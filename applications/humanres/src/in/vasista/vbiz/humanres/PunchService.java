@@ -345,6 +345,7 @@ public class PunchService {
 				GenericValue shiftType = getShiftTypeByTime(dctx,context);
 				shiftTypeId = shiftType.getString("shiftTypeId");
 				GenericValue lastShiftType =fetchLastEmplShiftDetails(dctx,context);
+				//Debug.log("lastShiftType====="+lastShiftType);
 				if(UtilValidate.isNotEmpty(lastShiftType) && shiftTimeGap !=0 && shiftTimeGap <= (3600000*shiftThreshold)){
 					shiftTypeId = lastShiftType.getString("shiftType");
 					employeeDailyAttendanceMap.put("date", lastShiftType.getDate("date"));
@@ -370,6 +371,10 @@ public class PunchService {
 						//here get shiftType for out time
 						//context.put("isOutTime", Boolean.TRUE);
 						//GenericValue shiftType = getShiftTypeByTime(dctx,context);
+						/*Map shiftCtx = UtilMisc.toMap("partyId",partyId);
+						shiftCtx.put("punchDateTime", lastEmplPunch.getTimestamp("punchDateTime"));
+						lastShiftType =fetchLastEmplShiftDetails(dctx,shiftCtx);*/
+						
 						if(UtilValidate.isNotEmpty(shiftType)){
 							//shiftTypeId = shiftType.getString("shiftTypeId");
 							String endTime = shiftType.getString("endTime");
@@ -379,7 +384,8 @@ public class PunchService {
 							    	endTime = workShiftPeriod.getString("endTime");
 							    }
 							}
-							employeeDailyAttendanceMap.put("date", lastShiftType.getDate("date"));
+							//Debug.log("lastEmplPunch====="+lastEmplPunch);
+							employeeDailyAttendanceMap.put("date", lastEmplPunch.getDate("punchdate"));
 							Timestamp lagPunchTime =
 								    Timestamp.valueOf(
 								        new SimpleDateFormat("yyyy-MM-dd ")
@@ -433,7 +439,7 @@ public class PunchService {
 				if(UtilValidate.isNotEmpty(employeeDetail.getString("canteenFacin")) && ("Y").equalsIgnoreCase(employeeDetail.getString("canteenFacin"))){
 					employeeDailyAttendanceMap.put("availedCanteen","Y");
 				}
-				
+				//Debug.log("employeeDailyAttendanceMap============"+employeeDailyAttendanceMap);
 				result = dispatcher.runSync("createorUpdateEmployeeDailyAttendance", employeeDailyAttendanceMap);
 				if(ServiceUtil.isError(result)){
 					Debug.logError(ServiceUtil.getErrorMessage(result), module);
@@ -637,10 +643,16 @@ public class PunchService {
 					employeeDailyAttendance.set("availedCanteen","Y");
 				}
 				delegator.store(employeeDailyAttendance);
+			}else{
+				Map employeeDailyAttendanceMap = UtilMisc.toMap("userLogin", userLogin);
+				employeeDailyAttendanceMap.put("date",shiftDate);
+				employeeDailyAttendanceMap.put("partyId", partyId);
+				employeeDailyAttendanceMap.put("shiftType", shiftTypeId);
+				employeeDailyAttendanceMap.put("lateMin",new BigDecimal(lateMin));
+				employeeDailyAttendanceMap.put("extraMin",new BigDecimal(extraMin));
+				result = dispatcher.runSync("createorUpdateEmployeeDailyAttendance", employeeDailyAttendanceMap);
 			}
 			
-			
-			//result = dispatcher.runSync("createorUpdateEmployeeDailyAttendance", employeeDailyAttendanceMap);
 			if(ServiceUtil.isError(result)){
 				Debug.logError(ServiceUtil.getErrorMessage(result), module);
 				return result;

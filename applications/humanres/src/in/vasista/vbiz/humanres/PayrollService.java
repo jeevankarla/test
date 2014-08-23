@@ -1140,7 +1140,7 @@ public class PayrollService {
 			String payHeadTypeId= (String) context.get("payHeadTypeId");
 			Timestamp fromDate = (Timestamp) context.get("fromDate");
 	        EntityCondition condition = EntityCondition.makeCondition("payHeadTypeId", EntityOperator.EQUALS,payHeadTypeId); 				
-        	payHeadPriceRules = delegator.findList("PayrollBenDedRule", condition, null, null, null, true);
+        	payHeadPriceRules = delegator.findList("PayrollBenDedRule", condition, null, null, null, false);
             if (payHeadPriceRules == null) payHeadPriceRules = FastList.newInstance();
 	        
             payHeadPriceRules = EntityUtil.filterByDate(payHeadPriceRules, fromDate);
@@ -1164,7 +1164,7 @@ public class PayrollService {
                 Timestamp nowTimestamp =  UtilDateTime.nowTimestamp();
                 List priceInfos = FastList.newInstance();
                 if(UtilValidate.isEmpty(payHeadPriceRules)){
-                	Debug.logImportant("no rules found for given payheadType", module);
+                	Debug.logImportant("no rules found for given payheadType ::"+context.get("payHeadTypeId"), module);
                     return calcResults;
                 }
 	            for (GenericValue payHeadPriceRule: payHeadPriceRules) {
@@ -2775,6 +2775,7 @@ public class PayrollService {
 			    			Timestamp cTimeEnd = UtilDateTime.getDayEnd(cTime);
 			    			//Debug.log("cTime==========="+cTime);
 			    			List<GenericValue> dayPunchList = EntityUtil.filterByCondition(punchList, EntityCondition.makeCondition(EntityCondition.makeCondition("punchdate",EntityOperator.LESS_THAN_EQUAL_TO,UtilDateTime.toSqlDate(cTime)) , EntityOperator.AND,EntityCondition.makeCondition("punchdate",EntityOperator.GREATER_THAN_EQUAL_TO,UtilDateTime.toSqlDate(cTime))));
+			    			//dayPunchList = EntityUtil.filterByCondition(punchList, EntityCondition.makeCondition(EntityCondition.makeCondition("shiftType",EntityOperator.NOT_EQUAL,"SHIFT_NIGHT") , EntityOperator.AND,EntityCondition.makeCondition("InOut",EntityOperator.NOT_EQUAL,"OUT")));
 			    			// filter by normal punchType
 			    			//call edit punch to re-calculate late min
 			    			if(UtilValidate.isNotEmpty(dayPunchList) && UtilValidate.isNotEmpty(periodBillingId)){

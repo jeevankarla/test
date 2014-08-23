@@ -491,7 +491,7 @@ public class PunchService {
 	  	    	}
 			}*/
 			//handle shift logic here
-			if(UtilValidate.isNotEmpty(shiftTypeId)){
+			/*if(UtilValidate.isNotEmpty(shiftTypeId)){
 				GenericValue emplDetails = delegator.findOne("EmployeeDetail", UtilMisc.toMap("partyId",partyId), false);
 				List<GenericValue> shiftEmplDetails = delegator.findByAnd("EmplDailyAttendanceDetail", UtilMisc.toMap("shiftType",shiftTypeId,"date",punchdate ,"partyId",partyId));
 				if(UtilValidate.isEmpty(shiftEmplDetails)){
@@ -510,7 +510,7 @@ public class PunchService {
 					}
 					
 				}
-			}
+			}*/
 			
 			delegator.createOrStore(emplPunch);
 			if(UtilValidate.isNotEmpty(oldPunchType) && (!PunchType.equals(oldPunchType))){				  
