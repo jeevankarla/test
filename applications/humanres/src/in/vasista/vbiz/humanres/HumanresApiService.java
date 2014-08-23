@@ -461,7 +461,7 @@ Debug.logInfo("result:" + result, module);
     }
    
     /*
-     * Fetch last punch for given employee.
+     * Fetch last punch for given employee.  Currently this will return only today's last punch
      * Note: Only "Normal" punchtype entries are considered
      */
     public static Map<String, Object> fetchEmployeeLastPunch(DispatchContext dctx, Map<String, ? extends Object> context) {
@@ -479,13 +479,17 @@ Debug.logInfo("result:" + result, module);
             Debug.logWarning("**** INVALID PARTY [" + (new Date()).toString() + "]: " + "party Id missing!", module);
             return ServiceUtil.returnError("Party Id is missing.");         
         }
+        Timestamp timePeriodStart = UtilDateTime.getDayStart(UtilDateTime.nowTimestamp());
+        Timestamp timePeriodEnd = UtilDateTime.getDayEnd(UtilDateTime.nowTimestamp());        
     	SimpleDateFormat timeFormat = new SimpleDateFormat("HH:mm");
     	EntityListIterator punchIter = null;
     	Map<String, Object> emplPunch = FastMap.newInstance();
 		try {
 			List condList = FastList.newInstance();
 			condList.add(EntityCondition.makeCondition("partyId", EntityOperator.EQUALS, partyId));
-			condList.add(EntityCondition.makeCondition("PunchType", EntityOperator.EQUALS , "Normal")); 			
+			condList.add(EntityCondition.makeCondition("PunchType", EntityOperator.EQUALS , "Normal")); 
+			condList.add(EntityCondition.makeCondition("punchdate", EntityOperator.GREATER_THAN_EQUAL_TO , UtilDateTime.toSqlDate(timePeriodStart)));
+			condList.add(EntityCondition.makeCondition("punchdate", EntityOperator.LESS_THAN_EQUAL_TO , UtilDateTime.toSqlDate(timePeriodEnd)));			
 			EntityCondition cond = EntityCondition.makeCondition(condList,EntityOperator.AND);
 			
 			punchIter = delegator.find("EmplPunch", cond, null, null, UtilMisc.toList("-punchdate","-punchtime"),null);
