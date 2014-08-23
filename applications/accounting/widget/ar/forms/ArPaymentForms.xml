@@ -64,7 +64,7 @@ under the License.
         <field name="paymentId"><text-find ignore-case="true"/></field>
         <field name="comments"><text-find ignore-case="true"/></field>
         <field name="paymentTypeId" position="1">
-            <drop-down allow-empty="false">
+            <drop-down allow-empty="true">
                 <entity-options entity-name="PaymentType" description="${description}">
                     <entity-constraint name="parentTypeId" value="ADVANCES_PAYIN" />
                 </entity-options>
