@@ -3100,7 +3100,7 @@ public class PayrollService {
 	      						employPayrollDetails.store();
 	      					}
 	      					else{
-	      						  if(noOfArrearDays.compareTo(BigDecimal.ZERO)>=0){
+	      						  if(UtilValidate.isNotEmpty(noOfArrearDays)){
 	      							noOfPayableDays=noOfPayableDays.subtract(arrearDays);
 	      							noOfPayableDays=noOfPayableDays.add(noOfArrearDays);
 	      							employPayrollDetails.set("noOfPayableDays",noOfPayableDays);
@@ -3117,7 +3117,7 @@ public class PayrollService {
       							employPayrollDetails.set("lossOfPayDays",lossOfPayDays);
       							employPayrollDetails.store();
 	      					}
-	      				}
+	      			}
 	      		} catch (GenericEntityException e) {
 	      			Debug.logError(e, module);
 	      			return ServiceUtil.returnError(e.toString());
