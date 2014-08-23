@@ -308,10 +308,10 @@ ${setRequestAttribute("OUTPUT_FILENAME", "TaxInvoice.txt")}
 					 	     <fo:block text-align="right" font-size="12pt" white-space-collapse="false" font-family="Courier,monospace" 
 					 	       keep-together="always">${productTotals.getValue().get("returnQtyLtrs")?if_exists?string("#0.00")}</fo:block>
 	                  	</fo:table-cell>
-	                  	<#assign vatRetSubTotal = vatRetSubTotal+(productTotals.getValue().get("returnBasicPrice")?if_exists)>
+	                  	<#assign vatRetSubTotal = vatRetSubTotal+(productTotals.getValue().get("returnPrice")?if_exists)>
 	                  	<fo:table-cell>   						
 					 	     <fo:block text-align="right" font-size="12pt" white-space-collapse="false" font-family="Courier,monospace" 
-					 	      keep-together="always">${productTotals.getValue().get("returnBasicPrice")?if_exists?string("#0.00")}</fo:block>
+					 	      keep-together="always">${productTotals.getValue().get("returnPrice")?if_exists?string("#0.00")}</fo:block>
 	                  	</fo:table-cell>
 	                  </fo:table-row>
 	                  </#if>
