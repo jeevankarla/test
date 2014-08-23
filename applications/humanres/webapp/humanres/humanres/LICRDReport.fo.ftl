@@ -16,13 +16,13 @@
 	        		<fo:block  keep-together="always" text-align="center" font-family="Courier,monospace" white-space-collapse="false" font-weight="bold">&#160;      ${uiLabelMap.KMFDairyHeader}</fo:block>
 					<fo:block  keep-together="always" text-align="center" font-family="Courier,monospace" white-space-collapse="false" font-weight="bold">&#160;      ${uiLabelMap.KMFDairySubHeader}</fo:block>
 	        		<fo:block  keep-together="always" text-align="center" font-family="Courier,monospace" white-space-collapse="false" font-weight="bold">&#160;      </fo:block>
-	        		<#if (parameters.InsuranceType)==("LIC_MD_INSR")>
+	        		<#if (parameters.insuranceTypeId)==("LIC_KMF")>
 	        		<fo:block text-align="left" keep-together="always" white-space-collapse="false">&#160;                          LIC STATEMENT OF KMF FOR THE MONTH OF ${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(fromDate, "MMMM yyyy")}         </fo:block>	 
 	        		</#if>
-	        		<#if (parameters.InsuranceType)==("LIC_DAIRY_INSR")>
+	        		<#if (parameters.insuranceTypeId)==("LIC_MD_INSR")>
 	        		<fo:block text-align="left" keep-together="always" white-space-collapse="false">&#160;                      LIC STATEMENT OF MOTHER DAIRY OF FOR THE MONTH OF ${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(fromDate, "MMMM yyyy")}       </fo:block>	 	 	  
 	        		</#if>
-	        		<#if (parameters.InsuranceType)==("RECCR_DEPOSIT")>
+	        		<#if (parameters.insuranceTypeId)==("RECCR_DEPOSIT")>
 	        		<fo:block text-align="center" keep-together="always" white-space-collapse="false">&#160;     RDP CUMULATIVE STATEMENT FOR THE MONTH OF ${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(fromDate, "MMMM yyyy")}                      </fo:block>	 
 	        		</#if>
 	        		<fo:block text-align="left" keep-together="always" white-space-collapse="false">&#160;                                                                          DATE: ${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(nowTimestamp, "dd-MMM-yyyy")}</fo:block>	 
@@ -59,13 +59,13 @@
 	                            <fo:table-cell >	
 	                            	<fo:block text-align="right" keep-together="always" font-weight="bold" font-size="15pt">&#160; Amount(Rs)</fo:block>
 	                            </fo:table-cell>
-	                            <#if (parameters.InsuranceType)==("RECCR_DEPOSIT")>
+	                            <#if (parameters.insuranceTypeId)==("RECCR_DEPOSIT")>
 	                            <fo:table-cell >	
 	                            	<fo:block text-align="right" keep-together="always" font-weight="bold" font-size="15pt">Cumulative</fo:block>
 	                            </fo:table-cell>
 	                            </#if>
 		                   	</fo:table-row>
-		                   	 <#if (parameters.InsuranceType)==("RECCR_DEPOSIT")>
+		                   	 <#if (parameters.insuranceTypeId)==("RECCR_DEPOSIT")>
 		                   	<fo:table-row>
 		                   		<fo:table-cell >	
 	                            	<fo:block text-align="center" keep-together="always" font-weight="bold" font-size="15pt"></fo:block>
@@ -95,6 +95,7 @@
 		                   	<#assign LicMap=LicFinalMap.entrySet()>
 		                   	<#list LicMap as LicValues>
 		                   		<#assign LicInsuranceValues=LicValues.getValue()>
+		                   		<#if LicInsuranceValues.get("amount")!=0>
 		                   		<fo:table-row >
 		                   			<fo:table-cell >	
 	                            		<fo:block text-align="center" keep-together="always" font-size="13pt">${sNo}</fo:block>
@@ -109,23 +110,26 @@
 	                            		<fo:block text-align="right" keep-together="always" font-size="13pt">${LicInsuranceValues.get("referenceNo")?if_exists}</fo:block>
 	                            	</fo:table-cell>
 	                            	<fo:table-cell >	
-	                            		<fo:block text-align="right" keep-together="always" font-size="13pt">${LicInsuranceValues.get("amount")?if_exists?string("##0.00")}</fo:block>
+	                            		<fo:block text-align="right" keep-together="always" font-size="13pt"> ${LicInsuranceValues.get("amount")?if_exists?string("##0.00")}</fo:block>
 	                            		<#assign GrandTot=GrandTot+LicInsuranceValues.get("amount")>
 	                            		<#assign pageTot=pageTot+LicInsuranceValues.get("amount")>
 	                            	</fo:table-cell>
-	                            	<#if (parameters.InsuranceType)==("RECCR_DEPOSIT")>
+	                            	<#if (parameters.insuranceTypeId)==("RECCR_DEPOSIT")>
 	                            		<#assign cumltvMap=finalcumulativeMap.entrySet()>
 	                            		<#list cumltvMap as cumulativeDetails>
 	                            			<#if (cumulativeDetails.getKey())==(LicInsuranceValues.get("employeeNo"))>
-			                            		<fo:table-cell >	
-			                            			<fo:block text-align="right" keep-together="always" font-size="13pt">${cumulativeDetails.getValue().get(LicInsuranceValues.get("employeeNo"))?if_exists?string("##0.00")}</fo:block>
-			                            		</fo:table-cell>
+	                            				<#if (cumulativeDetails.getValue().get(LicInsuranceValues.get("employeeNo")))!=0>
+				                            		<fo:table-cell >	
+				                            			<fo:block text-align="right" keep-together="always" font-size="13pt">${cumulativeDetails.getValue().get(LicInsuranceValues.get("employeeNo"))?if_exists?string("##0.00")}</fo:block>
+				                            		</fo:table-cell>
+				                            	</#if>
 			                            	</#if>
 		                            	</#list>
 	                            	</#if>
 	                            	<#assign sNo=sNo+1>
 	                            	<#assign noofLines=noofLines+1>
 	                            </fo:table-row>
+	                            </#if>
 	                            <#if (noofLines == 31) >
 	                            	<fo:table-row>
 	                            		<fo:table-cell>
@@ -180,7 +184,7 @@
                      <fo:table>
                      	<fo:table-column column-width="650pt"/>
                      	<fo:table-body>
-                     		 <#if (parameters.InsuranceType)==("RECCR_DEPOSIT")>
+                     		 <#if (parameters.insuranceTypeId)==("RECCR_DEPOSIT")>
 	                     		<fo:table-row >
 		                            <fo:table-cell>	
 		                            	<fo:block keep-together="always" text-align="center">&#160; This is a system generated report and does not require any signature. </fo:block>
