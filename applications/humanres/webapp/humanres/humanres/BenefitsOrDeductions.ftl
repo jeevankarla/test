@@ -134,7 +134,7 @@ function comparer(a, b) {
 						<#if type=="benefits">						
 							<#if benefitTypeIds?has_content> 
 						        <#list benefitTypeIds as benefitType>	
-										{id:"${benefitType}", name:"${benefitDescMap[benefitType]}", field:"${benefitType}", width:100, minWidth:80, editor:FloatCellEditor}<#if benefitType_has_next>,</#if>
+										{id:"${benefitType}", name:"${benefitDescMap[benefitType]?if_exists}", field:"${benefitType}", width:100, minWidth:80, editor:FloatCellEditor}<#if benefitType_has_next>,</#if>
 								</#list>
 							</#if>
 						</#if>	
