@@ -200,7 +200,7 @@ if(UtilValidate.isNotEmpty(periodBillingList)){
 				BankAdvicePayRollMap.put(partyId,bankAdviceDetailsMap);
 			}		
 			//getting actual Basic, DA, HRA for employee
-			basicSalAndGradeMap=PayrollService.fetchBasicSalaryAndGrade(dctx,[employeeId:partyId,timePeriodStart:timePeriodStart, timePeriodEnd: timePeriodEnd, userLogin : userLogin, proportionalFlag:"Y"]);
+			/*basicSalAndGradeMap=PayrollService.fetchBasicSalaryAndGrade(dctx,[employeeId:partyId,timePeriodStart:timePeriodStart, timePeriodEnd: timePeriodEnd, userLogin : userLogin, proportionalFlag:"Y"]);
 			Map salaryDetailsMap=FastMap.newInstance();
 			basicAmount =0;
 			if(UtilValidate.isNotEmpty(basicSalAndGradeMap)){
@@ -221,7 +221,7 @@ if(UtilValidate.isNotEmpty(periodBillingList)){
 			salaryDetailsMap.put("hraAmt",hraAmt);
 			if(UtilValidate.isNotEmpty(salaryDetailsMap)){
 				EmplSalaryDetailsMap.put(partyId,salaryDetailsMap);
-			}
+			}*/
 		}
 	}
 }
