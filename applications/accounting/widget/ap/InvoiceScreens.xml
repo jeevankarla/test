@@ -121,6 +121,9 @@ under the License.
 												</widgets>
 											</section>
                                         	<platform-specific>
+                                        	<html><html-template location="component://accounting/webapp/accounting/invoice/massPayments.ftl"/></html>
+											</platform-specific>
+											<platform-specific>
                                             	<html><html-template location="component://accounting/webapp/accounting/invoice/ListSearchInvoices.ftl"/></html>
                                         	</platform-specific>
                                         </screenlet>

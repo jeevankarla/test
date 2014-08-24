@@ -69,7 +69,7 @@
 			htmlMsg = "";
 			htmlMsg += "<select name='issuingAuthority' id='issuingAuthority' class='h4'>"+
 						"<option value=''>-- Select -- </option>"+
-						"<#if fundTransferAccounts?has_content><#list fundTransferAccounts as eachFinAccount><option value='${eachFinAccount.finAccountName?if_exists}' >${eachFinAccount.finAccountName?if_exists}</option></#list></#if>"+            
+						"<#if fundTransferAccounts?has_content><#list fundTransferAccounts as eachFinAccount><option value='${eachFinAccount.finAccountId?if_exists}' >${eachFinAccount.finAccountName?if_exists}</option></#list></#if>"+            
 						"</select>";
 			jQuery("#bankSelect").html('');
 			jQuery("#bankSelect").html(htmlMsg);

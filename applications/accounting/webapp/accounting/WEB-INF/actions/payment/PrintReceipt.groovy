@@ -22,6 +22,8 @@ if(parameters.paymentId){
 	tempPaymentIds.add(paymentId);
 	parameters.paymentIds = tempPaymentIds;
 }
+paymentMethodTypeId = "";
+paymentDescription = "";
 printPaymentsList = FastList.newInstance();
 if(parameters.paymentIds){
 	
@@ -31,6 +33,13 @@ if(parameters.paymentIds){
 		tempprintPaymentMap=[:];
 		tempprintPaymentMap.putAll(paymentRecipt);
 		totalAmount=paymentRecipt.amount;
+		paymentMethodTypeId = paymentRecipt.paymentMethodTypeId;
+		context.put("paymentMethodTypeId",paymentMethodTypeId);
+		paymentMethodTypeDetails = delegator.findOne("PaymentMethodType", [paymentMethodTypeId : paymentMethodTypeId], false);
+		if(UtilValidate.isNotEmpty(paymentMethodTypeDetails)){
+			paymentDescription = paymentMethodTypeDetails.description;
+			context.put("paymentDescription",paymentDescription);
+		}
 	
 	amountwords=UtilNumber.formatRuleBasedAmount(totalAmount,"%rupees-and-paise", locale).toUpperCase();
 	tempprintPaymentMap.put("amountWords",amountwords);

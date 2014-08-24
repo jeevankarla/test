@@ -212,21 +212,27 @@ function showPaymentEntryQTip(partyIdFrom1,partyIdTo1,invoiceId1,voucherType1,am
 			});
 	 	   }
 		  paymentMethodList = methodOptionList;
-		message += "<html><head></head><body><form action='${actionName?if_exists}' method='post' onsubmit='return disableGenerateButton();'><table cellspacing=10 cellpadding=10 width=400>";
+		  
+			message += "<html><head></head><body><form action='${actionName?if_exists}' method='post' onsubmit='return disableGenerateButton();'><table cellspacing=10 cellpadding=10 width=400>";
 			//message += "<br/><br/>";
+			testStr = '';
+			if(voucherType != 'CASH'){
+				testStr = "<tr class='h3'><td align='left'class='h3' width='60%'>Financial Account:</td><td align='left' width='60%'><select name='finAccountId' id='finAccountId'  class='h4'>"+
+						"<#if finAccountList?has_content><#list finAccountList as finAccount><option value='${finAccount.finAccountId?if_exists}' >${finAccount.finAccountName?if_exists}</option></#list></#if>"+            
+						"</select></td></tr>";
+			}
 			message += "<tr class='h3'><td align='left' class='h3' width='60%'>Payment Type :</td><td align='left' width='60%'><select name='paymentTypeId' id='paymentTypeId'  class='h4'>"+
 						"<#if paymentTypes?has_content><#list paymentTypes as eachMethodType><option value='${eachMethodType.paymentTypeId?if_exists}' >${eachMethodType.description?if_exists}</option></#list></#if>"+            
 						"</select></td></tr>"+
 						"<tr class='h3'><td align='left' class='h3' width='60%'><#if parentTypeId?exists && parentTypeId=="SALES_INVOICE">Payment Method Type :<#else>Payment Method:</#if> </td><td align='left' width='60%'><select <#if parentTypeId?exists && parentTypeId=="SALES_INVOICE"> name='paymentMethodTypeId' <#else> name='paymentMethodId' </#if> id='paymentMethodTypeId'  class='h4'>"+
-						"</select></td></tr>"+
+						"</select></td></tr>"+testStr+
 						"<tr class='h3'><td align='left' class='h3' width='60%'>Cheque Date:</td><td align='left' width='60%'><input class='h4' type='text' readonly id='effectiveDate' name='instrumentDate' onmouseover='datepick()'/></td></tr>" +
 						"<tr class='h3'><td align='left' class='h3' width='60%'>Cheque No:</td><td align='left' width='60%'><input class='h4' type='text'  id='paymentRefNum' name='paymentRefNum'/><input class='h4' type='hidden' id='parentTypeId' name='parentTypeId' value='${parentTypeId?if_exists}'/></td></tr>" +
 				 		"<tr class='h3'><td align='left' class='h3' width='60%'>Amount :</td><td align='left' width='60%'><input class='h4' type='text' id='amount' name='amount'/><input class='h4' type='hidden' id='partyIdFrom' name='partyIdFrom' /><input class='h4' type='hidden' id='partyIdTo' name='partyIdTo'/><input class='h4' type='hidden' id='invoiceId' name='invoiceId' /><input class='h4' type='hidden' id='voucherType' name='voucherType' /></td></tr>" +
 				 		"<tr class='h3'><td align='left' class='h3' width='60%'></td><td align='left' width='60%'><input class='h4' type='hidden' name='useFifo' value='TRUE'/></td></tr>"+
 				 		"<tr class='h3'><td align='left' class='h3' width='60%'>Chq.in favour:</td><td align='left' width='60%'><input class='h4' type='text' id='inFavourOf' name='inFavourOf' /></td></tr>" +
 				 		"<tr class='h3'><td align='center'><span align='right'><input type='submit' value='Submit' class='smallSubmit'/></span></td><td class='h3' width='100%' align='left'><span align='left'><button value='${uiLabelMap.CommonCancel}' onclick='return cancelForm();' class='smallSubmit'>${uiLabelMap.CommonCancel}</button></span></td></tr>";
-                		
-					message +=	"</table></form></body></html>";
+			message +=	"</table></form></body></html>";
 		var title = "Payment Entry : ";
 		Alert(message, title);
 	}	
@@ -238,18 +244,65 @@ function showPaymentEntryQTip(partyIdFrom1,partyIdTo1,invoiceId1,voucherType1,am
 		jQuery("#amount").val(amount);
 		jQuery("#inFavourOf").val(partyName);
 		
+		
 		$('#paymentMethodTypeId').html(paymentMethodList.join(''));
 		//$("#paymentMethodTypeId").addOption(paymentMethodList, false); 
 		//$("#paymentMethodTypeId")[0].options.add(paymentMethodList);
 		//alert("==amount=="+amount);
 		
 	};
+	
+	
+	function massPaymentSubmit(current){
+    	jQuery(current).attr( "disabled", "disabled");
+    	var index = 0;
+    	var invoices = jQuery("#listInvoices :checkbox[name='invoiceIds']");
+    	var appendStr = "<table id=parameters>";
+        jQuery.each(invoices, function() {
+            if (jQuery(this).is(':checked')) {
+            	var domObj = $(this).parent().parent();
+            	var amtObj = $(domObj).find("#amt");
+            	var partyIdObj = $(domObj).find("#partyId");
+            	var fromPartyIdObj = $(domObj).find("#fromPartyId");
+            	var partyIdNameObj = $(domObj).find("#partyIdName");
+            	var voucherTypeIdObj = $(domObj).find("#voucherTypeId");
+            	
+            	var invId = $(this).val();
+            	var amt = $(amtObj).val();
+            	var partyId = $(partyIdObj).val();
+            	var fromPartyId = $(fromPartyIdObj).val();
+            	var partyIdName = $(partyIdNameObj).val();
+            	var voucherTypeId = $(voucherTypeIdObj).val();
+            	
+            	appendStr += "<tr><td><input type=hidden name=invId id=invId value="+invId+" />";
+            	appendStr += "<input type=hidden name=partyId id=partyId value="+partyId+" />";
+            	appendStr += "<input type=hidden name=fromPartyId id=fromPartyId value="+fromPartyId+" />";
+            	appendStr += "<input type=hidden name=partyIdName id=partyIdName value="+partyIdName+" />";
+            	appendStr += "<input type=hidden name=voucherTypeId id=voucherTypeId value="+voucherTypeId+" />";
+            	appendStr += "<input type=hidden name=amt id=amt value="+amt+" /></td></tr>";
+                
+            }
+            index = index+1;
+            
+        });
+        appendStr += "</table>";
+        $("#paymentSubmitForm").append(appendStr);
+        
+        var form = $("#paymentSubmitForm");
+        massInvoicePayments(form);
+        
+    }
+	
+	
+	
 </script>
 <#if invoices?has_content>
   <#assign invoiceList  =  invoices.getCompleteList() />
   <#assign eliClose = invoices.close() />
 </#if>
 <#if invoiceList?has_content && (parameters.noConditionFind)?if_exists == 'Y'>
+<form name="paymentSubmitForm" id="paymentSubmitForm" method="post" action="makeMassInvoicePayments">
+</form>
   <div>
     <span class="label">${uiLabelMap.AccountingTotalInvoicesCount} :${invoiceList?size}</span>  
     <span class="label">${uiLabelMap.AccountingRunningTotalOutstanding} (${uiLabelMap.AccountingSelectedInvoicesCount}) :</span>
@@ -280,8 +333,8 @@ function showPaymentEntryQTip(partyIdFrom1,partyIdTo1,invoiceId1,voucherType1,am
       <input type="hidden" name="invoiceStatusChange" id="invoiceStatusChange" value="<@ofbizUrl>massChangeInvoiceStatus</@ofbizUrl>"/>
       <input type="hidden" name="bulkSms" id="bulkSms" value="<@ofbizUrl>bulkSms</@ofbizUrl>"/>
       <input type="hidden" name="bulkEmail" id="bulkEmail" value="<@ofbizUrl>bulkEmail</@ofbizUrl>"/>
-    </div>
-
+	 <#--<input id="submitButton" type="button"  onclick="javascript:massPaymentSubmit(this);" value="Make Payment" />-->
+	 </div>
     <table class="basic-table hover-bar" cellspacing="0">
       <thead>
         <tr class="header-row-2">
@@ -323,6 +376,15 @@ function showPaymentEntryQTip(partyIdFrom1,partyIdTo1,invoiceId1,voucherType1,am
               <td>${(invoice.description)?if_exists}</td>
               <#assign partyName= Static["org.ofbiz.party.party.PartyHelper"].getPartyName(delegator, invoice.partyIdFrom, false)?if_exists/>
             
+            
+              <input type = "hidden" name = "partyId" id = "partyId" value = "${invoice.partyId}">
+              <input type = "hidden" name = "fromPartyId" id = "fromPartyId" value = "${invoice.partyIdFrom}">
+              <input type = "hidden" name = "amt" id = "amt" value = "${invoicePaymentInfo.outstandingAmount}">
+              <input type = "hidden" name = "invId" id = "invId" value = "${invoice.invoiceId}">
+              <input type = "hidden" name = "partyIdName" id = "partyIdName" value = "${partyName}">
+              <input type = "hidden" name = "voucherTypeId" id = "voucherTypeId" value = "${invoice.prefPaymentMethodTypeId?if_exists}">
+              
+              
               <td><a href="/partymgr/control/viewprofile?partyId=${invoice.partyIdFrom}">${partyName}[${(invoice.partyIdFrom)?if_exists}]</a></td>
               <td><a href="/partymgr/control/viewprofile?partyId=${invoice.partyId}">${Static["org.ofbiz.party.party.PartyHelper"].getPartyName(delegator, invoice.partyId, false)?if_exists} [${(invoice.partyId)?if_exists}]</a></td>
               <td><@ofbizCurrency amount=invoicePaymentInfo.amount isoCode=defaultOrganizationPartyCurrencyUomId/></td>

@@ -4857,6 +4857,7 @@ public class InvoiceServices {
         String issuingAuthority = (String) context.get("issuingAuthority");
         String issuingAuthorityBranch = (String) context.get("issuingAuthorityBranch");
         String paymentTypeId = (String) context.get("paymentTypeId");
+        String finAccountId = (String) context.get("finAccountId");
         //String isDepositWithDrawPayment =(String) context.get("isDepositWithDrawPayment");
        // String finAccountTransTypeId =(String) context.get("finAccountTransTypeId");
         String organizationPartyId =(String) context.get("organizationPartyId");
@@ -4866,6 +4867,7 @@ public class InvoiceServices {
         String comments=(String) context.get("comments");
         Timestamp instrumentDate = (Timestamp) context.get("instrumentDate");
         List invoiceIds =(List) context.get("invoices");
+        Map invoiceAmountMap = (Map) context.get("invoiceAmountMap");
         
         String paymentId = "";
         GenericValue userLogin = (GenericValue) context.get("userLogin");
@@ -4910,6 +4912,9 @@ public class InvoiceServices {
             paymentCtx.put("userLogin", userLogin);
             paymentCtx.put("comments", comments);
             paymentCtx.put("facilityId", facilityId);
+            if (UtilValidate.isNotEmpty(finAccountId)) {
+				paymentCtx.put("finAccountId", finAccountId);
+			}
             paymentCtx.put("createdByUserLogin", userLogin.getString("userLoginId"));
             paymentCtx.put("lastModifiedByUserLogin",  userLogin.getString("userLoginId"));
             paymentCtx.put("createdDate", UtilDateTime.nowTimestamp());
@@ -4970,7 +4975,10 @@ public class InvoiceServices {
             		 Debug.logError(result.toString(), module);
                      return ServiceUtil.returnError(null, null, null, result);
                  }
-                 invoiceApplCtx.put("amountApplied", amountAppliedRunningTotal); 
+            	 invoiceApplCtx.put("amountApplied", amountAppliedRunningTotal);
+                 if(UtilValidate.isNotEmpty(invoiceAmountMap)){
+                	 invoiceApplCtx.put("amountApplied", (BigDecimal) invoiceAmountMap.get(invoiceId));
+            	 }
              	Map<String, Object> invoiceApplResult = dispatcher.runSync("createPaymentApplication",invoiceApplCtx);
              	
              	if (ServiceUtil.isError(invoiceApplResult)) {

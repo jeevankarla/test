@@ -634,10 +634,11 @@
         <attribute name="instrumentDate" mode="IN" type="String" optional="true" />
         <attribute name="useFifo" mode="IN" type="Boolean" optional="true"/>
         <attribute name="paymentId" mode="OUT" type="String" optional="true"/>
-         <attribute name="isEnableAcctg" mode="IN" type="String" optional="true"/>
+        <attribute name="isEnableAcctg" mode="IN" type="String" optional="true"/>
         <attribute name="statusFlag" mode="OUT" type="String" optional="true"/>
         <attribute name="hideSearch" mode="OUT" type="String" optional="true"/>
         <attribute name="enablePaymentSms" mode="OUT" type="Boolean" optional="true"/>
+        <attribute name="finAccountId" mode="IN" type="String" optional="true"/>
     </service>
     
     <service name="createFacilityInvoice" engine="java"

@@ -56,6 +56,15 @@ context.paymentTypes=paymentTypes;
 context.parentTypeId=parentTypeId;
 context.actionName=actionName;
 
+
+condList.clear();
+condList.add(EntityCondition.makeCondition("finAccountTypeId", EntityOperator.EQUALS, "BANK_ACCOUNT"));
+condList.add(EntityCondition.makeCondition("statusId", EntityOperator.EQUALS, "FNACT_ACTIVE"));
+condList.add(EntityCondition.makeCondition("ownerPartyId", EntityOperator.EQUALS, "Company"));
+cond = EntityCondition.makeCondition(condList, EntityOperator.AND);
+finAccountList = delegator.findList("FinAccount", cond, null, ["finAccountName"], null, false);
+context.finAccountList = finAccountList;
+
 JSONObject voucherPaymentMethodJSON = new JSONObject();
 JSONArray cashMethodItemsJSON = new JSONArray();
 JSONArray bankMethodItemsJSON = new JSONArray();
@@ -98,6 +107,12 @@ if("SALES_INVOICE"==parentTypeId){
 			cashMethodItemsJSON.add(newPMethodObj);
 			allMethodItemsJSON.add(newPMethodObj);
 		}
+		// for payment method id in ap payments
+		condList.clear();
+		condList.add(EntityCondition.makeCondition("partyId", EntityOperator.EQUALS, "Company"));
+		condList.add(EntityCondition.makeCondition("paymentMethodId", EntityOperator.NOT_EQUAL, "PAYMENTMETHOD2"));
+		cond = EntityCondition.makeCondition(condList, EntityOperator.AND);
+		bankPaymentMethodList = delegator.findList("PaymentMethod", cond, null, ["description"], null, false);
 		bankPaymentMethodList.each{ methodTypeEach->
 			JSONObject newPMethodObj = new JSONObject();
 			newPMethodObj.put("value",methodTypeEach.paymentMethodId);
@@ -111,14 +126,9 @@ if("SALES_INVOICE"==parentTypeId){
 	voucherPaymentMethodJSON.put("ALL",allMethodItemsJSON);
 	
 	//Debug.log("cashMethodItemsJSON=======>"+cashMethodItemsJSON);
-	//Debug.log("bankMethodItemsJSON=======>"+bankMethodItemsJSON);
 context.voucherPaymentMethodJSON=voucherPaymentMethodJSON;
-//Debug.log("voucherPaymentMethodJSON=======>"+voucherPaymentMethodJSON);
-
 
 voucherType=parameters.prefPaymentMethodTypeId;
-
-
 
 
 invoiceCreateScreenTitle="";
@@ -130,7 +140,7 @@ invoiceCreateScreenTitle = uiLabelMap.AccountingCreateNewCashPurchaseInvoice;
 invoiceCreateScreenTitle = uiLabelMap.AccountingCreateNewBankPurchaseInvoice;
 }
 context.invoiceCreateScreenTitle=invoiceCreateScreenTitle;
-
+context.voucherType = voucherType;
 
 
 prefPaymentMethodTypeId=voucherType;

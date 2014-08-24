@@ -21,11 +21,18 @@ package org.ofbiz.accounting.payment;
 import java.math.BigDecimal;
 import java.math.MathContext;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.sql.Timestamp;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import javax.servlet.ServletRequest;
+
+
+import javax.servlet.ServletContext;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 import javolution.util.FastList;
 import javolution.util.FastMap;
@@ -38,6 +45,7 @@ import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.base.util.UtilNumber;
 import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.base.util.UtilDateTime;
+import org.ofbiz.base.util.UtilHttp;	
 import org.ofbiz.entity.Delegator;
 import org.ofbiz.entity.GenericEntityException;
 import org.ofbiz.entity.GenericValue;
@@ -453,6 +461,7 @@ public class PaymentWorker {
         String invParentTypeId = (String) context.get("parentTypeId");
         String comments = (String) context.get("comments");
         String paymentRefNum = (String) context.get("paymentRefNum");
+        String finAccountId = (String) context.get("finAccountId");
         String inFavourOf = (String) context.get("inFavourOf");//to be stored in PaymentAttribute
         
         GenericValue userLogin = (GenericValue) context.get("userLogin");
@@ -465,6 +474,7 @@ public class PaymentWorker {
         //String paymentType = "SALES_PAYIN";
         String partyIdTo =(String)context.get("partyIdTo") ;   //"Company";
         String partyIdFrom =(String)context.get("partyIdFrom");
+        
         String paymentId = "";
         boolean roundingAdjustmentFlag =Boolean.TRUE;
        
@@ -505,6 +515,10 @@ public class PaymentWorker {
         
         paymentCtx.put("statusId", "PMNT_RECEIVED");
         //paymentCtx.put("isEnableAcctg", "N");
+        if (UtilValidate.isNotEmpty(finAccountId) ) {
+            paymentCtx.put("finAccountId", finAccountId);                        	
+        }
+        
         paymentCtx.put("amount", paymentAmount);
         paymentCtx.put("userLogin", userLogin); 
         paymentCtx.put("invoices", UtilMisc.toList(invoiceId));
@@ -523,9 +537,6 @@ public class PaymentWorker {
         Debug.logError(e, e.toString(), module);
         return ServiceUtil.returnError(e.toString());
         }
-        
-      
-        
          result = ServiceUtil.returnSuccess("Payment successfully done for Party "+partyIdTo+" ..!");
          result.put("invoiceId",invoiceId);
          result.put("parentTypeId",invParentTypeId);
@@ -534,6 +545,135 @@ public class PaymentWorker {
          result.put("hideSearch","Y");
         return result; 
    }
+    
+    public static String makeMassInvoicePayments(HttpServletRequest request, HttpServletResponse response) {
+		Delegator delegator = (Delegator) request.getAttribute("delegator");
+	  	  LocalDispatcher dispatcher = (LocalDispatcher) request.getAttribute("dispatcher");
+	  	  Locale locale = UtilHttp.getLocale(request);
+	  	  Map<String, Object> result = ServiceUtil.returnSuccess();
+	  	  HttpSession session = request.getSession();
+	  	  GenericValue userLogin = (GenericValue) session.getAttribute("userLogin");
+	      Timestamp nowTimeStamp = UtilDateTime.nowTimestamp();	 
+	      Timestamp todayDayStart = UtilDateTime.getDayStart(nowTimeStamp);
+	  	  Map<String, Object> paramMap = UtilHttp.getParameterMap(request);
+	  	  BigDecimal totalAmount = BigDecimal.ZERO;
+	  	  int rowCount = UtilHttp.getMultiFormRowCount(paramMap);
+	  	  if (rowCount < 1) {
+	  		  Debug.logError("No rows to process, as rowCount = " + rowCount, module);
+			  request.setAttribute("_ERROR_MESSAGE_", "No rows to process");	  		  
+	  		  return "error";
+	  	  }
+	  	  String paymentId = "";
+	  	  String inFavourOf = "";
+	  	  String paymentMethodId = "";
+	  	  String paymentType = "";
+	  	  String finAccountId = "";
+	  	  String instrumentDateStr = "";
+	  	  String paymentRefNum = "";
+	  	  String invoiceId = "";
+	  	  String partyIdTo = "";
+	  	  String partyIdFrom = "";
+  	
+		  	Map invoiceAmountMap = FastMap.newInstance();
+		  	List invoicesList = FastList.newInstance();
+			
+			  	for (int i = 0; i < rowCount; i++){
+		  		  
+			  	  Map paymentMap = FastMap.newInstance();
+		  		  String thisSuffix = UtilHttp.MULTI_ROW_DELIMITER + i;
+		  		  
+		  		  BigDecimal amount = BigDecimal.ZERO;
+		  		  String amountStr = "";
+		  		  
+		  		  if (paramMap.containsKey("invoiceId" + thisSuffix)) {
+		  			invoiceId = (String) paramMap.get("invoiceId"+thisSuffix);
+		  		  }
+		  		  if (paramMap.containsKey("amt" + thisSuffix)) {
+		  			amountStr = (String) paramMap.get("amt"+thisSuffix);
+		  		  }
+		  		  if(UtilValidate.isNotEmpty(amountStr)){
+					  try {
+			  			  amount = new BigDecimal(amountStr);
+			  		  } catch (Exception e) {
+			  			  Debug.logError(e, "Problems parsing amount string: " + amountStr, module);
+			  			  request.setAttribute("_ERROR_MESSAGE_", "Problems parsing amount string: " + amountStr);
+			  			  return "error";
+			  		  }
+		  		  }
+			  	  invoiceAmountMap.put(invoiceId,amount);
+			  	  invoicesList.add(invoiceId);
+			  	  totalAmount = totalAmount.add(amount);
+			  	}
+			  	paymentType = (String) paramMap.get("paymentTypeId");
+			  	inFavourOf = (String) paramMap.get("partyIdName");
+			  	partyIdTo = (String) paramMap.get("fromPartyId");
+			  	partyIdFrom = (String) paramMap.get("partyId");
+			  	paymentMethodId = (String) paramMap.get("paymentMethodId");
+			  	finAccountId = (String) paramMap.get("finAccountId");
+			  	instrumentDateStr = (String) paramMap.get("instrumentDate");
+			  	paymentRefNum = (String) paramMap.get("paymentRefNum");
+	  	
+		  	
+			  	Timestamp instrumentDate=UtilDateTime.nowTimestamp();
+		        if (UtilValidate.isNotEmpty(instrumentDateStr)) {
+					SimpleDateFormat sdf = new SimpleDateFormat("dd MMMMM, yyyy");
+					try {
+						instrumentDate = new java.sql.Timestamp(sdf.parse(instrumentDateStr).getTime());
+					} catch (ParseException e) {
+						Debug.logError(e, "Cannot parse date string: "+ instrumentDateStr, module);
+					} catch (NullPointerException e) {
+						Debug.logError(e, "Cannot parse date string: "	+ instrumentDateStr, module);
+					}
+				} 
+			       
+		  		try {
+		  			if(UtilValidate.isNotEmpty(totalAmount) && totalAmount.compareTo(BigDecimal.ZERO) > 0){
+		  				Map<String, Object> paymentCtx = UtilMisc.<String, Object>toMap("paymentTypeId", paymentType);
+			  	        paymentCtx.put("paymentMethodId", paymentMethodId);//from AP mandatory
+			  	        paymentCtx.put("organizationPartyId", partyIdTo);
+			            paymentCtx.put("partyId", partyIdFrom);
+			  	        if (!UtilValidate.isEmpty(paymentRefNum) ) {
+			  	            paymentCtx.put("paymentRefNum", paymentRefNum);                        	
+			  	        }
+			  	        paymentCtx.put("instrumentDate", instrumentDate);
+			  	        paymentCtx.put("statusId", "PMNT_RECEIVED");
+			  	        if (UtilValidate.isNotEmpty(finAccountId) ) {
+			  	            paymentCtx.put("finAccountId", finAccountId);                        	
+			  	        }
+			  	        paymentCtx.put("userLogin", userLogin);
+			  	        paymentCtx.put("amount", totalAmount);
+			  	        paymentCtx.put("invoices", invoicesList);
+			  	        paymentCtx.put("invoiceAmountMap", invoiceAmountMap);
+			  			try{
+			  				Map<String, Object> paymentResult = dispatcher.runSync("createPaymentAndApplicationForInvoices", paymentCtx);
+			  	  	        if (ServiceUtil.isError(paymentResult)) {
+			  	  	            Debug.logError("Problems in service createPaymentAndApplicationForInvoices", module);
+			  		  			request.setAttribute("_ERROR_MESSAGE_", "Error in service createPaymentAndApplicationForInvoices");
+			  		  			return "error";
+			  	  	        }
+			  	  	        paymentId = (String)paymentResult.get("paymentId");
+			  			}catch (Exception e) {
+			  		        Debug.logError(e, e.toString(), module);
+			  		        return "error";
+			  		        }
+			  	        //store attribute
+			  	        GenericValue paymentAttribute = delegator.makeValue("PaymentAttribute", UtilMisc.toMap("paymentId", paymentId, "attrName", "INFAVOUR_OF"));
+			  	        paymentAttribute.put("attrValue",inFavourOf);
+			  	        paymentAttribute.create();
+		  			}
+		  		}catch (GenericEntityException e2) {
+		  			  Debug.logError(e2, "Could not rollback transaction: " + e2.toString(), module);
+		  		}
+		  		 result = ServiceUtil.returnSuccess("Payment successfully done for Party "+partyIdTo+" ..!");
+		         result.put("paymentId",paymentId);
+		         result.put("partyIdFrom",partyIdTo);
+		         result.put("noConditionFind","Y");
+		         result.put("hideSearch","Y"); 
+		         request.setAttribute("_EVENT_MESSAGE_", "Payment successfully done for Party "+partyIdTo);
+		         return "success"; 
+	}
+    
+    
     public static Map<String, Object> depositReceiptPayment(DispatchContext dctx, Map<String, ? extends Object> context){
         Delegator delegator = dctx.getDelegator();
         LocalDispatcher dispatcher = dctx.getDispatcher();
@@ -543,34 +683,31 @@ public class PaymentWorker {
         Map<String, Object> result = ServiceUtil.returnSuccess();
         try {
 			GenericValue payment = delegator.findByPrimaryKey("Payment", UtilMisc.toMap("paymentId", paymentId));
-			if(!UtilAccounting.isPaymentType(payment, "RECEIPT")){
+			/*if(!UtilAccounting.isPaymentType(payment, "RECEIPT")){
 				return result; 
-			}
-			 /*if(!UtilAccounting.isPaymentMethodType(payment, "CASH")){
-				 return result;  
-			 }*/
+			}*/
+			
 				List<EntityExpr> condList = FastList.newInstance();
 				if(UtilAccounting.isPaymentMethodType(payment, "CASH")){
 					condList.add(EntityCondition.makeCondition("finAccountTypeId", EntityOperator.EQUALS ,"CASH"));
 					condList.add(EntityCondition.makeCondition("finAccountId", EntityOperator.NOT_EQUAL,"PETTY_CASH"));
-				}else{
-					if(UtilValidate.isEmpty(finAccountId)){
-						return result;  
-					}
-					condList.add(EntityCondition.makeCondition("finAccountTypeId", EntityOperator.EQUALS, "BANK_ACCOUNT"));
-				    condList.add(EntityCondition.makeCondition("finAccountId", EntityOperator.EQUALS,finAccountId));
+					EntityCondition cond = EntityCondition.makeCondition(condList, EntityOperator.AND);
+		            List cashFinAccountList = delegator.findList("FinAccount", cond, null, null, null, true);
+		            GenericValue cashAccount = EntityUtil.getFirst(cashFinAccountList);
+		            if(UtilValidate.isNotEmpty(cashAccount)){
+		            	finAccountId = cashAccount.getString("finAccountId");
+		            }
 				}
-	            EntityCondition cond = EntityCondition.makeCondition(condList, EntityOperator.AND);
-	            List cashFinAccountList = delegator.findList("FinAccount", cond, null, null, null, true);
-	           GenericValue cashAccount = EntityUtil.getFirst(cashFinAccountList);
+				if(UtilValidate.isEmpty(finAccountId)){
+					return result;  
+				}
 	          Map depositWithdrawPaymentCtx = UtilMisc.toMap("userLogin", userLogin);
 	          depositWithdrawPaymentCtx.put("paymentIds", UtilMisc.toList(paymentId));
 	          depositWithdrawPaymentCtx.put("transactionDate",payment.getTimestamp("transactionDate"));
 	          if(UtilValidate.isEmpty(payment.getString("transactionDate"))){
 	        	  depositWithdrawPaymentCtx.put("transactionDate",payment.getTimestamp("effectiveDate"));
 	          }
-	          
-	          depositWithdrawPaymentCtx.put("finAccountId", cashAccount.getString("finAccountId"));
+	          depositWithdrawPaymentCtx.put("finAccountId",finAccountId);
 	          Map<String, Object> depositResult = dispatcher.runSync("depositWithdrawPayments", depositWithdrawPaymentCtx);
 	          if (ServiceUtil.isError(depositResult)) {
 	          	Debug.logError(depositResult.toString(), module);

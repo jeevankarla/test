@@ -2832,7 +2832,7 @@ public class ByProductServices {
 	  	  }
 	  	  return "success";     
 	}
-	
+
 	public static Map<String, Object> cancelRetailerPayment(DispatchContext dctx, Map<String, ? extends Object> context){
         Delegator delegator = dctx.getDelegator();
         LocalDispatcher dispatcher = dctx.getDispatcher();
@@ -2868,7 +2868,7 @@ public class ByProductServices {
         String supplyDate = (String) context.get("paymentDate");
         String routeId = (String) context.get("routeId");
         String subTabItem = (String) context.get("subTabItem");
-        Locale locale = (Locale) context.get("locale");  
+        Locale locale = (Locale) context.get("locale");
         Map result = ServiceUtil.returnSuccess();
         String paymentMethodType = (String) context.get("paymentMethodTypeId");
         String paymentLocationId = (String) context.get("paymentLocationId");                
@@ -2879,6 +2879,9 @@ public class ByProductServices {
         String instrumentDate = (String) context.get("instrumentDate");
         String amountStr = (String) context.get("amount");
         BigDecimal amount = BigDecimal.ZERO;
+        List paymentIds = FastList.newInstance();
+        String finAccountName = null;
+        GenericValue finAccount = null;
         boolean useFifo = Boolean.FALSE;       
         if(UtilValidate.isNotEmpty(context.get("useFifo"))){
         	useFifo = (Boolean)context.get("useFifo");
@@ -2909,28 +2912,42 @@ public class ByProductServices {
 		//String payDateStr = UtilDateTime.toDateString(paymentDate, "yyyy-MM-dd");
 		try {
         	Map<String, Object> paymentCtx = FastMap.newInstance();
-        	
+        	 if(UtilValidate.isNotEmpty(issuingAuthority)){
+        		  finAccount = delegator.findOne("FinAccount", UtilMisc.toMap("finAccountId",issuingAuthority), false);
+	       		  if(UtilValidate.isNotEmpty(finAccount)){
+	       			  finAccountName = finAccount.getString("finAccountName");
+	       		  }else{
+	       			  finAccountName = issuingAuthority;
+	       		  }
+        	 }
         	paymentCtx.put("userLogin", userLogin);
         	paymentCtx.put("facilityId",facilityId);
         	paymentCtx.put("supplyDate", UtilDateTime.toDateString(UtilDateTime.nowTimestamp(), "yyyy-MM-dd"));
         	paymentCtx.put("paymentMethodTypeId",paymentMethodType);
         	paymentCtx.put("paymentPurposeType","ROUTE_MKTG");
-        	paymentCtx.put("issuingAuthority", issuingAuthority);
+        	if(UtilValidate.isNotEmpty(finAccountName)){
+        		paymentCtx.put("issuingAuthority", finAccountName);
+        	}
+        	if(paymentMethodType.equals("FT_PAYIN")){
+        		if(UtilValidate.isNotEmpty(issuingAuthority)){
+            		paymentCtx.put("finAccountId", issuingAuthority);
+            	}
+        	}
         	paymentCtx.put("amount",amount.toString());
         	paymentCtx.put("useFifo",true);
         	paymentCtx.put("paymentDate", paymentDate);
         	paymentCtx.put("paymentRefNum", paymentRefNum);
-        	paymentCtx.put("issuingAuthority", issuingAuthority);  
         	paymentCtx.put("issuingAuthorityBranch", issuingAuthorityBranch);  
         	paymentCtx.put("instrumentDate", instrumentDate);
         	paymentCtx.put("paymentPurposeType", paymentPurposeType);
-	  	if(amount.compareTo(BigDecimal.ZERO) > 0){
-	  	    Map paymentResult = dispatcher.runSync("createPaymentForBooth", paymentCtx);
-	  	    if(ServiceUtil.isError(paymentResult)){
-	  		Debug.logError("Problems in service createPaymentForBooth", module);
-	  		return ServiceUtil.returnError("Problems in service createPaymentForBooth");
-	  	    }
-	  	}
+		  	if(amount.compareTo(BigDecimal.ZERO) > 0){
+		  	    Map paymentResult = dispatcher.runSync("createPaymentForBooth", paymentCtx);
+		  	    if(ServiceUtil.isError(paymentResult)){
+		  	    	Debug.logError("Problems in service createPaymentForBooth", module);
+		  	    	return ServiceUtil.returnError("Problems in service createPaymentForBooth");
+		  	    }
+		  	    paymentIds.add(paymentResult.get("paymentId"));
+		  	}
         }catch (Exception e) {
             Debug.logError(e, e.toString(), module);
             return ServiceUtil.returnError(e.toString());
@@ -2946,7 +2963,7 @@ public class ByProductServices {
 	result.put("facilityId", routeId);
 	result.put("hideSearch", "N");
         return result;
-    }  
+    }
 	
 	
 	public static String processDSCorrectionMIS(HttpServletRequest request, HttpServletResponse response) {

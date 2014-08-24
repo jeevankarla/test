@@ -84,6 +84,7 @@ under the License.
           <td>${uiLabelMap.paymentLocation}</td>
           <td>${uiLabelMap.Amount}</td>
           <td>PaymentMethod Type</td>
+          <td>Receipt</td>
           <td>Cancel</td>          
           <#--<td align="right">${uiLabelMap.CommonSelectAll} <input type="checkbox" id="checkAllFacilities" name="checkAllFacilities" onchange="javascript:togglePaymentId(this);" checked="true"/></td>-->
         </tr>
@@ -110,6 +111,11 @@ under the License.
               		 ${(paymentMethodType.description)?if_exists}
               	</#if>
               </td>
+              <#if payment.statusId?has_content>
+              <td><#if payment.statusId == "PMNT_RECEIVED"><a class="buttontext" target="_BLANK" href="<@ofbizUrl>printReceipt.pdf?paymentIds=${payment.paymentId}</@ofbizUrl>">Print Receipt</a></#if></td>
+              <#else>
+               <td align="center"></td>
+               </#if>
               <td><#if hasPaymentCancelPermission && (payment.paymentMethodTypeId!="AXISHTOH_PAYIN")>
               			 <input id="submitButton" type="button"  onclick="javascript:setVoidPaymentParameters(this);" value="Cancel"/> 
               	  </#if>

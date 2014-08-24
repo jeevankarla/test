@@ -32,7 +32,8 @@ under the License.
         <auto-attributes include="nonpk" mode="IN" optional="true"/>
         <auto-attributes include="pk" mode="INOUT" optional="true"/>   
         <attribute name="paymentMethodTypeId" mode="INOUT" type="String" optional="true"></attribute> <!-- USING FOR NON ROUTE PAYMENT SCREEN -->
-         <attribute name="subTabItem" mode="INOUT" type="String" optional="true"></attribute>    
+         <attribute name="subTabItem" mode="INOUT" type="String" optional="true"></attribute>
+         <attribute name="finAccountId" mode="IN" type="String" optional="true"></attribute>    
         <override name="paymentTypeId" optional="false"/>
         <override name="partyIdFrom" optional="false"/>
         <override name="partyIdTo" optional="false"/>
@@ -239,12 +240,14 @@ under the License.
         <attribute name="paymentLocationId" type="String" mode="IN" optional="true"/>     
         <attribute name="paymentRefNum" type="String" mode="IN" optional="true"/>   
         <attribute name="issuingAuthority" type="String" mode="IN" optional="true"/>
+        <attribute name="finAccountId" type="String" mode="IN" optional="true"/>
         <attribute name="issuingAuthorityBranch" type="String" mode="IN" optional="true"/>
         <attribute name="instrumentDate" mode="IN" type="Timestamp" optional="true"/>
         <attribute name="isEnableAcctg" type="String" mode="IN" optional="true"/>  
         <attribute name="comments" type="String" mode="IN" optional="true"/>    
         <attribute name="paymentId" type="String" mode="OUT" optional="true"/>  
-        <attribute name="paymentMethodId" type="String" mode="IN" optional="true"/>  
+        <attribute name="paymentMethodId" type="String" mode="IN" optional="true"/>
+        <attribute name="invoiceAmountMap" type="Map" mode="IN" optional="true"/>  
     </service>
         <service name="createCreditNoteOrDebitNoteForInvoice" engine="java"
             location="org.ofbiz.accounting.invoice.InvoiceServices" invoke="createCreditNoteOrDebitNoteForInvoice" auth="true">
@@ -350,7 +353,8 @@ under the License.
         <attribute name="orderId" mode="IN" type="String" optional="true"/> 
          <attribute name="instrumentDate" mode="IN" type="String" optional="true"/> 
          <attribute name="invoiceId" mode="INOUT" type="String" optional="false"/> 
-         <attribute name="paymentMethodTypeId" mode="IN" type="String" optional="true"/> 
+         <attribute name="paymentMethodTypeId" mode="IN" type="String" optional="true"/>
+         <attribute name="finAccountId" mode="IN" type="String" optional="true"/> 
           <attribute name="paymentMethodId" mode="IN" type="String" optional="true"/> 
          <attribute name="paymentTypeId" mode="IN" type="String" optional="true"/> 
          <attribute name="comments" mode="IN" type="String" optional="true"/> 

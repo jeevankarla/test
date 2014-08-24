@@ -7244,6 +7244,7 @@ public class ByProductNetworkServices {
 		String issuingAuthorityBranch = (String) context.get("issuingAuthorityBranch");
 		String instrumentDateStr = (String) context.get("instrumentDate");
 		String isEnableAcctg = (String) context.get("isEnableAcctg");
+		String finAccountId = (String) context.get("finAccountId");
 		String ownerPartyId = "";
 		boolean useFifo = Boolean.FALSE;
 		if (UtilValidate.isNotEmpty(context.get("useFifo"))) {
@@ -7436,6 +7437,9 @@ public class ByProductNetworkServices {
 			if (UtilValidate.isNotEmpty(instrumentDate)) {
 				paymentCtx.put("instrumentDate", instrumentDate);
 			}
+			if (UtilValidate.isNotEmpty(finAccountId)) {
+				paymentCtx.put("finAccountId", finAccountId);
+			}
 			paymentCtx.put("paymentPurposeType", paymentPurposeType);
 			paymentCtx.put("statusId", "PMNT_RECEIVED");
 			if (UtilValidate.isNotEmpty(isEnableAcctg)) {
@@ -7444,6 +7448,7 @@ public class ByProductNetworkServices {
 			paymentCtx.put("amount", paymentAmount);
 			paymentCtx.put("userLogin", userLogin);
 			paymentCtx.put("invoices", invoiceIds);
+			
 			Debug.log("=====paymentAmount===="+paymentAmount+"=====invoiceIds=="+invoiceIds);
 			Map<String, Object> paymentResult = dispatcher.runSync("createPaymentAndApplicationForInvoices", paymentCtx);
 			if (ServiceUtil.isError(paymentResult)) {

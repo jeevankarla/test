@@ -3100,6 +3100,15 @@ under the License.
         <response name="error" type="request-redirect-noparam" value="FindArInvoices">
         </response>
     </request-map>
+   <request-map uri="makeMassInvoicePayments">
+     	<security https="true" auth="true"/>
+     	<event type="java"  path="org.ofbiz.accounting.payment.PaymentWorker"  invoke="makeMassInvoicePayments" global-transaction="true"/>
+     	<response name="success" type="request-redirect-noparam" value="FindApInvoices">
+        	<redirect-parameter name="partyIdFrom"/>
+        </response>     	
+        <response name="error" type="request-redirect-noparam" value="FindApInvoices">
+        </response>
+    </request-map>
    
      <request-map uri="cashierPortal">
         <security https="true" auth="true"/>

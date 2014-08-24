@@ -224,9 +224,9 @@ under the License.
                 </entity-options>
             </drop-down>
         </field>
-        <field name="paymentRefNum" position="1" title="${uiLabelMap.paymentRefNum}" required-field="true"><text/></field>
+        <field name="paymentRefNum" position="1" title="Payment Ref.Number"><text/></field>
         <field name="instrumentDate" position="2" title="${uiLabelMap.instrumentDate}"><date-time type="timestamp"></date-time></field>
-        <field name="issuingAuthority" position="2" title="${uiLabelMap.issuingAuthority}" required-field="true"><text></text></field>        
+        <field name="issuingAuthority" position="2" title="${uiLabelMap.issuingAuthority}"><text></text></field>        
         <field name="amount" position="1" required-field="true"><text/></field>
         <field name="comments" position="2"><text size="70"/></field>
         <field name="isDepositWithDrawPayment"><hidden value="Y"/></field>
@@ -914,11 +914,21 @@ under the License.
                 </entity-options>
             </drop-down>
         </field>
-         <field name="paymentDate" position="1" title="${uiLabelMap.paymentDate}"><date-time type="timestamp" ></date-time></field>
-          <field name="issuingAuthority" position="2" title="${uiLabelMap.issuingAuthority}" ><text></text></field>
+        <field name="paymentDate" position="1" title="${uiLabelMap.paymentDate}"><date-time type="timestamp" ></date-time></field>
+         <field use-when="&quot;${paymentMethodTypeId}&quot;.equals(&quot;FT_PAYIN&quot;)" name="finAccountId" title="Fin Account" position="2">
+            <drop-down allow-empty="true">
+                <entity-options entity-name="FinAccount" description="${finAccountName}" key-field-name="finAccountId">
+                    <entity-constraint name="ownerPartyId" value="Company"/>
+                    <entity-constraint name="finAccountTypeId" value="BANK_ACCOUNT"/>
+                    <entity-constraint name="statusId" value="FNACT_ACTIVE"/>
+                    <entity-order-by field-name="finAccountName"/>
+                </entity-options>
+            </drop-down>
+        </field>
+          <field name="issuingAuthority" position="1" title="${uiLabelMap.issuingAuthority}" ><text></text></field>
        <!--  <field name="instrumentDate" position="2" title="${uiLabelMap.instrumentDate}"><date-time type="timestamp"></date-time></field> 
        <field name="issuingAuthority" position="2" title="${uiLabelMap.issuingAuthority}" required-field="true"><text></text></field>   -->     
-        <field name="amount" position="1" required-field="true"><text/></field>
+        <field name="amount" position="2" required-field="true"><text/></field>
         <field name="paymentRefNum" position="1" title="${uiLabelMap.paymentRefNum}" ><text/></field>
        <field name="comments" position="2"><text size="70"/></field>
         <field name="isDepositWithDrawPayment"><hidden value="Y"/></field>

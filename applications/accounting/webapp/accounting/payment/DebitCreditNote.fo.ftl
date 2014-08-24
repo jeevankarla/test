@@ -43,6 +43,8 @@ under the License.
 	     	<#assign paymentDate = paymentDetails.paymentDate?if_exists>
 	     	<#assign amount = paymentDetails.amount?if_exists>
 	     	<#assign comments = paymentDetails.comments?if_exists>
+          	<#assign paymentMethodType = paymentDetails.paymentMethodTypeId?if_exists>
+          
           
         <fo:page-sequence master-reference="main">
         	<fo:static-content flow-name="xsl-region-before">
@@ -51,7 +53,7 @@ under the License.
 					<fo:block  keep-together="always" text-align="center" font-size = "13pt" font-family="Courier,monospace" white-space-collapse="false" font-weight="bold">${uiLabelMap.KMFDairyHeader}</fo:block>
 					<fo:block  keep-together="always" text-align="center" font-size = "13pt" font-family="Courier,monospace" white-space-collapse="false" font-weight="bold">${uiLabelMap.KMFDairySubHeader}</fo:block>
 					<fo:block linefeed-treatment="preserve">&#xA;</fo:block>
-					<fo:block  keep-together="always" text-align="center" font-size = "14pt" font-family="Courier,monospace" white-space-collapse="false" font-weight="bold"><#if partyIdFrom?exists && partyIdFrom == "Company">DEBIT ADVICE<#else>CREDIT ADVICE</#if></fo:block>
+					<fo:block  keep-together="always" text-align="center" font-size = "14pt" font-family="Courier,monospace" white-space-collapse="false" font-weight="bold"><#if paymentMethodType?exists && paymentMethodType == "CREDITNOTE_PAYIN">CREDIT ADVICE<#else>DEBIT ADVICE</#if></fo:block>
         	</fo:static-content>
         	<fo:flow flow-name="xsl-region-body">
               <fo:block linefeed-treatment="preserve">&#xA;</fo:block>
@@ -151,7 +153,7 @@ under the License.
 							</fo:table-row>
 							<fo:table-row>
 								<fo:table-cell>
-				            		<fo:block text-align="left" keep-together="always" font-size = "12pt">This is to inform you that your account has been <#if partyIdFrom?exists && partyIdFrom == "Company">DEBITED<#else>CREDITED</#if> with Rs: ${amount?if_exists?string("##0.00")}       on the basis of the following</fo:block>     
+				            		<fo:block text-align="left" keep-together="always" font-size = "12pt">This is to inform you that your account has been <#if paymentMethodType?exists && paymentMethodType == "CREDITNOTE_PAYIN">CREDITED<#else>DEBITED</#if> with Rs: ${amount?if_exists?string("##0.00")}       on the basis of the following</fo:block>     
 				       			</fo:table-cell>
 							</fo:table-row>
 							<fo:table-row>
