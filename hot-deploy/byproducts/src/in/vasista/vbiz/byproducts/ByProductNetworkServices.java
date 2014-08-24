@@ -969,6 +969,7 @@ public class ByProductNetworkServices {
 		if (UtilValidate.isNotEmpty(productIdsList)) {
 			for (int i = 0; i < productIdsList.size(); i++) {
 				String eachProd = (String) productIdsList.get(i);
+				Debug.log("eachProd #########################"+eachProd);
 				Map<String, Object> priceContext = FastMap.newInstance();
 				priceContext.put("userLogin", userLogin);
 				priceContext.put("productStoreId", productStoreId);
