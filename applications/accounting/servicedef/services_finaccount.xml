@@ -91,6 +91,16 @@ under the License.
         <description>Update FinAccount.actualBalance and FinAccount.availableBalance based on a new FinAccountTrans; meant to be called as an EECA as it is for data maintenance</description>
         <attribute name="finAccountTransId" type="String" mode="IN" optional="false"/>
     </service>
+     <service name="updateFinAccountActualBalanceFromTrans" engine="simple"
+        location="component://accounting/script/org/ofbiz/accounting/finaccount/FinAccountServices.xml" invoke="updateFinAccountActualBalanceFromTrans">
+        <description>Update FinAccount.actualBalance based on a new FinAccountTrans; meant to be called as an EECA as it is for data maintenance</description>
+        <attribute name="finAccountTransId" type="String" mode="IN" optional="false"/>
+    </service>
+     <service name="updateFinAccountAvailableBalanceFromTrans" engine="simple"
+        location="component://accounting/script/org/ofbiz/accounting/finaccount/FinAccountServices.xml" invoke="updateFinAccountAvailableBalanceFromTrans">
+        <description>Update FinAccount.availableBalance based on a new FinAccountTrans; meant to be called as an EECA as it is for data maintenance</description>
+        <attribute name="finAccountTransId" type="String" mode="IN" optional="false"/>
+    </service>
     <service name="updateFinAccountBalancesFromAuth" engine="simple"
         location="component://accounting/script/org/ofbiz/accounting/finaccount/FinAccountServices.xml" invoke="updateFinAccountBalancesFromAuth">
         <description>Update FinAccount.availableBalance based on a new FinAccountAuth; meant to be called as an EECA as it is for data maintenance</description>

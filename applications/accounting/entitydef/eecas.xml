@@ -22,10 +22,18 @@
     xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/entity-eca.xsd">
 
     <!-- To maintain FinAccount.actualBalance and FinAccount.availableBalance -->
-    <eca entity="FinAccountTrans" operation="create-store" event="return">
+  <!--   <eca entity="FinAccountTrans" operation="create-store" event="return">
         <condition  field-name="statusId" operator="equals" value="FINACT_TRNS_APPROVED"/>
         <action service="updateFinAccountBalancesFromTrans" mode="sync"/>
+    </eca> -->
+    <eca entity="FinAccountTrans" operation="create-store" event="return">
+        <condition  field-name="statusId" operator="equals" value="FINACT_TRNS_APPROVED"></condition>
+        <action service="updateFinAccountAvailableBalanceFromTrans" mode="sync"/>
     </eca>
+    <eca entity="FinAccountTrans" operation="create" event="return">
+         <action service="updateFinAccountActualBalanceFromTrans" mode="sync"/>
+    </eca>
+  
     <!-- To maintain FinAccount.availableBalance -->
     <eca entity="FinAccountAuth" operation="create-store" event="return">
         <action service="updateFinAccountBalancesFromAuth" mode="sync"/>

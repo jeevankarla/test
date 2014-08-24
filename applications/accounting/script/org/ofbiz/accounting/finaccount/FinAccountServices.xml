@@ -411,6 +411,7 @@ under the License.
 
         <call-simple-method method-name="inlineUpdateFinAccountActualAndAvailableBalance"/>
     </simple-method>
+    
     <simple-method method-name="inlineUpdateFinAccountActualAndAvailableBalance" short-description="">
         <call-simple-method method-name="getArithmeticSettingsInline"/>
 
@@ -467,7 +468,121 @@ under the License.
         <set field="finAccount.availableBalance" from-field="availableBalanceSum"/>
         <store-value value-field="finAccount"/>
     </simple-method>
+    
+    <!-- Vasista Logic to Compute Actual  Balances -->
+    <!-- Some methods to maintain FinAccount.actualBalance In Creation -->
+    <simple-method method-name="updateFinAccountActualBalanceFromTrans" short-description="Method To Maintain FinAccount.actualBalance In Creation">
+        <if-not-empty field="parameters.finAccountId">
+            <set field="finAccountId" from-field="parameters.finAccountId"/>
+            <else>
+                <entity-one entity-name="FinAccountTrans" value-field="mainFinAccountTrans"/>
+                <set field="finAccountId" from-field="mainFinAccountTrans.finAccountId"/>
+            </else>
+        </if-not-empty>
+        <call-simple-method method-name="inlineUpdateFinAccountActualBalance"/>
+    </simple-method>
+  <simple-method method-name="inlineUpdateFinAccountActualBalance" short-description="">
+        <call-simple-method method-name="getArithmeticSettingsInline"/>
 
+        <!-- NOTE: finAccountId should always be in place -->
+        <!-- Get all of the records for the account from the database and sum everything up again, make sure we don't have any errors propagated over time -->
+
+        <entity-condition entity-name="FinAccountTrans" list="finAccountTransList">
+            <condition-expr field-name="finAccountId" from-field="finAccountId"/>
+        </entity-condition>
+        <set field="actualBalanceSum" value="0" type="BigDecimal"/>
+        <iterate entry="finAccountTrans" list="finAccountTransList">
+            <if>
+                <condition><or>
+                     <if-compare field="finAccountTrans.statusId" operator="equals" value="FINACT_TRNS_APPROVED"/>
+                     <if-compare field="finAccountTrans.statusId" operator="equals" value="FINACT_TRNS_CREATED"/>
+                     </or>
+                </condition>
+            <then>
+                <if>
+                    <condition><if-compare field="finAccountTrans.finAccountTransTypeId" operator="equals" value="DEPOSIT"/></condition>
+                    <then><set field="amountForCalc" from-field="finAccountTrans.amount"/></then>
+                <else-if>
+                    <condition><if-compare field="finAccountTrans.finAccountTransTypeId" operator="equals" value="WITHDRAWAL"/></condition>
+                    <then><calculate field="amountForCalc"><calcop operator="negative" field="finAccountTrans.amount"/></calculate></then>
+                </else-if>
+                <else-if>
+                    <condition><if-compare field="finAccountTrans.finAccountTransTypeId" operator="equals" value="ADJUSTMENT"/></condition>
+                    <then><set field="amountForCalc" from-field="finAccountTrans.amount"/></then>
+                </else-if>
+                </if>
+                <set field="actualBalanceSum" value="${actualBalanceSum + amountForCalc}" type="BigDecimal"/>
+            </then>
+            </if>
+        </iterate>
+        <calculate field="actualBalanceSum" decimal-scale="${roundingDecimals}" rounding-mode="${roundingMode}">
+            <calcop operator="get" field="actualBalanceSum"/>
+        </calculate>
+        <!-- Okay, now just store the result of actualBalanceSum -->
+        <entity-one entity-name="FinAccount" value-field="finAccount"/>
+        <log level="info" message="In updateFinAccountActualBalanceFromTrans  and Updating FinAccount with ID [${finAccountId}] with actualBalance: ${finAccount.actualBalance} -> ${actualBalanceSum}"/>
+        <set field="finAccount.actualBalance" from-field="actualBalanceSum"/>
+        <store-value value-field="finAccount"/>
+
+    </simple-method>
+    
+     <!-- Some methods to maintain FinAccount.avaibleBalance In Reconcilation -->
+    <simple-method method-name="updateFinAccountAvailableBalanceFromTrans" short-description="Method To Maintain FinAccount.availableBalance In Creation">
+        <if-not-empty field="parameters.finAccountId">
+            <set field="finAccountId" from-field="parameters.finAccountId"/>
+            <else>
+                <entity-one entity-name="FinAccountTrans" value-field="mainFinAccountTrans"/>
+                <set field="finAccountId" from-field="mainFinAccountTrans.finAccountId"/>
+            </else>
+        </if-not-empty>
+        <call-simple-method method-name="inlineUpdateFinAccountAvailableBalance"/>
+    </simple-method>
+    
+     <simple-method method-name="inlineUpdateFinAccountAvailableBalance" short-description="">
+        <call-simple-method method-name="getArithmeticSettingsInline"/>
+
+        <!-- NOTE: finAccountId should always be in place -->
+        <!-- Get all of the records for the account from the database and sum everything up again, make sure we don't have any errors propagated over time -->
+
+        <entity-condition entity-name="FinAccountTrans" list="finAccountTransList">
+            <condition-expr field-name="finAccountId" from-field="finAccountId"/>
+        </entity-condition>
+        <set field="actualBalanceSum" value="0" type="BigDecimal"/>
+        <iterate entry="finAccountTrans" list="finAccountTransList">
+            <if>
+                <condition>
+                    <if-compare field="finAccountTrans.statusId" operator="equals" value="FINACT_TRNS_APPROVED"/>
+                </condition>
+            <then>
+                <if>
+                    <condition><if-compare field="finAccountTrans.finAccountTransTypeId" operator="equals" value="DEPOSIT"/></condition>
+                    <then><set field="amountForCalc" from-field="finAccountTrans.amount"/></then>
+                <else-if>
+                    <condition><if-compare field="finAccountTrans.finAccountTransTypeId" operator="equals" value="WITHDRAWAL"/></condition>
+                    <then><calculate field="amountForCalc"><calcop operator="negative" field="finAccountTrans.amount"/></calculate></then>
+                </else-if>
+                <else-if>
+                    <condition><if-compare field="finAccountTrans.finAccountTransTypeId" operator="equals" value="ADJUSTMENT"/></condition>
+                    <then><set field="amountForCalc" from-field="finAccountTrans.amount"/></then>
+                </else-if>
+                </if>
+                <set field="actualBalanceSum" value="${actualBalanceSum + amountForCalc}" type="BigDecimal"/>
+            </then>
+            </if>
+        </iterate>
+        <calculate field="actualBalanceSum" decimal-scale="${roundingDecimals}" rounding-mode="${roundingMode}">
+            <calcop operator="get" field="actualBalanceSum"/>
+        </calculate>
+
+        <set field="availableBalanceSum" from-field="actualBalanceSum"/>
+        <!-- Okay, now just store the results -->
+        <entity-one entity-name="FinAccount" value-field="finAccount"/>
+        <log level="info" message="In updateFinAccountBalancesFromTrans updating FinAccount with ID [${finAccountId}] with  availableBalance: ${finAccount.availableBalance} -> ${availableBalanceSum}"/>
+        <set field="finAccount.availableBalance" from-field="availableBalanceSum"/>
+        <store-value value-field="finAccount"/>
+    </simple-method>
+    <!--  End Of Vasista's Logic for Actual and Avilable balnces  -->
+    
     <!-- FinAccountTypeGlAccount methods -->
     <simple-method method-name="createFinAccountTypeGlAccount" short-description="Create an FinAccountTypeGlAccount">
         <make-value value-field="newEntity" entity-name="FinAccountTypeGlAccount"/>

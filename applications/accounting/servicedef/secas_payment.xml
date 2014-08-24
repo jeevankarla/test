@@ -54,8 +54,12 @@ under the License.
          <condition field-name="statusId" operator="equals" value="FINACT_TRNS_CANCELED"/>
          <action service="expirePaymentAssociationsOnFinAccountTransCancel" mode="sync"/>
          <action service="updatePaymentOnFinAccTransStatusSetToCancel" mode="sync"/>
-         <action service="updateFinAccountBalancesFromTrans" mode="sync"/>
+         <action service="updateFinAccountActualBalanceFromTrans" mode="sync"/>
+        <!--  <action service="updateFinAccountBalancesFromTrans" mode="sync"/> -->
+        <action service="updateFinAccountActualBalanceFromTrans" mode="sync"/> 
+        
      </eca> 
+     
      
      <!-- Create Reverse Accouting Transaction and Entries on removing PaymentApplication -->
      <eca service="removePaymentApplication" event="invoke">
