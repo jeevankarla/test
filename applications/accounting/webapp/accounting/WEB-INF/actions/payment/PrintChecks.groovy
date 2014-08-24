@@ -82,6 +82,7 @@ if(UtilValidate.isEmpty(paymentId)){
 }
 partyName = "";
 paymentDate = "";
+finAccountId = "";
 amountStr = BigDecimal.ZERO;
 if(UtilValidate.isNotEmpty(paymentId)){
 	paymentDetails = delegator.findOne("Payment", [paymentId : paymentId], false);
@@ -100,8 +101,15 @@ if(UtilValidate.isNotEmpty(paymentId)){
 		partyId = paymentDetails.partyIdFrom;
 	}
 	partyName = PartyHelper.getPartyName(delegator, partyId, false);
+	finAccountTransList = delegator.findList("FinAccountTrans", EntityCondition.makeCondition("paymentId", EntityOperator.EQUALS, paymentId), null, null, null, false);
+	if(UtilValidate.isNotEmpty(finAccountTransList)){
+		finAccountTransDetails = EntityUtil.getFirst(finAccountTransList);
+		if(UtilValidate.isNotEmpty(finAccountTransDetails)){
+			finAccountId = finAccountTransDetails.finAccountId;
+		}
+	}
 }
-	context.put("paymentMethodId",paymentMethodId);
+	context.put("finAccountId",finAccountId);
 	context.put("amount",amount);
 	context.put("amountStr",amountStr);
 	context.put("paymentId",paymentId);

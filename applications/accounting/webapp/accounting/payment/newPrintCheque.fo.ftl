@@ -40,8 +40,8 @@ under the License.
 </fo:root>
 </#escape>
 <#else>
- 
-<#if paymentMethodId?exists && (paymentMethodId == "PAYMENTMETHOD11" || paymentMethodId == "PAYMENTMETHOD6")>
+<#--  Axis Bank --> 
+<#if finAccountId?exists && (finAccountId == "FIN_ACCNT7" || finAccountId == "FIN_ACCNT8" || finAccountId == "FIN_ACCNT17")>
 <#escape x as x?xml>
     <fo:root xmlns:fo="http://www.w3.org/1999/XSL/Format">
         <fo:layout-master-set>
@@ -140,7 +140,8 @@ under the License.
 		</fo:root>
 </#escape>
 </#if>
-<#if paymentMethodId?exists && paymentMethodId == "PAYMENTMETHOD8">
+<#--  Bank of Baroda --> 
+<#if finAccountId?exists && (finAccountId == "FIN_ACCNT11" || finAccountId == "FIN_ACCNT12")>
 <#escape x as x?xml>
     <fo:root xmlns:fo="http://www.w3.org/1999/XSL/Format">
         <fo:layout-master-set>
@@ -251,7 +252,8 @@ under the License.
 		</fo:root>
 </#escape>
 </#if>
-<#if paymentMethodId?exists && paymentMethodId == "PAYMENTMETHOD4">
+<#--  Corporation Bank --> 
+<#if finAccountId?exists && (finAccountId == "FIN_ACCNT4" || finAccountId == "FIN_ACCNT5")>
 <#escape x as x?xml>
     <fo:root xmlns:fo="http://www.w3.org/1999/XSL/Format">
         <fo:layout-master-set>
@@ -358,7 +360,8 @@ under the License.
 		</fo:root>
 </#escape>
 </#if>
-<#if paymentMethodId?exists && paymentMethodId == "PAYMENTMETHOD10">
+<#--  ICICI Bank --> 
+<#if finAccountId?exists && (finAccountId == "FIN_ACCNT15" || finAccountId == "FIN_ACCNT16")>
 <#escape x as x?xml>
     <fo:root xmlns:fo="http://www.w3.org/1999/XSL/Format">
         <fo:layout-master-set>
@@ -456,9 +459,9 @@ under the License.
 		</fo:root>
 </#escape>
 </#if>
-<#-- Indian Bank-->
+<#--  State Bank of Mysore --> 
 
-<#if paymentMethodId?exists && paymentMethodId == "PAYMENTMETHOD3">
+<#if finAccountId?exists && (finAccountId == "FIN_ACCNT3")>
 <#escape x as x?xml>
     <fo:root xmlns:fo="http://www.w3.org/1999/XSL/Format">
         <fo:layout-master-set>
@@ -561,7 +564,8 @@ under the License.
 		</fo:root>
 </#escape>
 </#if>
-<#if paymentMethodId?exists && paymentMethodId == "PAYMENTMETHOD7">
+<#--  Vijaya Bank --> 
+<#if finAccountId?exists && (finAccountId == "FIN_ACCNT9" || finAccountId == "FIN_ACCNT10")>
 <#escape x as x?xml>
     <fo:root xmlns:fo="http://www.w3.org/1999/XSL/Format">
         <fo:layout-master-set>
@@ -660,8 +664,8 @@ under the License.
 </#escape>
 </#if>
 
-
-<#if paymentMethodId?exists && paymentMethodId == "PAYMENTMETHOD9">
+<#--  Indian Bank --> 
+<#if finAccountId?exists && (finAccountId == "FIN_ACCNT13" || finAccountId == "FIN_ACCNT14")>
 <#escape x as x?xml>
     <fo:root xmlns:fo="http://www.w3.org/1999/XSL/Format">
         <fo:layout-master-set>
