@@ -895,6 +895,7 @@ public class OrderServices {
         }
 
         // set the order item ship groups
+        /* commented when PurchaseOrder not created without shipment
         List<String> dropShipGroupIds = FastList.newInstance(); // this list will contain the ids of all the ship groups for drop shipments (no reservations)
         if (UtilValidate.isNotEmpty(orderItemShipGroupInfo)) {
             Iterator<GenericValue> osiInfos = orderItemShipGroupInfo.iterator();
@@ -921,6 +922,7 @@ public class OrderServices {
                 toBeStored.add(valueObj);
             }
         }
+        */
 
         // set the additional party roles
         Map<String, List<String>> additionalPartyRole = UtilGenerics.checkMap(context.get("orderAdditionalPartyRoleMap"));
@@ -1153,7 +1155,8 @@ public class OrderServices {
             delegator.storeAll(toBeStored);
 
             // START inventory reservation
-            List<String> resErrorMessages = new LinkedList<String>();
+            // commented when PurchaseOrder not created without shipment
+            /*List<String> resErrorMessages = new LinkedList<String>();
             try {
                 reserveInventory(delegator, dispatcher, userLogin, locale, orderItemShipGroupInfo, dropShipGroupIds, itemValuesBySeqId,
                         orderTypeId, productStoreId, resErrorMessages);
@@ -1163,7 +1166,7 @@ public class OrderServices {
 
             if (resErrorMessages.size() > 0) {
                 return ServiceUtil.returnError(resErrorMessages);
-            }
+            }*/
             // END inventory reservation
 
             successResult.put("orderId", orderId);
