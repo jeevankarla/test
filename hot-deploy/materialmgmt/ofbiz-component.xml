@@ -31,7 +31,7 @@
 
     <!-- web applications; will be mounted when using the embedded container -->
     <webapp name="materialmgmt"
-        title="materialmgmt"
+        title="MaterialManagement"
         server="default-server"
         location="webapp/materialmgmt"
         base-permission="OFBTOOLS,materialmgmt"

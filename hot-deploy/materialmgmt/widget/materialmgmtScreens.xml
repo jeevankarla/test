@@ -6,11 +6,29 @@
         <section>
             <actions>
                 <set field="headerItem" value="main"/><!-- this highlights the selected menu-item with name "main" -->
+                  <set field="titleProperty" value="Find Purchase Orders"/>
+                    <set field="tabButtonItem" value="FindPurchaseOrder" />	
+			        <set field="tabButtonItem2" value="FindPurchaseOrder"/>   
             </actions>
             <widgets>
                 <decorator-screen name="materialmgmtCommonDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
-                    </decorator-section>
+                      <include-menu name="PurchasesTabBar" location="component://materialmgmt/widget/materialmgmtMenus.xml"/>
+                        <section>
+                            <widgets>
+                                <decorator-screen name="FindScreenDecorator" location="component://common/widget/CommonScreens.xml">
+			                     <decorator-section name="search-options">
+			                            			<include-form name="FindPurchaseOrder" location="component://materialmgmt/widget/materialmgmtForms.xml"/>
+			                      </decorator-section>
+			                      <decorator-section name="search-results">
+			                      					<screenlet title="">
+			                          					<include-form name="listPurchaseOrders" location="component://materialmgmt/widget/materialmgmtForms.xml"/>
+			                      					</screenlet>
+			                      </decorator-section>
+			                      </decorator-screen>
+			                  </widgets>
+			                </section>
+			         </decorator-section>
                 </decorator-screen>
             </widgets>
         </section>

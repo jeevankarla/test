@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <resource xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
     <property key="materialmgmtApplication">
-        <value xml:lang="en">materialmgmt Application</value>
+        <value xml:lang="en">Material Management </value>
         <value xml:lang="zh">materialmgmt应用程序</value>
     </property>
     <property key="materialmgmtCompanyName">
-        <value xml:lang="en">OFBiz: materialmgmt</value>
+        <value xml:lang="en">Material Management</value>
     </property>
     <property key="materialmgmtCompanySubtitle">
         <value xml:lang="en">Part of the Open For Business Family of Open Source Software</value>
