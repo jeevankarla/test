@@ -86,7 +86,7 @@ company = delegator.findByPrimaryKey("PartyAndGroup", [partyId : "Company"]);
 populateChildren(company, employeeList);
 
 finalMap=[:];
-leaveBalanceMap=[:];
+
 
 if(UtilValidate.isNotEmpty(leaveTypeIds)){
 		leaveTypeIds.each { leaveTypeId ->
@@ -99,6 +99,8 @@ if(UtilValidate.isNotEmpty(leaveTypeIds)){
 			condition=EntityCondition.makeCondition(conditionList,EntityOperator.AND);
 			empLeavesList = delegator.findList("EmplLeave", condition ,null,null, null, false );
 			if(UtilValidate.isNotEmpty(empLeavesList)){
+				emplLeaveBalance=[:];
+				leaveBalanceMap=[:];
 				empLeavesList.each { empLeaves ->
 					employeeMap=[:];
 					empLeaveMap=EmplLeaveService.fetchLeaveDaysForPeriod(dctx,[partyId:empLeaves.get("partyId"),leaveTypeId:empLeaves.get("leaveTypeId"),timePeriodStart:fromDate, timePeriodEnd: thruDate,userLogin:userLogin]);
@@ -112,7 +114,6 @@ if(UtilValidate.isNotEmpty(leaveTypeIds)){
 						int interval=0;
 						interval=(UtilDateTime.getIntervalInDays(empLeaves.get("fromDate"), empLeaves.get("thruDate"))+1);
 						BigDecimal intv=new BigDecimal(interval);
-						//BigDecimal bal=new BigDecimal(balance);
 						if(empLeaves.get("dayFractionId")=="FIRST_HALF" || empLeaves.get("dayFractionId")=="SECOND_HALF"){
 							intv=interval/2;
 							employeeMap.put("noOfDays",intv);
@@ -122,13 +123,14 @@ if(UtilValidate.isNotEmpty(leaveTypeIds)){
 						employeeMap.put("leaveTypeId",empLeaves.get("leaveTypeId"));
 						
 						//balance 
+						balance=0;
 						emplLeaveBalance=[:];
 						if(UtilValidate.isNotEmpty(leaveBalanceMap.get(empLeaves.get("partyId")))){
 							emplLeaveBalance=leaveBalanceMap.get(empLeaves.get("partyId"));
 						}
 						
 						if(UtilValidate.isNotEmpty(emplLeaveBalance)){
-							balance = emplLeaveBalance.getAt(empLeaves.get("leaveTypeId"));
+								balance = emplLeaveBalance.getAt(empLeaves.get("leaveTypeId"));
 						}else{
 							leaveBalances = delegator.findByAnd("EmplLeaveBalanceStatus",[partyId:empLeaves.get("partyId"),customTimePeriodId:customTimePeriodId,leaveTypeId:empLeaves.get("leaveTypeId")],["openingBalance"]);
 							if(UtilValidate.isNotEmpty(leaveBalances) && leaveTypeId=="CL" || leaveTypeId=="EL" || leaveTypeId=="HPL"){

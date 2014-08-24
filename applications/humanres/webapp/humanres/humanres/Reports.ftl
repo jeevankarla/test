@@ -16,8 +16,8 @@ function makeDatePicker(fromDateId ,thruDateId){
 			onSelect: function(selectedDate) {
 			date = $(this).datepicker('getDate');
 			var maxDate = new Date(date.getTime());
-	        	maxDate.setDate(maxDate.getDate() + 31);
-				$("#"+thruDateId).datepicker( "option", {minDate: selectedDate, maxDate: maxDate}).datepicker('setDate', date);
+	        	//maxDate.setDate(maxDate.getDate() + 31);
+				$("#"+thruDateId).datepicker( "option", {setDate: '0',minDate: '-1y', maxDate: '+1y'}).datepicker('setDate', date);
 				//$( "#"+thruDateId ).datepicker( "option", "minDate", selectedDate );
 			}
 		});
