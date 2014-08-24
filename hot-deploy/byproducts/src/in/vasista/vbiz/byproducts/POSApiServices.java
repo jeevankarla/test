@@ -454,7 +454,17 @@ Debug.logInfo("accountSummary:" + facilityLedgerMap, module);
 		    	Map<String, Object> paymentResult = FastMap.newInstance();
 				paymentResult.put("paymentId", payment.get("paymentId"));
 				paymentResult.put("paymentDate", payment.get("paymentDate"));	
-				paymentResult.put("paymentMethodTypeId", payment.get("paymentMethodTypeId"));				
+				String paymentMethodTypeId = (String)payment.get("paymentMethodTypeId");
+				if (UtilValidate.isNotEmpty(paymentMethodTypeId)) {
+					try {
+						GenericValue paymentMethod = delegator.findByPrimaryKey("PaymentMethodType", UtilMisc.toMap("paymentMethodTypeId", paymentMethodTypeId));	
+						if (UtilValidate.isNotEmpty(paymentMethod)) {
+							paymentMethodTypeId = paymentMethod.getString("description");
+						}
+					}
+					catch (Exception e) {}
+				}
+				paymentResult.put("paymentMethodTypeId", paymentMethodTypeId);				
 				paymentResult.put("amount", payment.get("amount"));	
 				paymentsResultList.add(paymentResult);
 			}
