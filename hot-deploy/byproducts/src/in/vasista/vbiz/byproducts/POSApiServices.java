@@ -444,10 +444,25 @@ Debug.logInfo("accountSummary:" + facilityLedgerMap, module);
 		paramMap.put("facilityId", facilityId);  
 		paramMap.put("fromDate", fromDate);     
 		paramMap.put("thruDate", thruDate);  
+		List paymentsResultList = FastList.newInstance();        		
 		Map<String, Object> facilityPayments = FastMap.newInstance();
 		facilityPayments = ByProductNetworkServices.getBoothPaidPayments( dctx , paramMap);
-		result.put("paymentsResult", facilityPayments);
-Debug.logInfo("paymentResults:" + facilityPayments, module);		 
+		if (facilityPayments != null && facilityPayments.get("paymentsList") != null) {
+			List paymentsList = (List)facilityPayments.get("paymentsList");
+			for (int i = 0; i < paymentsList.size(); ++i) {
+				Map<String, Object> payment = (Map<String, Object>)paymentsList.get(i);
+		    	Map<String, Object> paymentResult = FastMap.newInstance();
+				paymentResult.put("paymentId", payment.get("paymentId"));
+				paymentResult.put("paymentDate", payment.get("paymentDate"));	
+				paymentResult.put("paymentMethodTypeId", payment.get("paymentMethodTypeId"));				
+				paymentResult.put("amount", payment.get("amount"));	
+				paymentsResultList.add(paymentResult);
+			}
+		}
+		Map<String, Object> paymentsMap = FastMap.newInstance(); 
+		paymentsMap.put("paymentsList", paymentsResultList); 		
+		result.put("paymentsResult", paymentsMap);
+Debug.logInfo("paymentsResult:" + paymentsMap, module);		 
     	return result;
     }    
     
