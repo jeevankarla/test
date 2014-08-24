@@ -152,19 +152,19 @@ if (invoice) {
 	printPaymentsList = FastList.newInstance();
     paymentAppls = delegator.findByAnd("PaymentApplication", [invoiceId : invoiceId]);
 	if(UtilValidate.isNotEmpty(paymentAppls)){
-		paymentDetails = EntityUtil.getFirst(paymentAppls);
-		if(UtilValidate.isNotEmpty(paymentDetails)){
-			paymentId = paymentDetails.paymentId;
+		paymentAppls.each{ paymentDet ->
+			paymentId = paymentDet.paymentId;
 			if(UtilValidate.isNotEmpty(paymentId)){
 				tempprintPaymentsList = delegator.findList("Payment",EntityCondition.makeCondition("paymentId", EntityOperator.EQUALS , paymentId)  , null, null, null, false );
 				tempprintPaymentsList.each{paymentRecipt->
 					tempprintPaymentMap=[:];
 					tempprintPaymentMap.putAll(paymentRecipt);
 					totalAmount=paymentRecipt.amount;
-				
 					amountwords=UtilNumber.formatRuleBasedAmount(totalAmount,"%rupees-and-paise", locale).toUpperCase();
 					tempprintPaymentMap.put("amountWords",amountwords);
-					printPaymentsList.add(tempprintPaymentMap);
+					finalPaymentMap = [:];
+					finalPaymentMap.putAll(tempprintPaymentMap);
+					printPaymentsList.add(finalPaymentMap);
 					context.put("printPaymentsList",printPaymentsList);
 				}
 			}
