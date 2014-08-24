@@ -144,6 +144,49 @@ public class ByProductNetworkServices {
 		}
 		return productList;
 	}
+	
+	public static Map getOrderDetails(DispatchContext dctx, Map<String, ? extends Object> context) {
+		Timestamp salesDate = UtilDateTime.nowTimestamp();
+		Delegator delegator = dctx.getDelegator();
+		LocalDispatcher dispatcher = dctx.getDispatcher();
+		Map result = ServiceUtil.returnSuccess();
+		String orderId = (String) context.get("orderId");
+		if(UtilValidate.isEmpty(orderId)){
+			Debug.logError("Order Id cannot be empty", module);
+		}
+		Map orderDetailMap = FastMap.newInstance(); 
+		
+		try {
+			GenericValue orderHeader = delegator.findOne("OrderHeader", UtilMisc.toMap("orderId", orderId), false);
+			
+			List<GenericValue> orderItems = delegator.findList("OrderItem", EntityCondition.makeCondition("orderId", EntityOperator.EQUALS, orderId), null, null, null, false);
+			List<GenericValue> orderAdjustment = delegator.findList("OrderAdjustment", EntityCondition.makeCondition("orderId", EntityOperator.EQUALS, orderId), null, null, null, false);
+			
+			List<GenericValue> orderItemAttribute = delegator.findList("OrderItemAttribute", EntityCondition.makeCondition("orderId", EntityOperator.EQUALS, orderId), null, null, null, false);
+			/*List conditionList = FastList.newInstance();
+			for(GenericValue eachItem : orderItems){
+				conditionList.clear();
+				conditionList.add(EntityCondition.makeCondition("orderId", EntityOperator.EQUALS, (String)eachItem.get("orderId")));
+				conditionList.add(EntityCondition.makeCondition("orderItemSeqId", EntityOperator.EQUALS, (String)eachItem.get("orderItemSeqId")));
+				conditionList.add(EntityCondition.makeCondition("attrName", EntityOperator.EQUALS, "batchNumber"));
+				EntityCondition cond = EntityCondition.makeCondition(conditionList, EntityOperator.AND);
+				List<GenericValue> attrBatches = EntityUtil.filterByCondition(orderItemAttribute, cond);
+				if(UtilValidate.isNotEmpty(attrBatches)){
+					GenericValue attrBatchNum = EntityUtil.getFirst(attrBatches);
+					eachItem.put("batchNumber", attrBatchNum.getString("attrValue"));
+				}
+			}*/
+			orderDetailMap.put("orderHeader", orderHeader);
+			orderDetailMap.put("orderItems", orderItems);
+			orderDetailMap.put("orderAdjustments", orderAdjustment);
+			orderDetailMap.put("orderItemAttribute", orderItemAttribute);
+		} catch (GenericEntityException e) {
+			// TODO: handle exception
+			Debug.logError(e, module);
+		}
+		result.put("orderDetails", orderDetailMap);
+		return result;
+	}
 
 	/*
 	  * Helper that returns the product -> productCategory (GenericValue of type ProductAndCategoryMember) map.  Since products can have multiple
