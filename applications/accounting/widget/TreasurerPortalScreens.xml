@@ -134,7 +134,7 @@
                 <service service-name="acctgFinAcctPermissionCheck" result-map="permResult">
                     <field-map field-name="mainAction" value="FINACCOUNT_EDIT"/>
                 </service>
-                 <script location="component://accounting/webapp/accounting/WEB-INF/actions/EditFinaccount.groovy"/>
+              <!--   <script location="component://accounting/webapp/accounting/WEB-INF/actions/EditFinaccount.groovy"/> --> 
                 <set field="hasFinEditPermission" from-field="permResult.hasPermission"/>
             </actions>
             <widgets>
