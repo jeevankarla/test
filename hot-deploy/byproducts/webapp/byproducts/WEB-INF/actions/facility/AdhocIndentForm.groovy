@@ -48,7 +48,7 @@ if(changeFlag=="ConvCharges"){
 	productCatageoryId="CON_CHG";
 }
 if(changeFlag=="InterUnitTransferSale"){
-	productCatageoryId="MILK_POWDER";//later we should change tranferble products only
+	productCatageoryId="INTER_UNIT";//later we should change tranferble products only
 }
 subscriptionProdList = [];
 displayGrid = true;
