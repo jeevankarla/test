@@ -4,7 +4,7 @@ import java.sql.Timestamp;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.List;
-
+import java.math.RoundingMode;
 import javolution.util.FastList;
 import org.ofbiz.base.util.*;
 import net.sf.json.JSONObject;
@@ -16,7 +16,7 @@ import org.ofbiz.entity.util.EntityUtil;
 import org.ofbiz.entity.util.EntityFindOptions;
 
 dctx = dispatcher.getDispatchContext();
-
+rounding = RoundingMode.HALF_UP;
 orderId = parameters.orderId;
 screenFlag = parameters.screenFlag;
 orderHeader = delegator.findOne("OrderHeader", UtilMisc.toMap("orderId", orderId),false);
@@ -41,20 +41,39 @@ orderItems = delegator.findList("OrderItem", EntityCondition.makeCondition("orde
 productIds = EntityUtil.getFieldListFromEntityList(orderItems, "productId", true);
 products = delegator.findList("Product", EntityCondition.makeCondition("productId", EntityOperator.IN, productIds), null, null, null, false);
 
+batchDetails = delegator.findList("OrderItemAttribute", EntityCondition.makeCondition("orderId", EntityOperator.EQUALS, orderId), null, null, null, false);
+
+conversionResult = ByProductNetworkServices.getProductQtyConversions(dctx, UtilMisc.toMap("productList", products, "userLogin", userLogin));
+productConversionDetails = [:];
+if(conversionResult){
+	productConversionDetails = conversionResult.get("productConversionDetails");
+}
+
 JSONArray orderItemListJSON = new JSONArray();
 if(screenFlag && screenFlag=="batchEdit"){
-	batchDetails = delegator.findList("OrderItemAttribute", EntityCondition.makeCondition("orderId", EntityOperator.EQUALS, orderId), null, null, null, false);
 	
 	orderItems.each { eachItem ->
 		
 		JSONObject itemJSON = new JSONObject();
 		orderItemSeqId = eachItem.orderItemSeqId;
 		
-		prodDetail = EntityUtil.filterByCondition(products, EntityCondition.makeCondition("productId", EntityOperator.EQUALS, eachItem.productId));
-		prodDesc = "";
-		if(prodDetail){
-			prodDesc = (prodDetail.get(0)).description
+		productConvDetail = productConversionDetails.get(eachItem.productId);
+		prodCrateValue = 1;
+		if(productConvDetail && productConvDetail.get("CRATE")){
+			prodCrateValue = productConvDetail.get("CRATE");
 		}
+
+		prodDetails = EntityUtil.filterByCondition(products, EntityCondition.makeCondition("productId", EntityOperator.EQUALS, eachItem.productId));
+		
+		prodDesc = "";
+		qtyInc = 1;
+		if(prodDetails){
+			prodDesc = (prodDetails.get(0)).description;
+			qtyInc = (prodDetails.get(0)).quantityIncluded;
+		}
+		
+		crateQty = (eachItem.quantity).divide(new BigDecimal(prodCrateValue) , 2, rounding);
+		qtyLtr = (eachItem.quantity).multiply(qtyInc).setScale(2, rounding);
 
 		batchNo = "";
 		if(batchDetails){
@@ -74,13 +93,19 @@ if(screenFlag && screenFlag=="batchEdit"){
 		itemJSON.put("productId", eachItem.productId);
 		itemJSON.put("batchNo", batchNo);
 		itemJSON.put("itemDescription", prodDesc);
-		itemJSON.put("quantity", eachItem.quantity);
+		if(requestFlag == "nandini" || requestFlag == "amul"){
+			itemJSON.put("quantity", crateQty);
+		}
+		else{
+			itemJSON.put("quantity", qtyLtr);
+		}
 		orderItemListJSON.add(itemJSON);
 	}
 }
 else{
 	orderItems.each { eachItem ->
 		taxPercent = 0;
+		orderItemSeqId = eachItem.orderItemSeqId;
 		if(eachItem.vatPercent && eachItem.vatPercent>0){
 			taxPercent = eachItem.vatPercent;
 		}
@@ -88,15 +113,48 @@ else{
 			taxPercent = eachItem.cstPercent;
 		}
 		
-		JSONObject itemJSON = new JSONObject();
-		prodDetail = EntityUtil.filterByCondition(products, EntityCondition.makeCondition("productId", EntityOperator.EQUALS, eachItem.productId));
-		prodDesc = "";
-		if(prodDetail){
-			prodDesc = (prodDetail.get(0)).description
+		productConvDetail = productConversionDetails.get(eachItem.productId);
+		
+		prodCrateValue = 1;
+		if(productConvDetail && productConvDetail.get("CRATE")){
+			prodCrateValue = productConvDetail.get("CRATE");
 		}
+
+		batchNo = "";
+		if(batchDetails){
+			condList = [];
+			condList.add(EntityCondition.makeCondition("orderId", EntityOperator.EQUALS, orderId));
+			condList.add(EntityCondition.makeCondition("orderItemSeqId", EntityOperator.EQUALS, orderItemSeqId));
+			condList.add(EntityCondition.makeCondition("attrName", EntityOperator.EQUALS, "batchNumber"));
+			condExpr = EntityCondition.makeCondition(condList, EntityOperator.AND);
+			itemBatchDetail = EntityUtil.filterByCondition(batchDetails, condExpr);
+			
+			if(itemBatchDetail){
+				batchNo = (EntityUtil.getFirst(itemBatchDetail)).attrValue;
+			}
+		}
+		
+		JSONObject itemJSON = new JSONObject();
+		prodDetails = EntityUtil.filterByCondition(products, EntityCondition.makeCondition("productId", EntityOperator.EQUALS, eachItem.productId));
+		prodDesc = "";
+		qtyInc = 1;
+		if(prodDetails){
+			prodDesc = (prodDetails.get(0)).description;
+			qtyInc = (prodDetails.get(0)).quantityIncluded;
+		}
+		
+		crateQty = (eachItem.quantity).divide(new BigDecimal(prodCrateValue) , 2, rounding);
+		qtyLtr = (eachItem.quantity).multiply(qtyInc).setScale(2, rounding);
+
 		itemJSON.put("productId", eachItem.productId);
 		itemJSON.put("itemDescription", prodDesc);
-		itemJSON.put("quantity", eachItem.quantity);
+		itemJSON.put("batchNo", batchNo);
+		if(requestFlag == "nandini" || requestFlag == "amul"){
+			itemJSON.put("quantity", crateQty);
+		}
+		else{
+			itemJSON.put("quantity", qtyLtr);
+		}
 		itemJSON.put("taxPercent", taxPercent);
 		itemJSON.put("itemTotal", eachItem.quantity*eachItem.unitListPrice);
 		orderItemListJSON.add(itemJSON);

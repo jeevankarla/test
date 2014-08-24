@@ -167,6 +167,26 @@ $(document).ready(function(){
        	  </#if>
         </tr>
         <tr><td><br/></td></tr>
+        <#if changeFlag?exists && changeFlag != "AdhocSaleNew">
+	      	<tr>
+	      		<td>&nbsp;</td>
+	      		<td align='left' valign='middle' nowrap="nowrap"><div class='h2'>PO Number:</div></td>
+	      		<td>&nbsp;</td>
+	   			<#if PONumber?exists && PONumber?has_content>  
+	  	  			<input type="hidden" name="PONumber" id="PONumber" value="${PONumber?if_exists}"/>  
+	      			<td valign='middle'>
+	        			<div class='tabletext h2'>${PONumber?if_exists}</div>
+	      			</td>       	
+	   			<#else>      	         
+	      			<td valign='middle'>
+	      				<input type="text" name="PONumber" id="PONumber" />    
+	         			<span class="tooltip">Fill if PO Number exists</span>       
+	      			</td>
+	   			</#if>
+	    	</tr>
+	    	<tr><td><br/></td></tr>
+    	</#if>
+        
         <#if changeFlag?exists && changeFlag == "AdhocSaleNew">
           	<tr>
           		<td>&nbsp;</td>

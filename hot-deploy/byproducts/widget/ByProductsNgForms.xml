@@ -628,8 +628,10 @@
         
         <field title="shipment Date" name="estimatedShipDate"><date-find/></field>
         <field name="shipmentId"><text-find/></field>
+        <field name="roleTypeId"><hidden value="BILL_TO_CUSTOMER"/></field>
+        <field name="partyIdTo" parameter-name="partyId"><lookup target-form-name="LookupPartyName"/></field> 
         <field name="shipmentTypeId"><hidden value="${shipmentTypeId}"/></field>
-        <field name="statusId"><hidden value="GENERATED"/></field>
+        <field name="shipStatusId"><hidden value="GENERATED"/></field>
         <field name="vehicleId" title="Vehicle Number"><text-find/></field>
         <field name="submitButton" title="${uiLabelMap.CommonFind}" widget-style="smallSubmit"><submit button-type="button"/></field>
     </form>
@@ -638,8 +640,8 @@
         <actions>
             <service service-name="performFind" result-map="result" result-map-list="listIt">
                 <field-map field-name="inputFields" from-field="parameters"/>
-                <field-map field-name="entityName" value="Shipment"/>
-                <field-map field-name="orderBy" from-field="parameters.sortField" value="-lastUpdatedStamp"/>
+                <field-map field-name="entityName" value="OrderHeaderAndRolesAndShipment"/>
+                <field-map field-name="orderBy" from-field="parameters.sortField" value="-estimatedShipDate"/>
                 <field-map field-name="viewIndex" from-field="viewIndex"/>
                 <field-map field-name="viewSize" from-field="viewSize"/>
             </service>
@@ -668,8 +670,8 @@
         <actions>
             <service service-name="performFind" result-map="result" result-map-list="listIt">
                 <field-map field-name="inputFields" from-field="parameters"/>
-                <field-map field-name="entityName" value="Shipment"/>
-                <field-map field-name="orderBy" from-field="parameters.sortField" value="-lastUpdatedStamp"/>
+                <field-map field-name="entityName" value="OrderHeaderAndRolesAndShipment"/>
+                <field-map field-name="orderBy" from-field="parameters.sortField" value="-estimatedShipDate"/>
                 <field-map field-name="viewIndex" from-field="viewIndex"/>
                 <field-map field-name="viewSize" from-field="viewSize"/>
             </service>
@@ -699,8 +701,8 @@
         <actions>
             <service service-name="performFind" result-map="result" result-map-list="listIt">
                 <field-map field-name="inputFields" from-field="parameters"/>
-                <field-map field-name="entityName" value="Shipment"/>
-                <field-map field-name="orderBy" from-field="parameters.sortField" value="-lastUpdatedStamp"/>
+                <field-map field-name="entityName" value="OrderHeaderAndRolesAndShipment"/>
+                <field-map field-name="orderBy" from-field="parameters.sortField" value="-estimatedShipDate"/>
                 <field-map field-name="viewIndex" from-field="viewIndex"/>
                 <field-map field-name="viewSize" from-field="viewSize"/>
             </service>
@@ -734,8 +736,8 @@
         <actions>
             <service service-name="performFind" result-map="result" result-map-list="listIt">
                 <field-map field-name="inputFields" from-field="parameters"/>
-                <field-map field-name="entityName" value="Shipment"/>
-                <field-map field-name="orderBy" from-field="parameters.sortField" value="-lastUpdatedStamp"/>
+                <field-map field-name="entityName" value="OrderHeaderAndRolesAndShipment"/>
+                <field-map field-name="orderBy" from-field="parameters.sortField" value="-estimatedShipDate"/>
                 <field-map field-name="viewIndex" from-field="viewIndex"/>
                 <field-map field-name="viewSize" from-field="viewSize"/>
             </service>
@@ -769,8 +771,8 @@
         <actions>
             <service service-name="performFind" result-map="result" result-map-list="listIt">
                 <field-map field-name="inputFields" from-field="parameters"/>
-                <field-map field-name="entityName" value="Shipment"/>
-                <field-map field-name="orderBy" from-field="parameters.sortField" value="-lastUpdatedStamp"/>
+                <field-map field-name="entityName" value="OrderHeaderAndRolesAndShipment"/>
+                <field-map field-name="orderBy" from-field="parameters.sortField" value="-estimatedShipDate"/>
                 <field-map field-name="viewIndex" from-field="viewIndex"/>
                 <field-map field-name="viewSize" from-field="viewSize"/>
             </service>
@@ -805,7 +807,7 @@
             <service service-name="performFind" result-map="result" result-map-list="listIt">
                 <field-map field-name="inputFields" from-field="parameters"/>
                 <field-map field-name="entityName" value="OrderHeader"/>
-                <field-map field-name="orderBy" from-field="parameters.sortField" value="-lastUpdatedStamp"/>
+                <field-map field-name="orderBy" from-field="parameters.sortField" value="-estimatedShipDate"/>
                 <field-map field-name="viewIndex" from-field="viewIndex"/>
                 <field-map field-name="viewSize" from-field="viewSize"/>
             </service>

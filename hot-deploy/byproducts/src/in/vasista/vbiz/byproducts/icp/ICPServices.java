@@ -150,7 +150,7 @@ public static Map<String, Object> approveICPOrder(DispatchContext dctx, Map cont
 		result.put("salesChannelEnumId", salesChannelEnumId);
 		return result;
 	}
-
+	
 	public static Map<String, Object> processICPSaleOrder(DispatchContext dctx, Map<String, ? extends Object> context) {
 		Delegator delegator = dctx.getDelegator();
 	    LocalDispatcher dispatcher = dctx.getDispatcher();
@@ -164,15 +164,79 @@ public static Map<String, Object> approveICPOrder(DispatchContext dctx, Map cont
 	  	String orderTaxType = (String) context.get("orderTaxType");
 	  	String packingType = (String) context.get("packingType");
 	  	String partyId = (String) context.get("partyId");
+	  	String orderId = (String) context.get("orderId");
+	  	String PONumber = (String) context.get("PONumber");
 	  	String currencyUomId = "INR";
 		Timestamp nowTimeStamp = UtilDateTime.nowTimestamp();
 		Timestamp effectiveDate = UtilDateTime.getDayStart(supplyDate);
-		String orderId = "";
 		boolean batchNumExists = Boolean.FALSE;
 		if (UtilValidate.isEmpty(partyId)) {
 			Debug.logError("Cannot create order without partyId: "+ partyId, module);
 			return ServiceUtil.returnError("partyId is empty");
 		}
+		List conditionList = FastList.newInstance();
+		if(UtilValidate.isNotEmpty(orderId)){
+			
+			boolean indentNotChanged = true; 
+			Map resultCtx = ByProductNetworkServices.getOrderDetails(dctx, UtilMisc.toMap("userLogin", userLogin, "orderId", orderId));
+			Map orderDetails = (Map)resultCtx.get("orderDetails");
+			List<GenericValue> extOrderItems = (List)orderDetails.get("orderItems");
+			
+			List<Map> prevQtyList = FastList.newInstance();
+			for(GenericValue extItem : extOrderItems){
+				Map prevQtyMap = FastMap.newInstance();
+				prevQtyMap.put("productId", extItem.getString("productId"));
+				prevQtyMap.put("quantity", extItem.getBigDecimal("quantity"));
+				prevQtyList.add(prevQtyMap);
+			}
+			if((UtilValidate.isNotEmpty(prevQtyList) &&  !prevQtyList.equals(productQtyList))){
+				indentNotChanged = false;
+ 	        }
+			
+			try{
+				if(!indentNotChanged){
+					result = dispatcher.runSync("massCancelOrders", UtilMisc.<String, Object>toMap("orderIdList", UtilMisc.toList(orderId),"userLogin", userLogin));
+					if (ServiceUtil.isError(result)) {
+						Debug.logError("Problem cancelling orders in Correction", module);	 		  		  
+				 		return ServiceUtil.returnError("Problem cancelling orders in Correction");
+					} 
+				}
+				else{
+					List condList = FastList.newInstance();
+					
+					for(Map prodBatch : productQtyList){
+						String prod = (String)prodBatch.get("productId");
+						String batchNum = null;
+						if(UtilValidate.isNotEmpty(prodBatch.get("batchNo"))){
+							batchNum = (String)prodBatch.get("batchNo");
+						}
+						List<GenericValue> orderItem = EntityUtil.filterByCondition(extOrderItems, EntityCondition.makeCondition("productId", EntityOperator.EQUALS, prod));
+						if(UtilValidate.isNotEmpty(orderItem) && batchNum != null){
+							String orderItemSeqId = (EntityUtil.getFirst(orderItem)).getString("orderItemSeqId");
+							
+							GenericValue orderItemBatch = delegator.makeValue("OrderItemAttribute");
+							orderItemBatch.set("orderId", orderId);
+							orderItemBatch.set("orderItemSeqId", orderItemSeqId);
+							orderItemBatch.set("attrName", "batchNumber");
+							orderItemBatch.set("attrValue", batchNum);
+							delegator.createOrStore(orderItemBatch);
+							
+						}
+						
+					}
+					
+				}
+				  			
+			}catch (GenericServiceException e) {
+				  Debug.logError(e, e.toString(), module);
+				  return ServiceUtil.returnError("Problem cancelling order");
+			}
+			catch (GenericEntityException e1) {
+				  Debug.logError(e1, e1.toString(), module);
+				  return ServiceUtil.returnError("Failed fetching existing order details");
+			}
+		}
+		
 		GenericValue product =null;
 		String productPriceTypeId = null;
 		String geoTax = "";
@@ -189,6 +253,7 @@ public static Map<String, Object> approveICPOrder(DispatchContext dctx, Map cont
 		try {
 			cart.setOrderType("SALES_ORDER");
 	        cart.setIsEnableAcctg("Y");
+	        cart.setExternalId(PONumber);
 	        cart.setProductStoreId(productStoreId);
 			cart.setChannelType(salesChannel);
 			cart.setBillToCustomerPartyId(partyId);
@@ -546,6 +611,8 @@ public static Map<String, Object> approveICPOrder(DispatchContext dctx, Map cont
 		String productStoreId = (String) request.getParameter("productStoreId");
 		String orderTaxType = (String) request.getParameter("orderTaxType");
 		String packingType = (String) request.getParameter("packingType");
+		String orderId = (String) request.getParameter("orderId");
+		String PONumber = (String) request.getParameter("PONumber");
 		String productSubscriptionTypeId = (String) request.getParameter("productSubscriptionTypeId");
 		String subscriptionTypeId = "AM";
 		String partyIdFrom = "";
@@ -556,7 +623,7 @@ public static Map<String, Object> approveICPOrder(DispatchContext dctx, Map cont
 		if(UtilValidate.isEmpty(productSubscriptionTypeId)){
 			productSubscriptionTypeId = "CASH";      	
 		}
-	  
+		
 		String productId = null;
 		String batchNo = null;
 		String quantityStr = null;
@@ -655,17 +722,18 @@ public static Map<String, Object> approveICPOrder(DispatchContext dctx, Map cont
 			request.setAttribute("_ERROR_MESSAGE_", "No rows to process, as rowCount =  :" + rowCount);
 			return "error";
 		}
-		/*String productStoreId = (String) (getIceCreamFactoryStore(delegator)).get("factoryStoreId");//to get Factory storeId
-*/	 
+		
 		processOrderContext.put("userLogin", userLogin);
 		processOrderContext.put("productQtyList", indentProductList);
 		processOrderContext.put("partyId", partyId);
 		processOrderContext.put("supplyDate", effectiveDate);
 		processOrderContext.put("salesChannel", salesChannel);
 		processOrderContext.put("orderTaxType", orderTaxType);
+		processOrderContext.put("orderId", orderId);
 		processOrderContext.put("packingType", packingType);
 		processOrderContext.put("enableAdvancePaymentApp", Boolean.TRUE);
 		processOrderContext.put("productStoreId", productStoreId);
+		processOrderContext.put("PONumber", PONumber);
 		result = processICPSaleOrder(dctx, processOrderContext);
 		if(ServiceUtil.isError(result)){
 			Debug.logError("Unable to generate order: " + ServiceUtil.getErrorMessage(result), module);
@@ -673,7 +741,13 @@ public static Map<String, Object> approveICPOrder(DispatchContext dctx, Map cont
 			return "error";
 		}
 		
-		request.setAttribute("_EVENT_MESSAGE_", "Entry successfully");
+		orderId = (String)result.get("orderId");
+		if(UtilValidate.isEmpty(orderId)){
+			Debug.logError("Unable to generate order: " + ServiceUtil.getErrorMessage(result), module);
+			request.setAttribute("_ERROR_MESSAGE_", "Unable to generate order  For party :" + partyId);
+			return "error";
+		}
+		request.setAttribute("_EVENT_MESSAGE_", "Order Entry successfully for party : "+partyId);
 		return "success";
 	}
 	

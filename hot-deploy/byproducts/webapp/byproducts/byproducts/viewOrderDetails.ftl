@@ -74,9 +74,9 @@
 		if(orderData != undefined){
 			var orderAmt = 0;
 			message += "<table cellspacing=10 cellpadding=10 border=2 width='100%'>" ;
-			message += "<thead><td align='center' class='h3'> Product Id</td><td align='center' class='h3'> Description</td><td align='center' class='h3'> Quantity</td><td align='center' class='h3'> Tax %</td><td align='center' class='h3'> Amount</td>";
+			message += "<thead><td align='center' class='h3'> Product Id</td><td align='center' class='h3'> Description</td><td align='center' class='h3'> Batch No.</td><td align='center' class='h3'> Qty</td><td align='center' class='h3'> Tax %</td><td align='center' class='h3'> Amount</td>";
 			for (i = 0; i < orderData.length; ++i) {
-				message += "<tr><td align='center' class='h4'>" + orderData[i].productId + "</td><td align='left' class='h4'>" + orderData[i].itemDescription + "</td><td align='center' class='h4'>"+ orderData[i].quantity +"</td>";
+				message += "<tr><td align='center' class='h4'>" + orderData[i].productId + "</td><td align='left' class='h4'>" + orderData[i].itemDescription + "</td><td align='center' class='h4'>"+ orderData[i].batchNo +"</td><td align='center' class='h4'>"+ orderData[i].quantity +"</td>";
 				message += "<td align='center' class='h4'>" + orderData[i].taxPercent + "</td><td align='center' class='h4'>" + orderData[i].itemTotal + "</td></tr>";
 				orderAmt = orderAmt+orderData[i].itemTotal;
 			}

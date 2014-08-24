@@ -147,7 +147,20 @@ under the License.
 							</fo:table-row>
 							<fo:table-row>
 			                    <fo:table-cell>
-					            	<fo:block linefeed-treatment="preserve">&#xA;</fo:block>
+					            	<fo:block  keep-together="always" text-align="left" font-size="10pt" white-space-collapse="false"> </fo:block>
+					            </fo:table-cell>
+					            <fo:table-cell>
+					            	<fo:block  keep-together="always" text-align="left" font-size="10pt" white-space-collapse="false"></fo:block>
+					            </fo:table-cell>
+					            <fo:table-cell>
+					            	<fo:block  keep-together="always" text-align="left" font-size="10pt" white-space-collapse="false">PO NO : </fo:block>
+					            </fo:table-cell>
+					            <fo:table-cell>
+					            	<fo:block  keep-together="always" text-align="left" font-size="10pt" white-space-collapse="false"><#if orderHeader?has_content>${orderHeader.externalId?if_exists}</#if></fo:block>  
+					            </fo:table-cell>
+							</fo:table-row>
+							<fo:table-row>
+			                    <fo:table-cell>
 					            	<fo:block linefeed-treatment="preserve">&#xA;</fo:block>
 					            </fo:table-cell>
 							</fo:table-row>

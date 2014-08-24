@@ -3292,21 +3292,23 @@
     <screen name="SalesInnerScreen">
         <section>
             <actions>
-               <set field="changeFlag" from-field="changeFlag"/>  
-               <set field="productSubscriptionTypeId" from-field="parameters.productSubscriptionTypeId"/>
-               <set field="subscriptionTypeId" from-field="parameters.subscriptionTypeId"/> 
-               <set field="boothId" from-field="parameters.boothId"/>
+            	<set field="changeFlag" from-field="changeFlag"/>  
+               	<set field="productSubscriptionTypeId" from-field="parameters.productSubscriptionTypeId"/>
+               	<set field="subscriptionTypeId" from-field="parameters.subscriptionTypeId"/> 
+               	<set field="boothId" from-field="parameters.boothId"/>
                 <!-- <entity-condition entity-name="Enumeration" list="prodSubTypes" use-cache="true">
                     <condition-expr field-name="enumTypeId" value="SUB_PROD_TYPE"/>
                     <order-by field-name="sequenceId"/>
                 </entity-condition> -->
                 <set field="checkListType" value="indentEntry"/>
                 <set field="effectiveDate" value="${parameters.effectiveDate}"/>
-                 <set field="shipmentTypeId" value="${parameters.shipmentTypeId}"/>
-                  <set field="priceTypeId" from-field="parameters.priceTypeId"/>
-                   <set field="productCatageoryId" from-field="parameters.productCatageoryId"/>
-                   <set field="vehicleId" from-field="parameters.vehicleId"/>
+                <set field="shipmentTypeId" value="${parameters.shipmentTypeId}"/>
+                <set field="priceTypeId" from-field="parameters.priceTypeId"/>
+                <set field="PONumber" from-field="parameters.PONumber"/>
+                <set field="productCatageoryId" from-field="parameters.productCatageoryId"/>
+                <set field="vehicleId" from-field="parameters.vehicleId"/>
                 <script location="component://byproducts/webapp/byproducts/WEB-INF/actions/facility/AdhocIndentForm.groovy"/>
+                <script location="component://byproducts/webapp/byproducts/WEB-INF/actions/facility/EditStoreOrderForm.groovy"/>
               <!--   <script location="component://byproducts/webapp/byproducts/WEB-INF/actions/recentChangeIndents.groovy"/>   -->              
                <!--  <script location="component://byproducts/webapp/byproducts/WEB-INF/actions/indentCheckListReport.groovy"/>    -->             
             </actions>

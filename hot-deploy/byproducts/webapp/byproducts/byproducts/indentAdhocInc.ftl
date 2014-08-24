@@ -64,7 +64,7 @@
 		jQuery(formId).append(jQuery(inputRowSubmit));
 		for (var rowCount=0; rowCount < data.length; ++rowCount)
 		{ 
-			var productId = data[rowCount]["productId"];
+			var productId = data[rowCount]["cProductId"];
 			var prodId="";
 			if(typeof(productId)!= "undefined"){ 	  
 			var prodId = productId.toUpperCase();
@@ -93,13 +93,21 @@
 		<#if changeFlag?exists && changeFlag != "AdhocSaleNew">
 			var partyId = $("#partyId").val();
 			var orderTaxType = $("#orderTaxType").val();
+			var poNumber = $("#PONumber").val();
 			var packingType = $("#packingType").val();
 			var productStoreId = $("#productStoreId").val();
 			var party = jQuery("<input>").attr("type", "hidden").attr("name", "partyId").val(partyId);
+			var POField = jQuery("<input>").attr("type", "hidden").attr("name", "PONumber").val(poNumber);
 			var tax = jQuery("<input>").attr("type", "hidden").attr("name", "orderTaxType").val(orderTaxType);
 			var pack = jQuery("<input>").attr("type", "hidden").attr("name", "packingType").val(packingType);
 			var productStore = jQuery("<input>").attr("type", "hidden").attr("name", "productStoreId").val(productStoreId);
+			<#if orderId?exists>
+				var order = '${orderId}';
+				var extOrder = jQuery("<input>").attr("type", "hidden").attr("name", "orderId").val(order);		
+				jQuery(formId).append(jQuery(extOrder));
+			</#if>
 			jQuery(formId).append(jQuery(party));
+			jQuery(formId).append(jQuery(POField));
 			jQuery(formId).append(jQuery(pack));
 			jQuery(formId).append(jQuery(tax));
 			jQuery(formId).append(jQuery(productStore));
@@ -160,7 +168,7 @@
       	}
       
       	if (item != null && item != undefined ) {
-      		item['productId'] = productLabelIdMap[value];
+      		item['cProductId'] = productLabelIdMap[value];
 	  	}      
       	return {valid: true, msg: null};
     }
@@ -196,25 +204,26 @@
 		var grid;
 		
 		var columns = [
-			<#if changeFlag?exists && changeFlag != "AdhocSaleNew">
+			<#--<#if changeFlag?exists && changeFlag != "AdhocSaleNew">
 				{id:"cProductName", name:"Product", field:"cProductName", width:180, minWidth:180, cssClass:"cell-title", availableTags: availableTags, editor: AutoCompleteEditor,sortable:false ,toolTip:""},
 			<#else>
 				{id:"cProductName", name:"Product", field:"cProductName", width:180, minWidth:180, cssClass:"cell-title", availableTags: availableTags, editor: AutoCompleteEditor, validator: productValidator, sortable:false ,toolTip:""},	
-			</#if>
+			</#if>-->
+			{id:"cProductName", name:"Product", field:"cProductName", width:180, minWidth:180, cssClass:"cell-title", availableTags: availableTags, editor: AutoCompleteEditor, validator: productValidator, sortable:false ,toolTip:""},
 			{id:"quantity", name:"Qty(Pkt)", field:"quantity", width:70, minWidth:70, cssClass:"cell-title",editor:FloatCellEditor, sortable:false , formatter: quantityFormatter,  validator: quantityValidator},
 			<#if changeFlag?exists && changeFlag != "AdhocSaleNew">
 				<#--{id:"batchNo", name:"Batch Number", field:"batchNo", width:65, minWidth:65, sortable:false, editor:TextCellEditor},-->
 			</#if>
 			<#if changeFlag?exists && changeFlag == "IcpSales" || changeFlag == "IcpSalesAmul">
 				{id:"crQuantity", name:"Qty(Crt)", field:"crQuantity", width:60, minWidth:60, cssClass:"cell-title",editor:FloatCellEditor, sortable:false, formatter: quantityFormatter},
-				<#--{id:"batchNo", name:"Batch Number", field:"batchNo", width:65, minWidth:65, sortable:false, editor:TextCellEditor},-->
-			<#elseif changeFlag?exists && changeFlag == "PowderSales" || changeFlag == "FgsSales">
+				{id:"batchNo", name:"Batch Number", field:"batchNo", width:65, minWidth:65, sortable:false, editor:TextCellEditor},
+			<#elseif changeFlag?exists && changeFlag == "PowderSales" || changeFlag == "FgsSales" || changeFlag == "InterUnitTransferSale" >
 				{id:"ltrQuantity", name:"Ltr/KG Qty", field:"ltrQuantity", width:65, minWidth:65, sortable:false, editor:FloatCellEditor},
 			</#if>
-			<#if changeFlag?exists && changeFlag!='InterUnitTransferSale'>
+			<#--<#if changeFlag?exists && changeFlag!='InterUnitTransferSale'>-->
 			{id:"unitCost", name:"Unit Price(Rs)", field:"unitPrice", width:65, minWidth:65, cssClass:"readOnlyColumnClass", sortable:false, formatter: rateFormatter, focusable :false , align:"right"},
 			{id:"amount", name:"Total Amount(Rs)", field:"amount", width:100, minWidth:100, cssClass:"readOnlyColumnClass", sortable:false, formatter: rateFormatter, focusable :false}	
-			</#if>
+			<#--</#if>-->
 		];
 		
 			var options = {
@@ -310,7 +319,7 @@
     	grid.onAddNewRow.subscribe(function (e, args) {
       		var item = args.item;   
       		var productLabel = item['cProductName']; 
-      		item['productId'] = productLabelIdMap[productLabel];     		 		
+      		item['cProductId'] = productLabelIdMap[productLabel];     		 		
       		grid.invalidateRow(data.length);
       		data.push(item);
       		grid.updateRowCount();
@@ -318,15 +327,14 @@
     	});
         grid.onCellChange.subscribe(function(e,args) {
         	if (args.cell == 0 || args.cell == 1) {
-				var prod = data[args.row]["productId"];
-				
+				var prod = data[args.row]["cProductId"];
 				var qty = parseFloat(data[args.row]["quantity"]);
 				var prodConversionData = conversionData[prod];
 				var convValue = 0;
 				<#if changeFlag?exists && changeFlag == "IcpSales" || changeFlag == "IcpSalesAmul">
 					convValue = prodConversionData['CRATE'];
 				</#if>
-				<#if changeFlag?exists && changeFlag == "PowderSales" || changeFlag == "FgsSales">
+				<#if changeFlag?exists && changeFlag == "PowderSales" || changeFlag == "FgsSales" || changeFlag == "InterUnitTransferSale">
 					convValue = prodConversionData['LtrKg'];
 				</#if>
 				var price = parseFloat(priceTags[prod]);
@@ -336,7 +344,7 @@
 						crVal = parseFloat(Math.round((qty/convValue)*100)/100);
 						data[args.row]["crQuantity"] = crVal;
 					</#if>
-					<#if changeFlag?exists && changeFlag == "PowderSales" || changeFlag == "FgsSales">
+					<#if changeFlag?exists && changeFlag == "PowderSales" || changeFlag == "FgsSales" || changeFlag == "InterUnitTransferSale">
 						crVal = parseFloat(Math.round((qty*convValue)*100)/100);
 						data[args.row]["ltrQuantity"] = crVal;
 					</#if>
@@ -372,12 +380,12 @@
 			}
 			
 			if (args.cell == 2) {
-				var prod = data[args.row]["productId"];
+				var prod = data[args.row]["cProductId"];
 				var calcQty = 0;
 				<#if changeFlag?exists && changeFlag == "IcpSales" || changeFlag == "IcpSalesAmul">
 					calcQty = parseFloat(data[args.row]["crQuantity"]);
 				</#if>
-				<#if changeFlag?exists && changeFlag == "PowderSales" || changeFlag == "FgsSales">
+				<#if changeFlag?exists && changeFlag == "PowderSales" || changeFlag == "FgsSales" || changeFlag == "InterUnitTransferSale">
 					calcQty = parseFloat(data[args.row]["ltrQuantity"]);
 				</#if>
 				var prodConversionData = conversionData[prod];
@@ -385,7 +393,7 @@
 				<#if changeFlag?exists && changeFlag == "IcpSales" || changeFlag == "IcpSalesAmul">
 					convValue = prodConversionData['CRATE'];
 				</#if>
-				<#if changeFlag?exists && changeFlag == "PowderSales" || changeFlag == "FgsSales">
+				<#if changeFlag?exists && changeFlag == "PowderSales" || changeFlag == "FgsSales" || changeFlag == "InterUnitTransferSale">
 					convValue = prodConversionData['LtrKg'];
 				</#if>
 				var price = parseFloat(priceTags[prod]);
@@ -396,7 +404,7 @@
 						calculateQty = parseFloat(Math.round((calcQty*convValue)*100)/100);
 						data[args.row]["quantity"] = calculateQty;
 					</#if>
-					<#if changeFlag?exists && changeFlag == "PowderSales" || changeFlag == "FgsSales">
+					<#if changeFlag?exists && changeFlag == "PowderSales" || changeFlag == "FgsSales" || changeFlag == "InterUnitTransferSale">
 						calculateQty = parseFloat(Math.round((calcQty/convValue)*100)/100);
 						data[args.row]["quantity"] = calculateQty;
 					</#if>
@@ -436,7 +444,7 @@
 		
 		grid.onActiveCellChanged.subscribe(function(e,args) {
         	if (args.cell == 1 && data[args.row] != null) {
-				var prod = data[args.row]["productId"];
+				var prod = data[args.row]["cProductId"];
 			}
 			
 		});
@@ -459,14 +467,38 @@
 		function updateProductTotalAmount() {
 			for(var i=0;i<data.length;i++){
 				var qty = parseFloat(data[i]["quantity"]);
-				var prod = data[i]["productId"];
+				var prod = data[i]["cProductId"];
+				
+				var prodConversionData = conversionData[prod];
+				var convValue = 0;
+				<#if changeFlag?exists && changeFlag == "IcpSales" || changeFlag == "IcpSalesAmul">
+					convValue = prodConversionData['CRATE'];
+				</#if>
+				<#if changeFlag?exists && changeFlag == "PowderSales" || changeFlag == "FgsSales" || changeFlag == "InterUnitTransferSale">
+					convValue = prodConversionData['LtrKg'];
+				</#if>
+				
 				var price = parseFloat(priceTags[prod]);
 				if(isNaN(price) || isNaN(qty)){
 					data[i]["amount"] = 0;
+					data[i]["unitPrice"] = 0;
 				}
 				else{
+					data[i]["unitPrice"] = price;
 					data[i]["amount"] = Math.round((qty*price) * 100)/100;
 				}
+				var crVal = 0;
+				if(convValue != 'undefined' || convValue != null || convValue > 0){
+					<#if changeFlag?exists && changeFlag == "IcpSales" || changeFlag == "IcpSalesAmul">
+						crVal = parseFloat(Math.round((qty/convValue)*100)/100);
+						data[i]["crQuantity"] = crVal;
+					</#if>
+					<#if changeFlag?exists && changeFlag == "PowderSales" || changeFlag == "FgsSales" || changeFlag == "InterUnitTransferSale">
+						crVal = parseFloat(Math.round((qty*convValue)*100)/100);
+						data[i]["ltrQuantity"] = crVal;
+					</#if>
+				}
+				
 				grid.updateRow(i);
 			}
 			var totalAmount = 0;
