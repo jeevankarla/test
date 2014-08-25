@@ -264,7 +264,6 @@ if(UtilValidate.isNotEmpty(BankAdvicePayRollMap) && UtilValidate.isNotEmpty(para
 parameters.partyId=orgPartyId;
 context.put("InstallmentFinalMap",InstallmentFinalMap);
 context.put("BankAdvicePayRollMap",BankAdvicePayRollMap);
-Debug.log("BankAdvicePayRollMap======"+BankAdvicePayRollMap);
 context.put("payRollSummaryMap",payRollSummaryMap);
 context.put("payRollMap",payRollMap);
 context.put("payRollEmployeeMap",payRollEmployeeMap);
