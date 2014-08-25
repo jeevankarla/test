@@ -775,7 +775,7 @@
 			</widgets>
 		</section>
 	</screen>
-	<screen name="SalesReportTXT">
+	<screen name="SalesReportPDF">
 		<section>
 			<actions>
 				<property-map resource="OrderUiLabels" map-name="uiLabelMap" global="true"/>
@@ -1051,15 +1051,38 @@
                 <property-map resource="ProductUiLabels" map-name="uiLabelMap" global="true"/>
                 <property-map resource="PartyUiLabels" map-name="uiLabelMap" global="true"/>
                 <property-map resource="CommonUiLabels" map-name="uiLabelMap" global="true"/>     
-                <set field="reportTypeFlag" from-field="parameters.reportTypeFlag"/>         
+                <set field="reportTypeFlag" from-field="parameters.reportTypeFlag"/> 
+                <set field="categoryType" from-field="parameters.categoryType"/>          
                 <script location="component://byproducts/webapp/byproducts/WEB-INF/actions/facility/paymentsCheckListReport.groovy"/>            
-            </actions>            
-            <widgets>            	
-				<platform-specific> 
-				  <xsl-fo><html-template location="component://byproducts/webapp/byproducts/reports/PaymentCheckListNewPDF.fo.ftl"/></xsl-fo> 
-                    <!--  <xsl-fo><html-template location="component://byproducts/webapp/byproducts/reports/PaymentCheckListNew.fo.ftl"/></xsl-fo> -->
-                </platform-specific>				
-            </widgets>
+            </actions>   
+            <widgets>
+				<section>
+					<condition>
+						<if-compare operator="equals" value="DailyPaymentCheckList" field="reportTypeFlag" />
+					</condition>
+					<widgets>
+						<platform-specific>
+		                    <xsl-fo>
+								<html-template
+									location="component://byproducts/webapp/byproducts/reports/PaymentCheckListNewPDF.fo.ftl" />
+							</xsl-fo>
+		                </platform-specific>
+					</widgets>
+				</section>
+				<section>
+					<condition>
+						<if-compare operator="equals" value="CrInstReport" field="reportTypeFlag" />
+					</condition>
+					<widgets>
+						<platform-specific>
+		                   <xsl-fo>
+								<html-template
+									location="component://byproducts/webapp/byproducts/reports/CreditInstitutionReport.fo.ftl" />
+							</xsl-fo>
+		                </platform-specific>
+					</widgets>
+				</section>
+			</widgets>         
         </section>
     </screen>
     <screen name="DailyPaymentCheckListCSV">
@@ -1367,16 +1390,33 @@
 				<property-map resource="PartyUiLabels" map-name="uiLabelMap" global="true"/>
 				<property-map resource="CommonUiLabels" map-name="uiLabelMap" global="true"/>
 				<script location="component://byproducts/webapp/byproducts/WEB-INF/actions/subsidyMilkReport.groovy" />	
+				<set field="reportTypeFlag" from-field="parameters.reportTypeFlag"/>
 			</actions>
 			<widgets>
 				<section>
+					<condition>
+						<if-compare operator="equals" value="" field="reportTypeFlag" />
+					</condition>
 					<widgets>
 						<platform-specific>
-							<xsl-fo>
+		                    <xsl-fo>
 								<html-template
 									location="component://byproducts/webapp/byproducts/reports/subsidyMilkReport.fo.ftl" />
 							</xsl-fo>
-						</platform-specific>
+		                </platform-specific>
+					</widgets>
+				</section>
+				<section>
+					<condition>
+						<if-compare operator="equals" value="subsidyMilkAgentWise" field="reportTypeFlag" />
+					</condition>
+					<widgets>
+						<platform-specific>
+		                   <xsl-fo>
+								<html-template
+									location="component://byproducts/webapp/byproducts/reports/AgentWiseSubsidyMilkReport.fo.ftl" />
+							</xsl-fo>
+		                </platform-specific>
 					</widgets>
 				</section>
 			</widgets>
