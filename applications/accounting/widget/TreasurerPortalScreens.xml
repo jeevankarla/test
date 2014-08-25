@@ -66,6 +66,12 @@
 								<!-- <screenlet title="Find Fines and Penalties">				
 									<include-form name="FindFinesAndPenalties" location="component://byproducts/widget/TransporterForms.xml" />
 								</screenlet> -->
+								<container style="button-bar">
+									<link target="FinAccountAlt.csv" text="Export As CSV" style="buttontext create">	
+									</link>
+									<link target="FinAccountAlt.pdf" text="Export As PDF" style="buttontext create">				
+									</link>
+								</container> 
 								<screenlet title="Bank Accounts List">				
 									 <include-form name="ListFinAccountsAlt" location="component://accounting/widget/TreasurerPortalForms.xml"/>
 								</screenlet>
@@ -143,13 +149,12 @@
                     <include-menu name="CompanyFinAccountTabBar" location="component://accounting/widget/AccountingMenus.xml"/>
                     	<section>
 							<widgets>
-								<!-- <container style="button-bar">
-									<link target="CreateNewFineorPenalty" text="Create New" style="buttontext create">				
+								<container style="button-bar">
+									<link target="FinAccountAlt.csv" text="Export As CSV" style="buttontext create">	
 									</link>
-								</container> -->
-								<!-- <screenlet title="Find Fines and Penalties">				
-									<include-form name="FindFinesAndPenalties" location="component://byproducts/widget/TransporterForms.xml" />
-								</screenlet> -->
+									<link target="FinAccountAlt.pdf" text="Export As PDF" style="buttontext create">				
+									</link>
+								</container>
 								<screenlet title="Bank Accounts List">				
 								 <include-form name="ListFinAccountsAlt" location="component://accounting/widget/TreasurerPortalForms.xml"/> 
 								</screenlet>

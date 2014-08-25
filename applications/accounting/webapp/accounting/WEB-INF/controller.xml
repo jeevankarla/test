@@ -1959,6 +1959,14 @@ under the License.
         <security https="true" auth="true"/>
         <response name="success" type="view" value="FindFinAccountAlt"/>
     </request-map>
+    <request-map uri="FinAccountAlt.csv">
+    	<security https="true" auth="true"/>    	
+    	<response name="success" type="view" value="FinAccountAltCSV"/>    	
+    </request-map>
+     <request-map uri="FinAccountAlt.pdf">
+    	<security https="true" auth="true"/>    	
+    	<response name="success" type="view" value="FinAccountAltPDF"/>    	
+    </request-map>
      <request-map uri="FindNonBankAccount">
         <security https="true" auth="true"/>
         <response name="success" type="view" value="FindNonBankAccount"/>
@@ -3541,6 +3549,9 @@ under the License.
     <view-map name="ComparativeCashFlowStatement" type="screen" page="component://accounting/widget/ReportFinancialSummaryScreens.xml#ComparativeCashFlowStatement"/>
     <view-map name="ComparativeCashFlowStatementPdf" type="screenfop" page="component://accounting/widget/ReportFinancialSummaryScreens.xml#ComparativeCashFlowStatementPdf" content-type="application/pdf" encoding="none"/>
     <view-map name="ComparativeCashFlowStatementCsv" type="screencsv" page="component://accounting/widget/ReportFinancialSummaryScreens.xml#ComparativeCashFlowStatementCsv" content-type="text/csv" encoding="none"/>
+    <view-map name="FinAccountAltCSV" type="screencsv" page="component://accounting/widget/ReportFinancialSummaryScreens.xml#FinAccountAltCSV" content-type="text/csv" encoding="none"/>
+    <view-map name="FinAccountAltPDF" type="screenfop" page="component://accounting/widget/ReportFinancialSummaryScreens.xml#FinAccountAltPDF" content-type="application/pdf" encoding="none"/>
+  
     <!-- Assignment Mappings -->
     <view-map name="EditPartyFixedAssetAssignments" type="screen" page="component://accounting/widget/FixedAssetScreens.xml#EditPartyFixedAssetAssignments"/>
 

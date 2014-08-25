@@ -910,4 +910,16 @@ under the License.
             </drop-down>
         </field>
     </form>
+     <form name="FinAccountsAltCSV" type="list" list-name="finAccList" odd-row-style="alternate-row" 
+        paginate="false" default-table-style="basic-table hover-bar" >
+        <field name="finAccountName" title="Fin Account Name"><display/></field>  
+        <field name="actualBalance" title="Actual Balance"><display/></field>  
+        <field name="availableBalance" title="Available Balance"><display/></field>   	
+    </form>
+    <form name="FinAccountsAltPDF" type="list" list-name="finAccList" odd-row-style="alternate-row" 
+        paginate="false" default-table-style="basic-table hover-bar" >
+        <field name="finAccountName" title="Fin Account Name"><display/></field>  
+        <field name="actualBalance" title="Actual Balance"><display/></field>  
+        <field name="availableBalance" title="Available Balance"><display/></field>   	
+    </form>
 </forms>
