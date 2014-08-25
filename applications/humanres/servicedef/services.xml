@@ -1107,6 +1107,7 @@ under the License.emplpunch
         <description>Delete Valid Punch</description>
         <permission-service service-name="humanResManagerPermission" main-action="GLOBALHR_EDIT"/>
         <auto-attributes mode="IN" include="pk" optional="false"/>
+        <auto-attributes mode="IN" include="nonpk" optional="true"/>
     </service>
     
      <service name="emplDailyPunchReport" engine="java"

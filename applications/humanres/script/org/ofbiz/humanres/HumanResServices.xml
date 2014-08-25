@@ -1110,10 +1110,23 @@
     </simple-method>
     <!-- delete employee punch -->
     <simple-method method-name="deletePunch" short-description="Delete Punch">
-    <log level="info" message="Removing PunchType =
+    	<log level="info" message="Removing PunchType =
                                            ${parameters.PunchType}"/>
-        <entity-one entity-name="EmplPunch" value-field="lookedUpValue"/>        
+        <entity-one entity-name="EmplPunch" value-field="lookedUpValue"/>
         <remove-value value-field="lookedUpValue"/>
+        <entity-and list="emplPunch" entity-name="EmplPunch">
+             <field-map field-name="partyId" from-field="parameters.partyId"/>
+             <field-map field-name="punchdate" from-field="parameters.punchdate"/>
+             <field-map field-name="shiftType" from-field="parameters.shiftType"/>
+         </entity-and>
+         <if-empty field="emplPunch">
+             <entity-and list="emplShift" entity-name="EmplDailyAttendanceDetail">
+               <field-map field-name="partyId" from-field="parameters.partyId"/>
+               <field-map field-name="date" from-field="parameters.punchdate"/>
+                <field-map field-name="shiftType" from-field="parameters.shiftType"/>
+         	</entity-and>
+         	<remove-list list="emplShift"/>
+         </if-empty>
     </simple-method>
     
     <simple-method method-name="getPartyBenefitCost" short-description="calculate party benefit cost">          

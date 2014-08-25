@@ -19,7 +19,7 @@
           <auto-fields-service default-field-type="hidden" service-name="adminPunch"/>  
         <field name="roleTypeId"><hidden value="EMPLOYEE"/></field>
         <field name="isManual"><hidden value="Y"/></field>	
-        <field name="partyId"><lookup target-form-name="LookupPartyName" default-value="${partyId}" target-parameter="roleTypeId"/></field>
+        <field name="partyId"><lookup target-form-name="LookupEmployeeName" default-value="${partyId}" target-parameter="roleTypeId"/></field>
         <field name="punchtime" title="Punch Time"><text size="15" default-value="${nowTime}"  /></field>
         <field name="punchtime" use-when="punchtime!=null" title="Punch Time"><text/></field>
         <field name="dateTime"><hidden/></field>
@@ -65,6 +65,7 @@
                 <parameter param-name="partyId"  value="${newPartyId}"/>
                 <parameter param-name="InOut" value="${newInOut}"/>
                 <parameter param-name="punchdate" value="${newpunchdate}"/>
+                <parameter param-name="shiftType" value="${parameters.shiftType}"/>
                 <parameter param-name="emplPunchId" value="${newemplPunchId}"/>  
             </hyperlink>          
         </field>  

@@ -508,7 +508,7 @@ public class PunchService {
 			List<GenericValue> emplPunch = delegator.findList("EmplPunch", cond, null, UtilMisc.toList("-punchdate","-punchtime"),null, false);
 			
 			if(UtilValidate.isEmpty(emplPunch)){
-				Debug.logError("no normal emplPunch====="+emplPunch, module);
+				Debug.logWarning("no normal emplPunch====="+emplPunch, module);
             	return result;
             }
 			emplPunch = EntityUtil.filterByCondition(emplPunch, EntityCondition.makeCondition(EntityCondition.makeCondition("PunchType",EntityOperator.EQUALS,"Normal")));

@@ -116,7 +116,7 @@
                 <entity-options description="${description}" key-field-name="emplLeaveReasonTypeId" entity-name="EmplLeaveReasonType"/>
             </drop-down>
         </field>
-        <field name="fromDate" tooltip="${uiLabelMap.CommonRequired}"><date-time type="date"/></field>
+        <field name="fromDate" tooltip="${uiLabelMap.CommonRequired}"><date-time type="date" /></field>
         <field name="thruDate" tooltip="${uiLabelMap.CommonRequired}"><date-time type="date"/></field>
         <!-- <field name="fromTime"><date-time type="time" input-method="time-dropdown"/></field>
         <field name="thruTime"><date-time type="time" input-method="time-dropdown"/></field> -->
