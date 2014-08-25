@@ -25,6 +25,7 @@ rounding = UtilNumber.getBigDecimalRoundingMode("order.rounding");
 reportTypeFlag=parameters.reportTypeFlag;
 unDepositedCheques=parameters.unDepositedCheques;
 searchBy=parameters.searchBy;
+categoryType=parameters.categoryType;
 allChanges= false;
 if (parameters.all == 'Y') {
 	allChanges = true;
@@ -72,9 +73,11 @@ boothPaymentCheckMap=[:];
 bankPaidMap=[:];
 
 
-if(UtilValidate.isNotEmpty(reportTypeFlag) && "DailyPaymentCheckList".equals(reportTypeFlag)){
+if(UtilValidate.isNotEmpty(reportTypeFlag) && "DailyPaymentCheckList".equals(reportTypeFlag)||"CrInstReport".equals(reportTypeFlag)){
 paymentDate=parameters.paymentDate;
 thruDate=parameters.thruDate;
+context.fromDate=paymentDate;
+context.thruDate=thruDate;
 paymentMethodTypeId = parameters.paymentMethodTypeId;
 fromDateTime=UtilDateTime.nowTimestamp();
 thruDateTime=UtilDateTime.nowTimestamp();
@@ -101,7 +104,13 @@ facilityIdsList=[];
 	if(parameters.routeId !="All"){
 		facilityIdsList =ByProductNetworkServices.getRouteBooths(delegator, parameters.routeId);
 	}else{
-	facilityIdsList=ByProductNetworkServices.getAllBooths(delegator,null).get("boothsList");
+	 if(UtilValidate.isNotEmpty(categoryType)){
+		facilityIdsList=ByProductNetworkServices.getAllBooths(delegator,categoryType).get("boothsList");
+		//Debug.log("facilityIdsList==2222==="+facilityIdsList);
+	 }else{
+	  facilityIdsList=ByProductNetworkServices.getAllBooths(delegator,null).get("boothsList");
+	 // Debug.log("facilityIdsList===1111="+facilityIdsList);
+	 }
 	}
 	paidPaymentInput=[:];
 	paidPaymentInput["fromDate"]=dayStart;
@@ -126,36 +135,55 @@ facilityIdsList=[];
 	boothPaidDetail = ByProductNetworkServices.getBoothPaidPayments( dctx , paidPaymentInput);
 	}
 	boothTempPaymentsList = boothPaidDetail["paymentsList"];
+	boothPaymentsMap=[:];
 	boothRouteIdsMap= boothPaidDetail["boothRouteIdsMap"];
-
-	boothTempPaymentsList.each{eachBoothPayment->
-			if(UtilValidate.isNotEmpty(eachBoothPayment.issuingAuthority)){
-				bankName=eachBoothPayment.issuingAuthority;
-					if(UtilValidate.isEmpty(bankPaidMap.get(bankName))){
-					List<GenericValue> tempboothPaidList=FastList.newInstance();
-					tempboothPaidList.add(eachBoothPayment);
-					bankPaidMap[bankName]=tempboothPaidList;
+	 if(UtilValidate.isNotEmpty(categoryType)){
+		 boothTempPaymentsList.each{eachBoothPayment->
+			    Debug.log("eachBoothPayment===="+eachBoothPayment);
+				 partyId=eachBoothPayment.partyIdFrom;
+					 if(UtilValidate.isEmpty(boothPaymentsMap.get(partyId))){
+					   List<GenericValue> tempboothPaidList=FastList.newInstance();
+					   tempboothPaidList.add(eachBoothPayment);
+					   boothPaymentsMap[partyId]=tempboothPaidList;
+					 }else{
+						 List<GenericValue> tempboothPaidList=FastList.newInstance();
+						 tempboothPaidList=boothPaymentsMap.get(partyId);
+						 tempboothPaidList.add(eachBoothPayment);
+						 boothPaymentsMap[partyId]=tempboothPaidList;
+						
+					 }
+	    }
+		 Debug.log("boothPaymentsMap===="+boothPaymentsMap);
+		 context.boothPaymentsMap=boothPaymentsMap;
+	 }else{
+		boothTempPaymentsList.each{eachBoothPayment->
+				if(UtilValidate.isNotEmpty(eachBoothPayment.issuingAuthority)){
+					bankName=eachBoothPayment.issuingAuthority;
+						if(UtilValidate.isEmpty(bankPaidMap.get(bankName))){
+						List<GenericValue> tempboothPaidList=FastList.newInstance();
+						tempboothPaidList.add(eachBoothPayment);
+						bankPaidMap[bankName]=tempboothPaidList;
+						}else{
+						List<GenericValue> tempboothPaidList=FastList.newInstance();
+						tempboothPaidList=bankPaidMap.get(bankName);
+						tempboothPaidList.add(eachBoothPayment);
+						bankPaidMap[bankName]=tempboothPaidList;
+						}
+				}else{
+					if(UtilValidate.isEmpty(bankPaidMap.get("noBankName"))){
+					List<GenericValue> tempboothPaidListnew=FastList.newInstance();
+					tempboothPaidListnew.add(eachBoothPayment);
+					bankPaidMap["noBankName"]=tempboothPaidListnew;
 					}else{
 					List<GenericValue> tempboothPaidList=FastList.newInstance();
-					tempboothPaidList=bankPaidMap.get(bankName);
+					tempboothPaidList=bankPaidMap.get("noBankName");
 					tempboothPaidList.add(eachBoothPayment);
-					bankPaidMap[bankName]=tempboothPaidList;
+					bankPaidMap["noBankName"]=tempboothPaidList;
 					}
-			}else{
-				if(UtilValidate.isEmpty(bankPaidMap.get("noBankName"))){
-				List<GenericValue> tempboothPaidListnew=FastList.newInstance();
-				tempboothPaidListnew.add(eachBoothPayment);
-				bankPaidMap["noBankName"]=tempboothPaidListnew;
-				}else{
-				List<GenericValue> tempboothPaidList=FastList.newInstance();
-				tempboothPaidList=bankPaidMap.get("noBankName");
-				tempboothPaidList.add(eachBoothPayment);
-				bankPaidMap["noBankName"]=tempboothPaidList;
 				}
-			}
+		}
 	}
 }
-
 List routeCheckListReportList = [];
 List nonRouteCheckListReportList = [];
 paymentIdsList=[];
@@ -170,6 +198,7 @@ if(UtilValidate.isNotEmpty(reportTypeFlag) && "CashPaymentCheckList".equals(repo
 		Debug.logError(e, "Cannot parse date string: "+paymentDate, "");
 	}
 	context.paymentDate=fromDateTime;
+	
 	dayStart = UtilDateTime.getDayStart(fromDateTime);
 	dayEnd = UtilDateTime.getDayEnd(fromDateTime);
 	
@@ -195,6 +224,5 @@ if(UtilValidate.isNotEmpty(reportTypeFlag) && "CashPaymentCheckList".equals(repo
 context.routeCheckListReportList=routeCheckListReportList;
 context.nonRouteCheckListReportList=nonRouteCheckListReportList;
 context.bankPaidMap=bankPaidMap;
-
 context.boothRouteIdsMap=boothRouteIdsMap;
 

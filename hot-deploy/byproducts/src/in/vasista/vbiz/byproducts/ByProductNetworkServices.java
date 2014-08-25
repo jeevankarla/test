@@ -4189,6 +4189,8 @@ public class ByProductNetworkServices {
 						tempPayment.put("paymentMethodTypeId",boothPayment.getString("paymentMethodTypeId"));
 						tempPayment.put("amount", BigDecimal.ZERO);
 						tempPayment.put("userId",boothPayment.getString("createdByUserLogin"));
+						tempPayment.put("comments",boothPayment.getString("comments"));
+						tempPayment.put("paymentRefNum",boothPayment.getString("paymentRefNum"));
 					}
 					if (!(tempPartyId.equals(boothPayment.getString("partyIdFrom")))) {
 						// populating paymentMethodTypeId for paid invoices
@@ -4206,6 +4208,8 @@ public class ByProductNetworkServices {
 						tempPayment.put("paymentMethodTypeId",boothPayment.getString("paymentMethodTypeId"));
 						tempPayment.put("amount",boothPayment.getBigDecimal("amount"));
 						tempPayment.put("userId",boothPayment.getString("createdByUserLogin"));
+						tempPayment.put("comments",boothPayment.getString("comments"));
+						tempPayment.put("paymentRefNum",boothPayment.getString("paymentRefNum"));
 					} else {
 						tempPayment.put("amount", (boothPayment.getBigDecimal("amount")).add((BigDecimal) tempPayment.get("amount")));
 					}
@@ -4224,6 +4228,8 @@ public class ByProductNetworkServices {
 						tempPayment.put("paymentMethodTypeId",boothPayment.getString("paymentMethodTypeId"));
 						tempPayment.put("amount", BigDecimal.ZERO);
 						tempPayment.put("userId",boothPayment.getString("createdByUserLogin"));
+						tempPayment.put("comments",boothPayment.getString("comments"));
+						tempPayment.put("paymentRefNum",boothPayment.getString("paymentRefNum"));
 					}
 					if (!(tempFacilityId.equals(boothPayment.getString("facilityId")))) {
 						// populating paymentMethodTypeId for paid invoices
@@ -4240,6 +4246,8 @@ public class ByProductNetworkServices {
 						tempPayment.put("paymentMethodTypeId",boothPayment.getString("paymentMethodTypeId"));
 						tempPayment.put("amount",boothPayment.getBigDecimal("amount"));
 						tempPayment.put("userId",boothPayment.getString("createdByUserLogin"));
+						tempPayment.put("comments",boothPayment.getString("comments"));
+						tempPayment.put("paymentRefNum",boothPayment.getString("paymentRefNum"));
 
 					} else {
 						tempPayment.put("amount", (boothPayment.getBigDecimal("amount")).add((BigDecimal) tempPayment.get("amount")));

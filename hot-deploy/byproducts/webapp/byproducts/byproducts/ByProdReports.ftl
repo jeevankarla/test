@@ -347,7 +347,7 @@ function makeDatePicker1(fromDateId ,thruDateId){
       		</form>
       	</tr> 
       	<tr class="alternate-row">
-      		<form id="SalesReport" name="SalesReport" method="post" action="<@ofbizUrl>salesReport.txt</@ofbizUrl>" target="_blank">	
+      		<form id="SalesReport" name="SalesReport" method="post" action="<@ofbizUrl>salesReport.pdf</@ofbizUrl>" target="_blank">	
       			<td width="30%">Sales Report</td>
       			<td width="15%">From<input  type="text" size="18pt" id="saleFromDateId" readonly  name="fromDate"/></td>
       			<td width="15%">Thru<input  type="text" size="18pt" id="saleThruDateId" readonly  name="thruDate"/></td>
@@ -507,6 +507,21 @@ function makeDatePicker1(fromDateId ,thruDateId){
 				<td width="10%"><input type="submit" value="PDF" onClick="javascript:appendParams('DailyPaymentCheckList', '<@ofbizUrl>DailyPaymentCheckList.pdf</@ofbizUrl>');" class="buttontext"/>
 					<input type="submit" value="CSV" onClick="javascript:appendParams('DailyPaymentCheckList', '<@ofbizUrl>DailyPaymentCheckListCsv.csv</@ofbizUrl>');" class="buttontext"/>
 					</td>
+      		</form>	
+        </tr>
+        <tr class="alternate-row">
+        	<form id="CrInstReport" name="CrInstReport" method="post"  target="_blank" action="<@ofbizUrl>DailyPaymentCheckList.pdf</@ofbizUrl>">	
+      			<td width="30%">Credit Institution Recovery Report<input  type="hidden"  value="CrInstReport"   name="reportTypeFlag"/>
+      				<input  type="hidden"  value="All"   name="routeId"/>
+      			</td>
+      			<td width="15%">From<input  type="text" size="18pt" id="crInstFromDateId" readonly  name="paymentDate"/></td>
+	      		<td width="15%">Thru<input  type="text" size="18pt" id="crInstThruDateId" readonly  name="thruDate"/></td>
+				<td width="15%">Category Type <select name='categoryType' class='h4'>
+					<option value='CR_INST'>Credit Institution</option>
+					</select>
+				</td>
+				<td width="15%"></td>
+				<td width="10"><input type="submit" value="Download" class="buttontext"/></td>
       		</form>	
         </tr>
         <tr class="alternate-row">
