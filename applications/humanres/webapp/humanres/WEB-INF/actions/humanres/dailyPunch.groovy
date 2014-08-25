@@ -47,15 +47,17 @@ for (GenericValue punch : punchList) {
 	if (punch.getString("InOut")) {
 		inOut = punch.getString("InOut");
 	}
+	String punchType = punch.getString("PunchType");
 	JSONArray punchJSON = new JSONArray();	
 	punchJSON.add(punchDateStr);
 	punchJSON.add(partyId);
 	punchJSON.add(partyName);
 	punchJSON.add(punchTime);
 	punchJSON.add(inOut);
+	punchJSON.add(punchType);
 	punchListJSON.add(punchJSON);
 }
 
-Debug.logError("punchListJSON="+punchListJSON,"");
+//Debug.logError("punchListJSON="+punchListJSON,"");
 context.punchDate = punchDate
 context.punchListJSON = punchListJSON;

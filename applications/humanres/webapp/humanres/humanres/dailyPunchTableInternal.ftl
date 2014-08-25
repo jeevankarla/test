@@ -26,7 +26,8 @@ $(document).ready(function() {
 			{ "title": "Employee Id" },			
 			{ "title": "Employee Name" },
 			{ "title": "Time" },			
-			{ "title": "IN/OUT" }],	
+			{ "title": "IN/OUT" },
+			{ "title": "Punch Type"}],	
 		"columnDefs": [{ type: 'date-eu', targets: [0] }],
        	"iDisplayLength" : 100
 	} );	
