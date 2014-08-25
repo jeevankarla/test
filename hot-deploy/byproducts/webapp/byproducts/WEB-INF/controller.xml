@@ -546,6 +546,11 @@
 	        <security https="true" auth="true"/>
 	        <response name="success" type="view" value="NonRouteGatePassPDF"/>
     </request-map>
+    <request-map uri="indentPrintReport.pdf">
+	        <security https="true" auth="true"/>
+	        <response name="success" type="view" value="IndentPrintReportPDF"/>
+    </request-map>
+    
      <request-map uri="orderSlip.txt">
 	        <security https="true" auth="true"/>
 	        <response name="success" type="view" value="orderSlipTXT"/>
@@ -1478,7 +1483,8 @@
     <view-map name="InvoiceTXT" type="screenfop" page="component://byproducts/widget/ByProductsNgScreens.xml#InvoiceTXT" content-type="text/plain"/><!-- for AdhocSale We are Using Invoice -->
     <view-map name="BuyerInvoicePDF" type="screenfop" page="component://byproducts/widget/ByProductsNgScreens.xml#BuyerInvoicePDF" content-type="application/pdf"/><!-- for AdhocSale We are Using Invoice -->
 	<view-map name="TaxInvoicePDF" type="screenfop" page="component://byproducts/widget/ByProductsNgScreens.xml#TaxInvoicePDF" content-type="application/pdf"/>
-	<view-map name="NonRouteGatePassPDF" type="screenfop" page="component://byproducts/widget/ByProductsReportScreens.xml#NonRouteGatePassPDF" content-type="application/pdf"/>   
+	<view-map name="NonRouteGatePassPDF" type="screenfop" page="component://byproducts/widget/ByProductsReportScreens.xml#NonRouteGatePassPDF" content-type="application/pdf"/>
+	<view-map name="IndentPrintReportPDF" type="screenfop" page="component://byproducts/widget/ByProductsReportScreens.xml#IndentPrintReportPDF" content-type="application/pdf"/>
    <view-map name="orderSlipTXT" type="screenfop" page="component://byproducts/widget/ByProductsNgScreens.xml#orderSlipTXT" content-type="text/plain"/> 
     
      <view-map name="MLDGenerateTruckSheetTXT" type="screenfop" page="component://byproducts/widget/ByProductsNgScreens.xml#TruckSheetReportTXT" content-type="text/plain"/>

@@ -358,6 +358,28 @@ under the License.
         <key-map field-name="orderId"/>
       </relation>
     </view-entity>
+    <view-entity entity-name="OrderHeaderAndRolesAndShipment"
+            package-name="org.ofbiz.order.order"
+            never-cache="true"
+            title="Order Header And Roles And Shipment View Entity">
+      <member-entity entity-alias="ORLE" entity-name="OrderRole"/>
+      <member-entity entity-alias="OH" entity-name="OrderHeader"/>
+      <member-entity entity-alias="SH" entity-name="Shipment"/>
+      <alias-all entity-alias="ORLE"/>
+      <alias-all entity-alias="OH"/>
+      <alias entity-alias="SH" name="shipmentId"/>
+      <alias entity-alias="SH" name="shipmentTypeId"/>
+      <alias entity-alias="SH" name="shipStatusId" field="statusId"/>
+      <alias entity-alias="SH" name="estimatedShipDate"/>
+      <alias entity-alias="SH" name="vehicleId"/>
+      <alias entity-alias="SH" name="routeId"/>
+      <view-link entity-alias="OH" rel-entity-alias="ORLE">
+        <key-map field-name="orderId"/>
+      </view-link>
+      <view-link entity-alias="OH" rel-entity-alias="SH">
+        <key-map field-name="shipmentId"/>
+      </view-link>
+    </view-entity>
     <view-entity entity-name="OrderHeaderItemAndInv"
             package-name="org.ofbiz.order.order"
             never-cache="true"

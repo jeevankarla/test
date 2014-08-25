@@ -65,7 +65,7 @@ else{
 	orderIds.add(parameters.orderId);
 	screenFlag = "dc";
 }
-
+screenFlag = "";
 orderIds.each{ eachOrderId ->
 	ordersMap = [:];
 	conditionList.clear();
@@ -78,6 +78,28 @@ orderIds.each{ eachOrderId ->
 	
 	if(orderHeaders){
 		orderDetail = EntityUtil.getFirst(orderHeaders);
+	}
+	
+	if(orderDetail){
+		salesChannelEnumId = orderDetail.salesChannelEnumId;
+		if(salesChannelEnumId == "ICP_NANDINI_CHANNEL"){
+			screenFlag = "NANDINI";
+		}
+		if(salesChannelEnumId == "ICP_AMUL_CHANNEL"){
+			screenFlag = "AMUL";
+		}
+		if(salesChannelEnumId == "FGS_PRODUCT_CHANNEL"){
+			screenFlag = "FGS";
+		}
+		if(salesChannelEnumId == "POWDER_PLANT_CHANNEL"){
+			screenFlag = "POWDER";
+		}
+		if(salesChannelEnumId == "PROCESSING_CHANNEL"){
+			screenFlag = "PROCESSCONVERSION";
+		}
+		if(salesChannelEnumId == "INTUNIT_TR_CHANNEL"){
+			screenFlag = "INTERUNIT";
+		}
 	}
 	
 	conditionList.clear();
