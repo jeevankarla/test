@@ -67,7 +67,7 @@ public class EmplLeaveService {
         	List customTimePeriods = delegator.findList("CustomTimePeriod", condition, null, UtilMisc.toList("-thruDate"), null, true);
         	if (customTimePeriods != null && customTimePeriods.size() > 0) {
         		GenericValue latestHRPeriod = EntityUtil.getFirst(customTimePeriods);
-        		result.put("leaveBalanceDate", latestHRPeriod.get("thruDate"));
+        		result.put("leaveBalanceDate", latestHRPeriod.get("fromDate"));
                 Map<String, Object> leaveBalancesMap = FastMap.newInstance();
             	conditionList.clear();
             	conditionList.add(EntityCondition.makeCondition("customTimePeriodId", EntityOperator.EQUALS, latestHRPeriod.getString("customTimePeriodId")));
