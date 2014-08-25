@@ -50,13 +50,13 @@
 			                   		<#if emplLOPValues.getValue().get("lossOfPayDays")!=0>
 				                   		<fo:table-row >
 				                   			<fo:table-cell >	
-				                            	<fo:block text-align="center" keep-together="always" font-weight="bold" font-size="15pt">${emplLOPValues.getKey()?if_exists}</fo:block>
+				                            	<fo:block text-align="center" keep-together="always" font-size="15pt">${emplLOPValues.getKey()?if_exists}</fo:block>
 				                            </fo:table-cell>
 				                            <fo:table-cell >	
-				                            	<fo:block text-align="left" keep-together="always" font-weight="bold" font-size="15pt">${emplLOPValues.getValue().get("employeeName")?if_exists}</fo:block>
+				                            	<fo:block text-align="left" keep-together="always" font-size="15pt">${emplLOPValues.getValue().get("employeeName")?if_exists}</fo:block>
 				                            </fo:table-cell>
 				                            <fo:table-cell >	
-				                            	<fo:block text-align="right" keep-together="always" font-weight="bold" font-size="15pt">${emplLOPValues.getValue().get("lossOfPayDays")?if_exists}</fo:block>
+				                            	<fo:block text-align="right" keep-together="always" font-size="15pt">${emplLOPValues.getValue().get("lossOfPayDays")?if_exists?string("##0.00000")}</fo:block>
 				                            </fo:table-cell>
 				                            <#assign noofLines=noofLines+1>
 				                     	</fo:table-row>
