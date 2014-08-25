@@ -942,8 +942,7 @@ under the License.
         <event type="service" invoke="deletePartySkill"/>
         <response name="success" type="view" value="EditEmployeeSkills"/>
         <response name="error" type="view" value="EditEmployeeSkills"/>
-    </request-map>
-          
+    </request-map>   
     <request-map uri="deleteDependent">
         <security https="true" auth="true"/>
         <event type="service" invoke="deletePartyRelationship"/>
@@ -1612,6 +1611,10 @@ under the License.
         <security https="true" auth="true"/>                        
         <response name="success" type="view" value="EmployeePunchData"/>        
     </request-map>
+    <request-map uri="EditedLateHoursReport.pdf">
+        <security https="true" auth="true"/>                        
+        <response name="success" type="view" value="EditedLateHoursReport"/>        
+    </request-map>
     <request-map uri="AttendanceExceptionReport.pdf">
         <security https="true" auth="true"/>                        
         <response name="success" type="view" value="AttendanceExceptionReport"/>        
@@ -1953,6 +1956,7 @@ under the License.
     <view-map name="EmployeesLOPdays" type="screenfop" page="component://humanres/widget/ReportHumanresSummaryScreens.xml#EmployeesLOPdays" content-type="application/pdf" encoding="none"/>
     <view-map name="CanteenReport" type="screenfop" page="component://humanres/widget/ReportHumanresSummaryScreens.xml#CanteenReport" content-type="application/pdf" encoding="none"/>
     <view-map name="EmployeePunchData" type="screenfop" page="component://humanres/widget/ReportHumanresSummaryScreens.xml#EmployeePunchData" content-type="application/pdf" encoding="none"/>
+	<view-map name="EditedLateHoursReport" type="screenfop" page="component://humanres/widget/EmployeeScreens.xml#EditedLateHoursReport" content-type="application/pdf" encoding="none"/>
     <view-map name="AttendanceExceptionReport" type="screenfop" page="component://humanres/widget/ReportHumanresSummaryScreens.xml#AttendanceExceptionReport" content-type="application/pdf" encoding="none"/>
     <view-map name="CompanyPunchReport" type="screen" page="component://humanres/widget/ReportHumanresSummaryScreens.xml#CompanyPunchReport"/>
     <view-map name="EmployeePunchReport" type="screen" page="component://humanres/widget/ReportHumanresSummaryScreens.xml#EmployeePunchReport"/>

@@ -64,6 +64,7 @@ function makeDatePicker1(fromDateId ,thruDateId){
 		makeDatePicker("MPthruDate","MPthruDate");
 		makeDatePicker("LOPfromDate","LOPfromDate");
 		makeDatePicker("LOPthruDate","LOPthruDate");
+		makeDatePicker("EditedLateHoursfromDate","EditedLateHoursfromDate");
 		makeDatePicker("EPfromDate","EPfromDate");
 		makeDatePicker("EPthruDate","EPthruDate");
 		$('#ui-datepicker-div').css('clip', 'auto');		
@@ -203,7 +204,6 @@ function makeDatePicker1(fromDateId ,thruDateId){
 							</form>
 						</table>
 					</tr>
-					
 					<tr class="alternate-row">
 						<form id="EmployeeMisPunchData" name="EmployeeMisPunchData" mothed="post" action="<@ofbizUrl>EmployeeMisPunchData.pdf</@ofbizUrl>" target="_blank">
 							<table class="basic-table" cellspacing="5">
@@ -228,6 +228,18 @@ function makeDatePicker1(fromDateId ,thruDateId){
 							</table>	
       	   				</form>
       	  			 </tr>
+      	  			 <tr class="alternate-row">
+						<form id="EditedLateHoursReport" name="EditedLateHoursReport" mothed="post" action="<@ofbizUrl>EditedLateHoursReport.pdf</@ofbizUrl>" target="_blank">
+							<table class="basic-table" cellspacing="5">
+								<tr class="alternate-row">
+									<td width="11%"><span class='h3'>Edited Late Hours Report</span></td>
+									<td width="23%"><span class='h3'>From Date</span><input  type="text"  id="EditedLateHoursfromDate"  size="18pt" name="fromDate"/></td>
+									<td width="11%"><span class='h3'><input type="submit" value="Download" class="buttontext"></span></td>
+								</tr>
+							</table>		 
+							</td>
+						</form>
+					</tr>
 					<tr class="alternate-row">
 						<table class="basic-table" cellspacing="3">
 							<form id="CanteenReport" name="CanteenReport" mothed="post" action="<@ofbizUrl>CanteenReport.pdf</@ofbizUrl>" target="_blank">
