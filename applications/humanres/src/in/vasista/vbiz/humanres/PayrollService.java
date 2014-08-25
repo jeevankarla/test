@@ -379,7 +379,6 @@ public class PayrollService {
 		            	GenericValue payGrade = delegator.findOne("PayGrade", UtilMisc.toMap(
 		            			"payGradeId", payGradeId), true);
 		            	result.put("payGradeId", payGrade.get("seqId"));
-		            	
 		                amount = salaryStep.getDouble("amount");
 		                
 		            	//adjust basic here
@@ -2860,6 +2859,8 @@ public class PayrollService {
 			    					 && UtilValidate.isEmpty(cHoliDayList) &&  UtilValidate.isEmpty(cDayLeaves)){
 			    				// no punch ,not weekly off ,not secondSaturDay, not general holiday  and no leave then consider it as lossOfPay
 			    				lossOfPayDays = lossOfPayDays+1;
+			    			}else if(UtilValidate.isNotEmpty(cDayLeaves) && UtilValidate.isNotEmpty(cDayLeaveFraction)){
+			    				lossOfPayDays = lossOfPayDays+0.5;
 			    			}
 			    			c1.add(Calendar.DATE,1);
 			    		}
