@@ -128,12 +128,14 @@ under the License.
 	       			 		<fo:block font-weight="bold" keep-together="always">CANARA BANK</fo:block>        
 	       			 	</fo:table-cell>
        			 	</fo:table-row>
+       			 <#if canaraBankIds?has_content>
+       			 	<#assign sno=0>	
 	              <#list canaraBankIds as partyId>            
 	              	 <#if BankAdvicePayRollMap.get(partyId)?has_content>   	
 	                   <fo:table-row height="14px" space-start=".15in">
 		                   <fo:table-cell  border="solid">
-		                   		<#assign temp=(temp+1)>
-		                        <fo:block text-align="center">${temp?if_exists}</fo:block>
+		                   		<#assign sno=(sno+1)>
+		                        <fo:block text-align="center">${sno?if_exists}</fo:block>
 		                   </fo:table-cell >
 		                   <fo:table-cell border="solid">
 		                    	<fo:block text-align="center">${BankAdvicePayRollMap.get(partyId).get("emplNo")?if_exists}</fo:block>
@@ -151,6 +153,7 @@ under the License.
 	               		</fo:table-row>
 	               		 </#if>       
 	                  </#list>
+	                  </#if>
 		              <fo:table-row border="solid">
 		              	<fo:table-cell/>
 		              	<fo:table-cell>              		
