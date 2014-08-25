@@ -9,6 +9,7 @@
             <set field="newemplPunchId" from-field="parameters.emplPunchId"/>
             
             <script location="component://humanres/webapp/humanres/WEB-INF/actions/calendar/emplPunch.bsh"/>
+           <!--  <script location="component://party/webapp/partymgr/static/checkDate.js"/> -->
          <!-- <set field="punchdate" value="${bsh:org.ofbiz.base.util.UtilDateTime.nowDateString(&quot;yyyy-MM-dd&quot;)}" type="String" />  -->
             <set field="punchtime" from-field="parameters.punchtime"/>
             
@@ -19,25 +20,28 @@
         <field name="roleTypeId"><hidden value="EMPLOYEE"/></field>
         <field name="isManual"><hidden value="Y"/></field>	
         <field name="partyId"><lookup target-form-name="LookupPartyName" default-value="${partyId}" target-parameter="roleTypeId"/></field>
-        <field name="punchtime" title="Punch Time"><text default-value="${nowTime}"/></field>
+        <field name="punchtime" title="Punch Time"><text size="15" default-value="${nowTime}"  /></field>
         <field name="punchtime" use-when="punchtime!=null" title="Punch Time"><text/></field>
         <field name="dateTime"><hidden/></field>
-        <field name="punchdate" title="Date"><date-time type="date" default-value="${groovy: org.ofbiz.base.util.UtilDateTime.nowTimestamp()}"/></field> 
-        <field name="emplPunchId"><hidden/></field>
-         <field name="shiftType">
-	         <drop-down allow-empty="true" current="selected">
-	  		  	<entity-options entity-name="WorkShiftType" description="${description}" key-field-name="shiftTypeId">
-	            </entity-options>
-			</drop-down>
-        </field> 
-        <field name="PunchType"  widget-style="required">
-        	<drop-down allow-empty="false" current="selected">
+        <field name="permision" id-name="Permission"><hidden value="${groovy:((security.hasEntityPermission(&quot;EMP_PUNCH_EDIT&quot;, &quot;_UPDATE&quot;,session)))}"/></field>
+        <field name="PunchType"  widget-style="required" event="onchange" action="javascript:change();">
+        	<drop-down allow-empty="false" current="selected" >
   		  		<entity-options entity-name="Enumeration" description="${description}" key-field-name="enumId">
                     <entity-constraint name="enumTypeId" value="PUNCH_TYPE"/>
                     <entity-order-by field-name="sequenceId"/>
                 </entity-options>
 			</drop-down>
         </field>
+        <field name="punchdate" title="Date"><text size="15" mask=" "/></field> 
+        <field name="emplPunchId"><hidden/></field>
+         <field name="shiftType">
+	         <drop-down allow-empty="true" current="selected">
+	  		  	<entity-options entity-name="WorkShiftType" description="${description}" key-field-name="shiftTypeId">
+	            </entity-options>
+			</drop-down> 
+        </field>
+        
+                
         <field name="oldPunchType">
         	<hidden value="${parameters.PunchType}"/>
         </field>
@@ -64,7 +68,13 @@
                 <parameter param-name="emplPunchId" value="${newemplPunchId}"/>  
             </hyperlink>          
         </field>  
-        
+        <sort-order>
+		<field-group title="" initially-collapsed="false">
+		<sort-field name="partyId"/>
+		<sort-field name="PunchType"/>
+		<sort-field name="punchdate"/>
+		</field-group>        
+        </sort-order>
 </form>
 </forms>
 

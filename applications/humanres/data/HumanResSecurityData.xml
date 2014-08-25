@@ -43,5 +43,9 @@ under the License.
     <SecurityGroup description="Employee LOP Edit" groupId="EMP_LOP_EDIT"/> 
     <SecurityGroupPermission groupId="FULLADMIN" permissionId="EMP_LOP_EDIT_UPDATE"/>
     <SecurityGroupPermission groupId="EMP_LOP_EDIT" permissionId="EMP_LOP_EDIT_UPDATE"/> 
+    
+    <SecurityGroup description="Employee PUNCH Edit" groupId="EMP_PUNCH_EDIT"></SecurityGroup>
+    <SecurityGroupPermission groupId="FULLADMIN" permissionId="EMP_PUNCH_EDIT_UPDATE"/>
+    <SecurityGroupPermission groupId="EMP_PUNCH_EDIT" permissionId="EMP_PUNCH_EDIT_UPDATE"/>
       
 </entity-engine-xml>
