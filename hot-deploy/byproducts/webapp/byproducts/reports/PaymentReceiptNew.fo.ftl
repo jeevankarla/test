@@ -127,6 +127,7 @@ under the License.
                     				<fo:block linefeed-treatment="preserve">&#xA;</fo:block>
                					</fo:table-cell>
 		  					</fo:table-row>
+		  					<#if paymentListReport.paymentMethodTypeId?exists && (paymentListReport.paymentMethodTypeId == "CHEQUE_PAYOUT" || paymentListReport.paymentMethodTypeId == "CHEQUE_PAYIN")>
 		  					<fo:table-row>
             				     <fo:table-cell font-weight = "bold">
                     				<fo:block>In Favour of:</fo:block>
@@ -135,6 +136,16 @@ under the License.
                					<fo:block>${paymentListReport.comments?if_exists}</fo:block>
                					</fo:table-cell>
 		  					</fo:table-row>
+		  					<#else>
+		  					<fo:table-row>
+            				     <fo:table-cell font-weight = "bold">
+                    				<fo:block></fo:block>
+               					</fo:table-cell>
+               					<fo:table-cell number-columns-spanned="2">
+               					<fo:block>${paymentListReport.comments?if_exists}</fo:block>
+               					</fo:table-cell>
+		  					</fo:table-row>
+		  					</#if>
 		  					<fo:table-row>
                					<fo:table-cell >
                     				<fo:block>-------------------------------------------------------------------------------</fo:block>
