@@ -127,8 +127,8 @@ oodPunchList.each { punch->
 }
 
 
-Debug.logError("punchListJSON="+punchListJSON,"");
-Debug.logError("oodPunchListJSON="+oodPunchListJSON,"");
+//Debug.logError("punchListJSON="+punchListJSON,"");
+//Debug.logError("oodPunchListJSON="+oodPunchListJSON,"");
 context.employeeId = employeeId;
 context.employeeName = employeeName;
 context.fromDate = fromDate;
