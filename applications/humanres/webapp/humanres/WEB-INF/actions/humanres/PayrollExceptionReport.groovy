@@ -45,7 +45,7 @@ if(UtilValidate.isNotEmpty(timePeriod)){
 	if(UtilValidate.isNotEmpty(payrollDetailsList)){
 		payrollDetailsList.each { payrollDetails ->
 		noOfPayableDays=payrollDetails.get("noOfPayableDays");
-		if(UtilValidate.isEmpty(noOfPayableDays)){
+		if(UtilValidate.isNotEmpty(noOfPayableDays)){
 			payrollDaysMap= [:];
 			partyId=payrollDetails.get("partyId");
 				payableDays = 0;
