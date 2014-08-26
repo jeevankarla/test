@@ -552,7 +552,7 @@ public class PunchService {
 										"DailyBusTimings", UtilMisc.toMap("date",
 												shiftDate, "shiftType", shiftType.getString("shiftTypeId")),
 										null);
-				    	    	busInTimeList = EntityUtil.orderBy(busInTimeList, UtilMisc.toList("inTime"));
+				    	    	busInTimeList = EntityUtil.orderBy(busInTimeList, UtilMisc.toList("-inTime"));
 				    	    	GenericValue busInTime = EntityUtil.getFirst(busInTimeList);
 				    	    	if(UtilValidate.isNotEmpty(busInTime)){
 				    	    		Timestamp busInDateTime = 
