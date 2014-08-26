@@ -459,7 +459,7 @@ public class ByProductServices {
 	     		  	Debug.logError(e, "Problem updating ItemIssuance for Route " + routeId, module); 
 	                return ServiceUtil.returnError(e.toString());
 	     	  }	
-	     	   try{
+	     	  /* try{
 	     		    Timestamp concFeeDueDate=UtilDateTime.getDayStart(UtilDateTime.addDaysToTimestamp(pMonthEnd, 10));
 		        	Timestamp pMonthStart=UtilDateTime.getMonthStart(estimatedDeliveryDate);
 		        	Map createInvoiceForConcessionaireFeeCtx = UtilMisc.toMap("userLogin",userLogin);
@@ -478,7 +478,7 @@ public class ByProductServices {
 		     	  }catch (Exception e) {
 		     		  	Debug.logError(e, "Problem In Concessionaire Fee Invoice Generation" + routeId, module); 
 		                return ServiceUtil.returnError(e.toString());
-		     	  }	
+		     	  }	*/
 	        } 
 		result.put("shipmentIdsList", shipmentIdsList);
         // attempt to create a Shipment entity
@@ -1509,13 +1509,13 @@ public class ByProductServices {
 				    	 return ServiceUtil.returnError("Error in cancel Shipment For Shopee Rent"); 
         
 					}
-					try {
+					/*try {
 		     			result =cancelConcessionaireFee(dctx,cancelShopeeRentCtx);
 					} catch (Exception e) {
 						 Debug.logError("Error in cancel Shipment For Concessionaire Fee"+e, module);
 				    	 return ServiceUtil.returnError("Error in cancel Shipment For Concessionaire Fee"); 
         
-					}
+					}*/
 		       }
 	        }catch (Exception e) {
 	            Debug.logError("Unable to get Shipment record from DataBase"+e, module);
