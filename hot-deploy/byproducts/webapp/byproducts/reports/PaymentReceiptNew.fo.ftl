@@ -123,14 +123,19 @@ under the License.
                        			</fo:table-cell>
             				</fo:table-row>
             				<fo:table-row>
-            				     <fo:table-cell>
-                    				<fo:block></fo:block>
+               					<fo:table-cell >
+                    				<fo:block linefeed-treatment="preserve">&#xA;</fo:block>
+               					</fo:table-cell>
+		  					</fo:table-row>
+		  					<fo:table-row>
+            				     <fo:table-cell font-weight = "bold">
+                    				<fo:block>In Favour of:</fo:block>
                					</fo:table-cell>
                					<fo:table-cell number-columns-spanned="2">
                					<fo:block>${paymentListReport.comments?if_exists}</fo:block>
                					</fo:table-cell>
 		  					</fo:table-row>
-            				<fo:table-row>
+		  					<fo:table-row>
                					<fo:table-cell >
                     				<fo:block>-------------------------------------------------------------------------------</fo:block>
                					</fo:table-cell>
