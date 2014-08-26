@@ -65,7 +65,10 @@
             <link target="analytics"/>
         </menu-item> 
         <menu-item name="newReports" title="New Reports">
-        <link target="MastersReports"/>
+             <condition>
+            	<if-has-permission permission="HR"  action="_REPORTS_VIEW"/>
+            </condition>
+        		<link target="MastersReports"/>
         </menu-item>	   
         <menu-item name="benefitOrDeduction" title="Benefits/Deductions">
         	<condition>
@@ -80,7 +83,10 @@
             <link target="DailyPunch"/>
         </menu-item>     
         <menu-item name="busTimings" title="Daily Bus Timings">
-        <link target="busTimings"/>
+           <condition>
+            	<if-has-permission permission="HR"  action="_DAILYBUS_VIEW"/>
+            </condition>
+        	<link target="busTimings"/>
         </menu-item>          	                    
 	</menu>
 	<menu name="AttendanceTabBar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml" 
