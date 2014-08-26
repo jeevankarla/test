@@ -1,4 +1,5 @@
-
+import org.ofbiz.entity.condition.*;
+import org.ofbiz.base.util.*;
 
 
 parameters.isPublic = 'Y';
