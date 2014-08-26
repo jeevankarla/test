@@ -1,4 +1,3 @@
-
 import org.ofbiz.base.util.*;
 import org.ofbiz.entity.condition.*;
 import org.ofbiz.entity.util.EntityUtil;
@@ -126,12 +125,43 @@ oodPunchList.each { punch->
 	}
 }
 
+JSONArray leaveListJSON = new JSONArray();
+conditionList.clear();
+conditionList.add(EntityCondition.makeCondition("partyId", EntityOperator.EQUALS, employeeId));
+conditionList.add(EntityCondition.makeCondition("leaveStatus", EntityOperator.EQUALS, "LEAVE_APPROVED"));
+conditionList.add(EntityCondition.makeCondition("fromDate", EntityOperator.LESS_THAN_EQUAL_TO, thruDate));
+conditionList.add(EntityCondition.makeCondition(EntityCondition.makeCondition("thruDate", EntityOperator.EQUALS, null), EntityOperator.OR,
+	EntityCondition.makeCondition("thruDate", EntityOperator.GREATER_THAN_EQUAL_TO, fromDate)));
+condition=EntityCondition.makeCondition(conditionList,EntityOperator.AND);
+Debug.logError("condition="+condition,"");
+
+leaveList = delegator.findList("EmplLeave", condition , null, null, null, false );
+Debug.logError("leaveList="+leaveList,"");
+
+leaveList.each { leave->
+	JSONArray leaveJSON = new JSONArray();
+	leaveFromDate = UtilDateTime.toDateString(leave.get("fromDate"), "dd/MM/yyyy");
+	leaveJSON.add(leaveFromDate);
+	leaveThruDate = "";
+	if(UtilValidate.isNotEmpty(leave.get("thruDate"))) {
+		leaveThruDate = UtilDateTime.toDateString(leave.get("thruDate"), "dd/MM/yyyy");;
+	}
+	leaveJSON.add(leaveThruDate);
+	leaveType = leave.get("leaveTypeId");
+	if(UtilValidate.isNotEmpty(leaveType) && UtilValidate.isNotEmpty(leave.getString("dayFractionId"))){
+		leaveType = leaveType + " (" + leave.getString("dayFractionId") + ")";
+	}
+	leaveJSON.add(leaveType);
+	leaveListJSON.add(leaveJSON);
+}
 
 //Debug.logError("punchListJSON="+punchListJSON,"");
 //Debug.logError("oodPunchListJSON="+oodPunchListJSON,"");
+//Debug.logError("leaveListJSON="+leaveListJSON,"");
 context.employeeId = employeeId;
 context.employeeName = employeeName;
 context.fromDate = fromDate;
 context.thruDate = thruDate;
 context.punchListJSON = punchListJSON;
 context.oodPunchListJSON = oodPunchListJSON;
+context.leaveListJSON = leaveListJSON;

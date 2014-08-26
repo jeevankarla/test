@@ -14,7 +14,7 @@
 
 $(document).ready(function() {
 
-	 
+	// attendance table 
 	var attendanceTable = ${StringUtil.wrapString(punchListJSON!'[]')};	 
 	$('#attendanceTable').html( '<table cellpadding="0" cellspacing="0" border="0" class="display" id="datatable1"></table>' );
 
@@ -28,6 +28,7 @@ $(document).ready(function() {
        	"iDisplayLength" : 100
 	} );
 	
+	// ood table
 	var oodTable = ${StringUtil.wrapString(oodPunchListJSON!'[]')};	 
 	$('#oodTable').html( '<table cellpadding="0" cellspacing="0" border="0" class="display" id="datatable2"></table>' );
 
@@ -39,7 +40,21 @@ $(document).ready(function() {
 			{ "title": "Duration (hrs)"}],	
 		"columnDefs": [{ type: 'date-eu', targets: [0,1] }],
        	"iDisplayLength" : 100
-	} );		
+	} );
+	
+	// leave table
+	var leaveTable = ${StringUtil.wrapString(leaveListJSON!'[]')};	 
+	$('#leaveTable').html( '<table cellpadding="0" cellspacing="0" border="0" class="display" id="datatable3"></table>' );
+
+	var datatable3 = $('#datatable3').dataTable( {
+		"data": leaveTable,
+		"columns": [
+			{ "title": "From Date" },			
+			{ "title": "Thru Date" },
+			{ "title": "Leave Type"}],	
+		"columnDefs": [{ type: 'date-eu', targets: [0,1] }],
+       	"iDisplayLength" : 100
+	} );			
 
 } );
 
@@ -69,5 +84,13 @@ $(document).ready(function() {
     		<div id="oodTable"/>  
     	</div>  	
     </div>
+    <div class="screenlet">  
+    	<div class="screenlet-title-bar">
+      		<h3>Approved Leaves</h3>	
+     	</div>
+	    <div class="screenlet-body">
+    		<div id="leaveTable"/>  
+    	</div>  	
+    </div>    
 </div>
 </div>    
