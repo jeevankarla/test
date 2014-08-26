@@ -14,7 +14,7 @@
         
         <field name="uploadedFile" title="${uiLabelMap.CommonUpload}"><file/></field>
         <field name="dataCategoryId"><hidden value="SR_DOCUMENT"/></field>
-        <field name="isPublic"><hidden value="Y"/></field>
+        <field name="isPublic"><hidden value="N"/></field>
              
         <field name="createButton" title="Upload File"><submit button-type="button"/></field>
     </form> 
