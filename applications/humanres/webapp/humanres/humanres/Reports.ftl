@@ -227,18 +227,25 @@ function makeDatePicker1(fromDateId ,thruDateId){
 								</tr>
 							</table>	
       	   				</form>
-      	  			 </tr>
-      	  			 <tr class="alternate-row">
-						<form id="EditedLateHoursReport" name="EditedLateHoursReport" mothed="post" action="<@ofbizUrl>EditedLateHoursReport.pdf</@ofbizUrl>" target="_blank">
-							<table class="basic-table" cellspacing="5">
-								<tr class="alternate-row">
-									<td width="11%"><span class='h3'>Edited Late Hours Report</span></td>
-									<td width="23%"><span class='h3'>From Date</span><input  type="text"  id="EditedLateHoursfromDate"  size="18pt" name="fromDate"/></td>
-									<td width="11%"><span class='h3'><input type="submit" value="Download" class="buttontext"></span></td>
-								</tr>
-							</table>		 
-							</td>
-						</form>
+      	  			</tr>
+					<tr class="alternate-row">
+						<table class="basic-table" cellspacing="3">
+							<form id="EditedLateHoursReport" name="EditedLateHoursReport" mothed="post" action="<@ofbizUrl>EditedLateHoursReport.pdf</@ofbizUrl>" target="_blank">
+								<table class="basic-table" cellspacing="5">
+									<tr class="alternate-row">
+										<td width="12%"><span class='h3'>Edited Late Hours Report</span></td>
+										<td width="24%"><span class='h3'>Period Id</span>
+											<select name="customTimePeriodId" class='h4'>
+												<#list timePeriodList as timePeriod>    
+													<option value='${timePeriod.customTimePeriodId}'>${timePeriod.periodName}:${timePeriod.fromDate}-${timePeriod.thruDate}</option>
+												</#list>      
+											</select>
+										</td>	
+										<td width="12%"><input type="submit" value="Download" class="buttontext"></td> 
+									</tr>
+								</table>	
+							</form>
+						</table>
 					</tr>
 					<tr class="alternate-row">
 						<table class="basic-table" cellspacing="3">

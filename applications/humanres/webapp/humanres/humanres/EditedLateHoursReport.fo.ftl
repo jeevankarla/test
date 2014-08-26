@@ -8,13 +8,13 @@
             </fo:simple-page-master>
         </fo:layout-master-set>
         ${setRequestAttribute("OUTPUT_FILENAME", "EditLateHoursReport.pdf")}
-        <#if FinalMap?has_content>
+        <#if attendanceDetailList?has_content>
 			<fo:page-sequence master-reference="main">
         		<fo:static-content font-size="12pt" font-family="Courier,monospace"  flow-name="xsl-region-before" font-weight="bold">        
 	        		<fo:block  keep-together="always" text-align="center" font-family="Courier,monospace" white-space-collapse="false" font-weight="bold">&#160;      ${uiLabelMap.KMFDairyHeader}</fo:block>
 					<fo:block  keep-together="always" text-align="center" font-family="Courier,monospace" white-space-collapse="false" font-weight="bold">&#160;      ${uiLabelMap.KMFDairySubHeader}</fo:block>
 	        		<fo:block  keep-together="always" text-align="center" font-family="Courier,monospace" white-space-collapse="false" font-weight="bold">&#160;      </fo:block>
-	        		<fo:block text-align="center" keep-together="always" white-space-collapse="false">&#160;    EDITED LATE HOURS REPORT FOR THE MONTH OF ${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(fromDateStart, "dd-MMM-yyyy")}</fo:block>	  
+	        		<fo:block text-align="center" keep-together="always" white-space-collapse="false">&#160;    EDITED LATE HOURS REPORT FOR THE MONTH OF ${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(fromDateStart, "MMM-yyyy")}</fo:block>	  
 	        		<fo:block text-align="left" keep-together="always" white-space-collapse="false">&#160;                                                                              DATE: ${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(nowTimestamp, "dd-MMM-yyyy")}</fo:block>	 
 	        		<fo:block text-align="left" keep-together="always" white-space-collapse="false">&#160;                                                                              PAGE: <fo:page-number/></fo:block>	 	 	  	 	  
 	        		<fo:block text-align="left" keep-together="always" white-space-collapse="false">&#160;</fo:block>
@@ -37,31 +37,30 @@
 	                    <fo:table-column column-width="80pt"/>
 	                    <fo:table-column column-width="80pt"/>
                      	<fo:table-body>
-                     	<#assign employeeAttendence=FinalMap.entrySet()>
-                     		<#list employeeAttendence as empAttendence>
-                     			<#if (empAttendence.getValue().get("overrideLateMin"))!=0>
+                     		<#list attendanceDetailList as empAttendence>
+                     			<#if (empAttendence.get("overrideLateMin"))!=0>
 				         			<fo:table-row>
 				                   		<fo:table-cell>	
-				                    		<fo:block text-align="center" keep-together="always" font-size="12pt">${empAttendence.getKey()}</fo:block>
+				                    		<fo:block text-align="center" keep-together="always" font-size="12pt">${empAttendence.get("partyId")}</fo:block>
 				                   		</fo:table-cell>
 				                   		<fo:table-cell>	
-				                    		<fo:block text-align="left" keep-together="always" font-size="12pt">${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(empAttendence.getValue().get("date"), "dd/MM/yy")?if_exists}</fo:block>
+				                    		<fo:block text-align="left" keep-together="always" font-size="12pt">${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(empAttendence.get("date"), "dd/MM/yy")?if_exists}</fo:block>
 				                    	</fo:table-cell>
 				                    	<fo:table-cell>	
-				                    		<fo:block text-align="right" keep-together="always" font-size="12pt"><#if empAttendence.getValue().get("lateMin")?has_content>${empAttendence.getValue().get("lateMin")?if_exists}<#else>0</#if></fo:block>
+				                    		<fo:block text-align="right" keep-together="always" font-size="12pt"><#if empAttendence.get("lateMin")?has_content>${empAttendence.get("lateMin")?if_exists}<#else>0</#if></fo:block>
 				                    	</fo:table-cell>
 				                    	<fo:table-cell>	
-				                    		<fo:block text-align="right" keep-together="always" font-size="12pt"><#if empAttendence.getValue().get("overrideLateMin")?has_content>${empAttendence.getValue().get("overrideLateMin")?if_exists}<#else>0</#if></fo:block>
+				                    		<fo:block text-align="right" keep-together="always" font-size="12pt"><#if empAttendence.get("overrideLateMin")?has_content>${empAttendence.get("overrideLateMin")?if_exists}<#else>0</#if></fo:block>
 				                    	</fo:table-cell>
 				                    	<fo:table-cell>	
-				                    		<fo:block text-align="right" keep-together="always" font-size="12pt"><#if empAttendence.getValue().get("overridenBy")?has_content>${empAttendence.getValue().get("overridenBy")?if_exists}<#else></#if></fo:block>
+				                    		<fo:block text-align="right" keep-together="always" font-size="12pt"><#if empAttendence.get("overridenBy")?has_content>${empAttendence.get("overridenBy")?if_exists}<#else></#if></fo:block>
 				                    	</fo:table-cell>
 				                    	<fo:table-cell>	
-											<fo:block text-align="right" keep-together="always" font-size="12pt"><#if empAttendence.getValue().get("editedDate")?has_content>${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(empAttendence.getValue().get("editedDate") ,"dd/MM/yy HH:mm")?if_exists}<#else></#if></fo:block>
+											<fo:block text-align="right" keep-together="always" font-size="12pt"><#if empAttendence.get("lastUpdatedStamp")?has_content>${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(empAttendence.get("lastUpdatedStamp") ,"dd/MM/yy HH:mm")?if_exists}<#else></#if></fo:block>
 				                    	</fo:table-cell>
 			                    		<#assign noofLines=noofLines+1>
 			               			</fo:table-row>
-			               		</#if>
+			               		</#if>	
 			               		<#if (noofLines == 35)>
 	                            	<fo:table-row>
 	                            		<fo:table-cell>
