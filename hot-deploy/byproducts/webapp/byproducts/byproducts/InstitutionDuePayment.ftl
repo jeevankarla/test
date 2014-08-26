@@ -65,7 +65,7 @@
 		if(str == undefined){
 			return;
 		}
-		if(str.search(/(FT)+/g) >= 0){
+		if(str.search(/(FUND_TRANSFER)+/g) >= 0){
 			htmlMsg = "";
 			htmlMsg += "<select name='issuingAuthority' id='issuingAuthority' class='h4'>"+
 						"<option value=''>-- Select -- </option>"+

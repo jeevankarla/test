@@ -2195,7 +2195,7 @@
     			
     			<entity-condition list="paymentMethodList" entity-name="PaymentMethodType">
     				<condition-list combine="or">
-    					<condition-expr field-name="paymentMethodTypeId" operator="equals"  value="FT_PAYIN"/>
+    					<condition-expr field-name="paymentMethodTypeId" operator="equals"  value="FUND_TRANSFER"/>
     					<condition-expr field-name="paymentMethodTypeId" operator="equals"  value="CHEQUE_PAYIN"/>
     				</condition-list>
     			</entity-condition>
