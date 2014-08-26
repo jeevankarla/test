@@ -2807,7 +2807,7 @@ public class PayrollService {
 			    			Boolean shiftFalg = Boolean.FALSE;
 			    			if(UtilValidate.isNotEmpty(dayShiftList)){
 			    				for(GenericValue dayShift :dayShiftList){
-			    					if(UtilValidate.isEmpty(cDayLeaveFraction) && (UtilValidate.isEmpty(employeeDetail.getString("punchType"))||((UtilValidate.isNotEmpty(employeeDetail.getString("punchType")) && (!(employeeDetail.getString("punchType").equalsIgnoreCase("O"))))))){
+			    					if(UtilValidate.isEmpty(cDayLeaveFraction) && (UtilValidate.isEmpty(employeeDetail.getString("punchType"))||((UtilValidate.isNotEmpty(employeeDetail.getString("punchType")) && (!(employeeDetail.getString("punchType").equalsIgnoreCase("O")))))) && (!(emplWeeklyOffDay.equalsIgnoreCase(weekName)))){
 			    						if(UtilValidate.isNotEmpty(dayShift.getBigDecimal("overrideLateMin"))){
 				    						lossOfPayDays = lossOfPayDays+(((dayShift.getBigDecimal("overrideLateMin")).doubleValue())/480);
 				    						lateMin= lateMin+(((dayShift.getBigDecimal("overrideLateMin")).doubleValue())/480);
@@ -2818,9 +2818,9 @@ public class PayrollService {
 				    						}
 				    						
 				    					}
-				    					extraMin=extraMin+(((dayShift.getBigDecimal("extraMin")).doubleValue())/480);
+				    					
 			    					}
-			    					
+			    					extraMin=extraMin+(((dayShift.getBigDecimal("extraMin")).doubleValue())/480);
 			    				}
 			    				List dayShifts = EntityUtil.getFieldListFromEntityList(dayShiftList, "shiftType", true);
 			    				List<GenericValue> inPunch = EntityUtil.filterByAnd(dayPunchList, UtilMisc.toMap("PunchType","Normal","InOut","IN"));
