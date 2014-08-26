@@ -249,7 +249,7 @@ function makeDatePicker1(fromDateId ,thruDateId){
 										<td width="24%"><span class='h3'>Period Id</span>
 											<select name="customTimePeriodId" class='h4'>
 												<#list timePeriodList as timePeriod>    
-													<option value='${timePeriod.customTimePeriodId}'>${timePeriod.periodName}:${timePeriod.fromDate}-${timePeriod.thruDate}</option>
+													<option value='${timePeriod.customTimePeriodId}'>${timePeriod.fromDate}-${timePeriod.thruDate}</option>
 												</#list>      
 											</select>
 										</td>	
@@ -267,7 +267,7 @@ function makeDatePicker1(fromDateId ,thruDateId){
 									<td width="24%"><span class='h3'>Period Id</span>
 									<select name="customTimePeriodId" class='h4'>
 										<#list timePeriodList as timePeriod>    
-											<option value='${timePeriod.customTimePeriodId}'>${timePeriod.periodName}:${timePeriod.fromDate}-${timePeriod.thruDate}</option>
+											<option value='${timePeriod.customTimePeriodId}'>${timePeriod.fromDate}-${timePeriod.thruDate}</option>
 										</#list>      
 									</select>
 									</td>	
@@ -306,7 +306,7 @@ function makeDatePicker1(fromDateId ,thruDateId){
 									<td width="27%"><span class='h3'>Period Id</span>
 										<select name="customTimePeriodId" class='h4'>
 											<#list timePeriodList as timePeriod>    
-												<option value='${timePeriod.customTimePeriodId}'>${timePeriod.periodName}:${timePeriod.fromDate}-${timePeriod.thruDate}</option>
+												<option value='${timePeriod.customTimePeriodId}'>${timePeriod.fromDate}-${timePeriod.thruDate}</option>
 											</#list>      
 										</select>
 									</td>
@@ -323,7 +323,7 @@ function makeDatePicker1(fromDateId ,thruDateId){
 									<td width="24%"><span class='h3'>Period Id</span>
 									<select name="customTimePeriodId" class='h4'>
 										<#list timePeriodList as timePeriod>    
-											<option value='${timePeriod.customTimePeriodId}'>${timePeriod.periodName}:${timePeriod.fromDate}-${timePeriod.thruDate}</option>
+											<option value='${timePeriod.customTimePeriodId}'>${timePeriod.fromDate}-${timePeriod.thruDate}</option>
 										</#list>      
 									</select>
 									</td>	
