@@ -23,9 +23,7 @@
     <form name="FindEmplLeaves" type="single" target="FindEmplLeaves"
         odd-row-style="header-row" default-table-style="basic-table">
         <actions>
-        	<set field="partyId" value="${userLogin.partyId}"/>
         </actions>
-        <auto-fields-entity entity-name="EmplLeave" default-field-type="find"/>
         <field name="partyId" title="Employee Id" use-when="hasEmplLeaveApprovePermission"><lookup target-form-name="LookupEmployeeName"/></field>
         <field name="partyId" title="${uiLabelMap.PartyPartyId}" use-when="!hasEmplLeaveApprovePermission"><hidden/></field>
         <field name="leaveTypeId">
@@ -37,6 +35,15 @@
             <drop-down allow-empty="true">
                 <entity-options description="${description}" key-field-name="emplLeaveReasonTypeId" entity-name="EmplLeaveReasonType"/>
             </drop-down>
+        </field>
+        <field name="fromDate" title="From Date" ><date-time type="date"/></field>
+        <field name="thruDate" title="Thru Date"><date-time type="date"/></field>
+       <field name="dayFractionId" position="1" title="First/Second Half">
+             <radio>
+                <entity-options description="${description}" entity-name="Enumeration" key-field-name="enumId">
+                   <entity-constraint name="enumTypeId" operator="equals" value="LEAVE_DAY_TYPE"/>
+                </entity-options>
+            </radio>
         </field>
         <field name="leaveStatus">
             <drop-down allow-empty="true">
@@ -55,17 +62,34 @@
         <field name="description"><hidden/></field>
         <field name="noConditionFind"><hidden value="Y"/><!-- if this isn't there then with all fields empty no query will be done --></field>
         <field name="searchButton" title="${uiLabelMap.CommonFind}" widget-style="smallSubmit"><submit button-type="button"/></field>
+        <sort-order>
+		<field-group title="" initially-collapsed="false">
+		<sort-field name="partyId"/>
+		<sort-field name="leaveTypeId"/>
+		<sort-field name="emplLeaveReasonTypeId"/>
+		<sort-field name="fromDate"/>
+		<sort-field name="thruDate"/>
+		<sort-field name="dayFractionId"/>
+		<sort-field name="approverPartyId"/>
+		<sort-field name="leaveStatus"/>
+		<sort-field name="searchButton"/>
+		</field-group>        
+        </sort-order>
     </form>
     <form name="ListEmplLeaves" list-name="employeeLeaveList" type="list" odd-row-style="alternate-row" header-row-style="header-row-2"
         paginate-target="FindEmplLeaves" default-table-style="basic-table hover-bar">
+        <actions>
+        </actions>
         <auto-fields-entity entity-name="EmplLeave" default-field-type="display"/>
-        <field name="partyId">
+        <field name="partyId" field-name="partyId" >
             <display-entity entity-name="PartyNameView" description="${firstName} ${lastName}">
                 <sub-hyperlink target="/partymgr/control/viewprofile" target-type="inter-app" description="${partyId}" link-style="buttontext">
                     <parameter param-name="partyId" from-field="partyId"/>
                 </sub-hyperlink>
             </display-entity>
         </field>
+        <field name="fromDate"><display description="${groovy:org.ofbiz.base.util.UtilDateTime.toDateString(fromDate, &quot;dd MMM, yyyy&quot;);}"></display> </field>
+        <field name="thruDate"><display description="${groovy:org.ofbiz.base.util.UtilDateTime.toDateString(thruDate, &quot;dd MMM, yyyy&quot;);}"/></field>
         <field name="approverPartyId">
             <display-entity entity-name="PartyNameView" description="${firstName} ${lastName}" key-field-name="partyId">
                 <sub-hyperlink target="/partymgr/control/viewprofile" target-type="inter-app" description="${approverPartyId}" link-style="buttontext">
@@ -116,8 +140,8 @@
                 <entity-options description="${description}" key-field-name="emplLeaveReasonTypeId" entity-name="EmplLeaveReasonType"/>
             </drop-down>
         </field>
-        <field name="fromDate" tooltip="${uiLabelMap.CommonRequired}"><date-time type="date" /></field>
-        <field name="thruDate" tooltip="${uiLabelMap.CommonRequired}"><date-time type="date"/></field>
+        <field name="fromDate" id-name="fromDate" tooltip="${uiLabelMap.CommonRequired}" event="onclick" action="javascript:picker()"><text  size="12"/></field>
+        <field name="thruDate" id-name="thruDate" tooltip="${uiLabelMap.CommonRequired}" event="onclick" action="javascript:picker()"><text size="12"/></field>
         <!-- <field name="fromTime"><date-time type="time" input-method="time-dropdown"/></field>
         <field name="thruTime"><date-time type="time" input-method="time-dropdown"/></field> -->
         <!-- <field name="effectedCreditDays" tooltip="${uiLabelMap.CommonRequired}" required-field="true"></field>
@@ -129,13 +153,27 @@
         <field name="submitButton" use-when="leaveApp!=null" title="${uiLabelMap.CommonUpdate}" widget-style="smallSubmit"><submit button-type="button"/></field>
     </form>
    <form name="FindLeaveApprovals" target="FindLeaveApprovals" type="single">
-        <auto-fields-entity entity-name="EmplLeave" default-field-type="find"/>
-        <field name="noConditionFind"><hidden value="Y"/></field>
-        <field name="effectedCreditDays"><hidden/></field>
-        <field name="lossOfPayDays"><hidden/></field>
-        <field name="documentsProduced"><hidden/></field>
-        <!--<field name="approverPartyId" use-when="!hasAdminPermission"><hidden value="${approverPartyId}"/></field>-->
-        <field name="partyId" title="Employee Id"><lookup target-form-name="LookupEmployeeName"/></field>
+        <field name="partyId" title="Employee Id" ><lookup target-form-name="LookupEmployeeName"/></field>
+        <!-- <field name="partyId" title="${uiLabelMap.PartyPartyId}" use-when="!hasEmplLeaveApprovePermission"><hidden/></field> -->
+        <field name="leaveTypeId">
+            <drop-down allow-empty="true">
+                <entity-options description="${description}" key-field-name="leaveTypeId" entity-name="EmplLeaveType"/>
+            </drop-down>
+        </field>
+        <field name="emplLeaveReasonTypeId">
+            <drop-down allow-empty="true">
+                <entity-options description="${description}" key-field-name="emplLeaveReasonTypeId" entity-name="EmplLeaveReasonType"/>
+            </drop-down>
+        </field>
+        <field name="fromDate" title="From Date" ><date-time type="date"/></field>
+        <field name="thruDate" title="Thru Date"><date-time type="date"/></field>
+       <field name="dayFractionId" position="1" title="First/Second Half">
+             <radio>
+                <entity-options description="${description}" entity-name="Enumeration" key-field-name="enumId">
+                   <entity-constraint name="enumTypeId" operator="equals" value="LEAVE_DAY_TYPE"/>
+                </entity-options>
+            </radio>
+        </field>
         <field name="leaveStatus">
             <drop-down allow-empty="true">
                 <entity-options description="${description}" key-field-name="statusId" entity-name="StatusItem">
@@ -144,16 +182,32 @@
                 </entity-options>
             </drop-down>
         </field>
+        <field name="lossOfPayDays"><hidden/></field>
+        <field name="effectedCreditDays"><hidden/></field>
+        <field name="appliedBy"><hidden/></field>
+		<field name="comment"><hidden/></field>
+		<field name="documentsProduced"><hidden/></field>
+        <field name="approverPartyId"><lookup target-form-name="LookupEmployeeName"/></field>
         <field name="description"><hidden/></field>
+        <field name="noConditionFind"><hidden value="Y"/><!-- if this isn't there then with all fields empty no query will be done --></field>
         <field name="searchButton" title="${uiLabelMap.CommonFind}" widget-style="smallSubmit"><submit button-type="button"/></field>
+        <sort-order>
+		<field-group title="" initially-collapsed="false">
+		<sort-field name="partyId"/>
+		<sort-field name="leaveTypeId"/>
+		<sort-field name="emplLeaveReasonTypeId"/>
+		<sort-field name="fromDate"/>
+		<sort-field name="thruDate"/>
+		<sort-field name="dayFractionId"/>
+		<sort-field name="approverPartyId"/>
+		<sort-field name="leaveStatus"/>
+		<sort-field name="searchButton"/>
+		</field-group>        
+        </sort-order>
     </form>
-    <form name="ListLeaveApprovals" list-name="listIt" type="list" odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
+    <form name="ListLeaveApprovals" list-name="employeeLeaveList" type="list" odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
         <actions>
-            <set field="entityName" value="EmplLeave"/>
-            <service service-name="performFind" result-map="result" result-map-list="listIt">
-                <field-map field-name="inputFields" from-field="parameters"/>
-                <field-map field-name="entityName" from-field="entityName"/>
-            </service>
+           
         </actions>
         <auto-fields-entity entity-name="EmplLeave" default-field-type="display"/>
         <field name="partyId" field-name="partyId">
@@ -163,6 +217,8 @@
                 </sub-hyperlink>
             </display-entity>
         </field>
+        <field name="fromDate"><display description="${groovy:org.ofbiz.base.util.UtilDateTime.toDateString(fromDate, &quot;dd MMM, yyyy&quot;);}"></display> </field>
+        <field name="thruDate"><display description="${groovy:org.ofbiz.base.util.UtilDateTime.toDateString(thruDate, &quot;dd MMM, yyyy&quot;);}"/></field>
         <field name="approverPartyId" field-name="approverPartyId">
             <display-entity entity-name="PartyNameView" description="${firstName} ${lastName}" key-field-name="partyId">
                 <sub-hyperlink target="/partymgr/control/viewprofile" target-type="inter-app" description="${approverPartyId}" link-style="buttontext">

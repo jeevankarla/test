@@ -29,7 +29,7 @@
                 <set field="tabButtonItem2" value="EmployeeLeave"/>                
                 <set field="partyId" from-field="parameters.partyId"/>
                 <set field="leaveTypeId" from-field="parameters.leaveTypeId"/>
-                <set field="fromDate" from-field="parameters.fromDate"/>
+                <!-- <set field="fromDate" from-field="parameters.fromDate"/> -->
                 <set field="emplLeaveCtx" from-field="parameters"/>
                 <script location="component://humanres/webapp/humanres/WEB-INF/actions/humanres/EmployeeLeaveList.groovy"/>
                 <service service-name="humanResManagerPermission" result-map="permResult">
@@ -40,6 +40,7 @@
                     <field-map field-name="mainAction" value="LEAVE_EDIT"/>
                 </service>
                 <set field="hasEmplLeaveEditPermission" from-field="permResult.hasPermission"/>
+                <set field="layoutSettings.javaScripts[]" value="/partymgr/js/emplLeaveDate.js" global="true"/>
             </actions>
             <widgets>
 				<decorator-screen name="HumanresCommonDecorator"
@@ -139,7 +140,8 @@
                     <field-map field-name="mainAction" value="ADMIN"/>
                 </service>
                 <set field="hasAdminPermission" from-field="permResult.hasPermission"/>
-                <set field="approverPartyId" from-field="parameters.userLogin.partyId"/>
+                <!-- <set field="approverPartyId" from-field="parameters.userLogin.partyId"/> -->
+                <script location="component://humanres/webapp/humanres/WEB-INF/actions/humanres/EmployeeLeaveList.groovy"/>
             </actions>
             <widgets>
 				<decorator-screen name="HumanresCommonDecorator"
@@ -182,6 +184,7 @@
                     <field-map field-name="leaveTypeId" from-field="leaveTypeId"/>
                     <field-map field-name="fromDate" from-field="fromDate"/>
                 </entity-one>
+                <set field="layoutSettings.javaScripts[]" value="/partymgr/js/emplLeaveDate.js" global="true"/>
             </actions>
             <widgets>
                 <decorator-screen name="HumanresCommonDecorator"
