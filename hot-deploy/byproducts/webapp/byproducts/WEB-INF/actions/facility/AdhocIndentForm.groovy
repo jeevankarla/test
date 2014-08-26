@@ -158,14 +158,10 @@ if(facility){
 	if(packingType){
 		inputProductRate.put("productPriceTypeId", packingType);
 	}
-	if(changeFlag!="InterUnitTransferSale"){
 	priceResultMap = ByProductNetworkServices.getStoreProductPricesByDate(delegator, dctx.getDispatcher(), inputProductRate);
-	}
 }
 prodPriceMap=[:];
-if(changeFlag!="InterUnitTransferSale"){//for Stock Transfer price no need to populate
-	prodPriceMap = (Map)priceResultMap.get("priceMap");
-}
+prodPriceMap = (Map)priceResultMap.get("priceMap");
 
 conversionResult = ByProductNetworkServices.getProductQtyConversions(dctx, UtilMisc.toMap("productCategoryId", productCatageoryId, "userLogin", userLogin));
 conversionMap = conversionResult.get("productConversionDetails");
