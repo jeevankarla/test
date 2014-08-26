@@ -34,11 +34,20 @@ under the License.
     <SecurityPermission description="Mobile employees view Permission." permissionId="MOB_EMPLOYEES_VIEW"/>
     <SecurityPermission description="Mobile myemployee view Permission." permissionId="MOB_MYEMPLOYEE_VIEW"/>
     <SecurityPermission description="Mobile retailer dashboard permission." permissionId="MOB_HR_DB_VIEW"/>
+    <SecurityPermission description="Mobile employee last punch view Permission." permissionId="MOB_PUNCH_VIEW"/>
+    
     
     <SecurityGroup description="Mobile employee" groupId="MOB_EMPLOYEE"/>
     <SecurityGroupPermission groupId="MOB_EMPLOYEE" permissionId="MOB_EMPLOYEES_VIEW"/>  
-    <SecurityGroupPermission groupId="MOB_EMPLOYEE" permissionId="MOB_MYEMPLOYEE_VIEW"/>    
+    <SecurityGroupPermission groupId="MOB_EMPLOYEE" permissionId="MOB_MYEMPLOYEE_VIEW"/>
+    <SecurityGroupPermission groupId="MOB_EMPLOYEE" permissionId="MOB_PUNCH_VIEW"/>                   
     <SecurityGroupPermission groupId="MOB_EMPLOYEE" permissionId="MOB_HR_DB_VIEW"/>  
+    
+    <SecurityGroup description="Mobile employee plus Punch View" groupId="MOB_EMPLOYEE_PLUS"/>
+    <SecurityGroupPermission groupId="MOB_EMPLOYEE_PLUS" permissionId="MOB_EMPLOYEES_VIEW"/>  
+    <SecurityGroupPermission groupId="MOB_EMPLOYEE_PLUS" permissionId="MOB_MYEMPLOYEE_VIEW"/> 
+    <SecurityGroupPermission groupId="MOB_EMPLOYEE_PLUS" permissionId="MOB_PUNCH_VIEW"/>           
+    <SecurityGroupPermission groupId="MOB_EMPLOYEE_PLUS" permissionId="MOB_HR_DB_VIEW"/>      
     
     <SecurityGroup description="Employee LOP Edit" groupId="EMP_LOP_EDIT"/> 
     <SecurityGroupPermission groupId="FULLADMIN" permissionId="EMP_LOP_EDIT_UPDATE"/>

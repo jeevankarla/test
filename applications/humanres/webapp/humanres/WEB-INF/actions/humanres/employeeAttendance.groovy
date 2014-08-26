@@ -43,19 +43,21 @@ String employeeName = PartyHelper.getPartyName(delegator, employeeId, false);
 Timestamp timePeriodStart = UtilDateTime.getDayStart(fromDate);
 Timestamp timePeriodEnd = UtilDateTime.getDayEnd(thruDate);
 JSONArray punchListJSON = new JSONArray();
+JSONArray oodPunchListJSON = new JSONArray();
 conditionList=[];
 conditionList.add(EntityCondition.makeCondition("punchdate", EntityOperator.GREATER_THAN_EQUAL_TO , UtilDateTime.toSqlDate(timePeriodStart)));
 conditionList.add(EntityCondition.makeCondition("punchdate", EntityOperator.LESS_THAN_EQUAL_TO , UtilDateTime.toSqlDate(timePeriodEnd)));
 // currently other punctypes such as OOD are not handled
-conditionList.add(EntityCondition.makeCondition("PunchType", EntityOperator.EQUALS , "Normal")); 
+//conditionList.add(EntityCondition.makeCondition("PunchType", EntityOperator.EQUALS , "Normal")); 
 conditionList.add(EntityCondition.makeCondition("partyId", employeeId));
 
 condition = EntityCondition.makeCondition(conditionList,EntityOperator.AND);
 orderBy = UtilMisc.toList("-punchdate","-punchtime");
 punchList = delegator.findList("EmplPunch", condition, null, orderBy, null, false);
 
+normalPunchList=  EntityUtil.filterByCondition(punchList, EntityCondition.makeCondition("PunchType",EntityOperator.EQUALS , "Normal"));
 def outTimestamp = null;
-punchList.each { punch->
+normalPunchList.each { punch->
 	String partyId= punch.getString("partyId");
 	String partyName = PartyHelper.getPartyName(delegator, partyId, false);
 	String punchTime = timeFormat.format(punch.get("punchtime"));
@@ -70,8 +72,8 @@ punchList.each { punch->
 	if (inOut.equals("IN")) {
 		inTimestamp = UtilDateTime.toDateString(punch.get("punchdate"), "dd/MM/yyyy") + " " + punchTime;
 		JSONArray punchJSON = new JSONArray();	
-		punchJSON.add(partyId);
-		punchJSON.add(partyName);
+		//punchJSON.add(partyId);
+		//punchJSON.add(partyName);
 		punchJSON.add(inTimestamp);
 		if (outTimestamp == null) {
 			punchJSON.add("");
@@ -89,8 +91,47 @@ punchList.each { punch->
 }
 
 
+oodPunchList=  EntityUtil.filterByCondition(punchList, EntityCondition.makeCondition("PunchType",EntityOperator.EQUALS , "Ood"));
+def inTimestamp = null;
+oodPunchList.each { punch->
+	String partyId= punch.getString("partyId");
+	String partyName = PartyHelper.getPartyName(delegator, partyId, false);
+	String punchTime = timeFormat.format(punch.get("punchtime"));
+	String inOut = "";
+	if (punch.getString("InOut")) {
+		inOut = punch.getString("InOut");
+	}
+	if (inOut.equals("IN")) {
+		inTimestamp = UtilDateTime.toDateString(punch.get("punchdate"), "dd/MM/yyyy") + " " + punchTime;
+		return;
+	}
+	if (inOut.equals("OUT")) {
+		outTimestamp = UtilDateTime.toDateString(punch.get("punchdate"), "dd/MM/yyyy") + " " + punchTime;
+		JSONArray punchJSON = new JSONArray();
+		//punchJSON.add(partyId);
+		//punchJSON.add(partyName);
+		punchJSON.add(outTimestamp);
+		if (inTimestamp == null) {   
+			punchJSON.add("");
+			punchJSON.add("");
+		}
+		else {
+			punchJSON.add(inTimestamp);
+			elapsedHours = UtilDateTime.getInterval(new java.sql.Timestamp(dateTimeFormat.parse(outTimestamp).getTime()),
+								new java.sql.Timestamp(dateTimeFormat.parse(inTimestamp).getTime()))/(1000*60*60);
+			punchJSON.add(String.format( "%.2f", elapsedHours ));
+		}
+		oodPunchListJSON.add(punchJSON);
+		inTimestamp = null;
+	}
+}
+
+
 Debug.logError("punchListJSON="+punchListJSON,"");
+Debug.logError("oodPunchListJSON="+oodPunchListJSON,"");
+context.employeeId = employeeId;
 context.employeeName = employeeName;
 context.fromDate = fromDate;
 context.thruDate = thruDate;
 context.punchListJSON = punchListJSON;
+context.oodPunchListJSON = oodPunchListJSON;
