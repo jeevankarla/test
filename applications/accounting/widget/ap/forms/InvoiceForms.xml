@@ -91,6 +91,15 @@ under the License.
 		</field>
 		<field name="billingAccountId"><hidden/></field>
 	</form>
+	
+	<form name="findPartyFinHistory" odd-row-style="alternate-row" header-row-style="header-row" type="single" 
+    	default-table-style="basic-table hover-bar" separate-columns="true">
+    	<field name="hideSearch"><hidden value="Y" /></field>
+		<field name="noConditionFind"><hidden value="N"/><!-- if this isn't there then with all fields empty no query will be done --></field>
+        <field name="partyId" title="PartyId"><lookup target-form-name="LookupPartyName"/></field>
+       	<field name="submitButton" title="${uiLabelMap.CommonFind}" widget-style="smallSubmit"><submit/></field>       
+    </form>
+	
     <form name="FindPurchaseInvoices" type="single" target="FindPurchaseInvoices">
         <actions>
             <set field="organizationPartyId" from-field="parameters.organizationPartyId" default-value="${defaultOrganizationPartyId}"/>

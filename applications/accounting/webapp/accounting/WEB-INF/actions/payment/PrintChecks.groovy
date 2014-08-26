@@ -59,103 +59,145 @@ rounding = UtilNumber.getBigDecimalRoundingMode("invoice.rounding");
 context.decimals = decimals;
 context.rounding = rounding;
 
-//for cheque printing
-paymentMethodId = "";
-attrValue = "";
-amount = BigDecimal.ZERO;
-paymentId = parameters.paymentId;
-invoiceId = parameters.invoiceId;
-
-if(UtilValidate.isEmpty(paymentId)){
-	paymentAppls = delegator.findByAnd("PaymentApplication", [invoiceId : invoiceId]);
-	if(UtilValidate.isNotEmpty(paymentAppls)){
-		paymentDetails = EntityUtil.getFirst(paymentAppls);
-		if(UtilValidate.isNotEmpty(paymentDetails)){
-			paymentId = paymentDetails.paymentId;
-			if(UtilValidate.isNotEmpty(paymentId)){
-				paymentAttrDetails = delegator.findOne("PaymentAttribute", [paymentId : paymentId, attrName : "INFAVOUR_OF"], false);
-				if(UtilValidate.isNotEmpty(paymentAttrDetails)){
-					attrValue = paymentAttrDetails.attrValue;
-				}
-		}
-	}
-}
-partyName = "";
-paymentDate = "";
-finAccountId = "";
-amountStr = BigDecimal.ZERO;
-if(UtilValidate.isNotEmpty(paymentId)){
-	paymentDetails = delegator.findOne("Payment", [paymentId : paymentId], false);
-	if(UtilValidate.isNotEmpty(paymentDetails)){
-		paymentMethodId = paymentDetails.paymentMethodId;
-		paymentDate = paymentDetails.instrumentDate;
-	}
-	if(UtilValidate.isNotEmpty(paymentDetails)){
-		amount = paymentDetails.amount;
-		amountWords = UtilFormatOut.formatCurrency(amount, context.get("currencyUomId"), locale);
-		amountStr = amountWords.replace("Rs"," ");
-	}
-	if(UtilValidate.isNotEmpty(paymentDetails.partyIdFrom) && (paymentDetails.partyIdFrom == "Company")){
-		partyId = paymentDetails.partyIdTo;
-	}else{
-		partyId = paymentDetails.partyIdFrom;
-	}
-	partyName = PartyHelper.getPartyName(delegator, partyId, false);
-	finAccountTransList = delegator.findList("FinAccountTrans", EntityCondition.makeCondition("paymentId", EntityOperator.EQUALS, paymentId), null, null, null, false);
-	if(UtilValidate.isNotEmpty(finAccountTransList)){
-		finAccountTransDetails = EntityUtil.getFirst(finAccountTransList);
-		if(UtilValidate.isNotEmpty(finAccountTransDetails)){
-			finAccountId = finAccountTransDetails.finAccountId;
-		}
-	}
-}
-	context.put("finAccountId",finAccountId);
-	context.put("amount",amount);
-	context.put("amountStr",amountStr);
-	context.put("paymentId",paymentId);
-	context.put("paymentDate",paymentDate);
-}
-if(UtilValidate.isNotEmpty(attrValue)){
-	context.put("attrValue",attrValue);
-}else{
-	context.put("attrValue",partyName);
-}
-if(UtilValidate.isEmpty(paymentId)){
-	Debug.logError("paymentId Cannot Be Empty","");
-	context.errorMessage = "Payment not done...!";
-	return;
-}
-// list of payments
-payments = [];
-
 // first ensure ability to print
 security = request.getAttribute("security");
 context.put("security", security);
 if (!security.hasEntityPermission("ACCOUNTING", "_PRINT_CHECKS", session)) {
-    context.payments = payments; // if no permission, just pass an empty list for now
-    return;
+	context.payments = payments; // if no permission, just pass an empty list for now
+	return;
 }
 
-// in the case of a single payment, the paymentId will be supplied
-paymentId = context.paymentId;
-if (paymentId) {
-    payment = delegator.findByPrimaryKey("Payment", [paymentId : paymentId]);
-    if (payment) payments.add(payment);
-    context.payments = payments;
-    return;
+
+attrValue = "";
+amount = BigDecimal.ZERO;
+finAccountId = "";
+
+partyName = "";
+paymentDate = "";
+amountStr = BigDecimal.ZERO;
+// for contra 
+reportTypeFlag = context.reportTypeFlag;
+if(UtilValidate.isNotEmpty(reportTypeFlag) && reportTypeFlag == "contraCheque"){
+	finAccountId = parameters.finAccountId;
+	amount = parameters.amount;
+	BigDecimal amount = new BigDecimal(amount);
+	amountWords = UtilFormatOut.formatCurrency(amount, context.get("currencyUomId"), locale);
+	amountStr = amountWords.replace("Rs"," ");
+	comments = parameters.comments;
+	Timestamp transactionDate = (Timestamp)
+	String transactionDateStr = parameters.transactionDate;
+	def sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+	try {
+		paymentDate = new java.sql.Timestamp(sdf.parse(transactionDateStr+" 00:00:00").getTime());
+	} catch (ParseException e) {
+		Debug.logError(e, "Cannot parse date string: " + transactionDateStr, "");
+	}
+	
+	if(UtilValidate.isNotEmpty(finAccountId)){
+		context.put("finAccountId",finAccountId);
+	}
+	if(UtilValidate.isNotEmpty(comments)){
+		context.put("attrValue",comments);
+	}
+	if(UtilValidate.isNotEmpty(paymentDate)){
+		context.put("paymentDate",paymentDate);
+	}
+	if(UtilValidate.isNotEmpty(amount)){
+		context.put("amount",amount);
+	}
+	if(UtilValidate.isNotEmpty(amountStr)){
+		context.put("amountStr",amountStr);
+	}
+}else{
+
+	//for cheque printing
+	paymentMethodId = "";
+	paymentId = parameters.paymentId;
+	invoiceId = parameters.invoiceId;
+	
+	if(UtilValidate.isEmpty(paymentId)){
+		paymentAppls = delegator.findByAnd("PaymentApplication", [invoiceId : invoiceId]);
+		if(UtilValidate.isNotEmpty(paymentAppls)){
+			paymentDetails = EntityUtil.getFirst(paymentAppls);
+			if(UtilValidate.isNotEmpty(paymentDetails)){
+				paymentId = paymentDetails.paymentId;
+				if(UtilValidate.isNotEmpty(paymentId)){
+					paymentAttrDetails = delegator.findOne("PaymentAttribute", [paymentId : paymentId, attrName : "INFAVOUR_OF"], false);
+					if(UtilValidate.isNotEmpty(paymentAttrDetails)){
+						attrValue = paymentAttrDetails.attrValue;
+					}
+			}
+		}
+	}
+	if(UtilValidate.isNotEmpty(paymentId)){
+		paymentDetails = delegator.findOne("Payment", [paymentId : paymentId], false);
+		if(UtilValidate.isNotEmpty(paymentDetails)){
+			paymentMethodId = paymentDetails.paymentMethodId;
+			paymentDate = paymentDetails.instrumentDate;
+		}
+		if(UtilValidate.isNotEmpty(paymentDetails)){
+			amount = paymentDetails.amount;
+			Debug.log("amount-------1111-----"+amount);
+			amountWords = UtilFormatOut.formatCurrency(amount, context.get("currencyUomId"), locale);
+			amountStr = amountWords.replace("Rs"," ");
+		}
+		if(UtilValidate.isNotEmpty(paymentDetails.partyIdFrom) && (paymentDetails.partyIdFrom == "Company")){
+			partyId = paymentDetails.partyIdTo;
+		}else{
+			partyId = paymentDetails.partyIdFrom;
+		}
+		partyName = PartyHelper.getPartyName(delegator, partyId, false);
+		finAccountTransList = delegator.findList("FinAccountTrans", EntityCondition.makeCondition("paymentId", EntityOperator.EQUALS, paymentId), null, null, null, false);
+		if(UtilValidate.isNotEmpty(finAccountTransList)){
+			finAccountTransDetails = EntityUtil.getFirst(finAccountTransList);
+			if(UtilValidate.isNotEmpty(finAccountTransDetails)){
+				finAccountId = finAccountTransDetails.finAccountId;
+			}
+		}
+	}
+		context.put("finAccountId",finAccountId);
+		context.put("amount",amount);
+		context.put("amountStr",amountStr);
+		context.put("paymentId",paymentId);
+		context.put("paymentDate",paymentDate);
+	}
+	if(UtilValidate.isNotEmpty(attrValue)){
+		context.put("attrValue",attrValue);
+	}else{
+		context.put("attrValue",partyName);
+	}
+	if(UtilValidate.isEmpty(paymentId)){
+		Debug.logError("paymentId Cannot Be Empty","");
+		context.errorMessage = "Payment not done...!";
+		return;
+	}
+	// list of payments
+	payments = [];
+	
+	// in the case of a single payment, the paymentId will be supplied
+	paymentId = context.paymentId;
+	if (paymentId) {
+		payment = delegator.findByPrimaryKey("Payment", [paymentId : paymentId]);
+		if (payment) payments.add(payment);
+		context.payments = payments;
+		return;
+	}
+	
+	// in the case of a multi form, parse the multi data and get all of the selected payments
+	selected = UtilHttp.parseMultiFormData(parameters);
+	selected.each { row ->
+		payment = delegator.findByPrimaryKey("Payment", [paymentId : row.paymentId]);
+		if (payment) {
+			payments.add(payment);
+		}
+	}
+	paymentGroupMembers = EntityUtil.filterByDate(delegator.findList("PaymentGroupMember", EntityCondition.makeCondition("paymentGroupId", EntityOperator.EQUALS, parameters.paymentGroupId), null, null, null, false));
+	//in the case of a multiple payments, paymentId List is supplied.
+	paymentGroupMembers.each { paymentGropupMember->
+		payments.add(paymentGropupMember.getRelatedOne("Payment"));
+	}
+	context.payments = payments;
 }
 
-// in the case of a multi form, parse the multi data and get all of the selected payments
-selected = UtilHttp.parseMultiFormData(parameters);
-selected.each { row ->
-    payment = delegator.findByPrimaryKey("Payment", [paymentId : row.paymentId]);
-    if (payment) {
-        payments.add(payment);
-    }
-}
-paymentGroupMembers = EntityUtil.filterByDate(delegator.findList("PaymentGroupMember", EntityCondition.makeCondition("paymentGroupId", EntityOperator.EQUALS, parameters.paymentGroupId), null, null, null, false));
-//in the case of a multiple payments, paymentId List is supplied.
-paymentGroupMembers.each { paymentGropupMember->
-    payments.add(paymentGropupMember.getRelatedOne("Payment"));
-}
-context.payments = payments;
+
+

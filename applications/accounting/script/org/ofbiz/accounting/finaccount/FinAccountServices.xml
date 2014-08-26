@@ -281,7 +281,10 @@ under the License.
 			<set field="createFinAccountTransMap.transactionDate" from-field="parameters.transactionDate"/>
 			<set field="createFinAccountTransMap.entryDate" from-field="parameters.entryDate"/>	
 			<set field="createFinAccountTransMap.reasonEnumId" value="FATR_CONTRA"/>	
-			<set field="createFinAccountTransMap.statusId" from-field="parameters.statusId"/>			
+			<set field="createFinAccountTransMap.statusId" from-field="parameters.statusId"/>
+			<if-not-empty field="parameters.contraRefNum">
+			 <set field="createFinAccountTransMap.contraRefNum" from-field="parameters.contraRefNum"/>
+			</if-not-empty>
 			<call-service service-name="createFinAccountTrans" in-map-name="createFinAccountTransMap">
 				<result-to-result result-name="finAccountTransId"/>
 				<result-to-field result-name="finAccountTransId" field="finAccountTransId1"/>

@@ -53,7 +53,7 @@ under the License.
             </fo:simple-page-master>
         </fo:layout-master-set>
         ${setRequestAttribute("OUTPUT_FILENAME", "chequeVoucher.pdf")}
-        <#if paymentId?has_content>  
+        <#if paymentId?has_content || finAccountId?has_content>  
         <fo:page-sequence master-reference="main">
         	<fo:static-content flow-name="xsl-region-before">
         	<fo:block  keep-together="always" text-align="right" font-size = "13pt" font-family="Courier,monospace" white-space-collapse="false" font-weight= "bold">${Static["org.ofbiz.base.util.UtilDateTime"].toDateStringBankFormat(paymentDate?if_exists, "ddMMyyyy")}</fo:block>
@@ -83,7 +83,7 @@ under the License.
 							</fo:table-row>
 							<fo:table-row>
 				       			<fo:table-cell>
-				            		<fo:block text-align="left" keep-together="always" font-size = "12pt">&#160;&#160;&#160;&#160;&#160;${attrValue}</fo:block>     
+				            		<fo:block text-align="left" keep-together="always" font-size = "12pt">&#160;&#160;&#160;&#160;&#160;${attrValue?if_exists}</fo:block>     
 				       			</fo:table-cell>
 							</fo:table-row>
 							<fo:table-row>
@@ -153,7 +153,7 @@ under the License.
             </fo:simple-page-master>
         </fo:layout-master-set>
         ${setRequestAttribute("OUTPUT_FILENAME", "chequeVoucher.pdf")}
-        <#if paymentId?has_content>  
+        <#if paymentId?has_content || finAccountId?has_content>  
         <fo:page-sequence master-reference="main">
         	<fo:static-content flow-name="xsl-region-before">
         	<fo:block  keep-together="always" text-align="right" font-size = "12pt" font-family="Courier,monospace" white-space-collapse="false" font-weight= "bold">${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(paymentDate?if_exists, "dd MM yyyy")}</fo:block>
@@ -192,7 +192,7 @@ under the License.
 				       		</fo:table-row>
 							<fo:table-row>
 				       			<fo:table-cell>
-				            		<fo:block text-align="left" keep-together="always" font-size = "12pt">&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;${attrValue}</fo:block>     
+				            		<fo:block text-align="left" keep-together="always" font-size = "12pt">&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;${attrValue?if_exists}</fo:block>     
 				       			</fo:table-cell>
 							</fo:table-row>
 							<fo:table-row>
@@ -265,7 +265,7 @@ under the License.
             </fo:simple-page-master>
         </fo:layout-master-set>
         ${setRequestAttribute("OUTPUT_FILENAME", "chequeVoucher.pdf")}
-        <#if paymentId?exists>  
+        <#if paymentId?has_content || finAccountId?has_content>  
         <fo:page-sequence master-reference="main">
         	<fo:static-content flow-name="xsl-region-before">
         	<fo:block  keep-together="always" text-align="right" font-size = "12pt" font-family="Courier,monospace" white-space-collapse="false" font-weight= "bold">${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(paymentDate?if_exists, "dd MM yyyy")}</fo:block>
@@ -298,7 +298,7 @@ under the License.
 							</fo:table-row>
 							<fo:table-row>
 				       			<fo:table-cell>
-				            		<fo:block text-align="left" keep-together="always" font-size = "12pt">&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;${attrValue}</fo:block>     
+				            		<fo:block text-align="left" keep-together="always" font-size = "12pt">&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;${attrValue?if_exists}</fo:block>     
 				       			</fo:table-cell>
 							</fo:table-row>
 							<fo:table-row>
@@ -373,7 +373,7 @@ under the License.
             </fo:simple-page-master>
         </fo:layout-master-set>
         ${setRequestAttribute("OUTPUT_FILENAME", "chequeVoucher.pdf")}
-        <#if paymentId?has_content>  
+        <#if paymentId?has_content || finAccountId?has_content>  
         <fo:page-sequence master-reference="main">
         	<fo:static-content flow-name="xsl-region-before">
         	<fo:block  keep-together="always" text-align="right" font-size = "13pt" font-family="Courier,monospace" white-space-collapse="false" font-weight= "bold">&#160;&#160;${Static["org.ofbiz.base.util.UtilDateTime"].toDateStringBankFormat(paymentDate?if_exists, "ddMMyyyy")}</fo:block>
@@ -402,7 +402,7 @@ under the License.
 							</fo:table-row>
 							<fo:table-row>
 				       			<fo:table-cell>
-				            		<fo:block text-align="left" keep-together="always" font-size = "12pt">&#160;&#160;&#160;&#160;&#160;${attrValue}</fo:block>     
+				            		<fo:block text-align="left" keep-together="always" font-size = "12pt">&#160;&#160;&#160;&#160;&#160;${attrValue?if_exists}</fo:block>     
 				       			</fo:table-cell>
 							</fo:table-row>
 							<fo:table-row>
@@ -473,7 +473,7 @@ under the License.
             </fo:simple-page-master>
         </fo:layout-master-set>
         ${setRequestAttribute("OUTPUT_FILENAME", "chequeVoucher.pdf")}
-        <#if paymentId?has_content>  
+        <#if paymentId?has_content || finAccountId?has_content>  
         <fo:page-sequence master-reference="main">
         	<fo:static-content flow-name="xsl-region-before">
         	<fo:block  keep-together="always" text-align="center" font-size = "13pt" font-family="Courier,monospace" white-space-collapse="false" font-weight= "bold">&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;${Static["org.ofbiz.base.util.UtilDateTime"].toDateStringBankFormat(paymentDate?if_exists, "ddMMyyyy")}</fo:block>
@@ -502,7 +502,7 @@ under the License.
 							</fo:table-row>
 							<fo:table-row>
 				       			<fo:table-cell>
-				            		<fo:block text-align="left" keep-together="always" font-size = "12pt">&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;${attrValue}</fo:block>     
+				            		<fo:block text-align="left" keep-together="always" font-size = "12pt">&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;${attrValue?if_exists}</fo:block>     
 				       			</fo:table-cell>
 							</fo:table-row>
 							<fo:table-row>
@@ -577,7 +577,7 @@ under the License.
             </fo:simple-page-master>
         </fo:layout-master-set>
         ${setRequestAttribute("OUTPUT_FILENAME", "chequeVoucher.pdf")}
-        <#if paymentId?exists>  
+        <#if paymentId?has_content || finAccountId?has_content>  
         <fo:page-sequence master-reference="main">
         	<fo:static-content flow-name="xsl-region-before">
         	<fo:block  keep-together="always" text-align="right" font-size = "12pt" font-family="Courier,monospace" white-space-collapse="false" font-weight= "bold">${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(paymentDate?if_exists, "dd MM yyyy")}</fo:block>
@@ -606,7 +606,7 @@ under the License.
 							</fo:table-row>
 							<fo:table-row>
 				       			<fo:table-cell>
-				            		<fo:block text-align="left" keep-together="always" font-size = "12pt">&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;${attrValue}</fo:block>     
+				            		<fo:block text-align="left" keep-together="always" font-size = "12pt">&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;${attrValue?if_exists}</fo:block>     
 				       			</fo:table-cell>
 							</fo:table-row>
 							<fo:table-row>
@@ -677,7 +677,7 @@ under the License.
             </fo:simple-page-master>
         </fo:layout-master-set>
         ${setRequestAttribute("OUTPUT_FILENAME", "chequeVoucher.pdf")}
-        <#if paymentId?exists>  
+        <#if paymentId?has_content || finAccountId?has_content>  
         <fo:page-sequence master-reference="main">
         	<fo:static-content flow-name="xsl-region-before">
         	<fo:block  keep-together="always" text-align="right" font-size = "12pt" font-family="Courier,monospace" white-space-collapse="false" font-weight= "bold">${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(paymentDate?if_exists, "dd MM yyyy")}</fo:block>
@@ -705,7 +705,7 @@ under the License.
 							</fo:table-row>
 							<fo:table-row>
 				       			<fo:table-cell>
-				            		<fo:block text-align="left" keep-together="always" font-size = "12pt">&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;${attrValue}</fo:block>     
+				            		<fo:block text-align="left" keep-together="always" font-size = "12pt">&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;${attrValue?if_exists}</fo:block>     
 				       			</fo:table-cell>
 							</fo:table-row>
 							<fo:table-row>

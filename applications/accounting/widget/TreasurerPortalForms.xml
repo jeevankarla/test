@@ -201,6 +201,54 @@ under the License.
     </form>
     
      <!-- create NewTreasurer Simple Deposit for Contra -->
+     
+     
+     <form name="FindContraEntries" type="single"  header-row-style="header-row" default-table-style="basic-table" >
+    	<field name="hideSearch"><hidden value="Y" /></field>
+		<field name="noConditionFind"><hidden value="N"/><!-- if this isn't there then with all fields empty no query will be done --></field>
+    	<field name="finAccountId" title="From Financial Account" >
+            <drop-down>
+                <entity-options entity-name="FinAccount" description="${finAccountName}" key-field-name="finAccountId">
+                   <entity-constraint name="organizationPartyId" value="Company"/> 
+                    <entity-constraint name="ownerPartyId" value="Company"/>
+                     <entity-constraint name="finAccountTypeId" value="BANK_ACCOUNT"/>
+                  <!--    <entity-constraint name="finAccountTypeId" value="CASH"/> -->
+                    <entity-order-by field-name="finAccountName"/>
+                </entity-options>
+            </drop-down>
+        </field>	
+       	<field name="submitButton" title="${uiLabelMap.CommonFind}" widget-style="smallSubmit"><submit/></field>       
+    </form>
+    <form name="ListContraEntries" type="list" list-name="listIt" odd-row-style="alternate-row" 
+      default-entity-name="FineRecovery" default-table-style="basic-table hover-bar" >
+    	<actions>    	
+    	   <service service-name="performFind" result-map="result" result-map-list="listIt">
+                <field-map field-name="inputFields" from-field="parameters"/>
+                <field-map field-name="entityName" value="FinAccountTrans"/>
+                <field-map field-name="viewIndex" from-field="viewIndex"/>
+                <field-map field-name="viewSize" from-field="viewSize"/>
+            </service> 
+        </actions>
+    	<field name="finAccountId" title = "Fin Account">
+          <display-entity entity-name="FinAccount" key-field-name="finAccountId" description="${finAccountName}"/>
+        </field>
+        <field name="contraRefNum"><display></display></field>    	
+    	<field name="amount" title="Amount(Rs)"><display/></field>
+    	<field name="createTransactionDetailReportPDF" title="Accounting Trans PDF" use-when="${isPosted=='Y'}" widget-style="buttontext">
+            <hyperlink target="acctgTransDetailReportPdf.pdf" description="${uiLabelMap.AccountingInvoicePDF}" target-window="_blank">
+                <parameter param-name="finAccountTransId" from-field="finAccountTransId"/>
+            </hyperlink>
+        </field>
+    	<field name="Print Cheque" widget-style="buttontext" >
+            <hyperlink target="printChecks.pdf" description="Print Cheque" target-window="_blank">
+             <parameter param-name="finAccountId"/>
+             <parameter param-name="amount"/>
+             <parameter param-name="comments"/>
+             <parameter param-name="transactionDate"/>
+             <parameter param-name="reportTypeFlag" value="contraCheque"/>
+            </hyperlink>
+        </field> 
+    </form>
      <form name="BankContraEntry" type="single" target="preCreateBankContraEntry"
         header-row-style="header-row" default-table-style="basic-table">
         <actions>
@@ -235,7 +283,7 @@ under the License.
         <field name="parentPaymentTypeId" parameter-name="parentTypeId"><hidden value="RECEIPT"/></field>
         <field name="paymentId" use-when="&quot;${entryType}&quot;==&quot;Payment&quot;" required-field="true"><lookup target-form-name="LookupPayment" target-parameter="parentTypeId"/></field> 
         <field name="amount" required-field="true" use-when="&quot;${entryType}&quot;!=&quot;Payment&quot;"><text/></field>
-        <field name="amount" use-when="&quot;${entryType}&quot;==&quot;Payment&quot;"><text/></field>       
+        <field name="amount" use-when="&quot;${entryType}&quot;==&quot;Payment&quot;"><text/></field>
         <field name="statusId" title="${uiLabelMap.CommonStatus}">
             <drop-down>
                 <entity-options entity-name="StatusItem" description="${description}">
@@ -252,9 +300,10 @@ under the License.
                     <entity-order-by field-name="finAccountName"/>
                 </entity-options>
             </drop-down>
-        </field>        
+        </field>
+        <field name="contraRefNum" title="Contra Ref Num"><text></text></field>         
         <field name="comments"><text/></field>
-        <field name="submitButton" title="${uiLabelMap.CommonAdd}" widget-style="smallSubmit"><submit button-type="button"/></field>
+        <field name="submitButton" title="${uiLabelMap.Create}" widget-style="smallSubmit"><submit button-type="button"/></field>
     </form>
     
     <form name="PaymentsDepositWithdraw" type="single" target="FindBankDepositOrWithdraw" >

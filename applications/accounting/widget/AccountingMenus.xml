@@ -2149,7 +2149,12 @@
              <link target="OutgoingDepositsRefund"></link>
           </menu-item>
     </menu>
-    
+    <menu name="ContraEntryTabBar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml"
+          default-menu-item-name="Payments" selected-menuitem-context-field-name="tabButtonItem4">
+          <menu-item name="BankContraEntry" title="Contra Transactions">
+             <link target="BankContraEntry"></link>
+          </menu-item>
+    </menu>
     
     
 	

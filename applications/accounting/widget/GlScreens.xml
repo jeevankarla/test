@@ -1079,14 +1079,15 @@ reportType:byAccount -->
 			<actions>
 				<property-map resource="AccountingUiLabels" map-name="uiLabelMap"
 					global="true" />
-				<set field="acctgTransId" from-field="parameters.acctgTransId" />
+				<script	location="component://accounting/webapp/accounting/WEB-INF/actions/reports/accountingTransAndFinAccountTrans.groovy" />
+				<!-- <set field="acctgTransId" from-field="parameters.acctgTransId" />
 				<entity-one entity-name="AcctgTrans" value-field="acctgTrans" />
 				<entity-and entity-name="AcctgTransEntry" list="acctgTransEntries">
 					<field-map field-name="acctgTransId" />
 					<order-by field-name="acctgTransEntrySeqId" />
-				</entity-and>
+				</entity-and> -->
 			</actions>
-			<widgets>
+			<!-- <widgets>
 				<decorator-screen name="SimpleDecorator"
 					location="component://common/widget/CommonScreens.xml">
 					<decorator-section name="body">
@@ -1096,6 +1097,14 @@ reportType:byAccount -->
 							location="component://accounting/widget/GlForms.xml" />
 					</decorator-section>
 				</decorator-screen>
+			</widgets> -->
+			<widgets>
+				<platform-specific>
+					<xsl-fo>
+						<html-template
+							location="component://accounting/webapp/accounting/reports/accountingTransAndFinAccountTrans.fo.ftl" />
+					</xsl-fo>
+				</platform-specific>
 			</widgets>
 		</section>
 	</screen>

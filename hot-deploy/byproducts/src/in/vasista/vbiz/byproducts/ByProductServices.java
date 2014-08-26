@@ -2955,7 +2955,7 @@ public class ByProductServices {
         	if(UtilValidate.isNotEmpty(finAccountName)){
         		paymentCtx.put("issuingAuthority", finAccountName);
         	}
-        	if(paymentMethodType.equals("FT_PAYIN")){
+        	if(paymentMethodType.equals("FUND_TRANSFER")){
         		if(UtilValidate.isNotEmpty(issuingAuthority)){
             		paymentCtx.put("finAccountId", issuingAuthority);
             	}

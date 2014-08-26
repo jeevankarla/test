@@ -1985,11 +1985,16 @@ under the License.
         <security https="true" auth="true"/>
         <response name="success" type="view" value="FinancialAccountingTransBANK"/>
     </request-map>
-     <request-map uri="BankContraEntry">
+     <request-map uri="CreateNewContra">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="CreateNewContra"/>
+    </request-map>
+    <request-map uri="BankContraEntry">
         <security https="true" auth="true"/>
         <response name="success" type="view" value="BankContraEntry"><redirect-parameter name=""/></response>
         <response name="error" type="view" value="BankContraEntry"/>
     </request-map>
+    
     <request-map uri="preCreateBankContraEntry">
         <security https="true" auth="true"/>
         <event type="service" path="" invoke="preCreateFinAccountTrans"/>
@@ -3338,6 +3343,7 @@ under the License.
     <view-map name="FindNonBankAccount" type="screen" page="component://accounting/widget/TreasurerPortalScreens.xml#FindNonBankAccount"/>
     <view-map name="FinancialAccountingTransBANK" type="screen" page="component://accounting/widget/TreasurerPortalScreens.xml#FinancialAccountingTransBANK"/>
     <view-map name="BankContraEntry" type="screen" page="component://accounting/widget/TreasurerPortalScreens.xml#BankContraEntry"/>
+    <view-map name="CreateNewContra" type="screen" page="component://accounting/widget/TreasurerPortalScreens.xml#CreateNewContra"/>
     <view-map name="FindBankDepositOrWithdraw" type="screen" page="component://accounting/widget/TreasurerPortalScreens.xml#PaymentsDepositWithdraw"/>
     <view-map name="FinAccountTransForReconsile" type="screen" page="component://accounting/widget/TreasurerPortalScreens.xml#FinAccountTransForReconsile"/>
     <view-map name="FindFinAccountReconciliationsNew" type="screen" page="component://accounting/widget/TreasurerPortalScreens.xml#FindFinAccountReconciliationsNew"/>

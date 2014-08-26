@@ -708,12 +708,12 @@
             </widgets>
         </section>
     </screen>
-       <screen name="BankContraEntry">
+       <!-- <screen name="BankContraEntry">
         <section>
             <actions>
                 <set field="titleProperty" value="PageTitleBankContraTrans" />
-               <!--   <script location="component://accounting/webapp/accounting/WEB-INF/actions/EditFinaccount.groovy"/>
-                <set field="tabButtonItem"  value="${parameters.tabButtonItem}" default-value="${context.tabButtonItem}"/> -->
+                 <script location="component://accounting/webapp/accounting/WEB-INF/actions/EditFinaccount.groovy"/>
+                <set field="tabButtonItem"  value="${parameters.tabButtonItem}" default-value="${context.tabButtonItem}"/>
                 <set field="tabButtonItem" value="ContraEntry"/>
                 
                 <set field="finAccountId" from-field="parameters.finAccountId"/>
@@ -725,13 +725,84 @@
             </actions>
             <widgets>
               <decorator-screen name="CommonTreasurerPortalDecorator" location="component://accounting/widget/CommonScreens.xml">
-                <!-- <decorator-screen name="CommonFinAccountDecorator" location="${parameters.finAccountDecoratorLocation}"> -->
+                <decorator-screen name="CommonFinAccountDecorator" location="${parameters.finAccountDecoratorLocation}">
                     <decorator-section name="body">
                        <include-menu name="CompanyFinAccountTabBar" location="component://accounting/widget/AccountingMenus.xml"/>
                         <label style="h1" text="${uiLabelMap.PageTitleBankContraTrans}"/>
                         <screenlet id="FinAccountTransPanel" collapsible="true">
                             <include-form name="BankContraEntry" location="component://accounting/widget/TreasurerPortalForms.xml"/>
                         </screenlet>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen> -->
+    
+    <screen name="BankContraEntry">
+        <section>
+             <actions>
+                <set field="titleProperty" value="PageTitleBankContraTrans" />
+               <!--   <script location="component://accounting/webapp/accounting/WEB-INF/actions/EditFinaccount.groovy"/>
+                <set field="tabButtonItem"  value="${parameters.tabButtonItem}" default-value="${context.tabButtonItem}"/> -->
+                <set field="tabButtonItem" value="ContraEntry"/>
+                <set field="tabButtonItem4" value="BankContraEntry"/>
+                <set field="finAccountId" from-field="parameters.finAccountId"/>
+                <set field="finAccountTransTypeId" from-field="parameters.finAccountTransTypeId"/>
+                <set field="entryType" from-field="parameters.entryType"/>
+                <entity-one entity-name="FinAccount" value-field="finAccount"/>
+                <set field="layoutSettings.javaScripts[]" value="/accounting/images/paymentTransaction.js" global="true"/>
+                <set field="finAccountTransId" from-field="parameters.finAccountTransId"/>
+            </actions>           
+            <widgets>
+            <decorator-screen name="CommonTreasurerPortalDecorator" location="component://accounting/widget/CommonScreens.xml">
+                    <decorator-section name="body">
+                    <include-menu name="ContraEntryTabBar" location="component://accounting/widget/AccountingMenus.xml"/>
+                    	<section>
+							<widgets>
+								<container style="button-bar">
+									<link target="CreateNewContra" text="Create Contra" style="buttontext create">				
+									</link>
+								</container>
+								<screenlet title="Find Contra Entries">				
+									<include-form name="FindContraEntries" location="component://accounting/widget/TreasurerPortalForms.xml"/>
+								</screenlet>
+								<screenlet title="List Contra Entries">				
+									<include-form name="ListContraEntries" location="component://accounting/widget/TreasurerPortalForms.xml"/>
+								</screenlet>
+							</widgets>      
+                    	</section>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    <screen name="CreateNewContra">
+        <section>
+            <actions>
+			   <set field="titleProperty" value="PageTitleBankContraTrans" />
+               <!--   <script location="component://accounting/webapp/accounting/WEB-INF/actions/EditFinaccount.groovy"/>
+                <set field="tabButtonItem"  value="${parameters.tabButtonItem}" default-value="${context.tabButtonItem}"/> -->
+                <set field="tabButtonItem" value="ContraEntry"/>
+                <set field="tabButtonItem4" value="BankContraEntry"/>
+                
+                <set field="finAccountId" from-field="parameters.finAccountId"/>
+                <set field="finAccountTransTypeId" from-field="parameters.finAccountTransTypeId"/>
+                <set field="entryType" from-field="parameters.entryType"/>
+                <entity-one entity-name="FinAccount" value-field="finAccount"/>
+                <set field="layoutSettings.javaScripts[]" value="/accounting/images/paymentTransaction.js" global="true"/>
+                <set field="finAccountTransId" from-field="parameters.finAccountTransId"/>
+            </actions>           
+            <widgets>
+            <decorator-screen name="CommonTreasurerPortalDecorator" location="component://accounting/widget/CommonScreens.xml">
+                    <decorator-section name="body">
+                    <include-menu name="ContraEntryTabBar" location="component://accounting/widget/AccountingMenus.xml"/>
+                    	<section>
+							<widgets>
+								<screenlet title="Create Contra Entry">				
+									<include-form name="BankContraEntry" location="component://accounting/widget/TreasurerPortalForms.xml"/>
+								</screenlet>
+							</widgets>      
+                    	</section>
                     </decorator-section>
                 </decorator-screen>
             </widgets>

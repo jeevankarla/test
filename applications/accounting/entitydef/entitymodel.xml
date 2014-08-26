@@ -575,6 +575,7 @@
 		<field name="orderItemSeqId" type="id">
 			<description>To be used along with orderId to point to an OrderItem that represents the purchase of a product to add money to the account.</description>
 		</field>
+		<field name="contraRefNum" type="short-varchar"></field>
 		<field name="performedByPartyId" type="id"></field>
 		<field name="reasonEnumId" type="id"></field>
 		<field name="comments" type="comment"></field>
