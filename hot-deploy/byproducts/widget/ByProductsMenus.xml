@@ -921,7 +921,7 @@
             </condition>
             <link target="FindPaymentNonRoute">
             	<parameter param-name="subTabItem" value="FundTransfer"/>
-            	<parameter param-name="paymentMethodTypeId" value="FT_PAYIN"/>
+            	<parameter param-name="paymentMethodTypeId" value="FUND_TRANSFER"/>
             </link>            
           </menu-item>
            <!-- 
