@@ -11,44 +11,26 @@ import in.vasista.vbiz.humanres.HumanresService;
 import in.vasista.vbiz.byproducts.ByProductServices;
 
 dctx = dispatcher.getDispatchContext();
-def sdf = new SimpleDateFormat("MMMM dd, yyyy");
-try {
-		fromDateStart = new java.sql.Timestamp(sdf.parse(parameters.fromDate).getTime());
-	} 
-	catch (ParseException e) {
-		Debug.logError(e, "Cannot parse date string: "+parameters.fromDate, "");
-	}
+
+if (parameters.customTimePeriodId == null) {
+	return;
+}
+GenericValue customTimePeriod = delegator.findOne("CustomTimePeriod", [customTimePeriodId : parameters.customTimePeriodId], false);
+fromDateStart=UtilDateTime.toTimestamp(customTimePeriod.getDate("fromDate"));
+thruDateEnd=UtilDateTime.toTimestamp(customTimePeriod.getDate("thruDate"));
 context.putAt("fromDateStart", fromDateStart);
 
-dayBegin = UtilDateTime.getDayStart(fromDateStart);
-dayEnd = UtilDateTime.getDayEnd(fromDateStart);
-dayBeginStr = UtilDateTime.toDateString(dayBegin);
-dayEndStr = UtilDateTime.toDateString(dayEnd);
-
-FinalMap=[:];
+fromDayBegin = UtilDateTime.getDayStart(fromDateStart);
+thruDayEnd = UtilDateTime.getDayEnd(thruDateEnd);
+fromDateBeginStr = UtilDateTime.toDateString(fromDayBegin);
+thruDateEndStr = UtilDateTime.toDateString(thruDayEnd);
 List conditionList=[];
-conditionList.add(EntityCondition.makeCondition("date", EntityOperator.GREATER_THAN_EQUAL_TO,  UtilDateTime.toSqlDate(dayBeginStr)));
-conditionList.add(EntityCondition.makeCondition("date", EntityOperator.LESS_THAN_EQUAL_TO,  UtilDateTime.toSqlDate(dayEndStr)));
+conditionList.add(EntityCondition.makeCondition("date", EntityOperator.GREATER_THAN_EQUAL_TO,  UtilDateTime.toSqlDate(fromDateBeginStr)));
+conditionList.add(EntityCondition.makeCondition("date", EntityOperator.LESS_THAN_EQUAL_TO,  UtilDateTime.toSqlDate(thruDateEndStr)));
 condition=EntityCondition.makeCondition(conditionList,EntityOperator.AND);
-def orderBy = UtilMisc.toList("partyId");
+def orderBy = UtilMisc.toList("partyId","date");
 attendanceDetailList = delegator.findList("EmplDailyAttendanceDetail", condition , null, orderBy, null, false);
-if(UtilValidate.isNotEmpty(attendanceDetailList)){
-	attendanceDetailList.each { attendenceDetails ->
-		empAttendenceMap= [:];
-		partyId = attendenceDetails.get("partyId");
-		date=attendenceDetails.get("date");
-		lateMin=attendenceDetails.get("lateMin");
-		overrideLateMin=attendenceDetails.get("overrideLateMin");
-		editedBy=attendenceDetails.get("overridenBy");
-		editedDate=attendenceDetails.get("lastUpdatedStamp");
-		empAttendenceMap.put("date",date);
-		empAttendenceMap.put("lateMin",lateMin);
-		empAttendenceMap.put("overrideLateMin",overrideLateMin);
-		empAttendenceMap.put("editedBy",editedBy);
-		empAttendenceMap.put("editedDate",editedDate);
-		FinalMap.put(partyId,empAttendenceMap);
-	}
-}
-context.put("FinalMap",FinalMap);
+
+context.put("attendanceDetailList",attendanceDetailList);
 
 
