@@ -9,11 +9,14 @@ if(userLogin){
 		parameters.isPublic = '';
 	}
 }
-if(UtilValidate.isEmpty(parameters.dataCategoryId)){
+if(UtilValidate.isEmpty(parameters.dataCategoryFieldId)){
 	dataCategoryIdList = delegator.findList("DataCategory", EntityCondition.makeCondition("parentCategoryId", EntityOperator.EQUALS , "OMS"), null, null, null, false);
 	
 	if(!UtilValidate.isEmpty(dataCategoryIdList)){
 		parameters.dataCategoryId = EntityUtil.getFieldListFromEntityList(dataCategoryIdList,"dataCategoryId",true);
 		parameters.dataCategoryId_op = "in";			
 	}
+}
+else {
+	parameters.dataCategoryId = parameters.dataCategoryFieldId;
 }
