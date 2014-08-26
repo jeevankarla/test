@@ -1040,7 +1040,7 @@
         
         <field name="uploadedFile" title="${uiLabelMap.CommonUpload}"><file/></field>
         <field name="dataCategoryId"><hidden value="PROFILE_PIC"/></field>
-        <field name="isPublic"><hidden value="Y"/></field>
+        <field name="isPublic"><hidden value="N"/></field>
              
         <field name="createButton" title="Upload Pic"><submit button-type="button"/></field>
     </form> 
