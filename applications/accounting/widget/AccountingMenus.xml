@@ -94,6 +94,12 @@
 			</condition>
 			<link target="cashierPortal" />
 		</menu-item>
+	   <menu-item name="TreasurerPortal" title="Treasurer Portal">
+			<condition>
+				<if-has-permission permission="ACCOUNTING" action="_TREASURER" />
+			</condition>
+			<link target="treasurerPortal" />
+		</menu-item>
 		
 	</menu>
 
