@@ -75,4 +75,3 @@ else{
 }
 context.putAt("finalGSLISMap",finalGSLISMap);
 
-Debug.log("finalGSLISMap============="+finalGSLISMap);
