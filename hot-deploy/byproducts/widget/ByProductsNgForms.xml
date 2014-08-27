@@ -1384,8 +1384,8 @@
         <field name="shipmentId"><hidden/></field>
         <field name="cratesSent" title="Crates Sent"><display></display></field>
         <field name="cansSent" title="Cans Sent"><display></display></field>
-        <field name="returnCrQuantity" title="Crates Received"  use-when="&quot;${statusId}&quot;==&quot;VEHICLE_CRATE_RTN&quot; || &quot;${statusId}&quot;==&quot;VEHICLE_DISPACHED&quot;"><text default-value="${cratesReceived}"  size="10"/></field>
-        <field name="returnCnQuantity" title="Cans Received"  use-when="&quot;${statusId}&quot;==&quot;VEHICLE_CRATE_RTN&quot; || &quot;${statusId}&quot;==&quot;VEHICLE_DISPACHED&quot;"><text default-value="${cansReceived}"  size="9"/></field>
+        <field name="returnCrQuantity" title="Crates Received" ><text default-value="${cratesReceived}"  size="10"/></field>
+        <field name="returnCnQuantity" title="Cans Received"  ><text default-value="${cansReceived}"  size="9"/></field>
         <field name="UpdateCrates"  use-when="&quot;${statusId}&quot;==&quot;VEHICLE_CRATE_RTN&quot; || &quot;${statusId}&quot;==&quot;VEHICLE_DISPACHED&quot;"    widget-style="buttontext"> 
            <submit button-type="button" />
         </field>
