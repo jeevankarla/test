@@ -454,6 +454,21 @@ function makeDatePicker1(fromDateId ,thruDateId){
 							</table>
 						</form>
 					</tr>
+					<tr class="alternate-row">
+						<form id="ProfessionalTaxReport" name="PaySheetFormat" mothed="post" action="<@ofbizUrl>ProfessionalTaxReport.pdf</@ofbizUrl>" target="_blank">
+							<table class="basic-table" cellspacing="5">
+								<tr class="alternate-row">
+									<td width="13%"><span class='h3'>Professional Tax Report</span></td>
+									<td width="45%"><span class='h3'>Period Id</span>
+										<select name="customTimePeriodId" id="customTimePeriodId" class='h5' >
+											<#list customTimePeriodList?sort_by("fromDate") as customTimePeriod><option value='${customTimePeriod.customTimePeriodId?if_exists}' >${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(customTimePeriod.fromDate, "dd MMMMM, yyyy")} -${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(customTimePeriod.thruDate, "dd MMMMM, yyyy")}</option></#list>
+										</select>
+									</td>
+									<td width="10%"><span class='h3'><input type="submit" value="Download" class="buttontext"></span></td>
+								</tr>
+							</table>
+						</form>
+					</tr>
 				   	<tr class="alternate-row">
 						<form id="BenefitsOrDeductionsExport" name="BenefitsOrDeductionsExport" mothed="post" action="<@ofbizUrl>ExportEmployeeBenefitsOrDeductions</@ofbizUrl>" target="_blank">
 							<table class="basic-table" cellspacing="0">
