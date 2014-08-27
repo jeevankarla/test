@@ -47,8 +47,10 @@ boothList.each{facility ->
 	
 	facilityRateResult = dispatcher.runSync("getFacilityRateAmount", inputRateAmt);
 	BigDecimal rateAmount=(BigDecimal)facilityRateResult.get("rateAmount");
-	BigDecimal basicRateAmount = (rateAmount.divide(new BigDecimal(1.1236) , 0, rounding));
-	
+	BigDecimal basicRateAmount=BigDecimal.ZERO;;
+	if (rateAmount>0) {
+	    basicRateAmount = (rateAmount.divide(new BigDecimal(1.1236) , 0, rounding));
+	}
 	tempMap =[:];
 	tempMap.put("boothId", facility.facilityId);
 	tempMap.put("facilityName", facility.facilityName);
