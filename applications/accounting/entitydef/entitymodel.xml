@@ -3757,6 +3757,18 @@
 			<key-map field-name="paymentTypeId" />
 		</relation>
 	</entity>
+	<entity entity-name="PaymentTypeAttribute" package-name="org.ofbiz.accounting.payment"
+		title="Payment Type Attribute Entity">
+		<field name="paymentTypeId" type="id-ne"></field>
+		<field name="attrName" type="id-long-ne"></field>
+		<field name="attrValue" type="value"></field>
+		<prim-key field="paymentTypeId" />
+		<prim-key field="attrName" />
+		<relation type="one" fk-name="PAYMETH_TYPE_ATTR"
+			rel-entity-name="PaymentType">
+			<key-map field-name="paymentTypeId" />
+		</relation>
+	</entity>
 	<entity entity-name="PaymentGlAccountTypeMap" package-name="org.ofbiz.accounting.payment"
 		title="Maps PaymentTypes to GlAccountTypes, allowing user to configure payments and gl accounts">
 		<field name="paymentTypeId" type="id-ne"></field>

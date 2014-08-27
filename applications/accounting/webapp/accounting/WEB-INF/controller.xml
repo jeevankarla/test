@@ -2442,6 +2442,24 @@ under the License.
         <response name="success" type="view" value="PortalPaymentOverview"/>
     </request-map>
     
+    <!--================= Refunds ===============-->
+    <request-map uri="refundAdvanceUnappliedPayments">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="refundAdvanceUnappliedPayments"/>
+        <response name="success" type="request-redirect" value="NewIncomingAdvancesRefund">
+            <redirect-parameter name="partyIdTo" from="partyIdFrom"/>
+            <redirect-parameter name="partyIdFrom" from="partyIdTo"/>
+        </response>
+    </request-map>
+    <request-map uri="refundAPAdvanceUnappliedPayments">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="refundAdvanceUnappliedPayments"/>
+        <response name="success" type="request-redirect" value="NewOutgoingAdvancesRefund">
+            <redirect-parameter name="partyIdTo" from="partyIdFrom"/>
+            <redirect-parameter name="partyIdFrom" from="partyIdTo"/>
+        </response>
+    </request-map>
+    
     <!--=================Cost calculation request===============-->
     <!--<request-map uri="EditCostCalcs">
         <security https="true" auth="true"/>

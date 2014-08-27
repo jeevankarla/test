@@ -683,8 +683,11 @@
                 <service service-name="acctgInvoicePermissionCheck" result-map="permResult">
                     <field-map field-name="mainAction" value="PAYMENT_EDIT"/>
                 </service>
-                <set field="layoutSettings.javaScripts[]" value="/accounting/images/paymentMethod.js" global="true"/>
+                <!-- <set field="layoutSettings.javaScripts[]" value="/accounting/images/paymentMethod.js" global="true"/> -->
+                <set field="searchParentType" value="ADVANCES_PAYIN"/>
+                <set field="refundParentType" value="REFUND_PAYOUT"/>
                 <set field="hasPaymentEditPermission" from-field="permResult.hasPermission"/>
+                <script location="component://accounting/webapp/accounting/WEB-INF/actions/GetPaymentsForParty.groovy"/>
             </actions>
             <widgets>
                 <decorator-screen name="CommonTreasurerPortalDecorator" location="component://accounting/widget/CommonScreens.xml">
@@ -695,9 +698,24 @@
                         		<if-compare operator="equals" value="true" field="hasPaymentEditPermission"/>
                         	</condition>
                             <widgets>
-                                <screenlet title="New Incoming Advance">
+                                <decorator-screen name="FindScreenDecorator" location="component://common/widget/CommonScreens.xml">
+                                    <decorator-section name="search-options">
+                                        <include-form name="NewIncomingAdvancesRefund" location="component://accounting/widget/TreasurerPortalForms.xml"/>
+                                    </decorator-section>
+                                    <decorator-section name="search-results">
+                                    	<platform-specific>
+                                           	<html><html-template location="component://accounting/webapp/accounting/payment/PaymentRefunds.ftl"/></html>
+                                       	</platform-specific>
+                                    	<screenlet title="Possible Payments To Refund">
+                                            <include-form name="listPaymentsNotApplied" location="component://accounting/widget/TreasurerPortalForms.xml"/>
+                                        </screenlet>
+                                    </decorator-section>
+                                    
+                                </decorator-screen>
+                                
+                                <!-- <screenlet title="New Incoming Advance">
                                     <include-form name="NewIncomingAdvancesRefund" location="component://accounting/widget/TreasurerPortalForms.xml"/>
-                                </screenlet>
+                                </screenlet> -->
                             </widgets>
                             <fail-widgets>
                             	<label style="h3" text="${uiLabelMap.newPaymentScreenError}"/>
@@ -876,21 +894,39 @@
                 <service service-name="acctgInvoicePermissionCheck" result-map="permResult">
                     <field-map field-name="mainAction" value="PAYMENT_EDIT"/>
                 </service>
-               	<set field="layoutSettings.javaScripts[]" value="/accounting/images/paymentMethodType.js" global="true"/>
+               	<!-- <set field="layoutSettings.javaScripts[]" value="/accounting/images/paymentMethodType.js" global="true"/> -->
                 <set field="hasPaymentEditPermission" from-field="permResult.hasPermission"/>
+                <set field="searchParentType" value="ADVANCES_PAYOUT"/>
+                <set field="refundParentType" value="REFUND_PAYIN"/>
+                <script location="component://accounting/webapp/accounting/WEB-INF/actions/GetPaymentsForParty.groovy"/>
             </actions>
             <widgets>
                 <decorator-screen name="CommonTreasurerPortalDecorator" location="component://accounting/widget/CommonScreens.xml">
-                    <decorator-section name="body">
+                	
+                	<decorator-section name="body">
                     	<include-menu name="OutgoingAdvancesTabBar" location="component://accounting/widget/AccountingMenus.xml"/>
                         <section>
                         	<condition>
                         		<if-compare operator="equals" value="true" field="hasPaymentEditPermission"/>
                         	</condition>
                             <widgets>
-                                <screenlet title="New Incoming Deposit">
-                                    <include-form name="NewOutgoingAdvanceRefund" location="component://accounting/widget/TreasurerPortalForms.xml"/>
-                                </screenlet>
+                                <decorator-screen name="FindScreenDecorator" location="component://common/widget/CommonScreens.xml">
+                                    <decorator-section name="search-options">
+                                        <include-form name="NewOutgoingAdvanceRefund" location="component://accounting/widget/TreasurerPortalForms.xml"/>
+                                    </decorator-section>
+                                    <decorator-section name="search-results">
+                                    	<platform-specific>
+                                           	<html><html-template location="component://accounting/webapp/accounting/payment/PaymentRefunds.ftl"/></html>
+                                       	</platform-specific>
+                                    	<screenlet title="Possible Payments To Refund">
+                                            <include-form name="listAPPaymentsNotApplied" location="component://accounting/widget/TreasurerPortalForms.xml"/>
+                                        </screenlet>
+                                    </decorator-section>
+                                </decorator-screen>
+                                
+                                <!-- <screenlet title="New Incoming Advance">
+                                    <include-form name="NewIncomingAdvancesRefund" location="component://accounting/widget/TreasurerPortalForms.xml"/>
+                                </screenlet> -->
                             </widgets>
                             <fail-widgets>
                             	<label style="h3" text="${uiLabelMap.newPaymentScreenError}"/>

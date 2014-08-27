@@ -720,4 +720,118 @@ public class PaymentWorker {
         return result; 
    }
     
+    public static Map<String, Object> refundAdvanceUnappliedPayments(DispatchContext dctx, Map<String, ? extends Object> context){
+        Delegator delegator = dctx.getDelegator();
+        LocalDispatcher dispatcher = dctx.getDispatcher();
+        BigDecimal paymentAmount = ProductEvents.parseBigDecimalForEntity((String) context.get("amountToRefund"));
+        String paymentMethodType = (String) context.get("paymentMethodTypeId");
+        String paymentMethodId = (String) context.get("paymentMethodId");
+        String instrumentDateStr=(String) context.get("instrumentDate");
+        String paymentTypeId = (String) context.get("paymentTypeId");
+        String comments = (String) context.get("comments");
+        String paymentRefNum = (String) context.get("paymentRefNum");
+        String issuingAuthority = (String) context.get("issuingAuthority");//to be stored in PaymentAttribute
+        String partyIdTo =(String)context.get("partyIdTo");
+        String partyIdFrom =(String)context.get("partyIdFrom");
+        String statusId =(String)context.get("statusId");
+        String paymentId =(String)context.get("paymentId");
+        
+        GenericValue userLogin = (GenericValue) context.get("userLogin");
+        Map<String, Object> result = ServiceUtil.returnSuccess();
+        
+        Timestamp instrumentDate=UtilDateTime.nowTimestamp();
+        if (UtilValidate.isNotEmpty(instrumentDateStr)) {
+			SimpleDateFormat sdf = new SimpleDateFormat("dd MMMMM, yyyy");
+			try {
+				instrumentDate = new java.sql.Timestamp(sdf.parse(instrumentDateStr).getTime());
+			} catch (ParseException e) {
+				Debug.logError(e, "Cannot parse date string: "+ instrumentDateStr, module);
+			} catch (NullPointerException e) {
+				Debug.logError(e, "Cannot parse date string: "	+ instrumentDateStr, module);
+			}
+		}
+        
+        String toPaymentId = "";
+        Timestamp paymentTimestamp = UtilDateTime.nowTimestamp();
+        
+        // Create Payment
+        
+        Map<String, Object> paymentCtx = UtilMisc.<String, Object>toMap("paymentTypeId", paymentTypeId);
+        paymentCtx.put("paymentMethodTypeId", paymentMethodType);
+        paymentCtx.put("partyIdTo", partyIdTo);
+        paymentCtx.put("partyIdFrom", partyIdFrom);
+        if (!UtilValidate.isEmpty(paymentMethodId)) {
+     	   paymentCtx.put("paymentMethodId", paymentMethodId);                       	
+        }   
+        if (!UtilValidate.isEmpty(context.get("isEnableAcctg"))) {
+        	paymentCtx.put("isEnableAcctg", context.get("isEnableAcctg"));                       	
+        }   
+        /*if (!UtilValidate.isEmpty(paymentLocationId) ) {
+            paymentCtx.put("paymentLocation", paymentLocationId);                        	
+        }*/ 
+        if (!UtilValidate.isEmpty(paymentRefNum) ) {
+            paymentCtx.put("paymentRefNum", paymentRefNum);                        	
+        }
+        if (!UtilValidate.isEmpty(issuingAuthority) ) {
+            paymentCtx.put("issuingAuthority", issuingAuthority);                        	
+        }
+        if (!UtilValidate.isEmpty(instrumentDate) ) {
+            paymentCtx.put("effectiveDate", instrumentDate);                        	
+        }
+        /*if (!UtilValidate.isEmpty(issuingAuthorityBranch) ) {
+            paymentCtx.put("issuingAuthorityBranch", issuingAuthorityBranch);                        	
+        }
+        if (!UtilValidate.isEmpty(paymentPurposeType)) {
+            paymentCtx.put("paymentPurposeType", paymentPurposeType);                        	
+        }*/
+        if (UtilValidate.isNotEmpty(instrumentDate) ) {
+            paymentCtx.put("paymentDate", instrumentDate);                        	
+        }
+        else{
+        	paymentCtx.put("paymentDate", UtilDateTime.nowTimestamp());
+        }
+        paymentCtx.put("statusId", statusId);            
+        paymentCtx.put("amount", paymentAmount);
+        paymentCtx.put("userLogin", userLogin);
+        paymentCtx.put("comments", comments);
+        paymentCtx.put("createdByUserLogin", userLogin.getString("userLoginId"));
+        paymentCtx.put("lastModifiedByUserLogin",  userLogin.getString("userLoginId"));
+        paymentCtx.put("createdDate", UtilDateTime.nowTimestamp());
+        paymentCtx.put("lastModifiedDate", UtilDateTime.nowTimestamp());
+        try {       	
+            Map<String, Object> paymentResult = dispatcher.runSync("createPayment", paymentCtx);
+            if (ServiceUtil.isError(paymentResult)) {
+            	Debug.logError(paymentResult.toString(), module);    			
+                return ServiceUtil.returnError(null, null, null, paymentResult);
+            }
+            toPaymentId = (String)paymentResult.get("paymentId");
+        }catch (Exception e) {
+            Debug.logError(e, e.toString(), module);
+            return ServiceUtil.returnError(e.toString());
+        }
+        // Payment Application To Payment
+        
+        Map<String, Object> paymentApplicationCtx = UtilMisc.<String, Object>toMap("paymentId", paymentId);
+        paymentApplicationCtx.put("toPaymentId", toPaymentId);
+        paymentApplicationCtx.put("amountApplied", paymentAmount);
+        paymentApplicationCtx.put("userLogin", userLogin);
+        try {       	
+            Map<String, Object> paymentApplicationResult = dispatcher.runSync("updatePaymentApplicationDef", paymentApplicationCtx);
+            if (ServiceUtil.isError(paymentApplicationResult)) {
+            	Debug.logError(paymentApplicationResult.toString(), module);    			
+                return ServiceUtil.returnError(null, null, null, paymentApplicationResult);
+            }
+            String paymentApplicationId = (String)paymentApplicationResult.get("paymentApplicationId");
+        }catch (Exception e) {
+            Debug.logError(e, e.toString(), module);
+            return ServiceUtil.returnError(e.toString());
+        }
+        
+        result = ServiceUtil.returnSuccess("Refund has been successfully issued to Party "+partyIdTo+" ..!");
+        result.put("paymentId",paymentId);
+        result.put("noConditionFind","N");
+        result.put("hideSearch","N");
+        return result; 
+    }
+    
 }
