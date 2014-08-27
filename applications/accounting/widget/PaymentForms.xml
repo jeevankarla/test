@@ -98,6 +98,11 @@ under the License.
         <field name="paymentDate"><display/></field>
         <field name="currencyUomId"><hidden/></field>
         <field name="amount"><display also-hidden="false" type="currency" currency="${currencyUomId}"/></field>
+        <field name="printReceipt" widget-style="buttontext">
+            <hyperlink target="printAdvAndDepositReceipt.pdf" description="Print Receipt" target-window="_BLANK">
+                <parameter param-name="paymentId"/>
+            </hyperlink>
+        </field>
 <!--        <field name="amountToApply"><display also-hidden="false" type="currency" currency="${currencyUomId}"/></field>-->
     </form>
 
