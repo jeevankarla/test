@@ -212,11 +212,12 @@ under the License.
                    <entity-constraint name="organizationPartyId" value="Company"/> 
                     <entity-constraint name="ownerPartyId" value="Company"/>
                      <entity-constraint name="finAccountTypeId" value="BANK_ACCOUNT"/>
-                  <!--    <entity-constraint name="finAccountTypeId" value="CASH"/> -->
                     <entity-order-by field-name="finAccountName"/>
                 </entity-options>
             </drop-down>
-        </field>	
+        </field>
+        <field name="amount"><text></text></field>
+        <field name="contraRefNum"><text></text></field>
        	<field name="submitButton" title="${uiLabelMap.CommonFind}" widget-style="smallSubmit"><submit/></field>       
     </form>
     <form name="ListContraEntries" type="list" list-name="listIt" odd-row-style="alternate-row" 
@@ -239,7 +240,7 @@ under the License.
                 <parameter param-name="finAccountTransId" from-field="finAccountTransId"/>
             </hyperlink>
         </field>
-    	<field name="Print Cheque" widget-style="buttontext" >
+    	<field use-when="&quot;${finAccountTransTypeId}&quot;==&quot;WITHDRAWAL&quot;" name="Print Cheque" widget-style="buttontext" >
             <hyperlink target="printChecks.pdf" description="Print Cheque" target-window="_blank">
              <parameter param-name="finAccountId"/>
              <parameter param-name="amount"/>

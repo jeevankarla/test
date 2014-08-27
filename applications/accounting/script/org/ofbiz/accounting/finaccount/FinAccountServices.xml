@@ -285,6 +285,9 @@ under the License.
 			<if-not-empty field="parameters.contraRefNum">
 			 <set field="createFinAccountTransMap.contraRefNum" from-field="parameters.contraRefNum"/>
 			</if-not-empty>
+			<if-not-empty field="parameters.comments">
+			 <set field="createFinAccountTransMap.comments" from-field="parameters.comments"/>
+			</if-not-empty>
 			<call-service service-name="createFinAccountTrans" in-map-name="createFinAccountTransMap">
 				<result-to-result result-name="finAccountTransId"/>
 				<result-to-field result-name="finAccountTransId" field="finAccountTransId1"/>
