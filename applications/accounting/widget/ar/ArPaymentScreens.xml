@@ -296,7 +296,7 @@ under the License.
                                     </decorator-section>
                                     <decorator-section name="search-results">
                                     	<platform-specific>
-                                           	<html><html-template location="component://accounting/webapp/accounting/payment/ListSearchPayments.ftl"/></html>
+                                           	<html><html-template location="component://accounting/webapp/accounting/payment/ListSearchAdvancesAndDeposits.ftl"/></html>
                                        	</platform-specific>
                                         <!-- <include-form name="ListPayments"  location="component://accounting/widget/PaymentForms.xml"/> -->
                                     </decorator-section>
@@ -382,7 +382,7 @@ under the License.
                                     </decorator-section>
                                     <decorator-section name="search-results">
                                     	<platform-specific>
-                                           	<html><html-template location="component://accounting/webapp/accounting/payment/ListSearchPayments.ftl"/></html>
+                                           	<html><html-template location="component://accounting/webapp/accounting/payment/ListSearchAdvancesAndDeposits.ftl"/></html>
                                        	</platform-specific>
                                         <!-- <include-form name="ListPayments"  location="component://accounting/widget/PaymentForms.xml"/> -->
                                     </decorator-section>
@@ -468,7 +468,7 @@ under the License.
                                     </decorator-section>
                                     <decorator-section name="search-results">
                                     	<platform-specific>
-                                           	<html><html-template location="component://accounting/webapp/accounting/payment/ListSearchPayments.ftl"/></html>
+                                           	<html><html-template location="component://accounting/webapp/accounting/payment/ListSearchAdvancesAndDeposits.ftl"/></html>
                                        	</platform-specific>
                                     </decorator-section>
                                 </decorator-screen>
