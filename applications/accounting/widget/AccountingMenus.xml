@@ -1175,7 +1175,7 @@
 				<parameter param-name="organizationPartyId" />
 			</link>
 		</menu-item>
-		<menu-item name="IncomeStatement" title="${uiLabelMap.AccountingIncomeStatement}">
+		<!-- <menu-item name="IncomeStatement" title="${uiLabelMap.AccountingIncomeStatement}">
 			<link target="IncomeStatement">
 				<parameter param-name="organizationPartyId" />
 			</link>
@@ -1219,9 +1219,9 @@
 				<parameter param-name="organizationPartyId" />
 			</link>
 		</menu-item>
-		<!--<menu-item name="InventoryValuation" title="${uiLabelMap.AccountingInventoryValuation}"> 
+		<menu-item name="InventoryValuation" title="${uiLabelMap.AccountingInventoryValuation}"> 
 			<link target="InventoryValuation"> <parameter param-name="organizationPartyId"/> 
-			</link> </menu-item> -->
+			</link> </menu-item>
 		<menu-item name="GlAccountBalanceByCostCenter" title="${uiLabelMap.FormFieldTitle_costCenters}">
 			<link target="GlAccountBalanceByCostCenter">
 				<parameter param-name="organizationPartyId" />
@@ -1236,7 +1236,7 @@
 			<link target="FinancialAccountingTrans">
 				<parameter param-name="organizationPartyId" />
 			</link>
-		</menu-item>		
+		</menu-item>	 -->	
 	</menu>
 	<menu name="PartyAdminTabBar" extends="CommonTabBarMenu"
 		extends-resource="component://common/widget/CommonMenus.xml"
