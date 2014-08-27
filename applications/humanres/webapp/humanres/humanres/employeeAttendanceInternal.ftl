@@ -27,6 +27,7 @@ $(document).ready(function() {
 		"columnDefs": [{ type: 'date-eu', targets: [0,1] }],
        	"iDisplayLength" : 100
 	} );
+	datatable1.fnSort( [ [0,'desc'] ] );		 	
 	
 	// ood table
 	var oodTable = ${StringUtil.wrapString(oodPunchListJSON!'[]')};	 
@@ -41,6 +42,8 @@ $(document).ready(function() {
 		"columnDefs": [{ type: 'date-eu', targets: [0,1] }],
        	"iDisplayLength" : 100
 	} );
+	datatable2.fnSort( [ [0,'desc'] ] );		 	
+	
 	
 	// leave table
 	var leaveTable = ${StringUtil.wrapString(leaveListJSON!'[]')};	 
@@ -55,6 +58,7 @@ $(document).ready(function() {
 		"columnDefs": [{ type: 'date-eu', targets: [0,1] }],
        	"iDisplayLength" : 100
 	} );	
+	datatable3.fnSort( [ [0,'desc'] ] );		 	
 	
 	// holidays table
 	var holidaysTable = ${StringUtil.wrapString(holidaysListJSON!'[]')};	 
@@ -68,6 +72,7 @@ $(document).ready(function() {
 		"columnDefs": [{ type: 'date-eu', targets: [0] }],
        	"iDisplayLength" : 100
 	} );				
+	datatable4.fnSort( [ [0,'desc'] ] );		 	
 
 } );
 
