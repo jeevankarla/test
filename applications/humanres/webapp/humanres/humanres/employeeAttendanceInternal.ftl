@@ -54,21 +54,33 @@ $(document).ready(function() {
 			{ "title": "Leave Type"}],	
 		"columnDefs": [{ type: 'date-eu', targets: [0,1] }],
        	"iDisplayLength" : 100
-	} );			
+	} );	
+	
+	// weekly offs table
+	var weeklyOffsTable = ${StringUtil.wrapString(woListJSON!'[]')};	 
+	$('#weeklyOffsTable').html( '<table cellpadding="0" cellspacing="0" border="0" class="display" id="datatable4"></table>' );
+
+	var datatable4 = $('#datatable4').dataTable( {
+		"data": weeklyOffsTable,
+		"columns": [
+			{ "title": "Weekly Off" }],	
+		"columnDefs": [{ type: 'date-eu', targets: [0] }],
+       	"iDisplayLength" : 100
+	} );				
 
 } );
 
 </script>
 
 <div style="width:800px; margin:0 auto; padding:20px">
-<h3>Employee Attendance Details for ${employeeId}: ${employeeName} [${fromDate?date} - ${thruDate?date}]</h3>	
+<h2>Employee Attendance Details for ${employeeId}: ${employeeName} [${fromDate?date} - ${thruDate?date}]</h2>	
 </div>
 
 <div class="container">
 <div class="lefthalf">		
 <div class="screenlet">
 	<div class="screenlet-title-bar">
-      	<h3>Daily Punch</h3>	
+      	<h3>Daily Punch  [Company Bus: ${companyBus}]</h3>	
      </div>
     <div class="screenlet-body">
     	<div id="attendanceTable"/>
@@ -91,6 +103,14 @@ $(document).ready(function() {
 	    <div class="screenlet-body">
     		<div id="leaveTable"/>  
     	</div>  	
-    </div>    
+    </div>   
+    <div class="screenlet">  
+    	<div class="screenlet-title-bar">
+      		<h3>Weekly Offs</h3>	
+     	</div>
+	    <div class="screenlet-body">
+    		<div id="weeklyOffsTable"/>  
+    	</div>  	
+    </div>     
 </div>
 </div>    

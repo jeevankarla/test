@@ -1,3 +1,6 @@
+import org.ofbiz.base.util.UtilValidate;
+
+import java.sql.Timestamp;
 import org.ofbiz.base.util.*;
 import org.ofbiz.entity.condition.*;
 import org.ofbiz.entity.util.EntityUtil;
@@ -144,7 +147,7 @@ leaveList.each { leave->
 	leaveJSON.add(leaveFromDate);
 	leaveThruDate = "";
 	if(UtilValidate.isNotEmpty(leave.get("thruDate"))) {
-		leaveThruDate = UtilDateTime.toDateString(leave.get("thruDate"), "dd/MM/yyyy");;
+		leaveThruDate = UtilDateTime.toDateString(leave.get("thruDate"), "dd/MM/yyyy");
 	}
 	leaveJSON.add(leaveThruDate);
 	leaveType = leave.get("leaveTypeId");
@@ -155,13 +158,49 @@ leaveList.each { leave->
 	leaveListJSON.add(leaveJSON);
 }
 
+
+// get companyBus details and weekly off days
+companyBus = "No";
+JSONArray woListJSON = new JSONArray();
+employeeDetail = delegator.findOne("EmployeeDetail", UtilMisc.toMap("partyId",employeeId), true);
+if(UtilValidate.isNotEmpty(employeeDetail)) { 
+	if(UtilValidate.isNotEmpty(employeeDetail.getString("companyBus")) && 
+		employeeDetail.getString("companyBus").equalsIgnoreCase("Y")){
+		companyBus = "Yes";
+	}
+		
+	if (UtilValidate.isNotEmpty(employeeDetail.getString("weeklyOff"))) {
+		Calendar c1=Calendar.getInstance();
+		c1.setTime(UtilDateTime.toSqlDate(fromDate));
+		Calendar c2=Calendar.getInstance();
+		c2.setTime(UtilDateTime.toSqlDate(thruDate));
+		emplWeeklyOffDay = employeeDetail.getString("weeklyOff");
+		while(c2.after(c1)){
+			String weekName = (c1.getDisplayName(Calendar.DAY_OF_WEEK, Calendar.LONG, locale));
+			if(emplWeeklyOffDay.equalsIgnoreCase(weekName)){
+				JSONArray woJSON = new JSONArray();
+				Timestamp cTime = new Timestamp(c1.getTimeInMillis());			
+				woDate = UtilDateTime.toDateString(cTime, "dd/MM/yyyy")			
+				woJSON.add(woDate);
+				woListJSON.add(woJSON);
+			}
+			c1.add(Calendar.DATE,1);
+		}
+	}
+}
+
+
 //Debug.logError("punchListJSON="+punchListJSON,"");
 //Debug.logError("oodPunchListJSON="+oodPunchListJSON,"");
 //Debug.logError("leaveListJSON="+leaveListJSON,"");
+Debug.logError("woListJSON="+woListJSON,"");
+
 context.employeeId = employeeId;
 context.employeeName = employeeName;
+context.companyBus = companyBus;
 context.fromDate = fromDate;
 context.thruDate = thruDate;
 context.punchListJSON = punchListJSON;
 context.oodPunchListJSON = oodPunchListJSON;
 context.leaveListJSON = leaveListJSON;
+context.woListJSON = woListJSON;
