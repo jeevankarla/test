@@ -146,6 +146,16 @@ under the License.
                					</fo:table-cell>
 		  					</fo:table-row>
 		  					</#if>
+		  					<#if paymentListReport.paymentMethodTypeId?exists && (paymentListReport.paymentMethodTypeId == "FUND_TRANSFER")>
+		  					<fo:table-row>
+            				     <fo:table-cell font-weight = "bold">
+                    				<fo:block>Transferred To:</fo:block>
+               					</fo:table-cell>
+               					<fo:table-cell number-columns-spanned="2">
+               					<fo:block>${paymentListReport.issuingAuthority?if_exists}</fo:block>
+               					</fo:table-cell>
+		  					</fo:table-row>
+		  					</#if>
 		  					<fo:table-row>
                					<fo:table-cell >
                     				<fo:block>-------------------------------------------------------------------------------</fo:block>
