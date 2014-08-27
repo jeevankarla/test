@@ -202,7 +202,7 @@ under the License.
                              <widgets>
                                  <screenlet title="${uiLabelMap.AccountingInvoicesApplPayments}" navigation-form-name="Invoices">
                                      <include-form name="ListInvoicesApplPayments" location="component://party/widget/partymgr/PartyForms.xml"/>
-                                     <section>
+                                     <!-- <section>
                                          <condition>
                                              <and>
                                                  <not><if-empty field="party.preferredCurrencyUomId"/></not>
@@ -217,7 +217,7 @@ under the License.
                                              <label style="h2" text="${uiLabelMap.PartyCurrency}"></label>
                                              <include-form name="ListInvoicesApplPayments" location="component://party/widget/partymgr/PartyForms.xml"/>
                                          </widgets>
-                                     </section>
+                                     </section> -->
                                  </screenlet>
                              </widgets>
                          </section>
@@ -231,7 +231,7 @@ under the License.
                      <widgets>
                          <screenlet title="${uiLabelMap.PartyInvoicesNotApplied}" navigation-form-name="partyFinancialHistoryInvoicesN">
                              <include-form name="ListUnAppliedInvoices" location="component://party/widget/partymgr/PartyForms.xml"/>
-                             <section>
+                             <!-- <section>
                                  <condition>
                                      <and>
                                          <not><if-empty field="party.preferredCurrencyUomId"/></not>
@@ -246,7 +246,7 @@ under the License.
                                      <label style="h2" text="${uiLabelMap.PartyCurrency}"></label>
                                      <include-form name="ListUnAppliedInvoices" location="component://party/widget/partymgr/PartyForms.xml"/>
                                  </widgets>
-                             </section>
+                             </section> -->
                          </screenlet>
                      </widgets>
                  </section>
@@ -258,7 +258,7 @@ under the License.
                      <widgets>
                          <screenlet title="${uiLabelMap.PartyPaymentsNotApplied}" navigation-form-name="partyFinancialHistoryPaymentsN">
                              <include-form name="ListUnAppliedPayments" location="component://party/widget/partymgr/PartyForms.xml"/>
-                             <section>
+                             <!-- <section>
                                  <condition>
                                      <and>
                                          <not><if-empty field="party.preferredCurrencyUomId"/></not>
@@ -273,7 +273,7 @@ under the License.
                                      <label style="h2" text="${uiLabelMap.PartyCurrency}"></label>
                                      <include-form name="ListUnAppliedPayments" location="component://party/widget/partymgr/PartyForms.xml"/>
                                  </widgets>
-                             </section>
+                             </section> -->
                          </screenlet>
                      </widgets>
                  </section>
@@ -285,7 +285,7 @@ under the License.
                      <widgets>
                          <screenlet title="${uiLabelMap.PartyFinancialSummary}${defaultOrganizationPartyId}" navigation-form-name="partyFinancialSummary">
                              <include-form name="partyFinancialSummary" location="component://party/widget/partymgr/PartyForms.xml"/>
-                             <section>
+                             <!-- <section>
                                  <condition>
                                      <and>
                                          <not><if-empty field="party.preferredCurrencyUomId"/></not>
@@ -300,7 +300,7 @@ under the License.
                                      <label style="h2" text="${uiLabelMap.PartyCurrency}"></label>
                                      <include-form name="partyFinancialSummary" location="component://party/widget/partymgr/PartyForms.xml"/>
                                  </widgets>
-                             </section>
+                             </section> -->
                          </screenlet>
                      </widgets>
                  </section>
