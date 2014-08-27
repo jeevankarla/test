@@ -3149,6 +3149,11 @@ under the License.
         <security https="true" auth="true"/>
         <response name="success" type="view" value="newReceipts"/>
     </request-map> 
+     <request-map uri="treasurerPortal">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="treasurerPortal"/>
+    </request-map>
+    
     <!-- here we using general Creation payment Services. -->
      <request-map uri="createCashReceipt">
         <security https="true" auth="true"/>
@@ -3352,6 +3357,7 @@ under the License.
     <view-map name="EditCustomTimePeriod" type="screen" page="component://accounting/widget/PeriodScreens.xml#EditCustomTimePeriod"/>
 
     <!-- FinAccount -->
+    
     <view-map name="FindFinAccount" type="screen" page="component://accounting/widget/FinAccountScreens.xml#FindFinAccount"/>
     <view-map name="FinAccountMain" type="screen" page="component://accounting/widget/FinAccountScreens.xml#FinAccountMain"/>
     <view-map name="FindDepositSlips" type="screen" page="component://accounting/widget/FinAccountScreens.xml#FindDepositSlips"/>
@@ -3359,6 +3365,8 @@ under the License.
     <view-map name="NewDepositPayment" type="screen" page="component://accounting/widget/FinAccountScreens.xml#NewDepositPayment"/>
     <view-map name="NewWithdrawalPayment" type="screen" page="component://accounting/widget/FinAccountScreens.xml#NewWithdrawalPayment"/>
     
+    
+    <view-map name="treasurerPortal" type="screen" page="component://accounting/widget/TreasurerPortalScreens.xml#FindFinAccountAlt"/>
      <view-map name="FindFinAccountAlt" type="screen" page="component://accounting/widget/TreasurerPortalScreens.xml#FindFinAccountAlt"/>
     <view-map name="FindFinAccountTransAlt" type="screen" page="component://accounting/widget/TreasurerPortalScreens.xml#FindFinAccountTransAlt"/>
     <view-map name="EditFinAccountAlt" type="screen" page="component://accounting/widget/TreasurerPortalScreens.xml#EditFinAccountAlt"/>
