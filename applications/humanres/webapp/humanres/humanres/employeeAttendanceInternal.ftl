@@ -56,14 +56,15 @@ $(document).ready(function() {
        	"iDisplayLength" : 100
 	} );	
 	
-	// weekly offs table
-	var weeklyOffsTable = ${StringUtil.wrapString(woListJSON!'[]')};	 
-	$('#weeklyOffsTable').html( '<table cellpadding="0" cellspacing="0" border="0" class="display" id="datatable4"></table>' );
+	// holidays table
+	var holidaysTable = ${StringUtil.wrapString(holidaysListJSON!'[]')};	 
+	$('#holidaysTable').html( '<table cellpadding="0" cellspacing="0" border="0" class="display" id="datatable4"></table>' );
 
 	var datatable4 = $('#datatable4').dataTable( {
-		"data": weeklyOffsTable,
+		"data": holidaysTable,
 		"columns": [
-			{ "title": "Weekly Off" }],	
+			{ "title": "Date" },
+			{ "title": "Holiday Description" }],	
 		"columnDefs": [{ type: 'date-eu', targets: [0] }],
        	"iDisplayLength" : 100
 	} );				
@@ -106,10 +107,10 @@ $(document).ready(function() {
     </div>   
     <div class="screenlet">  
     	<div class="screenlet-title-bar">
-      		<h3>Weekly Offs</h3>	
+      		<h3>Holidays</h3>	
      	</div>
 	    <div class="screenlet-body">
-    		<div id="weeklyOffsTable"/>  
+    		<div id="holidaysTable"/>  
     	</div>  	
     </div>     
 </div>

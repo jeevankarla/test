@@ -1,3 +1,5 @@
+import java.sql.Timestamp;
+
 import org.ofbiz.base.util.UtilValidate;
 
 import java.sql.Timestamp;
@@ -10,6 +12,7 @@ import java.text.SimpleDateFormat;
 import java.text.ParseException;
 import net.sf.json.JSONObject;
 import net.sf.json.JSONArray;
+import in.vasista.vbiz.humanres.HumanresService
 
 dctx = dispatcher.getDispatchContext();
 SimpleDateFormat timeFormat = new SimpleDateFormat("HH:mm");
@@ -161,14 +164,13 @@ leaveList.each { leave->
 
 // get companyBus details and weekly off days
 companyBus = "No";
-JSONArray woListJSON = new JSONArray();
+JSONArray holidaysListJSON = new JSONArray();
 employeeDetail = delegator.findOne("EmployeeDetail", UtilMisc.toMap("partyId",employeeId), true);
 if(UtilValidate.isNotEmpty(employeeDetail)) { 
 	if(UtilValidate.isNotEmpty(employeeDetail.getString("companyBus")) && 
 		employeeDetail.getString("companyBus").equalsIgnoreCase("Y")){
 		companyBus = "Yes";
-	}
-		
+	}		
 	if (UtilValidate.isNotEmpty(employeeDetail.getString("weeklyOff"))) {
 		Calendar c1=Calendar.getInstance();
 		c1.setTime(UtilDateTime.toSqlDate(fromDate));
@@ -176,24 +178,46 @@ if(UtilValidate.isNotEmpty(employeeDetail)) {
 		c2.setTime(UtilDateTime.toSqlDate(thruDate));
 		emplWeeklyOffDay = employeeDetail.getString("weeklyOff");
 		while(c2.after(c1)){
+			Timestamp cTime = new Timestamp(c1.getTimeInMillis());
 			String weekName = (c1.getDisplayName(Calendar.DAY_OF_WEEK, Calendar.LONG, locale));
 			if(emplWeeklyOffDay.equalsIgnoreCase(weekName)){
 				JSONArray woJSON = new JSONArray();
-				Timestamp cTime = new Timestamp(c1.getTimeInMillis());			
-				woDate = UtilDateTime.toDateString(cTime, "dd/MM/yyyy")			
+				woDate = UtilDateTime.toDateString(cTime, "dd/MM/yyyy");			
 				woJSON.add(woDate);
-				woListJSON.add(woJSON);
+				woJSON.add("Weekly Off")
+				holidaysListJSON.add(woJSON);
+			}
+	    	Timestamp secondSaturday = UtilDateTime.addDaysToTimestamp(UtilDateTime.getWeekStart(UtilDateTime.getMonthStart(cTime),0,2,timeZone,locale), -1);
+			if (secondSaturday.equals(cTime)) {
+				JSONArray ssJSON = new JSONArray();
+				ssDate = UtilDateTime.toDateString(cTime, "dd/MM/yyyy");
+				ssJSON.add(ssDate);
+				ssJSON.add("Second Saturday")
+				holidaysListJSON.add(ssJSON);
 			}
 			c1.add(Calendar.DATE,1);
 		}
 	}
 }
 
+inputMap = [userLogin:userLogin, fromDate:fromDate, thruDate:thruDate];
+resultMap = HumanresService.getGeneralHoliDays(dctx, inputMap);
+if (resultMap) {
+	generalHolidaysList = resultMap.get("holiDayList");
+	generalHolidaysList.each { generalHoliday->
+		JSONArray ghJSON = new JSONArray();
+		ghDate = UtilDateTime.toDateString(generalHoliday.get("holiDayDate"), "dd/MM/yyyy");
+		ghDescription = generalHoliday.get("description");
+		ghJSON.add(ghDate);
+		ghJSON.add(ghDescription);
+		holidaysListJSON.add(ghJSON);
+	}
+}
 
 //Debug.logError("punchListJSON="+punchListJSON,"");
 //Debug.logError("oodPunchListJSON="+oodPunchListJSON,"");
 //Debug.logError("leaveListJSON="+leaveListJSON,"");
-Debug.logError("woListJSON="+woListJSON,"");
+//Debug.logError("holidaysListJSON="+holidaysListJSON,"");
 
 context.employeeId = employeeId;
 context.employeeName = employeeName;
@@ -203,4 +227,4 @@ context.thruDate = thruDate;
 context.punchListJSON = punchListJSON;
 context.oodPunchListJSON = oodPunchListJSON;
 context.leaveListJSON = leaveListJSON;
-context.woListJSON = woListJSON;
+context.holidaysListJSON = holidaysListJSON;
