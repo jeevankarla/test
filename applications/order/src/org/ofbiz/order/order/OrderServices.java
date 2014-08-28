@@ -895,14 +895,14 @@ public class OrderServices {
         }
 
         // set the order item ship groups
-        /* commented when PurchaseOrder not created without shipment
+        // commented when PurchaseOrder not created without shipment
         List<String> dropShipGroupIds = FastList.newInstance(); // this list will contain the ids of all the ship groups for drop shipments (no reservations)
         if (UtilValidate.isNotEmpty(orderItemShipGroupInfo)) {
             Iterator<GenericValue> osiInfos = orderItemShipGroupInfo.iterator();
             while (osiInfos.hasNext()) {
                 GenericValue valueObj = osiInfos.next();
                 valueObj.set("orderId", orderId);
-                if ("OrderItemShipGroup".equals(valueObj.getEntityName())) {
+               /* if ("OrderItemShipGroup".equals(valueObj.getEntityName())) {
                     // ship group
                     if (valueObj.get("carrierRoleTypeId") == null) {
                         valueObj.set("carrierRoleTypeId", "CARRIER");
@@ -910,7 +910,9 @@ public class OrderServices {
                     if (!UtilValidate.isEmpty(valueObj.getString("supplierPartyId"))) {
                         dropShipGroupIds.add(valueObj.getString("shipGroupSeqId"));
                     }
-                } else if ("OrderAdjustment".equals(valueObj.getEntityName())) {
+                     toBeStored.add(valueObj); // from out side of if we bring here
+                } else */
+                	if ("OrderAdjustment".equals(valueObj.getEntityName())) {
                     // shipping / tax adjustment(s)
                     if (UtilValidate.isEmpty(valueObj.get("orderItemSeqId"))) {
                         valueObj.set("orderItemSeqId", DataModelConstants.SEQ_ID_NA);
@@ -918,11 +920,12 @@ public class OrderServices {
                     valueObj.set("orderAdjustmentId", delegator.getNextSeqId("OrderAdjustment"));
                     valueObj.set("createdDate", UtilDateTime.nowTimestamp());
                     valueObj.set("createdByUserLogin", userLogin.getString("userLoginId"));
+                    toBeStored.add(valueObj);
                 }
-                toBeStored.add(valueObj);
+               
             }
         }
-        */
+        
 
         // set the additional party roles
         Map<String, List<String>> additionalPartyRole = UtilGenerics.checkMap(context.get("orderAdditionalPartyRoleMap"));
