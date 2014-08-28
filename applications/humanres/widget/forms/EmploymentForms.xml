@@ -209,6 +209,7 @@
         <field name="roleTypeIdTo"><hidden/></field>
         <field name="partyIdFrom"><hidden/></field>
         <field name="partyIdTo"><hidden/></field>
+        <field name="tenantId"><hidden/></field>
         <field name="amount"><hidden/></field>     
         <field name="payGradeId" title="${uiLabelMap.HumanResPayGradeID}"><lookup target-form-name="LookupPayGrade" size="20"/></field>           
         <field name="salaryStepSeqId" title="${uiLabelMap.HumanResSalaryStepSeqId}"><lookup target-form-name="LookupSalaryStep" size="20"/></field>
@@ -349,7 +350,8 @@
         <field name="partyIdFrom"><hidden/></field>
         <field name="partyIdTo"><hidden/></field>
         <field name="actualEmployerPaidPercent"><hidden/></field>  
-        <field name="availableTime"><hidden/></field>                
+        <field name="availableTime"><hidden/></field>   
+        <field name="tenantId"><hidden/></field>             
         <field name="benefitTypeId" tooltip="${uiLabelMap.CommonRequired}" event="onchange" action="javascript:getPartyBenefitCost(${partyIdTo}, this.value);">
             <drop-down allow-empty="false">
                 <list-options list-name="benefitTypes" key-name="benefitTypeId" 
@@ -361,70 +363,67 @@
         <field name="cost"><text size="20" maxlength="30"/></field>
         <field name="submitButton" title="${uiLabelMap.CommonAdd}"><submit button-type="button"/></field>
     </form>
-    <form name="ListPayrollPreferences" type="multi" target="updatePayrollPreference?partyId=${partyId}&amp;roleTypeId=${roleTypeId}&amp;payrollPreferenceSeqId=${payrollPreferenceSeqId}&amp;roleTypeIdFrom=${roleTypeIdFrom}&amp;roleTypeIdTo=${roleTypeIdTo}&amp;partyIdFrom=${partyIdFrom}&amp;partyIdTo=${partyIdTo}&amp;fromDate=${fromDate}" separate-columns="true" paginate-target="findPayRollPreferences"
+    <form name="ListPartyDeductions" type="multi" target="updatePartyDeduction?deductionTypeId=${deductionTypeId}&amp;roleTypeIdFrom=${roleTypeIdFrom}&amp;roleTypeIdTo=${roleTypeIdTo}&amp;partyIdFrom=${partyIdFrom}&amp;partyIdTo=${partyIdTo}&amp;fromDate=${fromDate}" title="" paginate-target="findPartyDedutions"
         odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
         <actions>
-            <entity-condition entity-name="PayrollPreference">
-                <condition-list combine="and">
-                    <condition-expr field-name="partyId" operator="equals" from-field="parameters.partyIdTo"/>
-                    <condition-expr field-name="roleTypeId" operator="equals" from-field="parameters.roleTypeIdTo"/>
-                </condition-list>
-                <order-by field-name="fromDate"/>
+            <entity-condition entity-name="PartyDeduction">
+            	<condition-expr field-name="partyIdTo" operator="equals" from-field="partyIdTo"/>
+           		<order-by field-name="fromDate"/>
             </entity-condition>
             
-             <entity-one entity-name="PeriodType" value-field="periodType">
+            <entity-one entity-name="PeriodType" value-field="periodType">
                 <field-map field-name="periodTypeId" value="FISCAL_MONTH"/>
-            </entity-one>           
+            </entity-one>             
         </actions>
-        <auto-fields-service default-field-type="hidden" service-name="updatePayrollPreference"/>       
-        <field name="partyId"><display/></field>
-        <field name="roleTypeId"><display-entity entity-name="RoleType" description="${description}"/></field>
-        <field name="payrollPreferenceSeqId" title="${uiLabelMap.HumanResPayrollPreferenceSeqId}"><display also-hidden="true"/></field>
-        <field name="deductionTypeId" title="${uiLabelMap.HumanResPayrollPreferenceDeductionTypeId}"><display/></field>        
-        <field name="paymentMethodTypeId"><display-entity entity-name="PaymentMethodType" description="${description}"/></field>
-        <field name="periodTypeId"><display description="${periodType.description}"/></field>        
-        <field name="flatAmount"><text size="15" maxlength="30"/></field>
+        <!-- <auto-fields-service default-field-type="hidden" service-name="updatePayrollPreference"/> -->       
+        <field name="roleTypeIdFrom"><hidden/></field>
+        <field name="roleTypeIdTo"><hidden/></field>
+        <field name="partyIdFrom"><hidden/></field>
+        <field name="partyIdTo"><hidden/></field>
+        <field name="actualEmployerPaidPercent"><hidden/></field>
+        <field name="availableTime"><hidden/></field>                 
+        <field name="paymentMethodTypeId"><hidden/></field>
+        <field name="deductionTypeId"><display-entity entity-name="DeductionType" description="${description}"/></field>
         <field name="fromDate"><display/></field>
-        <field name="thruDate"><date-time/></field>
+        <field name="thruDate"><date-time/></field>    
+        <field name="cost" title="Flat Amount"><text size="20" maxlength="30"/></field>            
+        <field name="periodTypeId"><display description="${periodType.description}"/></field>
+        <field name="_rowSubmit" title="${uiLabelMap.CommonSelect}"><hidden value="Y"/></field> 
         <field name="deleteLink" title="${uiLabelMap.CommonDelete}" widget-style="buttontext">
-            <hyperlink target="deletePayrollPreference" description="${uiLabelMap.CommonDelete}" also-hidden="true">
-                <parameter param-name="partyId"/>
-                <parameter param-name="roleTypeId"/>
+            <hyperlink target="deletePartyDeduction" description="${uiLabelMap.CommonDelete}">
+                <parameter param-name="deductionTypeId"/>
+                <parameter param-name="roleTypeIdFrom"/>
+                <parameter param-name="roleTypeIdTo"/>
+                <parameter param-name="partyIdFrom"/>
                 <parameter param-name="partyIdTo"/>
-                <parameter param-name="roleTypeIdTo"/>                
-                <parameter param-name="payrollPreferenceSeqId"/>
+                <parameter param-name="fromDate"/>
             </hyperlink>
         </field>
-        <field name="_rowSubmit" title="${uiLabelMap.CommonSelect}"><hidden value="Y"/></field>
         <field name="submitButton" title="${uiLabelMap.CommonSubmit}" widget-style="smallSubmit"><submit/></field>
     </form>
-    <form name="ListPayrollPreferencesReadOnly" type="multi" target="updatePayrollPreference?partyId=${partyId}&amp;roleTypeId=${roleTypeId}&amp;payrollPreferenceSeqId=${payrollPreferenceSeqId}&amp;roleTypeIdFrom=${roleTypeIdFrom}&amp;roleTypeIdTo=${roleTypeIdTo}&amp;partyIdFrom=${partyIdFrom}&amp;partyIdTo=${partyIdTo}&amp;fromDate=${fromDate}" separate-columns="true" paginate-target="findPayRollPreferences"
+    <form name="ListPartyDeductionsReadOnly" type="multi" target="updatePartyDeduction?deductionTypeId=${deductionTypeId}&amp;roleTypeIdFrom=${roleTypeIdFrom}&amp;roleTypeIdTo=${roleTypeIdTo}&amp;partyIdFrom=${partyIdFrom}&amp;partyIdTo=${partyIdTo}&amp;fromDate=${fromDate}" title="" paginate-target="findPartyDedutions"
         odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
         <actions>
-            <entity-condition entity-name="PayrollPreference">
-                <condition-list combine="and">
-                    <condition-expr field-name="partyId" operator="equals" from-field="parameters.partyIdTo"/>
-                    <condition-expr field-name="roleTypeId" operator="equals" from-field="parameters.roleTypeIdTo"/>
-                </condition-list>
-                <order-by field-name="fromDate"/>
-            </entity-condition>
+            <entity-condition entity-name="PartyDeduction"><order-by field-name="fromDate"/></entity-condition>
             
-             <entity-one entity-name="PeriodType" value-field="periodType">
+            <entity-one entity-name="PeriodType" value-field="periodType">
                 <field-map field-name="periodTypeId" value="FISCAL_MONTH"/>
-            </entity-one>           
+            </entity-one>             
         </actions>
-        <auto-fields-service default-field-type="hidden" service-name="updatePayrollPreference"/>       
-        <field name="partyId"><display/></field>
-        <field name="roleTypeId"><display-entity entity-name="RoleType" description="${description}"/></field>
-        <field name="payrollPreferenceSeqId" title="${uiLabelMap.HumanResPayrollPreferenceSeqId}"><display also-hidden="true"/></field>
-        <field name="deductionTypeId" title="${uiLabelMap.HumanResPayrollPreferenceDeductionTypeId}"><display/></field>        
-        <field name="paymentMethodTypeId"><display-entity entity-name="PaymentMethodType" description="${description}"/></field>
-        <field name="periodTypeId"><display description="${periodType.description}"/></field>        
-        <field name="flatAmount"><display/></field>
+        <auto-fields-service service-name="updatePartyDeduction"/>
+        <field name="roleTypeIdFrom"><hidden/></field>
+        <field name="roleTypeIdTo"><hidden/></field>
+        <field name="partyIdFrom"><hidden/></field>
+        <field name="partyIdTo"><hidden/></field>
+        <field name="actualEmployerPaidPercent"><hidden/></field>
+        <field name="availableTime"><hidden/></field>                 
+        <field name="deductionTypeId"><display-entity entity-name="DeductionType" description="${description}"/></field>
         <field name="fromDate"><display/></field>
-        <field name="thruDate"><display/></field>
+        <field name="thruDate"><display/></field>    
+        <field name="cost"><display/></field>            
+        <field name="periodTypeId"><display description="${periodType.description}"/></field>
     </form>    
-    <form name="AddPayrollPreference" type="single" target="createPayrollPreference"
+    <form name="AddPartyDeduction" type="single" target="createPartyDeduction"
         header-row-style="header-row" default-table-style="basic-table">
         <actions>
             <entity-condition entity-name="DeductionType" list="deductionTypes">
@@ -433,40 +432,40 @@
             <entity-one entity-name="PeriodType" value-field="periodType">
                 <field-map field-name="periodTypeId" value="FISCAL_MONTH"/>
             </entity-one>               
-            <!-- <service service-name="getPartyDeductionAmount" result-map="amtMap">
+             <!-- <service service-name="getPartyDeductionAmount" result-map="amtMap">
                 <field-map field-name="partyId" from-field="partyIdTo"/>
                 <field-map field-name="deductionTypeId" from-field="deductionTypes[0].deductionTypeId"/>
-            </service>   -->   
-            <set field="flatAmount" from-field="amtMap.amount"/>
+            </service>  -->    
+            <set field="cost" from-field="amtMap.amount"/>
             
         </actions>        
-        <auto-fields-service service-name="createPayrollPreference"/>
-        <field name="payrollPreferenceSeqId" title="${uiLabelMap.HumanResPayrollPreferenceSeqId}" tooltip="${uiLabelMap.CommonRequired}" widget-style="required"><lookup target-form-name="LookupPayRollPreference"/></field>
+        <auto-fields-service service-name="createPartyDeduction"/>
+        <!-- <field name="payrollPreferenceSeqId" title="${uiLabelMap.HumanResPayrollPreferenceSeqId}" tooltip="${uiLabelMap.CommonRequired}" widget-style="required"><lookup target-form-name="LookupPayRollPreference"/></field> -->
+        <field name="roleTypeIdFrom"><hidden/></field>
+        <field name="roleTypeIdTo"><hidden/></field>
+        <field name="partyIdFrom"><hidden/></field>
+        <field name="partyIdTo"><hidden/></field>
+        <field name="actualEmployerPaidPercent"><hidden/></field> 
         <field name="partyId"><hidden/></field>
         <field name="roleTypeId"><hidden/></field>
-        <field name="partyIdTo"><hidden value="${partyId}"/></field>
+        <field name="partyIdTo"><hidden value="${partyIdTo}"/></field>
         <field name="roleTypeIdTo"><hidden value="${roleTypeId}"/></field>        
         <field name="fromDate"><hidden/></field>
+        <field name="tenantId"><hidden/></field>
         <field name="percentage"><hidden/></field>          
         <field name="routingNumber"><hidden/></field>  
         <field name="accountNumber"><hidden/></field>    
         <field name="bankName"><hidden/></field>                      
-        <field name="deductionTypeId" event="onchange" action="javascript:getPartyDeductionAmount(${partyIdTo}, this.value);">
+        <field name="deductionTypeId"  id-name="Deductionevent" event="onchange" action="javascript:getPartyDeductionAmount(${partyIdTo}, this.value);">
             <drop-down allow-empty="false" >
                 <list-options list-name="deductionTypes" key-name="deductionTypeId" 
                     description="${description}"/>            
             </drop-down>
         </field>
-        <field name="paymentMethodTypeId">
-            <drop-down allow-empty="false">
-                <entity-options description="${description}" key-field-name="paymentMethodTypeId" entity-name="PaymentMethodType">
-                    <entity-order-by field-name="paymentMethodTypeId"/>
-                </entity-options>
-            </drop-down>
-        </field>
+       
         <field name="periodTypeId"><display description="${periodType.description}"/></field>    
         <field name="fromDate" tooltip="${uiLabelMap.CommonRequired}"><date-time/></field>          
-        <field name="flatAmount" title="${uiLabelMap.HumanResPayrollPreferenceFlatAmount}"><text size="20" maxlength="30"/></field>                
+        <field name="cost"  id-name="Deductioncost" title="Flat Amount"><text size="20" maxlength="30"/></field>                
         <field name="submitButton" title="${uiLabelMap.CommonCreate}" widget-style="smallSubmit"><submit button-type="button"/></field>
     </form>
     <form name="ListPerformanceNotes" type="list" target="updatePerformanceNote" title="" paginate-target="findPerformanceNotes"

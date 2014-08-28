@@ -368,14 +368,28 @@ under the License.emplpunch
         <auto-attributes mode="IN" include="pk" optional="false"/>
     </service>
 
-    <service name="createPayrollPreference" engine="simple" default-entity-name="PayrollPreference"
-             location="component://humanres/script/org/ofbiz/humanres/HumanResServices.xml" invoke="createPayrollPreference" auth="true">
-        <description>Create Payroll Preference</description>
+    <service name="createPartyDeduction" engine="simple" default-entity-name="PartyDeduction"
+             location="component://humanres/script/org/ofbiz/humanres/HumanResServices.xml" invoke="createPartyDeduction" auth="true">
+        <description>Create Party Deduction</description>
         <permission-service service-name="humanResManagerPermission" main-action="EMPLOYMENT_EDIT"/>
         <auto-attributes mode="IN" include="pk" optional="false"/>
         <auto-attributes mode="IN" include="nonpk" optional="true"/>
         <!-- <attribute name="payrollPreferenceSeqId" mode="OUT" type="String" optional="false"/> -->
-        <override type="String" mode="IN" name="payrollPreferenceSeqId" optional="true"/>
+      <!--   <override type="String" mode="IN" name="payrollPreferenceSeqId" optional="true"/> -->
+    </service>
+    <service name="updatePartyDeduction" engine="simple" default-entity-name="PartyDeduction"
+             location="component://humanres/script/org/ofbiz/humanres/HumanResServices.xml" invoke="updatePartyDeduction" auth="true">
+        <description>Update Party Deduction</description>
+        <permission-service service-name="humanResManagerPermission" main-action="EMPLOYMENT_EDIT"/>        
+        <auto-attributes mode="IN" include="pk" optional="false"/>
+        <auto-attributes mode="IN" include="nonpk" optional="true"/>
+    </service>
+
+    <service name="deletePartyDeduction" engine="simple" default-entity-name="PartyDeduction"
+             location="component://humanres/script/org/ofbiz/humanres/HumanResServices.xml" invoke="deletePartyDeduction" auth="true">
+        <description>Delete Party Deduction</description>
+        <permission-service service-name="humanResManagerPermission" main-action="EMPLOYMENT_EDIT"/>
+        <auto-attributes mode="IN" include="pk" optional="false"/>
     </service>
 
     <service name="updatePayrollPreference" engine="simple" default-entity-name="PayrollPreference"

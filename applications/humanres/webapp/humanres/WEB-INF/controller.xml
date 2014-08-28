@@ -455,6 +455,7 @@ under the License.
         <event type="service" invoke="deletePayHistory"/>
         <response name="success" type="view" value="ListPayHistories"/>
     </request-map>
+    <!--Party Benfits  -->
     <request-map uri="findPartyBenefits">
         <security https="true" auth="true"/>
         <response name="success" type="view" value="EditPartyBenefits"/>
@@ -478,6 +479,31 @@ under the License.
         <event type="service" invoke="deletePartyBenefit"/>
         <response name="success" type="view" value="EditPartyBenefits"/>
     </request-map>
+    <!-- PartyDeductions -->
+    <request-map uri="findPartyDeductions">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="EditPartyDeductions"/>
+    </request-map>
+    <request-map uri="EditPartyDeductions">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="EditPartyDeductions"/>
+    </request-map>
+    <request-map uri="createPartyDeduction">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="createPartyDeduction"/>
+        <response name="success" type="view" value="EditPartyDeductions"/>
+    </request-map>
+    <request-map uri="updatePartyDeduction">
+        <security https="true" auth="true"/>
+        <event type="service-multi" invoke="updatePartyDeduction"/>
+        <response name="success" type="view" value="EditPartyDeductions"/>
+    </request-map>
+    <request-map uri="deletePartyDeduction">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="deletePartyDeduction"/>
+        <response name="success" type="view" value="EditPartyDeductions"/>
+    </request-map>
+    
     <request-map uri="findPayRollPreferences">
         <security https="true" auth="true"/>
         <response name="success" type="view" value="EditPayrollPreferences"/>
@@ -486,11 +512,11 @@ under the License.
         <security https="true" auth="true"/>
         <response name="success" type="view" value="EditPayrollPreferences"/>
     </request-map>
-    <request-map uri="createPayrollPreference">
+    <!-- <request-map uri="createPartyDeduction">
         <security https="true" auth="true"/>
-        <event type="service" invoke="createPayrollPreference"/>
+        <event type="service" invoke="createPartyDeduction"/>
         <response name="success" type="view" value="EditPayrollPreferences"/>
-    </request-map>
+    </request-map> -->
     <request-map uri="updatePayrollPreference">
         <security https="true" auth="true"/>
         <event type="service-multi" invoke="updatePayrollPreference"/>
@@ -1800,12 +1826,13 @@ under the License.
     <view-map name="EditEmployment" type="screen" page="component://humanres/widget/EmploymentScreens.xml#EditEmployment"/>
     <view-map name="ListEmployments" type="screen" page="component://humanres/widget/EmploymentScreens.xml#ListEmployments"/>
     <view-map name="EditPartyBenefits" type="screen" page="component://humanres/widget/EmploymentScreens.xml#EditPartyBenefits"/>
+    <view-map name="EditPartyDeductions" type="screen" page="component://humanres/widget/EmploymentScreens.xml#EditPartyDeductions"/>
     <view-map name="FindBenefitsOrDeductions" type="screen" page="component://humanres/widget/EmploymentScreens.xml#FindBenefitsOrDeductions"/>
     <view-map name="MastersReports" type="screen" page="component://humanres/widget/EmploymentScreens.xml#MastersReports"></view-map>
     <view-map name="LeaveReports" type="screen" page="component://humanres/widget/EmploymentScreens.xml#LeaveReports"></view-map>
     <view-map name="AttendanceReports" type="screen" page="component://humanres/widget/EmploymentScreens.xml#AttendanceReports"></view-map>
     <view-map name="PayrollReports" type="screen" page="component://humanres/widget/EmploymentScreens.xml#PayrollReports"></view-map>
-    <view-map name="EditPayrollPreferences" type="screen" page="component://humanres/widget/EmploymentScreens.xml#EditPayrollPreferences"/>
+    <view-map name="EditPartyDeduction" type="screen" page="component://humanres/widget/EmploymentScreens.xml#EditPartyDeduction"/>
     <view-map name="ListPayHistories" type="screen" page="component://humanres/widget/EmploymentScreens.xml#ListPayHistories"/>
     <view-map name="PayHistories" type="screen" page="component://humanres/widget/EmploymentScreens.xml#PayHistories"/>
     <view-map name="EditSalarySteps" type="screen" page="component://humanres/widget/PayGradeScreens.xml#EditSalarySteps"/>

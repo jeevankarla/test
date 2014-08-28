@@ -216,7 +216,7 @@
                 <set field="titleProperty" value="EditPartyBenefit"/>
                 <set field="headerItem" value="PayrollItems"/>
                 <set field="tabButtonItem" value="PayrollItems"/>
-                <set field="tabButtonItem2" value="EditPartyBenefits"/>
+                <set field="tabButtonItem2" value="EditPartyBenefit"/>
                 <set field="roleTypeIdFrom" from-field="parameters.roleTypeIdFrom"/>
                 <set field="roleTypeIdTo" from-field="parameters.roleTypeIdTo"/>
                 <set field="partyIdTo" from-field="parameters.partyIdTo"/>
@@ -269,26 +269,26 @@
             </widgets>
         </section>
     </screen>
-    <screen name="EditPayrollPreferences">
+    <screen name="EditPartyDeductions">
         <section>
             <actions>
                 <set field="layoutSettings.javaScripts[]" value="/images/jquery/plugins/loading/jquery.loading.1.6.4.js" global="true"/>
                 <set field="layoutSettings.javaScripts[]" value="/images/jquery/plugins/loading/jquery.loading.overflow.js" global="true"/>                            
                 <set field="layoutSettings.styleSheets[+0]" value="/images/jquery/plugins/loading/jquery.loading.1.6.css" global="true"/>                        
 				<set field="layoutSettings.javaScripts[]" value="/accounting/images/payrolFetcher.js" global="true"/>   
-				<set field="titleProperty" value="EditPayrollPreference"/>
+				<set field="titleProperty" value="EditPartyDeduction"/>
                 <set field="headerItem" value="PayrollItems"/>
                 <set field="tabButtonItem" value="PayrollItems"/>
-                <set field="tabButtonItem2" value="EditPayrollPreference"/>                     
+                <set field="tabButtonItem2" value="EditPartyDeduction"/>                     
                 <set field="roleTypeIdFrom" from-field="parameters.roleTypeIdFrom"/>
                 <set field="roleTypeIdTo" from-field="parameters.roleTypeIdTo"/>
                 <set field="partyIdTo" from-field="parameters.partyIdTo"/>
                 <set field="partyIdFrom" from-field="parameters.partyIdFrom"/>
                 <set field="fromDate" from-field="parameters.fromDate" type="Timestamp"/>
-                <set field="payrollPreferenceSeqId" from-field="parameters.payrollPreferenceSeqId"/>
-                <set field="partyId" from-field="parameters.partyIdTo"/>
+               <!--  <set field="payrollPreferenceSeqId" from-field="parameters.payrollPreferenceSeqId"/> -->
+                <set field="partyIdTo" from-field="parameters.partyIdTo"/>
                 <set field="roleTypeId" from-field="parameters.roleTypeIdTo"/>
-                <entity-one entity-name="PayrollPreference" value-field="payrollPreference"/>
+               <!--  <entity-one entity-name="PayrollPreference" value-field="payrollPreference"/> -->
                 <service service-name="humanResManagerPermission" result-map="permResult">
                     <field-map field-name="mainAction" value="EMPLOYMENT_EDIT"/>
                 </service>
@@ -313,16 +313,16 @@
 		                            	<if-compare field="hasEmplEditPermission" operator="equals" value="true" type="Boolean"/>
 		                            </condition> 
 		                            <widgets>                     
-		                        		<screenlet id="AddPayrollPreferencePanel" title="${uiLabelMap.HumanResAddPayrollPreference}" collapsible="true">
-		                            		<include-form name="AddPayrollPreference" location="component://humanres/widget/forms/EmploymentForms.xml"/>
+		                        		<screenlet id="AddPartyDeduction" title="Add Party Deduction" collapsible="true">
+		                            		<include-form name="AddPartyDeduction" location="component://humanres/widget/forms/EmploymentForms.xml"/>
 		                        		</screenlet>
 		                        		<screenlet>
-		                        			<include-form name="ListPayrollPreferences" location="component://humanres/widget/forms/EmploymentForms.xml"/>                       		
+		                        			<include-form name="ListPartyDeductions" location="component://humanres/widget/forms/EmploymentForms.xml"/>                       		
 		                        		</screenlet>
 		                        	</widgets>
 		                        	<fail-widgets>
 		                        		<screenlet>
-		                        			<include-form name="ListPayrollPreferencesReadOnly" location="component://humanres/widget/forms/EmploymentForms.xml"/>                       		
+		                        			<include-form name="ListPartyDeductionsReadOnly" location="component://humanres/widget/forms/EmploymentForms.xml"/>                       		
 		                        		</screenlet>                        	
 		                        	</fail-widgets>                        	
 		                        </section>

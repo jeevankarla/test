@@ -85,7 +85,7 @@
         <menu-item name="busTimings" title="Daily Bus Timings">
            <condition>
             	<if-has-permission permission="HR"  action="_DAILYBUS_VIEW"/>
-            </condition>
+            </condition> 
         	<link target="busTimings"/>
         </menu-item>          	                    
 	</menu>
@@ -537,8 +537,17 @@
                 <parameter param-name="fromDate"/>
             </link>
         </menu-item>
-        <menu-item name="EditPayrollPreference" title="${uiLabelMap.HumanResEditPayrollPreference}">
+        <!-- <menu-item name="EditPayrollPreference" title="${uiLabelMap.HumanResEditPayrollPreference}">
             <link target="EditPayrollPreferences" >
+                <parameter param-name="roleTypeIdFrom"/>
+                <parameter param-name="roleTypeIdTo"/>
+                <parameter param-name="partyIdFrom"/>
+                <parameter param-name="partyIdTo"/>
+                <parameter param-name="fromDate"/>
+            </link>
+        </menu-item>  -->
+        <menu-item name="EditPartyDeduction" title="Party Deductions">
+            <link target="EditPartyDeductions" >
                 <parameter param-name="roleTypeIdFrom"/>
                 <parameter param-name="roleTypeIdTo"/>
                 <parameter param-name="partyIdFrom"/>
@@ -650,7 +659,6 @@
         <menu-item name="Approval" title="${uiLabelMap.HumanResLeaveApproval}">
             <condition>
             	<if-has-permission permission="HR_LEAVE" action="_APPROVAL"/>
-            
             </condition>
             <link target="FindLeaveApprovals"/>
         </menu-item>

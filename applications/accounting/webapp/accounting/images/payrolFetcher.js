@@ -25,7 +25,7 @@ function getPartyBenefitCost(partyId, benefitTypeId){
 }
 
 function getPartyDeductionAmount(partyId, deductionTypeId){
-  var request = 'getPartyDeductionAmount';    
+  var request = 'Deductionevent';    
   optionList = '';
   jQuery.ajax({
       url: request,
@@ -34,7 +34,7 @@ function getPartyDeductionAmount(partyId, deductionTypeId){
       async: false,
       type: 'POST',
       success: function(result){
-          jQuery('#AddPayrollPreference_flatAmount').val(result['amount']);
+          jQuery('#Deductioncost').val(result['amount']);
       }
   });
 }

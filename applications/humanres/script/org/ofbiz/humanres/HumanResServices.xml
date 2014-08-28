@@ -274,16 +274,40 @@
         </if-empty>
         <create-value value-field="newEntity"/>
     </simple-method>
+    
+    <simple-method method-name="createPartyDeduction" short-description="Create a Party Deduction">
+        <make-value entity-name="PartyDeduction" value-field="newEntity"/>
+        <set-pk-fields map="parameters" value-field="newEntity"/>
+        <set-nonpk-fields map="parameters" value-field="newEntity"/>
+        <if-empty field="newEntity.fromDate">
+            <now-timestamp field="nowTimeStamp"/>
+            <set field="newEntity.fromDate" from-field="nowTimeStamp"/>
+        </if-empty>
+       <!--  <sequenced-id sequence-name="PayrollPreference" field="newEntity.payrollPreferenceSeqId"/>
+        <field-to-result field="payrollPreferenceSeqId" result-name="payrollPreferenceSeqId"/> -->
+        <create-value value-field="newEntity"/>
+    </simple-method>
 
     <simple-method method-name="updatePartyBenefit" short-description="Update Party Benefit">
         <entity-one entity-name="PartyBenefit" value-field="lookedUpValue"/>
         <set-nonpk-fields value-field="lookedUpValue" map="parameters"/>
         <store-value value-field="lookedUpValue"/>
     </simple-method>
-
+	<simple-method method-name="updatePartyDeduction" short-description="Update Party Deduction">
+        <entity-one entity-name="PartyDeduction" value-field="lookedUpValue"/>
+        <set-nonpk-fields value-field="lookedUpValue" map="parameters"/>
+        <store-value value-field="lookedUpValue"/>
+    </simple-method>
     <simple-method method-name="deletePartyBenefit" short-description="Delete Party Benefit">
         <now-timestamp field="nowTimeStamp"/>
         <entity-one entity-name="PartyBenefit" value-field="lookedUpValue"/>
+        <set field="lookedUpValue.thruDate" from-field="nowTimeStamp"/>
+        <store-value value-field="lookedUpValue"/>
+        <remove-value value-field="lookedUpValue"/>
+    </simple-method>
+    <simple-method method-name="deletePartyDeduction" short-description="Delete Party Deduction">
+        <now-timestamp field="nowTimeStamp"/>
+        <entity-one entity-name="PartyDeduction" value-field="lookedUpValue"/>
         <set field="lookedUpValue.thruDate" from-field="nowTimeStamp"/>
         <store-value value-field="lookedUpValue"/>
         <remove-value value-field="lookedUpValue"/>
@@ -375,14 +399,14 @@
         <remove-value value-field="lookedUpValue"/>
     </simple-method>
 
-    <simple-method method-name="createPayrollPreference" short-description="Create a Payroll Preference">
+    <!-- <simple-method method-name="createPayrollPreference" short-description="Create a Payroll Preference">
         <make-value entity-name="PayrollPreference" value-field="newEntity"/>
         <set-pk-fields map="parameters" value-field="newEntity"/>
         <set-nonpk-fields map="parameters" value-field="newEntity"/>
         <sequenced-id sequence-name="PayrollPreference" field="newEntity.payrollPreferenceSeqId"/>
         <field-to-result field="payrollPreferenceSeqId" result-name="payrollPreferenceSeqId"/>
         <create-value value-field="newEntity"/>
-    </simple-method>
+    </simple-method> -->
 
     <simple-method method-name="updatePayrollPreference" short-description="Update Payroll Preference">
         <entity-one entity-name="PayrollPreference" value-field="lookedUpValue"/>
@@ -837,6 +861,8 @@
     </simple-method>
 
     <simple-method method-name="updateEmplLeave" short-description="Update Employee Leave">
+    
+    
         <entity-one entity-name="EmplLeave" value-field="lookedUpValue"/>
         <set-nonpk-fields value-field="lookedUpValue" map="parameters"/>
         <store-value value-field="lookedUpValue"/>
