@@ -72,7 +72,20 @@ $(document).ready(function() {
 		"columnDefs": [{ type: 'date-eu', targets: [0] }],
        	"iDisplayLength" : 100
 	} );				
-	datatable4.fnSort( [ [0,'desc'] ] );		 	
+	datatable4.fnSort( [ [0,'desc'] ] );	
+	
+	// missed table
+	var missedTable = ${StringUtil.wrapString(missedListJSON!'[]')};	 
+	$('#missedTable').html( '<table cellpadding="0" cellspacing="0" border="0" class="display" id="datatable5"></table>' );
+
+	var datatable5 = $('#datatable5').dataTable( {
+		"data": missedTable,
+		"columns": [
+			{ "title": "Date" }],	
+		"columnDefs": [{ type: 'date-eu', targets: [0] }],
+       	"iDisplayLength" : 100
+	} );				
+	datatable5.fnSort( [ [0,'desc'] ] );		 	
 
 } );
 
@@ -86,7 +99,7 @@ $(document).ready(function() {
 <div class="lefthalf">		
 <div class="screenlet">
 	<div class="screenlet-title-bar">
-      	<h3>Daily Punch  <#if companyBus?has_content> ${companyBus}</#if></h3>	
+      	<h3>Daily Punch  [Company Bus: ${companyBus}]</h3>	
      </div>
     <div class="screenlet-body">
     	<div id="attendanceTable"/>
@@ -117,6 +130,14 @@ $(document).ready(function() {
 	    <div class="screenlet-body">
     		<div id="holidaysTable"/>  
     	</div>  	
-    </div>     
+    </div> 
+    <div class="screenlet">  
+    	<div class="screenlet-title-bar">
+      		<h3>Missed Days</h3>	
+     	</div>
+	    <div class="screenlet-body">
+    		<div id="missedTable"/>  
+    	</div>  	
+    </div>          
 </div>
 </div>    

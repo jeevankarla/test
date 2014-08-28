@@ -42,6 +42,7 @@ if (fromDate == null) {
 	fromDate = UtilDateTime.getDayStart(UtilDateTime.addDaysToTimestamp(thruDate, -45));
 }
 
+attendanceDaysSet = [:] as HashSet;
 //String punchDateStr = UtilDateTime.toDateString(punchDate, "dd/MM/yyyy");			
 String employeeName = PartyHelper.getPartyName(delegator, employeeId, false);
 
@@ -91,6 +92,7 @@ normalPunchList.each { punch->
 			punchJSON.add(String.format( "%.2f", elapsedHours ));				
 		}
 		punchListJSON.add(punchJSON);
+		attendanceDaysSet.add(UtilDateTime.toDateString(punch.get("punchdate"), "dd/MM/yyyy"));
 		outTimestamp = null;
 	}
 }
@@ -127,6 +129,7 @@ oodPunchList.each { punch->
 			punchJSON.add(String.format( "%.2f", elapsedHours ));
 		}
 		oodPunchListJSON.add(punchJSON);
+		attendanceDaysSet.add(UtilDateTime.toDateString(punch.get("punchdate"), "dd/MM/yyyy"));
 		inTimestamp = null;
 	}
 }
@@ -159,6 +162,21 @@ leaveList.each { leave->
 	}
 	leaveJSON.add(leaveType);
 	leaveListJSON.add(leaveJSON);
+	Calendar c1=Calendar.getInstance();
+	c1.setTime(UtilDateTime.toSqlDate(leave.get("fromDate")));
+	Calendar c2=Calendar.getInstance();
+	tmpThruDate = leave.get("thruDate");
+	if (UtilValidate.isEmpty(tmpThruDate)) {
+		tmpThruDate = thruDate;
+	}
+	c2.setTime(UtilDateTime.toSqlDate(tmpThruDate));
+	while(c2.equals(c1) || c2.after(c1)) {
+		Timestamp cTime = new Timestamp(c1.getTimeInMillis());
+		leaveDate = UtilDateTime.toDateString(cTime, "dd/MM/yyyy");
+		attendanceDaysSet.add(leaveDate);
+//Debug.logError("leaveDate="+leaveDate,"");		
+		c1.add(Calendar.DATE,1);
+	}
 }
 
 
@@ -190,6 +208,7 @@ if(UtilValidate.isNotEmpty(employeeDetail)) {
 				woJSON.add(woDate);
 				woJSON.add("Weekly Off")
 				holidaysListJSON.add(woJSON);
+				attendanceDaysSet.add(woDate);
 			}
 	    	Timestamp secondSaturday = UtilDateTime.addDaysToTimestamp(UtilDateTime.getWeekStart(UtilDateTime.getMonthStart(cTime),0,2,timeZone,locale), -1);
 			if (secondSaturday.equals(cTime)) {
@@ -198,6 +217,7 @@ if(UtilValidate.isNotEmpty(employeeDetail)) {
 				ssJSON.add(ssDate);
 				ssJSON.add("Second Saturday")
 				holidaysListJSON.add(ssJSON);
+				attendanceDaysSet.add(ssDate);
 			}
 			c1.add(Calendar.DATE,1);
 		}
@@ -215,13 +235,34 @@ if (resultMap) {
 		ghJSON.add(ghDate);
 		ghJSON.add(ghDescription);
 		holidaysListJSON.add(ghJSON);
+		attendanceDaysSet.add(ghDate);
 	}
+}
+
+// Check for missing days (no punch, no leaves, no holidays)
+JSONArray missingListJSON = new JSONArray();
+Calendar c1=Calendar.getInstance();
+c1.setTime(UtilDateTime.toSqlDate(fromDate));
+Calendar c2=Calendar.getInstance();
+c2.setTime(UtilDateTime.toSqlDate(thruDate));
+while(c2.after(c1)){
+	Timestamp cTime = new Timestamp(c1.getTimeInMillis());
+	curDate = UtilDateTime.toDateString(cTime, "dd/MM/yyyy");
+	if (!attendanceDaysSet.contains(curDate)) {
+		JSONArray missingJSON = new JSONArray();
+		missingJSON.add(curDate);
+		missingListJSON.add(missingJSON);
+	}
+	c1.add(Calendar.DATE,1);
 }
 
 //Debug.logError("punchListJSON="+punchListJSON,"");
 //Debug.logError("oodPunchListJSON="+oodPunchListJSON,"");
 //Debug.logError("leaveListJSON="+leaveListJSON,"");
 //Debug.logError("holidaysListJSON="+holidaysListJSON,"");
+
+//Debug.logError("attendanceDaysSet="+attendanceDaysSet,"");
+//Debug.logError("missingListJSON="+missingListJSON,"");
 
 context.employeeId = employeeId;
 context.employeeName = employeeName;
@@ -232,3 +273,4 @@ context.punchListJSON = punchListJSON;
 context.oodPunchListJSON = oodPunchListJSON;
 context.leaveListJSON = leaveListJSON;
 context.holidaysListJSON = holidaysListJSON;
+context.missedListJSON = missingListJSON;
