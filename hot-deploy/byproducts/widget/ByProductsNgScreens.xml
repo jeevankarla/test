@@ -3113,7 +3113,7 @@
                <set field="orderRoute" from-field="parameters.orderRoute"/> 
                <set field="supplyDate" from-field="parameters.supplyDate"/>
                 <set field="isFormSubmitted" from-field="parameters.isFormSubmitted"/>
-                <set field="productStoreResult"	value="${groovy:in.vasista.vbiz.byproducts.icp.ICPServices.getProductStoreByGroupId(delegator, 'ICECREAM_PRODUCTS')}" />
+                <set field="productStoreResult"	value="${groovy:in.vasista.vbiz.byproducts.icp.ICPServices.getProductStoreByGroupId(delegator, 'ICE_CREAM_NANDINI')}" />
 				<set field="productStoreId" value="${productStoreResult.factoryStoreId}"/>
                <set field="defaultEffectiveDateTime" value="${supplyDate}" default-value="${bsh:org.ofbiz.base.util.UtilDateTime.nowTimestamp()}"/>
 			   <set field="defaultEffectiveDate" 
@@ -3260,7 +3260,7 @@
 			   <set field="defaultEffectiveDate" 
 					value="${groovy:org.ofbiz.base.util.UtilDateTime.toDateString(defaultEffectiveDateTime, &quot;dd MMMMM, yyyy&quot;);}" />
 			   <set field="parameters.roleTypeId" value="EXCLUSIVE_CUSTOMER"/>
-			   <set field="productStoreResult"	value="${groovy:in.vasista.vbiz.byproducts.icp.ICPServices.getProductStoreByGroupId(delegator, 'ICECREAM_PRODUCTS')}" />
+			   <set field="productStoreResult"	value="${groovy:in.vasista.vbiz.byproducts.icp.ICPServices.getProductStoreByGroupId(delegator, 'ICE_CREAM_AMUL')}" />
 				<set field="productStoreId" value="${productStoreResult.factoryStoreId}"/>							  					  
             </actions>
             <widgets>
@@ -3322,7 +3322,7 @@
                		</condition> 
                        	<widgets>
                        	    <platform-specific><html><html-template location="component://byproducts/webapp/byproducts/byproducts/indentAdhocSale.ftl"/></html></platform-specific>
-                           </widgets>
+                        </widgets>
                        <fail-widgets>
                            <platform-specific><html><html-template location="component://byproducts/webapp/byproducts/byproducts/indentAdhocSale.ftl"/></html></platform-specific>								                           
                        </fail-widgets>
