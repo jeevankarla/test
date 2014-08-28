@@ -26,6 +26,7 @@ import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.UtilDateTime;
 import org.ofbiz.base.util.UtilHttp;
 import org.ofbiz.base.util.UtilMisc;
+import org.ofbiz.base.util.UtilNumber;
 import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.entity.Delegator;
 import org.ofbiz.entity.GenericEntityException;
@@ -46,7 +47,12 @@ public class PurchaseStoreServices {
 public static final String module = PurchaseStoreServices.class.getName();
 
    
-    
+public static final BigDecimal ZERO_BASE = BigDecimal.ZERO;
+public static final BigDecimal ONE_BASE = BigDecimal.ONE;
+public static final BigDecimal PERCENT_SCALE = new BigDecimal("100.000");
+public static int salestaxFinalDecimals = UtilNumber.getBigDecimalScale("salestax.final.decimals");
+public static int salestaxCalcDecimals = UtilNumber.getBigDecimalScale("salestax.calc.decimals");
+public static int salestaxRounding = UtilNumber.getBigDecimalRoundingMode("salestax.rounding");
 	    
 public static Map<String, Object> getPurchaseFactoryStore(Delegator delegator){
 	
@@ -107,8 +113,17 @@ public static String processPurchaseOrder(HttpServletRequest request, HttpServle
 	String productId = null;
 	String batchNo = null;
 	String quantityStr = null;
+	String unitPriceStr=null;
+	String vatStr=null;
+	String exciseStr=null;
+	String cstStr=null;
 	Timestamp effectiveDate=null;
 	BigDecimal quantity = BigDecimal.ZERO;
+	BigDecimal uPrice = BigDecimal.ZERO;
+	BigDecimal vat = BigDecimal.ZERO;
+	BigDecimal cst = BigDecimal.ZERO;
+	BigDecimal excise = BigDecimal.ZERO;
+	
 	Map<String, Object> result = ServiceUtil.returnSuccess();
 	HttpSession session = request.getSession();
 	GenericValue userLogin = (GenericValue) session.getAttribute("userLogin");
@@ -175,6 +190,7 @@ public static String processPurchaseOrder(HttpServletRequest request, HttpServle
 			request.setAttribute("_ERROR_MESSAGE_", "Empty product quantity");
 			return "error";	
 		}
+		
 		/*if (paramMap.containsKey("batchNo" + thisSuffix)) {
 			batchNo = (String) paramMap.get("batchNo" + thisSuffix);
 		}
@@ -182,17 +198,69 @@ public static String processPurchaseOrder(HttpServletRequest request, HttpServle
 			request.setAttribute("_ERROR_MESSAGE_", "Missing Batch Number");
 			return "error";			  
 		}*/
-	  
+		if (paramMap.containsKey("UPrice" + thisSuffix)) {
+		   unitPriceStr = (String) paramMap.get("UPrice" + thisSuffix);
+		}
+		if (paramMap.containsKey("VAT" + thisSuffix)) {
+			vatStr = (String) paramMap.get("VAT" + thisSuffix);
+		}
+		if (paramMap.containsKey("excise" + thisSuffix)) {
+			exciseStr = (String) paramMap.get("excise" + thisSuffix);
+		}
+		if (paramMap.containsKey("CST" + thisSuffix)) {
+			cstStr = (String) paramMap.get("CST" + thisSuffix);
+		}
+		
 		try {
 			quantity = new BigDecimal(quantityStr);
 		} catch (Exception e) {
 			Debug.logError(e, "Problems parsing quantity string: " + quantityStr, module);
 			request.setAttribute("_ERROR_MESSAGE_", "Problems parsing quantity string: " + quantityStr);
 			return "error";
+		}
+		try {
+			if (!unitPriceStr.equals("")) {
+			uPrice = new BigDecimal(unitPriceStr);
+			}
+		} catch (Exception e) {
+			Debug.logError(e, "Problems parsing UnitPrice string: " + unitPriceStr, module);
+			request.setAttribute("_ERROR_MESSAGE_", "Problems parsing UnitPrice string: " + unitPriceStr);
+			return "error";
 		} 
-	
+		try {
+			if (!vatStr.equals("")) {
+			vat = new BigDecimal(vatStr);
+			}
+		} catch (Exception e) {
+			Debug.logError(e, "Problems parsing VAT string: " + vatStr, module);
+			request.setAttribute("_ERROR_MESSAGE_", "Problems parsing VAT string: " + vatStr);
+			return "error";
+		}
+		try {
+			if (!exciseStr.equals("")) {
+			excise = new BigDecimal(exciseStr);
+			}
+		} catch (Exception e) {
+			Debug.logError(e, "Problems parsing excise string: " + exciseStr, module);
+			request.setAttribute("_ERROR_MESSAGE_", "Problems parsing excise string: " + exciseStr);
+			return "error";
+		}
+		try {
+			if (!cstStr.equals("")) {
+			cst = new BigDecimal(cstStr);
+			}
+		} catch (Exception e) {
+			Debug.logError(e, "Problems parsing CST string: " + cstStr, module);
+			request.setAttribute("_ERROR_MESSAGE_", "Problems parsing CST string: " + cstStr);
+			return "error";
+		}
+		Debug.log("===uPrice="+uPrice+"=vat="+vat+"==excise=="+excise+"==cst=="+cst);
 		productQtyMap.put("productId", productId);
 		productQtyMap.put("quantity", quantity);
+		productQtyMap.put("unitPrice", uPrice);
+		productQtyMap.put("vatPercentage", vat);
+		productQtyMap.put("cstPercentage", cst);
+		productQtyMap.put("excisePercentage", excise);
 		//productQtyMap.put("batchNo", batchNo);
 		indentProductList.add(productQtyMap);
 	}//end row count for loop
@@ -302,7 +370,16 @@ public static Map<String, Object> createPurchaseOrder(DispatchContext dctx, Map<
 	String productId = "";
 	BigDecimal quantity = BigDecimal.ZERO;
 	String batchNo = "";
+	BigDecimal unitPrice = BigDecimal.ZERO;
+	BigDecimal vat = BigDecimal.ZERO;
+	BigDecimal cst = BigDecimal.ZERO;
+	BigDecimal excise = BigDecimal.ZERO;
+	
 	for (Map<String, Object> prodQtyMap : productQtyList) {
+		
+		List taxList=FastList.newInstance();
+		
+		BigDecimal totalTaxAmt =  BigDecimal.ZERO;
 		
 		if(UtilValidate.isNotEmpty(prodQtyMap.get("productId"))){
 			productId = (String)prodQtyMap.get("productId");
@@ -310,10 +387,59 @@ public static Map<String, Object> createPurchaseOrder(DispatchContext dctx, Map<
 		if(UtilValidate.isNotEmpty(prodQtyMap.get("quantity"))){
 			quantity = (BigDecimal)prodQtyMap.get("quantity");
 		}
-		if(UtilValidate.isNotEmpty(prodQtyMap.get("batchNo"))){
-			batchNo = (String)prodQtyMap.get("batchNo");
+		if(UtilValidate.isNotEmpty(prodQtyMap.get("unitPrice"))){
+			unitPrice = (BigDecimal)prodQtyMap.get("unitPrice");
 		}
-		Map<String, Object> priceResult;
+		if(unitPrice.compareTo(BigDecimal.ZERO)>0){
+		if(UtilValidate.isNotEmpty(prodQtyMap.get("vatPercentage"))){
+			BigDecimal taxRate = (BigDecimal)prodQtyMap.get("vatPercentage");
+			BigDecimal taxAmount = BigDecimal.ZERO;
+        	if(taxRate.compareTo(BigDecimal.ZERO)>0){
+        		taxAmount = (unitPrice.multiply(taxRate)).divide(PERCENT_SCALE, salestaxCalcDecimals, salestaxRounding);
+        	}
+        	totalTaxAmt=totalTaxAmt.add(taxAmount);
+        	
+        	Map taxDetailMap = FastMap.newInstance();
+    		taxDetailMap.put("taxType", "VAT_SALE");
+    		taxDetailMap.put("amount", taxAmount);
+    		taxDetailMap.put("percentage", taxRate);
+    		taxList.add(taxDetailMap);
+        	/*if(taxPrice.compareTo(BigDecimal.ZERO)>0){
+        		taxAmount = itemQuantity.multiply(taxPrice).setScale(salestaxCalcDecimals, salestaxRounding);
+        	}*/
+		}
+		if(UtilValidate.isNotEmpty(prodQtyMap.get("cstPercentage"))){
+			cst = (BigDecimal)prodQtyMap.get("cstPercentage");
+			BigDecimal taxRate = cst;
+			BigDecimal taxAmount = BigDecimal.ZERO;
+        	if(taxRate.compareTo(BigDecimal.ZERO)>0){
+        		taxAmount = (unitPrice.multiply(taxRate)).divide(PERCENT_SCALE, salestaxCalcDecimals, salestaxRounding);
+        	}
+        	totalTaxAmt=totalTaxAmt.add(taxAmount);
+        	
+        	Map taxDetailMap = FastMap.newInstance();
+    		taxDetailMap.put("taxType", "CST_SALE");
+    		taxDetailMap.put("amount", taxAmount);
+    		taxDetailMap.put("percentage", taxRate);
+    		taxList.add(taxDetailMap);
+		}
+		if(UtilValidate.isNotEmpty(prodQtyMap.get("excisePercentage"))){
+			excise = (BigDecimal)prodQtyMap.get("excisePercentage");
+			BigDecimal taxRate = excise;
+			BigDecimal taxAmount = BigDecimal.ZERO;
+        	if(taxRate.compareTo(BigDecimal.ZERO)>0){
+        		taxAmount = (unitPrice.multiply(taxRate)).divide(PERCENT_SCALE, salestaxCalcDecimals, salestaxRounding);
+        	}
+        	totalTaxAmt=totalTaxAmt.add(taxAmount);
+        	
+        	Map taxDetailMap = FastMap.newInstance();
+    		taxDetailMap.put("taxType", "BED_SALE");
+    		taxDetailMap.put("amount", taxAmount);
+    		taxDetailMap.put("percentage", taxRate);
+    		taxList.add(taxDetailMap);
+		}
+		}
+	/*	Map<String, Object> priceResult;
 		Map<String, Object> priceContext = FastMap.newInstance();
 		priceContext.put("userLogin", userLogin);
 		priceContext.put("productStoreId", productStoreId);
@@ -326,10 +452,15 @@ public static Map<String, Object> createPurchaseOrder(DispatchContext dctx, Map<
 				return ServiceUtil.returnError("There was an error while calculating the price");
 		}
 		BigDecimal totalPrice = (BigDecimal)priceResult.get("totalPrice");
-		List taxList = (List)priceResult.get("taxList");
+		*/
+		BigDecimal totalPrice = unitPrice.add(totalTaxAmt);
+		//BigDecimal totalTaxAmt = BigDecimal.ZERO;
+		
+		//List taxList = (List)priceResult.get("taxList");
+		Debug.log("=========taxList====="+taxList);
 		ShoppingCartItem item = null;
 		try{
-			int itemIndx = cart.addItem(0, ShoppingCartItem.makeItem(Integer.valueOf(0), productId, null,	quantity, (BigDecimal)priceResult.get("price"),
+			int itemIndx = cart.addItem(0, ShoppingCartItem.makeItem(Integer.valueOf(0), productId, null,	quantity, unitPrice,
 			            null, null, null, null, null, null, null, null, null, null, null, null, null, dispatcher,
 			            cart, Boolean.FALSE, Boolean.FALSE, null, Boolean.TRUE, Boolean.TRUE));
 			

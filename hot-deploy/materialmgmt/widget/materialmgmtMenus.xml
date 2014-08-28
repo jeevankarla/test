@@ -4,7 +4,7 @@
         <menu-item name="main" title="${uiLabelMap.CommonMain}"><link target="main"/></menu-item>
     </menu>
       <menu name="MtMgmtTabBar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml">
-        <menu-item name="FindPurchaseOrder" title="Find Purchase Order">
+        <menu-item name="FindPurchaseOrder" title="Purchase Order">
         <link target="FindPurchaseOrder"/>
         </menu-item>
         </menu>

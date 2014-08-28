@@ -14,6 +14,22 @@
 	.readOnlyColumnClass {
 		font-weight: normal;
 		background: mistyrose;
+	}
+	
+	.righthalf {
+	    float: right;
+	    height: 1%;
+	    margin: 0 0 1% 1%;
+	    right: 0;
+	    width: 69%;
+	}
+	
+	.lefthalf {
+	    float: left;
+	    height: 1%;
+	    left: 0;
+	    margin: 0% 1% 1% 0%;
+	    width: 29%;
 	}	
 </style>			
 			
@@ -41,6 +57,7 @@
 	var productIdLabelMap = ${StringUtil.wrapString(productIdLabelJSON)!'{}'};
 	var availableTags = ${StringUtil.wrapString(productItemsJSON)!'[]'};
 	var priceTags = ${StringUtil.wrapString(productCostJSON)!'[]'};
+	var conversionData = ${StringUtil.wrapString(conversionJSON)!'{}'};
 	var data = ${StringUtil.wrapString(dataJSON)!'[]'};
 	var boothAutoJson = ${StringUtil.wrapString(boothsJSON)!'[]'};
 	var partyAutoJson = ${StringUtil.wrapString(partyJSON)!'[]'};	
@@ -60,22 +77,34 @@
 		}
 		var formId = "#" + formName;
 		var inputRowSubmit = jQuery("<input>").attr("type", "hidden").attr("name", "_useRowSubmit").val("Y");
-		jQuery(formId).append(jQuery(inputRowSubmit));	
-		var bankName = $("#bankName").val();
-		var chequeNo = $("#chequeNo").val();
-		var chequeDate = $("#chequeDate").val();
-		var amount = $("#amount").val();
-		var totAmt = $("#totAmt").val();
+		jQuery(formId).append(jQuery(inputRowSubmit));
 		for (var rowCount=0; rowCount < data.length; ++rowCount)
 		{ 
-			var productId = data[rowCount]["productId"];
+			var productId = data[rowCount]["cProductId"];
+			var prodId="";
+			if(typeof(productId)!= "undefined"){ 	  
 			var prodId = productId.toUpperCase();
+			}
 			var qty = parseFloat(data[rowCount]["quantity"]);
+			var UPrice = data[rowCount]["UPrice"];
+			var VAT = data[rowCount]["VAT"];
+			var CST = data[rowCount]["CST"];
+			var Excise = data[rowCount]["Excise"];
 	 		if (!isNaN(qty)) {	 		
 				var inputProd = jQuery("<input>").attr("type", "hidden").attr("name", "productId_o_" + rowCount).val(prodId);
-				var inputQty = jQuery("<input>").attr("type", "hidden").attr("name", "quantity_o_" + rowCount).val(qty);	
+				var inputQty = jQuery("<input>").attr("type", "hidden").attr("name", "quantity_o_" + rowCount).val(qty);
 				jQuery(formId).append(jQuery(inputProd));				
-				jQuery(formId).append(jQuery(inputQty));   
+				jQuery(formId).append(jQuery(inputQty));
+				
+				var inputPrice = jQuery("<input>").attr("type", "hidden").attr("name", "UPrice_o_" + rowCount).val(UPrice);
+				jQuery(formId).append(jQuery(inputPrice));
+				var inputVat = jQuery("<input>").attr("type", "hidden").attr("name", "VAT_o_" + rowCount).val(VAT);
+				jQuery(formId).append(jQuery(inputVat));
+				var inputCst = jQuery("<input>").attr("type", "hidden").attr("name", "CST_o_" + rowCount).val(CST);
+				jQuery(formId).append(jQuery(inputCst));
+				var inputExcise = jQuery("<input>").attr("type", "hidden").attr("name", "excise_o_" + rowCount).val(Excise);
+				jQuery(formId).append(jQuery(inputExcise));
+				
    			}
 		}
 		
@@ -86,16 +115,30 @@
    				jQuery(formId).append(jQuery(route));
    			 }
 		});
-		var inputBank = jQuery("<input>").attr("type", "hidden").attr("name", "bankName").val(bankName);
-		var inputChequeNo = jQuery("<input>").attr("type", "hidden").attr("name", "chequeNo").val(chequeNo);	
-		var inputChequeDate = jQuery("<input>").attr("type", "hidden").attr("name", "chequeDate").val(chequeDate);
-		var inputAmount = jQuery("<input>").attr("type", "hidden").attr("name", "amount").val(amount);	
-		var inputTotAmt = jQuery("<input>").attr("type", "hidden").attr("name", "totAmt").val(totAmt);	
-		jQuery(formId).append(jQuery(inputBank));				
-		jQuery(formId).append(jQuery(inputChequeNo));
-		jQuery(formId).append(jQuery(inputChequeDate));				
-		jQuery(formId).append(jQuery(inputAmount));
-		jQuery(formId).append(jQuery(inputTotAmt));
+		<#if changeFlag?exists && changeFlag != "AdhocSaleNew">
+			var partyId = $("#partyId").val();
+			var orderTaxType = $("#orderTaxType").val();
+			var poNumber = $("#PONumber").val();
+			var packingType = $("#packingType").val();
+			var taxInc = $("#UDP :checked")
+			var productStoreId = $("#productStoreId").val();
+			var party = jQuery("<input>").attr("type", "hidden").attr("name", "partyId").val(partyId);
+			var POField = jQuery("<input>").attr("type", "hidden").attr("name", "PONumber").val(poNumber);
+			var tax = jQuery("<input>").attr("type", "hidden").attr("name", "orderTaxType").val(orderTaxType);
+			var pack = jQuery("<input>").attr("type", "hidden").attr("name", "packingType").val(packingType);
+			var productStore = jQuery("<input>").attr("type", "hidden").attr("name", "productStoreId").val(productStoreId);
+			<#if orderId?exists>
+				var order = '${orderId}';
+				var extOrder = jQuery("<input>").attr("type", "hidden").attr("name", "orderId").val(order);		
+				jQuery(formId).append(jQuery(extOrder));
+			</#if>
+			jQuery(formId).append(jQuery(party));
+			jQuery(formId).append(jQuery(POField));
+			jQuery(formId).append(jQuery(pack));
+			jQuery(formId).append(jQuery(tax));
+			jQuery(formId).append(jQuery(productStore));
+		</#if>
+		
 		jQuery(formId).attr("action", action);	
 		jQuery(formId).submit();
 	}
@@ -126,34 +169,34 @@
         return productIdLabelMap[value];
     }
 
-   function productValidator(value,item) {
-      var currProdCnt = 1;
-	  for (var rowCount=0; rowCount < data.length; ++rowCount)
-	  { 
-	  	 
-		if (data[rowCount]['cProductName'] != null && data[rowCount]['cProductName'] != undefined && value == data[rowCount]['cProductName']) {
-			++currProdCnt;
-		}
-	  }
-	  
-	  var invalidProdCheck = 0;
-	  for (var rowCount=0; rowCount < availableTags.length; ++rowCount)
-	  {  
-		if (value == availableTags[rowCount]["label"]) {
-			invalidProdCheck = 1;
-		}
-	  }
-      if (currProdCnt > 1) {
-        return {valid: false, msg: "Duplicate Product " + value};      				
-      }
-      if(invalidProdCheck == 0){
-      	return {valid: false, msg: "Invalid Product " + value};
-      }
+    function productValidator(value,item) {
       
-      if (item != null && item != undefined ) {
-      	item['productId'] = productLabelIdMap[value];
-	  }      
-      return {valid: true, msg: null};
+    	var currProdCnt = 1;
+	  	for (var rowCount=0; rowCount < data.length; ++rowCount)
+	  	{ 
+			if (data[rowCount]['cProductName'] != null && data[rowCount]['cProductName'] != undefined && value == data[rowCount]['cProductName']) {
+				++currProdCnt;
+			}
+	  	}
+	  
+	  	var invalidProdCheck = 0;
+	  	for (var rowCount=0; rowCount < availableTags.length; ++rowCount)
+	  	{  
+			if (value == availableTags[rowCount]["label"]) {
+				invalidProdCheck = 1;
+			}
+	  	}
+      	if (currProdCnt > 1) {
+        	return {valid: false, msg: "Duplicate Product " + value};      				
+      	}
+      	if(invalidProdCheck == 0){
+      		return {valid: false, msg: "Invalid Product " + value};
+      	}
+      
+      	if (item != null && item != undefined ) {
+      		item['cProductId'] = productLabelIdMap[value];
+	  	}      
+      	return {valid: true, msg: null};
     }
     
     //quantity validator
@@ -187,10 +230,13 @@
 		var grid;
 		
 		var columns = [
-			{id:"cProductName", name:"Product", field:"cProductName", width:180, minWidth:180, cssClass:"cell-title", availableTags: availableTags, editor: AutoCompleteEditor, validator: productValidator,sortable:false ,toolTip:""},
+			{id:"cProductName", name:"Product", field:"cProductName", width:180, minWidth:180, cssClass:"cell-title", availableTags: availableTags, editor: AutoCompleteEditor, validator: productValidator, sortable:false ,toolTip:""},
 			{id:"quantity", name:"Qty(Pkt)", field:"quantity", width:70, minWidth:70, cssClass:"cell-title",editor:FloatCellEditor, sortable:false , formatter: quantityFormatter,  validator: quantityValidator},
-			{id:"unitCost", name:"Unit Price(Rs)", field:"unitPrice", width:65, minWidth:65, cssClass:"readOnlyColumnClass", sortable:false, formatter: rateFormatter, focusable :false , align:"right"},
-			{id:"amount", name:"Total Amount(Rs)", field:"amount", width:100, minWidth:100, cssClass:"readOnlyColumnClass", sortable:false, formatter: rateFormatter, focusable :false}	
+			{id:"UPrice", name:"Price", field:"UPrice", width:130, minWidth:130, editor:FloatCellEditor, sortable:false, formatter: rateFormatter, align:"right", toolTip:"UD Price"},
+			{id:"VAT", name:"VAT(%)", field:"VAT", width:70, minWidth:70, editor:FloatCellEditor, sortable:false, formatter: rateFormatter, align:"right", toolTip:"Vat Percentage"},
+			{id:"CST", name:"CST(%)", field:"CST", width:70, minWidth:70, editor:FloatCellEditor, sortable:false, formatter: rateFormatter, align:"right", toolTip:"CST Percentage"},
+			{id:"Excise", name:"Excise(%)", field:"Excise", width:70, minWidth:70, editor:FloatCellEditor, sortable:false, formatter: rateFormatter, align:"right", toolTip:"Excise Percentage"},
+			
 		];
 		
 			var options = {
@@ -215,7 +261,12 @@
 			$(grid.getCellNode(0,0)).click();
 		}
          grid.onKeyDown.subscribe(function(e) {
-			var cellNav = 2;
+			var cellNav = 0;
+			<#if changeFlag?exists && changeFlag != "AdhocSaleNew">
+				cellNav = 3;
+			<#else>
+				cellNav = 2;
+			</#if>
 			var cell = grid.getCellFromEvent(e);		
 			if(e.which == $.ui.keyCode.UP && cell.row == 0){
 				grid.getEditController().commitCurrentEdit();	
@@ -254,17 +305,6 @@
 				$(grid.getCellNode(cell.row, cellNav)).click();
 				e.stopPropagation();	
 			}else if (e.which == $.ui.keyCode.ENTER) {
-        	  /*	if (cell && cell.cell == 0) {
-					grid.getEditController().commitCurrentEdit();	
-					if (cell.row == 0) {
-						grid.navigateRight();    
-						grid.navigateUp(); 
-					} else {
-        				$(grid.getCellNode(cell.row - 1, cellNav)).click();
-        			}
-        			e.stopPropagation();	
-        			return false;
-        		}  */
         		grid.getEditController().commitCurrentEdit();
 				if(cell.cell == 1 || cell.cell == 2){
 					jQuery("#changeSave").click();
@@ -272,7 +312,7 @@
             	e.stopPropagation();
             	e.preventDefault();        	
             }else if (e.keyCode == 27) {
-             //here ESC to Save grid
+            //here ESC to Save grid
         		if (cell && cell.cell == 0) {
         			$(grid.getCellNode(cell.row - 1, cellNav)).click();
         			return false;
@@ -288,33 +328,11 @@
             }
         });
          
-         
-
-
-/*
-		grid.onKeyDown.subscribe(function(e) {		
-			var cell = grid.getCellFromEvent(e);			
-			if (e.which == $.ui.keyCode.RIGHT &&
-				cell && cell.cell == 1 && 
-				cell.row != data.length) {
-				grid.getEditController().commitCurrentEdit();	
-				$(grid.getCellNode(cell.row +1, 0)).click();
-				e.stopPropogation();		
-			}
-        	else if (e.which == $.ui.keyCode.ENTER) {
-				jQuery("#changeSave").click();   
-            	e.stopPropagation();
-            	e.preventDefault();        	
-            }
-            else {
-            	return false;
-            }
-        }); */
-       
-    	  grid.onAddNewRow.subscribe(function (e, args) {
+                
+    	grid.onAddNewRow.subscribe(function (e, args) {
       		var item = args.item;   
       		var productLabel = item['cProductName']; 
-      		item['productId'] = productLabelIdMap[productLabel];     		 		
+      		item['cProductId'] = productLabelIdMap[productLabel];     		 		
       		grid.invalidateRow(data.length);
       		data.push(item);
       		grid.updateRowCount();
@@ -322,27 +340,35 @@
     	});
         grid.onCellChange.subscribe(function(e,args) {
         	if (args.cell == 0 || args.cell == 1) {
-				var prod = data[args.row]["productId"];
+				var prod = data[args.row]["cProductId"];
 				var qty = parseFloat(data[args.row]["quantity"]);
+				var prodConversionData = conversionData[prod];
+				var convValue = 0;
+				<#if changeFlag?exists && changeFlag == "IcpSales" || changeFlag == "IcpSalesAmul">
+					convValue = prodConversionData['CRATE'];
+				</#if>
+				<#if changeFlag?exists && changeFlag == "PowderSales" || changeFlag == "FgsSales" || changeFlag == "InterUnitTransferSale">
+					convValue = prodConversionData['LtrKg'];
+				</#if>
 				var price = parseFloat(priceTags[prod]);
-				//var indentCat = prodIndentQtyCat[prod];
-				//var qtyInBulk = qtyInPieces[prod];
+				var crVal = 0;
+				if(convValue != 'undefined' || convValue != null || convValue > 0){
+					<#if changeFlag?exists && changeFlag == "IcpSales" || changeFlag == "IcpSalesAmul">
+						crVal = parseFloat(Math.round((qty/convValue)*100)/100);
+						data[args.row]["crQuantity"] = crVal;
+					</#if>
+					<#if changeFlag?exists && changeFlag == "PowderSales" || changeFlag == "FgsSales" || changeFlag == "InterUnitTransferSale">
+						crVal = parseFloat(Math.round((qty*convValue)*100)/100);
+						data[args.row]["ltrQuantity"] = crVal;
+					</#if>
+					
+				}
 				if(isNaN(price)){
 					price = 0;
 				}
 				if(isNaN(qty)){
 					qty = 0;
 				}
-				/*
-				if(indentCat == null && indentCat == undefined){
-					data[args.row]["crQuantity"] = "";
-				}
-				else{
-					if(!isNaN(qty) && qtyInBulk != 0){
-						data[args.row]["crQuantity"] = parseFloat(Math.round((qty/qtyInBulk)*100)/100);
-					}
-					
-				}*/
 				var roundedAmount;
 					roundedAmount = Math.round(qty*price);
 				if(isNaN(roundedAmount)){
@@ -366,40 +392,51 @@
 				jQuery("#totalAmount").html(dispText);
 			}
 			
-				if (args.cell == 2) {
-				var prod = data[args.row]["productId"];
-				var qty = parseFloat(data[args.row]["crQuantity"]);
-				var indentCat = prodIndentQtyCat[prod];
-				var qtyInBulk = qtyInPieces[prod];
+			if (args.cell == 2) {
+				var prod = data[args.row]["cProductId"];
+				var calcQty = 0;
+				<#if changeFlag?exists && changeFlag == "IcpSales" || changeFlag == "IcpSalesAmul">
+					calcQty = parseFloat(data[args.row]["crQuantity"]);
+				</#if>
+				<#if changeFlag?exists && changeFlag == "PowderSales" || changeFlag == "FgsSales" || changeFlag == "InterUnitTransferSale">
+					calcQty = parseFloat(data[args.row]["ltrQuantity"]);
+				</#if>
+				var prodConversionData = conversionData[prod];
+				var convValue = 0;
+				<#if changeFlag?exists && changeFlag == "IcpSales" || changeFlag == "IcpSalesAmul">
+					convValue = prodConversionData['CRATE'];
+				</#if>
+				<#if changeFlag?exists && changeFlag == "PowderSales" || changeFlag == "FgsSales" || changeFlag == "InterUnitTransferSale">
+					convValue = prodConversionData['LtrKg'];
+				</#if>
 				var price = parseFloat(priceTags[prod]);
-				var qtyPieces;
-				if(indentCat == null && indentCat == undefined){
-					data[args.row]["quantity"] = qty;
+				var calculateQty = 0;
+				if(convValue != 'undefined' && convValue != null && calcQty>0){
+
+					<#if changeFlag?exists && changeFlag == "IcpSales" || changeFlag == "IcpSalesAmul">
+						calculateQty = parseFloat(Math.round((calcQty*convValue)*100)/100);
+						data[args.row]["quantity"] = calculateQty;
+					</#if>
+					<#if changeFlag?exists && changeFlag == "PowderSales" || changeFlag == "FgsSales" || changeFlag == "InterUnitTransferSale">
+						calculateQty = parseFloat(Math.round((calcQty/convValue)*100)/100);
+						data[args.row]["quantity"] = calculateQty;
+					</#if>
 				}
-				else{
-					if(!isNaN(qty)){
-						data[args.row]["quantity"] = parseFloat(Math.round((qty*qtyInBulk)*100)/100);
-						qtyPieces = parseFloat(Math.round((qty*qtyInBulk)*100)/100);
-					}
-					
-				}
+				
 				if(isNaN(price)){
 					price = 0;
 				}
-				if(isNaN(qtyPieces)){
-					qtyPieces = 0;
+				if(isNaN(calculateQty)){
+					calculateQty = 0;
 				}
-				
-				
-				var roundedAmount = Math.round(qtyPieces*price);
-				
+				var roundedAmount;
+					roundedAmount = Math.round(calculateQty*price);
 				if(isNaN(roundedAmount)){
 					roundedAmount = 0;
 				}
 				data[args.row]["unitPrice"] = price;
 				data[args.row]["amount"] = roundedAmount;
 				grid.updateRow(args.row);
-				
 				var totalAmount = 0;
 				for (i = 0; i < data.length; i++) {
 					totalAmount += data[i]["amount"];
@@ -420,7 +457,7 @@
 		
 		grid.onActiveCellChanged.subscribe(function(e,args) {
         	if (args.cell == 1 && data[args.row] != null) {
-				var prod = data[args.row]["productId"];
+				var prod = data[args.row]["cProductId"];
 			}
 			
 		});
@@ -443,14 +480,38 @@
 		function updateProductTotalAmount() {
 			for(var i=0;i<data.length;i++){
 				var qty = parseFloat(data[i]["quantity"]);
-				var prod = data[i]["productId"];
+				var prod = data[i]["cProductId"];
+				
+				var prodConversionData = conversionData[prod];
+				var convValue = 0;
+				<#if changeFlag?exists && changeFlag == "IcpSales" || changeFlag == "IcpSalesAmul">
+					convValue = prodConversionData['CRATE'];
+				</#if>
+				<#if changeFlag?exists && changeFlag == "PowderSales" || changeFlag == "FgsSales" || changeFlag == "InterUnitTransferSale">
+					convValue = prodConversionData['LtrKg'];
+				</#if>
+				
 				var price = parseFloat(priceTags[prod]);
 				if(isNaN(price) || isNaN(qty)){
 					data[i]["amount"] = 0;
+					data[i]["unitPrice"] = 0;
 				}
 				else{
+					data[i]["unitPrice"] = price;
 					data[i]["amount"] = Math.round((qty*price) * 100)/100;
 				}
+				var crVal = 0;
+				if(convValue != 'undefined' || convValue != null || convValue > 0){
+					<#if changeFlag?exists && changeFlag == "IcpSales" || changeFlag == "IcpSalesAmul">
+						crVal = parseFloat(Math.round((qty/convValue)*100)/100);
+						data[i]["crQuantity"] = crVal;
+					</#if>
+					<#if changeFlag?exists && changeFlag == "PowderSales" || changeFlag == "FgsSales" || changeFlag == "InterUnitTransferSale">
+						crVal = parseFloat(Math.round((qty*convValue)*100)/100);
+						data[i]["ltrQuantity"] = crVal;
+					</#if>
+				}
+				
 				grid.updateRow(i);
 			}
 			var totalAmount = 0;
@@ -531,9 +592,12 @@
 	     var boothId=$('[name=boothId]').val();
 	     var partyId=$('[name=partyId]').val();
 		 if(boothId || partyId){
-		 setupGrid1();
+		 	setupGrid1();
 	     }
-		setupGrid2();		
+	     <#if screenFlag?exists && screenFlag == "AdhocSaleNew">
+	     	setupGrid2();
+	     </#if>
+				
         jQuery(".grid-header .ui-icon")
             .addClass("ui-state-default ui-corner-all")
             .mouseover(function(e) {

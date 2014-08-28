@@ -246,6 +246,7 @@ $(document).ready(function(){
     </div>
 	</div>
  	-->		
+ 	<#--
 <div class="screenlet">
     <div class="screenlet-body">
  		<div class="grid-header" style="width:100%">
@@ -253,7 +254,7 @@ $(document).ready(function(){
 		</div>    
 		<div id="myGrid2" style="width:100%;height:75px;"></div>		
     </div>
-</div>     
+</div> -->     
 </div>
 
 <div class="righthalf">
