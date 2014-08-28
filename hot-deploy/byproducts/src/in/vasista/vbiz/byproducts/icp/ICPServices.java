@@ -236,7 +236,6 @@ public static Map<String, Object> approveICPOrder(DispatchContext dctx, Map cont
 				  return ServiceUtil.returnError("Failed fetching existing order details");
 			}
 		}
-		
 		GenericValue product =null;
 		String productPriceTypeId = null;
 		String geoTax = "";
@@ -307,9 +306,14 @@ public static Map<String, Object> approveICPOrder(DispatchContext dctx, Map cont
 		String productId = "";
 		BigDecimal quantity = BigDecimal.ZERO;
 		String batchNo = "";
+		
 		List productList = FastList.newInstance();
 		for (Map<String, Object> prodQtyMap : productQtyList) {
 			
+			BigDecimal basicPrice = BigDecimal.ZERO;
+			BigDecimal bedPrice = BigDecimal.ZERO;
+			BigDecimal vatPrice = BigDecimal.ZERO;
+			BigDecimal cstPrice = BigDecimal.ZERO;
 			if(UtilValidate.isNotEmpty(prodQtyMap.get("productId"))){
 				productId = (String)prodQtyMap.get("productId");
 			}
@@ -320,22 +324,46 @@ public static Map<String, Object> approveICPOrder(DispatchContext dctx, Map cont
 				batchNo = (String)prodQtyMap.get("batchNo");
 				batchNumExists = true;
 			}
+			if(UtilValidate.isNotEmpty(prodQtyMap.get("basicPrice"))){
+				basicPrice = (BigDecimal)prodQtyMap.get("basicPrice");
+			}
+			if(UtilValidate.isNotEmpty(prodQtyMap.get("bedPrice"))){
+				bedPrice = (BigDecimal)prodQtyMap.get("bedPrice");
+			}
+			if(UtilValidate.isNotEmpty(prodQtyMap.get("vatPrice"))){
+				vatPrice = (BigDecimal)prodQtyMap.get("vatPrice");
+			}
+			if(UtilValidate.isNotEmpty(prodQtyMap.get("cstPrice"))){
+				cstPrice = (BigDecimal)prodQtyMap.get("cstPrice");
+			}
 			productList.add(productId);
+			
 			Map<String, Object> priceResult;
 			Map<String, Object> priceContext = FastMap.newInstance();
 			priceContext.put("userLogin", userLogin);
-			priceContext.put("productStoreId", productStoreId);
 			priceContext.put("productId", productId);	
-			priceContext.put("partyId", partyId);
 			if(UtilValidate.isNotEmpty(packingType)){
 				priceContext.put("productPriceTypeId", packingType);
 			}
 			priceContext.put("priceDate", effectiveDate);
 			priceContext.put("geoTax", geoTax);
-			priceResult = ByProductNetworkServices.calculateStoreProductPrices(delegator, dispatcher, priceContext);
+			priceContext.put("productStoreId", productStoreId);
+			if(UtilValidate.isNotEmpty(basicPrice) && basicPrice.compareTo(BigDecimal.ZERO)>0){
+				priceContext.put("basicPrice", basicPrice);
+				priceContext.put("bedPrice", bedPrice);
+				priceContext.put("vatPrice", vatPrice);
+				priceContext.put("cstPrice", cstPrice);
+				priceResult = ByProductNetworkServices.calculateUserDefinedProductPrice(delegator, dispatcher, priceContext);
+			}
+			else{
+				
+				priceContext.put("partyId", partyId);
+				priceResult = ByProductNetworkServices.calculateStoreProductPrices(delegator, dispatcher, priceContext);
+			}
+			
 			if (ServiceUtil.isError(priceResult)) {
-					Debug.logError("There was an error while calculating the price: " + ServiceUtil.getErrorMessage(priceResult), module);
-					return ServiceUtil.returnError("There was an error while calculating the price");
+				Debug.logError("There was an error while calculating the price: " + ServiceUtil.getErrorMessage(priceResult), module);
+				return ServiceUtil.returnError("There was an error while calculating the price");
 			}
 			BigDecimal totalPrice = (BigDecimal)priceResult.get("totalPrice");
 			List<Map> taxList = (List)priceResult.get("taxList");
@@ -354,7 +382,7 @@ public static Map<String, Object> approveICPOrder(DispatchContext dctx, Map cont
 				return ServiceUtil.returnError("Error adding product with id " + productId + " to the cart: ");
 	        }
 			List<GenericValue> productTaxes = EntityUtil.filterByCondition(prodPriceType, EntityCondition.makeCondition("productId", EntityOperator.EQUALS, productId));
-			
+
 			for (Map eachTaxType : taxList) {
 				String taxId = (String)eachTaxType.get("taxType");
 				BigDecimal amount = (BigDecimal) eachTaxType.get("amount");
@@ -368,7 +396,6 @@ public static Map<String, Object> approveICPOrder(DispatchContext dctx, Map cont
 				}
 			}
 		}
-		
 		cart.setDefaultCheckoutOptions(dispatcher);
         ProductPromoWorker.doPromotions(cart, dispatcher);
         CheckOutHelper checkout = new CheckOutHelper(dispatcher, delegator, cart);
@@ -619,7 +646,6 @@ public static Map<String, Object> approveICPOrder(DispatchContext dctx, Map cont
 		String shipmentId = "";
 		Map processOrderContext = FastMap.newInstance();
 		String salesChannel = (String)request.getParameter("salesChannel");
-		
 		if(UtilValidate.isEmpty(productSubscriptionTypeId)){
 			productSubscriptionTypeId = "CASH";      	
 		}
@@ -627,8 +653,16 @@ public static Map<String, Object> approveICPOrder(DispatchContext dctx, Map cont
 		String productId = null;
 		String batchNo = null;
 		String quantityStr = null;
+		String basicPriceStr = null;
+		String vatPriceStr = null;
+		String bedPriceStr = null;
+		String cstPriceStr = null;
 		Timestamp effectiveDate=null;
 		BigDecimal quantity = BigDecimal.ZERO;
+		BigDecimal basicPrice = BigDecimal.ZERO;
+		BigDecimal cstPrice = BigDecimal.ZERO;
+		BigDecimal vatPrice = BigDecimal.ZERO;
+		BigDecimal bedPrice = BigDecimal.ZERO;
 		Map<String, Object> result = ServiceUtil.returnSuccess();
 		HttpSession session = request.getSession();
 		GenericValue userLogin = (GenericValue) session.getAttribute("userLogin");
@@ -698,13 +732,34 @@ public static Map<String, Object> approveICPOrder(DispatchContext dctx, Map cont
 			if (paramMap.containsKey("batchNo" + thisSuffix)) {
 				batchNo = (String) paramMap.get("batchNo" + thisSuffix);
 			}
-			else {
-				request.setAttribute("_ERROR_MESSAGE_", "Missing Batch Number");
-				return "error";			  
+			
+			if (paramMap.containsKey("basicPrice" + thisSuffix)) {
+				basicPriceStr = (String) paramMap.get("basicPrice" + thisSuffix);
 			}
-		  
+			if (paramMap.containsKey("vatPrice" + thisSuffix)) {
+				vatPriceStr = (String) paramMap.get("vatPrice" + thisSuffix);
+			}
+			if (paramMap.containsKey("bedPrice" + thisSuffix)) {
+				bedPriceStr = (String) paramMap.get("bedPrice" + thisSuffix);
+			}
+			if (paramMap.containsKey("cstPrice" + thisSuffix)) {
+				cstPriceStr = (String) paramMap.get("cstPrice" + thisSuffix);
+			}
 			try {
 				quantity = new BigDecimal(quantityStr);
+				if(UtilValidate.isNotEmpty(basicPriceStr)){
+					basicPrice = new BigDecimal(basicPriceStr);
+				}
+				if(UtilValidate.isNotEmpty(cstPriceStr)){
+					cstPrice = new BigDecimal(cstPriceStr);
+				}
+				if(UtilValidate.isNotEmpty(bedPriceStr)){
+					bedPrice = new BigDecimal(bedPriceStr);
+				}
+				if(UtilValidate.isNotEmpty(vatPriceStr)){
+					vatPrice = new BigDecimal(vatPriceStr);
+				}
+				
 			} catch (Exception e) {
 				Debug.logError(e, "Problems parsing quantity string: " + quantityStr, module);
 				request.setAttribute("_ERROR_MESSAGE_", "Problems parsing quantity string: " + quantityStr);
@@ -714,6 +769,10 @@ public static Map<String, Object> approveICPOrder(DispatchContext dctx, Map cont
 			productQtyMap.put("productId", productId);
 			productQtyMap.put("quantity", quantity);
 			productQtyMap.put("batchNo", batchNo);
+			productQtyMap.put("basicPrice", basicPrice);
+			productQtyMap.put("bedPrice", bedPrice);
+			productQtyMap.put("cstPrice", cstPrice);
+			productQtyMap.put("vatPrice", vatPrice);
 			indentProductList.add(productQtyMap);
 		}//end row count for loop
 	  

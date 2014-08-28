@@ -38,6 +38,7 @@ $(document).ready(function(){
 <#assign changeRowTitle = "Changes">                
 
 <#include "indentAdhocInc.ftl"/>
+<#include "EditUDPPrice.ftl"/>
 <#--
 <#assign initAction =''>	
 	<#if changeFlag?exists && changeFlag=='supplDeliverySchedule'>
@@ -413,14 +414,16 @@ $(document).ready(function(){
     </div>
 	</div>
  			-->	
-<div class="screenlet">
-    <div class="screenlet-body">
- 		<div class="grid-header" style="width:100%">
-			<label>Last Change <#if lastChangeSubProdMap?exists && lastChangeSubProdMap?has_content>[made by ${lastChangeSubProdMap.modifiedBy?if_exists} at ${lastChangeSubProdMap.modificationTime?if_exists}] &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Entries Made by ${parameters.userLogin.userLoginId} Today: ${entrySize?if_exists}</#if></label>
-		</div>    
-		<div id="myGrid2" style="width:100%;height:75px;"></div>		
-    </div>
-</div>     
+<#if changeFlag?exists && changeFlag=='AdhocSaleNew'>			
+	<div class="screenlet">
+	    <div class="screenlet-body">
+	 		<div class="grid-header" style="width:100%">
+				<label>Last Change <#if lastChangeSubProdMap?exists && lastChangeSubProdMap?has_content>[made by ${lastChangeSubProdMap.modifiedBy?if_exists} at ${lastChangeSubProdMap.modificationTime?if_exists}] &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Entries Made by ${parameters.userLogin.userLoginId} Today: ${entrySize?if_exists}</#if></label>
+			</div>
+			<div id="myGrid2" style="width:100%;height:75px;"></div>		
+	    </div>
+	</div>
+</#if>     
 </div>
 
 <div class="righthalf">

@@ -5323,6 +5323,137 @@ public class ByProductNetworkServices {
 	 * @param context
 	 * @return a List of payment pending booths
 	 */
+	
+	public static Map<String, Object> getDaywiseCRInstDues(DispatchContext ctx,Map<String, ? extends Object> context) {
+		Delegator delegator = ctx.getDelegator();
+		GenericValue userLogin = (GenericValue) context.get("userLogin");
+		String facilityId = (String) context.get("facilityId");
+		List boothDuesList = FastList.newInstance();
+		String ownerPartyId = "";
+		List exprListForParameters = FastList.newInstance();
+		Map<String, Object> boothDuesDetail = FastMap.newInstance();
+		List boothOrdersList = FastList.newInstance();
+		BigDecimal totalAmount = BigDecimal.ZERO;
+
+		boolean isByParty = Boolean.FALSE;
+		boolean enableCRInst = Boolean.FALSE;
+		if (UtilValidate.isNotEmpty(context.get("isByParty"))) {
+			isByParty = Boolean.TRUE;
+		}
+		if (UtilValidate.isNotEmpty(context.get("enableCRInst"))) {
+			enableCRInst = Boolean.TRUE;
+		}
+		boolean enableSoCrPmntTrack = Boolean.FALSE;
+		try {
+			GenericValue tenantConfigEnableSoCrPmntTrack = delegator.findOne("TenantConfiguration", UtilMisc.toMap("propertyTypeEnumId", "LMS", "propertyName",	"enableSoCrPmntTrack"), true);
+			if (UtilValidate.isNotEmpty(tenantConfigEnableSoCrPmntTrack)&& (tenantConfigEnableSoCrPmntTrack.getString("propertyValue")).equals("Y")) {
+				enableSoCrPmntTrack = Boolean.TRUE;
+			}
+		} catch (GenericEntityException e) {
+			// TODO: handle exception
+			Debug.logError(e, module);
+		}
+		if (enableCRInst) {
+			exprListForParameters.add(EntityCondition.makeCondition("productSubscriptionTypeId", EntityOperator.IN,	UtilMisc.toList("CASH", "EMP_SUBSIDY", "CREDIT")));
+		} else {
+			if (enableSoCrPmntTrack) {
+				exprListForParameters.add(EntityCondition.makeCondition("productSubscriptionTypeId", EntityOperator.IN,	UtilMisc.toList("CASH", "SPECIAL_ORDER", "CREDIT")));
+			} else {
+				exprListForParameters.add(EntityCondition.makeCondition("productSubscriptionTypeId", EntityOperator.IN,UtilMisc.toList("CASH", "EMP_SUBSIDY")));
+			}
+		}
+
+		if (UtilValidate.isEmpty(facilityId)) {
+			Debug.logError("Facility Id cannot be empty", module);
+			return ServiceUtil.returnError("Facility Id cannot be empty");
+		}
+
+		try {
+			GenericValue facilityDetail = delegator.findOne("Facility",UtilMisc.toMap("facilityId", facilityId), true);
+			if (facilityDetail == null || !facilityDetail.getString("facilityTypeId").equals("BOOTH")) {
+				Debug.logInfo("facilityId '" + facilityId + "'is not a Booth ",	"");
+				return ServiceUtil.returnError("facilityId '" + facilityId	+ "'is not a Booth");
+			}
+			ownerPartyId = facilityDetail.getString("ownerPartyId");
+		} catch (GenericEntityException e) {
+			// TODO: handle exception
+			Debug.logError(e, module);
+			return ServiceUtil.returnError(e.toString());
+		}
+		if (isByParty) {
+			exprListForParameters.add(EntityCondition.makeCondition("partyId",EntityOperator.EQUALS, ownerPartyId));
+		} else {
+			exprListForParameters.add(EntityCondition.makeCondition("originFacilityId", EntityOperator.EQUALS, facilityId));
+		}
+
+		exprListForParameters.add(EntityCondition.makeCondition("invoiceStatusId", EntityOperator.NOT_IN, UtilMisc.toList("INVOICE_PAID","INVOICE_CANCELLED","INVOICE_WRITEOFF")));
+
+		// filter out booths owned by the APDDCF
+		exprListForParameters.add(EntityCondition.makeCondition("partyId",EntityOperator.NOT_EQUAL, "Company"));
+		EntityCondition paramCond = EntityCondition.makeCondition(exprListForParameters, EntityOperator.AND);
+		EntityFindOptions findOptions = new EntityFindOptions();
+		findOptions.setDistinct(true);
+		try {
+			boothOrdersList = delegator.findList("OrderHeaderFacAndItemBillingInv", paramCond, null,UtilMisc.toList("estimatedDeliveryDate"), findOptions,false);
+		} catch (GenericEntityException e) {
+			Debug.logError(e, module);
+			return ServiceUtil.returnError(e.toString());
+		}
+		String duesByParty = "N";
+		if (isByParty) {
+			duesByParty = "Y";
+		}
+
+		List<GenericValue> obInvoiceList = (List) getOpeningBalanceInvoices(ctx,UtilMisc.toMap("facilityId", facilityId, "duesByParty",	duesByParty)).get("invoiceList");
+		boothOrdersList.addAll(obInvoiceList);
+		boothOrdersList = EntityUtil.orderBy(boothOrdersList, UtilMisc.toList("parentFacilityId", "originFacilityId","estimatedDeliveryDate","invoiceId"));
+		List invoiceIds = EntityUtil.getFieldListFromEntityList(boothOrdersList, "invoiceId", true);
+		List<GenericValue> invoicesList = FastList.newInstance();
+		try {
+			invoicesList = delegator.findList("Invoice", EntityCondition.makeCondition("invoiceId", EntityOperator.IN, invoiceIds), null, UtilMisc.toList("dueDate"), null,false);
+			
+		} catch (GenericEntityException e) {
+			Debug.logError(e, module);
+			return ServiceUtil.returnError(e.toString());
+		}
+		if (UtilValidate.isNotEmpty(invoicesList)) {
+			Timestamp firstDate = ((GenericValue) invoicesList.get(0)).getTimestamp("dueDate");
+			firstDate = UtilDateTime.getDayStart(firstDate);
+			Timestamp lastDate = ((GenericValue) boothOrdersList.get(boothOrdersList.size() - 1)).getTimestamp("dueDate");
+			lastDate = UtilDateTime.getDayEnd(lastDate);
+			
+			Timestamp iterDate = firstDate;
+			List condList = FastList.newInstance();
+			Map<String, Object> boothPayments = FastMap.newInstance();
+			while (iterDate.compareTo(lastDate) < 0) {
+				Timestamp iterStartDate = UtilDateTime.getDayStart(iterDate);
+				Timestamp iterEndDate = UtilDateTime.getDayEnd(iterDate);
+				
+				condList.clear();
+				condList.add(EntityCondition.makeCondition("dueDate", EntityOperator.GREATER_THAN_EQUAL_TO, iterStartDate));
+				condList.add(EntityCondition.makeCondition("dueDate", EntityOperator.LESS_THAN_EQUAL_TO, iterEndDate));
+				EntityCondition exprCond = EntityCondition.makeCondition(condList, EntityOperator.AND);
+				
+				List<GenericValue> dayInvoices = EntityUtil.filterByCondition(invoicesList, exprCond);
+				
+				if(UtilValidate.isNotEmpty(dayInvoices)){
+					for(GenericValue invDetail : dayInvoices){
+						BigDecimal invoiceToApply = InvoiceWorker.getInvoiceNotApplied(invDetail);
+							Map boothDue = FastMap.newInstance();
+							boothDue.put("supplyDate", iterDate);
+							boothDue.put("amount", invoiceToApply);
+							boothDuesList.add(boothDue);
+							totalAmount = totalAmount.add((BigDecimal) invoiceToApply);
+					}
+				}
+				iterDate = UtilDateTime.addDaysToTimestamp(iterDate, 1);
+			}
+		}
+		boothDuesDetail.put("totalAmount", totalAmount);
+		boothDuesDetail.put("boothDuesList", boothDuesList);
+		return boothDuesDetail;
+	}
+	
 	public static Map<String, Object> getDaywiseBoothDues(DispatchContext ctx,Map<String, ? extends Object> context) {
 		Delegator delegator = ctx.getDelegator();
 		GenericValue userLogin = (GenericValue) context.get("userLogin");
@@ -6715,6 +6846,87 @@ public class ByProductNetworkServices {
 
 	    result.put("basicPrice", basicPrice);
 	    result.put("mrpPrice", MRPPrice);	    
+	    result.put("price", price);
+	    result.put("totalPrice", totalPrice);
+	    result.put("taxList", taxDetailList);
+	    return result;
+    }
+	
+	public static Map<String, Object> calculateUserDefinedProductPrice(Delegator delegator, LocalDispatcher dispatcher, Map<String, ? extends Object> context) {
+	    Map<String, Object> result = FastMap.newInstance();
+	   
+	    GenericValue userLogin = (GenericValue) context.get("userLogin");
+	    String productId = (String) context.get("productId"); 
+	    String geoTax = (String) context.get("geoTax");
+	    String productStoreId = (String) context.get("productStoreId");
+	    String productStoreGroupId = "_NA_";
+	    Timestamp priceDate = (Timestamp) context.get("priceDate");
+	    BigDecimal basicPrice = (BigDecimal) context.get("basicPrice");
+	    BigDecimal bedPrice = (BigDecimal) context.get("bedPrice");
+	    BigDecimal cstPrice = (BigDecimal) context.get("cstPrice");
+	    BigDecimal vatPrice = (BigDecimal) context.get("vatPrice");
+	    GenericValue product;
+	    String currencyDefaultUomId = (String) context.get("currencyUomId");
+	    BigDecimal discountAmount = BigDecimal.ZERO;
+	    if (UtilValidate.isEmpty(currencyDefaultUomId)) {
+	        currencyDefaultUomId = UtilProperties.getPropertyValue("general", "currency.uom.id.default", "INR");
+	    }
+	    if(UtilValidate.isEmpty(basicPrice) || (UtilValidate.isNotEmpty(basicPrice) && basicPrice.compareTo(BigDecimal.ZERO)<=0)){
+	    	Debug.logError("Not a valid user defined rate ", module);
+	        return ServiceUtil.returnError("Not a valid user defined rate for the item :"+productId);
+	    }
+	    GenericValue productStore;
+		try {
+			productStore = delegator.findByPrimaryKeyCache("ProductStore", UtilMisc.toMap("productStoreId", productStoreId));
+		} catch (GenericEntityException e) {
+			Debug.logError(e, e.toString(), module);
+	        return ServiceUtil.returnError(e.toString());
+		}
+		
+		List conditionList = FastList.newInstance();
+
+    	List taxDetailList = FastList.newInstance();
+		BigDecimal totalExciseDuty = BigDecimal.ZERO;
+		BigDecimal totalTaxAmt = BigDecimal.ZERO;
+		
+		if(vatPrice.compareTo(BigDecimal.ZERO)>0){
+			
+			Map taxDetailMap = FastMap.newInstance();
+			taxDetailMap.put("taxType", "VAT_SALE");
+			taxDetailMap.put("amount", vatPrice);
+			taxDetailMap.put("percentage", BigDecimal.ZERO);
+			taxDetailList.add(taxDetailMap);
+			
+			totalTaxAmt = totalTaxAmt.add(vatPrice);
+			
+		}
+		if(bedPrice.compareTo(BigDecimal.ZERO)>0){
+			
+			Map taxDetailMap = FastMap.newInstance();
+			
+			taxDetailMap.put("taxType", "BED_SALE");
+			taxDetailMap.put("amount", bedPrice);
+			taxDetailMap.put("percentage", BigDecimal.ZERO);
+			taxDetailList.add(taxDetailMap);
+			
+			totalExciseDuty = totalExciseDuty.add(bedPrice);
+		}
+		if(cstPrice.compareTo(BigDecimal.ZERO)>0){
+			
+			Map taxDetailMap = FastMap.newInstance();
+			
+			taxDetailMap.put("taxType", "CST_SALE");
+			taxDetailMap.put("amount", cstPrice);
+			taxDetailMap.put("percentage", BigDecimal.ZERO);
+			taxDetailList.add(taxDetailMap);
+			
+			totalTaxAmt = totalTaxAmt.add(cstPrice);
+		}
+    
+	    BigDecimal price = basicPrice.add(totalExciseDuty);
+	    BigDecimal totalPrice = price.add(totalTaxAmt);
+
+	    result.put("basicPrice", basicPrice);
 	    result.put("price", price);
 	    result.put("totalPrice", totalPrice);
 	    result.put("taxList", taxDetailList);
