@@ -86,7 +86,7 @@ $(document).ready(function() {
 <div class="lefthalf">		
 <div class="screenlet">
 	<div class="screenlet-title-bar">
-      	<h3>Daily Punch  [Company Bus: ${companyBus}]</h3>	
+      	<h3>Daily Punch  <#if companyBus?has_content> ${companyBus}</#if></h3>	
      </div>
     <div class="screenlet-body">
     	<div id="attendanceTable"/>

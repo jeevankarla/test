@@ -139,10 +139,10 @@ conditionList.add(EntityCondition.makeCondition("fromDate", EntityOperator.LESS_
 conditionList.add(EntityCondition.makeCondition(EntityCondition.makeCondition("thruDate", EntityOperator.EQUALS, null), EntityOperator.OR,
 	EntityCondition.makeCondition("thruDate", EntityOperator.GREATER_THAN_EQUAL_TO, fromDate)));
 condition=EntityCondition.makeCondition(conditionList,EntityOperator.AND);
-Debug.logError("condition="+condition,"");
+//Debug.logError("condition="+condition,"");
 
 leaveList = delegator.findList("EmplLeave", condition , null, null, null, false );
-Debug.logError("leaveList="+leaveList,"");
+//Debug.logError("leaveList="+leaveList,"");
 
 leaveList.each { leave->
 	JSONArray leaveJSON = new JSONArray();
@@ -163,13 +163,17 @@ leaveList.each { leave->
 
 
 // get companyBus details and weekly off days
-companyBus = "No";
+companyBus = "";
 JSONArray holidaysListJSON = new JSONArray();
 employeeDetail = delegator.findOne("EmployeeDetail", UtilMisc.toMap("partyId",employeeId), true);
 if(UtilValidate.isNotEmpty(employeeDetail)) { 
-	if(UtilValidate.isNotEmpty(employeeDetail.getString("companyBus")) && 
-		employeeDetail.getString("companyBus").equalsIgnoreCase("Y")){
-		companyBus = "Yes";
+	if(UtilValidate.isNotEmpty(employeeDetail.getString("companyBus"))) { 
+		if (employeeDetail.getString("companyBus").equalsIgnoreCase("Y")){
+			companyBus = "[Company Bus: Yes]";
+		}
+		else {
+			companyBus = "[Company Bus: No]";
+		}
 	}		
 	if (UtilValidate.isNotEmpty(employeeDetail.getString("weeklyOff"))) {
 		Calendar c1=Calendar.getInstance();
