@@ -117,8 +117,7 @@ function makeDatePicker1(fromDateId ,thruDateId){
 		makeDatePicker("fixedDepositDate","");
 		makeDatePicker("newOrTerminatefDate","newOrTerminatetDate");
 		makeDatePicker("vatInvoiceSeqNofDate","vatInvoiceSeqNotDate");
-		
-		
+		makeDatePicker("amulIceCreamfDate","amulIceCreamtDate");
 		$('#ui-datepicker-div').css('clip', 'auto');		
 	});
 //for Month Picker
@@ -968,14 +967,18 @@ function makeDatePicker1(fromDateId ,thruDateId){
 	      					<td width="10%"><input type="submit" value="Download" class="buttontext"/></td>
 	  					</form>
 	  				</tr>
-	  				 <tr class="alternate-row">
-						<form id="vatInvoiceSeqNoReport" name="vatInvoiceSeqNoReport" method="post" action="<@ofbizUrl>vatInvoiceSeqNoReport.pdf</@ofbizUrl>" target="_blank">	
-							<td width="30%">VAT Invoice Sequence No Report</td>
-							<td width="15%">From<input  type="text" size="18pt" id="vatInvoiceSeqNofDate" readonly  name="fromDate"/></td>
-						    <td width="15%">To<input  type="text" size="18pt" id="vatInvoiceSeqNotDate" readonly  name="thruDate"/></td>
-			      			<td width="15%"></td>
-			      			<td width="15%"></td>
-							<td width="10%"><input type="submit" value="Download" class="buttontext"/></td>
+	                   <tr class="alternate-row">
+						<form id="iceCreamSaleReport" name="iceCreamSaleReport" method="post" action="<@ofbizUrl>iceCreamSaleBookReport.pdf</@ofbizUrl>" target="_blank">	
+							<td width="30%">Sale Book Report</td>
+							<td width="15%">From<input  type="text" size="18pt" id="amulIceCreamfDate" readonly  name="fromDate"/></td>
+						    <td width="15%">To<input  type="text" size="18pt" id="amulIceCreamtDate" readonly  name="thruDate"/></td>
+			      			<td width="15%">By<select name="categoryType">
+			      			<option value="All">All</option>
+			      			<option value="ICE_CREAM_NANDINI">Nandini Ice Cream</option>
+			      			<option value="ICE_CREAM_AMUL">Amul Ice Cream</option>
+			      			</select></td>
+	      					<td width="15%"></td>
+							<td width="10%"><input type="submit" value="Download" class="buttontext"/></td> 
 						</form>
 	                  </tr>
 			        <#-- 
