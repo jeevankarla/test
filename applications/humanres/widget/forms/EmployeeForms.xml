@@ -465,7 +465,7 @@
 		<field name="belongsTo" title="${uiLabelMap.SonWifeDaughter}"><hidden></hidden></field>
         <field name="bloodGroup" title="${uiLabelMap.BloodGroup}">
          	<drop-down allow-empty="false">             
-				<entity-options entity-name="Enumeration" key-field-name="description" description="${description}">
+				<entity-options entity-name="Enumeration" key-field-name="enumId" description="${description}">
 				<entity-constraint name="enumTypeId" value="BLOOD_TYPE" />
 				<entity-order-by field-name="sequenceId" />
 				</entity-options>

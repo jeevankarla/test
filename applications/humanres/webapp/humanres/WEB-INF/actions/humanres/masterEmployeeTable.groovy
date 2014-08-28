@@ -104,7 +104,17 @@ def populateChildren(org, employeeList) {
 		employee.put("emailAddress",emailAddress);
 		employee.put("locationGeoId",employment.locationGeoId);
 		employee.put("gender",employment.gender);
+	
+		if(UtilValidate.isNotEmpty(employment.bloodGroup)){
+		bloodGroups=delegator.findByAnd("Enumeration",[enumId:employment.bloodGroup]);
+		if(UtilValidate.isNotEmpty(bloodGroups)){
+		bloodGroup=bloodGroups.get(0).description;
+		employee.put("bloodGroup",bloodGroup);
+		}
+		else
 		employee.put("bloodGroup",employment.bloodGroup);
+		}
+		
 		address = "";
 		if (employment.birthDate) {
 			int day =  UtilDateTime.getDayOfMonth(UtilDateTime.toTimestamp(employment.birthDate), timeZone, locale);
