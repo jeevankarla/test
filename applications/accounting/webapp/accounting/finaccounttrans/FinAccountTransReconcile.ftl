@@ -138,7 +138,7 @@ function toggleFinAccntTransId(master) {
      
    <form name="newFinTransReconsile" id="newFinTransReconsileId"  method="post" action="createReconsileToFinAccountTrans">
       <div align="right">
-       <input type="submit" value="Create Reconsile"  class="buttontext" id="bulkReconsileId" name="bulkReconsileName" onclick="javascript:return appendFinTransToReconsileForm();" />
+       <input type="submit" value="Create Reconcile"  class="buttontext" id="bulkReconsileId" name="bulkReconsileName" onclick="javascript:return appendFinTransToReconsileForm();" />
         <input name="statusId" type="hidden" value="FINACT_TRNS_APPROVED"/>
          <input name="finAccountId" type="hidden" value="${parameters.finAccountId}"/>
          <input name="organizationPartyId" type="hidden" value="${defaultOrganizationPartyId}"/>
