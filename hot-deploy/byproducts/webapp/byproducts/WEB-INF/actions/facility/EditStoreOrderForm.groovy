@@ -27,7 +27,6 @@ salesChannel = parameters.salesChannel;
 dctx = dispatcher.getDispatchContext();
 effectiveDate = parameters.effectiveDate;
 changeFlag=parameters.changeFlag;
-
 subscriptionProdList = [];
 displayGrid = true;
 effDateDayBegin="";
@@ -101,13 +100,35 @@ if(partyOrderIds){
 		newObj.put("cProductName",prodDetail.description +" [ "+prodDetail.brandName+"]");
 		newObj.put("quantity",eachItem.quantity);
 		newObj.put("batchNo", batchNo);
+		if(changeFlag && changeFlag == "PowderSales" || changeFlag == "FgsSales" || changeFlag == "InterUnitTransferSale"){
+			if(eachItem.unitPrice){
+				newObj.put("basicPrice", eachItem.unitPrice);
+			}else{
+				newObj.put("basicPrice", 0);
+			}
+			if(eachItem.cstAmount){
+				newObj.put("cstPrice", eachItem.cstAmount);
+			}else{
+				newObj.put("cstPrice", 0);
+			}
+			if(eachItem.vatAmount){
+				newObj.put("vatPrice", eachItem.vatAmount);
+			}else{
+				newObj.put("vatPrice", 0);
+			}
+			if(eachItem.bedAmount){
+				newObj.put("bedPrice", eachItem.bedAmount);
+			}else{
+				newObj.put("bedPrice", 0);
+			}
+			newObj.put("quantity",eachItem.quantity);
+		}
 		orderItemsJSON.add(newObj);
 		
 	}
 	context.orderId = updateOrderId;
 }
 context.dataJSON = orderItemsJSON;
-
 
 
 

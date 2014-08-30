@@ -194,7 +194,7 @@
 	<#if changeFlag?exists && changeFlag == "PowderSales" || changeFlag == "FgsSales" || changeFlag == "InterUnitTransferSale" >
 		function editClickHandlerEvent(row){
 			showUDPPriceToolTip(data[row], row);
-			<#-- updateUDPLabel();-->
+			 <#--updateUDPLabel();-->
 		}
 	</#if>
 	
@@ -284,13 +284,11 @@
 				{id:"batchNo", name:"Batch Number", field:"batchNo", width:65, minWidth:65, sortable:false, editor:TextCellEditor},
 			<#elseif changeFlag?exists && changeFlag == "PowderSales" || changeFlag == "FgsSales" || changeFlag == "InterUnitTransferSale" >
 				{id:"ltrQuantity", name:"Ltr/KG Qty", field:"ltrQuantity", width:65, minWidth:65, sortable:false, editor:FloatCellEditor},
-				<#-- {id:"UDP", name:strMsg, field:"UDP", width:130, minWidth:130, editor:FloatCellEditor, sortable:false, formatter: rateFormatter, align:"right", toolTip:"User Price"},-->
 			</#if>
 			
 			{id:"unitCost", name:"Unit Price(Rs)", field:"unitPrice", width:65, minWidth:65, cssClass:"readOnlyColumnClass", sortable:false, formatter: rateFormatter, focusable :false , align:"right"},
 			
 			<#if changeFlag?exists && changeFlag == "PowderSales" || changeFlag == "FgsSales" || changeFlag == "InterUnitTransferSale" >
-				<#--{id:"button", name:"Set/Update", field:"UDP", width:130, minWidth:130, sortable:false, align:"center", toolTip:"User Defined Price"},-->
 			</#if>
 			{id:"amount", name:"Total Amount(Rs)", field:"amount", width:100, minWidth:100, cssClass:"readOnlyColumnClass", sortable:false, formatter: rateFormatter, focusable :false}
 			
@@ -299,7 +297,7 @@
 		<#if changeFlag?exists && changeFlag == "PowderSales" || changeFlag == "FgsSales" || changeFlag == "InterUnitTransferSale" >
 			columns.push({id:"button", name:"Edit Price", field:"button", width:70, minWidth:70, cssClass:"cell-title",
  				formatter: function (row, cell, id, def, datactx) { 
-						return '<a href="#" class="button" onclick="editClickHandlerEvent('+row+')" value="Set">Set</a>'; 
+						return '<a href="#" class="button" onclick="editClickHandlerEvent('+row+')" value="Edit">Edit</a>'; 
  				}
  			});
  		</#if>
@@ -415,7 +413,19 @@
 				<#if changeFlag?exists && changeFlag == "PowderSales" || changeFlag == "FgsSales" || changeFlag == "InterUnitTransferSale">
 					convValue = prodConversionData['LtrKg'];
 				</#if>
-				var price = parseFloat(priceTags[prod]);
+				var udp = data[args.row]['basicPrice'];
+				var price = 0;
+				if(udp){
+					var basic_price = data[args.row]['basicPrice'];
+					var vat_price = data[args.row]['vatPrice'];
+					var cst_price = data[args.row]['cstPrice'];
+					var bed_price = data[args.row]['bedPrice'];
+					var totalPrice = basic_price+vat_price+cst_price+bed_price;
+					price = totalPrice;
+				}
+				else{
+					price = parseFloat(priceTags[prod]);
+				}
 				var crVal = 0;
 				if(convValue != 'undefined' || convValue != null || convValue > 0){
 					<#if changeFlag?exists && changeFlag == "IcpSales" || changeFlag == "IcpSalesAmul">
@@ -474,7 +484,19 @@
 				<#if changeFlag?exists && changeFlag == "PowderSales" || changeFlag == "FgsSales" || changeFlag == "InterUnitTransferSale">
 					convValue = prodConversionData['LtrKg'];
 				</#if>
-				var price = parseFloat(priceTags[prod]);
+				var udp = data[args.row]['basicPrice'];
+				var price = 0;
+				if(udp){
+					var basic_price = data[args.row]['basicPrice'];
+					var vat_price = data[args.row]['vatPrice'];
+					var cst_price = data[args.row]['cstPrice'];
+					var bed_price = data[args.row]['bedPrice'];
+					var totalPrice = basic_price+vat_price+cst_price+bed_price;
+					price = totalPrice;
+				}
+				else{
+					price = parseFloat(priceTags[prod]);
+				}
 				var calculateQty = 0;
 				if(convValue != 'undefined' && convValue != null && calcQty>0){
 
@@ -543,6 +565,7 @@
     
 		updateProductTotalAmount();
 		function updateProductTotalAmount() {
+			<#--updateUDPLabel();-->
 			for(var i=0;i<data.length;i++){
 				var qty = parseFloat(data[i]["quantity"]);
 				var prod = data[i]["cProductId"];
@@ -556,7 +579,20 @@
 					convValue = prodConversionData['LtrKg'];
 				</#if>
 				
-				var price = parseFloat(priceTags[prod]);
+				var udp = data[i]['basicPrice'];
+				var price = 0;
+				if(udp){
+					var basic_price = data[i]['basicPrice'];
+					var vat_price = data[i]['vatPrice'];
+					var cst_price = data[i]['cstPrice'];
+					var bed_price = data[i]['bedPrice'];
+					var totalPrice = basic_price+vat_price+cst_price+bed_price;
+					price = totalPrice;
+				}
+				else{
+					price = parseFloat(priceTags[prod]);
+				}
+				
 				if(isNaN(price) || isNaN(qty)){
 					data[i]["amount"] = 0;
 					data[i]["unitPrice"] = 0;
@@ -800,17 +836,14 @@
 		jQuery("#contactNumber").val(contactInfo["contactNumber"]); 
 		jQuery("#pinNumber").val(contactInfo["postalCode"]);
 	}
-	<#-- function updateUDPLabel() {
-		
+	
+	<#--function updateUDPLabel() {
 		for(var i=0;i<data.length;i++){
-			var UDPPrice = data[i]["UDPPrice"];
-			//alert("test ###"+JSON.stringify(UDPPrice));
-			if(UDPPrice){
-				var test = data[i]["button"];
+			var udpPrice = data[i]["basicPrice"];
+			if(udpPrice && udpPrice>0){
 				data[i]["button"] = "Update";
-				//alert("test #####"+JSON.stringify(test));				
 			}
-			grid.updateRow(i);
+			grid.updateRow(index);
 		}
 		grid.setData(data);
 		grid.render();    

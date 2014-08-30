@@ -68,7 +68,7 @@
 	}
 	
 	function showUDPPriceToolTip(gridRow, index) {
-		rowIndent = index;
+		rowIndex = index;
 		dataRow = gridRow;
 		productName = dataRow["cProductName"];
 		var message = "";
@@ -103,11 +103,11 @@
 			message += "<tr class='h3'><td align='left'>CST Amount : </td><td><input type='text' name='cstAmount' id='cstAmount'/></td></tr><tr class='h3'><td align='left'>BED Amount : </td><td><input type='text' name='bedAmount' id='bedAmount'></td></tr>";
 			message += "<tr class='h3'><td class='h3' align='left'><span align='right'><button value='Add Price' onclick='return addDataToGrid();' class='smallSubmit'>Add Price</button></span></td><td><span align='right'><button value='${uiLabelMap.CommonCancel}' onclick='return cancelForm();' class='smallSubmit'>${uiLabelMap.CommonCancel}</button></span></td></tr>";
 		}else{
-			message += "<tr class='h3'><td align='left'>Basic Price : </td><td><input type='text' name='amount' id='basicAmount' value='"+basicPrice+"'/></td></tr><tr><td align='left'>VAT Amount : </td><td><input type='text' name='vatAmount' id='vatAmount' value='"+vatPrice+"'></td></tr>";
-			message += "<tr class='h3'><td align='left'>CST Amount : </td><td><input type='text' name='cstAmount' id='cstAmount' value='"+cstPrice+"'/></td></tr><tr><td align='left'>BED Amount : </td><td><input type='text' name='bedAmount' id='bedAmount' value='"+bedPrice+"'></td></tr>";
+			message += "<tr class='h3'><td align='left'>Basic Price : </td><td><input type='text' name='amount' id='basicAmount' value='"+basicPrice+"'/></td></tr><tr class='h3'><td align='left'>VAT Amount : </td><td><input type='text' name='vatAmount' id='vatAmount' value='"+vatPrice+"'></td></tr>";
+			message += "<tr class='h3'><td align='left'>CST Amount : </td><td><input type='text' name='cstAmount' id='cstAmount' value='"+cstPrice+"'/></td></tr><tr class='h3'><td align='left'>BED Amount : </td><td><input type='text' name='bedAmount' id='bedAmount' value='"+bedPrice+"'></td></tr>";
 			message += "<tr class='h3'><td align='left'><span align='right'><button value='Add Price' onclick='return addDataToGrid();' class='smallSubmit'>Add Price</button></span></td><td><span align='right'><button value='${uiLabelMap.CommonCancel}' onclick='return cancelForm();' class='smallSubmit'>${uiLabelMap.CommonCancel}</button></span></td></tr>";
 		}	
-		title = "<h2><center>Edit User Defined Price <center></h2><br /><br /> <center>"+ productName +"</center> ";
+		title = "<h2><center>User Defined Price <center></h2><br /><br /> <center>"+ productName +"</center> ";
 		message += "</table>";
 		Alert(message, title);
 		
@@ -138,12 +138,17 @@
 		}else{
 			bedPrice = parseFloat(bedPrice);
 		}
-		
+		var totalUnitPrice = bPrice+cstPrice+vatPrice+bedPrice;
 		dataRow['basicPrice'] = bPrice;
 		dataRow['cstPrice'] = cstPrice;
 		dataRow['vatPrice'] = vatPrice;
 		dataRow['bedPrice'] = bedPrice;
+		dataRow['unitPrice'] = totalUnitPrice;
+		var qty = dataRow['quantity'];
 		
+		dataRow['amount'] = qty*totalUnitPrice;
+		grid.updateRow(rowIndex);
+		grid.render();
 		cancelForm();
 	}
 		
