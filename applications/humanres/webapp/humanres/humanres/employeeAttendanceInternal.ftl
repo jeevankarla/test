@@ -133,7 +133,7 @@ $(document).ready(function() {
     </div> 
     <div class="screenlet">  
     	<div class="screenlet-title-bar">
-      		<h3>Missed Days</h3>	
+      		<h3>Absent Days</h3>	
      	</div>
 	    <div class="screenlet-body">
     		<div id="missedTable"/>  
