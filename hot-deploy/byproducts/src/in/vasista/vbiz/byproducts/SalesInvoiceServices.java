@@ -762,7 +762,7 @@ public class SalesInvoiceServices {
 			totalBasicRevenue=totalBasicRevenue.add(basicRevenue);
 			
 			BigDecimal revenue = price.multiply(quantity);
-			
+			Debug.log("==FIRSTTTTTTT=>revenue ===!"+revenue+"====partyId=="+invoiceItem.getString("partyId")+"==invoiceId=="+invoiceItem.getString("invoiceId"));
 		/*	if (!(adjustmentOrderList.contains(invoiceItem.getString("orderId")))	&& (prodSubscriptionTypeId.equals("EMP_SUBSIDY"))) {
 				try {
 					List<GenericValue> adjustemntsList = delegator.findList("OrderAdjustment", EntityCondition.makeCondition("orderId", EntityOperator.EQUALS,invoiceItem.getString("orderId")), null,null, null, false);
@@ -922,7 +922,7 @@ public class SalesInvoiceServices {
 			//invoiceId Wise Totals
 			String invoiceId = "";
 			invoiceId = invoiceItem.getString("invoiceId");
-			//Debug.log("====>productId ===!"+productId+"====partyId=="+partyId+"==invoiceId=="+invoiceId);
+			Debug.log("====>productId ===!"+productId+"====partyId=="+partyId+"==invoiceId=="+invoiceId);
 			//String currentSaleDate=UtilDateTime.toDateString(invoiceItem.getTimestamp("invoiceDate"), "yyyy-MM-dd");
 			
 			if (invoiceIdTotals.get(invoiceId) == null) {
