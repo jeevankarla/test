@@ -77,8 +77,6 @@ partyTotals.each{eachParty ->
 	cstRevenue=0;
 	total=0;
 	totalMap=[:];
-	catWiseSaleMap=[:];
-	finalList=[];
 	prodTotals = eachParty.getValue().get("productTotals");
 	if(UtilValidate.isNotEmpty(prodTotals)){
 		prodTotals.each{productValue ->
@@ -95,7 +93,11 @@ partyTotals.each{eachParty ->
 						cstRevenue = cstRevenue+productValue.getValue().get("cstRevenue");
 						total = basicRevenue+bedRevenue+vatRevenue+cstRevenue;
 						totalMap["quantity"]=quantity;
-						totalMap["average"]=quantity/maxIntervalDays;
+						if(maxIntervalDays>0){
+						  totalMap["average"]=quantity/maxIntervalDays;
+						}else{
+						 totalMap["average"]=quantity;
+						}
 						totalMap["basicRevenue"]=basicRevenue;
 						totalMap["bedRevenue"]=bedRevenue;
 						totalMap["vatRevenue"]=vatRevenue;
@@ -111,7 +113,11 @@ partyTotals.each{eachParty ->
 							cstRevenue = cstRevenue+productValue.getValue().get("cstRevenue");
 							total = basicRevenue+bedRevenue+vatRevenue+cstRevenue;
 							totalMap["quantity"]=quantity;
-							totalMap["average"]=quantity/maxIntervalDays;
+							if(maxIntervalDays>0){
+							 totalMap["average"]=quantity/maxIntervalDays;
+							}else{
+							 totalMap["average"]=quantity;
+							}
 							totalMap["basicRevenue"]=basicRevenue;
 							totalMap["bedRevenue"]=bedRevenue;
 							totalMap["vatRevenue"]=vatRevenue;
@@ -124,8 +130,6 @@ partyTotals.each{eachParty ->
 	
 	if(quantity != 0){
 				partWiseSaleMap.put(eachParty.getKey(), totalMap);
-				categoryMap["ICE_CREAM_NANDINI"]=partWiseSaleMap;
-				finalList.add(categoryMap);
 	}
 }
 context.categoryType=categoryType;
