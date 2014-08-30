@@ -1327,6 +1327,10 @@
      <security https="true" auth="true"/>
     	<response name="success" type="view" value="IceCreamSaleBookReportPDF"/>
     </request-map>
+    <request-map uri="saleInvoiceAbstractReport.pdf">
+     <security https="true" auth="true"/>
+    	<response name="success" type="view" value="InvoiceAbstractReport"/>
+    </request-map>
     
     <request-map uri="chequeReturnReport.pdf">
      <security https="true" auth="true"/>
@@ -1537,6 +1541,7 @@
 	<view-map name="RetailerSalesComparisonTXT" type="screenfop" page="component://byproducts/widget/ByProductsReportScreens.xml#RetailerSalesComparisonTXT" content-type="text/plain"/>
 	<view-map name="VatInvoiceSeqNoReportPDF" type="screenfop" page="component://byproducts/widget/ByProductsReportScreens.xml#VatInvoiceSeqNoReportPDF" content-type="application/pdf"/>
 	<view-map name="IceCreamSaleBookReportPDF" type="screenfop" page="component://byproducts/widget/ByProductsReportScreens.xml#IceCreamSaleBookReportPDF" content-type="application/pdf"/>
+	<view-map name="InvoiceAbstractReport" type="screenfop" page="component://byproducts/widget/ByProductsReportScreens.xml#InvoiceAbstractReport" content-type="application/pdf"/>
 	
 	<view-map name="PCMReportPDF" type="screenfop" page="component://byproducts/widget/ByProductsReportScreens.xml#RetailerSalesComparisonTXT" content-type="application/pdf"/>
 	<view-map name="DailySalesRevenueTrend" type="screen" page="component://byproducts/widget/ByProductsNgScreens.xml#DailySalesRevenueTrend"/>
