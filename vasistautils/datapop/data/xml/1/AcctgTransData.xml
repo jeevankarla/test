@@ -1,7 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-
-<entity-engine-xml>
-    <AcctgTrans acctgTransId="1000" acctgTransTypeId="CAPITALIZATION" description="Initial Capital Stock" transactionDate="2011-09-30  10:33:26.26" isPosted="Y" postedDate="2011-09-30  10:33:26.26" glFiscalTypeId="ACTUAL"/>
-    <AcctgTrans acctgTransId="1001" acctgTransTypeId="OTHER_INTERNAL" description="Initial Working Capital" transactionDate="2011-09-30  10:33:26.26" isPosted="Y" postedDate="2011-09-30  10:33:26.26" glFiscalTypeId="ACTUAL"/>
-    <AcctgTrans acctgTransId="1003" acctgTransTypeId="OTHER_INTERNAL" description="Initial Profit and Loss Account" transactionDate="2011-09-30  10:33:26.26" isPosted="Y" postedDate="2011-09-30  10:33:26.26" glFiscalTypeId="ACTUAL"/>
-</entity-engine-xml>
