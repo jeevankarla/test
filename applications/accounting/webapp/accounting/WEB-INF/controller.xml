@@ -3266,6 +3266,9 @@ under the License.
         <security https="true" auth="true"/>                        
         <response name="success" type="view" value="CashierPaymentReceiptList"/>        
     </request-map>
+    <request-map uri="recStatemetn.pdf"><security https="true" auth="true"/>
+		<response name="success" type="view" value="RecStatement"></response>    
+    </request-map>
     
     
     <!-- end of request mappings -->
@@ -3367,6 +3370,7 @@ under the License.
     
     
     <view-map name="treasurerPortal" type="screen" page="component://accounting/widget/TreasurerPortalScreens.xml#FindFinAccountAlt"/>
+    <view-map name="RecStatement" type="screenfop" page="component://accounting/widget/TreasurerPortalScreens.xml#RecStatement" content-type="application/pdf" encoding="none"/>
      <view-map name="FindFinAccountAlt" type="screen" page="component://accounting/widget/TreasurerPortalScreens.xml#FindFinAccountAlt"/>
     <view-map name="FindFinAccountTransAlt" type="screen" page="component://accounting/widget/TreasurerPortalScreens.xml#FindFinAccountTransAlt"/>
     <view-map name="EditFinAccountAlt" type="screen" page="component://accounting/widget/TreasurerPortalScreens.xml#EditFinAccountAlt"/>
