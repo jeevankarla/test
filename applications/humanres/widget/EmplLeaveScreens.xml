@@ -49,7 +49,11 @@
                         <include-menu name="EmplLeaveTabBar" location="component://humanres/widget/HumanresMenus.xml"/>                    
                         <section>
                             <condition>
-                                <if-has-permission permission="HUMANRES" action="_VIEW"/>
+                                <or>
+                                   <if-has-permission permission="HUMANRES" action="_VIEW"/>
+                                    <if-has-permission permission="HR" action="_EMPLLEAVE_VIEW"/>
+                                </or>
+                               
                             </condition>
                             <widgets>
                                 <decorator-screen name="FindScreenDecorator" location="component://common/widget/CommonScreens.xml">
@@ -185,15 +189,36 @@
                     <field-map field-name="fromDate" from-field="fromDate"/>
                 </entity-one>
                 <set field="layoutSettings.javaScripts[]" value="/partymgr/js/emplLeaveDate.js" global="true"/>
+                <entity-and list="leaveTypeList" entity-name="EmplLeaveType">
+                   <field-map field-name=""/>
+                   <order-by field-name="description"/>
+                </entity-and>
+                <entity-and list="emplLeaveReasonTypeList" entity-name="EmplLeaveReasonType"> 
+                   <field-map field-name=""/>
+                   <order-by field-name="description"/>
+                </entity-and>
+                 <entity-and list="dayFractionList" entity-name="Enumeration"> 
+                   <field-map field-name="enumTypeId" value="LEAVE_DAY_TYPE"/>
+                </entity-and>
+                <script location="component://humanres/webapp/humanres/WEB-INF/actions/humanres/EditEmployeeLeave.groovy"/>
+                 
             </actions>
             <widgets>
                 <decorator-screen name="HumanresCommonDecorator"
 					location="component://humanres/widget/CommonScreens.xml">
                     <decorator-section name="body">
                         <include-menu name="EmplLeaveTabBar" location="component://humanres/widget/HumanresMenus.xml"/>
-                        <screenlet id="AddEmplLeavePanel" title="${uiLabelMap.HumanResAddEmplLeave}" collapsible="true">
+                        <!-- <screenlet id="AddEmplLeavePanel" title="${uiLabelMap.HumanResAddEmplLeave}" collapsible="true">
                             <include-form name="EditEmplLeave" location="component://humanres/widget/forms/EmplLeaveForms.xml"/>
-                        </screenlet>
+                        </screenlet> -->
+                        <container>
+                          <platform-specific>
+								<html>
+									<html-template
+										location="component://humanres/webapp/humanres/humanres/createEmplLeave.ftl"></html-template>
+								</html>
+						   </platform-specific>
+						</container>
                     </decorator-section>
                 </decorator-screen>
             </widgets>

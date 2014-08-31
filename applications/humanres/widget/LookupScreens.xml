@@ -23,7 +23,8 @@
 <screen name="LookupEmployeeName">
         <section>
             <condition>
-                <if-service-permission service-name="partyBasePermissionCheck" main-action="VIEW"/>
+                <if-has-permission permission="HUMANRES" action="VIEW"/>
+                <!-- <if-service-permission service-name="partyBasePermissionCheck" main-action="VIEW"/> -->
             </condition>
             <actions>          
                 <property-map resource="HumanResUiLabels" map-name="uiLabelMap" global="true"/>

@@ -68,11 +68,15 @@ public class EmplLeaveService {
         	if (customTimePeriods != null && customTimePeriods.size() > 0) {
         		GenericValue latestHRPeriod = EntityUtil.getFirst(customTimePeriods);
         		result.put("leaveBalanceDate", latestHRPeriod.get("fromDate"));
+        		//result.put("leaveBalanceDateTime", UtilDateTime.(latestHRPeriod.get("fromDate")));
                 Map<String, Object> leaveBalancesMap = FastMap.newInstance();
             	conditionList.clear();
             	conditionList.add(EntityCondition.makeCondition("customTimePeriodId", EntityOperator.EQUALS, latestHRPeriod.getString("customTimePeriodId")));
             	conditionList.add(EntityCondition.makeCondition("partyId", EntityOperator.EQUALS, employeeId));
-            	condition = EntityCondition.makeCondition(conditionList, EntityOperator.AND);        		
+            	if(UtilValidate.isNotEmpty(context.get("leaveTypeId"))){
+            		conditionList.add(EntityCondition.makeCondition("leaveTypeId", EntityOperator.EQUALS, context.get("leaveTypeId")));
+            	}
+            	condition = EntityCondition.makeCondition(conditionList, EntityOperator.AND);
 	            List<GenericValue> leaveBalances = delegator.findList("EmplLeaveBalanceStatus", condition, null, null, null, false);
 				for (int i = 0; i < leaveBalances.size(); ++i) {		
 					GenericValue leaveBalance = leaveBalances.get(i);
@@ -98,16 +102,35 @@ public class EmplLeaveService {
 					}
 					if (UtilValidate.isNotEmpty(leaveBalance.getBigDecimal("adjustedDays"))) {
 						closingBalance = closingBalance.add(leaveBalance.getBigDecimal("adjustedDays"));
-					}					
+					}
+					if(closingBalance.compareTo(BigDecimal.ZERO) != 0){
+						Map leaveCtx = FastMap.newInstance();
+						leaveCtx.put("timePeriodStart", UtilDateTime.toTimestamp(latestHRPeriod.getDate("thruDate")) );
+						leaveCtx.put("partyId", employeeId);
+						leaveCtx.put("leaveTypeId", leaveTypeId);
+						Map leaveResult = fetchLeaveDaysForPeriod(dctx,leaveCtx);
+						if(!ServiceUtil.isError(leaveResult)){
+							result.put("leaveBalanceDate", latestHRPeriod.get("thruDate"));
+							Map leaveDetailmap = (Map)leaveResult.get("leaveDetailmap");
+							Debug.log("leaveDetailmap========="+leaveDetailmap);
+							if(UtilValidate.isNotEmpty(leaveDetailmap)){
+								closingBalance = closingBalance.subtract((BigDecimal)leaveDetailmap.get(leaveTypeId));
+							}
+						}
+						
+					}
 					leaveBalancesMap.put(leaveTypeId, closingBalance);
 				}
-        		result.put("leaveBalances", leaveBalancesMap);
+				result.put("leaveBalances", leaveBalancesMap);
+				//this is to return date for json request
+				result.put("leaveBalanceDateStr",UtilDateTime.toDateString((java.sql.Date)result.get("leaveBalanceDate"),"dd-MM-yyyy"));
+        		
         	}
         } catch (Exception e) {
         	Debug.logError(e, "Error fetching leaves", module);
         	return ServiceUtil.returnError(e.toString());
         }
-
+        //Debug.log("result============"+result);
         return result;        
 	}
 	
@@ -132,7 +155,10 @@ public class EmplLeaveService {
 						conditionList.add(EntityCondition.makeCondition("leaveTypeId", EntityOperator.EQUALS, leaveTypeId));
 					}
 					conditionList.add(EntityCondition.makeCondition("leaveStatus", EntityOperator.NOT_EQUAL, "LEAVE_CREATED"));
-					conditionList.add(EntityCondition.makeCondition("fromDate", EntityOperator.LESS_THAN_EQUAL_TO, timePeriodEnd));
+					if(UtilValidate.isNotEmpty(timePeriodEnd)){
+						conditionList.add(EntityCondition.makeCondition("fromDate", EntityOperator.LESS_THAN_EQUAL_TO, timePeriodEnd));
+					}
+					
 					conditionList.add(EntityCondition.makeCondition(EntityCondition.makeCondition("thruDate", EntityOperator.EQUALS, null), EntityOperator.OR, 
 			    	EntityCondition.makeCondition("thruDate", EntityOperator.GREATER_THAN_EQUAL_TO, timePeriodStart)));
 					EntityCondition condition = EntityCondition.makeCondition(conditionList, EntityOperator.AND);  		
@@ -143,7 +169,7 @@ public class EmplLeaveService {
 						String leaveType =leave.getString("leaveTypeId");
 			            Timestamp from = leave.getTimestamp("fromDate");
 			            Timestamp thru = UtilDateTime.getDayEnd(leave.getTimestamp("thruDate"));			
-						if (from.compareTo(timePeriodStart) < 0 || thru.compareTo(timePeriodEnd) > 0) {
+						if ( UtilValidate.isNotEmpty(timePeriodEnd) && (from.compareTo(timePeriodStart) < 0 || thru.compareTo(timePeriodEnd) > 0)) {
 							Debug.logError("leave entry ========"+leave, module);
 							Debug.logError( errorMsg + ": leave cannot span multiple payroll periods ,employeeId:"+partyId, module);
 			            	/*return ServiceUtil.returnError(errorMsg + ": leave cannot span multiple payroll periods, employeeId:"+partyId, 

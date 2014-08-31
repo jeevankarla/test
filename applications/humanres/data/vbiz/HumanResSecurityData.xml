@@ -118,7 +118,6 @@ under the License.
       <SecurityPermission description="Allow view of  Employee Leave Screen in the HumanRes Manager." permissionId="HR_EMPLLEAVE_VIEW"/>  
       <SecurityGroup description="HumanRes Employee Leave screen View group, has complete permission to View Employee Leave screen." groupId="HR_EMPLLEAVEVIEW"/>
       <SecurityGroupPermission groupId="HR_EMPLLEAVEVIEW" permissionId="HR_EMPLLEAVE_VIEW"/> 
-      
        <!-- permission for LookUp Employees screen --> 
       <SecurityPermission description="Allow view of  Analytics in the HumanRes Manager." permissionId="HR_ANALYTICS_VIEW"/>  
       <SecurityGroup description="HumanRes Analytics screen View group, has complete permission to View Analytics screen." groupId="HR_ANALYTICSVIEW"/>
@@ -133,6 +132,7 @@ under the License.
       <SecurityPermission description="Allow to Access Leave Approval Screen in the HumanRes Manager." permissionId="HR_LEAVE_APPROVAL"/>  
       <SecurityGroup description="Allow to Access Leave Approval Screen in the HumanRes Manager." groupId="HR_LEAVEAPPROVAL"/>
       <SecurityGroupPermission groupId="HR_LEAVEAPPROVAL" permissionId="HR_LEAVE_APPROVAL"/>
+      <SecurityGroupPermission groupId="HR_LEAVEAPPROVAL" permissionId="HR_EMPLLEAVE_VIEW"/>
       
       <SecurityPermission description="Allow to Access and enter daily bus timings in HumanRes Manager." permissionId="HR_DAILYBUS_VIEW"/>  
       <SecurityGroup description="Allow to Access and enter daily bus timings in HumanRes Manager." groupId="HR_DAILYBUS_VIEW"/>

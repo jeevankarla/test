@@ -734,7 +734,12 @@ under the License.
         <response name="success" type="view" value="AttendanceFinalization"/>
         <response name="error" type="view" value="AttendanceFinalization"/>
     </request-map>
-    
+    <request-map uri="getEmployeeLeaveBalance">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="getEmployeeLeaveBalance"/>
+        <response name="success" type="request" value="json"/>
+        <response name="error" type="request" value="json"/>
+    </request-map>
     <request-map uri="PartyBenefitOrDeduction">
         <security https="true" auth="true"/>
         <response name="success" type="view" value="PartyBenefitOrDeduction"/>
@@ -1752,6 +1757,12 @@ under the License.
         <response name="success" type="view" value="emplDailyPunchReport"/>
         <response name="error" type="view" value="emplDailyPunchReport"/>
     </request-map>
+    <request-map uri="emplDailyPunchJson">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="emplDailyPunchReport"/>
+        <response name="success" type="request" value="json"/>
+    </request-map>
+    
     <request-map uri="EmplMonthlyPunchReport.csv">
         <security https="true" auth="true"/>
         <event type="service" invoke="emplMonthlyPunchReport"/>

@@ -54,7 +54,10 @@
 		</menu-item>      
         <menu-item name="EmployeeLeave" title="${uiLabelMap.HumanResEmployeeLeave}">
         	<condition>
-            	<if-has-permission permission="HR"  action="_EMPLLEAVE_VIEW"/>
+        	  <or>
+        	     <if-has-permission permission="HR"  action="_EMPLLEAVE_VIEW"/>
+        	     <if-has-permission permission="HR"  action="_LEAVE_APPROVAL"/>
+        	  </or>
             </condition>
             <link target="FindEmplLeaves"/>
         </menu-item>
@@ -658,7 +661,7 @@
         </menu-item>
         <menu-item name="Approval" title="${uiLabelMap.HumanResLeaveApproval}">
             <condition>
-            	<if-has-permission permission="HR_LEAVE" action="_APPROVAL"/>
+            	<if-has-permission permission="HR" action="_LEAVE_APPROVAL"/>
             </condition>
             <link target="FindLeaveApprovals"/>
         </menu-item>

@@ -31,6 +31,30 @@
 		</section>
 	</screen>
 	
+	 <screen name="MyportalLeaveApprove">
+        <section>
+            <actions>
+				<set field="tabButtonItem" value="main" />
+				<set field="titleProperty" value="Lookup Employees" />
+				<script
+					location="component://humanres/webapp/humanres/WEB-INF/actions/humanres/employeeTable.groovy" />
+            </actions>            
+            <widgets>
+                   <include-menu location="component://humanres/widget/HumanresMenus.xml" name="HumanresNGTabBar"/>
+                   <container>
+							<screenlet title="Company Employees">
+								<platform-specific>
+									<html>
+										<html-template
+											location="component://humanres/webapp/humanres/humanres/summaryTable.ftl"></html-template>
+									</html>
+								</platform-specific>
+							</screenlet>
+				</container>        
+            </widgets>
+        </section>
+    </screen> 
+	
 	 <screen name="DailyPunch">
         <section>
             <actions>

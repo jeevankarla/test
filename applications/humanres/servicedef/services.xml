@@ -1349,4 +1349,16 @@ under the License.emplpunch
         <auto-attributes mode="IN" entity-name="EmplPunch" include="pk"></auto-attributes>
         <auto-attributes mode="IN" entity-name="EmplPunch" include="nonpk" optional="true"></auto-attributes>
    </service>
+   <service name="getEmployeeLeaveBalance" engine="java" auth="true" invoke="getEmployeeLeaveBalance" 
+        location="in.vasista.vbiz.humanres.EmplLeaveService">
+        <description>populateEmplPunch from </description>
+       <attribute name="employeeId" mode="IN" type="String"/>
+       <attribute name="leaveTypeId" mode="IN" type="String" optional="true"/>
+       <attribute name="fromDate" mode="IN" type="Timestamp" optional="true"/>
+       <attribute name="customTimePeriodId" mode="IN" type="String" optional="true"/>
+       <attribute name="leaveBalances" mode="OUT" type="java.util.Map"/>
+       <attribute name="leaveBalanceDate" mode="OUT" type="java.sql.Date"/>
+       <attribute name="leaveBalanceDateStr" mode="OUT" type="String"/>
+   </service>
+   
 </services>

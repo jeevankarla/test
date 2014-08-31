@@ -102,7 +102,9 @@
             <hyperlink also-hidden="false" description="${uiLabelMap.CommonUpdate}" target="EditEmplLeave">
                 <parameter param-name="partyId"/>
                 <parameter param-name="leaveTypeId"/>
+                <parameter param-name="approverPartyId"/>
                 <parameter param-name="fromDate"/>
+                <parameter param-name="thruDate"/>
             </hyperlink>
         </field>
         <field name="deleteLink" title="${uiLabelMap.CommonDelete}" widget-style="buttontext" use-when="hasEmplLeaveEditPermission&amp;&amp;&quot;${leaveStatus}&quot;!=&quot;LEAVE_APPROVED&quot;">
@@ -120,14 +122,22 @@
         	<set field="partyId" value="${userLogin.partyId}"/>
         </actions> -->
         <alt-target use-when="leaveApp==null" target="createEmplLeaveExt"/>
-        <field name="partyId" title="Employee Id" tooltip="${uiLabelMap.CommonRequired}" use-when="hasEmplLeaveApprovePermission"><lookup target-form-name="LookupEmployeeName"/></field>
-        <field name="partyId" title="Name :" use-when="!hasEmplLeaveApprovePermission"><display-entity entity-name="PartyNameView" description="${firstName} ${lastName}"/></field>
-        <field name="approverPartyId" tooltip="${uiLabelMap.CommonRequired}"><lookup target-form-name="LookupEmployeeName"/></field>
+        <field name="partyId" title="Employee Id" tooltip="${uiLabelMap.CommonRequired}"><lookup target-form-name="LookupEmployeeName"/></field>
+        <!-- <field name="partyId" title="Name :" use-when="!hasEmplLeaveApprovePermission"><display-entity entity-name="PartyNameView" description="${firstName} ${lastName}"/></field> -->
         <field name="leaveTypeId" tooltip="${uiLabelMap.CommonRequired}">
             <drop-down allow-empty="true">
-                <entity-options description="${description}" key-field-name="leaveTypeId" entity-name="EmplLeaveType"/>
+                <entity-options description="${description}" key-field-name="leaveTypeId" entity-name="EmplLeaveType">
+                   <entity-order-by field-name="description"/>
+                </entity-options>
             </drop-down>
         </field>
+        <field name="emplLeaveReasonTypeId">
+            <drop-down allow-empty="true">
+                <entity-options description="${description}" key-field-name="emplLeaveReasonTypeId" entity-name="EmplLeaveReasonType"/>
+            </drop-down>
+        </field>
+        <field name="fromDate" tooltip="${uiLabelMap.CommonRequired}"><date-time type="date" /></field>
+        <field name="thruDate" tooltip="${uiLabelMap.CommonRequired}"><date-time type="date"/></field>
         <field name="dayFractionId" position="1" title="First/Second Half">
              <radio>
                 <entity-options description="${description}" entity-name="Enumeration" key-field-name="enumId">
@@ -135,6 +145,7 @@
                 </entity-options>
             </radio>
         </field>
+
         <field name="emplLeaveReasonTypeId">
             <drop-down allow-empty="true">
                 <entity-options description="${description}" key-field-name="emplLeaveReasonTypeId" entity-name="EmplLeaveReasonType"/>
@@ -148,6 +159,7 @@
 		<field name="lossOfPayDays" tooltip="${uiLabelMap.CommonRequired}" required-field="true"></field> -->
 		<field name="leaveStatus"><hidden value="LEAVE_CREATED"/></field>
 		<field name="appliedBy"><hidden/></field>
+		<field name="approverPartyId" tooltip="${uiLabelMap.CommonRequired}"><lookup target-form-name="LookupEmployeeName"/></field>
 		 <field name="comment" title="Comments"><textarea/></field>
 		<field name="submitButton" use-when="leaveApp==null" title="${uiLabelMap.CommonCreate}" widget-style="smallSubmit"><submit button-type="button"/></field>
         <field name="submitButton" use-when="leaveApp!=null" title="${uiLabelMap.CommonUpdate}" widget-style="smallSubmit"><submit button-type="button"/></field>

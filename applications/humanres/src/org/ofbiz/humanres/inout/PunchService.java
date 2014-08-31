@@ -565,11 +565,15 @@ public static Map emplDailyPunchReport(DispatchContext dctx, Map context) {
 		emplDailyPunchMap.put("orgId", partyId);
 		populateChildren(dctx, emplDailyPunchMap, employeeList);
 		
-		List<GenericValue> empPartyIds = EntityUtil
-		.getFieldListFromEntityList(employeeList, "partyIdTo", true);
+		if(UtilValidate.isEmpty(employeeList)){
+			emplDailyPunchMap.clear();
+			emplDailyPunchMap.put("employeeId", partyId);
+			populateChildren(dctx, emplDailyPunchMap, employeeList);
+		}
+		List empPartyIds = EntityUtil
+				.getFieldListFromEntityList(employeeList, "partyIdTo", true);
 		
 		try {
-
 			List conditionList1 = UtilMisc.toList(EntityCondition
 					.makeCondition("punchdate", EntityOperator.EQUALS,
 							selectedDate));
@@ -592,8 +596,6 @@ public static Map emplDailyPunchReport(DispatchContext dctx, Map context) {
 					conditionList2, EntityOperator.AND);
 			List<GenericValue> finalPunchOUT = delegator.findList("EmplPunch",
 					condition2, null, null, null, false);
-			
-
 			ArrayList punchDataList = new ArrayList();
 			for (GenericValue emplPunchIn : finalPunchIN) {
 				Map emplPunchMap = FastMap.newInstance();
@@ -606,7 +608,8 @@ public static Map emplDailyPunchReport(DispatchContext dctx, Map context) {
 						EmployeeId, false);
 
 				emplPunchMap.put("Employee", EmployeeName);
-				emplPunchMap.put("inTime", emplPunchIn.get("punchtime"));
+				emplPunchMap.put("inTime",(emplPunchIn.getTime("punchtime").getHours())+":"+(emplPunchIn.getTime("punchtime").getMinutes()));
+				//emplPunchMap.put("inTime", emplPunchIn.getString("punchtime"));
 				for (GenericValue emplPunchOut : finalPunchOUT) {
 					if (emplPunchIn.get("partyId").equals(
 							emplPunchOut.get("partyId"))) {
@@ -623,8 +626,9 @@ public static Map emplDailyPunchReport(DispatchContext dctx, Map context) {
 								/ (60 * 1000));
 						String totalTime = diffHours.toString() + ":"
 								+ diffMinutes.toString() + " Hrs";
-						emplPunchMap.put("outTime",
-								emplPunchOut.get("punchtime"));
+						/*emplPunchMap.put("outTime",
+								emplPunchOut.getString("punchtime"));*/
+						emplPunchMap.put("outTime",(emplPunchOut.getTime("punchtime").getHours())+":"+(emplPunchOut.getTime("punchtime").getMinutes()));
 						emplPunchMap.put("totalTime", totalTime.toString());
 					}
 				}
