@@ -4435,7 +4435,8 @@
 		<field name="includeTaxInPrice" type="indicator"><!-- this is mainly for VAT 
 				tax authorities -->
 		</field>
-		<prim-key field="taxAuthGeoId" />
+		<field name="enableTaxInvoice" type="indicator"/> 
+		<prim-key field="taxAuthGeoId"/>
 		<prim-key field="taxAuthPartyId" />
 		<relation type="one" fk-name="TAXAUTH_TAGEO" title="TaxAuth"
 			rel-entity-name="Geo">
