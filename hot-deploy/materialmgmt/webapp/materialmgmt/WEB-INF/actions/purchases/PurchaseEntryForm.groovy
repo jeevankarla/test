@@ -82,20 +82,19 @@ if(partyPostalAddress){
 
 prodList=[];
 
-if(UtilValidate.isNotEmpty(productCatageoryId)){
+//if(UtilValidate.isNotEmpty(productCatageoryId)){
 	exprList.clear();
 	exprList.add(EntityCondition.makeCondition("productId", EntityOperator.NOT_EQUAL, "_NA_"));
-	exprList.add(EntityCondition.makeCondition("isVirtual", EntityOperator.NOT_EQUAL, "Y"));
+	//exprList.add(EntityCondition.makeCondition("isVirtual", EntityOperator.NOT_EQUAL, "Y"));
 	exprList.add(EntityCondition.makeCondition("productTypeId", EntityOperator.EQUALS, "RAW_MATERIAL"));
 	/*exprList.add(EntityCondition.makeCondition("primaryProductCategoryId", EntityOperator.EQUALS, productCatageoryId));*/
 	exprList.add(EntityCondition.makeCondition(EntityCondition.makeCondition("salesDiscontinuationDate", EntityOperator.EQUALS, null),EntityOperator.OR,
 			 EntityCondition.makeCondition("salesDiscontinuationDate", EntityOperator.GREATER_THAN, effDateDayBegin)));
 	  EntityCondition discontinuationDateCondition = EntityCondition.makeCondition(exprList, EntityOperator.AND);
 		prodList =delegator.findList("Product", discontinuationDateCondition,null, null, null, false);
-		Debug.log("=====discontinuationDateCondition===="+discontinuationDateCondition);
-		Debug.log("=====prodList===="+prodList);
-}
-Debug.log("=====prodList===="+prodList);
+		
+//}
+Debug.log("=====prodList=Size==="+prodList.size());
 productStoreId =PurchaseStoreServices.getPurchaseFactoryStore(delegator).get("factoryStoreId");
 Debug.log("=====productStoreId===="+productStoreId);
 Map inputProductRate = FastMap.newInstance();
