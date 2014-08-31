@@ -5439,16 +5439,35 @@ public class ByProductNetworkServices {
 				if(UtilValidate.isNotEmpty(dayInvoices)){
 					for(GenericValue invDetail : dayInvoices){
 						BigDecimal invoiceToApply = InvoiceWorker.getInvoiceNotApplied(invDetail);
-							Map boothDue = FastMap.newInstance();
-							boothDue.put("supplyDate", iterDate);
-							boothDue.put("amount", invoiceToApply);
-							boothDuesList.add(boothDue);
-							totalAmount = totalAmount.add((BigDecimal) invoiceToApply);
+						Map boothDue = FastMap.newInstance();
+						boothDue.put("supplyDate", iterDate);
+						boothDue.put("amount", invoiceToApply);
+						boothDuesList.add(boothDue);
+						totalAmount = totalAmount.add((BigDecimal) invoiceToApply);
 					}
 				}
 				iterDate = UtilDateTime.addDaysToTimestamp(iterDate, 1);
 			}
 		}
+		Map resultCtx = (Map) getPartyProfileDafult(ctx, UtilMisc.toMap("boothIds",	UtilMisc.toList(facilityId), "supplyDate",	UtilDateTime.nowTimestamp()));
+		Map partyPaymentMethodDesc = (Map) resultCtx.get("partyPaymentMethodDesc");
+		Map partyProfileFacilityMap = (Map) resultCtx.get("partyProfileFacilityMap");
+		Map tempPayment = FastMap.newInstance();
+		tempPayment.put("facilityId", facilityId);
+		tempPayment.put("partyId",ownerPartyId);
+		if (UtilValidate.isNotEmpty(partyProfileFacilityMap.get(ownerPartyId))) {
+			tempPayment.put("paymentMethodTypeId",partyProfileFacilityMap.get(ownerPartyId));
+		}
+		if (UtilValidate.isNotEmpty(partyPaymentMethodDesc.get(ownerPartyId))) {
+			tempPayment.put("paymentMethodTypeDesc",partyPaymentMethodDesc.get(ownerPartyId));
+		}
+		tempPayment.put("grandTotal", totalAmount);
+		tempPayment.put("totalDue", totalAmount);
+
+		tempPayment.put("supplyDate", UtilDateTime.nowTimestamp());
+		List tempPaymentList = FastList.newInstance();
+		tempPaymentList.add(tempPayment);
+		boothDuesDetail.put("boothPaymentsList", tempPaymentList);
 		boothDuesDetail.put("totalAmount", totalAmount);
 		boothDuesDetail.put("boothDuesList", boothDuesList);
 		return boothDuesDetail;
@@ -6628,6 +6647,10 @@ public class ByProductNetworkServices {
 	    String productId = (String) context.get("productId"); 
 	    String partyId = (String) context.get("partyId");
 	    String geoTax = (String) context.get("geoTax");
+	    boolean isSale = true;
+	    if(UtilValidate.isNotEmpty(context.get("isSale"))){
+	    	isSale = (Boolean)context.get("isSale");
+	    }
 	    String productStoreId = (String) context.get("productStoreId");
 	    String shipmentTypeId = (String) context.get("shipmentTypeId");
 	    String productSubscriptionTypeId = (String) context.get("productSubscriptionTypeId");
@@ -6636,6 +6659,7 @@ public class ByProductNetworkServices {
 	    String productPriceTypeId = (String) context.get("productPriceTypeId");
 	    GenericValue product;
 	    String currencyDefaultUomId = (String) context.get("currencyUomId");
+	    
 	    BigDecimal discountAmount = BigDecimal.ZERO;
 	    String productCategory = "";
 	    List lmsProductIdsList = FastList.newInstance();
@@ -6656,7 +6680,6 @@ public class ByProductNetworkServices {
 			Debug.logError(e, e.toString(), module);
 	        return ServiceUtil.returnError(e.toString());
 		}
-		
 	    if (UtilValidate.isEmpty(priceDate)) {
 	    	priceDate = UtilDateTime.nowTimestamp();
 	    }
@@ -6748,21 +6771,29 @@ public class ByProductNetworkServices {
 			
 			List<GenericValue> prodPriceType = null;
 			String MRPPriceType = "";
-
+			boolean taxFilter = false;
 			if(UtilValidate.isNotEmpty(geoTax) && geoTax.equals("CST")){
 					MRPPriceType = "MRP_OS";
 					applicableTaxTypeList.remove("VAT_SALE");
+					taxFilter = true;
 			}
 			else{
 				MRPPriceType = "MRP_IS";
 				applicableTaxTypeList.remove("CST_SALE");
+				taxFilter = true;
 			}
+			
+			if(!isSale){
+				applicableTaxTypeList.remove("CST_SALE");
+				applicableTaxTypeList.remove("VAT_SALE");
+				taxFilter = true;
+			}
+			
 			//Calculate MRP price for excise duty amount
 			
 			List<GenericValue> MRPPriceList = EntityUtil.filterByCondition(productPricesComponents, EntityCondition.makeCondition("productPriceTypeId", EntityOperator.EQUALS, MRPPriceType));
 			
 			List<GenericValue> prodPriceTypes = EntityUtil.filterByCondition(productPricesComponents, EntityCondition.makeCondition("productPriceTypeId", EntityOperator.IN, applicableTaxTypeList));
-			
 			if(UtilValidate.isNotEmpty(MRPPriceList)){
 				MRPPrice = (BigDecimal)(EntityUtil.getFirst(MRPPriceList)).get("price");
 			}
@@ -6801,7 +6832,10 @@ public class ByProductNetworkServices {
 				}
 			}
 			// basicPrice = basicPrice.setScale( decimals,rounding);
-			List<GenericValue> taxList = TaxAuthorityServices.getTaxAdjustmentByType(delegator, product, productStore, null, BigDecimal.ONE, BigDecimal.ZERO, BigDecimal.ZERO, null, productTaxTypes);
+			List<GenericValue> taxList = FastList.newInstance();
+			if(!(UtilValidate.isEmpty(productTaxTypes) && taxFilter)){
+				taxList = TaxAuthorityServices.getTaxAdjustmentByType(delegator, product, productStore, null, BigDecimal.ONE, BigDecimal.ZERO, BigDecimal.ZERO, null, productTaxTypes);
+			}
 			for (GenericValue taxItem : taxList) {
 				String taxType = (String) taxItem.get("orderAdjustmentTypeId");
 				BigDecimal amount = BigDecimal.ZERO;

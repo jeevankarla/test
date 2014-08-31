@@ -94,7 +94,6 @@ if(parameters.hideSearch){
 if(parameters.onlyCurrentDues){
 	onlyCurrentDues = Boolean.parseBoolean(parameters.onlyCurrentDues);
 }
-Debug.log("only current dues #########################3"+onlyCurrentDues);
 if(statusId =="PAID"){
 	invoiceStatusId = "INVOICE_PAID";	
 }else{
@@ -113,7 +112,7 @@ if(hideSearch == "N"){
 		boothRouteIdsMap=boothsPaymentsDetail["boothRouteIdsMap"];
 	}
 	else {
-		boothsPaymentsDetail = ByProductNetworkServices.getBoothPayments( delegator ,dispatcher, userLogin ,paymentDate , invoiceStatusId,facilityId ,paymentMethodTypeId , onlyCurrentDues,duesByParty, Boolean.TRUE);
+		boothsPaymentsDetail = ByProductNetworkServices.getDaywiseCRInstDues(dctx, [userLogin: userLogin, facilityId:facilityId, isByParty:Boolean.TRUE, enableCRInst:Boolean.TRUE]);
 		boothTempPaymentsList = boothsPaymentsDetail["boothPaymentsList"];
 	}
 	if(statusId != "PAID" && boothTempPaymentsList.size()== 0){

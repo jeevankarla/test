@@ -206,25 +206,7 @@ $(document).ready(function(){
        			</#if>
         	</tr>
         <#else>
-        	<#if changeFlag?exists && changeFlag=='ConvCharges'>
-        		<tr>
-	          		<td>&nbsp;</td>
-	          		<td align='left' valign='middle' nowrap="nowrap"><div class='h2'>Type: </div></td>
-	          		<td>&nbsp;</td>
-	       			<#if packingType?exists && packingType?has_content>  
-		  	  			<input type="hidden" name="packingType" id="packingType" value="${packingType?if_exists}"/>  
-	          			<td valign='middle'>
-	            			<div class='tabletext h2'>${packingType?if_exists}</div>
-	          			</td>       	
-	       			<#else>      	         
-	          			<td valign='middle'>
-	          				<select name="packingType" id="packingType" class='h2'>
-	          					<option value="WITHOUT_PK">Without Pack</option>
-	          					<option value="WITH_PK">With Pack</option>
-	          			</td>
-	       			</#if>
-        		</tr>
-        	<#else>
+        	<#if changeFlag?exists && changeFlag !='ConvCharges' && changeFlag !='InterUnitTransferSale'>
         		<tr>
 	          		<td>&nbsp;</td>
 	          		<td align='left' valign='middle' nowrap="nowrap"><div class='h2'>Order Tax Type:</div></td>
@@ -239,6 +221,7 @@ $(document).ready(function(){
 	          				<select name="orderTaxType" id="orderTaxType" class='h2'>
 	          					<option value="INTRA">With in State</option>
 	          					<option value="INTER">Out of State</option>
+	          				</select>
 	          			</td>
 	       			</#if>
         		</tr>

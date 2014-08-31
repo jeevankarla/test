@@ -158,12 +158,10 @@
 			var partyId = $("#partyId").val();
 			var orderTaxType = $("#orderTaxType").val();
 			var poNumber = $("#PONumber").val();
-			var packingType = $("#packingType").val();
 			
 			var productStoreId = $("#productStoreId").val();
 			var party = jQuery("<input>").attr("type", "hidden").attr("name", "partyId").val(partyId);
 			var POField = jQuery("<input>").attr("type", "hidden").attr("name", "PONumber").val(poNumber);
-			var pack = jQuery("<input>").attr("type", "hidden").attr("name", "packingType").val(packingType);
 			var productStore = jQuery("<input>").attr("type", "hidden").attr("name", "productStoreId").val(productStoreId);
 			var tax = jQuery("<input>").attr("type", "hidden").attr("name", "orderTaxType").val(orderTaxType);
 			<#if orderId?exists>
@@ -174,7 +172,6 @@
 			
 			jQuery(formId).append(jQuery(party));
 			jQuery(formId).append(jQuery(POField));
-			jQuery(formId).append(jQuery(pack));
 			jQuery(formId).append(jQuery(tax));
 			jQuery(formId).append(jQuery(productStore));
 		</#if>
@@ -191,7 +188,7 @@
 	<#else>
 		 <#assign editClickHandlerAction='processIndentEntryNew'>		 	
 	</#if>-->
-	<#if changeFlag?exists && changeFlag == "PowderSales" || changeFlag == "FgsSales" || changeFlag == "InterUnitTransferSale" >
+	<#if changeFlag?exists && changeFlag == "PowderSales" || changeFlag == "FgsSales" || changeFlag == "InterUnitTransferSale" || changeFlag == "ConvCharges">
 		function editClickHandlerEvent(row){
 			showUDPPriceToolTip(data[row], row);
 			 <#--updateUDPLabel();-->
@@ -273,8 +270,6 @@
     }
 	var mainGrid;		
 	function setupGrid1() {
-
-		
 		
 		var columns = [
 			{id:"cProductName", name:"Product", field:"cProductName", width:180, minWidth:180, cssClass:"cell-title", availableTags: availableTags, editor: AutoCompleteEditor, validator: productValidator, sortable:false ,toolTip:""},
@@ -291,10 +286,9 @@
 			<#if changeFlag?exists && changeFlag == "PowderSales" || changeFlag == "FgsSales" || changeFlag == "InterUnitTransferSale" >
 			</#if>
 			{id:"amount", name:"Total Amount(Rs)", field:"amount", width:100, minWidth:100, cssClass:"readOnlyColumnClass", sortable:false, formatter: rateFormatter, focusable :false}
-			
 				
 		];
-		<#if changeFlag?exists && changeFlag == "PowderSales" || changeFlag == "FgsSales" || changeFlag == "InterUnitTransferSale" >
+		<#if changeFlag?exists && changeFlag == "PowderSales" || changeFlag == "FgsSales" || changeFlag == "InterUnitTransferSale" || changeFlag == "ConvCharges">
 			columns.push({id:"button", name:"Edit Price", field:"button", width:70, minWidth:70, cssClass:"cell-title",
  				formatter: function (row, cell, id, def, datactx) { 
 						return '<a href="#" class="button" onclick="editClickHandlerEvent('+row+')" value="Edit">Edit</a>'; 

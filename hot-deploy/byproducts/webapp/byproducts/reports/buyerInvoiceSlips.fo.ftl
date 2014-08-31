@@ -61,7 +61,7 @@ under the License.
 					            	<fo:block  keep-together="always" text-align="left" font-size="12pt" white-space-collapse="false">(ISSUED UNDER RULE 52A &amp; 173G)</fo:block>
 					            	<fo:block linefeed-treatment="preserve">&#xA;</fo:block>  
 					            	<fo:block  keep-together="always" text-align="left" font-size="12pt" white-space-collapse="false">ECC NO: <#if fromPartyDetail?has_content>${fromPartyDetail.get('PLA_NUMBER')?if_exists}</#if></fo:block>
-					            	<fo:block linefeed-treatment="preserve">&#xA;</fo:block>
+					            	<fo:block  keep-together="always" text-align="left" font-size="12pt" white-space-collapse="false">FSSAI: <#if fromPartyDetail?has_content>${fromPartyDetail.get('FSSAI_NUMBER')?if_exists}</#if></fo:block>
 					            	<fo:block  keep-together="always" text-align="left" font-size="12pt" white-space-collapse="false">DEPO: </fo:block>
 					            	
 					            </fo:table-cell>

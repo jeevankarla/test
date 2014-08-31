@@ -63,6 +63,13 @@
         <response name="success" type="request" value="FindPowderShipment"/>
         <response name="error" type="request" value="FindPowderShipment"/>
     </request-map>
+    <request-map uri="cancelInterUnitShipment">
+     	<security https="true" auth="true"/>     	
+        <event type="service" invoke="cancelICPShipment"/>
+        <response name="success" type="request" value="FindStockTranferShipment"/>
+        <response name="error" type="request" value="FindStockTranferShipment"/>
+    </request-map>
+    
     <request-map uri="cancelFGSShipment">
      	<security https="true" auth="true"/>     	
         <event type="service" invoke="cancelICPShipment"/>

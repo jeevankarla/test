@@ -162,13 +162,13 @@ public static Map<String, Object> approveICPOrder(DispatchContext dctx, Map cont
 	    String productStoreId = (String) context.get("productStoreId");
 	  	String salesChannel = (String) context.get("salesChannel");
 	  	String orderTaxType = (String) context.get("orderTaxType");
-	  	String packingType = (String) context.get("packingType");
 	  	String partyId = (String) context.get("partyId");
 	  	String orderId = (String) context.get("orderId");
 	  	String PONumber = (String) context.get("PONumber");
 	  	String currencyUomId = "INR";
 		Timestamp nowTimeStamp = UtilDateTime.nowTimestamp();
 		Timestamp effectiveDate = UtilDateTime.getDayStart(supplyDate);
+		boolean isSale = Boolean.TRUE;
 		boolean batchNumExists = Boolean.FALSE;
 		if (UtilValidate.isEmpty(partyId)) {
 			Debug.logError("Cannot create order without partyId: "+ partyId, module);
@@ -285,6 +285,9 @@ public static Map<String, Object> approveICPOrder(DispatchContext dctx, Map cont
 				applTaxTypeList.remove("VAT_SALE");
 			}
 		}
+	  	if(UtilValidate.isEmpty(geoTax) && UtilValidate.isNotEmpty(salesChannel) && ((salesChannel.equals("PROCESSING_CHANNEL")) || (salesChannel.equals("INTUNIT_TR_CHANNEL")))){
+	  		isSale = Boolean.FALSE;
+		}
 	  	List<GenericValue> productPriceTaxCalc = FastList.newInstance();
 		List<GenericValue> prodPriceType = null;
 		
@@ -342,9 +345,7 @@ public static Map<String, Object> approveICPOrder(DispatchContext dctx, Map cont
 			Map<String, Object> priceContext = FastMap.newInstance();
 			priceContext.put("userLogin", userLogin);
 			priceContext.put("productId", productId);	
-			if(UtilValidate.isNotEmpty(packingType)){
-				priceContext.put("productPriceTypeId", packingType);
-			}
+			
 			priceContext.put("priceDate", effectiveDate);
 			priceContext.put("geoTax", geoTax);
 			priceContext.put("productStoreId", productStoreId);
@@ -356,7 +357,7 @@ public static Map<String, Object> approveICPOrder(DispatchContext dctx, Map cont
 				priceResult = ByProductNetworkServices.calculateUserDefinedProductPrice(delegator, dispatcher, priceContext);
 			}
 			else{
-				
+				priceContext.put("isSale", isSale);
 				priceContext.put("partyId", partyId);
 				priceResult = ByProductNetworkServices.calculateStoreProductPrices(delegator, dispatcher, priceContext);
 			}
@@ -400,7 +401,10 @@ public static Map<String, Object> approveICPOrder(DispatchContext dctx, Map cont
         ProductPromoWorker.doPromotions(cart, dispatcher);
         CheckOutHelper checkout = new CheckOutHelper(dispatcher, delegator, cart);
 		try {
-			checkout.calcAndAddTax(productPriceTaxCalc);
+			if(isSale || UtilValidate.isNotEmpty(productPriceTaxCalc)){
+				checkout.calcAndAddTax(productPriceTaxCalc);
+			}
+			
 		} catch (Exception e1) {
 		// TODO Auto-generated catch block
 			Debug.logError(e1, "Error in CalcAndAddTax",module);
@@ -450,6 +454,8 @@ public static Map<String, Object> approveICPOrder(DispatchContext dctx, Map cont
 		Locale locale = UtilHttp.getLocale(request);
 		String shipDateStr = (String) request.getParameter("shipDate");
 		String vehicleId = (String) request.getParameter("vehicleId");
+		String carrierName = (String) request.getParameter("carrierName");
+		String lrNumber = (String) request.getParameter("lrNumber");
 		String modeOfDespatch = (String) request.getParameter("modeOfDespatch");
 		String salesChannelEnumId = (String) request.getParameter("salesChannelEnumId");
 		String shipmentTypeId = (String) request.getParameter("shipmentTypeId");
@@ -498,6 +504,8 @@ public static Map<String, Object> approveICPOrder(DispatchContext dctx, Map cont
 				newDirShip.set("shipmentTypeId", shipmentTypeId);
 				newDirShip.set("statusId", "GENERATED");
 				newDirShip.set("vehicleId", vehicleId);
+				newDirShip.set("carrierName", carrierName);
+				newDirShip.set("lrNumber", lrNumber);
 				newDirShip.set("modeOfDespatch", modeOfDespatch);
 				newDirShip.set("createdDate", UtilDateTime.nowTimestamp());
 				newDirShip.set("createdByUserLogin", userLogin.get("userLoginId"));
@@ -637,7 +645,6 @@ public static Map<String, Object> approveICPOrder(DispatchContext dctx, Map cont
 		String effectiveDateStr = (String) request.getParameter("effectiveDate");
 		String productStoreId = (String) request.getParameter("productStoreId");
 		String orderTaxType = (String) request.getParameter("orderTaxType");
-		String packingType = (String) request.getParameter("packingType");
 		String orderId = (String) request.getParameter("orderId");
 		String PONumber = (String) request.getParameter("PONumber");
 		String productSubscriptionTypeId = (String) request.getParameter("productSubscriptionTypeId");
@@ -789,7 +796,6 @@ public static Map<String, Object> approveICPOrder(DispatchContext dctx, Map cont
 		processOrderContext.put("salesChannel", salesChannel);
 		processOrderContext.put("orderTaxType", orderTaxType);
 		processOrderContext.put("orderId", orderId);
-		processOrderContext.put("packingType", packingType);
 		processOrderContext.put("enableAdvancePaymentApp", Boolean.TRUE);
 		processOrderContext.put("productStoreId", productStoreId);
 		processOrderContext.put("PONumber", PONumber);

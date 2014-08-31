@@ -2168,6 +2168,7 @@
 			</widgets>
 		</section>
 	</screen>
+	
 	 <screen name="FindInstitutionPayment">
 		<section>
 			<actions>
@@ -3848,7 +3849,7 @@
                       				</decorator-section>
                       				<decorator-section name="search-results">
                       					<screenlet title="Inter Unit Stock Transfrd Shipments">
-                      						<include-form name="listPowderShipments" location="component://byproducts/widget/ByProductsNgForms.xml"/>
+                      						<include-form name="listInterUnitShipments" location="component://byproducts/widget/ByProductsNgForms.xml"/>
                       					</screenlet>
                       				</decorator-section>
                                 </decorator-screen>

@@ -44,6 +44,8 @@ under the License.
         var index = 0;
         var shipDate = $("#shipDate").val();
         var vehicleId = $("#vehicleId").val();
+        var carrierName = $("#carrierName").val();
+        var lrNumber = $("#lrNumber").val();
         var modeOfDespatch = $("#modeOfDespatch").val();
         var shipmentTypeId = $("#shipmentTypeId").val();
         jQuery.each(orders, function() {
@@ -61,6 +63,8 @@ under the License.
     		appStr += "<input type=hidden name=shipDate value='"+ shipDate +"' />";
     	}
     	appStr += "<input type=hidden name=vehicleId value='"+ vehicleId +"' />";
+    	appStr += "<input type=hidden name=carrierName value='"+ carrierName +"' />";
+    	appStr += "<input type=hidden name=lrNumber value='"+ lrNumber +"' />";
     	appStr += "<input type=hidden name=modeOfDespatch value='"+ modeOfDespatch +"' />";
     	appStr += "<input type=hidden name=shipmentTypeId value='"+ shipmentTypeId +"' />";
     	$("#processOrdersForm").append(appStr);
@@ -179,9 +183,11 @@ under the License.
     	
     	<table width="100%">
     		<tr>
-    			<td><span class="label"> Vehicle Number:</span><input class='h3' type='text' id='vehicleId' name='vehicleId'/></td>
-    			<td><span class="label">Mode of Despatch:</span><select name="modeOfDespatch" id="modeOfDespatch"><option value="By Road">By Road</option><option value="By Air">By Air</option><option value="By Sea">By Sea</option></select></td>
-    			<td><span class="label"> Shipment Date:</span><input class='h3' type='text' id='shipDate' name='shipDate' value='${defaultEffectiveDate?if_exists}' onmouseover='datepick()'/></td>
+    			<td><span class="label"> Vehicle Number(<font color='red'>*</font>):</span><input class='h3' type='text' id='vehicleId' name='vehicleId'/></td>
+    			<td><span class="label"> Carrier Name:</span><input class='h3' type='text' id='carrierName' name='carrierName'/></td>
+    			<td><span class="label"> L/R Number:</span><input class='h3' type='text' id='lrNumber' name='lrNumber'/></td>
+    			<td><span class="label">Mode:</span><select name="modeOfDespatch" id="modeOfDespatch"><option value="By Road">By Road</option><option value="By Air">By Air</option><option value="By Sea">By Sea</option></select></td>
+    			<td><span class="label"> Ship Date(<font color='red'>*</font>):</span><input class='h3' type='text' id='shipDate' name='shipDate' value='${defaultEffectiveDate?if_exists}' onmouseover='datepick()'/></td>
     			<td><input id="submitButton" type="button"  onclick="javascript:processOrders(this);" value="Ship Orders"/></td>
     		</tr>
     	</table>

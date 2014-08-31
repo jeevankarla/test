@@ -566,6 +566,8 @@ under the License.
       <field name="partyIdFrom" type="id"></field>
       <field name="tripNum" type="id"></field><!--KMF multiple trips  -->
       <field name="vehicleId" type="id"></field><!--KMF route vehicle assocaiation  -->
+      <field name="carrierName" type="name"></field>
+      <field name="lrNumber" type="id"></field>
       <field name="routeId" type="id"></field>
       <field name="additionalShippingCharge" type="currency-amount"></field>
       <field name="addtlShippingChargeDesc" type="long-varchar"></field>

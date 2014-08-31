@@ -34,12 +34,12 @@ effDateDayEnd="";
 
 SimpleDateFormat sdf = new SimpleDateFormat("dd MMMMM, yyyy");
 if(UtilValidate.isNotEmpty(effectiveDate)){
-try {
-	effectiveDate = new java.sql.Timestamp(sdf.parse(effectiveDate).getTime());
-}catch (ParseException e) {
-	Debug.logError(e, "Cannot parse date string: " + effDate, "");
-	displayGrid = false;
-}
+	try {
+		effectiveDate = new java.sql.Timestamp(sdf.parse(effectiveDate).getTime());
+	}catch (ParseException e) {
+		Debug.logError(e, "Cannot parse date string: " + effDate, "");
+		displayGrid = false;
+	}
 	effDateDayBegin = UtilDateTime.getDayStart(effectiveDate);
 	effDateDayEnd = UtilDateTime.getDayEnd(effectiveDate);
 }else{
@@ -100,7 +100,7 @@ if(partyOrderIds){
 		newObj.put("cProductName",prodDetail.description +" [ "+prodDetail.brandName+"]");
 		newObj.put("quantity",eachItem.quantity);
 		newObj.put("batchNo", batchNo);
-		if(changeFlag && changeFlag == "PowderSales" || changeFlag == "FgsSales" || changeFlag == "InterUnitTransferSale"){
+		if(changeFlag && changeFlag == "PowderSales" || changeFlag == "FgsSales" || changeFlag == "InterUnitTransferSale" || changeFlag == "ConvCharges"){
 			if(eachItem.unitPrice){
 				newObj.put("basicPrice", eachItem.unitPrice);
 			}else{

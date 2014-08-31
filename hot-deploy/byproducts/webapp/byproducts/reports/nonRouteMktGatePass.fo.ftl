@@ -84,7 +84,7 @@ under the License.
 					            	<fo:block  keep-together="always" text-align="left" font-size="10pt" white-space-collapse="false">GP NO : </fo:block>
 					            </fo:table-cell>
 					            <fo:table-cell>
-					            	<fo:block  keep-together="always" text-align="left" font-size="10pt" white-space-collapse="false"><#if shipment?has_content>${shipment.shipmentId?if_exists}</#if></fo:block>  
+					            	<fo:block  keep-together="always" text-align="left" font-size="10pt" white-space-collapse="false"></fo:block>  
 					            </fo:table-cell>
 							</fo:table-row>
 							<fo:table-row>
@@ -114,7 +114,7 @@ under the License.
 					            	<fo:block  keep-together="always" text-align="left" font-size="10pt" white-space-collapse="false">DC No : </fo:block>
 					            </fo:table-cell>
 					            <fo:table-cell>	
-					            	<fo:block  keep-together="always" text-align="left" font-size="10pt" white-space-collapse="false">${orderId?if_exists}</fo:block>  
+					            	<fo:block  keep-together="always" text-align="left" font-size="10pt" white-space-collapse="false"><#if shipment?has_content>${shipment.shipmentId?if_exists}</#if></fo:block>  
 					            </fo:table-cell>
 							</fo:table-row>
 							<fo:table-row>
@@ -143,6 +143,20 @@ under the License.
 					            </fo:table-cell>
 					            <fo:table-cell>
 					            	<fo:block  keep-together="always" text-align="left" font-size="10pt" white-space-collapse="false"><#if invoice?has_content>${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(invoice.dueDate, "dd-MMM-yyyy")}<#else></#if></fo:block>  
+					            </fo:table-cell>
+							</fo:table-row>
+							<fo:table-row>
+			                    <fo:table-cell>
+					            	<fo:block  keep-together="always" text-align="left" font-size="10pt" white-space-collapse="false">CARRIER NO : </fo:block>
+					            </fo:table-cell>
+					            <fo:table-cell>
+					            	<fo:block  keep-together="always" text-align="left" font-size="10pt" white-space-collapse="false"><#if shipment?has_content>${shipment.carrierName?if_exists}</#if></fo:block>
+					            </fo:table-cell>
+					            <fo:table-cell>
+					            	<fo:block  keep-together="always" text-align="left" font-size="10pt" white-space-collapse="false">L/R NO : </fo:block>
+					            </fo:table-cell>
+					            <fo:table-cell>
+					            	<fo:block  keep-together="always" text-align="left" font-size="10pt" white-space-collapse="false"><#if shipment?has_content>${shipment.lrNumber?if_exists}</#if></fo:block>  
 					            </fo:table-cell>
 							</fo:table-row>
 							<fo:table-row>
