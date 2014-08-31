@@ -726,6 +726,12 @@
                	  <parameter param-name="shipmentId" /> 
             </hyperlink>
         </field>
+        <field name="debitNote" title="Debit/Credit Note" widget-style="buttontext" id-name = "DebitNote">
+            <hyperlink target="DebitNote" description="Debit/Credit Note" target-window="_blank"> 	
+               	  <parameter param-name="shipmentId" /> 
+               	  <parameter param-name="reportTypeFlag" value="debitNote"/> 
+            </hyperlink>
+        </field>
         <field name="cancelShipment" widget-style="buttontext">
             <hyperlink target="cancelInterUnitShipment" description="Cancel Shipment">
 	            <parameter param-name="shipmentId"/>

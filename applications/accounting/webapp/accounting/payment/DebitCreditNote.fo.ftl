@@ -20,15 +20,15 @@ under the License.
     <fo:root xmlns:fo="http://www.w3.org/1999/XSL/Format">
         <fo:layout-master-set>
             <fo:simple-page-master master-name="main" page-height="12in" page-width="8in"
-                     margin-left=".2in" margin-right=".3in" margin-top=".1in" margin-bottom=".3in">
+                     margin-left=".1in" margin-right=".1in" margin-top=".1in" margin-bottom=".3in">
                 <fo:region-body margin-top=".7in"/>
                 <fo:region-before extent=".4in"/>
                 <fo:region-after extent=".4in"/>
             </fo:simple-page-master>
         </fo:layout-master-set>
         ${setRequestAttribute("OUTPUT_FILENAME", "debitNote.pdf")}
-        <#if parameters.paymentId?has_content>  
-        <#assign paymentDetails = delegator.findOne("Payment", {"paymentId" :parameters.paymentId}, true)>
+        <#if paymentId?has_content>  
+        <#assign paymentDetails = delegator.findOne("Payment", {"paymentId" :paymentId}, true)>
         
         <#assign paymentId = "">
         <#assign partyIdFrom = "">
@@ -53,7 +53,7 @@ under the License.
 					<fo:block  keep-together="always" text-align="center" font-size = "13pt" font-family="Courier,monospace" white-space-collapse="false" font-weight="bold">${uiLabelMap.KMFDairyHeader}</fo:block>
 					<fo:block  keep-together="always" text-align="center" font-size = "13pt" font-family="Courier,monospace" white-space-collapse="false" font-weight="bold">${uiLabelMap.KMFDairySubHeader}</fo:block>
 					<fo:block linefeed-treatment="preserve">&#xA;</fo:block>
-					<fo:block  keep-together="always" text-align="center" font-size = "14pt" font-family="Courier,monospace" white-space-collapse="false" font-weight="bold"><#if paymentMethodType?exists && paymentMethodType == "CREDITNOTE_PAYIN">CREDIT ADVICE<#else>DEBIT ADVICE</#if></fo:block>
+					<fo:block  keep-together="always" text-align="center" font-size = "14pt" font-family="Courier,monospace" white-space-collapse="false" font-weight="bold"><#if partyIdFrom?exists && partyIdFrom == "Company">DEBIT ADVICE<#else>CREDIT ADVICE</#if></fo:block>
         	</fo:static-content>
         	<fo:flow flow-name="xsl-region-body">
               <fo:block linefeed-treatment="preserve">&#xA;</fo:block>
@@ -153,12 +153,12 @@ under the License.
 							</fo:table-row>
 							<fo:table-row>
 								<fo:table-cell>
-				            		<fo:block text-align="left" keep-together="always" font-size = "12pt">This is to inform you that your account has been <#if paymentMethodType?exists && paymentMethodType == "CREDITNOTE_PAYIN">CREDITED<#else>DEBITED</#if> with Rs: ${amount?if_exists?string("##0.00")}       on the basis of the following</fo:block>     
+				            		<fo:block text-align="left" keep-together="always" font-size = "12pt">This is to inform you that your account has been <#if partyIdFrom?exists && partyIdFrom == "Company">DEBITED<#else>CREDITED</#if> with Rs: ${amount?if_exists?string("##0.00")}       on the basis of the </fo:block>     
 				       			</fo:table-cell>
 							</fo:table-row>
 							<fo:table-row>
 								<fo:table-cell>
-				            		<fo:block text-align="left" keep-together="always" font-size = "12pt">transactions.</fo:block>     
+				            		<fo:block text-align="left" keep-together="always" font-size = "12pt">following transactions.</fo:block>     
 				       			</fo:table-cell>
 							</fo:table-row>
 							<fo:table-row>
@@ -182,8 +182,8 @@ under the License.
     	 	<fo:block>
                  	<fo:table border-style="solid">
                     <fo:table-column column-width="50pt"/>
-                    <fo:table-column column-width="261pt"/>
-                    <fo:table-column column-width="250pt"/>
+                    <fo:table-column column-width="350pt"/>
+                    <fo:table-column column-width="150pt"/>
                     <fo:table-body>
                     	<fo:table-row >
                    			<fo:table-cell border-style="solid">
@@ -202,8 +202,8 @@ under the License.
              <fo:block>
                  	<fo:table border-style="solid">
                  	<fo:table-column column-width="50pt"/>
-                    <fo:table-column column-width="261pt"/>
-                    <fo:table-column column-width="250pt"/>
+                    <fo:table-column column-width="350pt"/>
+                    <fo:table-column column-width="150pt"/>
                     <fo:table-body>
                     	<#assign sno=0>
 						<#if invoiceItems?has_content>

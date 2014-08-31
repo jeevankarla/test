@@ -35,6 +35,25 @@ import org.ofbiz.entity.condition.EntityOperator;
 
 paymentId = parameters.paymentId;
 invoiceId = parameters.get("invoiceId");
+
+reportTypeFlag = context.reportTypeFlag;
+if(UtilValidate.isNotEmpty(reportTypeFlag) && reportTypeFlag == "debitNote"){
+	shipmentId = parameters.shipmentId;
+	conditionList = [];
+	conditionList.add(EntityCondition.makeCondition("shipmentId", EntityOperator.EQUALS, shipmentId));
+	conditionList.add(EntityCondition.makeCondition("statusId", EntityOperator.NOT_EQUAL, "ORDER_CANCELLED"));
+	condition = EntityCondition.makeCondition(conditionList, EntityOperator.AND);
+	orderHeaders = delegator.findList("OrderHeader", condition, UtilMisc.toSet("orderId"), null, null, false);
+	orderIds = EntityUtil.getFieldListFromEntityList(orderHeaders, "orderId", true);
+	
+	conditionList.clear();
+	conditionList.add(EntityCondition.makeCondition("orderId", EntityOperator.IN, orderIds));
+	conditionList.add(EntityCondition.makeCondition("statusId", EntityOperator.NOT_EQUAL, "INVOICE_CANCELLED"));
+	cond = EntityCondition.makeCondition(conditionList, EntityOperator.AND);
+	invoices = delegator.findList("OrderItemBillingAndInvoiceAndInvoiceItem", cond, UtilMisc.toSet("invoiceId"), null, null, false);
+	invoiceIds = EntityUtil.getFieldListFromEntityList(invoices, "invoiceId", true);
+	invoiceId = invoiceIds.get(0);
+}
 //for debit credit note
 if(UtilValidate.isEmpty(invoiceId)){
 	paymentApplication = delegator.findByAnd("PaymentApplication", [paymentId :paymentId]);
@@ -46,111 +65,111 @@ if(UtilValidate.isEmpty(invoiceId)){
 	}
 }
 invoice = delegator.findByPrimaryKey("Invoice", [invoiceId : invoiceId]);
-context.invoice = invoice;currency = parameters.currency;        // allow the display of the invoice in the original currency, the default is to display the invoice in the default currency
+context.invoice = invoice;
+currency = parameters.currency;        // allow the display of the invoice in the original currency, the default is to display the invoice in the default currency
 BigDecimal conversionRate = new BigDecimal("1");
 ZERO = BigDecimal.ZERO;
 decimals = UtilNumber.getBigDecimalScale("invoice.decimals");
 rounding = UtilNumber.getBigDecimalRoundingMode("invoice.rounding");
 if (invoice) {
-    // each invoice of course has two billing addresses, but the one that is relevant for purchase invoices is the PAYMENT_LOCATION of the invoice
-    // (ie Accounts Payable address for the supplier), while the right one for sales invoices is the BILLING_LOCATION (ie Accounts Receivable or
-    // home of the customer.)
-    invoiceType=delegator.findOne("InvoiceType",[invoiceTypeId : invoice.invoiceTypeId] , false);   
-    parentInvoiceType=delegator.findOne("InvoiceType",[invoiceTypeId : invoiceType.parentTypeId] , false);
-    context.parentInvoiceType=parentInvoiceType;
-     if (("PURCHASE_INVOICE".equals(invoiceType.parentTypeId)) ||( "PURCHASE_INVOICE".equals(invoice.invoiceTypeId))) {
-        billingAddress = InvoiceWorker.getSendFromAddress(invoice);         
-    } else {
-        billingAddress = InvoiceWorker.getBillToAddress(invoice);
-    }
-    if (billingAddress) {
-        context.billingAddress = billingAddress;
-    }
-    billingParty = InvoiceWorker.getBillToParty(invoice);
-    Debug.logInfo(" billingParty==="+ billingParty,"");
-    context.billingParty = billingParty;
-    sendingParty = InvoiceWorker.getSendFromParty(invoice);
-    context.sendingParty = sendingParty;
-    if (("PURCHASE_INVOICE".equals(invoiceType.parentTypeId)) ||( "PURCHASE_INVOICE".equals(invoice.invoiceTypeId))) {
-         context.dispalyParty= sendingParty;       
-    } 
-    else{
-    	context.dispalyParty= billingParty;; 
-    }
+	// each invoice of course has two billing addresses, but the one that is relevant for purchase invoices is the PAYMENT_LOCATION of the invoice
+	// (ie Accounts Payable address for the supplier), while the right one for sales invoices is the BILLING_LOCATION (ie Accounts Receivable or
+	// home of the customer.)
+	invoiceType=delegator.findOne("InvoiceType",[invoiceTypeId : invoice.invoiceTypeId] , false);
+	parentInvoiceType=delegator.findOne("InvoiceType",[invoiceTypeId : invoiceType.parentTypeId] , false);
+	context.parentInvoiceType=parentInvoiceType;
+	 if (("PURCHASE_INVOICE".equals(invoiceType.parentTypeId)) ||( "PURCHASE_INVOICE".equals(invoice.invoiceTypeId))) {
+		billingAddress = InvoiceWorker.getSendFromAddress(invoice);
+	} else {
+		billingAddress = InvoiceWorker.getBillToAddress(invoice);
+	}
+	if (billingAddress) {
+		context.billingAddress = billingAddress;
+	}
+	billingParty = InvoiceWorker.getBillToParty(invoice);
+	Debug.logInfo(" billingParty==="+ billingParty,"");
+	context.billingParty = billingParty;
+	sendingParty = InvoiceWorker.getSendFromParty(invoice);
+	context.sendingParty = sendingParty;
+	if (("PURCHASE_INVOICE".equals(invoiceType.parentTypeId)) ||( "PURCHASE_INVOICE".equals(invoice.invoiceTypeId))) {
+		 context.dispalyParty= sendingParty;
+	}
+	else{
+		context.dispalyParty= billingParty;;
+	}
    
 
-    if (currency && !invoice.getString("currencyUomId").equals(currency)) {
-        conversionRate = InvoiceWorker.getInvoiceCurrencyConversionRate(invoice);
-        invoice.currencyUomId = currency;
-        invoice.invoiceMessage = " converted from original with a rate of: " + conversionRate.setScale(8, rounding);
-    }
+	if (currency && !invoice.getString("currencyUomId").equals(currency)) {
+		conversionRate = InvoiceWorker.getInvoiceCurrencyConversionRate(invoice);
+		invoice.currencyUomId = currency;
+		invoice.invoiceMessage = " converted from original with a rate of: " + conversionRate.setScale(8, rounding);
+	}
 
-    invoiceItems = invoice.getRelatedOrderBy("InvoiceItem", ["invoiceItemSeqId"]);
-    invoiceItemsConv = FastList.newInstance();
-    vatTaxesByType = FastMap.newInstance();
-    invoiceItems.each { invoiceItem ->
-        invoiceItem.amount = invoiceItem.getBigDecimal("amount").multiply(conversionRate).setScale(decimals, rounding);
-        invoiceItemsConv.add(invoiceItem);
-        // get party tax id for VAT taxes: they are required in invoices by EU
-        // also create a map with tax grand total amount by VAT tax: it is also required in invoices by UE
-        taxRate = invoiceItem.getRelatedOne("TaxAuthorityRateProduct");
-        if (taxRate && "VAT_TAX".equals(taxRate.taxAuthorityRateTypeId)) {
-            taxInfos = EntityUtil.filterByDate(delegator.findByAnd("PartyTaxAuthInfo", [partyId : billingParty.partyId, taxAuthGeoId : taxRate.taxAuthGeoId, taxAuthPartyId : taxRate.taxAuthPartyId]), invoice.invoiceDate);
-            taxInfo = EntityUtil.getFirst(taxInfos);
-            if (taxInfo) {
-                context.billingPartyTaxId = taxInfo.partyTaxId;
-            }
-            vatTaxesByTypeAmount = vatTaxesByType[taxRate.taxAuthorityRateSeqId];
-            if (!vatTaxesByTypeAmount) {
-                vatTaxesByTypeAmount = 0.0;
-            }
-            vatTaxesByType.put(taxRate.taxAuthorityRateSeqId, vatTaxesByTypeAmount + invoiceItem.amount);
-        }
-    }
-    context.vatTaxesByType = vatTaxesByType;
-    context.vatTaxIds = vatTaxesByType.keySet().asList();
+	invoiceItems = invoice.getRelatedOrderBy("InvoiceItem", ["invoiceItemSeqId"]);
+	invoiceItemsConv = FastList.newInstance();
+	vatTaxesByType = FastMap.newInstance();
+	invoiceItems.each { invoiceItem ->
+		invoiceItem.amount = invoiceItem.getBigDecimal("amount").multiply(conversionRate).setScale(decimals, rounding);
+		invoiceItemsConv.add(invoiceItem);
+		// get party tax id for VAT taxes: they are required in invoices by EU
+		// also create a map with tax grand total amount by VAT tax: it is also required in invoices by UE
+		taxRate = invoiceItem.getRelatedOne("TaxAuthorityRateProduct");
+		if (taxRate && "VAT_TAX".equals(taxRate.taxAuthorityRateTypeId)) {
+			taxInfos = EntityUtil.filterByDate(delegator.findByAnd("PartyTaxAuthInfo", [partyId : billingParty.partyId, taxAuthGeoId : taxRate.taxAuthGeoId, taxAuthPartyId : taxRate.taxAuthPartyId]), invoice.invoiceDate);
+			taxInfo = EntityUtil.getFirst(taxInfos);
+			if (taxInfo) {
+				context.billingPartyTaxId = taxInfo.partyTaxId;
+			}
+			vatTaxesByTypeAmount = vatTaxesByType[taxRate.taxAuthorityRateSeqId];
+			if (!vatTaxesByTypeAmount) {
+				vatTaxesByTypeAmount = 0.0;
+			}
+			vatTaxesByType.put(taxRate.taxAuthorityRateSeqId, vatTaxesByTypeAmount + invoiceItem.amount);
+		}
+	}
+	context.vatTaxesByType = vatTaxesByType;
+	context.vatTaxIds = vatTaxesByType.keySet().asList();
 
-    context.invoiceItems = invoiceItemsConv;
-	Debug.log("invoiceItems======"+invoiceItems);
-    invoiceTotal = InvoiceWorker.getInvoiceTotal(invoice).multiply(conversionRate).setScale(decimals, rounding);
-    invoiceNoTaxTotal = InvoiceWorker.getInvoiceNoTaxTotal(invoice).multiply(conversionRate).setScale(decimals, rounding);
-    context.invoiceTotal = invoiceTotal;
-    context.invoiceNoTaxTotal = invoiceNoTaxTotal;
+	context.invoiceItems = invoiceItemsConv;
+	invoiceTotal = InvoiceWorker.getInvoiceTotal(invoice).multiply(conversionRate).setScale(decimals, rounding);
+	invoiceNoTaxTotal = InvoiceWorker.getInvoiceNoTaxTotal(invoice).multiply(conversionRate).setScale(decimals, rounding);
+	context.invoiceTotal = invoiceTotal;
+	context.invoiceNoTaxTotal = invoiceNoTaxTotal;
 
-                //*________________this snippet was added for adding Tax ID in invoice header if needed _________________
+				//*________________this snippet was added for adding Tax ID in invoice header if needed _________________
 
-               sendingTaxInfos = sendingParty.getRelated("PartyTaxAuthInfo");
-               billingTaxInfos = billingParty.getRelated("PartyTaxAuthInfo");
-               sendingPartyTaxId = null;
-               billingPartyTaxId = null;
+			   sendingTaxInfos = sendingParty.getRelated("PartyTaxAuthInfo");
+			   billingTaxInfos = billingParty.getRelated("PartyTaxAuthInfo");
+			   sendingPartyTaxId = null;
+			   billingPartyTaxId = null;
 
-               if (billingAddress) {
-                   sendingTaxInfos.eachWithIndex { sendingTaxInfo, i ->
-                       if (sendingTaxInfo.taxAuthGeoId.equals(billingAddress.countryGeoId)) {
-                            sendingPartyTaxId = sendingTaxInfos[i-1].partyTaxId;
-                       }
-                   }
-                   billingTaxInfos.eachWithIndex { billingTaxInfo, i ->
-                       if (billingTaxInfo.taxAuthGeoId.equals(billingAddress.countryGeoId)) {
-                            billingPartyTaxId = billingTaxInfos[i-1].partyTaxId;
-                       }
-                   }
-               }
-               if (sendingPartyTaxId) {
-                   context.sendingPartyTaxId = sendingPartyTaxId;
-               }
-               if (billingPartyTaxId && !context.billingPartyTaxId) {
-                   context.billingPartyTaxId = billingPartyTaxId;
-               }
-               //________________this snippet was added for adding Tax ID in invoice header if needed _________________*/
+			   if (billingAddress) {
+				   sendingTaxInfos.eachWithIndex { sendingTaxInfo, i ->
+					   if (sendingTaxInfo.taxAuthGeoId.equals(billingAddress.countryGeoId)) {
+							sendingPartyTaxId = sendingTaxInfos[i-1].partyTaxId;
+					   }
+				   }
+				   billingTaxInfos.eachWithIndex { billingTaxInfo, i ->
+					   if (billingTaxInfo.taxAuthGeoId.equals(billingAddress.countryGeoId)) {
+							billingPartyTaxId = billingTaxInfos[i-1].partyTaxId;
+					   }
+				   }
+			   }
+			   if (sendingPartyTaxId) {
+				   context.sendingPartyTaxId = sendingPartyTaxId;
+			   }
+			   if (billingPartyTaxId && !context.billingPartyTaxId) {
+				   context.billingPartyTaxId = billingPartyTaxId;
+			   }
+			   //________________this snippet was added for adding Tax ID in invoice header if needed _________________*/
 
 
-    terms = invoice.getRelated("InvoiceTerm");
-    context.terms = terms;
+	terms = invoice.getRelated("InvoiceTerm");
+	context.terms = terms;
 
 	//for payment
 	printPaymentsList = FastList.newInstance();
-    paymentAppls = delegator.findByAnd("PaymentApplication", [invoiceId : invoiceId]);
+	paymentAppls = delegator.findByAnd("PaymentApplication", [invoiceId : invoiceId]);
 	if(UtilValidate.isNotEmpty(paymentAppls)){
 		paymentAppls.each{ paymentDet ->
 			paymentId = paymentDet.paymentId;
@@ -170,37 +189,34 @@ if (invoice) {
 			}
 		}
 	}
-    context.payments = paymentAppls;
+	context.payments = paymentAppls;
 	
-	
+	orderItemBillings = delegator.findByAnd("OrderItemBilling", [invoiceId : invoiceId], ['orderId']);
+	orders = new LinkedHashSet();
+	orderItemBillings.each { orderIb ->
+		orders.add(orderIb.orderId);
+	}
+	context.orders = orders;
 
-    orderItemBillings = delegator.findByAnd("OrderItemBilling", [invoiceId : invoiceId], ['orderId']);
-    orders = new LinkedHashSet();
-    orderItemBillings.each { orderIb ->
-        orders.add(orderIb.orderId);
-    }
-    context.orders = orders;
+	invoiceStatus = invoice.getRelatedOne("StatusItem");
+	context.invoiceStatus = invoiceStatus;
 
-    invoiceStatus = invoice.getRelatedOne("StatusItem");
-    context.invoiceStatus = invoiceStatus;
+	edit = parameters.editInvoice;
+	if ("true".equalsIgnoreCase(edit)) {
+		invoiceItemTypes = delegator.findList("InvoiceItemType", null, null, null, null, false);
+		context.invoiceItemTypes = invoiceItemTypes;
+		context.editInvoice = true;
+	}
 
-    edit = parameters.editInvoice;
-    if ("true".equalsIgnoreCase(edit)) {
-        invoiceItemTypes = delegator.findList("InvoiceItemType", null, null, null, null, false);
-        context.invoiceItemTypes = invoiceItemTypes;
-        context.editInvoice = true;
-    }
-
-    // format the date
-    if (invoice.invoiceDate) {
-        invoiceDate = DateFormat.getDateInstance(DateFormat.LONG).format(invoice.invoiceDate);
-        context.invoiceDate = invoiceDate;
-    } else {
-        context.invoiceDate = "N/A";
-    }
+	// format the date
+	if (invoice.invoiceDate) {
+		invoiceDate = DateFormat.getDateInstance(DateFormat.LONG).format(invoice.invoiceDate);
+		context.invoiceDate = invoiceDate;
+	} else {
+		context.invoiceDate = "N/A";
+	}
 }
-
-
+context.paymentId = paymentId;
 
 
 
