@@ -346,7 +346,7 @@ public static Map<String, Object> createPurchaseOrder(DispatchContext dctx, Map<
 	
 	try {
 		cart.setOrderType("PURCHASE_ORDER");
-        cart.setIsEnableAcctg("N");
+       // cart.setIsEnableAcctg("N");
         cart.setProductStoreId(productStoreId);
 		cart.setChannelType(salesChannel);
 		cart.setBillToCustomerPartyId(billToPartyId);
