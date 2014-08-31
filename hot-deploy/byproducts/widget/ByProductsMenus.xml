@@ -528,7 +528,7 @@
       	 <link target="InterUnitStkTr">    
          </link>
         </menu-item>
-        <menu-item name="ConversionCharges" title="Conversion/Processing Fee"> 
+        <menu-item name="ConversionCharges" title="Fee Income"> 
 	        <condition>
 	        	<or>
 	        		<if-has-permission permission="FACILITY"  action="_ADMIN"/>

@@ -45,7 +45,7 @@ if(changeFlag=="FgsSales"){
 	productCatageoryId="FG_STORE";
 }
 if(changeFlag=="ConvCharges"){
-	productCatageoryId="CON_CHG";
+	productCatageoryId="SERV_PROD";
 }
 if(changeFlag=="InterUnitTransferSale"){
 	productCatageoryId="INTER_UNIT";//later we should change tranferble products only
