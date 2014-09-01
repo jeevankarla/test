@@ -67,6 +67,9 @@ function makeDatePicker1(fromDateId ,thruDateId){
 		makeDatePicker("EditedLateHoursfromDate","EditedLateHoursfromDate");
 		makeDatePicker("EPfromDate","EPfromDate");
 		makeDatePicker("EPthruDate","EPthruDate");
+		makeDatePicker("BusfromDate","BusfromDate");
+		makeDatePicker("BusthruDate","BusthruDate");
+		
 		$('#ui-datepicker-div').css('clip', 'auto');		
 	});
 //for Month Picker
@@ -248,25 +251,6 @@ function makeDatePicker1(fromDateId ,thruDateId){
 						</table>
 					</tr>
 					<tr class="alternate-row">
-						<table class="basic-table" cellspacing="3">
-							<form id="CanteenReport" name="CanteenReport" mothed="post" action="<@ofbizUrl>CanteenReport.pdf</@ofbizUrl>" target="_blank">
-								<table class="basic-table" cellspacing="5">
-									<tr class="alternate-row">
-										<td width="12%"><span class='h3'>Canteen Report</span></td>
-										<td width="24%"><span class='h3'>Period Id</span>
-											<select name="customTimePeriodId" class='h4'>
-												<#list timePeriodList as timePeriod>    
-													<option value='${timePeriod.customTimePeriodId}'>${timePeriod.fromDate}-${timePeriod.thruDate}</option>
-												</#list>      
-											</select>
-										</td>	
-										<td width="12%"><input type="submit" value="Download" class="buttontext"></td> 
-									</tr>
-								</table>	
-							</form>
-						</table>
-					</tr>
-					<tr class="alternate-row">
 						<form id="EmployeesLOPdays" name="EmployeeMisPunchData" mothed="post" action="<@ofbizUrl>EmployeesLOPdays.pdf</@ofbizUrl>" >
 							<table class="basic-table" cellspacing="5">
 								<tr class="alternate-row">
@@ -339,6 +323,18 @@ function makeDatePicker1(fromDateId ,thruDateId){
 							</table>
 						</form>
 					</tr>
+					<tr class="alternate-row">
+					 	<form id="BusArrivalReport" name="BusArrivalReport" mothed="post" action="<@ofbizUrl>BusArrivalReport.pdf</@ofbizUrl>" target="_blank">
+	      	   				<table class="basic-table" cellspacing="5">
+								<tr class="alternate-row">
+						      	   	<td width="20%"><span class='h3'>Bus Arrival Report</td></span></td>
+						      	   	<td width="20%"><span class='h3'>From Date</span><input  type="text"  id="BusfromDate" size="18pt" name="BusfromDate"/></td>
+						  			<td width="20%"><span class='h3'>Thru Date</span><input  type="text"  id="BusthruDate" size="18pt" name="BusthruDate"/></td>
+									<td width="20%"><span class='h3'><input type="submit" value="Download" class="buttontext"></span></td> 
+								</tr>
+							</table>	
+      	   				</form>
+      	  			</tr>
 				</table>
 			</div>
 		</div>
@@ -439,6 +435,25 @@ function makeDatePicker1(fromDateId ,thruDateId){
 							</table>
 						</form>
 				   	</tr>
+				   	<tr class="alternate-row">
+						<table class="basic-table" cellspacing="3">
+							<form id="CanteenReport" name="CanteenReport" mothed="post" action="<@ofbizUrl>CanteenReport.pdf</@ofbizUrl>" target="_blank">
+								<table class="basic-table" cellspacing="5">
+									<tr class="alternate-row">
+										<td width="13%"><span class='h3'>Canteen Report</span></td>
+										<td width="45%"><span class='h3'>Period Id</span>
+											<select name="customTimePeriodId" class='h4'>
+												<#list timePeriodList as timePeriod>    
+													<option value='${timePeriod.customTimePeriodId}'>${timePeriod.fromDate}-${timePeriod.thruDate}</option>
+												</#list>      
+											</select>
+										</td>	
+										<td width="10%"><span class='h3'><input type="submit" value="Download" class="buttontext"></span></td> 
+									</tr>
+								</table>	
+							</form>
+						</table>
+					</tr>
 					<tr class="alternate-row">
 						<form id="GSLISReport" name="PaySheetFormat" mothed="post" action="<@ofbizUrl>GSLISReport.pdf</@ofbizUrl>" target="_blank">
 							<table class="basic-table" cellspacing="5">
