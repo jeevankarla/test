@@ -2162,6 +2162,376 @@
           </menu-item>
     </menu>
     
+    <!-- Quick Create Invoice Menus -->
     
+    <menu name="QuickCreateInvoiceTabBar" extends="CommonTabBarMenu"
+		extends-resource="component://common/widget/CommonMenus.xml">
+		<actions>
+				<script location="component://accounting/webapp/accounting/WEB-INF/actions/hideAcctgMenuItem.groovy"/>
+		</actions>
+		<menu-item name="find" title="${uiLabelMap.CommonFind}">
+			<link target="findInvoices" />
+		</menu-item>
+		<menu-item name="invoiceOverview" title="${uiLabelMap.AccountingInvoiceOverview}">
+			<condition>
+				<not>
+					<if-empty field="invoice.invoiceId" />
+				</not>
+			</condition>
+			<link target="QuickInvoiceOverview">
+				<parameter param-name="invoiceId" from-field="invoice.invoiceId" />
+			</link>
+		</menu-item>
+		<!-- <menu-item name="editInvoice" title="Update Invoice">
+			<condition>
+				<not>
+					<if-empty field="invoice.invoiceId" />
+				</not>
+			</condition>
+			<link target="newQuickCreateInvoice">
+				<parameter param-name="invoiceId" from-field="invoice.invoiceId" />
+			</link>
+		</menu-item> -->
+		<menu-item name="editInvoice" title="Update Invoice">
+			<link target="newQuickCreateInvoice">
+				<parameter param-name="invoiceId" from-field="invoice.invoiceId" />
+			</link>
+		</menu-item>
+		<!-- <menu-item name="updateInvoice" title="Update Invoice">
+			<condition>
+				<not>
+					<if-empty field="invoice.invoiceId" />
+				</not>
+			</condition>
+			<link target="newQuickCreateInvoice">
+				<parameter param-name="invoiceId" from-field="invoice.invoiceId" />
+			</link>
+		</menu-item> -->
+	</menu>
+    
+    <menu name="QuickCreateInvoiceSubTabBar" menu-container-style="button-bar button-style-2"
+		default-selected-style="selected">
+		<!-- <menu-item name="createNew" title="${uiLabelMap.CommonCreateNew}"
+			widget-style="buttontext create">
+			<condition>
+				<and>
+					<not>
+						<if-compare operator="equals" value="accounting"
+							field="localDispatcherName" />
+					</not>
+					<or>
+						<if-has-permission permission="ACCOUNTING"
+							action="_ARINVOICE_EDIT" />
+						<if-has-permission permission="ACCOUNTING"
+							action="_APINVOICE_EDIT" />
+					</or>
+				</and>
+			</condition>
+			<link target="newInvoice" />
+		</menu-item> -->
+		
+		<menu-item name="pdf" title="${uiLabelMap.AccountingInvoicePDF}">
+			<condition>
+				<not>
+					<if-empty field="invoice.invoiceId" />
+				</not>
+			</condition>
+			<link target="invoice.pdf" target-window="_BLANK">
+				<parameter param-name="invoiceId" from-field="invoice.invoiceId" />
+			</link>
+		</menu-item>
+		<menu-item name="newCashPdf" title="Cash Voucher PDF">
+			<condition>
+			  <and>
+					<not>
+						<if-empty field="invoice.invoiceId" />
+					</not>
+				    <if-compare field="invoice.prefPaymentMethodTypeId" operator="equals" value="CASH" />
+			  </and>
+			</condition>
+			<link target="invoiceNew.pdf" target-window="_BLANK">
+				<parameter param-name="invoiceId" from-field="invoice.invoiceId" />
+			</link>
+		</menu-item>
+		<menu-item name="newBankPdf" title="Bank Voucher PDF">
+			<condition>
+			<and>
+				<not>
+					<if-empty field="invoice.invoiceId" />
+				</not>
+				<if-compare field="invoice.prefPaymentMethodTypeId" operator="equals" value="BANK" />
+			</and>
+			</condition>
+			<link target="invoiceNew.pdf" target-window="_BLANK">
+				<parameter param-name="invoiceId" from-field="invoice.invoiceId" />
+			</link>
+		</menu-item>
+		<menu-item name="pdfDfltCur"
+			title="${uiLabelMap.AccountingInvoicePDFDefaultCur}(${defaultOrganizationPartyCurrencyUomId})">
+			<condition>
+				<and>
+					<not>
+						<if-empty field="invoice.invoiceId" />
+					</not>
+					<if-compare-field field="invoice.currencyUomId"
+						operator="not-equals" to-field="defaultOrganizationPartyCurrencyUomId" />
+				</and>
+			</condition>
+			<link target="invoice.pdf" target-window="_BLANK">
+				<parameter param-name="invoiceId" from-field="invoice.invoiceId" />
+				<parameter param-name="currency"
+					from-field="defaultOrganizationPartyCurrencyUomId" />
+			</link>
+		</menu-item>
+		<menu-item name="statusToApproved"
+			title="${uiLabelMap.AccountingInvoiceStatusToApproved}">
+			<condition>
+				<and>
+					<if-has-permission permission="ACCOUNTING"
+						action="_INVOICE_APPROVE" />
+					<not>
+						<if-empty field="invoice.invoiceId" />
+					</not>
+					<or>
+						<if-compare field="invoice.statusId" operator="equals"
+							value="INVOICE_IN_PROCESS" />
+						<!-- <if-compare field="invoice.statusId" operator="equals" value="INVOICE_SENT"/> 
+							<if-compare field="invoice.statusId" operator="equals" value="INVOICE_RECEIVED"/> -->
+					</or>
+				</and>
+			</condition>
+			<link target="QuickSetInvoiceStatus">
+				<parameter param-name="invoiceId" from-field="invoice.invoiceId" />
+				<parameter param-name="statusId" value="INVOICE_APPROVED" />
+			</link>
+		</menu-item>		
+		<menu-item name="statusToReceived"
+			title="${uiLabelMap.AccountingInvoiceStatusToReceived}">
+			<condition>
+				<and>
+					<if-has-permission permission="ACCOUNTING"
+						action="_INVOICE_APPROVE" />
+					<not>
+						<if-empty field="invoice.invoiceId" />
+					</not>
+					<if-compare field="invoice.statusId" operator="equals"
+						value="INVOICE_IN_PROCESS" />
+					<or>
+						<if-compare field="invoice.invoiceTypeId" operator="equals"
+							value="PURCHASE_INVOICE" />
+						<if-compare field="invoice.invoiceTypeId" operator="equals"
+							value="CUST_RTN_INVOICE" />
+					</or>
+				</and>
+			</condition>
+			<link target="setInvoiceStatus">
+				<parameter param-name="invoiceId" from-field="invoice.invoiceId" />
+				<parameter param-name="statusId" value="INVOICE_RECEIVED" />
+			</link>
+		</menu-item>
+		<menu-item name="statusToSent"
+			title="${uiLabelMap.AccountingInvoiceStatusToSent}">
+			<condition>
+				<and>
+					<if-has-permission permission="ACCOUNTING"
+						action="_INVOICE_APPROVE" />
+					<or>
+						<and>
+							<not>
+								<if-empty field="invoice.invoiceId" />
+							</not>
+							<if-compare field="invoice.statusId" operator="equals"
+								value="INVOICE_IN_PROCESS" />
+							<if-compare field="invoice.invoiceTypeId" operator="equals"
+								value="SALES_INVOICE" />
+						</and>
+						<and>
+							<not>
+								<if-empty field="invoice.invoiceId" />
+							</not>
+							<if-compare field="invoice.statusId" operator="equals"
+								value="INVOICE_APPROVED" />
+							<if-compare field="invoice.invoiceTypeId" operator="equals"
+								value="SALES_INVOICE" />
+						</and>
+					</or>
+				</and>
+			</condition>
+			<link target="setInvoiceStatus">
+				<parameter param-name="invoiceId" from-field="invoice.invoiceId" />
+				<parameter param-name="statusId" value="INVOICE_SENT" />
+			</link>
+		</menu-item>
+		<menu-item name="statusToReady"
+			title="${uiLabelMap.AccountingInvoiceStatusToReady}">
+			<condition>
+				<and>
+					<or>
+						<if-has-permission permission="ACCOUNTING"
+							action="_ARINVOICE_EDIT" />
+						<if-has-permission permission="ACCOUNTING"
+							action="_APINVOICE_EDIT" />
+					</or>
+					<not>
+						<if-empty field="invoice.invoiceId" />
+					</not>
+					<or>
+						<!-- <if-compare field="invoice.statusId" operator="equals" value="INVOICE_IN_PROCESS"/> 
+							<if-compare field="invoice.statusId" operator="equals" value="INVOICE_SENT"/> 
+							<if-compare field="invoice.statusId" operator="equals" value="INVOICE_RECEIVED"/> -->
+						<if-compare field="invoice.statusId" operator="equals"
+							value="INVOICE_APPROVED" />
+					</or>
+				</and>
+			</condition>
+			<link target="setInvoiceStatus">
+				<parameter param-name="invoiceId" from-field="invoice.invoiceId" />
+				<parameter param-name="statusId" value="INVOICE_READY" />
+			</link>
+		</menu-item>
+		<menu-item name="statusToPaid"
+			title="${uiLabelMap.AccountingInvoiceStatusToPaid}">
+			<condition>
+				<and>
+					<if-compare field="invoice.invoiceTypeId" operator="not-equals"	value="PETTYCASH_INVOICE" />
+					<if-has-permission permission="ACCOUNTING"
+						action="_INVOICE_APPROVE" />
+					<not>
+						<if-empty field="invoice.invoiceId" />
+					</not>
+					<or>
+						<if-compare field="invoice.statusId" operator="equals"
+							value="INVOICE_READY" />
+					</or>
+				</and>
+			</condition>
+			<link target="setInvoiceStatus">
+				<parameter param-name="invoiceId" from-field="invoice.invoiceId" />
+				<parameter param-name="statusId" value="INVOICE_PAID" />
+			</link>
+		</menu-item>
+		<menu-item name="statusToWriteoff"
+			title="${uiLabelMap.AccountingInvoiceStatusToWriteoff}">
+			<condition>
+				<and>
+				<if-compare field="invoice.invoiceTypeId" operator="not-equals"	value="PETTYCASH_INVOICE" />
+					<if-has-permission permission="ACCOUNTING"
+						action="_INVOICE_APPROVE" />
+					<not>
+						<if-empty field="invoice.invoiceId" />
+					</not>
+					<or>
+						<if-compare field="invoice.statusId" operator="equals"
+							value="INVOICE_READY" />
+					</or>
+				</and>
+			</condition>
+			<link target="setInvoiceStatus" request-confirmation="true"
+				confirmation-message="You want to writeoff this invoice number ${invoice.invoiceId}?">
+				<parameter param-name="invoiceId" from-field="invoice.invoiceId" />
+				<parameter param-name="statusId" value="INVOICE_WRITEOFF" />
+			</link>
+		</menu-item>
+		<menu-item name="statusToInProcess"
+			title="${uiLabelMap.AccountingInvoiceStatusToInProcess}">
+			<condition>
+				<and>
+					<if-has-permission permission="ACCOUNTING"
+						action="_INVOICE_APPROVE" />
+					<not>
+						<if-empty field="invoice.invoiceId" />
+					</not>
+					<or>
+						<if-compare field="invoice.statusId" operator="equals"
+							value="INVOICE_SENT" />
+						<if-compare field="invoice.statusId" operator="equals"
+							value="INVOICE_RECEIVED" />
+					</or>
+				</and>
+			</condition>
+			<link target="setInvoiceStatus">
+				<parameter param-name="invoiceId" from-field="invoice.invoiceId" />
+				<parameter param-name="statusId" value="INVOICE_IN_PROCESS" />
+			</link>
+		</menu-item>
+		<menu-item name="statusToCancelled"
+			title="${uiLabelMap.AccountingInvoiceStatusToCancelled}">
+			<condition>
+				<and>
+					<if-has-permission permission="ACCOUNTING"
+						action="_INVOICE_APPROVE" />
+					<not>
+						<if-empty field="invoice.invoiceId" />
+					</not>
+					<or>
+						<if-compare field="invoice.statusId" operator="equals"
+							value="INVOICE_IN_PROCESS" />
+						<if-compare field="invoice.statusId" operator="equals"
+							value="INVOICE_SENT" />
+						<if-compare field="invoice.statusId" operator="equals"
+							value="INVOICE_RECEIVED" />
+						<if-compare field="invoice.statusId" operator="equals"
+							value="INVOICE_READY" />
+						<if-compare field="invoice.statusId" operator="equals"
+							value="INVOICE_APPROVED" />
+					</or>
+				</and>
+			</condition>
+			<link target="setInvoiceStatus" request-confirmation="true"
+				confirmation-message="You want to cancel this invoice number ${invoice.invoiceId}?">
+				<parameter param-name="invoiceId" from-field="invoice.invoiceId" />
+				<parameter param-name="statusId" value="INVOICE_CANCELLED" />
+			</link>
+		</menu-item>
+		<menu-item name="makeApayment" title="${uiLabelMap.MakePayment}">			
+			<condition>
+				<and>
+					<if-compare field="invoice.invoiceTypeId" operator="equals"	value="PETTYCASH_INVOICE" />
+					<if-compare field="invoice.statusId" operator="equals"	value="INVOICE_READY" />
+				</and>			
+			</condition>
+			<link target="createPettyCashPayment">
+				<parameter param-name="invoiceId" from-field="invoice.invoiceId" />
+				<parameter param-name="amount" value="${bsh:return(org.ofbiz.accounting.invoice.InvoiceWorker.getInvoiceTotal(invoice));}" />
+				<parameter param-name="statusId" value="PMNT_NOT_PAID" />
+				<parameter param-name="partyIdTo" value="${invoice.partyIdFrom}"  />
+				<parameter param-name="partyIdFrom" value="${invoice.partyId}" />
+				<parameter param-name="currencyUomId" value="${invoice.currencyUomId}" />							
+			</link>
+		</menu-item>
+		<menu-item name="statusToConfirmed"
+			title="${uiLabelMap.AccountingPaymentTabStatusToConfirmedPayment}">
+			<condition>
+				<and>
+					<if-compare field="invoice.invoiceTypeId" operator="equals"	value="PETTYCASH_INVOICE" />
+					<if-compare field="invoice.statusId" operator="equals"	value="INVOICE_PAID" />
+					<if-has-permission permission="ACCOUNTING" action="_PAYMENTSTATUS_CONFIRMED" />
+					<if-compare field="payment[0].statusId" operator="equals" value="PMNT_SENT" />
+													
+				</and>
+			</condition>
+			<link target="setPaymentStatusPettyCash">
+				<parameter param-name="invoiceId" from-field="invoice.invoiceId" />
+				<parameter param-name="paymentId" value="${payment[0].paymentId}" />
+				<parameter param-name="statusId" value="PMNT_CONFIRMED" />
+			</link>
+		</menu-item>
+		<menu-item name="statusToVoidPayment"
+			title="${uiLabelMap.AccountingPaymentTabStatusToVoidPayment}">
+			<condition>
+				<and>
+					<if-compare field="invoice.invoiceTypeId" operator="equals"	value="PETTYCASH_INVOICE" />
+					<if-compare field="invoice.statusId" operator="equals"	value="INVOICE_PAID" />
+					<if-has-permission permission="ACCOUNTING" action="_PAYMENTSTATUS_CANCEL" />
+					<if-compare field="payment[0].statusId" operator="equals" value="PMNT_SENT" />
+				</and>
+			</condition>
+			<link target="voidPaymentPettyCash">
+				<parameter param-name="invoiceId" from-field="invoice.invoiceId" />
+				<parameter param-name="paymentId" value="${payment[0].paymentId}" />
+			</link>
+		</menu-item>
+		
+	</menu>
 	
 </menus>

@@ -104,6 +104,10 @@ under the License.
         <security https="true" auth="true"/>
         <response name="success" type="view" value="NewSalesInvoice"/>
     </request-map>
+    <request-map uri="newInvoiceTest">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="NewSalesInvoiceTest"/>
+    </request-map>
      <request-map uri="newCashInvoice">
         <security https="true" auth="true"/>
         <response name="success" type="view" value="NewSalesCashInvoice"/>
@@ -166,6 +170,59 @@ under the License.
         <response name="success" type="view" value="PaymentGroupOverview"/>
         <response name="error" type="view" value="FindArPaymentGroups"/>
     </request-map>
+    
+    <!-- New Create Invoice Screens Request Mapping -->
+    <request-map uri="newQuickCreateInvoice">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="NewQuickCreateSalesInvoice"/>
+    </request-map>
+    <request-map uri="QuickCreateInvoice">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="createInvoice"/>
+        <response name="success" type="request-redirect" value="newQuickCreateInvoice">
+            <redirect-parameter name="invoiceId"/>
+        </response>
+        <!-- <response name="success" type="request" value="newQuickCreateInvoice"/> -->
+        <response name="error" type="view" value="NewQuickCreateSalesInvoice"/>
+    </request-map>
+    <request-map uri="QuickUpdateInvoice">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="updateInvoice"/>
+        <response name="success" type="request-redirect" value="newQuickCreateInvoice">
+            <redirect-parameter name="invoiceId"/>
+        </response>
+        <!-- <response name="success" type="request" value="newQuickCreateInvoice"/> -->
+        <response name="error" type="view" value="NewQuickCreateSalesInvoice"/>
+    </request-map>
+    <request-map uri="quickCreateInvoiceItemAndTax">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="createInvoiceItemAndTax"/>
+        <response name="success" type="request-redirect" value="newQuickCreateInvoice">
+            <redirect-parameter name="invoiceId"/>
+        </response>
+        <!-- <response name="success" type="request" value="newQuickCreateInvoice"/> -->
+        <response name="error" type="view" value="NewQuickCreateSalesInvoice"/>
+    </request-map>
+    <request-map uri="quickRemoveInvoiceItemAndTax">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="removeInvoiceItemAndTax"/>
+        <response name="success" type="request-redirect" value="newQuickCreateInvoice">
+            <redirect-parameter name="invoiceId"/>
+        </response>
+        <!-- <response name="success" type="view" value="listInvoiceItemsNew"/> -->
+        <response name="error" type="view" value="NewQuickCreateSalesInvoice"/>
+    </request-map>
+    <request-map uri="QuickInvoiceOverview">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="QuickInvoiceOverview"/>
+    </request-map>
+    <request-map uri="QuickSetInvoiceStatus">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="setInvoiceStatus"/>
+        <response name="success" type="view" value="QuickInvoiceOverview"/>
+        <response name="error" type="view" value="invoiceOverview"/>
+    </request-map>
+    
     <!-- end of request mappings -->
 
     <!-- View Mappings -->
@@ -190,6 +247,12 @@ under the License.
 
     <view-map name="LookupInvoice" type="screen" page="component://accounting/widget/ar/LookupScreens.xml#LookupInvoice"/>
     <view-map name="LookupPayment" type="screen" page="component://accounting/widget/ar/LookupScreens.xml#LookupPayment"/>
+    
+    <!-- New Create Invoice Screens View Mapping -->
+    <view-map name="NewQuickCreateSalesInvoice" type="screen" page="component://accounting/widget/ar/InvoiceScreens.xml#NewQuickCreateSalesInvoice"/>
+    <view-map name="QuickInvoiceOverview" type="screen" page="component://accounting/widget/ar/InvoiceScreens.xml#QuickInvoiceOverview"/>
+    
+    
 
     <!-- end of view mappings -->
 </site-conf>
