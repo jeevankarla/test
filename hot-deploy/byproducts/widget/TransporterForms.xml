@@ -85,7 +85,7 @@ under the License.
             <hyperlink target-type="plain" target="javascript:showUpdateStatus('${periodBillingId}','${statusId}');" description="Update Status">
             </hyperlink>
         </field>
-         <field name="cancelTransporterMarginReport" widget-style="buttontext" use-when="${groovy:((security.hasEntityPermission(&quot;TRNSCANCEL&quot;, &quot;_CANCELADMIN&quot;, session)))}" title="${uiLabelMap.CommonCancel}">
+         <field name="cancelTransporterMarginReport" widget-style="buttontext" use-when="${groovy:((security.hasEntityPermission(&quot;TRNSMRGN&quot;, &quot;_CANCELADMIN&quot;, session)))}" title="${uiLabelMap.CommonCancel}">
             <hyperlink target="cancelTransporterMarginReport" description="${uiLabelMap.CommonCancel}" target-window="_blank">
                 <parameter param-name="periodBillingId"  from-field="periodBillingId" />                                                               
             </hyperlink>
@@ -185,7 +185,7 @@ under the License.
            	 	</entity-options>
 			</drop-down>
 		 </field>
-		 <field name="recoveryTypeId" title="Recovery Type">
+		 <field name="recoveryTypeId" title="Recovery Type" >
             <drop-down allow-empty="true">
                 <entity-options entity-name="Enumeration" description="${description}" key-field-name="enumId">
                     <entity-constraint name="enumTypeId" value="FAC_RECVRY"/>
@@ -232,6 +232,99 @@ under the License.
         	<parameter param-name="recoveryTypeId" from-field="recoveryTypeId"/>
         	<parameter param-name="recoveryId" from-field="recoveryId"/>
         </hyperlink>
+        </field>
+    </form>
+    <form name="FindHikesAndPayments" type="single" paginate-target="DieselHikePayment" target="DieselHikePayment" header-row-style="header-row" default-table-style="basic-table" >
+    	<field name="hideSearch"><hidden value="Y" /></field>
+		<field name="noConditionFind"><hidden value="N"/><!-- if this isn't there then with all fields empty no query will be done --></field>
+    	<field name="facilityId" title="Route"><lookup target-form-name="LookupFacility"/></field>    	
+        <field name="customTimePeriodId" title="${uiLabelMap.TimePeriod}" >
+        	<drop-down>																						
+            	<entity-options entity-name="CustomTimePeriod" key-field-name="customTimePeriodId"  filter-by-date="false" description="${groovy:org.ofbiz.base.util.UtilDateTime.toDateString(fromDate, &quot;dd MMM,yyyy&quot;);}-${groovy:org.ofbiz.base.util.UtilDateTime.toDateString(thruDate, &quot;dd MMM,yyyy&quot;);}">
+                	 <entity-constraint name="periodTypeId" operator="equals" value="DTC_FORTNIGHT_BILL"/>
+                 	 <entity-constraint name="isClosed" operator="equals" value="N"/>
+                 	 <entity-constraint name="fromDate" operator="less" value="${groovy: org.ofbiz.base.util.UtilDateTime.nowTimestamp();}"/>
+                 	 <entity-order-by field-name="-thruDate"/>
+           	 	</entity-options>
+			</drop-down>
+		 </field>
+		 <field name="recoveryTypeId" title="Hikes Type" >
+            <drop-down allow-empty="false">
+                <entity-options entity-name="Enumeration" description="${description}" key-field-name="enumId">
+                    <entity-constraint name="enumTypeId" value="FAC_DTC_HIKE"/>
+                    <entity-order-by field-name="sequenceId"/>
+                </entity-options>
+            </drop-down>
+        </field> 
+        <field name="ScreenFlagName" ><hidden value="DTC_HIKES"></hidden></field>
+		<!--  <field name="recoveryTypeId" title="Recovery Type" >
+        	<drop-down>
+        		<option key="CRATES" description="Crates"/>
+        		<option key="CANS" description="Cans"/>
+        		<option key="FINES_PENALTIES" description="Fines/Penalties"/>
+        	</drop-down>
+		</field> -->
+		<field name="amount" title="Amount(Rs)"><text/></field>
+       	<field name="submitButton" title="${uiLabelMap.CommonFind}" widget-style="smallSubmit"><submit/></field>       
+    </form>
+    <form name="ListHikesAndPayments" type="list" list-name="listIt" odd-row-style="alternate-row" 
+      default-entity-name="FineRecovery" target="DieselHikePayment" default-table-style="basic-table hover-bar" >
+    	<actions>   
+    	 <script  location="component://byproducts/webapp/byproducts/WEB-INF/actions/invoiceAndPayment/prepareFindOptions.groovy" /> 
+    	   <service service-name="performFind" result-map="result" result-map-list="listIt">
+                <field-map field-name="inputFields" from-field="parameters"/>
+                <field-map field-name="entityName" value="FineRecovery"/>
+                <field-map field-name="viewIndex" from-field="viewIndex"/>
+                <field-map field-name="viewSize" from-field="viewSize"/>
+            </service> 
+        </actions>
+    	<field name="facilityId" title="Route No"><display/></field>    	
+        <field name="customTimePeriodId" title="Time Period">
+        	<display-entity entity-name="CustomTimePeriod" key-field-name="customTimePeriodId" description="${groovy:org.ofbiz.base.util.UtilDateTime.toDateString(fromDate, &quot;MMMdd&quot;);}-${groovy:org.ofbiz.base.util.UtilDateTime.toDateString(thruDate, &quot;MMMdd yyyy&quot;);}"/>
+        </field>
+        <field name="recoveryTypeId" title = "Hike Type">
+          <display-entity entity-name="Enumeration" key-field-name="enumId" description="${description}"/>
+        </field>
+    	<field name="amount" title="Amount(Rs)"><display/></field>
+    	<field name="description" title="Description"><display/></field>
+    	<field name="incidentDate" title="Date Of Incident"><display/></field>
+    	<field name="createdByUserLogin" title="User Name"><display/></field>
+    	<field name="createdDate" title="createdDate"><display/></field>
+    	<field name="cancel" widget-style="buttontext cancel">
+		<hyperlink target="cancelHikeOrPayment" description="Cancel" confirmation-message="Are You Sure You Want To Cancel">
+        	<parameter param-name="facilityId" from-field="facilityId"/>
+        	<parameter param-name="customTimePeriodId" from-field="customTimePeriodId"/>
+        	<parameter param-name="recoveryTypeId" from-field="recoveryTypeId"/>
+        	<parameter param-name="recoveryId" from-field="recoveryId"/>
+        </hyperlink>
+        </field>
+    </form>
+    <form name="EnterNewHikeOrPayment" type="single" target="CreateNewHikeOrPayment" header-row-style="header-row" 
+		default-table-style="basic-table" >
+		<field name="facilityId" title="Route" action="javascript:this.value=this.value.toUpperCase();" event="onblur" ><lookup target-form-name="LookupFacility"/></field>
+		<field name="customTimePeriodId" title="${uiLabelMap.TimePeriod}" >
+        	<drop-down>																						
+            	<entity-options entity-name="CustomTimePeriod" key-field-name="customTimePeriodId"  filter-by-date="false" description="${groovy:org.ofbiz.base.util.UtilDateTime.toDateString(fromDate, &quot;dd MMM,yyyy&quot;);}-${groovy:org.ofbiz.base.util.UtilDateTime.toDateString(thruDate, &quot;dd MMM,yyyy&quot;);}">
+                	 <entity-constraint name="periodTypeId" operator="equals" value="DTC_FORTNIGHT_BILL"/>
+                 	 <entity-constraint name="isClosed" operator="equals" value="N"/>
+                 	 <entity-constraint name="fromDate" operator="less" value="${groovy: org.ofbiz.base.util.UtilDateTime.nowTimestamp();}"/>
+                 	 <entity-order-by field-name="-thruDate"/>
+           	 	</entity-options>
+			</drop-down>
+		</field>
+		 <field name="incidentDate"  required-field="true" title="Date of Hike"><date-time></date-time></field> 
+		 <field name="recoveryTypeId" title="Hike Type">
+            <drop-down allow-empty="false">
+                <entity-options entity-name="Enumeration" description="${description}" key-field-name="enumId">
+                    <entity-constraint name="enumTypeId" value="FAC_DTC_HIKE"/>
+                    <entity-order-by field-name="sequenceId"/>
+                </entity-options>
+            </drop-down>
+        </field> 
+		<field name="amount" title="Amount(Rs)"><text/></field>
+		 <field name="description" title="Description" ><textarea/></field> 
+		<field name="submitButton" title="${uiLabelMap.Create}" widget-style="smallSubmit">
+            <submit/>
         </field>
     </form>
    </forms>

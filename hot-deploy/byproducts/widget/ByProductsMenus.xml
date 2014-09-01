@@ -2,7 +2,7 @@
 <menus xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/widget-menu.xsd">
     <menu name="MainAppBar" title="${uiLabelMap.ByProductsApplication}" extends="CommonAppBarMenu" extends-resource="component://common/widget/CommonMenus.xml">
         <menu-item name="main" title="${uiLabelMap.CommonMain}"><link target="main"/></menu-item>
-          <menu-item name="mainNg" title="${uiLabelMap.CommonMainNg}"><link target="mainNg"/></menu-item>
+        <menu-item name="mainNg" title="${uiLabelMap.CommonMainNg}"><link target="mainNg"/></menu-item>
     </menu>
     
     <menu name="ByProductFacilityTabBar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml"
@@ -898,6 +898,9 @@
         <menu-item name="FinesAndPenalties" title="Fines And Penalties">
         	<link target="FinesAndPenalties"/>
         </menu-item>    
+        <menu-item name="DieselHikePayment" title="Diesel Hike Payment">
+        	<link target="DieselHikePayment"/>
+        </menu-item>  
       </menu>
        <menu name="NonRoutePaymentSubTabBar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml"
           default-menu-item-name="Payments" selected-menuitem-context-field-name="subTabButtonItem">

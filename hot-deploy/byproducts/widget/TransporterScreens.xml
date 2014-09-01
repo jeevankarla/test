@@ -41,8 +41,8 @@
 								<container style="button-bar">
 									<section>
 									<condition>	
-									<if-has-permission permission="TRNSMRGN" action="_ADMIN">
-									</if-has-permission></condition>
+									<if-has-permission permission="TRNSMRGN" action="_ADMIN"></if-has-permission>
+									</condition>
 									<widgets>
 									<link target="GenerateTransporterMarginReport" text="Generate Transporter Margin Billing" style="buttontext create">				
 										<parameter param-name="billingTypeId" value="PB_LMS_TRSPT_MRGN"/>
@@ -366,4 +366,61 @@
             </widgets>
         </section>
     </screen>	
+     <screen name="DieselHikePayment">
+        <section>
+            <actions>
+			   <set field="titleProperty" value="Transporter Billing"/>              
+			   <set field="tabButtonItem" value="TransporterMargins" />	
+			   <set field="tabButtonItem2" value="DieselHikePayment"/> 
+			   <!--  <script  location="component://byproducts/webapp/byproducts/WEB-INF/actions/invoiceAndPayment/prepareFindOptions.groovy" />  --> 
+            </actions>           
+            <widgets>
+            <decorator-screen name="ByProductsNgCommonDecorator" location="component://byproducts/widget/CommonScreens.xml">
+                    <decorator-section name="body">
+                    <include-menu name="TransporterMarginsTabBar" location="component://byproducts/widget/ByProductsMenus.xml"/>
+                    	<section>
+							<widgets>
+								<container style="button-bar">
+									<link target="EnterNewHikeOrPayment" text="Create New Hike" style="buttontext create">				
+									</link>
+								</container>
+								<screenlet title="Additional Payment">				
+									<include-form name="FindHikesAndPayments" location="component://byproducts/widget/TransporterForms.xml" />
+								</screenlet>
+								<screenlet title="List Fines and Penalties">				
+									<include-form name="ListHikesAndPayments" location="component://byproducts/widget/TransporterForms.xml" />
+								</screenlet>
+							</widgets>      
+                    	</section>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+      <screen name="EnterNewHikeOrPayment">
+        <section>
+            <actions>
+			   <set field="titleProperty" value="TransporterBilling"/>              
+			   <set field="tabButtonItem" value="TransporterMargins" />	
+			   <set field="tabButtonItem2" value="DieselHikePayment"/> 
+			    <set field="billingTypeId" value="PB_LMS_TRSPT_MRGN"/>
+            </actions>           
+            <widgets>
+            <decorator-screen name="ByProductsNgCommonDecorator" location="component://byproducts/widget/CommonScreens.xml">
+                    <decorator-section name="body">
+                    <include-menu name="TransporterMarginsTabBar" location="component://byproducts/widget/ByProductsMenus.xml"/>
+                    	<section>
+							<widgets>
+								<screenlet title="Create Transporter Hikes">				
+									<include-form name="EnterNewHikeOrPayment" location="component://byproducts/widget/TransporterForms.xml" />
+								</screenlet>
+							</widgets>      
+                    	</section>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    
+    
  </screens>
