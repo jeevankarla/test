@@ -1,0 +1,174 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<screens xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/widget-screen.xsd">
+        
+ <screen name="ArInvoicesSearch">
+        <section>
+            <actions>
+                <set field="titleProperty" value="Find Sale Invoices"/>
+                  <set field="tabButtonItem" value="InvoiceAndPaymentProcess" />	
+			      <set field="tabButtonItem2" value="ArInvoiceSearch"/>  
+                <service service-name="acctgInvoicePermissionCheck" result-map="permResult">
+                    <field-map field-name="mainAction" value="ARINVOICE_EDIT"/>
+                </service>
+                <set field="hasArInvoiceEditPermission" from-field="permResult.hasPermission"/>  
+                 <set field="parentTypeId" from-field="parameters.parentTypeId" />      
+                 <script location="component://accounting/webapp/ap/WEB-INF/actions/invoices/voucherPaymentMethod.groovy"/>     
+                  <service service-name="performFind" result-map="result">
+                    <field-map field-name="inputFields" from-field="parameters"/>
+                    <field-map field-name="entityName" value="InvoiceAndType"/>
+                    <field-map field-name="orderBy" value="invoiceDate DESC"/>
+                </service>
+                <set field="invoices" from-field="result.listIt"/>       
+            </actions>
+            <widgets>
+             <decorator-screen name="ByProductsNgCommonDecorator" location="component://byproducts/widget/CommonScreens.xml">
+                      <decorator-section name="body">  
+                      <include-menu name="InvoiceAndPaymentSubTab" location="component://byproducts/widget/ByProductsMenus.xml"/> 
+                        <section>
+                        <!-- <condition>
+                          <if-compare operator="equals" value="true" field="hasArInvoiceEditPermission"/>
+                    	</condition> -->
+                            <widgets>
+                                <decorator-screen name="FindScreenDecorator" location="component://common/widget/CommonScreens.xml">
+                                      <decorator-section name="search-options">
+                                        <include-form name="FindArInvoices" location="component://byproducts/widget/InvoiceAndPaymentForms.xml"/>
+                                    </decorator-section>
+                      				<decorator-section name="search-results">
+                      					<screenlet title="Invoices List"> 
+            								<section>   
+            									<condition>
+            										<not><if-empty field="invoices" /></not>
+            									</condition>
+            									<widgets>              							                                   
+		            								<link text="${uiLabelMap.AccountingExportAsCsv}" style="buttontext"
+														target="InvoiceSearchResultsCsv.csv">
+														<parameter param-name="parentTypeId" from-field="parameters.parentTypeId"/>
+														<parameter param-name="invoiceId_op" from-field="parameters.invoiceId_op"/>
+														<parameter param-name="invoiceId" from-field="parameters.invoiceId"/>
+														<parameter param-name="invoiceId_ic" from-field="parameters.invoiceId_ic"/>
+														<parameter param-name="description_op" from-field="parameters.description_op"/>
+														<parameter param-name="description" from-field="parameters.description"/>
+														<parameter param-name="description_ic" from-field="parameters.description_ic"/>
+														<parameter param-name="invoiceTypeId" from-field="parameters.invoiceTypeId"/>
+														<parameter param-name="statusId" from-field="parameters.statusId"/>
+														<parameter param-name="partyIdFrom" from-field="parameters.partyIdFrom"/>
+														<parameter param-name="partyId" from-field="parameters.partyId"/>
+														<parameter param-name="invoiceDate_fld0_value" from-field="parameters.invoiceDate_fld0_value"/>
+														<parameter param-name="invoiceDate_fld0_op" from-field="parameters.invoiceDate_fld0_op"/>
+														<parameter param-name="invoiceDate_fld1_value" from-field="parameters.invoiceDate_fld1_value"/>
+														<parameter param-name="invoiceDate_fld1_op" from-field="parameters.invoiceDate_fld1_op"/>
+														<parameter param-name="dueDate_fld0_value" from-field="parameters.dueDate_fld0_value"/>
+														<parameter param-name="dueDate_fld0_op" from-field="parameters.dueDate_fld0_op"/>
+														<parameter param-name="dueDate_fld1_value" from-field="parameters.dueDate_fld1_value"/>
+														<parameter param-name="dueDate_fld1_op" from-field="parameters.dueDate_fld1_op"/>
+													</link>	  
+												</widgets>
+											</section>               
+                                        	<platform-specific>
+                                            	<html><html-template location="component://accounting/webapp/accounting/invoice/ListSearchOtherInvoices.ftl"/></html>
+                                        	</platform-specific>
+                                        </screenlet>
+                      				</decorator-section>
+                                </decorator-screen>
+                            </widgets>
+                        </section>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    <screen name="ArPaymentsSearch">
+        <section>
+            <actions>
+                <set field="titleProperty" value="Find Payments"/>
+                <set field="headerItem" value="payments"/>
+                <set field="tabButtonItem" value="InvoiceAndPaymentProcess" />	
+			    <set field="tabButtonItem2" value="ArPaymentsSearch"/>  
+                <set field="viewSize" from-field="parameters.VIEW_SIZE" type="Integer" default-value="1000"/>
+                <service service-name="acctgInvoicePermissionCheck" result-map="permResult">
+                    <field-map field-name="mainAction" value="PAYMENT_EDIT"/>
+                </service>
+                <script  location="component://byproducts/webapp/byproducts/WEB-INF/actions/invoiceAndPayment/prepareFindOptions.groovy" />  
+                <set field="hasPaymentEditPermission" from-field="permResult.hasPermission"/>
+                 <script location="component://accounting/webapp/ap/WEB-INF/actions/invoices/voucherPaymentMethod.groovy"/>  
+                <service service-name="performFind" result-map="result">
+	                <field-map field-name="inputFields" from-field="parameters"/>
+	                <field-map field-name="entityName" value="PaymentAndTypeAndCreditCard"/>
+	                <field-map field-name="orderBy" value="effectiveDate DESC"/>
+	                <field-map field-name="viewIndex" from-field="viewIndex"/>
+	                <field-map field-name="viewSize" from-field="viewSize"/>
+	            </service>
+	            <set field="payments" from-field="result.listIt"/>
+            </actions>
+            <widgets>
+             <decorator-screen name="ByProductsNgCommonDecorator" location="component://byproducts/widget/CommonScreens.xml">
+                 <decorator-section name="body">  
+               <include-menu name="InvoiceAndPaymentSubTab" location="component://byproducts/widget/ByProductsMenus.xml"/> 
+                        <section>
+                            <widgets>
+                                <decorator-screen name="FindScreenDecorator" location="component://common/widget/CommonScreens.xml">
+                                    <decorator-section name="menu-bar">
+                                    	<section>
+                                    		<condition>
+                                    		<if-compare operator="equals" value="true" field="hasPaymentEditPermission"/>
+                                    		</condition>
+                                    		<widgets>
+                                             <container style="button-bar">
+                                            <link target="newPayment" text="${uiLabelMap.CommonCreateNew}" style="buttontext create"/>
+                                        </container>
+                                        </widgets>
+                                    </section>
+                                    </decorator-section>
+                                    <decorator-section name="search-options">
+                                        <include-form name="FindArPayments" location="component://byproducts/widget/InvoiceAndPaymentForms.xml" />
+                                        
+                                    </decorator-section>
+                                    <decorator-section name="search-results">
+                                        <link target="PaymentSearchResultsCsv.csv" text="Export As Csv" style="buttontext">
+												<parameter param-name="paymentId" from-field="parameters.paymentId"/>
+												<parameter param-name="paymentId_op" from-field="parameters.paymentId_op"/>
+												<parameter param-name="paymentId_ic" from-field="parameters.paymentId_ic"/>
+												<parameter param-name="parentTypeId" value="RECEIPT"/>
+												<parameter param-name="facilityId" from-field="parameters.facilityId"/>
+												<parameter param-name="facilityId_op" from-field="parameters.facilityId_op"/>
+												<parameter param-name="facilityId_ic" from-field="parameters.facilityId_ic"/>
+												<parameter param-name="comments" from-field="parameters.comments"/>
+												<parameter param-name="comments_op" from-field="parameters.comments_op"/>
+												<parameter param-name="comments_ic" from-field="parameters.comments_ic"/>
+												
+												<parameter param-name="paymentRefNum" from-field="paymentRefNum.comments"/>
+												<parameter param-name="paymentRefNum_op" from-field="parameters.paymentRefNum_op"/>
+												<parameter param-name="paymentRefNum_ic" from-field="parameters.paymentRefNum_ic"/>
+																				<parameter param-name="paymentDate_fld0_value" from-field="parameters.paymentDate_fld0_value"/>
+											    <parameter param-name="paymentDate_fld0_op" from-field="parameters.paymentDate_fld0_op"/>
+											    <parameter param-name="paymentDate_fld1_value" from-field="parameters.paymentDate_fld1_value"/>
+											    <parameter param-name="paymentDate_fld1_op" from-field="parameters.paymentDate_fld1_op"/>
+											    										
+												<parameter param-name="paymentMethodTypeId" from-field="parameters.paymentMethodTypeId"/>
+											    <parameter param-name="paymentTypeId" from-field="parameters.paymentTypeId"/>
+												<parameter param-name="paymentMethodTypeId" from-field="parameters.paymentMethodTypeId"/>
+											    <parameter param-name="paymentTypeId" from-field="parameters.paymentTypeId"/>
+												<parameter param-name="statusId" from-field="parameters.statusId"/>
+											    <parameter param-name="partyIdFrom" from-field="parameters.partyIdFrom"/>
+											    <parameter param-name="partyIdTo" from-field="parameters.partyIdTo"/>
+											    <parameter param-name="amount" from-field="parameters.amount"/>
+											    <parameter param-name="statusId" from-field="parameters.statusId"/>
+											    <parameter param-name="partyIdFrom" from-field="parameters.partyIdFrom"/>
+											    <parameter param-name="noConditionFind" value="Y"/>
+		
+                                        </link>
+                                    	<platform-specific>
+                                           	<html><html-template location="component://accounting/webapp/accounting/payment/ListSearchOtherPayments.ftl"/></html>
+                                       	</platform-specific>
+                                        <!-- <include-form name="ListPayments"  location="component://accounting/widget/PaymentForms.xml"/> -->
+                                    </decorator-section>
+                                </decorator-screen>
+                            </widgets>
+                        </section>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    </screens>
