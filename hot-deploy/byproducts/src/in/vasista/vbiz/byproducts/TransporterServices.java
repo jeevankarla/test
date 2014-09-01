@@ -459,11 +459,14 @@ import java.text.SimpleDateFormat;
 				BigDecimal totalMargin = (BigDecimal) partyWiseValues.get("totalMargin");
 				BigDecimal quantity = BigDecimal.ONE;
 				BigDecimal totalFine = BigDecimal.ZERO;
+				BigDecimal totalHikeAmount = BigDecimal.ZERO;
 				if(UtilValidate.isNotEmpty(partyWiseRecvoryMap) && UtilValidate.isNotEmpty(partyWiseRecvoryMap.get(partyIdTo))){
 					Map partyFinesMap=(Map)partyWiseRecvoryMap.get(partyIdTo);
 					totalFine=(BigDecimal)partyFinesMap.get("totalFine");
+					
+					totalHikeAmount=(BigDecimal)partyFinesMap.get("totalHikeAmount");
 				}
-				Debug.log("===partyIdTo==="+partyIdTo+"=====Fine="+totalFine+"===Commission="+totalMargin);
+				Debug.log("===partyIdTo==="+partyIdTo+"=====Fine="+totalFine+"===Commission="+totalMargin+"==totalHikeAmount="+totalHikeAmount);
 				/*GenericValue facilityDetail = delegator.findOne("Facility",UtilMisc.toMap("facilityId", facilityId) ,false);
 				String partyIdTo = facilityDetail.getString("ownerPartyId");*/
 				// heree Invoice Raised by Transporter
@@ -508,10 +511,18 @@ import java.text.SimpleDateFormat;
 		                    	 resMap = dispatcher.runSync("createInvoiceItem", UtilMisc.toMap("invoiceId", invoiceId,"invoiceItemTypeId", "DTC_RECOVERY_ITEM","quantity",quantity,"amount", totalFine.negate(),"userLogin", userLogin));
 				                    if (ServiceUtil.isError(result)) {
 				                    	//generationFailed = true;
-				    	                Debug.logWarning("There was an error while creating  the InvoiceItem: " + ServiceUtil.getErrorMessage(result), module);
+				    	                Debug.logWarning("There was an error while creating  the InvoiceItem For Recovery: " + ServiceUtil.getErrorMessage(result), module);
 				                    }
 						   }
-		                   
+		                   //for Hikes inserting New item for Same invoice
+		                    if(totalHikeAmount.compareTo(BigDecimal.ZERO) !=0){//if fine is zero dont add
+		                    	 resMap = dispatcher.runSync("createInvoiceItem", UtilMisc.toMap("invoiceId", invoiceId,"invoiceItemTypeId", "DTC_HIKE_ITEM","quantity",quantity,"amount", totalHikeAmount,"userLogin", userLogin));
+				                    if (ServiceUtil.isError(result)) {
+				                    	//generationFailed = true;
+				    	                Debug.logWarning("There was an error while creating  InvoiceItem For Hikes: " + ServiceUtil.getErrorMessage(result), module);
+				                    }
+						   }
+		                    
 		                    //for TDS Commission.
 		                   /* BigDecimal tdsMargin= totalMargin.divide(new BigDecimal(10));//for tax
 		                    resMap = dispatcher.runSync("createInvoiceItem", UtilMisc.toMap("invoiceId", invoiceId,"invoiceItemTypeId", "TDS_194H","quantity",quantity,"amount", tdsMargin,"userLogin", userLogin));
@@ -1547,7 +1558,9 @@ import java.text.SimpleDateFormat;
 				
 				GenericValue userLogin = (GenericValue) context.get("userLogin");
 				Map<String, Object> facilityRecoveryInfoMap = new HashMap<String, Object>();
+				//Map<String, Object> facilityRecoveryInfoMap = new HashMap<String, Object>();
 				Map<String, Object> partyRecoveryInfoMap = new HashMap<String, Object>();
+				Map<String, Object> partyHikesInfoMap = new HashMap<String, Object>();//for Extra Payments
 				Timestamp monthBegin =UtilDateTime.getDayStart(UtilDateTime.nowTimestamp());
 				if(UtilValidate.isNotEmpty((Timestamp) context.get("fromDate"))){
 					monthBegin=(Timestamp) context.get("fromDate");
@@ -1565,7 +1578,9 @@ import java.text.SimpleDateFormat;
 			        	List<GenericValue>	allFaclityCrateFinesList = EntityUtil.filterByCondition(facilityRecoveryList, EntityCondition.makeCondition("recoveryTypeId", EntityOperator.EQUALS, "CRATES"));
 			        	List<GenericValue>	allFaclityCanFinesList = EntityUtil.filterByCondition(facilityRecoveryList, EntityCondition.makeCondition("recoveryTypeId", EntityOperator.EQUALS, "CANS"));
 			        	List<GenericValue>	allFaclityOtherFinesList = EntityUtil.filterByCondition(facilityRecoveryList, EntityCondition.makeCondition("recoveryTypeId", EntityOperator.LIKE, "FINES_%"));
-
+			        	//for Hikes also Using Same but instead of Minus we will do plus in where ever we need
+			        	List<GenericValue>	allFaclityHikesList = EntityUtil.filterByCondition(facilityRecoveryList, EntityCondition.makeCondition("recoveryTypeId", EntityOperator.LIKE, "HIKES_%"));
+                        //Debug.log("====allFaclityHikesList="+allFaclityHikesList);
 	                	if(!UtilValidate.isEmpty(facilityIdsList)){
 	                		for(String facilityId : facilityIdsList){
 	                			Map<String, Object> facilityFineTempMap = FastMap.newInstance();
@@ -1573,9 +1588,12 @@ import java.text.SimpleDateFormat;
 	                			BigDecimal canFineAmount = BigDecimal.ZERO;
 	                			BigDecimal otherFinesAmount=BigDecimal.ZERO;
 	                			BigDecimal totalFineAmount = BigDecimal.ZERO;
+	                			BigDecimal totalHikeAmount = BigDecimal.ZERO;
 	                			List<GenericValue>	faclityCrateFinesList=EntityUtil.filterByCondition(allFaclityCrateFinesList, EntityCondition.makeCondition("facilityId", EntityOperator.EQUALS, facilityId));
 	                			List<GenericValue>	faclityCanFinesList=EntityUtil.filterByCondition(allFaclityCanFinesList, EntityCondition.makeCondition("facilityId", EntityOperator.EQUALS, facilityId));
 	                			List<GenericValue>	faclityOtherFinesList=EntityUtil.filterByCondition(allFaclityOtherFinesList, EntityCondition.makeCondition("facilityId", EntityOperator.EQUALS, facilityId));
+	                			
+	                			List<GenericValue>	faclityAllHikesList=EntityUtil.filterByCondition(allFaclityHikesList, EntityCondition.makeCondition("facilityId", EntityOperator.EQUALS, facilityId));
 	                			for(GenericValue facilityRecCrate : faclityCrateFinesList){
 	                				crateFineAmount=crateFineAmount.add(facilityRecCrate.getBigDecimal("amount"));
 	                			}
@@ -1593,6 +1611,10 @@ import java.text.SimpleDateFormat;
 	                			facilityFineTempMap.put("cansFine",canFineAmount);
 	                			facilityFineTempMap.put("othersFine",otherFinesAmount);
 	                			facilityFineTempMap.put("totalFine",totalFineAmount);
+	                			for(GenericValue facilityHikeOther : faclityAllHikesList){
+	                				totalHikeAmount=totalHikeAmount.add(facilityHikeOther.getBigDecimal("amount"));
+	                			}
+	                			facilityFineTempMap.put("totalHikeAmount",totalHikeAmount);
 	                			
 	                			facilityRecoveryInfoMap.put(facilityId, facilityFineTempMap);
 	                			
@@ -1612,6 +1634,7 @@ import java.text.SimpleDateFormat;
             			BigDecimal canFineAmount = BigDecimal.ZERO;
             			BigDecimal otherFinesAmount=BigDecimal.ZERO;
             			BigDecimal totalFineAmount = BigDecimal.ZERO;
+            			BigDecimal totalHikeAmount = BigDecimal.ZERO;
             			
 			        	 for(String faclityId:partyFacilityList){//adding each party Total fines which are having Routes
 			        		 if(UtilValidate.isNotEmpty(facilityRecoveryInfoMap.get(faclityId))){
@@ -1620,12 +1643,14 @@ import java.text.SimpleDateFormat;
 			        			canFineAmount=canFineAmount.add((BigDecimal)facilityFineMap.get("cansFine"));
 			        			otherFinesAmount=otherFinesAmount.add((BigDecimal)facilityFineMap.get("othersFine"));
 			        			totalFineAmount=totalFineAmount.add((BigDecimal)facilityFineMap.get("totalFine"));
+			        			totalHikeAmount=totalHikeAmount.add((BigDecimal)facilityFineMap.get("totalHikeAmount"));
 			        		 }
 			        	 }
 		        	    partyFineTempMap.put("cratesFine",crateFineAmount); 
             			partyFineTempMap.put("cansFine",canFineAmount);
             			partyFineTempMap.put("othersFine",otherFinesAmount);
             			partyFineTempMap.put("totalFine",totalFineAmount);
+            			partyFineTempMap.put("totalHikeAmount",totalHikeAmount);// newly added for Diesel Hike
             			
             			partyRecoveryInfoMap.put(partyId, partyFineTempMap);
 				  }
