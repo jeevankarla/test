@@ -77,9 +77,11 @@ context.nonBankAccountsList=nonBankAccountsList;
 if(UtilValidate.isNotEmpty(parameters.findPaymentMethodType)){
 	conditionList = [];
 	if(UtilValidate.isNotEmpty(finAccount) && ("BANK_ACCOUNT"==finAccount.finAccountTypeId)){
+	conditionList.add(EntityCondition.makeCondition("paymentMethodTypeId", EntityOperator.NOT_LIKE, "%_PAYOUT%"));
 	conditionList.add(EntityCondition.makeCondition("parentTypeId", EntityOperator.EQUALS, "MONEY"));
 	}
 	if(UtilValidate.isNotEmpty(finAccount) && ("BANK_ACCOUNT"!=finAccount.finAccountTypeId) ){
+	conditionList.add(EntityCondition.makeCondition("paymentMethodTypeId", EntityOperator.NOT_LIKE, "%_PAYOUT%"));
 	conditionList.add(EntityCondition.makeCondition("parentTypeId", EntityOperator.EQUALS, "STATUTORY"));
 	}
 	List paymentMethodTypeList = delegator.findList("PaymentMethodType", EntityCondition.makeCondition(conditionList, EntityOperator.AND), null, null, null, false);
