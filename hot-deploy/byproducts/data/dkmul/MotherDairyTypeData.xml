@@ -15,10 +15,11 @@
      storeName="MOTHER_DAIRY" subtitle="MOTHER_DAIRY" title="MOTHER_DAIRY" usePrimaryEmailUsername="N" viewCartOnAdd="N"/>
       -->
     <StatusType statusTypeId="VEHICLE_STATUS"/>
-    <StatusItem description="Out to field" sequenceId="1" statusCode="OUT" statusId="VEHICLE_OUT" statusTypeId="VEHICLE_STATUS"/>
-    <StatusItem description="CratesReturned" sequenceId="2" statusCode="CRATE_RTN" statusId="VEHICLE_CRATE_RTN" statusTypeId="VEHICLE_STATUS"/>
-    <StatusItem description="Products Returned" sequenceId="3" statusCode="PROD_RTN" statusId="VEHICLE_PROD_RTN" statusTypeId="VEHICLE_STATUS"/>
-    <StatusItem description="Confirmed" sequenceId="4" statusCode="Not yet Returned" statusId="VEHICLE_NTRTN" statusTypeId="VEHICLE_STATUS"/>
-    <StatusItem description="Finalized" sequenceId="5" statusCode="RETURNED" statusId="VEHICLE_RETURNED" statusTypeId="VEHICLE_STATUS"/>
+    <StatusItem description="Vehicle Loaded" sequenceId="1" statusCode="OUT" statusId="VEHICLE_OUT" statusTypeId="VEHICLE_STATUS"/>
+    <StatusItem description="Dispatched" sequenceId="2" statusCode="DISPATCHED" statusId="VEHICLE_DISPACHED" statusTypeId="VEHICLE_DISPACHED"/>
+    <StatusItem description="CratesReturned" sequenceId="3" statusCode="CRATE_RTN" statusId="VEHICLE_CRATE_RTN" statusTypeId="VEHICLE_STATUS"/>
+    <StatusItem description="Products Returned" sequenceId="4" statusCode="PROD_RTN" statusId="VEHICLE_PROD_RTN" statusTypeId="VEHICLE_STATUS"/>
+    <StatusItem description="Confirmed" sequenceId="5" statusCode="Not yet Returned" statusId="VEHICLE_NTRTN" statusTypeId="VEHICLE_STATUS"/>
+    <StatusItem description="Finalized" sequenceId="6" statusCode="RETURNED" statusId="VEHICLE_RETURNED" statusTypeId="VEHICLE_STATUS"/>
    
 </entity-engine-xml>
