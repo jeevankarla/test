@@ -1416,6 +1416,35 @@
         <response name="success" type="view" value="EditFixedDepositDetails"/>
         <response name="error" type="view" value="EditFixedDepositDetails"/>
     </request-map>
+    <!-- Department Portal requests -->
+    <!--  <request-map uri="findArDeptInvoices">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="findArDeptInvoices"/>
+        <response name="error" type="view" value="findArDeptInvoices"/>
+    </request-map> -->
+    <request-map uri="InvoiceAndPaymentProcess">
+       <security https="true" auth="true"/>
+        <response name="success" type="view" value="InvoiceAndPaymentProcess"/>
+        <response name="error" type="view" value="InvoiceAndPaymentProcess"/>
+    </request-map>
+    <request-map uri="createOtherVoucherPayment">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="createVoucherPayment"/>
+        <response name="success" type="request-redirect-noparam" value="ArPaymentsSearch">
+        <redirect-parameter  name="invoiceId"/> 
+         <redirect-parameter  name="parentTypeId"/> 
+        </response>
+        <response name="error" type="request-redirect-noparam" value="ArPaymentsSearch">
+        <redirect-parameter name="invoiceId"/>
+         <redirect-parameter  name="parentTypeId"/> 
+        </response>
+    </request-map>
+     <request-map uri="ArPaymentsSearch">
+       <security https="true" auth="true"/>
+        <response name="success" type="view" value="ArPaymentsSearch"/>
+        <response name="error" type="view" value="ArPaymentsSearch"/>
+    </request-map>
+    
     <!-- View Mappings -->
     <view-map name="main" type="screen" page="component://byproducts/widget/ByProductsNgScreens.xml#mainNg"/>
     <view-map name="mainNg" type="screen" page="component://byproducts/widget/ByProductsNgScreens.xml#mainNg"/>
@@ -1628,5 +1657,9 @@
  <view-map name="FindStockTranferShipment" type="screen" page="component://byproducts/widget/ByProductsNgScreens.xml#FindStockTranferShipment"/>
  <view-map name="ConversionChargesEntry" type="screen" page="component://byproducts/widget/ByProductsNgScreens.xml#ConversionChargesEntry"/>
  
-    
+ <!-- Department Portal Views -->
+ 
+ <!-- <view-map name="findArDeptInvoices" type="screen" page="component://byproducts/widget/DepartmentPortalScreens.xml#findArDeptInvoices"/> -->
+ <view-map name="InvoiceAndPaymentProcess" type="screen" page="component://byproducts/widget/InvoiceAndPaymentScreens.xml#ArInvoicesSearch"/>
+ <view-map name="ArPaymentsSearch" type="screen" page="component://byproducts/widget/InvoiceAndPaymentScreens.xml#ArPaymentsSearch"/>
 </site-conf>
