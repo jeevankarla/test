@@ -1814,17 +1814,34 @@
 				<property-map resource="OrderUiLabels" map-name="uiLabelMap" global="true"/>
 				<property-map resource="ProductUiLabels" map-name="uiLabelMap" global="true"/>
 				<property-map resource="PartyUiLabels" map-name="uiLabelMap" global="true"/>
+				<set field="reportTypeFlag" from-field="parameters.reportTypeFlag"/>
 				<script location="component://byproducts/webapp/byproducts/WEB-INF/actions/InvoiceAbstractReport.groovy" />	
 			</actions>
 			<widgets>
 				<section>
+					<condition>
+						<if-compare operator="equals" value="InvoiceSales" field="reportTypeFlag" />
+					</condition>
 					<widgets>
 						<platform-specific>
-							<xsl-fo>
+		                    <xsl-fo>
 								<html-template
 									location="component://byproducts/webapp/byproducts/reports/InvoiceAbstractReport.fo.ftl" />
 							</xsl-fo>
-						</platform-specific>
+		                </platform-specific>
+					</widgets>
+				</section>
+				<section>
+					<condition>
+						<if-compare operator="equals" value="InvoiceSalesAbstract" field="reportTypeFlag" />
+					</condition>
+					<widgets>
+						<platform-specific>
+		                   <xsl-fo>
+								<html-template
+									location="component://byproducts/webapp/byproducts/reports/InvoiceAbstractDayWiseReport.fo.ftl" />
+							</xsl-fo>
+		                </platform-specific>
 					</widgets>
 				</section>
 			</widgets>

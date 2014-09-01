@@ -51,9 +51,9 @@ dayBegin = UtilDateTime.getDayStart(fromDateTime);
 dayEnd = UtilDateTime.getDayEnd(thruDateTime);
 context.fromDate = fromDateTime;
 context.thruDate = thruDateTime;
-maxIntervalDays=UtilDateTime.getIntervalInDays(fromDateTime,thruDateTime);
+totalDays=UtilDateTime.getIntervalInDays(fromDateTime,thruDateTime);
 isByParty = Boolean.TRUE;
-if(maxIntervalDays > 32){
+if(totalDays > 32){
 	Debug.logError("You Cannot Choose More Than 31 Days.","");
 	context.errorMessage = "You Cannot Choose More Than 31 Days";
 	return;
@@ -67,69 +67,149 @@ if(categoryType.equals("ICE_CREAM_AMUL")||categoryType.equals("All")){
    amulPartyIds = ByProductNetworkServices.getPartyByRoleType(dctx, [userLogin: userLogin, roleTypeId: "EXCLUSIVE_CUSTOMER"]).get("partyIds");
    partyIds.addAll(amulPartyIds);
 }
-invoiceMap = [:];
-if(UtilValidate.isNotEmpty(partyIds)){
-	salesInvoiceTotals = SalesInvoiceServices.getPeriodSalesInvoiceTotals(dctx, [partyIds:partyIds, isQuantityLtrs:true,fromDate:dayBegin, thruDate:dayEnd]);
-	if(UtilValidate.isNotEmpty(salesInvoiceTotals)){
-		invoiceTotals = salesInvoiceTotals.get("invoiceIdTotals");
-		if(UtilValidate.isNotEmpty(invoiceTotals)){
-			invoiceTotals.each { invoice ->
-				if(UtilValidate.isNotEmpty(invoice)){
-					invoiceId = "";
-					partyName = "";
-					basicRevenue=0;
-					bedRevenue=0;
-					vatRevenue=0;
-					cstRevenue=0;
-					totalRevenue=0;
-					
-					invoiceId = invoice.getKey();
-					if(UtilValidate.isNotEmpty(invoice.getValue().invoiceDateStr)){
-						invoiceDate = invoice.getValue().invoiceDateStr;
+// Invoice No Sales report
+reportTypeFlag = parameters.reportTypeFlag;
+if(UtilValidate.isNotEmpty(reportTypeFlag) && reportTypeFlag == "InvoiceSales"){
+	invoiceMap = [:];
+	if(UtilValidate.isNotEmpty(partyIds)){
+		salesInvoiceTotals = SalesInvoiceServices.getPeriodSalesInvoiceTotals(dctx, [partyIds:partyIds, isQuantityLtrs:true,fromDate:dayBegin, thruDate:dayEnd]);
+		if(UtilValidate.isNotEmpty(salesInvoiceTotals)){
+			invoiceTotals = salesInvoiceTotals.get("invoiceIdTotals");
+			if(UtilValidate.isNotEmpty(invoiceTotals)){
+				invoiceTotals.each { invoice ->
+					if(UtilValidate.isNotEmpty(invoice)){
+						invoiceId = "";
+						partyName = "";
+						idValue = "";
+						basicRevenue=0;
+						bedRevenue=0;
+						vatRevenue=0;
+						cstRevenue=0;
+						totalRevenue=0;
+						
+						invoiceId = invoice.getKey();
+						if(UtilValidate.isNotEmpty(invoice.getValue().invoiceDateStr)){
+							invoiceDate = invoice.getValue().invoiceDateStr;
+						}
+						invoiceDetails = delegator.findOne("Invoice",[invoiceId : invoiceId] , false);
+						invoicePartyId = invoiceDetails.partyId;
+						partyIdentificationDetails = delegator.findOne("PartyIdentification", [partyId : invoicePartyId, partyIdentificationTypeId : "TIN_NUMBER"], false);
+						if(UtilValidate.isNotEmpty(partyIdentificationDetails)){
+							idValue = partyIdentificationDetails.idValue;
+						}
+						if(UtilValidate.isNotEmpty(invoicePartyId)){
+							partyName = PartyHelper.getPartyName(delegator, invoicePartyId, false);
+						}
+						if(UtilValidate.isNotEmpty(invoice.getValue().basicRevenue)){
+							basicRevenue = invoice.getValue().basicRevenue;
+						}
+						if(UtilValidate.isNotEmpty(invoice.getValue().vatRevenue)){
+							vatRevenue = invoice.getValue().vatRevenue;
+						}
+						if(UtilValidate.isNotEmpty(invoice.getValue().bedRevenue)){
+							bedRevenue = invoice.getValue().bedRevenue;
+						}
+						if(UtilValidate.isNotEmpty(invoice.getValue().cstRevenue)){
+							cstRevenue = invoice.getValue().cstRevenue;
+						}
+						if(UtilValidate.isNotEmpty(invoice.getValue().totalRevenue)){
+							totalRevenue = invoice.getValue().totalRevenue;
+						}
+						totalMap = [:];
+						totalMap["invoiceDate"]=invoiceDate;
+						totalMap["basicRevenue"]=basicRevenue;
+						totalMap["partyName"]=partyName;
+						totalMap["bedRevenue"]=bedRevenue;
+						totalMap["vatRevenue"]=vatRevenue;
+						totalMap["cstRevenue"]=cstRevenue;
+						totalMap["totalRevenue"]=totalRevenue;
+						totalMap["idValue"]=idValue;
+						tempMap = [:];
+						tempMap.putAll(totalMap);
+						if(UtilValidate.isNotEmpty(tempMap)){
+							invoiceMap.put(invoiceId,tempMap);
+						}
 					}
-					invoiceDetails = delegator.findOne("Invoice",[invoiceId : invoiceId] , false);
-					invoicePartyId = invoiceDetails.partyId;
-					if(UtilValidate.isNotEmpty(invoicePartyId)){
-						partyName = PartyHelper.getPartyName(delegator, invoicePartyId, false);
-					}
-					if(UtilValidate.isNotEmpty(invoice.getValue().basicRevenue)){
-						basicRevenue = invoice.getValue().basicRevenue;
-					}
-					if(UtilValidate.isNotEmpty(invoice.getValue().vatRevenue)){
-						vatRevenue = invoice.getValue().vatRevenue;
-					}
-					if(UtilValidate.isNotEmpty(invoice.getValue().bedRevenue)){
-						bedRevenue = invoice.getValue().bedRevenue;
-					}
-					if(UtilValidate.isNotEmpty(invoice.getValue().cstRevenue)){
-						cstRevenue = invoice.getValue().cstRevenue;
-					}
-					if(UtilValidate.isNotEmpty(invoice.getValue().totalRevenue)){
-						totalRevenue = invoice.getValue().totalRevenue;
-					}
-					totalMap = [:];
-					totalMap["invoiceDate"]=invoiceDate;
-					totalMap["basicRevenue"]=basicRevenue;
-					totalMap["partyName"]=partyName;
-					totalMap["bedRevenue"]=bedRevenue;
-					totalMap["vatRevenue"]=vatRevenue;
-					totalMap["cstRevenue"]=cstRevenue;
-					totalMap["totalRevenue"]=totalRevenue;
-					tempMap = [:];
-					tempMap.putAll(totalMap);
-					if(UtilValidate.isNotEmpty(tempMap)){
-						invoiceMap.put(invoiceId,tempMap);
+				}
+			}
+			context.put("invoiceMap",invoiceMap);
+		}
+	}
+}
+// Invoice Sales Abstract
+if(UtilValidate.isNotEmpty(reportTypeFlag) && reportTypeFlag == "InvoiceSalesAbstract"){
+	finalInvoiceDateMap = [:];
+	for( i=0 ; i <= (totalDays); i++){
+		currentDay =UtilDateTime.addDaysToTimestamp(fromDateTime, i);
+		dayBegin=UtilDateTime.getDayStart(currentDay);
+		dayEnd=UtilDateTime.getDayEnd(currentDay);
+		invoicePartyMap = [:];
+		if(UtilValidate.isNotEmpty(partyIds)){
+			salesInvoiceTotals = SalesInvoiceServices.getPeriodSalesInvoiceTotals(dctx, [partyIds:partyIds, isQuantityLtrs:true,fromDate:dayBegin, thruDate:dayEnd]);
+			if(UtilValidate.isNotEmpty(salesInvoiceTotals)){
+				invoiceTotals = salesInvoiceTotals.get("invoiceIdTotals");
+				if(UtilValidate.isNotEmpty(invoiceTotals)){
+					invoiceTotals.each { invoice ->
+						if(UtilValidate.isNotEmpty(invoice)){
+							invoiceId = "";
+							partyName = "";
+							basicRevenue=0;
+							bedRevenue=0;
+							vatRevenue=0;
+							cstRevenue=0;
+							totalRevenue=0;
+							
+							invoiceId = invoice.getKey();
+							if(UtilValidate.isNotEmpty(invoice.getValue().invoiceDateStr)){
+								invoiceDate = invoice.getValue().invoiceDateStr;
+							}
+							invoiceDetails = delegator.findOne("Invoice",[invoiceId : invoiceId] , false);
+							invoicePartyId = invoiceDetails.partyId;
+							if(UtilValidate.isNotEmpty(invoicePartyId)){
+								partyName = PartyHelper.getPartyName(delegator, invoicePartyId, false);
+							}
+							if(UtilValidate.isNotEmpty(invoice.getValue().basicRevenue)){
+								basicRevenue = invoice.getValue().basicRevenue;
+							}
+							if(UtilValidate.isNotEmpty(invoice.getValue().vatRevenue)){
+								vatRevenue = invoice.getValue().vatRevenue;
+							}
+							if(UtilValidate.isNotEmpty(invoice.getValue().bedRevenue)){
+								bedRevenue = invoice.getValue().bedRevenue;
+							}
+							if(UtilValidate.isNotEmpty(invoice.getValue().cstRevenue)){
+								cstRevenue = invoice.getValue().cstRevenue;
+							}
+							if(UtilValidate.isNotEmpty(invoice.getValue().totalRevenue)){
+								totalRevenue = invoice.getValue().totalRevenue;
+							}
+							totalMap = [:];
+							totalMap["invoiceId"]=invoiceId;
+							totalMap["basicRevenue"]=basicRevenue;
+							totalMap["bedRevenue"]=bedRevenue;
+							totalMap["vatRevenue"]=vatRevenue;
+							totalMap["cstRevenue"]=cstRevenue;
+							totalMap["totalRevenue"]=totalRevenue;
+							
+							invoicePartyList = [];
+							if(UtilValidate.isNotEmpty(invoicePartyMap[invoicePartyId])){
+								invoicePartyList = invoicePartyMap.get(invoicePartyId);
+							}
+							invoicePartyList.add(totalMap);
+							invoicePartyMap[invoicePartyId] = invoicePartyList;
+						}
 					}
 				}
 			}
 		}
-		context.put("invoiceMap",invoiceMap);
+		tempMap = [:];
+		tempMap.putAll(invoicePartyMap);
+		if(UtilValidate.isNotEmpty(tempMap)){
+			finalInvoiceDateMap.put(dayBegin,tempMap);
+		}
 	}
+	context.put("finalInvoiceDateMap",finalInvoiceDateMap);
 }
-
-
-
-
 
 
 
