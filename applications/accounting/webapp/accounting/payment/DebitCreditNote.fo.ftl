@@ -51,9 +51,12 @@ under the License.
 					<fo:block  keep-together="always" text-align="right" font-size = "11pt" font-family="Courier,monospace" white-space-collapse="false">    UserLogin : <#if userLogin?exists>${userLogin.userLoginId?if_exists}</#if></fo:block>
 					<fo:block  keep-together="always" text-align="right" font-size = "11pt" font-family="Courier,monospace" white-space-collapse="false">&#160;      Date:${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(nowTimestamp, "dd/MM/yy HH:mm:ss")}</fo:block>
 					<fo:block  keep-together="always" text-align="center" font-size = "13pt" font-family="Courier,monospace" white-space-collapse="false" font-weight="bold">${uiLabelMap.KMFDairyHeader}</fo:block>
-					<fo:block  keep-together="always" text-align="center" font-size = "13pt" font-family="Courier,monospace" white-space-collapse="false" font-weight="bold">${uiLabelMap.KMFDairySubHeader}</fo:block>
+					<fo:block  keep-together="always" text-align="center" font-size = "13pt" font-family="Courier,monospace" white-space-collapse="false" font-weight="bold">${invoice.invoiceTypeId}</fo:block>
 					<fo:block linefeed-treatment="preserve">&#xA;</fo:block>
-					<fo:block  keep-together="always" text-align="center" font-size = "14pt" font-family="Courier,monospace" white-space-collapse="false" font-weight="bold"><#if partyIdFrom?exists && partyIdFrom == "Company">DEBIT ADVICE<#else>CREDIT ADVICE</#if></fo:block>
+					<#assign invoiceTypeId = invoice.invoiceTypeId?if_exists>
+					<#assign partyIdFrom = invoice.partyIdFrom?if_exists>
+					<#assign partyId = invoice.partyId?if_exists>
+					<fo:block  keep-together="always" text-align="center" font-size = "14pt" font-family="Courier,monospace" white-space-collapse="false" font-weight="bold"><#if invoiceTypeId == "SALES_INVOICE" && partyIdFrom == "Company">DEBIT ADVICE</#if><#if invoiceTypeId == "PURCHASE_INVOICE" && partyId == "Company">CREDIT ADVICE</#if></fo:block>
         	</fo:static-content>
         	<fo:flow flow-name="xsl-region-body">
               <fo:block linefeed-treatment="preserve">&#xA;</fo:block>
@@ -153,7 +156,7 @@ under the License.
 							</fo:table-row>
 							<fo:table-row>
 								<fo:table-cell>
-				            		<fo:block text-align="left" keep-together="always" font-size = "12pt">This is to inform you that your account has been <#if partyIdFrom?exists && partyIdFrom == "Company">DEBITED<#else>CREDITED</#if> with Rs: ${amount?if_exists?string("##0.00")}       on the basis of the </fo:block>     
+				            		<fo:block text-align="left" keep-together="always" font-size = "12pt">This is to inform you that your account has been <#if invoiceTypeId == "SALES_INVOICE" && partyIdFrom == "Company">DEBITED</#if><#if invoiceTypeId == "PURCHASE_INVOICE" && partyId == "Company">CREDITED</#if> with Rs: ${amount?if_exists?string("##0.00")}       on the basis of the </fo:block>     
 				       			</fo:table-cell>
 							</fo:table-row>
 							<fo:table-row>
