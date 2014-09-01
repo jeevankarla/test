@@ -22,30 +22,33 @@ import org.ofbiz.base.util.UtilNumber;
 import in.vasista.vbiz.humanres.HumanresService;
 import in.vasista.vbiz.humanres.PayrollService;
 import org.ofbiz.party.party.PartyHelper;
-timePeriod = null;
+timePeriodId = null;
 if (parameters.customTimePeriodId == null) {
 	return;
 }
 dctx = dispatcher.getDispatchContext();
 GenericValue customTimePeriod = delegator.findOne("CustomTimePeriod", [customTimePeriodId : parameters.customTimePeriodId], false);
-timePeriodStart=UtilDateTime.toTimestamp(customTimePeriod.getDate("fromDate"));
-timePeriodEnd=UtilDateTime.toTimestamp(customTimePeriod.getDate("thruDate"));
+fromDateStart=UtilDateTime.toTimestamp(customTimePeriod.getDate("fromDate"));
+thruDateEnd=UtilDateTime.toTimestamp(customTimePeriod.getDate("thruDate"));
+context.putAt("fromDateStart", fromDateStart);
+fromDayBegin = UtilDateTime.getDayStart(fromDateStart);
+thruDayEnd = UtilDateTime.getDayEnd(thruDateEnd);
 
-resultMap = PayrollService.getPayrollAttedancePeriod(dctx, [timePeriodStart:timePeriodStart, timePeriodEnd: timePeriodEnd, timePeriodId: parameters.customTimePeriodId, userLogin : userLogin]);
+resultMap = PayrollService.getPayrollAttedancePeriod(dctx, [timePeriodStart:fromDayBegin, timePeriodEnd: thruDayEnd, timePeriodId: parameters.customTimePeriodId, userLogin : userLogin]);
 if(UtilValidate.isNotEmpty(resultMap.get("lastCloseAttedancePeriod"))){
 	lastCloseAttedancePeriod=resultMap.get("lastCloseAttedancePeriod");
-	timePeriod=lastCloseAttedancePeriod.get("periodName");
+	timePeriodId=lastCloseAttedancePeriod.get("customTimePeriodId");
 }
 payrollDetailsMap=[:];
-if(UtilValidate.isNotEmpty(timePeriod)){
+if(UtilValidate.isNotEmpty(timePeriodId)){
 	conditionList=[];
-	conditionList.add(EntityCondition.makeCondition("customTimePeriodId", EntityOperator.EQUALS ,timePeriod));
+	conditionList.add(EntityCondition.makeCondition("customTimePeriodId", EntityOperator.EQUALS ,timePeriodId));
 	condition = EntityCondition.makeCondition(conditionList,EntityOperator.AND);
 	payrollDetailsList = delegator.findList("PayrollAttendance", condition, null, null, null, false);
 	if(UtilValidate.isNotEmpty(payrollDetailsList)){
 		payrollDetailsList.each { payrollDetails ->
 		noOfPayableDays=payrollDetails.get("noOfPayableDays");
-		if(UtilValidate.isNotEmpty(noOfPayableDays)){
+		if(UtilValidate.isEmpty(noOfPayableDays)){
 			payrollDaysMap= [:];
 			partyId=payrollDetails.get("partyId");
 				payableDays = 0;
