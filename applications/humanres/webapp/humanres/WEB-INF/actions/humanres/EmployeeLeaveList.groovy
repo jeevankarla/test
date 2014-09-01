@@ -29,9 +29,14 @@ try {
 }
 List employeeLeaveList = [];
 List conditionList=[];
-conditionList.add(EntityCondition.makeCondition("partyId", EntityOperator.EQUALS, parameters.partyId));
+if(UtilValidate.isNotEmpty(parameters.partyId)){
+	conditionList.add(EntityCondition.makeCondition("partyId", EntityOperator.EQUALS, parameters.partyId));
+}
+
 if(UtilValidate.isNotEmpty(parameters.leaveTypeId)){
 	conditionList.add(EntityCondition.makeCondition("leaveTypeId", EntityOperator.EQUALS, parameters.leaveTypeId));
+}else{
+	
 }
 if(UtilValidate.isNotEmpty(parameters.emplLeaveReasonTypeId)){
 	conditionList.add(EntityCondition.makeCondition("emplLeaveReasonTypeId", EntityOperator.EQUALS, parameters.emplLeaveReasonTypeId));
@@ -41,6 +46,8 @@ if(UtilValidate.isNotEmpty(parameters.approverPartyId)){
 }
 if(UtilValidate.isNotEmpty(parameters.leaveStatus)){
 	conditionList.add(EntityCondition.makeCondition("leaveStatus", EntityOperator.EQUALS,parameters.leaveStatus ));
+}else{
+	conditionList.add(EntityCondition.makeCondition("leaveStatus", EntityOperator.EQUALS, "LEAVE_CREATED"));
 }
 if(UtilValidate.isNotEmpty(parameters.fromDate)){
 	conditionList.add(EntityCondition.makeCondition("fromDate", EntityOperator.GREATER_THAN_EQUAL_TO,fromDate ));
@@ -49,5 +56,6 @@ if(UtilValidate.isNotEmpty(parameters.thruDate)){
 	conditionList.add(EntityCondition.makeCondition("thruDate", EntityOperator.LESS_THAN_EQUAL_TO,thruDate ));
 }
 condition=EntityCondition.makeCondition(conditionList,EntityOperator.AND);
+Debug.log("condition========"+condition);
 LeaveDetails = delegator.findList("EmplLeave", condition , null, UtilMisc.toList("-fromDate"), null, false );
 context.put("employeeLeaveList",LeaveDetails);
