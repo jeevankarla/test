@@ -22,4 +22,20 @@ if(UtilValidate.isEmpty(parameters.purposeTypeIdField)){
 else {
 	parameters.paymentPurposeType = parameters.purposeTypeIdField;
 }
-//Debug.log("====parameters.purposeTypeIdField===="+parameters.purposeTypeIdField+"=====purposeTypeId="+parameters.purposeTypeId);
+condList.clear();
+//reset purposeType If Empty before search
+if(UtilValidate.isNotEmpty(parameters.ScreenFlagName)){
+if(UtilValidate.isEmpty(parameters.recoveryTypeId)){
+	condList.add(EntityCondition.makeCondition("enumTypeId", EntityOperator.EQUALS, "FAC_DTC_HIKE"));
+	//condList.add(EntityCondition.makeCondition("enumId", EntityOperator.NOT_IN, UtilMisc.toList("BYPROD_SALES_CHANNEL","RM_DIRECT_CHANNEL")));
+	enumCond = EntityCondition.makeCondition(condList, EntityOperator.AND);
+	recoveryTypeList = delegator.findList("Enumeration",enumCond, null, null, null, false);
+	Debug.log("====recoveryIdsList===="+EntityUtil.getFieldListFromEntityList(recoveryTypeList,"enumId",true));
+	if(!UtilValidate.isEmpty(recoveryTypeList)){
+		parameters.recoveryTypeId = EntityUtil.getFieldListFromEntityList(recoveryTypeList,"enumId",true);
+		parameters.recoveryTypeId = "in";
+	}
+}else {
+	parameters.recoveryTypeId = parameters.recoveryTypeId;
+}
+}
