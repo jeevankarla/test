@@ -1,6 +1,5 @@
 package in.vasista.vbiz.humanres;
 
-
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collection;
@@ -67,57 +66,147 @@ public class PayrollService {
 				String partyIdFrom= (String) context.get("orgPartyId");
 				String customTimePeriodId= (String) context.get("customTimePeriodId");				 
 				String periodBillingId = null;
+				List<GenericValue> billingParty = FastList.newInstance();
 				String billingTypeId = "PAYROLL_BILL";			
 				List conditionList = FastList.newInstance();
 		        List periodBillingList = FastList.newInstance();
 		        String partyId = (String) context.get("partyId");
 		        if(UtilValidate.isEmpty(partyId)){
 					partyId = "Company";
-				}
-		        conditionList.add(EntityCondition.makeCondition("statusId", EntityOperator.IN , UtilMisc.toList("GENERATED","IN_PROCESS","APPROVED")));
-		        conditionList.add(EntityCondition.makeCondition("customTimePeriodId", EntityOperator.EQUALS ,customTimePeriodId));
-		    	conditionList.add(EntityCondition.makeCondition("billingTypeId", EntityOperator.EQUALS , billingTypeId));
-		    	EntityCondition condition=EntityCondition.makeCondition(conditionList,EntityOperator.AND);
-		    	try {
-		    		periodBillingList = delegator.findList("PeriodBilling", condition, null,null, null, false);
-		    		if(!UtilValidate.isEmpty(periodBillingList)){
-		    			Debug.logError("Failed to create 'MarginReport': Already generated or In-process for the specified period", module);
-		    			return ServiceUtil.returnError("Failed to create 'MarginReport': Already generated or In-process for the specified period");
-		    		}
-		    	}catch (GenericEntityException e) {
-		    		 Debug.logError(e, module);             
-		             return ServiceUtil.returnError("Failed to find periodBillingList " + e);
-				} 
-		    	
-		    	GenericValue newEntity = delegator.makeValue("PeriodBilling");
-		        newEntity.set("billingTypeId", billingTypeId);
-		        newEntity.set("customTimePeriodId", customTimePeriodId);
-		        newEntity.set("statusId", "IN_PROCESS");
-		        newEntity.set("createdByUserLogin", userLogin.get("userLoginId"));
-		        newEntity.set("lastModifiedByUserLogin", userLogin.get("userLoginId"));
-		        newEntity.set("createdDate", UtilDateTime.nowTimestamp());
-		        newEntity.set("lastModifiedDate", UtilDateTime.nowTimestamp());
-			    try {     
-			        delegator.createSetNextSeqId(newEntity);
-					periodBillingId = (String) newEntity.get("periodBillingId");	
-					Map<String,  Object> runSACOContext = UtilMisc.<String, Object>toMap("periodBillingId", periodBillingId,"userLogin", userLogin);
-					runSACOContext.put("partyIdFrom", partyIdFrom);
-					runSACOContext.put("partyId", partyId);
-					dispatcher.runAsync("generatePayrollBilling", runSACOContext,false);
-					if(ServiceUtil.isError(result)){
-       					Debug.logError("Problems in service Parol Header", module);
-			  			return ServiceUtil.returnError("Problems in service Parol Header");
-       				}
-		    	} catch (GenericEntityException e) {
-					Debug.logError(e,"Failed To Create New Period_Billing", module);
-					return ServiceUtil.returnError("Problems in service Parol Header");
-				}
-		        catch (GenericServiceException e) {
-		            Debug.logError(e, "Error in calling 'generateVendorMargin' service", module);
-		            return ServiceUtil.returnError(e.getMessage());
-		        } 
-		        result.put("periodBillingId", periodBillingId);
-		        result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_SUCCESS);
+				}	        
+		        
+		        //code to handle department wise pay bill
+		     try{   
+		    	 GenericValue tenantConfiguration = delegator.findOne("TenantConfiguration", UtilMisc.toMap("propertyName", "PAYBILL_DEPTWISE_GEN","propertyTypeEnumId","HUMANRES"), false);
+		    	 if(UtilValidate.isNotEmpty(tenantConfiguration)&& ("Y".equals(tenantConfiguration.get("propertyValue")))){
+		    		 if(partyIdFrom.equals("Company")){
+ 			        	List conList= FastList.newInstance();
+ 			        		conList.add(EntityCondition.makeCondition("partyIdFrom", EntityOperator.EQUALS ,partyIdFrom));
+ 			        		conList.add(EntityCondition.makeCondition("partyRelationshipTypeId", EntityOperator.EQUALS , "GROUP_ROLLUP"));
+ 			        		conList.add(EntityCondition.makeCondition("roleTypeIdTo", EntityOperator.EQUALS , "ORGANIZATION_UNIT"));
+ 			        		EntityCondition cond=EntityCondition.makeCondition(conList,EntityOperator.AND);
+ 				    	try {
+ 				    		List<GenericValue> internalOrganizations = delegator.findList("PartyRelationship", cond, null,null, null, false);
+ 				    		billingParty.addAll(internalOrganizations);
+ 				    	}catch (GenericEntityException e) {
+ 				    		 Debug.logError(e, module);             
+ 				             return ServiceUtil.returnError("Failed to find periodBillingList " + e);
+ 						}			    	
+ 				    }else{
+ 				    	List conList= FastList.newInstance();
+ 		        		conList.add(EntityCondition.makeCondition("partyIdTo", EntityOperator.EQUALS ,partyIdFrom));
+ 		        		conList.add(EntityCondition.makeCondition("partyRelationshipTypeId", EntityOperator.EQUALS , "GROUP_ROLLUP"));
+ 		        		conList.add(EntityCondition.makeCondition("roleTypeIdTo", EntityOperator.EQUALS , "ORGANIZATION_UNIT"));
+ 		        		EntityCondition cond=EntityCondition.makeCondition(conList,EntityOperator.AND);
+ 				    	try {
+ 				    		List<GenericValue> internalOrganizations = delegator.findList("PartyRelationship", cond, null,null, null, false);
+ 				    		if(UtilValidate.isNotEmpty(internalOrganizations)){
+ 				    			billingParty.addAll(internalOrganizations);
+ 				    		}
+ 				    		
+ 				    	}catch (GenericEntityException e) {
+ 				    		 Debug.logError(e, module);             
+ 				             return ServiceUtil.returnError("Failed to find periodBillingList " + e);
+ 						}
+ 				    }   
+ 			        for(GenericValue eachFacility: billingParty){ 				    	
+ 				    	List conditionPeriodList = FastList.newInstance();
+ 				    	String billingPartyId = eachFacility.getString("partyIdTo");
+ 				    	partyIdFrom=eachFacility.getString("partyIdFrom");
+ 				        List periodBillingDeptList = FastList.newInstance();
+ 				        conditionPeriodList.add(EntityCondition.makeCondition("statusId", EntityOperator.IN , UtilMisc.toList("GENERATED","IN_PROCESS","APPROVED")));
+ 				        conditionPeriodList.add(EntityCondition.makeCondition("customTimePeriodId", EntityOperator.EQUALS ,customTimePeriodId));
+ 				        conditionPeriodList.add(EntityCondition.makeCondition("billingTypeId", EntityOperator.EQUALS , billingTypeId));
+ 				        conditionPeriodList.add(EntityCondition.makeCondition("partyId", EntityOperator.EQUALS , billingPartyId));
+ 				    	EntityCondition periodCondition=EntityCondition.makeCondition(conditionPeriodList,EntityOperator.AND);
+ 				    	GenericValue billingId =null;
+ 				    	try {
+ 				    		periodBillingDeptList = delegator.findList("PeriodBilling", periodCondition, null,null, null, false);
+ 				    		if(UtilValidate.isNotEmpty(periodBillingDeptList)){
+ 				    			continue;	    			
+ 				    		}
+ 				    		GenericValue newEntity = delegator.makeValue("PeriodBilling");
+ 					        newEntity.set("billingTypeId", billingTypeId);
+ 					        newEntity.set("customTimePeriodId", customTimePeriodId);
+ 					        newEntity.set("statusId", "IN_PROCESS");
+ 					        newEntity.set("partyId", billingPartyId);
+ 					        newEntity.set("createdByUserLogin", userLogin.get("userLoginId"));
+ 					        newEntity.set("lastModifiedByUserLogin", userLogin.get("userLoginId"));
+ 					        newEntity.set("createdDate", UtilDateTime.nowTimestamp());
+ 					        newEntity.set("lastModifiedDate", UtilDateTime.nowTimestamp());
+ 					        delegator.createSetNextSeqId(newEntity); 					        
+ 							periodBillingId = (String) newEntity.get("periodBillingId");	
+ 							Map<String,  Object> runSACOContext = UtilMisc.<String, Object>toMap("periodBillingId", periodBillingId,"userLogin", userLogin);
+ 							runSACOContext.put("partyIdFrom", billingPartyId);
+ 							runSACOContext.put("partyId",  partyIdFrom);
+ 							runSACOContext.put("periodBillingId", periodBillingId);
+ 							dispatcher.runAsync("generatePayrollBilling", runSACOContext,false);
+ 							if(ServiceUtil.isError(result)){
+ 		       					Debug.logError("Problems in service Parol Header", module);
+ 					  			return ServiceUtil.returnError("Problems in service Parol Header");
+ 		       				}
+ 				    	} catch (GenericEntityException e) {
+ 							Debug.logError(e,"Failed To Create New Period_Billing", module);
+ 							return ServiceUtil.returnError("Problems in service Parol Header");
+ 						}
+ 				        catch (GenericServiceException e) {
+ 				            Debug.logError(e, "Error in calling 'period Billing' service", module);
+ 				            return ServiceUtil.returnError(e.getMessage());
+ 				        } 
+ 				        result.put("periodBillingId", periodBillingId);
+ 				        result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_SUCCESS);  
+ 				    	
+ 				    }	
+ 			   }else{
+	 				  	conditionList.add(EntityCondition.makeCondition("statusId", EntityOperator.IN , UtilMisc.toList("GENERATED","IN_PROCESS","APPROVED")));
+	 			        conditionList.add(EntityCondition.makeCondition("customTimePeriodId", EntityOperator.EQUALS ,customTimePeriodId));
+	 			    	conditionList.add(EntityCondition.makeCondition("billingTypeId", EntityOperator.EQUALS , billingTypeId));
+	 			    	EntityCondition condition=EntityCondition.makeCondition(conditionList,EntityOperator.AND);
+	 			    	try {
+	 			    		periodBillingList = delegator.findList("PeriodBilling", condition, null,null, null, false);
+	 			    		if(!UtilValidate.isEmpty(periodBillingList)){
+	 			    			Debug.logError("Failed to create 'MarginReport': Already generated or In-process for the specified period", module);
+	 			    			return ServiceUtil.returnError("Failed to create 'MarginReport': Already generated or In-process for the specified period");
+	 			    		}
+	 			    	}catch (GenericEntityException e) {
+	 			    		 Debug.logError(e, module);             
+	 			             return ServiceUtil.returnError("Failed to find periodBillingList " + e);
+	 					} 
+	 			    	
+	 			    	GenericValue newEntity = delegator.makeValue("PeriodBilling");
+	 			        newEntity.set("billingTypeId", billingTypeId);
+	 			        newEntity.set("customTimePeriodId", customTimePeriodId);
+	 			        newEntity.set("statusId", "IN_PROCESS");
+	 			        newEntity.set("createdByUserLogin", userLogin.get("userLoginId"));
+	 			        newEntity.set("lastModifiedByUserLogin", userLogin.get("userLoginId"));
+	 			        newEntity.set("createdDate", UtilDateTime.nowTimestamp());
+	 			        newEntity.set("lastModifiedDate", UtilDateTime.nowTimestamp());
+	 				    try {     
+	 				        delegator.createSetNextSeqId(newEntity);
+	 						periodBillingId = (String) newEntity.get("periodBillingId");	
+	 						Map<String,  Object> runSACOContext = UtilMisc.<String, Object>toMap("periodBillingId", periodBillingId,"userLogin", userLogin);
+	 						runSACOContext.put("partyIdFrom", partyIdFrom);
+	 						runSACOContext.put("partyId", partyId);
+	 						dispatcher.runAsync("generatePayrollBilling", runSACOContext,false);
+	 						if(ServiceUtil.isError(result)){
+	 	       					Debug.logError("Problems in service Parol Header", module);
+	 				  			return ServiceUtil.returnError("Problems in service Parol Header");
+	 	       				}
+	 			    	} catch (GenericEntityException e) {
+	 						Debug.logError(e,"Failed To Create New Period_Billing", module);
+	 						return ServiceUtil.returnError("Problems in service Parol Header");
+	 					}
+	 			        catch (GenericServiceException e) {
+	 			            Debug.logError(e, "Error in calling 'generateVendorMargin' service", module);
+	 			            return ServiceUtil.returnError(e.getMessage());
+	 			        } 
+	 			        result.put("periodBillingId", periodBillingId);
+	 			        result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_SUCCESS);
+ 			   }
+		     } catch (GenericEntityException e) {
+					Debug.logError(e,"Unable  To get Tenant Configuration", module);
+						return ServiceUtil.returnError("Unable  To get Tenant Configuration");
+			}	       
 		    	return result;
 		
 			}
@@ -3118,7 +3207,7 @@ public class PayrollService {
       							employPayrollDetails.set("lossOfPayDays",lossOfPayDays);
       							employPayrollDetails.store();
 	      					}
-	      			}
+	    	      	}
 	      		} catch (GenericEntityException e) {
 	      			Debug.logError(e, module);
 	      			return ServiceUtil.returnError(e.toString());

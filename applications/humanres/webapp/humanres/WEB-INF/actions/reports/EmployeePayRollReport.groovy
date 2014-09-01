@@ -46,6 +46,9 @@ conditionList=[];
 conditionList.add(EntityCondition.makeCondition("billingTypeId", EntityOperator.EQUALS ,"PAYROLL_BILL"));
 conditionList.add(EntityCondition.makeCondition("statusId", EntityOperator.IN  ,stautsList));
 conditionList.add(EntityCondition.makeCondition("customTimePeriodId", EntityOperator.EQUALS ,parameters.customTimePeriodId));
+if(UtilValidate.isNotEmpty(parameters.periodBillingId)){
+	conditionList.add(EntityCondition.makeCondition("periodBillingId", EntityOperator.EQUALS ,parameters.periodBillingId));
+}
 condition = EntityCondition.makeCondition(conditionList,EntityOperator.AND);
 periodBillingList = delegator.findList("PeriodBilling", condition, null, null, null, false);
 //getting benefits

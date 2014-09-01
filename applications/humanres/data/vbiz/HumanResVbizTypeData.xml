@@ -160,7 +160,9 @@
     <TenantConfiguration propertyName="HR_SHIFT_LATE_COME" propertyValue="10" propertyTypeEnumId="HUMANRES" description="Humanres shift's late coming(in minutes)"/>
     <TenantConfiguration propertyName="HR_SHIFT_EARLY_GO" propertyValue="5" propertyTypeEnumId="HUMANRES" description="Humanres shift's earlying going(in minutes)"/>
      
-       
+    <Enumeration enumId="HUMANRES" enumTypeId="TENANTCONF_TYPE" sequenceId="1" description="Humanres tenant Configurations"/>
+    
+	<TenantConfiguration propertyName="PAYBILL_DEPTWISE_GEN" propertyValue="N" propertyTypeEnumId="HUMANRES" description="Humanres Pay Bill Department wise generation"/>   
        
     <!-- punch in and punch out data -->   
     <EnumerationType description="Punch Type" enumTypeId="PUNCH_TYPE" hasTable="N" parentTypeId=""/>

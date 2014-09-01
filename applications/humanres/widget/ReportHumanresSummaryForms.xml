@@ -445,6 +445,9 @@
 		<field name="periodBillingId" title="Payroll Id">
 			<display description="${periodBillingId}" />
 		</field>
+		<field name="partyId" title="Department Id">
+			<display-entity entity-name="PartyGroup" key-field-name="partyId" description="${groupName}"></display-entity>
+		</field>
 		<field name="customTimePeriodId" title="Payroll Period">
 			<display-entity entity-name="CustomTimePeriod" description="${groovy:org.ofbiz.base.util.UtilDateTime.toDateString(fromDate, &quot;dd MMMMM, yyyy&quot;);} - ${groovy:org.ofbiz.base.util.UtilDateTime.toDateString(thruDate, &quot;dd MMMMM, yyyy&quot;);}"></display-entity>
 		</field>
