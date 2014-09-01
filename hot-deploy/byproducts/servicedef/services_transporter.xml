@@ -47,6 +47,17 @@
         <attribute name="createdDate" type="Timestamp" mode="OUT" optional="true"/>    
         <attribute name="description" type="String" mode="INOUT" optional="true"/>   
     </service>
+    <service name="createNewHikeOrPayment" engine="java" auth="true" 
+        location="in.vasista.vbiz.byproducts.TransporterServices" invoke="createTransporterRecovery">
+        <description>Create Transporter Additional Payment or Hikes</description>        
+        <attribute name="facilityId" mode="IN" type="String" optional="false"/>   
+        <attribute name="customTimePeriodId" mode="IN" type="String" optional="false"/> 
+        <attribute name="recoveryTypeId" mode="IN" type="String" optional="false"/> 
+        <attribute name="amount" type="BigDecimal" mode="IN" optional="false"/> 
+        <attribute name="incidentDate" type="Timestamp" mode="INOUT" optional="false"/>    
+        <attribute name="createdDate" type="Timestamp" mode="OUT" optional="true"/>    
+        <attribute name="description" type="String" mode="INOUT" optional="true"/>   
+    </service>
     <service name="cancelTranporterRecovery" engine="java" auth="true" 
         location="in.vasista.vbiz.byproducts.TransporterServices" invoke="cancelTranporterRecovery">
         <description>Cancel Transporter Recovery based on Fines and Penalties</description>        
