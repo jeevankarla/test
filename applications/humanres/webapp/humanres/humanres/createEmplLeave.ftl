@@ -22,6 +22,10 @@ under the License.
 	jQuery("#fromDate").datepicker({dateFormat:'dd-mm-yy'}).datepicker("option", { defaultDate:jQuery("#fromDate").val()} );
 	jQuery("#thruDate").datepicker({dateFormat:'dd-mm-yy' , beforeShow :displayPunchDetails}).datepicker("option", {} );
 	
+	  $('input[name=partyId]').focusout(function(){
+	     displayLeaveBalance();
+	  
+	  });
 
 });
 
@@ -35,6 +39,9 @@ function displayPunchDetails(){
        var punchDate = jQuery("#fromDate").val();
        $('[name="fromDate"]').datepicker( "option", "dateFormat", "dd-mm-yy");
        var employeeId = $('input[name=partyId]').val();
+       if(employeeId ==""){
+          return;
+       }
       var data = "partyId="+employeeId+"&punchDate="+punchDate;
     $.ajax({
              type: "POST",
@@ -91,10 +98,15 @@ function viewGHandSS(){
 
 
 
- function displayLeaveBalance(select){
-    var leaveTypeId = $(select).val();
+ function displayLeaveBalance(){
+    var leaveTypeId = $('select[name=leaveTypeId]').val();
     var employeeId = $('input[name=partyId]').val();
     var data = "employeeId="+employeeId+"&leaveTypeId="+leaveTypeId;
+    $('#leaveBalance').html('');
+    if(employeeId =="" || leaveTypeId==""){
+       
+          return false;
+     }
     $.ajax({
              type: "POST",
              url: "getEmployeeLeaveBalance",
@@ -160,7 +172,7 @@ function viewGHandSS(){
               <tr>
                 <td class="label">Leave Type</td>
                 <td>
-                   <select name="leaveTypeId" class='h4' onchange="displayLeaveBalance(this);">
+                   <select name="leaveTypeId" class='h4' onchange="displayLeaveBalance();">
                        <option value=''></option>
 						<#list leaveTypeList as leaveType>
 						      <#if leaveTypeId?exists && (leaveTypeId == leaveType.leaveTypeId)>
