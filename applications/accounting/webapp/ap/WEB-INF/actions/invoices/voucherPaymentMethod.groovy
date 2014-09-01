@@ -25,11 +25,31 @@ import net.sf.json.JSONArray;
 import org.ofbiz.entity.util.EntityUtil;
 
 uiLabelMap = UtilProperties.getResourceBundleMap("AccountingUiLabels", locale);
+if(UtilValidate.isEmpty(parameters.noConditionFind)){
+return "";
+}
+condList = [];
+//reset purposeType If Empty before search
+if(UtilValidate.isEmpty(parameters.purposeTypeIdField)){
+	condList.add(EntityCondition.makeCondition("enumTypeId", EntityOperator.EQUALS, "ORDER_SALES_CHANNEL"));
+	condList.add(EntityCondition.makeCondition("enumId", EntityOperator.NOT_IN, UtilMisc.toList("BYPROD_SALES_CHANNEL","RM_DIRECT_CHANNEL")));
+	enumCond = EntityCondition.makeCondition(condList, EntityOperator.AND);
+	salesChannelList = delegator.findList("Enumeration",enumCond, null, null, null, false);
+	if(!UtilValidate.isEmpty(salesChannelList)){
+		parameters.purposeTypeId = EntityUtil.getFieldListFromEntityList(salesChannelList,"enumId",true);
+		//parameters.purposeTypeId=UtilMisc.toList("BYPROD_SALES_CHANNEL","RM_DIRECT_CHANNEL")
+		parameters.purposeTypeId_op = "in";
+	}
+}
+else {
+	parameters.purposeTypeId = parameters.purposeTypeIdField;
+}
+//Debug.log("====parameters.purposeTypeIdField===="+parameters.purposeTypeIdField+"=====purposeTypeId="+parameters.purposeTypeId);
 
-
+condList.clear();
 parentTypeId=parameters.parentTypeId;
 actionName="createVoucherPayment";
-condList = [];
+
 //AP PaymentTypes
 condList.add(EntityCondition.makeCondition("parentTypeId", EntityOperator.IN, UtilMisc.toList("DISBURSEMENT","TAX_PAYMENT")));
 cond = EntityCondition.makeCondition(condList, EntityOperator.AND);
@@ -37,6 +57,9 @@ apPaymentTypes = delegator.findList("PaymentType", cond, null, ["description"], 
 
 //AR PaymentTypes
 condList.clear();
+if(UtilValidate.isNotEmpty(parameters.paymentMethodSearchFlag)){
+	condList.add(EntityCondition.makeCondition("paymentTypeId", EntityOperator.LIKE, "%SALES_PAYIN%"));
+}
 condList.add(EntityCondition.makeCondition("parentTypeId", EntityOperator.IN, UtilMisc.toList("RECEIPT")));
 cond = EntityCondition.makeCondition(condList, EntityOperator.AND);
 arPaymentTypes = delegator.findList("PaymentType", cond, null, ["description"], null, false);
@@ -53,6 +76,9 @@ actionName="createApVoucherPayment";
 }else{
 context.paymentTypes=paymentTypes;
 }
+if(UtilValidate.isNotEmpty(parameters.paymentMethodSearchFlag)){
+actionName="createOtherVoucherPayment";
+}
 context.parentTypeId=parentTypeId;
 context.actionName=actionName;
 
@@ -65,11 +91,20 @@ cond = EntityCondition.makeCondition(condList, EntityOperator.AND);
 finAccountList = delegator.findList("FinAccount", cond, null, ["finAccountName"], null, false);
 context.finAccountList = finAccountList;
 
+//Debug.log("====paymentMethodSearchFlag=HECKKKKK="+parameters.paymentMethodSearchFlag);
 JSONObject voucherPaymentMethodJSON = new JSONObject();
 JSONArray cashMethodItemsJSON = new JSONArray();
 JSONArray bankMethodItemsJSON = new JSONArray();
 JSONArray allMethodItemsJSON = new JSONArray();
+bankPaymentMethodList=[];
+cashPaymentMethodList=[];
 condList.clear();
+if(UtilValidate.isNotEmpty(parameters.paymentMethodSearchFlag)){
+	condList.add(EntityCondition.makeCondition("paymentMethodTypeId", EntityOperator.NOT_LIKE, "%_PAYOUT%"));
+	condList.add(EntityCondition.makeCondition("parentTypeId", EntityOperator.EQUALS,"MONEY"));
+	cond = EntityCondition.makeCondition(condList, EntityOperator.AND);
+	bankPaymentMethodList = delegator.findList("PaymentMethodType",cond, null, null, null, false);
+}else{
 condList.add(EntityCondition.makeCondition("paymentMethodTypeId", EntityOperator.LIKE, paymentMethodLike));
 condList.add(EntityCondition.makeCondition("parentTypeId", EntityOperator.EQUALS,"BANK"));
 cond = EntityCondition.makeCondition(condList, EntityOperator.AND);
@@ -79,9 +114,11 @@ condList.add(EntityCondition.makeCondition("paymentMethodTypeId", EntityOperator
 condList.add(EntityCondition.makeCondition("parentTypeId", EntityOperator.EQUALS,"CASH"));
 cond = EntityCondition.makeCondition(condList, EntityOperator.AND);
 cashPaymentMethodList = delegator.findList("PaymentMethodType", cond, null, null, null, false);
+}
 
 bankPaymentMethodIdsList=EntityUtil.getFieldListFromEntityList(bankPaymentMethodList, "paymentMethodTypeId", false);
 cashPaymentMethodIdsList=EntityUtil.getFieldListFromEntityList(cashPaymentMethodList, "paymentMethodTypeId", false);
+
 if("SALES_INVOICE"==parentTypeId){
 	cashPaymentMethodList.each{ methodTypeEach->
 		JSONObject newPMethodObj = new JSONObject();
@@ -125,7 +162,7 @@ if("SALES_INVOICE"==parentTypeId){
 	voucherPaymentMethodJSON.put("BANK",bankMethodItemsJSON);
 	voucherPaymentMethodJSON.put("ALL",allMethodItemsJSON);
 	
-	//Debug.log("cashMethodItemsJSON=======>"+cashMethodItemsJSON);
+	//Debug.log("allMethodItemsJSON=======>"+allMethodItemsJSON);
 context.voucherPaymentMethodJSON=voucherPaymentMethodJSON;
 
 voucherType=parameters.prefPaymentMethodTypeId;

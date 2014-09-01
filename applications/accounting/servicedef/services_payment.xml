@@ -352,6 +352,8 @@ under the License.
         <attribute name="amount" mode="IN" type="String" optional="false"/>
         <attribute name="orderId" mode="IN" type="String" optional="true"/> 
          <attribute name="instrumentDate" mode="IN" type="String" optional="true"/> 
+         <attribute name="issuingAuthority" type="String" mode="IN" optional="true"/>
+          <attribute name="paymentPurposeType" type="String" mode="IN" optional="true"/>
          <attribute name="invoiceId" mode="INOUT" type="String" optional="false"/> 
          <attribute name="paymentMethodTypeId" mode="IN" type="String" optional="true"/>
          <attribute name="finAccountId" mode="IN" type="String" optional="true"/> 

@@ -463,7 +463,8 @@ public class PaymentWorker {
         String paymentRefNum = (String) context.get("paymentRefNum");
         String finAccountId = (String) context.get("finAccountId");
         String inFavourOf = (String) context.get("inFavourOf");//to be stored in PaymentAttribute
-        
+        String paymentPurposeType=(String)context.get("paymentPurposeType");
+        String issuingAuthority=(String)context.get("paymentPurposeType");
         GenericValue userLogin = (GenericValue) context.get("userLogin");
         
         Map<String, Object> result = ServiceUtil.returnSuccess();
@@ -502,14 +503,14 @@ public class PaymentWorker {
         paymentCtx.put("partyId", partyIdFrom);
         paymentCtx.put("facilityId", facilityId);
         paymentCtx.put("comments", comments);
-        //paymentCtx.put("paymentPurposeType", "ROUTE_MKTG");
+        paymentCtx.put("paymentPurposeType", paymentPurposeType);
         /*if (!UtilValidate.isEmpty(paymentLocationId) ) {
             paymentCtx.put("paymentLocationId", paymentLocationId);                        	
         }   */         
         if (!UtilValidate.isEmpty(paymentRefNum) ) {
             paymentCtx.put("paymentRefNum", paymentRefNum);                        	
         }
-       // paymentCtx.put("issuingAuthority", issuingAuthority);  
+        paymentCtx.put("issuingAuthority", issuingAuthority);  
        // paymentCtx.put("issuingAuthorityBranch", issuingAuthorityBranch);  
         paymentCtx.put("instrumentDate", instrumentDate);
         
