@@ -158,8 +158,6 @@ under the License.
 	
 </script>
 
-<#if invoiceItems?has_content>
-  
   <form name="listInvoiceItems" id="listInvoiceItems"  method="post" action="">
     
     <table id="customFields" class="basic-table hover-bar" cellspacing="0" width="10">
@@ -221,6 +219,3 @@ under the License.
       </tbody>
     </table>
   </form>
-<#else>
-  <h3>${uiLabelMap.AccountingNoInvoicesFound}</h3>
-</#if>
