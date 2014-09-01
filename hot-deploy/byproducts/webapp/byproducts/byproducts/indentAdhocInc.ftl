@@ -128,7 +128,7 @@
 				</#if>
    			}
 			
-   			<#if changeFlag?exists && changeFlag != "IcpSales" && changeFlag != "IcpSalesAmul">
+   			<#if changeFlag?exists && changeFlag != "IcpSales" && changeFlag != "IcpSalesAmul" && changeFlag != "IcpSalesBellary">
 				var bPrice = data[rowCount]["basicPrice"];
 				var vatPrice = data[rowCount]["vatPrice"];
 				var cstPrice = data[rowCount]["cstPrice"];
@@ -272,19 +272,18 @@
 	function setupGrid1() {
 		
 		var columns = [
-			{id:"cProductName", name:"Product", field:"cProductName", width:180, minWidth:180, cssClass:"cell-title", availableTags: availableTags, editor: AutoCompleteEditor, validator: productValidator, sortable:false ,toolTip:""},
+			{id:"cProductName", name:"Product", field:"cProductName", width:180, minWidth:180, cssClass:"cell-title", availableTags: availableTags, regexMatcher:"contains" ,editor: AutoCompleteEditor, validator: productValidator, sortable:false ,toolTip:""},
 			{id:"quantity", name:"Qty(Pkt)", field:"quantity", width:70, minWidth:70, cssClass:"cell-title",editor:FloatCellEditor, sortable:false , formatter: quantityFormatter,  validator: quantityValidator},
-			<#if changeFlag?exists && changeFlag == "IcpSales" || changeFlag == "IcpSalesAmul">
+			<#if changeFlag?exists && changeFlag == "IcpSales" || changeFlag == "IcpSalesAmul" || changeFlag == "IcpSalesBellary">
 				{id:"crQuantity", name:"Qty(Crt)", field:"crQuantity", width:60, minWidth:60, cssClass:"cell-title",editor:FloatCellEditor, sortable:false, formatter: quantityFormatter},
 				{id:"batchNo", name:"Batch Number", field:"batchNo", width:65, minWidth:65, sortable:false, editor:TextCellEditor},
-			<#elseif changeFlag?exists && changeFlag == "PowderSales" || changeFlag == "FgsSales" || changeFlag == "InterUnitTransferSale" >
+			<#elseif changeFlag?exists && changeFlag == "PowderSales" || changeFlag == "FgsSales" || changeFlag == "InterUnitTransferSale" || changeFlag == "ConvCharges">
 				{id:"ltrQuantity", name:"Ltr/KG Qty", field:"ltrQuantity", width:65, minWidth:65, sortable:false, editor:FloatCellEditor},
 			</#if>
-			
-			{id:"unitCost", name:"Unit Price(Rs)", field:"unitPrice", width:65, minWidth:65, cssClass:"readOnlyColumnClass", sortable:false, formatter: rateFormatter, focusable :false , align:"right"},
-			
-			<#if changeFlag?exists && changeFlag == "PowderSales" || changeFlag == "FgsSales" || changeFlag == "InterUnitTransferSale" >
+			<#if changeFlag?exists && changeFlag == "ConvCharges">
+				{id:"daysToStore", name:"Days to Preserve", field:"daysToStore", width:70, minWidth:70, cssClass:"cell-title",editor:FloatCellEditor, sortable:false , formatter: quantityFormatter,  validator: quantityValidator},
 			</#if>
+			{id:"unitCost", name:"Unit Price(Rs)", field:"unitPrice", width:65, minWidth:65, cssClass:"readOnlyColumnClass", sortable:false, formatter: rateFormatter, focusable :false , align:"right"},
 			{id:"amount", name:"Total Amount(Rs)", field:"amount", width:100, minWidth:100, cssClass:"readOnlyColumnClass", sortable:false, formatter: rateFormatter, focusable :false}
 				
 		];
@@ -401,10 +400,10 @@
 				var qty = parseFloat(data[args.row]["quantity"]);
 				var prodConversionData = conversionData[prod];
 				var convValue = 0;
-				<#if changeFlag?exists && changeFlag == "IcpSales" || changeFlag == "IcpSalesAmul">
+				<#if changeFlag?exists && changeFlag == "IcpSales" || changeFlag == "IcpSalesAmul" || changeFlag == "IcpSalesBellary">
 					convValue = prodConversionData['CRATE'];
 				</#if>
-				<#if changeFlag?exists && changeFlag == "PowderSales" || changeFlag == "FgsSales" || changeFlag == "InterUnitTransferSale">
+				<#if changeFlag?exists && changeFlag == "PowderSales" || changeFlag == "FgsSales" || changeFlag == "InterUnitTransferSale" || changeFlag == "ConvCharges">
 					convValue = prodConversionData['LtrKg'];
 				</#if>
 				var udp = data[args.row]['basicPrice'];
@@ -422,11 +421,11 @@
 				}
 				var crVal = 0;
 				if(convValue != 'undefined' || convValue != null || convValue > 0){
-					<#if changeFlag?exists && changeFlag == "IcpSales" || changeFlag == "IcpSalesAmul">
+					<#if changeFlag?exists && changeFlag == "IcpSales" || changeFlag == "IcpSalesAmul" || changeFlag == "IcpSalesBellary">
 						crVal = parseFloat(Math.round((qty/convValue)*100)/100);
 						data[args.row]["crQuantity"] = crVal;
 					</#if>
-					<#if changeFlag?exists && changeFlag == "PowderSales" || changeFlag == "FgsSales" || changeFlag == "InterUnitTransferSale">
+					<#if changeFlag?exists && changeFlag == "PowderSales" || changeFlag == "FgsSales" || changeFlag == "InterUnitTransferSale" || changeFlag == "ConvCharges">
 						crVal = parseFloat(Math.round((qty*convValue)*100)/100);
 						data[args.row]["ltrQuantity"] = crVal;
 					</#if>
@@ -464,18 +463,18 @@
 			if (args.cell == 2) {
 				var prod = data[args.row]["cProductId"];
 				var calcQty = 0;
-				<#if changeFlag?exists && changeFlag == "IcpSales" || changeFlag == "IcpSalesAmul">
+				<#if changeFlag?exists && changeFlag == "IcpSales" || changeFlag == "IcpSalesAmul" || changeFlag == "IcpSalesBellary">
 					calcQty = parseFloat(data[args.row]["crQuantity"]);
 				</#if>
-				<#if changeFlag?exists && changeFlag == "PowderSales" || changeFlag == "FgsSales" || changeFlag == "InterUnitTransferSale">
+				<#if changeFlag?exists && changeFlag == "PowderSales" || changeFlag == "FgsSales" || changeFlag == "InterUnitTransferSale" || changeFlag == "ConvCharges">
 					calcQty = parseFloat(data[args.row]["ltrQuantity"]);
 				</#if>
 				var prodConversionData = conversionData[prod];
 				var convValue = 0;
-				<#if changeFlag?exists && changeFlag == "IcpSales" || changeFlag == "IcpSalesAmul">
+				<#if changeFlag?exists && changeFlag == "IcpSales" || changeFlag == "IcpSalesAmul" || changeFlag == "IcpSalesBellary">
 					convValue = prodConversionData['CRATE'];
 				</#if>
-				<#if changeFlag?exists && changeFlag == "PowderSales" || changeFlag == "FgsSales" || changeFlag == "InterUnitTransferSale">
+				<#if changeFlag?exists && changeFlag == "PowderSales" || changeFlag == "FgsSales" || changeFlag == "InterUnitTransferSale" || changeFlag == "ConvCharges">
 					convValue = prodConversionData['LtrKg'];
 				</#if>
 				var udp = data[args.row]['basicPrice'];
@@ -494,11 +493,11 @@
 				var calculateQty = 0;
 				if(convValue != 'undefined' && convValue != null && calcQty>0){
 
-					<#if changeFlag?exists && changeFlag == "IcpSales" || changeFlag == "IcpSalesAmul">
+					<#if changeFlag?exists && changeFlag == "IcpSales" || changeFlag == "IcpSalesAmul" || changeFlag == "IcpSalesBellary">
 						calculateQty = parseFloat(Math.round((calcQty*convValue)*100)/100);
 						data[args.row]["quantity"] = calculateQty;
 					</#if>
-					<#if changeFlag?exists && changeFlag == "PowderSales" || changeFlag == "FgsSales" || changeFlag == "InterUnitTransferSale">
+					<#if changeFlag?exists && changeFlag == "PowderSales" || changeFlag == "FgsSales" || changeFlag == "InterUnitTransferSale" || changeFlag == "ConvCharges">
 						calculateQty = parseFloat(Math.round((calcQty/convValue)*100)/100);
 						data[args.row]["quantity"] = calculateQty;
 					</#if>
@@ -566,10 +565,10 @@
 				
 				var prodConversionData = conversionData[prod];
 				var convValue = 0;
-				<#if changeFlag?exists && changeFlag == "IcpSales" || changeFlag == "IcpSalesAmul">
+				<#if changeFlag?exists && changeFlag == "IcpSales" || changeFlag == "IcpSalesAmul" || changeFlag == "IcpSalesBellary">
 					convValue = prodConversionData['CRATE'];
 				</#if>
-				<#if changeFlag?exists && changeFlag == "PowderSales" || changeFlag == "FgsSales" || changeFlag == "InterUnitTransferSale">
+				<#if changeFlag?exists && changeFlag == "PowderSales" || changeFlag == "FgsSales" || changeFlag == "InterUnitTransferSale" || changeFlag == "ConvCharges">
 					convValue = prodConversionData['LtrKg'];
 				</#if>
 				
@@ -597,11 +596,11 @@
 				}
 				var crVal = 0;
 				if(convValue != 'undefined' || convValue != null || convValue > 0){
-					<#if changeFlag?exists && changeFlag == "IcpSales" || changeFlag == "IcpSalesAmul">
+					<#if changeFlag?exists && changeFlag == "IcpSales" || changeFlag == "IcpSalesAmul" || changeFlag == "IcpSalesBellary">
 						crVal = parseFloat(Math.round((qty/convValue)*100)/100);
 						data[i]["crQuantity"] = crVal;
 					</#if>
-					<#if changeFlag?exists && changeFlag == "PowderSales" || changeFlag == "FgsSales" || changeFlag == "InterUnitTransferSale">
+					<#if changeFlag?exists && changeFlag == "PowderSales" || changeFlag == "FgsSales" || changeFlag == "InterUnitTransferSale" || changeFlag == "ConvCharges">
 						crVal = parseFloat(Math.round((qty*convValue)*100)/100);
 						data[i]["ltrQuantity"] = crVal;
 					</#if>

@@ -493,8 +493,18 @@
       	 <link target="IcpSalesAmul">    
          </link>
         </menu-item>
+        <menu-item name="IcpSalesBellary" title="Bellary Icp Sale"> 
+        <condition>
+        	<or>
+        		<if-has-permission permission="FACILITY"  action="_ADMIN"/>
+        		<if-has-permission permission="ICPSALE"  action="_VIEW"/>
+        	</or>        		
+        </condition>  
+      	 <link target="IcpSalesBellary">    
+         </link>
+        </menu-item>
          
-        <menu-item name="PowderPlantSale" title="Powder Product Sales"> 
+        <menu-item name="PowderPlantSale" title="Depot Sales"> 
         <condition>
         	<or>
         		<if-has-permission permission="FACILITY"  action="_ADMIN"/>
@@ -812,6 +822,21 @@
          <!-- <menu-item name="FindIcpSalesOrder" title="Find Nandini Icp Orders">
         	<link target="FindIcpSalesOrder"></link>
         </menu-item> -->
+      </menu>
+      <menu name="IcpBellarySaleTabBar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml" selected-menuitem-context-field-name="tabButtonItem2">
+         <menu-item name="IcpSalesBellary" title="Order Entry">
+        	<link target="IcpSalesBellary"/>
+        </menu-item>
+        <menu-item name="ProcessBellaryOrders" title="Process Orders">
+        	<link target="processBellaryOrders">
+        		<parameter param-name="salesChannelEnumId" value="ICP_BELLARY_CHANNEL"/>
+        		<parameter param-name="shipmentTypeId" value="ICP_BELLARY_SHIPMENT"/>
+        	</link>
+        </menu-item>
+        <menu-item name="FindICPBellaryShipment" title="Find Shipments">
+        	<link target="FindICPBellaryShipment"/>
+        </menu-item>
+         
       </menu>
       <menu name="IcpAmulSaleTabBar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml" selected-menuitem-context-field-name="tabButtonItem2">
          <menu-item name="IcpSalesAmul" title="Order Entry">

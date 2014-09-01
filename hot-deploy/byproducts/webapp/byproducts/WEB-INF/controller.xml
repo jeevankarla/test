@@ -51,6 +51,13 @@
         <response name="success" type="request" value="FindICPNandiniShipment"/>
         <response name="error" type="request" value="FindICPNandiniShipment"/>
     </request-map>
+    
+    <request-map uri="cancelICPBellaryShipment">
+     	<security https="true" auth="true"/>     	
+        <event type="service" invoke="cancelICPShipment"/>
+        <response name="success" type="request" value="FindICPBellaryShipment"/>
+        <response name="error" type="request" value="FindICPBellaryShipment"/>
+    </request-map>
     <request-map uri="cancelICPAmulShipment">
      	<security https="true" auth="true"/>     	
         <event type="service" invoke="cancelICPShipment"/>
@@ -670,6 +677,11 @@
         <response name="success" type="view" value="IcpSales"/>   
        <response name="failed" type="view" value="IcpSales"/>  
     </request-map>
+    <request-map uri="IcpSalesBellary">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="IcpSalesBellary"/>   
+       <response name="failed" type="view" value="IcpSalesBellary"/>  
+    </request-map>
     <request-map uri="ConversionChargesEntry">
         <security https="true" auth="true"/>
         <response name="success" type="view" value="ConversionChargesEntry"/>   
@@ -760,6 +772,12 @@
         <response name="success" type="view" value="ProcessAmulOrders"/>   
        <response name="failed" type="view" value="ProcessAmulOrders"/>  
     </request-map>
+    <request-map uri="processBellaryOrders">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="ProcessBellaryOrders"/>   
+       <response name="failed" type="view" value="ProcessBellaryOrders"/>  
+    </request-map>
+    
     <request-map uri="approvePowderOrder">
         <security https="true" auth="true"/>
         <event type="service" path="" invoke="approveICPOrder"/>
@@ -845,6 +863,24 @@
         <response name="success" type="view" value="ProcessAmulOrders"/>   
        <response name="failed" type="view" value="ProcessAmulOrders"/>  
     </request-map>
+    <request-map uri="approveICPBellaryOrder">
+        <security https="true" auth="true"/>
+        <event type="service" path="" invoke="approveICPOrder"/>
+        <response name="success" type="view" value="ProcessBellaryOrders"/>   
+       <response name="failed" type="view" value="ProcessBellaryOrders"/>  
+    </request-map>
+    <request-map uri="cancelICPBellaryOrder">
+        <security https="true" auth="true"/>
+        <event type="service" path="" invoke="cancelICPOrder"/>
+        <response name="success" type="view" value="ProcessBellaryOrders"/>   
+       <response name="failed" type="view" value="ProcessBellaryOrders"/>  
+    </request-map>
+    <request-map uri="createShipmentAndInvoiceForBellaryOrders">
+        <security https="true" auth="true"/>
+        <event type="java" path="in.vasista.vbiz.byproducts.icp.ICPServices" invoke="createShipmentAndInvoiceForOrders"/>
+        <response name="success" type="view" value="ProcessBellaryOrders"/>   
+       <response name="failed" type="view" value="ProcessBellaryOrders"/>  
+    </request-map>
     <request-map uri="createShipmentAndInvoiceForNandiniOrders">
         <security https="true" auth="true"/>
         <event type="java" path="in.vasista.vbiz.byproducts.icp.ICPServices" invoke="createShipmentAndInvoiceForOrders"/>
@@ -894,7 +930,13 @@
     	<security https="true" auth="true"/>
         <response name="success" type="view" value="FindICPAmulShipment"/>   
        	<response name="failed" type="view" value="FindICPAmulShipment"/>  
+    </request-map>
+    <request-map uri="FindICPBellaryShipment">
+    	<security https="true" auth="true"/>
+        <response name="success" type="view" value="FindICPBellaryShipment"/>   
+       	<response name="failed" type="view" value="FindICPBellaryShipment"/>  
     </request-map>	
+    
     <request-map uri="FindIcpSalesOrder">
         <security https="true" auth="true"/>
         <response name="success" type="view" value="FindIcpSalesOrder"/>   
@@ -977,6 +1019,15 @@
      		<redirect-parameter name="orderId"/>
      		<redirect-parameter name="supplyDate"/></response>
         <response name="error" type="view" value="IcpSalesAmul"/>
+    </request-map>
+    <request-map uri="processIcpBellarySale">
+        <security https="true" auth="true"/>
+     	<event type="java"  path="in.vasista.vbiz.byproducts.icp.ICPServices"  invoke="processIcpSale" global-transaction="true"/>
+        <response name="success"  type="request-redirect-noparam" value="IcpSalesBellary">
+        <redirect-parameter name="orderStatus"/>
+     		<redirect-parameter name="orderId"/>
+     		<redirect-parameter name="supplyDate"/></response>
+        <response name="error" type="view" value="IcpSalesBellary"/>
     </request-map>
     
     <request-map uri="FindAdhocSalesOrder">
@@ -1669,12 +1720,16 @@
  <view-map name="ProcessFGSOrders" type="screen" page="component://byproducts/widget/ByProductsNgScreens.xml#ProcessFGSOrders"/>
  <view-map name="ProcessConversionOrders" type="screen" page="component://byproducts/widget/ByProductsNgScreens.xml#ProcessConversionOrders"/>
  <view-map name="ProcessAmulOrders" type="screen" page="component://byproducts/widget/ByProductsNgScreens.xml#ProcessAmulOrders"/>
+ <view-map name="ProcessBellaryOrders" type="screen" page="component://byproducts/widget/ByProductsNgScreens.xml#ProcessBellaryOrders"/>
  <view-map name="FindICPNandiniShipment" type="screen" page="component://byproducts/widget/ByProductsNgScreens.xml#FindICPNandiniShipment"/>
  <view-map name="FindFGSShipment" type="screen" page="component://byproducts/widget/ByProductsNgScreens.xml#FindFGSShipment"/>
  <view-map name="FindConversionSaleShipment" type="screen" page="component://byproducts/widget/ByProductsNgScreens.xml#FindConversionSaleShipment"/>
  <view-map name="FindPowderShipment" type="screen" page="component://byproducts/widget/ByProductsNgScreens.xml#FindPowderShipment"/>
  <view-map name="FindICPAmulShipment" type="screen" page="component://byproducts/widget/ByProductsNgScreens.xml#FindICPAmulShipment"/>
+ <view-map name="FindICPBellaryShipment" type="screen" page="component://byproducts/widget/ByProductsNgScreens.xml#FindICPBellaryShipment"/>
+ 
  <view-map name="IcpSalesAmul" type="screen" page="component://byproducts/widget/ByProductsNgScreens.xml#IcpSalesAmul"/>
+ <view-map name="IcpSalesBellary" type="screen" page="component://byproducts/widget/ByProductsNgScreens.xml#IcpSalesBellary"/>
  <view-map name="PowderPlantSale" type="screen" page="component://byproducts/widget/ByProductsNgScreens.xml#PowderPlantSale"/>
  <view-map name="FGSProductSale" type="screen" page="component://byproducts/widget/ByProductsNgScreens.xml#FGSProductSale"/>
  <view-map name="FindIcpAmulOrder" type="screen" page="component://byproducts/widget/ByProductsNgScreens.xml#FindIcpAmulOrder"/>

@@ -121,6 +121,8 @@ under the License.
 		action="cancelICPNandiniOrder"
 	<#elseif screenFlag?exists && screenFlag=="icpAmulSales">
 		action="cancelICPAmulOrder"
+	<#elseif screenFlag?exists && screenFlag=="icpBellarySales">
+		action="cancelICPBellaryOrder"
 	<#elseif screenFlag?exists && screenFlag=="powderSales">
 		action="cancelPowderOrder"
 	<#elseif screenFlag?exists && screenFlag=="fgsSales">
@@ -136,6 +138,8 @@ under the License.
 		action="approveICPNandiniOrder"
 	<#elseif screenFlag?exists && screenFlag=="icpAmulSales">
 		action="approveICPAmulOrder"
+	<#elseif screenFlag?exists && screenFlag=="icpBellarySales">
+		action="approveICPBellaryOrder"
 	<#elseif screenFlag?exists && screenFlag=="powderSales">
 		action="approvePowderOrder"
 	<#elseif screenFlag?exists && screenFlag=="fgsSales">
@@ -152,6 +156,8 @@ under the License.
 		action="createShipmentAndInvoiceForNandiniOrders"
 	<#elseif screenFlag?exists && screenFlag=="icpAmulSales">
 		action="createShipmentAndInvoiceForAmulOrders"
+	<#elseif screenFlag?exists && screenFlag=="icpBellarySales">
+		action="createShipmentAndInvoiceForBellaryOrders"
 	<#elseif screenFlag?exists && screenFlag=="powderSales">
 		action="createShipmentAndInvoiceForPowderOrders"
 	<#elseif screenFlag?exists && screenFlag=="fgsSales">
@@ -171,6 +177,8 @@ under the License.
     		<input class='h3' type='hidden' id='shipmentTypeId' name='shipmentTypeId' value='ICP_NANDINI_SHIPMENT'/>
     	<#elseif screenFlag?exists && screenFlag=="icpAmulSales">
     		<input class='h3' type='hidden' id='shipmentTypeId' name='shipmentTypeId' value='ICP_AMUL_SHIPMENT'/>
+    	<#elseif screenFlag?exists && screenFlag=="icpBellarySales">
+    		<input class='h3' type='hidden' id='shipmentTypeId' name='shipmentTypeId' value='ICP_BELLARY_SHIPMENT'/>
     	<#elseif screenFlag?exists && screenFlag=="powderSales">
     		<input class='h3' type='hidden' id='shipmentTypeId' name='shipmentTypeId' value='POWDER_SHIPMENT'/>
     	<#elseif screenFlag?exists && screenFlag=="fgsSales">

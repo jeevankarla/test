@@ -41,6 +41,7 @@
     <PartyIdentificationType partyIdentificationTypeId="SERVICETAX_NUMBER" description="Service Tax Number"/>
     <PartyIdentificationType partyIdentificationTypeId="TIN_NUMBER" description="TIN Number"/>
 	
+	<ShipmentType description="ICP Bellary Shipment" hasTable="N"  parentTypeId="DIRECT_SHIPMENT" shipmentTypeId="ICP_BELLARY_SHIPMENT"/>
 	<ShipmentType description="ICP Nandini Shipment" hasTable="N"  parentTypeId="DIRECT_SHIPMENT" shipmentTypeId="ICP_NANDINI_SHIPMENT"/>
 	<ShipmentType description="ICP Amul Shipment" hasTable="N"  parentTypeId="DIRECT_SHIPMENT" shipmentTypeId="ICP_AMUL_SHIPMENT"/>
 	<ShipmentType description="Powder Shipment" hasTable="N"  parentTypeId="DIRECT_SHIPMENT" shipmentTypeId="POWDER_SHIPMENT"/>
@@ -53,5 +54,6 @@
     <Enumeration description="Powder Plant Channel" enumCode="POWDER PLANT CHANNEL" enumId="POWDER_PLANT_CHANNEL" enumTypeId="ORDER_SALES_CHANNEL"/>
 	<Enumeration description="ICP Amul channel" enumCode="ICP AMUL" enumId="ICP_AMUL_CHANNEL" enumTypeId="ORDER_SALES_CHANNEL"/>
 	<Enumeration description="ICP Nandini channel" enumCode="ICP Nandini" enumId="ICP_NANDINI_CHANNEL" enumTypeId="ORDER_SALES_CHANNEL"/>
+	<Enumeration description="ICP Bellary channel" enumCode="ICP Bellary" enumId="ICP_BELLARY_CHANNEL" enumTypeId="ORDER_SALES_CHANNEL"/>
 	<Enumeration description="Inter Unit Transfer Channel" enumCode="Inter Unit Transfer Channel" enumId="INTUNIT_TR_CHANNEL" enumTypeId="ORDER_SALES_CHANNEL"/>
 </entity-engine-xml>

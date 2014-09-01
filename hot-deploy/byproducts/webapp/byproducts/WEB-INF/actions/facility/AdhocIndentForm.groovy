@@ -38,6 +38,9 @@ if(changeFlag=="IcpSales"){
 if(changeFlag=="IcpSalesAmul"){
 	productCatageoryId="ICE_CREAM_AMUL";
 }
+if(changeFlag=="IcpSalesBellary"){
+	productCatageoryId="ICE_CREAM_BELLARY";
+}
 if(changeFlag=="PowderSales"){
 	productCatageoryId="MILK_POWDER";
 }
@@ -203,7 +206,6 @@ productPrices = [];
 
 JSONObject productCostJSON = new JSONObject();
 productCostJSON=prodPriceMap;
-
 JSONObject prodIndentQtyCat = new JSONObject();
 JSONObject qtyInPieces = new JSONObject();
 

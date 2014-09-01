@@ -665,6 +665,37 @@
             </hyperlink>
         </field> 
     </form>
+    <form name="listICPBellaryShipments" type="list" list-name="listIt" paginate-target="FindICPBellaryShipment"
+        odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
+        <actions>
+            <service service-name="performFind" result-map="result" result-map-list="listIt">
+                <field-map field-name="inputFields" from-field="parameters"/>
+                <field-map field-name="entityName" value="OrderHeaderAndRolesAndShipment"/>
+                <field-map field-name="orderBy" from-field="parameters.sortField" value="-estimatedShipDate"/>
+                <field-map field-name="viewIndex" from-field="viewIndex"/>
+                <field-map field-name="viewSize" from-field="viewSize"/>
+            </service>
+        </actions>
+        <field name="shipmentId" ><display/></field>
+        <field name="estimatedShipDate" title="Ship Date"><display description="${groovy:org.ofbiz.base.util.UtilDateTime.toDateString(estimatedShipDate, &quot;dd/MM/yyyy&quot;);}"/></field>
+        <field name="vehicleId" title="Vehicle Number"><display/></field>
+        <field name="GatePass" widget-style="buttontext" >
+            <hyperlink target="nonRouteGatePass.pdf" description="GatePass" target-window="_blank">
+               	  <parameter param-name="shipmentId" /> 
+            </hyperlink>
+        </field> 
+        <field name="buyerInvoice" widget-style="buttontext" id-name = "invoiceSlips">
+            <hyperlink target="buyerInvoice.pdf" description="Invoice Slips" target-window="_blank"> 	
+               	  <parameter param-name="shipmentId" /> 
+            </hyperlink>
+        </field>
+      
+        <field name="cancelShipment" widget-style="buttontext">
+            <hyperlink target="cancelICPBellaryShipment" description="Cancel Shipment">
+	            <parameter param-name="shipmentId"/>
+            </hyperlink>
+        </field> 
+    </form>
     <form name="listICPAmulShipments" type="list" list-name="listIt" paginate-target="FindICPAmulShipment"
         odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
         <actions>

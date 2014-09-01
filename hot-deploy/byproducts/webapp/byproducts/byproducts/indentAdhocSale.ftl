@@ -76,6 +76,8 @@ $(document).ready(function(){
      	<form method="post" name="indententryinit" action="<@ofbizUrl>IcpSalesAmul</@ofbizUrl>" id="indententryinit">  
     <#elseif changeFlag?exists && changeFlag=='IcpSales'>
     	<form method="post" name="indententryinit" action="<@ofbizUrl>IcpSales</@ofbizUrl>" id="indententryinit">
+    	<#elseif changeFlag?exists && changeFlag=='IcpSalesBellary'>
+    	<form method="post" name="indententryinit" action="<@ofbizUrl>IcpSalesBellary</@ofbizUrl>" id="indententryinit">
     <#elseif changeFlag?exists && changeFlag=='PowderSales'>
     	<form method="post" name="indententryinit" action="<@ofbizUrl>PowderPlantSale</@ofbizUrl>" id="indententryinit">  
     <#elseif changeFlag?exists && changeFlag=='FgsSales'>
@@ -135,7 +137,10 @@ $(document).ready(function(){
 		          	<input type="hidden" name="salesChannel" id="salesChannel" value="ICP_AMUL_CHANNEL"/> 
 		        <#elseif changeFlag?exists && changeFlag=='IcpSales'>
 		         	<input type="hidden" name="shipmentTypeId" id="shipmentTypeId" value="ICP_NANDINI_SHIPMENT"/> 
-		           	<input type="hidden" name="salesChannel" id="salesChannel" value="ICP_NANDINI_CHANNEL"/> 
+		           	<input type="hidden" name="salesChannel" id="salesChannel" value="ICP_NANDINI_CHANNEL"/>
+		        <#elseif changeFlag?exists && changeFlag=='IcpSalesBellary'>
+		         	<input type="hidden" name="shipmentTypeId" id="shipmentTypeId" value="ICP_BELLARY_SHIPMENT"/> 
+		           	<input type="hidden" name="salesChannel" id="salesChannel" value="ICP_BELLARY_CHANNEL"/>    	 
 		        <#elseif changeFlag?exists && changeFlag=='PowderSales'>
 		         	<input type="hidden" name="shipmentTypeId" id="shipmentTypeId" value="POWDER_SHIPMENT"/> 
 		           	<input type="hidden" name="salesChannel" id="salesChannel" value="POWDER_PLANT_CHANNEL"/>
@@ -424,6 +429,8 @@ $(document).ready(function(){
 		         <#assign formAction='processIcpSale'>
 		    <#elseif changeFlag?exists && changeFlag=='IcpSalesAmul'>
 		         <#assign formAction='processIcpAmulSale'>
+		    <#elseif changeFlag?exists && changeFlag=='IcpSalesBellary'>
+		         <#assign formAction='processIcpBellarySale'>     
 		    <#elseif changeFlag?exists && changeFlag=='PowderSales'>
 		         <#assign formAction='processPowderSale'>
 		    <#elseif changeFlag?exists && changeFlag=='FgsSales'>
