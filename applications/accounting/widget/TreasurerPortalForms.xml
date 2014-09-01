@@ -474,12 +474,17 @@ under the License.
                 </entity-options>
             </drop-down>
         </field>
-        <field position="2" name="paymentMethodTypeId" event="onchange" action="javascript:paymentFieldsOnchange();">
+        <!-- <field position="2" name="paymentMethodTypeId" event="onchange" action="javascript:paymentFieldsOnchange();">
             <drop-down allow-empty="false">
                 <entity-options entity-name="PaymentMethodType"  description="${description}">
                 	<entity-constraint name="paymentMethodTypeId" operator="like" value="%_PAYIN%"/>
                     <entity-order-by field-name="description"/>                   
                 </entity-options>
+            </drop-down>
+        </field> -->
+        <field position="2" name="paymentMethodTypeId" title="${uiLabelMap.FormFieldTitle_paymentMethodTypeId}" event="onchange" action="javascript:paymentFieldsOnchange();" >
+            <drop-down allow-empty="true">
+                 <list-options list-name="paymentMethodTypeList" key-name="paymentMethodTypeId" description="${description}"/>
             </drop-down>
         </field>
         <field name="paymentRefNum" position="1" title="${uiLabelMap.paymentRefNum}" required-field="true"><text/></field>
@@ -711,12 +716,17 @@ under the License.
                 </entity-options>
             </drop-down>
         </field>
-        <field position="2" name="paymentMethodTypeId" event="onchange" action="javascript:paymentFieldsOnchange();">
+      <!--   <field position="2" name="paymentMethodTypeId" event="onchange" action="javascript:paymentFieldsOnchange();">
             <drop-down allow-empty="false">
                 <entity-options entity-name="PaymentMethodType"  description="${description}">
                 	<entity-constraint name="paymentMethodTypeId" operator="like" value="%_PAYIN%"/>
                     <entity-order-by field-name="description"/>                   
                 </entity-options>
+            </drop-down>
+        </field> -->
+        <field name="paymentMethodTypeId" title="${uiLabelMap.FormFieldTitle_paymentMethodTypeId}" event="onchange" action="javascript:paymentFieldsOnchange();"  position="2">
+            <drop-down allow-empty="true">
+                 <list-options list-name="paymentMethodTypeList" key-name="paymentMethodTypeId" description="${description}"/>
             </drop-down>
         </field>
         <field name="paymentRefNum" position="1" title="${uiLabelMap.paymentRefNum}" required-field="true"><text/></field>

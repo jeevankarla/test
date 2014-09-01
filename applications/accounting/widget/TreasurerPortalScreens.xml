@@ -59,13 +59,6 @@
                     <include-menu name="CompanyFinAccountTabBar" location="component://accounting/widget/AccountingMenus.xml"/>
                     	<section>
 							<widgets>
-								<!-- <container style="button-bar">
-									<link target="CreateNewFineorPenalty" text="Create New" style="buttontext create">				
-									</link>
-								</container> -->
-								<!-- <screenlet title="Find Fines and Penalties">				
-									<include-form name="FindFinesAndPenalties" location="component://byproducts/widget/TransporterForms.xml" />
-								</screenlet> -->
 								<container style="button-bar">
 									<link target="FinAccountAlt.csv" text="Export As CSV" style="buttontext create">	
 									</link>
@@ -106,13 +99,6 @@
                     <include-menu name="CompanyFinAccountTabBar" location="component://accounting/widget/AccountingMenus.xml"/>
                     	<section>
 							<widgets>
-								<!-- <container style="button-bar">
-									<link target="CreateNewFineorPenalty" text="Create New" style="buttontext create">				
-									</link>
-								</container> -->
-								<!-- <screenlet title="Find Fines and Penalties">				
-									<include-form name="FindFinesAndPenalties" location="component://byproducts/widget/TransporterForms.xml" />
-								</screenlet> -->
 								<screenlet title="Non Bank Accounts List">				
 									 <include-form name="ListNonBankAccounts" location="component://accounting/widget/TreasurerPortalForms.xml"/>
 								</screenlet>
@@ -594,6 +580,8 @@
                 <service service-name="acctgInvoicePermissionCheck" result-map="permResult">
                     <field-map field-name="mainAction" value="PAYMENT_EDIT"/>
                 </service>
+                <set field="parameters.findPaymentMethodType" value="bankOrNonBankMethodType"/>
+                 <script location="component://accounting/webapp/accounting/WEB-INF/actions/findPaymentMethodType.groovy"/>
                	<set field="layoutSettings.javaScripts[]" value="/accounting/images/paymentMethodType.js" global="true"/>
                 <set field="hasPaymentEditPermission" from-field="permResult.hasPermission"/>
             </actions>
@@ -1204,6 +1192,8 @@
                 <service service-name="acctgInvoicePermissionCheck" result-map="permResult">
                     <field-map field-name="mainAction" value="PAYMENT_EDIT"/>
                 </service>
+                 <set field="parameters.findPaymentMethodType" value="bankOrNonBankMethodType"/>
+                 <script location="component://accounting/webapp/accounting/WEB-INF/actions/findPaymentMethodType.groovy"/>
                	<set field="layoutSettings.javaScripts[]" value="/accounting/images/paymentMethodType.js" global="true"/>
                 <set field="hasPaymentEditPermission" from-field="permResult.hasPermission"/>
             </actions>
