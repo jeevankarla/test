@@ -153,6 +153,7 @@ if(UtilValidate.isNotEmpty(reportTypeFlag) && reportTypeFlag == "InvoiceSalesAbs
 						if(UtilValidate.isNotEmpty(invoice)){
 							invoiceId = "";
 							partyName = "";
+							idValue = "";
 							basicRevenue=0;
 							bedRevenue=0;
 							vatRevenue=0;
@@ -165,6 +166,10 @@ if(UtilValidate.isNotEmpty(reportTypeFlag) && reportTypeFlag == "InvoiceSalesAbs
 							}
 							invoiceDetails = delegator.findOne("Invoice",[invoiceId : invoiceId] , false);
 							invoicePartyId = invoiceDetails.partyId;
+							partyIdentificationDetails = delegator.findOne("PartyIdentification", [partyId : invoicePartyId, partyIdentificationTypeId : "TIN_NUMBER"], false);
+							if(UtilValidate.isNotEmpty(partyIdentificationDetails)){
+								idValue = partyIdentificationDetails.idValue;
+							}
 							if(UtilValidate.isNotEmpty(invoicePartyId)){
 								partyName = PartyHelper.getPartyName(delegator, invoicePartyId, false);
 							}
@@ -190,7 +195,7 @@ if(UtilValidate.isNotEmpty(reportTypeFlag) && reportTypeFlag == "InvoiceSalesAbs
 							totalMap["vatRevenue"]=vatRevenue;
 							totalMap["cstRevenue"]=cstRevenue;
 							totalMap["totalRevenue"]=totalRevenue;
-							
+							totalMap["idValue"]=idValue;
 							invoicePartyList = [];
 							if(UtilValidate.isNotEmpty(invoicePartyMap[invoicePartyId])){
 								invoicePartyList = invoicePartyMap.get(invoicePartyId);
