@@ -217,21 +217,22 @@
 	</simple-method>
 	
 	<simple-method method-name="createPartyRelationshipDependent" short-description="create a dependent relationship with employee by creating roles">  
-            <set field="dependentCtx.firstName" from-field="parameters.dependentFirstName"/>
-            <set field="dependentCtx.lastName" from-field="parameters.dependentLastName"/>
-            <set field="dependentCtx.birthDate" from-field="parameters.dependentBirthDate"/> 
-            <call-service service-name="createPerson" in-map-name="dependentCtx">          
-            <result-to-field result-name="partyId" field="partyId"/>            
-            </call-service>   
-        	<set field="roleMap.partyId" from-field="partyId"/>
-        	<set field="roleMap.roleTypeId" value="FAMILY_MEMBER"/>
-        	<call-service service-name="createPartyRole" in-map-name="roleMap"/>        
-        	<set field="relMap.partyIdFrom" from-field="parameters.empPartyId"/>
-        	<set field="relMap.roleTypeIdFrom" value="EMPLOYEE"/>
-        	<set field="relMap.partyIdTo" from-field="partyId"/>
-        	<set field="relMap.roleTypeIdTo" value="FAMILY_MEMBER"/>
-        	<set field="relMap.partyRelationshipTypeId" from-field="parameters.partyRelationshipTypeId"/> 
-        	<call-service service-name="createPartyRelationship" in-map-name="relMap"/>
+        <set field="dependentCtx.firstName" from-field="parameters.dependentFirstName"/>
+        <set field="dependentCtx.lastName" from-field="parameters.dependentLastName"/>
+        <set field="dependentCtx.birthDate" from-field="parameters.dependentBirthDate"/>
+        <call-service service-name="createPerson" in-map-name="dependentCtx">          
+        <result-to-field result-name="partyId" field="partyId"/>            
+        </call-service>   
+    	<set field="roleMap.partyId" from-field="partyId"/>
+    	<set field="roleMap.roleTypeId" value="FAMILY_MEMBER"/>
+    	<call-service service-name="createPartyRole" in-map-name="roleMap"/>        
+    	<set field="relMap.partyIdFrom" from-field="parameters.empPartyId"/>
+    	<set field="relMap.roleTypeIdFrom" value="EMPLOYEE"/>
+    	<set field="relMap.partyIdTo" from-field="partyId"/>
+    	<set field="relMap.roleTypeIdTo" value="FAMILY_MEMBER"/>
+    	<set field="relMap.priorityTypeId" from-field="parameters.priorityTypeId"/>
+    	<set field="relMap.partyRelationshipTypeId" from-field="parameters.partyRelationshipTypeId"/> 
+    	<call-service service-name="createPartyRelationship" in-map-name="relMap"/>
 	</simple-method>
  	
     <simple-method method-name="updateEmployment" short-description="Update Employment">
@@ -861,8 +862,6 @@
     </simple-method>
 
     <simple-method method-name="updateEmplLeave" short-description="Update Employee Leave">
-    
-    
         <entity-one entity-name="EmplLeave" value-field="lookedUpValue"/>
         <set-nonpk-fields value-field="lookedUpValue" map="parameters"/>
         <store-value value-field="lookedUpValue"/>

@@ -980,6 +980,12 @@ under the License.
         <response name="success" type="view-home"/>
         <response name="error" type="view-home"/>
     </request-map>
+     <request-map uri="updateDependent">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="updatePartyRelationship"/>
+        <response name="success" type="view-home"/>
+        <response name="error" type="view-home"/>
+    </request-map>
     <request-map uri="updateEmployee">
         <security https="true" auth="true"/>
         <event type="service" path="" invoke="updateEmployee"/>

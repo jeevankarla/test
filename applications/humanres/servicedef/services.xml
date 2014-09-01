@@ -657,6 +657,7 @@ under the License.emplpunch
         <attribute name="dependentFirstName" type="String" mode="IN" />
         <attribute name="dependentLastName" type="String" mode="IN" />
         <attribute name="dependentBirthDate" type="Date" mode="IN"/>
+        <attribute name="priorityTypeId" type="String" mode="IN" optional="true"/>
         <attribute name="empPartyId" mode="IN" type="String"></attribute>
         <attribute name="partyRelationshipTypeId" mode="IN" type="String"></attribute>      
         <attribute name="partyId" mode="OUT" type="String" optional="true"></attribute>
@@ -1238,7 +1239,7 @@ under the License.emplpunch
         <description>Calculate amunt for the given payhead type</description>
         <attribute name="periodBillingId" mode="IN" type="String" optional="true"/>
         <attribute name="payHeadTypeId" mode="IN" type="String"/> 
-        <attribute name="employeeId" mode="IN" type="String"/>
+        <attribute name="employeeId" mode="IN" type="String"/> 
         <attribute name="timePeriodStart" mode="IN" type="Timestamp"/>
         <attribute name="timePeriodEnd" mode="IN" type="Timestamp"/> 
         <attribute name="timePeriodId" mode="IN" type="String"/>
@@ -1309,11 +1310,11 @@ under the License.emplpunch
         <attribute name="periodBillingId" mode="IN" type="String" optional="true"/>
         <attribute name="payrollPeriodId" mode="IN" type="String" optional="false"/>
    </service> 
-   
+  
   <service name="populatePayrollAttedance" engine="java" auth="true" invoke="populatePayrollAttedance" 
         location="in.vasista.vbiz.humanres.PayrollService" transaction-timeout="1800">
         <description>Calculate amunt for the given payhead type</description>
-        <attribute name="orgPartyId" mode="IN" type="String"/>
+        <attribute name="orgPartyId" mode="IN" type="String"/> 
         <attribute name="periodBillingId" mode="IN" type="String" optional="true"/> 
         <attribute name="payrollPeriodId" mode="IN" type="String" optional="false"/>
    </service> 

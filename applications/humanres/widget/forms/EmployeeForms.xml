@@ -730,7 +730,13 @@
         <field name="dependentFirstName" title="${uiLabelMap.FormFieldTitle_firstName}" tooltip="${uiLabelMap.CommonRequired}" required-field="true" widget-style="required"><text></text></field>
         <field name="dependentLastName" title="${uiLabelMap.FormFieldTitle_lastName}" tooltip="${uiLabelMap.CommonRequired}" required-field="true" widget-style="required"><text></text></field>
         <field name="dependentBirthDate" title="${uiLabelMap.DateOfBirth}" tooltip="${uiLabelMap.CommonRequired}" required-field="true" widget-style="required"><date-time></date-time></field>
-        <field name="fromDate"><hidden value="nowTimestamp"></hidden></field>
+		<field name="fromDate"><hidden value="nowTimestamp"></hidden></field>
+		<field name="priorityTypeId" title="${uiLabelMap.IsNominee}" tooltip="${uiLabelMap.CommonRequired}">
+			<drop-down allow-empty="true">
+				<option key="PERSON_NOMINEE" description="Y" ></option>
+				<option key="N" description="N" ></option>
+			</drop-down>		
+		</field>
         <field name="submitButton" title="${uiLabelMap.CommonAdd}"><submit button-type="button"/></field>
     </form> 
     <form name="AddLanguage" type="single" target="createLanguage">
@@ -744,17 +750,28 @@
     </field>
    <field name="submitButton" title="${uiLabelMap.CommonAdd}"><submit button-type="button"/></field>
    </form>
-	<form name="ListDependentContacts" type="list" list-name="dependents" default-table-style="basic-table" >	
+	<form name="ListDependentContacts" type="list" list-name="dependents" default-table-style="basic-table" target="updateDependent">	
 		<row-actions>
         	<set field="dependentBirthDate" value="${bsh:org.ofbiz.base.util.UtilDateTime.getIntervalInDays(org.ofbiz.base.util.UtilDateTime.toTimestamp(birthDate), org.ofbiz.base.util.UtilDateTime.nowTimestamp())/365}Yrs"/>
         </row-actions>
-		<field name="empPartyId"><hidden></hidden></field>        
+		<field name="partyIdFrom"><hidden></hidden></field>        
         <field name="dependentFirstName" title="${uiLabelMap.FormFieldTitle_firstName}"><display default-value="${firstName}"></display></field>
         <field name="dependentLastName" title="${uiLabelMap.FormFieldTitle_lastName}" ><display default-value="${lastName}"></display></field>
         <field name="fromDate"><hidden></hidden></field>
         <field name="partyIdTo"><hidden></hidden></field> 
 		<field name="partyRelationshipTypeId" title="${uiLabelMap.Relation}"><display default-value="${partyRelationshipTypeId}"></display></field>
 		<field name="dependentBirthDate" title="${uiLabelMap.Age}"><display></display></field>
+        <field name="priorityTypeId" title="${uiLabelMap.Nominee}" >
+        <drop-down no-current-selected-key="${priorityTypeId}">
+        	<option key="PERSON_NOMINEE" description="Y"/>
+        	<option key="N" description="N"/>
+        </drop-down>
+		</field>
+		<field name="roleTypeIdFrom" > <hidden value="EMPLOYEE"/></field>
+		<field name="roleTypeIdTo" > <hidden value="FAMILY_MEMBER"/></field>
+        <field name="updateButton" widget-style="smallSubmit" separate-column="true">
+            <submit button-type="button"/>
+        </field>
      	<field name="deletePartyRelationship" title="${uiLabelMap.CommonDelete}" widget-style="buttontext">
             <hyperlink target="deleteDependent" description="${uiLabelMap.CommonDelete}" also-hidden="false">
                	<parameter param-name="partyIdTo"/>
