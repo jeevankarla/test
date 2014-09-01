@@ -1097,6 +1097,30 @@
         <response name="failed" type="view" value="FinesAndPenalties"/>
         <response name="error" type="view" value="FinesAndPenalties"/>
     </request-map>
+    <request-map uri="cancelHikeOrPayment">
+        <security https="true" auth="true"/>
+        <event type="service" path="" invoke="cancelTranporterRecovery"/>
+        <response name="success" type="request" value="DieselHikePayment"/>
+        <response name="failed" type="view" value="DieselHikePayment"/>
+        <response name="error" type="view" value="DieselHikePayment"/>
+    </request-map>
+     <request-map uri="DieselHikePayment">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="DieselHikePayment"/>
+        <response name="error" type="view" value="DieselHikePayment"/>
+    </request-map>
+     <request-map uri="EnterNewHikeOrPayment">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="EnterNewHikeOrPayment"/>
+    </request-map>
+     <request-map uri="CreateNewHikeOrPayment">
+        <security https="true" auth="true"/>
+        <event type="service" path="" invoke="createNewHikeOrPayment"/>
+        <response name="success" type="request" value="DieselHikePayment"/>
+        <response name="failed" type="view" value="DieselHikePayment"/>
+        <response name="error" type="view" value="DieselHikePayment"/>
+    </request-map>
+    
     <!-- migrated requests -->
     <request-map uri="processDispatchReconcilMISAjax">
         <security https="true" auth="true"/>
@@ -1619,6 +1643,8 @@
    <view-map name="FinesAndPenalties" type="screen" page="component://byproducts/widget/TransporterScreens.xml#FinesAndPenalties"/>
    <view-map name="CreateNewFineorPenalty" type="screen" page="component://byproducts/widget/TransporterScreens.xml#CreateNewFineorPenalty"/>
    <view-map name="Transporters" type="screen" page="component://byproducts/widget/TransporterScreens.xml#Transporters"/>
+   <view-map name="DieselHikePayment" type="screen" page="component://byproducts/widget/TransporterScreens.xml#DieselHikePayment"/>
+   <view-map name="EnterNewHikeOrPayment" type="screen" page="component://byproducts/widget/TransporterScreens.xml#EnterNewHikeOrPayment"/>
    
 <!-- Transporter views -->
  <view-map name="FindPastBoothPayments" type="screen" page="component://byproducts/widget/ByProductsNgScreens.xml#FindPastBoothPayments"/>

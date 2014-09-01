@@ -23,7 +23,7 @@ under the License.
 <#-- do not display columns associated with values specified in the request, ie constraint values -->
 
 <fo:layout-master-set>
-    <fo:simple-page-master master-name="main" page-height="12in" page-width="10in"
+    <fo:simple-page-master master-name="main" page-height="12in" page-width="12in"
             margin-top="0.3in" margin-bottom="1in" margin-left="0.3in" margin-right="0.3in">
         <fo:region-body margin-top="1.4in"/>
         <fo:region-before extent="1in"/>
@@ -37,7 +37,7 @@ under the License.
 						<fo:block  keep-together="always" text-align="center" font-family="Courier,monospace" white-space-collapse="false" font-weight="bold">&#160;      ${uiLabelMap.KMFDairySubHeader}</fo:block>
 						<fo:block text-align="center" font-weight="bold" font-size="10pt" keep-together="always"> ROUTE WISE DISTRIBUTION TRANSPORT COST ABSTRACT REPORT</fo:block>
 						<fo:block text-align="center" font-weight="bold" font-size="10pt" keep-together="always" white-space-collapse="false">FROM: ${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(fromDateTime, "dd/MM/yyyy")}   TO:${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(thruDateTime, "dd/MM/yyyy")}</fo:block>				    		
-		            <fo:block >-----------------------------------------------------------------------------------------------</fo:block>
+		            <fo:block >--------------------------------------------------------------------------------------------------------</fo:block>
 		            <fo:block>
 		            <fo:table >
                     <fo:table-column column-width="50pt"/>
@@ -75,6 +75,10 @@ under the License.
                 		         	 	<fo:block text-align="right" font-size="10pt" keep-together="always">Penalties</fo:block>
                 		        		<fo:block text-align="right" font-size="10pt" keep-together="always"></fo:block>
                     		        </fo:table-cell>
+                    		        <fo:table-cell>
+                		         	 	<fo:block text-align="right" font-size="10pt" keep-together="always">Diesel Hike</fo:block>
+                		        		<fo:block text-align="right" font-size="10pt" keep-together="always">&amp; Payments</fo:block>
+                    		        </fo:table-cell>
                     		         <fo:table-cell>
                     		         	<fo:block text-align="right" font-size="10pt" keep-together="always">NET-Amount</fo:block>
                     		         	<fo:block text-align="right" font-size="10pt" keep-together="always"></fo:block>
@@ -83,7 +87,7 @@ under the License.
                     		     </fo:table-body>
                     		     </fo:table>
                         </fo:block>
-		           <fo:block >-----------------------------------------------------------------------------------------------</fo:block>
+		           <fo:block >--------------------------------------------------------------------------------------------------------</fo:block>
 		            </fo:static-content>
 					<fo:flow flow-name="xsl-region-body" font-family="Courier,monospace">
 						<fo:block>
@@ -100,7 +104,8 @@ under the License.
                     			<fo:table-body>
                     			<#assign totGrTotRtAmt = (Static["java.math.BigDecimal"].ZERO)>  
                     			<#assign totCRandCanAmt = (Static["java.math.BigDecimal"].ZERO)>  
-                    			<#assign totGrOthersAmt = (Static["java.math.BigDecimal"].ZERO)>  
+                    			<#assign totGrOthersAmt = (Static["java.math.BigDecimal"].ZERO)> 
+                    			<#assign totGrHikesAmt = (Static["java.math.BigDecimal"].ZERO)>  
                     			<#assign totGrTotNetPayable = (Static["java.math.BigDecimal"].ZERO)>   
                     			<#assign sno=1>        			
                     			<#list masterList as trnsptMarginReportEntry>
@@ -118,6 +123,7 @@ under the License.
                     												<#-- accessing fines And Penalities-->
                     												<#assign facRecvoryMap=facilityRecoveryInfoMap.get(trnsptMarginValues.getKey())?if_exists>
                     												<#assign totalDeduction=0>
+                    												<#assign totalHikeAmnt=0>
 													                   <#if facRecvoryMap?has_content>
 													                   <#assign totalDeduction=facRecvoryMap.get("totalFine")?if_exists>
 													                   </#if>
@@ -133,17 +139,25 @@ under the License.
 													                     <#if facRecvoryMap?has_content>
 													                   <#assign canDeduction=facRecvoryMap.get("cansFine")?if_exists>
 													                   </#if>
-													                     <#assign totalCrAndCan=crateDeduction+canDeduction>
+													                     
 													                   <#if facRecvoryMap?has_content>
 													                   <#assign othersFine=facRecvoryMap.get("othersFine")?if_exists>
 													                   </#if>
+													                   <#if facRecvoryMap?has_content>
+													                   <#assign totalHikeAmnt=facRecvoryMap.get("totalHikeAmount")?if_exists>
+													                   </#if>
+													                   
 													                  
 													                    <#assign totalCrAndCan=crateDeduction+canDeduction>
                     												   <#assign netPayable = grTotRtAmt.subtract(totalDeduction)>
-                    												
+                    												<#-- after Deduction again needs to Hike if Any -->
+                    												 <#assign netPayable = netPayable.add(totalHikeAmnt)>
+                    												 
                     												 <#assign totGrTotRtAmt = totGrTotRtAmt.add(grTotRtAmt)>
                     												<#assign totCRandCanAmt = totCRandCanAmt.add(totalCrAndCan)>
                     												 <#assign totGrOthersAmt=totGrOthersAmt.add(othersFine)>
+                    												 <#assign totGrHikesAmt=totGrHikesAmt.add(totalHikeAmnt)>
+                    												 
                     												<#assign totGrTotNetPayable = totGrTotNetPayable.add(netPayable)>
                     												 
                     											<fo:table-row>
@@ -158,6 +172,7 @@ under the License.
                     												<fo:table-cell><fo:block text-align="right" font-size="10pt" keep-together="always">${grTotRtAmt.toEngineeringString()?if_exists}</fo:block></fo:table-cell>
                     												<fo:table-cell><fo:block text-align="right" font-size="10pt" keep-together="always">${totalCrAndCan?string("#0.00")?if_exists}</fo:block></fo:table-cell>
                     												<fo:table-cell><fo:block text-align="right" font-size="10pt" keep-together="always">${othersFine?string("#0.00")?if_exists}</fo:block></fo:table-cell>
+                    												<fo:table-cell><fo:block text-align="right" font-size="10pt" keep-together="always">${totalHikeAmnt?string("#0.00")?if_exists}</fo:block></fo:table-cell>
                     												<#--><fo:table-cell><fo:block text-align="right">${grTotpendingDue.toEngineeringString()?if_exists}</fo:block></fo:table-cell>-->
                     												<fo:table-cell><fo:block text-align="right" font-size="10pt" keep-together="always">${netPayable?string("#0")?if_exists}.00</fo:block></fo:table-cell>
                     											</fo:table-row>
@@ -178,6 +193,7 @@ under the License.
                     							<fo:table-cell><fo:block text-align="right" font-size="10pt" keep-together="always">${totGrTotRtAmt?if_exists?string("#0.00")}</fo:block></fo:table-cell>
                     							<fo:table-cell><fo:block text-align="right" font-size="10pt" keep-together="always">${totCRandCanAmt?if_exists?string("#0.00")}</fo:block></fo:table-cell>
                     							<fo:table-cell><fo:block text-align="right" font-size="10pt" keep-together="always">${totGrOthersAmt?if_exists?string("#0.00")}</fo:block></fo:table-cell>
+                    							<fo:table-cell><fo:block text-align="right" font-size="10pt" keep-together="always">${totGrHikesAmt?if_exists?string("#0.00")}</fo:block></fo:table-cell>
                     							<fo:table-cell><fo:block text-align="right" font-size="10pt" keep-together="always">${totGrTotNetPayable?string("#0")?if_exists}.00</fo:block></fo:table-cell>
                     						</fo:table-row> 
                     						<fo:table-row>
