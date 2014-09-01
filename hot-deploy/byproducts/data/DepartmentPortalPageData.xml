@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+Licensed to the Apache Software Foundation (ASF) under one
+or more contributor license agreements.  See the NOTICE file
+distributed with this work for additional information
+regarding copyright ownership.  The ASF licenses this file
+to you under the Apache License, Version 2.0 (the
+"License"); you may not use this file except in compliance
+with the License.  You may obtain a copy of the License at
+
+http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing,
+software distributed under the License is distributed on an
+"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+KIND, either express or implied.  See the License for the
+specific language governing permissions and limitations
+under the License.
+-->
+<!--Department portal work flow -->
+ <!--  <PortalPortlet portalPortletId="DEPARTMENT" portletName="List Deptment Invoices"
+        	screenName="MyPortalDepartmentScreen"
+      screenLocation="component://byproducts/widget/CommonScreens.xml"
+        description="ByProduct"/>  -->    
+        
+        
+    	<SecurityPermission description="Department Potal View as Dashboard" permissionId="MYPORTAL_DEPARTMENT"/>
+        <SecurityGroup description="Department Role user will have  myportal Access" groupId="MYPORTAL_DEPARTMENT"/>
+	 	 <SecurityGroupPermission groupId="MYPORTAL_DEPARTMENT" permissionId="MYPORTAL_DEPARTMENT"/>
+	 	 <SecurityGroupPermission groupId="MYPORTAL_DEPARTMENT" permissionId="MYPORTALBASE_ADMIN"/> 
+	 	 <SecurityGroupPermission groupId="MYPORTAL_DEPARTMENT" permissionId="ACCOUNTING_VIEW"/>
+	 	 <SecurityGroupPermission groupId="MYPORTAL_DEPARTMENT" permissionId="FACILITY_VIEW"/>
+	 	 <SecurityGroupPermission groupId="MYPORTAL_DEPARTMENT" permissionId="BYPRODUCTS_VIEW"/>
+	 
+	  <PortalPortlet portalPortletId="DEPARTMENT" portletName="List Deptment Invoices"
+        	screenName="MyPortalByProductFacilityTreeNg"
+      screenLocation="component://byproducts/widget/CommonScreens.xml"
+        description="ByProduct"/>  
+   	<PortletPortletCategory portalPortletId="DEPARTMENT" portletCategoryId="PRODUCTS"/>
+   	
+   	<PortalPage portalPageId="MYPORTAL_DEPARTMENT" sequenceNum="0" portalPageName="DEPARTMENT" description="The Milkosoft System ByProduct page" ownerUserLoginId="_NA_" securityGroupId="MYPORTAL_DEPARTMENT"/>
+   	<PortalPageColumn portalPageId="MYPORTAL_DEPARTMENT" columnSeqId="00001"/>
+   	<PortalPagePortlet portalPageId="MYPORTAL_DEPARTMENT" portalPortletId="DEPARTMENT" portletSeqId="00001" columnSeqId="00001" sequenceNum="0"/>
+  
+ <!-- For Creation of Order these permissions expected -->
+    <SecurityGroupPermission groupId="MYPORTAL_DEPARTMENT" permissionId="ICPSALE_VIEW"/>
+    <SecurityGroupPermission groupId="MYPORTAL_DEPARTMENT" permissionId="ACCOUNTING_ARINVOICE_EDIT"/>
+    <SecurityGroupPermission groupId="MYPORTAL_DEPARTMENT" permissionId="ACCOUNTING_INVOICE_APPROVE"/>
+    <SecurityGroupPermission groupId="MYPORTAL_DEPARTMENT" permissionId="ACCOUNTING_READ"/>
+    <SecurityGroupPermission groupId="MYPORTAL_DEPARTMENT" permissionId="ACCTG_PREF_VIEW"/>
+    <SecurityGroupPermission groupId="MYPORTAL_DEPARTMENT" permissionId="ACCTG_ATX_CREATE"/>
+    <SecurityGroupPermission groupId="MYPORTAL_DEPARTMENT" permissionId="BYPRODUCTS_DAILREPOR"/>
+    <SecurityGroupPermission groupId="MYPORTAL_DEPARTMENT" permissionId="ORDERMGR_CREATE"/>
+    <SecurityGroupPermission groupId="MYPORTAL_DEPARTMENT" permissionId="ORDERMGR_SALES_CREATE"/>
+    <SecurityGroupPermission groupId="MYPORTAL_DEPARTMENT" permissionId="ORDERMGR_SALES_ENTRY"/>
+    <SecurityGroupPermission groupId="MYPORTAL_DEPARTMENT" permissionId="ORDERMGR_SALES_UPDATE"/>
+    <SecurityGroupPermission groupId="MYPORTAL_DEPARTMENT" permissionId="ORDERMGR_UPDATE"/>
+    <SecurityGroupPermission groupId="MYPORTAL_DEPARTMENT" permissionId="ORDERMGR_VIEW"/>
