@@ -25,6 +25,7 @@ import org.ofbiz.base.util.UtilNumber;
 import in.vasista.vbiz.byproducts.ByProductNetworkServices;
 import org.ofbiz.accounting.invoice.InvoiceWorker;
 import in.vasista.vbiz.byproducts.SalesInvoiceServices;
+import org.ofbiz.party.party.PartyHelper;
 dctx = dispatcher.getDispatchContext();
 context.put("dctx",dctx);
 fromDate=parameters.fromDate;
@@ -127,9 +128,9 @@ partyTotals.each{eachParty ->
 			}
 		}
 	}
-	
+	partyName = PartyHelper.getPartyName(delegator, eachParty.getKey(), false);
 	if(quantity != 0){
-				partWiseSaleMap.put(eachParty.getKey(), totalMap);
+				partWiseSaleMap.put(partyName, totalMap);
 	}
 }
 context.categoryType=categoryType;
