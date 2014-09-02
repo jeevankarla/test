@@ -100,7 +100,7 @@ under the License.
 						            						</fo:table-cell>
 						            						<#assign partyName = Static["org.ofbiz.party.party.PartyHelper"].getPartyName(delegator, invoiceTot.getKey()?if_exists, false)>
 							             					<fo:table-cell>
-						            							<fo:block  keep-together="always" text-align="left" font-size="12pt" white-space-collapse="false" >${partyName}</fo:block>  
+						            							<fo:block  keep-together="always" text-align="left" font-size="12pt" white-space-collapse="false" >${partyName}[${invoiceTot.getKey()?if_exists}]</fo:block>  
 						            						</fo:table-cell>
 						            						<fo:table-cell>
 												             	<fo:block>
