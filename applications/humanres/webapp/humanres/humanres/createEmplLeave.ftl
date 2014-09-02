@@ -174,30 +174,41 @@ function viewGHandSS(){
             <input type="hidden" name="appliedBy" value =""/>
             <table class="basic-table" cellspacing="0">
               <tr>
-                <td class="label">${uiLabelMap.EmployeeId}</td>
+                <td class="label">${uiLabelMap.EmployeeId} :</td>
                 <td>
-                    <@htmlTemplate.lookupField value="${parameters.partyId?if_exists}" formName="EditEmplLeave" name="partyId" id="partyId" fieldFormName="LookupEmployeeName"/>
+                   <#if !editFlag>
+                      <@htmlTemplate.lookupField value="${parameters.partyId?if_exists}" formName="EditEmplLeave" name="partyId" id="partyId" fieldFormName="LookupEmployeeName"/>
                     <span class="tooltip"></span>
+                    <#else>
+                     <input type="hidden" name="partyId" id="partyId" value="${partyId?if_exists}"/>
+                     ${partyId?if_exists}
+                  </#if> 
+                    
                 </td>
               </tr>
               <tr>
-                <td class="label">Leave Type</td>
+                <td class="label">Leave Type :</td>
                 <td>
-                   <select name="leaveTypeId" class='h4' onchange="displayLeaveBalance();">
-                       <option value=''></option>
-						<#list leaveTypeList as leaveType>
-						      <#if leaveTypeId?exists && (leaveTypeId == leaveType.leaveTypeId)>
-      					             <option  value="${leaveTypeId}" selected="selected">${leaveType.description}</option>
-			      					<#else>
-			      						<option value='${leaveType.leaveTypeId}'>${leaveType.description}</option>
-			                  		</option>
-      				          </#if>    
-						</#list>      
-					</select>
+                   <#if !editFlag>
+		               <select name="leaveTypeId" class='h4' onchange="displayLeaveBalance();">
+		                   <option value=''></option>
+							<#list leaveTypeList as leaveType>
+							      <#if leaveTypeId?exists && (leaveTypeId == leaveType.leaveTypeId)>
+		  					             <option  value="${leaveTypeId}" selected="selected">${leaveType.description}</option>
+				      					<#else>
+				      						<option value='${leaveType.leaveTypeId}'>${leaveType.description}</option>
+				                  		</option>
+		  				          </#if>    
+							</#list>      
+						</select>
+					  <#else>
+					      <input type="hidden" name="leaveTypeId" id="leaveTypeId" value="${leaveTypeId}"/>
+						  ${leaveTypeId}
+					</#if>	
 					<span id="leaveBalance" name="leaveBalance" class="tooltip" wrap="wrap"></span>
                 </td>
               </tr>
-              <tr>
+             <!--<tr>
                 <td class="label">Leave ReasonType</td>
                 <td>
                     <option value=''></option>
@@ -212,21 +223,26 @@ function viewGHandSS(){
 						</#list>      
 					</select>
                 </td>
-              </tr>
+              </tr>-->
               <tr>
-                <td class="label">From Date</td>
+                <td class="label">From Date :</td>
                 <td>
-                   <input type="text" name="fromDate" id="fromDate" value="${fromDate?if_exists}"/> 
+                  <#if !editFlag>
+                   	 <input type="text" name="fromDate" id="fromDate" value="${fromDate?if_exists}"/>
+                    <#else>
+                      <input type="hidden" name="fromDate" id="fromDate" value="${fromDate?if_exists}"/>
+                     ${fromDate?if_exists}
+                  </#if> 
                 </td>
               </tr>
                <tr>
-                <td class="label">Thru Date</td>
+                <td class="label">Thru Date :</td>
                 <td>
                    <input type="text" name="thruDate" id="thruDate" value="${thruDate?if_exists}"/>
                 </td>
               </tr>
               <tr>
-                <td class="label">First/Second Half</td>
+                <td class="label">First/Second Half :</td>
                 <td>
                    <#list dayFractionList as dayFraction>
                        <#if dayFractionId?exists && (dayFractionId == dayFraction.enumId)>
@@ -239,14 +255,14 @@ function viewGHandSS(){
                 </td>
               </tr>
               <tr>
-                <td class="label">Approver PartyId</td>
+                <td class="label">Approver PartyId :</td>
                 <td>
                   <@htmlTemplate.lookupField value="${approverPartyId?if_exists}" formName="EditEmplLeave" name="approverPartyId" id="approverPartyId" fieldFormName="LookupEmployeeName"/>
                   <span class="tooltip"></span>
                 </td>
               </tr>
                <tr>
-                <td class="label">${uiLabelMap.Comments}</td>
+                <td class="label">${uiLabelMap.Comments} :</td>
                 <td>
                     <input type="text" name="comment" value="${comment?if_exists}" size="70"/>
                 </td>
@@ -254,7 +270,14 @@ function viewGHandSS(){
               <tr>
                 <td>&nbsp;</td>
                 <td>
-                	<input type="submit" name="submit" id="submit" value="Create" style="buttontext"/>
+                  &nbsp;
+                </td>
+              </tr>
+              <tr>
+                <td>&nbsp;</td>
+                <td>
+                	<input type="submit" name="submit" id="submit" value="Create" style="buttontext"/> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;
+                	<a name="cancel" id="cancel" value="Cancel" class="smallSubmit" href='<@ofbizUrl>FindEmplLeaves</@ofbizUrl>'>Cancel</a>
                 </td>
               </tr>
             </table>

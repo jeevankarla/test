@@ -247,10 +247,13 @@
             </hyperlink>
         </field>
     </form>
-    <form name="EditEmplLeaveStatus" type="single" target="updateEmplLeaveStatus" default-map-name="leaveApp">
+    <form name="EditEmplLeaveStatus" type="single" target="updateEmplLeaveStatus">
         <auto-fields-service service-name="updateEmplLeaveStatus" map-name="leaveApp"/>
+        <field name="effectedCreditDays"><hidden/></field>
+        <field name="lossOfPayDays"><hidden/></field>
         <field name="partyId"><display/></field>
         <field name="approverPartyId"><display/></field>
+        <field name="appliedBy"><display/></field>
         <field name="leaveTypeId"><display/></field>
         <field name="emplLeaveReasonTypeId"><display/></field>
         <field name="fromDate"><display/></field>

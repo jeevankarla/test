@@ -228,7 +228,9 @@
         <section>
             <actions>
                 <set field="titleProperty" value="PageTitleEditApprovalStatus"/>
-                <set field="tabButtonItem" value="Approval"/>
+                 <set field="headerItem" value="Leave"/>
+                <set field="tabButtonItem" value="EmployeeLeave"/>
+                <set field="tabButtonItem2" value="Approval"/>
                 <set field="partyId" from-field="parameters.partyId"/>
                 <set field="leaveTypeId" from-field="parameters.leaveTypeId"/>
                 <set field="fromDate" from-field="parameters.fromDate"/>

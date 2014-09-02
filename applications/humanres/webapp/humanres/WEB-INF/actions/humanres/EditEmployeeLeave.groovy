@@ -28,7 +28,9 @@ import org.ofbiz.entity.condition.*;
 import org.ofbiz.entity.util.EntityUtil;
 
 context.target= "createEmplLeaveExt";
+context.editFlag= Boolean.FALSE;
 if(leaveApp){
+	context.editFlag= Boolean.TRUE;
 	context.target= "updateEmplLeaveExt";
 	context.leaveTypeId = leaveApp.leaveTypeId;
 	context.emplLeaveReasonTypeId= leaveApp.emplLeaveReasonTypeId;
