@@ -136,6 +136,7 @@ if(UtilValidate.isNotEmpty(dtcBankMap)){
 		Map.Entry entry = mapIter.next();
 		 netAmount = BigDecimal.ZERO;
 		 totalFine = BigDecimal.ZERO;
+		 totalHike = BigDecimal.ZERO;
 		 routeId = entry.getKey();
 		 routeAmount = entry.getValue().get("amount");
 		 facilityPan = entry.getValue().get("facilityPan");
@@ -146,7 +147,9 @@ if(UtilValidate.isNotEmpty(dtcBankMap)){
 			 facilityRecvry = facRecoveryMap.get(routeId);
 			 if(UtilValidate.isNotEmpty(facilityRecvry.totalFine)){
 				 totalFine = facilityRecvry.totalFine;
+				 totalHike=facilityRecvry.totalHikeAmount;
 				 netAmount = (routeAmount-totalFine);
+				 netAmount = (netAmount+totalHike);//after adding Hike
 			 }
 		 }else{
 			 netAmount = routeAmount;
@@ -158,6 +161,9 @@ if(UtilValidate.isNotEmpty(dtcBankMap)){
 			 }
 			 if(UtilValidate.isNotEmpty(totalFine)){
 				  tempMap["totalFine"] = totalFine;
+			 }
+			 if(UtilValidate.isNotEmpty(totalFine)){
+				 tempMap["totalHikeAmount"] = totalHike;
 			 }
 			 if(UtilValidate.isNotEmpty(netAmount)){
 				  tempMap["netAmount"] = netAmount.setScale(0,BigDecimal.ROUND_HALF_UP);
@@ -194,6 +200,7 @@ if(UtilValidate.isNotEmpty(finalMap)){
 		dtcBankCsvMap["facilityFinAccount"] = route.getValue().get("facilityFinAccount");
 		dtcBankCsvMap["routeAmount"] = (route.getValue().get("routeAmount").setScale(2,BigDecimal.ROUND_HALF_UP));
 		dtcBankCsvMap["totalFine"] = (route.getValue().get("totalFine").setScale(2,BigDecimal.ROUND_HALF_UP));
+		dtcBankCsvMap["totalHikeAmount"] = (route.getValue().get("totalHikeAmount").setScale(2,BigDecimal.ROUND_HALF_UP));
 		dtcBankCsvMap["netAmount"] = (route.getValue().get("netAmount").setScale(0,BigDecimal.ROUND_HALF_UP));
 		tempMap = [:];
 		tempMap.putAll(dtcBankCsvMap);
