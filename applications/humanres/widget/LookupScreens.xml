@@ -23,7 +23,7 @@
 <screen name="LookupEmployeeName">
         <section>
             <condition>
-                <if-has-permission permission="HUMANRES" action="VIEW"/>
+                <if-has-permission permission="HUMANRES" action="_VIEW"/>
                 <!-- <if-service-permission service-name="partyBasePermissionCheck" main-action="VIEW"/> -->
             </condition>
             <actions>          
