@@ -93,7 +93,7 @@ under the License.
 			       								<fo:table-cell border-style="solid"><fo:block text-align="right" keep-together="always" font-weight="bold">${header.getValue().get(headerItem)?if_exists}</fo:block></fo:table-cell>
 			       							</#if>
 			       							<#if parameters.type=="deductions">
-			       								<fo:table-cell border-style="solid"><fo:block text-align="right" keep-together="always" font-weight="bold">${(header.getValue().get(headerItem)*(-1))?if_exists}</fo:block></fo:table-cell>
+			       								<fo:table-cell border-style="solid"><fo:block text-align="right" keep-together="always" font-weight="bold">${(header.getValue().get(headerItem))?if_exists}</fo:block></fo:table-cell>
 			       							</#if>
 			       						</#list>
 	       						</fo:table-row>	
@@ -118,7 +118,7 @@ under the License.
 		       								<fo:table-cell border-style="solid"><fo:block text-align="right" keep-together="always" font-weight="bold">${totalBenefitsMap.get(headerItem)?if_exists}</fo:block></fo:table-cell>
 		       							</#if>
 		       							<#if parameters.type=="deductions">
-		       								<fo:table-cell border-style="solid"><fo:block text-align="right" keep-together="always" font-weight="bold">${((totalDeductionsMap.get(headerItem))*(-1))?if_exists}</fo:block></fo:table-cell>
+		       								<fo:table-cell border-style="solid"><fo:block text-align="right" keep-together="always" font-weight="bold">${(totalDeductionsMap.get(headerItem))?if_exists}</fo:block></fo:table-cell>
 		       							</#if>
 		       						</#list>
 	   						</fo:table-row>	

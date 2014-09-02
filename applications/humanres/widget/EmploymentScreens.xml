@@ -413,7 +413,7 @@
             <actions>
                 <set field="titleProperty" value="HumanResFindEmployment"/>
                 <set field="headerItem" value="benefitOrDeduction"/>
-				<set field="tabButtonItem" value="benefitOrDeduction" />      
+				<set field="tabButtonItem" value="benefitOrDeduction" />
 				<entity-condition list="allBenefitsTypeList" entity-name="BenefitType">
 					<condition-expr field-name="benefitTypeId" operator="not-equals" value="PAYROL_BEN_SALARY"/>
 					<order-by field-name="sequenceNum"/>

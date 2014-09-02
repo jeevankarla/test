@@ -1066,7 +1066,7 @@
              <set field="footerImageUrl" value="/images/ProcessedbyVasista.gif"/>
             <!--  <set field="reportFlag" value="summary"/> -->
        		<set field="parameters.partyIdFrom" from-field="parameters.partyId"/>
-       		<script location="component://humanres/webapp/humanres/WEB-INF/actions/humanres/EmployeeBenefitsAndDeductions.groovy" />      
+       		<script location="component://humanres/webapp/humanres/WEB-INF/actions/humanres/BenefitsOrDeductionsExportPDF.groovy" />      
    		</actions> 
 		<widgets>
 			<section>                                                      
