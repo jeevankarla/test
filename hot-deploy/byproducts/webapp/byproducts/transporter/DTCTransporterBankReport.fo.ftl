@@ -22,7 +22,7 @@ under the License.
 
 <#-- do not display columns associated with values specified in the request, ie constraint values -->
 <fo:layout-master-set>
-	<fo:simple-page-master master-name="main" page-height="12in" page-width="10in"
+	<fo:simple-page-master master-name="main" page-height="12in" page-width="12in"
             margin-top="0.3in" margin-bottom=".3in" margin-left=".2in" margin-right=".1in">
         <fo:region-body margin-top="0.01in"/>
         <fo:region-before extent="1in"/>
@@ -54,6 +54,7 @@ ${setRequestAttribute("OUTPUT_FILENAME", "DTCBankReport.pdf")}
 	            		<fo:table-column column-width="110pt"/> 		
 	            		<fo:table-column column-width="90pt"/>
 	            		<fo:table-column column-width="80pt"/>
+	            		<fo:table-column column-width="80pt"/>
 	            		<fo:table-column column-width="90pt"/>
 	                    <fo:table-body>
 	                    <fo:table-row >
@@ -82,6 +83,9 @@ ${setRequestAttribute("OUTPUT_FILENAME", "DTCBankReport.pdf")}
                             		<fo:block  keep-together="always" text-align="left" font-size="10pt" white-space-collapse="false" font-weight="bold">Total Dedn.</fo:block>   
                         		</fo:table-cell>
                         		<fo:table-cell border-style="solid">
+                            		<fo:block  keep-together="always" text-align="left" font-size="10pt" white-space-collapse="false" font-weight="bold">Extra Payment</fo:block>   
+                        		</fo:table-cell>
+                        		<fo:table-cell border-style="solid">
                             		<fo:block  keep-together="always" text-align="right" font-size="10pt" white-space-collapse="false" font-weight="bold">Net Amount</fo:block>  
                         		</fo:table-cell>
                 			</fo:table-row>
@@ -98,10 +102,12 @@ ${setRequestAttribute("OUTPUT_FILENAME", "DTCBankReport.pdf")}
             		<fo:table-column column-width="110pt"/> 		
             		<fo:table-column column-width="90pt"/>
             		<fo:table-column column-width="80pt"/>
+            		<fo:table-column column-width="80pt"/>
             		<fo:table-column column-width="90pt"/>
                     <fo:table-body>
                     <#assign totalSale = 0>
                     <#assign grandTotalFine = 0>
+                     <#assign grandHikesAmount = 0>
                     <#assign totalNetAmount = 0>
                     <#assign routeDetails = finalMap.entrySet()>
                     <#assign sno=1>
@@ -109,6 +115,7 @@ ${setRequestAttribute("OUTPUT_FILENAME", "DTCBankReport.pdf")}
                     		<#assign routeId = eachRoute.getKey()?if_exists>
                     		<#assign saleAmount = eachRoute.getValue().get("routeAmount")?if_exists>
                     		<#assign totalFine = eachRoute.getValue().get("totalFine")?if_exists>
+                    		<#assign totalHikeAmount = eachRoute.getValue().get("totalHikeAmount")?if_exists>
                     		<#assign netAmount = eachRoute.getValue().get("netAmount")?if_exists>
                     		<#assign facilityName = eachRoute.getValue().get("facilityName")?if_exists>
                     		<#assign facilityCode = eachRoute.getValue().get("facilityCode")?if_exists>
@@ -152,11 +159,18 @@ ${setRequestAttribute("OUTPUT_FILENAME", "DTCBankReport.pdf")}
 	                                    </fo:block>
 	                                </fo:table-cell>
 	                                <fo:table-cell border-style="solid">
-	                                    <fo:block text-align="right">
+	                                    <fo:block text-align="right"> <#if totalFine?has_content>
 	                                    <#assign grandTotalFine = grandTotalFine+totalFine>
-	                                            <#if totalFine?has_content>${(totalFine)?string("##0.00")}<#else>0.00</#if>
+	                                           ${(totalFine)?string("##0.00")}<#else>0.00</#if>
 	                                    </fo:block>
 	                                </fo:table-cell>
+	                                 <fo:table-cell border-style="solid">
+	                                    <fo:block text-align="right">
+	                                    <#if totalHikeAmount?has_content>
+	                                    <#assign grandHikesAmount = grandHikesAmount+totalHikeAmount>${(totalHikeAmount)?string("##0.00")}<#else>0.00</#if>
+	                                    </fo:block>
+	                                </fo:table-cell>
+	                                
 	                                <fo:table-cell border-style="solid">
 	                                    <fo:block text-align="right">
 	                                    <#assign totalNetAmount = totalNetAmount+netAmount>
@@ -199,6 +213,11 @@ ${setRequestAttribute("OUTPUT_FILENAME", "DTCBankReport.pdf")}
                                 <fo:table-cell border-style="solid">
                                     <fo:block text-align="right">
                                             <#if grandTotalFine?has_content>${(grandTotalFine)?string("##0.00")}<#else>0.00</#if>
+                                    </fo:block>
+                                </fo:table-cell>
+                                 <fo:table-cell border-style="solid">
+                                    <fo:block text-align="right">
+                                            <#if grandHikesAmount?has_content>${(grandHikesAmount)?string("##0.00")}<#else>0.00</#if>
                                     </fo:block>
                                 </fo:table-cell>
                                 <fo:table-cell border-style="solid">
