@@ -1,0 +1,24 @@
+<Facility facilityId="Godown1" facilityTypeId="WAREHOUSE" facilityName="PrintPack Facility" description="Manufacturing Facility" ownerPartyId="Company" defaultInventoryItemTypeId="NON_SERIAL_INV_ITEM" defaultWeightUomId="WT_lb" defaultDaysToShip="25" geoPointId="9000"/>
+    <ProductStore productStoreId="9000" storeName="KMF Store" companyName="MDKMF" title="MDKMF"
+        subtitle="MDKMF" payToPartyId="Company" daysToCancelNonPay="30" prorateShipping="Y" prorateTaxes="Y"
+        inventoryFacilityId="Godown1" oneInventoryFacility="Y" checkInventory="Y" isFactoryStore="Y" reserveInventory="Y" balanceResOnOrderCreation="Y" reserveOrderEnumId="INVRO_FIFO_REC" requireInventory="N"
+        defaultLocaleString="en_US" defaultCurrencyUomId="INR" defaultSalesChannelEnumId="WEB_SALES_CHANNEL" allowPassword="Y" explodeOrderItems="N" retryFailedAuths="Y" reqReturnInventoryReceive="N"
+        headerApprovedStatus="ORDER_APPROVED" itemApprovedStatus="ITEM_APPROVED" digitalItemApprovedStatus="ITEM_APPROVED" headerDeclinedStatus="ORDER_REJECTED"
+        itemDeclinedStatus="ITEM_REJECTED" headerCancelStatus="ORDER_CANCELLED" itemCancelStatus="ITEM_CANCELLED" orderNumberPrefix="WS"
+        authDeclinedMessage="There has been a problem with your method of payment. Please try a different method or call customer service."
+        authFraudMessage="Your order has been rejected and your account has been disabled due to fraud."
+        authErrorMessage="Problem connecting to payment processor; we will continue to retry and notify you by email."
+        storeCreditValidDays="90" storeCreditAccountEnumId="FIN_ACCOUNT"
+        visualThemeId="EC_DEFAULT" prodSearchExcludeVariants="Y" autoApproveInvoice="Y" shipIfCaptureFails="Y" autoApproveOrder="Y" showOutOfStockProducts="Y"/>
+
+    <ProductStoreFacility productStoreId="9000" facilityId="Godown1" fromDate="2001-05-13 12:00:00.0"/><?xml version="1.0" encoding="UTF-8"?>
+<ProdCatalog prodCatalogId="MDKMF_STORE_CATALOG" catalogName="MDKMF STORE CATALOG" useQuickAdd="N"/>
+    <ProductStoreCatalog productStoreId="9000" prodCatalogId="MDKMF_STORE_CATALOG" fromDate="2011-05-13 12:00:00.0" sequenceNum="1"/>
+    
+    <ProductStoreGroup  description="MOTHER DAIRY"  productStoreGroupId="PURCHASE_PRODUCTS" productStoreGroupName="MDKMF_RAWMETERIAL"/> 
+	<ProductStoreGroupMember  fromDate="2014-01-31 00:00:00.0"  productStoreGroupId="PURCHASE_PRODUCTS" productStoreId="9000"/> 
+	       
+    <EnumerationType description="Order Purchase Channel" enumTypeId="ORDER_PRCHSE_CHANNEL" hasTable="N" parentTypeId=""/>
+    <Enumeration description="Products  Purchase Channel" enumCode="PROD_PRCHSE_CHANNEL" enumId="PROD_PRCHSE_CHANNEL" sequenceId="01" enumTypeId="ORDER_PRCHSE_CHANNEL"/>
+        
+     
