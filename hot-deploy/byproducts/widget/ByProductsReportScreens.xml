@@ -1761,7 +1761,7 @@
 			</widgets>
 		</section>
 	</screen>
-	<screen name="VatInvoiceSeqNoReportPDF">
+	<!-- <screen name="VatInvoiceSeqNoReportPDF">
 		<section>
 			<actions>
 				<property-map resource="CommonUiLabels" map-name="uiLabelMap" global="true"/>
@@ -1783,7 +1783,7 @@
 				</section>
 			</widgets>
 		</section>
-	</screen>
+	</screen> -->
 	<screen name="RegularIceCreamSaleBookPDF">
 		<section>
 			<actions>
@@ -1838,13 +1838,19 @@
 				<property-map resource="ProductUiLabels" map-name="uiLabelMap" global="true"/>
 				<property-map resource="PartyUiLabels" map-name="uiLabelMap" global="true"/>
 				<set field="reportTypeFlag" from-field="parameters.reportTypeFlag"/>
-				<script location="component://byproducts/webapp/byproducts/WEB-INF/actions/InvoiceAbstractReport.groovy" />	
+				<set field="vatType" from-field="parameters.vatType"/>
 			</actions>
 			<widgets>
 				<section>
 					<condition>
-						<if-compare operator="equals" value="InvoiceSales" field="reportTypeFlag" />
+					<and>
+					  <if-compare operator="equals" value="InvoiceSales" field="reportTypeFlag" />
+					  <if-compare operator="equals" value="centralExcise" field="vatType" />
+					</and>
 					</condition>
+					<actions>
+						<script location="component://byproducts/webapp/byproducts/WEB-INF/actions/InvoiceAbstractReport.groovy" />	
+					</actions>
 					<widgets>
 						<platform-specific>
 		                    <xsl-fo>
@@ -1856,13 +1862,35 @@
 				</section>
 				<section>
 					<condition>
-						<if-compare operator="equals" value="InvoiceSalesAbstract" field="reportTypeFlag" />
+					<and>
+					  <if-compare operator="equals" value="InvoiceSalesAbstract" field="reportTypeFlag" />
+					  <if-compare operator="equals" value="centralExcise" field="vatType" />
+					</and>
 					</condition>
+					<actions>
+						<script location="component://byproducts/webapp/byproducts/WEB-INF/actions/InvoiceAbstractReport.groovy" />	
+					</actions>
 					<widgets>
 						<platform-specific>
 		                   <xsl-fo>
 								<html-template
 									location="component://byproducts/webapp/byproducts/reports/InvoiceAbstractDayWiseReport.fo.ftl" />
+							</xsl-fo>
+		                </platform-specific>
+					</widgets>
+				</section>
+				<section>
+					<condition>
+						  <if-compare operator="equals" value="vat" field="vatType" />
+					</condition>
+					<actions>
+						<script location="component://byproducts/webapp/byproducts/WEB-INF/actions/VatInvoiceSeqNoReport.groovy" />	
+					</actions>
+					<widgets>
+						<platform-specific>
+		                   <xsl-fo>
+								<html-template
+									location="component://byproducts/webapp/byproducts/reports/VatInvoiceSeqNoReport.fo.ftl" />
 							</xsl-fo>
 		                </platform-specific>
 					</widgets>

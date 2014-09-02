@@ -78,6 +78,21 @@ function makeDatePicker1(fromDateId ,thruDateId){
 		});
 	}
 
+// for Vat Invoice Sequence and Invoice sale reports
+
+function reportTypeChangeFunc() {
+	var vatTypeValue = $('#vatType').val();
+	if(vatTypeValue == "centralExcise"){
+		$('#reportTypeFlag').parent().show();
+		$('#categoryType').parent().show();
+	}
+	else{
+	   	$('#reportTypeFlag').parent().hide();
+	   	$('#categoryType').parent().hide();
+	}
+}
+
+
 //call one method for one time fromDATE And thruDATE
 
 	$(document).ready(function(){
@@ -970,7 +985,7 @@ function makeDatePicker1(fromDateId ,thruDateId){
 	      					<td width="10%"><input type="submit" value="Download" class="buttontext"/></td>
 	  					</form>
 	  				</tr>
-	  				 <tr class="alternate-row">
+	  				<#--<tr class="alternate-row">
 						<form id="vatInvoiceSeqNoReport" name="vatInvoiceSeqNoReport" method="post" action="<@ofbizUrl>vatInvoiceSeqNoReport.pdf</@ofbizUrl>" target="_blank">	
 							<td width="30%">VAT Invoice Sequence No Report</td>
 							<td width="15%">From<input  type="text" size="18pt" id="vatInvoiceSeqNofDate" readonly  name="fromDate"/></td>
@@ -979,7 +994,7 @@ function makeDatePicker1(fromDateId ,thruDateId){
 			      			<td width="15%"></td>
 							<td width="10%"><input type="submit" value="Download" class="buttontext"/></td>
 						</form>
-	                  </tr>
+	                  </tr>-->
 	  				 <tr class="alternate-row">
 						<form id="regularIceCreamSaleReport" name="regularIceCreamSaleReport" method="post" action="<@ofbizUrl>RegularIceCreamSaleBookReport.pdf</@ofbizUrl>" target="_blank">	
 							<td width="30%">Regular Ice Cream Sale Book Report</td>
@@ -1010,18 +1025,24 @@ function makeDatePicker1(fromDateId ,thruDateId){
 	                  </tr>
 	                  <tr class="alternate-row">
 						<form id="saleInvoiceAbstractReport" name="saleInvoiceAbstractReport" method="post" action="<@ofbizUrl>saleInvoiceAbstractReport.pdf</@ofbizUrl>" target="_blank">	
-							<td width="30%">Invoice Abstract Report</td>
+							<td width="30%">Invoice Sequence Number Report</td>
 							<td width="15%">From<input  type="text" size="18pt" id="saleInvoiceAbstractfDate" readonly  name="fromDate"/></td>
 						    <td width="15%">To<input  type="text" size="18pt" id="saleInvoiceAbstracttDate" readonly  name="thruDate"/></td>
+						    <td width="15%">Type
+			      			  <select name='vatType' id = "vatType" onChange="reportTypeChangeFunc()">
+				      			<option value="centralExcise">Central Excise</option>
+				      			<option value="vat">VAT</option>
+				      			</select>
+				      		</td>
 			      			<td width="15%">By
-			      			  <select name="categoryType">
+			      			  <select name="categoryType" id= "categoryType">
 				      			<option value="All">All</option>
 				      			<option value="ICE_CREAM_NANDINI">Nandini Ice Cream</option>
 				      			<option value="ICE_CREAM_AMUL">Amul Ice Cream</option>
 				      			</select>
 				      		</td>
 			      			<td width="15%">Report Type 
-								<select name='reportTypeFlag'>
+								<select name='reportTypeFlag' id = "reportTypeFlag">
 									<option value='InvoiceSales'>InvoiceSales</option>
 									<option value='InvoiceSalesAbstract'>InvoiceSalesAbstract</option>
 								</select>
