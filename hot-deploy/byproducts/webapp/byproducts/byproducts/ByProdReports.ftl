@@ -118,7 +118,9 @@ function makeDatePicker1(fromDateId ,thruDateId){
 		makeDatePicker("newOrTerminatefDate","newOrTerminatetDate");
 		makeDatePicker("vatInvoiceSeqNofDate","vatInvoiceSeqNotDate");
 		makeDatePicker("amulIceCreamfDate","amulIceCreamtDate");
-		makeDatePicker("saleInvoiceAbstractfDate","saleInvoiceAbstracttDate");
+        makeDatePicker("saleInvoiceAbstractfDate","saleInvoiceAbstracttDate");
+	    makeDatePicker("regularIceCreamfDate","regularIceCreamtDate");
+		
 		$('#ui-datepicker-div').css('clip', 'auto');		
 	});
 //for Month Picker
@@ -978,7 +980,21 @@ function makeDatePicker1(fromDateId ,thruDateId){
 							<td width="10%"><input type="submit" value="Download" class="buttontext"/></td>
 						</form>
 	                  </tr>
-	  			       <tr class="alternate-row">
+	  				 <tr class="alternate-row">
+						<form id="regularIceCreamSaleReport" name="regularIceCreamSaleReport" method="post" action="<@ofbizUrl>RegularIceCreamSaleBookReport.pdf</@ofbizUrl>" target="_blank">	
+							<td width="30%">Regular Ice Cream Sale Book Report</td>
+							<td width="15%">From<input  type="text" size="18pt" id="regularIceCreamfDate" readonly  name="fromDate"/></td>
+						    <td width="15%">To<input  type="text" size="18pt" id="regularIceCreamtDate" readonly  name="thruDate"/></td>
+			      			<td width="15%">By<select name="categoryType">
+			      			<option value="All">All</option>
+			      			<option value="ICE_CREAM_NANDINI">Nandini Ice Cream</option>
+			      			<option value="ICE_CREAM_AMUL">Amul Ice Cream</option>
+			      			</select></td>
+			      			<td width="15%"></td>
+							<td width="10%"><input type="submit" value="Download" class="buttontext"/></td>
+						</form>
+	                  </tr>
+	                   <tr class="alternate-row">
 						<form id="iceCreamSaleReport" name="iceCreamSaleReport" method="post" action="<@ofbizUrl>iceCreamSaleBookReport.pdf</@ofbizUrl>" target="_blank">	
 							<td width="30%">Sale Book Report</td>
 							<td width="15%">From<input  type="text" size="18pt" id="amulIceCreamfDate" readonly  name="fromDate"/></td>

@@ -72,7 +72,7 @@ under the License.
 		                    <#assign total=0>
        							<#list partWiseSales as partWiseSaleDetails>
        							<#assign totalQty=totalQty+partWiseSaleDetails.getValue().get("quantity")>
-       							<#assign totalAvg=totalQty+partWiseSaleDetails.getValue().get("average")>
+       							<#assign totalAvg=totalAvg+partWiseSaleDetails.getValue().get("average")>
        							<#assign totalBasicRev=totalBasicRev+partWiseSaleDetails.getValue().get("basicRevenue")>
        							<#assign totalBedRev=totalBedRev+partWiseSaleDetails.getValue().get("bedRevenue")>
        							<#assign totalVatRev=totalVatRev+partWiseSaleDetails.getValue().get("vatRevenue")>
@@ -90,19 +90,19 @@ under the License.
 							            	<fo:block  keep-together="always" text-align="right" font-size="12pt" white-space-collapse="false" font-weight="bold">${partWiseSaleDetails.getValue().get("average")?string("#0.00")}</fo:block>  
 							            </fo:table-cell>
 							             <fo:table-cell>
-							            	<fo:block  keep-together="always" text-align="right" font-size="12pt" white-space-collapse="false" font-weight="bold">${partWiseSaleDetails.getValue().get("basicRevenue")}</fo:block>  
+							            	<fo:block  keep-together="always" text-align="right" font-size="12pt" white-space-collapse="false" font-weight="bold"><#if partWiseSaleDetails.getValue().get("basicRevenue") != 0>${partWiseSaleDetails.getValue().get("basicRevenue")?string("#0.00")}<#else></#if></fo:block>  
 							            </fo:table-cell>
 							            <fo:table-cell>
-							            	<fo:block  keep-together="always" text-align="right" font-size="12pt" white-space-collapse="false" font-weight="bold">${partWiseSaleDetails.getValue().get("bedRevenue")}</fo:block>  
+							            	<fo:block  keep-together="always" text-align="right" font-size="12pt" white-space-collapse="false" font-weight="bold"><#if partWiseSaleDetails.getValue().get("bedRevenue") !=0>${partWiseSaleDetails.getValue().get("bedRevenue")?string("#0.00")}<#else></#if></fo:block>  
 							            </fo:table-cell>
 							            <fo:table-cell>
-							            	<fo:block  keep-together="always" text-align="right" font-size="12pt" white-space-collapse="false" font-weight="bold">${partWiseSaleDetails.getValue().get("vatRevenue")}</fo:block>  
+							            	<fo:block  keep-together="always" text-align="right" font-size="12pt" white-space-collapse="false" font-weight="bold"><#if partWiseSaleDetails.getValue().get("vatRevenue") !=0>${partWiseSaleDetails.getValue().get("vatRevenue")?string("#0.00")}<#else></#if></fo:block>  
 							            </fo:table-cell>
 							            <fo:table-cell>
-							            	<fo:block  keep-together="always" text-align="right" font-size="12pt" white-space-collapse="false" font-weight="bold">${partWiseSaleDetails.getValue().get("cstRevenue")}</fo:block>  
+							            	<fo:block  keep-together="always" text-align="right" font-size="12pt" white-space-collapse="false" font-weight="bold"><#if partWiseSaleDetails.getValue().get("cstRevenue") !=0>${partWiseSaleDetails.getValue().get("cstRevenue")?string("#0.00")}<#else></#if></fo:block>  
 							            </fo:table-cell>
 							            <fo:table-cell>
-							            	<fo:block  keep-together="always" text-align="right" font-size="12pt" white-space-collapse="false" font-weight="bold">${partWiseSaleDetails.getValue().get("total")}</fo:block>  
+							            	<fo:block  keep-together="always" text-align="right" font-size="12pt" white-space-collapse="false" font-weight="bold">${partWiseSaleDetails.getValue().get("total")?string("#0.00")}</fo:block>  
 							            </fo:table-cell>
 							     </fo:table-row>
 								</#list>
@@ -122,16 +122,16 @@ under the License.
 							            	<fo:block  keep-together="always" text-align="right" font-size="12pt" white-space-collapse="false" font-weight="bold">${totalAvg?string("#0.00")}</fo:block>  
 							            </fo:table-cell>
 							             <fo:table-cell>
-							            	<fo:block  keep-together="always" text-align="right" font-size="12pt" white-space-collapse="false" font-weight="bold">${totalBasicRev}</fo:block>  
+							            	<fo:block  keep-together="always" text-align="right" font-size="12pt" white-space-collapse="false" font-weight="bold"><#if totalBasicRev !=0>${totalBasicRev?string("#0.00")}<#else></#if></fo:block>  
 							            </fo:table-cell>
 							            <fo:table-cell>
-							            	<fo:block  keep-together="always" text-align="right" font-size="12pt" white-space-collapse="false" font-weight="bold">${totalBedRev}</fo:block>  
+							            	<fo:block  keep-together="always" text-align="right" font-size="12pt" white-space-collapse="false" font-weight="bold"><#if totalBedRev!=0>${totalBedRev?string("#0.00")}<#else></#if></fo:block>  
 							            </fo:table-cell>
 							            <fo:table-cell>
-							            	<fo:block  keep-together="always" text-align="right" font-size="12pt" white-space-collapse="false" font-weight="bold">${totalVatRev}</fo:block>  
+							            	<fo:block  keep-together="always" text-align="right" font-size="12pt" white-space-collapse="false" font-weight="bold"><#if totalVatRev !=0>${totalVatRev?string("#0.00")}<#else></#if></fo:block>  
 							            </fo:table-cell>
 							            <fo:table-cell>
-							            	<fo:block  keep-together="always" text-align="right" font-size="12pt" white-space-collapse="false" font-weight="bold">${totalCstRev}</fo:block>  
+							            	<fo:block  keep-together="always" text-align="right" font-size="12pt" white-space-collapse="false" font-weight="bold"><#if totalCstRev !=0>${totalVatRev?string("#0.00")}<#else></#if></fo:block>  
 							            </fo:table-cell>
 							            <fo:table-cell>
 							            	<fo:block  keep-together="always" text-align="right" font-size="12pt" white-space-collapse="false" font-weight="bold">${total}</fo:block>  
