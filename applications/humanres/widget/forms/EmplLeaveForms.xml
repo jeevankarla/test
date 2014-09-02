@@ -24,8 +24,8 @@
         odd-row-style="header-row" default-table-style="basic-table">
         <actions>
         </actions>
-        <field name="partyId" title="Employee Id" use-when="hasEmplLeaveApprovePermission"><lookup target-form-name="LookupEmployeeName"/></field>
-        <field name="partyId" title="${uiLabelMap.PartyPartyId}" use-when="!hasEmplLeaveApprovePermission"><hidden/></field>
+        <field name="partyId" title="Employee Id"><lookup target-form-name="LookupEmployeeName"/></field>
+        <!-- <field name="partyId" title="${uiLabelMap.PartyPartyId}" use-when="!hasEmplLeaveApprovePermission"><hidden/></field> -->
         <field name="leaveTypeId">
             <drop-down allow-empty="true">
                 <entity-options description="${description}" key-field-name="leaveTypeId" entity-name="EmplLeaveType"/>
