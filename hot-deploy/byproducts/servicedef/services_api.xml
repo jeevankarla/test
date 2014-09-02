@@ -88,7 +88,7 @@
         <attribute name="transactionId" type="String" mode="IN" optional="false"/>
         <attribute name="paymentLocationId" type="String" mode="IN" optional="true"/>        
         <attribute type="List" mode="IN" name="boothPayments" optional="false"/>
-        <attribute type="List" mode="OUT" name="paymentList" optional="true"/>
+       <!--  <attribute type="List" mode="OUT" name="paymentList" optional="true"/> -->
     </service> 
 
 </services>   

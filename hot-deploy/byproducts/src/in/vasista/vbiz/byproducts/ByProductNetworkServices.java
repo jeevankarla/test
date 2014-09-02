@@ -7795,6 +7795,7 @@ public class ByProductNetworkServices {
 		String paymentLocationId = (String) context.get("paymentLocationId");
 		LocalDispatcher dispatcher = ctx.getDispatcher();
 		GenericValue userLogin = (GenericValue) context.get("userLogin");
+		List paymentList = FastList.newInstance();
 		List<Map<String, Object>> boothPayments = (List<Map<String, Object>>) context.get("boothPayments");
 		String infoString = "makeBoothPayments:: " + "paymentChannel=" + paymentChannel 
 				+";transactionId=" + transactionId + ";paymentLocationId=" + paymentLocationId 
@@ -7838,6 +7839,10 @@ public class ByProductNetworkServices {
 					Debug.logError("Payment failed for: " + infoString + "["+ paymentResult + "]", module);
 					return paymentResult;
 				}
+				Map paymentMap = FastMap.newInstance();
+				paymentMap.put("boothId", (String) boothPayment.get("boothId"));
+				paymentMap.put("paymentId", (String) paymentResult.get("paymentId"));
+				paymentList.add(paymentMap);
 				Debug.logInfo("Made following payment:" + paymentCtx, module);
 			} catch (GenericServiceException e) {
 				// TODO: handle exception
@@ -7845,7 +7850,9 @@ public class ByProductNetworkServices {
 				return ServiceUtil.returnError(e.getMessage());
 			}
 		}
-		return ServiceUtil.returnSuccess();
+		Map result = ServiceUtil.returnSuccess();
+		//result.put("paymentList", paymentList);
+		return result;
 	}
 	
 	public static Map<String, Object> createSequenceForVATInvoice(DispatchContext dctx, Map context) {
