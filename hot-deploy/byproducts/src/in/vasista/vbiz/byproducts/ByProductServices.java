@@ -3809,6 +3809,7 @@ public class ByProductServices {
   			  List condList = FastList.newInstance();
   			  if(UtilValidate.isNotEmpty(payReference)){
   				  condList.add(EntityCondition.makeCondition("paymentId", EntityOperator.EQUALS, payReference));
+  				  condList.add(EntityCondition.makeCondition("statusId", EntityOperator.NOT_IN, UtilMisc.toList("PMNT_VOID")));
   			  }
   			  else{
   				  condList.add(EntityCondition.makeCondition("facilityId", EntityOperator.EQUALS, boothId));
