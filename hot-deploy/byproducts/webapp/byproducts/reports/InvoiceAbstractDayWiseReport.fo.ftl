@@ -57,7 +57,7 @@ under the License.
 	        	<fo:flow flow-name="xsl-region-body"   font-family="Courier,monospace">		
         			<fo:block>
         				<fo:table>
-		                    <fo:table-column column-width="10pt"/>
+		                    <fo:table-column column-width="15pt"/>
 		                    <fo:table-column column-width="100pt"/>
 		                    <fo:table-column column-width="160pt"/> 
 		               	    <fo:table-column column-width="140pt"/>
@@ -84,8 +84,8 @@ under the License.
 							 			    <#list invoiceTotList as invoiceTot>
 							             	<fo:block>
 						        				<fo:table>
-								                    <fo:table-column column-width="100pt"/>
-								                    <fo:table-column column-width="150pt"/>
+								                    <fo:table-column column-width="65pt"/>
+								                    <fo:table-column column-width="185pt"/>
 								                    <fo:table-column column-width="160pt"/> 
 								               	    <fo:table-column column-width="170pt"/>
 								            		<fo:table-column column-width="140pt"/> 		

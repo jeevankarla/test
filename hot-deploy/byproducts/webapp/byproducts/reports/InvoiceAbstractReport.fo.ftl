@@ -53,8 +53,8 @@ under the License.
         			<fo:block>
         				<fo:table>
 		                    <fo:table-column column-width="100pt"/>
-		                    <fo:table-column column-width="100pt"/>
-		                    <fo:table-column column-width="105pt"/> 
+		                    <fo:table-column column-width="65pt"/>
+		                    <fo:table-column column-width="140pt"/> 
 		               	    <fo:table-column column-width="130pt"/>
 		            		<fo:table-column column-width="130pt"/> 		
 		            		<fo:table-column column-width="120pt"/>
