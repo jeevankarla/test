@@ -8,5 +8,8 @@
     <eca service="updateEmplLeave" event="invoke">
         <action service="periodValidation" mode="sync"/>
      </eca>  -->
+     <eca service="createEmplLeave" event="invoke">
+        <action service="leaveValidation" mode="sync"/>
+     </eca>
 </service-eca>     
      

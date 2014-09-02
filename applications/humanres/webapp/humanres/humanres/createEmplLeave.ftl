@@ -66,25 +66,35 @@ function displayPunchDetails(){
 
 function viewGHandSS(){
       var leaveTypeId = $('select[name=leaveTypeId]').val();
-      if(leaveTypeId !="CH"){
+       var employeeId = $('input[name=partyId]').val();
+      var data = "partyId="+employeeId;
+      if(leaveTypeId !="CH" && leaveTypeId !="CHGH" && leaveTypeId !="CHSS"){
          return false;
       }
-      $('[name="fromDate"]').datepicker( "option", "dateFormat", "yy-mm-dd");
-       var punchDate = jQuery("#fromDate").val();
-       $('[name="fromDate"]').datepicker( "option", "dateFormat", "dd-mm-yy");
-       var employeeId = $('input[name=partyId]').val();
-      var data = "partyId="+employeeId+"&punchDate="+punchDate;
+      if(leaveTypeId =="CHGH"){
+         data = data+"&isGH=Y";
+      }
+      if(leaveTypeId =="CHSS"){
+      	data = data+"&isSS=Y";
+      }
+      
     $.ajax({
              type: "POST",
-             url: "emplDailyPunchJson",
+             url: "getGeneralHoliDayOrSSWorkedDaysJson",
              data: data,
              dataType: 'json',
              success: function(result) {
-            	 var punchDataList = result["punchDataList"];
-            	 if(punchDataList !=""){
-            	    $('#punchDetails').html('<span style="color:green; font-size:11pt; font-stlye:bold"> IN:'+punchDataList[0].inTime+' , OUT:'+ punchDataList[0].outTime +'   </span>');
+            	 var workedHolidaysList = result["workedHolidaysList"];
+            	 if(workedHolidaysList != undefined){
+            	    var innerHtmlStr ="";
+            	    //alert(workedHolidaysList.length);
+            	   for(var i=0;i<workedHolidaysList.length;i++){
+            	        tmepWork = workedHolidaysList[i];
+                        innerHtmlStr += "Date:"+tmepWork.date+",PunchDetails: IN-"+ tmepWork.punchDetails.inTime +",OUT-"+ tmepWork.punchDetails.outTime +"<br/>";
+            	    }
+            	    $('#leaveBalance').html('<span style="color:green; font-size:11pt; font-stlye:bold">'+innerHtmlStr+'</span>');
             	 }else{
-            	     $('#punchDetails').html('');
+            	     $('#leaveBalance').html('');
             	 }
             	 
             	},
@@ -107,6 +117,10 @@ function viewGHandSS(){
        
           return false;
      }
+     if(leaveTypeId =="CH" || leaveTypeId =="CHGH" || leaveTypeId =="CHSS"){
+          return viewGHandSS();
+      }
+     
     $.ajax({
              type: "POST",
              url: "getEmployeeLeaveBalance",
@@ -133,9 +147,6 @@ function viewGHandSS(){
             	    leaveBalance =0;
             	 }
             	 $('#leaveBalance').html('<span class="tooltip" style="color:green; font-size:11pt; font-stlye:bold">Balance as on '+result["leaveBalanceDateStr"]+" is : "+ leaveBalance +'   </span>');
-            	  if(leaveTypeId =="CH"){
-            	      //$("#leaveBalance").append( '<a style="font-stlye:bold" onclick="viewGHandSS();" href="#">view GH and SS </a>' );
-            	  }
             	   
             	 },
             error: function() {
@@ -183,7 +194,7 @@ function viewGHandSS(){
       				          </#if>    
 						</#list>      
 					</select>
-					<span id="leaveBalance" name="leaveBalance"></span>
+					<span id="leaveBalance" name="leaveBalance" class="tooltip" wrap="wrap"></span>
                 </td>
               </tr>
               <tr>

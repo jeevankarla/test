@@ -1,13 +1,20 @@
 package org.ofbiz.humanres.inout;
 
+import in.vasista.vbiz.humanres.EmplLeaveService;
+
 import java.util.List;
 import java.util.Map;
+import java.math.BigDecimal;
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+import javolution.util.FastMap;
+
 import org.ofbiz.base.util.Debug;
+import org.ofbiz.base.util.UtilDateTime;
 import org.ofbiz.base.util.UtilMisc;
+import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.entity.Delegator;
 import org.ofbiz.entity.GenericEntityException;
 import org.ofbiz.service.DispatchContext;
@@ -50,6 +57,40 @@ public class PeriodValidation {
 				 //Debug.logInfo("CustomTimePeriod==========..........."+ periods ,module);
 				 return ServiceUtil.returnSuccess();
 		
-			}
+			}  
+			
+			public static Map<String, Object> leaveValidation(DispatchContext dctx, Map<String, Object> context) throws Exception{
+				 Delegator delegator = dctx.getDelegator();
+				 LocalDispatcher dispatcher=dctx.getDispatcher();
+				 Timestamp fromDate= (Timestamp) context.get("fromDate");
+				 Timestamp thruDate= (Timestamp) context.get("thruDate");
+				 String partyId = (String)context.get("partyId");
+				 
+				try {
+					
+					List conditionList = UtilMisc.toList(
+			            EntityCondition.makeCondition("partyId", EntityOperator.EQUALS, partyId));
+					
+					conditionList.add(EntityCondition.makeCondition("leaveStatus", EntityOperator.NOT_EQUAL, "LEAVE_REJECTED"));
+					conditionList.add(EntityCondition.makeCondition("fromDate", EntityOperator.LESS_THAN_EQUAL_TO, thruDate));
+					
+					conditionList.add(EntityCondition.makeCondition(EntityCondition.makeCondition("thruDate", EntityOperator.EQUALS, null), EntityOperator.OR, 
+			    	EntityCondition.makeCondition("thruDate", EntityOperator.GREATER_THAN_EQUAL_TO, fromDate)));
+					EntityCondition condition = EntityCondition.makeCondition(conditionList, EntityOperator.AND);  		
+					List<GenericValue> leaves = delegator.findList("EmplLeave", condition, null, null, null, false);
+					
+					if(UtilValidate.isNotEmpty(leaves)){
+						String errMsg = "Leave  already exists.";
+						Debug.logError(errMsg, module);
+						return ServiceUtil.returnError(errMsg);
+					}	
+				} catch (Exception e) {
+					// TODO Auto-generated catch block
+					Debug.logError(e.toString(), module);
+					return ServiceUtil.returnError(e.toString());
+				}
+				 return ServiceUtil.returnSuccess();
+		
+			} 
 
 }

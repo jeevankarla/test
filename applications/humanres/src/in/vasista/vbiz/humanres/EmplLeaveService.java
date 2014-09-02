@@ -105,14 +105,13 @@ public class EmplLeaveService {
 					}
 					if(closingBalance.compareTo(BigDecimal.ZERO) != 0){
 						Map leaveCtx = FastMap.newInstance();
-						leaveCtx.put("timePeriodStart", UtilDateTime.toTimestamp(latestHRPeriod.getDate("thruDate")) );
+						leaveCtx.put("timePeriodStart", UtilDateTime.toTimestamp(latestHRPeriod.getDate("fromDate")));
 						leaveCtx.put("partyId", employeeId);
 						leaveCtx.put("leaveTypeId", leaveTypeId);
 						Map leaveResult = fetchLeaveDaysForPeriod(dctx,leaveCtx);
 						if(!ServiceUtil.isError(leaveResult)){
 							result.put("leaveBalanceDate", latestHRPeriod.get("thruDate"));
 							Map leaveDetailmap = (Map)leaveResult.get("leaveDetailmap");
-							Debug.log("leaveDetailmap========="+leaveDetailmap);
 							if(UtilValidate.isNotEmpty(leaveDetailmap)){
 								closingBalance = closingBalance.subtract((BigDecimal)leaveDetailmap.get(leaveTypeId));
 							}

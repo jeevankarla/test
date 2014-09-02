@@ -1772,6 +1772,11 @@ under the License.
         <event type="service" invoke="emplDailyPunchReport"/>
         <response name="success" type="request" value="json"/>
     </request-map>
+    <request-map uri="getGeneralHoliDayOrSSWorkedDaysJson">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="getGeneralHoliDayOrSSWorkedDays"/>
+        <response name="success" type="request" value="json"/>
+    </request-map>
     
     <request-map uri="EmplMonthlyPunchReport.csv">
         <security https="true" auth="true"/>

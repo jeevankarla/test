@@ -830,7 +830,14 @@ under the License.emplpunch
         <attribute name="fromDate" type="Date" mode="IN" optional="false"/>
         <attribute name="thruDate" mode="IN" type="Date" optional="false"/>
     </service>
-
+    <service name="leaveValidation" engine="java"
+          location="org.ofbiz.humanres.inout.PeriodValidation" invoke="leaveValidation" auth="true">
+        <description>Checks to see any leaves between given fromDate and thruDate </description>
+        <attribute name="partyId" optional="false" type="String" mode="IN"/>
+        <attribute name="leaveTypeId" optional="true" type="String" mode="IN"/>
+        <attribute name="fromDate" type="Timestamp" mode="IN" optional="false"/>
+        <attribute name="thruDate" mode="IN" type="Timestamp" optional="false"/>
+    </service>
     <service name="updateEmplLeave" engine="simple" default-entity-name="EmplLeave"
              location="component://humanres/script/org/ofbiz/humanres/HumanResServices.xml" invoke="updateEmplLeave" auth="true">
         <description>Update Valid Employee Leave</description>
@@ -1239,7 +1246,7 @@ under the License.emplpunch
         <description>Calculate amunt for the given payhead type</description>
         <attribute name="periodBillingId" mode="IN" type="String" optional="true"/>
         <attribute name="payHeadTypeId" mode="IN" type="String"/> 
-        <attribute name="employeeId" mode="IN" type="String"/> 
+        <attribute name="employeeId" mode="IN" type="String"/>
         <attribute name="timePeriodStart" mode="IN" type="Timestamp"/>
         <attribute name="timePeriodEnd" mode="IN" type="Timestamp"/> 
         <attribute name="timePeriodId" mode="IN" type="String"/>
@@ -1310,11 +1317,11 @@ under the License.emplpunch
         <attribute name="periodBillingId" mode="IN" type="String" optional="true"/>
         <attribute name="payrollPeriodId" mode="IN" type="String" optional="false"/>
    </service> 
-  
+   
   <service name="populatePayrollAttedance" engine="java" auth="true" invoke="populatePayrollAttedance" 
         location="in.vasista.vbiz.humanres.PayrollService" transaction-timeout="1800">
         <description>Calculate amunt for the given payhead type</description>
-        <attribute name="orgPartyId" mode="IN" type="String"/> 
+        <attribute name="orgPartyId" mode="IN" type="String"/>
         <attribute name="periodBillingId" mode="IN" type="String" optional="true"/> 
         <attribute name="payrollPeriodId" mode="IN" type="String" optional="false"/>
    </service> 
@@ -1362,4 +1369,14 @@ under the License.emplpunch
        <attribute name="leaveBalanceDateStr" mode="OUT" type="String"/>
    </service>
    
+   <service name="getGeneralHoliDayOrSSWorkedDays" engine="java" auth="true" invoke="getGeneralHoliDayOrSSWorkedDays" 
+        location="in.vasista.vbiz.humanres.HumanresService">
+        <description>populateEmplPunch from </description>
+       <attribute name="partyId" mode="IN" type="String"/>
+       <attribute name="isSS" mode="IN" type="String" optional="true"/>
+       <attribute name="isGH" mode="IN" type="String" optional="true"/>
+       <attribute name="fromDate" mode="IN" type="Timestamp" optional="true"/>
+       <attribute name="thruDate" mode="IN" type="String" optional="true"/>
+       <attribute name="workedHolidaysList" mode="OUT" type="java.util.List"/>
+   </service>
 </services>

@@ -8,6 +8,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.TimeZone;
 
 import javolution.util.FastList;
 import javolution.util.FastMap;
@@ -25,6 +26,7 @@ import org.ofbiz.entity.condition.EntityCondition;
 import org.ofbiz.entity.condition.EntityOperator;
 import org.ofbiz.entity.transaction.TransactionUtil;
 import org.ofbiz.entity.util.EntityUtil;
+import org.ofbiz.humanres.inout.PunchService;
 import org.ofbiz.service.DispatchContext;
 import org.ofbiz.service.GenericServiceException;
 import org.ofbiz.service.LocalDispatcher;
@@ -155,5 +157,83 @@ public class HumanresService {
 	    	result.put("holiDayList", holiDayList);
 	Debug.logInfo("result:" + result, module);		 
 	    	return result;
-	    } 
+	    }
+	 public static Map<String, Object> getGeneralHoliDayOrSSWorkedDays(DispatchContext dctx, Map<String, ? extends Object> context) {
+	    	Delegator delegator = dctx.getDelegator();
+			LocalDispatcher dispatcher = dctx.getDispatcher();    	
+	        GenericValue userLogin = (GenericValue) context.get("userLogin");
+	        String partyId =  (String)context.get("partyId");
+	        Timestamp fromDate =  (Timestamp)context.get("fromDate");
+	        Timestamp thruDate =  (Timestamp)context.get("thruDate");
+	        String isSS =  (String)context.get("isSS");
+	        String isGH =  (String)context.get("isGH");
+	        Locale locale = new Locale("en","IN");
+			TimeZone timeZone = TimeZone.getDefault();
+	        String orgPartyId = "Company";
+			List<GenericValue> holiDayList = FastList.newInstance(); 
+			Map result = FastMap.newInstance();
+			if(UtilValidate.isEmpty(fromDate) && UtilValidate.isEmpty(thruDate)){
+				thruDate = UtilDateTime.nowTimestamp();
+				
+			}
+			try {
+				
+					if(UtilValidate.isNotEmpty(isGH) && isGH.equals("Y")){
+						if(UtilValidate.isEmpty(fromDate)){
+							fromDate = UtilDateTime.addDaysToTimestamp(thruDate, -60);
+						}
+						List conditionList = UtilMisc.toList(
+					            EntityCondition.makeCondition("organizationPartyId", EntityOperator.EQUALS, orgPartyId));
+							conditionList.add(EntityCondition.makeCondition("holiDayDate", EntityOperator.GREATER_THAN_EQUAL_TO, fromDate));
+							conditionList.add(EntityCondition.makeCondition(EntityCondition.makeCondition("holiDayDate", EntityOperator.LESS_THAN_EQUAL_TO, thruDate)));
+							EntityCondition condition = EntityCondition.makeCondition(conditionList, EntityOperator.AND);  		
+							holiDayList = delegator.findList("HolidayCalendar", condition, null, UtilMisc.toList("holiDayDate" ,"description"), null, false);
+					}
+					List<Date> holidays = FastList.newInstance();
+					if(UtilValidate.isNotEmpty(isSS) && isSS.equals("Y")){
+						if(UtilValidate.isEmpty(fromDate)){
+							fromDate = UtilDateTime.addDaysToTimestamp(thruDate, -30);
+						}
+						Timestamp secondSaturDay = UtilDateTime.addDaysToTimestamp(UtilDateTime.getWeekStart(UtilDateTime.getMonthStart(thruDate),0,2,timeZone,locale), -1);
+						holidays.add(UtilDateTime.toSqlDate(secondSaturDay));
+					}
+					
+					if(UtilValidate.isNotEmpty(holiDayList)){
+						for(GenericValue holiDay : holiDayList){
+							holidays.add(UtilDateTime.toSqlDate(holiDay.getTimestamp("holiDayDate")));
+						}
+						//holidays =EntityUtil.getFieldListFromEntityList(holiDayList, "holiDayDate", true);
+					}
+					List workedHolidaysList =FastList.newInstance();
+					result.put("workedHolidaysList", workedHolidaysList);
+					if(UtilValidate.isEmpty(holidays)){
+						return result;
+					}
+					List conList=UtilMisc.toList(EntityCondition.makeCondition("partyId", EntityOperator.EQUALS,partyId));
+					conList.add(EntityCondition.makeCondition("date",EntityOperator.IN,holidays));
+					EntityCondition con= EntityCondition.makeCondition(conList,EntityOperator.AND);
+					Debug.log("con===="+con);
+					
+					List<GenericValue> tempWorkedHolidaysList = delegator.findList("EmplDailyAttendanceDetail", con ,null,UtilMisc.toList("date" ,"partyId"), null, false );
+					for(GenericValue workedHoliday : tempWorkedHolidaysList){
+						Map tempDayMap = FastMap.newInstance();
+						Date tempDate = workedHoliday.getDate("date");
+						Map punMap = PunchService.emplDailyPunchReport(dctx, UtilMisc.toMap("partyId", partyId ,"punchDate",tempDate));
+						if(UtilValidate.isNotEmpty(punMap.get("punchDataList"))){
+							tempDayMap.put("punchDetails", ((List)punMap.get("punchDataList")).get(0));
+							tempDayMap.put("date",UtilDateTime.toDateString(tempDate,"dd-mm-yyyy"));
+						}
+						workedHolidaysList.add(tempDayMap);
+					}
+				  result.put("workedHolidaysList", workedHolidaysList);
+			}catch(GenericEntityException e){
+	  			Debug.logError("Error fetching  holidays worked " + e.getMessage(), module);
+	  		}
+	    	
+	    	
+	    	Debug.log("result:" + result, module);		 
+	    	return result;
+	    }
+	 
+	 
 }
