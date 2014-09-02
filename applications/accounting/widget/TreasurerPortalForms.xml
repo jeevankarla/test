@@ -488,7 +488,7 @@ under the License.
             </drop-down>
         </field>
         <field name="paymentRefNum" position="1" title="${uiLabelMap.paymentRefNum}" required-field="true"><text/></field>
-        <field name="effectiveDate" position="2" title="${uiLabelMap.effectiveDate}"><date-time type="timestamp"></date-time></field>
+        <field name="paymentDate" position="2" title="${uiLabelMap.effectiveDate}"><date-time type="timestamp"></date-time></field>
         <field name="issuingAuthority" position="2" title="${uiLabelMap.issuingAuthority}" required-field="true"><text></text></field>        
         <field name="amount" position="1" required-field="true"><text/></field>
         <field name="comments" position="2"><text size="70"/></field>
@@ -656,7 +656,7 @@ under the License.
             </drop-down>
         </field>
         <field name="paymentRefNum" position="1" title="${uiLabelMap.paymentRefNum}" required-field="true"><text/></field>
-        <field name="effectiveDate" position="2" title="${uiLabelMap.effectiveDate}"><date-time type="timestamp"></date-time></field>
+        <field name="paymentDate" position="2" title="${uiLabelMap.effectiveDate}"><date-time type="timestamp"></date-time></field>
         <field name="issuingAuthority" position="2" title="${uiLabelMap.issuingAuthority}" required-field="true"><text></text></field>            
         <field name="amount" position="1" required-field="true"><text/></field>
         <field name="comments" position="2"><text size="70"/></field>
@@ -730,7 +730,7 @@ under the License.
             </drop-down>
         </field>
         <field name="paymentRefNum" position="1" title="${uiLabelMap.paymentRefNum}" required-field="true"><text/></field>
-        <field name="effectiveDate" position="2" title="${uiLabelMap.effectiveDate}"><date-time type="timestamp"></date-time></field>
+        <field name="paymentDate" position="2" title="${uiLabelMap.effectiveDate}"><date-time type="timestamp"></date-time></field>
         <field name="issuingAuthority" position="2" title="${uiLabelMap.issuingAuthority}" required-field="true"><text></text></field>        
         <field name="amount" position="1" required-field="true"><text/></field>
         <field name="comments" position="2"><text size="70"/></field>
@@ -814,7 +814,7 @@ under the License.
             </drop-down>
         </field>
         <field name="paymentRefNum" position="1" title="${uiLabelMap.paymentRefNum}" required-field="true"><text/></field>
-        <field name="effectiveDate" position="2" title="${uiLabelMap.effectiveDate}"><date-time type="timestamp"></date-time></field>
+        <field name="paymentDate" position="2" title="${uiLabelMap.effectiveDate}"><date-time type="timestamp"></date-time></field>
         <field name="issuingAuthority" position="2" title="${uiLabelMap.issuingAuthority}" required-field="true"><text></text></field>            
         <field name="amount" position="1" required-field="true"><text/></field>
         <field name="comments" position="2"><text size="70"/></field>
@@ -883,7 +883,7 @@ under the License.
             </drop-down>
         </field>
         <field name="paymentRefNum" position="1" title="${uiLabelMap.paymentRefNum}" required-field="true"><text/></field>
-        <field name="effectiveDate" position="2" title="${uiLabelMap.effectiveDate}"><date-time type="timestamp"></date-time></field>
+        <field name="paymentDate" position="2" title="${uiLabelMap.effectiveDate}"><date-time type="timestamp"></date-time></field>
         <field name="issuingAuthority" position="2" title="${uiLabelMap.issuingAuthority}" required-field="true"><text></text></field>        
         <field name="amount" position="1" required-field="true"><text/></field>
         <field name="comments" position="2"><text size="70"/></field>
@@ -967,7 +967,7 @@ under the License.
             </drop-down>
         </field>
         <field name="paymentRefNum" position="1" title="${uiLabelMap.paymentRefNum}" required-field="true"><text/></field>
-        <field name="effectiveDate" position="2" title="${uiLabelMap.effectiveDate}"><date-time type="timestamp"></date-time></field>
+        <field name="paymentDate" position="2" title="${uiLabelMap.effectiveDate}"><date-time type="timestamp"></date-time></field>
         <field name="issuingAuthority" position="2" title="${uiLabelMap.issuingAuthority}" required-field="true"><text></text></field>            
         <field name="amount" position="1" required-field="true"><text/></field>
         <field name="comments" position="2"><text size="70"/></field>
