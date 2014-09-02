@@ -211,8 +211,9 @@ public class HumanresService {
 					}
 					List conList=UtilMisc.toList(EntityCondition.makeCondition("partyId", EntityOperator.EQUALS,partyId));
 					conList.add(EntityCondition.makeCondition("date",EntityOperator.IN,holidays));
+					conList.add(EntityCondition.makeCondition(EntityCondition.makeCondition("encashmentStatus",EntityOperator.EQUALS,null),
+							EntityOperator.OR,EntityCondition.makeCondition("encashmentStatus",EntityOperator.NOT_IN,UtilMisc.toList("CASH_ENCASHMENT","LEAVE_ENCASHMENT"))));
 					EntityCondition con= EntityCondition.makeCondition(conList,EntityOperator.AND);
-					Debug.log("con===="+con);
 					
 					List<GenericValue> tempWorkedHolidaysList = delegator.findList("EmplDailyAttendanceDetail", con ,null,UtilMisc.toList("date" ,"partyId"), null, false );
 					for(GenericValue workedHoliday : tempWorkedHolidaysList){
@@ -230,8 +231,7 @@ public class HumanresService {
 	  			Debug.logError("Error fetching  holidays worked " + e.getMessage(), module);
 	  		}
 	    	
-	    	
-	    	Debug.log("result:" + result, module);		 
+	    	//Debug.log("result:" + result, module);		 
 	    	return result;
 	    }
 	 
