@@ -4953,6 +4953,7 @@
       <field name="periodBillingId" type="id-ne"></field>
       <field name="billingTypeId" type="id"></field>
       <field name="customTimePeriodId" type="id"></field>
+      <field name="partyId" type="id"></field>
       <field name="statusId" type="id-ne"></field>
       <field name="facilityId" type="id"></field>
       <field name="createdDate" type="date-time"></field>
@@ -4972,6 +4973,9 @@
       <relation type="one" fk-name="PBILLING_FAC" rel-entity-name="Facility">
         <key-map field-name="facilityId"/>
       </relation>
+       <relation type="one" fk-name="PBILLING_PARTY" rel-entity-name="Party">
+        <key-map field-name="partyId"/>
+      </relation>  
       <relation type="one" fk-name="PBILLING_CBUL" title="CreatedBy" rel-entity-name="UserLogin">
         <key-map field-name="createdByUserLogin" rel-field-name="userLoginId"/>
       </relation>
