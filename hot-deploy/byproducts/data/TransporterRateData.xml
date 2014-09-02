@@ -33,6 +33,10 @@
      <Enumeration sequenceId="05"  description="Recovery Of Transport Cost" enumId="FINES_TRNS_COST" enumTypeId="FAC_RECVRY"/>
      <Enumeration sequenceId="06"  description="Fines Penalties-Others" enumId="FINES_PENALTIES" enumTypeId="FAC_RECVRY"/>
      
+     <EnumerationType enumTypeId="FAC_DTC_HIKE" /> 
+     <Enumeration sequenceId="01" description="Diesel Hike" enumId="HIKES_DIESEL_PAY"  enumTypeId="FAC_DTC_HIKE"/>
+    
+     
      <TenantConfiguration propertyName="enableTranporterDuePayment" propertyValue="Y" propertyTypeEnumId="LMS" description="Enable Adjustment Vehicle Short Payment screen"/>
     
     <GlAccount accountCode="409006" accountName="RECOVERY/FINES/PENALTIES - DTC"  description="RECOVERY/FINES/PENALTIES - DTC" glAccountClassId="REVENUE" glAccountId="409006" glResourceTypeId="MONEY" parentGlAccountId="409000" postedBalance="0.00"/>
@@ -46,8 +50,12 @@
 	
 	<InvoiceItemType invoiceItemTypeId="DTC_RECOVERY_ITEM" parentTypeId="DTC_ROUTE" hasTable="N" description="RECOVERY/FINES/PENALTIES - DTC" defaultGlAccountId="409006" />
 	<InvoiceItemTypeMap invoiceItemMapKey="INC_RECOVERY_MAP" invoiceTypeId="SALES_DIS_OUT" invoiceItemTypeId="DTC_RECOVERY_ITEM" />
+	
+	<InvoiceItemType defaultGlAccountId="681009" description="Additional Payment" hasTable="N" invoiceItemTypeId="DTC_HIKE_ITEM"/>
+    <InvoiceItemTypeMap invoiceItemMapKey="SD_DTC_ROUTE" invoiceItemTypeId="DTC_HIKE_ITEM" invoiceTypeId="SALES_DIS_OUT"/>
+	
    
-    <StatusItem description="Review GM Marketing" sequenceId="99" statusCode="GENERATED" statusId="GENERATED" statusTypeId="COM_EVENT_STATUS"/>
+   <!--  <StatusItem description="Review GM Marketing" sequenceId="99" statusCode="GENERATED" statusId="GENERATED" statusTypeId="COM_EVENT_STATUS"/> -->
      <StatusItem description="Approved for Payment" sequenceId="100" statusCode="APPROVED" statusId="APPROVED" statusTypeId="COM_EVENT_STATUS"/>
       <StatusItem description="Payment Approved" sequenceId="101" statusCode="APPROVED_PAYMENT" statusId="APPROVED_PAYMENT" statusTypeId="COM_EVENT_STATUS"/>
       <StatusItem description="Payment Rejected" sequenceId="102" statusCode="REJECT_PAYMENT" statusId="REJECT_PAYMENT" statusTypeId="COM_EVENT_STATUS"/>
