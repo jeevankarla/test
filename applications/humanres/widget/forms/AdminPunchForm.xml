@@ -18,6 +18,7 @@
           </actions>
           <auto-fields-service default-field-type="hidden" service-name="adminPunch"/>  
         <field name="roleTypeId"><hidden value="EMPLOYEE"/></field>
+         <field name="tenantId"><hidden/></field>
         <field name="isManual"><hidden value="Y"/></field>	
         <field name="partyId"><lookup target-form-name="LookupEmployeeName" default-value="${partyId}" target-parameter="roleTypeId"/></field>
         <field name="punchtime" title="Punch Time"><text size="15" default-value="${nowTime}"  /></field>
@@ -57,7 +58,7 @@
   		<option key="OUT" description="OUT"/>
           </drop-down>
         </field>
-      <field name="Note" title="${uiLabelMap.CommonNote}"><hidden/></field>  
+      <field name="Note" title="${uiLabelMap.CommonNote}"><textarea/></field>  
        <field name="submitButton" title="${uiLabelMap.CommonSubmit}" widget-style="smallSubmit" ><submit button-type="button"/></field>
          <field name="deleteLink"  title="${uiLabelMap.CommonDelete}" widget-style="smallSubmit" >
             <hyperlink target="deletePunch" description="${uiLabelMap.CommonDelete}">
