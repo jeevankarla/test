@@ -140,9 +140,9 @@ under the License.
                                           <!--  <link target="newInvoice" text="${uiLabelMap.CommonCreateNew}" style="buttontext create"/> --> <!--  NewPurchaseInvoice-->
                                             <link target="newInvoice" text="New Cash Voucher" style="buttontext create"><parameter param-name="prefPaymentMethodTypeId" value="CASH"/></link>
                                             <link target="newInvoice" text="New Bank Voucher" style="buttontext create"><parameter param-name="prefPaymentMethodTypeId" value="BANK"/></link>
-                                            <link target="partyFinanHistory" text="Party Financial History" style="buttontext create"></link>
                                             <link target="newQuickCreateAPInvoice" text="Quick Create Cash Voucher" style="buttontext create" > <parameter param-name="prefPaymentMethodTypeId" value="CASH"></parameter></link>
                                         	<link target="newQuickCreateAPInvoice" text="Quick Create Bank Voucher" style="buttontext create" > <parameter param-name="prefPaymentMethodTypeId" value="BANK"></parameter></link>
+                                        	<link target="partyFinanHistory" text="Party Financial History" style="buttontext create"></link>
                                         </container>
                                     </decorator-section>
                                     <decorator-section name="search-options">

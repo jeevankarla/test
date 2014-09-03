@@ -3274,13 +3274,18 @@ under the License.
 		<response name="success" type="view" value="RecStatement"></response>    
     </request-map>
     
+    <request-map uri="partyFinancialHistory">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="PartyFinHistory"/>
+    </request-map>
+    
     
     <!-- end of request mappings -->
 
     <!-- View Mappings -->
     <view-map name="main" type="screen" page="component://accounting/widget/CommonScreens.xml#main"/>
     <view-map name="cashierPortal" type="screen" page="component://accounting/widget/PaymentScreens.xml#findCashReceipts"/>
-
+    <view-map name="PartyFinHistory" type="screen" page="component://accounting/widget/ap/InvoiceScreens.xml#PartyFinHistory"/>
     <!-- BillingAccount -->
    <view-map name="FindBillingAccount" type="screen" page="component://accounting/widget/BillingAccountScreens.xml#FindBillingAccount"/>
     <view-map name="EditBillingAccount" type="screen" page="component://accounting/widget/BillingAccountScreens.xml#EditBillingAccount"/>

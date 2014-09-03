@@ -390,7 +390,8 @@ function showPaymentEntryQTip(partyIdFrom1,partyIdTo1,invoiceId1,voucherType1,am
           <td>${uiLabelMap.AccountingAmount}</td>
           <td>${uiLabelMap.FormFieldTitle_paidAmount}</td>
           <td>${uiLabelMap.FormFieldTitle_outstandingAmount}</td>
-          <td>Payment</td> 
+          <td>Payment</td>
+          <td>Party Ledger</td> 
          <#-- <td>Voucher</td>
            <td>Cheque</td> -->
          <#-- <td align="right">${uiLabelMap.CommonSelectAll} <input type="checkbox" id="checkAllInvoices" name="checkAllInvoices" onchange="javascript:toggleInvoiceId(this);"/></td> -->
@@ -441,6 +442,7 @@ function showPaymentEntryQTip(partyIdFrom1,partyIdTo1,invoiceId1,voucherType1,am
                <#else>
                 <td align="center"></td>
                </#if>
+               <td><a class="buttontext" target="_BLANK" href="<@ofbizUrl>partyFinancialHistory?partyId=${invoice.partyId}</@ofbizUrl>">PartyLedger</a></td>
               <#-- <td><a class="buttontext" target="_BLANK" href="<@ofbizUrl>invoiceVoucher?invoiceId=${invoice.invoiceId}</@ofbizUrl>">Voucher</a></td> 
               <#if invoice.parentTypeId?has_content>
               <td><#if invoice.parentTypeId == "PURCHASE_INVOICE"><a class="buttontext" target="_BLANK" href="<@ofbizUrl>printChecks.pdf?invoiceId=${invoice.invoiceId}</@ofbizUrl>">Cheque</a></#if></td>
