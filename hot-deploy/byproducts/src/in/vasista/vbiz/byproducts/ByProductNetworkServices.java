@@ -6705,8 +6705,6 @@ public class ByProductNetworkServices {
 				Debug.logError(e, e.toString(), module);
 		        return ServiceUtil.returnError(e.toString());
 			}
-	    }else{
-	    	productPriceTypeId = "DEFAULT_PRICE";
 	    }
 	    try {
     		Map inputRateAmt = UtilMisc.toMap("userLogin", userLogin,"partyId", partyId);
