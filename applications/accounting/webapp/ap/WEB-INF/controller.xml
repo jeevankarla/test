@@ -202,6 +202,52 @@ under the License.
         <security https="true" auth="true"/>
         <response name="success" type="view" value="CommissionReportPdf"/>
     </request-map>
+    
+    <!-- ================ New Create Invoice Screens Request Mapping ================= -->
+    <request-map uri="newQuickCreateAPInvoice">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="NewQuickCreatePurchaseInvoice"/>
+    </request-map>
+    <request-map uri="QuickCreateAPInvoice">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="createInvoice"/>
+        <response name="success" type="request-redirect" value="newQuickCreateAPInvoice">
+            <redirect-parameter name="invoiceId"/>
+        </response>
+        <!-- <response name="success" type="request" value="newQuickCreateInvoice"/> -->
+        <response name="error" type="view" value="NewQuickCreatePurchaseInvoice"/>
+    </request-map>
+    <request-map uri="QuickUpdateAPInvoice">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="updateInvoice"/>
+        <response name="success" type="request-redirect" value="newQuickCreateAPInvoice">
+            <redirect-parameter name="invoiceId"/>
+        </response>
+        <!-- <response name="success" type="request" value="newQuickCreateInvoice"/> -->
+        <response name="error" type="view" value="NewQuickCreatePurchaseInvoice"/>
+    </request-map>
+    <request-map uri="quickCreateInvoiceItemAndTaxAjax">
+       <security https="true" auth="false"/>
+       <event type="service"  invoke="createInvoiceItemAndTax"/>        
+       <response name="success" type="request" value="json"/>
+       <response name="error" type="request" value="json"/>    
+    </request-map>
+    <request-map uri="quickRemoveInvoiceItemAndTaxAjax">
+       <security https="true" auth="false"/>
+       <event type="service"  invoke="removeInvoiceItemAndTax"/>        
+       <response name="success" type="request" value="json"/>
+       <response name="error" type="request" value="json"/>    
+    </request-map>
+    <request-map uri="QuickAPInvoiceOverview">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="QuickAPInvoiceOverview"/>
+    </request-map>
+    <request-map uri="QuickSetAPInvoiceStatus">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="setInvoiceStatus"/>
+        <response name="success" type="view" value="QuickAPInvoiceOverview"/>
+        <response name="error" type="view" value="QuickAPInvoiceOverview"/>
+    </request-map>
 
     <!-- end of request mappings -->
 
@@ -233,4 +279,9 @@ under the License.
 
     <view-map name="LookupInvoice" type="screen" page="component://accounting/widget/ap/LookupScreens.xml#LookupInvoice"/>
     <view-map name="LookupPayment" type="screen" page="component://accounting/widget/ap/LookupScreens.xml#LookupPayment"/>
+    
+    <!-- New Create Invoice Screens View Mapping -->
+    
+    <view-map name="NewQuickCreatePurchaseInvoice" type="screen" page="component://accounting/widget/ap/InvoiceScreens.xml#NewQuickCreatePurchaseInvoice"/>
+    <view-map name="QuickAPInvoiceOverview" type="screen" page="component://accounting/widget/ap/InvoiceScreens.xml#QuickAPInvoiceOverview"/>
 </site-conf>

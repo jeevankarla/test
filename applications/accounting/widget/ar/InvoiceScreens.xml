@@ -149,6 +149,7 @@ under the License.
                                             		<link target="newInvoice" text="New Cash Voucher" style="buttontext create" > <parameter param-name="prefPaymentMethodTypeId" value="CASH"></parameter></link>
                                             		<link target="newInvoice" text="New Bank Voucher" style="buttontext create"><parameter param-name="prefPaymentMethodTypeId" value="BANK"></parameter></link> 
                                        			 	<link target="newQuickCreateInvoice" text="Quick Create Cash Voucher" style="buttontext create" > <parameter param-name="prefPaymentMethodTypeId" value="CASH"></parameter></link>
+                                            		<link target="newQuickCreateInvoice" text="Quick Create Bank Voucher" style="buttontext create" > <parameter param-name="prefPaymentMethodTypeId" value="BANK"></parameter></link>
                                             		
                                        			 </container>
                                        		</widgets>

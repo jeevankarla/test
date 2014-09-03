@@ -45,6 +45,8 @@ under the License.
   		var cstPercent;
   		var invoiceId = "${invoiceId}";
   		
+  		<#--
+  		
   		$('#save').click(function() {
   			var saveRow = $(this).parent().parent();
   			var invoiceItemTypeId = $('#invoiceItemTypeId :selected').val();  
@@ -53,12 +55,12 @@ under the License.
 			    eachTd.find('input').each (function() {
 			   		
 			   		var name = $(this).attr('name');
-			   		if(name == "productId"){
-			   			productId = $(this).val();
-			   		}
-			   		if(name == "quantity"){
-			   			quantity = $(this).val();
-			   		}
+			   	//	if(name == "productId"){
+			   	//		productId = $(this).val();
+			   	//	}
+			   	//	if(name == "quantity"){
+			   	//		quantity = $(this).val();
+			   	//	}
 			   		
 			   		if(name == "description"){
 			   			description = $(this).val();
@@ -77,13 +79,15 @@ under the License.
 			   		}
 			   
 			    });
+			   
 			}); 
 			
   			$.ajax({
 				 type: "POST",
 	             url: 'quickCreateInvoiceItemAndTaxAjax',
-	             data: {productId : productId,
-	             		quantity : quantity,
+	             
+	             data: {//productId : productId,
+	             		//quantity : quantity,
 	             		invoiceItemTypeId : invoiceItemTypeId,
 	             		description : description,
 	             		amount : amount,
@@ -100,12 +104,18 @@ under the License.
 						alert('Invoice item successfully Created');
 					}								 
 				},
+				success:function(json){
+					if(!json.error) location.reload(true);
+					$(document).ajaxStop(function() { location.reload(true); });
+				},
 				error: function(){
-					
+					alert("============================")
 				}							
 			});
+			 return false;
 		});	
 			
+		-->	
 	
   		<#--
   			
@@ -135,7 +145,7 @@ under the License.
   	
   	}); 
   	
-  	function removeInvoiceItem(invoiceItemSeqId, taxAuthPartyId, invoiceId) {
+  		function removeInvoiceItem(invoiceItemSeqId, taxAuthPartyId, invoiceId) {
 			$.ajax({
 				 type: "POST",
 	             url: 'quickRemoveInvoiceItemAndTaxAjax',
@@ -148,12 +158,86 @@ under the License.
 					if(result["_ERROR_MESSAGE_"] || result["_ERROR_MESSAGE_LIST_"]){
 	                    alert('Error Fetching available batches');
 					}else{
-										      	
+						location.reload(true);				      	
 					}								 
 				},
 				error: function(){
+					alert("error");
 				}							
 			});
+			return false;
+		}
+		
+		function saveInvoiceItem() {
+			var productId;
+	  		var quantity;
+	  		var description;
+	  		var amount;
+	  		var bedPercent;
+	  		var vatPercent;
+	  		var cstPercent;
+	  		var invoiceId = "${invoiceId}";
+	  		//alert($(this).id);
+			var saveRow = $('#save').parent().parent();
+  			var invoiceItemTypeId = $('#invoiceItemTypeId :selected').val();  
+  			saveRow.find('td').each (function() {
+			    var eachTd = $(this);
+			    eachTd.find('input').each (function() {
+			   		
+			   		var name = $(this).attr('name');
+			   	//	if(name == "productId"){
+			   	//		productId = $(this).val();
+			   	//	}
+			   	//	if(name == "quantity"){
+			   	//		quantity = $(this).val();
+			   	//	}
+			   		
+			   		if(name == "description"){
+			   			description = $(this).val();
+			   		}
+			   		if(name == "amount"){
+			   			amount = $(this).val();
+			   		}
+			   		if(name == "bedPercent"){
+			   			bedPercent = $(this).val();
+			   		}
+			   		if(name == "vatPercent"){
+			   			vatPercent = $(this).val();
+			   		}
+			   		if(name == "cstPercent"){
+			   			cstPercent = $(this).val();
+			   		}
+			   
+			    });
+			   
+			}); 
+			var data= {invoiceItemTypeId : invoiceItemTypeId,
+	             		description : description,
+	             		amount : amount,
+	             		bedPercent : bedPercent,
+	             		vatPercent : vatPercent,
+	             		cstPercent : cstPercent,
+	                    invoiceId: invoiceId};
+			$.ajax({
+				 type: "POST",
+	             url: 'quickCreateInvoiceItemAndTaxAjax',
+	             
+	             data: data,
+	             dataType: 'json',
+				 success:function(result){
+					if(result["_ERROR_MESSAGE_"] || result["_ERROR_MESSAGE_LIST_"]){
+	                    alert('Error Creating Invoice Item');
+					}else{
+						location.reload(true);
+					}								 
+				},
+				error:function(){
+				return false;
+				   alert("error");
+				}
+											
+			});
+			return false;
 		}
 	
 </script>
@@ -165,13 +249,13 @@ under the License.
       <thead>
         <tr class="header-row-2">
           <td>Item No</td>	
-          <td>Quantity</td>
+          <#--<td>Quantity</td>-->
           <td>Invoice Item Type</td>
-          <td>ProductId</td>
+          <#--<td>ProductId</td>-->
           <td>Description</td>
           <td>Amount</td>
           <td>Excise(%)</td>
-          <td>Vat(%)>
+          <td>Vat(%)</td>
           <td>Cst(%)</td>
           <td>Action</td>
         </tr>
@@ -181,22 +265,22 @@ under the License.
         <#list invoiceItems as invoice>
             <tr valign="middle"<#if alt_row> class="alternate-row"</#if>>
               <td><input class="input-medium" name="taxAuthPartyId" type="hidden" size="4"/>${invoice.invoiceItemSeqId}</td>
-              <td>${invoice.quantity}</td>
+              <#--<td>${invoice.quantity}</td>-->
               <td>${invoice.invoiceItemTypeId}</td>
-              <td>${invoice.productId}</td>
+              <#--<td>${invoice.productId}</td>-->
               <td>${invoice.description?if_exists}</td>
               <td>${invoice.amount?if_exists}</td>
               <td>${invoice.bedPercent?if_exists}</td>
               <td>${invoice.vatPercent?if_exists}</td>
               <td>${invoice.cstPercent?if_exists}</td>
-              <td><a name="remove" href="" onClick="javascript:removeInvoiceItem('${invoice.invoiceItemSeqId}', '${invoice.taxAuthPartyId?if_exists}', '${invoice.invoiceId}');">Remove</a></td>
+              <td><a name="remove" href="" onClick="return removeInvoiceItem('${invoice.invoiceItemSeqId}', '${invoice.taxAuthPartyId?if_exists}', '${invoice.invoiceId}');">Remove</a></td>
             </tr>
             <#-- toggle the row color -->
             <#assign alt_row = !alt_row>
         </#list>
         <tr valign="middle"<#if alt_row> class="alternate-row"</#if>>
           <td></td>
-          <td><input id="quantity" class="input-medium" name="quantity" type="text" size="4"/></td>
+          <#--<td><input id="quantity" class="input-medium" name="quantity" type="text" size="4"/></td>-->
           <td>
 			  <select name="invoiceItemTypeId" id="invoiceItemTypeId">
 		         <#list invoiceItemTypes as eachInvoiceItem>
@@ -206,15 +290,15 @@ under the License.
 		         </#list>
 			  </select>          
           </td>
-          <td>
+          <#--<td>
           	<@htmlTemplate.lookupField value="${productId?if_exists}" formName="listInvoiceItems" name="productId" id="productId" fieldFormName="LookupProduct"/>
-          </td>
-          <td><input id="description" class="input-medium" name="description" type="text"/></td>
+          </td>-->
+          <td><input id="description" class="input-medium" name="description" type="text" size="60"/></td>
           <td><input id="amount" class="input-medium" name="amount" type="text" size="6"/></td>
           <td><input id="bedPercent" class="input-medium" name="bedPercent" type="text" size="3"/></td>
           <td><input id="vatPercent" class="input-medium" name="vatPercent" type="text" size="3"/></td>
           <td><input id="cstPercent" class="input-medium" name="cstPercent" type="text" size="3"/></td>
-          <td><a id="save" name="save" href="" >Save</a></td>
+          <td><button id="save" name="save" onClick="return saveInvoiceItem();" style="buttontext">Save</button></td>
         </tr>
       </tbody>
     </table>

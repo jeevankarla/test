@@ -1011,7 +1011,7 @@ under the License.
             <submit button-type="button"/>
         </field>
     </form>
-    <form name="QuickInvoiceItemEdit" type="single" target="quickCreateInvoiceItemAndTax" title="" default-map-name="invoiceItem" default-entity-name="InvoiceItem"
+    <!-- <form name="QuickInvoiceItemEdit" type="single" target="quickCreateInvoiceItemAndTax" title="" default-map-name="invoiceItem" default-entity-name="InvoiceItem"
         header-row-style="header-row" default-table-style="basic-table">
         <field name="invoiceId"><hidden/></field>
         <field position="1" name="invoiceItemTypeId">
@@ -1067,10 +1067,10 @@ under the License.
        <field name="bedPercent" title="Excise(%)" use-when="hasArInvoiceEditPermission"><text size="7"/></field>
        <field name="cstPercent" title="CST(%)" use-when="hasArInvoiceEditPermission"><text size="7"/></field>
        <field name="vatPercent" title="VAT(%)" use-when="hasArInvoiceEditPermission"><text size="7"/></field>
-       <field name="total" widget-area-style="align-text"><display type="currency" currency="${invoice.currencyUomId}"/></field>  <!-- this should not look like something you can modify, hence display -->
+       <field name="total" widget-area-style="align-text"><display type="currency" currency="${invoice.currencyUomId}"/></field>  this should not look like something you can modify, hence display
        <field name="uomId"><hidden/></field>
        <field name="taxableFlag"><hidden/></field>
-       <!-- <field name="updateButton" title="${uiLabelMap.CommonUpdate}" widget-style="buttontext" use-when="hasArInvoiceEditPermission"><submit button-type="text-link"/></field> -->
+       <field name="updateButton" title="${uiLabelMap.CommonUpdate}" widget-style="buttontext" use-when="hasArInvoiceEditPermission"><submit button-type="text-link"/></field>
        <field name="removeButton" title="${uiLabelMap.CommonEmptyHeader}" widget-style="buttontext" use-when="&quot;${invoice.statusId}&quot;.equals(&quot;INVOICE_IN_PROCESS&quot;)">
             <hyperlink description="${uiLabelMap.CommonRemove}" target="quickRemoveInvoiceItemAndTax">
                 <parameter param-name="invoiceId"/>
@@ -1078,5 +1078,74 @@ under the License.
                 <parameter param-name="taxAuthPartyId" from-field="taxAuthPartyId"/>
             </hyperlink>
        </field>
-    </form>	
+    </form>	 -->
+    
+    <!-- ========================= New Create Purchase Invoice Forms ========================== -->
+    
+    <form name="NewQuickCreatePurchaseInvoice" type="single" target="QuickUpdateAPInvoice" title="Edit Invoice Header" default-map-name="invoice"
+        header-row-style="header-row" default-table-style="basic-table">
+        <actions>
+        	<set field="nowDate" value="${bsh:org.ofbiz.base.util.UtilDateTime.nowDateString(&quot;yyyy-MM-dd&quot;)}" type="String"/>
+        	<set field="pettyCashVendor" value="${bsh:org.ofbiz.base.util.UtilProperties.getPropertyValue(&quot;general.properties&quot;, &quot;pettyCashPartyId&quot;);}"/>
+        	<set field="pettyCashVendorRoleTypeId" value="${bsh:org.ofbiz.base.util.UtilProperties.getPropertyValue(&quot;general.properties&quot;, &quot;pettyCashRoleTypeId&quot;);}"/>
+        </actions>
+        <alt-target use-when="invoice==null" target="QuickCreateAPInvoice"/>
+         <field name="prefPaymentMethodTypeId"><hidden  value="${prefPaymentMethodTypeId}"/></field>
+        <field use-when="invoice!=null" name="invoiceId"><display/></field>
+        <field name="statusId"><hidden value="INVOICE_IN_PROCESS"/></field>
+        <field name="pettyCashVendorId"><hidden value="${pettyCashVendor}"/></field>
+        <field name="pettyCashVendorRoleTypeId"><hidden value="${pettyCashVendorRoleTypeId}"/></field>
+        <field name="pettyCashDueDate"><hidden value="${nowTimestamp}"/></field>
+        <field name="invoiceTab"><hidden/></field>
+        <field name="currencyUomId"><hidden value="${defaultOrganizationPartyCurrencyUomId}"/></field>
+        <field position="1" name="invoiceTypeId" event="onchange" action="javascript:setInvoiceAction(); javascript:setRoleTypeDropdown();">
+            <drop-down allow-empty="false" no-current-selected-key="PURCHASE_INVOICE">
+                <entity-options description="${description}" entity-name="InvoiceType">
+                	<entity-constraint name="invoiceTypeId" value="PURCHASE_INVOICE" operator="not-equals"/>
+                    <entity-constraint name="parentTypeId" value="PURCHASE_INVOICE"/>
+                    <entity-order-by field-name="description"/>
+                </entity-options>
+            </drop-down>
+        </field>
+        <field position="2" name="invoiceDate" event="onblur" action="javascript:setInvoiceDateAsDueDate();" required-field="true"><date-time/></field>   
+        <field name="dueDate"  ><hidden ></hidden></field>     
+        <field position="1" name="roleTypeId" >   
+            <drop-down allow-empty="true">
+                <entity-options description="${description}" entity-name="RoleType">
+                    <entity-constraint name="parentTypeId" operator="equals" value="VENDOR"/>
+                    <entity-order-by field-name="description"/>
+                </entity-options>
+                <entity-options description="${description}" entity-name="RoleType">
+                    <entity-order-by field-name="description"/>
+                </entity-options>
+            </drop-down>
+        </field> 
+        <field position="2" name="partyIdFrom" required-field="true"><lookup target-form-name="LookupPartyName" target-parameter="roleTypeId,invoiceTypeId"/></field>
+        <field name="timePeriodId">
+            <drop-down>
+                <entity-options entity-name="CustomTimePeriod" key-field-name="customTimePeriodId" description="${periodName}: ${fromDate} - ${thruDate}" filter-by-date="false">
+                    <entity-constraint name="periodTypeId" operator="equals" value="HR_MONTH"/>
+                    <entity-constraint name="isClosed" operator="equals" value="N" />                    
+                    <!-- <entity-constraint name="thruDate" operator="less" env-name="nowDate" />  -->                   
+                    <entity-order-by field-name="-thruDate"/>
+                </entity-options>
+            </drop-down>
+        </field>
+        <field position="1" name="organizationPartyId" parameter-name="partyId">
+            <drop-down allow-empty="false" no-current-selected-key="${defaultOrganizationPartyId}">
+                <entity-options description="${groupName}" entity-name="PartyAcctgPrefAndGroup" key-field-name="partyId">
+                    <entity-constraint name="partyId" operator="equals" value="Company"/>
+                    <entity-order-by field-name="groupName"/>
+                </entity-options>
+            </drop-down>
+        </field>                            
+        <field position="1" name="description" encode-output="false"><text size="100"/></field>        
+        <field position="1" name="invoiceMessage" encode-output="false"><text size="100"/></field>        
+        <field position="1" name="createButton" widget-style="smallSubmit" title="${uiLabelMap.CommonCreate}" use-when="invoice==null">
+            <submit button-type="button"/>
+        </field>
+        <field position="1" name="updateButton" widget-style="smallSubmit" use-when="invoice!=null&amp;&amp;invoice.getString(&quot;statusId&quot;).equals(&quot;INVOICE_IN_PROCESS&quot;)">
+            <submit button-type="button"/>
+        </field>
+    </form>
 </forms>
