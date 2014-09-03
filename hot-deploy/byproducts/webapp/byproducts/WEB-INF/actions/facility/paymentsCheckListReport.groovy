@@ -106,10 +106,8 @@ facilityIdsList=[];
 	}else{
 	 if(UtilValidate.isNotEmpty(categoryType)){
 		facilityIdsList=ByProductNetworkServices.getAllBooths(delegator,categoryType).get("boothsList");
-		//Debug.log("facilityIdsList==2222==="+facilityIdsList);
 	 }else{
 	  facilityIdsList=ByProductNetworkServices.getAllBooths(delegator,null).get("boothsList");
-	 // Debug.log("facilityIdsList===1111="+facilityIdsList);
 	 }
 	}
 	paidPaymentInput=[:];
@@ -118,6 +116,10 @@ facilityIdsList=[];
 	paidPaymentInput["paymentMethodTypeId"]=paymentMethodTypeId;
 	paidPaymentInput["facilityIdsList"]=facilityIdsList;
 	paidPaymentInput["orderByBankName"]=true;
+	if(UtilValidate.isNotEmpty(categoryType)){
+     paidPaymentInput["isByParty"]=true;
+	 paidPaymentInput["excludeCreditNote"]=true;
+	}
 	//for DayPayment CheckList for CreatedDate otherWise FindByPaymentDate
 	if(UtilValidate.isNotEmpty(searchBy) &&(searchBy=="findByCreatedDate")){
 		paidPaymentInput["findByCreatedDate"]=true;
@@ -139,7 +141,6 @@ facilityIdsList=[];
 	boothRouteIdsMap= boothPaidDetail["boothRouteIdsMap"];
 	 if(UtilValidate.isNotEmpty(categoryType)){
 		 boothTempPaymentsList.each{eachBoothPayment->
-			    Debug.log("eachBoothPayment===="+eachBoothPayment);
 				 partyId=eachBoothPayment.partyIdFrom;
 					 if(UtilValidate.isEmpty(boothPaymentsMap.get(partyId))){
 					   List<GenericValue> tempboothPaidList=FastList.newInstance();
@@ -153,7 +154,6 @@ facilityIdsList=[];
 						
 					 }
 	    }
-		 Debug.log("boothPaymentsMap===="+boothPaymentsMap);
 		 context.boothPaymentsMap=boothPaymentsMap;
 	 }else{
 		boothTempPaymentsList.each{eachBoothPayment->
