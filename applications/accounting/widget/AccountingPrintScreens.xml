@@ -81,6 +81,102 @@ under the License.
             </widgets>
         </section>
     </screen>
+    <screen name="AccountPDF">
+    <section>
+    	<actions>
+				<property-map resource="PartyUiLabels" map-name="uiLabelMap"
+					global="true" />
+				<set field="titleProperty" value="Accounting Transactions" />
+				<set field="tabButtonItem" default-value="invoiceOverview" value="${parameters.invoiceTab}"/>
+				<set field="invoiceId" from-field="parameters.invoiceId" />
+				<entity-one entity-name="Invoice" value-field="invoice" />
+				<entity-and entity-name="InvoiceRole" list="invoiceRoles">
+					<field-map from-field="parameters.invoiceId" field-name="invoiceId" />
+					<order-by field-name="partyId" />
+				</entity-and>
+				<entity-and entity-name="InvoiceStatus" list="invoiceStatus">
+					<field-map from-field="parameters.invoiceId" field-name="invoiceId" />
+					<order-by field-name="statusDate" />
+				</entity-and>
+				<entity-and entity-name="InvoiceTerm" list="invoiceTerms">
+					<field-map from-field="parameters.invoiceId" field-name="invoiceId" />
+					<order-by field-name="invoiceTermId" />
+				</entity-and>
+				<entity-and entity-name="TimeEntry" list="timeEntries">
+					<field-map from-field="parameters.invoiceId" field-name="invoiceId" />
+					<order-by field-name="invoiceItemSeqId" />
+				</entity-and>
+				<!-- <entity-and entity-name="PaymentApplication" list="paymentApplications">
+					<field-map from-field="parameters.invoiceId" field-name="invoiceId" />
+					<order-by field-name="paymentApplicationId" />
+				</entity-and> -->
+				<entity-and entity-name="PaymentAndApplication" list="payment">
+					<field-map from-field="parameters.invoiceId" field-name="invoiceId" />
+					<order-by field-name="paymentId" />
+				</entity-and>
+				<script
+					location="component://accounting/webapp/accounting/WEB-INF/actions/invoice/CreateApplicationList.groovy" />
+				<script
+					location="component://accounting/webapp/accounting/WEB-INF/actions/invoice/OrderListInvoiceItem.groovy" />
+				<set field="invoiceAmount"
+					value="${bsh:org.ofbiz.accounting.invoice.InvoiceWorker.getInvoiceTotal(invoice)}"
+					type="BigDecimal" />
+				<set field="notAppliedAmount"
+					value="${bsh:org.ofbiz.accounting.invoice.InvoiceWorker.getInvoiceNotApplied(invoice)}"
+					type="BigDecimal" />
+				<set field="appliedAmount"
+					value="${bsh:org.ofbiz.accounting.invoice.InvoiceWorker.getInvoiceApplied(invoice)}"
+					type="BigDecimal" />
+				<entity-condition entity-name="AcctgTransAndEntries"
+					list="AcctgTransAndEntries">
+					<condition-expr field-name="invoiceId" operator="equals"
+						from-field="invoiceId" />
+					<order-by field-name="acctgTransId" />
+				</entity-condition>
+				<service service-name="acctgInvoicePermissionCheck"
+					result-map="permResult">
+					<field-map field-name="mainAction" value="ARINVOICE_EDIT" />
+				</service>
+				<set field="hasArInvoiceEditPermission" from-field="permResult.hasPermission" />
+				<service service-name="acctgInvoicePermissionCheck"
+					result-map="permResult">
+					<field-map field-name="mainAction" value="INVOICE_APPROVE" />
+				</service>
+				<set field="hasApproveInvoiceEditPermission" from-field="permResult.hasPermission" />
+				<service service-name="acctgInvoicePermissionCheck"
+					result-map="permResult">
+					<field-map field-name="mainAction" value="APINVOICE_EDIT" />
+				</service>
+				<set field="hasApInvoiceEditPermission" from-field="permResult.hasPermission" />
+				<set field="localDispatcherName" value="${parameters.localDispatcherName}" />
+				<set field="requestUri" value="${parameters.targetRequestUri}"/>
+			</actions>
+            <widgets>
+                <section>
+                    <condition>
+                        <or>
+                            <if-service-permission service-name="acctgBasePermissionCheck" main-action="VIEW"/>
+                            <!-- can always see own invoice -->
+                            <if-compare field="invoice.partyIdFrom" operator="equals" value="${userLogin.partyId}"/>
+                            <if-compare field="invoice.partyId" operator="equals" value="${userLogin.partyId}"/>
+                            <!-- or is a contact of a company who owns the invoice-->
+                            <if-compare field="invoice.partyIdFrom" operator="equals" value="${myCompanyId}"/>
+                            <if-compare field="invoice.partyId" operator="equals" value="${myCompanyId}"/>
+                        </or>
+                    </condition>
+                    <widgets>
+                    		<decorator-screen name="SimpleDecorator"
+                                       location="component://common/widget/CommonScreens.xml">
+                                       <decorator-section name="body">
+                                       <include-form name="AcctgTransAndEntriespdf" location="component://accounting/widget/InvoiceForms.xml" />
+						
+				    </decorator-section>
+				    </decorator-screen>		
+                    </widgets>
+                </section>
+            </widgets>
+        </section>
+    </screen>
     <screen name="InvoiceNewPDF">
         <section>
             <actions>

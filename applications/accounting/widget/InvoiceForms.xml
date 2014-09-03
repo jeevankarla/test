@@ -228,7 +228,7 @@ under the License.
         <auto-fields-entity entity-name="AcctgTransAndEntries" default-field-type="display"/>
         <field name="invoiceId"><hidden/></field>
         <field name="paymentId"><hyperlink target="paymentOverview?paymentId=${paymentId}" description="${paymentId}"/></field>
-        <field name="amount"><display type="currency" currency="${currencyUomId}"/></field>
+        <field name="amount"><display type="currency" currency="${currencyUomId}" size="25"/></field>
         <field name="origAmount"><display type="currency" currency="${origCurrencyUomId}"/></field>
         <field name="acctgTransId"><hyperlink description="${acctgTransId}" target="EditAcctgTrans?acctgTransId=${acctgTransId}&amp;organizationPartyId=${organizationPartyId}"/></field>
         <field name="acctgTransTypeId" title="${uiLabelMap.FormFieldTitle_acctgTransType}"><display-entity entity-name="AcctgTransType"/></field>
@@ -237,6 +237,36 @@ under the License.
         <field name="glAccountClassId" title="${uiLabelMap.AccountingGlAccountClass}"><display-entity entity-name="GlAccountClass" description="${description}"/></field>
         <field name="partyId" title="${uiLabelMap.PartyParty}"><display-entity entity-name="PartyNameView" description="${lastName} ${groupName}"/></field>
         <field name="reconcileStatusId"><display-entity entity-name="StatusItem" key-field-name="statusId"/></field>
+        <field name="origCurrencyUomId"><ignored/></field>
+        <field name="currencyUomId"><ignored/></field>
+        <field name="shipmentId"><ignored/></field>
+        <field name="receiptId"><ignored/></field>
+        <field name="inventoryItemId"><ignored/></field>
+        <field name="workEffortId"><ignored/></field>
+        <field name="physicalInventoryId"><ignored/></field>
+        <field name="transDescription"><ignored/></field>
+        <sort-order>   
+            <sort-field name="acctgTransId"/>
+             <sort-field name="acctgTransEntrySeqId"/> 
+        </sort-order>
+    </form>
+    <form name="AcctgTransAndEntriespdf" type="list" title="Accounting Transactions" list-name="AcctgTransAndEntries"
+        odd-row-style="alternate-row" default-table-style="basic-table hover-bar">
+        <auto-fields-entity entity-name="AcctgTransAndEntries" default-field-type="hidden"/>
+        <field name="isPosted" title="Posted"><display size="2"/></field>
+        <field name="transactionDate" title="Trans Date"><display size="20" description="${groovy:org.ofbiz.base.util.UtilDateTime.toDateString(transactionDate,&quot;dd/MM/yy&quot;);}"/></field>
+        <field name="postedDate" title="Posted Date" ><display description="${groovy:org.ofbiz.base.util.UtilDateTime.toDateString(postedDate,&quot;dd/MM/yy&quot;);}"/></field>
+        <field name="transTypeDescription" title="Trans Type Description"><display/></field>
+        <field name="invoiceId"><hidden/></field>
+        <field name="paymentId"><hyperlink target="paymentOverview?paymentId=${paymentId}" description="${paymentId}"/></field>
+        <field name="glAccountId" title="gl Account Id"><display size="10"/></field>
+        <field name="debitCreditFlag" title="Debit Credit Flag"><display size="5"/></field>
+        <field name="amount"><display type="currency" currency="${currencyUomId}" size="25"/></field>
+        <field name="acctgTransId"><hyperlink description="${acctgTransId}" target="EditAcctgTrans?acctgTransId=${acctgTransId}&amp;organizationPartyId=${organizationPartyId}"/></field>
+        <field name="glJournalId" title="gl JournalId"><display-entity entity-name="GlJournal" description="${glJournalName}"/></field>
+        <field name="accountName" title="Account Name"><display/></field>
+        <!-- <field name="glAccountClassId" title="${uiLabelMap.AccountingGlAccountClass}"><display-entity entity-name="GlAccountClass" description="${description}"/></field> -->
+        <field name="partyId" title="party"><display-entity entity-name="PartyNameView" description="${firstName} "/></field>
         <field name="origCurrencyUomId"><ignored/></field>
         <field name="currencyUomId"><ignored/></field>
         <field name="shipmentId"><ignored/></field>
