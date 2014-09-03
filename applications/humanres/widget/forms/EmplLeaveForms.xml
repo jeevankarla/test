@@ -109,6 +109,7 @@
                 <parameter param-name="approverPartyId"/>
                 <parameter param-name="fromDate"/>
                 <parameter param-name="thruDate"/>
+                <parameter param-name="emplLeaveApplId"/>
             </hyperlink>
         </field>
         <field name="deleteLink" title="${uiLabelMap.CommonDelete}" widget-style="buttontext" use-when="hasEmplLeaveEditPermission&amp;&amp;&quot;${leaveStatus}&quot;!=&quot;LEAVE_APPROVED&quot;">
@@ -116,6 +117,7 @@
                 <parameter param-name="partyId"/>
                 <parameter param-name="leaveTypeId"/>
                 <parameter param-name="fromDate"/>
+                <parameter param-name="emplLeaveApplId"/>
             </hyperlink>
         </field>
         <field name="description"><hidden/></field>
@@ -248,11 +250,13 @@
                 <parameter param-name="partyId"/>
                 <parameter param-name="fromDate"/>
                 <parameter param-name="leaveTypeId"/>
+                <parameter param-name="emplLeaveApplId"/>
             </hyperlink>
         </field>
     </form>
     <form name="EditEmplLeaveStatus" type="single" target="updateEmplLeaveStatus">
         <auto-fields-service service-name="updateEmplLeaveStatus" map-name="leaveApp"/>
+        <field name="emplLeaveApplId"><hidden/></field>
         <field name="effectedCreditDays"><hidden/></field>
         <field name="lossOfPayDays"><hidden/></field>
         <field name="partyId"><display/></field>

@@ -179,14 +179,13 @@
                 <set field="partyId" from-field="parameters.partyId"/>
                 <set field="leaveTypeId" from-field="parameters.leaveTypeId"/>
                 <set field="fromDate" from-field="parameters.fromDate"/>
+                <set field="emplLeaveApplId" from-field="parameters.emplLeaveApplId"/>
                 <service service-name="humanResManagerPermission" result-map="permResult">
                     <field-map field-name="mainAction" value="APPROVE"/>
                 </service>
                 <set field="hasEmplLeaveApprovePermission" from-field="permResult.hasPermission"/>
                 <entity-one entity-name="EmplLeave" value-field="leaveApp" auto-field-map="false">
-                    <field-map field-name="partyId" from-field="partyId"/>
-                    <field-map field-name="leaveTypeId" from-field="leaveTypeId"/>
-                    <field-map field-name="fromDate" from-field="fromDate"/>
+                    <field-map field-name="emplLeaveApplId" from-field="emplLeaveApplId"/>
                 </entity-one>
                 <set field="layoutSettings.javaScripts[]" value="/partymgr/js/emplLeaveDate.js" global="true"/>
                 <entity-and list="leaveTypeList" entity-name="EmplLeaveType">
@@ -201,16 +200,12 @@
                    <field-map field-name="enumTypeId" value="LEAVE_DAY_TYPE"/>
                 </entity-and>
                 <script location="component://humanres/webapp/humanres/WEB-INF/actions/humanres/EditEmployeeLeave.groovy"/>
-                 
             </actions>
             <widgets>
                 <decorator-screen name="HumanresCommonDecorator"
 					location="component://humanres/widget/CommonScreens.xml">
                     <decorator-section name="body">
                         <include-menu name="EmplLeaveTabBar" location="component://humanres/widget/HumanresMenus.xml"/>
-                        <!-- <screenlet id="AddEmplLeavePanel" title="${uiLabelMap.HumanResAddEmplLeave}" collapsible="true">
-                            <include-form name="EditEmplLeave" location="component://humanres/widget/forms/EmplLeaveForms.xml"/>
-                        </screenlet> -->
                         <container>
                           <platform-specific>
 								<html>
@@ -234,10 +229,9 @@
                 <set field="partyId" from-field="parameters.partyId"/>
                 <set field="leaveTypeId" from-field="parameters.leaveTypeId"/>
                 <set field="fromDate" from-field="parameters.fromDate"/>
+                <set field="emplLeaveApplId" from-field="parameters.emplLeaveApplId"/>
                 <entity-one entity-name="EmplLeave" value-field="leaveApp" auto-field-map="false">
-                    <field-map field-name="partyId" from-field="partyId"/>
-                    <field-map field-name="leaveTypeId" from-field="leaveTypeId"/>
-                    <field-map field-name="fromDate" from-field="fromDate"/>
+                    <field-map field-name="emplLeaveApplId" from-field="emplLeaveApplId"/>
                 </entity-one>
             </actions>
             <widgets>

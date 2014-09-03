@@ -511,6 +511,10 @@ public class PunchService {
 					
 				}
 			}*/
+			emplPunch.set("createdByUserLogin", userLogin.getString("userLoginId"));
+			emplPunch.set("lastModifiedByUserLogin", userLogin.getString("userLoginId"));
+			emplPunch.set("createdDate", UtilDateTime.nowTimestamp());
+			emplPunch.set("lastModifiedDate", UtilDateTime.nowTimestamp());
 			
 			delegator.createOrStore(emplPunch);
 			if(UtilValidate.isNotEmpty(oldPunchType) && (!PunchType.equals(oldPunchType))){				  

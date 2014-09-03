@@ -557,6 +557,7 @@ under the License.
     <entity entity-name="EmplLeave"
             package-name="org.ofbiz.humanres.employment"
             title="Employee Leave Entity">
+        <field name="emplLeaveApplId" type="id-ne"/>
         <field name="partyId" type="id-ne"/>
         <field name="leaveTypeId" type="id-ne"/>
         <field name="emplLeaveReasonTypeId" type="id-ne"/>
@@ -571,9 +572,7 @@ under the License.
         <field name="documentsProduced" type="indicator"/>
         <field name="description" type="description"/>
         <field name="comment" type="description"/>
-        <prim-key field="partyId"/>
-        <prim-key field="leaveTypeId"/>
-        <prim-key field="fromDate"/>
+        <prim-key field="emplLeaveApplId"/>
         <relation type="one" fk-name="EMPL_LEAVE_PRTY" rel-entity-name="Party">
             <key-map field-name="partyId"/>
         </relation>
@@ -617,7 +616,7 @@ under the License.
         </relation>
     </entity>
     <!-- EmplLeaveStatus depricated   -->
-    <entity entity-name="EmplLeaveStatus" package-name="org.ofbiz.humanres.employment">
+    <!-- <entity entity-name="EmplLeaveStatus" package-name="org.ofbiz.humanres.employment">
     	<field name="partyId" type="id-ne"/>
         <field name="leaveTypeId" type="id-ne"/>
         <field name="leaveUomId" type="short-varchar"/>        
@@ -635,7 +634,7 @@ under the License.
         <relation type="one" fk-name="EMPL_LEAVE_ST_UOM" title="Uom" rel-entity-name="Uom">
             <key-map field-name="leaveUomId" rel-field-name="uomId"/>
         </relation>
-    </entity>
+    </entity> -->
    <entity entity-name="PayrollAttendance"
             package-name="org.ofbiz.humanres.employment"
             title="Attendance Entry Entity">
@@ -1475,6 +1474,10 @@ under the License.
 	  <field name="shiftType" type="id"/>
 	  <field name="isManual" type="indicator"/>
 	  <field name="Note" type="description"/>
+	  <field name="createdByUserLogin" type="id-vlong"></field>
+	  <field name="lastModifiedByUserLogin" type="id-vlong"></field>
+	  <field name="createdDate" type="date-time"></field>      
+      <field name="lastModifiedDate" type="date-time"></field>
 	  <prim-key field="partyId"/>
 	  <prim-key field="punchdate"/>
 	  <prim-key field="InOut"/>
@@ -1482,6 +1485,12 @@ under the License.
 	  <prim-key field="PunchType"/>
 	  <relation type="one" fk-name="EMP_STY"  rel-entity-name="WorkShiftType">
             <key-map field-name="shiftType" rel-field-name="shiftTypeId"/>
+      </relation>
+      <relation type="one" fk-name="EP_CRU" rel-entity-name="UserLogin">
+        <key-map field-name="createdByUserLogin" rel-field-name="userLoginId"/>
+      </relation>
+      <relation type="one" fk-name="EP_LMU" rel-entity-name="UserLogin">
+        <key-map field-name="lastModifiedByUserLogin" rel-field-name="userLoginId"/>
       </relation>
     </entity>
    <entity entity-name="EmplDailyAttendanceDetail" package-name="org.ofbiz.humanres.position"	title="Empl PUnch Type">
@@ -1497,11 +1506,15 @@ under the License.
 	  <field name="overridenBy" type="id-vlong"></field>
 	  <field name="extraMin" type="fixed-point"/>
 	  <field name="encashmentStatus" type="id"/>
+	  <field name="emplLeaveApplId" type="id"/>
 	  <prim-key field="partyId"/>
 	  <prim-key field="date"/>
 	  <prim-key field="seqId"/>
 	  <relation type="one" fk-name="EDAD_STY"  rel-entity-name="WorkShiftType">
             <key-map field-name="shiftType" rel-field-name="shiftTypeId"/>
+      </relation>
+      <relation type="one" fk-name="EDAD_EMPAPID"  rel-entity-name="EmplLeave">
+            <key-map field-name="emplLeaveApplId" rel-field-name="emplLeaveApplId"/>
       </relation>
     </entity>
      <!-- ==================NotificationAction=============================== -->

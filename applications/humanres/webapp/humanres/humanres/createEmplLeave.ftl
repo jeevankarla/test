@@ -171,6 +171,7 @@ function viewGHandSS(){
 
          <form name="EditEmplLeave" method="post" action="${target}" onsubmit="setFormParams()">
             <input type="hidden" name="leaveStatus" value ="LEAVE_CREATED"/>
+             <input type="hidden" name="emplLeaveApplId" value ="${parameters.emplLeaveApplId?if_exists}"/>
             <input type="hidden" name="appliedBy" value =""/>
             <table class="basic-table" cellspacing="0">
               <tr>
