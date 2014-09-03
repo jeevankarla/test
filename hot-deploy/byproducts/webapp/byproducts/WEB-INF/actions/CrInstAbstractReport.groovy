@@ -79,7 +79,6 @@ invoiceDates.each{eachDate ->
 	}
 	crInvoices.put(eachDate, eachDayInvoiceDetails);
 }
-
 periodTypes = UtilMisc.toList("INST_FORTNIGHT_BILL", "INST_MONTH_BILL", "INST_QUARTER_BILL", "INST_WEEK_BILL", "INST_DAILY_BILL");
 conditionList.clear();
 conditionList.add(EntityCondition.makeCondition("periodTypeId", EntityOperator.IN, periodTypes));
@@ -95,21 +94,18 @@ if(periodBillingList){
 	fromDateSqlFormat = periodBillingList.get(0).get("fromDate");
 	fromBillDate = UtilDateTime.toTimestamp(fromDateSqlFormat);
 }
- 
+
 
 conditionList.clear();
 conditionList.add(EntityCondition.makeCondition("partyIdFrom", EntityOperator.IN, boothList));
 conditionList.add(EntityCondition.makeCondition("statusId", EntityOperator.NOT_EQUAL, "PMNT_VOID"));
 conditionList.add(EntityCondition.makeCondition("paymentMethodTypeId", EntityOperator.EQUALS, "CREDITNOTE_PAYIN"));
-conditionList.add(EntityCondition.makeCondition("paymentDate", EntityOperator.GREATER_THAN_EQUAL_TO, fromBillDate));
+conditionList.add(EntityCondition.makeCondition("paymentDate", EntityOperator.GREATER_THAN_EQUAL_TO, dayBegin));
 conditionList.add(EntityCondition.makeCondition("paymentDate", EntityOperator.LESS_THAN_EQUAL_TO, dayEnd));
 conditionList.add(EntityCondition.makeCondition("amount", EntityOperator.GREATER_THAN, BigDecimal.ZERO));
 EntityCondition creditCond = EntityCondition.makeCondition(conditionList, EntityOperator.AND);
 creditNotePayments = delegator.findList("Payment", creditCond, null, ["paymentDate","partyIdFrom"], null, false);
-//Debug.log("creditNotePayments ##############################################"+creditNotePayments);
-//Debug.log("creditCond ##############################################"+creditCond);
 creditNoteMap = [:];
-
 creditNotePayments.each{ eachPayment ->
 	payDate = eachPayment.paymentDate;
 	payDate = UtilDateTime.getDayStart(payDate);
@@ -141,7 +137,6 @@ creditNotePayments.each{ eachPayment ->
 		creditNoteMap.put(payDate, tempMap);
 	}
 }
-
 finYearContext = [:];
 finYearContext.put("onlyIncludePeriodTypeIdList", UtilMisc.toList("FISCAL_YEAR"));
 finYearContext.put("organizationPartyId", "Company");
