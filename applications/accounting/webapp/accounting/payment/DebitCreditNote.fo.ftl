@@ -215,7 +215,11 @@ under the License.
 				         <#assign itemType = invoiceItem.getRelatedOne("InvoiceItemType")>
 				         <#assign isItemAdjustment = Static["org.ofbiz.entity.util.EntityTypeUtil"].hasParentType(delegator, "InvoiceItemType", "invoiceItemTypeId", itemType.getString("invoiceItemTypeId"), "parentTypeId", "INVOICE_ADJ")/>
 						 <#if invoiceItem.description?has_content>
-				                <#assign description=invoiceItem.description>
+				                <#assign productId=invoiceItem.productId>
+				                <#assign productDetails = delegator.findOne("Product", {"productId" :productId}, true)>
+				                <#if productDetails?has_content>
+				                  <#assign description=productDetails.get("description")>
+				                </#if>
 				            <#elseif taxRate?has_content & taxRate.get("description",locale)?has_content>
 				                <#assign description=taxRate.get("description",locale)>
 				            <#elseif itemType.get("description",locale)?has_content>
