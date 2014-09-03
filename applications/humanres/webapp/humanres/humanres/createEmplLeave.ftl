@@ -208,7 +208,7 @@ function viewGHandSS(){
 					<span id="leaveBalance" name="leaveBalance" class="tooltip" wrap="wrap"></span>
                 </td>
               </tr>
-             <!--<tr>
+             <tr>
                 <td class="label">Leave ReasonType</td>
                 <td>
                     <option value=''></option>
@@ -223,7 +223,7 @@ function viewGHandSS(){
 						</#list>      
 					</select>
                 </td>
-              </tr>-->
+              </tr>
               <tr>
                 <td class="label">From Date :</td>
                 <td>
