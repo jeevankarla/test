@@ -793,6 +793,7 @@ public class CheckOutHelper {
         }*/
 
         int shipGroups = this.cart.getShipGroupSize();
+       // Debug.log("==shipGroups=="+shipGroups+"===");
         for (int i = 0; i < shipGroups; i++) {
             ShoppingCart.CartShipInfo csi = cart.getShipInfo(i);
             Map<Integer, ShoppingCartItem> shoppingCartItemIndexMap = new HashMap<Integer, ShoppingCartItem>();
@@ -805,8 +806,8 @@ public class CheckOutHelper {
                 csi.clearAllTaxInfo();
                 continue;
             }
+         
             List<List<? extends Object>> taxReturn = this.getTaxAdjustments(dispatcher, "calcTax", serviceContext);
-
             if (Debug.verboseOn()) Debug.logVerbose("ReturnList: " + taxReturn, module);
             List<GenericValue> orderAdj = UtilGenerics.checkList(taxReturn.get(0));
             List<List<GenericValue>> itemAdj = UtilGenerics.checkList(taxReturn.get(1));

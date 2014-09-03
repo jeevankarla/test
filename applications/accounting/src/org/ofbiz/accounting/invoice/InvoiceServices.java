@@ -1200,13 +1200,19 @@ public class InvoiceServices {
                         createInvoiceItemAdjContext.put("invoiceId", invoiceId);
                         createInvoiceItemAdjContext.put("invoiceItemSeqId", invoiceItemSeqId);
                         createInvoiceItemAdjContext.put("invoiceItemTypeId", getInvoiceItemType(delegator, adj.getString("orderAdjustmentTypeId"), null, invoiceType, "INVOICE_ITM_ADJ"));
+                        Debug.log("=invoiceType="+invoiceType+"====NowKey=InSerVICEE=="+getInvoiceItemType(delegator, adj.getString("orderAdjustmentTypeId"), null, invoiceType, "INVOICE_ITM_ADJ"));
                         if (("SALES_TAX".equals(orderAdjustmentType.getString("parentTypeId")))) {
                             createInvoiceItemAdjContext.put("invoiceItemTypeId", adj.getString("orderAdjustmentTypeId"));
                         }
+                        if (("PURCHASE_TAX".equals(orderAdjustmentType.getString("parentTypeId")))) {
+                            createInvoiceItemAdjContext.put("invoiceItemTypeId", adj.getString("orderAdjustmentTypeId"));
+                        }
+                        Debug.log("=After=CREATIONNNNN===>"+invoiceType);
                         createInvoiceItemAdjContext.put("quantity", BigDecimal.ONE);
                         createInvoiceItemAdjContext.put("amount", amount);
                         createInvoiceItemAdjContext.put("overrideGlAccountId", adj.get("overrideGlAccountId"));
-                        if (!("SALES_TAX".equals(orderAdjustmentType.getString("parentTypeId")))) {   
+                        if ((!"SALES_TAX".equals(orderAdjustmentType.getString("parentTypeId"))) &&(!"PURCHASE_TAX".equals(orderAdjustmentType.getString("parentTypeId")))) {
+                        //if (!("SALES_TAX".equals(orderAdjustmentType.getString("parentTypeId")))) {   
                             createInvoiceItemAdjContext.put("productId", orderItem.get("productId"));
                             createInvoiceItemAdjContext.put("productFeatureId", orderItem.get("productFeatureId"));                        	
                         	createInvoiceItemAdjContext.put("parentInvoiceId", invoiceId);
@@ -1219,13 +1225,15 @@ public class InvoiceServices {
                         createInvoiceItemAdjContext.put("taxAuthorityRateSeqId", adj.get("taxAuthorityRateSeqId"));
 
                         // some adjustments fill out the comments field instead
-                        if (!("SALES_TAX".equals(orderAdjustmentType.getString("parentTypeId")))) {
+                        if ((!"SALES_TAX".equals(orderAdjustmentType.getString("parentTypeId"))) &&(!"PURCHASE_TAX".equals(orderAdjustmentType.getString("parentTypeId")))) {
+                       // if (!("SALES_TAX".equals(orderAdjustmentType.getString("parentTypeId")))) {
                         	String description = (UtilValidate.isEmpty(adj.getString("description")) ? adj.getString("comments") : adj.getString("description"));
                         	createInvoiceItemAdjContext.put("description", description);
                         }
                         // invoice items for sales tax are not taxable themselves
                         // TODO: This is not an ideal solution. Instead, we need to use OrderAdjustment.includeInTax when it is implemented
-                        if (!("SALES_TAX".equals(orderAdjustmentType.getString("parentTypeId")))) {
+                        if ((!"SALES_TAX".equals(orderAdjustmentType.getString("parentTypeId"))) &&(!"PURCHASE_TAX".equals(orderAdjustmentType.getString("parentTypeId")))) {
+                        //if (!("SALES_TAX".equals(orderAdjustmentType.getString("parentTypeId")))) {
                             createInvoiceItemAdjContext.put("taxableFlag", product.get("taxable"));
                         }
 
@@ -1266,8 +1274,8 @@ public class InvoiceServices {
                         BigDecimal thisAdjAmount = amount;
 
                         // adjustments only apply to totals when they are not tax or shipping adjustments
-                        if (!"SALES_TAX".equals(orderAdjustmentType.getString("parentTypeId")) &&
-                                !"SHIPPING_ADJUSTMENT".equals(adj.getString("orderAdjustmentTypeId"))) {
+                       // if (!"SALES_TAX".equals(orderAdjustmentType.getString("parentTypeId")) &&!"SHIPPING_ADJUSTMENT".equals(adj.getString("orderAdjustmentTypeId"))) {
+                       if ((!"SALES_TAX".equals(orderAdjustmentType.getString("parentTypeId"))) &&(!"PURCHASE_TAX".equals(orderAdjustmentType.getString("parentTypeId")))&&(!"SHIPPING_ADJUSTMENT".equals(orderAdjustmentType.getString("parentTypeId")))) { 	
                             // increment the invoice subtotal
                             invoiceSubTotal = invoiceSubTotal.add(thisAdjAmount).setScale(100, ROUNDING);
 
@@ -4532,6 +4540,7 @@ public class InvoiceServices {
                       createInvoiceItemAdjContext.put("invoiceId", invoiceId);
                       createInvoiceItemAdjContext.put("invoiceItemSeqId", invoiceItemSeqId);
                       createInvoiceItemAdjContext.put("invoiceItemTypeId", getInvoiceItemType(delegator, adj.getString("orderAdjustmentTypeId"), null, invoiceType, "INVOICE_ITM_ADJ"));
+                     Debug.log("=invoiceType="+invoiceType+"====NowKey=InSerVICEE=="+getInvoiceItemType(delegator, adj.getString("orderAdjustmentTypeId"), null, invoiceType, "INVOICE_ITM_ADJ"));
                       if (("SALES_TAX".equals(orderAdjustmentType.getString("parentTypeId")))) {
                           createInvoiceItemAdjContext.put("invoiceItemTypeId", adj.getString("orderAdjustmentTypeId"));
                       }
