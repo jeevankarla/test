@@ -4118,7 +4118,14 @@ public class ByProductNetworkServices {
 				return ServiceUtil.returnError("facilityId '" + facilityId+ "' error");
 			}
 		}
-
+		if(UtilValidate.isNotEmpty(context.get("facilityIdsList"))) {// if FacilityList is Not Empty
+			facilityIdsList = (List) context.get("facilityIdsList");
+			if (isByParty){
+				exprList.add(EntityCondition.makeCondition("partyIdFrom", EntityOperator.IN,facilityPartyIds));
+			}else{
+			exprList.add(EntityCondition.makeCondition("facilityId", EntityOperator.IN,facilityIdsList));
+			}
+		}
 		if (findByInstrumentDate) {// findByInstrumentDate filtering used for cheQue paymentChecklist
 			exprList.add(EntityCondition.makeCondition(EntityCondition.makeCondition("instrumentDate",EntityOperator.GREATER_THAN_EQUAL_TO, dayBegin),EntityOperator.AND, 
 					EntityCondition.makeCondition("instrumentDate",EntityOperator.LESS_THAN_EQUAL_TO, dayEnd)));
