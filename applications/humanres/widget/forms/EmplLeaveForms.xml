@@ -228,21 +228,24 @@
            
         </actions>
         <auto-fields-entity entity-name="EmplLeave" default-field-type="display"/>
+        <field name="effectedCreditDays"><hidden/></field>
+        <field name="lossOfPayDays"><hidden/></field>
         <field name="partyId" field-name="partyId">
-            <display-entity entity-name="PartyNameView" description="${firstName} ${lastName}">
+            <display-entity entity-name="PartyNameView" description="${firstName} ${lastName} [${partyId}]"><!--
                 <sub-hyperlink target="/partymgr/control/viewprofile" target-type="inter-app" description="${partyId}" link-style="buttontext">
                     <parameter param-name="partyId" from-field="partyId"/>
                 </sub-hyperlink>
-            </display-entity>
+            --></display-entity>
         </field>
         <field name="fromDate"><display description="${groovy:org.ofbiz.base.util.UtilDateTime.toDateString(fromDate, &quot;dd MMM, yyyy&quot;);}"></display> </field>
         <field name="thruDate"><display description="${groovy:org.ofbiz.base.util.UtilDateTime.toDateString(thruDate, &quot;dd MMM, yyyy&quot;);}"/></field>
+		<field name="dayFractionId" title="First/Second Half"></field>
         <field name="approverPartyId" field-name="approverPartyId">
-            <display-entity entity-name="PartyNameView" description="${firstName} ${lastName}" key-field-name="partyId">
+            <display-entity entity-name="PartyNameView" description="${firstName} ${lastName} [${partyId}]" key-field-name="partyId"><!--
                 <sub-hyperlink target="/partymgr/control/viewprofile" target-type="inter-app" description="${approverPartyId}" link-style="buttontext">
                     <parameter param-name="approverPartyId" from-field="approverPartyId"/>
                 </sub-hyperlink>
-            </display-entity>
+            --></display-entity>
         </field>
         <field name="leaveStatus"><display-entity entity-name="StatusItem" key-field-name="statusId" description="${description}"></display-entity></field>
         <field name="UpdateStatus" title="${uiLabelMap.CommonUpdate}" widget-style="buttontext">
