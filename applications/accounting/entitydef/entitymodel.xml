@@ -1831,7 +1831,8 @@
 		<field name="parentTypeId" type="id-ne"></field>
 		<field name="hasTable" type="indicator"></field>
 		<field name="isGroupInvoicable" type="indicator"></field>				
-		<field name="isPeriodInvoice" type="indicator"></field>	 	
+		<field name="isPeriodInvoice" type="indicator"></field>
+		<field name="checkRoleType" type="indicator"></field>	 	
 		<field name="description" type="description"></field>
 		<field name="paymentTypeId" type="id-ne"/>
 		<prim-key field="invoiceTypeId" />

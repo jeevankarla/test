@@ -174,28 +174,30 @@ under the License.
         	 <entity-one value-field="invoiceType" entity-name="InvoiceType">
         	 	<field-map field-name="invoiceTypeId" from-field="parameters.invoiceTypeId"/>
         	 </entity-one>
-        	 <if-compare operator="equals" value="PURCHASE_INVOICE" field="invoiceType.parentTypeId">
-        	 	<entity-one value-field="partyRole" entity-name="PartyRole">
-        	 		<field-map field-name="partyId" from-field="parameters.partyIdFrom"/>
-        	 		<field-map field-name="roleTypeId" from-field="parameters.roleTypeId"/>
-        	 	</entity-one>
-        	 	<if-empty field="partyRole.partyId"><set field="partyId" from-field="partyRole.partyId"/>
-        	 		<add-error><fail-property property="InvoiceTypeRoleTypePartyPurMisMatchError" resource="AccountingUiLabels"/></add-error>
-                		<log level="error" message="roleTypeId not  found for ${parameters.partyIdFrom}, please select correct roleType."/>
-                	<check-errors/>
-        	 	</if-empty>        	 	
-        	 </if-compare>
-        	 <if-compare operator="equals" value="SALES_INVOICE" field="invoiceType.parentTypeId">
-        	 	<entity-one value-field="partyRole" entity-name="PartyRole">
-        	 		<field-map field-name="partyId" from-field="parameters.partyId"/>
-        	 		<field-map field-name="roleTypeId" from-field="parameters.roleTypeId"/>
-        	 	</entity-one>
-        	 	<if-empty field="partyRole.partyId"><set field="partyId" from-field="partyRole.partyId"/>
-        	 		<add-error><fail-property property="InvoiceTypeRoleTypePartySalMisMatchError" resource="AccountingUiLabels"/></add-error>
-                		<log level="error" message="roleTypeId not  found for ${parameters.partyId}, please select correct roleType."/>
-                	<check-errors/>
-        	 	</if-empty>        	 	
-        	 </if-compare>
+        	 <if-compare operator="not-equals" value="N" field="invoiceType.checkRoleType">
+	        	 <if-compare operator="equals" value="PURCHASE_INVOICE" field="invoiceType.parentTypeId">
+	        	 	<entity-one value-field="partyRole" entity-name="PartyRole">
+	        	 		<field-map field-name="partyId" from-field="parameters.partyIdFrom"/>
+	        	 		<field-map field-name="roleTypeId" from-field="parameters.roleTypeId"/>
+	        	 	</entity-one>
+	        	 	<if-empty field="partyRole.partyId"><set field="partyId" from-field="partyRole.partyId"/>
+	        	 		<add-error><fail-property property="InvoiceTypeRoleTypePartyPurMisMatchError" resource="AccountingUiLabels"/></add-error>
+	                		<log level="error" message="roleTypeId not  found for ${parameters.partyIdFrom}, please select correct roleType."/>
+	                	<check-errors/>
+	        	 	</if-empty>        	 	
+	        	 </if-compare>
+	        	 <if-compare operator="equals" value="SALES_INVOICE" field="invoiceType.parentTypeId">
+	        	 	<entity-one value-field="partyRole" entity-name="PartyRole">
+	        	 		<field-map field-name="partyId" from-field="parameters.partyId"/>
+	        	 		<field-map field-name="roleTypeId" from-field="parameters.roleTypeId"/>
+	        	 	</entity-one>
+	        	 	<if-empty field="partyRole.partyId"><set field="partyId" from-field="partyRole.partyId"/>
+	        	 		<add-error><fail-property property="InvoiceTypeRoleTypePartySalMisMatchError" resource="AccountingUiLabels"/></add-error>
+	                		<log level="error" message="roleTypeId not  found for ${parameters.partyId}, please select correct roleType."/>
+	                	<check-errors/>
+	        	 	</if-empty>        	 	
+	        	 </if-compare>
+        	</if-compare>
         </if-not-empty>
         <set from-field="userLogin.userLoginId" field="newEntity.lastModifiedByUserLogin"/>
         <set from-field="userLogin.userLoginId" field="newEntity.createdByUserLogin"/>        
