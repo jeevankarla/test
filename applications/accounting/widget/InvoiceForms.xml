@@ -253,16 +253,12 @@ under the License.
     <form name="AcctgTransAndEntriespdf" type="list" title="Accounting Transactions" list-name="AcctgTransAndEntries"
         odd-row-style="alternate-row" default-table-style="basic-table hover-bar">
         <auto-fields-entity entity-name="AcctgTransAndEntries" default-field-type="hidden"/>
-        <field name="isPosted" title="Posted"><display size="1"/></field>
-        <field name="transactionDate" title="Trans Date"><display size="10" description="${groovy:org.ofbiz.base.util.UtilDateTime.toDateString(transactionDate,&quot;dd/MM/yy&quot;);}"/></field>
-        <field name="transTypeDescription" title="Trans Type Description"><display/></field>
         <field name="invoiceId"><hidden/></field>
-        <field name="paymentId"><hyperlink target="paymentOverview?paymentId=${paymentId}" description="${paymentId}"/></field>
         <field name="glAccountId" title="gl Account Id"><display size="10"/></field>
         <field name="debitCreditFlag" title="Debit Credit Flag"><display size="5"/></field>
         <field name="amount"><display  currency="${currencyUomId}" size="25"/></field>
         <field name="acctgTransId"><hyperlink description="${acctgTransId}" target="EditAcctgTrans?acctgTransId=${acctgTransId}&amp;organizationPartyId=${organizationPartyId}"/></field>
-        <field name="accountName" title="Account Name"><display size="20"/></field>
+        <field name="accountName" title="Account Name"><display size="30"/></field>
         <!-- <field name="glAccountClassId" title="${uiLabelMap.AccountingGlAccountClass}"><display-entity entity-name="GlAccountClass" description="${description}"/></field> -->
         <field name="origCurrencyUomId"><ignored/></field>
         <field name="currencyUomId"><ignored/></field>
@@ -274,6 +270,10 @@ under the License.
         <field name="transDescription"><ignored/></field>
         <sort-order>   
             <sort-field name="acctgTransId"/>
+            <sort-field name="accountName"/>
+            <sort-field name="glAccountId"/>
+            <sort-field name="debitCreditFlag"/>
+            <sort-field name="amount"/>
              <sort-field name="acctgTransEntrySeqId"/> 
         </sort-order>
     </form>
