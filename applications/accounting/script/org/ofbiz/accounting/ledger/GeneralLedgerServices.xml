@@ -574,6 +574,9 @@ under the License.
                 </entity-and>
                 <iterate list="productCategoryMembers" entry="productCategoryMember">
                 	<set field="parameters.glAccountTypeId" value="SALES_ACCOUNT"/>
+                	<if-compare field="parameters.acctgTransTypeId" operator="equals" value="PURCHASE_INVOICE">
+                		<set field="parameters.glAccountTypeId" value="PURCHASE_ACCOUNT"/>                	
+                	</if-compare>
                     <call-simple-method method-name="getProductCategoryGlAccountInline"/>
                     <if-not-empty field="productCategoryGlAccount.glAccountId">
                         <field-to-result field="productCategoryGlAccount.glAccountId" result-name="glAccountId"/>

@@ -281,7 +281,7 @@ under the License.
                 <set from-field="customTimePeriodList" field="customTimePeriodListByOrganizationPartyIdMap[acctgTransEntry.organizationPartyId]"/>
             </if-empty>
             <if-empty field="acctgTransEntry.glAccountId">
-                <add-error><fail-message message="Gl account id is not set for [${acctgTransEntry.acctgTransEntrySeqId}] or mapping not found for account type ${acctgTransEntry.glAccountTypeId}"/></add-error>
+                <add-error><fail-message message="Gl account id is not set for [${acctgTransEntry.acctgTransEntrySeqId}; ${acctgTransEntry.partyId}; ${acctgTransEntry.productId}] or mapping not found for account type ${acctgTransEntry.glAccountTypeId}"/></add-error>
             </if-empty>
             <if-empty field="acctgTransEntry.amount">
                 <add-error><fail-message message="Amount not set for [${acctgTransEntry.acctgTransEntrySeqId}] or failed to convert the original amount ${acctgTransEntry.origAmount} with currency ${acctgTransEntry.origCurrencyUomId}"/></add-error>
