@@ -91,6 +91,7 @@ prodList=[];
 	exprList.add(EntityCondition.makeCondition(EntityCondition.makeCondition("salesDiscontinuationDate", EntityOperator.EQUALS, null),EntityOperator.OR,
 			 EntityCondition.makeCondition("salesDiscontinuationDate", EntityOperator.GREATER_THAN, effDateDayBegin)));
 	  EntityCondition discontinuationDateCondition = EntityCondition.makeCondition(exprList, EntityOperator.AND);
+	  //Debug.log("=====EntityCondition===="+EntityCondition);
 		prodList =delegator.findList("Product", discontinuationDateCondition,null, null, null, false);
 		
 //}
@@ -107,9 +108,9 @@ if(facility){
 }
 inputProductRate.put("userLogin",userLogin);
 inputProductRate.put("productsList",prodList);
-Map priceResultMap =ByProductNetworkServices.getProductPricesByDate(delegator, dctx.getDispatcher(), inputProductRate);
-prodPriceMap = (Map)priceResultMap.get("priceMap");
-
+//Map priceResultMap =ByProductNetworkServices.getProductPricesByDate(delegator, dctx.getDispatcher(), inputProductRate);
+//prodPriceMap = (Map)priceResultMap.get("priceMap");
+prodPriceMap=[];
 
 JSONArray productItemsJSON = new JSONArray();
 JSONObject productIdLabelJSON = new JSONObject();
@@ -126,7 +127,7 @@ prodList.each{eachItem ->
 productPrices = [];
 
 JSONObject productCostJSON = new JSONObject();
-productCostJSON=prodPriceMap;
+//productCostJSON=prodPriceMap;
 
 JSONObject prodIndentQtyCat = new JSONObject();
 JSONObject qtyInPieces = new JSONObject();
