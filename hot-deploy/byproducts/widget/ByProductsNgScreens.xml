@@ -3059,7 +3059,7 @@
     <screen name="FGSProductSale">
         <section>
             <actions>
-               <set field="titleProperty" value="FGS Product Sales"/>              
+               <set field="titleProperty" value="Sale To Union"/>              
 			   <set field="tabButtonItem" value="FGSProductSale" />	
 			   <set field="tabButtonItem2" value="FGSProductSale"/>  
 			    <set field="changeFlag" value="FgsSales"/>  
@@ -3072,8 +3072,10 @@
 			   <set field="defaultEffectiveDate" 
 					value="${groovy:org.ofbiz.base.util.UtilDateTime.toDateString(defaultEffectiveDateTime, &quot;dd MMMMM, yyyy&quot;);}" />	
 				 <set field="parameters.roleTypeId" value="FGS_CUSTOMER"/>
-				 <set field="productStoreResult"	value="${groovy:in.vasista.vbiz.byproducts.icp.ICPServices.getProductStoreByGroupId(delegator, 'FG_STORE')}" />
+				 <set field="productCategoryResult" value="${groovy:org.ofbiz.product.product.ProductWorker.getProductsByCategoryAssoc(delegator, 'INDENT_PROD_CAT', 'FGS_INDENT', null)}" />
+				 <set field="productStoreResult" value="${groovy:in.vasista.vbiz.byproducts.icp.ICPServices.getProductStoreByGroupId(delegator, 'FG_STORE')}" />
 				<set field="productStoreId" value="${productStoreResult.factoryStoreId}"/>
+				<set field="categoryList" value="${productCategoryResult.productCategory}"/>
             </actions>
             <widgets>
               <decorator-screen name="ByProductsNgCommonDecorator" location="component://byproducts/widget/CommonScreens.xml">
@@ -3147,52 +3149,6 @@
             </widgets>
         </section>
     </screen>
-    <screen name="ConversionChargesEntry">
-        <section>
-            <actions>
-               <set field="titleProperty" value="Conversion Charges Entry"/>              
-			   <set field="tabButtonItem" value="ConversionCharges" />	
-			   <set field="tabButtonItem2" value="ConversionCharges"/>  
-			    <set field="changeFlag" value="ConvCharges"/>  
-               <set field="priceTypeId" from-field="parameters.priceTypeId"/>
-               <set field="orderStatus" from-field="parameters.orderStatus"/> 
-               <set field="orderId" from-field="parameters.orderId"/>
-               <set field="orderFacility" from-field="parameters.orderFacility"/> 
-               <set field="supplyDate" from-field="parameters.supplyDate"/>
-                <set field="isFormSubmitted" from-field="parameters.isFormSubmitted"/>
-                <set field="productStoreResult"	value="${groovy:in.vasista.vbiz.byproducts.icp.ICPServices.getProductStoreByGroupId(delegator, 'FG_STORE')}" />
-				<set field="productStoreId" value="${productStoreResult.factoryStoreId}"/>
-               <set field="defaultEffectiveDateTime" value="${supplyDate}" default-value="${bsh:org.ofbiz.base.util.UtilDateTime.nowTimestamp()}"/>
-			   <set field="defaultEffectiveDate" 
-					value="${groovy:org.ofbiz.base.util.UtilDateTime.toDateString(defaultEffectiveDateTime, &quot;dd MMMMM, yyyy&quot;);}" />	
-				 <set field="parameters.roleTypeId" value="FGS_CUSTOMER"/>
-				 
-            </actions>
-            <widgets>
-            	<decorator-screen name="ByProductsNgCommonDecorator" location="component://byproducts/widget/CommonScreens.xml">
-                      <decorator-section name="body">   
-                      <include-menu name="ConversionChargesTabBar" location="component://byproducts/widget/ByProductsMenus.xml"/>
-                      	<section>
-	                      	  <condition>
-	                             <if-compare operator="equals" field="isFormSubmitted" value=""/>
-	                         </condition>
-	                      		<widgets>
-	           						<include-screen name="AdhocSaleInner"/>
-	                      		</widgets>
-                      	</section>
-                      <section>
-                      <condition>
-                      <if-compare operator="equals" field="isFormSubmitted" value="YES"/>
-                      </condition>
-                                <widgets>
-	           						 <include-screen name="SalesInnerScreen"/>
-	                      		</widgets>
-                      </section>
-                    </decorator-section>                                       
-                </decorator-screen>
-            </widgets>
-        </section>
-    </screen> 
     	
     <screen name="PowderPlantSale">
         <section>
@@ -3354,7 +3310,7 @@
                 <set field="shipmentTypeId" value="${parameters.shipmentTypeId}"/>
                 <set field="priceTypeId" from-field="parameters.priceTypeId"/>
                 <set field="PONumber" from-field="parameters.PONumber"/>
-                <set field="productCatageoryId" from-field="parameters.productCatageoryId"/>
+                <set field="productCategoryId" from-field="parameters.productCategoryId"/>
                 <set field="vehicleId" from-field="parameters.vehicleId"/>
                 <script location="component://byproducts/webapp/byproducts/WEB-INF/actions/facility/AdhocIndentForm.groovy"/>
                 <script location="component://byproducts/webapp/byproducts/WEB-INF/actions/facility/EditStoreOrderForm.groovy"/>
@@ -3380,42 +3336,10 @@
         </section>
     </screen>
     
-    <screen name="ProcessConversionOrders">
-        <section>
-            <actions>
-                <set field="titleProperty" value="PROCESS Conversion Orders"/>              
-			    <set field="tabButtonItem" value="ConversionCharges" />	
-			   <set field="tabButtonItem2" value="ProcessConversionOrders"/>       
-               <set field="headerItem" value="byProductsOrderEntry"/>
-               <set field="viewSize" from-field="parameters.VIEW_SIZE"/>
-               <set field="defaultEffectiveDateTime" value="${bsh:org.ofbiz.base.util.UtilDateTime.getDayStart(org.ofbiz.base.util.UtilDateTime.nowTimestamp())}"/>
-			    <set field="defaultEffectiveDate" 
-					value="${groovy:org.ofbiz.base.util.UtilDateTime.toDateString(defaultEffectiveDateTime, &quot;dd MMMMM, yyyy&quot;);}" />
-               <set field="shipmentTypeId" from-field="parameters.shipmentTypeId"/>
-               <set field="salesChannelEnumId" from-field="parameters.salesChannelEnumId" />
-               <set field="screenFlag" value="convSales"/>
-               <script	location="component://byproducts/webapp/byproducts/WEB-INF/actions/facility/getIcpSalesOrder.groovy" />
-            </actions>
-            <widgets>
-                   <decorator-screen name="ByProductsNgCommonDecorator" location="component://byproducts/widget/CommonScreens.xml">
-                      <decorator-section name="body">  
-                      <include-menu name="ConversionChargesTabBar" location="component://byproducts/widget/ByProductsMenus.xml"/> 
-                        <section>
-                            <widgets>
-               					<screenlet title="Conversion Orders">
-               						<platform-specific><html><html-template location="component://byproducts/webapp/byproducts/byproducts/ListSearchIceCreamOrders.ftl"/></html></platform-specific>
-               					</screenlet>
-                            </widgets>
-                        </section>
-                    </decorator-section>
-                </decorator-screen>
-            </widgets>            
-        </section>
-    </screen>
     <screen name="ProcessFGSOrders">
         <section>
             <actions>
-                <set field="titleProperty" value="PROCESS FGS Orders"/>              
+                <set field="titleProperty" value="Process Union Orders"/>              
 			    <set field="tabButtonItem" value="FGSProductSale" />	
 			   <set field="tabButtonItem2" value="ProcessFGSOrders"/>       
                <set field="headerItem" value="byProductsOrderEntry"/>
@@ -3617,43 +3541,10 @@
         </section>
     </screen>
     
-    <screen name="FindConversionSaleShipment">
-        <section>
-            <actions>
-                <set field="titleProperty" value="Find Shipment"/>              
-			    <set field="tabButtonItem" value="ConversionCharges" />	
-			   <set field="tabButtonItem2" value="FindConversionSaleShipment"/>       
-               <set field="viewSize" from-field="parameters.VIEW_SIZE"/>
-               <set field="targetRequest" value="FindConversionSaleShipment"/>
-               <set field="shipmentTypeId" value="PROCESSING_SHIPMENT"/>
-            </actions>
-            <widgets>
-                  <decorator-screen name="ByProductsNgCommonDecorator" location="component://byproducts/widget/CommonScreens.xml">
-                      <decorator-section name="body">  
-                      <include-menu name="ConversionChargesTabBar" location="component://byproducts/widget/ByProductsMenus.xml"/> 
-                        <section>
-                            <widgets>
-                                <decorator-screen name="FindScreenDecorator" location="component://common/widget/CommonScreens.xml">
-                                    <decorator-section name="search-options">
-                            			<include-form name="FindICPShipment" location="component://byproducts/widget/ByProductsNgForms.xml"/>
-                      				</decorator-section>
-                      				<decorator-section name="search-results">
-                      					<screenlet title="">
-                      						<include-form name="listConversionSaleShipments" location="component://byproducts/widget/ByProductsNgForms.xml"/>
-                      					</screenlet>
-                      				</decorator-section>
-                                </decorator-screen>
-                            </widgets>
-                        </section>
-                    </decorator-section>
-                </decorator-screen>
-            </widgets>            
-        </section>
-    </screen>
     <screen name="FindFGSShipment">
         <section>
             <actions>
-                <set field="titleProperty" value="Find FGS Shipment"/>              
+                <set field="titleProperty" value="Find Union Sale Shipments"/>              
 			    <set field="tabButtonItem" value="FGSProductSale" />	
 			   <set field="tabButtonItem2" value="FindFGSShipment"/>       
                <set field="viewSize" from-field="parameters.VIEW_SIZE"/>

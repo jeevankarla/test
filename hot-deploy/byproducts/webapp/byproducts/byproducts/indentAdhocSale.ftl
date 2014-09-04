@@ -1,8 +1,26 @@
 <link type="text/css" href="<@ofbizContentUrl>/images/jquery/ui/css/ui-lightness/jquery-ui-1.8.13.custom.css</@ofbizContentUrl>" rel="Stylesheet" />	
+<link type="text/css" href="<@ofbizContentUrl>/images/jquery/plugins/multiSelect/jquery.multiselect.css</@ofbizContentUrl>" rel="Stylesheet" />
+
 
 <script type="text/javascript">
 
 $(document).ready(function(){
+
+   		$("#prodCatId").multiselect({
+   			minWidth : 180,
+   			height: 100,
+   			selectedList: 4,
+   			show: ["bounce", 100],
+   			position: {
+      			my: 'left bottom',
+      			at: 'left top'
+      		}
+   		});
+   		
+   		var productCategorySelectIds = ${StringUtil.wrapString(productCategoryJSON)!'[]'};
+		$("#prodCatId").val(productCategorySelectIds);
+		$("#prodCatId").multiselect("refresh");
+		
 		$( "#effectiveDate" ).datepicker({
 			dateFormat:'d MM, yy',
 			changeMonth: true,
@@ -33,6 +51,10 @@ $(document).ready(function(){
 		});
 		
 		
+	});
+	
+	$("#prodCatId").multiselect({
+   		selectedText: "# of # selected"
 	});
 </script>
 <#assign changeRowTitle = "Changes">                
@@ -84,30 +106,29 @@ $(document).ready(function(){
     	<form method="post" name="indententryinit" action="<@ofbizUrl>FGSProductSale</@ofbizUrl>" id="indententryinit">  
     <#elseif changeFlag?exists && changeFlag=='InterUnitTransferSale'>
     	<form method="post" name="indententryinit" action="<@ofbizUrl>InterUnitStkTr</@ofbizUrl>" id="indententryinit">
-    <#elseif changeFlag?exists && changeFlag=='ConvCharges'>
-    	<form method="post" name="indententryinit" action="<@ofbizUrl>ConversionChargesEntry</@ofbizUrl>" id="indententryinit">	  
     <#else>
     	<form method="post" name="indententryinit" action="<@ofbizUrl>AdhocSaleNew</@ofbizUrl>" id="indententryinit">  
     </#if>
 	
-      <table width="100%" border="0" cellspacing="0" cellpadding="0">  
+      <table width="100%" border="0" cellspacing="0" cellpadding="0">
+      
        <#if  (changeFlag?exists && changeFlag =='AdhocSaleNew')>   
         <tr>
           <td>&nbsp;</td>
           <td align='left' valign='middle' nowrap="nowrap"><div class='h2'>Products Type:</div></td>
           <td>&nbsp;</td>
-       <#if productCatageoryId?exists && booth?exists>
-	  	  <input type="hidden" name="productCatageoryId" id="productCatageoryId" value="${parameters.productCatageoryId}"/>   	   	   	   
-          <td valign='middle'>
-            <div class='tabletext h2'>
-               	${productCatageoryId}             
-            </div>
-          </td>       
-       <#else>
-          <td valign='middle'>
+       	  <#if productCatageoryId?exists && booth?exists>
+		  	  <input type="hidden" name="productCatageoryId" id="productCatageoryId" value="${parameters.productCatageoryId}"/>   	   	   	   
+	          <td valign='middle'>
+	            <div class='tabletext h3'>
+	               	${productCatageoryId}             
+	            </div>
+	          </td>       
+       	  <#else>
+          	<td valign='middle'>
           	<#assign isDefault = false> 
       		<select name="productCatageoryId" class='h2'>
-      		<option  value="" >Milk&Products</option>      			     			
+      			<option  value="" >Milk&Products</option>      			     			
                 <#list productCategoryIds as prodCategory>
                 	<#if !productCatageoryId?exists>    
 	                  	<#assign isDefault = false>                
@@ -115,13 +136,13 @@ $(document).ready(function(){
 	                      <#assign isDefault = true>
 	                    </#if> 
                     </#if>
-                    <#if productCatageoryId?exists && (productCatageoryId == prodCategory)>
-      					<option  value="${productCatageoryId}" selected="selected">${prodCategory}</option>
-      					<#else>
-      						<option value='${prodCategory}'<#if isDefault> selected="selected"</#if>>
-                    			${prodCategory}
-                  		</option>
-      				</#if>
+	                <#if productCatageoryId?exists && (productCatageoryId == prodCategory)>
+	  					<option  value="${productCatageoryId}" selected="selected">${prodCategory}</option>
+	  					<#else>
+	  						<option value='${prodCategory}'<#if isDefault> selected="selected"</#if>>
+	                			${prodCategory}
+	              		</option>
+	  				</#if>
       			</#list>            
 			</select>
           </td>
@@ -150,9 +171,6 @@ $(document).ready(function(){
 		        <#elseif changeFlag?exists && changeFlag=='InterUnitTransferSale'>
 		         	<input type="hidden" name="shipmentTypeId" id="shipmentTypeId" value="INTUNIT_TR_SHIPMENT"/> 
 		           	<input type="hidden" name="salesChannel" id="salesChannel" value="INTUNIT_TR_CHANNEL"/>
-		        <#elseif changeFlag?exists && changeFlag=='ConvCharges'>
-		         	<input type="hidden" name="shipmentTypeId" id="shipmentTypeId" value="PROCESSING_SHIPMENT"/> 
-		           	<input type="hidden" name="salesChannel" id="salesChannel" value="PROCESSING_CHANNEL"/> 
 		        <#else>
 		          	<input type="hidden" name="shipmentTypeId" id="shipmentTypeId" value="RM_DIRECT_SHIPMENT"/>
 		          	<input type="hidden" name="salesChannel" id="salesChannel" value="RM_DIRECT_CHANNEL"/>
@@ -163,7 +181,7 @@ $(document).ready(function(){
           <#if effectiveDate?exists && effectiveDate?has_content>  
 	  	  	<input type="hidden" name="effectiveDate" id="effectiveDate" value="${effectiveDate}"/>  
           	<td valign='middle'>
-            	<div class='tabletext h2'>${effectiveDate}         
+            	<div class='tabletext h3'>${effectiveDate}         
             	</div>
           	</td>       
        	  <#else> 
@@ -181,7 +199,7 @@ $(document).ready(function(){
 	   			<#if PONumber?exists && PONumber?has_content>  
 	  	  			<input type="hidden" name="PONumber" id="PONumber" value="${PONumber?if_exists}"/>  
 	      			<td valign='middle'>
-	        			<div class='tabletext h2'>${PONumber?if_exists}</div>
+	        			<div class='tabletext h3'>${PONumber?if_exists}</div>
 	      			</td>       	
 	   			<#else>      	         
 	      			<td valign='middle'>
@@ -191,6 +209,23 @@ $(document).ready(function(){
 	   			</#if>
 	    	</tr>
 	    	<tr><td><br/></td></tr>
+	    	<#if changeFlag?exists && (changeFlag == "FgsSales" || changeFlag == "InterUnitTransferSale")>
+		    	<tr>
+		      		<td>&nbsp;</td>
+		      		<td align='left' valign='middle' nowrap="nowrap"><div class='h2'>Product Category:</div></td>
+		      		<td>&nbsp;</td>
+		      		<td>
+		      		<#if productCategoryId?has_content>
+		      			<div class='tabletext h3'>${productCategoryId?if_exists}</div>
+		      		<#else>
+		      			<select id="prodCatId" name="productCatageoryId" class='h4' multiple="multiple" >
+		      				<#if categoryList?has_content><#list categoryList as eachCategory><option value='${eachCategory.productCategoryId?if_exists}'>${eachCategory.description?if_exists}</option></#list></#if>
+						</select>
+		      		</#if>
+					</td>
+				</tr>
+		    	<tr><td><br/></td></tr>
+	    	</#if>
     	</#if>
         
         <#if changeFlag?exists && changeFlag == "AdhocSaleNew">
@@ -201,7 +236,7 @@ $(document).ready(function(){
        			<#if vehicleId?exists && vehicleId?has_content>  
 	  	  			<input type="hidden" name="?if_exists" id="?if_exists" value="${vehicleId?if_exists}"/>  
           			<td valign='middle'>
-            			<div class='tabletext h2'>${vehicleId?if_exists}</div>
+            			<div class='tabletext h3'>${vehicleId?if_exists}</div>
           			</td>       	
        			<#else>      	         
           			<td valign='middle'>
@@ -211,7 +246,7 @@ $(document).ready(function(){
        			</#if>
         	</tr>
         <#else>
-        	<#if changeFlag?exists && changeFlag !='ConvCharges' && changeFlag !='InterUnitTransferSale'>
+        	<#if changeFlag?exists && changeFlag !='InterUnitTransferSale'>
         		<tr>
 	          		<td>&nbsp;</td>
 	          		<td align='left' valign='middle' nowrap="nowrap"><div class='h2'>Order Tax Type:</div></td>
@@ -219,7 +254,7 @@ $(document).ready(function(){
 	       			<#if orderTaxType?exists && orderTaxType?has_content>  
 		  	  			<input type="hidden" name="orderTaxType" id="orderTaxType" value="${orderTaxType?if_exists}"/>  
 	          			<td valign='middle'>
-	            			<div class='tabletext h2'>${orderTaxType?if_exists}</div>
+	            			<div class='tabletext h3'>${orderTaxType?if_exists}</div>
 	          			</td>       	
 	       			<#else>      	         
 	          			<td valign='middle'>
@@ -243,7 +278,7 @@ $(document).ready(function(){
 			<#if booth?exists && booth?has_content>  
 	  	  		<input type="hidden" name="boothId" id="boothId" value="${booth.facilityId.toUpperCase()}"/>  
           		<td valign='middle'>
-            		<div class='tabletext h2'>
+            		<div class='tabletext h3'>
                			${booth.facilityId.toUpperCase()} [ ${booth.facilityName?if_exists} ] ${partyAddress?if_exists} <#--&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <a href="javascript:processChangeIndentParty()" class="buttontext">Party Change</a>-->             
             		</div>
           		</td>       
@@ -437,8 +472,6 @@ $(document).ready(function(){
 		         <#assign formAction='processFGSProductSale'>     
 		 	<#elseif changeFlag?exists && changeFlag=='InterUnitTransferSale'>
 		         <#assign formAction='processInterUnitStkTrSale'> 
-		    <#elseif changeFlag?exists && changeFlag=='ConvCharges'>
-		         <#assign formAction='processConvChargesSale'>     
 		 	<#else>
 				<#assign formAction='processIcpSale'>		 					 	
 			</#if>				

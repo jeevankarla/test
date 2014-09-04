@@ -161,6 +161,7 @@ public static Map<String, Object> approveICPOrder(DispatchContext dctx, Map cont
 	    Locale locale = (Locale) context.get("locale");
 	    String productStoreId = (String) context.get("productStoreId");
 	  	String salesChannel = (String) context.get("salesChannel");
+	  	List productIds = (List) context.get("productIds");
 	  	String orderTaxType = (String) context.get("orderTaxType");
 	  	String partyId = (String) context.get("partyId");
 	  	String orderId = (String) context.get("orderId");
@@ -170,6 +171,7 @@ public static Map<String, Object> approveICPOrder(DispatchContext dctx, Map cont
 		Timestamp effectiveDate = UtilDateTime.getDayStart(supplyDate);
 		boolean isSale = Boolean.TRUE;
 		boolean batchNumExists = Boolean.FALSE;
+		boolean daysToStoreExists = Boolean.FALSE;
 		if (UtilValidate.isEmpty(partyId)) {
 			Debug.logError("Cannot create order without partyId: "+ partyId, module);
 			return ServiceUtil.returnError("partyId is empty");
@@ -285,7 +287,7 @@ public static Map<String, Object> approveICPOrder(DispatchContext dctx, Map cont
 				applTaxTypeList.remove("VAT_SALE");
 			}
 		}
-	  	if(UtilValidate.isEmpty(geoTax) && UtilValidate.isNotEmpty(salesChannel) && ((salesChannel.equals("PROCESSING_CHANNEL")) || (salesChannel.equals("INTUNIT_TR_CHANNEL")))){
+	  	if(UtilValidate.isEmpty(geoTax) && UtilValidate.isNotEmpty(salesChannel) && salesChannel.equals("INTUNIT_TR_CHANNEL")){
 	  		isSale = Boolean.FALSE;
 		}
 	  	List<GenericValue> productPriceTaxCalc = FastList.newInstance();
@@ -293,7 +295,7 @@ public static Map<String, Object> approveICPOrder(DispatchContext dctx, Map cont
 		
 	  	List condsList = FastList.newInstance();
 	  	
-	  	/*condsList.add(EntityCondition.makeCondition("productId", EntityOperator.IN, productList));*/
+	  	condsList.add(EntityCondition.makeCondition("productId", EntityOperator.IN, productIds));
 	  	condsList.add(EntityCondition.makeCondition("productPriceTypeId", EntityOperator.IN, applTaxTypeList));
 	  	condsList.add(EntityCondition.makeCondition("parentTypeId", EntityOperator.EQUALS, "TAX"));
 		EntityCondition priceCond = EntityCondition.makeCondition(condsList,EntityOperator.AND);
@@ -309,14 +311,14 @@ public static Map<String, Object> approveICPOrder(DispatchContext dctx, Map cont
 		String productId = "";
 		BigDecimal quantity = BigDecimal.ZERO;
 		String batchNo = "";
-		
-		List productList = FastList.newInstance();
+		String daysToStore = "";
 		for (Map<String, Object> prodQtyMap : productQtyList) {
 			
 			BigDecimal basicPrice = BigDecimal.ZERO;
 			BigDecimal bedPrice = BigDecimal.ZERO;
 			BigDecimal vatPrice = BigDecimal.ZERO;
 			BigDecimal cstPrice = BigDecimal.ZERO;
+			BigDecimal serviceTaxPrice = BigDecimal.ZERO;
 			if(UtilValidate.isNotEmpty(prodQtyMap.get("productId"))){
 				productId = (String)prodQtyMap.get("productId");
 			}
@@ -326,6 +328,10 @@ public static Map<String, Object> approveICPOrder(DispatchContext dctx, Map cont
 			if(UtilValidate.isNotEmpty(prodQtyMap.get("batchNo"))){
 				batchNo = (String)prodQtyMap.get("batchNo");
 				batchNumExists = true;
+			}
+			if(UtilValidate.isNotEmpty(prodQtyMap.get("daysToStore"))){
+				daysToStore = (String)prodQtyMap.get("daysToStore");
+				daysToStoreExists = true;
 			}
 			if(UtilValidate.isNotEmpty(prodQtyMap.get("basicPrice"))){
 				basicPrice = (BigDecimal)prodQtyMap.get("basicPrice");
@@ -339,7 +345,9 @@ public static Map<String, Object> approveICPOrder(DispatchContext dctx, Map cont
 			if(UtilValidate.isNotEmpty(prodQtyMap.get("cstPrice"))){
 				cstPrice = (BigDecimal)prodQtyMap.get("cstPrice");
 			}
-			productList.add(productId);
+			if(UtilValidate.isNotEmpty(prodQtyMap.get("serviceTaxPrice"))){
+				serviceTaxPrice = (BigDecimal)prodQtyMap.get("serviceTaxPrice");
+			}
 			
 			Map<String, Object> priceResult;
 			Map<String, Object> priceContext = FastMap.newInstance();
@@ -354,6 +362,7 @@ public static Map<String, Object> approveICPOrder(DispatchContext dctx, Map cont
 				priceContext.put("bedPrice", bedPrice);
 				priceContext.put("vatPrice", vatPrice);
 				priceContext.put("cstPrice", cstPrice);
+				priceContext.put("serviceTaxPrice", serviceTaxPrice);
 				priceResult = ByProductNetworkServices.calculateUserDefinedProductPrice(delegator, dispatcher, priceContext);
 			}
 			else{
@@ -383,7 +392,6 @@ public static Map<String, Object> approveICPOrder(DispatchContext dctx, Map cont
 				return ServiceUtil.returnError("Error adding product with id " + productId + " to the cart: ");
 	        }
 			List<GenericValue> productTaxes = EntityUtil.filterByCondition(prodPriceType, EntityCondition.makeCondition("productId", EntityOperator.EQUALS, productId));
-
 			for (Map eachTaxType : taxList) {
 				String taxId = (String)eachTaxType.get("taxType");
 				BigDecimal amount = (BigDecimal) eachTaxType.get("amount");
@@ -413,7 +421,7 @@ public static Map<String, Object> approveICPOrder(DispatchContext dctx, Map cont
 		orderId = (String) orderCreateResult.get("orderId");
 		
 		
-		if(UtilValidate.isNotEmpty(orderId) && batchNumExists){
+		if(UtilValidate.isNotEmpty(orderId) && (batchNumExists || daysToStoreExists)){
 			try{
 				GenericValue orderHeader = delegator.findOne("OrderHeader", UtilMisc.toMap("orderId", orderId), false);
 				if(geoTax.equals("CST")){
@@ -432,7 +440,15 @@ public static Map<String, Object> approveICPOrder(DispatchContext dctx, Map cont
 						newItemAttr.set("orderItemSeqId", orderItem.getString("orderItemSeqId"));
 						newItemAttr.set("attrName", "batchNumber");
 						newItemAttr.set("attrValue", (String)batchMap.get("batchNo"));
-						newItemAttr.create();            
+						newItemAttr.create();
+						
+						GenericValue newDayStoreAttr = delegator.makeValue("OrderItemAttribute");        	 
+						newDayStoreAttr.set("orderId", orderItem.getString("orderId"));
+						newDayStoreAttr.set("orderItemSeqId", orderItem.getString("orderItemSeqId"));
+						newDayStoreAttr.set("attrName", "daysToStore");
+						newDayStoreAttr.set("attrValue", (String)batchMap.get("daysToStore"));
+						newDayStoreAttr.create();
+						
 						productQtyList.remove(0);
 					}
 				}
@@ -659,17 +675,20 @@ public static Map<String, Object> approveICPOrder(DispatchContext dctx, Map cont
 		
 		String productId = null;
 		String batchNo = null;
+		String daysToStore = null;
 		String quantityStr = null;
 		String basicPriceStr = null;
 		String vatPriceStr = null;
 		String bedPriceStr = null;
 		String cstPriceStr = null;
+		String serTaxPriceStr = null;
 		Timestamp effectiveDate=null;
 		BigDecimal quantity = BigDecimal.ZERO;
 		BigDecimal basicPrice = BigDecimal.ZERO;
 		BigDecimal cstPrice = BigDecimal.ZERO;
 		BigDecimal vatPrice = BigDecimal.ZERO;
 		BigDecimal bedPrice = BigDecimal.ZERO;
+		BigDecimal serviceTaxPrice = BigDecimal.ZERO;
 		Map<String, Object> result = ServiceUtil.returnSuccess();
 		HttpSession session = request.getSession();
 		GenericValue userLogin = (GenericValue) session.getAttribute("userLogin");
@@ -711,7 +730,7 @@ public static Map<String, Object> approveICPOrder(DispatchContext dctx, Map cont
 			Debug.logError("No rows to process, as rowCount = " + rowCount, module);
 			return "error";
 		}
-	  
+		List productIds = FastList.newInstance();
 		List indentProductList = FastList.newInstance();
 		for (int i = 0; i < rowCount; i++) {
 		  
@@ -719,6 +738,7 @@ public static Map<String, Object> approveICPOrder(DispatchContext dctx, Map cont
 			String thisSuffix = UtilHttp.MULTI_ROW_DELIMITER + i;
 			if (paramMap.containsKey("productId" + thisSuffix)) {
 				productId = (String) paramMap.get("productId" + thisSuffix);
+				productIds.add(productId);
 			}
 			else {
 				request.setAttribute("_ERROR_MESSAGE_", "Missing product id");
@@ -739,6 +759,9 @@ public static Map<String, Object> approveICPOrder(DispatchContext dctx, Map cont
 			if (paramMap.containsKey("batchNo" + thisSuffix)) {
 				batchNo = (String) paramMap.get("batchNo" + thisSuffix);
 			}
+			if (paramMap.containsKey("daysToStore" + thisSuffix)) {
+				daysToStore = (String) paramMap.get("daysToStore" + thisSuffix);
+			}
 			
 			if (paramMap.containsKey("basicPrice" + thisSuffix)) {
 				basicPriceStr = (String) paramMap.get("basicPrice" + thisSuffix);
@@ -752,6 +775,10 @@ public static Map<String, Object> approveICPOrder(DispatchContext dctx, Map cont
 			if (paramMap.containsKey("cstPrice" + thisSuffix)) {
 				cstPriceStr = (String) paramMap.get("cstPrice" + thisSuffix);
 			}
+			if (paramMap.containsKey("serviceTaxPrice" + thisSuffix)) {
+				serTaxPriceStr = (String) paramMap.get("serviceTaxPrice" + thisSuffix);
+			}
+			
 			try {
 				quantity = new BigDecimal(quantityStr);
 				if(UtilValidate.isNotEmpty(basicPriceStr)){
@@ -766,6 +793,9 @@ public static Map<String, Object> approveICPOrder(DispatchContext dctx, Map cont
 				if(UtilValidate.isNotEmpty(vatPriceStr)){
 					vatPrice = new BigDecimal(vatPriceStr);
 				}
+				if(UtilValidate.isNotEmpty(serTaxPriceStr)){
+					serviceTaxPrice = new BigDecimal(serTaxPriceStr);
+				}
 				
 			} catch (Exception e) {
 				Debug.logError(e, "Problems parsing quantity string: " + quantityStr, module);
@@ -776,10 +806,12 @@ public static Map<String, Object> approveICPOrder(DispatchContext dctx, Map cont
 			productQtyMap.put("productId", productId);
 			productQtyMap.put("quantity", quantity);
 			productQtyMap.put("batchNo", batchNo);
+			productQtyMap.put("daysToStore", daysToStore);
 			productQtyMap.put("basicPrice", basicPrice);
 			productQtyMap.put("bedPrice", bedPrice);
 			productQtyMap.put("cstPrice", cstPrice);
 			productQtyMap.put("vatPrice", vatPrice);
+			productQtyMap.put("serviceTaxPrice", serviceTaxPrice);
 			indentProductList.add(productQtyMap);
 		}//end row count for loop
 	  
@@ -792,6 +824,7 @@ public static Map<String, Object> approveICPOrder(DispatchContext dctx, Map cont
 		processOrderContext.put("userLogin", userLogin);
 		processOrderContext.put("productQtyList", indentProductList);
 		processOrderContext.put("partyId", partyId);
+		processOrderContext.put("productIds", productIds);
 		processOrderContext.put("supplyDate", effectiveDate);
 		processOrderContext.put("salesChannel", salesChannel);
 		processOrderContext.put("orderTaxType", orderTaxType);

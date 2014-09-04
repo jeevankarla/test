@@ -925,6 +925,7 @@ public class ByProductNetworkServices {
 		String productStoreId = (String) context.get("productStoreId");
 		String partyId = (String) context.get("partyId");
 		String productCategoryId = (String) context.get("productCategoryId");
+		List productList = (List) context.get("productList");
 		String geoTax = (String) context.get("geoTax");
 		Timestamp priceDate = (Timestamp) context.get("priceDate");
 		Map prodPriceMap = FastMap.newInstance();
@@ -961,8 +962,11 @@ public class ByProductNetworkServices {
 		if (UtilValidate.isEmpty(currencyDefaultUomId)) {
 			currencyDefaultUomId = UtilProperties.getPropertyValue("general","currency.uom.id.default", "INR");
 		}
-		
-		List<GenericValue> indentProductList = ProductWorker.getProductsByCategory(delegator, productCategoryId, null);
+		List<GenericValue> indentProductList = FastList.newInstance();
+		indentProductList.addAll(productList);
+		if(UtilValidate.isEmpty(productList) && UtilValidate.isNotEmpty(productCategoryId)){
+			indentProductList = ProductWorker.getProductsByCategory(delegator, productCategoryId, null);
+		}
 
 		List productIdsList = EntityUtil.getFieldListFromEntityList(indentProductList, "productId", false);
 
@@ -6756,6 +6760,9 @@ public class ByProductNetworkServices {
 		BigDecimal MRPPrice = BigDecimal.ZERO;
 		
     	List<GenericValue> productComponentPrices = EntityUtil.filterByCondition(productPricesComponents, EntityCondition.makeCondition("productPriceTypeId", EntityOperator.EQUALS, productPriceTypeId));
+    	if(UtilValidate.isNotEmpty(productPriceTypeId) && UtilValidate.isEmpty(productComponentPrices) && !(productPriceTypeId.equals("DEFAULT_PRICE"))){
+    		productComponentPrices = EntityUtil.filterByCondition(productPricesComponents, EntityCondition.makeCondition("productPriceTypeId", EntityOperator.EQUALS, "DEFAULT_PRICE"));
+    	}
     	if(UtilValidate.isNotEmpty(productComponentPrices)){
     		String taxFlag = (EntityUtil.getFirst(productComponentPrices)).getString("taxInPrice");
     		basicPrice = (BigDecimal)(EntityUtil.getFirst(productComponentPrices)).getBigDecimal("price");
@@ -6774,7 +6781,6 @@ public class ByProductNetworkServices {
 			}
 
 			List applicableTaxTypeList = EntityUtil.getFieldListFromEntityList(applicableTaxTypes, "productPriceTypeId", true);
-			
 			List<GenericValue> prodPriceType = null;
 			String MRPPriceType = "";
 			boolean taxFilter = false;
@@ -6792,6 +6798,7 @@ public class ByProductNetworkServices {
 			if(!isSale){
 				applicableTaxTypeList.remove("CST_SALE");
 				applicableTaxTypeList.remove("VAT_SALE");
+				applicableTaxTypeList.remove("SERTAX_SALE");
 				taxFilter = true;
 			}
 			
@@ -6905,6 +6912,7 @@ public class ByProductNetworkServices {
 	    BigDecimal bedPrice = (BigDecimal) context.get("bedPrice");
 	    BigDecimal cstPrice = (BigDecimal) context.get("cstPrice");
 	    BigDecimal vatPrice = (BigDecimal) context.get("vatPrice");
+	    BigDecimal serviceTaxPrice = (BigDecimal) context.get("serviceTaxPrice");
 	    GenericValue product;
 	    String currencyDefaultUomId = (String) context.get("currencyUomId");
 	    BigDecimal discountAmount = BigDecimal.ZERO;
@@ -6961,6 +6969,16 @@ public class ByProductNetworkServices {
 			taxDetailList.add(taxDetailMap);
 			
 			totalTaxAmt = totalTaxAmt.add(cstPrice);
+		}
+		if(serviceTaxPrice.compareTo(BigDecimal.ZERO)>0){
+			
+			Map taxDetailMap = FastMap.newInstance();
+			
+			taxDetailMap.put("taxType", "SERTAX_SALE");
+			taxDetailMap.put("amount", serviceTaxPrice);
+			taxDetailMap.put("percentage", BigDecimal.ZERO);
+			taxDetailList.add(taxDetailMap);
+			totalTaxAmt = totalTaxAmt.add(serviceTaxPrice);
 		}
     
 	    BigDecimal price = basicPrice.add(totalExciseDuty);

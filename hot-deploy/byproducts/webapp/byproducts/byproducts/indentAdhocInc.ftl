@@ -51,6 +51,8 @@
 	    cursor:pointer;
 	    display:inline;
 	}
+	
+	
 	.btn:hover {
     	background-color:rgba(255,204,0,0.8);
 	}
@@ -76,7 +78,7 @@
 <script language="javascript" type="text/javascript" src="<@ofbizContentUrl>/images/jquery/plugins/slickgrid/controls/slick.pager.js</@ofbizContentUrl>"></script>
 <script language="javascript" type="text/javascript" src="<@ofbizContentUrl>/images/jquery/plugins/slickgrid/controls/slick.columnpicker.js</@ofbizContentUrl>"></script>
 <script language="javascript" type="text/javascript" src="<@ofbizContentUrl>/images/jquery/plugins/validate/jquery.validate.js</@ofbizContentUrl>"></script>
-
+<script language="javascript" type="text/javascript" src="<@ofbizContentUrl>/images/jquery/plugins/multiSelect/jquery.multiselect.js</@ofbizContentUrl>"></script>
 <script type="application/javascript">
 	var dataView;
 	var dataView2;
@@ -117,6 +119,7 @@
 			}
 			var qty = parseFloat(data[rowCount]["quantity"]);
 			var batchNo = data[rowCount]["batchNo"];
+			var days = data[rowCount]["daysToStore"];
 	 		if (!isNaN(qty)) {	 		
 				var inputProd = jQuery("<input>").attr("type", "hidden").attr("name", "productId_o_" + rowCount).val(prodId);
 				var inputQty = jQuery("<input>").attr("type", "hidden").attr("name", "quantity_o_" + rowCount).val(qty);
@@ -125,6 +128,8 @@
 				<#if changeFlag?exists && changeFlag != "AdhocSaleNew">
 					var batchNum = jQuery("<input>").attr("type", "hidden").attr("name", "batchNo_o_" + rowCount).val(batchNo);
 					jQuery(formId).append(jQuery(batchNum));
+					var days = jQuery("<input>").attr("type", "hidden").attr("name", "daysToStore_o_" + rowCount).val(days);
+					jQuery(formId).append(jQuery(days));
 				</#if>
    			}
 			
@@ -133,6 +138,7 @@
 				var vatPrice = data[rowCount]["vatPrice"];
 				var cstPrice = data[rowCount]["cstPrice"];
 				var bedPrice = data[rowCount]["bedPrice"];
+				var serviceTaxPrice = data[rowCount]["serviceTaxPrice"];
 				if(bPrice && bPrice>0){
 					var bPriceField = jQuery("<input>").attr("type", "hidden").attr("name", "basicPrice_o_"+ rowCount).val(bPrice);
 					jQuery(formId).append(jQuery(bPriceField));
@@ -142,6 +148,8 @@
 					jQuery(formId).append(jQuery(cstPriceField));
 					var bedPriceField = jQuery("<input>").attr("type", "hidden").attr("name", "bedPrice_o_"+ rowCount).val(bedPrice);
 					jQuery(formId).append(jQuery(bedPriceField));
+					var serviceTaxPriceField = jQuery("<input>").attr("type", "hidden").attr("name", "serviceTaxPrice_o_"+ rowCount).val(serviceTaxPrice);
+					jQuery(formId).append(jQuery(serviceTaxPriceField));
 				}
 			</#if>
    			
@@ -188,7 +196,7 @@
 	<#else>
 		 <#assign editClickHandlerAction='processIndentEntryNew'>		 	
 	</#if>-->
-	<#if changeFlag?exists && changeFlag == "PowderSales" || changeFlag == "FgsSales" || changeFlag == "InterUnitTransferSale" || changeFlag == "ConvCharges">
+	<#if changeFlag?exists && changeFlag == "PowderSales" || changeFlag == "FgsSales" || changeFlag == "InterUnitTransferSale">
 		function editClickHandlerEvent(row){
 			showUDPPriceToolTip(data[row], row);
 			 <#--updateUDPLabel();-->
@@ -277,17 +285,16 @@
 			<#if changeFlag?exists && changeFlag == "IcpSales" || changeFlag == "IcpSalesAmul" || changeFlag == "IcpSalesBellary">
 				{id:"crQuantity", name:"Qty(Crt)", field:"crQuantity", width:60, minWidth:60, cssClass:"cell-title",editor:FloatCellEditor, sortable:false, formatter: quantityFormatter},
 				{id:"batchNo", name:"Batch Number", field:"batchNo", width:65, minWidth:65, sortable:false, editor:TextCellEditor},
-			<#elseif changeFlag?exists && changeFlag == "PowderSales" || changeFlag == "FgsSales" || changeFlag == "InterUnitTransferSale" || changeFlag == "ConvCharges">
+			<#elseif changeFlag?exists && changeFlag == "PowderSales" || changeFlag == "FgsSales" || changeFlag == "InterUnitTransferSale">
 				{id:"ltrQuantity", name:"Ltr/KG Qty", field:"ltrQuantity", width:65, minWidth:65, sortable:false, editor:FloatCellEditor},
+				{id:"daysToStore", name:"Days", field:"daysToStore", width:70, minWidth:70, cssClass:"cell-title",editor:FloatCellEditor, sortable:false , formatter: quantityFormatter,  validator: quantityValidator , toolTip:"Days To Preserve(For Storage Charges)"},
 			</#if>
-			<#if changeFlag?exists && changeFlag == "ConvCharges">
-				{id:"daysToStore", name:"Days to Preserve", field:"daysToStore", width:70, minWidth:70, cssClass:"cell-title",editor:FloatCellEditor, sortable:false , formatter: quantityFormatter,  validator: quantityValidator},
-			</#if>
+			
 			{id:"unitCost", name:"Unit Price(Rs)", field:"unitPrice", width:65, minWidth:65, cssClass:"readOnlyColumnClass", sortable:false, formatter: rateFormatter, focusable :false , align:"right"},
 			{id:"amount", name:"Total Amount(Rs)", field:"amount", width:100, minWidth:100, cssClass:"readOnlyColumnClass", sortable:false, formatter: rateFormatter, focusable :false}
 				
 		];
-		<#if changeFlag?exists && changeFlag == "PowderSales" || changeFlag == "FgsSales" || changeFlag == "InterUnitTransferSale" || changeFlag == "ConvCharges">
+		<#if changeFlag?exists && changeFlag == "PowderSales" || changeFlag == "FgsSales" || changeFlag == "InterUnitTransferSale">
 			columns.push({id:"button", name:"Edit Price", field:"button", width:70, minWidth:70, cssClass:"cell-title",
  				formatter: function (row, cell, id, def, datactx) { 
 						return '<a href="#" class="button" onclick="editClickHandlerEvent('+row+')" value="Edit">Edit</a>'; 
@@ -403,7 +410,7 @@
 				<#if changeFlag?exists && changeFlag == "IcpSales" || changeFlag == "IcpSalesAmul" || changeFlag == "IcpSalesBellary">
 					convValue = prodConversionData['CRATE'];
 				</#if>
-				<#if changeFlag?exists && changeFlag == "PowderSales" || changeFlag == "FgsSales" || changeFlag == "InterUnitTransferSale" || changeFlag == "ConvCharges">
+				<#if changeFlag?exists && changeFlag == "PowderSales" || changeFlag == "FgsSales" || changeFlag == "InterUnitTransferSale" >
 					convValue = prodConversionData['LtrKg'];
 				</#if>
 				var udp = data[args.row]['basicPrice'];
@@ -413,7 +420,8 @@
 					var vat_price = data[args.row]['vatPrice'];
 					var cst_price = data[args.row]['cstPrice'];
 					var bed_price = data[args.row]['bedPrice'];
-					var totalPrice = basic_price+vat_price+cst_price+bed_price;
+					var serviceTax_price = data[args.row]['serviceTaxPrice'];
+					var totalPrice = basic_price+vat_price+cst_price+bed_price+serviceTax_price;
 					price = totalPrice;
 				}
 				else{
@@ -425,7 +433,7 @@
 						crVal = parseFloat(Math.round((qty/convValue)*100)/100);
 						data[args.row]["crQuantity"] = crVal;
 					</#if>
-					<#if changeFlag?exists && changeFlag == "PowderSales" || changeFlag == "FgsSales" || changeFlag == "InterUnitTransferSale" || changeFlag == "ConvCharges">
+					<#if changeFlag?exists && changeFlag == "PowderSales" || changeFlag == "FgsSales" || changeFlag == "InterUnitTransferSale">
 						crVal = parseFloat(Math.round((qty*convValue)*100)/100);
 						data[args.row]["ltrQuantity"] = crVal;
 					</#if>
@@ -466,7 +474,7 @@
 				<#if changeFlag?exists && changeFlag == "IcpSales" || changeFlag == "IcpSalesAmul" || changeFlag == "IcpSalesBellary">
 					calcQty = parseFloat(data[args.row]["crQuantity"]);
 				</#if>
-				<#if changeFlag?exists && changeFlag == "PowderSales" || changeFlag == "FgsSales" || changeFlag == "InterUnitTransferSale" || changeFlag == "ConvCharges">
+				<#if changeFlag?exists && changeFlag == "PowderSales" || changeFlag == "FgsSales" || changeFlag == "InterUnitTransferSale">
 					calcQty = parseFloat(data[args.row]["ltrQuantity"]);
 				</#if>
 				var prodConversionData = conversionData[prod];
@@ -474,7 +482,7 @@
 				<#if changeFlag?exists && changeFlag == "IcpSales" || changeFlag == "IcpSalesAmul" || changeFlag == "IcpSalesBellary">
 					convValue = prodConversionData['CRATE'];
 				</#if>
-				<#if changeFlag?exists && changeFlag == "PowderSales" || changeFlag == "FgsSales" || changeFlag == "InterUnitTransferSale" || changeFlag == "ConvCharges">
+				<#if changeFlag?exists && changeFlag == "PowderSales" || changeFlag == "FgsSales" || changeFlag == "InterUnitTransferSale">
 					convValue = prodConversionData['LtrKg'];
 				</#if>
 				var udp = data[args.row]['basicPrice'];
@@ -484,7 +492,8 @@
 					var vat_price = data[args.row]['vatPrice'];
 					var cst_price = data[args.row]['cstPrice'];
 					var bed_price = data[args.row]['bedPrice'];
-					var totalPrice = basic_price+vat_price+cst_price+bed_price;
+					var serviceTax_price = data[args.row]['serviceTaxPrice'];
+					var totalPrice = basic_price+vat_price+cst_price+bed_price+serviceTax_price;
 					price = totalPrice;
 				}
 				else{
@@ -497,7 +506,7 @@
 						calculateQty = parseFloat(Math.round((calcQty*convValue)*100)/100);
 						data[args.row]["quantity"] = calculateQty;
 					</#if>
-					<#if changeFlag?exists && changeFlag == "PowderSales" || changeFlag == "FgsSales" || changeFlag == "InterUnitTransferSale" || changeFlag == "ConvCharges">
+					<#if changeFlag?exists && changeFlag == "PowderSales" || changeFlag == "FgsSales" || changeFlag == "InterUnitTransferSale">
 						calculateQty = parseFloat(Math.round((calcQty/convValue)*100)/100);
 						data[args.row]["quantity"] = calculateQty;
 					</#if>
@@ -568,7 +577,7 @@
 				<#if changeFlag?exists && changeFlag == "IcpSales" || changeFlag == "IcpSalesAmul" || changeFlag == "IcpSalesBellary">
 					convValue = prodConversionData['CRATE'];
 				</#if>
-				<#if changeFlag?exists && changeFlag == "PowderSales" || changeFlag == "FgsSales" || changeFlag == "InterUnitTransferSale" || changeFlag == "ConvCharges">
+				<#if changeFlag?exists && changeFlag == "PowderSales" || changeFlag == "FgsSales" || changeFlag == "InterUnitTransferSale" >
 					convValue = prodConversionData['LtrKg'];
 				</#if>
 				
@@ -579,7 +588,8 @@
 					var vat_price = data[i]['vatPrice'];
 					var cst_price = data[i]['cstPrice'];
 					var bed_price = data[i]['bedPrice'];
-					var totalPrice = basic_price+vat_price+cst_price+bed_price;
+					var serviceTax_price = data[i]['serviceTaxPrice'];
+					var totalPrice = basic_price+vat_price+cst_price+bed_price+serviceTax_price;
 					price = totalPrice;
 				}
 				else{
@@ -600,7 +610,7 @@
 						crVal = parseFloat(Math.round((qty/convValue)*100)/100);
 						data[i]["crQuantity"] = crVal;
 					</#if>
-					<#if changeFlag?exists && changeFlag == "PowderSales" || changeFlag == "FgsSales" || changeFlag == "InterUnitTransferSale" || changeFlag == "ConvCharges">
+					<#if changeFlag?exists && changeFlag == "PowderSales" || changeFlag == "FgsSales" || changeFlag == "InterUnitTransferSale">
 						crVal = parseFloat(Math.round((qty*convValue)*100)/100);
 						data[i]["ltrQuantity"] = crVal;
 					</#if>
@@ -744,13 +754,7 @@
 	  			}
 		});
 		
-		$('input[type=checkbox]').click(function() {
-    		if($(this).is(':checked')) {
-        		alert("checked");
-    		} else {
-        		alert("unchecked");
-    		}
-		});		
+				
 		  $('#contactNumber').keypress(function (e) {
 	  			if (e.which == $.ui.keyCode.ENTER) {
 	    			$('#indententryinit').submit();

@@ -79,6 +79,7 @@
 			var vatPrice  = 0;
 			var bedPrice  = 0;
 			var cstPrice  = 0;
+			var serviceTaxPrice  = 0;
 			if(dataRow["basicPrice"]){
 				basicPrice = dataRow["basicPrice"];
 			}
@@ -91,8 +92,11 @@
 			if(dataRow["cstPrice"]){
 				cstPrice = dataRow["cstPrice"];
 			}
+			if(dataRow["serviceTaxPrice"]){
+				serviceTaxPrice = dataRow["serviceTaxPrice"];
+			}
 			
-			if(basicPrice>0 || vatPrice>0 || bedPrice>0 || cstPrice>0){
+			if(basicPrice>0 || vatPrice>0 || bedPrice>0 || cstPrice>0 || serviceTaxPrice>0){
 				priceExists = "Y";
 			}
 		}
@@ -101,10 +105,12 @@
 		if(priceExists == "N"){
 			message += "<tr class='h3'><td align='left'>Basic Price : </td><td align='right'><input type='text' name='amount' id='basicAmount' /></td></tr><tr class='h3'><td align='left'>VAT Amount : </td><td><input type='text' name='vatAmount' id='vatAmount'></td></tr>";
 			message += "<tr class='h3'><td align='left'>CST Amount : </td><td><input type='text' name='cstAmount' id='cstAmount'/></td></tr><tr class='h3'><td align='left'>BED Amount : </td><td><input type='text' name='bedAmount' id='bedAmount'></td></tr>";
+			message += "<tr class='h3'><td align='left'>Service Tax Amount : </td><td><input type='text' name='serviceTaxAmount' id='serviceTaxAmount' /></td></tr>";
 			message += "<tr class='h3'><td class='h3' align='left'><span align='right'><button value='Add Price' onclick='return addDataToGrid();' class='smallSubmit'>Add Price</button></span></td><td><span align='right'><button value='${uiLabelMap.CommonCancel}' onclick='return cancelForm();' class='smallSubmit'>${uiLabelMap.CommonCancel}</button></span></td></tr>";
 		}else{
 			message += "<tr class='h3'><td align='left'>Basic Price : </td><td><input type='text' name='amount' id='basicAmount' value='"+basicPrice+"'/></td></tr><tr class='h3'><td align='left'>VAT Amount : </td><td><input type='text' name='vatAmount' id='vatAmount' value='"+vatPrice+"'></td></tr>";
 			message += "<tr class='h3'><td align='left'>CST Amount : </td><td><input type='text' name='cstAmount' id='cstAmount' value='"+cstPrice+"'/></td></tr><tr class='h3'><td align='left'>BED Amount : </td><td><input type='text' name='bedAmount' id='bedAmount' value='"+bedPrice+"'></td></tr>";
+			message += "<tr class='h3'><td align='left'>Service Tax Amount : </td><td><input type='text' name='serviceTaxAmount' id='serviceTaxAmount' value='"+serviceTaxPrice+"'/></td></tr>";
 			message += "<tr class='h3'><td align='left'><span align='right'><button value='Add Price' onclick='return addDataToGrid();' class='smallSubmit'>Add Price</button></span></td><td><span align='right'><button value='${uiLabelMap.CommonCancel}' onclick='return cancelForm();' class='smallSubmit'>${uiLabelMap.CommonCancel}</button></span></td></tr>";
 		}	
 		title = "<h2><center>User Defined Price <center></h2><br /><br /> <center>"+ productName +"</center> ";
@@ -118,6 +124,7 @@
 		var cstPrice = $('#cstAmount').val();
 		var vatPrice = $('#vatAmount').val();
 		var bedPrice = $('#bedAmount').val();
+		var serviceTaxPrice = $('#serviceTaxAmount').val();
 		if(!bPrice){
 			bPrice = 0;
 		}else{
@@ -138,11 +145,17 @@
 		}else{
 			bedPrice = parseFloat(bedPrice);
 		}
-		var totalUnitPrice = bPrice+cstPrice+vatPrice+bedPrice;
+		if(!serviceTaxPrice){
+			serviceTaxPrice = 0;
+		}else{
+			serviceTaxPrice = parseFloat(serviceTaxPrice);
+		}
+		var totalUnitPrice = bPrice+cstPrice+vatPrice+bedPrice+serviceTaxPrice;
 		dataRow['basicPrice'] = bPrice;
 		dataRow['cstPrice'] = cstPrice;
 		dataRow['vatPrice'] = vatPrice;
 		dataRow['bedPrice'] = bedPrice;
+		dataRow['serviceTaxPrice'] = serviceTaxPrice;
 		dataRow['unitPrice'] = totalUnitPrice;
 		var qty = dataRow['quantity'];
 		

@@ -682,11 +682,6 @@
         <response name="success" type="view" value="IcpSalesBellary"/>   
        <response name="failed" type="view" value="IcpSalesBellary"/>  
     </request-map>
-    <request-map uri="ConversionChargesEntry">
-        <security https="true" auth="true"/>
-        <response name="success" type="view" value="ConversionChargesEntry"/>   
-       <response name="failed" type="view" value="ConversionChargesEntry"/>  
-    </request-map>
     
      <request-map uri="IcpSalesAmul">
         <security https="true" auth="true"/>
@@ -761,11 +756,6 @@
         <response name="success" type="view" value="ProcessFGSOrders"/>   
        <response name="failed" type="view" value="ProcessFGSOrders"/>  
     </request-map>
-    <request-map uri="processConversionOrders">
-        <security https="true" auth="true"/>
-        <response name="success" type="view" value="ProcessConversionOrders"/>   
-       <response name="failed" type="view" value="ProcessConversionOrders"/>  
-    </request-map>
     
     <request-map uri="processAmulOrders">
         <security https="true" auth="true"/>
@@ -784,12 +774,7 @@
         <response name="success" type="view" value="ProcessPowderOrders"/>   
        <response name="failed" type="view" value="ProcessPowderOrders"/>  
     </request-map>
-    <request-map uri="approveConversionOrder">
-        <security https="true" auth="true"/>
-        <event type="service" path="" invoke="approveICPOrder"/>
-        <response name="success" type="view" value="ProcessConversionOrders"/>   
-       <response name="failed" type="view" value="ProcessConversionOrders"/>  
-    </request-map>
+   
     <request-map uri="approveFGSOrder">
         <security https="true" auth="true"/>
         <event type="service" path="" invoke="approveICPOrder"/>
@@ -808,23 +793,11 @@
         <response name="success" type="view" value="ProcessInterUnitStkTr"/>   
        <response name="failed" type="view" value="ProcessInterUnitStkTr"/>  
     </request-map>
-    <request-map uri="cancelConversionOrder">
-        <security https="true" auth="true"/>
-        <event type="service" path="" invoke="cancelICPOrder"/>
-        <response name="success" type="view" value="ProcessConversionOrders"/>   
-       <response name="failed" type="view" value="ProcessConversionOrders"/>  
-    </request-map>
     <request-map uri="createShipAndInvForIUSTransferOrders">
         <security https="true" auth="true"/>
         <event type="java" path="in.vasista.vbiz.byproducts.icp.ICPServices" invoke="createShipmentAndInvoiceForOrders"/>
         <response name="success" type="view" value="ProcessInterUnitStkTr"/>   
        <response name="failed" type="view" value="ProcessInterUnitStkTr"/>  
-    </request-map>
-    <request-map uri="createShipAndInvForConversionOrders">
-        <security https="true" auth="true"/>
-        <event type="java" path="in.vasista.vbiz.byproducts.icp.ICPServices" invoke="createShipmentAndInvoiceForOrders"/>
-        <response name="success" type="view" value="ProcessConversionOrders"/>   
-       <response name="failed" type="view" value="ProcessConversionOrders"/>  
     </request-map>
     
     <request-map uri="cancelFGSOrder">
@@ -920,12 +893,6 @@
         <response name="success" type="view" value="FindFGSShipment"/>   
        	<response name="failed" type="view" value="FindFGSShipment"/>  
     </request-map>
-    <request-map uri="FindConversionSaleShipment">
-    	<security https="true" auth="true"/>
-        <response name="success" type="view" value="FindConversionSaleShipment"/>   
-       	<response name="failed" type="view" value="FindConversionSaleShipment"/>  
-    </request-map>
-    
     <request-map uri="FindICPAmulShipment">
     	<security https="true" auth="true"/>
         <response name="success" type="view" value="FindICPAmulShipment"/>   
@@ -972,15 +939,6 @@
      		<redirect-parameter name="orderId"/>
      		<redirect-parameter name="supplyDate"/></response>
         <response name="error" type="view" value="IcpSales"/>
-    </request-map>
-    <request-map uri="processConvChargesSale">
-        <security https="true" auth="true"/>
-     	<event type="java"  path="in.vasista.vbiz.byproducts.icp.ICPServices"  invoke="processIcpSale" global-transaction="true"/>
-        <response name="success"  type="request-redirect-noparam" value="ConversionChargesEntry">
-        <redirect-parameter name="orderStatus"/>
-     		<redirect-parameter name="orderId"/>
-     		<redirect-parameter name="supplyDate"/></response>
-        <response name="error" type="view" value="ConversionChargesEntry"/>
     </request-map>
     
     <request-map uri="processPowderSale">
@@ -1723,12 +1681,10 @@
  <view-map name="ProcessNandiniOrders" type="screen" page="component://byproducts/widget/ByProductsNgScreens.xml#ProcessNandiniOrders"/>
  <view-map name="ProcessPowderOrders" type="screen" page="component://byproducts/widget/ByProductsNgScreens.xml#ProcessPowderOrders"/>
  <view-map name="ProcessFGSOrders" type="screen" page="component://byproducts/widget/ByProductsNgScreens.xml#ProcessFGSOrders"/>
- <view-map name="ProcessConversionOrders" type="screen" page="component://byproducts/widget/ByProductsNgScreens.xml#ProcessConversionOrders"/>
  <view-map name="ProcessAmulOrders" type="screen" page="component://byproducts/widget/ByProductsNgScreens.xml#ProcessAmulOrders"/>
  <view-map name="ProcessBellaryOrders" type="screen" page="component://byproducts/widget/ByProductsNgScreens.xml#ProcessBellaryOrders"/>
  <view-map name="FindICPNandiniShipment" type="screen" page="component://byproducts/widget/ByProductsNgScreens.xml#FindICPNandiniShipment"/>
  <view-map name="FindFGSShipment" type="screen" page="component://byproducts/widget/ByProductsNgScreens.xml#FindFGSShipment"/>
- <view-map name="FindConversionSaleShipment" type="screen" page="component://byproducts/widget/ByProductsNgScreens.xml#FindConversionSaleShipment"/>
  <view-map name="FindPowderShipment" type="screen" page="component://byproducts/widget/ByProductsNgScreens.xml#FindPowderShipment"/>
  <view-map name="FindICPAmulShipment" type="screen" page="component://byproducts/widget/ByProductsNgScreens.xml#FindICPAmulShipment"/>
  <view-map name="FindICPBellaryShipment" type="screen" page="component://byproducts/widget/ByProductsNgScreens.xml#FindICPBellaryShipment"/>
@@ -1741,7 +1697,6 @@
  <view-map name="InterUnitStkTr" type="screen" page="component://byproducts/widget/ByProductsNgScreens.xml#InterUnitStkTr"/>
  <view-map name="ProcessInterUnitStkTr" type="screen" page="component://byproducts/widget/ByProductsNgScreens.xml#ProcessInterUnitStkTr"/>
  <view-map name="FindStockTranferShipment" type="screen" page="component://byproducts/widget/ByProductsNgScreens.xml#FindStockTranferShipment"/>
- <view-map name="ConversionChargesEntry" type="screen" page="component://byproducts/widget/ByProductsNgScreens.xml#ConversionChargesEntry"/>
  
  <!-- Department Portal Views -->
  

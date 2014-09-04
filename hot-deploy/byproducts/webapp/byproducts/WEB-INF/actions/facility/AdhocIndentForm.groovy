@@ -32,6 +32,7 @@ priceTypeId=parameters.priceTypeId;
 changeFlag=parameters.changeFlag;
 
 productCatageoryId=parameters.productCatageoryId;
+
 if(changeFlag=="IcpSales"){
 	productCatageoryId="ICE_CREAM_NANDINI";
 }
@@ -41,19 +42,18 @@ if(changeFlag=="IcpSalesAmul"){
 if(changeFlag=="IcpSalesBellary"){
 	productCatageoryId="ICE_CREAM_BELLARY";
 }
-if(changeFlag=="PowderSales"){
+/*if(changeFlag=="PowderSales"){
 	productCatageoryId="MILK_POWDER";
 }
 if(changeFlag=="FgsSales"){
-	productCatageoryId="FG_STORE";
-}
-if(changeFlag=="ConvCharges"){
-	productCatageoryId="SERV_PROD";
+	productCatageoryId="FGS_INDENT";
 }
 if(changeFlag=="InterUnitTransferSale"){
 	productCatageoryId="INTER_UNIT";//later we should change tranferble products only
-}
-subscriptionProdList = [];
+}*/
+
+boolean prodCatString = productCatageoryId instanceof String;
+
 displayGrid = true;
 effDateDayBegin="";
 effDateDayEnd="";
@@ -72,10 +72,7 @@ try {
 	effDateDayBegin = UtilDateTime.getDayStart(UtilDateTime.nowTimestamp());
 	effDateDayEnd = UtilDateTime.getDayEnd(UtilDateTime.nowTimestamp());
 }
-subscriptionId = null;
 conditionList = [];
-lastIndentDate = null;
-subscriptionId = null;
 exprList = [];
 result = [:];
 routeId = parameters.routeId;
@@ -86,7 +83,18 @@ facility = null;
 prodPriceMap = [:];
 if(changeFlag != "AdhocSaleNew"){
 	partyId = parameters.partyId;
-	party = delegator.findOne("PartyGroup", UtilMisc.toMap("partyId", partyId), false);	
+	party = delegator.findOne("PartyGroup", UtilMisc.toMap("partyId", partyId), false);
+	roleTypeId = parameters.roleTypeId;
+	partyRole = null;
+	if(party){
+		partyRole = delegator.findOne("PartyRole", UtilMisc.toMap("partyId", partyId, "roleTypeId", roleTypeId), false);
+	}
+	if(!party || !partyRole){
+		context.errorMessage = partyId+" incorrect for the transaction !!";
+		displayGrid = false;
+		return result;
+	}
+	context.productCategoryId = parameters.productCatageoryId;
 	context.party = party;
 	context.orderTaxType = parameters.orderTaxType;
 	context.packingType = parameters.packingType;
@@ -109,6 +117,7 @@ if(changeFlag != "AdhocSaleNew"){
 	partyId = facility.ownerPartyId;
 	
 }
+
 partyPostalAddress = delegator.findList("PartyAndPostalAddress", EntityCondition.makeCondition("partyId", EntityOperator.EQUALS, partyId), null,null,null, false);
 if(partyPostalAddress){
 	partyPostalAddress = EntityUtil.getFirst(partyPostalAddress);
@@ -118,10 +127,15 @@ if(partyPostalAddress){
 
 prodList=[];
 //productCatageoryId = "INDENT";
-if(UtilValidate.isNotEmpty(productCatageoryId) && "INDENT"==productCatageoryId){
+if(prodCatString && UtilValidate.isNotEmpty(productCatageoryId) && "INDENT"==productCatageoryId){
 	prodList= ProductWorker.getProductsByCategory(delegator ,"INDENT" ,null);
 }else if(UtilValidate.isNotEmpty(productCatageoryId)){
 //TO DO:
+	if(prodCatString){
+		prodList= ProductWorker.getProductsByCategory(delegator ,productCatageoryId ,null);
+	}else{
+		prodList= ProductWorker.getProductsByCategoryList(delegator ,productCatageoryId ,null);
+	}
 // we should not go with primaryProductCategoryId for now comment this , use product  catagory member
 	/*exprList.clear();
 	exprList.add(EntityCondition.makeCondition("productId", EntityOperator.NOT_EQUAL, "_NA_"));
@@ -131,12 +145,12 @@ if(UtilValidate.isNotEmpty(productCatageoryId) && "INDENT"==productCatageoryId){
 			 EntityCondition.makeCondition("salesDiscontinuationDate", EntityOperator.GREATER_THAN, effDateDayBegin)));
 	  EntityCondition discontinuationDateCondition = EntityCondition.makeCondition(exprList, EntityOperator.AND);
 		prodList =delegator.findList("Product", discontinuationDateCondition,null, null, null, false);*/
-       prodList= ProductWorker.getProductsByCategory(delegator ,productCatageoryId ,null);
+      
 		//Debug.log("=====discontinuationDateCondition===="+discontinuationDateCondition);
 }
-else{
+/*else{
 	prodList =ByProductNetworkServices.getByProductProducts(dispatcher.getDispatchContext(), UtilMisc.toMap());
-}
+}*/
 Map inputProductRate = FastMap.newInstance();
 inputProductRate.put("facilityId",boothId);
 inputProductRate.put("partyId",partyId);
@@ -149,7 +163,8 @@ if(facility){
 	priceResultMap = ByProductNetworkServices.getProductPricesByDate(delegator, dctx.getDispatcher(), inputProductRate);
 }else{
 	inputProductRate.put("priceDate",effDateDayBegin);
-	inputProductRate.put("productCategoryId", productCatageoryId);
+	inputProductRate.put("productList",prodList);
+	//inputProductRate.put("productCategoryId", productCatageoryId);
 	if(orderTaxType){
 		if(orderTaxType == "INTRA"){
 			inputProductRate.put("geoTax", "VAT");
@@ -165,8 +180,7 @@ if(facility){
 }
 prodPriceMap=[:];
 prodPriceMap = (Map)priceResultMap.get("priceMap");
-
-conversionResult = ByProductNetworkServices.getProductQtyConversions(dctx, UtilMisc.toMap("productCategoryId", productCatageoryId, "userLogin", userLogin));
+conversionResult = ByProductNetworkServices.getProductQtyConversions(dctx, UtilMisc.toMap("productList", prodList, "userLogin", userLogin));
 conversionMap = conversionResult.get("productConversionDetails");
 if(conversionMap){
 	Iterator prodConvIter = conversionMap.entrySet().iterator();

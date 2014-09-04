@@ -20,7 +20,6 @@ import in.vasista.vbiz.byproducts.icp.ICPServices;
 
 
 partyId = parameters.partyId;
-subscriptionTypeId = parameters.subscriptionTypeId;
 productSubscriptionTypeId = parameters.productSubscriptionTypeId;
 shipmentTypeId = parameters.shipmentTypeId;
 salesChannel = parameters.salesChannel;
@@ -73,21 +72,37 @@ if(partyOrderIds){
 	updateOrderId = partyOrderIds.get(0);
 	conditionList.clear();
 	conditionList.add(EntityCondition.makeCondition("orderId", EntityOperator.EQUALS, updateOrderId));
-	conditionList.add(EntityCondition.makeCondition("attrName", EntityOperator.EQUALS, "batchNumber"));
+	/*conditionList.add(EntityCondition.makeCondition("attrName", EntityOperator.EQUALS, "batchNumber"));*/
 	condExpr = EntityCondition.makeCondition(conditionList, EntityOperator.AND);
 	orderItemAttr = delegator.findList("OrderItemAttribute", condExpr, null, null, null, false);
+	batchNumberAttr = EntityUtil.filterByCondition(orderItemAttr, EntityCondition.makeCondition("attrName", EntityOperator.EQUALS, "batchNumber"));
+	daysToStoreAttr = EntityUtil.filterByCondition(orderItemAttr, EntityCondition.makeCondition("attrName", EntityOperator.EQUALS, "daysToStore"));
 	orderItems = delegator.findList("OrderItem", EntityCondition.makeCondition("orderId", EntityOperator.EQUALS, updateOrderId), null, null, null, false);
 	
+	
 	productIds = EntityUtil.getFieldListFromEntityList(orderItems, "productId", true);
+	productCategorySelect = delegator.findList("ProductCategoryMember", EntityCondition.makeCondition("productId", EntityOperator.IN, productIds), null, null, null, false);
+	productCategorySelectIds = EntityUtil.getFieldListFromEntityList(productCategorySelect, "productCategoryId", true);
+	
+	JSONArray productCategoryJSON = new JSONArray();
+	productCategorySelectIds.each{eachCatId ->
+		productCategoryJSON.add(eachCatId);
+	}
+	context.productCategoryJSON = productCategoryJSON;
 	
 	products = delegator.findList("Product", EntityCondition.makeCondition("productId", EntityOperator.IN, productIds), null, null, null, false);
 	
 	orderItems.each{ eachItem ->
 		
-		batchDetails = EntityUtil.filterByCondition(orderItemAttr, EntityCondition.makeCondition("orderItemSeqId", EntityOperator.EQUALS, eachItem.orderItemSeqId));
+		batchDetails = EntityUtil.filterByCondition(batchNumberAttr, EntityCondition.makeCondition("orderItemSeqId", EntityOperator.EQUALS, eachItem.orderItemSeqId));
 		batchNo = "";
 		if(batchDetails){
 			batchNo = (batchDetails.get(0)).get("attrValue");
+		}
+		daysDetails = EntityUtil.filterByCondition(daysToStoreAttr, EntityCondition.makeCondition("orderItemSeqId", EntityOperator.EQUALS, eachItem.orderItemSeqId));
+		daysToStore = "";
+		if(daysDetails){
+			daysToStore = (daysDetails.get(0)).get("attrValue");
 		}
 		productDetails = EntityUtil.filterByCondition(products, EntityCondition.makeCondition("productId", EntityOperator.EQUALS, eachItem.productId));
 		prodDetail = null;
@@ -100,6 +115,7 @@ if(partyOrderIds){
 		newObj.put("cProductName",prodDetail.description +" [ "+prodDetail.brandName+"]");
 		newObj.put("quantity",eachItem.quantity);
 		newObj.put("batchNo", batchNo);
+		newObj.put("daysToStore", daysToStore);
 		if(changeFlag && changeFlag == "PowderSales" || changeFlag == "FgsSales" || changeFlag == "InterUnitTransferSale" || changeFlag == "ConvCharges"){
 			if(eachItem.unitPrice){
 				newObj.put("basicPrice", eachItem.unitPrice);
