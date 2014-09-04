@@ -135,6 +135,7 @@ function reportTypeChangeFunc() {
 		makeDatePicker("amulIceCreamfDate","amulIceCreamtDate");
         makeDatePicker("saleInvoiceAbstractfDate","saleInvoiceAbstracttDate");
 	    makeDatePicker("regularIceCreamfDate","regularIceCreamtDate");
+	    makeDatePicker("purchaseFromDate","purchaseThruDate");
 		
 		$('#ui-datepicker-div').css('clip', 'auto');		
 	});
@@ -1047,6 +1048,16 @@ function reportTypeChangeFunc() {
 									<option value='InvoiceSalesAbstract'>InvoiceSalesAbstract</option>
 								</select>
 							</td>
+	      					<td width="15%"></td>
+							<td width="10%"><input type="submit" value="Download" class="buttontext"/></td> 
+						</form>
+	                  </tr>
+	                  <tr class="alternate-row">
+						<form id="purchaseRegisterBook" name="purchaseRegisterBook" method="post" action="<@ofbizUrl>purchaseRegisterBook.pdf</@ofbizUrl>" target="_blank">	
+							<td width="30%">Purchase Register Book Report</td>
+							<td width="15%">From<input  type="text" size="18pt" id="purchaseFromDate" readonly  name="fromDate"/></td>
+						    <td width="15%">To<input  type="text" size="18pt" id="purchaseThruDate" readonly  name="thruDate"/></td>
+						    <td width="15%"></td>
 	      					<td width="15%"></td>
 							<td width="10%"><input type="submit" value="Download" class="buttontext"/></td> 
 						</form>
