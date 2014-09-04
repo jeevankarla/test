@@ -834,7 +834,7 @@ under the License.
         <field name="paymentTypeId" position="1">
             <drop-down allow-empty="true">
                 <entity-options entity-name="PaymentType" description="${description}">
-                    <entity-constraint name="parentTypeId" value="REFSDEPOSIT_PAYIN" />
+                    <entity-constraint name="parentTypeId" value="REFDEPOSIT_PAYIN" />
                 </entity-options>
             </drop-down>
         </field>
@@ -851,7 +851,7 @@ under the License.
         <field name="paymentDate"><date-find type="date" default-option-from="sameDay"/></field>
         <field position="1" name="amount"><range-find></range-find></field>
         <field name="paymentRefNum"><text-find ignore-case="true"/></field>
-        <field name="parentTypeId"><hidden value="REFSDEPOSIT_PAYIN"/></field>
+        <field name="parentTypeId"><hidden value="REFDEPOSIT_PAYIN"/></field>
         <field name="searchButton" title="${uiLabelMap.CommonFind}" widget-style="smallSubmit"><submit button-type="button"/></field>
     </form>
     <form name="NewOutgoingDepositsRefund" type="single" target="createNewOutgoingDepositsRefund" default-map-name="payment"
@@ -869,7 +869,7 @@ under the License.
         <field name="paymentTypeId" title="${uiLabelMap.AccountingPaymentType}" position="1">
             <drop-down allow-empty="false">
                 <entity-options description="${description}" entity-name="PaymentType">
-                    <entity-constraint name="parentTypeId" value="REFSDEPOSIT_PAYIN"/>
+                    <entity-constraint name="parentTypeId" value="REFDEPOSIT_PAYIN"/>
                     <entity-order-by field-name="description"/>
                 </entity-options>
             </drop-down>
