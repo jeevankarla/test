@@ -492,6 +492,47 @@ under the License.
             </widgets>
         </section>
     </screen>
+    <screen name="PaymentTransPDF">
+        <section>
+            <actions>
+                <set field="titleProperty" value="Payment Accounting Transactions"/>
+                <set field="tabButtonItem" value="paymentOverview"/>
+                <set field="labelTitleProperty" value="PageTitlePaymentOverview"/>
+                <property-map resource="PartyUiLabels" map-name="uiLabelMap" global="true"/>
+                <set field="paymentId" from-field="parameters.paymentId"/>
+                <entity-one entity-name="Payment" value-field="payment"/>
+                <set field="finAccountTransId" from-field="payment.finAccountTransId"/>
+                <entity-one entity-name="FinAccountTrans" value-field="finAccountTrans"/>
+                <set field="appliedAmount" value="${bsh:org.ofbiz.accounting.payment.PaymentWorker.getPaymentApplied(payment).toString()}"/>
+                <set field="notAppliedAmount" value="${bsh:org.ofbiz.accounting.payment.PaymentWorker.getPaymentNotApplied(payment).toString()}"/>
+                <entity-condition entity-name="AcctgTransAndEntries" list="AcctgTransAndEntries">
+                    <condition-expr field-name="paymentId" from-field="paymentId"/>
+                    <order-by field-name="acctgTransId"/>
+                    <order-by field-name="acctgTransEntrySeqId"/>
+                </entity-condition>
+                <service service-name="acctgInvoicePermissionCheck" result-map="permResult">
+                    <field-map field-name="mainAction" value="PAYMENT_EDIT"/>
+                </service>
+               <set field="hasPaymentEditPermission" from-field="permResult.hasPermission"/>
+               <service service-name="acctgInvoicePermissionCheck" result-map="permResult">
+                    <field-map field-name="mainAction" value="PAYMENTAPP_EDIT"/>
+                </service>
+               <set field="hasPaymentAppEditPermission" from-field="permResult.hasPermission"/>
+                <service service-name="acctgInvoicePermissionCheck" result-map="permResult">
+                    <field-map field-name="mainAction" value="PAYMENTSTATUS_CANCEL"/>
+                </service>
+               <set field="hasPaymentStatusCancelPermission" from-field="permResult.hasPermission"/>
+            </actions>
+            <widgets>
+                <decorator-screen name="SimpleDecorator"   location="component://common/widget/CommonScreens.xml">
+                       <decorator-section name="body">
+                                    <include-form name="AcctgTransAndEntriespdf" location="component://accounting/widget/PaymentForms.xml"/>
+                         </decorator-section>
+			 		</decorator-screen>	
+             </widgets>
+       	</section>
+    </screen>
+    
 
     <screen name="ManualTransaction">
         <section>

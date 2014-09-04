@@ -582,6 +582,41 @@ under the License.
         <field name="paymentId"><hidden/></field>
         <field name="invoiceId"><hyperlink target="invoiceOverview?invoiceId=${invoiceId}" description="${invoiceId}"/></field>
     </form>
+    <form name="AcctgTransAndEntriespdf" type="list" list-name="AcctgTransAndEntries" extends="AcctgTransAndEntries" extends-resource="component://accounting/widget/InvoiceForms.xml">
+       <auto-fields-entity entity-name="AcctgTransAndEntries" default-field-type="hidden"/>
+        <field name="invoiceId"><hidden/></field>
+        <field name="glAccountId" title="gl Account Id"><display size="10"/></field>
+        <field name="debitCreditFlag" title="Debit Credit Flag"><display size="5"/></field>
+        <field name="amount"><display  currency="${currencyUomId}" size="25"/></field>
+        <field name="acctgTransId"><hyperlink description="${acctgTransId}" target="EditAcctgTrans?acctgTransId=${acctgTransId}&amp;organizationPartyId=${organizationPartyId}"/></field>
+        <field name="accountName" title="Account Name"><display size="30"/></field>
+        <!-- <field name="glAccountClassId" title="${uiLabelMap.AccountingGlAccountClass}"><display-entity entity-name="GlAccountClass" description="${description}"/></field> -->
+        <field name="origCurrencyUomId"><ignored/></field>
+        <field name="currencyUomId"><ignored/></field>
+        <field name="shipmentId"><ignored/></field>
+        <field name="receiptId"><ignored/></field>
+        <field name="inventoryItemId"><ignored/></field>
+        <field name="workEffortId"><ignored/></field>
+        <field name="physicalInventoryId"><ignored/></field>
+        <field name="transDescription"><ignored/></field>
+        <field name="paymentId"><hidden/></field>
+        <field name="partyId" title="${uiLabelMap.PartyParty}"><hidden/></field>
+        <field name="reconcileStatusId"><hidden/></field>
+        <field name="glAccountClassId" title="${uiLabelMap.AccountingGlAccountClass}"><hidden/></field>
+        <field name="origAmount"><hidden/></field>
+        <field name="glAccountTypeId" title="${uiLabelMap.FormFieldTitle_glAccountType}"><hidden/></field>
+        <field name="glAccountClassId" title="${uiLabelMap.AccountingGlAccountClass}"><hidden/></field>
+        <field name="glJournalId" title="${uiLabelMap.FormFieldTitle_glJournal}"><hidden/></field>
+        <field name="acctgTransTypeId" title="${uiLabelMap.FormFieldTitle_acctgTransType}"><hidden/></field>
+        <sort-order>   
+            <sort-field name="acctgTransId"/>
+            <sort-field name="accountName"/>
+            <sort-field name="glAccountId"/>
+            <sort-field name="debitCreditFlag"/>
+            <sort-field name="amount"/>
+             <sort-field name="acctgTransEntrySeqId"/> 
+        </sort-order>
+    </form>
 
     <form name="ListChecksToPrint" type="multi" list-name="payments" target="printChecks" separate-columns="true"
         odd-row-style="alternate-row" default-table-style="basic-table hover-bar">

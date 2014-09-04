@@ -2586,6 +2586,10 @@ under the License.
         <security https="true" auth="true"/>
         <response name="success" type="view" value="AccountPDF"/>
     </request-map>
+    <request-map uri="PaymentTranspdf">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="PaymentTransPDF"/>
+    </request-map>
     <request-map uri="invoiceNew.pdf">
     <security https="true" auth="true"/>
     <response name="success" type="view" value="InvoiceNewPDF"/>
@@ -3685,6 +3689,7 @@ under the License.
     <!-- PDFs  -->
     <view-map name="InvoicePDF" type="screenfop" page="component://accounting/widget/AccountingPrintScreens.xml#InvoicePDF" content-type="application/pdf" encoding="none"/>
     <view-map name="AccountPDF" type="screenfop" page="component://accounting/widget/AccountingPrintScreens.xml#AccountPDF" content-type="application/pdf"/>
+    <view-map name="PaymentTransPDF" type="screenfop" page="component://accounting/widget/PaymentScreens.xml#PaymentTransPDF" content-type="application/pdf"/>
     <view-map name="InvoiceNewPDF" type="screenfop" page="component://accounting/widget/AccountingPrintScreens.xml#InvoiceNewPDF" content-type="application/pdf" encoding="none"/>
     <view-map name="PrintCheckPDF" type="screenfop" page="component://accounting/widget/AccountingPrintScreens.xml#PrintCheckPDF" content-type="application/pdf" encoding="none"/>
     <view-map name="PrintInvoices" type="screenfop" page="component://accounting/widget/AccountingPrintScreens.xml#PrintInvoices" content-type="application/pdf" encoding="none"/>
