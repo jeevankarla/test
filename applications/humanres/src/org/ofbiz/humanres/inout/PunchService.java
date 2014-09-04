@@ -51,7 +51,7 @@ import org.ofbiz.service.DispatchContext;
 import org.ofbiz.service.GenericServiceException;
 import org.ofbiz.service.LocalDispatcher;
 import org.ofbiz.service.ServiceUtil;
-
+import org.ofbiz.security.Security;
 /**
  * Services for Party-punches maintenance
  */
@@ -85,11 +85,17 @@ public class PunchService {
 		String date3 = punchdate.toString();
 		String dateArr2[] = date3.split(Pattern.quote("-"));
 		String contactMechId = null;
+		Security security = dctx.getSecurity();
 		GenericValue userLogin = (GenericValue) context.get("userLogin");
 		int sec = 0, sec0 = 0, sec1 = 0;
 		int min = 0, min0 = 0, min1 = 0;
 		int hr = 0, hr0 = 0, hr1 = 0;
-
+        Timestamp nowTimestamp = UtilDateTime.nowTimestamp();
+        if (!(security.hasEntityPermission("EMP_PUNCH_EDIT", "_UPDATE", userLogin)) && (UtilDateTime.getIntervalInDays(UtilDateTime.toTimestamp(punchdate),nowTimestamp) >0) && PunchType.equals("Ood")) {
+        	String errMsg = "you don't have permissoin to edit previous day punch";
+        	Debug.logError(errMsg, module);
+            return ServiceUtil.returnError(errMsg);
+        } 
 		String punchout = punchtime.toString();
 		String punchintime = null;
 		String punchouttime = null;
