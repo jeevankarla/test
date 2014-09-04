@@ -222,11 +222,8 @@ under the License.
             </drop-down>
         </field>
         <field position="2" name="paymentMethodTypeId" event="onchange" action="javascript:paymentFieldsOnchange();">
-            <drop-down allow-empty="false">
-                <entity-options entity-name="PaymentMethodType"  description="${description}">
-                	<entity-constraint name="paymentMethodTypeId" operator="like" value="%_PAYIN%"/>
-                    <entity-order-by field-name="description"/>                   
-                </entity-options>
+            <drop-down allow-empty="false" >
+              	<list-options key-name="paymentMethodTypeId" list-name="paymentMethodTypeList" description="${description}"/>
             </drop-down>
         </field>
         <field name="paymentRefNum" position="1" title="Payment Ref.Number"><text/></field>

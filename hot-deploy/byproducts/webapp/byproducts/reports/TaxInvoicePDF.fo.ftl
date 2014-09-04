@@ -321,6 +321,8 @@ ${setRequestAttribute("OUTPUT_FILENAME", "TaxInvoice.pdf")}
             						<#assign text = "Excise Duty (Deposit) Including CESS 2.06%">
             					<#elseif eachTax.getKey()=="CST_SALE">
             						<#assign text = "Central Sales Tax(CST) 2.0%">
+            					<#elseif eachTax.getKey()=="SERTAX_SALE">
+            						<#assign text = "Service Tax ">
             					<#else>
             						<#assign text = "Value Added Tax(VAT) ">
             					</#if>
