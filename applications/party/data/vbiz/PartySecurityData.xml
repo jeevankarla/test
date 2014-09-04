@@ -166,4 +166,9 @@ under the License.
 	<SecurityGroupPermission groupId="BasicEmployee" permissionId="PARTYMGR_VIEW"/>  
 	<SecurityGroupPermission groupId="BasicEmployee" permissionId="PARTYMGRVIEWAPP"/>
 
+   <SecurityGroup description="View permissoins to party manager." groupId="PARTYMGRVIEW"/>
+   <SecurityGroupPermission groupId="PARTYMGRVIEW" permissionId="PARTYMGR_VIEW"/>
+   <SecurityGroupPermission groupId="PARTYMGRVIEW" permissionId="PARTYMGRVIEWAPP"/>
+    
+
 </entity-engine-xml>
