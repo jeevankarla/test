@@ -2124,7 +2124,7 @@
 			</link>
 		</menu-item>
 		<menu-item name="FinAccountTransForReconsile"
-			title="Reconcilation">
+			title="Reconciliation">
 			<condition>
 				<and>
 					<not><if-empty field="ctxFinAccountId"/></not>

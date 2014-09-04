@@ -598,16 +598,23 @@ under the License.
         <field name="fromDate" title="From Date" id-name="fromDate"><date-time type="timestamp"/></field>
         <field name="thruDate" title="Thru Date" id-name="thruDate"><date-time type="timestamp"/></field>
         <field name="organizationPartyId"><hidden/></field>
-        <field name="finAccountId" title="Financial Account" id-name="finAccountId">
+        <!-- <field name="finAccountId" title="Financial Account" id-name="finAccountId">
         	<drop-down allow-empty="false">
                 <list-options list-name="financialAccnt" key-name="finAccountId" description="${finAccountName}"/>
             </drop-down>
-            <!-- <drop-down>
+            <drop-down>
                 <entity-options entity-name="GlAccountOrganizationAndClass" description="${glAccountId} ${accountName}">
                     <entity-constraint name="organizationPartyId" operator="equals" env-name="organizationPartyId"/>
                     <entity-order-by field-name="glAccountId"/>
                 </entity-options>
-            </drop-down> -->
+            </drop-down>
+        </field> -->
+        <field name="finAccountId" title="Financial Account" id-name="finAccountId">
+            <drop-down>
+                <entity-options entity-name="FinAccount" description="${finAccountTypeId}">
+                    <entity-constraint name="finAccountId" operator="equals" value="FIN_ACCNT1"/>
+                </entity-options>
+            </drop-down>
         </field>
         <field name="isPosted" id-name="isPosted">
             <drop-down>

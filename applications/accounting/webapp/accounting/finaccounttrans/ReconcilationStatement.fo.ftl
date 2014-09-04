@@ -37,7 +37,7 @@ under the License.
 		        	<fo:flow flow-name="xsl-region-body"  font-family="Courier,monospace">	
 		        	<fo:block text-align="center"  keep-together="always"  font-family="Courier,monospace" font-weight="bold" white-space-collapse="false">     KARNATAKA CO-OPERATIVE MILK PRODUCERS FEDERATION LTD</fo:block>
                     	<fo:block text-align="center"  keep-together="always"  font-family="Courier,monospace" font-weight="bold" white-space-collapse="false">    UNIT : MOTHER DAIRY , G.K.V.K POST : YELAHANKA, BANGALORE -560065.</fo:block>
-                    	<fo:block text-align="center"  font-family="Courier,monospace" font-weight="bold"  white-space-collapse="false">RECONCILATION STATEMENT ${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(nowTimestamp, "dd/MM/yy HH:mm:ss")} </fo:block>
+                    	<fo:block text-align="center"  font-family="Courier,monospace" font-weight="bold"  white-space-collapse="false">RECONCILIATION STATEMENT ${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(nowTimestamp, "dd/MM/yy HH:mm:ss")} </fo:block>
                     	<fo:block text-align="left"  keep-together="always"  white-space-collapse="false" linefeed-treatment="preserve">&#xA;</fo:block> 
                     	<fo:block text-align="center"  font-family="Courier,monospace"  white-space-collapse="false">&#160;                                                         Balance As Per Books : ${finAccount.actualBalance?if_exists?string("#0.00")}</fo:block>
               			<fo:block text-align="left"  keep-together="always"  white-space-collapse="false">_______________________________________________________________________________________________</fo:block>

@@ -76,7 +76,7 @@ under the License.
             </hyperlink>
         </field> -->
         <field name="statement" title="Bank Reconcilation Statement" widget-style="buttontext">
-            <hyperlink target="recStatemetn.pdf" description="Statement" also-hidden="false">
+            <hyperlink target="recStatemetn.pdf" description="Statement" target-window="_BLANK"  also-hidden="false">
                 <parameter param-name="finAccountId"/>
                 <parameter param-name="glReconciliationId" value="_NA_" />
 				<parameter param-name="subTabItem" value="FinAccountTransForReconsile" />
