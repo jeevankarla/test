@@ -114,8 +114,11 @@ paymentTypes = EntityUtil.getFieldListFromEntityList(partyProfileDefault, "defau
 paymentMethodType = delegator.findList("PaymentMethodType", EntityCondition.makeCondition("paymentMethodTypeId", EntityOperator.IN, paymentTypes), null, null, null, false);
 
 payMethList = EntityUtil.filterByCondition(paymentMethodType, EntityCondition.makeCondition("paymentMethodTypeId", EntityOperator.EQUALS, parameters.paymentMethodTypeId));
+paymentMethodDesc ="";
+if(payMethList){
+	paymentMethodDesc = (EntityUtil.getFirst(payMethList)).get("description");
+}
 
-paymentMethodDesc = (EntityUtil.getFirst(payMethList)).get("description");
 context.paymentMethodType = paymentMethodType;
 
 boothPaymentsList=[];
