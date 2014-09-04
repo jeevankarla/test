@@ -57,7 +57,10 @@ under the License.
             		<fo:block><fo:table>
                     <fo:table-column column-width="18%"/>
                     <fo:table-column column-width="2%"/>
-                    <fo:table-column column-width="71%"/>
+                    <fo:table-column column-width="30%"/>
+                    <fo:table-column column-width="18%"/>
+                    <fo:table-column column-width="2%"/>
+                    <fo:table-column column-width="30%"/>
                     
 	                    <fo:table-body>
 		                    <fo:table-row>
@@ -70,7 +73,17 @@ under the License.
 		                   		  <fo:table-cell>
 		                        		<fo:block  text-align="left"  >${paymentMethodTypeDesc}</fo:block>  
 		                   		  </fo:table-cell>
-		        				  
+		        				  <#if (paymentListReport.issuingAuthority)?has_content>
+		                   		    	<fo:table-cell>
+		                            		<fo:block  keep-together="always" text-align="left">Bank Name</fo:block>  
+		                       			</fo:table-cell>
+		                       			<fo:table-cell>
+			                        		<fo:block  text-align="left"  >:</fo:block>  
+			                   		    </fo:table-cell>
+			                   		    <fo:table-cell>
+			                        		<fo:block  text-align="left"  >${paymentListReport.issuingAuthority?if_exists} ${paymentListReport.issuingAuthorityBranch?if_exists}</fo:block>  
+			                   		    </fo:table-cell>
+		                   		    </#if>
 		                    </fo:table-row>	
 		                    <fo:table-row>
 		                              <fo:table-cell>
@@ -82,6 +95,17 @@ under the License.
 			                   		    <fo:table-cell>
 			                        		<fo:block  text-align="left"  >${paymentListReport.paymentId?if_exists}&#160;&#160;&#160;</fo:block>  
 			                   		    </fo:table-cell>
+			                   		    <#if (paymentListReport.paymentRefNum)?has_content>
+			                   		    	<fo:table-cell>
+			                            		<fo:block  keep-together="always" text-align="left">Instrument No</fo:block>  
+			                       			</fo:table-cell>
+			                       			<fo:table-cell>
+				                        		<fo:block  text-align="left"  >:</fo:block>  
+				                   		    </fo:table-cell>
+				                   		    <fo:table-cell>
+				                        		<fo:block  text-align="left"  >${paymentListReport.paymentRefNum?if_exists}</fo:block>  
+				                   		    </fo:table-cell>
+			                   		    </#if>
 		                    </fo:table-row>	
 		                     <fo:table-row>
 		                				<fo:table-cell>
@@ -93,6 +117,9 @@ under the License.
 			                   		    <fo:table-cell>
 			                        		<fo:block  text-align="left"  >${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(paymentListReport.paymentDate, "MMMM dd,yyyy")}</fo:block>  
 			                   		    </fo:table-cell>
+			                   		    
+			                   		    
+			                   		    
 		                    </fo:table-row>		
 	                     </fo:table-body>
                       </fo:table>
