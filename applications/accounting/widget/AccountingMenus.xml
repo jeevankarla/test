@@ -786,7 +786,7 @@
 				<parameter param-name="paymentId" from-field="payment.paymentId" />
 			</link>
 		</menu-item>
-		<menu-item name="DebitNote"
+		<!-- <menu-item name="DebitNote"
 			title="Debit/Credit Note">
 			<condition>
 				<and>
@@ -806,7 +806,7 @@
 			<link target="DebitNote" target-window="_BLANK">
 				<parameter param-name="paymentId" from-field="payment.paymentId"/>
 			</link>
-		</menu-item>
+		</menu-item> -->
 	</menu>
 
 	<menu name="PaymentGroupTabBar" extends="CommonTabBarMenu"
