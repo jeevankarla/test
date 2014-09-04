@@ -40,7 +40,8 @@ under the License.
        <#if partWiseSaleMap?has_content>
 	        <fo:page-sequence master-reference="main" font-size="12pt">	
 	        	<fo:static-content flow-name="xsl-region-before" font-family="Courier,monospace">
-	        		<fo:block text-align="center" font-weight="bold" keep-together="always"  white-space-collapse="false">OFICE OF THE DIRECTOR :MOTHER DAIRY :G.KV.K POST :BANGALORE -560 65</fo:block>
+	        		<fo:block text-align="center" font-weight="bold" keep-together="always"  font-family="Courier,monospace" white-space-collapse="false">${uiLabelMap.KMFDairyHeader}</fo:block>
+	        		<fo:block  keep-together="always" text-align="center" font-family="Courier,monospace" white-space-collapse="false" font-weight="bold">${uiLabelMap.KMFDairySubHeader}</fo:block>
                 	<fo:block text-align="center"  keep-together="always"  white-space-collapse="false" font-weight="bold">CUSTOMERWISE SALES REGISTER REPORT</fo:block>
           			<fo:block text-align="center" font-weight="bold"  keep-together="always"  white-space-collapse="false"> <#if categoryType=="ICE_CREAM_NANDINI">NANDINI</#if><#if categoryType=="ICE_CREAM_AMUL">AMUL</#if> ICE CREAM SALES BOOK FOR THE PERIOD- ${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(fromDate, "dd/MM/yyyy")} - ${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(thruDate, "dd/MM/yyyy")} </fo:block>
           			<fo:block text-align="left"  keep-together="always"  font-family="Courier,monospace" font-weight="bold" white-space-collapse="false"> UserLogin:<#if userLogin?exists>${userLogin.userLoginId?if_exists}</#if>               &#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;Print Date :${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(nowTimestamp, "dd/MM/yy HH:mm:ss")}</fo:block>
@@ -78,10 +79,10 @@ under the License.
        							<#assign totalVatRev=totalVatRev+partWiseSaleDetails.getValue().get("vatRevenue")>
        							<#assign totalCstRev=totalCstRev+partWiseSaleDetails.getValue().get("cstRevenue")>
        							<#assign total=total+partWiseSaleDetails.getValue().get("total")>
-       							
+       							<#assign partyName = Static["org.ofbiz.party.party.PartyHelper"].getPartyName(delegator, partWiseSaleDetails.getKey()?if_exists, false)>
        							<fo:table-row>
 					                    <fo:table-cell>
-							            	<fo:block  keep-together="always" text-align="left" font-size="12pt" white-space-collapse="false" font-weight="bold">${partWiseSaleDetails.getKey()}</fo:block>  
+							            	<fo:block  keep-together="always" text-align="left" font-size="12pt" white-space-collapse="false" font-weight="bold">${partyName}<#if categoryType=="ICE_CREAM_AMUL">[${partWiseSaleDetails.getKey()?if_exists}]</#if></fo:block>  
 							            </fo:table-cell>
 							             <fo:table-cell>
 							            	<fo:block  keep-together="always" text-align="right" font-size="12pt" white-space-collapse="false" font-weight="bold">${partWiseSaleDetails.getValue().get("quantity")}</fo:block>  
@@ -116,7 +117,7 @@ under the License.
 							            	<fo:block  keep-together="always" text-align="left" font-size="12pt" white-space-collapse="false" font-weight="bold">Total</fo:block>  
 							            </fo:table-cell>
 							             <fo:table-cell>
-							            	<fo:block  keep-together="always" text-align="right" font-size="12pt" white-space-collapse="false" font-weight="bold">${totalQty}</fo:block>  
+							            	<fo:block  keep-together="always" text-align="right" font-size="12pt" white-space-collapse="false" font-weight="bold">${totalQty?string("#0.00")}</fo:block>  
 							            </fo:table-cell>
 							             <fo:table-cell>
 							            	<fo:block  keep-together="always" text-align="right" font-size="12pt" white-space-collapse="false" font-weight="bold">${totalAvg?string("#0.00")}</fo:block>  
@@ -131,10 +132,10 @@ under the License.
 							            	<fo:block  keep-together="always" text-align="right" font-size="12pt" white-space-collapse="false" font-weight="bold"><#if totalVatRev !=0>${totalVatRev?string("#0.00")}<#else></#if></fo:block>  
 							            </fo:table-cell>
 							            <fo:table-cell>
-							            	<fo:block  keep-together="always" text-align="right" font-size="12pt" white-space-collapse="false" font-weight="bold"><#if totalCstRev !=0>${totalVatRev?string("#0.00")}<#else></#if></fo:block>  
+							            	<fo:block  keep-together="always" text-align="right" font-size="12pt" white-space-collapse="false" font-weight="bold"><#if totalCstRev !=0>${totalCstRev?string("#0.00")}<#else></#if></fo:block>  
 							            </fo:table-cell>
 							            <fo:table-cell>
-							            	<fo:block  keep-together="always" text-align="right" font-size="12pt" white-space-collapse="false" font-weight="bold">${total}</fo:block>  
+							            	<fo:block  keep-together="always" text-align="right" font-size="12pt" white-space-collapse="false" font-weight="bold">${total?string("#0.00")}</fo:block>  
 							            </fo:table-cell>
 							     </fo:table-row>
 								<fo:table-row> 

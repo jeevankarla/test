@@ -40,9 +40,9 @@ under the License.
        <#if dayWiseInvoice?has_content>
 	        <fo:page-sequence master-reference="main" font-size="12pt">	
 	        	<fo:static-content flow-name="xsl-region-before" font-family="Courier,monospace">
-	        		<fo:block text-align="center" font-weight="bold" keep-together="always"  white-space-collapse="false">OFICE OF THE DIRECTOR :MOTHER DAIRY :G.KV.K POST :BANGALORE -560 65</fo:block>
-                	<fo:block text-align="center"  keep-together="always"  white-space-collapse="false" font-weight="bold">SALES REGISTER (TAXABLE)</fo:block>
-          			<fo:block text-align="center" font-weight="bold"  keep-together="always"  white-space-collapse="false"> <#if categoryType=="ICE_CREAM_NANDINI">NANDINI</#if><#if categoryType=="ICE_CREAM_AMUL">AMUL</#if> ICE CREAM SALES BOOK FOR THE PERIOD- ${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(fromDate, "dd/MM/yyyy")} - ${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(thruDate, "dd/MM/yyyy")} </fo:block>
+	        		<fo:block text-align="center" font-weight="bold" keep-together="always"  font-family="Courier,monospace" white-space-collapse="false">${uiLabelMap.KMFDairyHeader}</fo:block>
+	        		<fo:block  keep-together="always" text-align="center" font-family="Courier,monospace" white-space-collapse="false" font-weight="bold">${uiLabelMap.KMFDairySubHeader}</fo:block>
+                	<fo:block text-align="center" font-weight="bold"  keep-together="always"  white-space-collapse="false"> <#if categoryType=="ICE_CREAM_NANDINI">NANDINI</#if><#if categoryType=="ICE_CREAM_AMUL">AMUL</#if> ICE CREAM SALES BOOK FOR THE PERIOD- ${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(fromDate, "dd/MM/yyyy")} - ${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(thruDate, "dd/MM/yyyy")} </fo:block>
           			<fo:block text-align="left"  keep-together="always"  font-family="Courier,monospace" font-weight="bold" white-space-collapse="false"> UserLogin:<#if userLogin?exists>${userLogin.userLoginId?if_exists}</#if>               &#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;Print Date :${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(nowTimestamp, "dd/MM/yy HH:mm:ss")}</fo:block>
           			<fo:block>--------------------------------------------------------------------------------------------------------------------------------------------</fo:block>
             	    <fo:block text-align="left" font-weight="bold" font-size="12pt" keep-together="always" font-family="Courier,monospace" white-space-collapse="false">Invoice Retailer                    Description          Quantity        Ex-factory    ED              VAT(Rs)    C.S.T(Rs)       Total(Rs)</fo:block>
@@ -90,12 +90,13 @@ under the License.
           						 <#list invoiceMap as invoiceDetails>
           						 <#assign invoice = invoiceDetails.getValue().entrySet()>
           						 <#list invoice as invoiceDtls>
-       							 <fo:table-row>
+          						 <#assign partyName = Static["org.ofbiz.party.party.PartyHelper"].getPartyName(delegator, facilityMap.get(invoiceDetails.getKey())?if_exists, false)>
+							      <fo:table-row>
 							             <fo:table-cell>
 							            	<fo:block  keep-together="always" text-align="left" font-size="12pt" white-space-collapse="false" font-weight="bold">${invoiceDetails.getKey()}</fo:block>  
 							            </fo:table-cell>
 							             <fo:table-cell>
-							            	<fo:block  keep-together="always" text-align="left" font-size="12pt" white-space-collapse="false" font-weight="bold">${facilityMap.get(invoiceDetails.getKey())}</fo:block>  
+							            	<fo:block  keep-together="always" text-align="left" font-size="12pt" white-space-collapse="false" font-weight="bold">${partyName?if_exists}<#if categoryType=="ICE_CREAM_AMUL">[${facilityMap.get(invoiceDetails.getKey())?if_exists}]</#if></fo:block>  
 							            </fo:table-cell>
 							             <fo:table-cell>
 							            	<fo:block  keep-together="always" text-align="right" font-size="12pt" white-space-collapse="false" font-weight="bold">

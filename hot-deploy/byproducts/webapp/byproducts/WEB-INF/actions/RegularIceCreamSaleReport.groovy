@@ -62,13 +62,10 @@ if(categoryType.equals("ICE_CREAM_AMUL")||categoryType.equals("All")){
 amulPartyIds = ByProductNetworkServices.getPartyByRoleType(dctx, [userLogin: userLogin, roleTypeId: "EXCLUSIVE_CUSTOMER"]).get("partyIds");
 partyIds.addAll(amulPartyIds);
 }
-
-
 dayWiseTotals = SalesInvoiceServices.getPeriodSalesInvoiceTotals(dctx, [partyIds:partyIds, isQuantityLtrs:true,fromDate:dayBegin, thruDate:dayEnd]).get("invoiceIdTotals");
-Debug.log("dayWiseTotals===="+dayWiseTotals);
 facilityMap=[:];
 dayWiseInvoice=FastMap.newInstance();
-// Populating sales for Milk and Curd products
+// Populating sales for Ice cream products
 List invoiceList=FastList.newInstance();
 dayWiseTotals.each{eachInvoice ->
 	invoiceMap=[:];
@@ -76,24 +73,30 @@ dayWiseTotals.each{eachInvoice ->
 	invoice = delegator.findByPrimaryKey("Invoice", [invoiceId : eachInvoice.getKey()]);
 	invoiceDateStr=eachInvoice.getValue().get("invoiceDateStr");
 	//finalMap.put("invoiceDateStr",eachInvoice.getValue().get("invoiceDateStr"));
-	Debug.log("invoice==="+invoice);
-	partyName = PartyHelper.getPartyName(delegator, invoice.partyId, false);
-	facilityMap.put(eachInvoice.getKey(),partyName);
+	//partyName = PartyHelper.getPartyName(delegator, invoice.partyId, false);
+	facilityMap.put(eachInvoice.getKey(),invoice.partyId);
 	prodTotals = eachInvoice.getValue().get("productTotals");
 	tempVariantMap =FastMap.newInstance();
-	Debug.log("prodTotals==="+prodTotals);
 	if(UtilValidate.isNotEmpty(prodTotals)){
 		prodTotals.each{productValue ->
 			if(UtilValidate.isNotEmpty(productValue)){
 				currentProduct = productValue.getKey();
-				Debug.log("currentProduct==="+currentProduct);
 				product = delegator.findOne("Product", [productId : currentProduct], false);
 				productId = productValue.getKey();
-				productAssoc = EntityUtil.getFirst(delegator.findList("ProductAssoc", EntityCondition.makeCondition(["productAssocTypeId": "PRODUCT_VARIANT", "productIdTo": currentProduct,"thruDate":null]), null, ["-fromDate"], null, false));
+				Debug.log("productId===="+productId);
+					exprList=[];
+					exprList.add(EntityCondition.makeCondition("productCategoryTypeId", EntityOperator.EQUALS, "IC_CAT_RPT"));
+					exprList.add(EntityCondition.makeCondition("productId", EntityOperator.EQUALS, productId));
+				    condition = EntityCondition.makeCondition(exprList, EntityOperator.AND);
+				    productList = delegator.findList("ProductCategoryAndMember", condition, null, null, null, false);
+					if(UtilValidate.isNotEmpty(productList)){
+					 productList=EntityUtil.getFirst(productList);
+			        }
+				    
 				if(UtilValidate.isNotEmpty(categoryType)&& categoryType.equals(product.primaryProductCategoryId)){
 					if(categoryType.equals(product.primaryProductCategoryId)){
-						if(UtilValidate.isNotEmpty(productAssoc)){
-							virtualProductId = productAssoc.productId;
+						if(UtilValidate.isNotEmpty(productList)){
+							virtualProductId = productList.get("productCategoryId");
 						}
 						if(UtilValidate.isEmpty(tempVariantMap[virtualProductId])){
 							quantity =productValue.getValue().get("total");
@@ -136,7 +139,6 @@ dayWiseTotals.each{eachInvoice ->
 							temp=FastMap.newInstance();
 							temp.putAll(tempProdMap);
 							tempVariantMap[virtualProductId] = temp;
-							Debug.log("111tempVariantMap==="+tempVariantMap);
 						}else{
 							tempMap = [:];
 							productMap = [:];
@@ -158,14 +160,13 @@ dayWiseTotals.each{eachInvoice ->
 							temp=FastMap.newInstance();;
 							temp.putAll(productMap);
 							tempVariantMap[virtualProductId] = temp;
-							Debug.log("22tempVariantMap==="+tempVariantMap);
 						}
 						
 				 }
 					
 				}else if(UtilValidate.isNotEmpty(categoryType)&& categoryType.equals("All")){
-						if(UtilValidate.isNotEmpty(productAssoc)){
-							virtualProductId = productAssoc.productId;
+						if(UtilValidate.isNotEmpty(productList)){
+							virtualProductId = productList.get("productCategoryId");
 						}
 						if(UtilValidate.isEmpty(tempVariantMap[virtualProductId])){
 							quantity =productValue.getValue().get("total");
@@ -209,7 +210,6 @@ dayWiseTotals.each{eachInvoice ->
 							temp=FastMap.newInstance();
 							temp.putAll(tempProdMap);
 							tempVariantMap[virtualProductId] = temp;
-							Debug.log("111tempVariantMap==="+tempVariantMap);
 						}else{
 							tempMap = [:];
 							productMap = [:];
@@ -232,14 +232,11 @@ dayWiseTotals.each{eachInvoice ->
 							temp=FastMap.newInstance();;
 							temp.putAll(productMap);
 							tempVariantMap[virtualProductId] = temp;
-							Debug.log("22tempVariantMap==="+tempVariantMap);
 						}
 						
 				 
 			  }
 				finalMap.put("productTotals",tempVariantMap);
-				Debug.log("finalMap==="+finalMap);
-				
 			}
 		}
 	}
