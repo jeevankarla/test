@@ -62,7 +62,6 @@ under the License.
 
 
 function setTimepicker(){
-  alert("timepicker");
 		$('#punchtime').timepicker({ 
 		showSecond: true,	
 		timeFormat: 'hh:mm:ss',
@@ -96,8 +95,6 @@ function dateValidation(){
    
     
 	function dialogue(content, title) {
-	alert("content"+content);
-	alert("title"+title);
 		$('<div />').qtip({
 			content: {
 				text: content,
@@ -133,7 +130,6 @@ function dateValidation(){
 		// Content will consist of the message and an cancel and submit button
 		var message = $('<p />', { html: message }),
 			cancel = $('<button />', { text: 'cancel', 'class': 'full' });
-			alert("message"+message);
 		dialogue(message, title );		
 		
 	}
@@ -149,7 +145,6 @@ function dateValidation(){
 	
 	
 function showPunchEditForm(partyId,punchType,punchdate,InOut,emplPunchId,punchtime) {
-			alert("function start"+ punchtime);	
 		var message ="";
 		      message +="<form id='editAdminPunch' action='adminPunch' method='post' onsubmit='return disableGenerateButton();'><table cellspacing=10  cellpadding=20>"; 		
 			message +="<tr class='h3'><td align='left' class='h3' width='30%'>PartyId:</td><td align='left' class='h3' width='30%'><input type='text' value="+partyId+" name='partyId' readonly size='5' /></td></tr>"+
@@ -162,7 +157,6 @@ function showPunchEditForm(partyId,punchType,punchdate,InOut,emplPunchId,punchti
 			"<tr class='h3'><td align='right'><span align='right'><input type='submit' value='${uiLabelMap.CommonSubmit}' id='adminPunch' class='smallSubmit'/></span></td><td class='h3' width='80%' align='center'><span align='right'><button value='${uiLabelMap.CommonCancel}' onclick='return cancelForm();' class='smallSubmit'>${uiLabelMap.CommonCancel}</button></span></td></tr>";
 		message +="</table></form>";			
 		var title = "<h2><center>Edit Punch</center></h2>";
-		alert("first");
 		Alert(message, title);
 	}
 	

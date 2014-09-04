@@ -27,7 +27,7 @@ under the License.
         </actions> 
 		<field name="roleTypeId"><hidden value="EMPLOYEE"/></field>		
 		<field name="employeeId">
-			<lookup target-form-name="LookupEmployeeName" default-value="${partyId}" target-parameter="roleTypeId"/>
+			<lookup target-form-name="LookupEmployeeName" target-parameter="roleTypeId"/>
 		</field> 		      
        <field name="view" title="${uiLabelMap.CommonView}"><submit/></field>
     </form>
