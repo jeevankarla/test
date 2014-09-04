@@ -12,7 +12,7 @@
         visualThemeId="EC_DEFAULT" prodSearchExcludeVariants="Y" autoApproveInvoice="Y" shipIfCaptureFails="Y" autoApproveOrder="Y" showOutOfStockProducts="Y"/>
 
     <ProductStoreFacility productStoreId="9000" facilityId="Godown1" fromDate="2001-05-13 12:00:00.0"/><?xml version="1.0" encoding="UTF-8"?>
-<ProdCatalog prodCatalogId="MDKMF_STORE_CATALOG" catalogName="MDKMF STORE CATALOG" useQuickAdd="N"/>
+    <ProdCatalog prodCatalogId="MDKMF_STORE_CATALOG" catalogName="MDKMF STORE CATALOG" useQuickAdd="N"/>
     <ProductStoreCatalog productStoreId="9000" prodCatalogId="MDKMF_STORE_CATALOG" fromDate="2011-05-13 12:00:00.0" sequenceNum="1"/>
     
     <ProductStoreGroup  description="MOTHER DAIRY"  productStoreGroupId="PURCHASE_PRODUCTS" productStoreGroupName="MDKMF_RAWMETERIAL"/> 
@@ -20,5 +20,35 @@
 	       
     <EnumerationType description="Order Purchase Channel" enumTypeId="ORDER_PRCHSE_CHANNEL" hasTable="N" parentTypeId=""/>
     <Enumeration description="Products  Purchase Channel" enumCode="PROD_PRCHSE_CHANNEL" enumId="PROD_PRCHSE_CHANNEL" sequenceId="01" enumTypeId="ORDER_PRCHSE_CHANNEL"/>
+       
+       
+        <ProductPriceType productPriceTypeId="BEDCESS_PUR" parentTypeId="TAX" description="Educational Cess Bed On Purchase"/>
+    <ProductPriceType productPriceTypeId="BEDSECCESS_PUR" parentTypeId="TAX" description="Sec. Educational Cess Bed On Purchase"/>
+    <ProductPriceType productPriceTypeId="BED_PUR" parentTypeId="TAX" description="Basic Excise Duty On Purchase"/>
+    <ProductPriceType productPriceTypeId="CSTCESS_PUR" parentTypeId="TAX" description="CST - Education Cess On?Purchase"/>
+    <ProductPriceType productPriceTypeId="CSTSECCESS_PUR" parentTypeId="TAX" description="CST - SEC. Education Cess On?Purchase?"/>
+    <ProductPriceType productPriceTypeId="CST_PUR" parentTypeId="TAX" description="Central Sales Tax On Purchase"/>
+    <ProductPriceType productPriceTypeId="SERVICE_TAX_PUR" parentTypeId="TAX" description="Service Tax Purchase"/>
+    <ProductPriceType productPriceTypeId="VATCESS_PUR" parentTypeId="TAX" description="Educational Cess VAT On Purchase"/>
+    <ProductPriceType productPriceTypeId="VATSECCESS_PUR" parentTypeId="TAX" description="Sec. Educational Cess VAT On?Purchase"/>
+    <ProductPriceType productPriceTypeId="VAT_PUR" parentTypeId="TAX" description="Value Added Tax On Purchase"/>
+       
+       
         
-     
+   <OrderAdjustmentType orderAdjustmentTypeId="PURCHASE_TAX" hasTable="N" parentTypeId="" description="PURCHASE TAX"/>
+   <OrderAdjustmentType orderAdjustmentTypeId="BEDCESS_PUR" hasTable="N" parentTypeId="PURCHASE_TAX" description="Educational Cess Bed On Purchase"/>
+    <OrderAdjustmentType orderAdjustmentTypeId="BEDSECCESS_PUR" hasTable="N" parentTypeId="PURCHASE_TAX" description="Sec. Educational Cess Bed On Purchase"/>
+    <OrderAdjustmentType orderAdjustmentTypeId="BED_PUR" hasTable="N"  parentTypeId="PURCHASE_TAX" description="Basic Excise Duty On Purchase"/>
+    <OrderAdjustmentType orderAdjustmentTypeId="CSTCESS_PUR" hasTable="N" parentTypeId="PURCHASE_TAX" description="CST - Education Cess On?Purchase"/>
+    <OrderAdjustmentType orderAdjustmentTypeId="CSTSECCESS_PUR" hasTable="N" parentTypeId="PURCHASE_TAX" description="CST - SEC. Education Cess On?Purchase?"/>
+    <OrderAdjustmentType orderAdjustmentTypeId="CST_PUR"  hasTable="N" parentTypeId="PURCHASE_TAX" description="Central Sales Tax On Purchase"/>
+    <OrderAdjustmentType orderAdjustmentTypeId="SERVICE_TAX_PUR" hasTable="N" parentTypeId="PURCHASE_TAX" description="Service Tax Purchase"/>
+    <OrderAdjustmentType orderAdjustmentTypeId="VATCESS_PUR" hasTable="N" parentTypeId="PURCHASE_TAX" description="Educational Cess VAT On Purchase"/>
+    <OrderAdjustmentType orderAdjustmentTypeId="VATSECCESS_PUR" hasTable="N" parentTypeId="PURCHASE_TAX" description="Sec. Educational Cess VAT On?Purchase"/>
+    <OrderAdjustmentType orderAdjustmentTypeId="VAT_PUR" hasTable="N" parentTypeId="PURCHASE_TAX" description="Value Added Tax On Purchase"/>
+    
+      <InvoiceItemTypeMap invoiceTypeId="PURCHASE_INVOICE" invoiceItemMapKey="PURIN_MAP_VAT" invoiceItemTypeId="VAT_PUR"/>
+      <InvoiceItemTypeMap invoiceTypeId="PURCHASE_INVOICE" invoiceItemMapKey="PURIN_MAP_CST" invoiceItemTypeId="CST_PUR"/>
+      <InvoiceItemTypeMap invoiceTypeId="PURCHASE_INVOICE" invoiceItemMapKey="PURIN_MAP_BED" invoiceItemTypeId="BED_PUR"/>
+    
+    
