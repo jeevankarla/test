@@ -29,19 +29,29 @@ under the License.
         </fo:layout-master-set>
 		        <fo:page-sequence master-reference="main">		        	
 		        	<fo:flow flow-name="xsl-region-body" font-family="Courier,monospace">
-		        	    <fo:block  border-style="solid" font-family="Courier,monospace">
-        	            <fo:block text-align="center" border-style="solid">
-        	            <fo:block text-align="center" white-space-collapse="false" font-family="Courier,monospace" font-size="9pt" keep-together="always">&#160;                                                      &#160;                                           </fo:block>
-					    <fo:block text-align="center"  white-space-collapse="false" font-family="Courier,monospace" font-weight="bold" font-size="12pt" keep-together="always">${companyName}</fo:block>
-					     <fo:block text-align="center"  white-space-collapse="false" font-family="Courier,monospace" font-weight="bold" font-size="12pt" keep-together="always">INVOICE AND PAYMENT VOUCHER</fo:block>
-					    </fo:block>	
+						<fo:block>
 					    <#--
 		        		 Table Start -->
 		        		<fo:table  table-layout="fixed" width="100%" space-before="0.2in">
-		        				    <fo:table-column column-width="20%"/>
+		        				    <fo:table-column column-width="30%"/>
+        						    <fo:table-column column-width="30%"/>
         						    <fo:table-column column-width="40%"/>
-        						    <fo:table-column column-width="40%"/>
+
         						   	<fo:table-header>
+        						   	<fo:table-row>
+        						   			<fo:table-cell border-style="solid"></fo:table-cell>
+		    								<fo:table-cell border-style="solid">
+        						   				<fo:block text-align="center"  white-space-collapse="false" font-family="Courier,monospace" font-weight="bold" font-size="12pt" keep-together="always">${companyName}</fo:block>
+        						   			</fo:table-cell>
+        						   			<fo:table-cell border-style="solid"></fo:table-cell>
+        						   	</fo:table-row>
+        						   	<fo:table-row>
+        						   	<fo:table-cell border-style="solid"></fo:table-cell>
+		    								<fo:table-cell border-style="solid">
+        						   				<fo:block text-align="center"  white-space-collapse="false" font-family="Courier,monospace" font-weight="bold" font-size="12pt" keep-together="always">INVOICE AND PAYMENT VOUCHER</fo:block>
+        						   			</fo:table-cell>
+        						   			<fo:table-cell border-style="solid"></fo:table-cell>
+        						   	</fo:table-row>
         						   	<fo:table-row>
 		    								<fo:table-cell border-style="solid">
 		    									 <fo:block text-align="right" font-family="Courier,monospace"  font-size="12pt">&#160;</fo:block>
@@ -397,7 +407,6 @@ under the License.
         						   			</fo:table-row>
         						   		</fo:table-body>
         				         </fo:table>
-
         				</fo:table-cell>
         			</fo:table-row>
         		</fo:table-body>
