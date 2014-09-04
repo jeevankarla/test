@@ -48,7 +48,7 @@ import org.ofbiz.service.DispatchContext;
 import org.ofbiz.service.GenericServiceException;
 import org.ofbiz.service.LocalDispatcher;
 import org.ofbiz.service.ModelService;
-
+import org.ofbiz.service.ServiceUtil;
 /**
  * Product Worker class to reduce code in JSPs.
  */
@@ -1202,24 +1202,86 @@ nextProd:
      */
     public static List<GenericValue> getProductsByCategory(Delegator delegator ,String productCategoryId ,Timestamp filterDate){   	   	
         
-     if(UtilValidate.isEmpty(filterDate)){
-        	 filterDate = UtilDateTime.nowTimestamp(); 
-     }
-    Timestamp dayBegin =UtilDateTime.getDayStart(filterDate);
-   	List<GenericValue> productList =FastList.newInstance();
-   	List condList =FastList.newInstance();
-   	condList.add(EntityCondition.makeCondition("productCategoryId", EntityOperator.EQUALS, productCategoryId));
-   	condList.add(EntityCondition.makeCondition(EntityCondition.makeCondition("salesDiscontinuationDate", EntityOperator.EQUALS, null),EntityOperator.OR,
+    	if(UtilValidate.isEmpty(filterDate)){
+    		filterDate = UtilDateTime.nowTimestamp(); 
+    	}
+    	Timestamp dayBegin =UtilDateTime.getDayStart(filterDate);
+    	List<GenericValue> productList =FastList.newInstance();
+    	List condList =FastList.newInstance();
+    	condList.add(EntityCondition.makeCondition("productCategoryId", EntityOperator.EQUALS, productCategoryId));
+    	condList.add(EntityCondition.makeCondition(EntityCondition.makeCondition("salesDiscontinuationDate", EntityOperator.EQUALS, null),EntityOperator.OR,
    			 EntityCondition.makeCondition("salesDiscontinuationDate", EntityOperator.GREATER_THAN, dayBegin)));
-   	EntityCondition discontinuationDateCondition = EntityCondition.makeCondition(condList, EntityOperator.AND);
-   	try{
-   		productList =delegator.findList("ProductAndCategoryMember", discontinuationDateCondition,null, null, null, true);
-   		productList = EntityUtil.filterByDate(productList, dayBegin);
-   	}catch (GenericEntityException e) {
+    	EntityCondition discontinuationDateCondition = EntityCondition.makeCondition(condList, EntityOperator.AND);
+    	try{
+    		productList =delegator.findList("ProductAndCategoryMember", discontinuationDateCondition,null, null, null, true);
+    		productList = EntityUtil.filterByDate(productList, dayBegin);
+    	}catch (GenericEntityException e) {
 			// TODO: handle exception
-   		Debug.logError(e, module);
+    		Debug.logError(e, module);
 		} 
-   	return productList;
+    	return productList;
 	}
-
+    
+    public static List<GenericValue> getProductsByCategoryList(Delegator delegator ,List productCategoryIdsList ,Timestamp filterDate){   	   	
+        
+    	if(UtilValidate.isEmpty(filterDate)){
+    		filterDate = UtilDateTime.nowTimestamp(); 
+    	}
+    	Timestamp dayBegin =UtilDateTime.getDayStart(filterDate);
+    	List<GenericValue> productList =FastList.newInstance();
+    	List condList =FastList.newInstance();
+    	condList.add(EntityCondition.makeCondition("productCategoryId", EntityOperator.IN, productCategoryIdsList));
+    	condList.add(EntityCondition.makeCondition(EntityCondition.makeCondition("salesDiscontinuationDate", EntityOperator.EQUALS, null),EntityOperator.OR,
+   			 EntityCondition.makeCondition("salesDiscontinuationDate", EntityOperator.GREATER_THAN, dayBegin)));
+    	EntityCondition discontinuationDateCondition = EntityCondition.makeCondition(condList, EntityOperator.AND);
+    	try{
+    		productList =delegator.findList("ProductAndCategoryMember", discontinuationDateCondition,null, null, null, true);
+    		productList = EntityUtil.filterByDate(productList, dayBegin);
+    	}catch (GenericEntityException e) {
+			// TODO: handle exception
+    		Debug.logError(e, module);
+		} 
+    	return productList;
+	}
+    
+    public static Map getProductsByCategoryAssoc(Delegator delegator , String productCategoryId, String productCategoryAssocTypeId ,Timestamp filterDate){   	   	
+        
+        if(UtilValidate.isEmpty(filterDate)){
+           	 filterDate = UtilDateTime.nowTimestamp(); 
+        }
+        Map result = ServiceUtil.returnSuccess();
+        Timestamp dayBegin =UtilDateTime.getDayStart(filterDate);
+      	List<GenericValue> productList = FastList.newInstance();
+      	List<GenericValue> productCategory = FastList.newInstance();
+      	List condList =FastList.newInstance();
+      	if(UtilValidate.isNotEmpty(productCategoryId)){
+      		condList.add(EntityCondition.makeCondition("productCategoryId", EntityOperator.EQUALS, productCategoryId));
+      	}
+      	if(UtilValidate.isNotEmpty(productCategoryAssocTypeId)){
+      		condList.add(EntityCondition.makeCondition("productCategoryAssocTypeId", EntityOperator.EQUALS, productCategoryAssocTypeId));
+      	}
+      	EntityCondition assoCond = EntityCondition.makeCondition(condList, EntityOperator.AND);
+      	try{
+      		List<GenericValue> productCategoryAssoList = delegator.findList("ProductCategoryAssoc", assoCond,null, null, null, true);
+      		productCategoryAssoList = EntityUtil.filterByDate(productCategoryAssoList, dayBegin);
+      		
+      		List<String> productCategoryIdsList = EntityUtil.getFieldListFromEntityList(productCategoryAssoList, "productCategoryIdTo", true);
+      		productCategory = delegator.findList("ProductCategory", EntityCondition.makeCondition("productCategoryId", EntityOperator.IN, productCategoryIdsList), null, null, null, false);
+      		if(UtilValidate.isNotEmpty(productCategoryIdsList)){
+      			condList.clear();
+      			condList.add(EntityCondition.makeCondition("productCategoryId", EntityOperator.IN, productCategoryIdsList));
+      		   	condList.add(EntityCondition.makeCondition(EntityCondition.makeCondition("salesDiscontinuationDate", EntityOperator.EQUALS, null),EntityOperator.OR,
+      		   			EntityCondition.makeCondition("salesDiscontinuationDate", EntityOperator.GREATER_THAN, dayBegin)));
+      		   	EntityCondition discontinuationDateCondition = EntityCondition.makeCondition(condList, EntityOperator.AND);
+      		   		productList =delegator.findList("ProductAndCategoryMember", discontinuationDateCondition,null, null, null, true);
+      		   		productList = EntityUtil.filterByDate(productList, dayBegin);
+      		}
+      	}catch (GenericEntityException e) {
+   			// TODO: handle exception
+      		Debug.logError(e, module);
+   		}
+      	result.put("productList", productList);
+      	result.put("productCategory", productCategory);
+      	return result;
+   	}
 }

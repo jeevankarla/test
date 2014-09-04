@@ -1508,7 +1508,9 @@
         <field name="bedAmount" type="currency-precise" ></field>
         <field name="cstPercent" type="fixed-point"></field>
       	<field name="cstAmount" type="currency-precise" ></field>
-		
+		<field name="serviceTaxPercent" type="fixed-point"></field>
+      	<field name="serviceTaxAmount" type="currency-precise" ></field>
+      	
 		<prim-key field="invoiceId" />
 		<prim-key field="invoiceItemSeqId" />
 		<relation type="one" fk-name="INVOICE_ITMITYP"

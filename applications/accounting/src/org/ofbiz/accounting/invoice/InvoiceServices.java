@@ -1076,6 +1076,8 @@ public class InvoiceServices {
                 createInvoiceItemContext.put("vatPercent", orderItem.get("vatPercent"));
                 createInvoiceItemContext.put("cstAmount", orderItem.get("cstAmount"));
                 createInvoiceItemContext.put("cstPercent", orderItem.get("cstPercent"));
+                createInvoiceItemContext.put("serviceTaxAmount", orderItem.get("serviceTaxAmount"));
+                createInvoiceItemContext.put("serviceTaxPercent", orderItem.get("serviceTaxPercent"));
                 createInvoiceItemContext.put("productFeatureId", orderItem.get("productFeatureId"));
                 createInvoiceItemContext.put("overrideGlAccountId", orderItem.get("overrideGlAccountId"));
                 //createInvoiceItemContext.put("uomId", "");

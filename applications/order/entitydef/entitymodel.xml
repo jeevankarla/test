@@ -539,7 +539,9 @@ under the License.
       <field name="bedseccessAmount" type="currency-precise" ></field>
       <field name="cstPercent" type="fixed-point"></field>
       <field name="cstAmount" type="currency-precise" ></field>
-     
+      <field name="serviceTaxPercent" type="fixed-point"></field>
+      <field name="serviceTaxAmount" type="currency-precise" ></field>
+      
       <field name="recurringFreqUomId" type="id"></field>
       <field name="itemDescription" type="description"></field>
       <field name="comments" type="comment"></field>

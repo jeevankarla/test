@@ -3641,6 +3641,8 @@ public class ShoppingCart implements Iterable<ShoppingCartItem>, Serializable {
                 orderItem.set("vatAmount", item.getVatAmount());
                 orderItem.set("cstPercent" ,item.getCstPercent());
                 orderItem.set("cstAmount", item.getCstAmount());
+                orderItem.set("serviceTaxPercent" ,item.getServiceTaxPercent());
+                orderItem.set("serviceTaxAmount", item.getServiceTaxAmount());
                 orderItem.set("bedPercent",item.getBedPercent());
                 orderItem.set("bedAmount", item.getBedAmount());
                 orderItem.set("bedcessPercent", item.getBedcessPercent());

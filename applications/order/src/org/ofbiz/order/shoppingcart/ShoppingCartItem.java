@@ -164,6 +164,8 @@ public class ShoppingCartItem implements java.io.Serializable {
     private BigDecimal bedseccessAmount = null;
     private BigDecimal cstPercent = null;
     private BigDecimal cstAmount = null;
+    private BigDecimal serviceTaxPercent = null;
+    private BigDecimal serviceTaxAmount = null;
     
     
   
@@ -727,6 +729,8 @@ public class ShoppingCartItem implements java.io.Serializable {
         this.vatAmount = item.getVatAmount();
         this.cstPercent = item.getCstPercent();
         this.cstAmount = item.getCstAmount();
+        this.serviceTaxPercent = item.getServiceTaxPercent();
+        this.serviceTaxAmount = item.getServiceTaxAmount();
         this.bedPercent = item.getBedPercent();
         this.bedAmount = item.getBedAmount();
         this.bedcessPercent = item.getBedcessPercent();
@@ -2197,6 +2201,16 @@ public class ShoppingCartItem implements java.io.Serializable {
         return cstAmount;
     }
     
+    /** Returns the serviceTax percent. */
+    public BigDecimal getServiceTaxPercent() {
+        return serviceTaxPercent;
+    }
+    
+    /** Returns the serviceTax amount. */
+    public BigDecimal getServiceTaxAmount() {
+        return serviceTaxAmount;
+    }
+    
     /** Returns the bed percent. */
     public BigDecimal getBedPercent() {
         return bedPercent;
@@ -2253,6 +2267,10 @@ public class ShoppingCartItem implements java.io.Serializable {
     		 else if(taxType.startsWith("CST_")){
     			 this.cstPercent = percentage;
     			 this.cstAmount = amount;
+    		 }
+    		 else if(taxType.startsWith("SERTAX_")){
+    			 this.serviceTaxPercent = percentage;
+    			 this.serviceTaxAmount = amount;
     		 }
     	}// end of tax list 
     }
