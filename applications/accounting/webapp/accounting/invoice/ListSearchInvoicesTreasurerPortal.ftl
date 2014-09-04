@@ -213,7 +213,7 @@ function showPaymentEntryQTip(partyIdFrom1,partyIdTo1,invoiceId1,voucherType1,am
 	 	   }
 		  paymentMethodList = methodOptionList;
 		  
-			message += "<html><head></head><body><form action='${actionName?if_exists}' method='post' onsubmit='return disableGenerateButton();'><table cellspacing=10 cellpadding=10 width=400>";
+			message += "<html><head></head><body><form action='createApVoucherPaymentTreasurer' method='post' onsubmit='return disableGenerateButton();'><table cellspacing=10 cellpadding=10 width=400>";
 			//message += "<br/><br/>";
 			testStr = '';
 			if(voucherType != 'CASH'){

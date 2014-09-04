@@ -3335,7 +3335,28 @@ under the License.
         <response name="success" type="view" value="APInvoiceOverview"/>
         <response name="error" type="view" value="APInvoiceOverview"/>
     </request-map>
-    
+    <request-map uri="createApVoucherPaymentTreasurer">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="createVoucherPayment"/>
+        <response name="success" type="request-redirect-noparam" value="ApInvoices">
+        <redirect-parameter  name="invoiceId"/> 
+         <redirect-parameter  name="parentTypeId"/> 
+        </response>
+        <response name="error" type="request-redirect-noparam" value="ApInvoices">
+        <redirect-parameter name="invoiceId"/>
+         <redirect-parameter  name="parentTypeId"/> 
+        </response>
+    </request-map>
+    <request-map uri="createArVoucherPaymentTreasurer">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="createVoucherPayment"/>
+        <response name="success" type="request-redirect-noparam" value="ArInvoices">
+         <redirect-parameter  name="invoiceId" />
+          <redirect-parameter  name="parentTypeId"/> 
+         </response>
+        <response name="error" type="request-redirect-noparam" value="ArInvoices">
+        </response>
+    </request-map>
     <!--================= AR Invoices ==================== -->
 	
 	<request-map uri="ArInvoices">
