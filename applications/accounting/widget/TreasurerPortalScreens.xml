@@ -1784,6 +1784,7 @@
 									location="component://accounting/widget/AccountingMenus.xml" />
 						<include-menu name="CreateAPInvoiceSubTabBar"
 									location="component://accounting/widget/AccountingMenus.xml" />
+						<container style="h1"><label>For: ${invoice.description} [${invoice.invoiceId}]</label></container>			
 						<section>
 							<condition>
 								<and>
@@ -2263,6 +2264,7 @@
 									location="component://accounting/widget/AccountingMenus.xml" />
 						<include-menu name="CreateArInvoiceSubTabBar"
 									location="component://accounting/widget/AccountingMenus.xml" />
+									<container style="h1"><label>For: ${invoice.description} [${invoice.invoiceId}]</label></container>
 						<section>
 							<condition>
 								<and>
