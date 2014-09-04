@@ -2339,21 +2339,30 @@ public class OrderReadHelper {
         		if ("SALES_TAX".equals(orderAdjustmentType.getString("parentTypeId"))) {
         			taxAdjustments.add(adjustments.get(i));
         		}
+        		 // adding when Rollouting Purchase Order Vat by Order
+        		if ("PURCHASE_TAX".equals(orderAdjustmentType.getString("parentTypeId"))) {
+        			taxAdjustments.add(adjustments.get(i));
+        		}
            } 
         } catch (GenericEntityException e) {
         	Debug.logError(e, module);
         } 	   
         return taxAdjustments;
     }
+    
 
     public static List<GenericValue> fetchNonTaxAdjustments(List<GenericValue> adjustments) {
        List<GenericValue> nonTaxAdjustments = FastList.newInstance();
        try {       
     	   for (int i = 0; i < adjustments.size(); ++i) {
     		   GenericValue orderAdjustmentType = adjustments.get(i).getRelatedOne("OrderAdjustmentType");
-    		   if (!"SALES_TAX".equals(orderAdjustmentType.getString("parentTypeId"))) {
+    		   if ((!"SALES_TAX".equals(orderAdjustmentType.getString("parentTypeId"))) &&(!"PURCHASE_TAX".equals(orderAdjustmentType.getString("parentTypeId")))) {
     			   nonTaxAdjustments.add(adjustments.get(i));
-    		   }
+    		   } 
+    		   // adding when Rollouting Purchase Order Vat by Order
+    		   /*if ((!"SALES_TAX".equals(orderAdjustmentType.getString("parentTypeId"))) &&((!"PURCHASE_TAX".equals(orderAdjustmentType.getString("parentTypeId"))))) {
+    			   nonTaxAdjustments.add(adjustments.get(i));
+    		   }*/
     	   } 
        } catch (GenericEntityException e) {
     	   Debug.logError(e, module);
