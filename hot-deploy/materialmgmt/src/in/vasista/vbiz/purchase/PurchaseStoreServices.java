@@ -374,11 +374,10 @@ public static Map<String, Object> createPurchaseOrder(DispatchContext dctx, Map<
 	BigDecimal vat = BigDecimal.ZERO;
 	BigDecimal cst = BigDecimal.ZERO;
 	BigDecimal excise = BigDecimal.ZERO;
+	List<GenericValue> prodPriceTypeList = FastList.newInstance();
 	
 	for (Map<String, Object> prodQtyMap : productQtyList) {
-		
 		List taxList=FastList.newInstance();
-		
 		BigDecimal totalTaxAmt =  BigDecimal.ZERO;
 		
 		if(UtilValidate.isNotEmpty(prodQtyMap.get("productId"))){
@@ -400,13 +399,25 @@ public static Map<String, Object> createPurchaseOrder(DispatchContext dctx, Map<
         	totalTaxAmt=totalTaxAmt.add(taxAmount);
         	
         	Map taxDetailMap = FastMap.newInstance();
-    		taxDetailMap.put("taxType", "VAT_SALE");
+    		//taxDetailMap.put("taxType", "VAT_SALE");
+    		taxDetailMap.put("taxType", "VAT_PUR");
     		taxDetailMap.put("amount", taxAmount);
     		taxDetailMap.put("percentage", taxRate);
     		taxList.add(taxDetailMap);
         	/*if(taxPrice.compareTo(BigDecimal.ZERO)>0){
         		taxAmount = itemQuantity.multiply(taxPrice).setScale(salestaxCalcDecimals, salestaxRounding);
         	}*/
+    		GenericValue newProdPriceType = delegator.makeValue("ProductPriceAndType");        	 
+    		newProdPriceType.set("fromDate", effectiveDate);
+    		newProdPriceType.set("parentTypeId", "TAX");
+    		newProdPriceType.set("productId", productId);
+    		newProdPriceType.set("productStoreGroupId", "_NA_");
+    		newProdPriceType.set("productPricePurposeId", "PURCHASE");
+    		newProdPriceType.set("productPriceTypeId", "VAT_PUR");
+    		newProdPriceType.set("taxPercentage", taxRate);
+    		//newProdPriceType.set("taxAmount", taxAmount);
+    		newProdPriceType.set("currencyUomId", "INR");
+    		prodPriceTypeList.add(newProdPriceType);
 		}
 		if(UtilValidate.isNotEmpty(prodQtyMap.get("cstPercentage"))){
 			cst = (BigDecimal)prodQtyMap.get("cstPercentage");
@@ -418,10 +429,23 @@ public static Map<String, Object> createPurchaseOrder(DispatchContext dctx, Map<
         	totalTaxAmt=totalTaxAmt.add(taxAmount);
         	
         	Map taxDetailMap = FastMap.newInstance();
-    		taxDetailMap.put("taxType", "CST_SALE");
+    		//taxDetailMap.put("taxType", "CST_SALE");
+    		taxDetailMap.put("taxType", "CST_PUR");
     		taxDetailMap.put("amount", taxAmount);
     		taxDetailMap.put("percentage", taxRate);
     		taxList.add(taxDetailMap);
+    		
+    		GenericValue newProdPriceType = delegator.makeValue("ProductPriceAndType");        	 
+    		newProdPriceType.set("fromDate", effectiveDate);
+    		newProdPriceType.set("parentTypeId", "TAX");
+    		newProdPriceType.set("productId", productId);
+    		newProdPriceType.set("productStoreGroupId", "_NA_");
+    		newProdPriceType.set("productPricePurposeId", "PURCHASE");
+    		newProdPriceType.set("productPriceTypeId", "CST_PUR");
+    		newProdPriceType.set("taxPercentage", taxRate);
+    		//newProdPriceType.set("taxAmount", taxAmount);
+    		newProdPriceType.set("currencyUomId", "INR");
+    		prodPriceTypeList.add(newProdPriceType);
 		}
 		if(UtilValidate.isNotEmpty(prodQtyMap.get("excisePercentage"))){
 			excise = (BigDecimal)prodQtyMap.get("excisePercentage");
@@ -433,29 +457,30 @@ public static Map<String, Object> createPurchaseOrder(DispatchContext dctx, Map<
         	totalTaxAmt=totalTaxAmt.add(taxAmount);
         	
         	Map taxDetailMap = FastMap.newInstance();
-    		taxDetailMap.put("taxType", "BED_SALE");
+    		taxDetailMap.put("taxType", "BED_PUR");
+    		//taxDetailMap.put("taxType", "BED_SALE");
     		taxDetailMap.put("amount", taxAmount);
     		taxDetailMap.put("percentage", taxRate);
     		taxList.add(taxDetailMap);
+    		
+    		GenericValue newProdPriceType = delegator.makeValue("ProductPriceAndType");        	 
+    		newProdPriceType.set("fromDate", effectiveDate);
+    		newProdPriceType.set("parentTypeId", "TAX");
+    		newProdPriceType.set("productId", productId);
+    		newProdPriceType.set("productStoreGroupId", "_NA_");
+    		newProdPriceType.set("productPricePurposeId", "PURCHASE");
+    		newProdPriceType.set("productPriceTypeId", "BED_PUR");
+    		newProdPriceType.set("taxPercentage", taxRate);
+    		//newProdPriceType.set("taxAmount", taxAmount);
+    		newProdPriceType.set("currencyUomId", "INR");
+    		prodPriceTypeList.add(newProdPriceType);
+    		
 		}
 		}
-	/*	Map<String, Object> priceResult;
-		Map<String, Object> priceContext = FastMap.newInstance();
-		priceContext.put("userLogin", userLogin);
-		priceContext.put("productStoreId", productStoreId);
-		priceContext.put("productId", productId);
-		priceContext.put("partyId", partyId);
-		priceContext.put("priceDate", effectiveDate);
-		priceResult = ByProductServices.calculateByProductsPrice(delegator, dispatcher, priceContext);
-		if (ServiceUtil.isError(priceResult)) {
-				Debug.logError("There was an error while calculating the price: " + ServiceUtil.getErrorMessage(priceResult), module);
-				return ServiceUtil.returnError("There was an error while calculating the price");
-		}
-		BigDecimal totalPrice = (BigDecimal)priceResult.get("totalPrice");
-		*/
+	
 		BigDecimal totalPrice = unitPrice.add(totalTaxAmt);
 		//BigDecimal totalTaxAmt = BigDecimal.ZERO;
-		
+		Debug.log("==totalPrice==="+totalPrice+"==totalTaxAmt="+totalTaxAmt+"=unitPrice="+unitPrice);
 		//List taxList = (List)priceResult.get("taxList");
 		Debug.log("=========taxList====="+taxList);
 		ShoppingCartItem item = null;
@@ -474,35 +499,14 @@ public static Map<String, Object> createPurchaseOrder(DispatchContext dctx, Map<
         }
 		
 	}
-	Debug.log("=========cart====="+cart+"==shipId=="+shipmentId);
 	cart.setDefaultCheckoutOptions(dispatcher);
     ProductPromoWorker.doPromotions(cart, dispatcher);
     CheckOutHelper checkout = new CheckOutHelper(dispatcher, delegator, cart);
+
+	Debug.log("=========prodPriceTypeList====="+prodPriceTypeList);
 	
-	List<GenericValue> applicableTaxTypes = null;
 	try {
-		applicableTaxTypes = delegator.findList("ProductPriceType", EntityCondition.makeCondition("parentTypeId", EntityOperator.EQUALS,"TAX"), null, null, null, false);
-	} catch (GenericEntityException e) {
-		Debug.logError(e, "Failed to retrive ProductPriceType ", module);
-		return ServiceUtil.returnError("Failed to retrive ProductPriceType " + e);
-	}
-
-	List applicableTaxTypeList = EntityUtil.getFieldListFromEntityList(applicableTaxTypes, "productPriceTypeId", true);
-
-	List<GenericValue> prodPriceType = null;
-	List condList = FastList.newInstance();
-	condList.add(EntityCondition.makeCondition("productPriceTypeId", EntityOperator.LIKE, productPriceTypeId+"%"));
-	condList.add(EntityCondition.makeCondition("parentTypeId", EntityOperator.IN, applicableTaxTypeList));
-	EntityCondition condition2 = EntityCondition.makeCondition(condList,EntityOperator.AND);
-	try {
-		prodPriceType = delegator.findList("ProductPriceAndType", condition2, null, null, null, false);
-	} catch (GenericEntityException e) {
-		Debug.logError(e, "Failed to retrive ProductPriceAndType ", module);
-		return ServiceUtil.returnError("Failed to retrive ProductPriceAndType " + e);
-	}
-	prodPriceType = EntityUtil.filterByDate(prodPriceType, effectiveDate);
-	try {
-		checkout.calcAndAddTax(prodPriceType);
+		checkout.calcAndAddTax(prodPriceTypeList);
 	} catch (Exception e1) {
 	// TODO Auto-generated catch block
 		Debug.logError(e1, "Error in CalcAndAddTax",module);
