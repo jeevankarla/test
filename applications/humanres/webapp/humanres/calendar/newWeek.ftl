@@ -17,7 +17,13 @@ specific language governing permissions and limitations
 under the License.
 -->
 <html>
+
+<link type="text/css" href="<@ofbizContentUrl>/images/jquery/ui/css/ui-lightness/jquery-ui-1.8.13.custom.css</@ofbizContentUrl>" rel="Stylesheet" />
+<script type="text/javascript" src="<@ofbizContentUrl>/images/jquery/plugins/datetimepicker/jquery-ui-timepicker-addon-0.9.3.js</@ofbizContentUrl>"></script>
+
 <head>
+
+
  <script>
   function leapTo (link)
    {
@@ -50,8 +56,20 @@ under the License.
       document.getElementById('empdate').value=0;
     }
  </script>
-
+</head>
+<body>
 <script type="text/javascript">
+
+
+function setTimepicker(){
+  alert("timepicker");
+		$('#punchtime').timepicker({ 
+		showSecond: true,	
+		timeFormat: 'hh:mm:ss',
+		showOn: 'button',
+	        buttonImage: '/vasista/images/cal.gif',
+	 });
+}
 
 function inputDateConversion() {	
 	 flag=true;
@@ -74,16 +92,87 @@ function dateValidation(){
     return flag;
 	
   }
+//qtip
+   
+    
+	function dialogue(content, title) {
+	alert("content"+content);
+	alert("title"+title);
+		$('<div />').qtip({
+			content: {
+				text: content,
+				title: title
+			},
+			position: {
+				my: 'center', at: 'center', // Center it...
+				target: $(window) // ... in the window
+			},
+			show: {
+				ready: true, // Show it straight away
+				modal: {
+					on: true, // Make it modal (darken the rest of the page)...
+					blur: false // ... but don't close the tooltip when clicked
+				}
+			},
+			hide: false, // We'll hide it maunally so disable hide events
+			style: {name : 'cream'}, //'ui-tooltip-light ui-tooltip-rounded ui-tooltip-dialogue', // Add a few styles
+			events: {
+				// Hide the tooltip when any buttons in the dialogue are clicked
+				render: function(event, api) {
+//				    setTimepicker();
+					$('button', api.elements.content).click(api.hide);
+					
+				},
+				// Destroy the tooltip once it's hidden as we no longer need it!
+				hide: function(event, api) { api.destroy(); }
+			}
+		});		
+	}
+ 
+	function Alert(message, title)	{
+		// Content will consist of the message and an cancel and submit button
+		var message = $('<p />', { html: message }),
+			cancel = $('<button />', { text: 'cancel', 'class': 'full' });
+			alert("message"+message);
+		dialogue(message, title );		
+		
+	}
+	
+	function disableGenerateButton(){			
+		   $("input[type=submit]").attr("disabled", "disabled");
+	
+	}
+	//handle cancel event
+	function cancelForm(){		 
+		return false;
+	}
+	
+	
+function showPunchEditForm(partyId,punchType,punchdate,InOut,emplPunchId,punchtime) {
+			alert("function start"+ punchtime);	
+		var message ="";
+		      message +="<form id='editAdminPunch' action='adminPunch' method='post' onsubmit='return disableGenerateButton();'><table cellspacing=10  cellpadding=20>"; 		
+			message +="<tr class='h3'><td align='left' class='h3' width='30%'>PartyId:</td><td align='left' class='h3' width='30%'><input type='text' value="+partyId+" name='partyId' readonly size='5' /></td></tr>"+
+			"<tr class='h3'><td align='left' class='h3' width='40%'>Punch Type:</td><td align='left' class='h3' width='40%'><input type='text' value="+punchType+" name='PunchType' readonly size='5' /></td></tr>"+
+			"<tr class='h3'><td align='left' class='h3' width='40%'>Date:</td><td align='left' class='h3' width='40%'><input type='text' value="+punchdate+" name='punchdate' readonly size='10' /></td></tr>"+
+			"<tr class='h3'><td align='left' class='h3' width='40%'>Punch Time:</td><td align='left' class='h3' width='40%'><input type='text'  value="+punchtime+" name='punchtime' size='10' required />HH:MM:SS</tr>"+
+			"<tr class='h3'><td align='left' class='h3' width='40%'>IN/OUT:</td><td align='left' class='h3' width='40%'><input type='text' value="+InOut+" name='InOut' readonly size='5' /></td></tr>"+
+			"<tr class='h3'><td align='left' class='h3' width='40%'></td><td align='left' class='h3' width='40%'><input type='hidden' value="+emplPunchId+" name='emplPunchId' readonly size='5' /></td></tr>"+
+			"<tr class='h3'><td align='left' class='h3' width='40%'>Note:</td><td align='left' class='h3' width='40%'><input  type='textarea' value='' name='Note'></td></tr>"+
+			"<tr class='h3'><td align='right'><span align='right'><input type='submit' value='${uiLabelMap.CommonSubmit}' id='adminPunch' class='smallSubmit'/></span></td><td class='h3' width='80%' align='center'><span align='right'><button value='${uiLabelMap.CommonCancel}' onclick='return cancelForm();' class='smallSubmit'>${uiLabelMap.CommonCancel}</button></span></td></tr>";
+		message +="</table></form>";			
+		var title = "<h2><center>Edit Punch</center></h2>";
+		alert("first");
+		Alert(message, title);
+	}
+	
 
 </script> 
 
+<link rel="stylesheet" href="<@ofbizContentUrl>/images/jquery/plugins/qtip/jquery.qtip.css</@ofbizContentUrl>" type="text/css" media="screen" charset="utf-8" />
 
- </head>
- 
-<body onLoad="window.refresh()">
-<#if (security.hasEntityPermission("HUMANRES", "_ADMIN", session))>
-    <a href="<@ofbizUrl>WeeklyInOut.csv</@ofbizUrl>">Daily Report</a> 
-</#if>
+
+
 <div class="bothclear">
 	<div class="screenlet">
   		<div class="screenlet-title-bar">
@@ -202,14 +291,18 @@ function dateValidation(){
 							 	</#if>
 							</#if> 
 						</#list>
-					   <#if x!=1>  onClick="leapTo('/humanres/control/admPunch?partyId=${partyId}&punchdate=${period.start?string}&PunchType=${punchtype.enumId?if_exists}&InOut=IN&dateTime=${period.start?string}&emplPunchId=${cellid?string}')"
+						<#assign date=Static["org.ofbiz.base.util.UtilDateTime"].toDateString(period.start, "yyyy-MM-dd")>
+						<#assign punchtime="00:00:00">
+					   <#if x!=1>  onClick="showPunchEditForm('${partyId}','${punchtype.enumId?if_exists}','${date}','${inOut.enumId?if_exists}','${cellid?string}','${punchtime}')";<#--onClick="leapTo('/humanres/control/admPunch?partyId=${partyId}&punchdate=${period.start?string}&PunchType=${punchtype.enumId?if_exists}&InOut=IN&dateTime=${period.start?string}&emplPunchId=${cellid?string}')"-->
 					   <#else>
 							 <#list data as Records>
 						     	<#if Records.InOut="${inOut.enumId}">
 						  		<#if period.start?date=Records.punchdate>   
 						    		<#if Records.PunchType="${punchtype.enumId}">   
-						      			<#if Records.emplPunchId=cellid?string>    
-						      				onClick="leapTo('/humanres/control/admPunch?partyId=${partyId}&punchdate=${period.start?string}&PunchType=${punchtype.enumId?if_exists}&InOut=${inOut.enumId?if_exists}&dateTime=${period.start?string}&punchtime=${Records.getString('punchtime')}&emplPunchId=${cellid?string}&shiftType=${Records.shiftType?if_exists}')" 
+						      			<#if Records.emplPunchId=cellid?string>   
+						      			<#assign date=Static["org.ofbiz.base.util.UtilDateTime"].toDateString(period.start, "yyyy-MM-dd")> 
+						      				<#--onClick="leapTo('/humanres/control/admPunch?partyId=${partyId}&punchdate=${period.start?string}&PunchType=${punchtype.enumId?if_exists}&InOut=${inOut.enumId?if_exists}&dateTime=${period.start?string}&punchtime=${Records.getString('punchtime')}&emplPunchId=${cellid?string}&shiftType=${Records.shiftType?if_exists}')"-->
+						      				onClick="showPunchEditForm('${partyId}','${punchtype.enumId?if_exists}','${date}','${inOut.enumId?if_exists}','${cellid?string}','${Records.getString('punchtime')}')";
 						     				<#assign x=0>
 						        			<#break> 
 						     			</#if>
@@ -276,5 +369,4 @@ function dateValidation(){
 </#if>
 </body>
 </html>
-
 

@@ -64,7 +64,8 @@ under the License.
                 <set field="partyId" from-field="parameters.partyId"/>
                 <script location="component://humanres/webapp/humanres/WEB-INF/actions/calendar/Week.groovy"/>
                 <script location="component://humanres/webapp/humanres/WEB-INF/actions/calendar/attendance.bsh"/>
-                 
+                 <set field="layoutSettings.javaScripts[]" value="/images/jquery/ui/css/ui-lightness/jquery-ui-1.8.13.custom.css" global="true"/>
+              	<set field="layoutSettings.javaScripts[]" value="images/webapp/images/jquery/plugins/datetimepicker/jquery-ui-timepicker-addon-0.9.3.js" global="true"/>
                 <entity-one entity-name="Party" value-field="party"/>
                 <entity-one entity-name="EmplPunch" value-field="sldate"/>
                 <entity-condition entity-name="PartyRole" list="employee">
