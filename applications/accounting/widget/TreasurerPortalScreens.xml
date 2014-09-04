@@ -2142,8 +2142,8 @@
                     	<include-menu name="ARInvoiceTypesTabBar" location="component://accounting/widget/AccountingMenus.xml"/>
                     	<include-menu name="ARInvoiceTabBar"
 									location="component://accounting/widget/AccountingMenus.xml" />
-						<include-menu name="CreateArInvoiceSubTabBar"
-									location="component://accounting/widget/AccountingMenus.xml" />
+						<!-- <include-menu name="CreateArInvoiceSubTabBar"
+									location="component://accounting/widget/AccountingMenus.xml" /> -->
                         <section>
                         	<condition>
                     			<if-compare operator="equals" value="true" field="hasArInvoiceEditPermission"/>

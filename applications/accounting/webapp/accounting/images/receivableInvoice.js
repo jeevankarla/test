@@ -64,11 +64,14 @@ jQuery(document).ready(function() {
 	getRoleTypes();	
 	invoiceTypeOnChangeHandler();	
 	var action;
-	if (jQuery('select[name=partyClassificationGroupId] option:selected').val().length == 0)
+	if( $('select[name="partyClassificationGroupId"]').length )
 	{
-		jQuery('#NewSalesInvoice table tbody tr:eq(1) td:eq(0)').hide();	
-		jQuery('#NewSalesInvoice table tbody tr:eq(1) td:eq(1)').hide();	 		
-	}
+		if (jQuery('select[name=partyClassificationGroupId] option:selected').val().length == 0)
+		{
+			jQuery('#NewSalesInvoice table tbody tr:eq(1) td:eq(0)').hide();	
+			jQuery('#NewSalesInvoice table tbody tr:eq(1) td:eq(1)').hide();	 		
+		}
+	}	
 	setPartyGroupAction();  
     jQuery('#NewSalesInvoice').attr("action", action);        
 });

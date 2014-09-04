@@ -58,6 +58,7 @@ under the License.
 	}
 		
 	function saveInvoiceItem() {
+		
 		if( ($("#amount").val()).length < 1 ) {
 	    	$('#amount').css('background', 'red'); 
 	       	setTimeout(function () {
@@ -65,13 +66,11 @@ under the License.
 	       	}, 800);
 	    	return false;
 	    }
+		
 		var productId;
   		var quantity;
   		var description;
   		var amount;
-  		var bedPercent;
-  		var vatPercent;
-  		var cstPercent;
   		var invoiceId = "${invoiceId}";
 		var saveRow = $('#save').parent().parent();
 		var invoiceItemTypeId = $('#invoiceItemTypeId :selected').val();  
@@ -85,24 +84,12 @@ under the License.
 		   		if(name == "amount"){
 		   			amount = $(this).val();
 		   		}
-		   		if(name == "bedPercent"){
-		   			bedPercent = $(this).val();
-		   		}
-		   		if(name == "vatPercent"){
-		   			vatPercent = $(this).val();
-		   		}
-		   		if(name == "cstPercent"){
-		   			cstPercent = $(this).val();
-		   		}
 		    });
 		   
 		}); 
 		var data= {invoiceItemTypeId : invoiceItemTypeId,
              		description : description,
              		amount : amount,
-             		bedPercent : bedPercent,
-             		vatPercent : vatPercent,
-             		cstPercent : cstPercent,
                     invoiceId: invoiceId};
 		$.ajax({
 			 type: "POST",
@@ -151,9 +138,6 @@ under the License.
 				          <#--<td>ProductId</td>-->
 				          <td>Description</td>
 				          <td>Amount</td>
-				          <td>Excise(%)</td>
-				          <td>Vat(%)</td>
-				          <td>Cst(%)</td>
 				          <td>Action</td>
 				        </tr>
 				      </thead>
@@ -166,9 +150,6 @@ under the License.
 				              <td>${invoiceItemType.description}</td>
 				              <td>${invoice.description?if_exists}</td>
 				              <td>${invoice.amount?if_exists}</td>
-				              <td>${invoice.bedPercent?if_exists}</td>
-				              <td>${invoice.vatPercent?if_exists}</td>
-				              <td>${invoice.cstPercent?if_exists}</td>
 				              <td><a name="remove" href="" onClick="return removeInvoiceItem('${invoice.invoiceItemSeqId}', '${invoice.taxAuthPartyId?if_exists}', '${invoice.invoiceId}');">Remove</a></td>
 				            </tr>
 				            <#-- toggle the row color -->
@@ -185,11 +166,8 @@ under the License.
 						         </#list>
 							  </select>          
 				          </td>
-				          <td><input id="description" class="input-medium" name="description" type="text" size="30"/></td>
+				          <td><input id="description" class="input-medium" name="description" type="text" size="60"/></td>
 				          <td><input id="amount" class="input-medium" name="amount" type="text" size="12"/></td>
-				          <td><input id="bedPercent" class="input-medium" name="bedPercent" type="text" size="3"/></td>
-          				  <td><input id="vatPercent" class="input-medium" name="vatPercent" type="text" size="3"/></td>
-          				  <td><input id="cstPercent" class="input-medium" name="cstPercent" type="text" size="3"/></td>
 				          <td><button id="save" name="save" onClick="return saveInvoiceItem();" style="buttontext">Add</button></td>
 				        </tr>
 				      </tbody>
@@ -199,6 +177,6 @@ under the License.
 		 </div>
 		 	
 	</div>
-	<a style="font-size: 16px" href="<@ofbizUrl>ARInvoiceOverview?invoiceId=${invoice.invoiceId}&amp;subTabButtonValue=${tabButtonItem5}</@ofbizUrl>">&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;  Save</a>
+	<a style="font-size: 16px" href="<@ofbizUrl>ARInvoiceOverview?invoiceId=${invoice.invoiceId}&amp;subTabButtonValue=${tabButtonItem5}&amp;invoiceTypeId=${invoice.invoiceTypeId}</@ofbizUrl>">&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;  Save</a>
 	
   

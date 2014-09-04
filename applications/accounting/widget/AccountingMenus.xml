@@ -2953,7 +2953,7 @@
 		<menu-item name="find" title="${uiLabelMap.CommonFind}">
 			<link target="ApInvoices" >
 				<parameter param-name="subTabButtonValue" from-field="tabButtonItem5" />
-				<parameter param-name="invoiceTypeId" from-field="invoiceTypeId" />
+				<parameter param-name="invoiceTypeId" from-field="invoice.invoiceTypeId" />
 				<parameter param-name="actionSubTabButtonValue" value="find" />
 			</link>
 		</menu-item>
@@ -2980,6 +2980,8 @@
 			<link target="CreateAPInvoice">
 				<parameter param-name="subTabButtonValue" from-field="tabButtonItem5" />
 				<parameter param-name="invoiceId" from-field="invoice.invoiceId" />
+				<parameter param-name="showCreateButton" value="Y" />
+				<parameter param-name="invoiceTypeId" from-field="invoice.invoiceTypeId" />
 				<parameter param-name="actionSubTabButtonValue" value="createInvoice" />
 			</link>
 		</menu-item>
@@ -2995,6 +2997,7 @@
 			<link target="CreateAPInvoice">
 				<parameter param-name="subTabButtonValue" from-field="tabButtonItem5" />
 				<parameter param-name="invoiceId" from-field="invoice.invoiceId" />
+				<parameter param-name="invoiceTypeId" from-field="invoice.invoiceTypeId" />
 				<parameter param-name="actionSubTabButtonValue" value="updateInvoice" />
 			</link>
 		</menu-item>
@@ -3349,7 +3352,7 @@
 		<menu-item name="find" title="${uiLabelMap.CommonFind}">
 			<link target="ArInvoices" >
 				<parameter param-name="subTabButtonValue" from-field="tabButtonItem5" />
-				<parameter param-name="invoiceTypeId" from-field="invoiceTypeId" />
+				<parameter param-name="invoiceTypeId" from-field="invoice.invoiceTypeId" />
 				<parameter param-name="actionSubTabButtonValue" value="find" />
 			</link>
 		</menu-item>
@@ -3359,7 +3362,7 @@
 					<if-empty field="invoice.invoiceId" />
 				</not>
 			</condition>
-			<link target="ArInvoiceOverview">
+			<link target="ARInvoiceOverview">
 				<parameter param-name="subTabButtonValue" from-field="tabButtonItem5" />
 				<parameter param-name="invoiceTypeId" from-field="invoiceTypeId" />
 				<parameter param-name="invoiceId" from-field="invoice.invoiceId" />
@@ -3376,6 +3379,8 @@
 			<link target="CreateARInvoice">
 				<parameter param-name="subTabButtonValue" from-field="tabButtonItem5" />
 				<parameter param-name="invoiceId" from-field="invoice.invoiceId" />
+				<parameter param-name="showCreateButton" value="Y" />
+				<parameter param-name="invoiceTypeId" from-field="invoice.invoiceTypeId" />
 				<parameter param-name="actionSubTabButtonValue" value="createInvoice" />
 			</link>
 		</menu-item>
@@ -3391,6 +3396,7 @@
 			<link target="CreateARInvoice">
 				<parameter param-name="subTabButtonValue" from-field="tabButtonItem5" />
 				<parameter param-name="invoiceId" from-field="invoice.invoiceId" />
+				<parameter param-name="invoiceTypeId" from-field="invoice.invoiceTypeId" />
 				<parameter param-name="actionSubTabButtonValue" value="updateInvoice" />
 			</link>
 		</menu-item>

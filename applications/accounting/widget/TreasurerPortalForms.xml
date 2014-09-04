@@ -1245,7 +1245,7 @@ under the License.
                 </entity-options>
             </drop-down>
         </field> -->  
-        <field name="timePeriodId">
+        <!-- <field name="timePeriodId">
             <drop-down>
                 <entity-options entity-name="CustomTimePeriod" key-field-name="customTimePeriodId" description="${periodName}: ${fromDate} - ${thruDate}" filter-by-date="false">
                     <entity-constraint name="periodTypeId" operator="like" value="RATE_%"/>
@@ -1253,7 +1253,7 @@ under the License.
                     <entity-order-by field-name="-thruDate"/>
                 </entity-options>
             </drop-down>
-        </field>     
+        </field>  -->    
         <field name="partyIdFrom"><hidden value="Company"/></field>         
         <!-- <field position="1" name="organizationPartyId" parameter-name="partyIdFrom">
             <drop-down allow-empty="false" no-current-selected-key="${defaultOrganizationPartyId}">
