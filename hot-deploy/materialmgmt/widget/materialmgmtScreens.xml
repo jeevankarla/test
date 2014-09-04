@@ -137,7 +137,7 @@
                <set field="supplyDate" from-field="parameters.supplyDate"/>
                <set field="effectiveDate" value="${parameters.effectiveDate}"/>
                <set field="shipmentTypeId" value="${parameters.shipmentTypeId}"/>
-                <set field="parameters.roleTypeId" value="IC_WHOLESALE"/>
+               <!--  <set field="parameters.roleTypeId" value="IC_WHOLESALE"/> -->
                <!--  <script location="component://byproducts/webapp/byproducts/WEB-INF/actions/facility/enableBoothAutoComplete.groovy"/> -->
                 <script location="component://byproducts/webapp/byproducts/WEB-INF/actions/facility/enablePartyAutoComplete.groovy"/>
             </actions>
