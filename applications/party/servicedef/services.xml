@@ -1429,6 +1429,12 @@ under the License.
         <attribute name="thruDate" mode="IN" type="Timestamp" optional="true"/> 
         <attribute name="insuranceId" mode="OUT" type="String"  optional="true"/> 
     </service>
+     <service name="updatePartyInsuranceDetails" engine="entity-auto" default-entity-name="PartyInsurance" invoke="update">
+        <description>update Party Insurance entity</description>
+        <permission-service service-name="partyBasePermissionCheck" main-action="UPDATE"/>
+        <auto-attributes mode="IN" include="pk"/>
+        <auto-attributes mode="IN" optional="true" include="nonpk"/>
+    </service>
      <service name="deletePartyInsurance" engine="java" auth="true" invoke="deletePartyInsurance" 
         location="org.ofbiz.party.party.PartyServices">
         <description>Delete Party Insurance</description>
