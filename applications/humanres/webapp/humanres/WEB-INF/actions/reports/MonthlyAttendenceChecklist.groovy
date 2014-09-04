@@ -35,7 +35,14 @@ context.thruDate=UtilDateTime.toDateString(thruDate, "MMM dd, yyyy");
 
 emplList = [];
 
-
+hrMonthDates=[];
+List conList=[];
+conList.add(EntityCondition.makeCondition("periodTypeId",EntityOperator.EQUALS,"HR_MONTH"));
+conList.add(EntityCondition.makeCondition("thruDate",EntityOperator.LESS_THAN_EQUAL_TO,UtilDateTime.toSqlDate(thruDate)));
+con=EntityCondition.makeCondition(conList,EntityOperator.AND);
+hrMonthDates = delegator.findList("CustomTimePeriod", con ,null,UtilMisc.toList("-thruDate"), null, false );
+customTimePeriodIds=EntityUtil.getFirst(hrMonthDates);
+custTimeId=customTimePeriodIds.get("customTimePeriodId");
 def populateChildren(org, employeeList) {
 	EmploymentsMap=HumanresService.getActiveEmployements(dctx,[userLogin:userLogin,orgPartyId:"Company"]);
 	employments=EmploymentsMap.get("employementList");
@@ -72,7 +79,7 @@ def populateChildren(org, employeeList) {
 			employeeMap.put("arrearDays",employeePayrollAttedance.get("noOfArrearDays"));
 			employeeMap.put("lateMin", employeePayrollAttedance.get("lateMin"));
 			employeeMap.put("extraMin", employeePayrollAttedance.get("extraMin"));
-			leaveBalances = delegator.findByAnd("EmplLeaveBalanceStatus",[partyId:employee.partyId],["leaveTypeId"]);
+			leaveBalances = delegator.findByAnd("EmplLeaveBalanceStatus",[partyId:employee.partyId,customTimePeriodId:custTimeId],["leaveTypeId"]);
 			leaveBalances.each{ leaveType ->
 				if(leaveType.leaveTypeId=="CL")
 				employeeMap.put("BCL", leaveType.openingBalance);

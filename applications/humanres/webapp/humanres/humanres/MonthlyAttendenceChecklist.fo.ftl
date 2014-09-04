@@ -51,8 +51,8 @@ under the License.
                     <fo:table-column column-width="65pt"/>
                     <fo:table-column column-width="80pt"/>
                     <fo:table-column column-width="150pt"/>
-                    <fo:table-column column-width="60pt"/>
-                    <fo:table-column column-width="45pt"/>
+                    <fo:table-column column-width="80pt"/>
+                    <fo:table-column column-width="10pt"/>
                     <fo:table-column column-width="60pt"/>
                     <fo:table-column column-width="50pt"/>
                     <fo:table-column column-width="48pt"/>
@@ -112,19 +112,19 @@ under the License.
 	                            </fo:table-cell>
 	                            <fo:table-cell >
 	                            	<fo:block text-align="center" keep-together="always">LATE</fo:block>
-	                            	<fo:block text-align="center" keep-together="always">HOURS</fo:block>	                               
+	                            	<fo:block text-align="center" keep-together="always">MINUTES</fo:block>	                               
 	                            </fo:table-cell>
 	                            <fo:table-cell >
-	                            	<fo:block text-align="center" keep-together="always">EARLY</fo:block>
-	                            	<fo:block text-align="center" keep-together="always">HOURS</fo:block>	                               
+	                            	<fo:block text-align="center" keep-together="always"></fo:block>
+	                            	<fo:block text-align="center" keep-together="always"></fo:block>	                               
 	                            </fo:table-cell>
 	                            <fo:table-cell >
 	                            	<fo:block text-align="center" keep-together="always">EXTRA</fo:block>
-	                            	<fo:block text-align="center" keep-together="always">HOURS</fo:block>	                               
+	                            	<fo:block text-align="center" keep-together="always">MINUTES</fo:block>	                               
 	                            </fo:table-cell>	
 	                            <fo:table-cell >
-	                            	<fo:block text-align="center" keep-together="always">COLD</fo:block>
-	                            	<fo:block text-align="center" keep-together="always">DAYS</fo:block>	                               
+	                            	<fo:block text-align="center" keep-together="always">&#160;COLD</fo:block>
+	                            	<fo:block text-align="center" keep-together="always">&#160;DAYS</fo:block>	                               
 	                            </fo:table-cell>
 	                            <fo:table-cell >
 	                            	<fo:block text-align="center" keep-together="always">CASH</fo:block>
@@ -177,15 +177,15 @@ under the License.
                     <fo:table-column column-width="50pt"/>
                     <fo:table-column column-width="40pt"/>
                     <fo:table-column column-width="40pt"/>
-                    <fo:table-column column-width="40pt"/>
-                    <fo:table-column column-width="50pt"/>
+                    <fo:table-column column-width="36pt"/>
+                    <fo:table-column column-width="85pt"/>
+                    <fo:table-column column-width="65pt"/>
+                    <fo:table-column column-width="51pt"/>
+                    <fo:table-column column-width="53pt"/>
+                    <fo:table-column column-width="45pt"/>
+                    <fo:table-column column-width="45pt"/>
                     <fo:table-column column-width="55pt"/>
                     <fo:table-column column-width="53pt"/>
-                    <fo:table-column column-width="51pt"/>
-                    <fo:table-column column-width="51pt"/>
-                    <fo:table-column column-width="50pt"/>
-                    <fo:table-column column-width="50pt"/>
-                    <fo:table-column column-width="50pt"/>
                     <fo:table-column column-width="60pt"/>
                     <fo:table-column column-width="50pt"/>
                     <fo:table-body> 
@@ -198,16 +198,16 @@ under the License.
                     <fo:table-cell><fo:block text-align="left" keep-together="always">${(employee.name)?upper_case}</fo:block></fo:table-cell>
                     <fo:table-cell><fo:block linefeed-treatment="preserve">&#xA;</fo:block></fo:table-cell>
                     <#assign HPL=0>
-                    <#assign HPL=employee.HPL>
+                  <#assign HPL=employee.HPL> 
                     <fo:table-cell><fo:block text-align="right" keep-together="always"><#if HPL !=0>${(HPL)?if_exists?string("##0.0")}</#if></fo:block></fo:table-cell>
                     <#assign BHP=0>
-                    <#assign BHP=employee.BHP>
+                   <#assign BHP=employee.BHP> 
                     <fo:table-cell><fo:block text-align="right" keep-together="always"><#if BHP !=0>${(BHP)?if_exists?string("##0.0")}</#if></fo:block></fo:table-cell>
-                    <#assign CL=0>
-                    <#assign CL=employee.CL>
+                   <#assign CL=0>
+                     <#assign CL=employee.CL>
                     <fo:table-cell><fo:block text-align="right" keep-together="always"><#if CL !=0>${(CL)?if_exists?string("##0.0")}</#if></fo:block></fo:table-cell>
-                    <#assign BCL=0>
-                    <#assign BCL=employee.BCL>
+                  <#assign BCL=0>
+                   <#assign BCL=employee.BCL>
                     <fo:table-cell><fo:block text-align="right" keep-together="always"><#if BCL !=0>${BCL?if_exists?string("##0.0")}</#if></fo:block></fo:table-cell>
                     <#assign EL=0>
                     <#assign EL=employee.EL>
@@ -234,12 +234,10 @@ under the License.
                     <#assign shift_gen=employee.SHIFT_GEN>
                     <fo:table-cell><fo:block text-align="right" keep-together="always"><#if shift_gen !=0>${shift_gen?if_exists?string("##0.0")}</#if></fo:block></fo:table-cell>
                     <#assign lateHours=0>
-                    <#assign lateHours=((employee.lateMin)*480/60)>
-                    <fo:table-cell><fo:block text-align="right" keep-together="always"><#if lateHours !=0>${lateHours?if_exists?string("##0.0")}</#if></fo:block></fo:table-cell>
-                    
-                    <fo:table-cell><fo:block text-align="right" keep-together="always"></fo:block></fo:table-cell>
+                    <#assign lateHours=((employee.lateMin)*480)>
+                    <fo:table-cell><fo:block text-align="right" keep-together="always"><#if lateHours !=0>${lateHours?if_exists?string("##0.0000")}</#if></fo:block></fo:table-cell>
                     <#assign extraHours=0>
-                    <#assign extraHours=(employee.extraMin)*480/60>
+                    <#assign extraHours=(employee.extraMin)*480>
                     <fo:table-cell><fo:block text-align="right" keep-together="always"><#if extraHours !=0>${extraHours?if_exists?string("##0.0")}</#if></fo:block></fo:table-cell>
                     <fo:table-cell><fo:block text-align="right" keep-together="always"><#if employee.cldDays !=0>${(employee.cldDays)?if_exists?string("##0.0")}</#if></fo:block></fo:table-cell>
                     <fo:table-cell><fo:block text-align="right" keep-together="always"><#if employee.caDays !=0>${(employee.caDays)?if_exists?string("##0.0")}</#if></fo:block></fo:table-cell>
