@@ -136,7 +136,7 @@ function reportTypeChangeFunc() {
         makeDatePicker("saleInvoiceAbstractfDate","saleInvoiceAbstracttDate");
 	    makeDatePicker("regularIceCreamfDate","regularIceCreamtDate");
 	    makeDatePicker("purchaseFromDate","purchaseThruDate");
-		
+		makeDatePicker("analysisCodeFromDate","analysisCodeThruDate");
 		$('#ui-datepicker-div').css('clip', 'auto');		
 	});
 //for Month Picker
@@ -1002,9 +1002,12 @@ function reportTypeChangeFunc() {
 							<td width="15%">From<input  type="text" size="18pt" id="regularIceCreamfDate" readonly  name="fromDate"/></td>
 						    <td width="15%">To<input  type="text" size="18pt" id="regularIceCreamtDate" readonly  name="thruDate"/></td>
 			      			<td width="15%">By<select name="categoryType">
-			      			<option value="All">All</option>
-			      			<option value="ICE_CREAM_NANDINI">Nandini Ice Cream</option>
-			      			<option value="ICE_CREAM_AMUL">Amul Ice Cream</option>
+			      				<option value="All">All</option>
+				      			<option value="ICE_CREAM_NANDINI">Nandini Ice Cream</option>
+				      			<option value="ICE_CREAM_AMUL">Amul Ice Cream</option>
+				      			<option value="UNITS">Inter Unit Transfer</option>
+				      			<option value="UNION">Sale to Nandini</option>
+				      			<option value="DEPOT_CUSTOMER">Depot Sale</option>
 			      			</select></td>
 			      			<td width="15%"></td>
 							<td width="10%"><input type="submit" value="Download" class="buttontext"/></td>
@@ -1016,9 +1019,12 @@ function reportTypeChangeFunc() {
 							<td width="15%">From<input  type="text" size="18pt" id="amulIceCreamfDate" readonly  name="fromDate"/></td>
 						    <td width="15%">To<input  type="text" size="18pt" id="amulIceCreamtDate" readonly  name="thruDate"/></td>
 			      			<td width="15%">By<select name="categoryType">
-			      			<option value="All">All</option>
-			      			<option value="ICE_CREAM_NANDINI">Nandini Ice Cream</option>
-			      			<option value="ICE_CREAM_AMUL">Amul Ice Cream</option>
+			      				<option value="All">All</option>
+				      			<option value="ICE_CREAM_NANDINI">Nandini Ice Cream</option>
+				      			<option value="ICE_CREAM_AMUL">Amul Ice Cream</option>
+				      			<option value="UNITS">Inter Unit Transfer</option>
+				      			<option value="UNION">Sale to Nandini</option>
+				      			<option value="DEPOT_CUSTOMER">Depot Sale</option>
 			      			</select></td>
 	      					<td width="15%"></td>
 							<td width="10%"><input type="submit" value="Download" class="buttontext"/></td> 
@@ -1040,6 +1046,9 @@ function reportTypeChangeFunc() {
 				      			<option value="All">All</option>
 				      			<option value="ICE_CREAM_NANDINI">Nandini Ice Cream</option>
 				      			<option value="ICE_CREAM_AMUL">Amul Ice Cream</option>
+				      			<option value="UNITS">Inter Unit Transfer</option>
+				      			<option value="UNION">Sale to Nandini</option>
+				      			<option value="DEPOT_CUSTOMER">Depot Sale</option>
 				      			</select>
 				      		</td>
 			      			<td width="15%">Report Type 
@@ -1057,6 +1066,16 @@ function reportTypeChangeFunc() {
 							<td width="30%">Purchase Register Book Report</td>
 							<td width="15%">From<input  type="text" size="18pt" id="purchaseFromDate" readonly  name="fromDate"/></td>
 						    <td width="15%">To<input  type="text" size="18pt" id="purchaseThruDate" readonly  name="thruDate"/></td>
+						    <td width="15%"></td>
+	      					<td width="15%"></td>
+							<td width="10%"><input type="submit" value="Download" class="buttontext"/></td> 
+						</form>
+	                  </tr>
+	                  <tr class="alternate-row">
+						<form id="analysisCodeReport" name="analysisCodeReport" method="post" action="<@ofbizUrl>analysisCodeReport.pdf</@ofbizUrl>" target="_blank">	
+							<td width="30%">Analysis Code Report</td>
+							<td width="15%">From<input  type="text" size="18pt" id="analysisCodeFromDate" readonly  name="fromDate"/></td>
+						    <td width="15%">To<input  type="text" size="18pt" id="analysisCodeThruDate" readonly  name="thruDate"/></td>
 						    <td width="15%"></td>
 	      					<td width="15%"></td>
 							<td width="10%"><input type="submit" value="Download" class="buttontext"/></td> 

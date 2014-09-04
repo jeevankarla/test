@@ -55,12 +55,24 @@ if(maxIntervalDays > 32){
 }
 partyIds=[];
 if(categoryType.equals("ICE_CREAM_NANDINI")||categoryType.equals("All")){
-nandiniPartyIds = ByProductNetworkServices.getPartyByRoleType(dctx, [userLogin: userLogin, roleTypeId: "IC_WHOLESALE"]).get("partyIds");
-partyIds.addAll(nandiniPartyIds);
+   nandiniPartyIds = ByProductNetworkServices.getPartyByRoleType(dctx, [userLogin: userLogin, roleTypeId: "IC_WHOLESALE"]).get("partyIds");
+   partyIds.addAll(nandiniPartyIds);
 }
 if(categoryType.equals("ICE_CREAM_AMUL")||categoryType.equals("All")){
-amulPartyIds = ByProductNetworkServices.getPartyByRoleType(dctx, [userLogin: userLogin, roleTypeId: "EXCLUSIVE_CUSTOMER"]).get("partyIds");
-partyIds.addAll(amulPartyIds);
+   amulPartyIds = ByProductNetworkServices.getPartyByRoleType(dctx, [userLogin: userLogin, roleTypeId: "EXCLUSIVE_CUSTOMER"]).get("partyIds");
+   partyIds.addAll(amulPartyIds);
+}
+if(categoryType.equals("UNITS")||categoryType.equals("All")){
+	unitPartyIds = ByProductNetworkServices.getPartyByRoleType(dctx, [userLogin: userLogin, roleTypeId: "UNITS"]).get("partyIds");
+	partyIds.addAll(unitPartyIds);
+}
+if(categoryType.equals("UNION")||categoryType.equals("All")){
+	unionPartyIds = ByProductNetworkServices.getPartyByRoleType(dctx, [userLogin: userLogin, roleTypeId: "UNION"]).get("partyIds");
+	partyIds.addAll(unionPartyIds);
+}
+if(categoryType.equals("DEPOT_CUSTOMER")||categoryType.equals("All")){
+	depotPartyIds = ByProductNetworkServices.getPartyByRoleType(dctx, [userLogin: userLogin, roleTypeId: "DEPOT_CUSTOMER"]).get("partyIds");
+	partyIds.addAll(depotPartyIds);
 }
 dayWiseTotals = SalesInvoiceServices.getPeriodSalesInvoiceTotals(dctx, [partyIds:partyIds, isQuantityLtrs:true,fromDate:dayBegin, thruDate:dayEnd]).get("invoiceIdTotals");
 facilityMap=[:];
@@ -83,7 +95,6 @@ dayWiseTotals.each{eachInvoice ->
 				currentProduct = productValue.getKey();
 				product = delegator.findOne("Product", [productId : currentProduct], false);
 				productId = productValue.getKey();
-				Debug.log("productId===="+productId);
 					exprList=[];
 					exprList.add(EntityCondition.makeCondition("productCategoryTypeId", EntityOperator.EQUALS, "IC_CAT_RPT"));
 					exprList.add(EntityCondition.makeCondition("productId", EntityOperator.EQUALS, productId));
@@ -251,19 +262,18 @@ if(UtilValidate.isNotEmpty(invoiceList)){
 		if(UtilValidate.isNotEmpty(invoiceValue)){
 			invoice = invoiceValue.entrySet();
 			invoice.each{invValues ->
-			tempInvoiceMap=[:];
-			invoice = delegator.findByPrimaryKey("Invoice", [invoiceId : invValues.getKey()]);
-			invoiceDate=UtilDateTime.toDateString(invoice.getTimestamp("invoiceDate"), "dd-MMM-yyyy");
-			tempInvoiceMap.putAt(invValues.getKey(), invValues.getValue());
-			if(UtilValidate.isEmpty(dayWiseInvoice[invoiceDate])){
-				dayWiseInvoice.put(invoiceDate, tempInvoiceMap);
-			}else{
-			  tempMap =FastMap.newInstance();
-			  tempMap.putAll(dayWiseInvoice.get(invoiceDate));
-			  tempMap.put(invValues.getKey(), invValues.getValue());
-			  dayWiseInvoice.put(invoiceDate, tempMap);
-			
-			}
+				tempInvoiceMap=[:];
+				invoice = delegator.findByPrimaryKey("Invoice", [invoiceId : invValues.getKey()]);
+				invoiceDate=UtilDateTime.toDateString(invoice.getTimestamp("invoiceDate"), "dd-MMM-yyyy");
+				tempInvoiceMap.putAt(invValues.getKey(), invValues.getValue());
+				if(UtilValidate.isEmpty(dayWiseInvoice[invoiceDate])){
+					dayWiseInvoice.put(invoiceDate, tempInvoiceMap);
+				}else{
+				  tempMap =FastMap.newInstance();
+				  tempMap.putAll(dayWiseInvoice.get(invoiceDate));
+				  tempMap.put(invValues.getKey(), invValues.getValue());
+				  dayWiseInvoice.put(invoiceDate, tempMap);
+				}
 			}
 		}
 	}

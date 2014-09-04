@@ -67,6 +67,20 @@ if(categoryType.equals("ICE_CREAM_AMUL")||categoryType.equals("All")){
    amulPartyIds = ByProductNetworkServices.getPartyByRoleType(dctx, [userLogin: userLogin, roleTypeId: "EXCLUSIVE_CUSTOMER"]).get("partyIds");
    partyIds.addAll(amulPartyIds);
 }
+if(categoryType.equals("UNITS")||categoryType.equals("All")){
+	unitPartyIds = ByProductNetworkServices.getPartyByRoleType(dctx, [userLogin: userLogin, roleTypeId: "UNITS"]).get("partyIds");
+	partyIds.addAll(unitPartyIds);
+}
+if(categoryType.equals("UNION")||categoryType.equals("All")){
+	unionPartyIds = ByProductNetworkServices.getPartyByRoleType(dctx, [userLogin: userLogin, roleTypeId: "UNION"]).get("partyIds");
+	partyIds.addAll(unionPartyIds);
+}
+if(categoryType.equals("DEPOT_CUSTOMER")||categoryType.equals("All")){
+	depotPartyIds = ByProductNetworkServices.getPartyByRoleType(dctx, [userLogin: userLogin, roleTypeId: "DEPOT_CUSTOMER"]).get("partyIds");
+	partyIds.addAll(depotPartyIds);
+}
+
+
 // Invoice No Sales report
 reportTypeFlag = parameters.reportTypeFlag;
 if(UtilValidate.isNotEmpty(reportTypeFlag) && reportTypeFlag == "InvoiceSales"){

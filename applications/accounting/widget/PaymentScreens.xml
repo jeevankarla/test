@@ -726,7 +726,7 @@ under the License.
     <screen name="findCashReceipts">
         <section>
             <actions>
-                <set field="titleProperty" value="Cash Recipts Search"/>
+                <set field="titleProperty" value="Cash Receipts Search"/>
                <set field="subTabButtonItem" value="findCashReceipts" />
                 <set field="tabButtonItem" value="CashPaymentOther"/>
                 <set field="viewSize" from-field="parameters.VIEW_SIZE" type="Integer" default-value="1000"/>
