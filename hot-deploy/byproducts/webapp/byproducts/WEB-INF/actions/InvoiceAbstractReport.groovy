@@ -119,6 +119,7 @@ if(UtilValidate.isNotEmpty(reportTypeFlag) && reportTypeFlag == "InvoiceSales"){
 						totalMap["invoiceDate"]=invoiceDate;
 						totalMap["basicRevenue"]=basicRevenue;
 						totalMap["partyName"]=partyName;
+						totalMap["invoicePartyId"]=invoicePartyId;
 						totalMap["bedRevenue"]=bedRevenue;
 						totalMap["vatRevenue"]=vatRevenue;
 						totalMap["cstRevenue"]=cstRevenue;

@@ -84,7 +84,7 @@ under the License.
 							            	<fo:block  keep-together="always" text-align="left" font-size="12pt" white-space-collapse="false" >${invoiceDet.getKey()?if_exists}</fo:block>  
 							            </fo:table-cell>
 							             <fo:table-cell>
-							            	<fo:block  keep-together="always" text-align="left" font-size="12pt" white-space-collapse="false" >${invoiceDet.getValue().get("partyName")?if_exists}</fo:block>  
+							            	<fo:block  keep-together="always" text-align="left" font-size="12pt" white-space-collapse="false" >${invoiceDet.getValue().get("partyName")?if_exists}[${invoiceDet.getValue().get("invoicePartyId")?if_exists}]</fo:block>  
 							            </fo:table-cell>
 							             <fo:table-cell>
 							            	<fo:block  keep-together="always" text-align="right" font-size="12pt" white-space-collapse="false" >${invoiceDet.getValue().get("basicRevenue")?if_exists?string("#0.00")}</fo:block>  
