@@ -1059,6 +1059,233 @@ under the License.
             <hyperlink  target-type="plain" description="Refund"  target="javascript:showApPaymentRefundQTip('${paymentId}', '${partyIdTo}', '${partyIdFrom}', '${availableAmtToRefund}', '${refundPaymentTypeId}', 'refundAPAdvanceUnappliedPayments');"></hyperlink>
         </field>
     </form>
+     
+     <!-- ================= AP Invoice Forms ================== -->   
         
+    
+    <form name="FindInvoices" type="single" target="findInvoices" title="Find and list invoices"
+        header-row-style="header-row" default-table-style="basic-table">
+        <field name="noConditionFind"><hidden value="Y"/><!-- if this isn't there then with all fields empty no query will be done --></field>
+        <field name="hideSearch"><hidden value="Y"/></field>
+        <field name="prefPaymentMethodTypeId" title="Voucher Type">
+			<drop-down allow-empty="true">
+			<option key="CASH" description="Cash Voucher" ></option>
+			<option key="BANK" description="Bank Voucher" ></option>
+			</drop-down>
+		</field>
+        <field name="invoiceId"><text-find ignore-case="true"/></field>
+        <field name="facilityId" title="${uiLabelMap.OrderFacilityBooth}"><text-find ignore-case="true"/></field>
+        <field name="description"><text-find ignore-case="true"/></field>
+        <field name="invoiceTypeId"><display/></field>
+        <field name="subTabButtonValue"><hidden/></field>
+        <field name="actionSubTabButtonValue"><hidden/></field>
+        <!-- <field position="1" name="invoiceTypeId">
+            <drop-down allow-empty="true">
+                <entity-options description="${description}" entity-name="InvoiceType"/>
+            </drop-down>
+        </field> -->
+        <field name="statusId" title="${uiLabelMap.CommonStatus}" position="2">
+            <drop-down allow-empty="true">
+                <entity-options description="${description}" entity-name="StatusItem">
+                    <entity-constraint name="statusTypeId" operator="equals" value="INVOICE_STATUS"/>
+                </entity-options>
+            </drop-down>
+        </field>
+        <field position="1" name="partyIdFrom"><lookup target-form-name="LookupPartyName"/></field>
+        <field position="2" name="partyIdTo" parameter-name="partyId"><lookup target-form-name="LookupPartyName"/></field>       
+        <!-- <field name="billingAccountId"><lookup target-form-name="LookupBillingAccount"/></field> -->
+        <field name="invoiceDate"><date-find type="timestamp"/></field>
+        <field name="dueDate"><hidden/></field>
+        <field name="searchButton" title="${uiLabelMap.CommonFind}" widget-style="smallSubmit"><submit button-type="button"/></field>
+    </form>
+    <form name="FindApInvoices" type="single" target="ApInvoices" extends="FindInvoices" extends-resource="component://accounting/widget/TreasurerPortalForms.xml">
+		<field name="parentTypeId"><hidden value="PURCHASE_INVOICE"/></field>
+		<!-- <field name="invoiceTypeId" position="2">
+			<drop-down allow-empty="true">
+				<entity-options entity-name="InvoiceType" description="${description}">
+					<entity-constraint name="parentTypeId" value="PURCHASE_INVOICE"/>
+				</entity-options>
+			</drop-down>
+		</field> -->
+		<field name="statusId" title="${uiLabelMap.CommonStatus}"
+			position="2">
+			<drop-down allow-empty="true">
+				<entity-options description="${description}"
+					entity-name="StatusItem">
+					<entity-constraint name="statusTypeId" operator="equals"
+						value="INVOICE_STATUS" />
+					<entity-constraint name="statusId" operator="not-equals"
+						value="INVOICE_SENT" />
+				</entity-options>
+			</drop-down>
+		</field>
+		<field name="dueDate"><date-find type="timestamp"/></field>
+			<field name="billingAccountId">
+			<hidden />
+		</field>
+		<field name="billingAccountId"><hidden/></field>
+	</form>
+	<form name="FindArInvoices" type="single" target="ArInvoices" extends="FindInvoices" extends-resource="component://accounting/widget/TreasurerPortalForms.xml">
+		<field name="parentTypeId"><hidden value="SALES_INVOICE"/></field>
+		<!-- <field name="invoiceTypeId" position="1">
+			<drop-down allow-empty="true">
+				<entity-options entity-name="InvoiceType" description="${description}">
+					<entity-constraint name="parentTypeId" value="SALES_INVOICE" />
+				</entity-options>
+			</drop-down>
+		</field> -->
+		<field name="statusId" title="${uiLabelMap.CommonStatus}"
+			position="2">
+			<drop-down allow-empty="true">
+				<entity-options description="${description}"
+					entity-name="StatusItem">
+					<entity-constraint name="statusTypeId" operator="equals"
+						value="INVOICE_STATUS" />
+					<entity-constraint name="statusId" operator="not-equals"
+						value="INVOICE_RECEIVED" />
+				</entity-options>
+			</drop-down>
+		</field>
+		<field name="dueDate"><date-find type="timestamp"/></field>
+	</form>
+	<form name="CreateAPInvoice" type="single" target="UpdateAPInvoice" title="Edit Invoice Header" default-map-name="invoice"
+        header-row-style="header-row" default-table-style="basic-table">
+        <actions>
+        	<set field="nowDate" value="${bsh:org.ofbiz.base.util.UtilDateTime.nowDateString(&quot;yyyy-MM-dd&quot;)}" type="String"/>
+        	<set field="pettyCashVendor" value="${bsh:org.ofbiz.base.util.UtilProperties.getPropertyValue(&quot;general.properties&quot;, &quot;pettyCashPartyId&quot;);}"/>
+        	<set field="pettyCashVendorRoleTypeId" value="${bsh:org.ofbiz.base.util.UtilProperties.getPropertyValue(&quot;general.properties&quot;, &quot;pettyCashRoleTypeId&quot;);}"/>
+        </actions>
+        <alt-target use-when="invoice==null" target="NewCreateAPInvoice"/>
+         <field name="prefPaymentMethodTypeId"><hidden  value="${prefPaymentMethodTypeId}"/></field>
+        <field use-when="invoice!=null" name="invoiceId"><display/></field>
+        <field name="statusId"><hidden value="INVOICE_IN_PROCESS"/></field>
+        <field name="pettyCashVendorId"><hidden value="${pettyCashVendor}"/></field>
+        <field name="pettyCashVendorRoleTypeId"><hidden value="${pettyCashVendorRoleTypeId}"/></field>
+        <field name="pettyCashDueDate"><hidden value="${nowTimestamp}"/></field>
+        <field name="invoiceTab"><hidden/></field>
+        <field name="actionSubTabButtonValue"><hidden value="updateInvoice"/></field>
+        <field name="subTabButtonValue" ><hidden value="${parameters.subTabButtonValue}"/></field>
+        <field name="currencyUomId"><hidden value="${defaultOrganizationPartyCurrencyUomId}"/></field>
+        <field name="invoiceTypeId"><hidden/></field>
+        <!-- <field position="1" name="invoiceTypeId" event="onchange" action="javascript:setInvoiceAction(); javascript:setRoleTypeDropdown();">
+            <drop-down allow-empty="false" no-current-selected-key="PURCHASE_INVOICE">
+                <entity-options description="${description}" entity-name="InvoiceType">
+                	<entity-constraint name="invoiceTypeId" value="PURCHASE_INVOICE" operator="not-equals"/>
+                    <entity-constraint name="parentTypeId" value="PURCHASE_INVOICE"/>
+                    <entity-order-by field-name="description"/>
+                </entity-options>
+            </drop-down>
+        </field> -->
+        <field position="1" name="partyIdFrom" title="Party Id" required-field="true"><lookup target-form-name="LookupPartyName" target-parameter="roleTypeId,invoiceTypeId"/></field>
+        <field position="2" name="invoiceDate" event="onblur" action="javascript:setInvoiceDateAsDueDate();" required-field="true"><date-time/></field>   
+        <field name="dueDate"  ><hidden ></hidden></field>     
+        <!-- <field position="1" name="roleTypeId" >   
+            <drop-down allow-empty="true">
+                <entity-options description="${description}" entity-name="RoleType">
+                    <entity-constraint name="parentTypeId" operator="equals" value="VENDOR"/>
+                    <entity-order-by field-name="description"/>
+                </entity-options>
+                <entity-options description="${description}" entity-name="RoleType">
+                    <entity-order-by field-name="description"/>
+                </entity-options>
+            </drop-down>
+        </field> --> 
+        <!-- <field name="timePeriodId">
+            <drop-down>
+                <entity-options entity-name="CustomTimePeriod" key-field-name="customTimePeriodId" description="${periodName}: ${fromDate} - ${thruDate}" filter-by-date="false">
+                    <entity-constraint name="periodTypeId" operator="equals" value="HR_MONTH"/>
+                    <entity-constraint name="isClosed" operator="equals" value="N" />                    
+                    <entity-constraint name="thruDate" operator="less" env-name="nowDate" />                    
+                    <entity-order-by field-name="-thruDate"/>
+                </entity-options>
+            </drop-down>
+        </field> -->
+        <field name="partyId"><hidden value="Company"/></field>
+        <!-- <field position="1" name="organizationPartyId" parameter-name="partyId">
+            <drop-down allow-empty="false" no-current-selected-key="${defaultOrganizationPartyId}">
+                <entity-options description="${groupName}" entity-name="PartyAcctgPrefAndGroup" key-field-name="partyId">
+                    <entity-constraint name="partyId" operator="equals" value="Company"/>
+                    <entity-order-by field-name="groupName"/>
+                </entity-options>
+            </drop-down>
+        </field> -->                            
+        <field position="1" name="description" title="Narration" encode-output="false" required-field="true"><text size="100"/></field>        
+        <!-- <field position="1" name="invoiceMessage" encode-output="false"><text size="100"/></field> -->        
+        <field position="1" name="createButton" widget-style="smallSubmit" title="${uiLabelMap.CommonCreate}" use-when="invoice==null">
+            <submit button-type="button"/>
+        </field>
+        <field position="1" name="updateButton" widget-style="smallSubmit" use-when="invoice!=null&amp;&amp;invoice.getString(&quot;statusId&quot;).equals(&quot;INVOICE_IN_PROCESS&quot;)">
+            <submit button-type="button"/>
+        </field>
+    </form>  
+    <form name="CreateARInvoice" type="single" target="UpdateARInvoice" title="Edit Invoice Header" default-map-name="invoice"
+        header-row-style="header-row" default-table-style="basic-table">
+        <alt-target use-when="invoice==null" target="NewCreateARInvoice"/>
+        <field name="statusId"><hidden value="INVOICE_IN_PROCESS"/></field>
+        <field use-when="invoice!=null" name="invoiceId"><display/></field>
+        <field name="currencyUomId"><hidden value="${defaultOrganizationPartyCurrencyUomId}"/></field>
+        <field name="prefPaymentMethodTypeId" ><hidden   value="${prefPaymentMethodTypeId}"/></field>
+        <field name="actionSubTabButtonValue"><hidden value="updateInvoice"/></field>
+        <field name="subTabButtonValue" ><hidden value="${parameters.subTabButtonValue}"/></field>
+        <field name="invoiceTypeId"><hidden/></field>
+        <!-- <field position="1" name="invoiceTypeId" event="onchange" action="javascript:invoiceTypeOnChangeHandler();">
+            <drop-down allow-empty="false" no-current-selected-key="SALES_INVOICE">
+                <entity-options description="${description}" entity-name="InvoiceType">
+                	<entity-constraint name="parentTypeId" value="SALES_INVOICE"/>
+                    <entity-order-by field-name="description"/>
+                </entity-options>
+            </drop-down>
+        </field> -->
+        <!-- <field position="1" name="groupInvoice" required-field="false" event="onclick" action="javascript:setPartyGroupAction();"><check/></field> -->        
+        <!-- <field position="1" name="partyClassificationGroupId">
+            <drop-down allow-empty="false">
+                <entity-options description="${description}" entity-name="PartyClassificationGroup" key-field-name="partyClassificationGroupId">
+                    <entity-constraint name="isInvoicable" value="Y"/>                
+                    <entity-order-by field-name="description"/>
+                </entity-options>
+            </drop-down>
+        </field> -->  
+        <field name="timePeriodId">
+            <drop-down>
+                <entity-options entity-name="CustomTimePeriod" key-field-name="customTimePeriodId" description="${periodName}: ${fromDate} - ${thruDate}" filter-by-date="false">
+                    <entity-constraint name="periodTypeId" operator="like" value="RATE_%"/>
+                    <entity-constraint name="isClosed" operator="equals" value="N" />                                      
+                    <entity-order-by field-name="-thruDate"/>
+                </entity-options>
+            </drop-down>
+        </field>     
+        <field name="partyIdFrom"><hidden value="Company"/></field>         
+        <!-- <field position="1" name="organizationPartyId" parameter-name="partyIdFrom">
+            <drop-down allow-empty="false" no-current-selected-key="${defaultOrganizationPartyId}">
+                <entity-options description="${groupName}" entity-name="PartyAcctgPrefAndGroup" key-field-name="partyId">
+                	<entity-constraint name="partyId" operator="equals" value="Company"/>
+                    <entity-order-by field-name="groupName"/>
+                </entity-options>
+            </drop-down>
+        </field> -->
+        <field position="1" name="partyIdTo" entry-name="partyId" parameter-name="partyId" required-field="true"><lookup target-form-name="LookupPartyName" target-parameter="roleTypeId,invoiceTypeId"/></field>
+        <field position="2" name="dueDate" required-field="true"><date-time/></field>
+        <!-- <field use-when="invoice!=null" position="2" name="partyIdTo" entry-name="partyId" parameter-name="partyId" ><lookup target-form-name="LookupPartyName"/></field>
+         -->
+         <!-- <field position="1" name="roleTypeId" >
+            <drop-down allow-empty="true">
+                <entity-options description="${description}" entity-name="RoleType">
+                    <entity-constraint name="parentTypeId" operator="equals" value="CUSTOMER"/>
+                    <entity-order-by field-name="description"/>
+                </entity-options>
+                <entity-options description="${description}" entity-name="RoleType">
+                    <entity-order-by field-name="description"/>
+                </entity-options>
+            </drop-down>
+        </field>  -->                   
+        <field position="1" name="description" title="Narration" encode-output="false" required-field="true"><text size="100"/></field>        
+        <!-- <field position="1" name="invoiceMessage" encode-output="false"><text size="100"/></field> -->  
+        <field position="1" name="createButton" widget-style="smallSubmit" title="${uiLabelMap.CommonCreate}" use-when="invoice==null">
+            <submit button-type="button"/>
+        </field>
+        <field position="1" name="updateButton" widget-style="smallSubmit" use-when="invoice!=null&amp;&amp;invoice.getString(&quot;statusId&quot;).equals(&quot;INVOICE_IN_PROCESS&quot;)">
+            <submit button-type="button"/>
+        </field>
+    </form>  
     
 </forms>

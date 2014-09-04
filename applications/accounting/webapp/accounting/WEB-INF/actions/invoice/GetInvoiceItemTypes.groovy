@@ -116,6 +116,7 @@ if ("SALES_INVOICE".equals(invoice.invoiceTypeId)) {
 	*/
 	
 	invoiceItemTypes = EntityUtil.getRelated("InvoiceItemType", map);
+	invoiceItemTypes = EntityUtil.orderBy(invoiceItemTypes, UtilMisc.toList("description"));
 }
 context.invoiceItemTypes = invoiceItemTypes;
 

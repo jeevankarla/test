@@ -3280,9 +3280,124 @@ under the License.
     </request-map>
     
     
+    <!--================= AP Invoices ==================== -->
+	
+	<request-map uri="ApInvoices">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="FindApInvoices"/>
+    </request-map>
+    
+    <request-map uri="CreateAPInvoice">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="CreateAPInvoice"/>
+    </request-map>
+    <request-map uri="NewCreateAPInvoice">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="createInvoice"/>
+        <response name="success" type="request-redirect" value="CreateAPInvoice">
+            <redirect-parameter name="invoiceId"/>
+            <redirect-parameter name="actionSubTabButtonValue"/>
+            <redirect-parameter name="subTabButtonValue"/>
+        </response>
+        <!-- <response name="success" type="request" value="newQuickCreateInvoice"/> -->
+        <response name="error" type="view" value="CreateAPInvoice"/>
+    </request-map>
+    <request-map uri="UpdateAPInvoice">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="updateInvoice"/>
+        <response name="success" type="request-redirect" value="CreateAPInvoice">
+            <redirect-parameter name="invoiceId"/>
+            <redirect-parameter name="actionSubTabButtonValue"/>
+            <redirect-parameter name="subTabButtonValue"/>
+        </response>
+        <!-- <response name="success" type="request" value="newQuickCreateInvoice"/> -->
+        <response name="error" type="view" value="CreateAPInvoice"/>
+    </request-map>
+    <request-map uri="quickCreateInvoiceItemAndTaxAjax">
+       <security https="true" auth="false"/>
+       <event type="service"  invoke="createInvoiceItemAndTax"/>        
+       <response name="success" type="request" value="json"/>
+       <response name="error" type="request" value="json"/>    
+    </request-map>
+    <request-map uri="quickRemoveInvoiceItemAndTaxAjax">
+       <security https="true" auth="false"/>
+       <event type="service"  invoke="removeInvoiceItemAndTax"/>        
+       <response name="success" type="request" value="json"/>
+       <response name="error" type="request" value="json"/>    
+    </request-map>
+    <request-map uri="APInvoiceOverview">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="APInvoiceOverview"/>
+    </request-map>
+    <request-map uri="SetAPInvoiceStatus">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="setInvoiceStatus"/>
+        <response name="success" type="view" value="APInvoiceOverview"/>
+        <response name="error" type="view" value="APInvoiceOverview"/>
+    </request-map>
+    
+    <!--================= AR Invoices ==================== -->
+	
+	<request-map uri="ArInvoices">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="FindArInvoices"/>
+    </request-map>
+    <request-map uri="CreateARInvoice">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="CreateARInvoice"/>
+    </request-map>
+    <request-map uri="NewCreateARInvoice">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="createInvoice"/>
+        <response name="success" type="request-redirect" value="CreateARInvoice">
+            <redirect-parameter name="invoiceId"/>
+            <redirect-parameter name="actionSubTabButtonValue"/>
+            <redirect-parameter name="subTabButtonValue"/>
+        </response>
+        <!-- <response name="success" type="request" value="newQuickCreateInvoice"/> -->
+        <response name="error" type="view" value="CreateARInvoice"/>
+    </request-map>
+    <request-map uri="UpdateARInvoice">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="updateInvoice"/>
+        <response name="success" type="request-redirect" value="CreateARInvoice">
+            <redirect-parameter name="invoiceId"/>
+            <redirect-parameter name="actionSubTabButtonValue"/>
+            <redirect-parameter name="subTabButtonValue"/>
+        </response>
+        <!-- <response name="success" type="request" value="newQuickCreateInvoice"/> -->
+        <response name="error" type="view" value="CreateARInvoice"/>
+    </request-map>
+    <request-map uri="ARInvoiceOverview">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="ARInvoiceOverview"/>
+    </request-map>
+    <request-map uri="SetARInvoiceStatus">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="setInvoiceStatus"/>
+        <response name="success" type="view" value="ARInvoiceOverview"/>
+        <response name="error" type="view" value="ARInvoiceOverview"/>
+    </request-map>
+    
     <!-- end of request mappings -->
 
     <!-- View Mappings -->
+    
+    
+    <!--================= AP Invoices ==================== -->
+	
+	<view-map name="FindApInvoices" type="screen" page="component://accounting/widget/TreasurerPortalScreens.xml#FindApInvoices"/>
+	<view-map name="CreateAPInvoice" type="screen" page="component://accounting/widget/TreasurerPortalScreens.xml#CreateAPInvoice"/>
+	<view-map name="APInvoiceOverview" type="screen" page="component://accounting/widget/TreasurerPortalScreens.xml#APInvoiceOverview"/>
+    
+    <!--================= AR Invoices ==================== -->
+    
+    <view-map name="FindArInvoices" type="screen" page="component://accounting/widget/TreasurerPortalScreens.xml#FindArInvoices"/>
+    <view-map name="CreateARInvoice" type="screen" page="component://accounting/widget/TreasurerPortalScreens.xml#CreateARInvoice"/>
+	<view-map name="ARInvoiceOverview" type="screen" page="component://accounting/widget/TreasurerPortalScreens.xml#ARInvoiceOverview"/>
+    
+    
+    
     <view-map name="main" type="screen" page="component://accounting/widget/CommonScreens.xml#main"/>
     <view-map name="cashierPortal" type="screen" page="component://accounting/widget/PaymentScreens.xml#findCashReceipts"/>
     <view-map name="PartyFinHistory" type="screen" page="component://accounting/widget/ap/InvoiceScreens.xml#PartyFinHistory"/>
