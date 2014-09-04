@@ -116,7 +116,26 @@ function datepick()
 
     function getInvoiceRunningTotal() {
 		var checkedInvoices = jQuery("input[name='invoiceIds']:checked");
+		
         if(checkedInvoices.size() > 0) {
+        	var runningTotalVal = 0;
+        	var testList = new Array();
+        	jQuery.each(checkedInvoices, function() {
+            	if (jQuery(this).is(':checked')) {
+            		var domObj = $(this).parent().parent();
+					var test = $($(domObj).find("#fromPartyId")).val();
+					if(testList.length>0 && jQuery.inArray(test, testList)==-1){
+						$("#paymentButton").hide();	
+					}
+					testList.push(test);
+	            }
+    	    });
+    	    var uniqueList = testList.filter(function(itm,i,testList){
+    			return i==testList.indexOf(itm);
+			});
+			if(uniqueList.length == 1){
+				$("#paymentButton").show();
+			}
             jQuery.ajax({
                 url: 'getInvoiceRunningTotal',
                 type: 'POST',
@@ -333,7 +352,7 @@ function showPaymentEntryQTip(partyIdFrom1,partyIdTo1,invoiceId1,voucherType1,am
       <input type="hidden" name="invoiceStatusChange" id="invoiceStatusChange" value="<@ofbizUrl>massChangeInvoiceStatus</@ofbizUrl>"/>
       <input type="hidden" name="bulkSms" id="bulkSms" value="<@ofbizUrl>bulkSms</@ofbizUrl>"/>
       <input type="hidden" name="bulkEmail" id="bulkEmail" value="<@ofbizUrl>bulkEmail</@ofbizUrl>"/>
-	 <#--<input id="submitButton" type="button"  onclick="javascript:massPaymentSubmit(this);" value="Make Payment" />-->
+	  <input id="paymentButton" type="button"  onclick="javascript:massPaymentSubmit(this);" value="Make Payment" />
 	 </div>
     <table class="basic-table hover-bar" cellspacing="0">
       <thead>

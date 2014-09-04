@@ -24,7 +24,7 @@ under the License.
 <fo:layout-master-set>
 	<fo:simple-page-master master-name="main" page-height="12in" page-width="10in"
             margin-top="0.2in" margin-bottom=".3in" margin-left=".5in" margin-right=".1in">
-        <fo:region-body margin-top="3.2in"/>
+        <fo:region-body margin-top="3.6in"/>
         <fo:region-before extent="1in"/>
         <fo:region-after extent="1in"/>        
     </fo:simple-page-master>   
@@ -44,8 +44,8 @@ under the License.
               		<fo:block>-------------------------------------------------------------------------------</fo:block>
               		<fo:block font-weight = "bold">Received with thanks the ${reportType} by way of <#if paymentDescription == "CHQ">CHEQUE<#else>${paymentDescription?if_exists}</#if>												</fo:block>
             		<#assign  partyName="">
-            			
-            		<fo:block><fo:table>
+            		<fo:block>
+            		<fo:table>
                     <fo:table-column column-width="38%"/>
                     <fo:table-column column-width="50%"/>
                     <fo:table-body>
@@ -82,10 +82,15 @@ under the License.
                             		<fo:block  keep-together="always" text-align="left" font-weight = "bold">Cheque Date:${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(paymentListReport.instrumentDate?if_exists, "MMMM dd,yyyy")}</fo:block>  
                        		</fo:table-cell>
                        		<fo:table-cell>
-                            		<fo:block  text-align="right" font-weight = "bold" keep-together="always">Issuing Authority/Bank:${paymentListReport.issuingAuthority?if_exists}</fo:block>  
+                            		<fo:block  text-align="right" font-weight = "bold" keep-together="always"></fo:block>  
                        		</fo:table-cell>
                      </fo:table-row>  
-                     </#if>			
+                     </#if>
+                     <fo:table-row>	
+                       		<fo:table-cell>
+                            		<fo:block  text-align="left" font-weight = "bold" keep-together="always">Issuing Authority/Bank:${paymentListReport.issuingAuthority?if_exists}</fo:block>  
+                       		</fo:table-cell>
+                     </fo:table-row>
                      </fo:table-body>
                       </fo:table>
             		</fo:block>
@@ -147,16 +152,14 @@ under the License.
 		  					</fo:table-row>
 		  					</#if>
 		  					<#if paymentListReport.paymentMethodTypeId?exists && (paymentListReport.paymentMethodTypeId == "FUND_TRANSFER")>
-		  					<#if (paymentListReport.issuingAuthority?exists && paymentListReport.issuingAuthority != "ICP_NANDINI_CHANNEL")>
 		  					<fo:table-row>
-            				     <fo:table-cell font-weight = "bold">
+               					 <fo:table-cell font-weight = "bold">
                     				<fo:block>Transferred To:</fo:block>
                					</fo:table-cell>
                					<fo:table-cell number-columns-spanned="2">
                					<fo:block>${paymentListReport.issuingAuthority?if_exists}</fo:block>
                					</fo:table-cell>
 		  					</fo:table-row>
-		  					</#if>
 		  					</#if>
 		  					<fo:table-row>
                					<fo:table-cell >

@@ -35,14 +35,12 @@ under the License.
 					    <fo:block text-align="center"  white-space-collapse="false" font-family="Courier,monospace" font-weight="bold" font-size="12pt" keep-together="always">${companyName}</fo:block>
 					     <fo:block text-align="center"  white-space-collapse="false" font-family="Courier,monospace" font-weight="bold" font-size="12pt" keep-together="always">INVOICE AND PAYMENT VOUCHER</fo:block>
 					    </fo:block>	
-
 					    <#--
 		        		 Table Start -->
 		        		<fo:table  table-layout="fixed" width="100%" space-before="0.2in">
 		        				    <fo:table-column column-width="20%"/>
         						    <fo:table-column column-width="40%"/>
         						    <fo:table-column column-width="40%"/>
-
         						   	<fo:table-header>
         						   	<fo:table-row>
 		    								<fo:table-cell border-style="solid">
@@ -254,7 +252,7 @@ under the License.
 						        						 <#if (paymentListReport.paymentMethodTypeId == "CHEQUE_PAYIN" || paymentListReport.paymentMethodTypeId == "CHEQUE_PAYOUT")>
 						        						 <fo:table-row> 
 						        						 	<fo:table-cell>
-						        						 		<fo:block text-align="left" font-size="12pt" white-space-collapse="false" keep-together="always" font-weight="bold">&#160;CHEQUE BANK DETAILS:${paymentMethodDetails.description?if_exists}</fo:block>
+						        						 		<fo:block text-align="left" font-size="12pt" white-space-collapse="false" keep-together="always" font-weight="bold"><#if paymentMethodDetails?has_content>&#160;CHEQUE BANK DETAILS:${paymentMethodDetails.description?if_exists}</#if></fo:block>
 						        						 	</fo:table-cell>
 						        						 	<fo:table-cell>
 						        						 		<fo:block text-align="left" font-size="12pt" white-space-collapse="false" keep-together="always" font-weight="bold"></fo:block>

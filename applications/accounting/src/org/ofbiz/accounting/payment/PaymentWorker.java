@@ -464,7 +464,7 @@ public class PaymentWorker {
         String finAccountId = (String) context.get("finAccountId");
         String inFavourOf = (String) context.get("inFavourOf");//to be stored in PaymentAttribute
         String paymentPurposeType=(String)context.get("paymentPurposeType");
-        String issuingAuthority=(String)context.get("paymentPurposeType");
+        String issuingAuthority=(String)context.get("issuingAuthority");
         GenericValue userLogin = (GenericValue) context.get("userLogin");
         
         Map<String, Object> result = ServiceUtil.returnSuccess();
