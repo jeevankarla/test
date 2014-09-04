@@ -147,7 +147,7 @@ under the License.
 		  					</fo:table-row>
 		  					</#if>
 		  					<#if paymentListReport.paymentMethodTypeId?exists && (paymentListReport.paymentMethodTypeId == "FUND_TRANSFER")>
-		  					<#if paymentListReport.issuingAuthority?if_exists && paymentListReport.issuingAuthority != "ICP_NANDINI_CHANNEL">
+		  					<#if (paymentListReport.issuingAuthority?exists && paymentListReport.issuingAuthority != "ICP_NANDINI_CHANNEL")>
 		  					<fo:table-row>
             				     <fo:table-cell font-weight = "bold">
                     				<fo:block>Transferred To:</fo:block>
