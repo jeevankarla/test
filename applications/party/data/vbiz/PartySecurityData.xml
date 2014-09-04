@@ -165,10 +165,18 @@ under the License.
     <SecurityGroupPermission groupId="BasicEmployee" permissionId="PARTYMGR_CME-SMS_CREATE"/>  
 	<SecurityGroupPermission groupId="BasicEmployee" permissionId="PARTYMGR_VIEW"/>  
 	<SecurityGroupPermission groupId="BasicEmployee" permissionId="PARTYMGRVIEWAPP"/>
-
+    
    <SecurityGroup description="View permissoins to party manager." groupId="PARTYMGRVIEW"/>
    <SecurityGroupPermission groupId="PARTYMGRVIEW" permissionId="PARTYMGR_VIEW"/>
    <SecurityGroupPermission groupId="PARTYMGRVIEW" permissionId="PARTYMGRVIEWAPP"/>
+   
+   <SecurityPermission description="View permissoins mobile hits trend." permissionId="MOBILEHITS_VIEW"/>
     
-
+   <SecurityGroup description="View permissoins group to party manager and mobile hits trend." groupId="PARTYMGRVIEW_MOBHITS"/>
+   <SecurityGroupPermission groupId="PARTYMGRVIEW_MOBHITS" permissionId="OFBTOOLS_VIEW"/>
+   <SecurityGroupPermission groupId="PARTYMGRVIEW_MOBHITS" permissionId="PARTYMGR_VIEW"/>
+   <SecurityGroupPermission groupId="PARTYMGRVIEW_MOBHITS" permissionId="PARTYMGRVIEWAPP"/>
+   <SecurityGroupPermission groupId="PARTYMGRVIEW_MOBHITS" permissionId="MOBILEHITS_VIEW"/>
+     
+    
 </entity-engine-xml>

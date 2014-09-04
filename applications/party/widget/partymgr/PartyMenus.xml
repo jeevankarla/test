@@ -40,13 +40,20 @@
         </menu-item>
         <menu-item name="apiHits" title="Mobile Hits Trend">
             <condition>
-                <if-service-permission service-name="partyBasePermissionCheck" main-action="ADMIN"/>
+                <or>
+                  <if-service-permission service-name="partyBasePermissionCheck" main-action="ADMIN"/>
+                  <if-has-permission permission="MOBILEHITS" action="_VIEW"/>
+                </or>
             </condition>
         	<link target="apiHits"/>
         </menu-item> 
         <menu-item name="apiHitsDaily" title="Mobile Hits Daily">
             <condition>
-                <if-service-permission service-name="partyBasePermissionCheck" main-action="ADMIN"/>
+               <or>
+                 <if-has-permission permission="MOBILEHITS" action="_VIEW"/>
+                 <if-service-permission service-name="partyBasePermissionCheck" main-action="ADMIN"/>
+               </or>
+                
             </condition>
         	<link target="apiHitsDaily"/>
         </menu-item>                 
