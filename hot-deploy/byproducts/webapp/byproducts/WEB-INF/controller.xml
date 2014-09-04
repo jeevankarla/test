@@ -64,11 +64,11 @@
         <response name="success" type="request" value="FindICPAmulShipment"/>
         <response name="error" type="request" value="FindICPAmulShipment"/>
     </request-map>
-    <request-map uri="cancelPowderShipment">
+    <request-map uri="cancelDepotShipment">
      	<security https="true" auth="true"/>     	
         <event type="service" invoke="cancelICPShipment"/>
-        <response name="success" type="request" value="FindPowderShipment"/>
-        <response name="error" type="request" value="FindPowderShipment"/>
+        <response name="success" type="request" value="FindDepotShipment"/>
+        <response name="error" type="request" value="FindDepotShipment"/>
     </request-map>
     <request-map uri="cancelInterUnitShipment">
      	<security https="true" auth="true"/>     	
@@ -688,10 +688,10 @@
         <response name="success" type="view" value="IcpSalesAmul"/>   
        <response name="failed" type="view" value="IcpSalesAmul"/>  
     </request-map>
-    <request-map uri="PowderPlantSale">
+    <request-map uri="DepotSale">
         <security https="true" auth="true"/>
-        <response name="success" type="view" value="PowderPlantSale"/>   
-       <response name="failed" type="view" value="PowderPlantSale"/>  
+        <response name="success" type="view" value="DepotSale"/>   
+       <response name="failed" type="view" value="DepotSale"/>  
     </request-map>
     <request-map uri="FGSProductSale">
         <security https="true" auth="true"/>
@@ -721,7 +721,7 @@
         <response name="success" type="view-last"/>   
        <response name="failed" type="view-last"/>  
     </request-map>
-    <request-map uri="editPowderOrderBatchNumber">
+    <request-map uri="editDepotOrderBatchNumber">
         <security https="true" auth="true"/>
         <event type="java"  path="in.vasista.vbiz.byproducts.icp.ICPServices" invoke="editBatchNumber"/>
         <response name="success" type="view-last"/>   
@@ -746,10 +746,10 @@
         <response name="success" type="view" value="ProcessNandiniOrders"/>   
        <response name="failed" type="view" value="ProcessNandiniOrders"/>  
     </request-map>
-    <request-map uri="processPowderOrders">
+    <request-map uri="processDepotOrders">
         <security https="true" auth="true"/>
-        <response name="success" type="view" value="ProcessPowderOrders"/>   
-       <response name="failed" type="view" value="ProcessPowderOrders"/>  
+        <response name="success" type="view" value="ProcessDepotOrders"/>   
+       <response name="failed" type="view" value="ProcessDepotOrders"/>  
     </request-map>
     <request-map uri="processFGSOrders">
         <security https="true" auth="true"/>
@@ -768,11 +768,11 @@
        <response name="failed" type="view" value="ProcessBellaryOrders"/>  
     </request-map>
     
-    <request-map uri="approvePowderOrder">
+    <request-map uri="approveDepotOrder">
         <security https="true" auth="true"/>
         <event type="service" path="" invoke="approveICPOrder"/>
-        <response name="success" type="view" value="ProcessPowderOrders"/>   
-       <response name="failed" type="view" value="ProcessPowderOrders"/>  
+        <response name="success" type="view" value="ProcessDepotOrders"/>   
+       <response name="failed" type="view" value="ProcessDepotOrders"/>  
     </request-map>
    
     <request-map uri="approveFGSOrder">
@@ -806,11 +806,11 @@
         <response name="success" type="view" value="ProcessFGSOrders"/>   
        <response name="failed" type="view" value="ProcessFGSOrders"/>  
     </request-map>
-    <request-map uri="cancelPowderOrder">
+    <request-map uri="cancelDepotOrder">
         <security https="true" auth="true"/>
         <event type="service" path="" invoke="cancelICPOrder"/>
-        <response name="success" type="view" value="ProcessPowderOrders"/>   
-       <response name="failed" type="view" value="ProcessPowderOrders"/>  
+        <response name="success" type="view" value="ProcessDepotOrders"/>   
+       <response name="failed" type="view" value="ProcessDepotOrders"/>  
     </request-map>
     <request-map uri="approveICPNandiniOrder">
         <security https="true" auth="true"/>
@@ -860,11 +860,11 @@
         <response name="success" type="view" value="ProcessNandiniOrders"/>   
        <response name="failed" type="view" value="ProcessNandiniOrders"/>  
     </request-map>
-    <request-map uri="createShipmentAndInvoiceForPowderOrders">
+    <request-map uri="createShipmentAndInvoiceForDepotOrders">
         <security https="true" auth="true"/>
         <event type="java" path="in.vasista.vbiz.byproducts.icp.ICPServices" invoke="createShipmentAndInvoiceForOrders"/>
-        <response name="success" type="view" value="ProcessPowderOrders"/>   
-       <response name="failed" type="view" value="ProcessPowderOrders"/>  
+        <response name="success" type="view" value="ProcessDepotOrders"/>   
+       <response name="failed" type="view" value="ProcessDepotOrders"/>  
     </request-map>
     <request-map uri="createShipmentAndInvoiceForFGSOrders">
         <security https="true" auth="true"/>
@@ -883,10 +883,10 @@
         <response name="success" type="view" value="FindICPNandiniShipment"/>   
        	<response name="failed" type="view" value="FindICPNandiniShipment"/>  
     </request-map>
-    <request-map uri="FindPowderShipment">
+    <request-map uri="FindDepotShipment">
     	<security https="true" auth="true"/>
-        <response name="success" type="view" value="FindPowderShipment"/>   
-       	<response name="failed" type="view" value="FindPowderShipment"/>  
+        <response name="success" type="view" value="FindDepotShipment"/>   
+       	<response name="failed" type="view" value="FindDepotShipment"/>  
     </request-map>
     <request-map uri="FindFGSShipment">
     	<security https="true" auth="true"/>
@@ -941,14 +941,14 @@
         <response name="error" type="view" value="IcpSales"/>
     </request-map>
     
-    <request-map uri="processPowderSale">
+    <request-map uri="processDepotSale">
         <security https="true" auth="true"/>
      	<event type="java"  path="in.vasista.vbiz.byproducts.icp.ICPServices"  invoke="processIcpSale" global-transaction="true"/>
-        <response name="success"  type="request-redirect-noparam" value="PowderPlantSale">
+        <response name="success"  type="request-redirect-noparam" value="DepotSale">
         <redirect-parameter name="orderStatus"/>
      		<redirect-parameter name="orderId"/>
      		<redirect-parameter name="supplyDate"/></response>
-        <response name="error" type="view" value="PowderPlantSale"/>
+        <response name="error" type="view" value="DepotSale"/>
     </request-map>
      <request-map uri="processInterUnitStkTrSale">
         <security https="true" auth="true"/>
@@ -1679,23 +1679,23 @@
  <view-map name="FindPaymentNonRoute" type="screen" page="component://byproducts/widget/ByProductsNgScreens.xml#FindPaymentNonRoute"/>
  <view-map name="NewNonRouteReceipt" type="screen" page="component://byproducts/widget/ByProductsNgScreens.xml#NewNonRouteReceipt"/>
  
- <!-- IceCreamPlant and powder plant -->  
+ <!-- IceCreamPlant and Depot plant -->  
  <view-map name="IcpSales" type="screen" page="component://byproducts/widget/ByProductsNgScreens.xml#IcpSales"/>
  <view-map name="FindIcpSalesOrder" type="screen" page="component://byproducts/widget/ByProductsNgScreens.xml#FindIcpSalesOrder"/>
  <view-map name="ProcessNandiniOrders" type="screen" page="component://byproducts/widget/ByProductsNgScreens.xml#ProcessNandiniOrders"/>
- <view-map name="ProcessPowderOrders" type="screen" page="component://byproducts/widget/ByProductsNgScreens.xml#ProcessPowderOrders"/>
+ <view-map name="ProcessDepotOrders" type="screen" page="component://byproducts/widget/ByProductsNgScreens.xml#ProcessDepotOrders"/>
  <view-map name="ProcessFGSOrders" type="screen" page="component://byproducts/widget/ByProductsNgScreens.xml#ProcessFGSOrders"/>
  <view-map name="ProcessAmulOrders" type="screen" page="component://byproducts/widget/ByProductsNgScreens.xml#ProcessAmulOrders"/>
  <view-map name="ProcessBellaryOrders" type="screen" page="component://byproducts/widget/ByProductsNgScreens.xml#ProcessBellaryOrders"/>
  <view-map name="FindICPNandiniShipment" type="screen" page="component://byproducts/widget/ByProductsNgScreens.xml#FindICPNandiniShipment"/>
  <view-map name="FindFGSShipment" type="screen" page="component://byproducts/widget/ByProductsNgScreens.xml#FindFGSShipment"/>
- <view-map name="FindPowderShipment" type="screen" page="component://byproducts/widget/ByProductsNgScreens.xml#FindPowderShipment"/>
+ <view-map name="FindDepotShipment" type="screen" page="component://byproducts/widget/ByProductsNgScreens.xml#FindDepotShipment"/>
  <view-map name="FindICPAmulShipment" type="screen" page="component://byproducts/widget/ByProductsNgScreens.xml#FindICPAmulShipment"/>
  <view-map name="FindICPBellaryShipment" type="screen" page="component://byproducts/widget/ByProductsNgScreens.xml#FindICPBellaryShipment"/>
  
  <view-map name="IcpSalesAmul" type="screen" page="component://byproducts/widget/ByProductsNgScreens.xml#IcpSalesAmul"/>
  <view-map name="IcpSalesBellary" type="screen" page="component://byproducts/widget/ByProductsNgScreens.xml#IcpSalesBellary"/>
- <view-map name="PowderPlantSale" type="screen" page="component://byproducts/widget/ByProductsNgScreens.xml#PowderPlantSale"/>
+ <view-map name="DepotSale" type="screen" page="component://byproducts/widget/ByProductsNgScreens.xml#DepotSale"/>
  <view-map name="FGSProductSale" type="screen" page="component://byproducts/widget/ByProductsNgScreens.xml#FGSProductSale"/>
  <view-map name="FindIcpAmulOrder" type="screen" page="component://byproducts/widget/ByProductsNgScreens.xml#FindIcpAmulOrder"/>
  <view-map name="InterUnitStkTr" type="screen" page="component://byproducts/widget/ByProductsNgScreens.xml#InterUnitStkTr"/>

@@ -196,7 +196,7 @@
 	<#else>
 		 <#assign editClickHandlerAction='processIndentEntryNew'>		 	
 	</#if>-->
-	<#if changeFlag?exists && changeFlag == "PowderSales" || changeFlag == "FgsSales" || changeFlag == "InterUnitTransferSale">
+	<#if changeFlag?exists && changeFlag == "DepotSales" || changeFlag == "FgsSales" || changeFlag == "InterUnitTransferSale">
 		function editClickHandlerEvent(row){
 			showUDPPriceToolTip(data[row], row);
 			 <#--updateUDPLabel();-->
@@ -285,7 +285,7 @@
 			<#if changeFlag?exists && changeFlag == "IcpSales" || changeFlag == "IcpSalesAmul" || changeFlag == "IcpSalesBellary">
 				{id:"crQuantity", name:"Qty(Crt)", field:"crQuantity", width:60, minWidth:60, cssClass:"cell-title",editor:FloatCellEditor, sortable:false, formatter: quantityFormatter},
 				{id:"batchNo", name:"Batch Number", field:"batchNo", width:65, minWidth:65, sortable:false, editor:TextCellEditor},
-			<#elseif changeFlag?exists && changeFlag == "PowderSales" || changeFlag == "FgsSales" || changeFlag == "InterUnitTransferSale">
+			<#elseif changeFlag?exists && changeFlag == "DepotSales" || changeFlag == "FgsSales" || changeFlag == "InterUnitTransferSale">
 				{id:"ltrQuantity", name:"Ltr/KG Qty", field:"ltrQuantity", width:65, minWidth:65, sortable:false, editor:FloatCellEditor},
 				{id:"daysToStore", name:"Days", field:"daysToStore", width:70, minWidth:70, cssClass:"cell-title",editor:FloatCellEditor, sortable:false , formatter: quantityFormatter,  validator: quantityValidator , toolTip:"Days To Preserve(For Storage Charges)"},
 			</#if>
@@ -294,7 +294,7 @@
 			{id:"amount", name:"Total Amount(Rs)", field:"amount", width:100, minWidth:100, cssClass:"readOnlyColumnClass", sortable:false, formatter: rateFormatter, focusable :false}
 				
 		];
-		<#if changeFlag?exists && changeFlag == "PowderSales" || changeFlag == "FgsSales" || changeFlag == "InterUnitTransferSale">
+		<#if changeFlag?exists && changeFlag == "DepotSales" || changeFlag == "FgsSales" || changeFlag == "InterUnitTransferSale">
 			columns.push({id:"button", name:"Edit Price", field:"button", width:70, minWidth:70, cssClass:"cell-title",
  				formatter: function (row, cell, id, def, datactx) { 
 						return '<a href="#" class="button" onclick="editClickHandlerEvent('+row+')" value="Edit">Edit</a>'; 
@@ -410,7 +410,7 @@
 				<#if changeFlag?exists && changeFlag == "IcpSales" || changeFlag == "IcpSalesAmul" || changeFlag == "IcpSalesBellary">
 					convValue = prodConversionData['CRATE'];
 				</#if>
-				<#if changeFlag?exists && changeFlag == "PowderSales" || changeFlag == "FgsSales" || changeFlag == "InterUnitTransferSale" >
+				<#if changeFlag?exists && changeFlag == "DepotSales" || changeFlag == "FgsSales" || changeFlag == "InterUnitTransferSale" >
 					convValue = prodConversionData['LtrKg'];
 				</#if>
 				var udp = data[args.row]['basicPrice'];
@@ -433,7 +433,7 @@
 						crVal = parseFloat(Math.round((qty/convValue)*100)/100);
 						data[args.row]["crQuantity"] = crVal;
 					</#if>
-					<#if changeFlag?exists && changeFlag == "PowderSales" || changeFlag == "FgsSales" || changeFlag == "InterUnitTransferSale">
+					<#if changeFlag?exists && changeFlag == "DepotSales" || changeFlag == "FgsSales" || changeFlag == "InterUnitTransferSale">
 						crVal = parseFloat(Math.round((qty*convValue)*100)/100);
 						data[args.row]["ltrQuantity"] = crVal;
 					</#if>
@@ -474,7 +474,7 @@
 				<#if changeFlag?exists && changeFlag == "IcpSales" || changeFlag == "IcpSalesAmul" || changeFlag == "IcpSalesBellary">
 					calcQty = parseFloat(data[args.row]["crQuantity"]);
 				</#if>
-				<#if changeFlag?exists && changeFlag == "PowderSales" || changeFlag == "FgsSales" || changeFlag == "InterUnitTransferSale">
+				<#if changeFlag?exists && changeFlag == "DepotSales" || changeFlag == "FgsSales" || changeFlag == "InterUnitTransferSale">
 					calcQty = parseFloat(data[args.row]["ltrQuantity"]);
 				</#if>
 				var prodConversionData = conversionData[prod];
@@ -482,7 +482,7 @@
 				<#if changeFlag?exists && changeFlag == "IcpSales" || changeFlag == "IcpSalesAmul" || changeFlag == "IcpSalesBellary">
 					convValue = prodConversionData['CRATE'];
 				</#if>
-				<#if changeFlag?exists && changeFlag == "PowderSales" || changeFlag == "FgsSales" || changeFlag == "InterUnitTransferSale">
+				<#if changeFlag?exists && changeFlag == "DepotSales" || changeFlag == "FgsSales" || changeFlag == "InterUnitTransferSale">
 					convValue = prodConversionData['LtrKg'];
 				</#if>
 				var udp = data[args.row]['basicPrice'];
@@ -506,7 +506,7 @@
 						calculateQty = parseFloat(Math.round((calcQty*convValue)*100)/100);
 						data[args.row]["quantity"] = calculateQty;
 					</#if>
-					<#if changeFlag?exists && changeFlag == "PowderSales" || changeFlag == "FgsSales" || changeFlag == "InterUnitTransferSale">
+					<#if changeFlag?exists && changeFlag == "DepotSales" || changeFlag == "FgsSales" || changeFlag == "InterUnitTransferSale">
 						calculateQty = parseFloat(Math.round((calcQty/convValue)*100)/100);
 						data[args.row]["quantity"] = calculateQty;
 					</#if>
@@ -577,7 +577,7 @@
 				<#if changeFlag?exists && changeFlag == "IcpSales" || changeFlag == "IcpSalesAmul" || changeFlag == "IcpSalesBellary">
 					convValue = prodConversionData['CRATE'];
 				</#if>
-				<#if changeFlag?exists && changeFlag == "PowderSales" || changeFlag == "FgsSales" || changeFlag == "InterUnitTransferSale" >
+				<#if changeFlag?exists && changeFlag == "DepotSales" || changeFlag == "FgsSales" || changeFlag == "InterUnitTransferSale" >
 					convValue = prodConversionData['LtrKg'];
 				</#if>
 				
@@ -610,7 +610,7 @@
 						crVal = parseFloat(Math.round((qty/convValue)*100)/100);
 						data[i]["crQuantity"] = crVal;
 					</#if>
-					<#if changeFlag?exists && changeFlag == "PowderSales" || changeFlag == "FgsSales" || changeFlag == "InterUnitTransferSale">
+					<#if changeFlag?exists && changeFlag == "DepotSales" || changeFlag == "FgsSales" || changeFlag == "InterUnitTransferSale">
 						crVal = parseFloat(Math.round((qty*convValue)*100)/100);
 						data[i]["ltrQuantity"] = crVal;
 					</#if>

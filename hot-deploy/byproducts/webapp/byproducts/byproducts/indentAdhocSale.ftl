@@ -100,8 +100,8 @@ $(document).ready(function(){
     	<form method="post" name="indententryinit" action="<@ofbizUrl>IcpSales</@ofbizUrl>" id="indententryinit">
     	<#elseif changeFlag?exists && changeFlag=='IcpSalesBellary'>
     	<form method="post" name="indententryinit" action="<@ofbizUrl>IcpSalesBellary</@ofbizUrl>" id="indententryinit">
-    <#elseif changeFlag?exists && changeFlag=='PowderSales'>
-    	<form method="post" name="indententryinit" action="<@ofbizUrl>PowderPlantSale</@ofbizUrl>" id="indententryinit">  
+    <#elseif changeFlag?exists && changeFlag=='DepotSales'>
+    	<form method="post" name="indententryinit" action="<@ofbizUrl>DepotSale</@ofbizUrl>" id="indententryinit">  
     <#elseif changeFlag?exists && changeFlag=='FgsSales'>
     	<form method="post" name="indententryinit" action="<@ofbizUrl>FGSProductSale</@ofbizUrl>" id="indententryinit">  
     <#elseif changeFlag?exists && changeFlag=='InterUnitTransferSale'>
@@ -162,9 +162,9 @@ $(document).ready(function(){
 		        <#elseif changeFlag?exists && changeFlag=='IcpSalesBellary'>
 		         	<input type="hidden" name="shipmentTypeId" id="shipmentTypeId" value="ICP_BELLARY_SHIPMENT"/> 
 		           	<input type="hidden" name="salesChannel" id="salesChannel" value="ICP_BELLARY_CHANNEL"/>    	 
-		        <#elseif changeFlag?exists && changeFlag=='PowderSales'>
-		         	<input type="hidden" name="shipmentTypeId" id="shipmentTypeId" value="POWDER_SHIPMENT"/> 
-		           	<input type="hidden" name="salesChannel" id="salesChannel" value="POWDER_PLANT_CHANNEL"/>
+		        <#elseif changeFlag?exists && changeFlag=='DepotSales'>
+		         	<input type="hidden" name="shipmentTypeId" id="shipmentTypeId" value="DEPOT_SHIPMENT"/> 
+		           	<input type="hidden" name="salesChannel" id="salesChannel" value="DEPOT_CHANNEL"/>
 		        <#elseif changeFlag?exists && changeFlag=='FgsSales'>
 		         	<input type="hidden" name="shipmentTypeId" id="shipmentTypeId" value="FGS_SHIPMENT"/> 
 		           	<input type="hidden" name="salesChannel" id="salesChannel" value="FGS_PRODUCT_CHANNEL"/> 
@@ -272,7 +272,7 @@ $(document).ready(function(){
         <tr><td><br/></td></tr>
         <tr>
           <td>&nbsp;</td>
-          <td align='left' valign='middle' nowrap="nowrap"><div class='h2'><#if changeFlag?exists && changeFlag=='AdhocSaleNew'>Retailer Id:<#elseif changeFlag?exists && changeFlag=='InterUnitTransferSale'>KMF Unit ID:<#else>Wholesaler Id:</#if></div></td>
+          <td align='left' valign='middle' nowrap="nowrap"><div class='h2'><#if changeFlag?exists && changeFlag=='AdhocSaleNew'>Retailer:<#elseif changeFlag?exists && changeFlag=='InterUnitTransferSale'>KMF Unit ID:<#else>Party:</#if></div></td>
           <td>&nbsp;</td>
         <#if changeFlag?exists && changeFlag=='AdhocSaleNew'>
 			<#if booth?exists && booth?has_content>  
@@ -466,8 +466,8 @@ $(document).ready(function(){
 		         <#assign formAction='processIcpAmulSale'>
 		    <#elseif changeFlag?exists && changeFlag=='IcpSalesBellary'>
 		         <#assign formAction='processIcpBellarySale'>     
-		    <#elseif changeFlag?exists && changeFlag=='PowderSales'>
-		         <#assign formAction='processPowderSale'>
+		    <#elseif changeFlag?exists && changeFlag=='DepotSales'>
+		         <#assign formAction='processDepotSale'>
 		    <#elseif changeFlag?exists && changeFlag=='FgsSales'>
 		         <#assign formAction='processFGSProductSale'>     
 		 	<#elseif changeFlag?exists && changeFlag=='InterUnitTransferSale'>

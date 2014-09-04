@@ -504,7 +504,7 @@
          </link>
         </menu-item>
          
-        <menu-item name="PowderPlantSale" title="Depot Sales"> 
+        <menu-item name="DepotSale" title="Depot Sales"> 
         <condition>
         	<or>
         		<if-has-permission permission="FACILITY"  action="_ADMIN"/>
@@ -512,7 +512,7 @@
         		
         	</or>        		
         </condition>  
-      	 <link target="PowderPlantSale">    
+      	 <link target="DepotSale">    
          </link>
         </menu-item>
         
@@ -845,18 +845,18 @@
         	<link target="FindIcpAmulOrder"></link>
         </menu-item> -->
       </menu>
-      <menu name="PowderPlantSaleTabBar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml" selected-menuitem-context-field-name="tabButtonItem2">
-         <menu-item name="PowderPlantSale" title="Order Entry">
-        	<link target="PowderPlantSale"/>
+      <menu name="DepotSaleTabBar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml" selected-menuitem-context-field-name="tabButtonItem2">
+         <menu-item name="DepotSale" title="Order Entry">
+        	<link target="DepotSale"/>
         </menu-item>
-        <menu-item name="ProcessPowderOrders" title="Process Orders">
-        	<link target="processPowderOrders">
-        		<parameter param-name="salesChannelEnumId" value="POWDER_PLANT_CHANNEL"/>
-        		<parameter param-name="shipmentTypeId" value="POWDER_SHIPMENT"/>
+        <menu-item name="ProcessDepotOrders" title="Process Orders">
+        	<link target="processDepotOrders">
+        		<parameter param-name="salesChannelEnumId" value="DEPOT_CHANNEL"/>
+        		<parameter param-name="shipmentTypeId" value="DEPOT_SHIPMENT"/>
         	</link>
         </menu-item>
-        <menu-item name="FindPowderShipment" title="Find Shipments">
-        	<link target="FindPowderShipment" />
+        <menu-item name="FindDepotShipment" title="Find Shipments">
+        	<link target="FindDepotShipment" />
         </menu-item>
       </menu>
        <menu name="InterUnitTrTabBar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml" selected-menuitem-context-field-name="tabButtonItem2">

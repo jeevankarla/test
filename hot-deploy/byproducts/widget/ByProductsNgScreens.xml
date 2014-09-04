@@ -3071,7 +3071,7 @@
                <set field="defaultEffectiveDateTime" value="${supplyDate}" default-value="${bsh:org.ofbiz.base.util.UtilDateTime.nowTimestamp()}"/>
 			   <set field="defaultEffectiveDate" 
 					value="${groovy:org.ofbiz.base.util.UtilDateTime.toDateString(defaultEffectiveDateTime, &quot;dd MMMMM, yyyy&quot;);}" />	
-				 <set field="parameters.roleTypeId" value="FGS_CUSTOMER"/>
+				 <set field="parameters.roleTypeId" value="UNION"/>
 				 <set field="productCategoryResult" value="${groovy:org.ofbiz.product.product.ProductWorker.getProductsByCategoryAssoc(delegator, 'INDENT_PROD_CAT', 'FGS_INDENT', null)}" />
 				 <set field="productStoreResult" value="${groovy:in.vasista.vbiz.byproducts.icp.ICPServices.getProductStoreByGroupId(delegator, 'FG_STORE')}" />
 				<set field="productStoreId" value="${productStoreResult.factoryStoreId}"/>
@@ -3150,13 +3150,13 @@
         </section>
     </screen>
     	
-    <screen name="PowderPlantSale">
+    <screen name="DepotSale">
         <section>
             <actions>
                <set field="titleProperty" value="Depot Sales"/>              
-			   <set field="tabButtonItem" value="PowderPlantSale" />	
-			   <set field="tabButtonItem2" value="PowderPlantSale"/>  
-			    <set field="changeFlag" value="PowderSales"/>  
+			   <set field="tabButtonItem" value="DepotSale" />	
+			   <set field="tabButtonItem2" value="DepotSale"/>  
+			    <set field="changeFlag" value="DepotSales"/>  
                <set field="priceTypeId" from-field="parameters.priceTypeId"/>
                <set field="orderStatus" from-field="parameters.orderStatus"/> 
                <set field="orderId" from-field="parameters.orderId"/>
@@ -3167,14 +3167,14 @@
                	<set field="defaultEffectiveDateTime" value="${supplyDate}" default-value="${bsh:org.ofbiz.base.util.UtilDateTime.nowTimestamp()}"/>
 			   	<set field="defaultEffectiveDate" 
 					value="${groovy:org.ofbiz.base.util.UtilDateTime.toDateString(defaultEffectiveDateTime, &quot;dd MMMMM, yyyy&quot;);}" />
-			   	<set field="parameters.roleTypeId" value="POWDER_CUSTOMER"/>
-			   	<set field="productStoreResult"	value="${groovy:in.vasista.vbiz.byproducts.icp.ICPServices.getProductStoreByGroupId(delegator, 'POWDER_PLANT')}" />
+			   	<set field="parameters.roleTypeId" value="DEPOT_CUSTOMER"/>
+			   	<set field="productStoreResult"	value="${groovy:in.vasista.vbiz.byproducts.icp.ICPServices.getProductStoreByGroupId(delegator, 'FG_STORE')}" />
 				<set field="productStoreId" value="${productStoreResult.factoryStoreId}"/>							  					  
             </actions>
             <widgets>
               <decorator-screen name="ByProductsNgCommonDecorator" location="component://byproducts/widget/CommonScreens.xml">
                       <decorator-section name="body">   
-                      <include-menu name="PowderPlantSaleTabBar" location="component://byproducts/widget/ByProductsMenus.xml"/>
+                      <include-menu name="DepotSaleTabBar" location="component://byproducts/widget/ByProductsMenus.xml"/>
                       	<section>
 	                      	  <condition>
 	                             <if-compare operator="equals" field="isFormSubmitted" value=""/>
@@ -3368,12 +3368,12 @@
             </widgets>            
         </section>
     </screen>
-    <screen name="ProcessPowderOrders">
+    <screen name="ProcessDepotOrders">
         <section>
             <actions>
-                <set field="titleProperty" value="Process Powder Orders"/>              
-			    <set field="tabButtonItem" value="PowderPlantSale" />	
-			   <set field="tabButtonItem2" value="ProcessPowderOrders"/>       
+                <set field="titleProperty" value="Process Depot Orders"/>              
+			    <set field="tabButtonItem" value="DepotSale" />	
+			   <set field="tabButtonItem2" value="ProcessDepotOrders"/>       
                <set field="headerItem" value="byProductsOrderEntry"/>
                <set field="viewSize" from-field="parameters.VIEW_SIZE"/>
                <set field="defaultEffectiveDateTime" value="${bsh:org.ofbiz.base.util.UtilDateTime.getDayStart(org.ofbiz.base.util.UtilDateTime.nowTimestamp())}"/>
@@ -3381,16 +3381,16 @@
 					value="${groovy:org.ofbiz.base.util.UtilDateTime.toDateString(defaultEffectiveDateTime, &quot;dd MMMMM, yyyy&quot;);}" />
                <set field="shipmentTypeId" from-field="parameters.shipmentTypeId"/>
                <set field="salesChannelEnumId" from-field="parameters.salesChannelEnumId" />
-               <set field="screenFlag" value="powderSales"/>
+               <set field="screenFlag" value="depotSales"/>
                <script	location="component://byproducts/webapp/byproducts/WEB-INF/actions/facility/getIcpSalesOrder.groovy" />
             </actions>
             <widgets>
                    <decorator-screen name="ByProductsNgCommonDecorator" location="component://byproducts/widget/CommonScreens.xml">
                       <decorator-section name="body">  
-                      <include-menu name="PowderPlantSaleTabBar" location="component://byproducts/widget/ByProductsMenus.xml"/> 
+                      <include-menu name="DepotSaleTabBar" location="component://byproducts/widget/ByProductsMenus.xml"/> 
                         <section>
                             <widgets>
-               					<screenlet title="Powder Plant Orders">
+               					<screenlet title="Depot Orders">
                						<platform-specific><html><html-template location="component://byproducts/webapp/byproducts/byproducts/ListSearchIceCreamOrders.ftl"/></html></platform-specific>
                					</screenlet>
                             </widgets>
@@ -3574,20 +3574,20 @@
             </widgets>            
         </section>
     </screen>
-    <screen name="FindPowderShipment">
+    <screen name="FindDepotShipment">
         <section>
             <actions>
-                <set field="titleProperty" value="Find Powder Shipment"/>              
-			    <set field="tabButtonItem" value="PowderPlantSale" />	
-			   <set field="tabButtonItem2" value="FindPowderShipment"/>       
+                <set field="titleProperty" value="Find Depot Shipment"/>              
+			    <set field="tabButtonItem" value="DepotSale" />	
+			   <set field="tabButtonItem2" value="FindDepotShipment"/>       
                <set field="viewSize" from-field="parameters.VIEW_SIZE"/>
-               <set field="targetRequest" value="FindPowderShipment"/>
-               <set field="shipmentTypeId" value="POWDER_SHIPMENT"/> 
+               <set field="targetRequest" value="FindDepotShipment"/>
+               <set field="shipmentTypeId" value="DEPOT_SHIPMENT"/> 
             </actions>
             <widgets>
                   <decorator-screen name="ByProductsNgCommonDecorator" location="component://byproducts/widget/CommonScreens.xml">
                       <decorator-section name="body">  
-                      <include-menu name="PowderPlantSaleTabBar" location="component://byproducts/widget/ByProductsMenus.xml"/> 
+                      <include-menu name="DepotSaleTabBar" location="component://byproducts/widget/ByProductsMenus.xml"/> 
                         <section>
                             <widgets>
                                 <decorator-screen name="FindScreenDecorator" location="component://common/widget/CommonScreens.xml">
@@ -3596,7 +3596,7 @@
                       				</decorator-section>
                       				<decorator-section name="search-results">
                       					<screenlet title="">
-                      						<include-form name="listPowderShipments" location="component://byproducts/widget/ByProductsNgForms.xml"/>
+                      						<include-form name="listDepotShipments" location="component://byproducts/widget/ByProductsNgForms.xml"/>
                       					</screenlet>
                       				</decorator-section>
                                 </decorator-screen>
@@ -3771,7 +3771,7 @@
 			   <set field="defaultEffectiveDate" 
 					value="${groovy:org.ofbiz.base.util.UtilDateTime.toDateString(defaultEffectiveDateTime, &quot;dd MMMMM, yyyy&quot;);}" />
 			   <set field="parameters.roleTypeId" value="UNITS"/>
-			   <set field="productStoreResult"	value="${groovy:in.vasista.vbiz.byproducts.icp.ICPServices.getProductStoreByGroupId(delegator, 'POWDER_PLANT')}" />
+			   <set field="productStoreResult"	value="${groovy:in.vasista.vbiz.byproducts.icp.ICPServices.getProductStoreByGroupId(delegator, 'FG_STORE')}" />
 				<set field="productStoreId" value="${productStoreResult.factoryStoreId}"/>
 				<set field="productCategoryResult" value="${groovy:org.ofbiz.product.product.ProductWorker.getProductsByCategoryAssoc(delegator, 'INDENT_PROD_CAT', 'FGS_INDENT', null)}" />
 				 <set field="productStoreResult" value="${groovy:in.vasista.vbiz.byproducts.icp.ICPServices.getProductStoreByGroupId(delegator, 'FG_STORE')}" />

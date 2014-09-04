@@ -769,7 +769,7 @@
             </hyperlink>
         </field> 
     </form>
-    <form name="listPowderShipments" type="list" list-name="listIt" paginate-target="${targetRequest}" 
+    <form name="listDepotShipments" type="list" list-name="listIt" paginate-target="${targetRequest}" 
         odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
         <actions>
             <service service-name="performFind" result-map="result" result-map-list="listIt">
