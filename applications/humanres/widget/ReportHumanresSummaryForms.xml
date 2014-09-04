@@ -164,6 +164,9 @@
 		<field name="phoneNumber" title-area-style="tableheadwide"><display description="${phoneNumber}"/></field>
 		<field name="gender" title-area-style="tableheadwide"><display description="${gender}"/></field>
 		<field name="caste" title="Caste"><display description="${caste}"/></field>
+		<field name="weeklyOff" title="Weekly Off"><display description="${weeklyOff}"/></field>
+		<field name="canteenFacin" title="Canteen Facility"><display description="${canteenFacin}"/></field>
+		<field name="companyBus" title="Compay Bus"><display description="${companyBus}"/></field>
 		<field name="amount" title="Basic Pay" title-area-style="tableheadwide"><display description="${amount}"/></field>
 		<field name="daAmount" title="DA Amount"><display description="${daAmount}"/></field>
 		<field name="payGradeId" title="Grade" title-area-style="tableheadwide"><display description="${payGradeId}"/></field>

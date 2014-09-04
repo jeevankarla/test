@@ -143,6 +143,25 @@ def populateChildren(org, employeeList) {
 		employee.put("payGradeId",basicSalAndGradeMap.get("payGradeId"));
 		employment.fromDate=UtilDateTime.toDateString(employment.fromDate,"dd/MM/yyyy");
 		employee.put("fromDate",employment.fromDate);
+		List conditionList=[];
+		if(UtilValidate.isNotEmpty(employment.partyId)){
+			conditionList.add(EntityCondition.makeCondition("partyId", EntityOperator.EQUALS, employment.partyId));
+		}
+		condition=EntityCondition.makeCondition(conditionList,EntityOperator.AND);
+		empWeeklyOffDetails= delegator.findList("EmployeeDetail", condition, UtilMisc.toSet("weeklyOff","canteenFacin","companyBus"), null, null, false );
+		weeklyOff="";
+		canteenFacin="";
+		companyBus="";
+		if(UtilValidate.isNotEmpty(empWeeklyOffDetails)){
+			details=EntityUtil.getFirst(empWeeklyOffDetails);
+			weeklyOff=details.get("weeklyOff");
+			canteenFacin=details.get("canteenFacin");
+			companyBus=details.get("companyBus");
+		}
+		employee.put("weeklyOff",weeklyOff);
+		employee.put("canteenFacin",canteenFacin);
+		employee.put("companyBus",companyBus);
+		
 		employeeList.add(employee);
 	}
 }
