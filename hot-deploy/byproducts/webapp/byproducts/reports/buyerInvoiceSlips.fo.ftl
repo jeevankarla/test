@@ -21,7 +21,7 @@ under the License.
 <#escape x as x?xml>
 	<fo:root xmlns:fo="http://www.w3.org/1999/XSL/Format">
         <fo:layout-master-set>
-            <fo:simple-page-master master-name="main" page-height="12in" page-width="10in"  margin-left=".3in" margin-right=".3in" margin-top=".5in" margin-bottom=".5in">
+            <fo:simple-page-master master-name="main" page-height="12in" page-width="10in"  margin-left=".2in" margin-right=".3in" margin-top=".5in" margin-bottom=".5in">
                 <fo:region-body margin-top="0.5in"/>
                 <fo:region-before extent="1in"/>
                 <fo:region-after extent="1in"/>
@@ -88,10 +88,10 @@ under the License.
 							
 							<fo:table-row border-style="solid">
             					<fo:table-cell >
-            						<fo:block text-align="left" font-size="12pt" white-space-collapse="false" wrap-option="wrap">To: ${billingAddress.get("toName")?if_exists} </fo:block>
-            						<fo:block  keep-together="always" text-align="left" font-size="12pt" white-space-collapse="false">${billingAddress.get("address1")?if_exists} </fo:block>
-            						<fo:block  keep-together="always" text-align="left" font-size="12pt" white-space-collapse="false">${billingAddress.get("address2")?if_exists} </fo:block>
-            						<fo:block  keep-together="always" text-align="left" font-size="12pt" white-space-collapse="false">${billingAddress.get("city")?if_exists} - ${billingAddress.get("postalCode")?if_exists} </fo:block>  
+            						<fo:block text-align="left" font-size="12pt" white-space-collapse="false" wrap-option="wrap">To: <#if billingAddress?has_content>${billingAddress.get("toName")?if_exists} </#if></fo:block>
+            						<fo:block  keep-together="always" text-align="left" font-size="12pt" white-space-collapse="false"><#if billingAddress?has_content>${billingAddress.get("address1")?if_exists} </#if></fo:block>
+            						<fo:block  keep-together="always" text-align="left" font-size="12pt" white-space-collapse="false"><#if billingAddress?has_content>${billingAddress.get("address2")?if_exists} </#if></fo:block>
+            						<fo:block  keep-together="always" text-align="left" font-size="12pt" white-space-collapse="false"><#if billingAddress?has_content>${billingAddress.get("city")?if_exists} - ${billingAddress.get("postalCode")?if_exists} </#if></fo:block>  
             					</fo:table-cell>
             					<fo:table-cell>
             						<fo:block  keep-together="always" text-align="left" font-size="12pt" white-space-collapse="false">TIN: <#if toPartyDetail?has_content>${toPartyDetail.get('TIN_NUMBER')?if_exists}</#if></fo:block>
