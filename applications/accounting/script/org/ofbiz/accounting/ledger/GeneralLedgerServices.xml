@@ -2457,6 +2457,9 @@ under the License.
             <set field="debitEntry.origAmount" from-field="paymentApplication.amountApplied"/>
             <set field="debitEntry.origCurrencyUomId" from-field="payment.currencyUomId"/>
             <set field="debitEntry.glAccountId" from-field="payment.overrideGlAccountId"/>
+            <if-not-empty field="paymentGlAccountTypeMap.glAccountId">
+            	<set field="debitEntry.glAccountId" from-field="paymentGlAccountTypeMap.glAccountId"/>
+            </if-not-empty>
             <set field="debitEntry.glAccountTypeId" from-field="paymentGlAccountTypeMap.glAccountTypeId"/>
             <!-- Credit -->
             <make-value entity-name="AcctgTransEntry" value-field="creditEntry"/>
@@ -2485,6 +2488,9 @@ under the License.
             <set field="creditEntry.origAmount" from-field="paymentApplication.amountApplied"/>
             <set field="creditEntry.origCurrencyUomId" from-field="payment.currencyUomId"/>
             <set field="creditEntry.glAccountId" from-field="payment.overrideGlAccountId"/>
+            <if-not-empty field="paymentGlAccountTypeMap.glAccountId">
+            	<set field="creditEntry.glAccountId" from-field="paymentGlAccountTypeMap.glAccountId"/>
+            </if-not-empty>
             <set field="creditEntry.glAccountTypeId" from-field="paymentGlAccountTypeMap.glAccountTypeId"/>
             <!-- Debit -->
             <make-value entity-name="AcctgTransEntry" value-field="debitEntry"/>
