@@ -123,14 +123,12 @@ under the License.
 		action="cancelICPAmulOrder"
 	<#elseif screenFlag?exists && screenFlag=="icpBellarySales">
 		action="cancelICPBellaryOrder"
-	<#elseif screenFlag?exists && screenFlag=="powderSales">
-		action="cancelPowderOrder"
+	<#elseif screenFlag?exists && screenFlag=="depotSales">
+		action="cancelDepotOrder"
 	<#elseif screenFlag?exists && screenFlag=="fgsSales">
 		action="cancelFGSOrder"
 	<#elseif screenFlag?exists && screenFlag=="InterUnitTransferSale">
 		action="cancelIUSTransferOrder"
-	<#elseif screenFlag?exists && screenFlag=="convSales">
-		action="cancelConversionOrder"
 	</#if>>
 </form>
 <form name="orderApproveForm" id="orderApproveForm" method="post" 
@@ -140,14 +138,12 @@ under the License.
 		action="approveICPAmulOrder"
 	<#elseif screenFlag?exists && screenFlag=="icpBellarySales">
 		action="approveICPBellaryOrder"
-	<#elseif screenFlag?exists && screenFlag=="powderSales">
-		action="approvePowderOrder"
+	<#elseif screenFlag?exists && screenFlag=="depotSales">
+		action="approveDepotOrder"
 	<#elseif screenFlag?exists && screenFlag=="fgsSales">
 		action="approveFGSOrder"
 	<#elseif screenFlag?exists && screenFlag=="InterUnitTransferSale">
 		action="approveIUSTransferOrder"
-	<#elseif screenFlag?exists && screenFlag=="convSales">
-		action="approveConversionOrder"
 	</#if>>
 </form>
 
@@ -158,14 +154,12 @@ under the License.
 		action="createShipmentAndInvoiceForAmulOrders"
 	<#elseif screenFlag?exists && screenFlag=="icpBellarySales">
 		action="createShipmentAndInvoiceForBellaryOrders"
-	<#elseif screenFlag?exists && screenFlag=="powderSales">
-		action="createShipmentAndInvoiceForPowderOrders"
+	<#elseif screenFlag?exists && screenFlag=="depotSales">
+		action="createShipmentAndInvoiceForDepotOrders"
 	<#elseif screenFlag?exists && screenFlag=="fgsSales">
 		action="createShipmentAndInvoiceForFGSOrders"
 	<#elseif screenFlag?exists && screenFlag=="InterUnitTransferSale">
 		action="createShipAndInvForIUSTransferOrders"
-	<#elseif screenFlag?exists && screenFlag=="convSales">
-		action="createShipAndInvForConversionOrders"
 	</#if>>
 </form>
 
@@ -179,14 +173,12 @@ under the License.
     		<input class='h3' type='hidden' id='shipmentTypeId' name='shipmentTypeId' value='ICP_AMUL_SHIPMENT'/>
     	<#elseif screenFlag?exists && screenFlag=="icpBellarySales">
     		<input class='h3' type='hidden' id='shipmentTypeId' name='shipmentTypeId' value='ICP_BELLARY_SHIPMENT'/>
-    	<#elseif screenFlag?exists && screenFlag=="powderSales">
-    		<input class='h3' type='hidden' id='shipmentTypeId' name='shipmentTypeId' value='POWDER_SHIPMENT'/>
+    	<#elseif screenFlag?exists && screenFlag=="depotSales">
+    		<input class='h3' type='hidden' id='shipmentTypeId' name='shipmentTypeId' value='DEPOT_SHIPMENT'/>
     	<#elseif screenFlag?exists && screenFlag=="fgsSales">
     		<input class='h3' type='hidden' id='shipmentTypeId' name='shipmentTypeId' value='FGS_SHIPMENT'/>
     	<#elseif screenFlag?exists && screenFlag=="InterUnitTransferSale">
     		<input class='h3' type='hidden' id='shipmentTypeId' name='shipmentTypeId' value='INTUNIT_TR_SHIPMENT'/>
-    	<#elseif screenFlag?exists && screenFlag=="convSales">
-    		<input class='h3' type='hidden' id='shipmentTypeId' name='shipmentTypeId' value='PROCESSING_SHIPMENT'/>
     	</#if>
     	
     	<table width="100%">
