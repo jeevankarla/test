@@ -58,5 +58,9 @@ under the License.
     
     <SecurityGroupPermission groupId="FULLADMIN" permissionId="EMP_PUNCH_EDIT_UPDATE"/>
     <SecurityGroupPermission groupId="EMP_PUNCH_EDIT" permissionId="EMP_PUNCH_EDIT_UPDATE"/>
+    
+    <SecurityGroup description="Entering Daily Bus Timings" groupId="EMP_BUSTIMING"/>
+    <SecurityGroupPermission groupId="FULLADMIN" permissionId="HUMANRES_BUSTIMING_CREATE"/>
+    <SecurityGroupPermission groupId="EMP_BUSTIMING" permissionId="HUMANRES_BUSTIMING_CREATE"/>
       
 </entity-engine-xml>

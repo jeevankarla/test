@@ -83,7 +83,9 @@ under the License.emplpunch
     <service name="createBusTimings" engine="simple" default-entity-name="DailyBusTimings"
     location="component://humanres/script/org/ofbiz/humanres/HumanResServices.xml" invoke="createBusTimings" auth="true">
     	<description>Create Bus Timings</description>
-    	<permission-service service-name="humanResManagerPermission" main-action="EMPLOYEE_EDIT"/>
+    	<required-permissions join-type="OR">
+          <permission-service service-name="humanResManagerPermission" main-action="BUSTIMING_CREATE"/>
+    	</required-permissions>
     	<auto-attributes mode="IN" include="pk" optional="false"/>
     	<attribute name="inTime" mode="IN" type="Time" optional="false"></attribute>
         <auto-attributes mode="IN" include="nonpk" optional="true"/>
