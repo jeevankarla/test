@@ -184,11 +184,13 @@ under the License.
     	<table width="100%">
     		<tr>
     			<td><span class="label"> Vehicle Number(<font color='red'>*</font>):</span><input class='h3' type='text' id='vehicleId' name='vehicleId'/></td>
-    			<td><span class="label"> Carrier Name:</span><input class='h3' type='text' id='carrierName' name='carrierName'/></td>
-    			<td><span class="label"> L/R Number:</span><input class='h3' type='text' id='lrNumber' name='lrNumber'/></td>
     			<td><span class="label">Mode:</span><select name="modeOfDespatch" id="modeOfDespatch"><option value="By Road">By Road</option><option value="By Air">By Air</option><option value="By Sea">By Sea</option></select></td>
     			<td><span class="label"> Ship Date(<font color='red'>*</font>):</span><input class='h3' type='text' id='shipDate' name='shipDate' value='${defaultEffectiveDate?if_exists}' onmouseover='datepick()'/></td>
     			<td><input id="submitButton" type="button"  onclick="javascript:processOrders(this);" value="Ship Orders"/></td>
+    		</tr>
+    		<tr>
+    			<td><span class="label"> Carrier Name:</span><input class='h3' type='text' id='carrierName' name='carrierName'/></td>
+    			<td><span class="label"> L/R Number:</span><input class='h3' type='text' id='lrNumber' name='lrNumber'/></td>
     		</tr>
     	</table>
     	
