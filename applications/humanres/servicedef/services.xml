@@ -1103,7 +1103,10 @@ under the License.emplpunch
     <service name="updateEmplLeaveStatus" engine="simple" default-entity-name="EmplLeave"
             location="component://humanres/script/org/ofbiz/humanres/HumanResServices.xml" invoke="updateEmplLeaveStatus" auth="true">
         <description>Update Leave Approval Status</description>
-        <permission-service service-name="humanResManagerPermission" main-action="UPDATE"/>
+      	<required-permissions join-type="OR">
+          <permission-service service-name="humanResManagerPermission" main-action="UPDATE"/>
+          <permission-service service-name="humanResManagerPermission" main-action="LEAVE_APPROVAL"/>
+    	</required-permissions>
         <auto-attributes mode="IN" include="pk" optional="false"/>
         <auto-attributes mode="IN" include="nonpk" optional="true"/>
     </service>
