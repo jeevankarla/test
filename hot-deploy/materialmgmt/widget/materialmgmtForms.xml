@@ -69,7 +69,7 @@
                   <parameter param-name="shipmentId"/>
             </hyperlink>
         </field> -->
-         <field use-when="statusId.equals(&quot;ORDER_APPROVED&quot;)" name="GatePass" widget-style="buttontext" >
+         <!--  <field use-when="statusId.equals(&quot;ORDER_APPROVED&quot;)" name="GatePass" widget-style="buttontext" >
             <hyperlink target="AdhocTruckSheetReport.txt" description="GatePass" target-window="_blank">
                  <parameter param-name="shipmentTypeId" from-field="shipmentTypeId"/> 
                	  <parameter param-name="estimatedShipDate" from-field="estimatedDeliveryDate"/>
@@ -91,7 +91,7 @@
                	  <parameter param-name="invoiceId" from-field="invoiceId"/>
                	  <parameter param-name="shipmentId" /> 
             </hyperlink>
-        </field>
+        </field> -->
          <field use-when="statusId.equals(&quot;ORDER_APPROVED&quot;) &amp;&amp; paymentApplicationId==null" name="PayAmount" widget-style="buttontext"  >
             <hyperlink target="createAdhocSalePayment" description="Pay Order" target-window="_blank" >
              <parameter param-name="estimatedDeliveryDate"/>
