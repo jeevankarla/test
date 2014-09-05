@@ -71,8 +71,14 @@ under the License.
                 <entity-condition entity-name="PartyRole" list="employee">
                <condition-expr field-name="roleTypeId" operator="equals" value="EMPLOYEE" />
                 </entity-condition>
-                
-                
+                <entity-condition list="punchTypeList" entity-name="Enumeration">
+                	<condition-list>
+                		<condition-expr field-name="enumTypeId" operator="equals" value="PUNCH_TYPE"/>
+                	</condition-list>
+                <order-by field-name="sequenceId"/>
+                </entity-condition>
+                 <entity-condition list="shiftTypeList" entity-name="WorkShiftType">
+                </entity-condition>
             </actions>
             <widgets>
                 <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">

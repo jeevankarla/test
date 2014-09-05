@@ -144,14 +144,19 @@ function dateValidation(){
 	}
 	
 	
-function showPunchEditForm(partyId,punchType,punchdate,InOut,emplPunchId,punchtime) {
+function showPunchEditForm(partyId,punchType,punchdate,InOut,emplPunchId,punchtime,shiftType) {
 		var message ="";
 		      message +="<form id='editAdminPunch' action='adminPunch' method='post' onsubmit='return disableGenerateButton();'><table cellspacing=10  cellpadding=20>"; 		
 			message +="<tr class='h3'><td align='left' class='h3' width='30%'>PartyId:</td><td align='left' class='h3' width='30%'><input type='text' value="+partyId+" name='partyId' readonly size='5' /></td></tr>"+
-			"<tr class='h3'><td align='left' class='h3' width='40%'>Punch Type:</td><td align='left' class='h3' width='40%'><input type='text' value="+punchType+" name='PunchType' readonly size='5' /></td></tr>"+
+			"<tr class='h3'><td align='left' class='h3' width='40%'>Punch Type:</td><td align='left' class='h3' width='40%'><select name='PunchType'  allow-empty='false' id='PunchType' class='h4'><option >"+punchType+"</option>"+
+	              		"<#list punchTypeList as ptl><option value='${ptl.enumId}' >${ptl.enumId?if_exists}</option></#list>"+            
+						"</select></td></tr>"+
+			"<tr class='h3'><td align='left' class='h3' width='40%'>IN/OUT:</td><td align='left' class='h3' width='40%'><input type='text' value="+InOut+" name='InOut' readonly size='5' /></td></tr>"+
+			"<tr class='h3'><td align='left' class='h3' width='40%'>Shift Type:</td><td align='left' class='h3' width='40%'><select name='shiftType'  allow-empty='false' id='shiftType' class='h4'><option >"+shiftType+"</option>"+
+	              		"<#list shiftTypeList as stl><option value='${stl.shiftTypeId}' >${stl.shiftTypeId?if_exists}</option></#list>"+            
+						"</select></td></tr>"+
 			"<tr class='h3'><td align='left' class='h3' width='40%'>Date:</td><td align='left' class='h3' width='40%'><input type='text' value="+punchdate+" name='punchdate' readonly size='10' /></td></tr>"+
 			"<tr class='h3'><td align='left' class='h3' width='40%'>Punch Time:</td><td align='left' class='h3' width='40%'><input type='text'  value="+punchtime+" name='punchtime' size='10' required />HH:MM:SS</tr>"+
-			"<tr class='h3'><td align='left' class='h3' width='40%'>IN/OUT:</td><td align='left' class='h3' width='40%'><input type='text' value="+InOut+" name='InOut' readonly size='5' /></td></tr>"+
 			"<tr class='h3'><td align='left' class='h3' width='40%'></td><td align='left' class='h3' width='40%'><input type='hidden' value="+emplPunchId+" name='emplPunchId' readonly size='5' /></td></tr>"+
 			"<tr class='h3'><td align='left' class='h3' width='40%'>Note:</td><td align='left' class='h3' width='40%'><input  type='textarea' value='' name='Note'></td></tr>"+
 			"<tr class='h3'><td align='right'><span align='right'><input type='submit' value='${uiLabelMap.CommonSubmit}' id='adminPunch' class='smallSubmit'/></span></td><td class='h3' width='80%' align='center'><span align='right'><button value='${uiLabelMap.CommonCancel}' onclick='return cancelForm();' class='smallSubmit'>${uiLabelMap.CommonCancel}</button></span></td></tr>";
@@ -287,7 +292,8 @@ function showPunchEditForm(partyId,punchType,punchdate,InOut,emplPunchId,punchti
 						</#list>
 						<#assign date=Static["org.ofbiz.base.util.UtilDateTime"].toDateString(period.start, "yyyy-MM-dd")>
 						<#assign punchtime="00:00:00">
-					   <#if x!=1>  onClick="showPunchEditForm('${partyId}','${punchtype.enumId?if_exists}','${date}','${inOut.enumId?if_exists}','${cellid?string}','${punchtime}')";<#--onClick="leapTo('/humanres/control/admPunch?partyId=${partyId}&punchdate=${period.start?string}&PunchType=${punchtype.enumId?if_exists}&InOut=IN&dateTime=${period.start?string}&emplPunchId=${cellid?string}')"-->
+						<#assign shiftType="SHIFT_GEN">
+					   <#if x!=1>  onClick="showPunchEditForm('${partyId}','${punchtype.enumId?if_exists}','${date}','${inOut.enumId?if_exists}','${cellid?string}','${punchtime}','${shiftType?if_exists}')";<#--onClick="leapTo('/humanres/control/admPunch?partyId=${partyId}&punchdate=${period.start?string}&PunchType=${punchtype.enumId?if_exists}&InOut=IN&dateTime=${period.start?string}&emplPunchId=${cellid?string}')"-->
 					   <#else>
 							 <#list data as Records>
 						     	<#if Records.InOut="${inOut.enumId}">
@@ -296,7 +302,7 @@ function showPunchEditForm(partyId,punchType,punchdate,InOut,emplPunchId,punchti
 						      			<#if Records.emplPunchId=cellid?string>   
 						      			<#assign date=Static["org.ofbiz.base.util.UtilDateTime"].toDateString(period.start, "yyyy-MM-dd")> 
 						      				<#--onClick="leapTo('/humanres/control/admPunch?partyId=${partyId}&punchdate=${period.start?string}&PunchType=${punchtype.enumId?if_exists}&InOut=${inOut.enumId?if_exists}&dateTime=${period.start?string}&punchtime=${Records.getString('punchtime')}&emplPunchId=${cellid?string}&shiftType=${Records.shiftType?if_exists}')"-->
-						      				onClick="showPunchEditForm('${partyId}','${punchtype.enumId?if_exists}','${date}','${inOut.enumId?if_exists}','${cellid?string}','${Records.getString('punchtime')}')";
+						      				onClick="showPunchEditForm('${partyId}','${punchtype.enumId?if_exists}','${date}','${inOut.enumId?if_exists}','${cellid?string}','${Records.getString('punchtime')}','${Records.shiftType?if_exists}')";
 						     				<#assign x=0>
 						        			<#break> 
 						     			</#if>
