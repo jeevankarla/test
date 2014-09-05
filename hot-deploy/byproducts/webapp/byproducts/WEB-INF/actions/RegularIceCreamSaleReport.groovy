@@ -46,21 +46,21 @@ dayBegin = UtilDateTime.getDayStart(fromDateTime);
 dayEnd = UtilDateTime.getDayEnd(thruDateTime);
 context.fromDate = fromDateTime;
 context.thruDate = thruDateTime;
-maxIntervalDays=UtilDateTime.getIntervalInDays(fromDateTime,thruDateTime);
+totalDays=UtilDateTime.getIntervalInDays(fromDateTime,thruDateTime);
 isByParty = Boolean.TRUE;
-if(maxIntervalDays > 32){
+if(totalDays > 32){
 	Debug.logError("You Cannot Choose More Than 31 Days.","");
 	context.errorMessage = "You Cannot Choose More Than 31 Days";
 	return;
 }
 partyIds=[];
 if(categoryType.equals("ICE_CREAM_NANDINI")||categoryType.equals("All")){
-   nandiniPartyIds = ByProductNetworkServices.getPartyByRoleType(dctx, [userLogin: userLogin, roleTypeId: "IC_WHOLESALE"]).get("partyIds");
-   partyIds.addAll(nandiniPartyIds);
+nandiniPartyIds = ByProductNetworkServices.getPartyByRoleType(dctx, [userLogin: userLogin, roleTypeId: "IC_WHOLESALE"]).get("partyIds");
+partyIds.addAll(nandiniPartyIds);
 }
 if(categoryType.equals("ICE_CREAM_AMUL")||categoryType.equals("All")){
-   amulPartyIds = ByProductNetworkServices.getPartyByRoleType(dctx, [userLogin: userLogin, roleTypeId: "EXCLUSIVE_CUSTOMER"]).get("partyIds");
-   partyIds.addAll(amulPartyIds);
+amulPartyIds = ByProductNetworkServices.getPartyByRoleType(dctx, [userLogin: userLogin, roleTypeId: "EXCLUSIVE_CUSTOMER"]).get("partyIds");
+partyIds.addAll(amulPartyIds);
 }
 if(categoryType.equals("UNITS")||categoryType.equals("All")){
 	unitPartyIds = ByProductNetworkServices.getPartyByRoleType(dctx, [userLogin: userLogin, roleTypeId: "UNITS"]).get("partyIds");
@@ -74,214 +74,146 @@ if(categoryType.equals("DEPOT_CUSTOMER")||categoryType.equals("All")){
 	depotPartyIds = ByProductNetworkServices.getPartyByRoleType(dctx, [userLogin: userLogin, roleTypeId: "DEPOT_CUSTOMER"]).get("partyIds");
 	partyIds.addAll(depotPartyIds);
 }
-dayWiseTotals = SalesInvoiceServices.getPeriodSalesInvoiceTotals(dctx, [partyIds:partyIds, isQuantityLtrs:true,fromDate:dayBegin, thruDate:dayEnd]).get("invoiceIdTotals");
+//dayWiseTotals = SalesInvoiceServices.getPeriodSalesInvoiceTotals(dctx, [partyIds:partyIds, isQuantityLtrs:true,fromDate:dayBegin, thruDate:dayEnd]).get("invoiceIdTotals");
 facilityMap=[:];
 dayWiseInvoice=FastMap.newInstance();
-// Populating sales for Ice cream products
-List invoiceList=FastList.newInstance();
-dayWiseTotals.each{eachInvoice ->
-	invoiceMap=[:];
-	finalMap=FastMap.newInstance();
-	invoice = delegator.findByPrimaryKey("Invoice", [invoiceId : eachInvoice.getKey()]);
-	invoiceDateStr=eachInvoice.getValue().get("invoiceDateStr");
-	//finalMap.put("invoiceDateStr",eachInvoice.getValue().get("invoiceDateStr"));
-	//partyName = PartyHelper.getPartyName(delegator, invoice.partyId, false);
-	facilityMap.put(eachInvoice.getKey(),invoice.partyId);
-	prodTotals = eachInvoice.getValue().get("productTotals");
-	tempVariantMap =FastMap.newInstance();
-	if(UtilValidate.isNotEmpty(prodTotals)){
-		prodTotals.each{productValue ->
-			if(UtilValidate.isNotEmpty(productValue)){
-				currentProduct = productValue.getKey();
-				product = delegator.findOne("Product", [productId : currentProduct], false);
-				productId = productValue.getKey();
-					exprList=[];
-					exprList.add(EntityCondition.makeCondition("productCategoryTypeId", EntityOperator.EQUALS, "IC_CAT_RPT"));
-					exprList.add(EntityCondition.makeCondition("productId", EntityOperator.EQUALS, productId));
-				    condition = EntityCondition.makeCondition(exprList, EntityOperator.AND);
-				    productList = delegator.findList("ProductCategoryAndMember", condition, null, null, null, false);
-					if(UtilValidate.isNotEmpty(productList)){
-					 productList=EntityUtil.getFirst(productList);
-			        }
-				    
-				if(UtilValidate.isNotEmpty(categoryType)&& categoryType.equals(product.primaryProductCategoryId)){
-					if(categoryType.equals(product.primaryProductCategoryId)){
-						if(UtilValidate.isNotEmpty(productList)){
-							virtualProductId = productList.get("productCategoryId");
+// Invoice Sales Abstract
+	finalInvoiceDateMap = [:];
+	for( i=0 ; i <= (totalDays); i++){
+		currentDay =UtilDateTime.addDaysToTimestamp(fromDateTime, i);
+		dayBegin=UtilDateTime.getDayStart(currentDay);
+		dayEnd=UtilDateTime.getDayEnd(currentDay);
+		invoiceMap = [:];
+		if(UtilValidate.isNotEmpty(partyIds)){
+			salesInvoiceTotals = SalesInvoiceServices.getPeriodSalesInvoiceTotals(dctx, [partyIds:partyIds, isQuantityLtrs:true,fromDate:dayBegin, thruDate:dayEnd]);
+			if(UtilValidate.isNotEmpty(salesInvoiceTotals)){
+				invoiceTotals = salesInvoiceTotals.get("invoiceIdTotals");
+				if(UtilValidate.isNotEmpty(invoiceTotals)){
+					invoiceTotals.each { invoice ->
+						if(UtilValidate.isNotEmpty(invoice)){
+							invoiceId = "";
+							partyName = "";
+							idValue = "";
+							basicRevenue=0;
+							bedRevenue=0;
+							vatRevenue=0;
+							cstRevenue=0;
+							totalRevenue=0;
+							finalMap=FastMap.newInstance();
+							invoiceId = invoice.getKey();
+							if(UtilValidate.isNotEmpty(invoice.getValue().invoiceDateStr)){
+								invoiceDate = invoice.getValue().invoiceDateStr;
+							}
+							invoiceDetails = delegator.findOne("Invoice",[invoiceId : invoiceId] , false);
+							invoicePartyId = invoiceDetails.partyId;
+							prodTotals = invoice.getValue().get("productTotals");
+							tempVariantMap =FastMap.newInstance();
+							if(UtilValidate.isNotEmpty(prodTotals)){
+								prodTotals.each{productValue ->
+									if(UtilValidate.isNotEmpty(productValue)){
+										currentProduct = productValue.getKey();
+										product = delegator.findOne("Product", [productId : currentProduct], false);
+										productId = productValue.getKey();
+											exprList=[];
+											exprList.add(EntityCondition.makeCondition("productCategoryTypeId", EntityOperator.EQUALS, "IC_CAT_RPT"));
+											exprList.add(EntityCondition.makeCondition("productId", EntityOperator.EQUALS, productId));
+											condition = EntityCondition.makeCondition(exprList, EntityOperator.AND);
+											productList = delegator.findList("ProductCategoryAndMember", condition, null, null, null, false);
+											if(UtilValidate.isNotEmpty(productList)){
+											 productList=EntityUtil.getFirst(productList);
+											}
+												if(UtilValidate.isNotEmpty(productList)){
+													virtualProductId = productList.get("productCategoryId");
+												}
+												if(UtilValidate.isEmpty(tempVariantMap[virtualProductId])){
+													quantity =productValue.getValue().get("total");
+													basicRevenue = productValue.getValue().get("basicRevenue");
+													bedRevenue=productValue.getValue().get("bedRevenue");
+													vatRevenue = productValue.getValue().get("vatRevenue");
+													cstRevenue = productValue.getValue().get("cstRevenue");
+													tempProdMap = FastMap.newInstance();
+													tempProdMap["quantity"] = quantity;
+													tempProdMap["invoiceId"]=invoiceId;
+													if(basicRevenue>0){
+													 tempProdMap["basicRevenue"] = basicRevenue;
+													}else{
+													 basicRevenue=0;
+													 tempProdMap["basicRevenue"] = 0;
+													}
+													if(bedRevenue>0){
+														tempProdMap["bedRevenue"] = bedRevenue;
+													}else{
+														bedRevenue=0;
+														tempProdMap["bedRevenue"] = 0;
+													}
+													if(vatRevenue>0){
+														tempProdMap["vatRevenue"] = vatRevenue;
+													}else{
+														vatRevenue=0;
+														tempProdMap["vatRevenue"] = 0;
+													}
+													if(cstRevenue>0){
+													   tempProdMap["cstRevenue"] = cstRevenue;
+													}else{
+													   cstRevenue=0;
+													   tempProdMap["cstRevenue"] = 0;
+													}
+													totalVal = basicRevenue+bedRevenue+vatRevenue+cstRevenue;
+													if(totalVal>0){
+													 tempProdMap["totalVal"] = totalVal;
+													}else{
+													 tempProdMap["totalVal"] = 0;
+													}
+													temp=FastMap.newInstance();
+													temp.putAll(tempProdMap);
+													tempVariantMap[virtualProductId] = temp;
+												}else{
+													tempMap = [:];
+													productMap = [:];
+													tempMap.putAll(tempVariantMap.get(virtualProductId));
+													productMap.putAll(tempMap);
+													
+													quantity =productValue.getValue().get("total");
+													basicRevenue = productValue.getValue().get("basicRevenue");
+													bedRevenue=productValue.getValue().get("bedRevenue");
+													vatRevenue = productValue.getValue().get("vatRevenue");
+													cstRevenue = productValue.getValue().get("cstRevenue");
+													totalVal = basicRevenue+bedRevenue+vatRevenue+cstRevenue;
+													tempProdMap["invoiceId"]=invoiceId;
+													productMap["quantity"] += productValue.getValue().get("total");
+													productMap["basicRevenue"] += productValue.getValue().get("basicRevenue");
+													productMap["bedRevenue"] += productValue.getValue().get("bedRevenue");
+													productMap["vatRevenue"] += productValue.getValue().get("vatRevenue");
+													productMap["cstRevenue"] += productValue.getValue().get("cstRevenue");
+													productMap["totalVal"] += totalVal;
+													temp=FastMap.newInstance();;
+													temp.putAll(productMap);
+													tempVariantMap[virtualProductId] = temp;
+												}
+												//tempVariantMap["InvoiceId"]=invoiceId;
+										finalMap.put("productTotals",tempVariantMap);
+									}
+								}
+							}
+							invoiceList = [];
+							if(UtilValidate.isNotEmpty(invoiceMap[invoiceId])){
+								invoiceList = invoiceMap.get(invoiceId);
+							}
+							invoiceList.add(finalMap);
+							invoiceMap[invoiceId] = invoiceList;
 						}
-						if(UtilValidate.isEmpty(tempVariantMap[virtualProductId])){
-							quantity =productValue.getValue().get("total");
-							basicRevenue = productValue.getValue().get("basicRevenue");
-							bedRevenue=productValue.getValue().get("bedRevenue");
-							vatRevenue = productValue.getValue().get("vatRevenue");
-							cstRevenue = productValue.getValue().get("cstRevenue");
-							tempProdMap = FastMap.newInstance();
-							tempProdMap["quantity"] = quantity;
-							if(basicRevenue>0){
-							 tempProdMap["basicRevenue"] = basicRevenue;
-							}else{
-							 basicRevenue=0;
-							 tempProdMap["basicRevenue"] = 0;
-							}
-							if(bedRevenue>0){
-								tempProdMap["bedRevenue"] = bedRevenue;
-							}else{
-							    bedRevenue=0;
-								tempProdMap["bedRevenue"] = 0;
-							}
-							if(vatRevenue>0){
-								tempProdMap["vatRevenue"] = vatRevenue;
-							}else{
-							    vatRevenue=0;
-								tempProdMap["vatRevenue"] = 0;
-							}
-						    if(cstRevenue>0){
-							   tempProdMap["cstRevenue"] = cstRevenue;
-						    }else{
-							   cstRevenue=0;
-							   tempProdMap["cstRevenue"] = 0;
-						    }
-							totalVal = basicRevenue+bedRevenue+vatRevenue+cstRevenue;
-							if(totalVal>0){
-							 tempProdMap["totalVal"] = totalVal;
-							}else{
-							 tempProdMap["totalVal"] = 0;
-							}
-							temp=FastMap.newInstance();
-							temp.putAll(tempProdMap);
-							tempVariantMap[virtualProductId] = temp;
-						}else{
-							tempMap = [:];
-							productMap = [:];
-							tempMap.putAll(tempVariantMap.get(virtualProductId));
-							productMap.putAll(tempMap);
-							
-							quantity =productValue.getValue().get("total");
-							basicRevenue = productValue.getValue().get("basicRevenue");
-							bedRevenue=productValue.getValue().get("bedRevenue");
-							vatRevenue = productValue.getValue().get("vatRevenue");
-							cstRevenue = productValue.getValue().get("cstRevenue");
-							totalVal = basicRevenue+bedRevenue+vatRevenue+cstRevenue;
-							productMap["quantity"] += productValue.getValue().get("total");
-							productMap["basicRevenue"] += productValue.getValue().get("basicRevenue");
-							productMap["bedRevenue"] += productValue.getValue().get("bedRevenue");
-							productMap["vatRevenue"] += productValue.getValue().get("vatRevenue");
-							productMap["cstRevenue"] += productValue.getValue().get("cstRevenue");
-							productMap["totalVal"] += totalVal;
-							temp=FastMap.newInstance();;
-							temp.putAll(productMap);
-							tempVariantMap[virtualProductId] = temp;
-						}
-						
-				 }
-					
-				}else if(UtilValidate.isNotEmpty(categoryType)&& categoryType.equals("All")){
-						if(UtilValidate.isNotEmpty(productList)){
-							virtualProductId = productList.get("productCategoryId");
-						}
-						if(UtilValidate.isEmpty(tempVariantMap[virtualProductId])){
-							quantity =productValue.getValue().get("total");
-							basicRevenue = productValue.getValue().get("basicRevenue");
-							bedRevenue=productValue.getValue().get("bedRevenue");
-							vatRevenue = productValue.getValue().get("vatRevenue");
-							cstRevenue = productValue.getValue().get("cstRevenue");
-							tempProdMap = FastMap.newInstance();
-							tempProdMap["quantity"] = quantity;
-							if(basicRevenue>0){
-							 tempProdMap["basicRevenue"] = basicRevenue;
-							}else{
-							 basicRevenue=0;
-							 tempProdMap["basicRevenue"] = 0;
-							}
-							if(bedRevenue>0){
-								tempProdMap["bedRevenue"] = bedRevenue;
-							}else{
-							    bedRevenue=0
-								tempProdMap["bedRevenue"] = 0;
-							}
-							if(vatRevenue>0){
-								tempProdMap["vatRevenue"] = vatRevenue;
-							}else{
-							    vatRevenue=0;
-								tempProdMap["vatRevenue"] = 0;
-							}
-						    if(cstRevenue>0){
-							   tempProdMap["cstRevenue"] = cstRevenue;
-						    }else{
-							   cstRevenue=0;
-							   tempProdMap["cstRevenue"] = 0;
-						    }
-							totalVal = basicRevenue+bedRevenue+vatRevenue+cstRevenue;
-							if(totalVal>0){
-								tempProdMap["totalVal"] = totalVal;
-							}else{
-							   tempProdMap["totalVal"]=0;
-							}
-							
-							temp=FastMap.newInstance();
-							temp.putAll(tempProdMap);
-							tempVariantMap[virtualProductId] = temp;
-						}else{
-							tempMap = [:];
-							productMap = [:];
-							tempMap.putAll(tempVariantMap.get(virtualProductId));
-							productMap.putAll(tempMap);
-							
-							quantity =productValue.getValue().get("total");
-							basicRevenue = productValue.getValue().get("basicRevenue");
-							bedRevenue=productValue.getValue().get("bedRevenue");
-							vatRevenue = productValue.getValue().get("vatRevenue");
-							cstRevenue = productValue.getValue().get("cstRevenue");
-							
-							productMap["quantity"] += productValue.getValue().get("total");
-							productMap["basicRevenue"] += productValue.getValue().get("basicRevenue");
-							productMap["bedRevenue"] += productValue.getValue().get("bedRevenue");
-							productMap["vatRevenue"] += productValue.getValue().get("vatRevenue");
-							productMap["cstRevenue"] += productValue.getValue().get("cstRevenue");
-							totalVal = basicRevenue+bedRevenue+vatRevenue+cstRevenue;
-							productMap["totalVal"] += totalVal;
-							temp=FastMap.newInstance();;
-							temp.putAll(productMap);
-							tempVariantMap[virtualProductId] = temp;
-						}
-						
-				 
-			  }
-				finalMap.put("productTotals",tempVariantMap);
-			}
-		}
-	}
-	invoiceMap.put(eachInvoice.getKey(),finalMap);
-	invoiceList.add(invoiceMap);
-	
-	
-}
-
-if(UtilValidate.isNotEmpty(invoiceList)){
-	invoiceList.each{invoiceValue ->
-		if(UtilValidate.isNotEmpty(invoiceValue)){
-			invoice = invoiceValue.entrySet();
-			invoice.each{invValues ->
-				tempInvoiceMap=[:];
-				invoice = delegator.findByPrimaryKey("Invoice", [invoiceId : invValues.getKey()]);
-				invoiceDate=UtilDateTime.toDateString(invoice.getTimestamp("invoiceDate"), "dd-MMM-yyyy");
-				tempInvoiceMap.putAt(invValues.getKey(), invValues.getValue());
-				if(UtilValidate.isEmpty(dayWiseInvoice[invoiceDate])){
-					dayWiseInvoice.put(invoiceDate, tempInvoiceMap);
-				}else{
-				  tempMap =FastMap.newInstance();
-				  tempMap.putAll(dayWiseInvoice.get(invoiceDate));
-				  tempMap.put(invValues.getKey(), invValues.getValue());
-				  dayWiseInvoice.put(invoiceDate, tempMap);
+					}
 				}
 			}
 		}
+		tempMap = [:];
+		tempMap.putAll(invoiceMap);
+		if(UtilValidate.isNotEmpty(tempMap)){
+			dayWiseInvoice.put(dayBegin,tempMap);
+		}
 	}
-}
-context.facilityMap=facilityMap;
 context.categoryType=categoryType;
 context.dayWiseInvoice=dayWiseInvoice;
-context.invoiceMap=invoiceMap;
 
 
 
