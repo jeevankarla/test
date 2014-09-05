@@ -106,7 +106,7 @@ under the License.
         <security https="true" auth="true"/>
           <event type="service" invoke="adminPunch"/>
         <response name="success" type="view" value="Week"/>
-        <response name="error" type="view" value="AdminPunch"/>
+        <!-- <response name="error" type="view" value="AdminPunch"/> -->
     </request-map>
    <request-map uri="deletePunchInternal">
       <security  auth="true"/>  
