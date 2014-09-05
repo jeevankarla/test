@@ -73,7 +73,7 @@ under the License.
        							<#assign invoiceMap = dayWiseTotalsDetails.getValue().entrySet()>
        							<fo:table-row>
 					                    <fo:table-cell>
-							            	<fo:block  keep-together="always" text-align="left" font-size="12pt" white-space-collapse="false" font-weight="bold">${dayWiseTotalsDetails.getKey()}</fo:block>  
+							            	<fo:block  keep-together="always" text-align="left" font-size="12pt" white-space-collapse="false" font-weight="bold">${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(dayWiseTotalsDetails.getKey(), "dd-MMM-yyyy")}</fo:block>  
 							            </fo:table-cell>
 					           </fo:table-row>
 					           <fo:table-row> 
@@ -88,15 +88,16 @@ under the License.
                                 <#assign cst=0>
                                 <#assign total=0>
           						 <#list invoiceMap as invoiceDetails>
-          						 <#assign invoice = invoiceDetails.getValue().entrySet()>
+          						 <#assign invoice = invoiceDetails.getValue()>
           						 <#list invoice as invoiceDtls>
-          						 <#assign partyName = Static["org.ofbiz.party.party.PartyHelper"].getPartyName(delegator, facilityMap.get(invoiceDetails.getKey())?if_exists, false)>
+          						 <#assign invoice = delegator.findOne("Invoice", {"invoiceId" : invoiceDetails.getKey()}, true)>
+          						 <#assign partyName = Static["org.ofbiz.party.party.PartyHelper"].getPartyName(delegator, invoice.get("partyId")?if_exists, false)>
 							      <fo:table-row>
 							             <fo:table-cell>
 							            	<fo:block  keep-together="always" text-align="left" font-size="12pt" white-space-collapse="false" font-weight="bold">${invoiceDetails.getKey()}</fo:block>  
 							            </fo:table-cell>
 							             <fo:table-cell>
-							            	<fo:block  keep-together="always" text-align="left" font-size="12pt" white-space-collapse="false" font-weight="bold">${partyName?if_exists}<#if categoryType=="ICE_CREAM_AMUL">[${facilityMap.get(invoiceDetails.getKey())?if_exists}]</#if></fo:block>  
+							            	<fo:block  keep-together="always" text-align="left" font-size="12pt" white-space-collapse="false" font-weight="bold">${partyName}<#if categoryType=="ICE_CREAM_AMUL">[${invoice.get("partyId")?if_exists}]</#if></fo:block>  
 							            </fo:table-cell>
 							             <fo:table-cell>
 							            	<fo:block  keep-together="always" text-align="right" font-size="12pt" white-space-collapse="false" font-weight="bold">
@@ -109,7 +110,7 @@ under the License.
 								            		<fo:table-column column-width="90pt"/> 
 								            		<fo:table-column column-width="115pt"/> 
 					                                <fo:table-body>
-					                                <#assign productTotals=invoiceDtls.getValue().entrySet()>
+					                                <#assign productTotals=invoiceDtls.get("productTotals").entrySet()>
 					                                <#list productTotals as productDtls>
 					                               
 					                                <#assign qty=qty+productDtls.getValue().get("quantity")>
@@ -127,7 +128,7 @@ under the License.
 					       							<#assign grandTotal=grandTotal+productDtls.getValue().get("basicRevenue")+totalBedRev+productDtls.getValue().get("bedRevenue")+productDtls.getValue().get("vatRevenue")+productDtls.getValue().get("cstRevenue")>
 						                                <fo:table-row>
 						                                   <fo:table-cell>
-								                           		<fo:block  keep-together="always" font-size="12pt" text-align="left" white-space-collapse="false">${productDtls.getKey()?if_exists}</fo:block>  
+								                           		<fo:block  keep-together="always" font-size="12pt" text-align="left" white-space-collapse="false">${productDtls.getKey()}</fo:block>  
 								                       		</fo:table-cell>
 															<fo:table-cell>
 								                           		<fo:block  keep-together="always" font-size="12pt" text-align="right" white-space-collapse="false">${productDtls.getValue().get("quantity")?string("#0.00")}</fo:block>  
