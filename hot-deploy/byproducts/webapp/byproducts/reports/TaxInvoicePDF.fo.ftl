@@ -75,7 +75,8 @@ ${setRequestAttribute("OUTPUT_FILENAME", "TaxInvoice.pdf")}
 									 <fo:table-cell border-style="solid" > 
 									    <fo:block font-weight="bold">BUYER'S NAME </fo:block>  
 									 </fo:table-cell>   
-								 </fo:table-row> 
+								 </fo:table-row>
+								 <#if billingAddress?has_content> 
 								  <fo:table-row> 
 									 <fo:table-cell>
 									    <fo:block  keep-together="always" text-align="left" font-size="10pt" white-space-collapse="false" font-weight = "bold">To: ${billingAddress.get("toName")?if_exists} </fo:block>
@@ -84,6 +85,7 @@ ${setRequestAttribute("OUTPUT_FILENAME", "TaxInvoice.pdf")}
 	            						<fo:block  keep-together="always" text-align="left" font-size="10pt" white-space-collapse="false" font-weight = "bold">${billingAddress.get("city")?if_exists} - ${billingAddress.get("postalCode")?if_exists} </fo:block>  
 					            	</fo:table-cell>   
 								 </fo:table-row>
+								 </#if>
 								  <fo:table-row> 
 									 <fo:table-cell> 
 									      <fo:block text-align="left" white-space-collapse="false" font-family="Courier,monospace" font-size="10pt" keep-together="always" font-weight = "bold">TIN NO: <#if toPartyDetail?has_content>${toPartyDetail.get('TIN_NUMBER')?if_exists}</#if></fo:block>
@@ -173,7 +175,7 @@ ${setRequestAttribute("OUTPUT_FILENAME", "TaxInvoice.pdf")}
  								<fo:table-row> 
 									 <fo:table-cell border-style="solid" > 
 									      <fo:block text-align="center" white-space-collapse="false" font-family="Courier,monospace" font-size="10pt" keep-together="always" >Destination</fo:block>
-									      <fo:block text-align="center" white-space-collapse="false" font-family="Courier,monospace" font-size="10pt" keep-together="always" font-weight="bold">${billingAddress.get("toName")?if_exists}</fo:block> 
+									      <fo:block text-align="center" white-space-collapse="false" font-family="Courier,monospace" font-size="10pt" keep-together="always" font-weight="bold"><#if billingAddress?has_content>${billingAddress.get("toName")?if_exists}</#if></fo:block> 
 									 </fo:table-cell>   
 								 </fo:table-row> 
 								  <fo:table-row> 
