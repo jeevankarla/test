@@ -18,14 +18,28 @@
  */
 
 import org.ofbiz.party.contact.ContactMechWorker;
+import org.ofbiz.base.util.Debug;
+import org.ofbiz.entity.GenericValue;
+import org.ofbiz.entity.condition.*;
+import org.ofbiz.entity.util.EntityUtil;
+import org.ofbiz.base.util.*;
+
+import java.text.SimpleDateFormat;
+import java.math.BigDecimal;
+import java.sql.Timestamp;
 
 partyId = parameters.partyId;
+if(UtilValidate.isEmpty(partyId)){
+	facilityId = parameters.facilityId;
+	facility = delegator.findOne("Facility", [facilityId : facilityId], false);
+	if(UtilValidate.isNotEmpty(facility)){
+		partyId = facility.ownerPartyId;
+	}
+}
 context.partyId = partyId;
-
 Map mechMap = new HashMap();
 ContactMechWorker.getContactMechAndRelated(request, partyId, mechMap);
 context.mechMap = mechMap;
-
 context.contactMechId = mechMap.contactMechId;
 context.preContactMechTypeId = parameters.preContactMechTypeId;
 context.paymentMethodId = parameters.paymentMethodId;

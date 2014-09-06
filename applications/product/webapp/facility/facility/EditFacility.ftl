@@ -123,6 +123,10 @@ var pmRouteList = ${StringUtil.wrapString(pmRouteList)}
       <span class="tooltip"><#if ownerPartyName?has_content>${ownerPartyName.groupName?if_exists}${ownerPartyName.firstName?if_exists} ${ownerPartyName.lastName?if_exists}</#if> [${uiLabelMap.CommonRequired}]</span>
     </td>
   </tr>
+  <#--<tr>
+    <td class="label">Party Group Name</td>
+    <td><input type="text" name="lastName" value="${ownerPartyName.groupName?if_exists}" maxlength="50" /></td>
+  </tr>
   <tr>
     <td class="label">Address1</td>
     <td><input type="text" name="address1" value="${partyPostalAddress.address1?if_exists}" maxlength="50" /></td>
@@ -139,10 +143,10 @@ var pmRouteList = ${StringUtil.wrapString(pmRouteList)}
     <td class="label">PostalCode</td>
     <td><input type="text" name="postalCode" value="${partyPostalAddress.postalCode?if_exists}" maxlength="10" /></td>
   </tr>  
-  <!--<tr>
+  <tr>
     <td class="label">Phone Number</td>
     <td><input type="text" name="contactNumber" value="${contactNumber?if_exists}"  maxlength="10" /></td>
-  </tr> -->
+  </tr> 
   <tr>
 	<td class="label"><b>Country Code</b></td>
 	  <td><input type="text" name="countryCode" id="countryCode" value="${countryCode?if_exists}" size="5" maxlength="60" autocomplete="off" /></td>
@@ -154,7 +158,15 @@ var pmRouteList = ${StringUtil.wrapString(pmRouteList)}
    <tr>
     <td class="label">Email</td>
     <td><input type="text" name="emailAddress" value="${emailAddress?if_exists}" maxlength="30" /></td>
-  </tr> 
+  </tr>
+  <tr>
+    <td class="label">Pan Number</td>
+    <td><input type="text" name="panNumber" value="${panNumber?if_exists}" maxlength="30" /></td>
+ </tr>
+ <tr>
+    <td class="label">Bank Account Number</td>
+    <td><input type="text" name="finAccountCode" value="${finAccountCode?if_exists}" maxlength="30" /></td>
+ </tr>--> 
 <#if (enableInventory?if_exists && enableInventory)>    
   <tr>
     <td class="label">${uiLabelMap.ProductFacilityDefaultWeightUnit}</td>
