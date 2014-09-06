@@ -393,7 +393,8 @@ under the License.
       <field name="sequenceNum" type="numeric"></field>
       <field name="proportionalFlag" type="indicator"></field>
       <field name="acctgFormulaId" type="id"></field>
-      <field name="proportionalFormulaId" type="id"></field>         
+      <field name="proportionalFormulaId" type="id"></field>  
+      <field name="isContinuous" type="indicator"></field>       
       <field name="hasTable" type="indicator"></field>
       <field name="description" type="description"></field>
       <field name="employerPaidPercentage" type="floating-point"></field>

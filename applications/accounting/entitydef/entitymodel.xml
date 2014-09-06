@@ -3123,6 +3123,7 @@
 		<field name="proportionalFlag" type="indicator"></field>
 		<field name="sequenceNum" type="numeric"></field>
 		<field name="acctgFormulaId" type="id"></field>
+		<field name="isContinuous" type="indicator"></field>
 		<field name="proportionalFormulaId" type="id"></field> 
 		<field name="description" type="description" not-null="false"></field>
 		<prim-key field="deductionTypeId" />

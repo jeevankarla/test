@@ -2460,6 +2460,12 @@ public class PayrollService {
 						newEntity.set("benefitTypeId", payHeadTypeId);
 						newEntity.set("periodTypeId", "RATE_MONTH");
 						newEntity.set("fromDate", fromDateStart);
+						GenericValue benefitTypeValue = delegator.findOne("BenefitType",UtilMisc.toMap("benefitTypeId", payHeadTypeId), false);
+						if(UtilValidate.isNotEmpty(benefitTypeValue.get("isContinuous")) && ("Y".equals(benefitTypeValue.get("isContinuous")))){
+							
+						}else{
+							newEntity.set("thruDate", thruDateEnd);
+						}
 						newEntity.set("cost", amount);
 						newEntity.set("createdByUserLogin", userLogin.get("userLoginId"));
 				        newEntity.set("lastModifiedByUserLogin", userLogin.get("userLoginId"));
@@ -2533,6 +2539,12 @@ public class PayrollService {
 						newEntity.set("deductionTypeId", payHeadTypeId);
 						newEntity.set("periodTypeId", "RATE_MONTH");
 						newEntity.set("fromDate", fromDateStart);
+						GenericValue deductionTypeValue = delegator.findOne("DeductionType",UtilMisc.toMap("deductionTypeId", payHeadTypeId), false);
+						if(UtilValidate.isNotEmpty(deductionTypeValue.get("isContinuous")) && ("Y".equals(deductionTypeValue.get("isContinuous")))){
+							
+						}else{
+							newEntity.set("thruDate", thruDateEnd);
+						}
 						newEntity.set("cost", amount);
 						newEntity.set("createdByUserLogin", userLogin.get("userLoginId"));
 				        newEntity.set("lastModifiedByUserLogin", userLogin.get("userLoginId"));
