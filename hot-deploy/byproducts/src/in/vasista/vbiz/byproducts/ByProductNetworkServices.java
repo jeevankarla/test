@@ -6764,8 +6764,11 @@ public class ByProductNetworkServices {
     		productComponentPrices = EntityUtil.filterByCondition(productPricesComponents, EntityCondition.makeCondition("productPriceTypeId", EntityOperator.EQUALS, "DEFAULT_PRICE"));
     	}
     	if(UtilValidate.isNotEmpty(productComponentPrices)){
-    		String taxFlag = (EntityUtil.getFirst(productComponentPrices)).getString("taxInPrice");
-    		basicPrice = (BigDecimal)(EntityUtil.getFirst(productComponentPrices)).getBigDecimal("price");
+    		GenericValue productPriceComp = EntityUtil.getFirst(productComponentPrices);
+    		String taxFlag = productPriceComp.getString("taxInPrice");
+    		if(UtilValidate.isNotEmpty(productPriceComp.get("price"))){
+    			basicPrice = productPriceComp.getBigDecimal("price");
+    		}
     		if(UtilValidate.isNotEmpty(taxFlag) && taxFlag.equalsIgnoreCase("Y")){
     			taxInPrice = true;
     		}
