@@ -254,6 +254,7 @@
                 <parameter param-name="fromDate"/>
                 <parameter param-name="leaveTypeId"/>
                 <parameter param-name="emplLeaveApplId"/>
+                <parameter param-name="leaveStatus"/>
             </hyperlink>
         </field>
     </form>
@@ -271,12 +272,18 @@
         <field name="thruDate"><display/></field>
         <field name="description"><display/></field>
         <field name="leaveStatus" title="${uiLabelMap.HumanResLeaveStatus}">
-            <drop-down allow-empty="false">
+            <drop-down allow-empty="false"  current="APPROVED">
                 <entity-options description="${description}" key-field-name="statusId" entity-name="StatusItem">
                     <entity-constraint name="statusTypeId" operator="equals" value="LEAVE_STATUS"/>
                     <entity-order-by field-name="description"/>
                 </entity-options>
             </drop-down>
+        </field>
+        <field name="documentsProduced">
+        		<drop-down allow-empty="true">
+        			<option key="Y" ></option>
+        			<option key="N"></option>			
+        		</drop-down>
         </field>
         <field name="leaveStatus" use-when="leaveApp!=null&amp;&amp;leaveApp.getString(&quot;leaveStatus&quot;).equals(&quot;LEAVE_REJECTED&quot;)"><display></display></field>
         <field name="submitButton" title="${uiLabelMap.CommonUpdate}" widget-style="smallSubmit"><submit button-type="button"/></field>
