@@ -115,7 +115,7 @@ JSONArray headBenefitItemsJSON = new JSONArray();
 JSONArray headItemsJSON = new JSONArray();
 payrollConditionList=[];
 payrollConditionList.add(EntityCondition.makeCondition("customTimePeriodId", EntityOperator.EQUALS ,parameters.customTimePeriodId));
-payrollConditionList.add(EntityCondition.makeCondition("statusId", EntityOperator.EQUALS ,"GENERATED"));
+payrollConditionList.add(EntityCondition.makeCondition("statusId", EntityOperator.IN , UtilMisc.toList("GENERATED","APPROVED")));
 payrollCondition = EntityCondition.makeCondition(payrollConditionList,EntityOperator.AND);
 payrollDetailsList = delegator.findList("PeriodBillingAndCustomTimePeriod", payrollCondition, null, null, null, false);
 if(UtilValidate.isNotEmpty(payrollDetailsList)){
@@ -125,8 +125,8 @@ if(UtilValidate.isNotEmpty(payrollDetailsList)){
 		generatedConditionList.add(EntityCondition.makeCondition("periodBillingId", EntityOperator.EQUALS ,billingId));
 		generatedConditionList.add(EntityCondition.makeCondition("partyIdFrom", EntityOperator.IN , employementIds));
 		typecondition = EntityCondition.makeCondition(generatedConditionList,EntityOperator.AND);
-		partyList = delegator.findList("PayrollHeaderAndHeaderItem", typecondition, null, null, null, false);
-		partyList = UtilMisc.sortMaps(partyList, UtilMisc.toList("amount"));
+		def orderBy = UtilMisc.toList("amount","partyIdFrom");
+		partyList = delegator.findList("PayrollHeaderAndHeaderItem", typecondition, null, orderBy, null, false);
 		if(UtilValidate.isNotEmpty(partyList)){
 			partyList.each{ employee->
 				employeeId= employee.partyIdFrom;
@@ -340,10 +340,9 @@ else{
 	conditionList.add(EntityCondition.makeCondition(EntityCondition.makeCondition("thruDate", EntityOperator.EQUALS, null), EntityOperator.OR,
 			EntityCondition.makeCondition("thruDate", EntityOperator.GREATER_THAN_EQUAL_TO, timePeriodStart)));
 	EntityCondition condition=EntityCondition.makeCondition(conditionList,EntityOperator.AND);
-	List<GenericValue> partyBenefitList = delegator.findList("PartyBenefit", condition, null, null, null, false);
-	List<GenericValue> partyDeductionList = delegator.findList("PartyDeduction", condition, null, null, null, false);
-	partyBenefitList = UtilMisc.sortMaps(partyBenefitList, UtilMisc.toList("cost"));
-	partyDeductionList = UtilMisc.sortMaps(partyDeductionList, UtilMisc.toList("cost"));
+	def orderBy = UtilMisc.toList("cost","partyIdTo");
+	List<GenericValue> partyBenefitList = delegator.findList("PartyBenefit", condition, null, orderBy, null, false);
+	List<GenericValue> partyDeductionList = delegator.findList("PartyDeduction", condition, null, orderBy, null, false);
 	if(UtilValidate.isNotEmpty(partyBenefitList)){
 		partyBenefitList.each{ partyBenefit->
 			employeeId= partyBenefit.partyIdTo;
@@ -444,7 +443,6 @@ else{
 			amount= partyDed.cost;
 			headerItemTypeId=partyDed.deductionTypeId;
 			if(UtilValidate.isNotEmpty(amount)){
-				amount=amount*(-1);
 				//this is for Benefits/Deductions Report
 				if(parameters.dedTypeId==headerItemTypeId){
 					if(UtilValidate.isEmpty(deductionWiseMap.get(employeeId))){
@@ -482,13 +480,11 @@ else{
 				
 			}
 			if(UtilValidate.isNotEmpty(amount)){
-				amount=amount*(-1);
 				amount=amount.setScale(0,BigDecimal.ROUND_HALF_UP);
 			}else{
 				amount=" ";
 			}
 			if(UtilValidate.isNotEmpty(amount)){
-				amount=amount*(-1);
 				if(UtilValidate.isEmpty(deductionTypeValueMap.get(employeeId))){
 					Map tempDedMap=FastMap.newInstance();
 					tempDedMap.put(headerItemTypeId,amount);
