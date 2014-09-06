@@ -13,7 +13,6 @@ import in.vasista.vbiz.humanres.HumanresService;
 
 dctx = dispatcher.getDispatchContext();
 
-
 fromDate = UtilDateTime.getDayStart(UtilDateTime.nowTimestamp());
 thruDate = UtilDateTime.getDayEnd(UtilDateTime.nowTimestamp());
 def sdf = new SimpleDateFormat("MMMM dd, yyyy");
@@ -34,7 +33,7 @@ context.fromDate=UtilDateTime.toDateString(fromDate, "MMM dd, yyyy");
 context.thruDate=UtilDateTime.toDateString(thruDate, "MMM dd, yyyy");
 
 emplList = [];
-
+employementList=[];
 hrMonthDates=[];
 List conList=[];
 conList.add(EntityCondition.makeCondition("periodTypeId",EntityOperator.EQUALS,"HR_MONTH"));
@@ -44,7 +43,27 @@ hrMonthDates = delegator.findList("CustomTimePeriod", con ,null,UtilMisc.toList(
 customTimePeriodIds=EntityUtil.getFirst(hrMonthDates);
 custTimeId=customTimePeriodIds.get("customTimePeriodId");
 def populateChildren(org, employeeList) {
-	EmploymentsMap=HumanresService.getActiveEmployements(dctx,[userLogin:userLogin,orgPartyId:"Company"]);
+	if(UtilValidate.isEmpty(parameters.partyIdTo)){
+		EmploymentsMap=HumanresService.getActiveEmployements(dctx,[userLogin:userLogin,orgPartyId:"Company"]);
+	}
+	else{
+		EmplMap=[:];
+		EmplMap.put("partyId",parameters.partyIdTo);
+		List conditionList=[];
+		if(UtilValidate.isNotEmpty(parameters.partyIdTo)){
+			conditionList.add(EntityCondition.makeCondition("partyIdTo", EntityOperator.EQUALS, parameters.partyIdTo));
+		}
+		condition=EntityCondition.makeCondition(conditionList,EntityOperator.AND);
+		emplDetails= delegator.findList("EmploymentAndPerson", condition, UtilMisc.toSet("firstName","lastName"), null, null, false );
+		if(UtilValidate.isNotEmpty(emplDetails)){
+			details=EntityUtil.getFirst(emplDetails);
+			EmplMap.put("firstName",details.get("firstName"));
+			EmplMap.put("lastName",details.get("lastName"));
+		}
+		EmploymentsMap=[:];
+		employementList.add(EmplMap);
+		EmploymentsMap.put("employementList",employementList);
+		}
 	employments=EmploymentsMap.get("employementList");
 	employments.each { employee ->
 			employeeMap=[:];
@@ -137,5 +156,4 @@ context.internalOrgs=internalOrgs;
 context.employeeList=employeeList;
 company = delegator.findByPrimaryKey("PartyAndGroup", [partyId : "Company"]);
 populateChildren(company, employeeList);
-	
 context.put("employeeList",emplList);		

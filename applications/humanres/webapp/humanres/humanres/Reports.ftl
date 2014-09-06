@@ -198,9 +198,10 @@ function makeDatePicker1(fromDateId ,thruDateId){
 							<form id="MonthlyAttendenceChecklist" name="MonthlyAttendenceChecklist" mothed="post" action="<@ofbizUrl>MonthlyAttendenceChecklist.pdf</@ofbizUrl>" target="_blank">
 								<table class="basic-table" cellspacing="5">
 									<tr class="alternate-row">
-										<td width="20%"><span class='h3'>Monthly Attendence Checklist</span></td>
-										<td width="20%"><span class='h3'>From Date</span><input  type="text" size="18pt" id="mclfromDate"   name="mclFromDate"/></td>
-										<td width="20%"><span class='h3'>Thru Date</span><input  type="text" size="18pt" id="mclthruDate"   name="mclThruDate"/></td>
+										<td width="18%"><span class='h3'>Attendence And Leave Checklist</span></td>
+										<td width="13%"><span class="h3">Employee Id</span><input type="text" size="10pt" id="prtyId" name="partyIdTo"></td>
+										<td width="15%"><span class='h3'>From Date</span><input  type="text" size="18pt" id="mclfromDate"   name="mclFromDate"/></td>
+										<td width="15%"><span class='h3'>Thru Date</span><input  type="text" size="18pt" id="mclthruDate"   name="mclThruDate"/></td>
 										<td width="20%"><span class='h3'></span><input type="submit" value="Download" class="buttontext"></td> 
 									</tr>
 								</table>	
