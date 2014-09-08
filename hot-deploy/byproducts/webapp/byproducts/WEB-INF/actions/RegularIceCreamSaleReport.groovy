@@ -110,6 +110,7 @@ dayWiseInvoice=FastMap.newInstance();
 							tempVariantMap =FastMap.newInstance();
 							if(UtilValidate.isNotEmpty(prodTotals)){
 								prodTotals.each{productValue ->
+									virtualProductId="";
 									if(UtilValidate.isNotEmpty(productValue)){
 										currentProduct = productValue.getKey();
 										product = delegator.findOne("Product", [productId : currentProduct], false);
