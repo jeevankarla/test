@@ -350,17 +350,20 @@
             }
         }
 
-        function _fnDeleteRow(id, sDeleteURL) {
+        function _fnDeleteRow(id, sDeleteURL, data) {
             var sURL = sDeleteURL;
             if (sDeleteURL == null)
                 sURL = properties.sDeleteURL;
             properties.fnStartProcessingMode();
-            var data = $.extend(properties.oDeleteParameters, { "id": id });
+            var data = data;
+            if (data == null) {
+            	$.extend(properties.oDeleteParameters, { "id": id });
+            }
             $.ajax({ 'url': sURL,
                 'type': properties.sDeleteHttpMethod,
                 'data': data,
                 "success": _fnOnRowDeleted,
-                "dataType": "text",
+                "dataType": "json",
                 "error": function (response) {
                     properties.fnEndProcessingMode();
                     properties.fnShowError(response.responseText, "delete");
@@ -388,8 +391,9 @@
         function _fnOnRowDeleted(response) {
             properties.fnEndProcessingMode();
             var oTRSelected = $('tr.' + properties.sSelectedRowClass, oTable)[0];
-            if (response == "ok" || response == "") {
+            if (response == "ok" || response == "" || response["_EVENT_MESSAGE_"] == "ok") {
                 oTable.fnDeleteRow(oTRSelected);
+                
                 //oDeleteRowButton.attr("disabled", "true");
                 _fnDisableDeleteButton();
                 _fnSetDisplayStart();
