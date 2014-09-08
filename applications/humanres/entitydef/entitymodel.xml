@@ -1481,6 +1481,7 @@ under the License.
 	  </relation>
     </entity>
   <entity entity-name="EmplPunch" package-name="org.ofbiz.humanres.position"	title="Empl PUnch Type">
+	  <field name="employeePunchId" type="id-ne"/>
 	  <field name="emplPunchId" type="id-ne"/>
 	  <field name="partyId" type="id-ne"/>
 	  <field name="punchDateTime" type="date-time"/>
@@ -1495,11 +1496,12 @@ under the License.
 	  <field name="lastModifiedByUserLogin" type="id-vlong"></field>
 	  <field name="createdDate" type="date-time"></field>      
       <field name="lastModifiedDate" type="date-time"></field>
-	  <prim-key field="partyId"/>
+	  <!-- <prim-key field="partyId"/>
 	  <prim-key field="punchdate"/>
 	  <prim-key field="InOut"/>
 	  <prim-key field="emplPunchId"/>
-	  <prim-key field="PunchType"/>
+	  <prim-key field="PunchType"/> -->
+	  <prim-key field="employeePunchId"/>
 	  <relation type="one" fk-name="EMP_STY"  rel-entity-name="WorkShiftType">
             <key-map field-name="shiftType" rel-field-name="shiftTypeId"/>
       </relation>

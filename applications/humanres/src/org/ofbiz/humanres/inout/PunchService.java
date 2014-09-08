@@ -68,8 +68,8 @@ public class PunchService {
 
 		LocalDispatcher dispatcher = dctx.getDispatcher();
 		int PunchId = 0;
+		String employeePunchId = (String) context.get("employeePunchId");
 		String partyId = (String) context.get("partyId");
-		Debug.logInfo("Debug.loginfo*****" + partyId + "*****", module);
 		String emplPunchId = (String) context.get("emplPunchId");
 		String oldPunchType = (String) context.get("oldPunchType");
 		String oldShiftTypeId = (String) context.get("oldShiftTypeId");
@@ -109,7 +109,7 @@ public class PunchService {
 			PunchId = 7;
 
 		}		
-		Debug.logInfo("emplPunchId----" + emplPunchId, module);
+		Debug.log("emplPunchId----" + emplPunchId, module);
 		if (emplPunchId == null) {
 			try {
 
@@ -157,8 +157,8 @@ public class PunchService {
 			}
 
 		}
-
-		
+		context.put("emplPunchId",emplPunchId);
+		//Debug.logInfo("emplPunchId===" + emplPunchId, module);
 
 		try {
 
@@ -454,16 +454,25 @@ public class PunchService {
 			}
 		}
 		// this is end for lunch hr notification
-
+		GenericValue emplPunch = null;
+      
 		try {
-
-			GenericValue emplPunch = delegator.makeValue("EmplPunch", UtilMisc
-					.toMap("partyId", partyId, "emplPunchId", emplPunchId,
-							"PunchType", PunchType, "punchdate", punchdate,
-							"InOut", inout ,"isManual" ,isManual)); // create a generic value from id
+            if(UtilValidate.isNotEmpty(employeePunchId)){
+            	emplPunch = delegator.findOne("EmplPunch", UtilMisc.toMap("employeePunchId",employeePunchId), false);
+            	emplPunch.set("emplPunchId", emplPunchId);
+            	
+            }else{
+            	
+            	emplPunch = delegator.makeValue("EmplPunch", UtilMisc
+    					.toMap("partyId", partyId, "emplPunchId", emplPunchId,
+    							"PunchType", PunchType, "punchdate", punchdate,
+    							"InOut", inout ,"isManual" ,isManual)); // create a generic value from id
+            	emplPunch.setNextSeqId();
+            }
+			
 												// we just got
 
-			emplPunch.setNonPKFields(context); // move non-primary key fields
+            emplPunch.setNonPKFields(context); // move non-primary key fields
 												// from input parameters to
 												// genericvalue
 			emplPunch.set("shiftType", shiftTypeId);
@@ -522,8 +531,11 @@ public class PunchService {
 			emplPunch.set("createdDate", UtilDateTime.nowTimestamp());
 			emplPunch.set("lastModifiedDate", UtilDateTime.nowTimestamp());
 			
+			
+			Debug.log("emplPunch-==========="+emplPunch);
+			
 			delegator.createOrStore(emplPunch);
-			if(UtilValidate.isNotEmpty(oldPunchType) && (!PunchType.equals(oldPunchType))){				  
+			/*if(UtilValidate.isNotEmpty(oldPunchType) && (!PunchType.equals(oldPunchType))){				  
 				   GenericValue oldRecord = delegator.findOne("EmplPunch",UtilMisc.toMap("emplPunchId", emplPunchId,
 							"partyId", partyId, "PunchType", oldPunchType,
 							"punchdate", punchdate, "InOut", oldInOut), true);
@@ -531,7 +543,7 @@ public class PunchService {
 					   delegator.removeValue(oldRecord);
 				   }
 				  				  
-			}
+			}*/
 			if(UtilValidate.isNotEmpty(oldShiftTypeId) && (!shiftTypeId.equals(oldShiftTypeId))){				  
 				   List<GenericValue> shiftEmplPunch = delegator.findByAnd("EmplPunch", UtilMisc.toMap("shiftType",oldShiftTypeId,"punchdate",punchdate,"partyId",partyId));
 				   if(UtilValidate.isEmpty(shiftEmplPunch)){
@@ -540,8 +552,9 @@ public class PunchService {
 				   }
 				  				  
 			}
-			
-			return ServiceUtil.returnSuccess("Data added successfully");
+			Map resultMap = ServiceUtil.returnSuccess("Data added successfully");
+			resultMap.put("employeePunchId",emplPunch.get("employeePunchId"));
+			return resultMap;
 
 		} catch (Exception e) {
 

@@ -96,7 +96,11 @@
 		selected-menuitem-context-field-name="tabButtonItem2">
         <menu-item name="DailyPunch" title="Daily Punch Details"> 
         	<link target="DailyPunch"/>
-        </menu-item>   
+        </menu-item>
+         <menu-item name="DailyPunchEditTable" title="Daily Punch Edit Details"> 
+        	<link target="DailyPunchEditTable"/>
+        </menu-item>
+           
         <menu-item name="EmployeeAttendance" title="Employee Attendance Details"> 
         	<link target="EmployeeAttendance"/>
         </menu-item>  

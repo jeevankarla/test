@@ -1530,7 +1530,15 @@ under the License.
      <request-map uri="DailyPunch">
        <security https="true" auth="true"/>
         <response name="success" type="view" value="DailyPunch"/>
+    </request-map>
+    <request-map uri="DailyPunchEditTable">
+       <security https="true" auth="true"/>
+        <response name="success" type="view" value="DailyPunchEditTable"/>
     </request-map>  
+    <request-map uri="DailyPunchEditTableInternal">
+       <security https="true" auth="true"/>
+        <response name="success" type="view" value="DailyPunchEditTableInternal"/>
+    </request-map> 
      <request-map uri="DailyPunchInternal">
        <security https="true" auth="true"/>
         <response name="success" type="view" value="DailyPunchInternal"/>
@@ -1936,7 +1944,9 @@ under the License.
 
     <view-map name="DailyPunch" type="screen" page="component://humanres/widget/HumanresScreens.xml#DailyPunch"/>
     <view-map name="DailyPunchInternal" type="screen" page="component://humanres/widget/HumanresScreens.xml#DailyPunchInternal"/>
-
+    <view-map name="DailyPunchEditTable" type="screen" page="component://humanres/widget/HumanresScreens.xml#DailyPunchEditTable"/>
+    <view-map name="DailyPunchEditTableInternal" type="screen" page="component://humanres/widget/HumanresScreens.xml#DailyPunchEditTableInternal"/>
+    
     <view-map name="EmployeeAttendance" type="screen" page="component://humanres/widget/HumanresScreens.xml#EmployeeAttendance"/>
     <view-map name="AttendanceFinalization" type="screen" page="component://humanres/widget/HumanresScreens.xml#AttendanceFinalization"/>
     <view-map name="EmployeeArrearDays" type="screen" page="component://humanres/widget/HumanresScreens.xml#EmployeeArrearDays"></view-map>

@@ -1150,7 +1150,6 @@ under the License.emplpunch
         <auto-attributes mode="IN" include="nonpk" optional="true"/>
     </service>   
    
-
      <service name="adminPunch" engine="java" default-entity-name="EmplPunch"
              location="org.ofbiz.humanres.inout.PunchService" invoke="emplPunch" auth="true">
         <description>Add In/Out</description>
@@ -1160,7 +1159,8 @@ under the License.emplpunch
         <attribute name="oldPunchType"  mode="IN" type="String" optional="true"/>
         <attribute name="oldShiftTypeId"  mode="IN" type="String" optional="true"/>
         <attribute name="oldInOut"  mode="IN" type="String" optional="true"/>
-        <attribute name="punchdate" mode="IN" type="java.sql.Date"/> 
+        <attribute name="punchdate" mode="IN" type="java.sql.Date"/>
+        <attribute name="employeePunchId" mode="OUT" type="String" optional="false"/>  
     </service>
     
     

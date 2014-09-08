@@ -31,6 +31,7 @@ String punchDateStr = UtilDateTime.toDateString(punchDate, "dd/MM/yyyy");
 Timestamp timePeriodStart = UtilDateTime.getDayStart(punchDate);
 Timestamp timePeriodEnd = UtilDateTime.getDayEnd(punchDate);
 JSONArray punchListJSON = new JSONArray();
+JSONArray punchListEditJSON = new JSONArray();
 conditionList=[];
 conditionList.add(EntityCondition.makeCondition("punchdate", EntityOperator.GREATER_THAN_EQUAL_TO , UtilDateTime.toSqlDate(timePeriodStart)));
 conditionList.add(EntityCondition.makeCondition("punchdate", EntityOperator.LESS_THAN_EQUAL_TO , UtilDateTime.toSqlDate(timePeriodEnd)));
@@ -42,22 +43,31 @@ punchList = delegator.findList("EmplPunch", condition, null, null, null, false);
 for (GenericValue punch : punchList) {
 	String partyId= punch.getString("partyId");
 	String partyName = PartyHelper.getPartyName(delegator, partyId, false);
-	String punchTime = punch.get("punchtime").toString(); //timeFormat.parse((punch.get("punchtime")).toString());
+	String punchTime = punch.get("punchtime").toString(); //timeFormat.parse((punch.get("punchtime")).toString()); 
+	String employeePunchId = punch.get("employeePunchId");
 	String inOut = "";
 	if (punch.getString("InOut")) {
 		inOut = punch.getString("InOut");
 	}
 	String punchType = punch.getString("PunchType");
-	JSONArray punchJSON = new JSONArray();	
+	JSONArray punchJSON = new JSONArray();
+	JSONArray punchEditJSON = new JSONArray();
 	punchJSON.add(punchDateStr);
 	punchJSON.add(partyId);
 	punchJSON.add(partyName);
 	punchJSON.add(punchTime);
 	punchJSON.add(inOut);
 	punchJSON.add(punchType);
+	
 	punchListJSON.add(punchJSON);
+	
+	punchEditJSON.add(employeePunchId);
+	punchEditJSON.addAll(punchJSON);
+	Debug.log("punchEditJSON========"+punchEditJSON);
+	punchListEditJSON.add(punchEditJSON);
 }
 
 //Debug.logError("punchListJSON="+punchListJSON,"");
 context.punchDate = punchDate
 context.punchListJSON = punchListJSON;
+context.punchListEditJSON = punchListEditJSON;
