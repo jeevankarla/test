@@ -259,7 +259,7 @@
                     $.ajax({ 'url': properties.sAddURL,
                         'data': params,
                         'type': properties.sAddHttpMethod,
-                        "dataType": "text",
+                        "dataType": "json",
                         success: _fnOnRowAdded,
                         error: function (response) {
                             properties.fnEndProcessingMode();
@@ -281,7 +281,7 @@
         ///Event handler called when a new row is added and response is returned from server
         function _fnOnRowAdded(data) {
             properties.fnEndProcessingMode();
-
+           
             if (properties.fnOnNewRowPosted(data)) {
 
                 var oSettings = oTable.fnSettings();
@@ -300,8 +300,12 @@
                             sCellValue = $(this).html();
                         else
                             sCellValue = this.value;
-
+                        
+                        
                         sCellValue = sCellValue.replace(properties.sIDToken, data);
+                        if(data[$(this).attr("name")] != undefined ){
+                        	sCellValue = data[$(this).attr("name")];
+                        }
                         values[rel] = sCellValue;
                     }
                 });
