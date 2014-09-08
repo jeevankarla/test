@@ -101,6 +101,7 @@
 				<set field="titleProperty" value="DailyPunchEditTable" />
 				<set field="ajaxUrl" value="DailyPunchEditTableInternal" type="String"/>
 				<script location="component://humanres/webapp/humanres/WEB-INF/actions/humanres/dailyPunch.groovy"/>
+                
             </actions>            
             <widgets>
 				<decorator-screen name="HumanresCommonDecorator"
@@ -119,6 +120,12 @@
 	<screen name="DailyPunchEditTableInternal">
         <section>
             <actions>
+                <entity-and list="punchTypeList" entity-name="Enumeration">
+                   <field-map field-name="enumTypeId" value="PUNCH_TYPE"/>
+                   <order-by field-name="sequenceId"/>
+                </entity-and>
+                 <entity-condition list="shiftTypeList" entity-name="WorkShiftType">
+                </entity-condition>
 				<script location="component://humanres/webapp/humanres/WEB-INF/actions/humanres/dailyPunch.groovy"/>  
             </actions>            
             <widgets>

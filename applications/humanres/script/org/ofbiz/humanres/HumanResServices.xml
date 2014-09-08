@@ -1157,6 +1157,8 @@
          	</entity-and>
          	<remove-list list="emplShift"/>
          </if-empty>
+         <set field="responseMessage" value="ok"/>
+        <field-to-result field="responseMessage" result-name="successMessage"/>
     </simple-method>
     
     <simple-method method-name="getPartyBenefitCost" short-description="calculate party benefit cost">          

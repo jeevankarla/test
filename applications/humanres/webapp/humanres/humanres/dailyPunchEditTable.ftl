@@ -65,6 +65,8 @@ $("#punchDate").val(currentDate.getDate() + "/" + (currentDate.getMonth() + 1) +
     }
 });	
 
+	
+
 // enter event handle
 	$("input").keypress(function(e){
 		if (e.which == 13) {
@@ -98,7 +100,7 @@ $("#punchDate").val(currentDate.getDate() + "/" + (currentDate.getMonth() + 1) +
   	    
         $.get(  
             "${ajaxUrl}",  
-            { punchDate: $("#punchDate").val()},  
+            { punchDate: $("#punchDate").val() , partyId : $("input[name=partyId]").val() },  
             function(responseText){  
                 $("#result").html(responseText); 
 				var reponse = jQuery(responseText);
@@ -126,6 +128,11 @@ $("#punchDate").val(currentDate.getDate() + "/" + (currentDate.getMonth() + 1) +
         	<tr>
         		<td align="right" width="10%"><span class='h3'>Attendance Date: </span></td>
             	<td width="20%"><input class="mycalendar" type="text" id="punchDate" name="punchDate"/></td>
+            	<td align="right" width="10%"><span class='h3'>Employee Id: </span></td>
+            	<td width="20%">
+            	   <@htmlTemplate.lookupField value="${parameters.partyId?if_exists}" formName="attendance" name="partyId" id="partyId" fieldFormName="LookupEmployeeName"/>
+                    <span class="tooltip"></span>
+                  </td>
 				<td><input type="submit" value="Submit" id="getAttendanceTable" class="smallSubmit" /></td>
 			</tr>
     	</table>    	

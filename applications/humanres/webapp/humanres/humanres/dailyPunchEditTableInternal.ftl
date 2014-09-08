@@ -46,11 +46,11 @@ $(document).ready(function() {
        	bJQueryUI: true,
 		"sPaginationType": "full_numbers"
 	} ).makeEditable({
-	         sUpdateURL: "emplPunch",
-             sAddURL: "emplPunch",
-             sAddHttpMethod: "post",
-             sDeleteHttpMethod: "post",
-			 sDeleteURL: "deletePunch",
+	         sUpdateURL: "emplPunchJson",
+             sAddURL: "emplPunchJson",
+             sAddHttpMethod: "POST",
+             sDeleteHttpMethod: "POST",
+			 sDeleteURL: "deletePunchJson",
              "aoColumns": [ { },
              				{ 	cssclass: "required" },
                             { },
@@ -77,6 +77,7 @@ $(document).ready(function() {
 				oAddNewRowButtonOptions: {	label: "Add",
 									       icons: {primary:'ui-icon-plus'} 
 									},
+				oAddNewRowCancelButtonOptions: { label: "Cancel" },					
 			    oDeleteRowButtonOptions: {	label: "Remove", 
 													icons: {primary:'ui-icon-trash'}
 									},
@@ -87,40 +88,80 @@ $(document).ready(function() {
 										hide: "explode",
                                         modal: true
 									},
-			 sAddNewRowFormId: "formAddNewRow",
-			 oDeleteParameters : { 'employeePunchId': function _fnGetRowIDFromAttribute(nRow) {
-           							return $(nRow).attr("id");
-        						} },						
+			 fnOnDeleting: function (tr, id, fnDeleteRow) {
+
+                               var r = confirm('Please confirm that you want to delete this Punch row? ' + id);
+
+                               if (r) {
+
+                                       deleteParameters= {"employeePunchId" :id};
+
+                                       fnDeleteRow(id, null, deleteParameters);                                                
+
+                               }
+                               return false;
+                       }, 						
 			sAddDeleteToolbarSelector: ".dataTables_length"
 	        
 	});	
     datatable2.fnSort([[3,'desc']]);
 });	
 </script>
-		
+ 
+ 
+ 	
 <div class="screenlet">
 	<div class="screenlet-title-bar">
       	<h3>Attendance Punch-In Details for ${punchDate?date}</h3>	
      </div>
     <div class="screenlet-body">
-     <form id="formAddNewRow" action="#" title="Add a new browser" style="width:600px;min-width:600px">
-        <label for="engine">Rendering engine</label><br />
-	    <input type="text" name="engine" id="name" rel="0" />
-        <br />
-        <label for="browser">Browser</label><br />
-	<input type="text" name="browser" id="browser" rel="1" />
-        <input type="hidden" name="platform" rel="2" />
-        <br />
-        <label for="version">Engine version</label><br />
-	<select name="version" id="version" rel="3">
-                <option>1.5</option>
-                <option>1.7</option>
-                <option>1.8</option>
-        </select>
-        <br />
-        
-        <br />
-</form>
+      <form id='formAddNewRow'  method='post'>
+     <table cellspacing=10  cellpadding=20> 		
+		<tr class='h3'>
+			<td align='left' class='h3' width='30%'>PartyId:</td>
+			<td align='left' class='h3' width='30%'><input type='text' value="" name='partyId' size='5' /></td>
+		</tr>
+	    <tr class='h3'>
+	       <td align='left' class='h3' width='40%'>Punch Type:</td>
+	       <td align='left' class='h3' width='40%'>
+	        <select name='PunchType'  allow-empty='false' id='PunchType' class='h4'>
+          		<#list punchTypeList as ptl>
+          		<option value='${ptl.enumId}' >${ptl.enumId?if_exists}</option>
+          		</#list>          
+			 </select>
+			 </td></tr>
+			<tr class='h3'>
+			<td align='left' class='h3' width='40%'>IN/OUT:</td>
+			<td align='left' class='h3' width='40%'>
+			  <select name='InOut'  allow-empty='false' id='InOut' class='h4'>
+          		<option value='IN' >IN</option>
+          		<option value='OUT' >OUT</option>  
+			 </select>
+			</td>
+			</tr>
+			
+			<tr class='h3'>
+				<td align='left' class='h3' width='40%'>Shift Type:</td>
+				<td align='left' class='h3' width='40%'><select name='shiftType'  allow-empty='false' id='shiftType' class='h4'>
+	              		<#list shiftTypeList as stl>
+	              		    <option value='${stl.shiftTypeId}' >${stl.shiftTypeId?if_exists}</option>
+	              		</#list>          
+			</select></td></tr>
+			<tr class='h3'>
+				<td align='left' class='h3' width='40%'>Date:</td><td align='left' class='h3' width='40%'><input type='text'  name='punchdate' id='punchdate' size='10' /></td></tr>
+			<tr class='h3'>
+				<td align='left' class='h3' width='40%'>Punch Time:</td><td align='left' class='h3' width='40%'><input type='text'  value="" name='punchtime' size='10' required /></tr>
+			
+			<tr class='h3'>
+				<td align='left' class='h3' width='40%'>Note:</td><td align='left' class='h3' width='40%'><input  type='textarea' value='' name='Note'></td>
+			</tr>
+			<tr class='h3'>
+				<td align='left' class='h3' width='40%'></td>
+				<td align='left' class='h3' width='40%'><input  type='button' value='ok' id="btnAddNewRowOk">&nbsp;&nbsp;&nbsp;&nbsp;<input  type='button' value='cancel' id="btnAddNewRowCancel"></td>
+			</tr>
+		</table>
+		
+ </form>
     <div id="attendanceTable"> 
             
     	</div>

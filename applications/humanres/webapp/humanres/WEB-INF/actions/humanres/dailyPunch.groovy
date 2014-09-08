@@ -35,6 +35,9 @@ JSONArray punchListEditJSON = new JSONArray();
 conditionList=[];
 conditionList.add(EntityCondition.makeCondition("punchdate", EntityOperator.GREATER_THAN_EQUAL_TO , UtilDateTime.toSqlDate(timePeriodStart)));
 conditionList.add(EntityCondition.makeCondition("punchdate", EntityOperator.LESS_THAN_EQUAL_TO , UtilDateTime.toSqlDate(timePeriodEnd)));
+if(parameters.partyId){
+	conditionList.add(EntityCondition.makeCondition("partyId", EntityOperator.EQUALS , parameters.partyId));
+}
 
 condition = EntityCondition.makeCondition(conditionList,EntityOperator.AND);
 
@@ -63,7 +66,6 @@ for (GenericValue punch : punchList) {
 	
 	punchEditJSON.add(employeePunchId);
 	punchEditJSON.addAll(punchJSON);
-	Debug.log("punchEditJSON========"+punchEditJSON);
 	punchListEditJSON.add(punchEditJSON);
 }
 

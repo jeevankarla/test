@@ -96,6 +96,11 @@ under the License.
         <response name="success" type="view" value="Week"/>
         <response name="error" type="view" value="EmplPunch"/>
     </request-map>
+    <request-map uri="emplPunchJson">
+        <security https="true" auth="true"/>
+          <event type="service" invoke="emplPunch"/>
+        <response name="success" type="request" value="json"/>
+    </request-map>
     <request-map uri="admPunch">
         <security https="true" auth="true"/>
         <response name="success" type="view" value="AdminPunch"/>
@@ -113,9 +118,14 @@ under the License.
      <event type="service" invoke="deletePunch"/>       
         <response name="success" type="view" value="Week"/>               
     </request-map> 
-     <request-map uri="deletePunch">
+    <request-map uri="deletePunch">
         <security https="true" auth="true"/>
          <response name="success" type="request" value="deletePunchInternal"/>               
+    </request-map>
+   <request-map uri="deletePunchJson">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="deletePunch"/> 
+        <response name="success" type="request" value="json"/>               
     </request-map>
 	<request-map uri="week">
 		<security https="true" auth="true"/>
