@@ -206,9 +206,9 @@ dayWiseInvoice=FastMap.newInstance();
 				}
 			}
 		}
-		tempMap = [:];
-		tempMap.putAll(invoiceMap);
-		if(UtilValidate.isNotEmpty(tempMap)){
+		if(UtilValidate.isNotEmpty(invoiceMap)){
+			tempMap = [:];
+			tempMap.putAll(invoiceMap);
 			dayWiseInvoice.put(dayBegin,tempMap);
 		}
 	}
