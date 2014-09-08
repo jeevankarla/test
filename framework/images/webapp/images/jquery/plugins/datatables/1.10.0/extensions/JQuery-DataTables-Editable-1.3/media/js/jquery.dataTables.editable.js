@@ -146,8 +146,13 @@
             var oDefaultEditableSettings = {
                 event: 'dblclick',
                 "callback": function (sValue, settings) {
+//alert("callback! sNewCellValue=" + sNewCellValue + "; sValue=" + sValue + "; settings=" + settings);            	
                     properties.fnEndProcessingMode();
                     var status = "";
+                    var aPos = oTable.fnGetPosition(this);
+                    oTable.fnUpdate(sNewCellDisplayValue, aPos[0], aPos[2]);
+                    status = "success";
+                    /*
                     if (sNewCellValue == sValue) {
                         var aPos = oTable.fnGetPosition(this);
                         oTable.fnUpdate(sNewCellDisplayValue, aPos[0], aPos[2]);
@@ -157,7 +162,7 @@
                         oTable.fnUpdate(sOldValue, aPos[0], aPos[2]);
                         properties.fnShowError(sValue, "update");
                         status = "failure";
-                    }
+                    }*/
 
                     properties.fnOnEdited(status, sOldValue, sNewCellDisplayValue, aPos[0], aPos[1], aPos[2]);
                     if (settings.fnOnCellUpdated != null) {
