@@ -111,7 +111,8 @@ cond = EntityCondition.makeCondition(condList, EntityOperator.AND);
 bankPaymentMethodList = delegator.findList("PaymentMethodType",cond, null, null, null, false);
 condList.clear();
 condList.add(EntityCondition.makeCondition("paymentMethodTypeId", EntityOperator.LIKE, paymentMethodLike));
-condList.add(EntityCondition.makeCondition("parentTypeId", EntityOperator.EQUALS,"CASH"));
+//condList.add(EntityCondition.makeCondition("parentTypeId", EntityOperator.EQUALS,"CASH"));
+condList.add(EntityCondition.makeCondition("parentTypeId", EntityOperator.EQUALS,"MONEY"));
 cond = EntityCondition.makeCondition(condList, EntityOperator.AND);
 cashPaymentMethodList = delegator.findList("PaymentMethodType", cond, null, null, null, false);
 }
