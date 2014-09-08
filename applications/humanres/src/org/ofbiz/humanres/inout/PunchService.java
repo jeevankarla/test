@@ -82,6 +82,26 @@ public class PunchService {
 		String isManual = (String) context.get("isManual");
 		String shiftTypeId = (String) context.get("shiftType");
 		String flag = "out";
+		GenericValue emplPunch = null;
+		 if(UtilValidate.isNotEmpty(employeePunchId)){
+			 try{
+				 emplPunch = delegator.findOne("EmplPunch", UtilMisc.toMap("employeePunchId",employeePunchId), false);
+		         punchdate = emplPunch.getDate("punchdate");
+		         if(UtilValidate.isEmpty(punchtime)){
+		        	 punchtime = emplPunch.getTime("punchtime");
+		         }
+		         if(UtilValidate.isEmpty(PunchType)){
+		        	 PunchType = emplPunch.getString("PunchType");
+		         }
+		         
+			 }catch(Exception e){
+				 Debug.logError("Error In fetch employeePunch :"+e.toString(), module);
+				 return ServiceUtil
+							.returnError("Error In fetch employeePunch :"+e.toString());
+			 }
+         	
+         	
+         }
 		String date3 = punchdate.toString();
 		String dateArr2[] = date3.split(Pattern.quote("-"));
 		String contactMechId = null;
@@ -454,11 +474,8 @@ public class PunchService {
 			}
 		}
 		// this is end for lunch hr notification
-		GenericValue emplPunch = null;
-      
 		try {
             if(UtilValidate.isNotEmpty(employeePunchId)){
-            	emplPunch = delegator.findOne("EmplPunch", UtilMisc.toMap("employeePunchId",employeePunchId), false);
             	emplPunch.set("emplPunchId", emplPunchId);
             	
             }else{

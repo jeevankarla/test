@@ -49,6 +49,8 @@ for (GenericValue punch : punchList) {
 	String punchTime = punch.get("punchtime").toString(); //timeFormat.parse((punch.get("punchtime")).toString()); 
 	String employeePunchId = punch.get("employeePunchId");
 	String inOut = "";
+	String Note = punch.get("Note")
+	String shiftType = punch.get("shiftType")
 	if (punch.getString("InOut")) {
 		inOut = punch.getString("InOut");
 	}
@@ -66,6 +68,8 @@ for (GenericValue punch : punchList) {
 	
 	punchEditJSON.add(employeePunchId);
 	punchEditJSON.addAll(punchJSON);
+	punchEditJSON.add(Note);
+	punchEditJSON.add(shiftType);
 	punchListEditJSON.add(punchEditJSON);
 }
 
