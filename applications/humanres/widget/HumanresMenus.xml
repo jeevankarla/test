@@ -79,12 +79,12 @@
             </condition> 
             <link target="benefitOrDeduction"/>
         </menu-item>
-        <!-- <menu-item name="Attendance" title="Attendance">
+        <menu-item name="Attendance" title="Attendance">
         	<condition>
             	<if-has-permission permission="HR"  action="_ATTENDANCE_VIEW"/>
             </condition> 
             <link target="DailyPunch"/>
-        </menu-item>   -->   
+        </menu-item>     
         <menu-item name="busTimings" title="Daily Bus Timings">
            <condition>
             	<if-has-permission permission="HR"  action="_DAILYBUS_VIEW"/>
@@ -214,7 +214,7 @@
                 </and>
             </condition>
 			<link target="inOutEmployee"/></menu-item>
-		<menu-item name="Attendance" title="Attendance">
+		<!-- <menu-item name="Attendance" title="Attendance">
 			<condition>
                 <and>
                     <not><if-empty field="userLogin"/></not>
@@ -226,7 +226,7 @@
                 </and>
             </condition>
             <link target="week"/>
-		</menu-item>    
+		</menu-item>  -->   
         <menu-item name="GlobalHRSettings" title="${uiLabelMap.HumanResGlobalHRSettings}" selected-style="selected">
 			<condition>
             	<if-has-permission permission="HUMANRES"  action="_GLOBALHR_VIEW"/>
