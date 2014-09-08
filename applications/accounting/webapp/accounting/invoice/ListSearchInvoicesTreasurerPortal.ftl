@@ -116,7 +116,26 @@ function datepick()
 
     function getInvoiceRunningTotal() {
 		var checkedInvoices = jQuery("input[name='invoiceIds']:checked");
+		
         if(checkedInvoices.size() > 0) {
+        	var runningTotalVal = 0;
+        	var testList = new Array();
+        	jQuery.each(checkedInvoices, function() {
+            	if (jQuery(this).is(':checked')) {
+            		var domObj = $(this).parent().parent();
+					var test = $($(domObj).find("#fromPartyId")).val();
+					if(testList.length>0 && jQuery.inArray(test, testList)==-1){
+						$("#paymentButton").hide();	
+					}
+					testList.push(test);
+	            }
+    	    });
+    	    var uniqueList = testList.filter(function(itm,i,testList){
+    			return i==testList.indexOf(itm);
+			});
+			if(uniqueList.length == 1){
+				$("#paymentButton").show();
+			}
             jQuery.ajax({
                 url: 'getInvoiceRunningTotal',
                 type: 'POST',
@@ -333,7 +352,7 @@ function showPaymentEntryQTip(partyIdFrom1,partyIdTo1,invoiceId1,voucherType1,am
       <input type="hidden" name="invoiceStatusChange" id="invoiceStatusChange" value="<@ofbizUrl>massChangeInvoiceStatus</@ofbizUrl>"/>
       <input type="hidden" name="bulkSms" id="bulkSms" value="<@ofbizUrl>bulkSms</@ofbizUrl>"/>
       <input type="hidden" name="bulkEmail" id="bulkEmail" value="<@ofbizUrl>bulkEmail</@ofbizUrl>"/>
-	 <#--<input id="submitButton" type="button"  onclick="javascript:massPaymentSubmit(this);" value="Make Payment" />-->
+	  <input id="paymentButton" type="button"  onclick="javascript:massPaymentSubmit(this);" value="Make Payment" />
 	 </div>
     <table class="basic-table hover-bar" cellspacing="0">
       <thead>
@@ -389,12 +408,16 @@ function showPaymentEntryQTip(partyIdFrom1,partyIdTo1,invoiceId1,voucherType1,am
               <td><a href="/partymgr/control/viewprofile?partyId=${invoice.partyId}">${Static["org.ofbiz.party.party.PartyHelper"].getPartyName(delegator, invoice.partyId, false)?if_exists} [${(invoice.partyId)?if_exists}]</a></td>
               <td><@ofbizCurrency amount=invoicePaymentInfo.amount isoCode=defaultOrganizationPartyCurrencyUomId/></td>
               <td><@ofbizCurrency amount=invoicePaymentInfo.paidAmount isoCode=defaultOrganizationPartyCurrencyUomId/></td>
-              <td><@ofbizCurrency amount=invoicePaymentInfo.outstandingAmount isoCode=defaultOrganizationPartyCurrencyUomId/></td>
-              <#if (invoicePaymentInfo.outstandingAmount >0) && (invoice.prefPaymentMethodTypeId?exists) >
-              <td align="center"><input type="button"  name="paymentBuuton" value="Payment" onclick="javascript:showPaymentEntryQTip('${invoice.partyId}','${invoice.partyIdFrom}','${invoice.invoiceId}','${invoice.prefPaymentMethodTypeId?if_exists}','${invoicePaymentInfo.outstandingAmount}','${partyName}');"/></td>
-               <#else>
-                <td align="center"></td>
-               </#if>
+              <td><@ofbizCurrency amount=invoicePaymentInfo.outstandingAmount isoCode=defaultOrganizationPartyCurrencyUomId/></td>        
+              <#if ((invoice.statusId != "INVOICE_APPROVED") && (invoice.statusId != "INVOICE_IN_PROCESS") && (invoice.statusId != "INVOICE_CANCELLED")) >
+              	  <#if (invoice.parentTypeId == "PURCHASE_INVOICE" && (invoicePaymentInfo.outstandingAmount >0))||(invoice.prefPaymentMethodTypeId?exists) >
+              		  <td align="center"><input type="button"  name="paymentBuuton" value="Payment" onclick="javascript:showPaymentEntryQTip('${invoice.partyId}','${invoice.partyIdFrom}','${invoice.invoiceId}','${invoice.prefPaymentMethodTypeId?if_exists}','${invoicePaymentInfo.outstandingAmount}','${partyName}');"/></td>
+               	    <#else>
+                	  <td align="center"></td>
+               	  </#if>
+                <#else>
+                	<td align="center"></td>
+              </#if>
               <td><a class="buttontext" target="_BLANK" href="<@ofbizUrl>invoiceVoucher?invoiceId=${invoice.invoiceId}</@ofbizUrl>">Voucher</a></td>
               <#if invoice.parentTypeId?has_content>
               <td><#if invoice.parentTypeId == "PURCHASE_INVOICE"><a class="buttontext" target="_BLANK" href="<@ofbizUrl>printChecks.pdf?invoiceId=${invoice.invoiceId}</@ofbizUrl>">Cheque</a></#if></td>
