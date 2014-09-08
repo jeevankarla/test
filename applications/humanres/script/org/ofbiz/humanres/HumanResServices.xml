@@ -846,19 +846,15 @@
     
     <simple-method method-name="createEmplLeave" short-description="Create Employee Leave">
         <make-value entity-name="EmplLeave" value-field="newEntity"/>
-       <!--  <set-pk-fields value-field="newEntity" map="parameters"/> -->
-        <!-- <find-by-primary-key entity-name="EmplLeave" map="newEntity" value-field="emplLeaveData"/> -->
-        <!-- <if-not-empty field="emplLeaveData">
-            <add-error><fail-message message="ERROR: Leave  already exists."/></add-error>
-            <check-errors/>
-        </if-not-empty> -->
         <set-nonpk-fields value-field="newEntity" map="parameters"/>
         <set field="newEntity.thruDate" type="Timestamp" value="${groovy: org.ofbiz.base.util.UtilDateTime.getDayEnd(newEntity.thruDate)}"/>
          <set field="newEntity.appliedBy" from-field="userLogin.partyId"/>
          <sequenced-id sequence-name="EmplLeave" field="newEntity.emplLeaveApplId"/>
          <create-value value-field="newEntity"/>
-         <log level="always" message="Leave created successfully.=====${newEntity}"></log>
+         
          <set field="responseMessage" value="Leave created successfully."/>
+         <field-to-result field="newEntity.emplLeaveApplId" result-name="emplLeaveApplId"/>
+         <field-to-result field="newEntity.leaveStatus" result-name="leaveStatus"/>
         <field-to-result field="responseMessage" result-name="successMessage"/>
         <check-errors/>
     </simple-method>
@@ -869,11 +865,15 @@
         <store-value value-field="lookedUpValue"/>
         <set field="responseMessage" value="Leave Updated successfully."/>
         <field-to-result field="responseMessage" result-name="successMessage"/>
+        <field-to-result field="lookedUpValue.emplLeaveApplId" result-name="emplLeaveApplId"/>
+        <field-to-result field="lookedUpValue.leaveStatus" result-name="leaveStatus"/>
     </simple-method>
 
     <simple-method method-name="deleteEmplLeave" short-description="Delete Employee Leave">
         <entity-one entity-name="EmplLeave" value-field="emplLeave"/>
         <remove-value value-field="emplLeave"/>
+        <field-to-result field="emplLeave.emplLeaveApplId" result-name="emplLeaveApplId"/>
+        <field-to-result field="emplLeave.partyId" result-name="partyId"/>
     </simple-method>
 
     <simple-method method-name="createEmplLeaveType" short-description="Create a LeaveType">
@@ -1105,6 +1105,9 @@
         <store-value value-field="lookedUpValue"/>
         <set field="responseMessage" value="${parameters.leaveStatus} successfully."/>
         <field-to-result field="responseMessage" result-name="successMessage"/>
+        <field-to-result field="lookedUpValue.leaveStatus" result-name="leaveStatus"/>
+        <field-to-result field="lookedUpValue.emplLeaveApplId" result-name="emplLeaveApplId"/>
+        
     </simple-method>
      <!-- ================Time sheet========================= -->
      <simple-method method-name="emplpunch" short-description="Add punch">

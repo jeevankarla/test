@@ -222,7 +222,7 @@ public class HumanresService {
 						Map punMap = PunchService.emplDailyPunchReport(dctx, UtilMisc.toMap("partyId", partyId ,"punchDate",tempDate));
 						if(UtilValidate.isNotEmpty(punMap.get("punchDataList"))){
 							tempDayMap.put("punchDetails", ((List)punMap.get("punchDataList")).get(0));
-							tempDayMap.put("date",UtilDateTime.toDateString(tempDate,"dd-mm-yyyy"));
+							tempDayMap.put("date",UtilDateTime.toDateString(tempDate,"dd-MM-yyyy"));
 						}
 						workedHolidaysList.add(tempDayMap);
 					}
@@ -234,6 +234,4 @@ public class HumanresService {
 	    	//Debug.log("result:" + result, module);		 
 	    	return result;
 	    }
-	 
-	 
 }

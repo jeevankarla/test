@@ -129,10 +129,14 @@ under the License.
       <SecurityGroupPermission groupId="HR_ATTENDANCEVIEW" permissionId="HR_ATTENDANCE_VIEW"/>
       
        <!-- security group for Approve Employees Leaves  screen --> 
-      <SecurityPermission description="Allow to Access Leave Approval Screen in the HumanRes Manager." permissionId="HR_LEAVE_APPROVAL"/>  
+      <SecurityPermission description="Allow to Access Leave Approval Screen in the HumanRes Manager." permissionId="HR_LEAVE_APPROVAL"/>
+      <SecurityPermission description="Allow to Access Leave Approval service in the HumanRes Manager." permissionId="HUMANRES_LEAVE_APPROVAL"/>
+        
       <SecurityGroup description="Allow to Access Leave Approval Screen in the HumanRes Manager." groupId="HR_LEAVEAPPROVAL"/>
       <SecurityGroupPermission groupId="HR_LEAVEAPPROVAL" permissionId="HR_LEAVE_APPROVAL"/>
       <SecurityGroupPermission groupId="HR_LEAVEAPPROVAL" permissionId="HR_EMPLLEAVE_VIEW"/>
+      <SecurityGroupPermission groupId="HR_LEAVEAPPROVAL" permissionId="HUMANRES_LEAVE_APPROVAL"/>
+      
       
       <SecurityPermission description="Allow to Access and enter daily bus timings in HumanRes Manager." permissionId="HR_DAILYBUS_VIEW"/>  
       <SecurityGroup description="Allow to Access and enter daily bus timings in HumanRes Manager." groupId="HR_DAILYBUS_VIEW"/>

@@ -837,11 +837,24 @@ under the License.emplpunch
         <permission-service service-name="humanResManagerPermission" main-action="LEAVE_EDIT"/>
         <!-- <auto-attributes mode="IN" include="pk" optional="false"/> -->
         <auto-attributes mode="IN" include="nonpk" optional="true"/>
+        <attribute name="chDate" mode="IN" type="List" optional="true"/>
+        <attribute name="emplLeaveApplId" mode="OUT" type="String" optional="false"/>
+        <attribute name="leaveStatus" mode="OUT" type="String" optional="true"/>
         <override name="partyId" optional="false"/>
         <override name="leaveTypeId" optional="false"/>
         <override name="fromDate" optional="false"/>
         <override name="approverPartyId" optional="false"/>
         <override name="thruDate" optional="false"/>
+    </service>
+    <service name="updateGhSsAvailedDetails" engine="java" default-entity-name="EmplLeave"
+             location="in.vasista.vbiz.humanres.EmplLeaveService" invoke="updateGhSsAvailedDetails" auth="true">
+        <description>Create Employee Leave</description>
+        <permission-service service-name="humanResManagerPermission" main-action="LEAVE_EDIT"/>
+        <auto-attributes mode="IN" include="pk" optional="false"/>
+        <auto-attributes mode="IN" include="nonpk" optional="true"/>
+        <attribute name="chDate" mode="IN" type="List" optional="true"/>
+        <attribute name="serviceName" mode="IN" type="String" optional="true"/>
+        <override name="partyId" optional="false"/>
     </service>
     
     <service name="updateEmplLeave" engine="simple" default-entity-name="EmplLeave"
@@ -850,6 +863,10 @@ under the License.emplpunch
         <permission-service service-name="humanResManagerPermission" main-action="LEAVE_EDIT"/>
         <auto-attributes mode="IN" include="pk" optional="false"/>
         <auto-attributes mode="IN" include="nonpk" optional="true"/>
+        <attribute name="chDate" mode="IN" type="List" optional="true"/>
+        <attribute name="emplLeaveApplId" mode="OUT" type="String" optional="false"/>
+        <!--  <attribute name="partyId" mode="OUT" type="String" optional="true"/> -->
+        <attribute name="leaveStatus" mode="OUT" type="String" optional="true"/>
         <override name="partyId" optional="false"/>
         <override name="leaveTypeId" optional="false"/>
         <override name="fromDate" optional="false"/>
@@ -861,7 +878,8 @@ under the License.emplpunch
              location="component://humanres/script/org/ofbiz/humanres/HumanResServices.xml" invoke="deleteEmplLeave" auth="true">
         <description>Delete AgreementEmploymentAppl</description>
         <permission-service service-name="humanResManagerPermission" main-action="LEAVE_EDIT"/>
-        <auto-attributes mode="IN" include="pk" optional="false"/>
+        <auto-attributes mode="INOUT" include="pk" optional="false"/>
+        <auto-attributes mode="INOUT" optional="true" include="nonpk"/>
     </service>
     
     <service name="createEmplLeaveType" engine="simple" default-entity-name="EmplLeaveType"
@@ -1105,12 +1123,12 @@ under the License.emplpunch
     <service name="updateEmplLeaveStatus" engine="simple" default-entity-name="EmplLeave"
             location="component://humanres/script/org/ofbiz/humanres/HumanResServices.xml" invoke="updateEmplLeaveStatus" auth="true">
         <description>Update Leave Approval Status</description>
-      	<required-permissions join-type="OR">
-          <permission-service service-name="humanResManagerPermission" main-action="UPDATE"/>
-          <permission-service service-name="humanResManagerPermission" main-action="LEAVE_APPROVAL"/>
-    	</required-permissions>
-        <auto-attributes mode="IN" include="pk" optional="false"/>
-        <auto-attributes mode="IN" include="nonpk" optional="true"/>
+        <required-permissions join-type="OR">
+           <permission-service service-name="humanResManagerPermission" main-action="UPDATE"/>
+           <permission-service service-name="humanResManagerPermission" main-action="LEAVE_APPROVAL"/>
+        </required-permissions>
+        <auto-attributes mode="INOUT" include="pk" optional="false"/>
+        <auto-attributes mode="INOUT" include="nonpk" optional="true"/>
     </service>
     <!--====================Time & Attendance Services===================================-->
 	

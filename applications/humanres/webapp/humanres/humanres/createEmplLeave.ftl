@@ -16,6 +16,8 @@ KIND, either express or implied.  See the License for the
 specific language governing permissions and limitations
 under the License.
 -->
+<script language="javascript" type="text/javascript" src="<@ofbizContentUrl>/images/jquery/plugins/multiSelect/jquery.multiselect.js</@ofbizContentUrl>"></script>
+<link type="text/css" href="<@ofbizContentUrl>/images/jquery/plugins/multiSelect/jquery.multiselect.css</@ofbizContentUrl>" rel="Stylesheet" />
 
 <script language="JavaScript" type="text/javascript">
   jQuery(document).ready(function () {
@@ -26,7 +28,21 @@ under the License.
 	     displayLeaveBalance();
 	  
 	  });
-
+	  
+	  $('#ghssDropDown').hide();
+	  
+	  $("#chDate").multiselect({
+   			minWidth : 150,
+   			height: 80,
+   			selectedList: 4,
+   			show: ["bounce", 100],
+   			position: {
+      			my: 'left bottom',
+      			at: 'left top'
+      		},
+      		
+   		});
+   		
 });
 
 function displayPunchDetails(){
@@ -88,10 +104,16 @@ function viewGHandSS(){
             	 if(workedHolidaysList != undefined){
             	    var innerHtmlStr ="";
             	    //alert(workedHolidaysList.length);
+            	    var chDateDropDown ="";
             	   for(var i=0;i<workedHolidaysList.length;i++){
             	        tmepWork = workedHolidaysList[i];
                         innerHtmlStr += "Date:"+tmepWork.date+",PunchDetails: IN-"+ tmepWork.punchDetails.inTime +",OUT-"+ tmepWork.punchDetails.outTime +"<br/>";
+            	       chDateDropDown += "<option value="+ tmepWork.date+">"+tmepWork.date+"</option>";
             	    }
+            	     jQuery('#ghssDropDown').show();
+            	     jQuery('#chDate').append(chDateDropDown);
+            	     $("#chDate").multiselect("refresh");
+            	    
             	    $('#leaveBalance').html('<span style="color:green; font-size:11pt; font-stlye:bold">'+innerHtmlStr+'</span>');
             	 }else{
             	     $('#leaveBalance').html('');
@@ -113,6 +135,8 @@ function viewGHandSS(){
     var employeeId = $('input[name=partyId]').val();
     var data = "employeeId="+employeeId+"&leaveTypeId="+leaveTypeId;
     $('#leaveBalance').html('');
+    jQuery('#ghssDropDown').hide();
+    jQuery('#chDate').html('')
     if(employeeId =="" || leaveTypeId==""){
        
           return false;
@@ -222,6 +246,14 @@ function viewGHandSS(){
 								<option value='${emplLeaveReasonType.emplLeaveReasonTypeId}'>${emplLeaveReasonType.description}</option>
 							</#if>
 						</#list>      
+					</select>
+                </td>
+              </tr>
+              <tr id="ghssDropDown">
+                <td class="label">GH/SS Days</td>
+                <td>
+                    <select name="chDate" id="chDate" class='h4' multiple="multiple">
+                       <option value=''></option>
 					</select>
                 </td>
               </tr>

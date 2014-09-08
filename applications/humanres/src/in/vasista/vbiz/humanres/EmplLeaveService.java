@@ -153,7 +153,7 @@ public class EmplLeaveService {
 					if(UtilValidate.isNotEmpty(leaveTypeId)){
 						conditionList.add(EntityCondition.makeCondition("leaveTypeId", EntityOperator.EQUALS, leaveTypeId));
 					}
-					conditionList.add(EntityCondition.makeCondition("leaveStatus", EntityOperator.NOT_EQUAL, "LEAVE_CREATED"));
+					conditionList.add(EntityCondition.makeCondition("leaveStatus", EntityOperator.EQUALS, "LEAVE_APPROVED"));
 					if(UtilValidate.isNotEmpty(timePeriodEnd)){
 						conditionList.add(EntityCondition.makeCondition("fromDate", EntityOperator.LESS_THAN_EQUAL_TO, timePeriodEnd));
 					}
@@ -198,5 +198,64 @@ public class EmplLeaveService {
 				serviceResults.put("leaveDetailmap", leaveDetailmap);
 				serviceResults.put("noOfLeaveDays", noOfLeaveDays);
 		        return serviceResults; 
-			}	
+			}
+	
+	public static Map<String, Object> updateGhSsAvailedDetails(DispatchContext dctx, Map<String, ? extends Object> context) {
+    	Delegator delegator = dctx.getDelegator();
+		LocalDispatcher dispatcher = dctx.getDispatcher();    	
+        GenericValue userLogin = (GenericValue) context.get("userLogin");
+        String partyId =  (String)context.get("partyId");
+        List chDateStringList =  (List)context.get("chDate");
+        String emplLeaveApplId =  (String)context.get("emplLeaveApplId");
+        String leaveStatus =  (String)context.get("leaveStatus");
+        String serviceName = (String)context.get("serviceName");
+		List<GenericValue> holiDayList = FastList.newInstance(); 
+		Map result = FastMap.newInstance();
+		List<Date> chDateList = FastList.newInstance();
+		try {
+				List<Date> holidays = FastList.newInstance();
+				
+				Debug.log("context======="+context);
+				SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy");
+				if(UtilValidate.isNotEmpty(chDateStringList)){
+					for(int i=0;i< chDateStringList.size();i++){
+						String chDate = (String)chDateStringList.get(i);
+						chDateList.add(UtilDateTime.toSqlDate(sdf.parse(chDate)));
+					}
+				}
+				
+				List conList=UtilMisc.toList(EntityCondition.makeCondition("partyId", EntityOperator.EQUALS,partyId));
+				
+				if(UtilValidate.isNotEmpty(emplLeaveApplId) && UtilValidate.isEmpty(chDateList)){
+					conList.add(EntityCondition.makeCondition("emplLeaveApplId",EntityOperator.EQUALS,emplLeaveApplId));
+				}else{
+					
+					conList.add(EntityCondition.makeCondition("date",EntityOperator.IN,chDateList));
+				}
+				
+				EntityCondition con= EntityCondition.makeCondition(conList,EntityOperator.AND);
+				List<GenericValue> tempWorkedHolidaysList = delegator.findList("EmplDailyAttendanceDetail", con ,null,UtilMisc.toList("date" ,"partyId"), null, false );
+				for(GenericValue workedHoliday : tempWorkedHolidaysList){
+					if((UtilValidate.isNotEmpty(leaveStatus) && leaveStatus.equals("LEAVE_REJECTED")) || (UtilValidate.isNotEmpty(serviceName) && serviceName.equals("deleteEmplLeave"))){
+						workedHoliday.set("encashmentStatus", null);
+						workedHoliday.set("emplLeaveApplId", null);
+						
+					}else{
+						
+						workedHoliday.set("encashmentStatus", "LEAVE_ENCASHMENT");
+						workedHoliday.set("emplLeaveApplId", emplLeaveApplId);
+					}
+					
+					workedHoliday.store();
+				}
+		}catch(Exception e){
+  			Debug.logError("Error while updating EmplDailyAttendanceDetail " + e.getMessage(), module);
+  			return ServiceUtil.returnError("Error while updating EmplDailyAttendanceDetail ");
+  		}
+    	
+    	//Debug.log("result:" + result, module);		 
+    	return result;
+    }
+	
+	
 }
