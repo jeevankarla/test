@@ -455,7 +455,8 @@ public class PunchService {
 			}catch(Exception e){
 	  			Debug.logError("Error updating  Empl Punch :" + e.getMessage(), module);
 	  		}
-	    	return result;
+			Map resultMap = ServiceUtil.returnSuccess("service Done successfully");
+	    	return resultMap;
 	 } 
   
   public static Map<String, Object> populateEmplDailyShiftDetails(DispatchContext dctx, Map<String, Object> context) {
