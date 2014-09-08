@@ -47,6 +47,7 @@ $(document).ready(function() {
 		"sPaginationType": "full_numbers"
 	} ).makeEditable({
 	         sUpdateURL: "emplPunchJson",
+	         sRowParamId: "employeePunchId",
              sAddURL: "emplPunchJson",
              sAddHttpMethod: "POST",
              sDeleteHttpMethod: "POST",
