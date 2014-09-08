@@ -166,17 +166,24 @@ function makeDatePicker1(fromDateId ,thruDateId){
 				<table class="basic-table hover-bar h3" style="border-spacing: 0 10px;">
 					<tr class="alternate-row">
 						<form id="LeaveAvailedReport" name="LeaveAvailedReport" mothed="post" action="<@ofbizUrl>LeaveAvailedReport.pdf</@ofbizUrl>" target="_blank">
-							<td width="5%">Leave Availed Report</td>
-							<td width="5%">Leave Type
+							<td width="15%">Leave Availed Report</td>
+							<td width="15%">Organization Id 
+								<select name="partyId" class='h5'>
+									<#list orgList as org>    
+									<option value='${org.partyId}'>${org.groupName}</option>
+									</#list> 
+								</select>
+							</td>	
+							<td width="15%">Leave Type
 								<select name="leaveTypeId" id="leaveTypeId" class='h5' >
 									<option value="ALL">ALL</option>
 										<#list leaveTypeList as leave>
 									<option value='${leave.leaveTypeId}'>${leave.description}</option></#list>
 								</select>
 							</td>
-							<td width="5%">From Date<input  type="text"  id="larfromDate"   name="larFromDate"/></td>
-							<td width="5%">Thru Date<input  type="text"  id="larthruDate"   name="larThruDate"/></td>
-							<td width="3%"><input type="submit" value="Download" class="buttontext"></td> 
+							<td width="15%">From Date<input  type="text"  id="larfromDate"   name="larFromDate"/></td>
+							<td width="15%">Thru Date<input  type="text"  id="larthruDate"   name="larThruDate"/></td>
+							<td width="10%"><input type="submit" value="Download" class="buttontext"></td> 
 							</td>
 						</form>
 					</tr>

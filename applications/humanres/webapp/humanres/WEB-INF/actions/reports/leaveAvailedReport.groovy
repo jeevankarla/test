@@ -59,24 +59,11 @@ if(parameters.leaveTypeId=="ALL"){
 else{
 	leaveTypeIds.add(parameters.leaveTypeId);
 }
-
 employeesResult=[];
 employeeList=[];
 empIds=[];
 employeesMap=[:];
-
-def populateChildren(org, employeeList) {
-	EmploymentsMap=HumanresService.getActiveEmployements(dctx,[userLogin:userLogin,orgPartyId:"Company"]);
-	employments=EmploymentsMap.get("employementList");
-	employments.each { employment ->
-		String lastName="";
-		if(employment.lastName!=null){
-			lastName=employment.lastName;
-		}
-		empIds.add(employment.partyId);
-		employeesMap.put(employment.partyId, employment.firstName + " " + lastName);
-	}
-}
+orgName="";
 
 employeeList = [];
 internalOrgs=[];
@@ -84,6 +71,37 @@ context.internalOrgs=internalOrgs;
 context.employeeList=employeeList;
 company = delegator.findByPrimaryKey("PartyAndGroup", [partyId : "Company"]);
 populateChildren(company, employeeList);
+
+
+def populateChildren(org, employeeList) {
+	EmploymentsMap=HumanresService.getActiveEmployements(dctx,[userLogin:userLogin,orgPartyId:parameters.partyId]);
+	employments=EmploymentsMap.get("employementList");
+	employments.each { employment ->
+		String lastName="";
+		if(employment.lastName!=null){
+			lastName=employment.lastName;
+		}
+		empIds.add(employment.partyId);
+
+		List conditionList=[];
+		if(UtilValidate.isNotEmpty(employment.partyId)){
+			conditionList.add(EntityCondition.makeCondition("partyId", EntityOperator.EQUALS, parameters.partyId));
+			conditionList.add(EntityCondition.makeCondition("partyTypeId", EntityOperator.EQUALS,"PARTY_GROUP"));
+		}
+		condition=EntityCondition.makeCondition(conditionList,EntityOperator.AND);
+		orgDetails= delegator.findList("PartyRelationshipAndDetail", condition, UtilMisc.toSet("groupName"), null, null, false );
+		if(UtilValidate.isNotEmpty(orgDetails)){
+			details=EntityUtil.getFirst(orgDetails);
+			orgName=details.get("groupName");
+		}
+		
+		
+		
+		employeesMap.put(employment.partyId, employment.firstName + " " + lastName);
+	}
+}
+context.orgName=orgName;
+
 
 finalMap=[:];
 

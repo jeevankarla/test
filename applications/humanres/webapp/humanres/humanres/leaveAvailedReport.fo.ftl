@@ -23,7 +23,7 @@ under the License.
 		<fo:layout-master-set>
 			<fo:simple-page-master master-name="main" page-height="10in" page-width="12in"
 					 margin-left="0.2in" margin-right="0.2in"  margin-top="0.2in" margin-bottom="0.2in" >
-				<fo:region-body margin-top="3.4in"/>
+				<fo:region-body margin-top="3.6in"/>
 				<fo:region-before extent="1in"/>
 				<fo:region-after extent="1in"/>
 			</fo:simple-page-master>
@@ -44,6 +44,7 @@ under the License.
 				<fo:block linefeed-treatment="preserve">&#xA;</fo:block>
 				 <fo:block text-align="center" keep-together="always" white-space-collapse="false">The following officers/officials are sanctioned leave for the period mentioned against their names.</fo:block>
 				 <fo:block linefeed-treatment="preserve">&#xA;</fo:block>
+				 <fo:block text-align="left" keep-together="always" white-space-collapse="false" >&#160;                                        <fo:inline  text-decoration="underline">${orgName?upper_case}</fo:inline></fo:block>
 				 <fo:block text-align="left" keep-together="always" white-space-collapse="false">&#160;                                          Leave Code	:${leaveTypeId}</fo:block>
 				 <fo:block linefeed-treatment="preserve">&#xA;</fo:block>
 				 <fo:block text-align="left" keep-together="always" white-space-collapse="false">&#160;From Date	:${fromlarDate}			To Date	:${thrularDate}</fo:block>
