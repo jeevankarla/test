@@ -696,6 +696,22 @@ under the License.
             <key-map field-name="parentTypeId" rel-field-name="leaveTypeId"/>
         </relation>
     </entity>
+    <entity entity-name="EmplLeaveStatus"
+            package-name="org.ofbiz.humanres.employment"
+            title="Employee Leave Status Entity">
+        <field name="emplLeaveApplId" type="id-ne"/>
+        <field name="leaveStatus" type="id-ne"/>
+        <field name="changedDate" type="date-time"></field>      
+        <field name="changedByUserLogin" type="id-vlong"></field>
+        <prim-key field="emplLeaveApplId"/>
+        <prim-key field="leaveStatus"/>
+        <relation type="one" fk-name="EMPL_LEAVE_ST_ID" title="Parent" rel-entity-name="EmplLeave">
+            <key-map field-name="emplLeaveApplId" rel-field-name="emplLeaveApplId"/>
+        </relation>
+        <relation type="one" fk-name="EMPL_LEAVE_ST_LO" rel-entity-name="UserLogin">
+        	<key-map field-name="changedByUserLogin" rel-field-name="userLoginId"/>
+      </relation>
+    </entity>
     <entity entity-name="WorkShiftType"
             package-name="org.ofbiz.humanres"
             title="Work Shift Type Entity">

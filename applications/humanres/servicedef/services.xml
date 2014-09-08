@@ -1130,6 +1130,16 @@ under the License.emplpunch
         <auto-attributes mode="INOUT" include="pk" optional="false"/>
         <auto-attributes mode="INOUT" include="nonpk" optional="true"/>
     </service>
+    
+    <service name="storeEmplLeaveStatus" engine="java"
+             location="in.vasista.vbiz.humanres.EmplLeaveService" invoke="storeEmplLeaveStatus" auth="true">
+        <description>Store Employee Current Leave Status</description>
+        <attribute name="emplLeaveApplId"  mode="IN" type="String" optional="false"/>
+        <attribute name="leaveStatus"  mode="IN" type="String" optional="false"/>
+        <attribute name="changedByUserLogin"  mode="IN" type="String" optional="true"/>
+        <attribute name="changedDate" mode="IN" type="Timestamp" optional="true"/> 
+    </service>
+    
     <!--====================Time & Attendance Services===================================-->
 	
 	 <service name="emplPunch" engine="java" default-entity-name="EmplPunch"

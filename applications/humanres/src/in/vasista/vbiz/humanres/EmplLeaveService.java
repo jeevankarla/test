@@ -258,4 +258,28 @@ public class EmplLeaveService {
     }
 	
 	
+	public static Map<String, Object> storeEmplLeaveStatus(DispatchContext dctx, Map<String, ? extends Object> context) {
+    	Delegator delegator = dctx.getDelegator();
+		LocalDispatcher dispatcher = dctx.getDispatcher();    	
+        GenericValue userLogin = (GenericValue) context.get("userLogin");
+        String userLoginId = (String)userLogin.get("userLoginId");
+        String emplLeaveApplId =  (String)context.get("emplLeaveApplId");
+        String leaveStatus =  (String)context.get("leaveStatus");
+		Map result = FastMap.newInstance();
+		GenericValue emplLeaveStatusDetails = null; 
+		try {
+			emplLeaveStatusDetails = delegator.findOne("EmplLeaveStatus",UtilMisc.toMap("emplLeaveApplId", emplLeaveApplId,"leaveStatus",leaveStatus), true);
+			GenericValue emplLeaveStatus = delegator.makeValue("EmplLeaveStatus");
+		    emplLeaveStatus.set("emplLeaveApplId", emplLeaveApplId );
+		    emplLeaveStatus.set("leaveStatus", leaveStatus);
+		    emplLeaveStatus.set("changedByUserLogin", userLoginId); 
+		    emplLeaveStatus.set("changedDate", UtilDateTime.nowTimestamp());
+		    delegator.createOrStore(emplLeaveStatus);    
+		}catch(Exception e){
+  			Debug.logError("Error while updating emplLeaveStatus " + e.getMessage(), module);
+  			return ServiceUtil.returnError("Error while updating EmplLeaveStatus ");
+  		}
+    	return result;
+    }
+	
 }
