@@ -15,6 +15,8 @@
 
 $(document).ready(function() {
 
+     
+
 	 var attendanceTable = ${StringUtil.wrapString(punchListEditJSON!'[]')};	 
 	 $('#attendanceTable').html( '<table cellpadding="0" cellspacing="0" border="0" class="display" id="datatable2"><thead><tr></tr></thead><tbody></tbody></table>' );
 
@@ -119,6 +121,26 @@ $(document).ready(function() {
 	        
 	});	
     datatable2.fnSort([[3,'desc']]);
+    
+    $('#btnAddNewRow').click(function () {
+         
+           var  punchDate = new Date($("#punchDate").val());
+  			$("#punchdate").val(punchDate.getFullYear() + "-" + (punchDate.getMonth() + 1) + "-"+punchDate.getDate());
+  			alert($("input[name=employeeId]").val());
+            $("#partyId").val($("input[name=employeeId]").val());
+           
+      });
+    $("input[name=employeeId]").attr("required","required");
+    
+    function setTimepicker(){
+		$('#punchtime').timepicker({ 
+		showSecond: true,	
+		timeFormat: 'hh:mm:ss',
+		showOn: 'button',
+	        buttonImage: '/vasista/images/cal.gif',
+	 });
+}
+    
 });	
 </script>
  
@@ -135,7 +157,7 @@ $(document).ready(function() {
         <input type='hidden' value="Y" name='isManual'/> 		
 		<tr class='h3'>
 			<td align='left' class='h3' width='30%'>PartyId:</td>
-			<td align='left' class='h3' width='30%'><input type='text' value="" name='partyId' size='5' rel="2"/></td>
+			<td align='left' class='h3' width='30%'><input type='text' value="" name='partyId' size='5' rel="2" id='partyId' readonly/></td>
 		</tr>
 	    <tr class='h3'>
 	       <td align='left' class='h3' width='40%'>Punch Type:</td>
@@ -165,12 +187,12 @@ $(document).ready(function() {
 			</select></td></tr>
 			<tr class='h3'>
 				<td align='left' class='h3' width='40%'>Date:</td><td align='left' class='h3' width='40%'>
-					<input type='text'  name='punchdate' id='punchdate' size='10' rel="1"/>
+					<input type='text'  name='punchdate' id='punchdate' size='10' rel="1" readonly />
 				</td></tr>
 			<tr class='h3'>
 				<td align='left' class='h3' width='40%'>Punch Time:</td>
 				<td align='left' class='h3' width='40%'>
-				<input type='text'  value="" name='punchtime' size='10' required  rel="4"/></tr>
+				<input type='text'  value="" name='punchtime' id='punchtime' size='10' required  rel="4"/>HH:MM:SS</tr>
 			
 			<tr class='h3'>
 				<td align='left' class='h3' width='40%'>Note:</td><td align='left' class='h3' width='40%'><input  type='textarea' value='' name='Note' rel="7"></td>

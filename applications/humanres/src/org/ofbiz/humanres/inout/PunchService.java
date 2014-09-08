@@ -71,7 +71,7 @@ public class PunchService {
 		String employeePunchId = (String) context.get("employeePunchId");
 		String partyId = (String) context.get("partyId");
 		String emplPunchId = (String) context.get("emplPunchId");
-		String oldPunchType = (String) context.get("oldPunchType");
+		//String oldPunchType = (String) context.get("oldPunchType");
 		String oldShiftTypeId = (String) context.get("oldShiftTypeId");
 		String oldInOut = (String) context.get("oldInOut");
 		Date punchdate = (Date) context.get("punchdate");
@@ -87,6 +87,7 @@ public class PunchService {
 			 try{
 				 emplPunch = delegator.findOne("EmplPunch", UtilMisc.toMap("employeePunchId",employeePunchId), false);
 		         punchdate = emplPunch.getDate("punchdate");
+		         oldShiftTypeId = emplPunch.getString("shiftType");
 		         if(UtilValidate.isEmpty(punchtime)){
 		        	 punchtime = emplPunch.getTime("punchtime");
 		         }

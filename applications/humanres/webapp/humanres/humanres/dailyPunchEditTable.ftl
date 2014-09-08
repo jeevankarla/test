@@ -100,7 +100,7 @@ $("#punchDate").val(currentDate.getDate() + "/" + (currentDate.getMonth() + 1) +
   	    
         $.get(  
             "${ajaxUrl}",  
-            { punchDate: $("#punchDate").val() , partyId : $("input[name=partyId]").val() },  
+            { punchDate: $("#punchDate").val() , partyId : $("input[name=employeeId]").val() },  
             function(responseText){  
                 $("#result").html(responseText); 
 				var reponse = jQuery(responseText);
@@ -130,7 +130,7 @@ $("#punchDate").val(currentDate.getDate() + "/" + (currentDate.getMonth() + 1) +
             	<td width="20%"><input class="mycalendar" type="text" id="punchDate" name="punchDate"/></td>
             	<td align="right" width="10%"><span class='h3'>Employee Id: </span></td>
             	<td width="20%">
-            	   <@htmlTemplate.lookupField value="${parameters.partyId?if_exists}" formName="attendance" name="partyId" id="partyId" fieldFormName="LookupEmployeeName"/>
+            	   <@htmlTemplate.lookupField value="${parameters.partyId?if_exists}" formName="attendance" name="employeeId"  id="employeeId" fieldFormName="LookupEmployeeName"/>
                     <span class="tooltip"></span>
                   </td>
 				<td><input type="submit" value="Submit" id="getAttendanceTable" class="smallSubmit" /></td>
