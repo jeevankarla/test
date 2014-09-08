@@ -3306,6 +3306,16 @@
 				<parameter param-name="statusId" value="INVOICE_CANCELLED" />
 			</link>
 		</menu-item>
+		<menu-item name="apAccountignTrans" title="Accounting Transaction PDF">
+		<condition>
+				<not>
+					<if-empty field="invoice.invoiceId" />
+				</not>
+			</condition>
+			<link target="account.pdf" target-window="_BLANK">
+				<parameter param-name="invoiceId" from-field="invoice.invoiceId" />
+			</link>
+		</menu-item>
 		<menu-item name="makeApayment" title="${uiLabelMap.MakePayment}">			
 			<condition>
 				<and>
@@ -3703,6 +3713,16 @@
 				<parameter param-name="subTabButtonValue" from-field="tabButtonItem5" />
 				<parameter param-name="invoiceId" from-field="invoice.invoiceId" />
 				<parameter param-name="statusId" value="INVOICE_CANCELLED" />
+			</link>
+		</menu-item>
+		<menu-item name="arAccountignTrans" title="Accounting Transaction PDF">
+		<condition>
+				<not>
+					<if-empty field="invoice.invoiceId" />
+				</not>
+			</condition>
+			<link target="account.pdf" target-window="_BLANK">
+				<parameter param-name="invoiceId" from-field="invoice.invoiceId" />
 			</link>
 		</menu-item>
 		<menu-item name="makeApayment" title="${uiLabelMap.MakePayment}">			
