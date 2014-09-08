@@ -79,12 +79,12 @@
             </condition> 
             <link target="benefitOrDeduction"/>
         </menu-item>
-        <menu-item name="Attendance" title="Attendance">
+        <!-- <menu-item name="Attendance" title="Attendance">
         	<condition>
             	<if-has-permission permission="HR"  action="_ATTENDANCE_VIEW"/>
             </condition> 
             <link target="DailyPunch"/>
-        </menu-item>     
+        </menu-item>   -->   
         <menu-item name="busTimings" title="Daily Bus Timings">
            <condition>
             	<if-has-permission permission="HR"  action="_DAILYBUS_VIEW"/>
@@ -98,6 +98,9 @@
         	<link target="DailyPunch"/>
         </menu-item>
          <menu-item name="DailyPunchEditTable" title="Daily Punch Edit Details"> 
+            <condition>
+            	<if-has-permission permission="HR"  action="_ATTENDANCE_VIEW"/>
+            </condition> 
         	<link target="DailyPunchEditTable"/>
         </menu-item>
            
@@ -105,10 +108,10 @@
         	<link target="EmployeeAttendance"/>
         </menu-item>  
         <menu-item name="ArrearDays" title="Arrear Days">
-        <link target="ArrearDays"></link>
+              <link target="ArrearDays"></link>
         </menu-item>    
-          <menu-item name="AttendanceFinalization" title="Attendance Finalization">
-        <link target="AttendanceFinalization"></link>
+        <menu-item name="AttendanceFinalization" title="Attendance Finalization">
+        			<link target="AttendanceFinalization"></link>
         </menu-item>     
         <menu-item name="EditLateHours" title="Edit Late Hours">
         <link target="EditLateHours"></link>
