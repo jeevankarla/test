@@ -15,6 +15,7 @@
 * Parameters:
 * @sUpdateURL                   	String      URL of the server-side page used for updating cell. Default value is "UpdateData".
 * @sAddURL                      	String      URL of the server-side page used for adding new row. Default value is "AddData".
+* sRowParamId                       String	    This is the param key that will used to pass the row id (currently for update)
 * @sDeleteURL                   	String      URL of the server-side page used to delete row by id. Default value is "DeleteData".
 * @fnShowError                  	Function    function(message, action){...}  used to show error message. Action value can be "update", "add" or "delete".
 * @sAddNewRowFormId             	String      Id of the form for adding new row. Default id is "formAddNewRow".
@@ -192,19 +193,26 @@
                     iDisplayStart = _fnGetDisplayStart();
                     properties.fnStartProcessingMode();
                     var id = fnGetCellID(this);
+                    var sNewCellValue = $("input,select,textarea", $(this)).val();
+
                     var rowId = oTable.fnGetPosition(this)[0];
                     var columnPosition = oTable.fnGetPosition(this)[1];
                     var columnId = oTable.fnGetPosition(this)[2];
                     var sColumnName = oTable.fnSettings().aoColumns[columnId].sName;
                     if (sColumnName == null || sColumnName == "")
                         sColumnName = oTable.fnSettings().aoColumns[columnId].sTitle;
-                    return {
+                    var params = {
                         "id": id,
                         "rowId": rowId,
                         "columnPosition": columnPosition,
                         "columnId": columnId,
                         "columnName": sColumnName
                     };
+                    params[sColumnName] = sNewCellValue;
+                    if (properties.sRowParamId != null) {
+                    	params[properties.sRowParamId] = id;
+                    }                    
+                    return params;
                 },
                 "onerror": function () {
                     properties.fnEndProcessingMode();
