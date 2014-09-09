@@ -94,6 +94,10 @@ public class PunchService {
 		         if(UtilValidate.isEmpty(PunchType)){
 		        	 PunchType = emplPunch.getString("PunchType");
 		         }
+		         if(UtilValidate.isEmpty(shiftTypeId)){
+		        	 shiftTypeId = emplPunch.getString("shiftTypeId");
+		         }
+		         
 		         
 			 }catch(Exception e){
 				 Debug.logError("Error In fetch employeePunch :"+e.toString(), module);
