@@ -1278,7 +1278,7 @@ public class InvoiceServices {
                        if ((!"SALES_TAX".equals(orderAdjustmentType.getString("parentTypeId"))) &&(!"PURCHASE_TAX".equals(orderAdjustmentType.getString("parentTypeId")))&&(!"SHIPPING_ADJUSTMENT".equals(orderAdjustmentType.getString("parentTypeId")))) { 	
                             // increment the invoice subtotal
                             invoiceSubTotal = invoiceSubTotal.add(thisAdjAmount).setScale(100, ROUNDING);
-
+                           
                             // add to the ship amount only if it applies to this item
                             if (shippingApplies) {
                                 invoiceShipProRateAmount = invoiceShipProRateAmount.add(thisAdjAmount).setScale(invoiceTypeDecimals, ROUNDING);
@@ -1326,12 +1326,14 @@ public class InvoiceServices {
                 } else {
                     // these will effect the shipping pro-rate (unless commented)
                     // other adjustment type
+                	 //Debug.log("=adjAmount=BEFOREE=ELSE=TYPE=>"+adj.getString("orderAdjustmentTypeId")+"==");
+                	 //Debug.log("=orderSubTotal=>"+orderSubTotal+"=invoiceSubTotal="+invoiceSubTotal+"adj.amount="+adj.getBigDecimal("amount")+"=adj.amount=ROUNDING="+adj.getBigDecimal("amount").setScale(invoiceTypeDecimals, ROUNDING)+"=invoiceTypeDecimals="+invoiceTypeDecimals+"=ROUNDING="+ROUNDING);
                     BigDecimal adjAmount = calcHeaderAdj(delegator, adj, invoiceType, invoiceId, invoiceItemSeqId,
                             orderSubTotal, invoiceSubTotal, adj.getBigDecimal("amount").setScale(invoiceTypeDecimals, ROUNDING), invoiceTypeDecimals, ROUNDING, userLogin, dispatcher, locale);
                     // invoiceShipProRateAmount += adjAmount;
                     // do adjustments compound or are they based off subtotal? Here we will (unless commented)
                     // invoiceSubTotal += adjAmount;
-
+                    //Debug.log("=adjAmount==In==ELSEEE==>"+adjAmount);
                     // increment the counter
                     invoiceItemSeqNum++;
                     invoiceItemSeqId = UtilFormatOut.formatPaddedNumber(invoiceItemSeqNum, INVOICE_ITEM_SEQUENCE_ID_DIGITS);
@@ -1342,7 +1344,7 @@ public class InvoiceServices {
             // numerator/denominator problems when the shipping is not pro-rated but rather charged all on the first invoice
             for (GenericValue adj : shipAdjustments.keySet()) {
                 BigDecimal adjAlreadyInvoicedAmount = shipAdjustments.get(adj);
-
+                
                 if ("N".equalsIgnoreCase(prorateShipping)) {
 
                     // Set the divisor and multiplier to 1 to avoid prorating
@@ -2858,6 +2860,9 @@ public class InvoiceServices {
             if (divisor.signum() != 0) {
                 // multiply first then divide to avoid rounding errors
                 amount = baseAmount.multiply(multiplier).divide(divisor, decimals, rounding);
+            }
+            if ((invoiceTypeId != null) && (invoiceTypeId.equals("PURCHASE_INVOICE"))) {//  for Purchase Invoice we are skipping above for fixing Freight and Discount issues
+            	amount=baseAmount; 
             }
             if (amount.signum() != 0) {
                 Map<String, Object> createInvoiceItemContext = FastMap.newInstance();
