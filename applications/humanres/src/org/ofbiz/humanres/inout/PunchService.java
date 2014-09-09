@@ -95,7 +95,7 @@ public class PunchService {
 		        	 PunchType = emplPunch.getString("PunchType");
 		         }
 		         if(UtilValidate.isEmpty(shiftTypeId)){
-		        	 shiftTypeId = emplPunch.getString("shiftTypeId");
+		        	 shiftTypeId = emplPunch.getString("shiftType");
 		         }
 		         
 		         
