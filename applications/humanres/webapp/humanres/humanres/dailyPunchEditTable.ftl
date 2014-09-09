@@ -18,6 +18,7 @@
 <link rel="stylesheet" type="text/css" href="<@ofbizContentUrl>/images/jquery/plugins/datatables/1.10.0/extensions/JQuery-DataTables-Editable-1.3/media/css/demo_table_jui.css</@ofbizContentUrl>">
 <link rel="stylesheet" type="text/css" href="<@ofbizContentUrl>/images/jquery/plugins/datatables/1.10.0/extensions/JQuery-DataTables-Editable-1.3/media/css/themes/base/jquery-ui.css</@ofbizContentUrl>">
 <link rel="stylesheet" type="text/css" href="<@ofbizContentUrl>/images/jquery/plugins/datatables/1.10.0/extensions/JQuery-DataTables-Editable-1.3/media/css/themes/smoothness/jquery-ui-1.7.2.custom.css</@ofbizContentUrl>">
+<link rel="stylesheet" type="text/css" href="<@ofbizContentUrl>/images/jquery/plugins/jquery.flexselect-0.5.3/flexselect.css</@ofbizContentUrl>">
 
 
 <script type="text/javascript" language="javascript" src="<@ofbizContentUrl>/images/jquery/plugins/datatables/1.10.0/extensions/JQuery-DataTables-Editable-1.3/media/js/complete.js</@ofbizContentUrl>"></script>
@@ -33,6 +34,10 @@
 <script type="text/javascript" language="javascript" src="<@ofbizContentUrl>/images/jquery/plugins/datatables/1.10.0/extensions/JQuery-DataTables-Editable-1.3/media/js/jquery-ui.js</@ofbizContentUrl>"></script>
 
 <script type="text/javascript" language="javascript" src="<@ofbizContentUrl>/images/jquery/plugins/datatables/1.10.0/extensions/JQuery-DataTables-Editable-1.3/media/js/jquery.validate.js</@ofbizContentUrl>"></script>
+
+<script type="text/javascript" language="javascript" src="<@ofbizContentUrl>/images/jquery/plugins/jquery.flexselect-0.5.3/liquidmetal.js</@ofbizContentUrl>"></script>
+<script type="text/javascript" language="javascript" src="<@ofbizContentUrl>/images/jquery/plugins/jquery.flexselect-0.5.3/jquery.flexselect.js</@ofbizContentUrl>"></script>
+<script type="text/javascript" src="<@ofbizContentUrl>/images/jquery/plugins/datetimepicker/jquery-ui-timepicker-addon-0.9.3.js</@ofbizContentUrl>"></script>
 
 
 <style>
@@ -51,6 +56,7 @@
 <script type="text/javascript">
 
 $(document).ready(function(){
+
 currentDate = new Date();
 $("#punchDate").val(currentDate.getDate() + "/" + (currentDate.getMonth() + 1) + "/" + currentDate.getFullYear());
 
@@ -100,7 +106,7 @@ $("#punchDate").val(currentDate.getDate() + "/" + (currentDate.getMonth() + 1) +
   	    
         $.get(  
             "${ajaxUrl}",  
-            { punchDate: $("#punchDate").val() , partyId : $("input[name=employeeId]").val() },  
+            { punchDate: $("#punchDate").val() , partyId : $("#employeeId").val() },  
             function(responseText){  
                 $("#result").html(responseText); 
 				var reponse = jQuery(responseText);
@@ -114,7 +120,29 @@ $("#punchDate").val(currentDate.getDate() + "/" + (currentDate.getMonth() + 1) +
         );  
         return false;
     });
+    
+     var employees = ${StringUtil.wrapString(employeesJSON!'[]')};
+  //alert("employees="+employees);
+  $.each(employees, function(key, val){
+    $("#employeeId").append('<option value="' + val.employeeId + '">' + val.name + " [" + val.employeeId + "]" + '</option>');
+  });
+  $("#employeeId").flexselect({
+  						preSelection: false,
+  						hideDropdownOnEmptyInput: true});	
+    
+    
+    
 });
+
+function setTimepicker(){
+       //alert("hi");
+		$('#punchtime').timepicker({ 
+		showSecond: true,	
+		timeFormat: 'hh:mm:ss',
+		showOn: 'button',
+	        buttonImage: '/vasista/images/cal.gif',
+	 });
+}
 
 </script>
 
@@ -123,15 +151,15 @@ $("#punchDate").val(currentDate.getDate() + "/" + (currentDate.getMonth() + 1) +
       	<h3>Select Date</h3>	
      </div>
     <div class="screenlet-body">
-	  <form name="attendance">
+	  <form name="attendance" action="#" method="post">
 		<table class="basic-table" cellspacing="0">
         	<tr>
         		<td align="right" width="10%"><span class='h3'>Attendance Date: </span></td>
             	<td width="20%"><input class="mycalendar" type="text" id="punchDate" name="punchDate"/></td>
             	<td align="right" width="10%"><span class='h3'>Employee Id: </span></td>
             	<td width="20%">
-            	   <@htmlTemplate.lookupField value="${parameters.partyId?if_exists}" formName="attendance" name="employeeId"  id="employeeId" fieldFormName="LookupEmployeeName"/>
-                    <span class="tooltip"></span>
+            	     <select id="employeeId" name="employeeId" class="flexselect" required>
+            	     </select>
                   </td>
 				<td><input type="submit" value="Submit" id="getAttendanceTable" class="smallSubmit" /></td>
 			</tr>

@@ -15,8 +15,6 @@
 
 $(document).ready(function() {
 
-     
-
 	 var attendanceTable = ${StringUtil.wrapString(punchListEditJSON!'[]')};	 
 	 $('#attendanceTable').html( '<table cellpadding="0" cellspacing="0" border="0" class="display" id="datatable2"><thead><tr></tr></thead><tbody></tbody></table>' );
 
@@ -31,7 +29,7 @@ $(document).ready(function() {
 			{ "title": "In Out" },
 			{ "title": "Punch Type"},
 			{ "title": "Note"},
-			{ "title": "shiftType"}],
+			{ "title": "Shift Type"}],
 		"aoColumns": [
 			{ "sTitle": "employeePunchId" },
 			{ "sTitle": "Punch Date" },
@@ -41,7 +39,7 @@ $(document).ready(function() {
 			{ "sTitle": "InOut" },
 			{ "sTitle": "PunchType"},
 			{ "sTitle": "Note"},
-			{ "sTitle": "shiftType"}],
+			{ "sTitle": "Shift Type"}],
 	 "fnRowCallback": function( nRow, aData, iDisplayIndex, iDisplayIndexFull) {
            $(nRow).attr("id", aData[0]);
           return nRow;
@@ -68,7 +66,6 @@ $(document).ready(function() {
 	        					tooltip: 'Click to select IN/OUT',
 	        					loadtext: 'loading...',
 	                        	type: 'select',
-	            				onblur: 'submit',
 	        					data: "{'IN':'IN','OUT':'OUT'}",
 	        					submit:'Save changes'
 	    						},
@@ -77,7 +74,6 @@ $(document).ready(function() {
 	        					tooltip: 'Click to select PunchType',
 	        					loadtext: 'loading...',
 	                        	type: 'select',
-	            				onblur: 'submit',
 	        					data: "{'Normal':'Normal','Ood':'Ood'}",
 	        					submit:'Save changes'
 	    						},
@@ -85,10 +81,12 @@ $(document).ready(function() {
 	        					indicator: 'Saving Note...',
 	        					tooltip: 'Click to add note',
 	                        	type: 'textarea',
-	            				onblur: 'submit',
 	        					submit:'Save changes'
 	    				  },
-	    				  {}
+	    				  {
+	    				    onblur: 'ignore'
+	    				    
+	    				  }
 				],
 				oAddNewRowButtonOptions: {	label: "Add",
 									       icons: {primary:'ui-icon-plus'} 
@@ -128,20 +126,13 @@ $(document).ready(function() {
                   parseInt(parts[1], 10) - 1,
                   parseInt(parts[0], 10));         
   			$("#punchdate").val(punchDate.getFullYear() + "-" + (punchDate.getMonth() + 1) + "-"+punchDate.getDate());
-  			//alert($("input[name=employeeId]").val());
-            $("#partyId").val($("input[name=employeeId]").val());
+            $("#partyId").val($("select[name=employeeId]").val());
+            setTimepicker();
            
       });
-    $("input[name=employeeId]").attr("required","required");
+    $("input[name=employeeId]").attr("required",true);
     
-    function setTimepicker(){
-		$('#punchtime').timepicker({ 
-		showSecond: true,	
-		timeFormat: 'hh:mm:ss',
-		showOn: 'button',
-	        buttonImage: '/vasista/images/cal.gif',
-	 });
-}
+  
     
 });	
 </script>
@@ -158,7 +149,7 @@ $(document).ready(function() {
         <input type='hidden' value="" name='employeePunchId'  rel="0"/>
         <input type='hidden' value="Y" name='isManual'/> 		
 		<tr class='h3'>
-			<td align='left' class='h3' width='30%'>PartyId:</td>
+			<td align='left' class='h3' width='30%'>Employee Id:</td>
 			<td align='left' class='h3' width='30%'><input type='text' value="" name='partyId' size='5' rel="2" id='partyId' readonly/></td>
 		</tr>
 	    <tr class='h3'>
@@ -194,7 +185,7 @@ $(document).ready(function() {
 			<tr class='h3'>
 				<td align='left' class='h3' width='40%'>Punch Time:</td>
 				<td align='left' class='h3' width='40%'>
-				<input type='text'  value="" name='punchtime' id='punchtime' size='10' required  rel="4"/>HH:MM:SS</tr>
+				<input type='text'  value="" name='punchtime' id='punchtime' size='10' required  rel="4" />HH:MM:SS</tr>
 			
 			<tr class='h3'>
 				<td align='left' class='h3' width='40%'>Note:</td><td align='left' class='h3' width='40%'><input  type='textarea' value='' name='Note' rel="7"></td>

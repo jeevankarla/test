@@ -100,6 +100,7 @@
  				<set field="tabButtonItem2" value="DailyPunchEditTable" />                                           				
 				<set field="titleProperty" value="DailyPunchEditTable" />
 				<set field="ajaxUrl" value="DailyPunchEditTableInternal" type="String"/>
+				<script location="component://humanres/webapp/humanres/WEB-INF/actions/humanres/employees.groovy"/> 
 				<script location="component://humanres/webapp/humanres/WEB-INF/actions/humanres/dailyPunch.groovy"/>
                 
             </actions>            

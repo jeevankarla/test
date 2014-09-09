@@ -1110,7 +1110,7 @@
         
     </simple-method>
      <!-- ================Time sheet========================= -->
-     <simple-method method-name="emplpunch" short-description="Add punch">
+    <!--  <simple-method method-name="emplpunch" short-description="Add punch">
 	 <check-errors/>
         <make-value entity-name="EmplPunch" value-field="newEntity"/>
         <set-pk-fields value-field="newEntity" map="parameters"/> 
@@ -1120,24 +1120,24 @@
         </if-empty>        
         
          
-       <!--   <entity-one entity-name="UserPreference" value-name="lookedUpValue"/>
-         <set field="newEntity.Note" from-field="lookedUpValue.userPrefTypeId"/> -->
+         <entity-one entity-name="UserPreference" value-name="lookedUpValue"/>
+         <set field="newEntity.Note" from-field="lookedUpValue.userPrefTypeId"/>
         <create-value value-field="newEntity"/>
-	<!-- <string-to-list string="Record has been added..." list-name="successMessageList"/>   -->
+	<string-to-list string="Record has been added..." list-name="successMessageList"/>  
     </simple-method>
 
     <simple-method method-name="adminPunch" short-description="Update Employee Punch">
     <log level="verbose" message="loging ======================adminPunch"></log>
             <check-errors/>
-    <!--  <entity-one entity-name="EmplPunch" value-name="lookedUpValue"/> -->
+     <entity-one entity-name="EmplPunch" value-name="lookedUpValue"/>
              <make-value entity-name="EmplPunch" value-field="lookedUpValue"/>
         <set-pk-fields value-field="lookedUpValue" map="parameters"/>   
         <set-nonpk-fields value-field="lookedUpValue" map="parameters"/>
-        <!-- <store-value value-name="lookedUpValue"/> -->
+        <store-value value-name="lookedUpValue"/>
          <sequenced-id sequence-name="EmplPunch" field="lookedUpValue.emplPunchId"/> 
         <create-value value-field="lookedUpValue"/>
         	  
-    </simple-method>
+    </simple-method> -->
     <!-- delete employee punch -->
     <simple-method method-name="deletePunch" short-description="Delete Punch">
     	<log level="info" message="Removing PunchType =
@@ -1145,15 +1145,15 @@
         <entity-one entity-name="EmplPunch" value-field="lookedUpValue"/>
         <remove-value value-field="lookedUpValue"/>
         <entity-and list="emplPunch" entity-name="EmplPunch">
-             <field-map field-name="partyId" from-field="parameters.partyId"/>
-             <field-map field-name="punchdate" from-field="parameters.punchdate"/>
-             <field-map field-name="shiftType" from-field="parameters.shiftType"/>
+             <field-map field-name="partyId" from-field="lookedUpValue.partyId"/>
+             <field-map field-name="punchdate" from-field="lookedUpValue.punchdate"/>
+             <field-map field-name="shiftType" from-field="lookedUpValue.shiftType"/>
          </entity-and>
          <if-empty field="emplPunch">
              <entity-and list="emplShift" entity-name="EmplDailyAttendanceDetail">
-               <field-map field-name="partyId" from-field="parameters.partyId"/>
-               <field-map field-name="date" from-field="parameters.punchdate"/>
-                <field-map field-name="shiftType" from-field="parameters.shiftType"/>
+               <field-map field-name="partyId" from-field="lookedUpValue.partyId"/>
+               <field-map field-name="date" from-field="lookedUpValue.punchdate"/>
+                <field-map field-name="shiftType" from-field="lookedUpValue.shiftType"/>
          	</entity-and>
          	<remove-list list="emplShift"/>
          </if-empty>

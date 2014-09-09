@@ -134,7 +134,7 @@ public class PunchService {
 			PunchId = 7;
 
 		}		
-		Debug.log("emplPunchId----" + emplPunchId, module);
+		//Debug.log("emplPunchId----" + emplPunchId, module);
 		if (emplPunchId == null) {
 			try {
 
@@ -554,7 +554,7 @@ public class PunchService {
 			emplPunch.set("lastModifiedDate", UtilDateTime.nowTimestamp());
 			
 			
-			Debug.log("emplPunch-==========="+emplPunch);
+			Debug.logInfo("emplPunch-==========="+emplPunch,module);
 			
 			delegator.createOrStore(emplPunch);
 			/*if(UtilValidate.isNotEmpty(oldPunchType) && (!PunchType.equals(oldPunchType))){				  
@@ -579,9 +579,9 @@ public class PunchService {
 			return resultMap;
 
 		} catch (Exception e) {
-
+            Debug.logError("Unable to add punch, mismatch found! , Contact administrator"+e.toString(), punchouttime);
 			return ServiceUtil
-					.returnError("Unable to add punch, mismatch found! , Contact administrator");
+					.returnError("Unable to add punch, mismatch found! , Contact administrator :"+e.toString());
 
 		}
 
