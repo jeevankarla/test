@@ -119,14 +119,24 @@
 			var partyId = $("#partyId").val();
 			var orderTaxType = $("#orderTaxType").val();
 			var poNumber = $("#PONumber").val();
+			var sInvNumber = $("#SInvNumber").val();
 			var packingType = $("#packingType").val();
-			var taxInc = $("#UDP :checked")
+			var taxInc = $("#UDP :checked");
+			
+			var mrnNumber=$("#mrnNumber").val();
+			var freightCharges=$("#freightCharges").val();
+			var discount=$("#discount").val();
+			//alert("=mrnNumber="+mrnNumber+"=freightCharges="+freightCharges+"=discount="+discount+"=sInvNumber="+sInvNumber+"=poNumber="+poNumber);
 			var productStoreId = $("#productStoreId").val();
 			var party = jQuery("<input>").attr("type", "hidden").attr("name", "partyId").val(partyId);
-			var POField = jQuery("<input>").attr("type", "hidden").attr("name", "PONumber").val(poNumber);
+		    var POField = jQuery("<input>").attr("type", "hidden").attr("name", "PONumber").val(poNumber);
 			var tax = jQuery("<input>").attr("type", "hidden").attr("name", "orderTaxType").val(orderTaxType);
 			var pack = jQuery("<input>").attr("type", "hidden").attr("name", "packingType").val(packingType);
 			var productStore = jQuery("<input>").attr("type", "hidden").attr("name", "productStoreId").val(productStoreId);
+			var frightField = jQuery("<input>").attr("type", "hidden").attr("name", "freightCharges").val(freightCharges);
+			var dicountField = jQuery("<input>").attr("type", "hidden").attr("name", "discount").val(discount);
+			var mrnNumberField=jQuery("<input>").attr("type", "hidden").attr("name", "mrnNumber").val(mrnNumber);
+			var sInvNumberField=jQuery("<input>").attr("type", "hidden").attr("name", "SInvNumber").val(sInvNumber);
 			<#if orderId?exists>
 				var order = '${orderId}';
 				var extOrder = jQuery("<input>").attr("type", "hidden").attr("name", "orderId").val(order);		
@@ -137,6 +147,10 @@
 			jQuery(formId).append(jQuery(pack));
 			jQuery(formId).append(jQuery(tax));
 			jQuery(formId).append(jQuery(productStore));
+			jQuery(formId).append(jQuery(frightField));
+			jQuery(formId).append(jQuery(dicountField));
+			jQuery(formId).append(jQuery(mrnNumberField));
+			jQuery(formId).append(jQuery(sInvNumberField));
 		</#if>
 		
 		jQuery(formId).attr("action", action);	
@@ -215,13 +229,13 @@
 	
 	
 	function quantityValidator(value ,item) {
-		var quarterVal = value*4;
+		/*var quarterVal = value*4;
 		var floorValue = Math.floor(quarterVal);
 		var remainder = quarterVal - floorValue;
 		var remainderVal =  Math.floor(value) - value;
 	     if(remainder !=0 ){
 			return {valid: false, msg: "packets should not be in decimals " + value};
-		}
+		}*/
       return {valid: true, msg: null};
     }
 	var mainGrid;		
@@ -339,9 +353,10 @@
       		grid.render();
     	});
         grid.onCellChange.subscribe(function(e,args) {
-        	if (args.cell == 0 || args.cell == 1) {
+        	if (args.cell == 2) {
 				var prod = data[args.row]["cProductId"];
 				var qty = parseFloat(data[args.row]["quantity"]);
+				
 				var prodConversionData = conversionData[prod];
 				var convValue = 0;
 				<#if changeFlag?exists && changeFlag == "IcpSales" || changeFlag == "IcpSalesAmul">
@@ -374,6 +389,7 @@
 				if(isNaN(roundedAmount)){
 					roundedAmount = 0;
 				}
+				//alert("=prod="+prod+"=qty="+qty+"=price="+price);
 				data[args.row]["unitPrice"] = price;
 				data[args.row]["amount"] = roundedAmount;
 				grid.updateRow(args.row);
@@ -422,6 +438,14 @@
 						data[args.row]["quantity"] = calculateQty;
 					</#if>
 				}
+				   var basic_price = data[args.row]['UPrice'];
+					var vat_price = data[args.row]['VAT'];
+					var cst_price = data[args.row]['CST'];
+					var bed_price = data[args.row]['Excise'];
+					
+					var totalPrice = basic_price+vat_price+cst_price+bed_price;
+					price = totalPrice;
+					
 				
 				if(isNaN(price)){
 					price = 0;

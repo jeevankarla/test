@@ -263,6 +263,40 @@ $(document).ready(function(){
  		<div class="grid-header" style="width:100%">
 			<label>Purchase Entry </label><span id="totalAmount"></span>
 		</div>
+		 <div class="screenlet-body" >
+		<table width="50%" border="0" cellspacing="0" cellpadding="0">
+				<tr><td><br/></td></tr>
+		        <tr>
+       				<td align='left' valign='middle' nowrap="nowrap"><div class='h3'>MRN No.: </div></td>
+		         	<td valign='middle' align='left'> 
+             			<input class='h3' type="text" size="25" maxlength="25" name="mrnNumber" id="mrnNumber"/>          
+          			</td>
+          			<td>&nbsp;&nbsp;&nbsp;</td>
+          			<td align='left' valign='middle' nowrap="nowrap"><div class='h3'>PO No.: </div></td>
+		         	<td valign='middle' align='left'> 
+             			<input class='h3' type="text" size="25" maxlength="25" name="PONumber" id="PONumber"/>          
+          			</td>
+          			<td>&nbsp;&nbsp;&nbsp;</td>
+          			<td align='left' valign='middle' nowrap="nowrap"><div class='h3'>SUP Invoice No.: </div></td>
+		         	<td valign='middle' align='left'> 
+             			<input class='h3' type="text" size="25" maxlength="25" name="SInvNumber" id="SInvNumber"/>          
+          			</td>
+ 		       </tr>
+ 		       <tr><td><br/></td></tr>
+ 		        <tr>
+		        	<td align='left' valign='middle' nowrap="nowrap"><div class='h3'>Freight Charges: </div></td>
+       				<td valign='middle' align='left'> 
+           				<input class='h3' type="text" size="25" maxlength="25" name="freightCharges" id="freightCharges"/>          
+       				</td>
+       				<td>&nbsp;&nbsp;&nbsp;</td>
+       				<td align='left' valign='middle' nowrap="nowrap"><div class='h3'>Discount: </div></td>
+		         	<td valign='middle' align='left'> 
+             			<input class='h3' type="text" size="25" maxlength="25" name="discount" id="discount"/>          
+          			</td>
+ 		       </tr>
+ 		        <tr><td><br/></td></tr>
+        	</table>
+		</div>
 			<div id="myGrid1" style="width:100%;height:350px;"></div>
 			  
 			<#assign formAction =''>			
