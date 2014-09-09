@@ -123,10 +123,12 @@ $(document).ready(function() {
     datatable2.fnSort([[3,'desc']]);
     
     $('#btnAddNewRow').click(function () {
-         
-           var  punchDate = new Date($("#punchDate").val());
+			var parts = $("#punchDate").val().split("/");
+			var punchDate = new Date(parseInt(parts[2], 10),
+                  parseInt(parts[1], 10) - 1,
+                  parseInt(parts[0], 10));         
   			$("#punchdate").val(punchDate.getFullYear() + "-" + (punchDate.getMonth() + 1) + "-"+punchDate.getDate());
-  			alert($("input[name=employeeId]").val());
+  			//alert($("input[name=employeeId]").val());
             $("#partyId").val($("input[name=employeeId]").val());
            
       });
