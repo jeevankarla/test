@@ -742,7 +742,7 @@
     	</actions>
     	<field name="partyId" title="EmployeeId"><display/></field>
     	<field name="seqId"><hidden/></field>
-    	<field name="date" title="Date"><display/></field>
+    	<field name="date" title="Date"><display description="${groovy:org.ofbiz.base.util.UtilDateTime.toDateString(date,&quot;dd-MM-yyyy&quot;);}"/></field>
     	<field name="timePeriodId"><hidden/></field>
     	<field name="encashmentStatus">
     	<drop-down allow-empty="true">
