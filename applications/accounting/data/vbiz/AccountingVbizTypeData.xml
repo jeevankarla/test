@@ -715,4 +715,18 @@
       <PaymentMethodType  paymentMethodTypeId="CHEQUE_PAYOUT" parentTypeId="BANK"/>
       <PaymentMethodType description="Debit Note" paymentMethodTypeId="DEBITNOTE"  />
       <PaymentMethod  description="Debit Note" finAccountId="DEBITNOTE" fromDate="2011-07-12 00:00:00.0" glAccountId="659003"  partyId="Company" paymentMethodId="DEBITNOTE" paymentMethodTypeId="DEBITNOTE"/>
+
+ <PaymentMethodType description="Cash Payments" paymentMethodTypeId="CASH"  />
+ <PaymentMethodType  description="CSH"  paymentMethodTypeId="CASH_PAYOUT" parentTypeId="CASH"/>
+
+<PaymentMethodType  description="Money Equivalent"  paymentMethodTypeId="MONEY"/>
+<PaymentMethodType  description="Statutory Funds"  paymentMethodTypeId="STATUTORY"/>
+<PaymentMethodType  description="Service Tax Invoice"  parentTypeId="STATUTORY" paymentMethodTypeId="SERVICETAX_PAYINOUT"/>
+<PaymentMethodType  description="Tds Certificate Due"   parentTypeId="STATUTORY" paymentMethodTypeId="TDS_CERT_PAYINOUT"/>
+<PaymentMethodType  description="VAT Invoice"   parentTypeId="STATUTORY" paymentMethodTypeId="VAT_PAYINOUT"/>
+<PaymentMethodType  description="CHQ"   parentTypeId="MONEY" paymentMethodTypeId="CHEQUE_PAYIN"/>
+<PaymentMethodType  description="CHL"  parentTypeId="MONEY" paymentMethodTypeId="CHALLAN_PAYIN"/>
+<PaymentMethodType  description="FUND TRANSFER"  parentTypeId="MONEY" paymentMethodTypeId="FUND_TRANSFER"/>
+<PaymentMethodType  description="CSH"   parentTypeId="MONEY" paymentMethodTypeId="CASH_PAYIN"/>
+
 </entity-engine-xml>
