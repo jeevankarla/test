@@ -53,11 +53,24 @@ under the License.
     <SecurityGroupPermission groupId="FULLADMIN" permissionId="EMP_LOP_EDIT_UPDATE"/>
     <SecurityGroupPermission groupId="EMP_LOP_EDIT" permissionId="EMP_LOP_EDIT_UPDATE"/> 
     
-    <SecurityGroup description="Employee PUNCH Edit" groupId="EMP_PUNCH_EDIT"></SecurityGroup>
-    <SecurityPermission description=" employee previous day punch edit Permission." permissionId="EMP_PUNCH_EDIT_UPDATE"/>
     
-    <SecurityGroupPermission groupId="FULLADMIN" permissionId="EMP_PUNCH_EDIT_UPDATE"/>
+    <SecurityPermission description=" employee previous day punch edit Permission." permissionId="EMP_PUNCH_EDIT_UPDATE"/>
+    <SecurityPermission description=" employee previous day ood punch edit Permission." permissionId="EMP_PUNCH_OOD_UPDATE"/>
+    
+    <SecurityPermission description="delete EmplPunch punch Permission." permissionId="EMP_PUNCH_EDIT_REMOVE"/>
+    <SecurityGroup description="Employee PUNCH Edit" groupId="EMP_PUNCH_EDIT"></SecurityGroup>
     <SecurityGroupPermission groupId="EMP_PUNCH_EDIT" permissionId="EMP_PUNCH_EDIT_UPDATE"/>
+    
+    <SecurityGroup description="Employee PUNCH delete or Remove" groupId="EMP_PUNCH_DELETE"></SecurityGroup>
+    <SecurityGroupPermission groupId="EMP_PUNCH_DELETE" permissionId="EMP_PUNCH_EDIT_REMOVE"/>
+    
+    
+    <SecurityGroup description="Employee OOD PUNCH Edit" groupId="EMP_PUNCH_OOD_EDIT"></SecurityGroup>
+    <SecurityGroupPermission groupId="EMP_PUNCH_OOD_EDIT" permissionId="EMP_PUNCH_OOD_UPDATE"/>
+    
+    <SecurityGroupPermission groupId="FULLADMIN" permissionId="EMP_PUNCH_OOD_UPDATE"/>
+    <SecurityGroupPermission groupId="FULLADMIN" permissionId="EMP_PUNCH_EDIT_UPDATE"/>
+    <SecurityGroupPermission groupId="FULLADMIN" permissionId="EMP_PUNCH_EDIT_REMOVE"/>
     
     <SecurityGroup description="Entering Daily Bus Timings" groupId="HR_DAILYBUS_VIEW"/>
     <SecurityGroupPermission groupId="FULLADMIN" permissionId="HUMANRES_BUSTIMING_CREATE"/>

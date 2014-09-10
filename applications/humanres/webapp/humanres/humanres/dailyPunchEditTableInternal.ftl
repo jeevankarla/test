@@ -54,6 +54,7 @@ $(document).ready(function() {
 	         sRowParamId: "employeePunchId",
              sAddURL: "emplPunchJson",
              sAddHttpMethod: "POST",
+             sDeleteRowButtonId: "deletePunchRow",
              sDeleteHttpMethod: "POST",
 			 sDeleteURL: "deletePunchJson",
              "aoColumns": [ { },
@@ -84,7 +85,6 @@ $(document).ready(function() {
 	        					submit:'Save changes'
 	    				  },
 	    				  {
-	    				    readOnly: 'true',
 	    				    width: '80',
 	    				    height : '20'
 	    				    
@@ -128,15 +128,19 @@ $(document).ready(function() {
                   parseInt(parts[1], 10) - 1,
                   parseInt(parts[0], 10));         
   			$("#punchdate").val(punchDate.getFullYear() + "-" + (punchDate.getMonth() + 1) + "-"+punchDate.getDate());
+  			$("#punchdate_dis").val(punchDate.getDate() + "/" + (punchDate.getMonth() + 1) + "/" +punchDate.getFullYear());
+  			
             $("#partyId").val($("select[name=employeeId]").val());
             $("#emplName").val($("#employeeId option:selected").text());
             setTimepicker();
            
       });
+      
     $("input[name=employeeId]").attr("required",true);
-    
-  
-    
+    $("#deletePunchRow").hide();
+   <#if (security.hasEntityPermission("EMP_PUNCH_EDIT", "_REMOVE", session))>  
+     	$("#deletePunchRow").show();
+   </#if> 
 });	
 </script>
  
@@ -147,11 +151,12 @@ $(document).ready(function() {
       	<h3>Attendance Punch-In Details for ${punchDate?date}</h3>	
      </div>
     <div class="screenlet-body">
-   <#if (security.hasEntityPermission("HUMANRES", "_ADMIN", session))>
-      <form id='editAdminPunch' action='adminPunch' method='post'>
+ <#if (security.hasEntityPermission("HUMANRES", "_ADMIN", session) || security.hasEntityPermission("EMP_PUNCH_EDIT", "_UPDATE", session))>
+    <form id='editAdminPunch' action='adminPunch' method='post'>
      <table cellspacing=10  cellpadding=20>
         <input type='hidden' value="" name='employeePunchId'  rel="0"/>
-        <input type='hidden' value="Y" name='emplName' id="emplName" rel="3"/> 
+        <input type='hidden' value="Y" name='emplName' id="emplName" rel="3"/>
+        <input type='hidden'  name='punchdate' id='punchdate' size='10' />
         <input type='hidden' value="Y" name='isManual'/> 		
 		<tr class='h3'>
 			<td align='left' class='h3' width='30%'>Employee Id:</td>
@@ -189,7 +194,7 @@ $(document).ready(function() {
 			</select></td></tr>
 			<tr class='h3'>
 				<td align='left' class='h3' width='40%'>Date:</td><td align='left' class='h3' width='40%'>
-					<input type='text'  name='punchdate' id='punchdate' size='10' rel="1" readonly />
+					<input type='text'  name='punchdate_dis' id='punchdate_dis' size='10' rel="1" readonly />
 				</td></tr>
 			<tr class='h3'>
 				<td align='left' class='h3' width='40%'>Punch Time:</td>
@@ -197,7 +202,7 @@ $(document).ready(function() {
 				<input type='text'  value="" name='punchtime' id='punchtime' size='10' required  rel="4" />HH:MM:SS</tr>
 			
 			<tr class='h3'>
-				<td align='left' class='h3' width='40%'>Note:</td><td align='left' class='h3' width='40%'><input  type='textarea' value='' name='Note' rel="7"></td>
+				<td align='left' class='h3' width='40%'>Note:</td><td align='left' class='h3' width='40%'><input  type='textarea' value='' name='Note' rel="7" required></td>
 			</tr>
 			<tr class='h3'>
 				<td align='left' class='h3' width='40%'></td>
