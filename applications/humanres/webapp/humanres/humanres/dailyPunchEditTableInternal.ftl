@@ -31,7 +31,7 @@ $(document).ready(function() {
 			{ "title": "Note"},
 			{ "title": "Shift Type"}],
 		"aoColumns": [
-			{ "sTitle": "employeePunchId" },
+			{ "sTitle": "employeePunchId"},
 			{ "sTitle": "Punch Date" },
 			{ "sTitle": "Employee Id" },			
 			{ "sTitle": "Employee Name" },
@@ -84,7 +84,9 @@ $(document).ready(function() {
 	        					submit:'Save changes'
 	    				  },
 	    				  {
-	    				    onblur: 'ignore'
+	    				    readOnly: 'true',
+	    				    width: '80',
+	    				    height : '20'
 	    				    
 	    				  }
 				],
@@ -127,6 +129,7 @@ $(document).ready(function() {
                   parseInt(parts[0], 10));         
   			$("#punchdate").val(punchDate.getFullYear() + "-" + (punchDate.getMonth() + 1) + "-"+punchDate.getDate());
             $("#partyId").val($("select[name=employeeId]").val());
+            $("#emplName").val($("#employeeId option:selected").text());
             setTimepicker();
            
       });
@@ -147,6 +150,7 @@ $(document).ready(function() {
       <form id='editAdminPunch' action='adminPunch' method='post'>
      <table cellspacing=10  cellpadding=20>
         <input type='hidden' value="" name='employeePunchId'  rel="0"/>
+        <input type='hidden' value="Y" name='emplName' id="emplName" rel="3"/> 
         <input type='hidden' value="Y" name='isManual'/> 		
 		<tr class='h3'>
 			<td align='left' class='h3' width='30%'>Employee Id:</td>
@@ -175,7 +179,11 @@ $(document).ready(function() {
 				<td align='left' class='h3' width='40%'>Shift Type:</td>
 				<td align='left' class='h3' width='40%'><select name='shiftType'  allow-empty='false' id='shiftType' class='h4' rel="8">
 	              		<#list shiftTypeList as stl>
-	              		    <option value='${stl.shiftTypeId}' >${stl.shiftTypeId?if_exists}</option>
+	              		     <#if stl.shiftTypeId=="SHIFT_GEN">
+	              		            <option value='${stl.shiftTypeId}' selected>${stl.shiftTypeId?if_exists}</option>
+	              		         <#else>
+	              		           <option value='${stl.shiftTypeId}' >${stl.shiftTypeId?if_exists}</option>
+	              		     </#if>
 	              		</#list>          
 			</select></td></tr>
 			<tr class='h3'>

@@ -86,7 +86,7 @@ $("#punchDate").val(currentDate.getDate() + "/" + (currentDate.getMonth() + 1) +
      		$('#result').hide(); 
 	        $.get(  
             "${ajaxUrl}",  
-            { punchDate: $("#punchDate").val()},  
+            { punchDate: $("#punchDate").val(), partyId : $("#employeeId").val() },  
             function(responseText){  
                 $("#result").html(responseText); 
 				var reponse = jQuery(responseText);
@@ -100,7 +100,11 @@ $("#punchDate").val(currentDate.getDate() + "/" + (currentDate.getMonth() + 1) +
         );  
         
 	// also set the click handler
-  	$("#getAttendanceTable").click(function(){  
+  	$("#getAttendanceTable").click(function(){
+  	    if($("#employeeId").val() ==""){
+  	       return false;
+  	    }
+  	    
   	    $('#loader').show();
      	$('#result').hide(); 
   	    
@@ -123,6 +127,7 @@ $("#punchDate").val(currentDate.getDate() + "/" + (currentDate.getMonth() + 1) +
     
      var employees = ${StringUtil.wrapString(employeesJSON!'[]')};
   //alert("employees="+employees);
+   $("#employeeId").append('<option value="#"></option>');
   $.each(employees, function(key, val){
     $("#employeeId").append('<option value="' + val.employeeId + '">' + val.name + " [" + val.employeeId + "]" + '</option>');
   });
@@ -138,7 +143,7 @@ function setTimepicker(){
        //alert("hi");
 		$('#punchtime').timepicker({ 
 		showSecond: true,	
-		timeFormat: 'hh:mm:ss',
+		timeFormat: 'hh:mm:00',
 		showOn: 'button',
 	        buttonImage: '/vasista/images/cal.gif',
 	 });
