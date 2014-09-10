@@ -79,6 +79,6 @@ for (GenericValue hit : hitList) {
 	hitsListJSON.add(hitJSON);
 }
 
-Debug.logError("hitsListJSON="+hitsListJSON,"");
+//Debug.logError("hitsListJSON="+hitsListJSON,"");
 context.hitsDate = hitsDate
 context.hitsListJSON = hitsListJSON;

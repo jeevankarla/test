@@ -36,6 +36,6 @@ while (iterTime <= endTime) {
 	iterTime = UtilDateTime.addDaysToTimestamp(iterTime, 1);
 }
 
-Debug.logInfo("listJSON="+listJSON, "");
+//Debug.logInfo("listJSON="+listJSON, "");
 context.listJSON=listJSON;
 
