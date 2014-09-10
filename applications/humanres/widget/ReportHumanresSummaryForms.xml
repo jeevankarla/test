@@ -716,6 +716,13 @@
 	    <field name="lateMin" title="Late Minutes"><display/></field>
 	    <field name="customTimePeriodId"><hidden/></field>
 	    <field name="overrideLateMin" title="Edit Late Minutes"><text size="10"/></field>
+	    <field name="overrideReason" title="Remarks" widget-style="required">
+	    	<drop-down allow-empty="false">
+    		<entity-options entity-name="Enumeration" key-field-name="enumId" description="${description}">
+    			<entity-constraint name="enumTypeId" operator="equals" value="LATE_REASON"/>
+    		</entity-options>
+    	</drop-down>
+	    </field>
 	    <!-- <field name="extraMin" title="Extra Minutes"><display/></field>-->
 	     <field name="submitButton" title="${uiLabelMap.CommonUpdate}"><submit button-type="button"/></field>
     </form>

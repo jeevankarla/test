@@ -1526,6 +1526,7 @@ under the License.
 	  <field name="extraMin" type="fixed-point"/>
 	  <field name="encashmentStatus" type="id"/>
 	  <field name="emplLeaveApplId" type="id"/>
+	  <field name="overrideReason" type="id"></field>
 	  <prim-key field="partyId"/>
 	  <prim-key field="date"/>
 	  <prim-key field="seqId"/>

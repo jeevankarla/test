@@ -3253,9 +3253,11 @@ public class PayrollService {
 	      String partyId = (String) context.get("partyId");
 	      Date date=(Date)context.get("date");
 	      String timePeriodId = (String)context.get("timePeriodId");
+	      String overrideReason= (String)context.get("overrideReason");
 	      String encashmentStatus=(String) context.get("encashmentStatus");
 	      BigDecimal overrideLateMin=(BigDecimal)context.get("overrideLateMin");
 	      Map result = ServiceUtil.returnSuccess();
+	      
 	      try{
   				String userId= (String) userLogin.get("userLoginId");
   				List conditionList = FastList.newInstance();
@@ -3266,6 +3268,7 @@ public class PayrollService {
   				for (int i = 0; i < EmplDailyAttendanceDetail.size(); ++i) {
   					GenericValue DailyAttendanceDetail = EmplDailyAttendanceDetail.get(i);
   					DailyAttendanceDetail.set("overrideLateMin",overrideLateMin);
+  					DailyAttendanceDetail.set("overrideReason",overrideReason);
   					DailyAttendanceDetail.set("overridenBy", userId);
   					DailyAttendanceDetail.store();
   				}
