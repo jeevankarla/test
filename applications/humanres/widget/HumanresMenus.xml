@@ -81,7 +81,10 @@
         </menu-item>
         <menu-item name="Attendance" title="Attendance">
         	<condition>
-            	<if-has-permission permission="HR"  action="_ATTENDANCE_VIEW"/>
+        	   <or>
+	              <if-has-permission permission="HR"  action="_ATTENDANCE_VIEW"/>
+	              <if-has-permission permission="EMP"  action="_PUNCH_EDIT_UPDATE"/>
+            	</or>
             </condition> 
             <link target="DailyPunch"/>
         </menu-item>     
@@ -99,7 +102,7 @@
         </menu-item>
          <menu-item name="DailyPunchEditTable" title="Daily Punch Edit Details"> 
             <condition>
-            	<if-has-permission permission="HR"  action="_ATTENDANCE_VIEW"/>
+            	<if-has-permission permission="EMP"  action="_PUNCH_EDIT_UPDATE"/>
             </condition> 
         	<link target="DailyPunchEditTable"/>
         </menu-item>
@@ -114,10 +117,10 @@
         			<link target="AttendanceFinalization"></link>
         </menu-item>     
         <menu-item name="EditLateHours" title="Edit Late Hours">
-        <link target="EditLateHours"></link>
+        	<link target="EditLateHours"></link>
         </menu-item>
         <menu-item name="EditHolidays" title="Approval Holidays">
-        <link target="EditHolidays"></link>
+        	<link target="EditHolidays"></link>
         </menu-item>                         
     </menu>	 	
 	<menu name="AnalyticsTabBar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml" 
