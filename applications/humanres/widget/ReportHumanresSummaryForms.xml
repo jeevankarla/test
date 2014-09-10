@@ -716,8 +716,8 @@
 	    <field name="lateMin" title="Late Minutes"><display/></field>
 	    <field name="customTimePeriodId"><hidden/></field>
 	    <field name="overrideLateMin" title="Edit Late Minutes"><text size="10"/></field>
-	    <field name="overrideReason" title="Remarks" widget-style="required">
-	    	<drop-down allow-empty="false">
+	    <field name="overrideReason" title="Remarks" required-field="true" widget-style="required">
+	    	<drop-down allow-empty="true">
     		<entity-options entity-name="Enumeration" key-field-name="enumId" description="${description}">
     			<entity-constraint name="enumTypeId" operator="equals" value="LATE_REASON"/>
     		</entity-options>
