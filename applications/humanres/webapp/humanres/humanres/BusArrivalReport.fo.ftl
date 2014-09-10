@@ -17,7 +17,7 @@
 	        		<fo:block  keep-together="always" text-align="center" font-family="Courier,monospace" white-space-collapse="false" font-weight="bold">&#160;      ${uiLabelMap.KMFDairyHeader}</fo:block>
 					<fo:block  keep-together="always" text-align="center" font-family="Courier,monospace" white-space-collapse="false" font-weight="bold">&#160;      ${uiLabelMap.KMFDairySubHeader}</fo:block>
 	        		<fo:block  keep-together="always" text-align="center" font-family="Courier,monospace" white-space-collapse="false" font-weight="bold">&#160;      </fo:block>
-	        		<fo:block text-align="left" keep-together="always" white-space-collapse="false">&#160;                BUS LATE ARRIVAL DETAILS REPORT FROM ${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(fromDate, "dd/MM/yyyy")} TO ${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(thruDate, "dd/MM/yyyy")}        </fo:block>	
+	        		<fo:block text-align="left" keep-together="always" white-space-collapse="false">&#160;                   BUS ARRIVAL REPORT FROM ${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(fromDate, "dd/MM/yyyy")} TO ${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(thruDate, "dd/MM/yyyy")}        </fo:block>	
 	        		<fo:block  keep-together="always" text-align="center" font-family="Courier,monospace" white-space-collapse="false" font-weight="bold">&#160;      </fo:block> 
 	        		<fo:block text-align="left" keep-together="always" white-space-collapse="false">&#160;                                                                DATE: ${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(nowTimestamp, "dd-MMM-yyyy")}</fo:block>	 
 	        		<fo:block text-align="left" keep-together="always" white-space-collapse="false">&#160;                                                                PAGE: <fo:page-number/></fo:block>	 	 	  	 	  
@@ -29,7 +29,7 @@
 		                	<fo:table-column column-width="200pt"/>
 		                    <fo:table-column column-width="120pt"/>
 		                    <fo:table-column column-width="150pt"/>                
-		                    <fo:table-column column-width="150pt"/>
+		                    <fo:table-column column-width="170pt"/>
 	                		<fo:table-body> 
 	                     		<fo:table-row >
 		                            <fo:table-cell >	
@@ -54,29 +54,32 @@
 	                   			<#list busArrivalMap as busArrivalDetails>
 	                   				<#assign busArrivalValues=busArrivalDetails.getValue().entrySet()>
 	                   				<#list busArrivalValues as busArrivalTimings>
-		                   				<fo:table-row >
-					                   		<fo:table-cell >	
-			                            		<fo:block keep-together="always" text-align="left" font-size="15pt">${busArrivalDetails.getKey()?if_exists}</fo:block>
-			                            	</fo:table-cell>
-			                            	<fo:table-cell >	
-			                            		<fo:block keep-together="always" text-align="left" font-size="15pt">${busArrivalTimings.getKey()?if_exists}</fo:block>
-			                            	</fo:table-cell>
-			                            	<fo:table-cell >	
-			                            		<fo:block keep-together="always" text-align="right" font-size="15pt">${busArrivalTimings.getValue().get("shiftTime")?if_exists?string("HH:mm")}</fo:block>
-			                            	</fo:table-cell>
-			                            	<fo:table-cell >	
-			                            		<fo:block keep-together="always" text-align="right" font-size="15pt">${busArrivalTimings.getValue().get("arrivalTime")?if_exists?string("HH:mm")}</fo:block>
-			                            	</fo:table-cell>
-			                            	<#assign noofLines=noofLines+1>
-			                            </fo:table-row>
-			                            <#if (noofLines >= 31)>
-				                     		<#assign noofLines=1>
-					                     	<fo:table-row>
-				                            	<fo:table-cell >	
-				                            		<fo:block page-break-after="always"></fo:block>
+	                   					<#assign busRouteValues=busArrivalTimings.getValue().entrySet()>
+	                   					<#list busRouteValues as busRouteDetails>
+			                   				<fo:table-row >
+						                   		<fo:table-cell >	
+				                            		<fo:block keep-together="always" text-align="left" font-size="15pt">${busArrivalDetails.getKey()?if_exists}</fo:block>
 				                            	</fo:table-cell>
+				                            	<fo:table-cell >	
+				                            		<fo:block keep-together="always" text-align="left" font-size="15pt">${busArrivalTimings.getKey()?if_exists}</fo:block>
+				                            	</fo:table-cell>
+				                            	<fo:table-cell >	
+				                            		<fo:block keep-together="always" text-align="right" font-size="15pt">${busRouteDetails.getValue().get("shiftTime")?if_exists?string("HH:mm")}</fo:block>
+				                            	</fo:table-cell>
+				                            	<fo:table-cell >	
+				                            		<fo:block keep-together="always" text-align="right" font-size="15pt">${busRouteDetails.getValue().get("arrivalTime")?if_exists?string("HH:mm")}</fo:block>
+				                            	</fo:table-cell>
+				                            	<#assign noofLines=noofLines+1>
 				                            </fo:table-row>
-				                        </#if>
+				                            <#if (noofLines >= 31)>
+					                     		<#assign noofLines=1>
+						                     	<fo:table-row>
+					                            	<fo:table-cell >	
+					                            		<fo:block page-break-after="always"></fo:block>
+					                            	</fo:table-cell>
+					                            </fo:table-row>
+					                        </#if>
+					                   	</#list>
 			                      	</#list>
 			                      	<fo:table-row >
 				                   		<fo:table-cell >	
