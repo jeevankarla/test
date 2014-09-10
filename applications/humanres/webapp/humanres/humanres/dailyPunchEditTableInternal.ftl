@@ -103,6 +103,7 @@ $(document).ready(function() {
 										show: "blind",
 										hide: "explode",
                                         modal: true,
+                                        draggable: false
 									},
 			 fnOnDeleting: function (tr, id, fnDeleteRow) {
 
