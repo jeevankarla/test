@@ -52,3 +52,18 @@
       <InvoiceItemTypeMap invoiceTypeId="PURCHASE_INVOICE" invoiceItemMapKey="PURIN_MAP_BED" invoiceItemTypeId="BED_PUR"/>
     
     
+     <OrderAdjustmentType orderAdjustmentTypeId="COGS_ITEM16" hasTable="N" parentTypeId="" description="FREIGHT CHARGES On Purchase"/>
+     <OrderAdjustmentType orderAdjustmentTypeId="COGS_ITEM17" hasTable="N" parentTypeId="" description="DISCOUNTS On Purchase"/>
+     
+    <InvoiceItemType defaultGlAccountId="510000" description="FREIGHT CHARGES" hasTable="N" invoiceItemTypeId="COGS_ITEM16"/>
+    <InvoiceItemType defaultGlAccountId="511100" description="DISCOUNTS" hasTable="N" invoiceItemTypeId="COGS_ITEM17"/>
+    <GlAccountOrganization  glAccountId="510000"  organizationPartyId="Company"/>
+    <GlAccountOrganization  glAccountId="511100"  organizationPartyId="Company"/>
+      
+    <InvoiceItemTypeMap  invoiceItemMapKey="COGS_ITEM16" invoiceItemTypeId="COGS_ITEM16" invoiceTypeId="PURCHASE_INVOICE"  organizationPartyId="Company"/>
+    <InvoiceItemTypeMap  invoiceItemMapKey="COGS_ITEM17" invoiceItemTypeId="COGS_ITEM17" invoiceTypeId="PURCHASE_INVOICE"  organizationPartyId="Company"/> 
+    
+    <InvoiceItemType  defaultGlAccountId="" description="Invoice Raw Material or Purchase Item" hasTable="N" invoiceItemTypeId="INV_RAWPROD_ITEM"  parentTypeId="INV_PROD_ITEM"/>
+    <InvoiceItemTypeMap  invoiceItemMapKey="RAW_MATERIAL" invoiceItemTypeId="INV_RAWPROD_ITEM" invoiceTypeId="PURCHASE_INVOICE" /> 
+     
+      
