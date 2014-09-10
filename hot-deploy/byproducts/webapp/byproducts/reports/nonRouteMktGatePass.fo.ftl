@@ -353,7 +353,7 @@ under the License.
 														</fo:table-row>
 														<fo:table-row border-style="solid">
 			                    							<fo:table-cell number-columns-spanned="7" >
-					            								<fo:block  keep-together="always" text-align="left" font-size="12pt" white-space-collapse="false" font-weight="bold">(In Words:${Static["org.ofbiz.base.util.UtilNumber"].formatRuleBasedAmount(Static["java.lang.Double"].parseDouble(totalAmount?string("#0.00")), "%rupees-and-paise", locale).toUpperCase()} ONLY)</fo:block>
+					            								<fo:block  text-align="left" font-size="12pt" white-space-collapse="false" font-weight="bold" wrap-option="wrap">(In Words:${Static["org.ofbiz.base.util.UtilNumber"].formatRuleBasedAmount(Static["java.lang.Double"].parseDouble(totalAmount?string("#0.00")), "%rupees-and-paise", locale).toUpperCase()} ONLY)</fo:block>
 					            							</fo:table-cell>
 														</fo:table-row>
 													</#if>
