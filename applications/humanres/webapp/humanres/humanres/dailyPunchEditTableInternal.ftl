@@ -118,7 +118,7 @@ $(document).ready(function() {
 			sAddDeleteToolbarSelector: ".dataTables_length"
 	        
 	});	
-    datatable2.fnSort([[3,'desc']]);
+    datatable2.fnSort([[4,'desc']]);
     
     $('#btnAddNewRow').click(function () {
 			var parts = $("#punchDate").val().split("/");
