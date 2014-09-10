@@ -147,6 +147,7 @@ $(document).ready(function() {
       	<h3>Attendance Punch-In Details for ${punchDate?date}</h3>	
      </div>
     <div class="screenlet-body">
+   <#if (security.hasEntityPermission("HUMANRES", "_ADMIN", session))>
       <form id='editAdminPunch' action='adminPunch' method='post'>
      <table cellspacing=10  cellpadding=20>
         <input type='hidden' value="" name='employeePunchId'  rel="0"/>
@@ -205,6 +206,7 @@ $(document).ready(function() {
 		</table>
 		
  </form>
+ </#if>
     <div id="attendanceTable"> 
             
     	</div>
