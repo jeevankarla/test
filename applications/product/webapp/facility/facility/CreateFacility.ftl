@@ -258,14 +258,14 @@ function makeDatePicker(fromDateId ,thruDateId){
 					   <tr>
 				        <td class="label"><b> Booth Name*</b></td>
 				        <td>
-        		 			<input class="h3" type="text" size="18" maxlength="20" name="facilityName" id="facilityName"  />
+        		 			<input class="h3" type="text" size="18" maxlength="100" name="facilityName" id="facilityName"  />
           				</td>
 				        </tr>
 				        <tr>
 				        <tr>
 				            <td class="label"><b> Description</b></td>
 				            <td>
-	        				   <input class="h3" type="text" size="18" maxlength="20" name="description" id="description"  />
+	        				   <input class="h3" type="text" size="18" maxlength="255" name="description" id="description"  />
 	          				</td>
 				        </tr>
 				         <tr>
