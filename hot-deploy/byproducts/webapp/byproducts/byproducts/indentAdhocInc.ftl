@@ -281,12 +281,13 @@
 		
 		var columns = [
 			{id:"cProductName", name:"Product", field:"cProductName", width:180, minWidth:180, cssClass:"cell-title", availableTags: availableTags, regexMatcher:"contains" ,editor: AutoCompleteEditor, validator: productValidator, sortable:false ,toolTip:""},
-			{id:"quantity", name:"Qty(Pkt)", field:"quantity", width:70, minWidth:70, cssClass:"cell-title",editor:FloatCellEditor, sortable:false , formatter: quantityFormatter,  validator: quantityValidator},
 			<#if changeFlag?exists && changeFlag == "IcpSales" || changeFlag == "IcpSalesAmul" || changeFlag == "IcpSalesBellary">
 				{id:"crQuantity", name:"Qty(Crt)", field:"crQuantity", width:60, minWidth:60, cssClass:"cell-title",editor:FloatCellEditor, sortable:false, formatter: quantityFormatter},
+				{id:"quantity", name:"Qty(Pkt)", field:"quantity", width:70, minWidth:70, cssClass:"cell-title",editor:FloatCellEditor, sortable:false , formatter: quantityFormatter,  validator: quantityValidator},
 				{id:"batchNo", name:"Batch Number", field:"batchNo", width:65, minWidth:65, sortable:false, editor:TextCellEditor},
 			<#elseif changeFlag?exists && changeFlag == "DepotSales" || changeFlag == "FgsSales" || changeFlag == "InterUnitTransferSale">
 				{id:"ltrQuantity", name:"Ltr/KG Qty", field:"ltrQuantity", width:65, minWidth:65, sortable:false, editor:FloatCellEditor},
+				{id:"quantity", name:"Qty(Pkt)", field:"quantity", width:70, minWidth:70, cssClass:"cell-title",editor:FloatCellEditor, sortable:false , formatter: quantityFormatter,  validator: quantityValidator},
 				{id:"daysToStore", name:"Days", field:"daysToStore", width:70, minWidth:70, cssClass:"cell-title",editor:FloatCellEditor, sortable:false , formatter: quantityFormatter,  validator: quantityValidator , toolTip:"Days To Preserve(For Storage Charges)"},
 			</#if>
 			
@@ -402,7 +403,7 @@
       		grid.render();
     	});
         grid.onCellChange.subscribe(function(e,args) {
-        	if (args.cell == 0 || args.cell == 1) {
+        	if (args.cell == 2) {
 				var prod = data[args.row]["cProductId"];
 				var qty = parseFloat(data[args.row]["quantity"]);
 				var prodConversionData = conversionData[prod];
@@ -454,21 +455,34 @@
 				data[args.row]["amount"] = roundedAmount;
 				grid.updateRow(args.row);
 				var totalAmount = 0;
+				var totalCrates = 0;
 				for (i = 0; i < data.length; i++) {
+					totalAmount += data[i]["amount"];
+					<#if changeFlag?exists && changeFlag == "IcpSales" || changeFlag == "IcpSalesAmul" || changeFlag == "IcpSalesBellary">
+						totalCrates += data[i]["crQuantity"];
+					</#if>
 					totalAmount += data[i]["amount"];
 				}
 				var amt = parseFloat(Math.round((totalAmount) * 100) / 100);
-			
+				var dispText = "";
 				if(amt > 0 ){
-					var dispText = "<b>  [Invoice Amt: Rs " +  amt + "]</b>";
+					dispText = "<b>  [Invoice Amt: Rs " +  amt + "]</b>";
 				}
 				else{
-					var dispText = "<b>  [Invoice Amt: Rs 0 ]</b>";
+					dispText = "<b>  [Invoice Amt: Rs 0 ]</b>";
 				}
+				<#if changeFlag?exists && changeFlag == "IcpSales" || changeFlag == "IcpSalesAmul" || changeFlag == "IcpSalesBellary">
+					if(totalCrates > 0 ){
+						dispText += "&emsp;&emsp;&emsp;&emsp;&emsp;<b>  [Total Crates: " +  totalCrates + "]</b>";
+					}
+					else{
+						dispText += "&emsp;&emsp;&emsp;&emsp;&emsp;<b>  [Total Crates: Rs 0 ]</b>";
+					}
+				</#if>
 				jQuery("#totalAmount").html(dispText);
 			}
 			
-			if (args.cell == 2) {
+			if (args.cell == 0 || args.cell == 1) {
 				var prod = data[args.row]["cProductId"];
 				var calcQty = 0;
 				<#if changeFlag?exists && changeFlag == "IcpSales" || changeFlag == "IcpSalesAmul" || changeFlag == "IcpSalesBellary">
@@ -527,17 +541,29 @@
 				data[args.row]["amount"] = roundedAmount;
 				grid.updateRow(args.row);
 				var totalAmount = 0;
+				var totalCrates = 0;
 				for (i = 0; i < data.length; i++) {
 					totalAmount += data[i]["amount"];
+					<#if changeFlag?exists && changeFlag == "IcpSales" || changeFlag == "IcpSalesAmul" || changeFlag == "IcpSalesBellary">
+						totalCrates += data[i]["crQuantity"];
+					</#if>
 				}
 				var amt = parseFloat(Math.round((totalAmount) * 100) / 100);
-			
+				var dispText = "";
 				if(amt > 0 ){
-					var dispText = "<b>  [Invoice Amt: Rs " +  amt + "]</b>";
+					dispText = "<b>  [Invoice Amt: Rs " +  amt + "]</b>";
 				}
 				else{
-					var dispText = "<b>  [Invoice Amt: Rs 0 ]</b>";
+					dispText = "<b>  [Invoice Amt: Rs 0 ]</b>";
 				}
+				<#if changeFlag?exists && changeFlag == "IcpSales" || changeFlag == "IcpSalesAmul" || changeFlag == "IcpSalesBellary">
+					if(totalCrates > 0 ){
+						dispText += "&emsp;&emsp;&emsp;&emsp;&emsp;<b>  [Total Crates: " +  totalCrates + "]</b>";
+					}
+					else{
+						dispText += "&emsp;&emsp;&emsp;&emsp;&emsp;<b>  [Total Crates: Rs 0 ]</b>";
+					}
+				</#if>
 				jQuery("#totalAmount").html(dispText);
 			}
 			
@@ -571,7 +597,6 @@
 			for(var i=0;i<data.length;i++){
 				var qty = parseFloat(data[i]["quantity"]);
 				var prod = data[i]["cProductId"];
-				
 				var prodConversionData = conversionData[prod];
 				var convValue = 0;
 				<#if changeFlag?exists && changeFlag == "IcpSales" || changeFlag == "IcpSalesAmul" || changeFlag == "IcpSalesBellary">
@@ -582,15 +607,9 @@
 				</#if>
 				
 				var udp = data[i]['basicPrice'];
-				var price = 0;
-				if(udp){
-					var basic_price = data[i]['basicPrice'];
-					var vat_price = data[i]['vatPrice'];
-					var cst_price = data[i]['cstPrice'];
-					var bed_price = data[i]['bedPrice'];
-					var serviceTax_price = data[i]['serviceTaxPrice'];
-					var totalPrice = basic_price+vat_price+cst_price+bed_price+serviceTax_price;
-					price = totalPrice;
+				var price = parseFloat(data[i]['unitPrice']);
+				if(!price){
+					price = 0;
 				}
 				else{
 					price = parseFloat(priceTags[prod]);
@@ -620,16 +639,30 @@
 				grid.updateRow(i);
 			}
 			var totalAmount = 0;
+			var totalCrates = 0;
 			for (i = 0; i < data.length; i++) {
 				totalAmount += data[i]["amount"];
+				<#if changeFlag?exists && changeFlag == "IcpSales" || changeFlag == "IcpSalesAmul" || changeFlag == "IcpSalesBellary">
+					totalCrates += data[i]["crQuantity"];
+				</#if>
 			}
 			var amt = parseFloat(Math.round((totalAmount) * 100) / 100);
+			var dispText = "";
 			if(amt > 0 ){
-				var dispText = "<b> [Total: Rs" +  amt + "]</b>";
+				dispText = "<b>  [Invoice Amt: Rs " +  amt + "]</b>";
 			}
 			else{
-				var dispText = "<b> [Total: Rs 0 ]</b>";
+				dispText = "<b>  [Invoice Amt: Rs 0 ]</b>";
 			}
+			<#if changeFlag?exists && changeFlag == "IcpSales" || changeFlag == "IcpSalesAmul" || changeFlag == "IcpSalesBellary">
+				if(totalCrates > 0 ){
+					dispText += "&emsp;&emsp;&emsp;&emsp;&emsp;<b>  [Total Crates: " +  totalCrates + "]</b>";
+				}
+				else{
+					dispText += "&emsp;&emsp;&emsp;&emsp;&emsp;<b>  [Total Crates: Rs 0 ]</b>";
+				}
+			</#if>
+			
 			jQuery("#totalAmount").html(dispText);
 		}
 		mainGrid = grid;

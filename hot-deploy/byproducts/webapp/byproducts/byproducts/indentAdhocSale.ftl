@@ -453,7 +453,7 @@ $(document).ready(function(){
 <div class="screenlet">
     <div class="screenlet-body">
  		<div class="grid-header" style="width:100%">
-			<label>Indent Entry </label><span id="totalAmount"></span>
+			<span id="totalAmount"></span>
 		</div>
 			<div id="myGrid1" style="width:100%;height:350px;"></div>
 			  

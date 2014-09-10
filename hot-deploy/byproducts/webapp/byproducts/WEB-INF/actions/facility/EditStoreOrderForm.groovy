@@ -116,7 +116,8 @@ if(partyOrderIds){
 		newObj.put("quantity",eachItem.quantity);
 		newObj.put("batchNo", batchNo);
 		newObj.put("daysToStore", daysToStore);
-		if(changeFlag && changeFlag == "PowderSales" || changeFlag == "FgsSales" || changeFlag == "InterUnitTransferSale" || changeFlag == "ConvCharges"){
+		newObj.put("unitPrice", eachItem.unitListPrice);
+		if(changeFlag && changeFlag == "DepotSales" || changeFlag == "FgsSales" || changeFlag == "InterUnitTransferSale"){
 			if(eachItem.unitPrice){
 				newObj.put("basicPrice", eachItem.unitPrice);
 			}else{
