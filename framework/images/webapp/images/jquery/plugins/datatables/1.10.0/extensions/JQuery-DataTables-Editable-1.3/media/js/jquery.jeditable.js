@@ -75,7 +75,8 @@
             placeholder: 'Click to edit',
             loaddata   : {},
             submitdata : {},
-            ajaxoptions: {}
+            ajaxoptions: {},
+            readOnly   : 'false',
         };
         
         if(options) {
@@ -440,12 +441,16 @@
             },
             text: {
                 element : function(settings, original) {
+                	
                     var input = $('<input />');
                     if (settings.width  != 'none') { input.width(settings.width);  }
                     if (settings.height != 'none') { input.height(settings.height); }
                     /* https://bugzilla.mozilla.org/show_bug.cgi?id=236791 */
                     //input[0].setAttribute('autocomplete','off');
                     input.attr('autocomplete','off');
+                    if(settings.readOnly){
+                    	 input.attr('readonly','true');
+              	    }
                     $(this).append(input);
                     return(input);
                 }
@@ -497,7 +502,7 @@
                 }
             }
         },
-
+        
         /* Add new input type */
         addInputType: function(name, input) {
             $.editable.types[name] = input;
