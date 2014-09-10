@@ -103,7 +103,10 @@ $(document).ready(function() {
 										show: "blind",
 										hide: "explode",
                                         modal: true,
-                                        draggable: false
+                                        draggable: false,
+                                        resizable: false,
+                                        width: 400,
+                                        height: 350
 									},
 			 fnOnDeleting: function (tr, id, fnDeleteRow) {
 
@@ -160,11 +163,11 @@ $(document).ready(function() {
         <input type='hidden'  name='punchdate' id='punchdate' size='10' />
         <input type='hidden' value="Y" name='isManual'/> 		
 		<tr class='h3'>
-			<td align='left' class='h3' width='30%'>Employee Id:</td>
+			<td align='left' class='h3' width='20%'>Employee Id:</td>
 			<td align='left' class='h3' width='30%'><input type='text' value="" name='partyId' size='5' rel="2" id='partyId' readonly/></td>
 		</tr>
 	    <tr class='h3'>
-	       <td align='left' class='h3' width='40%'>Punch Type:</td>
+	       <td align='left' class='h3' width='20%'>Punch Type:</td>
 	       <td align='left' class='h3' width='40%'>
 	        <select name='PunchType'  allow-empty='false' id='PunchType' class='h4' rel="6">
           		<#list punchTypeList as ptl>
@@ -173,7 +176,7 @@ $(document).ready(function() {
 			 </select>
 			 </td></tr>
 			<tr class='h3'>
-			<td align='left' class='h3' width='40%'>IN/OUT:</td>
+			<td align='left' class='h3' width='20%'>IN/OUT:</td>
 			<td align='left' class='h3' width='40%'>
 			  <select name='InOut'  allow-empty='false' id='InOut' class='h4' rel="5">
           		<option value='IN' >IN</option>
@@ -183,7 +186,7 @@ $(document).ready(function() {
 			</tr>
 			
 			<tr class='h3'>
-				<td align='left' class='h3' width='40%'>Shift Type:</td>
+				<td align='left' class='h3' width='20%'>Shift Type:</td>
 				<td align='left' class='h3' width='40%'><select name='shiftType'  allow-empty='false' id='shiftType' class='h4' rel="8">
 	              		<#list shiftTypeList as stl>
 	              		     <#if stl.shiftTypeId=="SHIFT_GEN">
@@ -194,19 +197,19 @@ $(document).ready(function() {
 	              		</#list>          
 			</select></td></tr>
 			<tr class='h3'>
-				<td align='left' class='h3' width='40%'>Date:</td><td align='left' class='h3' width='40%'>
+				<td align='left' class='h3' width='20%'>Date:</td><td align='left' class='h3' width='40%'>
 					<input type='text'  name='punchdate_dis' id='punchdate_dis' size='10' rel="1" readonly />
 				</td></tr>
 			<tr class='h3'>
-				<td align='left' class='h3' width='40%'>Punch Time:</td>
+				<td align='left' class='h3' width='20%'>Punch Time:</td>
 				<td align='left' class='h3' width='40%'>
-				<input type='text'  value="" name='punchtime' id='punchtime' size='10' required  rel="4" />HH:MM:SS</tr>
+				<input type='text'  value="" name='punchtime' id='punchtime' size='10' required  rel="4" /><em  style="font-size: large;color:red;"><b>*</b></em></tr>
 			
 			<tr class='h3'>
-				<td align='left' class='h3' width='40%'>Note:</td><td align='left' class='h3' width='40%'><input  type='textarea' value='' name='Note' rel="7" required></td>
+				<td align='left' class='h3' width='20%'>Note:</td><td align='left' class='h3' width='40%'><input  type='textarea' value='' name='Note' rel="7" required><em  style="font-size: large;color:red;"><b>*</b></em></td>
 			</tr>
 			<tr class='h3'>
-				<td align='left' class='h3' width='40%'></td>
+				<td align='left' class='h3' width='20%'></td>
 				<td align='left' class='h3' width='40%'><input  type='submit' value='ok' id="btnAddNewRowOk">&nbsp;&nbsp;&nbsp;&nbsp;<input  type='button' value='cancel' id="btnAddNewRowCancel"></td>
 			</tr>
 		</table>
