@@ -69,6 +69,8 @@ function makeDatePicker1(fromDateId ,thruDateId){
 		makeDatePicker("EPthruDate","EPthruDate");
 		makeDatePicker("BusfromDate","BusfromDate");
 		makeDatePicker("BusthruDate","BusthruDate");
+		makeDatePicker("OODfromDate","OODfromDate");
+		makeDatePicker("OODthruDate","OODthruDate");
 		
 		$('#ui-datepicker-div').css('clip', 'auto');		
 	});
@@ -110,7 +112,7 @@ function makeDatePicker1(fromDateId ,thruDateId){
 							<td width="25%">Organization Id 
 								<select name="partyId" class='h4'>
 									<#list orgList as org>    
-									<option value='${org.partyId}'>${org.groupName}</option>
+									<option value='${org.partyId?if_exists}'>${org.groupName?if_exists}</option>
 									</#list> 
 								</select>
 							</td>	
@@ -124,7 +126,7 @@ function makeDatePicker1(fromDateId ,thruDateId){
 							<td width="35%">Organization Id 
 								<select name="partyIdFrom" class='h4'>
 									<#list orgList as org>    
-									<option value='${org.partyId}'>${org.groupName}</option>
+									<option value='${org.partyId}'>${org.groupName?if_exists}</option>
 									</#list> 
 								</select>
 							</td>	
@@ -170,7 +172,7 @@ function makeDatePicker1(fromDateId ,thruDateId){
 							<td width="15%">Organization Id 
 								<select name="partyId" class='h5'>
 									<#list orgList as org>    
-									<option value='${org.partyId}'>${org.groupName}</option>
+									<option value='${org.partyId}'>${org.groupName?if_exists}</option>
 									</#list> 
 								</select>
 							</td>	
@@ -178,7 +180,7 @@ function makeDatePicker1(fromDateId ,thruDateId){
 								<select name="leaveTypeId" id="leaveTypeId" class='h5' >
 									<option value="ALL">ALL</option>
 										<#list leaveTypeList as leave>
-									<option value='${leave.leaveTypeId}'>${leave.description}</option></#list>
+									<option value='${leave.leaveTypeId}'>${leave.description?if_exists}</option></#list>
 								</select>
 							</td>
 							<td width="15%">From Date<input  type="text"  id="larfromDate"   name="larFromDate"/></td>
@@ -248,7 +250,7 @@ function makeDatePicker1(fromDateId ,thruDateId){
 										<td width="24%"><span class='h3'>Period Id</span>
 											<select name="customTimePeriodId" class='h4'>
 												<#list timePeriodList as timePeriod>    
-													<option value='${timePeriod.customTimePeriodId}'>${timePeriod.periodName}:${timePeriod.fromDate}-${timePeriod.thruDate}</option>
+													<option value='${timePeriod.customTimePeriodId}'>${timePeriod.periodName?if_exists}:${timePeriod.fromDate?if_exists}-${timePeriod.thruDate?if_exists}</option>
 												</#list>      
 											</select>
 										</td>	
@@ -266,7 +268,7 @@ function makeDatePicker1(fromDateId ,thruDateId){
 									<td width="24%"><span class='h3'>Period Id</span>
 									<select name="customTimePeriodId" class='h4'>
 										<#list timePeriodList as timePeriod>    
-											<option value='${timePeriod.customTimePeriodId}'>${timePeriod.fromDate}-${timePeriod.thruDate}</option>
+											<option value='${timePeriod.customTimePeriodId}'>${timePeriod.fromDate?if_exists}-${timePeriod.thruDate?if_exists}</option>
 										</#list>      
 									</select>
 									</td>	
@@ -305,7 +307,7 @@ function makeDatePicker1(fromDateId ,thruDateId){
 									<td width="27%"><span class='h3'>Period Id</span>
 										<select name="customTimePeriodId" class='h4'>
 											<#list timePeriodList as timePeriod>    
-												<option value='${timePeriod.customTimePeriodId}'>${timePeriod.fromDate}-${timePeriod.thruDate}</option>
+												<option value='${timePeriod.customTimePeriodId}'>${timePeriod.fromDate?if_exists}-${timePeriod.thruDate?if_exists}</option>
 											</#list>      
 										</select>
 									</td>
@@ -322,7 +324,7 @@ function makeDatePicker1(fromDateId ,thruDateId){
 									<td width="24%"><span class='h3'>Period Id</span>
 									<select name="customTimePeriodId" class='h4'>
 										<#list timePeriodList as timePeriod>    
-											<option value='${timePeriod.customTimePeriodId}'>${timePeriod.fromDate}-${timePeriod.thruDate}</option>
+											<option value='${timePeriod.customTimePeriodId}'>${timePeriod.fromDate?if_exists}-${timePeriod.thruDate?if_exists}</option>
 										</#list>      
 									</select>
 									</td>	
@@ -338,6 +340,19 @@ function makeDatePicker1(fromDateId ,thruDateId){
 						      	   	<td width="20%"><span class='h3'>Bus Arrival Report</td></span></td>
 						      	   	<td width="20%"><span class='h3'>From Date</span><input  type="text"  id="BusfromDate" size="18pt" name="BusfromDate"/></td>
 						  			<td width="20%"><span class='h3'>Thru Date</span><input  type="text"  id="BusthruDate" size="18pt" name="BusthruDate"/></td>
+									<td width="20%"><span class='h3'><input type="submit" value="Download" class="buttontext"></span></td> 
+								</tr>
+							</table>	
+      	   				</form>
+      	  			</tr>
+      	  			<tr class="alternate-row">
+					 	<form id="OODReport" name="OODReport" mothed="post" action="<@ofbizUrl>OODReport.pdf</@ofbizUrl>" target="_blank">
+	      	   				<table class="basic-table" cellspacing="5">
+								<tr class="alternate-row">
+						      	   	<td width="20%"><span class='h3'>OOD Report</td></span></td>
+						      	   	<td width="20%"><span class='h3'>From Date</span><input  type="text"  id="OODfromDate" size="18pt" name="OODfromDate"/></td>
+						  			<td width="20%"><span class='h3'>Thru Date</span><input  type="text"  id="OODthruDate" size="18pt" name="OODthruDate"/></td>
+									<td width="15%"><span class='h3'>Employee Id<input type="text" id="PartyId" size="10pt" name="employeeId"/></span></td>
 									<td width="20%"><span class='h3'><input type="submit" value="Download" class="buttontext"></span></td> 
 								</tr>
 							</table>	
@@ -452,7 +467,7 @@ function makeDatePicker1(fromDateId ,thruDateId){
 										<td width="45%"><span class='h3'>Period Id</span>
 											<select name="customTimePeriodId" class='h4'>
 												<#list timePeriodList as timePeriod>    
-													<option value='${timePeriod.customTimePeriodId}'>${timePeriod.fromDate}-${timePeriod.thruDate}</option>
+													<option value='${timePeriod.customTimePeriodId}'>${timePeriod.fromDate?if_exists}-${timePeriod.thruDate?if_exists}</option>
 												</#list>      
 											</select>
 										</td>	
@@ -463,7 +478,7 @@ function makeDatePicker1(fromDateId ,thruDateId){
 						</table>
 					</tr>
 					<tr class="alternate-row">
-						<form id="GSLISReport" name="PaySheetFormat" mothed="post" action="<@ofbizUrl>GSLISReport.pdf</@ofbizUrl>" target="_blank">
+						<form id="GSLISReport" name="GSLISReport" mothed="post" action="<@ofbizUrl>GSLISReport.pdf</@ofbizUrl>" target="_blank">
 							<table class="basic-table" cellspacing="5">
 								<tr class="alternate-row">
 									<td width="13%"><span class='h3'>GSLIS Report</span></td>
@@ -478,7 +493,7 @@ function makeDatePicker1(fromDateId ,thruDateId){
 						</form>
 					</tr>
 					<tr class="alternate-row">
-						<form id="ProfessionalTaxReport" name="PaySheetFormat" mothed="post" action="<@ofbizUrl>ProfessionalTaxReport.pdf</@ofbizUrl>" target="_blank">
+						<form id="ProfessionalTaxReport" name="ProfessionalTaxReport" mothed="post" action="<@ofbizUrl>ProfessionalTaxReport.pdf</@ofbizUrl>" target="_blank">
 							<table class="basic-table" cellspacing="5">
 								<tr class="alternate-row">
 									<td width="13%"><span class='h3'>Professional Tax Report</span></td>
@@ -492,6 +507,7 @@ function makeDatePicker1(fromDateId ,thruDateId){
 							</table>
 						</form>
 					</tr>
+					
 				   	<tr class="alternate-row">
 						<form id="BenefitsOrDeductionsExport" name="BenefitsOrDeductionsExport" mothed="post" action="<@ofbizUrl>ExportEmployeeBenefitsOrDeductions</@ofbizUrl>" target="_blank">
 							<table class="basic-table" cellspacing="0">

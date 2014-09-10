@@ -300,6 +300,7 @@ under the License.
     	<response name="success" type="view" value="DailyBusTimings"/>
     	<response name="error" type="view" value="DailyBusTimings"/>
     </request-map>
+    
     <request-map uri="findBusTimings">
     	<security https="true" auth="true"/>
     	<response name="success" type="view" value="DailyBusTimings"/>
@@ -1579,6 +1580,7 @@ under the License.
     	<security https="true" auth="true"/>
     	<response name="success" type="view" value="DailyBusTimings"></response>
     </request-map>
+    
      <request-map uri="EmployeeAttendanceInternal">
        <security https="true" auth="true"/>
         <response name="success" type="view" value="EmployeeAttendanceInternal"/>
@@ -1631,6 +1633,7 @@ under the License.
         <response name="success" type="view" value="ProfessionalTaxReport"/>
         <response name="error" type="view" value="ProfessionalTaxReport"></response>
     </request-map>
+   
     <request-map uri="PrintPayrollSummary.pdf">
     	<security https="true" auth="true"/>
         <response name="success" type="view" value="PrintPayrollSummary"/>
@@ -1688,6 +1691,10 @@ under the License.
     <request-map uri="BusArrivalReport.pdf">
         <security https="true" auth="true"/>                        
         <response name="success" type="view" value="BusArrivalReport"/>        
+    </request-map>
+    <request-map uri="OODReport.pdf">
+        <security https="true" auth="true"/>                        
+        <response name="success" type="view" value="OODReport"/>        
     </request-map>
     <request-map uri="LICRDReport.pdf">
         <security https="true" auth="true"/>                        
@@ -1998,6 +2005,7 @@ under the License.
 	 <view-map name="PrintPaySlipsPdf" type="screenfop" page="component://humanres/widget/ReportHumanresSummaryScreens.xml#PrintPaySlipsPdf" content-type="application/pdf" encoding="none"></view-map>
 	 <view-map name="GSLISReport" type="screenfop" page="component://humanres/widget/ReportHumanresSummaryScreens.xml#GSLISReport" content-type="application/pdf" encoding="none"></view-map>
 	 <view-map name="ProfessionalTaxReport" type="screenfop" page="component://humanres/widget/ReportHumanresSummaryScreens.xml#ProfessionalTaxReport" content-type="application/pdf" encoding="none"></view-map>
+	 
 	 <view-map name="PrintPayrollSummary" type="screenfop" page="component://humanres/widget/ReportHumanresSummaryScreens.xml#PrintPayrollSummary" content-type="application/pdf" encoding="none"></view-map>
 	 <view-map name="ExportBenefitsOrDeductionsPDF" type="screenfop" page="component://humanres/widget/ReportHumanresSummaryScreens.xml#ExportBenefitsOrDeductionsPDF" content-type="application/pdf" encoding="none"></view-map>
 	 <view-map name="EmployeeWiseSalaryDetails" type="screen" page="component://humanres/widget/ReportHumanresSummaryScreens.xml#EmployeeWiseSalaryDetails"/>
@@ -2050,6 +2058,7 @@ under the License.
 	<view-map name="EditedLateHoursReport" type="screenfop" page="component://humanres/widget/EmployeeScreens.xml#EditedLateHoursReport" content-type="application/pdf" encoding="none"/>
     <view-map name="AttendanceExceptionReport" type="screenfop" page="component://humanres/widget/ReportHumanresSummaryScreens.xml#AttendanceExceptionReport" content-type="application/pdf" encoding="none"/>
     <view-map name="BusArrivalReport" type="screenfop" page="component://humanres/widget/ReportHumanresSummaryScreens.xml#BusArrivalReport" content-type="application/pdf" encoding="none"/>
+    <view-map name="OODReport" type="screenfop" page="component://humanres/widget/ReportHumanresSummaryScreens.xml#OODReport" content-type="application/pdf" encoding="none"/>
     <view-map name="CompanyPunchReport" type="screen" page="component://humanres/widget/ReportHumanresSummaryScreens.xml#CompanyPunchReport"/>
     <view-map name="EmployeePunchReport" type="screen" page="component://humanres/widget/ReportHumanresSummaryScreens.xml#EmployeePunchReport"/>
     <!-- <view-map name="EmployeePunchReport" type="screencsv" page="component://humanres/widget/ReportHumanresSummaryScreens.xml#EmployeePunchReport" content-type="text/csv" encoding="none"/> -->
