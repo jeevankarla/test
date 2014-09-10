@@ -1023,7 +1023,7 @@ under the License.
         <field name="amount"><display type="currency" currency="${currencyUomId}"/></field>
         <field name="availableAmtToRefund" title="Avbl Amt to Refund"><display type="currency" currency="${currencyUomId}"/></field>
         <field name="refundButton" title="Refund" widget-style="buttontext">
-            <hyperlink  target-type="plain" description="Refund"  target="javascript:showPaymentRefundQTip('${paymentId}', '${partyIdTo}', '${partyIdFrom}', '${availableAmtToRefund}', '${refundPaymentTypeId}', 'refundAdvanceUnappliedPayments');"></hyperlink>
+            <hyperlink  target-type="plain" description="Refund"  target="javascript:showPaymentRefundQTip('${paymentId}', '${partyIdTo}', '${partyIdFrom}', '${availableAmtToRefund}', '${refundPaymentTypeId}', 'refundAdvanceUnappliedPayments', 'N', 'WITHDRAWAL');"></hyperlink>
         </field>
     </form>
     <form name="NewOutgoingAdvanceRefund" type="single" target="NewOutgoingAdvancesRefund" default-map-name="payment"
@@ -1056,7 +1056,7 @@ under the License.
         <field name="availableAmtToRefund" title="Avbl Amt to Refund"><display type="currency" currency="${currencyUomId}"/></field>
         <!-- <field name="amountToRefund" title="Amt To Refund" parameter-name="amountApplied"><text size="10"/></field> -->
         <field name="refundButton" title="Refund" widget-style="buttontext">
-            <hyperlink  target-type="plain" description="Refund"  target="javascript:showApPaymentRefundQTip('${paymentId}', '${partyIdTo}', '${partyIdFrom}', '${availableAmtToRefund}', '${refundPaymentTypeId}', 'refundAPAdvanceUnappliedPayments');"></hyperlink>
+            <hyperlink  target-type="plain" description="Refund"  target="javascript:showApPaymentRefundQTip('${paymentId}', '${partyIdTo}', '${partyIdFrom}', '${availableAmtToRefund}', '${refundPaymentTypeId}', 'refundAPAdvanceUnappliedPayments', 'Y', 'DEPOSIT');"></hyperlink>
         </field>
     </form>
      

@@ -736,6 +736,8 @@ public class PaymentWorker {
         String partyIdFrom =(String)context.get("partyIdFrom");
         String statusId =(String)context.get("statusId");
         String paymentId =(String)context.get("paymentId");
+        String isDepositWithDrawPayment =(String)context.get("isDepositWithDrawPayment");
+        String finAccountTransTypeId =(String)context.get("finAccountTransTypeId");
         
         GenericValue userLogin = (GenericValue) context.get("userLogin");
         Map<String, Object> result = ServiceUtil.returnSuccess();
@@ -791,7 +793,7 @@ public class PaymentWorker {
         else{
         	paymentCtx.put("paymentDate", UtilDateTime.nowTimestamp());
         }
-        paymentCtx.put("statusId", statusId);            
+        paymentCtx.put("statusId", "PMNT_NOT_PAID");            
         paymentCtx.put("amount", paymentAmount);
         paymentCtx.put("userLogin", userLogin);
         paymentCtx.put("comments", comments);
@@ -799,8 +801,10 @@ public class PaymentWorker {
         paymentCtx.put("lastModifiedByUserLogin",  userLogin.getString("userLoginId"));
         paymentCtx.put("createdDate", UtilDateTime.nowTimestamp());
         paymentCtx.put("lastModifiedDate", UtilDateTime.nowTimestamp());
+        paymentCtx.put("isDepositWithDrawPayment", isDepositWithDrawPayment);            
+        paymentCtx.put("finAccountTransTypeId", finAccountTransTypeId);
         try {       	
-            Map<String, Object> paymentResult = dispatcher.runSync("createPayment", paymentCtx);
+            Map<String, Object> paymentResult = dispatcher.runSync("createPaymentAndFinAccountTrans", paymentCtx);
             if (ServiceUtil.isError(paymentResult)) {
             	Debug.logError(paymentResult.toString(), module);    			
                 return ServiceUtil.returnError(null, null, null, paymentResult);
@@ -810,6 +814,19 @@ public class PaymentWorker {
             Debug.logError(e, e.toString(), module);
             return ServiceUtil.returnError(e.toString());
         }
+        // Set Payment Status
+        
+        try {
+            Map<String, Object> pmntResults = dispatcher.runSync("setPaymentStatus", UtilMisc.toMap("userLogin", userLogin, "paymentId", toPaymentId, "statusId", statusId));
+            if (ServiceUtil.isError(pmntResults)) {
+            	Debug.logError(pmntResults.toString(), module);    			
+                return ServiceUtil.returnError(null, null, null, pmntResults);
+            }
+        } catch (Exception e) {
+            Debug.logError(e, "Unable to change Payment Status", module);
+        }
+        
+        
         // Payment Application To Payment
         
         Map<String, Object> paymentApplicationCtx = UtilMisc.<String, Object>toMap("paymentId", paymentId);

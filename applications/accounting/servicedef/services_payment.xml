@@ -383,6 +383,8 @@ under the License.
         <attribute name="effectiveDate" type="String" mode="IN" optional="true"/>
         <attribute name="issuingAuthority" type="String" mode="IN" optional="true"/>
         <attribute name="statusId" type="String" mode="IN" optional="true"/>
+        <attribute name="finAccountTransTypeId" type="String" mode="IN" optional="true"/>
+        <attribute name="isDepositWithDrawPayment" type="String" mode="IN" optional="true"/>
         
           <attribute name="noConditionFind" mode="OUT" type="String"  optional="true"/> 
           <attribute name="hideSearch" mode="OUT" type="String" optional="true"/> 
