@@ -38,7 +38,8 @@ invoiceDetailList = [];
 vatMap = [:];
 reportTitle = [:];
 today = UtilDateTime.nowTimestamp();
-screenFlag = "";
+reportFlag = "";
+screenFlag = parameters.screenFlag;
 orderDetailMap = [:];
 shipmentId = parameters.shipmentId;
 shipment = null;
@@ -57,15 +58,14 @@ if(shipmentId){
 	orderHeaders = delegator.findList("OrderHeader", condition, null, null, null, false);
 	
 	orderIds = EntityUtil.getFieldListFromEntityList(orderHeaders, "orderId", true);
-	screenFlag = "gatePass";
+	reportFlag = "gatePass";
 }
 else{
 	orderHeader = delegator.findOne("OrderHeader", UtilMisc.toMap("orderId", parameters.orderId), false);
 	orderHeaders.add(orderHeader);
 	orderIds.add(parameters.orderId);
-	screenFlag = "dc";
+	reportFlag = "dc";
 }
-screenFlag = "";
 orderIds.each{ eachOrderId ->
 	ordersMap = [:];
 	conditionList.clear();
@@ -75,33 +75,30 @@ orderIds.each{ eachOrderId ->
 	orderRole = delegator.findList("OrderRole", cond, null, null, null, false);
 	orderDetail = null;
 	orderHeaders = EntityUtil.filterByCondition(orderHeaders, EntityCondition.makeCondition("orderId", EntityOperator.EQUALS, eachOrderId));
-	
 	if(orderHeaders){
 		orderDetail = EntityUtil.getFirst(orderHeaders);
 	}
-	
 	if(orderDetail){
 		salesChannelEnumId = orderDetail.salesChannelEnumId;
 		if(salesChannelEnumId == "ICP_NANDINI_CHANNEL"){
-			screenFlag = "NANDINI";
+			reportFlag = "NANDINI";
 		}
 		if(salesChannelEnumId == "ICP_AMUL_CHANNEL"){
-			screenFlag = "AMUL";
+			reportFlag = "AMUL";
+		}
+		if(salesChannelEnumId == "ICP_BELLARY_CHANNEL"){
+			reportFlag = "BELLARY";
 		}
 		if(salesChannelEnumId == "FGS_PRODUCT_CHANNEL"){
-			screenFlag = "FGS";
+			reportFlag = "FGS";
 		}
-		if(salesChannelEnumId == "POWDER_PLANT_CHANNEL"){
-			screenFlag = "POWDER";
-		}
-		if(salesChannelEnumId == "PROCESSING_CHANNEL"){
-			screenFlag = "PROCESSCONVERSION";
+		if(salesChannelEnumId == "DEPOT_CHANNEL"){
+			reportFlag = "DEPOT";
 		}
 		if(salesChannelEnumId == "INTUNIT_TR_CHANNEL"){
-			screenFlag = "INTERUNIT";
+			reportFlag = "INTERUNIT";
 		}
 	}
-	
 	conditionList.clear();
 	conditionList.add(EntityCondition.makeCondition("orderId", EntityOperator.EQUALS, eachOrderId));
 	conditionList.add(EntityCondition.makeCondition("statusId", EntityOperator.NOT_EQUAL, "INVOICE_CANCELLED"));
@@ -110,7 +107,6 @@ orderIds.each{ eachOrderId ->
 	orderItemBill = delegator.findList("OrderItemBillingAndInvoiceAndInvoiceItem", cond1, UtilMisc.toSet("invoiceId"), null, null, false);
 	invoiceIds = EntityUtil.getFieldListFromEntityList(orderItemBill, "invoiceId", true);
 	invoices = delegator.findList("Invoice", EntityCondition.makeCondition("invoiceId", EntityOperator.IN, invoiceIds), null, null, null, false);
-	
 	invoice = null;
 	if(invoices){
 		invoice = invoices.get(0);
@@ -126,7 +122,6 @@ orderIds.each{ eachOrderId ->
 	orderItems = delegator.findList("OrderItem", EntityCondition.makeCondition("orderId", EntityOperator.EQUALS, eachOrderId), null, null, null, false);
 	productIds = EntityUtil.getFieldListFromEntityList(orderItems, "productId", true);
 	products = delegator.findList("Product", EntityCondition.makeCondition("productId", EntityOperator.IN, productIds), null, null, null, false);
-	
 	conversionResult = ByProductNetworkServices.getProductQtyConversions(dctx, UtilMisc.toMap("productList", products, "userLogin", userLogin));
 	productConversionDetails = [:];
 	if(conversionResult){
@@ -139,7 +134,6 @@ orderIds.each{ eachOrderId ->
 	orderBatchNumbers = delegator.findList("OrderItemAttribute", condExpr, null, null, null, false);
 	orderItemsList = [];
 	orderItems.each{eachItem ->
-		
 		productConvDetail = productConversionDetails.get(eachItem.productId);
 		
 		batchList = EntityUtil.filterByCondition(orderBatchNumbers, EntityCondition.makeCondition("orderItemSeqId", EntityOperator.EQUALS, eachItem.orderItemSeqId));
@@ -161,9 +155,12 @@ orderIds.each{ eachOrderId ->
 		tempMap.put("description",prodDetail.description);
 //		tempMap.put("itemDescription",eachItem.itemDescription);
 		tempMap.put("batchNo", batchNo);
+		tempMap.put("qty", eachItem.quantity);
 		tempMap.put("qtyInCrate", crateQty);
 		tempMap.put("qtyPerCrate", prodCrateValue);
 		tempMap.put("qtyLtr", qtyLtr);
+		tempMap.put("unitPrice", eachItem.unitListPrice);
+		tempMap.put("totalAmt", eachItem.quantity*eachItem.unitListPrice);
 		orderItemsList.add(tempMap);
 	}
 	ordersMap.put("orderItems", orderItemsList);
@@ -174,6 +171,7 @@ orderIds.each{ eachOrderId ->
 	ordersMap.put("partyName", partyName);
 	ordersMap.put("partyCode", partyId);
 	ordersMap.put("invoice", invoice);
+	ordersMap.put("reportFlag", reportFlag);
 	ordersMap.put("screenFlag", screenFlag);
 	orderDetailMap.put(eachOrderId, ordersMap);
 }

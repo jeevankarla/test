@@ -21,13 +21,15 @@ orderId = parameters.orderId;
 screenFlag = parameters.screenFlag;
 orderHeader = delegator.findOne("OrderHeader", UtilMisc.toMap("orderId", orderId),false);
 salesChannel = orderHeader.salesChannelEnumId;
-
 requestFlag = ""
-if(salesChannel == "POWDER_PLANT_CHANNEL"){
-	requestFlag = "powder";
+if(salesChannel == "DEPOT_CHANNEL"){
+	requestFlag = "depot";
 }
 if(salesChannel == "ICP_NANDINI_CHANNEL"){
 	requestFlag = "nandini";
+}
+if(salesChannel == "ICP_BELLARY_CHANNEL"){
+	requestFlag = "bellary";
 }
 if(salesChannel == "ICP_AMUL_CHANNEL"){
 	requestFlag = "amul";
@@ -40,7 +42,6 @@ JSONObject orderDetailJSON = new JSONObject();
 orderItems = delegator.findList("OrderItem", EntityCondition.makeCondition("orderId", EntityOperator.EQUALS, orderId), null, null, null, false);
 productIds = EntityUtil.getFieldListFromEntityList(orderItems, "productId", true);
 products = delegator.findList("Product", EntityCondition.makeCondition("productId", EntityOperator.IN, productIds), null, null, null, false);
-
 batchDetails = delegator.findList("OrderItemAttribute", EntityCondition.makeCondition("orderId", EntityOperator.EQUALS, orderId), null, null, null, false);
 
 conversionResult = ByProductNetworkServices.getProductQtyConversions(dctx, UtilMisc.toMap("productList", products, "userLogin", userLogin));
@@ -48,10 +49,8 @@ productConversionDetails = [:];
 if(conversionResult){
 	productConversionDetails = conversionResult.get("productConversionDetails");
 }
-
 JSONArray orderItemListJSON = new JSONArray();
 if(screenFlag && screenFlag=="batchEdit"){
-	
 	orderItems.each { eachItem ->
 		
 		JSONObject itemJSON = new JSONObject();
@@ -93,7 +92,7 @@ if(screenFlag && screenFlag=="batchEdit"){
 		itemJSON.put("productId", eachItem.productId);
 		itemJSON.put("batchNo", batchNo);
 		itemJSON.put("itemDescription", prodDesc);
-		if(requestFlag == "nandini" || requestFlag == "amul"){
+		if(requestFlag == "nandini" || requestFlag == "amul" || requestFlag == "bellary"){
 			itemJSON.put("quantity", crateQty);
 		}
 		else{
@@ -114,12 +113,10 @@ else{
 		}
 		
 		productConvDetail = productConversionDetails.get(eachItem.productId);
-		
 		prodCrateValue = 1;
 		if(productConvDetail && productConvDetail.get("CRATE")){
 			prodCrateValue = productConvDetail.get("CRATE");
 		}
-
 		batchNo = "";
 		if(batchDetails){
 			condList = [];
@@ -133,7 +130,6 @@ else{
 				batchNo = (EntityUtil.getFirst(itemBatchDetail)).attrValue;
 			}
 		}
-		
 		JSONObject itemJSON = new JSONObject();
 		prodDetails = EntityUtil.filterByCondition(products, EntityCondition.makeCondition("productId", EntityOperator.EQUALS, eachItem.productId));
 		prodDesc = "";
@@ -142,14 +138,13 @@ else{
 			prodDesc = (prodDetails.get(0)).description;
 			qtyInc = (prodDetails.get(0)).quantityIncluded;
 		}
-		
 		crateQty = (eachItem.quantity).divide(new BigDecimal(prodCrateValue) , 2, rounding);
 		qtyLtr = (eachItem.quantity).multiply(qtyInc).setScale(2, rounding);
 
 		itemJSON.put("productId", eachItem.productId);
 		itemJSON.put("itemDescription", prodDesc);
 		itemJSON.put("batchNo", batchNo);
-		if(requestFlag == "nandini" || requestFlag == "amul"){
+		if(requestFlag == "nandini" || requestFlag == "amul" || requestFlag == "bellary"){
 			itemJSON.put("quantity", crateQty);
 		}
 		else{

@@ -651,7 +651,8 @@
         <field name="vehicleId" title="Vehicle Number"><display/></field>
         <field name="GatePass" widget-style="buttontext" >
             <hyperlink target="nonRouteGatePass.pdf" description="GatePass" target-window="_blank">
-               	  <parameter param-name="shipmentId" /> 
+               	  <parameter param-name="shipmentId" />
+               	  <parameter param-name="screenFlag" /> 
             </hyperlink>
         </field> 
         <field name="buyerInvoice" widget-style="buttontext" id-name = "invoiceSlips">
@@ -681,7 +682,8 @@
         <field name="vehicleId" title="Vehicle Number"><display/></field>
         <field name="GatePass" widget-style="buttontext" >
             <hyperlink target="nonRouteGatePass.pdf" description="GatePass" target-window="_blank">
-               	  <parameter param-name="shipmentId" /> 
+               	  <parameter param-name="shipmentId" />
+               	  <parameter param-name="screenFlag" /> 
             </hyperlink>
         </field> 
         <field name="buyerInvoice" widget-style="buttontext" id-name = "invoiceSlips">
@@ -712,7 +714,8 @@
         <field name="vehicleId" title="Vehicle Number"><display/></field>
         <field name="GatePass" widget-style="buttontext" >
             <hyperlink target="nonRouteGatePass.pdf" description="GatePass" target-window="_blank">
-               	  <parameter param-name="shipmentId" /> 
+               	  <parameter param-name="shipmentId" />
+               	  <parameter param-name="screenFlag" /> 
             </hyperlink>
         </field> 
         <field name="buyerInvoice" widget-style="buttontext" id-name = "invoiceSlips">
@@ -744,7 +747,8 @@
         <field name="vehicleId" title="Vehicle Number"><display/></field>
         <field name="GatePass" widget-style="buttontext" >
             <hyperlink target="nonRouteGatePass.pdf" description="GatePass" target-window="_blank">
-               	  <parameter param-name="shipmentId" /> 
+               	  <parameter param-name="shipmentId" />
+               	  <parameter param-name="screenFlag" /> 
             </hyperlink>
         </field> 
         <field name="buyerInvoice" widget-style="buttontext" id-name = "invoiceSlips">
@@ -786,6 +790,7 @@
         <field name="GatePass" widget-style="buttontext" >
             <hyperlink target="nonRouteGatePass.pdf" description="GatePass" target-window="_blank">
                	  <parameter param-name="shipmentId" /> 
+               	  <parameter param-name="screenFlag" />
             </hyperlink>
         </field> 
         <field name="buyerInvoice" widget-style="buttontext" id-name = "invoiceSlips">
@@ -820,7 +825,8 @@
         <field name="vehicleId" title="Vehicle Number"><display/></field>
         <field name="GatePass" widget-style="buttontext" >
             <hyperlink target="nonRouteGatePass.pdf" description="GatePass" target-window="_blank">
-               	  <parameter param-name="shipmentId" /> 
+               	  <parameter param-name="shipmentId" />
+               	  <parameter param-name="screenFlag" /> 
             </hyperlink>
         </field> 
         <field name="buyerInvoice" widget-style="buttontext" id-name = "invoiceSlips">

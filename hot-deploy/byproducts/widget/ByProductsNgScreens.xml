@@ -3550,6 +3550,7 @@
                <set field="viewSize" from-field="parameters.VIEW_SIZE"/>
                <set field="targetRequest" value="FindFGSShipment"/>
                <set field="shipmentTypeId" value="FGS_SHIPMENT"/>
+               <set field="screenFlag" value="fgsSales"/>
             </actions>
             <widgets>
                   <decorator-screen name="ByProductsNgCommonDecorator" location="component://byproducts/widget/CommonScreens.xml">
@@ -3583,6 +3584,7 @@
                <set field="viewSize" from-field="parameters.VIEW_SIZE"/>
                <set field="targetRequest" value="FindDepotShipment"/>
                <set field="shipmentTypeId" value="DEPOT_SHIPMENT"/> 
+               <set field="screenFlag" value="depotSales"/>
             </actions>
             <widgets>
                   <decorator-screen name="ByProductsNgCommonDecorator" location="component://byproducts/widget/CommonScreens.xml">
@@ -3615,7 +3617,8 @@
 			   <set field="tabButtonItem2" value="FindICPNandiniShipment"/>       
                <set field="viewSize" from-field="parameters.VIEW_SIZE"/>
                <set field="targetRequest" value="FindICPNandiniShipment"/>
-             	<set field="shipmentTypeId" value="ICP_NANDINI_SHIPMENT"/> 
+             	<set field="shipmentTypeId" value="ICP_NANDINI_SHIPMENT"/>
+             	<set field="screenFlag" value="icpSales"/>
             </actions>
             <widgets>
                   <decorator-screen name="ByProductsNgCommonDecorator" location="component://byproducts/widget/CommonScreens.xml">
@@ -3644,13 +3647,13 @@
     <screen name="FindICPBellaryShipment">
         <section>
             <actions>
-                <set field="titleProperty" value="Find ICP Shipment"/>              
-			    <set field="tabButtonItem" value="IcpSalesBellary" />	
+               <set field="titleProperty" value="Find ICP Shipment"/>              
+			   <set field="tabButtonItem" value="IcpSalesBellary" />	
 			   <set field="tabButtonItem2" value="FindICPBellaryShipment"/>       
                <set field="viewSize" from-field="parameters.VIEW_SIZE"/>
                <set field="targetRequest" value="FindICPBellaryShipment"/>
                <set field="shipmentTypeId" value="ICP_BELLARY_SHIPMENT"/>
-               
+               <set field="screenFlag" value="icpBellarySales"/>
             </actions>
             <widgets>
                   <decorator-screen name="ByProductsNgCommonDecorator" location="component://byproducts/widget/CommonScreens.xml">
@@ -3684,7 +3687,7 @@
                <set field="viewSize" from-field="parameters.VIEW_SIZE"/>
                <set field="targetRequest" value="FindICPAmulShipment"/>
                <set field="shipmentTypeId" value="ICP_AMUL_SHIPMENT"/>
-               
+               <set field="screenFlag" value="icpAmulSales"/>
             </actions>
             <widgets>
                   <decorator-screen name="ByProductsNgCommonDecorator" location="component://byproducts/widget/CommonScreens.xml">
@@ -3845,6 +3848,7 @@
                <set field="viewSize" from-field="parameters.VIEW_SIZE"/>
                <set field="targetRequest" value="FindStockTranferShipment"/>
                <set field="shipmentTypeId" value="INTUNIT_TR_SHIPMENT"/> 
+               <set field="screenFlag" value="InterUnitTransferSale"/> 
             </actions>
             <widgets>
                   <decorator-screen name="ByProductsNgCommonDecorator" location="component://byproducts/widget/CommonScreens.xml">
