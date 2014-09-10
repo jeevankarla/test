@@ -45,6 +45,25 @@ for (GenericValue hit : hitList) {
     String hitTime = UtilDateTime.toDateString(hit.get("startDateTime"), "HH:mm:ss");
 
 	String userLoginId= hit.getString("userLoginId");
+	String partyId = "";
+	String role = "";
+	if (userLoginId) {
+		userLogin = delegator.findByPrimaryKey("UserLogin", [userLoginId : userLoginId]);
+		if (userLogin) {
+			partyId = userLogin.partyId;
+			if (partyId) {
+				partyRoles = delegator.findByAnd("PartyRole", [partyId : partyId]);
+				partyRoles.each { partyRole ->
+					if (partyRole.roleTypeId.equals("Retailer")) {
+						role = "Retailer";				
+					}
+					else if (partyRole.roleTypeId.equals("EMPLOYEE")) {
+						role = "Employee";
+					}
+				}
+			}
+		}
+	}
 	String contentId= hit.getString("contentId");
 	String totalTimeMillis = hit.getLong("totalTimeMillis");
 	
@@ -52,6 +71,8 @@ for (GenericValue hit : hitList) {
 	hitJSON.add(hitDate);
 	hitJSON.add(hitTime);
 	hitJSON.add(userLoginId);
+	hitJSON.add(partyId);
+	hitJSON.add(role);
 	hitJSON.add(contentId);
 	hitJSON.add(totalTimeMillis);
 	

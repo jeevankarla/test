@@ -22,9 +22,11 @@ $(document).ready(function() {
 	var datatable2 = $('#datatable2').dataTable( {
 		"data": hitsTable,
 		"columns": [
-			{ "title": "Hits Date" },
-			{ "title": "Hits Time" },			
-			{ "title": "User" },			
+			{ "title": "Hit Date" },
+			{ "title": "Hit Time" },			
+			{ "title": "User Login" },
+			{ "title": "Party Id" },	
+			{ "title": "Role" },														
 			{ "title": "Content Id" },
 			{ "title": "Time (ms)"}],	
 		"columnDefs": [{ type: 'date-eu', targets: [0] }],
