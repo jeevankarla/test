@@ -51,7 +51,8 @@ public static final BigDecimal ZERO_BASE = BigDecimal.ZERO;
 public static final BigDecimal ONE_BASE = BigDecimal.ONE;
 public static final BigDecimal PERCENT_SCALE = new BigDecimal("100.000");
 public static int salestaxFinalDecimals = UtilNumber.getBigDecimalScale("salestax.final.decimals");
-public static int salestaxCalcDecimals = UtilNumber.getBigDecimalScale("salestax.calc.decimals");
+public static int salestaxCalcDecimals = 2;//UtilNumber.getBigDecimalScale("salestax.calc.decimals");
+
 public static int salestaxRounding = UtilNumber.getBigDecimalRoundingMode("salestax.rounding");
 	    
 public static Map<String, Object> getPurchaseFactoryStore(Delegator delegator){
@@ -449,7 +450,7 @@ public static Map<String, Object> createPurchaseOrder(DispatchContext dctx, Map<
 		    		taxDetailMap.put("amount", taxAmount);
 		    		taxDetailMap.put("percentage", taxRate);
 		    		taxList.add(taxDetailMap);
-		    		
+
 		    		GenericValue newProdPriceType = delegator.makeValue("ProductPriceAndType");        	 
 		    		newProdPriceType.set("fromDate", effectiveDate);
 		    		newProdPriceType.set("parentTypeId", "TAX");
@@ -508,7 +509,6 @@ public static Map<String, Object> createPurchaseOrder(DispatchContext dctx, Map<
 		    		taxDetailMap.put("amount", taxAmount);
 		    		taxDetailMap.put("percentage", taxRate);
 		    		taxList.add(taxDetailMap);
-		    		
 		    		GenericValue newProdPriceType = delegator.makeValue("ProductPriceAndType");        	 
 		    		newProdPriceType.set("fromDate", effectiveDate);
 		    		newProdPriceType.set("parentTypeId", "TAX");
