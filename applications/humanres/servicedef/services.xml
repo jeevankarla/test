@@ -93,7 +93,9 @@ under the License.emplpunch
     <service name="deleteBusTiming" engine="simple" default-entity-name="DailyBusTimings"
              location="component://humanres/script/org/ofbiz/humanres/HumanResServices.xml" invoke="deleteBusTiming" auth="true">
         <description>Delete Bus Timing</description>
-        <permission-service service-name="humanResManagerPermission" main-action="EMPLOYEE_EDIT"/>
+       <required-permissions join-type="OR">
+          <permission-service service-name="humanResManagerPermission" main-action="BUSTIMING_DELETE"/>
+    	</required-permissions>
         <auto-attributes mode="IN" include="pk" optional="false"/>
     </service>
     <service name="updateLateMins" engine="java" default-entity-name="EmplDailyAttendanceDetail"

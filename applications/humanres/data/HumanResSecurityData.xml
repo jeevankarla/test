@@ -36,6 +36,7 @@ under the License.
     <SecurityPermission description="Mobile retailer dashboard permission." permissionId="MOB_HR_DB_VIEW"/>
     <SecurityPermission description="Mobile employee last punch view Permission." permissionId="MOB_PUNCH_VIEW"/>
     <SecurityPermission description="Entring Daily Bus Timings create Permission" permissionId="HUMANRES_BUSTIMING_CREATE"/>
+    <SecurityPermission description="Daily Bus Timings delete Permission" permissionId="HUMANRES_BUSTIMING_DELETE"/>
     
     <SecurityGroup description="Mobile employee" groupId="MOB_EMPLOYEE"/>
     <SecurityGroupPermission groupId="MOB_EMPLOYEE" permissionId="MOB_EMPLOYEES_VIEW"/>  
@@ -75,5 +76,10 @@ under the License.
     <SecurityGroup description="Entering Daily Bus Timings" groupId="HR_DAILYBUS_VIEW"/>
     <SecurityGroupPermission groupId="FULLADMIN" permissionId="HUMANRES_BUSTIMING_CREATE"/>
     <SecurityGroupPermission groupId="HR_DAILYBUS_VIEW" permissionId="HUMANRES_BUSTIMING_CREATE"/>
+    
+    
+    <SecurityGroup description="Deleting Daily Bus Timings" groupId="HR_DAILYBUS_DELETE"/>
+    <SecurityGroupPermission groupId="FULLADMIN" permissionId="HUMANRES_BUSTIMING_DELETE"/>
+    <SecurityGroupPermission groupId="HR_DAILYBUS_DELETE" permissionId="HUMANRES_BUSTIMING_DELETE"/>
       
 </entity-engine-xml>
