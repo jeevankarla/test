@@ -106,7 +106,6 @@
          <menu-item name="DailyPunchEditTable" title="OOD/Manual Punch Entry"> 
             <condition>
                 <or>
-                   <if-has-permission permission="HR"  action="_ATTENDANCE_VIEW"/>
                    <if-has-permission permission="EMP"  action="_PUNCH_EDIT_UPDATE"/>
                 </or>
             </condition> 
