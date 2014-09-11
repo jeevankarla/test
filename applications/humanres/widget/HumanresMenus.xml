@@ -89,7 +89,7 @@
             <link target="DailyPunch"/>
         </menu-item>     
         <menu-item name="busTimings" title="Daily Bus Timings">
-           <condition>
+            <condition>
             	<if-has-permission permission="HR"  action="_DAILYBUS_VIEW"/>
             </condition> 
         	<link target="busTimings"/>
@@ -539,7 +539,7 @@
                 <parameter param-name="partyId"/>
             </link>
         </menu-item>
-        <menu-item name="PayrollItems" title="Payroll Items">
+        <menu-item name="PayrollItems" title="Salary">
         	<link target="ListPayHistories">
         		<parameter param-name="roleTypeIdFrom" from-field="parameters.roleTypeIdFrom"/>
                 <parameter param-name="roleTypeIdTo" from-field="parameters.roleTypeIdTo"/>

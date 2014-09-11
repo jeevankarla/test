@@ -210,15 +210,23 @@
         <field name="partyIdFrom"><hidden/></field>
         <field name="partyIdTo"><hidden/></field>
         <field name="tenantId"><hidden/></field>
-        <field name="amount"><hidden/></field>     
-        <field name="payGradeId" title="${uiLabelMap.HumanResPayGradeID}"><lookup target-form-name="LookupPayGrade" size="20"/></field>           
-        <field name="salaryStepSeqId" title="${uiLabelMap.HumanResSalaryStepSeqId}"><lookup target-form-name="LookupSalaryStep" size="20"/></field>
-        <field name="fromDate" tooltip="${uiLabelMap.CommonRequired}"/>
-        <field name="periodTypeId"><display description="${periodType.description}"/></field>
+        <field name="amount"><text size="15"/></field>    
+        <field name="thruDate"><date-time type="date" /></field> 
+        <field name="payGradeId" title="Pay Grade"><lookup target-form-name="LookupPayGrade" size="20"/></field>           
+        <field name="salaryStepSeqId" title="Salary Step"><lookup target-form-name="LookupSalaryStep" size="20"/></field>
+        <field name="fromDate" tooltip="${uiLabelMap.CommonRequired}"><date-time type="date" /></field>
+        <field name="periodTypeId"><hidden/></field>
         <field name="submitButton" title="${uiLabelMap.CommonAdd}"><submit button-type="button"/></field>
+        <sort-order>
+        	<sort-field name="fromDate"/>
+        	<sort-field name="thruDate"/>
+        	<sort-field name="payGradeId"/>
+        	<sort-field name="salaryStepSeqId"/>
+        	<sort-field name="amount"/>
+        </sort-order>
     </form>        
     <form name="ListPayHistories" type="list" target="updatePayHistory" title="" paginate-target="findPayHistories" list-name="listIt"
-        odd-row-style="alternate-row" default-table-style="basic-table" separate-columns="true" header-row-style="header-row">
+        odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table" separate-columns="true">
         <actions>
              <entity-condition entity-name="PayHistory" filter-by-date="false">
                 <condition-list combine="and">
@@ -240,24 +248,29 @@
                 <field-map field-name="periodTypeId" value="FISCAL_MONTH"/>
             </entity-one>             
         </actions>
-        <auto-fields-service service-name="updatePayHistory"/>
+        <row-actions>
+        	<entity-one entity-name="PayGrade" value-field="payGrade"/>
+            <set field="payScale" from-field="payGrade.payScale"/>
+        </row-actions>
+        <!-- <auto-fields-service service-name="updatePayHistory"/> -->
         <field name="roleTypeIdFrom"><hidden/></field>
         <field name="roleTypeIdTo"><hidden/></field>
         <field name="partyIdFrom"><hidden/></field>
         <field name="partyIdTo"><hidden/></field>
-        <field name="amount"><hidden/></field>
+        <field name="payScale"><display/></field>
+        <field name="amount" use-when="!hasEmplEditPermission"><display/></field>
+        <field name="amount" use-when="hasEmplEditPermission" title="Amount"><text size="10"/></field>
         <field name="comments"><hidden/></field>
-        <field name="thruDate" use-when="!hasEmplEditPermission"><display/></field>  
+        <field name="tenantId"><hidden/></field>
+        <field name="thruDate" use-when="!hasEmplEditPermission" title="Thru Date"><display/></field>  
         <field name="payGradeId" use-when="!hasEmplEditPermission" title="${uiLabelMap.HumanResPayGradeID}"><display/></field>        
         <field name="salaryStepSeqId" use-when="!hasEmplEditPermission" title="${uiLabelMap.HumanResSalaryStepSeqId}"><display/></field>
-        <field name="fromDate"><display/></field>
-        <field name="thruDate" use-when="hasEmplEditPermission"><date-time/></field>              
-        <field name="periodTypeId"><display description="${periodType.description}"/></field>
-        <field name="payGradeId" use-when="hasEmplEditPermission" title="${uiLabelMap.HumanResPayGradeID}"><lookup target-form-name="LookupPayGrade" size="20"/></field>        
-        
-        <field name="salaryStepSeqId" use-when="hasEmplEditPermission" title="${uiLabelMap.HumanResSalaryStepSeqId}"><lookup target-form-name="LookupSalaryStep" size="20"/></field>
+        <field name="fromDate"><display description="${groovy:org.ofbiz.base.util.UtilDateTime.toDateString(fromDate, &quot;yyyy-MM-dd&quot;);}"></display> </field>
+        <field name="thruDate" use-when="hasEmplEditPermission"><date-time  type="date"/></field>              
+        <field name="payGradeId" use-when="hasEmplEditPermission" title="${uiLabelMap.HumanResPayGradeID}"><lookup target-form-name="LookupPayGrade" description-field-name="payGradeName" size="20"/></field>        
+        <field name="salaryStepSeqId" use-when="hasEmplEditPermission" title="${uiLabelMap.HumanResSalaryStepSeqId}"><lookup  target-form-name="LookupSalaryStep" size="20"/></field>
         <field name="submitButton" use-when="hasEmplEditPermission" title="${uiLabelMap.CommonUpdate}"><submit button-type="button"/></field>
-        <field name="deleteLink" use-when="hasEmplEditPermission" title="${uiLabelMap.CommonEmptyHeader}" widget-style="buttontext">
+        <field name="deleteLink" use-when="hasEmplEditPermission" title=" " widget-style="buttontext">
             <hyperlink target="deletePayHistory" description="${uiLabelMap.CommonDelete}">
                 <parameter param-name="roleTypeIdFrom"/>
                 <parameter param-name="roleTypeIdTo"/>
@@ -266,6 +279,18 @@
                 <parameter param-name="fromDate"/>
             </hyperlink>
         </field>
+        <field name="periodTypeId"><hidden/></field>
+        <sort-order>
+        <sort-field name="payScale"/>
+        	<sort-field name="fromDate"/>
+        	<sort-field name="thruDate"/>
+        	<sort-field name="salaryStepSeqId"/>
+        	
+        	<sort-field name="amount"/>
+        	<sort-field name="payGradeId"/>
+        	<sort-field name="submitButton"/>
+        	<sort-field name="deleteLink"/>
+        </sort-order>
     </form>
     <form name="ListPartyBenefits" type="multi" target="updatePartyBenefit?benefitTypeId=${benefitTypeId}&amp;roleTypeIdFrom=${roleTypeIdFrom}&amp;roleTypeIdTo=${roleTypeIdTo}&amp;partyIdFrom=${partyIdFrom}&amp;partyIdTo=${partyIdTo}&amp;fromDate=${fromDate}" title="" paginate-target="findPartyBenefits"
         odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar" separate-columns="true">
@@ -287,8 +312,8 @@
         <field name="actualEmployerPaidPercent"><hidden/></field>
         <field name="availableTime"><hidden/></field>                 
         <field name="benefitTypeId"><display-entity entity-name="BenefitType" description="${description}"/></field>
-        <field name="fromDate"><display/></field>
-        <field name="thruDate"><date-time/></field>    
+        <field name="fromDate"><display description="${groovy:org.ofbiz.base.util.UtilDateTime.toDateString(fromDate, &quot;yyyy-MM-dd&quot;);}"/></field>
+        <field name="thruDate"><date-time type="date"/></field>    
         <field name="cost"><text size="20" maxlength="30"/></field>            
         <field name="periodTypeId"><display description="${periodType.description}"/></field>
         <field name="_rowSubmit" title="${uiLabelMap.CommonSelect}"><hidden value="Y"/></field> 
@@ -321,7 +346,7 @@
         <field name="actualEmployerPaidPercent"><hidden/></field>
         <field name="availableTime"><hidden/></field>                 
         <field name="benefitTypeId"><display-entity entity-name="BenefitType" description="${description}"/></field>
-        <field name="fromDate"><display/></field>
+        <field name="fromDate"><display description="${groovy:org.ofbiz.base.util.UtilDateTime.toDateString(fromDate, &quot;yyyy-MM-dd&quot;);}"/></field>
         <field name="thruDate"><display/></field>    
         <field name="cost"><display/></field>            
         <field name="periodTypeId"><display description="${periodType.description}"/></field>
@@ -358,7 +383,8 @@
                     description="${description}"/>
             </drop-down>
         </field>
-        <field name="fromDate" tooltip="${uiLabelMap.CommonRequired}"><date-time/></field>
+        <field name="fromDate" tooltip="${uiLabelMap.CommonRequired}"><date-time type="date"/></field>
+        <field name="thruDate" ><date-time type="date"/></field>
         <field name="periodTypeId"><display description="${periodType.description}"/></field>
         <field name="cost"><text size="20" maxlength="30"/></field>
         <field name="submitButton" title="${uiLabelMap.CommonAdd}"><submit button-type="button"/></field>
@@ -383,9 +409,9 @@
         <field name="actualEmployerPaidPercent"><hidden/></field>
         <field name="availableTime"><hidden/></field>                 
         <field name="paymentMethodTypeId"><hidden/></field>
-        <field name="deductionTypeId"><display-entity entity-name="DeductionType" description="${description}"/></field>
-        <field name="fromDate"><display/></field>
-        <field name="thruDate"><date-time/></field>    
+        <field name="deductionTypeId" ><display-entity entity-name="DeductionType" description="${description}"/></field>
+        <field name="fromDate"><display description="${groovy:org.ofbiz.base.util.UtilDateTime.toDateString(fromDate ,&quot;yyyy-MM-dd&quot;);}"/></field>
+        <field name="thruDate"><date-time type="date"/></field>    
         <field name="cost" title="Flat Amount"><text size="20" maxlength="30"/></field>            
         <field name="periodTypeId"><display description="${periodType.description}"/></field>
         <field name="_rowSubmit" title="${uiLabelMap.CommonSelect}"><hidden value="Y"/></field> 
@@ -450,7 +476,8 @@
         <field name="roleTypeId"><hidden/></field>
         <field name="partyIdTo"><hidden value="${partyIdTo}"/></field>
         <field name="roleTypeIdTo"><hidden value="${roleTypeId}"/></field>        
-        <field name="fromDate"><hidden/></field>
+        <field name="fromDate" tooltip="${uiLabelMap.CommonRequired}"><date-time type="date"/></field>
+        <field name="thruDate"><date-time type="date"/></field>
         <field name="tenantId"><hidden/></field>
         <field name="percentage"><hidden/></field>          
         <field name="routingNumber"><hidden/></field>  
@@ -464,7 +491,6 @@
         </field>
        
         <field name="periodTypeId"><display description="${periodType.description}"/></field>    
-        <field name="fromDate" tooltip="${uiLabelMap.CommonRequired}"><date-time/></field>          
         <field name="cost"  id-name="Deductioncost" title="Flat Amount"><text size="20" maxlength="30"/></field>                
         <field name="submitButton" title="${uiLabelMap.CommonCreate}" widget-style="smallSubmit"><submit button-type="button"/></field>
     </form>

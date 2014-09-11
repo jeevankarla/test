@@ -188,7 +188,7 @@
 		                            	<if-compare field="hasEmplEditPermission" operator="equals" value="true" type="Boolean"/>
 		                            </condition> 
 		                            <widgets>                    
-		                        		<screenlet id="AddPayHistory" title="${uiLabelMap.HumanResAddPayHistory}" collapsible="true">
+		                        		<screenlet id="AddPayHistory" title="Add PayHistory" collapsible="true">
 		                            		<include-form name="AddPayHistory" location="component://humanres/widget/forms/EmploymentForms.xml"/>
 		                        		</screenlet> 
 		                        	</widgets> 
