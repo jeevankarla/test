@@ -521,7 +521,7 @@
 						data[args.row]["quantity"] = calculateQty;
 					</#if>
 					<#if changeFlag?exists && changeFlag == "DepotSales" || changeFlag == "FgsSales" || changeFlag == "InterUnitTransferSale">
-						calculateQty = parseFloat(Math.round((calcQty/convValue)*100)/100);
+						calculateQty = parseFloat(Math.round((calcQty/convValue)*10000)/10000);
 						data[args.row]["quantity"] = calculateQty;
 					</#if>
 				}
@@ -630,7 +630,7 @@
 						data[i]["crQuantity"] = crVal;
 					</#if>
 					<#if changeFlag?exists && changeFlag == "DepotSales" || changeFlag == "FgsSales" || changeFlag == "InterUnitTransferSale">
-						crVal = parseFloat(Math.round((qty*convValue)*100)/100);
+						crVal = parseFloat(Math.round((qty*convValue)*10000)/10000);
 						data[i]["ltrQuantity"] = crVal;
 					</#if>
 				}
