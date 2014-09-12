@@ -56,6 +56,19 @@ under the License.
     <StatusType statusTypeId="LEAVE_STATUS" description="Employee Leave Status"/>
     <StatusItem statusId="LEAVE_APPROVED" statusTypeId="LEAVE_STATUS"  description="Approved"/>
     <StatusItem statusId="LEAVE_REJECTED" statusTypeId="LEAVE_STATUS"  description="Rejected"/>
+    <StatusItem statusId="LEAVE_APPROVE_LEVEL1" statusTypeId="LEAVE_STATUS"  description="Level 1 Approved"/>
+    <StatusItem statusId="LEAVE_APPROVE_LEVEL2" statusTypeId="LEAVE_STATUS"  description="Level 2 Approved"/>
+    
+    <StatusValidChange statusId="LEAVE_CREATED" statusIdTo="LEAVE_REJECTED" conditionExpression="01|02|03" transitionName="Rejected"/>
+    <StatusValidChange statusId="LEAVE_APPROVED" statusIdTo="LEAVE_REJECTED" conditionExpression="01|02|03" transitionName="Rejected"/>   
+    <StatusValidChange statusId="LEAVE_CREATED" statusIdTo="LEAVE_APPROVE_LEVEL1" conditionExpression="02|03" transitionName="Level-1 Approved"/>
+    <StatusValidChange statusId="LEAVE_APPROVE_LEVEL1" statusIdTo="LEAVE_REJECTED" conditionExpression="02|03" transitionName="Rejected"/>
+    <StatusValidChange statusId="LEAVE_CREATED" statusIdTo="LEAVE_APPROVED" conditionExpression="01" transitionName="Approved"/>
+    <StatusValidChange statusId="LEAVE_APPROVE_LEVEL1"  statusIdTo="LEAVE_APPROVED" conditionExpression="02" transitionName="Approved"/>
+    <StatusValidChange statusId="LEAVE_APPROVE_LEVEL1"  statusIdTo="LEAVE_APPROVE_LEVEL2" conditionExpression="03" transitionName="Level-2 Approved"/>
+    <StatusValidChange statusId="LEAVE_APPROVE_LEVEL2"  statusIdTo="LEAVE_APPROVED" conditionExpression="03" transitionName="Approved"/>
+    <StatusValidChange statusId="LEAVE_APPROVE_LEVEL2" statusIdTo="LEAVE_REJECTED" conditionExpression="03" transitionName="Rejected"/>
+
 
     <EmplPositionType description="Programmer" hasTable="N" parentTypeId="" emplPositionTypeId="PROGRAMMER"/>
     <EmplPositionType description="System Administrator" hasTable="N" parentTypeId="" emplPositionTypeId="SYS_ADMIN"/>

@@ -38,12 +38,14 @@ import org.ofbiz.service.DispatchContext;
 import org.ofbiz.service.GenericServiceException;
 import org.ofbiz.service.LocalDispatcher;
 import org.ofbiz.service.ModelService;
+import org.ofbiz.base.util.StringUtil;
 import org.ofbiz.service.ServiceUtil;
 import org.ofbiz.entity.GenericValue;
 import org.ofbiz.entity.condition.EntityCondition;
 import org.ofbiz.entity.condition.EntityOperator;
 import org.ofbiz.entity.transaction.TransactionUtil;
 import org.ofbiz.entity.util.EntityUtil;
+
 
 public class EmplLeaveService {
     public static final String module = EmplLeaveService.class.getName();
@@ -257,6 +259,89 @@ public class EmplLeaveService {
     	return result;
     }
 	
+	public static Map<String, Object> getEmployLeaveValidStatusChange(DispatchContext ctx, Map<String, ? extends Object> context) {
+    	Delegator delegator = ctx.getDelegator();
+    	GenericValue userLogin = (GenericValue) context.get("userLogin");
+    	Map<String, Object> result = ServiceUtil.returnSuccess();
+        String leaveTypeId = (String)context.get("leaveTypeId");
+        String statusId = (String)context.get("leaveStatus");
+		String approveLevels = null;
+		List validStatusChangeList = FastList.newInstance();
+		try {
+			GenericValue emplLeaveTypeDetails = delegator.findOne("EmplLeaveType",UtilMisc.toMap("leaveTypeId", leaveTypeId), true);
+			if(UtilValidate.isNotEmpty(emplLeaveTypeDetails)){
+				approveLevels = (String) emplLeaveTypeDetails.get("approveLevels");
+			}
+			if(UtilValidate.isEmpty(approveLevels)){
+				approveLevels = "01";
+			}
+			List conditionList = FastList.newInstance();
+			conditionList.add(EntityCondition.makeCondition("statusTypeId", EntityOperator.EQUALS ,"LEAVE_STATUS"));
+			conditionList.add(EntityCondition.makeCondition("statusId", EntityOperator.EQUALS ,statusId));
+     		EntityCondition condition = EntityCondition.makeCondition(conditionList,EntityOperator.AND);
+     		List<GenericValue> StatusValidChangeList = delegator.findList("StatusValidChangeToDetail", condition, null,null, null, false);
+     		for(GenericValue statusValidChange:StatusValidChangeList){
+				String conditionExpression = statusValidChange.getString("conditionExpression");
+				List<String> condExpSplitStr = StringUtil.split(conditionExpression, "|");
+				if(condExpSplitStr.contains(approveLevels)){
+					validStatusChangeList.add(statusValidChange);
+				}
+     		}
+		}catch(Exception e){
+  			Debug.logError("Error while retrieving status list" + e.getMessage(), module);
+  			return ServiceUtil.returnError("Error while getting Employee Leave valid status");
+  		}
+		result.put("validStatusChangeList",validStatusChangeList);
+        return result;
+    }
+	
+	
+	public static Map<String, Object> updateEmplLeaveStatus(DispatchContext dctx, Map<String, ? extends Object> context) {
+    	Delegator delegator = dctx.getDelegator();
+		LocalDispatcher dispatcher = dctx.getDispatcher();    	
+        GenericValue userLogin = (GenericValue) context.get("userLogin");
+        String userLoginId = (String)userLogin.get("userLoginId");
+        String emplLeaveApplId =  (String)context.get("emplLeaveApplId");
+        String leaveStatus =  (String)context.get("leaveStatus");
+        String approverPartyId = (String)context.get("approverPartyId");
+        String leaveTypeId = (String)context.get("leaveTypeId");
+        Map<String, Object> result = ServiceUtil.returnSuccess(" "+ leaveStatus + " Sucessfully..!");
+		GenericValue emplLeaveDetails = null;
+		try {
+			if(UtilValidate.isEmpty(leaveStatus.trim())){
+				return ServiceUtil.returnError("Leave Status Cannot be Empty "); 
+			}
+			if(UtilValidate.isEmpty(approverPartyId)){
+				return ServiceUtil.returnError("Approver Party Cannot be Empty "); 
+			}
+			emplLeaveDetails = delegator.findOne("EmplLeave",UtilMisc.toMap("emplLeaveApplId", emplLeaveApplId), false);
+			if(UtilValidate.isNotEmpty(emplLeaveDetails)){
+				emplLeaveDetails.set("leaveStatus", leaveStatus);
+				emplLeaveDetails.set("approverPartyId", approverPartyId);
+				emplLeaveDetails.store();
+			}
+		}catch(Exception e){
+  			Debug.logError("Error while updating emplLeaveStatus " + e.getMessage(), module);
+  			return ServiceUtil.returnError("Error while updating EmplLeaveStatus ");
+  		}
+		result.put("emplLeaveApplId",emplLeaveDetails.getString("emplLeaveApplId"));
+		result.put("partyId",emplLeaveDetails.getString("partyId"));
+		result.put("leaveTypeId",emplLeaveDetails.getString("leaveTypeId"));
+		result.put("emplLeaveReasonTypeId",emplLeaveDetails.getString("emplLeaveReasonTypeId"));
+		result.put("fromDate",emplLeaveDetails.getTimestamp("fromDate"));
+		result.put("thruDate",emplLeaveDetails.getTimestamp("thruDate"));
+		result.put("effectedCreditDays",emplLeaveDetails.getBigDecimal("effectedCreditDays"));
+		result.put("dayFractionId",emplLeaveDetails.getString("dayFractionId"));
+		result.put("appliedBy",emplLeaveDetails.getString("appliedBy"));
+		result.put("lossOfPayDays",emplLeaveDetails.getBigDecimal("lossOfPayDays"));
+		result.put("approverPartyId",emplLeaveDetails.getString("approverPartyId"));
+		result.put("leaveStatus",emplLeaveDetails.getString("leaveStatus"));
+		result.put("documentsProduced",emplLeaveDetails.getString("documentsProduced"));
+		result.put("description",emplLeaveDetails.getString("description"));
+		result.put("comment",emplLeaveDetails.getString("comment"));
+    	return result;
+    }
+	
 	
 	public static Map<String, Object> storeEmplLeaveStatus(DispatchContext dctx, Map<String, ? extends Object> context) {
     	Delegator delegator = dctx.getDelegator();
@@ -265,6 +350,7 @@ public class EmplLeaveService {
         String userLoginId = (String)userLogin.get("userLoginId");
         String emplLeaveApplId =  (String)context.get("emplLeaveApplId");
         String leaveStatus =  (String)context.get("leaveStatus");
+        String approverPartyId = (String)context.get("approverPartyId");
 		Map result = FastMap.newInstance();
 		GenericValue emplLeaveStatusDetails = null; 
 		try {
@@ -272,6 +358,7 @@ public class EmplLeaveService {
 			GenericValue emplLeaveStatus = delegator.makeValue("EmplLeaveStatus");
 		    emplLeaveStatus.set("emplLeaveApplId", emplLeaveApplId );
 		    emplLeaveStatus.set("leaveStatus", leaveStatus);
+		    emplLeaveStatus.set("approverPartyId", approverPartyId);
 		    emplLeaveStatus.set("changedByUserLogin", userLoginId); 
 		    emplLeaveStatus.set("changedDate", UtilDateTime.nowTimestamp());
 		    delegator.createOrStore(emplLeaveStatus);    

@@ -691,6 +691,7 @@ under the License.
         <field name="parentTypeId" type="id-ne"/>
         <field name="hasTable" type="indicator"/>
         <field name="description" type="description"/>
+        <field name="approveLevels" type="id"/>
         <prim-key field="leaveTypeId"/>
         <relation type="one" fk-name="EMPL_LEAVE_TPAR" title="Parent" rel-entity-name="EmplLeaveType">
             <key-map field-name="parentTypeId" rel-field-name="leaveTypeId"/>
@@ -701,6 +702,7 @@ under the License.
             title="Employee Leave Status Entity">
         <field name="emplLeaveApplId" type="id-ne"/>
         <field name="leaveStatus" type="id-ne"/>
+        <field name="approverPartyId" type="id"></field>
         <field name="changedDate" type="date-time"></field>      
         <field name="changedByUserLogin" type="id-vlong"></field>
         <prim-key field="emplLeaveApplId"/>

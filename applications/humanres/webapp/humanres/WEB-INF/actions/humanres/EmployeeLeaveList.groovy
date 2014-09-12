@@ -14,7 +14,32 @@ import in.vasista.vbiz.byproducts.ByProductServices;
 
 fromDate = UtilDateTime.getDayStart(UtilDateTime.nowTimestamp());
 thruDate = UtilDateTime.getDayEnd(UtilDateTime.nowTimestamp());
+
+
+fDate = parameters.fDate;
+tDate = parameters.tDate;
+
+if(UtilValidate.isNotEmpty(parameters.fromDate)){
+	parameters.fromDate = UtilDateTime.toDateString(parameters.fromDate ,"yyyy-MM-dd");
+}
+if(UtilValidate.isNotEmpty(parameters.thruDate)){
+	parameters.thruDate = UtilDateTime.toDateString(parameters.thruDate ,"yyyy-MM-dd");
+}
+
 def sdf = new SimpleDateFormat("yyyy-MM-dd");
+try {
+	if (fDate) {
+		fromDate = UtilDateTime.getDayStart(new java.sql.Timestamp(sdf.parse(fDate).getTime()));
+	}
+	if (tDate) {
+		thruDate = UtilDateTime.getDayEnd(new java.sql.Timestamp(sdf.parse(tDate).getTime()));
+	}
+} catch (ParseException e) {
+	Debug.logError(e, "Cannot parse date string: " + e, "");
+	context.errorMessage = "Cannot parse date string: " + e;
+	return;
+}
+
 try {
 	if (parameters.fromDate) {
 		fromDate = UtilDateTime.getDayStart(new java.sql.Timestamp(sdf.parse(parameters.fromDate).getTime()));
@@ -27,6 +52,7 @@ try {
 	context.errorMessage = "Cannot parse date string: " + e;
 	return;
 }
+
 List employeeLeaveList = [];
 List conditionList=[];
 if(UtilValidate.isNotEmpty(parameters.partyId)){
@@ -46,9 +72,9 @@ if(UtilValidate.isNotEmpty(parameters.approverPartyId)){
 }
 if(UtilValidate.isNotEmpty(parameters.leaveStatus)){
 	conditionList.add(EntityCondition.makeCondition("leaveStatus", EntityOperator.EQUALS,parameters.leaveStatus ));
-}else{
+}/*else{
 	conditionList.add(EntityCondition.makeCondition("leaveStatus", EntityOperator.EQUALS, "LEAVE_CREATED"));
-}
+}*/
 if(UtilValidate.isNotEmpty(parameters.fromDate)){
 	conditionList.add(EntityCondition.makeCondition("fromDate", EntityOperator.GREATER_THAN_EQUAL_TO,fromDate ));
 }

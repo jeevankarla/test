@@ -230,9 +230,10 @@
                 <set field="leaveTypeId" from-field="parameters.leaveTypeId"/>
                 <set field="fromDate" from-field="parameters.fromDate"/>
                 <set field="emplLeaveApplId" from-field="parameters.emplLeaveApplId"/>
-                <entity-one entity-name="EmplLeave" value-field="leaveApp" auto-field-map="false">
+                <!-- <entity-one entity-name="EmplLeave" value-field="leaveApp" auto-field-map="false">
                     <field-map field-name="emplLeaveApplId" from-field="emplLeaveApplId"/>
-                </entity-one>
+                </entity-one> -->
+                <script location="component://humanres/webapp/humanres/WEB-INF/actions/humanres/EmplMultiLevelLeaveApproval.groovy"/>
             </actions>
             <widgets>
                <decorator-screen name="HumanresCommonDecorator"

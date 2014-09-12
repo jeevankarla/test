@@ -1527,8 +1527,8 @@ under the License.
     <request-map uri="updateEmplLeaveStatus">
         <security https="true" auth="true"/>
         <event type="service" invoke="updateEmplLeaveStatus"/>
-        <response name="success" type="view" value="EditEmplLeaveStatus"/>
-        <response name="error" type="view" value="EditEmplLeaveStatus"/>
+        <response name="success" type="view" value="FindLeaveApprovals"/>
+        <response name="error" type="view" value="FindLeaveApprovals"/>
     </request-map>
    <!--====================Reports Requests===================================-->
     <request-map uri="viewprofile">

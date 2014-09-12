@@ -22,9 +22,16 @@
      <eca service="updateEmplLeaveStatus" event="commit">
         <action service="updateGhSsAvailedDetails" mode="sync"/>
      </eca>
+     <eca service="createEmplLeave" event="commit">
+        <condition field-name="emplLeaveApplId" operator="is-not-empty"/>
+        <condition field-name="leaveStatus" operator="is-not-empty"/>
+        <condition field-name="approverPartyId" operator="is-not-empty"/>
+        <action service="storeEmplLeaveStatus" mode="sync"/>
+    </eca>
      <eca service="updateEmplLeaveStatus" event="commit">
         <condition field-name="emplLeaveApplId" operator="is-not-empty"/>
         <condition field-name="leaveStatus" operator="is-not-empty"/>
+        <condition field-name="approverPartyId" operator="is-not-empty"/>
         <action service="storeEmplLeaveStatus" mode="sync"/>
     </eca>
 </service-eca>     

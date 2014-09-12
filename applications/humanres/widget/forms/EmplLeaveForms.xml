@@ -112,8 +112,8 @@
                 <parameter param-name="emplLeaveApplId"/>
             </hyperlink>
         </field>
-        <field name="deleteLink" title="${uiLabelMap.CommonDelete}" widget-style="buttontext" use-when="hasEmplLeaveEditPermission&amp;&amp;&quot;${leaveStatus}&quot;!=&quot;LEAVE_APPROVED&quot;">
-            <hyperlink also-hidden="false" description="${uiLabelMap.CommonDelete}" target="deleteEmplLeave">
+        <field name="deleteLink" title="${uiLabelMap.CommonCancel}" widget-style="buttontext" use-when="hasEmplLeaveEditPermission&amp;&amp;&quot;${leaveStatus}&quot;!=&quot;LEAVE_APPROVED&quot;">
+            <hyperlink also-hidden="false" description="${uiLabelMap.CommonCancel}" target="deleteEmplLeave">
                 <parameter param-name="partyId"/>
                 <parameter param-name="leaveTypeId"/>
                 <parameter param-name="fromDate"/>
@@ -183,8 +183,8 @@
                 <entity-options description="${description}" key-field-name="emplLeaveReasonTypeId" entity-name="EmplLeaveReasonType"/>
             </drop-down>
         </field>
-        <field name="fromDate" title="From Date" ><date-time type="date"/></field>
-        <field name="thruDate" title="Thru Date"><date-time type="date"/></field>
+        <field name="fromDate" parameter-name="fDate" title="From Date" ><date-time type="date"/></field>
+        <field name="thruDate" parameter-name="tDate" title="Thru Date"><date-time type="date"/></field>
        <field name="dayFractionId" position="1" title="First/Second Half">
              <radio>
                 <entity-options description="${description}" entity-name="Enumeration" key-field-name="enumId">
@@ -205,7 +205,8 @@
         <field name="appliedBy"><hidden/></field>
 		<field name="comment"><hidden/></field>
 		<field name="documentsProduced"><hidden/></field>
-        <field name="approverPartyId"><lookup target-form-name="LookupEmployeeName"/></field>
+		<field name="approverPartyId" use-when="${groovy:((security.hasEntityPermission(&quot;HUMANRES&quot;, &quot;_ADMIN&quot;, session)))}"><lookup target-form-name="LookupEmployeeName"></lookup></field>
+        <field name="approverPartyId" use-when="${groovy:((security.hasEntityPermission(&quot;HUMANRES_LEAVE&quot;, &quot;_APPROVAL&quot;, session)))}"><display description="${userLogin.partyId}"></display></field>
         <field name="description"><hidden/></field>
         <field name="noConditionFind"><hidden value="Y"/><!-- if this isn't there then with all fields empty no query will be done --></field>
         <field name="searchButton" title="${uiLabelMap.CommonFind}" widget-style="smallSubmit"><submit button-type="button"/></field>
@@ -224,9 +225,7 @@
         </sort-order>
     </form>
     <form name="ListLeaveApprovals" list-name="employeeLeaveList" type="list" odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
-        <actions>
-           
-        </actions>
+        
         <auto-fields-entity entity-name="EmplLeave" default-field-type="display"/>
         <field name="effectedCreditDays"><hidden/></field>
         <field name="lossOfPayDays"><hidden/></field>
@@ -248,7 +247,7 @@
             --></display-entity>
         </field>
         <field name="leaveStatus"><display-entity entity-name="StatusItem" key-field-name="statusId" description="${description}"></display-entity></field>
-        <field name="UpdateStatus" title="${uiLabelMap.CommonUpdate}" widget-style="buttontext">
+        <field name="UpdateStatus" use-when="&quot;${leaveStatus}&quot;!=&quot;LEAVE_REJECTED&quot;" title="${uiLabelMap.CommonUpdate}" widget-style="buttontext">
             <hyperlink target="EditEmplLeaveStatus" description="${uiLabelMap.CommonUpdate}" >
                 <parameter param-name="partyId"/>
                 <parameter param-name="fromDate"/>
@@ -259,33 +258,44 @@
         </field>
     </form>
     <form name="EditEmplLeaveStatus" type="single" target="updateEmplLeaveStatus">
-        <auto-fields-service service-name="updateEmplLeaveStatus" map-name="leaveApp"/>
+        <actions>
+          <set field="emplLeaveStatus" from-field="leaveStatus"/>
+          <set field="leaveStatus" value=" "/>
+        </actions>
         <field name="emplLeaveApplId"><hidden/></field>
         <field name="effectedCreditDays"><hidden/></field>
         <field name="lossOfPayDays"><hidden/></field>
+        <field name="partyName"><display/></field>
         <field name="partyId"><display/></field>
-        <field name="approverPartyId"><display/></field>
+        <field name="approverPartyId" parameter-name="levelApproverPartyId"><display/></field>
         <field name="appliedBy"><display/></field>
         <field name="leaveTypeId"><display/></field>
         <field name="emplLeaveReasonTypeId"><display/></field>
         <field name="fromDate"><display/></field>
         <field name="thruDate"><display/></field>
         <field name="description"><display/></field>
-        <field name="leaveStatus" title="${uiLabelMap.HumanResLeaveStatus}">
+        <field name="levelApproverPartyId" parameter-name="approverPartyId" required-field="true" title="Level Approver Party"><lookup target-form-name="LookupEmployeeName"></lookup>
+        </field>
+        <!-- <field name="leaveStatus" title="${uiLabelMap.HumanResLeaveStatus}">
             <drop-down allow-empty="false"  current="APPROVED">
                 <entity-options description="${description}" key-field-name="statusId" entity-name="StatusItem">
                     <entity-constraint name="statusTypeId" operator="equals" value="LEAVE_STATUS"/>
                     <entity-order-by field-name="description"/>
                 </entity-options>
             </drop-down>
+        </field> -->
+        <field name="leaveStatus" title="Next Leave Status" required-field="true">
+	        <drop-down allow-empty="false">
+	        	<list-options key-name="statusIdTo" list-name="validStatusChangeList" description="${transitionName}"/>
+	        </drop-down>
         </field>
         <field name="documentsProduced">
-        		<drop-down allow-empty="true">
-        			<option key="Y" ></option>
-        			<option key="N"></option>			
-        		</drop-down>
+       		<drop-down allow-empty="true">
+       			<option key="Y" ></option>
+       			<option key="N"></option>			
+       		</drop-down>
         </field>
-        <field name="leaveStatus" use-when="leaveApp!=null&amp;&amp;leaveApp.getString(&quot;leaveStatus&quot;).equals(&quot;LEAVE_REJECTED&quot;)"><display></display></field>
+        <field name="leaveStatus"  use-when="emplLeaveStatus==&quot;LEAVE_REJECTED&quot;"><display></display></field>
         <field name="submitButton" title="${uiLabelMap.CommonUpdate}" widget-style="smallSubmit"><submit button-type="button"/></field>
     </form>
 </forms>

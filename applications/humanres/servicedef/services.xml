@@ -1122,8 +1122,8 @@ under the License.emplpunch
         <auto-attributes mode="IN" include="pk" optional="false"/>
     </service>
     
-    <service name="updateEmplLeaveStatus" engine="simple" default-entity-name="EmplLeave"
-            location="component://humanres/script/org/ofbiz/humanres/HumanResServices.xml" invoke="updateEmplLeaveStatus" auth="true">
+    <service name="updateEmplLeaveStatus" engine="java" default-entity-name="EmplLeave"
+            location="in.vasista.vbiz.humanres.EmplLeaveService" invoke="updateEmplLeaveStatus" auth="true">
         <description>Update Leave Approval Status</description>
         <required-permissions join-type="OR">
            <permission-service service-name="humanResManagerPermission" main-action="UPDATE"/>
@@ -1138,6 +1138,7 @@ under the License.emplpunch
         <description>Store Employee Current Leave Status</description>
         <attribute name="emplLeaveApplId"  mode="IN" type="String" optional="false"/>
         <attribute name="leaveStatus"  mode="IN" type="String" optional="false"/>
+        <attribute name="approverPartyId"  mode="IN" type="String" optional="false"/>
         <attribute name="changedByUserLogin"  mode="IN" type="String" optional="true"/>
         <attribute name="changedDate" mode="IN" type="Timestamp" optional="true"/> 
     </service>
