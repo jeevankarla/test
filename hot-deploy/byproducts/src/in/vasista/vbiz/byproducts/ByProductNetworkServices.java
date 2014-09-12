@@ -8494,6 +8494,7 @@ public class ByProductNetworkServices {
 		}
 
 		conditionList.add(EntityCondition.makeCondition("partyIdTo", EntityOperator.EQUALS, "Company"));
+		/*conditionList.add(EntityCondition.makeCondition(EntityCondition.makeCondition("paymentPurposeType", EntityOperator.EQUALS, "ROUTE_MKTG"), EntityOperator.OR, EntityCondition.makeCondition("paymentPurposeType", EntityOperator.EQUALS, null)));*/
 		conditionList.add(EntityCondition.makeCondition("paymentTypeId", EntityOperator.NOT_EQUAL, "SECURITYDEPSIT_PAYIN"));
 		conditionList.add(EntityCondition.makeCondition("paymentDate",EntityOperator.GREATER_THAN_EQUAL_TO, fromDate));
 		conditionList.add(EntityCondition.makeCondition("paymentDate",EntityOperator.LESS_THAN_EQUAL_TO, thruDate));
@@ -8637,8 +8638,8 @@ public class ByProductNetworkServices {
 			List conditionList = FastList.newInstance();
 			conditionList.add(EntityCondition.makeCondition("invoiceTypeId",EntityOperator.NOT_IN,UtilMisc.toList("STATUTORY_OUT")));
 			conditionList.add(EntityCondition.makeCondition("invoiceItemTypeId",EntityOperator.NOT_IN,UtilMisc.toList("INCO_FINEPENALTY_CHQ")));
-			conditionList.add(EntityCondition.makeCondition("dueDate",EntityOperator.GREATER_THAN_EQUAL_TO, fromDate));
-			conditionList.add(EntityCondition.makeCondition("dueDate",EntityOperator.LESS_THAN_EQUAL_TO, thruDate));
+			conditionList.add(EntityCondition.makeCondition("invoiceDate",EntityOperator.GREATER_THAN_EQUAL_TO, fromDate));
+			conditionList.add(EntityCondition.makeCondition("invoiceDate",EntityOperator.LESS_THAN_EQUAL_TO, thruDate));
 			if (isByParty) {
 				conditionList.add(EntityCondition.makeCondition("partyId",EntityOperator.IN, ownerPartyIds));
 			} else {
@@ -8650,7 +8651,7 @@ public class ByProductNetworkServices {
 			List<GenericValue> invoiceItems = delegator.findList("InvoiceAndItemType", condition, UtilMisc.toSet("invoiceId"), null, null, false);
 			List tempInvIds = EntityUtil.getFieldListFromEntityList(invoiceItems, "invoiceId", true);
 			
-			List<GenericValue> invoices = delegator.findList("Invoice", EntityCondition.makeCondition("invoiceId", EntityOperator.IN, tempInvIds), UtilMisc.toSet("invoiceId", "dueDate", "facilityId", "partyId"), null, null, false);
+			List<GenericValue> invoices = delegator.findList("Invoice", EntityCondition.makeCondition("invoiceId", EntityOperator.IN, tempInvIds), UtilMisc.toSet("invoiceId", "invoiceDate", "dueDate", "facilityId", "partyId"), null, null, false);
 			
 			
 			int intervalDays = (UtilDateTime.getIntervalInDays(fromDate,thruDate) + 1);
@@ -8660,7 +8661,7 @@ public class ByProductNetworkServices {
 				Timestamp supplyDate = UtilDateTime.addDaysToTimestamp(fromDate, k);
 				Timestamp dayStart = UtilDateTime.getDayStart(supplyDate);
 				Timestamp dayEnd = UtilDateTime.getDayEnd(supplyDate);
-				List<GenericValue> daywiseInvoices = EntityUtil.filterByCondition(invoices,EntityCondition.makeCondition(EntityCondition.makeCondition("dueDate",EntityOperator.GREATER_THAN_EQUAL_TO,dayStart),EntityOperator.AND,EntityCondition.makeCondition("dueDate",EntityOperator.LESS_THAN_EQUAL_TO,dayEnd)));
+				List<GenericValue> daywiseInvoices = EntityUtil.filterByCondition(invoices,EntityCondition.makeCondition(EntityCondition.makeCondition("invoiceDate",EntityOperator.GREATER_THAN_EQUAL_TO,dayStart),EntityOperator.AND,EntityCondition.makeCondition("invoiceDate",EntityOperator.LESS_THAN_EQUAL_TO,dayEnd)));
 				List dayPartyInvoices = FastList.newInstance();
 				if (isByParty) {
 					dayPartyInvoices = (List) EntityUtil.getFieldListFromEntityList(daywiseInvoices,"partyId", true);
@@ -8691,7 +8692,7 @@ public class ByProductNetworkServices {
 					for (int j = 0; j < daywiseBoothwiseSale.size(); j++) {
 						GenericValue dayBoothSale = (GenericValue) daywiseBoothwiseSale.get(j);
 						String invoiceId = dayBoothSale.getString("invoiceId");
-						Timestamp dueDate = (Timestamp) dayBoothSale.get("dueDate");
+						Timestamp dueDate = (Timestamp) dayBoothSale.get("invoiceDate");
 						BigDecimal amount = (BigDecimal) InvoiceWorker.getInvoiceTotal(delegator, invoiceId);
 						boothInvTotal = boothInvTotal.add(amount);
 						if (invDetail.containsKey(boothId)) {
