@@ -1661,6 +1661,9 @@ under the License.
     <request-map uri="EmployeeBankDetailsPdf.pdf"><security https="true" auth="true"/>
         <response name="success" type="view" value="EmployeeBankDetailsPdf"></response>
         </request-map>
+    <request-map uri="EmployeeBankDetailsCsv.csv"><security https="true" auth="true"/>
+        <response name="success" type="view" value="EmployeeBankDetailsCsv"></response>
+        </request-map>
     <request-map uri="LeaveAvailedReport.pdf"><security https="true" auth="true"/>
 		<response name="success" type="view" value="LeaveAvailedReport"></response>    
     </request-map>
@@ -2018,6 +2021,7 @@ under the License.
 	
 	 <view-map name="EmployeeBankDetails" type="screen" page="component://humanres/widget/ReportHumanresSummaryScreens.xml#EmployeeBankDetails"/> 
 	 <view-map name="EmployeeBankDetailsPdf" type="screenfop" page="component://humanres/widget/ReportHumanresSummaryScreens.xml#EmployeeBankDetailsPdf" content-type="application/pdf" encoding="none"/>
+	  <view-map name="EmployeeBankDetailsCsv" type="screencsv" page="component://humanres/widget/ReportHumanresSummaryScreens.xml#EmployeeBankDetailsCsv" content-type="text/csv" encoding="none"/>
 	 <view-map name="PFtransfer" type="screenfop" page="component://humanres/widget/ReportHumanresSummaryScreens.xml#PFtransfer" content-type="application/pdf" encoding="none"/>
 	 <view-map name="PFclaiming" type="screenfop" page="component://humanres/widget/ReportHumanresSummaryScreens.xml#PFclaiming" content-type="application/pdf" encoding="none"/>
 	 <view-map name="PFnomination" type="screenfop" page="component://humanres/widget/ReportHumanresSummaryScreens.xml#PFnomination" content-type="application/pdf" encoding="none"/>

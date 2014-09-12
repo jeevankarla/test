@@ -1151,12 +1151,12 @@
 			<!-- <script	location="component://humanres/webapp/humanres/WEB-INF/actions/reports/BankAdvise.groovy" /> -->
 			<set field="parameters.partyId" from-field="parameters.partyId"/>
 			<script location="component://humanres/webapp/humanres/WEB-INF/actions/reports/EmployeePayRollReport.groovy"/>  
-			<script	location="component://humanres/webapp/humanres/WEB-INF/actions/reports/BankAdvise.groovy" />    
+			<script	location="component://humanres/webapp/humanres/WEB-INF/actions/reports/BankAdvise.groovy" />
 		</actions>
 		<widgets>
 			<section>                                                      
 				<widgets>
-					<platform-specific>
+				<platform-specific>
 						<xsl-fo>
 							<html-template location="component://humanres/webapp/humanres/humanres/employeeBankDetails.fo.ftl" />
 						</xsl-fo>
@@ -1166,6 +1166,36 @@
 		</widgets>
 	</section>
 </screen>
+<screen name="EmployeeBankDetailsCsv">
+	<section>
+		<actions>
+		<set field="viewSize" value="99999"/>
+			<property-map resource="HumanResUiLabels" map-name="uiLabelMap" global="true" />
+			<property-map resource="AccountingUiLabels" map-name="uiLabelMap" global="true" />
+			<property-map resource="PartyUiLabels" map-name="uiLabelMap"  global="true" />
+			<property-map resource="CommonUiLabels" map-name="uiLabelMap" global="true" />
+			<set field="footerImageUrl" value="/images/ProcessedbyVasista.gif"/>
+			<entity-condition list="nameList" entity-name="PartyRoleAndPartyDetail">
+				<condition-expr field-name="partyId" operator="equals" value="${parameters.partyId}"/>
+			</entity-condition>
+			<set field="groupName" value="${nameList[0].groupName}"/>
+			<set field="partyId" value="${nameList[0].partyId}"/>
+			<!-- <script	location="component://humanres/webapp/humanres/WEB-INF/actions/reports/BankAdvise.groovy" /> -->
+			<set field="parameters.partyId" from-field="parameters.partyId"/>
+			<script location="component://humanres/webapp/humanres/WEB-INF/actions/reports/EmployeePayRollReport.groovy"/>  
+			<script	location="component://humanres/webapp/humanres/WEB-INF/actions/reports/BankAdvise.groovy" />
+			<script	location="component://humanres/webapp/humanres/WEB-INF/actions/reports/EmpBankAdvise.groovy" />    
+		</actions>
+		<widgets>
+			<section>                                                      
+				<widgets>
+					<include-form location="component://humanres/widget/ReportHumanresSummaryForms.xml" name="EmployeeBankDetailsCsv"/>
+				</widgets>
+			</section>
+		</widgets>
+	</section>
+</screen>
+
 	<screen name="EmployeeWiseSalaryDetails">
 		<section>
 			<actions>

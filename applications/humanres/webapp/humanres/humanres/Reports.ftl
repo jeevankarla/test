@@ -445,7 +445,8 @@ function makeDatePicker1(fromDateId ,thruDateId){
 											<#list customTimePeriodList?sort_by("fromDate") as customTimePeriod><option value='${customTimePeriod.customTimePeriodId?if_exists}' >${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(customTimePeriod.fromDate, "dd MMMMM, yyyy")} -${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(customTimePeriod.thruDate, "dd MMMMM, yyyy")}</option></#list>
 										</select></span>
 									</td>
-									<td width="10%"><span class='h3'><input type="submit" value="Download" class="buttontext"></span></td> 
+									<td width="10%"><span class='h4'><input type="submit" value="PDF" onClick="javascript:appendParams('MonthlyBankAdviceStatement', '<@ofbizUrl>EmployeeBankDetailsPdf.pdf</@ofbizUrl>');" class="buttontext"/>
+									 <input type="submit" value="CSV" onClick="javascript:appendParams('MonthlyBankAdviceStatement', '<@ofbizUrl>EmployeeBankDetailsCsv.csv</@ofbizUrl>');" class="buttontext"/></span></td> 
 									</td>
 								</tr>
 							</table>

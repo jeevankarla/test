@@ -176,6 +176,15 @@
 		<field name="address" title="Residential Address"><display description="${address}"/></field>
 		<field name="retirementDate" title="Retirement Date" title-area-style="tableheadwide"><display description="${retirementDate}"/></field>		
 	</form>	
+	<form name="EmployeeBankDetailsCsv" type="list" list-name="finalList" 
+		odd-row-style="alternate-row" default-table-style="basic-table hover-bar">
+		<actions></actions>
+		<field name="bankName" title="Bank Name"><display/></field>
+		<field name="emplId" title="Employee Id"><display/></field>
+		<field name="name" title="Employee Name"><display/></field>
+		<field name="acNo" title="Account Number"><display/></field>
+		<field name="netAmt" title="Net Amount"><display/></field>
+	</form>	
 	 <form name="employeeLookup" type="single"  odd-row-style="header-row" default-table-style="basic-table"  target="EmployeeWiseSalaryDetails">
        	<field name="employeeId">
 			<lookup target-form-name="LookupEmployeeName"/>
