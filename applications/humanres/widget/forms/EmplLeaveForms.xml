@@ -36,8 +36,8 @@
                 <entity-options description="${description}" key-field-name="emplLeaveReasonTypeId" entity-name="EmplLeaveReasonType"/>
             </drop-down>
         </field>
-        <field name="fromDate" title="From Date" ><date-time type="date"/></field>
-        <field name="thruDate" title="Thru Date"><date-time type="date"/></field>
+        <field name="fromDate"  parameter-name="fDate" title="From Date" ><date-time type="date"/></field>
+        <field name="thruDate"  parameter-name="tDate" title="Thru Date"><date-time type="date"/></field>
        <field name="dayFractionId" position="1" title="First/Second Half">
              <radio>
                 <entity-options description="${description}" entity-name="Enumeration" key-field-name="enumId">

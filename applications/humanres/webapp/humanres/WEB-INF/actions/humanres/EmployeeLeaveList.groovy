@@ -19,13 +19,6 @@ thruDate = UtilDateTime.getDayEnd(UtilDateTime.nowTimestamp());
 fDate = parameters.fDate;
 tDate = parameters.tDate;
 
-if(UtilValidate.isNotEmpty(parameters.fromDate)){
-	parameters.fromDate = UtilDateTime.toDateString(parameters.fromDate ,"yyyy-MM-dd");
-}
-if(UtilValidate.isNotEmpty(parameters.thruDate)){
-	parameters.thruDate = UtilDateTime.toDateString(parameters.thruDate ,"yyyy-MM-dd");
-}
-
 def sdf = new SimpleDateFormat("yyyy-MM-dd");
 try {
 	if (fDate) {
@@ -40,12 +33,20 @@ try {
 	return;
 }
 
+if(UtilValidate.isNotEmpty(parameters.fromDate)){
+	parameters.fromDate = UtilDateTime.toDateString(parameters.fromDate ,"yyyy-MM-dd HH:mm:ss");
+}
+if(UtilValidate.isNotEmpty(parameters.thruDate)){
+	parameters.thruDate = UtilDateTime.toDateString(parameters.thruDate ,"yyyy-MM-dd HH:mm:ss");
+}
+
+def sdf1 = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 try {
 	if (parameters.fromDate) {
-		fromDate = UtilDateTime.getDayStart(new java.sql.Timestamp(sdf.parse(parameters.fromDate).getTime()));
+		fromDate = UtilDateTime.getDayStart(new java.sql.Timestamp(sdf1.parse(parameters.fromDate).getTime()));
 	}
 	if (parameters.thruDate) {
-		thruDate = UtilDateTime.getDayEnd(new java.sql.Timestamp(sdf.parse(parameters.thruDate).getTime()));
+		thruDate = UtilDateTime.getDayEnd(new java.sql.Timestamp(sdf1.parse(parameters.thruDate).getTime()));
 	}
 } catch (ParseException e) {
 	Debug.logError(e, "Cannot parse date string: " + e, "");
