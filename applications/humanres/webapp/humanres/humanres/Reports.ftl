@@ -358,6 +358,23 @@ function makeDatePicker1(fromDateId ,thruDateId){
 							</table>	
       	   				</form>
       	  			</tr>
+      	  			<tr class="alternate-row">
+						<form id="PayableDaysReport" name="PayableDaysReport" mothed="post" action="<@ofbizUrl>PayableDaysReport.pdf</@ofbizUrl>" >
+							<table class="basic-table" cellspacing="5">
+								<tr class="alternate-row">
+									<td width="12%"><span class='h3'>Payable Days Report</span></td>
+									<td width="24%"><span class='h3'>Period Id</span>
+									<select name="customTimePeriodId" class='h4'>
+										<#list timePeriodList as timePeriod>    
+											<option value='${timePeriod.customTimePeriodId}'>${timePeriod.fromDate?if_exists}-${timePeriod.thruDate?if_exists}</option>
+										</#list>      
+									</select>
+									</td>	
+									<td width="12%"><span class='h3'><input type="submit" value="Download" class="buttontext"></span></td> 
+								</tr>
+							</table>
+						</form>
+				 	</tr>
 				</table>
 			</div>
 		</div>
@@ -477,7 +494,7 @@ function makeDatePicker1(fromDateId ,thruDateId){
 							</form>
 						</table>
 					</tr>
-					<tr class="alternate-row">
+					<#--	<tr class="alternate-row"> 
 						<form id="GSLISReport" name="GSLISReport" mothed="post" action="<@ofbizUrl>GSLISReport.pdf</@ofbizUrl>" target="_blank">
 							<table class="basic-table" cellspacing="5">
 								<tr class="alternate-row">
@@ -506,7 +523,7 @@ function makeDatePicker1(fromDateId ,thruDateId){
 								</tr>
 							</table>
 						</form>
-					</tr>
+					</tr>   -->
 					
 				   	<tr class="alternate-row">
 						<form id="BenefitsOrDeductionsExport" name="BenefitsOrDeductionsExport" mothed="post" action="<@ofbizUrl>ExportEmployeeBenefitsOrDeductions</@ofbizUrl>" target="_blank">
