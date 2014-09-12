@@ -196,6 +196,37 @@ public class LmsServices {
 		        	tempMap.put("fromDate", fromDate);
 		        	tempMap.put("userLogin", userLogin);
 		        	resultMap = dispatcher.runSync("addFacilityToGroup", tempMap);
+		        	String subscriptionType="";
+		        	if(UtilValidate.isNotEmpty(routeId)){
+		        		List<GenericValue> groupMemberList = delegator.findList("FacilityGroupMember",EntityCondition.makeCondition("facilityId", EntityOperator.EQUALS ,routeId) , null, null, null, false);
+		        		if(UtilValidate.isNotEmpty(groupMemberList)){
+		        			GenericValue groupMember = EntityUtil.getFirst(groupMemberList);
+		        			if("AM_RT_GROUP".equals(groupMember.get("facilityGroupId"))){
+		        				subscriptionType="AM";
+		        				
+		        			}
+		        			if("PM_RT_GROUP".equals(groupMember.get("facilityGroupId"))){
+		        				subscriptionType="PM";
+		        			}		
+		        		}
+		        		conditionList.clear();
+		        		conditionList.add(EntityCondition.makeCondition("subscriptionTypeId", EntityOperator.EQUALS, subscriptionType));
+		        		conditionList.add(EntityCondition.makeCondition("facilityId", EntityOperator.EQUALS, facilityId));
+						EntityCondition cond2=EntityCondition.makeCondition(conditionList,EntityOperator.AND);
+						List<GenericValue> subscriptionList = delegator.findList("Subscription",  cond2, null, UtilMisc.toList("fromDate"), null, false);
+						if(UtilValidate.isEmpty(subscriptionList)){
+			        		GenericValue newSubscription = delegator.makeValue("Subscription");
+							newSubscription.put("facilityId", facilityId);
+							newSubscription.set("subscriptionTypeId", subscriptionType);
+							try{
+							    delegator.createSetNextSeqId(newSubscription);
+							    Debug.log("created SubscriptionList ==="+newSubscription);
+							}catch (GenericEntityException e) {
+								Debug.logError(e, module);
+								return ServiceUtil.returnError("Error while creating  subscription" + e);	
+							}
+					     }
+		        	}
 		        	if(ServiceUtil.isError(resultMap)){
 		        		Debug.logError(ServiceUtil.getErrorMessage(resultMap), module);
 	                    return resultMap;
