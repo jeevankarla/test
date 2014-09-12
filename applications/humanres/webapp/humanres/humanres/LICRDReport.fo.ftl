@@ -36,6 +36,8 @@
                 		<#assign noofLines=1>
                 		<#assign GrandTot=0>
                 		<#assign pageTot=0>
+                		<#assign cumulativePageTot=0>
+                		<#assign cumulativeGrandTot=0>
 	                    <fo:table-column column-width="120pt"/>
 	                    <fo:table-column column-width="100pt"/>
 	                    <fo:table-column column-width="200pt"/>                
@@ -45,19 +47,19 @@
                      	<fo:table-body> 
                      		<fo:table-row >
 	                           	<fo:table-cell >	
-	                            	<fo:block text-align="center" keep-together="always" font-weight="bold" font-size="15pt">SLNo</fo:block>
+	                            	<fo:block text-align="center" keep-together="always" font-weight="bold" font-size="14pt">SLNo</fo:block>
 	                            </fo:table-cell>
 	                            <fo:table-cell >	
-	                            	<fo:block text-align="left" keep-together="always" font-weight="bold" font-size="15pt">Emp No</fo:block>
+	                            	<fo:block text-align="left" keep-together="always" font-weight="bold" font-size="14pt">Emp No</fo:block>
 	                            </fo:table-cell>
 	                            <fo:table-cell >	
-	                            	<fo:block text-align="left" keep-together="always" font-weight="bold" font-size="15pt">Name</fo:block>
+	                            	<fo:block text-align="left" keep-together="always" font-weight="bold" font-size="14pt">Name</fo:block>
 	                            </fo:table-cell>
 	                            <fo:table-cell >	
-	                            	<fo:block text-align="left" keep-together="always" font-weight="bold" font-size="15pt">Ref No</fo:block>
+	                            	<fo:block text-align="left" keep-together="always" font-weight="bold" font-size="14pt">Ref No</fo:block>
 	                            </fo:table-cell>
 	                            <fo:table-cell >	
-	                            	<fo:block text-align="right" keep-together="always" font-weight="bold" font-size="15pt">&#160; Amount(Rs)</fo:block>
+	                            	<fo:block text-align="right" keep-together="always" font-weight="bold" font-size="14pt">&#160; Amount(Rs)</fo:block>
 	                            </fo:table-cell>
 	                            <#if (parameters.insuranceTypeId)==("RECCR_DEPOSIT")>
 	                            <fo:table-cell >	
@@ -121,6 +123,8 @@
 	                            				<#if (cumulativeDetails.getValue().get(LicInsuranceValues.get("employeeNo")))!=0>
 				                            		<fo:table-cell >	
 				                            			<fo:block text-align="right" keep-together="always" font-size="13pt">${cumulativeDetails.getValue().get(LicInsuranceValues.get("employeeNo"))?if_exists?string("##0.00")}</fo:block>
+				                            			<#assign cumulativePageTot=cumulativePageTot+cumulativeDetails.getValue().get(LicInsuranceValues.get("employeeNo"))>
+				                            			<#assign cumulativeGrandTot=cumulativeGrandTot+cumulativeDetails.getValue().get(LicInsuranceValues.get("employeeNo"))>
 				                            		</fo:table-cell>
 				                            	</#if>
 			                            	</#if>
@@ -147,7 +151,13 @@
 	   									<fo:table-cell>
 	   										<fo:block text-align="right" page-break-after="always" font-weight="bold">${pageTot?if_exists?string("##0.00")}</fo:block>
 	   									</fo:table-cell>
+	   									<#if (parameters.insuranceTypeId)==("RECCR_DEPOSIT")>
+	   										<fo:table-cell>
+		   										<fo:block text-align="right" page-break-after="always" font-weight="bold">${cumulativePageTot?if_exists?string("##0.00")}</fo:block>
+		   									</fo:table-cell>
+	   									</#if>
 	   									<#assign pageTot=0>
+	   									<#assign cumulativePageTot=0>
 									</fo:table-row>
 	                           		<#assign noofLines =1>
 								</#if>
@@ -173,6 +183,11 @@
                             	<fo:table-cell >	
                             		<fo:block text-align="right" keep-together="always" font-weight="bold" font-size="12pt">${GrandTot?if_exists?string("##0.00")}</fo:block>
                             	</fo:table-cell>
+                            	<#if (parameters.insuranceTypeId)==("RECCR_DEPOSIT")>
+									<fo:table-cell>
+   										<fo:block text-align="right" keep-together="always" font-weight="bold" font-size="12pt">${cumulativeGrandTot?if_exists?string("##0.00")}</fo:block>
+   									</fo:table-cell>
+								</#if>
                            </fo:table-row>
                            <fo:table-row >
 		                   		<fo:table-cell >	
