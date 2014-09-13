@@ -869,10 +869,11 @@ under the License.emplpunch
         <attribute name="emplLeaveApplId" mode="OUT" type="String" optional="false"/>
         <!--  <attribute name="partyId" mode="OUT" type="String" optional="true"/> -->
         <attribute name="leaveStatus" mode="OUT" type="String" optional="true"/>
+        <attribute name="levelApproverPartyId" mode="IN" type="String" optional="true"/>
         <override name="partyId" optional="false"/>
         <override name="leaveTypeId" optional="false"/>
         <override name="fromDate" optional="false"/>
-        <override name="approverPartyId" optional="false"/>
+        <override name="approverPartyId" optional="true"/>
         <override name="thruDate" optional="false"/>
     </service>
 
@@ -1131,6 +1132,7 @@ under the License.emplpunch
         </required-permissions>
         <auto-attributes mode="INOUT" include="pk" optional="false"/>
         <auto-attributes mode="INOUT" include="nonpk" optional="true"/>
+        <attribute name="levelApproverPartyId"  mode="IN" type="String" optional="true"/>
     </service>
     
     <service name="storeEmplLeaveStatus" engine="java"
@@ -1139,6 +1141,7 @@ under the License.emplpunch
         <attribute name="emplLeaveApplId"  mode="IN" type="String" optional="false"/>
         <attribute name="leaveStatus"  mode="IN" type="String" optional="false"/>
         <attribute name="approverPartyId"  mode="IN" type="String" optional="false"/>
+        <attribute name="levelApproverPartyId"  mode="IN" type="String" optional="true"/>
         <attribute name="changedByUserLogin"  mode="IN" type="String" optional="true"/>
         <attribute name="changedDate" mode="IN" type="Timestamp" optional="true"/> 
     </service>

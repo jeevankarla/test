@@ -861,6 +861,9 @@
 
     <simple-method method-name="updateEmplLeave" short-description="Update Employee Leave">
         <entity-one entity-name="EmplLeave" value-field="lookedUpValue"/>
+        <if-not-empty field="parameters.levelApproverPartyId">
+          	<set field="parameters.approverPartyId" from-field="parameters.levelApproverPartyId"/>
+        </if-not-empty>
         <set-nonpk-fields value-field="lookedUpValue" map="parameters"/>
         <store-value value-field="lookedUpValue"/>
         <set field="responseMessage" value="Leave Updated successfully."/>

@@ -233,6 +233,7 @@
                 <!-- <entity-one entity-name="EmplLeave" value-field="leaveApp" auto-field-map="false">
                     <field-map field-name="emplLeaveApplId" from-field="emplLeaveApplId"/>
                 </entity-one> -->
+                <set field="layoutSettings.javaScripts[]" value="/humanres/images/approverPartyId.js" global="true"/>
                 <script location="component://humanres/webapp/humanres/WEB-INF/actions/humanres/EmplMultiLevelLeaveApproval.groovy"/>
             </actions>
             <widgets>

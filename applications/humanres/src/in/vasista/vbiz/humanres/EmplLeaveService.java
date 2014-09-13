@@ -304,6 +304,7 @@ public class EmplLeaveService {
         String emplLeaveApplId =  (String)context.get("emplLeaveApplId");
         String leaveStatus =  (String)context.get("leaveStatus");
         String approverPartyId = (String)context.get("approverPartyId");
+        String levelApproverPartyId = (String)context.get("levelApproverPartyId");
         String leaveTypeId = (String)context.get("leaveTypeId");
         Map<String, Object> result = ServiceUtil.returnSuccess(" "+ leaveStatus + " Sucessfully..!");
 		GenericValue emplLeaveDetails = null;
@@ -311,13 +312,19 @@ public class EmplLeaveService {
 			if(UtilValidate.isEmpty(leaveStatus.trim())){
 				return ServiceUtil.returnError("Leave Status Cannot be Empty "); 
 			}
-			if(UtilValidate.isEmpty(approverPartyId)){
+			if(UtilValidate.isEmpty(approverPartyId) && (UtilValidate.isEmpty(levelApproverPartyId))){
 				return ServiceUtil.returnError("Approver Party Cannot be Empty "); 
 			}
 			emplLeaveDetails = delegator.findOne("EmplLeave",UtilMisc.toMap("emplLeaveApplId", emplLeaveApplId), false);
 			if(UtilValidate.isNotEmpty(emplLeaveDetails)){
 				emplLeaveDetails.set("leaveStatus", leaveStatus);
-				emplLeaveDetails.set("approverPartyId", approverPartyId);
+				if(UtilValidate.isNotEmpty(levelApproverPartyId)){
+					emplLeaveDetails.set("approverPartyId", levelApproverPartyId);
+				}else{
+					if(UtilValidate.isNotEmpty(approverPartyId)){
+						emplLeaveDetails.set("approverPartyId",approverPartyId);
+					}
+				}
 				emplLeaveDetails.store();
 			}
 		}catch(Exception e){

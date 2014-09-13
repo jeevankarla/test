@@ -36,8 +36,8 @@
                 <entity-options description="${description}" key-field-name="emplLeaveReasonTypeId" entity-name="EmplLeaveReasonType"/>
             </drop-down>
         </field>
-        <field name="fromDate"  parameter-name="fDate" title="From Date" ><date-time type="date"/></field>
-        <field name="thruDate"  parameter-name="tDate" title="Thru Date"><date-time type="date"/></field>
+        <field name="fromDate" parameter-name="fDate" title="From Date" ><date-time type="date"/></field>
+        <field name="thruDate" parameter-name="tDate" title="Thru Date"><date-time type="date"/></field>
        <field name="dayFractionId" position="1" title="First/Second Half">
              <radio>
                 <entity-options description="${description}" entity-name="Enumeration" key-field-name="enumId">
@@ -267,15 +267,20 @@
         <field name="lossOfPayDays"><hidden/></field>
         <field name="partyName"><display/></field>
         <field name="partyId"><display/></field>
-        <field name="approverPartyId" parameter-name="levelApproverPartyId"><display/></field>
+        <field name="approverPartyId" title="Approver Party"><display/></field>
         <field name="appliedBy"><display/></field>
         <field name="leaveTypeId"><display/></field>
         <field name="emplLeaveReasonTypeId"><display/></field>
         <field name="fromDate"><display/></field>
         <field name="thruDate"><display/></field>
         <field name="description"><display/></field>
-        <field name="levelApproverPartyId" parameter-name="approverPartyId" required-field="true" title="Level Approver Party"><lookup target-form-name="LookupEmployeeName"></lookup>
+        
+        <field name="leaveStatus" id-name="leaveStatus" title="Next Leave Status" required-field="true" event="onchange" action="javascript:approverPartyIdChange(this);">
+	        <drop-down allow-empty="false">
+	        	<list-options key-name="statusIdTo" list-name="validStatusChangeList" description="${transitionName}"/>
+	        </drop-down>
         </field>
+        <field name="levelApproverPartyId"  required-field="true" title="Level Approver Party"><lookup target-form-name="LookupEmployeeName"></lookup></field>
         <!-- <field name="leaveStatus" title="${uiLabelMap.HumanResLeaveStatus}">
             <drop-down allow-empty="false"  current="APPROVED">
                 <entity-options description="${description}" key-field-name="statusId" entity-name="StatusItem">
@@ -284,11 +289,6 @@
                 </entity-options>
             </drop-down>
         </field> -->
-        <field name="leaveStatus" title="Next Leave Status" required-field="true">
-	        <drop-down allow-empty="false">
-	        	<list-options key-name="statusIdTo" list-name="validStatusChangeList" description="${transitionName}"/>
-	        </drop-down>
-        </field>
         <field name="documentsProduced">
        		<drop-down allow-empty="true">
        			<option key="Y" ></option>
