@@ -286,7 +286,11 @@
         ///Event handler called when a new row is added and response is returned from server
         function _fnOnRowAdded(data) {
             properties.fnEndProcessingMode();
-           
+            if(data["_ERROR_MESSAGE_LIST_"] != undefined ){
+            	alert("Error creating entry (Please check input values) ::"+data["_ERROR_MESSAGE_LIST_"]);
+            	return false;
+            }
+            
             if (properties.fnOnNewRowPosted(data)) {
 
                 var oSettings = oTable.fnSettings();
