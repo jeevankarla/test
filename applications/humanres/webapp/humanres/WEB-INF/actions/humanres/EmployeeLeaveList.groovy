@@ -12,20 +12,16 @@ import in.vasista.vbiz.humanres.HumanresService;
 import in.vasista.vbiz.byproducts.ByProductServices;
 
 
-fromDate = UtilDateTime.getDayStart(UtilDateTime.nowTimestamp());
-thruDate = UtilDateTime.getDayEnd(UtilDateTime.nowTimestamp());
-
-
-fDate = parameters.fDate;
-tDate = parameters.tDate;
+fromDate = parameters.fDate;
+thruDate = parameters.tDate;
 
 def sdf = new SimpleDateFormat("yyyy-MM-dd");
 try {
-	if (fDate) {
-		fromDate = UtilDateTime.getDayStart(new java.sql.Timestamp(sdf.parse(fDate).getTime()));
+	if (fromDate) {
+		fromDate = UtilDateTime.getDayStart(new java.sql.Timestamp(sdf.parse(fromDate).getTime()));
 	}
-	if (tDate) {
-		thruDate = UtilDateTime.getDayEnd(new java.sql.Timestamp(sdf.parse(tDate).getTime()));
+	if (thruDate) {
+		thruDate = UtilDateTime.getDayEnd(new java.sql.Timestamp(sdf.parse(thruDate).getTime()));
 	}
 } catch (ParseException e) {
 	Debug.logError(e, "Cannot parse date string: " + e, "");
@@ -34,24 +30,10 @@ try {
 }
 
 if(UtilValidate.isNotEmpty(parameters.fromDate)){
-	parameters.fromDate = UtilDateTime.toDateString(parameters.fromDate ,"yyyy-MM-dd HH:mm:ss");
+	fromDate = parameters.fromDate;
 }
 if(UtilValidate.isNotEmpty(parameters.thruDate)){
-	parameters.thruDate = UtilDateTime.toDateString(parameters.thruDate ,"yyyy-MM-dd HH:mm:ss");
-}
-
-def sdf1 = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-try {
-	if (parameters.fromDate) {
-		fromDate = UtilDateTime.getDayStart(new java.sql.Timestamp(sdf1.parse(parameters.fromDate).getTime()));
-	}
-	if (parameters.thruDate) {
-		thruDate = UtilDateTime.getDayEnd(new java.sql.Timestamp(sdf1.parse(parameters.thruDate).getTime()));
-	}
-} catch (ParseException e) {
-	Debug.logError(e, "Cannot parse date string: " + e, "");
-	context.errorMessage = "Cannot parse date string: " + e;
-	return;
+	thruDate = parameters.thruDate;
 }
 
 List employeeLeaveList = [];
@@ -76,12 +58,14 @@ if(UtilValidate.isNotEmpty(parameters.leaveStatus)){
 }/*else{
 	conditionList.add(EntityCondition.makeCondition("leaveStatus", EntityOperator.EQUALS, "LEAVE_CREATED"));
 }*/
-if(UtilValidate.isNotEmpty(parameters.fromDate)){
-	conditionList.add(EntityCondition.makeCondition("fromDate", EntityOperator.GREATER_THAN_EQUAL_TO,fromDate ));
+if(UtilValidate.isNotEmpty(fromDate)){
+	conditionList.add(EntityCondition.makeCondition("fromDate", EntityOperator.GREATER_THAN_EQUAL_TO, ObjectType.simpleTypeConvert(fromDate, "Timestamp", null, null) ));
 }
-if(UtilValidate.isNotEmpty(parameters.thruDate)){
-	conditionList.add(EntityCondition.makeCondition("thruDate", EntityOperator.LESS_THAN_EQUAL_TO,thruDate ));
+if(UtilValidate.isNotEmpty(thruDate)){
+	conditionList.add(EntityCondition.makeCondition("thruDate", EntityOperator.LESS_THAN_EQUAL_TO,ObjectType.simpleTypeConvert(thruDate, "Timestamp", null, null)));
 }
+
+
 condition=EntityCondition.makeCondition(conditionList,EntityOperator.AND);
 LeaveDetails = delegator.findList("EmplLeave", condition , null, UtilMisc.toList("-fromDate"), null, false );
 context.put("employeeLeaveList",LeaveDetails);
