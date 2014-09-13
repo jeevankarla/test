@@ -365,7 +365,7 @@ public class EmplLeaveService {
 			if(UtilValidate.isEmpty(approverPartyId) && (UtilValidate.isEmpty(levelApproverPartyId))){
 				return ServiceUtil.returnError("Approver Party Cannot be Empty "); 
 			}
-			emplLeaveStatusDetails = delegator.findOne("EmplLeaveStatus",UtilMisc.toMap("emplLeaveApplId", emplLeaveApplId,"leaveStatus",leaveStatus), true);
+			emplLeaveStatusDetails = delegator.findOne("EmplLeaveStatus",UtilMisc.toMap("emplLeaveApplId", emplLeaveApplId,"leaveStatus",leaveStatus), false);
 			GenericValue emplLeaveStatus = delegator.makeValue("EmplLeaveStatus");
 		    emplLeaveStatus.set("emplLeaveApplId", emplLeaveApplId );
 		    emplLeaveStatus.set("leaveStatus", leaveStatus);
