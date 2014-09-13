@@ -94,7 +94,7 @@ if(UtilValidate.isNotEmpty(partyIds)){
 		bedRevenue = eachParty.getValue().get("bedRevenue");
 		vatRevenue =eachParty.getValue().get("vatRevenue");
 		cstRevenue = eachParty.getValue().get("cstRevenue");
-		total = basicRevenue+bedRevenue+vatRevenue+cstRevenue;
+		total = eachParty.getValue().get("totalRevenue");
 		totalMap["quantity"]=quantity;
 		if(maxIntervalDays>0){
 		  totalMap["average"]=quantity/maxIntervalDays;
@@ -114,73 +114,6 @@ if(UtilValidate.isNotEmpty(partyIds)){
 context.categoryType=categoryType;
 context.partWiseSaleMap=partWiseSaleMap;
 
-/*if(categoryType.equals("ICE_CREAM_NANDINI")||categoryType.equals("All")){
-	nandiniPartyIds = ByProductNetworkServices.getPartyByRoleType(dctx, [userLogin: userLogin, roleTypeId: "IC_WHOLESALE"]).get("partyIds");
-	//partWiseSaleMap=[:];
-	partyTotals = SalesInvoiceServices.getPeriodSalesTotals(dctx, [partyIds:nandiniPartyIds, isQuantityLtrs:true,fromDate:dayBegin, thruDate:dayEnd]).get("partyTotals");
-	partyTotals.each{eachParty ->
-		quantity=0;
-		basicRevenue=0;
-		bedRevenue=0;
-		vatRevenue=0;
-		cstRevenue=0;
-		total=0;
-		totalMap=[:];
-		quantity = eachParty.getValue().get("total");
-		basicRevenue = eachParty.getValue().get("basicRevenue");
-		bedRevenue = eachParty.getValue().get("bedRevenue");
-		vatRevenue =eachParty.getValue().get("vatRevenue");
-		cstRevenue = eachParty.getValue().get("cstRevenue");
-		total = basicRevenue+bedRevenue+vatRevenue+cstRevenue;
-		totalMap["quantity"]=quantity;
-		if(maxIntervalDays>0){
-		  totalMap["average"]=quantity/maxIntervalDays;
-		}else{
-		 totalMap["average"]=quantity;
-		}
-		totalMap["basicRevenue"]=basicRevenue;
-		totalMap["bedRevenue"]=bedRevenue;
-		totalMap["vatRevenue"]=vatRevenue;
-		totalMap["cstRevenue"]=cstRevenue;
-		totalMap["total"]=total;
-	   if(quantity != 0){
-		partWiseSaleMap.put(eachParty.getKey(), totalMap);
-	   }
-	}
-}
-if(categoryType.equals("ICE_CREAM_AMUL")||categoryType.equals("All")){
- amulPartyIds = ByProductNetworkServices.getPartyByRoleType(dctx, [userLogin: userLogin, roleTypeId: "EXCLUSIVE_CUSTOMER"]).get("partyIds");
- partyTotals = SalesInvoiceServices.getPeriodSalesTotals(dctx, [partyIds:amulPartyIds, isQuantityLtrs:true,fromDate:dayBegin, thruDate:dayEnd]).get("partyTotals");
-partyTotals.each{eachParty ->
-		quantity=0;
-		basicRevenue=0;
-		bedRevenue=0;
-		vatRevenue=0;
-		cstRevenue=0;
-		total=0;
-		totalMap=[:];
-		quantity = eachParty.getValue().get("total");
-		basicRevenue = eachParty.getValue().get("basicRevenue");
-		bedRevenue = eachParty.getValue().get("bedRevenue");
-		vatRevenue =eachParty.getValue().get("vatRevenue");
-		cstRevenue = eachParty.getValue().get("cstRevenue");
-		total = basicRevenue+bedRevenue+vatRevenue+cstRevenue;
-		totalMap["quantity"]=quantity;
-		if(maxIntervalDays>0){
-		  totalMap["average"]=quantity/maxIntervalDays;
-		}else{
-		 totalMap["average"]=quantity;
-		}
-		totalMap["basicRevenue"]=basicRevenue;
-		totalMap["bedRevenue"]=bedRevenue;
-		totalMap["vatRevenue"]=vatRevenue;
-		totalMap["cstRevenue"]=cstRevenue;
-		totalMap["total"]=total;
-		if(quantity != 0){
-		partWiseSaleMap.put(eachParty.getKey(), totalMap);
-	    }
-	}
-}*/
 
 
 
