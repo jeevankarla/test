@@ -11,10 +11,12 @@
 </style>	
 
 
-<script type="text/javascript" language="javascript" class="init" charset="utf-8">	
+<script type="text/javascript" language="javascript" class="init" charset="utf-8">
 
 $(document).ready(function() {
-
+       $(':input').autotab_magic();
+     
+     
 	 var attendanceTable = ${StringUtil.wrapString(punchListEditJSON!'[]')};	 
 	 $('#attendanceTable').html( '<table cellpadding="0" cellspacing="0" border="0" class="display" id="datatable2"><thead><tr></tr></thead><tbody></tbody></table>' );
 
@@ -136,8 +138,7 @@ $(document).ready(function() {
   			
             $("#partyId").val($("select[name=employeeId]").val());
             $("#emplName").val($("#employeeId option:selected").text());
-            setTimepicker();
-           
+            
       });
       
     $("input[name=employeeId]").attr("required",true);
@@ -145,7 +146,17 @@ $(document).ready(function() {
    <#if (security.hasEntityPermission("EMP_PUNCH_EDIT", "_REMOVE", session))>  
      	$("#deletePunchRow").show();
    </#if> 
-});	
+});
+
+$('#timemm').keyup(function(){
+       
+         var timehh = $('#timehh').val();
+         var timemm = $('#timemm').val();
+        
+         $('#punchtime').val(timehh+":"+timemm+":00")
+     
+     });
+	
 </script>
  
  
@@ -203,7 +214,14 @@ $(document).ready(function() {
 			<tr class='h3'>
 				<td align='left' class='h3' width='20%'>Punch Time:</td>
 				<td align='left' class='h3' width='40%'>
-				<input type='text'  value="" name='punchtime' id='punchtime' size='10' required  rel="4" /><em  style="font-size: large;color:red;"><b>*</b></em></tr>
+				<input type='hidden'  value="" name='punchtime' id='punchtime' size='10'   rel="4" />
+				HH:
+				<input type='text'  value="" name='timehh' id='timehh' size='4' maxlength="2" autocomplete="off" required />
+				MM:
+				<input type='text'  value="" name='timemm' id='timemm' size='4' maxlength="2" autocomplete="off" required />
+				<em  style="font-size: large;color:red;">
+				
+				<b>*</b></em></td></tr>
 			
 			<tr class='h3'>
 				<td align='left' class='h3' width='20%'>Note:</td><td align='left' class='h3' width='40%'><input  type='textarea' value='' name='Note' rel="7" required><em  style="font-size: large;color:red;"><b>*</b></em></td>

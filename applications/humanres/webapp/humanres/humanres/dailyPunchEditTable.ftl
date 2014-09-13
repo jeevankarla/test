@@ -39,6 +39,13 @@
 <script type="text/javascript" language="javascript" src="<@ofbizContentUrl>/images/jquery/plugins/jquery.flexselect-0.5.3/jquery.flexselect.js</@ofbizContentUrl>"></script>
 <script type="text/javascript" src="<@ofbizContentUrl>/images/jquery/plugins/datetimepicker/jquery-ui-timepicker-addon-0.9.3.js</@ofbizContentUrl>"></script>
 
+<script language="javascript" type="text/javascript" src="<@ofbizContentUrl>/images/jquery/plugins/autoNumeric/autoNumeric-1.6.2.js</@ofbizContentUrl>"></script>
+
+<script language="javascript" type="text/javascript" src="<@ofbizContentUrl>/images/jquery/plugins/validate/jquery.validate.js</@ofbizContentUrl>"></script>
+
+<script language="javascript" type="text/javascript" src="<@ofbizContentUrl>/images/jquery/plugins/autoTab/jquery.autotab-1.1b.js</@ofbizContentUrl>"></script>
+
+
 
 <style>
 .mycalendar {
@@ -139,15 +146,14 @@ $("#punchDate").val(currentDate.getDate() + "/" + (currentDate.getMonth() + 1) +
     
 });
 
-function setTimepicker(){
+/*function setTimepicker(){
        //alert("hi");
 		$('#punchtime').timepicker({ 
 		showSecond: true,	
 		timeFormat: 'hh:mm:00',
-		showOn: 'button',
-	        buttonImage: '/vasista/images/cal.gif',
+		
 	 });
-}
+}*/
 
 </script>
 
