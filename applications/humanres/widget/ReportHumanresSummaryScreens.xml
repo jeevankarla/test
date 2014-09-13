@@ -247,6 +247,18 @@
 			</widgets>
 		</section>
 	</screen>
+	<screen name="CashEncashmentReportPDF">
+		<section>
+			<actions>
+			<script location="component://humanres/webapp/humanres/WEB-INF/actions/humanres/editLateHours.groovy"/>
+			</actions>
+			<widgets>
+				<platform-specific> 
+				  <xsl-fo><html-template location="component://humanres/webapp/humanres/humanres/CashEncashmentReportPDF.fo.ftl"/></xsl-fo> 
+                </platform-specific>
+			</widgets>
+		</section>
+	</screen>
 	<screen name="PFtransfer">
         <section>
             <actions>

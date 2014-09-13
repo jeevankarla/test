@@ -18,14 +18,41 @@ dctx = dispatcher.getDispatchContext();
 emplList=[];
 holidaysList=[];
 workedHolidaysList=[];
+List EncashmentList=[];
+employments=[];
 holidays=[];
+empIds=[];
+empName=[:];
+orderDate=UtilDateTime.nowTimestamp();
+context.orderDate=orderDate;
 partyId=parameters.partyId;
 timePeriodId=parameters.customTimePeriodId;
+employeeList = [];
+internalOrgs=[];
+context.internalOrgs=internalOrgs;
+context.employeeList=employeeList;
+company = delegator.findByPrimaryKey("PartyAndGroup", [partyId : "Company"]);
+populateChildren(company, employeeList);
+def populateChildren(org, employeeList) {
+	EmploymentsMap=HumanresService.getActiveEmployements(dctx,[userLogin:userLogin,orgPartyId:"company"]);
+	employments=EmploymentsMap.get("employementList");
+	employments.each{ employment->
+		empIds.add(employment.partyId);
+		String lastName="";
+		if(employment.lastName!=null){
+			lastName=employment.lastName;
+		}
+		name=employment.firstName+" "+lastName;
+		empName.put(employment.partyId,name);
+		
+	}
+}
 if(UtilValidate.isNotEmpty(timePeriodId)){
 	context.timePeriodId=timePeriodId;
 		dates=delegator.findOne("CustomTimePeriod", [customTimePeriodId:timePeriodId], false);
 		fromDate=UtilDateTime.toDateString(dates.get("fromDate"), "MMM dd, yyyy");
 		thruDate=UtilDateTime.toDateString(dates.get("thruDate"), "MMM dd, yyyy");
+		
 		fromDateStart = UtilDateTime.getDayStart(UtilDateTime.nowTimestamp());
 		thruDateEnd= UtilDateTime.getDayEnd(UtilDateTime.nowTimestamp());
 		def sdf = new SimpleDateFormat("MMMM dd, yyyy");
@@ -41,7 +68,8 @@ if(UtilValidate.isNotEmpty(timePeriodId)){
 		context.errorMessage = "Cannot parse date string: " + e;
 		return;
 		}
-		
+		context.fromlarDate=UtilDateTime.toDateString(fromDateStart,"dd-MM-yyyy");
+		context.thrularDate=UtilDateTime.toDateString(thruDateEnd,"dd-MM-yyyy");
 	partyId=parameters.partyId;
 	
 	resultMap=PayrollService.getPayrollAttedancePeriod(dctx,[userLogin:userLogin,timePeriodStart:fromDateStart,timePeriodEnd:thruDateEnd,timePeriodId:timePeriodId,locale:locale]);
@@ -74,7 +102,7 @@ if(UtilValidate.isNotEmpty(timePeriodId)){
 		condition=EntityCondition.makeCondition(conditionList,EntityOperator.AND);
 		emplList = delegator.findList("EmplDailyAttendanceDetail", condition ,null,null, null, false );
 		
-		
+		//Approval Holiday
 		List holidayconditionList=[];
 		holidayconditionList.add(EntityCondition.makeCondition("holiDayDate",EntityOperator.GREATER_THAN_EQUAL_TO,fromDateStart));
 		holidayconditionList.add(EntityCondition.makeCondition("holiDayDate",EntityOperator.LESS_THAN_EQUAL_TO,thruDateEnd));
@@ -95,8 +123,34 @@ if(UtilValidate.isNotEmpty(timePeriodId)){
 		workedHolidaysList = delegator.findList("EmplDailyAttendanceDetail", con ,null,null, null, false );
 		
 		
+		//GH and SS Encashment
+		
+		List conGHSSList=[];
+		conGHSSList.add(EntityCondition.makeCondition("partyId", EntityOperator.IN,empIds));
+		conGHSSList.add(EntityCondition.makeCondition("date",EntityOperator.IN,holidays));
+		conGHSSList.add(EntityCondition.makeCondition("encashmentStatus",EntityOperator.EQUALS,"CASH_ENCASHMENT"));
+		conGHSS=EntityCondition.makeCondition(conGHSSList,EntityOperator.AND);
+		workedGHSSList = delegator.findList("EmplDailyAttendanceDetail", conGHSS ,UtilMisc.toSet("partyId","date","shiftType","encashmentStatus"),null, null, false );
+		leaveType="";
+		workedGHSSList.each{ workedGHSS->
+			employee=[:];
+			if(workedGHSS.date==UtilDateTime.toSqlDate(secondSaturDay))
+				leaveType="SS";
+			else
+				leaveType="GH";
+				
+			employee.put("partyId",workedGHSS.partyId);
+			employee.put("date",workedGHSS.date);
+			employee.put("leaveType",leaveType);
+			employee.put("name",empName.get(workedGHSS.partyId));
+			employee.put("encashmentStatus",workedGHSS.encashmentStatus);
+			employee.put("shiftType",workedGHSS.shiftType);
+			EncashmentList.add(employee);
+			
+		}
 	}
 }
+
 context.emplList=emplList;
 context.holidaysList=workedHolidaysList;
-
+context.EncashmentList=EncashmentList;

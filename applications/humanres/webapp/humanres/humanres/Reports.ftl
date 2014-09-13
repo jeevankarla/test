@@ -176,7 +176,7 @@ function makeDatePicker1(fromDateId ,thruDateId){
 									</#list> 
 								</select>
 							</td>	
-							<td width="15%">Leave Type
+							<td width="20%">Leave Type
 								<select name="leaveTypeId" id="leaveTypeId" class='h5' >
 									<option value="ALL">ALL</option>
 										<#list leaveTypeList as leave>
@@ -188,6 +188,21 @@ function makeDatePicker1(fromDateId ,thruDateId){
 							<td width="10%"><input type="submit" value="Download" class="buttontext"></td> 
 							</td>
 						</form>
+					</tr>
+					<tr class="alternate-row">
+						<form id="CashEncashmentReport" name="CashEncashmentReport" mothed="post" action="<@ofbizUrl>CashEncashmentReport.pdf</@ofbizUrl>" target="_blank">
+							<td width="30%">Cash Encashment Report</td>
+							<td width="30%">Period Id
+								<select name="customTimePeriodId" id="customTimePeriodId" class='h4'>
+									<#list customTimePeriodList as customTimePeriod><option value='${customTimePeriod.customTimePeriodId?if_exists}' >${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(customTimePeriod.fromDate, "dd MMMMM, yyyy")} -${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(customTimePeriod.thruDate, "dd MMMMM, yyyy")}</option></#list>
+								</select>
+							</td>	
+							<td width="20%"></td>
+							<td width="20%"></td>
+							<td width="20%"></td>
+							<td width="10%"><input type="submit" value="Download" class="buttontext"></td>
+						
+						</form>											
 					</tr>
 				</table>
 			</div>
