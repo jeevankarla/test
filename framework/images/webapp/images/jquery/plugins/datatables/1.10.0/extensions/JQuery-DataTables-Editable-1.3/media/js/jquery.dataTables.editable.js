@@ -286,8 +286,8 @@
         ///Event handler called when a new row is added and response is returned from server
         function _fnOnRowAdded(data) {
             properties.fnEndProcessingMode();
-            if(data["_ERROR_MESSAGE_LIST_"] != undefined ){
-            	alert("Error creating entry (Please check input values) ::"+data["_ERROR_MESSAGE_LIST_"]);
+            if(data["_ERROR_MESSAGE_LIST_"] != undefined || data["_ERROR_MESSAGE_"] != undefined){
+            	alert("Error creating entry (Please check input values) ::"+data["_ERROR_MESSAGE_LIST_"] +"   "+data["_ERROR_MESSAGE_"]);
             	return false;
             }
             
