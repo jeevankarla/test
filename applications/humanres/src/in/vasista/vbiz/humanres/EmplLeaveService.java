@@ -358,14 +358,24 @@ public class EmplLeaveService {
         String emplLeaveApplId =  (String)context.get("emplLeaveApplId");
         String leaveStatus =  (String)context.get("leaveStatus");
         String approverPartyId = (String)context.get("approverPartyId");
+        String levelApproverPartyId = (String)context.get("levelApproverPartyId");
 		Map result = FastMap.newInstance();
 		GenericValue emplLeaveStatusDetails = null; 
 		try {
+			if(UtilValidate.isEmpty(approverPartyId) && (UtilValidate.isEmpty(levelApproverPartyId))){
+				return ServiceUtil.returnError("Approver Party Cannot be Empty "); 
+			}
 			emplLeaveStatusDetails = delegator.findOne("EmplLeaveStatus",UtilMisc.toMap("emplLeaveApplId", emplLeaveApplId,"leaveStatus",leaveStatus), true);
 			GenericValue emplLeaveStatus = delegator.makeValue("EmplLeaveStatus");
 		    emplLeaveStatus.set("emplLeaveApplId", emplLeaveApplId );
 		    emplLeaveStatus.set("leaveStatus", leaveStatus);
-		    emplLeaveStatus.set("approverPartyId", approverPartyId);
+		    if(UtilValidate.isNotEmpty(levelApproverPartyId)){
+		    	emplLeaveStatus.set("approverPartyId", levelApproverPartyId);
+			}else{
+				if(UtilValidate.isNotEmpty(approverPartyId)){
+					emplLeaveStatus.set("approverPartyId",approverPartyId);
+				}
+			}
 		    emplLeaveStatus.set("changedByUserLogin", userLoginId); 
 		    emplLeaveStatus.set("changedDate", UtilDateTime.nowTimestamp());
 		    delegator.createOrStore(emplLeaveStatus);    
