@@ -578,6 +578,8 @@ public class ByProductChangeIndentServices {
 				  			  updateSubscriptionProduct.put("sequenceNum",subscriptionProduct.getString("sequenceNum"));
 				  			  updateSubscriptionProduct.put("fromDate", subscriptionProduct.getTimestamp("fromDate"));
 				  			  updateSubscriptionProduct.put("thruDate", UtilDateTime.getDayEnd(UtilDateTime.addDaysToTimestamp(effectiveDate, -1)));
+				  			  updateSubscriptionProduct.put("lastModifiedByUserLogin",userLogin.get("userLoginId"));
+				  			  updateSubscriptionProduct.put("lastModifiedDate",nowTimeStamp);
 				  			  result = dispatcher.runSync("updateSubscriptionProduct",updateSubscriptionProduct);
 			  				  if (ServiceUtil.isError(result)) {
 			  					  String errMsg =  ServiceUtil.getErrorMessage(result);
