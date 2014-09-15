@@ -138,6 +138,7 @@ $(document).ready(function() {
   			
             $("#partyId").val($("select[name=employeeId]").val());
             $("#emplName").val($("#employeeId option:selected").text());
+            $('#timehh').focus();
             
       });
       
@@ -146,6 +147,10 @@ $(document).ready(function() {
    <#if (security.hasEntityPermission("EMP_PUNCH_EDIT", "_REMOVE", session))>  
      	$("#deletePunchRow").show();
    </#if> 
+   //$('#timehh').autoNumeric({mNum: 2,mDec: 0, autoTab : true ,autoTabTarget : 'timemm'}).trigger('focusout');
+   //$('#timemm').autoNumeric({mNum: 2,mDec: 0, aDec :'' ,autoTab : true ,autoTabTarget : 'Note'}).trigger('focusout');
+   
+   
 });
 
 $('#timemm').keyup(function(){
@@ -155,7 +160,7 @@ $('#timemm').keyup(function(){
         
          $('#punchtime').val(timehh+":"+timemm+":00")
      
-     });
+   });
 	
 </script>
  
@@ -224,7 +229,7 @@ $('#timemm').keyup(function(){
 				<b>*</b></em></td></tr>
 			
 			<tr class='h3'>
-				<td align='left' class='h3' width='20%'>Note:</td><td align='left' class='h3' width='40%'><input  type='textarea' value='' name='Note' rel="7" required><em  style="font-size: large;color:red;"><b>*</b></em></td>
+				<td align='left' class='h3' width='20%'>Note:</td><td align='left' class='h3' width='40%'><input  type='textarea' value='' id='Note' name='Note' rel="7" required><em  style="font-size: large;color:red;"><b>*</b></em></td>
 			</tr>
 			<tr class='h3'>
 				<td align='left' class='h3' width='20%'></td>
