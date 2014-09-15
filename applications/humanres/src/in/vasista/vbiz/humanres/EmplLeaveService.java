@@ -78,7 +78,7 @@ public class EmplLeaveService {
                 Map<String, Object> leaveBalancesMap = FastMap.newInstance();
             	conditionList.clear();
             	//conditionList.add(EntityCondition.makeCondition("customTimePeriodId", EntityOperator.EQUALS, latestHRPeriod.getString("customTimePeriodId")));
-            	conditionList.add(EntityCondition.makeCondition("thruDate", EntityOperator.LESS_THAN_EQUAL_TO, balanceDate ));
+            	conditionList.add(EntityCondition.makeCondition("fromDate", EntityOperator.LESS_THAN_EQUAL_TO, balanceDate ));
             	conditionList.add(EntityCondition.makeCondition("partyId", EntityOperator.EQUALS, employeeId));
             	if(UtilValidate.isNotEmpty(context.get("leaveTypeId"))){
             		conditionList.add(EntityCondition.makeCondition("leaveTypeId", EntityOperator.EQUALS, context.get("leaveTypeId")));
