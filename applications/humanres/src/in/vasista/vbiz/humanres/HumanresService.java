@@ -4,6 +4,7 @@ import java.math.BigDecimal;
 import java.sql.Timestamp;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
@@ -32,6 +33,8 @@ import org.ofbiz.service.GenericServiceException;
 import org.ofbiz.service.LocalDispatcher;
 import org.ofbiz.service.ServiceUtil;
 import org.ofbiz.security.Security;
+//import org.joda.time.DateTime;
+//import org.joda.time.DateTimeConstants;
 
 public class HumanresService {
 
@@ -167,6 +170,7 @@ public class HumanresService {
 	        Timestamp thruDate =  (Timestamp)context.get("thruDate");
 	        String isSS =  (String)context.get("isSS");
 	        String isGH =  (String)context.get("isGH");
+	        String isWeeklyOff = (String)context.get("isWeeklyOff");
 	        Locale locale = new Locale("en","IN");
 			TimeZone timeZone = TimeZone.getDefault();
 	        String orgPartyId = "Company";
@@ -197,8 +201,24 @@ public class HumanresService {
 						Timestamp secondSaturDay = UtilDateTime.addDaysToTimestamp(UtilDateTime.getWeekStart(UtilDateTime.getMonthStart(thruDate),0,2,timeZone,locale), -1);
 						holidays.add(UtilDateTime.toSqlDate(secondSaturDay));
 					}
+					if(UtilValidate.isNotEmpty(isWeeklyOff) && isWeeklyOff.equals("Y")){
+						/*if(UtilValidate.isEmpty(fromDate)){
+							fromDate = UtilDateTime.addDaysToTimestamp(thruDate, -30);
+						}
+						 DateTime startDt = new DateTime(UtilDateTime.getYear(fromDate, timeZone, locale),UtilDateTime.getMonth(fromDate, timeZone, locale),UtilDateTime.get,0,0,0,0);//1st Dec 2010
+					        DateTime endDt = new DateTime(UtilDateTime.getYear(thruDate, timeZone, locale),12,31,0,0,0,0);//31st Dec 2010
+					        DateTime tempDate = new DateTime(startDt.getMillis());
+					        while(tempDate.compareTo(endDt) <=0 ){
+					            if(tempDate.getDayOfWeek() !=  DateTimeConstants.SATURDAY){
+					                System.out.println(""+tempDate);
+					            }
+					            tempDate = tempDate.plusDays(1);
+
+					        }*/
+
+					}
 					
-					if(UtilValidate.isNotEmpty(holiDayList)){
+				  if(UtilValidate.isNotEmpty(holiDayList)){
 						for(GenericValue holiDay : holiDayList){
 							holidays.add(UtilDateTime.toSqlDate(holiDay.getTimestamp("holiDayDate")));
 						}
