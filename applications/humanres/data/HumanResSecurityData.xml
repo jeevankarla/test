@@ -57,6 +57,10 @@ under the License.
     
     <SecurityPermission description=" employee previous day punch edit Permission." permissionId="EMP_PUNCH_EDIT_UPDATE"/>
     <SecurityPermission description=" employee previous day ood punch edit Permission." permissionId="EMP_PUNCH_OOD_UPDATE"/>
+    <SecurityGroup description="Employee OOD PUNCH Edit" groupId="EMP_PUNCH_OOD_EDIT"></SecurityGroup>
+    <SecurityGroupPermission groupId="EMP_PUNCH_OOD_EDIT" permissionId="EMP_PUNCH_OOD_UPDATE"/>
+    <SecurityGroupPermission groupId="EMP_PUNCH_OOD_EDIT" permissionId="EMP_PUNCH_EDIT_UPDATE"/>
+    
     
     <SecurityPermission description="delete EmplPunch punch Permission." permissionId="EMP_PUNCH_EDIT_REMOVE"/>
     <SecurityGroup description="Employee PUNCH Edit" groupId="EMP_PUNCH_EDIT"></SecurityGroup>
@@ -82,8 +86,10 @@ under the License.
     <SecurityGroupPermission groupId="PAYBILL_GEN" permissionId="HR_ATTENDFIN_VIEW"/>
     <SecurityGroupPermission groupId="PAYBILL_GEN" permissionId="HR_ARREARDAYS_VIEW"/>
     
-    <SecurityGroup description="Employee OOD PUNCH Edit" groupId="EMP_PUNCH_OOD_EDIT"></SecurityGroup>
-    <SecurityGroupPermission groupId="EMP_PUNCH_OOD_EDIT" permissionId="EMP_PUNCH_OOD_UPDATE"/>
+    <SecurityGroupPermission groupId="HUMANRES_ADMIN" permissionId="HR_APPHOLIDAY_VIEW"/>
+    <SecurityGroupPermission groupId="HUMANRES_ADMIN" permissionId="HR_EDITLATE_VIEW"/>
+    <SecurityGroupPermission groupId="HUMANRES_ADMIN" permissionId="HR_ATTENDFIN_VIEW"/>
+    <SecurityGroupPermission groupId="HUMANRES_ADMIN" permissionId="HR_ARREARDAYS_VIEW"/>
     
     <SecurityGroupPermission groupId="FULLADMIN" permissionId="EMP_PUNCH_OOD_UPDATE"/>
     <SecurityGroupPermission groupId="FULLADMIN" permissionId="EMP_PUNCH_EDIT_UPDATE"/>
