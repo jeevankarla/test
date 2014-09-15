@@ -120,25 +120,37 @@
         </menu-item>  
         <menu-item name="ArrearDays" title="Arrear Days">
             <condition>
-	              <if-has-permission permission="HR"  action="_ATTENDANCE_VIEW"/>
+                   <and>
+                     <if-has-permission permission="HR"  action="_ATTENDANCE_VIEW"/>
+                      <if-has-permission permission="HR"  action="_ARREARDAYS_VIEW"/>
+                   </and>
             </condition>  
               <link target="ArrearDays"></link>
         </menu-item>    
         <menu-item name="AttendanceFinalization" title="Attendance Finalization">
             <condition>
-	              <if-has-permission permission="HR"  action="_ATTENDANCE_VIEW"/>
+                 <and>
+                    <if-has-permission permission="HR"  action="_ATTENDFIN_VIEW"/>
+                    <if-has-permission permission="HR"  action="_ATTENDANCE_VIEW"/>
+                 </and>
             </condition>  
         		<link target="AttendanceFinalization"></link>
         </menu-item>     
         <menu-item name="EditLateHours" title="Edit Late Hours">
             <condition>
-	              <if-has-permission permission="HR"  action="_ATTENDANCE_VIEW"/>
+                  <and>
+                    <if-has-permission permission="HR"  action="_EDITLATE_VIEW"/>
+	                <if-has-permission permission="HR"  action="_ATTENDANCE_VIEW"/>
+	               </and> 
             </condition>  
         	<link target="EditLateHours"></link>
         </menu-item>
         <menu-item name="EditHolidays" title="Approval Holidays">
             <condition>
-	              <if-has-permission permission="HR"  action="_ATTENDANCE_VIEW"/>
+                 <and>
+                    <if-has-permission permission="HR"  action="_APPHOLIDAY_VIEW"/>
+	               <if-has-permission permission="HR"  action="_ATTENDANCE_VIEW"/>
+	             </and> 
             </condition>  
         	<link target="EditHolidays"></link>
         </menu-item>                         
