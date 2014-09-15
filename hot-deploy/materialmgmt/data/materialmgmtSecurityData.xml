@@ -5,6 +5,7 @@
     <SecurityPermission description="Update operations in the materialmgmt Component." permissionId="materialmgmt_UPDATE"/>
     <SecurityPermission description="Delete operations in the materialmgmt Component." permissionId="materialmgmt_DELETE"/>
     <SecurityPermission description="ALL operations in the materialmgmt Component." permissionId="materialmgmt_ADMIN"/>
+    
     <SecurityGroupPermission groupId="FULLADMIN" permissionId="materialmgmt_ADMIN"/>
     <SecurityGroupPermission groupId="FLEXADMIN" permissionId="materialmgmt_CREATE"/>
     <SecurityGroupPermission groupId="FLEXADMIN" permissionId="materialmgmt_DELETE"/>
@@ -12,4 +13,24 @@
     <SecurityGroupPermission groupId="FLEXADMIN" permissionId="materialmgmt_VIEW"/>
     <SecurityGroupPermission groupId="VIEWADMIN" permissionId="materialmgmt_VIEW"/>
     <SecurityGroupPermission groupId="BIZADMIN" permissionId="materialmgmt_ADMIN"/>
+    
+    
+    
+    <SecurityGroup description="Material Management admin group for Purchase And Stores !" groupId="MATERIALMNG_ADMIN"/>
+    <SecurityGroupPermission groupId="MATERIALMNG_ADMIN"  permissionId="materialmgmt_ADMIN"/>
+    
+    <SecurityGroupPermission groupId="MATERIALMNG_ADMIN" permissionId="ACCOUNTING_ACCTFORMULA_EDIT"/>
+    <SecurityGroupPermission groupId="MATERIALMNG_ADMIN" permissionId="ACCOUNTING_ARINVOICE_EDIT"/>
+    <SecurityGroupPermission groupId="MATERIALMNG_ADMIN" permissionId="ACCOUNTING_READ"/>
+    <SecurityGroupPermission groupId="MATERIALMNG_ADMIN" permissionId="ACCTG_PREF_VIEW"/>
+    <SecurityGroupPermission groupId="MATERIALMNG_ADMIN" permissionId="ACCOUNTING_READ"/>
+    <SecurityGroupPermission groupId="MATERIALMNG_ADMIN" permissionId="ACCTG_PREF_VIEW"/>
+    <SecurityGroupPermission groupId="MATERIALMNG_ADMIN" permissionId="ACCTG_ATX_CREATE"/>
+    <SecurityGroupPermission groupId="MATERIALMNG_ADMIN" permissionId="MYPORTALBASE_ADMIN"/>
+    <SecurityGroupPermission groupId="MATERIALMNG_ADMIN" permissionId="ORDERMGR_CREATE"/>
+    <SecurityGroupPermission groupId="MATERIALMNG_ADMIN" permissionId="ORDERMGR_SALES_CREATE"/>
+    <SecurityGroupPermission groupId="MATERIALMNG_ADMIN" permissionId="ORDERMGR_SALES_ENTRY"/>
+    <SecurityGroupPermission groupId="MATERIALMNG_ADMIN" permissionId="ORDERMGR_SALES_UPDATE"/>
+    <SecurityGroupPermission groupId="MATERIALMNG_ADMIN" permissionId="ORDERMGR_UPDATE"/>
+    <SecurityGroupPermission groupId="MATERIALMNG_ADMIN" permissionId="ORDERMGR_VIEW"/>
 </entity-engine-xml>

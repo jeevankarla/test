@@ -247,10 +247,10 @@
 			{id:"cProductName", name:"Product", field:"cProductName", width:180, minWidth:180, cssClass:"cell-title", availableTags: availableTags, editor: AutoCompleteEditor, validator: productValidator, sortable:false ,toolTip:""},
 			{id:"quantity", name:"Qty(Pkt)", field:"quantity", width:70, minWidth:70, cssClass:"cell-title",editor:FloatCellEditor, sortable:false , formatter: quantityFormatter,  validator: quantityValidator},
 			{id:"UPrice", name:"Price", field:"UPrice", width:130, minWidth:130, editor:FloatCellEditor, sortable:false, formatter: rateFormatter, align:"right", toolTip:"UD Price"},
-			{id:"VAT", name:"VAT(%)", field:"VAT", width:70, minWidth:70, editor:FloatCellEditor, sortable:false, formatter: rateFormatter, align:"right", toolTip:"Vat Percentage"},
-			{id:"CST", name:"CST(%)", field:"CST", width:70, minWidth:70, editor:FloatCellEditor, sortable:false, formatter: rateFormatter, align:"right", toolTip:"CST Percentage"},
-			{id:"Excise", name:"Excise(%)", field:"Excise", width:70, minWidth:70, editor:FloatCellEditor, sortable:false, formatter: rateFormatter, align:"right", toolTip:"Excise Percentage"},
-			
+			{id:"VAT", name:"VAT-Amount", field:"VAT", width:80, minWidth:80, editor:FloatCellEditor, sortable:false, formatter: rateFormatter, align:"right", toolTip:"Vat Percentage"},
+			{id:"CST", name:"CST-Amount", field:"CST", width:80, minWidth:80, editor:FloatCellEditor, sortable:false, formatter: rateFormatter, align:"right", toolTip:"CST Percentage"},
+			{id:"Excise", name:"Excise-Amount", field:"Excise", width:80, minWidth:80, editor:FloatCellEditor, sortable:false, formatter: rateFormatter, align:"right", toolTip:"Excise Percentage"},
+			//{id:"amount", name:"Total Amount(Rs)", field:"amount", width:100, minWidth:100, cssClass:"readOnlyColumnClass", sortable:false, formatter: rateFormatter, focusable :false}
 		];
 		
 			var options = {
@@ -353,7 +353,7 @@
       		grid.render();
     	});
         grid.onCellChange.subscribe(function(e,args) {
-        	if (args.cell == 2) {
+        	if (args.cell == 2	) {
 				var prod = data[args.row]["cProductId"];
 				var qty = parseFloat(data[args.row]["quantity"]);
 				
@@ -389,7 +389,7 @@
 				if(isNaN(roundedAmount)){
 					roundedAmount = 0;
 				}
-				//alert("=prod="+prod+"=qty="+qty+"=price="+price);
+			//alert("=prod="+prod+"=qty="+qty+"=price="+price);
 				data[args.row]["unitPrice"] = price;
 				data[args.row]["amount"] = roundedAmount;
 				grid.updateRow(args.row);

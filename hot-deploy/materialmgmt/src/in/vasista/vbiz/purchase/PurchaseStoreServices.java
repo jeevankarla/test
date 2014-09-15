@@ -443,12 +443,13 @@ public static Map<String, Object> createPurchaseOrder(DispatchContext dctx, Map<
 				BigDecimal taxRate = excise;
 				BigDecimal taxAmount = BigDecimal.ZERO;
 	        	if(taxRate.compareTo(BigDecimal.ZERO)>0){
-	        		taxAmount = (unitPrice.multiply(taxRate)).divide(PERCENT_SCALE, salestaxCalcDecimals, salestaxRounding);
+	        		//taxAmount = (unitPrice.multiply(taxRate)).divide(PERCENT_SCALE, salestaxCalcDecimals, salestaxRounding);
+	        		taxAmount = (taxRate).setScale(salestaxCalcDecimals, salestaxRounding);
 	        		Map taxDetailMap = FastMap.newInstance();
 		    		taxDetailMap.put("taxType", "BED_PUR");
 		    		//taxDetailMap.put("taxType", "BED_SALE");
 		    		taxDetailMap.put("amount", taxAmount);
-		    		taxDetailMap.put("percentage", taxRate);
+		    		//taxDetailMap.put("percentage", taxRate);
 		    		taxList.add(taxDetailMap);
 
 		    		GenericValue newProdPriceType = delegator.makeValue("ProductPriceAndType");        	 
@@ -458,7 +459,7 @@ public static Map<String, Object> createPurchaseOrder(DispatchContext dctx, Map<
 		    		newProdPriceType.set("productStoreGroupId", "_NA_");
 		    		newProdPriceType.set("productPricePurposeId", "PURCHASE");
 		    		newProdPriceType.set("productPriceTypeId", "BED_PUR");
-		    		newProdPriceType.set("taxPercentage", taxRate);
+		    		//newProdPriceType.set("taxPercentage", taxRate);
 		    		newProdPriceType.set("taxAmount", taxAmount);
 		    		newProdPriceType.set("currencyUomId", "INR");
 		    		prodPriceTypeList.add(newProdPriceType);
@@ -471,12 +472,13 @@ public static Map<String, Object> createPurchaseOrder(DispatchContext dctx, Map<
 				BigDecimal taxRate = (BigDecimal)prodQtyMap.get("vatPercentage");
 				BigDecimal taxAmount = BigDecimal.ZERO;
 	        	if(taxRate.compareTo(BigDecimal.ZERO)>0){
-	        		taxAmount = (tempPrice.multiply(taxRate)).divide(PERCENT_SCALE, salestaxCalcDecimals, salestaxRounding);
+	        		//taxAmount = (tempPrice.multiply(taxRate)).divide(PERCENT_SCALE, salestaxCalcDecimals, salestaxRounding);
+	        		taxAmount=taxRate.setScale(salestaxCalcDecimals, salestaxRounding);
 	        		Map taxDetailMap = FastMap.newInstance();
 		    		//taxDetailMap.put("taxType", "VAT_SALE");
 		    		taxDetailMap.put("taxType", "VAT_PUR");
 		    		taxDetailMap.put("amount", taxAmount);
-		    		taxDetailMap.put("percentage", taxRate);
+		    		//taxDetailMap.put("percentage", taxRate);
 		    		taxList.add(taxDetailMap);
 		        	/*if(taxPrice.compareTo(BigDecimal.ZERO)>0){
 		        		taxAmount = itemQuantity.multiply(taxPrice).setScale(salestaxCalcDecimals, salestaxRounding);
@@ -488,7 +490,7 @@ public static Map<String, Object> createPurchaseOrder(DispatchContext dctx, Map<
 		    		newProdPriceType.set("productStoreGroupId", "_NA_");
 		    		newProdPriceType.set("productPricePurposeId", "PURCHASE");
 		    		newProdPriceType.set("productPriceTypeId", "VAT_PUR");
-		    		newProdPriceType.set("taxPercentage", taxRate);
+		    		//newProdPriceType.set("taxPercentage", taxRate);
 		    		newProdPriceType.set("taxAmount", taxAmount);
 		    		newProdPriceType.set("currencyUomId", "INR");
 		    		prodPriceTypeList.add(newProdPriceType);
@@ -502,12 +504,13 @@ public static Map<String, Object> createPurchaseOrder(DispatchContext dctx, Map<
 				BigDecimal taxRate = cst;
 				BigDecimal taxAmount = BigDecimal.ZERO;
 	        	if(taxRate.compareTo(BigDecimal.ZERO)>0){
-	        		taxAmount = (tempPrice.multiply(taxRate)).divide(PERCENT_SCALE, salestaxCalcDecimals, salestaxRounding);
+	        		//taxAmount = (tempPrice.multiply(taxRate)).divide(PERCENT_SCALE, salestaxCalcDecimals, salestaxRounding);
+	        		taxAmount=taxRate.setScale(salestaxCalcDecimals, salestaxRounding);
 	        		Map taxDetailMap = FastMap.newInstance();
 		    		//taxDetailMap.put("taxType", "CST_SALE");
 		    		taxDetailMap.put("taxType", "CST_PUR");
 		    		taxDetailMap.put("amount", taxAmount);
-		    		taxDetailMap.put("percentage", taxRate);
+		    		//taxDetailMap.put("percentage", taxRate);
 		    		taxList.add(taxDetailMap);
 		    		GenericValue newProdPriceType = delegator.makeValue("ProductPriceAndType");        	 
 		    		newProdPriceType.set("fromDate", effectiveDate);
@@ -516,7 +519,7 @@ public static Map<String, Object> createPurchaseOrder(DispatchContext dctx, Map<
 		    		newProdPriceType.set("productStoreGroupId", "_NA_");
 		    		newProdPriceType.set("productPricePurposeId", "PURCHASE");
 		    		newProdPriceType.set("productPriceTypeId", "CST_PUR");
-		    		newProdPriceType.set("taxPercentage", taxRate);
+		    		//newProdPriceType.set("taxPercentage", taxRate);
 		    		newProdPriceType.set("taxAmount", taxAmount);
 		    		newProdPriceType.set("currencyUomId", "INR");
 		    		prodPriceTypeList.add(newProdPriceType);
