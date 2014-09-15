@@ -421,6 +421,26 @@ public class ByProductChangeIndentServices {
   	    	  Debug.log("Error in fetching Tenant Configuration");		  
 			  return ServiceUtil.returnError("Error in fetching Tenant Configuration");
   	      }
+  	   
+  	      if(UtilValidate.isEmpty(productSubscriptionTypeId)){
+  	    	
+  	    	  try{
+  	    		  GenericValue facility=delegator.findOne("Facility", UtilMisc.toMap("facilityId",boothId), false);
+  	    		  
+  	    		  productSubscriptionTypeId = "CASH";
+  	    		  //lets override productSubscriptionTypeId based on facility category
+  	    		  if(UtilValidate.isNotEmpty(facility) && UtilValidate.isNotEmpty(facility.getString("categoryTypeEnum"))){
+  	    			  if(facility.getString("categoryTypeEnum").equals("SO_INST")){
+  	    				  productSubscriptionTypeId = "SPECIAL_ORDER";
+  	    			  }else if(facility.getString("categoryTypeEnum").equals("CR_INST")){
+  	    				  productSubscriptionTypeId = "CREDIT";
+  	    			  }
+  	    		  }
+  	    	  }catch (GenericEntityException e) {
+  	    		  Debug.log("Problem fetching data of retailer : "+boothId);		  
+  	    		  return ServiceUtil.returnError("Problem fetching data of retailer : "+boothId);
+  	    	  }
+  	      }
   	      Map prevIndentQtyMap = (Map)context.get("prevIndentQtyMap");
   	      if(UtilValidate.isEmpty(prevIndentQtyMap) && smsFlag){
   	    	 Map getIndentCtx = UtilMisc.toMap("userLogin",userLogin);
@@ -768,7 +788,6 @@ public class ByProductChangeIndentServices {
 	  	  		  condList.add(EntityCondition.makeCondition("estimatedDeliveryDate", EntityOperator.GREATER_THAN_EQUAL_TO, UtilDateTime.getDayStart(effectiveDate)));
 	  	  		  condList.add(EntityCondition.makeCondition("estimatedDeliveryDate", EntityOperator.LESS_THAN_EQUAL_TO, UtilDateTime.getDayEnd(effectiveDate)));
 	  	  		  EntityCondition shipCond = EntityCondition.makeCondition(condList, EntityOperator.AND);
-	  	  		  Debug.log("shipCond ######################################"+shipCond);
 	  	  		  List<GenericValue> OrderList = delegator.findList("OrderHeaderItemProductShipmentAndFacility", shipCond, null, null, null, false);
 	  	  		  List generatedRoutes = EntityUtil.getFieldListFromEntityList(OrderList, "routeId", true);
 
