@@ -354,7 +354,9 @@ under the License.emplpunch
         <permission-service service-name="humanResManagerPermission" main-action="EMPLOYMENT_EDIT"/>
         <auto-attributes mode="IN" include="pk" optional="false"/>
         <auto-attributes mode="IN" include="nonpk" optional="true"/>
-        <override type="Timestamp" mode="IN" name="fromDate" optional="true"/>
+        <override type="Timestamp" mode="IN" name="fromDate"  optional="false"/>
+        <override name="payGradeId" mode="IN" optional="false"></override>
+        <override name="salaryStepSeqId" mode="IN" optional="false"></override>
     </service>
 
     <service name="updatePayHistory" engine="simple" default-entity-name="PayHistory"

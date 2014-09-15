@@ -204,7 +204,7 @@
                 <field-map field-name="periodTypeId" value="FISCAL_MONTH"/>
             </entity-one>
         </actions>
-        <auto-fields-service service-name="createPayHistory"/>
+        <!-- <auto-fields-service service-name="createPayHistory"/> -->
         <field name="roleTypeIdFrom"><hidden /></field>
         <field name="roleTypeIdTo"><hidden/></field>
         <field name="partyIdFrom"><hidden/></field>
@@ -212,9 +212,9 @@
         <field name="tenantId"><hidden/></field>
         <field name="amount"><hidden/></field>    
         <field name="thruDate"><date-time type="date" /></field> 
-        <field name="payGradeId" title="Pay Grade"><lookup target-form-name="LookupPayGrade" size="20"/></field>           
-        <field name="salaryStepSeqId" title="Salary Step"><lookup target-form-name="LookupSalaryStep" size="20"/></field>
-        <field name="fromDate" tooltip="${uiLabelMap.CommonRequired}"><date-time type="date"/></field>
+        <field name="payGradeId" tooltip="${uiLabelMap.CommonRequired}"  required-field="true" title="Pay Grade"><lookup target-form-name="LookupPayGrade" size="20" /></field>           
+        <field name="salaryStepSeqId" tooltip="${uiLabelMap.CommonRequired}" required-field="true" title="Salary Step"><lookup target-form-name="LookupSalaryStep" size="20"/></field>
+        <field name="fromDate" tooltip="${uiLabelMap.CommonRequired}" required-field="true"><date-time type="date"/></field>
         <field name="periodTypeId"><hidden/></field>
         <field name="submitButton" title="${uiLabelMap.CommonAdd}"><submit button-type="button"/></field>
         <sort-order>
@@ -223,6 +223,7 @@
         	<sort-field name="payGradeId"/>
         	<sort-field name="salaryStepSeqId"/>
         	<sort-field name="amount"/>
+        	<sort-field name="submitButton"/>
         </sort-order>
     </form>        
     <form name="ListPayHistories" type="list" target="updatePayHistory" title="" paginate-target="findPayHistories" list-name="listIt"
@@ -267,12 +268,10 @@
         <field name="comments"><hidden/></field>
         <field name="tenantId"><hidden/></field>
         <field name="thruDate" use-when="!hasEmplEditPermission" title="Thru Date"><display/></field>  
-        <field name="payGradeId" use-when="!hasEmplEditPermission" title="${uiLabelMap.HumanResPayGradeID}"><display/></field>        
-        <field name="salaryStepSeqId" use-when="!hasEmplEditPermission" title="${uiLabelMap.HumanResSalaryStepSeqId}"><display/></field>
+        <field name="payGradeId"  title="${uiLabelMap.HumanResPayGradeID}"><display/></field>        
+        <field name="salaryStepSeqId"  title="${uiLabelMap.HumanResSalaryStepSeqId}"><display/></field>
         <field name="fromDate"><display description="${groovy:org.ofbiz.base.util.UtilDateTime.toDateString(fromDate, &quot;dd-MM-yyyy&quot;);}"></display> </field>
         <field name="thruDate" use-when="hasEmplEditPermission"><date-time  type="date"/></field>              
-        <field name="payGradeId" use-when="hasEmplEditPermission" title="${uiLabelMap.HumanResPayGradeID}"><lookup target-form-name="LookupPayGrade" description-field-name="payGradeName" size="20"/></field>        
-        <field name="salaryStepSeqId" use-when="hasEmplEditPermission" title="${uiLabelMap.HumanResSalaryStepSeqId}"><lookup  target-form-name="LookupSalaryStep" size="20"/></field>
         <field name="submitButton" use-when="hasEmplEditPermission" title="${uiLabelMap.CommonUpdate}"><submit button-type="button"/></field>
         <field name="deleteLink" use-when="hasEmplEditPermission" title=" " widget-style="buttontext">
             <hyperlink target="deletePayHistory" description="${uiLabelMap.CommonDelete}">
@@ -287,12 +286,14 @@
         <sort-order>
         <sort-field name="payScale"/>
         <sort-field name="amount"/>
+        <sort-field name="payGradeId"/>
+        <sort-field name="salaryStepSeqId"/>
         	<sort-field name="fromDate"/>
         	<sort-field name="thruDate"/>
         	
-        	<sort-field name="salaryStepSeqId"/>
         	
-        	<sort-field name="payGradeId"/>
+        	
+        	
         	<sort-field name="submitButton"/>
         	<sort-field name="deleteLink"/>
         </sort-order>
