@@ -112,7 +112,7 @@ public class EmplLeaveService {
 					}
 					if(closingBalance.compareTo(BigDecimal.ZERO) != 0){
 						Map leaveCtx = FastMap.newInstance();
-						leaveCtx.put("timePeriodStart", balanceDate);
+						leaveCtx.put("timePeriodStart", UtilDateTime.toTimestamp(leaveBalance.getDate("fromDate")));
 						leaveCtx.put("partyId", employeeId);
 						leaveCtx.put("leaveTypeId", leaveTypeId);
 						Map leaveResult = fetchLeaveDaysForPeriod(dctx,leaveCtx);
