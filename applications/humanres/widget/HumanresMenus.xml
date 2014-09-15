@@ -557,7 +557,6 @@
                 <parameter param-name="roleTypeIdTo" from-field="parameters.roleTypeIdTo"/>
                 <parameter param-name="partyIdFrom" from-field="parameters.partyIdFrom"/>
                 <parameter param-name="partyIdTo" from-field="parameters.partyId"/>
-                <parameter param-name="fromDate" from-field="parameters.fromDate"/>
         	</link>
         </menu-item>
     </menu>

@@ -155,7 +155,11 @@
     <screen name="ListPayHistories">
         <section>
             <actions>
-                <set field="titleProperty" value="ListPayHistories"/>
+	            <entity-one entity-name="Party" value-field="party">
+	                <field-map field-name="partyId" from-field="parameters.partyIdTo" />
+	            </entity-one>
+	            <set field="partyName" value="${groovy:org.ofbiz.party.party.PartyHelper.getPartyName(party, true)}"/>
+                <set field="titleProperty" value="ListPayHistories   ${parameters.partyIdTo} ${partyName}  "/>
                 <set field="headerItem" value="PayrollItems"/>
                 <set field="tabButtonItem" value="PayrollItems"/>
                 <set field="tabButtonItem2" value="ListPayHistories"/>
@@ -209,11 +213,15 @@
      <screen name="EditPartyBenefits">
         <section>
             <actions>
+            <entity-one entity-name="Party" value-field="party">
+	                <field-map field-name="partyId" from-field="parameters.partyIdTo" />
+	            </entity-one>
+	            <set field="partyName" value="${groovy:org.ofbiz.party.party.PartyHelper.getPartyName(party, true)}"/>
                 <set field="layoutSettings.javaScripts[]" value="/images/jquery/plugins/loading/jquery.loading.1.6.4.js" global="true"/>
                 <set field="layoutSettings.javaScripts[]" value="/images/jquery/plugins/loading/jquery.loading.overflow.js" global="true"/>                            
                 <set field="layoutSettings.styleSheets[+0]" value="/images/jquery/plugins/loading/jquery.loading.1.6.css" global="true"/>            
 				<set field="layoutSettings.javaScripts[]" value="/accounting/images/payrolFetcher.js" global="true"/>            
-                <set field="titleProperty" value="EditPartyBenefit"/>
+                <set field="titleProperty" value="EditPartyBenefit ${parameters.partyIdTo} ${partyName}"/>
                 <set field="headerItem" value="PayrollItems"/>
                 <set field="tabButtonItem" value="PayrollItems"/>
                 <set field="tabButtonItem2" value="EditPartyBenefit"/>
@@ -272,11 +280,15 @@
     <screen name="EditPartyDeductions">
         <section>
             <actions>
+            <entity-one entity-name="Party" value-field="party">
+	                <field-map field-name="partyId" from-field="parameters.partyIdTo" />
+	            </entity-one>
+	            <set field="partyName" value="${groovy:org.ofbiz.party.party.PartyHelper.getPartyName(party, true)}"/>
                 <set field="layoutSettings.javaScripts[]" value="/images/jquery/plugins/loading/jquery.loading.1.6.4.js" global="true"/>
                 <set field="layoutSettings.javaScripts[]" value="/images/jquery/plugins/loading/jquery.loading.overflow.js" global="true"/>                            
                 <set field="layoutSettings.styleSheets[+0]" value="/images/jquery/plugins/loading/jquery.loading.1.6.css" global="true"/>                        
 				<set field="layoutSettings.javaScripts[]" value="/accounting/images/payrolFetcher.js" global="true"/>   
-				<set field="titleProperty" value="EditPartyDeduction"/>
+				<set field="titleProperty" value="EditPartyDeduction ${parameters.partyIdTo} ${partyName}"/>
                 <set field="headerItem" value="PayrollItems"/>
                 <set field="tabButtonItem" value="PayrollItems"/>
                 <set field="tabButtonItem2" value="EditPartyDeduction"/>                     
