@@ -1917,8 +1917,8 @@ import java.text.SimpleDateFormat;
 			        	  periodBilling.set("statusId", "APPROVED_PAYMENT");
 						  periodBilling.store();
 			        }catch (GenericEntityException e) {
-			    		Debug.logError("Unable to get PeriodBilling record from DataBase"+e, module);
-			    		return ServiceUtil.returnError("Unable to get PeriodBilling record from DataBase "); 
+			    		Debug.logError("Unable to Make Payment Process For DTC Billing"+e, module);
+			    		return ServiceUtil.returnError("Unable to Make Payment Process For DTC Billing! "); 
 					}   
 					result.putAll(dtcPaymentResult);
 			       }
@@ -2016,7 +2016,7 @@ import java.text.SimpleDateFormat;
 				Timestamp instrumentDate = UtilDateTime.nowTimestamp();
 				
 				Map<String, Object> paymentCtx = UtilMisc.<String, Object>toMap("paymentTypeId", "EXPENSE_PAYOUT");
-				paymentCtx.put("paymentMethodTypeId", "CHEQUE_PAYOUT");
+				paymentCtx.put("paymentMethodTypeId", "CHEQUE_PAYIN");
 				paymentCtx.put("paymentMethodId", "");
 				paymentCtx.put("partyId","Company");	
 				/*paymentCtx.put("finAccountTransTypeId","WITHDRAWAL");
@@ -2043,7 +2043,8 @@ import java.text.SimpleDateFormat;
 						            paymentCtx.put("instrumentDate", invoice.getTimestamp("dueDate"));
 									paymentCtx.put("paymentDate", invoice.getTimestamp("dueDate"));
 									paymentCtx.put("effectiveDate", invoice.getTimestamp("dueDate"));
-						            paymentCtx.put("statusId", "PMNT_RECEIVED");
+						            //paymentCtx.put("statusId", "PMNT_RECEIVED");
+						            paymentCtx.put("statusId", "PMNT_NOT_PAID");
 						            paymentCtx.put("isEnableAcctg", "Y");
 						            paymentCtx.put("amount", outStandingAmount);
 						            paymentCtx.put("userLogin", userLogin); 
