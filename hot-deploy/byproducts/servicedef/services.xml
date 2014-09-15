@@ -571,7 +571,7 @@
         <description>Change indent helper to store subscription</description>
         
         <attribute name="subscriptionId" type="String" mode="IN" optional="false"/>
-        <attribute name="productSubscriptionTypeId" type="String" mode="IN" optional="false"/>
+        <attribute name="productSubscriptionTypeId" type="String" mode="IN" optional="true"/>
         <attribute name="boothId" type="String" mode="INOUT" optional="false"/>
         <attribute name="shipmentTypeId" type="String" mode="IN" optional="false"/>
         <attribute name="subscriptionTypeId" type="String" mode="IN" optional="true"/>
