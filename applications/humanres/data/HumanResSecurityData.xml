@@ -61,10 +61,26 @@ under the License.
     <SecurityPermission description="delete EmplPunch punch Permission." permissionId="EMP_PUNCH_EDIT_REMOVE"/>
     <SecurityGroup description="Employee PUNCH Edit" groupId="EMP_PUNCH_EDIT"></SecurityGroup>
     <SecurityGroupPermission groupId="EMP_PUNCH_EDIT" permissionId="EMP_PUNCH_EDIT_UPDATE"/>
+    <SecurityGroupPermission groupId="EMP_PUNCH_EDIT" permissionId="HUMANRES_PUNCH_EDIT"/>
     
     <SecurityGroup description="Employee PUNCH delete or Remove" groupId="EMP_PUNCH_DELETE"></SecurityGroup>
     <SecurityGroupPermission groupId="EMP_PUNCH_DELETE" permissionId="EMP_PUNCH_EDIT_REMOVE"/>
     
+    
+    <SecurityPermission description="Approve Worked Holidays Permission" permissionId="HR_APPHOLIDAY_VIEW"/>
+    <SecurityPermission description="Edit Late hours screen View Permission" permissionId="HR_EDITLATE_VIEW"/>
+    <SecurityPermission description="Attendance Finalization screen View Permission" permissionId="HR_ATTENDFIN_VIEW"/>
+    <SecurityPermission description="Arrear Days screen View Permission" permissionId="HR_ARREARDAYS_VIEW"/>
+    <SecurityGroup description="Paybill Generation Group Permission" groupId="PAYBILL_GEN"></SecurityGroup>
+    <SecurityGroupPermission groupId="FULLADMIN" permissionId="HR_APPHOLIDAY_VIEW"/>
+    <SecurityGroupPermission groupId="FULLADMIN" permissionId="HR_EDITLATE_VIEW"/>
+    <SecurityGroupPermission groupId="FULLADMIN" permissionId="HR_ATTENDFIN_VIEW"/>
+    <SecurityGroupPermission groupId="FULLADMIN" permissionId="HR_ARREARDAYS_VIEW"/>
+    
+    <SecurityGroupPermission groupId="PAYBILL_GEN" permissionId="HR_APPHOLIDAY_VIEW"/>
+    <SecurityGroupPermission groupId="PAYBILL_GEN" permissionId="HR_EDITLATE_VIEW"/>
+    <SecurityGroupPermission groupId="PAYBILL_GEN" permissionId="HR_ATTENDFIN_VIEW"/>
+    <SecurityGroupPermission groupId="PAYBILL_GEN" permissionId="HR_ARREARDAYS_VIEW"/>
     
     <SecurityGroup description="Employee OOD PUNCH Edit" groupId="EMP_PUNCH_OOD_EDIT"></SecurityGroup>
     <SecurityGroupPermission groupId="EMP_PUNCH_OOD_EDIT" permissionId="EMP_PUNCH_OOD_UPDATE"/>
