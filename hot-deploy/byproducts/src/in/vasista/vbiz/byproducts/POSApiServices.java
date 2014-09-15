@@ -312,7 +312,6 @@ Debug.logInfo(infoString, module);
 		processChangeIndentHelperCtx.put("shipmentTypeId", shipmentTypeId);
 		processChangeIndentHelperCtx.put("effectiveDate", supplyDate);
 		processChangeIndentHelperCtx.put("productQtyList", productQtyList);
-		processChangeIndentHelperCtx.put("productSubscriptionTypeId", productSubscriptionTypeId);
 		try {
 			Map svcResult = FastMap.newInstance(); 
 			svcResult = dispatcher.runSync("processChangeIndentHelper", processChangeIndentHelperCtx);
