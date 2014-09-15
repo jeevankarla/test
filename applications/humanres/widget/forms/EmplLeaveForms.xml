@@ -206,7 +206,7 @@
 		<field name="comment"><hidden/></field>
 		<field name="documentsProduced"><hidden/></field>
 		<field name="approverPartyId" use-when="${groovy:((security.hasEntityPermission(&quot;HUMANRES&quot;, &quot;_ADMIN&quot;, session)))}"><lookup target-form-name="LookupEmployeeName"></lookup></field>
-        <field name="approverPartyId" use-when="${groovy:((security.hasEntityPermission(&quot;HUMANRES_LEAVE&quot;, &quot;_APPROVAL&quot;, session)))}"><display description="${userLogin.partyId}"></display></field>
+        <field name="approverPartyId" use-when="${groovy:((security.hasEntityPermission(&quot;HUMANRES_LEAVE&quot;, &quot;_APPROVAL&quot;, session)))}"><lookup target-form-name="LookupEmployeeName"></lookup></field>
         <field name="description"><hidden/></field>
         <field name="noConditionFind"><hidden value="Y"/><!-- if this isn't there then with all fields empty no query will be done --></field>
         <field name="searchButton" title="${uiLabelMap.CommonFind}" widget-style="smallSubmit"><submit button-type="button"/></field>
