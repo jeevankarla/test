@@ -194,10 +194,13 @@
 				tempMap.vatPercentage = vatValues.taxPercentage;
 				 
 				 
-				 
 				
 				if(returnItems){
 					returnValues = EntityUtil.getFirst(returnItems);
+					
+					/* removing already calc values*/
+					returnItemsList.remove(returnValues);
+					
 					tempMap.returnQuantity = returnValues.returnQuantity;
 					tempMap.taxReturnQuantity = returnValues.returnQuantity;
 					productList=[];
