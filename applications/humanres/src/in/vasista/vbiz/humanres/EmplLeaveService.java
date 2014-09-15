@@ -84,7 +84,7 @@ public class EmplLeaveService {
             		conditionList.add(EntityCondition.makeCondition("leaveTypeId", EntityOperator.EQUALS, context.get("leaveTypeId")));
             	}
             	condition = EntityCondition.makeCondition(conditionList, EntityOperator.AND);
-	            List<GenericValue> leaveBalances = delegator.findList("EmplLeaveBalanceStatusAndPeriod", condition, null, UtilMisc.toList("-thruDate"), null, false);
+	            List<GenericValue> leaveBalances = delegator.findList("EmplLeaveBalanceStatusAndPeriod", condition, null, UtilMisc.toList("thruDate"), null, false);
 				for (int i = 0; i < leaveBalances.size(); ++i) {		
 					GenericValue leaveBalance = leaveBalances.get(i);
 					String leaveTypeId = leaveBalance.getString("leaveTypeId");
