@@ -11069,5 +11069,111 @@ public class ByProductNetworkServices {
         
         return result;
     }  
+    public static Map getPartyPaymentDetails(DispatchContext dctx,Map<String, ? extends Object> context) {
 
+		Delegator delegator = dctx.getDelegator();
+		LocalDispatcher dispatcher = dctx.getDispatcher();
+		Map result = FastMap.newInstance();
+		Timestamp fromDate = (Timestamp) context.get("fromDate");
+		Timestamp thruDate = (Timestamp) context.get("thruDate");
+		List partyIdsList = (List) context.get("partyIdsList");
+		int intervalDays = (UtilDateTime.getIntervalInDays(fromDate, thruDate) + 1);
+		List payments = FastList.newInstance();
+		List conditionList = FastList.newInstance();
+		if (UtilValidate.isNotEmpty(partyIdsList)) {
+			conditionList.add(EntityCondition.makeCondition(EntityCondition.makeCondition("partyIdFrom", EntityOperator.IN,	partyIdsList)));
+		}
+		conditionList.add(EntityCondition.makeCondition("partyIdTo", EntityOperator.EQUALS, "Company"));
+		conditionList.add(EntityCondition.makeCondition("paymentTypeId", EntityOperator.NOT_EQUAL, "SECURITYDEPSIT_PAYIN"));
+		conditionList.add(EntityCondition.makeCondition("paymentDate",EntityOperator.GREATER_THAN_EQUAL_TO, fromDate));
+		conditionList.add(EntityCondition.makeCondition("paymentDate",EntityOperator.LESS_THAN_EQUAL_TO, thruDate));
+		conditionList.add(EntityCondition.makeCondition("paymentMethodTypeId", EntityOperator.NOT_EQUAL,"CREDITNOTE_PAYIN"));
+		conditionList.add(EntityCondition.makeCondition(EntityCondition.makeCondition("statusId", EntityOperator.EQUALS,"PMNT_RECEIVED"), EntityOperator.OR, EntityCondition.makeCondition(EntityCondition.makeCondition("statusId",EntityOperator.EQUALS, "PMNT_VOID"),EntityOperator.AND, EntityCondition.makeCondition("chequeReturns", EntityOperator.EQUALS, "Y"))));
+		EntityCondition condition = EntityCondition.makeCondition(conditionList, EntityOperator.AND);
+		try {
+			payments = delegator.findList("Payment", condition, null, UtilMisc.toList("paymentDate", "partyIdFrom"), null,false);
+		} catch (GenericEntityException e) {
+			Debug.logError(e, e.toString(), module);
+			return ServiceUtil.returnError(e.toString());
+		}
+		List paymentParties = FastList.newInstance();
+		paymentParties = EntityUtil.getFieldListFromEntityList(payments,"partyIdFrom", true);
+		Map paymentDetailsMap = FastMap.newInstance();
+		Map partyPaidMap = FastMap.newInstance();
+
+		if (UtilValidate.isNotEmpty(paymentParties)) {
+			for (int i = 0; i < paymentParties.size(); i++) {
+				Map dayPaymentDetail = FastMap.newInstance();
+				String partyId = ((String) paymentParties.get(i)).toUpperCase();
+				BigDecimal totalPaidAmnt=BigDecimal.ZERO;
+				List<GenericValue> partyPayments = FastList.newInstance();
+				partyPayments = EntityUtil.filterByCondition(payments,EntityCondition.makeCondition(EntityFunction.UPPER_FIELD("partyIdFrom"),EntityOperator.EQUALS, EntityFunction.UPPER(((String) partyId).toUpperCase())));
+				if (UtilValidate.isNotEmpty(partyPayments)) {
+					for (int j = 0; j < partyPayments.size(); j++) {
+						GenericValue partyPayment = (GenericValue) partyPayments.get(j);
+						BigDecimal amount = (BigDecimal) partyPayment.get("amount");
+						totalPaidAmnt=totalPaidAmnt.add(amount);
+				        partyPaidMap.put(partyId,totalPaidAmnt);
+				
+			       }
+		        }
+			}
+		}
+	    result.put("partyPaidMap", partyPaidMap);
+		return result;
+	}
+	public static Map<String, Object> getPartyWiseReturnTotal(DispatchContext dctx, Map context) {
+		//Delegator delegator ,LocalDispatcher dispatcher ,GenericValue userLogin,String paymentDate,String invoiceStatusId ,String facilityId ,String paymentMethodTypeId ,boolean onlyCurrentDues ,boolean isPendingDues){
+		//TO DO:for now getting one shipment id  we need to get pmand am shipment id irrespective of Shipment type Id
+		GenericDelegator delegator = (GenericDelegator) dctx.getDelegator();
+		LocalDispatcher dispatcher = dctx.getDispatcher();
+		Map<String, Object> result = ServiceUtil.returnSuccess();
+		Timestamp fromDate = (Timestamp) context.get("fromDate");
+		Timestamp thruDate = (Timestamp) context.get("thruDate");
+		List partyIdsList = (List) context.get("partyIdsList");
+		
+		if (UtilValidate.isEmpty(fromDate)) {
+			fromDate = UtilDateTime.getDayStart(UtilDateTime.nowTimestamp());
+		}
+		if (UtilValidate.isEmpty(thruDate)) {
+			thruDate = UtilDateTime.getDayEnd(UtilDateTime.nowTimestamp());
+		}
+		int intervalDays = (UtilDateTime.getIntervalInDays(fromDate, thruDate)) + 1;
+		List<GenericValue> payments = FastList.newInstance();
+		List conditionList = FastList.newInstance();
+		if (UtilValidate.isNotEmpty(partyIdsList)) {
+			conditionList.add(EntityCondition.makeCondition(EntityCondition.makeCondition("partyIdFrom", EntityOperator.IN,	partyIdsList)));
+		}
+		conditionList.add(EntityCondition.makeCondition("statusId",EntityOperator.EQUALS, "PMNT_RECEIVED"));
+		conditionList.add(EntityCondition.makeCondition("paymentMethodTypeId",EntityOperator.EQUALS, "CREDITNOTE_PAYIN"));
+		conditionList.add(EntityCondition.makeCondition("paymentDate",EntityOperator.GREATER_THAN_EQUAL_TO, fromDate));
+		conditionList.add(EntityCondition.makeCondition("paymentDate",EntityOperator.LESS_THAN_EQUAL_TO, thruDate));
+		EntityCondition condition = EntityCondition.makeCondition(conditionList, EntityOperator.AND);
+		List<String> partyIds = FastList.newInstance();
+		try {
+			payments = delegator.findList("Payment", condition, null, null,	null, false);
+				partyIds = EntityUtil.getFieldListFromEntityList(payments,"partyIdFrom", true);
+		} catch (GenericEntityException e) {
+			Debug.logError(e, module);
+		}
+		Map partyReturnDetail = FastMap.newInstance();
+		for (String partyId : partyIds) {
+			List<GenericValue> partyCreditNoteDetails = FastList.newInstance();
+				partyCreditNoteDetails = EntityUtil.filterByCondition(payments,EntityCondition.makeCondition("partyIdFrom",	EntityOperator.EQUALS, partyId));
+			
+			if (UtilValidate.isNotEmpty(partyCreditNoteDetails)) {
+				Map returnDetails = FastMap.newInstance();
+				Map partyMap = FastMap.newInstance();
+				BigDecimal totalAmount = BigDecimal.ZERO;
+				for (GenericValue partyCreditNote : partyCreditNoteDetails) {
+					BigDecimal amount =partyCreditNote.getBigDecimal("amount");
+					totalAmount = totalAmount.add(amount);
+				}
+				returnDetails.put("totalAmount", totalAmount);
+				partyReturnDetail.put(partyId, returnDetails);
+			}
+		}
+		result.put("partyReturnTotals", partyReturnDetail);
+		return result;
+	}
 }
