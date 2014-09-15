@@ -281,10 +281,12 @@ under the License.
             <set field="parameters.contactMechTypeId" from-field="contactMechTypeId"/>
             <service result-map-list="listIt" result-map="result" service-name="performFind">
                 <field-map field-name="inputFields" from-field="parameters"/>
+                <field-map field-name="filterByDate" value="Y"/>                
                 <field-map field-name="entityName" value="PartyRoleAndContactMechDetail"/>
                 <field-map field-name="viewIndex" from-field="viewIndex"/>
                 <field-map field-name="viewSize" from-field="viewSize"/>
                 <field-map field-name="fieldList" from-field="selectedFields"/>
+                <field-map field-name=""/>
                 <field-map field-name="distinct" value="Y"/>
             </service>
         </actions>
