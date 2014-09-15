@@ -55,6 +55,10 @@ public class EmplLeaveService {
 
         Map<String, Object> result = FastMap.newInstance();
         String employeeId = (String) context.get("employeeId");
+        Date balanceDate = (Date)context.get("balanceDate");
+        if(UtilValidate.isEmpty(balanceDate)){
+        	balanceDate = UtilDateTime.toSqlDate(UtilDateTime.nowDate()); 
+        }
         try{		
         	List conditionList = UtilMisc.toList(
 				EntityCondition.makeCondition("billingTypeId", EntityOperator.EQUALS ,"PAYROLL_BILL"));		
@@ -73,13 +77,14 @@ public class EmplLeaveService {
         		//result.put("leaveBalanceDateTime", UtilDateTime.(latestHRPeriod.get("fromDate")));
                 Map<String, Object> leaveBalancesMap = FastMap.newInstance();
             	conditionList.clear();
-            	conditionList.add(EntityCondition.makeCondition("customTimePeriodId", EntityOperator.EQUALS, latestHRPeriod.getString("customTimePeriodId")));
+            	//conditionList.add(EntityCondition.makeCondition("customTimePeriodId", EntityOperator.EQUALS, latestHRPeriod.getString("customTimePeriodId")));
+            	conditionList.add(EntityCondition.makeCondition("thruDate", EntityOperator.LESS_THAN_EQUAL_TO, balanceDate ));
             	conditionList.add(EntityCondition.makeCondition("partyId", EntityOperator.EQUALS, employeeId));
             	if(UtilValidate.isNotEmpty(context.get("leaveTypeId"))){
             		conditionList.add(EntityCondition.makeCondition("leaveTypeId", EntityOperator.EQUALS, context.get("leaveTypeId")));
             	}
             	condition = EntityCondition.makeCondition(conditionList, EntityOperator.AND);
-	            List<GenericValue> leaveBalances = delegator.findList("EmplLeaveBalanceStatus", condition, null, null, null, false);
+	            List<GenericValue> leaveBalances = delegator.findList("EmplLeaveBalanceStatusAndPeriod", condition, null, null, null, false);
 				for (int i = 0; i < leaveBalances.size(); ++i) {		
 					GenericValue leaveBalance = leaveBalances.get(i);
 					String leaveTypeId = leaveBalance.getString("leaveTypeId");

@@ -616,6 +616,17 @@ under the License.
             <key-map field-name="customTimePeriodId"/>
         </relation>
     </entity>
+   <view-entity entity-name="EmplLeaveBalanceStatusAndPeriod"
+      package-name="org.ofbiz.humanres"
+      title="PayHeadsDetails">
+	      <member-entity entity-alias="ELB" entity-name="EmplLeaveBalanceStatus"/>
+	      <member-entity entity-alias="CT" entity-name="CustomTimePeriod"/>
+	      <alias-all entity-alias="ELB"/>
+	      <alias-all entity-alias="CT"/>
+	      <view-link entity-alias="ELB" rel-entity-alias="CT">
+	        <key-map field-name="customTimePeriodId"/>
+	      </view-link>
+    </view-entity>
     <!-- EmplLeaveStatus depricated   -->
     <!-- <entity entity-name="EmplLeaveStatus" package-name="org.ofbiz.humanres.employment">
     	<field name="partyId" type="id-ne"/>
