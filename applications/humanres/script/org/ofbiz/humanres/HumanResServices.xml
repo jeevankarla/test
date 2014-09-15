@@ -873,8 +873,13 @@
     </simple-method>
 
     <simple-method method-name="deleteEmplLeave" short-description="Delete Employee Leave">
+    	<entity-and entity-name="EmplLeaveStatus" list="emplLeaveStatusList">
+            <field-map field-name="emplLeaveApplId" from-field="parameters.emplLeaveApplId"/>
+        </entity-and>
+        <remove-list list="emplLeaveStatusList"/>
         <entity-one entity-name="EmplLeave" value-field="emplLeave"/>
         <remove-value value-field="emplLeave"/>
+        <set field="responseMessage" value="Leave Cancelled successfully."/>
         <field-to-result field="emplLeave.emplLeaveApplId" result-name="emplLeaveApplId"/>
         <field-to-result field="emplLeave.partyId" result-name="partyId"/>
     </simple-method>
