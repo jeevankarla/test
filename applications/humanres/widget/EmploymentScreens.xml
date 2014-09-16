@@ -191,10 +191,15 @@
 		                         	<condition>
 		                            	<if-compare field="hasEmplEditPermission" operator="equals" value="true" type="Boolean"/>
 		                            </condition> 
-		                            <widgets>                    
-		                        		<screenlet id="AddPayHistory" title="Add PayHistory" collapsible="true">
-		                            		<include-form name="AddPayHistory" location="component://humanres/widget/forms/EmploymentForms.xml"/>
-		                        		</screenlet> 
+		                            <widgets>  
+		                             <container style="button-bar">
+                                             <link target="AddPayHistory" text="Add PayHistory"  style="buttontext create">
+                                       		      <parameter param-name="roleTypeIdFrom" from-field="parameters.roleTypeIdFrom"/>
+								            	  <parameter param-name="roleTypeIdTo" from-field="parameters.roleTypeIdTo"/>
+								                  <parameter param-name="partyIdFrom" from-field="parameters.partyIdFrom"/>
+								                  <parameter param-name="partyIdTo" from-field="parameters.partyId"/>
+                                             </link>
+                                                </container>                  
 		                        	</widgets> 
 		                        </section>                  
 		                        <screenlet title="${uiLabelMap.HumanResListPayHistories}">
@@ -210,6 +215,62 @@
             </widgets>
         </section>
     </screen>
+    <screen name="AddPayHistory">
+        <section>
+            <actions>
+	            <entity-one entity-name="Party" value-field="party">
+	                <field-map field-name="partyId" from-field="parameters.partyIdTo" />
+	            </entity-one>
+	            <set field="partyName" value="${groovy:org.ofbiz.party.party.PartyHelper.getPartyName(party, true)}"/>
+                <set field="titleProperty" value="ListPayHistories   ${parameters.partyIdTo} ${partyName}  "/>
+                <set field="headerItem" value="PayrollItems"/>
+                <set field="tabButtonItem" value="PayrollItems"/>
+                <set field="tabButtonItem2" value="ListPayHistories"/>
+                <set field="roleTypeIdFrom" from-field="parameters.roleTypeIdFrom"/>
+                <set field="roleTypeIdTo" from-field="parameters.roleTypeIdTo"/>
+                <set field="partyIdTo" from-field="parameters.partyIdTo"/>
+                <set field="partyIdFrom" from-field="parameters.partyIdFrom"/>
+                <set field="fromDate" from-field="parameters.fromDate" type="Timestamp"/>
+                <service service-name="humanResManagerPermission" result-map="permResult">
+                    <field-map field-name="mainAction" value="EMPLOYMENT_EDIT"/>
+                </service>
+                <set field="hasEmplEditPermission" from-field="permResult.hasPermission"/>   
+                <service service-name="humanResManagerPermission" result-map="permResult">
+                    <field-map field-name="mainAction" value="EMPLOYMENT_VIEW"/>
+                </service>
+                <set field="hasEmploymentViewPermission" from-field="permResult.hasPermission"/>                    
+            </actions>
+            <widgets>
+                <decorator-screen name="EmployeeDecorator" location="${parameters.mainDecoratorLocation}">
+                   <decorator-section name="body">
+                    <include-menu location="component://humanres/widget/HumanresMenus.xml" name="EmployeeProfileTabBar"/>
+                    <include-menu location="component://humanres/widget/HumanresMenus.xml" name="PayrollItemsTabBar"/>
+                    	<section>
+                    	    <condition>
+                            	<if-compare field="hasEmploymentViewPermission" operator="equals" value="true" type="Boolean"/>
+                            </condition>
+		                    <widgets>                     
+		                         <section>
+		                         	<condition>
+		                            	<if-compare field="hasEmplEditPermission" operator="equals" value="true" type="Boolean"/>
+		                            </condition> 
+		                            <widgets>  
+		                        	</widgets> 
+		                        </section>                  
+		                        <screenlet id="AddPayHistory" title="Add PayHistory" collapsible="true">
+						           	<include-form name="AddPayHistory" location="component://humanres/widget/forms/EmploymentForms.xml"/>
+						         </screenlet>
+		                    </widgets>		
+		                    <fail-widgets>
+                                <label style="h3">${uiLabelMap.HumanResViewPermissionError}</label>                        			                    
+		                    </fail-widgets>
+		            	</section>			                        
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    
      <screen name="EditPartyBenefits">
         <section>
             <actions>

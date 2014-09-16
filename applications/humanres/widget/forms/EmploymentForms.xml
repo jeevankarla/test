@@ -204,7 +204,7 @@
                 <field-map field-name="periodTypeId" value="FISCAL_MONTH"/>
             </entity-one>
         </actions>
-        <!-- <auto-fields-service service-name="createPayHistory"/> -->
+        <auto-fields-service service-name="createPayHistory"/>
         <field name="roleTypeIdFrom"><hidden /></field>
         <field name="roleTypeIdTo"><hidden/></field>
         <field name="partyIdFrom"><hidden/></field>
