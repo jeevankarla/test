@@ -149,7 +149,7 @@ public class EmplLeaveService {
 							//result.put("leaveBalanceDate", latestHRPeriod.get("thruDate"));
 							Map leaveDetailmap = (Map)leaveResult.get("leaveDetailmap");
 							if(UtilValidate.isNotEmpty(leaveDetailmap)){
-								closingBalance = closingBalance.subtract(((BigDecimal)leaveDetailmap.get(leaveTypeId)).multiply(new BigDecimal(2)));
+								closingBalance = closingBalance.subtract(((BigDecimal)leaveDetailmap.get("CML")).multiply(new BigDecimal(2)));
 							}
 						}
 				  }
