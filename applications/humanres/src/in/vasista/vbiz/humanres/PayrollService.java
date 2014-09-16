@@ -2430,6 +2430,7 @@ public class PayrollService {
 	        	List<GenericValue> deductionTypes = delegator.findList("DeductionType",null, null,null, null, true);
 	        	deductionTypeIds = EntityUtil.getFieldListFromEntityList(deductionTypes, "deductionTypeId", true);
 	        	if(benefitTypeIds.contains(payHeadTypeId)){
+	        		GenericValue benefitTypeValue = delegator.findOne("BenefitType",UtilMisc.toMap("benefitTypeId", payHeadTypeId), false);
 					List conditionList = FastList.newInstance();
 					conditionList.add(EntityCondition.makeCondition("partyIdTo", EntityOperator.EQUALS ,partyId));
 					conditionList.add(EntityCondition.makeCondition("benefitTypeId", EntityOperator.EQUALS ,payHeadTypeId));
@@ -2460,10 +2461,7 @@ public class PayrollService {
 						newEntity.set("benefitTypeId", payHeadTypeId);
 						newEntity.set("periodTypeId", "RATE_MONTH");
 						newEntity.set("fromDate", fromDateStart);
-						GenericValue benefitTypeValue = delegator.findOne("BenefitType",UtilMisc.toMap("benefitTypeId", payHeadTypeId), false);
-						if(UtilValidate.isNotEmpty(benefitTypeValue.get("isContinuous")) && ("Y".equals(benefitTypeValue.get("isContinuous")))){
-							
-						}else{
+						if(!(UtilValidate.isNotEmpty(benefitTypeValue.get("isContinuous")) && ("Y".equals(benefitTypeValue.get("isContinuous"))))){
 							newEntity.set("thruDate", thruDateEnd);
 						}
 						newEntity.set("cost", amount);
@@ -2482,6 +2480,9 @@ public class PayrollService {
 								partyBenefit.set("partyIdTo",partyBenefit.getString("partyIdTo"));
 								partyBenefit.set("benefitTypeId",partyBenefit.getString("benefitTypeId"));
 								partyBenefit.set("cost", amount);
+								if(!(UtilValidate.isNotEmpty(benefitTypeValue.get("isContinuous")) && ("Y".equals(benefitTypeValue.get("isContinuous"))))){
+									partyBenefit.set("thruDate", thruDateEnd);
+								}
 								partyBenefit.set("lastModifiedByUserLogin", userLogin.get("userLoginId"));
 								partyBenefit.store();
 							}
@@ -2508,6 +2509,7 @@ public class PayrollService {
 					}
 				}
 				if(deductionTypeIds.contains(payHeadTypeId)){
+					GenericValue deductionTypeValue = delegator.findOne("DeductionType",UtilMisc.toMap("deductionTypeId", payHeadTypeId), false);
 					List conditionList = FastList.newInstance();
 					conditionList.add(EntityCondition.makeCondition("partyIdTo", EntityOperator.EQUALS ,partyId));
 					conditionList.add(EntityCondition.makeCondition("deductionTypeId", EntityOperator.EQUALS ,payHeadTypeId));
@@ -2530,7 +2532,6 @@ public class PayrollService {
 							activePartyDeduction.set("thruDate", previousDayEnd);
 							activePartyDeduction.store();
 						}
-						
 						GenericValue newEntity = delegator.makeValue("PartyDeduction");
 						newEntity.set("roleTypeIdFrom", "INTERNAL_ORGANIZATIO");
 						newEntity.set("roleTypeIdTo", "EMPLOYEE");
@@ -2538,11 +2539,8 @@ public class PayrollService {
 						newEntity.set("partyIdTo", partyId);
 						newEntity.set("deductionTypeId", payHeadTypeId);
 						newEntity.set("periodTypeId", "RATE_MONTH");
-						newEntity.set("fromDate", fromDateStart);
-						GenericValue deductionTypeValue = delegator.findOne("DeductionType",UtilMisc.toMap("deductionTypeId", payHeadTypeId), false);
-						if(UtilValidate.isNotEmpty(deductionTypeValue.get("isContinuous")) && ("Y".equals(deductionTypeValue.get("isContinuous")))){
-							
-						}else{
+						newEntity.set("fromDate", fromDateStart);						
+						if(!(UtilValidate.isNotEmpty(deductionTypeValue.get("isContinuous")) && ("Y".equals(deductionTypeValue.get("isContinuous"))))){
 							newEntity.set("thruDate", thruDateEnd);
 						}
 						newEntity.set("cost", amount);
@@ -2561,6 +2559,9 @@ public class PayrollService {
 								partyDeduction.set("partyIdTo",partyDeduction.getString("partyIdTo"));
 								partyDeduction.set("deductionTypeId",partyDeduction.getString("deductionTypeId"));
 								partyDeduction.set("cost", amount);
+								if(!(UtilValidate.isNotEmpty(deductionTypeValue.get("isContinuous")) && ("Y".equals(deductionTypeValue.get("isContinuous"))))){
+									partyDeduction.set("thruDate", thruDateEnd);
+								}
 								partyDeduction.set("lastModifiedByUserLogin", userLogin.get("userLoginId"));
 								partyDeduction.store();
 							}
@@ -2579,7 +2580,6 @@ public class PayrollService {
 								newEntity.set("createdByUserLogin", userLogin.get("userLoginId"));
 						        newEntity.set("lastModifiedByUserLogin", userLogin.get("userLoginId"));
 								newEntity.create();
-								
 								partyDeduction.set("thruDate", previousDayEnd);
 								partyDeduction.store();
 							}
