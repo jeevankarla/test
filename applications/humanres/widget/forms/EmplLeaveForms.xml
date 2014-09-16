@@ -276,7 +276,7 @@
         <field name="description"><display/></field>
         
         <field name="leaveStatus" id-name="leaveStatus" title="Next Leave Status" required-field="true" event="onchange" action="javascript:approverPartyIdChange(this);">
-	        <drop-down allow-empty="false">
+	        <drop-down allow-empty="false" current="selected">
 	        	<list-options key-name="statusIdTo" list-name="validStatusChangeList" description="${transitionName}"/>
 	        </drop-down>
         </field>
@@ -290,9 +290,9 @@
             </drop-down>
         </field> -->
         <field name="documentsProduced">
-       		<drop-down allow-empty="true">
+       		<drop-down allow-empty="false">
+       			<option key="N"></option>
        			<option key="Y" ></option>
-       			<option key="N"></option>			
        		</drop-down>
         </field>
         <field name="leaveStatus"  use-when="emplLeaveStatus==&quot;LEAVE_REJECTED&quot;"><display></display></field>
