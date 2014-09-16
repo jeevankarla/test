@@ -274,6 +274,9 @@ public class HumanresService {
 	    	Long numPrincipalInst = (Long)context.get("numPrincipalInst");
 	    	
 	    	GenericValue userLogin = (GenericValue) context.get("userLogin");
+	    	
+	    	Timestamp disbDateStart = UtilDateTime.getDayStart(disbDate);
+	    	Timestamp disbDateEnd = UtilDateTime.getDayEnd(disbDate);
 			
 	    	GenericDelegator delegator = (GenericDelegator) dctx.getDelegator();
 			LocalDispatcher dispatcher = dctx.getDispatcher();
@@ -282,7 +285,9 @@ public class HumanresService {
 				conditionList.add(EntityCondition.makeCondition("partyId", EntityOperator.EQUALS, partyId));
 				conditionList.add(EntityCondition.makeCondition("loanTypeId", EntityOperator.EQUALS, loanTypeId));
 				conditionList.add(EntityCondition.makeCondition("statusId", EntityOperator.EQUALS, statusId));
-		        EntityCondition condition = EntityCondition.makeCondition(conditionList,EntityOperator.AND);
+				conditionList.add(EntityCondition.makeCondition("disbDate", EntityOperator.GREATER_THAN_EQUAL_TO, disbDateStart));
+				conditionList.add(EntityCondition.makeCondition("disbDate", EntityOperator.LESS_THAN_EQUAL_TO, disbDateEnd));
+				EntityCondition condition = EntityCondition.makeCondition(conditionList,EntityOperator.AND);
 	    		List<GenericValue> loanList = FastList.newInstance();
 	    		loanList = delegator.findList("Loan", condition, null,null, null, false);
 	    		if(UtilValidate.isNotEmpty(loanList)){
@@ -299,7 +304,7 @@ public class HumanresService {
 				loan.set("numInterestInst", numInterestInst);
 				loan.set("numPrincipalInst", numPrincipalInst);
 				loan.set("numPrincipalInst", numPrincipalInst);
-				loan.set("disbDate", disbDate);
+				loan.set("disbDate", disbDateStart);
 				loan.set("createdDate", UtilDateTime.nowTimestamp());
 				loan.set("createdByUserLogin", userLogin.get("userLoginId"));
 	 			delegator.createSetNextSeqId(loan);
