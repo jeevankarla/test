@@ -1144,7 +1144,6 @@ public class ByProductNetworkServices {
 				Map priceResultMap = getProductPricesByDate(delegator,dctx.getDispatcher(), inputProductRate);
 				prodPriceMap = (Map) priceResultMap.get("priceMap");
 				result.put("productPrice", prodPriceMap);
-
 			}
 			result.put("supplyDate", supplyDate);
 			/*contIndentProducts = ProductWorker.getProductsByCategory(delegator ,"CONTINUES_INDENT" ,UtilDateTime.getDayStart(supplyDate));
@@ -8638,8 +8637,8 @@ public class ByProductNetworkServices {
 			List conditionList = FastList.newInstance();
 			conditionList.add(EntityCondition.makeCondition("invoiceTypeId",EntityOperator.NOT_IN,UtilMisc.toList("STATUTORY_OUT")));
 			conditionList.add(EntityCondition.makeCondition("invoiceItemTypeId",EntityOperator.NOT_IN,UtilMisc.toList("INCO_FINEPENALTY_CHQ")));
-			conditionList.add(EntityCondition.makeCondition("invoiceDate",EntityOperator.GREATER_THAN_EQUAL_TO, fromDate));
-			conditionList.add(EntityCondition.makeCondition("invoiceDate",EntityOperator.LESS_THAN_EQUAL_TO, thruDate));
+			conditionList.add(EntityCondition.makeCondition("dueDate",EntityOperator.GREATER_THAN_EQUAL_TO, fromDate));
+			conditionList.add(EntityCondition.makeCondition("dueDate",EntityOperator.LESS_THAN_EQUAL_TO, thruDate));
 			if (isByParty) {
 				conditionList.add(EntityCondition.makeCondition("partyId",EntityOperator.IN, ownerPartyIds));
 			} else {
@@ -8661,7 +8660,7 @@ public class ByProductNetworkServices {
 				Timestamp supplyDate = UtilDateTime.addDaysToTimestamp(fromDate, k);
 				Timestamp dayStart = UtilDateTime.getDayStart(supplyDate);
 				Timestamp dayEnd = UtilDateTime.getDayEnd(supplyDate);
-				List<GenericValue> daywiseInvoices = EntityUtil.filterByCondition(invoices,EntityCondition.makeCondition(EntityCondition.makeCondition("invoiceDate",EntityOperator.GREATER_THAN_EQUAL_TO,dayStart),EntityOperator.AND,EntityCondition.makeCondition("invoiceDate",EntityOperator.LESS_THAN_EQUAL_TO,dayEnd)));
+				List<GenericValue> daywiseInvoices = EntityUtil.filterByCondition(invoices,EntityCondition.makeCondition(EntityCondition.makeCondition("dueDate",EntityOperator.GREATER_THAN_EQUAL_TO,dayStart),EntityOperator.AND,EntityCondition.makeCondition("dueDate",EntityOperator.LESS_THAN_EQUAL_TO,dayEnd)));
 				List dayPartyInvoices = FastList.newInstance();
 				if (isByParty) {
 					dayPartyInvoices = (List) EntityUtil.getFieldListFromEntityList(daywiseInvoices,"partyId", true);
@@ -8692,7 +8691,7 @@ public class ByProductNetworkServices {
 					for (int j = 0; j < daywiseBoothwiseSale.size(); j++) {
 						GenericValue dayBoothSale = (GenericValue) daywiseBoothwiseSale.get(j);
 						String invoiceId = dayBoothSale.getString("invoiceId");
-						Timestamp dueDate = (Timestamp) dayBoothSale.get("invoiceDate");
+						Timestamp dueDate = (Timestamp) dayBoothSale.get("dueDate");
 						BigDecimal amount = (BigDecimal) InvoiceWorker.getInvoiceTotal(delegator, invoiceId);
 						boothInvTotal = boothInvTotal.add(amount);
 						if (invDetail.containsKey(boothId)) {
