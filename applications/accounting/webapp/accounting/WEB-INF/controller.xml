@@ -3517,7 +3517,7 @@ under the License.
     <view-map name="NewDepositPayment" type="screen" page="component://accounting/widget/FinAccountScreens.xml#NewDepositPayment"/>
     <view-map name="NewWithdrawalPayment" type="screen" page="component://accounting/widget/FinAccountScreens.xml#NewWithdrawalPayment"/>
     
-    
+    <!-- new Finacount Views -->
     <view-map name="treasurerPortal" type="screen" page="component://accounting/widget/TreasurerPortalScreens.xml#FindFinAccountAlt"/>
     <view-map name="RecStatement" type="screenfop" page="component://accounting/widget/TreasurerPortalScreens.xml#RecStatement" content-type="application/pdf" encoding="none"/>
      <view-map name="FindFinAccountAlt" type="screen" page="component://accounting/widget/TreasurerPortalScreens.xml#FindFinAccountAlt"/>
