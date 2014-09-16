@@ -48,25 +48,31 @@ misPunchDataMap=[:];
 
 TwoPunchEmployeesList = delegator.findList("EmployeeDetail",EntityCondition.makeCondition("punchType", EntityOperator.EQUALS, "AA") , null, null, null, false);
 if(UtilValidate.isNotEmpty(TwoPunchEmployeesList)){
+	leaveConditionList=[];
+	leaveConditionList.add(EntityCondition.makeCondition("partyId", EntityOperator.IN,EntityUtil.getFieldListFromEntityList(TwoPunchEmployeesList, "partyId", false)));
+	leaveConditionList.add(EntityCondition.makeCondition([EntityCondition.makeCondition("fromDate", EntityOperator.GREATER_THAN_EQUAL_TO, fromDate),
+		EntityCondition.makeCondition("thruDate", EntityOperator.LESS_THAN_EQUAL_TO, thruDate)]));
+	leavecondition=EntityCondition.makeCondition(leaveConditionList,EntityOperator.AND);
+	
+	empLeavedetailsList = delegator.findList("EmplLeave", leavecondition , null, null, null, false );
+	
+	List conditionList=[];
+	conditionList.add(EntityCondition.makeCondition("punchdate", EntityOperator.BETWEEN, UtilMisc.toList(UtilDateTime.toSqlDate(fromDate),UtilDateTime.toSqlDate(thruDate))));
+	conditionList.add(EntityCondition.makeCondition("partyId", EntityOperator.IN, EntityUtil.getFieldListFromEntityList(TwoPunchEmployeesList, "partyId", false)));
+	//conditionList.add(EntityCondition.makeCondition("InOut", EntityOperator.EQUALS, "IN"));
+	condition=EntityCondition.makeCondition(conditionList,EntityOperator.AND);
+	punchdeatils = delegator.findList("EmplPunch", condition , null, null, null, false );
+	
 	TwoPunchEmployeesList.each{ employee ->
 		partyIdmisPunchDataMap=[:];
 		currentDateKeysList.each{ date ->
 			SimpleDateFormat Format = new SimpleDateFormat("MM/dd/yyyy");
 			fromDate = UtilDateTime.getDayStart(new java.sql.Timestamp(Format.parse(date).getTime()));
 			thruDate=UtilDateTime.getDayEnd(new java.sql.Timestamp(Format.parse(date).getTime()));
-			leaveConditionList=[];
-			leaveConditionList.add(EntityCondition.makeCondition("partyId", EntityOperator.EQUALS, employee.get("partyId")));
-			leaveConditionList.add(EntityCondition.makeCondition([EntityCondition.makeCondition("fromDate", EntityOperator.GREATER_THAN_EQUAL_TO, fromDate),
-				EntityCondition.makeCondition("thruDate", EntityOperator.LESS_THAN_EQUAL_TO, thruDate)]));
-			leavecondition=EntityCondition.makeCondition(leaveConditionList,EntityOperator.AND);
-			empLeavedetails = delegator.findList("EmplLeave", leavecondition , null, null, null, false );
+			empLeavedetails = EntityUtil.filterByCondition(empLeavedetailsList, EntityCondition.makeCondition("partyId",EntityOperator.EQUALS,employee.get("partyId")));
 			if(UtilValidate.isEmpty(empLeavedetails)){
-				List conditionList=[];
-				conditionList.add(EntityCondition.makeCondition("punchdate", EntityOperator.EQUALS, UtilDateTime.toSqlDate(date)));
-				conditionList.add(EntityCondition.makeCondition("partyId", EntityOperator.EQUALS, employee.get("partyId")));
-				conditionList.add(EntityCondition.makeCondition("InOut", EntityOperator.EQUALS, "IN"));
-				condition=EntityCondition.makeCondition(conditionList,EntityOperator.AND);
-				punchindeatils = delegator.findList("EmplPunch", condition , null, null, null, false );
+				punchindeatils = EntityUtil.filterByAnd(punchdeatils,
+					 UtilMisc.toMap("InOut","IN" ,"punchdate", UtilDateTime.toSqlDate(date) , "partyId" ,employee.get("partyId")));
 				emplpunchindeatils = UtilMisc.sortMaps(punchindeatils, UtilMisc.toList("punchdate"));
 				if(UtilValidate.isNotEmpty(emplpunchindeatils)){
 					emplpunchindeatils.each{ emplpunchin ->
@@ -81,7 +87,9 @@ if(UtilValidate.isNotEmpty(TwoPunchEmployeesList)){
 							shiftoutconditionList.add(EntityCondition.makeCondition("InOut", EntityOperator.EQUALS, "OUT"));
 							shiftoutconditionList.add(EntityCondition.makeCondition("shiftType", EntityOperator.EQUALS, "SHIFT_NIGHT"));
 							shiftoutcondition=EntityCondition.makeCondition(shiftoutconditionList,EntityOperator.AND);
-							shiftpunchoutdeatils = delegator.findList("EmplPunch", shiftoutcondition , null, null, null, false );
+							//shiftpunchoutdeatils = delegator.findList("EmplPunch", shiftoutcondition , null, null, null, false );
+							shiftpunchoutdeatils = EntityUtil.filterByCondition(empLeavedetailsList, shiftoutcondition);
+							
 							if(UtilValidate.isEmpty(shiftpunchoutdeatils)){
 								shiftmispunchMap=[:];
 								shiftmispunchMap.put("date",date);
@@ -98,7 +106,8 @@ if(UtilValidate.isNotEmpty(TwoPunchEmployeesList)){
 							outconditionList.add(EntityCondition.makeCondition("partyId", EntityOperator.EQUALS, employee.get("partyId")));
 							outconditionList.add(EntityCondition.makeCondition("InOut", EntityOperator.EQUALS, "OUT"));
 							outcondition=EntityCondition.makeCondition(outconditionList,EntityOperator.AND);
-							punchoutdeatils = delegator.findList("EmplPunch", outcondition , null, null, null, false );
+							/*punchoutdeatils = delegator.findList("EmplPunch", outcondition , null, null, null, false );*/
+							punchoutdeatils = EntityUtil.filterByCondition(punchdeatils,outcondition);
 							if(UtilValidate.isEmpty(punchoutdeatils)){
 								currDateMisPunchMap=[:];
 								currDateMisPunchMap.put("date",date);
@@ -119,4 +128,3 @@ if(UtilValidate.isNotEmpty(TwoPunchEmployeesList)){
 	}
 }
 context.put("misPunchDataMap",misPunchDataMap);
-
