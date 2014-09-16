@@ -84,8 +84,12 @@ ${setRequestAttribute("OUTPUT_FILENAME", "prdctRetrnReport.txt")}
 	                            		<fo:block  text-align="left"  font-size="12pt" white-space-collapse="false">${payment.paymentRefNum?if_exists}</fo:block>  
 	                       			</fo:table-cell>
 	                       			<fo:table-cell>
-	                            		<fo:block  text-align="left"  font-size="12pt" white-space-collapse="false"><#if payment.paymentMethodTypeId?has_content && (payment.paymentMethodTypeId == "CHEQUE_PAYIN" || payment.paymentMethodTypeId == "CHEQUE_PAYOUT")>CHEQUE</#if><#if payment.paymentMethodTypeId?has_content && (payment.paymentMethodTypeId == "CASH_PAYIN" || payment.paymentMethodTypeId == "CASH_PAYOUT")>CASH</#if>
-	                            		<#if payment.paymentMethodTypeId?has_content && (payment.paymentMethodTypeId == "FUND_TRANSFER")>TRANSFER</#if></fo:block>  
+	                       			<#assign paymentType="">
+	                       			<#if payment?has_content && payment.paymentMethodTypeId?has_content>
+							            <#assign paymentMethodType = delegator.findOne("PaymentMethodType", {"paymentMethodTypeId" : payment.paymentMethodTypeId}, true)>
+							            <#assign paymentType = paymentMethodType.description>
+							        </#if>
+	                            		<fo:block  text-align="left"  keep-together="always" font-size="12pt" white-space-collapse="false">${paymentType}</fo:block>  
 	                       			</fo:table-cell>
 	                       			<fo:table-cell>
 	                            		<fo:block  text-align="right" font-size="12pt" white-space-collapse="false">${payment.amount}</fo:block>  
