@@ -457,6 +457,7 @@ public class PaymentWorker {
         String paymentMethodType = (String) context.get("paymentMethodTypeId");
         String paymentMethodId = (String) context.get("paymentMethodId");
         String instrumentDateStr=(String) context.get("instrumentDate");
+        String paymentDateStr=(String) context.get("paymentDate");
         String paymentType = (String) context.get("paymentTypeId");
         String invParentTypeId = (String) context.get("parentTypeId");
         String comments = (String) context.get("comments");
@@ -494,6 +495,17 @@ public class PaymentWorker {
 				Debug.logError(e, "Cannot parse date string: "	+ instrumentDateStr, module);
 			}
 		}
+        Timestamp paymentDate=UtilDateTime.nowTimestamp();
+        if (UtilValidate.isNotEmpty(paymentDateStr)) {
+			SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+			try {
+				paymentDate = new java.sql.Timestamp(sdf.parse(paymentDateStr).getTime());
+			} catch (ParseException e) {
+				Debug.logError(e, "Cannot parse date string: "+ paymentDateStr, module);
+			} catch (NullPointerException e) {
+				Debug.logError(e, "Cannot parse date string: "	+ paymentDateStr, module);
+			}
+		}
         try {
         Map<String, Object> paymentCtx = UtilMisc.<String, Object>toMap("paymentTypeId", paymentType);
        // Debug.log("===paymentMethodType===="+paymentMethodType+"===partyIdFrom==="+partyIdFrom+"===partyId=="+partyIdTo+"==paymentMethodType=="+paymentMethodType+"===paymentType=="+paymentType);
@@ -513,6 +525,7 @@ public class PaymentWorker {
         paymentCtx.put("issuingAuthority", issuingAuthority);  
        // paymentCtx.put("issuingAuthorityBranch", issuingAuthorityBranch);  
         paymentCtx.put("instrumentDate", instrumentDate);
+        paymentCtx.put("paymentDate", paymentDate);
         
         paymentCtx.put("statusId", "PMNT_RECEIVED");
         //paymentCtx.put("isEnableAcctg", "N");
@@ -570,6 +583,7 @@ public class PaymentWorker {
 	  	  String paymentType = "";
 	  	  String finAccountId = "";
 	  	  String instrumentDateStr = "";
+	  	  String paymentDateStr = "";
 	  	  String paymentRefNum = "";
 	  	  String invoiceId = "";
 	  	  String partyIdTo = "";
@@ -612,6 +626,7 @@ public class PaymentWorker {
 			  	paymentMethodId = (String) paramMap.get("paymentMethodId");
 			  	finAccountId = (String) paramMap.get("finAccountId");
 			  	instrumentDateStr = (String) paramMap.get("instrumentDate");
+			  	paymentDateStr = (String) paramMap.get("paymentDate");
 			  	paymentRefNum = (String) paramMap.get("paymentRefNum");
 	  	
 		  	
@@ -626,6 +641,17 @@ public class PaymentWorker {
 						Debug.logError(e, "Cannot parse date string: "	+ instrumentDateStr, module);
 					}
 				} 
+		        Timestamp paymentDate=UtilDateTime.nowTimestamp();
+		        if (UtilValidate.isNotEmpty(paymentDateStr)) {
+					SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+					try {
+						paymentDate = new java.sql.Timestamp(sdf.parse(paymentDateStr).getTime());
+					} catch (ParseException e) {
+						Debug.logError(e, "Cannot parse date string: "+ paymentDateStr, module);
+					} catch (NullPointerException e) {
+						Debug.logError(e, "Cannot parse date string: "	+ paymentDateStr, module);
+					}
+				}
 			       
 		  		try {
 		  			if(UtilValidate.isNotEmpty(totalAmount) && totalAmount.compareTo(BigDecimal.ZERO) > 0){
@@ -637,6 +663,7 @@ public class PaymentWorker {
 			  	            paymentCtx.put("paymentRefNum", paymentRefNum);                        	
 			  	        }
 			  	        paymentCtx.put("instrumentDate", instrumentDate);
+			  	        paymentCtx.put("paymentDate", paymentDate);
 			  	        paymentCtx.put("statusId", "PMNT_RECEIVED");
 			  	        if (UtilValidate.isNotEmpty(finAccountId) ) {
 			  	            paymentCtx.put("finAccountId", finAccountId);                        	
