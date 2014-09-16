@@ -59,6 +59,7 @@ public class EmplLeaveService {
         if(UtilValidate.isEmpty(balanceDate)){
         	balanceDate = UtilDateTime.toSqlDate(UtilDateTime.nowDate()); 
         }
+        String leaveTypeIdCtx = (String)context.get("leaveTypeId");
         try{		
         	List conditionList = UtilMisc.toList(
 				EntityCondition.makeCondition("billingTypeId", EntityOperator.EQUALS ,"PAYROLL_BILL"));		
@@ -80,8 +81,14 @@ public class EmplLeaveService {
             	//conditionList.add(EntityCondition.makeCondition("customTimePeriodId", EntityOperator.EQUALS, latestHRPeriod.getString("customTimePeriodId")));
             	conditionList.add(EntityCondition.makeCondition("fromDate", EntityOperator.LESS_THAN_EQUAL_TO, balanceDate ));
             	conditionList.add(EntityCondition.makeCondition("partyId", EntityOperator.EQUALS, employeeId));
+            	
             	if(UtilValidate.isNotEmpty(context.get("leaveTypeId"))){
-            		conditionList.add(EntityCondition.makeCondition("leaveTypeId", EntityOperator.EQUALS, context.get("leaveTypeId")));
+            		if(leaveTypeIdCtx.equals("CML")){
+            			conditionList.add(EntityCondition.makeCondition("leaveTypeId", EntityOperator.IN, UtilMisc.toList("HPL")));
+            		}else{
+            			conditionList.add(EntityCondition.makeCondition("leaveTypeId", EntityOperator.EQUALS, leaveTypeIdCtx));
+            		}
+            		
             	}
             	condition = EntityCondition.makeCondition(conditionList, EntityOperator.AND);
 	            List<GenericValue> leaveBalances = delegator.findList("EmplLeaveBalanceStatusAndPeriod", condition, null, UtilMisc.toList("thruDate"), null, false);
@@ -125,6 +132,22 @@ public class EmplLeaveService {
 						}
 						
 					}
+				  if(leaveTypeIdCtx.equals("CML") && leaveTypeId.equals("HPL")){
+					  
+					  closingBalance = closingBalance.divide(new BigDecimal(2), 1, BigDecimal.ROUND_HALF_UP);
+					  Map leaveCtx = FastMap.newInstance();
+						leaveCtx.put("timePeriodStart", UtilDateTime.toTimestamp(leaveBalance.getDate("fromDate")));
+						leaveCtx.put("partyId", employeeId);
+						leaveCtx.put("leaveTypeId",leaveTypeIdCtx );
+						Map leaveResult = fetchLeaveDaysForPeriod(dctx,leaveCtx);
+						if(!ServiceUtil.isError(leaveResult)){
+							//result.put("leaveBalanceDate", latestHRPeriod.get("thruDate"));
+							Map leaveDetailmap = (Map)leaveResult.get("leaveDetailmap");
+							if(UtilValidate.isNotEmpty(leaveDetailmap)){
+								closingBalance = closingBalance.subtract((BigDecimal)leaveDetailmap.get(leaveTypeId));
+							}
+						}
+				  }
 					leaveBalancesMap.put(leaveTypeId, closingBalance);
 				}
 				result.put("leaveBalances", leaveBalancesMap);
