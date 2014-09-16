@@ -1,5 +1,6 @@
 jQuery(document).ready(function() {
 	jQuery('[name=levelApproverPartyId]').parent().parent().parent().hide();
+	approverPartyIdChange();
 });
 function approverPartyIdChange(){
 	var leaveStatus = jQuery('[name=leaveStatus]').val();
