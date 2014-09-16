@@ -77,7 +77,47 @@ function makeDatePicker1(fromDateId ,thruDateId){
 			}
 		});
 	}
-
+	function makeDatePicker2(fromDateId ,thruDateId){
+	$( "#"+fromDateId ).datepicker({
+			dateFormat: 'M-yy',
+			changeMonth: true,
+			changeYear: true,
+			showButtonPanel: true,
+			onClose: function( selectedDate ) {
+			    var month = $("#ui-datepicker-div .ui-datepicker-month :selected").val();
+	            var year = $("#ui-datepicker-div .ui-datepicker-year :selected").val();
+	            $(this).datepicker('setDate', new Date(year, month, 1));
+	            $( "#"+thruDateId).datepicker('setDate', new Date(year, month, 1));
+			}
+		});
+	$( "#"+thruDateId ).datepicker({
+			dateFormat: 'M-yy',
+			changeMonth: true,
+			changeYear: true,
+			showButtonPanel: true,
+			onClose: function( selectedDate ) {
+			    var month = $("#ui-datepicker-div .ui-datepicker-month :selected").val();
+	            var year = $("#ui-datepicker-div .ui-datepicker-year :selected").val();
+	            $(this).datepicker('setDate', new Date(year, month, 1));
+			}
+		});
+	$(".IcDealerOSDuesFDate").focus(function () {
+	        $(".ui-datepicker-calendar").hide();
+	        $("#ui-datepicker-div").position({
+	            my: "center top",
+	            at: "center bottom",
+	            of: $(this)
+	        });    
+	     });
+	     $(".IcDealerOSDuesTDate").focus(function () {
+	        $(".ui-datepicker-calendar").hide();
+	        $("#ui-datepicker-div").position({
+	            my: "center top",
+	            at: "center bottom",
+	            of: $(this)
+	        });    
+	     });
+	}
 // for Vat Invoice Sequence and Invoice sale reports
 
 function reportTypeChangeFunc() {
@@ -137,6 +177,7 @@ function reportTypeChangeFunc() {
 	    makeDatePicker("regularIceCreamfDate","regularIceCreamtDate");
 	    makeDatePicker("purchaseFromDate","purchaseThruDate");
 		makeDatePicker("analysisCodeFromDate","analysisCodeThruDate");
+		makeDatePicker2("IcDealerOSDuesFDate","IcDealerOSDuesTDate");
 		$('#ui-datepicker-div').css('clip', 'auto');		
 	});
 //for Month Picker
@@ -1071,6 +1112,25 @@ function reportTypeChangeFunc() {
 							<td width="10%"><input type="submit" value="Download" class="buttontext"/></td> 
 						</form>
 	                  </tr>
+	                  <tr class="alternate-row">
+			      	   <form id="IcDealerOSDuesIntimation" name="IcDealerOSDuesIntimation" method="post" action="<@ofbizUrl>IcDealerOSDuesIntimation.pdf</@ofbizUrl>" target="_blank">        
+			             <td width="30%">Icecream Dealers Outstanding Dues intimation Report</td>
+			             <td width="15%">From<input  type="text" size="18pt" id="IcDealerOSDuesFDate" readonly  class="IcDealerOSDuesFDate" name="fromDate"/></td>
+			      		 <td width="15%">Thru<input  type="text" size="18pt" id="IcDealerOSDuesTDate" readonly  class="IcDealerOSDuesTDate" name="thruDate"/></td>
+			      		 <td width="15%">By
+			      			  <select name="categoryType" id= "categoryType">
+				      			<option value="All">All</option>
+				      			<option value="ICE_CREAM_NANDINI">Nandini Ice Cream</option>
+				      			<option value="ICE_CREAM_AMUL">Amul Ice Cream</option>
+				      			<option value="UNITS">Inter Unit Transfer</option>
+				      			<option value="UNION">Sale to Union</option>
+				      			<option value="DEPOT_CUSTOMER">Depot Sale</option>
+				      			</select>
+				      	</td>
+			             <td width="15%"></td>
+			             <td width="10%"><input type="submit" value="Download" class="buttontext"/></td>
+			           </form>
+			        </tr>
 			        <#-- 
       				<tr class="alternate-row">
 		        	<form id="duesAbstract" name="duesAbstract" method="post" action="<@ofbizUrl>duesAbstract.csv</@ofbizUrl>">	
