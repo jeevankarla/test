@@ -275,7 +275,7 @@
         <field name="thruDate"><display/></field>
         <field name="description"><display/></field>
         
-        <field name="leaveStatus" id-name="leaveStatus" title="Next Leave Status" required-field="true" event="onchange" action="javascript:approverPartyIdChange(this);">
+        <field name="leaveStatus" id-name="leaveStatus" title="Next Leave Status" required-field="true" event="onchange" action="javascript:approverPartyIdChange();">
 	        <drop-down allow-empty="false" current="selected">
 	        	<list-options key-name="statusIdTo" list-name="validStatusChangeList" description="${transitionName}"/>
 	        </drop-down>
