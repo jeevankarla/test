@@ -786,7 +786,7 @@
         </field>
        	<field name="submitButton" title="${uiLabelMap.CommonFind}" widget-style="smallSubmit"><submit/></field>   
     </form>
-    <form name="EditArrearDays" type="list" list-name="EditArrearDays" default-table-style="basic-table hover-bar" target="updateArrearDays" >
+    <form name="EditArrearDays" type="list" list-name="EditArrearDays" default-table-style="basic-table hover-bar" target="updateArrearDays" separate-columns="true" >
     	<actions>
 		     <entity-one entity-name="EmployeeDetail" value-field="emplDetail">
 					<field-map field-name="partyId" from-field="parameters.partyId" />
@@ -802,7 +802,8 @@
     	<field name="customTimePeriodId" title="Time Period"><display></display></field>
     	<field name="noOfPayableDays"><display></display></field> 
     	<field name="noOfArrearDays" title="Arrear Days"><text size="10"></text></field>
-    	<field name="lossOfPayDays" use-when="punchType!=null &amp;&amp; punchType.equals(&quot;N&quot;) &amp;&amp; ${groovy:((security.hasEntityPermission(&quot;EMP_LOP_EDIT&quot;, &quot;_UPDATE&quot;,session)))}" title="Loss Of Pay Days"><text size="10"></text></field>
+    	<field name="lossOfPayDays" use-when="punchType!=null &amp;&amp; punchType.equals(&quot;N&quot;) &amp;&amp; ${groovy:((security.hasEntityPermission(&quot;EMP_LOP_EDIT&quot;, &quot;_UPDATE&quot;,session)))}"><text size="10"></text></field>
+    	<field name="lateMin" use-when="${groovy:((security.hasEntityPermission(&quot;EMP_LATEMIN_EDIT&quot;, &quot;_UPDATE&quot;,session)))}" title="Approve Late Min" ><text size="10"></text></field>
     	 <field name="submitButton" title="${uiLabelMap.CommonUpdate}"><submit button-type="button"/></field>
     </form>
     <form name="ListPartyBenefitOrDeduction" type="list"

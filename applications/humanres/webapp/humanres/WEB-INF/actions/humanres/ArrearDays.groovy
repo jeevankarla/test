@@ -63,8 +63,13 @@ timePeriodId=parameters.customTimePeriodId;
 				lossOfPayDays=payrollAttendance.get("lossOfPayDays");
 				if(lossOfPayDays==null)
 				lossOfPayDays=0;
+				lateMin=payrollAttendance.get("lateMin");
+				if(lateMin==null)
+				lateMin=0;
+				lateMin=lateMin*480;
 				EditArrearDaysMap.put("noOfArrearDays",noOfArrearDays);
 				EditArrearDaysMap.put("lossOfPayDays",lossOfPayDays);
+				EditArrearDaysMap.put("lateMin",lateMin);
 				EditArrearDays.add(EditArrearDaysMap);
 				EditArrearDaysMap.put("timePeriodId", timePeriodId);
 			}

@@ -3175,7 +3175,9 @@ public class PayrollService {
 	      String timePeriodId = (String)context.get("timePeriodId");
 	      BigDecimal noOfArrearDays=(BigDecimal)context.get("noOfArrearDays");
 	      BigDecimal lossOfPayDays=(BigDecimal)context.get("lossOfPayDays");
+	      BigDecimal lateMin=(BigDecimal)context.get("lateMin");
 	      Map result = ServiceUtil.returnSuccess();
+	     lateMin = lateMin.divide(BigDecimal.valueOf(480), 4, BigDecimal.ROUND_HALF_UP);
 	      try{
 	      			List conditionLis=FastList.newInstance();
 	      			conditionLis.add(EntityCondition.makeCondition("customTimePeriodId",EntityOperator.EQUALS,timePeriodId));
@@ -3218,6 +3220,17 @@ public class PayrollService {
       							employPayrollDetails.set("noOfPayableDays",noOfPayableDays);
       							employPayrollDetails.set("lossOfPayDays",lossOfPayDays);
       							employPayrollDetails.store();
+	      					}
+	      					if(UtilValidate.isNotEmpty(lateMin) && lateMin.compareTo(BigDecimal.ZERO)>=0){
+	      						BigDecimal empLateMin=employPayrollDetails.getBigDecimal("lateMin");
+	      						if(UtilValidate.isEmpty(empLateMin)){
+	      							empLateMin = BigDecimal.ZERO;
+	      						}
+	      						noOfPayableDays=noOfPayableDays.add(empLateMin);
+	      						noOfPayableDays=noOfPayableDays.subtract(lateMin);
+	      						employPayrollDetails.set("noOfPayableDays",noOfPayableDays);
+	      						employPayrollDetails.set("lateMin",lateMin);
+	      						employPayrollDetails.store();
 	      					}
 	    	      	}
 	      		} catch (GenericEntityException e) {
