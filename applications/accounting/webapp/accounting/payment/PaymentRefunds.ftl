@@ -203,8 +203,8 @@
 								"<input class='h4' type='hidden' id='paymentId' name='paymentId' value='"+paymentId+"'/>"+
 								"<input class='h4' type='hidden' id='statusId' name='statusId' value='PMNT_RECEIVED'/>"+
 								"<input class='h4' type='hidden' id='paymentTypeId' name='paymentTypeId' value='"+paymentTypeId+"'/>"+
-								"<input class='h4' type='text' id='isDepositWithDrawPayment' name='isDepositWithDrawPayment' value='"+isDepositWithDrawPayment+"'/>"+
-								"<input class='h4' type='text' id='finAccountTransTypeId' name='finAccountTransTypeId' value='"+finAccountTransTypeId+"'/>"+
+								"<input class='h4' type='hidden' id='isDepositWithDrawPayment' name='isDepositWithDrawPayment' value='"+isDepositWithDrawPayment+"'/>"+
+								"<input class='h4' type='hidden' id='finAccountTransTypeId' name='finAccountTransTypeId' value='"+finAccountTransTypeId+"'/>"+
 							"</td>"+
 						"</tr>" +
 						"<tr class='h3'><td align='center'><span align='right'><input type='submit' value='Submit' class='smallSubmit'/></span></td><td class='h3' width='100%' align='left'><span align='left'><button value='${uiLabelMap.CommonCancel}' onclick='return cancelForm();' class='smallSubmit'>${uiLabelMap.CommonCancel}</button></span></td></tr>";
@@ -218,7 +218,7 @@
 	
 	function setPaymentMethodFields() { 
 		var str = $("#paymentMethodId option:selected").text();  	
-		if((str.search(/(CASH)+/g) >= 0) ||(str.search(/(CREDITNOTE)+/g) >= 0)|| (str.search(/(DEBITNOTE)+/g) >= 0) ||(str.search(/(Cash)+/g) >= 0) ||(str.search(/(cash)+/g) >= 0) ){
+		if((str.search(/(CASH)+/g) >= 0) ||(str.search(/(CREDITNOTE)+/g) >= 0)|| (str.search(/(DEBITNOTE)+/g) >= 0) ||(str.search(/(Cash)+/g) >= 0) ||(str.search(/(cash)+/g) >= 0) ||(str.search(/(CSH)+/g) >= 0) ){
 			$('.noncash').hide();
 		}	
 		else{
@@ -227,7 +227,7 @@
 	}
 	function setPaymentMethodTypeFields() { 
 		var str = $("#paymentMethodTypeId option:selected").text();  	
-		if((str.search(/(CASH)+/g) >= 0) ||(str.search(/(CREDITNOTE)+/g) >= 0)|| (str.search(/(DEBITNOTE)+/g) >= 0) ||(str.search(/(Cash)+/g) >= 0) ||(str.search(/(cash)+/g) >= 0) ){
+		if((str.search(/(CASH)+/g) >= 0) ||(str.search(/(CREDITNOTE)+/g) >= 0)|| (str.search(/(DEBITNOTE)+/g) >= 0) ||(str.search(/(Cash)+/g) >= 0) ||(str.search(/(cash)+/g) >= 0) ||(str.search(/(CSH)+/g) >= 0) ){
 			$('.noncash').hide();
 		}	
 		else{
