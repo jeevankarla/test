@@ -893,7 +893,7 @@
 		</field>
     	<field name="loanTypeId" title="Loan Type" tooltip="${uiLabelMap.CommonRequired}">
     		<drop-down>
-    			<entity-options entity-name="LoanType" key-field-name="loanTypeId" description="${loanTypeId}" filter-by-date="false">
+    			<entity-options entity-name="LoanType" key-field-name="loanTypeId" description="${description}" filter-by-date="false">
     			</entity-options>
     		</drop-down>
     	</field>
@@ -905,18 +905,13 @@
                 </entity-options>
             </drop-down>
         </field>
-    	<field name="description" title="Description">
-    		<drop-down>
-    			<entity-options entity-name="LoanType" key-field-name="description" description="${description}" filter-by-date="false">
-    			</entity-options>
-    		</drop-down>
-    	</field>
-    	<field name="extLoanRefNum" title="Loan Reference Number" required-field="true"><text size="20"/></field>
+    	<field name="description" title="Description" required-field="false"><text size="20"/></field>
+    	<field name="extLoanRefNum" title="Loan Reference Number" required-field="false"><text size="20"/></field>
     	<field name="principalAmount" title="Principal Amount" required-field="true"><text size="20"/></field>
     	<field name="interestAmount" title="Interest Amount" required-field="true"><text size="20"/></field>
     	<field name="numInterestInst" title="No of Interest Installments" required-field="true"><text size="20"/></field>
     	<field name="numPrincipalInst" title="No of Principal Installments" required-field="true"><text size="20"/></field>
-    	<field name="disbDate" title="Loan Date" required-field="false" tooltip="Select date from calendar"><date-time/></field>
+    	<field name="disbDate" title="Loan Date" required-field="true" tooltip="Select date from calendar"><date-time/></field>
     	<field name="submitButton" title="${uiLabelMap.CommonCreate}"><submit/></field>
     </form>
     <form name="FindLoan" type="single" header-row-style="header-row" default-table-style="basic-table">
@@ -928,7 +923,7 @@
 		</field>
     	<field name="loanTypeId" title="loanTypeId">
     		<drop-down allow-empty="true">
-    			<entity-options entity-name="LoanType" key-field-name="loanTypeId" description="${loanTypeId}" filter-by-date="false">
+    			<entity-options entity-name="LoanType" key-field-name="loanTypeId" description="${description}" filter-by-date="false">
     			</entity-options>
     		</drop-down>
     	</field>
@@ -940,12 +935,7 @@
                 </entity-options>
             </drop-down>
         </field>
-    	<field name="description" title="description">
-    		<drop-down allow-empty="true">
-    			<entity-options entity-name="LoanType" key-field-name="description" description="${description}" filter-by-date="false">
-    			</entity-options>
-    		</drop-down>
-    	</field>
+    	<field name="description" title="Description"><text></text></field>
     	<field name="extLoanRefNum" title="Loan Ref Number"><text></text></field>
     	<field name="searchButton" title="${uiLabelMap.CommonFind}" widget-style="smallSubmit"><submit button-type="button"/></field>
     </form>

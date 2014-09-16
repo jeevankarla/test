@@ -1436,7 +1436,7 @@ under the License.emplpunch
        <attribute name="loanTypeId" mode="IN" type="String" optional="false"/>
        <attribute name="statusId" mode="IN" type="String" optional="true"/>
        <attribute name="extLoanRefNum" mode="IN" type="String" optional="true"/>
-       <attribute name="disbDate" type="Timestamp" mode="IN" optional="true"/>
+       <attribute name="disbDate" type="Timestamp" mode="IN" optional="false"/>
        <attribute name="description" mode="IN" type="String" optional="true"/>
        <attribute name="principalAmount" mode="IN" type="BigDecimal" optional="false"/>
        <attribute name="interestAmount" mode="IN" type="BigDecimal" optional="false"/>
