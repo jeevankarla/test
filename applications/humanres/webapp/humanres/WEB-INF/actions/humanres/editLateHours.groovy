@@ -52,7 +52,6 @@ if(UtilValidate.isNotEmpty(timePeriodId)){
 		dates=delegator.findOne("CustomTimePeriod", [customTimePeriodId:timePeriodId], false);
 		fromDate=UtilDateTime.toDateString(dates.get("fromDate"), "MMM dd, yyyy");
 		thruDate=UtilDateTime.toDateString(dates.get("thruDate"), "MMM dd, yyyy");
-		
 		fromDateStart = UtilDateTime.getDayStart(UtilDateTime.nowTimestamp());
 		thruDateEnd= UtilDateTime.getDayEnd(UtilDateTime.nowTimestamp());
 		def sdf = new SimpleDateFormat("MMMM dd, yyyy");
@@ -68,8 +67,6 @@ if(UtilValidate.isNotEmpty(timePeriodId)){
 		context.errorMessage = "Cannot parse date string: " + e;
 		return;
 		}
-		context.fromlarDate=UtilDateTime.toDateString(fromDateStart,"dd-MM-yyyy");
-		context.thrularDate=UtilDateTime.toDateString(thruDateEnd,"dd-MM-yyyy");
 	partyId=parameters.partyId;
 	
 	resultMap=PayrollService.getPayrollAttedancePeriod(dctx,[userLogin:userLogin,timePeriodStart:fromDateStart,timePeriodEnd:thruDateEnd,timePeriodId:timePeriodId,locale:locale]);
@@ -80,6 +77,8 @@ if(UtilValidate.isNotEmpty(timePeriodId)){
 		attenDates=delegator.findOne("CustomTimePeriod", [customTimePeriodId:customTimePeriodId], false);
 		fromDate=UtilDateTime.toDateString(attenDates.get("fromDate"), "MMM dd, yyyy");
 		thruDate=UtilDateTime.toDateString(attenDates.get("thruDate"), "MMM dd, yyyy");
+		context.fromlarDate=fromDate;
+		context.thrularDate=thruDate;
 		fromDateStart = UtilDateTime.getDayStart(UtilDateTime.nowTimestamp());
 		thruDateEnd= UtilDateTime.getDayEnd(UtilDateTime.nowTimestamp());
 		def sdfn = new SimpleDateFormat("MMMM dd, yyyy");

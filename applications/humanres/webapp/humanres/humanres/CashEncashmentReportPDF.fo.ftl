@@ -37,15 +37,15 @@ under the License.
 				<fo:block linefeed-treatment="preserve">&#xA;</fo:block>
 				<fo:block text-align="center" keep-together="always" white-space-collapse="false">&#160;                               GH/SS CASH ENCASHMENT REPORT               Page Number  : <fo:page-number/></fo:block>
 				 <fo:block linefeed-treatment="preserve">&#xA;</fo:block>
-				 <fo:block text-align="left" keep-together="always" white-space-collapse="false">&#160;From Date	:${fromlarDate}			To Date	:${thrularDate}</fo:block>
+				 <fo:block text-align="left" keep-together="always" white-space-collapse="false">&#160;From Date	: ${fromlarDate?upper_case}			To Date	: ${thrularDate?upper_case}</fo:block>
 				 <fo:block text-align="left" keep-together="always"  >&#160;----------------------------------------------------------------------------------------------------</fo:block>
 				 <fo:block font-family="Courier,monospace">
 				<fo:table >
 					<fo:table-column column-width="42pt"/>
 					<fo:table-column column-width="55pt"/>
 					<fo:table-column column-width="150pt"/>
-					<fo:table-column column-width="100pt"/>
-					<fo:table-column column-width="150pt"/>
+					<fo:table-column column-width="120pt"/>
+					<fo:table-column column-width="160pt"/>
 					<fo:table-column column-width="150pt"/>
 					<fo:table-column column-width="110pt"/>
 					<fo:table-column column-width="100pt"/>
@@ -91,8 +91,8 @@ under the License.
 					 <fo:table-column column-width="30pt"/>
 					<fo:table-column column-width="80pt"/>
 					<fo:table-column column-width="100pt"/>
-					<fo:table-column column-width="80pt"/>
-					<fo:table-column column-width="130pt"/>
+					<fo:table-column column-width="100pt"/>
+					<fo:table-column column-width="140pt"/>
 					<fo:table-column column-width="75pt"/>
 					<fo:table-column column-width="60pt"/>
 					<fo:table-column column-width="50pt"/>
