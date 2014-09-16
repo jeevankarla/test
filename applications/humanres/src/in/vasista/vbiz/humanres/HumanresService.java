@@ -325,7 +325,44 @@ public class HumanresService {
 	    	GenericDelegator delegator = (GenericDelegator) dctx.getDelegator();
 			LocalDispatcher dispatcher = dctx.getDispatcher();
 			List conditionList=FastList.newInstance();
+			String payHeadTypeId = null;
+			String partyIdFrom = null;
 			try {
+				GenericValue loanTypeDetails = delegator.findOne("LoanType",UtilMisc.toMap("loanTypeId", loanTypeId), false);
+				if(UtilValidate.isNotEmpty(loanTypeDetails)){
+					payHeadTypeId = loanTypeDetails.getString("payHeadTypeId");
+				}
+				List condList = FastList.newInstance();
+				condList.add(EntityCondition.makeCondition("partyIdTo", EntityOperator.EQUALS ,partyId));
+				condList.add(EntityCondition.makeCondition("roleTypeIdTo", EntityOperator.EQUALS ,"EMPLOYEE"));
+				EntityCondition cond = EntityCondition.makeCondition(condList,EntityOperator.AND); 	
+				List<GenericValue> employmentList = delegator.findList("Employment", cond, null, null, null, false);
+				if(UtilValidate.isNotEmpty(employmentList)){
+					List activeEmploymentList = EntityUtil.filterByDate(employmentList, disbDateStart);
+					if(UtilValidate.isNotEmpty(activeEmploymentList)){
+						GenericValue activeEmployment = EntityUtil.getFirst(activeEmploymentList);
+						partyIdFrom = activeEmployment.getString("partyIdFrom");
+					}
+				}
+				
+				Map partyDeductionMap = FastMap.newInstance();
+				partyDeductionMap.put("userLogin",userLogin);
+				partyDeductionMap.put("roleTypeIdFrom","INTERNAL_ORGANIZATIO");
+				partyDeductionMap.put("roleTypeIdTo","EMPLOYEE");
+				partyDeductionMap.put("partyIdFrom",partyIdFrom);
+				partyDeductionMap.put("partyIdTo",partyId);
+				partyDeductionMap.put("deductionTypeId",payHeadTypeId);
+				partyDeductionMap.put("fromDate",disbDateStart);
+				try {
+					Map resultValue = dispatcher.runSync("createPartyDeduction", partyDeductionMap);
+					if(ServiceUtil.isError(result)){
+						Debug.logError(ServiceUtil.getErrorMessage(resultValue), module);
+						return result;
+					}
+				} catch (GenericServiceException s) {
+					Debug.logError("Error while creating Party Deduction"+s.getMessage(), module);
+				} 
+				
 				conditionList.add(EntityCondition.makeCondition("partyId", EntityOperator.EQUALS, partyId));
 				conditionList.add(EntityCondition.makeCondition("loanTypeId", EntityOperator.EQUALS, loanTypeId));
 				conditionList.add(EntityCondition.makeCondition("statusId", EntityOperator.EQUALS, statusId));
