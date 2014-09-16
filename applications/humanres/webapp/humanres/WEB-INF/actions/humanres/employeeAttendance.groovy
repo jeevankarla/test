@@ -13,6 +13,7 @@ import java.text.ParseException;
 import net.sf.json.JSONObject;
 import net.sf.json.JSONArray;
 import in.vasista.vbiz.humanres.HumanresService
+import java.util.concurrent.TimeUnit;
 
 dctx = dispatcher.getDispatchContext();
 SimpleDateFormat timeFormat = new SimpleDateFormat("HH:mm");
@@ -87,9 +88,13 @@ normalPunchList.each { punch->
 		}
 		else {
 			punchJSON.add(outTimestamp);
-			elapsedHours = UtilDateTime.getInterval(new java.sql.Timestamp(dateTimeFormat.parse(inTimestamp).getTime()), 
-								new java.sql.Timestamp(dateTimeFormat.parse(outTimestamp).getTime()))/(1000*60*60);
-			punchJSON.add(String.format( "%.2f", elapsedHours ));				
+			elapsedHours = (int)(UtilDateTime.getInterval(new java.sql.Timestamp(dateTimeFormat.parse(inTimestamp).getTime()), 
+								new java.sql.Timestamp(dateTimeFormat.parse(outTimestamp).getTime()))/(1000*60*60));
+							
+			elapsedMinutes = (int)((UtilDateTime.getInterval(new java.sql.Timestamp(dateTimeFormat.parse(inTimestamp).getTime()),
+								new java.sql.Timestamp(dateTimeFormat.parse(outTimestamp).getTime()))%(1000*60*60))/(1000*60));
+			elapsedMinutes = String.format( "%02d", elapsedMinutes );
+			punchJSON.add(elapsedHours+":"+elapsedMinutes);				
 		}
 		punchListJSON.add(punchJSON);
 		attendanceDaysSet.add(UtilDateTime.toDateString(punch.get("punchdate"), "dd/MM/yyyy"));
@@ -124,9 +129,19 @@ oodPunchList.each { punch->
 		}
 		else {
 			punchJSON.add(inTimestamp);
-			elapsedHours = UtilDateTime.getInterval(new java.sql.Timestamp(dateTimeFormat.parse(outTimestamp).getTime()),
-								new java.sql.Timestamp(dateTimeFormat.parse(inTimestamp).getTime()))/(1000*60*60);
-			punchJSON.add(String.format( "%.2f", elapsedHours ));
+			/*elapsedHours = (UtilDateTime.getInterval(new java.sql.Timestamp(dateTimeFormat.parse(outTimestamp).getTime()),
+								new java.sql.Timestamp(dateTimeFormat.parse(inTimestamp).getTime()))/(1000*60*60));
+							
+							
+							
+			punchJSON.add(String.format( "%.0f", elapsedHours ));*/
+			elapsedHours = (int)(UtilDateTime.getInterval(new java.sql.Timestamp(dateTimeFormat.parse(outTimestamp).getTime()),
+				new java.sql.Timestamp(dateTimeFormat.parse(inTimestamp).getTime()))/(1000*60*60));
+			
+			elapsedMinutes = (int)((UtilDateTime.getInterval(new java.sql.Timestamp(dateTimeFormat.parse(outTimestamp).getTime()),
+				new java.sql.Timestamp(dateTimeFormat.parse(inTimestamp).getTime()))%(1000*60*60))/(1000*60));
+			elapsedMinutes = String.format( "%02d", elapsedMinutes );
+			punchJSON.add(elapsedHours+":"+elapsedMinutes);
 		}
 		oodPunchListJSON.add(punchJSON);
 		attendanceDaysSet.add(UtilDateTime.toDateString(punch.get("punchdate"), "dd/MM/yyyy"));

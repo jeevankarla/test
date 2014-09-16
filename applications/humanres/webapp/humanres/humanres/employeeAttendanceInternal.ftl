@@ -23,7 +23,7 @@ $(document).ready(function() {
 		"columns": [
 			{ "title": "In Time" },			
 			{ "title": "Out Time" },
-			{ "title": "Duration (hrs)"}],	
+			{ "title": "Duration (HH:MM)"}],	
 		"columnDefs": [{ type: 'date-eu', targets: [0,1] }],
        	"iDisplayLength" : 100
 	} );
@@ -38,7 +38,7 @@ $(document).ready(function() {
 		"columns": [
 			{ "title": "Out Time" },			
 			{ "title": "In Time" },
-			{ "title": "Duration (hrs)"}],	
+			{ "title": "Duration (HH:MM)"}],	
 		"columnDefs": [{ type: 'date-eu', targets: [0,1] }],
        	"iDisplayLength" : 100
 	} );
