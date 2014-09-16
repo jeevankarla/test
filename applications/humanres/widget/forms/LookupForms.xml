@@ -191,6 +191,7 @@ under the License.
         header-row-style="header-row" default-table-style="basic-table">
         <auto-fields-entity entity-name="SalaryStep" default-field-type="hidden"/>
         <field name="salaryStepSeqId" title="${uiLabelMap.HumanResLookupSalaryStepSeqId}"><text-find/></field>
+        <field name="payGradeId" title="payGradeId"><text-find/></field>
         <field name="noConditionFind"><hidden value="Y"/><!-- if this isn't there then with all fields empty no query will be done --></field>
         <field name="submitButton" title="${uiLabelMap.CommonFind}" widget-style="smallSubmit"><submit button-type="button"/></field>
     </form>
@@ -202,6 +203,7 @@ under the License.
                 <field-map field-name="entityName" value="SalaryStep"/>
                 <field-map field-name="viewIndex" from-field="viewIndex"/>
                 <field-map field-name="viewSize" from-field="viewSize"/>
+                <field-map field-name="orderBy"  value="amount"/>
             </service>
         </actions>
         <field name="payGradeId" title="payGradeId"><display></display></field>
