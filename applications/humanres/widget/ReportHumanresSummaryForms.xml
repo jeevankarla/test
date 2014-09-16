@@ -957,7 +957,6 @@
     	<field name="numPrincipalInst" title="No of Principal Installments"><display></display></field>
     	<field name="disbDate" title="Disbursed Date" ><display></display></field>
     	<field name="createdDate" title="Created Date" ><display></display></field>
-    	<field name="createdDate" title="Created Date" ><display></display></field>
     	<field name="createdByUserLogin" title="Created By"><display></display></field>
     	<field use-when="${groovy:((security.hasEntityPermission(&quot;HR&quot;, &quot;_LOAN_DELETE&quot;, session)))}" name="deleteLink" title="Delete" widget-style="buttontext">
            <hyperlink also-hidden="false" description="${uiLabelMap.CommonDelete}" target="deleteEmployeeLoan">
