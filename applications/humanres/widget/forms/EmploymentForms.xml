@@ -395,7 +395,7 @@
         <field name="cost"><text size="20" maxlength="30"/></field>
         <field name="submitButton" title="${uiLabelMap.CommonAdd}"><submit button-type="button"/></field>
     </form>
-    <form name="ListPartyDeductions" type="multi" target="updatePartyDeduction?deductionTypeId=${deductionTypeId}&amp;roleTypeIdFrom=${roleTypeIdFrom}&amp;roleTypeIdTo=${roleTypeIdTo}&amp;partyIdFrom=${partyIdFrom}&amp;partyIdTo=${partyIdTo}&amp;fromDate=${fromDate}" title="" paginate-target="findPartyDedutions"
+    <form name="ListPartyDeductions" type="multi" target="updatePartyDeduction?deductionTypeId=${deductionTypeId}&amp;roleTypeIdFrom=${roleTypeIdFrom}&amp;roleTypeIdTo=${roleTypeIdTo}&amp;partyIdFrom=${partyIdFrom}&amp;partyIdTo=${partyIdTo}&amp;fromDate=${fromDate}" title=""  paginate-target="findPartyDeductions"
         odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
         <actions>
             <entity-condition entity-name="PartyDeduction">
