@@ -186,6 +186,7 @@ if(UtilValidate.isNotEmpty(reportTypeFlag) && ("PCMReport".equals(reportTypeFlag
 		
 		curFacList=[];
 		curFacList=categoryTotalMap.get(categoryType);
+		prvFacList=facilityPrevSaleMap.get(categoryType);
 		pcmAbstractMap=[:];
 		pcmAbstractMap["catSize"]=0;
 		pcmAbstractMap["milkAvgTot"]=0;
@@ -198,16 +199,29 @@ if(UtilValidate.isNotEmpty(reportTypeFlag) && ("PCMReport".equals(reportTypeFlag
 		pcmAbstractMap["bwt501To750"]=0;
 		pcmAbstractMap["bwt751To1000"]=0;
 		pcmAbstractMap["above1000"]=0;
+		curRetailerCount=0;
+		prvRetailerCount=0;
+		if(UtilValidate.isNotEmpty(curFacList)){
+		  curRetailerCount=curFacList.size();
+		}
+		if(UtilValidate.isNotEmpty(prvFacList)){
+		  prvRetailerCount=prvFacList.size();
+		}
 		
 		curFacList.each{ curFacilityMap->
 			boothId=curFacilityMap.get("facilityId");
-			//milkSaleTotal=curFacilityMap.get("milkSaleTotal");
 			milkAvgTotal=curFacilityMap.get("milkAvgTotal");
+			milkRtlAvgTotal=curFacilityMap.get("milkAvgTotal")/curRetailerCount;
 			preFacilityMap=facilityPrevSaleMap.get(boothId);
 			preAvgTot=0;
 			diff=0;
 			if(UtilValidate.isNotEmpty(preFacilityMap)){
 				preAvgTot=preFacilityMap.get("milkAvgTotal");
+				if(preFacilityMap.get("milkAvgTotal")>0 && prvRetailerCount>0){
+				 preRtlAvgTot=preFacilityMap.get("milkAvgTotal")/prvRetailerCount;
+				}else{
+				 preRtlAvgTot=preFacilityMap.get("milkAvgTotal");
+				}
 			}
 			diff=milkAvgTotal-preAvgTot;
 			if(diff==0){
@@ -219,7 +233,7 @@ if(UtilValidate.isNotEmpty(reportTypeFlag) && ("PCMReport".equals(reportTypeFlag
 			}
 			//updating count
 			pcmAbstractMap["catSize"]+=1;
-			pcmAbstractMap["milkAvgTot"]+=milkAvgTotal;
+			pcmAbstractMap["milkAvgTot"]+=milkRtlAvgTotal;
 			if(milkAvgTotal<=100){
 				pcmAbstractMap["less100"]+=1;
 			}else if(milkAvgTotal>=101&&milkAvgTotal<=250){
@@ -254,11 +268,11 @@ if(UtilValidate.isNotEmpty(reportTypeFlag) && "PCMReport".equals(reportTypeFlag)
 				if(UtilValidate.isEmpty(curNewFacilityMap[categoryType])){
 						curNewFacilityMap.put(categoryType,curCount+1);
 				 }else{
-					 tempMap = [:];
 					 curCount=curNewFacilityMap.get(categoryType)+1;
 					 curNewFacilityMap[categoryType] = curCount;
 				 }
 			   }
+			curCount=0;
 		}
 	}
    //Debug.log("curNewFacilityMap==="+curNewFacilityMap);
@@ -284,14 +298,21 @@ if(UtilValidate.isNotEmpty(reportTypeFlag) && "PCMReport".equals(reportTypeFlag)
 			prvPcmAbstractMap["bwt501To750"]=0;
 			prvPcmAbstractMap["bwt751To1000"]=0;
 			prvPcmAbstractMap["above1000"]=0;
-			
+			prvRetailerCount=0;
+			if(UtilValidate.isNotEmpty(prvFacList)){
+			 prvRetailerCount=prvFacList.size();
+			}
 			prvFacList.each{ prvFacilityMap->
 				boothId=prvFacilityMap.get("facilityId");
-				//prvMilkSaleTotal=prvFacilityMap.get("milkSaleTotal");
 				prvMilkAvgTotal=prvFacilityMap.get("milkAvgTotal");
+				 if(prvFacilityMap.get("milkSaleTotal")>0 && prvRetailerCount>0){
+				   prvMilkRtlAvgTotal=prvFacilityMap.get("milkAvgTotal")/prvRetailerCount;
+				 }else{
+				   prvMilkRtlAvgTotal=prvFacilityMap.get("milkAvgTotal");
+				 }
 				//updating count
 				prvPcmAbstractMap["catSize"]+=1;
-				prvPcmAbstractMap["milkAvgTot"]+=prvMilkAvgTotal;
+				prvPcmAbstractMap["milkAvgTot"]+=prvMilkRtlAvgTotal;
 				if(prvMilkAvgTotal<=100){
 					prvPcmAbstractMap["less100"]+=1;
 				}else if(prvMilkAvgTotal>=101&&prvMilkAvgTotal<=250){
@@ -330,6 +351,7 @@ if(UtilValidate.isNotEmpty(reportTypeFlag) && "PCMReport".equals(reportTypeFlag)
 						 prvNewFacilityMap[categoryType] = prvCount;
 					 }
 				   }
+				prvCount=0;
 			}
 		}
 

@@ -108,7 +108,7 @@ under the License.
 						<#list previousMonthCatLst as pMonthVal>
 	                       <#assign pMonthValMap=pMonthVal.getValue()>
                				<fo:table-cell>
-                           		<fo:block  keep-together="always" font-size="11pt" text-align="right" white-space-collapse="false">${pMonthValMap.get("milkAvgTot")?string("##0.00")}</fo:block>  
+                           		<fo:block  keep-together="always" font-size="11pt" text-align="right" white-space-collapse="false">${(Static["java.lang.Math"].round(pMonthValMap.get("milkAvgTot")))?string("0")}</fo:block>  
                        		</fo:table-cell>
 						</#list>
 						
@@ -116,7 +116,7 @@ under the License.
 	                    <#list currentMonthCatLst as cMonthVal>
 	                       <#assign cMonthValMap=cMonthVal.getValue()>
                				<fo:table-cell>
-                           		<fo:block  keep-together="always" font-size="11pt" text-align="right" white-space-collapse="false">${cMonthValMap.get("milkAvgTot")?string("##0.00")}</fo:block>  
+                           		<fo:block  keep-together="always" font-size="11pt" text-align="right" white-space-collapse="false">${(Static["java.lang.Math"].round(cMonthValMap.get("milkAvgTot")))?string("0")}</fo:block>  
                        		</fo:table-cell>
 						</#list>
 						 </fo:table-row>
