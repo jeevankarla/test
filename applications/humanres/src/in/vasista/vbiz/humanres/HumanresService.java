@@ -34,8 +34,6 @@ import org.ofbiz.service.GenericServiceException;
 import org.ofbiz.service.LocalDispatcher;
 import org.ofbiz.service.ServiceUtil;
 import org.ofbiz.security.Security;
-import org.joda.time.DateTime;
-import org.joda.time.DateTimeConstants;
 import org.ofbiz.base.util.StringUtil;
 
 import javolution.util.FastList;
