@@ -106,5 +106,9 @@ under the License.
     <SecurityGroup description="Loan deleting" groupId="HR_LOAN_DELETE"/>
     <SecurityGroupPermission groupId="FULLADMIN" permissionId="HR_LOAN_DELETE"/>
     <SecurityGroupPermission groupId="HR_LOAN_DELETE" permissionId="HR_LOAN_DELETE"/>
+    
+    <SecurityGroup description="Loan Updating" groupId="HR_LOAN_UPDATE"/>
+    <SecurityGroupPermission groupId="FULLADMIN" permissionId="HR_LOAN_UPDATE"/>
+    <SecurityGroupPermission groupId="HR_LOAN_UPDATE" permissionId="HR_LOAN_UPDATE"/>
       
 </entity-engine-xml>

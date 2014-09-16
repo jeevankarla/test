@@ -267,16 +267,17 @@ public class HumanresService {
 	    	String statusId = (String)context.get("statusId");
 	    	String description=(String)context.get("description");
 	    	String extLoanRefNum=(String)context.get("extLoanRefNum");
-	    	Timestamp disbDate =  (Timestamp)context.get("disbDate");
+	    	Date disbDate =  (Date)context.get("disbDate");
 	    	BigDecimal principalAmount = (BigDecimal)context.get("principalAmount");
 	    	BigDecimal interestAmount = (BigDecimal)context.get("interestAmount");
 	    	Long numInterestInst = (Long)context.get("numInterestInst");
 	    	Long numPrincipalInst = (Long)context.get("numPrincipalInst");
 	    	
 	    	GenericValue userLogin = (GenericValue) context.get("userLogin");
+	    	Timestamp disbDateTime = UtilDateTime.toTimestamp(disbDate);
 	    	
-	    	Timestamp disbDateStart = UtilDateTime.getDayStart(disbDate);
-	    	Timestamp disbDateEnd = UtilDateTime.getDayEnd(disbDate);
+	    	Timestamp disbDateStart = UtilDateTime.getDayStart(disbDateTime);
+	    	Timestamp disbDateEnd = UtilDateTime.getDayEnd(disbDateTime);
 			
 	    	GenericDelegator delegator = (GenericDelegator) dctx.getDelegator();
 			LocalDispatcher dispatcher = dctx.getDispatcher();
@@ -317,15 +318,10 @@ public class HumanresService {
 	 public static Map<String, Object> updateEmployeeLoan(DispatchContext dctx, Map context) {
 	    	Map<String, Object> result = ServiceUtil.returnSuccess();
 	    	String loanId = (String) context.get("loanId");
-	    	String partyId = (String) context.get("partyId");
-	    	String loanTypeId = (String) context.get("loanTypeId");
-	    	String statusId = (String)context.get("statusId");
-	    	String description=(String)context.get("description");
+	    	Date setlDate = (Date) context.get("setlDate");
 	    	
-	    	BigDecimal principalAmount = (BigDecimal)context.get("principalAmount");
-	    	BigDecimal interestAmount = (BigDecimal)context.get("interestAmount");
-	    	Long numInterestInst = (Long)context.get("numInterestInst");
-	    	Long numPrincipalInst = (Long)context.get("numPrincipalInst");
+	    	Timestamp setlDateTime = UtilDateTime.toTimestamp(setlDate);
+	    	Timestamp setlDateStart = UtilDateTime.getDayStart(setlDateTime);
 	    	
 	    	GenericValue userLogin = (GenericValue) context.get("userLogin");
 			GenericValue loanDetails = null;
@@ -334,10 +330,7 @@ public class HumanresService {
 			try {
 				loanDetails = delegator.findOne("Loan",UtilMisc.toMap("loanId", loanId), false);
 				if(UtilValidate.isNotEmpty(loanDetails)){
-					loanDetails.set("principalAmount", principalAmount);
-					loanDetails.set("interestAmount", interestAmount);
-					loanDetails.set("numInterestInst", numInterestInst);
-					loanDetails.set("numPrincipalInst", numPrincipalInst);
+					loanDetails.set("setlDate", setlDateStart);
 					loanDetails.set("lastModifiedDate", UtilDateTime.nowTimestamp());
 					loanDetails.set("lastModifiedByUserLogin", userLogin.get("userLoginId"));
 					loanDetails.store();
@@ -345,7 +338,7 @@ public class HumanresService {
 	        }catch(GenericEntityException e){
 				Debug.logError("Error while updating Loan"+e.getMessage(), module);
 			}
-	        result = ServiceUtil.returnSuccess("Loan Updated Sucessfully for Employee "  +partyId);
+	        result = ServiceUtil.returnSuccess("Loan Updated Sucessfully...!");
 	        return result;
 	    }
 }

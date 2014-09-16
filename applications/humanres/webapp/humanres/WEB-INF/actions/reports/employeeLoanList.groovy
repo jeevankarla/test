@@ -31,6 +31,7 @@ createdByUserLogin = null;
 statusDescription = null;
 extLoanRefNum = null;
 disbDate = null;
+setlDate = null;
 
 partyName = null;
 
@@ -75,6 +76,7 @@ if(UtilValidate.isNotEmpty(emplyLoanList)){
 			disbDate = employeeLoan.disbDate;
 			createdDate = employeeLoan.createdDate;
 			createdByUserLogin = employeeLoan.createdByUserLogin;
+			setlDate = employeeLoan.setlDate;
 			
 			employeeLoanMap = [:];
 			employeeLoanMap["loanId"] = loanId;
@@ -91,6 +93,7 @@ if(UtilValidate.isNotEmpty(emplyLoanList)){
 			employeeLoanMap["createdByUserLogin"] = createdByUserLogin;
 			employeeLoanMap["disbDate"] = UtilDateTime.toDateString(disbDate,"dd-MM-yyyy");
 			employeeLoanMap["createdDate"] = UtilDateTime.toDateString(createdDate,"dd-MM-yyyy");
+			employeeLoanMap["setlDate"] = setlDate;
 			tempMap = [:];
 			tempMap.putAll(employeeLoanMap);
 			if(UtilValidate.isNotEmpty(tempMap)){
