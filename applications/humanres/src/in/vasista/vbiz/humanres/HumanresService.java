@@ -21,6 +21,7 @@ import org.ofbiz.base.util.UtilHttp;
 import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.entity.Delegator;
+import org.ofbiz.entity.GenericDelegator;
 import org.ofbiz.entity.GenericEntityException;
 import org.ofbiz.entity.GenericValue;
 import org.ofbiz.entity.condition.EntityCondition;
@@ -35,6 +36,11 @@ import org.ofbiz.service.ServiceUtil;
 import org.ofbiz.security.Security;
 //import org.joda.time.DateTime;
 //import org.joda.time.DateTimeConstants;
+
+import javolution.util.FastList;
+import javolution.util.FastMap;
+
+
 
 public class HumanresService {
 
@@ -253,5 +259,88 @@ public class HumanresService {
 	    	
 	    	//Debug.log("result:" + result, module);		 
 	    	return result;
+	    }
+	 public static Map<String, Object> createEmployeeLoan(DispatchContext dctx, Map context) {
+	    	Map<String, Object> result = ServiceUtil.returnSuccess();
+	    	String partyId = (String) context.get("partyId");
+	    	String loanTypeId = (String) context.get("loanTypeId");
+	    	String statusId = (String)context.get("statusId");
+	    	String description=(String)context.get("description");
+	    	String extLoanRefNum=(String)context.get("extLoanRefNum");
+	    	Timestamp disbDate =  (Timestamp)context.get("disbDate");
+	    	BigDecimal principalAmount = (BigDecimal)context.get("principalAmount");
+	    	BigDecimal interestAmount = (BigDecimal)context.get("interestAmount");
+	    	Long numInterestInst = (Long)context.get("numInterestInst");
+	    	Long numPrincipalInst = (Long)context.get("numPrincipalInst");
+	    	
+	    	GenericValue userLogin = (GenericValue) context.get("userLogin");
+			
+	    	GenericDelegator delegator = (GenericDelegator) dctx.getDelegator();
+			LocalDispatcher dispatcher = dctx.getDispatcher();
+			List conditionList=FastList.newInstance();
+			try {
+				conditionList.add(EntityCondition.makeCondition("partyId", EntityOperator.EQUALS, partyId));
+				conditionList.add(EntityCondition.makeCondition("loanTypeId", EntityOperator.EQUALS, loanTypeId));
+				conditionList.add(EntityCondition.makeCondition("statusId", EntityOperator.EQUALS, statusId));
+		        EntityCondition condition = EntityCondition.makeCondition(conditionList,EntityOperator.AND);
+	    		List<GenericValue> loanList = FastList.newInstance();
+	    		loanList = delegator.findList("Loan", condition, null,null, null, false);
+	    		if(UtilValidate.isNotEmpty(loanList)){
+	    			return ServiceUtil.returnError("Loan already created...!"); 
+	    		}
+	    		GenericValue loan = delegator.makeValue("Loan");
+				loan.set("partyId", partyId);
+				loan.set("loanTypeId", loanTypeId);
+				loan.set("statusId", statusId);
+				loan.set("description", description);
+				loan.set("extLoanRefNum", extLoanRefNum);
+				loan.set("principalAmount", principalAmount);
+				loan.set("interestAmount", interestAmount);
+				loan.set("numInterestInst", numInterestInst);
+				loan.set("numPrincipalInst", numPrincipalInst);
+				loan.set("numPrincipalInst", numPrincipalInst);
+				loan.set("disbDate", disbDate);
+				loan.set("createdDate", UtilDateTime.nowTimestamp());
+				loan.set("createdByUserLogin", userLogin.get("userLoginId"));
+	 			delegator.createSetNextSeqId(loan);
+	        }catch(GenericEntityException e){
+				Debug.logError("Error while creating Loan"+e.getMessage(), module);
+			}
+	        result = ServiceUtil.returnSuccess("Loan Created Sucessfully for Employee "  +partyId);
+	        return result;
+	    }
+	 public static Map<String, Object> updateEmployeeLoan(DispatchContext dctx, Map context) {
+	    	Map<String, Object> result = ServiceUtil.returnSuccess();
+	    	String loanId = (String) context.get("loanId");
+	    	String partyId = (String) context.get("partyId");
+	    	String loanTypeId = (String) context.get("loanTypeId");
+	    	String statusId = (String)context.get("statusId");
+	    	String description=(String)context.get("description");
+	    	
+	    	BigDecimal principalAmount = (BigDecimal)context.get("principalAmount");
+	    	BigDecimal interestAmount = (BigDecimal)context.get("interestAmount");
+	    	Long numInterestInst = (Long)context.get("numInterestInst");
+	    	Long numPrincipalInst = (Long)context.get("numPrincipalInst");
+	    	
+	    	GenericValue userLogin = (GenericValue) context.get("userLogin");
+			GenericValue loanDetails = null;
+	    	GenericDelegator delegator = (GenericDelegator) dctx.getDelegator();
+			LocalDispatcher dispatcher = dctx.getDispatcher();
+			try {
+				loanDetails = delegator.findOne("Loan",UtilMisc.toMap("loanId", loanId), false);
+				if(UtilValidate.isNotEmpty(loanDetails)){
+					loanDetails.set("principalAmount", principalAmount);
+					loanDetails.set("interestAmount", interestAmount);
+					loanDetails.set("numInterestInst", numInterestInst);
+					loanDetails.set("numPrincipalInst", numPrincipalInst);
+					loanDetails.set("lastModifiedDate", UtilDateTime.nowTimestamp());
+					loanDetails.set("lastModifiedByUserLogin", userLogin.get("userLoginId"));
+					loanDetails.store();
+				}
+	        }catch(GenericEntityException e){
+				Debug.logError("Error while updating Loan"+e.getMessage(), module);
+			}
+	        result = ServiceUtil.returnSuccess("Loan Updated Sucessfully for Employee "  +partyId);
+	        return result;
 	    }
 }

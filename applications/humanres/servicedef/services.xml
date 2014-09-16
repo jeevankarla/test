@@ -1427,4 +1427,37 @@ under the License.emplpunch
        <attribute name="thruDate" mode="IN" type="String" optional="true"/>
        <attribute name="workedHolidaysList" mode="OUT" type="java.util.List"/>
    </service>
+   <!-- Loan Services -->
+   
+   <service name="createEmployeeLoan" engine="java" auth="true" invoke="createEmployeeLoan" 
+        location="in.vasista.vbiz.humanres.HumanresService">
+        <description>Create or update Loan</description>
+       <attribute name="partyId" mode="IN" type="String" optional="false"/>
+       <attribute name="loanTypeId" mode="IN" type="String" optional="false"/>
+       <attribute name="statusId" mode="IN" type="String" optional="true"/>
+       <attribute name="extLoanRefNum" mode="IN" type="String" optional="true"/>
+       <attribute name="disbDate" type="Timestamp" mode="IN" optional="true"/>
+       <attribute name="description" mode="IN" type="String" optional="true"/>
+       <attribute name="principalAmount" mode="IN" type="BigDecimal" optional="false"/>
+       <attribute name="interestAmount" mode="IN" type="BigDecimal" optional="false"/>
+       <attribute name="numInterestInst" mode="IN" type="Long" optional="false"/>
+       <attribute name="numPrincipalInst" mode="IN" type="Long" optional="false"/>
+   </service>
+   <service name="updateEmployeeLoan" engine="java" auth="true" invoke="updateEmployeeLoan" 
+        location="in.vasista.vbiz.humanres.HumanresService">
+        <description>Create or update Loan</description>
+       <attribute name="loanId" mode="IN" type="String" optional="false"/>
+       <attribute name="partyId" mode="IN" type="String" optional="false"/>
+       <attribute name="loanTypeId" mode="IN" type="String" optional="false"/>
+       <attribute name="statusId" mode="IN" type="String" optional="true"/>
+       <attribute name="description" mode="IN" type="String" optional="true"/>
+       <attribute name="principalAmount" mode="IN" type="BigDecimal" optional="true"/>
+       <attribute name="interestAmount" mode="IN" type="BigDecimal" optional="true"/>
+       <attribute name="numInterestInst" mode="IN" type="Long" optional="true"/>
+       <attribute name="numPrincipalInst" mode="IN" type="Long" optional="true"/>
+   </service>
+   <service name="deleteEmployeeLoan" default-entity-name="Loan" engine="entity-auto" invoke="delete" auth="true">
+        <description>Delete Loan</description>
+       <attribute name="loanId" mode="IN" type="String" optional="false"/>
+   </service>
 </services>

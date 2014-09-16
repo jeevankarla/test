@@ -1743,6 +1743,7 @@ under the License.
       <field name="disbDate" type="date-time"></field>
       <field name="disbAmount" type="currency-amount"></field>
       <field name="disbRefInvoiceId" type="id"></field>
+      <field name="extLoanRefNum" type="id"></field>
       <field name="setlDate" type="date-time"></field>
       <field name="createdByUserLogin" type="id-vlong"></field>
 	  <field name="lastModifiedByUserLogin" type="id-vlong"></field>

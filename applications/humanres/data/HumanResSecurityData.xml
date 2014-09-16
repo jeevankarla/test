@@ -99,9 +99,12 @@ under the License.
     <SecurityGroupPermission groupId="FULLADMIN" permissionId="HUMANRES_BUSTIMING_CREATE"/>
     <SecurityGroupPermission groupId="HR_DAILYBUS_VIEW" permissionId="HUMANRES_BUSTIMING_CREATE"/>
     
-    
     <SecurityGroup description="Deleting Daily Bus Timings" groupId="HR_DAILYBUS_DELETE"/>
     <SecurityGroupPermission groupId="FULLADMIN" permissionId="HUMANRES_BUSTIMING_DELETE"/>
     <SecurityGroupPermission groupId="HR_DAILYBUS_DELETE" permissionId="HUMANRES_BUSTIMING_DELETE"/>
+    
+    <SecurityGroup description="Loan deleting" groupId="HR_LOAN_DELETE"/>
+    <SecurityGroupPermission groupId="FULLADMIN" permissionId="HR_LOAN_DELETE"/>
+    <SecurityGroupPermission groupId="HR_LOAN_DELETE" permissionId="HR_LOAN_DELETE"/>
       
 </entity-engine-xml>

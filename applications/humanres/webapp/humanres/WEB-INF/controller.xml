@@ -1825,7 +1825,35 @@ under the License.
         <response name="success" type="view" value="emplMonthlyPunchReport"/>
         <response name="error" type="view" value="emplMonthlyPunchReport"/>
     </request-map>
-    
+    	
+    <!-- Loan -->
+
+	<request-map uri="loan">
+       	<security https="true" auth="true"/>
+       	<response name="success" type="view" value="loan"></response>
+    </request-map>
+     <request-map uri="NewLoan">
+    	<security https="true" auth="true"/>
+    	<response name="success" type="view" value="CreateNewLoan"></response>
+    </request-map>
+    <request-map uri="createEmployeeLoan">
+    	<security https="true" auth="true"/>
+    	<event type="service" invoke="createEmployeeLoan"/>
+    	<response name="success" type="view" value="loan"/>
+    	<response name="error" type="view" value="loan"/>
+    </request-map>
+    <request-map uri="updateEmployeeLoan">
+    	<security https="true" auth="true"/>
+    	<event type="service" invoke="updateEmployeeLoan"/>
+    	<response name="success" type="view" value="loan"/>
+    	<response name="error" type="view" value="loan"/>
+    </request-map>
+    <request-map uri="deleteEmployeeLoan">
+    	<security https="true" auth="true"/>
+    	<event type="service" invoke="deleteEmployeeLoan"/>
+    	<response name="success" type="view" value="loan"/>
+    	<response name="error" type="view" value="loan"/>
+    </request-map>
 
     <!-- ===================Lookup Request===================== -->
     <request-map uri="LookupPartyName" track-serverhit="false" track-visit="false"><security auth="true" https="true"/><response name="success" type="view" value="LookupPartyName"/></request-map>
@@ -2107,6 +2135,10 @@ under the License.
 	<view-map name="SalaryAnalysisChart" type="screen" page="component://humanres/widget/HumanresScreens.xml#SalaryAnalysisChart"/>
 	<view-map name="SalaryAnalysisChartInternal" type="screen" page="component://humanres/widget/HumanresScreens.xml#SalaryAnalysisChartInternal"/>
 	
+	<!-- Loan -->
+	<view-map name="loan" type="screen" page="component://humanres/widget/HumanresScreens.xml#loan"></view-map>
+    <view-map name="CreateNewLoan" type="screen" page="component://humanres/widget/HumanresScreens.xml#CreateNewLoan"></view-map>
+    
 	<!-- Employee Content -->
 	<view-map name="AddEmployeeNote" type="screen" page="component://humanres/widget/EmployeeScreens.xml#AddEmployeeNote"/>
 	
