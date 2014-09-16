@@ -1423,6 +1423,7 @@ under the License.emplpunch
        <attribute name="partyId" mode="IN" type="String"/>
        <attribute name="isSS" mode="IN" type="String" optional="true"/>
        <attribute name="isGH" mode="IN" type="String" optional="true"/>
+       <attribute name="isWeeklyOff" mode="IN" type="String" optional="true"/>
        <attribute name="fromDate" mode="IN" type="Timestamp" optional="true"/>
        <attribute name="thruDate" mode="IN" type="String" optional="true"/>
        <attribute name="workedHolidaysList" mode="OUT" type="java.util.List"/>

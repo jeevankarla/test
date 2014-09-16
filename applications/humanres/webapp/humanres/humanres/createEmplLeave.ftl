@@ -63,7 +63,7 @@ function displayPunchDetails(){
              type: "POST",
              url: "emplDailyPunchJson",
              data: data,
-             dataType: 'json',
+             dataType : 'json',
              success: function(result) {
             	 var punchDataList = result["punchDataList"];
             	 if(punchDataList !=""){
@@ -93,6 +93,9 @@ function viewGHandSS(){
       if(leaveTypeId =="CHSS"){
       	data = data+"&isSS=Y";
       }
+      if(leaveTypeId =="CH"){
+      	data = data+"&isWeeklyOff=Y";
+      }
       
     $.ajax({
              type: "POST",
@@ -105,9 +108,9 @@ function viewGHandSS(){
             	    var innerHtmlStr ="";
             	    //alert(workedHolidaysList.length);
             	    var chDateDropDown ="";
-            	   for(var i=0;i<workedHolidaysList.length;i++){
+            	   for(var i=0;i<workedHolidaysList.length;++i){
             	        tmepWork = workedHolidaysList[i];
-                        innerHtmlStr += "Date:"+tmepWork.date+",PunchDetails: IN-"+ tmepWork.punchDetails.inTime +",OUT-"+ tmepWork.punchDetails.outTime +"<br/>";
+                        innerHtmlStr += "Date:"+tmepWork.date+",PunchDetails: IN-"+ tmepWork.punchDetails.inTime +",OUT-"+ tmepWork.punchDetails.outTime +",Total-"+tmepWork.punchDetails.totalTime +"<br/>";
             	       chDateDropDown += "<option value="+ tmepWork.date+">"+tmepWork.date+"</option>";
             	    }
             	     jQuery('#ghssDropDown').show();

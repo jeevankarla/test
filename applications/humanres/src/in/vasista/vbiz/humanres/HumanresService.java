@@ -34,8 +34,9 @@ import org.ofbiz.service.GenericServiceException;
 import org.ofbiz.service.LocalDispatcher;
 import org.ofbiz.service.ServiceUtil;
 import org.ofbiz.security.Security;
-//import org.joda.time.DateTime;
-//import org.joda.time.DateTimeConstants;
+import org.joda.time.DateTime;
+import org.joda.time.DateTimeConstants;
+import org.ofbiz.base.util.StringUtil;
 
 import javolution.util.FastList;
 import javolution.util.FastMap;
@@ -183,14 +184,14 @@ public class HumanresService {
 			List<GenericValue> holiDayList = FastList.newInstance(); 
 			Map result = FastMap.newInstance();
 			if(UtilValidate.isEmpty(fromDate) && UtilValidate.isEmpty(thruDate)){
-				thruDate = UtilDateTime.nowTimestamp();
+				thruDate = UtilDateTime.getDayEnd(UtilDateTime.nowTimestamp());
 				
 			}
 			try {
 				
 					if(UtilValidate.isNotEmpty(isGH) && isGH.equals("Y")){
 						if(UtilValidate.isEmpty(fromDate)){
-							fromDate = UtilDateTime.addDaysToTimestamp(thruDate, -60);
+							fromDate = UtilDateTime.getDayStart(UtilDateTime.addDaysToTimestamp(thruDate, -60));
 						}
 						List conditionList = UtilMisc.toList(
 					            EntityCondition.makeCondition("organizationPartyId", EntityOperator.EQUALS, orgPartyId));
@@ -202,33 +203,60 @@ public class HumanresService {
 					List<Date> holidays = FastList.newInstance();
 					if(UtilValidate.isNotEmpty(isSS) && isSS.equals("Y")){
 						if(UtilValidate.isEmpty(fromDate)){
-							fromDate = UtilDateTime.addDaysToTimestamp(thruDate, -30);
+							fromDate = UtilDateTime.getDayStart(UtilDateTime.addDaysToTimestamp(thruDate, -30));
 						}
 						Timestamp secondSaturDay = UtilDateTime.addDaysToTimestamp(UtilDateTime.getWeekStart(UtilDateTime.getMonthStart(thruDate),0,2,timeZone,locale), -1);
 						holidays.add(UtilDateTime.toSqlDate(secondSaturDay));
 					}
 					if(UtilValidate.isNotEmpty(isWeeklyOff) && isWeeklyOff.equals("Y")){
-						/*if(UtilValidate.isEmpty(fromDate)){
-							fromDate = UtilDateTime.addDaysToTimestamp(thruDate, -30);
+						if(UtilValidate.isEmpty(fromDate)){
+							fromDate = UtilDateTime.getDayStart(UtilDateTime.addDaysToTimestamp(thruDate, -30));
 						}
-						 DateTime startDt = new DateTime(UtilDateTime.getYear(fromDate, timeZone, locale),UtilDateTime.getMonth(fromDate, timeZone, locale),UtilDateTime.get,0,0,0,0);//1st Dec 2010
-					        DateTime endDt = new DateTime(UtilDateTime.getYear(thruDate, timeZone, locale),12,31,0,0,0,0);//31st Dec 2010
-					        DateTime tempDate = new DateTime(startDt.getMillis());
-					        while(tempDate.compareTo(endDt) <=0 ){
-					            if(tempDate.getDayOfWeek() !=  DateTimeConstants.SATURDAY){
-					                System.out.println(""+tempDate);
-					            }
-					            tempDate = tempDate.plusDays(1);
-
-					        }*/
-
+						GenericValue employeeDetail = delegator.findOne("EmployeeDetail",UtilMisc.toMap("partyId",partyId),false);
+						List conditionList = FastList.newInstance();
+			    		conditionList.add(EntityCondition.makeCondition("partyId", EntityOperator.EQUALS ,partyId));
+					    conditionList.add(EntityCondition.makeCondition("date", EntityOperator.GREATER_THAN_EQUAL_TO , UtilDateTime.toSqlDate(fromDate)));
+					    conditionList.add(EntityCondition.makeCondition("date", EntityOperator.LESS_THAN_EQUAL_TO , UtilDateTime.toSqlDate(thruDate)));
+					    EntityCondition condition= EntityCondition.makeCondition(conditionList,EntityOperator.AND);
+					    List<GenericValue> emplDailyAttendanceDetailList = delegator.findList("EmplDailyAttendanceDetail", condition, null,null, null, false);
+                         
+					    String emplWeeklyOffDay = "SUNDAY";
+			    		
+				        if(UtilValidate.isNotEmpty(employeeDetail) && UtilValidate.isNotEmpty(employeeDetail.getString("weeklyOff"))){
+				        	emplWeeklyOffDay = employeeDetail.getString("weeklyOff");
+				         }
+						
+						Calendar c1=Calendar.getInstance();
+			    		c1.setTime(UtilDateTime.toSqlDate(fromDate));
+			    		Calendar c2=Calendar.getInstance();
+			    		c2.setTime(UtilDateTime.toSqlDate(thruDate));
+						while(c2.after(c1)){
+							Timestamp cTime = new Timestamp(c1.getTimeInMillis());
+			    			Timestamp cTimeEnd = UtilDateTime.getDayEnd(cTime);
+			    			String weekName = (c1.getDisplayName(Calendar.DAY_OF_WEEK, Calendar.LONG, locale));
+			    			List<GenericValue> dayShiftList = EntityUtil.filterByCondition(emplDailyAttendanceDetailList, EntityCondition.makeCondition("date",EntityOperator.EQUALS,UtilDateTime.toSqlDate(cTime)));
+			    			
+			    			if(weekName.equalsIgnoreCase(emplWeeklyOffDay) && UtilValidate.isNotEmpty(dayShiftList) || (dayShiftList.size() >= 2)){
+			    				for(int i=0 ;i<dayShiftList.size() ;i++){
+			    					GenericValue dayShift = dayShiftList.get(i);
+			    					List<GenericValue> emplPunchList = delegator.findByAnd("EmplPunch", UtilMisc.toMap("shiftType",dayShift.get("shiftType"),"punchdate", dayShift.get("date")));
+			    					emplPunchList = EntityUtil.orderBy(emplPunchList,UtilMisc.toList("-punchtime"));
+			    					GenericValue firstPunch = EntityUtil.getFirst(emplPunchList);
+			    					emplPunchList = EntityUtil.orderBy(emplPunchList,UtilMisc.toList("punchtime"));
+			    					GenericValue lastPunch = EntityUtil.getFirst(emplPunchList);
+			    					
+			    				}
+			    				holidays.add(UtilDateTime.toSqlDate(cTime));
+			    				
+			    			}
+			    			c1.add(Calendar.DATE,1);
+						}	
 					}
 					
 				  if(UtilValidate.isNotEmpty(holiDayList)){
 						for(GenericValue holiDay : holiDayList){
 							holidays.add(UtilDateTime.toSqlDate(holiDay.getTimestamp("holiDayDate")));
 						}
-						//holidays =EntityUtil.getFieldListFromEntityList(holiDayList, "holiDayDate", true);
 					}
 					List workedHolidaysList =FastList.newInstance();
 					result.put("workedHolidaysList", workedHolidaysList);
@@ -239,18 +267,35 @@ public class HumanresService {
 					conList.add(EntityCondition.makeCondition("date",EntityOperator.IN,holidays));
 					conList.add(EntityCondition.makeCondition(EntityCondition.makeCondition("encashmentStatus",EntityOperator.EQUALS,null),
 							EntityOperator.OR,EntityCondition.makeCondition("encashmentStatus",EntityOperator.NOT_IN,UtilMisc.toList("CASH_ENCASHMENT","LEAVE_ENCASHMENT"))));
-					EntityCondition con= EntityCondition.makeCondition(conList,EntityOperator.AND);
 					
+					EntityCondition con= EntityCondition.makeCondition(conList,EntityOperator.AND);
 					List<GenericValue> tempWorkedHolidaysList = delegator.findList("EmplDailyAttendanceDetail", con ,null,UtilMisc.toList("date" ,"partyId"), null, false );
 					for(GenericValue workedHoliday : tempWorkedHolidaysList){
 						Map tempDayMap = FastMap.newInstance();
 						Date tempDate = workedHoliday.getDate("date");
 						Map punMap = PunchService.emplDailyPunchReport(dctx, UtilMisc.toMap("partyId", partyId ,"punchDate",tempDate));
 						if(UtilValidate.isNotEmpty(punMap.get("punchDataList"))){
-							tempDayMap.put("punchDetails", ((List)punMap.get("punchDataList")).get(0));
-							tempDayMap.put("date",UtilDateTime.toDateString(tempDate,"dd-MM-yyyy"));
+							Map punchDetails = (Map)(((List)punMap.get("punchDataList")).get(0));
+							if(UtilValidate.isNotEmpty(punchDetails)){
+								String totalTime = (String)punchDetails.get("totalTime");
+								if(UtilValidate.isNotEmpty(totalTime)){
+									totalTime = totalTime.replace(" Hrs", "");
+									List<String> timeSplit = StringUtil.split(totalTime, ":");
+									if(UtilValidate.isNotEmpty(timeSplit)){
+										 int hours = Integer.parseInt(timeSplit.get(0));
+										 int minutes = Integer.parseInt(timeSplit.get(1));
+										 if(((hours*60)+minutes) >=210){
+											 tempDayMap.put("punchDetails", ((List)punMap.get("punchDataList")).get(0));
+											 tempDayMap.put("date",UtilDateTime.toDateString(tempDate,"dd-MM-yyyy"));
+											 workedHolidaysList.add(tempDayMap);
+										 }
+									}
+								}
+								
+							}
+							
 						}
-						workedHolidaysList.add(tempDayMap);
+						
 					}
 				  result.put("workedHolidaysList", workedHolidaysList);
 			}catch(GenericEntityException e){

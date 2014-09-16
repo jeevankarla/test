@@ -91,9 +91,12 @@ public class EmplLeaveService {
             		
             	}
             	condition = EntityCondition.makeCondition(conditionList, EntityOperator.AND);
+            	Debug.log("condition==="+condition);
 	            List<GenericValue> leaveBalances = delegator.findList("EmplLeaveBalanceStatusAndPeriod", condition, null, UtilMisc.toList("thruDate"), null, false);
-				for (int i = 0; i < leaveBalances.size(); ++i) {		
+	            Debug.log("leaveBalances==="+leaveBalances);
+	            for (int i = 0; i < leaveBalances.size(); ++i) {		
 					GenericValue leaveBalance = leaveBalances.get(i);
+					Debug.log("leaveBalance==="+leaveBalance);
 					String leaveTypeId = leaveBalance.getString("leaveTypeId");
 					BigDecimal openingBalance = BigDecimal.ZERO;					
 					BigDecimal closingBalance = BigDecimal.ZERO;
@@ -132,23 +135,29 @@ public class EmplLeaveService {
 						}
 						
 					}
-				  if(leaveTypeIdCtx.equals("CML") && leaveTypeId.equals("HPL")){
+					Debug.log("closingBalance==="+closingBalance);
+					
+				  if(leaveTypeIdCtx.equals("CML") || leaveTypeIdCtx.equals("HPL")){
 					  
-					  closingBalance = closingBalance.divide(new BigDecimal(2), 1, BigDecimal.ROUND_HALF_UP);
+					 // closingBalance = closingBalance.divide(new BigDecimal(2), 1, BigDecimal.ROUND_HALF_UP);
 					  Map leaveCtx = FastMap.newInstance();
 						leaveCtx.put("timePeriodStart", UtilDateTime.toTimestamp(leaveBalance.getDate("fromDate")));
 						leaveCtx.put("partyId", employeeId);
-						leaveCtx.put("leaveTypeId",leaveTypeIdCtx );
+						leaveCtx.put("leaveTypeId","CML");
 						Map leaveResult = fetchLeaveDaysForPeriod(dctx,leaveCtx);
 						if(!ServiceUtil.isError(leaveResult)){
 							//result.put("leaveBalanceDate", latestHRPeriod.get("thruDate"));
 							Map leaveDetailmap = (Map)leaveResult.get("leaveDetailmap");
 							if(UtilValidate.isNotEmpty(leaveDetailmap)){
-								closingBalance = closingBalance.subtract((BigDecimal)leaveDetailmap.get(leaveTypeId));
+								closingBalance = closingBalance.subtract(((BigDecimal)leaveDetailmap.get(leaveTypeId)).multiply(new BigDecimal(2)));
 							}
 						}
 				  }
-					leaveBalancesMap.put(leaveTypeId, closingBalance);
+				   if(leaveTypeIdCtx.equals("CML")){
+					   closingBalance = closingBalance.divide(new BigDecimal(2), 1, BigDecimal.ROUND_HALF_UP);
+				   }
+					leaveBalancesMap.put(leaveTypeIdCtx, closingBalance);
+					
 				}
 				result.put("leaveBalances", leaveBalancesMap);
 				//this is to return date for json request
