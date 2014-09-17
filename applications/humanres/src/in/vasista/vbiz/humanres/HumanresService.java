@@ -401,6 +401,7 @@ public class HumanresService {
 	    	
 	    	Timestamp setlDateTime = UtilDateTime.toTimestamp(setlDate);
 	    	Timestamp setlDateStart = UtilDateTime.getDayStart(setlDateTime);
+	    	Timestamp setlDateEnd = UtilDateTime.getDayEnd(setlDateTime);
 	    	
 	    	GenericValue userLogin = (GenericValue) context.get("userLogin");
 			GenericValue loanDetails = null;
@@ -409,7 +410,7 @@ public class HumanresService {
 			try {
 				loanDetails = delegator.findOne("Loan",UtilMisc.toMap("loanId", loanId), false);
 				if(UtilValidate.isNotEmpty(loanDetails)){
-					loanDetails.set("setlDate", setlDateStart);
+					loanDetails.set("setlDate", setlDateEnd);
 					loanDetails.set("lastModifiedDate", UtilDateTime.nowTimestamp());
 					loanDetails.set("lastModifiedByUserLogin", userLogin.get("userLoginId"));
 					loanDetails.store();
