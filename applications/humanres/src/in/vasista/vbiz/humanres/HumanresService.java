@@ -327,34 +327,33 @@ public class HumanresService {
 			List conditionList=FastList.newInstance();
 			String payHeadTypeId = null;
 			String partyIdFrom = null;
+			String customTimePeriodId = null;
 			try {
+				
+				List condList = FastList.newInstance();
+				condList.add(EntityCondition.makeCondition("periodTypeId", EntityOperator.EQUALS ,"HR_MONTH"));
+				condList.add(EntityCondition.makeCondition("fromDate", EntityOperator.LESS_THAN_EQUAL_TO,new java.sql.Date(disbDateStart.getTime())));
+				condList.add(EntityCondition.makeCondition("thruDate", EntityOperator.GREATER_THAN_EQUAL_TO, new java.sql.Date(disbDateEnd.getTime())));
+				EntityCondition cond = EntityCondition.makeCondition(condList,EntityOperator.AND); 	
+				List<GenericValue> customTimePeriodList = delegator.findList("CustomTimePeriod", cond, null, null, null, false);
+				if(UtilValidate.isNotEmpty(customTimePeriodList)){
+					GenericValue customTimePeriod = EntityUtil.getFirst(customTimePeriodList);
+					customTimePeriodId = customTimePeriod.getString("customTimePeriodId");
+				}
+				
 				GenericValue loanTypeDetails = delegator.findOne("LoanType",UtilMisc.toMap("loanTypeId", loanTypeId), false);
 				if(UtilValidate.isNotEmpty(loanTypeDetails)){
 					payHeadTypeId = loanTypeDetails.getString("payHeadTypeId");
 				}
-				List condList = FastList.newInstance();
-				condList.add(EntityCondition.makeCondition("partyIdTo", EntityOperator.EQUALS ,partyId));
-				condList.add(EntityCondition.makeCondition("roleTypeIdTo", EntityOperator.EQUALS ,"EMPLOYEE"));
-				EntityCondition cond = EntityCondition.makeCondition(condList,EntityOperator.AND); 	
-				List<GenericValue> employmentList = delegator.findList("Employment", cond, null, null, null, false);
-				if(UtilValidate.isNotEmpty(employmentList)){
-					List activeEmploymentList = EntityUtil.filterByDate(employmentList, disbDateStart);
-					if(UtilValidate.isNotEmpty(activeEmploymentList)){
-						GenericValue activeEmployment = EntityUtil.getFirst(activeEmploymentList);
-						partyIdFrom = activeEmployment.getString("partyIdFrom");
-					}
-				}
 				
 				Map partyDeductionMap = FastMap.newInstance();
 				partyDeductionMap.put("userLogin",userLogin);
-				partyDeductionMap.put("roleTypeIdFrom","INTERNAL_ORGANIZATIO");
-				partyDeductionMap.put("roleTypeIdTo","EMPLOYEE");
-				partyDeductionMap.put("partyIdFrom",partyIdFrom);
-				partyDeductionMap.put("partyIdTo",partyId);
-				partyDeductionMap.put("deductionTypeId",payHeadTypeId);
-				partyDeductionMap.put("fromDate",disbDateStart);
+				partyDeductionMap.put("amountNullFlag","Y");
+				partyDeductionMap.put("partyId",partyId);
+				partyDeductionMap.put("payHeadTypeId",payHeadTypeId);
+				partyDeductionMap.put("customTimePeriodId",customTimePeriodId);
 				try {
-					Map resultValue = dispatcher.runSync("createPartyDeduction", partyDeductionMap);
+					Map resultValue = dispatcher.runSync("createOrUpdatePartyBenefitOrDeduction", partyDeductionMap);
 					if(ServiceUtil.isError(result)){
 						Debug.logError(ServiceUtil.getErrorMessage(resultValue), module);
 						return result;

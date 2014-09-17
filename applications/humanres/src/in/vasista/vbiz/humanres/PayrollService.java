@@ -2394,6 +2394,7 @@ public class PayrollService {
 	        String customTimePeriodId = (String)context.get("customTimePeriodId");
 	        String payHeadTypeId = (String)context.get("payHeadTypeId");
 	        BigDecimal amount = (BigDecimal)context.get("amount");
+	        String amountNullFlag = (String)context.get("amountNullFlag");
 	        Locale locale = (Locale) context.get("locale");
 	        Map result = ServiceUtil.returnSuccess();
 	        Timestamp fromDateTime  = null;
@@ -2404,6 +2405,9 @@ public class PayrollService {
 	        String partyIdFrom = null;
 	        List benefitTypeIds = FastList.newInstance();
 	        List deductionTypeIds = FastList.newInstance();
+	        if(UtilValidate.isEmpty(amountNullFlag) && UtilValidate.isEmpty(amount)){
+	        	return ServiceUtil.returnError("Amount cannot be Empty");
+	        }
 	        try {
 		        GenericValue customTimePeriod = delegator.findOne("CustomTimePeriod", UtilMisc.toMap("customTimePeriodId", customTimePeriodId),false);
 	        	if (UtilValidate.isNotEmpty(customTimePeriod)) {
@@ -2473,7 +2477,6 @@ public class PayrollService {
 						BigDecimal prevAmount = partyBenefit.getBigDecimal("cost");
 						Timestamp prevFromDate = partyBenefit.getTimestamp("fromDate");
 						Timestamp prevThruDate = partyBenefit.getTimestamp("thruDate");
-						
 						if(prevFromDate.compareTo(fromDateStart)== 0){
 							if(prevAmount.compareTo(amount)!= 0){
 								// Update existing one
@@ -2508,6 +2511,12 @@ public class PayrollService {
 						}
 					}
 				}
+	        	BigDecimal amountToCompare = BigDecimal.ZERO;
+	        	if(UtilValidate.isNotEmpty(amountNullFlag)){
+	        		amountToCompare = BigDecimal.ZERO;
+	        	}else{
+	        		amountToCompare = amount;
+	        	}
 				if(deductionTypeIds.contains(payHeadTypeId)){
 					GenericValue deductionTypeValue = delegator.findOne("DeductionType",UtilMisc.toMap("deductionTypeId", payHeadTypeId), false);
 					List conditionList = FastList.newInstance();
@@ -2518,6 +2527,13 @@ public class PayrollService {
 						    EntityCondition.makeCondition("thruDate", EntityOperator.GREATER_THAN_EQUAL_TO, thruDateEnd)));
 			    	EntityCondition condition=EntityCondition.makeCondition(conditionList,EntityOperator.AND); 		
 					List<GenericValue> partyDeductionList = delegator.findList("PartyDeduction", condition, null, null, null, false);
+					if(UtilValidate.isNotEmpty(amountNullFlag)){
+		        		thruDateEnd = null;
+		        	}else{
+		        		if(!(UtilValidate.isNotEmpty(deductionTypeValue.get("isContinuous")) && ("Y".equals(deductionTypeValue.get("isContinuous"))))){
+		        			thruDateEnd = thruDateEnd;
+						}
+		        	}
 					if(UtilValidate.isEmpty(partyDeductionList)){
 						List condList = FastList.newInstance();
 						condList.add(EntityCondition.makeCondition("roleTypeIdFrom", EntityOperator.EQUALS ,"INTERNAL_ORGANIZATIO"));
@@ -2539,10 +2555,8 @@ public class PayrollService {
 						newEntity.set("partyIdTo", partyId);
 						newEntity.set("deductionTypeId", payHeadTypeId);
 						newEntity.set("periodTypeId", "RATE_MONTH");
-						newEntity.set("fromDate", fromDateStart);						
-						if(!(UtilValidate.isNotEmpty(deductionTypeValue.get("isContinuous")) && ("Y".equals(deductionTypeValue.get("isContinuous"))))){
-							newEntity.set("thruDate", thruDateEnd);
-						}
+						newEntity.set("fromDate", fromDateStart);	
+						newEntity.set("thruDate", thruDateEnd);
 						newEntity.set("cost", amount);
 						newEntity.set("createdByUserLogin", userLogin.get("userLoginId"));
 				        newEntity.set("lastModifiedByUserLogin", userLogin.get("userLoginId"));
@@ -2552,22 +2566,27 @@ public class PayrollService {
 						BigDecimal prevAmount = partyDeduction.getBigDecimal("cost");
 						Timestamp prevFromDate = partyDeduction.getTimestamp("fromDate");
 						Timestamp prevThruDate = partyDeduction.getTimestamp("thruDate");
-						
+						if(UtilValidate.isEmpty(prevAmount)){
+							prevAmount = BigDecimal.ZERO;
+						}
 						if(prevFromDate.compareTo(fromDateStart)== 0){
-							if(prevAmount.compareTo(amount)!= 0){
+							if(prevAmount.compareTo(amountToCompare)!= 0){
 								// Update existing one
 								partyDeduction.set("partyIdTo",partyDeduction.getString("partyIdTo"));
 								partyDeduction.set("deductionTypeId",partyDeduction.getString("deductionTypeId"));
 								partyDeduction.set("cost", amount);
-								if(!(UtilValidate.isNotEmpty(deductionTypeValue.get("isContinuous")) && ("Y".equals(deductionTypeValue.get("isContinuous"))))){
-									partyDeduction.set("thruDate", thruDateEnd);
-								}
+								partyDeduction.set("thruDate", thruDateEnd);
 								partyDeduction.set("lastModifiedByUserLogin", userLogin.get("userLoginId"));
 								partyDeduction.store();
+							}else{
+								if(UtilValidate.isNotEmpty(amountNullFlag)){
+									partyDeduction.set("thruDate", thruDateEnd);
+									partyDeduction.store();
+								}
 							}
 						}else{	
-							// Create New One							
-							if(UtilValidate.isEmpty(prevAmount) || prevAmount.compareTo(amount)!= 0){
+							// Create New One		
+							if(UtilValidate.isEmpty(prevAmount) || prevAmount.compareTo(amountToCompare)!= 0){
 								GenericValue newEntity = delegator.makeValue("PartyDeduction");
 								newEntity.set("roleTypeIdFrom", "INTERNAL_ORGANIZATIO");
 								newEntity.set("roleTypeIdTo", "EMPLOYEE");

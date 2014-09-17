@@ -1344,13 +1344,13 @@ under the License.emplpunch
         <attribute name="availedCanteen" mode="IN" type="String" optional="true"/>
         <attribute name="shiftType" mode="IN" type="String" optional="true"/>
     </service>
-    <service name="createOrUpdatePartyBenefitOrDeduction"  engine="java"
-                location="in.vasista.vbiz.humanres.PayrollService" invoke="createOrUpdatePartyBenefitOrDeduction" auth="true">
+    <service name="createOrUpdatePartyBenefitOrDeduction" engine="java" location="in.vasista.vbiz.humanres.PayrollService" invoke="createOrUpdatePartyBenefitOrDeduction" auth="true">
         <description>Create Or Update Employee Allowence</description>
-        <attribute name="partyId" mode="IN" type="String" optional="false"/>
-        <attribute name="customTimePeriodId" mode="IN" type="String" optional="false"/>
-        <attribute name="payHeadTypeId" mode="IN" type="String" optional="false"/>
-        <attribute name="amount" mode="IN" type="BigDecimal" optional="false"/>
+        <attribute name="partyId" mode="IN" type="String" optional="false" />
+        <attribute name="customTimePeriodId" mode="IN" type="String" optional="false" />
+        <attribute name="payHeadTypeId" mode="IN" type="String" optional="false" />
+        <attribute name="amount" mode="IN" type="BigDecimal" optional="true" />
+        <attribute name="amountNullFlag" mode="IN" type="String" optional="true" />
     </service>
   <service name="sendPayrollSms" engine="groovy"  location="component://humanres/webapp/humanres/WEB-INF/actions/reports/EmployeePayRollReport.groovy" auth="true">
       <description>send paroll sms</description>
