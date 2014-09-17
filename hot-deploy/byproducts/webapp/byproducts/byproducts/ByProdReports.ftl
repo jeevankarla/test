@@ -101,7 +101,7 @@ function makeDatePicker1(fromDateId ,thruDateId){
 	            $(this).datepicker('setDate', new Date(year, month, 1));
 			}
 		});
-	$(".IcDealerOSDuesFDate").focus(function () {
+	$(".FDate").focus(function () {
 	        $(".ui-datepicker-calendar").hide();
 	        $("#ui-datepicker-div").position({
 	            my: "center top",
@@ -109,7 +109,7 @@ function makeDatePicker1(fromDateId ,thruDateId){
 	            of: $(this)
 	        });    
 	     });
-	     $(".IcDealerOSDuesTDate").focus(function () {
+	     $(".TDate").focus(function () {
 	        $(".ui-datepicker-calendar").hide();
 	        $("#ui-datepicker-div").position({
 	            my: "center top",
@@ -178,6 +178,7 @@ function reportTypeChangeFunc() {
 	    makeDatePicker("purchaseFromDate","purchaseThruDate");
 		makeDatePicker("analysisCodeFromDate","analysisCodeThruDate");
 		makeDatePicker2("IcDealerOSDuesFDate","IcDealerOSDuesTDate");
+		makeDatePicker2("fdFromDate","");
 		$('#ui-datepicker-div').css('clip', 'auto');		
 	});
 //for Month Picker
@@ -1115,8 +1116,8 @@ function reportTypeChangeFunc() {
 	                  <tr class="alternate-row">
 			      	   <form id="IcDealerOSDuesIntimation" name="IcDealerOSDuesIntimation" method="post" action="<@ofbizUrl>IcDealerOSDuesIntimation.pdf</@ofbizUrl>" target="_blank">        
 			             <td width="30%">Icecream Dealers Outstanding Dues intimation Report</td>
-			             <td width="15%">From<input  type="text" size="18pt" id="IcDealerOSDuesFDate" readonly  class="IcDealerOSDuesFDate" name="fromDate"/></td>
-			      		 <td width="15%">Thru<input  type="text" size="18pt" id="IcDealerOSDuesTDate" readonly  class="IcDealerOSDuesTDate" name="thruDate"/></td>
+			             <td width="15%">From<input  type="text" size="18pt" id="IcDealerOSDuesFDate" readonly  class="FDate" name="fromDate"/></td>
+			      		 <td width="15%">Thru<input  type="text" size="18pt" id="IcDealerOSDuesTDate" readonly  class="TDate" name="thruDate"/></td>
 			      		 <td width="15%">By
 			      			  <select name="categoryType" id= "categoryType">
 				      			<option value="All">All</option>
@@ -1131,6 +1132,21 @@ function reportTypeChangeFunc() {
 			             <td width="10%"><input type="submit" value="Download" class="buttontext"/></td>
 			           </form>
 			        </tr>
+			        <tr class="alternate-row">
+					<form id="fDExpiringOrMaturingReport" name="fDExpiringOrMaturingReport" method="post" action="<@ofbizUrl>fDExpiringOrMaturingReport.pdf</@ofbizUrl>" target="_blank">	
+						<td width="30%">Fixed Deposit expiring/maturing Report</td>
+						<td width="15%">Month: <input type='text' id='fdFromDate' name='fromDate' readonly class="FDate"/></td>
+			  			<td width="15%">Category Type <select name='categoryType' class='h4'>
+							<option value='ALL'>All</option>
+							<option value='SHP_RTLR'>BVB</option>
+							<option value='SCT_RTLR'>Sachets</option>
+							</select>
+						</td>
+		      			<td width="15%"></td>
+		      			<td width="15%"></td>
+						<td width="10%"><input type="submit" value="Download" class="buttontext"/></td>      
+					</form>
+	              </tr>
 			        <#-- 
       				<tr class="alternate-row">
 		        	<form id="duesAbstract" name="duesAbstract" method="post" action="<@ofbizUrl>duesAbstract.csv</@ofbizUrl>">	
