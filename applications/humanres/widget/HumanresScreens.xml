@@ -521,7 +521,7 @@
 			<actions>
 				<set field="headerItem" value="loan" />
 				<set field="tabButtonItem" value="loan" />
-				<set field="titleProperty" value="loan" />
+				<set field="titleProperty" value="Loan" />
 				<script location="component://humanres/webapp/humanres/WEB-INF/actions/reports/employeeLoanList.groovy"/>
 			</actions>
 			<widgets>
@@ -549,7 +549,7 @@
 			<actions>
 				<set field="headerItem" value="loan" />
 				<set field="tabButtonItem" value="loan" />
-				<set field="titleProperty" value="loan" />
+				<set field="titleProperty" value="Loan" />
 			</actions>
 			<widgets>
 				<decorator-screen name="HumanresCommonDecorator"
