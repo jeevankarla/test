@@ -185,6 +185,7 @@ function makeDatePicker1(fromDateId ,thruDateId){
 							</td>
 							<td width="15%">From Date<input  type="text"  id="larfromDate"   name="larFromDate"/></td>
 							<td width="15%">Thru Date<input  type="text"  id="larthruDate"   name="larThruDate"/></td>
+							<td width="10%"></td>
 							<td width="10%"><input type="submit" value="Download" class="buttontext"></td> 
 							</td>
 						</form>
@@ -192,14 +193,21 @@ function makeDatePicker1(fromDateId ,thruDateId){
 					<tr class="alternate-row">
 						<form id="CashEncashmentReport" name="CashEncashmentReport" mothed="post" action="<@ofbizUrl>CashEncashmentReport.pdf</@ofbizUrl>" target="_blank">
 							<td width="30%">Cash Encashment Report</td>
-							<td width="30%">Period Id
+							<td width="15%">Organization Id 
+								<select name="partyId" class='h5'>
+									<#list orgList as org>    
+									<option value='${org.partyId}'>${org.groupName?if_exists}</option>
+									</#list> 
+								</select>
+							</td>	
+							<td width="15%">Period Id
 								<select name="customTimePeriodId" id="customTimePeriodId" class='h4'>
 									<#list customTimePeriodList as customTimePeriod><option value='${customTimePeriod.customTimePeriodId?if_exists}' >${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(customTimePeriod.fromDate, "dd MMMMM, yyyy")} -${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(customTimePeriod.thruDate, "dd MMMMM, yyyy")}</option></#list>
 								</select>
 							</td>	
-							<td width="20%"></td>
-							<td width="20%"></td>
-							<td width="20%"></td>
+							<td width="10%"></td>
+							<td width="10%"></td>
+							<td width="10%"></td>
 							<td width="10%"><input type="submit" value="Download" class="buttontext"></td>
 						
 						</form>											

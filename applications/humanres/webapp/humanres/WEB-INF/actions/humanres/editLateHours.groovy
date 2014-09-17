@@ -34,7 +34,7 @@ context.employeeList=employeeList;
 company = delegator.findByPrimaryKey("PartyAndGroup", [partyId : "Company"]);
 populateChildren(company, employeeList);
 def populateChildren(org, employeeList) {
-	EmploymentsMap=HumanresService.getActiveEmployements(dctx,[userLogin:userLogin,orgPartyId:"company"]);
+	EmploymentsMap=HumanresService.getActiveEmployements(dctx,[userLogin:userLogin,orgPartyId:parameters.partyId]);
 	employments=EmploymentsMap.get("employementList");
 	employments.each{ employment->
 		empIds.add(employment.partyId);
@@ -45,8 +45,21 @@ def populateChildren(org, employeeList) {
 		name=employment.firstName+" "+lastName;
 		empName.put(employment.partyId,name);
 		
+		List conditionList=[];
+		if(UtilValidate.isNotEmpty(employment.partyId)){
+			conditionList.add(EntityCondition.makeCondition("partyId", EntityOperator.EQUALS, parameters.partyId));
+			conditionList.add(EntityCondition.makeCondition("partyTypeId", EntityOperator.EQUALS,"PARTY_GROUP"));
+		}
+		condition=EntityCondition.makeCondition(conditionList,EntityOperator.AND);
+		orgDetails= delegator.findList("PartyRelationshipAndDetail", condition, UtilMisc.toSet("groupName"), null, null, false );
+		if(UtilValidate.isNotEmpty(orgDetails)){
+			details=EntityUtil.getFirst(orgDetails);
+			orgName=details.get("groupName");
+		}
+		
 	}
 }
+context.orgName=orgName;
 if(UtilValidate.isNotEmpty(timePeriodId)){
 	context.timePeriodId=timePeriodId;
 		dates=delegator.findOne("CustomTimePeriod", [customTimePeriodId:timePeriodId], false);
