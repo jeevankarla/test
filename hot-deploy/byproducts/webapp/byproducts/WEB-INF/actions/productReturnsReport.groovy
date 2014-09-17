@@ -109,15 +109,21 @@ returnQtyLtrs = "";
 
 shipmentIds=[];
 shipmentIdList = [];
+conditionList=[];
 	if(parameters.subscriptionTypeId == "ALL"){
 		if(parameters.routeId == "All-Routes"){
 			shipmentIds = ByProductNetworkServices.getShipmentIdsSupplyType(delegator,dayBegin,dayEnd,null);
 			//shipmentIds  = ByProductNetworkServices.getShipmentIds(delegator , UtilDateTime.toDateString(dayBegin, "yyyy-MM-dd HH:mm:ss"),null);
 			shipmentIdList.addAll(shipmentIds);
 		}else{
-		   shipment = delegator.findList("Shipment", EntityCondition.makeCondition([routeId : parameters.routeId, statusId: "GENERATED", estimatedShipDate : dayBegin]), null, null, null, false);
-		   shipmentIds = EntityUtil.getFieldListFromEntityList(shipment, "shipmentId", true);
-		   shipmentIdList.addAll(shipmentIds);
+		    conditionList.add(EntityCondition.makeCondition("routeId", EntityOperator.EQUALS, parameters.routeId));
+			conditionList.add(EntityCondition.makeCondition("statusId", EntityOperator.EQUALS, "GENERATED"));
+			conditionList.add(EntityCondition.makeCondition("estimatedShipDate", EntityOperator.GREATER_THAN_EQUAL_TO ,dayBegin));
+			conditionList.add(EntityCondition.makeCondition("estimatedShipDate", EntityOperator.LESS_THAN_EQUAL_TO ,dayEnd));
+			EntityCondition cond = EntityCondition.makeCondition(conditionList, EntityOperator.AND);
+		    shipment = delegator.findList("Shipment", cond, null, null, null, false);
+		    shipmentIds = EntityUtil.getFieldListFromEntityList(shipment, "shipmentId", true);
+		    shipmentIdList.addAll(shipmentIds);
 	   }
 	}else{
 	   if(parameters.routeId == "All-Routes"){
@@ -125,7 +131,14 @@ shipmentIdList = [];
 		   shipmentIdList.addAll(shipmentIds);
 	   }else{
 		   shipType = parameters.subscriptionTypeId+"_SHIPMENT";
-		   shipment = delegator.findList("Shipment", EntityCondition.makeCondition([routeId : parameters.routeId, shipmentTypeId: shipType, statusId: "GENERATED", estimatedShipDate : dayBegin]), null, null, null, false);
+		   conditionList.clear();
+		   conditionList.add(EntityCondition.makeCondition("routeId", EntityOperator.EQUALS, parameters.routeId));
+		   conditionList.add(EntityCondition.makeCondition("shipmentTypeId", EntityOperator.EQUALS, shipType));
+		   conditionList.add(EntityCondition.makeCondition("statusId", EntityOperator.EQUALS, "GENERATED"));
+		   conditionList.add(EntityCondition.makeCondition("estimatedShipDate", EntityOperator.GREATER_THAN_EQUAL_TO ,dayBegin));
+		   conditionList.add(EntityCondition.makeCondition("estimatedShipDate", EntityOperator.LESS_THAN_EQUAL_TO ,dayEnd));
+		   EntityCondition cond1 = EntityCondition.makeCondition(conditionList, EntityOperator.AND);
+		   shipment = delegator.findList("Shipment", cond1, null, null, null, false);
 		   shipmentIds = EntityUtil.getFieldListFromEntityList(shipment, "shipmentId", true);
 		   shipmentIdList.addAll(shipmentIds);
 	   }
