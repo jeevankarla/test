@@ -61,6 +61,8 @@ under the License.
 		            		<fo:table-column column-width="90pt"/>
 		            		<fo:table-column column-width="95pt"/>
 		            		<fo:table-column column-width="95pt"/>
+		            		<fo:table-column column-width="95pt"/>
+		            		<fo:table-column column-width="95pt"/>
 		                    <fo:table-body>
 	                            <#assign totalQty=0> 
 			                    <#assign totalBasicRev=0>
@@ -118,14 +120,14 @@ under the License.
 					                                <#assign edVal=edVal+productDtls.getValue().get("bedRevenue")>
 					                                <#assign vat=vat+productDtls.getValue().get("vatRevenue")>
 					                                <#assign cst=cst+productDtls.getValue().get("cstRevenue")>
-					                                <#assign total=total+productDtls.getValue().get("totalVal")>
+					                                <#assign total=total+productDtls.getValue().get("totalRevenue")>
 					                                
 					                                <#assign totalQty=totalQty+productDtls.getValue().get("quantity")>
 					       							<#assign totalBasicRev=totalBasicRev+productDtls.getValue().get("basicRevenue")>
 					       							<#assign totalBedRev=totalBedRev+productDtls.getValue().get("bedRevenue")>
 					       							<#assign totalVatRev=totalVatRev+productDtls.getValue().get("vatRevenue")>
 					       							<#assign totalCstRev=totalCstRev+productDtls.getValue().get("cstRevenue")>
-					       							<#assign grandTotal=grandTotal+productDtls.getValue().get("basicRevenue")+totalBedRev+productDtls.getValue().get("bedRevenue")+productDtls.getValue().get("vatRevenue")+productDtls.getValue().get("cstRevenue")>
+					       							<#assign grandTotal=grandTotal+productDtls.getValue().get("totalRevenue")>
 						                                <fo:table-row>
 						                                   <fo:table-cell>
 								                           		<fo:block  keep-together="always" font-size="12pt" text-align="left" white-space-collapse="false">${productDtls.getKey()}</fo:block>  
@@ -146,7 +148,7 @@ under the License.
 								                           		<fo:block  keep-together="always" font-size="12pt" text-align="right" white-space-collapse="false">${productDtls.getValue().get("cstRevenue")?string("#0.00")}</fo:block>  
 								                       		</fo:table-cell>
 								                       		<fo:table-cell>
-								                           		<fo:block  keep-together="always" font-size="12pt" text-align="right" white-space-collapse="false">${productDtls.getValue().get("totalVal")?string("#0.00")}</fo:block>  
+								                           		<fo:block  keep-together="always" font-size="12pt" text-align="right" white-space-collapse="false">${productDtls.getValue().get("totalRevenue")?string("#0.00")}</fo:block>  
 								                       		</fo:table-cell>
 										             	</fo:table-row>
 									             	</#list>
@@ -155,14 +157,59 @@ under the License.
 							            	</fo:block>  
 							            </fo:table-cell>
 							     </fo:table-row>
-							     </#list>
-							      </#list>
-							     <fo:table-row> 
+							      <fo:table-row> 
 							      <fo:table-cell>   						
 									<fo:block>--------------------------------------------------------------------------------------------------------------------------------------------</fo:block>
           						  </fo:table-cell>
           						  </fo:table-row> 
-							     <fo:table-row>
+							    <fo:table-row>
+							             <fo:table-cell>
+							            	<fo:block  keep-together="always" text-align="left" font-size="12pt" white-space-collapse="false" font-weight="bold"></fo:block>  
+							            </fo:table-cell>
+							             <fo:table-cell>
+							            	<fo:block  keep-together="always" text-align="left" font-size="12pt" white-space-collapse="false" font-weight="bold"></fo:block>  
+							            </fo:table-cell>
+									<fo:table-cell>
+							            	<fo:block  keep-together="always" text-align="right" font-size="12pt" white-space-collapse="false" font-weight="bold">
+							            		<fo:table>
+								            		<fo:table-column column-width="100pt"/>
+								            		<fo:table-column column-width="110pt"/> 
+								            		<fo:table-column column-width="110pt"/> 
+								            		<fo:table-column column-width="120pt"/> 
+								            		<fo:table-column column-width="85pt"/> 
+								            		<fo:table-column column-width="90pt"/> 
+								            		<fo:table-column column-width="115pt"/> 
+					                                <fo:table-body>
+					                               <#assign invTotals=invoiceDtls.get("invTotals").entrySet()>
+					                               <fo:table-row>
+						                                   <fo:table-cell>
+								                           		<fo:block  keep-together="always" font-size="12pt" text-align="left" white-space-collapse="false">Total</fo:block>  
+								                       		</fo:table-cell>
+					                                        <#list invTotals as invDtls>
+															<fo:table-cell>
+								                           		<fo:block  keep-together="always" font-size="12pt" text-align="right" white-space-collapse="false">${invDtls.getValue()?string("#0.00")}</fo:block>  
+								                       		</fo:table-cell>
+								                       		</#list>
+										            </fo:table-row>
+									             	
+									             </fo:table-body>
+									             </fo:table>
+							            	</fo:block>  
+							            </fo:table-cell>            
+										 </fo:table-row>   
+								  <fo:table-row> 
+							      <fo:table-cell>   						
+									<fo:block>--------------------------------------------------------------------------------------------------------------------------------------------</fo:block>
+          						  </fo:table-cell>
+          						  </fo:table-row>          	
+							     </#list>
+							      </#list>
+							     <#--<fo:table-row> 
+							      <fo:table-cell>   						
+									<fo:block>--------------------------------------------------------------------------------------------------------------------------------------------</fo:block>
+          						  </fo:table-cell>
+          						  </fo:table-row> -->
+							     <#--<fo:table-row>
 					                    <fo:table-cell>
 							            	<fo:block  keep-together="always" text-align="left" font-size="12pt" white-space-collapse="false" font-weight="bold"></fo:block>  
 							            </fo:table-cell>
@@ -210,12 +257,7 @@ under the License.
 									             </fo:table>
 							            	</fo:block>  
 							            </fo:table-cell>
-							     </fo:table-row>
-							     <fo:table-row> 
-							      <fo:table-cell>   						
-									<fo:block>--------------------------------------------------------------------------------------------------------------------------------------------</fo:block>
-          						  </fo:table-cell>
-          						  </fo:table-row> 
+							     </fo:table-row>-->
 								</#list>
 								 <fo:table-row>
 					                    <fo:table-cell>

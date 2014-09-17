@@ -107,6 +107,26 @@ dayWiseInvoice=FastMap.newInstance();
 							invoiceDetails = delegator.findOne("Invoice",[invoiceId : invoiceId] , false);
 							invoicePartyId = invoiceDetails.partyId;
 							prodTotals = invoice.getValue().get("productTotals");
+							
+							invQuantity=0;
+							invBasicRevenue=0;
+							invBedRevenue=0;
+							invVatRevenue=0;
+							invCstRevenue=0;
+							InvTotal=0;
+							totalMap=[:];
+							quantity = invoice.getValue().get("total");
+							basicRevenue = invoice.getValue().get("basicRevenue");
+							bedRevenue = invoice.getValue().get("bedRevenue");
+							vatRevenue =invoice.getValue().get("vatRevenue");
+							cstRevenue = invoice.getValue().get("cstRevenue");
+							totalRevenue = invoice.getValue().get("totalRevenue");
+							totalMap["quantity"]=quantity;
+							totalMap["basicRevenue"]=basicRevenue;
+							totalMap["bedRevenue"]=bedRevenue;
+							totalMap["vatRevenue"]=vatRevenue;
+							totalMap["cstRevenue"]=cstRevenue;
+							totalMap["totalRevenue"]=totalRevenue;
 							tempVariantMap =FastMap.newInstance();
 							if(UtilValidate.isNotEmpty(prodTotals)){
 								prodTotals.each{productValue ->
@@ -132,6 +152,7 @@ dayWiseInvoice=FastMap.newInstance();
 													bedRevenue=productValue.getValue().get("bedRevenue");
 													vatRevenue = productValue.getValue().get("vatRevenue");
 													cstRevenue = productValue.getValue().get("cstRevenue");
+													totalRevenue = productValue.getValue().get("totalRevenue");
 													tempProdMap = FastMap.newInstance();
 													tempProdMap["quantity"] = quantity;
 													tempProdMap["invoiceId"]=invoiceId;
@@ -159,11 +180,10 @@ dayWiseInvoice=FastMap.newInstance();
 													   cstRevenue=0;
 													   tempProdMap["cstRevenue"] = 0;
 													}
-													totalVal = basicRevenue+bedRevenue+vatRevenue+cstRevenue;
-													if(totalVal>0){
-													 tempProdMap["totalVal"] = totalVal;
+													if(totalRevenue>0){
+													 tempProdMap["totalRevenue"] = totalRevenue;
 													}else{
-													 tempProdMap["totalVal"] = 0;
+													 tempProdMap["totalRevenue"] = 0;
 													}
 													temp=FastMap.newInstance();
 													temp.putAll(tempProdMap);
@@ -179,20 +199,20 @@ dayWiseInvoice=FastMap.newInstance();
 													bedRevenue=productValue.getValue().get("bedRevenue");
 													vatRevenue = productValue.getValue().get("vatRevenue");
 													cstRevenue = productValue.getValue().get("cstRevenue");
-													totalVal = basicRevenue+bedRevenue+vatRevenue+cstRevenue;
-													tempProdMap["invoiceId"]=invoiceId;
+													totalRevenue = productValue.getValue().get("totalRevenue");
 													productMap["quantity"] += productValue.getValue().get("total");
 													productMap["basicRevenue"] += productValue.getValue().get("basicRevenue");
 													productMap["bedRevenue"] += productValue.getValue().get("bedRevenue");
 													productMap["vatRevenue"] += productValue.getValue().get("vatRevenue");
 													productMap["cstRevenue"] += productValue.getValue().get("cstRevenue");
-													productMap["totalVal"] += totalVal;
-													temp=FastMap.newInstance();;
+													productMap["totalRevenue"] += productValue.getValue().get("totalRevenue");
+													temp=FastMap.newInstance();
 													temp.putAll(productMap);
 													tempVariantMap[virtualProductId] = temp;
 												}
 												//tempVariantMap["InvoiceId"]=invoiceId;
 										finalMap.put("productTotals",tempVariantMap);
+										finalMap.put("invTotals",totalMap);
 									}
 								}
 							}
