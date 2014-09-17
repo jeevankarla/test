@@ -31,7 +31,10 @@ $(document).ready(function(){
 					selection: { mode: "x" } 
 				};
 	
-	var plot = jQuery.plot($("#graph"), [data], options);
+	var plot = jQuery.plot($("#graph"), [{label: "Total Hits", data: ${StringUtil.wrapString(listJSON)}}, 
+							  {label: "Retailer Hits", data: ${StringUtil.wrapString(listRetailerJSON)}},
+							  {label: "Employee Hits", data: ${StringUtil.wrapString(listEmployeeJSON)}}], 
+							  options);
 				
     var overview = $.plot($("#overview"), [data], {
         xaxis: { ticks: [], mode: "time" },
