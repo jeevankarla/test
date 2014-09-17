@@ -224,7 +224,7 @@ under the License.
                     				<fo:block linefeed-treatment="preserve">&#xA;</fo:block>
                     				
                     				<#--<fo:block text-indent="5pt" white-space-collapse="false" wrap-option="wrap">Pay Scale :</fo:block><fo:block text-indent="3pt"  wrap-option="wrap">${payGrade.get(0).payScale?if_exists}</fo:block>-->
-                    				<fo:block text-indent="5pt" white-space-collapse="false" keep-together="always">Late Minutes      :  <#if emplLeavesDetails?has_content>${emplLeavesDetails.lateMin?if_exists}</#if></fo:block>
+                    				<fo:block text-indent="5pt" white-space-collapse="false" keep-together="always">Late Minutes      :  <#if emplLeavesDetails?has_content>${(emplLeavesDetails.lateMin*480)?if_exists}</#if></fo:block>
                     			<#--<fo:block>
                     				<fo:table width="100%">
                     					<fo:table-column column-width="1.5in"/>
