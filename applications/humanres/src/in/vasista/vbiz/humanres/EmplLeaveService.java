@@ -91,12 +91,9 @@ public class EmplLeaveService {
             		
             	}
             	condition = EntityCondition.makeCondition(conditionList, EntityOperator.AND);
-            	Debug.log("condition==="+condition);
 	            List<GenericValue> leaveBalances = delegator.findList("EmplLeaveBalanceStatusAndPeriod", condition, null, UtilMisc.toList("thruDate"), null, false);
-	            Debug.log("leaveBalances==="+leaveBalances);
 	            for (int i = 0; i < leaveBalances.size(); ++i) {		
 					GenericValue leaveBalance = leaveBalances.get(i);
-					Debug.log("leaveBalance==="+leaveBalance);
 					String leaveTypeId = leaveBalance.getString("leaveTypeId");
 					BigDecimal openingBalance = BigDecimal.ZERO;					
 					BigDecimal closingBalance = BigDecimal.ZERO;
@@ -135,9 +132,8 @@ public class EmplLeaveService {
 						}
 						
 					}
-					Debug.log("closingBalance==="+closingBalance);
 					
-				  if(leaveTypeIdCtx.equals("CML") || leaveTypeIdCtx.equals("HPL")){
+				  if(UtilValidate.isNotEmpty(leaveTypeIdCtx) && (leaveTypeIdCtx.equals("CML") || leaveTypeIdCtx.equals("HPL"))){
 					  
 					 // closingBalance = closingBalance.divide(new BigDecimal(2), 1, BigDecimal.ROUND_HALF_UP);
 					  Map leaveCtx = FastMap.newInstance();
@@ -153,10 +149,13 @@ public class EmplLeaveService {
 							}
 						}
 				  }
-				   if(leaveTypeIdCtx.equals("CML")){
+				   if(UtilValidate.isNotEmpty(leaveTypeIdCtx) && leaveTypeIdCtx.equals("CML")){
 					   closingBalance = closingBalance.divide(new BigDecimal(2), 1, BigDecimal.ROUND_HALF_UP);
+					   leaveBalancesMap.put(leaveTypeIdCtx, closingBalance);
+				   }else{
+					   leaveBalancesMap.put(leaveTypeId, closingBalance);
 				   }
-					leaveBalancesMap.put(leaveTypeIdCtx, closingBalance);
+					
 					
 				}
 				result.put("leaveBalances", leaveBalancesMap);
