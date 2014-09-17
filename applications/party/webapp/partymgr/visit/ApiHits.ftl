@@ -28,7 +28,8 @@ $(document).ready(function(){
                		},
                		grid: { hoverable: true},
 					xaxis: { mode: "time" },
-					selection: { mode: "x" } 
+					selection: { mode: "x" },
+					legend : {position: "nw"} 
 				};
 	
 	var plot = jQuery.plot($("#graph"), [{label: "Total Hits", data: ${StringUtil.wrapString(listJSON)}}, 
