@@ -58,6 +58,10 @@ under the License.
     <SecurityGroupPermission groupId="FULLADMIN" permissionId="EMP_LATEMIN_EDIT_UPDATE"/>
     <SecurityGroupPermission groupId="EMP_LATEMIN_EDIT" permissionId="EMP_LATEMIN_EDIT_UPDATE"/> 
     
+     <SecurityGroup description="Employee GH and SS Days Approve" groupId="EMP_GHSS_EDIT"/> 
+    <SecurityGroupPermission groupId="FULLADMIN" permissionId="EMP_GHSS_EDIT_UPDATE"/>
+    <SecurityGroupPermission groupId="EMP_GHSS_EDIT" permissionId="EMP_GHSS_EDIT_UPDATE"/> 
+    
     <SecurityPermission description=" employee previous day punch edit Permission." permissionId="EMP_PUNCH_EDIT_UPDATE"/>
     <SecurityPermission description=" employee previous day ood punch edit Permission." permissionId="EMP_PUNCH_OOD_UPDATE"/>
     <SecurityGroup description="Employee OOD PUNCH Edit" groupId="EMP_PUNCH_OOD_EDIT"></SecurityGroup>

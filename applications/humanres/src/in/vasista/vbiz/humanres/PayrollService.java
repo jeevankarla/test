@@ -3175,9 +3175,11 @@ public class PayrollService {
 	      String timePeriodId = (String)context.get("timePeriodId");
 	      BigDecimal noOfArrearDays=(BigDecimal)context.get("noOfArrearDays");
 	      BigDecimal lossOfPayDays=(BigDecimal)context.get("lossOfPayDays");
-	      BigDecimal lateMin=(BigDecimal)context.get("lateMin");
+	      BigDecimal noOfAttendedSsDays=(BigDecimal)context.get("noOfAttendedSsDays");
+	      BigDecimal noOfAttendedHoliDays=(BigDecimal)context.get("noOfAttendedHoliDays");
 	      Map result = ServiceUtil.returnSuccess();
-	     lateMin = lateMin.divide(BigDecimal.valueOf(480), 4, BigDecimal.ROUND_HALF_UP);
+	      /*BigDecimal lateMin=(BigDecimal)context.get("lateMin");
+	      lateMin = lateMin.divide(BigDecimal.valueOf(480), 4, BigDecimal.ROUND_HALF_UP);*/
 	      try{
 	      			List conditionLis=FastList.newInstance();
 	      			conditionLis.add(EntityCondition.makeCondition("customTimePeriodId",EntityOperator.EQUALS,timePeriodId));
@@ -3214,14 +3216,25 @@ public class PayrollService {
 	      						    
 	      					}
 	      					if(UtilValidate.isNotEmpty(lossOfPayDays) && lossOfPayDays.compareTo(BigDecimal.ZERO)>=0){
-	      						
-	      						noOfPayableDays=noOfPayableDays.add(employPayrollDetails.getBigDecimal("lossOfPayDays"));
+	      						BigDecimal empLopDays=employPayrollDetails.getBigDecimal("lossOfPayDays");
+	      						if(UtilValidate.isEmpty(empLopDays)){
+	      							empLopDays = BigDecimal.ZERO;
+	      						}
+	      						noOfPayableDays=noOfPayableDays.add(empLopDays);
       							noOfPayableDays=noOfPayableDays.subtract(lossOfPayDays);
       							employPayrollDetails.set("noOfPayableDays",noOfPayableDays);
       							employPayrollDetails.set("lossOfPayDays",lossOfPayDays);
       							employPayrollDetails.store();
 	      					}
-	      					if(UtilValidate.isNotEmpty(lateMin) && lateMin.compareTo(BigDecimal.ZERO)>=0){
+	      					if(UtilValidate.isNotEmpty(noOfAttendedSsDays) && noOfAttendedSsDays.compareTo(BigDecimal.ZERO)>=0){
+      							employPayrollDetails.set("noOfAttendedSsDays",noOfAttendedSsDays);
+      							employPayrollDetails.store();
+	      					}
+	      					if(UtilValidate.isNotEmpty(noOfAttendedHoliDays) && noOfAttendedHoliDays.compareTo(BigDecimal.ZERO)>=0){
+      							employPayrollDetails.set("noOfAttendedHoliDays",noOfAttendedHoliDays);
+      							employPayrollDetails.store();
+	      					}
+	      					/*if(UtilValidate.isNotEmpty(lateMin) && lateMin.compareTo(BigDecimal.ZERO)>=0){
 	      						BigDecimal empLateMin=employPayrollDetails.getBigDecimal("lateMin");
 	      						if(UtilValidate.isEmpty(empLateMin)){
 	      							empLateMin = BigDecimal.ZERO;
@@ -3231,7 +3244,7 @@ public class PayrollService {
 	      						employPayrollDetails.set("noOfPayableDays",noOfPayableDays);
 	      						employPayrollDetails.set("lateMin",lateMin);
 	      						employPayrollDetails.store();
-	      					}
+	      					}*/
 	    	      	}
 	      		} catch (GenericEntityException e) {
 	      			Debug.logError(e, module);

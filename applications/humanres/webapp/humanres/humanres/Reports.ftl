@@ -194,7 +194,7 @@ function makeDatePicker1(fromDateId ,thruDateId){
 						<form id="CashEncashmentReport" name="CashEncashmentReport" mothed="post" action="<@ofbizUrl>CashEncashmentReport.pdf</@ofbizUrl>" target="_blank">
 							<td width="30%">Cash Encashment Report</td>
 							<td width="15%">Organization Id 
-								<select name="partyId" class='h5'>
+								<select name="deptId" class='h5'>
 									<#list orgList as org>    
 									<option value='${org.partyId}'>${org.groupName?if_exists}</option>
 									</#list> 

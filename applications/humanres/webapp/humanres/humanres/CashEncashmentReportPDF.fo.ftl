@@ -34,7 +34,7 @@ under the License.
 			<fo:static-content font-size="13.5pt" font-family="Courier,monospace"  flow-name="xsl-region-before" font-weight="bold">
 				<fo:block text-align="center" white-space-collapse="false">&#160;   MOTHER DAIRY A UNIT OF K.M.F						          													</fo:block>
 				<fo:block text-align="center" white-space-collapse="false">&#160;                        G.K.V.K POST, BANGALORE, KARNATAKA - 560065				 		Date :${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(orderDate, "dd/MM/yyyy")}               </fo:block>
-				<fo:block text-align="left" keep-together="always" white-space-collapse="false" >&#160;                                        <fo:inline  text-decoration="underline">${orgName?upper_case}</fo:inline></fo:block>
+				<fo:block text-align="center" keep-together="always" white-space-collapse="false" >                                       <fo:inline  text-decoration="underline">${orgName?upper_case}</fo:inline></fo:block>
 				<fo:block text-align="center" keep-together="always" white-space-collapse="false">&#160;                               GH/SS CASH ENCASHMENT REPORT               Page Number  : <fo:page-number/></fo:block>
 				 <fo:block linefeed-treatment="preserve">&#xA;</fo:block>
 				 <fo:block text-align="left" keep-together="always" white-space-collapse="false">&#160;From Date	: ${fromlarDate?upper_case}			To Date	: ${thrularDate?upper_case}</fo:block>

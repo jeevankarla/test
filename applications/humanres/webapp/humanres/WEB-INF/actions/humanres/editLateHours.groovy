@@ -26,6 +26,7 @@ empName=[:];
 orderDate=UtilDateTime.nowTimestamp();
 context.orderDate=orderDate;
 partyId=parameters.partyId;
+deptId=parameters.deptId;
 timePeriodId=parameters.customTimePeriodId;
 employeeList = [];
 internalOrgs=[];
@@ -34,7 +35,7 @@ context.employeeList=employeeList;
 company = delegator.findByPrimaryKey("PartyAndGroup", [partyId : "Company"]);
 populateChildren(company, employeeList);
 def populateChildren(org, employeeList) {
-	EmploymentsMap=HumanresService.getActiveEmployements(dctx,[userLogin:userLogin,orgPartyId:parameters.partyId]);
+	EmploymentsMap=HumanresService.getActiveEmployements(dctx,[userLogin:userLogin,orgPartyId:deptId]);
 	employments=EmploymentsMap.get("employementList");
 	employments.each{ employment->
 		empIds.add(employment.partyId);
@@ -47,7 +48,7 @@ def populateChildren(org, employeeList) {
 		
 		List conditionList=[];
 		if(UtilValidate.isNotEmpty(employment.partyId)){
-			conditionList.add(EntityCondition.makeCondition("partyId", EntityOperator.EQUALS, parameters.partyId));
+			conditionList.add(EntityCondition.makeCondition("partyId", EntityOperator.EQUALS, deptId));
 			conditionList.add(EntityCondition.makeCondition("partyTypeId", EntityOperator.EQUALS,"PARTY_GROUP"));
 		}
 		condition=EntityCondition.makeCondition(conditionList,EntityOperator.AND);
@@ -59,7 +60,9 @@ def populateChildren(org, employeeList) {
 		
 	}
 }
-context.orgName=orgName;
+if(UtilValidate.isNotEmpty(deptId))
+	context.orgName=orgName;
+
 if(UtilValidate.isNotEmpty(timePeriodId)){
 	context.timePeriodId=timePeriodId;
 		dates=delegator.findOne("CustomTimePeriod", [customTimePeriodId:timePeriodId], false);
@@ -81,7 +84,6 @@ if(UtilValidate.isNotEmpty(timePeriodId)){
 		return;
 		}
 	partyId=parameters.partyId;
-	
 	resultMap=PayrollService.getPayrollAttedancePeriod(dctx,[userLogin:userLogin,timePeriodStart:fromDateStart,timePeriodEnd:thruDateEnd,timePeriodId:timePeriodId,locale:locale]);
 	lastClosePeriod=resultMap.get("lastCloseAttedancePeriod");
 	if(UtilValidate.isNotEmpty(lastClosePeriod)){
