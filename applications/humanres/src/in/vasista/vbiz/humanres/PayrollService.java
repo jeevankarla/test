@@ -2868,8 +2868,8 @@ public class PayrollService {
 	        	input.put("thruDate", attdTimePeriodEnd);
 	        	resultMap = HumanresService.getActiveEmployements(dctx,input);
 	        	List<GenericValue> employementList = (List<GenericValue>)resultMap.get("employementList");
-	        	//Debug.log("employementList============"+employementList.size());
-	            //employementList = EntityUtil.filterByAnd(employementList, UtilMisc.toMap("partyIdTo","7054"));
+	        	Debug.log("employementList============"+employementList.size());
+	            //employementList = EntityUtil.filterByAnd(employementList, UtilMisc.toMap("partyIdTo","6851"));
 	        	//general holidays in that period
 	        	input.clear();
 	    		input.put("userLogin", userLogin);
@@ -2884,7 +2884,8 @@ public class PayrollService {
 	    	    Timestamp startTimestamp = UtilDateTime.nowTimestamp();
 	    		// second saturday
 	    		Timestamp secondSaturDay = UtilDateTime.addDaysToTimestamp(UtilDateTime.getWeekStart(UtilDateTime.getMonthStart(attdTimePeriodEnd),0,2,timeZone,locale), -1);
-	    		//Debug.log("second saturday===="+secondSaturDay);
+	    		//Debug.log("employementList===="+employementList.size());
+	    		
 	        	for(GenericValue employement : employementList) {
 	        		String employeeId = employement.getString("partyIdTo");
 	        		GenericValue newEntity = delegator.makeValue("PayrollAttendance");
@@ -2909,10 +2910,21 @@ public class PayrollService {
 	        		BigDecimal noOfEmployementDays = new BigDecimal(noOfCalenderDays);
 	        		Timestamp employementFromaDate = UtilDateTime.getDayStart(employement.getTimestamp("fromDate"));
 	        		Timestamp employementThruDate = employement.getTimestamp("thruDate");
-	        		if(UtilValidate.isNotEmpty(employementThruDate) && (employementThruDate.compareTo(timePeriodEnd) <0)){
-	        			noOfEmployementDays = new BigDecimal(UtilDateTime.getIntervalInDays(timePeriodStart, employementThruDate)+1);
+	        		if(UtilValidate.isNotEmpty(employementThruDate) && (employementThruDate.compareTo(timePeriodEnd) <=0)){
+	        			Map inputMap = FastMap.newInstance();
+	        			inputMap.put("userLogin", userLogin);
+	        			inputMap.put("orgPartyId", employeeId);
+	        			inputMap.put("fromDate", UtilDateTime.addDaysToTimestamp(employementThruDate,1));
+	    	        	resultMap = HumanresService.getActiveEmployements(dctx,input);
+	    	        	List<GenericValue> empEmployementList = (List<GenericValue>)resultMap.get("employementList");
+	    	        	Debug.log("empEmployementList==========="+empEmployementList.size());
+	    	        	GenericValue empEmployement = EntityUtil.getFirst(empEmployementList);
+	    	        	if(UtilValidate.isEmpty(empEmployement)){
+	    	        		noOfEmployementDays = new BigDecimal(UtilDateTime.getIntervalInDays(timePeriodStart, employementThruDate)+1);
+	    	        	}
+	        			
 	        		}
-	        		
+	        		//Debug.log("noOfEmployementDays==========="+noOfEmployementDays);
 	        		conditionList.clear();
 			        conditionList.add(EntityCondition.makeCondition("partyId", EntityOperator.EQUALS ,employeeId));
 			    	conditionList.add(EntityCondition.makeCondition("punchdate", EntityOperator.GREATER_THAN_EQUAL_TO , UtilDateTime.toSqlDate(attdTimePeriodStart)));

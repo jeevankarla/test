@@ -57,6 +57,7 @@ public class HumanresService {
         GenericValue org = (GenericValue) context.get("org");
         Timestamp fromDate =  (Timestamp)context.get("fromDate");
         Timestamp thruDate =  (Timestamp)context.get("thruDate");
+        Boolean isGroup = (Boolean)context.get("isGroup");
         if (org == null) {
         	return;
         }
@@ -71,6 +72,23 @@ public class HumanresService {
 		List<GenericValue> internalOrgs = FastList.newInstance();
   		try{
   			List conditionList = FastList.newInstance();
+  			if(UtilValidate.isNotEmpty(isGroup) && !isGroup){
+  				// for single employee
+  				conditionList.clear();
+  	  			conditionList.add(EntityCondition.makeCondition("partyIdTo", EntityOperator.EQUALS, org.getString("partyId")));
+  	  			conditionList.add(EntityCondition.makeCondition("roleTypeIdTo", EntityOperator.EQUALS,  "EMPLOYEE"));
+  	  			conditionList.add(EntityCondition.makeCondition("fromDate", EntityOperator.LESS_THAN_EQUAL_TO, thruDate));
+  				conditionList.add(EntityCondition.makeCondition(EntityCondition.makeCondition("thruDate", EntityOperator.EQUALS, null), EntityOperator.OR, 
+  						EntityCondition.makeCondition("thruDate", EntityOperator.GREATER_THAN_EQUAL_TO, fromDate)));
+  				
+  				EntityCondition condition = EntityCondition.makeCondition(conditionList, EntityOperator.AND);  		
+  				List<GenericValue> employments = delegator.findList("EmploymentAndPerson", condition, null, UtilMisc.toList("firstName"), null, false);
+  				
+  				employementList.addAll(employments);
+  				return;
+  				
+  			}
+  			conditionList.clear();
   			conditionList.add(EntityCondition.makeCondition("partyIdFrom", EntityOperator.EQUALS, org.getString("partyId")));
   			conditionList.add(EntityCondition.makeCondition("partyRelationshipTypeId", EntityOperator.EQUALS, "GROUP_ROLLUP"));
   			conditionList.add(EntityCondition.makeCondition("fromDate", EntityOperator.LESS_THAN_EQUAL_TO, thruDate));
@@ -124,9 +142,14 @@ public class HumanresService {
 	            	
 			List employementList = FastList.newInstance();        
 			try {
-				GenericValue org = delegator.findByPrimaryKey("PartyAndGroup", UtilMisc.toMap("partyId", orgPartyId));
 				Map<String, Object> inputParamMap = FastMap.newInstance();
-				inputParamMap.put("userLogin", userLogin);			
+				inputParamMap.put("userLogin", userLogin);	
+				GenericValue org = delegator.findByPrimaryKey("PartyAndGroup", UtilMisc.toMap("partyId", orgPartyId));
+				if(UtilValidate.isEmpty(org)){
+					org = delegator.findByPrimaryKey("Party", UtilMisc.toMap("partyId", orgPartyId));
+					inputParamMap.put("isGroup", false);
+				}
+						
 				inputParamMap.put("org", org);
 				inputParamMap.put("fromDate", fromDate);
 				inputParamMap.put("thruDate", thruDate);
@@ -134,9 +157,16 @@ public class HumanresService {
 			}catch(GenericEntityException e){
 	  			Debug.logError("Error fetching employments " + e.getMessage(), module);
 	  		}
+			List employeeIds = EntityUtil.getFieldListFromEntityList(employementList, "partyIdTo", true);
+			List tempEmployementList = FastList.newInstance();
+			for(int i=0;i<employeeIds.size();i++){
+				String employeeId = (String)employeeIds.get(i);
+				GenericValue tempEmployement = EntityUtil.getFirst(EntityUtil.filterByAnd(employementList,UtilMisc.toMap("partyIdTo",employeeId)));
+				tempEmployementList.add(tempEmployement);
+			}
 	    	Map result = FastMap.newInstance();  
-	    	result.put("employementList", employementList);
-	Debug.logInfo("result:" + result, module);		 
+	    	result.put("employementList", tempEmployementList);
+	    //Debug.logInfo("result:" + result, module);		 
 	    	return result;
 	    }    
 	
