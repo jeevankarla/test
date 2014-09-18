@@ -1289,6 +1289,17 @@ under the License.emplpunch
         <attribute name="amount" type="BigDecimal" mode="OUT" optional="false"/>
         <attribute name="priceInfos" type="List" mode="OUT" optional="true"/>       
     </service>
+    <service name="calculateAttendanceBonus" engine="java" auth="true" invoke="calculateAttendanceBonus" 
+        location="in.vasista.vbiz.humanres.PayrollService" validate="false">
+        <description>Calculate amunt for the given payhead type</description>
+        <attribute name="periodBillingId" mode="IN" type="String" optional="true"/>
+        <attribute name="payHeadTypeId" mode="IN" type="String"/> 
+        <attribute name="employeeId" mode="IN" type="String"/> 
+        <attribute name="timePeriodId" mode="IN" type="String"/>
+        <attribute name="amount" type="BigDecimal" mode="OUT" optional="false"/>
+        <attribute name="priceInfos" type="List" mode="OUT" optional="true"/>       
+    </service>
+    
     <service name="calculateLICPayHeadAmount" engine="java" auth="true" invoke="calculateLICPayHeadAmount" 
         location="in.vasista.vbiz.humanres.PayrollService" validate="false">
         <description>Calculate amunt for the given payhead type</description>

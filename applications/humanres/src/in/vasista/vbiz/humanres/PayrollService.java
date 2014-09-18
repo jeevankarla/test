@@ -2007,7 +2007,102 @@ public class PayrollService {
 	        // utilTimer.timerString("Finished price calc [productId=" + productId + "]", module);
 	        return result;
 	    }
-	    
+	    public static Map<String, Object> calculateAttendanceBonus(DispatchContext dctx, Map<String, ? extends Object> context) {
+
+	        Delegator delegator = dctx.getDelegator();
+	        LocalDispatcher dispatcher = dctx.getDispatcher();
+	        Map<String, Object> result = FastMap.newInstance();
+	        Timestamp nowTimestamp = UtilDateTime.nowTimestamp();
+	        GenericValue userLogin = (GenericValue) context.get("userLogin");
+	        String payHeadTypeId = (String) context.get("payHeadTypeId");
+	        String employeeId = (String) context.get("employeeId");
+	        String orgPartyId = (String) context.get("orgPartyId");
+	        Timestamp timePeriodStart = (Timestamp)context.get("timePeriodStart");
+			Timestamp timePeriodEnd = (Timestamp)context.get("timePeriodEnd");
+			String timePeriodId = (String) context.get("timePeriodId");
+	        Locale locale = (Locale) context.get("locale");
+	        BigDecimal amount = BigDecimal.ZERO;
+	        //Debug.log("in calculateShiftBasePayHeadAmount======");
+	        List priceInfos =FastList.newInstance();
+	        try{
+	        	Map input = FastMap.newInstance();
+	        	input.put("timePeriodId", timePeriodId);
+	        	input.put("timePeriodStart", timePeriodStart);
+	        	input.put("timePeriodEnd", timePeriodEnd);
+	        	Timestamp attdTimePeriodStart = timePeriodStart;
+	        	Timestamp attdTimePeriodEnd = timePeriodEnd;
+	        	
+	        	Map resultMap = getPayrollAttedancePeriod(dctx,input);
+	  	    	if(ServiceUtil.isError(resultMap)){
+	 	 	    	Debug.logError("Error in service findLastClosed Attedance Date ", module);    			
+	 	 		    return ServiceUtil.returnError("Error in service findLast Closed Attedance Date");
+	 	 	    }
+	  	    	//lastCloseAttedancePeriod = ((GenericValue)result.get("lastClosedTimePeriod"))
+	  	    	if(UtilValidate.isNotEmpty(resultMap.get("lastCloseAttedancePeriod"))){
+	  	    		GenericValue lastCloseAttedancePeriod = (GenericValue)resultMap.get("lastCloseAttedancePeriod");
+	  	    		attdTimePeriodStart = UtilDateTime.getDayStart(UtilDateTime.toTimestamp(lastCloseAttedancePeriod.getDate("fromDate")));
+	  	    		if(UtilDateTime.getIntervalInDays(attdTimePeriodStart, timePeriodStart) > 32){
+	  	    			Debug.logError("invalid  Attedance Period : "+lastCloseAttedancePeriod.getString("customTimePeriodId") +",startDate :"+ lastCloseAttedancePeriod.getDate("fromDate")+",endDate:"+lastCloseAttedancePeriod.getDate("thruDate"), module);    			
+		 	 		    return ServiceUtil.returnError("invalid  Attedance Period : "+lastCloseAttedancePeriod.getString("customTimePeriodId") +",startDate :"+ lastCloseAttedancePeriod.getDate("fromDate")+",endDate:"+lastCloseAttedancePeriod.getDate("thruDate"));
+	  	    		}
+	  	    		attdTimePeriodEnd = UtilDateTime.getDayEnd(UtilDateTime.toTimestamp(lastCloseAttedancePeriod.getDate("thruDate")));
+	  	    	}
+	  	    	input.clear();
+	    		input.put("userLogin", userLogin);
+	    		input.put("partyId", employeeId);
+	    		input.put("timePeriodStart", attdTimePeriodStart);
+	    		input.put("timePeriodEnd", attdTimePeriodEnd);
+	    		resultMap = EmplLeaveService.fetchLeaveDaysForPeriod(dctx, input);
+	    		if(ServiceUtil.isError(resultMap)){
+	    			Debug.logError(ServiceUtil.getErrorMessage(resultMap), module);
+	            	return ServiceUtil.returnError(ServiceUtil.getErrorMessage(resultMap), 
+	            			null, null, null);
+	    		}
+	    		Map leaveDetailmap = (Map)resultMap.get("leaveDetailmap");
+	    		StringBuilder priceInfoDescription = new StringBuilder();
+				priceInfoDescription.append(" \n ");
+	        	priceInfoDescription.append("\n \n[ Leave Details ::"+leaveDetailmap);
+				priceInfoDescription.append("  ]\n \n ");
+	        	Iterator tempIter = leaveDetailmap.entrySet().iterator();
+	        	Boolean bonusFlag = Boolean.TRUE;
+				
+	        	while (tempIter.hasNext()) {
+						Map.Entry tempEntry = (Entry) tempIter.next();
+						BigDecimal value = (BigDecimal)tempEntry.getValue();
+						String leaveTypeId = (String)tempEntry.getKey();
+						List excludeLeaveTypes = UtilMisc.toList("CH","CHGH","CHSS","RL");
+						if((!(excludeLeaveTypes.contains(leaveTypeId))) && value.compareTo(BigDecimal.ZERO) !=0){
+							bonusFlag = Boolean.FALSE;
+						}
+						
+					}
+	        	 Map employeePayrollAttedance = getEmployeePayrollAttedance(dctx,context);
+	        	 if(UtilValidate.isNotEmpty(employeePayrollAttedance) && ((Double)employeePayrollAttedance.get("lossOfPayDays")- (Double)employeePayrollAttedance.get("lateMin")) !=0 ){
+	        		 bonusFlag = Boolean.FALSE;
+	        	 }
+				if(bonusFlag){
+					Map condParms = FastMap.newInstance();
+					condParms.put("employeeId", employeeId);
+					condParms.put("otherCond", "NONE");
+					Map priceResultRuleCtx = FastMap.newInstance();
+                    priceResultRuleCtx.putAll(context);
+                    priceResultRuleCtx.put("condParms", condParms);
+                    Map<String, Object> calcResults = calculatePayHeadAmount(dctx,priceResultRuleCtx);
+					amount = (BigDecimal)calcResults.get("amount");
+					priceInfos.add(calcResults.get("priceInfos"));
+				}
+	        	priceInfos.add(priceInfoDescription);
+	            } catch (Exception e) {
+	                Debug.logError(e, "Error getting rules from the database while calculating price", module);
+	                return ServiceUtil.returnError(e.toString());
+	            }
+	        //end of price rules
+	           
+	          result.put("amount", amount);
+	          result.put("priceInfos", priceInfos);
+	        // utilTimer.timerString("Finished price calc [productId=" + productId + "]", module);
+	        return result;
+	    }
 	   public static Map<String, Object> calculateLICPayHeadAmount(DispatchContext dctx, Map<String, ? extends Object> context) {
 
 	        Delegator delegator = dctx.getDelegator();
@@ -2774,7 +2869,7 @@ public class PayrollService {
 	        	resultMap = HumanresService.getActiveEmployements(dctx,input);
 	        	List<GenericValue> employementList = (List<GenericValue>)resultMap.get("employementList");
 	        	//Debug.log("employementList============"+employementList.size());
-	        	//employementList = EntityUtil.filterByAnd(employementList, UtilMisc.toMap("partyIdTo","6728"));
+	            //employementList = EntityUtil.filterByAnd(employementList, UtilMisc.toMap("partyIdTo","7054"));
 	        	//general holidays in that period
 	        	input.clear();
 	    		input.put("userLogin", userLogin);
@@ -2927,7 +3022,8 @@ public class PayrollService {
 			    			Boolean shiftFalg = Boolean.FALSE;
 			    			if(UtilValidate.isNotEmpty(dayShiftList)){
 			    				for(GenericValue dayShift :dayShiftList){
-			    					if(UtilValidate.isEmpty(cDayLeaveFraction) && (UtilValidate.isEmpty(employeeDetail.getString("punchType"))||((UtilValidate.isNotEmpty(employeeDetail.getString("punchType")) && (!(employeeDetail.getString("punchType").equalsIgnoreCase("O")))))) && (!(emplWeeklyOffDay.equalsIgnoreCase(weekName)))){
+			    					if(UtilValidate.isEmpty(cDayLeaveFraction) && (UtilValidate.isEmpty(employeeDetail.getString("punchType"))||((UtilValidate.isNotEmpty(employeeDetail.getString("punchType")) 
+			    										&& (!(employeeDetail.getString("punchType").equalsIgnoreCase("O")))))) && (!(emplWeeklyOffDay.equalsIgnoreCase(weekName))) && UtilValidate.isEmpty(cHoliDayList) && (cTime.compareTo(secondSaturDay) != 0)){
 			    						if(UtilValidate.isNotEmpty(dayShift.getBigDecimal("overrideLateMin"))){
 				    						lossOfPayDays = lossOfPayDays+(((dayShift.getBigDecimal("overrideLateMin")).doubleValue())/480);
 				    						lateMin= lateMin+(((dayShift.getBigDecimal("overrideLateMin")).doubleValue())/480);
@@ -2946,6 +3042,16 @@ public class PayrollService {
 			    				List<GenericValue> inPunch = EntityUtil.filterByAnd(dayPunchList, UtilMisc.toMap("PunchType","Normal","InOut","IN"));
 			    				if((inPunch.size() >= 1) && (dayShifts.contains("SHIFT_NIGHT") || (UtilValidate.isNotEmpty(employeeDetail.getString("punchType")) && (employeeDetail.getString("punchType").equalsIgnoreCase("O"))))){
 			    					shiftFalg = Boolean.TRUE;
+			    				}else{
+			    					// if no night shift then ignore night shift punch outs ,since those are prevoius day shift related punchs
+			    					List tempCondList = FastList.newInstance();
+			    					tempCondList.add(EntityCondition.makeCondition(EntityCondition.makeCondition("shiftType",EntityOperator.EQUALS,"SHIFT_NIGHT"),EntityOperator.AND,
+	    									EntityCondition.makeCondition("InOut",EntityOperator.EQUALS,"OUT")));
+			    					EntityCondition tempCond = EntityCondition.makeCondition(tempCondList ,EntityOperator.AND);
+			    					List dayPunchNightList = EntityUtil.filterByCondition(dayPunchList,tempCond);
+			    					dayPunchList.removeAll(dayPunchNightList);
+			    					//Debug.log("ctime===="+cTime);
+			    					//Debug.log("dayPunchList==========="+dayPunchList);
 			    				}
 			    				/*// here handle multiple shifts on same day
 				    			if(UtilValidate.isNotEmpty(dayShifts) && dayShifts.size() >1){
@@ -2956,7 +3062,8 @@ public class PayrollService {
 			    			List encashmentStatusList = EntityUtil.getFieldListFromEntityList(dayShiftList, "encashmentStatus", true);
 			    			if((UtilValidate.isNotEmpty(dayPunchList) && dayPunchList.size() >=2) || shiftFalg){
 			    				if(!shiftFalg && (dayPunchList.size()%2) !=0){
-			    					// miss punch consider it as loss of pay
+			    					// mis punch consider it as loss of pay
+			    					//Debug.log("mis punch lossOfPayDays===="+cTime);
 			    					lossOfPayDays = lossOfPayDays+1;
 			    					c1.add(Calendar.DATE,1);
 			    					continue;
@@ -2979,6 +3086,7 @@ public class PayrollService {
 			    					 && UtilValidate.isEmpty(cHoliDayList) &&  UtilValidate.isEmpty(cDayLeaves)){
 			    				// no punch ,not weekly off ,not secondSaturDay, not general holiday  and no leave then consider it as lossOfPay
 			    				lossOfPayDays = lossOfPayDays+1;
+			    				//Debug.log("no punch lossOfPayDays===="+cTime);
 			    			}else if(UtilValidate.isNotEmpty(cDayLeaves) && UtilValidate.isNotEmpty(cDayLeaveFraction)){
 			    				lossOfPayDays = lossOfPayDays+0.5;
 			    			}
@@ -3020,8 +3128,8 @@ public class PayrollService {
 			    		resultMap = EmplLeaveService.fetchLeaveDaysForPeriod(dctx, input);
 			    		List<GenericValue> leavesList = (List)resultMap.get("leaves");
 			    		//input.put("leaveTypeId", "CML");
-			    		resultMap = EmplLeaveService.fetchLeaveDaysForPeriod(dctx, input);
-			    		leavesList.addAll((List)resultMap.get("leaves"));
+			    		//resultMap = EmplLeaveService.fetchLeaveDaysForPeriod(dctx, input);
+			    		//leavesList.addAll((List)resultMap.get("leaves"));
 			    		emplDailyAttendanceDetailList = delegator.findList("EmplDailyAttendanceDetail", condition, null,null, null, false);
 			    		if(UtilValidate.isNotEmpty(emplDailyAttendanceDetailList)){
 				    		for( GenericValue  emplDailyAttendanceDetail : emplDailyAttendanceDetailList){
