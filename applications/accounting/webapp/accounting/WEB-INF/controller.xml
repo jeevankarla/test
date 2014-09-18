@@ -726,6 +726,10 @@ under the License.
         <security https="true" auth="true"/>
         <response name="success" type="view" value="CreateAcctgTransAndEntries"/>
     </request-map>
+    <request-map uri="CreateAcctgTransAndEntriesNew">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="CreateAcctgTransAndEntriesNew"/>
+    </request-map>
     <request-map uri="EditAcctgTrans">
         <security https="true" auth="true"/>
         <response name="success" type="view" value="EditAcctgTrans"/>
@@ -757,11 +761,35 @@ under the License.
         <response name="success" type="view" value="EditAcctgTrans"/>
         <response name="error" type="view" value="EditAcctgTrans"/>
     </request-map>
+    <request-map uri="updateAcctgTransHeader">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="updateAcctgTrans"/>
+        <response name="success" type="view" value="CreateAcctgTransAndEntriesNew"/>
+        <response name="error" type="view" value="CreateAcctgTransAndEntriesNew"/>
+    </request-map>
+    <request-map uri="createAcctgTransHeader">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="createAcctgTrans"/>
+        <response name="success" type="view" value="CreateAcctgTransAndEntriesNew"/>
+        <response name="error" type="view" value="CreateAcctgTransAndEntriesNew"/>
+    </request-map>
     <request-map uri="createAcctgTransEntry">
         <security https="true" auth="true"/>
         <event type="service" invoke="createAcctgTransEntry"/>
         <response name="success" type="view" value="EditAcctgTrans"/>
         <response name="error" type="view" value="EditAcctgTrans"/>
+    </request-map>
+    <request-map uri="createAcctgTransEntryService">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="createAcctgTransEntry"/>
+        <response name="success" type="view" value="CreateAcctgTransAndEntriesNew"/>
+        <response name="error" type="view" value="CreateAcctgTransAndEntriesNew"/>
+    </request-map>
+    <request-map uri="updateAcctgTransEntryService">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="updateAcctgTransEntry"/>
+        <response name="success" type="view" value="CreateAcctgTransAndEntriesNew"/>
+        <response name="error" type="view" value="CreateAcctgTransAndEntriesNew"/>
     </request-map>
     <request-map uri="FindAcctgTransEntries">
         <security https="true" auth="true"/>
@@ -780,6 +808,12 @@ under the License.
         <response name="success" type="view" value="EditAcctgTrans"/>
         <response name="error" type="view" value="EditAcctgTrans"/>
     </request-map>
+    <request-map uri="deleteAcctgTransEntryService">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="deleteAcctgTransEntry"/>
+        <response name="success" type="view" value="CreateAcctgTransAndEntriesNew"/>
+        <response name="error" type="view" value="CreateAcctgTransAndEntriesNew"/>
+    </request-map>
     <request-map uri="newAcctgTrans">
         <security https="true" auth="true"/>
         <response name="success" type="view" value="NewAcctgTrans"/>
@@ -790,7 +824,7 @@ under the License.
         <response name="success" type="view" value="EditAcctgTrans"/>
         <response name="error" type="view" value="NewAcctgTrans"/>
     </request-map>
-
+	
     <request-map uri="copyAcctgTransAndEntries">
         <security https="true" auth="true"/>
         <event type="service" invoke="copyAcctgTransAndEntries"/>
@@ -3478,6 +3512,7 @@ under the License.
     <view-map name="PartyAccountsSummary" type="screen" page="component://accounting/widget/GlScreens.xml#PartyAccountsSummary"/>
     <view-map name="FindAcctgTrans" type="screen" page="component://accounting/widget/GlScreens.xml#FindAcctgTrans"/>
     <view-map name="CreateAcctgTransAndEntries" type="screen" page="component://accounting/widget/GlScreens.xml#CreateAcctgTransAndEntries"/>
+    <view-map name="CreateAcctgTransAndEntriesNew" type="screen" page="component://accounting/widget/GlScreens.xml#CreateAcctgTransAndEntriesNew"/>
     <view-map name="EditAcctgTrans" type="screen" page="component://accounting/widget/GlScreens.xml#EditAcctgTrans"/>
     <view-map name="FindAcctgTransEntries" type="screen" page="component://accounting/widget/GlScreens.xml#FindAcctgTransEntries"/>
     <view-map name="ListUnpostedAcctgTrans" type="screen" page="component://accounting/widget/GlScreens.xml#ListUnpostedAcctgTrans"/>

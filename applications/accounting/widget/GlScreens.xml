@@ -161,9 +161,14 @@
 													</link> -->
 												<link
 													text="${uiLabelMap.AccountingCreateAnAccountingTransaction}"
+													style="buttontext" target="CreateAcctgTransAndEntriesNew">
+													<parameter param-name="organizationPartyId" />
+												</link>	
+												<!-- <link
+													text="${uiLabelMap.AccountingCreateAnAccountingTransaction}"
 													style="buttontext" target="CreateAcctgTransAndEntries">
 													<parameter param-name="organizationPartyId" />
-												</link>
+												</link> -->
 												<link text="${uiLabelMap.PageTitleUnpostedTransactions}"
 													style="buttontext" target="ListUnpostedAcctgTrans">
 													<parameter param-name="organizationPartyId" />
@@ -462,6 +467,131 @@ reportType:byAccount -->
 		</section>
 	</screen>
 
+	<screen name="CreateAcctgTransAndEntriesNew">
+		<section>
+			<actions>
+				<property-map resource="AccountingUiLabels" map-name="uiLabelMap"
+					global="true" />
+				<set field="titleProperty" value="PageTitleEditTransaction" />
+				<set field="tabButtonItem" value="FindAcctgTrans" />
+				<set field="organizationPartyId" from-field="parameters.organizationPartyId"
+					global="true" />
+				<set field="acctgTransId" from-field="parameters.acctgTransId" />
+				<service service-name="acctgTransactionPermissionCheck"
+					result-map="permResult">
+					<field-map field-name="mainAction" value="EDIT" />
+				</service>
+				<set field="hasAcctgAtxEditPermission" from-field="permResult.hasPermission" />
+				<entity-one entity-name="AcctgTrans" value-field="acctgTrans" />
+				<entity-one entity-name="AcctgTransEntry" value-field="acctgTransEntry">
+					<field-map field-name="acctgTransId" />
+					<field-map field-name="acctgTransEntrySeqId"
+						from-field="parameters.editAcctgTransEntrySeqId" />
+				</entity-one>
+				<entity-and entity-name="AcctgTransEntry" list="acctgTransEntries">
+					<field-map field-name="acctgTransId" />
+					<order-by field-name="acctgTransEntrySeqId" />
+				</entity-and>
+				<service service-name="acctgTransactionPermissionCheck"
+					result-map="permResult">
+					<field-map field-name="mainAction" value="VIEW" />
+				</service>
+				<set field="hasAcctgAtxViewPermission" from-field="permResult.hasPermission" />
+			</actions>
+			<widgets>
+				<decorator-screen name="CommonPartyAccountingTransactionDecorator" location="${parameters.partyGlDecoratorLocation}">
+					<decorator-section name="body">
+						<section>
+							<condition>
+								<if-compare operator="equals" value="true" field="hasAcctgAtxViewPermission" />
+							</condition>
+							<widgets>
+								<section>
+									<condition>
+										<and>
+											<if-compare operator="equals" value="true" field="hasAcctgAtxEditPermission" />
+											<!-- <not>
+												<if-empty field="acctgTransId" />
+											</not> -->
+										</and>
+									</condition>
+									<widgets>
+										<include-menu	location="component://accounting/widget/AccountingMenus.xml"
+											name="EditGlAcctgTransSubTabBar" />
+										<section>
+											<condition>
+												<if-compare field="acctgTrans.isPosted" operator="equals"
+													value="Y" />
+											</condition>
+											<widgets>
+												<screenlet title="${uiLabelMap.PageTitleViewTransaction}">
+													<include-form name="ViewAcctgTrans"
+														location="component://accounting/widget/GlForms.xml" />
+												</screenlet>
+												<screenlet title="${uiLabelMap.PageTitleViewTransactionEntries}">
+													<include-form name="ViewAcctgTransEntries"
+														location="component://accounting/widget/GlForms.xml" />
+												</screenlet>
+											</widgets>
+											<fail-widgets>
+												<section>
+													<condition >
+														<and>
+															<if-compare operator="equals" value="true" field="hasAcctgAtxEditPermission" />
+															<not>
+																<if-empty field="acctgTransId" />
+															</not>
+														</and>
+													</condition>
+													<widgets>
+														<screenlet title="${uiLabelMap.PageTitleEditTransaction}">
+															<include-form name="EditAcctgTransNew" location="component://accounting/widget/GlForms.xml" />
+														</screenlet>
+														<screenlet title="${uiLabelMap.PageTitleEditTransactionEntries}">
+															<include-form name="ListAcctgTransEntriesNew" location="component://accounting/widget/GlForms.xml" />
+														</screenlet>
+														<screenlet title="${uiLabelMap.PageTitleAddTransactionEntry}">
+															<include-form name="EditAcctgTransEntryNew"	location="component://accounting/widget/GlForms.xml" />
+														</screenlet>	
+													</widgets>
+													<fail-widgets>
+														<screenlet title="${uiLabelMap.PageTitleEditTransaction}">
+															<include-form name="EditAcctgTransNew" location="component://accounting/widget/GlForms.xml" />
+														</screenlet>
+													</fail-widgets>
+												</section>
+											</fail-widgets>
+										</section>
+									</widgets>
+									<fail-widgets>
+										<section>
+
+											<widgets>
+												<screenlet title="${uiLabelMap.PageTitleViewTransaction}">
+													<include-form name="ViewAcctgTrans"
+														location="component://accounting/widget/GlForms.xml" />
+												</screenlet>
+												<screenlet title="${uiLabelMap.PageTitleViewTransactionEntries}">
+													<include-form name="ViewAcctgTransEntries"
+														location="component://accounting/widget/GlForms.xml" />
+												</screenlet>
+											</widgets>
+
+										</section>
+									</fail-widgets>
+								</section>
+							</widgets>
+							<fail-widgets>
+								<label style="h3"
+									text="${uiLabelMap.AccountingTransactionPermissionError}" />
+							</fail-widgets>
+						</section>
+					</decorator-section>
+				</decorator-screen>
+			</widgets>
+		</section>
+	</screen>
+	
 	<screen name="EditAcctgTrans">
 		<section>
 			<actions>

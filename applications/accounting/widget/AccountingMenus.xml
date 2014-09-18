@@ -1067,8 +1067,13 @@
 			</link>
 		</menu-item> -->
 		<menu-item name="acctgTransDetailReportPdf">
-			<link text="${uiLabelMap.CommonPdf}" style="buttontext"
-				target="acctgTransDetailReportPdf.pdf">
+			<condition>
+				<not>
+					<if-empty field="acctgTransId" />
+				</not>
+				
+			</condition>
+			<link text="${uiLabelMap.CommonPdf}" style="buttontext"	target="acctgTransDetailReportPdf.pdf">
 				<parameter param-name="acctgTransId" />
 			</link>
 		</menu-item>
