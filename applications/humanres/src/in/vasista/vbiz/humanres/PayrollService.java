@@ -2192,6 +2192,7 @@ public class PayrollService {
 	        	condList.add(EntityCondition.makeCondition("partyId",EntityOperator.EQUALS, employeeId));
 	        	condList.add(EntityCondition.makeCondition("payHeadTypeId",EntityOperator.EQUALS, payHeadTypeId));
 	        	condList.add(EntityCondition.makeCondition("disbDate", EntityOperator.LESS_THAN_EQUAL_TO, timePeriodStart));
+	        	condList.add(EntityCondition.makeCondition("statusId" ,EntityOperator.EQUALS ,"LOAN_DISBURSED"));
 	        	condList.add(EntityCondition.makeCondition(EntityCondition.makeCondition("setlDate", EntityOperator.EQUALS, null), EntityOperator.OR, 
 			        		EntityCondition.makeCondition("setlDate", EntityOperator.GREATER_THAN_EQUAL_TO, timePeriodEnd)));
 	        	EntityCondition cond = EntityCondition.makeCondition(condList,EntityOperator.AND);
@@ -2945,9 +2946,8 @@ public class PayrollService {
 	        			inputMap.put("userLogin", userLogin);
 	        			inputMap.put("orgPartyId", employeeId);
 	        			inputMap.put("fromDate", UtilDateTime.addDaysToTimestamp(employementThruDate,1));
-	    	        	resultMap = HumanresService.getActiveEmployements(dctx,input);
+	    	        	resultMap = HumanresService.getActiveEmployements(dctx,inputMap);
 	    	        	List<GenericValue> empEmployementList = (List<GenericValue>)resultMap.get("employementList");
-	    	        	Debug.log("empEmployementList==========="+empEmployementList.size());
 	    	        	GenericValue empEmployement = EntityUtil.getFirst(empEmployementList);
 	    	        	if(UtilValidate.isEmpty(empEmployement)){
 	    	        		noOfEmployementDays = new BigDecimal(UtilDateTime.getIntervalInDays(timePeriodStart, employementThruDate)+1);
