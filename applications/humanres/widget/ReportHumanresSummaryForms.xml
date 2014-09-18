@@ -723,7 +723,7 @@
 	    <field name="shiftType" title="Shift Type"><display/></field>
 	    <field name="seqId"><hidden/></field>
 	    <field name="lateMin" title="Late Minutes"><display/></field>
-	    <field name="customTimePeriodId"><hidden/></field>
+	    <field name="timePeriodId"><hidden/></field>
 	    <field name="overrideLateMin" title="Edit Late Minutes"><text size="10"/></field>
 	    <field name="overrideReason" title="Remarks" required-field="true" widget-style="required">
 	    	<drop-down allow-empty="true">
@@ -803,7 +803,7 @@
     	<field name="noOfPayableDays"><display></display></field> 
     	<field name="noOfArrearDays" title="Arrear Days"><text size="10"></text></field>
     	<field name="lossOfPayDays" use-when="punchType!=null &amp;&amp; punchType.equals(&quot;N&quot;) &amp;&amp; ${groovy:((security.hasEntityPermission(&quot;EMP_LOP_EDIT&quot;, &quot;_UPDATE&quot;,session)))}"><text size="10"></text></field>
-    	<!-- <field name="lateMin" use-when="${groovy:((security.hasEntityPermission(&quot;EMP_LATEMIN_EDIT&quot;, &quot;_UPDATE&quot;,session)))}" title="Approve Late Min" ><text size="10"></text></field> -->
+    	<field name="lateMin" use-when="${groovy:((security.hasEntityPermission(&quot;EMP_LATEMIN_EDIT&quot;, &quot;_UPDATE&quot;,session)))}" title="Approve Late Min" ><text size="10"></text></field>
     	<field name="noOfAttendedSsDays" use-when="${groovy:((security.hasEntityPermission(&quot;EMP_GHSS_EDIT&quot;, &quot;_UPDATE&quot;,session)))}" title="Availed SS Days" ><text size="10"></text></field>
     	<field name="noOfAttendedHoliDays" use-when="${groovy:((security.hasEntityPermission(&quot;EMP_GHSS_EDIT&quot;, &quot;_UPDATE&quot;,session)))}" title="Availed GH Days" ><text size="10"></text></field>
     	 <field name="submitButton" title="${uiLabelMap.CommonUpdate}"><submit button-type="button"/></field>

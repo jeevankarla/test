@@ -3305,8 +3305,8 @@ public class PayrollService {
 	      BigDecimal noOfAttendedSsDays=(BigDecimal)context.get("noOfAttendedSsDays");
 	      BigDecimal noOfAttendedHoliDays=(BigDecimal)context.get("noOfAttendedHoliDays");
 	      Map result = ServiceUtil.returnSuccess();
-	      /*BigDecimal lateMin=(BigDecimal)context.get("lateMin");
-	      lateMin = lateMin.divide(BigDecimal.valueOf(480), 4, BigDecimal.ROUND_HALF_UP);*/
+	      BigDecimal lateMin=(BigDecimal)context.get("lateMin");
+	      lateMin = lateMin.divide(BigDecimal.valueOf(480), 4, BigDecimal.ROUND_HALF_UP);
 	      try{
 	      			List conditionLis=FastList.newInstance();
 	      			conditionLis.add(EntityCondition.makeCondition("customTimePeriodId",EntityOperator.EQUALS,timePeriodId));
@@ -3361,7 +3361,7 @@ public class PayrollService {
       							employPayrollDetails.set("noOfAttendedHoliDays",noOfAttendedHoliDays);
       							employPayrollDetails.store();
 	      					}
-	      					/*if(UtilValidate.isNotEmpty(lateMin) && lateMin.compareTo(BigDecimal.ZERO)>=0){
+	      					if(UtilValidate.isNotEmpty(lateMin) && lateMin.compareTo(BigDecimal.ZERO)>=0){
 	      						BigDecimal empLateMin=employPayrollDetails.getBigDecimal("lateMin");
 	      						if(UtilValidate.isEmpty(empLateMin)){
 	      							empLateMin = BigDecimal.ZERO;
@@ -3371,7 +3371,7 @@ public class PayrollService {
 	      						employPayrollDetails.set("noOfPayableDays",noOfPayableDays);
 	      						employPayrollDetails.set("lateMin",lateMin);
 	      						employPayrollDetails.store();
-	      					}*/
+	      					}
 	    	      	}
 	      		} catch (GenericEntityException e) {
 	      			Debug.logError(e, module);
@@ -3410,26 +3410,9 @@ public class PayrollService {
 	      String encashmentStatus=(String) context.get("encashmentStatus");
 	      BigDecimal overrideLateMin=(BigDecimal)context.get("overrideLateMin");
 	      Map result = ServiceUtil.returnSuccess();
-	      
-	      try{
-  				String userId= (String) userLogin.get("userLoginId");
-  				List conditionList = FastList.newInstance();
-  				conditionList.add(EntityCondition.makeCondition("partyId", EntityOperator.EQUALS ,partyId));
-  				conditionList.add(EntityCondition.makeCondition("date", EntityOperator.EQUALS , date));
-  				EntityCondition condition=EntityCondition.makeCondition(conditionList,EntityOperator.AND); 		
-  				List<GenericValue> EmplDailyAttendanceDetail = delegator.findList("EmplDailyAttendanceDetail", condition, null, null, null, false);
-  				for (int i = 0; i < EmplDailyAttendanceDetail.size(); ++i) {
-  					GenericValue DailyAttendanceDetail = EmplDailyAttendanceDetail.get(i);
-  					DailyAttendanceDetail.set("overrideLateMin",overrideLateMin);
-  					DailyAttendanceDetail.set("overrideReason",overrideReason);
-  					DailyAttendanceDetail.set("overridenBy", userId);
-  					DailyAttendanceDetail.store();
-  				}
-  		} catch (GenericEntityException e) {
-  				Debug.logError(e, module);
-  				return ServiceUtil.returnError(e.toString());
-  			}
   		try{
+  			
+  			String userId= (String) userLogin.get("userLoginId");
   			
   			List conditionLis=FastList.newInstance();
   			conditionLis.add(EntityCondition.makeCondition("customTimePeriodId",EntityOperator.EQUALS,timePeriodId));
@@ -3444,7 +3427,13 @@ public class PayrollService {
   				List<GenericValue> EmplDailyAttendanceDetail = delegator.findList("EmplDailyAttendanceDetail", condition, null, null, null, false);
   				for (int i = 0; i < EmplDailyAttendanceDetail.size(); ++i) {
   					GenericValue DailyAttendanceDetail = EmplDailyAttendanceDetail.get(i);
-  					DailyAttendanceDetail.set("encashmentStatus",encashmentStatus);
+  					if(UtilValidate.isNotEmpty(encashmentStatus))
+  						DailyAttendanceDetail.set("encashmentStatus",encashmentStatus);
+  					if(UtilValidate.isNotEmpty(overrideLateMin)){
+	  					DailyAttendanceDetail.set("overrideLateMin",overrideLateMin);
+	  					DailyAttendanceDetail.set("overrideReason",overrideReason);
+	  					DailyAttendanceDetail.set("overridenBy", userId);
+  					}
   					DailyAttendanceDetail.store();
   				}
 		  	}
@@ -3461,6 +3450,36 @@ public class PayrollService {
   		return result;
   		
   	}
+	 
+	 
+	/*public static  Map<String, Object>getCustomTimePeriodId(DispatchContext dctx, Map context) {
+		 	GenericValue userLogin = (GenericValue) context.get("userLogin");
+		 	Date date =  (Date)context.get("date");
+	        Delegator delegator = dctx.getDelegator();
+	        Timestamp dateTime = UtilDateTime.toTimestamp(date);
+	    	Timestamp dateStart = UtilDateTime.getDayStart(dateTime);
+	    	Timestamp dateEnd = UtilDateTime.getDayEnd(dateTime);
+	        FastMap result = FastMap.newInstance();
+	        String customTimePeriodId = null;
+	        try {
+	        	
+	        	List condList = FastList.newInstance();
+				condList.add(EntityCondition.makeCondition("periodTypeId", EntityOperator.EQUALS ,"HR_MONTH"));
+				condList.add(EntityCondition.makeCondition("fromDate", EntityOperator.LESS_THAN_EQUAL_TO,new java.sql.Date(dateStart.getTime())));
+				condList.add(EntityCondition.makeCondition("thruDate", EntityOperator.GREATER_THAN_EQUAL_TO, new java.sql.Date(dateEnd.getTime())));
+				EntityCondition cond = EntityCondition.makeCondition(condList,EntityOperator.AND); 	
+				List<GenericValue> customTimePeriodList = delegator.findList("CustomTimePeriod", cond, null, null, null, false);
+				if(UtilValidate.isNotEmpty(customTimePeriodList)){
+					GenericValue customTimePeriod = EntityUtil.getFirst(customTimePeriodList);
+					customTimePeriodId = customTimePeriod.getString("customTimePeriodId");
+				}
+                result.put("customTimePeriodId", customTimePeriodId);
+	        }
+	        catch (GenericEntityException e) {
+	            Debug.logError(e, "Error retrieving CustomTimePeriodId");
+	        }        
+	        return result;
+}*/
 			
 
 }//end of service

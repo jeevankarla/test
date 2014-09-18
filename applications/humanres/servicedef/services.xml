@@ -103,6 +103,7 @@ under the License.emplpunch
     	<description>Upadate Late Minutes</description>
     	<permission-service service-name="humanResManagerPermission" main-action="EMPLOYEE_EDIT"/>
 		<auto-attributes mode="IN" include="pk" optional="false"/>
+		<attribute name="timePeriodId" mode="IN" type="String" optional="false"></attribute>
         <auto-attributes mode="IN" include="nonpk" optional="true"/>  
     </service>
 	<service name="updatEncashmentStatus" engine="java" default-entity-name="EmplDailyAttendanceDetail"
