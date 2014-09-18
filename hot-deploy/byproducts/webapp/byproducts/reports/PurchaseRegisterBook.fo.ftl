@@ -27,7 +27,7 @@ under the License.
                 <fo:region-after extent="1in"/>
             </fo:simple-page-master>
         </fo:layout-master-set>
-        ${setRequestAttribute("OUTPUT_FILENAME", "IceCreamSalesReport.pdf")}
+        ${setRequestAttribute("OUTPUT_FILENAME", "PurchaseRegisterBookReport.pdf")}
         <#if errorMessage?has_content>
 	<fo:page-sequence master-reference="main">
 	<fo:flow flow-name="xsl-region-body" font-family="Helvetica">
@@ -45,22 +45,23 @@ under the License.
                 	<fo:block text-align="center"  keep-together="always"  white-space-collapse="false" font-weight="bold">PURCHASE REGISTER REPORT</fo:block>
           			<fo:block text-align="left"  keep-together="always"  font-family="Courier,monospace" font-weight="bold" white-space-collapse="false"> UserLogin:<#if userLogin?exists>${userLogin.userLoginId?if_exists}</#if>               &#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;Print Date :${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(nowTimestamp, "dd/MM/yy HH:mm:ss")}</fo:block>
           			<fo:block>------------------------------------------------------------------------------------------------------------------------------------------------</fo:block>
-            	    <fo:block text-align="left" font-weight="bold" font-size="12pt" keep-together="always" font-family="Courier,monospace" white-space-collapse="false">Invoice     	Invoice       	Retailer Name        				Ex-Tax    										ED             		VAT(Rs)   		   C.S.T(Rs)      		Total(Rs)      TIN</fo:block>
-        			<fo:block text-align="left" font-weight="bold" font-size="12pt" keep-together="always" font-family="Courier,monospace" white-space-collapse="false">Date        	Number              			                	Value(Rs)    		  		Value(Rs)     																	  																&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;Number</fo:block>
+            	    <fo:block text-align="left" font-weight="bold" font-size="12pt" keep-together="always" font-family="Courier,monospace" white-space-collapse="false">Invoice        	Retailer Name    		 Ex-Tax    					ED            VAT      			C.S.T          	Freight    			Discount   				Total    					TIN</fo:block>
+        			<fo:block text-align="left" font-weight="bold" font-size="12pt" keep-together="always" font-family="Courier,monospace" white-space-collapse="false">Number        	              			 			Value     				Value   							    																						Pack,Forwdg																																	Number</fo:block>
 	        		<fo:block>------------------------------------------------------------------------------------------------------------------------------------------------</fo:block>
             	</fo:static-content>	        	
 	        	<fo:flow flow-name="xsl-region-body"   font-family="Courier,monospace">		
         			<fo:block>
         				<fo:table>
 		                    <fo:table-column column-width="100pt"/>
-		                    <fo:table-column column-width="65pt"/>
-		                    <fo:table-column column-width="140pt"/> 
-		               	    <fo:table-column column-width="140pt"/>
-		            		<fo:table-column column-width="130pt"/> 		
-		            		<fo:table-column column-width="120pt"/>
+		                    <fo:table-column column-width="70pt"/>
+		                    <fo:table-column column-width="130pt"/> 
+		               	    <fo:table-column column-width="90pt"/>
+		            		<fo:table-column column-width="110pt"/> 		
+		            		<fo:table-column column-width="100pt"/>
 		            		<fo:table-column column-width="110pt"/>
-		            		<fo:table-column column-width="125pt"/>
-		            		<fo:table-column column-width="95pt"/>
+		            		<fo:table-column column-width="105pt"/>
+		            		<fo:table-column column-width="105pt"/>
+		            		<fo:table-column column-width="130pt"/>
 		                    <fo:table-body>
 		                    <#assign invoiceDetails = invoiceMap.entrySet()>
 		                    <#assign totalBasicRev=0>
@@ -68,19 +69,41 @@ under the License.
 		                    <#assign totalVatRev=0>
 		                    <#assign totalCstRev=0>
 		                    <#assign totalRevenue=0>
+		                    <#assign totalFreightAmount=0>
+		                    <#assign totalDiscountAmount=0>
+		                    <#assign totalAmount=0>
+		                    
        							<#list invoiceDetails as invoiceDet>
        							<#assign totalBasicRev=totalBasicRev+invoiceDet.getValue().get("basicRevenue")?if_exists>
        							<#assign totalBedRev=totalBedRev+invoiceDet.getValue().get("bedRevenue")?if_exists>
        							<#assign totalVatRev=totalVatRev+invoiceDet.getValue().get("vatRevenue")?if_exists>
        							<#assign totalCstRev=totalCstRev+invoiceDet.getValue().get("cstRevenue")?if_exists>
        							<#assign totalRevenue=totalRevenue+invoiceDet.getValue().get("totalRevenue")?if_exists>
-       							
+       							<#assign totalFreightAmount=totalFreightAmount+invoiceDet.getValue().get("freightAmount")?if_exists>
+       							<#assign totalDiscountAmount=totalDiscountAmount+invoiceDet.getValue().get("discountAmount")?if_exists>
+       							<#assign totalAmount=totalAmount+invoiceDet.getValue().get("grandTotal")?if_exists>
        							<fo:table-row>
-					                    <fo:table-cell>
-							            	<fo:block  keep-together="always" text-align="left" font-size="12pt" white-space-collapse="false" >${invoiceDet.getValue().get("invoiceDate")?if_exists}</fo:block>  
-							            </fo:table-cell>
+       								<fo:table-cell>
+							            <fo:block  keep-together="always" font-weight = "bold" text-align="left" font-size="12pt" white-space-collapse="false" >${invoiceDet.getValue().get("invoiceDate")?if_exists}</fo:block>  
+							         </fo:table-cell>
+							         <fo:table-cell number-columns-spanned="2">
+							            <fo:block  keep-together="always" text-align="left" font-size="12pt" font-weight = "bold" white-space-collapse="false" >MRR NUMBER: ${invoiceDet.getValue().get("mrrNumber")?if_exists}</fo:block>  
+							         </fo:table-cell>
+							         <fo:table-cell number-columns-spanned="2">
+							            <fo:block  keep-together="always" text-align="left" font-size="12pt" font-weight = "bold" white-space-collapse="false" >PO NUMBER: ${invoiceDet.getValue().get("poNumber")?if_exists}</fo:block>  
+							         </fo:table-cell>
+							         <fo:table-cell>
+							            <fo:block  keep-together="always" text-align="left" font-size="12pt" font-weight = "bold" white-space-collapse="false" >SUP INVOICE NUMBER: ${invoiceDet.getValue().get("supInvNumber")?if_exists}</fo:block>  
+							         </fo:table-cell>
+							    </fo:table-row>
+							    <fo:table-row> 
+							      <fo:table-cell>   						
+									<fo:block>------------------------------------------------------------------------------------------------------------------------------------------------</fo:block>
+          						  </fo:table-cell>
+          						</fo:table-row>
+       							<fo:table-row>
 							             <fo:table-cell>
-							            	<fo:block  keep-together="always" text-align="left" font-size="12pt" white-space-collapse="false" >${invoiceDet.getKey()?if_exists}</fo:block>  
+							            	<fo:block  keep-together="always" font-weight = "bold" text-align="left" font-size="12pt" white-space-collapse="false" >${invoiceDet.getKey()?if_exists}</fo:block>  
 							            </fo:table-cell>
 							             <fo:table-cell>
 							            	<fo:block   text-align="left" font-size="12pt" white-space-collapse="false" >${invoiceDet.getValue().get("partyName")?if_exists}</fo:block>  
@@ -98,24 +121,27 @@ under the License.
 							            	<fo:block  keep-together="always" text-align="right" font-size="12pt" white-space-collapse="false" >${invoiceDet.getValue().get("cstRevenue")?if_exists?string("#0.00")}</fo:block>  
 							            </fo:table-cell>
 							            <fo:table-cell>
-							            	<fo:block  keep-together="always" text-align="right" font-size="12pt" white-space-collapse="false" >${invoiceDet.getValue().get("totalRevenue")?if_exists?string("#0.00")}</fo:block>  
+							            	<fo:block  keep-together="always" text-align="right" font-size="12pt" white-space-collapse="false" >${invoiceDet.getValue().get("freightAmount")?if_exists?string("#0.00")}</fo:block>  
 							            </fo:table-cell>
 							            <fo:table-cell>
-							            	<fo:block  keep-together="always" text-align="right" font-size="12pt" white-space-collapse="false" >${invoiceDet.getValue().get("idValue")?if_exists}</fo:block>  
+							            	<fo:block  keep-together="always" text-align="right" font-size="12pt" white-space-collapse="false" >${invoiceDet.getValue().get("discountAmount")?if_exists?string("#0.00")}</fo:block>  
+							            </fo:table-cell>
+							            <fo:table-cell>
+							            	<fo:block  keep-together="always" text-align="right" font-size="12pt" white-space-collapse="false" >${invoiceDet.getValue().get("grandTotal")?if_exists?string("#0.00")}</fo:block>  
+							            </fo:table-cell>
+							            <fo:table-cell>
+							            	<fo:block  keep-together="always" text-align="center" font-size="12pt" white-space-collapse="false" >${invoiceDet.getValue().get("tinNumber")?if_exists}</fo:block>  
 							            </fo:table-cell>
 							     </fo:table-row>
-								</#list>
-								<fo:table-row> 
+							     <fo:table-row> 
 							      <fo:table-cell>   						
 									<fo:block>------------------------------------------------------------------------------------------------------------------------------------------------</fo:block>
           						  </fo:table-cell>
-          						  </fo:table-row> 
+          						  </fo:table-row>
+								</#list>
 								<fo:table-row>
 					                    <fo:table-cell>
-							            	<fo:block  keep-together="always" text-align="left" font-size="12pt" white-space-collapse="false" font-weight="bold">Total</fo:block>  
-							            </fo:table-cell>
-							             <fo:table-cell>
-							            	<fo:block  keep-together="always" text-align="right" font-size="12pt" white-space-collapse="false" font-weight="bold"></fo:block>  
+							            	<fo:block  keep-together="always" text-align="left" font-size="12pt" white-space-collapse="false" font-weight="bold">Grand Total</fo:block>  
 							            </fo:table-cell>
 							             <fo:table-cell>
 							            	<fo:block  keep-together="always" text-align="right" font-size="12pt" white-space-collapse="false" font-weight="bold"></fo:block>  
@@ -133,7 +159,13 @@ under the License.
 							            	<fo:block  keep-together="always" text-align="right" font-size="12pt" white-space-collapse="false" font-weight="bold">${totalCstRev?if_exists?string("#0.00")}</fo:block>  
 							            </fo:table-cell>
 							            <fo:table-cell>
-							            	<fo:block  keep-together="always" text-align="right" font-size="12pt" white-space-collapse="false" font-weight="bold">${totalRevenue?if_exists?string("#0.00")}</fo:block>  
+							            	<fo:block  keep-together="always" text-align="right" font-size="12pt" white-space-collapse="false" font-weight="bold">${totalFreightAmount?if_exists?string("#0.00")}</fo:block>  
+							            </fo:table-cell>
+							            <fo:table-cell>
+							            	<fo:block  keep-together="always" text-align="right" font-size="12pt" white-space-collapse="false" font-weight="bold">${totalDiscountAmount?if_exists?string("#0.00")}</fo:block>  
+							            </fo:table-cell>
+							            <fo:table-cell>
+							            	<fo:block  keep-together="always" text-align="right" font-size="12pt" white-space-collapse="false" font-weight="bold">${totalAmount?if_exists?string("#0.00")}</fo:block>  
 							            </fo:table-cell>
 							     </fo:table-row>
 								<fo:table-row> 
@@ -141,7 +173,12 @@ under the License.
 									<fo:block>------------------------------------------------------------------------------------------------------------------------------------------------</fo:block>
           						  </fo:table-cell>
           						  </fo:table-row>
-          						  <#assign totalVat = 0>
+          						  <fo:table-row> 
+							      <fo:table-cell>   						
+									<fo:block keep-together="always" font-weight = "bold" font-style="italic">*All figures are in Rupees.</fo:block>
+          						  </fo:table-cell>
+          						  </fo:table-row>
+          						  <#--<#assign totalVat = 0>
           						  <#if vatMap?has_content> 
           						  <#assign vatList = vatMap.entrySet()>
           						  <#list vatList as vat>
@@ -169,7 +206,7 @@ under the License.
 							            	<fo:block  keep-together="always" text-align="right" font-size="12pt" white-space-collapse="false" font-weight="bold">${totalVat?if_exists?string("#0.00")}</fo:block>  
 							         </fo:table-cell>
           						  </fo:table-row>
-          						  </#if>
+          						  </#if>-->
 								<fo:table-row> 
 							      <fo:table-cell number-columns-spanned="2" >   						
 							 	      <fo:block linefeed-treatment="preserve">&#xA;</fo:block>  
@@ -199,6 +236,20 @@ under the License.
 							 	   </fo:table-cell>
 							 </fo:table-row>	
 							<fo:table-row> 
+							      <fo:table-cell number-columns-spanned="2" >   						
+							 	      <fo:block linefeed-treatment="preserve">&#xA;</fo:block>  
+							 	   </fo:table-cell>
+						 	         <fo:table-cell number-columns-spanned="2">   						
+							 	         <fo:block linefeed-treatment="preserve">&#xA;</fo:block> 
+							 	   </fo:table-cell>
+							 	   <fo:table-cell number-columns-spanned="2">   						
+							 	        <fo:block linefeed-treatment="preserve">&#xA;</fo:block> 
+							 	   </fo:table-cell>
+						 	         <fo:table-cell >   						
+							 	         <fo:block linefeed-treatment="preserve">&#xA;</fo:block> 
+							 	   </fo:table-cell>
+							 </fo:table-row>
+							 <fo:table-row> 
 							      <fo:table-cell number-columns-spanned="2" >   						
 							 	      <fo:block linefeed-treatment="preserve">&#xA;</fo:block>  
 							 	   </fo:table-cell>
@@ -219,7 +270,7 @@ under the License.
 						 	         <fo:table-cell number-columns-spanned="2">   						
 							 	         <fo:block text-align="right" white-space-collapse="false" font-size="12pt"  keep-together="always" font-weight="bold">&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;AM(F)/DM(F)</fo:block>
 							 	   </fo:table-cell>
-							 	   <fo:table-cell number-columns-spanned="3">   						
+							 	   <fo:table-cell number-columns-spanned="4">   						
 							 	         <fo:block text-align="right" white-space-collapse="false" font-size="12pt"  keep-together="always" font-weight="bold">&#160;&#160;&#160;&#160;&#160;&#160;M(F)/GM(F)</fo:block>
 							 	   </fo:table-cell>
 						 	         <fo:table-cell number-columns-spanned="2">   						

@@ -1944,6 +1944,25 @@
 			</widgets>
 		</section>
 	</screen>
+	<screen name="PurchaseRegisterBookCSV">
+		<section>
+			<actions>
+				<set field="viewSize" value="99999" />
+				<property-map resource="OrderUiLabels" map-name="uiLabelMap" global="true"/>
+				<property-map resource="ProductUiLabels" map-name="uiLabelMap" global="true"/>
+				<property-map resource="PartyUiLabels" map-name="uiLabelMap" global="true"/>
+				<property-map resource="CommonUiLabels" map-name="uiLabelMap" global="true"/>
+				<script location="component://byproducts/webapp/byproducts/WEB-INF/actions/PurchaseRegisterBook.groovy" />
+			</actions>
+			<widgets>
+				<section>
+					<widgets>
+						<include-form name="PurchaseRegisterBookCSV" location="component://byproducts/widget/ByProductsReportForms.xml" />
+					</widgets>
+				</section>
+			</widgets>
+		</section>
+	</screen>
 	<screen name="IcDealerOSDuesIntimationPDF">
 		<section>
 			<actions>

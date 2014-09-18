@@ -69,6 +69,7 @@ if(categoryType.equals("ICE_CREAM_AMUL")||categoryType.equals("All")){
 }*/
 // Invoice No Purchase report
 invoiceMap = [:];
+purchaseRegisterList = [];
 salesInvoiceTotals = SalesInvoiceServices.getPeriodSalesInvoiceTotals(dctx, [isPurchaseInvoice:true, isQuantityLtrs:true,fromDate:dayBegin, thruDate:dayEnd]);
 if(UtilValidate.isNotEmpty(salesInvoiceTotals)){
 	invoiceTotals = salesInvoiceTotals.get("invoiceIdTotals");
@@ -77,7 +78,7 @@ if(UtilValidate.isNotEmpty(salesInvoiceTotals)){
 			if(UtilValidate.isNotEmpty(invoice)){
 				invoiceId = "";
 				partyName = "";
-				idValue = "";
+				tinNumber = "";
 				basicRevenue=0;
 				bedRevenue=0;
 				vatRevenue=0;
@@ -96,7 +97,7 @@ if(UtilValidate.isNotEmpty(salesInvoiceTotals)){
 				invoicePartyId = invoiceDetails.partyIdFrom;
 				partyIdentificationDetails = delegator.findOne("PartyIdentification", [partyId : invoicePartyId, partyIdentificationTypeId : "TIN_NUMBER"], false);
 				if(UtilValidate.isNotEmpty(partyIdentificationDetails)){
-					idValue = partyIdentificationDetails.idValue;
+					tinNumber = partyIdentificationDetails.idValue;
 				}
 				if(UtilValidate.isNotEmpty(invoicePartyId)){
 					partyName = PartyHelper.getPartyName(delegator, invoicePartyId, false);
@@ -116,7 +117,55 @@ if(UtilValidate.isNotEmpty(salesInvoiceTotals)){
 				if(UtilValidate.isNotEmpty(invoice.getValue().totalRevenue)){
 					totalRevenue = invoice.getValue().totalRevenue;
 				}
+				freightAmount = 0;
+				discountAmount = 0;
+				invoiceItemsList = delegator.findList("InvoiceItem",EntityCondition.makeCondition("invoiceId", EntityOperator.EQUALS , invoiceId)  , null, null, null, false );
+				if(UtilValidate.isNotEmpty(invoiceItemsList)){
+					invoiceItemsList.each{ invoiceItem ->
+						if(UtilValidate.isNotEmpty(invoiceItem)){
+							invoiceItemTypeId = invoiceItem.invoiceItemTypeId;
+							if(UtilValidate.isNotEmpty(invoiceItemTypeId) && invoiceItemTypeId.equals("COGS_ITEM16")){
+								freightAmount = invoiceItem.amount;
+							}
+						}
+						if(UtilValidate.isNotEmpty(invoiceItem)){
+							invoiceItemTypeId = invoiceItem.invoiceItemTypeId;
+							if(UtilValidate.isNotEmpty(invoiceItemTypeId) && invoiceItemTypeId.equals("COGS_ITEM17")){
+								discountAmount = invoiceItem.amount;
+							}
+						}
+					}
+				}
+				orderId = null;
+				mrrNumber = null;
+				poNumber = null;
+				supInvNumber = null;
+				orderItemBillingList = delegator.findList("OrderItemBilling",EntityCondition.makeCondition("invoiceId", EntityOperator.EQUALS , invoiceId)  , null, null, null, false );
+				if(UtilValidate.isNotEmpty(orderItemBillingList)){
+					orderItemBilling = EntityUtil.getFirst(orderItemBillingList);
+					if(UtilValidate.isNotEmpty(orderItemBilling)){
+						orderId = orderItemBilling.orderId;
+						if(UtilValidate.isNotEmpty(orderId)){
+							mrnOrderAttributeDetails = delegator.findOne("OrderAttribute", [orderId : orderId, attrName : "MRN_NUMBER"], false);
+							if(UtilValidate.isNotEmpty(mrnOrderAttributeDetails)){
+								mrrNumber = mrnOrderAttributeDetails.attrValue;
+							}
+							poOrderAttributeDetails = delegator.findOne("OrderAttribute", [orderId : orderId, attrName : "PO_NUMBER"], false);
+							if(UtilValidate.isNotEmpty(poOrderAttributeDetails)){
+								poNumber = poOrderAttributeDetails.attrValue;
+							}
+							supInvOrderAttributeDetails = delegator.findOne("OrderAttribute", [orderId : orderId, attrName : "SUP_INV_NUMBER"], false);
+							if(UtilValidate.isNotEmpty(supInvOrderAttributeDetails)){
+								supInvNumber = supInvOrderAttributeDetails.attrValue;
+							}
+						}
+					}
+				}
+				grandTotal = 0;
+				grandTotal = totalRevenue+freightAmount+discountAmount;
+				
 				totalMap = [:];
+				totalMap["invoiceId"]=invoiceId;
 				totalMap["invoiceDate"]=invoiceDate;
 				totalMap["basicRevenue"]=basicRevenue;
 				totalMap["partyName"]=partyName;
@@ -124,18 +173,28 @@ if(UtilValidate.isNotEmpty(salesInvoiceTotals)){
 				totalMap["vatRevenue"]=vatRevenue;
 				totalMap["cstRevenue"]=cstRevenue;
 				totalMap["totalRevenue"]=totalRevenue;
-				totalMap["idValue"]=idValue;
+				totalMap["freightAmount"]=freightAmount;
+				totalMap["discountAmount"]=discountAmount;
+				totalMap["grandTotal"]=grandTotal;
+				totalMap["tinNumber"]=tinNumber;
+				totalMap["mrrNumber"]=mrrNumber;
+				totalMap["poNumber"]=poNumber;
+				totalMap["supInvNumber"]=supInvNumber;
 				tempMap = [:];
 				tempMap.putAll(totalMap);
 				if(UtilValidate.isNotEmpty(tempMap)){
 					invoiceMap.put(invoiceId,tempMap);
+					// for Purchase Report CSV
+					purchaseRegisterList.addAll(tempMap);
 				}
 			}
 		}
 	}
 	context.put("invoiceMap",invoiceMap);
+	context.putAt("purchaseRegisterList", purchaseRegisterList);
 }
-// for vat totals
+
+/*// for vat totals
 invoiceIdList = [];
 if(UtilValidate.isNotEmpty(salesInvoiceTotals)){
 	invoiceTotals = salesInvoiceTotals.get("invoiceIdTotals");
@@ -146,7 +205,16 @@ if(UtilValidate.isNotEmpty(salesInvoiceTotals)){
 				vatMap = [:];
 				if(UtilValidate.isNotEmpty(invoiceIdList)){
 					invoiceItemsList = delegator.findList("InvoiceItem",EntityCondition.makeCondition("invoiceId", EntityOperator.IN , invoiceIdList)  , null, null, null, false );
-					vatPercentList = EntityUtil.getFieldListFromEntityList(invoiceItemsList, "vatPercent", true);
+					invoiceItemTypeList = EntityUtil.getFieldListFromEntityList(invoiceItemsList, "invoiceItemTypeId", true);
+					invoiceItemTypeList.each{ invoiceItemTypeId
+						invoiceItemTypesList = EntityUtil.filterByAnd(invoiceItemsList, [invoiceItemTypeId : invoiceItemTypeId]);
+						invoiceItemTypesList.each { invoiceItem
+							if(invoiceItemTypeId.equals("COGS_ITEM16")){
+								freightAmount = invoiceItem.amount;
+								
+							}
+						}
+					}
 					vatPercentList.each { vatPercent->
 						invoiceItemsVatList = EntityUtil.filterByAnd(invoiceItemsList, [vatPercent : vatPercent]);
 						totalVatAmount = 0;
@@ -166,7 +234,7 @@ if(UtilValidate.isNotEmpty(salesInvoiceTotals)){
 			}
 		}
 	}
-}
+}*/
 
 
 

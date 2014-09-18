@@ -1110,7 +1110,8 @@ function reportTypeChangeFunc() {
 						    <td width="15%">To<input  type="text" size="18pt" id="purchaseThruDate" readonly  name="thruDate"/></td>
 						    <td width="15%"></td>
 	      					<td width="15%"></td>
-							<td width="10%"><input type="submit" value="Download" class="buttontext"/></td> 
+							<td width="10%"><input type="submit" value="PDF" onClick="javascript:appendParams('purchaseRegisterBook', '<@ofbizUrl>purchaseRegisterBook.pdf</@ofbizUrl>');" class="buttontext"/>
+							<input type="submit" value="CSV" onClick="javascript:appendParams('purchaseRegisterBook', '<@ofbizUrl>purchaseRegisterBook.csv</@ofbizUrl>');" class="buttontext"/></td>         			
 						</form>
 	                  </tr>
 	                  <tr class="alternate-row">
