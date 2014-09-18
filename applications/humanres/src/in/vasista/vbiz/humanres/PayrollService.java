@@ -217,11 +217,20 @@ public class PayrollService {
 				GenericValue periodBilling = null;
 				Map result = ServiceUtil.returnSuccess();
 				result.put("periodBillingId", periodBillingId);
+				boolean beganTransaction = false;
+		        	
 				try {
+					beganTransaction = TransactionUtil.begin(72000);
 					periodBilling =delegator.findOne("PeriodBilling", UtilMisc.toMap("periodBillingId", periodBillingId), false);
 				
 					result =  generatePayrollBillingInternal(dctx, context);
 	        		if(ServiceUtil.isError(result)){
+	        			try {
+			                // only rollback the transaction if we started one...
+			                TransactionUtil.rollback();
+			            } catch (Exception e2) {
+			                Debug.logError(e2, "Could not rollback transaction: " + e2.toString(), module);
+			            }
 	        			 Debug.logError(ServiceUtil.getErrorMessage(result), module);
 	        			 periodBilling.set("statusId", "GENERATION_FAIL");
 						 periodBilling.store();
@@ -231,6 +240,12 @@ public class PayrollService {
 	        		}
         		
 				} catch (Exception e1) {
+					try {
+		                // only rollback the transaction if we started one...
+		                TransactionUtil.rollback();
+		            } catch (Exception e2) {
+		                Debug.logError(e2, "Could not rollback transaction: " + e2.toString(), module);
+		            }
 					Debug.logError(e1,"Error While Finding PeriodBilling");
 					 periodBilling.set("statusId", "GENERATION_FAIL");
 					 periodBilling.store();
@@ -284,7 +299,6 @@ public class PayrollService {
 					Timestamp monthEnd = UtilDateTime.getDayEnd(thruDateTime, timeZone, locale);
 					try {
 						Map input = FastMap.newInstance();
-						//input.put(arg0, arg1);
 					   
 						if(UtilValidate.isEmpty(partyId)){
 							partyId = "Company";
@@ -367,6 +381,8 @@ public class PayrollService {
 					}
 					if (generationFailed) {
 						periodBilling.set("statusId", "GENERATION_FAIL");
+						Debug.logError("Error While generating PeriodBilling", module);
+						return ServiceUtil.returnError("Error While generating PeriodBilling");
 					} else {
 						periodBilling.set("statusId", "GENERATED");
 						periodBilling.set("lastModifiedDate", UtilDateTime.nowTimestamp());
@@ -2782,14 +2798,22 @@ public class PayrollService {
 	        Map input = FastMap.newInstance();
 	        Map result = ServiceUtil.returnSuccess();
 	        GenericValue periodBilling = null;
+	        boolean beganTransaction = false;
 	        try {     
-		        periodBilling = delegator.findOne("PeriodBilling",UtilMisc.toMap("periodBillingId",periodBillingId),false);
+	        	beganTransaction = TransactionUtil.begin(72000);
+	        	periodBilling = delegator.findOne("PeriodBilling",UtilMisc.toMap("periodBillingId",periodBillingId),false);
 		        if(UtilValidate.isEmpty(periodBilling)){
 		        	return ServiceUtil.returnError("invalid period billing");
 		        }
 				Map<String,  Object> runSACOContext = UtilMisc.<String, Object>toMap("payrollPeriodId", payrollPeriodId, "orgPartyId", orgPartyId, "periodBillingId",periodBillingId, "userLogin", userLogin);
 				Map resultAttd = dispatcher.runSync("populatePayrollAttedance", runSACOContext);
 				if(ServiceUtil.isError(resultAttd)){
+					try {
+		                // only rollback the transaction if we started one...
+		                TransactionUtil.rollback();
+		            } catch (Exception e2) {
+		                Debug.logError(e2, "Could not rollback transaction: " + e2.toString(), module);
+		            }
 					periodBilling.set("statusId", "GENERATION_FAIL");
 					delegator.store(periodBilling);
 					return ServiceUtil.returnSuccess(ServiceUtil.getErrorMessage(resultAttd));
@@ -2799,6 +2823,12 @@ public class PayrollService {
 		        
 	    	} catch (Exception e) {
 				Debug.logError(e,"Failed To run payroll attendance", module);
+				try {
+	                // only rollback the transaction if we started one...
+	                TransactionUtil.rollback();
+	            } catch (Exception e2) {
+	                Debug.logError(e2, "Could not rollback transaction: " + e2.toString(), module);
+	            }
 				try{
 					periodBilling.set("statusId", "GENERATION_FAIL");
 					delegator.store(periodBilling);
@@ -3232,7 +3262,7 @@ public class PayrollService {
 	    		String payrollPeriodId = periodBilling.getString("customTimePeriodId");
 	    		List condList =FastList.newInstance();
 	    		condList.add(EntityCondition.makeCondition("customTimePeriodId",EntityOperator.EQUALS,payrollPeriodId));
-	    		condList.add(EntityCondition.makeCondition("statusId",EntityOperator.NOT_IN,UtilMisc.toList("COM_CANCELLED","CANCEL_FAILED")));
+	    		condList.add(EntityCondition.makeCondition("statusId",EntityOperator.NOT_IN,UtilMisc.toList("COM_CANCELLED","CANCEL_FAILED" ,"GENERATION_FAIL")));
 	    		condList.add(EntityCondition.makeCondition("billingTypeId",EntityOperator.EQUALS,"PAYROLL_BILL"));
       			
 	    		
@@ -3240,7 +3270,7 @@ public class PayrollService {
 	    		List<GenericValue> payrollBillg = delegator.findList("PeriodBilling",cond,null,null,null,true );
 	    		if(UtilValidate.isNotEmpty(payrollBillg)){
 	    			Debug.logError("payroll allready generated ,please cancel payroll and do attendance finalization or cancel  ::"+payrollPeriodId, module);    			
-	 	 		    return ServiceUtil.returnError("payroll allready generated ,please cancel payroll and do attendance finalization or cancel ");
+	 	 		    return ServiceUtil.returnError("payroll allready generated ,please cancel payroll and do attendance finalization or cancel :"+payrollPeriodId);
 	    		}
 	    		
 	    		if(statusId.equals("COM_CANCELLED")){
