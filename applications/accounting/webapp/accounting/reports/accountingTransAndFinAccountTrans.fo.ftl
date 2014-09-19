@@ -29,7 +29,7 @@ under the License.
         <fo:region-after extent="1in"/>        
     </fo:simple-page-master>   
 </fo:layout-master-set>
-   ${setRequestAttribute("OUTPUT_FILENAME", "payrcpt.pdf")}
+   ${setRequestAttribute("OUTPUT_FILENAME", "accountingTrans.pdf")}
         <#if accountingTransEntries?has_content> 
         	<#assign acctgTransId = accountingTransEntries.acctgTransId?if_exists>
         	<#assign acctgTransTypeId = accountingTransEntries.acctgTransTypeId?if_exists>
@@ -61,9 +61,11 @@ under the License.
         	
            <fo:page-sequence master-reference="main" force-page-count="no-force" font-size="14pt" font-family="Courier,monospace">					
 		    	<fo:static-content flow-name="xsl-region-before">
-		    	    <fo:block  keep-together="always" text-align="center" font-weight = "bold" font-family="Courier,monospace" white-space-collapse="false">ACCOUNTING TRANSACTIONS</fo:block>
+		    	    
 					<fo:block  keep-together="always" text-align="center" font-weight = "bold" font-family="Courier,monospace" white-space-collapse="false">KARNATAKA CO-OPERATIVE MILK PRODUCERS FEDERATION LTD</fo:block>
 					<fo:block  keep-together="always" text-align="center" font-weight = "bold" font-family="Courier,monospace" white-space-collapse="false">UNIT: MOTHER DAIRY: G.K.V.K POST,YELAHANKA,BENGALORE:560065</fo:block>
+                    <fo:block text-align="right" linefeed-treatment="preserve">-</fo:block>
+                    <fo:block  keep-together="always" text-align="center" font-weight = "bold" font-family="Courier,monospace" white-space-collapse="false">JOURNAL VOUCHER</fo:block>
                     <fo:block text-align="left"  keep-together="always"  font-weight = "bold" white-space-collapse="false">Date:${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(nowTimestamp, "MMMM dd,yyyy")}&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;UserLogin : <#if userLogin?exists>${userLogin.userLoginId?if_exists}</#if>   </fo:block>
               		<fo:block>-------------------------------------------------------------------------------</fo:block>
             		<fo:block><fo:table>
@@ -259,8 +261,9 @@ under the License.
                      </fo:table-row>
                      <fo:table-row>	
                      <#if partyId?has_content>
+                     		<#assign partyFullName = Static["org.ofbiz.party.party.PartyHelper"].getPartyName(delegator, partyId?if_exists, false)>
                     		<fo:table-cell>
-                            		<fo:block  keep-together="always" text-align="left" >PartyId:${partyId?if_exists}</fo:block>  
+                            		<fo:block text-align="left" wrap-option="wrap">Party: ${partyFullName?if_exists}[${partyId?if_exists}]</fo:block>  
                        		</fo:table-cell>
                        		<#else>
                        			<fo:table-cell>
@@ -344,18 +347,21 @@ under the License.
                       </fo:table>
             		</fo:block>
             		<fo:block>-------------------------------------------------------------------------------</fo:block>
-            		<fo:block font-weight = "bold" font-size = "12pt">Account Code		      &#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;Account Name 		        &#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;Debit Amount    &#160;&#160;&#160;&#160;&#160;&#160;&#160;Credit Amount</fo:block>
+            		<fo:block font-weight = "bold" font-size = "12pt">Acct Code&#160;&#160;&#160;Acct Name 		        &#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;  Party  &#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;Debit Amt    &#160;&#160;&#160;&#160;&#160;&#160;&#160;Credit Amt</fo:block>
             		<fo:block>-------------------------------------------------------------------------------</fo:block>
             </fo:static-content>		
             <fo:flow flow-name="xsl-region-body"   font-family="Courier,monospace">	
             	<fo:block>
                  	<fo:table>
-                    <fo:table-column column-width="150pt"/>
-                    <fo:table-column column-width="150pt"/>
-                    <fo:table-column column-width="150pt"/>
-                    <fo:table-column column-width="150pt"/> 
+                    <fo:table-column column-width="100pt"/>
+                    <fo:table-column column-width="200pt"/>
+                    <fo:table-column column-width="100pt"/>
+                    <fo:table-column column-width="100pt"/>
+                    <fo:table-column column-width="100pt"/> 
                     <fo:table-body>
 							<#if accountingTransEntryList?has_content>
+							<#assign crTotal = 0>
+							<#assign drTotal = 0>
 							<#list accountingTransEntryList as accntngTransEntry>
 							<fo:table-row>
                 				<fo:table-cell>
@@ -364,22 +370,31 @@ under the License.
                        			<#if accntngTransEntry.glAccountId?has_content>  
         						<#assign glAccntDetails = delegator.findOne("GlAccount", {"glAccountId" :accntngTransEntry.glAccountId}, true)>
                 				<fo:table-cell>
-                            		<fo:block  keep-together="always" text-align="left">${glAccntDetails.accountName?if_exists}</fo:block>  
+                            		<fo:block text-align="left" wrap-option="wrap"> ${Static["org.ofbiz.order.order.OrderServices"].nameTrim((StringUtil.wrapString(glAccntDetails.accountName?if_exists)),50)} </fo:block>  
                        			</fo:table-cell>
                        			</#if>
-                       			<#if accntngTransEntry.debitCreditFlag?has_content && accntngTransEntry.debitCreditFlag == "D">
                        			<fo:table-cell>
-                            		<fo:block  text-align="right"  white-space-collapse="false">${accntngTransEntry.amount?if_exists?string("#0.00")}</fo:block>  
+                            		<fo:block  text-align="left"  white-space-collapse="false">${accntngTransEntry.partyId?if_exists}</fo:block>  
                        			</fo:table-cell>
+                       			<#if accntngTransEntry.debitCreditFlag?has_content && accntngTransEntry.debitCreditFlag == "D">
+                       				<fo:table-cell>
+                            			<fo:block  text-align="right"  white-space-collapse="false">${accntngTransEntry.amount?if_exists?string("#0.00")}</fo:block>  
+                       				</fo:table-cell>
+                       				<#if accntngTransEntry.amount?has_content>
+                       					<#assign drTotal = drTotal+accntngTransEntry.amount>
+                       				</#if>
                        			<#else>
                        			<fo:table-cell>
                             		<fo:block  text-align="right"  white-space-collapse="false">0.00</fo:block>  
                        			</fo:table-cell>
                        			</#if>
                        			<#if accntngTransEntry.debitCreditFlag?has_content && accntngTransEntry.debitCreditFlag == "C">
-                       			<fo:table-cell>
-                            		<fo:block  text-align="right"  white-space-collapse="false">${accntngTransEntry.amount?if_exists?string("#0.00")}</fo:block>  
-                       			</fo:table-cell>
+	                       			<fo:table-cell>
+	                            		<fo:block  text-align="right"  white-space-collapse="false">${accntngTransEntry.amount?if_exists?string("#0.00")}</fo:block>  
+	                       			</fo:table-cell>
+                       				<#if accntngTransEntry.amount?has_content>
+                       					<#assign crTotal = crTotal+accntngTransEntry.amount>
+                       				</#if>
                        			<#else>
                        			<fo:table-cell>
                             		<fo:block  text-align="right"  white-space-collapse="false">0.00</fo:block>  
@@ -387,6 +402,29 @@ under the License.
                        			</#if>
             				</fo:table-row>
 		  					</#list>
+		  					<fo:table-row>
+                				<fo:table-cell>
+                            		<fo:block  text-align="left"  white-space-collapse="false">-----------------------------------------------------------------------------</fo:block>  
+                       			</fo:table-cell>
+                				
+            				</fo:table-row>
+		  					<fo:table-row>
+                				<fo:table-cell>
+                            		<fo:block  text-align="left"  white-space-collapse="false"></fo:block>  
+                       			</fo:table-cell>
+                				<fo:table-cell>
+                            		<fo:block text-align="left" wrap-option="wrap" font-weight="bold"> Totals: </fo:block>  
+                       			</fo:table-cell>
+                       			<fo:table-cell>
+                            		<fo:block  text-align="left"  white-space-collapse="false"></fo:block>  
+                       			</fo:table-cell>
+                       			<fo:table-cell>
+                            		<fo:block  text-align="right"  white-space-collapse="false">${drTotal?if_exists?string("#0.00")}</fo:block>  
+                       			</fo:table-cell>
+                       			<fo:table-cell>
+                            		<fo:block  text-align="right"  white-space-collapse="false">${crTotal?if_exists?string("#0.00")}</fo:block>  
+                       			</fo:table-cell>
+            				</fo:table-row>
 		  					</#if>
 		              </fo:table-body>
 		                </fo:table>
