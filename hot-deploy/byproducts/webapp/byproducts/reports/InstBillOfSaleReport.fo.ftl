@@ -156,11 +156,18 @@ ${setRequestAttribute("OUTPUT_FILENAME", "BILLOFSALEReport.txt")}
 											</#if>
 											<#if (partyAddressResult.city?has_content)>
 											<fo:block font-weight="bold" text-align="left" keep-together="always" font-size = "12pt">
-											&#160;&#160;&#160;&#160;${partyAddressResult.city?if_exists} ${partyAddressResult.stateProvinceGeoId?if_exists}</fo:block>
+											&#160;&#160;&#160;&#160;${partyAddressResult.city?if_exists} </fo:block>
+											<#if (partyAddressResult.stateProvinceGeoId?has_content)>
+											<#assign geo = delegator.findOne("Geo", {"geoId" :partyAddressResult.stateProvinceGeoId}, true)>
+											<fo:block font-weight="bold" text-align="left" keep-together="always" font-size = "12pt">
+											&#160;&#160;&#160;&#160;${geo.geoName?if_exists}</fo:block>
+											</#if>
+											
 											</#if>
 											<#if (partyAddressResult.countryGeoId?has_content)>
+											<#assign geo = delegator.findOne("Geo", {"geoId" :partyAddressResult.countryGeoId}, true)>
 											<fo:block font-weight="bold" text-align="left" keep-together="always" font-size = "12pt">
-											&#160;&#160;&#160;&#160;${partyAddressResult.countryGeoId?if_exists}</fo:block>
+											&#160;&#160;&#160;&#160;${geo.geoName?if_exists}</fo:block>
 											</#if>
 											 <#if (partyAddressResult.contactNumber?has_content)>
 										<fo:block font-weight="bold" text-align="left" keep-together="always" font-size = "12pt">

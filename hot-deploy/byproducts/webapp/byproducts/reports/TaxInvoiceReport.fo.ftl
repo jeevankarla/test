@@ -89,8 +89,13 @@ ${setRequestAttribute("OUTPUT_FILENAME", "TaxInvoice.txt")}
 														<#if (partyAddressResult.city?has_content)>
 															<fo:block  text-align="left" keep-together="always">${partyAddressResult.city?if_exists} ${partyAddressResult.stateProvinceGeoId?if_exists}</fo:block>
 														</#if>
+														<#if (partyAddressResult.stateProvinceGeoId?has_content)>
+															<#assign geo = delegator.findOne("Geo", {"geoId" :partyAddressResult.stateProvinceGeoId}, true)>
+															<fo:block  text-align="left" keep-together="always">${geo.geoName?if_exists}</fo:block>
+														</#if>
 														<#if (partyAddressResult.countryGeoId?has_content)>
-															<fo:block  text-align="left" keep-together="always">${partyAddressResult.countryGeoId?if_exists}</fo:block>
+															<#assign geo = delegator.findOne("Geo", {"geoId" :partyAddressResult.countryGeoId}, true)>
+															<fo:block  text-align="left" keep-together="always">${geo.geoName?if_exists}</fo:block>
 														</#if>
 														<#if (partyTelephoneResult.contactNumber?has_content)>
 														  	<fo:block text-align="left" keep-together="always">${partyTelephoneResult.contactNumber?if_exists}</fo:block>
