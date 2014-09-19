@@ -1179,7 +1179,7 @@ under the License.emplpunch
         <auto-attributes mode="IN" include="nonpk" optional="true"/>
     </service>   
    
-   <--	<service name="emplPunchValidation" engine="java" 
+   <!--	<service name="emplPunchValidation" engine="java" 
              location="in.vasista.vbiz.humanres.PayrollService" invoke="emplPunchValidation" auth="true">
         <description>Validating punch</description>
         <attribute name="partyId" optional="false" type="String" mode="IN"/>
