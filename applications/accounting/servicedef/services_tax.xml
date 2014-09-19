@@ -67,7 +67,13 @@ under the License.
         <description>Tax Authority Rate Product Calc Service</description>
         <implements service="calcTaxTotalForDisplayInterface"/>
     </service>
-
+ <!-- Tax Authority Calc Services For Purchases -->
+    <service name="calcTaxForPurchase" engine="java"
+        location="org.ofbiz.accounting.tax.TaxAuthorityServices" invoke="rateProductTaxCalcForPurchase">
+        <description>Tax Authority Rate Product Calc  Service for Purchases</description>
+        <implements service="calcTaxInterface"/>
+    </service>
+    
     <!-- TaxAuthority -->
     <service name="createTaxAuthority" default-entity-name="TaxAuthority" engine="simple" auth="true"
         location="component://accounting/script/org/ofbiz/accounting/tax/TaxAuthorityServices.xml" invoke="createTaxAuthority">

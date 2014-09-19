@@ -248,7 +248,115 @@ public class TaxAuthorityServices {
 
         return result;
     }
+    //same Like Sales but for Tax consider flat amount
+    public static Map<String, Object> rateProductTaxCalcForPurchase(DispatchContext dctx, Map<String, ? extends Object> context) {
+        Delegator delegator = dctx.getDelegator();
+        String productStoreId = (String) context.get("productStoreId");
+        String facilityId = (String) context.get("facilityId");
+        String payToPartyId = (String) context.get("payToPartyId");
+        String billToPartyId = (String) context.get("billToPartyId");
+        List<GenericValue> itemProductList = UtilGenerics.checkList(context.get("itemProductList"));
+        List<BigDecimal> itemAmountList = UtilGenerics.checkList(context.get("itemAmountList"));
+        List<BigDecimal> itemPriceList = UtilGenerics.checkList(context.get("itemPriceList"));
+        List<BigDecimal> itemQuantityList = UtilGenerics.checkList(context.get("itemQuantityList"));
+        List<BigDecimal> itemShippingList = UtilGenerics.checkList(context.get("itemShippingList"));
+        List<GenericValue> taxItemTypes = UtilGenerics.checkList(context.get("taxItemTypes"));
+        BigDecimal orderShippingAmount = (BigDecimal) context.get("orderShippingAmount");
+        BigDecimal orderPromotionsAmount = (BigDecimal) context.get("orderPromotionsAmount");
+        GenericValue shippingAddress = (GenericValue) context.get("shippingAddress");
+        Locale locale = (Locale) context.get("locale");
+        GenericValue productStore = null;
+        GenericValue facility = null;
+        try {
+            if (productStoreId != null) {
+                productStore = delegator.findByPrimaryKey("ProductStore", UtilMisc.toMap("productStoreId", productStoreId));
+            }
+            if (facilityId != null) {
+                facility = delegator.findByPrimaryKey("Facility", UtilMisc.toMap("facilityId", facilityId));
+            }
+        } catch (GenericEntityException e) {
+            Debug.logError(e, "Data error getting tax settings: " + e.toString(), module);
+            return ServiceUtil.returnError(UtilProperties.getMessage(resource, "AccountingTaxSettingError", UtilMisc.toMap("errorString", e.toString()), locale));
+        }
 
+        if (productStore == null && payToPartyId == null) {
+            throw new IllegalArgumentException("Could not find payToPartyId [" + payToPartyId + "] or ProductStore [" + productStoreId + "] for tax calculation");
+        }
+        
+        if (shippingAddress == null && facility != null) {
+            // if there is no shippingAddress and there is a facility it means it is a face-to-face sale so get facility's address
+            try {
+                GenericValue facilityContactMech = ContactMechWorker.getFacilityContactMechByPurpose(delegator, facilityId, UtilMisc.toList("SHIP_ORIG_LOCATION", "PRIMARY_LOCATION"));
+                if (facilityContactMech != null) {
+                    shippingAddress = delegator.findByPrimaryKey("PostalAddress",
+                            UtilMisc.toMap("contactMechId", facilityContactMech.getString("contactMechId")));
+                }
+            } catch (GenericEntityException e) {
+                Debug.logError(e, "Data error getting tax settings: " + e.toString(), module);
+                return ServiceUtil.returnError(UtilProperties.getMessage(resource, "AccountingTaxSettingError", UtilMisc.toMap("errorString", e.toString()), locale));
+            }
+        }
+        /*if (shippingAddress == null || (shippingAddress.get("countryGeoId") == null && shippingAddress.get("stateProvinceGeoId") == null && shippingAddress.get("postalCodeGeoId") == null)) {
+            String errMsg = UtilProperties.getMessage(resource, "AccountingTaxNoAddressSpecified", locale);
+            if (shippingAddress != null) {
+                errMsg += UtilProperties.getMessage(resource, "AccountingTaxNoAddressSpecifiedDetails", UtilMisc.toMap("contactMechId", shippingAddress.getString("contactMechId"), "address1", shippingAddress.get("address1"), "postalCodeGeoId", shippingAddress.get("postalCodeGeoId"), "stateProvinceGeoId", shippingAddress.get("stateProvinceGeoId"), "countryGeoId", shippingAddress.get("countryGeoId")), locale);
+                Debug.logError(errMsg, module);
+            }
+            return ServiceUtil.returnError(errMsg);
+        }*/
+
+        // without knowing the TaxAuthority parties, just find all TaxAuthories for the set of IDs...
+        Set<GenericValue> taxAuthoritySet = FastSet.newInstance();
+        /*try {
+            getTaxAuthorities(delegator, shippingAddress, taxAuthoritySet);
+        } catch (GenericEntityException e) {
+            Debug.logError(e, "Data error getting tax settings: " + e.toString(), module);
+            return ServiceUtil.returnError(UtilProperties.getMessage(resource, "AccountingTaxSettingError", UtilMisc.toMap("errorString", e.toString()), locale));
+        }*/
+
+        // Setup the return lists.
+        List<GenericValue> orderAdjustments = FastList.newInstance();
+        List<List<GenericValue>> itemAdjustments = FastList.newInstance();
+
+        // Loop through the products; get the taxCategory; and lookup each in the cache.
+        for (int i = 0; i < itemProductList.size(); i++) {
+            GenericValue product = (GenericValue) itemProductList.get(i);
+            BigDecimal itemAmount = (BigDecimal) itemAmountList.get(i);
+            BigDecimal itemPrice = (BigDecimal) itemPriceList.get(i);
+            BigDecimal itemQuantity = BigDecimal.ONE; //itemQuantityList != null ? (BigDecimal) itemQuantityList.get(i) : null;
+            BigDecimal shippingAmount = (BigDecimal) itemShippingList.get(i);
+            List<GenericValue> taxList = null;
+            List<GenericValue> productTaxItemList = EntityUtil.filterByAnd(taxItemTypes, UtilMisc.toMap("productId",product.getString("productId")));
+            /*if (shippingAddress != null) {
+                taxList = getTaxAdjustments(delegator, product, productStore, payToPartyId, billToPartyId, taxAuthoritySet, itemPrice, itemQuantity, itemAmount, shippingAmount, ZERO_BASE);
+            }*/
+            // this is an add and not an addAll because we want a List of Lists of GenericValues, one List of Adjustments per item
+           
+            taxList = getTaxAdjustments(delegator, product, productStore, payToPartyId, billToPartyId, taxAuthoritySet, itemPrice, itemQuantity, itemAmount, shippingAmount, ZERO_BASE ,productTaxItemList);
+            itemAdjustments.add(taxList);
+        }
+        if (orderShippingAmount != null && orderShippingAmount.compareTo(BigDecimal.ZERO) > 0) {
+            List<GenericValue> taxList = getTaxAdjustments(delegator, null, productStore, payToPartyId, billToPartyId, taxAuthoritySet, ZERO_BASE, ZERO_BASE, ZERO_BASE, orderShippingAmount, ZERO_BASE ,null);
+            orderAdjustments.addAll(taxList);
+        }
+        if (orderPromotionsAmount != null && orderPromotionsAmount.compareTo(BigDecimal.ZERO) != 0) {
+            List<GenericValue> taxList = getTaxAdjustments(delegator, null, productStore, payToPartyId, billToPartyId, taxAuthoritySet, ZERO_BASE, ZERO_BASE, ZERO_BASE, ZERO_BASE, orderPromotionsAmount ,null);
+            orderAdjustments.addAll(taxList);
+        }
+        
+        List<List<GenericValue>> consolidatedItemAdjustments = FastList.newInstance();
+        consolidatedItemAdjustments = consolidateItemAdjustments(itemAdjustments);
+        //Debug.logInfo("orderAdjustments=" + orderAdjustments, module);
+        //Debug.logInfo("itemAdjustments=" + itemAdjustments, module);
+        Debug.logInfo("consolidatedItemAdjustments=" + consolidatedItemAdjustments, module);
+
+        Map<String, Object> result = ServiceUtil.returnSuccess();
+        result.put("orderAdjustments", orderAdjustments);
+        result.put("itemAdjustments", consolidatedItemAdjustments);
+
+        return result;
+    }
+    
     /*	
      * Helper Method to consolidate Tax Items since they are generated per product. 
      */    
