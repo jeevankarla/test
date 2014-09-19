@@ -81,14 +81,28 @@ under the License.
 
     <form name="AddUserLoginSecurityGroup" type="single" target="${addUserLoginSecurityGroupURI}"
         header-row-style="header-row" default-table-style="basic-table">
+        <actions> 
+           <entity-condition entity-name="SecurityGroup" list="securityGroupMobList">
+             <condition-list combine="or">
+                 <condition-expr field-name="groupId" operator="equals" value="MYPORTAL_CUSTOMER"/>
+                 <condition-expr field-name="groupId" operator="like" value="%MOB%"/>
+             </condition-list>
+           </entity-condition>
+        </actions>
         <auto-fields-service service-name="addUserLoginToSecurityGroup"/>
+        
         <field name="partyId"><hidden value="${partyId}"/></field>
         <field name="userLoginId"><hidden/></field>
-        <field name="groupId" title="${uiLabelMap.CommonGroup}">
+        <field name="groupId" title="${uiLabelMap.CommonGroup}" use-when="${groovy:((security.hasEntityPermission(&quot;SECURITY&quot;, &quot;_ADMIN&quot;,session)))}">
             <drop-down allow-empty="false">
                 <entity-options entity-name="SecurityGroup" description="${groupId} ${description}">
                     <entity-order-by field-name="groupId"/>
                 </entity-options>
+            </drop-down>
+        </field>
+         <field name="groupId" title="${uiLabelMap.CommonGroup}" use-when="${groovy:((security.hasEntityPermission(&quot;SECURITYADMIN&quot;, &quot;_MOBILE&quot;,session)))}">
+            <drop-down allow-empty="false">
+                <list-options key-name="groupId" list-name="securityGroupMobList" description="${groupId} ${description}"/>
             </drop-down>
         </field>
         <field name="submitButton" title="${uiLabelMap.CommonAdd}"><submit button-type="button"/></field>
@@ -227,7 +241,7 @@ under the License.
             </entity-condition>
         </actions>
         <field name="partyId"><hidden value="${partyId}"/></field>
-        <field name="groupIdCol" title="${uiLabelMap.CommonSecurityGroupId}" widget-style="buttontext">
+        <field name="groupIdCol" title="${uiLabelMap.CommonSecurityGroupId}" widget-style="buttontext" use-when="${groovy:((security.hasEntityPermission(&quot;SECURITY&quot;, &quot;_ADMIN&quot;,session)))}">
             <hyperlink description="${groupId}" target="EditSecurityGroup">
                     <parameter param-name="groupId"/>
             </hyperlink>

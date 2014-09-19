@@ -154,6 +154,7 @@ under the License.
 	<SecurityGroupPermission groupId="BIZADMIN" permissionId="PARTYMGRVIEWAPP"/>
     <SecurityGroup description="Security Admin group, has all permissions to modify security settings in party manager." groupId="SECURITYADMIN"/>
     <SecurityGroupPermission groupId="SECURITYADMIN" permissionId="SECURITY_ADMIN"/>
+   
     
 	<SecurityGroupPermission groupId="BasicEmployee" permissionId="PARTYMGR_CME_CREATE"/>  
 	<SecurityGroupPermission groupId="BasicEmployee" permissionId="PARTYMGR_CME_UPDATE"/>  
@@ -178,5 +179,13 @@ under the License.
    <SecurityGroupPermission groupId="PARTYMGRVIEW_MOBHITS" permissionId="PARTYMGRVIEWAPP"/>
    <SecurityGroupPermission groupId="PARTYMGRVIEW_MOBHITS" permissionId="MOBILEHITS_VIEW"/>
      
+     
+    <SecurityGroup groupId="SECURITYADMIN_MOBILE" description="Security Admin group for Mobile App, has all permissions to modify mobile app security settings in party manager."/>
+    <SecurityPermission description="Mobile user security permission in the Party Manager." permissionId="SECURITYADMIN_MOBILE"/>
+    <SecurityGroupPermission groupId="SECURITYADMIN_MOBILE" permissionId="SECURITY_CREATE"/>
+    <SecurityGroupPermission groupId="SECURITYADMIN_MOBILE" permissionId="SECURITY_UPDATE"/>
+    <SecurityGroupPermission groupId="SECURITYADMIN_MOBILE" permissionId="SECURITY_VIEW"/>
+    <SecurityGroupPermission groupId="SECURITYADMIN_MOBILE" permissionId="SECURITYADMIN_MOBILE"/>
+    
     
 </entity-engine-xml>
