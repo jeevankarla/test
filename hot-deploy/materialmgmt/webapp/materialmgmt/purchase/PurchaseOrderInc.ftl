@@ -90,6 +90,8 @@
 			var VAT = data[rowCount]["VAT"];
 			var CST = data[rowCount]["CST"];
 			var Excise = data[rowCount]["Excise"];
+			var bedCess = data[rowCount]["bedCessAmount"];
+			var bedSecCess = data[rowCount]["bedSecCessAmount"];
 	 		if (!isNaN(qty)) {	 		
 				var inputProd = jQuery("<input>").attr("type", "hidden").attr("name", "productId_o_" + rowCount).val(prodId);
 				var inputQty = jQuery("<input>").attr("type", "hidden").attr("name", "quantity_o_" + rowCount).val(qty);
@@ -104,6 +106,10 @@
 				jQuery(formId).append(jQuery(inputCst));
 				var inputExcise = jQuery("<input>").attr("type", "hidden").attr("name", "excise_o_" + rowCount).val(Excise);
 				jQuery(formId).append(jQuery(inputExcise));
+				var inputBedCess = jQuery("<input>").attr("type", "hidden").attr("name", "bedCess_o_" + rowCount).val(bedCess);
+				jQuery(formId).append(jQuery(inputBedCess));
+				var inputBedSecCess = jQuery("<input>").attr("type", "hidden").attr("name", "bedSecCess_o_" + rowCount).val(bedSecCess);
+				jQuery(formId).append(jQuery(inputBedSecCess));
 				
    			}
 		}
@@ -122,11 +128,14 @@
 			var sInvNumber = $("#SInvNumber").val();
 			var packingType = $("#packingType").val();
 			var taxInc = $("#UDP :checked");
+			var insurence = $("#insurence").val();
+			var SInvoiceDate = $("#SInvoiceDate").val();
+			
 			
 			var mrnNumber=$("#mrnNumber").val();
 			var freightCharges=$("#freightCharges").val();
 			var discount=$("#discount").val();
-			//alert("=mrnNumber="+mrnNumber+"=freightCharges="+freightCharges+"=discount="+discount+"=sInvNumber="+sInvNumber+"=poNumber="+poNumber);
+			//alert("=mrnNumber="+mrnNumber+"=freightCharges="+freightCharges+"=discount="+discount+"=sInvNumber="+sInvNumber+"=poNumber="+poNumber+"=insurence="+insurence);
 			var productStoreId = $("#productStoreId").val();
 			var party = jQuery("<input>").attr("type", "hidden").attr("name", "partyId").val(partyId);
 		    var POField = jQuery("<input>").attr("type", "hidden").attr("name", "PONumber").val(poNumber);
@@ -137,6 +146,8 @@
 			var dicountField = jQuery("<input>").attr("type", "hidden").attr("name", "discount").val(discount);
 			var mrnNumberField=jQuery("<input>").attr("type", "hidden").attr("name", "mrnNumber").val(mrnNumber);
 			var sInvNumberField=jQuery("<input>").attr("type", "hidden").attr("name", "SInvNumber").val(sInvNumber);
+			var insurenceField=jQuery("<input>").attr("type", "hidden").attr("name", "insurence").val(insurence);
+			var SInvoiceDateField=jQuery("<input>").attr("type", "hidden").attr("name", "SInvoiceDate").val(SInvoiceDate);
 			<#if orderId?exists>
 				var order = '${orderId}';
 				var extOrder = jQuery("<input>").attr("type", "hidden").attr("name", "orderId").val(order);		
@@ -151,6 +162,8 @@
 			jQuery(formId).append(jQuery(dicountField));
 			jQuery(formId).append(jQuery(mrnNumberField));
 			jQuery(formId).append(jQuery(sInvNumberField));
+			jQuery(formId).append(jQuery(insurenceField));
+			jQuery(formId).append(jQuery(SInvoiceDateField));
 		</#if>
 		
 		jQuery(formId).attr("action", action);	
@@ -247,9 +260,12 @@
 			{id:"cProductName", name:"Product", field:"cProductName", width:180, minWidth:180, cssClass:"cell-title", availableTags: availableTags, editor: AutoCompleteEditor, validator: productValidator, sortable:false ,toolTip:""},
 			{id:"quantity", name:"Qty(Pkt)", field:"quantity", width:70, minWidth:70, cssClass:"cell-title",editor:FloatCellEditor, sortable:false , formatter: quantityFormatter,  validator: quantityValidator},
 			{id:"UPrice", name:"Price", field:"UPrice", width:130, minWidth:130, editor:FloatCellEditor, sortable:false, formatter: rateFormatter, align:"right", toolTip:"UD Price"},
-			{id:"VAT", name:"VAT-Amount", field:"VAT", width:80, minWidth:80, editor:FloatCellEditor, sortable:false, formatter: rateFormatter, align:"right", toolTip:"Vat Percentage"},
+			{id:"VAT", name:"VAT-Amount", field:"VAT", width:80, minWidth:80, editor:FloatCellEditor, sortable:false, formatter: rateFormatter, align:"right", toolTip:"Vat Price"},
+			{id:"Excise", name:"Bed-Amount", field:"Excise", width:80, minWidth:80, editor:FloatCellEditor, sortable:false, formatter: rateFormatter, align:"right", toolTip:"Bed Amount"},
+			{id:"bedCessAmount", name:"Bed-CessAmount", field:"bedCessAmount", width:80, minWidth:80, editor:FloatCellEditor, sortable:false, formatter: rateFormatter, align:"right", toolTip:"Bed Cess Amount"},
+			{id:"bedSecCessAmount", name:"Bed-SecCessAmount", field:"bedSecCessAmount", width:80, minWidth:80, editor:FloatCellEditor, sortable:false, formatter: rateFormatter, align:"right", toolTip:"Bed Sec Cess Amount"},
 			{id:"CST", name:"CST-Amount", field:"CST", width:80, minWidth:80, editor:FloatCellEditor, sortable:false, formatter: rateFormatter, align:"right", toolTip:"CST Percentage"},
-			{id:"Excise", name:"Excise-Amount", field:"Excise", width:80, minWidth:80, editor:FloatCellEditor, sortable:false, formatter: rateFormatter, align:"right", toolTip:"Excise Percentage"},
+			
 			//{id:"amount", name:"Total Amount(Rs)", field:"amount", width:100, minWidth:100, cssClass:"readOnlyColumnClass", sortable:false, formatter: rateFormatter, focusable :false}
 		];
 		

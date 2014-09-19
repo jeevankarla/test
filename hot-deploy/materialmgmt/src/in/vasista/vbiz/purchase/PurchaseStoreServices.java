@@ -104,6 +104,10 @@ public static String processPurchaseOrder(HttpServletRequest request, HttpServle
 	String PONumber=(String) request.getParameter("PONumber");
 	String mrnNumber=(String) request.getParameter("mrnNumber");
 	String SInvNumber=(String) request.getParameter("SInvNumber");
+	String SInvoiceDateStr=(String) request.getParameter("SInvoiceDate");
+	String insurenceStr=(String) request.getParameter("insurence");
+	
+	
 	
 	String subscriptionTypeId = "AM";
 	String partyIdFrom = "";
@@ -122,16 +126,10 @@ public static String processPurchaseOrder(HttpServletRequest request, HttpServle
 	String batchNo = null;
 	String quantityStr = null;
 	String unitPriceStr=null;
-	String vatStr=null;
-	String exciseStr=null;
-	String cstStr=null;
+	
 	Timestamp effectiveDate=null;
 	BigDecimal quantity = BigDecimal.ZERO;
 	BigDecimal uPrice = BigDecimal.ZERO;
-	BigDecimal vat = BigDecimal.ZERO;
-	BigDecimal cst = BigDecimal.ZERO;
-	BigDecimal excise = BigDecimal.ZERO;
-	
 	
 	Map<String, Object> result = ServiceUtil.returnSuccess();
 	HttpSession session = request.getSession();
@@ -148,6 +146,17 @@ public static String processPurchaseOrder(HttpServletRequest request, HttpServle
 	}
 	else{
 		effectiveDate = UtilDateTime.getDayStart(UtilDateTime.nowTimestamp());
+	}
+	Timestamp SInvoiceDate=null;
+	if (UtilValidate.isNotEmpty(SInvoiceDateStr)) { //2011-12-25 18:09:45
+		SimpleDateFormat sdf = new SimpleDateFormat("dd MMMMM, yyyy");             
+		try {
+			SInvoiceDate = new java.sql.Timestamp(sdf.parse(SInvoiceDateStr).getTime());
+		} catch (ParseException e) {
+			Debug.logError(e, "Cannot parse SupplierInvoice Date String: " + SInvoiceDateStr, module);
+		} catch (NullPointerException e) {
+			Debug.logError(e, "Cannot parse SupplierInvoice Date String: " + SInvoiceDateStr, module);
+		}
 	}
 	if (partyId == "") {
 		request.setAttribute("_ERROR_MESSAGE_","Party Id is empty");
@@ -176,6 +185,7 @@ public static String processPurchaseOrder(HttpServletRequest request, HttpServle
 	}
 	BigDecimal freightCharges = BigDecimal.ZERO;
 	BigDecimal discount = BigDecimal.ZERO;
+	BigDecimal insurence = BigDecimal.ZERO;
 	try {
 		if (!freightChargesStr.equals("")) {
 			freightCharges = new BigDecimal(freightChargesStr);
@@ -194,10 +204,31 @@ public static String processPurchaseOrder(HttpServletRequest request, HttpServle
 		request.setAttribute("_ERROR_MESSAGE_", "Problems parsing discount string: " + discountStr);
 		return "error";
 	}
+	try {
+		if (!insurenceStr.equals("")) {
+			insurence = new BigDecimal(insurenceStr);
+		}
+	} catch (Exception e) {
+		Debug.logError(e, "Problems parsing insurence string: " + insurenceStr, module);
+		request.setAttribute("_ERROR_MESSAGE_", "Problems parsing insurence string: " + insurenceStr);
+		return "error";
+	}
   
 	List indentProductList = FastList.newInstance();
 	for (int i = 0; i < rowCount; i++) {
-	  
+		
+		String vatStr=null;
+		String exciseStr=null;
+		String bedCessStr=null;
+		String bedSecCessStr=null;
+		String cstStr=null;
+		
+		BigDecimal vat = BigDecimal.ZERO;
+		BigDecimal cst = BigDecimal.ZERO;
+		BigDecimal excise = BigDecimal.ZERO;
+		BigDecimal bedCessAmount = BigDecimal.ZERO;
+		BigDecimal bedSecCessAmount = BigDecimal.ZERO;
+		
 		Map<String  ,Object> productQtyMap = FastMap.newInstance();	  		  
 		String thisSuffix = UtilHttp.MULTI_ROW_DELIMITER + i;
 		if (paramMap.containsKey("productId" + thisSuffix)) {
@@ -236,6 +267,13 @@ public static String processPurchaseOrder(HttpServletRequest request, HttpServle
 		if (paramMap.containsKey("excise" + thisSuffix)) {
 			exciseStr = (String) paramMap.get("excise" + thisSuffix);
 		}
+		if (paramMap.containsKey("bedCess" + thisSuffix)) {
+			bedCessStr = (String) paramMap.get("bedCess" + thisSuffix);
+		}
+		if (paramMap.containsKey("bedSecCess" + thisSuffix)) {
+			bedSecCessStr = (String) paramMap.get("bedSecCess" + thisSuffix);
+		}
+		
 		if (paramMap.containsKey("CST" + thisSuffix)) {
 			cstStr = (String) paramMap.get("CST" + thisSuffix);
 		}
@@ -275,6 +313,25 @@ public static String processPurchaseOrder(HttpServletRequest request, HttpServle
 			return "error";
 		}
 		try {
+			if (!bedCessStr.equals("")) {
+				bedCessAmount = new BigDecimal(bedCessStr);
+			}
+		} catch (Exception e) {
+			Debug.logError(e, "Problems parsing bedCess string: " + bedCessStr, module);
+			request.setAttribute("_ERROR_MESSAGE_", "Problems parsing bedCess string: " + bedCessStr);
+			return "error";
+		}
+		try {
+			if (!bedSecCessStr.equals("")) {
+				bedSecCessAmount = new BigDecimal(bedSecCessStr);
+			}
+		} catch (Exception e) {
+			Debug.logError(e, "Problems parsing bedSecCess string: " + bedSecCessStr, module);
+			request.setAttribute("_ERROR_MESSAGE_", "Problems parsing bedSecCess string: " + bedSecCessStr);
+			return "error";
+		}
+		Debug.log("=bedCessStr="+bedCessStr+"=bedSecCessStr="+bedSecCessStr+"==bedSecCessAmount="+bedSecCessAmount);
+		try {
 			if (!cstStr.equals("")) {
 			cst = new BigDecimal(cstStr);
 			}
@@ -287,9 +344,14 @@ public static String processPurchaseOrder(HttpServletRequest request, HttpServle
 		productQtyMap.put("productId", productId);
 		productQtyMap.put("quantity", quantity);
 		productQtyMap.put("unitPrice", uPrice);
-		productQtyMap.put("vatPercentage", vat);
+		/*productQtyMap.put("vatPercentage", vat);
 		productQtyMap.put("cstPercentage", cst);
-		productQtyMap.put("excisePercentage", excise);
+		productQtyMap.put("excisePercentage", excise);*/
+		productQtyMap.put("vatAmount", vat);
+		productQtyMap.put("bedAmount", excise);
+		productQtyMap.put("bedCessAmount",bedCessAmount );
+		productQtyMap.put("bedSecCessAmount", bedSecCessAmount);
+		productQtyMap.put("cstAmount", cst);
 		//productQtyMap.put("batchNo", batchNo);
 		indentProductList.add(productQtyMap);
 	}//end row count for loop
@@ -311,9 +373,11 @@ public static String processPurchaseOrder(HttpServletRequest request, HttpServle
 	processOrderContext.put("productStoreId", productStoreId);
 	processOrderContext.put("freightCharges", freightCharges);
 	processOrderContext.put("discount", discount);
+	processOrderContext.put("insurence", insurence);
 	processOrderContext.put("mrnNumber", mrnNumber);
 	processOrderContext.put("PONumber", PONumber);
 	processOrderContext.put("SInvNumber", SInvNumber);
+	processOrderContext.put("SInvoiceDate", SInvoiceDate);
 	
 
 	result = createPurchaseOrder(dctx, processOrderContext);
@@ -346,8 +410,9 @@ public static Map<String, Object> createPurchaseOrder(DispatchContext dctx, Map<
   	String mrnNumber = (String) context.get("mrnNumber");
   	String PONumber=(String) context.get("PONumber");
   	String SInvNumber = (String) context.get("SInvNumber");
+	BigDecimal insurence = (BigDecimal) context.get("insurence");
 	
-  	//Debug.log("=AFTER==CONTEXT==freightCharges="+freightCharges+"=discount="+discount+"==mrnNumber=="+mrnNumber+"=PONumber="+PONumber+"=SInvNumber="+SInvNumber);
+  	Debug.log("=AFTER==CONTEXT==freightCharges="+freightCharges+"=discount="+discount+"==mrnNumber=="+mrnNumber+"=PONumber="+PONumber+"=SInvNumber="+SInvNumber+"=insurence="+insurence);
   	String currencyUomId = "INR";
   	String shipmentId = (String) context.get("shipmentId");
   	String shipmentTypeId = (String) context.get("shipmentTypeId");
@@ -419,6 +484,9 @@ public static Map<String, Object> createPurchaseOrder(DispatchContext dctx, Map<
 	BigDecimal vat = BigDecimal.ZERO;
 	BigDecimal cst = BigDecimal.ZERO;
 	BigDecimal excise = BigDecimal.ZERO;
+	BigDecimal bedCessAmount = BigDecimal.ZERO;
+	BigDecimal bedSecCessAmount = BigDecimal.ZERO;
+
 	List<GenericValue> prodPriceTypeList = FastList.newInstance();
 	
 	for (Map<String, Object> prodQtyMap : productQtyList) {
@@ -438,8 +506,8 @@ public static Map<String, Object> createPurchaseOrder(DispatchContext dctx, Map<
 		tempPrice = tempPrice.add(unitPrice);
 		
 		if(unitPrice.compareTo(BigDecimal.ZERO)>0){
-			if(UtilValidate.isNotEmpty(prodQtyMap.get("excisePercentage"))){
-				excise = (BigDecimal)prodQtyMap.get("excisePercentage");
+			if(UtilValidate.isNotEmpty(prodQtyMap.get("bedAmount"))){
+				excise = (BigDecimal)prodQtyMap.get("bedAmount");
 				BigDecimal taxRate = excise;
 				BigDecimal taxAmount = BigDecimal.ZERO;
 	        	if(taxRate.compareTo(BigDecimal.ZERO)>0){
@@ -467,9 +535,8 @@ public static Map<String, Object> createPurchaseOrder(DispatchContext dctx, Map<
 	        	tempPrice=tempPrice.add(taxAmount);
 	        	totalTaxAmt=totalTaxAmt.add(taxAmount);
 			}
-			//Debug.log("=tempPrice=="+tempPrice+"=totalTaxAmt="+totalTaxAmt);
-			if(UtilValidate.isNotEmpty(prodQtyMap.get("vatPercentage"))){
-				BigDecimal taxRate = (BigDecimal)prodQtyMap.get("vatPercentage");
+			if(UtilValidate.isNotEmpty(prodQtyMap.get("vatAmount"))){
+			    BigDecimal taxRate = (BigDecimal)prodQtyMap.get("vatAmount");
 				BigDecimal taxAmount = BigDecimal.ZERO;
 	        	if(taxRate.compareTo(BigDecimal.ZERO)>0){
 	        		//taxAmount = (tempPrice.multiply(taxRate)).divide(PERCENT_SCALE, salestaxCalcDecimals, salestaxRounding);
@@ -496,11 +563,62 @@ public static Map<String, Object> createPurchaseOrder(DispatchContext dctx, Map<
 		    		prodPriceTypeList.add(newProdPriceType);
 	        	}
 	        	totalTaxAmt=totalTaxAmt.add(taxAmount);
-	        	
-	        	
 			}
-			if(UtilValidate.isNotEmpty(prodQtyMap.get("cstPercentage"))){
-				cst = (BigDecimal)prodQtyMap.get("cstPercentage");
+			if(UtilValidate.isNotEmpty(prodQtyMap.get("bedCessAmount"))){
+			    BigDecimal taxRate = (BigDecimal)prodQtyMap.get("bedCessAmount");
+				BigDecimal taxAmount = BigDecimal.ZERO;
+	        	if(taxRate.compareTo(BigDecimal.ZERO)>0){
+	        		//taxAmount = (tempPrice.multiply(taxRate)).divide(PERCENT_SCALE, salestaxCalcDecimals, salestaxRounding);
+	        		taxAmount=taxRate.setScale(salestaxCalcDecimals, salestaxRounding);
+	        		Map taxDetailMap = FastMap.newInstance();
+		    		taxDetailMap.put("taxType", "BEDCESS_PUR");
+		    		taxDetailMap.put("amount", taxAmount);
+		    		//taxDetailMap.put("percentage", taxRate);
+		    		taxList.add(taxDetailMap);
+		    		
+		    		GenericValue newProdPriceType = delegator.makeValue("ProductPriceAndType");        	 
+		    		newProdPriceType.set("fromDate", effectiveDate);
+		    		newProdPriceType.set("parentTypeId", "TAX");
+		    		newProdPriceType.set("productId", productId);
+		    		newProdPriceType.set("productStoreGroupId", "_NA_");
+		    		newProdPriceType.set("productPricePurposeId", "PURCHASE");
+		    		newProdPriceType.set("productPriceTypeId", "BEDCESS_PUR");
+		    		//newProdPriceType.set("taxPercentage", taxRate);
+		    		newProdPriceType.set("taxAmount", taxAmount);
+		    		newProdPriceType.set("currencyUomId", "INR");
+		    		prodPriceTypeList.add(newProdPriceType);
+	        	}
+	        	totalTaxAmt=totalTaxAmt.add(taxAmount);
+			}
+			
+		    if(UtilValidate.isNotEmpty(prodQtyMap.get("bedSecCessAmount"))){
+			    BigDecimal taxRate = (BigDecimal)prodQtyMap.get("bedSecCessAmount");
+				BigDecimal taxAmount = BigDecimal.ZERO;
+	        	if(taxRate.compareTo(BigDecimal.ZERO)>0){
+	        		//taxAmount = (tempPrice.multiply(taxRate)).divide(PERCENT_SCALE, salestaxCalcDecimals, salestaxRounding);
+	        		taxAmount=taxRate.setScale(salestaxCalcDecimals, salestaxRounding);
+	        		Map taxDetailMap = FastMap.newInstance();
+		    		taxDetailMap.put("taxType", "BEDSECCESS_PUR");
+		    		taxDetailMap.put("amount", taxAmount);
+		    		//taxDetailMap.put("percentage", taxRate);
+		    		taxList.add(taxDetailMap);
+		        	
+		    		GenericValue newProdPriceType = delegator.makeValue("ProductPriceAndType");        	 
+		    		newProdPriceType.set("fromDate", effectiveDate);
+		    		newProdPriceType.set("parentTypeId", "TAX");
+		    		newProdPriceType.set("productId", productId);
+		    		newProdPriceType.set("productStoreGroupId", "_NA_");
+		    		newProdPriceType.set("productPricePurposeId", "PURCHASE");
+		    		newProdPriceType.set("productPriceTypeId", "BEDSECCESS_PUR");
+		    		//newProdPriceType.set("taxPercentage", taxRate);
+		    		newProdPriceType.set("taxAmount", taxAmount);
+		    		newProdPriceType.set("currencyUomId", "INR");
+		    		prodPriceTypeList.add(newProdPriceType);
+	        	}
+	        	totalTaxAmt=totalTaxAmt.add(taxAmount);
+			}
+			if(UtilValidate.isNotEmpty(prodQtyMap.get("cstAmount"))){
+				cst = (BigDecimal)prodQtyMap.get("cstAmount");
 				BigDecimal taxRate = cst;
 				BigDecimal taxAmount = BigDecimal.ZERO;
 	        	if(taxRate.compareTo(BigDecimal.ZERO)>0){
@@ -528,11 +646,15 @@ public static Map<String, Object> createPurchaseOrder(DispatchContext dctx, Map<
 			}
 		}
 	
-		BigDecimal totalPrice = unitPrice.add(totalTaxAmt);
+		//BigDecimal totalPrice = unitPrice.add(totalTaxAmt);
+		
+		BigDecimal totalPrice = unitPrice;//as of now For PurchaseOrder listPrice is same like unitPrice
+		
 		//BigDecimal totalTaxAmt = BigDecimal.ZERO;
 		//Debug.log("==totalPrice==="+totalPrice+"==totalTaxAmt="+totalTaxAmt+"=unitPrice="+unitPrice);
 		//List taxList = (List)priceResult.get("taxList");
 		//Debug.log("=========taxList====="+taxList);
+		//Debug.log("==prodPriceTypeList=====>"+prodPriceTypeList);
 		ShoppingCartItem item = null;
 		try{
 			int itemIndx = cart.addItem(0, ShoppingCartItem.makeItem(Integer.valueOf(0), productId, null,	quantity, unitPrice,
@@ -556,7 +678,8 @@ public static Map<String, Object> createPurchaseOrder(DispatchContext dctx, Map<
 	//Debug.log("=========prodPriceTypeList====="+prodPriceTypeList);
 	
 	try {
-		checkout.calcAndAddTax(prodPriceTypeList);
+		//checkout.calcAndAddTax(prodPriceTypeList);
+		checkout.calcAndAddTaxPurchase(prodPriceTypeList);
 	} catch (Exception e1) {
 	// TODO Auto-generated catch block
 		Debug.logError(e1, "Error in CalcAndAddTax",module);
@@ -602,6 +725,24 @@ public static Map<String, Object> createPurchaseOrder(DispatchContext dctx, Map<
 		  			  return adjResultMap;			  
 		  	 	}
 	    }
+		if(insurence.compareTo(BigDecimal.ZERO)>0){
+	    	Map adjustCtx = UtilMisc.toMap("userLogin",userLogin);	  	
+	    	adjustCtx.put("orderId", orderId);
+	    	adjustCtx.put("adjustmentTypeId", "INSURENCE");
+	    	adjustCtx.put("adjustmentAmount", insurence);
+	    	Map adjResultMap=FastMap.newInstance();
+		  	 	try{
+		  	 		 adjResultMap = dispatcher.runSync("createAdjustmentForPurchaseOrder",adjustCtx);  		  		 
+		  	 		if (ServiceUtil.isError(adjResultMap)) {
+		  	 			String errMsg =  ServiceUtil.getErrorMessage(adjResultMap);
+		  	 			Debug.logError(errMsg , module);
+		  	 		 return ServiceUtil.returnError(" Error While discount Adjustment for Purchase Order !");
+		  	 		}
+		  	 	}catch (Exception e) {
+		  			  Debug.logError(e, "Error While Creating discount Adjustment for Purchase Order ", module);
+		  			  return adjResultMap;			  
+		  	 	}
+	    }
 		
 		/*String mrnNumber = (String) context.get("mrnNumber");
 	  	String PONumber=(String) context.get("PONumber");
@@ -626,6 +767,18 @@ public static Map<String, Object> createPurchaseOrder(DispatchContext dctx, Map<
 				  Debug.logError(e, "Error While Creating Attribute(SUP_INV_NUMBER)  for Purchase Order ", module);
 				  return ServiceUtil.returnError("Error While Creating Attribute(SUP_INV_NUMBER)  for Purchase Order : "+orderId);
 	  	 	}
+			//supplier invoice date
+			try{
+				GenericValue orderAttribute = delegator.makeValue("OrderAttribute");
+				orderAttribute.set("orderId", orderId);
+				orderAttribute.set("attrName", "SUP_INV_DATE");
+				orderAttribute.set("attrValue", UtilDateTime.toDateString((Timestamp)context.get("SInvoiceDate"),null));
+				delegator.createOrStore(orderAttribute);
+				}catch (Exception e) {
+					  Debug.logError(e, "Error While Creating Attribute(SUP_INV_DATE)  for Purchase Order ", module);
+					  return ServiceUtil.returnError("Error While Creating Attribute(SUP_INV_DATE)  for Purchase Order : "+orderId);
+		  	 	}
+			
 		try{
 			GenericValue orderAttribute = delegator.makeValue("OrderAttribute");
 			orderAttribute.set("orderId", orderId);
@@ -645,6 +798,7 @@ public static Map<String, Object> createPurchaseOrder(DispatchContext dctx, Map<
 				  Debug.logError(e, "Error While Updating purposeTypeId for Order ", module);
 				  return ServiceUtil.returnError("Error While Updating purposeTypeId for Order : "+orderId);
 	  	 	}
+			
 		
 	// let's handle order rounding here
     /*try{   
@@ -793,7 +947,19 @@ public static Map<String, Object> createAdjustmentForPurchaseOrder(DispatchConte
 	         		return ServiceUtil.returnError("There was an error while creating the adjustment: " + ServiceUtil.getErrorMessage(result));          	            
 	         } 
 		}
-		
+		if("INSURENCE".equalsIgnoreCase(adjustmentTypeId)){
+			String orderAdjustmentTypeId = "COGS_ITEM18";
+			 Map createOrderAdjustmentCtx = UtilMisc.toMap("userLogin",userLogin);
+	    	 createOrderAdjustmentCtx.put("orderId", orderId);
+	    	 createOrderAdjustmentCtx.put("orderAdjustmentTypeId", orderAdjustmentTypeId);    	
+	    	 createOrderAdjustmentCtx.put("amount", adjustmentAmount);//minus discount value from total order
+	    	 //Debug.log("createOrderAdjustment==FOR====DISCOUNT=="+createOrderAdjustmentCtx);
+	    	 result = dispatcher.runSync("createOrderAdjustment", createOrderAdjustmentCtx);
+	     	 if (ServiceUtil.isError(result)) {
+	                Debug.logWarning("There was an error while creating  the adjustment: " + ServiceUtil.getErrorMessage(result), module);
+	         		return ServiceUtil.returnError("There was an error while creating the adjustment: " + ServiceUtil.getErrorMessage(result));          	            
+	         } 
+		}
 		
 	
 	} catch (Exception e) {

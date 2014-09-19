@@ -11,12 +11,12 @@ $(document).ready(function(){
 				$( "#effectiveDate" ).datepicker("option", selectedDate);
 			}
 		});
-		$( "#chequeDate" ).datepicker({
+		$( "#SInvoiceDate" ).datepicker({
 			dateFormat:'d MM, yy',
 			changeMonth: true,
 			numberOfMonths: 1,
 			onSelect: function( selectedDate ) {
-				$( "#effectiveDate" ).datepicker(selectedDate);
+				$( "#SInvoiceDate" ).datepicker(selectedDate);
 			}
 		});
 		$('#ui-datepicker-div').css('clip', 'auto');
@@ -269,32 +269,44 @@ $(document).ready(function(){
 		        <tr>
        				<td align='left' valign='middle' nowrap="nowrap"><div class='h3'>MRN No.: </div></td>
 		         	<td valign='middle' align='left'> 
-             			<input class='h3' type="text" size="25" maxlength="25" name="mrnNumber" id="mrnNumber"/>          
+             			<input class='h3' type="text" size="20" maxlength="30" name="mrnNumber" id="mrnNumber"/>          
           			</td>
           			<td>&nbsp;&nbsp;&nbsp;</td>
           			<td align='left' valign='middle' nowrap="nowrap"><div class='h3'>PO No.: </div></td>
 		         	<td valign='middle' align='left'> 
-             			<input class='h3' type="text" size="25" maxlength="25" name="PONumber" id="PONumber"/>          
+             			<input class='h3' type="text" size="20" maxlength="30" name="PONumber" id="PONumber"/>          
           			</td>
           			<td>&nbsp;&nbsp;&nbsp;</td>
           			<td align='left' valign='middle' nowrap="nowrap"><div class='h3'>SUP Invoice No.: </div></td>
 		         	<td valign='middle' align='left'> 
-             			<input class='h3' type="text" size="25" maxlength="25" name="SInvNumber" id="SInvNumber"/>          
+             			<input class='h3' type="text" size="20" maxlength="30" name="SInvNumber" id="SInvNumber"/>          
           			</td>
  		       </tr>
  		       <tr><td><br/></td></tr>
  		        <tr>
 		        	<td align='left' valign='middle' nowrap="nowrap"><div class='h3'>Freight Charges: </div></td>
        				<td valign='middle' align='left'> 
-           				<input class='h3' type="text" size="25" maxlength="25" name="freightCharges" id="freightCharges"/>          
+           				<input class='h3' type="text" size="20" maxlength="30" name="freightCharges" id="freightCharges"/>          
        				</td>
        				<td>&nbsp;&nbsp;&nbsp;</td>
        				<td align='left' valign='middle' nowrap="nowrap"><div class='h3'>Discount: </div></td>
 		         	<td valign='middle' align='left'> 
-             			<input class='h3' type="text" size="25" maxlength="25" name="discount" id="discount"/>          
+             			<input class='h3' type="text" size="20" maxlength="30" name="discount" id="discount"/>          
+          			</td>
+          			<td>&nbsp;&nbsp;&nbsp;</td>
+       				<td align='left' valign='middle' nowrap="nowrap"><div class='h3'>Insurance: </div></td>
+		         	<td valign='middle' align='left'> 
+             			<input class='h3' type="text" size="20" maxlength="30" name="insurence" id="insurence"/>          
+          			</td>
+ 		         </tr>
+ 		        <tr><td><br/></td></tr>
+		        <tr>
+          			<td align='left' valign='middle' nowrap="nowrap"><div class='h3'>SUP Invoice Date: </div></td>
+		         	<td valign='middle' align='left'> 
+             			<input class='h3' type="text" size="20" maxlength="30" name="SInvoiceDate" id="SInvoiceDate"/>          
           			</td>
  		       </tr>
- 		        <tr><td><br/></td></tr>
+ 		       <tr><td><br/></td></tr>
         	</table>
 		</div>
 			<div id="myGrid1" style="width:100%;height:350px;"></div>
