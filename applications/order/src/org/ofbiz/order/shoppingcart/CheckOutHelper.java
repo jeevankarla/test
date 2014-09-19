@@ -1697,4 +1697,51 @@ public class CheckOutHelper {
             }
         }
     }
+    //new Taxition Logic for Purchases
+    public void calcAndAddTaxPurchase(List<GenericValue> taxItemTypes) throws GeneralException {
+    	calcAndAddTaxPurchase(null, false ,taxItemTypes);
+    }
+    
+    public void calcAndAddTaxPurchase(GenericValue shipAddress, boolean skipEmptyAddresses ,List<GenericValue> taxItemTypes) throws GeneralException {
+        /*if (UtilValidate.isEmpty(cart.getShippingContactMechId()) && cart.getBillingAddress() == null && shipAddress == null) {
+            return;
+        }*/
+        int shipGroups = this.cart.getShipGroupSize();
+        for (int i = 0; i < shipGroups; i++) {
+            ShoppingCart.CartShipInfo csi = cart.getShipInfo(i);
+            Map<Integer, ShoppingCartItem> shoppingCartItemIndexMap = new HashMap<Integer, ShoppingCartItem>();
+            Map<String, Object> serviceContext = this.makeTaxContext(i, null, shoppingCartItemIndexMap, cart.getFacilityId(), skipEmptyAddresses);
+            if(UtilValidate.isNotEmpty(taxItemTypes)){
+            	serviceContext.put("taxItemTypes", taxItemTypes);
+            	
+            }
+            if (skipEmptyAddresses && serviceContext == null) {
+                csi.clearAllTaxInfo();
+                continue;
+            }
+         
+            //List<List<? extends Object>> taxReturn = this.getTaxAdjustments(dispatcher, "calcTax", serviceContext);
+            List<List<? extends Object>> taxReturn = this.getTaxAdjustments(dispatcher, "calcTaxForPurchase", serviceContext);
+            
+            if (Debug.verboseOn()) Debug.logVerbose("ReturnList: " + taxReturn, module);
+            List<GenericValue> orderAdj = UtilGenerics.checkList(taxReturn.get(0));
+            List<List<GenericValue>> itemAdj = UtilGenerics.checkList(taxReturn.get(1));
+            // set the item adjustments
+            if (itemAdj != null) {
+                for (int x = 0; x < itemAdj.size(); x++) {
+                    List<GenericValue> adjs = itemAdj.get(x);
+                    ShoppingCartItem item = shoppingCartItemIndexMap.get(Integer.valueOf(x));
+                    if (adjs == null) {
+                        adjs = new LinkedList<GenericValue>();
+                    }
+                    csi.setItemInfo(item, adjs);
+                    if (Debug.verboseOn()) Debug.logVerbose("Added item adjustments to ship group [" + i + " / " + x + "] - " + adjs, module);
+                }
+            }
+            // need to manually clear the order adjustments
+            csi.shipTaxAdj.clear();
+            csi.shipTaxAdj.addAll(orderAdj);
+        }
+    }
+    
 }

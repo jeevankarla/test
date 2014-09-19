@@ -736,7 +736,7 @@ public class ShoppingCartItem implements java.io.Serializable {
         this.bedcessPercent = item.getBedcessPercent();
         this.bedcessAmount = item.getBedcessAmount();
         this.bedseccessPercent = item.getBedseccessPercent();
-        this.bedseccessAmount = item.getBedseccessPercent();
+        this.bedseccessAmount = item.getBedseccessAmount();
        
         
         

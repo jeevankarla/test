@@ -3648,7 +3648,7 @@ public class ShoppingCart implements Iterable<ShoppingCartItem>, Serializable {
                 orderItem.set("bedcessPercent", item.getBedcessPercent());
                 orderItem.set("bedcessAmount", item.getBedcessAmount());
                 orderItem.set("bedseccessPercent",item.getBedseccessPercent());
-                orderItem.set("bedseccessAmount", item.getBedseccessPercent());
+                orderItem.set("bedseccessAmount", item.getBedseccessAmount());
                 
                 if (this.getUserLogin() != null) {
                     orderItem.set("changeByUserLoginId", this.getUserLogin().get("userLoginId"));
