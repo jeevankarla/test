@@ -89,7 +89,7 @@
             <link target="DailyPunch"/>
         </menu-item>     
         <menu-item name="busTimings" title="Daily Bus Timings">
-            <condition>
+           <condition>
             	<if-has-permission permission="HR"  action="_DAILYBUS_VIEW"/>
             </condition> 
         	<link target="busTimings"/>
@@ -500,6 +500,11 @@
                 <parameter param-name="partyIdFrom"/>
                 <parameter param-name="fromDate"/>
             </link>
+        </menu-item>
+        <menu-item name="ShiftCalender" title="Shift Calender">
+        	<link target="empShiftCalender" >
+        		<parameter param-name="partyId"/>
+        	</link>
         </menu-item>
         
         <menu-item name="PreviousEmployementProfile" title="${uiLabelMap.PreviousEmployementProfile}">

@@ -1023,7 +1023,29 @@ under the License.
      <request-map uri="PreviousEmployementProfile">
         <security https="true" auth="true"/>
         <response name="success" type="view" value="PreviousEmployementProfile" save-home-view="true"/>
-    </request-map>    
+    </request-map>  
+     <request-map uri="empShiftCalender">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="ShiftCalender" save-home-view="true"/>
+    </request-map>
+    <request-map uri="AddShiftCalender">
+    	<security https="true" auth="true"/>
+    	<event type="service" invoke="AddShiftCalender"/>
+    	<response name="success" type="view" value="ShiftCalender"/>
+    	<response name="error" type="view" value="ShiftCalender"/>
+    </request-map>
+    <request-map uri="UpdateShiftCalender">
+    	<security https="true" auth="true"/>
+    	<event type="service" invoke="UpdateShiftCalender"/>
+    	<response name="success" type="view" value="ShiftCalender"/>
+    	<response name="error" type="view" value="ShiftCalender"/>
+    </request-map>
+    <request-map uri="DeleteShiftCalender">
+    	<security https="true" auth="true"/>
+    	<event type="service" invoke="DeleteShiftCalender"/>
+    	<response name="success" type="view" value="ShiftCalender"/>
+    	<response name="error" type="view" value="ShiftCalender"/>
+    </request-map>
     <request-map uri="EditEmployeeQuals">
         <security https="true" auth="true"/>
         <response name="success" type="view" value="EditEmployeeQuals"/>
@@ -1638,7 +1660,11 @@ under the License.
         <response name="success" type="view" value="ProfessionalTaxReport"/>
         <response name="error" type="view" value="ProfessionalTaxReport"></response>
     </request-map>
-   
+  <-- <request-map uri="PayrollConsolidatedSummaryReport.pdf">
+    	<security https="true" auth="true"/>
+        <response name="success" type="view" value="PrintPayrollSummary"/>
+        <response name="error" type="view" value="PrintPayrollSummary"></response>
+    </request-map> -->
     <request-map uri="PrintPayrollSummary.pdf">
     	<security https="true" auth="true"/>
         <response name="success" type="view" value="PrintPayrollSummary"/>
@@ -1946,6 +1972,7 @@ under the License.
    
 	<view-map name="EditEmployee" type="screen" page="component://humanres/widget/EmployeeScreens.xml#EditEmployee" />   
     <view-map name="PreviousEmployementProfile" type="screen" page="component://humanres/widget/EmployeeScreens.xml#PreviousEmployementProfile"/>
+    <view-map name="ShiftCalender" type="screen" page="component://humanres/widget/EmployeeScreens.xml#ShiftCalender"/>
     <view-map name="EditEmployeeSkills" type="screen" page="component://humanres/widget/EmployeeScreens.xml#EditEmployeeSkills"/>
     <view-map name="EditEmployeeTrainings" type="screen" page="component://humanres/widget/EmployeeScreens.xml#EditEmployeeTrainings"/>
     <view-map name="EditEmployeeQuals" type="screen" page="component://humanres/widget/EmployeeScreens.xml#EditEmployeeQuals"/>

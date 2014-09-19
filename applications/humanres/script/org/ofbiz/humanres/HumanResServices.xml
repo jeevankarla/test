@@ -77,7 +77,23 @@
         <entity-one entity-name="DailyBusTimings" value-field="lookedUpValue"/>
         <remove-value value-field="lookedUpValue"/>
     </simple-method>
-
+	
+	<simple-method method-name="AddShiftCalender" short-description="Add Employee Shift Calender">
+    	<make-value value-field="newEntity" entity-name="EmployeeShiftCalendar"/>
+    	<set-pk-fields map="parameters" value-field="newEntity"/>
+    	<set-nonpk-fields map="parameters" value-field="newEntity"/>
+    	<create-value value-field="newEntity"/>
+    </simple-method>
+    
+     <simple-method method-name="UpdateShiftCalender" short-description="Update Employee Shift Calender">
+        <entity-one entity-name="EmployeeShiftCalendar" value-field="lookedUpValue"/>
+        <set-nonpk-fields value-field="lookedUpValue" map="parameters"/>
+        <store-value value-field="lookedUpValue"/>
+    </simple-method>
+    <simple-method method-name="DeleteShiftCalender" short-description="Delete Employee Shift Calender">
+    	<entity-one value-field="lookedUpValue" entity-name="EmployeeShiftCalendar"/>
+		<remove-value value-field="lookedUpValue"/>
+    </simple-method>
     <simple-method method-name="createPartySkill" short-description="Create Party Skills">
         <make-value entity-name="PartySkill" value-field="newEntity"/>
         <set-pk-fields map="parameters" value-field="newEntity"/>

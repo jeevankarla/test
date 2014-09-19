@@ -72,7 +72,27 @@ under the License.emplpunch
         <permission-service service-name="humanResManagerPermission" main-action="DELETE"/>
         <auto-attributes mode="IN" include="pk" optional="false"/>
     </service>
-
+	<service name="AddShiftCalender" engine="simple" default-entity-name="EmployeeShiftCalendar"
+    location="component://humanres/script/org/ofbiz/humanres/HumanResServices.xml" invoke="AddShiftCalender" auth="true">
+    	<description>Add Employee Shift Calender</description>
+          <permission-service service-name="humanResManagerPermission" main-action="EMP_SHIFT_CALENDER_CREATE"/>
+    	<auto-attributes mode="IN" include="pk" optional="false"/>
+        <auto-attributes mode="IN" include="nonpk" optional="true"/>
+    </service>
+    <service name="UpdateShiftCalender" engine="simple" default-entity-name="EmployeeShiftCalendar"
+    location="component://humanres/script/org/ofbiz/humanres/HumanResServices.xml" invoke="UpdateShiftCalender" auth="true">
+    	<description>Delete Employee Shift Calender</description>
+          <permission-service service-name="humanResManagerPermission" main-action="EMP_SHIFT_CALENDER_UPDATE"/>
+    	<auto-attributes mode="IN" include="pk" optional="false"/>
+    	<auto-attributes mode="IN" include="nonpk" optional="true"/>
+    </service>
+    <service name="DeleteShiftCalender" engine="simple" default-entity-name="EmployeeShiftCalendar"
+    location="component://humanres/script/org/ofbiz/humanres/HumanResServices.xml" invoke="DeleteShiftCalender" auth="true">
+    	<description>Delete Employee Shift Calender</description>
+          <permission-service service-name="humanResManagerPermission" main-action="EMP_SHIFT_CALENDER_DELETE"/>
+    	<auto-attributes mode="IN" include="pk" optional="false"/>
+    	<auto-attributes mode="IN" include="nonpk" optional="true"/>
+    </service>
     <service name="createPartySkill" engine="simple" default-entity-name="PartySkill"
              location="component://humanres/script/org/ofbiz/humanres/HumanResServices.xml" invoke="createPartySkill" auth="true">
         <description>Create Skill for a Party</description>
@@ -1159,6 +1179,12 @@ under the License.emplpunch
         <auto-attributes mode="IN" include="nonpk" optional="true"/>
     </service>   
    
+   <--	<service name="emplPunchValidation" engine="java" 
+             location="in.vasista.vbiz.humanres.PayrollService" invoke="emplPunchValidation" auth="true">
+        <description>Validating punch</description>
+        <attribute name="partyId" optional="false" type="String" mode="IN"/>
+        <attribute name="punchdate" type="Timestamp" mode="IN" optional="false"/>
+    </service> -->
      <service name="adminPunch" engine="java" default-entity-name="EmplPunch"
              location="org.ofbiz.humanres.inout.PunchService" invoke="emplPunch" auth="true">
         <description>Add In/Out</description>

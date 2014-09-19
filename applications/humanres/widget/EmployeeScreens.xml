@@ -278,7 +278,7 @@ under the License.
 		<section>
 			<actions>
 				<set field="titleProperty" value="PageTitlePreviousEmploymentProfile"/>
-				<set field="tabButtonItem" value="PageTitlePreviousEmploymentProfile" ></set>
+				<set field="tabButtonItem" value="PreviousEmployementProfile" ></set>
 				<set field="labelTitleProperty" value="PageTitlePreviousEmploymentProfile"/> 
 				<entity-one entity-name="EmployeeDetail" value-field="EmployeeDetail" use-cache="true" />
 			</actions>
@@ -287,6 +287,30 @@ under the License.
                     <decorator-section name="body">
 						<screenlet title="${uiLabelMap.PageTitlePreviousEmploymentProfile}" id="EmployeeInformationPanel">
 							<include-form name="PreviousEmploymentDetails" location="component://humanres/widget/forms/EmployeeForms.xml" />
+						</screenlet>
+					</decorator-section>
+				</decorator-screen>
+			</widgets>
+		</section>
+	</screen>
+	<screen name="ShiftCalender">
+		<section>
+			<actions>
+				<set field="titleProperty" value="PageTitlePreviousEmploymentProfile"/>
+				<set field="tabButtonItem" value="ShiftCalender" ></set>
+				<set field="partyId" from-field="parameters.partyId"/>
+				<entity-and list="ShiftList" entity-name="EmployeeShiftCalendar">
+					<field-map field-name="partyId" from-field="parameters.partyId"/>
+				</entity-and>
+			</actions>
+			<widgets>
+				 <decorator-screen name="EmployeeDecorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="body">
+						<screenlet title="Employee Shift Calender">
+							<include-form name="ShiftCalender" location="component://humanres/widget/forms/EmployeeForms.xml" />
+						</screenlet>
+						<screenlet title="List Employee Shift Calender">
+							<include-form name="ListShiftCalender" location="component://humanres/widget/forms/EmployeeForms.xml" />
 						</screenlet>
 					</decorator-section>
 				</decorator-screen>

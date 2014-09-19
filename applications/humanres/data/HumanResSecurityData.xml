@@ -110,6 +110,18 @@ under the License.
     <SecurityGroupPermission groupId="FULLADMIN" permissionId="HUMANRES_BUSTIMING_DELETE"/>
     <SecurityGroupPermission groupId="HR_DAILYBUS_DELETE" permissionId="HUMANRES_BUSTIMING_DELETE"/>
     
+    <SecurityPermission description="Creating Shifts in shift calender." permissionId="EMP_SHIFT_CALENDER_CREATE"/>
+    <SecurityPermission description="Deleting shifts in shift calender." permissionId="EMP_SHIFT_CALENDER_DELETE"/>
+    <SecurityPermission description="Updating shifts in shift calender." permissionId="EMP_SHIFT_CALENDER_UPDATE"/>
+    
+    <SecurityGroup description="Employee Shift Calender Permissions" groupId="EMP_SHIFT_CALENDER"/> 
+    <SecurityGroupPermission groupId="FULLADMIN" permissionId="EMP_SHIFT_CALENDER_CREATE"/>
+    <SecurityGroupPermission groupId="FULLADMIN" permissionId="EMP_SHIFT_CALENDER_DELETE"/>
+    <SecurityGroupPermission groupId="FULLADMIN" permissionId="EMP_SHIFT_CALENDER_UPDATE"/>
+    <SecurityGroupPermission groupId="EMP_SHIFT_CALENDER" permissionId="EMP_SHIFT_CALENDER_CREATE"/>
+    <SecurityGroupPermission groupId="EMP_SHIFT_CALENDER" permissionId="EMP_SHIFT_CALENDER_DELETE"/>
+    <SecurityGroupPermission groupId="EMP_SHIFT_CALENDER" permissionId="EMP_SHIFT_CALENDER_UPDATE"/>
+    
     <SecurityGroup description="Loan deleting" groupId="HR_LOAN_DELETE"/>
     <SecurityGroupPermission groupId="FULLADMIN" permissionId="HR_LOAN_DELETE"/>
     <SecurityGroupPermission groupId="HR_LOAN_DELETE" permissionId="HR_LOAN_DELETE"/>
