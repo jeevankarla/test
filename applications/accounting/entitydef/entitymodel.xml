@@ -1506,6 +1506,10 @@
         <field name="vatAmount" type="currency-precise" ></field>
         <field name="bedPercent" type="fixed-point"></field>
         <field name="bedAmount" type="currency-precise" ></field>
+        <field name="bedcessPercent" type="fixed-point"></field>
+	    <field name="bedcessAmount" type="currency-precise" ></field>
+	    <field name="bedseccessPercent" type="fixed-point"></field>
+	    <field name="bedseccessAmount" type="currency-precise" ></field>
         <field name="cstPercent" type="fixed-point"></field>
       	<field name="cstAmount" type="currency-precise" ></field>
 		<field name="serviceTaxPercent" type="fixed-point"></field>
