@@ -62,6 +62,8 @@ function makeDatePicker1(fromDateId ,thruDateId){
 		makeDatePicker("larthruDate","larthruDate");
 		makeDatePicker("ITEarningsfromDate","ITEarningsfromDate");
 		makeDatePicker("ITEarningsthruDate","ITEarningsthruDate");
+		makeDatePicker("ITDeductionsfromDate","ITDeductionsfromDate");
+		makeDatePicker("ITDeductionsthruDate","ITDeductionsthruDate");
 		makeDatePicker("MPfromDate","MPfromDate");
 		makeDatePicker("MPthruDate","MPthruDate");
 		makeDatePicker("LOPfromDate","LOPfromDate");
@@ -618,11 +620,25 @@ function makeDatePicker1(fromDateId ,thruDateId){
 						<form id="ITEarningsReport" name="ITEarningsReport" mothed="post" action="<@ofbizUrl>ITEarningsReport.pdf</@ofbizUrl>" target="_blank">
 							<table class="basic-table" cellspacing="5">
 								<tr class="alternate-row">
-									<td width="19%"><span class='h3'>IT Earnings Report</span></td>
+									<td width="19%"><span class='h3'>IT Earnings Report<input  type="hidden"  value="ITEarningsReport"   name="reportTypeFlag"/></span></td>
 									<td width="29%"><span class='h3'>Employee Id<@htmlTemplate.lookupField formName="ITEarningsReport" name="employeeId" id="PartyId" fieldFormName="LookupEmployeeName"/></span></td>
 									<td width="15%"><span class='h3'>From Date<input  type="text"  id="ITEarningsfromDate"   name="fromDate"/></span></td>
 									<td width="15%"><span class='h3'>Thru Date<input  type="text"  id="ITEarningsthruDate"   name="thruDate"/></span></td>
 									<td width="15%"><span class='h3'><input type="submit" value="Download" class="buttontext"></span></td>
+								</tr>
+							</table>
+						</form>
+					</tr>
+					<tr class="alternate-row">
+						<form id="ITDeductionsReport" name="ITDeductionsReport" mothed="post" action="<@ofbizUrl>ITEarningsReport.pdf</@ofbizUrl>" target="_blank">
+							<table class="basic-table" cellspacing="5">
+								<tr class="alternate-row">
+									<td width="19%"><span class='h3'>IT Deductions Report<input  type="hidden"  value="ITDeductionsReport"   name="reportTypeFlag"/></span></td>
+									<td width="29%"><span class='h3'>Employee Id<@htmlTemplate.lookupField formName="ITDeductionsReport" name="employeeId" id="PartyId" fieldFormName="LookupEmployeeName"/></span></td>
+									<td width="15%"><span class='h3'>From Date<input  type="text"  id="ITDeductionsfromDate"   name="fromDate"/></span></td>
+									<td width="15%"><span class='h3'>Thru Date<input  type="text"  id="ITDeductionsthruDate"   name="thruDate"/></span></td>
+									<td width="15%"><span class='h3'><input type="submit" value="Download" class="buttontext"></span></td>
+									<td><
 								</tr>
 							</table>
 						</form>
