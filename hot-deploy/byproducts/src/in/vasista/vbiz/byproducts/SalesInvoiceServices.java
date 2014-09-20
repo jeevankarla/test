@@ -743,6 +743,8 @@ public class SalesInvoiceServices {
 		BigDecimal totalSnf = ZERO;
 		BigDecimal totalVatRevenue = ZERO;
 		BigDecimal totalBedRevenue = ZERO;
+		BigDecimal totalBedCessRevenue = ZERO;
+		BigDecimal totalBedSecCessRevenue = ZERO;
 		BigDecimal totalCstRevenue = ZERO;
 
 		Map<String, Object> partyTotals = new TreeMap<String, Object>();
@@ -762,7 +764,7 @@ public class SalesInvoiceServices {
 			totalBasicRevenue=totalBasicRevenue.add(basicRevenue);
 			
 			BigDecimal revenue = price.multiply(quantity);
-			Debug.log("==FIRSTTTTTTT=>revenue ===!"+revenue+"====partyId=="+invoiceItem.getString("partyId")+"==invoiceId=="+invoiceItem.getString("invoiceId"));
+			
 		/*	if (!(adjustmentOrderList.contains(invoiceItem.getString("orderId")))	&& (prodSubscriptionTypeId.equals("EMP_SUBSIDY"))) {
 				try {
 					List<GenericValue> adjustemntsList = delegator.findList("OrderAdjustment", EntityCondition.makeCondition("orderId", EntityOperator.EQUALS,invoiceItem.getString("orderId")), null,null, null, false);
@@ -775,30 +777,54 @@ public class SalesInvoiceServices {
 
 				adjustmentOrderList.add(invoiceItem.getString("orderId"));
 			}*/
-			totalRevenue = totalRevenue.add(revenue);
-			totalPacket = totalPacket.add(packetQuantity);
 			
 			BigDecimal vatAmount = ZERO;
 			if (UtilValidate.isNotEmpty(invoiceItem.getBigDecimal("vatAmount"))) {
 				vatAmount = invoiceItem.getBigDecimal("vatAmount");
 			}
-			BigDecimal vatRevenue = vatAmount.multiply(quantity);
-			totalVatRevenue = totalVatRevenue.add(vatRevenue);
-			
 			BigDecimal bedAmount = ZERO;
 			if (UtilValidate.isNotEmpty(invoiceItem.getBigDecimal("bedAmount"))) {
 				bedAmount = invoiceItem.getBigDecimal("bedAmount");
 			}
-			BigDecimal bedRevenue = bedAmount.multiply(quantity);
-			totalBedRevenue = totalBedRevenue.add(bedRevenue);
-			
+			BigDecimal bedcessAmount = ZERO;
+			if (UtilValidate.isNotEmpty(invoiceItem.getBigDecimal("bedcessAmount"))) {
+				bedcessAmount = invoiceItem.getBigDecimal("bedcessAmount");
+			}
+			BigDecimal bedseccessAmount = ZERO;
+			if (UtilValidate.isNotEmpty(invoiceItem.getBigDecimal("bedseccessAmount"))) {
+				bedseccessAmount = invoiceItem.getBigDecimal("bedseccessAmount");
+			}
 			BigDecimal cstAmount = ZERO;
 			if (UtilValidate.isNotEmpty(invoiceItem.getBigDecimal("cstAmount"))) {
 				cstAmount = invoiceItem.getBigDecimal("cstAmount");
 			}
-			BigDecimal cstRevenue = cstAmount.multiply(quantity);
-			totalCstRevenue = totalCstRevenue.add(cstRevenue);
 			
+			BigDecimal vatRevenue = vatAmount.multiply(quantity);
+			BigDecimal bedRevenue = bedAmount.multiply(quantity);
+			BigDecimal bedCessRevenue = bedcessAmount.multiply(quantity);
+			BigDecimal bedSecCessRevenue = bedseccessAmount.multiply(quantity);
+			BigDecimal cstRevenue = cstAmount.multiply(quantity);
+			Debug.log("==BEFORE=CHECK===>Invoice-ID="+invoiceItem.getString("invoiceId")+"revenue ===!"+revenue+"====vatRevenue=="+vatRevenue+"==bedCessRevenue=="+bedCessRevenue+"=bedSecCessRevenue="+bedSecCessRevenue+"=cstRevenue="+cstRevenue);
+			//for purchase invoice consider flat amounts and revenue needs to compute bcz unitprice and listPrice are same
+			 if(isPurchaseInvoice){
+				 vatRevenue = vatAmount;
+				 bedRevenue = bedAmount;
+				 bedCessRevenue = bedcessAmount;
+				 bedSecCessRevenue = bedseccessAmount;
+				 cstRevenue = cstAmount;
+				 revenue=revenue.add(vatRevenue); revenue=revenue.add(bedRevenue); revenue=revenue.add(bedCessRevenue);
+				 revenue=revenue.add(bedSecCessRevenue); revenue=revenue.add(cstRevenue);
+				}
+			 Debug.log("==AFTTER=CHECK==>revenue ===!"+revenue+"====vatRevenue=="+vatRevenue+"==bedCessRevenue=="+bedCessRevenue+"=bedSecCessRevenue="+bedSecCessRevenue+"=cstRevenue="+cstRevenue);
+			totalRevenue = totalRevenue.add(revenue);
+		    totalPacket = totalPacket.add(packetQuantity);
+				
+			totalVatRevenue = totalVatRevenue.add(vatRevenue);
+			totalBedRevenue = totalBedRevenue.add(bedRevenue);
+			totalBedCessRevenue = totalBedCessRevenue.add(bedCessRevenue);
+			totalBedSecCessRevenue = totalBedSecCessRevenue.add(bedSecCessRevenue);
+			totalCstRevenue = totalCstRevenue.add(cstRevenue);
+           
 			//String productName = invoiceItem.getString("productName");
 			String productId = invoiceItem.getString("productId");
 			if(isQuantityLtrs){
@@ -827,6 +853,8 @@ public class SalesInvoiceServices {
 				newMap.put("basicRevenue", basicRevenue);
 				newMap.put("vatRevenue", vatRevenue);
 				newMap.put("bedRevenue", bedRevenue);
+				newMap.put("bedCessRevenue", bedCessRevenue);
+				newMap.put("bedSecCessRevenue", bedSecCessRevenue);
 				newMap.put("cstRevenue", cstRevenue);
 				
 				Map<String, Object> productItemMap = FastMap.newInstance();
@@ -836,13 +864,14 @@ public class SalesInvoiceServices {
 				productItemMap.put("totalRevenue", revenue);
 				productItemMap.put("vatRevenue", vatRevenue);
 				productItemMap.put("bedRevenue", bedRevenue);
+				productItemMap.put("bedCessRevenue", bedCessRevenue);
+				productItemMap.put("bedSecCessRevenue", bedSecCessRevenue);
 				productItemMap.put("cstRevenue", cstRevenue);
 				Map<String, Object> productMap = FastMap.newInstance();
 				productMap.put(productId, productItemMap);
 				
 				newMap.put("productTotals", productMap);
 				partyTotals.put(partyId, newMap);
-				Debug.log("====>productId=IN-IFFFF!"+productId+"====partyId=="+partyId);
 			}else {
 				Map partyMap = (Map) partyTotals.get(partyId);
 				BigDecimal runningTotal = (BigDecimal) partyMap.get("total");
@@ -868,6 +897,15 @@ public class SalesInvoiceServices {
 				BigDecimal runningBedRevenue = (BigDecimal) partyMap.get("bedRevenue");
 				runningBedRevenue = runningBedRevenue.add(bedRevenue);
 				partyMap.put("bedRevenue", runningBedRevenue);
+				
+				BigDecimal runningBedCessRevenue = (BigDecimal) partyMap.get("bedCessRevenue");
+				runningBedCessRevenue = runningBedCessRevenue.add(bedCessRevenue);
+				partyMap.put("bedCessRevenue", runningBedCessRevenue);
+				
+				BigDecimal runningBedSecCessRevenue = (BigDecimal) partyMap.get("bedSecCessRevenue");
+				runningBedSecCessRevenue = runningBedSecCessRevenue.add(bedSecCessRevenue);
+				partyMap.put("bedSecCessRevenue", runningBedSecCessRevenue);
+			
 				BigDecimal runningCstRevenue = (BigDecimal) partyMap.get("cstRevenue");
 				runningCstRevenue = runningCstRevenue.add(cstRevenue);
 				partyMap.put("cstRevenue", runningCstRevenue);
@@ -882,6 +920,8 @@ public class SalesInvoiceServices {
 					productItemMap.put("basicRevenue", basicRevenue);
 					productItemMap.put("totalRevenue", revenue);
 					productItemMap.put("vatRevenue", vatRevenue);
+					productItemMap.put("bedCessRevenue", bedCessRevenue);
+					productItemMap.put("bedSecCessRevenue", bedSecCessRevenue);
 					productItemMap.put("bedRevenue", bedRevenue);
 					productItemMap.put("cstRevenue", cstRevenue);
 					partyProductTotals.put(productId, productItemMap);
@@ -911,15 +951,21 @@ public class SalesInvoiceServices {
 					prodRunningBedRevenue = prodRunningBedRevenue.add(bedRevenue);
 					productMap.put("bedRevenue", prodRunningBedRevenue);
 					
+					BigDecimal prodRunningBedCessRevenue = (BigDecimal) partyMap.get("bedCessRevenue");
+					prodRunningBedCessRevenue = prodRunningBedCessRevenue.add(bedCessRevenue);
+					partyMap.put("bedCessRevenue", prodRunningBedCessRevenue);
+					
+					BigDecimal prodRunningBedSecCessRevenue = (BigDecimal) partyMap.get("bedSecCessRevenue");
+					prodRunningBedSecCessRevenue = prodRunningBedSecCessRevenue.add(bedSecCessRevenue);
+					partyMap.put("bedSecCessRevenue", prodRunningBedSecCessRevenue);
+					
 					BigDecimal prodRunningCstRevenue = (BigDecimal) productMap.get("cstRevenue");
 					prodRunningCstRevenue = prodRunningCstRevenue.add(cstRevenue);
 					productMap.put("cstRevenue", prodRunningCstRevenue);
 					
 					partyProductTotals.put(productId, productMap);
 				}
-				Debug.log("====>productId=ELSE!"+productId+"====partyId=="+partyId);
 			}
-			
 			
 			//invoiceId Wise Totals
 			String invoiceId = "";
@@ -937,6 +983,8 @@ public class SalesInvoiceServices {
 				newMap.put("basicRevenue", basicRevenue);
 				newMap.put("vatRevenue", vatRevenue);
 				newMap.put("bedRevenue", bedRevenue);
+				newMap.put("bedCessRevenue", bedCessRevenue);
+				newMap.put("bedSecCessRevenue", bedSecCessRevenue);
 				newMap.put("cstRevenue", cstRevenue);
 				
 				Map<String, Object> productItemMap = FastMap.newInstance();
@@ -946,6 +994,8 @@ public class SalesInvoiceServices {
 				productItemMap.put("totalRevenue", revenue);
 				productItemMap.put("vatRevenue", vatRevenue);
 				productItemMap.put("bedRevenue", bedRevenue);
+				productItemMap.put("bedCessRevenue", bedCessRevenue);
+				productItemMap.put("bedSecCessRevenue", bedSecCessRevenue);
 				productItemMap.put("cstRevenue", cstRevenue);
 				Map<String, Object> productMap = FastMap.newInstance();
 				productMap.put(productId, productItemMap);
@@ -977,6 +1027,12 @@ public class SalesInvoiceServices {
 				BigDecimal runningBedRevenue = (BigDecimal) invoiceMap.get("bedRevenue");
 				runningBedRevenue = runningBedRevenue.add(bedRevenue);
 				invoiceMap.put("bedRevenue", runningBedRevenue);
+				BigDecimal runningBedCessRevenue = (BigDecimal) invoiceMap.get("bedCessRevenue");
+				runningBedCessRevenue = runningBedCessRevenue.add(bedCessRevenue);
+				invoiceMap.put("bedCessRevenue", runningBedCessRevenue);
+				BigDecimal runningBedSecCessRevenue = (BigDecimal) invoiceMap.get("bedSecCessRevenue");
+				runningBedSecCessRevenue = runningBedSecCessRevenue.add(bedSecCessRevenue);
+				invoiceMap.put("bedSecCessRevenue", runningBedSecCessRevenue);
 				BigDecimal runningCstRevenue = (BigDecimal) invoiceMap.get("cstRevenue");
 				runningCstRevenue = runningCstRevenue.add(cstRevenue);
 				invoiceMap.put("cstRevenue", runningCstRevenue);
@@ -992,6 +1048,8 @@ public class SalesInvoiceServices {
 					productItemMap.put("totalRevenue", revenue);
 					productItemMap.put("vatRevenue", vatRevenue);
 					productItemMap.put("bedRevenue", bedRevenue);
+					productItemMap.put("bedCessRevenue", bedCessRevenue);
+					productItemMap.put("bedSecCessRevenue", bedSecCessRevenue);
 					productItemMap.put("cstRevenue", cstRevenue);
 					invProductTotals.put(productId, productItemMap);
 
@@ -1019,6 +1077,14 @@ public class SalesInvoiceServices {
 					BigDecimal prodRunningBedRevenue = (BigDecimal) productMap.get("bedRevenue");
 					prodRunningBedRevenue = prodRunningBedRevenue.add(bedRevenue);
 					productMap.put("bedRevenue", prodRunningBedRevenue);
+			
+					BigDecimal prodRunningBedCessRevenue = (BigDecimal) productMap.get("bedCessRevenue");
+					prodRunningBedCessRevenue = prodRunningBedCessRevenue.add(bedCessRevenue);
+					productMap.put("bedCessRevenue", prodRunningBedCessRevenue);
+					
+					BigDecimal prodRunningBedSecCessRevenue = (BigDecimal) productMap.get("bedSecCessRevenue");
+					prodRunningBedSecCessRevenue = prodRunningBedSecCessRevenue.add(bedSecCessRevenue);
+					productMap.put("bedSecCessRevenue", prodRunningBedSecCessRevenue);
 					
 					BigDecimal prodRunningCstRevenue = (BigDecimal) productMap.get("cstRevenue");
 					prodRunningCstRevenue = prodRunningCstRevenue.add(cstRevenue);
@@ -1037,6 +1103,8 @@ public class SalesInvoiceServices {
 				newMap.put("basicRevenue", basicRevenue);
 				newMap.put("vatRevenue", vatRevenue);
 				newMap.put("bedRevenue", bedRevenue);
+				newMap.put("bedCessRevenue", bedCessRevenue);
+				newMap.put("bedSecCessRevenue", bedSecCessRevenue);
 				newMap.put("cstRevenue", cstRevenue);
 				productTotals.put(productId, newMap);
 			} 
@@ -1064,6 +1132,14 @@ public class SalesInvoiceServices {
 				runningBedRevenue = runningBedRevenue.add(bedRevenue);
 				productMap.put("bedRevenue", runningBedRevenue);
 				
+				BigDecimal prodRunningBedCessRevenue = (BigDecimal) productMap.get("bedCessRevenue");
+				prodRunningBedCessRevenue = prodRunningBedCessRevenue.add(bedCessRevenue);
+				productMap.put("bedCessRevenue", prodRunningBedCessRevenue);
+				
+				BigDecimal prodRunningBedSecCessRevenue = (BigDecimal) productMap.get("bedSecCessRevenue");
+				prodRunningBedSecCessRevenue = prodRunningBedSecCessRevenue.add(bedSecCessRevenue);
+				productMap.put("bedSecCessRevenue", prodRunningBedSecCessRevenue);
+				
 				BigDecimal runningCstRevenue = (BigDecimal) productMap.get("cstRevenue");
 				runningCstRevenue = runningCstRevenue.add(cstRevenue);
 				productMap.put("cstRevenue", runningCstRevenue);
@@ -1083,6 +1159,8 @@ public class SalesInvoiceServices {
 		totalPacket = totalPacket.setScale(decimals, rounding);
 		totalVatRevenue = totalVatRevenue.setScale(decimals, rounding);
 	    totalBedRevenue = totalBedRevenue.setScale(decimals, rounding);
+	    totalBedCessRevenue = totalBedCessRevenue.setScale(decimals, rounding);
+		totalBedSecCessRevenue = totalBedSecCessRevenue.setScale(decimals, rounding);
 		totalCstRevenue = totalCstRevenue.setScale(decimals, rounding);
 	
 		for (Map.Entry<String, Object> entry : productTotals.entrySet()) {
@@ -1112,6 +1190,14 @@ public class SalesInvoiceServices {
 			tempVal = tempVal.setScale(decimals, rounding);
 			productValue.put("bedRevenue", tempVal);
 			
+			tempVal = (BigDecimal) productValue.get("bedCessRevenue");
+			tempVal = tempVal.setScale(decimals, rounding);
+			productValue.put("bedCessRevenue", tempVal);
+			
+			tempVal = (BigDecimal) productValue.get("bedSecCessRevenue");
+			tempVal = tempVal.setScale(decimals, rounding);
+			productValue.put("bedSecCessRevenue", tempVal);
+			
 			tempVal = (BigDecimal) productValue.get("cstRevenue");
 			tempVal = tempVal.setScale(decimals, rounding);
 			productValue.put("cstRevenue", tempVal);
@@ -1123,6 +1209,8 @@ public class SalesInvoiceServices {
 		result.put("totalBasicRevenue", totalBasicRevenue);
 		result.put("totalVatRevenue", totalVatRevenue);
 		result.put("totalBedRevenue", totalBedRevenue);
+		result.put("totalBedCessRevenue", totalBedCessRevenue);
+		result.put("totalBedSecCessRevenue", totalBedSecCessRevenue);
 		result.put("totalCstRevenue", totalCstRevenue);
 		result.put("totalPacket", totalPacket);
 		result.put("invoiceIdTotals", invoiceIdTotals);
