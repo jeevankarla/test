@@ -2093,7 +2093,7 @@ public class PayrollService {
 						
 					}
 	        	 Map employeePayrollAttedance = getEmployeePayrollAttedance(dctx,context);
-	        	 if(UtilValidate.isNotEmpty(employeePayrollAttedance) && ((Double)employeePayrollAttedance.get("lossOfPayDays")- (Double)employeePayrollAttedance.get("lateMin")) !=0 ){
+	        	 if(UtilValidate.isNotEmpty(employeePayrollAttedance) && ((Double)employeePayrollAttedance.get("lateMin")) !=0 ){
 	        		 bonusFlag = Boolean.FALSE;
 	        	 }
 				if(bonusFlag){
@@ -2593,7 +2593,7 @@ public class PayrollService {
 							prevAmount = BigDecimal.ZERO;
 						}
 						if(prevFromDate.compareTo(fromDateStart)== 0){
-							if(prevAmount.compareTo(amount)!= 0){
+							if((prevAmount.compareTo(amount)) != 0 || (prevAmount.compareTo(BigDecimal.ZERO) ==0) ){
 								// Update existing one
 								partyBenefit.set("partyIdTo",partyBenefit.getString("partyIdTo"));
 								partyBenefit.set("benefitTypeId",partyBenefit.getString("benefitTypeId"));
@@ -2685,7 +2685,7 @@ public class PayrollService {
 							prevAmount = BigDecimal.ZERO;
 						}
 						if(prevFromDate.compareTo(fromDateStart)== 0){
-							if(prevAmount.compareTo(amountToCompare)!= 0){
+							if(prevAmount.compareTo(amountToCompare)!= 0 || (prevAmount.compareTo(BigDecimal.ZERO) ==0)){
 								// Update existing one
 								partyDeduction.set("partyIdTo",partyDeduction.getString("partyIdTo"));
 								partyDeduction.set("deductionTypeId",partyDeduction.getString("deductionTypeId"));
@@ -3355,7 +3355,7 @@ public class PayrollService {
 	      try{
 	      			List conditionLis=FastList.newInstance();
 	      			conditionLis.add(EntityCondition.makeCondition("customTimePeriodId",EntityOperator.EQUALS,timePeriodId));
-	      			conditionLis.add(EntityCondition.makeCondition("statusId",EntityOperator.NOT_IN,UtilMisc.toList("COM_CANCELLED","CANCEL_FAILED")));
+	      			conditionLis.add(EntityCondition.makeCondition("statusId",EntityOperator.NOT_IN,UtilMisc.toList("COM_CANCELLED","CANCEL_FAILED","GENERATION_FAIL")));
 	      			conditionLis.add(EntityCondition.makeCondition("billingTypeId",EntityOperator.EQUALS,"PAYROLL_BILL"));
 	      			
 	      			EntityCondition conditon=EntityCondition.makeCondition(conditionLis,EntityOperator.AND);
@@ -3371,6 +3371,10 @@ public class PayrollService {
 	      					GenericValue employPayrollDetails = emplPayrollAttendanceDetailList.get(i);
 	      					BigDecimal arrearDays=employPayrollDetails.getBigDecimal("noOfArrearDays");
 	      					BigDecimal noOfPayableDays= employPayrollDetails.getBigDecimal("noOfPayableDays");
+	      					if(UtilValidate.isEmpty(lossOfPayDays)){
+	      						lossOfPayDays = employPayrollDetails.getBigDecimal("lossOfPayDays");
+	      					}
+	      					
 	      					if(UtilValidate.isEmpty(arrearDays)){
 	      						employPayrollDetails.set("noOfArrearDays",noOfArrearDays);
 	      						noOfPayableDays=noOfPayableDays.add(noOfArrearDays);
@@ -3413,7 +3417,11 @@ public class PayrollService {
 	      						}
 	      						noOfPayableDays=noOfPayableDays.add(empLateMin);
 	      						noOfPayableDays=noOfPayableDays.subtract(lateMin);
+	      						lossOfPayDays = lossOfPayDays.subtract(empLateMin);
+	      						lossOfPayDays = lossOfPayDays.add(lateMin);
+	      						
 	      						employPayrollDetails.set("noOfPayableDays",noOfPayableDays);
+	      						employPayrollDetails.set("lossOfPayDays",lossOfPayDays);
 	      						employPayrollDetails.set("lateMin",lateMin);
 	      						employPayrollDetails.store();
 	      					}
