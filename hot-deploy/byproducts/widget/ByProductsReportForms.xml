@@ -142,12 +142,14 @@
         <field name="mrrNumber" title="MRR Number"><display/></field>
         <field name="poNumber" title="PO Number"><display/></field>
         <field name="supInvNumber" title="Supp Invoice Number"><display/></field>
+        <field name="supInvDate" title="Supp Invoice Date"><display/></field>
         <field name="basicRevenue" title="Basic Revenue"><display/></field>
         <field name="bedRevenue" title="Bed Revenue"><display/></field>
         <field name="vatRevenue" title="Vat Revenue"><display/></field>
         <field name="cstRevenue" title="CST Revenue"><display/></field>
         <field name="freightAmount" title="Freight Amount"><display/></field>
         <field name="discountAmount" title="Discount Amount"><display/></field>
+        <field name="insuranceAmount" title="Insurance Amount"><display/></field>
         <field name="grandTotal" title="Total Amount"><display/></field>
         <field name="tinNumber" title="Tin Number"><display/></field>
     </form>

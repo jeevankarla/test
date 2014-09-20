@@ -84,6 +84,7 @@ if(UtilValidate.isNotEmpty(salesInvoiceTotals)){
 				vatRevenue=0;
 				cstRevenue=0;
 				totalRevenue=0;
+				totalBedRevenue = 0;
 				
 				vatAmount = 0;
 				quantity = 0;
@@ -111,14 +112,23 @@ if(UtilValidate.isNotEmpty(salesInvoiceTotals)){
 				if(UtilValidate.isNotEmpty(invoice.getValue().bedRevenue)){
 					bedRevenue = invoice.getValue().bedRevenue;
 				}
+				if(UtilValidate.isNotEmpty(invoice.getValue().bedCessRevenue)){
+					bedCessRevenue = invoice.getValue().bedCessRevenue;
+				}
+				if(UtilValidate.isNotEmpty(invoice.getValue().bedSecCessRevenue)){
+					bedSecCessRevenue = invoice.getValue().bedSecCessRevenue;
+				}
 				if(UtilValidate.isNotEmpty(invoice.getValue().cstRevenue)){
 					cstRevenue = invoice.getValue().cstRevenue;
 				}
 				if(UtilValidate.isNotEmpty(invoice.getValue().totalRevenue)){
 					totalRevenue = invoice.getValue().totalRevenue;
 				}
+				totalBedRevenue = bedRevenue+bedCessRevenue+bedCessRevenue;
+				
 				freightAmount = 0;
 				discountAmount = 0;
+				insuranceAmount = 0;
 				invoiceItemsList = delegator.findList("InvoiceItem",EntityCondition.makeCondition("invoiceId", EntityOperator.EQUALS , invoiceId)  , null, null, null, false );
 				if(UtilValidate.isNotEmpty(invoiceItemsList)){
 					invoiceItemsList.each{ invoiceItem ->
@@ -134,12 +144,19 @@ if(UtilValidate.isNotEmpty(salesInvoiceTotals)){
 								discountAmount = invoiceItem.amount;
 							}
 						}
+						if(UtilValidate.isNotEmpty(invoiceItem)){
+							invoiceItemTypeId = invoiceItem.invoiceItemTypeId;
+							if(UtilValidate.isNotEmpty(invoiceItemTypeId) && invoiceItemTypeId.equals("COGS_ITEM18")){
+								insuranceAmount = invoiceItem.amount;
+							}
+						}
 					}
 				}
 				orderId = null;
 				mrrNumber = null;
 				poNumber = null;
 				supInvNumber = null;
+				supInvDate = null;
 				orderItemBillingList = delegator.findList("OrderItemBilling",EntityCondition.makeCondition("invoiceId", EntityOperator.EQUALS , invoiceId)  , null, null, null, false );
 				if(UtilValidate.isNotEmpty(orderItemBillingList)){
 					orderItemBilling = EntityUtil.getFirst(orderItemBillingList);
@@ -158,28 +175,34 @@ if(UtilValidate.isNotEmpty(salesInvoiceTotals)){
 							if(UtilValidate.isNotEmpty(supInvOrderAttributeDetails)){
 								supInvNumber = supInvOrderAttributeDetails.attrValue;
 							}
+							supInvDateOrderAttributeDetails = delegator.findOne("OrderAttribute", [orderId : orderId, attrName : "SUP_INV_DATE"], false);
+							if(UtilValidate.isNotEmpty(supInvDateOrderAttributeDetails)){
+								supInvDate = supInvDateOrderAttributeDetails.attrValue;
+							}
 						}
 					}
 				}
 				grandTotal = 0;
-				grandTotal = totalRevenue+freightAmount+discountAmount;
+				grandTotal = totalRevenue+freightAmount+discountAmount+insuranceAmount;
 				
 				totalMap = [:];
 				totalMap["invoiceId"]=invoiceId;
 				totalMap["invoiceDate"]=invoiceDate;
 				totalMap["basicRevenue"]=basicRevenue;
 				totalMap["partyName"]=partyName;
-				totalMap["bedRevenue"]=bedRevenue;
+				totalMap["bedRevenue"]=totalBedRevenue;
 				totalMap["vatRevenue"]=vatRevenue;
 				totalMap["cstRevenue"]=cstRevenue;
 				totalMap["totalRevenue"]=totalRevenue;
 				totalMap["freightAmount"]=freightAmount;
 				totalMap["discountAmount"]=discountAmount;
+				totalMap["insuranceAmount"]=insuranceAmount;
 				totalMap["grandTotal"]=grandTotal;
 				totalMap["tinNumber"]=tinNumber;
 				totalMap["mrrNumber"]=mrrNumber;
 				totalMap["poNumber"]=poNumber;
 				totalMap["supInvNumber"]=supInvNumber;
+				totalMap["supInvDate"]=supInvDate;
 				tempMap = [:];
 				tempMap.putAll(totalMap);
 				if(UtilValidate.isNotEmpty(tempMap)){
