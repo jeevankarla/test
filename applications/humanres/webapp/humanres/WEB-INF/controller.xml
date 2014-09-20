@@ -791,6 +791,10 @@ under the License.
     	<security https="true" auth="true"/>
     	<response name="success" type="view" value="PayrollReports"></response>
     </request-map>
+    <request-map uri="StatutoryReports">
+    	<security https="true" auth="true"/>
+    	<response name="success" type="view" value="StatutoryReports"></response>
+    </request-map>
     <request-map uri="updateEmployeeBenefitsOrDeductions">
        <security https="true" auth="true"/>
        <event type="java" path="in.vasista.vbiz.humanres.PayrollService" invoke="updateBenefitsOrDeductions"/>
@@ -1749,6 +1753,10 @@ under the License.
         <security https="true" auth="true"/>                        
         <response name="success" type="view" value="CanteenReport"/>        
     </request-map>
+    <request-map uri="ITEarningsReport.pdf">
+        <security https="true" auth="true"/>                        
+        <response name="success" type="view" value="ITEarningsReport"/>        
+    </request-map>
      <!--====================Trainings Requests===================================-->
  <!--====================Cal Requests===================================-->
 <request-map uri="calendar"><security https="true" auth="true"/>
@@ -1958,6 +1966,7 @@ under the License.
     <view-map name="LeaveReports" type="screen" page="component://humanres/widget/EmploymentScreens.xml#LeaveReports"></view-map>
     <view-map name="AttendanceReports" type="screen" page="component://humanres/widget/EmploymentScreens.xml#AttendanceReports"></view-map>
     <view-map name="PayrollReports" type="screen" page="component://humanres/widget/EmploymentScreens.xml#PayrollReports"></view-map>
+    <view-map name="StatutoryReports" type="screen" page="component://humanres/widget/EmploymentScreens.xml#StatutoryReports"></view-map>
     <view-map name="EditPartyDeduction" type="screen" page="component://humanres/widget/EmploymentScreens.xml#EditPartyDeduction"/>
     <view-map name="ListPayHistories" type="screen" page="component://humanres/widget/EmploymentScreens.xml#ListPayHistories"/>
      <view-map name="AddPayHistory" type="screen" page="component://humanres/widget/EmploymentScreens.xml#AddPayHistory"/>
@@ -2136,7 +2145,7 @@ under the License.
     <view-map name="CompanyPunchReport" type="screen" page="component://humanres/widget/ReportHumanresSummaryScreens.xml#CompanyPunchReport"/>
     <view-map name="EmployeePunchReport" type="screen" page="component://humanres/widget/ReportHumanresSummaryScreens.xml#EmployeePunchReport"/>
     <!-- <view-map name="EmployeePunchReport" type="screencsv" page="component://humanres/widget/ReportHumanresSummaryScreens.xml#EmployeePunchReport" content-type="text/csv" encoding="none"/> -->
-    
+    <view-map name="ITEarningsReport" type="screenfop" page="component://humanres/widget/ReportHumanresSummaryScreens.xml#ITEarningsReport" content-type="application/pdf" encoding="none"/>
     <view-map name="AttendanceReport" type="screen" page="component://humanres/widget/ReportHumanresSummaryScreens.xml#AttendanceReport"/>
     <view-map name="emplDailyPunchReport" type="screencsv" page="component://humanres/widget/ReportHumanresSummaryScreens.xml#emplDailyPunchReport" content-type="text/csv" encoding="none"/>
     <view-map name="emplMonthlyPunchReport" type="screencsv" page="component://humanres/widget/ReportHumanresSummaryScreens.xml#emplMonthlyPunchReport" content-type="text/csv" encoding="none"/>

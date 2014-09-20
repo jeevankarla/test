@@ -413,7 +413,6 @@ public class HumanresService {
 				loan.set("interestAmount", interestAmount);
 				loan.set("numInterestInst", numInterestInst);
 				loan.set("numPrincipalInst", numPrincipalInst);
-				loan.set("numPrincipalInst", numPrincipalInst);
 				loan.set("disbDate", disbDateStart);
 				loan.set("createdDate", UtilDateTime.nowTimestamp());
 				loan.set("createdByUserLogin", userLogin.get("userLoginId"));

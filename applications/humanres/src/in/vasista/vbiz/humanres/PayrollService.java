@@ -3490,7 +3490,6 @@ public class PayrollService {
   			}
   		result = ServiceUtil.returnSuccess("Successfully Updated!!");
   		return result;
-  		
   	}
 	 
 	 
@@ -3522,6 +3521,92 @@ public class PayrollService {
 	        }        
 	        return result;
 }*/
-			
-
+	 public static Map<String, Object> getEmployeeSalaryTotalsForPeriod(DispatchContext dctx, Map<String, ? extends Object> context){
+		    Delegator delegator = dctx.getDelegator();
+	      LocalDispatcher dispatcher = dctx.getDispatcher();
+	      GenericValue userLogin = (GenericValue) context.get("userLogin");
+	      String partyId = (String) context.get("partyId");
+	      Timestamp fromDate = (Timestamp) context.get("fromDate");
+	      if (UtilValidate.isEmpty(fromDate)) {
+	    	  Debug.logError("fromDate cannot be empty", module);
+	    	  return ServiceUtil.returnError("fromDate cannot be empty");
+	      }
+	      Timestamp thruDate = (Timestamp) context.get("thruDate");
+	      if (UtilValidate.isEmpty(thruDate)) {
+	    	  Debug.logError("thruDate cannot be empty", module);
+	    	  return ServiceUtil.returnError("thruDate cannot be empty");
+	      }
+	      Map result = ServiceUtil.returnSuccess();
+	      
+	      Timestamp fromDateStart = UtilDateTime.getDayStart(fromDate);
+	      Timestamp thruDateEnd = UtilDateTime.getDayEnd(thruDate);
+	      
+	      Map customTimePeriodMap = FastMap.newInstance();
+	      try{
+	    	  List condList = FastList.newInstance();
+	    	  condList.add(EntityCondition.makeCondition("periodTypeId", EntityOperator.EQUALS ,"HR_MONTH"));
+	    	  condList.add(EntityCondition.makeCondition("billingTypeId", EntityOperator.EQUALS ,"PAYROLL_BILL"));
+	    	  condList.add(EntityCondition.makeCondition("statusId", EntityOperator.EQUALS ,"GENERATED"));
+	    	  condList.add(EntityCondition.makeCondition("fromDate", EntityOperator.GREATER_THAN_EQUAL_TO,new java.sql.Date(fromDateStart.getTime())));
+	    	  condList.add(EntityCondition.makeCondition("thruDate", EntityOperator.LESS_THAN_EQUAL_TO, new java.sql.Date(thruDateEnd.getTime())));
+	    	  EntityCondition cond = EntityCondition.makeCondition(condList,EntityOperator.AND); 	
+	    	  List<GenericValue> PeriodBillingAndCustomTimePeriodList = delegator.findList("PeriodBillingAndCustomTimePeriod", cond, null, null, null, false);
+	    	  if(UtilValidate.isNotEmpty(PeriodBillingAndCustomTimePeriodList)){
+	    		  List<GenericValue> customTimePeriodIdList = null;
+	    		  List<String> customTimePeriodIds = EntityUtil.getFieldListFromEntityList(PeriodBillingAndCustomTimePeriodList, "customTimePeriodId", false);
+	    		  Map customTimePeriodTotalsMap = FastMap.newInstance();
+	    		  for(String customTimePeriodId : customTimePeriodIds){
+	    			  customTimePeriodIdList = EntityUtil.filterByCondition(PeriodBillingAndCustomTimePeriodList,EntityCondition.makeCondition("customTimePeriodId", EntityOperator.EQUALS ,customTimePeriodId));
+	    			  Map periodBillingMap = FastMap.newInstance();
+	    			  Map periodBillingTotalsMap = FastMap.newInstance();
+		    		  for(GenericValue periodBilling : customTimePeriodIdList){
+		    			    String periodBillingId = periodBilling.getString("periodBillingId");
+		  					List payHeadCondList = FastList.newInstance();
+		  					payHeadCondList.add(EntityCondition.makeCondition("periodBillingId", EntityOperator.EQUALS, periodBillingId));
+		  					payHeadCondList.add(EntityCondition.makeCondition("partyIdFrom", EntityOperator.EQUALS, partyId));
+		  					EntityCondition payHeadCond = EntityCondition.makeCondition(payHeadCondList,EntityOperator.AND);
+		  					List<GenericValue> payrollHeaderAndHeaderItemList = delegator.findList("PayrollHeaderAndHeaderItem", payHeadCond, null, null, null, false);
+		  					Map payHeadTotalsMap = FastMap.newInstance();
+		  					if(UtilValidate.isNotEmpty(payrollHeaderAndHeaderItemList)){
+		  						for(GenericValue payrollHeaderAndHeaderItem : payrollHeaderAndHeaderItemList){
+		  							String payrollHeaderItemTypeId = payrollHeaderAndHeaderItem.getString("payrollHeaderItemTypeId");
+		  							BigDecimal amount = payrollHeaderAndHeaderItem.getBigDecimal("amount");
+		  							if(payHeadTotalsMap.containsKey(payrollHeaderItemTypeId)){
+		  								BigDecimal existAmount = (BigDecimal) payHeadTotalsMap.get(payrollHeaderItemTypeId);
+		  								BigDecimal totalAmount = existAmount.add(amount);
+		  								payHeadTotalsMap.put(payrollHeaderItemTypeId,totalAmount);
+		  							}else{
+		  								payHeadTotalsMap.put(payrollHeaderItemTypeId,amount);
+		  							}
+		  							if(periodBillingTotalsMap.containsKey(payrollHeaderItemTypeId)){
+		  								BigDecimal existAmount = (BigDecimal) periodBillingTotalsMap.get(payrollHeaderItemTypeId);
+		  								BigDecimal totalAmount = existAmount.add(amount);
+		  								periodBillingTotalsMap.put(payrollHeaderItemTypeId,totalAmount);
+		  							}else{
+		  								periodBillingTotalsMap.put(payrollHeaderItemTypeId,amount);
+		  							}
+		  							if(customTimePeriodTotalsMap.containsKey(payrollHeaderItemTypeId)){
+		  								BigDecimal existAmount = (BigDecimal) customTimePeriodTotalsMap.get(payrollHeaderItemTypeId);
+		  								BigDecimal totalAmount = existAmount.add(amount);
+		  								customTimePeriodTotalsMap.put(payrollHeaderItemTypeId,totalAmount);
+		  							}else{
+		  								customTimePeriodTotalsMap.put(payrollHeaderItemTypeId,amount);
+		  							}
+		  						}
+		  					}
+		  					periodBillingMap.put(periodBillingId, payHeadTotalsMap);
+		  					periodBillingMap.put("periodTotals",periodBillingTotalsMap);
+		    		  }
+		    		  customTimePeriodMap.put(customTimePeriodId,periodBillingMap);
+		    		  customTimePeriodMap.put("customTimePeriodTotals",customTimePeriodTotalsMap);
+	    		  }
+	    	  }	
+	      }catch (GenericEntityException e) {
+				Debug.logError(e, module);
+				return ServiceUtil.returnError(e.toString());
+			}
+	    result.put("periodTotalsForParty",customTimePeriodMap);
+		return result;
+	}
+	 
 }//end of service

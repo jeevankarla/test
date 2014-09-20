@@ -529,7 +529,7 @@
     		<actions>  
 	    		<entity-condition list="leaveTypeList" entity-name="EmplLeaveType">
 				</entity-condition>
-	    		<set field="titleProperty" value="HumanResFindEmployment"/>
+	    		<set field="titleProperty" value="Masters Reports"/>
 	            <set field="tabButtonItem" value="newReports"/>
 				<set field="tabButtonItem2" value="MastersReports" />   	
 	    		<set field="screenFlag" value="newReports"/>
@@ -569,7 +569,7 @@
     		<actions>  
 	    		<entity-condition list="leaveTypeList" entity-name="EmplLeaveType">
 				</entity-condition>
-	    		<set field="titleProperty" value="HumanResFindEmployment"/>
+	    		<set field="titleProperty" value="Leave Reports"/>
 	            <set field="tabButtonItem" value="newReports"/>
 				<set field="tabButtonItem2" value="LeaveReports" />   	
 	    		<set field="screenFlag" value="newReports"/>
@@ -609,7 +609,7 @@
     		<actions>  
 	    		<entity-condition list="leaveTypeList" entity-name="EmplLeaveType">
 				</entity-condition>
-	    		<set field="titleProperty" value="HumanResFindEmployment"/>
+	    		<set field="titleProperty" value="Attendance Reports"/>
 	            <set field="tabButtonItem" value="newReports"/>
 				<set field="tabButtonItem2" value="AttendanceReports" />   	
 	    		<set field="screenFlag" value="newReports"/>
@@ -649,7 +649,7 @@
     		<actions>  
 	    		<entity-condition list="leaveTypeList" entity-name="EmplLeaveType">
 				</entity-condition>
-	    		<set field="titleProperty" value="HumanResFindEmployment"/>
+	    		<set field="titleProperty" value="Payroll Reports"/>
 	            <set field="tabButtonItem" value="newReports"/>
 				<set field="tabButtonItem2" value="PayrollReports" />   	
 	    		<set field="screenFlag" value="newReports"/>
@@ -668,6 +668,45 @@
                 </entity-condition>  	
 	    		<script location="component://humanres/webapp/humanres/WEB-INF/actions/humanres/reports.groovy"/>
     			<set field="reportFrequencyFlag" value="PayrollReports"/>
+    		</actions>
+    		<widgets>
+    		<decorator-screen name="HumanresCommonDecorator" location="component://humanres/widget/CommonScreens.xml">
+    			<decorator-section name="body">
+    				<section>
+    					<widgets>
+    					<include-menu name="NewReportsTabBar" location="component://humanres/widget/HumanresMenus.xml"/> 
+    					<platform-specific><html><html-template location="component://humanres/webapp/humanres/humanres/Reports.ftl"></html-template></html></platform-specific>
+    					</widgets>
+    				</section>
+    			</decorator-section>    		
+    		</decorator-screen>
+    		</widgets>
+    	</section>
+    </screen>
+    <screen name="StatutoryReports">
+    	<section>
+    		<actions>  
+	    		<entity-condition list="leaveTypeList" entity-name="EmplLeaveType">
+				</entity-condition>
+	    		<set field="titleProperty" value="Statutory Reports"/>
+	            <set field="tabButtonItem" value="newReports"/>
+				<set field="tabButtonItem2" value="StatutoryReports" />   	
+	    		<set field="screenFlag" value="newReports"/>
+	    		<entity-condition list="timePeriodList" entity-name="CustomTimePeriod" use-cache="true" filter-by-date="false" >
+                	<condition-expr field-name="periodTypeId" operator="equals" value="ATTENDANCE_MONTH"/>
+                	<order-by field-name="-thruDate"/>
+                </entity-condition>	
+	    		<entity-condition list="allBenefitsTypeList" entity-name="BenefitType">
+					<condition-expr field-name="benefitTypeId" operator="not-equals" value="PAYROL_BEN_SALARY"/>
+					<order-by field-name="sequenceNum"/>
+				</entity-condition>
+				<entity-condition list="allDeductionTypeList" entity-name="DeductionType">
+					<order-by field-name="sequenceNum"/>					
+				</entity-condition>
+    		 	<entity-condition entity-name="InsuranceType" list="finalInsuranceTypeList" use-cache="true">
+                </entity-condition>  	
+	    		<script location="component://humanres/webapp/humanres/WEB-INF/actions/humanres/reports.groovy"/>
+    			<set field="reportFrequencyFlag" value="StatutoryReports"/>
     		</actions>
     		<widgets>
     		<decorator-screen name="HumanresCommonDecorator" location="component://humanres/widget/CommonScreens.xml">

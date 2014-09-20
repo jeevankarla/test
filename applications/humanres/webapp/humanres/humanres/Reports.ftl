@@ -60,6 +60,8 @@ function makeDatePicker1(fromDateId ,thruDateId){
 		makeDatePicker("mclthruDate","mclthruDate");
 		makeDatePicker("larfromDate","larfromDate");
 		makeDatePicker("larthruDate","larthruDate");
+		makeDatePicker("ITEarningsfromDate","ITEarningsfromDate");
+		makeDatePicker("ITEarningsthruDate","ITEarningsthruDate");
 		makeDatePicker("MPfromDate","MPfromDate");
 		makeDatePicker("MPthruDate","MPthruDate");
 		makeDatePicker("LOPfromDate","LOPfromDate");
@@ -595,6 +597,32 @@ function makeDatePicker1(fromDateId ,thruDateId){
 									</span>
 									</td>
 									<td ><input type="submit" value="Download" class="buttontext"></td>
+								</tr>
+							</table>
+						</form>
+					</tr>
+			   	</table>
+			</div>
+		</div>
+	</div>
+</#if>
+<#if reportFrequencyFlag =="StatutoryReports">
+	<div>
+		<div class="screenlet">
+			<div class="screenlet-title-bar">
+				<h3>Reports</h3>
+			</div>
+			<div class="screenlet-body">
+				<table class="basic-table hover-bar h3" style="border-spacing: 0 10px;">
+				   <tr class="alternate-row">
+						<form id="ITEarningsReport" name="ITEarningsReport" mothed="post" action="<@ofbizUrl>ITEarningsReport.pdf</@ofbizUrl>" target="_blank">
+							<table class="basic-table" cellspacing="5">
+								<tr class="alternate-row">
+									<td width="19%"><span class='h3'>IT Earnings Report</span></td>
+									<td width="29%"><span class='h3'>Employee Id<@htmlTemplate.lookupField formName="ITEarningsReport" name="employeeId" id="PartyId" fieldFormName="LookupEmployeeName"/></span></td>
+									<td width="15%"><span class='h3'>From Date<input  type="text"  id="ITEarningsfromDate"   name="fromDate"/></span></td>
+									<td width="15%"><span class='h3'>Thru Date<input  type="text"  id="ITEarningsthruDate"   name="thruDate"/></span></td>
+									<td width="15%"><span class='h3'><input type="submit" value="Download" class="buttontext"></span></td>
 								</tr>
 							</table>
 						</form>
