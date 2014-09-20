@@ -2589,6 +2589,9 @@ public class PayrollService {
 						BigDecimal prevAmount = partyBenefit.getBigDecimal("cost");
 						Timestamp prevFromDate = partyBenefit.getTimestamp("fromDate");
 						Timestamp prevThruDate = partyBenefit.getTimestamp("thruDate");
+						if(UtilValidate.isEmpty(prevAmount)){
+							prevAmount = BigDecimal.ZERO;
+						}
 						if(prevFromDate.compareTo(fromDateStart)== 0){
 							if(prevAmount.compareTo(amount)!= 0){
 								// Update existing one
