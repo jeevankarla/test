@@ -70,7 +70,7 @@ under the License.
         <field name="currentPassword"><password/></field>
         <field name="currentPasswordVerify"><password/></field>
         <field name="requirePasswordChange">
-            <drop-down allow-empty="false" no-current-selected-key="N">
+            <drop-down allow-empty="false" no-current-selected-key="Y">
                 <option key="Y" description="${uiLabelMap.CommonY}"/>
                 <option key="N" description="${uiLabelMap.CommonN}"/>
             </drop-down>
@@ -178,10 +178,13 @@ under the License.
                 <order-by field-name="groupId"/>
             </entity-condition>
         </actions>
-        <field name="groupId" title="${uiLabelMap.CommonSecurityGroupId}" widget-style="buttontext">
+        <field name="groupId" title="${uiLabelMap.CommonSecurityGroupId}" widget-style="buttontext" use-when="${groovy:((security.hasEntityPermission(&quot;SECURITY&quot;, &quot;_ADMIN&quot;,session)))}">
             <hyperlink also-hidden="false" description="${groupId}" target="EditSecurityGroup">
                 <parameter param-name="groupId"/>
             </hyperlink>
+        </field>
+        <field name="groupId" title="${uiLabelMap.CommonSecurityGroupId}" widget-style="buttontext" use-when="${groovy:((security.hasEntityPermission(&quot;SECURITYADMIN&quot;, &quot;_MOBILE&quot;,session)))}">
+           <display description="${groupId}"></display>
         </field>
         <field name="description" title="${uiLabelMap.CommonDescription}"><display/></field>
     </form>
