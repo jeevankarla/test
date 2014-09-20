@@ -1072,6 +1072,10 @@ public class InvoiceServices {
                 createInvoiceItemContext.put("unitListPrice", orderItem.get("unitListPrice"));
                 createInvoiceItemContext.put("bedAmount", orderItem.get("bedAmount"));
                 createInvoiceItemContext.put("bedPercent", orderItem.get("bedPercent"));
+                createInvoiceItemContext.put("bedcessPercent", orderItem.get("bedcessPercent"));
+                createInvoiceItemContext.put("bedcessAmount", orderItem.get("bedcessAmount"));
+                createInvoiceItemContext.put("bedseccessPercent", orderItem.get("bedseccessPercent"));
+                createInvoiceItemContext.put("bedseccessAmount", orderItem.get("bedseccessAmount"));
                 createInvoiceItemContext.put("vatAmount", orderItem.get("vatAmount"));
                 createInvoiceItemContext.put("vatPercent", orderItem.get("vatPercent"));
                 createInvoiceItemContext.put("cstAmount", orderItem.get("cstAmount"));
