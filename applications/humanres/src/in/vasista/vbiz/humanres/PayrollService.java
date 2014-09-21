@@ -3270,10 +3270,10 @@ public class PayrollService {
       			
 	    		
 	    		EntityCondition cond = EntityCondition.makeCondition(condList,EntityOperator.AND);
-	    		List<GenericValue> payrollBillg = delegator.findList("PeriodBilling",cond,null,null,null,true );
+	    		List<GenericValue> payrollBillg = delegator.findList("PeriodBilling",cond,null,null,null,false);
 	    		if(UtilValidate.isNotEmpty(payrollBillg)){
 	    			Debug.logError("payroll allready generated ,please cancel payroll and do attendance finalization or cancel  ::"+payrollPeriodId, module);    			
-	 	 		    return ServiceUtil.returnError("payroll allready generated ,please cancel payroll and do attendance finalization or cancel :"+payrollPeriodId);
+	 	 		    return ServiceUtil.returnError("payroll allready generated ,please cancel payroll and do attendance finalization or cancel :"+payrollBillg);
 	    		}
 	    		
 	    		if(statusId.equals("COM_CANCELLED")){
