@@ -347,7 +347,7 @@
     	</field>
     	<field name="shiftTypePeriodId" title="Shift Time" >
           <drop-down allow-empty="false">
-                <entity-options entity-name="WorkShiftPeriod" key-field-name="shiftPeriodId" description="${startTime}-${endTime}" filter-by-date="false">
+                <entity-options entity-name="WorkShiftTypePeriodAndMap" key-field-name="shiftPeriodId" description="${description} :: ${startTime}-${endTime}" filter-by-date="false">
                     <entity-order-by field-name="startTime"/>
                 </entity-options>
             </drop-down>
