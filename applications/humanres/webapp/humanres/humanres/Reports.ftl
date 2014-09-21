@@ -638,7 +638,6 @@ function makeDatePicker1(fromDateId ,thruDateId){
 									<td width="15%"><span class='h3'>From Date<input  type="text"  id="ITDeductionsfromDate"   name="fromDate"/></span></td>
 									<td width="15%"><span class='h3'>Thru Date<input  type="text"  id="ITDeductionsthruDate"   name="thruDate"/></span></td>
 									<td width="15%"><span class='h3'><input type="submit" value="Download" class="buttontext"></span></td>
-									<td><
 								</tr>
 							</table>
 						</form>
