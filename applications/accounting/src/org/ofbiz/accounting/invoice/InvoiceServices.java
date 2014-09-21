@@ -5150,6 +5150,7 @@ public class InvoiceServices {
     				billOfSale.put("billOfSaleTypeId", "EXCISE_INV");
     				billOfSale.put("invoiceId", invoiceId);
     				billOfSale.put("finYearId", finYearId);
+    				billOfSale.put("invoiceDueDate", invDate);
     				delegator.setNextSubSeqId(billOfSale, "sequenceId", 10, 1);
     	            delegator.create(billOfSale);
        				
@@ -5159,6 +5160,7 @@ public class InvoiceServices {
     				billOfSale.put("billOfSaleTypeId", "VAT_INV");
     				billOfSale.put("invoiceId", invoiceId);
     				billOfSale.put("finYearId", finYearId);
+    				billOfSale.put("invoiceDueDate", invDate);
     				delegator.setNextSubSeqId(billOfSale, "sequenceId", 10, 1);
     	            delegator.create(billOfSale);
        			}

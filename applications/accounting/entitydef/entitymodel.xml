@@ -1426,6 +1426,7 @@
 		<field name="billOfSaleTypeId" type="id"></field>
 		<field name="sequenceId" type="id-ne"></field>
 		<field name="invoiceId" type="id-ne"></field>
+		<field name="invoiceDueDate" type="date-time"></field>
 		<prim-key field="finYearId" />
 		<prim-key field="billOfSaleTypeId" />
 		<prim-key field="sequenceId" />
@@ -4313,7 +4314,7 @@
 		<relation type="many" fk-name="PAYGRP_FACILITY"  rel-entity-name="Facility">
 			<key-map field-name="facilityId" />
 		</relation>
-	</entity>
+		</entity>
 	<entity entity-name="PaymentGroupType" package-name="org.ofbiz.accounting.payment"
 		title="Payment Group Type Entity">
 		<description>Payment Group Type</description>

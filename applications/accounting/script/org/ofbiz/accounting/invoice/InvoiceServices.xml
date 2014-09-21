@@ -141,6 +141,7 @@ under the License.
           <make-value value-field="newEntity" entity-name="BillOfSaleInvoiceSequence"/>
           <set field="newEntity.finYearId" from-field="customTimePeriod.customTimePeriodId"/>
           <set field="newEntity.invoiceId" from-field="invoice.invoiceId"/>
+          <set field="newEntity.invoiceDueDate" from-field="invoice.invoiceDueDate"/>
           <set field="newEntity.billOfSaleTypeId" from-field="parameters.billOfSaleTypeId"/>
           <make-next-seq-id seq-field-name="sequenceId" value-field="newEntity"/>
           <create-value value-field="newEntity"/>
