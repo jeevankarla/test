@@ -2510,10 +2510,10 @@ under the License.
             title="Return Item Entity">
         <field name="returnId" type="id-ne"></field>
         <field name="returnItemSeqId" type="id-ne"></field>
-        <field name="returnReasonId" type="id" enable-audit-log="true">
+        <field name="returnReasonId" type="id">
             <description>why item is returned: did not like, wrong item, damaged, etc. etc.</description>
         </field>
-        <field name="returnTypeId" type="id" enable-audit-log="true">
+        <field name="returnTypeId" type="id">
             <description>actually used for disbursement type: store credit, cash refund, exchange</description>
         </field>
         <field name="returnItemTypeId" type="id">
@@ -2527,11 +2527,11 @@ under the License.
         <field name="orderItemSeqId" type="id"></field>
         <field name="statusId" type="id"></field>
         <field name="expectedItemStatus" type="id"></field>
-        <field name="returnQuantity" type="fixed-point" enable-audit-log="true"><description>promised by the customer</description></field>
-        <field name="receivedQuantity" type="fixed-point" enable-audit-log="true"><description>actually received from the customer</description></field>
-        <field name="returnPrice" type="currency-amount" enable-audit-log="true"></field>
+        <field name="returnQuantity" type="fixed-point"><description>promised by the customer</description></field>
+        <field name="receivedQuantity" type="fixed-point"><description>actually received from the customer</description></field>
+        <field name="returnPrice" type="currency-amount"></field>
         <field name="returnItemResponseId" type="id"></field>
-        <field name="returnBasicPrice" type="currency-amount" enable-audit-log="true"></field>
+        <field name="returnBasicPrice" type="currency-amount"></field>
         <field name="vatPercent" type="fixed-point"></field>
         <field name="vatAmount" type="currency-precise" ></field>
         <prim-key field="returnId"/>
