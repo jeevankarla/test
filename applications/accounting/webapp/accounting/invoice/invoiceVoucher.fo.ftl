@@ -143,16 +143,20 @@ under the License.
 						        						  <#assign sno=sno+1>
 												            <#--<#assign itemType = invoiceItem.getRelatedOne("InvoiceItemType")>
 												            <#assign isItemAdjustment = Static["org.ofbiz.entity.util.EntityTypeUtil"].hasParentType(delegator, "InvoiceItemType", "invoiceItemTypeId", itemType.getString("invoiceItemTypeId"), "parentTypeId", "INVOICE_ADJ")/>-->
-																 	<#assign itemType = delegator.findOne("InvoiceItemType", {"invoiceItemTypeId" : invoiceItem.invoiceItemTypeId}, false)?if_exists/>
+																 	<#assign invoiceItemType = delegator.findOne("InvoiceItemType", {"invoiceItemTypeId" : invoiceItem.invoiceItemTypeId}, false)?if_exists/>
 																 	<#if invoiceItem.description?has_content>
 														                <#assign description=invoiceItem.description>
 														            <#elseif taxRate?has_content & taxRate.get("description",locale)?has_content>
 														                <#assign description=taxRate.get("description",locale)>
-														            <#elseif itemType.get("description",locale)?has_content>
-														                <#assign description=itemType.get("description",locale)>
-														            </#if>  
-															       <#assign glAccountId = "">
-																   <#assign glAccountId =   invoiceItem.get("glAccountId")?if_exists>   
+														            <#elseif invoiceItemType.get("description",locale)?has_content>
+														                <#assign description=invoiceItemType.get("description",locale)>
+														            </#if>
+														            <#assign glAccountId = "">
+														   			<#if invoiceItemType.defaultGlAccountId?has_content>
+														   				<#assign glAccountId =   invoiceItemType.defaultGlAccountId?if_exists>
+														   			<#elseif invoiceItem.get("glAccountId")?has_content>	
+														   				<#assign glAccountId =   invoiceItem.get("glAccountId")?if_exists>  
+														   			</#if>
 																    <#if glAccountId?has_content>
 																    	<#assign glAccountDetails = delegator.findOne("GlAccount", {"glAccountId" : glAccountId}, false)?if_exists/>
 																    </#if> 
