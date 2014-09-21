@@ -156,7 +156,7 @@ if(UtilValidate.isNotEmpty(salesInvoiceTotals)){
 				mrrNumber = null;
 				poNumber = null;
 				supInvNumber = null;
-				supInvDate = null;
+				supInvDateTime = null;
 				orderItemBillingList = delegator.findList("OrderItemBilling",EntityCondition.makeCondition("invoiceId", EntityOperator.EQUALS , invoiceId)  , null, null, null, false );
 				if(UtilValidate.isNotEmpty(orderItemBillingList)){
 					orderItemBilling = EntityUtil.getFirst(orderItemBillingList);
@@ -178,6 +178,16 @@ if(UtilValidate.isNotEmpty(salesInvoiceTotals)){
 							supInvDateOrderAttributeDetails = delegator.findOne("OrderAttribute", [orderId : orderId, attrName : "SUP_INV_DATE"], false);
 							if(UtilValidate.isNotEmpty(supInvDateOrderAttributeDetails)){
 								supInvDate = supInvDateOrderAttributeDetails.attrValue;
+								def sdf1 = new SimpleDateFormat("MM/dd/yy HH:mm");
+								try {
+									supInvDateTime = new java.sql.Timestamp(sdf1.parse(supInvDate).getTime());
+								} catch (ParseException e) {
+									Debug.logError(e, "Cannot parse date string: "+supInvDate, "");
+								}
+								supInvDateTime = UtilDateTime.getDayStart(supInvDateTime);
+								if(UtilValidate.isNotEmpty(supInvDateTime)){
+									supInvDateTime = UtilDateTime.toDateString(supInvDateTime, "dd/MM/yyyy");
+								}
 							}
 						}
 					}
@@ -202,7 +212,7 @@ if(UtilValidate.isNotEmpty(salesInvoiceTotals)){
 				totalMap["mrrNumber"]=mrrNumber;
 				totalMap["poNumber"]=poNumber;
 				totalMap["supInvNumber"]=supInvNumber;
-				totalMap["supInvDate"]=supInvDate;
+				totalMap["supInvDate"]=supInvDateTime;
 				tempMap = [:];
 				tempMap.putAll(totalMap);
 				if(UtilValidate.isNotEmpty(tempMap)){
