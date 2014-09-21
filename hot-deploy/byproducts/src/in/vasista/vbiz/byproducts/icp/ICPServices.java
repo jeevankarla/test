@@ -403,6 +403,16 @@ public static Map<String, Object> approveICPOrder(DispatchContext dctx, Map cont
 					}
 					productPriceTaxCalc.add(prodTaxType);
 				}
+				else{
+					GenericValue productPrice = delegator.makeValue("ProductPrice");        	 
+					productPrice.set("productId", productId);
+					productPrice.set("productPriceTypeId", taxId);
+					productPrice.set("productPricePurposeId", "SALE_PRICE");
+					productPrice.set("productStoreGroupId", "_NA_");
+					productPrice.set("currencyUomId", "INR");
+					productPrice.set("price", amount);
+					productPriceTaxCalc.add(productPrice);
+				}
 			}
 		}
 		cart.setDefaultCheckoutOptions(dispatcher);
