@@ -856,6 +856,7 @@ public class ByProductServices {
         }
         Timestamp estimatedDeliveryDate = (Timestamp) context.get("estimatedDeliveryDate");
         String shipmentId = (String) context.get("shipmentId");
+        String geoTax = (String) context.get("geoTax");
         List excludeInvoiceForFacilityIds = (List) context.get("excludeInvoiceForFacilityIds");
         List<GenericValue> subscriptionProductsList = UtilGenerics.checkList(context.get("subscriptionProductsList"));
         Map<String, Object> resultMap = FastMap.newInstance();
@@ -871,7 +872,10 @@ public class ByProductServices {
         if (UtilValidate.isEmpty(subscriptionProductsList)) {
             //Debug.logInfo("No subscription to create orders, finished", module);
             return resultMap;
-        }   
+        }
+        List<String> productIdsList = FastList.newInstance();
+        productIdsList = EntityUtil.getFieldListFromEntityList(subscriptionProductsList, "productId", true);
+        
         String productSubscriptionTypeId = subscriptionProductsList.get(0).getString("productSubscriptionTypeId");
         String subscriptionId = subscriptionProductsList.get(0).getString("subscriptionId");
         String partyId = subscriptionProductsList.get(0).getString("ownerPartyId");
@@ -880,31 +884,15 @@ public class ByProductServices {
         if(UtilValidate.isNotEmpty(PONumberMap) && UtilValidate.isNotEmpty(PONumberMap.get(subscriptionId))){
         	PONumber = (String)PONumberMap.get(subscriptionId);
         }
-        List conditionList = FastList.newInstance();
         
-         conditionList.add(EntityCondition.makeCondition("partyId", EntityOperator.EQUALS, partyId));
-		conditionList.add(EntityCondition.makeCondition("partyClassificationGroupId", EntityOperator.LIKE, "PM_RC_%"));
-		EntityCondition condition = EntityCondition.makeCondition(conditionList,EntityOperator.AND);
-		
-		List<GenericValue> partyClassificationList = null;
 		GenericValue shipment = null;
 		try{
-			partyClassificationList = delegator.findList("PartyClassification", condition, null, null, null, false);
 			shipment=delegator.findOne("Shipment",UtilMisc.toMap("shipmentId", shipmentId), false);
 			
 		}catch(GenericEntityException e){
 			Debug.logError("No partyRole found for given partyId:"+ partyId, module);
 			return ServiceUtil.returnError("No partyRole found for given partyId");
 		}
-		
-		String productPriceTypeId = null;
-		
-		if (UtilValidate.isNotEmpty(partyClassificationList)) {
-			GenericValue partyClassification = partyClassificationList.get(0);
-			productPriceTypeId = (String) partyClassification.get("partyClassificationGroupId");
-			//productPriceTypeId = productPriceTypeId+"_PRICE";
-		}
-		conditionList.clear();
 		
         ShoppingCart cart = new ShoppingCart(delegator, productStoreId, locale, currencyUomId);
         cart.setOrderType("SALES_ORDER");
@@ -931,7 +919,48 @@ public class ByProductServices {
 				// TODO: handle exception
 			}
     		return ServiceUtil.returnError("Error setting userLogin in the cart: " + exc.getMessage());          	            
-        }      
+        }
+        
+        List<GenericValue> applicableTaxTypes = null;
+		try {
+			applicableTaxTypes = delegator.findList("ProductPriceType", EntityCondition.makeCondition("parentTypeId", EntityOperator.EQUALS,"TAX"), null, null, null, false);
+		} catch (GenericEntityException e) {
+			Debug.logError(e, "Failed to retrive ProductPriceType ", module);
+			return ServiceUtil.returnError("Failed to retrive ProductPriceType " + e);
+		}
+		
+	  	List applTaxTypeList = EntityUtil.getFieldListFromEntityList(applicableTaxTypes, "productPriceTypeId", true);
+	  	if(UtilValidate.isNotEmpty(geoTax)){
+			if(geoTax.equals("VAT")){
+				applTaxTypeList.remove("CST_SALE");
+			}
+			else{
+				applTaxTypeList.remove("VAT_SALE");
+			}
+		}
+	  	else{
+	  		applTaxTypeList.remove("CST_SALE");
+	  		applTaxTypeList.remove("SERTAX_SALE");
+	  	}
+	  	
+	  	List<GenericValue> productPriceTaxCalc = FastList.newInstance();
+		List<GenericValue> prodPriceType = null;
+		List conditionList = FastList.newInstance();
+		conditionList.clear();
+		conditionList.add(EntityCondition.makeCondition("productId", EntityOperator.IN, productIdsList));
+		conditionList.add(EntityCondition.makeCondition("productPriceTypeId", EntityOperator.IN, applTaxTypeList));
+		conditionList.add(EntityCondition.makeCondition("parentTypeId", EntityOperator.EQUALS, "TAX"));
+		EntityCondition priceCond = EntityCondition.makeCondition(conditionList,EntityOperator.AND);
+		
+		try {
+			prodPriceType = delegator.findList("ProductPriceAndType", priceCond, null, null, null, false);
+		} catch (GenericEntityException e) {
+			Debug.logError(e, "Failed to retrive ProductPriceType ", module);
+			return ServiceUtil.returnError("Failed to retrive ProductPriceType " + e);
+		}
+		prodPriceType = EntityUtil.filterByDate(prodPriceType, estimatedDeliveryDate);
+        
+        
         Iterator<GenericValue> i = subscriptionProductsList.iterator();
         while (i.hasNext()) {
             GenericValue subscriptionProduct = i.next();
@@ -954,16 +983,13 @@ public class ByProductServices {
                 		return ServiceUtil.returnError("There was an error while calculating the price: " + ServiceUtil.getErrorMessage(priceResult));          	            
                     }
                     BigDecimal totalPrice = (BigDecimal)priceResult.get("totalPrice");
-                    List taxList = (List)priceResult.get("taxList");
+                    List<Map> taxList = (List)priceResult.get("taxList");
             		List<ShoppingCartItem> tempCartItems =cart.findAllCartItems(subscriptionProduct.getString("productId"));
             		ShoppingCartItem item = null;
             		if(tempCartItems.size() >0){
             			 item = tempCartItems.get(0);
             			 item.setQuantity((item.getQuantity()).add(new BigDecimal(subscriptionProduct.getString("quantity"))), dispatcher, cart, true, false ,false);
                          item.setBasePrice((BigDecimal)priceResult.get("basicPrice"));
-                         
-                       
-                        
             			
             		}else{
             			int itemIndx = cart.addItem(0, ShoppingCartItem.makeItem(Integer.valueOf(0), subscriptionProduct.getString("productId"), null, 
@@ -976,19 +1002,34 @@ public class ByProductServices {
             			
             			
             		}
-            		 item.setListPrice(totalPrice);
+            		item.setListPrice(totalPrice);
             		item.setTaxDetails(taxList);
             		
+            		List<GenericValue> productTaxes = EntityUtil.filterByCondition(prodPriceType, EntityCondition.makeCondition("productId", EntityOperator.EQUALS, subscriptionProduct.getString("productId")));
+        			for (Map eachTaxType : taxList) {
+        				String taxId = (String)eachTaxType.get("taxType");
+        				BigDecimal amount = (BigDecimal) eachTaxType.get("amount");
+        				List<GenericValue> productTaxTypesList = EntityUtil.filterByCondition(productTaxes, EntityCondition.makeCondition("productPriceTypeId", EntityOperator.EQUALS, taxId));
+        				if(UtilValidate.isNotEmpty(productTaxTypesList)){
+        					GenericValue prodTaxType = EntityUtil.getFirst(productTaxTypesList);
+        					if(UtilValidate.isNotEmpty(amount) && amount.compareTo(BigDecimal.ZERO)>0){
+        						prodTaxType.set("price", amount);
+        					}
+        					productPriceTaxCalc.add(prodTaxType);
+        				}
+        			}
+        			
                 } catch (Exception exc) {
                     Debug.logError("Error adding product with id " + subscriptionProduct.getString("productId") + " to the cart: " + exc.getMessage(), module);
                     try{
-                   	 shipment.set("statusId", "GENERATION_FAIL");
+                    	shipment.set("statusId", "GENERATION_FAIL");
              		  	shipment.store();
-                   }catch (Exception e) {
-       				// TODO: handle exception
-       			  }
+                    }catch (Exception e) {
+                    	// TODO: handle exception
+                    }
                     return ServiceUtil.returnError("Error adding product with id " + subscriptionProduct.getString("productId") + " to the cart: " + exc.getMessage());          	            
                 }
+            	
                
             }  
             // for now comment out the  inventory logic
@@ -998,44 +1039,10 @@ public class ByProductServices {
         ProductPromoWorker.doPromotions(cart, dispatcher);
         CheckOutHelper checkout = new CheckOutHelper(dispatcher, delegator, cart);
         
-        
-		List<GenericValue> applicableTaxTypes = null;
-		try {
-        	applicableTaxTypes = delegator.findList("ProductPriceType", EntityCondition.makeCondition("parentTypeId", EntityOperator.EQUALS,"TAX"), null, null, null, false);
-		} catch (GenericEntityException e) {
-			Debug.logError(e, "Failed to retrive InventoryItem ", module);
-			try{
-           	 shipment.set("statusId", "GENERATION_FAIL");
-     		  	shipment.store();
-           }catch (Exception ex) {
-				// TODO: handle exception
-			}
-    		return ServiceUtil.returnError("Failed to retrive InventoryItem " + e);
-		}
-		List applicableTaxTypeList = EntityUtil.getFieldListFromEntityList(applicableTaxTypes, "productPriceTypeId", true);
-		
-        List<GenericValue> prodPriceType = null;
-        
-        conditionList.clear();
-		conditionList.add(EntityCondition.makeCondition("productPriceTypeId", EntityOperator.LIKE, productPriceTypeId+"%"));
-		conditionList.add(EntityCondition.makeCondition("parentTypeId", EntityOperator.IN, applicableTaxTypeList));
-		EntityCondition condition1 = EntityCondition.makeCondition(conditionList,EntityOperator.AND);
-        
         try {
-        	prodPriceType = delegator.findList("ProductPriceAndType", condition1, null, null, null, false);
-		} catch (GenericEntityException e) {
-			Debug.logError(e, "Failed to retrive InventoryItem ", module);
-			try{
-           	 shipment.set("statusId", "GENERATION_FAIL");
-     		  	shipment.store();
-           }catch (Exception ex) {
-				// TODO: handle exception
-			}
-    		return ServiceUtil.returnError("Failed to retrive InventoryItem " + e);
-		}
-       
-        try {
-			checkout.calcAndAddTax(prodPriceType);
+        	if(UtilValidate.isNotEmpty(productPriceTaxCalc)){
+        		checkout.calcAndAddTax(productPriceTaxCalc);
+        	}
 		} catch (GeneralException e) {
 			// TODO Auto-generated catch block
 			Debug.logError(e, "Failed to add tax amount ", module);
