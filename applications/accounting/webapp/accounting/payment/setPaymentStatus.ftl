@@ -92,7 +92,7 @@
 		testFlag = checkFlag;
 		message += "<form action='setPaymentStatus' method='post' onsubmit='return disableButton();'><table cellspacing=10 cellpadding=10>" ; 		
 			message += "<tr class='h3'><td align='left' class='h3' width='40%'>Transaction Date:</td><td align='left' width='60%'><input class='h3' type='text' id='transactionDate' name='transactionDate' onmouseover='datepick()' size='17' readonly/></td></tr>";
-			            if(testFlag == true && (paymentMethodType == 'FUND_TRANSFER' || paymentMethodType == 'CHEQUE_PAYIN' || paymentMethod == 'PAYMENTMETHOD4' || paymentMethod == 'PAYMENTMETHOD6')){
+			            if(testFlag == true && (paymentMethodType == 'FUND_TRANSFER' || paymentMethod == 'PAYMENTMETHOD4' || paymentMethod == 'PAYMENTMETHOD6')){
 			            	message += "<tr class='h3'><td align='left' class='h3' width='40%'>Financial Account:</td><td align='right' width='60%'><select name='finAccountId' id='finAccountId'>";
 			            	for(var i=0 ; i<finAccountIdsList.length ; i++){
 								var innerList=finAccountIdsList[i];
