@@ -527,7 +527,7 @@ public class PaymentWorker {
         paymentCtx.put("instrumentDate", instrumentDate);
         paymentCtx.put("paymentDate", paymentDate);
         
-        paymentCtx.put("statusId", "PMNT_RECEIVED");
+        paymentCtx.put("statusId", "PMNT_NOT_PAID");
         //paymentCtx.put("isEnableAcctg", "N");
         if (UtilValidate.isNotEmpty(finAccountId) ) {
             paymentCtx.put("finAccountId", finAccountId);                        	
@@ -543,6 +543,26 @@ public class PaymentWorker {
             return ServiceUtil.returnError(null, null, null, paymentResult);
         }
         paymentId = (String)paymentResult.get("paymentId");
+        try {
+        	GenericValue payment = delegator.findOne("Payment",UtilMisc.toMap("paymentId",paymentId) , false);
+        	String statusId = null;
+        	if(UtilValidate.isNotEmpty(payment)){
+        		if(UtilAccounting.isReceipt(payment)){
+        			statusId = "PMNT_RECEIVED";
+        		}
+        		if(UtilAccounting.isDisbursement(payment)){
+        			statusId = "PMNT_SENT";
+        		}
+        	}
+            Map<String, Object> pmntResults = dispatcher.runSync("setPaymentStatus", UtilMisc.toMap("userLogin", userLogin, "paymentId", paymentId, "statusId", statusId));
+            if (ServiceUtil.isError(pmntResults)) {
+            	Debug.logError(pmntResults.toString(), module);    			
+                return ServiceUtil.returnError(null, null, null, pmntResults);
+            }
+        } catch (Exception e) {
+            Debug.logError(e, "Unable to change Payment Status", module);
+        }
+        
         //store attribute
         GenericValue paymentAttribute = delegator.makeValue("PaymentAttribute", UtilMisc.toMap("paymentId", paymentId, "attrName", "INFAVOUR_OF"));
         paymentAttribute.put("attrValue",inFavourOf);
@@ -664,7 +684,7 @@ public class PaymentWorker {
 			  	        }
 			  	        paymentCtx.put("instrumentDate", instrumentDate);
 			  	        paymentCtx.put("paymentDate", paymentDate);
-			  	        paymentCtx.put("statusId", "PMNT_RECEIVED");
+			  	        paymentCtx.put("statusId", "PMNT_NOT_PAID");
 			  	        if (UtilValidate.isNotEmpty(finAccountId) ) {
 			  	            paymentCtx.put("finAccountId", finAccountId);                        	
 			  	        }
@@ -680,6 +700,26 @@ public class PaymentWorker {
 			  		  			return "error";
 			  	  	        }
 			  	  	        paymentId = (String)paymentResult.get("paymentId");
+				  	  	    try {
+					  	  	    GenericValue payment = delegator.findOne("Payment",UtilMisc.toMap("paymentId",paymentId) , false);
+					        	String statusId = null;
+					        	if(UtilValidate.isNotEmpty(payment)){
+					        		if(UtilAccounting.isReceipt(payment)){
+					        			statusId = "PMNT_RECEIVED";
+					        		}
+					        		if(UtilAccounting.isDisbursement(payment)){
+					        			statusId = "PMNT_SENT";
+					        		}
+					        	}
+				  	            Map<String, Object> pmntResults = dispatcher.runSync("setPaymentStatus", UtilMisc.toMap("userLogin", userLogin, "paymentId", paymentId, "statusId", statusId));
+				  	            if (ServiceUtil.isError(pmntResults)) {
+				  	            	Debug.logError(pmntResults.toString(), module);
+				  	            	request.setAttribute("_ERROR_MESSAGE_", "Error in service setPaymentStatus");
+				  	                return "error";
+				  	            }
+				  	        } catch (Exception e) {
+				  	            Debug.logError(e, "Unable to change Payment Status", module);
+				  	        }
 			  			}catch (Exception e) {
 			  		        Debug.logError(e, e.toString(), module);
 			  		        return "error";
@@ -693,11 +733,8 @@ public class PaymentWorker {
 		  			  Debug.logError(e2, "Could not rollback transaction: " + e2.toString(), module);
 		  		}
 		  		 result = ServiceUtil.returnSuccess("Payment successfully done for Party "+partyIdTo+" ..!");
-		         result.put("paymentId",paymentId);
-		         result.put("partyIdFrom",partyIdTo);
-		         result.put("noConditionFind","Y");
-		         result.put("hideSearch","Y"); 
 		         request.setAttribute("_EVENT_MESSAGE_", "Payment successfully done for Party "+partyIdTo);
+		         request.setAttribute("paymentId",paymentId);
 		         return "success"; 
 	}
     

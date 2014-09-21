@@ -3176,10 +3176,10 @@ under the License.
    <request-map uri="makeMassInvoicePayments">
      	<security https="true" auth="true"/>
      	<event type="java"  path="org.ofbiz.accounting.payment.PaymentWorker"  invoke="makeMassInvoicePayments" global-transaction="true"/>
-     	<response name="success" type="request-redirect-noparam" value="FindApInvoices">
-        	<redirect-parameter name="partyIdFrom"/>
+     	<response name="success" type="request-redirect" value="paymentOverview">
+        	<redirect-parameter name="paymentId"/>
         </response>     	
-        <response name="error" type="request-redirect-noparam" value="FindApInvoices">
+        <response name="error" type="request-redirect" value="paymentOverview">
         </response>
     </request-map>
    
