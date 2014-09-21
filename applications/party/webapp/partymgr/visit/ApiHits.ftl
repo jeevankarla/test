@@ -34,7 +34,8 @@ $(document).ready(function(){
 	
 	var plot = jQuery.plot($("#graph"), [{label: "Total Hits", data: ${StringUtil.wrapString(listJSON)}}, 
 							  {label: "Retailer Hits", data: ${StringUtil.wrapString(listRetailerJSON)}},
-							  {label: "Employee Hits", data: ${StringUtil.wrapString(listEmployeeJSON)}}], 
+							  {label: "Employee Hits", data: ${StringUtil.wrapString(listEmployeeJSON)}},
+							  {label: "Change Indent Hits", data: ${StringUtil.wrapString(listChangeIndentsJSON)}}], 
 							  options);
 				
     var overview = $.plot($("#overview"), [data], {

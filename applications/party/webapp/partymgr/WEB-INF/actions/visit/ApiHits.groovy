@@ -18,6 +18,7 @@ startTime = UtilDateTime.getDayStart(startTime);
 JSONArray listJSON= new JSONArray();
 JSONArray listRetailerJSON= new JSONArray();
 JSONArray listEmployeeJSON= new JSONArray();
+JSONArray listChangeIndentsJSON= new JSONArray();
 
 dayHitsMap = [:];
 EntityListIterator apiHitsIter = null;
@@ -33,6 +34,8 @@ try {
 	while ((apiHit = apiHitsIter.next()) != null) {
 		hitDate = UtilDateTime.getDayEnd(apiHit.get("startDateTime"));
 		String userLoginId= apiHit.getString("userLoginId");
+		String contentId= apiHit.getString("contentId");
+
 		String partyId = "";
 		String role = "";
 		if (userLoginId) {
@@ -52,25 +55,20 @@ try {
 				}
 			}
 		}
-		def hitMap = [totalHits : 0, retailerHits : 0, employeeHits : 0];		
+		def hitMap = [totalHits : 0, retailerHits : 0, employeeHits : 0, changeIndentHits : 0];		
 		if (dayHitsMap.containsKey(hitDate.getTime())) {
-			hitMap = dayHitsMap[hitDate.getTime()];
-			if (hitMap.containsKey("totalHits")) {
-				hitMap["totalHits"] +=  1;
-			} 
-			else {
-				hitMap["totalHits"] =  1;
-			}			
+			hitMap = dayHitsMap[hitDate.getTime()];		
 		}
-		else
-		{
-			hitMap["totalHits"] =  1;
-		}
+
+		hitMap["totalHits"] +=  1;
 		if (role == "Retailer") {
 			hitMap["retailerHits"] += 1;
 		}
-		else if (role == "Employee") {
+		if (role == "Employee") {
 			hitMap["employeeHits"] += 1;
+		}
+		if (contentId == "webtools.processChangeIndentApi") {
+			hitMap["changeIndentHits"] += 1;		
 		}
 		dayHitsMap[hitDate.getTime()] = hitMap;
 	}
@@ -85,6 +83,7 @@ while (iterTime <= endTime) {
 	totalHits = 0;
 	retailerHits = 0;
 	employeeHits = 0;
+	changeIndentHits = 0;
 	
 	if (dayHitsMap.containsKey(iterTime.getTime())) {
 		hitMap = dayHitsMap[iterTime.getTime()];
@@ -97,6 +96,9 @@ while (iterTime <= endTime) {
 		if (hitMap.containsKey("employeeHits")) {
 			employeeHits = hitMap["employeeHits"];
 		}
+		if (hitMap.containsKey("changeIndentHits")) {
+			changeIndentHits = hitMap["changeIndentHits"];
+		}		
 	}
 	JSONArray dayList= new JSONArray();
 	dayList.add(iterTime.getTime());
@@ -112,6 +114,12 @@ while (iterTime <= endTime) {
 	dayEmployeeList.add(iterTime.getTime());
 	dayEmployeeList.add(employeeHits);
 	listEmployeeJSON.add(dayEmployeeList);
+
+	JSONArray changeIndentsList= new JSONArray();
+	changeIndentsList.add(iterTime.getTime());
+	changeIndentsList.add(changeIndentHits);
+	listChangeIndentsJSON.add(changeIndentsList);	
+	
 	iterTime = UtilDateTime.addDaysToTimestamp(iterTime, 1);
 }
 
@@ -120,4 +128,6 @@ while (iterTime <= endTime) {
 context.listJSON=listJSON;
 context.listRetailerJSON=listRetailerJSON;
 context.listEmployeeJSON=listEmployeeJSON;
+context.listChangeIndentsJSON=listChangeIndentsJSON;
+
 
