@@ -2198,14 +2198,17 @@ public class ByProductServices {
 		    conditionList.clear();
 		    conditionList.add(EntityCondition.makeCondition("productId", EntityOperator.EQUALS, productId));
 		    /*conditionList.add(EntityCondition.makeCondition("productPriceTypeId", EntityOperator.LIKE, productPriceTypeId+"%"));*/
-			if(UtilValidate.isNotEmpty(geoTax)){
-				if(geoTax.equals("VAT")){
-					applicableTaxTypeList.remove("CST_SALE");
-				}
-				else{
-					applicableTaxTypeList.remove("VAT_SALE");
-				}
-			}
+		    boolean taxFilter = false;
+		    if(UtilValidate.isNotEmpty(geoTax) && geoTax.equals("CST")){
+				applicableTaxTypeList.remove("VAT_SALE");
+				taxFilter = true;
+		    }
+		    else{
+		    	applicableTaxTypeList.remove("CST_SALE");
+		    	applicableTaxTypeList.remove("SERTAX_SALE");
+		    	taxFilter = true;
+		    }
+		    
 			conditionList.add(EntityCondition.makeCondition("productPriceTypeId", EntityOperator.IN, applicableTaxTypeList));
 			conditionList.add(EntityCondition.makeCondition(EntityCondition.makeCondition("thruDate", EntityOperator.EQUALS, null),EntityOperator.OR,
 	    			 EntityCondition.makeCondition("thruDate", EntityOperator.GREATER_THAN, priceDate)));
@@ -2273,7 +2276,12 @@ public class ByProductServices {
        		}
         
        // basicPrice = basicPrice.setScale( decimals,rounding);
-		List<GenericValue> taxList = TaxAuthorityServices.getTaxAdjustmentByType(delegator, product, productStore, null, BigDecimal.ONE, BigDecimal.ZERO, BigDecimal.ZERO, null, prodPriceType);
+			List<GenericValue> taxList = FastList.newInstance();
+			if(!(UtilValidate.isEmpty(prodPriceType) && taxFilter)){
+				taxList = TaxAuthorityServices.getTaxAdjustmentByType(delegator, product, productStore, null, BigDecimal.ONE, BigDecimal.ZERO, BigDecimal.ZERO, null, prodPriceType);
+			}
+			
+		
 		List taxDetailList = FastList.newInstance();
 		BigDecimal totalExciseDuty = BigDecimal.ZERO;
 		BigDecimal totalTaxAmt = BigDecimal.ZERO;
@@ -2859,7 +2867,166 @@ public class ByProductServices {
 	  	  }
 	  	  return "success";     
 	}
-
+	
+	public static String processGroupPaymentDeposit(HttpServletRequest request, HttpServletResponse response) {
+		Delegator delegator = (Delegator) request.getAttribute("delegator");
+	  	  LocalDispatcher dispatcher = (LocalDispatcher) request.getAttribute("dispatcher");
+	  	  Locale locale = UtilHttp.getLocale(request);
+	  	  Map<String, Object> result = ServiceUtil.returnSuccess();
+	  	  HttpSession session = request.getSession();
+	  	  GenericValue userLogin = (GenericValue) session.getAttribute("userLogin");
+	      Timestamp nowTimeStamp = UtilDateTime.nowTimestamp();	 
+	      Timestamp todayDayStart = UtilDateTime.getDayStart(nowTimeStamp);
+	  	  Map<String, Object> paramMap = UtilHttp.getParameterMap(request);
+	  	  String paymentMethodTypeId = (String)request.getParameter("paymentMethodTypeId");
+	  	  String paymentGroupTypeId = (String)request.getParameter("paymentGroupTypeId");
+	  	  String paymentRefNum = (String)request.getParameter("paymentRefNum");
+	  	  String instrumentDateStr = (String)request.getParameter("instrumentDate");
+	  	  String amountStr = (String)request.getParameter("amount");
+	  	  String paymentDateStr = (String)request.getParameter("paymentDate");
+	  	  String issuingAuthority = (String)request.getParameter("issuingAuthority");
+	  	  String finAccountId = (String)request.getParameter("finAccountId");
+	  	  
+	  	  if(UtilValidate.isEmpty(paymentDateStr)){
+	  		  Debug.logError("Deposit date cannot be empty: " + paymentDateStr, module);
+			  request.setAttribute("_ERROR_MESSAGE_", "Deposit date cannot be empty: " + paymentDateStr);
+			  return "error";
+	  	  }
+	  	  if(UtilValidate.isEmpty(amountStr)){
+	  		  Debug.logError("amount cannot be empty: " + amountStr, module);
+			  request.setAttribute("_ERROR_MESSAGE_", "amount cannot be empty: " + amountStr);
+			  return "error";
+	  	  }
+	  	  BigDecimal amount = new BigDecimal(amountStr);
+	  	  Timestamp paymentDate = null;
+	  	  Timestamp instrumentDate = null;
+	  	  SimpleDateFormat sdf = new SimpleDateFormat("dd MMMM, yyyy");
+  		  try {
+			 paymentDate = new java.sql.Timestamp(sdf.parse(paymentDateStr).getTime());
+	  	  } catch (ParseException e) {
+  			  Debug.logError(e, "Cannot parse date string: " + paymentDateStr, module);
+  			  request.setAttribute("_ERROR_MESSAGE_", "Problems parsing date string: " + paymentDateStr);
+			  return "error";
+	  	  } catch (NullPointerException e) {
+  			  Debug.logError(e, "Cannot parse date string: " + paymentDateStr, module);
+  			  request.setAttribute("_ERROR_MESSAGE_", "Problems parsing date string: " + paymentDateStr);
+			  return "error";
+	  	  }
+  		  
+  		  if(UtilValidate.isNotEmpty(instrumentDateStr)){
+  			  try {
+  				 instrumentDate = new java.sql.Timestamp(sdf.parse(instrumentDateStr).getTime());
+  		  	  } catch (ParseException e) {
+  	  			  Debug.logError(e, "Cannot parse date string: " + instrumentDateStr, module);
+  	  			  request.setAttribute("_ERROR_MESSAGE_", "Problems parsing date string: " + instrumentDateStr);
+  				  return "error";
+  		  	  } catch (NullPointerException e) {
+  	  			  Debug.logError(e, "Cannot parse date string: " + instrumentDateStr, module);
+  	  			  request.setAttribute("_ERROR_MESSAGE_", "Problems parsing date string: " + instrumentDateStr);
+  				  return "error";
+  		  	  }
+  		  }
+	  	  
+	  	  List paymentIds = FastList.newInstance();	
+	  	  int rowCount = UtilHttp.getMultiFormRowCount(paramMap);
+	  	  if (rowCount < 1) {
+	  		  Debug.logError("No rows to process, as rowCount = " + rowCount, module);
+			  request.setAttribute("_ERROR_MESSAGE_", "No rows to process");	  		  
+	  		  return "error";
+	  	  }
+	  	  String paymentGroupId = "";
+	  	  boolean beganTransaction = false;
+	  	  try{
+	  		  
+	  		  beganTransaction = TransactionUtil.begin(7200);
+	  		  List exprListForParameters = FastList.newInstance();
+	  	      
+		  	  for (int i = 0; i < rowCount; i++){
+		  		  String paymentId = "";
+		  		  String thisSuffix = UtilHttp.MULTI_ROW_DELIMITER + i;
+	  			  if (paramMap.containsKey("paymentId" + thisSuffix)) {
+	  				  paymentId = (String) paramMap.get("paymentId" + thisSuffix);
+		  		  }
+	  			  if(UtilValidate.isNotEmpty(paymentId)){
+	  				  Map<String, Object> pmntResults = dispatcher.runSync("setPaymentStatus", UtilMisc.toMap("userLogin", userLogin, "paymentId", paymentId, "statusId", "PMNT_SENT"));
+		  			  if (ServiceUtil.isError(pmntResults)) {
+		  				  Debug.logError("Problems in service setPaymentStatus", module);
+				  		  request.setAttribute("_ERROR_MESSAGE_", "Error in service setPaymentStatus");
+				  		  TransactionUtil.rollback();
+				  		  return "error";
+		  			  }
+		  			  
+		       		  paymentIds.add(paymentId);
+	  			  }
+	  			  
+		  	  }//end of loop
+		  	  Map finDepositCtx = FastMap.newInstance();
+		  	  finDepositCtx.put("userLogin", userLogin);
+		  	  finDepositCtx.put("paymentIds", paymentIds);
+		  	  finDepositCtx.put("finAccountId", finAccountId);
+		  	  finDepositCtx.put("transactionDate", paymentDate);
+		  	  Map resultDepositMap = dispatcher.runSync("depositWithdrawPayments", finDepositCtx);
+		  	  if(ServiceUtil.isError(resultDepositMap)){
+		  		  Debug.logError("Problems in service depositWithdrawPayments", module);
+		  		  request.setAttribute("_ERROR_MESSAGE_", "Error in service depositWithdrawPayments");
+		  		  TransactionUtil.rollback();
+		  		  return "error";
+		  	  }
+		  	  if(UtilValidate.isNotEmpty(paymentIds) && paymentIds.size() > 1 ){
+		  		  Map serviceCtx = FastMap.newInstance();
+		  		  serviceCtx.put("paymentIds", paymentIds);
+		  		  serviceCtx.put("paymentMethodTypeId", paymentMethodTypeId);
+		  		  serviceCtx.put("instrumentDate", instrumentDate);
+		  		  serviceCtx.put("paymentDate", paymentDate);
+		  		  serviceCtx.put("paymentRefNum", paymentRefNum);
+		  		  serviceCtx.put("issuingAuthority", issuingAuthority);
+		  		  serviceCtx.put("amount", amount);
+		  		  serviceCtx.put("finAccountId", finAccountId);
+		  		  serviceCtx.put("paymentGroupTypeId", paymentGroupTypeId);
+		  		  serviceCtx.put("userLogin", userLogin);
+		  		  Map resultCtx = dispatcher.runSync("createPaymentGroupAndMember", serviceCtx);
+		  		  if(ServiceUtil.isError(resultCtx)){
+		    			Debug.logError("Error while creating payment group: " + ServiceUtil.getErrorMessage(resultCtx), module);
+		    			request.setAttribute("_ERROR_MESSAGE_", "Error while creating payment group");
+			  			TransactionUtil.rollback();
+			  			return "error";
+		  		  }
+		  		  paymentGroupId = (String)resultCtx.get("paymentGroupId");
+		  		  Debug.log("paymentGroupId ####################"+paymentGroupId);
+		  	  }
+		  	 
+	  	  } catch (GenericEntityException e) {
+	  		  try {
+	  			  // only rollback the transaction if we started one...
+	  			  TransactionUtil.rollback(beganTransaction, "Error Fetching data", e);
+	  		  } catch (GenericEntityException e2) {
+	  			  Debug.logError(e2, "Could not rollback transaction: " + e2.toString(), module);
+	  		  }
+	  		  Debug.logError("An entity engine error occurred while fetching data", module);
+	  	  }
+	  	  catch (GenericServiceException e) {
+	  		  try {
+	  			  // only rollback the transaction if we started one...
+	  			  TransactionUtil.rollback(beganTransaction, "Error while calling services", e);
+	  		  } catch (GenericEntityException e2) {
+	  			  Debug.logError(e2, "Could not rollback transaction: " + e2.toString(), module);
+	  		  }
+	  		  Debug.logError("An entity engine error occurred while calling services", module);
+	  	  }
+	  	  finally {
+	  		  // only commit the transaction if we started one... this will throw an exception if it fails
+	  		  try {
+	  			  TransactionUtil.commit(beganTransaction);
+	  		  } catch (GenericEntityException e) {
+	  			  Debug.logError(e, "Could not commit transaction for entity engine error occurred while fetching data", module);
+	  		  }
+	  	  }
+	  	  Debug.log("Server completed successfully ###############################################################################");
+	  	  request.setAttribute("_EVENT_MESSAGE_", "Successfully made processed group payment entries ");
+	  	  return "success";     
+	}
+	
+	
 	public static Map<String, Object> cancelRetailerPayment(DispatchContext dctx, Map<String, ? extends Object> context){
         Delegator delegator = dctx.getDelegator();
         LocalDispatcher dispatcher = dctx.getDispatcher();
