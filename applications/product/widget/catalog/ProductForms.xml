@@ -97,7 +97,9 @@ under the License.
         </field>
 
         <field position="1" name="internalName" title="${uiLabelMap.ProductInternalName}" required-field="true"><text size="30" maxlength="255"/></field>
-        <field position="2" name="brandName" title="${uiLabelMap.ProductBrandName}" ><text size="30" maxlength="60"/></field><!--
+        <field position="2" name="brandName" title="${uiLabelMap.ProductBrandName}" ><text size="30" maxlength="60"/></field>
+        <field position="1" name="description" title="${uiLabelMap.Description}"><text size="30" maxlength="255"/></field>
+        <!--
         <field name="manufacturerPartyId" title="${uiLabelMap.ProductOemPartyId}" ><text size="20" maxlength="20"/></field>
         --><field name="comments" title="${uiLabelMap.CommonComments}"><text size="60" maxlength="250"/></field>
 
@@ -280,6 +282,7 @@ under the License.
             <field-group title="${uiLabelMap.ProductWordingAndComment}" collapsible="true">
                 <sort-field name="internalName"/>
                 <sort-field name="brandName"/>
+                <sort-field name="description"/>
                 <sort-field name="manufacturerPartyId"/>
                 <sort-field name="comments"/>
             </field-group><!--
