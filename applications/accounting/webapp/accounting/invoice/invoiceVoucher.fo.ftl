@@ -51,7 +51,7 @@ under the License.
         						   				<fo:block text-align="center"  white-space-collapse="false" font-family="Courier,monospace" font-weight="bold" font-size="12pt" keep-together="always">INVOICE AND PAYMENT VOUCHER</fo:block>
         						   			</fo:table-cell>
         						   			<fo:table-cell border-style="solid"></fo:table-cell>
-        						   	</fo:table-row>
+        						   	</fo:table-row>	
         						   	<fo:table-row>
 		    								<fo:table-cell border-style="solid">
 		    									 <fo:block text-align="right" font-family="Courier,monospace"  font-size="12pt">&#160;</fo:block>
@@ -137,22 +137,25 @@ under the License.
 						        						</fo:table-cell>
 						        						</fo:table-row>	
 						        						<#assign sno=0>
-						        						  <#list invoiceItems as invoiceItem>
+						        						  <#list invoiceItemList as invoiceItem>
+						        						  <#assign acctngTransDetails = {}>
+						        						  <#assign glAccountDetails = {}>
 						        						  <#assign sno=sno+1>
-												            <#assign itemType = invoiceItem.getRelatedOne("InvoiceItemType")>
-												            <#assign isItemAdjustment = Static["org.ofbiz.entity.util.EntityTypeUtil"].hasParentType(delegator, "InvoiceItemType", "invoiceItemTypeId", itemType.getString("invoiceItemTypeId"), "parentTypeId", "INVOICE_ADJ")/>
-																 <#if invoiceItem.description?has_content>
+												            <#--<#assign itemType = invoiceItem.getRelatedOne("InvoiceItemType")>
+												            <#assign isItemAdjustment = Static["org.ofbiz.entity.util.EntityTypeUtil"].hasParentType(delegator, "InvoiceItemType", "invoiceItemTypeId", itemType.getString("invoiceItemTypeId"), "parentTypeId", "INVOICE_ADJ")/>-->
+																 	<#assign itemType = delegator.findOne("InvoiceItemType", {"invoiceItemTypeId" : invoiceItem.invoiceItemTypeId}, false)?if_exists/>
+																 	<#if invoiceItem.description?has_content>
 														                <#assign description=invoiceItem.description>
 														            <#elseif taxRate?has_content & taxRate.get("description",locale)?has_content>
 														                <#assign description=taxRate.get("description",locale)>
 														            <#elseif itemType.get("description",locale)?has_content>
 														                <#assign description=itemType.get("description",locale)>
 														            </#if>  
-														   <#assign invoiceItemTypeDetails = delegator.findOne("InvoiceItemType", {"invoiceItemTypeId" : invoiceItem.invoiceItemTypeId}, true)?if_exists/>         
-														   <#assign glAccountId =   invoiceItemTypeDetails.defaultGlAccountId?if_exists>   
-														    <#if glAccountId?has_content>
-														    	<#assign glAccountDetails = delegator.findOne("GlAccount", {"glAccountId" : glAccountId}, true)?if_exists/>
-														    </#if>         						
+															       <#assign glAccountId = "">
+																   <#assign glAccountId =   invoiceItem.get("glAccountId")?if_exists>   
+																    <#if glAccountId?has_content>
+																    	<#assign glAccountDetails = delegator.findOne("GlAccount", {"glAccountId" : glAccountId}, false)?if_exists/>
+																    </#if> 
 						        						<fo:table-row>
 							        						<fo:table-cell bottom="">
 						        		                    <fo:table  table-layout="fixed" width="100%" space-before="0.2in">
@@ -172,7 +175,7 @@ under the License.
 						        											<fo:block text-align="center" font-size="12pt" white-space-collapse="false">&#160; <#if glAccountDetails?has_content>${glAccountDetails.description?if_exists}(${glAccountId})</#if> </fo:block>
 						        							  		  </fo:table-cell>
 						        							  		  <fo:table-cell border-style="solid">
-						        											<fo:block text-align="center" font-size="12pt" white-space-collapse="false" keep-together="always">&#160; <@ofbizCurrency amount=(Static["org.ofbiz.accounting.invoice.InvoiceWorker"].getInvoiceItemTotal(invoiceItem)) isoCode=invoice.currencyUomId?if_exists/> </fo:block>
+						        											<fo:block text-align="center" font-size="12pt" white-space-collapse="false" keep-together="always">&#160; ${invoiceItem.amount?if_exists?string("#0.00")} </fo:block>
 						        							  		  </fo:table-cell>
         						   									 </fo:table-row>
         						   									 </fo:table-body>
@@ -193,7 +196,7 @@ under the License.
 				        											<fo:block text-align="left" font-size="12pt" white-space-collapse="false" keep-together="always" font-weight="bold"></fo:block>
 				        							  		 </fo:table-cell>
 			        							  		 	<fo:table-cell >
-			        											<fo:block text-align="right" font-size="12pt" white-space-collapse="false" keep-together="always" font-weight="bold">Total:&#160;<@ofbizCurrency amount=invoiceTotal isoCode=invoice.currencyUomId?if_exists/></fo:block>
+			        											<fo:block text-align="right" font-size="12pt" white-space-collapse="false" keep-together="always" font-weight="bold">Total:<@ofbizCurrency amount=invoiceTotal isoCode=invoice.currencyUomId?if_exists/></fo:block>
 			        							  		 	</fo:table-cell>
 						        						</fo:table-row>
 						        						

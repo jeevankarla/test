@@ -107,10 +107,36 @@ if (invoice) {
 
 	invoiceItems = invoice.getRelatedOrderBy("InvoiceItem", ["invoiceItemSeqId"]);
 	invoiceItemsConv = FastList.newInstance();
+	invoiceItemList = FastList.newInstance();
 	vatTaxesByType = FastMap.newInstance();
 	invoiceItems.each { invoiceItem ->
 		invoiceItem.amount = invoiceItem.getBigDecimal("amount").multiply(conversionRate).setScale(decimals, rounding);
 		invoiceItemsConv.add(invoiceItem);
+		glAccountId = null;
+		List conditionList=[];
+		conditionList.add(EntityCondition.makeCondition("invoiceId", EntityOperator.EQUALS, invoiceItem.invoiceId));
+		if(UtilValidate.isNotEmpty(invoiceItem.productId)){
+			conditionList.add(EntityCondition.makeCondition("productId", EntityOperator.EQUALS, invoiceItem.productId));
+		}else{
+		conditionList.add(EntityCondition.makeCondition("productId", EntityOperator.EQUALS, null));
+		}
+		conditionList.add(EntityCondition.makeCondition("debitCreditFlag", EntityOperator.EQUALS, "D"));
+		condition=EntityCondition.makeCondition(conditionList,EntityOperator.AND);
+		acctngTransEntriesList = delegator.findList("AcctgTransAndEntries", condition , null, null, null, false );
+		if(UtilValidate.isNotEmpty(acctngTransEntriesList)){
+			acctngTransEntries = EntityUtil.getFirst(acctngTransEntriesList);
+			glAccountId = acctngTransEntries.glAccountId;
+		}
+		
+		invoiceItemMap = [:];
+		invoiceItemMap["description"] = invoiceItem.description;
+		invoiceItemMap["invoiceItemTypeId"] = invoiceItem.invoiceItemTypeId;
+		invoiceItemMap["amount"] = invoiceItem.amount;
+		invoiceItemMap["glAccountId"] = glAccountId;
+		if(UtilValidate.isNotEmpty(invoiceItemMap)){
+			invoiceItemList.add(invoiceItemMap);
+		}
+		
 		// get party tax id for VAT taxes: they are required in invoices by EU
 		// also create a map with tax grand total amount by VAT tax: it is also required in invoices by UE
 		taxRate = invoiceItem.getRelatedOne("TaxAuthorityRateProduct");
@@ -127,9 +153,10 @@ if (invoice) {
 			vatTaxesByType.put(taxRate.taxAuthorityRateSeqId, vatTaxesByTypeAmount + invoiceItem.amount);
 		}
 	}
+	context.put("invoiceItemList",invoiceItemList);
 	context.vatTaxesByType = vatTaxesByType;
 	context.vatTaxIds = vatTaxesByType.keySet().asList();
-
+	//Debug.log("invoiceItemsConv==========="+invoiceItemsConv);
 	context.invoiceItems = invoiceItemsConv;
 	invoiceTotal = InvoiceWorker.getInvoiceTotal(invoice).multiply(conversionRate).setScale(decimals, rounding);
 	invoiceNoTaxTotal = InvoiceWorker.getInvoiceNoTaxTotal(invoice).multiply(conversionRate).setScale(decimals, rounding);
