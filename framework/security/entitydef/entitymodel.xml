@@ -192,11 +192,15 @@ under the License.
       <field name="groupId" type="id-ne"></field>
       <field name="fromDate" type="date-time"></field>
       <field name="thruDate" type="date-time"></field>
+      <field name="createdByUserLogin" type="id"></field>
       <prim-key field="userLoginId"/>
       <prim-key field="groupId"/>
       <prim-key field="fromDate"/>
       <relation type="one" fk-name="USER_SECGRP_USER" rel-entity-name="UserLogin">
         <key-map field-name="userLoginId"/>
+      </relation>
+      <relation type="one" fk-name="USER_SECGRP_CRUSER" rel-entity-name="UserLogin">
+        <key-map field-name="createdByUserLogin" rel-field-name="userLoginId"/>
       </relation>
       <relation type="one" fk-name="USER_SECGRP_GRP" rel-entity-name="SecurityGroup">
         <key-map field-name="groupId"/>

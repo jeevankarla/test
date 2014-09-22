@@ -92,7 +92,7 @@ under the License.
         <make-value value-field="newEntity" entity-name="UserLoginSecurityGroup"/>
         <set-pk-fields map="parameters" value-field="newEntity"/>
         <set-nonpk-fields map="parameters" value-field="newEntity"/>
-
+       <set field="newEntity.createdByUserLogin" value="${userLogin.userLoginId}"/>
         <if-empty field="newEntity.fromDate">
             <now-timestamp field="nowTimestamp"/>
             <set from-field="nowTimestamp" field="newEntity.fromDate"/>
