@@ -31,6 +31,9 @@ if (parameters.customTimePeriodId == null) {
 }
 timePeriodId=parameters.customTimePeriodId;
 deptId=parameters.partyId;
+if(parameters.partyIdTo){
+	deptId=parameters.partyIdTo;
+}
 dctx = dispatcher.getDispatchContext();
 context.put("type",parameters.type);
 GenericValue customTimePeriod = delegator.findOne("CustomTimePeriod", [customTimePeriodId : timePeriodId], false);
@@ -46,6 +49,7 @@ finalMap=[:];
 finalList=[];
 Map emplInputMap = FastMap.newInstance();
 emplInputMap.put("userLogin", userLogin);
+
 emplInputMap.put("orgPartyId", deptId);
 emplInputMap.put("fromDate", timePeriodStart);
 emplInputMap.put("thruDate", timePeriodEnd);
