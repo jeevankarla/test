@@ -2513,8 +2513,16 @@ public class PayrollService {
       			conList.add(EntityCondition.makeCondition("customTimePeriodId", EntityOperator.EQUALS , customTimePeriodId));
       			EntityCondition con=EntityCondition.makeCondition(conList,EntityOperator.AND); 
       			List<GenericValue> emplPayrollAttendanceDetailList = delegator.findList("PayrollAttendance", con, null, null, null, false);
-      				for (int i = 0; i < emplPayrollAttendanceDetailList.size(); ++i) {
-      					GenericValue employPayrollDetails = emplPayrollAttendanceDetailList.get(i);
+      			GenericValue employPayrollDetails = null;	  
+      			if(UtilValidate.isNotEmpty(emplPayrollAttendanceDetailList)){
+      					employPayrollDetails = emplPayrollAttendanceDetailList.get(0);
+      			 }else{
+      				employPayrollDetails = delegator.makeValue("PayrollAttendance");
+      			 }
+      			    employPayrollDetails.set("partyId",partyId);
+					employPayrollDetails.set("customTimePeriodId",customTimePeriodId);
+						
+      			
       					if(UtilValidate.isNotEmpty(employPayrollDetails)){
       						employPayrollDetails.set("noOfPayableDays",noOfPayableDays);
       						employPayrollDetails.set("noOfAttendedDays",noOfAttendedDays);
@@ -2534,9 +2542,9 @@ public class PayrollService {
       						employPayrollDetails.set("operatingAllowanceDays",operatingAllowanceDays);
       						employPayrollDetails.set("inChargeAllowanceDays",inChargeAllowanceDays);
       						employPayrollDetails.set("noOfHalfPayDays",noOfHalfPayDays);
-      						employPayrollDetails.store();
+      				        delegator.createOrStore(employPayrollDetails);
       					}
-    	      	}
+    	      	
       		} catch (GenericEntityException e) {
       				Debug.logError(e, module);
       			}
