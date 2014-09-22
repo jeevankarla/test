@@ -664,6 +664,14 @@ under the License.
         <field name="noOfArrearDays" type="fixed-point"/>
         <field name="lateMin" type="fixed-point"/>
         <field name="extraMin" type="fixed-point"/>
+        <field name="noOfNightAllowanceDays" type="fixed-point"/>
+        <field name="coldOrBoiledAllowanceDays" type="fixed-point"/>
+        <field name="noOfRiskAllowanceDays" type="fixed-point"/>
+        <field name="heavyTankerAllowanceDays" type="fixed-point"/>
+        <field name="trTankerAllowanceDays" type="fixed-point"/>
+        <field name="operatingAllowanceDays" type="fixed-point"/>
+        <field name="inChargeAllowanceDays" type="fixed-point"/>
+        <field name="noOfHalfPayDays" type="fixed-point"/>
         <prim-key field="partyId"/>
         <prim-key field="customTimePeriodId"/>
         <relation type="one" fk-name="PAYROLL_PERIOD_CUST_TP" rel-entity-name="CustomTimePeriod">

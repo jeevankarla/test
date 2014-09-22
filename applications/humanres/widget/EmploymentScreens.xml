@@ -524,6 +524,46 @@
         </section>
     </screen>
     
+     <screen name="EditPayrollAttendance">
+        <section>
+            <actions>
+                <set field="titleProperty" value="Edit Payroll Attendance"/>
+                <set field="headerItem" value="Attendance"/>
+                <set field="tabButtonItem2" value="EditPayrollAttendance" /> 
+				<set field="tabButtonItem" value="Attendance" />
+            </actions>
+            <widgets>
+				<decorator-screen name="HumanresCommonDecorator" location="component://humanres/widget/CommonScreens.xml">
+                    <decorator-section name="body">
+                    	<include-menu location="component://humanres/widget/HumanresMenus.xml" name="AttendanceTabBar"/> 
+		                    		<screenlet name="search-options" title="search-options">      
+		                                <include-form name="editPayrollAttendance" location="component://humanres/widget/forms/EmploymentForms.xml"/>
+		                            </screenlet>		                           	 
+		                            
+				                   <include-screen name="EditPayroll" location="component://humanres/widget/EmploymentScreens.xml"/>
+		                            
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    <screen name="EditPayroll">
+        <section>
+            <actions>
+            	<script location="component://humanres/webapp/humanres/WEB-INF/actions/humanres/EditPayrollAttedance.groovy"/>  
+            </actions>
+            <widgets>
+                <section>
+                <widgets>
+                    <platform-specific>
+                        <html><html-template location="component:///humanres/webapp/humanres/humanres/EditPayrollAttendance.ftl"/></html>
+                    </platform-specific>
+                </widgets>
+                </section>
+            </widgets>
+        </section>
+    </screen>
+    
  	<screen name="MastersReports">
     	<section>
     		<actions>  

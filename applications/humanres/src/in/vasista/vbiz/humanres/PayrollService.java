@@ -2423,6 +2423,128 @@ public class PayrollService {
 	        return result;
 	 }//end of service
 */	 
+	 public static String editPayrollAttendance(HttpServletRequest request, HttpServletResponse response) {
+	    	Delegator delegator = (Delegator) request.getAttribute("delegator");
+	        LocalDispatcher dispatcher = (LocalDispatcher) request.getAttribute("dispatcher");
+	        Locale locale = UtilHttp.getLocale(request);
+	        Map<String, Object> result = ServiceUtil.returnSuccess();
+	        HttpSession session = request.getSession();
+	        Map paramMap = UtilHttp.getParameterMap(request);
+	        GenericValue userLogin = (GenericValue) session.getAttribute("userLogin");		
+	        String partyId = (String) request.getParameter("partyId");	
+	        String customTimePeriodId = (String) request.getParameter("customTimePeriodId");
+	        String timePeriodId = (String) request.getParameter("timePeriodId");
+	        
+	        String noOfPayableDaysStr=(String)request.getParameter("noOfPayableDays");
+	        BigDecimal noOfPayableDays=new BigDecimal(noOfPayableDaysStr);
+	        
+	        String noOfAttendedDaysStr=(String)request.getParameter("noOfAttendedDays");
+	        BigDecimal noOfAttendedDays=new BigDecimal(noOfAttendedDaysStr);
+	        
+	        String noOfCalenderDaysStr=(String)request.getParameter("noOfCalenderDays");
+	        BigDecimal noOfCalenderDays=new BigDecimal(noOfCalenderDaysStr);
+	        
+	        String noOfLeaveDaysStr=(String)request.getParameter("noOfLeaveDays");
+	        BigDecimal noOfLeaveDays=new BigDecimal(noOfLeaveDaysStr);
+	        
+	        String noOfAttendedHoliDaysStr=(String)request.getParameter("noOfAttendedHoliDays");
+	        BigDecimal noOfAttendedHoliDays=new BigDecimal(noOfAttendedHoliDaysStr);
+	        
+	        String noOfAttendedSsDaysStr=(String)request.getParameter("noOfAttendedSsDays");
+	        BigDecimal noOfAttendedSsDays=new BigDecimal(noOfAttendedSsDaysStr);
+	        
+	        String noOfAttendedWeeklyOffDaysStr=(String)request.getParameter("noOfAttendedWeeklyOffDays");
+	        BigDecimal noOfAttendedWeeklyOffDays=new BigDecimal(noOfAttendedWeeklyOffDaysStr);
+	        
+	        String noOfCompoffAvailedStr=(String)request.getParameter("noOfCompoffAvailed");
+	        BigDecimal noOfCompoffAvailed=new BigDecimal(noOfCompoffAvailedStr);
+	        
+	        String noOfArrearDaysStr=(String)request.getParameter("noOfArrearDays");
+	        BigDecimal noOfArrearDays=new BigDecimal(noOfArrearDaysStr);
+	        
+	        String noOfNightAllowanceDaysStr=(String)request.getParameter("noOfNightAllowanceDays");
+	        BigDecimal noOfNightAllowanceDays=new BigDecimal(noOfNightAllowanceDaysStr);
+	        
+	        String coldOrBoiledAllowanceDaysStr=(String)request.getParameter("coldOrBoiledAllowanceDays");
+	        BigDecimal coldOrBoiledAllowanceDays=new BigDecimal(coldOrBoiledAllowanceDaysStr);
+	        
+	        String noOfRiskAllowanceDaysStr=(String)request.getParameter("noOfRiskAllowanceDays");
+	        BigDecimal noOfRiskAllowanceDays=new BigDecimal(noOfRiskAllowanceDaysStr);
+	        
+	        String heavyTankerAllowanceDaysStr=(String)request.getParameter("heavyTankerAllowanceDays");
+	        BigDecimal heavyTankerAllowanceDays=new BigDecimal(heavyTankerAllowanceDaysStr);
+	        
+	        String trTankerAllowanceDaysStr=(String)request.getParameter("trTankerAllowanceDays");
+	        BigDecimal trTankerAllowanceDays=new BigDecimal(trTankerAllowanceDaysStr);
+	        
+	        String operatingAllowanceDaysStr=(String)request.getParameter("operatingAllowanceDays");
+	        BigDecimal operatingAllowanceDays=new BigDecimal(operatingAllowanceDaysStr);
+	        
+	        String inChargeAllowanceDaysStr=(String)request.getParameter("inChargeAllowanceDays");
+	        BigDecimal inChargeAllowanceDays=new BigDecimal(inChargeAllowanceDaysStr);
+	        
+	        String lossOfPayDaysStr=(String)request.getParameter("lossOfPayDays");
+	        BigDecimal lossOfPayDays=new BigDecimal(lossOfPayDaysStr);
+	        
+	        String noOfHalfPayDaysStr=(String)request.getParameter("noOfHalfPayDays");
+	        BigDecimal noOfHalfPayDays=new BigDecimal(noOfHalfPayDaysStr);
+	        
+	        String billingTypeId = "PAYROLL_BILL";	
+	        // Returning error if payroll already generated
+	        List conditionList = FastList.newInstance();
+	        List periodBillingList = FastList.newInstance();
+	        conditionList.add(EntityCondition.makeCondition("statusId", EntityOperator.IN , UtilMisc.toList("GENERATED","IN_PROCESS","APPROVED")));
+	        conditionList.add(EntityCondition.makeCondition("customTimePeriodId", EntityOperator.EQUALS ,timePeriodId));
+	    	conditionList.add(EntityCondition.makeCondition("billingTypeId", EntityOperator.EQUALS , billingTypeId));
+	    	EntityCondition condition=EntityCondition.makeCondition(conditionList,EntityOperator.AND);
+	    	try {
+	    		periodBillingList = delegator.findList("PeriodBilling", condition, null,null, null, false);
+	    			    		
+	    	}catch (GenericEntityException e) {
+	    		 Debug.logError(e, module);             
+			} 
+	        if(UtilValidate.isNotEmpty(periodBillingList)){	    			
+ 			request.setAttribute("_ERROR_MESSAGE_", "Payroll Already generated for this period, you can not edit values");
+				return "error";
+	        }
+	        try {
+      			List conList = FastList.newInstance();
+      			conList.add(EntityCondition.makeCondition("partyId", EntityOperator.EQUALS ,partyId));
+      			conList.add(EntityCondition.makeCondition("customTimePeriodId", EntityOperator.EQUALS , customTimePeriodId));
+      			EntityCondition con=EntityCondition.makeCondition(conList,EntityOperator.AND); 
+      			List<GenericValue> emplPayrollAttendanceDetailList = delegator.findList("PayrollAttendance", con, null, null, null, false);
+      				for (int i = 0; i < emplPayrollAttendanceDetailList.size(); ++i) {
+      					GenericValue employPayrollDetails = emplPayrollAttendanceDetailList.get(i);
+      					if(UtilValidate.isNotEmpty(employPayrollDetails)){
+      						employPayrollDetails.set("noOfPayableDays",noOfPayableDays);
+      						employPayrollDetails.set("noOfAttendedDays",noOfAttendedDays);
+      						employPayrollDetails.set("noOfCalenderDays",noOfCalenderDays);
+      						employPayrollDetails.set("noOfLeaveDays",noOfLeaveDays);
+      						employPayrollDetails.set("noOfAttendedHoliDays",noOfAttendedHoliDays);
+      						employPayrollDetails.set("noOfAttendedSsDays",noOfAttendedSsDays);
+      						employPayrollDetails.set("noOfAttendedWeeklyOffDays",noOfAttendedWeeklyOffDays);
+      						employPayrollDetails.set("noOfCompoffAvailed",noOfCompoffAvailed);
+      						employPayrollDetails.set("lossOfPayDays",lossOfPayDays);
+      						employPayrollDetails.set("noOfArrearDays",noOfArrearDays);
+      						employPayrollDetails.set("noOfNightAllowanceDays",noOfNightAllowanceDays);
+      						employPayrollDetails.set("coldOrBoiledAllowanceDays",coldOrBoiledAllowanceDays);
+      						employPayrollDetails.set("noOfRiskAllowanceDays",noOfRiskAllowanceDays);
+      						employPayrollDetails.set("heavyTankerAllowanceDays",heavyTankerAllowanceDays);
+      						employPayrollDetails.set("trTankerAllowanceDays",trTankerAllowanceDays);
+      						employPayrollDetails.set("operatingAllowanceDays",operatingAllowanceDays);
+      						employPayrollDetails.set("inChargeAllowanceDays",inChargeAllowanceDays);
+      						employPayrollDetails.set("noOfHalfPayDays",noOfHalfPayDays);
+      						employPayrollDetails.store();
+      					}
+    	      	}
+      		} catch (GenericEntityException e) {
+      				Debug.logError(e, module);
+      			}
+	      	 return "success";
+	    }
+	 
+	 
+	 
 	 public static String updateBenefitsOrDeductions(HttpServletRequest request, HttpServletResponse response) {
 	    	Delegator delegator = (Delegator) request.getAttribute("delegator");
 	        LocalDispatcher dispatcher = (LocalDispatcher) request.getAttribute("dispatcher");
@@ -2433,6 +2555,7 @@ public class PayrollService {
 	        String partyId = (String) request.getParameter("partyId");	
 	        String periodId = (String) request.getParameter("periodId");
 	        String billingTypeId = "PAYROLL_BILL";	
+	        
 	        Map paramMap = UtilHttp.getParameterMap(request);
 	        FastList payheadTypeIdsList = FastList.newInstance();
 	        // Returning error if payroll already generated
@@ -3504,13 +3627,26 @@ public class PayrollService {
   	}
 	 
 	 
-	/*public static  Map<String, Object>getCustomTimePeriodId(DispatchContext dctx, Map context) {
+/*	public static  Map<String, Object>getCustomTimePeriodId(DispatchContext dctx, Map context) {
 		 	GenericValue userLogin = (GenericValue) context.get("userLogin");
 		 	Date date =  (Date)context.get("date");
+		 	Timestamp punchDate = (Timestamp)context.get("punchdate");
+		 	String employeePunchId=(String)context.get("employeePunchId");
 	        Delegator delegator = dctx.getDelegator();
-	        Timestamp dateTime = UtilDateTime.toTimestamp(date);
+	        Timestamp dateTime=null;
+	        Debug.log("punchDate========================="+punchDate);
+	        Debug.log("date========================="+date);
+	        Debug.log("employeePunchId========================="+employeePunchId);
+	        if(UtilValidate.isNotEmpty(punchDate)){
+	        	 dateTime = punchDate;
+	        }else{
+	        	 dateTime = UtilDateTime.toTimestamp(date);
+	        }
+	        Debug.log("dateTime====================="+dateTime);
 	    	Timestamp dateStart = UtilDateTime.getDayStart(dateTime);
 	    	Timestamp dateEnd = UtilDateTime.getDayEnd(dateTime);
+	    	Debug.log("dateStart============================"+dateStart);
+	    	Debug.log("dateEnd=====end======================="+dateEnd);
 	        FastMap result = FastMap.newInstance();
 	        String customTimePeriodId = null;
 	        try {
@@ -3520,7 +3656,9 @@ public class PayrollService {
 				condList.add(EntityCondition.makeCondition("fromDate", EntityOperator.LESS_THAN_EQUAL_TO,new java.sql.Date(dateStart.getTime())));
 				condList.add(EntityCondition.makeCondition("thruDate", EntityOperator.GREATER_THAN_EQUAL_TO, new java.sql.Date(dateEnd.getTime())));
 				EntityCondition cond = EntityCondition.makeCondition(condList,EntityOperator.AND); 	
+				Debug.log("cond============================"+cond);
 				List<GenericValue> customTimePeriodList = delegator.findList("CustomTimePeriod", cond, null, null, null, false);
+				Debug.log("customTimePeriodList=========================list====="+customTimePeriodList);
 				if(UtilValidate.isNotEmpty(customTimePeriodList)){
 					GenericValue customTimePeriod = EntityUtil.getFirst(customTimePeriodList);
 					customTimePeriodId = customTimePeriod.getString("customTimePeriodId");
@@ -3531,7 +3669,55 @@ public class PayrollService {
 	            Debug.logError(e, "Error retrieving CustomTimePeriodId");
 	        }        
 	        return result;
-}*/
+	}
+	public static Map<String, Object> emplPunchValidation(DispatchContext dctx, Map<String, ? extends Object> context){
+	    Delegator delegator = dctx.getDelegator();
+      LocalDispatcher dispatcher = dctx.getDispatcher();
+      GenericValue userLogin = (GenericValue) context.get("userLogin");
+      String partyId = (String) context.get("partyId");
+      Timestamp punchdate = (Timestamp)context.get("punchdate");
+      Map result = ServiceUtil.returnSuccess();
+      Map customTimePeriodId=getCustomTimePeriodId(dctx,context);
+      Debug.log("customTimePeriodId=======custid================="+customTimePeriodId);
+		try{
+			
+			
+			List conditionLis=FastList.newInstance();
+			conditionLis.add(EntityCondition.makeCondition("customTimePeriodId",EntityOperator.EQUALS,timePeriodId));
+			conditionLis.add(EntityCondition.makeCondition("statusId",EntityOperator.NOT_IN,UtilMisc.toList("COM_CANCELLED","CANCEL_FAILED")));
+			EntityCondition conditon=EntityCondition.makeCondition(conditionLis,EntityOperator.AND);
+			List<GenericValue> statusList=delegator.findList("PeriodBilling",conditon, null, null,null,false);
+	  	if(UtilValidate.isEmpty(statusList)){
+	  		List conditionList = FastList.newInstance();
+				conditionList.add(EntityCondition.makeCondition("partyId", EntityOperator.EQUALS ,partyId));
+				conditionList.add(EntityCondition.makeCondition("date", EntityOperator.EQUALS , date));
+				EntityCondition condition=EntityCondition.makeCondition(conditionList,EntityOperator.AND); 		
+				List<GenericValue> EmplDailyAttendanceDetail = delegator.findList("EmplDailyAttendanceDetail", condition, null, null, null, false);
+				for (int i = 0; i < EmplDailyAttendanceDetail.size(); ++i) {
+					GenericValue DailyAttendanceDetail = EmplDailyAttendanceDetail.get(i);
+					if(UtilValidate.isNotEmpty(encashmentStatus))
+						DailyAttendanceDetail.set("encashmentStatus",encashmentStatus);
+					if(UtilValidate.isNotEmpty(overrideLateMin)){
+  					DailyAttendanceDetail.set("overrideLateMin",overrideLateMin);
+  					DailyAttendanceDetail.set("overrideReason",overrideReason);
+  					DailyAttendanceDetail.set("overridenBy", userId);
+					}
+					DailyAttendanceDetail.store();
+				}
+	  	}
+	  	else{
+	  		Debug.logError("Already Payroll Generated ",module);
+	  		return ServiceUtil.returnError("Already Payroll Generated ");
+	  	}
+			
+		}catch (GenericEntityException e) {
+				Debug.logError(e, module);
+				return ServiceUtil.returnError(e.toString());
+			}
+		result = ServiceUtil.returnSuccess("Successfully Updated!!");
+		return result;
+		
+	}*/
 	 public static Map<String, Object> getEmployeeSalaryTotalsForPeriod(DispatchContext dctx, Map<String, ? extends Object> context){
 		    Delegator delegator = dctx.getDelegator();
 	      LocalDispatcher dispatcher = dctx.getDispatcher();
