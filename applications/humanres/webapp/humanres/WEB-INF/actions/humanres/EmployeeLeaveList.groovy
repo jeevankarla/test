@@ -38,6 +38,13 @@ if(UtilValidate.isNotEmpty(parameters.thruDate)){
 
 List employeeLeaveList = [];
 List conditionList=[];
+
+if(UtilValidate.isNotEmpty(parameters.noConditionFind)){
+	approverPartyId = parameters.approverPartyId;
+}else{
+	approverPartyId = context.approverPartyId;
+}
+
 if(UtilValidate.isNotEmpty(parameters.partyId)){
 	conditionList.add(EntityCondition.makeCondition("partyId", EntityOperator.EQUALS, parameters.partyId));
 }
@@ -50,8 +57,8 @@ if(UtilValidate.isNotEmpty(parameters.leaveTypeId)){
 if(UtilValidate.isNotEmpty(parameters.emplLeaveReasonTypeId)){
 	conditionList.add(EntityCondition.makeCondition("emplLeaveReasonTypeId", EntityOperator.EQUALS, parameters.emplLeaveReasonTypeId));
 }
-if(UtilValidate.isNotEmpty(parameters.approverPartyId)){
-	conditionList.add(EntityCondition.makeCondition("approverPartyId", EntityOperator.EQUALS, parameters.approverPartyId));
+if(UtilValidate.isNotEmpty(approverPartyId)){
+	conditionList.add(EntityCondition.makeCondition("approverPartyId", EntityOperator.EQUALS, approverPartyId));
 }
 if(UtilValidate.isNotEmpty(parameters.leaveStatus)){
 	conditionList.add(EntityCondition.makeCondition("leaveStatus", EntityOperator.EQUALS,parameters.leaveStatus ));
@@ -69,3 +76,4 @@ if(UtilValidate.isNotEmpty(thruDate)){
 condition=EntityCondition.makeCondition(conditionList,EntityOperator.AND);
 LeaveDetails = delegator.findList("EmplLeave", condition , null, UtilMisc.toList("-fromDate"), null, false );
 context.put("employeeLeaveList",LeaveDetails);
+Debug.log("LeaveDetails========="+LeaveDetails);

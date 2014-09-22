@@ -144,7 +144,7 @@
                     <field-map field-name="mainAction" value="ADMIN"/>
                 </service>
                 <set field="hasAdminPermission" from-field="permResult.hasPermission"/>
-                <!-- <set field="approverPartyId" from-field="parameters.userLogin.partyId"/> -->
+                <set field="approverPartyId" from-field="parameters.userLogin.partyId"/>
                 <script location="component://humanres/webapp/humanres/WEB-INF/actions/humanres/EmployeeLeaveList.groovy"/>
             </actions>
             <widgets>
