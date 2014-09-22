@@ -37,7 +37,7 @@ glAcctType = delegator.findList("GlAccountType", cond, null, null, null, false);
 
 glAcctTypeIds = EntityUtil.getFieldListFromEntityList(glAcctType, "glAccountTypeId", false);
 conditionList.clear();
-conditionList.add(EntityCondition.makeCondition("glAccountTypeId", EntityOperator.IN, glAcctTypeIds));
+conditionList.add(EntityCondition.makeCondition(EntityCondition.makeCondition("glAccountTypeId", EntityOperator.IN, glAcctTypeIds), EntityOperator.OR, EntityCondition.makeCondition("glAccountTypeId", EntityOperator.EQUALS, null)));
 conditionList.add(EntityCondition.makeCondition("organizationPartyId", EntityOperator.EQUALS, "Company"));
 conditionList.add(EntityCondition.makeCondition("accountCode", EntityOperator.NOT_EQUAL, null));
 condExpr = EntityCondition.makeCondition(conditionList, EntityOperator.AND);
