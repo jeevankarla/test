@@ -488,6 +488,7 @@ reportType:byAccount -->
 					<field-map field-name="acctgTransEntrySeqId"
 						from-field="parameters.editAcctgTransEntrySeqId" />
 				</entity-one>
+				<script location="component://accounting/webapp/accounting/WEB-INF/actions/organizationGLForJournalVocher.groovy"/>
 				<entity-and entity-name="AcctgTransEntry" list="acctgTransEntries">
 					<field-map field-name="acctgTransId" />
 					<order-by field-name="acctgTransEntrySeqId" />
@@ -552,7 +553,12 @@ reportType:byAccount -->
 														</screenlet>
 														<screenlet title="${uiLabelMap.PageTitleAddTransactionEntry}">
 															<include-form name="EditAcctgTransEntryNew"	location="component://accounting/widget/GlForms.xml" />
-														</screenlet>	
+														</screenlet>
+														<platform-specific>
+															<html>
+																<html-template location="component://accounting/webapp/accounting/reports/glAccountAutoSuggest.ftl" />
+															</html>
+														</platform-specific>	
 													</widgets>
 													<fail-widgets>
 														<screenlet title="${uiLabelMap.PageTitleEditTransaction}">

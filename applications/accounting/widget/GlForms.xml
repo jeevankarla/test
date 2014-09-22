@@ -734,13 +734,7 @@ under the License.
                 </entity-options>
             </drop-down>
         </field> -->
-        <field name="glAccountId" position="1">
-            <drop-down allow-empty="true">
-                <entity-options entity-name="GlAccountOrganizationAndClass" key-field-name="glAccountId" description="${accountCode} - ${accountName} [${glAccountId}]">
-                    <entity-constraint name="organizationPartyId" operator="equals" env-name="parameters.organizationPartyId"/>
-                    <entity-order-by field-name="accountCode"/>
-                </entity-options>
-            </drop-down>
+        <field name="glAccountId" position="1" id-name="glAccountId" tooltip=" "><text/>
         </field>
         <field name="productId" position="1"><lookup target-form-name="LookupProduct" size="20" maxlength="20"/></field>
         <field name="partyId" position="2"><lookup target-form-name="LookupPartyName" size="20" maxlength="20"/></field>
@@ -773,19 +767,9 @@ under the License.
         <field name="organizationPartyId"><hidden/></field>
         <field name="acctgTransId"><hidden/></field>
         <field name="acctgTransEntrySeqId"><display/></field>
-        <!-- <field name="glAccountTypeId" title="${uiLabelMap.FormFieldTitle_glAccountType}">
-            <drop-down allow-empty="true">
-                <entity-options entity-name="GlAccountType" description="${description}">
-                    <entity-order-by field-name="glAccountTypeId"/>
-                </entity-options>
-            </drop-down>
-        </field> -->
         <field name="glAccountId">
-            <drop-down allow-empty="true">
-                <entity-options entity-name="GlAccountOrganizationAndClass" key-field-name="glAccountId" description="${accountCode} - ${accountName} [${glAccountId}]">
-                    <entity-constraint name="organizationPartyId" operator="equals" env-name="parameters.organizationPartyId"/>
-                    <entity-order-by field-name="accountCode"/>
-                </entity-options>
+            <drop-down allow-empty="false">
+            	<list-options key-name="glAccountId" list-name="glAccounts" description="${glAccountId} - ${glAccountClassId} [${accountName}]"/>
             </drop-down>
         </field>
         <!--
