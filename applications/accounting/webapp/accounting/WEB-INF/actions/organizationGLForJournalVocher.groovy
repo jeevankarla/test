@@ -30,12 +30,12 @@ import org.ofbiz.base.util.UtilMisc;
 
 conditionList = [];
 conditionList.add(EntityCondition.makeCondition("glAccountTypeId", EntityOperator.NOT_EQUAL, "FIN_ACCOUNT"));
-conditionList.add(EntityCondition.makeCondition("parentTypeId", EntityOperator.NOT_EQUAL, "FIN_ACCOUNT"));
+conditionList.add(EntityCondition.makeCondition(EntityCondition.makeCondition("parentTypeId", EntityOperator.NOT_EQUAL, "FIN_ACCOUNT"),EntityOperator.OR, 
+	EntityCondition.makeCondition("parentTypeId", EntityOperator.EQUALS, null)));
 cond = EntityCondition.makeCondition(conditionList, EntityOperator.AND);
 glAcctType = delegator.findList("GlAccountType", cond, null, null, null, false);
 
 glAcctTypeIds = EntityUtil.getFieldListFromEntityList(glAcctType, "glAccountTypeId", false);
-
 conditionList.clear();
 conditionList.add(EntityCondition.makeCondition("glAccountTypeId", EntityOperator.IN, glAcctTypeIds));
 conditionList.add(EntityCondition.makeCondition("organizationPartyId", EntityOperator.EQUALS, "Company"));
