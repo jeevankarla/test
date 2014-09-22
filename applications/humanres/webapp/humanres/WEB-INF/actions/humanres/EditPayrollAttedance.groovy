@@ -72,11 +72,13 @@ List<GenericValue> payrollAttendanceList = delegator.findList("PayrollAttendance
 
 if(UtilValidate.isNotEmpty(employementList)){
 	employementList.each{employement ->
-		emplPayrollAttendanceList = EntityUtil.filterByAnd(payrollAttendanceList,UtilMisc.toMap("partyId",employement.get("partyIdTo")));
+		partyId=employement.get("partyIdTo");
+		emplPayrollAttendanceList = EntityUtil.filterByAnd(payrollAttendanceList,UtilMisc.toMap("partyId",partyId));
 		tempFinalMap=[:];
 		tempFinalMap["timePeriodId"]="";
-		tempFinalMap["customTimePeriodId"]="";
-		tempFinalMap["Dates"]="";
+		tempFinalMap.put("customTimePeriodId",customTimePeriodId);
+		tempFinalMap.put("timePeriodId",timePeriodId);
+		tempFinalMap.put("Dates",dates);
 		tempFinalMap["noOfPayableDays"]=0;
 		tempFinalMap["noOfAttendedDays"]=0;
 		tempFinalMap["noOfCalenderDays"]=0;
@@ -97,11 +99,9 @@ if(UtilValidate.isNotEmpty(employementList)){
 		tempFinalMap["noOfHalfPayDays"]=0;
 		 emplPayrollAttendanceList.each{payrollAttendance->
 			
-			partyId=payrollAttendance.get("partyId");
-			tempFinalMap.put("timePeriodId",timePeriodId);
 			tempFinalMap.put("Dates",dates);
 			customTimePeriodId=payrollAttendance.get("customTimePeriodId");
-			tempFinalMap.put("customTimePeriodId",customTimePeriodId);
+			
 			
 			noOfPayableDays=payrollAttendance.get("noOfPayableDays");
 			if(UtilValidate.isEmpty(noOfPayableDays))
@@ -192,10 +192,8 @@ if(UtilValidate.isNotEmpty(employementList)){
 			if(UtilValidate.isEmpty(noOfHalfPayDays))
 			noOfHalfPayDays=0;
 			tempFinalMap.put("noOfHalfPayDays",noOfHalfPayDays);
-			
-			finalMap.put(partyId,tempFinalMap);
-			
 		}
+		 finalMap.put(partyId,tempFinalMap);
 	}
 }
 
