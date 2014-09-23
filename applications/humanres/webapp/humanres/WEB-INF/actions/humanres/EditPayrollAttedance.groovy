@@ -87,6 +87,9 @@ if(UtilValidate.isNotEmpty(employementList)){
 		tempFinalMap["noOfCalenderDays"]=0;
 		tempFinalMap["casualLeaveDays"]=0;
 		tempFinalMap["earnedLeaveDays"]=0;
+		tempFinalMap["commutedLeaveDays"]=0;
+		tempFinalMap["disabilityLeaveDays"]=0;
+		tempFinalMap["extraOrdinaryLeaveDays"]=0;
 		tempFinalMap["noOfAttendedHoliDays"]=0;
 		tempFinalMap["noOfAttendedSsDays"]=0;
 		tempFinalMap["noOfAttendedWeeklyOffDays"]=0;
@@ -131,6 +134,21 @@ if(UtilValidate.isNotEmpty(employementList)){
 			if(UtilValidate.isEmpty(earnedLeaveDays))
 			earnedLeaveDays=0;
 			tempFinalMap.put("earnedLeaveDays",earnedLeaveDays);
+			
+			commutedLeaveDays=payrollAttendance.get("commutedLeaveDays");
+			if(UtilValidate.isEmpty(commutedLeaveDays))
+			commutedLeaveDays=0;
+			tempFinalMap.put("commutedLeaveDays",commutedLeaveDays);
+			
+			disabilityLeaveDays=payrollAttendance.get("disabilityLeaveDays");
+			if(UtilValidate.isEmpty(disabilityLeaveDays))
+			disabilityLeaveDays=0;
+			tempFinalMap.put("disabilityLeaveDays",disabilityLeaveDays);
+			
+			extraOrdinaryLeaveDays=payrollAttendance.get("extraOrdinaryLeaveDays");
+			if(UtilValidate.isEmpty(extraOrdinaryLeaveDays))
+			extraOrdinaryLeaveDays=0;
+			tempFinalMap.put("extraOrdinaryLeaveDays",extraOrdinaryLeaveDays);
 			
 			noOfAttendedHoliDays=payrollAttendance.get("noOfAttendedHoliDays");
 			if(UtilValidate.isEmpty(noOfAttendedHoliDays))

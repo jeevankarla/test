@@ -2450,6 +2450,15 @@ public class PayrollService {
 	        String earnedLeaveDaysStr=(String)request.getParameter("earnedLeaveDays");
 	        BigDecimal earnedLeaveDays=new BigDecimal(earnedLeaveDaysStr);
 	        
+	        String disabilityLeaveDaysStr=(String)request.getParameter("disabilityLeaveDays");
+	        BigDecimal disabilityLeaveDays=new BigDecimal(disabilityLeaveDaysStr);
+	        
+	        String extraOrdinaryLeaveDaysStr=(String)request.getParameter("extraOrdinaryLeaveDays");
+	        BigDecimal extraOrdinaryLeaveDays=new BigDecimal(extraOrdinaryLeaveDaysStr);
+	        
+	        String commutedLeaveDaysStr=(String)request.getParameter("commutedLeaveDays");
+	        BigDecimal commutedLeaveDays=new BigDecimal(commutedLeaveDaysStr);
+	        
 	        String noOfAttendedHoliDaysStr=(String)request.getParameter("noOfAttendedHoliDays");
 	        BigDecimal noOfAttendedHoliDays=new BigDecimal(noOfAttendedHoliDaysStr);
 	        
@@ -2546,6 +2555,9 @@ public class PayrollService {
       						employPayrollDetails.set("operatingAllowanceDays",operatingAllowanceDays);
       						employPayrollDetails.set("inChargeAllowanceDays",inChargeAllowanceDays);
       						employPayrollDetails.set("noOfHalfPayDays",noOfHalfPayDays);
+      						employPayrollDetails.set("commutedLeaveDays",commutedLeaveDays);
+      						employPayrollDetails.set("disabilityLeaveDays",disabilityLeaveDays);
+      						employPayrollDetails.set("extraOrdinaryLeaveDays",extraOrdinaryLeaveDays);
       				        delegator.createOrStore(employPayrollDetails);
       					}
     	      	
