@@ -17,7 +17,9 @@ $(document).ready(function() {
        $(':input').autotab_magic();
      
      
-	 var attendanceTable = ${StringUtil.wrapString(punchListEditJSON!'[]')};	 
+	 var attendanceTable = ${StringUtil.wrapString(punchListEditJSON!'[]')};
+	 var shiftTypeData = ${StringUtil.wrapString(shiftJSON!'[]')};
+	 	 
 	 $('#attendanceTable').html( '<table cellpadding="0" cellspacing="0" border="0" class="display" id="datatable2"><thead><tr></tr></thead><tbody></tbody></table>' );
 
 	var datatable2 = $('#datatable2').dataTable( {
@@ -31,7 +33,7 @@ $(document).ready(function() {
 			{ "title": "In Out" },
 			{ "title": "Punch Type"},
 			{ "title": "Note"},
-			{ "title": "Shift Type"}],
+			{ "title": "shiftType"}],
 		"aoColumns": [
 			{ "sTitle": "employeePunchId"},
 			{ "sTitle": "Punch Date" },
@@ -41,7 +43,7 @@ $(document).ready(function() {
 			{ "sTitle": "InOut" },
 			{ "sTitle": "PunchType"},
 			{ "sTitle": "Note"},
-			{ "sTitle": "Shift Type"}],
+			{ "sTitle": "shiftType"}],
 	 "fnRowCallback": function( nRow, aData, iDisplayIndex, iDisplayIndexFull) {
            $(nRow).attr("id", aData[0]);
           return nRow;
@@ -87,9 +89,12 @@ $(document).ready(function() {
 	        					submit:'Save changes'
 	    				  },
 	    				  {
-	    				    width: '80',
-	    				    height : '20'
-	    				    
+	    				    indicator: 'Saving ShiftType...',
+        					tooltip: 'Click to select ShiftType',
+        					loadtext: 'loading...',
+                        	type: 'select',
+        					data: "{'SHIFT_01':'SHIFT_01','SHIFT_02':'SHIFT_02','SHIFT_GEN':'SHIFT_GEN' ,'SHIFT_NIGHT':'SHIFT_NIGHT'}",
+        					submit:'Save changes'
 	    				  }
 				],
 				oAddNewRowButtonOptions: {	label: "Add",
@@ -206,9 +211,9 @@ $('#timemm').keyup(function(){
 				<td align='left' class='h3' width='40%'><select name='shiftType'  allow-empty='false' id='shiftType' class='h4' rel="8">
 	              		<#list shiftTypeList as stl>
 	              		     <#if stl.shiftTypeId=="SHIFT_GEN">
-	              		            <option value='${stl.shiftTypeId}' selected>${stl.shiftTypeId?if_exists}</option>
+	              		            <option value='${stl.shiftTypeId}' selected>${stl.description?if_exists}</option>
 	              		         <#else>
-	              		           <option value='${stl.shiftTypeId}' >${stl.shiftTypeId?if_exists}</option>
+	              		           <option value='${stl.shiftTypeId}' >${stl.description?if_exists}</option>
 	              		     </#if>
 	              		</#list>          
 			</select></td></tr>

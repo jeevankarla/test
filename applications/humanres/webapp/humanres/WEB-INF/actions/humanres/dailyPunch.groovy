@@ -25,7 +25,8 @@ try {
 if (punchDate == null) {
 	punchDate = UtilDateTime.nowTimestamp();
 }
-
+shiftTypeList = delegator.findList("WorkShiftType", null, null, null, null, false);
+context.shiftTypeList = shiftTypeList;
 String punchDateStr = UtilDateTime.toDateString(punchDate, "dd/MM/yyyy");			
 
 Timestamp timePeriodStart = UtilDateTime.getDayStart(punchDate);
@@ -73,7 +74,6 @@ for (GenericValue punch : punchList) {
 	punchListEditJSON.add(punchEditJSON);
 }
 
-//Debug.logError("punchListJSON="+punchListJSON,"");
 context.punchDate = punchDate
 context.punchListJSON = punchListJSON;
 context.punchListEditJSON = punchListEditJSON;

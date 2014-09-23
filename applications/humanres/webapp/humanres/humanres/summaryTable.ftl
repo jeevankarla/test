@@ -59,7 +59,7 @@ $(document).ready(function() {
             },
 		"iDisplayLength" : 25,		
      	"fnRowCallback": function(nRow, aData, iDisplayIndex ) {
-     		<#if security.hasEntityPermission("HR", "_EMPLLOOKUP_VIEW", session)>
+     		<#if security.hasEntityPermission("HUMANRES", "_ADMIN", session)>
 		    $('td:eq(0)', nRow).html('<a href="EmployeeProfile?partyId=' + aData[1] + '">' +
                 aData[0] + '</a>');
             </#if>    
