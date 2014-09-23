@@ -133,6 +133,9 @@ under the License.
                 <check-errors/>
             </if-compare>
         </if-compare-field>
+        <if-empty field="parameters.amount">
+        	<set field="parameters.amount" from-field="parameters.origAmount"/>
+        </if-empty>
         <set-nonpk-fields map="parameters" value-field="lookedUpValue"/>
         <store-value value-field="lookedUpValue"/>
 
