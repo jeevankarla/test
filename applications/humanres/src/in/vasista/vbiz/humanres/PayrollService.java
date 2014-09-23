@@ -3639,7 +3639,7 @@ public class PayrollService {
   	}
 	 
 	 
-	/*public static  Map<String, Object> getCustomTimePeriodIdForDate(DispatchContext dctx, Map context) {
+	public static  Map<String, Object> checkPayrollGeneratedOrNotForDate(DispatchContext dctx, Map context) {
 		 	GenericValue userLogin = (GenericValue) context.get("userLogin");
 		 	Date date =  (Date)context.get("date");
 		 	Timestamp punchDate = (Timestamp)context.get("punchdate");
@@ -3683,7 +3683,7 @@ public class PayrollService {
 	            Debug.logError(e, "Error retrieving CustomTimePeriodId");
 	        }        
 	        return result;
-	}*/
+	}
 	
 	 public static Map<String, Object> getEmployeeSalaryTotalsForPeriod(DispatchContext dctx, Map<String, ? extends Object> context){
 		    Delegator delegator = dctx.getDelegator();

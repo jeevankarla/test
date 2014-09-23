@@ -1179,12 +1179,11 @@ under the License.emplpunch
         <auto-attributes mode="IN" include="nonpk" optional="true"/>
     </service>   
    
-   <!--	<service name="emplPunchValidation" engine="java" 
-             location="in.vasista.vbiz.humanres.PayrollService" invoke="emplPunchValidation" auth="true">
+   	<service name="emplPunchValidation" engine="java" 
+             location="org.ofbiz.humanres.inout.PunchService" invoke="emplPunch" auth="true"  >
         <description>Validating punch</description>
-        <attribute name="partyId" optional="false" type="String" mode="IN"/>
-        <attribute name="punchdate" type="Timestamp" mode="IN" optional="false"/>
-    </service> -->
+        <attribute name="employeePunchId" type="String" mode="IN" optional="false"/>
+    </service> 
      <service name="adminPunch" engine="java" default-entity-name="EmplPunch"
              location="org.ofbiz.humanres.inout.PunchService" invoke="emplPunch" auth="true">
         <description>Add In/Out</description>

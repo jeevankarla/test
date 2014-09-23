@@ -31,6 +31,7 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.TimeZone;
 import java.util.regex.Pattern;
+import in.vasista.vbiz.humanres.PayrollService;
 
 import javolution.util.FastList;
 import javolution.util.FastMap;
@@ -65,7 +66,8 @@ public class PunchService {
 	{
 
 		GenericDelegator delegator = (GenericDelegator) dctx.getDelegator();
-
+		GenericValue userLogin = (GenericValue) context.get("userLogin");
+		Map<String, Object> result = ServiceUtil.returnSuccess();
 		LocalDispatcher dispatcher = dctx.getDispatcher();
 		int PunchId = 0;
 		String employeePunchId = (String) context.get("employeePunchId");
@@ -83,10 +85,12 @@ public class PunchService {
 		String shiftTypeId = (String) context.get("shiftType");
 		String flag = "out";
 		GenericValue emplPunch = null;
+		
 		 if(UtilValidate.isNotEmpty(employeePunchId)){
 			 try{
 				 emplPunch = delegator.findOne("EmplPunch", UtilMisc.toMap("employeePunchId",employeePunchId), false);
 		         punchdate = emplPunch.getDate("punchdate");
+		         
 		         oldShiftTypeId = emplPunch.getString("shiftType");
 		         if(UtilValidate.isEmpty(punchtime)){
 		        	 punchtime = emplPunch.getTime("punchtime");
@@ -107,11 +111,15 @@ public class PunchService {
          	
          	
          }
+		// Returning error if payroll already generated
+		Map customTimePeriodIdMap = PayrollService.checkPayrollGeneratedOrNotForDate(dctx,UtilMisc.toMap("userLogin",userLogin,"date",punchdate));
+		if (ServiceUtil.isError(customTimePeriodIdMap)) {
+			return customTimePeriodIdMap;
+		}	
 		String date3 = punchdate.toString();
 		String dateArr2[] = date3.split(Pattern.quote("-"));
 		String contactMechId = null;
 		Security security = dctx.getSecurity();
-		GenericValue userLogin = (GenericValue) context.get("userLogin");
 		int sec = 0, sec0 = 0, sec1 = 0;
 		int min = 0, min0 = 0, min1 = 0;
 		int hr = 0, hr0 = 0, hr1 = 0;
