@@ -450,4 +450,57 @@ public class HumanresService {
 	        result = ServiceUtil.returnSuccess("Loan Updated Sucessfully...!");
 	        return result;
 	    }
+	 	
+	 public static Map<String, Object> createNewEmployment(DispatchContext dctx, Map context) {
+	    	Map<String, Object> result = ServiceUtil.returnSuccess();
+	    	String partyIdFrom = (String) context.get("partyIdFrom");
+	    	String partyIdTo = (String) context.get("partyIdTo");
+	    	String fromDateStr = (String) context.get("fromDate");
+	    	Timestamp fromDate = UtilDateTime.nowTimestamp();
+	        if (UtilValidate.isNotEmpty(fromDateStr)) {
+				SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+				try {
+					fromDate = new java.sql.Timestamp(sdf.parse(fromDateStr).getTime());
+				} catch (ParseException e) {
+					Debug.logError(e, "Cannot parse date string: "+ fromDateStr, module);
+				} catch (NullPointerException e) {
+					Debug.logError(e, "Cannot parse date string: "	+ fromDateStr, module);
+				}
+			}
+	    	Timestamp fromDateStart = UtilDateTime.getDayStart(fromDate);
+	    	Timestamp previousDayEnd = UtilDateTime.getDayEnd(UtilDateTime.addDaysToTimestamp(fromDate, -1));
+	    	GenericValue userLogin = (GenericValue) context.get("userLogin");
+	    	GenericDelegator delegator = (GenericDelegator) dctx.getDelegator();
+			LocalDispatcher dispatcher = dctx.getDispatcher();
+			Timestamp appointmentDate = null;
+			String locationGeoId = null;
+			try {
+				List conditionList = FastList.newInstance();
+				conditionList.add(EntityCondition.makeCondition("partyIdTo", EntityOperator.EQUALS ,partyIdTo));
+				conditionList.add(EntityCondition.makeCondition("roleTypeIdFrom", EntityOperator.EQUALS ,"INTERNAL_ORGANIZATIO"));
+				conditionList.add(EntityCondition.makeCondition("roleTypeIdTo", EntityOperator.EQUALS ,"EMPLOYEE"));
+		    	EntityCondition condition = EntityCondition.makeCondition(conditionList,EntityOperator.AND); 		
+				List<GenericValue> activeEmploymentList = delegator.findList("Employment", condition, null, UtilMisc.toList("-fromDate"), null, false);
+				if(UtilValidate.isNotEmpty(activeEmploymentList)){
+					GenericValue activeEmployment = EntityUtil.getFirst(activeEmploymentList);
+					appointmentDate = activeEmployment.getTimestamp("appointmentDate");
+					locationGeoId = activeEmployment.getString("locationGeoId");
+					activeEmployment.set("thruDate", previousDayEnd);
+					activeEmployment.store();
+				}
+				GenericValue newEntity = delegator.makeValue("Employment");
+				newEntity.set("roleTypeIdFrom", "INTERNAL_ORGANIZATIO");
+				newEntity.set("roleTypeIdTo", "EMPLOYEE");
+				newEntity.set("partyIdFrom", partyIdFrom);
+				newEntity.set("partyIdTo", partyIdTo);
+				newEntity.set("fromDate", fromDateStart);
+				newEntity.set("appointmentDate", appointmentDate);
+				newEntity.set("locationGeoId", locationGeoId);
+				newEntity.create();
+	        }catch(GenericEntityException e){
+				Debug.logError("Error while creating new Employment"+e.getMessage(), module);
+			}
+	        result = ServiceUtil.returnSuccess("New Employment Created Sucessfully...!");
+	        return result;
+	    }
 }

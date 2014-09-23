@@ -1564,8 +1564,21 @@ under the License.
     <request-map uri="updateEmplLeaveStatus">
         <security https="true" auth="true"/>
         <event type="service" invoke="updateEmplLeaveStatus"/>
-        <response name="success" type="view" value="FindLeaveApprovals"/>
+        <response name="success" type="request-redirect-noparam" value="FindLeaveApprovals">
+        	<redirect-parameter name="emplLeaveApplId"/>
+        </response> 
         <response name="error" type="view" value="FindLeaveApprovals"/>
+    </request-map>
+    <request-map uri="getEmploymentDetails">
+        <security https="true" auth="true"/>
+        <event type="groovy" path="component://humanres/webapp/humanres/WEB-INF/actions/reports/" invoke="EmploymentDetails.groovy"/>
+        <response name="success" type="request" value="json"/>
+    </request-map>
+    <request-map uri="createNewEmployment">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="createNewEmployment"/>
+        <response name="success" type="view" value="ListEmployments"/>
+        <response name="error" type="view" value="ListEmployments"/>
     </request-map>
    <!--====================Reports Requests===================================-->
     <request-map uri="viewprofile">

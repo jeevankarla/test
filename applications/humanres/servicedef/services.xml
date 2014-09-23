@@ -253,6 +253,14 @@ under the License.emplpunch
         <permission-service service-name="humanResManagerPermission" main-action="EMPLOYMENT_EDIT"/>
         <auto-attributes mode="IN" include="pk" optional="false"/>
     </service>
+	
+	<service name="createNewEmployment" engine="java" auth="true" invoke="createNewEmployment" 
+        location="in.vasista.vbiz.humanres.HumanresService">
+        <description>Create new employment and closing previous employment</description>
+       <attribute name="partyIdTo" mode="IN" type="String" optional="false"/>
+       <attribute name="partyIdFrom" mode="IN" type="String" optional="false"/>
+       <attribute name="fromDate" type="String" mode="IN" optional="false"/>
+   </service>
 
     <service name="createEmploymentApp" engine="simple" default-entity-name="EmploymentApp"
              location="component://humanres/script/org/ofbiz/humanres/HumanResServices.xml" invoke="createEmploymentApp" auth="true">

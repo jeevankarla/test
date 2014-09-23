@@ -125,6 +125,7 @@
                 <set field="titleProperty" value="HumanResListEmployments"/>
                 <set field="tabButtonItem" value="ListEmployment"/>
                 <set field="employmentCtx.partyIdTo" from-field="parameters.partyId"/>
+                <set field="partyId" from-field="parameters.partyId"/>
                 <service service-name="humanResManagerPermission" result-map="permResult">
                     <field-map field-name="mainAction" value="EMPLOYMENT_VIEW"/>
                 </service>
@@ -134,6 +135,7 @@
                 <decorator-screen name="HumanresCommonDecorator"
 					location="component://humanres/widget/CommonScreens.xml">
                     <decorator-section name="body">
+                   	<link target="javascript:newEmployment(${partyId});"  text="Create New Employment" style="buttontext" url-mode="plain"/>
                     	<section>
                     	    <condition>
                             	<if-compare field="hasEmploymentViewPermission" operator="equals" value="true" type="Boolean"/>
@@ -141,6 +143,9 @@
 		                    <widgets>                       
 		                        <screenlet title="${uiLabelMap.HumanResEmployment}" navigation-form-name="ListEmploymentsPerson">
 		                            <include-form name="ListEmploymentsPerson" location="component://humanres/widget/forms/EmploymentForms.xml"/>
+		                           <platform-specific>
+				                        <html><html-template location="component:///humanres/webapp/humanres/humanres/newEmployment.ftl"/></html>
+				                   </platform-specific>
 		                        </screenlet>
 		                    </widgets>		
 		                    <fail-widgets>
