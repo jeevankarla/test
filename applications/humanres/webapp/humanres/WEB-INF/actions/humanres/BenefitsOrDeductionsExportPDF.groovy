@@ -27,6 +27,7 @@ import in.vasista.vbiz.humanres.HumanresService;
 if (parameters.customTimePeriodId == null) {
 	return;
 }
+
 dctx = dispatcher.getDispatchContext();
 context.put("type",parameters.type);
 GenericValue customTimePeriod = delegator.findOne("CustomTimePeriod", [customTimePeriodId : parameters.customTimePeriodId], false);
@@ -51,15 +52,16 @@ emplInputMap.put("userLogin", userLogin);
 emplInputMap.put("orgPartyId", "Company");
 emplInputMap.put("fromDate", timePeriodStart);
 emplInputMap.put("thruDate", timePeriodEnd);
-Map resultMap = HumanresService.getActiveEmployements(dctx,emplInputMap);
-List<GenericValue> employementList = (List<GenericValue>)resultMap.get("employementList");
-//employementList = EntityUtil.orderBy(employementList, UtilMisc.toList("partyIdTo"));
-employementIds = EntityUtil.getFieldListFromEntityList(employementList, "partyIdTo", true);
-if(parameters.partyIdTo){
-	employementIds=UtilMisc.toList(parameters.partyIdTo);
+
+if(UtilValidate.isEmpty(parameters.partyId)){
+	Map resultMap = HumanresService.getActiveEmployements(dctx,emplInputMap);
+	List<GenericValue> employementList = (List<GenericValue>)resultMap.get("employementList");
+	employementIds = EntityUtil.getFieldListFromEntityList(employementList, "partyIdTo", true);
 }else{
-	employementIds=employementIds;
+	OrganizationDetails=delegator.findList("Employment",EntityCondition.makeCondition("partyIdFrom", EntityOperator.EQUALS, parameters.partyId) , null, null, null, false);
+	employementIds = EntityUtil.getFieldListFromEntityList(OrganizationDetails, "partyIdTo", true);
 }
+	
 //getting benefits
 benefitTypeList = delegator.findList("BenefitType", EntityCondition.makeCondition("benefitTypeId", EntityOperator.NOT_EQUAL ,"PAYROL_BEN_SALARY"), null, ["sequenceNum"], null, false);
 benefitDescMap=[:];

@@ -329,7 +329,7 @@ function makeDatePicker1(fromDateId ,thruDateId){
 						<form id="EmployeeWiseAttendanceDetails" name="EmployeeWiseAttendanceDetails" mothed="post" action="<@ofbizUrl>EmplMonthAttendanceDetails</@ofbizUrl>" target="_blank">
 							<table class="basic-table" cellspacing="5">
 								<tr class="alternate-row">
-									<td width="19%"><span class='h3'>Employee Month Attendance Details</span></td>
+									<td width="19%"><span class='h3'>Employee Attendance Details</span></td>
 									<td width="15%"><span class='h3'>Employee Id</span><input type="text" size="10pt" id="PartyId" name="partyIdTo"/></td>
 									<td width="27%"><span class='h3'>Period Id</span>
 										<select name="customTimePeriodId" class='h4'>
@@ -554,10 +554,18 @@ function makeDatePicker1(fromDateId ,thruDateId){
 					</tr>   -->
 					
 				   	<tr class="alternate-row">
-						<form id="BenefitsOrDeductionsExport" name="BenefitsOrDeductionsExport" mothed="post" action="<@ofbizUrl>ExportEmployeeBenefitsOrDeductions</@ofbizUrl>" target="_blank">
+						<form id="BenefitsOrDeductionsExport" name="BenefitsOrDeductionsExport" mothed="post" action="<@ofbizUrl>ExportEmployeeBenefitsOrDeductions</@ofbizUrl>">
 							<table class="basic-table" cellspacing="0">
 								<tr>
 									<td><span class='h3'>BenefitsOrDeductions</span></td>
+									<td width="30%"><span class='h3'>Organization Id </span>
+										<select name="partyId" class='h4'>
+											<option value=''></option>
+											<#list orgList as org>    
+												<option value='${org.partyId}'>${org.groupName}</option>
+											</#list> 
+										</select>
+									</td>
 									<td><span class='h3'>Type</span></td>
 									<td>
 										<span class='h6'>
