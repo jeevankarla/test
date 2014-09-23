@@ -2444,8 +2444,11 @@ public class PayrollService {
 	        String noOfCalenderDaysStr=(String)request.getParameter("noOfCalenderDays");
 	        BigDecimal noOfCalenderDays=new BigDecimal(noOfCalenderDaysStr);
 	        
-	        String noOfLeaveDaysStr=(String)request.getParameter("noOfLeaveDays");
-	        BigDecimal noOfLeaveDays=new BigDecimal(noOfLeaveDaysStr);
+	        String casualLeaveDaysStr=(String)request.getParameter("casualLeaveDays");
+	        BigDecimal casualLeaveDays=new BigDecimal(casualLeaveDaysStr);
+	        
+	        String earnedLeaveDaysStr=(String)request.getParameter("earnedLeaveDays");
+	        BigDecimal earnedLeaveDays=new BigDecimal(earnedLeaveDaysStr);
 	        
 	        String noOfAttendedHoliDaysStr=(String)request.getParameter("noOfAttendedHoliDays");
 	        BigDecimal noOfAttendedHoliDays=new BigDecimal(noOfAttendedHoliDaysStr);
@@ -2527,7 +2530,8 @@ public class PayrollService {
       						employPayrollDetails.set("noOfPayableDays",noOfPayableDays);
       						employPayrollDetails.set("noOfAttendedDays",noOfAttendedDays);
       						employPayrollDetails.set("noOfCalenderDays",noOfCalenderDays);
-      						employPayrollDetails.set("noOfLeaveDays",noOfLeaveDays);
+      						employPayrollDetails.set("casualLeaveDays",casualLeaveDays);
+      						employPayrollDetails.set("earnedLeaveDays",earnedLeaveDays);
       						employPayrollDetails.set("noOfAttendedHoliDays",noOfAttendedHoliDays);
       						employPayrollDetails.set("noOfAttendedSsDays",noOfAttendedSsDays);
       						employPayrollDetails.set("noOfAttendedWeeklyOffDays",noOfAttendedWeeklyOffDays);
@@ -3635,97 +3639,52 @@ public class PayrollService {
   	}
 	 
 	 
-/*	public static  Map<String, Object>getCustomTimePeriodId(DispatchContext dctx, Map context) {
+	/*public static  Map<String, Object> getCustomTimePeriodIdForDate(DispatchContext dctx, Map context) {
 		 	GenericValue userLogin = (GenericValue) context.get("userLogin");
 		 	Date date =  (Date)context.get("date");
 		 	Timestamp punchDate = (Timestamp)context.get("punchdate");
-		 	String employeePunchId=(String)context.get("employeePunchId");
 	        Delegator delegator = dctx.getDelegator();
 	        Timestamp dateTime=null;
-	        Debug.log("punchDate========================="+punchDate);
-	        Debug.log("date========================="+date);
-	        Debug.log("employeePunchId========================="+employeePunchId);
 	        if(UtilValidate.isNotEmpty(punchDate)){
 	        	 dateTime = punchDate;
 	        }else{
 	        	 dateTime = UtilDateTime.toTimestamp(date);
 	        }
-	        Debug.log("dateTime====================="+dateTime);
 	    	Timestamp dateStart = UtilDateTime.getDayStart(dateTime);
 	    	Timestamp dateEnd = UtilDateTime.getDayEnd(dateTime);
-	    	Debug.log("dateStart============================"+dateStart);
-	    	Debug.log("dateEnd=====end======================="+dateEnd);
-	        FastMap result = FastMap.newInstance();
+	        Map result = ServiceUtil.returnSuccess();
 	        String customTimePeriodId = null;
 	        try {
-	        	
 	        	List condList = FastList.newInstance();
 				condList.add(EntityCondition.makeCondition("periodTypeId", EntityOperator.EQUALS ,"HR_MONTH"));
 				condList.add(EntityCondition.makeCondition("fromDate", EntityOperator.LESS_THAN_EQUAL_TO,new java.sql.Date(dateStart.getTime())));
 				condList.add(EntityCondition.makeCondition("thruDate", EntityOperator.GREATER_THAN_EQUAL_TO, new java.sql.Date(dateEnd.getTime())));
 				EntityCondition cond = EntityCondition.makeCondition(condList,EntityOperator.AND); 	
-				Debug.log("cond============================"+cond);
 				List<GenericValue> customTimePeriodList = delegator.findList("CustomTimePeriod", cond, null, null, null, false);
-				Debug.log("customTimePeriodList=========================list====="+customTimePeriodList);
 				if(UtilValidate.isNotEmpty(customTimePeriodList)){
 					GenericValue customTimePeriod = EntityUtil.getFirst(customTimePeriodList);
 					customTimePeriodId = customTimePeriod.getString("customTimePeriodId");
 				}
-                result.put("customTimePeriodId", customTimePeriodId);
+				
+				if(UtilValidate.isNotEmpty(customTimePeriodId)){
+			        List conditionList = FastList.newInstance();
+			        List periodBillingList = FastList.newInstance();
+			        conditionList.add(EntityCondition.makeCondition("statusId", EntityOperator.IN , UtilMisc.toList("GENERATED","IN_PROCESS","APPROVED")));
+			        conditionList.add(EntityCondition.makeCondition("customTimePeriodId", EntityOperator.EQUALS ,customTimePeriodId));
+			    	conditionList.add(EntityCondition.makeCondition("billingTypeId", EntityOperator.EQUALS ,"PAYROLL_BILL"));
+			    	EntityCondition condition=EntityCondition.makeCondition(conditionList,EntityOperator.AND);
+			    	periodBillingList = delegator.findList("PeriodBilling", condition, null,null, null, false);
+			    	if(UtilValidate.isNotEmpty(periodBillingList)){	    			
+			    		return ServiceUtil.returnError("Already Payroll Generated ");
+			        }
+				}
 	        }
 	        catch (GenericEntityException e) {
 	            Debug.logError(e, "Error retrieving CustomTimePeriodId");
 	        }        
 	        return result;
-	}
-	public static Map<String, Object> emplPunchValidation(DispatchContext dctx, Map<String, ? extends Object> context){
-	    Delegator delegator = dctx.getDelegator();
-      LocalDispatcher dispatcher = dctx.getDispatcher();
-      GenericValue userLogin = (GenericValue) context.get("userLogin");
-      String partyId = (String) context.get("partyId");
-      Timestamp punchdate = (Timestamp)context.get("punchdate");
-      Map result = ServiceUtil.returnSuccess();
-      Map customTimePeriodId=getCustomTimePeriodId(dctx,context);
-      Debug.log("customTimePeriodId=======custid================="+customTimePeriodId);
-		try{
-			
-			
-			List conditionLis=FastList.newInstance();
-			conditionLis.add(EntityCondition.makeCondition("customTimePeriodId",EntityOperator.EQUALS,timePeriodId));
-			conditionLis.add(EntityCondition.makeCondition("statusId",EntityOperator.NOT_IN,UtilMisc.toList("COM_CANCELLED","CANCEL_FAILED")));
-			EntityCondition conditon=EntityCondition.makeCondition(conditionLis,EntityOperator.AND);
-			List<GenericValue> statusList=delegator.findList("PeriodBilling",conditon, null, null,null,false);
-	  	if(UtilValidate.isEmpty(statusList)){
-	  		List conditionList = FastList.newInstance();
-				conditionList.add(EntityCondition.makeCondition("partyId", EntityOperator.EQUALS ,partyId));
-				conditionList.add(EntityCondition.makeCondition("date", EntityOperator.EQUALS , date));
-				EntityCondition condition=EntityCondition.makeCondition(conditionList,EntityOperator.AND); 		
-				List<GenericValue> EmplDailyAttendanceDetail = delegator.findList("EmplDailyAttendanceDetail", condition, null, null, null, false);
-				for (int i = 0; i < EmplDailyAttendanceDetail.size(); ++i) {
-					GenericValue DailyAttendanceDetail = EmplDailyAttendanceDetail.get(i);
-					if(UtilValidate.isNotEmpty(encashmentStatus))
-						DailyAttendanceDetail.set("encashmentStatus",encashmentStatus);
-					if(UtilValidate.isNotEmpty(overrideLateMin)){
-  					DailyAttendanceDetail.set("overrideLateMin",overrideLateMin);
-  					DailyAttendanceDetail.set("overrideReason",overrideReason);
-  					DailyAttendanceDetail.set("overridenBy", userId);
-					}
-					DailyAttendanceDetail.store();
-				}
-	  	}
-	  	else{
-	  		Debug.logError("Already Payroll Generated ",module);
-	  		return ServiceUtil.returnError("Already Payroll Generated ");
-	  	}
-			
-		}catch (GenericEntityException e) {
-				Debug.logError(e, module);
-				return ServiceUtil.returnError(e.toString());
-			}
-		result = ServiceUtil.returnSuccess("Successfully Updated!!");
-		return result;
-		
 	}*/
+	
 	 public static Map<String, Object> getEmployeeSalaryTotalsForPeriod(DispatchContext dctx, Map<String, ? extends Object> context){
 		    Delegator delegator = dctx.getDelegator();
 	      LocalDispatcher dispatcher = dctx.getDispatcher();

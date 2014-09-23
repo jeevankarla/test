@@ -672,6 +672,8 @@ under the License.
         <field name="operatingAllowanceDays" type="fixed-point"/>
         <field name="inChargeAllowanceDays" type="fixed-point"/>
         <field name="noOfHalfPayDays" type="fixed-point"/>
+        <field name="casualLeaveDays" type="fixed-point"/>
+        <field name="earnedLeaveDays" type="fixed-point"/>
         <prim-key field="partyId"/>
         <prim-key field="customTimePeriodId"/>
         <relation type="one" fk-name="PAYROLL_PERIOD_CUST_TP" rel-entity-name="CustomTimePeriod">

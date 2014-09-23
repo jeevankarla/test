@@ -73,7 +73,6 @@ conditionList.add(EntityCondition.makeCondition("partyId", EntityOperator.IN , e
 conditionList.add(EntityCondition.makeCondition("customTimePeriodId", EntityOperator.EQUALS, customTimePeriodId));
 EntityCondition condition=EntityCondition.makeCondition(conditionList,EntityOperator.AND);
 List<GenericValue> payrollAttendanceList = delegator.findList("PayrollAttendance", condition, null, ["partyId"], null, false);
-
 if(UtilValidate.isNotEmpty(employementList)){
 	employementList.each{employement ->
 		partyId=employement.get("partyIdTo");
@@ -86,7 +85,8 @@ if(UtilValidate.isNotEmpty(employementList)){
 		tempFinalMap["noOfPayableDays"]=0;
 		tempFinalMap["noOfAttendedDays"]=0;
 		tempFinalMap["noOfCalenderDays"]=0;
-		tempFinalMap["noOfLeaveDays"]=0;
+		tempFinalMap["casualLeaveDays"]=0;
+		tempFinalMap["earnedLeaveDays"]=0;
 		tempFinalMap["noOfAttendedHoliDays"]=0;
 		tempFinalMap["noOfAttendedSsDays"]=0;
 		tempFinalMap["noOfAttendedWeeklyOffDays"]=0;
@@ -122,10 +122,15 @@ if(UtilValidate.isNotEmpty(employementList)){
 			noOfCalenderDays=0;
 			tempFinalMap.put("noOfCalenderDays",noOfCalenderDays);
 			
-			noOfLeaveDays=payrollAttendance.get("noOfLeaveDays");
-			if(UtilValidate.isEmpty(noOfLeaveDays))
-			noOfLeaveDays=0;
-			tempFinalMap.put("noOfLeaveDays",noOfLeaveDays);
+			casualLeaveDays=payrollAttendance.get("casualLeaveDays");
+			if(UtilValidate.isEmpty(casualLeaveDays))
+			casualLeaveDays=0;
+			tempFinalMap.put("casualLeaveDays",casualLeaveDays);
+			
+			earnedLeaveDays=payrollAttendance.get("earnedLeaveDays");
+			if(UtilValidate.isEmpty(earnedLeaveDays))
+			earnedLeaveDays=0;
+			tempFinalMap.put("earnedLeaveDays",earnedLeaveDays);
 			
 			noOfAttendedHoliDays=payrollAttendance.get("noOfAttendedHoliDays");
 			if(UtilValidate.isEmpty(noOfAttendedHoliDays))
