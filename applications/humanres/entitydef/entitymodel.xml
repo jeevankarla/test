@@ -1043,6 +1043,7 @@ under the License.
       <field name="budgetId" type="id"></field>
       <field name="budgetItemSeqId" type="id"></field>
       <field name="emplPositionTypeId" type="id"></field>
+      <field name="name" type="name"></field>
       <field name="estimatedFromDate" type="date-time"></field>
       <field name="estimatedThruDate" type="date-time"></field>
       <field name="salaryFlag" type="indicator"></field>
