@@ -34,6 +34,7 @@ import org.ofbiz.entity.Delegator;
 import org.ofbiz.entity.GenericDelegator;
 import org.ofbiz.entity.GenericEntityException;
 import org.ofbiz.party.party.PartyWorker;
+import org.ofbiz.party.party.PartyHelper;
 import org.ofbiz.service.DispatchContext;
 import org.ofbiz.service.GenericServiceException;
 import org.ofbiz.service.LocalDispatcher;
@@ -395,8 +396,14 @@ public class EmplLeaveService {
         String leaveStatus =  (String)context.get("leaveStatus");
         String approverPartyId = (String)context.get("approverPartyId");
         String levelApproverPartyId = (String)context.get("levelApproverPartyId");
+        String leaveTypeId = "";
+        String ownerPartyId = "";
+        String dayFractionId = "";
+        Timestamp leaveFromDate = UtilDateTime.nowTimestamp();
+        Timestamp leaveThruDate = UtilDateTime.nowTimestamp();
 		Map result = FastMap.newInstance();
 		GenericValue emplLeaveStatusDetails = null; 
+  	    Boolean smsFlag = Boolean.FALSE;
 		try {
 			if(UtilValidate.isEmpty(approverPartyId) && (UtilValidate.isEmpty(levelApproverPartyId))){
 				return ServiceUtil.returnError("Approver Party Cannot be Empty "); 
@@ -415,11 +422,112 @@ public class EmplLeaveService {
 		    emplLeaveStatus.set("changedByUserLogin", userLoginId); 
 		    emplLeaveStatus.set("changedDate", UtilDateTime.nowTimestamp());
 		    delegator.createOrStore(emplLeaveStatus);    
+		    
+			GenericValue emplLeaveDetails = delegator.findOne("EmplLeave",UtilMisc.toMap("emplLeaveApplId", emplLeaveApplId), false);
+			if(UtilValidate.isNotEmpty(emplLeaveDetails)){
+				ownerPartyId = emplLeaveDetails.getString("partyId");				
+				leaveTypeId = emplLeaveDetails.getString("leaveTypeId");
+				dayFractionId = emplLeaveDetails.getString("dayFractionId");				
+	            leaveFromDate = emplLeaveDetails.getTimestamp("fromDate");
+	            leaveThruDate = emplLeaveDetails.getTimestamp("thruDate");				
+			}
+		    GenericValue tenantConfigEnableIndentSms = delegator.findOne("TenantConfiguration", UtilMisc.toMap("propertyTypeEnumId","SMS", "propertyName","enableLeaveSms"), true);
+			if (UtilValidate.isNotEmpty(tenantConfigEnableIndentSms) && (tenantConfigEnableIndentSms.getString("propertyValue")).equals("Y")) {
+				 smsFlag = Boolean.TRUE;
+			}
 		}catch(Exception e){
   			Debug.logError("Error while updating emplLeaveStatus " + e.getMessage(), module);
   			return ServiceUtil.returnError("Error while updating EmplLeaveStatus ");
   		}
+		result.put("ownerPartyId", ownerPartyId);
+		result.put("leaveTypeId", leaveTypeId);
+		result.put("dayFractionId", dayFractionId);		
+		result.put("leaveFromDate", leaveFromDate);
+		result.put("leaveThruDate", leaveThruDate);
+		result.put("approverPartyId", approverPartyId);
+		result.put("leaveStatus", leaveStatus);	
+		result.put("smsFlag", smsFlag);		
     	return result;
     }
-	
+
+    public static Map<String, Object>  sendLeaveStatusSms(DispatchContext dctx, Map<String, Object> context)  {
+        GenericValue userLogin = (GenericValue) context.get("userLogin");      
+        Delegator delegator = dctx.getDelegator();
+        LocalDispatcher dispatcher = dctx.getDispatcher();  
+        Map<String, Object> serviceResult;
+        String ownerPartyId =  (String)context.get("ownerPartyId");
+        String leaveTypeId =  (String)context.get("leaveTypeId"); 
+        String dayFractionId =  (String)context.get("dayFractionId");                
+        String leaveStatus =  (String)context.get("leaveStatus");
+        String approverPartyId =  (String)context.get("approverPartyId");        
+        Timestamp leaveFromDate = (Timestamp) context.get("leaveFromDate"); 
+        Timestamp leaveThruDate = (Timestamp) context.get("leaveThruDate"); 
+        String leaveFromDateStr = "";
+        if (UtilValidate.isNotEmpty(leaveFromDate)) {
+        	leaveFromDateStr = UtilDateTime.toDateString(leaveFromDate, "dd MMM");
+        }
+        String leaveThruDateStr = "";        
+        if (UtilValidate.isNotEmpty(leaveThruDate)) {
+        	leaveThruDateStr = UtilDateTime.toDateString(leaveThruDate, "dd MMM");
+        	if (UtilValidate.isNotEmpty(dayFractionId)) {
+        		leaveThruDateStr = leaveThruDateStr + " " + dayFractionId;
+        	}
+        }        
+        String text;
+        String smsPartyId;
+        if (leaveStatus.equals("LEAVE_APPROVED")) {
+        	text = "Your leave has been approved. (" + leaveTypeId + "; " +
+        			leaveFromDateStr + " - " +
+        			leaveThruDateStr + ")";
+        	smsPartyId = ownerPartyId;
+        }
+        else if (leaveStatus.equals("LEAVE_REJECTED")) {
+        	text = "Your leave has been rejected. (" + leaveTypeId + "; " +
+        			leaveFromDateStr + " - " +
+        			leaveThruDateStr + ")";
+        	smsPartyId = ownerPartyId;        	
+        }
+        else {
+			String employeeName = PartyHelper.getPartyName(delegator,
+					ownerPartyId, false);
+        	text = "You have a leave approval request. (" + ownerPartyId + 
+        			" " + employeeName + "; " +
+        			 leaveTypeId + "; " +
+         			leaveFromDateStr + " - " +
+         			leaveThruDateStr + ")";
+        	smsPartyId = approverPartyId;        	
+        }      
+        
+		try {
+            Map<String, Object> getTelParams = FastMap.newInstance();
+            getTelParams.put("partyId", smsPartyId);
+            getTelParams.put("userLogin", userLogin);                    	
+            serviceResult = dispatcher.runSync("getPartyTelephone", getTelParams);
+            if (ServiceUtil.isError(serviceResult)) {
+            	Debug.logError(ServiceUtil.getErrorMessage(serviceResult), module);
+            	return ServiceUtil.returnSuccess();
+            } 
+            if(UtilValidate.isEmpty(serviceResult.get("contactNumber"))){
+            	Debug.logError( "No  contactNumber found for employee : "+smsPartyId, module);
+            	return ServiceUtil.returnSuccess();
+            }
+            String contactNumberTo = (String) serviceResult.get("countryCode") + (String) serviceResult.get("contactNumber");            
+            Map<String, Object> sendSmsParams = FastMap.newInstance();      
+            sendSmsParams.put("contactNumberTo", contactNumberTo);          
+            sendSmsParams.put("text", text); 
+/*            
+            serviceResult  = dispatcher.runSync("sendSms", sendSmsParams);       
+            if (ServiceUtil.isError(serviceResult)) {
+            	Debug.logError(ServiceUtil.getErrorMessage(serviceResult), module);
+            	return ServiceUtil.returnSuccess();
+            }
+*/               
+Debug.logError("text: " + text + " : " + smsPartyId + " : " + contactNumberTo, module);            
+		}
+		catch (Exception e) {
+			Debug.logError(e, "Problem sending leave status sms", module);
+			return ServiceUtil.returnError(e.getMessage());
+		}       
+        return ServiceUtil.returnSuccess();
+    }	
 }

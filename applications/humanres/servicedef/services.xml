@@ -1170,12 +1170,30 @@ under the License.emplpunch
              location="in.vasista.vbiz.humanres.EmplLeaveService" invoke="storeEmplLeaveStatus" auth="true">
         <description>Store Employee Current Leave Status</description>
         <attribute name="emplLeaveApplId"  mode="IN" type="String" optional="false"/>
-        <attribute name="leaveStatus"  mode="IN" type="String" optional="false"/>
-        <attribute name="approverPartyId"  mode="IN" type="String" optional="false"/>
+        <attribute name="leaveStatus"  mode="INOUT" type="String" optional="false"/>
+        <attribute name="approverPartyId"  mode="INOUT" type="String" optional="false"/>
         <attribute name="levelApproverPartyId"  mode="IN" type="String" optional="true"/>
         <attribute name="changedByUserLogin"  mode="IN" type="String" optional="true"/>
         <attribute name="changedDate" mode="IN" type="Timestamp" optional="true"/> 
+        <attribute name="smsFlag" type="Boolean" mode="OUT" optional="true"/> 
+        <attribute name="ownerPartyId"  mode="OUT" type="String" optional="false"/>  
+        <attribute name="leaveTypeId"  mode="OUT" type="String" optional="false"/> 
+        <attribute name="dayFractionId"  mode="OUT" type="String" optional="true"/>                                                   
+        <attribute name="leaveFromDate" type="Timestamp" mode="OUT" optional="false"/>
+        <attribute name="leaveThruDate" type="Timestamp" mode="OUT" optional="true"/>                       
     </service>
+    
+   <service name="sendLeaveStatusSms" engine="java"
+        location="in.vasista.vbiz.humanres.EmplLeaveService" invoke="sendLeaveStatusSms">
+        <description>Send a leave status sms</description>
+        <attribute name="ownerPartyId" type="String" mode="IN" optional="false"/>
+        <attribute name="leaveTypeId" type="String" mode="IN" optional="false"/>  
+        <attribute name="dayFractionId"  mode="IN" type="String" optional="true"/>                                                                 
+        <attribute name="leaveFromDate" type="Timestamp" mode="IN" optional="false"/>
+        <attribute name="leaveThruDate" type="Timestamp" mode="IN" optional="true"/> 
+        <attribute name="approverPartyId"  mode="IN" type="String" optional="false"/>
+        <attribute name="leaveStatus"  mode="IN" type="String" optional="false"/>                                                                   
+    </service>    
     
     <!--====================Time & Attendance Services===================================-->
 	

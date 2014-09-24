@@ -200,5 +200,8 @@
     <Enumeration description="Leave Encash" enumCode="LEAVE_ENCASHMENT" enumId="LEAVE_ENCASHMENT" sequenceId="02" enumTypeId="ENCASHMENT_STATUS"/>
     
     <Enumeration description="Payroll Attendance Finalizaton Billing" enumCode="PB_HR_ATTN_FINAL" enumId="PB_HR_ATTN_FINAL" enumTypeId="PERIOD_BILLING"/> 
+
+    <TenantConfiguration propertyName="enableLeaveSms" propertyValue="N" propertyTypeEnumId="SMS" description="Enable Leave Sms functionality"/>
+
     
 </entity-engine-xml>
