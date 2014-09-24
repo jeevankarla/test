@@ -128,7 +128,19 @@ def populateChildren(org, employeeList) {
 			retirementDate=UtilDateTime.toDateString(retirementDate,"dd/MM/yyyy");
 			employee.put("retirementDate",retirementDate);
 		}
-		basicSalAndGradeMap=PayrollService.fetchBasicSalaryAndGrade(dctx,[employeeId:employment.partyIdTo,timePeriodStart:fromDate, timePeriodEnd: thruDate, userLogin : userLogin, proportionalFlag:"N"]);
+		if(UtilValidate.isNotEmpty(fromDateStart)){
+			newFromDate=fromDateStart;
+		}else{
+				newFromDate=fromDate;
+		}
+		
+		if(UtilValidate.isNotEmpty(thruDateStart)){
+			newThruDate=thruDateStart;
+		}else{
+			newThruDate=thruDate;
+		}
+		
+		basicSalAndGradeMap=PayrollService.fetchBasicSalaryAndGrade(dctx,[employeeId:employment.partyIdTo,timePeriodStart:newFromDate, timePeriodEnd: newThruDate, userLogin : userLogin, proportionalFlag:"N"]);
 		partyPostalAddress= dispatcher.runSync("getPartyPostalAddress", [partyId: employment.partyId, userLogin: userLogin]);
 		address="";
 		if (partyPostalAddress != null) {
