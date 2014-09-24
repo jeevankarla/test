@@ -207,12 +207,14 @@ under the License.
                     		<#assign lossOfPay=0>
                     		<#assign netPaidDays=0>
                     		<#assign arrearDays=0>
+                    		<#assign noOfPayableDays=0>
                     		<#if emplLeavesDetails?has_content>
                     			<#assign totalDays=emplLeavesDetails.get("noOfCalenderDays")?if_exists>
                     			<#assign lossOfPay=emplLeavesDetails.get("lossOfPayDays")?if_exists>
                     			<#assign arrearDays=emplLeavesDetails.get("noOfArrearDays")?if_exists>
-                    			<#assign netPaidDays=(totalDays-lossOfPay)>
-                    		</#if>                    		
+                    			<#assign noOfPayableDays=emplLeavesDetails.get("noOfPayableDays")?if_exists>
+                    		</#if>    
+                    		<#assign netPaidDays=(noOfPayableDays-arrearDays)>                		
                      		<fo:table-cell border-style="solid">
                      			<fo:block linefeed-treatment="preserve">&#xA;</fo:block>
                         		<fo:block text-align="center" white-space-collapse="false">${totalDays?if_exists}  days</fo:block>
