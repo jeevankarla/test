@@ -5,12 +5,12 @@
     <description>Humanres API services</description>
     <vendor>Vasista</vendor>
 
-  <service name="recordPunch" engine="java" invoke="recordPunch" location="in.vasista.vbiz.humanres.PunchService" auth="true" export="true" transaction-timeout="300">
+  <service name="recordPunch" engine="java" invoke="recordPunch" location="in.vasista.vbiz.humanres.HumanresPunchService" auth="true" export="true" transaction-timeout="300">
         <description>record punch</description>
        <permission-service service-name="humanResManagerPermission" main-action="CREATE"/>
        <attribute name="punchList" mode="IN" type="java.util.List"/>
   </service>
- <service name="fetchLastPunch" engine="java" invoke="fetchLastPunch" location="in.vasista.vbiz.humanres.PunchService" auth="true" export="true">
+ <service name="fetchLastPunch" engine="java" invoke="fetchLastPunch" location="in.vasista.vbiz.humanres.HumanresPunchService" auth="true" export="true">
         <description>fetch punch</description>
        <permission-service service-name="humanResManagerPermission" main-action="CREATE"/>
       <attribute name="deviceId" mode="IN" optional="true" type="String"/>

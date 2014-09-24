@@ -1380,7 +1380,7 @@ under the License.emplpunch
         <attribute name="periodBillingId" mode="IN" type="String" optional="false"/>
     </service>
     <service name="createorUpdateEmployeeDailyAttendance"  engine="java"
-                location="in.vasista.vbiz.humanres.PunchService" invoke="createorUpdateEmployeeDailyAttendance" auth="true">
+                location="in.vasista.vbiz.humanres.HumanresPunchService" invoke="createorUpdateEmployeeDailyAttendance" auth="true">
         <description>Create Or Update Employee Allowence</description>
         <auto-attributes mode="IN" entity-name="EmplDailyAttendanceDetail" include="nonpk" optional="true"/>
         <attribute name="partyId" mode="IN" type="String" optional="false"/>
@@ -1431,7 +1431,7 @@ under the License.emplpunch
          <attribute name="statusId" mode="IN" type="String" optional="false"/> 
    </service> 
    <service name="populateEmplPunchFromRawForPeriod" engine="java" auth="true" invoke="populateEmplPunchFromRawForPeriod" 
-        location="in.vasista.vbiz.humanres.PunchService" transaction-timeout="10000">
+        location="in.vasista.vbiz.humanres.HumanresPunchService" transaction-timeout="10000">
         <description>populateEmplPunch From Raw For Period</description>
         <attribute name="fromDate" mode="IN" type="Timestamp"/> 
         <attribute name="thruDate" mode="IN" type="Timestamp"/> 
@@ -1439,13 +1439,13 @@ under the License.emplpunch
    </service> 
    
    <service name="populateEmplPunch" engine="java" auth="true" invoke="populateEmplPunch" 
-        location="in.vasista.vbiz.humanres.PunchService">
+        location="in.vasista.vbiz.humanres.HumanresPunchService">
         <description>populateEmplPunch from </description>
         <auto-attributes mode="IN" entity-name="EmplPunchRaw" include="pk"></auto-attributes>
         <auto-attributes mode="IN" entity-name="EmplPunchRaw" include="nonpk" optional="true"></auto-attributes>
    </service>
   <service name="populateEmplDailyShiftDetails" engine="java" auth="true" invoke="populateEmplDailyShiftDetails" 
-        location="in.vasista.vbiz.humanres.PunchService">
+        location="in.vasista.vbiz.humanres.HumanresPunchService">
         <description>populateEmplPunch from </description>
         <auto-attributes mode="IN" entity-name="EmplPunch" include="pk"></auto-attributes>
         <auto-attributes mode="IN" entity-name="EmplPunch" include="nonpk" optional="true"></auto-attributes>

@@ -43,9 +43,9 @@ import org.ofbiz.service.ServiceUtil;
  * Services for Party-punches maintenance
  */
 
-public class PunchService {
+public class HumanresPunchService {
 
-	public static final String module = PunchService.class.getName();
+	public static final String module = HumanresPunchService.class.getName();
 	
 	//API Services
 	public static Map<String, Object> recordPunch(DispatchContext dctx, Map<String, Object> context) throws Exception{
@@ -256,6 +256,7 @@ public class PunchService {
 	        GenericValue userLogin = (GenericValue) context.get("userLogin");
 	        String partyId =  (String)context.get("partyId");
 	        Timestamp punchDateTime =  (Timestamp)context.get("punchDateTime");
+	        String deviceId = (String)context.get("deviceId");
 	        Map result = ServiceUtil.returnSuccess();
 	        String shiftTypeId = null;
 			try {
@@ -470,6 +471,7 @@ public class PunchService {
 					return result;
 				}
 				emplPunchMap.put("isManual","N");
+				emplPunchMap.put("sourceId",deviceId);
 				emplPunchMap.put("shiftType",shiftTypeId);
 				result = dispatcher.runSync("emplPunch", emplPunchMap);
 				if(ServiceUtil.isError(result)){

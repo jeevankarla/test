@@ -397,6 +397,7 @@ under the License.
       <field name="isContinuous" type="indicator"></field>       
       <field name="hasTable" type="indicator"></field>
       <field name="description" type="description"></field>
+      <field name="isEmployerContribution" type="indicator"></field>
       <field name="employerPaidPercentage" type="floating-point"></field>
       <prim-key field="benefitTypeId"/>
       <relation type="one" fk-name="BEN_TYPE_PAR" title="Parent" rel-entity-name="BenefitType">
@@ -1517,6 +1518,7 @@ under the License.
 	  <field name="InOut" type="id-ne"/>
 	  <field name="shiftType" type="id"/>
 	  <field name="isManual" type="indicator"/>
+	   <field name="sourceId" type="id"/>
 	  <field name="Note" type="description"/>
 	  <field name="createdByUserLogin" type="id-vlong"></field>
 	  <field name="lastModifiedByUserLogin" type="id-vlong"></field>
@@ -1669,6 +1671,21 @@ under the License.
       </index>		
 	</entity>
    <entity entity-name="PayrollHeaderItem" package-name="org.ofbiz.humanres"
+		title="PayrollHeader Item Entity">
+		<field name="payrollHeaderId" type="id-ne"></field>
+		<field name="payrollItemSeqId" type="id-ne"></field>
+		<field name="payrollHeaderItemTypeId" type="id"></field>
+		<field name="amount" type="currency-precise"></field>
+		<field name="description" type="description"></field>
+		<field name="showInPaySlip" type="indicator" />
+		<prim-key field="payrollHeaderId" />
+		<prim-key field="payrollItemSeqId" />
+		<relation type="one" fk-name="PAYH_IID"
+			rel-entity-name="PayrollHeader">
+			<key-map field-name="payrollHeaderId"/>
+		</relation>
+	</entity>
+	<entity entity-name="PayrollHeaderItemEc" package-name="org.ofbiz.humanres"
 		title="PayrollHeader Item Entity">
 		<field name="payrollHeaderId" type="id-ne"></field>
 		<field name="payrollItemSeqId" type="id-ne"></field>

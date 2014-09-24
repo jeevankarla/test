@@ -175,11 +175,17 @@ under the License.
     <PayrollBenDedRule payrollBenDedRuleId="1000-ATTED" ruleName="Attendance Condition " payHeadTypeId="PAYROL_BEN_ATNDBON" fromDate="2013-09-01 00:00:00.0"/>
     <PayHeadPriceAction customPriceCalcService="calculateAttendanceBonus" amount="" payHeadPriceActionSeqId="01" payHeadPriceActionTypeId="PRICE_SERVICE" payrollBenDedRuleId="1000-ATTED" />
     
+    
+    
+    
     <!-- attendance bonus based -->
     <PayrollBenDedRule payrollBenDedRuleId="1000-ATTEDAMT" ruleName="Bonus Amount" payHeadTypeId="PAYROL_BEN_ATNDBON" fromDate="2013-09-01 00:00:00.0"/>
     <PayrollBenDedCond condValue="NONE" inputParamEnumId="PAYHD_BEDE_OTHER" operatorEnumId="PRC_EQ" payrollBenDedCondSeqId="01" payrollBenDedRuleId="1000-ATTEDAMT"/>
     <PayHeadPriceAction amount="30" payHeadPriceActionSeqId="01" payHeadPriceActionTypeId="PRICE_FLAT" payrollBenDedRuleId="1000-ATTEDAMT" />
      
+    <PayrollBenDedRule payrollBenDedRuleId="PAYROL_BEN_PFEMPLYR" ruleName="PF Employer's Share" payHeadTypeId="PAYROL_BEN_PFEMPLYR" fromDate="2013-09-01 00:00:00.0"/>
+    <PayHeadPriceAction payHeadPriceActionSeqId="01" payHeadPriceActionTypeId="PRICE_FLAT" payrollBenDedRuleId="PAYROL_BEN_PFEMPLYR"  acctgFormulaId="CONVEYANCE_CNV1"/>
+    
     
 <!-- PayHeadPriceAction
 	PayHeadPriceActionType

@@ -344,6 +344,7 @@ public class PayrollService {
 					  			return ServiceUtil.returnError("Problems in service Parol Header Item");
 		       				}
 							List payHeaderItemList = (List)payHeadItemResult.get("itemsList");
+							List employerItemsList = (List)payHeadItemResult.get("employerItemsList");
 							for(int j=0;j< payHeaderItemList.size();j++){
 								Map payHeaderItemValue = (Map)payHeaderItemList.get(j);
 								if(UtilValidate.isEmpty(payHeaderItemValue.get("amount")) || (((BigDecimal)payHeaderItemValue.get("amount")).compareTo(BigDecimal.ZERO) ==0) ){
@@ -372,6 +373,19 @@ public class PayrollService {
 					            	
 					            }
 					            
+							}
+							//here populate employer's contribution
+							for(int j=0;j< employerItemsList.size();j++){
+								Map payHeaderItemValue = (Map)employerItemsList.get(j);
+								if(UtilValidate.isEmpty(payHeaderItemValue.get("amount")) || (((BigDecimal)payHeaderItemValue.get("amount")).compareTo(BigDecimal.ZERO) ==0) ){
+									continue;
+								}
+		       					GenericValue payHeaderItem = delegator.makeValue("PayrollHeaderItemEc");
+		       					payHeaderItem.set("payrollHeaderId", payHeader.get("payrollHeaderId"));
+		       					payHeaderItem.set("payrollHeaderItemTypeId",payHeaderItemValue.get("payrollItemTypeId"));
+		       					payHeaderItem.set("amount", ((BigDecimal)payHeaderItemValue.get("amount")).setScale(0, BigDecimal.ROUND_HALF_UP));
+		       				    delegator.setNextSubSeqId(payHeaderItem, "payrollItemSeqId", 5, 1);
+					            delegator.create(payHeaderItem);
 							}
 	       				}
 						
@@ -620,8 +634,10 @@ public class PayrollService {
 		       conditionList.add(EntityCondition.makeCondition("fromDate", EntityOperator.LESS_THAN_EQUAL_TO, timePeriodEnd));
 		        conditionList.add(EntityCondition.makeCondition(EntityCondition.makeCondition("thruDate", EntityOperator.EQUALS, null), EntityOperator.OR, 
 		        		EntityCondition.makeCondition("thruDate", EntityOperator.GREATER_THAN_EQUAL_TO, timePeriodStart)));
+		        conditionList.add(EntityCondition.makeCondition(EntityCondition.makeCondition("isEmployerContribution", EntityOperator.EQUALS, null), EntityOperator.OR, 
+		        		EntityCondition.makeCondition("isEmployerContribution", EntityOperator.EQUALS, "N")));
 		        EntityCondition condition = EntityCondition.makeCondition(conditionList, EntityOperator.AND);  		
-				List<GenericValue> partyBenefits = delegator.findList("PartyBenefit", condition, null, null, null, false);
+				List<GenericValue> partyBenefits = delegator.findList("BenefitTypeAndParty", condition, null, null, null, false);
 				for (int i = 0; i < partyBenefits.size(); ++i) {		
 					GenericValue benefit = partyBenefits.get(i);
 					String benefitTypeId = benefit.getString("benefitTypeId");				
@@ -758,6 +774,88 @@ public class PayrollService {
 				results.put("itemsList", itemsList);
 				return results; 		
 			}
+			
+		private static Map<String, Object> createPayrolBenefitItemsEmployerContribution(DispatchContext dctx, Map<String, Object> context) 
+					throws GenericServiceException,GenericEntityException {
+			        Delegator delegator = dctx.getDelegator();
+			        LocalDispatcher dispatcher = dctx.getDispatcher();
+			        String errorMsg = "createPayrolBenefitItems Employer's Contribution failed";
+					String partyId = (String) context.get("partyId");	
+			        GenericValue userLogin = (GenericValue) context.get("userLogin");
+			        Timestamp timePeriodStart = (Timestamp)context.get("timePeriodStart");
+			        Timestamp timePeriodEnd = (Timestamp)context.get("timePeriodEnd");
+			        String timePeriodId = (String) context.get("timePeriodId");
+			        String periodBillingId= (String) context.get("periodBillingId");
+			        Boolean isCalc = Boolean.FALSE;
+			        List itemsList = FastList.newInstance();
+			        
+					Map<String, Object> serviceResults;
+					
+					List conditionList = UtilMisc.toList(
+			                EntityCondition.makeCondition("partyIdTo", EntityOperator.EQUALS, partyId));
+			       conditionList.add(EntityCondition.makeCondition("fromDate", EntityOperator.LESS_THAN_EQUAL_TO, timePeriodEnd));
+			        conditionList.add(EntityCondition.makeCondition(EntityCondition.makeCondition("thruDate", EntityOperator.EQUALS, null), EntityOperator.OR, 
+			        		EntityCondition.makeCondition("thruDate", EntityOperator.GREATER_THAN_EQUAL_TO, timePeriodStart)));
+			        conditionList.add(EntityCondition.makeCondition(EntityCondition.makeCondition("isEmployerContribution", EntityOperator.NOT_EQUAL, null), EntityOperator.OR, 
+			        		EntityCondition.makeCondition("isEmployerContribution", EntityOperator.EQUALS, "Y")));
+			        EntityCondition condition = EntityCondition.makeCondition(conditionList, EntityOperator.AND);  		
+					List<GenericValue> partyBenefits = delegator.findList("BenefitTypeAndParty", condition, null, null, null, false);
+					for (int i = 0; i < partyBenefits.size(); ++i) {		
+						GenericValue benefit = partyBenefits.get(i);
+						String benefitTypeId = benefit.getString("benefitTypeId");				
+						Map input = UtilMisc.toMap("userLogin", userLogin);				
+						input.put("payrollItemTypeId", benefitTypeId);			  
+						Timestamp from = benefit.getTimestamp("fromDate");
+						Timestamp thru = benefit.getTimestamp("thruDate");
+						GenericValue benefitTypeRow = delegator.findOne("BenefitType", UtilMisc.toMap(
+			        			"benefitTypeId", benefitTypeId), false);
+			        	context.put("proportionalFlag", benefitTypeRow.getString("proportionalFlag"));
+						//if empty cost then look in rule engine
+						/*if(UtilValidate.isEmpty(benefit.getBigDecimal("cost"))){
+							Map payHeadCtx = UtilMisc.toMap("userLogin", userLogin);				
+							payHeadCtx.put("payHeadTypeId", benefitTypeId);
+							payHeadCtx.put("timePeriodStart", timePeriodStart);
+							payHeadCtx.put("timePeriodEnd", timePeriodEnd);
+							payHeadCtx.put("timePeriodId", timePeriodId);
+							payHeadCtx.put("employeeId", partyId);
+							payHeadCtx.put("proportionalFlag",context.get("proportionalFlag"));
+							Map<String, Object> result = calculatePayHeadAmount(dctx,payHeadCtx);
+							if(ServiceUtil.isError(result)){
+			        			 Debug.logError(ServiceUtil.getErrorMessage(result), module);
+			 		             return result;
+			        		}
+							if(UtilValidate.isNotEmpty(result)){
+								benefit.set("cost" ,result.get("amount"));
+							}
+						}*/
+			        	Map payHeadCtx = UtilMisc.toMap("userLogin", userLogin);				
+						payHeadCtx.put("payHeadTypeId", benefitTypeId);
+						payHeadCtx.put("timePeriodStart", timePeriodStart);
+						payHeadCtx.put("timePeriodEnd", timePeriodEnd);
+						payHeadCtx.put("timePeriodId", timePeriodId);
+						payHeadCtx.put("employeeId", partyId);
+						payHeadCtx.put("periodBillingId", periodBillingId);
+						payHeadCtx.put("proportionalFlag",context.get("proportionalFlag"));
+						Map<String, Object> result = getPayHeadAmount(dctx,payHeadCtx);
+						if(ServiceUtil.isError(result)){
+		        			 Debug.logError(ServiceUtil.getErrorMessage(result), module);
+		 		             return result;
+		        		}
+						if(UtilValidate.isNotEmpty(result)){
+							benefit.set("cost" ,result.get("amount"));
+						}
+			        	
+			        	
+						//Map<String, Object> adjustment = adjustAmount(context,benefit.getBigDecimal("cost"), from, thru);			
+						input.put("quantity", BigDecimal.ONE);
+						input.put("amount", benefit.getBigDecimal("cost"));
+						
+						itemsList.add(input);
+					} 
+					Map<String, Object> results = ServiceUtil.returnSuccess();
+					results.put("itemsList", itemsList);
+					return results; 
+				}
 
 			/**
 			 * Typically this should result in one invoice.  But in certain cases such as pay hikes
@@ -920,9 +1018,25 @@ public class PayrollService {
 					Debug.logError(e, errorMsg + "Unable to create payroll InvoiceItem records for benefits: " + e.getMessage(), module);
 			        return ServiceUtil.returnError(errorMsg + "Unable to create payroll payHeadItem records for deductions: " + e.getMessage());
 				}
+				// Create payhead items for employer's contribution
+				List employerItemsList = FastList.newInstance();
+				try {
+					serviceResults = createPayrolBenefitItemsEmployerContribution(dctx, context);
+			        if (ServiceUtil.isError(serviceResults)) {
+			        	return ServiceUtil.returnError(errorMsg, null, null, serviceResults);
+			        }
+			        if(UtilValidate.isNotEmpty(serviceResults.get("itemsList"))){
+			        	employerItemsList.addAll((List)serviceResults.get("itemsList"));
+				    	   
+				     }
+ 				}catch (Exception e) {
+					Debug.logError(e, errorMsg + "Unable to create payroll InvoiceItem records for benefits: " + e.getMessage(), module);
+			        return ServiceUtil.returnError(errorMsg + "Unable to create payroll payHeadItem records for deductions: " + e.getMessage());
+				}
 				
 			    Map result = ServiceUtil.returnSuccess();
 			    result.put("itemsList",itemsList);
+			    result.put("employerItemsList", employerItemsList);
 				return result;   	
 			}
 			
