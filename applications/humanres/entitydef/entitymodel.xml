@@ -657,13 +657,13 @@ under the License.
         <field name="noOfAttendedDays" type="fixed-point"/>
         <field name="noOfCalenderDays" type="fixed-point"/>
         <field name="noOfLeaveDays" type="fixed-point"/>
-        <field name="noOfAttendedHoliDays" type="fixed-point"/>
-        <field name="noOfAttendedSsDays" type="fixed-point"/><!-- no.of attended second saturday -->
+        <field name="noOfAttendedHoliDays" type="fixed-point" enable-audit-log="true"/>
+        <field name="noOfAttendedSsDays" type="fixed-point" enable-audit-log="true"/><!-- no.of attended second saturday -->
         <field name="noOfAttendedWeeklyOffDays" type="fixed-point"/>
         <field name="noOfCompoffAvailed" type="fixed-point"/>
-        <field name="lossOfPayDays" type="fixed-point"/>
-        <field name="noOfArrearDays" type="fixed-point"/>
-        <field name="lateMin" type="fixed-point"/>
+        <field name="lossOfPayDays" type="fixed-point" enable-audit-log="true"/>
+        <field name="noOfArrearDays" type="fixed-point" enable-audit-log="true"/>
+        <field name="lateMin" type="fixed-point" enable-audit-log="true"/>
         <field name="extraMin" type="fixed-point"/>
         <field name="noOfNightAllowanceDays" type="fixed-point"/>
         <field name="coldOrBoiledAllowanceDays" type="fixed-point"/>
