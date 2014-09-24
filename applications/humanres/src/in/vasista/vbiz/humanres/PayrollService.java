@@ -3779,7 +3779,7 @@ public class PayrollService {
 	    	Timestamp dateStart = UtilDateTime.getDayStart(dateTime);
 	    	Timestamp dateEnd = UtilDateTime.getDayEnd(dateTime);
 	        Map result = ServiceUtil.returnSuccess();
-	        String customTimePeriodId = null;
+	        /*String customTimePeriodId = null;
 	        try {
 	        	List condList = FastList.newInstance();
 				condList.add(EntityCondition.makeCondition("periodTypeId", EntityOperator.EQUALS ,"HR_MONTH"));
@@ -3807,7 +3807,7 @@ public class PayrollService {
 	        }
 	        catch (GenericEntityException e) {
 	            Debug.logError(e, "Error retrieving CustomTimePeriodId");
-	        }        
+	        }        */
 	        return result;
 	}
 	
