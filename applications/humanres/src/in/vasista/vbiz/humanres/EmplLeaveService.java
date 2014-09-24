@@ -514,15 +514,13 @@ public class EmplLeaveService {
             String contactNumberTo = (String) serviceResult.get("countryCode") + (String) serviceResult.get("contactNumber");            
             Map<String, Object> sendSmsParams = FastMap.newInstance();      
             sendSmsParams.put("contactNumberTo", contactNumberTo);          
-            sendSmsParams.put("text", text); 
-/*            
+            sendSmsParams.put("text", text);             
             serviceResult  = dispatcher.runSync("sendSms", sendSmsParams);       
             if (ServiceUtil.isError(serviceResult)) {
             	Debug.logError(ServiceUtil.getErrorMessage(serviceResult), module);
             	return ServiceUtil.returnSuccess();
-            }
-*/               
-Debug.logError("text: " + text + " : " + smsPartyId + " : " + contactNumberTo, module);            
+            }               
+            Debug.logInfo("text: " + text + " : " + smsPartyId + " : " + contactNumberTo, module);            
 		}
 		catch (Exception e) {
 			Debug.logError(e, "Problem sending leave status sms", module);
