@@ -41,7 +41,7 @@ $(document).ready(function(){
 			
 
 <div class="full">
-<div class="lefthalf">
+<div class="full">
 <div class="screenlet">
 	<div class="screenlet-title-bar">
          <div class="grid-header" style="width:100%">
@@ -257,13 +257,13 @@ $(document).ready(function(){
 </div> -->     
 </div>
 
-<div class="righthalf">
+<div class="full">
 <div class="screenlet">
     <div class="screenlet-body">
  		<div class="grid-header" style="width:100%">
 			<label>Purchase Entry </label><span id="totalAmount"></span>
 		</div>
-		 <div class="screenlet-body" >
+		 <div class="screenlet-body" id="FieldsDIV" >
 		<table width="50%" border="0" cellspacing="0" cellpadding="0">
 				<tr><td><br/></td></tr>
 		        <tr>
@@ -280,6 +280,11 @@ $(document).ready(function(){
           			<td align='left' valign='middle' nowrap="nowrap"><div class='h3'>SUP Invoice No.: </div></td>
 		         	<td valign='middle' align='left'> 
              			<input class='h3' type="text" size="20" maxlength="30" name="SInvNumber" id="SInvNumber"/>          
+          			</td>
+          			<td>&nbsp;&nbsp;&nbsp;</td>
+          			<td align='left' valign='middle' nowrap="nowrap"><div class='h3'>SUP Invoice Date: </div></td>
+		         	<td valign='middle' align='left'> 
+             			<input class='h3' type="text" size="20" maxlength="30" name="SInvoiceDate" id="SInvoiceDate"/>          
           			</td>
  		       </tr>
  		       <tr><td><br/></td></tr>
@@ -298,15 +303,16 @@ $(document).ready(function(){
 		         	<td valign='middle' align='left'> 
              			<input class='h3' type="text" size="20" maxlength="30" name="insurence" id="insurence"/>          
           			</td>
- 		         </tr>
- 		        <tr><td><br/></td></tr>
-		        <tr>
-          			<td align='left' valign='middle' nowrap="nowrap"><div class='h3'>SUP Invoice Date: </div></td>
+          			<td>&nbsp;&nbsp;&nbsp;</td>
+          			<td align='left' valign='middle' nowrap="nowrap"><div class='h3'>Add BED: </div></td>
 		         	<td valign='middle' align='left'> 
-             			<input class='h3' type="text" size="20" maxlength="30" name="SInvoiceDate" id="SInvoiceDate"/>          
+		         	<input class='h3' type="checkbox" size="20" id="addBED" name="addBED" value="" onclick="javascript:addBedColumns();"/>
+             			      
           			</td>
- 		       </tr>
- 		       <tr><td><br/></td></tr>
+ 		         </tr>
+ 		          <tr><td><br/></td></tr>
+ 		          <tr><td colspan="6"> <span class="tooltip"> Note:once BED columns added and input given to BED columns You cant remove them</span></tr>
+ 		      
         	</table>
 		</div>
 			<div id="myGrid1" style="width:100%;height:350px;"></div>
@@ -323,7 +329,7 @@ $(document).ready(function(){
     	<div align="center">
     		<input type="submit" style="padding:.3em" id="changeSave" value="Submit" onclick="javascript:processIndentEntry('indententry','<@ofbizUrl>${formAction}</@ofbizUrl>');"/>
     		&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-    		<input type="submit" style="padding:.3em" id="changeCancel" value="Cancel" onclick="javascript:processIndentEntry('indententry','<@ofbizUrl>SupplDeliverySchedule</@ofbizUrl>');"/>   	
+    		<input type="submit" style="padding:.3em" id="changeCancel" value="Cancel" onclick="javascript:processIndentEntry('indententry','<@ofbizUrl>${formAction}</@ofbizUrl>');"/>   	
     	</div>     
 	</#if>  
 	</div>

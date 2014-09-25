@@ -277,6 +277,35 @@ public static String processPurchaseOrder(HttpServletRequest request, HttpServle
 		if (paramMap.containsKey("CST" + thisSuffix)) {
 			cstStr = (String) paramMap.get("CST" + thisSuffix);
 		}
+		//percenatge of TAXes
+		
+		String VatPercentStr=null;
+		String ExcisePercentStr=null;
+		String bedCessPercentStr=null;
+		String bedSecCessPercentStr=null;
+		String CSTPercentStr=null;
+		
+		BigDecimal vatPercent=BigDecimal.ZERO;
+		BigDecimal excisePercent=BigDecimal.ZERO;
+		BigDecimal bedCessPercent=BigDecimal.ZERO;
+		BigDecimal bedSecCessPercent=BigDecimal.ZERO;
+		BigDecimal cstPercent=BigDecimal.ZERO; 
+		
+		if (paramMap.containsKey("VatPercent" + thisSuffix)) {
+			VatPercentStr = (String) paramMap.get("VatPercent" + thisSuffix);
+		}
+		if (paramMap.containsKey("ExcisePercent" + thisSuffix)) {
+			ExcisePercentStr = (String) paramMap.get("ExcisePercent" + thisSuffix);
+		}
+		if (paramMap.containsKey("bedCessPercent" + thisSuffix)) {
+			bedCessPercentStr = (String) paramMap.get("bedCessPercent" + thisSuffix);
+		}
+		if (paramMap.containsKey("bedSecCessPercent" + thisSuffix)) {
+			bedSecCessPercentStr = (String) paramMap.get("bedSecCessPercent" + thisSuffix);
+		}
+		if (paramMap.containsKey("CSTPercent" + thisSuffix)) {
+			CSTPercentStr = (String) paramMap.get("CSTPercent" + thisSuffix);
+		}
 		
 		try {
 			quantity = new BigDecimal(quantityStr);
@@ -330,7 +359,7 @@ public static String processPurchaseOrder(HttpServletRequest request, HttpServle
 			request.setAttribute("_ERROR_MESSAGE_", "Problems parsing bedSecCess string: " + bedSecCessStr);
 			return "error";
 		}
-		Debug.log("=bedCessStr="+bedCessStr+"=bedSecCessStr="+bedSecCessStr+"==bedSecCessAmount="+bedSecCessAmount);
+		
 		try {
 			if (!cstStr.equals("")) {
 			cst = new BigDecimal(cstStr);
@@ -340,7 +369,55 @@ public static String processPurchaseOrder(HttpServletRequest request, HttpServle
 			request.setAttribute("_ERROR_MESSAGE_", "Problems parsing CST string: " + cstStr);
 			return "error";
 		}
-	
+		
+		//percenatges population
+		try {
+			if (!VatPercentStr.equals("")) {
+				vatPercent = new BigDecimal(VatPercentStr);
+			}
+		} catch (Exception e) {
+			Debug.logError(e, "Problems parsing VatPercent string: " + VatPercentStr, module);
+			request.setAttribute("_ERROR_MESSAGE_", "Problems parsing VatPercent string: " + VatPercentStr);
+			return "error";
+		}
+		try {
+			if (!ExcisePercentStr.equals("")) {
+				excisePercent = new BigDecimal(ExcisePercentStr);
+			}
+		} catch (Exception e) {
+			Debug.logError(e, "Problems parsing excisePercent string: " + ExcisePercentStr, module);
+			request.setAttribute("_ERROR_MESSAGE_", "Problems parsing excisePercent string: " + ExcisePercentStr);
+			return "error";
+		}
+		try {
+			if (!bedCessPercentStr.equals("")) {
+				bedCessPercent = new BigDecimal(bedCessPercentStr);
+			}
+		} catch (Exception e) {
+			Debug.logError(e, "Problems parsing bedCessPercent string: " + bedCessPercentStr, module);
+			request.setAttribute("_ERROR_MESSAGE_", "Problems parsing bedCessPercent string: " + bedCessPercentStr);
+			return "error";
+		}
+		try {
+			if (!bedSecCessPercentStr.equals("")) {
+				bedSecCessPercent = new BigDecimal(bedSecCessPercentStr);
+			}
+		} catch (Exception e) {
+			Debug.logError(e, "Problems parsing bedSecCessPercent string: " + bedSecCessPercentStr, module);
+			request.setAttribute("_ERROR_MESSAGE_", "Problems parsing bedSecCessPercent string: " + bedSecCessPercentStr);
+			return "error";
+		}
+		try {
+			if (!CSTPercentStr.equals("")) {
+				cstPercent = new BigDecimal(CSTPercentStr);
+			}
+		} catch (Exception e) {
+			Debug.logError(e, "Problems parsing CSTPercent string: " + CSTPercentStr, module);
+			request.setAttribute("_ERROR_MESSAGE_", "Problems parsing CSTPercent string: " + CSTPercentStr);
+			return "error";
+		}
+		Debug.log("=CSTPercentStr="+CSTPercentStr+"=bedCessPercentStr="+bedCessPercentStr+"==bedSecCessPercentStr="+bedSecCessPercentStr+"==VatPercentStr=="+VatPercentStr);
+		
 		productQtyMap.put("productId", productId);
 		productQtyMap.put("quantity", quantity);
 		productQtyMap.put("unitPrice", uPrice);
@@ -353,6 +430,12 @@ public static String processPurchaseOrder(HttpServletRequest request, HttpServle
 		productQtyMap.put("bedSecCessAmount", bedSecCessAmount);
 		productQtyMap.put("cstAmount", cst);
 		//productQtyMap.put("batchNo", batchNo);
+		productQtyMap.put("vatPercent", vatPercent);
+		productQtyMap.put("excisePercent", excisePercent);
+		productQtyMap.put("bedCessPercent",bedCessPercent );
+		productQtyMap.put("bedSecCessPercent", bedSecCessPercent);
+		productQtyMap.put("cstPercent", cstPercent);
+	
 		indentProductList.add(productQtyMap);
 	}//end row count for loop
 	if( UtilValidate.isEmpty(indentProductList)){
@@ -412,7 +495,7 @@ public static Map<String, Object> createPurchaseOrder(DispatchContext dctx, Map<
   	String SInvNumber = (String) context.get("SInvNumber");
 	BigDecimal insurence = (BigDecimal) context.get("insurence");
 	
-  	Debug.log("=AFTER==CONTEXT==freightCharges="+freightCharges+"=discount="+discount+"==mrnNumber=="+mrnNumber+"=PONumber="+PONumber+"=SInvNumber="+SInvNumber+"=insurence="+insurence);
+  	Debug.log("===productQtyList="+productQtyList);
   	String currencyUomId = "INR";
   	String shipmentId = (String) context.get("shipmentId");
   	String shipmentTypeId = (String) context.get("shipmentTypeId");
@@ -504,12 +587,14 @@ public static Map<String, Object> createPurchaseOrder(DispatchContext dctx, Map<
 		}
 		BigDecimal tempPrice = BigDecimal.ZERO;
 		tempPrice = tempPrice.add(unitPrice);
-		
 		if(unitPrice.compareTo(BigDecimal.ZERO)>0){
 			if(UtilValidate.isNotEmpty(prodQtyMap.get("bedAmount"))){
 				excise = (BigDecimal)prodQtyMap.get("bedAmount");
+		        BigDecimal excisePercent=(BigDecimal)prodQtyMap.get("excisePercent");
+				
 				BigDecimal taxRate = excise;
 				BigDecimal taxAmount = BigDecimal.ZERO;
+				
 	        	if(taxRate.compareTo(BigDecimal.ZERO)>0){
 	        		//taxAmount = (unitPrice.multiply(taxRate)).divide(PERCENT_SCALE, salestaxCalcDecimals, salestaxRounding);
 	        		taxAmount = (taxRate).setScale(salestaxCalcDecimals, salestaxRounding);
@@ -517,7 +602,7 @@ public static Map<String, Object> createPurchaseOrder(DispatchContext dctx, Map<
 		    		taxDetailMap.put("taxType", "BED_PUR");
 		    		//taxDetailMap.put("taxType", "BED_SALE");
 		    		taxDetailMap.put("amount", taxAmount);
-		    		//taxDetailMap.put("percentage", taxRate);
+		    		taxDetailMap.put("percentage", excisePercent);
 		    		taxList.add(taxDetailMap);
 
 		    		GenericValue newProdPriceType = delegator.makeValue("ProductPriceAndType");        	 
@@ -527,7 +612,7 @@ public static Map<String, Object> createPurchaseOrder(DispatchContext dctx, Map<
 		    		newProdPriceType.set("productStoreGroupId", "_NA_");
 		    		newProdPriceType.set("productPricePurposeId", "PURCHASE");
 		    		newProdPriceType.set("productPriceTypeId", "BED_PUR");
-		    		//newProdPriceType.set("taxPercentage", taxRate);
+		    		newProdPriceType.set("taxPercentage", excisePercent);
 		    		newProdPriceType.set("taxAmount", taxAmount);
 		    		newProdPriceType.set("currencyUomId", "INR");
 		    		prodPriceTypeList.add(newProdPriceType);
@@ -537,6 +622,7 @@ public static Map<String, Object> createPurchaseOrder(DispatchContext dctx, Map<
 			}
 			if(UtilValidate.isNotEmpty(prodQtyMap.get("vatAmount"))){
 			    BigDecimal taxRate = (BigDecimal)prodQtyMap.get("vatAmount");
+			    BigDecimal vatPercent=(BigDecimal)prodQtyMap.get("vatPercent");
 				BigDecimal taxAmount = BigDecimal.ZERO;
 	        	if(taxRate.compareTo(BigDecimal.ZERO)>0){
 	        		//taxAmount = (tempPrice.multiply(taxRate)).divide(PERCENT_SCALE, salestaxCalcDecimals, salestaxRounding);
@@ -545,7 +631,7 @@ public static Map<String, Object> createPurchaseOrder(DispatchContext dctx, Map<
 		    		//taxDetailMap.put("taxType", "VAT_SALE");
 		    		taxDetailMap.put("taxType", "VAT_PUR");
 		    		taxDetailMap.put("amount", taxAmount);
-		    		//taxDetailMap.put("percentage", taxRate);
+		    		taxDetailMap.put("percentage", vatPercent);
 		    		taxList.add(taxDetailMap);
 		        	/*if(taxPrice.compareTo(BigDecimal.ZERO)>0){
 		        		taxAmount = itemQuantity.multiply(taxPrice).setScale(salestaxCalcDecimals, salestaxRounding);
@@ -557,15 +643,22 @@ public static Map<String, Object> createPurchaseOrder(DispatchContext dctx, Map<
 		    		newProdPriceType.set("productStoreGroupId", "_NA_");
 		    		newProdPriceType.set("productPricePurposeId", "PURCHASE");
 		    		newProdPriceType.set("productPriceTypeId", "VAT_PUR");
-		    		//newProdPriceType.set("taxPercentage", taxRate);
+		    		newProdPriceType.set("taxPercentage", vatPercent);
 		    		newProdPriceType.set("taxAmount", taxAmount);
 		    		newProdPriceType.set("currencyUomId", "INR");
 		    		prodPriceTypeList.add(newProdPriceType);
 	        	}
 	        	totalTaxAmt=totalTaxAmt.add(taxAmount);
 			}
+			/*productQtyMap.put("vatPercent", vatPercent);
+			productQtyMap.put("excisePercent", excisePercent);
+			productQtyMap.put("bedCessPercent",bedCessPercent );
+			productQtyMap.put("bedSecCessPercent", bedSecCessPercent);
+			productQtyMap.put("cstPercent", cstPercent);*/
+			
 			if(UtilValidate.isNotEmpty(prodQtyMap.get("bedCessAmount"))){
 			    BigDecimal taxRate = (BigDecimal)prodQtyMap.get("bedCessAmount");
+			    BigDecimal bedCessPercent=(BigDecimal)prodQtyMap.get("bedCessPercent");
 				BigDecimal taxAmount = BigDecimal.ZERO;
 	        	if(taxRate.compareTo(BigDecimal.ZERO)>0){
 	        		//taxAmount = (tempPrice.multiply(taxRate)).divide(PERCENT_SCALE, salestaxCalcDecimals, salestaxRounding);
@@ -573,7 +666,7 @@ public static Map<String, Object> createPurchaseOrder(DispatchContext dctx, Map<
 	        		Map taxDetailMap = FastMap.newInstance();
 		    		taxDetailMap.put("taxType", "BEDCESS_PUR");
 		    		taxDetailMap.put("amount", taxAmount);
-		    		//taxDetailMap.put("percentage", taxRate);
+		    		taxDetailMap.put("percentage", bedCessPercent);
 		    		taxList.add(taxDetailMap);
 		    		
 		    		GenericValue newProdPriceType = delegator.makeValue("ProductPriceAndType");        	 
@@ -583,7 +676,7 @@ public static Map<String, Object> createPurchaseOrder(DispatchContext dctx, Map<
 		    		newProdPriceType.set("productStoreGroupId", "_NA_");
 		    		newProdPriceType.set("productPricePurposeId", "PURCHASE");
 		    		newProdPriceType.set("productPriceTypeId", "BEDCESS_PUR");
-		    		//newProdPriceType.set("taxPercentage", taxRate);
+		    		newProdPriceType.set("taxPercentage", bedCessPercent);
 		    		newProdPriceType.set("taxAmount", taxAmount);
 		    		newProdPriceType.set("currencyUomId", "INR");
 		    		prodPriceTypeList.add(newProdPriceType);
@@ -593,6 +686,7 @@ public static Map<String, Object> createPurchaseOrder(DispatchContext dctx, Map<
 			
 		    if(UtilValidate.isNotEmpty(prodQtyMap.get("bedSecCessAmount"))){
 			    BigDecimal taxRate = (BigDecimal)prodQtyMap.get("bedSecCessAmount");
+			    BigDecimal bedSecCessPercent=(BigDecimal)prodQtyMap.get("bedSecCessPercent");
 				BigDecimal taxAmount = BigDecimal.ZERO;
 	        	if(taxRate.compareTo(BigDecimal.ZERO)>0){
 	        		//taxAmount = (tempPrice.multiply(taxRate)).divide(PERCENT_SCALE, salestaxCalcDecimals, salestaxRounding);
@@ -600,7 +694,7 @@ public static Map<String, Object> createPurchaseOrder(DispatchContext dctx, Map<
 	        		Map taxDetailMap = FastMap.newInstance();
 		    		taxDetailMap.put("taxType", "BEDSECCESS_PUR");
 		    		taxDetailMap.put("amount", taxAmount);
-		    		//taxDetailMap.put("percentage", taxRate);
+		    		taxDetailMap.put("percentage", bedSecCessPercent);
 		    		taxList.add(taxDetailMap);
 		        	
 		    		GenericValue newProdPriceType = delegator.makeValue("ProductPriceAndType");        	 
@@ -610,7 +704,7 @@ public static Map<String, Object> createPurchaseOrder(DispatchContext dctx, Map<
 		    		newProdPriceType.set("productStoreGroupId", "_NA_");
 		    		newProdPriceType.set("productPricePurposeId", "PURCHASE");
 		    		newProdPriceType.set("productPriceTypeId", "BEDSECCESS_PUR");
-		    		//newProdPriceType.set("taxPercentage", taxRate);
+		    		newProdPriceType.set("taxPercentage", bedSecCessPercent);
 		    		newProdPriceType.set("taxAmount", taxAmount);
 		    		newProdPriceType.set("currencyUomId", "INR");
 		    		prodPriceTypeList.add(newProdPriceType);
@@ -619,6 +713,7 @@ public static Map<String, Object> createPurchaseOrder(DispatchContext dctx, Map<
 			}
 			if(UtilValidate.isNotEmpty(prodQtyMap.get("cstAmount"))){
 				cst = (BigDecimal)prodQtyMap.get("cstAmount");
+				BigDecimal cstPercent=(BigDecimal)prodQtyMap.get("cstPercent");
 				BigDecimal taxRate = cst;
 				BigDecimal taxAmount = BigDecimal.ZERO;
 	        	if(taxRate.compareTo(BigDecimal.ZERO)>0){
@@ -628,7 +723,7 @@ public static Map<String, Object> createPurchaseOrder(DispatchContext dctx, Map<
 		    		//taxDetailMap.put("taxType", "CST_SALE");
 		    		taxDetailMap.put("taxType", "CST_PUR");
 		    		taxDetailMap.put("amount", taxAmount);
-		    		//taxDetailMap.put("percentage", taxRate);
+		    		taxDetailMap.put("percentage", cstPercent);
 		    		taxList.add(taxDetailMap);
 		    		GenericValue newProdPriceType = delegator.makeValue("ProductPriceAndType");        	 
 		    		newProdPriceType.set("fromDate", effectiveDate);
@@ -637,7 +732,7 @@ public static Map<String, Object> createPurchaseOrder(DispatchContext dctx, Map<
 		    		newProdPriceType.set("productStoreGroupId", "_NA_");
 		    		newProdPriceType.set("productPricePurposeId", "PURCHASE");
 		    		newProdPriceType.set("productPriceTypeId", "CST_PUR");
-		    		//newProdPriceType.set("taxPercentage", taxRate);
+		    		newProdPriceType.set("taxPercentage", cstPercent);
 		    		newProdPriceType.set("taxAmount", taxAmount);
 		    		newProdPriceType.set("currencyUomId", "INR");
 		    		prodPriceTypeList.add(newProdPriceType);

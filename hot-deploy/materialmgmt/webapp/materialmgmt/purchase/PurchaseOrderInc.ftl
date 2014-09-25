@@ -52,6 +52,11 @@
 <script type="application/javascript">
 	var dataView;
 	var dataView2;
+	var grid;
+	
+	var withOutBedcolumns;
+	
+	var withBedcolumns;
 	
 	var productLabelIdMap = ${StringUtil.wrapString(productLabelIdJSON)!'{}'};
 	var productIdLabelMap = ${StringUtil.wrapString(productIdLabelJSON)!'{}'};
@@ -92,6 +97,14 @@
 			var Excise = data[rowCount]["Excise"];
 			var bedCess = data[rowCount]["bedCessAmount"];
 			var bedSecCess = data[rowCount]["bedSecCessAmount"];
+			
+			var VATPer = data[rowCount]["VatPercent"];
+			var CSTPer = data[rowCount]["CSTPercent"];
+			var ExcisePer = data[rowCount]["ExcisePercent"];
+			var bedCessPer = data[rowCount]["bedCessPercent"];
+			var bedSecCessPer = data[rowCount]["bedSecCessPercent"];
+			
+		
 	 		if (!isNaN(qty)) {	 		
 				var inputProd = jQuery("<input>").attr("type", "hidden").attr("name", "productId_o_" + rowCount).val(prodId);
 				var inputQty = jQuery("<input>").attr("type", "hidden").attr("name", "quantity_o_" + rowCount).val(qty);
@@ -110,6 +123,24 @@
 				jQuery(formId).append(jQuery(inputBedCess));
 				var inputBedSecCess = jQuery("<input>").attr("type", "hidden").attr("name", "bedSecCess_o_" + rowCount).val(bedSecCess);
 				jQuery(formId).append(jQuery(inputBedSecCess));
+				
+				//percentages
+				
+				var inputVATPer = jQuery("<input>").attr("type", "hidden").attr("name", "VatPercent_o_" + rowCount).val(VATPer);
+				jQuery(formId).append(jQuery(inputVATPer));
+				
+				var inputCSTPer = jQuery("<input>").attr("type", "hidden").attr("name", "CSTPercent_o_" + rowCount).val(CSTPer);
+				jQuery(formId).append(jQuery(inputCSTPer));
+				
+				var inputExcisePer = jQuery("<input>").attr("type", "hidden").attr("name", "ExcisePercent_o_" + rowCount).val(ExcisePer);
+				jQuery(formId).append(jQuery(inputExcisePer));
+				
+				var inputbedCessPer = jQuery("<input>").attr("type", "hidden").attr("name", "bedCessPercent_o_" + rowCount).val(bedCessPer);
+				jQuery(formId).append(jQuery(inputbedCessPer));
+				
+				var inputbedSecCessPer = jQuery("<input>").attr("type", "hidden").attr("name", "bedSecCessPercent_o_" + rowCount).val(bedSecCessPer);
+				jQuery(formId).append(jQuery(inputbedSecCessPer));
+				
 				
    			}
 		}
@@ -235,11 +266,12 @@
     }
 	
 	function rateFormatter(row, cell, value, columnDef, dataContext) { 
+		if(isNaN(value)){
+					value = 0;
+		}		
 		var formatValue = parseFloat(value).toFixed(2);
         return formatValue;
     }
-	
-	
 	
 	function quantityValidator(value ,item) {
 		/*var quarterVal = value*4;
@@ -253,22 +285,46 @@
     }
 	var mainGrid;		
 	function setupGrid1() {
-
-		var grid;
-		
-		var columns = [
+    
+             withOutBedcolumns = [
 			{id:"cProductName", name:"Product", field:"cProductName", width:180, minWidth:180, cssClass:"cell-title", availableTags: availableTags, editor: AutoCompleteEditor, validator: productValidator, sortable:false ,toolTip:""},
 			{id:"quantity", name:"Qty(Pkt)", field:"quantity", width:70, minWidth:70, cssClass:"cell-title",editor:FloatCellEditor, sortable:false , formatter: quantityFormatter,  validator: quantityValidator},
 			{id:"UPrice", name:"Price", field:"UPrice", width:130, minWidth:130, editor:FloatCellEditor, sortable:false, formatter: rateFormatter, align:"right", toolTip:"UD Price"},
-			{id:"VAT", name:"VAT-Amount", field:"VAT", width:80, minWidth:80, editor:FloatCellEditor, sortable:false, formatter: rateFormatter, align:"right", toolTip:"Vat Price"},
-			{id:"Excise", name:"Bed-Amount", field:"Excise", width:80, minWidth:80, editor:FloatCellEditor, sortable:false, formatter: rateFormatter, align:"right", toolTip:"Bed Amount"},
-			{id:"bedCessAmount", name:"Bed-CessAmount", field:"bedCessAmount", width:80, minWidth:80, editor:FloatCellEditor, sortable:false, formatter: rateFormatter, align:"right", toolTip:"Bed Cess Amount"},
-			{id:"bedSecCessAmount", name:"Bed-SecCessAmount", field:"bedSecCessAmount", width:80, minWidth:80, editor:FloatCellEditor, sortable:false, formatter: rateFormatter, align:"right", toolTip:"Bed Sec Cess Amount"},
+			
+			{id:"amount", name:"Basic Amount(Rs)", field:"amount", width:100, minWidth:100, cssClass:"readOnlyColumnClass", sortable:false, formatter: rateFormatter, focusable :false},
+			{id:"VatPercent", name:"VAT(%)", field:"VatPercent", width:80, minWidth:80, editor:FloatCellEditor, sortable:false, formatter: rateFormatter, align:"right", toolTip:"Vat Price"},
+			{id:"VAT", name:"VAT-Amount", field:"VAT", width:80, minWidth:80, editor:FloatCellEditor, sortable:false, formatter: rateFormatter, align:"right", toolTip:"Vat Percent"},
+			
+			{id:"CSTPercent", name:"CST (%)", field:"CSTPercent", width:80, minWidth:80, editor:FloatCellEditor, sortable:false, formatter: rateFormatter, align:"right", toolTip:"CST Percentage"},
 			{id:"CST", name:"CST-Amount", field:"CST", width:80, minWidth:80, editor:FloatCellEditor, sortable:false, formatter: rateFormatter, align:"right", toolTip:"CST Percentage"},
 			
-			//{id:"amount", name:"Total Amount(Rs)", field:"amount", width:100, minWidth:100, cssClass:"readOnlyColumnClass", sortable:false, formatter: rateFormatter, focusable :false}
 		];
+            
+		 withBedcolumns = [
+			{id:"cProductName", name:"Product", field:"cProductName", width:180, minWidth:180, cssClass:"cell-title", availableTags: availableTags, editor: AutoCompleteEditor, validator: productValidator, sortable:false ,toolTip:""},
+			{id:"quantity", name:"Qty(Pkt)", field:"quantity", width:70, minWidth:70, cssClass:"cell-title",editor:FloatCellEditor, sortable:false , formatter: quantityFormatter,  validator: quantityValidator},
+			{id:"UPrice", name:"Price", field:"UPrice", width:90, minWidth:90, editor:FloatCellEditor, sortable:false, formatter: rateFormatter, align:"right", toolTip:"UD Price"},
+			
+			{id:"amount", name:"BaseAmount(Rs)", field:"amount", width:100, minWidth:100, cssClass:"readOnlyColumnClass", sortable:false, formatter: rateFormatter, focusable :false},
 		
+			{id:"ExcisePercent", name:"BED(%)", field:"ExcisePercent", width:80, minWidth:80, editor:FloatCellEditor, sortable:false, formatter: rateFormatter, align:"right", toolTip:"Bed Percent"},
+			{id:"Excise", name:"Bed-Amt", field:"Excise", width:80, minWidth:80, editor:FloatCellEditor, sortable:false, formatter: rateFormatter, align:"right", toolTip:"Bed Amount"},
+		
+			{id:"bedCessPercent", name:"Bed-Cess(%)", field:"bedCessPercent", width:85, minWidth:85, editor:FloatCellEditor, sortable:false, formatter: rateFormatter, align:"right", toolTip:"Bed Cess Percent"},
+			{id:"bedCessAmount", name:"Bed-CessAmt", field:"bedCessAmount", width:85, minWidth:85, editor:FloatCellEditor, sortable:false, formatter: rateFormatter, align:"right", toolTip:"Bed Cess Amount"},
+			
+			{id:"bedSecCessPercent", name:"B-SecCess(%)", field:"bedSecCessPercent", width:90, minWidth:89, editor:FloatCellEditor, sortable:false, formatter: rateFormatter, align:"right", toolTip:"Bed Sec Cess Percent"},
+			{id:"bedSecCessAmount", name:"B-SecCessAmt", field:"bedSecCessAmount", width:90, minWidth:89, editor:FloatCellEditor, sortable:false, formatter: rateFormatter, align:"right", toolTip:"Bed Sec Cess Amount"},
+			
+			{id:"VatPercent", name:"VAT(%)", field:"VatPercent", width:80, minWidth:80, editor:FloatCellEditor, sortable:false, formatter: rateFormatter, align:"right", toolTip:"Vat Price"},
+			{id:"VAT", name:"VAT-Amount", field:"VAT", width:80, minWidth:80, editor:FloatCellEditor, sortable:false, formatter: rateFormatter, align:"right", toolTip:"Vat Percent"},
+			
+			{id:"CSTPercent", name:"CST (%)", field:"CSTPercent", width:80, minWidth:80, editor:FloatCellEditor, sortable:false, formatter: rateFormatter, align:"right", toolTip:"CST Percentage"},
+			{id:"CST", name:"CST-Amount", field:"CST", width:80, minWidth:80, editor:FloatCellEditor, sortable:false, formatter: rateFormatter, align:"right", toolTip:"CST Percentage"},
+		  ];
+		  
+		  var columns=withBedcolumns;
+		  
 			var options = {
 			editable: true,		
 			forceFitColumns: false,			
@@ -278,12 +334,12 @@
 			autoEdit: true,
             secondaryHeaderRowHeight: 25
 		};
-		
-
+	
 		grid = new Slick.Grid("#myGrid1", data, columns, options);
-        grid.setSelectionModel(new Slick.CellSelectionModel());        
+        grid.setSelectionModel(new Slick.CellSelectionModel()); 
+     
 		var columnpicker = new Slick.Controls.ColumnPicker(columns, grid, options);
-		
+	    addBedColumns();
 		// wire up model events to drive the grid
         if (data.length > 0) {			
 			$(grid.getCellNode(0, 1)).click();
@@ -369,31 +425,14 @@
       		grid.render();
     	});
         grid.onCellChange.subscribe(function(e,args) {
-        	if (args.cell == 2	) {
+        var totalValue=0;
+        
+        	if (args.cell == 2) {
 				var prod = data[args.row]["cProductId"];
 				var qty = parseFloat(data[args.row]["quantity"]);
-				
-				var prodConversionData = conversionData[prod];
-				var convValue = 0;
-				<#if changeFlag?exists && changeFlag == "IcpSales" || changeFlag == "IcpSalesAmul">
-					convValue = prodConversionData['CRATE'];
-				</#if>
-				<#if changeFlag?exists && changeFlag == "PowderSales" || changeFlag == "FgsSales" || changeFlag == "InterUnitTransferSale">
-					convValue = prodConversionData['LtrKg'];
-				</#if>
-				var price = parseFloat(priceTags[prod]);
-				var crVal = 0;
-				if(convValue != 'undefined' || convValue != null || convValue > 0){
-					<#if changeFlag?exists && changeFlag == "IcpSales" || changeFlag == "IcpSalesAmul">
-						crVal = parseFloat(Math.round((qty/convValue)*100)/100);
-						data[args.row]["crQuantity"] = crVal;
-					</#if>
-					<#if changeFlag?exists && changeFlag == "PowderSales" || changeFlag == "FgsSales" || changeFlag == "InterUnitTransferSale">
-						crVal = parseFloat(Math.round((qty*convValue)*100)/100);
-						data[args.row]["ltrQuantity"] = crVal;
-					</#if>
-					
-				}
+			
+				var price = data[args.row]['UPrice'];
+		
 				if(isNaN(price)){
 					price = 0;
 				}
@@ -401,98 +440,128 @@
 					qty = 0;
 				}
 				var roundedAmount;
-					roundedAmount = Math.round(qty*price);
+				roundedAmount = qty*price;
+				//roundedAmount = Math.round(qty*price);
 				if(isNaN(roundedAmount)){
 					roundedAmount = 0;
 				}
+				totalValue=roundedAmount;
 			//alert("=prod="+prod+"=qty="+qty+"=price="+price);
-				data[args.row]["unitPrice"] = price;
+				data[args.row]["UPrice"] = price;
 				data[args.row]["amount"] = roundedAmount;
 				grid.updateRow(args.row);
-				var totalAmount = 0;
-				for (i = 0; i < data.length; i++) {
-					totalAmount += data[i]["amount"];
-				}
-				var amt = parseFloat(Math.round((totalAmount) * 100) / 100);
-			
-				if(amt > 0 ){
-					var dispText = "<b>  [Invoice Amt: Rs " +  amt + "]</b>";
-				}
-				else{
-					var dispText = "<b>  [Invoice Amt: Rs 0 ]</b>";
-				}
-				jQuery("#totalAmount").html(dispText);
+				updateInvoiceTotalAmount();
 			}
 			
-			if (args.cell == 2) {
-				var prod = data[args.row]["cProductId"];
-				var calcQty = 0;
-				<#if changeFlag?exists && changeFlag == "IcpSales" || changeFlag == "IcpSalesAmul">
-					calcQty = parseFloat(data[args.row]["crQuantity"]);
-				</#if>
-				<#if changeFlag?exists && changeFlag == "PowderSales" || changeFlag == "FgsSales" || changeFlag == "InterUnitTransferSale">
-					calcQty = parseFloat(data[args.row]["ltrQuantity"]);
-				</#if>
-				var prodConversionData = conversionData[prod];
-				var convValue = 0;
-				<#if changeFlag?exists && changeFlag == "IcpSales" || changeFlag == "IcpSalesAmul">
-					convValue = prodConversionData['CRATE'];
-				</#if>
-				<#if changeFlag?exists && changeFlag == "PowderSales" || changeFlag == "FgsSales" || changeFlag == "InterUnitTransferSale">
-					convValue = prodConversionData['LtrKg'];
-				</#if>
-				var price = parseFloat(priceTags[prod]);
-				var calculateQty = 0;
-				if(convValue != 'undefined' && convValue != null && calcQty>0){
-
-					<#if changeFlag?exists && changeFlag == "IcpSales" || changeFlag == "IcpSalesAmul">
-						calculateQty = parseFloat(Math.round((calcQty*convValue)*100)/100);
-						data[args.row]["quantity"] = calculateQty;
-					</#if>
-					<#if changeFlag?exists && changeFlag == "PowderSales" || changeFlag == "FgsSales" || changeFlag == "InterUnitTransferSale">
-						calculateQty = parseFloat(Math.round((calcQty/convValue)*100)/100);
-						data[args.row]["quantity"] = calculateQty;
-					</#if>
+		if(data[args.row]['ExcisePercent']!='undefined' && data[args.row]['ExcisePercent']>=0) {
+		      $("#addBED").attr('disabled', 'disabled');
+              $("#addBED").attr('readonly', 'readonly');
+				var basic_total = data[args.row]['amount'];
+				if(isNaN(basic_total)){
+						basic_total = 0;
 				}
-				   var basic_price = data[args.row]['UPrice'];
-					var vat_price = data[args.row]['VAT'];
-					var cst_price = data[args.row]['CST'];
-					var bed_price = data[args.row]['Excise'];
-					
-					var totalPrice = basic_price+vat_price+cst_price+bed_price;
-					price = totalPrice;
-					
-				
-				if(isNaN(price)){
-					price = 0;
+				var Excise_percent= data[args.row]['ExcisePercent'];
+				if(isNaN(Excise_percent)){
+					Excise_percent = 0;
 				}
-				if(isNaN(calculateQty)){
-					calculateQty = 0;
+				var exciseUnit = Excise_percent/100;
+				var exciseAmount=basic_total*exciseUnit;
+				//var exciseAmount=Math.round(basic_total*exciseUnit);
+				//alert("=basic_total="+basic_total+"=Excise_percent="+Excise_percent+"=exciseAmount="+exciseAmount);
+				if(isNaN(exciseAmount)){
+					exciseAmount = 0;
 				}
-				var roundedAmount;
-					roundedAmount = Math.round(calculateQty*price);
-				if(isNaN(roundedAmount)){
-					roundedAmount = 0;
+				data[args.row]["Excise"] = exciseAmount;
+				updateInvoiceTotalAmount();
+			 }
+			 
+		   if(data[args.row]['Excise']!='undefined' && data[args.row]['Excise']>=0) {
+			 //once BED added and input happens disable the AddBed button
+			  $("#addBED").attr('disabled', 'disabled');
+              $("#addBED").attr('readonly', 'readonly');
+              
+			    var basic_total = data[args.row]['amount'];
+				if(isNaN(basic_total)){
+						basic_total = 0;
 				}
-				data[args.row]["unitPrice"] = price;
-				data[args.row]["amount"] = roundedAmount;
-				grid.updateRow(args.row);
-				var totalAmount = 0;
-				for (i = 0; i < data.length; i++) {
-					totalAmount += data[i]["amount"];
+			    var basic_Excise=data[args.row]['Excise'];
+				var bedCessPercent= data[args.row]['bedCessPercent'];
+				if(isNaN(bedCessPercent)){
+					bedCessPercent = 0;
 				}
-				var amt = parseFloat(Math.round((totalAmount) * 100) / 100);
+				var bedCessUnit = bedCessPercent/100;
+				 bedCessAmount=basic_Excise*bedCessUnit;
+				//alert("=bedCessUnit="+bedCessUnit+"=basic_Excise="+basic_Excise+"=bedCessPercent="+bedCessPercent);
+				if(isNaN(bedCessAmount)){
+					bedCessAmount = 0;
+				}
+				data[args.row]["bedCessAmount"] = bedCessAmount;
+				updateInvoiceTotalAmount();
+			 }
+			 
+			 if(data[args.row]['Excise']!='undefined' && data[args.row]['Excise']>=0) {
+			    var basic_Excise=data[args.row]['Excise'];
+				var bedSecCessPercent= data[args.row]['bedSecCessPercent'];
+				if(isNaN(bedSecCessPercent)){
+					bedSecCessPercent = 0;
+				}
+				var bedSecCessUnit = bedSecCessPercent/100;
+				 bedSecCessAmount=basic_Excise*bedSecCessUnit;
+				//alert("=bedCessUnit="+bedCessUnit+"=basic_Excise="+basic_Excise+"=bedSecCessPercent="+bedSecCessPercent);
+				if(isNaN(bedSecCessAmount)){
+					bedSecCessAmount = 0;
+				}
+				data[args.row]["bedSecCessAmount"] = bedSecCessAmount;
+				updateInvoiceTotalAmount();
+			 }
+			     
+			 var amountAftereExcise = 0;
+			 
+			  if(!isNaN(data[args.row]['amount'])){
+					amountAftereExcise += data[args.row]['amount'];
+				}
+				if(!isNaN(data[args.row]['Excise'])){
+					amountAftereExcise += data[args.row]['Excise'];
+				}
+				if(!isNaN(data[args.row]['bedCessAmount'])){
+					amountAftereExcise += data[args.row]['bedCessAmount'];
+				}
+				if(!isNaN(data[args.row]['bedSecCessAmount'])){
+					amountAftereExcise += data[args.row]['bedSecCessAmount'];
+				}
 			
-				if(amt > 0 ){
-					var dispText = "<b>  [Invoice Amt: Rs " +  amt + "]</b>";
+			 if(data[args.row]['VatPercent']!='undefined' && data[args.row]['VatPercent']>=0) {
+				var vat_percent= data[args.row]['VatPercent'];
+				if(isNaN(vat_percent)){
+					vat_percent = 0;
 				}
-				else{
-					var dispText = "<b>  [Invoice Amt: Rs 0 ]</b>";
+				var vatUnit = vat_percent/100;
+				var vatAmount=amountAftereExcise*vatUnit;
+				//alert("===INVAT==amountAftereExcise="+amountAftereExcise+"=vat_percent="+vat_percent+"=vatAmount="+vatAmount);
+				if(isNaN(vatAmount)){
+					vatAmount = 0;
 				}
-				jQuery("#totalAmount").html(dispText);
-			}
-			
-		
+				data[args.row]["VAT"] = vatAmount;
+				updateInvoiceTotalAmount();
+			  }
+			  if(args.cell == 11) {
+				updateInvoiceTotalAmount();
+			  }
+			 
+			 
+			  if(data[args.row]['CSTPercent']!='undefined' && data[args.row]['CSTPercent']>=0) {
+				var cst_percent= data[args.row]['CSTPercent'];
+				if(isNaN(cst_percent)){
+					cst_percent = 0;
+				}
+				var cstUnit = cst_percent/100;
+				var cstAmount=amountAftereExcise*cstUnit;
+				if(isNaN(cstAmount)){
+					cstAmount = 0;
+				}
+				data[args.row]["CST"] = cstAmount;
+				updateInvoiceTotalAmount();
+			 }
 		}); 
 		
 		grid.onActiveCellChanged.subscribe(function(e,args) {
@@ -516,42 +585,56 @@
         }
 
     });
+    
+    
+    function updateInvoiceTotalAmount(){
+            var totalAmount = 0;
+            //alert("==data.length===>"+data.length);
+				for (i = 0; i < data.length; i++) {
+				   if(!isNaN(data[i]["amount"])){
+					totalAmount += data[i]["amount"];
+				   }
+				   if(!isNaN(data[i]["Excise"])){
+					totalAmount += data[i]["Excise"];
+				   }
+				   if(!isNaN(data[i]["bedCessAmount"])){
+					totalAmount += data[i]["bedCessAmount"];
+				   }
+				   if(!isNaN(data[i]["bedSecCessAmount"])){
+					totalAmount += data[i]["bedSecCessAmount"];
+				   }
+				  
+				   if(!isNaN(data[i]["VAT"])){
+					totalAmount += data[i]["VAT"];
+				   }
+				   if(!isNaN(data[i]["CST"])){
+					totalAmount += data[i]["CST"];
+				   }
+				   
+				}
+				 //alert("<==totalAmount===>"+totalAmount);
+				var amt = parseFloat(Math.round((totalAmount) * 100) / 100);
+			
+				if(amt > 0 ){
+					var dispText = "<b>  [Invoice Amt: Rs " +  amt + "]</b>";
+				}
+				else{
+					var dispText = "<b>  [Invoice Amt: Rs 0 ]</b>";
+				}
+				//alert("==amt="+amt);
+				jQuery("#totalAmount").html(dispText);
+    }
+    
+ 
 		updateProductTotalAmount();
 		function updateProductTotalAmount() {
 			for(var i=0;i<data.length;i++){
 				var qty = parseFloat(data[i]["quantity"]);
 				var prod = data[i]["cProductId"];
-				
 				var prodConversionData = conversionData[prod];
 				var convValue = 0;
-				<#if changeFlag?exists && changeFlag == "IcpSales" || changeFlag == "IcpSalesAmul">
-					convValue = prodConversionData['CRATE'];
-				</#if>
-				<#if changeFlag?exists && changeFlag == "PowderSales" || changeFlag == "FgsSales" || changeFlag == "InterUnitTransferSale">
-					convValue = prodConversionData['LtrKg'];
-				</#if>
-				
 				var price = parseFloat(priceTags[prod]);
-				if(isNaN(price) || isNaN(qty)){
-					data[i]["amount"] = 0;
-					data[i]["unitPrice"] = 0;
-				}
-				else{
-					data[i]["unitPrice"] = price;
-					data[i]["amount"] = Math.round((qty*price) * 100)/100;
-				}
 				var crVal = 0;
-				if(convValue != 'undefined' || convValue != null || convValue > 0){
-					<#if changeFlag?exists && changeFlag == "IcpSales" || changeFlag == "IcpSalesAmul">
-						crVal = parseFloat(Math.round((qty/convValue)*100)/100);
-						data[i]["crQuantity"] = crVal;
-					</#if>
-					<#if changeFlag?exists && changeFlag == "PowderSales" || changeFlag == "FgsSales" || changeFlag == "InterUnitTransferSale">
-						crVal = parseFloat(Math.round((qty*convValue)*100)/100);
-						data[i]["ltrQuantity"] = crVal;
-					</#if>
-				}
-				
 				grid.updateRow(i);
 			}
 			var totalAmount = 0;
@@ -565,79 +648,48 @@
 			else{
 				var dispText = "<b> [Total: Rs 0 ]</b>";
 			}
+			
 			jQuery("#totalAmount").html(dispText);
 		}
 		mainGrid = grid;
 	}
 	
-	function setupGrid2() {
-		var grid;
-		var data = [
-			<#if lastChangeSubProdMap?exists && lastChangeSubProdMap?has_content>	
-				{"id":"1", "boothId":"${lastChangeSubProdMap.boothId}" 					
-				<#if prodList?exists>
-					<#list prodList as product>				
-					, "${product.productId}":"${lastChangeSubProdMap[product.productId]}"
-					</#list> 
-				</#if>				
-				}				
-			</#if>
-		];
-
-		var columns = [
-			{id:"boothId", name:"RetailerCode[Name]", field:"boothId", width:180, minWidth:120, cssClass:"cell-title", sortable:false},
-        	<#if prodList?exists>
-				<#list prodList as product>				
-					{id:"${product.productId}", name:"${product.productName?if_exists}", field:"${product.productId}", width:75, minWidth:75, editor:FloatCellEditor}<#if product_has_next>,</#if>
-				</#list>
-			</#if>		
-		];
-
-		var options = {
-			editable: false,		
-			forceFitColumns: false,
-			enableCellNavigation: false,		
-            secondaryHeaderRowHeight: 25
-		};
-		
-        var groupItemMetadataProvider = new Slick.Data.GroupItemMetadataProvider();
-		dataView2 = new Slick.Data.DataView({
-        	groupItemMetadataProvider: groupItemMetadataProvider
-        });
-		grid = new Slick.Grid("#myGrid2", dataView2, columns, options);
-        grid.setSelectionModel(new Slick.CellSelectionModel());
-
-		var columnpicker = new Slick.Controls.ColumnPicker(columns, grid, options);
-		
-		// wire up model events to drive the grid
-		dataView2.onRowCountChanged.subscribe(function(e,args) {
-			grid.updateRowCount();
-            grid.render();
-		});
-		dataView2.onRowsChanged.subscribe(function(e,args) {
-			grid.invalidateRows(args.rows);
-			grid.render();
-		});
-            
-		// initialize the model after all the events have been hooked up
-		dataView2.beginUpdate();
-		dataView2.setItems(data);
-		dataView2.endUpdate();
-
-	}
 	
+	//update ExciseElementValues
+    function updateGridColumnsValues(){
+				for (i = 0; i < data.length; i++) {
+				   if(!isNaN(data[i]["Excise"])){
+				   data[args.row]["CST"] = cstAmount;
+				   data[i]["Excise"]=0;
+					totalAmount += data[i]["Excise"];
+				   }
+				   if(!isNaN(data[i]["bedCessAmount"])){
+					data[i]["bedCessAmount"]=0;
+				   }
+				   if(!isNaN(data[i]["bedSecCessAmount"])){
+					data[i]["bedSecCessAmount"]=0;
+				   }
+				   if(!isNaN(data[i]["VAT"])){
+					data[i]["VAT"]=0;
+				   }
+				   if(!isNaN(data[i]["CST"])){
+					data[i]["CST"]=0;
+				   }
+				   updateInvoiceTotalAmount();
+				}		
+     }
 	
 	jQuery(function(){
 	     // only setupGrid when BoothId exists
 	     var boothId=$('[name=boothId]').val();
 	     var partyId=$('[name=partyId]').val();
 		 if(boothId || partyId){
+		    gridShowCall();
 		 	setupGrid1();
+	     }else{ 
+	        gridHideCall();
 	     }
-	     <#if screenFlag?exists && screenFlag == "AdhocSaleNew">
-	     	setupGrid2();
-	     </#if>
-				
+	   		
         jQuery(".grid-header .ui-icon")
             .addClass("ui-state-default ui-corner-all")
             .mouseover(function(e) {
@@ -766,4 +818,23 @@
 		jQuery("#pinNumber").val(contactInfo["postalCode"]);
 	}
 	
+	function gridHideCall() {
+           $('#FieldsDIV').hide();
+          
+    }
+     function gridShowCall() {
+           $('#FieldsDIV').show();
+    }
+    
+    function addBedColumns(){
+             var isChecked = $('#addBED').is(':checked');
+            if(isChecked) { 
+             
+              grid.setColumns(withBedcolumns);
+            }else{
+            //updateGridColumnsValues();
+            grid.setColumns(withOutBedcolumns);
+             
+            }   
+    }
 </script>			
