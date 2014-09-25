@@ -1400,12 +1400,12 @@ public class PayrollService {
 	                for (GenericValue payrollBenDedCond : payrollBenDedCondList) {
 	                	
                          if(UtilValidate.isNotEmpty(condParms)){
-                        	 if (!checkPriceCondition(payrollBenDedCond,userLogin,employeeId, dctx, delegator, timePeriodStart ,timePeriodEnd ,timePeriodId , condParms)) {
+                        	 if (!checkPriceCondition(payrollBenDedCond,userLogin,employeeId, dctx, delegator, timePeriodStart ,timePeriodEnd ,timePeriodId , condParms, context)) {
      	                        allTrue = false;
      	                        break;
      	                    }
                          }else{
-                        	 if (!checkPriceCondition(payrollBenDedCond, userLogin ,employeeId, dctx, delegator, timePeriodStart ,timePeriodEnd, timePeriodId ,null)) {
+                        	 if (!checkPriceCondition(payrollBenDedCond, userLogin ,employeeId, dctx, delegator, timePeriodStart ,timePeriodEnd, timePeriodId ,null ,context)) {
      	                        allTrue = false;
      	                        break;
      	                    }
@@ -1441,7 +1441,18 @@ public class PayrollService {
 	     	                    //Debug.log(payHeadPriceAction+"########payHeadPriceAction ############");
 	                        if ("PRICE_FLAT".equals(payHeadPriceAction.getString("payHeadPriceActionTypeId"))) {
 	                            String formulaId = payHeadPriceAction.getString("acctgFormulaId");
-	                            if (UtilValidate.isNotEmpty(formulaId)) {
+	                            Map formulaCtx = FastMap.newInstance();
+	                            formulaCtx.putAll(context);
+	                            formulaCtx.put("formulaId",formulaId);
+	                            formulaCtx.put("BASIC", (Double)fetchBasicSalaryAndGradeMap.get("amount"));
+	                            Map formulaResult = evaluatePayrollAcctgFormula(dctx ,formulaCtx);
+	                            if(ServiceUtil.isError(formulaResult)){
+	                            	Debug.logError(ServiceUtil.getErrorMessage(formulaResult), module);
+	                            	return formulaResult;
+	                            }
+	                            modifyAmount = (BigDecimal)formulaResult.get("amount");
+	                            priceInfoDescription.append(formulaResult.get("priceInfoDescription"));
+	                            /*if (UtilValidate.isNotEmpty(formulaId)) {
 	                            
 		    		        		Evaluator evltr = new Evaluator(dctx);
 		    		        		//Debug.log("*********** formulaId ================"+formulaId);
@@ -1537,7 +1548,7 @@ public class PayrollService {
 		     	                    priceInfoDescription.append("\n ,variables values:");
 		     	                    priceInfoDescription.append(variables);
 		     	                    priceInfoDescription.append("]\n");
-	                           }
+	                           }*/
 	                         
 	                        }else if ("PRICE_SERVICE".equals(payHeadPriceAction.getString("payHeadPriceActionTypeId"))) {
 	                        	   // customPriceCalcService
@@ -1585,7 +1596,7 @@ public class PayrollService {
             calcResults.put("priceInfos", priceInfos);
             return calcResults;
 	        }  
-	 public static boolean checkPriceCondition(GenericValue payrollBenDedCond,GenericValue userLogin, String employeeId,DispatchContext dctx,Delegator delegator, Timestamp fromDate ,Timestamp thruDate ,String timePeriodId , Map condParms) throws GenericEntityException {
+	 public static boolean checkPriceCondition(GenericValue payrollBenDedCond,GenericValue userLogin, String employeeId,DispatchContext dctx,Delegator delegator, Timestamp fromDate ,Timestamp thruDate ,String timePeriodId , Map condParms,Map context) throws GenericEntityException {
 	        if (Debug.verboseOn()) Debug.logVerbose("Checking price condition: " + payrollBenDedCond, module);
 	        
 	      //get Employee Payroll Cond Parms details here
@@ -1620,67 +1631,85 @@ public class PayrollService {
 	        }
 
 	        int compare = 0;
+	        String  formulaId = payrollBenDedCond.getString("condFormulaId");
+	        String condValue = payrollBenDedCond.getString("condValue");
+	        //here handle formula based values
+	        if(UtilValidate.isNotEmpty(formulaId)){
+	        	 
+	        	Map formulaCtx = FastMap.newInstance();
+	            formulaCtx.putAll(context);
+	            formulaCtx.put("formulaId",formulaId);
+	             //formulaCtx.put("BASIC", (Double)fetchBasicSalaryAndGradeMap.get("amount"));
+	             Map formulaResult = evaluatePayrollAcctgFormula(dctx ,formulaCtx);
+	             if(ServiceUtil.isError(formulaResult)){
+	             	Debug.logError(ServiceUtil.getErrorMessage(formulaResult), module);
+	             	return false;
+	             }
+	             condValue = ((BigDecimal)formulaResult.get("amount")).toString();
+	             //priceInfoDescription.append(formulaResult.get("priceInfoDescription"));
+	        }
+	       
             //Debug.log("checking condtion for ::"+payrollBenDedCond);
 	        if ("PAYHD_BEDE_EMPID".equals(payrollBenDedCond.getString("inputParamEnumId"))) {
-	            compare = employeeId.compareTo(payrollBenDedCond.getString("condValue"));
+	            compare = employeeId.compareTo(condValue);
 	        } else if ("PAYHD_BEDE_POS".equals(payrollBenDedCond.getString("inputParamEnumId"))) {
 	            if (UtilValidate.isNotEmpty(emplPositionTypeId)) {
-	                compare = emplPositionTypeId.compareTo(payrollBenDedCond.getString("condValue"));
+	                compare = emplPositionTypeId.compareTo(condValue);
 	            } else {
 	                compare = 1;
 	            }
 	        }else if ("PAYHD_BEDE_GEO".equals(payrollBenDedCond.getString("inputParamEnumId"))) {
 	            if (UtilValidate.isNotEmpty(geoId)) {
-	                compare = geoId.compareTo(payrollBenDedCond.getString("condValue"));
+	                compare = geoId.compareTo(condValue);
 	            } else {
 	                compare = 1;
 	            }
 	        }else if ("PAYHD_BEDE_STATE".equals(payrollBenDedCond.getString("inputParamEnumId"))) {
 	            if (UtilValidate.isNotEmpty(geoId)) {
-	                compare = stateId.compareTo(payrollBenDedCond.getString("condValue"));
+	                compare = stateId.compareTo(condValue);
 	            } else {
 	                compare = 1;
 	            }
 	        }
 	        else if ("PAYHD_BEDE_DEPT".equals(payrollBenDedCond.getString("inputParamEnumId"))) {
 	            if (UtilValidate.isNotEmpty(departmentId)) {
-	                compare = departmentId.compareTo(payrollBenDedCond.getString("condValue"));
+	                compare = departmentId.compareTo(condValue);
 	            } else {
 	                compare = 1;
 	            }
 	        }else if ("PAYHD_BEDE_SHIFT".equals(payrollBenDedCond.getString("inputParamEnumId"))) {
 	            if (UtilValidate.isNotEmpty(shiftTypeId)) {
-	                compare = shiftTypeId.compareTo(payrollBenDedCond.getString("condValue"));
+	                compare = shiftTypeId.compareTo(condValue);
 	            } else {
 	                compare = 1;
 	            }
 	        }else if ("PAYHD_BEDE_GRADE".equals(payrollBenDedCond.getString("inputParamEnumId"))) {
 	            if (UtilValidate.isNotEmpty(payGradeId)) {
-	                compare = payGradeId.compareTo(payrollBenDedCond.getString("condValue"));
+	                compare = payGradeId.compareTo(condValue);
 	            } else {
 	                compare = 1;
 	            }
 	        }else if ("PAYHD_BEDE_OTHER".equals(payrollBenDedCond.getString("inputParamEnumId"))) {
 	            if (UtilValidate.isNotEmpty(otherCond)) {
-	                compare = otherCond.compareTo(payrollBenDedCond.getString("condValue"));
+	                compare = otherCond.compareTo(condValue);
 	            } else {
 	                compare = 1;
 	            }
 	        }else if ("PAYHD_BEDE_GROSS_SAL".equals(payrollBenDedCond.getString("inputParamEnumId"))) {
 	        	Map grossSalaryMap  = getEmployeeGrossSalary(dctx ,paramCtxMap);
 	        	BigDecimal grossSalary = ((BigDecimal)grossSalaryMap.get("amount"));
-	        	BigDecimal condValue = new BigDecimal(payrollBenDedCond.getString("condValue"));
+	        	BigDecimal condValueTemp = new BigDecimal(condValue);
 	            if (UtilValidate.isNotEmpty(grossSalary)) {
-	                compare = grossSalary.compareTo(condValue);
+	                compare = grossSalary.compareTo(condValueTemp);
 	            } else {
 	                compare = 1;
 	            }
 	        }else if ("PAYHD_BEDE_LEAVEDAYS".equals(payrollBenDedCond.getString("inputParamEnumId"))) {
 	        	Map employeePayrollAttedance = getEmployeePayrollAttedance(dctx,paramCtxMap);
 	        	int noOfLeaveDays = (((Double)employeePayrollAttedance.get("noOfLeaveDays")).intValue());
-	        	int condValue = Integer.parseInt(payrollBenDedCond.getString("condValue"));
+	        	int condValueTemp = Integer.parseInt(condValue);
 	            if (UtilValidate.isNotEmpty(noOfLeaveDays)) {
-	                compare = noOfLeaveDays-condValue;
+	                compare = noOfLeaveDays-condValueTemp;
 	            } else {
 	                compare = 1;
 	            }
@@ -1707,6 +1736,138 @@ public class PayrollService {
 	        }
 	        return false;
 	    }
+	  private static Map<String , Object> evaluatePayrollAcctgFormula(DispatchContext dctx, Map<String, ? extends Object> context){
+		  String formulaId = (String)context.get("formulaId");
+		  GenericDelegator delegator = (GenericDelegator) dctx.getDelegator();
+		  LocalDispatcher dispatcher = dctx.getDispatcher();
+		  Map<String, Object> result = ServiceUtil.returnSuccess();
+		  Locale locale = (Locale) context.get("locale");
+		  GenericValue userLogin = (GenericValue) context.get("userLogin");
+		  String employeeId= (String) context.get("employeeId");
+		  Timestamp timePeriodStart = (Timestamp)context.get("timePeriodStart");
+		  Timestamp timePeriodEnd = (Timestamp)context.get("timePeriodEnd");
+		  String timePeriodId = (String) context.get("timePeriodId");
+		  double basicSalary = 0;
+		  if(UtilValidate.isEmpty(context.get("BASIC"))){
+			  Map fetchBasicSalaryAndGradeMap = fetchBasicSalaryAndGrade(dctx, context);
+			  basicSalary = ((Double)fetchBasicSalaryAndGradeMap.get("amount")).doubleValue();
+		  }else{
+			  basicSalary = ((Double) context.get("BASIC")).doubleValue();
+		  }
+		  
+		  StringBuilder priceInfoDescription = new StringBuilder();
+		  BigDecimal modifyAmount = BigDecimal.ZERO;
+		  
+		  result.put("amount", modifyAmount);
+		  result.put("priceInfoDescription", priceInfoDescription);
+		  if (UtilValidate.isEmpty(formulaId)) {
+			  return result;
+		  }
+		  try{
+			  
+      		Evaluator evltr = new Evaluator(dctx);
+      		//Debug.log("*********** formulaId ================"+formulaId);
+      		evltr.setFormulaIdAndSlabAmount(formulaId, modifyAmount.doubleValue());
+				HashMap<String, Double> variables = new HashMap<String, Double>();
+				Map formulaVaribules = evltr.getVariableValues();
+				double attendance = 1;
+				Set<String> varibuleKeySet = formulaVaribules.keySet();
+				
+				ArrayList varibuleKeyList = new ArrayList(varibuleKeySet);
+				List payheadTypeIdsList = (List)((getPayheadTypes(dctx , context)).get("payheadTypeIdsList"));
+				//Debug.log("*********** varibuleKeySet ================"+varibuleKeySet);
+				// this to support no.of days in the accounting formula
+				//  NOOFCALENDERDAYS      NOOFATTENDEDDAYS      LOSSOFPAYDAYS
+				//  NOOFATTENDEDHOLIDAYS  NOOFATTENDEDSS        NOOFATTENDEDWEEKLYOFF
+				//  NOOFLEAVEDAYS         NOOFCOMPOFFSAVAILED   GROSSSALARY
+				// NOOFAVAILEDVEHICLEDAYS  
+				boolean getAttendance = false;
+				Set supportedVaribules = UtilMisc.toSet("NOOFCALENDERDAYS","NOOFATTENDEDDAYS","LOSSOFPAYDAYS",
+						"NOOFATTENDEDHOLIDAYS" ,"NOOFATTENDEDSS" ,"NOOFATTENDEDWEEKLYOFF" ,"NOOFLEAVEDAYS","NOOFCOMPOFFSAVAILED");
+				supportedVaribules.add("NOOFAVAILEDVEHICLEDAYS");
+				supportedVaribules.add("NOOFPAYABLEDAYS");
+				supportedVaribules.add("NOOFARREARDAYS");
+				
+				for(int i= 0;i<varibuleKeyList.size();i++){
+					String varibuleKey = (String)varibuleKeyList.get(i);
+					if(supportedVaribules.contains(varibuleKey)){
+						getAttendance =true;
+					}
+				}
+				if(getAttendance){
+					Map attendanceMap = getEmployeePayrollAttedance(dctx ,context);
+					
+					variables.put("NOOFCALENDERDAYS", (Double)attendanceMap.get("noOfCalenderDays"));
+					variables.put("NOOFATTENDEDDAYS", (Double)attendanceMap.get("noOfAttendedDays"));
+					variables.put("NOOFATTENDEDHOLIDAYS", (Double)attendanceMap.get("noOfAttendedHoliDays"));
+					variables.put("LOSSOFPAYDAYS", (Double)attendanceMap.get("lossOfPayDays"));
+					variables.put("NOOFATTENDEDSS", (Double)attendanceMap.get("noOfAttendedSsDays"));
+					variables.put("NOOFATTENDEDWEEKLYOFF", (Double)attendanceMap.get("noOfAttendedWeeklyOffDays"));
+					variables.put("NOOFLEAVEDAYS", (Double)attendanceMap.get("noOfLeaveDays"));
+					variables.put("NOOFCOMPOFFSAVAILED", (Double)attendanceMap.get("noOfCompoffAvailed"));
+					variables.put("NOOFAVAILEDVEHICLEDAYS", (new Double((Integer)attendanceMap.get("availedVehicleDays"))));
+					variables.put("NOOFPAYABLEDAYS", (Double)attendanceMap.get("noOfPayableDays"));
+					variables.put("NOOFARREARDAYS", (Double)attendanceMap.get("noOfArrearDays"));
+					
+					double noOfAttendedDays = ((Double)attendanceMap.get("noOfAttendedDays")).doubleValue();
+					evltr.setFormulaIdAndSlabAmount(formulaId, noOfAttendedDays);
+				}
+				for(int i= 0;i<varibuleKeyList.size();i++){
+					
+					// this to support dependent benefit or deductions
+					String varibuleKey = (String)varibuleKeyList.get(i);
+					if(payheadTypeIdsList.contains(varibuleKey)){
+						Map payheadAmtCtx = FastMap.newInstance();
+	                    payheadAmtCtx.put("userLogin", userLogin);
+	                    payheadAmtCtx.put("employeeId", employeeId);
+	                    payheadAmtCtx.put("timePeriodStart", timePeriodStart);
+	                    payheadAmtCtx.put("timePeriodEnd", timePeriodEnd);
+	                    payheadAmtCtx.put("timePeriodId", timePeriodId);
+	                    payheadAmtCtx.put("customTimePeriodId", timePeriodId);
+	                    payheadAmtCtx.put("payHeadTypeId", varibuleKey);
+	                    if(UtilValidate.isNotEmpty(context.get("proportionalFlag"))){
+	                    	payheadAmtCtx.put("proportionalFlag", context.get("proportionalFlag"));
+			            }
+	                   // Debug.log("in dependent flag"+payheadAmtCtx);
+		                Map<String, Object> innerCalcResults = getPayHeadAmount(dctx,payheadAmtCtx);
+						variables.put(varibuleKey, ((BigDecimal)innerCalcResults.get("amount")).doubleValue());
+					}
+					// this to support GROSSSALARY 
+					if(varibuleKeySet.contains("GROSSSALARY") ){
+						Map grossAmtCtx = FastMap.newInstance();
+	                    grossAmtCtx.put("userLogin", userLogin);
+	                    grossAmtCtx.put("employeeId", employeeId);
+	                    grossAmtCtx.put("timePeriodStart", timePeriodStart);
+	                    grossAmtCtx.put("timePeriodEnd", timePeriodEnd);
+	                    grossAmtCtx.put("timePeriodId", timePeriodId);
+						Map grossSalaryMap  = getEmployeeGrossSalary(dctx ,grossAmtCtx);
+						variables.put(varibuleKey, ((BigDecimal)grossSalaryMap.get("amount")).doubleValue());
+					}
+					
+				}
+				//double basicSalary = ((Double)fetchBasicSalaryAndGradeMap.get("amount")).doubleValue();
+				variables.put("BASIC", basicSalary);
+				evltr.addVariableValues(variables);   
+				modifyAmount = new BigDecimal( evltr.evaluate());
+				//amount info 
+				priceInfoDescription.append("[");
+               priceInfoDescription.append("formulaId:");
+               priceInfoDescription.append(formulaId);
+               priceInfoDescription.append(", formula :");
+               GenericValue formula = delegator.findOne("AcctgFormula", UtilMisc.toMap("acctgFormulaId",formulaId),false);
+               priceInfoDescription.append(formula.getString("formula"));
+               priceInfoDescription.append("\n ,variables values:");
+               priceInfoDescription.append(variables);
+               priceInfoDescription.append("]\n");
+               result.put("amount", modifyAmount);
+     		   result.put("priceInfoDescription", priceInfoDescription);
+         }catch(Exception e){
+        	 Debug.logError(e.toString(), module);
+        	 return ServiceUtil.returnError(e.toString());
+         }
+		  return result;
+	  }
+	 
 	 public static Map<String, Object> getEmployeePayrollCondParms(DispatchContext dctx, Map<String, ? extends Object> context) {
 
 	        Delegator delegator = dctx.getDelegator();
