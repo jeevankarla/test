@@ -81,11 +81,15 @@ under the License.
 
     <form name="AddUserLoginSecurityGroup" type="single" target="${addUserLoginSecurityGroupURI}"
         header-row-style="header-row" default-table-style="basic-table">
-        <actions> 
+        <actions>
+          <entity-and entity-name="UserLoginAndSecurityGroup" filter-by-date="true" list="userSecurityGroupList">
+             <field-map field-name="userLoginId" value="milkosoftSecAdmin"/>
+          </entity-and>
+          <set field="groupIds" value="${groovy:org.ofbiz.entity.util.EntityUtil.getFieldListFromEntityList(userSecurityGroupList, 'groupId', true);}" type="List"/>
            <entity-condition entity-name="SecurityGroup" list="securityGroupMobList">
-             <condition-list combine="or">
-                 <condition-expr field-name="groupId" operator="equals" value="MYPORTAL_CUSTOMER"/>
-                 <condition-expr field-name="groupId" operator="like" value="%MOB%"/>
+             <condition-list combine="and">
+                 <condition-expr field-name="groupId" operator="in" from-field="groupIds"/>
+                 <!-- <condition-expr field-name="groupId" operator="like" value="%MOB%"/> -->
              </condition-list>
            </entity-condition>
         </actions>
