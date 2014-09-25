@@ -106,7 +106,7 @@
 	                            		<fo:block text-align="left" keep-together="always" font-size="13pt">${LicInsuranceValues.get("employeeNo")?if_exists}</fo:block>
 	                            	</fo:table-cell>
 	                            	<fo:table-cell >	
-	                            		<fo:block text-align="left" keep-together="always" font-size="13pt">${LicInsuranceValues.get("employeeName")?if_exists}</fo:block>
+	                            		<fo:block text-align="left" keep-together="always" font-size="13pt">${LicInsuranceValues.get("employeeFirstName")?if_exists}&#160;${LicInsuranceValues.get("employeeMiddleName")?if_exists}&#160;${LicInsuranceValues.get("employeeLastName")?if_exists}</fo:block>
 	                            	</fo:table-cell>
 	                            	<fo:table-cell >	
 	                            		<fo:block text-align="right" keep-together="always" font-size="13pt">${LicInsuranceValues.get("referenceNo")?if_exists}</fo:block>

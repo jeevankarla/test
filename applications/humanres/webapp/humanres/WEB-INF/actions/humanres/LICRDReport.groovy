@@ -31,14 +31,21 @@ emplInputMap.put("fromDate", fromDateStart);
 emplInputMap.put("thruDate", thruDateEnd);
 Map EmploymentsMap = HumanresService.getActiveEmployements(dctx,emplInputMap);
 employments=EmploymentsMap.get("employementList");
+Debug.log("employments==================="+employments);
 
+//middleName:J, lastName:B
 employeeIdsList=[];
 employeeNameMap=[:];
 
 if(UtilValidate.isNotEmpty(employments)){
 	employments.each { employment ->
+		nameMap=[:];
 		employeeIdsList.add(employment.get("partyId"));
-		employeeNameMap.putAt(employment.get("partyId"),employment.get("firstName"));
+		nameMap.put("firstName",employment.get("firstName"));
+		nameMap.put("middleName",employment.get("middleName"));
+		nameMap.put("lastName",employment.get("lastName"));
+		employeeNameMap.putAt(employment.get("partyId"),nameMap);
+		
 	}
 }
 
@@ -55,13 +62,17 @@ if(UtilValidate.isNotEmpty(orderInsuranceDetails)){
 	orderInsuranceDetails.each { insurance ->
 		LicDetailsMap=[:];
 		insuranceId=insurance.get("insuranceId");
-		employeeName=employeeNameMap.get(insurance.get("partyId"));
+		employeeFirstName=employeeNameMap.get(insurance.get("partyId")).get("firstName");
+		employeeMiddleName=employeeNameMap.get(insurance.get("partyId")).get("middleName");
+		employeeLastName=employeeNameMap.get(insurance.get("partyId")).get("lastName");
 		if(UtilValidate.isNotEmpty(insurance.get("insuranceNumber"))){
 			 referenceNo=new BigDecimal(insurance.get("insuranceNumber"));
 		}
 		employeeNo=insurance.get("partyId");
 		amount=insurance.get("premiumAmount");
-		LicDetailsMap.put("employeeName",employeeName);
+		LicDetailsMap.put("employeeFirstName",employeeFirstName);
+		LicDetailsMap.put("employeeMiddleName",employeeMiddleName);
+		LicDetailsMap.put("employeeLastName",employeeLastName);
 		LicDetailsMap.put("referenceNo",referenceNo);
 		LicDetailsMap.put("employeeNo",employeeNo);
 		LicDetailsMap.put("amount",amount);
@@ -71,7 +82,9 @@ if(UtilValidate.isNotEmpty(orderInsuranceDetails)){
 	tempLICList = UtilMisc.sortMaps(tempLicDetailsList, UtilMisc.toList("referenceNo"));
 	tempLICList.each{ policy ->
 		LicInsuranceMap=[:];
-		LicInsuranceMap.put("employeeName",policy.employeeName);
+		LicInsuranceMap.put("employeeFirstName",policy.employeeFirstName);
+		LicInsuranceMap.put("employeeMiddleName",policy.employeeMiddleName);
+		LicInsuranceMap.put("employeeLastName",policy.employeeLastName);
 		LicInsuranceMap.put("referenceNo",policy.referenceNo);
 		LicInsuranceMap.put("employeeNo",policy.employeeNo);
 		LicInsuranceMap.put("amount",policy.amount);
