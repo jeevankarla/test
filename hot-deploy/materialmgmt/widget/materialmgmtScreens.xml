@@ -171,12 +171,12 @@
             </actions>
             <widgets>
                    <section>
-               	   <condition>
+               	  <!--  <condition>
                			<and>                     		
           					<if-has-permission permission="BYPRODUCTS" action="_INDENT"/>
               					<not><if-empty field="booth"/></not>
                			</and>
-               		</condition> 
+               		</condition> --> 
                        	<widgets>
                        	    <platform-specific><html><html-template location="component://materialmgmt/webapp/materialmgmt/purchase/PurchaseOrder.ftl"/></html></platform-specific>
                            </widgets>

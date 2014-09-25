@@ -12,4 +12,11 @@
          <attribute name="adjustmentAmount" mode="IN" type="BigDecimal" optional="false"/>
         
    </service>
+    <service name="cancelPurchaseOrder" engine="java"
+                location="in.vasista.vbiz.purchase.PurchaseStoreServices" invoke="cancelPurchaseOrder">
+        <description> Cancel Purchase Order</description>        
+        <attribute name="orderId" mode="IN" type="String" optional="false"/>
+        <attribute name="partyId" mode="IN" type="String" optional="true"/>
+        <attribute name="statusId" mode="IN" type="String" optional="false"/>
+   </service>
 </services>

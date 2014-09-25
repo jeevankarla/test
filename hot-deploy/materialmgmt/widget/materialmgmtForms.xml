@@ -38,9 +38,8 @@
                 <field-map field-name="orderId"/>
             </entity-and>
             <set field="invoiceId" from-field="invoices[0].invoiceId"/>  
-             <set field="partyIdFrom" from-field="invoices[0].partyIdFrom" />
             <set field="invTotal" value="${bsh:org.ofbiz.accounting.invoice.InvoiceWorker.getInvoiceTotal(delegator,invoiceId)}"></set>  
-           
+         
               <entity-and entity-name="PaymentApplication" list="paymentApplications">
                 <field-map field-name="invoiceId"/>
             </entity-and>
@@ -49,10 +48,12 @@
            <entity-one entity-name="Invoice" value-field="invoice">
         		<field-map field-name="invoiceId" from-field="invoiceId" />
         	</entity-one>
+        	<set field="partyIdFrom" from-field="invoice.partyIdFrom" />
+        	<set field="supplierName" value="${bsh:org.ofbiz.party.party.PartyHelper.getPartyName(delegator,partyIdFrom,false);}"></set>
         	<set field="invStatusId" from-field="invoice.statusId"/>
         </row-actions>
-       
-        <field name="partyIdFrom" title="Supplier Code"><display/></field>
+      
+        <field name="partyIdFrom" title="Supplier Code"> <display  description="${supplierName}[${partyIdFrom}]"> </display></field>
          <field name="shipmentId" ><hidden></hidden></field>
         <field name="invoiceId" title="Invoice Id" widget-style="buttontext"><hyperlink target="invoiceOverview" target-window="_blank" description="${invoiceId}"> <parameter param-name="invoiceId"/></hyperlink>        </field>
         <field name="invTotal" title="Invoice Amt (Rs)"><display/></field>
@@ -91,7 +92,7 @@
                	  <parameter param-name="invoiceId" from-field="invoiceId"/>
                	  <parameter param-name="shipmentId" /> 
             </hyperlink>
-        </field> -->
+        </field> 
          <field use-when="statusId.equals(&quot;ORDER_APPROVED&quot;) &amp;&amp; paymentApplicationId==null" name="PayAmount" widget-style="buttontext"  >
             <hyperlink target="createAdhocSalePayment" description="Pay Order" target-window="_blank" >
              <parameter param-name="estimatedDeliveryDate"/>
@@ -102,7 +103,7 @@
                 <parameter param-name="facilityId"  from-field="originFacilityId"/>
                   <parameter param-name="shipmentId"/>
             </hyperlink>
-        </field> 
+        </field> -->
        <!--  <field use-when="statusId.equals(&quot;ORDER_APPROVED&quot;)" name="EditOrder" widget-style="buttontext" >
             <hyperlink target="AdhocOrderCorrection" description="Edit Order" target-window="_blank">
              <parameter param-name="estimatedDeliveryDate"/>
@@ -113,12 +114,10 @@
             </hyperlink>
         </field> -->
         <field use-when="statusId.equals(&quot;ORDER_APPROVED&quot;) &amp;&amp; paymentApplicationId==null" name="cancelOrder" widget-style="buttontext">
-            <hyperlink target="cancelAdhocSalesOrder" description="Cancel Order">
+            <hyperlink target="cancelPurchaseOrder" description="Cancel Order">
                 <parameter param-name="orderId"/>
                 <parameter param-name="statusId"/>
-                <parameter param-name="originFacilityId"/>
-                 <parameter param-name="shipmentId"/>
-                
+                <parameter param-name="partyId" from-field="partyIdFrom"/>
             </hyperlink>
         </field> 
     </form>

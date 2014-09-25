@@ -5,6 +5,7 @@ import java.sql.Timestamp;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -416,7 +417,6 @@ public static String processPurchaseOrder(HttpServletRequest request, HttpServle
 			request.setAttribute("_ERROR_MESSAGE_", "Problems parsing CSTPercent string: " + CSTPercentStr);
 			return "error";
 		}
-		Debug.log("=CSTPercentStr="+CSTPercentStr+"=bedCessPercentStr="+bedCessPercentStr+"==bedSecCessPercentStr="+bedSecCessPercentStr+"==VatPercentStr=="+VatPercentStr);
 		
 		productQtyMap.put("productId", productId);
 		productQtyMap.put("quantity", quantity);
@@ -494,8 +494,7 @@ public static Map<String, Object> createPurchaseOrder(DispatchContext dctx, Map<
   	String PONumber=(String) context.get("PONumber");
   	String SInvNumber = (String) context.get("SInvNumber");
 	BigDecimal insurence = (BigDecimal) context.get("insurence");
-	
-  	Debug.log("===productQtyList="+productQtyList);
+
   	String currencyUomId = "INR";
   	String shipmentId = (String) context.get("shipmentId");
   	String shipmentTypeId = (String) context.get("shipmentTypeId");
@@ -896,29 +895,20 @@ public static Map<String, Object> createPurchaseOrder(DispatchContext dctx, Map<
 			
 		
 	// let's handle order rounding here
-    /*try{   
+    try{   
     	Map roundAdjCtx = UtilMisc.toMap("userLogin",userLogin);	  	
     	roundAdjCtx.put("orderId", orderId);
   	 	result = dispatcher.runSync("adjustRoundingDiffForOrder",roundAdjCtx);  		  		 
   	 	if (ServiceUtil.isError(result)) {
   	 		String errMsg =  ServiceUtil.getErrorMessage(result);
   	 		Debug.logError(errMsg , module);
-  	 		shipment.set("statusId", "GENERATION_FAIL");
-	      	  	shipment.store();
 	      	  	return ServiceUtil.returnError(errMsg+"==Error While  Rounding Order !");
 	 		}
 	 	}catch (Exception e) {
 	 		Debug.logError(e, "Error while Creating Order", module);
-  		try{
-  			shipment.set("statusId", "GENERATION_FAIL");
-      		shipment.store();
-        }catch (Exception ex) {
-        	Debug.logError(ex, module);        
-            return ServiceUtil.returnError(ex.toString());
-		}
         return ServiceUtil.returnError(e+"==Error While  Rounding Order !");
   		//return resultMap;			  
-  	}*/
+  	}
     // approve the order
     if (UtilValidate.isNotEmpty(orderId)) {
         boolean approved = OrderChangeHelper.approveOrder(dispatcher, userLogin, orderId);
@@ -1066,5 +1056,72 @@ public static Map<String, Object> createAdjustmentForPurchaseOrder(DispatchConte
     return result;
 }
 
+public static Map<String, Object> cancelPurchaseOrder(DispatchContext dctx, Map<String, ? extends Object> context) {
+	Delegator delegator = dctx.getDelegator();
+    LocalDispatcher dispatcher = dctx.getDispatcher();       
+    GenericValue userLogin = (GenericValue) context.get("userLogin");
+    Map<String, Object> result = new HashMap<String, Object>();
+    String orderId = (String) context.get("orderId");
+    String statusId = (String) context.get("statusId");
+    String partyId = (String) context.get("partyId");
+    if(UtilValidate.isEmpty(orderId)){
+		return ServiceUtil.returnError("orderId is null" + orderId);
+    }
+    else{
+    	List<GenericValue> orderItems = null;
+  		try{
+  		  List conditionList = UtilMisc.toList(EntityCondition.makeCondition("orderId", EntityOperator.EQUALS, orderId));
+		  conditionList.add(EntityCondition.makeCondition("statusId", EntityOperator.NOT_EQUAL, "ORDER_CANCELLED"));
+		  EntityCondition condition = EntityCondition.makeCondition(conditionList, EntityOperator.AND);
+  			orderItems = delegator.findList("OrderHeader",condition, null, null, null, false);
+ 		} catch (GenericEntityException e) {
+ 			Debug.logError(e, module);
+    		return ServiceUtil.returnError("Error in fetching Order :" + orderId);
+	    }
+ 		if(UtilValidate.isEmpty(orderItems)){
+ 			Debug.logError("Error ", module);
+    		return ServiceUtil.returnError("No Order Items available to Cacnel Order:" + orderId+" for SupplierId:"+partyId);
+ 		}else{ 	
+ 			for (GenericValue orderItem : orderItems) {
+ 				orderId=orderItem.getString("orderId");
+ 				boolean cancelled = OrderChangeHelper.cancelOrder(dispatcher, userLogin, orderId);//order Cancelation helper
+ 				List<GenericValue> OrderItemBillingList = null;
+ 		        String invoiceId = null;
+ 		  		try{
+ 		  			OrderItemBillingList = delegator.findList("OrderItemBilling", EntityCondition.makeCondition("orderId", EntityOperator.EQUALS, orderId), null, null, null, false);
+ 		 		} catch (GenericEntityException e) {
+ 		 			Debug.logError(e, module);
+ 		    		return ServiceUtil.returnError("Error in fetching Order Item billing :" + orderId);
+ 			    }
+ 		 		if(UtilValidate.isEmpty(OrderItemBillingList)){
+ 		 			Debug.logError("OrderItemBillingList is empty", module);
+ 		    		return ServiceUtil.returnError("No invoice found for order :" + orderId);
+ 		 		}
+ 		 		else{
+ 		 			invoiceId = OrderItemBillingList.get(0).getString("invoiceId");
+ 		 			
+ 		 			Map<String, Object> cancelInvoiceInput = FastMap.newInstance();
+ 		 	       	cancelInvoiceInput.put("invoiceId", invoiceId);
+ 		 	        cancelInvoiceInput.put("statusId", "INVOICE_CANCELLED");
+ 		 	       	cancelInvoiceInput.put("userLogin", userLogin);
+ 		 	        Map<String, Object> resultMap = null;
+ 		 	        try {
+ 		 	        	resultMap = dispatcher.runSync("setInvoiceStatus", cancelInvoiceInput);
+ 		 	        	if(ServiceUtil.isError(resultMap)){
+ 		 	        		Debug.logError("Error in service setInvoiceStatus while cancelling invoice", module);
+ 		 	 	        	return ServiceUtil.returnError("Error in service setInvoiceStatus while cancelling invoice :" + invoiceId);
+ 		 	        	}
+ 		 	        } catch (GenericServiceException e) {
+ 		 	        	Debug.logError(e, module);
+ 		 	        	return ServiceUtil.returnError("Error in cancelling invoice :" + invoiceId);
+ 		 	        }
+ 		 	        Debug.log("invoiceId cancelled is : "+invoiceId);
+ 		 		}
+ 			 }
+ 		}
+	}
+    return ServiceUtil.returnSuccess("Order Canceled Successfully for Party:" +partyId+" !");
+
+}
 
 }
