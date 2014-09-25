@@ -91,9 +91,9 @@
                 </sub-hyperlink>
             --></display-entity>
         </field>
-        <field name="fromDate"><display description="${groovy:org.ofbiz.base.util.UtilDateTime.toDateString(fromDate, &quot;dd MMM, yyyy&quot;);}"></display> </field>
-        <field name="thruDate"><display description="${groovy:org.ofbiz.base.util.UtilDateTime.toDateString(thruDate, &quot;dd MMM, yyyy&quot;);}"/></field>
-		<field name="dayFractionId" title="First/Second Half"></field>
+        <field name="fromDate" red-when="never"><display description="${groovy:org.ofbiz.base.util.UtilDateTime.toDateString(fromDate, &quot;dd MMM, yyyy&quot;);}"></display> </field>
+        <field name="thruDate" red-when="never"><display description="${groovy:org.ofbiz.base.util.UtilDateTime.toDateString(thruDate, &quot;dd MMM, yyyy&quot;);}"/></field>
+		<field name="dayFractionId" title="1st/2nd Half"></field>
         <field name="approverPartyId">
             <display-entity entity-name="PartyNameView" description="${firstName} ${lastName} [${partyId}]" key-field-name="partyId"><!--
                 <sub-hyperlink target="/partymgr/control/viewprofile" target-type="inter-app" description="${approverPartyId}" link-style="buttontext">
@@ -235,8 +235,8 @@
                 </sub-hyperlink>
             --></display-entity>
         </field>
-        <field name="fromDate"><display description="${groovy:org.ofbiz.base.util.UtilDateTime.toDateString(fromDate, &quot;dd MMM, yyyy&quot;);}"></display> </field>
-        <field name="thruDate"><display description="${groovy:org.ofbiz.base.util.UtilDateTime.toDateString(thruDate, &quot;dd MMM, yyyy&quot;);}"/></field>
+        <field name="fromDate" red-when="never"><display description="${groovy:org.ofbiz.base.util.UtilDateTime.toDateString(fromDate, &quot;dd MMM, yyyy&quot;);}"></display> </field>
+        <field name="thruDate" red-when="never"><display description="${groovy:org.ofbiz.base.util.UtilDateTime.toDateString(thruDate, &quot;dd MMM, yyyy&quot;);}"/></field>
 		<field name="dayFractionId" title="First/Second Half"></field>
         <field name="approverPartyId" field-name="approverPartyId">
             <display-entity entity-name="PartyNameView" description="${firstName} ${lastName} [${partyId}]" key-field-name="partyId"><!--
