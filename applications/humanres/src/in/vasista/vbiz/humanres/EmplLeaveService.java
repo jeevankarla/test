@@ -353,6 +353,11 @@ public class EmplLeaveService {
 				return ServiceUtil.returnError("Approver Party Cannot be Empty "); 
 			}
 			emplLeaveDetails = delegator.findOne("EmplLeave",UtilMisc.toMap("emplLeaveApplId", emplLeaveApplId), false);
+			// Returning error if payroll already generated
+			Map customTimePeriodIdMap = PayrollService.checkPayrollGeneratedOrNotForDate(dctx,UtilMisc.toMap("userLogin",userLogin,"date",UtilDateTime.toSqlDate(emplLeaveDetails.getTimestamp("fromDate"))));
+			if (ServiceUtil.isError(customTimePeriodIdMap)) {
+				return customTimePeriodIdMap;
+			}	
 			if(UtilValidate.isNotEmpty(emplLeaveDetails)){
 				emplLeaveDetails.set("leaveStatus", leaveStatus);
 				if(UtilValidate.isNotEmpty(levelApproverPartyId)){

@@ -3978,7 +3978,7 @@ public class PayrollService {
 					 thruDateEnd=UtilDateTime.toTimestamp(thruDate);
 					 thruDateEnd=UtilDateTime.getDayEnd(thruDateEnd);
 			    	if(UtilValidate.isNotEmpty(periodBillingList) && (dateTime.before(thruDateEnd))){	    			
-			    		return ServiceUtil.returnError("Already Payroll Generated ");
+			    		return ServiceUtil.returnError("Payroll Already Generated.");
 			        }
 				}
 	        }

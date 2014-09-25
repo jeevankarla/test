@@ -21,7 +21,12 @@ under the License.
 
 <script language="JavaScript" type="text/javascript">
   jQuery(document).ready(function () {
-	jQuery("#fromDate").datepicker({dateFormat:'dd-mm-yy'}).datepicker("option", { defaultDate:jQuery("#fromDate").val()} );
+    
+	jQuery("#fromDate").datepicker({dateFormat:'dd-mm-yy',
+									onSelect: function( selectedDate ) {
+									$( "#thruDate" ).datepicker( "option", {minDate: selectedDate});
+								     }
+						           }).datepicker("option", {});
 	jQuery("#thruDate").datepicker({dateFormat:'dd-mm-yy' , beforeShow :displayPunchDetails}).datepicker("option", {} );
 	
 	  $('input[name=partyId]').focusout(function(){

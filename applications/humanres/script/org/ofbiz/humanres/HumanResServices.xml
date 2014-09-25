@@ -863,6 +863,9 @@
     <simple-method method-name="createEmplLeave" short-description="Create Employee Leave">
         <make-value entity-name="EmplLeave" value-field="newEntity"/>
         <set-nonpk-fields value-field="newEntity" map="parameters"/>
+        <set field="inputMap.date" from-field="newEntity.fromDate" type="Date"/>
+        <call-service service-name="checkPayrollGeneratedOrNotForDate" in-map-name="inputMap"/>
+        <check-errors />
         <set field="newEntity.thruDate" type="Timestamp" value="${groovy: org.ofbiz.base.util.UtilDateTime.getDayEnd(newEntity.thruDate)}"/>
          <set field="newEntity.appliedBy" from-field="userLogin.partyId"/>
          <sequenced-id sequence-name="EmplLeave" field="newEntity.emplLeaveApplId"/>
