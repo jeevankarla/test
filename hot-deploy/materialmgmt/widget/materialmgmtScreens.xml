@@ -95,7 +95,7 @@
                <set field="defaultEffectiveDateTime" value="${supplyDate}" default-value="${bsh:org.ofbiz.base.util.UtilDateTime.nowTimestamp()}"/>
 			   <set field="defaultEffectiveDate" 
 					value="${groovy:org.ofbiz.base.util.UtilDateTime.toDateString(defaultEffectiveDateTime, &quot;dd MMMMM, yyyy&quot;);}" />	
-				 <set field="parameters.roleTypeId" value="MAINSTORE _VENDOR"/>
+				 <set field="parameters.roleTypeId" value="MAINSTORE_VENDOR"/>
             </actions>
             <widgets>
               <decorator-screen name="materialmgmtCommonDecorator" location="${parameters.mainDecoratorLocation}">
