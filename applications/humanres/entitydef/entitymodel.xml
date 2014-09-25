@@ -1728,6 +1728,7 @@ under the License.
       <field name="inputParamEnumId" type="id"></field>
       <field name="operatorEnumId" type="id"></field>
       <field name="condValue" type="long-varchar"></field>
+      <field name="condFormulaId" type="id-vlong"></field>
       <prim-key field="payrollBenDedRuleId"/>
       <prim-key field="payrollBenDedCondSeqId"/>
       <relation type="one" fk-name="PYB_PCCOND_RULE" rel-entity-name="PayrollBenDedRule">
