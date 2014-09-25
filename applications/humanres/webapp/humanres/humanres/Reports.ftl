@@ -522,7 +522,7 @@ function makeDatePicker1(fromDateId ,thruDateId){
 							</form>
 						</table>
 					</tr>
-					<#--	<tr class="alternate-row"> 
+					<tr class="alternate-row"> 
 						<form id="GSLISReport" name="GSLISReport" mothed="post" action="<@ofbizUrl>GSLISReport.pdf</@ofbizUrl>" target="_blank">
 							<table class="basic-table" cellspacing="5">
 								<tr class="alternate-row">
@@ -537,7 +537,7 @@ function makeDatePicker1(fromDateId ,thruDateId){
 							</table>
 						</form>
 					</tr>
-					<tr class="alternate-row">
+					<#--  <tr class="alternate-row">
 						<form id="ProfessionalTaxReport" name="ProfessionalTaxReport" mothed="post" action="<@ofbizUrl>ProfessionalTaxReport.pdf</@ofbizUrl>" target="_blank">
 							<table class="basic-table" cellspacing="5">
 								<tr class="alternate-row">

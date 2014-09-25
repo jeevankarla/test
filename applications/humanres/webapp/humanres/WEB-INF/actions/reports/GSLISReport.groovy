@@ -39,6 +39,9 @@ if(UtilValidate.isNotEmpty(payrollDetailsList)){
 				typeId=GSLISemployee.get("payrollHeaderItemTypeId");
 				partyId=GSLISemployee.get("partyIdFrom");
 				amount=GSLISemployee.get("amount");
+				if(amount<0 && amount!=0){
+					amount=amount*(-1);
+				}
 				String partyName = PartyHelper.getPartyName(delegator, partyId, false);
 				GSLISMap.put("partyId",partyId);
 				GSLISMap.put("amount",amount);

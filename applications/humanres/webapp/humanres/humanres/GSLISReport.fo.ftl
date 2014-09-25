@@ -56,6 +56,41 @@
 		                   		<#list GSLISMap as GSLISMapValues>
 		                   			<#if GSLISMapValues.getValue().get("amount")?has_content>
 		                   				<#if (GSLISMapValues.getValue().get("amount"))!=0>
+		                   					<#assign nextAmount=GSLISMapValues.getValue().get("amount")>
+		                   					<#if currAmount!=nextAmount>
+		                   						<fo:table-row >
+							                   		<fo:table-cell >	
+					                            		<fo:block keep-together="always" font-weight="bold">---------------------------------------------------------------------------------------------</fo:block>
+					                            	</fo:table-cell>
+					                            </fo:table-row>
+					                            <fo:table-row>
+				                            		<fo:table-cell>
+				   										<fo:block text-align="center" keep-together="always" font-weight="bold">Total:</fo:block>
+				   									</fo:table-cell>
+				   									<fo:table-cell >	
+					                            		<fo:block text-align="left" keep-together="always" font-weight="bold"></fo:block>
+					                            	</fo:table-cell>
+					                            	<fo:table-cell >	
+					                            		<fo:block text-align="left" keep-together="always" font-weight="bold"></fo:block>
+					                            	</fo:table-cell>
+				   									<fo:table-cell>
+				   										<fo:block text-align="right" keep-together="always" font-weight="bold">${pageTot?if_exists?string("##0.00")}</fo:block>
+				   									</fo:table-cell>
+				   									<#assign pageTot=0>
+				   									<#assign noofLines=1>
+				   									<#assign SNO=1>
+												</fo:table-row>
+												<fo:table-row >
+							                   		<fo:table-cell >	
+					                            		<fo:block keep-together="always" font-weight="bold">---------------------------------------------------------------------------------------------</fo:block>
+					                            	</fo:table-cell>
+					                            </fo:table-row>
+					                            <fo:table-row>
+					                            	<fo:table-cell >	
+					                            		<fo:block page-break-after="always"></fo:block>
+					                            	</fo:table-cell>
+					                            </fo:table-row>
+					                        </#if>
 				                   			<fo:table-row >
 				                   				<fo:table-cell >	
 					                            	<fo:block text-align="center" keep-together="always" font-size="15pt">${SNO}</fo:block>
@@ -68,33 +103,43 @@
 					                            	<fo:block text-align="left" keep-together="always" font-size="15pt">${GSLISMapValues.getValue().get("partyName")}</fo:block>
 					                            </fo:table-cell>
 					                            <fo:table-cell >	
-					                            	<fo:block text-align="right" keep-together="always" font-size="15pt">${GSLISMapValues.getValue().get("amount")*(-1)}</fo:block>
-					                            	<#assign GrandTot=GrandTot+(GSLISMapValues.getValue().get("amount")*(-1))>
-	                            					<#assign pageTot=pageTot+(GSLISMapValues.getValue().get("amount")*(-1))>
+					                            	<fo:block text-align="right" keep-together="always" font-size="15pt">${GSLISMapValues.getValue().get("amount")}</fo:block>
+					                            	<#assign currAmount=GSLISMapValues.getValue().get("amount")>
+					                            	<#assign GrandTot=GrandTot+(GSLISMapValues.getValue().get("amount"))>
+	                            					<#assign pageTot=pageTot+(GSLISMapValues.getValue().get("amount"))>
 					                            </fo:table-cell>
 					                            <#assign noofLines=noofLines+1>
 					                    	</fo:table-row>
-					                    	<#if (noofLines == 31) >
-				                            	<fo:table-row>
-				                            		<fo:table-cell>
-				   										<fo:block page-break-after="always" font-weight="bold" font-size="13pt" text-align="center">Page Total:</fo:block>
-				   									</fo:table-cell>
-				   									<fo:table-cell >	
-					                            		<fo:block text-align="left" keep-together="always" font-weight="bold"></fo:block>
-					                            	</fo:table-cell>
+					                    	<#if (noofLines >= 31)>
+					                     		<#assign noofLines=1>
+						                     	<fo:table-row>
 					                            	<fo:table-cell >	
-					                            		<fo:block text-align="left" keep-together="always" font-weight="bold"></fo:block>
+					                            		<fo:block page-break-after="always"></fo:block>
 					                            	</fo:table-cell>
-				   									<fo:table-cell>
-				   										<fo:block text-align="right" page-break-after="always" font-weight="bold" font-size="13pt">${pageTot?if_exists?string("##0.00")}</fo:block>
-				   									</fo:table-cell>
-				   									<#assign pageTot=0>
-												</fo:table-row>
-				                           		<#assign noofLines =1>
-											</#if>
+					                            </fo:table-row>
+					                        </#if>
 					                   	</#if>
 				                    </#if>
 			                    </#list>
+			                    <fo:table-row >
+			                   		<fo:table-cell >	
+	                            		<fo:block keep-together="always" font-weight="bold">---------------------------------------------------------------------------------------------</fo:block>
+	                            	</fo:table-cell>
+	                            </fo:table-row>
+			                    <fo:table-row>
+                            		<fo:table-cell>
+   										<fo:block text-align="center" keep-together="always" font-weight="bold">Total:</fo:block>
+   									</fo:table-cell>
+   									<fo:table-cell >	
+	                            		<fo:block text-align="left" keep-together="always" font-weight="bold"></fo:block>
+	                            	</fo:table-cell>
+	                            	<fo:table-cell >	
+	                            		<fo:block text-align="left" keep-together="always" font-weight="bold"></fo:block>
+	                            	</fo:table-cell>
+   									<fo:table-cell>
+   										<fo:block text-align="right" keep-together="always" font-weight="bold">${pageTot?if_exists?string("##0.00")}</fo:block>
+   									</fo:table-cell>
+								</fo:table-row>
 			                    <fo:table-row >
 			                   		<fo:table-cell >	
 	                            		<fo:block keep-together="always" font-weight="bold">---------------------------------------------------------------------------------------------</fo:block>
