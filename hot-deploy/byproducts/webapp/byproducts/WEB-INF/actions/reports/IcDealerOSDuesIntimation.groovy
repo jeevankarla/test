@@ -106,7 +106,7 @@ if(partyIds){
 		Timestamp monthBegin=UtilDateTime.getMonthStart(date);
 		Timestamp monthEnd=UtilDateTime.getMonthEnd(monthBegin,TimeZone.getDefault(),Locale.getDefault());
 		daywiseReceipts = ByProductNetworkServices.getPartyPaymentDetails(dctx, UtilMisc.toMap("fromDate",monthBegin,"thruDate" ,monthEnd,"partyIdsList", [eachParty])).get("partyPaidMap");
-		partyTotals = SalesInvoiceServices.getPeriodSalesTotals(dctx, [partyIds:[eachParty], isQuantityLtrs:true,fromDate:monthBegin, thruDate:monthEnd]).get("partyTotals");
+		partyTotals = SalesInvoiceServices.getPeriodSalesInvoiceTotals(dctx, [partyIds:[eachParty], isQuantityLtrs:true,fromDate:monthBegin, thruDate:monthEnd]).get("partyTotals");
 		openingBalance = (ByProductNetworkServices.getOpeningBalanceForParty( dctx , [userLogin: userLogin, saleDate: monthBegin, partyId:eachParty])).get("openingBalance");
 		
 		partyReturnTotals = ByProductNetworkServices.getPartyWiseReturnTotal(dctx, UtilMisc.toMap("fromDate",monthBegin,"thruDate" ,monthEnd,"partyIdsList", [eachParty])).get("partyReturnTotals");
