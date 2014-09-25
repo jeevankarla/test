@@ -37,9 +37,6 @@
        <condition operator="equals" field-name="smsFlag" type="Boolean" value="true"/>
         <action service="sendLeaveStatusSms" mode="async" />
     </eca>    
-    <eca service="deletePunch" event="invoke" run-on-error="false" >
-    	<condition field-name="employeePunchId" operator="is-not-empty"/>
-        <action service="emplPunchValidation" mode="sync" ignore-error="false"/>
-     </eca>
+   
 </service-eca>     
      

@@ -1205,11 +1205,12 @@ under the License.emplpunch
         <auto-attributes mode="IN" include="nonpk" optional="true"/>
     </service>   
    
-   	<service name="emplPunchValidation" engine="java" 
-             location="org.ofbiz.humanres.inout.PunchService" invoke="emplPunch" auth="true"  >
-        <description>Validating punch</description>
-        <attribute name="employeePunchId" type="String" mode="IN" optional="false"/>
-    </service> 
+   	
+    <service name="checkPayrollGeneratedOrNotForDate" engine="java" 
+             location="in.vasista.vbiz.humanres.PayrollService" invoke="checkPayrollGeneratedOrNotForDate" auth="true">
+        <attribute name="date" mode="IN" type="java.sql.Date" />
+    </service>
+    
      <service name="adminPunch" engine="java" default-entity-name="EmplPunch"
              location="org.ofbiz.humanres.inout.PunchService" invoke="emplPunch" auth="true">
         <description>Add In/Out</description>

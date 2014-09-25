@@ -3939,8 +3939,10 @@ public class PayrollService {
 	        }
 	    	Timestamp dateStart = UtilDateTime.getDayStart(dateTime);
 	    	Timestamp dateEnd = UtilDateTime.getDayEnd(dateTime);
+	    	Timestamp fromDateStart=null;
+	    	Timestamp thruDateEnd=null;
 	        Map result = ServiceUtil.returnSuccess();
-	        /*String customTimePeriodId = null;
+	        String customTimePeriodId = null;
 	        try {
 	        	List condList = FastList.newInstance();
 				condList.add(EntityCondition.makeCondition("periodTypeId", EntityOperator.EQUALS ,"HR_MONTH"));
@@ -3951,8 +3953,11 @@ public class PayrollService {
 				if(UtilValidate.isNotEmpty(customTimePeriodList)){
 					GenericValue customTimePeriod = EntityUtil.getFirst(customTimePeriodList);
 					customTimePeriodId = customTimePeriod.getString("customTimePeriodId");
+					Date fromDate = (Date)customTimePeriod.get("fromDate");
+					 fromDateStart=UtilDateTime.toTimestamp(fromDate);
+					Date thruDate = (Date)customTimePeriod.get("thruDate");
+					 thruDateEnd=UtilDateTime.toTimestamp(thruDate);
 				}
-				
 				if(UtilValidate.isNotEmpty(customTimePeriodId)){
 			        List conditionList = FastList.newInstance();
 			        List periodBillingList = FastList.newInstance();
@@ -3961,14 +3966,25 @@ public class PayrollService {
 			    	conditionList.add(EntityCondition.makeCondition("billingTypeId", EntityOperator.EQUALS ,"PAYROLL_BILL"));
 			    	EntityCondition condition=EntityCondition.makeCondition(conditionList,EntityOperator.AND);
 			    	periodBillingList = delegator.findList("PeriodBilling", condition, null,null, null, false);
-			    	if(UtilValidate.isNotEmpty(periodBillingList)){	    			
+			    	//getting attendance customTimePeriod
+			    	Map customMap=getPayrollAttedancePeriod(dctx,UtilMisc.toMap("userLogin",userLogin,"timePeriodStart",fromDateStart,"timePeriodEnd",thruDateEnd,"timePeriodId",customTimePeriodId));
+			    	GenericValue lastClosePeriod = (GenericValue)customMap.get("lastCloseAttedancePeriod");
+			    	if(UtilValidate.isNotEmpty(lastClosePeriod))
+			    	customTimePeriodId=lastClosePeriod.getString("customTimePeriodId");
+			    	
+			    	Date fromDate = (Date)lastClosePeriod.get("fromDate");
+					 fromDateStart=UtilDateTime.toTimestamp(fromDate);
+					Date thruDate = (Date)lastClosePeriod.get("thruDate");
+					 thruDateEnd=UtilDateTime.toTimestamp(thruDate);
+					 thruDateEnd=UtilDateTime.getDayEnd(thruDateEnd);
+			    	if(UtilValidate.isNotEmpty(periodBillingList) && (dateTime.before(thruDateEnd))){	    			
 			    		return ServiceUtil.returnError("Already Payroll Generated ");
 			        }
 				}
 	        }
 	        catch (GenericEntityException e) {
 	            Debug.logError(e, "Error retrieving CustomTimePeriodId");
-	        }        */
+	        }        
 	        return result;
 	}
 	

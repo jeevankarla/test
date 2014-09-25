@@ -1166,9 +1166,11 @@
     </simple-method> -->
     <!-- delete employee punch -->
     <simple-method method-name="deletePunch" short-description="Delete Punch">
-    	<log level="info" message="Removing PunchType =
-                                           ${parameters.PunchType}"/>
+    	<log level="info" message="Removing PunchType ${parameters.PunchType}"/>
         <entity-one entity-name="EmplPunch" value-field="lookedUpValue"/>
+        <set field="inputMap.date" from-field="lookedUpValue.punchdate"/>
+        <call-service service-name="checkPayrollGeneratedOrNotForDate" in-map-name="inputMap"/>
+        <check-errors />
         <remove-value value-field="lookedUpValue"/>
         <entity-and list="emplPunch" entity-name="EmplPunch">
              <field-map field-name="partyId" from-field="lookedUpValue.partyId"/>

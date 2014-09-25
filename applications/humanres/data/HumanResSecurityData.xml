@@ -28,6 +28,11 @@ under the License.
     <SecurityGroup description="Edit Payroll" groupId="EDIT_PAYROLL"/>
     <SecurityGroupPermission groupId="EDIT_PAYROLL" permissionId="EDIT_PAYROLL_VIEW"/>
     
+    <SecurityPermission description="View Permission for LoanTab." permissionId="LOAN_TAB_VIEW"/>
+    <SecurityGroup description="View Loan Tab" groupId="LOAN_TAB"/>
+    <SecurityGroupPermission groupId="FULLADMIN" permissionId="LOAN_TAB_VIEW"/>
+    <SecurityGroupPermission groupId="LOAN_TAB" permissionId="LOAN_TAB_VIEW"/>
+    
     <SecurityGroupPermission groupId="FULLADMIN" permissionId="HUMANRES_ADMIN"/>
     <SecurityGroupPermission groupId="FLEXADMIN" permissionId="HUMANRES_CREATE"/>
     <SecurityGroupPermission groupId="FLEXADMIN" permissionId="HUMANRES_DELETE"/>
