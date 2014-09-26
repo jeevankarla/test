@@ -2863,6 +2863,23 @@ public class PayrollService {
 	        conditionList.add(EntityCondition.makeCondition("statusId", EntityOperator.IN , UtilMisc.toList("GENERATED","IN_PROCESS","APPROVED")));
 	        conditionList.add(EntityCondition.makeCondition("customTimePeriodId", EntityOperator.EQUALS ,periodId));
 	    	conditionList.add(EntityCondition.makeCondition("billingTypeId", EntityOperator.EQUALS , billingTypeId));
+	    	//code to edit benefits(or)deductions values department wise
+	    	try {
+		    	GenericValue tenantConfiguration = delegator.findOne("TenantConfiguration", UtilMisc.toMap("propertyName", "PAYBILL_DEPTWISE_GEN","propertyTypeEnumId","HUMANRES"), false);
+		    	 if(UtilValidate.isNotEmpty(tenantConfiguration)&& ("Y".equals(tenantConfiguration.get("propertyValue")))){
+		    		 List emplconditionList = FastList.newInstance();
+		    		 emplconditionList.add(EntityCondition.makeCondition("partyIdTo", EntityOperator.EQUALS, partyId));
+		    		 EntityCondition	emplCond = EntityCondition.makeCondition(emplconditionList, EntityOperator.AND);  		
+						List<GenericValue> employments = delegator.findList("Employment", emplCond, null, null, null, false);
+						employments = EntityUtil.filterByDate(employments, true);
+			            GenericValue employment = EntityUtil.getFirst(employments);
+			            if(UtilValidate.isNotEmpty(employment)){
+			            	conditionList.add(EntityCondition.makeCondition("partyId", EntityOperator.EQUALS , employment.getString("partyIdFrom"))); 
+			        	}		 
+		    	 }
+	    	}catch(GenericEntityException e){
+	    		 Debug.logError(e, module);    
+	    	}
 	    	EntityCondition condition=EntityCondition.makeCondition(conditionList,EntityOperator.AND);
 	    	try {
 	    		periodBillingList = delegator.findList("PeriodBilling", condition, null,null, null, false);
