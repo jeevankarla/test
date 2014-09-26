@@ -1393,6 +1393,12 @@ under the License.emplpunch
         <attribute name="partyIdFrom" mode="IN" type="String"></attribute>
         <attribute name="periodBillingId" mode="INOUT" type="String"></attribute>
     </service>
+    <service name="generateEmployerContributionPayrollBilling"  engine="java"
+                location="in.vasista.vbiz.humanres.PayrollService" invoke="generateEmployerContributionPayrollBilling" auth="true" transaction-timeout="5000">
+        <description>Create an ProductPriceRule</description>
+        <attribute name="periodBillingId" mode="INOUT" type="String"></attribute>
+    </service>
+    
     <service name="cancelPayrollBilling"  engine="java"
                 location="in.vasista.vbiz.humanres.PayrollService" invoke="cancelPayrollBilling" auth="true">
         <description>Cancel Payroll Billing</description>

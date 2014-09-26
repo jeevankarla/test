@@ -436,6 +436,8 @@ public class PayrollService {
 		    					if(UtilValidate.isNotEmpty(loanRecoveryList)){
 		    						delegator.removeAll(loanRecoveryList);
 		    					}
+		    					List<GenericValue> payrollHeaderItemEcList = delegator.findList("PayrollHeaderItemEc", EntityCondition.makeCondition("payrollHeaderId", EntityOperator.IN, payrollHeaderIds), null, null, null, false);
+		    					delegator.removeAll(payrollHeaderItemEcList);
 		    					delegator.removeAll(payrollHeaderItemList);
 		    	    		    delegator.removeAll(payrollHeaderList);
 		    	    		}
@@ -4235,4 +4237,104 @@ public class PayrollService {
 		return result;
 	}
 	 
-}//end of service
+public static Map<String, Object> generateEmployerContributionPayrollBilling(DispatchContext dctx, Map<String, Object> context) throws Exception{
+			GenericDelegator delegator = (GenericDelegator) dctx.getDelegator();
+			LocalDispatcher dispatcher = dctx.getDispatcher();
+			Map<String, Object> result = ServiceUtil.returnSuccess();	
+			GenericValue userLogin = (GenericValue) context.get("userLogin");
+			String periodBillingId = (String) context.get("periodBillingId");
+			TimeZone timeZone = TimeZone.getDefault();
+			List masterList = FastList.newInstance();
+			Locale locale = Locale.getDefault();
+			GenericValue periodBilling = null;
+			String customTimePeriodId = null;
+			boolean generationFailed = false;
+			boolean beganTransaction = false;
+			try{
+				beganTransaction = TransactionUtil.begin(7200);
+				try {
+					periodBilling =delegator.findOne("PeriodBilling", UtilMisc.toMap("periodBillingId", periodBillingId), false);
+					if(!periodBilling.getString("statusId").equals("APPROVED")){
+						Debug.logError("invalid periodbilling:"+periodBillingId, module);
+						return ServiceUtil.returnError("invalid periodbilling:"+periodBillingId);
+					}
+					customTimePeriodId = periodBilling.getString("customTimePeriodId");
+				} catch (GenericEntityException e1) {
+					Debug.logError(e1,"Error While Finding PeriodBilling");
+					return ServiceUtil.returnError("Error While Finding PeriodBilling" + e1);
+				}
+				GenericValue customTimePeriod;
+				try {
+					customTimePeriod = delegator.findOne("CustomTimePeriod",UtilMisc.toMap("customTimePeriodId", customTimePeriodId), false);
+				} catch (GenericEntityException e1) {
+					 TransactionUtil.rollback();
+					Debug.logError(e1,"Error While Finding Customtime Period");
+					return ServiceUtil.returnError("Error While Finding Customtime Period" + e1);
+				}
+				if(customTimePeriod == null){
+					generationFailed = true;
+				}
+				Timestamp fromDateTime=UtilDateTime.toTimestamp(customTimePeriod.getDate("fromDate"));
+				Timestamp thruDateTime=UtilDateTime.toTimestamp(customTimePeriod.getDate("thruDate"));
+				
+				Timestamp monthBegin = UtilDateTime.getDayStart(fromDateTime, timeZone, locale);
+				Timestamp monthEnd = UtilDateTime.getDayEnd(thruDateTime, timeZone, locale);
+				List payHeaderList = delegator.findByAnd("PayrollHeader", UtilMisc.toMap("periodBillingId",periodBillingId));
+				try {
+					
+    				for(int i=0;i<payHeaderList.size();i++){
+    					Map payHeader = (Map)payHeaderList.get(i);
+    					
+    					//create payroll header Items here
+    					Map inputItem = FastMap.newInstance();
+    					inputItem.put("userLogin", userLogin);
+						inputItem.put("partyId", payHeader.get("partyIdFrom"));
+						inputItem.put("timePeriodId", customTimePeriodId);
+						inputItem.put("periodBillingId", periodBillingId);
+						inputItem.put("timePeriodStart", monthBegin);
+						inputItem.put("timePeriodEnd", monthEnd);
+						
+						List employerItemsList = FastList.newInstance();
+						try {
+							Map serviceResults = createPayrolBenefitItemsEmployerContribution(dctx, inputItem);
+					        if (ServiceUtil.isError(serviceResults)) {
+					        	return ServiceUtil.returnError(ServiceUtil.getErrorMessage(serviceResults), null, null, serviceResults);
+					        }
+					        if(UtilValidate.isNotEmpty(serviceResults.get("itemsList"))){
+					        	employerItemsList.addAll((List)serviceResults.get("itemsList"));
+						    	   
+						     }
+		 				}catch (Exception e) {
+							Debug.logError(e,"Unable to create payroll InvoiceItem records for benefits: " + e.getMessage(), module);
+					        return ServiceUtil.returnError("Unable to create payroll payHeadItem records for deductions: " + e.getMessage());
+						}						
+						//here populate employer's contribution
+						for(int j=0;j< employerItemsList.size();j++){
+							Map payHeaderItemValue = (Map)employerItemsList.get(j);
+							if(UtilValidate.isEmpty(payHeaderItemValue.get("amount")) || (((BigDecimal)payHeaderItemValue.get("amount")).compareTo(BigDecimal.ZERO) ==0) ){
+								continue;
+							}
+	       					GenericValue payHeaderItem = delegator.makeValue("PayrollHeaderItemEc");
+	       					payHeaderItem.set("payrollHeaderId", payHeader.get("payrollHeaderId"));
+	       					payHeaderItem.set("payrollHeaderItemTypeId",payHeaderItemValue.get("payrollItemTypeId"));
+	       					payHeaderItem.set("amount", ((BigDecimal)payHeaderItemValue.get("amount")).setScale(0, BigDecimal.ROUND_HALF_UP));
+	       				    delegator.setNextSubSeqId(payHeaderItem, "payrollItemSeqId", 5, 1);
+				            delegator.create(payHeaderItem);
+						}
+    				}
+					
+				}catch (Exception e) {
+					Debug.logError(e, module);
+					return ServiceUtil.returnError("Error While generating PeriodBilling" + e);
+				}
+				
+		}catch (GenericEntityException e) {
+				Debug.logError(e, module);
+				return ServiceUtil.returnError("Error While generating PeriodBilling" + e);
+		}
+		result.put("periodBillingId", periodBillingId);	
+		return result;
+	
+		} 
+	 
+}//end of class
