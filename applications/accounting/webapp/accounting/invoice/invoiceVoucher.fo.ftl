@@ -179,7 +179,7 @@ under the License.
 						        											<fo:block text-align="center" font-size="12pt" white-space-collapse="false">&#160; <#if glAccountDetails?has_content>${glAccountDetails.description?if_exists}(${glAccountId})</#if> </fo:block>
 						        							  		  </fo:table-cell>
 						        							  		  <fo:table-cell border-style="solid">
-						        											<fo:block text-align="center" font-size="12pt" white-space-collapse="false" keep-together="always">&#160; ${invoiceItem.amount?if_exists?string("#0.00")} </fo:block>
+						        											<fo:block text-align="right" font-size="12pt" white-space-collapse="false" keep-together="always">&#160; ${invoiceItem.amount?if_exists?string("#0.00")} </fo:block>
 						        							  		  </fo:table-cell>
         						   									 </fo:table-row>
         						   									 </fo:table-body>
