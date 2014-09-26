@@ -38,7 +38,6 @@ PayableDaysMap=[:];
 if(UtilValidate.isNotEmpty(employments)){
 	List conditionList=[];
 	employmentIds = EntityUtil.getFieldListFromEntityList(employments, "partyId", true);
-	
 	conditionList.add(EntityCondition.makeCondition("partyId", EntityOperator.IN, employmentIds));
 	conditionList.add(EntityCondition.makeCondition(EntityCondition.makeCondition("noOfPayableDays", EntityOperator.NOT_EQUAL, BigDecimal.ZERO)));
 	condition=EntityCondition.makeCondition(conditionList,EntityOperator.AND);
@@ -51,7 +50,9 @@ if(UtilValidate.isNotEmpty(employments)){
 		if(UtilValidate.isNotEmpty(tempAttendance)){
 			tempAttendance.each { employee ->
 				PayableMap=[:];
-				employeeName=employment.get("firstName");
+				employeeFirstName=employment.get("firstName");
+				employeeMiddleName=employment.get("middleName");
+				employeeLastName=employment.get("lastName");
 				PayableDays=employee.get("noOfPayableDays");
 				roundedPayableDays=PayableDays.setScale(0,BigDecimal.ROUND_HALF_UP);
 				if(roundedPayableDays>PayableDays){
@@ -62,7 +63,9 @@ if(UtilValidate.isNotEmpty(employments)){
 				if(roundedDiff>0){
 					PayableDays=PayableDays.setScale(4,BigDecimal.ROUND_HALF_UP);
 				}
-				PayableMap.put("employeeName",employeeName);
+				PayableMap.put("employeeFirstName",employeeFirstName);
+				PayableMap.put("employeeMiddleName",employeeMiddleName);
+				PayableMap.put("employeeLastName",employeeLastName);
 				PayableMap.put("PayableDays",PayableDays);
 				PayableDaysMap.put(partyId,PayableMap);
 			}

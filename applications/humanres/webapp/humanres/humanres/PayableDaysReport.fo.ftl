@@ -59,7 +59,7 @@
 			                            	<fo:block text-align="left" keep-together="always" font-size="15pt">${payableDaysValues.getKey()?if_exists}</fo:block>
 			                            </fo:table-cell>
 			                            <fo:table-cell >	
-			                            	<fo:block text-align="left" keep-together="always" font-size="15pt">${payableDaysValues.getValue().get("employeeName")?if_exists}</fo:block>
+			                            	<fo:block text-align="left" keep-together="always" font-size="15pt">${payableDaysValues.getValue().get("employeeFirstName")?if_exists} ${payableDaysValues.getValue().get("employeeMiddleName")?if_exists} ${payableDaysValues.getValue().get("employeeLastName")?if_exists}</fo:block>
 			                            </fo:table-cell>
 			                            <fo:table-cell >	
 			                            	<fo:block text-align="right" keep-together="always" font-size="15pt">${payableDaysValues.getValue().get("PayableDays")?if_exists}</fo:block>
