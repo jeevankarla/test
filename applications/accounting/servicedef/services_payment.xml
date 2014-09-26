@@ -67,6 +67,7 @@ under the License.
         <description>Update a Payment</description>
         <auto-attributes include="pk" mode="IN" optional="false"/>
         <auto-attributes include="nonpk" mode="IN" optional="true"/>
+        <attribute name="inFavourOf" type="String" mode="IN" optional="true"/>
     </service>
 
     <service name="setPaymentStatus" engine="simple" default-entity-name="Payment"
@@ -77,6 +78,9 @@ under the License.
         <attribute name="transactionDate" type="Timestamp" mode="IN" optional="true"/>
         <attribute name="oldStatusId" type="String" mode="OUT" optional="true"/>
         <attribute name="finAccountId" type="String" mode="IN" optional="true"/>
+        <attribute name="paymentRefNum" type="String" mode="IN" optional="true"/>
+        <attribute name="instrumentDate" type="Timestamp" mode="IN" optional="true"/>
+        <attribute name="inFavourOf" type="String" mode="IN" optional="true"/>
     </service>
 
     <service name="depositReceiptPayment" engine="java"

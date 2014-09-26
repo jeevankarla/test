@@ -121,11 +121,6 @@ if(UtilValidate.isNotEmpty(reportTypeFlag) && reportTypeFlag == "contraCheque"){
 			paymentDetails = EntityUtil.getFirst(paymentAppls);
 			if(UtilValidate.isNotEmpty(paymentDetails)){
 				paymentId = paymentDetails.paymentId;
-				if(UtilValidate.isNotEmpty(paymentId)){
-					paymentAttrDetails = delegator.findOne("PaymentAttribute", [paymentId : paymentId, attrName : "INFAVOUR_OF"], false);
-					if(UtilValidate.isNotEmpty(paymentAttrDetails)){
-						attrValue = paymentAttrDetails.attrValue;
-					}
 			}
 		}
 	}
@@ -135,9 +130,12 @@ if(UtilValidate.isNotEmpty(reportTypeFlag) && reportTypeFlag == "contraCheque"){
 			paymentMethodId = paymentDetails.paymentMethodId;
 			paymentDate = paymentDetails.instrumentDate;
 		}
+		paymentAttrDetails = delegator.findOne("PaymentAttribute", [paymentId : paymentId, attrName : "INFAVOUR_OF"], false);
+		if(UtilValidate.isNotEmpty(paymentAttrDetails)){
+			attrValue = paymentAttrDetails.attrValue;
+		}
 		if(UtilValidate.isNotEmpty(paymentDetails)){
 			amount = paymentDetails.amount;
-			Debug.log("amount-------1111-----"+amount);
 			amountWords = UtilFormatOut.formatCurrency(amount, context.get("currencyUomId"), locale);
 			amountStr = amountWords.replace("Rs"," ");
 		}
@@ -154,21 +152,25 @@ if(UtilValidate.isNotEmpty(reportTypeFlag) && reportTypeFlag == "contraCheque"){
 				finAccountId = finAccountTransDetails.finAccountId;
 			}
 		}
+		if(UtilValidate.isNotEmpty(attrValue)){
+			context.put("attrValue",attrValue);
+		}else{
+			context.put("attrValue",partyName);
+		}
 	}
-		context.put("finAccountId",finAccountId);
-		context.put("amount",amount);
-		context.put("amountStr",amountStr);
-		context.put("paymentId",paymentId);
-		context.put("paymentDate",paymentDate);
+	context.put("finAccountId",finAccountId);
+	context.put("amount",amount);
+	context.put("amountStr",amountStr);
+	context.put("paymentId",paymentId);
+	context.put("paymentDate",paymentDate);
+	if(UtilValidate.isEmpty(finAccountId)){
+		Debug.logError("finAccountId Cannot Be Empty","");
+		context.errorMessage = "Accounting Transactions not done...!";
+		return;
 	}
-	if(UtilValidate.isNotEmpty(attrValue)){
-		context.put("attrValue",attrValue);
-	}else{
-		context.put("attrValue",partyName);
-	}
-	if(UtilValidate.isEmpty(paymentId)){
-		Debug.logError("paymentId Cannot Be Empty","");
-		context.errorMessage = "Payment not done...!";
+	if(UtilValidate.isNotEmpty(finAccountId) && finAccountId == "FIN_ACCNT1"){
+		Debug.logError("cash payment","");
+		context.errorMessage = "Not a Cheque Payment....!";
 		return;
 	}
 	// list of payments

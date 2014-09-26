@@ -226,9 +226,9 @@ under the License.
               	<list-options key-name="paymentMethodTypeId" list-name="paymentMethodTypeList" description="${description}"/>
             </drop-down>
         </field>
-        <field name="paymentRefNum" position="1" title="Payment Ref.Number"><text/></field>
+        <field name="paymentRefNum" position="1" title="${uiLabelMap.PaymentRefNum}"><text/></field>
         <field name="instrumentDate" position="2" title="${uiLabelMap.instrumentDate}"><date-time type="timestamp"></date-time></field>
-        <field name="issuingAuthority" position="2" title="${uiLabelMap.issuingAuthority}"><text></text></field>        
+        <field name="issuingAuthority" position="2" title="${uiLabelMap.issuingAuthority}"><text></text></field>          
         <field name="amount" position="1" required-field="true"><text/></field>
         <field name="comments" position="2"><text size="70"/></field>
         <field name="isDepositWithDrawPayment"><hidden value="Y"/></field>
@@ -528,11 +528,11 @@ under the License.
             </hyperlink>
         </field>
         <field name="amount" position="1"><display type="currency" currency="${payment.currencyUomId}"/></field>
-        <field name="paymentDate" position="2" title="${uiLabelMap.paymentDate}"><display type="date"/></field>
-        <field name="paymentRefNum" position="1" title="${uiLabelMap.paymentRefNum}"><display/></field>
-        <field name="instrumentDate" position="2" title="${uiLabelMap.instrumentDate}"><display type="date"/></field><field name="issuingAuthority" position="1" title="${uiLabelMap.issuingAuthority}" required-field="true"><display/></field>
-        
-        <field name="comments" position="2"><display/></field>
+        <field name="paymentDate" position="2" title="${uiLabelMap.PaymentDate}"><display type="date"/></field>
+        <!-- <field name="paymentRefNum" position="1" title="${uiLabelMap.paymentRefNum}"><display/></field>
+        <field name="instrumentDate" position="2" title="${uiLabelMap.instrumentDate}"><display type="date"/></field>
+        <field name="issuingAuthority" position="1" title="${uiLabelMap.issuingAuthority}" required-field="true"><display/></field>
+        <field name="comments" position="2"><display/></field> -->
     </form>
 
     <form name="paymentApplications" type="list" list-name="paymentApplications"

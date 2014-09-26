@@ -6,20 +6,19 @@ function paymentFieldsOnchange(){
 		jQuery("input[name='effectiveDate']").parent().parent().hide();
 		jQuery("input[name='issuingAuthority']").parent().parent().hide();
 		jQuery("input[name='issuingAuthorityBranch']").parent().parent().hide();
-		jQuery("input[name='paymentRefNum']").removeClass("required");
-		jQuery("input[name='effectiveDate']").removeClass("required");
-		jQuery("input[name='issuingAuthority']").removeClass("required");
-		jQuery("input[name='issuingAuthorityBranch']").removeClass("required");
+		//jQuery("input[name='paymentRefNum']").removeClass("required");
+		//jQuery("input[name='effectiveDate']").removeClass("required");
+		//jQuery("input[name='issuingAuthority']").removeClass("required");
+		//jQuery("input[name='issuingAuthorityBranch']").removeClass("required");
 	}else{
-	
 		jQuery("input[name='paymentRefNum']").parent().parent().show();
 		jQuery("input[name='effectiveDate']").parent().parent().show();
 		jQuery("input[name='issuingAuthority']").parent().parent().show();
 		jQuery("input[name='issuingAuthorityBranch']").parent().parent().show();
-		jQuery("input[name='paymentRefNum']").addClass("required");
-		jQuery("input[name='effectiveDate']").addClass("required");
-		jQuery("input[name='issuingAuthority']").addClass("required");	
-		jQuery("input[name='issuingAuthorityBranch']").addClass("required");	
+		//jQuery("input[name='paymentRefNum']").addClass("required");
+		//jQuery("input[name='effectiveDate']").addClass("required");
+		//jQuery("input[name='issuingAuthority']").addClass("required");	
+		//jQuery("input[name='issuingAuthorityBranch']").addClass("required");	
 	}
 	
 }

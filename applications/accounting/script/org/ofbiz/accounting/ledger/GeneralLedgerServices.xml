@@ -2360,7 +2360,7 @@ under the License.
              <!-- <if-not-empty field="parameters.finAccountId">
             	   <set field="paymentMethod.finAccountId" from-field="parameters.finAccountId"/>
              </if-not-empty> -->
-            <if-not-empty field="paymentMethod.finAccountId">
+            <!-- <if-not-empty field="paymentMethod.finAccountId">
             	<entity-one entity-name="FinAccount" value-field="finAccount">
                 	<field-map field-name="finAccountId" from-field="paymentMethod.finAccountId"/>
             	</entity-one>
@@ -2380,7 +2380,8 @@ under the License.
                 <call-service service-name="depositWithdrawPayments" in-map-name="depositWithdrawPaymentCtx">
                     <result-to-field result-name="finAccountTransId"/>
                 </call-service>        	 
-        	</if-not-empty>
+        	</if-not-empty> -->
+        	<field-to-result field="paymentMethod.finAccountId" result-name="finAccountId"/>
         </if-compare>
     </simple-method>
 

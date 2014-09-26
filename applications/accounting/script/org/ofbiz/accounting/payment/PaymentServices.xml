@@ -157,7 +157,6 @@ under the License.
             </then>
         </if>
         <check-errors/>
-
         <if-compare field="payment.statusId" value="PMNT_NOT_PAID" operator="not-equals">
             <!-- check if only status change -->
             <make-value value-field="newPayment" entity-name="Payment"/>
@@ -168,6 +167,7 @@ under the License.
             <!-- fields :- comments, paymentRefNum, finAccountTransId, statusId can editable for Payment -->
             <set field="oldPayment.statusId" from-field="newPayment.statusId"/>
             <set field="oldPayment.comments" from-field="newPayment.comments"/>
+            <set field="oldPayment.instrumentDate" from-field="newPayment.instrumentDate"/>
             <set field="oldPayment.paymentRefNum" from-field="newPayment.paymentRefNum" set-if-null="true"/>
             <set field="oldPayment.finAccountTransId" from-field="newPayment.finAccountTransId" set-if-null="true"/>
             <if-compare-field field="oldPayment" to-field="newPayment" operator="not-equals">
@@ -213,13 +213,19 @@ under the License.
         <set from-field="userLogin.userLoginId" field="payment.lastModifiedByUserLogin"/>
         <set from-field="nowTimestamp" field="payment.lastModifiedDate"/>
         <store-value value-field="payment"/>
-
         <if-not-empty field="parameters.statusId">
             <if-compare-field field="parameters.statusId" to-field="statusIdSave" operator="not-equals">
                 <set-service-fields service-name="setPaymentStatus" map="parameters" to-map="param"/>
                 <call-service service-name="setPaymentStatus" in-map-name="param"/>
                 <check-errors/>
             </if-compare-field>
+        </if-not-empty>
+        <if-not-empty field="parameters.inFavourOf">
+        	<make-value entity-name="PaymentAttribute" value-field="newEntity"/>
+        	<set field="newEntity.paymentId" from-field="payment.paymentId"/>
+        	<set field="newEntity.attrName" value="INFAVOUR_OF"/>
+        	<set field="newEntity.attrValue" from-field="parameters.inFavourOf"/>
+        <create-value value-field="newEntity"/>
         </if-not-empty>
     </simple-method>
     <simple-method method-name="createPaymentApplication" short-description="Create a Payment Application">

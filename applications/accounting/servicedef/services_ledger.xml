@@ -569,7 +569,7 @@ under the License.
         <description>Create an accounting transaction for an outgoing payment</description>
         <attribute name="paymentId" type="String" mode="IN" optional="false"/>
         <attribute name="acctgTransId" type="String" mode="OUT" optional="true"/>
-        <!-- <attribute name="finAccountId" type="String" mode="IN" optional="true"/> -->
+        <attribute name="finAccountId" type="String" mode="OUT" optional="true"/>
     </service>
 
     <!--A service to clone an existing accounting transaction and its entries (AcctgTrans and AcctgTransEntry) -->

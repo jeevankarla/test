@@ -234,6 +234,10 @@ under the License.
         <response name="success" type="view" value="QuickInvoiceOverview"/>
         <response name="error" type="view" value="QuickInvoiceOverview"/>
     </request-map>
+    <request-map uri="partyFinanHistory">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="PartyFinHistory"/>
+    </request-map>
     
     <!-- end of request mappings -->
 
@@ -264,7 +268,7 @@ under the License.
     <view-map name="NewQuickCreateSalesInvoice" type="screen" page="component://accounting/widget/ar/InvoiceScreens.xml#NewQuickCreateSalesInvoice"/>
     <view-map name="QuickInvoiceOverview" type="screen" page="component://accounting/widget/ar/InvoiceScreens.xml#QuickInvoiceOverview"/>
     
-    
-
+    <view-map name="PartyFinHistory" type="screen" page="component://accounting/widget/ap/InvoiceScreens.xml#PartyFinHistory"/>
+	
     <!-- end of view mappings -->
 </site-conf>

@@ -2494,6 +2494,18 @@ under the License.
         </response>
     </request-map>
     
+    <request-map uri="FindTreasurerPayments">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="FindTreasurerPayments"/>
+    </request-map>
+    <request-map uri="findTreasurerPayments">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="FindTreasurerPayments"/>
+    </request-map>
+    <request-map uri="partyFinanHistory">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="PartyFinHistory"/>
+    </request-map>
     <!--=================Cost calculation request===============-->
     <!--<request-map uri="EditCostCalcs">
         <security https="true" auth="true"/>
@@ -3859,6 +3871,9 @@ under the License.
    <view-map name="PaymentsCheckList" type="screenfop" page="component://byproducts/widget/ByProductsReportScreens.xml#PaymentsCheckList" content-type="application/pdf" encoding="none"/>
    <view-map name="DailyPaymentCheckListCSV" type="screencsv" page="component://byproducts/widget/ByProductsReportScreens.xml#DailyPaymentCheckListCSV" content-type="text/csv" encoding="none"/>
    
+   <!-- Treasurer payment search views -->
+   <view-map name="FindTreasurerPayments" type="screen" page="component://accounting/widget/TreasurerPortalScreens.xml#FindTreasurerPayments"/>
+   <view-map name="PartyFinHistory" type="screen" page="component://accounting/widget/ap/InvoiceScreens.xml#PartyFinHistory"/>
    
    <!--================= Advances ==================== -->
    <view-map name="IncomingAdvancesReceived" type="screen" page="component://accounting/widget/TreasurerPortalScreens.xml#IncomingAdvancesReceived"/>

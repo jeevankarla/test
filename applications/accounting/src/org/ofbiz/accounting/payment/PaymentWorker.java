@@ -752,32 +752,32 @@ public class PaymentWorker {
 				return result; 
 			}*/
 			
-				List<EntityExpr> condList = FastList.newInstance();
-				if(UtilAccounting.isPaymentMethodType(payment, "CASH")){
-					condList.add(EntityCondition.makeCondition("finAccountTypeId", EntityOperator.EQUALS ,"CASH"));
-					condList.add(EntityCondition.makeCondition("finAccountId", EntityOperator.NOT_EQUAL,"PETTY_CASH"));
-					EntityCondition cond = EntityCondition.makeCondition(condList, EntityOperator.AND);
-		            List cashFinAccountList = delegator.findList("FinAccount", cond, null, null, null, true);
-		            GenericValue cashAccount = EntityUtil.getFirst(cashFinAccountList);
-		            if(UtilValidate.isNotEmpty(cashAccount)){
-		            	finAccountId = cashAccount.getString("finAccountId");
-		            }
-				}
-				if(UtilValidate.isEmpty(finAccountId)){
-					return result;  
-				}
-	          Map depositWithdrawPaymentCtx = UtilMisc.toMap("userLogin", userLogin);
-	          depositWithdrawPaymentCtx.put("paymentIds", UtilMisc.toList(paymentId));
-	          depositWithdrawPaymentCtx.put("transactionDate",payment.getTimestamp("transactionDate"));
-	          if(UtilValidate.isEmpty(payment.getString("transactionDate"))){
-	        	  depositWithdrawPaymentCtx.put("transactionDate",payment.getTimestamp("effectiveDate"));
-	          }
-	          depositWithdrawPaymentCtx.put("finAccountId",finAccountId);
-	          Map<String, Object> depositResult = dispatcher.runSync("depositWithdrawPayments", depositWithdrawPaymentCtx);
-	          if (ServiceUtil.isError(depositResult)) {
-	          	Debug.logError(depositResult.toString(), module);
-	              return ServiceUtil.returnError(null, null, null, depositResult);
-	          }
+			List<EntityExpr> condList = FastList.newInstance();
+			if(UtilAccounting.isPaymentMethodType(payment, "CASH")){
+				condList.add(EntityCondition.makeCondition("finAccountTypeId", EntityOperator.EQUALS ,"CASH"));
+				condList.add(EntityCondition.makeCondition("finAccountId", EntityOperator.NOT_EQUAL,"PETTY_CASH"));
+				EntityCondition cond = EntityCondition.makeCondition(condList, EntityOperator.AND);
+	            List cashFinAccountList = delegator.findList("FinAccount", cond, null, null, null, true);
+	            GenericValue cashAccount = EntityUtil.getFirst(cashFinAccountList);
+	            if(UtilValidate.isNotEmpty(cashAccount)){
+	            	finAccountId = cashAccount.getString("finAccountId");
+	            }
+			}
+			if(UtilValidate.isEmpty(finAccountId)){
+				return result;  
+			}
+			Map depositWithdrawPaymentCtx = UtilMisc.toMap("userLogin", userLogin);
+			depositWithdrawPaymentCtx.put("paymentIds", UtilMisc.toList(paymentId));
+			depositWithdrawPaymentCtx.put("transactionDate",payment.getTimestamp("transactionDate"));
+			if(UtilValidate.isEmpty(payment.getString("transactionDate"))){
+				depositWithdrawPaymentCtx.put("transactionDate",payment.getTimestamp("effectiveDate"));
+			}
+			depositWithdrawPaymentCtx.put("finAccountId",finAccountId);
+			Map<String, Object> depositResult = dispatcher.runSync("depositWithdrawPayments", depositWithdrawPaymentCtx);
+			if (ServiceUtil.isError(depositResult)) {
+				Debug.logError(depositResult.toString(), module);
+				return ServiceUtil.returnError(null, null, null, depositResult);
+			}
         }catch(Exception e){
         	 Debug.logError(e, e.toString(), module);
              return ServiceUtil.returnError(e.toString());

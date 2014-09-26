@@ -751,7 +751,7 @@
 				<parameter param-name="statusId" value="PMNT_CONFIRMED" />
 			</link>
 		</menu-item> -->
-		<menu-item name="printAsCheck" title="${uiLabelMap.AccountingPrintAsCheck}">
+		<!-- <menu-item name="printAsCheck" title="${uiLabelMap.AccountingPrintAsCheck}">
 			<condition>
 				<and>
 					<not>
@@ -764,7 +764,7 @@
 			<link target="printChecks.pdf">
 				<parameter param-name="paymentId" from-field="payment.paymentId" />
 			</link>
-		</menu-item>
+		</menu-item> -->
 		<menu-item name="statusToVoidPayment"
 			title="${uiLabelMap.AccountingPaymentTabStatusToVoid}">
 			<condition>
@@ -825,6 +825,12 @@
 				</and>
 			</condition>
 			<link target="PaymentTranspdf" target-window="_BLANK">
+				<parameter param-name="paymentId" from-field="payment.paymentId"/>
+			</link>
+		</menu-item>
+		<menu-item name="paymentVoucher"
+			title="Payment Voucher">
+			<link target="printAdvAndDepositReceipt.pdf" target-window="_BLANK">
 				<parameter param-name="paymentId" from-field="payment.paymentId"/>
 			</link>
 		</menu-item>
@@ -2081,6 +2087,15 @@
 				<parameter param-name="invoiceTypeId" value="MIS_INCOME_IN" />
              	<parameter param-name="subTabButtonValue" value="Miscellaneous" />
              	<parameter param-name="actionSubTabButtonValue" value="find" />
+			</link>
+		</menu-item>
+		<menu-item name="treasurerPayments" title="Payment Processing">
+		     <condition>
+				<or>
+				    <if-has-permission permission="ACCOUNTING"  action="_TREASURER"/>
+            	</or>            
+            </condition>
+			<link target="FindTreasurerPayments">
 			</link>
 		</menu-item>
           
