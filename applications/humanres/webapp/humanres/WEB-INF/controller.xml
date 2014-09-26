@@ -807,6 +807,12 @@ under the License.
        <response name="success" type="request" value="json"/>
        <response name="error" type="request" value="json"/>
    </request-map>
+   <request-map uri="EditPayrollAttendanceShiftWise">
+       <security https="true" auth="true"/>
+       <event type="java" path="in.vasista.vbiz.humanres.PayrollService" invoke="updatePayrollAttendanceShiftWise"/>
+       <response name="success" type="request" value="json"/>
+       <response name="error" type="request" value="json"/>
+   </request-map>
    <!-- ================Employee Position Group==================================== -->
     <request-map uri="FindEmplPositions">
         <security https="true" auth="true"/>
@@ -1597,6 +1603,10 @@ under the License.
        <security https="true" auth="true"/>
         <response name="success" type="view" value="EditPayrollAttendance"/>
     </request-map>
+    <request-map uri="EditShiftDays">
+       <security https="true" auth="true"/>
+        <response name="success" type="view" value="EditShiftDay"/>
+    </request-map>
     <request-map uri="DailyPunchEditTable">
        <security https="true" auth="true"/>
         <response name="success" type="view" value="DailyPunchEditTable"/>
@@ -2044,6 +2054,7 @@ under the License.
     <view-map name="EditPerfReviewItems" type="screen" page="component://humanres/widget/PerfReviewScreens.xml#EditPerfReviewItems"/>
     
     <view-map name="EditPayrollAttendance" type="screen" page="component://humanres/widget/EmploymentScreens.xml#EditPayrollAttendance"/>
+    <view-map name="EditShiftDay" type="screen" page="component://humanres/widget/EmploymentScreens.xml#EditShiftDay"/>
 
     <view-map name="EditPerformanceNotes" type="screen" page="component://humanres/widget/EmploymentScreens.xml#EditPerformanceNotes"/>
     <view-map name="EditSkillTypes" type="screen" page="component://humanres/widget/GlobalHRSettingScreens.xml#EditSkillTypes"/>

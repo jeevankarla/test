@@ -528,7 +528,43 @@
             </widgets>
         </section>
     </screen>
-    
+    <screen name="EditShiftDay">
+        <section>
+            <actions>
+                <set field="titleProperty" value="Edit Shift Days"/>
+                <set field="headerItem" value="Attendance"/>
+                <set field="tabButtonItem2" value="EditShiftDays" /> 
+				<set field="tabButtonItem" value="Attendance" />
+            </actions>
+            <widgets>
+				<decorator-screen name="HumanresCommonDecorator" location="component://humanres/widget/CommonScreens.xml">
+                    <decorator-section name="body">
+                    	<include-menu location="component://humanres/widget/HumanresMenus.xml" name="AttendanceTabBar"/> 
+                   		<screenlet name="search-options" title="search-options">      
+                           <include-form name="editShiftDays" location="component://humanres/widget/forms/EmploymentForms.xml"/>
+                        </screenlet>	
+                        <include-screen name="EditshiftDays" location="component://humanres/widget/EmploymentScreens.xml"/>	                           	 
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+     <screen name="EditshiftDays">
+        <section>
+            <actions>
+            	<script location="component://humanres/webapp/humanres/WEB-INF/actions/humanres/EditShiftDays.groovy"/>  
+            </actions>
+            <widgets>
+                <section>
+                <widgets>
+                    <platform-specific>
+                        <html><html-template location="component:///humanres/webapp/humanres/humanres/EditShiftDays.ftl"/></html>
+                    </platform-specific>
+                </widgets>
+                </section>
+            </widgets>
+        </section>
+    </screen>
      <screen name="EditPayrollAttendance">
         <section>
             <actions>

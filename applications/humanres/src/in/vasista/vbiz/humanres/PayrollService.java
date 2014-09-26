@@ -2842,7 +2842,148 @@ public class PayrollService {
 	      	 return "success";
 	    }
 	 
-	 
+	 public static String updatePayrollAttendanceShiftWise(HttpServletRequest request, HttpServletResponse response) {
+	    	Delegator delegator = (Delegator) request.getAttribute("delegator");
+	        LocalDispatcher dispatcher = (LocalDispatcher) request.getAttribute("dispatcher");
+	        Locale locale = UtilHttp.getLocale(request);
+	        Map<String, Object> result = ServiceUtil.returnSuccess();
+	        HttpSession session = request.getSession();
+	        GenericValue userLogin = (GenericValue) session.getAttribute("userLogin");		
+	        String timePeriodId = (String) request.getParameter("timePeriodId");
+	        String billingTypeId = "PAYROLL_BILL";	
+	        Map paramMap = UtilHttp.getParameterMap(request);
+	        FastList shiftTypeIdsList = FastList.newInstance();
+	        // Returning error if payroll already generated
+	        List conditionList = FastList.newInstance();
+	        List periodBillingList = FastList.newInstance();
+	        conditionList.add(EntityCondition.makeCondition("statusId", EntityOperator.IN , UtilMisc.toList("GENERATED","IN_PROCESS","APPROVED")));
+	        conditionList.add(EntityCondition.makeCondition("customTimePeriodId", EntityOperator.EQUALS ,timePeriodId));
+	    	conditionList.add(EntityCondition.makeCondition("billingTypeId", EntityOperator.EQUALS , billingTypeId));
+	    	EntityCondition condition=EntityCondition.makeCondition(conditionList,EntityOperator.AND);
+	    	try {
+	    		periodBillingList = delegator.findList("PeriodBilling", condition, null,null, null, false);
+	    			    		
+	    	}catch (GenericEntityException e) {
+	    		 Debug.logError(e, module);             
+			} 
+	        if(UtilValidate.isNotEmpty(periodBillingList)){	    			
+ 			request.setAttribute("_ERROR_MESSAGE_", "Payroll Already generated for this period, you can not edit values");
+				return "error";
+ 		}
+	        try{
+	        	List<GenericValue> shiftTypes = delegator.findList("WorkShiftType",null, null,null, null, true);
+	        	shiftTypeIdsList.addAll(EntityUtil.getFieldListFromEntityList(shiftTypes, "shiftTypeId", true));
+      } catch (GenericEntityException e) {
+          Debug.logError(e, "Error getting payhead types", module);
+      }
+	        if(UtilValidate.isNotEmpty(shiftTypeIdsList)){
+	        	for(int i=0;i<shiftTypeIdsList.size();i++){
+	        		String shiftTypeId= (String)shiftTypeIdsList.get(i);
+	        		if(UtilValidate.isNotEmpty(paramMap.get(shiftTypeId))){
+	        			Map<String, Object> shiftItemMap=FastMap.newInstance();
+	        			String noOfDaysStr=(String)paramMap.get(shiftTypeId);
+	        			String customTimePeriodId = (String)paramMap.get("customTimePeriodId");
+	        			String partyId = (String)paramMap.get("partyId");
+	        			if((!" ".equals(noOfDaysStr))){
+		        			BigDecimal noOfDays= BigDecimal.ZERO;
+		    				if (UtilValidate.isNotEmpty(noOfDaysStr)) {	
+		    					noOfDays = new BigDecimal(noOfDaysStr);
+		    				}
+		    				shiftItemMap.put("userLogin",userLogin);
+		    				shiftItemMap.put("customTimePeriodId",customTimePeriodId);
+		    				shiftItemMap.put("noOfDays",noOfDays);
+		    				shiftItemMap.put("partyId",partyId);
+		    				shiftItemMap.put("shiftTypeId",shiftTypeId);
+		    				try {
+		    					if(noOfDays.compareTo(BigDecimal.ZERO) >=0){
+		    						Map resultValue = dispatcher.runSync("createOrUpdatePayrollAttendanceShiftWise", shiftItemMap);
+		    						if( ServiceUtil.isError(resultValue)) {
+		    							String errMsg =  ServiceUtil.getErrorMessage(resultValue);
+		    							Debug.logWarning(errMsg , module);
+		    							request.setAttribute("_ERROR_MESSAGE_",errMsg);
+		    							
+		    							return "error";
+		    						}
+		    					}
+		    					
+		    				} catch (GenericServiceException s) {
+		    					s.printStackTrace();
+		    				} 
+	        			}
+	        		}
+	        	}
+	        }
+	      	 return "success";
+	    }
+	 public static Map<String, Object> createOrUpdatePayrollAttendanceShiftWise(DispatchContext dctx, Map<String, ? extends Object> context){
+		    Delegator delegator = dctx.getDelegator();
+	        LocalDispatcher dispatcher = dctx.getDispatcher();
+	        GenericValue userLogin = (GenericValue) context.get("userLogin");
+	        String partyId = (String) context.get("partyId");
+	        String customTimePeriodId = (String)context.get("customTimePeriodId");
+	        String shiftTypeId = (String)context.get("shiftTypeId");
+	        BigDecimal noOfDays = (BigDecimal)context.get("noOfDays");
+	        String noOfDaysNullFlag = (String)context.get("noOfDaysNullFlag");
+	        BigDecimal availedCanteenDays = BigDecimal.ZERO;
+	        BigDecimal availedVehicleDays = BigDecimal.ZERO;
+	        String canteenFacin = null;
+	        String companyBus = null;
+	        Locale locale = (Locale) context.get("locale");
+	        Map result = ServiceUtil.returnSuccess();
+	        List shiftTypeIdsList = FastList.newInstance();
+	        if(UtilValidate.isEmpty(noOfDaysNullFlag) && UtilValidate.isEmpty(noOfDays)){
+	        	return ServiceUtil.returnError("ShiftDays cannot be Empty");
+	        }
+	        
+			try {
+				List conList = FastList.newInstance();
+		        conList.add(EntityCondition.makeCondition("partyId", EntityOperator.EQUALS ,partyId));
+		        EntityCondition con=EntityCondition.makeCondition(conList,EntityOperator.AND); 	
+		        List<GenericValue> employeeDetailsList = delegator.findList("EmployeeDetail", con, null, null, null, false);
+		        if(UtilValidate.isNotEmpty(employeeDetailsList)){
+		        	GenericValue employeeDetails=employeeDetailsList.get(0);
+		        	canteenFacin=(String)employeeDetails.get("canteenFacin");
+		        	companyBus=(String)employeeDetails.get("companyBus");
+		        	if(canteenFacin.equals("Y"))
+		        		availedCanteenDays=noOfDays;
+		        	if(companyBus.equals("N"))
+		        		availedVehicleDays=noOfDays;
+		        }
+				List<GenericValue> shiftTypeIds = delegator.findList("WorkShiftType",null, null,null, null, true);
+	        	shiftTypeIdsList = EntityUtil.getFieldListFromEntityList(shiftTypeIds, "shiftTypeId", true);
+	        	if(shiftTypeIdsList.contains(shiftTypeId)){
+					List conditionList = FastList.newInstance();
+					conditionList.add(EntityCondition.makeCondition("partyId", EntityOperator.EQUALS ,partyId));
+					conditionList.add(EntityCondition.makeCondition("shiftTypeId", EntityOperator.EQUALS ,shiftTypeId));
+					conditionList.add(EntityCondition.makeCondition("customTimePeriodId", EntityOperator.EQUALS ,customTimePeriodId));
+			    	EntityCondition condition=EntityCondition.makeCondition(conditionList,EntityOperator.AND); 		
+					List<GenericValue> partyShiftsList = delegator.findList("PayrollAttendanceShiftWise", condition, null, null, null, false);
+					if(UtilValidate.isEmpty(partyShiftsList)){
+						GenericValue newEntity = delegator.makeValue("PayrollAttendanceShiftWise");
+						newEntity.set("partyId", partyId);
+						newEntity.set("shiftTypeId", shiftTypeId);
+						newEntity.set("customTimePeriodId", customTimePeriodId);
+						newEntity.set("noOfDays", noOfDays);
+						newEntity.set("availedCanteenDays", availedCanteenDays);
+						newEntity.set("availedVehicleDays", availedVehicleDays);
+						newEntity.create();
+					}else{	
+						GenericValue partyShift = partyShiftsList.get(0);
+						partyShift.set("noOfDays",noOfDays);
+						partyShift.set("shiftTypeId",shiftTypeId);
+						partyShift.set("availedCanteenDays", availedCanteenDays);
+						partyShift.set("availedVehicleDays", availedVehicleDays);
+						partyShift.store();
+					}
+				}
+			
+			} catch (GenericEntityException e) {
+				Debug.logError(e, module);
+				return ServiceUtil.returnError(e.toString());
+			}
+	        result = ServiceUtil.returnSuccess("Successfully Updated!!");
+	        return result;
+	 }//end of service
 	 
 	 public static String updateBenefitsOrDeductions(HttpServletRequest request, HttpServletResponse response) {
 	    	Delegator delegator = (Delegator) request.getAttribute("delegator");
@@ -2937,6 +3078,7 @@ public class PayrollService {
 	        }
 	      	 return "success";
 	    }
+	 
 	 public static Map<String, Object> createOrUpdatePartyBenefitOrDeduction(DispatchContext dctx, Map<String, ? extends Object> context){
 		    Delegator delegator = dctx.getDelegator();
 	        LocalDispatcher dispatcher = dctx.getDispatcher();

@@ -492,14 +492,14 @@
 				<option key="N" />
 			</drop-down>
 		</field>
-		<field name="shiftType" title="${uiLabelMap.ShiftType}">
+		<!-- <field name="shiftType" title="${uiLabelMap.ShiftType}">
 			<drop-down allow-empty="true">
 				<entity-options entity-name="Enumeration" key-field-name="enumId" description="${description}">
 					<entity-constraint name="enumTypeId" value="EMPL_REC_SHT" />
 					<entity-order-by field-name="sequenceId" />
 				</entity-options>
 			</drop-down>
-		</field>
+		</field> -->
 		<field name="belongsTo" title="${uiLabelMap.SonWifeDaughter}"><hidden></hidden></field>
         <field name="bloodGroup" title="${uiLabelMap.BloodGroup}">
          	<drop-down allow-empty="false">             
