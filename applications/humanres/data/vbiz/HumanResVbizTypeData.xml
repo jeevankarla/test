@@ -14,7 +14,8 @@
     <BenefitType benefitTypeId="PAYROL_BEN_PERBONUS" description=" Performance Bonus " hasTable="N" parentTypeId=""/>
     <BenefitType benefitTypeId="PAYROL_BEN_STBONUS" description=" Statutory Bonus " hasTable="N" parentTypeId=""/>
     <BenefitType benefitTypeId="PAYROL_BEN_OTHERS" description=" Other Benefits " hasTable="N" parentTypeId=""/>
-
+    <BenefitType benefitTypeId="PAYROL_BEN_PENS" description="Employee Pension" hasTable="N" isEmployerContribution="Y" parentTypeId=""/>
+    
 <EmplLeaveReasonType description="Medical" emplLeaveReasonTypeId="MEDICAL" hasTable="N" parentTypeId=""/>
     <EmplLeaveReasonType description="Casual" emplLeaveReasonTypeId="CASUAL" hasTable="N" parentTypeId=""/>
     <EmplLeaveReasonType description="Maternity" emplLeaveReasonTypeId="MATERNITY" hasTable="N" parentTypeId=""/>
