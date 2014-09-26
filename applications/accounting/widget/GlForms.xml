@@ -119,7 +119,7 @@ under the License.
         </field>
         <field name="invoiceId" use-when="invoiceId==null"><display/></field>
         <field name="paymentId" use-when="paymentId!=null" widget-style="buttontext">
-            <hyperlink also-hidden="false" description="${paymentId}" target="editPayment">
+            <hyperlink also-hidden="false" description="${paymentId}" target="paymentOverview">
                 <parameter param-name="paymentId"/>
             </hyperlink>
         </field>
