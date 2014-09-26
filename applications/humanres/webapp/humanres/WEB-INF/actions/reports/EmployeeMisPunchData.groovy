@@ -65,7 +65,21 @@ if(UtilValidate.isNotEmpty(TwoPunchEmployeesList)){
 	
 	TwoPunchEmployeesList.each{ employee ->
 		partyIdmisPunchDataMap=[:];
+		DateKeysList=[];
 		currentDateKeysList.each{ date ->
+			dateStr = "";
+			def sdf1 = new SimpleDateFormat("MM/dd/yyyy");
+			try {
+				if (date) {
+					dateTimestamp = new java.sql.Timestamp(sdf1.parse(date).getTime());
+					dateStr = UtilDateTime.toDateString(dateTimestamp,"dd/MM/yyyy");
+				}
+			} catch (ParseException e) {
+				Debug.logError(e, "Cannot parse date string: " + e, "");
+				context.errorMessage = "Cannot parse date string: " + e;
+				return;
+			}
+			DateKeysList.add(dateStr);
 			SimpleDateFormat Format = new SimpleDateFormat("MM/dd/yyyy");
 			fromDate = UtilDateTime.getDayStart(new java.sql.Timestamp(Format.parse(date).getTime()));
 			thruDate=UtilDateTime.getDayEnd(new java.sql.Timestamp(Format.parse(date).getTime()));
@@ -92,12 +106,12 @@ if(UtilValidate.isNotEmpty(TwoPunchEmployeesList)){
 							
 							if(UtilValidate.isEmpty(shiftpunchoutdeatils)){
 								shiftmispunchMap=[:];
-								shiftmispunchMap.put("date",date);
+								shiftmispunchMap.put("date",dateStr);
 								shiftmispunchMap.put("partyId",employee.get("partyId"));
 								shiftmispunchMap.put("Time",emplpunchin.get("punchtime"));
 								String partyName = PartyHelper.getPartyName(delegator, employee.get("partyId"), false);
 								shiftmispunchMap.put("partyName",partyName);
-								partyIdmisPunchDataMap.put(date,shiftmispunchMap);
+								partyIdmisPunchDataMap.put(emplpunchin.get("punchtime"),shiftmispunchMap);
 							}
 						}
 						else{
@@ -110,12 +124,12 @@ if(UtilValidate.isNotEmpty(TwoPunchEmployeesList)){
 							punchoutdeatils = EntityUtil.filterByCondition(punchdeatils,outcondition);
 							if(UtilValidate.isEmpty(punchoutdeatils)){
 								currDateMisPunchMap=[:];
-								currDateMisPunchMap.put("date",date);
+								currDateMisPunchMap.put("date",dateStr);
 								currDateMisPunchMap.put("partyId",employee.get("partyId"));
 								currDateMisPunchMap.put("Time",emplpunchin.get("punchtime"));
 								String partyName = PartyHelper.getPartyName(delegator, employee.get("partyId"), false);
 								currDateMisPunchMap.put("partyName",partyName);
-								partyIdmisPunchDataMap.put(date,currDateMisPunchMap);
+								partyIdmisPunchDataMap.put(emplpunchin.get("punchtime"),currDateMisPunchMap);
 							}
 						}
 					}
@@ -127,4 +141,5 @@ if(UtilValidate.isNotEmpty(TwoPunchEmployeesList)){
 		}
 	}
 }
+context.put("DateKeysList",DateKeysList);
 context.put("misPunchDataMap",misPunchDataMap);

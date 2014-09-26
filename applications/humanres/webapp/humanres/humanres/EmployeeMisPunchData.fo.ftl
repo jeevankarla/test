@@ -12,6 +12,7 @@
 		
 		<#if misPunchDataMap?has_content>
 			<#assign noofLines=1>
+			<#assign SNo=1>
 			<fo:page-sequence master-reference="main">
         		<fo:static-content font-size="14pt" font-family="Courier,monospace"  flow-name="xsl-region-before" font-weight="bold">        
 	        		<fo:block  keep-together="always" text-align="center" font-family="Courier,monospace" white-space-collapse="false" font-weight="bold">&#160;      ${uiLabelMap.KMFDairyHeader}</fo:block>
@@ -26,12 +27,16 @@
           		<fo:flow flow-name="xsl-region-body" font-family="Courier,monospace">
 	            	<fo:block font-family="Courier,monospace">
 	                	<fo:table >
-		                	<fo:table-column column-width="120pt"/>
-		                    <fo:table-column column-width="120pt"/>
-		                    <fo:table-column column-width="350pt"/>                
+	                		<fo:table-column column-width="90pt"/>
+		                	<fo:table-column column-width="100pt"/>
+		                    <fo:table-column column-width="220pt"/>
+		                    <fo:table-column column-width="170pt"/>                
 		                    <fo:table-column column-width="50pt"/>
 	                		<fo:table-body> 
 	                     		<fo:table-row >
+	                     			<fo:table-cell >	
+		                            	<fo:block text-align="center" keep-together="always" font-weight="bold" font-size="15pt">SNo</fo:block>
+		                            </fo:table-cell>
 		                            <fo:table-cell >	
 		                            	<fo:block text-align="left" keep-together="always" font-weight="bold" font-size="15pt">Emp No</fo:block>
 		                            </fo:table-cell>
@@ -50,13 +55,17 @@
 	                            		<fo:block keep-together="always" font-weight="bold">---------------------------------------------------------------------------------------------</fo:block>
 	                            	</fo:table-cell>
 	                            </fo:table-row>
-	                            <#list currentDateKeysList as date>
+	                            <#list DateKeysList as date>
 	                            	<#assign misPunchMap=misPunchDataMap.entrySet()>
 		                   			<#list misPunchMap as misPunchValues>
 			                   			<#assign misPunchData=misPunchValues.getValue().entrySet()>
 			                   			<#list misPunchData as empMisPunchValues>
 			                   				<#if (empMisPunchValues.getValue().get("date"))==date>
 					                   			<fo:table-row >
+					                   				<fo:table-cell >	
+						                            	<fo:block text-align="center" keep-together="always" font-size="15pt">${SNo?if_exists}</fo:block>
+						                            	<#assign SNo=SNo+1>
+						                            </fo:table-cell>
 						                            <fo:table-cell >	
 						                            	<fo:block text-align="left" keep-together="always" font-size="15pt">${empMisPunchValues.getValue().get("partyId")?if_exists}</fo:block>
 						                            </fo:table-cell>
