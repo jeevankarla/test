@@ -532,7 +532,6 @@ public class PaymentWorker {
         if (UtilValidate.isNotEmpty(finAccountId) ) {
             paymentCtx.put("finAccountId", finAccountId);                        	
         }
-        
         paymentCtx.put("amount", paymentAmount);
         paymentCtx.put("userLogin", userLogin); 
         paymentCtx.put("invoices", UtilMisc.toList(invoiceId));
@@ -554,7 +553,14 @@ public class PaymentWorker {
         			statusId = "PMNT_SENT";
         		}
         	}
-            Map<String, Object> pmntResults = dispatcher.runSync("setPaymentStatus", UtilMisc.toMap("userLogin", userLogin, "paymentId", paymentId, "statusId", statusId));
+        	
+        	Map<String, Object> setPaymentStatusMap = UtilMisc.<String, Object>toMap("userLogin", userLogin);
+        	setPaymentStatusMap.put("paymentId", paymentId);
+        	setPaymentStatusMap.put("statusId", statusId);
+        	if(UtilValidate.isNotEmpty(finAccountId)){
+        		setPaymentStatusMap.put("finAccountId", finAccountId);
+        	}
+            Map<String, Object> pmntResults = dispatcher.runSync("setPaymentStatus", setPaymentStatusMap);
             if (ServiceUtil.isError(pmntResults)) {
             	Debug.logError(pmntResults.toString(), module);    			
                 return ServiceUtil.returnError(null, null, null, pmntResults);
@@ -711,8 +717,14 @@ public class PaymentWorker {
 					        			statusId = "PMNT_SENT";
 					        		}
 					        	}
-				  	            Map<String, Object> pmntResults = dispatcher.runSync("setPaymentStatus", UtilMisc.toMap("userLogin", userLogin, "paymentId", paymentId, "statusId", statusId));
-				  	            if (ServiceUtil.isError(pmntResults)) {
+					        	Map<String, Object> setPaymentStatusMap = UtilMisc.<String, Object>toMap("userLogin", userLogin);
+					        	setPaymentStatusMap.put("paymentId", paymentId);
+					        	setPaymentStatusMap.put("statusId", statusId);
+					        	if(UtilValidate.isNotEmpty(finAccountId)){
+					        		setPaymentStatusMap.put("finAccountId", finAccountId);
+					        	}
+					            Map<String, Object> pmntResults = dispatcher.runSync("setPaymentStatus", setPaymentStatusMap);
+					            if (ServiceUtil.isError(pmntResults)) {
 				  	            	Debug.logError(pmntResults.toString(), module);
 				  	            	request.setAttribute("_ERROR_MESSAGE_", "Error in service setPaymentStatus");
 				  	                return "error";
@@ -751,7 +763,6 @@ public class PaymentWorker {
 			/*if(!UtilAccounting.isPaymentType(payment, "RECEIPT")){
 				return result; 
 			}*/
-			
 			List<EntityExpr> condList = FastList.newInstance();
 			if(UtilAccounting.isPaymentMethodType(payment, "CASH")){
 				condList.add(EntityCondition.makeCondition("finAccountTypeId", EntityOperator.EQUALS ,"CASH"));
