@@ -53,15 +53,12 @@ emplInputMap.put("orgPartyId", "Company");
 emplInputMap.put("fromDate", timePeriodStart);
 emplInputMap.put("thruDate", timePeriodEnd);
 
-if(UtilValidate.isEmpty(parameters.partyId)){
-	Map resultMap = HumanresService.getActiveEmployements(dctx,emplInputMap);
-	List<GenericValue> employementList = (List<GenericValue>)resultMap.get("employementList");
-	employementIds = EntityUtil.getFieldListFromEntityList(employementList, "partyIdTo", true);
-}else{
-	OrganizationDetails=delegator.findList("Employment",EntityCondition.makeCondition("partyIdFrom", EntityOperator.EQUALS, parameters.partyId) , null, null, null, false);
-	employementIds = EntityUtil.getFieldListFromEntityList(OrganizationDetails, "partyIdTo", true);
+if(UtilValidate.isNotEmpty(parameters.partyId)){
+	emplInputMap.put("orgPartyId", parameters.partyId);
 }
-	
+Map resultMap = HumanresService.getActiveEmployements(dctx,emplInputMap);
+List<GenericValue> employementList = (List<GenericValue>)resultMap.get("employementList");
+employementIds = EntityUtil.getFieldListFromEntityList(employementList, "partyIdTo", true);
 //getting benefits
 benefitTypeList = delegator.findList("BenefitType", EntityCondition.makeCondition("benefitTypeId", EntityOperator.NOT_EQUAL ,"PAYROL_BEN_SALARY"), null, ["sequenceNum"], null, false);
 benefitDescMap=[:];
