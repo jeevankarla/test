@@ -113,6 +113,9 @@ if (invoice) {
 		invoiceItem.amount = invoiceItem.getBigDecimal("amount").multiply(conversionRate).setScale(decimals, rounding);
 		invoiceItemsConv.add(invoiceItem);
 		glAccountId = null;
+		quantity = 0;
+		unitPrice= 0;
+		amount = 0;
 		List conditionList=[];
 		conditionList.add(EntityCondition.makeCondition("invoiceId", EntityOperator.EQUALS, invoiceItem.invoiceId));
 		if(UtilValidate.isNotEmpty(invoiceItem.productId)){
@@ -127,11 +130,19 @@ if (invoice) {
 			acctngTransEntries = EntityUtil.getFirst(acctngTransEntriesList);
 			glAccountId = acctngTransEntries.glAccountId;
 		}
+		quantity = invoiceItem.quantity;
+		unitPrice = invoiceItem.unitPrice;
+		
+		if(UtilValidate.isNotEmpty(unitPrice) && unitPrice != 0){
+			amount = quantity*unitPrice;
+		}else{
+			amount = invoiceItem.amount;
+		}
 		
 		invoiceItemMap = [:];
 		invoiceItemMap["description"] = invoiceItem.description;
 		invoiceItemMap["invoiceItemTypeId"] = invoiceItem.invoiceItemTypeId;
-		invoiceItemMap["amount"] = invoiceItem.amount;
+		invoiceItemMap["amount"] = amount;
 		invoiceItemMap["glAccountId"] = glAccountId;
 		if(UtilValidate.isNotEmpty(invoiceItemMap)){
 			invoiceItemList.add(invoiceItemMap);
