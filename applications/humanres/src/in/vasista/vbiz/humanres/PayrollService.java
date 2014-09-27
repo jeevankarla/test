@@ -48,6 +48,7 @@ import org.ofbiz.entity.GenericValue;
 import org.ofbiz.entity.condition.EntityCondition;
 import org.ofbiz.entity.condition.EntityOperator;
 import org.ofbiz.entity.model.DynamicViewEntity;
+import org.ofbiz.entity.model.ModelEntity;
 import org.ofbiz.entity.model.ModelKeyMap;
 import org.ofbiz.entity.transaction.TransactionUtil;
 import org.ofbiz.entity.util.EntityFindOptions;
@@ -1789,7 +1790,9 @@ public class PayrollService {
 				supportedVaribules.add("NOOFAVAILEDVEHICLEDAYS");
 				supportedVaribules.add("NOOFPAYABLEDAYS");
 				supportedVaribules.add("NOOFARREARDAYS");
-				
+				ModelEntity modelEntity = delegator.getModelEntity("PayrollAttendance");
+		        List<String> fieldNames = modelEntity.getAllFieldNames();
+		        varibuleKeyList.addAll(fieldNames);
 				for(int i= 0;i<varibuleKeyList.size();i++){
 					String varibuleKey = (String)varibuleKeyList.get(i);
 					if(supportedVaribules.contains(varibuleKey)){
@@ -1810,7 +1813,16 @@ public class PayrollService {
 					variables.put("NOOFAVAILEDVEHICLEDAYS", (new Double((Integer)attendanceMap.get("availedVehicleDays"))));
 					variables.put("NOOFPAYABLEDAYS", (Double)attendanceMap.get("noOfPayableDays"));
 					variables.put("NOOFARREARDAYS", (Double)attendanceMap.get("noOfArrearDays"));
-					
+					//here populate all PayrollAttencdance field's as variables
+					Iterator tempIter = attendanceMap.entrySet().iterator();
+		        	while (tempIter.hasNext()) {
+							Map.Entry tempEntry = (Entry) tempIter.next();
+							String variableName = (String)tempEntry.getKey();
+							if(UtilValidate.isNotEmpty(tempEntry.getValue()) && (tempEntry.getValue() instanceof Double)){
+								variables.put(variableName, (Double)tempEntry.getValue());
+							}
+							
+					}
 					double noOfAttendedDays = ((Double)attendanceMap.get("noOfAttendedDays")).doubleValue();
 					evltr.setFormulaIdAndSlabAmount(formulaId, noOfAttendedDays);
 				}
@@ -2015,66 +2027,7 @@ public class PayrollService {
 	        }catch (Exception e) {
 				// TODO: handle exception
 			}
-	       /*Debug.logInfo("lastCloseAttedancePeriod==========="+lastCloseAttedancePeriod,module);
-	        conditionList.clear();
-	        conditionList.add(EntityCondition.makeCondition("partyId", EntityOperator.EQUALS ,employeeId));
-	        if(UtilValidate.isNotEmpty(lastCloseAttedancePeriod)){
-	        	conditionList.add(EntityCondition.makeCondition("date", EntityOperator.GREATER_THAN_EQUAL_TO , UtilDateTime.toSqlDate(lastCloseAttedancePeriod.getDate("fromDate"))));
-	 	    	conditionList.add(EntityCondition.makeCondition("date", EntityOperator.LESS_THAN_EQUAL_TO , UtilDateTime.toSqlDate(lastCloseAttedancePeriod.getDate("thruDate"))));
-	        	
-	        }else{
-	        	conditionList.add(EntityCondition.makeCondition("date", EntityOperator.GREATER_THAN_EQUAL_TO , UtilDateTime.toSqlDate(timePeriodStart)));
-	 	    	conditionList.add(EntityCondition.makeCondition("date", EntityOperator.LESS_THAN_EQUAL_TO , UtilDateTime.toSqlDate(timePeriodEnd)));
-	        }
-	        	
-	       
-	    	EntityCondition condition=EntityCondition.makeCondition(conditionList,EntityOperator.AND);
-	    	try {
-	    		Map input =FastMap.newInstance();
-	    		input.put("userLogin", userLogin);
-	    		input.put("partyId", employeeId);
-	    		input.put("timePeriodStart", timePeriodStart);
-	    		input.put("timePeriodEnd", timePeriodEnd);
-	    		input.put("leaveTypeId", "HPL");
-	    		Map resultMap = EmplLeaveService.fetchLeaveDaysForPeriod(dctx, input);
-	    		List<GenericValue> leaves = (List)resultMap.get("leaves");
-	    		input.put("leaveTypeId", "CML");
-	    		resultMap = EmplLeaveService.fetchLeaveDaysForPeriod(dctx, input);
-	    		leaves.addAll((List)resultMap.get("leaves"));
-	    		emplDailyAttendanceDetailList = delegator.findList("EmplDailyAttendanceDetail", condition, null,null, null, false);
-	    		if(UtilValidate.isNotEmpty(emplDailyAttendanceDetailList)){
-	    			availedVehicleDays = (EntityUtil.filterByAnd(emplDailyAttendanceDetailList, UtilMisc.toMap("availedVehicleAllowance" ,"Y"))).size();
-	    			disAvailedVehicleDays = (EntityUtil.filterByAnd(emplDailyAttendanceDetailList, UtilMisc.toMap("availedVehicleAllowance" ,"N"))).size();
-		    		for( GenericValue  emplDailyAttendanceDetail : emplDailyAttendanceDetailList){
-		    			String shiftType = emplDailyAttendanceDetail.getString("shiftType");
-		    			if(UtilValidate.isNotEmpty(leaves)){
-		    				List cDayLeaves = EntityUtil.filterByDate(leaves, UtilDateTime.toTimestamp(emplDailyAttendanceDetail.getString("date")));
-			    			if(UtilValidate.isNotEmpty(cDayLeaves)){
-			    				continue;
-			    			}
-		    			}
-		    			
-		    			//String availedVehicleAllowance = emplDailyAttendanceDetail.getString("availedVehicleAllowance");
-		    			String availedCanteen = emplDailyAttendanceDetail.getString("availedCanteen");
-		    			if(UtilValidate.isEmpty(shiftDetailMap.get(shiftType))){
-		    				shiftDetailMap.put(shiftType,1);
-		    			}else{
-		    				shiftDetailMap.put(shiftType,(((Integer)(shiftDetailMap.get(shiftType))).intValue()+1));
-		    			}
-		    			// availedCanteen
-		    			if(UtilValidate.isNotEmpty(availedCanteen) && availedCanteen.equalsIgnoreCase("Y")){
-		    				if(UtilValidate.isEmpty(availedCanteenDetailMap.get(shiftType))){
-			    				availedCanteenDetailMap.put(shiftType,1);
-			    			}else{
-			    				availedCanteenDetailMap.put(shiftType,(((Integer)(availedCanteenDetailMap.get(shiftType))).intValue()+1));
-			    			}
-		    			}
-		    		}
-	    		}
-	    		
-*/	    
-	        
-	        
+	          
 	     try {
 	    	 
 			List<GenericValue> payrollAttendanceShiftWiseList = delegator.findByAnd("PayrollAttendanceShiftWise", UtilMisc.toMap("partyId",employeeId,"customTimePeriodId",attendancePeriodId));
@@ -2105,6 +2058,17 @@ public class PayrollService {
 			result.put("extraMin", 0.0);
 			result.put("availedVehicleDays" , availedVehicleDays);
 			if(UtilValidate.isNotEmpty(payrollAttendance)){
+				Iterator tempIter = payrollAttendance.entrySet().iterator();
+	        	while (tempIter.hasNext()) {
+						Map.Entry tempEntry = (Entry) tempIter.next();
+						String variableName = (String)tempEntry.getKey();
+						if(UtilValidate.isNotEmpty(tempEntry.getValue()) && tempEntry.getValue() instanceof BigDecimal){
+							result.put(variableName, 0.0);
+							result.put(variableName, (BigDecimal)tempEntry.getValue());
+						}
+						
+					}
+				
 				if(UtilValidate.isNotEmpty(payrollAttendance.get("lossOfPayDays"))){
 					result.put("lossOfPayDays", (payrollAttendance.getBigDecimal("lossOfPayDays")).doubleValue());
 				}
