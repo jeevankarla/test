@@ -12,4 +12,19 @@
     <SecurityGroupPermission groupId="FLEXADMIN" permissionId="MOTHERDAIRY_VIEW"/>
     <SecurityGroupPermission groupId="VIEWADMIN" permissionId="MOTHERDAIRY_VIEW"/>
     <SecurityGroupPermission groupId="BIZADMIN" permissionId="MOTHERDAIRY_ADMIN"/>
+    
+    <SecurityGroup groupId="STORE_SALES" description="STORE SALES GROUP"/>
+<SecurityGroupPermission groupId="STORE_SALES" permissionId="CATALOG_CREATE"/>
+    <SecurityGroupPermission groupId="STORE_SALES" permissionId="CATALOG_VIEW"/>
+    
+<SecurityGroupPermission groupId="STORE_SALES" permissionId="ORDERMGR_CREATE"/>
+<SecurityGroupPermission groupId="STORE_SALES" permissionId="ORDERMGR_SALES_CREATE"/>
+<SecurityGroupPermission groupId="STORE_SALES" permissionId="ORDERMGR_SALES_ENTRY"/>
+<SecurityGroupPermission groupId="STORE_SALES" permissionId="ORDERMGR_SALES_UPDATE"/>
+<SecurityGroupPermission groupId="STORE_SALES" permissionId="ORDERMGR_UPDATE"/>
+    <SecurityGroupPermission groupId="STORE_SALES" permissionId="ACCOUNTING_ARINVOICE_EDIT"/>
+    <SecurityGroupPermission groupId="STORE_SALES" permissionId="ACCOUNTING_READ"/>
+    <SecurityGroupPermission groupId="STORE_SALES" permissionId="ACCTG_PREF_VIEW"/>
+    
+     <SecurityGroupPermission groupId="STORE_SALES" permissionId="ACCTG_ATX_CREATE"/> 
 </entity-engine-xml>

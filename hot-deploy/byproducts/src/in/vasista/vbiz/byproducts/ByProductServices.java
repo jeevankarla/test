@@ -2885,9 +2885,10 @@ public class ByProductServices {
 	      Timestamp nowTimeStamp = UtilDateTime.nowTimestamp();	 
 	      Timestamp todayDayStart = UtilDateTime.getDayStart(nowTimeStamp);
 	  	  Map<String, Object> paramMap = UtilHttp.getParameterMap(request);
-	  	  String paymentMethodTypeId = (String)request.getParameter("paymentMethodTypeId");
+	  	  String paymentMethodId = (String)request.getParameter("paymentMethodId");
 	  	  String paymentGroupTypeId = (String)request.getParameter("paymentGroupTypeId");
 	  	  String paymentRefNum = (String)request.getParameter("paymentRefNum");
+	  	  String inFavor = (String)request.getParameter("inFavor");
 	  	  String instrumentDateStr = (String)request.getParameter("instrumentDate");
 	  	  String amountStr = (String)request.getParameter("amount");
 	  	  String paymentDateStr = (String)request.getParameter("paymentDate");
@@ -2895,13 +2896,23 @@ public class ByProductServices {
 	  	  String finAccountId = (String)request.getParameter("finAccountId");
 	  	  
 	  	  if(UtilValidate.isEmpty(paymentDateStr)){
-	  		  Debug.logError("Deposit date cannot be empty: " + paymentDateStr, module);
+	  		  Debug.logError("Payment date cannot be empty: " + paymentDateStr, module);
 			  request.setAttribute("_ERROR_MESSAGE_", "Deposit date cannot be empty: " + paymentDateStr);
 			  return "error";
 	  	  }
 	  	  if(UtilValidate.isEmpty(amountStr)){
 	  		  Debug.logError("amount cannot be empty: " + amountStr, module);
 			  request.setAttribute("_ERROR_MESSAGE_", "amount cannot be empty: " + amountStr);
+			  return "error";
+	  	  }
+	  	  if(UtilValidate.isEmpty(inFavor)){
+	  		  Debug.logError("InFavor of cannot be empty: " + inFavor, module);
+			  request.setAttribute("_ERROR_MESSAGE_", "Infavor of cannot be empty: " + inFavor);
+			  return "error";
+	  	  }
+	  	  if(UtilValidate.isEmpty(paymentMethodId)){
+	  		  Debug.logError("paymentMethodId of cannot be empty: " + paymentMethodId, module);
+			  request.setAttribute("_ERROR_MESSAGE_", "paymentMethodId of cannot be empty: " + paymentMethodId);
 			  return "error";
 	  	  }
 	  	  BigDecimal amount = new BigDecimal(amountStr);
@@ -2947,15 +2958,31 @@ public class ByProductServices {
 	  		  
 	  		  beganTransaction = TransactionUtil.begin(7200);
 	  		  List exprListForParameters = FastList.newInstance();
-	  	      
+	  		  
+	  		  GenericValue paymentMethod = delegator.findOne("PaymentMethod", UtilMisc.toMap("paymentMethodId", paymentMethodId), false);
+	  		  String paymentMethodTypeId = paymentMethod.getString("paymentMethodTypeId");
 		  	  for (int i = 0; i < rowCount; i++){
 		  		  String paymentId = "";
 		  		  String thisSuffix = UtilHttp.MULTI_ROW_DELIMITER + i;
 	  			  if (paramMap.containsKey("paymentId" + thisSuffix)) {
 	  				  paymentId = (String) paramMap.get("paymentId" + thisSuffix);
 		  		  }
-	  			  if(UtilValidate.isNotEmpty(paymentId)){
-	  				  Map<String, Object> pmntResults = dispatcher.runSync("setPaymentStatus", UtilMisc.toMap("userLogin", userLogin, "paymentId", paymentId, "statusId", "PMNT_SENT"));
+	  			  GenericValue payment = delegator.findOne("Payment", UtilMisc.toMap("paymentId", paymentId), false);
+	  			  
+	  			  if(UtilValidate.isNotEmpty(payment) && !((payment.getString("statusId")).equals("PMNT_SENT"))){
+	  				  Map updatePayCtx = FastMap.newInstance();
+		  			  updatePayCtx.put("paymentId", paymentId);
+		  			  updatePayCtx.put("userLogin", userLogin);	
+		  			  updatePayCtx.put("paymentMethodId", paymentMethodId);
+		  			  Map pmntUpdateResults = dispatcher.runSync("updatePayment", updatePayCtx);
+		  			  if (ServiceUtil.isError(pmntUpdateResults)) {
+		  				  Debug.logError("Problems in service updatePayment", module);
+				  		  request.setAttribute("_ERROR_MESSAGE_", "Error in service updatePayment");
+				  		  TransactionUtil.rollback();
+				  		  return "error";
+		  			  }
+		  			  
+		  			  Map<String, Object> pmntResults = dispatcher.runSync("setPaymentStatus", UtilMisc.toMap("userLogin", userLogin, "paymentId", paymentId, "statusId", "PMNT_SENT"));
 		  			  if (ServiceUtil.isError(pmntResults)) {
 		  				  Debug.logError("Problems in service setPaymentStatus", module);
 				  		  request.setAttribute("_ERROR_MESSAGE_", "Error in service setPaymentStatus");
@@ -2963,7 +2990,9 @@ public class ByProductServices {
 				  		  return "error";
 		  			  }
 		  			  
-		       		  paymentIds.add(paymentId);
+	  			  }
+	  			  if(UtilValidate.isNotEmpty(payment)){
+	  				  paymentIds.add(paymentId);
 	  			  }
 	  			  
 		  	  }//end of loop
@@ -2979,18 +3008,26 @@ public class ByProductServices {
 		  		  TransactionUtil.rollback();
 		  		  return "error";
 		  	  }
-		  	  if(UtilValidate.isNotEmpty(paymentIds) && paymentIds.size() > 1 ){
+		  	  if(UtilValidate.isNotEmpty(paymentIds) && paymentIds.size() > 0 ){
 		  		  Map serviceCtx = FastMap.newInstance();
 		  		  serviceCtx.put("paymentIds", paymentIds);
+		  		  serviceCtx.put("paymentMethodId", paymentMethodId);
 		  		  serviceCtx.put("paymentMethodTypeId", paymentMethodTypeId);
 		  		  serviceCtx.put("instrumentDate", instrumentDate);
 		  		  serviceCtx.put("paymentDate", paymentDate);
 		  		  serviceCtx.put("paymentRefNum", paymentRefNum);
 		  		  serviceCtx.put("issuingAuthority", issuingAuthority);
 		  		  serviceCtx.put("amount", amount);
+		  		  serviceCtx.put("inFavor", inFavor);
+		  		  serviceCtx.put("statusId", "PAYGRP_CREATED");
 		  		  serviceCtx.put("finAccountId", finAccountId);
 		  		  serviceCtx.put("paymentGroupTypeId", paymentGroupTypeId);
+		  		  serviceCtx.put("createdDate", UtilDateTime.nowTimestamp());
+		  		  serviceCtx.put("lastModifiedDate", UtilDateTime.nowTimestamp());
+		  		  serviceCtx.put("lastModifiedByUserLogin", userLogin.getString("userLoginId"));
+		  		  serviceCtx.put("createdByUserLogin", userLogin.getString("userLoginId"));
 		  		  serviceCtx.put("userLogin", userLogin);
+		  		  
 		  		  Map resultCtx = dispatcher.runSync("createPaymentGroupAndMember", serviceCtx);
 		  		  if(ServiceUtil.isError(resultCtx)){
 		    			Debug.logError("Error while creating payment group: " + ServiceUtil.getErrorMessage(resultCtx), module);
@@ -2999,7 +3036,6 @@ public class ByProductServices {
 			  			return "error";
 		  		  }
 		  		  paymentGroupId = (String)resultCtx.get("paymentGroupId");
-		  		  Debug.log("paymentGroupId ####################"+paymentGroupId);
 		  	  }
 		  	 
 	  	  } catch (GenericEntityException e) {
@@ -3028,11 +3064,59 @@ public class ByProductServices {
 	  			  Debug.logError(e, "Could not commit transaction for entity engine error occurred while fetching data", module);
 	  		  }
 	  	  }
-	  	  Debug.log("Server completed successfully ###############################################################################");
 	  	  request.setAttribute("_EVENT_MESSAGE_", "Successfully made processed group payment entries ");
 	  	  return "success";     
 	}
 	
+	public static Map<String, Object> cancelPaymentGrouping(DispatchContext dctx, Map<String, ? extends Object> context){
+        Delegator delegator = dctx.getDelegator();
+        LocalDispatcher dispatcher = dctx.getDispatcher();
+        String paymentGroupId = (String) context.get("paymentGroupId");
+        Locale locale = (Locale) context.get("locale");  
+        Map result = ServiceUtil.returnSuccess();
+        GenericValue userLogin = (GenericValue) context.get("userLogin");
+        try {
+        	GenericValue paymentGroup = delegator.findOne("PaymentGroup", UtilMisc.toMap("paymentGroupId", paymentGroupId), false);
+        	String statusId = paymentGroup.getString("statusId");
+        	if(UtilValidate.isNotEmpty(statusId) && statusId.equals("PAYGRP_CANCELLED")){
+        		Debug.logError("Payment Group is already cancelled", module);
+  		      	return ServiceUtil.returnError("Payment Group is already cancelled for Id : "+paymentGroupId);
+        	}
+        	
+        	List<GenericValue> paymentList = delegator.findList("PaymentGroupMember", EntityCondition.makeCondition("paymentGroupId", EntityOperator.EQUALS, paymentGroupId), null, null, null, false);
+        	
+        	List paymentIds = EntityUtil.getFieldListFromEntityList(paymentList, "paymentId", true);
+        	
+        	List<GenericValue> payments = delegator.findList("Payment", EntityCondition.makeCondition("paymentId", EntityOperator.IN, paymentIds), null, null, null, false);
+        	for(GenericValue payment: payments){
+        		
+        		String finAccountTransId = payment.getString("finAccountTransId");
+        		if(UtilValidate.isNotEmpty(finAccountTransId)){
+        			Map finAccountTransMap = FastMap.newInstance();
+
+        			finAccountTransMap.put("finAccountTransId", finAccountTransId);
+        			finAccountTransMap.put("statusId", "FINACT_TRNS_CANCELED");
+        			finAccountTransMap.put("userLogin", userLogin);
+        			
+        			Map finAccountTransMapResult = dispatcher.runSync("setFinAccountTransStatus", finAccountTransMap);
+                    if (ServiceUtil.isError(finAccountTransMapResult)){
+                    	String errMsg =  ServiceUtil.getErrorMessage(finAccountTransMapResult);
+            		  	Debug.logError(errMsg , module);
+            		  	return ServiceUtil.returnError("Problem changing finaccount trans status to cancelled for transId :" + finAccountTransId);    
+            		}
+        		}
+        	}
+            paymentGroup.set("statusId", "PAYGRP_CANCELLED");
+            paymentGroup.set("lastModifiedDate", UtilDateTime.nowTimestamp());
+            paymentGroup.set("lastModifiedByUserLogin", (String)userLogin.get("userLoginId"));
+            paymentGroup.store();
+        }catch (Exception e) {
+			  Debug.logError(e, e.toString(), module);
+		      return ServiceUtil.returnError(e.toString());
+		} 
+  		result = ServiceUtil.returnSuccess("Batch Payment successfully cancelled.");
+        return result;
+    }
 	
 	public static Map<String, Object> cancelRetailerPayment(DispatchContext dctx, Map<String, ? extends Object> context){
         Delegator delegator = dctx.getDelegator();

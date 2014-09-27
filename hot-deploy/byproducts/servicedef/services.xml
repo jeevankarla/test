@@ -28,8 +28,14 @@
         <attribute name="returnCrQuantity" type="BigDecimal" mode="IN" optional="false"/>
         <attribute name="returnCnQuantity" type="BigDecimal" mode="IN" optional="false"/>
         <attribute name="statusIdTo" type="String" mode="IN" optional="true"/>
-        
+    
     </service>
+    <service name="cancelPaymentGrouping" engine="java" 
+        location="in.vasista.vbiz.byproducts.ByProductServices" invoke="cancelPaymentGrouping">
+        <description>Cancel Payment Grouping</description>
+        <attribute name="paymentGroupId" type="String" mode="IN" optional="false"/>
+    </service>
+    
     <service name="createSequenceForVATInvoice" engine="java" 
         location="in.vasista.vbiz.byproducts.ByProductNetworkServices" invoke="createSequenceForVATInvoice" transaction-timeout="20000">
         <description>Create Crate and Can Return</description>

@@ -48,13 +48,22 @@
 	<ShipmentType description="Depot Shipment" hasTable="N"  parentTypeId="DIRECT_SHIPMENT" shipmentTypeId="DEPOT_SHIPMENT"/>
     <ShipmentType description="FGS Shipment" hasTable="N" parentTypeId="DIRECT_SHIPMENT" shipmentTypeId="FGS_SHIPMENT"/>
     <ShipmentType description="Inter Unit Transfer Shipment" hasTable="N" parentTypeId="DIRECT_SHIPMENT" shipmentTypeId="INTUNIT_TR_SHIPMENT"/>
-    <ShipmentType description="Conversion Charges Shipment" hasTable="N" parentTypeId="DIRECT_SHIPMENT" shipmentTypeId="PROCESSING_SHIPMENT"/>
      
-    <Enumeration description="Conversion Processing Channel" enumCode="CONVERSION PROCESSING CHANNEL" enumId="PROCESSING_CHANNEL" enumTypeId="ORDER_SALES_CHANNEL"/>
     <Enumeration description="FGS Product Channel" enumCode="FGS CHANNEL" enumId="FGS_PRODUCT_CHANNEL" enumTypeId="ORDER_SALES_CHANNEL"/>
     <Enumeration description="Depot Channel" enumCode="DEPOT CHANNEL" enumId="DEPOT_CHANNEL" enumTypeId="ORDER_SALES_CHANNEL"/>
 	<Enumeration description="ICP Amul channel" enumCode="ICP AMUL" enumId="ICP_AMUL_CHANNEL" enumTypeId="ORDER_SALES_CHANNEL"/>
 	<Enumeration description="ICP Nandini channel" enumCode="ICP Nandini" enumId="ICP_NANDINI_CHANNEL" enumTypeId="ORDER_SALES_CHANNEL"/>
 	<Enumeration description="ICP Bellary channel" enumCode="ICP Bellary" enumId="ICP_BELLARY_CHANNEL" enumTypeId="ORDER_SALES_CHANNEL"/>
 	<Enumeration description="Inter Unit Transfer Channel" enumCode="Inter Unit Transfer Channel" enumId="INTUNIT_TR_CHANNEL" enumTypeId="ORDER_SALES_CHANNEL"/>
+	
+	<StatusType statusTypeId="PAYGRP_STATUS" description="Payment Created Status" hasTable="N" parentTypeId=""/>
+    <StatusItem statusId="PAYGRP_CREATED" statusTypeId="PAYGRP_STATUS" statusCode="CREATED" sequenceId="01" description="Created"/>
+    <StatusItem statusId="PAYGRP_CANCELLED" statusTypeId="PAYGRP_STATUS" statusCode="CANCELLED" sequenceId="12" description="Cancelled"/>
+    <StatusValidChange condition="" statusId="PAYGRP_CREATED" statusIdTo="PAYGRP_CANCELLED" transitionName="Set Created to Cancelled"/>
+    <RoleType description="Batch Billing" hasTable="N" roleTypeId="BATCH_BILLING"/>
+	<RoleType description="DTC Billing" hasTable="N" parentTypeId="BATCH_BILLING" roleTypeId="DTC_BILL"/>
+	<RoleType description="PTC Billing" hasTable="N" parentTypeId="BATCH_BILLING" roleTypeId="PTC_BILL"/>
+	<PaymentGroupType description="DTC Batch Payments" hasTable="N" parentTypeId="CHECK_RUN" paymentGroupTypeId="DTC_BILL"/>
+	<PaymentGroupType description="PTC Billing" hasTable="N" parentTypeId="CHECK_RUN" paymentGroupTypeId="PTC_BILL"/>
+	
 </entity-engine-xml>
