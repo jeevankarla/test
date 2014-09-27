@@ -272,7 +272,8 @@ under the License.
         <attribute name="isEnableAcctg" type="String" mode="IN" optional="true"/>  
         <attribute name="comments" type="String" mode="IN" optional="true"/> 
         <attribute name="statusId" type="String" mode="IN" optional="true"/> 
-        <attribute name="paymentsList" type="List" mode="OUT" optional="true"/> 
+        <attribute name="paymentsList" type="List" mode="OUT" optional="true"/>
+        <attribute name="finAccountId" type="String" mode="IN" optional="true"/>
     </service>
     <service name="settleInvoiceAndPayments" engine="java"
             location="org.ofbiz.accounting.invoice.InvoiceServices" invoke="settleInvoiceAndPayments" auth="true">

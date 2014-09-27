@@ -5189,6 +5189,7 @@ public class InvoiceServices {
         String statusId = (String) context.get("statusId");
         String partyId =(String) context.get("partyId");
         String facilityId =(String) context.get("facilityId");
+        String finAccountId =(String) context.get("finAccountId");
         String comments=(String) context.get("comments");
         Timestamp instrumentDate = (Timestamp) context.get("instrumentDate");
         List invoiceIds =(List) context.get("invoiceIds");
@@ -5277,6 +5278,9 @@ public class InvoiceServices {
             paymentCtx.put("lastModifiedByUserLogin",  userLogin.getString("userLoginId"));
             paymentCtx.put("createdDate", UtilDateTime.nowTimestamp());
             paymentCtx.put("lastModifiedDate", UtilDateTime.nowTimestamp());
+			if(UtilValidate.isNotEmpty(finAccountId)){
+				paymentCtx.put("finAccountId", finAccountId);
+			}
             Map<String, Object> paymentResult = dispatcher.runSync("createPayment", paymentCtx);
             if (ServiceUtil.isError(paymentResult)) {
             	Debug.logError(paymentResult.toString(), module);    			

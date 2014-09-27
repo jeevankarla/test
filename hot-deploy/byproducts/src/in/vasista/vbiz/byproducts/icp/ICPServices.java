@@ -592,6 +592,15 @@ public static Map<String, Object> approveICPOrder(DispatchContext dctx, Map cont
 			       	TransactionUtil.rollback();
 			       	return "error";
 		        }
+		        
+		        GenericValue invoice= delegator.findOne("Invoice",UtilMisc.toMap("invoiceId", invoiceId), true);
+				if (UtilValidate.isEmpty(invoice)) {
+					Debug.logError("Invoice doesn't exists with Id: " + invoiceId,module);
+					return "error";
+				}
+				if (UtilValidate.isNotEmpty(invoice)) {
+					partyIdFrom = invoice.getString("partyId");
+				}
 		        //creditNote is created here
 		        if("INTUNIT_TR_CHANNEL".equals(salesChannelEnumId)){
 		    		  Map paymentInputMap = FastMap.newInstance();
@@ -602,6 +611,23 @@ public static Map<String, Object> approveICPOrder(DispatchContext dctx, Map cont
 			  		  paymentInputMap.put("paymentPurposeType","NON_ROUTE_MKTG");
 			  		  paymentInputMap.put("statusId", "PMNT_RECEIVED");
 			  		  paymentInputMap.put("invoiceIds",UtilMisc.toList(invoiceId));
+			  		  String finAccountId =  null;
+			  		  List conditionList = FastList.newInstance();
+			  		  conditionList.add(EntityCondition.makeCondition("ownerPartyId", EntityOperator.EQUALS ,partyIdFrom));
+			  		  conditionList.add(EntityCondition.makeCondition("finAccountTypeId", EntityOperator.EQUALS ,"INTERUNIT_ACCOUNT"));
+			  		  conditionList.add(EntityCondition.makeCondition("statusId", EntityOperator.EQUALS ,"FNACT_ACTIVE"));
+			  		  EntityCondition condition = EntityCondition.makeCondition(conditionList,EntityOperator.AND); 		
+			  		  List<GenericValue> finAccountList = delegator.findList("FinAccount", condition, null, null, null, false);
+			  		  if(UtilValidate.isNotEmpty(finAccountList)){
+			  			  GenericValue finAccount = EntityUtil.getFirst(finAccountList);
+				  			if(UtilValidate.isNotEmpty(finAccount)){
+				  				finAccountId = finAccount.getString("finAccountId");
+				  			}
+			  		  }
+				  	  if(UtilValidate.isNotEmpty(finAccountId)){
+				  		  paymentInputMap.put("finAccountId", finAccountId);
+					  }
+			  		  
 			  		  Map paymentResult = dispatcher.runSync("createCreditNoteOrDebitNoteForInvoice", paymentInputMap);
 			  		  if(ServiceUtil.isError(paymentResult)){
 		    			     Debug.logError(paymentResult.toString(), module);

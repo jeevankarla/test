@@ -529,10 +529,10 @@ under the License.
         </field>
         <field name="amount" position="1"><display type="currency" currency="${payment.currencyUomId}"/></field>
         <field name="paymentDate" position="2" title="${uiLabelMap.PaymentDate}"><display type="date"/></field>
-        <!-- <field name="paymentRefNum" position="1" title="${uiLabelMap.paymentRefNum}"><display/></field>
+        <field name="paymentRefNum" position="1" title="${uiLabelMap.PaymentRefNum}"><display/></field>
         <field name="instrumentDate" position="2" title="${uiLabelMap.instrumentDate}"><display type="date"/></field>
         <field name="issuingAuthority" position="1" title="${uiLabelMap.issuingAuthority}" required-field="true"><display/></field>
-        <field name="comments" position="2"><display/></field> -->
+        <field name="comments" position="2"><display/></field>
     </form>
 
     <form name="paymentApplications" type="list" list-name="paymentApplications"
