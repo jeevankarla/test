@@ -43,6 +43,7 @@
                <set field="headerItem" value="byProductsOrderEntry"/>
                <set field="viewSize" from-field="parameters.VIEW_SIZE"/>
                <set field="targetRequest" value="FindPurchaseOrder"/>
+                <set field="ChannalType" value="PROD_PRCHSE_CHANNEL"/> 
              <!--   <set field="ChannalType" value="RM_DIRECT_CHANNEL"/> -->
             </actions>
             <widgets>
@@ -184,6 +185,94 @@
                            <platform-specific><html><html-template location="component://materialmgmt/webapp/materialmgmt/purchase/PurchaseOrder.ftl"/></html></platform-specific>								                           
                        </fail-widgets>
                    </section>
+            </widgets>
+        </section>
+    </screen> 
+    <screen name="FindInterUnitPurchase">
+        <section>
+            <actions>
+                <set field="titleProperty" value="Find InterUnit Purchase Order"/>              
+			    <set field="tabButtonItem" value="FindInterUnitPurchase" />	
+			   <set field="tabButtonItem2" value="FindInterUnitPurchase"/>       
+               <set field="headerItem" value="byProductsOrderEntry"/>
+               <set field="viewSize" from-field="parameters.VIEW_SIZE"/>
+               <set field="targetRequest" value="FindInterUnitPurchase"/>
+               
+                <set field="ChannalType" value="INTER_PRCHSE_CHANNEL"/> 
+            </actions>
+            <widgets>
+                 <decorator-screen name="materialmgmtCommonDecorator" location="${parameters.mainDecoratorLocation}">
+                      <decorator-section name="body">  
+                         <include-menu name="InterUnitPurchasesTabBar" location="component://materialmgmt/widget/materialmgmtMenus.xml"/>
+                        <section>
+                            <widgets>
+                                <decorator-screen name="FindScreenDecorator" location="component://common/widget/CommonScreens.xml">
+                                    <decorator-section name="search-options">
+                            			<include-form name="FindPurchaseOrder" location="component://materialmgmt/widget/materialmgmtForms.xml"/>
+                      				</decorator-section>
+                      				<decorator-section name="search-results">
+                      					<screenlet title="">
+                      						<!-- <link target="parlourSalesOrders.csv" text="Export As CSV" style="buttontext create">
+									  	 		<parameter param-name="orderId" from-field="parameters.orderId"/>
+												<parameter param-name="hideSearch" from-field="parameters.hideSearch"/>
+												<parameter param-name="orderDate" from-field="parameters.orderDate"/>
+												<parameter param-name="orderType" from-field="parameters.orderType"/>
+												<parameter param-name="salesChannelEnumId" from-field="parameters.salesChannelEnumId"/>
+												<parameter param-name="statusId" from-field="parameters.statusId"/>
+												<parameter param-name="productStoreId" from-field="parameters.productStoreId"/>
+												<parameter param-name="noConditionFind" from-field="parameters.noConditionFind"/>
+									  	 	</link> -->
+                          					<include-form name="listPurchaseOrders" location="component://materialmgmt/widget/materialmgmtForms.xml"/>
+                      					</screenlet>
+                      				</decorator-section>
+                                </decorator-screen>
+                            </widgets>
+                        </section>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>            
+        </section>
+    </screen> 
+    <screen name="InterUnitPurchaseOrderInit">
+        <section>
+            <actions>
+               <set field="titleProperty" value="InterUnit Purchase Order Entry"/>              
+			   <set field="tabButtonItem" value="FindInterUnitPurchase" />	
+			   <set field="tabButtonItem2" value="InterUnitPurchaseOrderInit"/>  
+			    <set field="changeFlag" value="InterUnitPurchase"/>  
+               <set field="priceTypeId" from-field="parameters.priceTypeId"/>
+               <set field="orderStatus" from-field="parameters.orderStatus"/> 
+               <set field="orderId" from-field="parameters.orderId"/>
+               <set field="supplyDate" from-field="parameters.supplyDate"/>
+                <set field="isFormSubmitted" from-field="parameters.isFormSubmitted"/>
+               <set field="defaultEffectiveDateTime" value="${supplyDate}" default-value="${bsh:org.ofbiz.base.util.UtilDateTime.nowTimestamp()}"/>
+			   <set field="defaultEffectiveDate" 
+					value="${groovy:org.ofbiz.base.util.UtilDateTime.toDateString(defaultEffectiveDateTime, &quot;dd MMMMM, yyyy&quot;);}" />	
+				 <!--  <set field="parameters.roleTypeId" value="MAINSTORE_VENDOR"/> -->
+				   <set field="parameters.roleTypeId" value="UNITS"/> 
+            </actions>
+            <widgets>
+              <decorator-screen name="materialmgmtCommonDecorator" location="${parameters.mainDecoratorLocation}">
+                      <decorator-section name="body">   
+                      <include-menu name="InterUnitPurchasesTabBar" location="component://materialmgmt/widget/materialmgmtMenus.xml"/>
+                      	<section>
+	                      	  <condition>
+	                             <if-compare operator="equals" field="isFormSubmitted" value=""/>
+	                         </condition>
+	                      		<widgets>
+	           						<include-screen name="PurchaseOrderInner"/>
+	                      		</widgets>
+                      	</section>
+                      <section>
+                      <condition>
+                      <if-compare operator="equals" field="isFormSubmitted" value="YES"/>
+                      </condition>
+                                <widgets>
+	           						 <include-screen name="PurchaseOrderEntry"/>
+	                      		</widgets>
+                      </section>
+                    </decorator-section>                                       
+                </decorator-screen>
             </widgets>
         </section>
     </screen> 

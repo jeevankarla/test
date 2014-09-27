@@ -7,7 +7,12 @@
         <menu-item name="FindPurchaseOrder" title="Purchase Order">
         <link target="FindPurchaseOrder"/>
         </menu-item>
+        
+         <menu-item name="FindInterUnitPurchase" title="InterUnit Purchase">
+          <link target="FindInterUnitPurchase"/>
+        </menu-item>
         </menu>
+        
         <!-- Sub Tab Menus -->
         <menu name="PurchasesTabBar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml" selected-menuitem-context-field-name="tabButtonItem2">
         <menu-item name="FindPurchaseOrder" title="Find Purchase Order">
@@ -15,6 +20,15 @@
         </menu-item>
          <menu-item name="newPurchaseOrder" title="New PurchaseOrder">
         	<link target="PurchaseOrderInit"/>
+        </menu-item>
+      </menu>
+      
+      <menu name="InterUnitPurchasesTabBar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml" selected-menuitem-context-field-name="tabButtonItem2">
+        <menu-item name="FindInterUnitPurchase" title="Find InterUnit Purchase">
+        <link target="FindInterUnitPurchase"/>
+        </menu-item>
+         <menu-item name="InterUnitPurchaseOrderInit" title="New InterUnit PurchaseOrder">
+        	<link target="InterUnitPurchaseOrderInit"/>
         </menu-item>
       </menu>
 </menus>

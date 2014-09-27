@@ -20,9 +20,11 @@
 	       
     <EnumerationType description="Order Purchase Channel" enumTypeId="ORDER_PRCHSE_CHANNEL" hasTable="N" parentTypeId=""/>
     <Enumeration description="Products  Purchase Channel" enumCode="PROD_PRCHSE_CHANNEL" enumId="PROD_PRCHSE_CHANNEL" sequenceId="01" enumTypeId="ORDER_PRCHSE_CHANNEL"/>
+    
+    <Enumeration description="Inter Unit Purchase Channel" enumCode="INTER_PRCHSE_CHANNEL" enumId="INTER_PRCHSE_CHANNEL" sequenceId="02" enumTypeId="ORDER_PRCHSE_CHANNEL"/>
        
        
-        <ProductPriceType productPriceTypeId="BEDCESS_PUR" parentTypeId="TAX" description="Educational Cess Bed On Purchase"/>
+    <ProductPriceType productPriceTypeId="BEDCESS_PUR" parentTypeId="TAX" description="Educational Cess Bed On Purchase"/>
     <ProductPriceType productPriceTypeId="BEDSECCESS_PUR" parentTypeId="TAX" description="Sec. Educational Cess Bed On Purchase"/>
     <ProductPriceType productPriceTypeId="BED_PUR" parentTypeId="TAX" description="Basic Excise Duty On Purchase"/>
     <ProductPriceType productPriceTypeId="CSTCESS_PUR" parentTypeId="TAX" description="CST - Education Cess On?Purchase"/>
@@ -78,4 +80,7 @@
     <InvoiceItemType  defaultGlAccountId="" description="Invoice Raw Material or Purchase Item" hasTable="N" invoiceItemTypeId="INV_RAWPROD_ITEM"  parentTypeId="INV_PROD_ITEM"/>
     <InvoiceItemTypeMap  invoiceItemMapKey="RAW_MATERIAL" invoiceItemTypeId="INV_RAWPROD_ITEM" invoiceTypeId="PURCHASE_INVOICE" /> 
      
+     <PaymentMethodType  description="Credit  Note Transfer"  parentTypeId="NOTE" paymentMethodTypeId="CREDITNOTE_TRNSF"/>
+     <PaymentMethodType  description="Debit Note Transfer"  parentTypeId="NOTE" paymentMethodTypeId="DEBITNOTE_TRNSF"/>
+      
       

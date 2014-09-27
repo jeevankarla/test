@@ -35,6 +35,7 @@ import org.ofbiz.entity.GenericValue;
 import org.ofbiz.entity.condition.EntityCondition;
 import org.ofbiz.entity.condition.EntityOperator;
 import org.ofbiz.entity.transaction.TransactionUtil;
+
 import org.ofbiz.entity.util.EntityUtil;
 import org.ofbiz.service.DispatchContext;
 import org.ofbiz.service.GenericServiceException;
@@ -466,7 +467,7 @@ public static String processPurchaseOrder(HttpServletRequest request, HttpServle
 	result = createPurchaseOrder(dctx, processOrderContext);
 	if(ServiceUtil.isError(result)){
 		Debug.logError("Unable to generate order: " + ServiceUtil.getErrorMessage(result), module);
-		request.setAttribute("_ERROR_MESSAGE_", "Unable to generate order  For party :" + partyId);
+		request.setAttribute("_ERROR_MESSAGE_", "Unable to generate order  For party :" + partyId+"....! "+ServiceUtil.getErrorMessage(result));
 		return "error";
 	}
 	
@@ -485,6 +486,7 @@ public static Map<String, Object> createPurchaseOrder(DispatchContext dctx, Map<
   	String salesChannel = (String) context.get("salesChannel");
   	String vehicleId = (String) context.get("vehicleId");
   	String partyId = (String) context.get("partyId");
+  	boolean beganTransaction = false;
   	//fright Charges
   	BigDecimal freightCharges = (BigDecimal) context.get("freightCharges");
   	BigDecimal discount = (BigDecimal) context.get("discount");
@@ -570,6 +572,8 @@ public static Map<String, Object> createPurchaseOrder(DispatchContext dctx, Map<
 	BigDecimal bedSecCessAmount = BigDecimal.ZERO;
 
 	List<GenericValue> prodPriceTypeList = FastList.newInstance();
+	try{
+	beganTransaction = TransactionUtil.begin(7200);
 	
 	for (Map<String, Object> prodQtyMap : productQtyList) {
 		List taxList=FastList.newInstance();
@@ -946,24 +950,54 @@ public static Map<String, Object> createPurchaseOrder(DispatchContext dctx, Map<
 	                 return ServiceUtil.returnError(e.toString());
 	            }  
 	            // apply invoice if any adavance payments from this  party
-     			Map<String, Object> resultPaymentApp = dispatcher.runSync("settleInvoiceAndPayments", UtilMisc.<String, Object>toMap("invoiceId", (String)result.get("invoiceId"),"userLogin", userLogin));
-     			if (ServiceUtil.isError(resultPaymentApp)) {						  
-     				Debug.logError("There was an error while  adjusting advance payment" + ServiceUtil.getErrorMessage(resultPaymentApp), module);			             
-     	            return ServiceUtil.returnError("There was an error while  adjusting advance payment" + ServiceUtil.getErrorMessage(resultPaymentApp));  
-     		    }
+	            //raising DebitNote Here for UNITS PURCHASES  
+	            
+	            if("INTER_PRCHSE_CHANNEL".equals(salesChannel)){
+		    		  Map paymentInputMap = FastMap.newInstance();
+			  		  paymentInputMap.put("userLogin", userLogin);
+			  		  paymentInputMap.put("paymentTypeId", "EXPENSE_PAYOUT");
+			  		 // paymentInputMap.put("paymentType", "SALES_PAYIN");
+			  		  paymentInputMap.put("paymentMethodTypeId", "DEBITNOTE_TRNSF");
+			  		  paymentInputMap.put("paymentPurposeType","INTER_PRCHSE_CHANNEL");
+			  		  paymentInputMap.put("statusId", "PMNT_RECEIVED");
+			  		  paymentInputMap.put("invoiceIds",UtilMisc.toList((String)result.get("invoiceId")));
+			  		  Map paymentResult = dispatcher.runSync("createCreditNoteOrDebitNoteForInvoice", paymentInputMap);
+			  		  if(ServiceUtil.isError(paymentResult)){
+		    			     Debug.logError(paymentResult.toString(), module);
+		    			     return ServiceUtil.returnError("There was an error in service createCreditNoteOrDebitNoteForInvoice" + ServiceUtil.getErrorMessage(paymentResult));  
+			  		  }
+			  		  List paymentIds = (List)paymentResult.get("paymentsList");
+  	                  Debug.log("+++++++===paymentIds===AfterDEbitNote=="+paymentIds);
+		        }else{
+	     			Map<String, Object> resultPaymentApp = dispatcher.runSync("settleInvoiceAndPayments", UtilMisc.<String, Object>toMap("invoiceId", (String)result.get("invoiceId"),"userLogin", userLogin));
+	     			if (ServiceUtil.isError(resultPaymentApp)) {						  
+	     				Debug.logError("There was an error while  adjusting advance payment" + ServiceUtil.getErrorMessage(resultPaymentApp), module);			             
+	     	            return ServiceUtil.returnError("There was an error while  adjusting advance payment" + ServiceUtil.getErrorMessage(resultPaymentApp));  
+	     		    }
+		        }
     		}//end of advance payment appl   
         }catch (Exception e) {
         	Debug.logError(e, module);
-            try{
-            	shipment.set("statusId", "GENERATION_FAIL");
-         		shipment.store();
-            }catch (Exception ex) {
-            	Debug.logError(e, module);        
-            	return ServiceUtil.returnError(e.toString());
-   			}
             return ServiceUtil.returnError(e.toString()); 
         }
     }
+	}catch(Exception e){
+		try {
+			// only rollback the transaction if we started one...
+  			TransactionUtil.rollback(beganTransaction, "Error while calling services", e);
+		} catch (GenericEntityException e2) {
+  			Debug.logError(e2, "Could not rollback transaction: " + e2.toString(), module);
+  		}
+		return ServiceUtil.returnError(e.toString()); 
+	}
+	finally {
+  		  // only commit the transaction if we started one... this will throw an exception if it fails
+  		  try {
+  			  TransactionUtil.commit(beganTransaction);
+  		  } catch (GenericEntityException e) {
+  			  Debug.logError(e, "Could not commit transaction for entity engine error occurred while fetching data", module);
+  		  }
+  	}
 	result.put("orderId", orderId);
 	Debug.log("result successful  #################################");
 	return result;

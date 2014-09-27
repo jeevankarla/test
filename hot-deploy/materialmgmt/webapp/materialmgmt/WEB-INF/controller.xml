@@ -31,11 +31,21 @@
        <response name="error" type="view" value="FindPurchaseOrder"/>
      </request-map>
      <request-map uri="PurchaseOrderInit">
-     <security https="true" auth="true"/>
-     <response name="success" type="view" value="PurchaseOrderInit"/>
+       <security https="true" auth="true"/>
+       <response name="success" type="view" value="PurchaseOrderInit"/>
        <response name="error" type="view" value="PurchaseOrderInit"/>
      </request-map>
-     
+    
+      <request-map uri="FindInterUnitPurchase">
+        <security https="true" auth="true"/>
+       <response name="success" type="view" value="FindInterUnitPurchase"/>
+       <response name="error" type="view" value="FindInterUnitPurchase"/>
+     </request-map>
+     <request-map uri="InterUnitPurchaseOrderInit">
+       <security https="true" auth="true"/>
+       <response name="success" type="view" value="InterUnitPurchaseOrderInit"/>
+       <response name="error" type="view" value="InterUnitPurchaseOrderInit"/>
+     </request-map>
     
     
     
@@ -45,10 +55,17 @@
         <response name="success"  type="request-redirect-noparam" value="PurchaseOrderInit">
         <redirect-parameter name="orderStatus"/>
      		<redirect-parameter name="orderId"/>
-     		<redirect-parameter name="orderFacility"/>
-     		<redirect-parameter name="orderRoute"/>
      		<redirect-parameter name="supplyDate"/></response>
         <response name="error" type="view" value="PurchaseOrderInit"/>
+    </request-map>
+    <request-map uri="processInterUnitPurchaseOrder">
+        <security https="true" auth="true"/>
+     	<event type="java"  path="in.vasista.vbiz.purchase.PurchaseStoreServices"  invoke="processPurchaseOrder" global-transaction="true"/>
+        <response name="success"  type="request-redirect-noparam" value="InterUnitPurchaseOrderInit">
+        <redirect-parameter name="orderStatus"/>
+     		<redirect-parameter name="orderId"/>
+     		<redirect-parameter name="supplyDate"/></response>
+        <response name="error" type="view" value="InterUnitPurchaseOrderInit"/>
     </request-map>
     
     <request-map uri="cancelPurchaseOrder">
@@ -57,6 +74,12 @@
          <response name="success"  type="request-redirect-noparam" value="FindPurchaseOrder"></response>
         <response name="error" type="view" value="FindPurchaseOrder"/>
     </request-map>
+    <request-map uri="cancelInterUnitPurchaseOrder">
+        <security https="true" auth="true"/>
+        <event type="service" path="" invoke="cancelPurchaseOrder"/>
+         <response name="success"  type="request-redirect-noparam" value="FindInterUnitPurchase"></response>
+        <response name="error" type="view" value="FindInterUnitPurchase"/>
+    </request-map>
     
     <!-- View Mappings -->
     <view-map name="main" type="screen" page="component://materialmgmt/widget/materialmgmtScreens.xml#main"/>
@@ -64,5 +87,7 @@
      <view-map name="FindPurchaseOrder" type="screen" page="component://materialmgmt/widget/materialmgmtScreens.xml#FindPurchaseOrder"/>
      
      <view-map name="PurchaseOrderInit" type="screen" page="component://materialmgmt/widget/materialmgmtScreens.xml#PurchaseOrderInit"/>
+    <view-map name="FindInterUnitPurchase" type="screen" page="component://materialmgmt/widget/materialmgmtScreens.xml#FindInterUnitPurchase"/>
+    <view-map name="InterUnitPurchaseOrderInit" type="screen" page="component://materialmgmt/widget/materialmgmtScreens.xml#InterUnitPurchaseOrderInit"/>
    
 </site-conf>

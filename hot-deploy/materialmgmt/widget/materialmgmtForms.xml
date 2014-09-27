@@ -2,11 +2,10 @@
 <forms xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"  xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/widget-form.xsd">
 
 	<form name="FindPurchaseOrder" title="" type="single" target="${targetRequest}" header-row-style="header-row" default-table-style="basic-table">
-    <!--     <field use-when="&quot;${ChannalType}&quot; == &quot;PROD_PRCHSE_CHANNEL&quot;" name="originFacilityId" title="Booth Code"><text-find/></field> -->
         <field title="Delivery Date" name="estimatedDeliveryDate"><date-find/></field>
         <field name="orderId"><text-find/></field>
-        <field name="orderType"><hidden value="SALES_ORDER"/></field>
-        <field name="salesChannelEnumId"><hidden value="PROD_PRCHSE_CHANNEL"  > </hidden></field>
+        <field name="orderType"><hidden value="PURCHASE_ORDER"/></field>
+        <field name="salesChannelEnumId"><hidden value="${ChannalType}"  > </hidden></field>
         <field name="statusId">
         	<drop-down>
         		<option key="ORDER_APPROVED" description="Approved"/>
@@ -22,7 +21,7 @@
         <field name="submitButton" title="${uiLabelMap.CommonFind}" widget-style="smallSubmit"><submit button-type="button"/></field>
     </form>
     
-     <form name="listPurchaseOrders" type="list" list-name="listIt" paginate-target="FindPurchaseOrder"
+     <form name="listPurchaseOrders" type="list" list-name="listIt" paginate-target="${targetRequest}"
         odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
         <actions>
             <service service-name="performFind" result-map="result" result-map-list="listIt">
@@ -60,6 +59,8 @@
         <field name="invStatusId" title="Status Id" ><display-entity key-field-name="statusId" description="${description}" entity-name="StatusItem"/></field>
         <field name="estimatedDeliveryDate" title="Delivery Date"><display description="${groovy:org.ofbiz.base.util.UtilDateTime.toDateString(estimatedDeliveryDate, &quot;dd/MM/yyyy&quot;);}"/></field>
         <field name="createdBy" title="Created By"><display/></field>
+        <field name="salesChannelEnumId"><display/></field>
+      
         <field name="lastUpdatedStamp" title="Last Update"><display description="${groovy:org.ofbiz.base.util.UtilDateTime.toDateString(lastUpdatedStamp, &quot;dd/MM/yyyy HH:mm:ss&quot;);}" /></field>
         <!--  <field use-when="statusId.equals(&quot;ORDER_APPROVED&quot;)" name="Order" widget-style="buttontext" >
             <hyperlink target="printAdhocOrder" description="Print Order" target-window="_blank">
@@ -113,8 +114,15 @@
                   <parameter param-name="shipmentId"/>
             </hyperlink>
         </field> -->
-        <field use-when="statusId.equals(&quot;ORDER_APPROVED&quot;) &amp;&amp; paymentApplicationId==null" name="cancelOrder" widget-style="buttontext">
+        <field use-when="statusId.equals(&quot;ORDER_APPROVED&quot;) &amp;&amp; paymentApplicationId==null &amp;&amp;  salesChannelEnumId.equals(&quot;PROD_PRCHSE_CHANNEL&quot;)" name="cancelOrder" widget-style="buttontext">
             <hyperlink target="cancelPurchaseOrder" description="Cancel Order">
+                <parameter param-name="orderId"/>
+                <parameter param-name="statusId"/>
+                <parameter param-name="partyId" from-field="partyIdFrom"/>
+            </hyperlink>
+        </field> 
+         <field use-when="statusId.equals(&quot;ORDER_APPROVED&quot;) &amp;&amp; paymentApplicationId==null &amp;&amp;  salesChannelEnumId.equals(&quot;INTER_PRCHSE_CHANNEL&quot;)" name="cancelOrder" widget-style="buttontext">
+            <hyperlink target="cancelInterUnitPurchaseOrder" description="Cancel  Order">
                 <parameter param-name="orderId"/>
                 <parameter param-name="statusId"/>
                 <parameter param-name="partyId" from-field="partyIdFrom"/>

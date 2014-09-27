@@ -427,7 +427,7 @@
         grid.onCellChange.subscribe(function(e,args) {
         var totalValue=0;
         
-        	if (args.cell == 2) {
+        	if (args.cell == 2 || args.cell == 1) {
 				var prod = data[args.row]["cProductId"];
 				var qty = parseFloat(data[args.row]["quantity"]);
 			
@@ -713,7 +713,65 @@
 		mainGrid = grid;
 	}
 	
-	
+	// update when  discunt/fright/insurence changes
+	function addToInvoiceAmount(){
+            var totalAmount = 0;
+            //alert("==data.length===>"+data.length);
+				for (i = 0; i < data.length; i++) {
+				   if(!isNaN(data[i]["amount"])){
+					totalAmount += data[i]["amount"];
+				   }
+				   if(!isNaN(data[i]["Excise"])){
+					totalAmount += data[i]["Excise"];
+				   }
+				   if(!isNaN(data[i]["bedCessAmount"])){
+					totalAmount += data[i]["bedCessAmount"];
+				   }
+				   if(!isNaN(data[i]["bedSecCessAmount"])){
+					totalAmount += data[i]["bedSecCessAmount"];
+				   }
+				  
+				   if(!isNaN(data[i]["VAT"])){
+					totalAmount += data[i]["VAT"];
+				   }
+				   if(!isNaN(data[i]["CST"])){
+					totalAmount += data[i]["CST"];
+				   }
+				   
+				}
+				
+				 	var freightCharges=$("#freightCharges").val();
+			         var discount=$("#discount").val();
+			         var insurence = $("#insurence").val();
+			         //alert("<==totalAmount===>"+totalAmount+"=freightCharges="+freightCharges+"=discount="+discount+"=insurence="+insurence);
+			         if(freightCharges !=="" && (!isNaN(freightCharges))){
+			          freightCharges = parseFloat(freightCharges);
+			          //alert("<==totalAmount===>"+totalAmount+"==freightCharges=="+freightCharges);
+			         totalAmount +=freightCharges;
+			         }
+			         if(insurence !=="" && (!isNaN(insurence))){
+			         insurence = parseFloat(insurence);
+			         // alert("<==totalAmount===>"+totalAmount+"==insurence=="+insurence);
+			         totalAmount +=insurence;
+			         }
+			         if(discount !=="" && (!isNaN(discount))){
+			        discount = parseFloat(discount);
+			         totalAmount -=discount;
+			         }
+			         
+			    //var amt = parseFloat(Math.round((totalAmount))); for total rounding
+				var amt = parseFloat(Math.round((totalAmount) * 100) / 100);
+			
+				if(amt > 0 ){
+					var dispText = "<b>  [Invoice Amt: Rs " +  amt + "]</b>";
+				}
+				else{
+					var dispText = "<b>  [Invoice Amt: Rs 0 ]</b>";
+				}
+				//alert("==amt="+amt);
+				jQuery("#totalAmount").html(dispText);
+    }
+    
 	//update ExciseElementValues
     function updateGridColumnsValues(){
 				for (i = 0; i < data.length; i++) {
