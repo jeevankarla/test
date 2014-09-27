@@ -4445,6 +4445,7 @@
 				tax authorities -->
 		</field>
 		<field name="enableTaxInvoice" type="indicator"/> 
+		<field name="sequenceNum" type="numeric"></field>
 		<prim-key field="taxAuthGeoId"/>
 		<prim-key field="taxAuthPartyId" />
 		<relation type="one" fk-name="TAXAUTH_TAGEO" title="TaxAuth"
