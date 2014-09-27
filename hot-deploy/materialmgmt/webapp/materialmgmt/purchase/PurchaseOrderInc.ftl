@@ -452,116 +452,155 @@
 				grid.updateRow(args.row);
 				updateInvoiceTotalAmount();
 			}
-			
-		if(data[args.row]['ExcisePercent']!='undefined' && data[args.row]['ExcisePercent']>=0) {
-		      $("#addBED").attr('disabled', 'disabled');
-              $("#addBED").attr('readonly', 'readonly');
-				var basic_total = data[args.row]['amount'];
-				if(isNaN(basic_total)){
-						basic_total = 0;
-				}
-				var Excise_percent= data[args.row]['ExcisePercent'];
-				if(isNaN(Excise_percent)){
-					Excise_percent = 0;
-				}
-				var exciseUnit = Excise_percent/100;
-				var exciseAmount=basic_total*exciseUnit;
-				//var exciseAmount=Math.round(basic_total*exciseUnit);
-				//alert("=basic_total="+basic_total+"=Excise_percent="+Excise_percent+"=exciseAmount="+exciseAmount);
-				if(isNaN(exciseAmount)){
-					exciseAmount = 0;
-				}
-				data[args.row]["Excise"] = exciseAmount;
-				updateInvoiceTotalAmount();
-			 }
-			 
-		   if(data[args.row]['Excise']!='undefined' && data[args.row]['Excise']>=0) {
-			 //once BED added and input happens disable the AddBed button
-			  $("#addBED").attr('disabled', 'disabled');
-              $("#addBED").attr('readonly', 'readonly');
-              
-			    var basic_total = data[args.row]['amount'];
-				if(isNaN(basic_total)){
-						basic_total = 0;
-				}
-			    var basic_Excise=data[args.row]['Excise'];
-				var bedCessPercent= data[args.row]['bedCessPercent'];
-				if(isNaN(bedCessPercent)){
-					bedCessPercent = 0;
-				}
-				var bedCessUnit = bedCessPercent/100;
-				 bedCessAmount=basic_Excise*bedCessUnit;
-				//alert("=bedCessUnit="+bedCessUnit+"=basic_Excise="+basic_Excise+"=bedCessPercent="+bedCessPercent);
-				if(isNaN(bedCessAmount)){
-					bedCessAmount = 0;
-				}
-				data[args.row]["bedCessAmount"] = bedCessAmount;
-				updateInvoiceTotalAmount();
-			 }
-			 
-			 if(data[args.row]['Excise']!='undefined' && data[args.row]['Excise']>=0) {
-			    var basic_Excise=data[args.row]['Excise'];
-				var bedSecCessPercent= data[args.row]['bedSecCessPercent'];
-				if(isNaN(bedSecCessPercent)){
-					bedSecCessPercent = 0;
-				}
-				var bedSecCessUnit = bedSecCessPercent/100;
-				 bedSecCessAmount=basic_Excise*bedSecCessUnit;
-				//alert("=bedCessUnit="+bedCessUnit+"=basic_Excise="+basic_Excise+"=bedSecCessPercent="+bedSecCessPercent);
-				if(isNaN(bedSecCessAmount)){
-					bedSecCessAmount = 0;
-				}
-				data[args.row]["bedSecCessAmount"] = bedSecCessAmount;
-				updateInvoiceTotalAmount();
-			 }
-			     
-			 var amountAftereExcise = 0;
-			 
-			  if(!isNaN(data[args.row]['amount'])){
-					amountAftereExcise += data[args.row]['amount'];
-				}
-				if(!isNaN(data[args.row]['Excise'])){
-					amountAftereExcise += data[args.row]['Excise'];
-				}
-				if(!isNaN(data[args.row]['bedCessAmount'])){
-					amountAftereExcise += data[args.row]['bedCessAmount'];
-				}
-				if(!isNaN(data[args.row]['bedSecCessAmount'])){
-					amountAftereExcise += data[args.row]['bedSecCessAmount'];
-				}
-			
-			 if(data[args.row]['VatPercent']!='undefined' && data[args.row]['VatPercent']>=0) {
-				var vat_percent= data[args.row]['VatPercent'];
-				if(isNaN(vat_percent)){
-					vat_percent = 0;
-				}
-				var vatUnit = vat_percent/100;
-				var vatAmount=amountAftereExcise*vatUnit;
-				//alert("===INVAT==amountAftereExcise="+amountAftereExcise+"=vat_percent="+vat_percent+"=vatAmount="+vatAmount);
-				if(isNaN(vatAmount)){
-					vatAmount = 0;
-				}
-				data[args.row]["VAT"] = vatAmount;
-				updateInvoiceTotalAmount();
-			  }
-			  if(args.cell == 11) {
-				updateInvoiceTotalAmount();
-			  }
-			 
-			 
-			  if(data[args.row]['CSTPercent']!='undefined' && data[args.row]['CSTPercent']>=0) {
-				var cst_percent= data[args.row]['CSTPercent'];
-				if(isNaN(cst_percent)){
-					cst_percent = 0;
-				}
-				var cstUnit = cst_percent/100;
-				var cstAmount=amountAftereExcise*cstUnit;
-				if(isNaN(cstAmount)){
-					cstAmount = 0;
-				}
-				data[args.row]["CST"] = cstAmount;
-				updateInvoiceTotalAmount();
-			 }
+			var isChecked = $('#addBED').is(':checked');
+            if(isChecked) { 
+               //alert("=IN=CHECKEDD===="+isChecked);
+	               if(args.cell == 4) {
+				      $("#addBED").attr('disabled', 'disabled');
+		              $("#addBED").attr('readonly', 'readonly');
+						var basic_total = data[args.row]['amount'];
+						if(isNaN(basic_total)){
+								basic_total = 0;
+						}
+						var Excise_percent= data[args.row]['ExcisePercent'];
+						if(isNaN(Excise_percent)){
+							Excise_percent = 0;
+						}
+						var exciseUnit = Excise_percent/100;
+						var exciseAmount=basic_total*exciseUnit;
+						//var exciseAmount=Math.round(basic_total*exciseUnit);
+						//alert("=basic_total="+basic_total+"=Excise_percent="+Excise_percent+"=exciseAmount="+exciseAmount);
+						if(isNaN(exciseAmount)){
+							exciseAmount = 0;
+						}
+						data[args.row]["Excise"] = exciseAmount;
+						updateInvoiceTotalAmount();
+					 }
+					 //bedcess
+					if(args.cell == 6) {
+				     //once BED added and input happens disable the AddBed button
+					  $("#addBED").attr('disabled', 'disabled');
+		              $("#addBED").attr('readonly', 'readonly');
+					    var basic_total = data[args.row]['amount'];
+						if(isNaN(basic_total)){
+								basic_total = 0;
+						}
+					    var basic_Excise=data[args.row]['Excise'];
+						var bedCessPercent= data[args.row]['bedCessPercent'];
+						if(isNaN(bedCessPercent)){
+							bedCessPercent = 0;
+						}
+						var bedCessUnit = bedCessPercent/100;
+						 bedCessAmount=basic_Excise*bedCessUnit;
+						//alert("=bedCessUnit="+bedCessUnit+"=basic_Excise="+basic_Excise+"=bedCessPercent="+bedCessPercent);
+						if(isNaN(bedCessAmount)){
+							bedCessAmount = 0;
+						}
+						data[args.row]["bedCessAmount"] = bedCessAmount;
+						updateInvoiceTotalAmount();
+				        }
+				        if(args.cell == 8) {
+					    var basic_Excise=data[args.row]['Excise'];
+						var bedSecCessPercent= data[args.row]['bedSecCessPercent'];
+						if(isNaN(bedSecCessPercent)){
+							bedSecCessPercent = 0;
+						}
+						var bedSecCessUnit = bedSecCessPercent/100;
+						 bedSecCessAmount=basic_Excise*bedSecCessUnit;
+						if(isNaN(bedSecCessAmount)){
+							bedSecCessAmount = 0;
+						}
+						data[args.row]["bedSecCessAmount"] = bedSecCessAmount;
+						updateInvoiceTotalAmount();
+						}
+					 var amountAftereExcise = 0;
+					  if(!isNaN(data[args.row]['amount'])){
+							amountAftereExcise += data[args.row]['amount'];
+						}
+						if(!isNaN(data[args.row]['Excise'])){
+							amountAftereExcise += data[args.row]['Excise'];
+						}
+						if(!isNaN(data[args.row]['bedCessAmount'])){
+							amountAftereExcise += data[args.row]['bedCessAmount'];
+						}
+						if(!isNaN(data[args.row]['bedSecCessAmount'])){
+							amountAftereExcise += data[args.row]['bedSecCessAmount'];
+						}
+					 if(args.cell == 10) {
+						var vat_percent= data[args.row]['VatPercent'];
+						if(isNaN(vat_percent)){
+							vat_percent = 0;
+						}
+						var vatUnit = vat_percent/100;
+						var vatAmount=amountAftereExcise*vatUnit;
+						//alert("===INVAT==amountAftereExcise="+amountAftereExcise+"=vat_percent="+vat_percent+"=vatAmount="+vatAmount);
+						if(isNaN(vatAmount)){
+							vatAmount = 0;
+						}
+						data[args.row]["VAT"] = vatAmount;
+						updateInvoiceTotalAmount();
+					  }
+					  if(args.cell == 11) {
+						updateInvoiceTotalAmount();
+					  }
+					  if(args.cell==12) {
+						var cst_percent= data[args.row]['CSTPercent'];
+						if(isNaN(cst_percent)){
+							cst_percent = 0;
+						}
+						var cstUnit = cst_percent/100;
+						var cstAmount=amountAftereExcise*cstUnit;
+						if(isNaN(cstAmount)){
+							cstAmount = 0;
+						}
+						data[args.row]["CST"] = cstAmount;
+						updateInvoiceTotalAmount();
+					  }
+					  if(args.cell == 13) {
+						updateInvoiceTotalAmount();
+					  }
+		            }else{  
+			            if(args.cell == 4) {
+			              var amountAftereExcise = 0;
+			              if(!isNaN(data[args.row]['amount'])){
+							amountAftereExcise += data[args.row]['amount'];
+						   }
+							var vat_percent= data[args.row]['VatPercent'];
+							if(isNaN(vat_percent)){
+								vat_percent = 0;
+							}
+							var vatUnit = vat_percent/100;
+							var vatAmount=amountAftereExcise*vatUnit;
+							if(isNaN(vatAmount)){
+								vatAmount = 0;
+							}
+							data[args.row]["VAT"] = vatAmount;
+							updateInvoiceTotalAmount();
+						  }
+						  if(args.cell == 5) {
+						   updateInvoiceTotalAmount();
+					       }
+		            }  
+		            if(args.cell==6) {
+	                  var amountAftereExcise = 0;
+		              if(!isNaN(data[args.row]['amount'])){
+						amountAftereExcise += data[args.row]['amount'];
+					   }
+						var cst_percent= data[args.row]['CSTPercent'];
+						if(isNaN(cst_percent)){
+							cst_percent = 0;
+						}
+						var cstUnit = cst_percent/100;
+						var cstAmount=amountAftereExcise*cstUnit;
+						if(isNaN(cstAmount)){
+							cstAmount = 0;
+						}
+						data[args.row]["CST"] = cstAmount;
+						updateInvoiceTotalAmount();
+					  }
+					  if(args.cell == 7) {
+						updateInvoiceTotalAmount();
+					  } 
 		}); 
 		
 		grid.onActiveCellChanged.subscribe(function(e,args) {
@@ -612,7 +651,27 @@
 				   }
 				   
 				}
-				 //alert("<==totalAmount===>"+totalAmount);
+				
+				 	var freightCharges=$("#freightCharges").val();
+			         var discount=$("#discount").val();
+			         var insurence = $("#insurence").val();
+			         //alert("<==totalAmount===>"+totalAmount+"=freightCharges="+freightCharges+"=discount="+discount+"=insurence="+insurence);
+			         if(freightCharges !=="" && (!isNaN(freightCharges))){
+			          freightCharges = parseFloat(freightCharges);
+			          //alert("<==totalAmount===>"+totalAmount+"==freightCharges=="+freightCharges);
+			         totalAmount +=freightCharges;
+			         }
+			         if(insurence !=="" && (!isNaN(insurence))){
+			         insurence = parseFloat(insurence);
+			         // alert("<==totalAmount===>"+totalAmount+"==insurence=="+insurence);
+			         totalAmount +=insurence;
+			         }
+			         if(discount !=="" && (!isNaN(discount))){
+			        discount = parseFloat(discount);
+			         totalAmount -=discount;
+			         }
+			         
+			    //var amt = parseFloat(Math.round((totalAmount))); for total rounding
 				var amt = parseFloat(Math.round((totalAmount) * 100) / 100);
 			
 				if(amt > 0 ){
