@@ -619,36 +619,6 @@ public static Map<String, Object> createPurchaseOrder(DispatchContext dctx, Map<
 	        	tempPrice=tempPrice.add(taxAmount);
 	        	totalTaxAmt=totalTaxAmt.add(taxAmount);
 			}
-			if(UtilValidate.isNotEmpty(prodQtyMap.get("vatAmount"))){
-			    BigDecimal taxRate = (BigDecimal)prodQtyMap.get("vatAmount");
-			    BigDecimal vatPercent=(BigDecimal)prodQtyMap.get("vatPercent");
-				BigDecimal taxAmount = BigDecimal.ZERO;
-	        	if(taxRate.compareTo(BigDecimal.ZERO)>0){
-	        		//taxAmount = (tempPrice.multiply(taxRate)).divide(PERCENT_SCALE, salestaxCalcDecimals, salestaxRounding);
-	        		taxAmount=taxRate.setScale(salestaxCalcDecimals, salestaxRounding);
-	        		Map taxDetailMap = FastMap.newInstance();
-		    		//taxDetailMap.put("taxType", "VAT_SALE");
-		    		taxDetailMap.put("taxType", "VAT_PUR");
-		    		taxDetailMap.put("amount", taxAmount);
-		    		taxDetailMap.put("percentage", vatPercent);
-		    		taxList.add(taxDetailMap);
-		        	/*if(taxPrice.compareTo(BigDecimal.ZERO)>0){
-		        		taxAmount = itemQuantity.multiply(taxPrice).setScale(salestaxCalcDecimals, salestaxRounding);
-		        	}*/
-		    		GenericValue newProdPriceType = delegator.makeValue("ProductPriceAndType");        	 
-		    		newProdPriceType.set("fromDate", effectiveDate);
-		    		newProdPriceType.set("parentTypeId", "TAX");
-		    		newProdPriceType.set("productId", productId);
-		    		newProdPriceType.set("productStoreGroupId", "_NA_");
-		    		newProdPriceType.set("productPricePurposeId", "PURCHASE");
-		    		newProdPriceType.set("productPriceTypeId", "VAT_PUR");
-		    		newProdPriceType.set("taxPercentage", vatPercent);
-		    		newProdPriceType.set("taxAmount", taxAmount);
-		    		newProdPriceType.set("currencyUomId", "INR");
-		    		prodPriceTypeList.add(newProdPriceType);
-	        	}
-	        	totalTaxAmt=totalTaxAmt.add(taxAmount);
-			}
 			/*productQtyMap.put("vatPercent", vatPercent);
 			productQtyMap.put("excisePercent", excisePercent);
 			productQtyMap.put("bedCessPercent",bedCessPercent );
@@ -704,6 +674,36 @@ public static Map<String, Object> createPurchaseOrder(DispatchContext dctx, Map<
 		    		newProdPriceType.set("productPricePurposeId", "PURCHASE");
 		    		newProdPriceType.set("productPriceTypeId", "BEDSECCESS_PUR");
 		    		newProdPriceType.set("taxPercentage", bedSecCessPercent);
+		    		newProdPriceType.set("taxAmount", taxAmount);
+		    		newProdPriceType.set("currencyUomId", "INR");
+		    		prodPriceTypeList.add(newProdPriceType);
+	        	}
+	        	totalTaxAmt=totalTaxAmt.add(taxAmount);
+			}
+		    if(UtilValidate.isNotEmpty(prodQtyMap.get("vatAmount"))){
+			    BigDecimal taxRate = (BigDecimal)prodQtyMap.get("vatAmount");
+			    BigDecimal vatPercent=(BigDecimal)prodQtyMap.get("vatPercent");
+				BigDecimal taxAmount = BigDecimal.ZERO;
+	        	if(taxRate.compareTo(BigDecimal.ZERO)>0){
+	        		//taxAmount = (tempPrice.multiply(taxRate)).divide(PERCENT_SCALE, salestaxCalcDecimals, salestaxRounding);
+	        		taxAmount=taxRate.setScale(salestaxCalcDecimals, salestaxRounding);
+	        		Map taxDetailMap = FastMap.newInstance();
+		    		//taxDetailMap.put("taxType", "VAT_SALE");
+		    		taxDetailMap.put("taxType", "VAT_PUR");
+		    		taxDetailMap.put("amount", taxAmount);
+		    		taxDetailMap.put("percentage", vatPercent);
+		    		taxList.add(taxDetailMap);
+		        	/*if(taxPrice.compareTo(BigDecimal.ZERO)>0){
+		        		taxAmount = itemQuantity.multiply(taxPrice).setScale(salestaxCalcDecimals, salestaxRounding);
+		        	}*/
+		    		GenericValue newProdPriceType = delegator.makeValue("ProductPriceAndType");        	 
+		    		newProdPriceType.set("fromDate", effectiveDate);
+		    		newProdPriceType.set("parentTypeId", "TAX");
+		    		newProdPriceType.set("productId", productId);
+		    		newProdPriceType.set("productStoreGroupId", "_NA_");
+		    		newProdPriceType.set("productPricePurposeId", "PURCHASE");
+		    		newProdPriceType.set("productPriceTypeId", "VAT_PUR");
+		    		newProdPriceType.set("taxPercentage", vatPercent);
 		    		newProdPriceType.set("taxAmount", taxAmount);
 		    		newProdPriceType.set("currencyUomId", "INR");
 		    		prodPriceTypeList.add(newProdPriceType);
