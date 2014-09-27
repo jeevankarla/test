@@ -1697,11 +1697,11 @@ under the License.
         <response name="success" type="view" value="ProfessionalTaxReport"/>
         <response name="error" type="view" value="ProfessionalTaxReport"></response>
     </request-map>
-   <!-- <request-map uri="PayrollConsolidatedSummaryReport.pdf">
+   <request-map uri="PayrollConsolidatedSummaryReport.pdf">
     	<security https="true" auth="true"/>
         <response name="success" type="view" value="PrintPayrollSummary"/>
         <response name="error" type="view" value="PrintPayrollSummary"></response>
-    </request-map> --> 
+    </request-map> 
     <request-map uri="PrintPayrollSummary.pdf">
     	<security https="true" auth="true"/>
         <response name="success" type="view" value="PrintPayrollSummary"/>

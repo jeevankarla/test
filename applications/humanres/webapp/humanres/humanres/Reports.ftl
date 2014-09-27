@@ -552,7 +552,29 @@ function makeDatePicker1(fromDateId ,thruDateId){
 							</table>
 						</form>
 					</tr>   -->
-					
+					<tr class="alternate-row">
+						<form id="PayrollConsolidatedSummaryReport" name="PayrollConsolidatedSummaryReport" mothed="post" action="<@ofbizUrl>PayrollConsolidatedSummaryReport.pdf</@ofbizUrl>" target="_blank">
+							<table class="basic-table" cellspacing="5">
+								<tr class="alternate-row">
+									<td width="20%"><span class='h3'>Payroll Consolidated Summary Report</span></td>
+									<td width="30%"><spam class='h3'>Organization Id 
+										<select name="deptId" class='h4'>
+											<#list orgList as org>    
+												<option value='${org.partyId}'>${org.groupName?if_exists}</option>
+											</#list> 
+										</select></span>
+									</td>	
+									<td width="30%"><span class='h3'>Period Id
+										<select name="customTimePeriodId" id="customTimePeriodId" class='h4'>
+											<#list customTimePeriodList as customTimePeriod><option value='${customTimePeriod.customTimePeriodId?if_exists}' >${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(customTimePeriod.fromDate, "dd MMMMM, yyyy")} -${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(customTimePeriod.thruDate, "dd MMMMM, yyyy")}</option></#list>
+										</select></span>
+									</td>	
+									<td width="5%"></td>
+									<td width="30%"><span class="h3"><input type="submit" value="Download" class="buttontext"></span></td>
+								</tr>
+							</table>
+						</form>
+					</tr>
 				   	<tr class="alternate-row">
 						<form id="BenefitsOrDeductionsExport" name="BenefitsOrDeductionsExport" mothed="post" action="<@ofbizUrl>ExportEmployeeBenefitsOrDeductions</@ofbizUrl>">
 							<table class="basic-table" cellspacing="0">
@@ -608,6 +630,7 @@ function makeDatePicker1(fromDateId ,thruDateId){
 									</td>
 									<td ><input type="submit" value="Download" class="buttontext"></td>
 								</tr>
+								
 							</table>
 						</form>
 					</tr>

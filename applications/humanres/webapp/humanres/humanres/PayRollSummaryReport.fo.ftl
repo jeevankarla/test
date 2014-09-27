@@ -30,11 +30,16 @@ under the License.
   <#if payRollSummaryMap?has_content>
      <fo:page-sequence master-reference="main"> 	 <#-- the footer -->
      		<fo:static-content flow-name="xsl-region-before">
-     			<#assign partyGroup = delegator.findOne("PartyGroup", {"partyId" : parameters.partyId}, true)>
-     			<#assign partyAddressResult = dispatcher.runSync("getPartyPostalAddress", Static["org.ofbiz.base.util.UtilMisc"].toMap("partyId", parameters.partyId, "userLogin", userLogin))/>
-     			<fo:block white-space-collapse="false" font-weight="bold" text-align="center" keep-together="always">${partyGroup.groupName?if_exists}  <#if partyAddressResult.address1?has_content>${partyAddressResult.address1?if_exists}</#if><#if (partyAddressResult.address2?has_content)>${partyAddressResult.address2?if_exists}</#if></fo:block>
-        	 	<fo:block text-align="left" white-space-collapse="false" font-weight="bold">&#160; SUMMARY OF EARNINGS AND DEDUCTIONS FOR THE MONTH OF :  ${(Static["org.ofbiz.base.util.UtilDateTime"].toDateString(timePeriodEnd, "MMMMM-yyyy")).toUpperCase()}</fo:block>
-        		<fo:block white-space-collapse="false" keep-together="always">${uiLabelMap.CommonPage}No: <fo:page-number/>                 Date: ${(Static["org.ofbiz.base.util.UtilDateTime"].toDateString(nowTimestamp, "dd-MMM-yyyy"))}</fo:block>
+     		<#if deptId?exists>
+     			<#assign department=deptId/>
+     		<#else>
+     			<#assign department= parameters.partyId/>
+     		</#if> 
+     			<#assign partyGroup = delegator.findOne("PartyGroup", {"partyId" :department}, true)>
+     			<#assign partyAddressResult = dispatcher.runSync("getPartyPostalAddress", Static["org.ofbiz.base.util.UtilMisc"].toMap("partyId", department, "userLogin", userLogin))/>
+     			<fo:block white-space-collapse="false" font-weight="bold" text-align="center" keep-together="always">${partyGroup.groupName?if_exists?upper_case}  <#if partyAddressResult.address1?has_content>${partyAddressResult.address1?if_exists}</#if><#if (partyAddressResult.address2?has_content)>${partyAddressResult.address2?if_exists}</#if></fo:block>
+        	 	<fo:block text-align="center" white-space-collapse="false" font-weight="bold">&#160; SUMMARY OF EARNINGS AND DEDUCTIONS FOR THE MONTH OF :  ${(Static["org.ofbiz.base.util.UtilDateTime"].toDateString(timePeriodEnd, "MMMMM-yyyy")).toUpperCase()}</fo:block>
+        		<fo:block white-space-collapse="false" keep-together="always">&#160;${uiLabelMap.CommonPage}No: <fo:page-number/>                                                                                                                                     Date: ${(Static["org.ofbiz.base.util.UtilDateTime"].toDateString(nowTimestamp, "dd MMM, yyyy"))?upper_case}</fo:block>
         		<fo:block text-align="left" keep-together="always" white-space-collapse="false">-------------------------------------------------------------------------------------------------------------------------------------------------------------------</fo:block>	 	 	  
         		<fo:block text-align="left" white-space-collapse="false" keep-together="always" font-weight="bold">Earnings                                                             Amount      Deductions                                                             Amount</fo:block>
         		<fo:block text-align="left" keep-together="always" white-space-collapse="false">-------------------------------------------------------------------------------------------------------------------------------------------------------------------</fo:block>

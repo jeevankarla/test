@@ -20,12 +20,12 @@ import java.text.SimpleDateFormat;
 import org.ofbiz.service.ServiceUtil;
 import org.ofbiz.base.util.UtilNumber;
 import in.vasista.vbiz.humanres.PayrollService;
+import in.vasista.vbiz.humanres.HumanresService;
 
 if (parameters.customTimePeriodId == null) {
 	return;	
 }
 dctx = dispatcher.getDispatchContext();
-
 
 orgPartyId = null;
 
@@ -83,6 +83,24 @@ if(UtilValidate.isNotEmpty(deductionTypeList)){
 dedTypeIds = EntityUtil.getFieldListFromEntityList(deductionTypeList, "deductionTypeId", true);
 context.dedTypeIds=dedTypeIds;
 context.dedDescMap=dedDescMap;
+
+Map emplInputMap = FastMap.newInstance();
+deptId=parameters.deptId;
+if(UtilValidate.isNotEmpty(deptId)){
+	context.deptId=deptId;
+	emplInputMap.put("orgPartyId", deptId);
+}else{
+	emplInputMap.put("orgPartyId", "Company");
+	}
+
+emplInputMap.put("userLogin", userLogin);
+emplInputMap.put("fromDate", timePeriodStart);
+emplInputMap.put("thruDate", timePeriodEnd);
+Map EmploymentsMap = HumanresService.getActiveEmployements(dctx,emplInputMap);
+List<GenericValue> employementList = (List<GenericValue>)EmploymentsMap.get("employementList");
+employementList = EntityUtil.orderBy(employementList, UtilMisc.toList("partyIdTo"));
+employementIds = EntityUtil.getFieldListFromEntityList(employementList, "partyIdTo", true);
+
 Map payRollMap=FastMap.newInstance();
 Map payRollSummaryMap=FastMap.newInstance();
 Map payRollEmployeeMap=FastMap.newInstance();
@@ -97,13 +115,14 @@ if(UtilValidate.isNotEmpty(periodBillingList)){
 	payConList.add(EntityCondition.makeCondition("periodBillingId", EntityOperator.EQUALS ,periodBillingId));
 	if(UtilValidate.isNotEmpty(parameters.employeeId))
 		payConList.add(EntityCondition.makeCondition("partyIdFrom", EntityOperator.EQUALS ,parameters.employeeId));
+		if(UtilValidate.isNotEmpty(deptId))
+			payConList.add(EntityCondition.makeCondition("partyIdFrom", EntityOperator.IN ,employementIds));
 	payCond = EntityCondition.makeCondition(payConList,EntityOperator.AND);
 	payRollHeaderList = delegator.findList("PayrollHeader", payCond, null, null, null, false);
 	if(UtilValidate.isNotEmpty(payRollHeaderList)){
 		payrollHeader = payRollHeaderList[0];
 		if(UtilValidate.isNotEmpty(payrollHeader)){
 			orgPartyId = payrollHeader.partyId;
-			
 		}
 		payRollHeaderList.each{ payRollHead->
 			payrollHeaderId=payRollHead.get("payrollHeaderId");
