@@ -3624,6 +3624,24 @@
 			<key-map field-name="contactMechId" />
 		</relation>
 	</view-entity>
+	<view-entity entity-name="PaymentMethodAndType"
+		package-name="org.ofbiz.accounting.payment" never-cache="true"
+		title="PaymentMethod and PaymentMethodType View Entity">
+		<member-entity entity-alias="PM" entity-name="PaymentMethod" />
+		<member-entity entity-alias="PMT" entity-name="PaymentMethodType" />
+		<alias entity-alias="PM" name="paymentMethodId" />
+		<alias entity-alias="PM" name="paymentMethodTypeId" />
+		<alias entity-alias="PM" name="partyId" />
+		<alias entity-alias="PM" name="glAccountId" />
+		<alias entity-alias="PM" name="finAccountId" />
+		<alias entity-alias="PM" name="fromDate" />
+		<alias entity-alias="PM" name="thruDate" />
+		<alias entity-alias="PM" name="description" />
+		<alias entity-alias="PMT" name="parentTypeId" />
+		<view-link entity-alias="PM" rel-entity-alias="PMT">
+			<key-map field-name="paymentMethodTypeId" />
+		</view-link>
+	</view-entity>
 	<view-entity entity-name="PaymentMethodAndEftAccount"
 		package-name="org.ofbiz.accounting.payment" never-cache="true"
 		title="PaymentMethod and EftAccount View Entity">
@@ -4304,17 +4322,45 @@
 		<description>Payment Group</description>
 		<field name="paymentGroupId" type="id-ne"></field>
 		<field name="facilityId" type="id-ne"></field>
+		<field name="partyId" type="id-ne"></field>
 		<field name="paymentGroupTypeId" type="id-ne"></field>
 		<field name="paymentGroupName" type="name"></field>
+		<field name="paymentMethodId" type="id-ne"></field>
+		<field name="paymentMethodTypeId" type="id-ne"></field>
+		<field name="instrumentDate" type="date-time"></field>
+		<field name="paymentDate" type="date-time"></field>
+		<field name="statusId" type="id"></field>
+		<field name="inFavor" type="value"></field>
+		<field name="paymentRefNum" type="short-varchar"></field>
+		<field name="issuingAuthority" type="short-varchar"></field>
+		<field name="amount" type="currency-amount"></field>
+		<field name="finAccountId" type="id"></field>
+		<field name="createdDate" type="date-time"></field>
+      	<field name="createdByUserLogin" type="id-vlong"></field>
+      	<field name="lastModifiedDate" type="date-time"></field>
+      	<field name="lastModifiedByUserLogin" type="id-vlong"></field>
+		
 		<prim-key field="paymentGroupId" />
 		<relation type="one" fk-name="PAYMNTGP_PGTYPE"
 			rel-entity-name="PaymentGroupType">
 			<key-map field-name="paymentGroupTypeId" />
 		</relation>
+		<relation type="one" fk-name="PAYGRP_STTS" rel-entity-name="StatusItem">
+        	<key-map field-name="statusId"/>
+      	</relation>
 		<relation type="many" fk-name="PAYGRP_FACILITY"  rel-entity-name="Facility">
 			<key-map field-name="facilityId" />
 		</relation>
-		</entity>
+		<relation type="one" fk-name="PAYGRP_PARTY" rel-entity-name="Party">
+			<key-map field-name="partyId" />
+		</relation>
+		<relation type="one" fk-name="PAYGRP_PMTY"	rel-entity-name="PaymentMethodType">
+			<key-map field-name="paymentMethodTypeId" />
+		</relation>
+		<relation type="one" fk-name="PAYGRP_PMETH"	rel-entity-name="PaymentMethod">
+			<key-map field-name="paymentMethodId" />
+		</relation>
+	</entity>
 	<entity entity-name="PaymentGroupType" package-name="org.ofbiz.accounting.payment"
 		title="Payment Group Type Entity">
 		<description>Payment Group Type</description>

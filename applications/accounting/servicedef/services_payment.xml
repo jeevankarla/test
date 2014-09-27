@@ -283,6 +283,7 @@ under the License.
     <service name="createPaymentGroupAndMember" engine="simple"
             location="component://accounting/script/org/ofbiz/accounting/payment/PaymentServices.xml" invoke="createPaymentGroupAndMember" auth="true">
         <attribute name="paymentIds" type="List" mode="IN" optional="false"/>
+        <auto-attributes entity-name="PaymentGroup" include="nonpk" mode="IN" optional="true"/>
         <attribute name="facilityId" type="String" mode="IN" optional="true"/>
         <attribute name="paymentGroupTypeId" type="String" mode="IN" optional="false"/>
         <attribute name="fromDate" type="Timestamp" mode="IN" optional="true"/>

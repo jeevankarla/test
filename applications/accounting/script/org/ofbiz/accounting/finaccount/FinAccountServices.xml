@@ -719,13 +719,21 @@ under the License.
                 			<select-field field-name="glAccountId"/>
                 		</entity-one>
                 		<set field="createFinAccountTransMap.glAccountId" from-field="paymentMethod.glAccountId"/>
-                		<if-compare operator="equals" value="COMPANY_CHECK" field="payment.paymentMethodTypeId">
-                			<entity-one value-field="glAccountTypeDefault" entity-name="GlAccountTypeDefault">
-								<field-map field-name="glAccountTypeId" value="UNWITHDRAWAN_PAYMENT"/>
-								<field-map field-name="organizationPartyId" from-field="finAccount.organizationPartyId"/>			
-							</entity-one>							
-							<set field="createFinAccountTransMap.glAccountId" from-field="glAccountTypeDefault.glAccountId"/>							
-                		</if-compare>
+                		<if>
+                			<condition>
+                				<or>
+                					<if-compare operator="equals" value="COMPANY_CHECK" field="payment.paymentMethodTypeId"/>
+                					<if-empty field="paymentMethod.glAccountId"/>
+                				</or>
+                			</condition>
+                			<then>
+                				<entity-one value-field="glAccountTypeDefault" entity-name="GlAccountTypeDefault">
+                					<field-map field-name="glAccountTypeId" value="UNWITHDRAWAN_PAYMENT"/>
+                					<field-map field-name="organizationPartyId" from-field="finAccount.organizationPartyId"/>
+                				</entity-one>
+                				<set field="createFinAccountTransMap.glAccountId" from-field="glAccountTypeDefault.glAccountId"/>
+                			</then>
+                		</if>
                     </if-compare>
                 </else>
                 </if-compare>
