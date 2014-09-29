@@ -47,6 +47,14 @@ under the License.
       		},
       		
    		});
+   	jQuery("#approverPartyId").focusout(function(){
+   		var partyId=$('input[name=partyId]').val();
+   		var apPartyId=$('input[name=approverPartyId]').val();
+   		if(partyId==apPartyId){
+   		alert("Employee Id And Approver Id Must Be Different");
+   		location.reload(true);
+   		}
+   	});	
    		
 });
 
