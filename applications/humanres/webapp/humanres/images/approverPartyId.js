@@ -1,6 +1,8 @@
 jQuery(document).ready(function() {
 	jQuery('[name=levelApproverPartyId]').parent().parent().parent().hide();
+	picker();
 	approverPartyIdChange();
+	
 });
 function approverPartyIdChange(){
 	var leaveStatus = jQuery('[name=leaveStatus]').val();
@@ -14,3 +16,16 @@ function approverPartyIdChange(){
 		jQuery('[name=levelApproverPartyId]').parent().parent().parent().hide();
 	}
 }
+
+function picker(){
+	jQuery("#thruDate").datepicker({
+		dateFormat:'dd-mm-yy',
+		changeMonth: true,
+		numberOfMonths: 1,
+		onSelect: function(selectedDate) {
+			jQuery("#thruDate").datepicker('setDate', selectedDate);
+		}
+	});
+	
+}
+

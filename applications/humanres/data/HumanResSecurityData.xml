@@ -62,7 +62,11 @@ under the License.
     
     <SecurityGroup description="Employee LOP Edit" groupId="EMP_LOP_EDIT"/> 
     <SecurityGroupPermission groupId="FULLADMIN" permissionId="EMP_LOP_EDIT_UPDATE"/>
-    <SecurityGroupPermission groupId="EMP_LOP_EDIT" permissionId="EMP_LOP_EDIT_UPDATE"/> 
+    <SecurityGroupPermission groupId="EMP_LOP_EDIT" permissionId="EMP_LOP_EDIT_UPDATE"/>
+    
+    <SecurityGroup description="Leaves Edit After Approved" groupId="APPROVED_LEAVE"/> 
+    <SecurityGroupPermission groupId="FULLADMIN" permissionId="APPROVED_LEAVE_UPDATE"/>
+    <SecurityGroupPermission groupId="APPROVED_LEAVE" permissionId="APPROVED_LEAVE_UPDATE"/> 
     
     <SecurityGroup description="Employee LATEMIN Approve" groupId="EMP_LATEMIN_EDIT"/> 
     <SecurityGroupPermission groupId="FULLADMIN" permissionId="EMP_LATEMIN_EDIT_UPDATE"/>

@@ -72,8 +72,6 @@ if(UtilValidate.isNotEmpty(thruDate)){
 	conditionList.add(EntityCondition.makeCondition("thruDate", EntityOperator.LESS_THAN_EQUAL_TO,ObjectType.simpleTypeConvert(thruDate, "Timestamp", null, null)));
 }
 
-
 condition=EntityCondition.makeCondition(conditionList,EntityOperator.AND);
 LeaveDetails = delegator.findList("EmplLeave", condition , null, UtilMisc.toList("-fromDate"), null, false );
 context.put("employeeLeaveList",LeaveDetails);
-Debug.log("LeaveDetails========="+LeaveDetails);

@@ -343,9 +343,14 @@ public class EmplLeaveService {
         String approverPartyId = (String)context.get("approverPartyId");
         String levelApproverPartyId = (String)context.get("levelApproverPartyId");
         String leaveTypeId = (String)context.get("leaveTypeId");
+        String Date=(String)context.get("thruDate");
         Map<String, Object> result = ServiceUtil.returnSuccess(" "+ leaveStatus + " Sucessfully..!");
 		GenericValue emplLeaveDetails = null;
 		try {
+			 SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy");
+		     Timestamp thruDate=UtilDateTime.toTimestamp(sdf.parse(Date));
+		     thruDate = UtilDateTime.getDayEnd(thruDate);
+			
 			if(UtilValidate.isEmpty(leaveStatus.trim())){
 				return ServiceUtil.returnError("Leave Status Cannot be Empty "); 
 			}
@@ -354,12 +359,23 @@ public class EmplLeaveService {
 			}
 			emplLeaveDetails = delegator.findOne("EmplLeave",UtilMisc.toMap("emplLeaveApplId", emplLeaveApplId), false);
 			// Returning error if payroll already generated
-			Map customTimePeriodIdMap = PayrollService.checkPayrollGeneratedOrNotForDate(dctx,UtilMisc.toMap("userLogin",userLogin,"date",UtilDateTime.toSqlDate(emplLeaveDetails.getTimestamp("fromDate"))));
-			if (ServiceUtil.isError(customTimePeriodIdMap)) {
-				return customTimePeriodIdMap;
-			}	
+			if(!emplLeaveDetails.get("leaveStatus").equals("LEAVE_APPROVED")){
+				Map customTimePeriodIdMap = PayrollService.checkPayrollGeneratedOrNotForDate(dctx,UtilMisc.toMap("userLogin",userLogin,"date",UtilDateTime.toSqlDate(emplLeaveDetails.getTimestamp("fromDate"))));
+				if (ServiceUtil.isError(customTimePeriodIdMap)) {
+					return customTimePeriodIdMap;
+				}
+			}
+			if(leaveStatus.equals("LEAVE_REJECTED")){
+				Map customTimePeriodIdMap = PayrollService.checkPayrollGeneratedOrNotForDate(dctx,UtilMisc.toMap("userLogin",userLogin,"date",UtilDateTime.toSqlDate(emplLeaveDetails.getTimestamp("fromDate"))));
+				if (ServiceUtil.isError(customTimePeriodIdMap)) {
+					return customTimePeriodIdMap;
+				}
+			}
 			if(UtilValidate.isNotEmpty(emplLeaveDetails)){
 				emplLeaveDetails.set("leaveStatus", leaveStatus);
+				if(UtilValidate.isNotEmpty(thruDate) && !emplLeaveDetails.get("thruDate").equals(thruDate)){
+					emplLeaveDetails.set("thruDate", thruDate);
+				}
 				if(UtilValidate.isNotEmpty(levelApproverPartyId)){
 					emplLeaveDetails.set("approverPartyId", levelApproverPartyId);
 				}else{

@@ -282,11 +282,18 @@
         <field name="emplLeaveReasonTypeId"><display/></field>
         <field name="fromDate"><display/></field>
         <field name="thruDate"><display/></field>
+        <field name="thruDate" id-name="thruDate" event="onclick:picker()" use-when="emplLeaveStatus.equals(&quot;LEAVE_APPROVED&quot;) &amp;&amp; ${groovy:((security.hasEntityPermission(&quot;APPROVED_LEAVE&quot;, &quot;_UPDATE&quot;,session)))}"><text size="10"/></field>
         <field name="description"><display/></field>
         
         <field name="leaveStatus" id-name="leaveStatus" title="Next Leave Status" required-field="true" event="onchange" action="javascript:approverPartyIdChange();">
 	        <drop-down allow-empty="false" current="selected">
 	        	<list-options key-name="statusIdTo" list-name="validStatusChangeList" description="${transitionName}"/>
+	        </drop-down>
+        </field>
+        <field name="leaveStatus" id-name="leaveStatus" use-when="emplLeaveStatus.equals(&quot;LEAVE_APPROVED&quot;)" title="Next Leave Status" required-field="true" event="onchange" action="javascript:approverPartyIdChange();">
+	        <drop-down allow-empty="false" current="selected">
+	        <option key="LEAVE_APPROVED" description="Approved" />
+	        <option key="LEAVE_REJECTED" description="Rejected" />
 	        </drop-down>
         </field>
         <field name="levelApproverPartyId"  required-field="true" title="Level Approver Party"><lookup target-form-name="LookupEmployeeName"></lookup></field>
@@ -299,7 +306,7 @@
             </drop-down>
         </field> -->
         <field name="documentsProduced">
-       		<drop-down allow-empty="false">
+       		<drop-down allow-empty="false" current="selected">
        			<option key="N"></option>
        			<option key="Y" ></option>
        		</drop-down>

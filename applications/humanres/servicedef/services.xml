@@ -1164,6 +1164,7 @@ under the License.emplpunch
         <auto-attributes mode="INOUT" include="pk" optional="false"/>
         <auto-attributes mode="INOUT" include="nonpk" optional="true"/>
         <attribute name="levelApproverPartyId"  mode="IN" type="String" optional="true"/>
+        <attribute name="thruDate" mode="IN" type="String" optional="true"></attribute>
     </service>
     
     <service name="storeEmplLeaveStatus" engine="java"
