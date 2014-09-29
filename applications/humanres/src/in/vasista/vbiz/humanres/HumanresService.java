@@ -479,6 +479,8 @@ public class HumanresService {
 				conditionList.add(EntityCondition.makeCondition("partyIdTo", EntityOperator.EQUALS ,partyIdTo));
 				conditionList.add(EntityCondition.makeCondition("roleTypeIdFrom", EntityOperator.EQUALS ,"INTERNAL_ORGANIZATIO"));
 				conditionList.add(EntityCondition.makeCondition("roleTypeIdTo", EntityOperator.EQUALS ,"EMPLOYEE"));
+				conditionList.add(EntityCondition.makeCondition("fromDate", EntityOperator.LESS_THAN_EQUAL_TO ,fromDateStart));
+				conditionList.add(EntityCondition.makeCondition("thruDate", EntityOperator.EQUALS ,null));
 		    	EntityCondition condition = EntityCondition.makeCondition(conditionList,EntityOperator.AND); 		
 				List<GenericValue> activeEmploymentList = delegator.findList("Employment", condition, null, UtilMisc.toList("-fromDate"), null, false);
 				if(UtilValidate.isNotEmpty(activeEmploymentList)){
@@ -487,16 +489,19 @@ public class HumanresService {
 					locationGeoId = activeEmployment.getString("locationGeoId");
 					activeEmployment.set("thruDate", previousDayEnd);
 					activeEmployment.store();
+					GenericValue newEntity = delegator.makeValue("Employment");
+					newEntity.set("roleTypeIdFrom", "INTERNAL_ORGANIZATIO");
+					newEntity.set("roleTypeIdTo", "EMPLOYEE");
+					newEntity.set("partyIdFrom", partyIdFrom);
+					newEntity.set("partyIdTo", partyIdTo);
+					newEntity.set("fromDate", fromDateStart);
+					newEntity.set("appointmentDate", appointmentDate);
+					newEntity.set("locationGeoId", locationGeoId);
+					newEntity.create();
+				}else{
+					return ServiceUtil.returnError("Department already exists.....!");
 				}
-				GenericValue newEntity = delegator.makeValue("Employment");
-				newEntity.set("roleTypeIdFrom", "INTERNAL_ORGANIZATIO");
-				newEntity.set("roleTypeIdTo", "EMPLOYEE");
-				newEntity.set("partyIdFrom", partyIdFrom);
-				newEntity.set("partyIdTo", partyIdTo);
-				newEntity.set("fromDate", fromDateStart);
-				newEntity.set("appointmentDate", appointmentDate);
-				newEntity.set("locationGeoId", locationGeoId);
-				newEntity.create();
+				
 	        }catch(GenericEntityException e){
 				Debug.logError("Error while creating new Employment"+e.getMessage(), module);
 			}
