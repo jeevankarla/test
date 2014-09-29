@@ -3071,6 +3071,25 @@
             </widgets>
         </section>
     </screen>
+    <screen name="PrintPayGroupVoucher">
+        <section>
+            <actions>
+                <!-- pass in paymentId to print one check, otherwise use multi form input -->
+                <set field="paymentGroupId" from-field="parameters.paymentGroupId"/>
+                <property-map resource="AccountingUiLabels" map-name="uiLabelMap" global="true"/>
+                <property-map resource="CommonUiLabels" map-name="uiLabelMap" global="true"/>
+                <property-map resource="OrderUiLabels" map-name="uiLabelMap" global="true"/>
+				<property-map resource="ProductUiLabels" map-name="uiLabelMap" global="true"/>
+				<property-map resource="PartyUiLabels" map-name="uiLabelMap" global="true"/>
+                <script location="component://byproducts/webapp/byproducts/WEB-INF/actions/reports/PrintPayGroupVoucher.groovy"/>
+            </actions>
+            <widgets>
+                <platform-specific>
+                   <html><html-template location="component://byproducts/webapp/byproducts/reports/printPayGroupVoucher.fo.ftl"></html-template></html>
+                </platform-specific>
+            </widgets>
+        </section>
+    </screen>
     <screen name="FindGroupPayment">
         <section>
             <actions>

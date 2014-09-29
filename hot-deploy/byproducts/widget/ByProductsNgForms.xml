@@ -671,6 +671,11 @@
             <hyperlink target="printPayGroupCheque.pdf" description="Print" target-window="_blank">
                	  <parameter param-name="paymentGroupId" />
             </hyperlink>
+        </field>
+        <field name="Print Voucher" widget-style="buttontext" >
+            <hyperlink target="printPayGroupVoucher.pdf" description="Voucher" target-window="_blank">
+               	  <parameter param-name="paymentGroupId" />
+            </hyperlink>
         </field> 
         <field name="cancelBatch" widget-style="buttontext">
             <hyperlink target="cancelPaymentGrouping" description="Cancel">
