@@ -5287,6 +5287,25 @@ public class InvoiceServices {
                 return ServiceUtil.returnError(null, null, null, paymentResult);
             }
             paymentId = (String)paymentResult.get("paymentId");
+            try {
+            	GenericValue payment = delegator.findOne("Payment",UtilMisc.toMap("paymentId",paymentId) , false);
+            	 statusId = null;
+            	if(UtilValidate.isNotEmpty(payment)){
+            		if(UtilAccounting.isReceipt(payment)){
+            			statusId = "PMNT_RECEIVED";
+            		}
+            		if(UtilAccounting.isDisbursement(payment)){
+            			statusId = "PMNT_SENT";
+            		}
+            	}
+                Map<String, Object> pmntResults = dispatcher.runSync("setPaymentStatus", UtilMisc.toMap("userLogin", userLogin, "paymentId", paymentId, "statusId", statusId));
+                if (ServiceUtil.isError(pmntResults)) {
+                	Debug.logError(pmntResults.toString(), module);    			
+                    return ServiceUtil.returnError(null, null, null, pmntResults);
+                }
+            } catch (Exception e) {
+                Debug.logError(e, "Unable to change Payment Status", module);
+            }
             paymentsList.add(paymentId);
             }catch (Exception e) {
             Debug.logError(e, e.toString(), module);
