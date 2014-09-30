@@ -609,7 +609,7 @@ public static Map<String, Object> approveICPOrder(DispatchContext dctx, Map cont
 			  		 // paymentInputMap.put("paymentType", "SALES_PAYIN");
 			  		  paymentInputMap.put("paymentMethodTypeId", "CREDITNOTE_PAYIN");
 			  		  paymentInputMap.put("paymentPurposeType","NON_ROUTE_MKTG");
-			  		  paymentInputMap.put("statusId", "PMNT_RECEIVED");
+			  		  paymentInputMap.put("statusId", "PMNT_NOT_PAID");
 			  		  paymentInputMap.put("invoiceIds",UtilMisc.toList(invoiceId));
 			  		  String finAccountId =  null;
 			  		  List conditionList = FastList.newInstance();
