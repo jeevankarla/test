@@ -781,8 +781,17 @@ public static Map<String, Object> createPurchaseOrder(DispatchContext dctx, Map<
 	} catch (Exception e1) {
 	// TODO Auto-generated catch block
 		Debug.logError(e1, "Error in CalcAndAddTax",module);
+		return ServiceUtil.returnError(" Error While Creating Adjustment for Purchase Order !");
 	}
-	Map<String, Object> orderCreateResult = checkout.createOrder(userLogin);
+	
+	Map<String, Object> orderCreateResult=checkout.createOrder(userLogin);
+	Debug.log("===orderCreateResult=====>"+orderCreateResult);
+	if (ServiceUtil.isError(orderCreateResult)) {
+		String errMsg =  ServiceUtil.getErrorMessage(orderCreateResult);
+		Debug.logError(errMsg, "While Creating Order",module);
+		return ServiceUtil.returnError(" Error While Creating Order !"+errMsg);
+	}
+		
 	orderId = (String) orderCreateResult.get("orderId");
 	//let's create Fright Adhustment here
 	// handle employee subsidies here 
@@ -959,7 +968,7 @@ public static Map<String, Object> createPurchaseOrder(DispatchContext dctx, Map<
 			  		 // paymentInputMap.put("paymentType", "SALES_PAYIN");
 			  		  paymentInputMap.put("paymentMethodTypeId", "DEBITNOTE_TRNSF");
 			  		  paymentInputMap.put("paymentPurposeType","INTER_PRCHSE_CHANNEL");
-			  		  paymentInputMap.put("statusId", "PMNT_RECEIVED");
+			  		  paymentInputMap.put("statusId", "PMNT_NOT_PAID");
 			  		  paymentInputMap.put("invoiceIds",UtilMisc.toList((String)result.get("invoiceId")));
 			  		  Map paymentResult = dispatcher.runSync("createCreditNoteOrDebitNoteForInvoice", paymentInputMap);
 			  		  if(ServiceUtil.isError(paymentResult)){
