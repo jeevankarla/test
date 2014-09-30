@@ -1296,16 +1296,30 @@ under the License.
                 </condition-list>
                 <order-by field-name="description"/>
             </entity-condition>
+            <entity-condition entity-name="PaymentMethodType" list="paymentMethodTypes">
+                <condition-list combine="or">
+                    <condition-expr field-name="paymentMethodTypeId" operator="equals" value="CASH_PAYIN"/>
+                    <condition-expr field-name="paymentMethodTypeId" operator="equals" value="CASH_PAYOUT"/>
+                    <condition-expr field-name="paymentMethodTypeId" operator="equals" value="CHEQUE_PAYIN"/>
+                    <condition-expr field-name="paymentMethodTypeId" operator="equals" value="FUND_TRANSFER"/>
+                </condition-list>
+                <order-by field-name="description"/>
+            </entity-condition>
         </actions>
         <field name="noConditionFind"><hidden value="Y"/><!-- if this isn't there then with all fields empty no query will be done --></field>
         <field name="paymentId"><text-find ignore-case="true"/></field>
         <field name="facilityId" title="${uiLabelMap.OrderFacilityBooth}"><text-find ignore-case="true"/></field>
         <field name="comments"><text-find ignore-case="true"/></field>
-        <field name="paymentMethodTypeId">
+        <!-- <field name="paymentMethodTypeId">
             <drop-down allow-empty="true">
                 <entity-options description="${description}" entity-name="PaymentMethodType">
                     <entity-order-by field-name="description"/>
                 </entity-options>
+            </drop-down>
+        </field> -->
+        <field name="paymentMethodTypeId">
+            <drop-down allow-empty="true">
+                <list-options list-name="paymentMethodTypes" key-name="paymentMethodTypeId" description="${description}"/>
             </drop-down>
         </field>        
         <field name="paymentTypeId" title="${uiLabelMap.AccountingPaymentType}" position="1">
