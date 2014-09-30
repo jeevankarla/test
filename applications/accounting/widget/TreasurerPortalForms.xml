@@ -1371,7 +1371,7 @@ under the License.
                 <parameter param-name="paymentId"/>
             </hyperlink>
         </field>
-        <field name="Print Cheque" widget-style="buttontext" >
+        <field use-when="&quot;${paymentMethodTypeId}&quot;==&quot;CHEQUE_PAYIN&quot;" name="Print Cheque" widget-style="buttontext" >
             <hyperlink target="printChecks.pdf" description="Print Cheque" target-window="_blank">
              	<parameter param-name="paymentId"/>
             </hyperlink>

@@ -49,12 +49,10 @@ if(parameters.paymentIds){
 
 paymentMethodType = delegator.findList("PaymentMethodType", EntityCondition.makeCondition(["paymentMethodTypeId" : printPaymentsList[0].get("paymentMethodTypeId")]), null, null, null, false);
 paymentMethodTypeDesc = paymentMethodType[0].get("description");
-Debug.log("paymentMethodTypeDesc ============="+paymentMethodTypeDesc);
 context.paymentMethodTypeDesc = paymentMethodTypeDesc;
 
 paymentType = delegator.findList("PaymentType", EntityCondition.makeCondition(["paymentTypeId" : printPaymentsList[0].get("paymentTypeId")]), null, null, null, false);
 parentTypeId = paymentType[0].get("parentTypeId");
-Debug.log("parentTypeId ============="+parentTypeId);
 
 reportType = null;
 
@@ -64,7 +62,6 @@ if( (printPaymentsList[0].get("paymentTypeId")).contains("PAYIN")){
 else{
 	reportType = "Payment";
 }
-Debug.log("reportType ============="+reportType);
 
 //if(parentTypeId == "RECEIPT"){
 //	reportType = "RECEIPT";
@@ -73,8 +70,6 @@ Debug.log("reportType ============="+reportType);
 //	reportType = "PAYMENT";
 //}
 
-Debug.log("printPaymentsList ============="+printPaymentsList);
-Debug.log("payTypeDesc ============="+paymentType[0].get("description"));
 
 context.paymentTypeDescription = paymentType[0].get("description");
 context.reportType = reportType;

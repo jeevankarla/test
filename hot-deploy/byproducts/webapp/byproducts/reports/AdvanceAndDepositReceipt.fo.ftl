@@ -207,36 +207,47 @@ under the License.
                    					<fo:block white-space-collapse="false" keep-together="always">&#160;&#160;&#160;(In Words: ${paymentListReport.amountWords} only)</fo:block>
 			                   	</fo:table-cell>
 						  	</fo:table-row>
-						  	
-						  	
+						  	<#assign cheqFav = "">
+								 <#if (paymentListReport.paymentMethodTypeId == "CHEQUE_PAYIN" || paymentListReport.paymentMethodTypeId == "CHEQUE_PAYOUT")>
+									 <#if paymentListReport.paymentId?has_content>
+									 <#assign paymentAttrDetails = delegator.findOne("PaymentAttribute", {"paymentId" : paymentListReport.paymentId, "attrName" : "INFAVOUR_OF"}, true)?if_exists/>
+									 
+									  <#if paymentAttrDetails.attrValue?has_content>
+									  	<#assign cheqFav = paymentAttrDetails.attrValue?if_exists>
+									  <#else>
+									  	<#assign cheqFav = partyName?if_exists>
+									 </#if>
+									 <fo:table-row>
+		        						<fo:table-cell>
+		        								<fo:block text-align="left" font-size="12pt" white-space-collapse="false" keep-together="always" font-weight="bold"> &#160; </fo:block>
+		        								<fo:block text-align="left" font-size="12pt" white-space-collapse="false" keep-together="always" font-weight="bold">Cheque in favour of:${cheqFav?if_exists}</fo:block>
+		        						</fo:table-cell>
+	        						</fo:table-row>
+	        						</#if>
+        						</#if>
 		              			<fo:table-row>
-							        						<fo:table-cell number-columns-spanned="2">
-							        								<fo:block text-align="left" font-size="12pt" white-space-collapse="false" keep-together="always" > &#160; </fo:block>
-							        								<fo:block text-align="left" font-size="12pt" white-space-collapse="false" keep-together="always" > &#160; </fo:block>
-							        								<fo:block text-align="left" font-size="12pt" white-space-collapse="false" keep-together="always" > &#160; </fo:block>
-							        								<fo:block text-align="left" font-size="12pt" white-space-collapse="false" keep-together="always" > &#160; </fo:block>
-							        								<fo:block text-align="left" font-size="12pt" white-space-collapse="false" keep-together="always" >PROCD.&#160;&#160;&#160;&#160;&#160;&#160;D.Mgr(Finance)/Mgr(Finance)/GM(Finance)</fo:block>
-							        						</fo:table-cell>
-							        							<fo:table-cell>
-							        							 	<fo:block text-align="left" font-size="12pt" white-space-collapse="false" keep-together="always" > &#160;</fo:block>
-							        								<fo:block text-align="left" font-size="12pt" white-space-collapse="false" keep-together="always" > &#160; </fo:block>
-							        								<fo:block text-align="left" font-size="12pt" white-space-collapse="false" keep-together="always" > &#160; </fo:block>
-							        								<fo:block text-align="left" font-size="12pt" white-space-collapse="false" keep-together="always" > &#160; </fo:block>
-							        								<fo:block text-align="left" font-size="12pt" white-space-collapse="false" keep-together="always" >&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;Pre Audit</fo:block>
-							        						</fo:table-cell>
-							        						<fo:table-cell>
-							        								<fo:block text-align="left" font-size="12pt" white-space-collapse="false" keep-together="always" > &#160;</fo:block>
-							        								<fo:block text-align="left" font-size="12pt" white-space-collapse="false" keep-together="always" > &#160; </fo:block>
-							        								<fo:block text-align="left" font-size="12pt" white-space-collapse="false" keep-together="always" > &#160; </fo:block>
-							        								<fo:block text-align="left" font-size="12pt" white-space-collapse="false" keep-together="always" > &#160; </fo:block>
-							        								<fo:block text-align="right" font-size="12pt" white-space-collapse="false" keep-together="always" >&#160; Director</fo:block>
-							        						</fo:table-cell>  
-						        						</fo:table-row>								
-						  	
-						  	
-						  	
-						  	
-						  	
+	        						<fo:table-cell number-columns-spanned="2">
+	        								<fo:block text-align="left" font-size="12pt" white-space-collapse="false" keep-together="always" > &#160; </fo:block>
+	        								<fo:block text-align="left" font-size="12pt" white-space-collapse="false" keep-together="always" > &#160; </fo:block>
+	        								<fo:block text-align="left" font-size="12pt" white-space-collapse="false" keep-together="always" > &#160; </fo:block>
+	        								<fo:block text-align="left" font-size="12pt" white-space-collapse="false" keep-together="always" > &#160; </fo:block>
+	        								<fo:block text-align="left" font-size="12pt" white-space-collapse="false" keep-together="always" >PROCD.&#160;&#160;&#160;&#160;&#160;&#160;D.Mgr(Finance)/Mgr(Finance)/GM(Finance)</fo:block>
+	        						</fo:table-cell>
+	        							<fo:table-cell>
+	        							 	<fo:block text-align="left" font-size="12pt" white-space-collapse="false" keep-together="always" > &#160;</fo:block>
+	        								<fo:block text-align="left" font-size="12pt" white-space-collapse="false" keep-together="always" > &#160; </fo:block>
+	        								<fo:block text-align="left" font-size="12pt" white-space-collapse="false" keep-together="always" > &#160; </fo:block>
+	        								<fo:block text-align="left" font-size="12pt" white-space-collapse="false" keep-together="always" > &#160; </fo:block>
+	        								<fo:block text-align="left" font-size="12pt" white-space-collapse="false" keep-together="always" >&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;Pre Audit</fo:block>
+	        						</fo:table-cell>
+	        						<fo:table-cell>
+	        								<fo:block text-align="left" font-size="12pt" white-space-collapse="false" keep-together="always" > &#160;</fo:block>
+	        								<fo:block text-align="left" font-size="12pt" white-space-collapse="false" keep-together="always" > &#160; </fo:block>
+	        								<fo:block text-align="left" font-size="12pt" white-space-collapse="false" keep-together="always" > &#160; </fo:block>
+	        								<fo:block text-align="left" font-size="12pt" white-space-collapse="false" keep-together="always" > &#160; </fo:block>
+	        								<fo:block text-align="right" font-size="12pt" white-space-collapse="false" keep-together="always" >&#160; Director</fo:block>
+	        						</fo:table-cell>  
+        						</fo:table-row>								
 		              </fo:table-body>
 		                </fo:table>
 		               </fo:block> 	
