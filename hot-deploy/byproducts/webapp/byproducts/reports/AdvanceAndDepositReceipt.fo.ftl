@@ -125,7 +125,7 @@ under the License.
                       </fo:table>
             		</fo:block>
             		<fo:block>------------------------------------------------------------------------</fo:block>
-            		<fo:block >&#160;&#160;${reportType}													&#160;&#160;&#160;&#160;&#160;&#160;&#160;Description 								&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;Party Name			&#160;&#160;&#160;&#160;&#160;&#160;Amount</fo:block>
+            		<fo:block >&#160;&#160;${reportType} Id													&#160;&#160;&#160;&#160;&#160;&#160;&#160;Description 								&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;Party Name			&#160;&#160;&#160;&#160;&#160;&#160;Amount</fo:block>
             		<fo:block>------------------------------------------------------------------------</fo:block>
             </fo:static-content>		
             <fo:flow flow-name="xsl-region-body"   font-family="Courier,monospace">	
@@ -231,7 +231,7 @@ under the License.
 	        								<fo:block text-align="left" font-size="12pt" white-space-collapse="false" keep-together="always" > &#160; </fo:block>
 	        								<fo:block text-align="left" font-size="12pt" white-space-collapse="false" keep-together="always" > &#160; </fo:block>
 	        								<fo:block text-align="left" font-size="12pt" white-space-collapse="false" keep-together="always" > &#160; </fo:block>
-	        								<fo:block text-align="left" font-size="12pt" white-space-collapse="false" keep-together="always" >PROCD.&#160;&#160;&#160;&#160;&#160;&#160;D.Mgr(Finance)/Mgr(Finance)/GM(Finance)</fo:block>
+	        								<fo:block text-align="left" font-size="12pt" white-space-collapse="false" keep-together="always" >PROCD.&#160;&#160;&#160;&#160;&#160;&#160;Dy.Mgr/Mgr/GM(Finance)</fo:block>
 	        						</fo:table-cell>
 	        							<fo:table-cell>
 	        							 	<fo:block text-align="left" font-size="12pt" white-space-collapse="false" keep-together="always" > &#160;</fo:block>
