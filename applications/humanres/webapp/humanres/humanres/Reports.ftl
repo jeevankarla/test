@@ -674,7 +674,7 @@ function makeDatePicker1(fromDateId ,thruDateId){
 						</form>
 					</tr>
 					<tr class="alternate-row">
-						<form id="StatutoryReport" name="StatutoryReport" method="post" action="<@ofbizUrl>StatutoryReport.pdf</@ofbizUrl>" >	
+						<form id="PFMonthlyStatement" name="PFMonthlyStatement" method="post" action="<@ofbizUrl>PFMonthlyStatement.pdf</@ofbizUrl>" >	
 							<table class="basic-table" cellspacing="5">
 									<tr class="alternate-row">
 										<td width="20%"><span class='h3'>PF Monthly Statement</span></td>

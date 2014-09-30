@@ -184,7 +184,7 @@
 			</widgets>
 		</section>
 	</screen>
-	<screen name="StatutoryReport">
+	<screen name="PFMonthlyStatement">
 		<section>
 			<actions>
 				<property-map resource="OrderUiLabels" map-name="uiLabelMap" global="true"/>
