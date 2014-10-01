@@ -1322,9 +1322,16 @@ under the License.
                 <list-options list-name="paymentMethodTypes" key-name="paymentMethodTypeId" description="${description}"/>
             </drop-down>
         </field>        
-        <field name="paymentTypeId" title="${uiLabelMap.AccountingPaymentType}" position="1">
+        <!-- <field name="paymentTypeId" title="${uiLabelMap.AccountingPaymentType}" position="1">
             <drop-down allow-empty="false">
                 <list-options list-name="paymentTypes" key-name="paymentTypeId" description="${description}"/>
+            </drop-down>
+        </field> -->
+        <field name="paymentTypeId" title="${uiLabelMap.AccountingPaymentType}" position="1">
+            <drop-down allow-empty="true">
+                <entity-options description="${description}" entity-name="PaymentType">
+                    <entity-order-by field-name="description"/>
+                </entity-options>
             </drop-down>
         </field>
         <field name="statusId" title="${uiLabelMap.CommonStatus}" position="2">
