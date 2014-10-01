@@ -570,9 +570,9 @@ public class PaymentWorker {
         }*/
         
         //store attribute
-        GenericValue paymentAttribute = delegator.makeValue("PaymentAttribute", UtilMisc.toMap("paymentId", paymentId, "attrName", "INFAVOUR_OF"));
+       /* GenericValue paymentAttribute = delegator.makeValue("PaymentAttribute", UtilMisc.toMap("paymentId", paymentId, "attrName", "INFAVOUR_OF"));
         paymentAttribute.put("attrValue",inFavourOf);
-        paymentAttribute.create();
+        paymentAttribute.create();*/
         }catch (Exception e) {
         Debug.logError(e, e.toString(), module);
         return ServiceUtil.returnError(e.toString());
@@ -737,9 +737,9 @@ public class PaymentWorker {
 			  		        return "error";
 			  		        }
 			  	        //store attribute
-			  	        GenericValue paymentAttribute = delegator.makeValue("PaymentAttribute", UtilMisc.toMap("paymentId", paymentId, "attrName", "INFAVOUR_OF"));
+			  	        /*GenericValue paymentAttribute = delegator.makeValue("PaymentAttribute", UtilMisc.toMap("paymentId", paymentId, "attrName", "INFAVOUR_OF"));
 			  	        paymentAttribute.put("attrValue",inFavourOf);
-			  	        paymentAttribute.create();
+			  	        paymentAttribute.create();*/
 		  			}
 		  		}catch (GenericEntityException e2) {
 		  			  Debug.logError(e2, "Could not rollback transaction: " + e2.toString(), module);
