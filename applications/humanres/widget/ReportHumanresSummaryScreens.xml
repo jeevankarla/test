@@ -181,6 +181,16 @@
                			 </platform-specific>
 					</widgets>
 				</section>
+				<section>
+					<condition>
+						<if-compare operator="equals" value="ITAXStatement" field="reportTypeFlag"/>
+					</condition>
+					<widgets>
+						<platform-specific> 
+				  			<xsl-fo><html-template location="component://humanres/webapp/humanres/humanres/ITAXStatement.fo.ftl"/></xsl-fo> 
+               			 </platform-specific>
+					</widgets>
+				</section>
 			</widgets>
 		</section>
 	</screen>

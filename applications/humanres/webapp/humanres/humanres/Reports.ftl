@@ -75,6 +75,8 @@ function makeDatePicker1(fromDateId ,thruDateId){
 		makeDatePicker("BusthruDate","BusthruDate");
 		makeDatePicker("OODfromDate","OODfromDate");
 		makeDatePicker("OODthruDate","OODthruDate");
+		makeDatePicker("ITAXfromDate","ITAXfromDate");
+		makeDatePicker("ITAXthruDate","ITAXthruDate");
 		
 		$('#ui-datepicker-div').css('clip', 'auto');		
 	});
@@ -697,6 +699,22 @@ function makeDatePicker1(fromDateId ,thruDateId){
 								</table>	
 							</form>
 						</table>
+					</tr>
+					<tr class="alternate-row">
+						<form id="ITAXStatement" name="ITAXStatement" mothed="post" action="<@ofbizUrl>ITAXStatement.pdf</@ofbizUrl>" target="_blank">
+							<table class="basic-table" cellspacing="5">
+								<tr class="alternate-row">
+									<td width="19%"><span class='h3'>Monthly IncomeTax Statement<input  type="hidden"  value="ITAXStatement"   name="reportTypeFlag"/></span></td>
+									<td width="29%"></td>
+									<td width="30%"><span class='h3'>Period Id
+										<select name="customTimePeriodId" id="customTimePeriodId" class='h4'>
+											<#list customTimePeriodList as customTimePeriod><option value='${customTimePeriod.customTimePeriodId?if_exists}' >${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(customTimePeriod.fromDate, "dd MMMMM, yyyy")} -${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(customTimePeriod.thruDate, "dd MMMMM, yyyy")}</option></#list>
+										</select></span>
+									</td>
+									<td width="15%"><span class='h3'><input type="submit" value="Download" class="buttontext"></span></td>
+								</tr>
+							</table>
+						</form>
 					</tr>
 			   	</table>
 			</div>
