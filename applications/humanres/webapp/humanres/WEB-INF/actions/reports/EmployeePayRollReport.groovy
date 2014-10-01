@@ -49,6 +49,9 @@ conditionList.add(EntityCondition.makeCondition("customTimePeriodId", EntityOper
 if(UtilValidate.isNotEmpty(parameters.periodBillingId)){
 	conditionList.add(EntityCondition.makeCondition("periodBillingId", EntityOperator.EQUALS ,parameters.periodBillingId));
 }
+if(UtilValidate.isNotEmpty(parameters.partyIdFrom)){
+	conditionList.add(EntityCondition.makeCondition("partyId", EntityOperator.EQUALS , parameters.partyIdFrom));
+}
 condition = EntityCondition.makeCondition(conditionList,EntityOperator.AND);
 periodBillingList = delegator.findList("PeriodBilling", condition, null, null, null, false);
 //getting benefits
@@ -89,9 +92,11 @@ deptId=parameters.deptId;
 if(UtilValidate.isNotEmpty(deptId)){
 	context.deptId=deptId;
 	emplInputMap.put("orgPartyId", deptId);
+}else if(UtilValidate.isNotEmpty(parameters.partyIdFrom)){
+	emplInputMap.put("orgPartyId", parameters.partyIdFrom);
 }else{
 	emplInputMap.put("orgPartyId", "Company");
-	}
+}
 
 emplInputMap.put("userLogin", userLogin);
 emplInputMap.put("fromDate", timePeriodStart);

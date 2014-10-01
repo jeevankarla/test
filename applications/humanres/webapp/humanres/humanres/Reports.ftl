@@ -422,6 +422,14 @@ function makeDatePicker1(fromDateId ,thruDateId){
 							<table class="basic-table" cellspacing="5">
 								<tr class="alternate-row">
 									<td width="11%"><span class='h3'>Payroll Exception Report</span></td>
+										<td width="25%"><span class='h3'>Organization Id </span>
+											<select name="partyId" class='h4'>
+											    <option></option>
+												<#list orgList as org>    
+													<option value='${org.partyId}'>${org.groupName?if_exists}</option>
+												</#list> 
+											</select>
+										</td>
 										<td width="40%"><span class='h3'>Period Id</span>
 										<select name="customTimePeriodId" id="customTimePeriodId" class='h4'>
 											<#list customTimePeriodList as customTimePeriod><option value='${customTimePeriod.customTimePeriodId?if_exists}' >${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(customTimePeriod.fromDate, "dd MMMMM, yyyy")} -${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(customTimePeriod.thruDate, "dd MMMMM, yyyy")}</option></#list>
@@ -432,23 +440,6 @@ function makeDatePicker1(fromDateId ,thruDateId){
 							</table>	
 						</form>
 				   </tr>
-				   <tr class="alternate-row">
-						<form id="EmployeeWiseSalaryDetails" name="EmployeeWiseSalaryDetails" mothed="post" action="<@ofbizUrl>EmployeeWiseSalaryDetails</@ofbizUrl>" target="_blank">
-							<table class="basic-table" cellspacing="5">
-								<tr class="alternate-row">
-									<td width="19%"><span class='h3'>Employee Wise Salary Details</span></td>
-									<td width="29%"><span class='h3'>Employee Id<input type="text" id="PartyId" size="10pt" name="employeeId"/></span></td>
-									<td width="40%"><span class='h3'>Period Id</span>
-										<select name="customTimePeriodId" id="customTimePeriodId" class='h5' >
-											<#list customTimePeriodList?sort_by("fromDate") as customTimePeriod><option value='${customTimePeriod.customTimePeriodId?if_exists}' >${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(customTimePeriod.fromDate, "dd MMMMM, yyyy")} -${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(customTimePeriod.thruDate, "dd MMMMM, yyyy")}</option></#list>
-										</select>
-									</td>
-									<td width="15%"><span class='h3'><input type="submit" value="PDF" onClick="javascript:appendParams('EmployeeWiseSalaryDetails', '<@ofbizUrl>EmployeeWiseSalaryDetailsPdf.pdf</@ofbizUrl>');" class="buttontext"/>
-									<input type="submit" value="CSV" onClick="javascript:appendParams('EmployeeWiseSalaryDetails', '<@ofbizUrl>EmployeeWiseSalaryDetailsCsv.csv</@ofbizUrl>');" class="buttontext"/></span></td>
-								</tr>
-							</table>
-						</form>
-					</tr>
 					<tr class="alternate-row">
 						<form id="MonthlyBankAdviceStatement" name="MonthlyBankAdviceStatement" mothed="post" action="<@ofbizUrl>EmployeeBankDetailsPdf.pdf</@ofbizUrl>" target="_blank">
 							<table class="basic-table" cellspacing="5">
@@ -505,6 +496,23 @@ function makeDatePicker1(fromDateId ,thruDateId){
 							</table>
 						</form>
 				   	</tr>
+				   	 <tr class="alternate-row">
+						<form id="EmployeeWiseSalaryDetails" name="EmployeeWiseSalaryDetails" mothed="post" action="<@ofbizUrl>EmployeeWiseSalaryDetails</@ofbizUrl>" target="_blank">
+							<table class="basic-table" cellspacing="5">
+								<tr class="alternate-row">
+									<td width="19%"><span class='h3'>Employee Wise Salary Details</span></td>
+									<td width="29%"><span class='h3'>Employee Id<input type="text" id="PartyId" size="10pt" name="employeeId"/></span></td>
+									<td width="40%"><span class='h3'>Period Id</span>
+										<select name="customTimePeriodId" id="customTimePeriodId" class='h5' >
+											<#list customTimePeriodList?sort_by("fromDate") as customTimePeriod><option value='${customTimePeriod.customTimePeriodId?if_exists}' >${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(customTimePeriod.fromDate, "dd MMMMM, yyyy")} -${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(customTimePeriod.thruDate, "dd MMMMM, yyyy")}</option></#list>
+										</select>
+									</td>
+									<td width="15%"><span class='h3'><input type="submit" value="PDF" onClick="javascript:appendParams('EmployeeWiseSalaryDetails', '<@ofbizUrl>EmployeeWiseSalaryDetailsPdf.pdf</@ofbizUrl>');" class="buttontext"/>
+									<input type="submit" value="CSV" onClick="javascript:appendParams('EmployeeWiseSalaryDetails', '<@ofbizUrl>EmployeeWiseSalaryDetailsCsv.csv</@ofbizUrl>');" class="buttontext"/></span></td>
+								</tr>
+							</table>
+						</form>
+					</tr>
 				   	<tr class="alternate-row">
 						<table class="basic-table" cellspacing="3">
 							<form id="CanteenReport" name="CanteenReport" mothed="post" action="<@ofbizUrl>CanteenReport.pdf</@ofbizUrl>" target="_blank">
