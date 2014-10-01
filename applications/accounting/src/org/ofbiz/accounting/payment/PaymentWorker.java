@@ -741,9 +741,10 @@ public class PaymentWorker {
 			  	        paymentAttribute.put("attrValue",inFavourOf);
 			  	        paymentAttribute.create();*/
 		  			}
-		  		}catch (GenericEntityException e2) {
-		  			  Debug.logError(e2, "Could not rollback transaction: " + e2.toString(), module);
-		  		}
+		  		}catch (Exception e) {
+	  		        Debug.logError(e, e.toString(), module);
+	  		        return "error";
+	  		    }
 		  		 result = ServiceUtil.returnSuccess("Payment successfully done for Party "+partyIdTo+" ..!");
 		         request.setAttribute("_EVENT_MESSAGE_", "Payment successfully done for Party "+partyIdTo);
 		         request.setAttribute("paymentId",paymentId);
