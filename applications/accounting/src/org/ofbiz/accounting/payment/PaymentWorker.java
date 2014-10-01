@@ -542,7 +542,7 @@ public class PaymentWorker {
             return ServiceUtil.returnError(null, null, null, paymentResult);
         }
         paymentId = (String)paymentResult.get("paymentId");
-        try {
+        /*try {
         	GenericValue payment = delegator.findOne("Payment",UtilMisc.toMap("paymentId",paymentId) , false);
         	String statusId = null;
         	if(UtilValidate.isNotEmpty(payment)){
@@ -567,7 +567,7 @@ public class PaymentWorker {
             }
         } catch (Exception e) {
             Debug.logError(e, "Unable to change Payment Status", module);
-        }
+        }*/
         
         //store attribute
         GenericValue paymentAttribute = delegator.makeValue("PaymentAttribute", UtilMisc.toMap("paymentId", paymentId, "attrName", "INFAVOUR_OF"));
@@ -706,7 +706,7 @@ public class PaymentWorker {
 			  		  			return "error";
 			  	  	        }
 			  	  	        paymentId = (String)paymentResult.get("paymentId");
-				  	  	    try {
+				  	  	    /*try {
 					  	  	    GenericValue payment = delegator.findOne("Payment",UtilMisc.toMap("paymentId",paymentId) , false);
 					        	String statusId = null;
 					        	if(UtilValidate.isNotEmpty(payment)){
@@ -731,7 +731,7 @@ public class PaymentWorker {
 				  	            }
 				  	        } catch (Exception e) {
 				  	            Debug.logError(e, "Unable to change Payment Status", module);
-				  	        }
+				  	        }*/
 			  			}catch (Exception e) {
 			  		        Debug.logError(e, e.toString(), module);
 			  		        return "error";
