@@ -476,8 +476,24 @@
 						data[args.row]["Excise"] = exciseAmount;
 						updateInvoiceTotalAmount();
 					 }
-					 //bedcess
-					if(args.cell == 6) {
+					  if(args.cell == 5) {
+						  var B_percent= data[args.row]['ExcisePercent'];
+							if(isNaN(B_percent)){
+								B_percent = 0;
+							}
+							var B_Amnt= data[args.row]['Excise'];
+							if(isNaN(data[args.row]['Excise'])){
+							B_Amnt = 0;
+						    }
+						   if(B_Amnt>0 && B_percent<=0 ){
+							alert(" 'BED Percent' can not be empty if 'B Amount' is grater than ZERO");
+							 data[args.row]["Excise"] = 0;
+							 grid.updateRow(args.row);
+							}
+						   updateInvoiceTotalAmount();
+					   }
+				//bedcess 
+				if(args.cell == 6) {
 				     //once BED added and input happens disable the AddBed button
 					  $("#addBED").attr('disabled', 'disabled');
 		              $("#addBED").attr('readonly', 'readonly');
@@ -498,8 +514,24 @@
 						}
 						data[args.row]["bedCessAmount"] = bedCessAmount;
 						updateInvoiceTotalAmount();
-				        }
-				        if(args.cell == 8) {
+				    }
+				    if(args.cell == 7) {
+						  var BC_percent= data[args.row]['bedCessPercent'];
+							if(isNaN(BC_percent)){
+								BC_percent = 0;
+							}
+							var BC_Amnt= data[args.row]['bedCessAmount'];
+							if(isNaN(data[args.row]['bedCessAmount'])){
+							BC_Amnt = 0;
+						    }
+						   if(BC_Amnt>0 && BC_percent<=0 ){
+							alert(" 'Bed Cess Percent' can not be empty if 'Bed Cess Amount' is grater than ZERO");
+							 data[args.row]["bedCessAmount"] = 0;
+							 grid.updateRow(args.row);
+							}
+						   updateInvoiceTotalAmount();
+					   }
+			        if(args.cell == 8) {
 					    var basic_Excise=data[args.row]['Excise'];
 						var bedSecCessPercent= data[args.row]['bedSecCessPercent'];
 						if(isNaN(bedSecCessPercent)){
@@ -512,7 +544,23 @@
 						}
 						data[args.row]["bedSecCessAmount"] = bedSecCessAmount;
 						updateInvoiceTotalAmount();
-						}
+					}
+					if(args.cell == 9) {
+						  var BSC_percent= data[args.row]['bedSecCessPercent'];
+							if(isNaN(BSC_percent)){
+								BSC_percent = 0;
+							}
+							var BSC_Amnt= data[args.row]['bedSecCessAmount'];
+							if(isNaN(data[args.row]['bedSecCessAmount'])){
+							BSC_Amnt = 0;
+						    }
+						   if(BSC_Amnt>0 && BSC_percent<=0 ){
+							alert(" 'Bed SecCess Percent' can not be empty if 'Bed SecCess Amount' is grater than ZERO");
+							 data[args.row]["bedSecCessAmount"] = 0;
+							 grid.updateRow(args.row);
+							}
+						   updateInvoiceTotalAmount();
+					   }
 					 var amountAftereExcise = 0;
 					  if(!isNaN(data[args.row]['amount'])){
 							amountAftereExcise += data[args.row]['amount'];
@@ -541,8 +589,21 @@
 						updateInvoiceTotalAmount();
 					  }
 					  if(args.cell == 11) {
-						updateInvoiceTotalAmount();
-					  }
+						  var vat_percent= data[args.row]['VatPercent'];
+							if(isNaN(vat_percent)){
+								vat_percent = 0;
+							}
+							var vat_Amnt= data[args.row]['VAT'];
+							if(isNaN(data[args.row]['VAT'])){
+							vat_Amnt = 0;
+						    }
+						   if(vat_Amnt>0 && vat_percent<=0 ){
+							alert("'vat Percent' can not be empty if 'vat Amount' is grater than ZERO");
+							 data[args.row]["VAT"] = 0;
+							 grid.updateRow(args.row);
+							}
+						   updateInvoiceTotalAmount();
+					   }
 					  if(args.cell==12) {
 						var cst_percent= data[args.row]['CSTPercent'];
 						if(isNaN(cst_percent)){
@@ -557,8 +618,21 @@
 						updateInvoiceTotalAmount();
 					  }
 					  if(args.cell == 13) {
+					        var cst_percent= data[args.row]['CSTPercent'];
+							if(isNaN(cst_percent)){
+								cst_percent = 0;
+							}
+							var cst_Amnt= data[args.row]['CST'];
+							if(isNaN(data[args.row]['CST'])){
+							cst_Amnt = 0;
+						    }
+					      if(cst_Amnt>0 && cst_percent<=0 ){
+							alert("'cst Percent' can not be empty if 'cst Amount' is grater than ZERO");
+							 data[args.row]["CST"] = 0;
+							 grid.updateRow(args.row);
+							}
 						updateInvoiceTotalAmount();
-					  }
+					  } 
 		            }else{  
 			            if(args.cell == 4) {
 			              var amountAftereExcise = 0;
@@ -578,6 +652,19 @@
 							updateInvoiceTotalAmount();
 						  }
 						  if(args.cell == 5) {
+						  var vat_percent= data[args.row]['VatPercent'];
+							if(isNaN(vat_percent)){
+								vat_percent = 0;
+							}
+							var vat_Amnt= data[args.row]['VAT'];
+							if(isNaN(data[args.row]['VAT'])){
+							vat_Amnt = 0;
+						    }
+						   if(vat_Amnt>0 && vat_percent<=0 ){
+							alert("'vat Percent' can not be empty if 'vat Amount' is grater than ZERO");
+							 data[args.row]["VAT"] = 0;
+							 grid.updateRow(args.row);
+							}
 						   updateInvoiceTotalAmount();
 					       }
 		            }  
@@ -599,6 +686,19 @@
 						updateInvoiceTotalAmount();
 					  }
 					  if(args.cell == 7) {
+					        var cst_percent= data[args.row]['CSTPercent'];
+							if(isNaN(cst_percent)){
+								cst_percent = 0;
+							}
+							var cst_Amnt= data[args.row]['CST'];
+							if(isNaN(data[args.row]['CST'])){
+							cst_Amnt = 0;
+						    }
+					      if(cst_Amnt>0 && cst_percent<=0 ){
+							alert("'cst Percent' can not be empty if 'cst Amount' is grater than ZERO");
+							 data[args.row]["CST"] = 0;
+							 grid.updateRow(args.row);
+							}
 						updateInvoiceTotalAmount();
 					  } 
 		}); 
