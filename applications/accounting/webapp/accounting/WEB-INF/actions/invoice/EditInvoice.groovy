@@ -105,7 +105,7 @@ if (invoice) {
 		invoice.invoiceMessage = " converted from original with a rate of: " + conversionRate.setScale(8, rounding);
 	}
 
-	invoiceItems = invoice.getRelatedOrderBy("InvoiceItem", ["invoiceItemSeqId"]);
+	invoiceItems = invoice.getRelatedOrderBy("InvoiceItem", ["-productId","invoiceItemSeqId"]);
 	invoiceItemsConv = FastList.newInstance();
 	invoiceItemList = FastList.newInstance();
 	vatTaxesByType = FastMap.newInstance();

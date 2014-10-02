@@ -2484,6 +2484,9 @@
             	<set field="titleProperty" value="Treasurer Payments" />
                 <set field="tabButtonItem" value="treasurerPayments"/>
                 <set field="tabButtonItem4" value="FindTreasurerPayments"/>
+                <#--
+                 <set field="parameters.findPaymentMethodType" value="bankOrNonBankMethodType"/>
+                 <script location="component://accounting/webapp/accounting/WEB-INF/actions/findPaymentMethodType.groovy"/> -->
             </actions>
             <widgets>
                  <decorator-screen name="CommonTreasurerPortalDecorator" location="component://accounting/widget/CommonScreens.xml">
