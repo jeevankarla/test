@@ -4,8 +4,8 @@
 	<form name="FindPurchaseOrder" title="" type="single" target="${targetRequest}" header-row-style="header-row" default-table-style="basic-table">
         <field title="Delivery Date" name="estimatedDeliveryDate"><date-find/></field>
         <field name="orderId"><text-find/></field>
-        <field name="orderType"><hidden value="PURCHASE_ORDER"/></field>
-        <field name="salesChannelEnumId"><hidden value="${ChannalType}"  > </hidden></field>
+        <field name="orderTypeId"><hidden value="PURCHASE_ORDER"/></field>
+        <field name="salesChannelEnumId" ><hidden value="${ChannalType}"  > </hidden></field>
         <field name="statusId">
         	<drop-down>
         		<option key="ORDER_APPROVED" description="Approved"/>
