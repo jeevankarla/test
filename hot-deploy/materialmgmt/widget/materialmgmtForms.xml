@@ -127,7 +127,7 @@
                 <parameter param-name="partyId" from-field="partyIdFrom"/>
             </hyperlink>
         </field> 
-         <field use-when="statusId.equals(&quot;ORDER_APPROVED&quot;) &amp;&amp; paymentApplicationId==null &amp;&amp;  salesChannelEnumId.equals(&quot;INTER_PRCHSE_CHANNEL&quot;)" name="cancelOrder" widget-style="buttontext">
+         <field use-when="statusId.equals(&quot;ORDER_APPROVED&quot;) &amp;&amp;   salesChannelEnumId.equals(&quot;INTER_PRCHSE_CHANNEL&quot;)" name="cancelOrder" widget-style="buttontext">
             <hyperlink target="cancelInterUnitPurchaseOrder" description="Cancel  Order">
                 <parameter param-name="orderId"/>
                 <parameter param-name="statusId"/>
