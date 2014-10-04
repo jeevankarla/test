@@ -1107,6 +1107,7 @@ public static Map<String, Object> cancelPurchaseOrder(DispatchContext dctx, Map<
     String orderId = (String) context.get("orderId");
     String statusId = (String) context.get("statusId");
     String partyId = (String) context.get("partyId");
+    String salesChannelEnumId=null;
     if(UtilValidate.isEmpty(orderId)){
 		return ServiceUtil.returnError("orderId is null" + orderId);
     }
@@ -1127,6 +1128,7 @@ public static Map<String, Object> cancelPurchaseOrder(DispatchContext dctx, Map<
  		}else{ 	
  			for (GenericValue orderItem : orderItems) {
  				orderId=orderItem.getString("orderId");
+ 				salesChannelEnumId=orderItem.getString("salesChannelEnumId");
  				boolean cancelled = OrderChangeHelper.cancelOrder(dispatcher, userLogin, orderId);//order Cancelation helper
  				List<GenericValue> OrderItemBillingList = null;
  		        String invoiceId = null;
@@ -1142,7 +1144,23 @@ public static Map<String, Object> cancelPurchaseOrder(DispatchContext dctx, Map<
  		 		}
  		 		else{
  		 			invoiceId = OrderItemBillingList.get(0).getString("invoiceId");
- 		 			
+ 		 			 if("INTER_PRCHSE_CHANNEL".equals(salesChannelEnumId)){
+ 		 				 try{
+ 		 				List<GenericValue> paymentAppList = delegator.findList("PaymentApplication", EntityCondition.makeCondition("invoiceId", EntityOperator.EQUALS, invoiceId), null, null, null, false);
+	 		 				if(!UtilValidate.isEmpty(paymentAppList)){
+	 		 				String paymentId=paymentAppList.get(0).getString("paymentId");
+	 		 				Debug.log("+++++++===paymentId==in =InterUnitPurchases=="+paymentId);
+	 		 				Map<String, Object> removePaymentApplResult = dispatcher.runSync("voidPayment", UtilMisc.toMap("userLogin" ,userLogin ,"paymentId" ,paymentId));
+	 						 if (ServiceUtil.isError(removePaymentApplResult)) {
+	 				            	Debug.logError(removePaymentApplResult.toString(), module);    			
+	 				                return ServiceUtil.returnError(null, null, null, removePaymentApplResult);
+	 				            }
+	 		 				}
+ 		 				 }catch (Exception e) {
+ 		 		 			Debug.logError(e, module);
+ 		 		    		return ServiceUtil.returnError("Error in fetching PaymentId for invoiceId: "+invoiceId);
+ 		 			    }
+ 		 			 }
  		 			Map<String, Object> cancelInvoiceInput = FastMap.newInstance();
  		 	       	cancelInvoiceInput.put("invoiceId", invoiceId);
  		 	        cancelInvoiceInput.put("statusId", "INVOICE_CANCELLED");
