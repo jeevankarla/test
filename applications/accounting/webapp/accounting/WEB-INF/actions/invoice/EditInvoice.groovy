@@ -35,12 +35,15 @@ import org.ofbiz.entity.condition.EntityOperator;
 
 paymentId = parameters.paymentId;
 invoiceId = parameters.get("invoiceId");
-
 reportTypeFlag = context.reportTypeFlag;
 if(UtilValidate.isNotEmpty(reportTypeFlag) && reportTypeFlag == "debitNote"){
 	shipmentId = parameters.shipmentId;
 	conditionList = [];
+	if(UtilValidate.isNotEmpty(parameters.orderId)){
+		conditionList.add(EntityCondition.makeCondition("orderId", EntityOperator.EQUALS, parameters.orderId));
+	}else{
 	conditionList.add(EntityCondition.makeCondition("shipmentId", EntityOperator.EQUALS, shipmentId));
+	}
 	conditionList.add(EntityCondition.makeCondition("statusId", EntityOperator.NOT_EQUAL, "ORDER_CANCELLED"));
 	condition = EntityCondition.makeCondition(conditionList, EntityOperator.AND);
 	orderHeaders = delegator.findList("OrderHeader", condition, UtilMisc.toSet("orderId"), null, null, false);
