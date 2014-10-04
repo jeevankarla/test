@@ -114,6 +114,12 @@
                   <parameter param-name="shipmentId"/>
             </hyperlink>
         </field> -->
+        <field name="debitNote" use-when="salesChannelEnumId.equals(&quot;INTER_PRCHSE_CHANNEL&quot;)"  title="Debit/Credit Note" widget-style="buttontext" id-name = "DebitNote">
+            <hyperlink target="DebitNote" description="Debit/Credit Note" target-window="_blank"> 	
+               	  <parameter param-name="orderId"/>
+               	  <parameter param-name="reportTypeFlag" value="debitNote"/> 
+            </hyperlink>
+        </field>
         <field use-when="statusId.equals(&quot;ORDER_APPROVED&quot;) &amp;&amp; paymentApplicationId==null &amp;&amp;  salesChannelEnumId.equals(&quot;PROD_PRCHSE_CHANNEL&quot;)" name="cancelOrder" widget-style="buttontext">
             <hyperlink target="cancelPurchaseOrder" description="Cancel Order">
                 <parameter param-name="orderId"/>
