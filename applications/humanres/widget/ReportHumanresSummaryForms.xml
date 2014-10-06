@@ -802,7 +802,7 @@
     	<field name="customTimePeriodId" title="Time Period"><display></display></field>
     	<field name="noOfPayableDays"><display></display></field> 
     	<field name="noOfArrearDays" title="Arrear Days"><text size="10"></text></field>
-    	<field name="lossOfPayDays" use-when="punchType!=null &amp;&amp; punchType.equals(&quot;N&quot;) &amp;&amp; ${groovy:((security.hasEntityPermission(&quot;EMP_LOP_EDIT&quot;, &quot;_UPDATE&quot;,session)))}"><text size="10"></text></field>
+    	<field name="lossOfPayDays" use-when="${groovy:((security.hasEntityPermission(&quot;EMP_LOP_EDIT&quot;, &quot;_UPDATE&quot;,session)))}"><text size="10"></text></field>
     	<field name="lateMin" use-when="${groovy:((security.hasEntityPermission(&quot;EMP_LATEMIN_EDIT&quot;, &quot;_UPDATE&quot;,session)))}" title="Approve Late Min" ><text size="10"></text></field>
     	<field name="noOfAttendedSsDays" use-when="${groovy:((security.hasEntityPermission(&quot;EMP_GHSS_EDIT&quot;, &quot;_UPDATE&quot;,session)))}" title="Availed SS Days" ><text size="10"></text></field>
     	<field name="noOfAttendedHoliDays" use-when="${groovy:((security.hasEntityPermission(&quot;EMP_GHSS_EDIT&quot;, &quot;_UPDATE&quot;,session)))}" title="Availed GH Days" ><text size="10"></text></field>

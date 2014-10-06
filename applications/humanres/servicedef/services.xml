@@ -1385,6 +1385,7 @@ under the License.emplpunch
         <description>Create an ProductPriceRule</description>
         <attribute name="orgPartyId" mode="IN" type="String"></attribute>
         <attribute name="customTimePeriodId" mode="IN" type="String"></attribute>
+        <attribute name="billingTypeId" mode="IN" type="String" optional="true"/>
         <attribute name="periodBillingId" mode="OUT" type="String"></attribute>
     </service>
     <service name="generatePayrollBilling"  engine="java"
@@ -1394,6 +1395,21 @@ under the License.emplpunch
         <attribute name="partyIdFrom" mode="IN" type="String"></attribute>
         <attribute name="periodBillingId" mode="INOUT" type="String"></attribute>
     </service>
+    <service name="generatePayrollBillingInternal"  engine="java"
+                location="in.vasista.vbiz.humanres.PayrollService" invoke="generatePayrollBillingInternal" auth="true" transaction-timeout="5000">
+        <description>Create an ProductPriceRule</description>
+        <attribute name="partyId" mode="IN" type="String"></attribute>
+        <attribute name="partyIdFrom" mode="IN" type="String"></attribute>
+        <attribute name="periodBillingId" mode="INOUT" type="String"></attribute>
+    </service>
+     <service name="generatePayrollMedicalReimbursement"  engine="java"
+                location="in.vasista.vbiz.humanres.PayrollService" invoke="generatePayrollMedicalReimbursement" auth="true" transaction-timeout="5000">
+        <description>Create an ProductPriceRule</description>
+        <attribute name="partyId" mode="IN" type="String"></attribute>
+        <attribute name="partyIdFrom" mode="IN" type="String"></attribute>
+        <attribute name="periodBillingId" mode="INOUT" type="String"></attribute>
+    </service>
+     
     <service name="generateEmployerContributionPayrollBilling"  engine="java"
                 location="in.vasista.vbiz.humanres.PayrollService" invoke="generateEmployerContributionPayrollBilling" auth="true" transaction-timeout="5000">
         <description>Create an ProductPriceRule</description>

@@ -16,6 +16,8 @@
     <BenefitType benefitTypeId="PAYROL_BEN_OTHERS" description=" Other Benefits " hasTable="N" parentTypeId=""/>
     <BenefitType benefitTypeId="PAYROL_BEN_PENS" description="Employee Pension" hasTable="N" isEmployerContribution="Y" parentTypeId=""/>
     
+    <BenefitType benefitTypeId="PAYROL_BEN_MED_REB" description="Medical Reimbursement" hasTable="N" parentTypeId=""/>
+    
 <EmplLeaveReasonType description="Medical" emplLeaveReasonTypeId="MEDICAL" hasTable="N" parentTypeId=""/>
     <EmplLeaveReasonType description="Casual" emplLeaveReasonTypeId="CASUAL" hasTable="N" parentTypeId=""/>
     <EmplLeaveReasonType description="Maternity" emplLeaveReasonTypeId="MATERNITY" hasTable="N" parentTypeId=""/>
@@ -201,8 +203,25 @@
     <Enumeration description="Leave Encash" enumCode="LEAVE_ENCASHMENT" enumId="LEAVE_ENCASHMENT" sequenceId="02" enumTypeId="ENCASHMENT_STATUS"/>
     
     <Enumeration description="Payroll Attendance Finalizaton Billing" enumCode="PB_HR_ATTN_FINAL" enumId="PB_HR_ATTN_FINAL" enumTypeId="PERIOD_BILLING"/> 
-
-    <TenantConfiguration propertyName="enableLeaveSms" propertyValue="N" propertyTypeEnumId="SMS" description="Enable Leave Sms functionality"/>
+   
+   <Enumeration description="Suppl Payroll Medical Reimbursement" enumCode="SP_MED_REIMB" enumId="SP_MED_REIMB" enumTypeId="PERIOD_BILLING"/> 
+   <Enumeration description="Suppl Payroll Leave Encashment" enumCode="SP_LEAVE_ENCASH" enumId="SP_LEAVE_ENCASH" enumTypeId="PERIOD_BILLING"/> 
+   
+   
+   <PayrollType payrollTypeId="SP_MED_REIMB" parentTypeId="PAYROLL_BILL" periodTypeId="RATE_QUARTER" serviceName="generatePayrollMedicalReimbursement" />
+   <PayrollTypePayheadTypeMap payrollTypeId="SP_MED_REIMB" payHeadTypeId="PAYROL_BEN_MED_REB"/>
+   
+   <PayrollType payrollTypeId="PAYROLL_BILL" periodTypeId="RATE_MONTH" serviceName="generatePayrollBillingInternal"/>
+   
+   <BenefitType benefitTypeId="PAYROL_BEN_MED_REB" description="Medical Reimbursement" hasTable="N" parentTypeId=""/>
+   <AcctgFormula acctgFormulaId="BEN_MED_REB" formula="1200*(${NOOFPAYABLEDAYS}/${NOOFCALENDERDAYS})" description="Medical Reimbursement" isSlabBased="N"/>
+        
+    <PayrollBenDedRule payrollBenDedRuleId="BEN_MED_REB" ruleName="Medical Reimbursement  Rule" payHeadTypeId="PAYROL_BEN_MED_REB" fromDate="2001-01-01 12:00:00.0"/>
+    <PayHeadPriceAction acctgFormulaId="BEN_MED_REB" amount="" payHeadPriceActionSeqId="01" payHeadPriceActionTypeId="PRICE_FLAT" payrollBenDedRuleId="BEN_MED_REB" />
+    
+   
+   
+   <TenantConfiguration propertyName="enableLeaveSms" propertyValue="N" propertyTypeEnumId="SMS" description="Enable Leave Sms functionality"/>
 
     
 </entity-engine-xml>
