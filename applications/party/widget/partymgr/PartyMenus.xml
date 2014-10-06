@@ -74,6 +74,12 @@
             </condition>
             <link target="FindSecurityGroup"/>
         </menu-item>
+        <menu-item name="FindPartyGeoPoint" title="Party Locations">
+			<condition>
+                <if-service-permission service-name="partyBasePermissionCheck" main-action="ADMIN"/>
+            </condition>        
+        	<link target="FindPartyGeoPoint"/>
+        </menu-item>  
        <!-- <menu-item name="addrmap" title="${uiLabelMap.PageTitleAddressMatchMap}"><link target="addressMatchMap"/></menu-item>-->
         <!--<menu-item name="partyinv" title="${uiLabelMap.PartyInvitation}"><link target="partyInvitation"/></menu-item>-->
     </menu>

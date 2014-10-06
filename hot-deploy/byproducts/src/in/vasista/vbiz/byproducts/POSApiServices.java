@@ -8,13 +8,11 @@ import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
-
 import javolution.util.FastList;
 import javolution.util.FastMap;
 
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.UtilDateTime;
-import org.ofbiz.base.util.UtilHttp;
 import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.entity.Delegator;
@@ -22,13 +20,12 @@ import org.ofbiz.entity.GenericEntityException;
 import org.ofbiz.entity.GenericValue;
 import org.ofbiz.entity.condition.EntityCondition;
 import org.ofbiz.entity.condition.EntityOperator;
-import org.ofbiz.entity.transaction.TransactionUtil;
 import org.ofbiz.entity.util.EntityUtil;
 import org.ofbiz.service.DispatchContext;
-import org.ofbiz.service.GenericServiceException;
 import org.ofbiz.service.LocalDispatcher;
 import org.ofbiz.service.ServiceUtil;
 import org.ofbiz.security.Security;
+
 
 
 public class POSApiServices {
@@ -612,4 +609,43 @@ Debug.logInfo("result:" + result, module);
 		}	
 		return svcResult;   
     }
+    
+    public static Map<String, Object> uploadPartyLocations(DispatchContext dctx, Map<String, ? extends Object> context) {
+    	Delegator delegator = dctx.getDelegator();
+    	GenericValue userLogin = (GenericValue) context.get("userLogin");
+    	String partyId = userLogin.getString("partyId");
+		if (UtilValidate.isEmpty(partyId)) {
+			Debug.logError("Empty party Id", module);
+			return ServiceUtil.returnError("Empty party Id");	   
+		}	
+		List<Map<String, Object>> locations = (List<Map<String, Object>>) context.get("locations");
+		if (UtilValidate.isEmpty(locations)) {
+			Debug.logError("No locations", module);
+			return ServiceUtil.returnError("No locations");	   
+		}
+		Map result = ServiceUtil.returnSuccess("Locations successfully processed.");		
+		Map<String, Object> uploadLocationsResults = FastMap.newInstance();
+		String infoString = "uploadPartyLocations:: partyId: " + partyId + "; locations:" + locations;
+		Debug.logInfo(infoString, module);		
+		for (int i = 0; i < locations.size(); ++i) {	
+			Map location = locations.get(i);
+		  	double latitude = ((Double)location.get("latitude")).doubleValue();
+		  	double longitude = ((Double)location.get("longitude")).doubleValue();
+		  	Timestamp createdTime = UtilDateTime.toTimestamp((Date)location.get("createdDate"));
+	        try {
+			  	GenericValue newEntity = delegator.makeValue("PartyLocation");
+			  	newEntity.set("partyId", partyId);		  	
+			  	newEntity.set("fromDate", createdTime);		  	
+		        newEntity.set("latitude", latitude);
+		        newEntity.set("longitude", longitude);
+			  	delegator.create(newEntity);
+	        } catch (GenericEntityException e) {
+	            Debug.logError(e, module);
+	            return ServiceUtil.returnError("Failed to create entity " + e);            
+	        } 
+		}		 
+		uploadLocationsResults.put("numLocations", locations.size());
+  		result.put("uploadLocationsResults", uploadLocationsResults);		
+  		return result; 
+    }      
 }

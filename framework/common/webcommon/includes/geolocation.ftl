@@ -204,7 +204,11 @@ under the License.
                 	];       
 					var polyline = new GPolyline(latlng, colors[${lineNum%3}], 3);
 					map.addOverlay(polyline);
-					midLineArrows(latlng, '${geoChart.routeLabels[lineNum]}');
+					var routeLabel = "";
+					<#if geoChart.routeLabels?has_content>
+						routeLabel = '${geoChart.routeLabels[lineNum]}';
+					</#if>
+					midLineArrows(latlng, routeLabel);
 					<#assign lineNum = lineNum + 1/>
 				</#list>
 			</#if>

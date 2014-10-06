@@ -64,6 +64,14 @@
         <attribute type="Map" mode="OUT" name="facilitiesResult" optional="true"/>
     </service>  
     
+    <service name="uploadPartyLocations" engine="java"  auth="true" export="true"
+        location="in.vasista.vbiz.byproducts.POSApiServices" invoke="uploadPartyLocations">
+        <description>Service to upload a party's (determined by the login param) locations</description>
+        <attribute type="List" mode="IN" name="locations" optional="false"/>                      
+        <attribute type="Map" mode="OUT" name="uploadLocationsResults" optional="true"/>
+    </service>       
+    
+    
     <!-- Thin wrapper around getBoothDues with mobile permission checking -->
      <service name="getFacilityDues" engine="java"  auth="true" export="true"
         location="in.vasista.vbiz.byproducts.POSApiServices" invoke="getFacilityDues">

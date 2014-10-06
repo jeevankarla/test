@@ -1250,10 +1250,17 @@ under the License.
         <security https="true" auth="true"/>
         <response name="success" type="view" value="ProfileEditUserLoginSecurityGroups"/>
     </request-map>
+    
+    <request-map uri="FindPartyGeoPoint">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="FindPartyGeoPoint"/>
+    </request-map>
 
     <!-- end of request mappings -->
 
     <!-- View Mappings -->
+    <view-map name="FindPartyGeoPoint" type="screen" page="component://party/widget/partymgr/GeoScreens.xml#FindPartyGeoPoint"/>
+    
     <view-map name="CreateRelationship" type="screen" page="component://party/widget/partymgr/PartyScreens.xml#CreateRelationship"></view-map>
     <view-map name="main" type="screen" page="component://party/widget/partymgr/PartyScreens.xml#findparty"/>
 
