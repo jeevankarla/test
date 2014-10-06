@@ -1651,13 +1651,13 @@ under the License.
 		<field name="payrollTypeId" type="id-ne"></field>
 		<field name="parentTypeId" type="id-ne"></field>
 		<field name="periodTypeId" type="id"></field>
-		<field name="serviceName" type="id"></field>
+		<field name="serviceName" type="id-vlong"></field>
 		<prim-key field="payrollTypeId" />
 		<relation type="one" fk-name="PT_PT" rel-entity-name="Enumeration">
-        	<key-map field-name="payrollTypeId"/>
+        	<key-map field-name="payrollTypeId" rel-field-name="enumId"/>
         </relation>
         <relation type="one" fk-name="PT_PT" rel-entity-name="Enumeration">
-        	<key-map field-name="parentTypeId"/>
+        	<key-map field-name="parentTypeId" rel-field-name="enumId"/>
         </relation>
 	    <relation type="one" fk-name="PT_PET"
 			rel-entity-name="PeriodType">
@@ -1672,7 +1672,7 @@ under the License.
 		<prim-key field="payrollTypeId" />
 		<prim-key field="payHeadTypeId" />
 		<relation type="one" fk-name="PTPH_PT" rel-entity-name="Enumeration">
-        	<key-map field-name="payrollTypeId"/>
+        	<key-map field-name="payrollTypeId" rel-field-name="enumId"/>
         </relation>
 	</entity>
 	
