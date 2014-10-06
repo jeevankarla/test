@@ -7947,21 +7947,20 @@ public class ByProductNetworkServices {
 		conditionList.add(EntityCondition.makeCondition("statusId",EntityOperator.NOT_EQUAL, "INVOICE_CANCELLED"));
 		conditionList.add(EntityCondition.makeCondition("dueDate",EntityOperator.GREATER_THAN_EQUAL_TO, fromDate));
 		conditionList.add(EntityCondition.makeCondition("dueDate",EntityOperator.LESS_THAN_EQUAL_TO, thruDate));
-		conditionList.add(EntityCondition.makeCondition("invoiceItemTypeId",EntityOperator.EQUALS, "VAT_SALE"));
+		/*conditionList.add(EntityCondition.makeCondition("invoiceItemTypeId",EntityOperator.EQUALS, "VAT_SALE"));*/
 		EntityCondition condition = EntityCondition.makeCondition(conditionList, EntityOperator.AND);
 		List<String> invoiceIds = FastList.newInstance();
 		List<GenericValue> extInvoices = FastList.newInstance();
 		try {
-			extInvoices = delegator.findList("InvoiceItemInvoiceItemTypeInvoice", condition, UtilMisc.toSet("invoiceId"), UtilMisc.toList("dueDate", "facilityId"), null, false);
+			extInvoices = delegator.findList("InvoiceItemInvoiceItemTypeInvoice", condition, UtilMisc.toSet("invoiceId", "dueDate", "invoiceItemTypeId"), UtilMisc.toList("dueDate", "partyId"), null, false);
 			invoiceIds = EntityUtil.getFieldListFromEntityList(extInvoices, "invoiceId", true);
-			
 		} catch (GenericEntityException e) {
 			Debug.logError(e, module);
 			return ServiceUtil.returnError(e.getMessage());
 		}
 		conditionList.clear();
 		conditionList.add(EntityCondition.makeCondition("invoiceId",EntityOperator.IN, invoiceIds));
-		conditionList.add(EntityCondition.makeCondition("billOfSaleTypeId",EntityOperator.EQUALS, "VAT_INV"));
+		/*conditionList.add(EntityCondition.makeCondition("billOfSaleTypeId",EntityOperator.EQUALS, "VAT_INV"));*/
 		conditionList.add(EntityCondition.makeCondition("finYearId",EntityOperator.EQUALS, finYearId));
 		EntityCondition billOfSaleCond = EntityCondition.makeCondition(conditionList, EntityOperator.AND);
 		List excludeInvoiceIds = FastList.newInstance();
@@ -7969,16 +7968,31 @@ public class ByProductNetworkServices {
 			List<GenericValue> extBillOfSaleInvoices = delegator.findList("BillOfSaleInvoiceSequence", billOfSaleCond, UtilMisc.toSet("invoiceId"), null, null, false);
 			excludeInvoiceIds = EntityUtil.getFieldListFromEntityList(extBillOfSaleInvoices, "invoiceId", true); 
 			int i = 0;
-			invoiceIds.removeAll(excludeInvoiceIds);		
-			for(String vatInvId : invoiceIds){
+			invoiceIds.removeAll(excludeInvoiceIds);
+			for(String invId : invoiceIds){
 				i++;
-				GenericValue billOfSale = delegator.makeValue("BillOfSaleInvoiceSequence");
-				billOfSale.put("billOfSaleTypeId", "VAT_INV");
-				billOfSale.put("invoiceId", vatInvId);
-				billOfSale.put("finYearId", finYearId);
-				delegator.setNextSubSeqId(billOfSale, "sequenceId", 10, 1);
-	            delegator.create(billOfSale);
-	            if(i%500 == 0){
+				List<GenericValue> invDetails = EntityUtil.filterByCondition(extInvoices, EntityCondition.makeCondition("invoiceId", EntityOperator.EQUALS, invId));
+				List<String> invoiceItemTypeIds = EntityUtil.getFieldListFromEntityList(invDetails, "invoiceItemTypeId", true);
+				Timestamp invDate = (EntityUtil.getFirst(invDetails)).getTimestamp("dueDate");
+				if(invoiceItemTypeIds.contains("BED_SALE")){
+       				GenericValue billOfSale = delegator.makeValue("BillOfSaleInvoiceSequence");
+    				billOfSale.put("billOfSaleTypeId", "EXCISE_INV");
+    				billOfSale.put("invoiceId", invId);
+    				billOfSale.put("finYearId", finYearId);
+    				billOfSale.put("invoiceDueDate", invDate);
+    				delegator.setNextSubSeqId(billOfSale, "sequenceId", 10, 1);
+    	            delegator.create(billOfSale);
+       			}
+				else if(invoiceItemTypeIds.contains("VAT_SALE") || invoiceItemTypeIds.contains("CST_SALE")){
+       				GenericValue billOfSale = delegator.makeValue("BillOfSaleInvoiceSequence");
+    				billOfSale.put("billOfSaleTypeId", "VAT_INV");
+    				billOfSale.put("invoiceId", invId);
+    				billOfSale.put("finYearId", finYearId);
+    				billOfSale.put("invoiceDueDate", invDate);
+    				delegator.setNextSubSeqId(billOfSale, "sequenceId", 10, 1);
+    	            delegator.create(billOfSale);
+       			}
+				if(i%100 == 0){
 	            	Debug.log("Records processed ###########"+i);
 	            }
 	            
@@ -7988,6 +8002,7 @@ public class ByProductNetworkServices {
 		}
 		return result;
 	}
+	
 	public static Map<String, Object> getPartyByRoleType(DispatchContext dctx, Map context) {
 		GenericDelegator delegator = (GenericDelegator) dctx.getDelegator();
 		LocalDispatcher dispatcher = dctx.getDispatcher();
