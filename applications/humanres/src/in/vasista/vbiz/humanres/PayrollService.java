@@ -3257,6 +3257,7 @@ public class PayrollService {
 								newEntity.set("deductionTypeId", payHeadTypeId);
 								newEntity.set("periodTypeId", "RATE_MONTH");
 								newEntity.set("fromDate", fromDateStart);
+								newEntity.set("thruDate", thruDateEnd);
 								newEntity.set("cost", amount);
 								newEntity.set("createdByUserLogin", userLogin.get("userLoginId"));
 						        newEntity.set("lastModifiedByUserLogin", userLogin.get("userLoginId"));
