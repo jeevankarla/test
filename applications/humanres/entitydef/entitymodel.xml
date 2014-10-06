@@ -1882,6 +1882,7 @@ under the License.
       <field name="principalAmount" type="currency-amount"></field>
       <field name="interestAmount" type="currency-amount"></field>
       <field name="interestInstNum" type="numeric"></field>
+       <field name="closingBalance" type="currency-amount"></field>
       <field name="payrollHeaderId" type="id"></field>
       <field name="payrollItemSeqId" type="id"></field>
       <field name="paymentId" type="id"></field>
