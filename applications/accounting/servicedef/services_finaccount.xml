@@ -153,7 +153,13 @@ under the License.
         <attribute name="glAccountId" type="String" mode="IN" optional="false"/>
          <attribute name="paymentId" type="String" mode="IN" optional="true"/>
     </service>
-
+	<service name="createFinAcctTransSequence" engine="java"
+        location="org.ofbiz.accounting.finaccount.FinAccountServices" invoke="createFinAcctTransSequence">
+        <description>Create Fin Account Trans Sequence meant to be called as an SECA</description>
+        <permission-service service-name="acctgFinAcctPermissionCheck" main-action="FINACCOUNTTX_EDIT"/>
+        <attribute name="finAccountTransId" type="String" mode="IN" optional="false"/>
+    </service>
+	
     <service name="createFinAccountRole" engine="simple" default-entity-name="FinAccountRole"
             location="component://accounting/script/org/ofbiz/accounting/finaccount/FinAccountServices.xml" invoke="createFinAccountRole">
         <description>Create a new Financial Account Role</description>

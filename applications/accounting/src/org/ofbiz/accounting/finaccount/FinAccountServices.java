@@ -597,6 +597,51 @@ public class FinAccountServices {
 
         return result;
     }
+    
+    public static Map<String, Object> createFinAcctTransSequence(DispatchContext dctx, Map<String, Object> context) {
+        LocalDispatcher dispatcher = dctx.getDispatcher();
+        Delegator delegator = dctx.getDelegator();
+        GenericValue userLogin = (GenericValue) context.get("userLogin");
+        String finAccountTransId = (String) context.get("finAccountTransId");
+        Map<String, Object> result = ServiceUtil.returnSuccess();
+    	GenericValue finAccountTrans = null;
+    	boolean createSequence = Boolean.FALSE;
+        try{
+        	finAccountTrans = delegator.findOne("FinAccountTrans", UtilMisc.toMap("finAccountTransId", finAccountTransId), false);
+        	
+    	}catch(GenericEntityException e){
+    		Debug.logError(e, module);
+            return ServiceUtil.returnError(e.getMessage());
+    	}
+        
+        try {
+			GenericValue tenantConfigEnableTransSeq = delegator.findOne("TenantConfiguration", UtilMisc.toMap("propertyTypeEnumId", "LMS", "propertyName","enableFinTransSequence"), true);
+			if (UtilValidate.isNotEmpty(tenantConfigEnableTransSeq) && (tenantConfigEnableTransSeq.getString("propertyValue")).equals("Y")) {
+				createSequence = Boolean.TRUE;
+			}
+		} catch (GenericEntityException e) {
+			// TODO: handle exception
+			Debug.logError(e, module);
+		}
+        
+        if(UtilValidate.isNotEmpty(finAccountTrans) && createSequence){
+        	try {
+        		GenericValue newTransSeq = delegator.makeValue("FinAccntTransSequence");        	 
+            	newTransSeq.set("finAccountId", finAccountTrans.getString("finAccountId"));
+            	newTransSeq.set("finAccountTransTypeId", finAccountTrans.getString("finAccountTransTypeId"));
+            	newTransSeq.set("transactionDate", finAccountTrans.getTimestamp("transactionDate"));
+            	newTransSeq.set("finAccountTransId", finAccountTrans.getString("finAccountTransId"));
+            	delegator.setNextSubSeqId(newTransSeq, "transSequenceId", 10, 1);
+            	newTransSeq.create();
+             } catch (GeneralException e) {
+            	 Debug.logError(e, module);
+                 return ServiceUtil.returnError(e.getMessage());
+             }
+        }
+        return result;
+    }
+    
+    
     public static Map<String, Object> setMassFinAccountTransStatus(DispatchContext dctx, Map<String, Object> context) {
         Delegator delegator = dctx.getDelegator();
         LocalDispatcher dispatcher = dctx.getDispatcher();   

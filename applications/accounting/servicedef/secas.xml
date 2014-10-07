@@ -133,7 +133,11 @@ under the License.
         <condition field-name="glAccountId" operator="is-not-empty"/>
         <action service="postFinAccountTransToGl" mode="sync"/>
     </eca>
-
+	<eca service="createFinAccountTrans" event="commit">
+        <condition field-name="finAccountId" operator="is-not-empty"/>
+        <action service="createFinAcctTransSequence" mode="sync"/>
+    </eca>
+    
     <!-- sample ECA rules for the sampleInvoiceAffiliateCommission service triggering
     <eca service="createPayment" event="commit">
         <condition field-name="statusId" operator="equals" value="PMNT_RECEIVED"/>
