@@ -329,7 +329,7 @@ access. For a detailed description see the core/docs/entityconfig.html file.
                 jdbc-driver="com.mysql.jdbc.Driver"
                 jdbc-uri="jdbc:mysql://127.0.0.1/vbiz?autoReconnect=true"
                 jdbc-username="root"
-                jdbc-password="rootvst"
+                jdbc-password="vbiz"
                 isolation-level="ReadCommitted"
                 pool-minsize="2"
                 pool-maxsize="250"
@@ -365,7 +365,7 @@ access. For a detailed description see the core/docs/entityconfig.html file.
                 jdbc-uri="jdbc:mysql://127.0.0.1/vbizolap?autoReconnect=true"
                 jdbc-username="root"
 
-                jdbc-password="rootvst"
+                jdbc-password="vbiz"
                 isolation-level="ReadCommitted"
                 pool-minsize="2"
 
@@ -403,7 +403,7 @@ access. For a detailed description see the core/docs/entityconfig.html file.
                 jdbc-uri="jdbc:mysql://127.0.0.1/vbiztenant?autoReconnect=true"
                 jdbc-username="root"
 
-                jdbc-password="rootvst"
+                jdbc-password="vbiz"
                 isolation-level="ReadCommitted"
                 pool-minsize="2"
 
@@ -433,7 +433,7 @@ access. For a detailed description see the core/docs/entityconfig.html file.
                 jdbc-driver="com.mysql.jdbc.Driver"
                 jdbc-uri="jdbc:mysql://127.0.0.1/ofbiz_odbc?autoReconnect=true"
                 jdbc-username="root"
-                jdbc-password="rootvst"
+                jdbc-password="vbiz"
                 isolation-level="ReadCommitted"
                 pool-minsize="2"
                 pool-maxsize="250"
