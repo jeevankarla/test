@@ -1799,8 +1799,11 @@ under the License.
         <security https="true" auth="true"/>                        
         <response name="success" type="view" value="PFMonthlyStatement"/>        
     </request-map>
-
-
+    <request-map uri="ESIMonthlystatement.pdf">
+        <security https="true" auth="true"/>                        
+        <response name="success" type="view" value="ESIMonthlystatement"/>        
+    </request-map>
+	
      <!--====================Trainings Requests===================================-->
  <!--====================Cal Requests===================================-->
 <request-map uri="calendar"><security https="true" auth="true"/>
@@ -2195,6 +2198,7 @@ under the License.
     <view-map name="ITEarningsReport" type="screenfop" page="component://humanres/widget/ReportHumanresSummaryScreens.xml#ITEarningsReport" content-type="application/pdf" encoding="none"/>
    
     <view-map name="PFMonthlyStatement" type="screenfop" page="component://humanres/widget/ReportHumanresSummaryScreens.xml#PFMonthlyStatement" content-type="application/pdf" encoding="none"/>
+    <view-map name="ESIMonthlystatement" type="screenfop" page="component://humanres/widget/ReportHumanresSummaryScreens.xml#ESIMonthlystatement" content-type="application/pdf" encoding="none"/>
     <view-map name="AttendanceReport" type="screen" page="component://humanres/widget/ReportHumanresSummaryScreens.xml#AttendanceReport"/>
     <view-map name="emplDailyPunchReport" type="screencsv" page="component://humanres/widget/ReportHumanresSummaryScreens.xml#emplDailyPunchReport" content-type="text/csv" encoding="none"/>
     <view-map name="emplMonthlyPunchReport" type="screencsv" page="component://humanres/widget/ReportHumanresSummaryScreens.xml#emplMonthlyPunchReport" content-type="text/csv" encoding="none"/>

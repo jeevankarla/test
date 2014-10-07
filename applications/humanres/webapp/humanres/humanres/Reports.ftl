@@ -724,6 +724,21 @@ function makeDatePicker1(fromDateId ,thruDateId){
 							</table>
 						</form>
 					</tr>
+					<tr class="alternate-row">
+						<form id="ESIMonthlystatement" name="ESIMonthlystatement" method="post" action="<@ofbizUrl>ESIMonthlystatement.pdf</@ofbizUrl>" target="_blank" >	
+							<table class="basic-table" cellspacing="5">
+								<tr class="alternate-row">
+									<td width="20%"><span class='h3'>ESI Monthly statement</span></td>
+									<td width="30%"><span class='h3'>Period Id
+										<select name="customTimePeriodId" id="customTimePeriodId" class='h4'>
+											<#list customTimePeriodList as customTimePeriod><option value='${customTimePeriod.customTimePeriodId?if_exists}' >${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(customTimePeriod.fromDate, "dd MMMMM, yyyy")} -${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(customTimePeriod.thruDate, "dd MMMMM, yyyy")}</option></#list>
+										</select></span>
+									</td>	
+									<td width="15%"><span class='h3'><input type="submit" value="Download" class="buttontext"></span></td> 
+								</tr>
+							</table>	
+						</form>
+					</tr>
 			   	</table>
 			</div>
 		</div>
