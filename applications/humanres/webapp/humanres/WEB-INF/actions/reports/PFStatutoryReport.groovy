@@ -41,7 +41,7 @@ import in.vasista.vbiz.humanres.PayrollService;
 	partyIdsList=[];
 	conditionList=[];
 	conditionList.add(EntityCondition.makeCondition("customTimePeriodId", EntityOperator.EQUALS ,parameters.customTimePeriodId));
-	conditionList.add(EntityCondition.makeCondition("statusId", EntityOperator.EQUALS ,"GENERATED"));
+	conditionList.add(EntityCondition.makeCondition("statusId", EntityOperator.IN , UtilMisc.toList("GENERATED","APPROVED")));
 	if(UtilValidate.isNotEmpty(parameters.periodBillingId)){
 		conditionList.add(EntityCondition.makeCondition("periodBillingId", EntityOperator.EQUALS ,parameters.periodBillingId));
 	}
@@ -80,13 +80,10 @@ import in.vasista.vbiz.humanres.PayrollService;
 	headerCondition = EntityCondition.makeCondition(headerConditionList,EntityOperator.AND);
 	def orderBy = UtilMisc.toList("partyIdFrom");
 	payrollHeader = delegator.findList("PayrollHeader", headerCondition, null, orderBy, null, false);
-	//payrollHeader = delegator.findList("PayrollHeader", EntityCondition.makeCondition(["periodBillingId" : periodBillingId]), null, null, null, false);
 	payrollHeaderIdsList = EntityUtil.getFieldListFromEntityList(payrollHeader, "payrollHeaderId", true);
-	//partyIdsList = EntityUtil.getFieldListFromEntityList(payrollHeader, "partyIdFrom", true);
 	
 	if(UtilValidate.isNotEmpty(payrollHeader)){
 		payrollHeader.each{ HeaderId ->
-			//for(i=0; i<payrollHeaderIdsList.size(); i++){
 			employeesMap=[:];
 			wages= 0;
 			epf = fpf = 0;
@@ -131,10 +128,6 @@ import in.vasista.vbiz.humanres.PayrollService;
 					}
 				}
 			
-				//employerPFList = delegator.findOne("PayrollHeaderItemEc", [payrollHeaderId : payrollHeaderId], false);
-				/*if(payrollHeaderId=="124319"){
-					Debug.log("headerItemsList==========="+headerItemsList);
-				}*/
 				employeedetailMap = [:];
 				employeedetailMap.put("partyId", partyId);
 				employeedetailMap.put("wages", wages);
