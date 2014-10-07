@@ -2000,6 +2000,15 @@
 			<link target="FindNonBankAccount">
 			</link>
 		 </menu-item>
+		 <menu-item name="FindDepositAccount" title="Deposit Accounts">
+          <condition>
+				<or>
+				    <if-has-permission permission="ACCOUNTING"  action="_TREASURER"/>
+            	</or>            
+            </condition>
+			<link target="FindDepositAccount">
+			</link>
+		 </menu-item>
 		 <menu-item name="IncomingAdvances" title="Advances Received">
           <condition>
 				<or>
@@ -2018,7 +2027,7 @@
 			<link target="OutgoingAdvancesPaid">
 			</link>
 		 </menu-item>
-		 <menu-item name="IncomingDeposits" title="Deposits Received">
+		 <!-- <menu-item name="IncomingDeposits" title="Deposits Received">
           <condition>
 				<or>
 				    <if-has-permission permission="ACCOUNTING"  action="_TREASURER"/>
@@ -2035,7 +2044,7 @@
             </condition>
 			<link target="OutgoingDepositsPaid">
 			</link>
-		 </menu-item> 
+		 </menu-item> --> 
 		  <menu-item name="PaymentOverview" title="Payment Overview">
           <condition>
 				<and>
@@ -2111,6 +2120,46 @@
 		 </menu-item> -->
     </menu> 
     
+    <menu name="DepositAccountTabBar" extends="CommonTabBarMenu"	extends-resource="component://common/widget/CommonMenus.xml"
+		default-menu-item-name="EditFinAccount" selected-menuitem-context-field-name="tabButtonItem2">
+
+		<menu-item name="EditDepositFinAccount" title="Edit Account">
+		 	<condition>
+			     <and> 
+					<not><if-empty field="ctxFinAccountId"/></not>
+					<or><not><if-empty field="finAccountId"/></not></or>
+           		 </and> 
+           	</condition>
+			<link target="EditDepositFinAccount">
+				<parameter param-name="finAccountId" value="${ctxFinAccountId}" />
+			</link>
+		</menu-item>
+		<menu-item name="WithdrawFromDepositAcct" title="Withdraw from Acct">
+		  <condition>
+		  	<and>
+				<if-has-permission permission="ACCOUNTING"  action="_TREASURER"/>
+				<not><if-empty field="ctxFinAccountId"/></not>
+				<or><not><if-empty field="finAccountId"/></not></or>
+            </and> 
+           </condition>
+			<link target="WithdrawFromDepositAcct">
+				<parameter param-name="finAccountId" value="${ctxFinAccountId}" />
+			</link>
+		</menu-item>
+		<menu-item name="DepositToDepositAcct" title="Deposit to Acct">
+		  <condition>
+		  	<and>
+				<if-has-permission permission="ACCOUNTING"  action="_TREASURER"/>
+				<not><if-empty field="ctxFinAccountId"/></not>
+				<or><not><if-empty field="finAccountId"/></not></or>
+            </and> 
+           </condition>
+			<link target="DepositToDepositAcct">
+				<parameter param-name="finAccountId" value="${ctxFinAccountId}" />
+			</link>
+		</menu-item> 
+	</menu>
+	
       <menu name="CompanyFinAccountTabBar" extends="CommonTabBarMenu"
 		extends-resource="component://common/widget/CommonMenus.xml"
 		default-menu-item-name="EditFinAccount" selected-menuitem-context-field-name="tabButtonItem2">

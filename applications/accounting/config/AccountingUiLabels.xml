@@ -3046,6 +3046,9 @@
         <value xml:lang="th">สร้าง/เปลี่ยนแปลงงบกำไรสะสมและงบแสดงการเปลี่ยนแปลงฐานะการเงิน</value>
         <value xml:lang="zh">创建/更新金融账户</value>
     </property>
+    <property key="AccountingEditDepositAcct">
+        <value xml:lang="en">Deposit Account ${finAccount.finAccountName} [${finAccountId}]</value>
+    </property>
     <property key="AccountingEditFinAccountAuthorityFor">
         <value xml:lang="en">Edit Financial Account Authority For ${finAccount.finAccountName} [${finAccountId}]</value>
         <value xml:lang="hi_IN">वित्तीय खाता प्राधिकरण ${finAccount.finAccountName} [${finAccountId}] के लिए सम्पादित करे</value>

@@ -73,6 +73,124 @@
                </widgets>
         </section>
     </screen>
+    <screen name="FindDepositAccount">
+        <section>
+            <actions>
+                <set field="titleProperty" value="Non Financial Accounts"/>
+                  <set field="tabButtonItem" value="FindDepositAccount"/>
+                 <set field="tabButtonItem2" value="FindDepositAccount"/>
+                <set field="viewIndex" from-field="parameters.VIEW_INDEX" type="Integer" default-value="0"/>
+                <set field="viewSize" from-field="parameters.VIEW_SIZE" type="Integer" default-value="20"/>
+                <set field="parameters.ownerPartyId" value="Company"/>
+                <set field="parameters.finAccountTypeId" value="DEPOSIT_ACCOUNT"/>
+                <set field="noConditionFind" value="Y"/>
+                <set field="screenFlag" value="DEPOSIT_ACCOUNT" /> 
+                <set field="parameters.screenFlag" value="DEPOSIT_ACCOUNT" /> 
+                <service service-name="acctgFinAcctPermissionCheck" result-map="permResult">
+                    <field-map field-name="mainAction" value="FINACCOUNT_EDIT"/>
+                </service>
+                <set field="hasFinEditPermission" from-field="permResult.hasPermission"/>
+                 <script location="component://accounting/webapp/accounting/WEB-INF/actions/EditFinaccount.groovy"/>
+            </actions>
+            <widgets>
+              <decorator-screen name="CommonTreasurerPortalDecorator" location="component://accounting/widget/CommonScreens.xml"> 
+                    <decorator-section name="body">
+                    <include-menu name="CompanyFinAccountTabBar" location="component://accounting/widget/AccountingMenus.xml"/>
+                   	<container style="button-bar">
+	                    <link target="EditDepositFinAccount" text="Create Deposit Account" style="buttontext create"/>
+                    </container>
+                    
+                   <!--  <container style="button-bar">
+						<link target="FinAccountAlt.csv" text="Export As CSV" style="buttontext create"/>	
+						<link target="FinAccountAlt.pdf" text="Export As PDF" style="buttontext create"/>				
+					</container>  -->
+                   	<section>
+						<widgets>
+							<screenlet title="Deposit Accounts List">				
+								 <include-form name="ListDepositAccounts" location="component://accounting/widget/TreasurerPortalForms.xml"/>
+							</screenlet>
+						</widgets>      
+                   	</section>
+                   </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    <screen name="WithdrawFromDepositAcct">
+        <section>
+            <actions>
+			   <set field="titleProperty" value="Withdraw From Acct" />
+               <!--   <script location="component://accounting/webapp/accounting/WEB-INF/actions/EditFinaccount.groovy"/>
+                <set field="tabButtonItem"  value="${parameters.tabButtonItem}" default-value="${context.tabButtonItem}"/> -->
+                <set field="tabButtonItem" value="FindDepositAccount"/>
+                <set field="tabButtonItem2" value="WithdrawFromDepositAcct"/>
+                <set field="finAccountId" from-field="parameters.finAccountId"/>
+                <property-to-field field="defaultCurrencyUomId" resource="general" property="currency.uom.id.default" default="INR"/>
+                <service service-name="acctgFinAcctPermissionCheck" result-map="permResult">
+                    <field-map field-name="mainAction" value="FINACCOUNT_EDIT"/>
+                </service>
+                <set field="screenFlag" value="DEPOSIT_ACCOUNT"/>
+                <set field="hasFinEditPermission" from-field="permResult.hasPermission"/> 
+                <entity-one entity-name="FinAccount" value-field="finAccount"/>
+                <set field="parameters.finAccountTransTypeId" value="DEPOSIT"/>
+                <set field="parameters.parentTypeId" value="DISBURSEMENT"/>
+                <script location="component://accounting/webapp/accounting/WEB-INF/actions/WithdrawDepositFinAcct.groovy"/>
+<!--                 <set field="layoutSettings.javaScripts[]" value="/accounting/images/paymentTransaction.js" global="true"/> -->
+                <!-- <set field="finAccountTransId" from-field="parameters.finAccountTransId"/> -->
+            </actions>           
+            <widgets>
+            	<decorator-screen name="CommonTreasurerPortalDecorator" location="component://accounting/widget/CommonScreens.xml">
+                    <decorator-section name="body">
+                    	<include-menu name="DepositAccountTabBar" location="component://accounting/widget/AccountingMenus.xml"/>
+                    	<section>
+							<widgets>
+								<label style="h1" text="${uiLabelMap.AccountingEditDepositAcct}" ></label>
+								<screenlet title="Withdraw from Account">				
+									<include-form name="WithdrawAcctFinTransEntry" location="component://accounting/widget/TreasurerPortalForms.xml"/>
+								</screenlet>
+							</widgets>      
+                    	</section>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    <screen name="DepositToDepositAcct">
+        <section>
+            <actions>
+			   <set field="titleProperty" value="Deposit to Acct" />
+                <set field="tabButtonItem" value="FindDepositAccount"/>
+                <set field="tabButtonItem2" value="DepositToDepositAcct"/>
+                <set field="finAccountId" from-field="parameters.finAccountId"/>
+                <property-to-field field="defaultCurrencyUomId" resource="general" property="currency.uom.id.default" default="INR"/>
+                <service service-name="acctgFinAcctPermissionCheck" result-map="permResult">
+                    <field-map field-name="mainAction" value="FINACCOUNT_EDIT"/>
+                </service>
+                <set field="screenFlag" value="DEPOSIT_ACCOUNT"/>
+                <set field="hasFinEditPermission" from-field="permResult.hasPermission"/> 
+                <entity-one entity-name="FinAccount" value-field="finAccount"/>
+                <set field="parameters.finAccountTransTypeId" value="WITHDRAWAL"/>
+                <set field="parameters.parentTypeId" value="RECEIPT"/>
+                <script location="component://accounting/webapp/accounting/WEB-INF/actions/WithdrawDepositFinAcct.groovy"/>
+            </actions>           
+            <widgets>
+            	<decorator-screen name="CommonTreasurerPortalDecorator" location="component://accounting/widget/CommonScreens.xml">
+                    <decorator-section name="body">
+                    	<include-menu name="DepositAccountTabBar" location="component://accounting/widget/AccountingMenus.xml"/>
+                    	<section>
+							<widgets>
+								<label style="h1" text="${uiLabelMap.AccountingEditDepositAcct}" ></label>
+								<screenlet title="Deposit To Account">				
+									<include-form name="DepositAcctFinTransEntry" location="component://accounting/widget/TreasurerPortalForms.xml"/>
+								</screenlet>
+							</widgets>      
+                    	</section>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    
     <screen name="FindNonBankAccount">
         <section>
             <actions>
@@ -149,6 +267,52 @@
 								</screenlet>
 							</widgets>      
                     	</section>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    <screen name="EditDepositFinAccount">
+        <section>
+            <actions>
+                <set field="titleProperty" value="Edit Deposit Account"/>
+                <set field="tabButtonItem"  value="${parameters.tabButtonItem}" default-value="${context.tabButtonItem}"/>
+                <set field="tabButtonItem2" value="EditDepositFinAccount"/>
+                
+                <set field="finAccountId" from-field="parameters.finAccountId"/>
+                <property-to-field field="defaultCurrencyUomId" resource="general" property="currency.uom.id.default" default="INR"/>
+                <service service-name="acctgFinAcctPermissionCheck" result-map="permResult">
+                    <field-map field-name="mainAction" value="FINACCOUNT_EDIT"/>
+                </service>
+                <set field="hasFinEditPermission" from-field="permResult.hasPermission"/> 
+                <entity-one entity-name="FinAccount" value-field="finAccount"/>
+            <script location="component://accounting/webapp/accounting/WEB-INF/actions/EditFinaccount.groovy"/>
+            </actions>
+            <widgets>
+              <decorator-screen name="CommonTreasurerPortalDecorator" location="component://accounting/widget/CommonScreens.xml">
+                    <decorator-section name="body">
+                      <include-menu name="DepositAccountTabBar" location="component://accounting/widget/AccountingMenus.xml"/>
+                        <section>
+                            <condition>
+                            	<if-service-permission service-name="acctgFinAcctPermissionCheck" main-action="FINACCOUNT_EDIT"/>
+                                <not><if-empty field="finAccountId" /></not>
+                            </condition>
+                            <widgets>
+                                <!-- <container style="button-bar">
+                                    <link target="EditDepositFinAccount" text="Create Deposit Account" style="buttontext create"/>
+                                </container> -->
+                                <label style="h1" text="${uiLabelMap.AccountingEditDepositAcct}" ></label>
+                                <screenlet title="Edit Deposit Account">
+                                    <include-form name="EditDepositAccount" location="component://accounting/widget/TreasurerPortalForms.xml"/>
+                                </screenlet>
+                            </widgets>
+                            <fail-widgets>
+                                <label style="h1" text="${uiLabelMap.AccountingCreateNewFinAccount}"></label>
+                                <screenlet id="CreateFinAccountPanel" collapsible="true">
+                                    <include-form name="EditFinAccount" location="component://accounting/widget/FinAccountForms.xml"/>
+                                </screenlet>
+                            </fail-widgets>
+                        </section>
                     </decorator-section>
                 </decorator-screen>
             </widgets>

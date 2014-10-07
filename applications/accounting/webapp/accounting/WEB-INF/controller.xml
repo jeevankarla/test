@@ -2005,7 +2005,10 @@ under the License.
         <security https="true" auth="true"/>
         <response name="success" type="view" value="FindNonBankAccount"/>
     </request-map>
-    
+    <request-map uri="FindDepositAccount">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="FindDepositAccount"/>
+    </request-map>
      <request-map uri="FindFinAccountTransAlt">
         <security https="true" auth="true"/>
         <response name="success" type="view" value="FindFinAccountTransAlt"/>
@@ -2028,14 +2031,30 @@ under the License.
         <response name="success" type="view" value="BankContraEntry"><redirect-parameter name=""/></response>
         <response name="error" type="view" value="BankContraEntry"/>
     </request-map>
-    
+    <request-map uri="preCreateDepositAcctContraEntry">
+        <security https="true" auth="true"/>
+        <event type="service" path="" invoke="preCreateFinAccountTrans"/>
+        <response name="success" type="request-redirect-noparam" value="WithdrawFromDepositAcct" />
+        <response name="error" type="request-redirect-noparam" value="WithdrawFromDepositAcct"/>
+    </request-map>
     <request-map uri="preCreateBankContraEntry">
         <security https="true" auth="true"/>
         <event type="service" path="" invoke="preCreateFinAccountTrans"/>
         <response name="success" type="request-redirect-noparam" value="BankContraEntry" />
         <response name="error" type="request-redirect-noparam" value="BankContraEntry"/>
     </request-map>
-    
+    <request-map uri="EditDepositFinAccount">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="EditDepositFinAccount"/>
+    </request-map>
+    <request-map uri="WithdrawFromDepositAcct">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="WithdrawFromDepositAcct"/>
+    </request-map>
+    <request-map uri="DepositToDepositAcct">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="DepositToDepositAcct"/>
+    </request-map>
      <request-map uri="EditFinAccountAlt">
         <security https="true" auth="true"/>
         <response name="success" type="view" value="EditFinAccountAlt"/>
@@ -2050,12 +2069,25 @@ under the License.
         <response name="success" type="view" value="EditFinAccount"/>
         <response name="error" type="view" value="EditFinAccount"/>
     </request-map>
+    <request-map uri="createDepositFinAccount">
+        <security https="true" auth="true"/>
+        <event type="service" path="" invoke="createFinAccount"/>
+        <response name="success" type="view" value="EditDepositFinAccount"/>
+        <response name="error" type="view" value="EditDepositFinAccount"/>
+    </request-map>
     <request-map uri="updateFinAccount">
         <security https="true" auth="true"/>
         <event type="service" path="" invoke="updateFinAccount"/>
         <response name="success" type="view" value="EditFinAccount"/>
         <response name="error" type="view" value="EditFinAccount"/>
     </request-map>
+    <request-map uri="updateDepositFinAccount">
+        <security https="true" auth="true"/>
+        <event type="service" path="" invoke="updateFinAccount"/>
+        <response name="success" type="view" value="EditDepositFinAccount"/>
+        <response name="error" type="view" value="EditDepositFinAccount"/>
+    </request-map>
+    
     <request-map uri="deleteFinAccount">
         <security https="true" auth="true"/>
         <event type="service" path="" invoke="deleteFinAccount"/>
@@ -3570,7 +3602,11 @@ under the License.
      <view-map name="FindFinAccountAlt" type="screen" page="component://accounting/widget/TreasurerPortalScreens.xml#FindFinAccountAlt"/>
     <view-map name="FindFinAccountTransAlt" type="screen" page="component://accounting/widget/TreasurerPortalScreens.xml#FindFinAccountTransAlt"/>
     <view-map name="EditFinAccountAlt" type="screen" page="component://accounting/widget/TreasurerPortalScreens.xml#EditFinAccountAlt"/>
+    <view-map name="EditDepositFinAccount" type="screen" page="component://accounting/widget/TreasurerPortalScreens.xml#EditDepositFinAccount"/>
+    <view-map name="WithdrawFromDepositAcct" type="screen" page="component://accounting/widget/TreasurerPortalScreens.xml#WithdrawFromDepositAcct"/>
+    <view-map name="DepositToDepositAcct" type="screen" page="component://accounting/widget/TreasurerPortalScreens.xml#DepositToDepositAcct"/>
     <view-map name="FindNonBankAccount" type="screen" page="component://accounting/widget/TreasurerPortalScreens.xml#FindNonBankAccount"/>
+    <view-map name="FindDepositAccount" type="screen" page="component://accounting/widget/TreasurerPortalScreens.xml#FindDepositAccount"/>
     <view-map name="FinancialAccountingTransBANK" type="screen" page="component://accounting/widget/TreasurerPortalScreens.xml#FinancialAccountingTransBANK"/>
     <view-map name="BankContraEntry" type="screen" page="component://accounting/widget/TreasurerPortalScreens.xml#BankContraEntry"/>
     <view-map name="CreateNewContra" type="screen" page="component://accounting/widget/TreasurerPortalScreens.xml#CreateNewContra"/>
