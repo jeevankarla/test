@@ -1549,4 +1549,13 @@ under the License.emplpunch
         <description>Delete Loan</description>
        <attribute name="loanId" mode="IN" type="String" optional="false"/>
    </service>
+   <service name="getLoanAmountsByLoanType" engine="java" invoke="getLoanAmountsByLoanType" auth="true" 
+   		location="in.vasista.vbiz.humanres.HumanresService">
+        <description>Get Loan Amounts By Loan Type</description>
+       <attribute name="loanTypeId" mode="IN" type="String" optional="false"/>
+       <attribute name="principalAmount" mode="OUT" type="BigDecimal"/>
+       <attribute name="interestAmount" mode="OUT" type="BigDecimal"/>
+       <attribute name="numInterestInst" mode="OUT" type="Long"/>
+       <attribute name="numPrincipalInst" mode="OUT" type="Long"/>
+   </service>
 </services>

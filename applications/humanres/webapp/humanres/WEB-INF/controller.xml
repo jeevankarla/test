@@ -1940,7 +1940,11 @@ under the License.
     	<response name="success" type="view" value="loan"/>
     	<response name="error" type="view" value="loan"/>
     </request-map>
-
+    <request-map uri="getLoanAmountsByLoanType">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="getLoanAmountsByLoanType"/>
+        <response name="success" type="request" value="json"/>
+    </request-map>
     <!-- ===================Lookup Request===================== -->
     <request-map uri="LookupPartyName" track-serverhit="false" track-visit="false"><security auth="true" https="true"/><response name="success" type="view" value="LookupPartyName"/></request-map>
     <request-map uri="LookupPayment"><security auth="true" https="true"/><response name="success" type="view" value="LookupPayment"/></request-map>

@@ -550,6 +550,7 @@
 				<set field="headerItem" value="loan" />
 				<set field="tabButtonItem" value="loan" />
 				<set field="titleProperty" value="Loan" />
+				<set field="layoutSettings.javaScripts[]" value="/humanres/images/loanTypesAmountChange.js" global="true"/>
 			</actions>
 			<widgets>
 				<decorator-screen name="HumanresCommonDecorator"

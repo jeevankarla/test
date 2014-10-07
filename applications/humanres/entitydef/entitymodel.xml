@@ -1808,6 +1808,7 @@ under the License.
       <field name="maxAvails" type="numeric"></field>
       <field name="numPrincipalInst" type="numeric"></field>
       <field name="numInterestInst" type="numeric"></field>
+      <field name="rateOfInterest" type="floating-point"></field>
       <prim-key field="loanTypeId"/>
     </entity>
    <entity entity-name="Loan"

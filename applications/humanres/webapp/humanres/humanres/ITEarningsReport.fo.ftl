@@ -27,7 +27,7 @@ under the License.
                 <fo:region-after extent="1in"/>
             </fo:simple-page-master>
         </fo:layout-master-set>
-        ${setRequestAttribute("OUTPUT_FILENAME", "PurchaseRegisterBookReport.pdf")}
+        ${setRequestAttribute("OUTPUT_FILENAME", "ItEarningsReport.pdf")}
         <#if errorMessage?has_content>
 	<fo:page-sequence master-reference="main">
 	<fo:flow flow-name="xsl-region-body" font-family="Helvetica">
@@ -37,7 +37,10 @@ under the License.
 	</fo:flow>
 	</fo:page-sequence>	
 	<#else>
-       <#if partyBenefitsList?has_content>
+       <#if partyBenefitFinalMap?has_content>
+       <#assign partyBenefitFinalList = partyBenefitFinalMap.entrySet()>
+       <#list partyBenefitFinalList as partyBenefitsMap>
+       <#assign employeeId = partyBenefitsMap.getKey()>
 	        <fo:page-sequence master-reference="main" font-size="12pt">	
 	        	<fo:static-content flow-name="xsl-region-before" font-family="Courier,monospace">
 	        		<fo:block  keep-together="always" text-align="center" font-family="Courier,monospace" font-size="12pt" white-space-collapse="false">&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;${uiLabelMap.CommonPage}- <fo:page-number/> </fo:block>
@@ -79,8 +82,7 @@ under the License.
 	                    	<#assign totalOthers = 0>
 	                    	<#assign totalBenefits = 0>
 	                    	
-		                    <#list partyBenefitsList as partyBenefitsMap>
-			                    <#assign partyBenefitList = partyBenefitsMap.entrySet()>
+			                    <#assign partyBenefitList = partyBenefitsMap.getValue().entrySet()>
 			                    <#list partyBenefitList as partyBenefits>
 			                    	<#assign basic = 0>
 			                    	<#assign attendanceBonus = 0>
@@ -167,7 +169,6 @@ under the License.
 							            <fo:block  keep-together="always" text-align="right" font-size="12pt" white-space-collapse="false" >${benefits?if_exists?string("#0.00")}</fo:block>  
 							         </fo:table-cell>
 							    </fo:table-row>
-							    </#list>
 							    </#list>
 							    <fo:table-row> 
 							      <fo:table-cell>   						
@@ -319,6 +320,7 @@ under the License.
         			</fo:block> 		
 				</fo:flow>
 			</fo:page-sequence>
+			 </#list>
 		<#else>
     	<fo:page-sequence master-reference="main">
 		<fo:flow flow-name="xsl-region-body" font-family="Helvetica">

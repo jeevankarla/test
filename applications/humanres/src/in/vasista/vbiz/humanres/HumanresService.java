@@ -13,6 +13,7 @@ import java.util.TimeZone;
 
 import javolution.util.FastList;
 import javolution.util.FastMap;
+import java.util.HashMap;
 
 import org.apache.fop.fo.properties.CondLengthProperty;
 import org.ofbiz.base.util.Debug;
@@ -38,6 +39,7 @@ import org.ofbiz.base.util.StringUtil;
 
 import javolution.util.FastList;
 import javolution.util.FastMap;
+import org.ofbiz.accounting.util.formula.Evaluator;
 
 
 
@@ -345,21 +347,16 @@ public class HumanresService {
 	    	BigDecimal interestAmount = (BigDecimal)context.get("interestAmount");
 	    	Long numInterestInst = (Long)context.get("numInterestInst");
 	    	Long numPrincipalInst = (Long)context.get("numPrincipalInst");
-	    	
 	    	GenericValue userLogin = (GenericValue) context.get("userLogin");
 	    	Timestamp disbDateTime = UtilDateTime.toTimestamp(disbDate);
-	    	
 	    	Timestamp disbDateStart = UtilDateTime.getDayStart(disbDateTime);
 	    	Timestamp disbDateEnd = UtilDateTime.getDayEnd(disbDateTime);
-			
 	    	GenericDelegator delegator = (GenericDelegator) dctx.getDelegator();
 			LocalDispatcher dispatcher = dctx.getDispatcher();
-			List conditionList=FastList.newInstance();
 			String payHeadTypeId = null;
 			String partyIdFrom = null;
 			String customTimePeriodId = null;
 			try {
-				
 				List condList = FastList.newInstance();
 				condList.add(EntityCondition.makeCondition("periodTypeId", EntityOperator.EQUALS ,"HR_MONTH"));
 				condList.add(EntityCondition.makeCondition("fromDate", EntityOperator.LESS_THAN_EQUAL_TO,new java.sql.Date(disbDateStart.getTime())));
@@ -370,12 +367,10 @@ public class HumanresService {
 					GenericValue customTimePeriod = EntityUtil.getFirst(customTimePeriodList);
 					customTimePeriodId = customTimePeriod.getString("customTimePeriodId");
 				}
-				
 				GenericValue loanTypeDetails = delegator.findOne("LoanType",UtilMisc.toMap("loanTypeId", loanTypeId), false);
 				if(UtilValidate.isNotEmpty(loanTypeDetails)){
 					payHeadTypeId = loanTypeDetails.getString("payHeadTypeId");
 				}
-				
 				Map partyDeductionMap = FastMap.newInstance();
 				partyDeductionMap.put("userLogin",userLogin);
 				partyDeductionMap.put("amountNullFlag","Y");
@@ -391,17 +386,16 @@ public class HumanresService {
 				} catch (GenericServiceException s) {
 					Debug.logError("Error while creating Party Deduction"+s.getMessage(), module);
 				} 
-				
+				List conditionList=FastList.newInstance();
 				conditionList.add(EntityCondition.makeCondition("partyId", EntityOperator.EQUALS, partyId));
 				conditionList.add(EntityCondition.makeCondition("loanTypeId", EntityOperator.EQUALS, loanTypeId));
 				conditionList.add(EntityCondition.makeCondition("statusId", EntityOperator.EQUALS, statusId));
-				conditionList.add(EntityCondition.makeCondition("disbDate", EntityOperator.GREATER_THAN_EQUAL_TO, disbDateStart));
-				conditionList.add(EntityCondition.makeCondition("disbDate", EntityOperator.LESS_THAN_EQUAL_TO, disbDateEnd));
+				conditionList.add(EntityCondition.makeCondition("setlDate", EntityOperator.EQUALS, null));
 				EntityCondition condition = EntityCondition.makeCondition(conditionList,EntityOperator.AND);
 	    		List<GenericValue> loanList = FastList.newInstance();
 	    		loanList = delegator.findList("Loan", condition, null,null, null, false);
 	    		if(UtilValidate.isNotEmpty(loanList)){
-	    			return ServiceUtil.returnError("Loan already created...!"); 
+	    			return ServiceUtil.returnError("Loan already exists for that loan type for Employee "+partyId); 
 	    		}
 	    		GenericValue loan = delegator.makeValue("Loan");
 				loan.set("partyId", partyId);
@@ -448,6 +442,58 @@ public class HumanresService {
 				Debug.logError("Error while updating Loan"+e.getMessage(), module);
 			}
 	        result = ServiceUtil.returnSuccess("Loan Updated Sucessfully...!");
+	        return result;
+	    }
+	 
+	 public static Map<String, Object> getLoanAmountsByLoanType(DispatchContext dctx, Map context) {
+	    	Map<String, Object> result = ServiceUtil.returnSuccess();
+	    	String loanTypeId = (String) context.get("loanTypeId");
+			GenericValue loanTypeDetails = null;
+	    	GenericDelegator delegator = (GenericDelegator) dctx.getDelegator();
+			LocalDispatcher dispatcher = dctx.getDispatcher();
+			BigDecimal principalAmount = BigDecimal.ZERO;
+			Long numPrincipalInst = null;
+			Long numInterestInst = null;
+			Double rateOfInterest = null;
+			BigDecimal interestAmount = BigDecimal.ZERO;
+			try {
+				loanTypeDetails = delegator.findOne("LoanType",UtilMisc.toMap("loanTypeId", loanTypeId), false);
+				if(UtilValidate.isNotEmpty(loanTypeDetails)){
+					if(UtilValidate.isNotEmpty(loanTypeDetails)){
+						if(UtilValidate.isNotEmpty(loanTypeDetails.getBigDecimal("maxAmount"))){
+							principalAmount = loanTypeDetails.getBigDecimal("maxAmount");
+						}
+						if(UtilValidate.isNotEmpty(loanTypeDetails.getLong("numPrincipalInst"))){
+							numPrincipalInst = loanTypeDetails.getLong("numPrincipalInst");
+						}
+						if(UtilValidate.isNotEmpty(loanTypeDetails.getLong("numInterestInst"))){
+							numInterestInst = loanTypeDetails.getLong("numInterestInst");
+						}
+						if(UtilValidate.isNotEmpty(loanTypeDetails.getDouble("rateOfInterest"))){
+							rateOfInterest = loanTypeDetails.getDouble("rateOfInterest");
+						}
+						Long totalInstallments = numPrincipalInst + numInterestInst;
+						if(UtilValidate.isNotEmpty(totalInstallments)){
+							Evaluator evltr = new Evaluator(dctx);
+							HashMap<String, Double> variables = new HashMap<String, Double>();
+							variables.put("totalInstallments",totalInstallments.doubleValue());
+							variables.put("rateOfInterest",rateOfInterest.doubleValue());
+							variables.put("principalAmount",principalAmount.doubleValue());
+							String formulaId = "INTEREST_AMNT_CALC";
+							evltr.setFormulaIdAndSlabAmount(formulaId,0.0);
+							evltr.addVariableValues(variables);
+							interestAmount = new BigDecimal( evltr.evaluate());
+							interestAmount = interestAmount.setScale(2, BigDecimal.ROUND_HALF_UP);
+						}
+					}
+				}
+	        }catch(GenericEntityException e){
+				Debug.logError("Error while getting Loan Amounts"+e.getMessage(), module);
+			}
+			result.put("principalAmount", principalAmount);
+			result.put("interestAmount", interestAmount);
+			result.put("numPrincipalInst", numPrincipalInst);
+			result.put("numInterestInst", numInterestInst);
 	        return result;
 	    }
 	 	
@@ -501,7 +547,6 @@ public class HumanresService {
 				}else{
 					return ServiceUtil.returnError("Department already exists.....!");
 				}
-				
 	        }catch(GenericEntityException e){
 				Debug.logError("Error while creating new Employment"+e.getMessage(), module);
 			}

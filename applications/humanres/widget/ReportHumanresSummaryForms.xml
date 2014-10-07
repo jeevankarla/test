@@ -894,8 +894,8 @@
     	<field name="partyId" title="Employee">
 			<lookup target-form-name="LookupEmployeeName"/>
 		</field>
-    	<field name="loanTypeId" title="Loan Type" tooltip="${uiLabelMap.CommonRequired}">
-    		<drop-down>
+    	<field name="loanTypeId" id-name="loanTypeId" title="Loan Type" tooltip="${uiLabelMap.CommonRequired}" event="onchange" action="javascript:loanTypesAmountChange();">
+    		<drop-down allow-empty="true">
     			<entity-options entity-name="LoanType" key-field-name="loanTypeId" description="${description}" filter-by-date="false">
     			</entity-options>
     		</drop-down>
@@ -909,11 +909,11 @@
             </drop-down>
         </field>
     	<field name="description" title="Description" required-field="false"><text size="20"/></field>
-    	<field name="extLoanRefNum" title="Loan Reference Number" required-field="false"><text size="20"/></field>
-    	<field name="principalAmount" title="Principal Amount" required-field="true"><text size="20"/></field>
-    	<field name="interestAmount" title="Interest Amount" required-field="true"><text size="20"/></field>
-    	<field name="numInterestInst" title="No of Interest Installments" required-field="true"><text size="20"/></field>
-    	<field name="numPrincipalInst" title="No of Principal Installments" required-field="true"><text size="20"/></field>
+    	<field name="principalAmount" id-name="principalAmount" title="Principal Amount" required-field="true"><text size="20"/></field>
+    	<field name="interestAmount" id-name="interestAmount" title="Interest Amount" required-field="true"><text size="20"/></field>
+    	<field name="numInterestInst" id-name="numInterestInst" title="No of Interest Installments" required-field="true"><text size="20"/></field>
+    	<field name="numPrincipalInst" id-name="numPrincipalInst" title="No of Principal Installments" required-field="true"><text size="20"/></field>
+    	<field name="extLoanRefNum" title="External Loan Reference Number" required-field="false"><text size="20"/></field>
     	<field name="disbDate" title="Loan Date" required-field="true" tooltip="Select date from calendar"><date-time type="date" ></date-time></field>
     	<field name="submitButton" title="${uiLabelMap.CommonCreate}"><submit/></field>
     </form>
@@ -939,7 +939,7 @@
             </drop-down>
         </field>
     	<field name="description" title="Description"><text></text></field>
-    	<field name="extLoanRefNum" title="Loan Ref Number"><text></text></field>
+    	<field name="extLoanRefNum" title="External Loan Ref Number"><text></text></field>
     	<field name="searchButton" title="${uiLabelMap.CommonFind}" widget-style="smallSubmit"><submit button-type="button"/></field>
     </form>
     <form name="ListEmployeeLoans" type="list" list-name="employeeLoanList"  odd-row-style="alternate-row" 
@@ -950,14 +950,18 @@
     	<field name="loanId" title="Loan Id"><display></display></field>
     	<field name="partyId" title="Employee"><display></display></field>
     	<field name="partyName" title="Employee Name"><display></display></field>
-    	<field name="loanTypeId" title="Loan Type"><display></display></field>
-    	<field name="statusId" title="Status"><display></display></field>
+    	<field name="loanTypeId" title = "Loan Type">
+          <display-entity entity-name="LoanType" key-field-name="loanTypeId" description="${description}"/>
+        </field>
+    	<field name="statusId" title = "Status">
+          <display-entity entity-name="StatusItem" key-field-name="statusId" description="${statusCode}"/>
+        </field>
     	<field name="description" title="Description"><display></display></field>
-    	<field name="extLoanRefNum" title="Loan Ref Number"><display></display></field>
-    	<field name="principalAmount" title="Principal Amount" ><display></display></field>
-    	<field name="interestAmount" title="Interest Amount"><display></display></field>
-    	<field name="numInterestInst" title="No of Interest Installments"><display></display></field>
-    	<field name="numPrincipalInst" title="No of Principal Installments"><display></display></field>
+    	<field name="extLoanRefNum" title="ExtLoanRefNum"><display></display></field>
+    	<field name="principalAmount" title="Prncpl.Amt" ><display></display></field>
+    	<field name="interestAmount" title="Int.Amt"><display></display></field>
+    	<field name="numInterestInst" title="Int.Instm"><display></display></field>
+    	<field name="numPrincipalInst" title="Pri.Instm"><display></display></field>
     	<field name="disbDate" title="Disbursed Date" ><display></display></field>
     	<field name="setlDate" title="Settled Date"><date-time type="date" ></date-time></field>
     	<field name="createdDate" title="Created Date" ><display size="50"></display></field>

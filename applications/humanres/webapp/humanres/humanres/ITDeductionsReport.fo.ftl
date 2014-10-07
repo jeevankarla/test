@@ -27,7 +27,7 @@ under the License.
                 <fo:region-after extent="1in"/>
             </fo:simple-page-master>
         </fo:layout-master-set>
-        ${setRequestAttribute("OUTPUT_FILENAME", "PurchaseRegisterBookReport.pdf")}
+        ${setRequestAttribute("OUTPUT_FILENAME", "ItDeductionReport.pdf")}
         <#if errorMessage?has_content>
 	<fo:page-sequence master-reference="main">
 	<fo:flow flow-name="xsl-region-body" font-family="Helvetica">
@@ -37,7 +37,10 @@ under the License.
 	</fo:flow>
 	</fo:page-sequence>	
 	<#else>
-       <#if partyDeductionsList?has_content>
+       <#if partyDeductionFinalMap?has_content>
+       		<#assign partyDeductionFinalList = partyDeductionFinalMap.entrySet()>
+       		<#list partyDeductionFinalList as partyDeductionsMap>
+       			<#assign employeeId = partyDeductionsMap.getKey()>
 	        <fo:page-sequence master-reference="main" font-size="12pt">	
 	        	<fo:static-content flow-name="xsl-region-before" font-family="Courier,monospace">
 	        		<fo:block  keep-together="always" text-align="center" font-family="Courier,monospace" font-size="12pt" white-space-collapse="false">&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;${uiLabelMap.CommonPage}- <fo:page-number/> </fo:block>
@@ -82,8 +85,7 @@ under the License.
 	                    	<#assign totalIncomeTax = 0>
 	                    	<#assign totalPrfTax = 0>
 	                    	
-		                    <#list partyDeductionsList as partyDeductionsMap>
-			                    <#assign partyDeductionList = partyDeductionsMap.entrySet()>
+			                <#assign partyDeductionList = partyDeductionsMap.getValue().entrySet()>
 			                    <#list partyDeductionList as partyDeductions>
 			                    	<#assign epf = 0>
 				                    <#assign vpf = 0>
@@ -162,7 +164,6 @@ under the License.
 							            <fo:block  keep-together="always" text-align="right" font-size="12pt" white-space-collapse="false" >${prfTax?if_exists?string("#0.00")}</fo:block>  
 							         </fo:table-cell>
 							    </fo:table-row>
-							    </#list>
 							    </#list>
 							    <fo:table-row> 
 							      <fo:table-cell>   						
@@ -245,6 +246,7 @@ under the License.
         			</fo:block> 		
 				</fo:flow>
 			</fo:page-sequence>
+			</#list>
 		<#else>
     	<fo:page-sequence master-reference="main">
 		<fo:flow flow-name="xsl-region-body" font-family="Helvetica">
