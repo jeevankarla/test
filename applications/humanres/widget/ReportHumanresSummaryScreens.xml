@@ -1093,7 +1093,7 @@
             <property-map resource="PartyUiLabels" map-name="uiLabelMap" global="true"/>
             <property-map resource="CommonUiLabels" map-name="uiLabelMap" global="true"/>
             <set field="footerImageUrl" value="/images/ProcessedbyVasista.gif"/>
-       		<!-- <set field="parameters.partyIdFrom" from-field="parameters.partyId"/> -->
+       		<set field="parameters.partyIdFrom" from-field="parameters.partyId"/>
        		<!-- <script location="component://humanres/webapp/humanres/WEB-INF/actions/reports/employeePersonalProfile.groovy"/>  -->      		
             <script location="component://humanres/webapp/humanres/WEB-INF/actions/reports/EmployeePayRollReport.groovy"/>      
    		</actions> 
