@@ -49,7 +49,7 @@ conditionList.add(EntityCondition.makeCondition("customTimePeriodId", EntityOper
 if(UtilValidate.isNotEmpty(parameters.periodBillingId)){
 	conditionList.add(EntityCondition.makeCondition("periodBillingId", EntityOperator.EQUALS ,parameters.periodBillingId));
 }
-if(UtilValidate.isNotEmpty(parameters.partyIdFrom)){
+if(UtilValidate.isNotEmpty(parameters.partyIdFrom) && (!"Company".equals(parameters.partyIdFrom))){
 	conditionList.add(EntityCondition.makeCondition("partyId", EntityOperator.EQUALS , parameters.partyIdFrom));
 }
 condition = EntityCondition.makeCondition(conditionList,EntityOperator.AND);
