@@ -622,6 +622,23 @@
 			<key-map field-name="glReconciliationId" />
 		</relation>
 	</entity>
+	<entity entity-name="FinAccntTransSequence" package-name="org.ofbiz.accounting.finaccount"
+		title="Financial Account Transaction Sequence">
+		<field name="transSequenceId" type="id-ne"></field>
+		<field name="finAccountTransId" type="id-ne"></field>
+		<field name="finAccountTransTypeId" type="id-ne"></field>
+		<field name="finAccountId" type="id"></field>
+		<field name="transactionDate" type="date-time"></field>
+		<prim-key field="finAccountTransTypeId" />
+		<prim-key field="transSequenceId" />
+		<prim-key field="finAccountId" />
+		<relation type="one" fk-name="FINACCT_TX_TYPE" rel-entity-name="FinAccountTransType">
+			<key-map field-name="finAccountTransTypeId" />
+		</relation>
+		<relation type="one" fk-name="FIN_ACT_TX_FNACT"	rel-entity-name="FinAccount">
+			<key-map field-name="finAccountId" />
+		</relation>
+	</entity>
 	<entity entity-name="FinAccountTransAttribute" package-name="org.ofbiz.accounting.finaccount"
 		title="Financial Account Transaction Attribute Entity">
 		<field name="finAccountTransId" type="id-ne"></field>

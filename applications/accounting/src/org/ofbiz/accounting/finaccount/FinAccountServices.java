@@ -488,6 +488,115 @@ public class FinAccountServices {
 
         return result;
     }
+    
+    public static Map<String, Object> populateFinAccountTransSequence(DispatchContext dctx, Map<String, Object> context) {
+        LocalDispatcher dispatcher = dctx.getDispatcher();
+        Delegator delegator = dctx.getDelegator();
+
+        GenericValue userLogin = (GenericValue) context.get("userLogin");
+        Timestamp fromDate = (Timestamp) context.get("fromDate");
+        Timestamp thruDate = (Timestamp) context.get("thruDate");
+        String finAccountId = (String) context.get("finAccountId");
+        String finAccountTransTypeId = (String) context.get("finAccountTransTypeId");
+        Map<String, Object> result = ServiceUtil.returnSuccess();
+        Timestamp nowTime = UtilDateTime.nowTimestamp();
+        GenericValue finAccount;
+        try {
+            finAccount = delegator.findByPrimaryKey("FinAccount", UtilMisc.toMap("finAccountId", finAccountId));
+        } catch (GenericEntityException e) {
+            return ServiceUtil.returnError(e.getMessage());
+        }
+        if(UtilValidate.isEmpty(fromDate)){
+        	fromDate = UtilDateTime.getDayStart(nowTime);
+        }
+        if(UtilValidate.isEmpty(thruDate)){
+        	thruDate = UtilDateTime.getDayEnd(nowTime);
+        }
+        if(UtilValidate.isNotEmpty(finAccountId) && UtilValidate.isEmpty(finAccount)){
+        	Debug.logError("Financial Account doesn't exists with Id: "+finAccountId, module);
+        	return ServiceUtil.returnError("Financial Account doesn't exists with Id: "+finAccountId);
+        }
+        List finAccountIdsList = FastList.newInstance();
+        List condList = FastList.newInstance();
+        if(UtilValidate.isEmpty(finAccountId)){
+        	try{
+        		condList.add(EntityCondition.makeCondition("ownerPartyId", EntityOperator.EQUALS, "Company"));
+        		condList.add(EntityCondition.makeCondition("finAccountTypeId", EntityOperator.IN, UtilMisc.toList("BANK_ACCOUNT", "CASH")));
+        		EntityCondition cond = EntityCondition.makeCondition(condList, EntityOperator.AND);
+        		List<GenericValue> finAccounts = delegator.findList("FinAccount", cond, UtilMisc.toSet("finAccountId"), null, null, false);
+        		finAccountIdsList = EntityUtil.getFieldListFromEntityList(finAccounts, "finAccountId", true);
+        	}catch(GenericEntityException e){
+        		Debug.logError(e, module);
+                return ServiceUtil.returnError(e.getMessage());
+        	}
+        }
+        List<String> finAccountTransIdsList = FastList.newInstance();
+        try{
+
+        	condList.clear();
+        	if(UtilValidate.isNotEmpty(finAccountTransTypeId)){
+        		condList.add(EntityCondition.makeCondition("finAccountTransTypeId", EntityOperator.EQUALS, finAccountTransTypeId));
+            }
+            if(UtilValidate.isNotEmpty(finAccountId)){
+            	condList.add(EntityCondition.makeCondition("finAccountId", EntityOperator.EQUALS, finAccountId));
+            }
+            else{
+            	condList.add(EntityCondition.makeCondition("finAccountId", EntityOperator.IN, finAccountIdsList));
+            }
+            condList.add(EntityCondition.makeCondition("transactionDate", EntityOperator.GREATER_THAN_EQUAL_TO, fromDate));
+            condList.add(EntityCondition.makeCondition("transactionDate", EntityOperator.LESS_THAN, thruDate));
+            EntityCondition seqCond = EntityCondition.makeCondition(condList, EntityOperator.AND);
+            List<GenericValue> finAccountTransSeqList = delegator.findList("FinAccntTransSequence", seqCond, UtilMisc.toSet("finAccountTransId"), null, null, false);
+            finAccountTransIdsList = EntityUtil.getFieldListFromEntityList(finAccountTransSeqList, "finAccountTransId", true);
+    	}catch(GenericEntityException e){
+    		Debug.logError(e, module);
+            return ServiceUtil.returnError(e.getMessage());
+    	}
+        
+        List<EntityExpr> exprs = FastList.newInstance();
+        if(UtilValidate.isNotEmpty(finAccountTransTypeId)){
+        	exprs.add(EntityCondition.makeCondition("finAccountTransTypeId", EntityOperator.EQUALS, finAccountTransTypeId));
+        }
+        if(UtilValidate.isNotEmpty(finAccountId)){
+        	exprs.add(EntityCondition.makeCondition("finAccountId", EntityOperator.EQUALS, finAccountId));
+        }
+        else{
+        	exprs.add(EntityCondition.makeCondition("finAccountId", EntityOperator.IN, finAccountIdsList));
+        }
+        if(UtilValidate.isNotEmpty(finAccountTransIdsList)){
+        	exprs.add(EntityCondition.makeCondition("finAccountTransId", EntityOperator.NOT_IN, finAccountTransIdsList));
+        }
+        exprs.add(EntityCondition.makeCondition("transactionDate", EntityOperator.GREATER_THAN_EQUAL_TO, fromDate));
+        exprs.add(EntityCondition.makeCondition("transactionDate", EntityOperator.LESS_THAN, thruDate));
+        EntityCondition condition = EntityCondition.makeCondition(exprs, EntityOperator.AND);
+        EntityListIterator eli = null;
+        try {
+        	eli = delegator.find("FinAccountTrans", condition, null, null, UtilMisc.toList("transactionDate"), null);
+            GenericValue trans;
+            while ((trans = eli.next()) != null) {
+            	GenericValue newTransSeq = delegator.makeValue("FinAccntTransSequence");        	 
+            	newTransSeq.set("finAccountId", trans.getString("finAccountId"));
+            	newTransSeq.set("finAccountTransTypeId", trans.getString("finAccountTransTypeId"));
+            	newTransSeq.set("transactionDate", trans.getTimestamp("transactionDate"));
+            	newTransSeq.set("finAccountTransId", trans.getString("finAccountTransId"));
+            	delegator.setNextSubSeqId(newTransSeq, "transSequenceId", 10, 1);
+            	delegator.createOrStore(newTransSeq);
+            }
+         } catch (GeneralException e) {
+        	 Debug.logError(e, module);
+             return ServiceUtil.returnError(e.getMessage());
+         } finally {
+		        if (eli != null) {
+		            try {
+		                eli.close();
+		            } catch (GenericEntityException e) {
+		                Debug.logWarning(e, module);
+		            }
+		        }
+         }
+
+        return result;
+    }
     public static Map<String, Object> setMassFinAccountTransStatus(DispatchContext dctx, Map<String, Object> context) {
         Delegator delegator = dctx.getDelegator();
         LocalDispatcher dispatcher = dctx.getDispatcher();   
