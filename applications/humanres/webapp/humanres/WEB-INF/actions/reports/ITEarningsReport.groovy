@@ -24,6 +24,23 @@ context.putAt("fromDate", fromDate);
 context.putAt("thruDate", thruDate);
 context.putAt("employeeId", employeeId);
 
+reportTypeFlag = parameters.reportTypeFlag;
+if(UtilValidate.isNotEmpty(reportTypeFlag) && reportTypeFlag=="ITAXStatement"){
+	customTimePeriodId=parameters.customTimePeriodId;
+	List condList =[];
+	condList.add(EntityCondition.makeCondition("periodTypeId", EntityOperator.EQUALS ,"HR_MONTH"));
+	condList.add(EntityCondition.makeCondition("customTimePeriodId", EntityOperator.EQUALS, customTimePeriodId));
+	EntityCondition cond = EntityCondition.makeCondition(condList,EntityOperator.AND);
+	List<GenericValue> customTimePeriodList = delegator.findList("CustomTimePeriod", cond, null, null, null, false);
+	if(UtilValidate.isNotEmpty(customTimePeriodList)){
+		GenericValue customTimePeriod = EntityUtil.getFirst(customTimePeriodList);
+		Date fromDate = (Date)customTimePeriod.get("fromDate");
+		fromDateStart=UtilDateTime.toTimestamp(fromDate);
+		Date thruDate = (Date)customTimePeriod.get("thruDate");
+		thruDateEnd=UtilDateTime.toTimestamp(thruDate);
+	}
+	context.orderDate=UtilDateTime.nowTimestamp();
+}
 
 def sdf = new SimpleDateFormat("MMMM dd,yyyy");
 try {
@@ -38,7 +55,7 @@ try {
 	context.errorMessage = "Cannot parse date string: " + e;
 	return;
 }
-reportTypeFlag = parameters.reportTypeFlag;
+
 partyBenefitsList = [];
 partyDeductionsList = [];
 customTimePeriodTotals = PayrollService.getEmployeeSalaryTotalsForPeriod(dctx,UtilMisc.toMap("partyId",employeeId,"fromDate",fromDate,"thruDate",thruDate,"userLogin",userLogin)).get("periodTotalsForParty");
@@ -245,3 +262,56 @@ if(UtilValidate.isNotEmpty(customTimePeriodTotals)){
 }
 context.putAt("partyBenefitsList", partyBenefitsList);
 context.putAt("partyDeductionsList", partyDeductionsList);
+
+//IncomeTax Statement
+if(UtilValidate.isNotEmpty(reportTypeFlag) && reportTypeFlag=="ITAXStatement"){
+context.fromDate=fromDateStart;
+emplInputMap = [:];
+emplInputMap.put("userLogin", userLogin);
+emplInputMap.put("orgPartyId", "Company");
+emplInputMap.put("fromDate", fromDateStart);
+emplInputMap.put("thruDate", thruDateEnd);
+Map EmploymentsMap = HumanresService.getActiveEmployements(dctx,emplInputMap);
+List<GenericValue> employementList = (List<GenericValue>)EmploymentsMap.get("employementList");
+employementList = EntityUtil.orderBy(employementList, UtilMisc.toList("partyIdTo"));
+ITAXFinalList=[];
+grandTotal=0;
+employementList.each{employment->
+	String lastName="";
+	if(employment.lastName!=null){
+		lastName=employment.lastName;
+	}
+	name=employment.firstName+" "+lastName;
+	customTimePeriodTotals = PayrollService.getEmployeeSalaryTotalsForPeriod(dctx,UtilMisc.toMap("partyId",employment.partyId,"fromDate",fromDateStart,"thruDate",thruDateEnd,"userLogin",userLogin)).get("periodTotalsForParty");
+	if(UtilValidate.isNotEmpty(customTimePeriodTotals)){
+		Iterator customTimePeriodIter = customTimePeriodTotals.entrySet().iterator();
+		while(customTimePeriodIter.hasNext()){
+			tempMap=[:];
+			Map.Entry customTimePeriodEntry = customTimePeriodIter.next();
+			if(customTimePeriodEntry.getKey() != "customTimePeriodTotals"){
+				periodTotals = customTimePeriodEntry.getValue().get("periodTotals");
+				tempMap.put("name",name);
+				tempMap.put("partyId",employment.partyId);
+				panId=employment.panId;
+				if(UtilValidate.isEmpty(panId)){
+					panId="";
+				}
+				tempMap.put("panId",panId);
+				incomeTax = periodTotals.get("PAYROL_DD_INC_TAX");
+				if(UtilValidate.isEmpty(incomeTax)){
+					incomeTax = 0;
+				}
+				grandTotal=grandTotal-(incomeTax);
+				tempMap.put("incomeTax",-(incomeTax));
+				ITAXFinalList.add(tempMap);
+			}	
+		}		
+	}			
+				
+}
+context.grandTotal=grandTotal;
+context.ITAXFinalList=ITAXFinalList;
+}
+
+
+
