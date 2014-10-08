@@ -4790,11 +4790,16 @@
 		title="Rate Type Entity">
 		<field name="rateTypeId" type="id-ne"></field>
 		<field name="invoiceItemTypeId" type="id" />
+		<field name="parentTypeId" type="id-ne"></field>
 		<field name="description" type="description"></field>
 		<prim-key field="rateTypeId" />
 		<relation type="one" fk-name="RATETYP_INVITMTYP"
 			rel-entity-name="InvoiceItemType">
 			<key-map field-name="invoiceItemTypeId" />
+		</relation>
+		<relation type="one" fk-name="RATETYP_PRTYP"
+			rel-entity-name="RateType">
+			<key-map field-name="parentTypeId" rel-field-name="rateTypeId"/>
 		</relation>
 	</entity>
 

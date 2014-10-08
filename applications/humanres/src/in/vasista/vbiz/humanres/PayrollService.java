@@ -2132,6 +2132,16 @@ public class PayrollService {
 							}
 							
 					}
+		        	// here set all rateamount values as variabules
+		        	Map rateAmountMap= preparePayrollRateAmountVariables(dctx,context);
+		        	if(ServiceUtil.isError(rateAmountMap)){
+		        		 Debug.logError(ServiceUtil.getErrorMessage(rateAmountMap), module);
+		            	 return ServiceUtil.returnError(ServiceUtil.getErrorMessage(rateAmountMap));
+		        	}
+		        	if(UtilValidate.isNotEmpty(rateAmountMap.get("variables"))){
+		        		variables.putAll((Map)rateAmountMap.get("variables"));
+		        	}
+		        	
 					double noOfAttendedDays = ((Double)attendanceMap.get("noOfAttendedDays")).doubleValue();
 					evltr.setFormulaIdAndSlabAmount(formulaId, noOfAttendedDays);
 				}
@@ -2191,6 +2201,59 @@ public class PayrollService {
 		  return result;
 	  }
 	 
+	  
+ public static Map<String, Object> preparePayrollRateAmountVariables(DispatchContext dctx, Map<String, ? extends Object> context) {
+
+	        Delegator delegator = dctx.getDelegator();
+	        LocalDispatcher dispatcher = dctx.getDispatcher();
+	        Map<String, Object> result = FastMap.newInstance();
+	        Timestamp nowTimestamp = UtilDateTime.nowTimestamp();
+	        GenericValue userLogin = (GenericValue) context.get("userLogin");
+	        String employeeId = (String) context.get("employeeId");
+	        Timestamp timePeriodStart = (Timestamp)context.get("timePeriodStart");
+	        Timestamp timePeriodEnd = (Timestamp)context.get("timePeriodEnd");
+	        Locale locale = (Locale) context.get("locale");
+	        Map<String, Double> variables = FastMap.newInstance();
+	        try{
+	        	List conditionList = FastList.newInstance();
+	        	conditionList = UtilMisc.toList(
+						EntityCondition.makeCondition("parentTypeId", EntityOperator.NOT_EQUAL, null));
+				conditionList.add(EntityCondition.makeCondition("parentTypeId", EntityOperator.EQUALS, "PAYROLL_RATE"));
+				
+				EntityCondition condition = EntityCondition.makeCondition(conditionList, EntityOperator.AND);
+	        	
+	        	List<GenericValue> payRollRateTypes = delegator.findList("RateType", condition, null,null, null, false);
+	        	if(UtilValidate.isEmpty(payRollRateTypes)){
+	        		return result;
+	        	}
+	        	conditionList.clear();
+	        	conditionList = UtilMisc.toList(
+						EntityCondition.makeCondition("rateTypeId", EntityOperator.IN, EntityUtil.getFieldListFromEntityList(payRollRateTypes, "rateTypeId", true)));
+				conditionList.add(EntityCondition.makeCondition("fromDate", EntityOperator.LESS_THAN_EQUAL_TO, timePeriodEnd));
+				conditionList.add(EntityCondition.makeCondition(EntityCondition.makeCondition("thruDate", EntityOperator.EQUALS, null), EntityOperator.OR, 
+			    EntityCondition.makeCondition("thruDate", EntityOperator.GREATER_THAN_EQUAL_TO, timePeriodStart)));
+				condition = EntityCondition.makeCondition(conditionList, EntityOperator.AND);
+	        	List<GenericValue> payRollRateAmounts = delegator.findList("RateAmount", condition, null,null, null, false);
+	        	payRollRateAmounts = EntityUtil.filterByDate(payRollRateAmounts, timePeriodStart);
+	        	for(GenericValue rateAmount : payRollRateAmounts){
+	        		if(UtilValidate.isNotEmpty(rateAmount.getDouble("rateAmount")))
+	        			variables.put(rateAmount.getString("rateTypeId"), rateAmount.getDouble("rateAmount"));
+	        	}
+	        	
+	        	
+	           
+	          } catch (GenericEntityException e) {
+	                Debug.logError(e, "Error getting rules from the database while calculating price", module);
+	                return ServiceUtil.returnError(e.toString());
+	            }
+	        //end of price rules
+
+	       
+	         result.put("variables", variables);
+	         Debug.log("variables====="+variables);
+	        return result;
+	    }
+	  
 	 public static Map<String, Object> getEmployeePayrollCondParms(DispatchContext dctx, Map<String, ? extends Object> context) {
 
 	        Delegator delegator = dctx.getDelegator();
@@ -4007,7 +4070,7 @@ public class PayrollService {
 	        	input.put("thruDate", attdTimePeriodEnd);
 	        	resultMap = HumanresService.getActiveEmployements(dctx,input);
 	        	List<GenericValue> employementList = (List<GenericValue>)resultMap.get("employementList");
-	        	Debug.log("employementList============"+employementList.size());
+	        	//Debug.log("employementList============"+employementList.size());
 	            //employementList = EntityUtil.filterByAnd(employementList, UtilMisc.toMap("partyIdTo","6851"));
 	        	//general holidays in that period
 	        	input.clear();
