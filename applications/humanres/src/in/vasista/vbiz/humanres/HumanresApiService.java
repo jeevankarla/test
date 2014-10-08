@@ -146,7 +146,9 @@ Debug.logInfo("getEmployeePayslips: condition->" + condition, module);
 			GenericValue emplPositionAndFulfillment = EntityUtil.getFirst(emplPositionAndFulfillments);
 			if(UtilValidate.isNotEmpty(emplPositionAndFulfillment) && emplPositionAndFulfillment.getString("emplPositionTypeId") != null){
 				GenericValue emplPositionType = delegator.findOne("EmplPositionType",UtilMisc.toMap("emplPositionTypeId", emplPositionAndFulfillment.getString("emplPositionTypeId")), true);
-				if (emplPositionType != null) {
+				if(UtilValidate.isNotEmpty(emplPositionAndFulfillment) && UtilValidate.isNotEmpty(emplPositionAndFulfillment.getString("name"))){
+					employeePosition = emplPositionAndFulfillment.getString("name");
+				}else if (emplPositionType != null) {
 					employeePosition = emplPositionType.getString("description");
 				}
 				else {

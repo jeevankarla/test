@@ -25,7 +25,9 @@ def populateChildren(org, employeeList) {
 		emplPositionAndFulfillment = EntityUtil.getFirst(emplPositionAndFulfillments);
 		if(UtilValidate.isNotEmpty(emplPositionAndFulfillment) && emplPositionAndFulfillment.getString("emplPositionTypeId") != null){
 			emplPositionType = delegator.findOne("EmplPositionType",[emplPositionTypeId : emplPositionAndFulfillment.getString("emplPositionTypeId")], true);
-			if (emplPositionType != null) {
+			if(UtilValidate.isNotEmpty(emplPositionAndFulfillment) && UtilValidate.isNotEmpty(emplPositionAndFulfillment.getString("name"))){
+				employeePosition = emplPositionAndFulfillment.getString("name");
+			}else if (emplPositionType != null) {
 				employeePosition = emplPositionType.getString("description");
 			}
 			else {

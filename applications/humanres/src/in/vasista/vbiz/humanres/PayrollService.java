@@ -710,6 +710,7 @@ public class PayrollService {
 		                Map employeePayrollAttedance = getEmployeePayrollAttedance(dctx,context);
 		                //context.put("lossOfPayDays",employeePayrollAttedance.get("lossOfPayDays"));
 		                context.put("noOfPayableDays",employeePayrollAttedance.get("noOfPayableDays"));
+		                context.put("noOfCalenderDays",employeePayrollAttedance.get("noOfCalenderDays"));
 		            	Timestamp from = row.getTimestamp("fromDate");
 			            Timestamp thru = row.getTimestamp("thruDate");
 			            if(UtilValidate.isEmpty(context.get("proportionalFlag"))){
@@ -792,7 +793,10 @@ public class PayrollService {
 				BigDecimal periodDays;
 				int payrollPeriodDays;
 				periodDays = BigDecimal.valueOf(period.days() + 1); // to include the end day as well	
-				payrollPeriodDays = payrollPeriod.days() + 1; // to include the end day as well			
+				payrollPeriodDays = payrollPeriod.days() + 1; // to include the end day as well	
+				if(UtilValidate.isNotEmpty(context.get("noOfCalenderDays"))){
+					payrollPeriodDays = ((Double)context.get("noOfCalenderDays")).intValue();
+				}
 				BigDecimal noOfPayableDays = periodDays;
 				if(UtilValidate.isNotEmpty(context.get("noOfPayableDays"))){
 					noOfPayableDays = new BigDecimal((Double)context.get("noOfPayableDays"));
