@@ -215,7 +215,6 @@ public class HumanresService {
 			Map result = FastMap.newInstance();
 			if(UtilValidate.isEmpty(fromDate) && UtilValidate.isEmpty(thruDate)){
 				thruDate = UtilDateTime.getDayEnd(UtilDateTime.nowTimestamp());
-				
 			}
 			try {
 				
@@ -454,7 +453,7 @@ public class HumanresService {
 			BigDecimal principalAmount = BigDecimal.ZERO;
 			Long numPrincipalInst = null;
 			Long numInterestInst = null;
-			Double rateOfInterest = null;
+			Double rateOfInterest = 1.0;
 			BigDecimal interestAmount = BigDecimal.ZERO;
 			try {
 				loanTypeDetails = delegator.findOne("LoanType",UtilMisc.toMap("loanTypeId", loanTypeId), false);
@@ -477,7 +476,9 @@ public class HumanresService {
 							Evaluator evltr = new Evaluator(dctx);
 							HashMap<String, Double> variables = new HashMap<String, Double>();
 							variables.put("totalInstallments",totalInstallments.doubleValue());
-							variables.put("rateOfInterest",rateOfInterest.doubleValue());
+							if(UtilValidate.isNotEmpty(rateOfInterest)){
+								variables.put("rateOfInterest",rateOfInterest.doubleValue());
+							}
 							variables.put("principalAmount",principalAmount.doubleValue());
 							String formulaId = "INTEREST_AMNT_CALC";
 							evltr.setFormulaIdAndSlabAmount(formulaId,0.0);
