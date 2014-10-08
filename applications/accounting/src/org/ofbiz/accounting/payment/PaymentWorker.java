@@ -484,7 +484,8 @@ public class PaymentWorker {
         List boothOrdersList = FastList.newInstance();
         Timestamp paymentTimestamp = UtilDateTime.nowTimestamp();
       
-        Timestamp instrumentDate=UtilDateTime.nowTimestamp();
+        //Timestamp instrumentDate=UtilDateTime.nowTimestamp();
+        Timestamp instrumentDate = null;
         if (UtilValidate.isNotEmpty(instrumentDateStr)) {
 			SimpleDateFormat sdf = new SimpleDateFormat("dd MMMMM, yyyy");
 			try {
@@ -656,7 +657,8 @@ public class PaymentWorker {
 			  	paymentRefNum = (String) paramMap.get("paymentRefNum");
 	  	
 		  	
-			  	Timestamp instrumentDate=UtilDateTime.nowTimestamp();
+			  	//Timestamp instrumentDate=UtilDateTime.nowTimestamp();
+			  	Timestamp instrumentDate = null;
 		        if (UtilValidate.isNotEmpty(instrumentDateStr)) {
 					SimpleDateFormat sdf = new SimpleDateFormat("dd MMMMM, yyyy");
 					try {

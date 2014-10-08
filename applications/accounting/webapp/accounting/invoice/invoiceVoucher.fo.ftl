@@ -250,7 +250,6 @@ under the License.
 						        						 	</fo:table-cell>
 						        						 </fo:table-row>
 						        						 <#if paymentListReport.paymentMethodTypeId?has_content && (paymentListReport.paymentMethodTypeId == "CHEQUE_PAYIN" || paymentListReport.paymentMethodTypeId == "CHEQUE_PAYOUT")> 
-						        							
 						        							 <#if paymentListReport.paymentMethodId?has_content>
 														    	<#assign paymentMethodDetails = delegator.findOne("PaymentMethod", {"paymentMethodId" : paymentListReport.paymentMethodId}, true)?if_exists/>
 														    </#if>
@@ -263,7 +262,7 @@ under the License.
 						        						 		<fo:block text-align="left" font-size="12pt" white-space-collapse="false" keep-together="always" font-weight="bold"></fo:block>
 						        						 	</fo:table-cell>
 						        						 	<fo:table-cell>
-						        						 		<fo:block text-align="left" font-size="12pt" white-space-collapse="false" keep-together="always" font-weight="bold">CHEQUE DATE:${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(paymentListReport.instrumentDate?if_exists, "dd-MM-yyyy")}</fo:block>
+						        						 		<fo:block text-align="left" font-size="12pt" white-space-collapse="false" keep-together="always" font-weight="bold">CHEQUE DATE:<#if paymentListReport.instrumentDate?has_content>${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(paymentListReport.instrumentDate?if_exists, "dd-MM-yyyy")}</#if></fo:block>
 						        						 	</fo:table-cell>
 						        						 </fo:table-row>
 						        						 <#if (paymentListReport.paymentMethodTypeId == "CHEQUE_PAYIN" || paymentListReport.paymentMethodTypeId == "CHEQUE_PAYOUT")>
