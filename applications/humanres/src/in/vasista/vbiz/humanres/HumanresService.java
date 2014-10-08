@@ -45,7 +45,7 @@ import org.ofbiz.accounting.util.formula.Evaluator;
 
 public class HumanresService {
 
-    public static final String module = HumanresApiService.class.getName();
+    public static final String module = HumanresService.class.getName();
     /*
      * Helper that returns full employee profile.  This method expects the employee's EmploymentAndPerson
      * record as an input.

@@ -13,6 +13,7 @@ import net.sf.json.JSONArray;
 import in.vasista.vbiz.humanres.PayrollService;
 import in.vasista.vbiz.humanres.HumanresService;
 import in.vasista.vbiz.byproducts.ByProductServices;
+import in.vasista.vbiz.humanres.HumanresHelperServices;
 
 dctx = dispatcher.getDispatchContext();
 emplList=[];
@@ -130,9 +131,16 @@ if(UtilValidate.isNotEmpty(timePeriodId)){
 			}
 		}
 		holidays.add(UtilDateTime.toSqlDate(secondSaturDay));
+		//get employee EmployeeWeeklyOff Days and exclude those
+		employeeWeeklyOffInpuMap = [:];
+		employeeWeeklyOffInpuMap.put("employeeId",partyId);
+		employeeWeeklyOffInpuMap.put("fromDate",fromDateStart);
+		employeeWeeklyOffInpuMap.put("thruDate",thruDateEnd);
+		List employeeWeeklyOffDays = (List)((HumanresHelperServices.getEmployeeWeeklyOffDays(dctx,employeeWeeklyOffInpuMap)).get("weeklyOffDays"));
 		List conList=[];
 		conList.add(EntityCondition.makeCondition("partyId", EntityOperator.EQUALS,partyId));
 		conList.add(EntityCondition.makeCondition("date",EntityOperator.IN,holidays));
+		conList.add(EntityCondition.makeCondition("date",EntityOperator.NOT_IN,employeeWeeklyOffDays));
 		conList.add(EntityCondition.makeCondition(EntityCondition.makeCondition("encashmentStatus",EntityOperator.NOT_EQUAL,"LEAVE_ENCASHMENT"),EntityOperator.OR,
 			EntityCondition.makeCondition("encashmentStatus",EntityOperator.EQUALS,null)));
 		con=EntityCondition.makeCondition(conList,EntityOperator.AND);
