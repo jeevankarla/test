@@ -801,6 +801,12 @@ under the License.
        <response name="success" type="request" value="json"/>
        <response name="error" type="request" value="json"/>
    </request-map>
+   <request-map uri="updateWaterOrElectricityCharges">
+       <security https="true" auth="true"/>
+       <event type="java" path="in.vasista.vbiz.humanres.PayrollService" invoke="updateWaterOrElectricityCharges"/>
+       <response name="success" type="request" value="json"/>
+       <response name="error" type="request" value="json"/>
+   </request-map>
    <request-map uri="EditPayrollAttendance">
        <security https="true" auth="true"/>
        <event type="java" path="in.vasista.vbiz.humanres.PayrollService" invoke="editPayrollAttendance"/>
@@ -1644,7 +1650,10 @@ under the License.
     	<security https="true" auth="true"/>
     	<response name="success" type="view" value="DailyBusTimings"></response>
     </request-map>
-    
+     <request-map uri="waterElectricityCharges">
+    	<security https="true" auth="true"/>
+    	<response name="success" type="view" value="WaterElectricityCharges"></response>
+    </request-map>
      <request-map uri="EmployeeAttendanceInternal">
        <security https="true" auth="true"/>
         <response name="success" type="view" value="EmployeeAttendanceInternal"/>
@@ -2105,6 +2114,7 @@ under the License.
     <view-map name="ApprovalHolidays" type="screen" page="component://humanres/widget/HumanresScreens.xml#ApprovalHolidays"></view-map>
     <view-map name="EditEmplLateHours" type="screen" page="component://humanres/widget/HumanresScreens.xml#EditEmplLateHours"></view-map>
     <view-map name="DailyBusTimings" type="screen" page="component://humanres/widget/HumanresScreens.xml#DailyBusTimings"></view-map>
+    <view-map name="WaterElectricityCharges" type="screen" page="component://humanres/widget/HumanresScreens.xml#WaterElectricityCharges"></view-map>
     <view-map name="EmployeeAttendanceInternal" type="screen" page="component://humanres/widget/HumanresScreens.xml#EmployeeAttendanceInternal"/>
 
  <!--====================Reports View===================================-->

@@ -4925,5 +4925,110 @@ public static Map<String, Object> generateEmployerContributionPayrollBilling(Dis
 		return result;
 	
 		} 
+
+	public static String updateWaterOrElectricityCharges(HttpServletRequest request, HttpServletResponse response) {
+		Delegator delegator = (Delegator) request.getAttribute("delegator");
+	    LocalDispatcher dispatcher = (LocalDispatcher) request.getAttribute("dispatcher");
+	    Locale locale = UtilHttp.getLocale(request);
+	    Map<String, Object> result = ServiceUtil.returnSuccess();
+	    HttpSession session = request.getSession();
+	    GenericValue userLogin = (GenericValue) session.getAttribute("userLogin");		
+	    String partyId = (String) request.getParameter("partyId");	
+	    String periodId = (String) request.getParameter("periodId");
+	    String assetId = (String) request.getParameter("assetId");	    
+	    Map paramMap = UtilHttp.getParameterMap(request);	    
+	    List productMeterTypeIdsList=FastList.newInstance();
+	    try{
+	    	List<GenericValue> productMeterType = delegator.findList("ProductMeterType",EntityCondition.makeCondition("productMeterTypeId", EntityOperator.IN ,UtilMisc.toList("WATER","ELECTRICITY")), null,null, null, true);
+	    	productMeterTypeIdsList.addAll(EntityUtil.getFieldListFromEntityList(productMeterType, "productMeterTypeId", true));
+	 } catch (GenericEntityException e) {
+	     Debug.logError(e, "Error getting payhead types", module);
+	 }
+	 
+	 if(UtilValidate.isNotEmpty(productMeterTypeIdsList)){
+	 	for(int i=0;i<productMeterTypeIdsList.size();i++){
+	 		String meterTypeId= (String)productMeterTypeIdsList.get(i);
+		    if(UtilValidate.isNotEmpty(paramMap.get(meterTypeId))){
+				Map<String, Object> payItemMap=FastMap.newInstance();
+				String meterValStr=(String)paramMap.get(meterTypeId);
+				if((!" ".equals(meterValStr))){
+	    			BigDecimal meterVal= BigDecimal.ZERO;
+					if (UtilValidate.isNotEmpty(meterValStr)) {	
+						meterVal = new BigDecimal(meterValStr);
+					}
+					payItemMap.put("userLogin",userLogin);
+					payItemMap.put("customTimePeriodId",periodId);
+					payItemMap.put("meterVal",meterVal);
+					payItemMap.put("partyId",partyId);
+					payItemMap.put("assetId",assetId);
+					payItemMap.put("meterTypeId",meterTypeId);	    				
+					try {
+						if(meterVal.compareTo(BigDecimal.ZERO) >=0){
+							Map resultValue = dispatcher.runSync("createOrUpdateWaterOrElectricityCharges", payItemMap);
+							if( ServiceUtil.isError(resultValue)) {
+								String errMsg =  ServiceUtil.getErrorMessage(resultValue);
+								Debug.logWarning(errMsg , module);
+								request.setAttribute("_ERROR_MESSAGE_",errMsg);
+								
+								return "error";
+							}
+						}
+						
+					} catch (GenericServiceException s) {
+						s.printStackTrace();
+					} 
+				}
+			}
+	 	}
+	 }	    
+	  	 return "success";
+	}
+
+	public static Map<String, Object> createOrUpdateWaterOrElectricityCharges(DispatchContext dctx, Map<String, ? extends Object> context){
+	    Delegator delegator = dctx.getDelegator();
+	    LocalDispatcher dispatcher = dctx.getDispatcher();
+	    GenericValue userLogin = (GenericValue) context.get("userLogin");
+	    String partyId = (String) context.get("partyId");
+	    String assetId = (String) context.get("assetId");
+	    String customTimePeriodId = (String)context.get("customTimePeriodId");
+	    String meterTypeId = (String)context.get("meterTypeId");
+	    BigDecimal meterVal = (BigDecimal)context.get("meterVal");
+	    Locale locale = (Locale) context.get("locale");
+	    Map result = ServiceUtil.returnSuccess();
+	    Timestamp fromDateTime  = null;
+	    Timestamp thruDateTime  = null;
+	    Timestamp previousDayEnd = null;
+	    Timestamp fromDateStart  = null;
+	    Timestamp thruDateEnd  = null;
+	    String fixedAssetId = null;
+	    try {
+	        GenericValue customTimePeriod = delegator.findOne("CustomTimePeriod", UtilMisc.toMap("customTimePeriodId", customTimePeriodId),false);
+	    	if (UtilValidate.isNotEmpty(customTimePeriod)) {
+	    		fromDateTime = UtilDateTime.toTimestamp(customTimePeriod.getDate("fromDate"));
+	    		thruDateTime = UtilDateTime.toTimestamp(customTimePeriod.getDate("thruDate"));
+	    		fromDateStart = UtilDateTime.getDayStart(fromDateTime);
+	    		thruDateEnd = UtilDateTime.getDayEnd(thruDateTime);
+			    previousDayEnd = UtilDateTime.getDayEnd(UtilDateTime.addDaysToTimestamp(fromDateTime, -1));
+	    	}
+	    }catch (GenericEntityException e) {
+	    	Debug.logError(e, module);
+	    	return ServiceUtil.returnError(e.getMessage());
+		}	   
+		try {			
+			GenericValue newMeterEntity = delegator.makeValue("FixedAssetMeter");
+			newMeterEntity.set("fixedAssetId", assetId);
+			newMeterEntity.set("productMeterTypeId", meterTypeId);
+			newMeterEntity.set("readingDate", thruDateEnd);
+			newMeterEntity.set("meterValue", meterVal);
+			delegator.createOrStore(newMeterEntity); 	
+					
+					
+			}catch (GenericEntityException e) {
+				Debug.logError(e, module);
+				return ServiceUtil.returnError(e.toString());
+		}
+	    result = ServiceUtil.returnSuccess("Successfully Updated!!");
+	    return result;
+	}//end of service
 	 
 }//end of class

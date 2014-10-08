@@ -697,6 +697,28 @@
            </hyperlink>
            </field>
     </form>
+    <form name="WaterElectricityCharges" type="single" header-row-style="header-row" default-table-style="basic-table" target="createWaterElectricityCharges">
+    
+    	<field name="partyId" title="Employee Id" required-field="true">
+			<lookup target-form-name="LookupEmployeeName"/>
+		</field>
+		<field name="customTimePeriodId" required-field="true">
+            <drop-down>
+                <entity-options entity-name="CustomTimePeriod" key-field-name="customTimePeriodId" description="${groovy:org.ofbiz.base.util.UtilDateTime.toDateString(fromDate, &quot;dd MMMMM, yyyy&quot;);} - ${groovy:org.ofbiz.base.util.UtilDateTime.toDateString(thruDate, &quot;dd MMMMM, yyyy&quot;);}" filter-by-date="false">
+                    <entity-constraint name="periodTypeId" operator="equals" value="HR_MONTH"/>
+                    <entity-order-by field-name="-thruDate"/>
+                    <entity-order-by field-name="periodNum"/>
+                </entity-options>
+            </drop-down>
+        </field>
+        <field name="chargeType" title="Charge Type">
+        	<drop-down>
+        		<option key="WATER" description="Water"/>
+        		<option key="ELECTRICITY" description="Electricity"/>
+        	</drop-down>
+        </field>
+    	<field name="submitButton" title="Find" widget-style="smallSubmit"><submit/></field>
+    </form>
    <form name="EditLateHours" type="single" header-row-style="header-row" default-table-style="basic-table" target="findEmplDetails">
     	<field name="hideSearch"><hidden value="Y" /></field>
 		 <field name="noConditionFind"><hidden value="Y"/><!-- if this isn't there then with all fields empty no query will be done --></field>

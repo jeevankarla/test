@@ -247,6 +247,49 @@
 			</widgets>
 		</section>
 	 </screen>
+	 <screen name="WaterElectricityCharges">
+        <section>
+            <actions>
+                <set field="titleProperty" value="HumanResFindEmployment"/>
+                <set field="headerItem" value="WaterElectricityCharges"/>
+				<set field="tabButtonItem" value="WaterElectricityCharges" />
+				<entity-condition list="allBenefitsTypeList" entity-name="BenefitType">
+					<condition-expr field-name="benefitTypeId" operator="not-equals" value="PAYROL_BEN_SALARY"/>
+					<order-by field-name="sequenceNum"/>
+				</entity-condition>
+				<entity-condition list="allDeductionTypeList" entity-name="DeductionType">
+					<order-by field-name="sequenceNum"/>					
+				</entity-condition>
+				<!-- <script location="component://humanres/webapp/humanres/WEB-INF/actions/humanres/EmployeeBenefitsAndDeductions.groovy" /> -->
+				<script location="component://humanres/webapp/humanres/WEB-INF/actions/humanres/WaterAndElectricityCharges.groovy" />  
+            </actions>
+            <widgets>
+				<decorator-screen name="HumanresCommonDecorator" location="component://humanres/widget/CommonScreens.xml">
+                    <decorator-section name="body">
+                    	<section>
+		                    <widgets>                       
+		                        <decorator-screen name="FindScreenDecorator" location="component://common/widget/CommonScreens.xml">
+		                            <decorator-section name="search-options">
+		                                <include-form name="FindWaterElectricityCharges" location="component://humanres/widget/forms/EmploymentForms.xml"/>
+		                            </decorator-section>		                           	 
+		                            <decorator-section name="search-results">
+		                               <section>
+		                               		 <widgets>
+				                                 <platform-specific>
+				                                     <html><html-template location="component:///humanres/webapp/humanres/humanres/WaterAndElectricityCharges.ftl"/></html>
+				                                 </platform-specific>
+				                             </widgets>
+		                               </section>
+		                            </decorator-section>
+		                        </decorator-screen>
+		                    </widgets>                    
+                              		                   
+		            	</section>				                        
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
 	 <screen name="EditEmplLateHours">
 		<section>
 			<actions>

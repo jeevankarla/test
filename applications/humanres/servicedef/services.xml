@@ -1439,6 +1439,14 @@ under the License.emplpunch
         <attribute name="amount" mode="IN" type="BigDecimal" optional="true" />
         <attribute name="amountNullFlag" mode="IN" type="String" optional="true" />
     </service>
+    <service name="createOrUpdateWaterOrElectricityCharges" engine="java" location="in.vasista.vbiz.humanres.PayrollService" invoke="createOrUpdateWaterOrElectricityCharges" auth="true">
+        <description>Create Or Update Employee Allowence</description>
+        <attribute name="partyId" mode="IN" type="String" optional="false" />
+        <attribute name="assetId" mode="IN" type="String" optional="false" />
+        <attribute name="customTimePeriodId" mode="IN" type="String" optional="false" />
+        <attribute name="meterTypeId" mode="IN" type="String" optional="false" />
+        <attribute name="meterVal" mode="IN" type="BigDecimal" optional="true" />
+    </service>
     <service name="createOrUpdatePayrollAttendanceShiftWise" engine="java" location="in.vasista.vbiz.humanres.PayrollService" invoke="createOrUpdatePayrollAttendanceShiftWise" auth="true">
         <description>Create Or Update Employee ShiftDetails</description>
         <attribute name="partyId" mode="IN" type="String" optional="false" />
