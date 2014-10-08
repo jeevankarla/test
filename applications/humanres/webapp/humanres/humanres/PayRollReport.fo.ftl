@@ -132,9 +132,10 @@ under the License.
                      		 					</fo:table-cell>-->
                      		 				</fo:table-row>
                      		 				<#assign designation = delegator.findOne("EmplPositionType", {"emplPositionTypeId" : emplPositionAndFulfilment[0].emplPositionTypeId?if_exists}, true)>
+                     		 				<#assign designationName=emplPositionAndFulfilment[0].name?if_exists>
                      		 				<fo:table-row>
                      		 					<fo:table-cell>
-                     		 						<fo:block text-align="left" keep-together="always" white-space-collapse="false">&#160;Designation               : <#if designation?has_content>${designation.description?if_exists}</#if></fo:block>
+                     		 						<fo:block text-align="left" keep-together="always" white-space-collapse="false">&#160;Designation               : <#if designationName?has_content>${designationName?if_exists}<#else><#if designation?has_content>${designation.description?if_exists}</#if></#if></fo:block>
                      		 					</fo:table-cell>
                      		 					<fo:table-cell>
                      		 						<fo:block text-align="left" keep-together="always" white-space-collapse="false">D.O.J                         : <#if (doj[0].appointmentDate)?has_content>${Static["org.ofbiz.base.util.UtilDateTime"].toDateString((doj[0].appointmentDate?if_exists), "dd/MM/yyyy")}</#if></fo:block>
