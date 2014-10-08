@@ -133,6 +133,8 @@ if(UtilValidate.isNotEmpty(timePeriodId)){
 		List conList=[];
 		conList.add(EntityCondition.makeCondition("partyId", EntityOperator.EQUALS,partyId));
 		conList.add(EntityCondition.makeCondition("date",EntityOperator.IN,holidays));
+		conList.add(EntityCondition.makeCondition(EntityCondition.makeCondition("encashmentStatus",EntityOperator.NOT_EQUAL,"LEAVE_ENCASHMENT"),EntityOperator.OR,
+			EntityCondition.makeCondition("encashmentStatus",EntityOperator.EQUALS,null)));
 		con=EntityCondition.makeCondition(conList,EntityOperator.AND);
 		workedHolidaysList = delegator.findList("EmplDailyAttendanceDetail", con ,null,null, null, false );
 		
