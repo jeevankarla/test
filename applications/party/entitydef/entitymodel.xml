@@ -1785,7 +1785,9 @@ under the License.
         <field name="fromDate" type="date-time"></field>
         <field name="thruDate" type="date-time"></field>
         <field name="latitude" type="floating-point" not-null="true"></field>
-        <field name="longitude" type="floating-point" not-null="true"></field>        
+        <field name="longitude" type="floating-point" not-null="true"></field> 
+        <field name="noteName" type="name"></field>
+        <field name="noteInfo" type="very-long"></field>       
         <prim-key field="partyId"/>
         <prim-key field="fromDate"/>
         <relation type="one" fk-name="PARTY_LOCATION_PTY" rel-entity-name="Party">
