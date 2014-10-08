@@ -4783,15 +4783,18 @@ public class PayrollService {
 	    			  Map periodBillingMap = FastMap.newInstance();
 	    			  Map periodBillingTotalsMap = FastMap.newInstance();
 		    		  for(GenericValue periodBilling : customTimePeriodIdList){
+		    			    EntityListIterator payrollHeaderAndHeaderItemIter = null;
 		    			    String periodBillingId = periodBilling.getString("periodBillingId");
+		    			    
 		  					List payHeadCondList = FastList.newInstance();
 		  					payHeadCondList.add(EntityCondition.makeCondition("periodBillingId", EntityOperator.EQUALS, periodBillingId));
 		  					payHeadCondList.add(EntityCondition.makeCondition("partyIdFrom", EntityOperator.EQUALS, partyId));
 		  					EntityCondition payHeadCond = EntityCondition.makeCondition(payHeadCondList,EntityOperator.AND);
-		  					List<GenericValue> payrollHeaderAndHeaderItemList = delegator.findList("PayrollHeaderAndHeaderItem", payHeadCond, null, null, null, false);
+		  					payrollHeaderAndHeaderItemIter = delegator.find("PayrollHeaderAndHeaderItem", payHeadCond, null, null, null, null);
 		  					Map payHeadTotalsMap = FastMap.newInstance();
-		  					if(UtilValidate.isNotEmpty(payrollHeaderAndHeaderItemList)){
-		  						for(GenericValue payrollHeaderAndHeaderItem : payrollHeaderAndHeaderItemList){
+		  					if(UtilValidate.isNotEmpty(payrollHeaderAndHeaderItemIter)){
+		  						GenericValue payrollHeaderAndHeaderItem;
+		  						while( payrollHeaderAndHeaderItemIter != null && (payrollHeaderAndHeaderItem = payrollHeaderAndHeaderItemIter.next()) != null){
 		  							String payrollHeaderItemTypeId = payrollHeaderAndHeaderItem.getString("payrollHeaderItemTypeId");
 		  							BigDecimal amount = payrollHeaderAndHeaderItem.getBigDecimal("amount");
 		  							if(payHeadTotalsMap.containsKey(payrollHeaderItemTypeId)){
@@ -4847,6 +4850,7 @@ public class PayrollService {
 		  					
 		  					periodBillingMap.put(periodBillingId, payHeadTotalsMap);
 		  					periodBillingMap.put("periodTotals",periodBillingTotalsMap);
+		  					payrollHeaderAndHeaderItemIter.close();
 		    		  }
 		    		  customTimePeriodMap.put(customTimePeriodId,periodBillingMap);
 		    		  customTimePeriodMap.put("customTimePeriodTotals",customTimePeriodTotalsMap);
