@@ -185,6 +185,26 @@
 		<field name="acNo" title="Account Number"><display/></field>
 		<field name="netAmt" title="Net Amount"><display/></field>
 	</form>	
+	<form name="ITAXQuaerlyrtStatement" type="list" list-name="finalList" odd-row-style="alternate-row" default-table-style="basic-table hover-bar">
+	    <field name="serialNo" title="Sl NO"><display /></field>
+		<field name="monthSno" title="Serial No"><display/></field>
+		<field name="partyId" title="Employee Code"><display/></field>
+		<field name="mode" title="Mode"><display/></field>
+		<field name="panId" title="PAN Of The Employee"><display/></field>
+		<field name="name" title="Name Of The Employee"><display/></field>
+		<field name="sectionCode" title="Section Code" ><display default-value="92B" /></field>
+		<field name="endDate" title="Date Of Payment Credit"><display /></field>
+		<field name="ddDate" title="Date Of Deduction"><display/></field>
+		<field name="grossAmt" title="Amount Paid/Credited"><display/></field>
+		<field name="tdsAmt" title="TDS"><display/></field>
+		<field name="surcharge" title="Surcharge"><display/></field>
+		<field name="educationCess" title="Education Cess"><display/></field>
+		<field name="totalTds" title="Total TDS"><display/></field>
+		<field name="totalTax" title="Total Tax Deposited"><display/></field>
+		<field name="dateOfDeposite" title="Date Of Deposite"><display/></field>
+		<field name="nonDdOrLowerdd" title="Reason For Non Deduction/Lower Deduction"><display/></field>
+		<field name="certificate" title="Number Of Certificate Issued By The Assessing Officer Non Deduction/Lower Deduction "><display/></field>
+	</form>	
 	 <form name="employeeLookup" type="single"  odd-row-style="header-row" default-table-style="basic-table"  target="EmployeeWiseSalaryDetails">
        	<field name="employeeId">
 			<lookup target-form-name="LookupEmployeeName"/>

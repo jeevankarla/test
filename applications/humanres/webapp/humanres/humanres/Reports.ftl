@@ -49,6 +49,7 @@ function makeDatePicker1(fromDateId ,thruDateId){
 			}
 		});
 	}
+	
 
 //call one method for one time fromDATE And thruDATE
 
@@ -86,7 +87,7 @@ function makeDatePicker1(fromDateId ,thruDateId){
 	        changeMonth: true,
 	        changeYear: true,
 	        showButtonPanel: true,
-	        dateFormat: 'yy-mm',
+	        dateFormat: 'mm-yy',
 	        onClose: function(dateText, inst) { 
 	            var month = $("#ui-datepicker-div .ui-datepicker-month :selected").val();
 	            var year = $("#ui-datepicker-div .ui-datepicker-year :selected").val();
@@ -737,6 +738,18 @@ function makeDatePicker1(fromDateId ,thruDateId){
 									<td width="15%"><span class='h3'><input type="submit" value="Download" class="buttontext"></span></td> 
 								</tr>
 							</table>	
+						</form>
+					</tr>
+					<tr class="alternate-row">
+						<form id="ITAXQuaerlyrtStatement" name="ITAXQuaerlyrtStatement" mothed="post" action="<@ofbizUrl>ITAXQuaerlyrtStatementCsv.csv</@ofbizUrl>" target="_blank">
+							<table class="basic-table" cellspacing="5">
+								<tr class="alternate-row">
+									<td width="19%"><span class='h3'>Quarerly IncomeTax Statement<input  type="hidden"  value="ITAXQuaerlyrtStatement"   name="reportTypeFlag"/></span></td>
+									<td width="15%"><span class='h3'>From: <input type='text' id='fromMonth' name='fromMonth' onmouseover='monthPicker()' class="monthPicker"/></span></td>
+			      		 			<td width="15%"><span class='h3'>Thru: <input type='text' id='thruMonth' name='thruMonth' onmouseover='monthPicker()' class="monthPicker"/></span></td>
+									<td width="15%"><span class='h3'><input type="submit" value="Download" class="buttontext"></span></td>
+								</tr>
+							</table>
 						</form>
 					</tr>
 			   	</table>

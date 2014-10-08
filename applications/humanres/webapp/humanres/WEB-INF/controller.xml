@@ -1672,7 +1672,7 @@ under the License.
     </request-map>
     <request-map uri="EmployeesListCsv.csv"><security https="true" auth="true"/><response name="success" type="view" value="EmployeesListCsv"></response></request-map>
     <request-map uri="EmployeesListPdf.pdf"><security https="true" auth="true"/><response name="success" type="view" value="EmployeesListPdf"></response></request-map>
-
+	<request-map uri="ITAXQuaerlyrtStatementCsv.csv"><security https="true" auth="true"/><response name="success" type="view" value="ITAXQuaerlyrtStatementCsv"></response></request-map>
     <request-map uri="PayHeadTypes">
        <security https="true" auth="true"/>
         <response name="success" type="view" value="PayHeadTypes"/>
@@ -2125,6 +2125,7 @@ under the License.
  	<view-map name="EmployeeGroups" type="screen" page="component://humanres/widget/ReportHumanresSummaryScreens.xml#EmployeeGroups"/>
  	<view-map name="Employees" type="screen" page="component://humanres/widget/ReportHumanresSummaryScreens.xml#Employees"/>
  	<view-map name="EmployeesListCsv" type="screencsv" page="component://humanres/widget/ReportHumanresSummaryScreens.xml#EmployeesListCsv" content-type="text/csv" encoding="none"/>
+ 	<view-map name="ITAXQuaerlyrtStatementCsv" type="screencsv" page="component://humanres/widget/ReportHumanresSummaryScreens.xml#ITAXQuaerlyrtStatementCsv" content-type="text/csv" encoding="none"/>
 	<view-map name="EmployeesListPdf" type="screenfop" page="component://humanres/widget/ReportHumanresSummaryScreens.xml#EmployeesListPdf" content-type="application/pdf" encoding="none"/>
  	<view-map name="viewprofile" type="screen" page="component://party/widget/partymgr/PartyScreens.xml#viewprofile"/>
  	<view-map name="PayHeadTypes" type="screen" page="component://humanres/widget/ReportHumanresSummaryScreens.xml#PayHeadTypes"/>

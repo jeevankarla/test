@@ -4757,9 +4757,15 @@ public class PayrollService {
 	      
 	      Timestamp fromDateStart = UtilDateTime.getDayStart(fromDate);
 	      Timestamp thruDateEnd = UtilDateTime.getDayEnd(thruDate);
-	      
+	      List<GenericValue> benefitTypesList = FastList.newInstance();
 	      Map customTimePeriodMap = FastMap.newInstance();
+	      List<String> benefitTypes = FastList.newInstance();
 	      try{
+	    	  List benCondList = UtilMisc.toList(EntityCondition.makeCondition("benefitTypeId",EntityOperator.NOT_EQUAL,"PAYROL_BEN_WASHG"));
+	    	  EntityCondition benCondition = EntityCondition.makeCondition(benCondList,EntityOperator.AND);
+	    	  benefitTypesList = delegator.findList("BenefitType",benCondition,null,null,null,false);
+	    	  benefitTypes = EntityUtil.getFieldListFromEntityList(benefitTypesList, "benefitTypeId", false); 
+	    		  
 	    	  List condList = FastList.newInstance();
 	    	  condList.add(EntityCondition.makeCondition("periodTypeId", EntityOperator.EQUALS ,"HR_MONTH"));
 	    	  condList.add(EntityCondition.makeCondition("billingTypeId", EntityOperator.EQUALS ,"PAYROLL_BILL"));
@@ -4811,6 +4817,34 @@ public class PayrollService {
 		  							}
 		  						}
 		  					}
+		  					
+		  					// calculating grossAmount 
+		  					BigDecimal grossBenefitAmt = BigDecimal.ZERO;
+		  					if(UtilValidate.isNotEmpty(payHeadTotalsMap)){
+		  						
+		  						Set<String> payHeadersKeySet = payHeadTotalsMap.keySet();
+		  						for(String payHeadersKey : payHeadersKeySet){
+		  							if(benefitTypes.contains(payHeadersKey)){
+		  								BigDecimal payHeaderAmount = (BigDecimal)payHeadTotalsMap.get(payHeadersKey);
+		  								grossBenefitAmt = grossBenefitAmt.add(payHeaderAmount);
+		  							}
+		  						}
+		  						payHeadTotalsMap.put("grossBenefitAmt",grossBenefitAmt);
+		  						if(UtilValidate.isNotEmpty(periodBillingTotalsMap) && UtilValidate.isEmpty(periodBillingTotalsMap.get("grossBenefitAmt"))){
+		  							periodBillingTotalsMap.put("grossBenefitAmt",grossBenefitAmt);
+		  						}else{
+		  							BigDecimal peridGrossBenAmt = grossBenefitAmt.add((BigDecimal)periodBillingTotalsMap.get("grossBenefitAmt"));
+		  							periodBillingTotalsMap.put("grossBenefitAmt",peridGrossBenAmt);
+		  						}
+		  						if(UtilValidate.isNotEmpty(customTimePeriodTotalsMap) && UtilValidate.isEmpty(customTimePeriodTotalsMap.get("grossBenefitAmt"))){
+		  							customTimePeriodTotalsMap.put("grossBenefitAmt",grossBenefitAmt);
+		  						}else{
+		  							BigDecimal customGrossBenAmt = grossBenefitAmt.add((BigDecimal)customTimePeriodTotalsMap.get("grossBenefitAmt"));
+		  							customTimePeriodTotalsMap.put("grossBenefitAmt",customGrossBenAmt);
+		  						}
+		  						
+		  					}
+		  					
 		  					periodBillingMap.put(periodBillingId, payHeadTotalsMap);
 		  					periodBillingMap.put("periodTotals",periodBillingTotalsMap);
 		    		  }
@@ -4821,6 +4855,11 @@ public class PayrollService {
 	      }catch (GenericEntityException e) {
 				Debug.logError(e, module);
 				return ServiceUtil.returnError(e.toString());
+			}catch (Exception e) {
+				// TODO: handle exception
+				Debug.logError(e, module);
+				return ServiceUtil.returnError(e.toString());
+				
 			}
 	    result.put("periodTotalsForParty",customTimePeriodMap);
 		return result;
