@@ -741,10 +741,10 @@ function makeDatePicker1(fromDateId ,thruDateId){
 						</form>
 					</tr>
 					<tr class="alternate-row">
-						<form id="ITAXQuaerlyrtStatement" name="ITAXQuaerlyrtStatement" mothed="post" action="<@ofbizUrl>ITAXQuaerlyrtStatementCsv.csv</@ofbizUrl>" target="_blank">
+						<form id="ITAXQuarterlyStatement" name="ITAXQuarterlyStatement" mothed="post" action="<@ofbizUrl>ITAXQuarterlyStatementCsv.csv</@ofbizUrl>" target="_blank">
 							<table class="basic-table" cellspacing="5">
 								<tr class="alternate-row">
-									<td width="19%"><span class='h3'>Quarerly IncomeTax Statement<input  type="hidden"  value="ITAXQuaerlyrtStatement"   name="reportTypeFlag"/></span></td>
+									<td width="19%"><span class='h3'>Quarterly IncomeTax Statement<input  type="hidden"  value="ITAXQuaerlyrtStatement"   name="reportTypeFlag"/></span></td>
 									<td width="15%"><span class='h3'>From: <input type='text' id='fromMonth' name='fromMonth' onmouseover='monthPicker()' class="monthPicker"/></span></td>
 			      		 			<td width="15%"><span class='h3'>Thru: <input type='text' id='thruMonth' name='thruMonth' onmouseover='monthPicker()' class="monthPicker"/></span></td>
 									<td width="15%"><span class='h3'><input type="submit" value="Download" class="buttontext"></span></td>

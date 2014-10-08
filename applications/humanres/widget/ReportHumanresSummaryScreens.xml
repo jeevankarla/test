@@ -796,7 +796,7 @@
 		</section>
 	</screen>
 	
-	<screen name="ITAXQuaerlyrtStatementCsv">
+	<screen name="ITAXQuarterlyStatementCsv">
 		<section>
 			<actions>
 			<set field="viewSize" value="99999"/>
@@ -804,7 +804,7 @@
                     <field-map field-name="mainAction" value="REPORTS_VIEW"/>
                 </service>
                 <set field="hasReportsViewPermission" from-field="permResult.hasPermission"/>
-			<script location="component://humanres/webapp/humanres/WEB-INF/actions/humanres/ITAXQuaerlyrtStatement.groovy"/>					
+			<script location="component://humanres/webapp/humanres/WEB-INF/actions/humanres/ITAXQuarterlyStatement.groovy"/>					
 			</actions>
 			<widgets>
          		<section>
@@ -813,7 +813,7 @@
                  	</condition>
                  	<widgets>				
 						<container>
-						<include-form name="ITAXQuaerlyrtStatement"
+						<include-form name="ITAXQuarterlyStatement"
 							location="component://humanres/widget/ReportHumanresSummaryForms.xml" />
 							</container>
 					</widgets>
