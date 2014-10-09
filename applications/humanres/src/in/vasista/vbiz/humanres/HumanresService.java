@@ -247,6 +247,8 @@ public class HumanresService {
 			    		conditionList.add(EntityCondition.makeCondition("partyId", EntityOperator.EQUALS ,partyId));
 					    conditionList.add(EntityCondition.makeCondition("date", EntityOperator.GREATER_THAN_EQUAL_TO , UtilDateTime.toSqlDate(fromDate)));
 					    conditionList.add(EntityCondition.makeCondition("date", EntityOperator.LESS_THAN_EQUAL_TO , UtilDateTime.toSqlDate(thruDate)));
+					    conditionList.add(EntityCondition.makeCondition(EntityCondition.makeCondition("encashmentStatus",EntityOperator.EQUALS,null),
+								EntityOperator.OR,EntityCondition.makeCondition("encashmentStatus",EntityOperator.NOT_IN,UtilMisc.toList("CASH_ENCASHMENT","LEAVE_ENCASHMENT"))));
 					    EntityCondition condition= EntityCondition.makeCondition(conditionList,EntityOperator.AND);
 					    List<GenericValue> emplDailyAttendanceDetailList = delegator.findList("EmplDailyAttendanceDetail", condition, null,null, null, false);
                          
@@ -314,7 +316,8 @@ public class HumanresService {
 									if(UtilValidate.isNotEmpty(timeSplit)){
 										 int hours = Integer.parseInt(timeSplit.get(0));
 										 int minutes = Integer.parseInt(timeSplit.get(1));
-										 if(((hours*60)+minutes) >=210){
+										 //if(((hours*60)+minutes) >=210){
+										 if(((hours*60)+minutes) >=240){
 											 tempDayMap.put("punchDetails", ((List)punMap.get("punchDataList")).get(0));
 											 tempDayMap.put("date",UtilDateTime.toDateString(tempDate,"dd-MM-yyyy"));
 											 workedHolidaysList.add(tempDayMap);
