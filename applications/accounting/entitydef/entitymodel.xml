@@ -473,6 +473,18 @@
         	<key-map field-name="categoryTypeEnum" rel-field-name="enumId"/>
       	</relation>
 	</entity>
+	<view-entity entity-name="FinAccountAndType" package-name="org.ofbiz.accounting.finaccount"
+		title="Financial Account and Type View Entity">
+		<member-entity entity-alias="FA" entity-name="FinAccount" />
+		<member-entity entity-alias="FT" entity-name="FinAccountType" />
+		<alias-all entity-alias="FA" />
+		<alias name="parentTypeId" entity-alias="FT" />
+		<alias name="replenishEnumId" entity-alias="FT" />
+		<alias name="description" entity-alias="FT"/>
+		<view-link entity-alias="FA" rel-entity-alias="FT">
+			<key-map field-name="finAccountTypeId" />
+		</view-link>
+	</view-entity>
 	<view-entity entity-name="FinAccountAndRole" package-name="org.ofbiz.accounting.finaccount"
 		title="Financial Account and Role View Entity">
 		<member-entity entity-alias="FA" entity-name="FinAccount" />
