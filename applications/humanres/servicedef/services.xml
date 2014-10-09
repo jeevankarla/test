@@ -1528,7 +1528,7 @@ under the License.emplpunch
        <attribute name="isGH" mode="IN" type="String" optional="true"/>
        <attribute name="isWeeklyOff" mode="IN" type="String" optional="true"/>
        <attribute name="fromDate" mode="IN" type="Timestamp" optional="true"/>
-       <attribute name="thruDate" mode="IN" type="String" optional="true"/>
+       <attribute name="thruDate" mode="IN" type="Timestamp" optional="true"/>
        <attribute name="workedHolidaysList" mode="OUT" type="java.util.List"/>
    </service>
    <!-- Loan Services -->

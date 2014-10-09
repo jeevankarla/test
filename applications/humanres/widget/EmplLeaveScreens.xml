@@ -235,6 +235,7 @@
                 </entity-one> -->
                 <set field="layoutSettings.javaScripts[]" value="/humanres/images/approverPartyId.js" global="true"/>
                 <script location="component://humanres/webapp/humanres/WEB-INF/actions/humanres/EmplMultiLevelLeaveApproval.groovy"/>
+                <script location="component://humanres/webapp/humanres/WEB-INF/actions/humanres/EmployeeLeaveList.groovy"/>
             </actions>
             <widgets>
                <decorator-screen name="HumanresCommonDecorator"

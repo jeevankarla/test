@@ -216,6 +216,7 @@ public class HumanresService {
 			if(UtilValidate.isEmpty(fromDate) && UtilValidate.isEmpty(thruDate)){
 				thruDate = UtilDateTime.getDayEnd(UtilDateTime.nowTimestamp());
 			}
+			thruDate = UtilDateTime.getDayEnd(thruDate, timeZone, locale);
 			try {
 				
 					if(UtilValidate.isNotEmpty(isGH) && isGH.equals("Y")){

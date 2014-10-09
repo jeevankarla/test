@@ -282,6 +282,7 @@
         <field name="emplLeaveReasonTypeId"><display/></field>
         <field name="fromDate"><display/></field>
         <field name="thruDate"><display/></field>
+        <field name="GHSSdays" title="GH/SS Days"><display description="${dateList}"></display></field>
         <field name="thruDate" id-name="thruDate" event="onclick:picker()" use-when="emplLeaveStatus.equals(&quot;LEAVE_APPROVED&quot;) &amp;&amp; ${groovy:((security.hasEntityPermission(&quot;APPROVED_LEAVE&quot;, &quot;_UPDATE&quot;,session)))}"><text size="10"/></field>
         <field name="description"><display/></field>
         

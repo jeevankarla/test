@@ -18,12 +18,30 @@ under the License.
 -->
 <script language="javascript" type="text/javascript" src="<@ofbizContentUrl>/images/jquery/plugins/multiSelect/jquery.multiselect.js</@ofbizContentUrl>"></script>
 <link type="text/css" href="<@ofbizContentUrl>/images/jquery/plugins/multiSelect/jquery.multiselect.css</@ofbizContentUrl>" rel="Stylesheet" />
+<script language="javascript" type="text/javascript" src="<@ofbizContentUrl>/images/jquery/plugins/validate/jquery.validate.js</@ofbizContentUrl>"></script>
 
 <script language="JavaScript" type="text/javascript">
+
+$(function() {
+       $('input[name=submit]').click (function (){
+    	  	var leaveTypeId = $('select[name=leaveTypeId]').val();
+			if(leaveTypeId =="CH" || leaveTypeId =="CHGH" || leaveTypeId =="CHSS"){
+				var chDate = $('select[name=chDate]').val();
+				if(!chDate){
+					alert("Please select GH/SS date");
+				}
+			 }
+    	});
+  });
+
   jQuery(document).ready(function () {
     
 	jQuery("#fromDate").datepicker({dateFormat:'dd-mm-yy',
 									onSelect: function( selectedDate ) {
+									var leaveTypeId = $('select[name=leaveTypeId]').val();
+									if(leaveTypeId =="CH" || leaveTypeId =="CHGH" || leaveTypeId =="CHSS"){
+	     								return viewGHandSS();
+     								 }
 									$( "#thruDate" ).datepicker( "option", {minDate: selectedDate});
 								     }
 						           }).datepicker("option", {});
@@ -96,7 +114,10 @@ function displayPunchDetails(){
 function viewGHandSS(){
       var leaveTypeId = $('select[name=leaveTypeId]').val();
        var employeeId = $('input[name=partyId]').val();
-      var data = "partyId="+employeeId;
+       $('[name="fromDate"]').datepicker( "option", "dateFormat", "yy-mm-dd");
+       var fromDate = jQuery("#fromDate").val();
+       $('[name="fromDate"]').datepicker( "option", "dateFormat", "dd-mm-yy");
+       var data = "partyId="+employeeId;
       if(leaveTypeId !="CH" && leaveTypeId !="CHGH" && leaveTypeId !="CHSS"){
          return false;
       }
@@ -109,6 +130,7 @@ function viewGHandSS(){
       if(leaveTypeId =="CH"){
       	data = data+"&isWeeklyOff=Y";
       }
+      data = data+"&thruDate="+fromDate;
       
     $.ajax({
              type: "POST",
@@ -157,9 +179,9 @@ function viewGHandSS(){
        
           return false;
      }
-     if(leaveTypeId =="CH" || leaveTypeId =="CHGH" || leaveTypeId =="CHSS"){
-          return viewGHandSS();
-      }
+     //if(leaveTypeId =="CH" || leaveTypeId =="CHGH" || leaveTypeId =="CHSS"){
+          //return viewGHandSS();
+     // }
      
     $.ajax({
              type: "POST",
@@ -209,7 +231,7 @@ function viewGHandSS(){
     </div>
     <div class="screenlet-body">
 
-         <form name="EditEmplLeave" method="post" action="${target}" onsubmit="setFormParams()">
+         <form name="EditEmplLeave" id = "EditEmplLeave" method="post" action="${target}" onsubmit="setFormParams()">
             <input type="hidden" name="leaveStatus" value ="LEAVE_CREATED"/>
              <input type="hidden" name="emplLeaveApplId" value ="${parameters.emplLeaveApplId?if_exists}"/>
             <input type="hidden" name="appliedBy" value =""/>
@@ -265,14 +287,6 @@ function viewGHandSS(){
 					</select>
                 </td>
               </tr>
-              <tr id="ghssDropDown">
-                <td class="label">GH/SS Days</td>
-                <td>
-                    <select name="chDate" id="chDate" class='h4' multiple="multiple">
-                       <option value=''></option>
-					</select>
-                </td>
-              </tr>
               <tr>
                 <td class="label">From Date :</td>
                 <td>
@@ -288,6 +302,14 @@ function viewGHandSS(){
                 <td class="label">Thru Date :</td>
                 <td>
                    <input type="text" name="thruDate" id="thruDate" value="${thruDate?if_exists}"/>
+                </td>
+              </tr>
+              <tr id="ghssDropDown">
+                <td class="label">GH/SS Days</td>
+                <td>
+                    <select name="chDate" id="chDate" class='h4' multiple="multiple">
+                       <option value=''></option>
+					</select>
                 </td>
               </tr>
               <tr>

@@ -359,17 +359,9 @@ public class EmplLeaveService {
 			}
 			emplLeaveDetails = delegator.findOne("EmplLeave",UtilMisc.toMap("emplLeaveApplId", emplLeaveApplId), false);
 			// Returning error if payroll already generated
-			if(!emplLeaveDetails.get("leaveStatus").equals("LEAVE_APPROVED")){
-				Map customTimePeriodIdMap = PayrollService.checkPayrollGeneratedOrNotForDate(dctx,UtilMisc.toMap("userLogin",userLogin,"date",UtilDateTime.toSqlDate(emplLeaveDetails.getTimestamp("fromDate"))));
-				if (ServiceUtil.isError(customTimePeriodIdMap)) {
-					return customTimePeriodIdMap;
-				}
-			}
-			if(leaveStatus.equals("LEAVE_REJECTED")){
-				Map customTimePeriodIdMap = PayrollService.checkPayrollGeneratedOrNotForDate(dctx,UtilMisc.toMap("userLogin",userLogin,"date",UtilDateTime.toSqlDate(emplLeaveDetails.getTimestamp("fromDate"))));
-				if (ServiceUtil.isError(customTimePeriodIdMap)) {
-					return customTimePeriodIdMap;
-				}
+			Map customTimePeriodIdMap = PayrollService.checkPayrollGeneratedOrNotForDate(dctx,UtilMisc.toMap("userLogin",userLogin,"date",UtilDateTime.toSqlDate(emplLeaveDetails.getTimestamp("fromDate"))));
+			if (ServiceUtil.isError(customTimePeriodIdMap)) {
+				return customTimePeriodIdMap;
 			}
 			if(UtilValidate.isNotEmpty(emplLeaveDetails)){
 				emplLeaveDetails.set("leaveStatus", leaveStatus);

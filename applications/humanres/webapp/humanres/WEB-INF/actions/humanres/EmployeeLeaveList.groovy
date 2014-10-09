@@ -75,3 +75,15 @@ if(UtilValidate.isNotEmpty(thruDate)){
 condition=EntityCondition.makeCondition(conditionList,EntityOperator.AND);
 LeaveDetails = delegator.findList("EmplLeave", condition , null, UtilMisc.toList("-fromDate"), null, false );
 context.put("employeeLeaveList",LeaveDetails);
+
+dateList = [];
+emplLeaveApplId = parameters.emplLeaveApplId;
+if(UtilValidate.isNotEmpty(emplLeaveApplId)){
+	emplDailyAttendanceDetailList = delegator.findList("EmplDailyAttendanceDetail",EntityCondition.makeCondition("emplLeaveApplId", EntityOperator.EQUALS, emplLeaveApplId) , null, null, null, false);
+	if(UtilValidate.isNotEmpty(emplDailyAttendanceDetailList)){
+		dateList = EntityUtil.getFieldListFromEntityList(emplDailyAttendanceDetailList,"date",true);
+		if(UtilValidate.isNotEmpty(dateList)){
+			context.put("dateList",dateList);
+		}
+	}
+}
