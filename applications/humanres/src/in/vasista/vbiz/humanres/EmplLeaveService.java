@@ -46,6 +46,7 @@ import org.ofbiz.entity.condition.EntityCondition;
 import org.ofbiz.entity.condition.EntityOperator;
 import org.ofbiz.entity.transaction.TransactionUtil;
 import org.ofbiz.entity.util.EntityUtil;
+import org.ofbiz.humanres.inout.PunchService;
 
 
 public class EmplLeaveService {
@@ -248,13 +249,13 @@ public class EmplLeaveService {
         String emplLeaveApplId =  (String)context.get("emplLeaveApplId");
         String leaveStatus =  (String)context.get("leaveStatus");
         String serviceName = (String)context.get("serviceName");
+        String dayFractionId = (String)context.get("dayFractionId");
 		List<GenericValue> holiDayList = FastList.newInstance(); 
 		Map result = FastMap.newInstance();
 		List<Date> chDateList = FastList.newInstance();
 		try {
 				List<Date> holidays = FastList.newInstance();
 				
-				Debug.log("context======="+context);
 				SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy");
 				if(UtilValidate.isNotEmpty(chDateStringList)){
 					for(int i=0;i< chDateStringList.size();i++){
@@ -286,6 +287,33 @@ public class EmplLeaveService {
 					}
 					
 					workedHoliday.store();
+				}
+				if(UtilValidate.isNotEmpty(chDateStringList)){
+					for(int i=0;i< chDateStringList.size();i++){
+						String chDate = (String)chDateStringList.get(i);
+						Date tempDate = UtilDateTime.toSqlDate(sdf.parse(chDate));
+						Map tempDayMap = FastMap.newInstance();
+						Map punMap = PunchService.emplDailyPunchReport(dctx, UtilMisc.toMap("partyId", partyId ,"punchDate",tempDate));
+						if(UtilValidate.isNotEmpty(punMap.get("punchDataList"))){
+							Map punchDetails = (Map)(((List)punMap.get("punchDataList")).get(0));
+							if(UtilValidate.isNotEmpty(punchDetails)){
+								String totalTime = (String)punchDetails.get("totalTime");
+								if(UtilValidate.isNotEmpty(totalTime)){
+									totalTime = totalTime.replace(" Hrs", "");
+									List<String> timeSplit = StringUtil.split(totalTime, ":");
+									if(UtilValidate.isNotEmpty(timeSplit)){
+										 int hours = Integer.parseInt(timeSplit.get(0));
+										 int minutes = Integer.parseInt(timeSplit.get(1));
+										 if(UtilValidate.isEmpty(dayFractionId)){
+											 if(((hours*60)+minutes) >=240 && ((hours*60)+minutes) <=480){
+												 return ServiceUtil.returnError("Full Day Leave Not Applicable for GH/SS: "+tempDate); 
+											 }
+										 }
+									}
+								}
+							}
+						}
+					}
 				}
 		}catch(Exception e){
   			Debug.logError("Error while updating EmplDailyAttendanceDetail " + e.getMessage(), module);
