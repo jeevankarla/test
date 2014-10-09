@@ -27,6 +27,13 @@ if (parameters.all == 'Y') {
 	allChanges = true;
 }
 
+facilityList = [];
+if(parameters.unitId){
+	facilityList = (ProcurementNetworkServices.getFacilityAgents(dctx, UtilMisc.toMap("facilityId", parameters.unitId))).get("facilityIds");
+}else if(parameters.shedId){
+	facilityList = (ProcurementNetworkServices.getFacilityAgents(dctx, UtilMisc.toMap("facilityId", parameters.shedId))).get("facilityIds");
+}
+
 dayBegin = UtilDateTime.getDayStart(selectDate, timeZone, locale);
 dayEnd = UtilDateTime.getDayEnd(selectDate, timeZone, locale);
 procurementProductList =[];
@@ -40,6 +47,9 @@ conditionList.add(EntityCondition.makeCondition("changeByUserLoginId", EntityOpe
 conditionList.add(EntityCondition.makeCondition("orderTypeId", EntityOperator.EQUALS , "PURCHASE_ORDER"));
 conditionList.add(EntityCondition.makeCondition("orderStatusId", EntityOperator.EQUALS , "ORDER_CREATED"));
 //conditionList.add(EntityCondition.makeCondition("changeDatetime", EntityOperator.GREATER_THAN_EQUAL_TO, dayBegin));
+if(facilityList){
+	conditionList.add(EntityCondition.makeCondition("originFacilityId", EntityOperator.IN, facilityList));
+}
 conditionList.add(EntityCondition.makeCondition([
 	EntityCondition.makeCondition("createdDate", EntityOperator.GREATER_THAN_EQUAL_TO, dayBegin),
 	EntityCondition.makeCondition("changeDatetime", EntityOperator.GREATER_THAN_EQUAL_TO, dayBegin)
@@ -75,10 +85,16 @@ for(int i=0;i < orderItemsList.size();i++){
 			if(orderItem.productName == procProduct.productName){
 				totMap["totQtyKgs"+procProduct.brandName] += orderItem.quantity;
 				totMap["totQtyKgsTot"] += orderItem.quantity;
-				totMap["totFat"+procProduct.brandName] += orderItem.fat;
-				totMap["totFatTot"] += orderItem.fat;
-				totMap["totSng"+procProduct.brandName] += orderItem.snf;
-				totMap["totSngTot"] += orderItem.snf;
+				if(orderItem.fat){
+					totMap["totFat"+procProduct.brandName] += orderItem.fat;
+					totMap["totFatTot"] += orderItem.fat;
+				}
+				if(orderItem.snf){
+					totMap["totSng"+procProduct.brandName] += orderItem.snf;
+					totMap["totSngTot"] += orderItem.snf;
+				}
+				
+			
 				if(UtilValidate.isNotEmpty(orderItem.sQuantityLtrs)){
 					totMap["totSqtyLts"+procProduct.brandName] += orderItem.sQuantityLtrs;
 					totMap["totSqtyLtsTot"] += orderItem.sQuantityLtrs;

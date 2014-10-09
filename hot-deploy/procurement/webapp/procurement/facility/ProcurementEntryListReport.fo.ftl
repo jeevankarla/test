@@ -22,40 +22,45 @@ under the License.
     <fo:root xmlns:fo="http://www.w3.org/1999/XSL/Format">
         <fo:layout-master-set>
             <fo:simple-page-master master-name="main" page-height="12in" page-width="10in"  margin-top=".3in"  margin-left=".3in" margin-right=".3in">
-                <fo:region-body margin-top="1.2in"/>
+                <fo:region-body margin-top="1.3in"/>
                 <fo:region-before extent="1in"/>
                 <fo:region-after extent="1in"/>
             </fo:simple-page-master>
         </fo:layout-master-set>
+        <#assign pageStart= parameters.pageStart>
+        <#assign pageEnd= parameters.pageEnd>
         ${setRequestAttribute("OUTPUT_FILENAME", "ProcCheckList.txt")}
+        ${setRequestAttribute("VST_PAGE_START", "${pageStart}")}
+        ${setRequestAttribute("VST_PAGE_END", "${pageEnd}")}
       <#if dayWiseEntryMap?has_content>  
         <#assign dayWiseEntry = dayWiseEntryMap.entrySet()>        	            	              
         <#list dayWiseEntry as checkListReportValues>      
         <fo:page-sequence master-reference="main">
         	<fo:static-content flow-name="xsl-region-before" font-family="Courier,monospace" font-size="10pt">
-        		<fo:block text-align="left" white-space-collapse="false" font-weight="bold" keep-together="always">CHECK LIST FOR MILK PROCUREMENT PARTICULARS DATED: ${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(checkListReportValues.getKey(), "dd-MM-yyyy")}   <#if parameters.purchaseTime == "AM">MORNING</#if><#if parameters.purchaseTime == "PM">Evening</#if>   UserLogin : ${userLoginId?if_exists} Page: <fo:page-number/></fo:block>
-        		<fo:block text-align="left" keep-together="always" white-space-collapse="false">---------------------------------------------------------------------------------------------------</fo:block>	 	 	  
+        		<fo:block text-align="left" white-space-collapse="false" font-weight="bold" keep-together="always">CHECK LIST FOR MILK PROCUREMENT PARTICULARS DATED: ${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(checkListReportValues.getKey(), "dd-MM-yyyy")}  <#if parameters.purchaseTime == "AM">MORNING</#if><#if parameters.purchaseTime == "PM">Evening</#if>  UserLogin : ${userLoginId?if_exists} Page: <fo:page-number/></fo:block>
+        		<fo:block text-align="left" keep-together="always" white-space-collapse="false">-----------------------------------------------------------------------------------------------</fo:block>	 	 	  
         		<#assign unitDetails = delegator.findOne("Facility", {"facilityId" : parameters.unitId}, true)>
         		<fo:block text-align="left" white-space-collapse="false" font-weight="bold" keep-together="always">UNIT : ${unitDetails.facilityCode?if_exists}       NAME :<#assign UNIT = delegator.findOne("Facility", {"facilityId" : parameters.unitId}, true)> ${UNIT.get("facilityName")?if_exists}</fo:block>
-        		<fo:block text-align="left" white-space-collapse="false" keep-together="always" font-size="10pt">&#160;                                            GOOD MILK              SOUR MILK     CURD   PTC RECVRY</fo:block>
-        		<fo:block text-align="left" white-space-collapse="false" keep-together="always" font-size="10pt">&#160;                                       ----------------------    --------------  ------ -----------</fo:block>
-        		<fo:block text-align="left" white-space-collapse="false" keep-together="always" font-size="10pt">SNO MCC/CODE   CENTER NAME       TYP MLK   QTY-KGS  FAT%   SNF%   QTY-LTS   FAT%  QTY-LTS  QTY-KGS</fo:block>
-        		<fo:block text-align="left" keep-together="always" white-space-collapse="false">---------------------------------------------------------------------------------------------------</fo:block>
+        		<fo:block text-align="left" white-space-collapse="false" keep-together="always" font-size="10pt">&#160;                                          GOOD MILK          SOUR MILK     CURD   PTC RECVRY</fo:block>
+        		<fo:block text-align="left" white-space-collapse="false" keep-together="always" font-size="10pt">&#160;                                     --------------------   -----------  --------- -----------</fo:block>
+        		<fo:block text-align="left" white-space-collapse="false" keep-together="always" font-size="10pt">SNO MCC/CODE  CENTER NAME       TYP     QTY    FAT    SNF     QTY    FAT     QTY     QTY</fo:block>
+        		<fo:block text-align="left" white-space-collapse="false" keep-together="always" font-size="10pt">&#160;                               MLK     KGS    (%)    (%)     LTS    (%)     LTS     KGS</fo:block>
+        		<fo:block text-align="left" keep-together="always" white-space-collapse="false">-----------------------------------------------------------------------------------------------</fo:block>
         	</fo:static-content>        	  
         	<fo:flow flow-name="xsl-region-body" font-family="Courier,monospace"> 
         		<#assign checkListReportEntryList = checkListReportValues.getValue()>
 		    		<fo:block>
-	                 	<fo:table border-width="1pt" border-style="dotted">
-	                    <fo:table-column column-width="40pt"/>
-	                    <fo:table-column column-width="50pt"/>  
+	                 	<fo:table>
+	                    <fo:table-column column-width="20pt"/>
+	                    <fo:table-column column-width="40pt"/>  
 	               	    <fo:table-column column-width="95pt"/>
-	                    <fo:table-column column-width="80pt"/>  
-	                    <fo:table-column column-width="37pt"/>
+	                    <fo:table-column column-width="95pt"/>  
+	                    <fo:table-column column-width="20pt"/>
 	                    <fo:table-column column-width="40pt"/>
 	                    <fo:table-column column-width="45pt"/>  
 	                    <fo:table-column column-width="47pt"/>
 	                    <fo:table-column column-width="45pt"/>
-	                    <fo:table-column column-width="45pt"/>  
+	                    <fo:table-column column-width="40pt"/>  
 	                    <fo:table-column column-width="45pt"/>
 	                    <fo:table-column column-width="60pt"/>   
 	                    <fo:table-body>
@@ -68,10 +73,10 @@ under the License.
 	                            	<fo:block text-align="left">${temp}.</fo:block>	                               
 	                            </fo:table-cell>	                           
 	                        	<fo:table-cell>
-	                            	<fo:block text-align="left">${checkListReport.facilityCode?if_exists}</fo:block>	                               
+	                            	<fo:block text-align="right">${checkListReport.facilityCode?if_exists}</fo:block>	                               
 	                            </fo:table-cell>	
 	                            <fo:table-cell >	
-	                        		<fo:block text-align="left" keep-together="always">${Static["org.ofbiz.order.order.OrderServices"].nameTrim((StringUtil.wrapString(facility.get("facilityName").toUpperCase())),15)}</fo:block>
+	                        		<fo:block text-align="left" keep-together="always" text-indent="15pt">${Static["org.ofbiz.order.order.OrderServices"].nameTrim((StringUtil.wrapString(facility.get("facilityName").toUpperCase())),15)}</fo:block>
 	                        	</fo:table-cell>	                        	
 	                        	<fo:table-cell >	
 	                        	<#list procurementProductList as procProducts>
@@ -107,8 +112,27 @@ under the License.
 			             		<fo:table-cell><fo:block linefeed-treatment="preserve">&#xA;</fo:block></fo:table-cell>
 			             	</fo:table-row>			           	            
 				        </#list>
-				        	 <fo:table-row>
-			             		<fo:table-cell><fo:block linefeed-treatment="preserve">---------------------------------------------------------------------------------------------</fo:block></fo:table-cell>
+				        	
+			        <fo:table-row>   
+			        <fo:table-cell>	  	
+			          <fo:block>
+	                 	<fo:table>
+	                    <fo:table-column column-width="40pt"/>
+	                    <fo:table-column column-width="50pt"/>  
+	               	    <fo:table-column column-width="95pt"/>
+	                    <fo:table-column column-width="95pt"/>  
+	                    <fo:table-column column-width="35pt"/>
+	                    <fo:table-column column-width="60pt"/>
+	                    <fo:table-column column-width="50pt"/>  
+	                    <fo:table-column column-width="53pt"/>
+	                    <fo:table-column column-width="50pt"/>
+	                    <fo:table-column column-width="50pt"/>  
+	                    <fo:table-column column-width="55pt"/>
+	                    <fo:table-column column-width="60pt"/>   
+	                    <fo:table-body>	
+			             	<#assign checkListDate=checkListReportValues.getKey()>
+			             		 <fo:table-row>
+			             		<fo:table-cell><fo:block>---------------------------------------------------------------------------------------------</fo:block></fo:table-cell>
 			             	</fo:table-row>
 				        	<fo:table-row>
 			             		<fo:table-cell/>
@@ -118,77 +142,110 @@ under the License.
 			             			<fo:block font-weight="bold"></fo:block>
 			             		</fo:table-cell>
 			             	</fo:table-row>
-			             	<#assign checkListDate=checkListReportValues.getKey()>
 			             	 <#list procurementProductList as procProducts>				             	 	 
 		                   	     <fo:table-row>
 		                   	     	<fo:table-cell/>
 		                   	     	<fo:table-cell/>
-		                   	     	<fo:table-cell/>
-		                   	     	<fo:table-cell/>
+		                   	     	<fo:table-cell/>		                   	     	
 		                   	     	<fo:table-cell>
-		                            	<fo:block text-align="left">${procProducts.brandName}</fo:block>	                               
+		                            	<fo:block text-align="left" text-indent="47pt">${procProducts.brandName}</fo:block>	                               
 		                            </fo:table-cell>
 		                        	<fo:table-cell>
-		                            	<fo:block text-align="left" text-indent="7pt">${dayTotalsMap.get(checkListDate).get("QtyKgs"+procProducts.brandName)?if_exists?string("##0.0")}</fo:block>	                               
+		                            	<fo:block text-align="right">${dayTotalsMap.get(checkListDate).get("QtyKgs"+procProducts.brandName)?if_exists?string("##0.0")}</fo:block>	                               
 		                            </fo:table-cell>
 		                            <fo:table-cell>
-		                            	<fo:block text-align="left" text-indent="25pt">${dayTotalsMap.get(checkListDate).get("kgFat"+procProducts.brandName)?if_exists?string("##0.00")}</fo:block>	                               
+		                            	<fo:block text-align="right">${dayTotalsMap.get(checkListDate).get("kgFat"+procProducts.brandName)?if_exists?string("##0.00")}</fo:block>	                               
 		                            </fo:table-cell>
 		                            <fo:table-cell>
-		                            	<fo:block text-align="left" text-indent="45pt">${dayTotalsMap.get(checkListDate).get("kgSnf"+procProducts.brandName)?if_exists?string("##0.00")}</fo:block>	                               
+		                            	<fo:block text-align="right">${dayTotalsMap.get(checkListDate).get("kgSnf"+procProducts.brandName)?if_exists?string("##0.00")}</fo:block>	                               
 		                            </fo:table-cell>
 		                            <fo:table-cell>
-		                            	<fo:block text-align="left" text-indent="60pt">${dayTotalsMap.get(checkListDate).get("SqtyLts"+procProducts.brandName)?if_exists?string("##0.0")}</fo:block>	                               
+		                            	<fo:block text-align="right">${dayTotalsMap.get(checkListDate).get("SqtyLts"+procProducts.brandName)?if_exists?string("##0.0")}</fo:block>	                               
 		                            </fo:table-cell>
 		                            <fo:table-cell>
-		                            	<fo:block text-align="left" text-indent="70pt">${dayTotalsMap.get(checkListDate).get("SFat"+procProducts.brandName)?if_exists?string("##0.0")}</fo:block>	                               
+		                            	<fo:block text-align="right">${dayTotalsMap.get(checkListDate).get("SFat"+procProducts.brandName)?if_exists?string("##0.0")}</fo:block>	                               
 		                            </fo:table-cell>
 		                            <fo:table-cell>
-		                            	<fo:block text-align="left" text-indent="70pt">${dayTotalsMap.get(checkListDate).get("CqtyLts"+procProducts.brandName)?if_exists?string("##0.0")}</fo:block>	                               
+		                            	<fo:block text-align="right">${dayTotalsMap.get(checkListDate).get("CqtyLts"+procProducts.brandName)?if_exists?string("##0.0")}</fo:block>	                               
 		                            </fo:table-cell>
 		                            <fo:table-cell>
-		                            	<fo:block text-align="left" text-indent="70pt">${dayTotalsMap.get(checkListDate).get("PtcRcyKgs"+procProducts.brandName)?if_exists?string("##0.0")}</fo:block>	                               
+		                            	<fo:block text-align="right">${dayTotalsMap.get(checkListDate).get("PtcRcyKgs"+procProducts.brandName)?if_exists?string("##0.0")}</fo:block>	                               
 		                            </fo:table-cell>
 						         </fo:table-row>						         
 						     </#list>	
-						
-					 	<fo:table-row>
-		             		<fo:table-cell><fo:block linefeed-treatment="preserve">---------------------------------------------------------------------------------------------</fo:block></fo:table-cell>
+						     <fo:table-row>
+		             		<fo:table-cell><fo:block >---------------------------------------------------------------------------------------------</fo:block></fo:table-cell>
 		             	</fo:table-row>
-						
-						 <fo:table-row>
+		             	<fo:table-row>
                    	     	<fo:table-cell/>
                    	     	<fo:table-cell/>                   	     	
-                   	     	<fo:table-cell/>
                    	     	<fo:table-cell/>
                    	     	<fo:table-cell>
                             	<fo:block text-align="left">TOTAL</fo:block>	                               
                             </fo:table-cell>                                     	     	
                         	<fo:table-cell>
-                            	<fo:block text-align="left" text-indent="7pt">${dayTotalsMap.get(checkListDate).get("QtyKgs")?if_exists?string("##0.0")}</fo:block>	                               
+                            	<fo:block text-align="right">${dayTotalsMap.get(checkListDate).get("QtyKgs")?if_exists?string("##0.0")}</fo:block>	                               
                             </fo:table-cell>
                             <fo:table-cell>
-                            	<fo:block text-align="left" text-indent="25pt">${dayTotalsMap.get(checkListDate).get("kgFat")?if_exists?string("##0.00")}</fo:block>	                               
+                            	<fo:block text-align="right">${dayTotalsMap.get(checkListDate).get("kgFat")?if_exists?string("##0.00")}</fo:block>	                               
                             </fo:table-cell>
                             <fo:table-cell>
-                            	<fo:block text-align="left" text-indent="45pt">${dayTotalsMap.get(checkListDate).get("kgSnf")?if_exists?string("##0.00")}</fo:block>	                               
+                            	<fo:block text-align="right">${dayTotalsMap.get(checkListDate).get("kgSnf")?if_exists?string("##0.00")}</fo:block>	                               
                             </fo:table-cell>
                             <fo:table-cell>
-                            	<fo:block text-align="left" text-indent="60pt">${dayTotalsMap.get(checkListDate).get("SqtyLts")?if_exists?string("##0.0")}</fo:block>	                               
+                            	<fo:block text-align="right">${dayTotalsMap.get(checkListDate).get("SqtyLts")?if_exists?string("##0.0")}</fo:block>	                               
                             </fo:table-cell>
                             <fo:table-cell>
-                            	<fo:block text-align="left" text-indent="70pt">${dayTotalsMap.get(checkListDate).get("SFat")?if_exists?string("##0.0")}</fo:block>	                               
+                            	<fo:block text-align="right">${dayTotalsMap.get(checkListDate).get("SFat")?if_exists?string("##0.0")}</fo:block>	                               
                             </fo:table-cell>
                             <fo:table-cell>
-                            	<fo:block text-align="left" text-indent="70pt">${dayTotalsMap.get(checkListDate).get("CqtyLts")?if_exists?string("##0.0")}</fo:block>	                               
+                            	<fo:block text-align="right">${dayTotalsMap.get(checkListDate).get("CqtyLts")?if_exists?string("##0.0")}</fo:block>	                               
                             </fo:table-cell>
                             <fo:table-cell>
-                            	<fo:block text-align="left" text-indent="70pt">${dayTotalsMap.get(checkListDate).get("PtcRcyKgs")?if_exists?string("##0.0")}</fo:block>	                               
+                            	<fo:block text-align="right">${dayTotalsMap.get(checkListDate).get("PtcRcyKgs")?if_exists?string("##0.0")}</fo:block>	                               
                             </fo:table-cell>
 				         </fo:table-row>
 				         <fo:table-row>
-			             	<fo:table-cell><fo:block linefeed-treatment="preserve">---------------------------------------------------------------------------------------------</fo:block></fo:table-cell>
-			             </fo:table-row>			             			            	                   		              	 	
+			             	<fo:table-cell><fo:block>---------------------------------------------------------------------------------------------</fo:block></fo:table-cell>
+			             </fo:table-row>
+			             <fo:table-row>
+			             	<fo:table-cell><fo:block linefeed-treatment="preserve">&#xA;</fo:block></fo:table-cell>
+			             </fo:table-row>
+			             <fo:table-row>
+			             <fo:table-cell/>
+                   	     	<fo:table-cell/>                   	     	
+                   	     	<fo:table-cell/>
+                   	     	<fo:table-cell>
+                            	<fo:block text-align="left"></fo:block>	                               
+                            </fo:table-cell>                                     	     	
+                        	<fo:table-cell>
+                            	<fo:block text-align="right"></fo:block>	                               
+                            </fo:table-cell>
+                            <fo:table-cell>
+                            	<fo:block text-align="right"></fo:block>	                               
+                            </fo:table-cell>
+                            <fo:table-cell>
+                            	<fo:block text-align="right"></fo:block>	                               
+                            </fo:table-cell>
+                            <fo:table-cell>
+                            	<fo:block text-align="right"></fo:block>	                               
+                            </fo:table-cell>
+                            <fo:table-cell>
+                            	<fo:block white-space-collapse="false" white-space-treatment="preserve" keep-together="always">Verified By</fo:block>                               
+                            </fo:table-cell>
+                            <fo:table-cell>
+                            	<fo:block text-align="right"></fo:block>	                               
+                            </fo:table-cell>
+                            <fo:table-cell>
+                            	<fo:block text-align="right"></fo:block>	                               
+                            </fo:table-cell>
+				         </fo:table-row>
+						 </fo:table-body>
+						</fo:table>
+					</fo:block>	 
+					</fo:table-cell>
+					</fo:table-row>					
+						 			             			            	                   		              	 	
 	                    </fo:table-body>
 	                </fo:table>
                </fo:block>	

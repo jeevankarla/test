@@ -28,6 +28,16 @@ import in.vasista.vbiz.procurement.ProcurementNetworkServices;
 import in.vasista.vbiz.procurement.ProcurementServices;
 import in.vasista.vbiz.procurement.PriceServices;
 
+if(UtilValidate.isEmpty(parameters.customTimePeriodId)){
+	Debug.logError("customTimePeriod Cannot Be Empty","");
+	context.errorMessage = "No Shed Has Been Selected.......!";
+	return;
+}
+if(UtilValidate.isEmpty(parameters.unitId)){
+	Debug.logError("unitId Cannot Be Empty","");
+	context.errorMessage = "No Unit Has Been Selected.......!";
+	return;
+}
 rounding = UtilNumber.getBigDecimalRoundingMode("order.rounding");
 context.rounding = rounding;
 customTimePeriod=delegator.findOne("CustomTimePeriod",[customTimePeriodId : parameters.customTimePeriodId], false);
@@ -134,15 +144,17 @@ for(route in unitRoutesList){
 			billingValues = ProcurementReports.getProcurementBillingValues(dctx , [userLogin: userLogin ,customTimePeriodId: parameters.customTimePeriodId, facilityId: agents.facilityId]);
 			billingVal = billingValues.get("FacilityBillingMap");
 			billingCartage =0;
+			cartageMap = [:];
 			if (UtilValidate.isNotEmpty(billingVal)) {
 				billingFac = billingVal.get(agents.facilityId);
 				procurementProductList.each{ procProducts ->
 					billingTot = billingFac.get(procProducts.productId);
-					if((procProducts.productName)==(parameters.productName)){
+					
 						billingCartage = billingTot.get("cartage");					
-					}				
+						cartageMap[procProducts.productId]=billingCartage;
 				}		
-			} 
+			}			
+			adjustmentsMap["cartageMap"]=cartageMap;
 			adjustmentsMap["cartage"] = billingCartage;
 			adjustments[agents.facilityId]=(adjustmentsMap); 	
 			// for displying default rates for products
@@ -184,6 +196,7 @@ for(route in unitRoutesList){
 			   inMap.put("fatPercent", BigDecimal.ZERO);
 			   inMap.put("snfPercent", BigDecimal.ZERO);
 			   inMap.put("productId",procProducts.productId);
+			   inMap.put("priceDate", dayBegin);
 			   Map priceChart = PriceServices.getProcurementProductPrice(dctx,inMap);
 			   useTotalSolids = priceChart.get("useTotalSolids");	
 			   useTotSolidsMap[procProducts.productName]=useTotalSolids;		   

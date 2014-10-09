@@ -10,7 +10,18 @@ def populateChildren(facility, treeNode, enableEdit) {
 	JSONArray childNodesList= new JSONArray();
 	
 	childFacilities = delegator.findByAnd("Facility", [parentFacilityId : facility.facilityId],["facilityCode","facilityName"]);
-	childFacilities.each { childFacility ->
+	
+	facilitiesList = [];
+	childFacilities.each { rootFacility ->
+		facilityMap = [:];
+		facilityMap.putAll(rootFacility);
+		facilityMap.putAt("intFacCode",Integer.parseInt((String)rootFacility.get("facilityCode")));
+		facilitiesList.add(facilityMap);
+	}
+	
+	facilitiesList = UtilMisc.sortMaps(facilitiesList, UtilMisc.toList("intFacCode"));
+	
+	facilitiesList.each { childFacility ->
 		JSONObject groupNode = new JSONObject();
 		JSONObject attrNode= new JSONObject();
 		JSONObject dataNode= new JSONObject();		
@@ -43,7 +54,7 @@ def populateChildren(facility, treeNode, enableEdit) {
 		if (enableEdit)  {
 			JSONObject href = new JSONObject();
 			href.put("href", "#");
-			href.put("onClick","callDocument('EditFacility?facilityId=" + childFacility.facilityId + "')");
+			href.put("onClick","callDocument('EditProcFacility?facilityId=" + childFacility.facilityId + "')");
 			dataNode.put("attr", href);
 		}
 		groupNode.put("data", dataNode);
@@ -75,7 +86,7 @@ def populateRootNodes(rootFacility, treeNodesList, enableEdit) {
 	if (enableEdit) {		
 		JSONObject href = new JSONObject();
 		href.put("href", "#");
-		href.put("onClick","callDocument('EditFacility?facilityId=" + rootFacility.facilityId + "')");
+		href.put("onClick","callDocument('EditProcFacility?facilityId=" + rootFacility.facilityId + "')");
 		dataNode.put("attr", href);	
 	}	
 	rootNode.put("attr", attrNode);
@@ -90,22 +101,25 @@ String facilityId = request.getParameter("facilityId");
 
 boolean zoneOwner = false;
 userLogin = session.getAttribute("userLogin");
+roleTypeAndParty = null;
 if (userLogin.partyId) {
-	roleTypeAndParty = delegator.findByAnd("RoleTypeAndParty", ['partyId': userLogin.partyId, 'roleTypeId': 'ZONE_OWNER']);
+	roleTypeAndParty = delegator.findByAnd("FacilityParty", ['partyId': userLogin.partyId, 'roleTypeId': 'PROCUREMENT_ROLE']);
+	roleTypeAndParty = EntityUtil.filterByDate(roleTypeAndParty);
 	if (roleTypeAndParty) {
-		enableEdit = false;
+		enableEdit = true;
 		zoneOwner = true;
+		roleTypeAndParty = EntityUtil.getFirst(roleTypeAndParty)
 	}
 }
 
 if (facilityId == null && zoneOwner) {
 	// for now we assume a user can own only a single zone. 
 	// Should not be a big deal to handle the other scenario..
-	owningFacility = delegator.findByAnd("Facility", [ownerPartyId : userLogin.partyId]);
+	owningFacility = delegator.findOne("Facility", [facilityId : roleTypeAndParty.facilityId] , false);
 	if (owningFacility)  {
-		facilityId = owningFacility.get(0).facilityId;
+		facilityId = owningFacility.facilityId;
 		context.facilityId = facilityId;
-		context.facility = owningFacility.get(0);
+		context.facility = owningFacility;
 		//Debug.logInfo("context="+context,"");
 	}	
 }

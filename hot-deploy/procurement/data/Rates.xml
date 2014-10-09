@@ -5,6 +5,10 @@
 	
 	<FacilityRate facilityId ="MBNR" productId="101" supplyTypeEnumId="_NA_" rateTypeId="PROC_TIP_AMOUNT" rateAmount="4.00" rateCurrencyUomId="INR" fromDate="2012-01-01 0:00:00.000" thruDate=""/>
 	<FacilityRate facilityId ="MBNR" productId="102" supplyTypeEnumId="_NA_" rateTypeId="PROC_TIP_AMOUNT" rateAmount="2.00" rateCurrencyUomId="INR" fromDate="2012-01-01 0:00:00.000" thruDate=""/>
+	<FacilityRate facilityId ="CHTR" productId="101" supplyTypeEnumId="_NA_" rateTypeId="PROC_TIP_AMOUNT" rateAmount="4.00" rateCurrencyUomId="INR" fromDate="2012-01-01 0:00:00.000" thruDate=""/>
+	<FacilityRate facilityId ="CHTR" productId="102" supplyTypeEnumId="_NA_" rateTypeId="PROC_TIP_AMOUNT" rateAmount="2.00" rateCurrencyUomId="INR" fromDate="2012-01-01 0:00:00.000" thruDate=""/>
+	<FacilityRate facilityId ="ANTP" productId="101" supplyTypeEnumId="_NA_" rateTypeId="PROC_TIP_AMOUNT" rateAmount="4.00" rateCurrencyUomId="INR" fromDate="2012-01-01 0:00:00.000" thruDate=""/>
+	<FacilityRate facilityId ="ANTP" productId="102" supplyTypeEnumId="_NA_" rateTypeId="PROC_TIP_AMOUNT" rateAmount="2.00" rateCurrencyUomId="INR" fromDate="2012-01-01 0:00:00.000" thruDate=""/>
 	
 	
 	<!-- <FacilityRate facilityId ="8_1" productId="_NA_" supplyTypeEnumId="_NA_" rateTypeId="PROC_AGENT_MRGN" rateAmount="2.00" rateCurrencyUomId="INR" fromDate="2012-01-01 0:00:00.000" thruDate=""/>

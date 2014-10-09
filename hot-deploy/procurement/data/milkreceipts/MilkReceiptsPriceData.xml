@@ -1,0 +1,731 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<entity-engine-xml>
+<!-- Please Note that Populate UomId at Sslab1 -->
+
+<!-- KMF Price Chart -->
+	<ProcurementPriceChart procPriceChartId="MR10" regionId="KRNT" fromDate="2014-04-01 00:00:00" createdDate="2014-04-01 00:00:00" billQuantity="DISP_QTY" lastModifiedDate="2012-07-01 00:00:00" useBaseSnf="Y" useBaseFat="Y"  customPriceCalcService="calculateMilkReceiptProductPrice"/> 
+
+
+	<ProcurementPrice procPriceChartId="MR10" productId="111" price="0.00" fatPercent="5.0" snfPercent="9.0" procurementPriceTypeId="PROC_PRICE_SLAB1" currencyUomId="INR" />
+ 	<ProcurementPrice procPriceChartId="MR10" productId="111" price="0.00" fatPercent="5.0" snfPercent="7.5" procurementPriceTypeId="PROC_PRICE_SLAB2" currencyUomId="INR" />
+ 	<ProcurementPrice procPriceChartId="MR10" productId="111" fatPercent="0.0" snfPercent="0.0" price="0.0" procurementPriceTypeId="PROC_PRICE_SOUR" currencyUomId="INR" />
+ 	
+ 	<!-- MINIMAM AND MAXIMAM QUALITY -->
+ 	<ProcurementPrice procPriceChartId="MR10" productId="111" fatPercent="4.49" snfPercent="7.49" price="0.00" procurementPriceTypeId="PROC_PRICE_MIN_QLTY" currencyUomId="INR" />
+ 	<ProcurementPrice procPriceChartId="MR10" productId="111" fatPercent="10" snfPercent="10.0" price="0.00" procurementPriceTypeId="PROC_PRICE_MAX_QLTY" currencyUomId="INR" />
+ 	
+	
+	<ProcurementPrice procPriceChartId="MR10" productId="111" fatPercent="0.0" snfPercent="9.0" price="0.0" procurementPriceTypeId="PROC_PRICE_SNF_DED" currencyUomId="INR" />
+	<ProcurementPrice procPriceChartId="MR10" productId="111" fatPercent="5.0" snfPercent="0.0" price="0.0" procurementPriceTypeId="PROC_PRICE_FAT_DED" currencyUomId="INR" />
+	
+ 	<ProcurementPrice procPriceChartId="MR10" productId="111" fatPercent="0.0" snfPercent=".1" price="0.00" procurementPriceTypeId="PROC_PRICE_SNF_DED" currencyUomId="INR" />
+ 	<ProcurementPrice procPriceChartId="MR10" productId="111" fatPercent="0.1" snfPercent="0.0" price="0.0" procurementPriceTypeId="PROC_PRICE_FAT_DED" currencyUomId="INR" />
+ 	
+ 	
+	<ProcurementPrice procPriceChartId="MR10" productId="111" fatPercent="0.0" snfPercent=".1" price="0.00" procurementPriceTypeId="PROC_PRICE_SNF_PRM" currencyUomId="INR" />
+	<ProcurementPrice procPriceChartId="MR10" productId="111" fatPercent="0.1" snfPercent="0" price="0.0" procurementPriceTypeId="PROC_PRICE_FAT_PRM" currencyUomId="INR"/>	
+
+
+	<ProcurementPrice procPriceChartId="MR10" productId="211" price="28" fatPercent="3.5" snfPercent="8.5" useTotalSolids="N" procurementPriceTypeId="PROC_PRICE_SLAB1" currencyUomId="INR" uomId="VLIQ_KG"/>
+ 	<ProcurementPrice procPriceChartId="MR10" productId="211" price="28" fatPercent="2.5" snfPercent="7.5" useTotalSolids="N" procurementPriceTypeId="PROC_PRICE_SLAB2" currencyUomId="INR" uomId="VLIQ_KG"/>
+ 	<!-- <ProcurementPrice procPriceChartId="10" productId="221" price="105.95" fatPercent="2.5" snfPercent="7.5" useTotalSolids="Y" procurementPriceTypeId="PROC_PRICE_SLAB3" currencyUomId="INR" /> -->
+ 	<ProcurementPrice procPriceChartId="MR10" productId="211" fatPercent="0.0" snfPercent="0.0" price="0" procurementPriceTypeId="PROC_PRICE_SOUR" currencyUomId="INR" />
+ 	<ProcurementPrice procPriceChartId="MR10" productId="211" fatPercent="2.49" snfPercent="7.49" price="0.00" procurementPriceTypeId="PROC_PRICE_MIN_QLTY" currencyUomId="INR" />
+ 	<ProcurementPrice procPriceChartId="MR10" productId="211" fatPercent="4.9" snfPercent="10.0" price="0.00" procurementPriceTypeId="PROC_PRICE_MAX_QLTY" currencyUomId="INR" />
+
+	<ProcurementPrice procPriceChartId="MR10" productId="211" fatPercent="0.0" snfPercent="8.5" price="0.0" procurementPriceTypeId="PROC_PRICE_SNF_DED" currencyUomId="INR" />
+	<ProcurementPrice procPriceChartId="MR10" productId="211" fatPercent="3.5" snfPercent="0.0" price="0.0" procurementPriceTypeId="PROC_PRICE_FAT_DED" currencyUomId="INR" />
+	
+ 	<ProcurementPrice procPriceChartId="MR10" productId="211" fatPercent="0.0" snfPercent=".1" price="0.23" procurementPriceTypeId="PROC_PRICE_SNF_DED" currencyUomId="INR" />
+ 	<ProcurementPrice procPriceChartId="MR10" productId="211" fatPercent="0.1" snfPercent="0.0" price="0.25" procurementPriceTypeId="PROC_PRICE_FAT_DED" currencyUomId="INR" />
+ 	
+ 	
+	<ProcurementPrice procPriceChartId="MR10" productId="211" fatPercent="0.0" snfPercent=".1" price="0.23" procurementPriceTypeId="PROC_PRICE_SNF_PRM" currencyUomId="INR" />
+	<ProcurementPrice procPriceChartId="MR10" productId="211" fatPercent="0.1" snfPercent="0" price="0.25" procurementPriceTypeId="PROC_PRICE_FAT_PRM" currencyUomId="INR" />	
+	
+	
+<!-- KKDMPCU Price Chart -->	
+	
+	<ProcurementPriceChart procPriceChartId="MR11" regionId="MR5003" fromDate="2014-04-01 00:00:00" createdDate="2014-04-01 00:00:00" lastModifiedDate="2012-07-01 00:00:00" useBaseSnf="Y" useBaseFat="Y" uomId="" customPriceCalcService="calculateMilkReceiptProductPrice"/> 
+	
+	<!-- Buffalo Milk Pricing-->
+ 	<ProcurementPrice procPriceChartId="MR11" productId="111" price="470.00" fatPercent="5.0" snfPercent="9.0" procurementPriceTypeId="PROC_PRICE_SLAB1" currencyUomId="INR" />
+ 	<ProcurementPrice procPriceChartId="MR11" productId="111" price="470.00" fatPercent="5.0" snfPercent="8.0" procurementPriceTypeId="PROC_PRICE_SLAB2" currencyUomId="INR" />
+ 	<ProcurementPrice procPriceChartId="MR11" productId="111" price="352.50" fatPercent="4.5" snfPercent="7.5" procurementPriceTypeId="PROC_PRICE_SLAB3" currencyUomId="INR" />
+ 	<ProcurementPrice procPriceChartId="MR11" productId="111" fatPercent="0.0" snfPercent="0.0" price="156.66" procurementPriceTypeId="PROC_PRICE_SOUR" currencyUomId="INR" />
+ 	
+ 	<!-- MINIMAM AND MAXIMAM QUALITY -->
+ 	<ProcurementPrice procPriceChartId="MR11" productId="111" fatPercent="4.49" snfPercent="7.49" price="0.00" procurementPriceTypeId="PROC_PRICE_MIN_QLTY" currencyUomId="INR" />
+ 	<ProcurementPrice procPriceChartId="MR11" productId="111" fatPercent="10" snfPercent="10.0" price="0.00" procurementPriceTypeId="PROC_PRICE_MAX_QLTY" currencyUomId="INR" />
+ 	
+	
+
+
+
+	<ProcurementPrice procPriceChartId="MR11" productId="111" fatPercent="0.0" snfPercent="9.0" price="0.0" procurementPriceTypeId="PROC_PRICE_SNF_DED" currencyUomId="INR" />
+	<ProcurementPrice procPriceChartId="MR11" productId="111" fatPercent="5.0" snfPercent="0.0" price="0.0" procurementPriceTypeId="PROC_PRICE_FAT_DED" currencyUomId="INR" />
+	
+ 	<ProcurementPrice procPriceChartId="MR11" productId="111" fatPercent="0.0" snfPercent=".1" price="0.10" procurementPriceTypeId="PROC_PRICE_SNF_DED" currencyUomId="INR" />
+ 	<ProcurementPrice procPriceChartId="MR11" productId="111" fatPercent="0.1" snfPercent="0.0" price="0.0" procurementPriceTypeId="PROC_PRICE_FAT_DED" currencyUomId="INR" />
+ 	
+ 	
+	<ProcurementPrice procPriceChartId="MR11" productId="111" fatPercent="0.0" snfPercent=".1" price="0.10" procurementPriceTypeId="PROC_PRICE_SNF_PRM" currencyUomId="INR" />
+	<ProcurementPrice procPriceChartId="MR11" productId="111" fatPercent="0.1" snfPercent="0" price="0.0" procurementPriceTypeId="PROC_PRICE_FAT_PRM" currencyUomId="INR" />	
+	
+
+
+
+
+	<!-- Cow Milk Pricing-->
+ 	<ProcurementPrice procPriceChartId="MR11" productId="211" price="170.00" fatPercent="3.0" snfPercent="8.0" useTotalSolids="Y" procurementPriceTypeId="PROC_PRICE_SLAB1" currencyUomId="INR" />
+ 	<ProcurementPrice procPriceChartId="MR11" productId="211" price="127.50" fatPercent="2.5" snfPercent="7.5" useTotalSolids="Y" procurementPriceTypeId="PROC_PRICE_SLAB2" currencyUomId="INR" />
+ 	<!-- <ProcurementPrice procPriceChartId="MR11" productId="221" price="105.95" fatPercent="2.5" snfPercent="7.5" useTotalSolids="Y" procurementPriceTypeId="PROC_PRICE_SLAB3" currencyUomId="INR" /> -->
+ 	<ProcurementPrice procPriceChartId="MR11" productId="211" fatPercent="0.0" snfPercent="0.0" price="56.66" procurementPriceTypeId="PROC_PRICE_SOUR" currencyUomId="INR" />
+ 	<ProcurementPrice procPriceChartId="MR11" productId="211" fatPercent="0.0" snfPercent="9.0" price="0.0" procurementPriceTypeId="PROC_PRICE_SNF_DED" currencyUomId="INR" />
+ 	<ProcurementPrice procPriceChartId="MR11" productId="211" fatPercent="2.49" snfPercent="7.49" price="0.00" procurementPriceTypeId="PROC_PRICE_MIN_QLTY" currencyUomId="INR" />
+ 	<ProcurementPrice procPriceChartId="MR11" productId="211" fatPercent="4.9" snfPercent="10" price="0.00" procurementPriceTypeId="PROC_PRICE_MAX_QLTY" currencyUomId="INR" />
+	
+	
+	<ProcurementPrice procPriceChartId="MR11" productId="211" fatPercent="0.0" snfPercent="8.0" price="0.0" procurementPriceTypeId="PROC_PRICE_SNF_DED" currencyUomId="INR" />
+	<ProcurementPrice procPriceChartId="MR11" productId="211" fatPercent="3.0" snfPercent="0.0" price="0.0" procurementPriceTypeId="PROC_PRICE_FAT_DED" currencyUomId="INR" />
+	
+ 	<ProcurementPrice procPriceChartId="MR11" productId="211" fatPercent="0.0" snfPercent=".1" price="0.10" procurementPriceTypeId="PROC_PRICE_SNF_DED" currencyUomId="INR" />
+ 	<ProcurementPrice procPriceChartId="MR11" productId="211" fatPercent="0.1" snfPercent="0.0" price="0.0" procurementPriceTypeId="PROC_PRICE_FAT_DED" currencyUomId="INR" />
+ 	
+ 	
+	<ProcurementPrice procPriceChartId="MR11" productId="211" fatPercent="0.0" snfPercent=".1" price="0.10" procurementPriceTypeId="PROC_PRICE_SNF_PRM" currencyUomId="INR" />
+	<ProcurementPrice procPriceChartId="MR11" productId="211" fatPercent="0.1" snfPercent="0" price="0.0" procurementPriceTypeId="PROC_PRICE_FAT_PRM" currencyUomId="INR" />	
+	
+	
+	
+	
+	<!--  Triveni Dairy pvtLtd -->
+	
+	<ProcurementPriceChart procPriceChartId="MR12" regionId="MR5096" fromDate="2014-02-26 00:00:00"  thruDate="2014-04-30 23:59:59" createdDate="2014-04-01 00:00:00" lastModifiedDate="2012-07-01 00:00:00" useBaseSnf="Y" useBaseFat="Y" uomId="" customPriceCalcService="calculateMilkReceiptProductPrice"/> 
+	
+	<!-- Buffalo Milk Pricing-->
+ 	<ProcurementPrice procPriceChartId="MR12" productId="111" price="675.00" fatPercent="5.0" snfPercent="9.0" procurementPriceTypeId="PROC_PRICE_SLAB1" currencyUomId="INR" />
+ 	<ProcurementPrice procPriceChartId="MR12" productId="111" price="675.00" fatPercent="5.0" snfPercent="7.5" procurementPriceTypeId="PROC_PRICE_SLAB2" currencyUomId="INR" />
+ 	<ProcurementPrice procPriceChartId="MR12" productId="111" fatPercent="0.0" snfPercent="0.0" price="0.0" procurementPriceTypeId="PROC_PRICE_SOUR" currencyUomId="INR" />
+ 	
+ 	<!-- MINIMAM AND MAXIMAM QUALITY -->
+ 	<ProcurementPrice procPriceChartId="MR12" productId="111" fatPercent="4.49" snfPercent="7.49" price="0.00" procurementPriceTypeId="PROC_PRICE_MIN_QLTY" currencyUomId="INR" />
+ 	<ProcurementPrice procPriceChartId="MR12" productId="111" fatPercent="10" snfPercent="10.0" price="0.00" procurementPriceTypeId="PROC_PRICE_MAX_QLTY" currencyUomId="INR" />
+ 	
+	
+	<ProcurementPrice procPriceChartId="MR12" productId="111" fatPercent="0.0" snfPercent="9.0" price="0.0" procurementPriceTypeId="PROC_PRICE_SNF_DED" currencyUomId="INR" />
+	<ProcurementPrice procPriceChartId="MR12" productId="111" fatPercent="5.0" snfPercent="0.0" price="0.0" procurementPriceTypeId="PROC_PRICE_FAT_DED" currencyUomId="INR" />
+	
+ 	<ProcurementPrice procPriceChartId="MR12" productId="111" fatPercent="0.0" snfPercent=".1" price="0.10" procurementPriceTypeId="PROC_PRICE_SNF_DED" currencyUomId="INR" />
+ 	<ProcurementPrice procPriceChartId="MR12" productId="111" fatPercent="0.1" snfPercent="0.0" price="0.0" procurementPriceTypeId="PROC_PRICE_FAT_DED" currencyUomId="INR" />
+ 	
+ 	
+	<ProcurementPrice procPriceChartId="MR12" productId="111" fatPercent="0.0" snfPercent=".1" price="0.10" procurementPriceTypeId="PROC_PRICE_SNF_PRM" currencyUomId="INR" />
+	<ProcurementPrice procPriceChartId="MR12" productId="111" fatPercent="0.1" snfPercent="0" price="0.0" procurementPriceTypeId="PROC_PRICE_FAT_PRM" currencyUomId="INR" />	
+	
+	
+	<ProcurementPriceChart procPriceChartId="MR13" regionId="MR5096" fromDate="2014-05-01 00:00:00"  thruDate="2014-09-30 23:59:59" createdDate="2014-05-01 00:00:00" lastModifiedDate="2012-07-01 00:00:00" useBaseSnf="Y" useBaseFat="Y" uomId="" customPriceCalcService="calculateMilkReceiptProductPrice"/> 
+	
+	<!-- Buffalo Milk Pricing-->
+ 	<ProcurementPrice procPriceChartId="MR13" productId="111" price="699.00" fatPercent="5.0" snfPercent="9.0" procurementPriceTypeId="PROC_PRICE_SLAB1" currencyUomId="INR" />
+ 	<ProcurementPrice procPriceChartId="MR13" productId="111" price="699.00" fatPercent="5.0" snfPercent="7.5" procurementPriceTypeId="PROC_PRICE_SLAB2" currencyUomId="INR" />
+ 	<ProcurementPrice procPriceChartId="MR13" productId="111" fatPercent="0.0" snfPercent="0.0" price="0.0" procurementPriceTypeId="PROC_PRICE_SOUR" currencyUomId="INR" />
+ 	
+ 	<!-- MINIMAM AND MAXIMAM QUALITY -->
+ 	<ProcurementPrice procPriceChartId="MR13" productId="111" fatPercent="4.49" snfPercent="7.49" price="0.00" procurementPriceTypeId="PROC_PRICE_MIN_QLTY" currencyUomId="INR" />
+ 	<ProcurementPrice procPriceChartId="MR13" productId="111" fatPercent="10" snfPercent="10.0" price="0.00" procurementPriceTypeId="PROC_PRICE_MAX_QLTY" currencyUomId="INR" />
+ 	
+	
+	
+	<ProcurementPrice procPriceChartId="MR13" productId="111" fatPercent="0.0" snfPercent="9.0" price="0.0" procurementPriceTypeId="PROC_PRICE_SNF_DED" currencyUomId="INR" />
+	<ProcurementPrice procPriceChartId="MR13" productId="111" fatPercent="5.0" snfPercent="0.0" price="0.0" procurementPriceTypeId="PROC_PRICE_FAT_DED" currencyUomId="INR" />
+	
+ 	<ProcurementPrice procPriceChartId="MR13" productId="111" fatPercent="0.0" snfPercent=".1" price="0.10" procurementPriceTypeId="PROC_PRICE_SNF_DED" currencyUomId="INR" />
+ 	<ProcurementPrice procPriceChartId="MR13" productId="111" fatPercent="0.1" snfPercent="0.0" price="0.0" procurementPriceTypeId="PROC_PRICE_FAT_DED" currencyUomId="INR" />
+ 	
+ 	
+	<ProcurementPrice procPriceChartId="MR13" productId="111" fatPercent="0.0" snfPercent=".1" price="0.10" procurementPriceTypeId="PROC_PRICE_SNF_PRM" currencyUomId="INR" />
+	<ProcurementPrice procPriceChartId="MR13" productId="111" fatPercent="0.1" snfPercent="0" price="0.0" procurementPriceTypeId="PROC_PRICE_FAT_PRM" currencyUomId="INR" />	
+	
+
+	<!--  Muralikrishna Dairy -->
+	
+	
+	<ProcurementPriceChart procPriceChartId="MR14" regionId="MR5097" fromDate="2014-02-26 00:00:00"  thruDate="2014-04-30 23:59:59" createdDate="2014-04-01 00:00:00" lastModifiedDate="2012-07-01 00:00:00" useBaseSnf="Y" useBaseFat="Y" uomId="" customPriceCalcService="calculateMilkReceiptProductPrice"/> 
+	
+	<!-- Buffalo Milk Pricing-->
+ 	<ProcurementPrice procPriceChartId="MR14" productId="111" price="675.00" fatPercent="5.0" snfPercent="9.0" procurementPriceTypeId="PROC_PRICE_SLAB1" currencyUomId="INR" />
+ 	<ProcurementPrice procPriceChartId="MR14" productId="111" price="675.00" fatPercent="5.0" snfPercent="7.5" procurementPriceTypeId="PROC_PRICE_SLAB2" currencyUomId="INR" />
+ 	<ProcurementPrice procPriceChartId="MR14" productId="111" fatPercent="0.0" snfPercent="0.0" price="0.0" procurementPriceTypeId="PROC_PRICE_SOUR" currencyUomId="INR" />
+ 	
+ 	<!-- MINIMAM AND MAXIMAM QUALITY -->
+ 	<ProcurementPrice procPriceChartId="MR14" productId="111" fatPercent="4.49" snfPercent="7.49" price="0.00" procurementPriceTypeId="PROC_PRICE_MIN_QLTY" currencyUomId="INR" />
+ 	<ProcurementPrice procPriceChartId="MR14" productId="111" fatPercent="10" snfPercent="10.0" price="0.00" procurementPriceTypeId="PROC_PRICE_MAX_QLTY" currencyUomId="INR" />
+	
+	
+	<ProcurementPrice procPriceChartId="MR14" productId="111" fatPercent="0.0" snfPercent="9.0" price="0.0" procurementPriceTypeId="PROC_PRICE_SNF_DED" currencyUomId="INR" />
+	<ProcurementPrice procPriceChartId="MR14" productId="111" fatPercent="5.0" snfPercent="0.0" price="0.0" procurementPriceTypeId="PROC_PRICE_FAT_DED" currencyUomId="INR" />
+	
+ 	<ProcurementPrice procPriceChartId="MR14" productId="111" fatPercent="0.0" snfPercent=".1" price="0.10" procurementPriceTypeId="PROC_PRICE_SNF_DED" currencyUomId="INR" />
+ 	<ProcurementPrice procPriceChartId="MR14" productId="111" fatPercent="0.1" snfPercent="0.0" price="0.0" procurementPriceTypeId="PROC_PRICE_FAT_DED" currencyUomId="INR" />
+ 	
+ 	
+	<ProcurementPrice procPriceChartId="MR14" productId="111" fatPercent="0.0" snfPercent=".1" price="0.10" procurementPriceTypeId="PROC_PRICE_SNF_PRM" currencyUomId="INR" />
+	<ProcurementPrice procPriceChartId="MR14" productId="111" fatPercent="0.1" snfPercent="0" price="0.0" procurementPriceTypeId="PROC_PRICE_FAT_PRM" currencyUomId="INR" />	
+	
+	
+	
+	
+	
+	<!-- Vaishno devi food Products -->
+	
+	<ProcurementPriceChart procPriceChartId="MR15" regionId="MR5058" fromDate="2014-04-01 00:00:00" createdDate="2014-04-01 00:00:00" lastModifiedDate="2012-07-01 00:00:00" useBaseSnf="Y" useBaseFat="Y"  customPriceCalcService="calculateMilkReceiptProductPrice"/> 
+
+	<!-- Cow Milk Pricing-->
+ 	<ProcurementPrice procPriceChartId="MR15" productId="211" price="31.5" fatPercent="3.5" snfPercent="8.5" useTotalSolids="Y" procurementPriceTypeId="PROC_PRICE_SLAB1" currencyUomId="INR" uomId="VLIQ_KG"/>
+ 	<ProcurementPrice procPriceChartId="MR15" productId="211" price="31.5" fatPercent="2.5" snfPercent="7.5" useTotalSolids="Y" procurementPriceTypeId="PROC_PRICE_SLAB2" currencyUomId="INR" uomId="VLIQ_KG"/>
+ 	<!-- <ProcurementPrice procPriceChartId="MR10" productId="221" price="105.95" fatPercent="2.5" snfPercent="7.5" useTotalSolids="Y" procurementPriceTypeId="PROC_PRICE_SLAB3" currencyUomId="INR" /> -->
+ 	<ProcurementPrice procPriceChartId="MR15" productId="211" fatPercent="0.0" snfPercent="0.0" price="0" procurementPriceTypeId="PROC_PRICE_SOUR" currencyUomId="INR" />
+ 	<ProcurementPrice procPriceChartId="MR15" productId="211" fatPercent="2.49" snfPercent="7.49" price="0.00" procurementPriceTypeId="PROC_PRICE_MIN_QLTY" currencyUomId="INR" />
+ 	<ProcurementPrice procPriceChartId="MR15" productId="211" fatPercent="4.9" snfPercent="10.0" price="0.00" procurementPriceTypeId="PROC_PRICE_MAX_QLTY" currencyUomId="INR" />
+
+	<ProcurementPrice procPriceChartId="MR15" productId="211" fatPercent="0.0" snfPercent="8.5" price="0.0" procurementPriceTypeId="PROC_PRICE_SNF_DED" currencyUomId="INR" />
+	<ProcurementPrice procPriceChartId="MR15" productId="211" fatPercent="3.5" snfPercent="0.0" price="0.0" procurementPriceTypeId="PROC_PRICE_FAT_DED" currencyUomId="INR" />
+	
+ 	<ProcurementPrice procPriceChartId="MR15" productId="211" fatPercent="0.0" snfPercent=".1" price="0.15" procurementPriceTypeId="PROC_PRICE_SNF_DED" currencyUomId="INR" />
+ 	<ProcurementPrice procPriceChartId="MR15" productId="211" fatPercent="0.1" snfPercent="0.0" price="0.10" procurementPriceTypeId="PROC_PRICE_FAT_DED" currencyUomId="INR" />
+ 	
+ 	
+	<ProcurementPrice procPriceChartId="MR15" productId="211" fatPercent="0.0" snfPercent=".1" price="0.15" procurementPriceTypeId="PROC_PRICE_SNF_PRM" currencyUomId="INR" />
+	<ProcurementPrice procPriceChartId="MR15" productId="211" fatPercent="0.1" snfPercent="0" price="0.10" procurementPriceTypeId="PROC_PRICE_FAT_PRM" currencyUomId="INR" />
+	
+	
+	
+	<ProcurementPrice procPriceChartId="MR15" productId="121" price="22.20" fatPercent="0.05" snfPercent="8.7" useTotalSolids="N" procurementPriceTypeId="PROC_PRICE_SLAB1" currencyUomId="INR" uomId="VLIQ_KG"/>
+ 	<ProcurementPrice procPriceChartId="MR15" productId="121" price="22.20" fatPercent="0.05" snfPercent="7.8" useTotalSolids="N" procurementPriceTypeId="PROC_PRICE_SLAB2" currencyUomId="INR" uomId="VLIQ_KG"/>
+ 	<ProcurementPrice procPriceChartId="MR15" productId="121" fatPercent="0.0" snfPercent="0.0" price="0" procurementPriceTypeId="PROC_PRICE_SOUR" currencyUomId="INR" />
+ 	<ProcurementPrice procPriceChartId="MR15" productId="121" fatPercent="0.04" snfPercent="7.79" price="0.00" procurementPriceTypeId="PROC_PRICE_MIN_QLTY" currencyUomId="INR" />
+ 	<ProcurementPrice procPriceChartId="MR15" productId="121" fatPercent="1.0" snfPercent="10.0" price="0.00" procurementPriceTypeId="PROC_PRICE_MAX_QLTY" currencyUomId="INR" />
+
+	<ProcurementPrice procPriceChartId="MR15" productId="121" fatPercent="0.0" snfPercent="8.7" price="0.0" procurementPriceTypeId="PROC_PRICE_SNF_DED" currencyUomId="INR" />
+	<ProcurementPrice procPriceChartId="MR15" productId="121" fatPercent="0.5" snfPercent="0.0" price="0.0" procurementPriceTypeId="PROC_PRICE_FAT_DED" currencyUomId="INR" />
+	
+ 	<ProcurementPrice procPriceChartId="MR15" productId="121" fatPercent="0.0" snfPercent=".1" price="0.15" procurementPriceTypeId="PROC_PRICE_SNF_DED" currencyUomId="INR" />
+ 	<ProcurementPrice procPriceChartId="MR15" productId="121" fatPercent="0.1" snfPercent="0.0" price="0.00" procurementPriceTypeId="PROC_PRICE_FAT_DED" currencyUomId="INR" />
+ 	
+ 	
+	<ProcurementPrice procPriceChartId="MR15" productId="121" fatPercent="0.0" snfPercent=".1" price="0.15" procurementPriceTypeId="PROC_PRICE_SNF_PRM" currencyUomId="INR" />
+	<ProcurementPrice procPriceChartId="MR15" productId="121" fatPercent="0.1" snfPercent="0" price="0.10" procurementPriceTypeId="PROC_PRICE_FAT_PRM" currencyUomId="INR" />	
+	
+	
+
+	<ProcurementPrice procPriceChartId="MR15" productId="221" price="22.20" fatPercent="0.05" snfPercent="8.7" useTotalSolids="N" procurementPriceTypeId="PROC_PRICE_SLAB1" currencyUomId="INR" uomId="VLIQ_KG"/>
+ 	<ProcurementPrice procPriceChartId="MR15" productId="221" price="22.20" fatPercent="0.05" snfPercent="7.8" useTotalSolids="N" procurementPriceTypeId="PROC_PRICE_SLAB2" currencyUomId="INR" uomId="VLIQ_KG"/>
+ 	<ProcurementPrice procPriceChartId="MR15" productId="221" fatPercent="0.0" snfPercent="0.0" price="0" procurementPriceTypeId="PROC_PRICE_SOUR" currencyUomId="INR" />
+ 	<ProcurementPrice procPriceChartId="MR15" productId="221" fatPercent="0.04" snfPercent="7.79" price="0.00" procurementPriceTypeId="PROC_PRICE_MIN_QLTY" currencyUomId="INR" />
+ 	<ProcurementPrice procPriceChartId="MR15" productId="221" fatPercent="1.0" snfPercent="10.0" price="0.00" procurementPriceTypeId="PROC_PRICE_MAX_QLTY" currencyUomId="INR" />
+
+	<ProcurementPrice procPriceChartId="MR15" productId="221" fatPercent="0.0" snfPercent="8.7" price="0.0" procurementPriceTypeId="PROC_PRICE_SNF_DED" currencyUomId="INR" />
+	<ProcurementPrice procPriceChartId="MR15" productId="221" fatPercent="0.05" snfPercent="0.0" price="0.0" procurementPriceTypeId="PROC_PRICE_FAT_DED" currencyUomId="INR" />
+	
+ 	<ProcurementPrice procPriceChartId="MR15" productId="221" fatPercent="0.0" snfPercent=".1" price="0.15" procurementPriceTypeId="PROC_PRICE_SNF_DED" currencyUomId="INR" />
+ 	<ProcurementPrice procPriceChartId="MR15" productId="221" fatPercent="0.1" snfPercent="0.0" price="0.00" procurementPriceTypeId="PROC_PRICE_FAT_DED" currencyUomId="INR" />
+ 	
+ 	
+	<ProcurementPrice procPriceChartId="MR15" productId="221" fatPercent="0.0" snfPercent=".1" price="0.15" procurementPriceTypeId="PROC_PRICE_SNF_PRM" currencyUomId="INR" />
+	<ProcurementPrice procPriceChartId="MR15" productId="221" fatPercent="0.1" snfPercent="0" price="0.10" procurementPriceTypeId="PROC_PRICE_FAT_PRM" currencyUomId="INR" />	
+	
+	
+	
+	
+	<!-- SambaSiva Dairy Prices -->
+	
+	<ProcurementPriceChart procPriceChartId="MR16" regionId="MR5092" fromDate="2014-02-26 00:00:00"  thruDate="2014-04-30 23:59:59" createdDate="2014-04-01 00:00:00" lastModifiedDate="2012-07-01 00:00:00" useBaseSnf="Y" useBaseFat="Y" uomId="" customPriceCalcService="calculateMilkReceiptProductPrice"/> 
+	
+	<!-- Buffalo Milk Pricing-->
+ 	<ProcurementPrice procPriceChartId="MR16" productId="111" price="675.00" fatPercent="5.0" snfPercent="9.0" procurementPriceTypeId="PROC_PRICE_SLAB1" currencyUomId="INR" />
+ 	<ProcurementPrice procPriceChartId="MR16" productId="111" price="675.00" fatPercent="5.0" snfPercent="7.5" procurementPriceTypeId="PROC_PRICE_SLAB2" currencyUomId="INR" />
+ 	<ProcurementPrice procPriceChartId="MR16" productId="111" fatPercent="0.0" snfPercent="0.0" price="0.0" procurementPriceTypeId="PROC_PRICE_SOUR" currencyUomId="INR" />
+ 	
+ 	<!-- MINIMAM AND MAXIMAM QUALITY -->
+ 	<ProcurementPrice procPriceChartId="MR16" productId="111" fatPercent="4.49" snfPercent="7.49" price="0.00" procurementPriceTypeId="PROC_PRICE_MIN_QLTY" currencyUomId="INR" />
+ 	<ProcurementPrice procPriceChartId="MR16" productId="111" fatPercent="10" snfPercent="10.0" price="0.00" procurementPriceTypeId="PROC_PRICE_MAX_QLTY" currencyUomId="INR" />
+	
+	
+	<ProcurementPrice procPriceChartId="MR16" productId="111" fatPercent="0.0" snfPercent="9.0" price="0.0" procurementPriceTypeId="PROC_PRICE_SNF_DED" currencyUomId="INR" />
+	<ProcurementPrice procPriceChartId="MR16" productId="111" fatPercent="5.0" snfPercent="0.0" price="0.0" procurementPriceTypeId="PROC_PRICE_FAT_DED" currencyUomId="INR" />
+	
+ 	<ProcurementPrice procPriceChartId="MR16" productId="111" fatPercent="0.0" snfPercent=".1" price="0.10" procurementPriceTypeId="PROC_PRICE_SNF_DED" currencyUomId="INR" />
+ 	<ProcurementPrice procPriceChartId="MR16" productId="111" fatPercent="0.1" snfPercent="0.0" price="0.0" procurementPriceTypeId="PROC_PRICE_FAT_DED" currencyUomId="INR" />
+ 	
+ 	
+	<ProcurementPrice procPriceChartId="MR16" productId="111" fatPercent="0.0" snfPercent=".1" price="0.10" procurementPriceTypeId="PROC_PRICE_SNF_PRM" currencyUomId="INR" />
+	<ProcurementPrice procPriceChartId="MR16" productId="111" fatPercent="0.1" snfPercent="0" price="0.0" procurementPriceTypeId="PROC_PRICE_FAT_PRM" currencyUomId="INR" />	
+	
+	
+	
+	
+	<ProcurementPriceChart procPriceChartId="MR17" regionId="MR5092" fromDate="2014-05-01 00:00:00"  thruDate="2014-09-30 23:59:59" createdDate="2014-04-01 00:00:00" lastModifiedDate="2012-07-01 00:00:00" useBaseSnf="Y" useBaseFat="Y" uomId="" customPriceCalcService="calculateMilkReceiptProductPrice"/> 
+	
+	<!-- Buffalo Milk Pricing-->
+ 	<ProcurementPrice procPriceChartId="MR17" productId="111" price="699.00" fatPercent="5.0" snfPercent="9.0" procurementPriceTypeId="PROC_PRICE_SLAB1" currencyUomId="INR" />
+ 	<ProcurementPrice procPriceChartId="MR17" productId="111" price="699.00" fatPercent="5.0" snfPercent="7.5" procurementPriceTypeId="PROC_PRICE_SLAB2" currencyUomId="INR" />
+ 	<ProcurementPrice procPriceChartId="MR17" productId="111" fatPercent="0.0" snfPercent="0.0" price="0.0" procurementPriceTypeId="PROC_PRICE_SOUR" currencyUomId="INR" />
+ 	
+ 	<!-- MINIMAM AND MAXIMAM QUALITY -->
+ 	<ProcurementPrice procPriceChartId="MR17" productId="111" fatPercent="4.49" snfPercent="7.49" price="0.00" procurementPriceTypeId="PROC_PRICE_MIN_QLTY" currencyUomId="INR" />
+ 	<ProcurementPrice procPriceChartId="MR17" productId="111" fatPercent="10" snfPercent="10.0" price="0.00" procurementPriceTypeId="PROC_PRICE_MAX_QLTY" currencyUomId="INR" />
+	
+	
+	<ProcurementPrice procPriceChartId="MR17" productId="111" fatPercent="0.0" snfPercent="9.0" price="0.0" procurementPriceTypeId="PROC_PRICE_SNF_DED" currencyUomId="INR" />
+	<ProcurementPrice procPriceChartId="MR17" productId="111" fatPercent="5.0" snfPercent="0.0" price="0.0" procurementPriceTypeId="PROC_PRICE_FAT_DED" currencyUomId="INR" />
+	
+ 	<ProcurementPrice procPriceChartId="MR17" productId="111" fatPercent="0.0" snfPercent=".1" price="0.10" procurementPriceTypeId="PROC_PRICE_SNF_DED" currencyUomId="INR" />
+ 	<ProcurementPrice procPriceChartId="MR17" productId="111" fatPercent="0.1" snfPercent="0.0" price="0.0" procurementPriceTypeId="PROC_PRICE_FAT_DED" currencyUomId="INR" />
+ 	
+ 	
+	<ProcurementPrice procPriceChartId="MR17" productId="111" fatPercent="0.0" snfPercent=".1" price="0.10" procurementPriceTypeId="PROC_PRICE_SNF_PRM" currencyUomId="INR" />
+	<ProcurementPrice procPriceChartId="MR17" productId="111" fatPercent="0.1" snfPercent="0" price="0.0" procurementPriceTypeId="PROC_PRICE_FAT_PRM" currencyUomId="INR" />	
+	
+	
+	
+	<!-- Cow Milk Pricing-->
+ 	<ProcurementPrice procPriceChartId="MR17" productId="211" price="31.5" fatPercent="3.5" snfPercent="8.5" useTotalSolids="N" procurementPriceTypeId="PROC_PRICE_SLAB1" currencyUomId="INR" uomId="VLIQ_KG"/>
+ 	<ProcurementPrice procPriceChartId="MR17" productId="211" price="31.5" fatPercent="2.5" snfPercent="7.5" useTotalSolids="N" procurementPriceTypeId="PROC_PRICE_SLAB2" currencyUomId="INR" uomId="VLIQ_KG"/>
+ 	
+ 	<ProcurementPrice procPriceChartId="MR17" productId="211" fatPercent="0.0" snfPercent="0.0" price="0" procurementPriceTypeId="PROC_PRICE_SOUR" currencyUomId="INR" />
+ 	<ProcurementPrice procPriceChartId="MR17" productId="211" fatPercent="2.49" snfPercent="7.49" price="0.00" procurementPriceTypeId="PROC_PRICE_MIN_QLTY" currencyUomId="INR" />
+ 	<ProcurementPrice procPriceChartId="MR17" productId="211" fatPercent="4.9" snfPercent="10.0" price="0.00" procurementPriceTypeId="PROC_PRICE_MAX_QLTY" currencyUomId="INR" />
+
+	<ProcurementPrice procPriceChartId="MR17" productId="211" fatPercent="0.0" snfPercent="8.5" price="0.0" procurementPriceTypeId="PROC_PRICE_SNF_DED" currencyUomId="INR" />
+	<ProcurementPrice procPriceChartId="MR17" productId="211" fatPercent="3.5" snfPercent="0.0" price="0.0" procurementPriceTypeId="PROC_PRICE_FAT_DED" currencyUomId="INR" />
+	
+ 	<ProcurementPrice procPriceChartId="MR17" productId="211" fatPercent="0.0" snfPercent=".1" price="0.15" procurementPriceTypeId="PROC_PRICE_SNF_DED" currencyUomId="INR" />
+ 	<ProcurementPrice procPriceChartId="MR17" productId="211" fatPercent="0.1" snfPercent="0.0" price="0.10" procurementPriceTypeId="PROC_PRICE_FAT_DED" currencyUomId="INR" />
+ 	
+ 	
+	<ProcurementPrice procPriceChartId="MR17" productId="211" fatPercent="0.0" snfPercent=".1" price="0.15" procurementPriceTypeId="PROC_PRICE_SNF_PRM" currencyUomId="INR" />
+	<ProcurementPrice procPriceChartId="MR17" productId="211" fatPercent="0.1" snfPercent="0" price="0.10" procurementPriceTypeId="PROC_PRICE_FAT_PRM" currencyUomId="INR" />
+	
+	
+	
+	<!-- Buffalo SKIM Milk Pricing-->
+ 	<ProcurementPrice procPriceChartId="MR17" productId="121" price="22.20" fatPercent="0.5" snfPercent="8.7" useTotalSolids="N" procurementPriceTypeId="PROC_PRICE_SLAB1" currencyUomId="INR" uomId="VLIQ_KG"/>
+ 	<ProcurementPrice procPriceChartId="MR17" productId="121" price="22.20" fatPercent="0.01" snfPercent="7.5" useTotalSolids="N" procurementPriceTypeId="PROC_PRICE_SLAB2" currencyUomId="INR" uomId="VLIQ_KG"/>
+ 	
+ 	<ProcurementPrice procPriceChartId="MR17" productId="121" fatPercent="0.0" snfPercent="0.0" price="0" procurementPriceTypeId="PROC_PRICE_SOUR" currencyUomId="INR" />
+ 	<ProcurementPrice procPriceChartId="MR17" productId="121" fatPercent="0.0" snfPercent="7.49" price="0.00" procurementPriceTypeId="PROC_PRICE_MIN_QLTY" currencyUomId="INR" />
+ 	<ProcurementPrice procPriceChartId="MR17" productId="121" fatPercent="1.0" snfPercent="10.0" price="0.00" procurementPriceTypeId="PROC_PRICE_MAX_QLTY" currencyUomId="INR" />
+
+	<ProcurementPrice procPriceChartId="MR17" productId="121" fatPercent="0.0" snfPercent="8.7" price="0.0" procurementPriceTypeId="PROC_PRICE_SNF_DED" currencyUomId="INR" />
+	<ProcurementPrice procPriceChartId="MR17" productId="121" fatPercent="0.05" snfPercent="0.0" price="0.0" procurementPriceTypeId="PROC_PRICE_FAT_DED" currencyUomId="INR" />
+	
+ 	<ProcurementPrice procPriceChartId="MR17" productId="121" fatPercent="0.0" snfPercent=".1" price="0.15" procurementPriceTypeId="PROC_PRICE_SNF_DED" currencyUomId="INR" />
+ 	<ProcurementPrice procPriceChartId="MR17" productId="121" fatPercent="0.1" snfPercent="0.0" price="0.00" procurementPriceTypeId="PROC_PRICE_FAT_DED" currencyUomId="INR" />
+ 	
+ 	
+	<ProcurementPrice procPriceChartId="MR17" productId="121" fatPercent="0.0" snfPercent=".1" price="0.15" procurementPriceTypeId="PROC_PRICE_SNF_PRM" currencyUomId="INR" />
+	<ProcurementPrice procPriceChartId="MR17" productId="121" fatPercent="0.1" snfPercent="0" price="0.00" procurementPriceTypeId="PROC_PRICE_FAT_PRM" currencyUomId="INR" />
+	
+	
+	<!-- Cow SKIM Milk Pricing-->
+
+	<ProcurementPrice procPriceChartId="MR17" productId="221" price="22.20" fatPercent="0.05" snfPercent="8.7" useTotalSolids="N" procurementPriceTypeId="PROC_PRICE_SLAB1" currencyUomId="INR" uomId="VLIQ_KG"/>
+ 	<ProcurementPrice procPriceChartId="MR17" productId="221" price="22.20" fatPercent="0.05" snfPercent="7.8" useTotalSolids="N" procurementPriceTypeId="PROC_PRICE_SLAB2" currencyUomId="INR" uomId="VLIQ_KG"/>
+ 	<ProcurementPrice procPriceChartId="MR17" productId="221" fatPercent="0.0" snfPercent="0.0" price="0" procurementPriceTypeId="PROC_PRICE_SOUR" currencyUomId="INR" />
+ 	<ProcurementPrice procPriceChartId="MR17" productId="221" fatPercent="0.04" snfPercent="7.79" price="0.00" procurementPriceTypeId="PROC_PRICE_MIN_QLTY" currencyUomId="INR" />
+ 	<ProcurementPrice procPriceChartId="MR17" productId="221" fatPercent="1.0" snfPercent="10.0" price="0.00" procurementPriceTypeId="PROC_PRICE_MAX_QLTY" currencyUomId="INR" />
+
+	<ProcurementPrice procPriceChartId="MR17" productId="221" fatPercent="0.0" snfPercent="8.7" price="0.0" procurementPriceTypeId="PROC_PRICE_SNF_DED" currencyUomId="INR" />
+	<ProcurementPrice procPriceChartId="MR17" productId="221" fatPercent="0.05" snfPercent="0.0" price="0.0" procurementPriceTypeId="PROC_PRICE_FAT_DED" currencyUomId="INR" />
+	
+ 	<ProcurementPrice procPriceChartId="MR17" productId="221" fatPercent="0.0" snfPercent=".1" price="0.15" procurementPriceTypeId="PROC_PRICE_SNF_DED" currencyUomId="INR" />
+ 	<ProcurementPrice procPriceChartId="MR17" productId="221" fatPercent="0.1" snfPercent="0.0" price="0.00" procurementPriceTypeId="PROC_PRICE_FAT_DED" currencyUomId="INR" />
+ 	
+ 	
+	<ProcurementPrice procPriceChartId="MR17" productId="221" fatPercent="0.0" snfPercent=".1" price="0.15" procurementPriceTypeId="PROC_PRICE_SNF_PRM" currencyUomId="INR" />
+	<ProcurementPrice procPriceChartId="MR17" productId="221" fatPercent="0.1" snfPercent="0" price="0.00" procurementPriceTypeId="PROC_PRICE_FAT_PRM" currencyUomId="INR" />	
+	
+
+
+
+	<!-- MURALIKRISHNA DAIRY -->
+	<ProcurementPriceChart procPriceChartId="MR18" regionId="MR5097" fromDate="2014-05-01 00:00:00"  thruDate="2014-09-30 23:59:59" createdDate="2014-04-01 00:00:00" lastModifiedDate="2014-07-09 00:00:00" useBaseSnf="Y" useBaseFat="Y" uomId="" customPriceCalcService="calculateMilkReceiptProductPrice"/> 
+	
+	<!-- Buffalo Milk Pricing-->
+ 	<ProcurementPrice procPriceChartId="MR18" productId="111" price="699.00" fatPercent="5.0" snfPercent="9.0" procurementPriceTypeId="PROC_PRICE_SLAB1" currencyUomId="INR" />
+ 	<ProcurementPrice procPriceChartId="MR18" productId="111" price="699.00" fatPercent="5.0" snfPercent="7.5" procurementPriceTypeId="PROC_PRICE_SLAB2" currencyUomId="INR" />
+ 	<ProcurementPrice procPriceChartId="MR18" productId="111" fatPercent="0.0" snfPercent="0.0" price="0.0" procurementPriceTypeId="PROC_PRICE_SOUR" currencyUomId="INR" />
+ 	
+ 	<!-- MINIMAM AND MAXIMAM QUALITY -->
+ 	<ProcurementPrice procPriceChartId="MR18" productId="111" fatPercent="4.49" snfPercent="7.49" price="0.00" procurementPriceTypeId="PROC_PRICE_MIN_QLTY" currencyUomId="INR" />
+ 	<ProcurementPrice procPriceChartId="MR18" productId="111" fatPercent="10" snfPercent="10.0" price="0.00" procurementPriceTypeId="PROC_PRICE_MAX_QLTY" currencyUomId="INR" />
+	
+	
+	<ProcurementPrice procPriceChartId="MR18" productId="111" fatPercent="0.0" snfPercent="9.0" price="0.0" procurementPriceTypeId="PROC_PRICE_SNF_DED" currencyUomId="INR" />
+	<ProcurementPrice procPriceChartId="MR18" productId="111" fatPercent="5.0" snfPercent="0.0" price="0.0" procurementPriceTypeId="PROC_PRICE_FAT_DED" currencyUomId="INR" />
+	
+ 	<ProcurementPrice procPriceChartId="MR18" productId="111" fatPercent="0.0" snfPercent=".1" price="0.10" procurementPriceTypeId="PROC_PRICE_SNF_DED" currencyUomId="INR" />
+ 	<ProcurementPrice procPriceChartId="MR18" productId="111" fatPercent="0.1" snfPercent="0.0" price="0.0" procurementPriceTypeId="PROC_PRICE_FAT_DED" currencyUomId="INR" />
+ 	
+ 	
+	<ProcurementPrice procPriceChartId="MR18" productId="111" fatPercent="0.0" snfPercent=".1" price="0.10" procurementPriceTypeId="PROC_PRICE_SNF_PRM" currencyUomId="INR" />
+	<ProcurementPrice procPriceChartId="MR18" productId="111" fatPercent="0.1" snfPercent="0" price="0.0" procurementPriceTypeId="PROC_PRICE_FAT_PRM" currencyUomId="INR" />	
+	
+
+
+
+
+
+
+<ProcurementPriceChart procPriceChartId="MR10" regionId="KRNT" fromDate="2014-04-01 00:00:00" thruDate="2014-07-27 23:59:59" createdDate="2014-04-01 00:00:00" billQuantity="DISP_QTY" lastModifiedDate="2012-07-01 00:00:00" useBaseSnf="Y" useBaseFat="Y"  customPriceCalcService="calculateMilkReceiptProductPrice"/>
+<ProcurementPriceChart procPriceChartId="MR19" regionId="KRNT" fromDate="2014-07-28 00:00:00" thruDate="2014-07-29 23:59:59" createdDate="2014-04-01 00:00:00" billQuantity="DISP_QTY" lastModifiedDate="2012-07-01 00:00:00" useBaseSnf="Y" useBaseFat="Y"  customPriceCalcService="calculateMilkReceiptProductPrice"/> 
+
+	<ProcurementPrice procPriceChartId="MR19" productId="211" price="28" fatPercent="3.5" snfPercent="8.5" useTotalSolids="N" procurementPriceTypeId="PROC_PRICE_SLAB1" currencyUomId="INR" uomId="VLIQ_KG"/>
+ 	<ProcurementPrice procPriceChartId="MR19" productId="211" price="28" fatPercent="2.5" snfPercent="7.5" useTotalSolids="N" procurementPriceTypeId="PROC_PRICE_SLAB2" currencyUomId="INR" uomId="VLIQ_KG"/>
+ 	<!-- <ProcurementPrice procPriceChartId="10" productId="221" price="105.95" fatPercent="2.5" snfPercent="7.5" useTotalSolids="Y" procurementPriceTypeId="PROC_PRICE_SLAB3" currencyUomId="INR" /> -->
+ 	<ProcurementPrice procPriceChartId="MR19" productId="211" fatPercent="0.0" snfPercent="0.0" price="0" procurementPriceTypeId="PROC_PRICE_SOUR" currencyUomId="INR" />
+ 	<ProcurementPrice procPriceChartId="MR19" productId="211" fatPercent="2.49" snfPercent="7.49" price="0.00" procurementPriceTypeId="PROC_PRICE_MIN_QLTY" currencyUomId="INR" />
+ 	<ProcurementPrice procPriceChartId="MR19" productId="211" fatPercent="4.9" snfPercent="10.0" price="0.00" procurementPriceTypeId="PROC_PRICE_MAX_QLTY" currencyUomId="INR" />
+
+	<ProcurementPrice procPriceChartId="MR19" productId="211" fatPercent="0.0" snfPercent="8.5" price="0.0" procurementPriceTypeId="PROC_PRICE_SNF_DED" currencyUomId="INR" />
+	<ProcurementPrice procPriceChartId="MR19" productId="211" fatPercent="3.5" snfPercent="0.0" price="0.0" procurementPriceTypeId="PROC_PRICE_FAT_DED" currencyUomId="INR" />
+	
+ 	<ProcurementPrice procPriceChartId="MR19" productId="211" fatPercent="0.0" snfPercent=".1" price="0.23" procurementPriceTypeId="PROC_PRICE_SNF_DED" currencyUomId="INR" />
+ 	<ProcurementPrice procPriceChartId="MR19" productId="211" fatPercent="0.1" snfPercent="0.0" price="0.25" procurementPriceTypeId="PROC_PRICE_FAT_DED" currencyUomId="INR" />
+ 	
+ 	
+	<ProcurementPrice procPriceChartId="MR19" productId="211" fatPercent="0.0" snfPercent=".1" price="0.23" procurementPriceTypeId="PROC_PRICE_SNF_PRM" currencyUomId="INR" />
+	<ProcurementPrice procPriceChartId="MR19" productId="211" fatPercent="0.1" snfPercent="0" price="0.25" procurementPriceTypeId="PROC_PRICE_FAT_PRM" currencyUomId="INR" />
+	
+	
+	<ProcurementPrice procPriceChartId="MR19" productId="444" price="29" fatPercent="3.0" snfPercent="8.5" useTotalSolids="N" procurementPriceTypeId="PROC_PRICE_SLAB1" currencyUomId="INR" uomId="VLIQ_KG"/>
+ 	<ProcurementPrice procPriceChartId="MR19" productId="444" price="29" fatPercent="2.5" snfPercent="7.5" useTotalSolids="N" procurementPriceTypeId="PROC_PRICE_SLAB2" currencyUomId="INR" uomId="VLIQ_KG"/>
+ 	<!-- <ProcurementPrice procPriceChartId="10" productId="221" price="105.95" fatPercent="2.5" snfPercent="7.5" useTotalSolids="Y" procurementPriceTypeId="PROC_PRICE_SLAB3" currencyUomId="INR" /> -->
+ 	<ProcurementPrice procPriceChartId="MR19" productId="444" fatPercent="0.0" snfPercent="0.0" price="0" procurementPriceTypeId="PROC_PRICE_SOUR" currencyUomId="INR" />
+ 	<ProcurementPrice procPriceChartId="MR19" productId="444" fatPercent="2.49" snfPercent="7.49" price="0.00" procurementPriceTypeId="PROC_PRICE_MIN_QLTY" currencyUomId="INR" />
+ 	<ProcurementPrice procPriceChartId="MR19" productId="444" fatPercent="4.9" snfPercent="10.0" price="0.00" procurementPriceTypeId="PROC_PRICE_MAX_QLTY" currencyUomId="INR" />
+
+	<ProcurementPrice procPriceChartId="MR19" productId="444" fatPercent="0.0" snfPercent="8.5" price="0.0" procurementPriceTypeId="PROC_PRICE_SNF_DED" currencyUomId="INR" />
+	<ProcurementPrice procPriceChartId="MR19" productId="444" fatPercent="3.0" snfPercent="0.0" price="0.0" procurementPriceTypeId="PROC_PRICE_FAT_DED" currencyUomId="INR" />
+	
+ 	<ProcurementPrice procPriceChartId="MR19" productId="444" fatPercent="0.0" snfPercent=".1" price="0.0" procurementPriceTypeId="PROC_PRICE_SNF_DED" currencyUomId="INR" />
+ 	<ProcurementPrice procPriceChartId="MR19" productId="444" fatPercent="0.1" snfPercent="0.0" price="0.0" procurementPriceTypeId="PROC_PRICE_FAT_DED" currencyUomId="INR" />
+ 	
+ 	
+	<ProcurementPrice procPriceChartId="MR19" productId="444" fatPercent="0.0" snfPercent=".1" price="0.0" procurementPriceTypeId="PROC_PRICE_SNF_PRM" currencyUomId="INR" />
+	<ProcurementPrice procPriceChartId="MR19" productId="444" fatPercent="0.1" snfPercent="0" price="0.0" procurementPriceTypeId="PROC_PRICE_FAT_PRM" currencyUomId="INR" />	
+
+
+
+<ProcurementPriceChart procPriceChartId="MR20" regionId="KRNT" fromDate="2014-07-30 00:00:00"  createdDate="2014-04-01 00:00:00" billQuantity="DISP_QTY" lastModifiedDate="2012-07-01 00:00:00" useBaseSnf="Y" useBaseFat="Y"  customPriceCalcService="calculateMilkReceiptProductPrice"/> 
+
+	<ProcurementPrice procPriceChartId="MR20" productId="211" price="28" fatPercent="3.5" snfPercent="8.5" useTotalSolids="N" procurementPriceTypeId="PROC_PRICE_SLAB1" currencyUomId="INR" uomId="VLIQ_KG"/>
+ 	<ProcurementPrice procPriceChartId="MR20" productId="211" price="28" fatPercent="2.5" snfPercent="7.5" useTotalSolids="N" procurementPriceTypeId="PROC_PRICE_SLAB2" currencyUomId="INR" uomId="VLIQ_KG"/>
+ 	<!-- <ProcurementPrice procPriceChartId="10" productId="221" price="105.95" fatPercent="2.5" snfPercent="7.5" useTotalSolids="Y" procurementPriceTypeId="PROC_PRICE_SLAB3" currencyUomId="INR" /> -->
+ 	<ProcurementPrice procPriceChartId="MR20" productId="211" fatPercent="0.0" snfPercent="0.0" price="0" procurementPriceTypeId="PROC_PRICE_SOUR" currencyUomId="INR" />
+ 	<ProcurementPrice procPriceChartId="MR20" productId="211" fatPercent="2.49" snfPercent="7.49" price="0.00" procurementPriceTypeId="PROC_PRICE_MIN_QLTY" currencyUomId="INR" />
+ 	<ProcurementPrice procPriceChartId="MR20" productId="211" fatPercent="4.9" snfPercent="10.0" price="0.00" procurementPriceTypeId="PROC_PRICE_MAX_QLTY" currencyUomId="INR" />
+
+	<ProcurementPrice procPriceChartId="MR20" productId="211" fatPercent="0.0" snfPercent="8.5" price="0.0" procurementPriceTypeId="PROC_PRICE_SNF_DED" currencyUomId="INR" />
+	<ProcurementPrice procPriceChartId="MR20" productId="211" fatPercent="3.5" snfPercent="0.0" price="0.0" procurementPriceTypeId="PROC_PRICE_FAT_DED" currencyUomId="INR" />
+	
+ 	<ProcurementPrice procPriceChartId="MR20" productId="211" fatPercent="0.0" snfPercent=".1" price="0.23" procurementPriceTypeId="PROC_PRICE_SNF_DED" currencyUomId="INR" />
+ 	<ProcurementPrice procPriceChartId="MR20" productId="211" fatPercent="0.1" snfPercent="0.0" price="0.25" procurementPriceTypeId="PROC_PRICE_FAT_DED" currencyUomId="INR" />
+ 	
+ 	
+	<ProcurementPrice procPriceChartId="MR20" productId="211" fatPercent="0.0" snfPercent=".1" price="0.23" procurementPriceTypeId="PROC_PRICE_SNF_PRM" currencyUomId="INR" />
+	<ProcurementPrice procPriceChartId="MR20" productId="211" fatPercent="0.1" snfPercent="0" price="0.25" procurementPriceTypeId="PROC_PRICE_FAT_PRM" currencyUomId="INR" />
+	
+
+
+
+<ProcurementPriceChart procPriceChartId="MR17" regionId="MR5092" fromDate="2014-05-01 00:00:00"  thruDate="2014-07-27 23:59:59" createdDate="2014-04-01 00:00:00" lastModifiedDate="2012-07-01 00:00:00" useBaseSnf="Y" useBaseFat="Y" uomId="" customPriceCalcService="calculateMilkReceiptProductPrice"/> 
+<ProcurementPriceChart procPriceChartId="MR21" regionId="MR5092" fromDate="2014-07-29 00:00:00"  thruDate="2014-07-29 23:59:59" createdDate="2014-04-01 00:00:00" lastModifiedDate="2012-07-01 00:00:00" useBaseSnf="Y" useBaseFat="Y" uomId="" customPriceCalcService="calculateMilkReceiptProductPrice"/>	
+	<!-- Buffalo Milk Pricing-->
+ 	<ProcurementPrice procPriceChartId="MR21" productId="111" price="699.00" fatPercent="5.0" snfPercent="9.0" procurementPriceTypeId="PROC_PRICE_SLAB1" currencyUomId="INR" />
+ 	<ProcurementPrice procPriceChartId="MR21" productId="111" price="699.00" fatPercent="5.0" snfPercent="7.5" procurementPriceTypeId="PROC_PRICE_SLAB2" currencyUomId="INR" />
+ 	<ProcurementPrice procPriceChartId="MR21" productId="111" fatPercent="0.0" snfPercent="0.0" price="0.0" procurementPriceTypeId="PROC_PRICE_SOUR" currencyUomId="INR" />
+ 	
+ 	<!-- MINIMAM AND MAXIMAM QUALITY -->
+ 	<ProcurementPrice procPriceChartId="MR21" productId="111" fatPercent="4.49" snfPercent="7.49" price="0.00" procurementPriceTypeId="PROC_PRICE_MIN_QLTY" currencyUomId="INR" />
+ 	<ProcurementPrice procPriceChartId="MR21" productId="111" fatPercent="10" snfPercent="10.0" price="0.00" procurementPriceTypeId="PROC_PRICE_MAX_QLTY" currencyUomId="INR" />
+	
+	
+	<ProcurementPrice procPriceChartId="MR21" productId="111" fatPercent="0.0" snfPercent="9.0" price="0.0" procurementPriceTypeId="PROC_PRICE_SNF_DED" currencyUomId="INR" />
+	<ProcurementPrice procPriceChartId="MR21" productId="111" fatPercent="5.0" snfPercent="0.0" price="0.0" procurementPriceTypeId="PROC_PRICE_FAT_DED" currencyUomId="INR" />
+	
+ 	<ProcurementPrice procPriceChartId="MR21" productId="111" fatPercent="0.0" snfPercent=".1" price="0.10" procurementPriceTypeId="PROC_PRICE_SNF_DED" currencyUomId="INR" />
+ 	<ProcurementPrice procPriceChartId="MR21" productId="111" fatPercent="0.1" snfPercent="0.0" price="0.0" procurementPriceTypeId="PROC_PRICE_FAT_DED" currencyUomId="INR" />
+ 	
+ 	
+	<ProcurementPrice procPriceChartId="MR21" productId="111" fatPercent="0.0" snfPercent=".1" price="0.10" procurementPriceTypeId="PROC_PRICE_SNF_PRM" currencyUomId="INR" />
+	<ProcurementPrice procPriceChartId="MR21" productId="111" fatPercent="0.1" snfPercent="0" price="0.0" procurementPriceTypeId="PROC_PRICE_FAT_PRM" currencyUomId="INR" />	
+	
+	
+	
+	<!-- Cow Milk Pricing-->
+ 	<ProcurementPrice procPriceChartId="MR21" productId="211" price="31.5" fatPercent="3.5" snfPercent="8.5" useTotalSolids="N" procurementPriceTypeId="PROC_PRICE_SLAB1" currencyUomId="INR" uomId="VLIQ_KG"/>
+ 	<ProcurementPrice procPriceChartId="MR21" productId="211" price="31.5" fatPercent="2.5" snfPercent="7.5" useTotalSolids="N" procurementPriceTypeId="PROC_PRICE_SLAB2" currencyUomId="INR" uomId="VLIQ_KG"/>
+ 	
+ 	<ProcurementPrice procPriceChartId="MR21" productId="211" fatPercent="0.0" snfPercent="0.0" price="0" procurementPriceTypeId="PROC_PRICE_SOUR" currencyUomId="INR" />
+ 	<ProcurementPrice procPriceChartId="MR21" productId="211" fatPercent="2.49" snfPercent="7.49" price="0.00" procurementPriceTypeId="PROC_PRICE_MIN_QLTY" currencyUomId="INR" />
+ 	<ProcurementPrice procPriceChartId="MR21" productId="211" fatPercent="4.9" snfPercent="10.0" price="0.00" procurementPriceTypeId="PROC_PRICE_MAX_QLTY" currencyUomId="INR" />
+
+	<ProcurementPrice procPriceChartId="MR21" productId="211" fatPercent="0.0" snfPercent="8.5" price="0.0" procurementPriceTypeId="PROC_PRICE_SNF_DED" currencyUomId="INR" />
+	<ProcurementPrice procPriceChartId="MR21" productId="211" fatPercent="3.5" snfPercent="0.0" price="0.0" procurementPriceTypeId="PROC_PRICE_FAT_DED" currencyUomId="INR" />
+	
+ 	<ProcurementPrice procPriceChartId="MR21" productId="211" fatPercent="0.0" snfPercent=".1" price="0.15" procurementPriceTypeId="PROC_PRICE_SNF_DED" currencyUomId="INR" />
+ 	<ProcurementPrice procPriceChartId="MR21" productId="211" fatPercent="0.1" snfPercent="0.0" price="0.10" procurementPriceTypeId="PROC_PRICE_FAT_DED" currencyUomId="INR" />
+ 	
+ 	
+	<ProcurementPrice procPriceChartId="MR21" productId="211" fatPercent="0.0" snfPercent=".1" price="0.15" procurementPriceTypeId="PROC_PRICE_SNF_PRM" currencyUomId="INR" />
+	<ProcurementPrice procPriceChartId="MR21" productId="211" fatPercent="0.1" snfPercent="0" price="0.10" procurementPriceTypeId="PROC_PRICE_FAT_PRM" currencyUomId="INR" />
+	
+	
+	
+	<!-- Buffalo SKIM Milk Pricing-->
+ 	<ProcurementPrice procPriceChartId="MR21" productId="121" price="22.20" fatPercent="0.5" snfPercent="8.7" useTotalSolids="N" procurementPriceTypeId="PROC_PRICE_SLAB1" currencyUomId="INR" uomId="VLIQ_KG"/>
+ 	<ProcurementPrice procPriceChartId="MR21" productId="121" price="22.20" fatPercent="0.01" snfPercent="7.5" useTotalSolids="N" procurementPriceTypeId="PROC_PRICE_SLAB2" currencyUomId="INR" uomId="VLIQ_KG"/>
+ 	
+ 	<ProcurementPrice procPriceChartId="MR21" productId="121" fatPercent="0.0" snfPercent="0.0" price="0" procurementPriceTypeId="PROC_PRICE_SOUR" currencyUomId="INR" />
+ 	<ProcurementPrice procPriceChartId="MR21" productId="121" fatPercent="0.0" snfPercent="7.49" price="0.00" procurementPriceTypeId="PROC_PRICE_MIN_QLTY" currencyUomId="INR" />
+ 	<ProcurementPrice procPriceChartId="MR21" productId="121" fatPercent="1.0" snfPercent="10.0" price="0.00" procurementPriceTypeId="PROC_PRICE_MAX_QLTY" currencyUomId="INR" />
+
+	<ProcurementPrice procPriceChartId="MR21" productId="121" fatPercent="0.0" snfPercent="8.7" price="0.0" procurementPriceTypeId="PROC_PRICE_SNF_DED" currencyUomId="INR" />
+	<ProcurementPrice procPriceChartId="MR21" productId="121" fatPercent="0.05" snfPercent="0.0" price="0.0" procurementPriceTypeId="PROC_PRICE_FAT_DED" currencyUomId="INR" />
+	
+ 	<ProcurementPrice procPriceChartId="MR21" productId="121" fatPercent="0.0" snfPercent=".1" price="0.15" procurementPriceTypeId="PROC_PRICE_SNF_DED" currencyUomId="INR" />
+ 	<ProcurementPrice procPriceChartId="MR21" productId="121" fatPercent="0.1" snfPercent="0.0" price="0.00" procurementPriceTypeId="PROC_PRICE_FAT_DED" currencyUomId="INR" />
+ 	
+ 	
+	<ProcurementPrice procPriceChartId="MR21" productId="121" fatPercent="0.0" snfPercent=".1" price="0.15" procurementPriceTypeId="PROC_PRICE_SNF_PRM" currencyUomId="INR" />
+	<ProcurementPrice procPriceChartId="MR21" productId="121" fatPercent="0.1" snfPercent="0" price="0.00" procurementPriceTypeId="PROC_PRICE_FAT_PRM" currencyUomId="INR" />
+	
+	
+	<!-- Cow SKIM Milk Pricing-->
+
+	<ProcurementPrice procPriceChartId="MR21" productId="221" price="22.20" fatPercent="0.05" snfPercent="8.7" useTotalSolids="N" procurementPriceTypeId="PROC_PRICE_SLAB1" currencyUomId="INR" uomId="VLIQ_KG"/>
+ 	<ProcurementPrice procPriceChartId="MR21" productId="221" price="22.20" fatPercent="0.05" snfPercent="7.8" useTotalSolids="N" procurementPriceTypeId="PROC_PRICE_SLAB2" currencyUomId="INR" uomId="VLIQ_KG"/>
+ 	<ProcurementPrice procPriceChartId="MR21" productId="221" fatPercent="0.0" snfPercent="0.0" price="0" procurementPriceTypeId="PROC_PRICE_SOUR" currencyUomId="INR" />
+ 	<ProcurementPrice procPriceChartId="MR21" productId="221" fatPercent="0.04" snfPercent="7.79" price="0.00" procurementPriceTypeId="PROC_PRICE_MIN_QLTY" currencyUomId="INR" />
+ 	<ProcurementPrice procPriceChartId="MR21" productId="221" fatPercent="1.0" snfPercent="10.0" price="0.00" procurementPriceTypeId="PROC_PRICE_MAX_QLTY" currencyUomId="INR" />
+
+	<ProcurementPrice procPriceChartId="MR21" productId="221" fatPercent="0.0" snfPercent="8.7" price="0.0" procurementPriceTypeId="PROC_PRICE_SNF_DED" currencyUomId="INR" />
+	<ProcurementPrice procPriceChartId="MR21" productId="221" fatPercent="0.05" snfPercent="0.0" price="0.0" procurementPriceTypeId="PROC_PRICE_FAT_DED" currencyUomId="INR" />
+	
+ 	<ProcurementPrice procPriceChartId="MR21" productId="221" fatPercent="0.0" snfPercent=".1" price="0.15" procurementPriceTypeId="PROC_PRICE_SNF_DED" currencyUomId="INR" />
+ 	<ProcurementPrice procPriceChartId="MR21" productId="221" fatPercent="0.1" snfPercent="0.0" price="0.00" procurementPriceTypeId="PROC_PRICE_FAT_DED" currencyUomId="INR" />
+ 	
+ 	
+	<ProcurementPrice procPriceChartId="MR21" productId="221" fatPercent="0.0" snfPercent=".1" price="0.15" procurementPriceTypeId="PROC_PRICE_SNF_PRM" currencyUomId="INR" />
+	<ProcurementPrice procPriceChartId="MR21" productId="221" fatPercent="0.1" snfPercent="0" price="0.00" procurementPriceTypeId="PROC_PRICE_FAT_PRM" currencyUomId="INR" />	
+
+	<ProcurementPrice procPriceChartId="MR21" productId="444" price="36" fatPercent="3.0" snfPercent="8.5" useTotalSolids="N" procurementPriceTypeId="PROC_PRICE_SLAB1" currencyUomId="INR" uomId="VLIQ_L"/>
+ 	<ProcurementPrice procPriceChartId="MR21" productId="444" price="36" fatPercent="2.5" snfPercent="7.5" useTotalSolids="N" procurementPriceTypeId="PROC_PRICE_SLAB2" currencyUomId="INR" uomId="VLIQ_L"/>
+ 	<!-- <ProcurementPrice procPriceChartId="10" productId="221" price="105.95" fatPercent="2.5" snfPercent="7.5" useTotalSolids="Y" procurementPriceTypeId="PROC_PRICE_SLAB3" currencyUomId="INR" /> -->
+ 	<ProcurementPrice procPriceChartId="MR21" productId="444" fatPercent="0.0" snfPercent="0.0" price="0" procurementPriceTypeId="PROC_PRICE_SOUR" currencyUomId="INR" />
+ 	<ProcurementPrice procPriceChartId="MR21" productId="444" fatPercent="2.49" snfPercent="7.49" price="0.00" procurementPriceTypeId="PROC_PRICE_MIN_QLTY" currencyUomId="INR" />
+ 	<ProcurementPrice procPriceChartId="MR21" productId="444" fatPercent="4.9" snfPercent="10.0" price="0.00" procurementPriceTypeId="PROC_PRICE_MAX_QLTY" currencyUomId="INR" />
+
+	<ProcurementPrice procPriceChartId="MR21" productId="444" fatPercent="0.0" snfPercent="8.5" price="0.0" procurementPriceTypeId="PROC_PRICE_SNF_DED" currencyUomId="INR" />
+	<ProcurementPrice procPriceChartId="MR21" productId="444" fatPercent="3.0" snfPercent="0.0" price="0.0" procurementPriceTypeId="PROC_PRICE_FAT_DED" currencyUomId="INR" />
+	
+ 	<ProcurementPrice procPriceChartId="MR21" productId="444" fatPercent="0.0" snfPercent=".1" price="0.0" procurementPriceTypeId="PROC_PRICE_SNF_DED" currencyUomId="INR" />
+ 	<ProcurementPrice procPriceChartId="MR21" productId="444" fatPercent="0.1" snfPercent="0.0" price="0.0" procurementPriceTypeId="PROC_PRICE_FAT_DED" currencyUomId="INR" />
+ 	
+ 	
+	<ProcurementPrice procPriceChartId="MR21" productId="444" fatPercent="0.0" snfPercent=".1" price="0.0" procurementPriceTypeId="PROC_PRICE_SNF_PRM" currencyUomId="INR" />
+	<ProcurementPrice procPriceChartId="MR21" productId="444" fatPercent="0.1" snfPercent="0" price="0.0" procurementPriceTypeId="PROC_PRICE_FAT_PRM" currencyUomId="INR" />
+	
+	
+	<ProcurementPriceChart procPriceChartId="MR21" regionId="MR5092" fromDate="2014-07-28 00:00:00"  thruDate="2014-07-29 23:59:59" createdDate="2014-04-01 00:00:00" lastModifiedDate="2012-07-01 00:00:00" useBaseSnf="Y" useBaseFat="Y" uomId="" customPriceCalcService="calculateMilkReceiptProductPrice"/>
+	<ProcurementPriceChart procPriceChartId="MR22" regionId="MR5092" fromDate="2014-07-30 00:00:00"  thruDate="2014-09-30 23:59:59" createdDate="2014-04-01 00:00:00" lastModifiedDate="2012-07-01 00:00:00" useBaseSnf="Y" useBaseFat="Y" uomId="" customPriceCalcService="calculateMilkReceiptProductPrice"/>	
+	<!-- Buffalo Milk Pricing-->
+ 	<ProcurementPrice procPriceChartId="MR22" productId="111" price="699.00" fatPercent="5.0" snfPercent="9.0" procurementPriceTypeId="PROC_PRICE_SLAB1" currencyUomId="INR" />
+ 	<ProcurementPrice procPriceChartId="MR22" productId="111" price="699.00" fatPercent="5.0" snfPercent="7.5" procurementPriceTypeId="PROC_PRICE_SLAB2" currencyUomId="INR" />
+ 	<ProcurementPrice procPriceChartId="MR22" productId="111" fatPercent="0.0" snfPercent="0.0" price="0.0" procurementPriceTypeId="PROC_PRICE_SOUR" currencyUomId="INR" />
+ 	
+ 	<!-- MINIMAM AND MAXIMAM QUALITY -->
+ 	<ProcurementPrice procPriceChartId="MR22" productId="111" fatPercent="4.49" snfPercent="7.49" price="0.00" procurementPriceTypeId="PROC_PRICE_MIN_QLTY" currencyUomId="INR" />
+ 	<ProcurementPrice procPriceChartId="MR22" productId="111" fatPercent="10" snfPercent="10.0" price="0.00" procurementPriceTypeId="PROC_PRICE_MAX_QLTY" currencyUomId="INR" />
+	
+	
+	<ProcurementPrice procPriceChartId="MR22" productId="111" fatPercent="0.0" snfPercent="9.0" price="0.0" procurementPriceTypeId="PROC_PRICE_SNF_DED" currencyUomId="INR" />
+	<ProcurementPrice procPriceChartId="MR22" productId="111" fatPercent="5.0" snfPercent="0.0" price="0.0" procurementPriceTypeId="PROC_PRICE_FAT_DED" currencyUomId="INR" />
+	
+ 	<ProcurementPrice procPriceChartId="MR22" productId="111" fatPercent="0.0" snfPercent=".1" price="0.10" procurementPriceTypeId="PROC_PRICE_SNF_DED" currencyUomId="INR" />
+ 	<ProcurementPrice procPriceChartId="MR22" productId="111" fatPercent="0.1" snfPercent="0.0" price="0.0" procurementPriceTypeId="PROC_PRICE_FAT_DED" currencyUomId="INR" />
+ 	
+ 	
+	<ProcurementPrice procPriceChartId="MR22" productId="111" fatPercent="0.0" snfPercent=".1" price="0.10" procurementPriceTypeId="PROC_PRICE_SNF_PRM" currencyUomId="INR" />
+	<ProcurementPrice procPriceChartId="MR22" productId="111" fatPercent="0.1" snfPercent="0" price="0.0" procurementPriceTypeId="PROC_PRICE_FAT_PRM" currencyUomId="INR" />	
+	
+	
+	
+	<!-- Cow Milk Pricing-->
+ 	<ProcurementPrice procPriceChartId="MR22" productId="211" price="31.5" fatPercent="3.5" snfPercent="8.5" useTotalSolids="N" procurementPriceTypeId="PROC_PRICE_SLAB1" currencyUomId="INR" uomId="VLIQ_KG"/>
+ 	<ProcurementPrice procPriceChartId="MR22" productId="211" price="31.5" fatPercent="2.5" snfPercent="7.5" useTotalSolids="N" procurementPriceTypeId="PROC_PRICE_SLAB2" currencyUomId="INR" uomId="VLIQ_KG"/>
+ 	
+ 	<ProcurementPrice procPriceChartId="MR22" productId="211" fatPercent="0.0" snfPercent="0.0" price="0" procurementPriceTypeId="PROC_PRICE_SOUR" currencyUomId="INR" />
+ 	<ProcurementPrice procPriceChartId="MR22" productId="211" fatPercent="2.49" snfPercent="7.49" price="0.00" procurementPriceTypeId="PROC_PRICE_MIN_QLTY" currencyUomId="INR" />
+ 	<ProcurementPrice procPriceChartId="MR22" productId="211" fatPercent="4.9" snfPercent="10.0" price="0.00" procurementPriceTypeId="PROC_PRICE_MAX_QLTY" currencyUomId="INR" />
+
+	<ProcurementPrice procPriceChartId="MR22" productId="211" fatPercent="0.0" snfPercent="8.5" price="0.0" procurementPriceTypeId="PROC_PRICE_SNF_DED" currencyUomId="INR" />
+	<ProcurementPrice procPriceChartId="MR22" productId="211" fatPercent="3.5" snfPercent="0.0" price="0.0" procurementPriceTypeId="PROC_PRICE_FAT_DED" currencyUomId="INR" />
+	
+ 	<ProcurementPrice procPriceChartId="MR22" productId="211" fatPercent="0.0" snfPercent=".1" price="0.15" procurementPriceTypeId="PROC_PRICE_SNF_DED" currencyUomId="INR" />
+ 	<ProcurementPrice procPriceChartId="MR22" productId="211" fatPercent="0.1" snfPercent="0.0" price="0.10" procurementPriceTypeId="PROC_PRICE_FAT_DED" currencyUomId="INR" />
+ 	
+ 	
+	<ProcurementPrice procPriceChartId="MR22" productId="211" fatPercent="0.0" snfPercent=".1" price="0.15" procurementPriceTypeId="PROC_PRICE_SNF_PRM" currencyUomId="INR" />
+	<ProcurementPrice procPriceChartId="MR22" productId="211" fatPercent="0.1" snfPercent="0" price="0.10" procurementPriceTypeId="PROC_PRICE_FAT_PRM" currencyUomId="INR" />
+	
+	
+	
+	<!-- Buffalo SKIM Milk Pricing-->
+ 	<ProcurementPrice procPriceChartId="MR22" productId="121" price="22.20" fatPercent="0.5" snfPercent="8.7" useTotalSolids="N" procurementPriceTypeId="PROC_PRICE_SLAB1" currencyUomId="INR" uomId="VLIQ_KG"/>
+ 	<ProcurementPrice procPriceChartId="MR22" productId="121" price="22.20" fatPercent="0.01" snfPercent="7.5" useTotalSolids="N" procurementPriceTypeId="PROC_PRICE_SLAB2" currencyUomId="INR" uomId="VLIQ_KG"/>
+ 	
+ 	<ProcurementPrice procPriceChartId="MR22" productId="121" fatPercent="0.0" snfPercent="0.0" price="0" procurementPriceTypeId="PROC_PRICE_SOUR" currencyUomId="INR" />
+ 	<ProcurementPrice procPriceChartId="MR22" productId="121" fatPercent="0.0" snfPercent="7.49" price="0.00" procurementPriceTypeId="PROC_PRICE_MIN_QLTY" currencyUomId="INR" />
+ 	<ProcurementPrice procPriceChartId="MR22" productId="121" fatPercent="1.0" snfPercent="10.0" price="0.00" procurementPriceTypeId="PROC_PRICE_MAX_QLTY" currencyUomId="INR" />
+
+	<ProcurementPrice procPriceChartId="MR22" productId="121" fatPercent="0.0" snfPercent="8.7" price="0.0" procurementPriceTypeId="PROC_PRICE_SNF_DED" currencyUomId="INR" />
+	<ProcurementPrice procPriceChartId="MR22" productId="121" fatPercent="0.05" snfPercent="0.0" price="0.0" procurementPriceTypeId="PROC_PRICE_FAT_DED" currencyUomId="INR" />
+	
+ 	<ProcurementPrice procPriceChartId="MR22" productId="121" fatPercent="0.0" snfPercent=".1" price="0.15" procurementPriceTypeId="PROC_PRICE_SNF_DED" currencyUomId="INR" />
+ 	<ProcurementPrice procPriceChartId="MR22" productId="121" fatPercent="0.1" snfPercent="0.0" price="0.00" procurementPriceTypeId="PROC_PRICE_FAT_DED" currencyUomId="INR" />
+ 	
+ 	
+	<ProcurementPrice procPriceChartId="MR22" productId="121" fatPercent="0.0" snfPercent=".1" price="0.15" procurementPriceTypeId="PROC_PRICE_SNF_PRM" currencyUomId="INR" />
+	<ProcurementPrice procPriceChartId="MR22" productId="121" fatPercent="0.1" snfPercent="0" price="0.00" procurementPriceTypeId="PROC_PRICE_FAT_PRM" currencyUomId="INR" />
+	
+	
+	<!-- Cow SKIM Milk Pricing-->
+
+	<ProcurementPrice procPriceChartId="MR22" productId="221" price="22.20" fatPercent="0.05" snfPercent="8.7" useTotalSolids="N" procurementPriceTypeId="PROC_PRICE_SLAB1" currencyUomId="INR" uomId="VLIQ_KG"/>
+ 	<ProcurementPrice procPriceChartId="MR22" productId="221" price="22.20" fatPercent="0.05" snfPercent="7.8" useTotalSolids="N" procurementPriceTypeId="PROC_PRICE_SLAB2" currencyUomId="INR" uomId="VLIQ_KG"/>
+ 	<ProcurementPrice procPriceChartId="MR22" productId="221" fatPercent="0.0" snfPercent="0.0" price="0" procurementPriceTypeId="PROC_PRICE_SOUR" currencyUomId="INR" />
+ 	<ProcurementPrice procPriceChartId="MR22" productId="221" fatPercent="0.04" snfPercent="7.79" price="0.00" procurementPriceTypeId="PROC_PRICE_MIN_QLTY" currencyUomId="INR" />
+ 	<ProcurementPrice procPriceChartId="MR22" productId="221" fatPercent="1.0" snfPercent="10.0" price="0.00" procurementPriceTypeId="PROC_PRICE_MAX_QLTY" currencyUomId="INR" />
+
+	<ProcurementPrice procPriceChartId="MR22" productId="221" fatPercent="0.0" snfPercent="8.7" price="0.0" procurementPriceTypeId="PROC_PRICE_SNF_DED" currencyUomId="INR" />
+	<ProcurementPrice procPriceChartId="MR22" productId="221" fatPercent="0.05" snfPercent="0.0" price="0.0" procurementPriceTypeId="PROC_PRICE_FAT_DED" currencyUomId="INR" />
+	
+ 	<ProcurementPrice procPriceChartId="MR22" productId="221" fatPercent="0.0" snfPercent=".1" price="0.15" procurementPriceTypeId="PROC_PRICE_SNF_DED" currencyUomId="INR" />
+ 	<ProcurementPrice procPriceChartId="MR22" productId="221" fatPercent="0.1" snfPercent="0.0" price="0.00" procurementPriceTypeId="PROC_PRICE_FAT_DED" currencyUomId="INR" />
+ 	
+ 	
+	<ProcurementPrice procPriceChartId="MR22" productId="221" fatPercent="0.0" snfPercent=".1" price="0.15" procurementPriceTypeId="PROC_PRICE_SNF_PRM" currencyUomId="INR" />
+	<ProcurementPrice procPriceChartId="MR22" productId="221" fatPercent="0.1" snfPercent="0" price="0.00" procurementPriceTypeId="PROC_PRICE_FAT_PRM" currencyUomId="INR" />	
+
+
+
+<!-- Vizag -->
+<ProcurementPriceChart procPriceChartId="MR23" regionId="VZG" fromDate="2014-07-28 00:00:00" thruDate="2014-07-29 23:59:59" createdDate="2014-04-01 00:00:00" billQuantity="ACK_QTY" lastModifiedDate="2012-07-01 00:00:00" useBaseSnf="Y" useBaseFat="Y"  customPriceCalcService="calculateMilkReceiptProductPrice"/> 
+
+	
+	<ProcurementPrice procPriceChartId="MR23" productId="444" price="30" fatPercent="3.0" snfPercent="8.5" useTotalSolids="N" procurementPriceTypeId="PROC_PRICE_SLAB1" currencyUomId="INR" uomId="VLIQ_L"/>
+ 	<ProcurementPrice procPriceChartId="MR23" productId="444" price="30" fatPercent="2.5" snfPercent="7.5" useTotalSolids="N" procurementPriceTypeId="PROC_PRICE_SLAB2" currencyUomId="INR" uomId="VLIQ_L"/>
+ 	<!-- <ProcurementPrice procPriceChartId="10" productId="221" price="105.95" fatPercent="2.5" snfPercent="7.5" useTotalSolids="Y" procurementPriceTypeId="PROC_PRICE_SLAB3" currencyUomId="INR" /> -->
+ 	<ProcurementPrice procPriceChartId="MR23" productId="444" fatPercent="0.0" snfPercent="0.0" price="0" procurementPriceTypeId="PROC_PRICE_SOUR" currencyUomId="INR" />
+ 	<ProcurementPrice procPriceChartId="MR23" productId="444" fatPercent="2.49" snfPercent="7.49" price="0.00" procurementPriceTypeId="PROC_PRICE_MIN_QLTY" currencyUomId="INR" />
+ 	<ProcurementPrice procPriceChartId="MR23" productId="444" fatPercent="4.9" snfPercent="10.0" price="0.00" procurementPriceTypeId="PROC_PRICE_MAX_QLTY" currencyUomId="INR" />
+
+	<ProcurementPrice procPriceChartId="MR23" productId="444" fatPercent="0.0" snfPercent="8.5" price="0.0" procurementPriceTypeId="PROC_PRICE_SNF_DED" currencyUomId="INR" />
+	<ProcurementPrice procPriceChartId="MR23" productId="444" fatPercent="3.0" snfPercent="0.0" price="0.0" procurementPriceTypeId="PROC_PRICE_FAT_DED" currencyUomId="INR" />
+	
+ 	<ProcurementPrice procPriceChartId="MR23" productId="444" fatPercent="0.0" snfPercent=".1" price="0.0" procurementPriceTypeId="PROC_PRICE_SNF_DED" currencyUomId="INR" />
+ 	<ProcurementPrice procPriceChartId="MR23" productId="444" fatPercent="0.1" snfPercent="0.0" price="0.0" procurementPriceTypeId="PROC_PRICE_FAT_DED" currencyUomId="INR" />
+ 	
+ 	
+	<ProcurementPrice procPriceChartId="MR23" productId="444" fatPercent="0.0" snfPercent=".1" price="0.0" procurementPriceTypeId="PROC_PRICE_SNF_PRM" currencyUomId="INR" />
+	<ProcurementPrice procPriceChartId="MR23" productId="444" fatPercent="0.1" snfPercent="0" price="0.0" procurementPriceTypeId="PROC_PRICE_FAT_PRM" currencyUomId="INR" />	
+
+<!-- Sangam Dairy  -->
+<ProcurementPriceChart procPriceChartId="MR24" regionId="30944" fromDate="2014-07-28 00:00:00" thruDate="2014-07-29 23:59:59" createdDate="2014-04-01 00:00:00" billQuantity="ACK_QTY" lastModifiedDate="2012-07-01 00:00:00" useBaseSnf="Y" useBaseFat="Y"  customPriceCalcService="calculateMilkReceiptProductPrice"/> 
+	
+	<ProcurementPrice procPriceChartId="MR24" productId="444" price="30" fatPercent="3.0" snfPercent="8.5" useTotalSolids="N" procurementPriceTypeId="PROC_PRICE_SLAB1" currencyUomId="INR" uomId="VLIQ_KG"/>
+ 	<ProcurementPrice procPriceChartId="MR24" productId="444" price="30" fatPercent="2.5" snfPercent="7.5" useTotalSolids="N" procurementPriceTypeId="PROC_PRICE_SLAB2" currencyUomId="INR" uomId="VLIQ_KG"/>
+ 	<!-- <ProcurementPrice procPriceChartId="10" productId="221" price="105.95" fatPercent="2.5" snfPercent="7.5" useTotalSolids="Y" procurementPriceTypeId="PROC_PRICE_SLAB3" currencyUomId="INR" /> -->
+ 	<ProcurementPrice procPriceChartId="MR24" productId="444" fatPercent="0.0" snfPercent="0.0" price="0" procurementPriceTypeId="PROC_PRICE_SOUR" currencyUomId="INR" />
+ 	<ProcurementPrice procPriceChartId="MR24" productId="444" fatPercent="2.49" snfPercent="7.49" price="0.00" procurementPriceTypeId="PROC_PRICE_MIN_QLTY" currencyUomId="INR" />
+ 	<ProcurementPrice procPriceChartId="MR24" productId="444" fatPercent="4.9" snfPercent="10.0" price="0.00" procurementPriceTypeId="PROC_PRICE_MAX_QLTY" currencyUomId="INR" />
+
+	<ProcurementPrice procPriceChartId="MR24" productId="444" fatPercent="0.0" snfPercent="8.5" price="0.0" procurementPriceTypeId="PROC_PRICE_SNF_DED" currencyUomId="INR" />
+	<ProcurementPrice procPriceChartId="MR24" productId="444" fatPercent="3.0" snfPercent="0.0" price="0.0" procurementPriceTypeId="PROC_PRICE_FAT_DED" currencyUomId="INR" />
+	
+ 	<ProcurementPrice procPriceChartId="MR24" productId="444" fatPercent="0.0" snfPercent=".1" price="0.0" procurementPriceTypeId="PROC_PRICE_SNF_DED" currencyUomId="INR" />
+ 	<ProcurementPrice procPriceChartId="MR24" productId="444" fatPercent="0.1" snfPercent="0.0" price="0.0" procurementPriceTypeId="PROC_PRICE_FAT_DED" currencyUomId="INR" />
+ 	
+ 	
+	<ProcurementPrice procPriceChartId="MR24" productId="444" fatPercent="0.0" snfPercent=".1" price="0.0" procurementPriceTypeId="PROC_PRICE_SNF_PRM" currencyUomId="INR" />
+	<ProcurementPrice procPriceChartId="MR24" productId="444" fatPercent="0.1" snfPercent="0" price="0.0" procurementPriceTypeId="PROC_PRICE_FAT_PRM" currencyUomId="INR" />	
+
+	
+
+<!-- Mother Dairy hyt -->
+<ProcurementPriceChart procPriceChartId="MR25" regionId="MR5022" fromDate="2014-07-28 00:00:00" thruDate="2014-07-29 23:59:59" createdDate="2014-04-01 00:00:00" billQuantity="ACK_QTY" lastModifiedDate="2012-07-01 00:00:00" useBaseSnf="Y" useBaseFat="Y"  customPriceCalcService="calculateMilkReceiptProductPrice"/> 
+	
+	<ProcurementPrice procPriceChartId="MR25" productId="444" price="36" fatPercent="3.0" snfPercent="8.5" useTotalSolids="N" procurementPriceTypeId="PROC_PRICE_SLAB1" currencyUomId="INR" uomId="VLIQ_L"/>
+ 	<ProcurementPrice procPriceChartId="MR25" productId="444" price="36" fatPercent="2.5" snfPercent="7.5" useTotalSolids="N" procurementPriceTypeId="PROC_PRICE_SLAB2" currencyUomId="INR" uomId="VLIQ_L"/>
+ 	<!-- <ProcurementPrice procPriceChartId="10" productId="221" price="105.95" fatPercent="2.5" snfPercent="7.5" useTotalSolids="Y" procurementPriceTypeId="PROC_PRICE_SLAB3" currencyUomId="INR" /> -->
+ 	<ProcurementPrice procPriceChartId="MR25" productId="444" fatPercent="0.0" snfPercent="0.0" price="0" procurementPriceTypeId="PROC_PRICE_SOUR" currencyUomId="INR" />
+ 	<ProcurementPrice procPriceChartId="MR25" productId="444" fatPercent="2.49" snfPercent="7.49" price="0.00" procurementPriceTypeId="PROC_PRICE_MIN_QLTY" currencyUomId="INR" />
+ 	<ProcurementPrice procPriceChartId="MR25" productId="444" fatPercent="4.9" snfPercent="10.0" price="0.00" procurementPriceTypeId="PROC_PRICE_MAX_QLTY" currencyUomId="INR" />
+
+	<ProcurementPrice procPriceChartId="MR25" productId="444" fatPercent="0.0" snfPercent="8.5" price="0.0" procurementPriceTypeId="PROC_PRICE_SNF_DED" currencyUomId="INR" />
+	<ProcurementPrice procPriceChartId="MR25" productId="444" fatPercent="3.0" snfPercent="0.0" price="0.0" procurementPriceTypeId="PROC_PRICE_FAT_DED" currencyUomId="INR" />
+	
+ 	<ProcurementPrice procPriceChartId="MR25" productId="444" fatPercent="0.0" snfPercent=".1" price="0.0" procurementPriceTypeId="PROC_PRICE_SNF_DED" currencyUomId="INR" />
+ 	<ProcurementPrice procPriceChartId="MR25" productId="444" fatPercent="0.1" snfPercent="0.0" price="0.0" procurementPriceTypeId="PROC_PRICE_FAT_DED" currencyUomId="INR" />
+ 	
+ 	
+	<ProcurementPrice procPriceChartId="MR25" productId="444" fatPercent="0.0" snfPercent=".1" price="0.0" procurementPriceTypeId="PROC_PRICE_SNF_PRM" currencyUomId="INR" />
+	<ProcurementPrice procPriceChartId="MR25" productId="444" fatPercent="0.1" snfPercent="0" price="0.0" procurementPriceTypeId="PROC_PRICE_FAT_PRM" currencyUomId="INR" />	
+
+	
+	<!-- Mukunda dairy -->
+	<ProcurementPriceChart procPriceChartId="MR26" regionId="MR5083" fromDate="2014-07-28 00:00:00" thruDate="2014-07-29 23:59:59" createdDate="2014-04-01 00:00:00" billQuantity="ACK_QTY" lastModifiedDate="2012-07-01 00:00:00" useBaseSnf="Y" useBaseFat="Y"  customPriceCalcService="calculateMilkReceiptProductPrice"/> 
+	
+	<ProcurementPrice procPriceChartId="MR26" productId="444" price="35" fatPercent="3.0" snfPercent="8.5" useTotalSolids="N" procurementPriceTypeId="PROC_PRICE_SLAB1" currencyUomId="INR" uomId="VLIQ_L"/>
+ 	<ProcurementPrice procPriceChartId="MR26" productId="444" price="35" fatPercent="2.5" snfPercent="7.5" useTotalSolids="N" procurementPriceTypeId="PROC_PRICE_SLAB2" currencyUomId="INR" uomId="VLIQ_L"/>
+ 	<!-- <ProcurementPrice procPriceChartId="10" productId="221" price="105.95" fatPercent="2.5" snfPercent="7.5" useTotalSolids="Y" procurementPriceTypeId="PROC_PRICE_SLAB3" currencyUomId="INR" /> -->
+ 	<ProcurementPrice procPriceChartId="MR26" productId="444" fatPercent="0.0" snfPercent="0.0" price="0" procurementPriceTypeId="PROC_PRICE_SOUR" currencyUomId="INR" />
+ 	<ProcurementPrice procPriceChartId="MR26" productId="444" fatPercent="2.49" snfPercent="7.49" price="0.00" procurementPriceTypeId="PROC_PRICE_MIN_QLTY" currencyUomId="INR" />
+ 	<ProcurementPrice procPriceChartId="MR26" productId="444" fatPercent="4.9" snfPercent="10.0" price="0.00" procurementPriceTypeId="PROC_PRICE_MAX_QLTY" currencyUomId="INR" />
+
+	<ProcurementPrice procPriceChartId="MR26" productId="444" fatPercent="0.0" snfPercent="8.5" price="0.0" procurementPriceTypeId="PROC_PRICE_SNF_DED" currencyUomId="INR" />
+	<ProcurementPrice procPriceChartId="MR26" productId="444" fatPercent="3.0" snfPercent="0.0" price="0.0" procurementPriceTypeId="PROC_PRICE_FAT_DED" currencyUomId="INR" />
+	
+ 	<ProcurementPrice procPriceChartId="MR26" productId="444" fatPercent="0.0" snfPercent=".1" price="0.0" procurementPriceTypeId="PROC_PRICE_SNF_DED" currencyUomId="INR" />
+ 	<ProcurementPrice procPriceChartId="MR26" productId="444" fatPercent="0.1" snfPercent="0.0" price="0.0" procurementPriceTypeId="PROC_PRICE_FAT_DED" currencyUomId="INR" />
+ 	
+ 	
+	<ProcurementPrice procPriceChartId="MR26" productId="444" fatPercent="0.0" snfPercent=".1" price="0.0" procurementPriceTypeId="PROC_PRICE_SNF_PRM" currencyUomId="INR" />
+	<ProcurementPrice procPriceChartId="MR26" productId="444" fatPercent="0.1" snfPercent="0" price="0.0" procurementPriceTypeId="PROC_PRICE_FAT_PRM" currencyUomId="INR" />	
+
+	
+
+	<ProcurementPriceChart procPriceChartId="MR27" regionId="MR5022" fromDate="2014-09-22 00:00:00"  billQuantity="ACK_QTY" lastModifiedDate="2012-07-01 00:00:00" useBaseSnf="Y" useBaseFat="Y"  customPriceCalcService="calculateMilkReceiptProductPrice"/>
+	
+	<ProcurementPrice procPriceChartId="MR27" productId="111" price="0.00" fatPercent="5.0" snfPercent="8.5" procurementPriceTypeId="PROC_PRICE_SLAB1" currencyUomId="INR" />
+ 	<ProcurementPrice procPriceChartId="MR27" productId="111" price="0.00" fatPercent="5.0" snfPercent="7.5" procurementPriceTypeId="PROC_PRICE_SLAB2" currencyUomId="INR" />
+ 	<ProcurementPrice procPriceChartId="MR27" productId="111" fatPercent="0.0" snfPercent="0.0" price="0" procurementPriceTypeId="PROC_PRICE_SOUR" currencyUomId="INR" />
+ 	<!-- MINIMAM AND MAXIMAM QUALITY -->
+ 	<ProcurementPrice procPriceChartId="MR27" productId="111" fatPercent="4.99" snfPercent="7.49" price="0.00" procurementPriceTypeId="PROC_PRICE_MIN_QLTY" currencyUomId="INR" />
+ 	<ProcurementPrice procPriceChartId="MR27" productId="111" fatPercent="10" snfPercent="10.0" price="0.00" procurementPriceTypeId="PROC_PRICE_MAX_QLTY" currencyUomId="INR" />
+	<ProcurementPrice procPriceChartId="MR27" productId="111" fatPercent="0.0" snfPercent="8.5" price="0.0" procurementPriceTypeId="PROC_PRICE_SNF_DED" currencyUomId="INR" />
+	<ProcurementPrice procPriceChartId="MR27" productId="111" fatPercent="5.5" snfPercent="0.0" price="0.0" procurementPriceTypeId="PROC_PRICE_FAT_DED" currencyUomId="INR" />
+
+ 	<ProcurementPrice procPriceChartId="MR27" productId="111" fatPercent="0.0" snfPercent=".1" price="0.0" procurementPriceTypeId="PROC_PRICE_SNF_DED" currencyUomId="INR" />
+ 	<ProcurementPrice procPriceChartId="MR27" productId="111" fatPercent="0.1" snfPercent="0.0" price="0.0" procurementPriceTypeId="PROC_PRICE_FAT_DED" currencyUomId="INR" />
+ 	
+	<ProcurementPrice procPriceChartId="MR27" productId="111" fatPercent="0.0" snfPercent=".1" price="0.0" procurementPriceTypeId="PROC_PRICE_SNF_PRM" currencyUomId="INR" />
+	<ProcurementPrice procPriceChartId="MR27" productId="111" fatPercent="0.1" snfPercent="0" price="0.0" procurementPriceTypeId="PROC_PRICE_FAT_PRM" currencyUomId="INR" />	
+	
+
+	
+</entity-engine-xml>
+

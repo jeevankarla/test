@@ -28,20 +28,76 @@
     <SecurityGroupPermission groupId="PROCUREMENT_ENTRY" permissionId="PROCUREMENT_VIEW"/>
     <SecurityGroupPermission groupId="PROCUREMENT_ENTRY" permissionId="PROCUREMENT_DATAMIG"/>
     <SecurityGroupPermission groupId="PROCUREMENT_ENTRY" permissionId="PROCUREMENT_DATAENTRY"/>
-    <SecurityGroupPermission groupId="PROCUREMENT_ENTRY" permissionId="FACILITY_FIND"/>
     <SecurityGroupPermission groupId="PROCUREMENT_ENTRY" permissionId="FACILITY_VIEW"/>
     <SecurityGroupPermission groupId="PROCUREMENT_ENTRY" permissionId="ORDERMGR_CREATE"/>
     <SecurityGroupPermission groupId="PROCUREMENT_ENTRY" permissionId="ORDERMGR_DELETE"/>
     <SecurityGroupPermission groupId="PROCUREMENT_ENTRY" permissionId="ORDERMGR_PURCHASE_CREATE"/>
     <SecurityGroupPermission groupId="PROCUREMENT_ENTRY" permissionId="ORDERMGR_PURCHASE_VIEW"/>    
      
+    <SecurityPermission description="ALL operations Billing in the Procurement Component." permissionId="PROCUREMENT_BILLINC"/>
     <SecurityGroup groupId="PROCUREMENT_BILLINC" description="Procurement billing incharge Group Permission"/>
     <SecurityGroupPermission groupId="PROCUREMENT_BILLINC" permissionId="PROCUREMENT_VIEW"/>
     <SecurityGroupPermission groupId="PROCUREMENT_BILLINC" permissionId="ACCTFORMULA_EDIT"/>
     <SecurityGroupPermission groupId="PROCUREMENT_BILLINC" permissionId="ACCOUNTING_ACCTFORMULA_EDIT"/>
     <SecurityGroupPermission groupId="PROCUREMENT_BILLINC" permissionId="ACCOUNTING_READ"/>
     <SecurityGroupPermission groupId="PROCUREMENT_BILLINC" permissionId="ACCOUNTING_ARINVOICE_EDIT"/>   
-    <SecurityGroupPermission groupId="PROCUREMENT_BILLINC" permissionId="FACILITY_FIND"/>
     <SecurityGroupPermission groupId="PROCUREMENT_BILLINC" permissionId="FACILITY_VIEW"/>      
+    <SecurityGroupPermission groupId="PROCUREMENT_BILLINC" permissionId="ORDERMGR_UPDATE"/>
+    <SecurityGroupPermission groupId="PROCUREMENT_BILLINC" permissionId="PROCUREMENT_BILLINC"/>      
+    
+    <!-- special permission to delete procurement entry -->
+    <SecurityPermission description="Special permission to delete procurement entries" permissionId="PROCUREMENTENTRY_DELETE"/>
+    <SecurityGroupPermission groupId="FULLADMIN" permissionId="PROCUREMENTENTRY_DELETE"/>	
+    <SecurityGroupPermission groupId="BIZADMIN" permissionId="PROCUREMENTENTRY_DELETE"/>
+    
+    <SecurityPermission description="Special permission to view csv files downloading in shed reports" permissionId="CSV_VIEW"/>
+    <SecurityGroupPermission groupId="FULLADMIN" permissionId="CSV_VIEW"/>
+    
+	 <!-- special permission to UPLOAD DBF FOR procurement  -->
+    <SecurityPermission description="Special permission to upload procurement dbfs" permissionId="PROCUREMENTDBF_IMPORT"/>
+    <SecurityGroup groupId="PROCUREMENT_IMPORT" description="Special group permission to upload procurement dbfs "/>
+    <SecurityGroupPermission groupId="PROCUREMENT_IMPORT" permissionId="PROCUREMENTDBF_IMPORT"/>
+    <SecurityGroupPermission groupId="FULLADMIN" permissionId="PROCUREMENTDBF_IMPORT"/>	
+    
+
+    <!-- Special permission to view annual reports -->
+    <SecurityPermission description="Special permission to view Annual Reports" permissionId="ANNUALREPORTS_VIEW"/>
+    <SecurityGroupPermission groupId="FULLADMIN" permissionId="ANNUALREPORTS_VIEW"/>
+    
+    <!-- Specila permission to send procurement sms -->
+     
+     <SecurityPermission description="Special Permission to show Shed Average  Report." permissionId="SHEDAVGRATE_VIEW"/>
+     <SecurityGroupPermission groupId="PROCUREMENT_BILLINC" permissionId="SHEDAVGRATE_VIEW"/>
+	<SecurityGroupPermission groupId="FULLADMIN" permissionId="SHEDAVGRATE_VIEW"/>
+	<SecurityGroupPermission groupId="BIZADMIN" permissionId="SHEDAVGRATE_VIEW"/>
+     
+     <SecurityPermission description="Special Permission to show Send SMS Report." permissionId="SENDPROCSMS_VIEW"/>
+	<SecurityGroupPermission groupId="FULLADMIN" permissionId="SENDPROCSMS_VIEW"/>
+	<SecurityGroupPermission groupId="BIZADMIN" permissionId="SENDPROCSMS_VIEW"/>
+	
+	<!-- Special permission to Update OpCost and Commission -->
+    <SecurityPermission description="Special Permission to Update OpCost And Commission." permissionId="OPCOST_VIEW"/>
+	<SecurityGroupPermission groupId="FULLADMIN" permissionId="OPCOST_VIEW"/>
+	<SecurityGroupPermission groupId="BIZADMIN" permissionId="OPCOST_VIEW"/>
+	
+	
+	
+	<!-- Permissions to View ProcurementReports only -->
+	<SecurityPermission description="Permission to view reports in the Procurement Component." permissionId="PROCUREMENT_REPORTS"/>
+    <SecurityGroup groupId="PROCUREMENT_REPORTS" description="Procurement  Reports Permission"/>
+    
+    <SecurityGroupPermission groupId="PROCUREMENT_REPORTS" permissionId="PROCUREMENT_VIEW"/>
+    
+    <SecurityGroupPermission groupId="PROCUREMENT_REPORTS" permissionId="PROCUREMENT_REPORTS"/>
+    <SecurityGroupPermission groupId="PROCUREMENT_BILLINC" permissionId="PROCUREMENT_REPORTS"/>
+    <SecurityGroupPermission groupId="PROCUREMENT_ENTRY" permissionId="PROCUREMENT_REPORTS"/>
+    <SecurityGroupPermission groupId="FULLADMIN" permissionId="PROCUREMENT_REPORTS"/>
+	<SecurityGroupPermission groupId="BIZADMIN" permissionId="PROCUREMENT_REPORTS"/>
+	
+	<SecurityGroup groupId="PROC_ANNUALREPORTS" description="Special permission to view Annual Reports"/>
+    <SecurityGroupPermission groupId="PROC_ANNUALREPORTS" permissionId="ANNUALREPORTS_VIEW"/>
+    <!-- End -->
+    
+    
     
 </entity-engine-xml>

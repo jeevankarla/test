@@ -8,11 +8,21 @@
             </fo:simple-page-master>
         </fo:layout-master-set>
         ${setRequestAttribute("OUTPUT_FILENAME", "UnitMilkBillSummery.txt")}
-       <#if unitWiseValues?has_content>    
+<#if errorMessage?has_content>
+<fo:page-sequence master-reference="main">
+   <fo:flow flow-name="xsl-region-body" font-family="Helvetica">
+      <fo:block font-size="14pt">
+              ${errorMessage}.
+   	  </fo:block>
+   </fo:flow>
+</fo:page-sequence>        
+<#else>        
+       <#if unitWiseValues?has_content>  
+       <#assign unitWiseGrandTot = 0>  
 		<fo:page-sequence master-reference="main">
 			<fo:static-content flow-name="xsl-region-before" font-family="Courier,monospace">
 			<#assign reportHeader = delegator.findOne("TenantConfiguration", {"propertyTypeEnumId" : "MILK_PROCUREMENT","propertyName" : "reportHeaderLable"}, true)>
-				<fo:block text-align="left" white-space-collapse="false" keep-together="always" font-size="11pt">&#160;      ${reportHeader.description?if_exists}</fo:block>
+				<fo:block text-align="left" white-space-collapse="false" keep-together="always" font-size="11pt">&#160;      ${reportHeader.description?if_exists}                            PAGE NO:<fo:page-number/></fo:block>
 				<#assign unitDetails = delegator.findOne("Facility", {"facilityId" : parameters.unitId}, true)>
 				<fo:block text-align="left" white-space-collapse="false" keep-together="always" font-size="11pt">&#160;         UNIT :  ${unitDetails.facilityName}</fo:block>
 				<fo:block text-align="left" white-space-collapse="false" keep-together="always" font-size="11pt">&#160;      GRAND TOTAL FOR ALL BANKS  ${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(fromDate, "dd/MM/yyyy")} TO ${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(thruDate, "dd/MM/yyyy")}</fo:block>
@@ -23,18 +33,17 @@
 				<#assign milkValue=0> 
 				<#assign totAdditions=0>
 				<#assign totDeductions=0>	
+				<#assign cartage =0>
+				<#assign commAmount =0>
+				<#assign others = 0>
  		   		<#if MilkBillValuesMap?has_content>
 					<#assign totalqty=(MilkBillValuesMap.get("totalqty"))>
 					<#assign milkValue=(MilkBillValuesMap.get("milkValue"))>
 					<#assign totAdditions=(MilkBillValuesMap.get("totAdditions"))>
 					<#assign totDeductions=(MilkBillValuesMap.get("totDeductions"))>
-				</#if>
-				<#assign amOpCost=0>
-				<#assign pmOpCost=0>
-				<#if supplyTypeMap?exists>
-					<#assign amOpCost=supplyTypeMap["AM"]>
-					<#assign pmOpCost=supplyTypeMap["PM"]>
-				</#if>
+					<#assign cartage = MilkBillValuesMap.get("cartage")>
+		    		<#assign commAmount = MilkBillValuesMap.get("commission")>
+				</#if>				
  		   		<fo:block font-family="Courier,monospace" font-size="9pt">
  		   			<fo:table>
  		   				<fo:table-column column-width="40pt"/>
@@ -50,21 +59,93 @@
 		    						<fo:block linefeed-treatment="preserve">&#xA;</fo:block>
 		    						<fo:block white-space-collapse="false" keep-together="always" font-size="10pt">A D D I T I O N S</fo:block>
 		    						<fo:block linefeed-treatment="preserve">&#xA;</fo:block>
-		    						<#assign cartage =0>
-		    						<#if billingValuesMap?exists>
+		    						
+		    						
+		    						<#--<#if billingValuesMap?exists>
 		    							<#assign facilityBilling = billingValuesMap.entrySet()>
 		    							<#list facilityBilling as billingTotals>
 		    								<#assign totalValues = billingTotals.getValue()>
-		    								<#assign cartage = totalValues.get("tot").get("cartage")>	
+		    								<#assign cartage = totalValues.get("tot").get("cartage")>
+		    								<#assign commAmount = totalValues.get("tot").get("commAmt")>	
 		    							</#list>
-		    						</#if>		    						
-		    						<fo:block white-space-collapse="false" keep-together="always">TOTAL CARTAGE : ${cartage?if_exists?string("##0.00")}</fo:block>
-		    						<fo:block linefeed-treatment="preserve">&#xA;</fo:block>
-		    						<fo:block white-space-collapse="false" keep-together="always">TOTAL OP-COST : ${((totAMLtrs*amOpCost)+(totPMLtrs*pmOpCost))?string("##0.00")} (AM Ltrs : ${(totAMLtrs)?string("##0.0")} PM Ltrs : ${(totPMLtrs)?string("##0.0")})</fo:block>
-		    						<fo:block linefeed-treatment="preserve">&#xA;</fo:block>
-		    						<fo:block white-space-collapse="false" keep-together="always">TOTAL  OTHERS : 0.00</fo:block>
-		    						<fo:block linefeed-treatment="preserve">&#xA;</fo:block>
-		    						<fo:block white-space-collapse="false" keep-together="always">TOT.ADDITIONS : ${(totAdditions+cartage+((totAMLtrs*amOpCost)+(totPMLtrs*pmOpCost)))?if_exists?string("##0.00")}</fo:block>
+		    						</#if>-->
+		    						<#assign totAdditions =totAdditions+commAmount>
+		    						<fo:block font-size="9pt">
+		    							<fo:table>
+		    								<fo:table-column column-width="90pt"/>
+		    								<fo:table-column column-width="30pt"/>
+		    								<fo:table-column column-width="40pt"/>
+		    								<fo:table-column column-width="90pt"/>
+		    								<fo:table-body>
+		    									<fo:table-row>
+		    										<fo:table-cell>
+		    											<fo:block text-align="left" keep-together="always" >TOTAL CARTAGE</fo:block>
+		    										</fo:table-cell>
+		    										<fo:table-cell>
+		    											<fo:block text-align="center" >:</fo:block>
+		    										</fo:table-cell>
+		    										<fo:table-cell>
+		    											<fo:block text-align="right" keep-together="always">${cartage?if_exists?string("##0.00")}</fo:block>
+		    										</fo:table-cell>
+		    									</fo:table-row>
+		    									<#if (commAmount>0)>
+		    									<fo:table-row>
+		    										<fo:table-cell>
+		    											<fo:block text-align="left" keep-together="always" >TOTAL COMM AMT</fo:block>
+		    										</fo:table-cell>
+		    										<fo:table-cell>
+		    											<fo:block text-align="center" >:</fo:block>
+		    										</fo:table-cell>
+		    										<fo:table-cell>
+		    											<fo:block text-align="right" keep-together="always">${commAmount?if_exists?string("##0.00")}</fo:block>
+		    										</fo:table-cell>
+		    									</fo:table-row>
+		    									</#if>
+		    									<fo:table-row>
+		    										<fo:table-cell>
+		    											<fo:block text-align="left" keep-together="always" >TOTAL OPCOST</fo:block>
+		    										</fo:table-cell>
+		    										<fo:table-cell>
+		    											<fo:block text-align="center" >:</fo:block>
+		    										</fo:table-cell>
+		    										<fo:table-cell>
+		    											<fo:block text-align="right" keep-together="always">${opCost?if_exists?string("##0.00")}</fo:block>
+		    										</fo:table-cell>
+		    										<fo:table-cell>
+		    											<#if uomId== "VLIQ_TS">
+							    						 	<fo:block white-space-collapse="false" keep-together="always" text-align="left">(BM KGFAT : ${(solidsMap.get("BM"))?string("##0.0")} CM SLDS : ${(solidsMap.get("CM"))?string("##0.0")})</fo:block>
+							    						<#else>	
+							    							<fo:block white-space-collapse="false" keep-together="always" text-align="left">(AM Ltrs : ${(qtyMap.get("AM"))?string("##0.0")} PM Ltrs : ${(qtyMap.get("PM"))?string("##0.0")})</fo:block>
+							    						</#if>
+		    										</fo:table-cell>
+		    									</fo:table-row>
+		    									<fo:table-row>
+		    										<fo:table-cell>
+		    											<fo:block text-align="left" keep-together="always" >TOTAL OTHERS</fo:block>
+		    										</fo:table-cell>
+		    										<fo:table-cell>
+		    											<fo:block text-align="center" >:</fo:block>
+		    										</fo:table-cell>
+		    										<fo:table-cell>
+		    											<fo:block text-align="right" keep-together="always">${others?if_exists?string("##0.00")}</fo:block>
+		    										</fo:table-cell>
+		    									</fo:table-row>
+		    									<fo:table-row>
+		    										<fo:table-cell>
+		    											<fo:block text-align="left" keep-together="always" >TOT.ADDITIONS </fo:block>
+		    										</fo:table-cell>
+		    										<fo:table-cell>
+		    											<fo:block text-align="center" >:</fo:block>
+		    										</fo:table-cell>
+		    										<fo:table-cell>
+		    											<fo:block text-align="right" keep-together="always">${(totAdditions+cartage+(opCost))?if_exists?string("##0.00")}</fo:block>
+		    										</fo:table-cell>
+		    									</fo:table-row>
+		    								</fo:table-body>
+		    							</fo:table>
+		    						
+		    						</fo:block>
+		    								    						
 		    						<fo:block>-------------------------------------------------------------------</fo:block>
 		    						<fo:block font-size="8pt" font-family="Courier,monospace">
 		    							<fo:table>
@@ -241,10 +322,10 @@
 																	<#if ((adjType.getValue()).orderAdjustmentTypeId) == deduction.getKey()>
 																		<#assign dedVal = deduction.getValue()>
 																		<#assign totDeductVal = totDeductVal + deduction.getValue()>																	
-																	</#if>
-																
+																	</#if>																
 																</#list>
-																	<fo:block white-space-collapse="false" text-align="left" text-indent="360pt" keep-together="always">TOTAL ${(adjType.getValue()).description?if_exists}</fo:block>
+																	<#assign orderAdjustmentDesc=Static["in.vasista.vbiz.procurement.ProcurementNetworkServices"].getShedOrderAdjustmentDescription( dctx,Static["org.ofbiz.base.util.UtilMisc"].toMap("shedId",unitDetails.get("parentFacilityId"))).get("shedAdjustmentDescriptionMap")>
+																	<fo:block white-space-collapse="false" text-align="left" text-indent="360pt" keep-together="always">TOTAL ${orderAdjustmentDesc[(adjType.getValue()).orderAdjustmentTypeId]?if_exists}</fo:block>
 																</fo:table-cell>
 																<fo:table-cell>
 																<fo:block white-space-collapse="false" text-align="left" text-indent="420" keep-together="always">:</fo:block>
@@ -319,7 +400,7 @@
 														<fo:block white-space-collapse="false" text-align="left" text-indent="350pt" keep-together="always">TOTAL ADDITIONS          :</fo:block>
 													</fo:table-cell>
 													<fo:table-cell>
-														<fo:block white-space-collapse="false" text-align="right">${(totAdditions+cartage+((totAMLtrs*amOpCost)+(totPMLtrs*pmOpCost)))?if_exists?string("##0.00")}</fo:block>
+														<fo:block white-space-collapse="false" text-align="right">${(totAdditions+cartage+(opCost))?if_exists?string("##0.00")}</fo:block>
 														<fo:block text-align="left" text-indent="285pt">-------------------------------------------</fo:block>
 													</fo:table-cell>
 												</fo:table-row>
@@ -328,7 +409,7 @@
 														<fo:block white-space-collapse="false" text-align="left" text-indent="350pt" keep-together="always">TOTAL                    :</fo:block>
 													</fo:table-cell>
 													<fo:table-cell>
-														<fo:block white-space-collapse="false" text-align="right">${(milkValue+(totAdditions+cartage+((totAMLtrs*amOpCost)+(totPMLtrs*pmOpCost)))+tipAmount)?if_exists?string("##0.00")}</fo:block>
+														<fo:block white-space-collapse="false" text-align="right">${(milkValue+(totAdditions+cartage+(opCost))+tipAmount)?if_exists?string("##0.00")}</fo:block>
 														<fo:block text-align="left" text-indent="285pt">-------------------------------------------</fo:block>	
 													</fo:table-cell>
 												</fo:table-row>
@@ -364,7 +445,7 @@
 														<fo:block white-space-collapse="false" text-align="left" text-indent="350pt" keep-together="always">N  E  T  A M O U N T    :</fo:block>
 													</fo:table-cell>
 													<fo:table-cell>
-														<fo:block white-space-collapse="false" text-align="right">${((milkValue+(totAdditions+cartage+((totAMLtrs*amOpCost)+(totPMLtrs*pmOpCost)))+tipAmount)-(totDeductVal+tipAmount))?if_exists?string("##0.00")}</fo:block>
+														<fo:block white-space-collapse="false" text-align="right">${((milkValue+(totAdditions+cartage+(opCost))+tipAmount)-(totDeductVal+tipAmount))?if_exists?string("##0.00")}</fo:block>
 														<fo:block text-align="left" text-indent="285pt">-------------------------------------------</fo:block>	
 													</fo:table-cell>
 												</fo:table-row>
@@ -372,8 +453,9 @@
 													<fo:table-cell>
 														<fo:block white-space-collapse="false" text-align="left" text-indent="350pt" keep-together="always">ROUNDED NET AMT         :</fo:block>
 													</fo:table-cell>
+													
 													<fo:table-cell>
-														<fo:block white-space-collapse="false" text-align="right">${Static["java.lang.Math"].round(((milkValue+(totAdditions+cartage+((totAMLtrs*amOpCost)+(totPMLtrs*pmOpCost)))+tipAmount)-(totDeductVal+tipAmount)))?if_exists?string("##0.00")}</fo:block>
+														<fo:block white-space-collapse="false" text-align="right"><#if unitTotals.get("netRndAmountWithOp")?has_content>${unitTotals.get("netRndAmountWithOp")?if_exists?string("##0.00")}<#else>0.00</#if></fo:block>
 														<fo:block text-align="left" text-indent="285pt">-------------------------------------------</fo:block>	
 													</fo:table-cell>
 												</fo:table-row>
@@ -396,6 +478,6 @@
 			</fo:flow>
 		</fo:page-sequence>
 	</#if>
-		
+	</#if>	
 	</fo:root>
 </#escape>

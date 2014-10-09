@@ -7,7 +7,7 @@
         <#if procurementEntryList?exists> 
 	        <#list procurementEntryList as procurementEntry>				
 				{id:"${procurementEntry_index}" , date:"${procurementEntry.date}", supplyType:"${procurementEntry.supplyType}", 
-				 product:"${procurementEntry.product}", fat:"${procurementEntry.fat}", snf:"${procurementEntry.snf}",
+				 product:"${procurementEntry.product}", fat:"${procurementEntry.fat}", snf:"${procurementEntry.snf}", qtyLtrs:"${procurementEntry.qtyLtrs}",
 				 qtyKgs:"${procurementEntry.qtyKgs}", price:"${procurementEntry.price}", _collapsed:true} <#if procurementEntry_has_next>,</#if>
 			</#list>
 		</#if>		
@@ -47,10 +47,11 @@ function myFilter(item) {
 
 		var columns = [
 			{id:"date", name:"Date", field:"date", width:120, minWidth:70, cssClass:"cell-title", sortable:false, formatter: TaskNameFormatter},	
-			{id:"supplyTime", name:"Supply", field:"supplyType", width:100, minWidth:70, cssClass:"cell-title", sortable:false},								
-			{id:"product", name:"Product", field:"product", width:100, minWidth:70, cssClass:"cell-title", sortable:false},	
-			{id:"fat", name:"Fat", field:"fat", width:100, minWidth:70, cssClass:"cell-title-right", sortable:false},	
-			{id:"snf", name:"SNF", field:"snf", width:100, minWidth:70, cssClass:"cell-title-right", sortable:false},	
+			{id:"supplyTime", name:"Supply", field:"supplyType", width:100, minWidth:50, cssClass:"cell-title", sortable:false},								
+			{id:"product", name:"Product", field:"product", width:100, minWidth:50, cssClass:"cell-title", sortable:false},	
+			{id:"fat", name:"Fat", field:"fat", width:70, minWidth:50, cssClass:"cell-title-right", sortable:false},	
+			{id:"snf", name:"SNF", field:"snf", width:70, minWidth:50, cssClass:"cell-title-right", sortable:false},
+			{id:"qtyLtrs", name:"Quantity (Ltrs)", field:"qtyLtrs", width:100, minWidth:70, cssClass:"cell-title-right", sortable:false},
 			{id:"quantity", name:"Quantity (Kgs)", field:"qtyKgs", width:100, minWidth:70, cssClass:"cell-title-right", sortable:false},	
 			{id:"price", name:"Price (Rs)", field:"price", width:100, minWidth:70, cssClass:"cell-title-right", sortable:false}	
 		];
@@ -120,7 +121,9 @@ function myFilter(item) {
 							  {label: "Cow Milk", data: ${StringUtil.wrapString(listCMJSON)}}], 
 				{ 
 					series: {
-                   		lines: { show: true },
+                   		lines: { show: true ,fill:true,
+                   		 fillColor: { colors: [{ opacity: 0.7 }, { opacity: 0.1}] }
+                   		 },
                    		points: { show: true }
                 	},
                		grid: { hoverable: true}, 
@@ -190,7 +193,7 @@ function myFilter(item) {
     <div class="screenlet-body">
    		<div id="graph" class="graph"></div>  
         <br><br><br><br>   		  
-		<div id="myGrid1" style="width:735px;height:600px"></div>   		
+		<div id="myGrid1" style="width:800px;height:600px"></div>   		
     </div>
 </div>
 

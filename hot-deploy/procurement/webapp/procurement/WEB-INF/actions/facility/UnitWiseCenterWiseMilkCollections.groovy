@@ -26,6 +26,12 @@ import org.ofbiz.base.util.UtilDateTime;
 import in.vasista.vbiz.procurement.ProcurementReports;
 import in.vasista.vbiz.procurement.ProcurementNetworkServices;
 
+
+if(UtilValidate.isEmpty(parameters.unitId)){
+	Debug.logError("UnitId Cannot Be Empty","");
+	context.errorMessage = "No Unit Has Been Selected.......!";
+	return;
+}
 def sdf = new SimpleDateFormat("MMMM dd, yyyy");
 try {
 	if (parameters.fromDate) {
@@ -47,6 +53,17 @@ try {
 }
 context.put("fromDate", fromDate);
 context.put("thruDate", thruDate);
+fromRange = parameters.fromRange;
+toRange = parameters.toRange;
+
+
+if(UtilValidate.isNotEmpty(fromRange)){
+	fromRange = new BigDecimal(fromRange);
+}
+if(UtilValidate.isNotEmpty(toRange)){
+	toRange = new BigDecimal(toRange);
+}
+
 dctx = dispatcher.getDispatchContext();
 context.put("dctx",dctx);
 facilityId = parameters.unitId ; 
@@ -66,6 +83,8 @@ centersList = [];
 centersList = centerListMaps.get("agentsList");
 centerTotalsList = [];
 unitTotalsMap = [:];
+inActiveCentersList = [];
+
 BigDecimal grBMTotals = 0;
 BigDecimal grCMTotals = 0;
 BigDecimal grTotalQty = 0;
@@ -80,17 +99,33 @@ for(centerMap in centersList){
 	centerTotals = ProcurementReports.getPeriodTotals(dctx , [fromDate: fromDate , thruDate: thruDate , facilityId:centerId,userLogin:userLogin]);
 	if(centerTotals){
 		totalsMap = centerTotals.get(centerId).get("dayTotals").get("TOT").get("TOT");
-		centerBMTotal = ProcurementNetworkServices.convertKGToLitre(new BigDecimal( totalsMap.get("Buffalo Milk").get("qtyKgs")));
-		centerCMTotal = ProcurementNetworkServices.convertKGToLitre(new BigDecimal(totalsMap.get("Cow Milk").get("qtyKgs")));
-		centerTotalQuantity = ProcurementNetworkServices.convertKGToLitre(new BigDecimal(totalsMap.get("TOT").get("qtyKgs")));
-		grBMTotals = grBMTotals+centerBMTotal;
-		grCMTotals = grCMTotals+centerCMTotal;
-		grTotalQty = grTotalQty+centerTotalQuantity;
+		centerBMTotal = totalsMap.get("Buffalo Milk").get("qtyLtrs");
+		centerCMTotal = totalsMap.get("Cow Milk").get("qtyLtrs");
+		centerTotalQuantity = totalsMap.get("TOT").get("qtyLtrs");
+		
 		centerDetailsMap.put("BMTotal",centerBMTotal);
 		centerDetailsMap.put("CMTotal",centerCMTotal);
 		centerDetailsMap.put("totalqty",centerTotalQuantity);
-		centerTotalsList.add(centerDetailsMap);
+			
+		if(UtilValidate.isNotEmpty(fromRange)&&(UtilValidate.isNotEmpty(toRange))){
+			if((centerTotalQuantity >= fromRange) && (centerTotalQuantity <= toRange )){
+				grBMTotals = grBMTotals+centerBMTotal;
+				grCMTotals = grCMTotals+centerCMTotal;
+				grTotalQty = grTotalQty+centerTotalQuantity;
+				centerTotalsList.add(centerDetailsMap);
+			}
+		}else{
+			grBMTotals = grBMTotals+centerBMTotal;
+			grCMTotals = grCMTotals+centerCMTotal;
+			grTotalQty = grTotalQty+centerTotalQuantity;
+			centerTotalsList.add(centerDetailsMap);
 		}
+	}else {
+		centerDetailsMap.put("centerCode",centerFacilityMap.get("facilityCode"));
+		centerDetailsMap.put("centerName",centerFacilityMap.get("facilityName"));
+		inActiveCentersList.add(centerDetailsMap);
+		
+	}
 }
 centerTotalsMap = [:];
 if(centerTotalsList){
@@ -104,9 +139,7 @@ unitTotalsMap.put("unitName",unitName);
 context.put("unitTotalsMap",unitTotalsMap);
 context.put("centerTotalsMap",centerTotalsMap);
 context.put("centerTotalsList",centerTotalsList);
-
-
-
+context.put("inActiveCentersList",inActiveCentersList);
 
 
  

@@ -25,6 +25,15 @@ import org.ofbiz.service.ServiceUtil;
 import org.ofbiz.base.util.UtilDateTime;
 import in.vasista.vbiz.procurement.ProcurementReports;
 import in.vasista.vbiz.procurement.ProcurementNetworkServices;
+
+if(UtilValidate.isEmpty(parameters.customTimePeriodId)){
+	parameters["customTimePeriodId"]= parameters.shedCustomTimePeriodId;
+}
+if(UtilValidate.isEmpty(parameters.customTimePeriodId)){
+	Debug.logError("customTimePeriod Cannot Be Empty","");
+	context.errorMessage = "No Shed Has Been Selected.......!";
+	return;
+}
 customTimePeriod=delegator.findOne("CustomTimePeriod",[customTimePeriodId : parameters.customTimePeriodId], false);
 fromDate=UtilDateTime.toTimestamp(customTimePeriod.getDate("fromDate"));
 thruDate=UtilDateTime.toTimestamp(customTimePeriod.getDate("thruDate"));
@@ -35,29 +44,87 @@ dctx = dispatcher.getDispatchContext();
 context.put("dctx",dctx);
 conditionList =[];
 unitTotalsMap =[:];
-if(parameters.shedId){
-	conditionList.add(EntityCondition.makeCondition(EntityCondition.makeCondition("parentFacilityId", EntityOperator.EQUALS, parameters.shedId)));
-}
-//conditionList.add(EntityCondition.makeCondition(EntityCondition.makeCondition("facilityTypeId", EntityOperator.EQUALS ,"UNIT")));
-condition = EntityCondition.makeCondition(conditionList,EntityOperator.AND);
-unitsList = delegator.findList("Facility",condition,null,null,null,false);
-unitsList.each{ unit ->	
-	unitTotals = ProcurementReports.getPeriodTotals(dctx , [fromDate: fromDate , thruDate: thruDate , facilityId: unit.facilityId]);
-	if(UtilValidate.isNotEmpty(unitTotals)){
-		unitTotalsMap[unit.facilityId] =[:];
-		unitTotalsMap[unit.facilityId].putAll(unitTotals);
-	}
+finalUnitTotMap=[:];
+if(UtilValidate.isEmpty(parameters.shedId)){
+	return;
 }
 procurementProductList =[];
 procurementProductList = ProcurementNetworkServices.getProcurementProducts(dispatcher.getDispatchContext(), UtilMisc.toMap());
 context.procurementProductList = procurementProductList;
-shedTotals = ProcurementReports.getPeriodTotals(dctx , [fromDate: fromDate , thruDate: thruDate , facilityId:  parameters.shedId]);
-Map shedWiseTotalValues =[:];
-Iterator mapIter = shedTotals.entrySet().iterator();
-	while(mapIter.hasNext()){
-		Map.Entry entry = mapIter.next();
-		Map shedValuesMap = (Map)entry.getValue();
-		shedWiseTotalValues = ((Map)((Map)((Map)shedValuesMap.get("dayTotals")).get("TOT")).get("TOT"));	
+//conditionList.add(EntityCondition.makeCondition(EntityCondition.makeCondition("facilityTypeId", EntityOperator.EQUALS ,"UNIT")));
+/*condition = EntityCondition.makeCondition(conditionList,EntityOperator.AND);
+unitsList = delegator.findList("Facility",condition,null,null,null,false);*/
+unitsListSorted = [];
+
+shedUnits = ProcurementNetworkServices.getShedCustomTimePeriodUnits(dctx,[shedId : parameters.shedId,customTimePeriodId : parameters.customTimePeriodId]);
+//shedUnits = ProcurementNetworkServices.getShedUnitsByShed(dctx,[shedId : parameters.shedId]);
+unitsListSorted = shedUnits.customTimePeriodUnitsDetailList;
+shedTotalsMap = [:];
+for(procProduct in procurementProductList){
+	shedTotalsMap[procProduct.brandName+"QtyKgs"] = 0;
+	shedTotalsMap[procProduct.brandName+"QtyLtrs"] = 0;
+	shedTotalsMap[procProduct.brandName+"kgFat"] = 0;
+	shedTotalsMap[procProduct.brandName+"kgSnf"] = 0;
+	shedTotalsMap[procProduct.brandName+"Solids"] = 0;
+}
+shedTotalsMap["totMixQtyKgs"] = 0;
+shedTotalsMap["totMixQtyLtrs"] = 0;
+shedTotalsMap["totMixKgFat"] = 0;
+shedTotalsMap["totMixKgSnf"] = 0;
+shedTotalsMap["totMixSolids"] = 0;
+shedTotalsMap["totMixPtcCurd"] = 0;
+shedTotalsMap["totMixCurdLtrs"] = 0;
+unitsListSorted.each{ unit ->	
+	unitBillAbstract = ProcurementNetworkServices.getUnitBillsAbstract(dctx , [customTimePeriodId: parameters.customTimePeriodId , unitId: unit.facilityId]);
+	
+	if(UtilValidate.isNotEmpty(unitBillAbstract)){
+	unitAbsTotals = unitBillAbstract.getAt("centerWiseAbsMap");
+	unitGrndValuesTot = (unitAbsTotals).getAt("TOT");
+	unitWiseDetailsMap=[:];
+		if(UtilValidate.isNotEmpty(unitGrndValuesTot)){		
+			for(procProduct in procurementProductList){
+				if(UtilValidate.isNotEmpty(unitGrndValuesTot.getAt(procProduct.productId))){
+					productAbs = unitGrndValuesTot.getAt(procProduct.productId);
+							
+					qtyKgs= productAbs.get("qtyKgs");
+					kgFat= productAbs.get("kgFat");
+					kgSnf= productAbs.get("kgSnf");
+					unitWiseDetailsMap[procProduct.brandName+"QtyKgs"] = qtyKgs;
+					unitWiseDetailsMap[procProduct.brandName+"QtyLtrs"] = productAbs.get("qtyLtrs");
+					unitWiseDetailsMap[procProduct.brandName+"kgFat"] = productAbs.get("kgFat");
+					unitWiseDetailsMap[procProduct.brandName+"kgSnf"] = productAbs.get("kgSnf");
+					unitWiseDetailsMap[procProduct.brandName+"Solids"] =productAbs.get("solids");
+				}
+			}
+			totProductMap = unitGrndValuesTot.get("TOT");
+			unitWiseDetailsMap["totQtyKgs"] = totProductMap.get("qtyKgs");
+			unitWiseDetailsMap["totQtyLtrs"] = totProductMap.get("qtyLtrs");
+			unitWiseDetailsMap["totKgFat"] = totProductMap.get("kgFat");
+			unitWiseDetailsMap["totKgSnf"] = totProductMap.get("kgSnf");
+			unitWiseDetailsMap["totSolids"] = totProductMap.get("solids");
+			unitWiseDetailsMap["ptcCurdQty"] = totProductMap.get("ptcCurd");
+			unitWiseDetailsMap["curdQtyLtrs"] = totProductMap.get("cQtyLtrs");
+		}
+		if(UtilValidate.isNotEmpty(unitWiseDetailsMap)){
+			finalUnitTotMap.put(unit.facilityId,unitWiseDetailsMap);
+			for(procProduct in procurementProductList){
+				shedTotalsMap[procProduct.brandName+"QtyKgs"] +=  (unitWiseDetailsMap.get(procProduct.brandName+"QtyKgs"));
+				shedTotalsMap[procProduct.brandName+"QtyLtrs"] += (unitWiseDetailsMap.get(procProduct.brandName+"QtyLtrs"));
+				shedTotalsMap[procProduct.brandName+"kgFat"] += (unitWiseDetailsMap.get(procProduct.brandName+"kgFat"));
+				shedTotalsMap[procProduct.brandName+"kgSnf"] += (unitWiseDetailsMap.get(procProduct.brandName+"kgSnf"));
+				shedTotalsMap[procProduct.brandName+"Solids"] =(unitWiseDetailsMap.get(procProduct.brandName+"Solids"));;
+			}
+			shedTotalsMap["totMixQtyKgs"] +=unitWiseDetailsMap.get("totQtyKgs");
+			shedTotalsMap["totMixQtyLtrs"] += unitWiseDetailsMap.get("totQtyLtrs");
+			shedTotalsMap["totMixKgFat"] += unitWiseDetailsMap.get("totKgFat");
+			shedTotalsMap["totMixKgSnf"] += unitWiseDetailsMap.get("totKgSnf");
+			shedTotalsMap["totMixSolids"] += unitWiseDetailsMap.get("totSolids");
+			shedTotalsMap["totMixPtcCurd"] += unitWiseDetailsMap.get("ptcCurdQty");
+			shedTotalsMap["totMixCurdLtrs"] += unitWiseDetailsMap.get("curdQtyLtrs");
+			
+		}
 	}
-context.putAt("shedWiseTotalValues", shedWiseTotalValues);
-context.put("unitTotalsMap", unitTotalsMap);
+	
+}
+context.putAt("finalUnitTotMap", finalUnitTotMap);
+context.putAt("shedTotalsMap", shedTotalsMap);	

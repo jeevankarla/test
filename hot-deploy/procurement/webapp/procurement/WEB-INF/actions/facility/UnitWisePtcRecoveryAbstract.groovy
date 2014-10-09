@@ -17,6 +17,16 @@ import javolution.util.FastList;
 import javolution.util.FastMap;
 import org.ofbiz.service.ServiceUtil;
 
+if(UtilValidate.isEmpty(parameters.customTimePeriodId)){
+	Debug.logError("customTimePeriod Cannot Be Empty","");
+	context.errorMessage = "No Shed Has Been Selected.......!";
+	return;
+}
+if(UtilValidate.isEmpty(parameters.unitId)){
+	Debug.logError("unitId Cannot Be Empty","");
+	context.errorMessage = "No Unit Has Been Selected.......!";
+	return;
+}
 customTimePeriod=delegator.findOne("CustomTimePeriod",[customTimePeriodId : parameters.customTimePeriodId], false);
 fromDateTime=UtilDateTime.toTimestamp(customTimePeriod.getDate("fromDate"));
 thruDateTime=UtilDateTime.toTimestamp(customTimePeriod.getDate("thruDate"));
@@ -26,6 +36,9 @@ dayBegin = UtilDateTime.getDayStart(fromDateTime, timeZone, locale);
 dayEnd = UtilDateTime.getDayEnd(thruDateTime , timeZone, locale);
 
 dctx = dispatcher.getDispatchContext();
+
+unitDetails = delegator.findOne("Facility",[facilityId : parameters.unitId],false);
+
 context.put("dctx",dctx);
 conditionList =[];
 conditionList.add(EntityCondition.makeCondition(EntityCondition.makeCondition("parentFacilityId", EntityOperator.EQUALS, parameters.unitId)));
@@ -62,6 +75,7 @@ unitWiseGtotMap["netAmountToRecover"] = 0;
 unitRoutesList.each{ route ->
 	routeWisePtcRecoveryMap = [:];
 	routeTotals = ProcurementReports.getPeriodTotals(dctx , [fromDate: dayBegin , thruDate: dayEnd , facilityId: route.facilityId ,includeCenterTotals: true]);
+	
 	routeWisePtcRecoveryMap["qtyLtrs"] = 0;
 	routeWisePtcRecoveryMap["qtyKgs"] = 0;
 	routeWisePtcRecoveryMap["fat"] = 0;
@@ -79,6 +93,8 @@ unitRoutesList.each{ route ->
 	
 	if(UtilValidate.isNotEmpty(routeTotals)){
 		centerWiseTots = routeTotals.get("centerWiseTotals");
+		
+		
 		routeCentersList = delegator.findList("Facility",EntityCondition.makeCondition("parentFacilityId", EntityOperator.EQUALS, route.facilityId),null,null,null,false);
 		
 		routeCentersList.each { center ->
@@ -120,32 +136,33 @@ unitRoutesList.each{ route ->
 									centerWisePtcRecoveryMap["centerName"] = center.facilityName;
 									centerWisePtcRecoveryMap["day"] = shipment;
 									centerWisePtcRecoveryMap["typ"] = procProd.brandName;
-									centerWisePtcRecoveryMap["qtyLtrs"] = ProcurementNetworkServices.convertKGToLitre(dataForShipAndProd.get("ptcQtyKgs"));
+									centerWisePtcRecoveryMap["qtyLtrs"] = (dataForShipAndProd.get("ptcQtyLtrs"));
 									centerWisePtcRecoveryMap["qtyKgs"] = dataForShipAndProd.get("ptcQtyKgs");
 									centerWisePtcRecoveryMap["fat"] = dataForShipAndProd.get("fat");
 									centerWisePtcRecoveryMap["snf"] = dataForShipAndProd.get("snf");
-									centerWisePtcRecoveryMap["kgFat"] = dataForShipAndProd.get("kgFat");
-									centerWisePtcRecoveryMap["kgSnf"] = dataForShipAndProd.get("kgSnf");
+									centerWisePtcRecoveryMap["kgFat"] = ProcurementNetworkServices.calculateKgFatOrKgSnf(dataForShipAndProd.get("ptcQtyKgs"),dataForShipAndProd.get("fat"));
+									centerWisePtcRecoveryMap["kgSnf"] = ProcurementNetworkServices.calculateKgFatOrKgSnf(dataForShipAndProd.get("ptcQtyKgs"),dataForShipAndProd.get("snf"))
 									
 									routeWisePtcRecoveryMap["dated"] = "ROUTE-TOT";
-									routeWisePtcRecoveryMap["centerCode"] = route.facilityId;
+									routeWisePtcRecoveryMap["centerCode"] = route.facilityCode;
 									routeWisePtcRecoveryMap["centerName"] = route.facilityName;
 									routeWisePtcRecoveryMap["qtyLtrs"] += centerWisePtcRecoveryMap.get("qtyLtrs");
 									routeWisePtcRecoveryMap["qtyKgs"] += dataForShipAndProd.get("ptcQtyKgs");
-									routeWisePtcRecoveryMap["fat"] += dataForShipAndProd.get("fat");
-									routeWisePtcRecoveryMap["snf"] += dataForShipAndProd.get("snf");
-									routeWisePtcRecoveryMap["kgFat"] += dataForShipAndProd.get("kgFat");
-									routeWisePtcRecoveryMap["kgSnf"] += dataForShipAndProd.get("kgSnf");
+									routeWisePtcRecoveryMap["kgFat"] += centerWisePtcRecoveryMap["kgFat"];
+									routeWisePtcRecoveryMap["kgSnf"] += centerWisePtcRecoveryMap["kgSnf"];
+									routeWisePtcRecoveryMap["fat"] = ProcurementNetworkServices.calculateKgFatOrKgSnf(routeWisePtcRecoveryMap.get("kgFat"),routeWisePtcRecoveryMap.get("qtyKgs"));
+									routeWisePtcRecoveryMap["snf"] = ProcurementNetworkServices.calculateKgFatOrKgSnf(routeWisePtcRecoveryMap.get("kgSnf"),routeWisePtcRecoveryMap.get("qtyKgs"));
+									
 									
 									unitWiseGtotMap["dated"] = "UNIT-TOT";
-									unitWiseGtotMap["centerCode"] = parameters.unitId;
+									unitWiseGtotMap["centerCode"] = unitDetails.facilityCode;
 									unitWiseGtotMap["centerName"] = "Unit Total";
 									unitWiseGtotMap["qtyLtrs"] += centerWisePtcRecoveryMap.get("qtyLtrs");
 									unitWiseGtotMap["qtyKgs"] += dataForShipAndProd.get("ptcQtyKgs");
-									unitWiseGtotMap["fat"] += dataForShipAndProd.get("fat");
-									unitWiseGtotMap["snf"] += dataForShipAndProd.get("snf");
-									unitWiseGtotMap["kgFat"] += dataForShipAndProd.get("kgFat");
-									unitWiseGtotMap["kgSnf"] += dataForShipAndProd.get("kgSnf");
+									unitWiseGtotMap["kgFat"] += centerWisePtcRecoveryMap["kgFat"];
+									unitWiseGtotMap["kgSnf"] += centerWisePtcRecoveryMap["kgSnf"];
+									unitWiseGtotMap["fat"] = ProcurementNetworkServices.calculateKgFatOrKgSnf(unitWiseGtotMap.get("kgFat"),unitWiseGtotMap.get("qtyKgs"));
+									unitWiseGtotMap["snf"] = ProcurementNetworkServices.calculateKgFatOrKgSnf(unitWiseGtotMap.get("kgFat"),unitWiseGtotMap.get("qtyKgs"));
 									
 									//rate
 									inMap = [:];
@@ -153,8 +170,8 @@ unitRoutesList.each{ route ->
 									inMap.put("facilityId",center.facilityId);
 									inMap.put("priceDate",priceDate);
 									inMap.put("productId", procProd.productId);
-									inMap.put("fatPercent", dataForShipAndProd.get("fat"));
-									inMap.put("snfPercent", dataForShipAndProd.get("snf"));
+									inMap.put("fatPercent", centerWisePtcRecoveryMap.get("fat"));
+									inMap.put("snfPercent", centerWisePtcRecoveryMap.get("snf"));
 									inMap.put("supplyTypeEnumId",shipment);
 									inMap.put("categoryTypeEnum",center.categoryTypeEnum);
 									rateMap = dispatcher.runSync("calculateProcurementProductPrice",inMap);
@@ -163,14 +180,18 @@ unitRoutesList.each{ route ->
 										return ;
 									}
 									
+									String usetotalSolids = rateMap.get("useTotalSolids");
 									//rate and totPrem
 									centerWisePtcRecoveryMap["rate"] = rateMap.get("defaultRate");
-									centerWisePtcRecoveryMap["totAmount"] = dataForShipAndProd.get("price");
-									routeWisePtcRecoveryMap["totAmount"] += dataForShipAndProd.get("price");
-									unitWiseGtotMap["totAmount"] += dataForShipAndProd.get("price");
-									centerWisePtcRecoveryMap["totPrem"] = dataForShipAndProd.get("totPrem");
-									routeWisePtcRecoveryMap["totPrem"] += dataForShipAndProd.get("totPrem");
-									unitWiseGtotMap["totPrem"] += dataForShipAndProd.get("totPrem");
+									grossAmt=0;
+									grossAmt =(centerWisePtcRecoveryMap.get("qtyKgs"))*rateMap.get("price");
+									premium = rateMap.get("premium")*centerWisePtcRecoveryMap.get("qtyKgs");
+									centerWisePtcRecoveryMap["totAmount"] = grossAmt-premium;
+									routeWisePtcRecoveryMap["totAmount"] += centerWisePtcRecoveryMap["totAmount"];
+									unitWiseGtotMap["totAmount"] += centerWisePtcRecoveryMap["totAmount"];
+									centerWisePtcRecoveryMap["totPrem"] = premium;
+									routeWisePtcRecoveryMap["totPrem"] += premium;
+									unitWiseGtotMap["totPrem"] += premium;
 									
 									//netamount = totVal - totprem;
 									centerWisePtcRecoveryMap["netAmount"] = centerWisePtcRecoveryMap.get("totAmount")+centerWisePtcRecoveryMap.get("totPrem");
@@ -178,6 +199,7 @@ unitRoutesList.each{ route ->
 									unitWiseGtotMap["netAmount"] += centerWisePtcRecoveryMap.get("netAmount");
 									
 									//tip amount
+									inputFacRateAmt.put("productId", procProd.productId);
 									inputFacRateAmt.put("rateTypeId", "PROC_TIP_AMOUNT");
 									inputFacRateAmt.put("facilityId",parameters.unitId);
 									centerRateAmount = dispatcher.runSync("getProcurementFacilityRateAmount", inputFacRateAmt);
@@ -185,8 +207,11 @@ unitRoutesList.each{ route ->
 										context.errorMessage = "No valid rate Amount found for the given Unit";
 										return ;
 									}
-									
-									centerWisePtcRecoveryMap["tipAmount"] = dataForShipAndProd.get("ptcQtyKgs")*(centerRateAmount.rateAmount);
+									if(UtilValidate.isNotEmpty(usetotalSolids)&&( usetotalSolids.equalsIgnoreCase("Y"))){
+										centerWisePtcRecoveryMap["tipAmount"] = (centerWisePtcRecoveryMap.get("kgFat")+centerWisePtcRecoveryMap.get("kgSnf"))*(centerRateAmount.rateAmount);
+									}else{
+									    centerWisePtcRecoveryMap["tipAmount"] = (centerWisePtcRecoveryMap.get("kgFat"))*(centerRateAmount.rateAmount);
+									}
 									routeWisePtcRecoveryMap["tipAmount"] += centerWisePtcRecoveryMap.get("tipAmount");
 									unitWiseGtotMap["tipAmount"] += centerWisePtcRecoveryMap.get("tipAmount");
 									
@@ -196,14 +221,14 @@ unitRoutesList.each{ route ->
 									unitWiseGtotMap["difAmount"] = 0.00;
 									
 									//PENALITY
-									inputFacRateAmt.put("rateTypeId", "PROC_PENALITY_AMOUNT");
+									inputFacRateAmt.put("rateTypeId", "PROC_PENALTY_AMOUNT");
 									inputFacRateAmt.put("facilityId",center.facilityId);
 									centerPenalityAmount = dispatcher.runSync("getProcurementFacilityRateAmount", inputFacRateAmt);
 									if (ServiceUtil.isError(centerPenalityAmount)) {
 										context.errorMessage = "No valid Penality Amount found for the given Facility";
 										return ;
 									}
-									centerWisePtcRecoveryMap["penality"] = dataForShipAndProd.get("ptcQtyKgs")*(centerPenalityAmount.rateAmount);
+									centerWisePtcRecoveryMap["penality"] = centerWisePtcRecoveryMap.get("qtyLtrs")*(centerPenalityAmount.rateAmount);
 									routeWisePtcRecoveryMap["penality"] += centerWisePtcRecoveryMap.get("penality");
 									unitWiseGtotMap["penality"] += centerWisePtcRecoveryMap.get("penality");
 									
@@ -220,10 +245,19 @@ unitRoutesList.each{ route ->
 									}
 									
 									//sValue
-									if(centerWisePtcRecoveryMap.get("curdOrSour")=="C"){
+									if(centerWisePtcRecoveryMap.get("curdOrSour")=="CURD"){
 										centerWisePtcRecoveryMap["sValue"] = 0;
 									}else{
-									centerWisePtcRecoveryMap["sValue"] = 0;
+									    sourRate = rateMap.get("sourRate");
+										sValue = 0;
+										// need to configure snf value here  the value is taken as 8 
+										if(UtilValidate.isNotEmpty(usetotalSolids)&&( usetotalSolids.equalsIgnoreCase("Y"))){
+												sValue = (centerWisePtcRecoveryMap.get("qtyKgs")*sourRate*((centerWisePtcRecoveryMap.get("fat"))+8))/100;
+											}else{
+												sValue = centerWisePtcRecoveryMap.get("kgFat")*sourRate;
+											}
+										
+										centerWisePtcRecoveryMap["sValue"] =sValue;
 									}
 									routeWisePtcRecoveryMap["sValue"] += centerWisePtcRecoveryMap.get("sValue");
 									unitWiseGtotMap["sValue"] += centerWisePtcRecoveryMap.get("sValue");

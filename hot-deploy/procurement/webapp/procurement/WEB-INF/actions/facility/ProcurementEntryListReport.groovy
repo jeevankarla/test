@@ -19,6 +19,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import in.vasista.vbiz.procurement.ProcurementNetworkServices;
 import in.vasista.vbiz.procurement.ProcurementReports;
+import org.ofbiz.service.ServiceUtil;
 
 dctx = dispatcher.getDispatchContext();
 unitRoutes = ProcurementNetworkServices.getUnitRoutes(dctx,UtilMisc.toMap("unitId", parameters.unitId));
@@ -43,6 +44,28 @@ procurementProductList =[];
 procurementProductList = ProcurementNetworkServices.getProcurementProducts(dctx, UtilMisc.toMap());
 context.put("procurementProductList",procurementProductList);
 
+tenConfigFacilityId ="";
+if(UtilValidate.isNotEmpty(parameters.shedId)){
+	tenConfigFacilityId = parameters.shedId;
+}
+
+
+Map tenantConfigSettings = FastMap.newInstance();
+Map tenantConfigMap = FastMap.newInstance();
+String enableLR = "N";
+if(UtilValidate.isNotEmpty(tenConfigFacilityId)){
+	tenantConfigMap = dispatcher.runSync("getFacilityTenantConfigurations",UtilMisc.toMap("userLogin", userLogin, "facilityId", tenConfigFacilityId));
+	if(ServiceUtil.isSuccess(tenantConfigMap)){
+		tenantConfigSettings = tenantConfigMap.get("tenantConfigurationsMap");
+		
+	}
+}
+context.put("tenantConfigSettings",tenantConfigSettings);
+if(UtilValidate.isNotEmpty(tenantConfigSettings)&& UtilValidate.isNotEmpty(tenantConfigSettings.get("enableLR"))){
+	enableLR=tenantConfigSettings.get("enableLR");
+	}
+
+context.put("enableLR",enableLR);
 conditionList = [];
 if(parameters.checkListType !='All'){
 	conditionList.add(EntityCondition.makeCondition("changeByUserLoginId", EntityOperator.EQUALS , userLogin.userLoginId));
@@ -63,8 +86,7 @@ tempDate ="";
 dayWiseEntryMap=[:];
 tempList =[];
 int lastEntryValue =0;
-for(orderItems in orderItemsList){
-	lastEntryValue =lastEntryValue+1;
+for(orderItems in orderItemsList){	
 	if(tempDate == ""){
 		tempDate = orderItems.estimatedDeliveryDate;
 	}	
@@ -74,10 +96,11 @@ for(orderItems in orderItemsList){
 		tempList=[];
 	}
 	tempList.add(orderItems);		
-	dayWiseEntryMap[tempDate]=(tempList);
+	/*dayWiseEntryMap[tempDate]=(tempList);*/
 	if(lastEntryValue == orderItemsList.size()-1){		
 		dayWiseEntryMap[tempDate]=(tempList);
 	}
+	lastEntryValue =lastEntryValue+1;
 }
 context.putAt("dayWiseEntryMap", dayWiseEntryMap);
 Map GrTotMap = FastMap.newInstance();
@@ -86,6 +109,7 @@ Map tempMap =FastMap.newInstance();
 tempMap["QtyKgs"] = BigDecimal.ZERO;
 tempMap["kgFat"] = BigDecimal.ZERO;
 tempMap["kgSnf"] = BigDecimal.ZERO;
+tempMap["unitPrice"] = BigDecimal.ZERO;
 tempMap["SqtyLts"] = BigDecimal.ZERO;
 tempMap["SFat"] = BigDecimal.ZERO;
 tempMap["CqtyLts"] = BigDecimal.ZERO;
@@ -95,6 +119,7 @@ for(procProduct in procurementProductList){
 	tempMap["QtyKgs"+procProduct.brandName] = BigDecimal.ZERO;
 	tempMap["kgFat"+procProduct.brandName] = BigDecimal.ZERO;
 	tempMap["kgSnf"+procProduct.brandName] = BigDecimal.ZERO;
+	tempMap["unitPrice"+procProduct.brandName] = BigDecimal.ZERO;
 	tempMap["SqtyLts"+procProduct.brandName] = BigDecimal.ZERO;
 	tempMap["SFat"+procProduct.brandName] = BigDecimal.ZERO;
 	tempMap["CqtyLts"+procProduct.brandName] = BigDecimal.ZERO;
@@ -126,7 +151,8 @@ for(int i=0;i < orderItemsList.size();i++){
 				
 				//Code for Calculating Day total
 				tempDayTotMap["QtyKgs"+procProduct.brandName] += orderItem.quantity;;
-				tempDayTotMap["QtyKgs"] += orderItem.quantity;				
+				tempDayTotMap["QtyKgs"] += orderItem.quantity;	
+				tempDayTotMap["unitPrice"+procProduct.brandName] += (orderItem.unitPrice).setScale(2,3);
 				tempDayTotMap["kgFat"+procProduct.brandName] += kgFat;
 				tempDayTotMap["kgFat"] += kgFat;
 				tempDayTotMap["kgSnf"+procProduct.brandName] += kgSnf;

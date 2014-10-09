@@ -23,12 +23,43 @@ under the License.
         
    <simple-method method-name="deleteProcurementEntry" short-description="Delete Procurement Entry">        
         <entity-one entity-name="OrderItem" value-field="lookedUpValue"/>
+        <set-current-user-login value-field="userLogin"/>
+        <entity-one value-field="createdUserLoginValue" entity-name="UserLogin">
+        	<field-map field-name="userLoginId" from-field="lookedUpValue.createdByUserLoginId"/>
+        </entity-one>
+        <set field="userLoginPartyId"  from-field="createdUserLoginValue.partyId" />
+        <if>
+        	<condition>
+	        	<not>
+	        		<or>
+	        			<if-has-permission permission="PROCUREMENTENTRY" action="_DELETE"/>
+	        			<if-compare operator="equals" value="${userLogin.partyId}" field="userLoginPartyId" type="String"/>
+	        		</or>
+	        	</not>	
+        	</condition>
+        	<then>
+        		<add-error>
+        			<fail-message message="you do not have permission to delete entry."/>
+        		</add-error>
+        		<check-errors/>
+        	</then>
+        </if>
         <if-compare operator="equals" value="ITEM_APPROVED" field="lookedUpValue.statusId">
         	<add-error>
         		<fail-message message="you can not delete entry, once  billing is generated."/>
         	</add-error>
         	<check-errors/>
-        </if-compare> 
+        </if-compare>
+        <entity-and list="orderItemBillingList" entity-name="OrderItemBilling">
+        	<field-map field-name="orderId" from-field="lookedUpValue.orderId"/>
+        	<field-map field-name="orderItemSeqId" from-field="lookedUpValue.orderItemSeqId"/>
+        </entity-and>
+        <entity-and list="procValidationList" entity-name="ProcBillingValidation">
+        	<field-map field-name="orderId" from-field="lookedUpValue.orderId"/>
+        	<field-map field-name="orderItemSeqId" from-field="lookedUpValue.orderItemSeqId"/>
+        </entity-and>        
+      <remove-list list="orderItemBillingList"/>
+      <remove-list list="procValidationList"/>
       <remove-value value-field="lookedUpValue"/>
         <field-to-result field="lookedUpValue.orderId" result-name="orderId"></field-to-result>
         <return response-code="entry deleted, quantity '${lookedUpValue.quantity}'"/>
@@ -82,15 +113,24 @@ under the License.
         <find-by-primary-key map="lookupPKMap" value-field="lookedUpValue"/>
         <remove-value value-field="lookedUpValue"/>
     </simple-method>
+    <simple-method method-name="updateProcFaciltiyOutputEntry" short-description="Update an OutputEntry Record">
+        <entity-one entity-name="ProcFacilityOutput" value-field="lookedUpValue"/>
+        <set-nonpk-fields map="parameters" value-field="lookedUpValue"/>
+        <set-current-user-login value-field="userLogin"/>
+        <store-value value-field="lookedUpValue"/>
+    </simple-method>
     <simple-method method-name="deleteProFacilityOutputEntry" short-description="Delete an Facility Output Entry">
+       	<!-- <set field="checkProcPeriodBillingInMap.facilityId" from-field="parameters.facilityId"/>
        	<set field="checkProcPeriodBillingInMap.customTimePeriodId" from-field="parameters.customTimePeriodId"/>
        	<set field="checkProcPeriodBillingInMap.userLogin" from-field="parameters.userLogin"/>
  		<call-service service-name="checkProcPeriodBilling" in-map-name="checkProcPeriodBillingInMap">
  			<result-to-field  result-name="checkPeriodBillingResult" field="checkPeriodBillingResult"/>
  		</call-service>
- 		<check-errors />
-	    <make-value entity-name="ProcFacilityOutput" value-field="lookedUpValue"/>
-        <set-pk-fields value-field="lookedUpValue" map="parameters"/>
-        <remove-value value-field="lookedUpValue"/>
+ 		<check-errors /> -->
+		<make-value entity-name="ProcFacilityOutput" value-field="lookedUpValue"/>
+       	<set-pk-fields value-field="lookedUpValue" map="parameters"/>
+       	<remove-value value-field="lookedUpValue"/>
+       	<return response-code="entry deleted"/>	
+ 		
     </simple-method>
 </simple-methods>

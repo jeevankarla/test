@@ -37,9 +37,12 @@ function milkTypeChangeHandler(){
 	jQuery('[name= cQuantityLtrs]').val('0');
 	if(milkTypeValue == 'S' ){
 		jQuery('[name=gheeYield]').parent().parent().show();
-		jQuery('[name=sFat]').parent().parent().show();
+		//jQuery('[name=sFat]').parent().parent().show();
+		jQuery('[name=sKgFat]').parent().parent().show();
+		jQuery('[name=sKgSnf]').parent().parent().show();
 		jQuery('[name = sQuantityLtrs]').parent().parent().show();
-		jQuery('[name = sFat]').addClass("required");
+		//jQuery('[name = sFat]').addClass("required");
+		jQuery('[name = sKgFat]').addClass("required");
 		jQuery('[name = sQuantityLtrs]').addClass("required");
 		jQuery('[name=sQuantityLtrs]').val('');
 		jQuery('[name= cQuantityLtrs]').parent().parent().hide();
@@ -49,19 +52,25 @@ function milkTypeChangeHandler(){
 	}else if(milkTypeValue=='C'){
 		jQuery('[name= gheeYield]').parent().parent().hide();
 		jQuery('[name= sQuantityLtrs]').parent().parent().hide();
-		jQuery('[name= sFat]').parent().parent().hide();
+		//jQuery('[name= sFat]').parent().parent().hide();
+		jQuery('[name= sKgFat]').parent().parent().hide();
+		jQuery('[name= sKgSnf]').parent().parent().hide();
 		jQuery('[name= sQuantityLtrs]').removeClass("required");
-		jQuery('[name = sFat]').removeClass("required");
+		//jQuery('[name = sFat]').removeClass("required");
+		jQuery('[name = sKgFat]').removeClass("required");
 		jQuery('[name= gheeYield]').removeClass("required");
 		jQuery('[name= cQuantityLtrs]').parent().parent().show();
 		jQuery('#addSourDistribution').hide();
 	}else{
 		jQuery('[name = sQuantityLtrs]').parent().parent().hide();
-		jQuery('[name=sFat]').parent().parent().hide();
+		//jQuery('[name=sFat]').parent().parent().hide();
+		jQuery('[name=sKgFat]').parent().parent().hide();
+		jQuery('[name=sKgSnf]').parent().parent().hide();
 		jQuery('[name= cQuantityLtrs]').parent().parent().hide();
 		jQuery('[name = gheeYield]').parent().parent().hide();
 		jQuery('[name= sQuantityLtrs]').removeClass("required");
-		jQuery('[name= sFat]').removeClass("required");
+		jQuery('[name= sKgFat]').removeClass("required");
+		//jQuery('[name= sFat]').removeClass("required");
 		jQuery('[name= gheeYield]').removeClass("required");
 		jQuery('[name= cQuantityLtrs]').removeClass("required");
 		jQuery('#addSourDistribution').hide();

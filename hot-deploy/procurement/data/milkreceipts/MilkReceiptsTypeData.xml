@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<entity-engine-xml>
+	<Enumeration description="Milk Receipts" enumCode="MILK_RECEIPTS" enumId="MILK_RECEIPTS" sequenceId="01" enumTypeId="PROC_ORD_PUR_TYPE"/>
+ 	<ProductCategory longDescription="Milk Receipts Products" productCategoryId="MILK_RECEIPTS" categoryName="Milk Receipts" productCategoryTypeId="CATALOG_CATEGORY"/>
+	
+	<EnumerationType enumTypeId="BILL_QTY_TYPE"  description="Bill Quantity Types"/>
+    <Enumeration description="Dispatched Qty" enumCode="DISP_QTY" enumId="DISP_QTY" sequenceId="1" enumTypeId="BILL_QTY_TYPE"/>
+    <Enumeration description="Acknoledged Qty" enumCode="ACK_QTY" enumId="ACK_QTY" sequenceId="2" enumTypeId="BILL_QTY_TYPE "/>
+	
+	
+	<EnumerationType enumTypeId="FACILITY_MCC_TYPE"  description="Facility MCC Types"/>
+    <Enumeration description="Federation" enumCode="FEDERATION" enumId="FEDERATION" sequenceId="1" enumTypeId="FACILITY_MCC_TYPE"/>
+    <Enumeration description="Union" enumCode="UNION" enumId="UNION" sequenceId="2" enumTypeId="FACILITY_MCC_TYPE"/>
+    <Enumeration description="Others" enumCode="OTHERS" enumId="OTHERS" sequenceId="3" enumTypeId="FACILITY_MCC_TYPE"/>
+    
+    <EnumerationType enumTypeId="MILK_CELL_TYPE"  description="Milk Receipt cell Types"/>
+    <Enumeration description="FirstCell" enumCode="FC" enumId="FC" sequenceId="1" enumTypeId="MILK_CELL_TYPE"/>
+    <Enumeration description="MiddleCell" enumCode="MC" enumId="MC" sequenceId="2" enumTypeId="MILK_CELL_TYPE"/>
+    <Enumeration description="BackCell" enumCode="BC" enumId="BC" sequenceId="3" enumTypeId="MILK_CELL_TYPE"/>
+    
+    
+    <EnumerationType enumTypeId="FAC_INC_EXP_TYPE"  description="Milk Receipt INCOME,EXPENDITURE Types"/>
+    <EnumerationType enumTypeId="FAC_INC" parentTypeId="FAC_INC_EXP_TYPE" description="Milk Receipt Income Types"/>
+    <EnumerationType enumTypeId="FAC_EXP" parentTypeId="FAC_INC_EXP_TYPE" description="Milk Receipt Expenditure Types"/>
+    <Enumeration description="sales" enumCode="SALES" enumId="SALES" sequenceId="1" enumTypeId="FAC_INC"/>
+    <Enumeration description="salaries" enumCode="SALARY" enumId="SALARY" sequenceId="3" enumTypeId="FAC_EXP"/>
+    <Enumeration description="store material Value" enumCode="STORE_MATERIAL" enumId="STORE_MATERIAL" sequenceId="4" enumTypeId="FAC_EXP"/>
+    <Enumeration description="milk Products Value" enumCode="MLK_PROD_VAL" enumId="MLK_PROD_VAL" sequenceId="5" enumTypeId="FAC_EXP"/>
+    <Enumeration description="opcost Released" enumCode="OPCOST_RELSD" enumId="OPCOST_RELSD" sequenceId="6" enumTypeId="FAC_EXP"/>
+    
+    <EnumerationType description="Milk Receipts Error Validation Type" enumTypeId="MLK_RCPT_VAL_TYPE" hasTable="N" parentTypeId=""/>
+   	<Enumeration description="Quantity Variation" enumCode="QTY_VALIDATION" enumId="QTY_VALIDATION" enumTypeId="MLK_RCPT_VAL_TYPE"/>
+   	<Enumeration description="Snf.Fat range validation" enumCode="SNFFAT_CHECK" enumId="SNFFAT_CHECK" enumTypeId="MLK_RCPT_VAL_TYPE"/>
+   	<ProcBillingValidationRule shedId="_NA_" productId="111" validationTypeId="SNFFAT_CHECK" fromDate="2013-01-01 00:00:00.0" minFat="5" maxFat="8" minSnf="7.8" maxSnf="9.5"/>
+   	<ProcBillingValidationRule shedId="_NA_" productId="211" validationTypeId="SNFFAT_CHECK" fromDate="2013-01-01 00:00:00.0" minFat="3" maxFat="5.2" minSnf="7.8" maxSnf="9.5"/>
+   	<ProcBillingValidationRule shedId="_NA_" productId="103" validationTypeId="SNFFAT_CHECK" fromDate="2013-01-01 00:00:00.0" minFat="5" maxFat="8" minSnf="7.8" maxSnf="9.5"/>
+   	<ProcBillingValidationRule shedId="_NA_" productId="333" validationTypeId="SNFFAT_CHECK" fromDate="2013-01-01 00:00:00.0" minFat="5" maxFat="8" minSnf="7.8" maxSnf="9.5"/>
+   	<ProcBillingValidationRule shedId="_NA_" productId="221" validationTypeId="SNFFAT_CHECK" fromDate="2013-01-01 00:00:00.0" minFat="0.05" maxFat="0.45" minSnf="7.8" maxSnf="9.5"/>
+   	<ProcBillingValidationRule shedId="_NA_" productId="121" validationTypeId="SNFFAT_CHECK" fromDate="2013-01-01 00:00:00.0" minFat="0.05" maxFat="0.45" minSnf="7.8" maxSnf="9.5"/>
+   	
+   	<ProcBillingValidationRule shedId="_NA_" productId="_NA_" validationTypeId="QTY_VALIDATION" fromDate="2013-01-01 00:00:00.0" minFat="24" maxFat="36" quantity="100"/>
+    
+</entity-engine-xml>

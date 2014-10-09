@@ -57,7 +57,7 @@ under the License.
         <field name="facilityName"><text-find/></field>
         <field name="parentFacilityId" title="Route/Parent Facility Id"><text-find/></field>
         <field name="facilityTypeId_0" title="FacilityTypeId">
-            <drop-down allow-empty="true" no-current-selected-key="CENTER" >
+            <drop-down allow-empty="false" no-current-selected-key="CENTER" >
                 <option key="CENTER" description="CENTER"/>               
             </drop-down>
         </field>
@@ -73,7 +73,6 @@ under the License.
         <field name="noConditionFind"><hidden value="Y"/><!-- if this isn't there then with all fields empty no query will be done --></field>
         <field name="submitButton" title="${uiLabelMap.CommonFind}" widget-style="smallSubmit"><submit button-type="button"/></field>
     </form>
- 
  	<form name="listProcurementLookupFacility" list-name="listIt" title="" type="list"
         odd-row-style="alternate-row" default-table-style="basic-table hover-bar" paginate-target="ProcurementLookupFacility">
         <actions>
@@ -88,6 +87,62 @@ under the License.
             <hyperlink also-hidden="false" target-type="plain" description="${facilityId}" target="javascript:set_values('${facilityId}', '${facilityName}')"/>
         </field>
         <field name="facilityName" ><display/></field>
+        <field name="facilityTypeId"><display/></field>
+ 	</form>
+ 	<form name="procurementUnitLookupFacility" target="ProcurementUnitLookupFacility" title="" type="single"
+        header-row-style="header-row" default-table-style="basic-table">
+        
+        <!--<auto-fields-entity entity-name="Facility" default-field-type="hidden"/> -->
+        <field name="facilityId"><text-find/></field>
+        <field name="facilityName"><text-find/></field>
+        <field name="parentFacilityId" title="Route/Parent Facility Id"><text-find/></field>
+        <field name="facilityTypeId_0" title="FacilityTypeId">
+            <drop-down allow-empty="false" no-current-selected-key="UNIT" >
+                <option key="UNIT" description="UNIT"/>               
+            </drop-down>
+        </field>
+        <!-- <field name="categoryTypeEnum" title="${uiLabelMap.ProductFacilityCategoryType}">
+            <drop-down allow-empty="true">
+                <entity-options entity-name="Enumeration" description="${description}" key-field-name="enumId">
+                    <entity-constraint name="enumTypeId" value="BOOTH_CAT_TYPE"/>
+                    <entity-order-by field-name="sequenceId"/>
+                </entity-options>
+            </drop-down>
+        </field>   -->      
+        <field name="ownerPartyId" title="${uiLabelMap.ProductFacilityOwner}"><lookup target-form-name="LookupPartyName"/></field>
+        <field name="noConditionFind"><hidden value="Y"/><!-- if this isn't there then with all fields empty no query will be done --></field>
+        <field name="submitButton" title="${uiLabelMap.CommonFind}" widget-style="smallSubmit"><submit button-type="button"/></field>
+    </form>
+ 	<form name="listProcurementCenterLookupFacility" list-name="listIt" title="" type="list"
+        odd-row-style="alternate-row" default-table-style="basic-table hover-bar" paginate-target="ProcurementCenterLookupFacility">
+        <actions>
+            <service service-name="performFind" result-map="result" result-map-list="listIt">
+                <field-map field-name="inputFields" from-field="parameters"/>
+                <field-map field-name="entityName" value="Facility"/>
+                <field-map field-name="viewIndex" from-field="viewIndex"/>
+                <field-map field-name="viewSize" from-field="viewSize"/>
+            </service>
+        </actions>
+        <field name="facilityId" title="${uiLabelMap.CommonEmptyHeader}" widget-style="buttontext">
+            <hyperlink also-hidden="false" target-type="plain" description="${facilityId}" target="javascript:set_values('${facilityId}', '${facilityName}')"/>
+        </field>
+        <field name="facilityName" ><display /></field>
+        <field name="facilityTypeId"><display/></field>
+ 	</form>
+ 	<form name="listProcurementUnitLookupFacility" list-name="listIt" title="" type="list"
+        odd-row-style="alternate-row" default-table-style="basic-table hover-bar" paginate-target="ProcurementUnitLookupFacility">
+        <actions>
+            <service service-name="performFind" result-map="result" result-map-list="listIt">
+                <field-map field-name="inputFields" from-field="parameters"/>
+                <field-map field-name="entityName" value="Facility"/>
+                <field-map field-name="viewIndex" from-field="viewIndex"/>
+                <field-map field-name="viewSize" from-field="viewSize"/>
+            </service>
+        </actions>
+        <field name="facilityId" title="${uiLabelMap.CommonEmptyHeader}" widget-style="buttontext">
+            <hyperlink also-hidden="false" target-type="plain" description="${facilityId}" target="javascript:set_values('${facilityId}', '${facilityName}' )"/>
+        </field>
+        <field name="facilityName" ><display description=" ${facilityName}-${groovy:import org.ofbiz.base.util.*; return (in.vasista.vbiz.procurement.ProcurementNetworkServices.getShedDetailsForFacility(dispatcher.getDispatchContext() ,UtilMisc.toMap(&quot;facilityId&quot;,facilityId))).get(&quot;facility&quot;).get(&quot;facilityId&quot;);}" /></field>
         <field name="facilityTypeId"><display/></field>
  	</form>          
 </forms>        

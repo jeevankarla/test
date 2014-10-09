@@ -1047,8 +1047,10 @@ under the License.
         <field name="defaultWeightUomId" type="id"></field>
         <field name="geoPointId" type="id"></field>
         <field name="facilityCode" type="id"></field>
-      	<field name="cashDues" type="currency-amount"></field>      
-      	<field name="district" type="name"></field>	       	         	    	   
+        <field name="mccCode" type="id"></field>
+        <field name="mccTypeId" type="id"></field>
+      	<field name="cashDues" type="currency-amount"></field>
+      	<field name="district" type="name"></field>
       	<field name="useEcs" type="indicator"><description>If this facility wants ecs then check this flag.</description></field>      	       	         	    	   
         
         <prim-key field="facilityId"/>
@@ -2454,6 +2456,86 @@ under the License.
       </relation>
       <relation type="one" fk-name="INV_XFER_ISSU" rel-entity-name="ItemIssuance">
         <key-map field-name="itemIssuanceId"/>
+      </relation>
+    </entity>
+    <entity entity-name="MilkTransferAdvice"
+            package-name="org.ofbiz.product.inventory"
+            title="Milk Transfer Advice Entity">
+      <field name="milkTransferId" type="id-ne"></field>
+      <field name="facilityId" type="id"></field>
+      <field name="quantityLtrs" type="fixed-point"></field>
+      <field name="createdByUserLogin" type="id-vlong"></field>
+      <field name="lastModifiedByUserLogin" type="id-vlong"></field>
+      <prim-key field="milkTransferId"/>
+      <prim-key field="facilityId"/>
+      <relation rel-entity-name="MilkTransfer" type="one" fk-name="SD_MXFID_MXF">
+           <key-map field-name="milkTransferId"/>
+      </relation>
+      <relation rel-entity-name="Facility" type="one" fk-name="SD_FAC_FACILITY">
+           <key-map field-name="facilityId"/>
+      </relation>
+      <relation type="one" fk-name="SD_CBUL" title="CreatedBy" rel-entity-name="UserLogin">
+        <key-map field-name="createdByUserLogin" rel-field-name="userLoginId"/>
+      </relation>
+      <relation type="one" fk-name="SD_LMBUL" title="ModifiedBy" rel-entity-name="UserLogin">
+        <key-map field-name="lastModifiedByUserLogin" rel-field-name="userLoginId"/>
+      </relation>
+    </entity>        
+    <entity entity-name="MilkTransfer"
+            package-name="org.ofbiz.product.inventory"
+            title="Milk Transfer Entity">
+       <field name="milkTransferId" type="id-ne"></field>
+      <field name="statusId" type="id-ne"></field>
+      <field name="facilityId" type="id"></field>
+      <field name="facilityIdTo" type="id"></field>
+      <field name="productId" type="id-ne"></field>
+      <field name="quantity" type="fixed-point"></field>
+      <field name="snf" type="fixed-point"></field>
+      <field name="fat" type="fixed-point"></field>
+      <field name="sendKgFat" type="fixed-point"></field>
+      <field name="sendKgSnf" type="fixed-point"></field>
+      <field name="sendLR" type="fixed-point"></field>
+      <field name="sQuantityLtrs" type="fixed-point"></field>
+      <field name="sFat" type="fixed-point"></field>
+      <field name="cQuantityLtrs" type="fixed-point"></field>
+      <field name="receivedQuantity" type="fixed-point"></field>
+      <field name="milkType" type="indicator"></field>
+      <field name="receivedSnf" type="fixed-point"></field>
+      <field name="receivedFat" type="fixed-point"></field>
+      <field name="receivedKgFat" type="fixed-point"></field>
+      <field name="receivedKgSnf" type="fixed-point"></field>
+      <field name="receivedLR" type="fixed-point"></field>
+      <field name="gheeYield" type="fixed-point"></field>
+      <field name="containerId" type="id"></field>
+      <field name="sendDate" type="date-time"></field>
+      <field name="receiveDate" type="date-time"></field>
+      <field name="comments" type="comment"></field>
+      <field name="createdByUserLogin" type="id-vlong"></field>
+      <field name="lastModifiedByUserLogin" type="id-vlong"></field>
+      <prim-key field="milkTransferId"/>
+      <relation type="one" fk-name="MILK_XFER_PROD" rel-entity-name="Product">
+        <key-map field-name="productId"/>
+      </relation>
+      <relation type="one" fk-name="MILK_XFER_STTS" rel-entity-name="StatusItem">
+        <key-map field-name="statusId"/>
+      </relation>
+      <relation type="one" fk-name="MILK_XFER_CBUL" title="CreatedBy" rel-entity-name="UserLogin">
+        <key-map field-name="createdByUserLogin" rel-field-name="userLoginId"/>
+      </relation>
+      <relation type="one" fk-name="MILK_XFER_LMBUL" title="ModifiedBy" rel-entity-name="UserLogin">
+        <key-map field-name="lastModifiedByUserLogin" rel-field-name="userLoginId"/>
+      </relation>
+      <relation type="one" fk-name="MILK_XFER_FAC" rel-entity-name="Facility">
+        <key-map field-name="facilityId"/>
+      </relation>
+      <relation type="one" fk-name="MILK_RECEIVEDFROM_FAC" rel-entity-name="Facility">
+        <key-map field-name="receivedFromFacilityId"/>
+      </relation>
+      <relation type="one" fk-name="MILK_SENDTO_FAC" rel-entity-name="Facility">
+        <key-map field-name="sendToFacilityId"/>
+      </relation>
+      <relation type="one" fk-name="MILK_XFER_CONT" rel-entity-name="Container">
+        <key-map field-name="containerId"/>
       </relation>
     </entity>
     <entity entity-name="Lot"

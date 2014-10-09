@@ -29,8 +29,12 @@ try {
 	context.errorMessage = "Cannot parse date string: " + e;
 	return;
 }
+
+if(UtilValidate.isEmpty(parameters.facilityId) && UtilValidate.isNotEmpty(parameters.procurementDate)){
+	parameters.facilityId = "MAIN_PLANT";
+}
+
 facilityId = parameters.facilityId;
-//Debug.logInfo("fromDate="+ fromDate + "; thruDate=" + thruDate + "; facilityId=" + facilityId, "");
 
 if(facilityId){
 	facility = delegator.findOne("Facility",[facilityId : facilityId], false);

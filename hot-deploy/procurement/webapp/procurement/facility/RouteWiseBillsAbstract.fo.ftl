@@ -28,7 +28,20 @@ under the License.
                 <fo:region-after extent="1in"/>
             </fo:simple-page-master>
         </fo:layout-master-set>
-        ${setRequestAttribute("OUTPUT_FILENAME", "RouteWiseBillsAbst.txt")}
+        ${setRequestAttribute("OUTPUT_FILENAME", "RouteWiseBillsAbst.txt")} 
+        <#assign pageStart= parameters.pageStart>
+        <#assign pageEnd= parameters.pageEnd>       
+        ${setRequestAttribute("VST_PAGE_START", "${pageStart}")}
+        ${setRequestAttribute("VST_PAGE_END", "${pageEnd}")}    
+        <#if errorMessage?has_content>
+		<fo:page-sequence master-reference="main">
+		   <fo:flow flow-name="xsl-region-body" font-family="Helvetica">
+		      <fo:block font-size="14pt">
+		              ${errorMessage}.
+		   	  </fo:block>
+		   </fo:flow>
+		</fo:page-sequence>        
+		<#else>
         <fo:page-sequence master-reference="main">
         	<#assign reportHeader = delegator.findOne("TenantConfiguration", {"propertyTypeEnumId" : "MILK_PROCUREMENT","propertyName" : "reportHeaderLable"}, true)>
         	<fo:static-content flow-name="xsl-region-before" font-family="Courier,monospace">
@@ -100,10 +113,11 @@ under the License.
 											<fo:table-body>
 												<fo:table-row>
 													<fo:table-cell>
+														<#assign orderAdjustmentDesc=Static["in.vasista.vbiz.procurement.ProcurementNetworkServices"].getShedOrderAdjustmentDescription( dctx,Static["org.ofbiz.base.util.UtilMisc"].toMap("shedId",shedId)).get("shedAdjustmentDescriptionMap")>
 														<#assign dedTypes = adjustmentDedTypes.entrySet()>
 						        						<#list dedTypes as adjType>
 						        							<#if adjType.getKey() <= 3 >
-						        								<fo:block text-align="left" keep-together="always" white-space-collapse="false" font-size="7pt">&#160;                                                                     ${(adjType.getValue()).description}   </fo:block>
+						        								<fo:block text-align="left" keep-together="always" white-space-collapse="false" font-size="7pt">&#160;                                                                     ${orderAdjustmentDesc[(adjType.getValue()).orderAdjustmentTypeId]?if_exists}   </fo:block>
 						        							</#if>
 						        						</#list>	          
 													</fo:table-cell>
@@ -111,7 +125,7 @@ under the License.
 														<#assign dedTypes = adjustmentDedTypes.entrySet()>
 						        						<#list dedTypes as adjType>
 						        							<#if (adjType.getKey() > 3) && (adjType.getKey() < 8)>
-						        								<fo:block text-align="left" keep-together="always" white-space-collapse="false" font-size="7pt">&#160;                                                                   ${(adjType.getValue()).description}   </fo:block>
+						        								<fo:block text-align="left" keep-together="always" white-space-collapse="false" font-size="7pt">&#160;                                                                   ${orderAdjustmentDesc[(adjType.getValue()).orderAdjustmentTypeId]?if_exists}   </fo:block>
 						        							</#if>
 						        						</#list>
 													</fo:table-cell>
@@ -119,7 +133,7 @@ under the License.
 														<#assign dedTypes = adjustmentDedTypes.entrySet()>
 						        						<#list dedTypes as adjType>
 						        							<#if (adjType.getKey() > 7) && (adjType.getKey() < 12)>
-						        								<fo:block text-align="left" keep-together="always" white-space-collapse="false" font-size="7pt">&#160;                                                                  ${(adjType.getValue()).description}   </fo:block>
+						        								<fo:block text-align="left" keep-together="always" white-space-collapse="false" font-size="7pt">&#160;                                                                  ${orderAdjustmentDesc[(adjType.getValue()).orderAdjustmentTypeId]?if_exists}   </fo:block>
 						        							</#if>
 						        						</#list>
 													</fo:table-cell>
@@ -465,5 +479,6 @@ under the License.
 					</fo:block>
             	</fo:flow>		
 			</fo:page-sequence>
+		</#if>	
 </fo:root>
 </#escape>

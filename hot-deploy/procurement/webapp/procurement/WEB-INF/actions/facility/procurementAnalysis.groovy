@@ -10,20 +10,22 @@ def sdf = new SimpleDateFormat("MMMM dd, yyyy");
 try {
 	if (parameters.fromDate) {
 		fromDate = UtilDateTime.getDayStart(new java.sql.Timestamp(sdf.parse(parameters.fromDate).getTime()));
-	}
-	else {
+	}else {
 		fromDate = UtilDateTime.getDayStart(UtilDateTime.nowTimestamp());
 	}
 	if (parameters.thruDate) {
 		thruDate = UtilDateTime.getDayEnd(new java.sql.Timestamp(sdf.parse(parameters.thruDate).getTime()));
-	}
-	else {
+	}else {
 		thruDate = UtilDateTime.getDayEnd(UtilDateTime.nowTimestamp());
 	}
 } catch (ParseException e) {
 	Debug.logError(e, "Cannot parse date string: " + e, "");
 	context.errorMessage = "Cannot parse date string: " + e;
 	return;
+}
+
+if(UtilValidate.isEmpty(parameters.facilityId) && UtilValidate.isNotEmpty(parameters.fromDate)){
+	parameters.facilityId = "MAIN_PLANT";
 }
 facilityId = parameters.facilityId;
 //Debug.logInfo("fromDate="+ fromDate + "; thruDate=" + thruDate + "; facilityId=" + facilityId, "");

@@ -33,7 +33,7 @@ under the License.
         <#assign rowCount=0>
        <fo:page-sequence master-reference="main">
             <fo:static-content flow-name="xsl-region-before" font-family="Courier,monospace">
-                <fo:block text-align="left" white-space-collapse="false"  keep-together="always">&#160;                          STATEMENT FOR MCC CENTER WISE LTS,KGS,KGFAT,KGSNF  </fo:block>
+                <fo:block text-align="left" white-space-collapse="false"  keep-together="always">&#160;                          STATEMENT FOR MCC CENTER WISE LTS,KGS,KGFAT,KGSNF PAGE NO:<fo:page-number/></fo:block>
                         <fo:block font-size="6pt">------------------------------------------------------------------------------------------------------------------------------------------------------------------</fo:block>
                         <fo:block text-align="left" keep-together="always" white-space-collapse="false" font-size="6pt">&#160; UNIT NAME     :   ${unit.facilityName}                                                  ROUTE NAME       :   ${route.facilityName} </fo:block>
                         <fo:block text-align="left" keep-together="always" white-space-collapse="false" font-size="6pt">&#160; CENTER NAME   :   ${facility.facilityName}                                                  TRANSACTIONS DATE   :   ${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(fromDate, "dd/MM/yyyy")} To ${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(thruDate, "dd/MM/yyyy")}                                </fo:block>

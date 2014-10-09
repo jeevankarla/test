@@ -66,6 +66,7 @@ under the License.
             </condition>
             <actions>
                 <property-map resource="ProductUiLabels" map-name="uiLabelMap" global="true"/>
+                <set field="parameters.displayParentFacilityId" value="N" global="true"/>
                 <set field="title" value="${uiLabelMap.PageTitleLookupFacility}"/>
                 <set field="queryString" from-field="result.queryString"/>
                 <set field="viewIndex" from-field="parameters.VIEW_INDEX" type="Integer"/>
@@ -86,6 +87,36 @@ under the License.
                 </decorator-screen>
             </widgets>
         </section>
+	</screen> 
+	<screen name="ProcurementUnitLookupFacility">
+        <section>
+            <condition>
+                <if-service-permission service-name="facilityGenericPermission" main-action="VIEW"/>
+            </condition>
+            <actions>
+                <property-map resource="ProductUiLabels" map-name="uiLabelMap" global="true"/>
+                <set field="title" value="${uiLabelMap.PageTitleLookupFacility}"/>
+                <set field="parameters.displayParentFacilityId" value="Y" global="true"/>
+                <set field="queryString" from-field="result.queryString"/>
+                <set field="viewIndex" from-field="parameters.VIEW_INDEX" type="Integer"/>
+                <set field="viewSize" from-field="parameters.VIEW_SIZE" type="Integer" default-value="20"/>
+                <set field="entityName" value="Facility"/>
+                <set field="searchFields" value="[facilityId, facilityName, description]"/>
+                <script location="component://procurement/webapp/procurement/WEB-INF/actions/facility/getUserRelatedFacilies.groovy"/>
+                <script location="component://procurement/webapp/procurement/WEB-INF/actions/facility/ConditionUnitFacilityLookup.groovy"/>
+                <script location="component://procurement/webapp/procurement/WEB-INF/actions/facility/FacilityUnitLookupCustomPerformFind.groovy"/>
+            </actions>
+            <widgets>
+                <decorator-screen name="LookupDecorator" location="component://common/widget/CommonScreens.xml">
+                    <decorator-section name="search-options">
+                        <include-form name="procurementUnitLookupFacility" location="component://procurement/widget/ProcurementLookupForms.xml"/>
+                    </decorator-section>
+                    <decorator-section name="search-results">
+                        <include-form name="listProcurementUnitLookupFacility" location="component://procurement/widget/ProcurementLookupForms.xml"/>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
 	</screen>    
 	<screen name="ProcurementCenterLookupFacility">
         <section>
@@ -100,8 +131,8 @@ under the License.
                 <set field="viewSize" from-field="parameters.VIEW_SIZE" type="Integer" default-value="20"/>
                 <set field="entityName" value="Facility"/>
                 <set field="searchFields" value="[facilityId, facilityName, description]"/>
-                <script location="component://procurement/webapp/procurement/WEB-INF/actions/facility/ConditionFacilityLookup.groovy"/>
-                <script location="component://procurement/webapp/procurement/WEB-INF/actions/facility/FacilityLookupCustomPerformFind.groovy"/>
+                <script location="component://procurement/webapp/procurement/WEB-INF/actions/facility/ConditionCenterFacilityLookup.groovy"/>
+                <script location="component://procurement/webapp/procurement/WEB-INF/actions/facility/FacilityCenterLookupCustomPerformFind.groovy"/>
             </actions>
             <widgets>
                 <decorator-screen name="LookupDecorator" location="component://common/widget/CommonScreens.xml">
@@ -109,7 +140,7 @@ under the License.
                         <include-form name="procurementCenterLookupFacility" location="component://procurement/widget/ProcurementLookupForms.xml"/>
                     </decorator-section>
                     <decorator-section name="search-results">
-                        <include-form name="listProcurementLookupFacility" location="component://procurement/widget/ProcurementLookupForms.xml"/>
+                        <include-form name="listProcurementCenterLookupFacility" location="component://procurement/widget/ProcurementLookupForms.xml"/>
                     </decorator-section>
                 </decorator-screen>
             </widgets>
@@ -123,11 +154,124 @@ under the License.
                 <set field="tabButtonItem" value="ProcurementEntry" />
                 <set field="tabButtonItem2" value="ProcurementEntry" />
                 <set field="layoutSettings.javaScripts[]" value="/procurement/images/appendDecimals.js" global="true"/>
-                <set field="layoutSettings.javaScripts[]" value="/procurement/images/procurementEntry.js" global="true"/>	
                 <set field="updateFlag" value="create" global="true"/>
+                <set field="prodctFocusFlag" value="FALSE" global="true"/>
+                
+                <set field="editRecord" value="false" global="true"/>
+                <script location="component://procurement/webapp/procurement/WEB-INF/actions/facility/getUserRelatedFacilies.groovy"/>
+                <script location="component://procurement/webapp/procurement/WEB-INF/actions/facility/ProcurementEntry.groovy" />
+                 <set field="layoutSettings.javaScripts[]" value="/procurement/images/procurementEntry.js" global="true"/>	
                 <!-- <entity-condition list="listProcurementOrders" entity-name="OrderHeaderItemProductAndFacility">
                 	<condition-expr field-name="orderTypeId" operator="equals" value="PURCHASE_ORDER"/>
-                </entity-condition> -->               
+                </entity-condition> -->  
+               <!--  <set field="parameters.fromDate" value="${groovy:import org.ofbiz.base.util.UtilDateTime; UtilDateTime.toDateString(UtilDateTime.addDaysToTimestamp(UtilDateTime.nowTimestamp(),-1),&quot;yyyy-MM-dd&quot;)}"></set>
+                <set field="parameters.thruDate" value="${groovy: import org.ofbiz.base.util.UtilDateTime; UtilDateTime.toDateString(UtilDateTime.nowTimestamp(),&quot;yyyy-MM-dd&quot;)}"></set>
+                <set field="parameters.createdByUserLoginId" value="${userLogin.userLoginId}"></set>             
+               
+                <script location="component://procurement/webapp/procurement/WEB-INF/actions/facility/ProcurementEntrySearch.groovy"/>
+                <set field="parameters.createdByUserLoginId" value="${userLogin.userLoginId}"></set>
+                <set field="parameters.orderTypeId" value="PURCHASE_ORDER"></set> 
+                <set field="parameters.purposeTypeId" value="MILK_PROCUREMENT"></set>                
+                 <set field="viewIndex" value="0" type="Integer"/>
+                <set field="viewSize" value="1" type="Integer"/>
+                <service service-name="performFind" result-map="result">
+                    <field-map field-name="inputFields" from-field="parameters"/>
+                    <field-map field-name="entityName" value="OrderHeaderItemProductAndFacility"/>
+                    <field-map field-name="orderBy" value="-createdDate"/>
+                    <field-map field-name="viewIndex" from-field="viewIndex"/>
+                	<field-map field-name="viewSize" from-field="viewSize"/>                  
+                </service>
+                <set field="listProcurementOrders" from-field="result.listIt"/>
+                <script location="component://procurement/webapp/procurement/WEB-INF/actions/facility/PrepareProcurementEntryList.groovy"/> -->
+                 
+            </actions>
+            <widgets>
+                <decorator-screen name="ProcurementCommonDecorator" location="component://procurement/widget/CommonScreens.xml">
+                    <decorator-section name="body">
+                    	<include-menu name="ProcurementEntryTabBar" location="component://procurement/widget/ProcurementMenus.xml"/> 
+                    	<!-- <container style="lefthalf">
+                    		<screenlet title="${uiLabelMap.ProcurementEntry}">                    			
+          					    	<platform-specific><html><html-template location="component://procurement/webapp/procurement/facility/CheckListMenu.ftl"/></html></platform-specific>
+						       		<include-form location="component://procurement/widget/ProcurementForms.xml" name="ProcurementEntry"/>
+                    		</screenlet>                     		
+                    	</container>                    	
+                   		  <screenlet>
+                   				<include-form location="component://procurement/widget/ProcurementForms.xml" name="ListRecentProcurementEntry"/>                    		
+                   		</screenlet> -->
+                   	<section>
+                   		<condition>	
+                   			<if-has-permission permission="MILKLINE" action="_VIEW "/>
+                   		</condition>
+                   		<widgets>
+                   			<platform-specific><html><html-template location="component://milkline/webapp/milkline/procurement/NewProcurementEntry.ftl"/></html></platform-specific>
+                   		</widgets>
+                   		<fail-widgets>
+ 							<platform-specific><html><html-template location="component://procurement/webapp/procurement/facility/ProcurementEntry.ftl"/></html></platform-specific>                  		
+                   		</fail-widgets>
+                   	</section>	
+	          					
+							                         
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen> 
+    <screen name="ProcurementWeighingEntry">
+        <section>
+            <actions>
+                <set field="titleProperty" value="PageTitleProcurementEntry"/>
+                <set field="headerItem" value="orderentry"/>
+                <set field="tabButtonItem" value="ProcurementEntry" />
+                <set field="tabButtonItem2" value="WeighingEntry" />
+                <set field="layoutSettings.javaScripts[]" value="/procurement/images/appendDecimals.js" global="true"/>
+                <set field="layoutSettings.javaScripts[]" value="/sadf/images/procurementSADFEntry.js" global="true"/>	
+                <set field="updateFlag" value="create" global="true"/>
+                <set field="prodctFocusFlag" value="FALSE" global="true"/>                
+                <set field="editRecord" value="false" global="true"/>                             
+                <script location="component://procurement/webapp/procurement/WEB-INF/actions/facility/getUserRelatedFacilies.groovy"/>
+                <!-- <script location="component://procurement/webapp/procurement/WEB-INF/actions/facility/ProcurementEntrySearch.groovy"/> -->
+                <set field="parameters.createdByUserLoginId" value="${userLogin.userLoginId}"></set>
+                <set field="parameters.orderTypeId" value="PURCHASE_ORDER"></set> 
+                <set field="parameters.purposeTypeId" value="MILK_PROCUREMENT"></set>                
+                 <set field="viewIndex" value="0" type="Integer"/>
+                <set field="viewSize" value="1" type="Integer"/>
+               <!--  <service service-name="performFind" result-map="result">
+                    <field-map field-name="inputFields" from-field="parameters"/>
+                    <field-map field-name="entityName" value="OrderHeaderItemProductAndFacility"/>
+                    <field-map field-name="orderBy" value="-createdDate"/>
+                    <field-map field-name="viewIndex" from-field="viewIndex"/>
+                	<field-map field-name="viewSize" from-field="viewSize"/>                  
+                </service>
+                <set field="listProcurementOrders" from-field="result.listIt"/>
+                <script location="component://procurement/webapp/procurement/WEB-INF/actions/facility/PrepareProcurementEntryList.groovy"/> -->
+                 <script location="component://procurement/webapp/procurement/WEB-INF/actions/facility/ProcurementEntry.groovy" />
+            </actions>
+            <widgets>
+                <decorator-screen name="ProcurementCommonDecorator" location="component://procurement/widget/CommonScreens.xml">
+                    <decorator-section name="body">
+                    	<include-menu name="ProcurementEntryTabBar" location="component://procurement/widget/ProcurementMenus.xml"/> 
+	                   		<section>                   		          		
+		                   		<widgets>
+		 							<platform-specific><html><html-template location="component://sadf/webapp/sadf/facility/ProcurementWeighingEntry.ftl"/></html></platform-specific>                  		
+		                   		</widgets>           		       		
+	                   		</section>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen> 
+    <screen name="ProcurementLabEntry">
+        <section>
+            <actions>
+                <set field="titleProperty" value="PageTitleProcurementEntry"/>
+                <set field="headerItem" value="orderentry"/>
+                <set field="tabButtonItem" value="ProcurementEntry" />
+                <set field="tabButtonItem2" value="LabProcEntry" />
+                <set field="layoutSettings.javaScripts[]" value="/procurement/images/appendDecimals.js" global="true"/>
+                <set field="layoutSettings.javaScripts[]" value="/sadf/images/procurementSADFEntry.js" global="true"/>	
+                <set field="updateFlag" value="create" global="true"/>
+                <set field="prodctFocusFlag" value="FALSE" global="true"/>                
+                <set field="editRecord" value="false" global="true"/>                             
                 <script location="component://procurement/webapp/procurement/WEB-INF/actions/facility/getUserRelatedFacilies.groovy"/>
                 <script location="component://procurement/webapp/procurement/WEB-INF/actions/facility/ProcurementEntrySearch.groovy"/>
                 <set field="parameters.createdByUserLoginId" value="${userLogin.userLoginId}"></set>
@@ -145,28 +289,28 @@ under the License.
                 <set field="listProcurementOrders" from-field="result.listIt"/>
                 <script location="component://procurement/webapp/procurement/WEB-INF/actions/facility/PrepareProcurementEntryList.groovy"/>
                  <script location="component://procurement/webapp/procurement/WEB-INF/actions/facility/ProcurementEntry.groovy" />
+                <script location="component://procurement/webapp/procurement/WEB-INF/actions/facility/ProcurementLabEntries.groovy" />
             </actions>
             <widgets>
                 <decorator-screen name="ProcurementCommonDecorator" location="component://procurement/widget/CommonScreens.xml">
                     <decorator-section name="body">
                     	<include-menu name="ProcurementEntryTabBar" location="component://procurement/widget/ProcurementMenus.xml"/> 
-                    	<!-- <container style="lefthalf">
-                    		<screenlet title="${uiLabelMap.ProcurementEntry}">                    			
-          					    	<platform-specific><html><html-template location="component://procurement/webapp/procurement/facility/CheckListMenu.ftl"/></html></platform-specific>
-						       		<include-form location="component://procurement/widget/ProcurementForms.xml" name="ProcurementEntry"/>
-                    		</screenlet>                     		
-                    	</container>                    	
-                   		  <screenlet>
-                   				<include-form location="component://procurement/widget/ProcurementForms.xml" name="ListRecentProcurementEntry"/>                    		
-                   		</screenlet> -->
-                   		
-	          					<platform-specific><html><html-template location="component://procurement/webapp/procurement/facility/ProcurementEntry.ftl"/></html></platform-specific>
-							                         
+	                   	<section>              		         		
+	                   		<widgets>
+	                   			<container >
+	                   				<screenlet title="${uiLabelMap.ProcurementEntry}" >                   			
+                   					<include-form location="component://sadf/widget/SadfForms.xml" name="FindProcurementSADFEntry"/>
+                   				</screenlet>	                   				
+	                   				<platform-specific><html><html-template location="component://sadf/webapp/sadf/facility/ProcurementLabEntry.ftl"/></html></platform-specific>
+	                   			</container>	                   			
+	                   		</widgets>                    		             		
+	                   	</section>	
                     </decorator-section>
                 </decorator-screen>
             </widgets>
         </section>
     </screen> 
+    
      <screen name="EditProcurementEntry">
         <section>
             <actions>
@@ -181,7 +325,7 @@ under the License.
                 	<condition-expr field-name="orderTypeId" operator="equals" value="PURCHASE_ORDER"/>
                 </entity-condition> -->
                 <script location="component://procurement/webapp/procurement/WEB-INF/actions/facility/getUserRelatedFacilies.groovy"/>               
-                <script location="component://procurement/webapp/procurement/WEB-INF/actions/facility/ProcurementEntrySearch.groovy"/>
+                <!-- <script location="component://procurement/webapp/procurement/WEB-INF/actions/facility/ProcurementEntrySearch.groovy"/>
                 <set field="parameters.createdByUserLoginId" value="${userLogin.userLoginId}"></set>
                 <set field="parameters.orderTypeId" value="PURCHASE_ORDER"></set> 
                 <set field="parameters.purposeTypeId" value="MILK_PROCUREMENT"></set>                
@@ -194,10 +338,12 @@ under the License.
                     <field-map field-name="viewIndex" from-field="viewIndex"/>
                 	<field-map field-name="viewSize" from-field="viewSize"/>                  
                 </service>
-                <set field="updateFlag" value="update" global="true"/>
-                <set field="editRecord" from-field="parameters.editRecord" default-value="false" global="true"/> 
+               
                 <set field="listProcurementOrders" from-field="result.listIt"/>
-                <script location="component://procurement/webapp/procurement/WEB-INF/actions/facility/PrepareProcurementEntryList.groovy"/>
+                <script location="component://procurement/webapp/procurement/WEB-INF/actions/facility/PrepareProcurementEntryList.groovy"/> -->
+                 <set field="updateFlag" value="update" global="true"/>
+                <set field="prodctFocusFlag" value="FALSE" global="true"/>
+                <set field="editRecord" from-field="parameters.editRecord" default-value="false" global="true"/> 
                 <script location="component://procurement/webapp/procurement/WEB-INF/actions/facility/ProcurementEntry.groovy" />
             </actions>
             <widgets>
@@ -206,7 +352,17 @@ under the License.
                     	<include-menu name="ProcurementEntryTabBar" location="component://procurement/widget/ProcurementMenus.xml"/>
                     	<include-menu name="EditProcurementEntryTabBar" location="component://procurement/widget/ProcurementMenus.xml"/> 
                     	               		
-	          					<platform-specific><html><html-template location="component://procurement/webapp/procurement/facility/ProcurementEntry.ftl"/></html></platform-specific>
+	          		<section>
+                   		<condition>	
+                   			<if-has-permission permission="MILKLINE" action="_VIEW "/>
+                   		</condition>
+                   		<widgets>
+                   			<platform-specific><html><html-template location="component://milkline/webapp/milkline/procurement/NewProcurementEntry.ftl"/></html></platform-specific>
+                   		</widgets>
+                   		<fail-widgets>
+ 							<platform-specific><html><html-template location="component://procurement/webapp/procurement/facility/ProcurementEntry.ftl"/></html></platform-specific>                  		
+                   		</fail-widgets>
+                   	</section>
 							                         
                     </decorator-section>
                 </decorator-screen>
@@ -320,6 +476,7 @@ under the License.
                 <set field="tabButtonItem" value="ProcurementEntry" />
                 <set field="tabButtonItem2" value="FindProcurementEntry" />
                 <set field="layoutSettings.javaScripts[]" value="/procurement/images/removeProcurementEntrySearchParams.js" global="true"/>
+                 <set field="layoutSettings.javaScripts[]" value="/procurement/images/deleteProcurementEntry.js" global="true"/>
                 <script location="component://procurement/webapp/procurement/WEB-INF/actions/facility/getUserRelatedFacilies.groovy"/>
                	<set field="shedId" from-field="context.shedId"/>
                	<set field="unitCode" from-field="context.unitCode"/> 	
@@ -338,6 +495,7 @@ under the License.
                    				<parameter param-name="supplyTypeEnumId" from-field="parameters.supplyTypeEnumId"/>
                    				<parameter param-name="shedId" from-field="parameters.shedId"/>
                    				<parameter param-name="unitCode" from-field="parameters.unitCode"/>
+                   				<parameter param-name="routeCode" from-field="parameters.routeCode"/>
                    				<parameter param-name="facilityCode" from-field="parameters.facilityCode"/>
 								<parameter param-name="hideSearch" from-field="parameters.hideSearch"/>
 								<parameter param-name="noConditionFind" from-field="parameters.noConditionFind"/>
@@ -352,6 +510,7 @@ under the License.
                    				<parameter param-name="supplyTypeEnumId" from-field="parameters.supplyTypeEnumId"/>
                    				<parameter param-name="shedId" from-field="parameters.shedId"/>
                    				<parameter param-name="unitCode" from-field="parameters.unitCode"/>
+                   				<parameter param-name="routeCode" from-field="parameters.routeCode"/>
                    				<parameter param-name="facilityCode" from-field="parameters.facilityCode"/>
 								<parameter param-name="hideSearch" from-field="parameters.hideSearch"/>
 								<parameter param-name="noConditionFind" from-field="parameters.noConditionFind"/>
@@ -409,7 +568,7 @@ under the License.
            </widgets>
         </section>
     </screen> 
-    <screen name="FindFacility">
+    <screen name="FindProcFacility">
         <section>
             <actions>
                 <set field="titleProperty" value="ProductFindFacilities"/>
@@ -438,9 +597,7 @@ under the License.
                                                 <if-service-permission service-name="facilityGenericPermission" main-action="VIEW"/>
                                             </condition>
                                             <widgets>
-                                                <include-menu name="FacilityTabBar" location="component://product/widget/facility/FacilityMenus.xml"/>
-                                                <include-menu name="FindLocationsTabBar"
-									                 location="component://product/widget/facility/FacilityMenus.xml"/>
+                                                <include-menu name="ProcurementTabBar" location="component://procurement/widget/ProcurementMenus.xml"/>
                                                 <section>
                                                     <condition>
                                                         <not><if-empty field="facilityId"/></not>
@@ -501,17 +658,17 @@ under the License.
                                                     </condition>
                                                     <widgets>
                                                         <container style="button-bar">
-                                                        <link target="EditFacility" text="${uiLabelMap.ProductCreateNewFacility}" style="buttontext"/>
-                                                        <link target="boothMaster.csv" text="Export As CSV" style="buttontext create" />		
+                                                        <link target="EditProcFacility" text="${uiLabelMap.ProductCreateNewFacility}" style="buttontext"/>
+                                                        <!-- <link target="boothMaster.csv" text="Export As CSV" style="buttontext create" /> -->		
                                                         </container>
                                                     </widgets>
                                                 </section>
                                             </decorator-section>
                                             <decorator-section name="search-options">
-                                                <include-form name="FindFacilityOptions" location="component://product/widget/facility/FacilityForms.xml"/>
+                                                <include-form name="ProcFindFacilityOptions" location="component://product/widget/facility/FacilityForms.xml"/>
                                             </decorator-section>
                                             <decorator-section name="search-results">
-                                                <include-screen name="FacilitySearchResults" location="component://product/widget/facility/FacilityScreens.xml"/>
+                                                <include-screen name="ProcFacilitySearchResults" location="component://procurement/widget/ProcurementScreens.xml"/>
                                             </decorator-section>
                                         </decorator-screen>
                                     </widgets>
@@ -526,16 +683,32 @@ under the License.
             </widgets>
         </section>
     </screen>
-     <screen name="EditFacility">
+     <screen name="EditProcFacility">
         <section>
             <actions>
                 <set field="titleProperty" value="ProductNewFacility"/>
                 <set field="tabButtonItem" value="EditFacility" />
 				<set field="subTabButtonItem" value="createnewlocation" />
+				<set field="reportFrequencyFlag" value="ShedReports" /> 
                 <script location="component://product/webapp/facility/WEB-INF/actions/facility/EditFacility.groovy"/>
-                 <script location="component://procurement/webapp/procurement/WEB-INF/actions/facility/UnitRoutes.groovy"/>
+                <set field="showBankDetailsFlag" value="bankDetails"/>
+                <set field="showFacilityRateDetailsFlag" value="facilityRateDetails"/>
+                <entity-condition list="facilityTypes" entity-name="FacilityType">
+                	<condition-list>
+                	 <condition-expr field-name="parentTypeId" value ="PROC_FACILITY_TYPE"/>
+                	</condition-list>
+                </entity-condition>
+               <script location="component://procurement/webapp/procurement/WEB-INF/actions/facility/getUserRelatedFacilies.groovy"/>
+               <script location="component://procurement/webapp/procurement/WEB-INF/actions/facility/FacilityCustomTimePeriods.groovy"/>
+               <script location="component://procurement/webapp/procurement/WEB-INF/actions/facility/FacilityFinAccounts.groovy"/>  
+               <set field="shedId" from-field="context.shedId" />
+               <set field="unitCode" from-field="context.unitCode"/>
+               <set field="parameters.shedId"  default-value="${parameters.shedId}"/>
+               <set field="parameters.unitCode" from-field="context.unitCode" default-value="${parameters.unitCode}"/>          
+               <script location="component://procurement/webapp/procurement/WEB-INF/actions/facility/UnitRoutes.groovy"/>   
                <set field="routesList" value="${routesList}"/>
-               <set field="unitsList" value="${unitsList}"/>
+               <set field="unitsList" value="${unitsList}"/> 
+               <set field="layoutSettings.javaScripts[]" value="/procurement/images/facilityTypeChange.js" global="true"/>       
             </actions>
             <widgets>
                 <section>
@@ -559,14 +732,16 @@ under the License.
                                             </condition>
                                             <widgets>
                                                 <container style="button-bar">
-                                                    <link target="EditFacility" text="${uiLabelMap.ProductNewFacility}" style="buttontext create"/><!--
+                                                    <link target="EditProcFacility" text="${uiLabelMap.ProductNewFacility}" style="buttontext create"/><!--
                                                     <link target="/workeffort/control/calendar" text="${uiLabelMap.CommonViewCalendar}" style="buttontext" url-mode="inter-app">
                                                         <parameter param-name="facilityId"/>
                                                         <parameter param-name="externalLoginKey" from-field="parameters.externalLoginKey"/>
                                                     </link>
                                                 --></container>
                                                 <label style="h1">${uiLabelMap.ProductEditFacility} ${facility.facilityName} [${facilityId}]</label>
+                                               <platform-specific><html><html-template location="component://procurement/webapp/procurement/facility/ProcurementDependentDropDown.ftl"></html-template></html></platform-specific>
                                                 <platform-specific><html><html-template location="component://product/webapp/facility/facility/EditFacility.ftl"/></html></platform-specific>
+                                                
                                             </widgets>
                                         </section>
                                     </widgets>
@@ -593,17 +768,16 @@ under the License.
                                         <set field="requestName" value="getAssociatedStateList"/>
                                         <set field="responseName" value="stateList"/>
                                         <set field="dependentKeyName" value="geoId"/>
-                                        <set field="descName" value="geoName"/>
-                                        <set field="selectedDependentOption" value="_none_"/>
+                                        <set field="descName" value="geoName"/>    
+                                        <set field="selectedDependentOption" value="_none_"/>                                                                
                                     </actions>
                                     <widgets>
                                          <include-menu name="ProcurementTabBar" location="component://procurement/widget/ProcurementMenus.xml"/>
-                                        <include-menu name="FindLocationsTabBar"
-									           location="component://product/widget/facility/FacilityMenus.xml"/>
                                         <label style="h1">${uiLabelMap.ProductNewFacility}</label>
                                         <platform-specific><html><html-template location="component://common/webcommon/includes/setDependentDropdownValuesJs.ftl"/></html></platform-specific>
                                			<platform-specific><html><html-template location="component://procurement/webapp/procurement/facility/ProcurementDependentDropDown.ftl"></html-template></html></platform-specific>
-                                        <include-form name="EditFacilityForm" location="component://procurement/widget/ProcurementForms.xml"/>
+                                        <include-form name="EditFacilityForm" location="component://procurement/widget/ProcurementForms.xml"/>                                        
+                                        <platform-specific><html><html-template location="component://procurement/webapp/procurement/facility/NewFacilityLocation.ftl"></html-template></html></platform-specific>
                                         <!-- <platform-specific><html><html-template location="component://product/webapp/facility/facility/EditFacility.ftl"/></html></platform-specific>
  -->                                    </widgets>
                                     <fail-widgets>
@@ -614,6 +788,20 @@ under the License.
                         </decorator-screen>
                     </fail-widgets>
                 </section>
+            </widgets>
+        </section>
+    </screen>
+    <screen name="ProcFacilitySearchResults">
+        <section>
+            <condition>
+                <if-service-permission service-name="facilityGenericPermission" main-action="VIEW"/>
+            </condition>
+            <actions>
+                <property-map resource="ProductUiLabels" map-name="uiLabelMap" global="true"/>
+                <property-map resource="CommonUiLabels" map-name="uiLabelMap" global="true"/>
+            </actions>
+            <widgets>
+                <include-form name="FindProcFacility" location="component://procurement/widget/ProcurementForms.xml"/>
             </widgets>
         </section>
     </screen>
@@ -939,35 +1127,58 @@ under the License.
                 		</platform-specific>
             		</widgets>
             		<fail-widgets>
-            			 <platform-specific>
-                    		<xsl-fo><html-template location="component://procurement/webapp/procurement/facility/ProcurementEntryListReport.fo.ftl"/></xsl-fo>
-                		</platform-specific>            			
+            		   <section>
+            		   		<condition>
+           						<if-compare field="enableLR" operator="equals" value="Y" />
+            				</condition>
+            		   		<widgets>
+            		   			<platform-specific>
+                    				<xsl-fo><html-template location="component://procurement/webapp/procurement/facility/ProcurementEntryListReportForLR.fo.ftl"/></xsl-fo>
+                				</platform-specific>
+            		   		</widgets>
+            		   		<fail-widgets>
+            		   			<platform-specific>
+                    				<xsl-fo><html-template location="component://procurement/webapp/procurement/facility/ProcurementEntryListReport.fo.ftl"/></xsl-fo>
+                				</platform-specific>
+            		   		</fail-widgets>
+            		   </section>
+            			             			
             		</fail-widgets>
             	</section>            	 
            </widgets>
         </section>
     </screen>
-    <screen name="ProcurementReports">
+    <screen name="UnitReports">
         <section>
             <actions>
                <set field="titleProperty" value="PageTitleProcurementReports"/>	            
-               <set field="tabButtonItem" value="reports"/> 
+               <set field="tabButtonItem" value="reports"/>
+               <set field="tabButtonItem3" value="UnitReports"/>  
                <set field="reportDate" value="${bsh:org.ofbiz.base.util.UtilDateTime.nowDate()}" type="Date"/>                
 			   <set field="reportDateStr" value="${bsh:org.ofbiz.base.util.UtilDateTime.nowDateString(&quot;dd MMMMM, yyyy&quot;)}" type="String"/> 				  
-               <entity-condition list="timePeriodList" entity-name="FacilityCustomTimePeriod" use-cache="true" filter-by-date="false" >
+               <!-- <entity-condition list="timePeriodList" entity-name="CustomTimePeriod" use-cache="true" filter-by-date="false" >
                 	<condition-list combine="and">
                 		<condition-expr field-name="periodTypeId" operator="equals" value="PROC_BILL_MONTH"/>                	   
                 	</condition-list>             	
                 	<order-by field-name="-thruDate"/>
-               </entity-condition>
+               </entity-condition> -->
+               <entity-condition list="statusItemList" entity-name="StatusItem">
+                	<condition-list combine="or">
+                		<condition-expr field-name="statusId" operator="equals" value="ITEM_APPROVED"/>
+                		<condition-expr field-name="statusId" operator="equals" value="ITEM_CREATED"/>
+                	</condition-list>
+                </entity-condition>
+               <script location="component://procurement/webapp/procurement/WEB-INF/actions/facility/getUserRelatedFacilies.groovy"/>
+              <!--  <script location="component://procurement/webapp/procurement/WEB-INF/actions/facility/FacilityCustomTimePeriods.groovy"/>
+               <script location="component://procurement/webapp/procurement/WEB-INF/actions/facility/FacilityFinAccounts.groovy"/> -->
                <set field="productsList" type="List" value="${groovy: import org.ofbiz.base.util.*; return (in.vasista.vbiz.procurement.ProcurementNetworkServices.getProcurementProducts(dispatcher.getDispatchContext(),context)); }"/>
-              
-               <script location="component://procurement/webapp/procurement/WEB-INF/actions/facility/UnitRoutes.groovy"/>
+               
+             <!--   <script location="component://procurement/webapp/procurement/WEB-INF/actions/facility/UnitRoutes.groovy"/>
                <set field="routesList" value="${routesList}"/>
-               <set field="unitsList" value="${unitsList}"/>
+               <set field="unitsList" value="${unitsList}"/> -->
                <script location="component://procurement/webapp/procurement/WEB-INF/actions/facility/getTenantId.groovy"/>
                <set field="tenantId" value="${tenantId}"/>
-               <script location="component://procurement/webapp/procurement/WEB-INF/actions/facility/getUserRelatedFacilies.groovy"/> 
+               <set field="reportFrequencyFlag" value="UnitReports"/> 
             </actions>
             <widgets>
             	<section>
@@ -987,8 +1198,26 @@ under the License.
                    </decorator-screen>
             	  </widgets>
             	  <fail-widgets>
+            	  	<section>
+            		<condition>
+            			<if-has-permission permission="SADF" action="_VIEW "/>
+            		</condition>
+            	  	<widgets>
+	            	  	<decorator-screen name="ProcurementCommonDecorator" location="component://procurement/widget/CommonScreens.xml">
+	                    <decorator-section name="body">
+	                    		<platform-specific><html><html-template location="component://procurement/webapp/procurement/facility/ProcurementDependentDropDown.ftl"></html-template></html></platform-specific>
+	                    		<platform-specific><html><html-template location="component://procurement/webapp/procurement/facility/shedSelection.ftl"></html-template></html></platform-specific>  
+		                    	<container>
+		                        	<label style="h1">Procurement Reports</label>                       	
+		                        </container>  
+	   							<platform-specific><html><html-template location="component://sadf/webapp/sadf/facility/ProcurementReports.ftl"></html-template></html></platform-specific>                     
+	                	</decorator-section>
+	                   </decorator-screen>
+            	  	</widgets>
+            	  	<fail-widgets>
             	  	<decorator-screen name="ProcurementCommonDecorator" location="component://procurement/widget/CommonScreens.xml">
                     <decorator-section name="body">
+                    	    <include-menu name="ProcurementReportsTabBar" location="component://procurement/widget/ProcurementMenus.xml"/> 
                     		<platform-specific><html><html-template location="component://procurement/webapp/procurement/facility/ProcurementDependentDropDown.ftl"></html-template></html></platform-specific>
                     		<platform-specific><html><html-template location="component://procurement/webapp/procurement/facility/shedSelection.ftl"></html-template></html></platform-specific>  
 	                    	<container>
@@ -997,9 +1226,262 @@ under the License.
    							<platform-specific><html><html-template location="component://procurement/webapp/procurement/facility/ProcurementReports.ftl"></html-template></html></platform-specific>                     
                 	</decorator-section>
                    </decorator-screen>
+                   </fail-widgets>
+                   </section>
             	  </fail-widgets>
             	</section>
-            	 
+            </widgets>
+        </section>
+    </screen>
+   <screen name="ShedReports">
+        <section>
+            <actions>
+               <set field="titleProperty" value="PageTitleProcurementReports"/>	            
+               <set field="tabButtonItem" value="reports"/> 
+               <set field="tabButtonItem3" value="ShedReports"/> 
+               <set field="reportDate" value="${bsh:org.ofbiz.base.util.UtilDateTime.nowDate()}" type="Date"/>     
+               <entity-condition list="consolidatedTimePeriodList" entity-name="CustomTimePeriod">
+                	<condition-expr field-name="periodTypeId" operator="equals" value="PROC_BILL_MONTH"/>
+                	<order-by field-name="-fromDate"/>
+                </entity-condition>           
+			   <set field="reportDateStr" value="${bsh:org.ofbiz.base.util.UtilDateTime.nowDateString(&quot;dd MMMMM, yyyy&quot;)}" type="String"/> 				  
+               <script location="component://procurement/webapp/procurement/WEB-INF/actions/facility/getUserRelatedFacilies.groovy"/>
+               <!-- <entity-condition list="statusItemList" entity-name="StatusItem">
+                	<condition-list combine="or">
+                		<condition-expr field-name="statusId" operator="equals" value="ITEM_APPROVED"/>
+                		<condition-expr field-name="statusId" operator="equals" value="ITEM_CREATED"/>
+                	</condition-list>
+                </entity-condition>
+               <script location="component://procurement/webapp/procurement/WEB-INF/actions/facility/getUserRelatedFacilies.groovy"/>
+               <script location="component://procurement/webapp/procurement/WEB-INF/actions/facility/FacilityCustomTimePeriods.groovy"/>
+               <script location="component://procurement/webapp/procurement/WEB-INF/actions/facility/FacilityFinAccounts.groovy"/> -->
+               <set field="productsList" type="List" value="${groovy: import org.ofbiz.base.util.*; return (in.vasista.vbiz.procurement.ProcurementNetworkServices.getProcurementProducts(dispatcher.getDispatchContext(),context)); }"/>
+               
+              <!--  <script location="component://procurement/webapp/procurement/WEB-INF/actions/facility/UnitRoutes.groovy"/>
+               <set field="routesList" value="${routesList}"/>
+               <set field="unitsList" value="${unitsList}"/> -->
+               <script location="component://procurement/webapp/procurement/WEB-INF/actions/facility/getTenantId.groovy"/>
+               <set field="tenantId" value="${tenantId}"/>
+               <set field="reportFrequencyFlag" value="ShedReports"/>
+            </actions>
+            <widgets>
+            	<section>
+            		<condition>
+            			<if-has-permission permission="MILKLINE" action="_VIEW "/>
+            		</condition>
+            	  <widgets>
+            	  	<decorator-screen name="ProcurementCommonDecorator" location="component://procurement/widget/CommonScreens.xml">
+                    <decorator-section name="body">
+                    		<platform-specific><html><html-template location="component://procurement/webapp/procurement/facility/ProcurementDependentDropDown.ftl"></html-template></html></platform-specific>
+                    		<platform-specific><html><html-template location="component://procurement/webapp/procurement/facility/shedSelection.ftl"></html-template></html></platform-specific>  
+	                    	<container>
+	                        	<label style="h1">Procurement Reports</label>                       	
+	                        </container>  
+   							<platform-specific><html><html-template location="component://milkline/webapp/milkline/procurement/ProcurementReports.ftl"></html-template></html></platform-specific>                     
+                	</decorator-section>
+                   </decorator-screen>
+            	  </widgets>
+            	  <fail-widgets>
+            	  	<section>
+            		<condition>
+            			<if-has-permission permission="SADF" action="_VIEW "/>
+            		</condition>
+            	  	<widgets>
+	            	  	<decorator-screen name="ProcurementCommonDecorator" location="component://procurement/widget/CommonScreens.xml">
+	                    <decorator-section name="body">
+	                    		<platform-specific><html><html-template location="component://procurement/webapp/procurement/facility/ProcurementDependentDropDown.ftl"></html-template></html></platform-specific>
+	                    		<platform-specific><html><html-template location="component://procurement/webapp/procurement/facility/shedSelection.ftl"></html-template></html></platform-specific>  
+		                    	<container>
+		                        	<label style="h1">Procurement Reports</label>                       	
+		                        </container>  
+	   							<platform-specific><html><html-template location="component://sadf/webapp/sadf/facility/ProcurementReports.ftl"></html-template></html></platform-specific>                     
+	                	</decorator-section>
+	                   </decorator-screen>
+            	  	</widgets>
+            	  	<fail-widgets>
+            	  	<decorator-screen name="ProcurementCommonDecorator" location="component://procurement/widget/CommonScreens.xml">
+                    <decorator-section name="body">
+                            <include-menu name="ProcurementReportsTabBar" location="component://procurement/widget/ProcurementMenus.xml"/> 
+                    		<platform-specific><html><html-template location="component://procurement/webapp/procurement/facility/ProcurementDependentDropDown.ftl"></html-template></html></platform-specific>
+                    		<platform-specific><html><html-template location="component://procurement/webapp/procurement/facility/shedSelection.ftl"></html-template></html></platform-specific>  
+	                    	<container>
+	                        	<label style="h1">Procurement Reports</label>                       	
+	                        </container>  
+   							<platform-specific><html><html-template location="component://procurement/webapp/procurement/facility/ProcurementReports.ftl"></html-template></html></platform-specific>                     
+                	</decorator-section>
+                   </decorator-screen>
+                   </fail-widgets>
+                   </section>
+            	  </fail-widgets>
+            	</section>
+            </widgets>
+        </section>
+    </screen>
+    <screen name="AnnualReports">
+        <section>
+            <actions>
+               <set field="titleProperty" value="PageTitleProcurementReports"/>	            
+               <set field="tabButtonItem" value="reports"/> 
+               <set field="tabButtonItem3" value="AnnualReports"/> 
+               <set field="reportDate" value="${bsh:org.ofbiz.base.util.UtilDateTime.nowDate()}" type="Date"/>                
+			   <set field="reportDateStr" value="${bsh:org.ofbiz.base.util.UtilDateTime.nowDateString(&quot;dd MMMMM, yyyy&quot;)}" type="String"/> 				  
+               <script location="component://procurement/webapp/procurement/WEB-INF/actions/facility/getUserRelatedFacilies.groovy"/>
+               <script location="component://procurement/webapp/procurement/WEB-INF/actions/yearlyReports/FieldsList.groovy"/>
+               <!-- <entity-condition list="statusItemList" entity-name="StatusItem">
+                	<condition-list combine="or">
+                		<condition-expr field-name="statusId" operator="equals" value="ITEM_APPROVED"/>
+                		<condition-expr field-name="statusId" operator="equals" value="ITEM_CREATED"/>
+                	</condition-list>
+                </entity-condition>
+               <script location="component://procurement/webapp/procurement/WEB-INF/actions/facility/getUserRelatedFacilies.groovy"/>
+               <script location="component://procurement/webapp/procurement/WEB-INF/actions/facility/FacilityCustomTimePeriods.groovy"/>
+               <script location="component://procurement/webapp/procurement/WEB-INF/actions/facility/FacilityFinAccounts.groovy"/> -->
+               <set field="productsList" type="List" value="${groovy: import org.ofbiz.base.util.*; return (in.vasista.vbiz.procurement.ProcurementNetworkServices.getProcurementProducts(dispatcher.getDispatchContext(),context)); }"/>
+               
+               <entity-and list="customTimePeriodList" entity-name="CustomTimePeriod">
+					<field-map field-name="periodTypeId" value="FISCAL_YEAR" />
+				</entity-and>
+              <!--  <script location="component://procurement/webapp/procurement/WEB-INF/actions/facility/UnitRoutes.groovy"/>
+               <set field="routesList" value="${routesList}"/>
+               <set field="unitsList" value="${unitsList}"/> -->
+               <entity-and list="customTimePeriodList" entity-name="CustomTimePeriod">
+                   <field-map field-name="periodTypeId" value="FISCAL_YEAR"/>
+               </entity-and>
+               <script location="component://procurement/webapp/procurement/WEB-INF/actions/facility/getTenantId.groovy"/>
+               <set field="tenantId" value="${tenantId}"/>
+               <set field="reportFrequencyFlag" value="AnnualReports"/> 
+            </actions>
+            <widgets>
+            	<section>
+            		<condition>
+            			<if-has-permission permission="MILKLINE" action="_VIEW "/>
+            		</condition>
+            	  <widgets>
+            	  	<decorator-screen name="ProcurementCommonDecorator" location="component://procurement/widget/CommonScreens.xml">
+                    <decorator-section name="body">
+                    		<platform-specific><html><html-template location="component://procurement/webapp/procurement/facility/ProcurementDependentDropDown.ftl"></html-template></html></platform-specific>
+                    		<platform-specific><html><html-template location="component://procurement/webapp/procurement/facility/shedSelection.ftl"></html-template></html></platform-specific>  
+	                    	<container>
+	                        	<label style="h1">Procurement Reports</label>                       	
+	                        </container>  
+   							<platform-specific><html><html-template location="component://milkline/webapp/milkline/procurement/ProcurementReports.ftl"></html-template></html></platform-specific>                     
+                	</decorator-section>
+                   </decorator-screen>
+            	  </widgets>
+            	  <fail-widgets>
+            	  	<section>
+            		<condition>
+            			<if-has-permission permission="SADF" action="_VIEW "/>
+            		</condition>
+            	  	<widgets>
+	            	  	<decorator-screen name="ProcurementCommonDecorator" location="component://procurement/widget/CommonScreens.xml">
+	                    <decorator-section name="body">
+	                    		<platform-specific><html><html-template location="component://procurement/webapp/procurement/facility/ProcurementDependentDropDown.ftl"></html-template></html></platform-specific>
+	                    		<platform-specific><html><html-template location="component://procurement/webapp/procurement/facility/shedSelection.ftl"></html-template></html></platform-specific>  
+		                    	<container>
+		                        	<label style="h1">Procurement Reports</label>                       	
+		                        </container>  
+	   							<platform-specific><html><html-template location="component://sadf/webapp/sadf/facility/ProcurementReports.ftl"></html-template></html></platform-specific>                     
+	                	</decorator-section>
+	                   </decorator-screen>
+            	  	</widgets>
+            	  	<fail-widgets>
+            	  	<decorator-screen name="ProcurementCommonDecorator" location="component://procurement/widget/CommonScreens.xml">
+                    <decorator-section name="body">
+                            <include-menu name="ProcurementReportsTabBar" location="component://procurement/widget/ProcurementMenus.xml"/> 
+                    		<platform-specific><html><html-template location="component://procurement/webapp/procurement/facility/ProcurementDependentDropDown.ftl"></html-template></html></platform-specific>
+                    		<platform-specific><html><html-template location="component://procurement/webapp/procurement/facility/shedSelection.ftl"></html-template></html></platform-specific>  
+	                    	<container>
+	                        	<label style="h1">Procurement Reports</label>                       	
+	                        </container>  
+   							<platform-specific><html><html-template location="component://procurement/webapp/procurement/facility/ProcurementReports.ftl"></html-template></html></platform-specific>                     
+                	</decorator-section>
+                   </decorator-screen>
+                   </fail-widgets>
+                   </section>
+            	  </fail-widgets>
+            	</section>
+            </widgets>
+        </section>
+    </screen>
+    <screen name="RegionWiseReports">
+        <section>
+            <actions>
+               <set field="titleProperty" value="PageTitleProcurementReports"/>	            
+               <set field="tabButtonItem" value="reports"/> 
+               <set field="tabButtonItem3" value="RegionWiseReports"/> 
+               <set field="reportDate" value="${bsh:org.ofbiz.base.util.UtilDateTime.nowDate()}" type="Date"/>                
+			   <set field="reportDateStr" value="${bsh:org.ofbiz.base.util.UtilDateTime.nowDateString(&quot;dd MMMMM, yyyy&quot;)}" type="String"/> 				  
+               <script location="component://procurement/webapp/procurement/WEB-INF/actions/facility/getUserRelatedFacilies.groovy"/>
+               <script location="component://procurement/webapp/procurement/WEB-INF/actions/yearlyReports/FieldsList.groovy"/>
+               <script location="component://procurement/webapp/procurement/WEB-INF/RegionWiseReports/GetRegionList.groovy"/>
+               <!-- <entity-condition list="statusItemList" entity-name="StatusItem">
+                	<condition-list combine="or">
+                		<condition-expr field-name="statusId" operator="equals" value="ITEM_APPROVED"/>
+                		<condition-expr field-name="statusId" operator="equals" value="ITEM_CREATED"/>
+                	</condition-list>
+                </entity-condition>
+               <script location="component://procurement/webapp/procurement/WEB-INF/actions/facility/getUserRelatedFacilies.groovy"/>
+               <script location="component://procurement/webapp/procurement/WEB-INF/actions/facility/FacilityCustomTimePeriods.groovy"/>
+               <script location="component://procurement/webapp/procurement/WEB-INF/actions/facility/FacilityFinAccounts.groovy"/> -->
+               <set field="productsList" type="List" value="${groovy: import org.ofbiz.base.util.*; return (in.vasista.vbiz.procurement.ProcurementNetworkServices.getProcurementProducts(dispatcher.getDispatchContext(),context)); }"/>
+               
+              <!--  <script location="component://procurement/webapp/procurement/WEB-INF/actions/facility/UnitRoutes.groovy"/>
+               <set field="routesList" value="${routesList}"/>
+               <set field="unitsList" value="${unitsList}"/> -->
+               <script location="component://procurement/webapp/procurement/WEB-INF/actions/facility/getTenantId.groovy"/>
+               <set field="tenantId" value="${tenantId}"/>
+               <set field="reportFrequencyFlag" value="RegionWiseReports"/> 
+            </actions>
+            <widgets>
+            	<section>
+            		<condition>
+            			<if-has-permission permission="MILKLINE" action="_VIEW "/>
+            		</condition>
+            	  <widgets>
+            	  	<decorator-screen name="ProcurementCommonDecorator" location="component://procurement/widget/CommonScreens.xml">
+                    <decorator-section name="body">
+                    		<platform-specific><html><html-template location="component://procurement/webapp/procurement/facility/ProcurementDependentDropDown.ftl"></html-template></html></platform-specific>
+                    		<platform-specific><html><html-template location="component://procurement/webapp/procurement/facility/shedSelection.ftl"></html-template></html></platform-specific>  
+	                    	<container>
+	                        	<label style="h1">Procurement Reports</label>                       	
+	                        </container>  
+   							<platform-specific><html><html-template location="component://milkline/webapp/milkline/procurement/ProcurementReports.ftl"></html-template></html></platform-specific>                     
+                	</decorator-section>
+                   </decorator-screen>
+            	  </widgets>
+            	  <fail-widgets>
+            	  	<section>
+            		<condition>
+            			<if-has-permission permission="SADF" action="_VIEW "/>
+            		</condition>
+            	  	<widgets>
+	            	  	<decorator-screen name="ProcurementCommonDecorator" location="component://procurement/widget/CommonScreens.xml">
+	                    <decorator-section name="body">
+	                    		<platform-specific><html><html-template location="component://procurement/webapp/procurement/facility/ProcurementDependentDropDown.ftl"></html-template></html></platform-specific>
+	                    		<platform-specific><html><html-template location="component://procurement/webapp/procurement/facility/shedSelection.ftl"></html-template></html></platform-specific>  
+		                    	<container>
+		                        	<label style="h1">Procurement Reports</label>                       	
+		                        </container>  
+	   							<platform-specific><html><html-template location="component://sadf/webapp/sadf/facility/ProcurementReports.ftl"></html-template></html></platform-specific>                     
+	                	</decorator-section>
+	                   </decorator-screen>
+            	  	</widgets>
+            	  	<fail-widgets>
+            	  	<decorator-screen name="ProcurementCommonDecorator" location="component://procurement/widget/CommonScreens.xml">
+                    <decorator-section name="body">
+                            <include-menu name="ProcurementReportsTabBar" location="component://procurement/widget/ProcurementMenus.xml"/> 
+                    		<platform-specific><html><html-template location="component://procurement/webapp/procurement/facility/ProcurementDependentDropDown.ftl"></html-template></html></platform-specific>
+	                    	<container>
+	                        	<label style="h1">Procurement Reports</label>                       	
+	                        </container>  
+   							<platform-specific><html><html-template location="component://procurement/webapp/procurement/facility/ProcurementReports.ftl"></html-template></html></platform-specific>                     
+                	</decorator-section>
+                   </decorator-screen>
+                   </fail-widgets>
+                   </section>
+            	  </fail-widgets>
+            	</section>
             </widgets>
         </section>
     </screen>
@@ -1040,7 +1522,7 @@ under the License.
         	</actions>
             <widgets>
             	 <platform-specific>
-                    <xsl-fo><html-template location="component://procurement/webapp/procurement/facility/ShedWiseAmountAbstract.fo.ftl"/></xsl-fo>
+                    <xsl-fo><html-template location="component://procurement/webapp/procurement/facility/ShedWiseAmountAbstTxt.fo.ftl"/></xsl-fo>
                 </platform-specific>
             </widgets>
         </section>
@@ -1050,7 +1532,12 @@ under the License.
         	<actions>
         		<property-map resource="ProductUiLabels" map-name="uiLabelMap" global="true"/>            
                 <property-map resource="HumanResUiLabels" map-name="uiLabelMap" global="true"/> 
+                <script location="component://procurement/webapp/procurement/WEB-INF/actions/facility/ShedMaintenanceInvoiceAmtList.groovy"/>
+                <script location="component://procurement/webapp/procurement/WEB-INF/actions/facility/ShortagesRecovery.groovy"/>
                 <script location="component://procurement/webapp/procurement/WEB-INF/actions/facility/ShedWiseAmountAbstract.groovy"/>
+                <script location="component://procurement/webapp/procurement/WEB-INF/actions/facility/ShedMilkBillDetails.groovy"/>
+                <script location="component://procurement/webapp/procurement/WEB-INF/actions/facility/BillsAbstractFromAbsEntity.groovy"/>
+                 <script location="component://procurement/webapp/procurement/WEB-INF/actions/facility/UnitWiseNetPayable.groovy"/>
                 <script location="component://procurement/webapp/procurement/WEB-INF/actions/facility/BankWiseTotalPayment.groovy"/>        		        		
         	</actions>
             <widgets>
@@ -1065,7 +1552,12 @@ under the License.
         	<actions>
         		<property-map resource="ProductUiLabels" map-name="uiLabelMap" global="true"/>            
                 <property-map resource="HumanResUiLabels" map-name="uiLabelMap" global="true"/> 
+                <script location="component://procurement/webapp/procurement/WEB-INF/actions/facility/ShedMaintenanceInvoiceAmtList.groovy"/>
+                <script location="component://procurement/webapp/procurement/WEB-INF/actions/facility/ShortagesRecovery.groovy"/>
                 <script location="component://procurement/webapp/procurement/WEB-INF/actions/facility/ShedWiseAmountAbstract.groovy"/>
+                <script location="component://procurement/webapp/procurement/WEB-INF/actions/facility/ShedMilkBillDetails.groovy"/>                
+                <script location="component://procurement/webapp/procurement/WEB-INF/actions/facility/BillsAbstractFromAbsEntity.groovy"/>
+                <script location="component://procurement/webapp/procurement/WEB-INF/actions/facility/UnitWiseNetPayable.groovy"/>
                 <script location="component://procurement/webapp/procurement/WEB-INF/actions/facility/BankWiseTotalPayment.groovy"/>        		        		
         	</actions>
             <widgets>
@@ -1080,7 +1572,7 @@ under the License.
         	<actions>
         		<property-map resource="ProductUiLabels" map-name="uiLabelMap" global="true"/>            
                 <property-map resource="HumanResUiLabels" map-name="uiLabelMap" global="true"/>                
-        	    <script location="component://procurement/webapp/procurement/WEB-INF/actions/facility/BillsAbstract.groovy"/>        		        		
+        	    <script location="component://procurement/webapp/procurement/WEB-INF/actions/facility/BillsAbstractFromAbsEntity.groovy"/>        		        		
         	</actions>
             <widgets>
             	 <platform-specific>
@@ -1094,7 +1586,7 @@ under the License.
         	<actions>
         		<property-map resource="ProductUiLabels" map-name="uiLabelMap" global="true"/>            
                 <property-map resource="HumanResUiLabels" map-name="uiLabelMap" global="true"/>                
-        	    <script location="component://procurement/webapp/procurement/WEB-INF/actions/facility/BillsAbstract.groovy"/>        		        		
+        	    <script location="component://procurement/webapp/procurement/WEB-INF/actions/facility/BillsAbstractFromAbsEntity.groovy"/>        		        		
         	</actions>
             <widgets>
             	 <platform-specific>
@@ -1111,9 +1603,21 @@ under the License.
         	    <script location="component://procurement/webapp/procurement/WEB-INF/actions/facility/feedRecoveries.groovy"/>        		        		
         	</actions>
             <widgets>
-            	 <platform-specific>
-                    <xsl-fo><html-template location="component://procurement/webapp/procurement/facility/feedRecoveries.fo.ftl"/></xsl-fo>
-                </platform-specific>
+            	 <section>
+            		<condition>
+           				<if-has-permission permission="MILKLINE" action="_VIEW "/>
+            		</condition>
+            		<widgets>
+                  <platform-specific>
+                   			 <xsl-fo><html-template location="component://milkline/webapp/milkline/procurement/FeedRecoveries.fo.ftl"/></xsl-fo>
+                		</platform-specific>
+            		</widgets>
+            		<fail-widgets>
+            			 <platform-specific>
+                    		<xsl-fo><html-template location="component://procurement/webapp/procurement/facility/feedRecoveries.fo.ftl"/></xsl-fo>
+                		</platform-specific> 
+            		</fail-widgets>
+            	</section>            	 
             </widgets>
         </section>
     </screen>
@@ -1122,7 +1626,7 @@ under the License.
         	<actions>
         		<property-map resource="ProductUiLabels" map-name="uiLabelMap" global="true"/>            
                 <property-map resource="HumanResUiLabels" map-name="uiLabelMap" global="true"/>                
-        	    <script location="component://procurement/webapp/procurement/WEB-INF/actions/facility/BillsAbstract.groovy"/>
+        	    <script location="component://procurement/webapp/procurement/WEB-INF/actions/facility/BillsAbstractFromAbsEntity.groovy"/>
         	    <script location="component://procurement/webapp/procurement/WEB-INF/actions/facility/BankAbstarct.groovy"/>             		        		
         	</actions>
             <widgets>
@@ -1194,11 +1698,24 @@ under the License.
                 <property-map resource="ProductUiLabels" map-name="uiLabelMap" global="true"/>            
                 <property-map resource="HumanResUiLabels" map-name="uiLabelMap" global="true"/> 
                 <script location="component://procurement/webapp/procurement/WEB-INF/actions/facility/UnitWiseCenterWiseMilkCollections.groovy"/>                               
+            	<set field="centerFlag" from-field="parameters.centerFlag"/>
             </actions>
             <widgets>
+            	<section>
+            		<condition>
+           				<if-compare operator="equals" value="Y" field="centerFlag"/>
+            		</condition>
+            		<widgets>
                  <platform-specific>
+                   			 <xsl-fo><html-template location="component://procurement/webapp/procurement/facility/InActiveCenterList.fo.ftl"/></xsl-fo>
+                		</platform-specific>
+            		</widgets>
+            		<fail-widgets>
+            			 <platform-specific>
                     <xsl-fo><html-template location="component://procurement/webapp/procurement/facility/UnitWiseCenterWiseMilkCollections.fo.ftl"/></xsl-fo>
                 </platform-specific>
+            		</fail-widgets>
+            	</section>                   
             </widgets>
         </section>
     </screen>
@@ -1259,7 +1776,7 @@ under the License.
         	</actions>
             <widgets>
             	 <platform-specific>
-                    <xsl-fo><html-template location="component://procurement/webapp/procurement/facility/ShedWiseProcurementAbstract.fo.ftl"/></xsl-fo>
+                    <xsl-fo><html-template location="component://procurement/webapp/procurement/facility/ShedWiseProcurementAbstTxt.fo.ftl"/></xsl-fo>
                 </platform-specific>
             </widgets>
         </section>
@@ -1283,7 +1800,11 @@ under the License.
         	<actions>
         		<property-map resource="ProductUiLabels" map-name="uiLabelMap" global="true"/>            
                 <property-map resource="HumanResUiLabels" map-name="uiLabelMap" global="true"/> 
+                <script location="component://procurement/webapp/procurement/WEB-INF/actions/facility/ShedMaintenanceInvoiceAmtList.groovy"/>
+                <script location="component://procurement/webapp/procurement/WEB-INF/actions/facility/ShortagesRecovery.groovy"/>
                 <script location="component://procurement/webapp/procurement/WEB-INF/actions/facility/ShedWiseAmountAbstract.groovy"/>
+                <script location="component://procurement/webapp/procurement/WEB-INF/actions/facility/ShedMilkBillDetails.groovy"/>                
+                <script location="component://procurement/webapp/procurement/WEB-INF/actions/facility/BillsAbstractFromAbsEntity.groovy"/>
                 <script location="component://procurement/webapp/procurement/WEB-INF/actions/facility/UnitWiseNetPayable.groovy"/>        		        		
         	</actions>
             <widgets>
@@ -1298,6 +1819,7 @@ under the License.
         	<actions>
         		<property-map resource="ProductUiLabels" map-name="uiLabelMap" global="true"/>            
                 <property-map resource="HumanResUiLabels" map-name="uiLabelMap" global="true"/> 
+                <script location="component://procurement/webapp/procurement/WEB-INF/actions/facility/BillsAbstractFromAbsEntity.groovy"/>
                 <script location="component://procurement/webapp/procurement/WEB-INF/actions/facility/UnitWiseMilkBillSummary.groovy"/>   
                 <script location="component://procurement/webapp/procurement/WEB-INF/actions/facility/getTenantId.groovy"/>
                 <set field="tenantId" value="${tenantId}"/>      		        		
@@ -1326,7 +1848,9 @@ under the License.
         	<actions>
         		<property-map resource="ProductUiLabels" map-name="uiLabelMap" global="true"/>            
                 <property-map resource="HumanResUiLabels" map-name="uiLabelMap" global="true"/> 
-                <script location="component://procurement/webapp/procurement/WEB-INF/actions/facility/UnitWiseCenterWiseBankStmt.groovy"/>        		        		
+                <set field="parameters.facilityTypeStr" value="UNIT" global="true"/>
+                <script location="component://procurement/webapp/procurement/WEB-INF/actions/facility/BillsAbstractFromAbsEntity.groovy"/>
+                <script location="component://procurement/webapp/procurement/WEB-INF/actions/facility/BankWiseCenterWiseReport.groovy"/>
         	</actions>
             <widgets>
             	 <platform-specific>
@@ -1341,53 +1865,58 @@ under the License.
                <set field="titleProperty" value="PageTitleProcurementBilling"/>	            
                <set field="tabButtonItem" value="Billing"/>
                <set field="tabButtonItem2" value="ProcurementBilling"/>
-               <script location="component://procurement/webapp/procurement/WEB-INF/actions/facility/UnitRoutes.groovy"/>
                <script location="component://procurement/webapp/procurement/WEB-INF/actions/facility/getUserRelatedFacilies.groovy"/>
-               <set field="shedList" value="${shedList}"/>
-               <set field="unitsList" value="${units}"/>
+               <script location="component://procurement/webapp/procurement/WEB-INF/actions/facility/FacilityCustomTimePeriods.groovy"/>
+               <script location="component://procurement/webapp/procurement/WEB-INF/actions/facility/UnitRoutes.groovy"/>
+           	   <set field="shedCode" from-field="context.shedCode"/>
+           	   <set field="unitCode" from-field="context.unitCode"/>
+                <!--  <set field="unitsList" value="${units}"/> -->
+                 <!-- <entity-condition list="timePeriodList" entity-name="CustomTimePeriod">
+               <set field="shedList" value="${shedList}" global="true"/>
+               <set field="unitsList" value="${units}" global="true"/>
                  <entity-condition list="timePeriodList" entity-name="CustomTimePeriod">  
                  	<condition-expr field-name="periodTypeId" operator="equals"  value="PROC_BILL_MONTH"/>              
 	                <order-by field-name="-createdStamp"/>  		
-                </entity-condition>  
-                <entity-condition list="listProcurementBilling" entity-name="PeriodBilling">
-                	<condition-list combine="and">
-                		<condition-expr field-name="billingTypeId" operator="equals" value="PB_PROC_MRGN"/>
-                		<condition-expr field-name="statusId" operator="not-equals" value="COM_CANCELLED"/>
-                	</condition-list>                	
-                	<order-by field-name="-customTimePeriodId"/>
-                	<order-by field-name="-lastModifiedDate"/>
-                </entity-condition>
-                <set field="facilityId" value="${parameters.facilityId}"/>               
+                </entity-condition> --> 
+               <entity-condition list="ProcurementBillingList" entity-name="PeriodBilling">
+               	<condition-list combine="and">
+               		<condition-expr field-name="billingTypeId" operator="equals" value="PB_PROC_MRGN"/>
+               		<condition-expr field-name="statusId" operator="not-equals" value="COM_CANCELLED"/>
+               	</condition-list>                	
+               	<order-by field-name="-customTimePeriodId"/>
+               	<order-by field-name="-lastModifiedDate"/>
+               </entity-condition>
+               <set field="facilityId" value="${parameters.facilityId}"/>               
             </actions>
              <widgets>
                  <decorator-screen name="ProcurementCommonDecorator" location="component://procurement/widget/CommonScreens.xml">
                      <decorator-section name="body">
                     	<include-menu name="ProcurementBillingTabBar" location="component://procurement/widget/ProcurementMenus.xml"/> 
-                    <container style="lefthalf">
-                    <screenlet title="Process Billing">
-                        <platform-specific><html><html-template location="component://procurement/webapp/procurement/facility/ProcurementDependentDropDown.ftl"></html-template></html></platform-specific>
-                    	<platform-specific><html><html-template location="component://procurement/webapp/procurement/facility/ProcBilling.ftl"/></html></platform-specific>      		         
-					</screenlet>
-					</container>
-                    	<container>
-							<container style="clear"></container>
-					   </container>  
-					   <container>
-                    	<screenlet title="Process Billing List">
-						       	<include-form name="ListProcurementBilling" location="component://procurement/widget/ProcurementForms.xml"/>
-                    	</screenlet> 
-                    	</container>          		         
+						<platform-specific><html><html-template location="component://procurement/webapp/procurement/facility/ProcurementDependentDropDown.ftl"></html-template></html></platform-specific>
+						<platform-specific><html><html-template location="component://procurement/webapp/procurement/facility/BillingGeneration.ftl"/></html></platform-specific>
+					    <container style="button-bar">
+							<link url-mode="plain" target="javascript:showRunValidationForm();" text="Generate Billing" style="buttontext create"  link-type="anchor"/>
+						</container>
+                    	<container style="lefthalf">
+            			      	 <screenlet title="Find Procurement Billing">
+	                   				<include-form location="component://procurement/widget/ProcurementForms.xml" name="FindProcurementBilling"/>
+	                   				<platform-specific><html><html-template location="component://procurement/webapp/procurement/facility/FindProcurementBilling.ftl"/></html></platform-specific>
+                    	         </screenlet>
+                    	         <screenlet title="Procurement Billing List">
+						       	    <include-form name="ProcurementBillingList" location="component://procurement/widget/ProcurementForms.xml"/>
+                    	         </screenlet>  
+                    	</container>        		         
                     </decorator-section>                    
                 </decorator-screen>
             </widgets>
         </section>
     </screen>
- <screen name="FindProcurementBillingValidation">
+ 	<screen name="FindProcurementBillingValidation">
         <section>
             <actions>
                <set field="titleProperty" value="PageTitleProcurementBilling"/>	            
                <set field="tabButtonItem" value="Billing"/>
-               <set field="tabButtonItem2" value="FindProcurementBillingValidation"/>
+               <set field="tabButtonItem2" value="FindProcurementBillingValidation"/>               
                 <entity-condition list="statusItemList" entity-name="StatusItem">
                 	<condition-list combine="or">
                 		<condition-expr field-name="statusId" operator="equals" value="ITEM_APPROVED"/>
@@ -1400,15 +1929,23 @@ under the License.
                 		<condition-expr field-name="parentFacilityId" operator="equals" value="MAIN_PLANT"/>
                 	</condition-list>
                 </entity-condition>
-                <entity-condition list="timePeriodList" entity-name="CustomTimePeriod">
+               <set field="findProcBillingFlag" value="true" />
+               
+                <!-- <entity-condition list="timePeriodsList" entity-name="CustomTimePeriod">
                 	<condition-expr field-name="periodTypeId" operator="equals"  value="PROC_BILL_MONTH"/>                	
                 	<order-by field-name="-fromDate"/>
-                </entity-condition>
-               <set field="testTimePeriodId" value="${groovy:import org.ofbiz.entity.util.EntityUtil; (EntityUtil.getFirst(timePeriodList)).get(&quot;customTimePeriodId&quot;)}"/>
+                </entity-condition> -->
+               <!-- <set field="testTimePeriodId" value="${groovy:import org.ofbiz.entity.util.EntityUtil; (EntityUtil.getFirst(timePeriodList)).get(&quot;customTimePeriodId&quot;)}"/> -->
                <script location="component://procurement/webapp/procurement/WEB-INF/actions/facility/ProcBillingValidationSearch.groovy"/>
+               <set field="layoutSettings.javaScripts[]" value="/procurement/images/removeProcBillingValidationSearchParams.js" global="true"/>
+               <set field="layoutSettings.javaScripts[]" value="/procurement/images/approveValidationEntry.js" global="true"/>               
                <script location="component://procurement/webapp/procurement/WEB-INF/actions/facility/getUserRelatedFacilies.groovy"/>
-               <set field="shedId" from-field="context.shedId"/>
+               <script location="component://procurement/webapp/procurement/WEB-INF/actions/facility/FacilityCustomTimePeriods.groovy"/>
+               <set field="shedId" from-field="context.shedId" />
                <set field="unitCode" from-field="context.unitCode"/>
+               <set field="parameters.shedId"  default-value="${parameters.unitId}"/>
+               <set field="parameters.unitCode" from-field="context.unitCode" default-value="${parameters.unitCode}"/>
+              <!--  <set field="layoutSettings.javaScripts[]" value="/procurement/images/updateAndApproveValidationEntryAjax.js" global="true"/> -->
                <service service-name="performFind" result-map="result" >
 	                 <field-map field-name="inputFields" from-field="parameters"/>
 	                 <field-map field-name="entityName" value="ProcBillingValidation"/>
@@ -1416,27 +1953,41 @@ under the License.
 	                 <field-map field-name="viewIndex" from-field="viewIndex"/>
 	             	 <field-map field-name="viewSize" from-field="viewSize"/>                  
             	</service>
+            	<set field="customTimePeriodId" value=""/>
             	<set field="listProcurementBillingValidation" from-field="result.listIt"/> 
             	<set field="listProcBillingValidation" value="${result.listIt}"/>
             	<script location="component://procurement/webapp/procurement/WEB-INF/actions/facility/SeperationOfValidations.groovy" />
             	<set field="negativeAmtList" value="${negativeAmtList}"/> 
             	<set field="qtySnfFinalList" value="${qtySnfFinalList}"/>
-            	<set field="outLierFinalList" value="${outLierFinalList}"/>           	                   
+            	<set field="outLierFinalList" value="${outLierFinalList}"/>         
+            	<set field="checkCodeFinalList" value="${checkCodeFinalList}"/>  	
+            	
+            	<script location="component://procurement/webapp/procurement/WEB-INF/actions/facility/UnitRoutes.groovy"/>
+                <set field="shedList" value="${shedList}"/>
+                <set field="unitsList" value="${unitsList}"/>                   
             </actions>
             <widgets>
             	 <decorator-screen name="ProcurementCommonDecorator" location="component://procurement/widget/CommonScreens.xml">
                     <decorator-section name="body">
                     <include-menu name="ProcurementBillingTabBar" location="component://procurement/widget/ProcurementMenus.xml"/>  
-                    	<container style="button-bar">
-							<platform-specific><html><html-template location="component://procurement/webapp/procurement/facility/RunValidation.ftl"/></html></platform-specific>							  	        					
+                    	<container style="button-bar">   
+                    		<platform-specific><html><html-template location="component://procurement/webapp/procurement/facility/ProcurementDependentDropDown.ftl"></html-template></html></platform-specific>                 		 
 							<link url-mode="plain" target="javascript:showRunValidationForm();" text="Run Validation" style="buttontext create"  link-type="anchor"/>
 						</container>
-                    	<container style="lefthalf">
+                    	<container>
                         	<label style="h1">Billing Validation </label>
+                        	<label id="procurementEntry_spinner" text="  "></label>
                         	<screenlet title="Find Invalid Record">                        	
                         		<include-form name="FindProcurementBillingValidation" location="component://procurement/widget/ProcurementForms.xml"/>
+                        		<platform-specific><html><html-template location="component://procurement/webapp/procurement/facility/FindProcurementBillingValidation.ftl"></html-template></html></platform-specific>
+							<platform-specific><html><html-template location="component://procurement/webapp/procurement/facility/RunValidation.ftl"/></html></platform-specific>
+                        		<!-- <link url-mode="plain" target="printValidations" text="Print Validation" style="buttontext create"  link-type="anchor">
+                        			<parameter param-name="shedId" from-field="parameters.unitId"/>
+                        			<parameter param-name="unitCode" from-field="parameters.unitCode"/>
+                        			<parameter param-name="customTimePeriodId" from-field="parameters.customTimePeriodId"/>
+                        		</link> -->
                         	</screenlet>
-                        	<screenlet title="List OutLier Validation">                        	
+                        	<!--<screenlet title="List OutLier Validation">                        	
                         		<include-form name="ListOutLierBillingValidation" location="component://procurement/widget/ProcurementForms.xml"/>
                         	</screenlet>
                         	<screenlet title="List Negative Validation">                        	
@@ -1444,10 +1995,41 @@ under the License.
                         	</screenlet>
                         	<screenlet title="Qty SNF FAT  Validation">                        	
                         		<include-form name="ListQtySnfFatValidation" location="component://procurement/widget/ProcurementForms.xml"/>
-                        	</screenlet>                        	                    	
+                        	</screenlet>   
+                        	<screenlet title="Check Code Validation">                        	
+                        		<include-form name="ListCheckCodeValidation" location="component://procurement/widget/ProcurementForms.xml"/>
+                        	</screenlet>-->                        	
+                        	<screenlet title="List Negative Validation">                        	
+                        		<include-form name="ListNegativeAmtValidation" location="component://procurement/widget/ProcurementForms.xml"/>
+                        	</screenlet>                 	
+                        	<platform-specific><html><html-template location="component://procurement/webapp/procurement/facility/qtySnfValidation.ftl"/></html></platform-specific>
+                        	<platform-specific><html><html-template location="component://procurement/webapp/procurement/facility/quantityOutlierValidation.ftl"/></html></platform-specific>
+                        	<platform-specific><html><html-template location="component://procurement/webapp/procurement/facility/checkCodeValidationEntries.ftl"/></html></platform-specific>                         	
                         </container>             
                 	</decorator-section>
                 </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    <screen name="PrintValidations">
+        <section>
+        	<actions>
+        		<property-map resource="ProductUiLabels" map-name="uiLabelMap" global="true"/>            
+                <property-map resource="HumanResUiLabels" map-name="uiLabelMap" global="true"/> 
+               	<script location="component://procurement/webapp/procurement/WEB-INF/actions/facility/printValidations.groovy"/>
+            	<set field="negativeAmtList" value="${negativeAmtList}"/> 
+            	<set field="qtySnfFinalList" value="${qtySnfFinalList}"/>
+            	<set field="outLierFinalList" value="${outLierFinalList}"/> 
+            	<set field="checkCodeFinalList" value="${checkCodeFinalList}"/>     		        		
+        	</actions>
+            <widgets>
+            	<section>            		
+            		<widgets>
+            			 <platform-specific>
+                    		<xsl-fo><html-template location="component://procurement/webapp/procurement/facility/PrintValidations.fo.ftl"/></xsl-fo>
+                		</platform-specific>
+            		</widgets>            		
+            	</section>            	 
             </widgets>
         </section>
     </screen>
@@ -1473,6 +2055,207 @@ under the License.
            </widgets>
        </section>
     </screen>
+    <screen name="MissingData">
+        <section>
+            <actions>
+               <set field="titleProperty" value="Missing Transactions"/>	            
+               <set field="tabButtonItem" value="Billing"/>
+               <set field="tabButtonItem2" value="MissingData"/>
+                <script location="component://procurement/webapp/procurement/WEB-INF/actions/facility/getUserRelatedFacilies.groovy"/>
+               	<set field="shedId" from-field="context.shedId"/>
+               	<set field="shedCode" from-field="context.shedCode"/>
+               	<set field="parameters.shedCode" from-field="context.shedCode"/>
+               	<set field="parameters.unitCode" from-field="context.unitCode"/> 
+               <!--  <script location="component://procurement/webapp/procurement/WEB-INF/actions/facility/FacilityCustomTimePeriods.groovy"/>
+                <script location="component://procurement/webapp/procurement/WEB-INF/actions/facility/UnitRoutes.groovy"/> -->
+               <set field="shedList" value="${shedList}" global="true"/>
+               <set field="unitsList" value="${unitsList}" global="true"/>
+                
+                
+            </actions>
+             <widgets>
+                 <decorator-screen name="ProcurementCommonDecorator" location="component://procurement/widget/CommonScreens.xml">
+                     <decorator-section name="body">
+						<platform-specific><html><html-template location="component://procurement/webapp/procurement/facility/ProcurementDependentDropDown.ftl"></html-template></html></platform-specific>
+                    	<container style="lefthalf">
+            			      	<include-menu name="ProcurementBillingTabBar" location="component://procurement/widget/ProcurementMenus.xml"/>
+            			      	 <screenlet title="Find Missing Data">
+	                   				<platform-specific><html><html-template location="component://procurement/webapp/procurement/facility/ProcurementDependentDropDown.ftl"></html-template></html></platform-specific>
+	                   				<include-form location="component://procurement/widget/ProcurementForms.xml" name="FindMissingTransactions"/>
+	                   				<platform-specific><html><html-template location="component://procurement/webapp/procurement/facility/FindFacilityOutputEntry.ftl"></html-template></html></platform-specific>
+                    	         </screenlet>
+                    	         <screenlet title="Missing Data List">
+						       	    <include-form name="ListMissingTransactions" location="component://procurement/widget/ProcurementForms.xml"/>
+                    	         </screenlet>  
+                    	</container>        		         
+                    </decorator-section>                    
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    <screen name="TransPortCommission">
+        <section>
+            <actions>
+               <set field="titleProperty" value="Transport Commission"/>	            
+               <set field="tabButtonItem" value="Billing"/>
+               <set field="tabButtonItem2" value="TransportCommission"/>
+                <script location="component://procurement/webapp/procurement/WEB-INF/actions/facility/getUserRelatedFacilies.groovy"/>
+               	<set field="shedId" from-field="context.shedId"/>
+               	<set field="shedCode" from-field="context.shedCode"/>
+               	<set field="parameters.shedCode" from-field="context.shedCode"/>
+               	<set field="parameters.unitCode" from-field="context.unitCode"/> 
+                <script location="component://procurement/webapp/procurement/WEB-INF/actions/facility/FacilityCustomTimePeriods.groovy"/>
+                <script location="component://procurement/webapp/procurement/WEB-INF/actions/facility/UnitRoutes.groovy"/>
+               <set field="shedList" value="${shedList}" global="true"/>
+               <set field="unitsList" value="${unitsList}" global="true"/>
+               <entity-condition list="transportCommissionBillingList" entity-name="PeriodBilling">
+               		<condition-list combine="and">
+               			<condition-expr field-name="billingTypeId" operator="equals" value="TRNSPT_PROC_MRGN"/>
+               			<condition-expr field-name="statusId" operator="not-equals" value="COM_CANCELLED"/>
+               			<condition-expr field-name="customTimePeriodId" operator="equals" value="${parameters.customTimePeriodId}"/>
+               		</condition-list>
+               </entity-condition>                
+            </actions>
+             <widgets>
+                 <decorator-screen name="ProcurementCommonDecorator" location="component://procurement/widget/CommonScreens.xml">
+                     <decorator-section name="body">
+						<platform-specific><html><html-template location="component://procurement/webapp/procurement/facility/ProcurementDependentDropDown.ftl"></html-template></html></platform-specific>
+                    	<container style="lefthalf">                    		
+           			      	<include-menu name="ProcurementBillingTabBar" location="component://procurement/widget/ProcurementMenus.xml"/>
+           			      	 <link target="CreateTransporterCommission" text="${uiLabelMap.CommonCreateNew}" style="buttontext create" />
+           			      	 <screenlet title="Find Transport Commission">
+                   				<include-form location="component://procurement/widget/ProcurementForms.xml" name="FindTransportCommission"/>
+                   	         </screenlet>
+                   	         <screenlet title="Transport Commission List">
+					       	    <include-form name="ListTransportCommission" location="component://procurement/widget/ProcurementForms.xml"/>
+                   	         </screenlet>  
+                    	</container>        		         
+                    </decorator-section>                    
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    <screen name="CreateTransporterCommission">
+        <section>
+            <actions>
+               <set field="titleProperty" value="Transport Commission"/>	            
+               <set field="tabButtonItem" value="Billing"/>
+               <set field="tabButtonItem2" value="TransportCommission"/>
+                <script location="component://procurement/webapp/procurement/WEB-INF/actions/facility/getUserRelatedFacilies.groovy"/>
+               	<set field="shedId" from-field="context.shedId"/>
+               	<set field="shedCode" from-field="context.shedCode"/>
+               	<set field="parameters.shedCode" from-field="context.shedCode"/>
+               	<set field="parameters.unitCode" from-field="context.unitCode"/> 
+                <script location="component://procurement/webapp/procurement/WEB-INF/actions/facility/FacilityCustomTimePeriods.groovy"/>
+                <script location="component://procurement/webapp/procurement/WEB-INF/actions/facility/UnitRoutes.groovy"/>
+               <set field="shedList" value="${shedList}" global="true"/>
+               <set field="unitsList" value="${unitsList}" global="true"/>                          
+            </actions>
+             <widgets>
+                 <decorator-screen name="ProcurementCommonDecorator" location="component://procurement/widget/CommonScreens.xml">
+                     <decorator-section name="body">
+						<platform-specific><html><html-template location="component://procurement/webapp/procurement/facility/ProcurementDependentDropDown.ftl"></html-template></html></platform-specific>
+                    	<container style="lefthalf">                    		
+           			      	<include-menu name="ProcurementBillingTabBar" location="component://procurement/widget/ProcurementMenus.xml"/>
+           			      	<screenlet title="Create Transport Commission">
+                   				<platform-specific><html><html-template location="component://procurement/webapp/procurement/facility/ProcurementDependentDropDown.ftl"></html-template></html></platform-specific>
+                   				<include-form location="component://procurement/widget/ProcurementForms.xml" name="CreateTransportCommission"/>
+                   	         </screenlet>
+                    	</container>        		         
+                    </decorator-section>                    
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    <screen name="ShedMaintenance">
+        <section>
+            <actions>
+               <set field="titleProperty" value="Shed Maintenance"/>	            
+               <set field="tabButtonItem" value="shedMaintenance"/>
+                <script location="component://procurement/webapp/procurement/WEB-INF/actions/facility/getUserRelatedFacilies.groovy"/>
+               	<set field="shedId" from-field="context.shedId"/>
+               	<set field="shedCode" from-field="context.shedCode"/>
+               	<set field="parameters.shedCode" from-field="context.shedCode"/>
+               	<set field="parameters.unitCode" from-field="context.unitCode"/> 
+                <!-- <script location="component://procurement/webapp/procurement/WEB-INF/actions/facility/FacilityCustomTimePeriods.groovy"/>
+                <script location="component://procurement/webapp/procurement/WEB-INF/actions/facility/UnitRoutes.groovy"/> -->
+               <set field="shedList" value="${shedList}" global="true"/>
+               <set field="unitsList" value="${unitsList}" global="true"/> 
+               <script location="component://procurement/webapp/procurement/WEB-INF/actions/facility/ShedMaintenanceInvoiceAmtList.groovy"/>
+               <set field="shedMaintenanceInvoiceList" value="${procurementAbstract}"/>                                     
+            </actions>
+             <widgets>
+                 <decorator-screen name="ProcurementCommonDecorator" location="component://procurement/widget/CommonScreens.xml">
+                     <decorator-section name="body">
+						<platform-specific><html><html-template location="component://procurement/webapp/procurement/facility/ProcurementDependentDropDown.ftl"></html-template></html></platform-specific>
+                    	<container style="lefthalf">                    		
+           			      	 <link target="createShedMaintenanceInvoice" text="${uiLabelMap.CommonCreateNew}" style="buttontext create" />
+           			      	 <screenlet title="Find Shed Maintance">
+                   				<include-form location="component://procurement/widget/ProcurementForms.xml" name="FindShedMaintenance"/>
+                   				<platform-specific><html><html-template location="component://procurement/webapp/procurement/facility/FindFacilityOutputEntry.ftl"></html-template></html></platform-specific>
+                   	         </screenlet>
+                   	         <screenlet title="List Shed Maintenance">
+					       	    <include-form name="ListShedMaintenance" location="component://procurement/widget/ProcurementForms.xml"/>
+                   	         </screenlet>  
+                    	</container>        		         
+                    </decorator-section>                    
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    <screen name="CreateShedMaintenanceInvoice">
+        <section>
+            <actions>
+               <set field="titleProperty" value="Shed Maintenance"/>	            
+               <set field="tabButtonItem" value="shedMaintenance"/>
+               <set field="tabButtonItem2" value="shedMaintenance"/>
+                <script location="component://procurement/webapp/procurement/WEB-INF/actions/facility/getUserRelatedFacilies.groovy"/>
+               	<set field="shedId" from-field="context.shedId"/>
+               	<set field="shedCode" from-field="context.shedCode"/>
+               	<set field="parameters.shedCode" from-field="context.shedCode"/>
+               	<set field="parameters.unitCode" from-field="context.unitCode"/> 
+                <!-- <script location="component://procurement/webapp/procurement/WEB-INF/actions/facility/FacilityCustomTimePeriods.groovy"/>
+                <script location="component://procurement/webapp/procurement/WEB-INF/actions/facility/UnitRoutes.groovy"/> -->
+               <set field="shedList" value="${shedList}" global="true"/>
+               <set field="unitsList" value="${unitsList}" global="true"/>                          
+            </actions>
+             <widgets>
+                 <decorator-screen name="ProcurementCommonDecorator" location="component://procurement/widget/CommonScreens.xml">
+                     <decorator-section name="body">
+						<platform-specific><html><html-template location="component://procurement/webapp/procurement/facility/ProcurementDependentDropDown.ftl"></html-template></html></platform-specific>
+                    	<container style="lefthalf">                    		
+           			      	<screenlet title="Create ShedMaintenance Invoice">
+                   				<include-form location="component://procurement/widget/ProcurementForms.xml" name="CreateShedMaintenanceInvoice"/>
+                   				<platform-specific><html><html-template location="component://procurement/webapp/procurement/facility/FindFacilityOutputEntry.ftl"></html-template></html></platform-specific>
+                   	         </screenlet>
+                    	</container>        		         
+                    </decorator-section>                    
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    <screen name="ImportDBFData">
+       <section>
+           <actions>
+               <set field="titleProperty" value="PageTitleProcurementEntry"/>
+               <set field="headerItem" value="ProcurementEntry"/>
+               <set field="tabButtonItem" value="ImportDBFData" />
+                <property-map resource="CommonUiLabels" map-name="uiLabelMap"/>
+               <property-map resource="WebtoolsUiLabels" map-name="uiLabelMap"/> 
+               <set field="layoutSettings.javaScripts[]" value="/procurement/images/setParameter.js" global="true"/>
+                              
+           </actions>
+           <widgets>
+               <decorator-screen name="ProcurementCommonDecorator" location="component://procurement/widget/CommonScreens.xml">
+                   <decorator-section name="body">
+                        <screenlet>
+                           <include-form name="dbfToVbizProc" location="component://procurement/widget/ProcurementForms.xml"/>
+                        </screenlet>
+                    </decorator-section>
+               </decorator-screen>
+           </widgets>
+       </section>
+    </screen>
     <screen name="ProcurementRates">
         <section>
             <actions>
@@ -1490,7 +2273,6 @@ under the License.
                         <include-menu name="PriceCalculatorTabBar" location="component://procurement/widget/ProcurementMenus.xml"/>
                         <container style="lefthalf">                            
                         	<screenlet title="Price Calculator">                        	
-                                <platform-specific><html><html-template location="component://procurement/webapp/procurement/facility/ProcurementDependentDropDown.ftl"></html-template></html></platform-specific>
                                 <include-form name="PriceCalculator" location="component://procurement/widget/ProcurementForms.xml"/>
                             </screenlet>
                             <screenlet title="Price Details">                           
@@ -1575,7 +2357,71 @@ under the License.
                 </decorator-screen>
             </widgets>
         </section>
-    </screen>  
+    </screen>
+    <screen name="MpfReceipts">
+        <section>
+            <actions>
+               <set field="titleProperty" value="Milk Transfers"/>               
+               <set field="tabButtonItem" value="MilkTransfers"/> 
+               <set field="tabButtonItem2" value="MPFReceipts"/>
+               <script location="component://procurement/webapp/procurement/WEB-INF/actions/facility/getUserRelatedFacilies.groovy"/>
+               <script location="component://procurement/webapp/procurement/WEB-INF/actions/facility/FacilityCustomTimePeriods.groovy"/>
+               <script location="component://procurement/webapp/procurement/WEB-INF/actions/facility/UnitRoutes.groovy"/>
+               <set field="shedId" from-field="context.shedId"/>
+               	<set field="shedCode" from-field="context.shedCode"/>
+               	<set field="unitCode" from-field="context.unitCode"/>
+               	<set field="unitId" from-field="context.unitId"/>  
+                <script location="component://procurement/webapp/procurement/WEB-INF/actions/facility/UnitRoutes.groovy"/> 
+               <set field="shedList" value="${shedList}" global="true"/>
+               <set field="unitsList" value="${unitsList}" global="true"/>
+            </actions>
+            <widgets>
+                <decorator-screen name="ProcurementCommonDecorator" location="component://procurement/widget/CommonScreens.xml">
+                    <decorator-section name="body">  
+                    <include-menu name="MilkTransferTabBar" location="component://procurement/widget/ProcurementMenus.xml"/>
+                        <screenlet title="Find MPF Receipts">
+                         		<platform-specific><html><html-template location="component://procurement/webapp/procurement/facility/ProcurementDependentDropDown.ftl"></html-template></html></platform-specific>
+	                   			<include-form name="FindMPFReceipts" location="component://procurement/widget/ProcurementForms.xml"/>
+								<platform-specific><html><html-template location="component://procurement/webapp/procurement/facility/FindFacilityOutputEntry.ftl"></html-template></html></platform-specific>
+                          
+                        </screenlet>
+                        <screenlet title="MPF Receipts">
+                            <include-form name="ListMPFReceipts" location="component://procurement/widget/ProcurementForms.xml"/>
+                        </screenlet>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    
+    <screen name="AddSourDistribution">
+        <section>
+            <actions>
+               <set field="titleProperty" value="Milk Transfers"/>               
+               <set field="tabButtonItem" value="MilkTransfers"/> 
+               <set field="tabButtonItem2" value="MPFReceipts"/>
+               <set field="shedId" from-field="context.shedId"/>
+               	<set field="shedCode" from-field="context.shedCode"/>
+               	<set field="unitCode" from-field="context.unitCode"/>
+               	<set field="unitId" from-field="context.unitId"/>  
+                <script location="component://procurement/webapp/procurement/WEB-INF/actions/facility/getShedUnitsList.groovy"/> 
+               <set field="shedList" value="${shedList}" global="true"/>
+               <set field="unitsList" value="${unitsList}" global="true"/>
+            </actions>
+            <widgets>
+                <decorator-screen name="ProcurementCommonDecorator" location="component://procurement/widget/CommonScreens.xml">
+                    <decorator-section name="body">  
+                    <include-menu name="MilkTransferTabBar" location="component://procurement/widget/ProcurementMenus.xml"/>
+                        <screenlet title="Find MPF Receipts">
+	                   			<include-form name="AddSourDistribution" location="component://procurement/widget/ProcurementForms.xml"/>
+                        </screenlet>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+      
+    
     <screen name="BillingAdjustments">
         <section>
             <actions>
@@ -1583,7 +2429,9 @@ under the License.
                 <set field="headerItem" value="BillingAdjustments"/>
                 <set field="tabButtonItem" value="BillingAdjustments" />
                 <set field="tabButtonItem2" value="BillingAdjustmentAdditions" /> 
+                <set field="parameters.isTimePeriodClosed" value="Y"/> 
                 <set field="layoutSettings.javaScripts[]" value="/procurement/images/appendDecimals.js" global="true"/>        
+                <script location="component://procurement/webapp/procurement/WEB-INF/actions/facility/FacilityCustomTimePeriods.groovy"/>
                 <script location="component://procurement/webapp/procurement/WEB-INF/actions/facility/getUserRelatedFacilies.groovy"/>
                	<set field="shedId" from-field="context.shedId"/>
                	<set field="unitCode" from-field="context.unitCode"/> 
@@ -1591,31 +2439,40 @@ under the License.
                 <script location="component://procurement/webapp/procurement/WEB-INF/actions/facility/ProcurementEntrySearch.groovy"/>
                 <entity-condition list="additionsList" entity-name="OrderHeaderAdjustmentAndAdjustmentType"> 
 	                <condition-list combine="and">
+	                	<condition-expr field-name="createdByUserLogin" value="${userLogin.userLoginId}"/>
 	                	<condition-expr field-name="parentTypeId" operator="equals" value="MILKPROC_ADDITIONS"/>
 	                	<condition-expr field-name="statusId" operator="equals" value="ORDER_CREATED"/>
 	                </condition-list>               	
                		<order-by field-name="-createdDate"/>
                 </entity-condition>   	
-                <set field="additionsList" from-field="additionsList"/>               
+                <set field="additionsList" from-field="additionsList"/>  
+                <set field="adjustmentsList" from-field="additionsList"/>              
                 <script location="component://procurement/webapp/procurement/WEB-INF/actions/facility/ProcurementEntry.groovy" />
-                <entity-condition list="timePeriodList" entity-name="CustomTimePeriod">               
+                <script location="component://procurement/webapp/procurement/WEB-INF/actions/facility/AdjustmentLastEntryList.groovy" />
+               <!--  <entity-condition list="timePeriodList" entity-name="CustomTimePeriod">               
 	                <condition-expr field-name="periodTypeId" operator="equals" value="PROC_BILL_MONTH"/>  	
 	                <order-by field-name="-fromDate"/>	
                 </entity-condition>  
-                <set field="timePeriodList" from-field="timePeriodList"/> 
+                <set field="timePeriodList" from-field="timePeriodList"/>  -->
                 <entity-condition list="adjustmentTypeList" entity-name="OrderAdjustmentType">
                 	<condition-expr field-name="parentTypeId" operator="equals" value="MILKPROC_ADDITIONS"/>
                 </entity-condition>
                 <set field="adjustmentTypeList" from-field="adjustmentTypeList"/>
                 <set field="createAdjustmentTarget" value="createBillingAdjustmentAdditions"/> 
-                <set field="timePeriodId" from-field="parameters.customTimePeriodId"/>                     
+                <set field="timePeriodId" from-field="parameters.customTimePeriodId"/> 
+                <set field="entryAdjType" value="Additions"/>   
+                <set field="adjDescription" value="${groovy: import in.vasista.vbiz.procurement.ProcurementNetworkServices;import org.ofbiz.base.util.UtilMisc;  dctx = dispatcher.getDispatchContext(); return (ProcurementNetworkServices.getShedOrderAdjustmentDescription(dctx, UtilMisc.toMap(&quot;shedId&quot;, shedId)));}"></set>             
             </actions>
             <widgets>
                 <decorator-screen name="ProcurementCommonDecorator" location="component://procurement/widget/CommonScreens.xml">
                     <decorator-section name="body">
                     	<include-menu name="BillingAdjustmentTabBar" location="component://procurement/widget/ProcurementMenus.xml"/> 
-                    	<platform-specific><html><html-template location="component://procurement/webapp/procurement/facility/AdjustmentsEntry.ftl"/></html></platform-specific>      		         
-                    	<container style="lefthalf">                    		
+                    	<container style="lefthalf">
+                    		<screenlet title = "Add Addition">
+                    			<platform-specific><html><html-template location="component://procurement/webapp/procurement/facility/AdjustmentsEntry.ftl"/></html></platform-specific>
+                    		</screenlet>
+                    	</container>      		         
+                    	<container style="righthalf">                    		
                     		<screenlet title="${uiLabelMap.AdditionsList}">
 						       	<include-form location="component://procurement/widget/ProcurementForms.xml" name="AdjustmentsAdditionsList"/>
                     		</screenlet>                     		
@@ -1632,39 +2489,51 @@ under the License.
                 <set field="headerItem" value="BillingAdjustments"/>
                 <set field="tabButtonItem" value="BillingAdjustments" />
                 <set field="tabButtonItem2" value="BillingAdjustmentDeductions" />
+                <set field="parameters.isTimePeriodClosed" value="Y"/>
                 <set field="layoutSettings.javaScripts[]" value="/procurement/images/appendDecimals.js" global="true"/>
                 <script location="component://procurement/webapp/procurement/WEB-INF/actions/facility/ProcurementEntrySearch.groovy"/>
                 <script location="component://procurement/webapp/procurement/WEB-INF/actions/facility/getUserRelatedFacilies.groovy"/>
                	<set field="shedId" from-field="context.shedId"/>
                	<set field="unitCode" from-field="context.unitCode"/>
+               	<script location="component://procurement/webapp/procurement/WEB-INF/actions/facility/FacilityCustomTimePeriods.groovy"/>
                 <entity-condition list="deductionsList" entity-name="OrderHeaderAdjustmentAndAdjustmentType"> 
 	                <condition-list>
+	                	<condition-expr field-name="createdByUserLogin" value="${userLogin.userLoginId}"/>
 	                	<condition-expr field-name="parentTypeId" operator="equals" value="MILKPROC_DEDUCTIONS"/>
 	                	<condition-expr field-name="statusId" operator="equals" value="ORDER_CREATED"/>
 	                </condition-list>        		                		
                 	<order-by field-name="-createdDate"/>
                 </entity-condition>   	
                 <set field="deductionsList" from-field="deductionsList"/>
-                <entity-condition list="timePeriodList" entity-name="CustomTimePeriod">               
+                 <set field="adjustmentsList" from-field="deductionsList"/>
+               <!--  <entity-condition list="timePeriodList" entity-name="CustomTimePeriod">               
 	                <condition-expr field-name="periodTypeId" operator="equals" value="PROC_BILL_MONTH"/>
 	                <order-by field-name="-fromDate"/>  		
                 </entity-condition>  
-                <set field="timePeriodList" from-field="timePeriodList"/> 
+                <set field="timePeriodList" from-field="timePeriodList"/>  -->
                 <entity-condition list="adjustmentTypeList" entity-name="OrderAdjustmentType">
                 	<condition-expr field-name="parentTypeId" operator="equals" value="MILKPROC_DEDUCTIONS"/>
+                	<order-by field-name="sequenceNum"/>
                 </entity-condition>
                 <set field="adjustmentTypeList" from-field="adjustmentTypeList"/>
                 <set field="createAdjustmentTarget" value="createBillingAdjustmentDeductions"/>
                 <set field="timePeriodId" from-field="parameters.customTimePeriodId"/>
                  <set field="adjustmentTypeId" from-field="parameters.adjustmentTypeId"/>
                 <script location="component://procurement/webapp/procurement/WEB-INF/actions/facility/ProcurementEntry.groovy" />
+                <script location="component://procurement/webapp/procurement/WEB-INF/actions/facility/AdjustmentLastEntryList.groovy" />
+                <set field="entryAdjType" value="Deductions"/>
+                <set field="adjDescription" value="${groovy: import in.vasista.vbiz.procurement.ProcurementNetworkServices;import org.ofbiz.base.util.UtilMisc;  dctx = dispatcher.getDispatchContext(); return (ProcurementNetworkServices.getShedOrderAdjustmentDescription(dctx, UtilMisc.toMap(&quot;shedId&quot;, shedId)));}"></set>
             </actions>
             <widgets>
                 <decorator-screen name="ProcurementCommonDecorator" location="component://procurement/widget/CommonScreens.xml">
                     <decorator-section name="body">
                     	<include-menu name="BillingAdjustmentTabBar" location="component://procurement/widget/ProcurementMenus.xml"/> 
-                    	<platform-specific><html><html-template location="component://procurement/webapp/procurement/facility/AdjustmentsEntry.ftl"/></html></platform-specific>
-                    	<container style="lefthalf"> 
+                    	<container style="lefthalf">
+                    		<screenlet title = "Add Deduction">
+                    			<platform-specific><html><html-template location="component://procurement/webapp/procurement/facility/AdjustmentsEntry.ftl"/></html></platform-specific>
+                    		</screenlet>
+                    	</container>
+                    	<container style="righthalf"> 
                     		<screenlet title="${uiLabelMap.DeductionsList}">
 						       	<include-form location="component://procurement/widget/ProcurementForms.xml" name="AdjustmentsDeductionsList"/>
                     		</screenlet>                    		
@@ -1678,14 +2547,15 @@ under the License.
         <section>
             <actions>
                 <set field="viewIndex"  value="5" type="Integer"/>
-                <set field="viewSize" from-field="parameters.viewSize" type="Integer"/>
+                <set field="viewSize" from-field="parameters.viewSize" type="Integer" default-value="5"/>
                 <set field="titleProperty" value="PageTitleProcurementEntry"/>
                 <set field="headerItem" value="BillingAdjustments"/>
                 <set field="tabButtonItem" value="BillingAdjustments" />
                 <set field="tabButtonItem2" value="FindAdjustment" />  
                 <script location="component://procurement/webapp/procurement/WEB-INF/actions/facility/AdjustmentEntriesSearch.groovy" />  
-             	 <set field="viewIndex" value="0" type="Integer"/>
+             	<set field="viewIndex" value="0" type="Integer"/>
                 <set field="viewSize" value="10" type="Integer"/>
+                <set field="parameters.createdByUserLogin" from-field="parameters.createdByUserLogin"/>
              	<service service-name="performFind" result-map="result">
 	                 <field-map field-name="inputFields" from-field="parameters"/>
 	                 <field-map field-name="entityName" value="OrderHeaderAdjustmentAndAdjustmentType"/>
@@ -1694,20 +2564,22 @@ under the License.
 	             	 <field-map field-name="viewSize" from-field="viewSize"/>                  
             	</service>   	
                 <set field="listAdjustment" from-field="result.listIt"/>
-                <entity-condition list="adjustmentsTypeList" entity-name="OrderAdjustmentType">
+                <!-- <entity-condition list="adjustmentsTypeList" entity-name="OrderAdjustmentType">
                 	<condition-list combine="or"> 
                 		<condition-expr field-name="parentTypeId" operator="equals" value="MILKPROC_DEDUCTIONS"/>
                 		<condition-expr field-name="parentTypeId" operator="equals" value="MILKPROC_ADDITIONS"/>
                 	</condition-list>
                 </entity-condition>
-                <set field="adjTypeList" from-field="adjustmentsTypeList"/>
+                <set field="adjTypeList" from-field="adjustmentsTypeList"/> -->
                 <set field="layoutSettings.javaScripts[]" value="/procurement/images/appendDecimals.js" global="true"/>
                 <set field="layoutSettings.javaScripts[]" value="/procurement/images/procurementEntry.js" global="true"/>
                 <set field="layoutSettings.javaScripts[]" value="/procurement/images/removeProcurementEntrySearchParams.js" global="true"/>
                 <script location="component://procurement/webapp/procurement/WEB-INF/actions/facility/ProcurementEntrySearch.groovy"/>
                 <script location="component://procurement/webapp/procurement/WEB-INF/actions/facility/getUserRelatedFacilies.groovy"/>
                <set field="shedId" from-field="context.shedId"/>
-               <set field="unitCode" from-field="context.unitCode"/>                                    
+               <set field="unitCode" from-field="context.unitCode"/>     
+               <set field="adjDescription" value="${groovy: import in.vasista.vbiz.procurement.ProcurementNetworkServices;import org.ofbiz.base.util.UtilMisc;  dctx = dispatcher.getDispatchContext(); return (ProcurementNetworkServices.getShedOrderAdjustmentDescription(dctx, UtilMisc.toMap(&quot;shedId&quot;, shedId)));}"></set> 
+               <set field="adjDescriptionList" value="${groovy:  return (adjDescription.get(&quot;orderAdjDescList&quot;));}" type="List"></set>                              
             </actions>
             <widgets>
                 <decorator-screen name="ProcurementCommonDecorator" location="component://procurement/widget/CommonScreens.xml">
@@ -1725,16 +2597,29 @@ under the License.
                 </decorator-screen>
             </widgets>
         </section>
-    </screen>   
-    <screen name="MilkTransfers">
+    </screen>    
+    <screen name="FindTransfers">
         <section>
             <actions>
                 <set field="titleProperty" value="PageTitleProcurementEntry"/>
                 <set field="headerItem" value="BillingAdjustments"/>
                 <set field="tabButtonItem" value="MilkTransfers" />
-                <set field="tabButtonItem2" value="SendMilk" />
-                <entity-condition list="listIt" entity-name="MilkTransfer">
-                </entity-condition>
+                <set field="tabButtonItem2" value="FindTransfers" />
+                <entity-one value-field="tenantConfiguration" entity-name="TenantConfiguration">
+                	<field-map field-name="propertyName" value="enableSupplyTimeForTRNSF"/>
+                	<field-map field-name="propertyTypeEnumId" value="MILK_PROCUREMENT"/>
+                </entity-one>
+                <set field="supplyTimeValue" value="${tenantConfiguration.propertyValue}"/>
+                <entity-one value-field="tenantConfiguration" entity-name="TenantConfiguration">
+                	<field-map field-name="propertyName" value="enableFatSnfLRForTRNSF"/>
+                	<field-map field-name="propertyTypeEnumId" value="MILK_PROCUREMENT"/>
+                </entity-one>
+                <set field="enableFatSnfLR" value="${tenantConfiguration.propertyValue}"/>
+                <script location="component://procurement/webapp/procurement/WEB-INF/actions/facility/getUserRelatedFacilies.groovy"/>
+                <script location="component://procurement/webapp/procurement/WEB-INF/actions/facility/MilkTransfersSearch.groovy"/>
+                <!-- <entity-condition list="listIt" entity-name="MilkTransfer">
+                </entity-condition> -->
+                
                 <set field="productsList" type="List" value="${groovy: import org.ofbiz.base.util.*; return (in.vasista.vbiz.procurement.ProcurementNetworkServices.getProcurementTransferProducts(dispatcher.getDispatchContext(),context)); }"/>
             </actions>
             <widgets>
@@ -1742,7 +2627,59 @@ under the License.
                     <decorator-section name="body">
                        <include-menu name="MilkTransferTabBar" location="component://procurement/widget/ProcurementMenus.xml"/>
                         <container style="full">
-                            <link target="createSendingMilk" text="${uiLabelMap.CommonCreateNew}" 	style="buttontext create" />                    		
+                    		<screenlet title="Find Sending Milk">
+                             	<include-form location="component://procurement/widget/ProcurementForms.xml" name="FindingMilk"/>
+                            </screenlet> 
+                            <screenlet title="Sending Milk List">
+                            	<include-form location="component://procurement/widget/ProcurementForms.xml" name="ListSendMilk"/>
+                            </screenlet>  
+                            <screenlet title="Received Milk List">
+                            	<include-form location="component://procurement/widget/ProcurementForms.xml" name="ListMilkReceived"/>
+                            </screenlet>    
+                         </container>                        
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>  
+    <screen name="MilkTransfers">
+        <section>
+            <actions>
+                <set field="titleProperty" value="PageTitleProcurementEntry"/>
+                <set field="headerItem" value="BillingAdjustments"/>
+                <set field="tabButtonItem" value="MilkTransfers" />
+                <set field="tabButtonItem2" value="SendMilk" />
+                 <set field="tabButtonItem2" value="SendMilk" />
+                <entity-one value-field="tenantConfiguration" entity-name="TenantConfiguration">
+                	<field-map field-name="propertyName" value="enableSupplyTimeForTRNSF"/>
+                	<field-map field-name="propertyTypeEnumId" value="MILK_PROCUREMENT"/>
+                </entity-one>
+                <set field="supplyTimeValue" value="${tenantConfiguration.propertyValue}"/>
+                <entity-one value-field="tenantConfiguration" entity-name="TenantConfiguration">
+                	<field-map field-name="propertyName" value="enableFatSnfLRForTRNSF"/>
+                	<field-map field-name="propertyTypeEnumId" value="MILK_PROCUREMENT"/>
+                </entity-one>
+                <set field="enableFatSnfLR" value="${tenantConfiguration.propertyValue}"/>
+                <script location="component://procurement/webapp/procurement/WEB-INF/actions/facility/getUserRelatedFacilies.groovy"/>
+                <script location="component://procurement/webapp/procurement/WEB-INF/actions/facility/MilkTransfersSearch.groovy"/>
+                <!-- <entity-condition list="listIt" entity-name="MilkTransfer">
+                </entity-condition> -->
+                <script location="component://procurement/webapp/procurement/WEB-INF/actions/facility/getUserRelatedFacilies.groovy"/>
+               	<set field="shedId" from-field="context.shedId"/>
+               	<set field="shedCode" from-field="context.shedCode"/>
+               	<set field="parameters.shedCode" from-field="context.shedCode"/>
+               	<set field="parameters.unitCode" from-field="context.unitCode"/> 
+                <!-- <script location="component://procurement/webapp/procurement/WEB-INF/actions/facility/FacilityCustomTimePeriods.groovy"/>
+                <script location="component://procurement/webapp/procurement/WEB-INF/actions/facility/UnitRoutes.groovy"/> -->
+                <set field="shedList" value="${shedList}" global="true"/>
+                <set field="productsList" type="List" value="${groovy: import org.ofbiz.base.util.*; return (in.vasista.vbiz.procurement.ProcurementNetworkServices.getProcurementTransferProducts(dispatcher.getDispatchContext(),context)); }"/>
+            </actions>
+            <widgets>
+                <decorator-screen name="ProcurementCommonDecorator" location="component://procurement/widget/CommonScreens.xml">
+                    <decorator-section name="body">
+                       <include-menu name="MilkTransferTabBar" location="component://procurement/widget/ProcurementMenus.xml"/>
+                        <container style="full">
+                            <!-- <link target="createSendingMilk" text="${uiLabelMap.CommonCreateNew}" style="buttontext h1 create"  />                    		
                     		<screenlet title="Find Sending Milk">
                                     <include-form location="component://procurement/widget/ProcurementForms.xml" name="FindingMilk"/>
                             </screenlet> 
@@ -1751,7 +2688,12 @@ under the License.
                             </screenlet>  
                             <screenlet title="Received Milk List">
                                     <include-form location="component://procurement/widget/ProcurementForms.xml" name="ListMilkReceived"/>
-                            </screenlet>    
+                            </screenlet>     -->
+                            <screenlet title="Sending Milk">
+                 				<platform-specific><html><html-template location="component://procurement/webapp/procurement/facility/ProcurementDependentDropDown.ftl"></html-template></html></platform-specific>
+                                 	<include-form location="component://procurement/widget/ProcurementForms.xml" name="SendMilk"/>
+                                 	<platform-specific><html><html-template location="component://procurement/webapp/procurement/facility/FindFacilityOutputEntry.ftl"></html-template></html></platform-specific>
+                            </screenlet>
                          </container>                        
                     </decorator-section>
                 </decorator-screen>
@@ -1765,9 +2707,22 @@ under the License.
                 <set field="headerItem" value="BillingAdjustments"/>
                 <set field="tabButtonItem" value="MilkTransfers" />
                 <set field="tabButtonItem2" value="ReceivedMilk" />
+                <entity-one value-field="tenantConfiguration" entity-name="TenantConfiguration">
+                	<field-map field-name="propertyName" value="enableSupplyTimeForTRNSF"/>
+                	<field-map field-name="propertyTypeEnumId" value="MILK_PROCUREMENT"/>
+                </entity-one>
+                <set field="supplyTimeValue" value="${tenantConfiguration.propertyValue}"/>
+                <entity-one value-field="tenantConfiguration" entity-name="TenantConfiguration">
+                	<field-map field-name="propertyName" value="enableFatSnfLRForTRNSF"/>
+                	<field-map field-name="propertyTypeEnumId" value="MILK_PROCUREMENT"/>
+                </entity-one>
+                <set field="enableFatSnfLR" value="${tenantConfiguration.propertyValue}"/>
                 <entity-condition list="listReceivedMilk" entity-name="MilkTransfer">
                     <condition-expr field-name="statusId" value="MXF_INPROCESS"/>
                 </entity-condition>
+                <script location="component://procurement/webapp/procurement/WEB-INF/actions/facility/getUserRelatedFacilies.groovy"/>
+                <!-- <set field="context.listReceivedMilk" from-field="listReceivedMilk"/> -->
+                <script location="component://procurement/webapp/procurement/WEB-INF/actions/facility/filterMilkTransfersReceived.groovy"/>
                 <set field="productsList" type="List" value="${groovy: import org.ofbiz.base.util.*; return (in.vasista.vbiz.procurement.ProcurementNetworkServices.getProcurementTransferProducts(dispatcher.getDispatchContext(),context)); }"/>
             </actions>
             <widgets>
@@ -1802,8 +2757,27 @@ under the License.
                 <set field="headerItem" value="BillingAdjustments"/>
                 <set field="tabButtonItem" value="MilkTransfers" />
                 <set field="tabButtonItem2" value="SendMilk" />
+                <entity-one value-field="tenantConfiguration" entity-name="TenantConfiguration">
+                	<field-map field-name="propertyName" value="enableSupplyTimeForTRNSF"/>
+                	<field-map field-name="propertyTypeEnumId" value="MILK_PROCUREMENT"/>
+                </entity-one>
+                <set field="supplyTimeValue" value="${tenantConfiguration.propertyValue}"/>
+                <entity-one value-field="tenantConfiguration" entity-name="TenantConfiguration">
+                	<field-map field-name="propertyName" value="enableFatSnfLRForTRNSF"/>
+                	<field-map field-name="propertyTypeEnumId" value="MILK_PROCUREMENT"/>
+                </entity-one>
+                <set field="enableFatSnfLR" value="${tenantConfiguration.propertyValue}"/>
                 <entity-condition list="listIt" entity-name="MilkTransfer">
                 </entity-condition>
+                <script location="component://procurement/webapp/procurement/WEB-INF/actions/facility/getUserRelatedFacilies.groovy"/>
+               	<set field="shedId" from-field="context.shedId"/>
+               	<set field="shedCode" from-field="context.shedCode"/>
+               	<set field="parameters.shedCode" from-field="context.shedCode"/>
+               	<set field="parameters.unitCode" from-field="context.unitCode"/> 
+               <!--  <script location="component://procurement/webapp/procurement/WEB-INF/actions/facility/FacilityCustomTimePeriods.groovy"/>
+                <script location="component://procurement/webapp/procurement/WEB-INF/actions/facility/UnitRoutes.groovy"/> -->
+                <set field="shedList" value="${shedList}" global="true"/>
+                <set field="unitsList" value="${unitsList}" global="true"/>
                 <set field="productsList" type="List" value="${groovy: import org.ofbiz.base.util.*; return (in.vasista.vbiz.procurement.ProcurementNetworkServices.getProcurementTransferProducts(dispatcher.getDispatchContext(),context)); }"/>
             </actions>
             <widgets>
@@ -1812,7 +2786,9 @@ under the License.
                     	<container style="lefthalf"> 
                        <include-menu name="MilkTransferTabBar" location="component://procurement/widget/ProcurementMenus.xml"/>
                     		<screenlet title="Sending Milk">
+                    				<platform-specific><html><html-template location="component://procurement/webapp/procurement/facility/ProcurementDependentDropDown.ftl"></html-template></html></platform-specific>
                                     <include-form location="component://procurement/widget/ProcurementForms.xml" name="SendMilk"/>
+                                    <platform-specific><html><html-template location="component://procurement/webapp/procurement/facility/FindFacilityOutputEntry.ftl"></html-template></html></platform-specific>
                             </screenlet>                    		
                     	</container>
                     </decorator-section>
@@ -1831,6 +2807,9 @@ under the License.
                 <entity-condition list="listReceivedMilk" entity-name="MilkTransfer">
                     <condition-expr field-name="statusId" value="MXF_INPROCESS"/>
                 </entity-condition>
+                <set field="context.listReceivedMilk" from-field="listReceivedMilk"/>
+                <script location="component://procurement/webapp/procurement/WEB-INF/actions/facility/getUserRelatedFacilies.groovy"/>
+                <script location="component://procurement/webapp/procurement/WEB-INF/actions/facility/filterMilkTransfersReceived.groovy"/>
                 <set field="productsList" type="List" value="${groovy: import org.ofbiz.base.util.*; return (in.vasista.vbiz.procurement.ProcurementNetworkServices.getProcurementTransferProducts(dispatcher.getDispatchContext(),context)); }"/>
             </actions>
             <widgets>
@@ -1865,6 +2844,16 @@ under the License.
                 <set field="headerItem" value="BillingAdjustments"/>
                 <set field="tabButtonItem" value="MilkTransfers" />
                 <set field="tabButtonItem2" value="ReceivedMilk" />
+                <entity-one value-field="tenantConfiguration" entity-name="TenantConfiguration">
+                	<field-map field-name="propertyName" value="enableSupplyTimeForTRNSF"/>
+                	<field-map field-name="propertyTypeEnumId" value="MILK_PROCUREMENT"/>
+                </entity-one>
+                <set field="supplyTimeValue" value="${tenantConfiguration.propertyValue}"/>
+                <entity-one value-field="tenantConfiguration" entity-name="TenantConfiguration">
+                	<field-map field-name="propertyName" value="enableFatSnfLRForTRNSF"/>
+                	<field-map field-name="propertyTypeEnumId" value="MILK_PROCUREMENT"/>
+                </entity-one>
+                <set field="enableFatSnfLR" value="${tenantConfiguration.propertyValue}"/>
                 <set field="milkTransferId" from-field="parameters.milkTransferId"/>
                 <entity-one value-field="milkRecordList" entity-name="MilkTransfer">
                     <field-map field-name="milkTransferId" from-field="milkTransferId"/>
@@ -1901,9 +2890,10 @@ under the License.
                	<set field="parameters.shedCode" from-field="context.shedCode"/>
                	<set field="parameters.unitCode" from-field="context.unitCode"/> 
                 <script location="component://procurement/webapp/procurement/WEB-INF/actions/facility/ProcurementEntrySearch.groovy"/>
-                <script location="component://procurement/webapp/procurement/WEB-INF/actions/facility/UnitRoutes.groovy"/>
-               <set field="shedList" value="${shedList}"/>
-               <set field="unitsList" value="${unitsList}"/>
+               <!--  <script location="component://procurement/webapp/procurement/WEB-INF/actions/facility/FacilityCustomTimePeriods.groovy"/>
+                <script location="component://procurement/webapp/procurement/WEB-INF/actions/facility/UnitRoutes.groovy"/> -->
+               <set field="shedList" value="${shedList}" global="true"/>
+               <set field="unitsList" value="${unitsList}" global="true"/>
             </actions>
             <widgets>
                 <decorator-screen name="ProcurementCommonDecorator" location="component://procurement/widget/CommonScreens.xml">
@@ -1911,8 +2901,9 @@ under the License.
                    		<container style="lefthalf">
                         	<include-menu name="OutputEntryTabBar" location="component://procurement/widget/ProcurementMenus.xml"/>
                         	<screenlet title="${uiLabelMap.FacilityOutputEntry}">
-	                   		<platform-specific><html><html-template location="component://procurement/webapp/procurement/facility/ProcurementDependentDropDown.ftl"></html-template></html></platform-specific>
-	                   			<include-form location="component://procurement/widget/ProcurementForms.xml" name="FindFacilityOutputEntry"/>                   			                   		
+	                   			<platform-specific><html><html-template location="component://procurement/webapp/procurement/facility/ProcurementDependentDropDown.ftl"></html-template></html></platform-specific>
+	                   			<include-form location="component://procurement/widget/ProcurementForms.xml" name="FindFacilityOutputEntry"/>
+								<platform-specific><html><html-template location="component://procurement/webapp/procurement/facility/FindFacilityOutputEntry.ftl"></html-template></html></platform-specific>	                   			                   			                   		
 	                   		</screenlet>                   		
 	                   		<screenlet>
 	                             <include-form location="component://procurement/widget/ProcurementForms.xml" name="ListProcOutputEntry"/>                           
@@ -1929,21 +2920,24 @@ under the License.
                 <set field="titleProperty" value="PageTitleProcurementFacilityOutputEntry"/>               
                 <set field="tabButtonItem" value="FindFacilityOutputEntry" />
                  <set field="tabButtonItem1" value="CreateProcFaciltiyOutputEntry" /> 
-                 <entity-condition list="timePeriodList" entity-name="CustomTimePeriod">               
+                 <!-- <entity-condition list="timePeriodList" entity-name="CustomTimePeriod">               
 	                <condition-expr field-name="periodTypeId" operator="equals" value="PROC_BILL_MONTH"/>
 	                <order-by field-name="-createdStamp"/>  		
-                </entity-condition>
+                </entity-condition> -->
+                <set field="parameters.isTimePeriodClosed" value="Y"/>
+                <script location="component://procurement/webapp/procurement/WEB-INF/actions/facility/FacilityCustomTimePeriods.groovy"/>
                 <script location="component://procurement/webapp/procurement/WEB-INF/actions/facility/getUserRelatedFacilies.groovy"/>
                	<set field="shedId" from-field="context.shedId"/>
                	<set field="shedCode" from-field="context.shedCode"/>
                	<set field="unitCode" from-field="context.unitCode"/>  
                	<set field="parameters.shedCode" from-field="context.shedCode"/>
                	<set field="parameters.unitCode" from-field="context.unitCode"/>   
-                <set field="timePeriodList" from-field="timePeriodList"/>   
-                <entity-condition list="outputTypeList" entity-name="Enumeration">
-                	<condition-expr field-name="enumTypeId" operator="equals" value="PROC_OUTPUT_TYPE"/>
-                </entity-condition>	
-                <set field="outputTypeList" from-field="outputTypeList"/>
+                <!-- <set field="timePeriodList" from-field="timePeriodList"/> -->   
+                <script location="component://procurement/webapp/procurement/WEB-INF/actions/facility/getProcurementOutputTypes.groovy"/>
+                <!-- <entity-condition list="outputTypeList" entity-name="Enumeration">
+	                <condition-expr field-name="enumTypeId" operator="equals" value="PROC_OUTPUT_TYPE"/>
+                </entity-condition>  -->
+                <set field="outputTypeList" value="${outputTypes}" global="true"/>
                 <set field="timePeriodId" from-field="parameters.customTimePeriodId"/>
 				<set field="layoutSettings.javaScripts[]" value="/procurement/images/appendDecimals.js" global="true"/>
                 <script location="component://procurement/webapp/procurement/WEB-INF/actions/facility/ProcurementEntrySearch.groovy"/>
@@ -1954,8 +2948,12 @@ under the License.
                  <decorator-screen name="ProcurementCommonDecorator" location="component://procurement/widget/CommonScreens.xml">
                      <decorator-section name="body">
                     	<include-menu name="OutputEntryTabBar" location="component://procurement/widget/ProcurementMenus.xml"/> 
-                    	<platform-specific><html><html-template location="component://procurement/webapp/procurement/facility/ProcOutputEntry.ftl"/></html></platform-specific>      		         
-                    	<container style="lefthalf">                    		
+                    	<container style="lefthalf">
+                    		<screenlet title="Create Output Entry">
+                    			<platform-specific><html><html-template location="component://procurement/webapp/procurement/facility/ProcOutputEntry.ftl"/></html></platform-specific>
+                    		</screenlet>
+                    	</container>         
+                    	<container style="righthalf">                    		
                     		<screenlet title="List Facility Output  Entries Data">
 						       	<include-form location="component://procurement/widget/ProcurementForms.xml" name="ListRecentProcOutputEntries"/>
                     		</screenlet>                     		
@@ -1965,4 +2963,61 @@ under the License.
             </widgets>
         </section>
     </screen>
+      <screen name="FindProcurementTimePeriod">
+		<section>
+			<actions>
+			    <set field="titleProperty" value="ProcurementTimePeriod"/>
+				<set field="tabButtonItem" value="ProcurementTimePeriod"/>
+				<set field="tabButtonItem2" value="ProcurementTimePeriod"/> 
+			</actions>
+			<widgets>	
+				<decorator-screen name="ProcurementCommonDecorator" location="component://procurement/widget/CommonScreens.xml">
+					<decorator-section name="body">
+						<section>
+							<widgets>
+								<container style="button-bar">
+									<link target="CreateProcurementTimePeriod" text="${uiLabelMap.CommonCreateNew}" style="buttontext create" />
+								</container>
+								<screenlet title="Find ProcurementTimePeriod">
+									<include-form location="component://procurement/widget/ProcurementForms.xml" name="FindProcurementTimePeriod"/>					
+								</screenlet>
+								 <screenlet title="ProcurementTimePeriod List">				
+									<include-form location="component://procurement/widget/ProcurementForms.xml" name="ProcurementTimePeriodList"/>				
+								</screenlet>
+							</widgets> 
+						</section>						
+					</decorator-section>	
+				</decorator-screen>		
+			</widgets>
+		</section>
+	</screen>
+    <screen name="Create NewProcurementTimePeriod">
+		<section>
+			<actions>
+			    <set field="tabButtonItem" value="ProcurementTimePeriod"/>
+			    <set field="tabButtonItem2" value="ProcurementTimePeriod"/>
+			   <script location="component://procurement/webapp/procurement/WEB-INF/actions/facility/getUserRelatedFacilies.groovy"/>
+               	<set field="shedId" from-field="context.shedId"/>
+               	<set field="shedCode" from-field="context.shedCode"/>
+               	<set field="parameters.shedCode" from-field="context.shedCode"/>
+                 <script location="component://procurement/webapp/procurement/WEB-INF/actions/facility/FacilityCustomTimePeriods.groovy"/>
+                <script location="component://procurement/webapp/procurement/WEB-INF/actions/facility/UnitRoutes.groovy"/>
+			</actions>
+			<widgets>	
+				<decorator-screen name="ProcurementCommonDecorator" location="component://procurement/widget/CommonScreens.xml">
+					<decorator-section name="body">
+						<section>
+							<widgets>
+								<screenlet title="Create Procurement TimePeriod">
+								<platform-specific><html><html-template location="component://procurement/webapp/procurement/facility/ProcurementDependentDropDown.ftl"></html-template></html></platform-specific>
+									<include-form location="component://procurement/widget/ProcurementForms.xml" name="ProcurementTimePeriod"/>
+									<platform-specific><html><html-template location="component://procurement/webapp/procurement/facility/ProcurementTimePeriod.ftl"></html-template></html></platform-specific>			
+								</screenlet>
+							</widgets> 
+						</section>						
+					</decorator-section>	
+				</decorator-screen>		
+			</widgets>
+		</section>
+	</screen>
  </screens>   

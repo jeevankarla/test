@@ -34,7 +34,7 @@ under the License.
         	<fo:static-content flow-name="xsl-region-before">
         	<fo:block font-size="7pt" linefeed-treatment="preserve" >&#xA;</fo:block>
         	<#assign reportHeader = delegator.findOne("TenantConfiguration", {"propertyTypeEnumId" : "MILK_PROCUREMENT","propertyName" : "reportHeaderLable"}, true)>
-    		<fo:block font-size="7pt" text-align="left" white-space-collapse="false" font-weight="bold">.                                                               ${reportHeader.description?if_exists}.</fo:block> 	 	  
+    		<fo:block font-size="7pt" text-align="left" white-space-collapse="false" font-weight="bold">.                                                               ${reportHeader.description?if_exists}.                                                                                       PAGE NO:<fo:page-number/></fo:block> 	 	  
         	<fo:block font-size="7pt" text-align="left" white-space-collapse="false" font-weight="bold">.                                                                   B  A  N  K        W  I  S  E        A  B  S  T  R  A  C  T                  ${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(fromDateTime, "dd/MM/yyyy")} TO ${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(thruDateTime, "dd/MM/yyyy")}                  </fo:block>
         	<fo:block font-size="7pt" linefeed-treatment="preserve">&#xA;</fo:block>
         	<fo:block font-size="7pt" text-align="left" white-space-collapse="false" font-weight="bold">UNIT CODE  AND  NAME : ${unitCode?if_exists}   ${unitName?if_exists}                </fo:block>
@@ -83,7 +83,7 @@ under the License.
 	                            	<fo:block font-size="7pt" text-align="right"><#if bankAbstract.get("netAmount")?has_content>${bankAbstract.get("netAmount")?if_exists?string("##0.00")}<#else>0.00</#if></fo:block>                               
 	                            </fo:table-cell>
 	                            <fo:table-cell >	
-	                            	<fo:block font-size="7pt" text-align="right"><#if bankAbstract.get("netRndAmount")?has_content>${bankAbstract.get("netRndAmount")?if_exists?string("##0.00")}<#else>0.00</#if></fo:block>                               
+	                            	<fo:block font-size="7pt" text-align="right"><#if unitTotals.get("netRndAmountWithOp")?has_content>${unitTotals.get("netRndAmountWithOp")?if_exists?string("##0.00")}<#else>0.00</#if></fo:block>                               
 	                            </fo:table-cell>
 				            </fo:table-row>	
 				            <fo:table-row>	
@@ -109,7 +109,7 @@ under the License.
 	                            	<fo:block font-size="7pt" text-align="right"><#if bankAbstract.get("netAmount")?has_content>${bankAbstract.get("netAmount")?if_exists?string("##0.00")}<#else>0.00</#if></fo:block>                               
 	                            </fo:table-cell>
 	                            <fo:table-cell >	
-	                            	<fo:block font-size="7pt" text-align="right"><#if bankAbstract.get("netRndAmount")?has_content>${bankAbstract.get("netRndAmount")?if_exists?string("##0.00")}<#else>0.00</#if></fo:block>                               
+	                            	<fo:block font-size="7pt" text-align="right"><#if unitTotals.get("netRndAmountWithOp")?has_content>${unitTotals.get("netRndAmountWithOp")?if_exists?string("##0.00")}<#else>0.00</#if></fo:block>                               
 	                            </fo:table-cell>
 	                            <fo:table-cell >	
 	                            	<fo:block font-size="7pt" text-align="left">*</fo:block>                               
@@ -143,7 +143,7 @@ under the License.
 	                            	<fo:block font-size="7pt" text-align="right"><#if bankAbstract.get("netAmount")?has_content>${bankAbstract.get("netAmount")?if_exists?string("##0.00")}<#else>0.00</#if></fo:block>                               
 	                            </fo:table-cell>
 	                            <fo:table-cell >	
-	                            	<fo:block font-size="7pt" text-align="right"><#if bankAbstract.get("netRndAmount")?has_content>${bankAbstract.get("netRndAmount")?if_exists?string("##0.00")}<#else>0.00</#if></fo:block>                               
+	                            	<fo:block font-size="7pt" text-align="right"><#if unitTotals.get("netRndAmountWithOp")?has_content>${unitTotals.get("netRndAmountWithOp")?if_exists?string("##0.00")}<#else>0.00</#if></fo:block>                               
 	                            </fo:table-cell>
 				            </fo:table-row>
 				            <fo:table-row>	

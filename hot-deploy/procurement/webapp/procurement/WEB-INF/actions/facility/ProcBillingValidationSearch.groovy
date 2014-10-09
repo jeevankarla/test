@@ -15,13 +15,13 @@ import in.vasista.vbiz.procurement.ProcurementNetworkServices;
 
 
 dctx = dispatcher.getDispatchContext();
-if(!UtilValidate.isEmpty(parameters.shedId)){
+if(UtilValidate.isNotEmpty(parameters.shedId)){
 	List facilityList = (ProcurementNetworkServices.getShedAgents(dctx, UtilMisc.toMap("shedId", parameters.shedId))).get("agentsList");
 	parameters.centerId = facilityList;
 	parameters.centerId_op = "in";
 }
 
-if(!UtilValidate.isEmpty(parameters.unitCode)){
+if(UtilValidate.isNotEmpty(parameters.unitCode)){
 	List<GenericValue> facilityList= (ProcurementNetworkServices.getUnitAgents(dctx, UtilMisc.toMap("shedId", parameters.shedId ,"unitCode", parameters.unitCode))).get("agentsList");
 	parameters.centerId = EntityUtil.getFieldListFromEntityList(facilityList,"facilityId" , true);
 	parameters.centerId_op = "in";

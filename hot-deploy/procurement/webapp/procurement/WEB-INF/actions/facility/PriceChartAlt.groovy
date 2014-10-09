@@ -78,7 +78,7 @@ if(parameters.get("priceDate")!=null){
  if(!productId && UtilValidate.isNotEmpty(procurementProductList)){
 	 productId = EntityUtil.getFirst(procurementProductList).get("productId");
   }
- context.facilityId = facilityId;
+ //context.facilityId = facilityId;
  context.product = delegator.findOne("Product",[productId:productId],true);
  facility = delegator.findOne("Facility",[facilityId:facilityId],false);
  categoryTypeEnum = parameters.get("categoryTypeEnum");
@@ -99,17 +99,18 @@ if(parameters.get("priceDate")!=null){
  JSONArray dataJSONList= new JSONArray();
  priceChartMap  = priceChart.get("priceChartMap");
  snfPercentList  = priceChart.get("snfPercentList");
-Iterator mapIter = priceChartMap.entrySet().iterator();
-while (mapIter.hasNext()) {
-	Map.Entry entry = mapIter.next();
-	fat =entry.getKey();
-	fatPriceMap = priceChartMap[fat];
-	JSONObject newObj = new JSONObject(fatPriceMap);
-	newObj.put("id",fat);
-	newObj.put("fat",fat);
-	dataJSONList.add(newObj);
-}
-
+ if(UtilValidate.isNotEmpty(priceChartMap)){
+	Iterator mapIter = priceChartMap.entrySet().iterator();
+	while (mapIter.hasNext()) {
+		Map.Entry entry = mapIter.next();
+		fat =entry.getKey();
+		fatPriceMap = priceChartMap[fat];
+		JSONObject newObj = new JSONObject(fatPriceMap);
+		newObj.put("id",fat);
+		newObj.put("fat",fat);
+		dataJSONList.add(newObj);
+	}
+ }
 /*JSONArray dataJSONList= new JSONArray();
 JSONObject newObj = new JSONObject();
 newObj.put("id",4.5);

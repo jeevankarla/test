@@ -36,6 +36,7 @@ snfPercentStr = parameters.snfPercent;
 milkKgsStr = parameters.milkKgs ;
 BigDecimal fatPercent = null;
 BigDecimal snfPercent = null;
+BigDecimal lrValue = null;
 BigDecimal milkKgs = BigDecimal.ONE;
 dctx = dispatcher.getDispatchContext();
 tenantId = delegator.getDelegatorTenantId();
@@ -43,9 +44,10 @@ context.tenantId =  tenantId.toUpperCase();
 procurementProductList = ProcurementNetworkServices.getProcurementProducts(dispatcher.getDispatchContext(), UtilMisc.toMap());
 context.putAt("procurementProductList", procurementProductList);
 if(UtilValidate.isNotEmpty(fatPercentStr)&&UtilValidate.isNotEmpty(snfPercentStr)){
-	fatPercent = new BigDecimal(fatPercentStr).setScale(2,BigDecimal.ROUND_UNNECESSARY);
-	snfPercent =new BigDecimal(snfPercentStr).setScale(2,BigDecimal.ROUND_UNNECESSARY);
- 	milkKgs = new BigDecimal(milkKgsStr).setScale(2,BigDecimal.ROUND_UNNECESSARY);
+	fatPercent = new BigDecimal(fatPercentStr).setScale(2,BigDecimal.ROUND_HALF_UP);
+	snfPercent =new BigDecimal(snfPercentStr).setScale(2,BigDecimal.ROUND_HALF_UP);
+ 	milkKgs = new BigDecimal(milkKgsStr).setScale(2,BigDecimal.ROUND_HALF_UP);
+	lrValue = ProcurementNetworkServices.convertFatSnfToLR(fatPercent,snfPercent);
 }
 productId  = parameters.productId;
 
@@ -57,8 +59,7 @@ if(UtilValidate.isNotEmpty(facilityId)){
 		categoryTypeEnum = facility.getString("categoryTypeEnum");
 	}
 }
-
-def sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+def sdf = new SimpleDateFormat("yyyy-MM-dd");
 Timestamp priceDate = UtilDateTime.nowTimestamp();
 if(UtilValidate.isNotEmpty(parameters.get("priceDate"))){
 	 parseDate = parameters.get("priceDate");
@@ -79,7 +80,7 @@ if(UtilValidate.isNotEmpty(fatPercent)&&UtilValidate.isNotEmpty(snfPercent)&&Uti
 	inMap.put("facilityId", facilityId);
 	inMap.put("fatPercent", fatPercent);
 	inMap.put("snfPercent", snfPercent);
-	inMap.put("priceDate", priceDate)
+	inMap.put("priceDate", priceDate);
 	
 	inMap.put("supplyTypeEnumId",parameters.supplyTypeEnumId);
 	inMap.put("categoryTypeEnum",categoryTypeEnum);
@@ -93,7 +94,7 @@ if(UtilValidate.isNotEmpty(fatPercent)&&UtilValidate.isNotEmpty(snfPercent)&&Uti
 	kgFat = (milkKgs*fatPercent/100).setScale(2,BigDecimal.ROUND_HALF_UP);
 	kgSnf = new BigDecimal(milkKgs*snfPercent/100).setScale(2,BigDecimal.ROUND_HALF_UP);
 
-	rateMap.putAt("price",rateMap.get("price").setScale(2,BigDecimal.ROUND_HALF_UP));
+	rateMap.putAt("price",rateMap.get("price"));
 	rateMap.putAt("kgFat",kgFat);
 	rateMap.putAt("kgSnf",kgSnf);
 	rateMap.putAt("productId", productId);
@@ -101,6 +102,7 @@ if(UtilValidate.isNotEmpty(fatPercent)&&UtilValidate.isNotEmpty(snfPercent)&&Uti
 	rateMap.putAt("snfPercent", snfPercent);
 	rateMap.putAt("kgs",milkKgs);
 	rateMap.putAt("lts",lts);
+	rateMap.putAt("lrValue", lrValue);
 	rateMap.putAt("facilityId", facilityId);
 	uomId = rateMap.uomId;
 	rateMap.putAt("gross",((rateMap.get("price"))*milkKgs)-(rateMap.get("premium")*milkKgs));
@@ -127,10 +129,9 @@ if(UtilValidate.isNotEmpty(fatPercent)&&UtilValidate.isNotEmpty(snfPercent)&&Uti
 		inputRateAmt.put("productId", productId);
 		inputRateAmt.put("facilityId",facilityId);
 		rateAmount = dispatcher.runSync("getProcurementFacilityRateAmount", inputRateAmt);
-		rateMap.putAt("tipDed", rateAmount.rateAmount);
+		rateMap.putAt("tipDed", (rateAmount.rateAmount)*rateMap.get("kgFat"));
 			
 	}
-
 	context.put("rateMap",rateMap);
 	rateList.add(rateMap);
 	context.put("rateList", rateList);

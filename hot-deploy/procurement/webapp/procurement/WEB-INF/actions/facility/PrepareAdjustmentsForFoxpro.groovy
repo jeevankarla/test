@@ -53,6 +53,9 @@ import in.vasista.vbiz.procurement.ProcurementNetworkServices;
 import in.vasista.vbiz.procurement.ProcurementServices;
 
 shedId = parameters.shedId;
+if(UtilValidate.isEmpty(parameters.customTimePeriodId)){
+  	parameters["customTimePeriodId"]= parameters.shedCustomTimePeriodId;
+}
 customTimePeriodId = parameters.customTimePeriodId;
 if(UtilValidate.isEmpty(shedId)){
 	context.errorMessage = "Shed is Not Selected";
@@ -62,13 +65,20 @@ dctx = dispatcher.getDispatchContext();
 customTimePeriod=delegator.findOne("CustomTimePeriod",[customTimePeriodId : parameters.customTimePeriodId], false);
 fromDate=UtilDateTime.toTimestamp(customTimePeriod.getDate("fromDate"));
 thruDate=UtilDateTime.toTimestamp(customTimePeriod.getDate("thruDate"));
-orderAdjustments = ProcurementServices.getPeriodAdjustmentsForAgent(dctx , [userLogin: userLogin ,fromDate: fromDate , thruDate: thruDate, facilityId:shedId]);
+shedUnits = ProcurementNetworkServices.getShedCustomTimePeriodUnits(dctx,[shedId : parameters.shedId,customTimePeriodId : parameters.customTimePeriodId]);
+unitIds=shedUnits.unitsList;
+centerIdsList=[];
+unitIds.each{ unitId->
+	List centerList = (ProcurementNetworkServices.getUnitAgents(dctx, UtilMisc.toMap("unitId", unitId))).get("agentsList");
+	centerIds=EntityUtil.getFieldListFromEntityList(centerList,"facilityId" , true);
+	centerIdsList.addAll(centerIds);
+}
+orderAdjustments = ProcurementServices.getPeriodAdjustmentsForAgent(dctx , [userLogin: userLogin ,fromDate: fromDate , thruDate: thruDate, facilityIds:centerIdsList]);
 centerWiseAdjustments = orderAdjustments.centerWiseAdjustments;
 additionsListFoxpro = [];
 deductionsListFoxpro = [];
 if(UtilValidate.isNotEmpty(centerWiseAdjustments)){
 	centerAdjustments = centerWiseAdjustments.entrySet();
-	Debug.log("upto here ok");
 	for(center in centerAdjustments){
 		    centerId = center.getKey();
 			centerDetails = delegator.findOne("Facility",[facilityId:centerId],false);

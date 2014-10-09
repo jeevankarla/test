@@ -22,6 +22,7 @@
 
     <!-- service resources: model(s), eca(s) and group definitions -->
     <service-resource type="model" loader="main" location="servicedef/services.xml"/>
+    <service-resource type="model" loader="main" location="servicedef/services_milkreceipts.xml"/>
     
     <service-resource type="eca" loader="main" location="servicedef/secas.xml"/>
     <!--<service-resource type="group" loader="main" location="servicedef/groups.xml"/>
@@ -36,4 +37,10 @@
         location="webapp/procurement"
         base-permission="OFBTOOLS,PROCUREMENT"
         mount-point="/procurement"/>
+      <webapp name="milkreceipts"
+        title="MilkReceipts"
+        server="default-server"
+        location="webapp/milkreceipts"
+        base-permission="OFBTOOLS,MILKRECEIPT"
+        mount-point="/milkreceipts"/>
 </ofbiz-component>

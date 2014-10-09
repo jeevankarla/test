@@ -55,6 +55,7 @@ for(GenericValue product : procurementProductList){
 	inMap.put("fatPercent", BigDecimal.ZERO);
 	inMap.put("snfPercent", BigDecimal.ZERO);
 	inMap.put("productId", product.productId);
+	inMap.put("priceDate", fromDate);
 	Map priceChart = PriceServices.getProcurementProductPrice(dctx,inMap);
 	useTotalSolids = priceChart.get("useTotalSolids");
 	productSlabMap["useTotalSolids"] = useTotalSolids;
@@ -152,6 +153,9 @@ if(UtilValidate.isNotEmpty(procurementEntries)){
 			   inMap.put("categoryTypeEnum",procurementEntry.categoryTypeEnum);
 			   rateMap = dispatcher.runSync("calculateProcurementProductPrice",inMap);
 			   tempMap.put("RATE",rateMap.defaultRate);*/
+			  if(tempMap.get("GQTY")<=0 && tempMap.get("SQTY")<=0){
+				  tempMap.put("RATE", 0);
+			  }
 			   procurementEntryListFoxpro.add(tempMap);
 		 }
 	      

@@ -28,7 +28,20 @@ under the License.
                 <fo:region-after extent="1in"/>
             </fo:simple-page-master>
         </fo:layout-master-set>
-         ${setRequestAttribute("OUTPUT_FILENAME", "BillsAbst.txt")}
+        ${setRequestAttribute("OUTPUT_FILENAME", "BillsAbst.txt")}
+        <#assign pageStart= parameters.pageStart>
+        <#assign pageEnd= parameters.pageEnd>       
+        ${setRequestAttribute("VST_PAGE_START", "${pageStart}")}
+        ${setRequestAttribute("VST_PAGE_END", "${pageEnd}")}
+        <#if errorMessage?has_content>
+		<fo:page-sequence master-reference="main">
+		   <fo:flow flow-name="xsl-region-body" font-family="Helvetica">
+		      <fo:block font-size="14pt">
+		              ${errorMessage}.
+		   	  </fo:block>
+		   </fo:flow>
+		</fo:page-sequence> 
+		<#else>
         <fo:page-sequence master-reference="main">
         	<#assign reportHeader = delegator.findOne("TenantConfiguration", {"propertyTypeEnumId" : "MILK_PROCUREMENT","propertyName" : "reportHeaderLable"}, true)>
         	<fo:static-content flow-name="xsl-region-before" font-family="Courier,monospace">
@@ -36,7 +49,7 @@ under the License.
         		<fo:block text-align="left" white-space-collapse="false" font-size="7pt" keep-together="always">&#160;                     			    	       B I L L S    A B S T R A C T   ${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(fromDateTime, "dd/MM/yyyy")} TO ${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(thruDateTime, "dd/MM/yyyy")}</fo:block>
         		<fo:block text-align="left" keep-together="always" white-space-collapse="false" font-size="7pt">&#160;                			    			UNIT CODE AND NAME : ${unitCode?if_exists}   ${unitName?if_exists}                                     PAGE NO:<fo:page-number/></fo:block>	 	 	  
         	</fo:static-content>
-        	
+        <#assign opcost = 0>
        	<fo:flow flow-name="xsl-region-body" font-family="Courier,monospace"> 	
        	<#assign lineNumber = 11>   
             <fo:block  text-align="left" font-size="8pt">     	
@@ -100,10 +113,11 @@ under the License.
 											<fo:table-body>
 												<fo:table-row>
 													<fo:table-cell>
+													<#assign orderAdjustmentDesc=Static["in.vasista.vbiz.procurement.ProcurementNetworkServices"].getShedOrderAdjustmentDescription( dctx,Static["org.ofbiz.base.util.UtilMisc"].toMap("shedId",shedId)).get("shedAdjustmentDescriptionMap")>
 														<#assign dedTypes = adjustmentDedTypes.entrySet()>
 						        						<#list dedTypes as adjType>
 						        							<#if adjType.getKey() <= 3 >
-						        								<fo:block text-align="left" keep-together="always" white-space-collapse="false" font-size="7pt">&#160;                                                                     ${(adjType.getValue()).description}   </fo:block>
+						        								<fo:block text-align="left" keep-together="always" white-space-collapse="false" font-size="7pt">&#160;                                                                     ${orderAdjustmentDesc[(adjType.getValue()).orderAdjustmentTypeId]?if_exists}   </fo:block>
 						        							</#if>
 						        						</#list>	          
 													</fo:table-cell>
@@ -111,7 +125,7 @@ under the License.
 														<#assign dedTypes = adjustmentDedTypes.entrySet()>
 						        						<#list dedTypes as adjType>
 						        							<#if (adjType.getKey() > 3) && (adjType.getKey() < 8)>
-						        								<fo:block text-align="left" keep-together="always" white-space-collapse="false" font-size="7pt">&#160;                                                                   ${(adjType.getValue()).description}   </fo:block>
+						        								<fo:block text-align="left" keep-together="always" white-space-collapse="false" font-size="7pt">&#160;                                                                   ${orderAdjustmentDesc[(adjType.getValue()).orderAdjustmentTypeId]?if_exists}   </fo:block>
 						        							</#if>
 						        						</#list>
 													</fo:table-cell>
@@ -119,7 +133,7 @@ under the License.
 														<#assign dedTypes = adjustmentDedTypes.entrySet()>
 						        						<#list dedTypes as adjType>
 						        							<#if (adjType.getKey() > 7) && (adjType.getKey() < 12)>
-						        								<fo:block text-align="left" keep-together="always" white-space-collapse="false" font-size="7pt">&#160;                                                                  ${(adjType.getValue()).description}   </fo:block>
+						        								<fo:block text-align="left" keep-together="always" white-space-collapse="false" font-size="7pt">&#160;                                                                  ${orderAdjustmentDesc[(adjType.getValue()).orderAdjustmentTypeId]?if_exists}   </fo:block>
 						        							</#if>
 						        						</#list>
 													</fo:table-cell>
@@ -144,6 +158,7 @@ under the License.
                     		<#list centerData as centerDetail>
                     		
                     			<#if centerDetail.getValue().get("centerName") == "TOTAL">
+                    			
                     				<fo:table-row>
 	                    				<fo:table-cell >	
 	                    					<fo:block font-size="7pt">-------------------------------------------------------------------------------------------------------------------------------------------------------------------</fo:block>
@@ -317,7 +332,7 @@ under the License.
 	                        			<fo:block text-align="right" font-size="7pt"><#if centerDetail.getValue().get("totKgSnf")?has_content>${centerDetail.getValue().get("totKgSnf")?if_exists?string("##0.00")}<#else>0.00</#if></fo:block>
 	                        		</fo:table-cell>
                     				<fo:table-cell >	
-	                        			<fo:block text-align="right" font-size="7pt"><#if centerDetail.getValue().get("commAmt")?has_content>${centerDetail.getValue().get("commAmt")?if_exists?string("##0.00")}<#else>0.00</#if></fo:block>
+	                        			<fo:block text-align="right" font-size="7pt"><#if centerDetail.getValue().get("commAmt")?has_content>${((centerDetail.getValue().get("commAmt"))+opcost)?if_exists?string("##0.00")}<#else>0.00</#if></fo:block>
 	                        		</fo:table-cell>
 	                        		<fo:table-cell >	
 	                        			<fo:block text-align="right" font-size="7pt"><#if centerDetail.getValue().get("grossAmount")?has_content>${centerDetail.getValue().get("grossAmount")?if_exists?string("##0.00")}<#else>0.00</#if></fo:block>
@@ -370,8 +385,7 @@ under the License.
 	                        		</fo:table-cell>
                     			</fo:table-row>
                     			
-                    			<#assign procNewProd = procurementProductList.get(2)?if_exists>
-                    			<#assign procProdBname = procNewProd.brandName>
+                    			<#assign procNewProd = procurementProductList.get(2)>
                     			<fo:table-row>
                     				<fo:table-cell >	
 	                        			<fo:block linefeed-treatment="preserve">&#xA;</fo:block>
@@ -380,19 +394,19 @@ under the License.
 	                        			<fo:block linefeed-treatment="preserve">&#xA;</fo:block>
 	                        		</fo:table-cell>
                     				<fo:table-cell >	
-	                        			<fo:block text-align="right" font-size="7pt"><#if procNewProd?has_content>${centerDetail.getValue().get(procProdBname+"QtyKgs")?if_exists?string("##0.0")}<#else></#if></fo:block>
+	                        			<fo:block text-align="right" font-size="7pt"><#if procNewProd?has_content>${centerDetail.getValue().get(procNewProd.brandName+"QtyKgs")?if_exists?string("##0.0")}<#else></#if></fo:block>
 	                        		</fo:table-cell>
                     				<fo:table-cell >	
-	                        			<fo:block text-align="right" font-size="7pt"><#if procNewProd?has_content>${centerDetail.getValue().get(procProdBname+"QtyLtrs")?if_exists?string("##0.0")}<#else></#if></fo:block>
+	                        			<fo:block text-align="right" font-size="7pt"><#if procNewProd?has_content>${centerDetail.getValue().get(procNewProd.brandName+"QtyLtrs")?if_exists?string("##0.0")}<#else></#if></fo:block>
 	                        		</fo:table-cell>
 	                        		<fo:table-cell >	
-	                        			<fo:block text-align="right" font-size="7pt"><#if procNewProd?has_content>${centerDetail.getValue().get(procProdBname+"KgFat")?if_exists?string("##0.00")}<#else></#if></fo:block>
+	                        			<fo:block text-align="right" font-size="7pt"><#if procNewProd?has_content>${centerDetail.getValue().get(procNewProd.brandName+"KgFat")?if_exists?string("##0.00")}<#else></#if></fo:block>
 	                        		</fo:table-cell>
                     				<fo:table-cell >	
-	                        			<fo:block text-align="right" font-size="7pt"><#if procNewProd?has_content>${centerDetail.getValue().get(procProdBname+"KgSnf")?if_exists?string("##0.00")}<#else></#if></fo:block>
+	                        			<fo:block text-align="right" font-size="7pt"><#if procNewProd?has_content>${centerDetail.getValue().get(procNewProd.brandName+"KgSnf")?if_exists?string("##0.00")}<#else></#if></fo:block>
 	                        		</fo:table-cell>
                     				<fo:table-cell >	
-	                        			<fo:block text-align="right" font-size="7pt"><#if procNewProd?has_content>${centerDetail.getValue().get(procProdBname+"Price")?if_exists?string("##0.00")}<#else></#if></fo:block>
+	                        			<fo:block text-align="right" font-size="7pt"><#if procNewProd?has_content>${centerDetail.getValue().get(procNewProd.brandName+"Price")?if_exists?string("##0.00")}<#else></#if></fo:block>
 	                        		</fo:table-cell>
 	                        		<fo:table-cell >	
 	                        			<fo:block linefeed-treatment="preserve">&#xA;</fo:block>
@@ -433,9 +447,15 @@ under the License.
 	                        		<fo:table-cell >	
 	                        			<fo:block text-align="right" font-size="7pt">********</fo:block>
 	                        		</fo:table-cell>
+	                        		<#if centerDetail.getValue().get("centerName") == "TOTAL">   
+	                        		<fo:table-cell >	
+	                        			<fo:block text-align="right" font-size="7pt"><#if unitTotals.get("netRndAmountWithOp")?has_content>${unitTotals.get("netRndAmountWithOp")?if_exists?string("##0.00")}<#else>0.00</#if></fo:block>
+	                        		</fo:table-cell>
+	                        		<#else>
 	                        		<fo:table-cell >	
 	                        			<fo:block text-align="right" font-size="7pt"><#if centerDetail.getValue().get("netRndAmount")?has_content>${centerDetail.getValue().get("netRndAmount")?if_exists?string("##0.00")}<#else>0.00</#if></fo:block>
 	                        		</fo:table-cell>
+	                        		</#if>
 	                        		<fo:table-cell >	
 	                        			<fo:block text-align="right" font-size="7pt"></fo:block>
 	                        		</fo:table-cell>
@@ -443,6 +463,8 @@ under the License.
 	                        			<fo:block text-align="right" font-size="7pt"></fo:block>
 	                        		</fo:table-cell>
                     			</fo:table-row>
+
+
                     			<fo:table-row>
                     				<fo:table-cell >
                     					<#assign lineNumber = lineNumber + 5>
@@ -462,8 +484,8 @@ under the License.
                     		</fo:table-body>					
 						</fo:table>
 					</fo:block>
-			
             	</fo:flow>		
 			</fo:page-sequence>
+			</#if>
 </fo:root>
 </#escape>

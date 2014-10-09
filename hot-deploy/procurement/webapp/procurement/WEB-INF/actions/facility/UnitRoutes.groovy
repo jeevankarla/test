@@ -34,6 +34,11 @@ if(UtilValidate.isNotEmpty(parameters.shedId)){
 	shedUnitDetails = ProcurementNetworkServices.getShedUnitsByShed(dctx ,context);
 	unitsList = (List)shedUnitsMap[parameters.shedId];
 }
+if(UtilValidate.isNotEmpty(context.shedId)){
+	context.putAt("shedId", context.shedId)
+	shedUnitDetails = ProcurementNetworkServices.getShedUnitsByShed(dctx ,context);
+	unitsList = (List)shedUnitsMap[context.shedId];
+}
 JSONObject shedUnitsJson = new JSONObject();
 Iterator mapIter = shedUnitsMap.entrySet().iterator();
 while (mapIter.hasNext()) {
@@ -60,24 +65,3 @@ if(UtilValidate.isNotEmpty(context.productsList)){
 }
 context.putAt("milkProductsList", milkProductsList);
 
-// to get supervisors list for milkline grades report
-supervisorsList = [];
-supervisorsList = delegator.findList("FacilityFacilityPartyAndPerson",EntityCondition.makeCondition("roleTypeId",EntityOperator.EQUALS,"SUPERVISOR"),["partyId","firstName","lastName"]as Set,null,null,false);
-supervisorList = [];
-if(UtilValidate.isNotEmpty(supervisorsList)){
-	supervisorsHashList =  new HashSet(supervisorsList);
-	for(supervisor in supervisorsHashList){
-		supervisorMap = [:];
-			name = "";
-			if(UtilValidate.isNotEmpty(supervisor.lastName)){
-					name = supervisor.lastName;
-				}
-			if(UtilValidate.isNotEmpty(supervisor.firstName)){
-				name = name+" "+supervisor.firstName;
-			}
-			supervisorMap.put("partyId",supervisor.partyId);
-			supervisorMap.put("name",name);
-			supervisorList.add(supervisorMap);
-		}
-	}	
-context.putAt("supervisorList", supervisorList);

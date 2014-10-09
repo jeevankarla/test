@@ -42,8 +42,7 @@ updateFatSnfMap.putAll(tempMap);
 
 conditionList.clear();
 
-
-conditionList.add(EntityCondition.makeCondition(EntityCondition.makeCondition("shedId", EntityOperator.EQUALS, parameters.shedId)));
+conditionList.add(EntityCondition.makeCondition(EntityCondition.makeCondition("shedId", EntityOperator.EQUALS, parameters.unitId)));
 conditionList.add(EntityCondition.makeCondition(EntityCondition.makeCondition("customTimePeriodId", EntityOperator.EQUALS ,parameters.customTimePeriodId)));
 conditionList.add(EntityCondition.makeCondition(EntityCondition.makeCondition("validationTypeId", EntityOperator.EQUALS ,parameters.validationTypeId)));
 conditionList.add(EntityCondition.makeCondition(EntityCondition.makeCondition("sequenceNum", EntityOperator.EQUALS ,parameters.sequenceNum)));

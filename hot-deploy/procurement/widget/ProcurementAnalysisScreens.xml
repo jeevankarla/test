@@ -59,7 +59,77 @@
                 </decorator-screen>
             </widgets>
         </section>
-    </screen> 
+    </screen>
+    <screen name="ProcurementCenterLocationComp">
+        <section>
+            <actions>
+               <set field="titleProperty" value="PageTitleProcurementAnalysisLocationComp"/>	            
+               <set field="tabButtonItem" value="Analysis"/>
+ 				<set field="tabButtonItem2" value="ProcurementCenterLocationComp" />                                                          
+               <script location="component://procurement/webapp/procurement/WEB-INF/actions/facility/ProcurementCenterLocationComp.groovy"/>                                              
+               
+            </actions>
+            <widgets>
+            	 <decorator-screen name="ProcurementCommonDecorator" location="component://procurement/widget/CommonScreens.xml">
+                    <decorator-section name="body">  
+                    	<include-menu name="ProcurementAnalysisTabBar" location="component://procurement/widget/ProcurementMenus.xml"/>                                                                            
+                        <platform-specific> 
+                            <html><html-template location="component://procurement/webapp/procurement/facility/procurementCenterLocationCompSelection.ftl"/></html>
+                        </platform-specific>
+                        <platform-specific> 
+                            <html><html-template location="component://procurement/webapp/procurement/facility/procurementCenterLocationComp.ftl"/></html>
+                        </platform-specific>     
+                        	        
+                	</decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    
+    <screen name="ProcurementEntryDailyStatus">
+		<section>
+			<actions>
+			    <set field="titleProperty" value="Procurement Entry Daily Status"/>
+				<set field="tabButtonItem" value="Analysis"/>
+				<set field="tabButtonItem2" value="ProcurementEntryDailyStatus"/>
+			</actions>
+			<widgets>	
+				<decorator-screen name="ProcurementCommonDecorator" location="component://procurement/widget/CommonScreens.xml">
+					<decorator-section name="body">
+						<include-menu name="ProcurementAnalysisTabBar" location="component://procurement/widget/ProcurementMenus.xml"/>
+						<section>
+							<widgets>
+								<screenlet title="Find ProcurementEntry Status">
+									<include-form location="component://procurement/widget/ProcurementForms.xml" name="FindProcurementEntryStatus"/>
+								</screenlet>
+							</widgets> 
+						</section>						
+					</decorator-section>	
+				</decorator-screen>		
+			</widgets>
+		</section>
+	</screen>
+	
+	<screen name="ProcurementEntryDailyStatusReport">
+        <section>
+        	<actions>
+        		<property-map resource="ProductUiLabels" map-name="uiLabelMap" global="true"/>            
+                <property-map resource="HumanResUiLabels" map-name="uiLabelMap" global="true"/> 
+               	<script location="component://procurement/webapp/procurement/WEB-INF/actions/facility/ProcurementEntryDailyStatus.groovy"/>
+        	</actions>
+            <widgets>
+            	<section>            		
+            		<widgets>
+            			 <platform-specific>
+                    		<xsl-fo><html-template location="component://procurement/webapp/procurement/facility/procurementEntryDailyStatus.fo.ftl"/></xsl-fo>
+                		</platform-specific>
+            		</widgets>            		
+            	</section>            	 
+            </widgets>
+        </section>
+    </screen>
+	
+    
 	<screen name="ProcurementAnalysisDailyTrend">
         <section>
             <actions>
@@ -73,6 +143,9 @@
                     <decorator-section name="body">
                     	<include-menu name="ProcurementAnalysisTabBar" location="component://procurement/widget/ProcurementMenus.xml"/>                                                                            
                         <container>
+                            <platform-specific> 
+                            	<html><html-template location="component://procurement/webapp/procurement/facility/dayWiseTrendSelection.ftl"/></html>
+                            </platform-specific>    
                         	<platform-specific> 
                             	<html><html-template location="component://procurement/webapp/procurement/facility/dayWiseTotalProcurement.ftl"/></html>
                         	</platform-specific>                        

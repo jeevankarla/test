@@ -37,5 +37,20 @@ under the License.
     	<condition field-name="orderId" operator="is-not-empty"/>
     	<condition field-name="orderItemSeqId" operator="is-not-empty"/>
         <action service="checkDeleteProcValidationEntry" mode="sync"/>
-    </eca>    
+    </eca>
+    <eca service="createMilkTransferRecord" event="invoke" run-on-error="false">
+        <action service="checkCustomTimePeriod" mode="sync" ignore-error="false" ignore-failure="false"/>
+    </eca>
+    <eca service="createProcFaciltiyOutputEntry" event="invoke" run-on-error="false">
+        <action service="checkCustomTimePeriod" mode="sync" ignore-error="false" ignore-failure="false"/>
+    </eca>
+    <eca service="createProcurementEntry" event="invoke" run-on-error="false">
+    	<action service="checkCustomTimePeriod" mode="sync" ignore-error="false" ignore-failure="false"/>
+    </eca>
+     <eca service="updateProcurementEntry" event="invoke" run-on-error="false">
+    	<action service="checkCustomTimePeriod" mode="sync" ignore-error="false" ignore-failure="false"/>
+    </eca>
+    <eca service="createBillingAdjustment" event="invoke" run-on-error="false">
+    	<action service="checkCustomTimePeriod" mode="sync" ignore-error="false" ignore-failure="false"/>
+    </eca>
 </service-eca>

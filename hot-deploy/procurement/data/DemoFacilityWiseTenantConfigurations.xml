@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<entity-engine-xml>
+	<FacilityAttribute facilityId="MBNR" attrName="enableCenterCodeRetain" attrValue="N"/>
+	<FacilityAttribute facilityId="MBNR" attrName="enableConvertKgToLtrSetScale" attrValue="N"/>
+	<FacilityAttribute facilityId="MBNR" attrName="enableLR" attrValue="N"/>
+	<FacilityAttribute facilityId="MBNR" attrName="enableMultipleProcEntries" attrValue="N"/>
+	<FacilityAttribute facilityId="MBNR" attrName="enableQuantityInLtrs" attrValue="N"/>
+	<FacilityAttribute facilityId="MBNR" attrName="reportHeaderLable" attrValue="Y"/>
+	<FacilityAttribute facilityId="MBNR" attrName="enableCenterCodeRetain" attrValue="N"/>
+	<FacilityAttribute facilityId="NZB"  attrName="SHRTRECRYUNITS" attrValue="Y"/>
+	<FacilityAttribute facilityId="CHTR" attrName="enableLR" attrValue="Y"/>
+	<FacilityAttribute facilityId="CHTR" attrName="enableQuantityInLtrs" attrValue="Y"/>
+	<FacilityAttribute facilityId="CHTR" attrName="milkTypeBySeqNum" attrValue="Y"/>
+</entity-engine-xml> 
+
+

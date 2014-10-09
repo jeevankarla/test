@@ -27,6 +27,16 @@ import in.vasista.vbiz.procurement.ProcurementReports;
 import in.vasista.vbiz.procurement.ProcurementServices;
 import in.vasista.vbiz.procurement.ProcurementNetworkServices;
 
+if(UtilValidate.isEmpty(parameters.customTimePeriodId)){
+	Debug.logError("customTimePeriod Cannot Be Empty","");
+	context.errorMessage = "No Shed Has Been Selected.......!";
+	return;
+}
+if(UtilValidate.isEmpty(parameters.unitId)){
+	Debug.logError("unitId Cannot Be Empty","");
+	context.errorMessage = "No Unit Has Been Selected.......!";
+	return;
+}
 customTimePeriod=delegator.findOne("CustomTimePeriod",[customTimePeriodId : parameters.customTimePeriodId], false);
 fromDateTime=UtilDateTime.toTimestamp(customTimePeriod.getDate("fromDate"));
 thruDateTime=UtilDateTime.toTimestamp(customTimePeriod.getDate("thruDate"));
@@ -44,16 +54,26 @@ routesDetailsList.each { route->
 
 unitCentersList = ProcurementNetworkServices.getUnitAgents(dctx,UtilMisc.toMap("unitId",parameters.unitId ));
 centersList = unitCentersList.get("agentsList");
+List tempCentersList = FastList.newInstance();
 centersList = UtilMisc.sortMaps(centersList, UtilMisc.toList("facilityCode"));
+for(center in centersList){
+	Map tempCenterMap = FastMap.newInstance();
+	tempCenterMap.put("facilityId", center.get("facilityId"));
+	tempCenterMap.put("facilityName", center.get("facilityName"));
+	tempCenterMap.put("facilityCode",Integer.parseInt(center.get("facilityCode")));
+	tempCentersList.add(tempCenterMap);
+}
+tempCentersList = UtilMisc.sortMaps(tempCentersList, UtilMisc.toList("facilityCode"));
 adjustments =[:];
 adjustmentsTotMap = [:];
 
 orderAdjItemsList = delegator.findList("OrderAdjustmentType",EntityCondition.makeCondition("parentTypeId", EntityOperator.IN , UtilMisc.toList("MILKPROC_ADDITIONS","MILKPROC_DEDUCTIONS")),null,null,null,false);
+orderAdjItemsList = UtilMisc.sortMaps(orderAdjItemsList, UtilMisc.toList("sequenceNum"));
 context.put("orderAdjItemsList",orderAdjItemsList);
 orderAdjItemsList.each { orderAdj ->
 	adjustmentsTotMap[orderAdj.orderAdjustmentTypeId] = 0;
 }
-centersList.each{ center ->
+tempCentersList.each{ center ->
 	agentAdjustments = ProcurementServices.getPeriodAdjustmentsForAgent(dctx , [userLogin: userLogin ,fromDate: fromDateTime , thruDate: thruDateTime, facilityId: center.facilityId]);
   adjustmentsMap =[:];
   if(UtilValidate.isNotEmpty(agentAdjustments)){
@@ -69,8 +89,7 @@ centersList.each{ center ->
 					adjustmentsMap[additionValues.getKey()] = 0;
 					adjustmentsMap[additionValues.getKey()] = additionValues.getValue();
 					adjustmentsTotMap[additionValues.getKey()] += additionValues.getValue();
-				
-				}
+			}
 			}else{
 				deductionsList = adjustmentValues.getValue();
 				deductionsList.each{ deductionValues ->
@@ -85,6 +104,5 @@ centersList.each{ center ->
 	adjustments[center.facilityId]=adjustmentsMap;
   }
 }
-Debug.log("adjustments----------------------------------------"+adjustments);
 context.put("adjustmentsTotMap",adjustmentsTotMap);
 context.put("adjustments",adjustments);

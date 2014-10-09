@@ -27,38 +27,47 @@ under the License.
             </fo:simple-page-master>
         </fo:layout-master-set>
         ${setRequestAttribute("OUTPUT_FILENAME", "FeedAndOtherRecoveries.txt")}
+        <#if errorMessage?has_content>
+		<fo:page-sequence master-reference="main">
+		   <fo:flow flow-name="xsl-region-body" font-family="Helvetica">
+		      <fo:block font-size="14pt">
+		              ${errorMessage}.
+		   	  </fo:block>
+		   </fo:flow>
+		</fo:page-sequence>        
+		<#else> 
         <fo:page-sequence master-reference="main">
-        	<fo:static-content flow-name="xsl-region-before">
+        	<fo:static-content flow-name="xsl-region-before" font-family="Courier,monospace">
         	 	<#assign facility = delegator.findOne("Facility", {"facilityId" : parameters.unitId}, true)>
-        		<fo:block text-align="left" white-space-collapse="false" font-weight="bold" font-size="7pt">&#160;              UNIT NAME :${facility.get("facilityName")?if_exists}      DATE OF ENDING :${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(thruDateTime, "dd/MM/yyyy")}        Page:<fo:page-number/>   </fo:block>
-        		<fo:block text-align="left" keep-together="always" white-space-collapse="false" font-size="7pt">-------------------------------------------------------------------------------------------------------------------------------------------------------------------</fo:block>	 	 	  
+        		<fo:block text-align="left" white-space-collapse="false" font-weight="bold" font-size="7pt">&#160;                UNIT NAME :${facility.get("facilityName")?if_exists}                     DATE OF ENDING :${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(thruDateTime, "dd/MM/yyyy")}                                PAGE NO:<fo:page-number/>  </fo:block>
+        		<fo:block text-align="left" keep-together="always" white-space-collapse="false" font-size="7pt">-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------</fo:block>
         	</fo:static-content>
         	<fo:flow flow-name="xsl-region-body" font-family="Courier,monospace">   		           
                  <fo:block>
-                 	<fo:table border-width="1pt" border-style="dotted">
+                 	<fo:table>
                     <!--<fo:table-column column-width="1pt"/>
                     <fo:table-column column-width="25pt"/>--> 
-                    <fo:table-column column-width="25pt"/>  
-               	    <fo:table-column column-width="75pt"/>
-               	    <fo:table-column column-width="47pt"/>
-               	    <fo:table-column column-width="57pt"/>
+                    <fo:table-column column-width="18pt"/>  
+               	    <fo:table-column column-width="50pt"/>
                	    <#list orderAdjItemsList as orderAdjType>
-                    <fo:table-column column-width="47pt"/>
+                    <fo:table-column column-width="35pt"/>
                		</#list>
                     
-		          	<fo:table-header border-width="1pt" border-style="dotted">
-		          		<!--<fo:table-cell><fo:block text-align="left" font-size="7pt"></fo:block></fo:table-cell>
-		          		<fo:table-cell><fo:block text-align="left" font-size="7pt">Route No</fo:block></fo:table-cell>-->
-		          		<fo:table-cell><fo:block text-align="left" font-size="7pt">Center Code</fo:block></fo:table-cell>
-		          		<fo:table-cell><fo:block text-align="left" font-size="7pt">Center Name</fo:block></fo:table-cell>
+		          	<fo:table-header>
+		          		<!--<fo:table-cell><fo:block text-align="left" font-size="5pt"></fo:block></fo:table-cell>
+		          		<fo:table-cell><fo:block text-align="left" font-size="5pt">Route No</fo:block></fo:table-cell>-->
+		          		<fo:table-cell><fo:block text-align="left" font-size="5pt">CENTER <fo:block>CODE</fo:block></fo:block></fo:table-cell>
+		          		<fo:table-cell><fo:block text-align="center" font-size="5pt">CENTER <fo:block>NAME</fo:block></fo:block></fo:table-cell>
+		          		<#assign shedId=facility.parentFacilityId>
                	    <#list orderAdjItemsList as orderAdjType>
-		            	<fo:table-cell><fo:block text-align="right" font-size="7pt">${orderAdjType.description?if_exists}</fo:block><fo:block text-align="right" font-size="7pt">(RS)</fo:block></fo:table-cell>
+               	    	<#assign orderAdjustmentDesc=Static["in.vasista.vbiz.procurement.ProcurementNetworkServices"].getShedOrderAdjustmentDescription( dctx,Static["org.ofbiz.base.util.UtilMisc"].toMap("shedId",shedId)).get("shedAdjustmentDescriptionMap")>
+		            	<fo:table-cell><fo:block text-align="right" font-size="5pt">${Static["org.ofbiz.order.order.OrderServices"].nameTrim((StringUtil.wrapString(orderAdjustmentDesc[orderAdjType.orderAdjustmentTypeId])),7)?if_exists}</fo:block><fo:block text-align="right" font-size="5pt">(RS)</fo:block></fo:table-cell>
 		            </#list>   	
 				    </fo:table-header>		           
                     <fo:table-body>
 	                   <fo:table-row>     
                    	     	<fo:table-cell>
-	                        		<fo:block text-align="left" font-size="7pt">-------------------------------------------------------------------------------------------------------------------------------------------------------------------</fo:block>
+	                        		<fo:block text-align="left" keep-together="always" white-space-collapse="false" font-size="7pt">-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------</fo:block>
 	                        </fo:table-cell>
 				        </fo:table-row>
                   		<#assign adjustmentItem = adjustments.entrySet()>
@@ -66,30 +75,30 @@ under the License.
 	                    <#assign adjustmentDetail = adjustedAmount.getValue()>
                    	 	<fo:table-row>
                    	     	<!--<fo:table-cell>
-	                            	<fo:block linefeed-treatment="preserve" font-size="7pt">&#xA;</fo:block>        
+	                            	<fo:block linefeed-treatment="preserve" font-size="5pt">&#xA;</fo:block>        
 	                        </fo:table-cell>
 	                        <fo:table-cell>
-	                            	<fo:block text-align="left" keep-together="always" font-size="7pt" white-space-collapse="false">${adjustmentDetail.get("routeNo")?if_exists}</fo:block>        
+	                            	<fo:block text-align="left" keep-together="always" font-size="5pt" white-space-collapse="false">${adjustmentDetail.get("routeNo")?if_exists}</fo:block>        
 	                        </fo:table-cell>-->
 	                        <fo:table-cell>
-	                            	<fo:block text-align="left" keep-together="always" font-size="7pt" white-space-collapse="false">${adjustmentDetail.get("centerCode")?if_exists}</fo:block>        
+	                            	<fo:block text-align="left" keep-together="always" font-size="5pt" white-space-collapse="false">${adjustmentDetail.get("centerCode")?if_exists}</fo:block>        
 	                        </fo:table-cell>
 	                        <fo:table-cell>
-	                            	<fo:block text-align="left" keep-together="always" font-size="7pt" white-space-collapse="false">${adjustmentDetail.get("centerName")?if_exists}</fo:block>        
+	                            	<fo:block text-align="left" keep-together="always" font-size="5pt" white-space-collapse="false">${Static["org.ofbiz.order.order.OrderServices"].nameTrim((StringUtil.wrapString(adjustmentDetail.get("centerName"))),15)?if_exists}</fo:block>        
 	                        </fo:table-cell>
 	                      <#list orderAdjItemsList as orderAdjType>
-	                       	<#assign adjustVal = adjustmentDetail.get(orderAdjType.orderAdjustmentTypeId)>    
+	                       	<#assign adjustVal = adjustmentDetail.get(orderAdjType.orderAdjustmentTypeId)?if_exists>    
 	                       	<#if !adjustVal?has_content>
 	                       		<#assign adjustVal = 0>
 	                       	</#if>
-	                           <fo:table-cell><fo:block text-align="right" keep-together="always" font-size="7pt" white-space-collapse="false">${adjustVal?if_exists?string("##0.00")}</fo:block> </fo:table-cell>
+	                           <fo:table-cell><fo:block text-align="right" keep-together="always" font-size="5pt" white-space-collapse="false">${adjustVal?if_exists?string("##0.00")}</fo:block> </fo:table-cell>
 	                   		<#assign adjustVal = 0>
 	                   		</#list>
 	                    </fo:table-row>    	 
               			</#list>
               		 	<fo:table-row>
                    	     	<fo:table-cell>
-	                        		<fo:block text-align="left" font-size="7pt">-------------------------------------------------------------------------------------------------------------------------------------------------------------------</fo:block>
+	                        		<fo:block text-align="left" keep-together="always" white-space-collapse="false" font-size="7pt">-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------</fo:block>
 	                        </fo:table-cell>
 				     	</fo:table-row>
 				        <fo:table-row>
@@ -97,16 +106,16 @@ under the License.
                    	     	<!--<fo:table-cell/>
                    	     	<fo:table-cell/>-->
                    	     	<fo:table-cell>
-	                            	<fo:block text-align="left" font-size="7pt">Total:</fo:block>	                               
+	                            	<fo:block text-align="left" font-size="5pt">Total:</fo:block>	                               
 	                        </fo:table-cell>
 	                        <#assign header = adjustmentsTotMap.entrySet()>
                	    		<#list header as head>
-	                           <fo:table-cell><fo:block text-align="right" keep-together="always" font-size="7pt" white-space-collapse="false">${head.getValue()?if_exists?string("##0.00")}</fo:block> </fo:table-cell>
+	                           <fo:table-cell><fo:block text-align="right" keep-together="always" font-size="5pt" white-space-collapse="false">${head.getValue()?if_exists?string("##0.00")}</fo:block> </fo:table-cell>
 	                   		</#list>
 				        </fo:table-row>
 				         <fo:table-row>
                    	     	<fo:table-cell>
-	                        		<fo:block text-align="left" font-size="7pt">-------------------------------------------------------------------------------------------------------------------------------------------------------------------</fo:block>
+	                        		<fo:block text-align="left" keep-together="always" white-space-collapse="false" font-size="7pt">-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------</fo:block>
 	                        </fo:table-cell>
 				        </fo:table-row>
                     </fo:table-body>
@@ -114,5 +123,6 @@ under the License.
                </fo:block>      
            </fo:flow>
         </fo:page-sequence>
+        </#if>
      </fo:root>
 </#escape>

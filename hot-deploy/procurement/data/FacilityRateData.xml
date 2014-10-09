@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<entity-engine-xml>
+    <FacilityRate facilityId="20507" rateTypeId="PROC_CARTAGE" productId="_NA_" supplyTypeEnumId="_NA_" acctgFormulaId="" rateAmount="0.25" rateCurrencyUomId="INR" fromDate="2012-01-01 00:00:00.00" thruDate=""/>
+    <FacilityRate facilityId="20255" rateTypeId="PROC_CARTAGE" productId="_NA_" supplyTypeEnumId="_NA_" acctgFormulaId="" rateAmount="0.25" rateCurrencyUomId="INR" fromDate="2012-01-01 00:00:00.00" thruDate=""/>
+    <FacilityRate facilityId="20259" rateTypeId="PROC_CARTAGE" productId="_NA_" supplyTypeEnumId="_NA_" acctgFormulaId="" rateAmount="0.25" rateCurrencyUomId="INR" fromDate="2012-01-01 00:00:00.00" thruDate=""/>
+    <FacilityRate facilityId="20300" rateTypeId="PROC_CARTAGE" productId="_NA_" supplyTypeEnumId="_NA_" acctgFormulaId="" rateAmount="0.25" rateCurrencyUomId="INR" fromDate="2012-01-01 00:00:00.00" thruDate=""/>
+    <FacilityRate facilityId="20262" rateTypeId="PROC_CARTAGE" productId="_NA_" supplyTypeEnumId="_NA_" acctgFormulaId="" rateAmount="0.25" rateCurrencyUomId="INR" fromDate="2012-01-01 00:00:00.00" thruDate=""/>
+    <FacilityRate facilityId="20136" rateTypeId="PROC_CARTAGE" productId="_NA_" supplyTypeEnumId="_NA_" acctgFormulaId="" rateAmount="0.25" rateCurrencyUomId="INR" fromDate="2012-01-01 00:00:00.00" thruDate=""/>
+    <FacilityRate facilityId="20592" rateTypeId="PROC_CARTAGE" productId="_NA_" supplyTypeEnumId="_NA_" acctgFormulaId="" rateAmount="0.25" rateCurrencyUomId="INR" fromDate="2012-01-01 00:00:00.00" thruDate=""/>
+    <FacilityRate facilityId="20137" rateTypeId="PROC_CARTAGE" productId="_NA_" supplyTypeEnumId="_NA_" acctgFormulaId="" rateAmount="0.20" rateCurrencyUomId="INR" fromDate="2012-01-01 00:00:00.00" thruDate=""/>
+    <FacilityRate facilityId="20240" rateTypeId="PROC_CARTAGE" productId="_NA_" supplyTypeEnumId="_NA_" acctgFormulaId="" rateAmount="0.25" rateCurrencyUomId="INR" fromDate="2012-01-01 00:00:00.00" thruDate=""/>
+    <FacilityRate facilityId="20310" rateTypeId="PROC_CARTAGE" productId="_NA_" supplyTypeEnumId="_NA_" acctgFormulaId="" rateAmount="0.25" rateCurrencyUomId="INR" fromDate="2012-01-01 00:00:00.00" thruDate=""/>
+    <FacilityRate facilityId="20312" rateTypeId="PROC_CARTAGE" productId="_NA_" supplyTypeEnumId="_NA_" acctgFormulaId="" rateAmount="0.25" rateCurrencyUomId="INR" fromDate="2012-01-01 00:00:00.00" thruDate=""/>
+    <FacilityRate facilityId="20311" rateTypeId="PROC_CARTAGE" productId="_NA_" supplyTypeEnumId="_NA_" acctgFormulaId="" rateAmount="0.25" rateCurrencyUomId="INR" fromDate="2012-01-01 00:00:00.00" thruDate=""/>
+    <FacilityRate facilityId="20284" rateTypeId="PROC_CARTAGE" productId="_NA_" supplyTypeEnumId="_NA_" acctgFormulaId="" rateAmount="0.25" rateCurrencyUomId="INR" fromDate="2012-01-01 00:00:00.00" thruDate=""/>
+    <FacilityRate facilityId="20568" rateTypeId="PROC_CARTAGE" productId="_NA_" supplyTypeEnumId="_NA_" acctgFormulaId="" rateAmount="0.25" rateCurrencyUomId="INR" fromDate="2012-01-01 00:00:00.00" thruDate=""/>
+    <FacilityRate facilityId="20287" rateTypeId="PROC_CARTAGE" productId="_NA_" supplyTypeEnumId="_NA_" acctgFormulaId="" rateAmount="0.25" rateCurrencyUomId="INR" fromDate="2012-01-01 00:00:00.00" thruDate=""/>
+    <FacilityRate facilityId="20288" rateTypeId="PROC_CARTAGE" productId="_NA_" supplyTypeEnumId="_NA_" acctgFormulaId="" rateAmount="0.25" rateCurrencyUomId="INR" fromDate="2012-01-01 00:00:00.00" thruDate=""/>
+    <FacilityRate facilityId="20649" rateTypeId="PROC_CARTAGE" productId="_NA_" supplyTypeEnumId="_NA_" acctgFormulaId="" rateAmount="0.25" rateCurrencyUomId="INR" fromDate="2012-01-01 00:00:00.00" thruDate=""/>
+    <FacilityRate facilityId="20602" rateTypeId="PROC_CARTAGE" productId="_NA_" supplyTypeEnumId="_NA_" acctgFormulaId="" rateAmount="0.25" rateCurrencyUomId="INR" fromDate="2012-01-01 00:00:00.00" thruDate=""/>
+    <FacilityRate facilityId="20633" rateTypeId="PROC_CARTAGE" productId="_NA_" supplyTypeEnumId="_NA_" acctgFormulaId="" rateAmount="0.25" rateCurrencyUomId="INR" fromDate="2012-01-01 00:00:00.00" thruDate=""/>
+    
+    <FacilityRate facilityId="20006" rateTypeId="PROC_OP_COST" productId="_NA_" supplyTypeEnumId="AM" acctgFormulaId="PROC_OP_COST_MBNRAM" rateAmount="2.00" rateCurrencyUomId="INR" fromDate="2012-01-01 00:00:00.00" thruDate=""/>
+    <FacilityRate facilityId="20007" rateTypeId="PROC_OP_COST" productId="_NA_" supplyTypeEnumId="AM" acctgFormulaId="PROC_OP_COST_MBNRAM" rateAmount="2.00" rateCurrencyUomId="INR" fromDate="2012-01-01 00:00:00.00" thruDate=""/>
+    <FacilityRate facilityId="20008" rateTypeId="PROC_OP_COST" productId="_NA_" supplyTypeEnumId="AM" acctgFormulaId="PROC_OP_COST_MBNRAM" rateAmount="2.00" rateCurrencyUomId="INR" fromDate="2012-01-01 00:00:00.00" thruDate=""/>
+    <FacilityRate facilityId="20009" rateTypeId="PROC_OP_COST" productId="_NA_" supplyTypeEnumId="AM" acctgFormulaId="PROC_OP_COST_MBNRAM" rateAmount="2.00" rateCurrencyUomId="INR" fromDate="2012-01-01 00:00:00.00" thruDate=""/>
+    <FacilityRate facilityId="20010" rateTypeId="PROC_OP_COST" productId="_NA_" supplyTypeEnumId="AM"  rateAmount="1.65" rateCurrencyUomId="INR" fromDate="2012-01-01 00:00:00.00" thruDate=""/>
+    <FacilityRate facilityId="20011" rateTypeId="PROC_OP_COST" productId="_NA_" supplyTypeEnumId="AM" acctgFormulaId="PROC_OP_COST_MBNRAM" rateAmount="2.00" rateCurrencyUomId="INR" fromDate="2012-01-01 00:00:00.00" thruDate=""/>
+    <FacilityRate facilityId="20012" rateTypeId="PROC_OP_COST" productId="_NA_" supplyTypeEnumId="AM"  rateAmount="1.25" rateCurrencyUomId="INR" fromDate="2012-01-01 00:00:00.00" thruDate=""/>
+    <FacilityRate facilityId="20013" rateTypeId="PROC_OP_COST" productId="_NA_" supplyTypeEnumId="AM"  rateAmount="1.25" rateCurrencyUomId="INR" fromDate="2012-01-01 00:00:00.00" thruDate=""/>
+    <FacilityRate facilityId="20014" rateTypeId="PROC_OP_COST" productId="_NA_" supplyTypeEnumId="AM"  rateAmount="1.25" rateCurrencyUomId="INR" fromDate="2012-01-01 00:00:00.00" thruDate=""/>
+    <FacilityRate facilityId="20015" rateTypeId="PROC_OP_COST" productId="_NA_" supplyTypeEnumId="AM"  rateAmount="1.25" rateCurrencyUomId="INR" fromDate="2012-01-01 00:00:00.00" thruDate=""/>
+    <FacilityRate facilityId="20016" rateTypeId="PROC_OP_COST" productId="_NA_" supplyTypeEnumId="AM"  rateAmount="1.25" rateCurrencyUomId="INR" fromDate="2012-01-01 00:00:00.00" thruDate=""/>
+    <FacilityRate facilityId="20017" rateTypeId="PROC_OP_COST" productId="_NA_" supplyTypeEnumId="AM"  rateAmount="1.25" rateCurrencyUomId="INR" fromDate="2012-01-01 00:00:00.00" thruDate=""/>
+    <FacilityRate facilityId="20018" rateTypeId="PROC_OP_COST" productId="_NA_" supplyTypeEnumId="AM" acctgFormulaId="PROC_OP_COST_MBNRAM" rateAmount="2.00" rateCurrencyUomId="INR" fromDate="2012-01-01 00:00:00.00" thruDate=""/>
+    <FacilityRate facilityId="20006" rateTypeId="PROC_OP_COST" productId="_NA_" supplyTypeEnumId="PM" acctgFormulaId="PROC_OP_COST_MBNRPM" rateAmount="2.25" rateCurrencyUomId="INR" fromDate="2012-01-01 00:00:00.00" thruDate=""/>
+    <FacilityRate facilityId="20007" rateTypeId="PROC_OP_COST" productId="_NA_" supplyTypeEnumId="PM" acctgFormulaId="PROC_OP_COST_MBNRPM" rateAmount="2.25" rateCurrencyUomId="INR" fromDate="2012-01-01 00:00:00.00" thruDate=""/>
+    <FacilityRate facilityId="20008" rateTypeId="PROC_OP_COST" productId="_NA_" supplyTypeEnumId="PM" acctgFormulaId="PROC_OP_COST_MBNRPM" rateAmount="2.25" rateCurrencyUomId="INR" fromDate="2012-01-01 00:00:00.00" thruDate=""/>
+    <FacilityRate facilityId="20009" rateTypeId="PROC_OP_COST" productId="_NA_" supplyTypeEnumId="PM" acctgFormulaId="PROC_OP_COST_MBNRPM" rateAmount="2.25" rateCurrencyUomId="INR" fromDate="2012-01-01 00:00:00.00" thruDate=""/>
+    <FacilityRate facilityId="20010" rateTypeId="PROC_OP_COST" productId="_NA_" supplyTypeEnumId="PM" acctgFormulaId="PROC_OP_COST_MBNRPM" rateAmount="1.90" rateCurrencyUomId="INR" fromDate="2012-01-01 00:00:00.00" thruDate=""/>
+    <FacilityRate facilityId="20011" rateTypeId="PROC_OP_COST" productId="_NA_" supplyTypeEnumId="PM" acctgFormulaId="PROC_OP_COST_MBNRPM" rateAmount="2.25" rateCurrencyUomId="INR" fromDate="2012-01-01 00:00:00.00" thruDate=""/>
+    <FacilityRate facilityId="20012" rateTypeId="PROC_OP_COST" productId="_NA_" supplyTypeEnumId="PM"  rateAmount="1.50" rateCurrencyUomId="INR" fromDate="2012-01-01 00:00:00.00" thruDate=""/>
+    <FacilityRate facilityId="20013" rateTypeId="PROC_OP_COST" productId="_NA_" supplyTypeEnumId="PM"  rateAmount="1.50" rateCurrencyUomId="INR" fromDate="2012-01-01 00:00:00.00" thruDate=""/>
+    <FacilityRate facilityId="20014" rateTypeId="PROC_OP_COST" productId="_NA_" supplyTypeEnumId="PM"  rateAmount="1.50" rateCurrencyUomId="INR" fromDate="2012-01-01 00:00:00.00" thruDate=""/>
+    <FacilityRate facilityId="20015" rateTypeId="PROC_OP_COST" productId="_NA_" supplyTypeEnumId="PM"  rateAmount="1.50" rateCurrencyUomId="INR" fromDate="2012-01-01 00:00:00.00" thruDate=""/>
+    <FacilityRate facilityId="20016" rateTypeId="PROC_OP_COST" productId="_NA_" supplyTypeEnumId="PM"  rateAmount="1.50" rateCurrencyUomId="INR" fromDate="2012-01-01 00:00:00.00" thruDate=""/>
+    <FacilityRate facilityId="20017" rateTypeId="PROC_OP_COST" productId="_NA_" supplyTypeEnumId="PM"  rateAmount="1.50" rateCurrencyUomId="INR" fromDate="2012-01-01 00:00:00.00" thruDate=""/>
+    <FacilityRate facilityId="20018" rateTypeId="PROC_OP_COST" productId="_NA_" supplyTypeEnumId="PM" acctgFormulaId="PROC_OP_COST_MBNRPM" rateAmount="2.25" rateCurrencyUomId="INR" fromDate="2012-01-01 00:00:00.00" thruDate=""/>
+</entity-engine-xml>

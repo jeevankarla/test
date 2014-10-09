@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<entity-engine-xml>
+    <Product productId="111" productTypeId="RAW_MATERIAL" primaryProductCategoryId="MILK_RECEIPTS" internalName="Buffalo Milk" productName="Buffalo Milk" brandName="BM WM" description="Buffalo Milk" longDescription="Buffalo Milk" quantityUomId="VLIQ_L"  taxable="N" chargeShipping="N" autoCreateKeywords="Y" isVirtual="N" isVariant="N" billOfMaterialLevel="0" createdDate="2011-12-01 12:00:00.0" lastModifiedDate="2011-12-01 12:00:00.0" lastModifiedByUserLogin="kvarma" inShippingBox="N" lastUpdatedStamp="2011-12-01 12:00:00.0" lastUpdatedTxStamp="2011-12-01 12:00:00.0" createdStamp="2011-12-01 12:00:00.0" createdTxStamp="2011-12-01 12:00:00.0"/>
+    <ProductCategoryMember productCategoryId="MILK_RECEIPTS" productId="111" fromDate="2011-12-01 12:00:00.0" lastUpdatedStamp="2012-01-10 18:53:58.0" lastUpdatedTxStamp="2012-01-10 18:53:57.0" createdStamp="2012-01-10 18:53:58.0" createdTxStamp="2012-01-10 18:53:57.0"/>
+    
+    <Product productId="211" productTypeId="RAW_MATERIAL" primaryProductCategoryId="MILK_RECEIPTS" internalName="Cow Milk" productName="Cow Milk" brandName="CM WM" description="Cow Milk" longDescription="Cow Milk" quantityUomId="VLIQ_L"  taxable="N" chargeShipping="N" autoCreateKeywords="Y" isVirtual="N" isVariant="N" billOfMaterialLevel="0" createdDate="2011-12-01 12:00:00.0" lastModifiedDate="2011-12-01 12:00:00.0" lastModifiedByUserLogin="kvarma" inShippingBox="N" lastUpdatedStamp="2011-12-01 12:00:00.0" lastUpdatedTxStamp="2011-12-01 12:00:00.0" createdStamp="2011-12-01 12:00:00.0" createdTxStamp="2011-12-01 12:00:00.0"/>
+    <ProductCategoryMember productCategoryId="MILK_RECEIPTS" productId="211" fromDate="2011-12-01 12:00:00.0" lastUpdatedStamp="2012-01-10 18:53:58.0" lastUpdatedTxStamp="2012-01-10 18:53:57.0" createdStamp="2012-01-10 18:53:58.0" createdTxStamp="2012-01-10 18:53:57.0"/>
+    
+    <Product productId="333" productTypeId="RAW_MATERIAL" primaryProductCategoryId="MILK_RECEIPTS" internalName="Mixed Milk" productName="Mixed Milk" brandName="MM WM" description="Mixed Milk" longDescription="Mixed Milk" quantityUomId="VLIQ_L"  taxable="N" chargeShipping="N" autoCreateKeywords="Y" isVirtual="N" isVariant="N" billOfMaterialLevel="0" createdDate="2011-12-01 12:00:00.0" lastModifiedDate="2011-12-01 12:00:00.0" lastModifiedByUserLogin="kvarma" inShippingBox="N" lastUpdatedStamp="2011-12-01 12:00:00.0" lastUpdatedTxStamp="2011-12-01 12:00:00.0" createdStamp="2011-12-01 12:00:00.0" createdTxStamp="2011-12-01 12:00:00.0"/>
+    <ProductCategoryMember productCategoryId="MILK_RECEIPTS" productId="333" fromDate="2011-12-01 12:00:00.0" lastUpdatedStamp="2012-01-10 18:53:58.0" lastUpdatedTxStamp="2012-01-10 18:53:57.0" createdStamp="2012-01-10 18:53:58.0" createdTxStamp="2012-01-10 18:53:57.0"/>
+    
+    <Product productId="121" productTypeId="RAW_MATERIAL" primaryProductCategoryId="MILK_RECEIPTS" internalName="Buffalo Skim Milk" productName="Buffalo Skim Milk" brandName="BM SKM" description="Buffalo Skim Milk" longDescription="Buffalo Skim Milk" quantityUomId="VLIQ_L"  taxable="N" chargeShipping="N" autoCreateKeywords="Y" isVirtual="N" isVariant="N" billOfMaterialLevel="0" createdDate="2011-12-01 12:00:00.0" lastModifiedDate="2011-12-01 12:00:00.0" lastModifiedByUserLogin="kvarma" inShippingBox="N" lastUpdatedStamp="2011-12-01 12:00:00.0" lastUpdatedTxStamp="2011-12-01 12:00:00.0" createdStamp="2011-12-01 12:00:00.0" createdTxStamp="2011-12-01 12:00:00.0"/>
+    <ProductCategoryMember productCategoryId="MILK_RECEIPTS" productId="121" fromDate="2011-12-01 12:00:00.0" lastUpdatedStamp="2012-01-10 18:53:58.0" lastUpdatedTxStamp="2012-01-10 18:53:57.0" createdStamp="2012-01-10 18:53:58.0" createdTxStamp="2012-01-10 18:53:57.0"/>
+    
+    <Product productId="221" productTypeId="RAW_MATERIAL" primaryProductCategoryId="MILK_RECEIPTS" internalName="Cow Skim Milk" productName="Cow Skim Milk" brandName="CM SKM" description="Cow Skim Milk" longDescription="Cow Skim Milk" quantityUomId="VLIQ_L"  taxable="N" chargeShipping="N" autoCreateKeywords="Y" isVirtual="N" isVariant="N" billOfMaterialLevel="0" createdDate="2011-12-01 12:00:00.0" lastModifiedDate="2011-12-01 12:00:00.0" lastModifiedByUserLogin="kvarma" inShippingBox="N" lastUpdatedStamp="2011-12-01 12:00:00.0" lastUpdatedTxStamp="2011-12-01 12:00:00.0" createdStamp="2011-12-01 12:00:00.0" createdTxStamp="2011-12-01 12:00:00.0"/>
+    <ProductCategoryMember productCategoryId="MILK_RECEIPTS" productId="221" fromDate="2011-12-01 12:00:00.0" lastUpdatedStamp="2012-01-10 18:53:58.0" lastUpdatedTxStamp="2012-01-10 18:53:57.0" createdStamp="2012-01-10 18:53:58.0" createdTxStamp="2012-01-10 18:53:57.0"/>
+    
+    <Product productId="999" productTypeId="RAW_MATERIAL" primaryProductCategoryId="MILK_RECEIPTS" internalName="Sour Milk" productName="Sour Milk" brandName="SOUR/REJT" description="Sour Milk" longDescription="Sour Milk" quantityUomId="VLIQ_L"  taxable="N" chargeShipping="N" autoCreateKeywords="Y" isVirtual="N" isVariant="N" billOfMaterialLevel="0" createdDate="2011-12-01 12:00:00.0" lastModifiedDate="2011-12-01 12:00:00.0" lastModifiedByUserLogin="kvarma" inShippingBox="N" lastUpdatedStamp="2011-12-01 12:00:00.0" lastUpdatedTxStamp="2011-12-01 12:00:00.0" createdStamp="2011-12-01 12:00:00.0" createdTxStamp="2011-12-01 12:00:00.0"/>
+    <ProductCategoryMember productCategoryId="MILK_RECEIPTS" productId="999" fromDate="2011-12-01 12:00:00.0" lastUpdatedStamp="2012-01-10 18:53:58.0" lastUpdatedTxStamp="2012-01-10 18:53:57.0" createdStamp="2012-01-10 18:53:58.0" createdTxStamp="2012-01-10 18:53:57.0"/>
+    
+    
+    
+    
+    
+    <Product productId="444" productTypeId="RAW_MATERIAL" primaryProductCategoryId="MILK_RECEIPTS" internalName="Toned Milk" productName="Toned Milk" brandName="TM" description="Toned Milk" longDescription="Toned Milk" quantityUomId="VLIQ_L"  taxable="N" chargeShipping="N" autoCreateKeywords="Y" isVirtual="N" isVariant="N" billOfMaterialLevel="0" createdDate="2011-12-01 12:00:00.0" lastModifiedDate="2011-12-01 12:00:00.0" lastModifiedByUserLogin="kvarma" inShippingBox="N" lastUpdatedStamp="2011-12-01 12:00:00.0" lastUpdatedTxStamp="2011-12-01 12:00:00.0" createdStamp="2011-12-01 12:00:00.0" createdTxStamp="2011-12-01 12:00:00.0"/>
+    <ProductCategoryMember productCategoryId="MILK_RECEIPTS" productId="444" fromDate="2011-12-01 12:00:00.0" lastUpdatedStamp="2012-01-10 18:53:58.0" lastUpdatedTxStamp="2012-01-10 18:53:57.0" createdStamp="2012-01-10 18:53:58.0" createdTxStamp="2012-01-10 18:53:57.0"/>
+    
+    <ProductCategoryMember productCategoryId="MILK_RECEIPTS" productId="101" fromDate="2011-12-01 12:00:00.0" lastUpdatedStamp="2012-01-10 18:53:58.0" lastUpdatedTxStamp="2012-01-10 18:53:57.0" createdStamp="2012-01-10 18:53:58.0" createdTxStamp="2012-01-10 18:53:57.0"/>
+    <ProductCategoryMember productCategoryId="MILK_RECEIPTS" productId="102" fromDate="2011-12-01 12:00:00.0" lastUpdatedStamp="2012-01-10 18:53:58.0" lastUpdatedTxStamp="2012-01-10 18:53:57.0" createdStamp="2012-01-10 18:53:58.0" createdTxStamp="2012-01-10 18:53:57.0"/>
+    <ProductCategoryMember productCategoryId="MILK_RECEIPTS" productId="103" fromDate="2011-12-01 12:00:00.0" lastUpdatedStamp="2012-01-10 18:53:58.0" lastUpdatedTxStamp="2012-01-10 18:53:57.0" createdStamp="2012-01-10 18:53:58.0" createdTxStamp="2012-01-10 18:53:57.0"/>
+	<FacilityAttribute facilityId="KRNT" attrName="enableQuantityKgs" attrValue="Y"/>
+	
+	
+	<Facility facilityId="ANTP" mccTypeId="FEDERATION"></Facility>
+	<Facility facilityId="CHTR" mccTypeId="FEDERATION"></Facility>
+	<Facility facilityId="EGD" mccTypeId="FEDERATION"></Facility>
+	<Facility facilityId="KDP" mccTypeId="FEDERATION"></Facility>
+	<Facility facilityId="KMM" mccTypeId="FEDERATION"></Facility>
+	<Facility facilityId="MBNR" mccTypeId="FEDERATION"></Facility>
+	<Facility facilityId="MDK" mccTypeId="FEDERATION"></Facility>
+	<Facility facilityId="NLG" mccTypeId="FEDERATION"></Facility>
+	<Facility facilityId="NZB" mccTypeId="FEDERATION"></Facility>
+	<Facility facilityId="WGD" mccTypeId="FEDERATION"></Facility>
+	<Facility facilityId="WGL" mccTypeId="FEDERATION"></Facility>
+	
+	
+	<Facility facilityId="VZG" mccTypeId="UNION"></Facility>
+	<Facility facilityId="VFD" mccTypeId="UNION"></Facility>
+	<Facility facilityId="TMLN" mccTypeId="UNION"></Facility>
+	<Facility facilityId="PRA" mccTypeId="UNION"></Facility>
+	<Facility facilityId="ORIS" mccTypeId="UNION"></Facility>
+	<Facility facilityId="NLR" mccTypeId="UNION"></Facility>
+	<Facility facilityId="MAHR" mccTypeId="UNION"></Facility>
+	<Facility facilityId="KRNT" mccTypeId="UNION"></Facility>
+	<Facility facilityId="KRL" mccTypeId="UNION"></Facility>
+	<Facility facilityId="KRI" mccTypeId="UNION"></Facility>
+	<Facility facilityId="KNG" mccTypeId="UNION"></Facility>
+	<Facility facilityId="KKN" mccTypeId="UNION"></Facility>
+	<Facility facilityId="GUN" mccTypeId="UNION"></Facility>
+	<Facility facilityId="PVT" mccTypeId="OTHERS"></Facility>
+	
+	<!-- contactList example -->
+	<ContactList contactListId="ANDHRA_NOTIFY_LST" contactListName="ANDHRA NOTIFY LIST"  description="ANDHRA NOTIFY LIST"
+				 contactListTypeId="ANNOUNCEMENT" contactMechTypeId="TELECOM_NUMBER" ownerPartyId="10200" />
+	<ContactList contactListId="RECPT_NOTIFY_LST" contactListName="RECEIPTS NOTIFY LIST"  description="RECEIPTS NOTIFY LIST"
+				 contactListTypeId="ANNOUNCEMENT" contactMechTypeId="TELECOM_NUMBER" ownerPartyId="10200" />
+				 
+	
+</entity-engine-xml>

@@ -53,29 +53,46 @@ productsList = [];
 productsList = ProcurementNetworkServices.getProcurementProducts(dctx,UtilMisc.toMap());
 productsMap = [:];
 totalsList = [];
+
+unitCode = null;
+shedCode = null;
+centerFacilityId = null;
+facilityCode = parameters.facilityCode;
+unitFacility = delegator.findOne("Facility",[facilityId:parameters.unitId],false);
+if(UtilValidate.isNotEmpty(unitFacility)){
+	unitCode = unitFacility.facilityCode;
+}
+shedFacility = delegator.findOne("Facility",[facilityId:parameters.shedId],false);
+if(UtilValidate.isNotEmpty(shedFacility)){
+	shedCode = shedFacility.facilityCode;
+}
+GenericValue agentFacility = (GenericValue)(ProcurementNetworkServices.getAgentFacilityByShedCode(dctx, UtilMisc.toMap("shedCode", shedCode,"centerCode", facilityCode,"unitCode",unitCode))).get("agentFacility");
+if(UtilValidate.isNotEmpty(agentFacility)){
+	centerFacilityId = agentFacility.facilityId;
+}
+
 for(product in productsList){
 	productsMap.putAt(product.productName,product.brandName);
 }
-if(UtilValidate.isNotEmpty(productsMap)){
-	facilityId = parameters.centerId;
-	facility = delegator.findOne("Facility",[facilityId:facilityId],false);
+if(UtilValidate.isNotEmpty(productsMap)&& UtilValidate.isNotEmpty(centerFacilityId)){
+	facility = delegator.findOne("Facility",[facilityId:centerFacilityId],false);
 	if(UtilValidate.isEmpty(facility)){
-		Debug.logError("facility not found with the facilityId =====>"+facilityId,"");
-		context.errorMessage = "facility not found with facilityId ====> "+facilityId ;
+		Debug.logError("facility not found with the facilityId =====>"+centerFacilityId,"");
+		context.errorMessage = "facility not found with facilityId ====> "+centerFacilityId;
 		return;
 		}
 	context.put("facility",facility);
 	route = delegator.findOne("Facility",[facilityId:facility.get("parentFacilityId")],false);
 	context.put("route",route);
-		unitDetails = ProcurementNetworkServices.getCenterDtails(dctx ,[centerId:facilityId]);
+		unitDetails = ProcurementNetworkServices.getCenterDtails(dctx ,[centerId:centerFacilityId]);
 	if(UtilValidate.isNotEmpty(unitDetails.unitFacility)){
 		unit = unitDetails.get("unitFacility");
 		context.put("unit",unit);
 		dayWiseEntriesList = [];
-		agentDayTotals = ProcurementReports.getPeriodTotals(dctx , [fromDate: fromDate , thruDate: thruDate , facilityId: facilityId,userLogin:userLogin]);
+		agentDayTotals = ProcurementReports.getPeriodTotals(dctx , [fromDate: fromDate , thruDate: thruDate , facilityId: centerFacilityId,userLogin:userLogin]);
 		if(UtilValidate.isNotEmpty(agentDayTotals)){
 			dayTotalsMap = [:];
-			dayTotalsMap = agentDayTotals.get(facilityId).get("dayTotals");
+			dayTotalsMap = agentDayTotals.get(centerFacilityId).get("dayTotals");
 			totalsMap = [:];
 			totalsMap = dayTotalsMap.get("TOT").get("TOT");
 			grandTotals = [:];

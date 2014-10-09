@@ -26,22 +26,52 @@ import in.vasista.vbiz.procurement.ProcurementReports;
 import net.sf.json.JSONObject;
 
 dctx = dispatcher.getDispatchContext();
-
+Map ReportConfigMap = FastMap.newInstance();
 Map userRelatedFacilities = ProcurementNetworkServices.getFacilityShedByUserLogin(dctx,UtilMisc.toMap("userLogin",context.userLogin));
+Map shedMap = new HashMap();
 if(ServiceUtil.isSuccess(userRelatedFacilities)){
 		Map unitDetails = userRelatedFacilities.get("unitDetails");
 		Map shedDetails = userRelatedFacilities.get("shedDetails");
+		List unitMapsList = userRelatedFacilities.get("unitMapsList");
 		if(UtilValidate.isNotEmpty(unitDetails)){
 			context.put("unitId",unitDetails.get("facilityId"));
 			context.put("unitName",unitDetails.get("facilityName"));
 			context.put("unitCode",unitDetails.get("facilityCode"));
-			}
+		}
+		if(UtilValidate.isNotEmpty(unitMapsList)){
+			context.put("unitMapsList",unitMapsList);
+		}
 		if(UtilValidate.isNotEmpty(shedDetails)){
 			context.put("shedId",shedDetails.get("facilityId"));
 			context.put("shedName",shedDetails.get("facilityName"));
 			context.put("shedCode",shedDetails.get("facilityCode"));
-			}
+			ReportConfigMap = (ProcurementNetworkServices.getFacilityProcurementReportConfig(dctx,UtilMisc.toMap("userLogin",context.userLogin))).get("ReportConfigMap");
+			
+		}
 	
 }else{
-	Debug.log("no Facility Found");
+    shedList =[];
+	unitsList =[];
+   if(UtilValidate.isNotEmpty(context.shedId) || UtilValidate.isNotEmpty(parameters.shedId)){
+	shedDetails = null;
+	if(context.shedId){
+		shedDetails = delegator.findOne("Facility",[facilityId : context.shedId], false);
+	}
+	if(parameters.shedId){
+		shedDetails = delegator.findOne("Facility",[facilityId : parameters.shedId], false);
+	}
+		shedMap.put("facilityId",shedDetails.facilityId);
+		shedMap.put("facilityName",shedDetails.facilityName);
+		shedMap.put("facilityCode",shedDetails.facilityCode);
+		shedMap.put("facilityTypeId","SHED");
+		shedList.add(shedMap);
+	
+}else{
+		shedList.addAll(ProcurementNetworkServices.getSheds(delegator));
+	}
+context.putAt("relatedShedList", shedList);
+context.putAt("shedList", shedList);
+context.putAt("unitsList", unitsList);
+	//Debug.logInfo("no Facility Found","");
 }
+context.put("ReportConfigMap", ReportConfigMap);

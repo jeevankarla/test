@@ -16,10 +16,11 @@ import org.ofbiz.base.util.UtilDateTime;
 import in.vasista.vbiz.procurement.ProcurementReports;
 import in.vasista.vbiz.procurement.ProcurementNetworkServices;
 import in.vasista.vbiz.procurement.ProcurementServices;
+import org.ofbiz.order.order.OrderServices;
 
 
 //getting  shed total TipAmount and deductions (other than feed in ) for DDACCOUNT
-ddAmountMap =[:];
+/*ddAmountMap =[:];
 if(UtilValidate.isNotEmpty(context.get("shedWiseTotalsMap"))){
 	
 	shedWiseTotalsMap = context.get("shedWiseTotalsMap");	
@@ -39,7 +40,16 @@ if(UtilValidate.isNotEmpty(context.get("shedWiseTotalsMap"))){
 		ddAmountMap["amount"]=totalDDAmount;
 		}	
 }
-context.putAt("ddAmountMap", ddAmountMap);
+context.putAt("ddAmountMap", ddAmountMap);*/
+if(UtilValidate.isEmpty(parameters.customTimePeriodId)){
+	parameters["customTimePeriodId"]= parameters.shedCustomTimePeriodId;
+}
+if(UtilValidate.isEmpty(parameters.customTimePeriodId)){
+	Debug.logError("customTimePeriod Cannot Be Empty","");
+	context.errorMessage = "No Shed Has Been Selected.......!";
+	return;
+}
+
 customTimePeriod=delegator.findOne("CustomTimePeriod",[customTimePeriodId : parameters.customTimePeriodId], false);
 fromDate=UtilDateTime.toTimestamp(customTimePeriod.getDate("fromDate"));
 thruDate=UtilDateTime.toTimestamp(customTimePeriod.getDate("thruDate"));
@@ -51,8 +61,10 @@ context.put("dctx",dctx);
 condList =[];
 
 if(UtilValidate.isNotEmpty(parameters.shedId)){
-	shedUnitDetails = ProcurementNetworkServices.getShedUnitsByShed(dctx ,[userLogin: userLogin,shedId: parameters.shedId]);
-	unitsList = shedUnitDetails.get("unitsDetailList");
+	/*shedUnitDetails = ProcurementNetworkServices.getShedUnitsByShed(dctx ,[userLogin: userLogin,shedId: parameters.shedId]);
+	unitsList = shedUnitDetails.get("unitsDetailList");*/
+	shedUnitsDetails = ProcurementNetworkServices.getShedCustomTimePeriodUnits(dctx,[shedId : parameters.shedId,customTimePeriodId : parameters.customTimePeriodId]);
+	unitsList = shedUnitsDetails.customTimePeriodUnitsDetailList;	
 }else{
  return;
 }
@@ -73,6 +85,7 @@ for(int i=0;i<unitsList.size();i++){ unit = unitsList.get(i);
 		//conditionList.add(EntityCondition.makeCondition("finAccountCode", EntityOperator.NOT_EQUAL,null));
 		condition = EntityCondition.makeCondition(conditionList,EntityOperator.AND);
 		unitFinAccountList = delegator.findList("FacilityPersonAndFinAccount",condition,null,null,null,false);
+		unitFinAccountList = UtilMisc.sortMaps(unitFinAccountList, UtilMisc.toList("gbCode"));
 		
 		if(UtilValidate.isEmpty(unitFinAccountList)){
 			continue;
@@ -82,7 +95,7 @@ for(int i=0;i<unitsList.size();i++){ unit = unitsList.get(i);
 		bankTotalsMap["nameOfTheBank"] = unitDetail.finAccountName;
 		bankTotalsMap["nameOfTheBrch"] = unitDetail.finAccountBranch;
 		bankTotalsMap["ifscCode"] = unitDetail.get("ifscCode");
-		bankTotalsMap["accountHolder"] = (PartyHelper.getPartyName(delegator, unitDetail.get("ownerPartyId"), true)).replace(',', '');
+		bankTotalsMap["accountHolder"] = OrderServices.nameTrim((PartyHelper.getPartyName(delegator, unitDetail.get("ownerPartyId"), true)).replace(',', ''),25);
 		bankTotalsMap["bankAccNo"] = unitDetail.get("finAccountCode");
 	} catch (Exception e) {
          Debug.logError("Error retrieving FinAccount Details For Unit : "+unit.facilityId +"------------>"+e.toString(), "");
@@ -117,11 +130,11 @@ for(int i=0;i<unitsList.size();i++){ unit = unitsList.get(i);
 		
 		totEntry = unitTotals.get("periodTransferTotalsMap");
 		unitTotEntry = totEntry.get(unit.facilityId);
-		transferValues = unitTotEntry.get("transfers");
+		/*transferValues = unitTotEntry.get("transfers");
 		periodTotals = transferValues.get("procurementPeriodTotals");
 		periodDayTotals = periodTotals.get("dayTotals");
 		if(UtilValidate.isNotEmpty(periodDayTotals.get("TOT"))){
-			milkValue = periodDayTotals.get("TOT").get("price");
+			milkValue = (periodDayTotals.get("TOT").get("price")+periodDayTotals.get("TOT").get("sPrice"));
 		}
 		cartage =0;
 		opCost =0;
@@ -130,14 +143,24 @@ for(int i=0;i<unitsList.size();i++){ unit = unitsList.get(i);
 			opCost =shedWiseAmountAbstractMap.get(unit.facilityId).get("opCost");			
 		}
 		netAmount = milkValue+unitAddnTot+cartage+opCost-unitDednsTot;
+		netAmount =netAmount.setScale(0,BigDecimal.ROUND_HALF_UP);
 		//shortages
 		shortages = transferValues.get("shortages");
 		totalRecoveryAmt = shortages.get("kgFatAmt")+shortages.get("kgSnfAmt");
 		//netPayment Amount
-		netTotAmount = netAmount+totalRecoveryAmt;
-		
+		netTotAmount = netAmount+totalRecoveryAmt;*/
+		netTotAmount=0;
+		//taking from Unit Milk bill Net Payable groovy
+		if(UtilValidate.isNotEmpty(context.getAt("UnitWiseDetailsMap"))){
+			UnitDetailsMap=context.getAt("UnitWiseDetailsMap");
+			netTotAmount = UnitDetailsMap.get(unit.facilityId).getAt("netAmtPayable");
+		}
 		bankTotalsMap["amount"] = netTotAmount;
-		
+		if(netTotAmount<0){
+			unitBankWiseAbstract=[];
+			context.put("negativeAmtMsg", "UNIT :"+unit.facilityCode+"  HAS NEGATIVE AMOUNT");
+			return;
+		}
 		unitBankWiseAbstract.add(bankTotalsMap);
 	}
 	//for total bank payments report
@@ -155,4 +178,3 @@ unitBankWiseAbstract = UtilMisc.sortMaps(unitBankWiseAbstract, UtilMisc.toList("
 
 context.put("bankWiseTotalAmountMap", bankWiseTotalAmountMap);
 context.put("unitBankWiseAbstract", unitBankWiseAbstract);
-//Debug.log("==================================================>"+unitBankWiseAbstract);

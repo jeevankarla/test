@@ -28,6 +28,15 @@ under the License.
             </fo:simple-page-master>
        </fo:layout-master-set>
        ${setRequestAttribute("OUTPUT_FILENAME", "unitwiseIOAbst.txt")}
+       <#if errorMessage?has_content>
+		<fo:page-sequence master-reference="main">
+		   <fo:flow flow-name="xsl-region-body" font-family="Helvetica">
+		      <fo:block font-size="14pt">
+		              ${errorMessage}.
+		   	  </fo:block>
+		   </fo:flow>
+		</fo:page-sequence>        
+		<#else>
         <#if results == "Y">
        <fo:page-sequence master-reference="main">
             <fo:static-content flow-name="xsl-region-before" font-family="Courier,monospace">
@@ -61,6 +70,7 @@ under the License.
                         <#assign totKgSnf =0>
                         <#if openingBalMap?has_content>
                             <#assign openingBal =openingBalMap.get("openingBalance")>
+                           <#if (openingBal.qtyKgs)?has_content && (openingBal.qtyKgs)!=0>
                             <fo:table-row>
                                 <fo:table-cell>
                                 </fo:table-cell>
@@ -74,10 +84,10 @@ under the License.
                                     <fo:block text-align="right">${openingBal.get("qtyKgs")?if_exists?string("##0.00")}</fo:block>
                                 </fo:table-cell>
                                 <fo:table-cell>
-                                    <fo:block text-align="right">${openingBal.get("kgFat")?if_exists?string("##0.00")}</fo:block>
+                                    <fo:block text-align="right">${openingBal.get("kgFat")?if_exists?string("##0.000")}</fo:block>
                                 </fo:table-cell>
                                 <fo:table-cell>
-                                    <fo:block text-align="right">${openingBal.get("kgSnf")?if_exists?string("##0.00")}</fo:block>
+                                    <fo:block text-align="right">${openingBal.get("kgSnf")?if_exists?string("##0.000")}</fo:block>
                                 </fo:table-cell>
                                 <fo:table-cell>
                                     <fo:block text-align="right">${openingBal.get("fat")?if_exists?string("##0.00")}</fo:block>
@@ -86,35 +96,39 @@ under the License.
                                     <fo:block text-align="right">${openingBal.get("snf")?if_exists?string("##0.00")}</fo:block>
                                 </fo:table-cell>
                             </fo:table-row>
-                        </#if> 
-                        <#if tmPreparationMap?has_content>
-                            <#if (tmPreparationMap.qtyKgs)?has_content && (tmPreparationMap.qtyKgs)!=0>
-                            <fo:table-row>
-                                <fo:table-cell>
-                                </fo:table-cell>
-                                <fo:table-cell>
-                                  <fo:block keep-together="always" text-align="left">TM Preparation </fo:block>
-                                </fo:table-cell>
-                                <fo:table-cell>
-                                    <fo:block text-align="right">${tmPreparationMap.qtyLtrs?if_exists?string("##0.00")}</fo:block>
-                                </fo:table-cell>
-                                <fo:table-cell>
-                                    <fo:block text-align="right">${tmPreparationMap.get("qtyKgs")?if_exists?string("##0.00")}</fo:block>
-                                </fo:table-cell>
-                                <fo:table-cell>
-                                    <fo:block text-align="right">${tmPreparationMap.get("kgFat")?if_exists?string("##0.00")}</fo:block>
-                                </fo:table-cell>
-                                <fo:table-cell>
-                                    <fo:block text-align="right">${tmPreparationMap.get("kgSnf")?if_exists?string("##0.00")}</fo:block>
-                                </fo:table-cell>
-                                <fo:table-cell>
-                                    <fo:block text-align="right">${tmPreparationMap.get("fat")?if_exists?string("##0.00")}</fo:block>
-                                </fo:table-cell>
-                                <fo:table-cell>
-                                    <fo:block text-align="right">${tmPreparationMap.get("snf")?if_exists?string("##0.00")}</fo:block>
-                                </fo:table-cell>
-                            </fo:table-row>
                             </#if>
+                        </#if> 
+                        <#if inputEntriesList?has_content>
+                            <#list inputEntriesList as inputEntry>
+	                            <#if (inputEntry.qtyKgs)?has_content && (inputEntry.qtyKgs)!=0>
+	                            	<#assign key = inputEntry.get("outputType")>
+		                            <fo:table-row>
+		                                <fo:table-cell>
+		                                </fo:table-cell>
+		                                <fo:table-cell>
+		                                  <fo:block keep-together="always" text-align="left">${key.replace("_"," ")} </fo:block>
+		                                </fo:table-cell>
+		                                <fo:table-cell>
+		                                    <fo:block text-align="right">${inputEntry.qtyLtrs?if_exists?string("##0.00")}</fo:block>
+		                                </fo:table-cell>
+		                                <fo:table-cell>
+		                                    <fo:block text-align="right">${inputEntry.get("qtyKgs")?if_exists?string("##0.00")}</fo:block>
+		                                </fo:table-cell>
+		                                <fo:table-cell>
+		                                    <fo:block text-align="right">${inputEntry.get("kgFat")?if_exists?string("##0.000")}</fo:block>
+		                                </fo:table-cell>
+		                                <fo:table-cell>
+		                                    <fo:block text-align="right">${inputEntry.get("kgSnf")?if_exists?string("##0.000")}</fo:block>
+		                                </fo:table-cell>
+		                                <fo:table-cell>
+		                                    <fo:block text-align="right">${inputEntry.get("fat")?if_exists?string("##0.00")}</fo:block>
+		                                </fo:table-cell>
+		                                <fo:table-cell>
+		                                    <fo:block text-align="right">${inputEntry.get("snf")?if_exists?string("##0.00")}</fo:block>
+		                                </fo:table-cell>
+		                            </fo:table-row>
+	                            </#if>
+                            </#list>
                         </#if> 
                           <#if procTotalsMap?has_content>
                             <fo:table-row>
@@ -131,10 +145,10 @@ under the License.
                                     <fo:block text-align="right">${procTotalsMap.get("qtyKgs")?if_exists?string("##0.00")}</fo:block>
                                 </fo:table-cell>
                                 <fo:table-cell>
-                                    <fo:block text-align="right">${procTotalsMap.get("kgFat")?if_exists?string("##0.00")}</fo:block>
+                                    <fo:block text-align="right">${procTotalsMap.get("kgFat")?if_exists?string("##0.000")}</fo:block>
                                 </fo:table-cell>
                                 <fo:table-cell>
-                                    <fo:block text-align="right">${procTotalsMap.get("kgSnf")?if_exists?string("##0.00")}</fo:block>
+                                    <fo:block text-align="right">${procTotalsMap.get("kgSnf")?if_exists?string("##0.000")}</fo:block>
                                 </fo:table-cell>
                                 <fo:table-cell>
                                     <fo:block text-align="right">${procTotalsMap.get("fat")?if_exists?string("##0.00")}</fo:block>
@@ -161,10 +175,10 @@ under the License.
                                     <fo:block text-align="right">${procThruTransfer.get("qtyKgs")?if_exists?string("##0.00")}</fo:block>
                                 </fo:table-cell>
                                 <fo:table-cell>
-                                    <fo:block text-align="right">${procThruTransfer.get("kgFat")?if_exists?string("##0.00")}</fo:block>
+                                    <fo:block text-align="right">${procThruTransfer.get("kgFat")?if_exists?string("##0.000")}</fo:block>
                                 </fo:table-cell>
                                 <fo:table-cell>
-                                    <fo:block text-align="right">${procThruTransfer.get("kgSnf")?if_exists?string("##0.00")}</fo:block>
+                                    <fo:block text-align="right">${procThruTransfer.get("kgSnf")?if_exists?string("##0.000")}</fo:block>
                                 </fo:table-cell>
                                 <fo:table-cell>
                                     <fo:block text-align="right">${procThruTransfer.get("fat")?if_exists?string("##0.00")}</fo:block>
@@ -321,7 +335,7 @@ under the License.
                                <#if closingBalance.outputType!="CLOSING_BALANCE">
                                <fo:table-row>
                                     <fo:table-cell>
-                                        <fo:block text-align="left" keep-together="always">${closingBalance.outputType}</fo:block>
+                                        <fo:block text-align="left" keep-together="always">${(closingBalance.outputType).replace("_"," ")}</fo:block>
                                     </fo:table-cell>
                                     <fo:table-cell>
                                     </fo:table-cell>
@@ -357,7 +371,7 @@ under the License.
                             <#if qtyKgs?has_content && qtyKgs!=0>
                             <fo:table-row>
                                     <fo:table-cell>
-                                       <fo:block text-align="left" keep-together="always">${outputType}</fo:block>
+                                       <fo:block text-align="left" keep-together="always">${outputType.replace("_"," ")}</fo:block>
                                     </fo:table-cell>
                                     <fo:table-cell>
                                     </fo:table-cell>
@@ -456,6 +470,7 @@ under the License.
                         </fo:block>
                     </fo:flow>
                 </fo:page-sequence>
+     </#if>
      </#if>
    </fo:root> 
  </#escape>     

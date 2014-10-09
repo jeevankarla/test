@@ -95,6 +95,7 @@ under the License.
     	default-table-style="basic-table hover-bar" separate-columns="true" list-name="listProcurementOrders" >   		
     	 <actions>
     	 	<set field="procurementProductList" type="List" value="${groovy: import org.ofbiz.base.util.*; return (in.vasista.vbiz.procurement.ProcurementNetworkServices.getProcurementProducts(dispatcher.getDispatchContext(),context)); }"/>
+    	 	<set field="unitMapListSize" value="${groovy:  if (unitMapsList.size()!=0) return 1;}" default-value="0"/>
     	 </actions>
     	 <field name="noConditionFind"><hidden value="Y"/><!-- if this isn't there then with all fields empty no query will be done --></field>
     	 <field name="hideSearch"><hidden value="Y"/></field>
@@ -110,6 +111,12 @@ under the License.
         <field use-when="shedId!=null" name="shedId" title="Shed Name"><display default-value="${shedId}"  description="${shedName}"/></field>  
 		 <field name="unitCode"><text-find/></field>
 		 <field use-when="unitCode!=null" name="unitCode" title="Unit" tooltip="${unitName}"><display default-value="${unitCode}" description="${unitCode}"/> </field>
+		 <field use-when="(${unitMapListSize}!=0)" name="unitCode" title="unit">
+		 	<drop-down>
+		 		<list-options key-name="facilityCode" list-name="unitMapsList" description="${facilityCode} ${facilityName}"/>
+		 	</drop-down>
+		 </field>
+		 <field name="routeCode"><text-find/></field>
 		 <field name="facilityCode" title="Center Code"><text-find/></field>
 		  <field name="productId" title="Milk Type">
             <drop-down allow-empty="true">
@@ -199,6 +206,136 @@ under the License.
 			</field-group>					
 		</sort-order> 
     </form>
+   <form name="FindMissingTransactions" odd-row-style="alternate-row" header-row-style="header-row" type="single"  default-table-style="basic-table hover-bar" separate-columns="true" >    
+       <field name="shedId" id-name="shedId" title="Shed Name"  event="onChange" action="javascript:getTimePeriodsByUnit(this.value)" >
+            <drop-down allow-empty="true">
+                <entity-options description="${description}" entity-name="Facility" key-field-name="facilityId">
+                	<entity-constraint name="facilityTypeId" operator="equals" value="SHED"/>
+                </entity-options>
+            </drop-down>
+       </field>
+       <field use-when="(shedId!=null)&amp;&amp;(shedCode!=null)" id-name="shedId" name="shedId" title="Shed Name"><display default-value="${shedId}"  description="${shedName}"/></field>
+	   <field name="customTimePeriodId" id-name="customTimePeriodId">
+			<drop-down  allow-empty="false" no-current-selected-key="${customTimePeriodId}">
+			    <list-options key-name="customTimePeriodId" list-name="timePeriodList" description="${groovy:org.ofbiz.base.util.UtilDateTime.toDateString(fromDate, &quot;MMMdd&quot;);}-${groovy:org.ofbiz.base.util.UtilDateTime.toDateString(thruDate, &quot;MMMdd YYYY&quot;);}"/>
+			</drop-down>
+	   </field>
+	   <field name="submitButton" title="Find"><submit button-type="button"/></field>
+    </form> 
+   <form name="ListMissingTransactions" odd-row-style="alternate-row" header-row-style="header-row" type="list" paginate-target="MissingData"
+    	default-table-style="basic-table hover-bar" separate-columns="true" list-name="missingDataList" >		
+		<actions>
+			<script location="component://procurement/webapp/procurement/WEB-INF/actions/facility/MissingData.groovy"/>
+		</actions>
+		<field name="facilityCode"  title="Unit Code"><display/></field>
+		<field name="facilityName" title="Unit Name"><display/></field>
+		<field name="MissingType" title="Type of Data"><display/></field>
+		<field name="status" title="Status"><display/></field>
+    </form>
+   <form name="FindTransportCommission" odd-row-style="alternate-row" header-row-style="header-row" type="single"  default-table-style="basic-table hover-bar" separate-columns="true" >    
+	   <field name="noConditionFind"><hidden value="Y"/><!-- if this isn't there then with all fields empty no query will be done --></field>
+       <field name="hideSearch"><hidden value="Y"/></field>       	
+       <field name="shedId" id-name="shedId" title="Shed Name" event="onchange" action="javascript:setOutPutEntryShedUnitsDropDown(this);">
+            <drop-down allow-empty="true">
+                <entity-options description="${description}" entity-name="Facility" key-field-name="facilityId">
+                	<entity-constraint name="facilityTypeId" operator="equals" value="SHED"/>
+                </entity-options>
+            </drop-down>
+       </field>
+       <field use-when="(shedId!=null)&amp;&amp;(shedCode!=null)" id-name="shedId" name="shedId" title="Shed Name"><display default-value="${shedId}"  description="${shedName}"/></field>  
+       <!-- <field name="facilityId" title="unit Code" id-name="facilityId" event="onchange" action="getTimePeriodsByUnit($('[name=shedId]').val(),$('[name=facilityId]').val());" >
+	       	<drop-down allow-empty="false">
+	       		<list-options key-name="facilityId"  list-name="unitsList" description="${facilityName}"/>
+	       	</drop-down>
+       </field> -->
+	   <field name="customTimePeriodId" id-name="customTimePeriodId">
+			<drop-down  allow-empty="false" no-current-selected-key="${customTimePeriodId}">
+			    <list-options key-name="customTimePeriodId" list-name="timePeriodList" description="${groovy:org.ofbiz.base.util.UtilDateTime.toDateString(fromDate, &quot;MMMdd&quot;);}-${groovy:org.ofbiz.base.util.UtilDateTime.toDateString(thruDate, &quot;MMMdd YYYY&quot;);}"/>
+			</drop-down>
+	   </field>
+	   <field name="submitButton" title="Find"><submit button-type="button"/></field>
+    </form>  
+   <form name="CreateTransportCommission" odd-row-style="alternate-row" header-row-style="header-row" type="single"  default-table-style="basic-table hover-bar" separate-columns="true"  target="createTransportCommission">    
+       <field name="shedId" id-name="shedId" title="Shed Name" event="onchange" action="javascript:setOutPutEntryShedUnitsDropDown(this);">
+            <drop-down allow-empty="true">
+                <entity-options description="${description}" entity-name="Facility" key-field-name="facilityId">
+                	<entity-constraint name="facilityTypeId" operator="equals" value="SHED"/>
+                </entity-options>
+            </drop-down>
+       </field>
+       <field use-when="(shedId!=null)&amp;&amp;(shedCode!=null)" id-name="shedId" name="shedId" title="Shed Name"><display default-value="${shedId}"  description="${shedName}"/></field>  
+       <field name="facilityId" title="unit Code" id-name="facilityId" event="onchange" action="getTimePeriodsByUnit($('[name=shedId]').val(),$('[name=facilityId]').val());" >
+	       	<drop-down allow-empty="false">
+	       		<list-options key-name="facilityId"  list-name="unitsList" description="${facilityName}"/>
+	       	</drop-down>
+       </field>
+	   <field name="customTimePeriodId" id-name="customTimePeriodId">
+			<drop-down  allow-empty="false" no-current-selected-key="${customTimePeriodId}">
+			    <list-options key-name="customTimePeriodId" list-name="timePeriodList" description="${groovy:org.ofbiz.base.util.UtilDateTime.toDateString(fromDate, &quot;MMMdd&quot;);}-${groovy:org.ofbiz.base.util.UtilDateTime.toDateString(thruDate, &quot;MMMdd YYYY&quot;);}"/>
+			</drop-down>
+	   </field>
+	   <field name="submitButton" title="Create"><submit button-type="button"/></field>
+    </form>     
+   <form name="ListTransportCommission" odd-row-style="alternate-row" header-row-style="header-row" type="list" paginate-target="transportCommission"
+    	default-table-style="basic-table hover-bar" separate-columns="true" list-name="transportCommissionBillingList" >		
+		<field name="facilityId" title="Transporter Name"><display-entity entity-name="Facility" key-field-name="facilityId" description="${facilityName}[${facilityCode}]"></display-entity></field>
+		<field name="customTimePeriodId" title="Time Period"><display-entity entity-name="CustomTimePeriod" key-field-name="customTimePeriodId" description="${groovy:org.ofbiz.base.util.UtilDateTime.toDateString(fromDate, &quot;MMMdd&quot;);}-${groovy:org.ofbiz.base.util.UtilDateTime.toDateString(thruDate, &quot;MMMdd yyyy&quot;);}"/></field>
+		<!-- <field name="billingTypeId" title="billing Type"><display/></field> -->
+		<field name="statusId" title="Status"><display-entity entity-name="StatusItem" description="${description}"/></field>
+		<field name="cancelTransportCommission" widget-style="buttontext" use-when="(&quot;${statusId}&quot;==&quot;GENERATED&quot;)&amp;&amp;(${groovy:((security.hasEntityPermission(&quot;PROCUREMENT&quot;, &quot;_BILLINC&quot;, session))) } )" title="${uiLabelMap.CommonCancel}">
+            <hyperlink target="cancelTransportCommission" description="${uiLabelMap.CommonCancel}">
+                <parameter param-name="periodBillingId"  from-field="periodBillingId" />                                                               
+            </hyperlink>
+        </field> 
+    </form> 
+    <form name="FindShedMaintenance" odd-row-style="alternate-row" header-row-style="header-row" type="single"  default-table-style="basic-table hover-bar" separate-columns="true" >    
+       <field name="shedId" id-name="shedId" title="Shed Name"  event="onChange" action="javascript:getTimePeriodsByUnit(this.value)" >
+            <drop-down allow-empty="true">
+                <entity-options description="${description}" entity-name="Facility" key-field-name="facilityId">
+                	<entity-constraint name="facilityTypeId" operator="equals" value="SHED"/>
+                </entity-options>
+            </drop-down>
+       </field>
+       <field use-when="(shedId!=null)&amp;&amp;(shedCode!=null)" id-name="shedId" name="shedId" title="Shed Name"><display default-value="${shedId}"  description="${shedName}"/></field>
+	   <field name="customTimePeriodId" id-name="customTimePeriodId">
+			<drop-down  allow-empty="false" no-current-selected-key="${customTimePeriodId}">
+			    <list-options key-name="customTimePeriodId" list-name="timePeriodList" description="${groovy:org.ofbiz.base.util.UtilDateTime.toDateString(fromDate, &quot;MMMdd&quot;);}-${groovy:org.ofbiz.base.util.UtilDateTime.toDateString(thruDate, &quot;MMMdd YYYY&quot;);}"/>
+			</drop-down>
+	   </field>
+	   <field name="submitButton" title="Find"><submit button-type="button"/></field>
+    </form>  
+    <form name="CreateShedMaintenanceInvoice" odd-row-style="alternate-row" header-row-style="header-row" type="single"  default-table-style="basic-table hover-bar" separate-columns="true"  target="createShedMaintenanceAmtInvoice">    
+       <field name="shedId" id-name="shedId" title="Shed Name"  event="onChange" action="javascript:getTimePeriodsByUnit(this.value)" >
+            <drop-down allow-empty="true">
+                <entity-options description="${description}" entity-name="Facility" key-field-name="facilityId">
+                	<entity-constraint name="facilityTypeId" operator="equals" value="SHED"/>
+                </entity-options>
+            </drop-down>
+       </field>
+       <field use-when="(shedId!=null)&amp;&amp;(shedCode!=null)" id-name="shedId" name="shedId" title="Shed Name"><display default-value="${shedId}"  description="${shedName}"/></field>
+	   <field name="customTimePeriodId" id-name="customTimePeriodId">
+			<drop-down  allow-empty="false" no-current-selected-key="${customTimePeriodId}">
+			    <list-options key-name="customTimePeriodId" list-name="timePeriodList" description="${groovy:org.ofbiz.base.util.UtilDateTime.toDateString(fromDate, &quot;MMMdd&quot;);}-${groovy:org.ofbiz.base.util.UtilDateTime.toDateString(thruDate, &quot;MMMdd YYYY&quot;);}"/>
+			</drop-down>
+	   </field>
+	   <field name="amount"><text size="15"/></field>
+	   <field name="submitButton" title="Create"><submit button-type="button"/></field>
+    </form>
+    <form name="ListShedMaintenance" odd-row-style="alternate-row" header-row-style="header-row" type="list" paginate-target="ShedMaintenance"
+    	default-table-style="basic-table hover-bar" separate-columns="true" list-name="shedMaintenanceInvoiceList" >		
+		<field name="facilityId" title="Shed"><display-entity entity-name="Facility" key-field-name="facilityId" description="${facilityName}[${facilityCode}]"></display-entity></field>
+		<field name="fromDate" title="from Date"><display description="${groovy:org.ofbiz.base.util.UtilDateTime.toDateString(fromDate, &quot;dd/MM/yyyy&quot;);}"></display></field>
+		<field name="thruDate" title="thru Date"><display description="${groovy:org.ofbiz.base.util.UtilDateTime.toDateString(thruDate, &quot;dd/MM/yyyy&quot;);}"/></field>
+		<field name="grossAmt" title="Amount"><display/></field>
+		<field name="cancelLink" title="${uiLabelMap.CommonEmptyHeader}" widget-style="smallSubmit">
+            <hyperlink target="cancelShedMaintenanceInvoice" also-hidden="false" description="${uiLabelMap.CommonCancel}" target-type="intra-app">
+                <parameter param-name="facilityId"/>
+                <parameter param-name="periodBillingId"/>
+                <parameter param-name="fromDate"/>
+                <parameter param-name="thruDate"/>
+            </hyperlink>
+        </field>
+    </form> 
    <form name="ListRecentProcurementEntry" odd-row-style="alternate-row" header-row-style="header-row" type="list" paginate-target="FindProcurementEntry"
     	default-table-style="basic-table hover-bar" separate-columns="true" list-name="procurementEntryList" >		
 		<field name="shedCode" title="Shed"><display/></field>
@@ -226,12 +363,11 @@ under the License.
                 <parameter param-name="orderItemSeqId" />
             </hyperlink>
         </field>
-		<field name="delete" title="${uiLabelMap.CommonDelete}" widget-style="buttontext">
-        	 <hyperlink target="deleteProcurementEntry" also-hidden="false" description="${uiLabelMap.CommonDelete}" target-type="intra-app">
-                <parameter param-name="orderId" />
-                <parameter param-name="orderItemSeqId" />
-            </hyperlink>
-        </field> 
+		<field name="delete" title="${uiLabelMap.CommonDelete}" widget-style="buttontext" event="onclick" action="javascript:deleteProcurementEntry(this,'${orderId}','${orderItemSeqId}');">
+            <hyperlink target="javascript:deleteProcurementEntry(this,'${orderId}','${orderItemSeqId}');" description="delete" target-type="plain">
+                                                                    
+           </hyperlink>
+        </field>        
     </form>  
      <form name="ListProcurementEntry" odd-row-style="alternate-row" header-row-style="header-row" type="list" paginate-target="FindProcurementEntry"
     	default-table-style="basic-table hover-bar" separate-columns="true" list-name="listIt"  extends="ListRecentProcurementEntry">
@@ -252,7 +388,7 @@ under the License.
 			<set field="shedCode" value="${groovy: return centerDetails.get(&quot;shedFacility&quot;).get(&quot;facilityCode&quot;);}"/>
 			<set field="unitCode" value="${groovy: return centerDetails.get(&quot;unitFacility&quot;).get(&quot;facilityCode&quot;);}"/>
 			<set field="sTotalAmount" value="${groovy:  if ((sQuantityLtrs != null) &amp;&amp;  (sUnitPrice != null)) return (sQuantityLtrs)*(sUnitPrice);}"/>
-			<set field="totalPremium" value="${groovy:  if (unitPremiumPrice != null)  return (quantity)*(unitPremiumPrice); }"/>
+			<set field="totalPremium" value="${groovy:  if (unitPremiumPrice != null)  return   new BigDecimal((quantity)*(unitPremiumPrice)).setScale(2,BigDecimal.ROUND_HALF_UP);}"/>
 			<set field="totalAmount" value="${groovy:    return ((quantity)*(unitPrice))-((quantity)*(unitPremiumPrice)); }"/>
 		</row-actions>
     </form> 
@@ -280,6 +416,23 @@ under the License.
         <field name="cQuantityLtrs"><display/></field>
         <field name="createdDate"><display/></field>
         <field name="createdByUserLoginId"><display/></field>        
+     </form>     
+      <form name="ShedAgentsCsv" type="list" list-name="centerMasterList" paginate="false"
+    		odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
+		<field name="UCODE" title="UNIT"><display/></field>				
+		<field name="RNO" title="RNO"><display/></field>
+		<field name="CCODE" title="CENTERCODE"><display/></field>
+		<field name="CENTERID" title="CENTER ID"><display/></field>
+		<field name="CNAME" title="CNAME"><display /></field>
+		<field name="MCCTYP" title="MCCTYP"><display/></field>
+		<field name="PNAME" title="PNAME"><display /></field>
+		<field name="COMN" title="COMN"><display/></field>
+		<field name="CART" title="CART"><display/></field>
+		<field name="GBCODE" title="GBCODE"><display/></field>
+		<field name="BCODE" title="BCODE"><display/></field>		
+		<field name="BANO" title="BANO"><display default-value="0"/></field>
+		<field name="INCENTIVE" title="INCENTIVE"><display/></field>
+		<field name="HABCODE" title="HABCODE"><display/></field>
      </form>
     <form name="PeriodBilling" odd-row-style="alternate-row" header-row-style="header-row" type="single"
     	default-table-style="basic-table hover-bar" separate-columns="true" target="populateProcurementPeriodBilling">    
@@ -292,7 +445,7 @@ under the License.
          </field>
 		  <field name="customTimePeriodId" required-field="true">
 			<drop-down >
-                <entity-options entity-name="CustomTimePeriod" key-field-name="customTimePeriodId" description="${periodName}" filter-by-date="false">
+                <entity-options entity-name="CustomTimePeriod" key-field-name="customTimePeriodId" description="${groovy:org.ofbiz.base.util.UtilDateTime.toDateString(fromDate, &quot;MMMdd&quot;);}-${groovy:org.ofbiz.base.util.UtilDateTime.toDateString(thruDate, &quot;MMMdd yyyy&quot;);}" filter-by-date="false">
                     <entity-constraint name="periodTypeId" operator="equals" value="PROC_BILL_MONTH"/>
                     <entity-order-by field-name="-fromDate"/>
             	</entity-options>
@@ -303,14 +456,14 @@ under the License.
             <submit button-type="button"/>
        </field>            
     </form>
-     <form name="ListProcurementBilling" list-name="listProcurementBilling" title="" type="list" 
+     <!-- <form name="ListProcurementBilling" list-name="listProcurementBilling" title="" type="list" 
         odd-row-style="alternate-row" default-table-style="basic-table hover-bar">
         <field name="periodBillingId"><hidden/></field> 
         <field name="facilityId" title="${uiLabelMap.Facility}">
           <display-entity entity-name="Facility" key-field-name="facilityId" description="${facilityName}(${facilityCode})"/>
         </field>      
         <field name="customTimePeriodId" title="${uiLabelMap.TimePeriod}">
-          <display-entity entity-name="CustomTimePeriod" key-field-name="customTimePeriodId" description="${periodName}"/>
+          <display-entity entity-name="CustomTimePeriod" key-field-name="customTimePeriodId" description="${groovy:org.ofbiz.base.util.UtilDateTime.toDateString(fromDate, &quot;MMMdd&quot;);}-${groovy:org.ofbiz.base.util.UtilDateTime.toDateString(thruDate, &quot;MMMdd yyyy&quot;);}"/>
         </field>
         <field name="statusId" title="Status"><display-entity entity-name="StatusItem" description="${description}"/></field>        
         <field name="cancelProcessBilling" widget-style="buttontext" use-when="(&quot;${statusId}&quot;==&quot;GENERATED&quot;)&amp;&amp;(${groovy:((security.hasEntityPermission(&quot;FACILITY&quot;, &quot;_TRUCKSHEETCANCEL&quot;, session))) } )" title="${uiLabelMap.CommonCancel}">
@@ -318,26 +471,93 @@ under the License.
                 <parameter param-name="periodBillingId"  from-field="periodBillingId" />                                                               
             </hyperlink>
         </field> 
-    </form>
+    </form> -->
+    <form name="FindProcurementBilling" odd-row-style="alternate-row" header-row-style="header-row" type="single"  default-table-style="basic-table hover-bar" separate-columns="true" target="ProcurementBilling">    
+	   <actions>
+	   		<set field="unitMapListSize" value="${groovy:  if (unitMapsList.size()!=0) return 1;}" default-value="0"/>
+	   </actions>
+	   <field name="noConditionFind"><hidden value="Y"/><!-- if this isn't there then with all fields empty no query will be done --></field>
+       <field name="hideSearch"><hidden value="Y"/></field>       	
+       <field name="shedId" id-name="shedId" title="Shed Name" event="onchange" action="javascript:setOutPutEntryShedUnitsDropDown(this);">
+            <drop-down allow-empty="true">
+                <entity-options description="${description}" entity-name="Facility" key-field-name="facilityId">
+                	<entity-constraint name="facilityTypeId" operator="equals" value="SHED"/>
+                </entity-options>
+            </drop-down>
+       </field>
+       <field use-when="(shedId!=null)&amp;&amp;(shedCode!=null)" id-name="shedId" name="shedId" title="Shed Name"><display default-value="${shedId}"  description="${shedName}"/></field>  
+       <field name="facilityId" title="unit Code" id-name="facilityId" event="onchange" action="getTimePeriodsByUnit($('[name=shedId]').val(),$('[name=facilityId]').val());" >
+	       	<drop-down allow-empty="true">
+	       		<list-options key-name="facilityId"  list-name="unitsList" description="${facilityCode} ${facilityName}"/>
+	       	</drop-down>
+       </field>
+       <field use-when="unitCode!=null" id-name="facilityId" name="facilityId" title="Unit Code" tooltip="${unitName}"><display default-value="${unitId}" description="${unitCode}"/> </field>       
+	 	<field use-when="(${unitMapListSize}!=0)" name="facilityId" title="Unit Code">
+		 	<drop-down>
+		 		<list-options key-name="facilityCode" list-name="unitMapsList" description="${facilityCode} ${facilityName}"/>
+		 	</drop-down>
+		 </field>
+	   <field name="customTimePeriodId" id-name="customTimePeriodId">
+			<drop-down  allow-empty="true">
+			    <list-options key-name="customTimePeriodId" list-name="timePeriodList" description="${groovy:org.ofbiz.base.util.UtilDateTime.toDateString(fromDate, &quot;MMMdd&quot;);}-${groovy:org.ofbiz.base.util.UtilDateTime.toDateString(thruDate, &quot;MMMdd YYYY&quot;);}"/>
+			</drop-down>
+	   </field>
+	   <field name="submitButton" title="Find"><submit button-type="button"/></field>
+    </form>   
+    <form name="ProcurementBillingList" type="list" list-name="listIt" odd-row-style="alternate-row" default-table-style="basic-table hover-bar"  paginate="false">
+        <actions>
+           <script location="component://procurement/webapp/procurement/WEB-INF/actions/facility/ProcurementBillingperformfind.groovy"/>
+            <service service-name="performFind" result-map="result" result-map-list="listIt">
+                <field-map field-name="inputFields" from-field="parameters"/>
+                <field-map field-name="entityName" value="BillingAndFacilityCustomTimePeriod"/>
+                <field-map field-name="orderBy" value="-createdDate"/>
+            </service>
+        </actions>
+        <row-actions>
+            <set field="isClosed" from-field="isClosed" type="String"/>
+        </row-actions>
+        <field name="facilityId" title="${uiLabelMap.Facility}">
+          <display-entity entity-name="Facility" key-field-name="facilityId" description="${facilityName}(${facilityCode})"/>
+        </field> 
+        <field name="periodBillingId"><hidden/></field> 
+        <field name="customTimePeriodId" title="CustomTimePeriodId"><display-entity entity-name="CustomTimePeriod" description="${groovy:org.ofbiz.base.util.UtilDateTime.toDateString(fromDate, &quot;MMMdd&quot;);}-${groovy:org.ofbiz.base.util.UtilDateTime.toDateString(thruDate, &quot;MMMdd yyyy&quot;);}" /></field>
+        <field name="statusId" title="Status"><display-entity entity-name="StatusItem" description="${description}"/></field>  
+        <field name="cancelProcessBilling" widget-style="buttontext" use-when="(&quot;${statusId}&quot;==&quot;GENERATED&quot;)&amp;&amp;(${groovy:((security.hasEntityPermission(&quot;PROCUREMENT&quot;, &quot;_BILLINC&quot;, session)))}) &amp;&amp; (&quot;${isClosed}&quot;!=&quot;Y&quot;)" title="${uiLabelMap.CommonCancel}">
+            <hyperlink target="cancelProcessPeriodBilling" description="${uiLabelMap.CommonCancel}">
+                <parameter param-name="periodBillingId"  from-field="periodBillingId" />                                                               
+            </hyperlink>
+        </field>      
+    </form>   
      <form name="FindProcurementBillingValidation" odd-row-style="alternate-row" header-row-style="header-row" type="single" default-table-style="basic-table hover-bar" target="FindProcurementBillingValidation">    	
-    	<field name="noConditionFind"><hidden value="Y"/><!-- if this isn't there then with all fields empty no query will be done --></field>
+    	 <actions>
+    	 	<set field="unitMapListSize" value="${groovy:  if (unitMapsList.size()!=0) return 1;}" default-value="0"/>
+    	 </actions>
+    	 <field name="noConditionFind"><hidden value="Y"/><!-- if this isn't there then with all fields empty no query will be done --></field>
     	 <field name="hideSearch"><hidden value="Y"/></field>    	    	
-    	 <field name="shedId" title="Shed Name">
-            <drop-down allow-empty="false">
+    	 <field name="shedId" title="Shed Name" event="onchange" action="javascript:resetUnitCodeAndTimePeriod(this);" id-name="shedId">
+            <drop-down allow-empty="true">
                 <entity-options description="${description}" entity-name="Facility" key-field-name="facilityId">
                 	<entity-constraint name="facilityTypeId" operator="equals" value="SHED"/>
                 </entity-options>
             </drop-down>
          </field>
-         <field use-when="shedId!=null" name="shedId" title="Shed Name"><display default-value="${shedId}"  description="${shedName}"/></field>
+         <field use-when="shedId!=null" name="shedId" title="Shed Name" id-name="shedId"><display default-value="${shedId}"  description="${shedName}"/></field>
          <field name="unitCode" title="Unit"><text size="15"></text></field>
-         <field use-when="unitCode!=null" name="unitCode" title="Unit" tooltip="${unitName}"><display default-value="${unitCode}" description="${unitCode}"/> </field>
+         <field use-when="unitCode!=null" name="unitCode" title="Unit" tooltip="${unitName}"><display default-value="${unitCode}" description="${unitCode}"/> </field> 
+          <field use-when="(${unitMapListSize}!=0)" name="unitCode" title="unit">
+		 	<drop-down>
+		 		<list-options key-name="facilityCode" list-name="unitMapsList" description="${facilityCode} ${facilityName}"/>
+		 	</drop-down>
+		 </field>
           <field name="customTimePeriodId" required-field="true">
-			<drop-down >
-                <entity-options entity-name="CustomTimePeriod" key-field-name="customTimePeriodId" description="${periodName}" filter-by-date="false">
+			<!-- <drop-down >
+                <entity-options entity-name="CustomTimePeriod" key-field-name="customTimePeriodId" description="${groovy:org.ofbiz.base.util.UtilDateTime.toDateString(fromDate, &quot;MMMdd&quot;);}-${groovy:org.ofbiz.base.util.UtilDateTime.toDateString(thruDate, &quot;MMMdd yyyy&quot;);}" filter-by-date="false">
                     <entity-constraint name="periodTypeId" operator="equals" value="PROC_BILL_MONTH"/>
                      <entity-order-by field-name="-fromDate"/>
             	</entity-options>
+			</drop-down> -->
+			<drop-down allow-empty="true" current="selected">
+                <list-options key-name="customTimePeriodId" list-name="timePeriodList" description="${groovy:org.ofbiz.base.util.UtilDateTime.toDateString(fromDate, &quot;MMMdd&quot;);}-${groovy:org.ofbiz.base.util.UtilDateTime.toDateString(thruDate, &quot;MMMdd YYYY&quot;);}"/>
 			</drop-down>
 		</field>
 		 <field name="statusId">
@@ -349,15 +569,14 @@ under the License.
             <submit button-type="button"/>
          </field>
     </form> 
-     <form name="ListOutLierBillingValidation" list-name="outLierFinalList" title="" type="list"  odd-row-style="alternate-row" default-table-style="basic-table hover-bar">
+     <form name="ListOutLierBillingValidation" list-name="outLierFinalList" title="" type="list"  odd-row-style="alternate-row" default-table-style="basic-table hover-bar" paginate-target="FindProcurementBillingValidation">
 	    <row-actions>
 			<set field="unitDetails" value="${groovy:import org.ofbiz.base.util.*; return (in.vasista.vbiz.procurement.ProcurementNetworkServices.getCenterDtails(dispatcher.getDispatchContext() ,UtilMisc.toMap(&quot;centerId&quot;,originFacilityId))).get(&quot;unitFacility&quot;);}" type="Object"/>
-			<set  field="unitCode" value="${groovy: unitDetails.get(&quot;facilityCode&quot;)}"/>
-			<set  field="shedId" value="${groovy: unitDetails.get(&quot;parentFacilityId&quot;)}"/>
+			<set  field="unitCode" value="${groovy: unitDetails.get(&quot;facilityCode&quot;)}"/>			
 		</row-actions>
 		<field name="validationTypeId"><hidden/></field>
-		<field name="shedId" title="Shed" sort-field="true"><display></display></field>
-		<field name="unitCode" title="Unit" sort-field="true"><display></display></field>
+		<field name="shedId" title="Shed" ><display-entity entity-name="Facility" key-field-name="facilityId" description="${parentFacilityId}"></display-entity></field>
+		<field name="unitCode" title="Unit"><display></display></field>
         <field name="facilityCode" title="center" sort-field="true"><display/></field>
         <field name="estimatedDeliveryDate" title="Proc Date" sort-field="true"><display description="${groovy:org.ofbiz.base.util.UtilDateTime.toDateString(estimatedDeliveryDate, &quot;dd/MM/yyyy&quot;);}"/></field>
        	<field name="supplyTypeEnumId" title="Time"><display/></field>
@@ -370,36 +589,35 @@ under the License.
         <field name="cQuantityLtrs" title="CQty" separate-column="true"><display></display></field>
         <field name="ptcQuantity" title="ptcQty" separate-column="true"><display></display></field>
         <field name="statusId" title="Status" separate-column="true"><display-entity entity-name="StatusItem" description="${description}"/></field>
-        <field use-when="&quot;${statusId}&quot;==&quot;ITEM_CREATED&quot;" name="approveValidation" widget-style="buttontext" title="Approve">
-            <hyperlink target="approveValidation" description="Approve">
-	            <parameter param-name="shedId"  from-field="shedId" />
-	           	<parameter param-name="customTimePeriodId"  from-field="customTimePeriodId" />
-	           	<parameter param-name="validationTypeId"  from-field="validationTypeId" /> 
-	            <parameter param-name="sequenceNum"  from-field="sequenceNum" />
-                <parameter param-name="statusId"  value="ITEM_APPROVED" />                                                               
+        <field name="approveValidation" use-when="&quot;${statusId}&quot;==&quot;ITEM_CREATED&quot;"  widget-style="buttontext" title="Approve" id-name="approveButton"
+        		 event="onclick" action="javascript:approveValidationEntry(this,'${shedId}',${customTimePeriodId},'${validationTypeId}','${sequenceNum}');">
+            <hyperlink target="javascript:approveValidationEntry(this,'${shedId}',${customTimePeriodId},'${validationTypeId}','${sequenceNum}');" description="Approve" target-type="plain">
+	                                                                    
             </hyperlink>
         </field>
         <field use-when="&quot;${statusId}&quot;==&quot;ITEM_CREATED&quot;" name="edit" title="${uiLabelMap.CommonEdit}" widget-style="buttontext">
         	 <hyperlink target="EditSnfFatValidation" also-hidden="false" description="${uiLabelMap.CommonEdit}" target-type="intra-app">
-                <parameter param-name="orderId" />
+               <parameter param-name="orderId" />
                 <parameter param-name="orderItemSeqId" />
-               	<parameter param-name="shedId"  from-field="shedId" />
-	           	<parameter param-name="customTimePeriodId"  from-field="customTimePeriodId" />
-	           	<parameter param-name="validationTypeId"  from-field="validationTypeId" /> 
+               	<parameter param-name="unitId"  value="${shedId}"/>
+	           	<parameter param-name="customTimePeriodId"  from-field="parameters.customTimePeriodId"/>
+	           	<parameter param-name="validationTypeId"  from-field="validationTypeId" />
+	           	<parameter param-name="unitCode"  from-field="unitCode" /> 
 	            <parameter param-name="sequenceNum"  from-field="sequenceNum" />
                 <parameter param-name="statusId"  value="ITEM_APPROVED" />
             </hyperlink>
         </field>     
     </form>
     <form name="ListNegativeAmtValidation" list-name="negativeAmtList" title="" type="list" 
-        odd-row-style="alternate-row" default-table-style="basic-table hover-bar">
+        odd-row-style="alternate-row" default-table-style="basic-table hover-bar" paginate-target="FindProcurementBillingValidation">
         <row-actions>
 			<set field="unitDetails" value="${groovy:import org.ofbiz.base.util.*; return (in.vasista.vbiz.procurement.ProcurementNetworkServices.getCenterDtails(dispatcher.getDispatchContext() ,UtilMisc.toMap(&quot;centerId&quot;,centerId))).get(&quot;unitFacility&quot;);}" type="Object"/>
 			<set  field="unitCode" value="${groovy: unitDetails.get(&quot;facilityCode&quot;)}"/>
+			<set  field="shedFacilityId" value="${groovy: unitDetails.get(&quot;parentFacilityId&quot;)}"/>
 		</row-actions>
-        <field name="shedId" title="Shed Name"><display-entity entity-name="Facility" key-field-name="facilityId" description="${facilityId}"></display-entity></field>       
+        <field name="shedFacilityId" title="Shed Name"><display-entity entity-name="Facility" key-field-name="facilityId" description="${facilityId}"></display-entity></field>       
         <field name="customTimePeriodId" title="${uiLabelMap.TimePeriod}">
-          <display-entity entity-name="CustomTimePeriod" key-field-name="customTimePeriodId" description="${periodName}"/>
+          <display-entity entity-name="CustomTimePeriod" key-field-name="customTimePeriodId" description="${groovy:org.ofbiz.base.util.UtilDateTime.toDateString(fromDate, &quot;MMMdd&quot;);}-${groovy:org.ofbiz.base.util.UtilDateTime.toDateString(thruDate, &quot;MMMdd yyyy&quot;);}"/>
         </field>
         <field name="unitCode" title="Unit" sort-field="true"><display></display></field>
         <field name="centerId" title="center" sort-field="true"><display-entity entity-name="Facility" key-field-name="facilityId" description="${facilityCode}"></display-entity></field>
@@ -407,13 +625,9 @@ under the License.
           <display-entity entity-name="Enumeration" key-field-name="enumId" description="${description}"/>
         </field>
         <field name="statusId" title="Status"><display-entity entity-name="StatusItem" description="${description}"/></field>
-		<field use-when="&quot;${statusId}&quot;==&quot;ITEM_CREATED&quot;" name="approveValidation" widget-style="buttontext" title="Approve">
-            <hyperlink target="approveValidation" description="Approve">
-	            <parameter param-name="shedId"  from-field="shedId" />
-	           	<parameter param-name="customTimePeriodId"  from-field="customTimePeriodId" />
-	           	<parameter param-name="validationTypeId"  from-field="validationTypeId" /> 
-	            <parameter param-name="sequenceNum"  from-field="sequenceNum" />
-                <parameter param-name="statusId"  value="ITEM_APPROVED" />                                                               
+		<field name="approveValidation" use-when="&quot;${statusId}&quot;==&quot;ITEM_CREATED&quot;"  widget-style="buttontext" title="Approve" id-name="approveButton"
+        		 event="onclick" action="javascript:approveValidationEntry(this,'${shedId}',${customTimePeriodId},'${validationTypeId}','${sequenceNum}');">
+            <hyperlink target="javascript:approveValidationEntry(this,'${shedId}',${customTimePeriodId},'${validationTypeId}','${sequenceNum}');" description="Approve" target-type="plain">
             </hyperlink>
         </field>  
         <field use-when="&quot;${statusId}&quot;==&quot;ITEM_CREATED&quot;" name="Edit" title-style="buttontext"  separate-column="true" widget-style="button">
@@ -427,14 +641,14 @@ under the License.
           </hyperlink>
        </field>     
     </form>
-     <form name="ListQtySnfFatValidation" list-name="qtySnfFinalList" title="" type="list" odd-row-style="alternate-row" default-table-style="basic-table hover-bar">
+     <form name="ListQtySnfFatValidation" list-name="qtySnfFinalList" title="" type="list" odd-row-style="alternate-row" default-table-style="basic-table hover-bar" paginate-target="FindProcurementBillingValidation">
         <row-actions>
 			<set field="unitDetails" value="${groovy:import org.ofbiz.base.util.*; return (in.vasista.vbiz.procurement.ProcurementNetworkServices.getCenterDtails(dispatcher.getDispatchContext() ,UtilMisc.toMap(&quot;centerId&quot;,originFacilityId))).get(&quot;unitFacility&quot;);}" type="Object"/>
 			<set  field="unitCode" value="${groovy: unitDetails.get(&quot;facilityCode&quot;)}"/>
-			<set  field="shedId" value="${groovy: unitDetails.get(&quot;parentFacilityId&quot;)}"/>
+			<!-- <set  field="shedId" value="${groovy: unitDetails.get(&quot;parentFacilityId&quot;)}"/> -->
 		</row-actions>
 		<field name="validationTypeId"><hidden/></field>
-		<field name="shedId" title="Shed" sort-field="true"><display></display></field>
+		<field name="shedId" title="Shed" ><display-entity entity-name="Facility" key-field-name="facilityId" description="${parentFacilityId}"></display-entity></field>
 		<field name="unitCode" title="Unit" sort-field="true"><display></display></field>
         <field name="facilityCode" title="center" sort-field="true"><display/></field>
         <field name="estimatedDeliveryDate" title="Proc Date" sort-field="true"><display description="${groovy:org.ofbiz.base.util.UtilDateTime.toDateString(estimatedDeliveryDate, &quot;dd/MM/yyyy&quot;);}"/></field>
@@ -448,22 +662,59 @@ under the License.
         <field name="cQuantityLtrs" title="CQty" separate-column="true"><display></display></field>
         <field name="ptcQuantity" title="ptcQty" separate-column="true"><display></display></field>
         <field name="statusId" title="Status"><display-entity entity-name="StatusItem" description="${description}"/></field>
-        <field use-when="&quot;${statusId}&quot;==&quot;ITEM_CREATED&quot;" name="approveValidation" widget-style="buttontext" title="Approve">
-            <hyperlink target="approveValidation" description="Approve">
-	            <parameter param-name="shedId"  from-field="shedId" />
-	           	<parameter param-name="customTimePeriodId"  from-field="customTimePeriodId" />
-	           	<parameter param-name="validationTypeId"  from-field="validationTypeId" /> 
-	            <parameter param-name="sequenceNum"  from-field="sequenceNum" />
-                <parameter param-name="statusId"  value="ITEM_APPROVED" />                                                               
+        <field name="approveValidation" use-when="&quot;${statusId}&quot;==&quot;ITEM_CREATED&quot;"  widget-style="buttontext" title="Approve" id-name="approveButton"
+        		 event="onclick" action="javascript:approveValidationEntry(this,'${shedId}',${customTimePeriodId},'${validationTypeId}','${sequenceNum}');">
+            <hyperlink target="javascript:approveValidationEntry(this,'${shedId}',${customTimePeriodId},'${validationTypeId}','${sequenceNum}');" description="Approve" target-type="plain">
             </hyperlink>
         </field>
         <field use-when="&quot;${statusId}&quot;==&quot;ITEM_CREATED&quot;" name="edit" title="${uiLabelMap.CommonEdit}" widget-style="buttontext">
         	 <hyperlink target="EditSnfFatValidation" also-hidden="false" description="${uiLabelMap.CommonEdit}" target-type="intra-app">
-                <parameter param-name="orderId" />
+               <parameter param-name="orderId" />
                 <parameter param-name="orderItemSeqId" />
-               	<parameter param-name="shedId"  from-field="shedId" />
-	           	<parameter param-name="customTimePeriodId"  from-field="customTimePeriodId" />
-	           	<parameter param-name="validationTypeId"  from-field="validationTypeId" /> 
+               	<parameter param-name="unitId"  value="${shedId}"/>
+	           	<parameter param-name="customTimePeriodId"  from-field="parameters.customTimePeriodId"/>
+	           	<parameter param-name="validationTypeId"  from-field="validationTypeId" />
+	           	<parameter param-name="unitCode"  from-field="unitCode" /> 
+	            <parameter param-name="sequenceNum"  from-field="sequenceNum" />
+                <parameter param-name="statusId"  value="ITEM_APPROVED" />
+            </hyperlink>
+        </field>    
+    </form>
+    <form name="ListCheckCodeValidation" list-name="checkCodeFinalList" title="" type="list" odd-row-style="alternate-row" default-table-style="basic-table hover-bar" paginate-target="FindProcurementBillingValidation">
+        <row-actions>
+			<set field="unitDetails" value="${groovy:import org.ofbiz.base.util.*; return (in.vasista.vbiz.procurement.ProcurementNetworkServices.getCenterDtails(dispatcher.getDispatchContext() ,UtilMisc.toMap(&quot;centerId&quot;,originFacilityId))).get(&quot;unitFacility&quot;);}" type="Object"/>
+			<set  field="unitCode" value="${groovy: unitDetails.get(&quot;facilityCode&quot;)}"/>
+			<!-- <set  field="shedId" value="${groovy: unitDetails.get(&quot;parentFacilityId&quot;)}"/> -->
+		</row-actions>
+		<field name="validationTypeId"><hidden/></field>
+		<field name="shedId" title="Shed" sort-field="true"><display-entity entity-name="Facility" key-field-name="facilityId" description="${parentFacilityId}"></display-entity></field>
+		<field name="unitCode" title="Unit" sort-field="true"><display></display></field>
+        <field name="facilityCode" title="center" sort-field="true"><display/></field>
+        <field name="estimatedDeliveryDate" title="Proc Date" sort-field="true"><display description="${groovy:org.ofbiz.base.util.UtilDateTime.toDateString(estimatedDeliveryDate, &quot;dd/MM/yyyy&quot;);}"/></field>
+       	<field name="supplyTypeEnumId" title="Time"><display/></field>
+        <field name="productId" title="Milk" separate-column="true"><display-entity entity-name="Product" key-field-name="productId" description="${brandName}"></display-entity></field>
+        <field name="quantityKgs" title="Quantity" separate-column="true"><display></display></field>
+        <field name="fat" title="Fat" separate-column="true"><display></display></field>
+        <field name="snf" title="Snf" separate-column="true"><display></display></field>
+        <field name="sQuantityLtrs" title="SQty" separate-column="true"><display></display></field>
+        <field name="sFat" title="SFat" separate-column="true"><display></display></field>
+        <field name="cQuantityLtrs" title="CQty" separate-column="true"><display></display></field>
+        <field name="ptcQuantity" title="ptcQty" separate-column="true"><display></display></field>
+        <field name="statusId" title="Status"><display-entity entity-name="StatusItem" description="${description}"/></field>
+        <field name="approveValidation" use-when="&quot;${statusId}&quot;==&quot;ITEM_CREATED&quot;"  widget-style="buttontext" title="Approve" id-name="approveButton"
+        		 event="onclick" action="javascript:approveValidationEntry(this,'${shedId}',${customTimePeriodId},'${validationTypeId}','${sequenceNum}');">
+            <hyperlink target="javascript:approveValidationEntry(this,'${shedId}',${customTimePeriodId},'${validationTypeId}','${sequenceNum}');" description="Approve" target-type="plain">
+	                                                                    
+            </hyperlink>
+        </field>
+       <field use-when="&quot;${statusId}&quot;==&quot;ITEM_CREATED&quot;" name="edit" title="${uiLabelMap.CommonEdit}" widget-style="buttontext">
+        	 <hyperlink target="EditSnfFatValidation" also-hidden="false" description="${uiLabelMap.CommonEdit}" target-type="intra-app">
+               <parameter param-name="orderId" />
+                <parameter param-name="orderItemSeqId" />
+               	<parameter param-name="unitId"  value="${shedId}"/>
+	           	<parameter param-name="customTimePeriodId"  from-field="parameters.customTimePeriodId"/>
+	           	<parameter param-name="validationTypeId"  from-field="validationTypeId" />
+	           	<parameter param-name="unitCode"  from-field="unitCode" /> 
 	            <parameter param-name="sequenceNum"  from-field="sequenceNum" />
                 <parameter param-name="statusId"  value="ITEM_APPROVED" />
             </hyperlink>
@@ -481,9 +732,8 @@ under the License.
 		<field name="sequenceNum"><hidden></hidden></field>
 		<field name="customTimePeriodId"><hidden></hidden></field>
 		<field name="statusId"><hidden></hidden></field>		
-		<!-- <field name="shedCode"><hidden></hidden></field> -->
 		<field name="orderId"><hidden/></field>
-		<field name="orderItemSeqId"><hidden/></field>    
+		<field name="orderItemSeqId"><hidden/></field>  
 		<field name="estimatedDeliveryDate" title="${uiLabelMap.ProcurementDate}"><display/></field>
 		<field name="shedCode" title="shed"><display description="${shedCode}"/></field>    
     	<field name="unitCode" title="Unit"><display description="${unitCode}"/></field>
@@ -531,15 +781,19 @@ under the License.
     	default-table-style="basic-table hover-bar" separate-columns="true" default-map-name="procValidationEntry" paginate-target-anchor="EditProcValidationEntry">
 		<field name="shedId" title="shed"><display/></field>    
     	<field name="customTimePeriodId" title="${uiLabelMap.TimePeriod}">
-          <display-entity entity-name="CustomTimePeriod" key-field-name="customTimePeriodId" description="${periodName}"/>
+          <display-entity entity-name="CustomTimePeriod" key-field-name="customTimePeriodId" description="${groovy:org.ofbiz.base.util.UtilDateTime.toDateString(fromDate, &quot;MMMdd&quot;);}-${groovy:org.ofbiz.base.util.UtilDateTime.toDateString(thruDate, &quot;MMMdd yyyy&quot;);}"/>
         </field>
     	<field name="centerId" title="center Code"><display-entity entity-name="Facility" key-field-name="facilityId" description="${facilityCode}"></display-entity></field>
         <field name="validationTypeId" title="Validation Type"><display/></field> 
         <field name="totalAmt"><display description="${totalAmt}"></display></field>  
     </form>
     <form name="DeductionTypesList" odd-row-style="alternate-row"  type="multi"  use-row-submit="true" target="updateNegativeBillingAmount" list-name="deductionsList">    
+       <row-actions>
+       		<set field="amount" value="${amount*-1}"/>
+       </row-actions>
        <field name="orderAdjustmentId"><hidden></hidden></field>
        <field name="statusId"><hidden></hidden></field>
+       <field name="orderId"><hidden></hidden></field>
        <field name="orderAdjustmentTypeId"><display-entity entity-name="OrderAdjustmentType" key-field-name="orderAdjustmentTypeId" description="${description}"></display-entity></field>
        <field name="amount"><text></text></field>  
        <field name="submitButton" title="submit" widget-style="buttontext"><submit button-type="text-link"/></field>           
@@ -583,6 +837,7 @@ under the License.
 	   <field name="solids" title="Solids :" position="1"><display type="accounting-number" /></field>
 	   <field name="tipDed" title="T I P Ded :" position="2"><display type="accounting-number" /></field>
 	   <field use-when="!&quot;${tenantId}&quot;.equals(&quot;APDDCF-PROC&quot;)" name="price" title="Per Unit Rate :" position="1"><display type="accounting-number" /></field>	   
+       <field use-when="${groovy:((security.hasEntityPermission(&quot;MILKLINE&quot;, &quot;_VIEW&quot;, session))) } " name="lrValue" title="LR Value :" position="2"><display type="accounting-number" /></field>
     </form>
     <form name="FindPriceChart" odd-row-style="alternate-row" header-row-style="header-row" type="single"  default-table-style="basic-table hover-bar" separate-columns="true" target="ProcurementPriceChart">    
       <field name="facilityId" ><lookup target-form-name="ProcurementLookupFacility"/></field>
@@ -594,7 +849,7 @@ under the License.
         	</drop-down>            
        </field>
        <field name="productId">
-       		<drop-down allow-empty="false">
+       		<drop-down allow-empty="true">
        			<list-options key-name="productId" list-name="procurementProductList" description="${description}"/>
        		</drop-down>
        </field>
@@ -621,7 +876,7 @@ under the License.
        <field name="supplyTypeEnumId" title="Purchase Time"><display/></field>
     </form>
     <form name="PriceChartList" odd-row-style="alternate-row" header-row-style="header-row" type="list" list-name="procPriceChartList" default-table-style="basic-table hover-bar" separate-columns="true" target="" paginate-target="ProcurementPriceChart">    
-       <field name="facilityId" title="FaclityId"><display/></field>
+       <field name="facilityId" title="FacilityId"><display/></field>
        <field name="categoryTypeEnum" title="Category Type"><display/></field>
         <field name="priceDate" title="Price Effective Date"><display description="${groovy:org.ofbiz.base.util.UtilDateTime.toDateString(priceDate, &quot;dd/MM/yyyy&quot;);}"/></field>
        <field name="productId" title="Milk Type"><display-entity entity-name="Product" description="${internalName}" key-field-name="productId"/></field>
@@ -655,6 +910,7 @@ under the License.
 			<set field="centerDetails" value="${groovy: import in.vasista.vbiz.procurement.ProcurementNetworkServices;import org.ofbiz.base.util.UtilMisc;  dctx = dispatcher.getDispatchContext(); return (ProcurementNetworkServices.getCenterDtails(dctx, UtilMisc.toMap(&quot;centerId&quot;, originFacilityId)));}"  type="Object"/>
 			<set field="shedCode" value="${groovy: return centerDetails.get(&quot;shedFacility&quot;).get(&quot;facilityCode&quot;);}"/>
 			<set field="unitCode" value="${groovy: return centerDetails.get(&quot;unitFacility&quot;).get(&quot;facilityCode&quot;);}"/>
+			<set field="adjDescriptionList" value="${groovy:  return (adjDescription.get(&quot;orderAdjDescList&quot;));}" type="List"></set>
 		</row-actions>
 		<field name="orderId"><hidden/></field>
 		<field name="orderAdjustmentId"><hidden/></field>
@@ -664,7 +920,7 @@ under the License.
        	<field name="orderDate"><display/></field>
        	<field name="orderAdjustmentTypeId">
        		<drop-down>
-       			<list-options key-name="orderAdjustmentTypeId" description="${description}" list-name="adjustmentTypeList"/>
+       			<list-options key-name="orderAdjustmentTypeId" description="${description}" list-name="adjDescriptionList"/>
        		</drop-down>
        	</field>
        	<field name="amount"><text size="7"/></field>
@@ -681,17 +937,19 @@ under the License.
        <row-actions>
 			<set field="centerDetails" value="${groovy: import in.vasista.vbiz.procurement.ProcurementNetworkServices;import org.ofbiz.base.util.UtilMisc;  dctx = dispatcher.getDispatchContext(); return (ProcurementNetworkServices.getCenterDtails(dctx, UtilMisc.toMap(&quot;centerId&quot;, originFacilityId)));}"  type="Object"/>
 			<set field="shedCode" value="${groovy: return centerDetails.get(&quot;shedFacility&quot;).get(&quot;facilityCode&quot;);}"/>
-			<set field="unitCode" value="${groovy: return centerDetails.get(&quot;unitFacility&quot;).get(&quot;facilityCode&quot;);}"/>			
+			<set field="unitCode" value="${groovy: return centerDetails.get(&quot;unitFacility&quot;).get(&quot;facilityCode&quot;);}"/>
+			<set field="amount" value="${amount*-1}"/>		
+			<set field="adjDescriptionList" value="${groovy:  return (adjDescription.get(&quot;orderAdjDescList&quot;));}" type="List"></set>	
 		</row-actions>	
 		<field name="orderId"><hidden/></field>
 		<field name="orderAdjustmentId"><hidden/></field>	
 	   	<field name="shedCode" title="Shed"><display/></field>
        	<field name="unitCode" title="Unit"><display></display></field>
        	<field name="originFacilityId" title="Center"><display-entity entity-name="Facility" key-field-name="facilityId" description="${facilityCode}"></display-entity></field>      
-       	<field name="orderDate"><display/></field>
+       	<field name="orderDate"><display description="${groovy:org.ofbiz.base.util.UtilDateTime.toDateString(orderDate, &quot;dd/MM/yyyy&quot;);}"/></field>
        	<field name="orderAdjustmentTypeId">
        		<drop-down>
-       			<list-options key-name="orderAdjustmentTypeId" description="${description}" list-name="adjustmentTypeList"/>
+       			<list-options key-name="orderAdjustmentTypeId" description="${description}" list-name="adjDescriptionList"/>
        		</drop-down>
        	</field>
        	<field name="amount"><text size="7"/></field>
@@ -704,6 +962,9 @@ under the License.
         </field>
     </form>   
     <form name="FindAdjustments" odd-row-style="alternate-row" header-row-style="header-row" type="single"	default-table-style="basic-table hover-bar" separate-columns="true" target="FindAdjustment">    	
+    	<actions>
+    		<set field="unitMapListSize" value="${groovy:  if (unitMapsList.size()!=0) return 1;}" default-value="0"/>
+    	</actions>
     	<field name="noConditionFind"><hidden value="Y"/><!-- if this isn't there then with all fields empty no query will be done --></field>
     	 <field name="hideSearch"><hidden value="Y"/></field>    	 
     	 <field name="shedId" title="Shed Name">
@@ -716,13 +977,19 @@ under the License.
          <field use-when="shedId!=null" name="shedId" title="Shed Name"><display default-value="${shedId}"  description="${shedName}"/></field>
 		 <field name="unitCode"><text></text></field>
 		 <field use-when="unitCode!=null" name="unitCode" title="Unit" tooltip="${unitName}"><display default-value="${unitCode}" description="${unitCode}"/> </field>
+		 <field use-when="(${unitMapListSize}!=0)" name="unitCode" title="unit">
+		 	<drop-down>
+		 		<list-options key-name="facilityCode" list-name="unitMapsList" description="${facilityCode} ${facilityName}"/>
+		 	</drop-down>
+		 </field>
 		 <field name="facilityCode" title="centerCode"><text></text></field> 
 		 <field name="orderAdjustmentTypeId" title="Adjustment Type Id">
 			<drop-down allow-empty="true">
-				<list-options key-name="orderAdjustmentTypeId" list-name="adjTypeList" description="${description}"/>                
+				<list-options key-name="orderAdjustmentTypeId" list-name="adjDescriptionList" description="${description}"/>                
 			</drop-down>
 	   	 </field>				
 	   	 <field name="orderDate"><date-find/></field> 
+	   	 <field name="createdByUserLogin" title="userLogin"><text/></field>
 		 <field name="submitButton" title="${uiLabelMap.CommonFind}" widget-style="smallSubmit">
             <submit button-type="button"/>
          </field>
@@ -732,6 +999,11 @@ under the License.
 			<set field="centerDetails" value="${groovy: import in.vasista.vbiz.procurement.ProcurementNetworkServices;import org.ofbiz.base.util.UtilMisc;  dctx = dispatcher.getDispatchContext(); return (ProcurementNetworkServices.getCenterDtails(dctx, UtilMisc.toMap(&quot;centerId&quot;, originFacilityId)));}"  type="Object"/>
 			<set field="shedCode" value="${groovy: return centerDetails.get(&quot;shedFacility&quot;).get(&quot;facilityCode&quot;);}"/>
 			<set field="unitCode" value="${groovy: return centerDetails.get(&quot;unitFacility&quot;).get(&quot;facilityCode&quot;);}"/>			
+			<entity-one entity-name="OrderAdjustmentType" value-field="orderAdjustmentType">
+				<field-map field-name="orderAdjustmentTypeId" from-field="orderAdjustmentTypeId"/>
+			</entity-one>
+			<set field="parentType" value="${orderAdjustmentType.parentTypeId}" />
+			<set field="amount" value="${groovy:if(((parentType).equals('MILKPROC_DEDUCTIONS')))return((amount*-1));}" default-value="${amount}"/>
 		</row-actions>
 		<field name="orderId"><hidden/></field>
 		<field name="orderAdjustmentId"><hidden/></field>
@@ -741,7 +1013,7 @@ under the License.
        	<field name="orderDate"><display/></field>
        	 <field name="orderAdjustmentTypeId" title="Adjustment Type Id">
 			<drop-down allow-empty="true">
-				<list-options key-name="orderAdjustmentTypeId" list-name="adjTypeList" description="${description}"/>                
+				<list-options key-name="orderAdjustmentTypeId" description="${description}" list-name="adjDescriptionList"/>                
 			</drop-down>
 	   	 </field>
        	<field name="amount"><text size="7"/></field>
@@ -754,19 +1026,40 @@ under the License.
         </field>
     </form>      
     <form name="SendMilk" odd-row-style="alternate-row" header-row-style="header-row" type="single"  default-table-style="basic-table hover-bar" separate-columns="true" target="createSendMilkRecord">    
-       <field name="facilityId" tooltip="required" required-field="true" ><lookup target-form-name="ProcurementLookupFacility" size="10"/></field>
-       <field name="facilityIdTo" title="To FacilityId" tooltip="required" required-field="true" ><lookup target-form-name="ProcurementLookupFacility" size="10"/></field>
-       <field name="sendDate" title="Transfer Date" widget-style="required" tooltip="required" required-field="true"><date-time default-value="${nowTimestamp}"/></field>
+        <field name="shedId" id-name="shedId" title="Shed Name"  event="onChange" action="javascript:getTimePeriodsByUnit(this.value)" >
+            <drop-down allow-empty="true">
+                <entity-options description="${description}" entity-name="Facility" key-field-name="facilityId">
+                	<entity-constraint name="facilityTypeId" operator="equals" value="SHED"/>
+                </entity-options>
+            </drop-down>
+       </field>
+       <field use-when="(shedId!=null)&amp;&amp;(shedCode!=null)" id-name="shedId" name="shedId" title="Shed Name"><display default-value="${shedId}"  description="${shedName}"/></field>
+	   <field name="customTimePeriodId" id-name="customTimePeriodId">
+			<drop-down  allow-empty="false" no-current-selected-key="${customTimePeriodId}">
+			    <list-options key-name="customTimePeriodId" list-name="timePeriodList" description="${groovy:org.ofbiz.base.util.UtilDateTime.toDateString(fromDate, &quot;MMMdd&quot;);}-${groovy:org.ofbiz.base.util.UtilDateTime.toDateString(thruDate, &quot;MMMdd YYYY&quot;);}"/>
+			</drop-down>
+	   </field>
+       
+       <field name="sendDate" title="Transfer Date" widget-style="required" tooltip="required and Should be in fortNight" required-field="true"><date-time default-value="${nowTimestamp}" /></field>
+       <field name="facilityId" tooltip="required" required-field="true" ><lookup target-form-name="ProcurementUnitLookupFacility" size="10"/></field>
+       <field name="facilityIdTo" title="To FacilityId" tooltip="required" required-field="true" ><lookup target-form-name="ProcurementUnitLookupFacility" size="10"/></field>
        <field name="productId" title="Milk Type">
-            <drop-down allow-empty="false">
+            <drop-down allow-empty="false" >
                 <list-options key-name="productId" list-name="productsList" description="${description}"/>
             </drop-down>
        </field>
-       <field name="quantity" widget-style="required" tooltip="required" required-field="true"><text size="5" /></field>
+       <field name="quantityLtrs"  title="quntity(LTRS)"><text size="5" /></field>
+       <field name="quantity" widget-style="required" tooltip="required" required-field="true" title="quntity(KGS)"><text size="5" /></field>
        <field name="sendKgFat" title="kgFat"><text size="5"/></field>
        <field name="sendKgSnf" title="kgSnf"><text size="5"/></field>
-       <field name="fat" title="Fat"><text size="5" /></field>
-       <field name="snf" title="Snf"><text size="5"/></field>
+       <field name="fat" use-when="&quot;${enableFatSnfLR}&quot;==&quot;Y&quot;"><text size="5"/></field>
+       <field name="snf" use-when="&quot;${enableFatSnfLR}&quot;==&quot;Y&quot;"><text size="5"/></field>
+       <field name="supplyTypeEnumId" title="Purchage Time" use-when="&quot;${supplyTimeValue}&quot;==&quot;Y&quot;">
+           <drop-down allow-empty="true" >
+                <option key="AM" description="AM"/>
+                <option key="PM" description="PM"/>
+           </drop-down>
+       </field>
        <field name="sendLR" title="LR"><text size="5"/></field>
        <field name="containerId" title="Vehicle Number"><text size="5"/></field>
        <field name="submitButton" title="${uiLabelMap.CommonSubmit}" widget-style="smallSubmit">
@@ -774,33 +1067,39 @@ under the License.
        </field>    
     </form> 
     
-     <form name="FindingMilk" odd-row-style="alternate-row" header-row-style="header-row" type="single"  default-table-style="basic-table hover-bar" separate-columns="true" target="createSendMilkRecord">    
+     <form name="FindingMilk" odd-row-style="alternate-row" header-row-style="header-row" type="single"  default-table-style="basic-table hover-bar" separate-columns="true" target="FindTransfers">    
        <field name="facilityId" >
-       <lookup target-form-name="ProcurementLookupFacility" size="10"/></field>
+       <lookup target-form-name="ProcurementUnitLookupFacility" size="10"/></field>
        <field name="facilityIdTo" title="To FacilityId">
-       <lookup target-form-name="ProcurementLookupFacility" size="10"/></field>
-       <field name="sendDate" title="Transfer Date" widget-style="required" ><date-time default-value="${nowTimestamp}"/></field>
+       <lookup target-form-name="ProcurementUnitLookupFacility" size="10"/></field>
+       <!-- <field name="sendDate" title="Transfer Date" widget-style="required" ><date-time type="timestamp"/></field> -->
+       <field name="fromDate" title="From Date"><date-time type="timestamp"/></field>
+	   <field name="thruDate" title="Thru Date"><date-time type="timestamp"/></field>
+       <!-- <field name="sendDate" title="Transfer Date" widget-style="required" ><date-time default-value="${groovy:import org.ofbiz.base.util.UtilDateTime; return UtilDateTime.nowDate();}" type="date"/></field>   -->
        <field name="productId" title="Milk Type">
-            <drop-down allow-empty="false">
+            <drop-down current="selected">
                 <list-options key-name="productId" list-name="productsList" description="${description}"/>
+                <option key=""/>
             </drop-down>
        </field>
        <!-- <field name="quantity" widget-style="required" tooltip="required" required-field="true"><text size="5" /></field>
        <field name="fat" widget-style="required" tooltip="required" required-field="true"><text size="5" /></field>
        <field name="snf" widget-style="required" tooltip="required" required-field="true"><text size="5"/></field>
        <field name="containerId" title="Vehicle Number"><text size="5"/></field> -->
-       
+       <field name="createdByUserLogin" title="userLogin"><text/></field>
        <field name="submitButton" title="${uiLabelMap.CommonFind}" widget-style="smallSubmit">
             <submit button-type="button"/>
        </field>    
     </form> 
     <form name="ListSendMilk" odd-row-style="alternate-row" header-row-style="header-row-2" type="list" list-name="listIt"  default-table-style="basic-table " separate-columns="true"  target="updateSendMilkRecord" paginate-target="MilkTransfers">    
        <actions>
-     <set field="parameters.statusId" value="MXF_INPROCESS"/>
-       		<service service-name="performFind" result-map="result" result-map-list="listIt">
+     		<set field="parameters.statusId" value="${parameters.statusId}" default-value="MXF_INPROCESS"/>
+       		<set field="parameters.createdByUserLogin" from-field="parameters.createdByUserLogin" />
+       		<service service-name="performFindList" result-map="result" result-map-list="list" >
                 <field-map field-name="inputFields" from-field="parameters"/>
                 <field-map field-name="entityName" value="MilkTransfer"/>
             </service>
+            <script location="component://procurement/webapp/procurement/WEB-INF/actions/facility/filterMilkTransfersSent.groovy"/>
        </actions>       
        <field name="milkTransferId" separate-column="true"><hidden/></field>
        <field name="facilityId" separate-column="true"><display-entity entity-name="Facility" key-field-name="facilityId" description="${facilityName}"></display-entity></field>
@@ -811,20 +1110,20 @@ under the License.
                  <list-options key-name="productId" list-name="productsList" description="${description}"/>
              </drop-down>
        </field>
+       <!-- <field name="supplyTypeEnumId" title="Purchase Time" use-when="&quot;${supplyTimeValue}&quot;==&quot;Y&quot;"><display></display></field> -->
        <field name="quantity"><text size="5" /></field>
-       <field name="fat" ><text size="5" /></field>
-       <field name="snf"><text size="5" /></field>
+       <field name="quantityLtrs"><text size="5" default-value="${quantity/1.03}"/></field>
+       <field name="fat" use-when="&quot;${enableFatSnfLR}&quot;==&quot;Y&quot;"><text size="5"/></field>
+       <field name="snf" use-when="&quot;${enableFatSnfLR}&quot;==&quot;Y&quot;"><text size="5"/></field>
        <field name="sendKgFat" title="KgFat"><text size="5" /></field>
        <field name="sendKgSnf" title="KgSnf"><text size="5" /></field>
        <field name="containerId" title="Vehicle Number"><text size="5" /></field>
        <field name="statusId" title="Status" separate-column="true"><display-entity entity-name="StatusItem" key-field-name="statusId" description="${description}"/></field>
-      
-      
         <!--   <field  name="milkType"  title="Milk Type"><display/></field>  -->
-        <field name="update" title-style="buttontext"> 
+        <field use-when="&quot;${statusId}&quot;.equals(&quot;MXF_INPROCESS&quot;)" name="update" title-style="buttontext"> 
         	<submit/>
         </field> 
-       <field  name="delete"  title="Delete" title-style="buttontext" separate-column="true">
+       <field use-when="&quot;${statusId}&quot;.equals(&quot;MXF_INPROCESS&quot;)"  name="delete"  title="Delete" title-style="buttontext" separate-column="true">
           <hyperlink target="deleteMilkRecord" description="${uiLabelMap.CommonDelete}">
             <parameter param-name="milkTransferId"/>
           </hyperlink>
@@ -834,57 +1133,195 @@ under the License.
 	        <sort-field name="facilityId"/>
 	        <sort-field name="facilityIdTo"/>
 	        <sort-field name="productId"/>
+	        <sort-field name="supplyTypeEnumId"/>	        
 	        <sort-field name="quantity"/>
+	        <sort-field name="quantityLtrs"/>
 	        <sort-field name="fat"/>
 	        <sort-field name="snf"/>
 	        <sort-field name="sendKgFat"/>
 	        <sort-field name="sendKgSnf"/>
-	        <sort-field name="containerId"/>
+	        <sort-field name="containerId"/>	       
 	        <sort-field name="sendDate"/>
 	        <sort-field name="statusId"/>
 	        <sort-field name="update"/>
 	        <sort-field name="delete"/>
        </sort-order>
     </form>    
-    <form name="ListMilkReceived" odd-row-style="alternate-row" header-row-style="header-row-2" type="list" list-name="listIt"  default-table-style="basic-table " separate-columns="true"  target="updateSendMilkRecord" paginate-target="MilkTransfers">    
+    
+    <form name="FindMPFReceipts" odd-row-style="alternate-row" header-row-style="header-row" type="single"  default-table-style="basic-table hover-bar" separate-columns="true" target="MpfReceipts">    
+	   <actions>
+	   		<set field="unitMapListSize" value="${groovy:  if (unitMapsList.size()!=0) return 1;}" default-value="0"/>
+	   </actions>
+	   <field name="noConditionFind"><hidden value="Y"/><!-- if this isn't there then with all fields empty no query will be done --></field>
+       <field name="hideSearch"><hidden value="Y"/></field>
+       <field name="facilityIdTo"><hidden value="MAIN_PLANT"/></field>       	
+       <field name="shedId" id-name="shedId" title="Shed Name" event="onchange" action="javascript:setOutPutEntryShedUnitsDropDown(this);">
+            <drop-down allow-empty="true">
+                <entity-options description="${description}" entity-name="Facility" key-field-name="facilityId">
+                	<entity-constraint name="facilityTypeId" operator="equals" value="SHED"/>
+                </entity-options>
+            </drop-down>
+       </field>
+       <field use-when="(shedId!=null)&amp;&amp;(shedCode!=null)" id-name="shedId" name="shedId" title="Shed Name"><display default-value="${shedId}"  description="${shedName}"/></field>  
+       <field name="facilityId" title="unit Code" id-name="facilityId" event="onchange" action="getTimePeriodsByUnit($('[name=shedId]').val(),$('[name=facilityId]').val());" >
+	       	<drop-down allow-empty="true">
+	       		<list-options key-name="facilityId"  list-name="unitsList" description="${facilityName}"/>
+	       	</drop-down>
+       </field>
+       <field use-when="(${unitMapListSize}!=0)" name="facilityId" title="unit Code" id-name="facilityId" event="onchange" action="getTimePeriodsByUnit($('[name=shedId]').val(),$('[name=facilityId]').val());" >
+	       	<drop-down allow-empty="true">
+	       		<list-options key-name="facilityId"  list-name="unitMapsList" description="${facilityName}"/>
+	       	</drop-down>
+       </field>
+       <field use-when="unitCode!=null" id-name="facilityId" name="facilityId" title="Unit Code" tooltip="${unitName}"><display default-value="${unitId}" description="${unitCode}"/> </field>       
+       <field name="customTimePeriodId">
+			<drop-down allow-empty="true">
+                <list-options key-name="customTimePeriodId" list-name="timePeriodList" description="${groovy:org.ofbiz.base.util.UtilDateTime.toDateString(fromDate, &quot;MMMdd&quot;);}-${groovy:org.ofbiz.base.util.UtilDateTime.toDateString(thruDate, &quot;MMMdd YYYY&quot;);}"/>
+			</drop-down>
+		</field>
+	   <field name="submitButton" title="Find"><submit button-type="button"/></field>
+    </form>
+    
+    <form name="AddSourDistribution" odd-row-style="alternate-row"   header-row-style="header-row" type="single"  default-table-style="basic-table hover-bar" separate-columns="true" target="CreateSourDistribution">
+    	 <field name="facilityId" title="From"><display-entity entity-name="Facility" key-field-name="facilityId" description="${facilityName}"></display-entity></field>
+    	 <field name="facilityIdTo" title="To"><display-entity entity-name="Facility" key-field-name="facilityId" description="${facilityName}"></display-entity></field>
+    	 <field name="receiveDate" title="RecDate"><display type="text" /></field>
+    	 <field name="containerId" title="Tanker Number"><display/></field>
+    	 <field name="milkTransferId"><hidden/></field>
+    	 <field name="sQuantityLtrs" title="SQty(Ltrs)"><display /></field>
+    	 <field name="sKgFat" title="SKgFat"><display/></field>
+       	 <field name="sKgSnf" title="SKgSnf"><display /></field>
+    	 <field name="gheeYield" title="ghee(Qty Kgs)" required-field="true"><text size="5"></text></field>
+    	 <field name="unitIds" title="Select Units">
+    	 	<check>
+    	 		<list-options key-name="facilityId" list-name="unitsList" description="${facilityCode}-${facilityName}"/>
+    	 	</check>
+    	 </field>
+    	 <field name="submit" title="AddSourDistributionAdvice"><submit/></field>
+    	 <sort-order>
+    	 	<field-group title="Sour Milk Details " collapsible="false" initially-collapsed="false">
+    	 		<sort-field name="receiveDate"/>
+    	 		<sort-field name="containerId"/>
+    	 		<sort-field name="facilityId"/>
+    	 		<sort-field name="facilityIdTo"/>
+    	 		<sort-field name="sQuantityLtrs"/>
+    	 		<sort-field name="sKgFat"/>
+    	 		<sort-field name="sKgSnf"/>
+    	 		
+    	 	</field-group>
+    	 
+    	 </sort-order>
+    	 
+    </form>
+    <form name="ListMPFReceipts" odd-row-style="alternate-row" header-row-style="header-row-2" type="list" list-name="list" 
+    	 default-table-style="basic-table "	target="AddSourDistribution"	separate-columns="true" paginate-target="MpfReceipts">
+    <actions>
+    	
+    	<set field="parameters.statusId" value="MXF_RECD"/>
+    	<set field="parameters.isMilkRcpt" value="N"/>
+    	<set field="parameters.productId" value="999"/>
+    	<script  location="component://procurement/webapp/procurement/WEB-INF/actions/facility/MPFReceiptsSearch.groovy"/>	
+       	<service service-name="performFindList" result-map="result" result-map-list="list" >
+            <field-map field-name="inputFields" from-field="parameters"/>
+            <field-map field-name="entityName" value="MilkTransfer"/>
+            <field-map field-name="viewIndex" from-field="viewIndex"/>
+            <field-map field-name="viewSize" from-field="viewSize"/>
+        </service>
+    </actions>    
+       <field name="containerId" title="Tanker Number"><display/></field>
+       <field name="shedId"><hidden/></field>
+       <field name="milkTransferId" separate-column="true"><hidden/></field>
+       <field name="gheeYield" separate-column="true"><hidden/></field>
+       <field name="facilityId" separate-column="true"><display-entity entity-name="Facility" key-field-name="facilityId" description="${facilityName}"></display-entity></field>
+       <field name="facilityIdTo" separate-column="true"><display-entity entity-name="Facility" key-field-name="facilityId" description="${facilityName}"></display-entity></field>
+       <field name="receiveDate" title="RecDate"><display type="text" description="${groovy:org.ofbiz.base.util.UtilDateTime.toDateString(receiveDate, &quot;dd-MM-yyyy&quot;);}"/></field>
+       <field name="receivedDate" ><hidden value="${receiveDate}"/></field>
+       <field name="productId" title="Milktype"><display-entity entity-name="Product" key-field-name="productId" description="${description}"></display-entity></field>
+       <field name="receivedQuantity" title="Recquantity(Kgs)"><display/></field>
+       <field name="receivedQuantityLtrs" title="Recquantity(Ltrs)"><display/></field>
+       <field name="receivedKgFat" title="RecKgFat"><display /></field>
+       <field name="receivedKgSnf" title="RecKgSnf"><display /></field>
+       <field name="sQuantityLtrs" title="SQty(Ltrs)"><display /></field>
+       <field name="sKgFat" title="SKgFat"><display/></field>
+       <field name="sKgSnf" title="SKgSnf"><display /></field>
+       <field name="statusId" parameter-name="status" title="Status" separate-column="true"><display-entity entity-name="StatusItem" key-field-name="statusId" description="${description}"/></field>
+       <!--  <field  name="milkType"  title="Milk Type"><display/></field>  -->
+       <field name="addSourDistribution" title="" widget-style="buttontext">
+       		<submit/>
+        	<!-- <hyperlink  target-type="plain" description="Add Sour Distribution"  target="javascript:addSourDistribution();"></hyperlink> -->
+        </field>
+       <sort-order>
+	        <sort-field name="containerId"/>
+	        <sort-field name="milkTransferId"/>
+	        <sort-field name="facilityId"/>
+	        <sort-field name="facilityIdTo"/>
+	        <sort-field name="receiveDate"/>
+	        <sort-field name="productId"/>
+	        <sort-field name="receivedQuantity"/>
+	        <sort-field name="receivedQuantityLtrs"/>
+	        <sort-field name="receivedFat"/>
+	        <sort-field name="receivedSnf"/>
+	        <sort-field name="receivedKgFat"/>
+	        <sort-field name="receivedKgSnf"/>
+	        <sort-field name="sQuantityLtrs"/>
+	        <!-- <sort-field name="sFat"/> -->
+	        <sort-field name="sKgFat"/>
+	        <sort-field name="sKgSnf"/>
+	        <sort-field name="statusId"/>
+	        <sort-field name="addSourDistribution"/>
+       </sort-order>
+    </form>   
+    <form name="ListMilkReceived" odd-row-style="alternate-row" header-row-style="header-row-2" type="list" list-name="list"  default-table-style="basic-table " separate-columns="true"  target="updateSendMilkRecord" paginate-target="MilkTransfers">    
      <actions>
-     <set field="parameters.statusId" value="MXF_RECD"/>
-       		<service service-name="performFind" result-map="result" result-map-list="listIt">
-                <field-map field-name="inputFields" from-field="parameters"/>
-                <field-map field-name="entityName" value="MilkTransfer"/>
-            </service>
-       </actions>       
+     	<set field="parameters.statusId" value="MXF_RECD"/>
+     	<set field="parameters.createdByUserLogin" from-field="parameters.createdByUserLogin" default-value=""/>
+       	<service service-name="performFindList" result-map="result" result-map-list="list" >
+            <field-map field-name="inputFields" from-field="parameters"/>
+            <field-map field-name="entityName" value="MilkTransfer"/>
+        </service>
+   		<script location="component://procurement/webapp/procurement/WEB-INF/actions/facility/filterFindMilkTransfersReceived.groovy"/>
+     </actions>       
        <field name="milkTransferId" separate-column="true"><hidden/></field>
        <field name="facilityId" separate-column="true"><display-entity entity-name="Facility" key-field-name="facilityId" description="${facilityName}"></display-entity></field>
        <field name="facilityIdTo" separate-column="true"><display-entity entity-name="Facility" key-field-name="facilityId" description="${facilityName}"></display-entity></field>
-       <field name="receiveDate" title="ReceivedDate"><display type="date-time"/></field>
+       <field name="receiveDate" title="RecDate"><display type="date-time"/></field>
        <field name="productId" title="Milktype"><display-entity entity-name="Product" key-field-name="productId" description="${description}"></display-entity></field>
-       <field name="quantity" title="Receivedquantity"><display/></field>
-       <field name="receivedFat" title="ReceivedFat"><display/></field>
-       <field name="receivedSnf" title="ReceivedSnf"><display/></field>
-       <field name="receivedKgFat" title="ReceivedKgFat"><display/></field>
-       <field name="receivedKgSnf" title="ReceivedKgSnf"><display/></field>
-       <field name="containerId" title="Vehicle Number"><display/></field>
-       <field name="statusId" title="Status" separate-column="true"><display-entity entity-name="StatusItem" key-field-name="statusId" description="${description}"/></field>
+       <field name="receivedQuantity" title="Recquantity(Kgs)"><text size="10" /></field>
+       <field name="receivedQuantityLtrs" title="Recquantity(Ltrs)"><text size="10" default-value="${quantity/1.03}"/></field>
+       <!-- <field name="receivedFat" title="RecFat"><text size="10" /></field>
+       <field name="receivedSnf" title="RecSnf"><text size="10" /></field> -->
+       <field name="receivedFat"  use-when="&quot;${enableFatSnfLR}&quot;==&quot;Y&quot;"><text size="5"/></field>
+       <field name="receivedSnf"  use-when="&quot;${enableFatSnfLR}&quot;==&quot;Y&quot;"><text size="5"/></field>
+       <field name="receivedKgFat" title="RecKgFat"><text size="10" /></field>
+       <field name="receivedKgSnf" title="RecKgSnf"><text size="10" /></field>
+       <field name="sQuantityLtrs" title="SQty(Ltrs)"><text size="5" /></field>
+       <!-- <field name="sFat" title="SourFat"><text size="5" /></field> -->
+       <field name="sKgFat" title="SKgFat"><text size="5" /></field>
+       <field name="sKgSnf" title="SKgSnf"><text size="5" /></field>
+       <field name="cQuantityLtrs" title="CurdQty(Ltrs)"><text size="5" /></field>
+       <field name="containerId" title="Vehicle Number"><text size="5" /></field>
+       <field name="supplyTypeEnumId" title="Purchase Time" use-when="&quot;${supplyTimeValue}&quot;==&quot;Y&quot;"><display></display></field>
+       <field name="statusId" parameter-name="status" title="Status" separate-column="true"><display-entity entity-name="StatusItem" key-field-name="statusId" description="${description}"/></field>
        <!--  <field  name="milkType"  title="Milk Type"><display/></field>  -->
-       <!--  <field name="update" title-style="buttontext"> 
+       <field use-when="&quot;${statusId}&quot;.equals(&quot;MXF_RECD&quot;)  " name="update" title-style="buttontext"> 
         	<submit/>
         </field> 
-       <field  name="delete"  title="delete" title-style="buttontext" separate-column="true">
-          <hyperlink target="deleteMilkRecord" description="${uiLabelMap.CommonDelete}">
-            <parameter param-name="milkTransferId"/>
-          </hyperlink>
-       </field> -->
        <sort-order>
 	        <sort-field name="milkTransferId"/>
 	        <sort-field name="facilityId"/>
 	        <sort-field name="facilityIdTo"/>
 	        <sort-field name="productId"/>
-	        <sort-field name="quantity"/>
+	        <sort-field name="receivedQuantity"/>
+	        <sort-field name="receivedQuantityLtrs"/>
 	        <sort-field name="receivedFat"/>
 	        <sort-field name="receivedSnf"/>
 	        <sort-field name="receivedKgFat"/>
 	        <sort-field name="receivedKgSnf"/>
+	        <sort-field name="sQuantityLtrs"/>
+	        <!-- <sort-field name="sFat"/> -->
+	        <sort-field name="sKgFat"/>
+	        <sort-field name="sKgSnf"/>
+	        <sort-field name="cQuantityLtrs"/>
 	        <sort-field name="containerId"/>
 	        <sort-field name="receiveDate"/>
 	        <sort-field name="statusId"/>
@@ -900,15 +1337,22 @@ under the License.
        <field name="sendDate" title="send Date"><display type="date-time"/></field>
        <field name="receiveDate" title="Received Date" required-field="true"><date-time default-value="${receiveDate}"/></field>
        <field name="productId" title="product"><display-entity entity-name="Product" key-field-name="productId"  description="${description}"/>      </field>
-       <field name="quantity" title="Quantity" ><display/></field> 
+       <field name="quantity" title="Quantity(Kgs)" ><display/></field>
+       <field name="quantityLtrs" title="Quantity(Ltrs)" ><display default-value="${quantity/1.03}"/></field> 
        <field name="sendKgFat" title="KgFat" id-name="gKgFat"><display/></field>
        <field name="sendKgSnf" title="KgSnf" id-name="gKgSnf"><display/></field>
-       <field name="fat" ><display/></field>
-       <field name="snf" ><display/></field>    
+       <!-- <field name="fat" ><display/></field>
+       <field name="snf" ><display/></field> -->  
+       <field name="fat" use-when="&quot;${enableFatSnfLR}&quot;==&quot;Y&quot;"><display/></field>
+       <field name="snf" use-when="&quot;${enableFatSnfLR}&quot;==&quot;Y&quot;"><display/></field>  
        <field name="sendLR" title="LR" id-name="gLR"><display/></field>    
-       <field name="receivedQuantity" title="Good Milk Qty(Kgs)" required-field="true" id-name="gQty"><text size="5"/></field>
-       <field name="receivedFat" title="Fat" id-name="gFat"><text size="5" /></field>
-       <field name="receivedSnf" title="Snf" id-name="gSnf"><text size="5"/></field>  
+       <field name="supplyTypeEnumId" title="Purchase Time" use-when="&quot;${supplyTimeValue}&quot;==&quot;Y&quot;"><display></display></field>
+       <field name="receivedQuantity" title="Good Milk Qty(Kgs)" tooltip="required" required-field="true" id-name="gQty"><text size="5"/></field>
+       <field name="receivedQuantityLtrs"  required-field="false" title="Good Milk Qty(Ltrs)"><text size="5" /></field>
+       <!-- <field name="receivedFat" title="Fat" id-name="gFat"><text size="5" /></field>
+       <field name="receivedSnf" title="Snf" id-name="gSnf"><text size="5"/></field>   -->
+       <field name="receivedFat" title="Fat" use-when="&quot;${enableFatSnfLR}&quot;==&quot;Y&quot;" id-name="gFat"><text size="5"/></field>
+       <field name="receivedSnf" title="Snf" use-when="&quot;${enableFatSnfLR}&quot;==&quot;Y&quot;" id-name="gSnf"><text size="5"/></field>
        <field name="receivedKgFat" title="KgFat" id-name="gKgFat"><text size="5" /></field>
        <field name="receivedKgSnf" title="KgSnf" id-name="gKgSnf"><text size="5"/></field>
        <field name="receivedLR" title="LR" id-name="gLR"><text size="5"/></field>     
@@ -919,7 +1363,8 @@ under the License.
             </drop-down>
        </field>
        <field name="sQuantityLtrs" title="Sour Milk Qty(Ltrs)" id-name="sQty"><text size="5"/></field>
-       <field name="sFat" title="Sour Fat" id-name="sFat"><text size="5"/></field>
+       <field name="sKgFat" title="Sour Kg Fat" id-name="sKgFat"><text size="5"/></field>
+       <field name="sKgSnf" title="Sour Kg Snf" id-name="sKgSnf"><text size="5"/></field>
        <field name="gheeYield" title="Ghee yield(Kgs)" id-name="gheeYield"><text size="5"/></field>
        <field name="cQuantityLtrs" title="Curd Quantity(Ltrs)" id-name="cQty"><text size="5" default-value="0"/></field>
        <field name="facilityId_o_0" id-name="facilityId_0" title="${uiLabelMap.UnitName}"><lookup target-form-name="ProcurementLookupFacility" size="10"/></field>
@@ -955,15 +1400,18 @@ under the License.
 	       		<sort-field name="sendDate"/>
 	       		<sort-field name="productId"/>
 	       		<sort-field name="quantity"/>
+	       		<sort-field name="quantityLtrs"/>
 	            <sort-field name="sendKgFat"/>
 	       		<sort-field name="sendKgSnf"/>
 	       		<sort-field name="fat"/>
 	       		<sort-field name="snf"/>
 	       		<sort-field name="sendLR"/>
+	       		<sort-field name="supplyTypeEnumId"/>
        		</field-group>
        		<field-group collapsible="true" initially-collapsed="false" title="Recieved  Milk Details">
        		   <sort-field name="receiveDate"/>
        		   <sort-field name="receivedQuantity"/>
+       		   <sort-field name="receivedQuantityLtrs"/>
        		   <sort-field name="receivedKgFat"/>
        		   <sort-field name="receivedKgSnf"/>
        		    <sort-field name="receivedFat"/>
@@ -973,7 +1421,8 @@ under the License.
        		<field-group collapsible="false" initially-collapsed="false" title="Sour/Curd Milk Details">
        		   <sort-field name="milkType"/>
        		   <sort-field name="sQuantityLtrs"/>
-       		   <sort-field name="sFat"/>
+       		   <sort-field name="sKgFat"/>
+       		   <sort-field name="sKgSnf"/>
        		   <sort-field name="gheeYield"/>
        		   <sort-field name="cQuantityLtrs"/>
        		   <sort-field name="addSourDistribution"/>
@@ -1005,9 +1454,12 @@ under the License.
        </sort-order> 
     </form>  
     <form name="ListReceivedMilk" odd-row-style="alternate-row" header-row-style="header-row" type="list"  default-table-style="basic-table hover-bar" separate-columns="true" list-name="listReceivedMilk" paginate-target="ReceiveMilk" >    
+       <actions>
+       		<script location="component://procurement/webapp/procurement/WEB-INF/actions/facility/filterMilkTransfersReceived.groovy"/>
+       </actions>
        <field name="milkTransferId"><hidden/></field>
-       <field name="facilityIdTo" title="facilityId"><display/></field>
-       <field name="facilityId" title="Received from"><display/></field>
+       <field name="facilityIdTo" title="facilityId"><display-entity entity-name="Facility" description="${facilityName}" key-field-name="facilityId" /></field>
+       <field name="facilityId" title="Received from"><display-entity entity-name="Facility" description="${facilityName}" /></field>
        <field name="receiveDate" title="Received Date"><display type="date-time" default-value="${nowTimestamp}"/></field>
        <field name="productId" title="Milk Type"><display-entity entity-name="Product" description="${description}"/></field>
       <!--  <field name="productId" title="Milk Type">
@@ -1016,9 +1468,12 @@ under the License.
                 <option key="102" description="Cow"/>
             </drop-down>
        </field> -->
+       <field name="supplyTypeEnumId" title="Purchase Time" use-when="&quot;${supplyTimeValue}&quot;==&quot;Y&quot;"><display></display></field>
        <field name="quantity"><display/></field>
-       <field name="fat" ><display/></field>
-       <field name="snf"><display/></field>
+       <field name="sendKgFat" title="Kg Fat"><display/></field>
+       <field name="sendKgSnf" title="Kg Snf"><display/></field>
+       <field name="fat" use-when="&quot;${enableFatSnfLR}&quot;==&quot;Y&quot;"><display/></field>
+       <field name="snf" use-when="&quot;${enableFatSnfLR}&quot;==&quot;Y&quot;"><display/></field>        
        <field name="statusId" title="status"><display-entity entity-name="StatusItem" key-field-name="statusId" description="${description}"></display-entity></field>
        <field name="Approve" title-style="buttontext"  separate-column="true" widget-style="button">
           <hyperlink target="approveMilkRecord" description="Approve">
@@ -1046,11 +1501,35 @@ under the License.
       	<field name="bmcuCode" title="BMCU/MCC Code" required-field="true"><text size="20"></text></field>
       	<field name="routeId" title="Route No" required-field="true"><text size="20" ></text></field>
       	<field name="centerCode" title="Center Code" required-field="true"><text size="20" ></text></field>
+      	<field name="producerCode" title="Producer Code" required-field="true"><text size="20" ></text></field>
       	<!-- <field name="centerName" title="Center Name" required-field="true"><text size="20" ></text></field> -->
-      	<field name="firstName" required-field="true" title="Farmer First Name"><text size="20" ></text></field>
-      	<field name="lastName"  required-field="true" title="Farmer Last Name"><text size="20" ></text></field>
-      	<field name="mobileNo"><text size="20" ></text></field>
-      	<field name="avgMilkProduced"  required-field="true"><text size="20" ></text></field>
+      	<field name="firstName"  title="Surname"><text size="20" ></text></field>
+      	<field name="lastName"  required-field="true" title="Name"><text size="20" ></text></field>
+      	<field name="fatherName"  title="Father Name"><text size="20" ></text></field>
+      	 <field name="gender" title="Gender">
+	          <drop-down allow-empty="true" no-current-selected-key="">
+	              <option key="MALE"></option>
+	              <option key="FEMALE"></option>
+	          </drop-down>
+         </field>
+      	 <field name="caste" title="Caste">
+          <drop-down allow-empty="true" no-current-selected-key="">
+              <option key="SC"></option>
+              <option key="ST"></option>
+              <option key="BC" />
+              <option key="GENERAL" />
+              <option key="MINORITY"/>
+              <option key="OTHERS"/>
+           </drop-down>
+         </field>
+      	<field name="mobileNo"><text size="20" maxlength="12"></text></field>
+      	<field name="avgMilkProduced" ><text size="20" ></text></field>
+      	<field name="bankName" title="Bank Name" required-field="true"><text size="20" ></text></field>
+      	<field name="bankAccountNo" title="Bank Account No" required-field="true"><text size="20" ></text></field>
+      	<field name="branchName" title="Branch Name" required-field="true"><text size="20" ></text></field>
+      	<field name="ifscNo" title="IFSC No" ><text size="20" ></text></field>
+      	<field name="micrCode" title="MICR Code" ><text size="20" ></text></field>
+      	<field name="aadharCardNo" title="Aadhar Card No" required-field="true"><text size="20" ></text></field>
       	<field name="submitButton" title="${uiLabelMap.CommonCreate}" widget-style="smallSubmit">
             <submit button-type="button"/>
         </field>
@@ -1112,12 +1591,21 @@ under the License.
       	<field name="shedCode" title="Shed Code"><display-entity entity-name="Geo" description="${geoName}" key-field-name="geoId"></display-entity></field>
       	<field name="bmcuCode" title="BMCU/MCC Code"><display/></field>
       	<field name="routeId" title="Route No"><display/></field>
+      	<field name="producerCode" title="Producer Code"><display/></field>
       	<field name="centerCode" title="Center Code"><display/></field>
       	<field name="centerName" title="Center Name"><display/></field>
       	<field name="firstName"><display/></field>
       	<field name="lastName" ><display/></field>
+      	<field name="fatherName" title="Father Name"><display/></field>
+      	<field name="gender" title="Gender"><display/></field>
+      	<field name="caste" title="Caste"><display/></field>
       	<field name="mobileNo" ><display/></field>
-      	<field name="avgMilkProduced"><display/></field>      	
+      	<field name="avgMilkProduced"><display/></field>
+      	<field name="bankAccountNo" title="Account Number"><display/></field>
+      	<field name="branchName" title="branch"><display/></field>
+      	<field name="ifscNo" title="Ifsc No."><display/></field>
+      	<field name="micrCode" title="MICR Code"><display/></field>
+      	<field name="aadharCardNo" title="Aadhar Card No."><display/></field>
     </form>
     <form name="FindProcurementProducerMigr" odd-row-style="alternate-row" header-row-style="header-row" type="single"  default-table-style="basic-table hover-bar" separate-columns="true" target="FindProcurementProducerMigr">    
         <field name="noConditionFind"><hidden value="Y"/><!-- if this isn't there then with all fields empty no query will be done --></field>
@@ -1158,7 +1646,7 @@ under the License.
        </field>       
        <field name="customTimePeriodId" required-field="true">
 			<drop-down >
-                <entity-options entity-name="CustomTimePeriod" key-field-name="customTimePeriodId" description="${periodName}" filter-by-date="false">
+                <entity-options entity-name="CustomTimePeriod" key-field-name="customTimePeriodId" description="${groovy:org.ofbiz.base.util.UtilDateTime.toDateString(fromDate, &quot;MMMdd&quot;);}-${groovy:org.ofbiz.base.util.UtilDateTime.toDateString(thruDate, &quot;MMMdd yyyy&quot;);}" filter-by-date="false">
                     <entity-constraint name="periodTypeId" operator="equals" value="PROC_BILL_MONTH"/>
             	</entity-options>
 			</drop-down>
@@ -1177,68 +1665,79 @@ under the License.
             <submit button-type="button"/>
         </field>
     </form>
-    <form name="FindFacilityOutputEntry" odd-row-style="alternate-row" header-row-style="header-row" type="single"  default-table-style="basic-table hover-bar" separate-columns="true" target="FindFacilityOutputEntry">    
+    <form name="FindFacilityOutputEntry" odd-row-style="alternate-row" header-row-style="header-row" type="single"  default-table-style="basic-table hover-bar" separate-columns="true" target="FindFacilityOutputEntry">
+      	<actions>
+      		<script location="component://procurement/webapp/procurement/WEB-INF/actions/facility/getProcurementOutputTypes.groovy"/>
+      		<set field="optionsList" from-field="outputTypes" global="true" type="List"/>
+      		<set field="unitMapListSize" value="${groovy:  if (unitMapsList.size()!=0) return 1;}" default-value="0"/>
+      	</actions>
        <field name="noConditionFind"><hidden value="Y"/><!-- if this isn't there then with all fields empty no query will be done --></field>
        <field name="hideSearch"><hidden value="Y"/></field>       	
-      <field name="shedId" title="Shed Name" event="onchange" action="javascript:setOutPutEntryShedUnitsDropDown(this);">
+       <field name="shedId" id-name="shedId" title="Shed Name" event="onchange" action="javascript:setOutPutEntryShedUnitsDropDown(this);">
             <drop-down allow-empty="true">
                 <entity-options description="${description}" entity-name="Facility" key-field-name="facilityId">
                 	<entity-constraint name="facilityTypeId" operator="equals" value="SHED"/>
                 </entity-options>
             </drop-down>
        </field>
-       <field use-when="shedId!=null" name="shedId" title="Shed Name"><display default-value="${shedId}"  description="${shedName}"/></field>  
-       <field name="facilityId" title="unit Code" >
-	       	<drop-down>
-	       		<list-options key-name="facilityId" list-name="unitsList" description="${facilityName}"/>
+       <field use-when="(shedId!=null)&amp;&amp;(shedCode!=null)" id-name="shedId" name="shedId" title="Shed Name"><display default-value="${shedId}"  description="${shedName}"/></field>  
+       <field name="facilityId" title="unit Code" id-name="facilityId" event="onchange" action="getTimePeriodsByUnit($('[name=shedId]').val(),$('[name=facilityId]').val());" >
+	       	<drop-down allow-empty="true">
+	       		<list-options key-name="facilityId"  list-name="unitsList" description="${facilityName}"/>
 	       	</drop-down>
        </field>
-        <field use-when="unitCode!=null" name="facilityId" title="Unit Code" tooltip="${unitName}"><display default-value="${unitId}" description="${unitCode}"/> </field>       
+       <field use-when="(${unitMapListSize}!=0)" name="facilityId" title="unit Code" id-name="facilityId" event="onchange" action="getTimePeriodsByUnit($('[name=shedId]').val(),$('[name=facilityId]').val());" >
+	       	<drop-down allow-empty="true">
+	       		<list-options key-name="facilityId"  list-name="unitMapsList" description="${facilityName}"/>
+	       	</drop-down>
+       </field>
+       <field use-when="unitCode!=null" id-name="facilityId" name="facilityId" title="Unit Code" tooltip="${unitName}"><display default-value="${unitId}" description="${unitCode}"/> </field>       
        <field name="customTimePeriodId">
 			<drop-down allow-empty="true">
-                <entity-options entity-name="CustomTimePeriod" key-field-name="customTimePeriodId" description="${periodName}" filter-by-date="false">
-                    <entity-constraint name="periodTypeId" operator="equals" value="PROC_BILL_MONTH"/>
-            	</entity-options>
+                <list-options key-name="customTimePeriodId" list-name="timePeriodList" description="${groovy:org.ofbiz.base.util.UtilDateTime.toDateString(fromDate, &quot;MMMdd&quot;);}-${groovy:org.ofbiz.base.util.UtilDateTime.toDateString(thruDate, &quot;MMMdd YYYY&quot;);}"/>
 			</drop-down>
-		</field>		
+		</field>
 		<field name="outputTypeId" title="Output Type">
         	<drop-down allow-empty="true">
-        		<entity-options description="${description}" entity-name="Enumeration" key-field-name="enumId">        	
-        			<entity-constraint name="enumTypeId" operator="equals" value="PROC_OUTPUT_TYPE"/>	
-        		</entity-options>
+        		<list-options key-name="enumId" list-name="optionsList" description="${description}"/>
         	</drop-down>            
-        </field>      	   
+        </field>  
+        <field name="createdByUserLogin" title="userLogin"><text/></field>    	   
       	<field name="submitButton" title="${uiLabelMap.CommonFind}" widget-style="smallSubmit">
             <submit button-type="button"/>
         </field>
     </form>
-    <form name="ListProcOutputEntry" odd-row-style="alternate-row" header-row-style="header-row" type="list"  default-table-style="basic-table hover-bar" separate-columns="true"  paginate-target="FindFacilityOutputEntry" list-name="listIt">    
+    <form name="ListProcOutputEntry" odd-row-style="alternate-row" header-row-style="header-row" type="list" target="updateProcFacilityOutputEntry" default-table-style="basic-table hover-bar" separate-columns="true"  paginate-target="FindFacilityOutputEntry" list-name="listIt">    
        <actions>
-       		<service service-name="performFind" result-map="result" result-map-list="listIt">
+	       <script location="component://procurement/webapp/procurement/WEB-INF/actions/facility/ProcFacilityOutputEntryPerformfind.groovy"/>
+	       <set field="viewSize" value="50" type="Integer"/>
+    	   <service service-name="performFind" result-map="result" result-map-list="listIt">
                 <field-map field-name="inputFields" from-field="parameters"/>
                 <field-map field-name="entityName" value="ProcFacilityOutput"/>
                <!--  <field-map field-name="orderBy" value="-createdDate"/> -->
                 <!-- <field-map field-name="viewIndex" from-field="viewIndex"/>
             	<field-map field-name="viewSize" from-field="viewSize"/>  -->                 
-            </service>
+           </service>
        </actions>       
-       <auto-fields-entity entity-name="ProcFacilityOutput" default-field-type="display"/>       
+       <!-- <auto-fields-entity entity-name="ProcFacilityOutput" default-field-type="display"/> -->       
 	   	<field name="facilityId" title="Unit"><display-entity entity-name="Facility" key-field-name="facilityId" description="${facilityCode}"></display-entity></field>
-      	<field name="customTimePeriodId" title="Time Period"><display-entity entity-name="CustomTimePeriod" key-field-name="customTimePeriodId" description="${periodName}"></display-entity></field>
+      	<field name="customTimePeriodId" title="Time Period"><display-entity entity-name="CustomTimePeriod" key-field-name="customTimePeriodId" description="${groovy:org.ofbiz.base.util.UtilDateTime.toDateString(fromDate, &quot;MMMdd&quot;);}-${groovy:org.ofbiz.base.util.UtilDateTime.toDateString(thruDate, &quot;MMMdd yyyy&quot;);}"></display-entity></field>
       	<field name="outputTypeId"><display-entity entity-name="Enumeration" key-field-name="enumId" description="${description}"></display-entity></field>
-      	<field name="qty"><display/></field>
-      	<field name="kgFat"><display/></field>
-      	<field name="kgSnf"><display/></field>
-      	<field name="quantityLtrs"><display/></field>      	
-		<field name="delete" title="${uiLabelMap.CommonDelete}" widget-style="buttontext">
+      	<field name="qty"><text size="8"/></field>
+      	<field name="quantityLtrs"><text size="8"/></field>
+      	<field name="kgFat"><text size="8"/></field>
+      	<field name="kgSnf"><text size="8"/></field>
+      	<field name="createdByUserLogin" title="Created User"><display/></field>
+		<field use-when="(&quot;${userLogin.userLoginId}&quot;==&quot;${createdByUserLogin}&quot;)||(${groovy:((security.hasEntityPermission(&quot;FACILITY&quot;, &quot;_ADMIN&quot;, session))) } )" name="update" title="${uiLabelMap.CommonUpdate}" widget-style="buttontext"><submit/></field>
+		<field use-when="(&quot;${userLogin.userLoginId}&quot;==&quot;${createdByUserLogin}&quot;)||(${groovy:((security.hasEntityPermission(&quot;FACILITY&quot;, &quot;_ADMIN&quot;, session))) } )" name="delete" title="${uiLabelMap.CommonDelete}" widget-style="button"> 
         	 <hyperlink target="deleteProFacilityOutputEntry" also-hidden="false" description="${uiLabelMap.CommonDelete}" target-type="intra-app">
                 <parameter param-name="facilityId"/>
                 <parameter param-name="customTimePeriodId"/>
-                <parameter param-name="outputTypeId"/>                
+                <parameter param-name="outputTypeId"/>
             </hyperlink>
-        </field> 
+        </field>
     </form> 
-    <form name="ListRecentProcOutputEntries" extends="ListProcOutputEntry"  paginate-target="CreateProcFaciltiyOutputEntry" list-name="listIt">    	
+    <form name="ListRecentProcOutputEntries" default-table-style="basic-table hover-bar"  odd-row-style="alternate-row" header-row-style="header-row" type="list" paginate-target="CreateProcFaciltiyOutputEntry" list-name="listIt">    	
        <actions>
        			<set field="viewSize" from-field="parameters.VIEW_SIZE" type="Integer" default-value="5"/>  
                 <set field="viewIndex" from-field="parameters.VIEW_INDEX" type="Integer" />
@@ -1252,12 +1751,22 @@ under the License.
                     <field-map field-name="viewSize" from-field="viewSize"/>                  
                 </service>
        </actions>
-       <auto-fields-entity entity-name="ProcFacilityOutput" default-field-type="display"/> 
-       <field name="delete" title="${uiLabelMap.CommonDelete}" widget-style="buttontext">
-        	 <hyperlink target="deleteFacilityOutputEntry" also-hidden="false" description="${uiLabelMap.CommonDelete}" target-type="intra-app">
+       <!-- <auto-fields-entity entity-name="ProcFacilityOutput" default-field-type="display"/> --> 
+       <field name="facilityId" title="Unit"><display-entity entity-name="Facility" key-field-name="facilityId" description="${facilityCode}"></display-entity></field>
+      	<field name="customTimePeriodId" title="Time Period"><display-entity entity-name="CustomTimePeriod" key-field-name="customTimePeriodId" description="${groovy:org.ofbiz.base.util.UtilDateTime.toDateString(fromDate, &quot;MMMdd&quot;);}-${groovy:org.ofbiz.base.util.UtilDateTime.toDateString(thruDate, &quot;MMMdd yyyy&quot;);}"></display-entity></field>
+      	<field name="outputTypeId" title="outputType"><display-entity entity-name="Enumeration" key-field-name="enumId" description="${description}"></display-entity></field>
+      	<field name="qty"><display/></field>
+      	<field name="quantityLtrs"><display/></field>
+      	<field name="kgFat"><display/></field>
+      	<field name="kgSnf"><display/></field>
+      	<field name="fat"><display/></field>
+      	<field name="snf"><display/></field>
+      	<field name="lactoReading"><display/></field>
+      	<field use-when="(&quot;${userLogin.userLoginId}&quot;==&quot;${createdByUserLogin}&quot;)||(${groovy:((security.hasEntityPermission(&quot;FACILITY&quot;, &quot;_ADMIN&quot;, session))) } )" name="delete" title="${uiLabelMap.CommonDelete}" widget-style="buttontext" >
+        	 <hyperlink target="deleteProcFacilityOutputEntry" also-hidden="false" description="${uiLabelMap.CommonDelete}" target-type="intra-app">
                 <parameter param-name="facilityId"/>
                 <parameter param-name="customTimePeriodId"/>
-                <parameter param-name="outputTypeId"/>                
+                <parameter param-name="outputTypeId"/>
             </hyperlink>
         </field>
     </form>   
@@ -1269,61 +1778,123 @@ under the License.
     </form>
     <form name="EditFacilityForm" type="single"  target="CreateFacility"
         odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
-        <field name="facilityTypeId" required-field="true">
+        <row-actions>    		
+    		<set field="openedDate" value="${groovy:org.ofbiz.base.util.UtilDateTime.toDateString(openedDate, &quot;dd/MM/yyyy&quot;);}"/>
+       	</row-actions>
+        <field name="facilityDetails" title="Facility Details" title-style="group-label"><display description=" " also-hidden="false"/></field>
+        <field name="facilityTypeId" required-field="true" event="onchange" action="javascript:facilityTypeChangeHandler(this);">
             <drop-down allow-empty="true">
             	<option key="CENTER" description="Center"/>
             	<option key="PROC_ROUTE" description="Route"/>
             	<option key="UNIT" description="Unit"/>
             </drop-down>
         </field>
-        <field name="shedId" title="Shed Name" event="onchange" action="setShedUnitsDropDown(this)" id-name="shedId">
+        <field name="shedId" title="Shed Name" event="onchange" action="setShedFacUnitsDropDown(this)" id-name="shedId">
             <drop-down allow-empty="true">
                 <entity-options description="${description}" entity-name="Facility" key-field-name="facilityId">
                 	<entity-constraint name="facilityTypeId" operator="equals" value="SHED"/>
                 </entity-options>
             </drop-down>
         </field>
-        <field name="unitId" title="Unit Name" id-name="unitId" event="onchange" action="getUnitRoute(this)">
-          	<drop-down allow-empty="true" >
-          	 	<option key=""/>
-         	</drop-down>
-        </field>
-        <field name="routeId" title="Route Name" id-name="routeId">
-          	<drop-down allow-empty="true" >
+        <field name="shedId" use-when="shedId!=null" title="Shed Name" id-name="shedId"><display default-value="${shedId}"  description="${shedName}"/></field>
+        <field name="unit" parameter-name="unitId" title="Unit Name" id-name="unitId" event="onchange" action="getUnitRoute(this)">
+          	<!-- <drop-down allow-empty="true" no-current-selected-key="${unitId}" current="selected" >
           	 	<option key="" />
-         	</drop-down>
+         	</drop-down> -->
+         	<drop-down allow-empty="true" no-current-selected-key="${unitId}" current="selected">
+       			<list-options key-name="unitId" list-name="unitList" description="${facilityName}"/>
+       		</drop-down>
         </field>
-        <field name="facilityId" title="Facility Code"><text size="10" maxlength="9"/></field>
-        <field name="categoryTypeEnum" title="${uiLabelMap.ProductFacilityCategoryType}">
+        <field name="route" parameter-name="routeId" title="Route Name" id-name="routeId">
+          	<!-- <drop-down allow-empty="true"  no-current-selected-key="${routeId}" current="selected">
+          	 	<option key="" />
+         	</drop-down> -->
+         	<drop-down allow-empty="true" no-current-selected-key="${routeId}" current="selected">
+       			<list-options key-name="routeId" list-name="routesList" description="${facilityName}"/>
+       		</drop-down>
+        </field>
+        <field name="facilityCode" title="Facility Code" required-field="true"><text size="10" maxlength="9"/></field>
+        <!-- <field name="categoryTypeEnum" title="${uiLabelMap.ProductFacilityCategoryType}">
             <drop-down allow-empty="true">
                 <entity-options entity-name="Enumeration" description="${description}" key-field-name="enumId">
                     <entity-constraint name="enumTypeId" value="BOOTH_CAT_TYPE"/>
                     <entity-order-by field-name="sequenceId"/>
                 </entity-options>
             </drop-down>
-        </field>
-        <field name="facilityName" title="Faclity Name" required-field="true"><text/></field>    
+        </field> -->
+        <field name="facilityName" title="Facility Name" required-field="true"><text/></field>    
         <field name="sequenceNum" title="Sequence"><hidden/></field>
         <field name="description" title="Description"><text maxlength="25"/></field>
         <field name="ownerDetails" title="Owner Details" title-area-style="group-label"><display description=" " also-hidden="false"/></field>
         <field name="firstName" title="Name" required-field="true"><text maxlength="25"/></field>
-        <field name="contactNumber" title="${uiLabelMap.PartyPhoneNumber}"><text size="15" maxlength="15"/></field>
-        <field name="address" title="Address"><text size="30" maxlength="60"/></field>
+        <!-- <field name="contactNumber" title="${uiLabelMap.PartyPhoneNumber}"><text size="15" maxlength="15"/></field>
+        <field name="address" title="Address"><text size="30" maxlength="60"/></field> -->
+        <field name="openedDate" title="Opening Date"><date-time type="date"/></field>
         <field name="stateProvinceGeoId" title="${uiLabelMap.CommonState}"><hidden value="IN-AP"/></field>
         <field name="postalCode" title="${uiLabelMap.CommonZipPostalCode}"><hidden value="500007"/></field>
         <field name="bankDetails" title="Bank Details" title-area-style="group-label"><display description=" " also-hidden="false"/></field>
-        <field name="finAccountName" title="Bank Name"><text></text></field>
-        <field name="finAccountBranch" title="Bank Branch"><text></text></field>
-        <field name="finAccountCode" title="Account Number"><text></text></field>
-		<field name="useEcs" title="${uiLabelMap.UseEcs}">
+        <field name="bankName" title="Bank Name" id-name="finAccountName" event="onchange" action="javascript:setShortNameAndGbCode();">
+            <drop-down allow-empty="false">
+        		<list-options key-name="bankName" list-name="shedOptionList" description="${finAcc}"/>
+       		</drop-down>
+        </field>
+        <!-- <field name="bankShortName" parameter-name="shortName" title="Short Name">
+        	<drop-down allow-empty="false">
+        		<list-options list-name="shrtNameList" key-name="shortName"  description="${shortName}"/>
+       		</drop-down>
+        </field> -->
+        <field name="bankShortName" parameter-name="shortName" id-name="shortName" title="Short Name"><text></text></field>
+        <field name="finAccountBranch" title="Bank Branch" required-field="true"><text></text></field>
+        <field name="finAccountCode" title="Account Number" required-field="true"><text></text></field>
+        <field name="gbCode" title="GB Code" required-field="true"><text></text></field>
+        <field name="bCode" title="B Code" required-field="true"><text></text></field>
+        <field name="bPlace" title="B Place" required-field="false"><text></text></field>
+        <field name="ifscCode" title="IFSC Code"><text></text></field>
+        <field use-when="${groovy:((security.hasEntityPermission(&quot;MILKLINE&quot;, &quot;_VIEW&quot;, session))) } " name="supervisorDetails" title="Supervisor Details" title-area-style="group-label"><display description=" " also-hidden="false"/></field>
+        <field use-when="${groovy:((security.hasEntityPermission(&quot;MILKLINE&quot;, &quot;_VIEW&quot;, session))) } " name="supervisorId" title="Supervisor Id"><lookup target-form-name="LookupPartyName" target-parameter="roleTypeId"/></field>
+        <field name="roleTypeId" ><hidden value="SUPERVISOR"/></field>
+		<!-- <field name="useEcs" title="${uiLabelMap.UseEcs}">
 			<drop-down allow-empty="true">
                 <option key="Y" description="${uiLabelMap.CommonYes}"/>
                 <option key="N" description="${uiLabelMap.CommonNo}"/>
             </drop-down>
-		</field>        
-        <field name="submitButton" title="${uiLabelMap.CommonSave}" widget-style="smallSubmit"><submit button-type="button"/></field>
+		</field> -->
+		<field name="facilityRateDetails" title="Facility Rate Details" title-area-style="group-label"><display description=" " also-hidden="false"/></field>        
+        <field name="opCost" title="AM OpCost" position="1"><text></text></field>
+        <field name="opCostUomId" title="AmOpCostUom" position="1">
+        	<drop-down allow-empty="true">
+        	 	<option key="VLIQ_K" description="Kilograms"/>
+                <option key="VLIQ_L" description="Liters"/>
+                <option key="VLIQ_TS" description="TotalSolids"/>
+       		</drop-down>
+         </field>
+        <field name="eOpCost" title="PM OpCost" position="1"><text></text></field>
+        <field name="eOpCostUomId" title="PmOpCostUom" position="1">
+        	<drop-down allow-empty="true">
+        	 	<option key="VLIQ_K" description="Kilograms"/>
+                <option key="VLIQ_L" description="Liters"/>
+                <option key="VLIQ_TS" description="TotalSolids"/>
+       		</drop-down>
+         </field>
+        <field name="cartage" title="Cartage" position="1"><text></text></field>
+        <field name="cartageUomId" title="CartageUom" position="1">
+        	<drop-down allow-empty="true">
+        	 	<option key="VLIQ_K" description="Kilograms"/>
+                <option key="VLIQ_L" description="Liters"/>
+                <option key="VLIQ_TS" description="TotalSolids"/>
+       		</drop-down>
+         </field>
+         <field name="commission" title="Commission" position="1"><text></text></field>
+        <field name="commissionUomId" title="CommissionUom" position="1">
+        	<drop-down allow-empty="true">
+        	 	<option key="VLIQ_K" description="Kilograms"/>
+                <option key="VLIQ_L" description="Liters"/>
+                <option key="VLIQ_TS" description="TotalSolids"/>
+       		</drop-down>
+         </field>
+        <field name="submitButton" title="${uiLabelMap.CommonSave}" widget-style="smallSubmit" event="onclick" action="javascript:checkBankDetails();"><submit button-type="button"/></field>
         <field name="cancelLink" title="${uiLabelMap.CommonEmptyHeader}" widget-style="smallSubmit">
-            <hyperlink target="FindFacility" also-hidden="false" description="${uiLabelMap.CommonCancel}" target-type="intra-app">
+            <hyperlink target="FindProcFacility" also-hidden="false" description="${uiLabelMap.CommonCancel}" target-type="intra-app">
                 <parameter param-name="facilityId" />
             </hyperlink>
         </field>
@@ -1358,9 +1929,9 @@ under the License.
 		<field name="UCODE" title="UCODE_N%L2"><display/></field>
 		<field name="RNO" title="RNO_N%L2"><display/></field>
 		<field name="CCODE" title="CCODE_N%L5"><display/></field>
-		<field name="AIWR" title="AIWR_N%L8%D2"><display description="${groovy: return (AIWR.toString()).replace(&quot;,&quot; , &quot;&quot;)}" default-value="0"/></field>
+		<field name="MILKPROC_AIWR" title="AIWR_N%L8%D2"><display description="${groovy: return (MILKPROC_AIWR.toString()).replace(&quot;,&quot; , &quot;&quot;)}" default-value="0"/></field>
 		<field name="MILKPROC_INTEREST" title="INTR_N%L8%D2"><display description="${groovy: return (MILKPROC_INTEREST.toString()).replace(&quot;,&quot; , &quot;&quot;)}" default-value="0"/></field>
-	    <field name="OTHER" title="OTHR_N%L8%D2"><display default-value="0"/></field>
+	    <field name="MILKPROC_OTHER_ADDNs" title="OTHR_N%L8%D2"><display default-value="0" description="${groovy: return (MILKPROC_OTHER_ADDNs.toString()).replace(&quot;,&quot; , &quot;&quot;)}" /></field>
 		<field name="SNO" title="SNO_N%L4"><display/></field>
      </form>
      <form name="MpDeductionsFoxproCsv" type="list" list-name="deductionsListFoxpro" paginate="false"
@@ -1386,13 +1957,18 @@ under the License.
      
       <form name="MPABSFoxproCsv" type="list" list-name="MPABSFoxproCsv" paginate="false"
     		odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">		
+		<actions>
+			<set field="BANOTITLE" type="String" value="${groovy:if(((parameters.shedId).equals('WGD')))return(&quot;BANO_C%L17&quot;);}" default-value="BANO_N%17"/>
+			<set field="MLKLTSTITLE" type="String" value="${groovy:if(((parameters.shedId).equals('CHTR')))return(&quot;MLKLTS_N%L10%D2&quot;);}" default-value="MLKLTS_N%L8%D2"/>
+			<set field="MLKKGSTITLE" type="String" value="${groovy:if(((parameters.shedId).equals('CHTR')))return(&quot;MLKKGS_N%L11%D2&quot;);}" default-value="MLKKGS_N%L8%D2"/>
+		</actions>
 		<field name="UCODE" title="UCODE_N%L2"><display/></field>
 		<field name="BDATE" title="BDATE_D"><display/></field>
 		<field name="LDATE" title="LDATE_D"><display/></field>		
 		<field name="CCODE" title="CCODE_N%L5"><display/></field>
 		<field name="TYPMLK" title="TYPMLK_C%L2"><display/></field>
-		<field name="MLKLTS" title="MLKLTS_N%L8%D2"><display description="${groovy: return (MLKLTS.toString()).replace(&quot;,&quot; , &quot;&quot;)}" default-value="0"/></field>
-		<field name="MLKKGS" title="MLKKGS_N%L8%D2"><display description="${groovy: return (MLKKGS.toString()).replace(&quot;,&quot; , &quot;&quot;)}" default-value="0"/></field>
+		<field name="MLKLTS" title="${MLKLTSTITLE}"><display description="${groovy: return (MLKLTS.toString()).replace(&quot;,&quot; , &quot;&quot;)}" default-value="0"/></field>
+		<field name="MLKKGS" title="${MLKKGSTITLE}"><display description="${groovy: return (MLKKGS.toString()).replace(&quot;,&quot; , &quot;&quot;)}" default-value="0"/></field>
 		<field name="MLKAMT" title="MLKAMT_N%L9%D2"><display description="${groovy: return (MLKAMT.toString()).replace(&quot;,&quot; , &quot;&quot;)}" default-value="0"/></field>
 		<field name="COMSN" title="COMSN_N%L8%D2"><display description="${groovy: return (COMSN.toString()).replace(&quot;,&quot; , &quot;&quot;)}" default-value="0"/></field>
 		<field name="CART" title="CART_N%L7%D2"><display description="${groovy: return (CART.toString()).replace(&quot;,&quot; , &quot;&quot;)}"  default-value="0"/></field>
@@ -1423,7 +1999,7 @@ under the License.
 		<field name="RNO" title="RNO_N%L2"><display default-value="0"/></field>
 		<field name="GBCODE" title="GBCODE_N%L2"><display default-value="0"/></field>
 		<field name="BCODE" title="BCODE_N%L2"><display default-value="0"/></field>
-		<field name="BANO" title="BANO_N%L17"><display default-value="0"/></field>
+		<field name="BANO" title="${BANOTITLE}"><display default-value="0"/></field>
 		<field name="MISCADD" title="MISCADD_N%L8%D2"><display default-value="0"/></field>	
 		<field name="MORLTS" title="MORLTS_N%L8%D2"><display default-value="0"/></field>	
 		<field name="EVELTS" title="EVELTS_N%L8%D2"><display default-value="0"/></field>				
@@ -1432,6 +2008,9 @@ under the License.
      </form>
       <form name="UNITMASFoxproCsv" type="list" list-name="UnitMasterList" paginate="false"
     		odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
+		<actions>
+			<set field="BANOTITLE" type="String" value="${groovy:if(((parameters.shedId).equals('CHTR'))||((parameters.shedId).equals('WGD'))||((parameters.shedId).equals('ANTP'))||((parameters.shedId).equals('WGL')))return(&quot;BANO_C%17&quot;);}" default-value="BANO_N%L17"/>
+		</actions>
 		<field name="UCODE" title="UCODE_N%L2"><display/></field>
 		<field name="UNAME" title="UNAME_C%L20"><display description="${groovy: return UNAME.replace(&quot;,&quot; , &quot;&quot;)}"/></field>
 		<field name="UTYPE" title="UTYPE_N%L1"><display/></field>
@@ -1439,12 +2018,12 @@ under the License.
 		<field name="MNGBY" title="MNGBY_N%L1" ><display  default-value="0"/></field>
 		<field name="DOP" title="DOP_D"><display/></field>
 		<field name="CAP" title="CAP_N%L6"><display description="${groovy: return (CAP.toString()).replace(&quot;,&quot; , &quot;&quot;)}" default-value="0"/></field>
-		<field name="OPCOST" title="OPCOST_N%L6%D2"><display/></field>
+		<field name="OPCOST" title="OPCOST_N%L5%D2"><display/></field>
 		<field name="EOPCOST" title="EOPCOST_N%L5%D2"><display/></field>
 		<field name="OCODE" title="OCODE_N%L2"><display/></field>
 		<field name="GBCODE" title="GBCODE_N%L2"><display/></field>
 		<field name="BCODE" title="BCODE_N%L2"><display/></field>		
-		<field name="BANO" title="BANO_N%L17"><display/></field>
+		<field name="BANO" title="${BANOTITLE}"><display/></field>
 		<field name="PNAME" title="PNAME_C%L25"><display description="${groovy: return PNAME.replace(&quot;,&quot; , &quot;&quot;)}"/></field>
 		<field name="DIST" title="DIST_C%L3"><display/></field>
 		<field name="USERID" title="USERID_N%L1"><display/></field>
@@ -1456,7 +2035,10 @@ under the License.
 		<field name="RNAME" title="RNAME_C%L20"><display description="${groovy: return RNAME.replace(&quot;,&quot; , &quot;&quot;)}"/></field>
      </form>
      <form name="MPMASFoxproCsv" type="list" list-name="centerMasterList" paginate="false"
-    		odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
+     	odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
+     	<actions>
+			<set field="BANOTITLE" type="String" value="${groovy:if(((parameters.shedId).equals('WGD')))return(&quot;BANO_C%L17&quot;);}" default-value="BANO_N%17"/>
+		</actions>
 		<field name="UCODE" title="UCODE_N%L2"><display/></field>
 		<field name="CCODE" title="CCODE_N%L5"><display/></field>
 		<field name="MCCTYP" title="MCCTYP_N%L1"><display/></field>
@@ -1467,9 +2049,9 @@ under the License.
 		<field name="CART" title="CART_N%L4%D2"><display/></field>
 		<field name="GBCODE" title="GBCODE_N%L2"><display/></field>
 		<field name="BCODE" title="BCODE_N%L2"><display/></field>		
-		<field name="BANO" title="BANO_N%L17"><display default-value="0"/></field>
+		<field name="BANO" title="${BANOTITLE}"><display default-value="0"/></field>
 		<field name="INCENTIVE" title="INCENTIVE_L%L1"><display/></field>
-		<field name="HABCODE" title="HABCODE_N%L12"><display/></field>
+		<field name="HABCODE" title="HABCODE_N%L17"><display/></field>
      </form>
      <form name="BANKMASCsv" type="list" list-name="bankMasList" paginate="false"
     		odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
@@ -1482,6 +2064,176 @@ under the License.
 		<field name="TRBNAME" title="TRBNAME_C%L25"><display/></field>
 		<field name="TRBRANCH" title="TRBRANCH_C%L20"><display/></field>
 		<field name="TRIFCNO" title="TRIFCNO_C%L11"><display/></field>
-		<field name="TRBANO" title="TRBANO_C%L17"><display/></field>
+		<field name="TRBANO" title="TRBANO_N%L17"><display default-value="0"/></field>
+     </form>
+     <form name="GBMASCsv" type="list" list-name="gbMasList" paginate="false"
+    		odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
+		<field name="gbCode" title="GBCODE_N%L2"><display/></field>
+		<field name="finAccountName" title="GBNAME_C%L25"><display/></field>
+		<field name="SHNAME" title="SHNAM_C%L5"><display/></field>
+     </form>
+     <form name="GBMASWGDCsv" type="list" list-name="gbMasList" paginate="false"
+    		odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
+		<field name="gbCode" title="GBCODE_N%L2"><display/></field>
+		<field name="finAccountName" title="GBNAME_C%L25"><display/></field>
+		<field name="SHNAME" title="IFCNO_C%L4"><display/></field>
+		<field name="IFCNO" title="SHNAM_C%L4" ><display></display></field>
+		<field name="ONLINE" title="ONLINE_L%L1" ><display default-value="F"></display></field>
+     </form>
+    <form name="ProcurementTimePeriod"  title="Procurement TimePeriod" type="single" 
+        default-title-style="tableheadtext" default-tooltip-style="tabletext" default-widget-style="inputBox"  target="ProcurementFacilityTimePeriod">
+        <actions>
+        	<set field="unitMapListSize" value="${groovy:  if (unitMapsList.size()!=0) return 1;}" default-value="0"/>
+        </actions>
+        <field name="shedId" id-name="shedId" title="Shed Name" event="onchange" action="javascript:setProcurementUnitsDropDown(this);">
+            <drop-down allow-empty="true">
+                <entity-options description="${description}" entity-name="Facility" key-field-name="facilityId">
+                	<entity-constraint name="facilityTypeId" operator="equals" value="SHED"/>
+                </entity-options>
+            </drop-down>
+       </field>
+       <field use-when="(shedId!=null)&amp;&amp;(shedCode!=null)" id-name="shedId" name="shedId" title="Shed Name"><display default-value="${shedId}"  description="${shedName}"/></field>  
+       
+        <field name="unit" parameter-name="unitId" title="Unit Name" id-name="unitId" >
+          	<!-- <drop-down allow-empty="true" no-current-selected-key="${unitId}" current="selected" >
+          	 	<option key="" />
+         	</drop-down> -->
+         	<drop-down allow-empty="true" no-current-selected-key="${unitId}" current="selected">
+       			<list-options key-name="unitId" list-name="unitList" description="${facilityName}"/>
+       		</drop-down>
+        </field>
+        <field use-when="(${unitMapListSize}!=0)" name="unit" title="Unit Name" parameter-name="unitId">
+		 	<drop-down allow-empty="true">
+		 		<list-options key-name="facilityId" list-name="unitMapsList" description="${facilityCode} ${facilityName}"/>
+		 	</drop-down>
+		 </field>
+         <field name="customTimePeriodId" required-field="true">
+			<drop-down >
+                <entity-options entity-name="CustomTimePeriod" key-field-name="customTimePeriodId" description="${groovy:org.ofbiz.base.util.UtilDateTime.toDateString(fromDate, &quot;MMMdd&quot;);}-${groovy:org.ofbiz.base.util.UtilDateTime.toDateString(thruDate, &quot;MMMdd yyyy&quot;);}" filter-by-date="false">
+                    <entity-constraint name="periodTypeId" operator="equals" value="PROC_BILL_MONTH"/>
+                    <entity-constraint name="isClosed" operator="equals" value="N"/>
+                    <entity-order-by field-name="-thruDate"/>
+            	</entity-options>
+			</drop-down>
+		</field>
+	   <field name="submitButton" title="${uiLabelMap.CommonCreate}" widget-style="smallSubmit">
+            <submit button-type="button"/>
+       </field>   
+     </form>   
+     <form name="FindProcurementEntryStatus" odd-row-style="alternate-row" header-row-style="header-row" type="single"  default-table-style="basic-table hover-bar" separate-columns="true" target="ProcurementEntryDailyStatusReport" target-window="_blank">    
+       <field name="noConditionFind"><hidden value="Y"/><!-- if this isn't there then with all fields empty no query will be done --></field>
+       <field name="hideSearch"><hidden value="Y"/></field>       	
+       <field name="facilityId" title="Shed" >
+       	<drop-down allow-empty="true">
+       		<entity-options description="${facilityName}" entity-name="Facility" key-field-name="facilityId">
+       			<entity-constraint name="facilityTypeId" value="SHED"/>
+       		</entity-options>
+       	</drop-down>
+       
+       </field>
+       <field name="customTimePeriodId" required-field="false">
+			<drop-down allow-empty="true">
+                <entity-options entity-name="CustomTimePeriod" key-field-name="customTimePeriodId" description="${groovy:org.ofbiz.base.util.UtilDateTime.toDateString(fromDate, &quot;MMMdd&quot;);}-${groovy:org.ofbiz.base.util.UtilDateTime.toDateString(thruDate, &quot;MMMdd yyyy&quot;);}" filter-by-date="false">
+                    <entity-constraint name="periodTypeId" operator="equals" value="PROC_BILL_MONTH"/>
+                    <entity-order-by field-name="-fromDate"/>
+            	</entity-options>
+			</drop-down>
+		</field>
+       <field name="submitButton" title="download"><submit button-type="button"/></field>
+     </form>
+    
+    
+     <form name="FindProcurementTimePeriod" odd-row-style="alternate-row" header-row-style="header-row" type="single"  default-table-style="basic-table hover-bar" separate-columns="true" >    
+       <field name="noConditionFind"><hidden value="Y"/><!-- if this isn't there then with all fields empty no query will be done --></field>
+       <field name="hideSearch"><hidden value="Y"/></field>       	
+       <field name="facilityId" ><lookup target-form-name="ProcurementUnitLookupFacility" size="10"/></field>
+       <field name="customTimePeriodId" required-field="false">
+			<drop-down allow-empty="true">
+                <entity-options entity-name="CustomTimePeriod" key-field-name="customTimePeriodId" description="${groovy:org.ofbiz.base.util.UtilDateTime.toDateString(fromDate, &quot;MMMdd&quot;);}-${groovy:org.ofbiz.base.util.UtilDateTime.toDateString(thruDate, &quot;MMMdd yyyy&quot;);}" filter-by-date="false">
+                    <entity-constraint name="periodTypeId" operator="equals" value="PROC_BILL_MONTH"/>
+                    <entity-order-by field-name="-fromDate"/>
+            	</entity-options>
+			</drop-down>
+		</field>
+	   <field name="createdByUserLogin" title="Created By"><text maxlength="25"/></field>
+       <field name="submitButton" title="Find"><submit button-type="button"/></field>
+     </form>   
+     <form name="ProcurementTimePeriodList" type="list" list-name="listIt" odd-row-style="alternate-row" default-table-style="basic-table hover-bar" >
+        <actions>
+            <script location="component://procurement/webapp/procurement/WEB-INF/actions/facility/filterCustomTimePeriods.groovy"/>
+        </actions>
+    	<field name="facilityId" title="FacilityId"><display /></field>
+    	<field name="customTimePeriodId" title="CustomTimePeriodId"><display-entity entity-name="CustomTimePeriod" description="${groovy:org.ofbiz.base.util.UtilDateTime.toDateString(fromDate, &quot;MMMdd&quot;);}-${groovy:org.ofbiz.base.util.UtilDateTime.toDateString(thruDate, &quot;MMMdd yyyy&quot;);}" /></field>
+        <field name="createdByUserLogin" title="Created By"><display/></field>
+        <field name="createdDate"><display description="${groovy:org.ofbiz.base.util.UtilDateTime.toDateString(createdDate, &quot;yyyy:MM:dd HH:mm:ss&quot;);}"/></field>
+	    <field use-when="${groovy:((security.hasEntityPermission(&quot;PROCUREMENT&quot;, &quot;_ADMIN&quot;, session))) }" name="close" title="Close" widget-style="buttontext">
+            <hyperlink target="closeFacilityProcurementTimePeriod" description="${uiLabelMap.CommonClose}">
+                <parameter param-name="facilityId"/>
+                <parameter param-name="customTimePeriodId"/>
+            </hyperlink>
+	   </field>
+    </form>  
+    <form name="dbfToVbizProc" id="dbfToVbizProc" target="saveDbfToVbizProc" type="upload" 
+  		header-row-style="header-row">    
+        <field name="mimeTypeId"><hidden value="text/csv"/></field>
+        <field name="shedCode" title="Shed" event="onchange" action="javascript:setFormTarget(this);">
+        	<drop-down>
+        		<entity-options description="${description}" entity-name="Facility" key-field-name="facilityCode">
+        			<entity-constraint name="facilityTypeId" operator="equals" value="SHED"/>
+        		</entity-options>
+       		</drop-down> 
+       	</field>
+        <field name="uploadedFile" title="${uiLabelMap.CommonUpload}" tooltip="uplaod (MPROC OR MPADDN OR MPDED).dbf file only*"><file/></field>        
+        <field name="Convert" id-name="convert" ><submit button-type="button"/></field>
+    </form>
+    <form name="FindProcFacility" type="list" list-name="listIt" paginate-target="FindProcFacility"
+        odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
+        <actions>
+            <service service-name="performFind" result-map="result" result-map-list="listIt">
+                <field-map field-name="inputFields" from-field="parameters"/>
+                <field-map field-name="entityName" value="Facility"/>
+                <field-map field-name="viewIndex" from-field="viewIndex"/>
+                <field-map field-name="viewSize" from-field="viewSize"/>
+            </service>
+        </actions>
+        <row-actions>
+            <service service-name="getPartyTelephone" result-map="telephone">
+                <field-map field-name="partyId" from-field="ownerPartyId"/>
+            </service>
+        </row-actions>        
+        <field name="facilityId" title="Booth Id">
+            <hyperlink target="EditProcFacility" description="${facilityId}">
+                <parameter param-name="facilityId"/>
+            </hyperlink>
+        </field>
+         <field name="facilityCode" title="Code">
+            <display description="${facilityCode}"/> 
+        </field>
+        <field name="facilityName" title="Booth Name"><display/></field>
+        <field name="facilityTypeId" title="${uiLabelMap.ProductFacilityType}">
+            <display-entity entity-name="FacilityType" description="${description}"/>
+        </field>
+        <field name="parentFacilityId" title="Route/Parent Facility Id"><display/></field>   
+        <field name="categoryTypeEnum" title="${uiLabelMap.ProductFacilityCategoryType}">
+            <display-entity entity-name="Enumeration" key-field-name="enumId"  description="${description}"/>
+        </field>                     
+        <field name="ownerPartyId" title="Owner Name">
+            <hyperlink also-hidden="false" description="${groovy:org.ofbiz.party.party.PartyHelper.getPartyName(delegator,ownerPartyId,false);}[${ownerPartyId}]" target="/partymgr/control/viewprofile" target-type="inter-app">
+                <parameter param-name="partyId" from-field="ownerPartyId"/>
+            </hyperlink>
+        </field>        
+        <field name="phoneNumber" title="${uiLabelMap.PartyContactNumber}">
+            <display description="${telephone.contactNumber}"/> 
+        </field>       
+        <field name="FacilitySize" title="${uiLabelMap.ProductFacilitySize}"><display/></field>
+        <field name="description"><display/></field>
+        <on-event-update-area event-type="paginate" area-id="search-results" area-target="FacilitySearchResults"/>
+    </form>
+    <form name="EcsCsvReport" type="list" list-name="ecsList" paginate="false"
+    		odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
+    	<!-- BANO  PNAME   NETAMT  -->
+    	<field name="centerName" title="PNAME"><display/></field>
+    	<field name="bankAccNum" title="BANO" ><display/></field>
+    	<field name="netAmount" title="AMOUNT"><display/></field>
      </form>
 </forms>        

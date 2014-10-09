@@ -18,16 +18,47 @@ specific language governing permissions and limitations
 under the License.
 -->
 <screens xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/widget-screen.xsd">
+    <screen name="ShedWiseAverageRate">
+        <section>
+        	<actions>
+        		<property-map resource="ProductUiLabels" map-name="uiLabelMap" global="true"/>            
+                <property-map resource="HumanResUiLabels" map-name="uiLabelMap" global="true"/>                
+        	    <script location="component://procurement/webapp/procurement/WEB-INF/actions/facility/ShedWiseAverageRate.groovy"/>        		        		
+        	</actions>
+            <widgets>
+            	 <platform-specific>
+                    <xsl-fo><html-template location="component://procurement/webapp/procurement/facility/ShedWiseAverageRate.fo.ftl"/></xsl-fo>
+                </platform-specific>
+            </widgets>
+        </section>
+    </screen>
     <screen name="ShortagesRecovery">
         <section>
            <actions>
                 <property-map resource="ProductUiLabels" map-name="uiLabelMap" global="true"/>            
                 <property-map resource="HumanResUiLabels" map-name="uiLabelMap" global="true"/> 
-                <script location="component://procurement/webapp/procurement/WEB-INF/actions/facility/ShortagesRecovery.groovy"/>                               
+                <script location="component://procurement/webapp/procurement/WEB-INF/actions/facility/ShortagesRecovery.groovy"/>                
+                <script location="component://procurement/webapp/procurement/WEB-INF/actions/facility/ShedWiseAmountAbstract.groovy"/>
+                <script location="component://procurement/webapp/procurement/WEB-INF/actions/facility/ShedMilkBillDetails.groovy"/>
+                <script location="component://procurement/webapp/procurement/WEB-INF/actions/facility/UnitWiseNetPayable.groovy"/>                               
             </actions> 
             <widgets>
             <platform-specific>
                     <xsl-fo><html-template location="component://procurement/webapp/procurement/facility/ShortagesRecovery.fo.ftl"/></xsl-fo>
+                </platform-specific>
+            </widgets>
+        </section>
+    </screen>
+    <screen name="ShortagesExcel">
+        <section>
+           <actions>
+                <property-map resource="ProductUiLabels" map-name="uiLabelMap" global="true"/>            
+                <property-map resource="HumanResUiLabels" map-name="uiLabelMap" global="true"/> 
+                <script location="component://procurement/webapp/procurement/WEB-INF/actions/facility/ShortagesExcel.groovy"/>                               
+            </actions> 
+            <widgets>
+            <platform-specific>
+                    <xsl-fo><html-template location="component://procurement/webapp/procurement/facility/ShortagesExcel.fo.ftl"/></xsl-fo>
                 </platform-specific>
             </widgets>
         </section>
@@ -37,14 +68,203 @@ under the License.
            <actions>
                 <property-map resource="ProductUiLabels" map-name="uiLabelMap" global="true"/>            
                 <property-map resource="HumanResUiLabels" map-name="uiLabelMap" global="true"/> 
-                <script location="component://procurement/webapp/procurement/WEB-INF/actions/facility/ShortagesRecovery.groovy"/>
-                <script location="component://procurement/webapp/procurement/WEB-INF/actions/facility/ShedMilkBillDetails.groovy"/>
+               <script location="component://procurement/webapp/procurement/WEB-INF/actions/facility/ShedMaintenanceInvoiceAmtList.groovy"/>
+               <script location="component://procurement/webapp/procurement/WEB-INF/actions/facility/ShortagesRecovery.groovy"/>
+               <script location="component://procurement/webapp/procurement/WEB-INF/actions/facility/ShedWiseAmountAbstract.groovy"/>
+               <script location="component://procurement/webapp/procurement/WEB-INF/actions/facility/ShedMilkBillDetails.groovy"/>                
+                <script location="component://procurement/webapp/procurement/WEB-INF/actions/facility/UnitWiseNetPayable.groovy"/>  
             </actions> 
             <widgets>
                 <platform-specific>
                     <xsl-fo><html-template location="component://procurement/webapp/procurement/facility/ShedMilkBillDetails.fo.ftl"/></xsl-fo>
                 </platform-specific>
             </widgets>
+        </section>
+    </screen>
+    <screen name="ProcurementSummarySms">
+        <section>
+           <actions>
+               <property-map resource="ProductUiLabels" map-name="uiLabelMap" global="true"/>            
+               <property-map resource="HumanResUiLabels" map-name="uiLabelMap" global="true"/> 
+               <script location="component://procurement/webapp/procurement/WEB-INF/actions/facility/ShedMaintenanceInvoiceAmtList.groovy"/>
+               <script location="component://procurement/webapp/procurement/WEB-INF/actions/facility/BillsAbstractFromAbsEntity.groovy"/>
+               <script location="component://procurement/webapp/procurement/WEB-INF/actions/facility/ShortagesRecovery.groovy"/>
+               <script location="component://procurement/webapp/procurement/WEB-INF/actions/facility/ShedWiseAmountAbstract.groovy"/>
+               <script location="component://procurement/webapp/procurement/WEB-INF/actions/facility/ShedMilkBillDetails.groovy"/>                
+               <script location="component://procurement/webapp/procurement/WEB-INF/actions/facility/UnitWiseNetPayable.groovy"/> 
+               <script location="component://procurement/webapp/procurement/WEB-INF/actions/facility/ProcurementSummarySms.groovy"/> 
+            </actions>
+            <widgets>
+                <platform-specific>
+                    <xsl-fo><html-template location="component://procurement/webapp/procurement/facility/ProcurementSummarySms.fo.ftl"/></xsl-fo>
+                </platform-specific>
+            </widgets>
+        </section>
+    </screen>
+    <screen name="MilkBillDifference">
+        <section>
+           <actions>
+                <property-map resource="ProductUiLabels" map-name="uiLabelMap" global="true"/>            
+                <property-map resource="HumanResUiLabels" map-name="uiLabelMap" global="true"/> 
+                <script location="component://procurement/webapp/procurement/WEB-INF/actions/facility/ShedMilkBillDifference.groovy"/>
+            </actions> 
+            <widgets>
+                <platform-specific>
+                    <xsl-fo><html-template location="component://procurement/webapp/procurement/facility/ShedMilkBillDifference.fo.ftl"/></xsl-fo>
+                </platform-specific>
+            </widgets>
+        </section>
+    </screen>
+    <screen name="BankUnitWiseAbstReport" transaction-timeout="7200">
+        <section>
+           <actions>
+                <property-map resource="ProductUiLabels" map-name="uiLabelMap" global="true"/>            
+                <property-map resource="HumanResUiLabels" map-name="uiLabelMap" global="true"/>                
+                <script location="component://procurement/webapp/procurement/WEB-INF/actions/facility/BillsAbstractFromAbsEntity.groovy"/>
+                <script location="component://procurement/webapp/procurement/WEB-INF/actions/facility/ShortagesRecovery.groovy"/>
+                <script location="component://procurement/webapp/procurement/WEB-INF/actions/facility/ShedWiseAmountAbstract.groovy"/>
+                <script location="component://procurement/webapp/procurement/WEB-INF/actions/facility/ShedMilkBillDetails.groovy"/>                
+                <script location="component://procurement/webapp/procurement/WEB-INF/actions/facility/UnitWiseNetPayable.groovy"/> 
+                <script location="component://procurement/webapp/procurement/WEB-INF/actions/facility/BankWiseCenterWiseReport.groovy"/>
+                <set field="reportTypeFlag" from-field="parameters.reportTypeFlag"/>
+            </actions> 
+            <widgets>                
+                <section>
+					<condition>
+						<if-compare operator="equals" value="centerWise" field="reportTypeFlag" />
+					</condition>
+					<widgets>
+						<platform-specific>
+		                    <xsl-fo><html-template location="component://procurement/webapp/procurement/facility/BankWiseCenterWiseReport.fo.ftl"/></xsl-fo>
+		                </platform-specific>
+					</widgets>
+				</section>
+				<section>
+					<condition>
+						<if-compare operator="equals" value="unitWise" field="reportTypeFlag" />
+					</condition>
+					<widgets>
+						<platform-specific>
+		                    <xsl-fo><html-template location="component://procurement/webapp/procurement/facility/BankWiseUnitWiseReport.fo.ftl"/></xsl-fo>
+		                </platform-specific>
+					</widgets>
+				</section>
+				<section>
+					<condition>
+						<if-compare operator="equals" value="centerPayment" field="reportTypeFlag" />
+					</condition>
+					<widgets>
+						<platform-specific>
+		                    <xsl-fo><html-template location="component://procurement/webapp/procurement/facility/BranchCenterWiseReport.fo.ftl"/></xsl-fo>
+		                </platform-specific>
+					</widgets>
+				</section>
+				<section>
+					<condition>
+						<if-compare operator="equals" value="bankPayment" field="reportTypeFlag" />
+					</condition>
+					<widgets>
+						<platform-specific>
+		                    <xsl-fo><html-template location="component://procurement/webapp/procurement/facility/WGBankWiseTotalPayment.fo.ftl"/></xsl-fo>
+		                </platform-specific>
+					</widgets>
+				</section>
+            </widgets>
+        </section>
+     </screen>
+    <screen name="BankBranchWiseUnitCenterWiseReport" transaction-timeout="7200">
+        <section>
+           <actions>
+                <property-map resource="ProductUiLabels" map-name="uiLabelMap" global="true"/>            
+                <property-map resource="HumanResUiLabels" map-name="uiLabelMap" global="true"/>                
+                <script location="component://procurement/webapp/procurement/WEB-INF/actions/facility/BillsAbstract.groovy"/>
+                <script location="component://procurement/webapp/procurement/WEB-INF/actions/facility/ShortagesRecovery.groovy"/>
+                <script location="component://procurement/webapp/procurement/WEB-INF/actions/facility/ShedWiseAmountAbstract.groovy"/>
+                <script location="component://procurement/webapp/procurement/WEB-INF/actions/facility/ShedMilkBillDetails.groovy"/>                
+                <script location="component://procurement/webapp/procurement/WEB-INF/actions/facility/UnitWiseNetPayable.groovy"/> 
+                <script location="component://procurement/webapp/procurement/WEB-INF/actions/facility/BankWiseCenterWiseReport.groovy"/>
+            </actions> 
+            <widgets>                
+                <section>
+					<widgets>
+						<platform-specific>
+		                    <xsl-fo><html-template location="component://procurement/webapp/procurement/facility/BankBranchWiseUnitCenterWiseReport.fo.ftl"/></xsl-fo>
+		                </platform-specific>
+					</widgets>
+				</section>
+            </widgets>
+        </section>
+    </screen>
+    <screen name="BankBranchWiseAbstReport">
+        <section>
+           <actions>
+                <property-map resource="ProductUiLabels" map-name="uiLabelMap" global="true"/>            
+                <property-map resource="HumanResUiLabels" map-name="uiLabelMap" global="true"/> 
+                <script location="component://procurement/webapp/procurement/WEB-INF/actions/facility/BillsAbstractFromAbsEntity.groovy"/>
+                <script location="component://procurement/webapp/procurement/WEB-INF/actions/facility/ShortagesRecovery.groovy"/>                
+                <script location="component://procurement/webapp/procurement/WEB-INF/actions/facility/ShedWiseAmountAbstract.groovy"/>
+                <script location="component://procurement/webapp/procurement/WEB-INF/actions/facility/ShedMilkBillDetails.groovy"/>
+                <script location="component://procurement/webapp/procurement/WEB-INF/actions/facility/UnitWiseNetPayable.groovy"/> 
+                <script location="component://procurement/webapp/procurement/WEB-INF/actions/facility/BankWiseCenterWiseReport.groovy"/>
+                <!-- <set field="reportTypeFlag" from-field="parameters.reportTypeFlag"/> -->
+            </actions> 
+            <widgets>                
+				<platform-specific>
+                    <xsl-fo><html-template location="component://procurement/webapp/procurement/facility/BankBranchWiseReport.fo.ftl"/></xsl-fo>
+                </platform-specific>
+			</widgets>
+        </section>
+    </screen>
+    <screen name="shedWiseTipAmountReport">
+        <section>
+           <actions>
+                <property-map resource="ProductUiLabels" map-name="uiLabelMap" global="true"/>            
+                <property-map resource="HumanResUiLabels" map-name="uiLabelMap" global="true"/> 
+                <script location="component://procurement/webapp/procurement/WEB-INF/actions/facility/ShedWiseAmountAbstract.groovy"/>
+                <!-- <set field="reportTypeFlag" from-field="parameters.reportTypeFlag"/> -->
+            </actions> 
+            <widgets>                
+				<platform-specific>
+                    <xsl-fo><html-template location="component://procurement/webapp/procurement/facility/ShedWiseTipAmountReport.fo.ftl"/></xsl-fo>
+                </platform-specific>
+			</widgets>
+        </section>
+    </screen>
+     <screen name="MilkBillRequisitionPdf">
+        <section>
+           <actions>
+                <property-map resource="ProductUiLabels" map-name="uiLabelMap" global="true"/>            
+                <property-map resource="HumanResUiLabels" map-name="uiLabelMap" global="true"/> 
+                <script location="component://procurement/webapp/procurement/WEB-INF/actions/facility/ShortagesRecovery.groovy"/>
+                <script location="component://procurement/webapp/procurement/WEB-INF/actions/facility/ShedMilkBillDetails.groovy"/>
+                <script location="component://procurement/webapp/procurement/WEB-INF/actions/facility/ShedMilkBillDifference.groovy"/>
+                <script location="component://procurement/webapp/procurement/WEB-INF/actions/facility/ShedInputOutputAbst.groovy"/>                                  
+            </actions> 
+            <widgets>
+            <platform-specific>
+                    <xsl-fo><html-template location="component://procurement/webapp/procurement/facility/MilkBillRequisitionPdf.fo.ftl"/></xsl-fo>
+                </platform-specific>
+            </widgets>
+        </section>
+    </screen>
+    <screen name="BankCoverLetter">
+        <section>
+           <actions>
+                <property-map resource="ProductUiLabels" map-name="uiLabelMap" global="true"/>            
+                <property-map resource="HumanResUiLabels" map-name="uiLabelMap" global="true"/> 
+                <script location="component://procurement/webapp/procurement/WEB-INF/actions/facility/BillsAbstract.groovy"/>
+                <script location="component://procurement/webapp/procurement/WEB-INF/actions/facility/ShortagesRecovery.groovy"/>
+                 <script location="component://procurement/webapp/procurement/WEB-INF/actions/facility/ShedWiseAmountAbstract.groovy"/>
+                <script location="component://procurement/webapp/procurement/WEB-INF/actions/facility/ShedMilkBillDetails.groovy"/>               
+                <script location="component://procurement/webapp/procurement/WEB-INF/actions/facility/UnitWiseNetPayable.groovy"/> 
+                <script location="component://procurement/webapp/procurement/WEB-INF/actions/facility/BankWiseCenterWiseReport.groovy"/>
+                <!-- <set field="reportTypeFlag" from-field="parameters.reportTypeFlag"/> -->
+            </actions> 
+            <widgets>                
+				<platform-specific>
+                    <xsl-fo><html-template location="component://procurement/webapp/procurement/facility/BankCoverLetter.fo.ftl"/></xsl-fo>
+                </platform-specific>
+			</widgets>
         </section>
     </screen>
     <screen name="UnitWiseInputOutputAbstract">
@@ -61,6 +281,54 @@ under the License.
             </widgets>
         </section>
     </screen>
+    <screen name="UnitWiseNameMaster">
+        <section>
+           <actions>
+                <property-map resource="ProductUiLabels" map-name="uiLabelMap" global="true"/>            
+                <property-map resource="HumanResUiLabels" map-name="uiLabelMap" global="true"/> 
+                <script location="component://procurement/webapp/procurement/WEB-INF/actions/facility/UnitMasterCsv.groovy"/>                               
+            </actions> 
+            <widgets>
+                <platform-specific>
+                    <xsl-fo><html-template location="component://procurement/webapp/procurement/facility/UnitNameMaster.fo.ftl"/></xsl-fo>
+                </platform-specific>
+            </widgets>
+        </section>
+    </screen>
+    
+     <screen name="VillageNameMaster">
+        <section>
+           <actions>
+                <property-map resource="ProductUiLabels" map-name="uiLabelMap" global="true"/>            
+                <property-map resource="HumanResUiLabels" map-name="uiLabelMap" global="true"/> 
+                <set field="centerCodeSorting" value="Y"/>
+                <script location="component://procurement/webapp/procurement/WEB-INF/actions/facility/MPMASCsv.groovy"/>                               
+            </actions> 
+            <widgets>
+                <platform-specific>
+                    <xsl-fo><html-template location="component://procurement/webapp/procurement/facility/VillageNameMaster.fo.ftl"/></xsl-fo>
+                </platform-specific>
+            </widgets>
+        </section>
+    </screen>
+    <screen name="ConsolidatedReport">
+		<section>
+			<actions>
+                <property-map resource="ProductUiLabels" map-name="uiLabelMap" global="true"/>            
+                <property-map resource="HumanResUiLabels" map-name="uiLabelMap" global="true"/>
+                <script location="component://procurement/webapp/procurement/WEB-INF/actions/facility/ConsolidatedReport.groovy"/>
+            </actions> 
+			<widgets>         
+                  <platform-specific>
+		              <xsl-fo><html-template location="component://procurement/webapp/procurement/facility/ConsolidatedReport.fo.ftl"/></xsl-fo>
+		          </platform-specific>
+             </widgets>
+		</section>
+	</screen>
+    
+    
+    
+    
     <!-- Screens for Foxpro csvs  -->
      <screen name="procurementEntriesFoxproCsv">
         <section>
@@ -114,12 +382,29 @@ under the License.
            </widgets>
         </section>
     </screen>
-    <screen name="MPABSFoxproCsv">
+    <screen name="MPABSFoxproCsv" transaction-timeout="3600">
         <section>
         	<actions>
         		<set field="headerItem" value="ProcurementEntry"/>
             	<set field="tabButtonItem" value="Reports" />        		
         		<script location="component://procurement/webapp/procurement/WEB-INF/actions/facility/BillsAbstract.groovy"/>
+        	</actions>
+            <widgets>
+              <section>                 
+                 <widgets>
+                  	<include-form name="MPABSFoxproCsv" location="component://procurement/widget/ProcurementForms.xml"/>
+                 </widgets>               
+              </section>
+              	            	
+           </widgets>
+        </section>
+    </screen>
+    <screen name="MPABSFoxproCsvNew" transaction-timeout="3600">
+        <section>
+        	<actions>
+        		<set field="headerItem" value="ProcurementEntry"/>
+            	<set field="tabButtonItem" value="Reports" />        		
+        		<script location="component://procurement/webapp/procurement/WEB-INF/actions/facility/BillsAbstractFromAbsEntity.groovy"/>
         	</actions>
             <widgets>
               <section>                 
@@ -164,11 +449,12 @@ under the License.
            </widgets>
         </section>
     </screen>
-    <screen name="MPMASFoxproCsv">
+    <screen name="MPMASFoxproCsv" transaction-timeout="3600">
         <section>
         	<actions>
         		<set field="headerItem" value="ProcurementEntry"/>
             	<set field="tabButtonItem" value="Reports" />        		
+            	<set field="centerCodeSorting" value="N"/>  		
         		<script location="component://procurement/webapp/procurement/WEB-INF/actions/facility/MPMASCsv.groovy"/>
         	</actions>
             <widgets>
@@ -194,6 +480,448 @@ under the License.
                  </widgets>               
               </section>              	            	
            </widgets>
+        </section>
+    </screen>
+    <screen name="GBMASFoxproCsv">
+        <section>
+        	<actions>
+        		<set field="headerItem" value="ProcurementEntry"/>
+            	<set field="tabButtonItem" value="Reports" />        		
+        		<script location="component://procurement/webapp/procurement/WEB-INF/actions/facility/GBMASCsv.groovy"/>
+        		<set field="shed" from-field="parameters.shedId"/>
+        	</actions>
+            <widgets>
+              <section>                 
+                <condition>
+                	<if-compare operator="not-equals" value="WGD" field="shed"/>
+                </condition>
+                 <widgets>
+                  	<include-form name="GBMASCsv" location="component://procurement/widget/ProcurementForms.xml"/>
+                 </widgets>
+                 <fail-widgets>
+                 	<include-form name="GBMASWGDCsv" location="component://procurement/widget/ProcurementForms.xml"/>
+                 </fail-widgets>               
+              </section>              	            	
+           </widgets>
+        </section>
+    </screen>
+    <screen name="ShedAgentsCsv">
+        <section>
+        	<actions>
+        		<set field="headerItem" value="ProcurementEntry"/>
+            	<set field="centerCodeSorting" value="Y"/>
+                <script location="component://procurement/webapp/procurement/WEB-INF/actions/facility/MPMASCsv.groovy"/>  
+        	</actions>
+            <widgets>
+              <section>                 
+                 <widgets>
+                  	<include-form name="ShedAgentsCsv" location="component://procurement/widget/ProcurementForms.xml"/>
+                 </widgets>               
+              </section>              	            	
+           </widgets>
+        </section>
+    </screen>   
+    <screen name="AcknowledgementReportTXT">
+        <section>
+           <actions>
+                <property-map resource="ProductUiLabels" map-name="uiLabelMap" global="true"/>            
+                <property-map resource="HumanResUiLabels" map-name="uiLabelMap" global="true"/> 
+                <script location="component://procurement/webapp/procurement/WEB-INF/actions/facility/MilkTransferAckReport.groovy"/>                               
+            </actions> 
+            <widgets>
+                <platform-specific>
+                    <xsl-fo><html-template location="component://procurement/webapp/procurement/facility/MilkTransferAckReport.fo.ftl"/></xsl-fo>
+                </platform-specific>
+            </widgets>
+        </section>
+    </screen>
+    <screen name="WGAcknowledgementReportTXT">
+        <section>
+           <actions>
+                <property-map resource="ProductUiLabels" map-name="uiLabelMap" global="true"/>            
+                <property-map resource="HumanResUiLabels" map-name="uiLabelMap" global="true"/> 
+                <script location="component://procurement/webapp/procurement/WEB-INF/actions/facility/MilkTransferAckReport.groovy"/>                               
+            </actions> 
+            <widgets>
+                <platform-specific>
+                    <xsl-fo><html-template location="component://procurement/webapp/procurement/facility/WGMilkTransferAckReport.fo.ftl"/></xsl-fo>
+                </platform-specific>
+            </widgets>
+        </section>
+    </screen>
+    <screen name="ShedwiseUnitwiseCapacityUtilization">
+		<section>
+			<actions>
+				<property-map resource="ProductUiLabels" map-name="uiLabelMap" global="true" />
+				<property-map resource="HumanResUiLabels" map-name="uiLabelMap" global="true" />
+				<script location="component://procurement/webapp/procurement/WEB-INF/actions/facility/ShedwiseUnitwiseCapacityUtilization.groovy"/>
+			</actions>
+			<widgets>
+				<platform-specific>
+					<html>
+						<html-template
+							location="component://procurement/webapp/procurement/facility/ShedwiseUnitwiseCapacityUtilization.fo.ftl"></html-template>
+					</html>
+				</platform-specific>
+			</widgets>
+		</section>
+	</screen>
+    <screen name="SBI-ECS">
+        <section>
+           <actions>
+                <property-map resource="ProductUiLabels" map-name="uiLabelMap" global="true"/>            
+                <property-map resource="HumanResUiLabels" map-name="uiLabelMap" global="true"/> 
+                <script location="component://procurement/webapp/procurement/WEB-INF/actions/facility/BillsAbstractFromAbsEntity.groovy"/>
+                <script location="component://procurement/webapp/procurement/WEB-INF/actions/facility/ShortagesRecovery.groovy"/>
+                <script location="component://procurement/webapp/procurement/WEB-INF/actions/facility/ShedWiseAmountAbstract.groovy"/>
+                <script location="component://procurement/webapp/procurement/WEB-INF/actions/facility/ShedMilkBillDetails.groovy"/>
+                <script location="component://procurement/webapp/procurement/WEB-INF/actions/facility/UnitWiseNetPayable.groovy"/> 
+                <script location="component://procurement/webapp/procurement/WEB-INF/actions/facility/BankWiseTotalPayment.groovy"/>
+                <script location="component://procurement/webapp/procurement/WEB-INF/actions/facility/BankWiseCenterWiseReport.groovy"/>
+                <script location="component://procurement/webapp/procurement/WEB-INF/actions/facility/ecs/EcsSBIReport.groovy"/>
+            </actions> 
+            <widgets>                
+            	<decorator-screen name="ProcurementCommonDecorator" location="component://procurement/widget/CommonScreens.xml">
+                    <decorator-section name="body">  
+                       <platform-specific>
+		                    <html><html-template location="component://procurement/webapp/procurement/facility/ecs/ECSReport.ftl"/></html>
+		                </platform-specific>
+                	</decorator-section>
+                </decorator-screen>
+             </widgets>
+        </section>
+    </screen>
+    <screen name="SBI-ECS-CSV">
+		<section>
+			<actions>
+                <property-map resource="ProductUiLabels" map-name="uiLabelMap" global="true"/>            
+                <property-map resource="HumanResUiLabels" map-name="uiLabelMap" global="true"/> 
+                <script location="component://procurement/webapp/procurement/WEB-INF/actions/facility/BillsAbstractFromAbsEntity.groovy"/>
+                <script location="component://procurement/webapp/procurement/WEB-INF/actions/facility/ShortagesRecovery.groovy"/>
+                 <script location="component://procurement/webapp/procurement/WEB-INF/actions/facility/ShedWiseAmountAbstract.groovy"/>
+                <script location="component://procurement/webapp/procurement/WEB-INF/actions/facility/ShedMilkBillDetails.groovy"/>               
+                <script location="component://procurement/webapp/procurement/WEB-INF/actions/facility/UnitWiseNetPayable.groovy"/> 
+                <script location="component://procurement/webapp/procurement/WEB-INF/actions/facility/BankWiseTotalPayment.groovy"/> 
+                <script location="component://procurement/webapp/procurement/WEB-INF/actions/facility/BankWiseCenterWiseReport.groovy"/>
+                <script location="component://procurement/webapp/procurement/WEB-INF/actions/facility/ecs/EcsCsvReport.groovy"/>
+            </actions> 
+			<widgets> 
+            	<include-form name="EcsCsvReport" location="component://procurement/widget/ProcurementForms.xml"/>                	
+            </widgets>
+		</section>
+	</screen>
+	<screen name="SBI-ECS-TXT">
+		<section>
+			<actions>
+                <property-map resource="ProductUiLabels" map-name="uiLabelMap" global="true"/>            
+                <property-map resource="HumanResUiLabels" map-name="uiLabelMap" global="true"/> 
+                <script location="component://procurement/webapp/procurement/WEB-INF/actions/facility/BillsAbstractFromAbsEntity.groovy"/>
+                <script location="component://procurement/webapp/procurement/WEB-INF/actions/facility/ShortagesRecovery.groovy"/>
+                <script location="component://procurement/webapp/procurement/WEB-INF/actions/facility/ShedWiseAmountAbstract.groovy"/>
+                <script location="component://procurement/webapp/procurement/WEB-INF/actions/facility/ShedMilkBillDetails.groovy"/>
+                <script location="component://procurement/webapp/procurement/WEB-INF/actions/facility/UnitWiseNetPayable.groovy"/> 
+                <script location="component://procurement/webapp/procurement/WEB-INF/actions/facility/BankWiseTotalPayment.groovy"/> 
+                <script location="component://procurement/webapp/procurement/WEB-INF/actions/facility/BankWiseCenterWiseReport.groovy"/>
+                <script location="component://procurement/webapp/procurement/WEB-INF/actions/facility/ecs/EcsCsvReport.groovy"/>
+            </actions> 
+			<widgets>                
+                  <platform-specific>
+		                    <xsl-fo><html-template location="component://procurement/webapp/procurement/facility/ecs/ECSReportTxt.fo.ftl"/></xsl-fo>
+		           </platform-specific>
+             </widgets>
+		</section>
+	</screen>
+	<screen name="ShedWiseMonthWiseKgFatKgSnf">
+		<section>
+			<actions>
+                <property-map resource="ProductUiLabels" map-name="uiLabelMap" global="true"/>            
+                <property-map resource="HumanResUiLabels" map-name="uiLabelMap" global="true"/> 
+                <script location="component://procurement/webapp/procurement/WEB-INF/actions/yearlyReports/ShedWiseMonthWiseKgFatKgSnf.groovy"/>
+            </actions> 
+			<widgets>                
+                  <platform-specific>
+		                    <xsl-fo><html-template location="component://procurement/webapp/procurement/yearlyReports/ShedWiseMonthWiseKgFatKgSnf.fo.ftl"/></xsl-fo>
+		           </platform-specific>
+             </widgets>
+		</section>
+	</screen>
+	<screen name="UnitWiseMonthWiseKgFatKgSnf">
+		<section>
+			<actions>
+                <property-map resource="ProductUiLabels" map-name="uiLabelMap" global="true"/>            
+                <property-map resource="HumanResUiLabels" map-name="uiLabelMap" global="true"/> 
+                <script location="component://procurement/webapp/procurement/WEB-INF/actions/yearlyReports/UnitWiseMonthWiseKgFatKgSnf.groovy"/>
+            </actions> 
+			<widgets>                
+                  <platform-specific>
+		                    <xsl-fo><html-template location="component://procurement/webapp/procurement/yearlyReports/UnitWiseMonthWiseKgFatKgSnf.fo.ftl"/></xsl-fo>
+		           </platform-specific>
+             </widgets>
+		</section>
+	</screen>
+	<screen name="UnitWiseMonthWiseMilkPayment">
+		<section>
+			<actions>
+                <property-map resource="ProductUiLabels" map-name="uiLabelMap" global="true"/>            
+                <property-map resource="HumanResUiLabels" map-name="uiLabelMap" global="true"/> 
+                <script location="component://procurement/webapp/procurement/WEB-INF/actions/yearlyReports/UnitWiseMonthWiseMilkPayment.groovy"/>
+            </actions> 
+			<widgets>                
+                  <platform-specific>
+		                    <xsl-fo><html-template location="component://procurement/webapp/procurement/yearlyReports/UnitWiseMonthWiseMilkPayment.fo.ftl"/></xsl-fo>
+		           </platform-specific>
+             </widgets>
+		</section>
+	</screen>
+       <screen name="shedWiseAnnualAbstract">
+        <section>
+        	<actions>
+        		<property-map resource="ProductUiLabels" map-name="uiLabelMap" global="true"/>            
+                <property-map resource="HumanResUiLabels" map-name="uiLabelMap" global="true"/> 
+                <script location="component://procurement/webapp/procurement/WEB-INF/actions/yearlyReports/ShedWiseAnnualAbstract.groovy"/>        		        		
+        	</actions>
+            <widgets>
+            	 <platform-specific>
+                    <xsl-fo><html-template location="component://procurement/webapp/procurement/yearlyReports/ShedWiseAnnualAbstract.fo.ftl"/></xsl-fo>
+                </platform-specific>
+            </widgets>
+        </section>
+    </screen>
+	<screen name="UnitWiseKgFatKgSnfTotalSolids">
+		<section>
+			<actions>
+                <property-map resource="ProductUiLabels" map-name="uiLabelMap" global="true"/>            
+                <property-map resource="HumanResUiLabels" map-name="uiLabelMap" global="true"/> 
+                <script location="component://procurement/webapp/procurement/WEB-INF/actions/yearlyReports/UnitWiseKgfatKgsnfTotalSolids.groovy"/>
+            </actions> 
+			<widgets>                
+                  <platform-specific>
+		                    <xsl-fo><html-template location="component://procurement/webapp/procurement/yearlyReports/UnitWiseKgfatKgsnfTotalSolids.fo.ftl"/></xsl-fo>
+		           </platform-specific>
+             </widgets>
+		</section>
+	</screen>
+	<screen name="ShedWiseMonthWiseMilkPayment">
+		<section>
+			<actions>
+                <property-map resource="ProductUiLabels" map-name="uiLabelMap" global="true"/>            
+                <property-map resource="HumanResUiLabels" map-name="uiLabelMap" global="true"/> 
+                <script location="component://procurement/webapp/procurement/WEB-INF/actions/yearlyReports/ShedWiseMonthWiseMilkPayment.groovy"/>
+            </actions> 
+			<widgets>                
+                  <platform-specific>
+		                    <xsl-fo><html-template location="component://procurement/webapp/procurement/yearlyReports/ShedWiseMonthWiseMilkPayment.fo.ftl"/></xsl-fo>
+		           </platform-specific>
+             </widgets>
+		</section>
+	</screen>
+	<screen name="FNCenterWiseKgFatKgSnf">
+		<section>
+			<actions>
+                <property-map resource="ProductUiLabels" map-name="uiLabelMap" global="true"/>            
+                <property-map resource="HumanResUiLabels" map-name="uiLabelMap" global="true"/> 
+                <script location="component://procurement/webapp/procurement/WEB-INF/actions/yearlyReports/FNCenterWiseKgFatKgSnf.groovy"/>
+            </actions> 
+			<widgets>                
+                  <platform-specific>
+		                    <xsl-fo><html-template location="component://procurement/webapp/procurement/yearlyReports/FNCenterWiseKgFatKgSnf.fo.ftl"/></xsl-fo>
+		           </platform-specific>
+             </widgets>
+		</section>
+	</screen>
+	<screen name="CenterWiseMonthWiseFatSnfDeduction">
+		<section>
+			<actions>
+                <property-map resource="ProductUiLabels" map-name="uiLabelMap" global="true"/>            
+                <property-map resource="HumanResUiLabels" map-name="uiLabelMap" global="true"/> 
+                <script location="component://procurement/webapp/procurement/WEB-INF/actions/yearlyReports/CenterWiseMonthWiseFatSnfDeduction.groovy"/>
+            </actions> 
+			<widgets>                
+                  <platform-specific>
+		                    <xsl-fo><html-template location="component://procurement/webapp/procurement/yearlyReports/CenterWiseMonthWiseFatSnfDeduction.fo.ftl"/></xsl-fo>
+		           </platform-specific>
+             </widgets>
+		</section>
+	</screen>
+	<screen name="FortnightKgfatAccount">
+		<section>
+			<actions>
+                <property-map resource="ProductUiLabels" map-name="uiLabelMap" global="true"/>            
+                <property-map resource="HumanResUiLabels" map-name="uiLabelMap" global="true"/> 
+                <script location="component://procurement/webapp/procurement/WEB-INF/actions/yearlyReports/FortnightKgfatAccount.groovy"/>  
+            </actions> 
+			<widgets>                
+                  <platform-specific>
+                         <xsl-fo><html-template location="component://procurement/webapp/procurement/yearlyReports/FortnightKgfatAccount.fo.ftl"/></xsl-fo>		           </platform-specific>
+             </widgets>
+		</section>
+	</screen>
+	<screen name="MonthWiseUnitWiseDetailsList">
+		<section>
+			<actions>
+				<property-map resource="ProductUiLabels" map-name="uiLabelMap" global="true"/>
+				<property-map resource="HumanResUiLabels" map-name="uiLabelMap" global="true"/>
+				<script location="component://procurement/webapp/procurement/WEB-INF/actions/yearlyReports/MonthWiseUnitWiseDetailsList.groovy"/>
+			</actions>
+			<widgets>
+				<platform-specific>
+					<xsl-fo><html-template location="component://procurement/webapp/procurement/yearlyReports/MonthWiseUnitWiseDetailsList.fo.ftl"/></xsl-fo>
+				</platform-specific>
+			</widgets>
+		</section>
+	</screen>
+	<screen name="FNCollectionCentrewisePayment">
+		<section>
+			<actions>
+                <property-map resource="ProductUiLabels" map-name="uiLabelMap" global="true"/>            
+                <property-map resource="HumanResUiLabels" map-name="uiLabelMap" global="true"/> 
+                <script location="component://procurement/webapp/procurement/WEB-INF/actions/yearlyReports/FNCollectionCentrewisePayment.groovy"/>
+            </actions> 
+			<widgets>                
+                  <platform-specific>
+		                    <xsl-fo><html-template location="component://procurement/webapp/procurement/yearlyReports/FNCollectionCentrewisePayment.fo.ftl"/></xsl-fo>
+		           </platform-specific>
+             </widgets>
+		</section>
+	</screen>
+	<screen name="Unit-wiseProcurementComparing">
+		<section>
+			<actions>
+                <property-map resource="ProductUiLabels" map-name="uiLabelMap" global="true"/>            
+                <property-map resource="HumanResUiLabels" map-name="uiLabelMap" global="true"/> 
+                <script location="component://procurement/webapp/procurement/WEB-INF/actions/yearlyReports/Unit-wiseProcurementComparing.groovy"/>
+            </actions> 
+			<widgets>                
+                  <platform-specific>
+		                    <xsl-fo><html-template location="component://procurement/webapp/procurement/yearlyReports/Unit-wiseProcurementComparing.fo.ftl"/></xsl-fo>
+		           </platform-specific>
+             </widgets>
+		</section>
+	</screen>
+	<screen name="CenterWiseBillsAbstract">
+		<section>
+			<actions>
+                <property-map resource="ProductUiLabels" map-name="uiLabelMap" global="true"/>            
+                <property-map resource="HumanResUiLabels" map-name="uiLabelMap" global="true"/> 
+                <script location="component://procurement/webapp/procurement/WEB-INF/actions/yearlyReports/CenterWiseBillsAbstract.groovy"/>
+            </actions> 
+			<widgets>                
+                  <platform-specific>
+		                    <xsl-fo><html-template location="component://procurement/webapp/procurement/yearlyReports/CenterWiseBillsAbstract.fo.ftl"/></xsl-fo>
+		           </platform-specific>
+             </widgets>
+		</section>
+	</screen>
+	<screen name="UnitWiseLeanFlushSeason">
+		<section>
+			<actions>
+				<property-map resource="ProductUiLabels" map-name="uiLabelMap" global="true"/>
+				<property-map resource="HumanResUiLabels" map-name="uiLabelMap" global="true"/>
+				<script location="component://procurement/webapp/procurement/WEB-INF/actions/yearlyReports/UnitWiseLeanFlushSeason.groovy"/>
+			</actions> 
+			<widgets>
+				<platform-specific>
+					<xsl-fo><html-template location="component://procurement/webapp/procurement/yearlyReports/UnitWiseLeanFlushSeason.fo.ftl"/></xsl-fo>
+				</platform-specific>
+			</widgets>
+		</section>
+	</screen>
+	<screen name="LeanFlushSeasonYearWise">
+		<section>
+			<actions>
+				<property-map resource="ProductUiLabels" map-name="uiLabelMap" global="true"/>
+				<property-map resource="HumanResUiLabels" map-name="uiLabelMap" global="true"/>
+				<script location="component://procurement/webapp/procurement/WEB-INF/actions/yearlyReports/LeanFlushSeasonYearWise.groovy"/>
+			</actions> 
+			<widgets>
+				<platform-specific>
+					<xsl-fo><html-template location="component://procurement/webapp/procurement/yearlyReports/LeanFlushSeasonYearWise.fo.ftl"/></xsl-fo>
+				</platform-specific>
+			</widgets>
+		</section>
+	</screen>
+	<screen name="UnitwiseCenterwiseSelectedlist">
+		<section>
+			<actions>
+                <property-map resource="ProductUiLabels" map-name="uiLabelMap" global="true"/>            
+                <property-map resource="HumanResUiLabels" map-name="uiLabelMap" global="true"/> 
+                <script location="component://procurement/webapp/procurement/WEB-INF/actions/yearlyReports/UnitwiseCenterwiseSelectedlist.groovy"/>
+            </actions> 
+			<widgets>                
+                  <platform-specific>
+		                    <xsl-fo><html-template location="component://procurement/webapp/procurement/yearlyReports/UnitwiseCenterwiseSelectedlist.fo.ftl"/></xsl-fo>
+		           </platform-specific>
+             </widgets>
+		</section>
+	</screen>
+	<screen name="MonthWiseAverageRateStatement">
+    		<section>
+    			<actions>
+                    <property-map resource="ProductUiLabels" map-name="uiLabelMap" global="true"/>            
+                    <property-map resource="HumanResUiLabels" map-name="uiLabelMap" global="true"/> 
+                    <script location="component://procurement/webapp/procurement/WEB-INF/actions/yearlyReports/MonthWiseAverageRateStatement.groovy"/>
+                </actions> 
+    			<widgets>                
+                      <platform-specific>
+    		                    <xsl-fo><html-template location="component://procurement/webapp/procurement/yearlyReports/MonthWiseAverageRateStatement.fo.ftl"/></xsl-fo>
+    		           </platform-specific>
+                 </widgets>
+    		</section>
+	</screen>
+	<screen name="ProcurementAbstract">
+		<section>
+			<actions>
+                <property-map resource="ProductUiLabels" map-name="uiLabelMap" global="true"/>            
+                <property-map resource="HumanResUiLabels" map-name="uiLabelMap" global="true"/> 
+                <script location="component://procurement/webapp/procurement/WEB-INF/RegionWiseReports/ProcurementAbstract.groovy"/>
+            </actions> 
+			<widgets>                
+                  <platform-specific>
+		                    <xsl-fo><html-template location="component://procurement/webapp/procurement/RegionWiseReports/ProcurementAbstract.fo.ftl"/></xsl-fo>
+		           </platform-specific>
+             </widgets>
+		</section>
+	</screen>
+	<screen name="ProcurementPayment">
+		<section>
+			<actions>
+                <property-map resource="ProductUiLabels" map-name="uiLabelMap" global="true"/>            
+                <property-map resource="HumanResUiLabels" map-name="uiLabelMap" global="true"/> 
+                <script location="component://procurement/webapp/procurement/WEB-INF/RegionWiseReports/procurementPaymentAbstract.groovy"/>
+            </actions> 
+			<widgets>                
+                  <platform-specific>
+		                    <xsl-fo><html-template location="component://procurement/webapp/procurement/RegionWiseReports/procurementPaymentAbstract.fo.ftl"/></xsl-fo>
+		           </platform-specific>
+             </widgets>
+		</section>
+	</screen>
+	<screen name="RegionWiseThreeYearsComparision">
+		<section>
+			<actions>
+                <property-map resource="ProductUiLabels" map-name="uiLabelMap" global="true"/>            
+                <property-map resource="HumanResUiLabels" map-name="uiLabelMap" global="true"/> 
+                <script location="component://procurement/webapp/procurement/WEB-INF/RegionWiseReports/RegionWiseThreeYearsComparision.groovy"/>
+            </actions> 
+			<widgets>                
+                  <platform-specific>
+		                    <xsl-fo><html-template location="component://procurement/webapp/procurement/RegionWiseReports/RegionWiseThreeYearsComparision.fo.ftl"/></xsl-fo>
+		           </platform-specific>
+             </widgets>
+		</section>
+	</screen>
+	<screen name="ShedsUserChargesReport">
+        <section>
+           <actions>
+                <property-map resource="ProductUiLabels" map-name="uiLabelMap" global="true"/>            
+                <property-map resource="HumanResUiLabels" map-name="uiLabelMap" global="true"/> 
+                <script location="component://procurement/webapp/procurement/WEB-INF/actions/facility/ShedWiseUserChargesReport.groovy"/>
+            </actions> 
+            <widgets>                
+				<platform-specific>
+                    <xsl-fo><html-template location="component://procurement/webapp/procurement/facility/ShedWiseUserCharges.fo.ftl"/></xsl-fo>
+                </platform-specific>
+			</widgets>
         </section>
     </screen>
 </screens>

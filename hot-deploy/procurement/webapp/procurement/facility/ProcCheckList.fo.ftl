@@ -111,10 +111,15 @@ under the License.
 		                    			<fo:block text-align="right">${orderItems.quantity?if_exists?string("##0.0")}</fo:block>
 		                    		</fo:table-cell>
 		                    		<fo:table-cell>
-		                    			<fo:block text-align="right">${orderItems.fat?if_exists?string("##0.0")}</fo:block>
+		                    		   <#if orderItems.fat?if_exists>
+		                    			 <fo:block text-align="right">${orderItems.fat?if_exists?string("##0.0")}</fo:block>
+		                    		   </#if>	
 		                    		</fo:table-cell>
 		                    		<fo:table-cell>
-		                    			<fo:block text-align="right">${orderItems.snf?if_exists?string("##0.00")}</fo:block>
+		                    		  <#if orderItems.snf?if_exists>
+		                    		     <fo:block text-align="right">${orderItems.snf?if_exists?string("##0.00")}</fo:block>
+		                    		  </#if>
+		                    			
 		                    		</fo:table-cell>
 		                    		<fo:table-cell>		                    			
 		                    			<fo:block text-align="right">${orderItems.sQuantityLtrs?if_exists}</fo:block>		                    			

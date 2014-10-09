@@ -1,0 +1,345 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<services xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/services.xsd">
+    <description>MilkReceipts Services</description>
+    <vendor></vendor>
+    <version>1.0</version>
+    
+	 <service name="createMilkReceiptEntry" engine="java"
+                location="in.vasista.vbiz.milkReceipts.MilkReceiptServices" invoke="createMilkReceiptEntry" auth="true">
+        <attribute name="facilityId" mode="IN" type="String" optional="false"/>
+        <attribute name="facilityIdTo" mode="IN" type="String" optional="false"/>
+        <attribute name="sendDate" mode="IN" type="java.sql.Timestamp" optional="false"/>
+		<attribute name="vehicleId" mode="IN" type="String" optional="false"/>
+        <attribute name="productId" mode="IN" type="String" optional="false"/>
+        <attribute name="capacity" mode="IN" type="String" optional="true"/>
+        <attribute name="sendTime" mode="IN" type="String" optional="true"/>
+        <attribute name="soda" mode="IN" type="String" optional="true"/>
+        <attribute name="cob" mode="IN" type="String" optional="true"/>
+        <attribute name="milkCondition" mode="IN" type="String" optional="true"/>                
+         <attribute name="cellWiseDetailsMap" mode="IN" type="Map" optional="false"/>
+	 	<attribute name="milkTransferId" mode="IN" type="String" optional="true"/>
+	 	<attribute name="milkTransferId" mode="OUT" type="String" optional="false"/>
+	 	<attribute name="sequenceNum" mode="OUT" type="String" optional="true"/>
+    </service>  
+     <service name="finalizeMilkReceipts" engine="java"
+                location="in.vasista.vbiz.milkReceipts.MilkReceiptServices" invoke="finalizeMilkReceipts" auth="true">
+                <attribute name="fromDate" mode="IN" type="java.sql.Timestamp" optional="false"></attribute>
+                <attribute name="thruDate" mode="IN" type="java.sql.Timestamp" optional="false"></attribute>
+    </service>  
+      
+    <service name="updateMilkReceiptEntry" engine="java"
+                location="in.vasista.vbiz.milkReceipts.MilkReceiptServices" invoke="updateMilkReceiptEntry" auth="true">
+        <attribute name="milkTransferId" mode="IN" type="String" optional="false"/>
+        <attribute name="facilityId" mode="IN" type="String" optional="false"/>
+        <attribute name="facilityIdTo" mode="IN" type="String" optional="false"/>
+        <attribute name="recdDate" mode="IN" type="java.sql.Timestamp" optional="false"/>
+		<attribute name="vehicleId" mode="IN" type="String" optional="false"/>
+        <attribute name="recdProductId" mode="IN" type="String" optional="false"/>
+        <attribute name="capacity" mode="IN" type="String" optional="true"/>
+        <attribute name="ackTime" mode="IN" type="String" optional="true"/>
+        <attribute name="soda" mode="IN" type="String" optional="true"/>
+        <attribute name="recdCob" mode="IN" type="String" optional="true"/>
+        <attribute name="milkCondition" mode="IN" type="String" optional="true"/>
+        <attribute name="cellWiseDetailsMap" mode="IN" type="Map" optional="false"/>
+        <attribute name="sQuantityLtrs" mode="IN" type="BigDecimal" optional="true"/>        
+	 	<attribute name="sFat" mode="IN" type="BigDecimal" optional="true"/>
+	 	<attribute name="sSnf" mode="IN" type="BigDecimal" optional="true"/>
+	 	<attribute name="gheeYield" mode="IN" type="BigDecimal" optional="true"/>
+	 	<attribute name="cQuantityLtrs" mode="IN" type="BigDecimal" optional="true"/>
+	 	<attribute name="milkType" mode="IN" type="String" optional="true"/>	
+	 	<attribute name="milkTransferId" mode="OUT" type="String" optional="false"/>
+    </service>
+    <service name="createMilkTransferItem" engine="java"
+                location="in.vasista.vbiz.milkReceipts.MilkReceiptServices" invoke="createMilkTransferItem" auth="true">
+        <attribute name="sendDate" mode="IN" type="java.sql.Timestamp" optional="false"/>
+        <attribute name="milkTransferId" mode="IN" type="String" optional="false"></attribute>
+		<attribute name="vehicleId" mode="IN" type="String" optional="false"/>
+        <attribute name="productId" mode="IN" type="String" optional="false"/>
+        <attribute name="facilityId" mode="IN" type="String" optional="true"/>
+        <attribute name="capacity" mode="IN" type="String" optional="true"/>
+        <attribute name="cob" mode="IN" type="String" optional="true"/>
+        <attribute name="soda" mode="IN" type="String" optional="true"/>
+        <attribute name="sendTime" mode="IN" type="String" optional="true"/>
+        <attribute name="cellType" mode="IN" type="String" optional="true"/>
+        <attribute name="milkCondition" mode="IN" type="String" optional="true"/>
+		<attribute name="quantity" mode="IN" type="BigDecimal" optional="false"/>
+		<attribute name="quantityLtrs" mode="IN" type="BigDecimal" optional="false"/>        
+	 	<attribute name="fat" mode="IN" type="BigDecimal" optional="false"/>
+	 	<attribute name="snf" mode="IN" type="BigDecimal" optional="false"/>
+	 	<attribute name="sendLR" mode="IN" type="BigDecimal" optional="true"/>
+	 	<attribute name="sendAcidity" mode="IN" type="Long" optional="true"/>
+	 	<attribute name="sendTemparature" mode="IN" type="BigDecimal" optional="true"/>
+	 	
+	 	<attribute name="ackTime" mode="IN" type="String" optional="true"/>
+	 	<attribute name="receivedDate" mode="IN" type="java.sql.Timestamp" optional="false"/>	 	
+	 	<attribute name="receivedProductId" mode="IN" type="String" optional="false"/>
+	 	<attribute name="receivedQuantity" mode="IN" type="BigDecimal" optional="false"/>
+		<attribute name="receivedQuantityLtrs" mode="IN" type="BigDecimal" optional="false"/>        
+	 	<attribute name="receivedFat" mode="IN" type="BigDecimal" optional="false"/>
+	 	<attribute name="receivedSnf" mode="IN" type="BigDecimal" optional="false"/>
+	 	<attribute name="receivedLR" mode="IN" type="BigDecimal" optional="true"/>
+	 	<attribute name="receivedAcidity" mode="IN" type="Long" optional="true"/>
+	 	<attribute name="receivedTemparature" mode="IN" type="BigDecimal" optional="true"/>	 	
+	 	
+	 	
+	 	<attribute name="milkTransferId" mode="OUT" type="String" optional="false"/>
+	 	<attribute name="sequenceNum" mode="OUT" type="String" optional="false"/>
+    </service>   
+    <service name="updateMilkTransferItem" engine="java"
+                location="in.vasista.vbiz.milkReceipts.MilkReceiptServices" invoke="updateMilkTransferItem" auth="true">
+        
+        <attribute name="sequenceNum" mode="IN" type="String" optional="false"/>
+        <attribute name="sendDate" mode="IN" type="java.sql.Timestamp" optional="false"/>
+        <attribute name="milkTransferId" mode="IN" type="String" optional="false"></attribute>
+		<attribute name="vehicleId" mode="IN" type="String" optional="false"/>
+        <attribute name="productId" mode="IN" type="String" optional="false"/>
+        <attribute name="facilityId" mode="IN" type="String" optional="true"/>
+        <attribute name="capacity" mode="IN" type="String" optional="true"/>
+        <attribute name="cob" mode="IN" type="String" optional="true"/>
+        <attribute name="soda" mode="IN" type="String" optional="true"/>
+        <attribute name="sendTime" mode="IN" type="String" optional="true"/>
+        <attribute name="cellType" mode="IN" type="String" optional="true"/>
+        <attribute name="milkCondition" mode="IN" type="String" optional="true"/>
+		<attribute name="quantity" mode="IN" type="BigDecimal" optional="false"/>
+		<attribute name="quantityLtrs" mode="IN" type="BigDecimal" optional="false"/>        
+	 	<attribute name="fat" mode="IN" type="BigDecimal" optional="false"/>
+	 	<attribute name="snf" mode="IN" type="BigDecimal" optional="false"/>
+	 	<attribute name="sendLR" mode="IN" type="BigDecimal" optional="true"/>
+	 	<attribute name="sendAcidity" mode="IN" type="Long" optional="true"/>
+	 	<attribute name="sendTemparature" mode="IN" type="BigDecimal" optional="true"/>
+	 	
+	 	<attribute name="ackTime" mode="IN" type="String" optional="true"/>
+	 	<attribute name="receivedDate" mode="IN" type="java.sql.Timestamp" optional="false"/>	 	
+	 	<attribute name="receivedProductId" mode="IN" type="String" optional="false"/>
+	 	<attribute name="receivedQuantity" mode="IN" type="BigDecimal" optional="false"/>
+		<attribute name="receivedQuantityLtrs" mode="IN" type="BigDecimal" optional="false"/>        
+	 	<attribute name="receivedFat" mode="IN" type="BigDecimal" optional="false"/>
+	 	<attribute name="receivedSnf" mode="IN" type="BigDecimal" optional="false"/>
+	 	<attribute name="receivedLR" mode="IN" type="BigDecimal" optional="true"/>
+	 	<attribute name="receivedAcidity" mode="IN" type="Long" optional="true"/>
+	 	<attribute name="receivedTemparature" mode="IN" type="BigDecimal" optional="true"/>	 	
+	 	
+    </service>
+    <service name="fetchRecentReceiptAjax" engine="java"
+                location="in.vasista.vbiz.milkReceipts.MilkReceiptServices" invoke="fetchRecentReceiptAjax" auth="true">
+        <attribute name="milkTransferId" mode="IN" type="String" optional="true"></attribute>        
+        <attribute name="orderItemMap" mode="OUT" type="Map" optional="true"/>
+    </service>
+    
+    <service name="createMilkReceiptEntryAjax" engine="java"
+                location="in.vasista.vbiz.milkReceipts.MilkReceiptServices" invoke="createMilkReceiptEntryAjax" auth="true">
+        <attribute name="facilityId" mode="IN" type="String" optional="false"/>
+        <attribute name="facilityIdTo" mode="IN" type="String" optional="false"/>
+        <attribute name="sendDate" mode="IN" type="String" optional="false"/>
+        <attribute name="receiveDate" mode="IN" type="String" optional="false"/>
+        
+		<attribute name="tankerNo" mode="IN" type="String" optional="false"/>
+        <attribute name="productId" mode="IN" type="String" optional="false"/>
+        <attribute name="capacity" mode="IN" type="String" optional="true"/>
+        <attribute name="cob" mode="IN" type="String" optional="true"/>
+        <attribute name="soda" mode="IN" type="String" optional="true"/>
+        <attribute name="sendTime" mode="IN" type="String" optional="true"/>
+        <attribute name="ackTime" mode="IN" type="String" optional="true"/>
+        <attribute name="milkCondition" mode="IN" type="String" optional="true"/>
+        <attribute name="qtyKgsFlag" mode="IN" type="String" optional="false"/>
+        
+		<attribute name="fcQtyLtrs" mode="IN" type="BigDecimal" optional="false"/>        
+	 	<attribute name="fcFat" mode="IN" type="BigDecimal" optional="false"/>
+	 	<attribute name="fcSnf" mode="IN" type="BigDecimal" optional="false"/>
+	 	<attribute name="fcAcid" mode="IN" type="Long" optional="false"/>
+	 	<attribute name="fcTemp" mode="IN" type="BigDecimal" optional="false"/>
+	 	<attribute name="fcClr" mode="IN" type="BigDecimal" optional="false"/>
+	 	
+	 	<attribute name="fcAckQtyLtrs" mode="IN" type="BigDecimal" optional="false"/>        
+	 	<attribute name="fcAckFat" mode="IN" type="BigDecimal" optional="false"/>
+	 	<attribute name="fcAckSnf" mode="IN" type="BigDecimal" optional="false"/>
+	 	<attribute name="fcAckAcid" mode="IN" type="Long" optional="false"/>
+	 	<attribute name="fcAckTemp" mode="IN" type="BigDecimal" optional="false"/>
+	 	<attribute name="fcAckClr" mode="IN" type="BigDecimal" optional="false"/>
+	 	
+	 	<attribute name="mcQtyLtrs" mode="IN" type="BigDecimal" optional="true"/>        
+	 	<attribute name="mcFat" mode="IN" type="BigDecimal" optional="true"/>
+	 	<attribute name="mcSnf" mode="IN" type="BigDecimal" optional="true"/>
+	 	<attribute name="mcAcid" mode="IN" type="Long" optional="true"/>
+	 	<attribute name="mcTemp" mode="IN" type="BigDecimal" optional="true"/>
+	 	<attribute name="mcClr" mode="IN" type="BigDecimal" optional="true"/>
+	 	
+	 	<attribute name="mcAckQtyLtrs" mode="IN" type="BigDecimal" optional="true"/>        
+	 	<attribute name="mcAckFat" mode="IN" type="BigDecimal" optional="true"/>
+	 	<attribute name="mcAckSnf" mode="IN" type="BigDecimal" optional="true"/>
+	 	<attribute name="mcAckAcid" mode="IN" type="Long" optional="true"/>
+	 	<attribute name="mcAckTemp" mode="IN" type="BigDecimal" optional="true"/>
+	 	<attribute name="mcAckClr" mode="IN" type="BigDecimal" optional="true"/>		
+        
+        <attribute name="bcQtyLtrs" mode="IN" type="BigDecimal" optional="true"/>        
+	 	<attribute name="bcFat" mode="IN" type="BigDecimal" optional="true"/>
+	 	<attribute name="bcSnf" mode="IN" type="BigDecimal" optional="true"/>
+	 	<attribute name="bcAcid" mode="IN" type="Long" optional="true"/>
+	 	<attribute name="bcTemp" mode="IN" type="BigDecimal" optional="true"/>
+	 	<attribute name="bcClr" mode="IN" type="BigDecimal" optional="true"/>
+	 	
+	 	<attribute name="bcAckQtyLtrs" mode="IN" type="BigDecimal" optional="true"/>        
+	 	<attribute name="bcAckFat" mode="IN" type="BigDecimal" optional="true"/>
+	 	<attribute name="bcAckSnf" mode="IN" type="BigDecimal" optional="true"/>
+	 	<attribute name="bcAckAcid" mode="IN" type="Long" optional="true"/>
+	 	<attribute name="bcAckTemp" mode="IN" type="BigDecimal" optional="true"/>
+	 	<attribute name="bcAckClr" mode="IN" type="BigDecimal" optional="true"/>
+	 	
+	 	<attribute name="milkTransferId" mode="IN" type="String" optional="true"/>
+	 	<attribute name="milkTransferId" mode="OUT" type="String" optional="false"/>
+	 	<attribute name="orderItemMap" mode="OUT" type="Map" optional="false"/>
+	 	<attribute name="sequenceNum" mode="OUT" type="String" optional="true"/>
+    </service>
+    <service name="updateReceipt" engine="java"
+                location="in.vasista.vbiz.milkReceipts.MilkReceiptServices" invoke="updateReceipt" auth="true">
+        <attribute name="facilityId" mode="IN" type="String" optional="false"/>
+        <attribute name="facilityIdTo" mode="IN" type="String" optional="false"/>
+        <attribute name="sendDate" mode="IN" type="String" optional="false"/>
+        <attribute name="receiveDate" mode="IN" type="String" optional="false"/>
+        
+		<attribute name="tankerNo" mode="IN" type="String" optional="false"/>
+        <attribute name="productId" mode="IN" type="String" optional="false"/>
+        <attribute name="capacity" mode="IN" type="String" optional="true"/>
+        <attribute name="cob" mode="IN" type="String" optional="true"/>
+        <attribute name="soda" mode="IN" type="String" optional="true"/>
+        <attribute name="sendTime" mode="IN" type="String" optional="true"/>
+        <attribute name="ackTime" mode="IN" type="String" optional="true"/>
+        <attribute name="milkCondition" mode="IN" type="String" optional="true"/>
+        <attribute name="qtyKgsFlag" mode="IN" type="String" optional="false"/>
+        
+		<attribute name="fcQtyLtrs" mode="IN" type="BigDecimal" optional="false"/>
+		<attribute name="fcSequenceNum" mode="IN" type="String" optional="false"/>        
+	 	<attribute name="fcFat" mode="IN" type="BigDecimal" optional="false"/>
+	 	<attribute name="fcSnf" mode="IN" type="BigDecimal" optional="false"/>
+	 	<attribute name="fcAcid" mode="IN" type="Long" optional="true"/>
+	 	<attribute name="fcTemp" mode="IN" type="BigDecimal" optional="true"/>
+	 	<attribute name="fcClr" mode="IN" type="BigDecimal" optional="true"/>
+	 	
+	 	<attribute name="fcAckQtyLtrs" mode="IN" type="BigDecimal" optional="false"/>        
+	 	<attribute name="fcAckFat" mode="IN" type="BigDecimal" optional="false"/>
+	 	<attribute name="fcAckSnf" mode="IN" type="BigDecimal" optional="false"/>
+	 	<attribute name="fcAckAcid" mode="IN" type="Long" optional="true"/>
+	 	<attribute name="fcAckTemp" mode="IN" type="BigDecimal" optional="true"/>
+	 	<attribute name="fcAckClr" mode="IN" type="BigDecimal" optional="true"/>
+	 	
+	 	<attribute name="mcQtyLtrs" mode="IN" type="BigDecimal" optional="true"/>     
+	 	<attribute name="mcSequenceNum" mode="IN" type="String" optional="true"/>   
+	 	<attribute name="mcFat" mode="IN" type="BigDecimal" optional="true"/>
+	 	<attribute name="mcSnf" mode="IN" type="BigDecimal" optional="true"/>
+	 	<attribute name="mcAcid" mode="IN" type="Long" optional="true"/>
+	 	<attribute name="mcTemp" mode="IN" type="BigDecimal" optional="true"/>
+	 	<attribute name="mcClr" mode="IN" type="BigDecimal" optional="true"/>
+	 	
+	 	<attribute name="mcAckQtyLtrs" mode="IN" type="BigDecimal" optional="true"/>        
+	 	<attribute name="mcAckFat" mode="IN" type="BigDecimal" optional="true"/>
+	 	<attribute name="mcAckSnf" mode="IN" type="BigDecimal" optional="true"/>
+	 	<attribute name="mcAckAcid" mode="IN" type="Long" optional="true"/>
+	 	<attribute name="mcAckTemp" mode="IN" type="BigDecimal" optional="true"/>
+	 	<attribute name="mcAckClr" mode="IN" type="BigDecimal" optional="true"/>		
+        
+        <attribute name="bcQtyLtrs" mode="IN" type="BigDecimal" optional="true"/>        
+	 	<attribute name="bcSequenceNum" mode="IN" type="String" optional="true"/>	
+	 	<attribute name="bcFat" mode="IN" type="BigDecimal" optional="true"/>
+	 	<attribute name="bcSnf" mode="IN" type="BigDecimal" optional="true"/>
+	 	<attribute name="bcAcid" mode="IN" type="Long" optional="true"/>
+	 	<attribute name="bcTemp" mode="IN" type="BigDecimal" optional="true"/>
+	 	<attribute name="bcClr" mode="IN" type="BigDecimal" optional="true"/>
+	 	
+	 	<attribute name="bcAckQtyLtrs" mode="IN" type="BigDecimal" optional="true"/>        
+	 	<attribute name="bcAckFat" mode="IN" type="BigDecimal" optional="true"/>
+	 	<attribute name="bcAckSnf" mode="IN" type="BigDecimal" optional="true"/>
+	 	<attribute name="bcAckAcid" mode="IN" type="Long" optional="true"/>
+	 	<attribute name="bcAckTemp" mode="IN" type="BigDecimal" optional="true"/>
+	 	<attribute name="bcAckClr" mode="IN" type="BigDecimal" optional="true"/>
+	 	
+	 	<attribute name="milkTransferId" mode="IN" type="String" optional="false"/>
+	 	<attribute name="milkTransferId" mode="OUT" type="String" optional="true"/>
+	 	<attribute name="orderItemMap" mode="OUT" type="Map" optional="true"/>
+	 	<attribute name="sequenceNum" mode="OUT" type="String" optional="true"/>
+    </service>
+    <service name="createNewMilkReceiptEntry" engine="java"
+                location="in.vasista.vbiz.milkReceipts.MilkReceiptServices" invoke="createNewMilkReceiptEntry" auth="true">
+        <attribute name="facilityId" mode="IN" type="String" optional="false"/>
+        <attribute name="facilityIdTo" mode="IN" type="String" optional="false"/>
+        <attribute name="sendDate" mode="IN" type="String" optional="false"/>
+        <attribute name="receiveDate" mode="IN" type="String" optional="false"/>
+        
+		<attribute name="tankerNo" mode="IN" type="String" optional="false"/>
+        <attribute name="productId" mode="IN" type="String" optional="false"/>
+        <attribute name="capacity" mode="IN" type="String" optional="true"/>
+        <attribute name="cob" mode="IN" type="String" optional="true"/>
+        <attribute name="soda" mode="IN" type="String" optional="true"/>
+        <attribute name="sendTime" mode="IN" type="String" optional="true"/>
+        <attribute name="ackTime" mode="IN" type="String" optional="true"/>
+        <attribute name="milkCondition" mode="IN" type="String" optional="true"/>
+        <attribute name="qtyKgsFlag" mode="IN" type="String" optional="false"/>
+        
+		<attribute name="fcQtyLtrs" mode="IN" type="BigDecimal" optional="false"/>        
+	 	<attribute name="fcFat" mode="IN" type="BigDecimal" optional="false"/>
+	 	<attribute name="fcSnf" mode="IN" type="BigDecimal" optional="false"/>
+	 	<attribute name="fcAcid" mode="IN" type="Long" optional="true"/>
+	 	<attribute name="fcTemp" mode="IN" type="BigDecimal" optional="true"/>
+	 	<attribute name="fcClr" mode="IN" type="BigDecimal" optional="true"/>
+	 	
+	 	<attribute name="fcAckQtyLtrs" mode="IN" type="BigDecimal" optional="false"/>        
+	 	<attribute name="fcAckFat" mode="IN" type="BigDecimal" optional="false"/>
+	 	<attribute name="fcAckSnf" mode="IN" type="BigDecimal" optional="false"/>
+	 	<attribute name="fcAckAcid" mode="IN" type="Long" optional="true"/>
+	 	<attribute name="fcAckTemp" mode="IN" type="BigDecimal" optional="true"/>
+	 	<attribute name="fcAckClr" mode="IN" type="BigDecimal" optional="true"/>
+	 	
+	 	<attribute name="mcQtyLtrs" mode="IN" type="BigDecimal" optional="true"/>        
+	 	<attribute name="mcFat" mode="IN" type="BigDecimal" optional="true"/>
+	 	<attribute name="mcSnf" mode="IN" type="BigDecimal" optional="true"/>
+	 	<attribute name="mcAcid" mode="IN" type="Long" optional="true"/>
+	 	<attribute name="mcTemp" mode="IN" type="BigDecimal" optional="true"/>
+	 	<attribute name="mcClr" mode="IN" type="BigDecimal" optional="true"/>
+	 	
+	 	<attribute name="mcAckQtyLtrs" mode="IN" type="BigDecimal" optional="true"/>        
+	 	<attribute name="mcAckFat" mode="IN" type="BigDecimal" optional="true"/>
+	 	<attribute name="mcAckSnf" mode="IN" type="BigDecimal" optional="true"/>
+	 	<attribute name="mcAckAcid" mode="IN" type="Long" optional="true"/>
+	 	<attribute name="mcAckTemp" mode="IN" type="BigDecimal" optional="true"/>
+	 	<attribute name="mcAckClr" mode="IN" type="BigDecimal" optional="true"/>		
+        
+        <attribute name="bcQtyLtrs" mode="IN" type="BigDecimal" optional="true"/>        
+	 	<attribute name="bcFat" mode="IN" type="BigDecimal" optional="true"/>
+	 	<attribute name="bcSnf" mode="IN" type="BigDecimal" optional="true"/>
+	 	<attribute name="bcAcid" mode="IN" type="Long" optional="true"/>
+	 	<attribute name="bcTemp" mode="IN" type="BigDecimal" optional="true"/>
+	 	<attribute name="bcClr" mode="IN" type="BigDecimal" optional="true"/>
+	 	
+	 	<attribute name="bcAckQtyLtrs" mode="IN" type="BigDecimal" optional="true"/>        
+	 	<attribute name="bcAckFat" mode="IN" type="BigDecimal" optional="true"/>
+	 	<attribute name="bcAckSnf" mode="IN" type="BigDecimal" optional="true"/>
+	 	<attribute name="bcAckAcid" mode="IN" type="Long" optional="true"/>
+	 	<attribute name="bcAckTemp" mode="IN" type="BigDecimal" optional="true"/>
+	 	<attribute name="bcAckClr" mode="IN" type="BigDecimal" optional="true"/>
+	 	
+	 	<attribute name="milkTransferId" mode="IN" type="String" optional="true"/>
+	 	<attribute name="milkTransferId" mode="OUT" type="String" optional="false"/>
+	 	<attribute name="sequenceNum" mode="OUT" type="String" optional="true"/>
+    </service>
+     <service name="IncomeExpenditureEntry" engine="java"
+                location="in.vasista.vbiz.milkReceipts.MilkReceiptServices" invoke="IncomeExpenditureEntry" auth="true">
+        <attribute name="shedId" mode="IN" type="String" optional="false"/>
+        <attribute name="customTimePeriodId" mode="IN" type="String" optional="false"/>
+        <attribute name="productId" mode="IN" type="BigDecimal" optional="true"/>
+	 	<attribute name="kgFat" mode="IN" type="BigDecimal" optional="true"/>
+	 	<attribute name="kgSnf" mode="IN" type="BigDecimal" optional="true"/>
+	 	<attribute name="salesQtyKgs" mode="IN" type="BigDecimal" optional="true"/>
+	 	<attribute name="saleAmount" mode="IN" type="BigDecimal" optional="true"/>
+	 	<attribute name="cashAmount" mode="IN" type="BigDecimal" optional="true"/>
+	 	<attribute name="amount" mode="IN" type="BigDecimal" optional="true"/>
+	 	<attribute name="productId" mode="IN" type="String" optional="true"/>
+	 	<attribute name="salaryEnum" mode="IN" type="String" optional="true"/>
+	 	<attribute name="amountTypeId" mode="IN" type="String" optional="true"/>
+    </service>
+    <service name="deleteIncomeExpEntry" engine="java"
+             location="in.vasista.vbiz.milkReceipts.MilkReceiptServices" invoke="deleteIncomeExpEntry" auth="true">
+        <attribute name="facilityId" mode="IN" type="String" optional="false"/>
+        <attribute name="customTimePeriodId" mode="IN" type="String" optional="false"/>
+        <attribute name="amountTypeId" mode="IN" type="String" optional="false"/>
+    </service>    
+</services>

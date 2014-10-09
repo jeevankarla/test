@@ -7,14 +7,23 @@
                 <fo:region-after extent="1in"/>
             </fo:simple-page-master>
         </fo:layout-master-set>
+<#if errorMessage?has_content>
+<fo:page-sequence master-reference="main">
+   <fo:flow flow-name="xsl-region-body" font-family="Helvetica">
+      <fo:block font-size="14pt">
+              ${errorMessage}.
+   	  </fo:block>
+   </fo:flow>
+</fo:page-sequence>        
+<#else>         
              <#if unitTotalsMap?has_content>  
         		<fo:page-sequence master-reference="main">
         			<fo:static-content flow-name="xsl-region-before" font-family="Helvetica" font-size="8pt">
         				<fo:block text-align="left" white-space-collapse="false" keep-together="always">MILK SHED NAME:  ${parameters.shedId}                                                  FORTINIGHT CONSOLIDATED REPORT OF MILK PROCUREMENT, KG-FAT,KG-SNF,TOTAL SOLIDS PERIOD FROM : ${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(fromDate, "dd/MM/yyyy")} TO ${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(thruDate, "dd/MM/yyyy")}</fo:block>
         				<fo:block font-size="8pt">-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------</fo:block>
-        				<fo:block text-align="left" keep-together="always" white-space-collapse="false" font-size="8pt">.                                                                                           BUFFALO MILK                                                                                                           COW MILK                                                                                                                TOTAL MIXED MILK                                                                     CURD MILK BOURNED BY</fo:block>
-        				<fo:block text-align="left" keep-together="always" white-space-collapse="false" font-size="8pt">UNIT                                            ---------------------------------------------------------------------------------------------------------    ------------------------------------------------------------------------------------------------------------------     ---------------------------------------------------------------------------------------------------------        --------------------------------------- </fo:block>
-        				<fo:block keep-together="always" white-space-collapse="false">CODE   NAME OF CENTER      KGS       LTS        KGFAT        KGSNF       TOT.SOLIDS    AV.FAT    AV.SNF        KGS             LTS           KGFAT         KGSNF       TOT.SOLIDS    AV.FAT      AV.SNF         KGS        LTS         KGFAT         KGSNF     TOT.SOLIDS    AV.FAT    AV.SNF         PROD.LTS    P.T.C LTS</fo:block>
+        				<fo:block text-align="left" keep-together="always" white-space-collapse="false" font-size="8pt">.                                                                                           BUFFALO MILK                                                                                                           COW MILK                                                                                                                TOTAL MIXED MILK                                                                       CURD MILK BOURNED BY</fo:block>
+        				<fo:block text-align="left" keep-together="always" white-space-collapse="false" font-size="8pt">UNIT                                            ---------------------------------------------------------------------------------------------------------    ------------------------------------------------------------------------------------------------------------------     --------------------------------------------------------------------------------------------------------------  --------------------------------------- </fo:block>
+        				<fo:block keep-together="always" white-space-collapse="false">CODE     UNIT NAME               KGS        LTS              KGFAT         KGSNF     TOT.SOLIDS    AV.FAT   AV.SNF        KGS             LTS          KGFAT       KGSNF      TOT.SOLIDS    AV.FAT     AV.SNF        KGS          LTS               KGFAT       KGSNF     TOT.SOLIDS    AV.FAT    AV.SNF         PROD.LTS    P.T.C LTS</fo:block>
         				<fo:block font-size="8pt">-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------</fo:block>
         			</fo:static-content>
        				<fo:flow flow-name="xsl-region-body" font-family="Helvetica">       				   
@@ -24,7 +33,7 @@
     					<#assign grTotMixKgFat=0>
         				<#assign grTotMixKgSnf= 0>
         				<#assign grTotMixCurdLtrs= 0>
-        				<#assign grTotMixPtcKgs=0>
+        				<#assign grTotMixPtcLtrs=0>
      					<#list unitTotals as units>
      						<#assign facility = delegator.findOne("Facility", {"facilityId" : units.getKey()}, true)>
      						<#assign unitTotalEntries = units.getValue().entrySet()>
@@ -117,7 +126,7 @@
                    																		<fo:block text-indent="40pt" text-align="right">${Ltrs?if_exists?string("##0.0")}</fo:block>     																	
      																				</fo:table-cell>
      																				<fo:table-cell>           																	 																		
-                   																		<fo:block text-indent="40pt" text-align="right">${KgFat}</fo:block>     																	
+                   																		<fo:block text-indent="40pt" text-align="right">${KgFat?if_exists?string("##0.000")}</fo:block>     																	
      																				</fo:table-cell>
                    																	<fo:table-cell>          
                    																		<fo:block text-indent="40pt" text-align="right">${KgSnf?if_exists?string("##0.000")}</fo:block>     																	
@@ -141,14 +150,14 @@
 		     																		 <#assign mixKgFat = (milkTypeEntries.getValue().get("kgFat"))>
 		     																		 <#assign mixKgSnf = (milkTypeEntries.getValue().get("kgSnf"))>
 		     																		 <#assign mixCurdLtrs=(milkTypeEntries.getValue().get("cQtyLtrs"))>
-		     																		 <#assign mixPtcKgs=(milkTypeEntries.getValue().get("ptcQtyKgs"))>
+		     																		 <#assign mixPtcLtrs=(milkTypeEntries.getValue().get("ptcQtyLtrs"))>
 		     																		 
 		     																		 <#assign grTotMixLtrs = grTotMixLtrs+mixLtrs>
 		     																		 <#assign grTotMixKgs = grTotMixKgs+ mixKgs>
 		    														    			 <#assign grTotMixKgFat = grTotMixKgFat+mixKgFat>
 		        				                                                     <#assign grTotMixKgSnf = grTotMixKgSnf+mixKgSnf>
 		        				                                                     <#assign grTotMixCurdLtrs=grTotMixCurdLtrs+mixCurdLtrs>
-		        				                                                     <#assign grTotMixPtcKgs=grTotMixPtcKgs+mixPtcKgs>	
+		        				                                                     <#assign grTotMixPtcLtrs=grTotMixPtcLtrs+mixPtcLtrs>	
      																				<fo:table-cell>           																	 																		
                    																		<fo:block text-indent="40pt" text-align="right">${mixKgs?if_exists?string("##0.0")}</fo:block>     																	
      																				</fo:table-cell>
@@ -174,7 +183,7 @@
                    																		<fo:block text-indent="40pt" text-align="right">${mixCurdLtrs?if_exists?string("##0.0")}</fo:block>     																	
      																				</fo:table-cell>
      																				<fo:table-cell>          
-                   																		<fo:block text-indent="40pt" text-align="right">${mixPtcKgs?if_exists?string("##0.0")}</fo:block>     																	
+                   																		<fo:block text-indent="40pt" text-align="right">${(mixPtcLtrs)?if_exists?string("##0.0")}</fo:block>     																	
      																				</fo:table-cell>
      																			</#if>	
      																		</#list>	
@@ -200,8 +209,7 @@
          				</#list>
          				</#list>
          				<fo:block font-size="8pt">-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------</fo:block>
-         				<#if shedWiseTotalValues?has_content>
-	         				<#assign shedWiseTotals = shedWiseTotalValues.entrySet()> 
+         				<#if shedWiseTotalsMap?has_content>
 	         				<fo:block font-size="8pt">
 	        					<fo:table>
 	        						<#assign ListSize=(procurementProductList.size())>
@@ -219,27 +227,27 @@
 											<fo:table-column column-width="50pt"/>												
 											</#list>	
 										</#list>-->
-										<fo:table-column column-width="80pt"/>
+										<fo:table-column column-width="90pt"/>
+										<fo:table-column column-width="40pt"/>
 										<fo:table-column column-width="40pt"/>
 										<fo:table-column column-width="50pt"/>
 										<fo:table-column column-width="45pt"/>
 										<fo:table-column column-width="50pt"/>
-										<fo:table-column column-width="50pt"/>
 										<fo:table-column column-width="30pt"/>
 										<fo:table-column column-width="40pt"/>
-										<fo:table-column column-width="46pt"/>
+										<fo:table-column column-width="49pt"/>
 										<fo:table-column column-width="45pt"/>
 										<fo:table-column column-width="47pt"/>
+										<fo:table-column column-width="45pt"/>
 										<fo:table-column column-width="50pt"/>
-										<fo:table-column column-width="50pt"/>
-										<fo:table-column column-width="30pt"/>
+										<fo:table-column column-width="33pt"/>
 										<fo:table-column column-width="40pt"/>
 										<fo:table-column column-width="53pt"/>
+										<fo:table-column column-width="43pt"/>
 										<fo:table-column column-width="50pt"/>
 										<fo:table-column column-width="45pt"/>
 										<fo:table-column column-width="50pt"/>
-										<fo:table-column column-width="50pt"/>
-										<fo:table-column column-width="30pt"/>
+										<fo:table-column column-width="35pt"/>
 										<fo:table-column column-width="35pt"/>
 										<fo:table-column column-width="50pt"/>
 										<fo:table-column column-width="50pt"/>
@@ -251,59 +259,55 @@
 	                   						<fo:table-cell>
 	                   							<fo:block keep-together="always"> TOTAL :</fo:block>
 	                   						</fo:table-cell>
-	                   					<#list procurementProductList as procProducts>           						  
-	                   						<#list shedWiseTotals as shedWistTotEntries>    
-	                   							<#if procProducts.productName == shedWistTotEntries.getKey()>          						
-			                   						<fo:table-cell>
-			                   							<fo:block keep-together="always" text-indent="40pt" text-align="right">${(shedWistTotEntries.getValue().get("qtyKgs")+(shedWistTotEntries.getValue().get("sQtyLtrs")*1.03))?string("##0.0")}</fo:block>
-			                   						</fo:table-cell>
-			                   						<fo:table-cell>
-			                   							<fo:block keep-together="always" text-indent="40pt" text-align="right">${(shedWistTotEntries.getValue().get("qtyLtrs")+shedWistTotEntries.getValue().get("sQtyLtrs"))?string("##0.0")}</fo:block>
-			                   						</fo:table-cell>
-			                   						<fo:table-cell>
-			                   							<fo:block keep-together="always" text-indent="40pt" text-align="right">${((shedWistTotEntries.getValue().get("kgFat")))?string("##0.000")}</fo:block>
-			                   						</fo:table-cell>
-			                   						<fo:table-cell>
-			                   							<fo:block keep-together="always" text-indent="40pt" text-align="right">${(shedWistTotEntries.getValue().get("kgSnf"))?string("##0.000")}</fo:block>
-			                   						</fo:table-cell>
-			                   						<fo:table-cell>
-			                   							<fo:block keep-together="always" text-indent="40pt" text-align="right">${((shedWistTotEntries.getValue().get("kgSnf"))+(shedWistTotEntries.getValue().get("kgFat")))?if_exists?string("##0.000")}</fo:block>
-			                   						</fo:table-cell>
-			                   						<fo:table-cell>
-			                   							<fo:block keep-together="always" text-indent="40pt" text-align="right">${(shedWistTotEntries.getValue().get("fat"))?string("##0.0")}</fo:block>
-			                   						</fo:table-cell>
-			                   						<fo:table-cell>
-			                   							<fo:block keep-together="always" text-indent="40pt" text-align="right">${(shedWistTotEntries.getValue().get("snf"))?string("##0.00")}</fo:block>
-			                   						</fo:table-cell>
-	                   							</#if>	
-	                   						</#list>	
+	                   					<#list procurementProductList as procProducts>            							   						
+	                   						<fo:table-cell>
+	                   							<fo:block text-align="right">${shedWiseTotalsMap.get(procProducts.brandName+"QtyKgs")?string("##0.0")}</fo:block>
+	                   						</fo:table-cell>
+	                   						<fo:table-cell>
+	                   							<fo:block text-align="right">${shedWiseTotalsMap.get(procProducts.brandName+"QtyLtrs")?string("##0.0")}</fo:block>
+	                   						</fo:table-cell>
+	                   						<fo:table-cell>
+	                   							<fo:block text-align="right">${shedWiseTotalsMap.get(procProducts.brandName+"kgFat")?string("##0.000")}</fo:block>
+	                   						</fo:table-cell>
+	                   						<fo:table-cell>
+	                   							<fo:block text-align="right">${shedWiseTotalsMap.get(procProducts.brandName+"kgSnf")?string("##0.000")}</fo:block>
+	                   						</fo:table-cell>
+	                   						<fo:table-cell>
+	                   							<fo:block text-align="right">${(shedWiseTotalsMap.get(procProducts.brandName+"kgFat")+shedWiseTotalsMap.get(procProducts.brandName+"kgSnf"))?if_exists?string("##0.000")}</fo:block>
+	                   						</fo:table-cell>
+	                   						<fo:table-cell>
+	                   							<fo:block text-align="right"><#if shedWiseTotalsMap.get(procProducts.brandName+"QtyKgs") !=0>${((shedWiseTotalsMap.get(procProducts.brandName+"kgFat")*100)/shedWiseTotalsMap.get(procProducts.brandName+"QtyKgs"))?if_exists?string("##0.0")}<#else>0.0</#if></fo:block>
+	                   						</fo:table-cell>
+	                   						<fo:table-cell>
+	                   							<fo:block text-align="right"><#if shedWiseTotalsMap.get(procProducts.brandName+"QtyKgs") !=0>${((shedWiseTotalsMap.get(procProducts.brandName+"kgSnf")*100)/shedWiseTotalsMap.get(procProducts.brandName+"QtyKgs"))?if_exists?string("##0.00")}<#else>0.00</#if></fo:block>
+	                   						</fo:table-cell>             						
 	                   					</#list>                   						
 	                   						<fo:table-cell>
-	                   							<fo:block keep-together="always" text-indent="40pt" text-align="right">${grTotMixKgs?if_exists?string("##0.0")}</fo:block>
+	                   							<fo:block text-align="right">${grTotMixKgs?if_exists?string("##0.0")}</fo:block>
 	                   						</fo:table-cell>
 	                   						<fo:table-cell>
-	                   							<fo:block keep-together="always" text-indent="40pt" text-align="right">${grTotMixLtrs?if_exists?string("##0.0")}</fo:block>
+	                   							<fo:block text-align="right">${grTotMixLtrs?if_exists?string("##0.0")}</fo:block>
 	                   						</fo:table-cell>
 	                   						<fo:table-cell>
-	                   							<fo:block keep-together="always" text-indent="40pt" text-align="right">${grTotMixKgFat?if_exists?string("##0.000")}</fo:block>
+	                   							<fo:block text-align="right">${grTotMixKgFat?if_exists?string("##0.000")}</fo:block>
 	                   						</fo:table-cell>
 	                   						<fo:table-cell>
-	                   							<fo:block keep-together="always" text-indent="40pt" text-align="right">${grTotMixKgSnf?if_exists?string("##0.000")}</fo:block>
+	                   							<fo:block text-align="right">${grTotMixKgSnf?if_exists?string("##0.000")}</fo:block>
 	                   						</fo:table-cell>
 	                   						<fo:table-cell>
-	                   							<fo:block keep-together="always" text-indent="40pt" text-align="right">${(grTotMixKgFat+grTotMixKgSnf)?if_exists?string("##0.000")}</fo:block>
+	                   							<fo:block text-align="right">${(grTotMixKgFat+grTotMixKgSnf)?if_exists?string("##0.000")}</fo:block>
 	                   						</fo:table-cell>
 	                   						<fo:table-cell>
-	                   							<fo:block keep-together="always" text-indent="40pt" text-align="right"><#if grTotMixKgs !=0>${((grTotMixKgFat*100)/grTotMixKgs)?if_exists?string("##0.0")}<#else>0.0</#if></fo:block>
+	                   							<fo:block text-align="right"><#if grTotMixKgs !=0>${((grTotMixKgFat*100)/grTotMixKgs)?if_exists?string("##0.0")}<#else>0.0</#if></fo:block>
 	                   						</fo:table-cell>
 	                   						<fo:table-cell>
-	                   							<fo:block keep-together="always" text-indent="40pt" text-align="right"><#if grTotMixKgs !=0>${((grTotMixKgSnf*100)/grTotMixKgs)?if_exists?string("##0.00")}<#else>0.00</#if></fo:block>
+	                   							<fo:block text-align="right"><#if grTotMixKgs !=0>${((grTotMixKgSnf*100)/grTotMixKgs)?if_exists?string("##0.00")}<#else>0.00</#if></fo:block>
 	                   						</fo:table-cell>    
 	                   						<fo:table-cell>
-	                   							<fo:block keep-together="always" text-indent="40pt" text-align="right">${grTotMixCurdLtrs?if_exists?string("##0.0")}</fo:block>
+	                   							<fo:block text-align="right">${grTotMixCurdLtrs?if_exists?string("##0.0")}</fo:block>
 	                   						</fo:table-cell>
 	                   						<fo:table-cell>
-	                   							<fo:block keep-together="always" text-indent="40pt" text-align="right">${grTotMixPtcKgs?if_exists?string("##0.0")}</fo:block>
+	                   							<fo:block text-align="right">${grTotMixPtcLtrs?if_exists?string("##0.0")}</fo:block>
 	                   						</fo:table-cell>         					        						
 	                   					</fo:table-row>
 	                   				</fo:table-body>
@@ -321,6 +325,7 @@
 	       		 		</fo:block>
 	    			</fo:flow>
 				</fo:page-sequence>
-			</#if> 
+			</#if>
+</#if> 
 </fo:root>
 </#escape>

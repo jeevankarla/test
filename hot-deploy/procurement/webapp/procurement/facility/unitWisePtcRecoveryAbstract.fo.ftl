@@ -27,15 +27,24 @@ under the License.
                 <fo:region-after extent="1in"/>
             </fo:simple-page-master>
         </fo:layout-master-set>
-        ${setRequestAttribute("OUTPUT_FILENAME", "unitWisePtcRecovery.txt")}
+         ${setRequestAttribute("OUTPUT_FILENAME", "unitWisePtcRecovery.txt")}
+<#if errorMessage?has_content>
+<fo:page-sequence master-reference="main">
+   <fo:flow flow-name="xsl-region-body" font-family="Helvetica">
+      <fo:block font-size="14pt">
+              ${errorMessage}.
+   	  </fo:block>
+   </fo:flow>
+</fo:page-sequence>        
+<#else>         
         <#if routeWiseCentersList?has_content>
         <fo:page-sequence master-reference="main">
         	<fo:static-content flow-name="xsl-region-before">
         	<#assign facility = delegator.findOne("Facility", {"facilityId" : parameters.unitId}, true)>
         	<fo:block font-size="7pt" linefeed-treatment="preserve">&#xA;</fo:block>
-    		<fo:block font-size="8pt" text-align="left" white-space-collapse="false" font-weight="bold">.                                             STATEMENT SHOWING THE RECOVERABLE MILK AMOUNT FROM THE PRIVATE TRANSPORT CONTRACTOR</fo:block> 	 	  
+    		<fo:block font-size="8pt" text-align="left" white-space-collapse="false" font-weight="bold">.                                             STATEMENT SHOWING THE RECOVERABLE MILK AMOUNT FROM THE PRIVATE TRANSPORT CONTRACTOR                                                                                                                                                                                               PAGE NO:<fo:page-number/> </fo:block> 	 	  
         	<fo:block font-size="8pt" text-align="left" white-space-collapse="false" >-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------</fo:block>
-        	<fo:block font-size="8pt" text-align="left" white-space-collapse="false" font-weight="bold">UNIT CODE :  ${facility.get("facilityId")?if_exists}                                                                    UNIT NAME :  ${facility.get("facilityName")?if_exists}                                                                PERIOD FROM :  ${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(fromDateTime, "dd/MM/yyyy")}     TO    ${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(thruDateTime, "dd/MM/yyyy")} </fo:block>
+        	<fo:block font-size="8pt" text-align="left" white-space-collapse="false" font-weight="bold">UNIT CODE :  ${facility.get("facilityCode")?if_exists}                                                                    UNIT NAME :  ${facility.get("facilityName")?if_exists}                                                                PERIOD FROM :  ${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(fromDateTime, "dd/MM/yyyy")}     TO    ${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(thruDateTime, "dd/MM/yyyy")} </fo:block>
         	</fo:static-content>
         	<fo:flow flow-name="xsl-region-body" font-family="Helvetica">   		           
                  <fo:block font-size="7pt">
@@ -96,7 +105,7 @@ under the License.
 	                            </fo:table-cell>
 	                            <#if (ptcData.get("dated") == "ROUTE-TOT")||(ptcData.get("dated") == "UNIT-TOT")>
 	                            <fo:table-cell >	
-	                            	<fo:block font-size="7pt" text-align="center">${ptcData.get("centerName")?if_exists}</fo:block>                               
+	                            	<fo:block font-size="7pt" text-align="left">${ptcData.get("centerName")?if_exists}</fo:block>                               
 	                            </fo:table-cell>
             					<#else>
 	                            <fo:table-cell >	
@@ -135,10 +144,10 @@ under the License.
 	                            	<fo:block font-size="7pt" text-align="center">${ptcData.get("qtyKgs")?if_exists?string("##0.0")}</fo:block>                               
 	                            </fo:table-cell>
 	                            <fo:table-cell >	
-	                            	<fo:block font-size="7pt" text-align="center">${ptcData.get("fat")?if_exists?string("##0.0")}</fo:block>                               
+	                            	<fo:block font-size="7pt" text-align="center"><#if ptcData.get("qtyKgs") !=0>${((ptcData.get("kgFat")*100)/ptcData.get("qtyKgs"))?if_exists?string("##0.0")}</#if></fo:block>                               
 	                            </fo:table-cell>
 	                            <fo:table-cell >	
-	                            	<fo:block font-size="7pt" text-align="center">${ptcData.get("snf")?if_exists?string("##0.00")}</fo:block>                               
+	                            	<fo:block font-size="7pt" text-align="center"><#if ptcData.get("qtyKgs") !=0>${((ptcData.get("kgSnf")*100)/ptcData.get("qtyKgs"))?if_exists?string("##0.0")}</#if></fo:block>                               
 	                            </fo:table-cell>
 	                            <fo:table-cell >	
 	                            	<fo:block font-size="7pt" text-align="center">${ptcData.get("kgFat")?if_exists?string("##0.000")}</fo:block>                               
@@ -214,6 +223,7 @@ under the License.
                     </fo:block>
                 </fo:flow>
             </fo:page-sequence>
+        </#if>
         </#if>
      </fo:root>
 </#escape>

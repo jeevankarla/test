@@ -30,6 +30,7 @@ import in.vasista.vbiz.procurement.ProcurementNetworkServices;
 import in.vasista.vbiz.procurement.PriceServices;
 
 facilityId = parameters.getAt("facilityId");
+productId = parameters.getAt("productId");
 def sdf = new SimpleDateFormat("yyyy-MM-dd");
 Timestamp priceDate = UtilDateTime.nowTimestamp();
 if(parameters.get("priceDate")!=null){
@@ -57,6 +58,7 @@ context.procurementProductList = procurementProductList;
  dctx = dispatcher.getDispatchContext();
  inMap = [:];
  inMap.put("userLogin",context.userLogin);
+ inMap.put("productId",productId)
  inMap.put("facilityId",facilityId);
  inMap.put("priceDate",priceDate);
  inMap.put("supplyTypeEnumId",parameters.supplyTypeEnumId);
@@ -64,21 +66,27 @@ context.procurementProductList = procurementProductList;
  GenericValue priceChartLists = PriceServices.fetchPriceChart(dctx,inMap);
  procurementPrices = [];
  if (priceChartLists == null) {
-		context.errorMessage = "No valid price chart found";
+		//context.errorMessage = "No valid price chart found";
 		return ;
-	}else{
-			procurementPriceLists = delegator.findList("ProcurementPrice",EntityCondition.makeCondition("procPriceChartId",EntityOperator.EQUALS,priceChartLists.get("procPriceChartId")),null,null,null,false);
+	}else{  
+			List conditionList = FastList.newInstance();
+			conditionList.add(EntityCondition.makeCondition("procPriceChartId",EntityOperator.EQUALS,priceChartLists.get("procPriceChartId")));
+			if(UtilValidate.isNotEmpty(productId)){
+				conditionList.add(EntityCondition.makeCondition("productId",EntityOperator.EQUALS,productId));
+			}
+			EntityCondition condition = EntityCondition.makeCondition(conditionList,EntityJoinOperator.AND);
+			procurementPriceLists = delegator.findList("ProcurementPrice",condition,null,null,null,false);
 			chartId = procurementPriceLists[0].get("procPriceChartId");
 			for(procurementPriceList in procurementPriceLists){
-				priceChartMap = [:] ;
-				priceChartMap.put("facilityId",facilityId);
-				priceChartMap.put("price",procurementPriceList.get("price"));
-				priceChartMap.put("procurementPriceTypeId",procurementPriceList.get("procurementPriceTypeId"));
-				priceChartMap.put("productId",procurementPriceList.get("productId"));
-				priceChartMap.put("fatPercent",procurementPriceList.get("fatPercent"));
-				priceChartMap.put("snfPercent",procurementPriceList.get("snfPercent"));
-				procurementPrices.add(priceChartMap);
-				}
+					priceChartMap = [:] ;
+					priceChartMap.put("facilityId",facilityId);
+					priceChartMap.put("price",procurementPriceList.get("price"));
+					priceChartMap.put("procurementPriceTypeId",procurementPriceList.get("procurementPriceTypeId"));
+					priceChartMap.put("productId",procurementPriceList.get("productId"));
+					priceChartMap.put("fatPercent",procurementPriceList.get("fatPercent"));
+					priceChartMap.put("snfPercent",procurementPriceList.get("snfPercent"));
+					procurementPrices.add(priceChartMap);
+			}
 	}
 	chartDetails = delegator.findOne("ProcurementPriceChart",[procPriceChartId:chartId],false);
 	regionId = chartDetails.get("regionId");

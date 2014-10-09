@@ -44,7 +44,7 @@ under the License.
          	<#assign unitRouteEntry = unitRouteEntries.getValue().entrySet()>         	  
         		<fo:page-sequence master-reference="main">
         			<fo:static-content flow-name="xsl-region-before" font-family="Courier,monospace">        				
-        				<fo:block text-align="left" white-space-collapse="false" font-size="8pt" keep-together="always">STATEMENT OF DAY WISE ANALYSIS FOR LTS,KGS,KGFAT,KGSNF AND AVERAGE FAT , AVERAGE SNF </fo:block>
+        				<fo:block text-align="left" white-space-collapse="false" font-size="8pt" keep-together="always">STATEMENT OF DAY WISE ANALYSIS FOR LTS,KGS,KGFAT,KGSNF AND AVERAGE FAT , AVERAGE SNF                                                 PAGE NO:<fo:page-number/></fo:block>
         				<fo:block font-size="8pt">------------------------------------------------------------------------------------------------------------------------------------------------------------------</fo:block>
         				<#assign unitDetails = delegator.findOne("Facility", {"facilityId" : unitRouteEntries.getKey()}, true)>
         				<fo:block text-align="left" keep-together="always" white-space-collapse="false" font-size="8pt">.         UNIT CODE    :  ${(unitDetails.facilityCode)?if_exists}                UNIT NAME               :${unitDetails.description?if_exists}</fo:block>
@@ -52,7 +52,7 @@ under the License.
         				<fo:block font-size="8pt">------------------------------------------------------------------------------------------------------------------------------------------------------------------</fo:block>
         				<fo:block text-align="left" keep-together="always" white-space-collapse="false" font-size="8pt">.                            R    D    T                        GOOD MILK                                   SOUR MILK                        TOTAL         CURDLED</fo:block>
         				<fo:block keep-together="always" white-space-collapse="false" font-size="8pt">.                            N    A    Y     ------------------------------------------------  ----------------------------  -------------------------------- -------</fo:block>
-        				<fo:block keep-together="always" white-space-collapse="false" font-size="8pt">CODE   NAME OF CENTER        O    Y    P      LTS      KGS     FAT%   SNF    KGFAT    KGSNF    LTS    KGS    FAT%   KGFAT    LTS     KGS     KGFAT    KGSNF   LTS </fo:block>
+        				<fo:block keep-together="always" white-space-collapse="false" font-size="8pt">CODE   NAME OF CENTER        O    Y    P      LTS      KGS     FAT%   SNF    KGFAT    KGSNF      LTS   KGS   FAT%   KGFAT     LTS    KGS     KGFAT    KGSNF   LTS </fo:block>
         				<fo:block font-size="8pt">------------------------------------------------------------------------------------------------------------------------------------------------------------------</fo:block>
         			</fo:static-content>
        				<fo:flow flow-name="xsl-region-body" font-family="Courier,monospace">
@@ -113,11 +113,11 @@ under the License.
                     								<#list agentAmEntries as agentEntryValues>
                     									<#if agentEntryValues.getKey() !="TOT">
                     										<#if agentEntryValues.getKey() == milkTypeValue.getKey()>                    											
-                    											<fo:block keep-together="always">
+                    											<fo:block>
                     												<fo:table>
-                    													<fo:table-column column-width="35pt"/>
+                    													<fo:table-column column-width="20pt"/>
                    														<fo:table-column column-width="17pt"/>
-                   														<fo:table-column column-width="40pt"/>
+                   														<fo:table-column column-width="55pt"/>
                    														<fo:table-column column-width="40pt"/>
                    														<fo:table-column column-width="40pt"/>
                    														<fo:table-column column-width="40pt"/>
@@ -137,13 +137,13 @@ under the License.
                    														<fo:table-column column-width="40pt"/>
                    														<fo:table-column column-width="35pt"/>
                    														<fo:table-body>
-                   														<#if agentEntryValues.getValue().get("qtyKgs") !=0>
+                   														<#if (agentEntryValues.getValue().get("qtyKgs")+agentEntryValues.getValue().get("sQtyLtrs")) !=0 || agentEntryValues.getValue().get("cQtyLtrs") !=0>
                    															<fo:table-row>
                    																<fo:table-cell>
-								                    								<fo:block>${facility.facilityCode}</fo:block>
+								                    								<fo:block text-align="right">${facility.facilityCode}</fo:block>
 								                    							</fo:table-cell>
 								                    							<fo:table-cell>                    								
-								                    								<fo:block keep-together="always">${Static["org.ofbiz.order.order.OrderServices"].nameTrim((StringUtil.wrapString(facility.get("facilityName").toUpperCase())),15)}</fo:block>
+								                    								<fo:block keep-together="always" text-align="left" text-indent="13pt">${Static["org.ofbiz.order.order.OrderServices"].nameTrim((StringUtil.wrapString(facility.get("facilityName").toUpperCase())),15)}</fo:block>
 								                    							</fo:table-cell>
 								                    							<#assign parentFacilityDetails = delegator.findOne("Facility", {"facilityId" : facility.parentFacilityId}, true)>
                    																<fo:table-cell/>
@@ -262,11 +262,11 @@ under the License.
                    					<fo:table-column column-width="40pt"/>
                    					<fo:table-column column-width="40pt"/>
                    					<fo:table-column column-width="5pt"/>
-                   					<fo:table-column column-width="35pt"/>
-                   					<fo:table-column column-width="27pt"/>
-                   					<fo:table-column column-width="35pt"/>
-                   					<fo:table-column column-width="35pt"/>
-                   					<fo:table-column column-width="45pt"/>
+                   					<fo:table-column column-width="33pt"/>
+                   					<fo:table-column column-width="33pt"/>
+                   					<fo:table-column column-width="30pt"/>
+                   					<fo:table-column column-width="38pt"/>
+                   					<fo:table-column column-width="43pt"/>
                    					<fo:table-column column-width="40pt"/>
                    					<fo:table-column column-width="37pt"/>
                    					<fo:table-column column-width="45pt"/>
@@ -282,69 +282,69 @@ under the License.
                    							<fo:table-cell></fo:table-cell>
                    							<fo:table-cell></fo:table-cell>
                    							<fo:table-cell>
-                   								<fo:block text-align="left" keep-together="always" text-indent="68pt" white-space-collapse="false">BM</fo:block>
-        										<fo:block text-align="left" keep-together="always" text-indent="68pt" white-space-collapse="false">CM</fo:block>
+                   								<fo:block text-align="left" text-indent="68pt">BM</fo:block>
+        										<fo:block text-align="left" text-indent="68pt">CM</fo:block>
                    							</fo:table-cell>                   							             							
                    							<fo:table-cell>
-                   								<fo:block text-align="right" white-space-collapse="false">${rtBMTotLtrs?if_exists?string("##0.0")}</fo:block>
-        										<fo:block text-align="right" white-space-collapse="false">${rtCMTotLtrs?if_exists?string("##0.0")}</fo:block>
+                   								<fo:block text-align="right">${rtBMTotLtrs?if_exists?string("##0.0")}</fo:block>
+        										<fo:block text-align="right">${rtCMTotLtrs?if_exists?string("##0.0")}</fo:block>
                    							</fo:table-cell>
                    							<fo:table-cell>
-                   								<fo:block text-align="right" keep-together="always" white-space-collapse="false">${rtBMTotKgs?if_exists?string("##0.0")}</fo:block>
-        										<fo:block text-align="right" keep-together="always" white-space-collapse="false">${rtCMTotKgs?if_exists?string("##0.0")}</fo:block>
+                   								<fo:block text-align="right">${rtBMTotKgs?if_exists?string("##0.0")}</fo:block>
+        										<fo:block text-align="right">${rtCMTotKgs?if_exists?string("##0.0")}</fo:block>
                    							</fo:table-cell>
                    							<fo:table-cell>
-                   								<fo:block text-align="right" keep-together="always" white-space-collapse="false"><#if rtBMTotKgs !=0>${((rtBMTotKgFat*100)/rtBMTotKgs)?if_exists?string("##0.0")}<#else>0.0</#if></fo:block>
-        										<fo:block text-align="right" keep-together="always" white-space-collapse="false"><#if rtCMTotKgs !=0>${((rtCMTotKgFat*100)/rtCMTotKgs)?if_exists?string("##0.0")}<#else>0.0</#if></fo:block>
+                   								<fo:block text-align="right"><#if rtBMTotKgs !=0>${((rtBMTotKgFat*100)/rtBMTotKgs)?if_exists?string("##0.0")}<#else>0.0</#if></fo:block>
+        										<fo:block text-align="right"><#if rtCMTotKgs !=0>${((rtCMTotKgFat*100)/rtCMTotKgs)?if_exists?string("##0.0")}<#else>0.0</#if></fo:block>
                    							</fo:table-cell>
                    							<fo:table-cell>
-                   								<fo:block text-align="right" keep-together="always" white-space-collapse="false"><#if rtBMTotKgs !=0>${((rtBMTotKgSnf*100)/rtBMTotKgs)?if_exists?string("##0.00")}<#else>0.00</#if></fo:block>
-        										<fo:block text-align="right" keep-together="always" white-space-collapse="false"><#if rtCMTotKgs !=0>${((rtCMTotKgSnf*100)/rtCMTotKgs)?if_exists?string("##0.00")}<#else>0.00</#if></fo:block>
+                   								<fo:block text-align="right"><#if rtBMTotKgs !=0>${((rtBMTotKgSnf*100)/rtBMTotKgs)?if_exists?string("##0.00")}<#else>0.00</#if></fo:block>
+        										<fo:block text-align="right"><#if rtCMTotKgs !=0>${((rtCMTotKgSnf*100)/rtCMTotKgs)?if_exists?string("##0.00")}<#else>0.00</#if></fo:block>
                    							</fo:table-cell>
                    							<fo:table-cell>
-                   								<fo:block text-align="right" keep-together="always" white-space-collapse="false">${rtBMTotKgFat?if_exists?string("##0.00")}</fo:block>
-        										<fo:block text-align="right" keep-together="always" white-space-collapse="false">${rtCMTotKgFat?if_exists?string("##0.00")}</fo:block>
+                   								<fo:block text-align="right">${rtBMTotKgFat?if_exists?string("##0.00")}</fo:block>
+        										<fo:block text-align="right">${rtCMTotKgFat?if_exists?string("##0.00")}</fo:block>
                    							</fo:table-cell>
                    							<fo:table-cell>
-                   								<fo:block text-align="right" keep-together="always" white-space-collapse="false">${rtBMTotKgSnf?if_exists?string("##0.00")}</fo:block>
-        										<fo:block text-align="right" keep-together="always" white-space-collapse="false">${rtCMTotKgSnf?if_exists?string("##0.00")}</fo:block>
+                   								<fo:block text-align="right">${rtBMTotKgSnf?if_exists?string("##0.00")}</fo:block>
+        										<fo:block text-align="right">${rtCMTotKgSnf?if_exists?string("##0.00")}</fo:block>
                    							</fo:table-cell>
                    							<fo:table-cell></fo:table-cell>
                    							<fo:table-cell>
-                   								<fo:block text-align="right" keep-together="always" white-space-collapse="false">${rtBMTotSltrs?if_exists?string("##0.0")}</fo:block>
-        										<fo:block text-align="right" keep-together="always" white-space-collapse="false">${rtCMTotSltrs?if_exists?string("##0.0")}</fo:block>
+                   								<fo:block text-align="right">${rtBMTotSltrs?if_exists?string("##0.0")}</fo:block>
+        										<fo:block text-align="right">${rtCMTotSltrs?if_exists?string("##0.0")}</fo:block>
                    							</fo:table-cell>
                    							<fo:table-cell>
-                   								<fo:block text-align="right" keep-together="always" white-space-collapse="false">${rtBMTotSKgs?if_exists?string("##0.0")}</fo:block>
-        										<fo:block text-align="right" keep-together="always" white-space-collapse="false">${rtCMTotSKgs?if_exists?string("##0.0")}</fo:block>
+                   								<fo:block text-align="right">${rtBMTotSKgs?if_exists?string("##0.0")}</fo:block>
+        										<fo:block text-align="right">${rtCMTotSKgs?if_exists?string("##0.0")}</fo:block>
                    							</fo:table-cell>
                    							<fo:table-cell>
-                   								<fo:block text-align="right" keep-together="always" white-space-collapse="false"><#if rtBMTotSKgs !=0>${((rtBMTotSKgFat*100)/rtBMTotSKgs)?if_exists?string("##0.00")}<#else>0.0</#if></fo:block>
-        										<fo:block text-align="right" keep-together="always" white-space-collapse="false"><#if rtCMTotSKgs !=0>${((rtCMTotSKgFat*100)/rtCMTotSKgs)?if_exists?string("##0.00")}<#else>0.0</#if></fo:block>
+                   								<fo:block text-align="right"><#if rtBMTotSKgs !=0>${((rtBMTotSKgFat*100)/rtBMTotSKgs)?if_exists?string("##0.00")}<#else>0.0</#if></fo:block>
+        										<fo:block text-align="right"><#if rtCMTotSKgs !=0>${((rtCMTotSKgFat*100)/rtCMTotSKgs)?if_exists?string("##0.00")}<#else>0.0</#if></fo:block>
                    							</fo:table-cell>
                    							<fo:table-cell>
-                   								<fo:block text-align="right" keep-together="always" white-space-collapse="false">${rtBMTotSKgFat?if_exists?string("##0.00")}</fo:block>
-        										<fo:block text-align="right" keep-together="always" white-space-collapse="false">${rtCMTotSKgFat?if_exists?string("##0.00")}</fo:block>
+                   								<fo:block text-align="right">${rtBMTotSKgFat?if_exists?string("##0.00")}</fo:block>
+        										<fo:block text-align="right">${rtCMTotSKgFat?if_exists?string("##0.00")}</fo:block>
                    							</fo:table-cell>
                    							<fo:table-cell>
-                   								<fo:block text-align="right" keep-together="always" white-space-collapse="false">${(rtBMTotLtrs+rtBMTotSltrs)?if_exists?string("##0.0")}</fo:block>
-        										<fo:block text-align="right" keep-together="always" white-space-collapse="false">${(rtCMTotLtrs+rtCMTotSltrs)?if_exists?string("##0.0")}</fo:block>
+                   								<fo:block text-align="right">${(rtBMTotLtrs+rtBMTotSltrs)?if_exists?string("##0.0")}</fo:block>
+        										<fo:block text-align="right">${(rtCMTotLtrs+rtCMTotSltrs)?if_exists?string("##0.0")}</fo:block>
                    							</fo:table-cell>
                    							<fo:table-cell>
-                   								<fo:block text-align="right" keep-together="always" white-space-collapse="false">${(rtBMTotKgs+rtBMTotSKgs)?if_exists?string("##0.0")}</fo:block>
-        										<fo:block text-align="right" keep-together="always" white-space-collapse="false">${(rtCMTotKgs+rtCMTotSKgs)?if_exists?string("##0.0")}</fo:block>
+                   								<fo:block text-align="right">${(rtBMTotKgs+rtBMTotSKgs)?if_exists?string("##0.0")}</fo:block>
+        										<fo:block text-align="right">${(rtCMTotKgs+rtCMTotSKgs)?if_exists?string("##0.0")}</fo:block>
                    							</fo:table-cell>
                    							<fo:table-cell>
-                   								<fo:block text-align="right" keep-together="always" white-space-collapse="false">${(rtBMTotKgFat+rtBMTotSKgFat)?if_exists?string("##0.00")}</fo:block>
-        										<fo:block text-align="right" keep-together="always" white-space-collapse="false">${(rtCMTotKgFat+rtCMTotSKgFat)?if_exists?string("##0.00")}</fo:block>
+                   								<fo:block text-align="right">${(rtBMTotKgFat+rtBMTotSKgFat)?if_exists?string("##0.00")}</fo:block>
+        										<fo:block text-align="right">${(rtCMTotKgFat+rtCMTotSKgFat)?if_exists?string("##0.00")}</fo:block>
                    							</fo:table-cell>
                    							<fo:table-cell>
-                   								<fo:block text-align="right" keep-together="always" white-space-collapse="false">${(rtBMTotKgSnf)?if_exists?string("##0.00")}</fo:block>
-        										<fo:block text-align="right" keep-together="always" white-space-collapse="false">${(rtCMTotKgSnf)?if_exists?string("##0.00")}</fo:block>
+                   								<fo:block text-align="right">${(rtBMTotKgSnf)?if_exists?string("##0.00")}</fo:block>
+        										<fo:block text-align="right">${(rtCMTotKgSnf)?if_exists?string("##0.00")}</fo:block>
                    							</fo:table-cell>
                    							<fo:table-cell>
-                   								<fo:block text-align="right" keep-together="always" white-space-collapse="false">${(rtBMCurLdLts)?if_exists?string("##0.0")}</fo:block>
-        										<fo:block text-align="right" keep-together="always" white-space-collapse="false">${(rtCMCurLdLts)?if_exists?string("##0.0")}</fo:block>
+                   								<fo:block text-align="right">${(rtBMCurLdLts)?if_exists?string("##0.0")}</fo:block>
+        										<fo:block text-align="right">${(rtCMCurLdLts)?if_exists?string("##0.0")}</fo:block>
                    							</fo:table-cell>
                    						</fo:table-row>
                    						<fo:table-row>
@@ -372,53 +372,52 @@ under the License.
                    								<fo:block text-align="right">${(rtBMTotLtrs+rtCMTotLtrs)?if_exists?string("##0.0")}</fo:block>
                                             </fo:table-cell>
                                             <fo:table-cell>
-                   								<fo:block text-align="right" white-space-collapse="false">${(rtBMTotKgs+rtCMTotKgs)?if_exists?string("##0.0")}</fo:block>
+                   								<fo:block text-align="right">${(rtBMTotKgs+rtCMTotKgs)?if_exists?string("##0.0")}</fo:block>
                                             </fo:table-cell>
                                             <fo:table-cell>
-                   								<fo:block text-align="right" white-space-collapse="false"><#if (rtBMTotKgs+rtCMTotKgs) !=0>${(((rtBMTotKgFat+rtCMTotKgFat)*100)/(rtBMTotKgs+rtCMTotKgs))?if_exists?string("##0.0")}<#else>0.0</#if></fo:block>
+                   								<fo:block text-align="right"><#if (rtBMTotKgs+rtCMTotKgs) !=0>${(((rtBMTotKgFat+rtCMTotKgFat)*100)/(rtBMTotKgs+rtCMTotKgs))?if_exists?string("##0.0")}<#else>0.0</#if></fo:block>
         									</fo:table-cell>
                    							<fo:table-cell>
-                   								<fo:block text-align="right" white-space-collapse="false"><#if (rtBMTotKgs+rtCMTotKgs) !=0>${(((rtBMTotKgSnf+rtCMTotKgSnf)*100)/(rtBMTotKgs+rtCMTotKgs))?if_exists?string("##0.00")}<#else>0.0</#if></fo:block>
+                   								<fo:block text-align="right"><#if (rtBMTotKgs+rtCMTotKgs) !=0>${(((rtBMTotKgSnf+rtCMTotKgSnf)*100)/(rtBMTotKgs+rtCMTotKgs))?if_exists?string("##0.00")}<#else>0.0</#if></fo:block>
                    							</fo:table-cell>
                    							<fo:table-cell>
-                   								<fo:block text-align="right" white-space-collapse="false">${(rtBMTotKgFat+rtCMTotKgFat)?if_exists?string("##0.00")}</fo:block>
+                   								<fo:block text-align="right">${(rtBMTotKgFat+rtCMTotKgFat)?if_exists?string("##0.00")}</fo:block>
         									</fo:table-cell>
                    							<fo:table-cell>
-                   								<fo:block text-align="right" white-space-collapse="false">${(rtBMTotKgSnf+rtCMTotKgSnf)?if_exists?string("##0.00")}</fo:block>
+                   								<fo:block text-align="right">${(rtBMTotKgSnf+rtCMTotKgSnf)?if_exists?string("##0.00")}</fo:block>
         									</fo:table-cell>
                    							<fo:table-cell></fo:table-cell>
                    							<fo:table-cell>
-                   								<fo:block text-align="right" white-space-collapse="false">${(rtBMTotSltrs+rtCMTotSltrs)?if_exists?string("##0.0")}</fo:block>
+                   								<fo:block text-align="right">${(rtBMTotSltrs+rtCMTotSltrs)?if_exists?string("##0.0")}</fo:block>
         									</fo:table-cell>
                    							<fo:table-cell>
-                   								<fo:block text-align="right" white-space-collapse="false">${(rtBMTotSKgs+rtCMTotSKgs)?if_exists?string("##0.0")}</fo:block>
+                   								<fo:block text-align="right">${(rtBMTotSKgs+rtCMTotSKgs)?if_exists?string("##0.0")}</fo:block>
         									</fo:table-cell>
         									<fo:table-cell>
-        										<fo:block text-align="right" white-space-collapse="false"><#if (rtBMTotSKgs+rtCMTotSKgs) !=0>${(((rtBMTotSKgFat+rtCMTotSKgFat)*100)/(rtBMTotSKgs+rtCMTotSKgs))?if_exists?string("##0.00")}<#else>0.0</#if></fo:block>
+        										<fo:block text-align="right"><#if (rtBMTotSKgs+rtCMTotSKgs) !=0>${(((rtBMTotSKgFat+rtCMTotSKgFat)*100)/(rtBMTotSKgs+rtCMTotSKgs))?if_exists?string("##0.00")}<#else>0.0</#if></fo:block>
         									</fo:table-cell>
                    							<fo:table-cell>
-                   								<fo:block text-align="right" white-space-collapse="false">${(rtBMTotSKgFat+rtCMTotSKgFat)?if_exists?string("##0.00")}</fo:block>
+                   								<fo:block text-align="right">${(rtBMTotSKgFat+rtCMTotSKgFat)?if_exists?string("##0.00")}</fo:block>
         									</fo:table-cell>
                    							<fo:table-cell>
-                   								<fo:block text-align="right" white-space-collapse="false">${((rtBMTotLtrs+rtBMTotSltrs)+(rtCMTotLtrs+rtCMTotSltrs))?if_exists?string("##0.0")}</fo:block>
+                   								<fo:block text-align="right">${((rtBMTotLtrs+rtBMTotSltrs)+(rtCMTotLtrs+rtCMTotSltrs))?if_exists?string("##0.0")}</fo:block>
         									</fo:table-cell>
                    							<fo:table-cell>
-                   								<fo:block text-align="right" white-space-collapse="false">${((rtBMTotKgs+rtBMTotSKgs)+(rtCMTotKgs+rtCMTotSKgs))?if_exists?string("##0.0")}</fo:block>
+                   								<fo:block text-align="right">${((rtBMTotKgs+rtBMTotSKgs)+(rtCMTotKgs+rtCMTotSKgs))?if_exists?string("##0.0")}</fo:block>
         									</fo:table-cell>
         									<fo:table-cell>
-                   								<fo:block text-align="right" white-space-collapse="false">${((rtBMTotKgFat+rtBMTotSKgFat)+(rtCMTotKgFat+rtCMTotSKgFat))?if_exists?string("##0.00")}</fo:block>
+                   								<fo:block text-align="right">${((rtBMTotKgFat+rtBMTotSKgFat)+(rtCMTotKgFat+rtCMTotSKgFat))?if_exists?string("##0.00")}</fo:block>
         									</fo:table-cell>
                    							<fo:table-cell>
-                   								<fo:block text-align="right" white-space-collapse="false">${(rtBMTotKgSnf+rtCMTotKgSnf)?if_exists?string("##0.00")}</fo:block>
+                   								<fo:block text-align="right">${(rtBMTotKgSnf+rtCMTotKgSnf)?if_exists?string("##0.00")}</fo:block>
                    							</fo:table-cell>
                    							<fo:table-cell>
-                   								<fo:block text-align="right" keep-together="always" white-space-collapse="false">${(rtBMCurLdLts+rtCMCurLdLts)?if_exists?string("##0.0")}</fo:block>
+                   								<fo:block text-align="right">${(rtBMCurLdLts+rtCMCurLdLts)?if_exists?string("##0.0")}</fo:block>
         									</fo:table-cell>
                    						</fo:table-row>
                    						<fo:table-row>
                    							<fo:table-cell>
                    								<fo:block font-size="8pt">------------------------------------------------------------------------------------------------------------------------------------------------------------------</fo:block>
-                   								
                    							</fo:table-cell>
                    						</fo:table-row>
                    					</fo:table-body>

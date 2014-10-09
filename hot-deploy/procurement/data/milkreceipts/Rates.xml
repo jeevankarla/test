@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<entity-engine-xml>
+	<RateType rateTypeId="MLKRECPT_OPCOST"  description="Milk Receipt units opcost"/>
+	<FacilityRate facilityId ="25490" productId="_NA_" supplyTypeEnumId="_NA_" rateTypeId="MLKRECPT_OPCOST" rateAmount="2.00" rateCurrencyUomId="INR" fromDate="2012-01-01 0:00:00.000" thruDate=""/>
+	<RateType rateTypeId="MLKRCPT_PROD_RATE"  description="Milk Receipt product Rate"/>
+	<FacilityRate facilityId ="_NA_" productId="103" supplyTypeEnumId="_NA_" rateTypeId="MLKRCPT_PROD_RATE" rateAmount="20.00" rateCurrencyUomId="INR" fromDate="2012-01-01 0:00:00.000" thruDate=""/>
+</entity-engine-xml>

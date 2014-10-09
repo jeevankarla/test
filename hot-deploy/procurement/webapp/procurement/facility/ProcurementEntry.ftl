@@ -70,16 +70,22 @@
 <script type="application/javascript">
 	//Decimal formating
 	jQuery(function($) {	
+		var dateFormat = $('#orderDate').datepicker( "option", "dateFormat" );
+		$('#orderDate').datepicker( "option", "dateFormat", "dd-mm-yy" );
 		//$('input.money').autoNumeric({aNeg: '-'}).trigger('focusout'); 
 		//$('#fat').autoNumeric('init',{aSep: '.',  mDec:functionName});
-		$('#quantity').autoNumeric({mDec: 1 ,mRound: 'A' ,	aSep:''}).trigger('focusout');
-		$('#qtyLtrs').autoNumeric({mDec: 2}).trigger('focusout');
-		$('#fat').autoNumeric({mNum: 2,mDec: 1}).trigger('focusout');
+       <#if (tenantConfigCondition?has_content) && (tenantConfigCondition.enableQtyDecimalEntry?has_content) && (tenantConfigCondition.enableQtyDecimalEntry = 'Y')>
+			$('#quantity').autoNumeric({mDec: 1 ,mRound: 'A' , mDecNum:'0|5' ,	aSep:'' , autoTab : true}).trigger('focusout');
+		<#else>
+		    $('#quantity').autoNumeric({mDec: 1 ,mRound: 'A' ,	aSep:'' , autoTab : true}).trigger('focusout');
+		</#if>
+		$('#qtyLtrs').autoNumeric({mDec: 2 , autoTab : true}).trigger('focusout');
+		$('#fat').autoNumeric({mNum: 2,mDec: 1 , autoTab : true}).trigger('focusout');
 		$('#snf').autoNumeric({mNum: 2,mDec: 2}).trigger('focusout');
-		$('#sFat').autoNumeric({mNum: 2,mDec: 1}).trigger('focusout');
-		$('#sQuantity').autoNumeric({mDec: 1}).trigger('focusout');
-		$('#cQuantity').autoNumeric({mDec: 1}).trigger('focusout');
-		$('#ptcQuantity').autoNumeric({mDec: 1}).trigger('focusout');
+		$('#sFat').autoNumeric({mNum: 2,mDec: 1, autoTab : true}).trigger('focusout');
+		$('#sQuantity').autoNumeric({mDec: 1 , autoTab : true}).trigger('focusout');
+		$('#cQuantity').autoNumeric({mDec: 1 , autoTab : true}).trigger('focusout');
+		$('#ptcQuantity').autoNumeric({mDec: 1 , autoTab : true}).trigger('focusout');
 		$('#lactoReading').autoNumeric({mNum: 2,mDec: 1}).trigger('focusout');
 		
 			
@@ -108,7 +114,8 @@
 	 
     $(':input').autotab_magic();	
 	
-	$('#snf').autotab({ target: 'submitEntry',previous: 'fat' });
+	$('#snf').autotab({ target: 'submitEntry', previous: 'fat'});
+	
     // OR
 
    // $('#area_code, #number1, #number2').autotab_magic();
@@ -119,18 +126,23 @@
 	var recentChnage;
 	function setUpRecentList(recentChnage) {
 			recentChnage = recentChnage;
-			orderDate = (new Date((recentChnage["estimatedDeliveryDate"])["time"])).toString('dd-MM-yyyy');	
+			orderDate = (new Date((recentChnage["estimatedDeliveryDate"])["time"])).toString('yyyy-MM-dd');	
 			var grid;		
 			var data = [			
 					{"id":"1","orderDate":orderDate ,"purchaseTime":recentChnage['purchaseTime'], "unit":recentChnage['unitCode'], 
 						"center":recentChnage['centerCode'], "productId":productBrandNameJson[recentChnage['productId']] ,
-					 	<#if (tenantConfigCondition.enableQuantityInLtrs?has_content) && (tenantConfigCondition.enableQuantityInLtrs != 'N')>
+					 	<#if (tenantConfigCondition?has_content) && (tenantConfigCondition.enableQuantityInLtrs?has_content) && (tenantConfigCondition.enableQuantityInLtrs != 'N')>
 					 		"qtyLtrs":(recentChnage['qtyLtrs'])
 					 	<#else>
 							"quantity":recentChnage['quantity']											 	 
 					 	</#if>
-					 	,"fat":recentChnage['fat'], "snf":recentChnage['snf'], 
-					 	<#if (tenantConfigCondition.enableSQuantityInKgs?has_content) && (tenantConfigCondition.enableSQuantityInKgs != 'N')>
+					 	,"fat":recentChnage['fat'], 
+					 	<#if (tenantConfigCondition?has_content) && (tenantConfigCondition.enableLR?has_content)&& (tenantConfigCondition.enableLR != 'N')>
+	       			   		"lactoReading":recentChnage['lactoReading'],
+	       				<#else>
+	       					"snf":recentChnage['snf'], 
+	        			</#if>
+					 	<#if (tenantConfigCondition?has_content) && (tenantConfigCondition.enableSQuantityInKgs?has_content) && (tenantConfigCondition.enableSQuantityInKgs != 'N')>
 					 		"sQuantity":recentChnage['sQuantityLtrs']
 					 	<#else>
 					 			"sQtyKgs":(recentChnage['sQtyKgs'])
@@ -148,14 +160,18 @@
 				{id:"unit", name:"Unit Code", field:"unit", width:100, minWidth:100, cssClass:"cell-title", sortable:false},
 				{id:"center", name:"Center Code", field:"center", width:100, minWidth:100, cssClass:"cell-title", sortable:false},
 	        	{id:"productId", name:"Milk Type", field:"productId", width:70, minWidth:70, cssClass:"cell-title", sortable:false},
-	        	<#if (tenantConfigCondition.enableQuantityInLtrs?has_content)&&(tenantConfigCondition.enableQuantityInLtrs != 'N')>
+	        	<#if (tenantConfigCondition?has_content) && (tenantConfigCondition.enableQuantityInLtrs?has_content)&&(tenantConfigCondition.enableQuantityInLtrs != 'N')>
 	        	{id:"qtyLtrs", name:"Quantity-Ltrs", field:"qtyLtrs", width:100, minWidth:100, sortable:false , editor:FloatCellEditor},
 	        	<#else>
 				{id:"quantity", name:"Quantity", field:"quantity", width:100, minWidth:100, sortable:false , editor:FloatCellEditor},	        		
 	        	</#if>
 	        	{id:"fat", name:"Fat", field:"fat", width:70, minWidth:70, sortable:false , editor:FloatCellEditor},
-	        	{id:"snf", name:"Snf", field:"snf", width:70, minWidth:70,  sortable:false ,editor:FloatCellEditor},
-	        	<#if (tenantConfigCondition.enableSQuantityInKgs?has_content) && (tenantConfigCondition.enableSQuantityInKgs != 'N')>
+	        	<#if (tenantConfigCondition?has_content) && (tenantConfigCondition.enableLR?has_content)&& (tenantConfigCondition.enableLR != 'N')>
+	       			{id:"lactoReading", name:"lactoReading", field:"lactoReading", width:70, minWidth:70,  sortable:false ,editor:FloatCellEditor},
+	       			<#else>
+	       			{id:"snf", name:"Snf", field:"snf", width:70, minWidth:70,  sortable:false ,editor:FloatCellEditor},
+	        	</#if>
+	        	<#if (tenantConfigCondition?has_content) && (tenantConfigCondition.enableSQuantityInKgs?has_content) && (tenantConfigCondition.enableSQuantityInKgs != 'N')>
 	        		{id:"sQuantity", name:"sQuantity", field:"sQuantity", width:70, minWidth:70,  sortable:false ,editor:FloatCellEditor}
 	        	<#else>
 	        		{id:"sQtyKgs", name:"sQty-Kgs", field:"sQtyKgs", width:70, minWidth:70,  sortable:false ,editor:FloatCellEditor}
@@ -236,7 +252,7 @@
 		$("input").keyup(function(e){
 	  		if(e.target.name == "unitCode" ){
 				var unitJson = shedJson[$('[name=shedCode]').val()];
-	  			$('input[name=unitCode]').val(e.target.value.toUpperCase());  
+	  			$('[name=unitCode]').val(e.target.value.toUpperCase());  
 	  			var tempUnitJson = unitJson[e.target.value];
 	  			  			
 	  			if(tempUnitJson){
@@ -254,8 +270,8 @@
 	  		if((e.target.name) == "centerCode"){
 	  			var unitJson = shedJson[$('[name=shedCode]').val()];
 	  			$('input[name=centerCode]').val(e.target.value.toUpperCase());
-	  			var tempCenterJson = (unitJson[ $('input[name=unitCode]').val()] )["centers"];
-	  			var centerName = tempCenterJson [$('input[name=centerCode]').val()];
+	  			var tempCenterJson = (unitJson[ $('[name=unitCode]').val()] )["centers"];
+	  			var centerName = tempCenterJson [$('[name=centerCode]').val()];
 	  						
 	  			if(centerName){
 	  				$('span#centerToolTip').removeClass("tooltipWarning");
@@ -269,16 +285,16 @@
 	  		}
 	  		if($('#updateFlag').val()=='update'){
 	  		  if(((e.target.name) == "shedCode")||((e.target.name) == "centerCode")||((e.target.name) == "unitCode")||((e.target.name) == "purchaseTime")||((e.target.name) == "productId")||((e.target.name) == "orderDate")){
-	  			var fetchRecord = 'true';
+	  			var fetchRecord = 'false';
 	  			if($('#editRecord').val()=='true'){
-	  				if(($('[name=quantity]').val()!='')&&($('[name=fat]').val()!='')&&($('[name=snf]').val()!='')){
-	  					fetchRecord = 'false'
-	  					}
-	  			}
-	  			if(fetchRecord=='true'){
-		  			clearEditEntryFields();	  			
+	  				if((e.which == 27)){
+	  					clearEditEntryFields();	  			
+		  				fetchProurementEntry();
+	  				}
+	  			}else{
+	  				clearEditEntryFields();	  			
 		  			fetchProurementEntry();
-	  			}	
+	  			}
 	  		}
 	  		  
 	  	}
@@ -288,6 +304,47 @@
 	
 		
 	});
+	
+function validateFatSnfValue(prodId,fat,snf){	
+	var validateRule = ${StringUtil.wrapString(prodJson)}
+	if((fat>validateRule[prodId]['maxFat'])||(fat<=0)){
+		alert(validateRule[prodId]['brandName']+' fat should be between'+validateRule[prodId]['minFat']+'-'+validateRule[prodId]['maxFat']);		
+		return false;
+	}
+	if((snf>validateRule[prodId]['maxSnf'])||(snf<=0)){
+		alert(validateRule[prodId]['brandName']+' snf should be between'+validateRule[prodId]['minSnf']+'-'+validateRule[prodId]['maxSnf']);
+		return false;
+	}
+	return true;	
+}	
+function prepareFechRecentChangeParameters(){
+		var dataJson;
+		var tempShedId;
+		var tempUnitId;
+		<#if shedCode?has_content>
+			tempShedId = '${shedId}';
+		</#if>
+		<#if unitCode?has_content>
+			tempUnitId = '${unitId}';
+		</#if>
+		<#if shedCode?has_content && unitCode?has_content>
+			dataJson  = {"shedId":tempShedId,
+							"unitId":tempUnitId,
+						   };
+		<#else>
+	 		<#if shedCode?has_content>
+				dataJson  = {"shedId":tempShedId,
+						   };
+			</#if>
+		</#if>
+		fetchRecentChange(dataJson);
+		
+}
+$(window).load(function() 
+{  
+	 prepareFechRecentChangeParameters();
+ 	
+});  
 function clearEditEntryFields(){
 	$('[name=orderId]').val('');
 	$('[name=orderItemSeqId]').val('');
@@ -322,7 +379,20 @@ function updateProcurementEntryInternal(formName, action, row) {
 		var rowCount = 0;
 		for (key in changeItem){			
 			var value = changeItem[key];	
-	 		if (key != "id") {	 			 		
+	 		if (key != "id") {
+	 			var tempValue = value;
+	 			if (key == "lactoReading") {
+			   		if((Number(tempValue)>30)){
+				  		 alert('LR  should be less than 31');
+				  		 return false;				
+   						}
+   					}	 			 		
+   			}
+   			 
+		}
+		for (key in changeItem){			
+			var value = changeItem[key];	
+	 		if (key != "id") {
 				var inputParam = jQuery("<input>").attr("type", "hidden").attr("name", key).val(value);										
 				jQuery(formId).append(jQuery(inputParam));				
 				 				
@@ -380,17 +450,17 @@ function updateProcurementEntryInternal(formName, action, row) {
  	<div class="screenlet-title-bar">
         <ul>
    			<li>
-   				<a href="<@ofbizUrl>procurementCheckList.pdf?userLoginId=${userLogin.get("userLoginId")}&&all=Y</@ofbizUrl>" >All Check List</a>
+   				<a href="<@ofbizUrl>procurementCheckList.pdf?userLoginId=${userLogin.get("userLoginId")}&&all=Y&&shedId=<#if shedId?has_content>${shedId}</#if>&&unitId=<#if unitId?has_content>${unitId}</#if></@ofbizUrl>" >All Check List</a>
             </li>  
    			<li>
-   				<a href="<@ofbizUrl>procurementCheckList.pdf?userLoginId=${userLogin.get("userLoginId")}</@ofbizUrl>">My Check List</a>
+   				<a href="<@ofbizUrl>procurementCheckList.pdf?userLoginId=${userLogin.get("userLoginId")}&&shedId=<#if shedId?has_content>${shedId}</#if>&&unitId=<#if unitId?has_content>${unitId}</#if></@ofbizUrl>">My Check List</a>
             </li>                      
          </ul>
      </div>
    </div>  
  	<form method="post" name="ProcurementEntry" id="ProcurementEntry">
- 	  <input type="hidden" name="retainCenterCode" id="retainCenterCode" value="${tenantConfigCondition.enableCenterCodeRetain}">	     
-      <input type="hidden" name="updateFlag" id="updateFlag" value="${updateFlag}">
+ 	  <input type="hidden" name="retainCenterCode" id="retainCenterCode" value="<#if (tenantConfigCondition?has_content)> ${(tenantConfigCondition.enableCenterCodeRetain)?if_exists} </#if>">
+ 	  <input type="hidden" name="updateFlag" id="updateFlag" value="${updateFlag}">
       <input type="hidden" name="editRecord" id="editRecord" value="${editRecord}">
       <input type="hidden" size="10" maxlength="15" name="orderId" id="orderId" autocomplete="off" />
       <input type="hidden" size="10" maxlength="15" name="orderItemSeqId" id="orderItemSeqId" autocomplete="off"/>
@@ -420,12 +490,23 @@ function updateProcurementEntryInternal(formName, action, row) {
           <td align='left' valign='middle' nowrap="nowrap"><div class='h2'>${uiLabelMap.unitCode}:</div></td>
           
           <td valign='middle' nowrap="nowrap">
-            <div class='tabletext'>            
+            <div class='tabletext h2'>            
             	<#if unitCode?has_content>
-             		<h2>${unitCode}     <span class="tooltip">${unitName}</span></h2>
+             		<h1>${unitCode}     <span class="tooltip">${unitName}</span></h1>
              		<input type="hidden" size="6" maxlength="6" name="unitCode" id="unitCode" autocomplete="off" value="${unitCode}" />
              	<#else>
-             		<input type="text" size="6" maxlength="6" name="unitCode" id="unitCode" autocomplete="off" required /><em>*</em><span class="tooltip" id ="unitToolTip">none</span>
+             		<#if unitMapsList?has_content>
+		      		<select name="unitCode" id="unitCode" class="h3">
+		                <#list unitMapsList as unit>    
+								<#assign isDefault = false>
+								<option value='${unit.facilityCode}' <#if isDefault> selected="selected"</#if>>
+		                    	${unit.facilityCode}	${unit.facilityName}
+		                  	</option>                  	
+		      			</#list>            
+					</select>
+             		<#else>
+             			<input type="text" size="6" maxlength="6" name="unitCode" id="unitCode" autocomplete="off" required /><em>*</em><span class="tooltip" id ="unitToolTip">none</span>
+             		</#if>
              	</#if>              	   	
             </div>     
           </td>
@@ -460,7 +541,7 @@ function updateProcurementEntryInternal(formName, action, row) {
           <td align='left' valign='middle' nowrap="nowrap"><div class='h2'>Milk Type:</div></td>
           
           <td valign='middle'> 
-      		<select name="productId" class='h2'>
+      		<select name="productId" class='h2' id="productId">
                 <#list productList as product>    
                   	<#assign isDefault = false>
 					<option value='${product.productId}'<#if isDefault> selected="selected"</#if>>
@@ -476,14 +557,14 @@ function updateProcurementEntryInternal(formName, action, row) {
           
           <td valign='middle' nowrap="nowrap">
             <div class='tabletext h2'>            
-             	<input type="text" size="8" maxlength="6" name="centerCode" id="centerCode" autocomplete="off" required/><em>*</em><span class="tooltip" id ="centerToolTip">none</span>             	            	
+             	<input type="text" size="8" maxlength="6" name="centerCode" id="centerCode" autocomplete="off" required/><em>*</em><span class="tooltip" id ="centerToolTip">none</span><#if (editRecord?has_content) && (editRecord=='true')><span class="tooltip" size="8"><b>Press ESC to Get the Record</b></span></#if>             	            	
             </div>
           </td>
         </tr>
         <div>
          <tr>
           <td>&nbsp;</td>
-          <#if (tenantConfigCondition.enableQuantityInLtrs?has_content)&& (tenantConfigCondition.enableQuantityInLtrs != 'N')>
+          <#if  (tenantConfigCondition?has_content) && (tenantConfigCondition.enableQuantityInLtrs?has_content)&& (tenantConfigCondition.enableQuantityInLtrs != 'N')>
 	          <td align='left' valign='middle' nowrap="nowrap"><div class='h2'>Good Milk Qty(Ltrs):</div></td>
 	          <td valign='middle'>
 	            <div class='tabletext h2'>            
@@ -513,7 +594,7 @@ function updateProcurementEntryInternal(formName, action, row) {
          </tr>
          <tr>
 		<td>&nbsp;</td>
-		<#if (tenantConfigCondition.enableLR?has_content)&& tenantConfigCondition.enableLR != 'N'>
+		<#if (tenantConfigCondition?has_content) && (tenantConfigCondition.enableLR?has_content)&& tenantConfigCondition.enableLR != 'N'>
 			<td align='left' valign='middle' nowrap="nowrap" ><div class='h2'>MILK LR:</div></td>
 	        <td valign='middle'>
 	            <div class='tabletext h2'>            
@@ -539,7 +620,7 @@ function updateProcurementEntryInternal(formName, action, row) {
       	
         <tr>
           <td>&nbsp;</td>
-          <#if (tenantConfigCondition.enableSQuantityInKgs?has_content) && (tenantConfigCondition.enableSQuantityInKgs != 'N')>
+          <#if (tenantConfigCondition?has_content) && (tenantConfigCondition.enableSQuantityInKgs?has_content) && (tenantConfigCondition.enableSQuantityInKgs != 'N')>
 	          <td align='left' valign='middle' nowrap="nowrap"><div class='h2'>Sour Milk Qty(Ltrs):</div></td>
 	          
 	          <td valign='middle'>

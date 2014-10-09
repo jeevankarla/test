@@ -22,22 +22,45 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import in.vasista.vbiz.procurement.ProcurementNetworkServices;
 import in.vasista.vbiz.procurement.ProcurementReports;
+import in.vasista.vbiz.procurement.ProcurementServices;
 import net.sf.json.JSONObject;
+import org.ofbiz.service.ServiceUtil;
 
 dctx = dispatcher.getDispatchContext();
 // get the shed id based on userLogin 
 // for now allways first shed 
 shedList = ProcurementNetworkServices.getSheds(delegator);
 shedId = "";
+tenConfigFacilityId ="";
+if(UtilValidate.isNotEmpty(context.getAt("shedId"))){
+	tenConfigFacilityId = context.get("shedId");
+	}
+if(UtilValidate.isNotEmpty(context.getAt("unitId"))){
+	tenConfigFacilityId = context.getAt("unitId");
+	}
+
 if(shedList){	
 	shedId = EntityUtil.getFirst(shedList).get("facilityId");
 }
-if(UtilValidate.isNotEmpty(context.getAt("shedId"))){
-	shedId = context.get("shedId");
-	} 
 
+Map tenantConfigSettings = FastMap.newInstance();
+Map tenantConfigMap = FastMap.newInstance();
+if(UtilValidate.isNotEmpty(tenConfigFacilityId)){
+	tenantConfigMap = dispatcher.runSync("getFacilityTenantConfigurations",UtilMisc.toMap("userLogin", userLogin, "facilityId", tenConfigFacilityId));
+	if(ServiceUtil.isSuccess(tenantConfigMap)){
+		tenantConfigSettings = tenantConfigMap.get("tenantConfigurationsMap");
+	}
+}
 procurementProductList =[];
 procurementProductList = ProcurementNetworkServices.getProcurementProducts(dctx, UtilMisc.toMap());
+milkTypeBySeqNum = "";
+milkType = delegator.findOne("FacilityAttribute",[facilityId : tenConfigFacilityId, attrName: "milkTypeBySeqNum"], false);
+if(UtilValidate.isNotEmpty(milkType)){
+	milkTypeBySeqNum = milkType.get("attrValue");
+}
+if((UtilValidate.isNotEmpty(milkTypeBySeqNum))&&(("Y".equals(milkTypeBySeqNum)))){
+	procurementProductList = UtilMisc.sortMaps(procurementProductList, UtilMisc.toList("-sequenceNum"));
+}
 context.put("productList",procurementProductList);
 JSONObject productBrandNameJson = new JSONObject();
 
@@ -105,7 +128,7 @@ tenantConfigConditionList = [];
 tenantConfigConditionList.add(EntityCondition.makeCondition("propertyTypeEnumId", EntityOperator.EQUALS ,"MILK_PROCUREMENT"));
 tenantConfigCondition = EntityCondition.makeCondition(tenantConfigConditionList,EntityOperator.AND);
 tenantConfigList = [];
-tenantConfigList = delegator.findList("TenantConfiguration",tenantConfigCondition,["propertyName","propertyValue"]as Set,null,null,false);
+tenantConfigList = delegator.findList("TenantConfiguration",tenantConfigCondition,null,null,null,false);
 tenantConfigCondition = [:];
 for(tenantconfig in tenantConfigList){
 	tenantConfigCondition.put(tenantconfig.propertyName,tenantconfig.propertyValue);
@@ -121,6 +144,38 @@ if(UtilValidate.isEmpty(recentChangeJson.qtyLtrs)){
 		}
 	}	
 }
-
-Debug.log("tenantConfigCondition====>"+tenantConfigCondition);
+if(UtilValidate.isNotEmpty(tenantConfigSettings)){
+	for(key in tenantConfigSettings.keySet()){
+		tenantConfigCondition.putAt(key, tenantConfigSettings.getAt(key)); 
+	}
+}
 context.recentChangeJson = recentChangeJson;
+
+conditionList=[];
+if(UtilValidate.isNotEmpty(context.shedId)){
+	conditionList.add(EntityCondition.makeCondition("shedId", EntityOperator.EQUALS, context.shedId));
+}else{
+	conditionList.add(EntityCondition.makeCondition("shedId", EntityOperator.EQUALS, "_NA_"));
+}
+conditionList.add(EntityCondition.makeCondition("validationTypeId", EntityOperator.EQUALS, "QTYSNFFAT_CHECK"));
+ruleCondition = EntityCondition.makeCondition(conditionList, EntityOperator.AND);
+validationRuleList =delegator.findList("ProcBillingValidationRule", ruleCondition, null, null, null,false);
+JSONObject prodJson = new JSONObject();
+	if(UtilValidate.isNotEmpty(validationRuleList)){
+		validationRuleList.each{ validation->
+			minFat = validation.get("minFat");
+			maxFat = validation.get("maxFat");
+			minSnf = validation.get("minSnf");
+			maxSnf = validation.get("maxSnf");
+			productId = validation.get("productId");
+			productDetails=delegator.findOne("Product",[productId : productId], false);
+			JSONObject prodJsonValue = new JSONObject();
+			prodJsonValue.put("minFat", minFat);
+			prodJsonValue.put("maxFat", maxFat+2);
+			prodJsonValue.put("minSnf", minSnf+2);
+			prodJsonValue.put("maxSnf", maxSnf);
+			prodJsonValue.put("brandName", productDetails.brandName);
+			prodJson.putAt(productId, prodJsonValue);
+		}
+	}
+context.prodJson = prodJson.toString();

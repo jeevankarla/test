@@ -8,28 +8,28 @@
     <EnumerationType description="Procurement OutPut Type" enumTypeId="PROC_OUTPUT_TYPE" hasTable="N" parentTypeId=""/>
     <Enumeration description="Local Sales" enumCode="LOCAL_SALES" enumId="LOCAL_SALES" enumTypeId="PROC_OUTPUT_TYPE"/>
    	<Enumeration description="TM Preparation" enumCode="TM_PREPARATION" enumId="TM_PREPARATION" enumTypeId="PROC_OUTPUT_TYPE"/>
-   	<Enumeration description="TM Preparation OB" enumCode="TM_PREPARATION_OB" enumId="TM_PREPARATION_OB" enumTypeId="PROC_OUTPUT_TYPE"/>
+   	<Enumeration description="TM Balance" enumCode="TM_PREPARATION_OB" enumId="TM_PREPARATION_OB" enumTypeId="PROC_OUTPUT_TYPE"/>
    	<Enumeration description="Sour" enumCode="SOUR" enumId="SOUR" enumTypeId="PROC_OUTPUT_TYPE"/>
    	<Enumeration description="Curdled" enumCode="CURDLED" enumId="CURDLED" enumTypeId="PROC_OUTPUT_TYPE"/>
    	<Enumeration description="Other" enumCode="OTHER" enumId="OTHER" enumTypeId="PROC_OUTPUT_TYPE"/>
+   	<Enumeration description="ROPLANT CONDENCED DIFFERENCE" enumCode="ROPLANT_COND_DIFF" enumId="ROPALNT_COND_DIFF" enumTypeId="PROC_OUTPUT_TYPE"/>
+   	<Enumeration description="CURD PREPARATION" enumCode="CURD_PREPARATION" enumId="CURD_PREPARATION" enumTypeId="PROC_OUTPUT_TYPE"/>
    	<Enumeration description="Closing Balance" enumCode="CLOSING_BALANCE" enumId="CLOSING_BALANCE" enumTypeId="PROC_OUTPUT_TYPE"/>
 
     <RoleType description="Society" hasTable="N" parentTypeId="ORGANIZATION_ROLE" roleTypeId="SOCIETY"/>
     <RoleType description="Agent" hasTable="N" parentTypeId="ORGANIZATION_ROLE" roleTypeId="AGENT"/>    
 
-    <FacilityType facilityTypeId="UNIT" parentTypeId="" hasTable="N" description="Unit"/>   
-    <FacilityType facilityTypeId="SHED" parentTypeId="MAIN_PLANT" hasTable="N" description="shed"/>	
-	<FacilityType description="Center" facilityTypeId="CENTER" hasTable="N" parentTypeId=""/>
+    <FacilityType facilityTypeId="MAIN_PLANT" parentTypeId="PLANT" hasTable="N" description="MainPlant"/>
+    <FacilityType facilityTypeId="SHED" parentTypeId="PLANT" hasTable="N" description="shed"/>
+    <FacilityType facilityTypeId="UNIT" parentTypeId="" hasTable="N" description="Unit"/>
+    <FacilityType facilityTypeId="PROC_ROUTE"  hasTable="N" description="Procurement Route"/>
+	<FacilityType facilityTypeId="CENTER"  hasTable="N" description="Center" />
 		
 	<EnumerationType description="Centers Facility Category Type" enumTypeId="PROC_CENTER_CAT_TYPE" hasTable="N" parentTypeId="FACILITY_CAT_TYPE"/>
     <Enumeration description="Agents" enumCode="AGENT" enumId="AGENT" sequenceId="01" enumTypeId="PROC_CENTER_CAT_TYPE"/>
     <Enumeration description="Society" enumCode="SOCIETY" enumId="SOCIETY" sequenceId="02" enumTypeId="PROC_CENTER_CAT_TYPE"/>
 	 
 	
-	<FacilityType facilityTypeId="MAIN_PLANT" parentTypeId="PLANT" hasTable="N" description="MainPlant"/>
-    <FacilityType facilityTypeId="SHED" parentTypeId="PLANT" hasTable="N" description="shed"/>
-    
-	<FacilityType facilityTypeId="PROC_ROUTE"  hasTable="N" description="Procurement Route"/>
 	<EnumerationType description="Period Billing Type" enumTypeId="PBILLING_TYPE" hasTable="N" parentTypeId=""/>
     <Enumeration description="Procurement  Margin Period Billing" enumCode="PB_PROC_MRGN" enumId="PB_PROC_MRGN" sequenceId="01" enumTypeId="PBILLING_TYPE"/>
 	<EnumerationType description="Centers Facility Category Type" enumTypeId="PROC_CENTER_CAT_TYPE" hasTable="N" parentTypeId="FACILITY_CAT_TYPE"/>
@@ -57,6 +57,9 @@
     <!-- Additions and deductions  -->
     <OrderAdjustmentType description="Procurement Additions" hasTable="N" orderAdjustmentTypeId="MILKPROC_ADDITIONS"/>   
  	<OrderAdjustmentType description="Interest" hasTable="N" orderAdjustmentTypeId="MILKPROC_INTEREST" parentTypeId="MILKPROC_ADDITIONS"/>
+    <OrderAdjustmentType orderAdjustmentTypeId="MILKPROC_AIWR" parentTypeId="MILKPROC_ADDITIONS" hasTable="N" description="AIWR" lastUpdatedStamp="2012-12-04 15:41:05.0" lastUpdatedTxStamp="2012-12-04 15:41:05.0" createdStamp="2011-01-12 00:00:00.0" createdTxStamp="2011-01-12 00:00:00.0"/>
+    <OrderAdjustmentType orderAdjustmentTypeId="MILKPROC_OTHER_ADDNs" parentTypeId="MILKPROC_ADDITIONS" hasTable="N" description="OTHERS" lastUpdatedStamp="2012-12-04 15:41:05.0" lastUpdatedTxStamp="2012-12-04 15:41:05.0" createdStamp="2011-01-12 00:00:00.0" createdTxStamp="2011-01-12 00:00:00.0"/>
+    
  	<!--Premium Discount price  -->
  	<OrderAdjustmentType description="Premium Discount Amount" hasTable="N" orderAdjustmentTypeId="MILKPROC_PREMAMOUNT" parentTypeId="MILKPROC_ADDITIONS"/>
  	<OrderAdjustmentType description="Procurement Deductions" hasTable="N" orderAdjustmentTypeId="MILKPROC_DEDUCTIONS"/>   
@@ -77,10 +80,13 @@
     <Enumeration description="Maximum Quality" enumCode="PROC_PRICE_MAX_QLTY" enumId="PROC_PRICE_MAX_QLTY" sequenceId="10" enumTypeId="PROC_PRICE_TYPE"/>
     <Enumeration description="Snf Deduction" enumCode="PROC_PRICE_SNF_DED" enumId="PROC_PRICE_SNF_DED" sequenceId="07" enumTypeId="PROC_PRICE_TYPE"/>
     <Enumeration description="Snf Premium" enumCode="PROC_PRICE_SNF_PRM" enumId="PROC_PRICE_SNF_PRM" sequenceId="08" enumTypeId="PROC_PRICE_TYPE"/>
+    <Enumeration description="Fat Premium" enumCode="PROC_PRICE_FAT_PRM" enumId="PROC_PRICE_FAT_PRM" sequenceId="11" enumTypeId="PROC_PRICE_TYPE"/>
+    <Enumeration description="FAT Deduction" enumCode="PROC_PRICE_FAT_DED" enumId="PROC_PRICE_FAT_DED" sequenceId="12" enumTypeId="PROC_PRICE_TYPE"/>
     <Enumeration description="Sour Proce" enumCode="PROC_PRICE_SOUR" enumId="PROC_PRICE_SOUR" sequenceId="09" enumTypeId="PROC_PRICE_TYPE"/>
     <!-- Facility Rate Types  -->
     
-    <RateType rateTypeId="PROC_AGENT_MRGN"  description="Agent margin"/>
+   
+     <RateType rateTypeId="PROC_AGENT_MRGN"  description="Agent margin"/>
 	<RateType rateTypeId="PROC_CARTAGE"  description="Cartage"/>
 	<RateType rateTypeId="PROC_OP_COST"  description="OP Cost"/>
 	<RateType rateTypeId="PROC_TIP_AMOUNT"  description="Tip Amount"/>
@@ -89,6 +95,8 @@
 	<RateAmount rateTypeId="GHEE_YEILD_RATE" rateAmount="160.0" rateCurrencyUomId="INR" periodTypeId="RATE_HOUR"  partyId="_NA_" productId="_NA_" workEffortId="_NA_" emplPositionTypeId="_NA_" fromDate="2013-01-01 0:00:00.000" thruDate="" />
     <Enumeration description="Milk Producer Channel" enumCode="PRODUCER_CHANNEL" enumId="PRODUC_SALES_CHANNEL" sequenceId="101" enumTypeId="ORDER_SALES_CHANNEL"/>
     
+     <RateType rateTypeId="PROC_MILKOSOFT_CHARG"  description="Procurement Milokosoft Charges"/>
+     <FacilityRate facilityId ="_NA_" productId="_NA_" supplyTypeEnumId="_NA_" rateTypeId="PROC_MILKOSOFT_CHARG" rateAmount="0.025" rateCurrencyUomId="INR" fromDate="2012-01-01 0:00:00.000" thruDate=""/>
     
     
 	<EnumerationType enumTypeId="FACILITY_SCHEME_TYPE"  description="Facility Scheme Types"/>    
@@ -115,7 +123,9 @@
 	<EnumerationType description="Units Managed By Type" enumTypeId="PROC_MNGNBY_TYPE" hasTable="N" parentTypeId="FACILITY_MNGBY_TYPE"/>
 	<Enumeration description="APDDCF" enumCode="APDDCF" enumId="APDDCF" sequenceId="01" enumTypeId="PROC_MNGNBY_TYPE"/>
 	<Enumeration description="IKP" enumCode="IKP" enumId="IKP" sequenceId="02" enumTypeId="PROC_MNGNBY_TYPE"/>
+	<Enumeration description="PPP" enumCode="PPP" enumId="PPP" sequenceId="03" enumTypeId="PROC_MNGNBY_TYPE"/>
 	
+	<EnumerationType enumTypeId="FACILITY_CAT_TYPE"  description="FACILITY CATEGORY TYPES"/>
 	<EnumerationType description="Units Facility Category Type" enumTypeId="PROC_UNIT_CAT_TYPE" hasTable="N" parentTypeId="FACILITY_CAT_TYPE"/>
 	<Enumeration description="DAIRY" enumCode="DAIRY" enumId="DAIRY" sequenceId="01" enumTypeId="PROC_UNIT_CAT_TYPE"/>
 	<Enumeration description="MCC" enumCode="MCC" enumId="MCC" sequenceId="02" enumTypeId="PROC_UNIT_CAT_TYPE"/>
@@ -123,7 +133,8 @@
 	
 	<Enumeration enumId="MILK_PROCUREMENT" enumTypeId="TENANTCONF_TYPE" sequenceId="1" description="Invoice and Payment Sms  Configurations"/>
 	<TenantConfiguration propertyName="enableLR" propertyValue="N" propertyTypeEnumId="MILK_PROCUREMENT" description="Enable Lacto Meter Reading"/>
-	<TenantConfiguration propertyName="enableQuantityInLtrs" propertyValue="N" propertyTypeEnumId="MILK_PROCUREMENT" description="Enable Input Taking Quantity in Liters"/>   
+	<TenantConfiguration propertyName="enableQuantityInLtrs" propertyValue="N" propertyTypeEnumId="MILK_PROCUREMENT" description="Enable Input Taking Quantity in Liters"/>
+	<TenantConfiguration propertyName="enableSupplyTimeMilkXFER" propertyValue="N" propertyTypeEnumId="MILK_PROCUREMENT" description="Enable Supply Time for Milk Transfer"/>   
     
     <TenantConfiguration propertyName="enableMultipleProcEntries" propertyValue="Y" propertyTypeEnumId="MILK_PROCUREMENT" description="Enable multiple procurement entries for center"/>   
     <TenantConfiguration propertyName="enableSQuantityInKgs" propertyValue="Y" propertyTypeEnumId="MILK_PROCUREMENT" description="Enable Input Taking SQuantity in Kgs"/>   
@@ -131,17 +142,44 @@
    	<TenantConfiguration propertyName="reportHeaderLable" propertyValue="Y" propertyTypeEnumId="MILK_PROCUREMENT" description="THE SUPRAJA DAIRY PRIVATE LIMITED"/>	
    	<TenantConfiguration propertyName="reportHeaderLable" propertyValue="Y" propertyTypeEnumId="MILK_PROCUREMENT" description="THE ANDHRA PRADESH DAIRY DEVELOPMENT COOP.FED LTD"/>
    	<TenantConfiguration propertyName="enableCenterCodeRetain" propertyValue="N" propertyTypeEnumId="MILK_PROCUREMENT" description="Enable retaining of centerCode"/>
+   	<TenantConfiguration propertyName="enableRecalculateProcEntryPrice" propertyValue="N" propertyTypeEnumId="MILK_PROCUREMENT" description="Enable recalculateProcurementEntryPrice service in the time of billing"/>
    <!-- Billing Error List Types  -->
    
     <EnumerationType description="Procurement Billing Error Validation Type" enumTypeId="PROC_BILL_VAL_TYPE" hasTable="N" parentTypeId=""/>
     <Enumeration description="Quantity Outlier" enumCode="QTY_OUTLIER" enumId="QTY_OUTLIER" enumTypeId="PROC_BILL_VAL_TYPE"/>
    	<Enumeration description="Billing Negative Amount" enumCode="NEGATIVE_AMOUNT" enumId="NEGATIVE_AMOUNT" enumTypeId="PROC_BILL_VAL_TYPE"/>
    	<Enumeration description="Quantity,Snf.Fat range validation" enumCode="QTYSNFFAT_CHECK" enumId="QTYSNFFAT_CHECK" enumTypeId="PROC_BILL_VAL_TYPE"/>
+   	<Enumeration description="Check Code" enumCode="CHECKCENTER_CODE" enumId="CHECKCENTER_CODE" enumTypeId="PROC_BILL_VAL_TYPE"/>
    	
    	<!-- ProcBillingValidationRule -->
    	<ProcBillingValidationRule shedId="MBNR" productId="101" validationTypeId="QTYSNFFAT_CHECK" fromDate="2013-01-01 00:00:00.0" minFat="4" maxFat="15" minSnf="7.5" maxSnf="15"/>
    	<ProcBillingValidationRule shedId="MBNR" productId="102" validationTypeId="QTYSNFFAT_CHECK" fromDate="2013-01-01 00:00:00.0" minFat="2.5" maxFat="10" minSnf="7.5" maxSnf="15"/>
    	<ProcBillingValidationRule shedId="MBNR" productId="_NA_" validationTypeId="QTY_OUTLIER" fromDate="2013-01-01 00:00:00.0" quantity="40"/>
+   	<ProcBillingValidationRule shedId="MBNR" productId="_NA_" validationTypeId="CHECKCENTER_CODE" fromDate="2013-01-01 00:00:00.0" quantity="3"/>
+   
+   	<ProcBillingValidationRule shedId="MBNR1" productId="101" validationTypeId="QTYSNFFAT_CHECK" fromDate="2013-01-01 00:00:00.0" minFat="4" maxFat="15" minSnf="7.5" maxSnf="15"/>
+   	<ProcBillingValidationRule shedId="MBNR1" productId="102" validationTypeId="QTYSNFFAT_CHECK" fromDate="2013-01-01 00:00:00.0" minFat="2.5" maxFat="10" minSnf="7.5" maxSnf="15"/>
+   	<ProcBillingValidationRule shedId="MBNR1" productId="_NA_" validationTypeId="QTY_OUTLIER" fromDate="2013-01-01 00:00:00.0" quantity="40"/>
+   	<ProcBillingValidationRule shedId="MBNR1" productId="_NA_" validationTypeId="CHECKCENTER_CODE" fromDate="2013-01-01 00:00:00.0" quantity="3"/>
+   	
+   	<ProcBillingValidationRule shedId="CHTR" productId="101" validationTypeId="QTYSNFFAT_CHECK" fromDate="2013-01-01 00:00:00.0" minFat="4" maxFat="15" minSnf="7.5" maxSnf="15"/>
+   	<ProcBillingValidationRule shedId="CHTR" productId="102" validationTypeId="QTYSNFFAT_CHECK" fromDate="2013-01-01 00:00:00.0" minFat="2.5" maxFat="10" minSnf="7.5" maxSnf="15"/>
+   	<ProcBillingValidationRule shedId="CHTR" productId="_NA_" validationTypeId="QTY_OUTLIER" fromDate="2013-01-01 00:00:00.0" quantity="40"/>
+   	<ProcBillingValidationRule shedId="CHTR" productId="_NA_" validationTypeId="CHECKCENTER_CODE" fromDate="2013-01-01 00:00:00.0" quantity="3"/>
+   	
+   	<ProcBillingValidationRule shedId="ANTP" productId="101" validationTypeId="QTYSNFFAT_CHECK" fromDate="2013-01-01 00:00:00.0" minFat="4" maxFat="15" minSnf="7.5" maxSnf="15"/>
+   	<ProcBillingValidationRule shedId="ANTP" productId="102" validationTypeId="QTYSNFFAT_CHECK" fromDate="2013-01-01 00:00:00.0" minFat="2.5" maxFat="10" minSnf="7.5" maxSnf="15"/>
+   	<ProcBillingValidationRule shedId="ANTP" productId="_NA_" validationTypeId="QTY_OUTLIER" fromDate="2013-01-01 00:00:00.0" quantity="40"/>
+   	<ProcBillingValidationRule shedId="ANTP" productId="_NA_" validationTypeId="CHECKCENTER_CODE" fromDate="2013-01-01 00:00:00.0" quantity="3"/>
+   	
+   	
+   	<!-- Default config for error list  -->
+   	<ProcBillingValidationRule shedId="_NA_" productId="101" validationTypeId="QTYSNFFAT_CHECK" fromDate="2013-01-01 00:00:00.0" minFat="4" maxFat="15" minSnf="7.5" maxSnf="15"/>
+   	<ProcBillingValidationRule shedId="_NA_" productId="102" validationTypeId="QTYSNFFAT_CHECK" fromDate="2013-01-01 00:00:00.0" minFat="2.5" maxFat="10" minSnf="7.5" maxSnf="15"/>
+   	<ProcBillingValidationRule shedId="_NA_" productId="_NA_" validationTypeId="QTY_OUTLIER" fromDate="2013-01-01 00:00:00.0" quantity="40"/>
+   	<ProcBillingValidationRule shedId="_NA_" productId="_NA_" validationTypeId="CHECKCENTER_CODE" fromDate="2013-01-01 00:00:00.0" quantity="3"/>
+   	
+   	
    	
    	<!-- configuring DD Account  -->
    	<!-- here i taken party Id and DD code same -->
@@ -155,7 +193,44 @@
 		ownerPartyId="97" postToGlAccountId="" fromDate="2012-01-01 01:00:00.000" thruDate="" isRefundable="Y" replenishPaymetId="NULL" replenishLevel="0" actualBalance="0" 	
 		availableBalance="0" lastUpdatedStamp="2012-01-01 01:00:00.000" lastUpdatedTxStlmp="2012-01-01 01:00:00.000" createdStamp="2012-01-01 01:00:00.000"
 		createdTxStamp="2012-01-01 01:00:00.000" finAccountBranch="MAHABUBNAGAR" micrNumber="NULL" ifscCode="CNRB0001408" 
-		categoryTypeEnum="NULL" isLmsMrgnAccnt=""/>
-   	<!-- End of DD account Configuration -->	
-   	 	
+		categoryTypeEnum="" isLmsMrgnAccnt=""/>
+   	<!-- End of DD account Configuration -->
+   		
+ 	<RoleType description="Procurement Role" hasTable="N" roleTypeId="PROCUREMENT_ROLE"/>
+ 	<!-- For Total Solids Uom -->
+ 	<Uom abbreviation="TotalSolids" createdStamp="2011-09-07 11:40:34.0" createdTxStamp="2011-09-07 11:40:34.0" description="TotalSolids" lastUpdatedStamp="2013-07-16 17:41:55.0" lastUpdatedTxStamp="2013-07-16 17:41:55.0" uomId="VLIQ_TS" uomTypeId="WEIGHT_MEASURE"/>
+ 	<Uom abbreviation="KGS" createdStamp="2011-09-07 11:40:34.0" createdTxStamp="2011-09-07 11:40:34.0" description="KGS" lastUpdatedStamp="2013-07-16 17:41:55.0" lastUpdatedTxStamp="2013-07-16 17:41:55.0" uomId="VLIQ_KG" uomTypeId="WEIGHT_MEASURE"/>
+ 	
+ 	
+ 
+ 	
+ 	<!-- region wise Reports -->
+ 	
+ 	<FacilityGroupType facilityGroupTypeId="REGION_GROUP" description="REGION GROPING"/>
+ 	<FacilityGroup facilityGroupId="ANDHRA" facilityGroupTypeId="REGION_GROUP" facilityGroupName="ANDHRA REGION" description="ANDHRA REGION"/>
+ 	<FacilityGroup facilityGroupId="TELANGANA" facilityGroupTypeId="REGION_GROUP" facilityGroupName="TELANGANA REGION" description="TELANGANA REGION"/>
+ 	<FacilityGroupMember facilityGroupId="ANDHRA" fromDate="2000-01-01 00:00:00.000" facilityId="WGD"/>
+ 	<FacilityGroupMember facilityGroupId="TELANGANA" fromDate="2000-01-01 00:00:00.000" facilityId="MBNR"/>
+ 	<FacilityGroupMember facilityGroupId="TELANGANA" fromDate="2000-01-01 00:00:00.000" facilityId="MDK"/>
+ 	
+ 	
+ 	<Geo geoId="PKM" geoName="PRAKASAM"></Geo>
+ 	<Geo geoId="MBN" geoName="MAHABUBNAGAR"></Geo>
+ 	<Geo geoId="CTR" geoName="CHITTOOR"></Geo>
+ 	<Geo geoId="NLR" geoName="NELLORE"></Geo>
+ 	<Geo geoId="KDP" geoName="KADAPA"></Geo>
+ 	<Geo geoId="MDK" geoName="MEDAK"></Geo>
+ 	<Geo geoId="ADB" geoName="ADILABAD"></Geo>
+ 	<Geo geoId="KNR" geoName="KAREEM NAGAR"></Geo>
+ 	<Geo geoId="NZB" geoName="NIZAMABAD"></Geo>
+ 	<Geo geoId="ELR" geoName="ELURU"></Geo>
+ 	<Geo geoId="WGL" geoName="WARANGAL"></Geo>
+ 	<Geo geoId="WGD" geoName="WEST GODAVARI"></Geo>
+ 	<Geo geoId="EGD" geoName="EAST GODAVARI"></Geo>
+ 	<Geo geoId="VIS" geoName="VISAKA"></Geo>
+ 	<Geo geoId="ATP" geoName="ANANTHAPUR"></Geo>
+ 	<Geo geoId="KMM" geoName="KHAMMAM"></Geo>
+ 	<Geo geoId="NLG" geoName="NALGONDA"></Geo>
+ 	<Geo geoId="RRD" geoName="RANGAREDDY"></Geo>
+ 	
 </entity-engine-xml>

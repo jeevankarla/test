@@ -30,6 +30,15 @@ import in.vasista.vbiz.procurement.ProcurementNetworkServices;
 import in.vasista.vbiz.procurement.ProcurementServices;
 import in.vasista.vbiz.procurement.PriceServices;
 
+if(UtilValidate.isEmpty(parameters.shedCustomTimePeriodId)){
+	Debug.logError("customTimePeriod Cannot Be Empty","");
+	context.errorMessage = "No Shed Has Been Selected.......!";
+	return;
+}
+
+if(UtilValidate.isEmpty(parameters.customTimePeriodId)){
+	parameters["customTimePeriodId"]= parameters.shedCustomTimePeriodId;
+}
 customTimePeriod=delegator.findOne("CustomTimePeriod",[customTimePeriodId : parameters.customTimePeriodId], false);
 fromDateTime=UtilDateTime.toTimestamp(customTimePeriod.getDate("fromDate"));
 thruDateTime=UtilDateTime.toTimestamp(customTimePeriod.getDate("thruDate"));
@@ -50,16 +59,24 @@ dctx = dispatcher.getDispatchContext();
 context.put("dctx",dctx);
 
 orderAdjItemsList = delegator.findList("OrderAdjustmentType",EntityCondition.makeCondition("parentTypeId", EntityOperator.EQUALS ,"MILKPROC_DEDUCTIONS"),null,null,null,false);
+orderAdjItemsList = UtilMisc.sortMaps(orderAdjItemsList, UtilMisc.toList("sequenceNum"));
 context.put("orderAdjItemsList",orderAdjItemsList);
 
 procurementProductList =[];
 procurementProductList = ProcurementNetworkServices.getProcurementProducts(dctx, UtilMisc.toMap());
 context.put("procurementProductList",procurementProductList);
 
-Map inputFacRateAmt = UtilMisc.toMap("userLogin", userLogin);
+// here we are populatin productMap for getting productId
+Map productDetailsMap = FastMap.newInstance();
+for(product in procurementProductList){
+		productDetailsMap.put(product.get("productName"),product.get("productId"));
+	}
+
+
+/*Map inputFacRateAmt = UtilMisc.toMap("userLogin", userLogin);
 inputFacRateAmt.put("rateTypeId", "PROC_TIP_AMOUNT");
 inputFacRateAmt.put("rateCurrencyUomId", "INR");
-
+*/
 shedWiseAmountAbstractMap = [:];
 shedWiseTotalsMap = [:];
 for(procProduct in procurementProductList){
@@ -78,14 +95,24 @@ shedWiseTotalsMap["tipAmount"] = 0;
 shedWiseTotalsMap["opCost"] = 0;
 
 conditionList =[];
-if(parameters.shedId){
-	conditionList.add(EntityCondition.makeCondition(EntityCondition.makeCondition("parentFacilityId", EntityOperator.EQUALS, parameters.shedId)));
-}else{
+if(UtilValidate.isEmpty(parameters.shedId)){
 	return;
 }
-condition = EntityCondition.makeCondition(conditionList,EntityOperator.AND);
-unitsList = delegator.findList("Facility",condition,null,null,null,false);
-unitsList.each{ unit ->
+/*condition = EntityCondition.makeCondition(conditionList,EntityOperator.AND);
+unitsList = delegator.findList("Facility",condition,null,null,null,false);*/
+unitsListSorted = [];
+/*if(UtilValidate.isNotEmpty(unitsList)){
+	unitsList.each{ unit->
+		unit.set("facilityCode", (unit.facilityCode).toInteger());
+		unitsListSorted.add(unit);
+	}
+	unitsListSorted = UtilMisc.sortMaps(unitsListSorted, UtilMisc.toList("facilityCode"));
+}*/
+shedUnits = ProcurementNetworkServices.getShedCustomTimePeriodUnits(dctx,[shedId : parameters.shedId,customTimePeriodId : parameters.customTimePeriodId]);
+/*shedUnits = ProcurementNetworkServices.getShedUnitsByShed(dctx,[shedId : parameters.shedId]);
+unitsListSorted = shedUnits.unitsDetailList;*/
+unitsListSorted = shedUnits.customTimePeriodUnitsDetailList;
+unitsListSorted.each{ unit ->
 	unitWiseAmountAbstractMap = [:];
 	unitWiseAmountAbstractMap["unitName"] = unit.facilityName;
 	unitWiseAmountAbstractMap["grossAmount"] = 0;
@@ -100,28 +127,41 @@ unitsList.each{ unit ->
 	}
 	unitWiseAmountAbstractMap["tipAmount"] = 0;
 	unitWiseAmountAbstractMap["opCost"] = 0;
-	unitTotals = ProcurementReports.getPeriodTotals(dctx , [fromDate: dayBegin , thruDate: dayEnd , facilityId: unit.facilityId ]);
-	if(UtilValidate.isNotEmpty(unitTotals)){
-		unitMap = unitTotals.get(unit.facilityId);
-		if (UtilValidate.isNotEmpty(unitMap)) {
-			dayTotalsMap = unitMap.get("dayTotals");
+	//unitTotals = ProcurementReports.getPeriodTotals(dctx , [fromDate: dayBegin , thruDate: dayEnd , facilityId: unit.facilityId ]);
+	
+	unitBillAbstract = ProcurementNetworkServices.getUnitBillsAbstract(dctx , [customTimePeriodId: parameters.customTimePeriodId , unitId: unit.facilityId]);
+	if(ServiceUtil.isError(unitBillAbstract)){
+		Debug.logError("error while geting Bill's Abstract unitId: :"+unitId, "");
+		return error;
+	}
+	unitAbsTotals = unitBillAbstract.getAt("centerWiseAbsMap");
+	unitGrndValuesTot = (unitAbsTotals).getAt("TOT");	
+	
+			/*dayTotalsMap = unitMap.get("dayTotals");
 			dateMap = dayTotalsMap.get("TOT");
 			supplyMap = dateMap.get("TOT");
 			totProductMap = supplyMap.get("TOT");
-			totQtyKgs = totProductMap.get("qtyKgs");
+			totQtyKgs = totProductMap.get("qtyKgs");*/
 			tipAmount = 0;
 			opCost =0;
-			for(procProduct in procurementProductList){
-				productMap = supplyMap.get(procProduct.productName);
-				unitWiseAmountAbstractMap[procProduct.brandName+"Amount"] = productMap.get("price");
-				totPrice  +=  productMap.get("price");
+			cartage=0;
+			commissionAmt=0;
+			addnTot=0;
+			dednTot=0;
+	if(UtilValidate.isNotEmpty(unitGrndValuesTot)){
+			for(procProduct in procurementProductList){				
+				productAbs = unitGrndValuesTot.getAt(procProduct.productId);
 				
-				inMap = [:];
+				unitWiseAmountAbstractMap[procProduct.brandName+"Amount"] = productAbs.get("price");
+				totPrice  +=  productAbs.get("price");
+				
+				/*inMap = [:];
 				inMap.put("userLogin",context.userLogin);
 				inMap.put("facilityId",unit.facilityId);
 				inMap.put("fatPercent", BigDecimal.ZERO);
 				inMap.put("snfPercent", BigDecimal.ZERO);
 				inMap.put("productId",procProduct.productId);
+				inMap.put("priceDate", dayBegin);
 				Map priceChart = PriceServices.getProcurementProductPrice(dctx,inMap);
 				useTotalSolids = priceChart.get("useTotalSolids");
 				//tip for center
@@ -134,43 +174,85 @@ unitsList.each{ unit ->
 					tipAmount += fatSnfQty*unitRateAmount.rateAmount;
 				}else{
 					tipAmount += (productMap.get("kgFat")-productMap.get("zeroKgFat"))*unitRateAmount.rateAmount;
-				}
+				}*/
 			}
-			inputFacRateAmt.put("facilityId", unit.facilityId);			
-			for(key in dateMap.keySet()){
+			totProductMap = unitGrndValuesTot.get("TOT");
+			
+			if(UtilValidate.isNotEmpty(totProductMap)){
+				tipAmount=totProductMap.get("tipAmt");
+				opCost=totProductMap.get("opCost");
+				cartage=totProductMap.get("cartage");
+				commissionAmt=totProductMap.get("commissionAmount");
+				addnTot=totProductMap.get("grsAddn");
+				dednTot=totProductMap.get("grsDed");				
+			}
+			
+	}
+		if(UtilValidate.isNotEmpty(tipAmount)){
+			unitWiseAmountAbstractMap["tipAmount"]=tipAmount;
+		}
+		if(UtilValidate.isNotEmpty(opCost)){
+			unitWiseAmountAbstractMap["opCost"]=opCost;
+		}
+		if(UtilValidate.isNotEmpty(cartage)){
+			unitWiseAmountAbstractMap["cartage"]=cartage;
+		}
+		if(UtilValidate.isNotEmpty(commissionAmt)){
+			unitWiseAmountAbstractMap["commissionAmount"]=commissionAmt;
+		}
+		if(UtilValidate.isNotEmpty(addnTot)){
+			unitWiseAmountAbstractMap["AddnTot"]=addnTot;
+		}
+		if(UtilValidate.isNotEmpty(dednTot)){
+			unitWiseAmountAbstractMap["DednsTot"]=dednTot;
+		}
+			//inputFacRateAmt.put("facilityId", unit.facilityId);			
+			/*for(key in dateMap.keySet()){
 				if(!key.equalsIgnoreCase("TOT")){
 					inputFacRateAmt.put("supplyTypeEnumId", key);
-					qtyLtrs = 0;
 					tempMap = dateMap.get(key);
+					inputFacRateAmt.put("rateTypeId", "PROC_OP_COST");
+					inputFacRateAmt.put("slabAmount",unit.facilitySize);
+					Map<String, Object> opCostAmtMap = FastMap.newInstance();
 					if(UtilValidate.isNotEmpty(tempMap)){
 						for( productKey in tempMap.keySet()){
 							if(!productKey.equalsIgnoreCase("TOT")){
-								qtyLtrs = qtyLtrs+( tempMap.get(productKey).get("qtyLtrs"));
+								BigDecimal totalSolids=BigDecimal.ZERO;
+								qtyLtrs = 0;
+								String prodKey = productKey.toString(); 
+								inputFacRateAmt.put("productId",productDetailsMap.get(productKey));
+								opCostAmtMap = dispatcher.runSync("getProcurementFacilityRateAmount", inputFacRateAmt);
+								BigDecimal opCostRate = BigDecimal.ZERO;
+								String uomId = "VLIQ_L";
+								if(ServiceUtil.isSuccess(opCostAmtMap)){
+									opCostRate = (BigDecimal)opCostAmtMap.get("rateAmount");
+									if(UtilValidate.isNotEmpty(opCostAmtMap.get("uomId"))){
+										uomId = (String) opCostAmtMap.get("uomId");
+									}
+								}
+								qtyLtrs = qtyLtrs+( tempMap.get(productKey).get("qtyLtrs"))+( tempMap.get(productKey).get("sQtyLtrs"));
+								
+								if(uomId.equalsIgnoreCase("VLIQ_KGFAT")){
+									totalSolids = totalSolids+ ( tempMap.get(productKey).get("kgFat"))+( tempMap.get(productKey).get("sKgFat"));
+									uomId = "VLIQ_TS";
+								}else{
+									totalSolids = totalSolids+ ( tempMap.get(productKey).get("kgFat"))+( tempMap.get(productKey).get("sKgFat"))+( tempMap.get(productKey).get("kgSnf"));
+								}
+								opCost = opCost+(ProcurementNetworkServices.calculateProcOPCost(dctx,UtilMisc.toMap("uomId", uomId,"totalSolids",totalSolids,"qtyLtrs",qtyLtrs,"opCostRate",opCostRate)));
 							}
 						}
 					}
-					inputFacRateAmt.put("rateTypeId", "PROC_OP_COST");
-					inputFacRateAmt.put("slabAmount",unit.facilitySize);
-					Map<String, Object> opCostAmtMap = dispatcher.runSync("getProcurementFacilityRateAmount", inputFacRateAmt);
-					BigDecimal opCostRate = BigDecimal.ZERO;
-					if(ServiceUtil.isSuccess(opCostAmtMap)){
-						opCostRate = (BigDecimal)opCostAmtMap.get("rateAmount");
-					}
-					opCost = opCost+(opCostRate.multiply(qtyLtrs));
+					
+					
 				}
 			}
+			*/
 			
-			if(UtilValidate.isNotEmpty(tipAmount)){
-				unitWiseAmountAbstractMap["tipAmount"]=tipAmount;
-			}
-			if(UtilValidate.isNotEmpty(opCost)){
-				unitWiseAmountAbstractMap["opCost"]=opCost;
-			}
-		}
-	}
+	
+	
 	
 	//for Cartage and Commission
-	unitWiseAmountAbstractMap["cartage"] = 0;
+	/*unitWiseAmountAbstractMap["cartage"] = 0;
 	unitWiseAmountAbstractMap["commissionAmount"] = 0;
 	unitCentersList = ProcurementNetworkServices.getUnitAgents(dctx,UtilMisc.toMap("unitId", unit.facilityId));
 	centersList = unitCentersList.get("agentsList");
@@ -182,15 +264,15 @@ unitsList.each{ unit ->
 		facCommProList = delegator.findList("FacilityCommissionProc",conditionFcp,null,null,null,false);
 		if(UtilValidate.isNotEmpty(facCommProList)){
 			facCommProList.each{ facCommProItem ->
-				unitWiseAmountAbstractMap["cartage"] += facCommProItem.cartage;
+				//unitWiseAmountAbstractMap["cartage"] += facCommProItem.cartage;
 				unitWiseAmountAbstractMap["commissionAmount"] += facCommProItem.commissionAmount;
 			}
 		}
-	}
+	}*/
 
 	//for Adjustments 
-	unitWiseAmountAbstractMap["AddnTot"] = 0;
-	unitWiseAmountAbstractMap["DednsTot"] = 0;
+	//unitWiseAmountAbstractMap["AddnTot"] = 0;
+	//unitWiseAmountAbstractMap["DednsTot"] = 0;
 	unitAdjustments = ProcurementServices.getPeriodAdjustmentsForAgent(dctx , [userLogin: userLogin ,fromDate: dayBegin , thruDate: dayEnd, facilityId: unit.facilityId]);
 	if(UtilValidate.isNotEmpty(unitAdjustments)){
 	  adjustmentsTypeValues = unitAdjustments.get("adjustmentsTypeMap");
@@ -198,24 +280,26 @@ unitsList.each{ unit ->
 		   adjustmentsTypeValues.each{ adjustmentValues ->
 			  if("MILKPROC_ADDITIONS".equals(adjustmentValues.getKey())){
 				  additionsList = adjustmentValues.getValue();
-				  additionsList.each{ additionValues ->
+				 /* additionsList.each{ additionValues ->
 					  unitWiseAmountAbstractMap["AddnTot"] += additionValues.getValue();
-				  }
+				  }*/
 			  }else{
 				  deductionsList = adjustmentValues.getValue();
 				  deductionsList.each{ deductionValues ->
 					  unitWiseAmountAbstractMap[deductionValues.getKey()] = deductionValues.getValue();
-					  unitWiseAmountAbstractMap["DednsTot"] += deductionValues.getValue();
+					  //unitWiseAmountAbstractMap["DednsTot"] += deductionValues.getValue();
 				  }
 			  }
 		   }
 		}
 	 }
-	
 	//for GrossAmount   GrossAmount = AdditionAmount + CommissionAmount + Cartage + Buffalo Milk Amount +Cow Milk Amount.
-		unitWiseAmountAbstractMap["grossAmount"] = unitWiseAmountAbstractMap.get("grossAmount")+unitWiseAmountAbstractMap.get("AddnTot")+unitWiseAmountAbstractMap.get("opCost")+unitWiseAmountAbstractMap.get("cartage")+totPrice;
+		unitWiseAmountAbstractMap["grossAmount"] = unitWiseAmountAbstractMap.get("grossAmount")+unitWiseAmountAbstractMap.get("AddnTot")+unitWiseAmountAbstractMap.get("commissionAmount")+unitWiseAmountAbstractMap.get("opCost")+unitWiseAmountAbstractMap.get("cartage")+totPrice;
+		
+		unitWiseAmountAbstractMap["opCost"] = unitWiseAmountAbstractMap.get("opCost");
+		unitWiseAmountAbstractMap["commissionAmount"] = unitWiseAmountAbstractMap.get("commissionAmount");
 	//for NetAmount  	NetAmount  = GrossAmount - AllDeductionsAmount.
-		unitWiseAmountAbstractMap["netAmount"] = unitWiseAmountAbstractMap.get("grossAmount")-unitWiseAmountAbstractMap.get("DednsTot");
+		unitWiseAmountAbstractMap["netAmount"] = (new BigDecimal(unitWiseAmountAbstractMap.get("grossAmount")-unitWiseAmountAbstractMap.get("DednsTot")));
 	
 	shedWiseAmountAbstractMap[unit.facilityId] = unitWiseAmountAbstractMap;
 	
@@ -240,8 +324,7 @@ shedWiseAmountAbstractMap["TOTAL"] = shedWiseTotalsMap;
 context.put("shedWiseTotalsMap",shedWiseTotalsMap);
 context.put("shedWiseAmountAbstractMap",shedWiseAmountAbstractMap);
 
-//Debug.logInfo("shedWiseAmountAbstractMap=================-------------------------================="+shedWiseAmountAbstractMap,"");
-
+//Debug.log("shedWiseAmountAbstractMap============================"+shedWiseAmountAbstractMap);
 
 
 

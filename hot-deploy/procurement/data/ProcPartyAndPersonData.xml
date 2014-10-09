@@ -1,0 +1,1897 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<entity-engine-xml>
+    <Party partyId="20626" partyTypeId="PARTY_GROUP"/>
+    <Party partyId="20627" partyTypeId="PARTY_GROUP"/>
+    <Party partyId="20628" partyTypeId="PARTY_GROUP"/>
+    <Party partyId="20629" partyTypeId="PARTY_GROUP"/>
+    <Party partyId="20630" partyTypeId="PARTY_GROUP"/>
+    <Party partyId="20631" partyTypeId="PARTY_GROUP"/>
+    <Party partyId="20632" partyTypeId="PARTY_GROUP"/>
+    <Party partyId="20633" partyTypeId="PARTY_GROUP"/>
+    <Party partyId="20634" partyTypeId="PARTY_GROUP"/>
+    <Party partyId="20635" partyTypeId="PARTY_GROUP"/>
+    <Party partyId="20636" partyTypeId="PARTY_GROUP"/>
+    <Party partyId="20637" partyTypeId="PARTY_GROUP"/>
+    <Party partyId="20638" partyTypeId="PARTY_GROUP"/>
+    <Party partyId="20639" partyTypeId="PARTY_GROUP"/>
+    <Party partyId="20640" partyTypeId="PARTY_GROUP"/>
+    <Party partyId="20641" partyTypeId="PARTY_GROUP"/>
+    <Party partyId="20642" partyTypeId="PARTY_GROUP"/>
+    <Party partyId="20643" partyTypeId="PARTY_GROUP"/>
+    <Party partyId="20644" partyTypeId="PARTY_GROUP"/>
+    <!-- Centers -->
+    <Party partyId="20000" partyTypeId="PARTY_GROUP"/>
+    <Party partyId="20001" partyTypeId="PARTY_GROUP"/>
+    <Party partyId="20002" partyTypeId="PARTY_GROUP"/>
+    <Party partyId="20003" partyTypeId="PARTY_GROUP"/>
+    <Party partyId="20004" partyTypeId="PARTY_GROUP"/>
+    <Party partyId="20005" partyTypeId="PARTY_GROUP"/>
+    <Party partyId="20006" partyTypeId="PARTY_GROUP"/>
+    <Party partyId="20007" partyTypeId="PARTY_GROUP"/>
+    <Party partyId="20008" partyTypeId="PARTY_GROUP"/>
+    <Party partyId="20009" partyTypeId="PARTY_GROUP"/>
+    <Party partyId="20010" partyTypeId="PARTY_GROUP"/>
+    <Party partyId="20011" partyTypeId="PARTY_GROUP"/>
+    <Party partyId="20012" partyTypeId="PARTY_GROUP"/>
+    <Party partyId="20013" partyTypeId="PARTY_GROUP"/>
+    <Party partyId="20014" partyTypeId="PARTY_GROUP"/>
+    <Party partyId="20015" partyTypeId="PARTY_GROUP"/>
+    <Party partyId="20016" partyTypeId="PARTY_GROUP"/>
+    <Party partyId="20017" partyTypeId="PARTY_GROUP"/>
+    <Party partyId="20018" partyTypeId="PARTY_GROUP"/>
+    <Party partyId="20019" partyTypeId="PARTY_GROUP"/>
+    <Party partyId="20020" partyTypeId="PARTY_GROUP"/>
+    <Party partyId="20021" partyTypeId="PARTY_GROUP"/>
+    <Party partyId="20022" partyTypeId="PARTY_GROUP"/>
+    <Party partyId="20023" partyTypeId="PARTY_GROUP"/>
+    <Party partyId="20024" partyTypeId="PARTY_GROUP"/>
+    <Party partyId="20025" partyTypeId="PARTY_GROUP"/>
+    <Party partyId="20026" partyTypeId="PARTY_GROUP"/>
+    <Party partyId="20027" partyTypeId="PARTY_GROUP"/>
+    <Party partyId="20028" partyTypeId="PARTY_GROUP"/>
+    <Party partyId="20029" partyTypeId="PARTY_GROUP"/>
+    <Party partyId="20030" partyTypeId="PARTY_GROUP"/>
+    <Party partyId="20031" partyTypeId="PARTY_GROUP"/>
+    <Party partyId="20032" partyTypeId="PARTY_GROUP"/>
+    <Party partyId="20033" partyTypeId="PARTY_GROUP"/>
+    <Party partyId="20034" partyTypeId="PARTY_GROUP"/>
+    <Party partyId="20035" partyTypeId="PARTY_GROUP"/>
+    <Party partyId="20036" partyTypeId="PARTY_GROUP"/>
+    <Party partyId="20037" partyTypeId="PARTY_GROUP"/>
+    <Party partyId="20038" partyTypeId="PARTY_GROUP"/>
+    <Party partyId="20039" partyTypeId="PARTY_GROUP"/>
+    <Party partyId="20040" partyTypeId="PARTY_GROUP"/>
+    <Party partyId="20041" partyTypeId="PARTY_GROUP"/>
+    <Party partyId="20042" partyTypeId="PARTY_GROUP"/>
+    <Party partyId="20043" partyTypeId="PARTY_GROUP"/>
+    <Party partyId="20044" partyTypeId="PARTY_GROUP"/>
+    <Party partyId="20045" partyTypeId="PARTY_GROUP"/>
+    <Party partyId="20046" partyTypeId="PARTY_GROUP"/>
+    <Party partyId="20047" partyTypeId="PARTY_GROUP"/>
+    <Party partyId="20048" partyTypeId="PARTY_GROUP"/>
+    <Party partyId="20049" partyTypeId="PARTY_GROUP"/>
+    <Party partyId="20050" partyTypeId="PARTY_GROUP"/>
+    <Party partyId="20051" partyTypeId="PARTY_GROUP"/>
+    <Party partyId="20052" partyTypeId="PARTY_GROUP"/>
+    <Party partyId="20053" partyTypeId="PARTY_GROUP"/>
+    <Party partyId="20054" partyTypeId="PARTY_GROUP"/>
+    <Party partyId="20055" partyTypeId="PARTY_GROUP"/>
+    <Party partyId="20056" partyTypeId="PARTY_GROUP"/>
+    <Party partyId="20057" partyTypeId="PARTY_GROUP"/>
+    <Party partyId="20058" partyTypeId="PARTY_GROUP"/>
+    <Party partyId="20059" partyTypeId="PARTY_GROUP"/>
+    <Party partyId="20060" partyTypeId="PARTY_GROUP"/>
+    <Party partyId="20061" partyTypeId="PARTY_GROUP"/>
+    <Party partyId="20062" partyTypeId="PARTY_GROUP"/>
+    <Party partyId="20063" partyTypeId="PARTY_GROUP"/>
+    <Party partyId="20064" partyTypeId="PARTY_GROUP"/>
+    <Party partyId="20065" partyTypeId="PARTY_GROUP"/>
+    <Party partyId="20066" partyTypeId="PARTY_GROUP"/>
+    <Party partyId="20067" partyTypeId="PARTY_GROUP"/>
+    <Party partyId="20068" partyTypeId="PARTY_GROUP"/>
+    <Party partyId="20069" partyTypeId="PARTY_GROUP"/>
+    <Party partyId="20070" partyTypeId="PARTY_GROUP"/>
+    <Party partyId="20071" partyTypeId="PARTY_GROUP"/>
+    <Party partyId="20072" partyTypeId="PARTY_GROUP"/>
+    <Party partyId="20073" partyTypeId="PARTY_GROUP"/>
+    <Party partyId="20074" partyTypeId="PARTY_GROUP"/>
+    <Party partyId="20075" partyTypeId="PARTY_GROUP"/>
+    <Party partyId="20076" partyTypeId="PARTY_GROUP"/>
+    <Party partyId="20077" partyTypeId="PARTY_GROUP"/>
+    <Party partyId="20078" partyTypeId="PARTY_GROUP"/>
+    <Party partyId="20079" partyTypeId="PARTY_GROUP"/>
+    <Party partyId="20080" partyTypeId="PARTY_GROUP"/>
+    <Party partyId="20081" partyTypeId="PARTY_GROUP"/>
+    <Party partyId="20082" partyTypeId="PARTY_GROUP"/>
+    <Party partyId="20083" partyTypeId="PARTY_GROUP"/>
+    <Party partyId="20084" partyTypeId="PARTY_GROUP"/>
+    <Party partyId="20085" partyTypeId="PARTY_GROUP"/>
+    <Party partyId="20086" partyTypeId="PARTY_GROUP"/>
+    <Party partyId="20087" partyTypeId="PARTY_GROUP"/>
+    <Party partyId="20088" partyTypeId="PARTY_GROUP"/>
+    <Party partyId="20089" partyTypeId="PARTY_GROUP"/>
+    <Party partyId="20090" partyTypeId="PARTY_GROUP"/>
+    <Party partyId="20091" partyTypeId="PARTY_GROUP"/>
+    <Party partyId="20092" partyTypeId="PARTY_GROUP"/>
+    <Party partyId="20093" partyTypeId="PARTY_GROUP"/>
+    <Party partyId="20094" partyTypeId="PARTY_GROUP"/>
+    <Party partyId="20095" partyTypeId="PARTY_GROUP"/>
+    <Party partyId="20096" partyTypeId="PARTY_GROUP"/>
+    <Party partyId="20097" partyTypeId="PARTY_GROUP"/>
+    <Party partyId="20098" partyTypeId="PARTY_GROUP"/>
+    <Party partyId="20099" partyTypeId="PARTY_GROUP"/>
+    <Party partyId="20100" partyTypeId="PARTY_GROUP"/>
+    <Party partyId="20101" partyTypeId="PARTY_GROUP"/>
+    <Party partyId="20102" partyTypeId="PARTY_GROUP"/>
+    <Party partyId="20103" partyTypeId="PARTY_GROUP"/>
+    <Party partyId="20104" partyTypeId="PARTY_GROUP"/>
+    <Party partyId="20105" partyTypeId="PARTY_GROUP"/>
+    <Party partyId="20106" partyTypeId="PARTY_GROUP"/>
+    <Party partyId="20107" partyTypeId="PARTY_GROUP"/>
+    <Party partyId="20108" partyTypeId="PARTY_GROUP"/>
+    <Party partyId="20109" partyTypeId="PARTY_GROUP"/>
+    <Party partyId="20110" partyTypeId="PARTY_GROUP"/>
+    <Party partyId="20111" partyTypeId="PARTY_GROUP"/>
+    <Party partyId="20112" partyTypeId="PARTY_GROUP"/>
+    <Party partyId="20113" partyTypeId="PARTY_GROUP"/>
+    <Party partyId="20114" partyTypeId="PARTY_GROUP"/>
+    <Party partyId="20115" partyTypeId="PARTY_GROUP"/>
+    <Party partyId="20116" partyTypeId="PARTY_GROUP"/>
+    <Party partyId="20117" partyTypeId="PARTY_GROUP"/>
+    <Party partyId="20118" partyTypeId="PARTY_GROUP"/>
+    <Party partyId="20119" partyTypeId="PARTY_GROUP"/>
+    <Party partyId="20120" partyTypeId="PARTY_GROUP"/>
+    <Party partyId="20121" partyTypeId="PARTY_GROUP"/>
+    <Party partyId="20122" partyTypeId="PARTY_GROUP"/>
+    <Party partyId="20123" partyTypeId="PARTY_GROUP"/>
+    <Party partyId="20124" partyTypeId="PARTY_GROUP"/>
+    <Party partyId="20125" partyTypeId="PARTY_GROUP"/>
+    <Party partyId="20126" partyTypeId="PARTY_GROUP"/>
+    <Party partyId="20127" partyTypeId="PARTY_GROUP"/>
+    <Party partyId="20128" partyTypeId="PARTY_GROUP"/>
+    <Party partyId="20129" partyTypeId="PARTY_GROUP"/>
+    <Party partyId="20130" partyTypeId="PARTY_GROUP"/>
+    <Party partyId="20131" partyTypeId="PARTY_GROUP"/>
+    <Party partyId="20132" partyTypeId="PARTY_GROUP"/>
+    <Party partyId="20133" partyTypeId="PARTY_GROUP"/>
+    <Party partyId="20134" partyTypeId="PARTY_GROUP"/>
+    <Party partyId="20135" partyTypeId="PARTY_GROUP"/>
+    <Party partyId="20136" partyTypeId="PARTY_GROUP"/>
+    <Party partyId="20137" partyTypeId="PARTY_GROUP"/>
+    <Party partyId="20138" partyTypeId="PARTY_GROUP"/>
+    <Party partyId="20139" partyTypeId="PARTY_GROUP"/>
+    <Party partyId="20140" partyTypeId="PARTY_GROUP"/>
+    <Party partyId="20141" partyTypeId="PARTY_GROUP"/>
+    <Party partyId="20142" partyTypeId="PARTY_GROUP"/>
+    <Party partyId="20143" partyTypeId="PARTY_GROUP"/>
+    <Party partyId="20144" partyTypeId="PARTY_GROUP"/>
+    <Party partyId="20145" partyTypeId="PARTY_GROUP"/>
+    <Party partyId="20146" partyTypeId="PARTY_GROUP"/>
+    <Party partyId="20147" partyTypeId="PARTY_GROUP"/>
+    <Party partyId="20148" partyTypeId="PARTY_GROUP"/>
+    <Party partyId="20149" partyTypeId="PARTY_GROUP"/>
+    <Party partyId="20150" partyTypeId="PARTY_GROUP"/>
+    <Party partyId="20151" partyTypeId="PARTY_GROUP"/>
+    <Party partyId="20152" partyTypeId="PARTY_GROUP"/>
+    <Party partyId="20153" partyTypeId="PARTY_GROUP"/>
+    <Party partyId="20154" partyTypeId="PARTY_GROUP"/>
+    <Party partyId="20155" partyTypeId="PARTY_GROUP"/>
+    <Party partyId="20156" partyTypeId="PARTY_GROUP"/>
+    <Party partyId="20157" partyTypeId="PARTY_GROUP"/>
+    <Party partyId="20158" partyTypeId="PARTY_GROUP"/>
+    <Party partyId="20159" partyTypeId="PARTY_GROUP"/>
+    <Party partyId="20160" partyTypeId="PARTY_GROUP"/>
+    <Party partyId="20161" partyTypeId="PARTY_GROUP"/>
+    <Party partyId="20162" partyTypeId="PARTY_GROUP"/>
+    <Party partyId="20163" partyTypeId="PARTY_GROUP"/>
+    <Party partyId="20164" partyTypeId="PARTY_GROUP"/>
+    <Party partyId="20165" partyTypeId="PARTY_GROUP"/>
+    <Party partyId="20166" partyTypeId="PARTY_GROUP"/>
+    <Party partyId="20167" partyTypeId="PARTY_GROUP"/>
+    <Party partyId="20168" partyTypeId="PARTY_GROUP"/>
+    <Party partyId="20169" partyTypeId="PARTY_GROUP"/>
+    <Party partyId="20170" partyTypeId="PARTY_GROUP"/>
+    <Party partyId="20171" partyTypeId="PARTY_GROUP"/>
+    <Party partyId="20172" partyTypeId="PARTY_GROUP"/>
+    <Party partyId="20173" partyTypeId="PARTY_GROUP"/>
+    <Party partyId="20174" partyTypeId="PARTY_GROUP"/>
+    <Party partyId="20175" partyTypeId="PARTY_GROUP"/>
+    <Party partyId="20176" partyTypeId="PARTY_GROUP"/>
+    <Party partyId="20177" partyTypeId="PARTY_GROUP"/>
+    <Party partyId="20178" partyTypeId="PARTY_GROUP"/>
+    <Party partyId="20179" partyTypeId="PARTY_GROUP"/>
+    <Party partyId="20180" partyTypeId="PARTY_GROUP"/>
+    <Party partyId="20181" partyTypeId="PARTY_GROUP"/>
+    <Party partyId="20182" partyTypeId="PARTY_GROUP"/>
+    <Party partyId="20183" partyTypeId="PARTY_GROUP"/>
+    <Party partyId="20184" partyTypeId="PARTY_GROUP"/>
+    <Party partyId="20185" partyTypeId="PARTY_GROUP"/>
+    <Party partyId="20186" partyTypeId="PARTY_GROUP"/>
+    <Party partyId="20187" partyTypeId="PARTY_GROUP"/>
+    <Party partyId="20188" partyTypeId="PARTY_GROUP"/>
+    <Party partyId="20189" partyTypeId="PARTY_GROUP"/>
+    <Party partyId="20190" partyTypeId="PARTY_GROUP"/>
+    <Party partyId="20191" partyTypeId="PARTY_GROUP"/>
+    <Party partyId="20192" partyTypeId="PARTY_GROUP"/>
+    <Party partyId="20193" partyTypeId="PARTY_GROUP"/>
+    <Party partyId="20194" partyTypeId="PARTY_GROUP"/>
+    <Party partyId="20195" partyTypeId="PARTY_GROUP"/>
+    <Party partyId="20196" partyTypeId="PARTY_GROUP"/>
+    <Party partyId="20197" partyTypeId="PARTY_GROUP"/>
+    <Party partyId="20198" partyTypeId="PARTY_GROUP"/>
+    <Party partyId="20199" partyTypeId="PARTY_GROUP"/>
+    <Party partyId="20200" partyTypeId="PARTY_GROUP"/>
+    <Party partyId="20201" partyTypeId="PARTY_GROUP"/>
+    <Party partyId="20202" partyTypeId="PARTY_GROUP"/>
+    <Party partyId="20203" partyTypeId="PARTY_GROUP"/>
+    <Party partyId="20204" partyTypeId="PARTY_GROUP"/>
+    <Party partyId="20205" partyTypeId="PARTY_GROUP"/>
+    <Party partyId="20206" partyTypeId="PARTY_GROUP"/>
+    <Party partyId="20207" partyTypeId="PARTY_GROUP"/>
+    <Party partyId="20208" partyTypeId="PARTY_GROUP"/>
+    <Party partyId="20209" partyTypeId="PARTY_GROUP"/>
+    <Party partyId="20210" partyTypeId="PARTY_GROUP"/>
+    <Party partyId="20211" partyTypeId="PARTY_GROUP"/>
+    <Party partyId="20212" partyTypeId="PARTY_GROUP"/>
+    <Party partyId="20213" partyTypeId="PARTY_GROUP"/>
+    <Party partyId="20214" partyTypeId="PARTY_GROUP"/>
+    <Party partyId="20215" partyTypeId="PARTY_GROUP"/>
+    <Party partyId="20216" partyTypeId="PARTY_GROUP"/>
+    <Party partyId="20217" partyTypeId="PARTY_GROUP"/>
+    <Party partyId="20218" partyTypeId="PARTY_GROUP"/>
+    <Party partyId="20219" partyTypeId="PARTY_GROUP"/>
+    <Party partyId="20220" partyTypeId="PARTY_GROUP"/>
+    <Party partyId="20221" partyTypeId="PARTY_GROUP"/>
+    <Party partyId="20222" partyTypeId="PARTY_GROUP"/>
+    <Party partyId="20223" partyTypeId="PARTY_GROUP"/>
+    <Party partyId="20224" partyTypeId="PARTY_GROUP"/>
+    <Party partyId="20225" partyTypeId="PARTY_GROUP"/>
+    <Party partyId="20226" partyTypeId="PARTY_GROUP"/>
+    <Party partyId="20227" partyTypeId="PARTY_GROUP"/>
+    <Party partyId="20228" partyTypeId="PARTY_GROUP"/>
+    <Party partyId="20229" partyTypeId="PARTY_GROUP"/>
+    <Party partyId="20230" partyTypeId="PARTY_GROUP"/>
+    <Party partyId="20231" partyTypeId="PARTY_GROUP"/>
+    <Party partyId="20232" partyTypeId="PARTY_GROUP"/>
+    <Party partyId="20233" partyTypeId="PARTY_GROUP"/>
+    <Party partyId="20234" partyTypeId="PARTY_GROUP"/>
+    <Party partyId="20235" partyTypeId="PARTY_GROUP"/>
+    <Party partyId="20236" partyTypeId="PARTY_GROUP"/>
+    <Party partyId="20237" partyTypeId="PARTY_GROUP"/>
+    <Party partyId="20238" partyTypeId="PARTY_GROUP"/>
+    <Party partyId="20239" partyTypeId="PARTY_GROUP"/>
+    <Party partyId="20240" partyTypeId="PARTY_GROUP"/>
+    <Party partyId="20241" partyTypeId="PARTY_GROUP"/>
+    <Party partyId="20242" partyTypeId="PARTY_GROUP"/>
+    <Party partyId="20243" partyTypeId="PARTY_GROUP"/>
+    <Party partyId="20244" partyTypeId="PARTY_GROUP"/>
+    <Party partyId="20245" partyTypeId="PARTY_GROUP"/>
+    <Party partyId="20246" partyTypeId="PARTY_GROUP"/>
+    <Party partyId="20247" partyTypeId="PARTY_GROUP"/>
+    <Party partyId="20248" partyTypeId="PARTY_GROUP"/>
+    <Party partyId="20249" partyTypeId="PARTY_GROUP"/>
+    <Party partyId="20250" partyTypeId="PARTY_GROUP"/>
+    <Party partyId="20251" partyTypeId="PARTY_GROUP"/>
+    <Party partyId="20252" partyTypeId="PARTY_GROUP"/>
+    <Party partyId="20253" partyTypeId="PARTY_GROUP"/>
+    <Party partyId="20254" partyTypeId="PARTY_GROUP"/>
+    <Party partyId="20255" partyTypeId="PARTY_GROUP"/>
+    <Party partyId="20256" partyTypeId="PARTY_GROUP"/>
+    <Party partyId="20257" partyTypeId="PARTY_GROUP"/>
+    <Party partyId="20258" partyTypeId="PARTY_GROUP"/>
+    <Party partyId="20259" partyTypeId="PARTY_GROUP"/>
+    <Party partyId="20260" partyTypeId="PARTY_GROUP"/>
+    <Party partyId="20261" partyTypeId="PARTY_GROUP"/>
+    <Party partyId="20262" partyTypeId="PARTY_GROUP"/>
+    <Party partyId="20263" partyTypeId="PARTY_GROUP"/>
+    <Party partyId="20264" partyTypeId="PARTY_GROUP"/>
+    <Party partyId="20265" partyTypeId="PARTY_GROUP"/>
+    <Party partyId="20266" partyTypeId="PARTY_GROUP"/>
+    <Party partyId="20267" partyTypeId="PARTY_GROUP"/>
+    <Party partyId="20268" partyTypeId="PARTY_GROUP"/>
+    <Party partyId="20269" partyTypeId="PARTY_GROUP"/>
+    <Party partyId="20270" partyTypeId="PARTY_GROUP"/>
+    <Party partyId="20271" partyTypeId="PARTY_GROUP"/>
+    <Party partyId="20272" partyTypeId="PARTY_GROUP"/>
+    <Party partyId="20273" partyTypeId="PARTY_GROUP"/>
+    <Party partyId="20274" partyTypeId="PARTY_GROUP"/>
+    <Party partyId="20275" partyTypeId="PARTY_GROUP"/>
+    <Party partyId="20276" partyTypeId="PARTY_GROUP"/>
+    <Party partyId="20277" partyTypeId="PARTY_GROUP"/>
+    <Party partyId="20278" partyTypeId="PARTY_GROUP"/>
+    <Party partyId="20279" partyTypeId="PARTY_GROUP"/>
+    <Party partyId="20280" partyTypeId="PARTY_GROUP"/>
+    <Party partyId="20281" partyTypeId="PARTY_GROUP"/>
+    <Party partyId="20282" partyTypeId="PARTY_GROUP"/>
+    <Party partyId="20283" partyTypeId="PARTY_GROUP"/>
+    <Party partyId="20284" partyTypeId="PARTY_GROUP"/>
+    <Party partyId="20285" partyTypeId="PARTY_GROUP"/>
+    <Party partyId="20286" partyTypeId="PARTY_GROUP"/>
+    <Party partyId="20287" partyTypeId="PARTY_GROUP"/>
+    <Party partyId="20288" partyTypeId="PARTY_GROUP"/>
+    <Party partyId="20289" partyTypeId="PARTY_GROUP"/>
+    <Party partyId="20290" partyTypeId="PARTY_GROUP"/>
+    <Party partyId="20291" partyTypeId="PARTY_GROUP"/>
+    <Party partyId="20292" partyTypeId="PARTY_GROUP"/>
+    <Party partyId="20293" partyTypeId="PARTY_GROUP"/>
+    <Party partyId="20294" partyTypeId="PARTY_GROUP"/>
+    <Party partyId="20295" partyTypeId="PARTY_GROUP"/>
+    <Party partyId="20296" partyTypeId="PARTY_GROUP"/>
+    <Party partyId="20297" partyTypeId="PARTY_GROUP"/>
+    <Party partyId="20298" partyTypeId="PARTY_GROUP"/>
+    <Party partyId="20299" partyTypeId="PARTY_GROUP"/>
+    <Party partyId="20300" partyTypeId="PARTY_GROUP"/>
+    <Party partyId="20301" partyTypeId="PARTY_GROUP"/>
+    <Party partyId="20302" partyTypeId="PARTY_GROUP"/>
+    <Party partyId="20303" partyTypeId="PARTY_GROUP"/>
+    <Party partyId="20304" partyTypeId="PARTY_GROUP"/>
+    <Party partyId="20305" partyTypeId="PARTY_GROUP"/>
+    <Party partyId="20306" partyTypeId="PARTY_GROUP"/>
+    <Party partyId="20307" partyTypeId="PARTY_GROUP"/>
+    <Party partyId="20308" partyTypeId="PARTY_GROUP"/>
+    <Party partyId="20309" partyTypeId="PARTY_GROUP"/>
+    <Party partyId="20310" partyTypeId="PARTY_GROUP"/>
+    <Party partyId="20311" partyTypeId="PARTY_GROUP"/>
+    <Party partyId="20312" partyTypeId="PARTY_GROUP"/>
+    <Party partyId="20313" partyTypeId="PARTY_GROUP"/>
+    <Party partyId="20314" partyTypeId="PARTY_GROUP"/>
+    <Party partyId="20315" partyTypeId="PARTY_GROUP"/>
+    <Party partyId="20316" partyTypeId="PARTY_GROUP"/>
+    <Party partyId="20317" partyTypeId="PARTY_GROUP"/>
+    <Party partyId="20318" partyTypeId="PARTY_GROUP"/>
+    <Party partyId="20319" partyTypeId="PARTY_GROUP"/>
+    <Party partyId="20320" partyTypeId="PARTY_GROUP"/>
+    <Party partyId="20321" partyTypeId="PARTY_GROUP"/>
+    <Party partyId="20322" partyTypeId="PARTY_GROUP"/>
+    <Party partyId="20323" partyTypeId="PARTY_GROUP"/>
+    <Party partyId="20324" partyTypeId="PARTY_GROUP"/>
+    <Party partyId="20325" partyTypeId="PARTY_GROUP"/>
+    <Party partyId="20326" partyTypeId="PARTY_GROUP"/>
+    <Party partyId="20327" partyTypeId="PARTY_GROUP"/>
+    <Party partyId="20328" partyTypeId="PARTY_GROUP"/>
+    <Party partyId="20329" partyTypeId="PARTY_GROUP"/>
+    <Party partyId="20330" partyTypeId="PARTY_GROUP"/>
+    <Party partyId="20331" partyTypeId="PARTY_GROUP"/>
+    <Party partyId="20332" partyTypeId="PARTY_GROUP"/>
+    <Party partyId="20333" partyTypeId="PARTY_GROUP"/>
+    <Party partyId="20334" partyTypeId="PARTY_GROUP"/>
+    <Party partyId="20335" partyTypeId="PARTY_GROUP"/>
+    <Party partyId="20336" partyTypeId="PARTY_GROUP"/>
+    <Party partyId="20337" partyTypeId="PARTY_GROUP"/>
+    <Party partyId="20338" partyTypeId="PARTY_GROUP"/>
+    <Party partyId="20339" partyTypeId="PARTY_GROUP"/>
+    <Party partyId="20340" partyTypeId="PARTY_GROUP"/>
+    <Party partyId="20341" partyTypeId="PARTY_GROUP"/>
+    <Party partyId="20342" partyTypeId="PARTY_GROUP"/>
+    <Party partyId="20343" partyTypeId="PARTY_GROUP"/>
+    <Party partyId="20344" partyTypeId="PARTY_GROUP"/>
+    <Party partyId="20345" partyTypeId="PARTY_GROUP"/>
+    <Party partyId="20346" partyTypeId="PARTY_GROUP"/>
+    <Party partyId="20347" partyTypeId="PARTY_GROUP"/>
+    <Party partyId="20348" partyTypeId="PARTY_GROUP"/>
+    <Party partyId="20349" partyTypeId="PARTY_GROUP"/>
+    <Party partyId="20350" partyTypeId="PARTY_GROUP"/>
+    <Party partyId="20351" partyTypeId="PARTY_GROUP"/>
+    <Party partyId="20352" partyTypeId="PARTY_GROUP"/>
+    <Party partyId="20353" partyTypeId="PARTY_GROUP"/>
+    <Party partyId="20354" partyTypeId="PARTY_GROUP"/>
+    <Party partyId="20355" partyTypeId="PARTY_GROUP"/>
+    <Party partyId="20356" partyTypeId="PARTY_GROUP"/>
+    <Party partyId="20357" partyTypeId="PARTY_GROUP"/>
+    <Party partyId="20358" partyTypeId="PARTY_GROUP"/>
+    <Party partyId="20359" partyTypeId="PARTY_GROUP"/>
+    <Party partyId="20360" partyTypeId="PARTY_GROUP"/>
+    <Party partyId="20361" partyTypeId="PARTY_GROUP"/>
+    <Party partyId="20362" partyTypeId="PARTY_GROUP"/>
+    <Party partyId="20363" partyTypeId="PARTY_GROUP"/>
+    <Party partyId="20364" partyTypeId="PARTY_GROUP"/>
+    <Party partyId="20365" partyTypeId="PARTY_GROUP"/>
+    <Party partyId="20366" partyTypeId="PARTY_GROUP"/>
+    <Party partyId="20367" partyTypeId="PARTY_GROUP"/>
+    <Party partyId="20368" partyTypeId="PARTY_GROUP"/>
+    <Party partyId="20369" partyTypeId="PARTY_GROUP"/>
+    <Party partyId="20370" partyTypeId="PARTY_GROUP"/>
+    <Party partyId="20371" partyTypeId="PARTY_GROUP"/>
+    <Party partyId="20372" partyTypeId="PARTY_GROUP"/>
+    <Party partyId="20373" partyTypeId="PARTY_GROUP"/>
+    <Party partyId="20374" partyTypeId="PARTY_GROUP"/>
+    <Party partyId="20375" partyTypeId="PARTY_GROUP"/>
+    <Party partyId="20376" partyTypeId="PARTY_GROUP"/>
+    <Party partyId="20377" partyTypeId="PARTY_GROUP"/>
+    <Party partyId="20378" partyTypeId="PARTY_GROUP"/>
+    <Party partyId="20379" partyTypeId="PARTY_GROUP"/>
+    <Party partyId="20380" partyTypeId="PARTY_GROUP"/>
+    <Party partyId="20381" partyTypeId="PARTY_GROUP"/>
+    <Party partyId="20382" partyTypeId="PARTY_GROUP"/>
+    <Party partyId="20383" partyTypeId="PARTY_GROUP"/>
+    <Party partyId="20384" partyTypeId="PARTY_GROUP"/>
+    <Party partyId="20385" partyTypeId="PARTY_GROUP"/>
+    <Party partyId="20386" partyTypeId="PARTY_GROUP"/>
+    <Party partyId="20387" partyTypeId="PARTY_GROUP"/>
+    <Party partyId="20388" partyTypeId="PARTY_GROUP"/>
+    <Party partyId="20389" partyTypeId="PARTY_GROUP"/>
+    <Party partyId="20390" partyTypeId="PARTY_GROUP"/>
+    <Party partyId="20391" partyTypeId="PARTY_GROUP"/>
+    <Party partyId="20392" partyTypeId="PARTY_GROUP"/>
+    <Party partyId="20393" partyTypeId="PARTY_GROUP"/>
+    <Party partyId="20394" partyTypeId="PARTY_GROUP"/>
+    <Party partyId="20395" partyTypeId="PARTY_GROUP"/>
+    <Party partyId="20396" partyTypeId="PARTY_GROUP"/>
+    <Party partyId="20397" partyTypeId="PARTY_GROUP"/>
+    <Party partyId="20398" partyTypeId="PARTY_GROUP"/>
+    <Party partyId="20399" partyTypeId="PARTY_GROUP"/>
+    <Party partyId="20400" partyTypeId="PARTY_GROUP"/>
+    <Party partyId="20401" partyTypeId="PARTY_GROUP"/>
+    <Party partyId="20402" partyTypeId="PARTY_GROUP"/>
+    <Party partyId="20403" partyTypeId="PARTY_GROUP"/>
+    <Party partyId="20404" partyTypeId="PARTY_GROUP"/>
+    <Party partyId="20405" partyTypeId="PARTY_GROUP"/>
+    <Party partyId="20406" partyTypeId="PARTY_GROUP"/>
+    <Party partyId="20407" partyTypeId="PARTY_GROUP"/>
+    <Party partyId="20408" partyTypeId="PARTY_GROUP"/>
+    <Party partyId="20409" partyTypeId="PARTY_GROUP"/>
+    <Party partyId="20410" partyTypeId="PARTY_GROUP"/>
+    <Party partyId="20411" partyTypeId="PARTY_GROUP"/>
+    <Party partyId="20412" partyTypeId="PARTY_GROUP"/>
+    <Party partyId="20413" partyTypeId="PARTY_GROUP"/>
+    <Party partyId="20414" partyTypeId="PARTY_GROUP"/>
+    <Party partyId="20415" partyTypeId="PARTY_GROUP"/>
+    <Party partyId="20416" partyTypeId="PARTY_GROUP"/>
+    <Party partyId="20417" partyTypeId="PARTY_GROUP"/>
+    <Party partyId="20418" partyTypeId="PARTY_GROUP"/>
+    <Party partyId="20419" partyTypeId="PARTY_GROUP"/>
+    <Party partyId="20420" partyTypeId="PARTY_GROUP"/>
+    <Party partyId="20421" partyTypeId="PARTY_GROUP"/>
+    <Party partyId="20422" partyTypeId="PARTY_GROUP"/>
+    <Party partyId="20423" partyTypeId="PARTY_GROUP"/>
+    <Party partyId="20424" partyTypeId="PARTY_GROUP"/>
+    <Party partyId="20425" partyTypeId="PARTY_GROUP"/>
+    <Party partyId="20426" partyTypeId="PARTY_GROUP"/>
+    <Party partyId="20427" partyTypeId="PARTY_GROUP"/>
+    <Party partyId="20428" partyTypeId="PARTY_GROUP"/>
+    <Party partyId="20429" partyTypeId="PARTY_GROUP"/>
+    <Party partyId="20430" partyTypeId="PARTY_GROUP"/>
+    <Party partyId="20431" partyTypeId="PARTY_GROUP"/>
+    <Party partyId="20432" partyTypeId="PARTY_GROUP"/>
+    <Party partyId="20433" partyTypeId="PARTY_GROUP"/>
+    <Party partyId="20434" partyTypeId="PARTY_GROUP"/>
+    <Party partyId="20435" partyTypeId="PARTY_GROUP"/>
+    <Party partyId="20436" partyTypeId="PARTY_GROUP"/>
+    <Party partyId="20437" partyTypeId="PARTY_GROUP"/>
+    <Party partyId="20438" partyTypeId="PARTY_GROUP"/>
+    <Party partyId="20439" partyTypeId="PARTY_GROUP"/>
+    <Party partyId="20440" partyTypeId="PARTY_GROUP"/>
+    <Party partyId="20441" partyTypeId="PARTY_GROUP"/>
+    <Party partyId="20442" partyTypeId="PARTY_GROUP"/>
+    <Party partyId="20443" partyTypeId="PARTY_GROUP"/>
+    <Party partyId="20444" partyTypeId="PARTY_GROUP"/>
+    <Party partyId="20445" partyTypeId="PARTY_GROUP"/>
+    <Party partyId="20446" partyTypeId="PARTY_GROUP"/>
+    <Party partyId="20447" partyTypeId="PARTY_GROUP"/>
+    <Party partyId="20448" partyTypeId="PARTY_GROUP"/>
+    <Party partyId="20449" partyTypeId="PARTY_GROUP"/>
+    <Party partyId="20450" partyTypeId="PARTY_GROUP"/>
+    <Party partyId="20451" partyTypeId="PARTY_GROUP"/>
+    <Party partyId="20452" partyTypeId="PARTY_GROUP"/>
+    <Party partyId="20453" partyTypeId="PARTY_GROUP"/>
+    <Party partyId="20454" partyTypeId="PARTY_GROUP"/>
+    <Party partyId="20455" partyTypeId="PARTY_GROUP"/>
+    <Party partyId="20456" partyTypeId="PARTY_GROUP"/>
+    <Party partyId="20457" partyTypeId="PARTY_GROUP"/>
+    <Party partyId="20458" partyTypeId="PARTY_GROUP"/>
+    <Party partyId="20459" partyTypeId="PARTY_GROUP"/>
+    <Party partyId="20460" partyTypeId="PARTY_GROUP"/>
+    <Party partyId="20461" partyTypeId="PARTY_GROUP"/>
+    <Party partyId="20462" partyTypeId="PARTY_GROUP"/>
+    <Party partyId="20463" partyTypeId="PARTY_GROUP"/>
+    <Party partyId="20464" partyTypeId="PARTY_GROUP"/>
+    <Party partyId="20465" partyTypeId="PARTY_GROUP"/>
+    <Party partyId="20466" partyTypeId="PARTY_GROUP"/>
+    <Party partyId="20467" partyTypeId="PARTY_GROUP"/>
+    <Party partyId="20468" partyTypeId="PARTY_GROUP"/>
+    <Party partyId="20469" partyTypeId="PARTY_GROUP"/>
+    <Party partyId="20470" partyTypeId="PARTY_GROUP"/>
+    <Party partyId="20471" partyTypeId="PARTY_GROUP"/>
+    <Party partyId="20472" partyTypeId="PARTY_GROUP"/>
+    <Party partyId="20473" partyTypeId="PARTY_GROUP"/>
+    <Party partyId="20474" partyTypeId="PARTY_GROUP"/>
+    <Party partyId="20475" partyTypeId="PARTY_GROUP"/>
+    <Party partyId="20476" partyTypeId="PARTY_GROUP"/>
+    <Party partyId="20477" partyTypeId="PARTY_GROUP"/>
+    <Party partyId="20478" partyTypeId="PARTY_GROUP"/>
+    <Party partyId="20479" partyTypeId="PARTY_GROUP"/>
+    <Party partyId="20480" partyTypeId="PARTY_GROUP"/>
+    <Party partyId="20481" partyTypeId="PARTY_GROUP"/>
+    <Party partyId="20482" partyTypeId="PARTY_GROUP"/>
+    <Party partyId="20483" partyTypeId="PARTY_GROUP"/>
+    <Party partyId="20484" partyTypeId="PARTY_GROUP"/>
+    <Party partyId="20485" partyTypeId="PARTY_GROUP"/>
+    <Party partyId="20486" partyTypeId="PARTY_GROUP"/>
+    <Party partyId="20487" partyTypeId="PARTY_GROUP"/>
+    <Party partyId="20488" partyTypeId="PARTY_GROUP"/>
+    <Party partyId="20489" partyTypeId="PARTY_GROUP"/>
+    <Party partyId="20490" partyTypeId="PARTY_GROUP"/>
+    <Party partyId="20491" partyTypeId="PARTY_GROUP"/>
+    <Party partyId="20492" partyTypeId="PARTY_GROUP"/>
+    <Party partyId="20493" partyTypeId="PARTY_GROUP"/>
+    <Party partyId="20494" partyTypeId="PARTY_GROUP"/>
+    <Party partyId="20495" partyTypeId="PARTY_GROUP"/>
+    <Party partyId="20496" partyTypeId="PARTY_GROUP"/>
+    <Party partyId="20497" partyTypeId="PARTY_GROUP"/>
+    <Party partyId="20498" partyTypeId="PARTY_GROUP"/>
+    <Party partyId="20499" partyTypeId="PARTY_GROUP"/>
+    <Party partyId="20500" partyTypeId="PARTY_GROUP"/>
+    <Party partyId="20501" partyTypeId="PARTY_GROUP"/>
+    <Party partyId="20502" partyTypeId="PARTY_GROUP"/>
+    <Party partyId="20503" partyTypeId="PARTY_GROUP"/>
+    <Party partyId="20504" partyTypeId="PARTY_GROUP"/>
+    <Party partyId="20505" partyTypeId="PARTY_GROUP"/>
+    <Party partyId="20506" partyTypeId="PARTY_GROUP"/>
+    <Party partyId="20507" partyTypeId="PARTY_GROUP"/>
+    <Party partyId="20508" partyTypeId="PARTY_GROUP"/>
+    <Party partyId="20509" partyTypeId="PARTY_GROUP"/>
+    <Party partyId="20510" partyTypeId="PARTY_GROUP"/>
+    <Party partyId="20511" partyTypeId="PARTY_GROUP"/>
+    <Party partyId="20512" partyTypeId="PARTY_GROUP"/>
+    <Party partyId="20513" partyTypeId="PARTY_GROUP"/>
+    <Party partyId="20514" partyTypeId="PARTY_GROUP"/>
+    <Party partyId="20515" partyTypeId="PARTY_GROUP"/>
+    <Party partyId="20516" partyTypeId="PARTY_GROUP"/>
+    <Party partyId="20517" partyTypeId="PARTY_GROUP"/>
+    <Party partyId="20518" partyTypeId="PARTY_GROUP"/>
+    <Party partyId="20519" partyTypeId="PARTY_GROUP"/>
+    <Party partyId="20520" partyTypeId="PARTY_GROUP"/>
+    <Party partyId="20521" partyTypeId="PARTY_GROUP"/>
+    <Party partyId="20522" partyTypeId="PARTY_GROUP"/>
+    <Party partyId="20523" partyTypeId="PARTY_GROUP"/>
+    <Party partyId="20524" partyTypeId="PARTY_GROUP"/>
+    <Party partyId="20525" partyTypeId="PARTY_GROUP"/>
+    <Party partyId="20526" partyTypeId="PARTY_GROUP"/>
+    <Party partyId="20527" partyTypeId="PARTY_GROUP"/>
+    <Party partyId="20528" partyTypeId="PARTY_GROUP"/>
+    <Party partyId="20529" partyTypeId="PARTY_GROUP"/>
+    <Party partyId="20530" partyTypeId="PARTY_GROUP"/>
+    <Party partyId="20531" partyTypeId="PARTY_GROUP"/>
+    <Party partyId="20532" partyTypeId="PARTY_GROUP"/>
+    <Party partyId="20533" partyTypeId="PARTY_GROUP"/>
+    <Party partyId="20534" partyTypeId="PARTY_GROUP"/>
+    <Party partyId="20535" partyTypeId="PARTY_GROUP"/>
+    <Party partyId="20536" partyTypeId="PARTY_GROUP"/>
+    <Party partyId="20537" partyTypeId="PARTY_GROUP"/>
+    <Party partyId="20538" partyTypeId="PARTY_GROUP"/>
+    <Party partyId="20539" partyTypeId="PARTY_GROUP"/>
+    <Party partyId="20540" partyTypeId="PARTY_GROUP"/>
+    <Party partyId="20541" partyTypeId="PARTY_GROUP"/>
+    <Party partyId="20542" partyTypeId="PARTY_GROUP"/>
+    <Party partyId="20543" partyTypeId="PARTY_GROUP"/>
+    <Party partyId="20544" partyTypeId="PARTY_GROUP"/>
+    <Party partyId="20545" partyTypeId="PARTY_GROUP"/>
+    <Party partyId="20546" partyTypeId="PARTY_GROUP"/>
+    <Party partyId="20547" partyTypeId="PARTY_GROUP"/>
+    <Party partyId="20548" partyTypeId="PARTY_GROUP"/>
+    <Party partyId="20549" partyTypeId="PARTY_GROUP"/>
+    <Party partyId="20550" partyTypeId="PARTY_GROUP"/>
+    <Party partyId="20551" partyTypeId="PARTY_GROUP"/>
+    <Party partyId="20552" partyTypeId="PARTY_GROUP"/>
+    <Party partyId="20553" partyTypeId="PARTY_GROUP"/>
+    <Party partyId="20554" partyTypeId="PARTY_GROUP"/>
+    <Party partyId="20555" partyTypeId="PARTY_GROUP"/>
+    <Party partyId="20556" partyTypeId="PARTY_GROUP"/>
+    <Party partyId="20557" partyTypeId="PARTY_GROUP"/>
+    <Party partyId="20558" partyTypeId="PARTY_GROUP"/>
+    <Party partyId="20559" partyTypeId="PARTY_GROUP"/>
+    <Party partyId="20560" partyTypeId="PARTY_GROUP"/>
+    <Party partyId="20561" partyTypeId="PARTY_GROUP"/>
+    <Party partyId="20562" partyTypeId="PARTY_GROUP"/>
+    <Party partyId="20563" partyTypeId="PARTY_GROUP"/>
+    <Party partyId="20564" partyTypeId="PARTY_GROUP"/>
+    <Party partyId="20565" partyTypeId="PARTY_GROUP"/>
+    <Party partyId="20566" partyTypeId="PARTY_GROUP"/>
+    <Party partyId="20567" partyTypeId="PARTY_GROUP"/>
+    <Party partyId="20568" partyTypeId="PARTY_GROUP"/>
+    <Party partyId="20569" partyTypeId="PARTY_GROUP"/>
+    <Party partyId="20570" partyTypeId="PARTY_GROUP"/>
+    <Party partyId="20571" partyTypeId="PARTY_GROUP"/>
+    <Party partyId="20572" partyTypeId="PARTY_GROUP"/>
+    <Party partyId="20573" partyTypeId="PARTY_GROUP"/>
+    <Party partyId="20574" partyTypeId="PARTY_GROUP"/>
+    <Party partyId="20575" partyTypeId="PARTY_GROUP"/>
+    <Party partyId="20576" partyTypeId="PARTY_GROUP"/>
+    <Party partyId="20577" partyTypeId="PARTY_GROUP"/>
+    <Party partyId="20578" partyTypeId="PARTY_GROUP"/>
+    <Party partyId="20579" partyTypeId="PARTY_GROUP"/>
+    <Party partyId="20580" partyTypeId="PARTY_GROUP"/>
+    <Party partyId="20581" partyTypeId="PARTY_GROUP"/>
+    <Party partyId="20582" partyTypeId="PARTY_GROUP"/>
+    <Party partyId="20583" partyTypeId="PARTY_GROUP"/>
+    <Party partyId="20584" partyTypeId="PARTY_GROUP"/>
+    <Party partyId="20585" partyTypeId="PARTY_GROUP"/>
+    <Party partyId="20586" partyTypeId="PARTY_GROUP"/>
+    <Party partyId="20587" partyTypeId="PARTY_GROUP"/>
+    <Party partyId="20588" partyTypeId="PARTY_GROUP"/>
+    <Party partyId="20589" partyTypeId="PARTY_GROUP"/>
+    <Party partyId="20590" partyTypeId="PARTY_GROUP"/>
+    <Party partyId="20591" partyTypeId="PARTY_GROUP"/>
+    <Party partyId="20592" partyTypeId="PARTY_GROUP"/>
+    <Party partyId="20593" partyTypeId="PARTY_GROUP"/>
+    <Party partyId="20594" partyTypeId="PARTY_GROUP"/>
+    <Party partyId="20595" partyTypeId="PARTY_GROUP"/>
+    <Party partyId="20596" partyTypeId="PARTY_GROUP"/>
+    <Party partyId="20597" partyTypeId="PARTY_GROUP"/>
+    <Party partyId="20598" partyTypeId="PARTY_GROUP"/>
+    <Party partyId="20599" partyTypeId="PARTY_GROUP"/>
+    <Party partyId="20600" partyTypeId="PARTY_GROUP"/>
+    <Party partyId="20601" partyTypeId="PARTY_GROUP"/>
+    <Party partyId="20602" partyTypeId="PARTY_GROUP"/>
+    <Party partyId="20603" partyTypeId="PARTY_GROUP"/>
+    <Party partyId="20604" partyTypeId="PARTY_GROUP"/>
+    <Party partyId="20605" partyTypeId="PARTY_GROUP"/>
+    <Party partyId="20606" partyTypeId="PARTY_GROUP"/>
+    <Party partyId="20607" partyTypeId="PARTY_GROUP"/>
+    <Party partyId="20608" partyTypeId="PARTY_GROUP"/>
+    
+    
+    
+    <PartyGroup partyId="20626" groupName="MAHABUBNAGAR DAIRY"/>
+    <PartyGroup partyId="20627" groupName="MCC SHADNAGAR"/>
+    <PartyGroup partyId="20628" groupName="MCC KADTHAL"/>
+    <PartyGroup partyId="20629" groupName="MCC KALWAKURTHY"/>
+    <PartyGroup partyId="20630" groupName="MCC WANAPARTHY"/>
+    <PartyGroup partyId="20631" groupName="MCC ACHAMPET"/>
+    <PartyGroup partyId="20632" groupName="BCUKONDAREDDYPALLY"/>
+    <PartyGroup partyId="20633" groupName="BCU NAGARKURNOOL"/>
+    <PartyGroup partyId="20634" groupName="BCU KHILAGHANPUR"/>
+    <PartyGroup partyId="20635" groupName="BCU JADCHERLA"/>
+    <PartyGroup partyId="20636" groupName="BCU KOTHAKOTA"/>
+    <PartyGroup partyId="20637" groupName="BCU MOOSAPET"/>
+    <PartyGroup partyId="20638" groupName="BCU JAKINALAPALLY"/>
+    <PartyGroup partyId="20639" groupName="BCU THIMMARASIPALLY"/>
+    <PartyGroup partyId="20640" groupName="BCU GUNDURU"/>
+    <PartyGroup partyId="20641" groupName="BCU KOTRA"/>
+    <PartyGroup partyId="20642" groupName="BCU THANDRA"/>
+    <PartyGroup partyId="20643" groupName="BCU THIMMINONI PALLY-A"/>
+    <PartyGroup partyId="20644" groupName="BCU NARAYANAPET"/>
+	<!--Centers-->
+	 <PartyGroup partyId="20000" groupName="MBNR ROUTE-1"/>
+    <PartyGroup partyId="20001" groupName="KOTHALABAD"/>
+    <PartyGroup partyId="20002" groupName="KOILKONDA"/>
+    <PartyGroup partyId="20003" groupName="KOSGI"/>
+    <PartyGroup partyId="20004" groupName="MBNR ROUTE-5"/>
+    <PartyGroup partyId="20005" groupName="KOTHAPET"/>
+    <PartyGroup partyId="20006" groupName="KESHAMPET"/>
+    <PartyGroup partyId="20007" groupName="CHEGUR-DEVINIPALLY"/>
+    <PartyGroup partyId="20008" groupName="RAJAPUR"/>
+    <PartyGroup partyId="20009" groupName="KONDURGU"/>
+    <PartyGroup partyId="20010" groupName="CHINCHOOD-MAMIDIPALL"/>
+    <PartyGroup partyId="20011" groupName="CHEGURU ROUTE."/>
+    <PartyGroup partyId="20012" groupName="YACHARAM"/>
+    <PartyGroup partyId="20013" groupName="NALLAWARIPALLY"/>
+    <PartyGroup partyId="20014" groupName="IRVIN"/>
+    <PartyGroup partyId="20015" groupName="TALAKONDAPALLY"/>
+    <PartyGroup partyId="20016" groupName="MADUGULA"/>
+    <PartyGroup partyId="20017" groupName="CHANDRAYANPALLY"/>
+    <PartyGroup partyId="20018" groupName="DEVARAKONDA"/>
+    <PartyGroup partyId="20019" groupName="NAGAR KURNOOL"/>
+    <PartyGroup partyId="20020" groupName="JEDCHERLA"/>
+    <PartyGroup partyId="20021" groupName="G.I.PALLY"/>
+    <PartyGroup partyId="20022" groupName="RAGHUPATHIPET"/>
+    <PartyGroup partyId="20023" groupName="THIPPAREDDY PALLY"/>
+    <PartyGroup partyId="20024" groupName="JAGBOINPALLY"/>
+    <PartyGroup partyId="20025" groupName="KOTHAKOTA"/>
+    <PartyGroup partyId="20026" groupName="KHILAGHANAPUR"/>
+    <PartyGroup partyId="20027" groupName="THUDUKURTHY"/>
+    <PartyGroup partyId="20028" groupName="PEBBAIR"/>
+    <PartyGroup partyId="20029" groupName="MADDIGATLA"/>
+    <PartyGroup partyId="20030" groupName="PEDDAKOTHAPALLY"/>
+    <PartyGroup partyId="20031" groupName="ACHAMPET RT-0"/>
+    <PartyGroup partyId="20032" groupName="LINGAL"/>
+    <PartyGroup partyId="20033" groupName="PARVATHAPUR"/>
+    <PartyGroup partyId="20034" groupName="MUSTIPALLY"/>
+    <PartyGroup partyId="20035" groupName="AMRABAD"/>
+    <PartyGroup partyId="20036" groupName="KONDAREDDYPALLY"/>
+    <PartyGroup partyId="20037" groupName="NAGARKURNOOL"/>
+    <PartyGroup partyId="20038" groupName="KHILAGANAPUR"/>
+    <PartyGroup partyId="20039" groupName="KODGAL-THIRUMALAPUR"/>
+    <PartyGroup partyId="20040" groupName="KOTHA KOTA"/>
+    <PartyGroup partyId="20041" groupName="ADDAKUL"/>
+    <PartyGroup partyId="20042" groupName="JAKINALAPALLY ROUTE"/>
+    <PartyGroup partyId="20043" groupName="THIMMARASIPALLY ROUT"/>
+    <PartyGroup partyId="20044" groupName="GUNDURU ROUTE"/>
+    <PartyGroup partyId="20045" groupName="KOTRA"/>
+    <PartyGroup partyId="20046" groupName="THANDRA"/>
+    <PartyGroup partyId="20047" groupName="THIMMINONIPALLY"/>
+    <PartyGroup partyId="20048" groupName="NARAYANAPET"/>
+    <PartyGroup partyId="20049" groupName="KAMARAM"/>
+    <PartyGroup partyId="20050" groupName="POMAL"/>
+    <PartyGroup partyId="20051" groupName="YENMENGANDLA"/>
+    <PartyGroup partyId="20052" groupName="KUCHUR"/>
+    <PartyGroup partyId="20053" groupName="NAWABPET"/>
+    <PartyGroup partyId="20054" groupName="MALKAPUR"/>
+    <PartyGroup partyId="20055" groupName="KARKONDA"/>
+    <PartyGroup partyId="20056" groupName="BOKKALONIPALLY"/>
+    <PartyGroup partyId="20057" groupName="RUDRARAM"/>
+    <PartyGroup partyId="20058" groupName="MAHABUBNAGAR"/>
+    <PartyGroup partyId="20059" groupName="THANGLAPALLY"/>
+    <PartyGroup partyId="20060" groupName="HANMANSANPALLY"/>
+    <PartyGroup partyId="20061" groupName="KAKARLAPAHAD"/>
+    <PartyGroup partyId="20062" groupName="BOYAPALLY"/>
+    <PartyGroup partyId="20063" groupName="KRUPAKAR DAIRY"/>
+    <PartyGroup partyId="20064" groupName="VEPUR"/>
+    <PartyGroup partyId="20065" groupName="CRISTIAN PALLY"/>
+    <PartyGroup partyId="20066" groupName="GUNDYAL"/>
+    <PartyGroup partyId="20067" groupName="AMBATONIPALLY"/>
+    <PartyGroup partyId="20068" groupName="VENKAT REDDY PALLY"/>
+    <PartyGroup partyId="20069" groupName="AMMAPUR"/>
+    <PartyGroup partyId="20070" groupName="THIRUMALAGIRI"/>
+    <PartyGroup partyId="20071" groupName="HANUWADA"/>
+    <PartyGroup partyId="20072" groupName="BALSARKONDA"/>
+    <PartyGroup partyId="20073" groupName="IBRAHIMBAD"/>
+    <PartyGroup partyId="20074" groupName="PAGDIYAL"/>
+    <PartyGroup partyId="20075" groupName="MOHAMMADABAD"/>
+    <PartyGroup partyId="20076" groupName="BHAVANI DAIRY"/>
+    <PartyGroup partyId="20077" groupName="CHOWDER PALLY"/>
+    <PartyGroup partyId="20078" groupName="GUDIMALKAPUR"/>
+    <PartyGroup partyId="20079" groupName="UTA KUNTA"/>
+    <PartyGroup partyId="20080" groupName="AMISTAPUR"/>
+    <PartyGroup partyId="20081" groupName="MANYAMKONDA"/>
+    <PartyGroup partyId="20082" groupName="HASNAPUR"/>
+    <PartyGroup partyId="20083" groupName="ENUGONDA"/>
+    <PartyGroup partyId="20084" groupName="OBLAIPALLY"/>
+    <PartyGroup partyId="20085" groupName="POTHANPALLY"/>
+    <PartyGroup partyId="20086" groupName="MACHANPALLY"/>
+    <PartyGroup partyId="20087" groupName="BURUGUPALLY"/>
+    <PartyGroup partyId="20088" groupName="DHARMAPUR"/>
+    <PartyGroup partyId="20089" groupName="JAMALPOOR"/>
+    <PartyGroup partyId="20090" groupName="MANIKONDA"/>
+    <PartyGroup partyId="20091" groupName="MACHAN PALLY"/>
+    <PartyGroup partyId="20092" groupName="IBRAHIM NAGER"/>
+    <PartyGroup partyId="20093" groupName="BANDAMEEDIPALLY"/>
+    <PartyGroup partyId="20094" groupName="KODUR"/>
+    <PartyGroup partyId="20095" groupName="AMBATONIPALLY"/>
+    <PartyGroup partyId="20096" groupName="GUNDIYAL"/>
+    <PartyGroup partyId="20097" groupName="TATIKONDA"/>
+    <PartyGroup partyId="20098" groupName="MKDAIRY"/>
+    <PartyGroup partyId="20099" groupName="SHIVAM"/>
+    <PartyGroup partyId="20100" groupName="MALKAPUR-II"/>
+    <PartyGroup partyId="20101" groupName="MACHANPALLY-II"/>
+    <PartyGroup partyId="20102" groupName="KOTAKADIRA"/>
+    <PartyGroup partyId="20103" groupName="UOOTAKUNTAII"/>
+    <PartyGroup partyId="20104" groupName="GARLAPAHAD"/>
+    <PartyGroup partyId="20105" groupName="KANAYAPALLY"/>
+    <PartyGroup partyId="20106" groupName="MALKAPURII"/>
+    <PartyGroup partyId="20107" groupName="RAMCHANDRAPUR"/>
+    <PartyGroup partyId="20108" groupName="MIRZAPOOR"/>
+    <PartyGroup partyId="20109" groupName="BANDAMEEDIPALLY"/>
+    <PartyGroup partyId="20110" groupName="THATIKONDA"/>
+    <PartyGroup partyId="20111" groupName="POTHULAMADGU"/>
+    <PartyGroup partyId="20112" groupName="SUBHANPUR"/>
+    <PartyGroup partyId="20113" groupName="THULAVANIGADDA"/>
+    <PartyGroup partyId="20114" groupName="ALWAL"/>
+    <PartyGroup partyId="20115" groupName="SANGEM"/>
+    <PartyGroup partyId="20116" groupName="BUCHIGUDA"/>
+    <PartyGroup partyId="20117" groupName="ABCOLONY"/>
+    <PartyGroup partyId="20118" groupName="GATTI LIMITED"/>
+    <PartyGroup partyId="20119" groupName="LINGARAM"/>
+    <PartyGroup partyId="20120" groupName="GANGADAR PALLY"/>
+    <PartyGroup partyId="20121" groupName="LINGAREDDY GUDA"/>
+    <PartyGroup partyId="20122" groupName="KESHAMPET"/>
+    <PartyGroup partyId="20123" groupName="PAPIREDDY GUDA"/>
+    <PartyGroup partyId="20124" groupName="CHOWDARI GUDA"/>
+    <PartyGroup partyId="20125" groupName="CHINTHAKUNTAPALLY"/>
+    <PartyGroup partyId="20126" groupName="POMALPALLY"/>
+    <PartyGroup partyId="20127" groupName="KONDAREDDYPALLY-I"/>
+    <PartyGroup partyId="20128" groupName="KONDAREDYPALLY-II"/>
+    <PartyGroup partyId="20129" groupName="DGDTHANDA"/>
+    <PartyGroup partyId="20130" groupName="PADKAL"/>
+    <PartyGroup partyId="20131" groupName="SHARIGUDA"/>
+    <PartyGroup partyId="20132" groupName="VEMULNARVA"/>
+    <PartyGroup partyId="20133" groupName="VELJERLA"/>
+    <PartyGroup partyId="20134" groupName="VEERANNAPALLY"/>
+    <PartyGroup partyId="20135" groupName="YELLAMPALLY"/>
+    <PartyGroup partyId="20136" groupName="SHERI GUDA-II"/>
+    <PartyGroup partyId="20137" groupName="FAROOQ NAGAR"/>
+    <PartyGroup partyId="20138" groupName="EDULAPALLYII"/>
+    <PartyGroup partyId="20139" groupName="DEVENIPALLY"/>
+    <PartyGroup partyId="20140" groupName="PULLAPPAGUDA"/>
+    <PartyGroup partyId="20141" groupName="CHINNA ELKICHERLA-I"/>
+    <PartyGroup partyId="20142" groupName="MALLAGATTU"/>
+    <PartyGroup partyId="20143" groupName="KANDHIVANAM"/>
+    <PartyGroup partyId="20144" groupName="ELIKCHARLA-2"/>
+    <PartyGroup partyId="20145" groupName="MEKAGUDA-2"/>
+    <PartyGroup partyId="20146" groupName="PUCHERLA KUNTA THAND"/>
+    <PartyGroup partyId="20147" groupName="UDITYAL-2"/>
+    <PartyGroup partyId="20148" groupName="CHGHANAPUR"/>
+    <PartyGroup partyId="20149" groupName="LBDAIRY"/>
+    <PartyGroup partyId="20150" groupName="KODICHERLA-2"/>
+    <PartyGroup partyId="20151" groupName="INMULNARVA THANDA"/>
+    <PartyGroup partyId="20152" groupName="KALLEPALLY"/>
+    <PartyGroup partyId="20153" groupName="TANVI DAIRY"/>
+    <PartyGroup partyId="20154" groupName="SRIRANGAPOOR"/>
+    <PartyGroup partyId="20155" groupName="B V RAO NAGER"/>
+    <PartyGroup partyId="20156" groupName="BALANAGAR"/>
+    <PartyGroup partyId="20157" groupName="JANDAGUDA"/>
+    <PartyGroup partyId="20158" groupName="MBR DAIRY"/>
+    <PartyGroup partyId="20159" groupName="VINAYAKA DAIRY"/>
+    <PartyGroup partyId="20160" groupName="CHINNA REVALLY"/>
+    <PartyGroup partyId="20161" groupName="GOUTHAPOOR"/>
+    <PartyGroup partyId="20162" groupName="BODAJANAMPET"/>
+    <PartyGroup partyId="20163" groupName="MOTHIGHANAPOOR"/>
+    <PartyGroup partyId="20164" groupName="KOTHA CHILKAMARRI"/>
+    <PartyGroup partyId="20165" groupName="VITTYAL"/>
+    <PartyGroup partyId="20166" groupName="BURGULA"/>
+    <PartyGroup partyId="20167" groupName="HEMAJIPUR"/>
+    <PartyGroup partyId="20168" groupName="SAIBABA COLONY"/>
+    <PartyGroup partyId="20169" groupName="TOMMIDI REKULA"/>
+    <PartyGroup partyId="20170" groupName="AJAY DAIRY"/>
+    <PartyGroup partyId="20171" groupName="PEDDA REVALLY"/>
+    <PartyGroup partyId="20172" groupName="SURARAM"/>
+    <PartyGroup partyId="20173" groupName="SRIRANGAPUR-2"/>
+    <PartyGroup partyId="20174" groupName="MANAGUDA"/>
+    <PartyGroup partyId="20175" groupName="MADILAPUR-3"/>
+    <PartyGroup partyId="20176" groupName="KALLYPALLY"/>
+    <PartyGroup partyId="20177" groupName="DATTAYAPALLY"/>
+    <PartyGroup partyId="20178" groupName="KOLUKUNTA TANDA"/>
+    <PartyGroup partyId="20179" groupName="LINGARAMII"/>
+    <PartyGroup partyId="20180" groupName="VITTAL YADAV"/>
+    <PartyGroup partyId="20181" groupName="KKTANDAII"/>
+    <PartyGroup partyId="20182" groupName="SOLIPUR"/>
+    <PartyGroup partyId="20183" groupName="SRIKRISHNA DAIRY"/>
+    <PartyGroup partyId="20184" groupName="SANGHIGUDA"/>
+    <PartyGroup partyId="20185" groupName="UPPARIGADDA"/>
+    <PartyGroup partyId="20186" groupName="ANURADHA DAIRY"/>
+    <PartyGroup partyId="20187" groupName="KAJIGUDA THANDA"/>
+    <PartyGroup partyId="20188" groupName="MANIKAMMAGUDI"/>
+    <PartyGroup partyId="20189" groupName="MANI BAI DAIRY"/>
+    <PartyGroup partyId="20190" groupName="NERALA CHERUV"/>
+    <PartyGroup partyId="20191" groupName="RAHMAN DAIRY"/>
+    <PartyGroup partyId="20192" groupName="CHERKUPALLY"/>
+    <PartyGroup partyId="20193" groupName="GANGANNAGUDA"/>
+    <PartyGroup partyId="20194" groupName="KONDURG"/>
+    <PartyGroup partyId="20195" groupName="VISHWANATHPOOR"/>
+    <PartyGroup partyId="20196" groupName="PARVATHAPOOR"/>
+    <PartyGroup partyId="20197" groupName="BAYYAWARIPALLY"/>
+    <PartyGroup partyId="20198" groupName="SILMBAITHANDA"/>
+    <PartyGroup partyId="20199" groupName="BEMARAM"/>
+    <PartyGroup partyId="20200" groupName="TIRMAL DEVUNIPALLY"/>
+    <PartyGroup partyId="20201" groupName="PEDDA ELKICHERLA"/>
+    <PartyGroup partyId="20202" groupName="CRGHANAPOOR THANDA"/>
+    <PartyGroup partyId="20203" groupName="NAGIREDDYPALLY"/>
+    <PartyGroup partyId="20204" groupName="CHINTAGUDEM"/>
+    <PartyGroup partyId="20205" groupName="ENUMULANARVA"/>
+    <PartyGroup partyId="20206" groupName="MODAMPALLY"/>
+    <PartyGroup partyId="20207" groupName="THIMMAPUR-II"/>
+    <PartyGroup partyId="20208" groupName="KISHAN NAGAR"/>
+    <PartyGroup partyId="20209" groupName="CHINCHOOD"/>
+    <PartyGroup partyId="20210" groupName="AYYAWARIPALLI"/>
+    <PartyGroup partyId="20211" groupName="MAKUTHA"/>
+    <PartyGroup partyId="20212" groupName="MAMIDIPALLY"/>
+    <PartyGroup partyId="20213" groupName="NAGHULAPALLY"/>
+    <PartyGroup partyId="20214" groupName="RASUMALLEGUDA"/>
+    <PartyGroup partyId="20215" groupName="NASARABAD"/>
+    <PartyGroup partyId="20216" groupName="ANTHIREDDY GUDA"/>
+    <PartyGroup partyId="20217" groupName="VEERLA PALLY"/>
+    <PartyGroup partyId="20218" groupName="VENKATESHWARA DAIRY"/>
+    <PartyGroup partyId="20219" groupName="MADILAPUR-II"/>
+    <PartyGroup partyId="20220" groupName="POMALPALLY-II"/>
+    <PartyGroup partyId="20221" groupName="PETALAGADDA TANDA"/>
+    <PartyGroup partyId="20222" groupName="PENJERLA-II"/>
+    <PartyGroup partyId="20223" groupName="KAKHARLA THANDA"/>
+    <PartyGroup partyId="20224" groupName="GOLLUR"/>
+    <PartyGroup partyId="20225" groupName="PALGUDAM"/>
+    <PartyGroup partyId="20226" groupName="NAGULAGADDA TANDA"/>
+    <PartyGroup partyId="20227" groupName="GOMATHA MAHILA SANGA"/>
+    <PartyGroup partyId="20228" groupName="MARRIKUNTA"/>
+    <PartyGroup partyId="20229" groupName="RANGADAM"/>
+    <PartyGroup partyId="20230" groupName="SRIS RAM REDDY"/>
+    <PartyGroup partyId="20231" groupName="RAMANNAGUDA-II"/>
+    <PartyGroup partyId="20232" groupName="AREGUDA"/>
+    <PartyGroup partyId="20233" groupName="DEBBADAGUDA"/>
+    <PartyGroup partyId="20234" groupName="MUCHERLA"/>
+    <PartyGroup partyId="20235" groupName="ANMASPALLY"/>
+    <PartyGroup partyId="20236" groupName="KADTHAL"/>
+    <PartyGroup partyId="20237" groupName="KADTHAL-2"/>
+    <PartyGroup partyId="20238" groupName="NALLAVARIPALLY"/>
+    <PartyGroup partyId="20239" groupName="JANGAREDDYPALLY"/>
+    <PartyGroup partyId="20240" groupName="CHALLAMPALLY"/>
+    <PartyGroup partyId="20241" groupName="VENKAT RAO PETA"/>
+    <PartyGroup partyId="20242" groupName="SAI MACS(JRPAL"/>
+    <PartyGroup partyId="20243" groupName="VAMPUGUDA"/>
+    <PartyGroup partyId="20244" groupName="KHANAPOOR"/>
+    <PartyGroup partyId="20245" groupName="EVIJAYA"/>
+    <PartyGroup partyId="20246" groupName="AKUTHOTAPALLY"/>
+    <PartyGroup partyId="20247" groupName="DASARAPALLYII"/>
+    <PartyGroup partyId="20248" groupName="CHOKKANNAPALLY"/>
+    <PartyGroup partyId="20249" groupName="BANODONIPALLY"/>
+    <PartyGroup partyId="20250" groupName="VELDANDA"/>
+    <PartyGroup partyId="20251" groupName="KAMOTONIPALLY"/>
+    <PartyGroup partyId="20252" groupName="BARKATHPALLY"/>
+    <PartyGroup partyId="20253" groupName="CHERKUR"/>
+    <PartyGroup partyId="20254" groupName="PEDDAPUR"/>
+    <PartyGroup partyId="20255" groupName="KUPPAGANDLA"/>
+    <PartyGroup partyId="20256" groupName="KARKALPAHAD"/>
+    <PartyGroup partyId="20257" groupName="BOLLAMPALLY"/>
+    <PartyGroup partyId="20258" groupName="CHUKKAPOORII"/>
+    <PartyGroup partyId="20259" groupName="CHOWDARPALLY"/>
+    <PartyGroup partyId="20260" groupName="REKYA TANDA"/>
+    <PartyGroup partyId="20261" groupName="VELUGU RALLATANDA"/>
+    <PartyGroup partyId="20262" groupName="PTTHANDA"/>
+    <PartyGroup partyId="20263" groupName="PKTHANDA"/>
+    <PartyGroup partyId="20264" groupName="VRPET-II"/>
+    <PartyGroup partyId="20265" groupName="NRGTHANDA"/>
+    <PartyGroup partyId="20266" groupName="KVADA TANDA"/>
+    <PartyGroup partyId="20267" groupName="HEMLAL"/>
+    <PartyGroup partyId="20268" groupName="PVBTANDA"/>
+    <PartyGroup partyId="20269" groupName="GNTANDA"/>
+    <PartyGroup partyId="20270" groupName="NKTHANDA"/>
+    <PartyGroup partyId="20271" groupName="DEVAMMA"/>
+    <PartyGroup partyId="20272" groupName="CHEPUNUNTHALA"/>
+    <PartyGroup partyId="20273" groupName="BMOHAN REDDY DAIRY"/>
+    <PartyGroup partyId="20274" groupName="UTLAPALLY"/>
+    <PartyGroup partyId="20275" groupName="CHARIKONDA"/>
+    <PartyGroup partyId="20276" groupName="RAMPOOR"/>
+    <PartyGroup partyId="20277" groupName="CHANDRADANA"/>
+    <PartyGroup partyId="20278" groupName="TALAKONDAPALLY"/>
+    <PartyGroup partyId="20279" groupName="PADAKAL"/>
+    <PartyGroup partyId="20280" groupName="SANGAIPALLY"/>
+    <PartyGroup partyId="20281" groupName="TAKARAJUGUDA"/>
+    <PartyGroup partyId="20282" groupName="NIRDAVELLY"/>
+    <PartyGroup partyId="20283" groupName="RAMPOORII"/>
+    <PartyGroup partyId="20284" groupName="MEDAKPALLY"/>
+    <PartyGroup partyId="20285" groupName="MEDAK PALLY-II"/>
+    <PartyGroup partyId="20286" groupName="VELJAL"/>
+    <PartyGroup partyId="20287" groupName="LEYMAMIDI"/>
+    <PartyGroup partyId="20288" groupName="MADHARAM"/>
+    <PartyGroup partyId="20289" groupName="NYAMATHAPUR"/>
+    <PartyGroup partyId="20290" groupName="RAICHED"/>
+    <PartyGroup partyId="20291" groupName="KBTHANDA"/>
+    <PartyGroup partyId="20292" groupName="PEDDY REDDY TANDA"/>
+    <PartyGroup partyId="20293" groupName="SALARPOOR"/>
+    <PartyGroup partyId="20294" groupName="THUMALKUNTATANDA"/>
+    <PartyGroup partyId="20295" groupName="BHARAPURAM"/>
+    <PartyGroup partyId="20296" groupName="CHENNARAMII"/>
+    <PartyGroup partyId="20297" groupName="PTTHANDA"/>
+    <PartyGroup partyId="20298" groupName="SVS"/>
+    <PartyGroup partyId="20299" groupName="RANGAIAH"/>
+    <PartyGroup partyId="20300" groupName="RANGAMPET"/>
+    <PartyGroup partyId="20301" groupName="ADELLY"/>
+    <PartyGroup partyId="20302" groupName="MARRIPALLY"/>
+    <PartyGroup partyId="20303" groupName="EKWAPALLY"/>
+    <PartyGroup partyId="20304" groupName="GOVIND PALLY"/>
+    <PartyGroup partyId="20305" groupName="KONAPUR"/>
+    <PartyGroup partyId="20306" groupName="CHANDHRADANA-II"/>
+    <PartyGroup partyId="20307" groupName="MAKTHA MADHARAM"/>
+    <PartyGroup partyId="20308" groupName="KARKAS THANDA"/>
+    <PartyGroup partyId="20309" groupName="RAMANUNTHALA TANDA"/>
+    <PartyGroup partyId="20310" groupName="JAYAPALLY"/>
+    <PartyGroup partyId="20311" groupName="ABAGHAVAN REDDY"/>
+    <PartyGroup partyId="20312" groupName="KISTAMPALLY THANDA"/>
+    <PartyGroup partyId="20313" groupName="JUPALLY-1"/>
+    <PartyGroup partyId="20314" groupName="POTHEPALLY"/>
+    <PartyGroup partyId="20315" groupName="THIMAYAPALLY"/>
+    <PartyGroup partyId="20316" groupName="BUDDONIPALLY"/>
+    <PartyGroup partyId="20317" groupName="RUKNODDIN"/>
+    <PartyGroup partyId="20318" groupName="SR PALLY"/>
+    <PartyGroup partyId="20319" groupName="JEEDIPALLYII"/>
+    <PartyGroup partyId="20320" groupName="SUDHAKAL"/>
+    <PartyGroup partyId="20321" groupName="BEKKERA"/>
+    <PartyGroup partyId="20322" groupName="THOTA PALLY"/>
+    <PartyGroup partyId="20323" groupName="YELLIKATTA"/>
+    <PartyGroup partyId="20324" groupName="VENKATAPUR"/>
+    <PartyGroup partyId="20325" groupName="VEPOOR"/>
+    <PartyGroup partyId="20326" groupName="MEDIPUR"/>
+    <PartyGroup partyId="20327" groupName="KURUMIDDA"/>
+    <PartyGroup partyId="20328" groupName="JEEDIPALLY"/>
+    <PartyGroup partyId="20329" groupName="KALWAKURTHY"/>
+    <PartyGroup partyId="20330" groupName="KALWAKURTHY"/>
+    <PartyGroup partyId="20331" groupName="THOTAPALLY-II"/>
+    <PartyGroup partyId="20332" groupName="URKONDA3"/>
+    <PartyGroup partyId="20333" groupName="RACHURIII"/>
+    <PartyGroup partyId="20334" groupName="KONAPUR"/>
+    <PartyGroup partyId="20335" groupName="PANJUGULA-2"/>
+    <PartyGroup partyId="20336" groupName="RACHARLAPALLY-II"/>
+    <PartyGroup partyId="20337" groupName="SMTPHYMAVATHI"/>
+    <PartyGroup partyId="20338" groupName="VEPOOR-II"/>
+    <PartyGroup partyId="20339" groupName="KOTRA THANDA"/>
+    <PartyGroup partyId="20340" groupName="MITTASADAGODU"/>
+    <PartyGroup partyId="20341" groupName="KALWAKURTHY"/>
+    <PartyGroup partyId="20342" groupName="WADDALA"/>
+    <PartyGroup partyId="20343" groupName="CHANDRANPALLY"/>
+    <PartyGroup partyId="20344" groupName="VEMULA"/>
+    <PartyGroup partyId="20345" groupName="MARUTHI DAIRY"/>
+    <PartyGroup partyId="20346" groupName="RACHUR TANDA"/>
+    <PartyGroup partyId="20347" groupName="MIDJIL"/>
+    <PartyGroup partyId="20348" groupName="BOINPALLY"/>
+    <PartyGroup partyId="20349" groupName="REVALLY"/>
+    <PartyGroup partyId="20350" groupName="KOTHUR"/>
+    <PartyGroup partyId="20351" groupName="MALLAPUR"/>
+    <PartyGroup partyId="20352" groupName="GUDIGANPALLY"/>
+    <PartyGroup partyId="20353" groupName="MADHARAM"/>
+    <PartyGroup partyId="20354" groupName="MARCHALA"/>
+    <PartyGroup partyId="20355" groupName="RACHALAPALLY"/>
+    <PartyGroup partyId="20356" groupName="RACHALAPALLY-II"/>
+    <PartyGroup partyId="20357" groupName="VIKRAM REDDY"/>
+    <PartyGroup partyId="20358" groupName="SILAR PALLY"/>
+    <PartyGroup partyId="20359" groupName="KALWAKURTHY"/>
+    <PartyGroup partyId="20360" groupName="PANJUGULAIV"/>
+    <PartyGroup partyId="20361" groupName="VIJAY DAIRY"/>
+    <PartyGroup partyId="20362" groupName="RACHUR-I"/>
+    <PartyGroup partyId="20363" groupName="IPPAPAHAD"/>
+    <PartyGroup partyId="20364" groupName="RACHOOR-2"/>
+    <PartyGroup partyId="20365" groupName="GATTU IPPALAPALLY"/>
+    <PartyGroup partyId="20366" groupName="YANGAMPALLY"/>
+    <PartyGroup partyId="20367" groupName="VEERANNAPALLY"/>
+    <PartyGroup partyId="20368" groupName="ZUPALLY2"/>
+    <PartyGroup partyId="20369" groupName="YELLIKAL"/>
+    <PartyGroup partyId="20370" groupName="RANGAPUR"/>
+    <PartyGroup partyId="20371" groupName="KALVAKURTHY"/>
+    <PartyGroup partyId="20372" groupName="PANJUGULA"/>
+    <PartyGroup partyId="20373" groupName="JANGAREDDYPALLY"/>
+    <PartyGroup partyId="20374" groupName="MOKURALA"/>
+    <PartyGroup partyId="20375" groupName="PRPALLY"/>
+    <PartyGroup partyId="20376" groupName="THIPPAREDDY PALLY"/>
+    <PartyGroup partyId="20377" groupName="NIJAMABAD"/>
+    <PartyGroup partyId="20378" groupName="KONETIPUR"/>
+    <PartyGroup partyId="20379" groupName="GAJARA"/>
+    <PartyGroup partyId="20380" groupName="MUCHARLAPALLY"/>
+    <PartyGroup partyId="20381" groupName="JAGBOINPALLY"/>
+    <PartyGroup partyId="20382" groupName="URKONDAPET"/>
+    <PartyGroup partyId="20383" groupName="BOMMARASIPALLY"/>
+    <PartyGroup partyId="20384" groupName="RAM REDDY PALLY"/>
+    <PartyGroup partyId="20385" groupName="NARSAM PALLY"/>
+    <PartyGroup partyId="20386" groupName="CHOWDAR PALLY"/>
+    <PartyGroup partyId="20387" groupName="MADAYAPALLY"/>
+    <PartyGroup partyId="20388" groupName="MASIGUNDLA PALLY"/>
+    <PartyGroup partyId="20389" groupName="GUNDLAGUNTAPALLY"/>
+    <PartyGroup partyId="20390" groupName="URKONDA-II"/>
+    <PartyGroup partyId="20391" groupName="PEDDAMANDADI"/>
+    <PartyGroup partyId="20392" groupName="MANIGILLA"/>
+    <PartyGroup partyId="20393" groupName="JAGATHPALLY"/>
+    <PartyGroup partyId="20394" groupName="KOTHAMADDIGATLA"/>
+    <PartyGroup partyId="20395" groupName="RAJANAGARAM"/>
+    <PartyGroup partyId="20396" groupName="KANMANOOR"/>
+    <PartyGroup partyId="20397" groupName="MOJERLA"/>
+    <PartyGroup partyId="20398" groupName="PANGAL"/>
+    <PartyGroup partyId="20399" groupName="KOTHAPET"/>
+    <PartyGroup partyId="20400" groupName="PEBBAIR"/>
+    <PartyGroup partyId="20401" groupName="GANGARAM"/>
+    <PartyGroup partyId="20402" groupName="AMMAPALLY THANDA"/>
+    <PartyGroup partyId="20403" groupName="MAMMAI PALLY"/>
+    <PartyGroup partyId="20404" groupName="SHAIN PALLY"/>
+    <PartyGroup partyId="20405" groupName="KETHEPALLY"/>
+    <PartyGroup partyId="20406" groupName="GOLLA PALLY"/>
+    <PartyGroup partyId="20407" groupName="BIJINAPALLY"/>
+    <PartyGroup partyId="20408" groupName="PEDDAGUDAM"/>
+    <PartyGroup partyId="20409" groupName="REVALLY"/>
+    <PartyGroup partyId="20410" groupName="GOLLAPALLY"/>
+    <PartyGroup partyId="20411" groupName="WANAPARTHY"/>
+    <PartyGroup partyId="20412" groupName="THIRIMALAPUR"/>
+    <PartyGroup partyId="20413" groupName="EDULA"/>
+    <PartyGroup partyId="20414" groupName="MIRAS PALLY"/>
+    <PartyGroup partyId="20415" groupName="PEDDAGUDEM THANDA"/>
+    <PartyGroup partyId="20416" groupName="YEDUTLA"/>
+    <PartyGroup partyId="20417" groupName="KRISHNA"/>
+    <PartyGroup partyId="20418" groupName="BALLEDPALLY"/>
+    <PartyGroup partyId="20419" groupName="RAJANAGARAM-II"/>
+    <PartyGroup partyId="20420" groupName="PGMTHANDA2"/>
+    <PartyGroup partyId="20421" groupName="VENKATAYA"/>
+    <PartyGroup partyId="20422" groupName="LAXMA REDDY"/>
+    <PartyGroup partyId="20423" groupName="561KOTHAMADIGATLA-2"/>
+    <PartyGroup partyId="20424" groupName="SRINIVASLU"/>
+    <PartyGroup partyId="20425" groupName="MALLAYAPALLY"/>
+    <PartyGroup partyId="20426" groupName="MACHINAPALLY"/>
+    <PartyGroup partyId="20427" groupName="DHARMA REDDY"/>
+    <PartyGroup partyId="20428" groupName="CHANDRA MOULI"/>
+    <PartyGroup partyId="20429" groupName="BEERALLY"/>
+    <PartyGroup partyId="20430" groupName="SHAKAPOOR TANDA"/>
+    <PartyGroup partyId="20431" groupName="NARENDER REDDY"/>
+    <PartyGroup partyId="20432" groupName="VENKATESH DAIRY"/>
+    <PartyGroup partyId="20433" groupName="CHINNA REDDY"/>
+    <PartyGroup partyId="20434" groupName="JANUMPALLY"/>
+    <PartyGroup partyId="20435" groupName="SRINIVASULU"/>
+    <PartyGroup partyId="20436" groupName="PADMASRI"/>
+    <PartyGroup partyId="20437" groupName="TADIPERTHY"/>
+    <PartyGroup partyId="20438" groupName="CHINNARAM"/>
+    <PartyGroup partyId="20439" groupName="RAMESH BABU"/>
+    <PartyGroup partyId="20440" groupName="DATHATREYA REDDY"/>
+    <PartyGroup partyId="20441" groupName="VADDI REDDY"/>
+    <PartyGroup partyId="20442" groupName="NAGESH DAIRY"/>
+    <PartyGroup partyId="20443" groupName="ALWAL"/>
+    <PartyGroup partyId="20444" groupName="CHINNAMANDADI"/>
+    <PartyGroup partyId="20445" groupName="BUDHARAM"/>
+    <PartyGroup partyId="20446" groupName="MAHADEVPET"/>
+    <PartyGroup partyId="20447" groupName="VELTUR"/>
+    <PartyGroup partyId="20448" groupName="POLEPALLY"/>
+    <PartyGroup partyId="20449" groupName="VATTEM"/>
+    <PartyGroup partyId="20450" groupName="CHINNAMANDADITHANDA"/>
+    <PartyGroup partyId="20451" groupName="MADDIGATLA"/>
+    <PartyGroup partyId="20452" groupName="MENTAPALLLY"/>
+    <PartyGroup partyId="20453" groupName="VENGALYA PALLY"/>
+    <PartyGroup partyId="20454" groupName="GOPLAPURAM"/>
+    <PartyGroup partyId="20455" groupName="CHINNAMUNGALCHEDU"/>
+    <PartyGroup partyId="20456" groupName="REMODDULA"/>
+    <PartyGroup partyId="20457" groupName="NAGULAPALLY"/>
+    <PartyGroup partyId="20458" groupName="INOLE"/>
+    <PartyGroup partyId="20459" groupName="PENIMILLA"/>
+    <PartyGroup partyId="20460" groupName="THUMMANPET"/>
+    <PartyGroup partyId="20461" groupName="UPPERPALLY"/>
+    <PartyGroup partyId="20462" groupName="MARRIPALLY"/>
+    <PartyGroup partyId="20463" groupName="GATTUTHAMMEN"/>
+    <PartyGroup partyId="20464" groupName="IPPAKUNTA"/>
+    <PartyGroup partyId="20465" groupName="MAHADEVPUR"/>
+    <PartyGroup partyId="20466" groupName="GOLAGUNDAM"/>
+    <PartyGroup partyId="20467" groupName="PALKAPALLY"/>
+    <PartyGroup partyId="20468" groupName="GODAL"/>
+    <PartyGroup partyId="20469" groupName="CHENNARAM"/>
+    <PartyGroup partyId="20470" groupName="KOMMAREDDYPALLY"/>
+    <PartyGroup partyId="20471" groupName="VALLABHAPOOR"/>
+    <PartyGroup partyId="20472" groupName="MANGALIKUNTAPALLY"/>
+    <PartyGroup partyId="20473" groupName="KONDAREDDYPALLY"/>
+    <PartyGroup partyId="20474" groupName="ANATHAVARAM"/>
+    <PartyGroup partyId="20475" groupName="SMT SAYAMMA"/>
+    <PartyGroup partyId="20476" groupName="VALLABHAPOOR-2"/>
+    <PartyGroup partyId="20477" groupName="VISHNUVARDHAN REDDY"/>
+    <PartyGroup partyId="20478" groupName="SUDHAKAR"/>
+    <PartyGroup partyId="20479" groupName="LAXMAPUR(PG)"/>
+    <PartyGroup partyId="20480" groupName="MOLGARA"/>
+    <PartyGroup partyId="20481" groupName="UPPANUTHALA"/>
+    <PartyGroup partyId="20482" groupName="RAKONDA"/>
+    <PartyGroup partyId="20483" groupName="MAMILLAPALLY"/>
+    <PartyGroup partyId="20484" groupName="PEDDAPUR"/>
+    <PartyGroup partyId="20485" groupName="POLEPALLY"/>
+    <PartyGroup partyId="20486" groupName="MOTHUKULA KUNTA"/>
+    <PartyGroup partyId="20487" groupName="SADHAGOD"/>
+    <PartyGroup partyId="20488" groupName="KAMSANPALLY"/>
+    <PartyGroup partyId="20489" groupName="ZINKUNTA"/>
+    <PartyGroup partyId="20490" groupName="RAMAJIPALLY"/>
+    <PartyGroup partyId="20491" groupName="ACHAMPET"/>
+    <PartyGroup partyId="20492" groupName="ZIKUNTA"/>
+    <PartyGroup partyId="20493" groupName="RAM REDDY PALLY"/>
+    <PartyGroup partyId="20494" groupName="TIPPAPOOR"/>
+    <PartyGroup partyId="20495" groupName="LAXMIPALLY"/>
+    <PartyGroup partyId="20496" groupName="SAINPET"/>
+    <PartyGroup partyId="20497" groupName="RAKONDA-II"/>
+    <PartyGroup partyId="20498" groupName="LINGALA"/>
+    <PartyGroup partyId="20499" groupName="GATTUKADIPALLY"/>
+    <PartyGroup partyId="20500" groupName="SINGARAM"/>
+    <PartyGroup partyId="20501" groupName="CHANNARAMII"/>
+    <PartyGroup partyId="20502" groupName="CHANDAPUR"/>
+    <PartyGroup partyId="20503" groupName="PARWATHAMMA"/>
+    <PartyGroup partyId="20504" groupName="CM REDDY DAIRY"/>
+    <PartyGroup partyId="20505" groupName="AOUSALIKUNTA"/>
+    <PartyGroup partyId="20506" groupName="NADIMPALLY"/>
+    <PartyGroup partyId="20507" groupName="BANALA"/>
+    <PartyGroup partyId="20508" groupName="KOTHAKUNTAPALLY"/>
+    <PartyGroup partyId="20509" groupName="BALMOOR"/>
+    <PartyGroup partyId="20510" groupName="KONDANAGULA"/>
+    <PartyGroup partyId="20511" groupName="KOTHAPALLY"/>
+    <PartyGroup partyId="20512" groupName="DHARARAM"/>
+    <PartyGroup partyId="20513" groupName="HAJIPUR"/>
+    <PartyGroup partyId="20514" groupName="DINDI"/>
+    <PartyGroup partyId="20515" groupName="RANGAPUR"/>
+    <PartyGroup partyId="20516" groupName="KORATIKAL"/>
+    <PartyGroup partyId="20517" groupName="AYYAVARIPALLY"/>
+    <PartyGroup partyId="20518" groupName="MAILARAM"/>
+    <PartyGroup partyId="20519" groupName="VELTOOR"/>
+    <PartyGroup partyId="20520" groupName="LAKNARAM"/>
+    <PartyGroup partyId="20521" groupName="POLISETTI PALLY"/>
+    <PartyGroup partyId="20522" groupName="VENKATAGIRI"/>
+    <PartyGroup partyId="20523" groupName="MAGDUMPUR"/>
+    <PartyGroup partyId="20524" groupName="VEERAMRAMAJIPALLY"/>
+    <PartyGroup partyId="20525" groupName="BOLOGET PALLY"/>
+    <PartyGroup partyId="20526" groupName="RAICHED"/>
+    <PartyGroup partyId="20527" groupName="LATHIFPOOR"/>
+    <PartyGroup partyId="20528" groupName="ERTANPALLY"/>
+    <PartyGroup partyId="20529" groupName="BILLAKAL"/>
+    <PartyGroup partyId="20530" groupName="VENKATAIAH"/>
+    <PartyGroup partyId="20531" groupName="POLISHETTYPALLY THAN"/>
+    <PartyGroup partyId="20532" groupName="BOMMANPALLY"/>
+    <PartyGroup partyId="20533" groupName="CHENCHUPALUGU"/>
+    <PartyGroup partyId="20534" groupName="GOPAL"/>
+    <PartyGroup partyId="20535" groupName="CHINNAIAH"/>
+    <PartyGroup partyId="20536" groupName="VIGNESHPOOR"/>
+    <PartyGroup partyId="20537" groupName="RANGHAMPET"/>
+    <PartyGroup partyId="20538" groupName="ASRINIVASULU"/>
+    <PartyGroup partyId="20539" groupName="SEETHARAMPOOR"/>
+    <PartyGroup partyId="20540" groupName="PARVATHALU"/>
+    <PartyGroup partyId="20541" groupName="GPNTHANDA"/>
+    <PartyGroup partyId="20542" groupName="ACHAMPET-2"/>
+    <PartyGroup partyId="20543" groupName="SURAPOOR"/>
+    <PartyGroup partyId="20544" groupName="PADRA"/>
+    <PartyGroup partyId="20545" groupName="DAYAKAR DAIRYFARM"/>
+    <PartyGroup partyId="20546" groupName="MOLKAMAMIDI"/>
+    <PartyGroup partyId="20547" groupName="GOVERDHAN"/>
+    <PartyGroup partyId="20548" groupName="GANESH DAIRY"/>
+    <PartyGroup partyId="20549" groupName="AHMED DAIRY"/>
+    <PartyGroup partyId="20550" groupName="STHANDA"/>
+    <PartyGroup partyId="20551" groupName="SURAIAH DAIRY FARM"/>
+    <PartyGroup partyId="20552" groupName="CHANDRA SHEKAR DAIRY"/>
+    <PartyGroup partyId="20553" groupName="PARVATHALU2"/>
+    <PartyGroup partyId="20554" groupName="RAYAVARAM"/>
+    <PartyGroup partyId="20555" groupName="SIDDAPUR"/>
+    <PartyGroup partyId="20556" groupName="POLSHETPALLYII"/>
+    <PartyGroup partyId="20557" groupName="DAMODHAR REDDY"/>
+    <PartyGroup partyId="20558" groupName="SUNDER REDDY"/>
+    <PartyGroup partyId="20559" groupName="KCTHANDA"/>
+    <PartyGroup partyId="20560" groupName="SURESH DAIRY"/>
+    <PartyGroup partyId="20561" groupName="HAJIPOOR -2"/>
+    <PartyGroup partyId="20562" groupName="SUBBAREDDY"/>
+    <PartyGroup partyId="20563" groupName="RANGAPOOR-2"/>
+    <PartyGroup partyId="20564" groupName="SPET"/>
+    <PartyGroup partyId="20565" groupName="PASHA"/>
+    <PartyGroup partyId="20566" groupName="PEDARA"/>
+    <PartyGroup partyId="20567" groupName="KUMMARONIPALLY"/>
+    <PartyGroup partyId="20568" groupName="JANGI REDDY PALLY"/>
+    <PartyGroup partyId="20569" groupName="MADHAVANPALLY"/>
+    <PartyGroup partyId="20570" groupName="MANNANOOR"/>
+    <PartyGroup partyId="20571" groupName="GUWALONIPALLY"/>
+    <PartyGroup partyId="20572" groupName="JINUGUPALLY"/>
+    <PartyGroup partyId="20573" groupName="PULJAL"/>
+    <PartyGroup partyId="20574" groupName="THADOOR"/>
+    <PartyGroup partyId="20575" groupName="CHOUTPALLY"/>
+    <PartyGroup partyId="20576" groupName="LASMAPUR (PN)"/>
+    <PartyGroup partyId="20577" groupName="LINGOTAM"/>
+    <PartyGroup partyId="20578" groupName="CHENNAM PALLY"/>
+    <PartyGroup partyId="20579" groupName="DATTARAM"/>
+    <PartyGroup partyId="20580" groupName="VENKATESHWARLA BAVI"/>
+    <PartyGroup partyId="20581" groupName="CHITLAMKUNTA"/>
+    <PartyGroup partyId="20582" groupName="RENAIAH"/>
+    <PartyGroup partyId="20583" groupName="KOTHARAMNAGAR"/>
+    <PartyGroup partyId="20584" groupName="BOLGATE PALLY"/>
+    <PartyGroup partyId="20585" groupName="AMBATIPALLY"/>
+    <PartyGroup partyId="20586" groupName="JAFFER DAIRY"/>
+    <PartyGroup partyId="20587" groupName="TADOOR-2"/>
+    <PartyGroup partyId="20588" groupName="RAMESH DAIRY"/>
+    <PartyGroup partyId="20589" groupName="AMBAGIRI"/>
+    <PartyGroup partyId="20590" groupName="MANAJIPET"/>
+    <PartyGroup partyId="20591" groupName="PRADEEP"/>
+    <PartyGroup partyId="20592" groupName="LINGOTAM"/>
+    <PartyGroup partyId="20593" groupName="PARSHARAMULU"/>
+    <PartyGroup partyId="20594" groupName="AMBAGIRI"/>
+    <PartyGroup partyId="20595" groupName="VNKGOUD"/>
+    <PartyGroup partyId="20596" groupName="KONDAREDDYPALLY"/>
+    <PartyGroup partyId="20597" groupName="BMCU NAGAR KURNOOL"/>
+    <PartyGroup partyId="20598" groupName="KHILLAGHANPOOR"/>
+    <PartyGroup partyId="20599" groupName="BMCU JEDCHERLA"/>
+    <PartyGroup partyId="20600" groupName="BMCU KOTHAKOTA"/>
+    <PartyGroup partyId="20601" groupName="BMCU MOOSAPET"/>
+    <PartyGroup partyId="20602" groupName="BMCU JAKINALAPALLY"/>
+    <PartyGroup partyId="20603" groupName="BMCU THIMMARASIPALLY"/>
+    <PartyGroup partyId="20604" groupName="BMCU GUNDUR"/>
+    <PartyGroup partyId="20605" groupName="BMCU KOTRA"/>
+    <PartyGroup partyId="20606" groupName="BMCU THANDRA"/>
+    <PartyGroup partyId="20607" groupName="BCU THIMMINONIPALLY"/>
+    <PartyGroup partyId="20608" groupName="BMCU NARAYANAPET"/>
+	    
+	    
+	    
+    <PartyStatus statusId="PARTY_ENABLED" partyId="20626" statusDate="2012-12-06 00:00:00.000"/>
+    <PartyStatus statusId="PARTY_ENABLED" partyId="20627" statusDate="2012-12-06 00:00:00.000"/>
+    <PartyStatus statusId="PARTY_ENABLED" partyId="20628" statusDate="2012-12-06 00:00:00.000"/>
+    <PartyStatus statusId="PARTY_ENABLED" partyId="20629" statusDate="2012-12-06 00:00:00.000"/>
+    <PartyStatus statusId="PARTY_ENABLED" partyId="20630" statusDate="2012-12-06 00:00:00.000"/>
+    <PartyStatus statusId="PARTY_ENABLED" partyId="20631" statusDate="2012-12-06 00:00:00.000"/>
+    <PartyStatus statusId="PARTY_ENABLED" partyId="20632" statusDate="2012-12-06 00:00:00.000"/>
+    <PartyStatus statusId="PARTY_ENABLED" partyId="20633" statusDate="2012-12-06 00:00:00.000"/>
+    <PartyStatus statusId="PARTY_ENABLED" partyId="20634" statusDate="2012-12-06 00:00:00.000"/>
+    <PartyStatus statusId="PARTY_ENABLED" partyId="20635" statusDate="2012-12-06 00:00:00.000"/>
+    <PartyStatus statusId="PARTY_ENABLED" partyId="20636" statusDate="2012-12-06 00:00:00.000"/>
+    <PartyStatus statusId="PARTY_ENABLED" partyId="20637" statusDate="2012-12-06 00:00:00.000"/>
+    <PartyStatus statusId="PARTY_ENABLED" partyId="20638" statusDate="2012-12-06 00:00:00.000"/>
+    <PartyStatus statusId="PARTY_ENABLED" partyId="20639" statusDate="2012-12-06 00:00:00.000"/>
+    <PartyStatus statusId="PARTY_ENABLED" partyId="20640" statusDate="2012-12-06 00:00:00.000"/>
+    <PartyStatus statusId="PARTY_ENABLED" partyId="20641" statusDate="2012-12-06 00:00:00.000"/>
+    <PartyStatus statusId="PARTY_ENABLED" partyId="20642" statusDate="2012-12-06 00:00:00.000"/>
+    <PartyStatus statusId="PARTY_ENABLED" partyId="20643" statusDate="2012-12-06 00:00:00.000"/>
+    <PartyStatus statusId="PARTY_ENABLED" partyId="20644" statusDate="2012-12-06 00:00:00.000"/>
+    <!-- Centers -->
+    <PartyStatus statusId="PARTY_ENABLED" partyId="20000" statusDate="2012-11-15 00:00:00.000"/>
+    <PartyStatus statusId="PARTY_ENABLED" partyId="20001" statusDate="2012-11-15 00:00:00.000"/>
+    <PartyStatus statusId="PARTY_ENABLED" partyId="20002" statusDate="2012-11-15 00:00:00.000"/>
+    <PartyStatus statusId="PARTY_ENABLED" partyId="20003" statusDate="2012-11-15 00:00:00.000"/>
+    <PartyStatus statusId="PARTY_ENABLED" partyId="20004" statusDate="2012-11-15 00:00:00.000"/>
+    <PartyStatus statusId="PARTY_ENABLED" partyId="20005" statusDate="2012-11-15 00:00:00.000"/>
+    <PartyStatus statusId="PARTY_ENABLED" partyId="20006" statusDate="2012-11-15 00:00:00.000"/>
+    <PartyStatus statusId="PARTY_ENABLED" partyId="20007" statusDate="2012-11-15 00:00:00.000"/>
+    <PartyStatus statusId="PARTY_ENABLED" partyId="20008" statusDate="2012-11-15 00:00:00.000"/>
+    <PartyStatus statusId="PARTY_ENABLED" partyId="20009" statusDate="2012-11-15 00:00:00.000"/>
+    <PartyStatus statusId="PARTY_ENABLED" partyId="20010" statusDate="2012-11-15 00:00:00.000"/>
+    <PartyStatus statusId="PARTY_ENABLED" partyId="20011" statusDate="2012-11-15 00:00:00.000"/>
+    <PartyStatus statusId="PARTY_ENABLED" partyId="20012" statusDate="2012-11-15 00:00:00.000"/>
+    <PartyStatus statusId="PARTY_ENABLED" partyId="20013" statusDate="2012-11-15 00:00:00.000"/>
+    <PartyStatus statusId="PARTY_ENABLED" partyId="20014" statusDate="2012-11-15 00:00:00.000"/>
+    <PartyStatus statusId="PARTY_ENABLED" partyId="20015" statusDate="2012-11-15 00:00:00.000"/>
+    <PartyStatus statusId="PARTY_ENABLED" partyId="20016" statusDate="2012-11-15 00:00:00.000"/>
+    <PartyStatus statusId="PARTY_ENABLED" partyId="20017" statusDate="2012-11-15 00:00:00.000"/>
+    <PartyStatus statusId="PARTY_ENABLED" partyId="20018" statusDate="2012-11-15 00:00:00.000"/>
+    <PartyStatus statusId="PARTY_ENABLED" partyId="20019" statusDate="2012-11-15 00:00:00.000"/>
+    <PartyStatus statusId="PARTY_ENABLED" partyId="20020" statusDate="2012-11-15 00:00:00.000"/>
+    <PartyStatus statusId="PARTY_ENABLED" partyId="20021" statusDate="2012-11-15 00:00:00.000"/>
+    <PartyStatus statusId="PARTY_ENABLED" partyId="20022" statusDate="2012-11-15 00:00:00.000"/>
+    <PartyStatus statusId="PARTY_ENABLED" partyId="20023" statusDate="2012-11-15 00:00:00.000"/>
+    <PartyStatus statusId="PARTY_ENABLED" partyId="20024" statusDate="2012-11-15 00:00:00.000"/>
+    <PartyStatus statusId="PARTY_ENABLED" partyId="20025" statusDate="2012-11-15 00:00:00.000"/>
+    <PartyStatus statusId="PARTY_ENABLED" partyId="20026" statusDate="2012-11-15 00:00:00.000"/>
+    <PartyStatus statusId="PARTY_ENABLED" partyId="20027" statusDate="2012-11-15 00:00:00.000"/>
+    <PartyStatus statusId="PARTY_ENABLED" partyId="20028" statusDate="2012-11-15 00:00:00.000"/>
+    <PartyStatus statusId="PARTY_ENABLED" partyId="20029" statusDate="2012-11-15 00:00:00.000"/>
+    <PartyStatus statusId="PARTY_ENABLED" partyId="20030" statusDate="2012-11-15 00:00:00.000"/>
+    <PartyStatus statusId="PARTY_ENABLED" partyId="20031" statusDate="2012-11-15 00:00:00.000"/>
+    <PartyStatus statusId="PARTY_ENABLED" partyId="20032" statusDate="2012-11-15 00:00:00.000"/>
+    <PartyStatus statusId="PARTY_ENABLED" partyId="20033" statusDate="2012-11-15 00:00:00.000"/>
+    <PartyStatus statusId="PARTY_ENABLED" partyId="20034" statusDate="2012-11-15 00:00:00.000"/>
+    <PartyStatus statusId="PARTY_ENABLED" partyId="20035" statusDate="2012-11-15 00:00:00.000"/>
+    <PartyStatus statusId="PARTY_ENABLED" partyId="20036" statusDate="2012-11-15 00:00:00.000"/>
+    <PartyStatus statusId="PARTY_ENABLED" partyId="20037" statusDate="2012-11-15 00:00:00.000"/>
+    <PartyStatus statusId="PARTY_ENABLED" partyId="20038" statusDate="2012-11-15 00:00:00.000"/>
+    <PartyStatus statusId="PARTY_ENABLED" partyId="20039" statusDate="2012-11-15 00:00:00.000"/>
+    <PartyStatus statusId="PARTY_ENABLED" partyId="20040" statusDate="2012-11-15 00:00:00.000"/>
+    <PartyStatus statusId="PARTY_ENABLED" partyId="20041" statusDate="2012-11-15 00:00:00.000"/>
+    <PartyStatus statusId="PARTY_ENABLED" partyId="20042" statusDate="2012-11-15 00:00:00.000"/>
+    <PartyStatus statusId="PARTY_ENABLED" partyId="20043" statusDate="2012-11-15 00:00:00.000"/>
+    <PartyStatus statusId="PARTY_ENABLED" partyId="20044" statusDate="2012-11-15 00:00:00.000"/>
+    <PartyStatus statusId="PARTY_ENABLED" partyId="20045" statusDate="2012-11-15 00:00:00.000"/>
+    <PartyStatus statusId="PARTY_ENABLED" partyId="20046" statusDate="2012-11-15 00:00:00.000"/>
+    <PartyStatus statusId="PARTY_ENABLED" partyId="20047" statusDate="2012-11-15 00:00:00.000"/>
+    <PartyStatus statusId="PARTY_ENABLED" partyId="20048" statusDate="2012-11-15 00:00:00.000"/>
+    <PartyStatus statusId="PARTY_ENABLED" partyId="20049" statusDate="2012-11-15 00:00:00.000"/>
+    <PartyStatus statusId="PARTY_ENABLED" partyId="20050" statusDate="2012-11-15 00:00:00.000"/>
+    <PartyStatus statusId="PARTY_ENABLED" partyId="20051" statusDate="2012-11-15 00:00:00.000"/>
+    <PartyStatus statusId="PARTY_ENABLED" partyId="20052" statusDate="2012-11-15 00:00:00.000"/>
+    <PartyStatus statusId="PARTY_ENABLED" partyId="20053" statusDate="2012-11-15 00:00:00.000"/>
+    <PartyStatus statusId="PARTY_ENABLED" partyId="20054" statusDate="2012-11-15 00:00:00.000"/>
+    <PartyStatus statusId="PARTY_ENABLED" partyId="20055" statusDate="2012-11-15 00:00:00.000"/>
+    <PartyStatus statusId="PARTY_ENABLED" partyId="20056" statusDate="2012-11-15 00:00:00.000"/>
+    <PartyStatus statusId="PARTY_ENABLED" partyId="20057" statusDate="2012-11-15 00:00:00.000"/>
+    <PartyStatus statusId="PARTY_ENABLED" partyId="20058" statusDate="2012-11-15 00:00:00.000"/>
+    <PartyStatus statusId="PARTY_ENABLED" partyId="20059" statusDate="2012-11-15 00:00:00.000"/>
+    <PartyStatus statusId="PARTY_ENABLED" partyId="20060" statusDate="2012-11-15 00:00:00.000"/>
+    <PartyStatus statusId="PARTY_ENABLED" partyId="20061" statusDate="2012-11-15 00:00:00.000"/>
+    <PartyStatus statusId="PARTY_ENABLED" partyId="20062" statusDate="2012-11-15 00:00:00.000"/>
+    <PartyStatus statusId="PARTY_ENABLED" partyId="20063" statusDate="2012-11-15 00:00:00.000"/>
+    <PartyStatus statusId="PARTY_ENABLED" partyId="20064" statusDate="2012-11-15 00:00:00.000"/>
+    <PartyStatus statusId="PARTY_ENABLED" partyId="20065" statusDate="2012-11-15 00:00:00.000"/>
+    <PartyStatus statusId="PARTY_ENABLED" partyId="20066" statusDate="2012-11-15 00:00:00.000"/>
+    <PartyStatus statusId="PARTY_ENABLED" partyId="20067" statusDate="2012-11-15 00:00:00.000"/>
+    <PartyStatus statusId="PARTY_ENABLED" partyId="20068" statusDate="2012-11-15 00:00:00.000"/>
+    <PartyStatus statusId="PARTY_ENABLED" partyId="20069" statusDate="2012-11-15 00:00:00.000"/>
+    <PartyStatus statusId="PARTY_ENABLED" partyId="20070" statusDate="2012-11-15 00:00:00.000"/>
+    <PartyStatus statusId="PARTY_ENABLED" partyId="20071" statusDate="2012-11-15 00:00:00.000"/>
+    <PartyStatus statusId="PARTY_ENABLED" partyId="20072" statusDate="2012-11-15 00:00:00.000"/>
+    <PartyStatus statusId="PARTY_ENABLED" partyId="20073" statusDate="2012-11-15 00:00:00.000"/>
+    <PartyStatus statusId="PARTY_ENABLED" partyId="20074" statusDate="2012-11-15 00:00:00.000"/>
+    <PartyStatus statusId="PARTY_ENABLED" partyId="20075" statusDate="2012-11-15 00:00:00.000"/>
+    <PartyStatus statusId="PARTY_ENABLED" partyId="20076" statusDate="2012-11-15 00:00:00.000"/>
+    <PartyStatus statusId="PARTY_ENABLED" partyId="20077" statusDate="2012-11-15 00:00:00.000"/>
+    <PartyStatus statusId="PARTY_ENABLED" partyId="20078" statusDate="2012-11-15 00:00:00.000"/>
+    <PartyStatus statusId="PARTY_ENABLED" partyId="20079" statusDate="2012-11-15 00:00:00.000"/>
+    <PartyStatus statusId="PARTY_ENABLED" partyId="20080" statusDate="2012-11-15 00:00:00.000"/>
+    <PartyStatus statusId="PARTY_ENABLED" partyId="20081" statusDate="2012-11-15 00:00:00.000"/>
+    <PartyStatus statusId="PARTY_ENABLED" partyId="20082" statusDate="2012-11-15 00:00:00.000"/>
+    <PartyStatus statusId="PARTY_ENABLED" partyId="20083" statusDate="2012-11-15 00:00:00.000"/>
+    <PartyStatus statusId="PARTY_ENABLED" partyId="20084" statusDate="2012-11-15 00:00:00.000"/>
+    <PartyStatus statusId="PARTY_ENABLED" partyId="20085" statusDate="2012-11-15 00:00:00.000"/>
+    <PartyStatus statusId="PARTY_ENABLED" partyId="20086" statusDate="2012-11-15 00:00:00.000"/>
+    <PartyStatus statusId="PARTY_ENABLED" partyId="20087" statusDate="2012-11-15 00:00:00.000"/>
+    <PartyStatus statusId="PARTY_ENABLED" partyId="20088" statusDate="2012-11-15 00:00:00.000"/>
+    <PartyStatus statusId="PARTY_ENABLED" partyId="20089" statusDate="2012-11-15 00:00:00.000"/>
+    <PartyStatus statusId="PARTY_ENABLED" partyId="20090" statusDate="2012-11-15 00:00:00.000"/>
+    <PartyStatus statusId="PARTY_ENABLED" partyId="20091" statusDate="2012-11-15 00:00:00.000"/>
+    <PartyStatus statusId="PARTY_ENABLED" partyId="20092" statusDate="2012-11-15 00:00:00.000"/>
+    <PartyStatus statusId="PARTY_ENABLED" partyId="20093" statusDate="2012-11-15 00:00:00.000"/>
+    <PartyStatus statusId="PARTY_ENABLED" partyId="20094" statusDate="2012-11-15 00:00:00.000"/>
+    <PartyStatus statusId="PARTY_ENABLED" partyId="20095" statusDate="2012-11-15 00:00:00.000"/>
+    <PartyStatus statusId="PARTY_ENABLED" partyId="20096" statusDate="2012-11-15 00:00:00.000"/>
+    <PartyStatus statusId="PARTY_ENABLED" partyId="20097" statusDate="2012-11-15 00:00:00.000"/>
+    <PartyStatus statusId="PARTY_ENABLED" partyId="20098" statusDate="2012-11-15 00:00:00.000"/>
+    <PartyStatus statusId="PARTY_ENABLED" partyId="20099" statusDate="2012-11-15 00:00:00.000"/>
+    <PartyStatus statusId="PARTY_ENABLED" partyId="20100" statusDate="2012-11-15 00:00:00.000"/>
+    <PartyStatus statusId="PARTY_ENABLED" partyId="20101" statusDate="2012-11-15 00:00:00.000"/>
+    <PartyStatus statusId="PARTY_ENABLED" partyId="20102" statusDate="2012-11-15 00:00:00.000"/>
+    <PartyStatus statusId="PARTY_ENABLED" partyId="20103" statusDate="2012-11-15 00:00:00.000"/>
+    <PartyStatus statusId="PARTY_ENABLED" partyId="20104" statusDate="2012-11-15 00:00:00.000"/>
+    <PartyStatus statusId="PARTY_ENABLED" partyId="20105" statusDate="2012-11-15 00:00:00.000"/>
+    <PartyStatus statusId="PARTY_ENABLED" partyId="20106" statusDate="2012-11-15 00:00:00.000"/>
+    <PartyStatus statusId="PARTY_ENABLED" partyId="20107" statusDate="2012-11-15 00:00:00.000"/>
+    <PartyStatus statusId="PARTY_ENABLED" partyId="20108" statusDate="2012-11-15 00:00:00.000"/>
+    <PartyStatus statusId="PARTY_ENABLED" partyId="20109" statusDate="2012-11-15 00:00:00.000"/>
+    <PartyStatus statusId="PARTY_ENABLED" partyId="20110" statusDate="2012-11-15 00:00:00.000"/>
+    <PartyStatus statusId="PARTY_ENABLED" partyId="20111" statusDate="2012-11-15 00:00:00.000"/>
+    <PartyStatus statusId="PARTY_ENABLED" partyId="20112" statusDate="2012-11-15 00:00:00.000"/>
+    <PartyStatus statusId="PARTY_ENABLED" partyId="20113" statusDate="2012-11-15 00:00:00.000"/>
+    <PartyStatus statusId="PARTY_ENABLED" partyId="20114" statusDate="2012-11-15 00:00:00.000"/>
+    <PartyStatus statusId="PARTY_ENABLED" partyId="20115" statusDate="2012-11-15 00:00:00.000"/>
+    <PartyStatus statusId="PARTY_ENABLED" partyId="20116" statusDate="2012-11-15 00:00:00.000"/>
+    <PartyStatus statusId="PARTY_ENABLED" partyId="20117" statusDate="2012-11-15 00:00:00.000"/>
+    <PartyStatus statusId="PARTY_ENABLED" partyId="20118" statusDate="2012-11-15 00:00:00.000"/>
+    <PartyStatus statusId="PARTY_ENABLED" partyId="20119" statusDate="2012-11-15 00:00:00.000"/>
+    <PartyStatus statusId="PARTY_ENABLED" partyId="20120" statusDate="2012-11-15 00:00:00.000"/>
+    <PartyStatus statusId="PARTY_ENABLED" partyId="20121" statusDate="2012-11-15 00:00:00.000"/>
+    <PartyStatus statusId="PARTY_ENABLED" partyId="20122" statusDate="2012-11-15 00:00:00.000"/>
+    <PartyStatus statusId="PARTY_ENABLED" partyId="20123" statusDate="2012-11-15 00:00:00.000"/>
+    <PartyStatus statusId="PARTY_ENABLED" partyId="20124" statusDate="2012-11-15 00:00:00.000"/>
+    <PartyStatus statusId="PARTY_ENABLED" partyId="20125" statusDate="2012-11-15 00:00:00.000"/>
+    <PartyStatus statusId="PARTY_ENABLED" partyId="20126" statusDate="2012-11-15 00:00:00.000"/>
+    <PartyStatus statusId="PARTY_ENABLED" partyId="20127" statusDate="2012-11-15 00:00:00.000"/>
+    <PartyStatus statusId="PARTY_ENABLED" partyId="20128" statusDate="2012-11-15 00:00:00.000"/>
+    <PartyStatus statusId="PARTY_ENABLED" partyId="20129" statusDate="2012-11-15 00:00:00.000"/>
+    <PartyStatus statusId="PARTY_ENABLED" partyId="20130" statusDate="2012-11-15 00:00:00.000"/>
+    <PartyStatus statusId="PARTY_ENABLED" partyId="20131" statusDate="2012-11-15 00:00:00.000"/>
+    <PartyStatus statusId="PARTY_ENABLED" partyId="20132" statusDate="2012-11-15 00:00:00.000"/>
+    <PartyStatus statusId="PARTY_ENABLED" partyId="20133" statusDate="2012-11-15 00:00:00.000"/>
+    <PartyStatus statusId="PARTY_ENABLED" partyId="20134" statusDate="2012-11-15 00:00:00.000"/>
+    <PartyStatus statusId="PARTY_ENABLED" partyId="20135" statusDate="2012-11-15 00:00:00.000"/>
+    <PartyStatus statusId="PARTY_ENABLED" partyId="20136" statusDate="2012-11-15 00:00:00.000"/>
+    <PartyStatus statusId="PARTY_ENABLED" partyId="20137" statusDate="2012-11-15 00:00:00.000"/>
+    <PartyStatus statusId="PARTY_ENABLED" partyId="20138" statusDate="2012-11-15 00:00:00.000"/>
+    <PartyStatus statusId="PARTY_ENABLED" partyId="20139" statusDate="2012-11-15 00:00:00.000"/>
+    <PartyStatus statusId="PARTY_ENABLED" partyId="20140" statusDate="2012-11-15 00:00:00.000"/>
+    <PartyStatus statusId="PARTY_ENABLED" partyId="20141" statusDate="2012-11-15 00:00:00.000"/>
+    <PartyStatus statusId="PARTY_ENABLED" partyId="20142" statusDate="2012-11-15 00:00:00.000"/>
+    <PartyStatus statusId="PARTY_ENABLED" partyId="20143" statusDate="2012-11-15 00:00:00.000"/>
+    <PartyStatus statusId="PARTY_ENABLED" partyId="20144" statusDate="2012-11-15 00:00:00.000"/>
+    <PartyStatus statusId="PARTY_ENABLED" partyId="20145" statusDate="2012-11-15 00:00:00.000"/>
+    <PartyStatus statusId="PARTY_ENABLED" partyId="20146" statusDate="2012-11-15 00:00:00.000"/>
+    <PartyStatus statusId="PARTY_ENABLED" partyId="20147" statusDate="2012-11-15 00:00:00.000"/>
+    <PartyStatus statusId="PARTY_ENABLED" partyId="20148" statusDate="2012-11-15 00:00:00.000"/>
+    <PartyStatus statusId="PARTY_ENABLED" partyId="20149" statusDate="2012-11-15 00:00:00.000"/>
+    <PartyStatus statusId="PARTY_ENABLED" partyId="20150" statusDate="2012-11-15 00:00:00.000"/>
+    <PartyStatus statusId="PARTY_ENABLED" partyId="20151" statusDate="2012-11-15 00:00:00.000"/>
+    <PartyStatus statusId="PARTY_ENABLED" partyId="20152" statusDate="2012-11-15 00:00:00.000"/>
+    <PartyStatus statusId="PARTY_ENABLED" partyId="20153" statusDate="2012-11-15 00:00:00.000"/>
+    <PartyStatus statusId="PARTY_ENABLED" partyId="20154" statusDate="2012-11-15 00:00:00.000"/>
+    <PartyStatus statusId="PARTY_ENABLED" partyId="20155" statusDate="2012-11-15 00:00:00.000"/>
+    <PartyStatus statusId="PARTY_ENABLED" partyId="20156" statusDate="2012-11-15 00:00:00.000"/>
+    <PartyStatus statusId="PARTY_ENABLED" partyId="20157" statusDate="2012-11-15 00:00:00.000"/>
+    <PartyStatus statusId="PARTY_ENABLED" partyId="20158" statusDate="2012-11-15 00:00:00.000"/>
+    <PartyStatus statusId="PARTY_ENABLED" partyId="20159" statusDate="2012-11-15 00:00:00.000"/>
+    <PartyStatus statusId="PARTY_ENABLED" partyId="20160" statusDate="2012-11-15 00:00:00.000"/>
+    <PartyStatus statusId="PARTY_ENABLED" partyId="20161" statusDate="2012-11-15 00:00:00.000"/>
+    <PartyStatus statusId="PARTY_ENABLED" partyId="20162" statusDate="2012-11-15 00:00:00.000"/>
+    <PartyStatus statusId="PARTY_ENABLED" partyId="20163" statusDate="2012-11-15 00:00:00.000"/>
+    <PartyStatus statusId="PARTY_ENABLED" partyId="20164" statusDate="2012-11-15 00:00:00.000"/>
+    <PartyStatus statusId="PARTY_ENABLED" partyId="20165" statusDate="2012-11-15 00:00:00.000"/>
+    <PartyStatus statusId="PARTY_ENABLED" partyId="20166" statusDate="2012-11-15 00:00:00.000"/>
+    <PartyStatus statusId="PARTY_ENABLED" partyId="20167" statusDate="2012-11-15 00:00:00.000"/>
+    <PartyStatus statusId="PARTY_ENABLED" partyId="20168" statusDate="2012-11-15 00:00:00.000"/>
+    <PartyStatus statusId="PARTY_ENABLED" partyId="20169" statusDate="2012-11-15 00:00:00.000"/>
+    <PartyStatus statusId="PARTY_ENABLED" partyId="20170" statusDate="2012-11-15 00:00:00.000"/>
+    <PartyStatus statusId="PARTY_ENABLED" partyId="20171" statusDate="2012-11-15 00:00:00.000"/>
+    <PartyStatus statusId="PARTY_ENABLED" partyId="20172" statusDate="2012-11-15 00:00:00.000"/>
+    <PartyStatus statusId="PARTY_ENABLED" partyId="20173" statusDate="2012-11-15 00:00:00.000"/>
+    <PartyStatus statusId="PARTY_ENABLED" partyId="20174" statusDate="2012-11-15 00:00:00.000"/>
+    <PartyStatus statusId="PARTY_ENABLED" partyId="20175" statusDate="2012-11-15 00:00:00.000"/>
+    <PartyStatus statusId="PARTY_ENABLED" partyId="20176" statusDate="2012-11-15 00:00:00.000"/>
+    <PartyStatus statusId="PARTY_ENABLED" partyId="20177" statusDate="2012-11-15 00:00:00.000"/>
+    <PartyStatus statusId="PARTY_ENABLED" partyId="20178" statusDate="2012-11-15 00:00:00.000"/>
+    <PartyStatus statusId="PARTY_ENABLED" partyId="20179" statusDate="2012-11-15 00:00:00.000"/>
+    <PartyStatus statusId="PARTY_ENABLED" partyId="20180" statusDate="2012-11-15 00:00:00.000"/>
+    <PartyStatus statusId="PARTY_ENABLED" partyId="20181" statusDate="2012-11-15 00:00:00.000"/>
+    <PartyStatus statusId="PARTY_ENABLED" partyId="20182" statusDate="2012-11-15 00:00:00.000"/>
+    <PartyStatus statusId="PARTY_ENABLED" partyId="20183" statusDate="2012-11-15 00:00:00.000"/>
+    <PartyStatus statusId="PARTY_ENABLED" partyId="20184" statusDate="2012-11-15 00:00:00.000"/>
+    <PartyStatus statusId="PARTY_ENABLED" partyId="20185" statusDate="2012-11-15 00:00:00.000"/>
+    <PartyStatus statusId="PARTY_ENABLED" partyId="20186" statusDate="2012-11-15 00:00:00.000"/>
+    <PartyStatus statusId="PARTY_ENABLED" partyId="20187" statusDate="2012-11-15 00:00:00.000"/>
+    <PartyStatus statusId="PARTY_ENABLED" partyId="20188" statusDate="2012-11-15 00:00:00.000"/>
+    <PartyStatus statusId="PARTY_ENABLED" partyId="20189" statusDate="2012-11-15 00:00:00.000"/>
+    <PartyStatus statusId="PARTY_ENABLED" partyId="20190" statusDate="2012-11-15 00:00:00.000"/>
+    <PartyStatus statusId="PARTY_ENABLED" partyId="20191" statusDate="2012-11-15 00:00:00.000"/>
+    <PartyStatus statusId="PARTY_ENABLED" partyId="20192" statusDate="2012-11-15 00:00:00.000"/>
+    <PartyStatus statusId="PARTY_ENABLED" partyId="20193" statusDate="2012-11-15 00:00:00.000"/>
+    <PartyStatus statusId="PARTY_ENABLED" partyId="20194" statusDate="2012-11-15 00:00:00.000"/>
+    <PartyStatus statusId="PARTY_ENABLED" partyId="20195" statusDate="2012-11-15 00:00:00.000"/>
+    <PartyStatus statusId="PARTY_ENABLED" partyId="20196" statusDate="2012-11-15 00:00:00.000"/>
+    <PartyStatus statusId="PARTY_ENABLED" partyId="20197" statusDate="2012-11-15 00:00:00.000"/>
+    <PartyStatus statusId="PARTY_ENABLED" partyId="20198" statusDate="2012-11-15 00:00:00.000"/>
+    <PartyStatus statusId="PARTY_ENABLED" partyId="20199" statusDate="2012-11-15 00:00:00.000"/>
+    <PartyStatus statusId="PARTY_ENABLED" partyId="20200" statusDate="2012-11-15 00:00:00.000"/>
+    <PartyStatus statusId="PARTY_ENABLED" partyId="20201" statusDate="2012-11-15 00:00:00.000"/>
+    <PartyStatus statusId="PARTY_ENABLED" partyId="20202" statusDate="2012-11-15 00:00:00.000"/>
+    <PartyStatus statusId="PARTY_ENABLED" partyId="20203" statusDate="2012-11-15 00:00:00.000"/>
+    <PartyStatus statusId="PARTY_ENABLED" partyId="20204" statusDate="2012-11-15 00:00:00.000"/>
+    <PartyStatus statusId="PARTY_ENABLED" partyId="20205" statusDate="2012-11-15 00:00:00.000"/>
+    <PartyStatus statusId="PARTY_ENABLED" partyId="20206" statusDate="2012-11-15 00:00:00.000"/>
+    <PartyStatus statusId="PARTY_ENABLED" partyId="20207" statusDate="2012-11-15 00:00:00.000"/>
+    <PartyStatus statusId="PARTY_ENABLED" partyId="20208" statusDate="2012-11-15 00:00:00.000"/>
+    <PartyStatus statusId="PARTY_ENABLED" partyId="20209" statusDate="2012-11-15 00:00:00.000"/>
+    <PartyStatus statusId="PARTY_ENABLED" partyId="20210" statusDate="2012-11-15 00:00:00.000"/>
+    <PartyStatus statusId="PARTY_ENABLED" partyId="20211" statusDate="2012-11-15 00:00:00.000"/>
+    <PartyStatus statusId="PARTY_ENABLED" partyId="20212" statusDate="2012-11-15 00:00:00.000"/>
+    <PartyStatus statusId="PARTY_ENABLED" partyId="20213" statusDate="2012-11-15 00:00:00.000"/>
+    <PartyStatus statusId="PARTY_ENABLED" partyId="20214" statusDate="2012-11-15 00:00:00.000"/>
+    <PartyStatus statusId="PARTY_ENABLED" partyId="20215" statusDate="2012-11-15 00:00:00.000"/>
+    <PartyStatus statusId="PARTY_ENABLED" partyId="20216" statusDate="2012-11-15 00:00:00.000"/>
+    <PartyStatus statusId="PARTY_ENABLED" partyId="20217" statusDate="2012-11-15 00:00:00.000"/>
+    <PartyStatus statusId="PARTY_ENABLED" partyId="20218" statusDate="2012-11-15 00:00:00.000"/>
+    <PartyStatus statusId="PARTY_ENABLED" partyId="20219" statusDate="2012-11-15 00:00:00.000"/>
+    <PartyStatus statusId="PARTY_ENABLED" partyId="20220" statusDate="2012-11-15 00:00:00.000"/>
+    <PartyStatus statusId="PARTY_ENABLED" partyId="20221" statusDate="2012-11-15 00:00:00.000"/>
+    <PartyStatus statusId="PARTY_ENABLED" partyId="20222" statusDate="2012-11-15 00:00:00.000"/>
+    <PartyStatus statusId="PARTY_ENABLED" partyId="20223" statusDate="2012-11-15 00:00:00.000"/>
+    <PartyStatus statusId="PARTY_ENABLED" partyId="20224" statusDate="2012-11-15 00:00:00.000"/>
+    <PartyStatus statusId="PARTY_ENABLED" partyId="20225" statusDate="2012-11-15 00:00:00.000"/>
+    <PartyStatus statusId="PARTY_ENABLED" partyId="20226" statusDate="2012-11-15 00:00:00.000"/>
+    <PartyStatus statusId="PARTY_ENABLED" partyId="20227" statusDate="2012-11-15 00:00:00.000"/>
+    <PartyStatus statusId="PARTY_ENABLED" partyId="20228" statusDate="2012-11-15 00:00:00.000"/>
+    <PartyStatus statusId="PARTY_ENABLED" partyId="20229" statusDate="2012-11-15 00:00:00.000"/>
+    <PartyStatus statusId="PARTY_ENABLED" partyId="20230" statusDate="2012-11-15 00:00:00.000"/>
+    <PartyStatus statusId="PARTY_ENABLED" partyId="20231" statusDate="2012-11-15 00:00:00.000"/>
+    <PartyStatus statusId="PARTY_ENABLED" partyId="20232" statusDate="2012-11-15 00:00:00.000"/>
+    <PartyStatus statusId="PARTY_ENABLED" partyId="20233" statusDate="2012-11-15 00:00:00.000"/>
+    <PartyStatus statusId="PARTY_ENABLED" partyId="20234" statusDate="2012-11-15 00:00:00.000"/>
+    <PartyStatus statusId="PARTY_ENABLED" partyId="20235" statusDate="2012-11-15 00:00:00.000"/>
+    <PartyStatus statusId="PARTY_ENABLED" partyId="20236" statusDate="2012-11-15 00:00:00.000"/>
+    <PartyStatus statusId="PARTY_ENABLED" partyId="20237" statusDate="2012-11-15 00:00:00.000"/>
+    <PartyStatus statusId="PARTY_ENABLED" partyId="20238" statusDate="2012-11-15 00:00:00.000"/>
+    <PartyStatus statusId="PARTY_ENABLED" partyId="20239" statusDate="2012-11-15 00:00:00.000"/>
+    <PartyStatus statusId="PARTY_ENABLED" partyId="20240" statusDate="2012-11-15 00:00:00.000"/>
+    <PartyStatus statusId="PARTY_ENABLED" partyId="20241" statusDate="2012-11-15 00:00:00.000"/>
+    <PartyStatus statusId="PARTY_ENABLED" partyId="20242" statusDate="2012-11-15 00:00:00.000"/>
+    <PartyStatus statusId="PARTY_ENABLED" partyId="20243" statusDate="2012-11-15 00:00:00.000"/>
+    <PartyStatus statusId="PARTY_ENABLED" partyId="20244" statusDate="2012-11-15 00:00:00.000"/>
+    <PartyStatus statusId="PARTY_ENABLED" partyId="20245" statusDate="2012-11-15 00:00:00.000"/>
+    <PartyStatus statusId="PARTY_ENABLED" partyId="20246" statusDate="2012-11-15 00:00:00.000"/>
+    <PartyStatus statusId="PARTY_ENABLED" partyId="20247" statusDate="2012-11-15 00:00:00.000"/>
+    <PartyStatus statusId="PARTY_ENABLED" partyId="20248" statusDate="2012-11-15 00:00:00.000"/>
+    <PartyStatus statusId="PARTY_ENABLED" partyId="20249" statusDate="2012-11-15 00:00:00.000"/>
+    <PartyStatus statusId="PARTY_ENABLED" partyId="20250" statusDate="2012-11-15 00:00:00.000"/>
+    <PartyStatus statusId="PARTY_ENABLED" partyId="20251" statusDate="2012-11-15 00:00:00.000"/>
+    <PartyStatus statusId="PARTY_ENABLED" partyId="20252" statusDate="2012-11-15 00:00:00.000"/>
+    <PartyStatus statusId="PARTY_ENABLED" partyId="20253" statusDate="2012-11-15 00:00:00.000"/>
+    <PartyStatus statusId="PARTY_ENABLED" partyId="20254" statusDate="2012-11-15 00:00:00.000"/>
+    <PartyStatus statusId="PARTY_ENABLED" partyId="20255" statusDate="2012-11-15 00:00:00.000"/>
+    <PartyStatus statusId="PARTY_ENABLED" partyId="20256" statusDate="2012-11-15 00:00:00.000"/>
+    <PartyStatus statusId="PARTY_ENABLED" partyId="20257" statusDate="2012-11-15 00:00:00.000"/>
+    <PartyStatus statusId="PARTY_ENABLED" partyId="20258" statusDate="2012-11-15 00:00:00.000"/>
+    <PartyStatus statusId="PARTY_ENABLED" partyId="20259" statusDate="2012-11-15 00:00:00.000"/>
+    <PartyStatus statusId="PARTY_ENABLED" partyId="20260" statusDate="2012-11-15 00:00:00.000"/>
+    <PartyStatus statusId="PARTY_ENABLED" partyId="20261" statusDate="2012-11-15 00:00:00.000"/>
+    <PartyStatus statusId="PARTY_ENABLED" partyId="20262" statusDate="2012-11-15 00:00:00.000"/>
+    <PartyStatus statusId="PARTY_ENABLED" partyId="20263" statusDate="2012-11-15 00:00:00.000"/>
+    <PartyStatus statusId="PARTY_ENABLED" partyId="20264" statusDate="2012-11-15 00:00:00.000"/>
+    <PartyStatus statusId="PARTY_ENABLED" partyId="20265" statusDate="2012-11-15 00:00:00.000"/>
+    <PartyStatus statusId="PARTY_ENABLED" partyId="20266" statusDate="2012-11-15 00:00:00.000"/>
+    <PartyStatus statusId="PARTY_ENABLED" partyId="20267" statusDate="2012-11-15 00:00:00.000"/>
+    <PartyStatus statusId="PARTY_ENABLED" partyId="20268" statusDate="2012-11-15 00:00:00.000"/>
+    <PartyStatus statusId="PARTY_ENABLED" partyId="20269" statusDate="2012-11-15 00:00:00.000"/>
+    <PartyStatus statusId="PARTY_ENABLED" partyId="20270" statusDate="2012-11-15 00:00:00.000"/>
+    <PartyStatus statusId="PARTY_ENABLED" partyId="20271" statusDate="2012-11-15 00:00:00.000"/>
+    <PartyStatus statusId="PARTY_ENABLED" partyId="20272" statusDate="2012-11-15 00:00:00.000"/>
+    <PartyStatus statusId="PARTY_ENABLED" partyId="20273" statusDate="2012-11-15 00:00:00.000"/>
+    <PartyStatus statusId="PARTY_ENABLED" partyId="20274" statusDate="2012-11-15 00:00:00.000"/>
+    <PartyStatus statusId="PARTY_ENABLED" partyId="20275" statusDate="2012-11-15 00:00:00.000"/>
+    <PartyStatus statusId="PARTY_ENABLED" partyId="20276" statusDate="2012-11-15 00:00:00.000"/>
+    <PartyStatus statusId="PARTY_ENABLED" partyId="20277" statusDate="2012-11-15 00:00:00.000"/>
+    <PartyStatus statusId="PARTY_ENABLED" partyId="20278" statusDate="2012-11-15 00:00:00.000"/>
+    <PartyStatus statusId="PARTY_ENABLED" partyId="20279" statusDate="2012-11-15 00:00:00.000"/>
+    <PartyStatus statusId="PARTY_ENABLED" partyId="20280" statusDate="2012-11-15 00:00:00.000"/>
+    <PartyStatus statusId="PARTY_ENABLED" partyId="20281" statusDate="2012-11-15 00:00:00.000"/>
+    <PartyStatus statusId="PARTY_ENABLED" partyId="20282" statusDate="2012-11-15 00:00:00.000"/>
+    <PartyStatus statusId="PARTY_ENABLED" partyId="20283" statusDate="2012-11-15 00:00:00.000"/>
+    <PartyStatus statusId="PARTY_ENABLED" partyId="20284" statusDate="2012-11-15 00:00:00.000"/>
+    <PartyStatus statusId="PARTY_ENABLED" partyId="20285" statusDate="2012-11-15 00:00:00.000"/>
+    <PartyStatus statusId="PARTY_ENABLED" partyId="20286" statusDate="2012-11-15 00:00:00.000"/>
+    <PartyStatus statusId="PARTY_ENABLED" partyId="20287" statusDate="2012-11-15 00:00:00.000"/>
+    <PartyStatus statusId="PARTY_ENABLED" partyId="20288" statusDate="2012-11-15 00:00:00.000"/>
+    <PartyStatus statusId="PARTY_ENABLED" partyId="20289" statusDate="2012-11-15 00:00:00.000"/>
+    <PartyStatus statusId="PARTY_ENABLED" partyId="20290" statusDate="2012-11-15 00:00:00.000"/>
+    <PartyStatus statusId="PARTY_ENABLED" partyId="20291" statusDate="2012-11-15 00:00:00.000"/>
+    <PartyStatus statusId="PARTY_ENABLED" partyId="20292" statusDate="2012-11-15 00:00:00.000"/>
+    <PartyStatus statusId="PARTY_ENABLED" partyId="20293" statusDate="2012-11-15 00:00:00.000"/>
+    <PartyStatus statusId="PARTY_ENABLED" partyId="20294" statusDate="2012-11-15 00:00:00.000"/>
+    <PartyStatus statusId="PARTY_ENABLED" partyId="20295" statusDate="2012-11-15 00:00:00.000"/>
+    <PartyStatus statusId="PARTY_ENABLED" partyId="20296" statusDate="2012-11-15 00:00:00.000"/>
+    <PartyStatus statusId="PARTY_ENABLED" partyId="20297" statusDate="2012-11-15 00:00:00.000"/>
+    <PartyStatus statusId="PARTY_ENABLED" partyId="20298" statusDate="2012-11-15 00:00:00.000"/>
+    <PartyStatus statusId="PARTY_ENABLED" partyId="20299" statusDate="2012-11-15 00:00:00.000"/>
+    <PartyStatus statusId="PARTY_ENABLED" partyId="20300" statusDate="2012-11-15 00:00:00.000"/>
+    <PartyStatus statusId="PARTY_ENABLED" partyId="20301" statusDate="2012-11-15 00:00:00.000"/>
+    <PartyStatus statusId="PARTY_ENABLED" partyId="20302" statusDate="2012-11-15 00:00:00.000"/>
+    <PartyStatus statusId="PARTY_ENABLED" partyId="20303" statusDate="2012-11-15 00:00:00.000"/>
+    <PartyStatus statusId="PARTY_ENABLED" partyId="20304" statusDate="2012-11-15 00:00:00.000"/>
+    <PartyStatus statusId="PARTY_ENABLED" partyId="20305" statusDate="2012-11-15 00:00:00.000"/>
+    <PartyStatus statusId="PARTY_ENABLED" partyId="20306" statusDate="2012-11-15 00:00:00.000"/>
+    <PartyStatus statusId="PARTY_ENABLED" partyId="20307" statusDate="2012-11-15 00:00:00.000"/>
+    <PartyStatus statusId="PARTY_ENABLED" partyId="20308" statusDate="2012-11-15 00:00:00.000"/>
+    <PartyStatus statusId="PARTY_ENABLED" partyId="20309" statusDate="2012-11-15 00:00:00.000"/>
+    <PartyStatus statusId="PARTY_ENABLED" partyId="20310" statusDate="2012-11-15 00:00:00.000"/>
+    <PartyStatus statusId="PARTY_ENABLED" partyId="20311" statusDate="2012-11-15 00:00:00.000"/>
+    <PartyStatus statusId="PARTY_ENABLED" partyId="20312" statusDate="2012-11-15 00:00:00.000"/>
+    <PartyStatus statusId="PARTY_ENABLED" partyId="20313" statusDate="2012-11-15 00:00:00.000"/>
+    <PartyStatus statusId="PARTY_ENABLED" partyId="20314" statusDate="2012-11-15 00:00:00.000"/>
+    <PartyStatus statusId="PARTY_ENABLED" partyId="20315" statusDate="2012-11-15 00:00:00.000"/>
+    <PartyStatus statusId="PARTY_ENABLED" partyId="20316" statusDate="2012-11-15 00:00:00.000"/>
+    <PartyStatus statusId="PARTY_ENABLED" partyId="20317" statusDate="2012-11-15 00:00:00.000"/>
+    <PartyStatus statusId="PARTY_ENABLED" partyId="20318" statusDate="2012-11-15 00:00:00.000"/>
+    <PartyStatus statusId="PARTY_ENABLED" partyId="20319" statusDate="2012-11-15 00:00:00.000"/>
+    <PartyStatus statusId="PARTY_ENABLED" partyId="20320" statusDate="2012-11-15 00:00:00.000"/>
+    <PartyStatus statusId="PARTY_ENABLED" partyId="20321" statusDate="2012-11-15 00:00:00.000"/>
+    <PartyStatus statusId="PARTY_ENABLED" partyId="20322" statusDate="2012-11-15 00:00:00.000"/>
+    <PartyStatus statusId="PARTY_ENABLED" partyId="20323" statusDate="2012-11-15 00:00:00.000"/>
+    <PartyStatus statusId="PARTY_ENABLED" partyId="20324" statusDate="2012-11-15 00:00:00.000"/>
+    <PartyStatus statusId="PARTY_ENABLED" partyId="20325" statusDate="2012-11-15 00:00:00.000"/>
+    <PartyStatus statusId="PARTY_ENABLED" partyId="20326" statusDate="2012-11-15 00:00:00.000"/>
+    <PartyStatus statusId="PARTY_ENABLED" partyId="20327" statusDate="2012-11-15 00:00:00.000"/>
+    <PartyStatus statusId="PARTY_ENABLED" partyId="20328" statusDate="2012-11-15 00:00:00.000"/>
+    <PartyStatus statusId="PARTY_ENABLED" partyId="20329" statusDate="2012-11-15 00:00:00.000"/>
+    <PartyStatus statusId="PARTY_ENABLED" partyId="20330" statusDate="2012-11-15 00:00:00.000"/>
+    <PartyStatus statusId="PARTY_ENABLED" partyId="20331" statusDate="2012-11-15 00:00:00.000"/>
+    <PartyStatus statusId="PARTY_ENABLED" partyId="20332" statusDate="2012-11-15 00:00:00.000"/>
+    <PartyStatus statusId="PARTY_ENABLED" partyId="20333" statusDate="2012-11-15 00:00:00.000"/>
+    <PartyStatus statusId="PARTY_ENABLED" partyId="20334" statusDate="2012-11-15 00:00:00.000"/>
+    <PartyStatus statusId="PARTY_ENABLED" partyId="20335" statusDate="2012-11-15 00:00:00.000"/>
+    <PartyStatus statusId="PARTY_ENABLED" partyId="20336" statusDate="2012-11-15 00:00:00.000"/>
+    <PartyStatus statusId="PARTY_ENABLED" partyId="20337" statusDate="2012-11-15 00:00:00.000"/>
+    <PartyStatus statusId="PARTY_ENABLED" partyId="20338" statusDate="2012-11-15 00:00:00.000"/>
+    <PartyStatus statusId="PARTY_ENABLED" partyId="20339" statusDate="2012-11-15 00:00:00.000"/>
+    <PartyStatus statusId="PARTY_ENABLED" partyId="20340" statusDate="2012-11-15 00:00:00.000"/>
+    <PartyStatus statusId="PARTY_ENABLED" partyId="20341" statusDate="2012-11-15 00:00:00.000"/>
+    <PartyStatus statusId="PARTY_ENABLED" partyId="20342" statusDate="2012-11-15 00:00:00.000"/>
+    <PartyStatus statusId="PARTY_ENABLED" partyId="20343" statusDate="2012-11-15 00:00:00.000"/>
+    <PartyStatus statusId="PARTY_ENABLED" partyId="20344" statusDate="2012-11-15 00:00:00.000"/>
+    <PartyStatus statusId="PARTY_ENABLED" partyId="20345" statusDate="2012-11-15 00:00:00.000"/>
+    <PartyStatus statusId="PARTY_ENABLED" partyId="20346" statusDate="2012-11-15 00:00:00.000"/>
+    <PartyStatus statusId="PARTY_ENABLED" partyId="20347" statusDate="2012-11-15 00:00:00.000"/>
+    <PartyStatus statusId="PARTY_ENABLED" partyId="20348" statusDate="2012-11-15 00:00:00.000"/>
+    <PartyStatus statusId="PARTY_ENABLED" partyId="20349" statusDate="2012-11-15 00:00:00.000"/>
+    <PartyStatus statusId="PARTY_ENABLED" partyId="20350" statusDate="2012-11-15 00:00:00.000"/>
+    <PartyStatus statusId="PARTY_ENABLED" partyId="20351" statusDate="2012-11-15 00:00:00.000"/>
+    <PartyStatus statusId="PARTY_ENABLED" partyId="20352" statusDate="2012-11-15 00:00:00.000"/>
+    <PartyStatus statusId="PARTY_ENABLED" partyId="20353" statusDate="2012-11-15 00:00:00.000"/>
+    <PartyStatus statusId="PARTY_ENABLED" partyId="20354" statusDate="2012-11-15 00:00:00.000"/>
+    <PartyStatus statusId="PARTY_ENABLED" partyId="20355" statusDate="2012-11-15 00:00:00.000"/>
+    <PartyStatus statusId="PARTY_ENABLED" partyId="20356" statusDate="2012-11-15 00:00:00.000"/>
+    <PartyStatus statusId="PARTY_ENABLED" partyId="20357" statusDate="2012-11-15 00:00:00.000"/>
+    <PartyStatus statusId="PARTY_ENABLED" partyId="20358" statusDate="2012-11-15 00:00:00.000"/>
+    <PartyStatus statusId="PARTY_ENABLED" partyId="20359" statusDate="2012-11-15 00:00:00.000"/>
+    <PartyStatus statusId="PARTY_ENABLED" partyId="20360" statusDate="2012-11-15 00:00:00.000"/>
+    <PartyStatus statusId="PARTY_ENABLED" partyId="20361" statusDate="2012-11-15 00:00:00.000"/>
+    <PartyStatus statusId="PARTY_ENABLED" partyId="20362" statusDate="2012-11-15 00:00:00.000"/>
+    <PartyStatus statusId="PARTY_ENABLED" partyId="20363" statusDate="2012-11-15 00:00:00.000"/>
+    <PartyStatus statusId="PARTY_ENABLED" partyId="20364" statusDate="2012-11-15 00:00:00.000"/>
+    <PartyStatus statusId="PARTY_ENABLED" partyId="20365" statusDate="2012-11-15 00:00:00.000"/>
+    <PartyStatus statusId="PARTY_ENABLED" partyId="20366" statusDate="2012-11-15 00:00:00.000"/>
+    <PartyStatus statusId="PARTY_ENABLED" partyId="20367" statusDate="2012-11-15 00:00:00.000"/>
+    <PartyStatus statusId="PARTY_ENABLED" partyId="20368" statusDate="2012-11-15 00:00:00.000"/>
+    <PartyStatus statusId="PARTY_ENABLED" partyId="20369" statusDate="2012-11-15 00:00:00.000"/>
+    <PartyStatus statusId="PARTY_ENABLED" partyId="20370" statusDate="2012-11-15 00:00:00.000"/>
+    <PartyStatus statusId="PARTY_ENABLED" partyId="20371" statusDate="2012-11-15 00:00:00.000"/>
+    <PartyStatus statusId="PARTY_ENABLED" partyId="20372" statusDate="2012-11-15 00:00:00.000"/>
+    <PartyStatus statusId="PARTY_ENABLED" partyId="20373" statusDate="2012-11-15 00:00:00.000"/>
+    <PartyStatus statusId="PARTY_ENABLED" partyId="20374" statusDate="2012-11-15 00:00:00.000"/>
+    <PartyStatus statusId="PARTY_ENABLED" partyId="20375" statusDate="2012-11-15 00:00:00.000"/>
+    <PartyStatus statusId="PARTY_ENABLED" partyId="20376" statusDate="2012-11-15 00:00:00.000"/>
+    <PartyStatus statusId="PARTY_ENABLED" partyId="20377" statusDate="2012-11-15 00:00:00.000"/>
+    <PartyStatus statusId="PARTY_ENABLED" partyId="20378" statusDate="2012-11-15 00:00:00.000"/>
+    <PartyStatus statusId="PARTY_ENABLED" partyId="20379" statusDate="2012-11-15 00:00:00.000"/>
+    <PartyStatus statusId="PARTY_ENABLED" partyId="20380" statusDate="2012-11-15 00:00:00.000"/>
+    <PartyStatus statusId="PARTY_ENABLED" partyId="20381" statusDate="2012-11-15 00:00:00.000"/>
+    <PartyStatus statusId="PARTY_ENABLED" partyId="20382" statusDate="2012-11-15 00:00:00.000"/>
+    <PartyStatus statusId="PARTY_ENABLED" partyId="20383" statusDate="2012-11-15 00:00:00.000"/>
+    <PartyStatus statusId="PARTY_ENABLED" partyId="20384" statusDate="2012-11-15 00:00:00.000"/>
+    <PartyStatus statusId="PARTY_ENABLED" partyId="20385" statusDate="2012-11-15 00:00:00.000"/>
+    <PartyStatus statusId="PARTY_ENABLED" partyId="20386" statusDate="2012-11-15 00:00:00.000"/>
+    <PartyStatus statusId="PARTY_ENABLED" partyId="20387" statusDate="2012-11-15 00:00:00.000"/>
+    <PartyStatus statusId="PARTY_ENABLED" partyId="20388" statusDate="2012-11-15 00:00:00.000"/>
+    <PartyStatus statusId="PARTY_ENABLED" partyId="20389" statusDate="2012-11-15 00:00:00.000"/>
+    <PartyStatus statusId="PARTY_ENABLED" partyId="20390" statusDate="2012-11-15 00:00:00.000"/>
+    <PartyStatus statusId="PARTY_ENABLED" partyId="20391" statusDate="2012-11-15 00:00:00.000"/>
+    <PartyStatus statusId="PARTY_ENABLED" partyId="20392" statusDate="2012-11-15 00:00:00.000"/>
+    <PartyStatus statusId="PARTY_ENABLED" partyId="20393" statusDate="2012-11-15 00:00:00.000"/>
+    <PartyStatus statusId="PARTY_ENABLED" partyId="20394" statusDate="2012-11-15 00:00:00.000"/>
+    <PartyStatus statusId="PARTY_ENABLED" partyId="20395" statusDate="2012-11-15 00:00:00.000"/>
+    <PartyStatus statusId="PARTY_ENABLED" partyId="20396" statusDate="2012-11-15 00:00:00.000"/>
+    <PartyStatus statusId="PARTY_ENABLED" partyId="20397" statusDate="2012-11-15 00:00:00.000"/>
+    <PartyStatus statusId="PARTY_ENABLED" partyId="20398" statusDate="2012-11-15 00:00:00.000"/>
+    <PartyStatus statusId="PARTY_ENABLED" partyId="20399" statusDate="2012-11-15 00:00:00.000"/>
+    <PartyStatus statusId="PARTY_ENABLED" partyId="20400" statusDate="2012-11-15 00:00:00.000"/>
+    <PartyStatus statusId="PARTY_ENABLED" partyId="20401" statusDate="2012-11-15 00:00:00.000"/>
+    <PartyStatus statusId="PARTY_ENABLED" partyId="20402" statusDate="2012-11-15 00:00:00.000"/>
+    <PartyStatus statusId="PARTY_ENABLED" partyId="20403" statusDate="2012-11-15 00:00:00.000"/>
+    <PartyStatus statusId="PARTY_ENABLED" partyId="20404" statusDate="2012-11-15 00:00:00.000"/>
+    <PartyStatus statusId="PARTY_ENABLED" partyId="20405" statusDate="2012-11-15 00:00:00.000"/>
+    <PartyStatus statusId="PARTY_ENABLED" partyId="20406" statusDate="2012-11-15 00:00:00.000"/>
+    <PartyStatus statusId="PARTY_ENABLED" partyId="20407" statusDate="2012-11-15 00:00:00.000"/>
+    <PartyStatus statusId="PARTY_ENABLED" partyId="20408" statusDate="2012-11-15 00:00:00.000"/>
+    <PartyStatus statusId="PARTY_ENABLED" partyId="20409" statusDate="2012-11-15 00:00:00.000"/>
+    <PartyStatus statusId="PARTY_ENABLED" partyId="20410" statusDate="2012-11-15 00:00:00.000"/>
+    <PartyStatus statusId="PARTY_ENABLED" partyId="20411" statusDate="2012-11-15 00:00:00.000"/>
+    <PartyStatus statusId="PARTY_ENABLED" partyId="20412" statusDate="2012-11-15 00:00:00.000"/>
+    <PartyStatus statusId="PARTY_ENABLED" partyId="20413" statusDate="2012-11-15 00:00:00.000"/>
+    <PartyStatus statusId="PARTY_ENABLED" partyId="20414" statusDate="2012-11-15 00:00:00.000"/>
+    <PartyStatus statusId="PARTY_ENABLED" partyId="20415" statusDate="2012-11-15 00:00:00.000"/>
+    <PartyStatus statusId="PARTY_ENABLED" partyId="20416" statusDate="2012-11-15 00:00:00.000"/>
+    <PartyStatus statusId="PARTY_ENABLED" partyId="20417" statusDate="2012-11-15 00:00:00.000"/>
+    <PartyStatus statusId="PARTY_ENABLED" partyId="20418" statusDate="2012-11-15 00:00:00.000"/>
+    <PartyStatus statusId="PARTY_ENABLED" partyId="20419" statusDate="2012-11-15 00:00:00.000"/>
+    <PartyStatus statusId="PARTY_ENABLED" partyId="20420" statusDate="2012-11-15 00:00:00.000"/>
+    <PartyStatus statusId="PARTY_ENABLED" partyId="20421" statusDate="2012-11-15 00:00:00.000"/>
+    <PartyStatus statusId="PARTY_ENABLED" partyId="20422" statusDate="2012-11-15 00:00:00.000"/>
+    <PartyStatus statusId="PARTY_ENABLED" partyId="20423" statusDate="2012-11-15 00:00:00.000"/>
+    <PartyStatus statusId="PARTY_ENABLED" partyId="20424" statusDate="2012-11-15 00:00:00.000"/>
+    <PartyStatus statusId="PARTY_ENABLED" partyId="20425" statusDate="2012-11-15 00:00:00.000"/>
+    <PartyStatus statusId="PARTY_ENABLED" partyId="20426" statusDate="2012-11-15 00:00:00.000"/>
+    <PartyStatus statusId="PARTY_ENABLED" partyId="20427" statusDate="2012-11-15 00:00:00.000"/>
+    <PartyStatus statusId="PARTY_ENABLED" partyId="20428" statusDate="2012-11-15 00:00:00.000"/>
+    <PartyStatus statusId="PARTY_ENABLED" partyId="20429" statusDate="2012-11-15 00:00:00.000"/>
+    <PartyStatus statusId="PARTY_ENABLED" partyId="20430" statusDate="2012-11-15 00:00:00.000"/>
+    <PartyStatus statusId="PARTY_ENABLED" partyId="20431" statusDate="2012-11-15 00:00:00.000"/>
+    <PartyStatus statusId="PARTY_ENABLED" partyId="20432" statusDate="2012-11-15 00:00:00.000"/>
+    <PartyStatus statusId="PARTY_ENABLED" partyId="20433" statusDate="2012-11-15 00:00:00.000"/>
+    <PartyStatus statusId="PARTY_ENABLED" partyId="20434" statusDate="2012-11-15 00:00:00.000"/>
+    <PartyStatus statusId="PARTY_ENABLED" partyId="20435" statusDate="2012-11-15 00:00:00.000"/>
+    <PartyStatus statusId="PARTY_ENABLED" partyId="20436" statusDate="2012-11-15 00:00:00.000"/>
+    <PartyStatus statusId="PARTY_ENABLED" partyId="20437" statusDate="2012-11-15 00:00:00.000"/>
+    <PartyStatus statusId="PARTY_ENABLED" partyId="20438" statusDate="2012-11-15 00:00:00.000"/>
+    <PartyStatus statusId="PARTY_ENABLED" partyId="20439" statusDate="2012-11-15 00:00:00.000"/>
+    <PartyStatus statusId="PARTY_ENABLED" partyId="20440" statusDate="2012-11-15 00:00:00.000"/>
+    <PartyStatus statusId="PARTY_ENABLED" partyId="20441" statusDate="2012-11-15 00:00:00.000"/>
+    <PartyStatus statusId="PARTY_ENABLED" partyId="20442" statusDate="2012-11-15 00:00:00.000"/>
+    <PartyStatus statusId="PARTY_ENABLED" partyId="20443" statusDate="2012-11-15 00:00:00.000"/>
+    <PartyStatus statusId="PARTY_ENABLED" partyId="20444" statusDate="2012-11-15 00:00:00.000"/>
+    <PartyStatus statusId="PARTY_ENABLED" partyId="20445" statusDate="2012-11-15 00:00:00.000"/>
+    <PartyStatus statusId="PARTY_ENABLED" partyId="20446" statusDate="2012-11-15 00:00:00.000"/>
+    <PartyStatus statusId="PARTY_ENABLED" partyId="20447" statusDate="2012-11-15 00:00:00.000"/>
+    <PartyStatus statusId="PARTY_ENABLED" partyId="20448" statusDate="2012-11-15 00:00:00.000"/>
+    <PartyStatus statusId="PARTY_ENABLED" partyId="20449" statusDate="2012-11-15 00:00:00.000"/>
+    <PartyStatus statusId="PARTY_ENABLED" partyId="20450" statusDate="2012-11-15 00:00:00.000"/>
+    <PartyStatus statusId="PARTY_ENABLED" partyId="20451" statusDate="2012-11-15 00:00:00.000"/>
+    <PartyStatus statusId="PARTY_ENABLED" partyId="20452" statusDate="2012-11-15 00:00:00.000"/>
+    <PartyStatus statusId="PARTY_ENABLED" partyId="20453" statusDate="2012-11-15 00:00:00.000"/>
+    <PartyStatus statusId="PARTY_ENABLED" partyId="20454" statusDate="2012-11-15 00:00:00.000"/>
+    <PartyStatus statusId="PARTY_ENABLED" partyId="20455" statusDate="2012-11-15 00:00:00.000"/>
+    <PartyStatus statusId="PARTY_ENABLED" partyId="20456" statusDate="2012-11-15 00:00:00.000"/>
+    <PartyStatus statusId="PARTY_ENABLED" partyId="20457" statusDate="2012-11-15 00:00:00.000"/>
+    <PartyStatus statusId="PARTY_ENABLED" partyId="20458" statusDate="2012-11-15 00:00:00.000"/>
+    <PartyStatus statusId="PARTY_ENABLED" partyId="20459" statusDate="2012-11-15 00:00:00.000"/>
+    <PartyStatus statusId="PARTY_ENABLED" partyId="20460" statusDate="2012-11-15 00:00:00.000"/>
+    <PartyStatus statusId="PARTY_ENABLED" partyId="20461" statusDate="2012-11-15 00:00:00.000"/>
+    <PartyStatus statusId="PARTY_ENABLED" partyId="20462" statusDate="2012-11-15 00:00:00.000"/>
+    <PartyStatus statusId="PARTY_ENABLED" partyId="20463" statusDate="2012-11-15 00:00:00.000"/>
+    <PartyStatus statusId="PARTY_ENABLED" partyId="20464" statusDate="2012-11-15 00:00:00.000"/>
+    <PartyStatus statusId="PARTY_ENABLED" partyId="20465" statusDate="2012-11-15 00:00:00.000"/>
+    <PartyStatus statusId="PARTY_ENABLED" partyId="20466" statusDate="2012-11-15 00:00:00.000"/>
+    <PartyStatus statusId="PARTY_ENABLED" partyId="20467" statusDate="2012-11-15 00:00:00.000"/>
+    <PartyStatus statusId="PARTY_ENABLED" partyId="20468" statusDate="2012-11-15 00:00:00.000"/>
+    <PartyStatus statusId="PARTY_ENABLED" partyId="20469" statusDate="2012-11-15 00:00:00.000"/>
+    <PartyStatus statusId="PARTY_ENABLED" partyId="20470" statusDate="2012-11-15 00:00:00.000"/>
+    <PartyStatus statusId="PARTY_ENABLED" partyId="20471" statusDate="2012-11-15 00:00:00.000"/>
+    <PartyStatus statusId="PARTY_ENABLED" partyId="20472" statusDate="2012-11-15 00:00:00.000"/>
+    <PartyStatus statusId="PARTY_ENABLED" partyId="20473" statusDate="2012-11-15 00:00:00.000"/>
+    <PartyStatus statusId="PARTY_ENABLED" partyId="20474" statusDate="2012-11-15 00:00:00.000"/>
+    <PartyStatus statusId="PARTY_ENABLED" partyId="20475" statusDate="2012-11-15 00:00:00.000"/>
+    <PartyStatus statusId="PARTY_ENABLED" partyId="20476" statusDate="2012-11-15 00:00:00.000"/>
+    <PartyStatus statusId="PARTY_ENABLED" partyId="20477" statusDate="2012-11-15 00:00:00.000"/>
+    <PartyStatus statusId="PARTY_ENABLED" partyId="20478" statusDate="2012-11-15 00:00:00.000"/>
+    <PartyStatus statusId="PARTY_ENABLED" partyId="20479" statusDate="2012-11-15 00:00:00.000"/>
+    <PartyStatus statusId="PARTY_ENABLED" partyId="20480" statusDate="2012-11-15 00:00:00.000"/>
+    <PartyStatus statusId="PARTY_ENABLED" partyId="20481" statusDate="2012-11-15 00:00:00.000"/>
+    <PartyStatus statusId="PARTY_ENABLED" partyId="20482" statusDate="2012-11-15 00:00:00.000"/>
+    <PartyStatus statusId="PARTY_ENABLED" partyId="20483" statusDate="2012-11-15 00:00:00.000"/>
+    <PartyStatus statusId="PARTY_ENABLED" partyId="20484" statusDate="2012-11-15 00:00:00.000"/>
+    <PartyStatus statusId="PARTY_ENABLED" partyId="20485" statusDate="2012-11-15 00:00:00.000"/>
+    <PartyStatus statusId="PARTY_ENABLED" partyId="20486" statusDate="2012-11-15 00:00:00.000"/>
+    <PartyStatus statusId="PARTY_ENABLED" partyId="20487" statusDate="2012-11-15 00:00:00.000"/>
+    <PartyStatus statusId="PARTY_ENABLED" partyId="20488" statusDate="2012-11-15 00:00:00.000"/>
+    <PartyStatus statusId="PARTY_ENABLED" partyId="20489" statusDate="2012-11-15 00:00:00.000"/>
+    <PartyStatus statusId="PARTY_ENABLED" partyId="20490" statusDate="2012-11-15 00:00:00.000"/>
+    <PartyStatus statusId="PARTY_ENABLED" partyId="20491" statusDate="2012-11-15 00:00:00.000"/>
+    <PartyStatus statusId="PARTY_ENABLED" partyId="20492" statusDate="2012-11-15 00:00:00.000"/>
+    <PartyStatus statusId="PARTY_ENABLED" partyId="20493" statusDate="2012-11-15 00:00:00.000"/>
+    <PartyStatus statusId="PARTY_ENABLED" partyId="20494" statusDate="2012-11-15 00:00:00.000"/>
+    <PartyStatus statusId="PARTY_ENABLED" partyId="20495" statusDate="2012-11-15 00:00:00.000"/>
+    <PartyStatus statusId="PARTY_ENABLED" partyId="20496" statusDate="2012-11-15 00:00:00.000"/>
+    <PartyStatus statusId="PARTY_ENABLED" partyId="20497" statusDate="2012-11-15 00:00:00.000"/>
+    <PartyStatus statusId="PARTY_ENABLED" partyId="20498" statusDate="2012-11-15 00:00:00.000"/>
+    <PartyStatus statusId="PARTY_ENABLED" partyId="20499" statusDate="2012-11-15 00:00:00.000"/>
+    <PartyStatus statusId="PARTY_ENABLED" partyId="20500" statusDate="2012-11-15 00:00:00.000"/>
+    <PartyStatus statusId="PARTY_ENABLED" partyId="20501" statusDate="2012-11-15 00:00:00.000"/>
+    <PartyStatus statusId="PARTY_ENABLED" partyId="20502" statusDate="2012-11-15 00:00:00.000"/>
+    <PartyStatus statusId="PARTY_ENABLED" partyId="20503" statusDate="2012-11-15 00:00:00.000"/>
+    <PartyStatus statusId="PARTY_ENABLED" partyId="20504" statusDate="2012-11-15 00:00:00.000"/>
+    <PartyStatus statusId="PARTY_ENABLED" partyId="20505" statusDate="2012-11-15 00:00:00.000"/>
+    <PartyStatus statusId="PARTY_ENABLED" partyId="20506" statusDate="2012-11-15 00:00:00.000"/>
+    <PartyStatus statusId="PARTY_ENABLED" partyId="20507" statusDate="2012-11-15 00:00:00.000"/>
+    <PartyStatus statusId="PARTY_ENABLED" partyId="20508" statusDate="2012-11-15 00:00:00.000"/>
+    <PartyStatus statusId="PARTY_ENABLED" partyId="20509" statusDate="2012-11-15 00:00:00.000"/>
+    <PartyStatus statusId="PARTY_ENABLED" partyId="20510" statusDate="2012-11-15 00:00:00.000"/>
+    <PartyStatus statusId="PARTY_ENABLED" partyId="20511" statusDate="2012-11-15 00:00:00.000"/>
+    <PartyStatus statusId="PARTY_ENABLED" partyId="20512" statusDate="2012-11-15 00:00:00.000"/>
+    <PartyStatus statusId="PARTY_ENABLED" partyId="20513" statusDate="2012-11-15 00:00:00.000"/>
+    <PartyStatus statusId="PARTY_ENABLED" partyId="20514" statusDate="2012-11-15 00:00:00.000"/>
+    <PartyStatus statusId="PARTY_ENABLED" partyId="20515" statusDate="2012-11-15 00:00:00.000"/>
+    <PartyStatus statusId="PARTY_ENABLED" partyId="20516" statusDate="2012-11-15 00:00:00.000"/>
+    <PartyStatus statusId="PARTY_ENABLED" partyId="20517" statusDate="2012-11-15 00:00:00.000"/>
+    <PartyStatus statusId="PARTY_ENABLED" partyId="20518" statusDate="2012-11-15 00:00:00.000"/>
+    <PartyStatus statusId="PARTY_ENABLED" partyId="20519" statusDate="2012-11-15 00:00:00.000"/>
+    <PartyStatus statusId="PARTY_ENABLED" partyId="20520" statusDate="2012-11-15 00:00:00.000"/>
+    <PartyStatus statusId="PARTY_ENABLED" partyId="20521" statusDate="2012-11-15 00:00:00.000"/>
+    <PartyStatus statusId="PARTY_ENABLED" partyId="20522" statusDate="2012-11-15 00:00:00.000"/>
+    <PartyStatus statusId="PARTY_ENABLED" partyId="20523" statusDate="2012-11-15 00:00:00.000"/>
+    <PartyStatus statusId="PARTY_ENABLED" partyId="20524" statusDate="2012-11-15 00:00:00.000"/>
+    <PartyStatus statusId="PARTY_ENABLED" partyId="20525" statusDate="2012-11-15 00:00:00.000"/>
+    <PartyStatus statusId="PARTY_ENABLED" partyId="20526" statusDate="2012-11-15 00:00:00.000"/>
+    <PartyStatus statusId="PARTY_ENABLED" partyId="20527" statusDate="2012-11-15 00:00:00.000"/>
+    <PartyStatus statusId="PARTY_ENABLED" partyId="20528" statusDate="2012-11-15 00:00:00.000"/>
+    <PartyStatus statusId="PARTY_ENABLED" partyId="20529" statusDate="2012-11-15 00:00:00.000"/>
+    <PartyStatus statusId="PARTY_ENABLED" partyId="20530" statusDate="2012-11-15 00:00:00.000"/>
+    <PartyStatus statusId="PARTY_ENABLED" partyId="20531" statusDate="2012-11-15 00:00:00.000"/>
+    <PartyStatus statusId="PARTY_ENABLED" partyId="20532" statusDate="2012-11-15 00:00:00.000"/>
+    <PartyStatus statusId="PARTY_ENABLED" partyId="20533" statusDate="2012-11-15 00:00:00.000"/>
+    <PartyStatus statusId="PARTY_ENABLED" partyId="20534" statusDate="2012-11-15 00:00:00.000"/>
+    <PartyStatus statusId="PARTY_ENABLED" partyId="20535" statusDate="2012-11-15 00:00:00.000"/>
+    <PartyStatus statusId="PARTY_ENABLED" partyId="20536" statusDate="2012-11-15 00:00:00.000"/>
+    <PartyStatus statusId="PARTY_ENABLED" partyId="20537" statusDate="2012-11-15 00:00:00.000"/>
+    <PartyStatus statusId="PARTY_ENABLED" partyId="20538" statusDate="2012-11-15 00:00:00.000"/>
+    <PartyStatus statusId="PARTY_ENABLED" partyId="20539" statusDate="2012-11-15 00:00:00.000"/>
+    <PartyStatus statusId="PARTY_ENABLED" partyId="20540" statusDate="2012-11-15 00:00:00.000"/>
+    <PartyStatus statusId="PARTY_ENABLED" partyId="20541" statusDate="2012-11-15 00:00:00.000"/>
+    <PartyStatus statusId="PARTY_ENABLED" partyId="20542" statusDate="2012-11-15 00:00:00.000"/>
+    <PartyStatus statusId="PARTY_ENABLED" partyId="20543" statusDate="2012-11-15 00:00:00.000"/>
+    <PartyStatus statusId="PARTY_ENABLED" partyId="20544" statusDate="2012-11-15 00:00:00.000"/>
+    <PartyStatus statusId="PARTY_ENABLED" partyId="20545" statusDate="2012-11-15 00:00:00.000"/>
+    <PartyStatus statusId="PARTY_ENABLED" partyId="20546" statusDate="2012-11-15 00:00:00.000"/>
+    <PartyStatus statusId="PARTY_ENABLED" partyId="20547" statusDate="2012-11-15 00:00:00.000"/>
+    <PartyStatus statusId="PARTY_ENABLED" partyId="20548" statusDate="2012-11-15 00:00:00.000"/>
+    <PartyStatus statusId="PARTY_ENABLED" partyId="20549" statusDate="2012-11-15 00:00:00.000"/>
+    <PartyStatus statusId="PARTY_ENABLED" partyId="20550" statusDate="2012-11-15 00:00:00.000"/>
+    <PartyStatus statusId="PARTY_ENABLED" partyId="20551" statusDate="2012-11-15 00:00:00.000"/>
+    <PartyStatus statusId="PARTY_ENABLED" partyId="20552" statusDate="2012-11-15 00:00:00.000"/>
+    <PartyStatus statusId="PARTY_ENABLED" partyId="20553" statusDate="2012-11-15 00:00:00.000"/>
+    <PartyStatus statusId="PARTY_ENABLED" partyId="20554" statusDate="2012-11-15 00:00:00.000"/>
+    <PartyStatus statusId="PARTY_ENABLED" partyId="20555" statusDate="2012-11-15 00:00:00.000"/>
+    <PartyStatus statusId="PARTY_ENABLED" partyId="20556" statusDate="2012-11-15 00:00:00.000"/>
+    <PartyStatus statusId="PARTY_ENABLED" partyId="20557" statusDate="2012-11-15 00:00:00.000"/>
+    <PartyStatus statusId="PARTY_ENABLED" partyId="20558" statusDate="2012-11-15 00:00:00.000"/>
+    <PartyStatus statusId="PARTY_ENABLED" partyId="20559" statusDate="2012-11-15 00:00:00.000"/>
+    <PartyStatus statusId="PARTY_ENABLED" partyId="20560" statusDate="2012-11-15 00:00:00.000"/>
+    <PartyStatus statusId="PARTY_ENABLED" partyId="20561" statusDate="2012-11-15 00:00:00.000"/>
+    <PartyStatus statusId="PARTY_ENABLED" partyId="20562" statusDate="2012-11-15 00:00:00.000"/>
+    <PartyStatus statusId="PARTY_ENABLED" partyId="20563" statusDate="2012-11-15 00:00:00.000"/>
+    <PartyStatus statusId="PARTY_ENABLED" partyId="20564" statusDate="2012-11-15 00:00:00.000"/>
+    <PartyStatus statusId="PARTY_ENABLED" partyId="20565" statusDate="2012-11-15 00:00:00.000"/>
+    <PartyStatus statusId="PARTY_ENABLED" partyId="20566" statusDate="2012-11-15 00:00:00.000"/>
+    <PartyStatus statusId="PARTY_ENABLED" partyId="20567" statusDate="2012-11-15 00:00:00.000"/>
+    <PartyStatus statusId="PARTY_ENABLED" partyId="20568" statusDate="2012-11-15 00:00:00.000"/>
+    <PartyStatus statusId="PARTY_ENABLED" partyId="20569" statusDate="2012-11-15 00:00:00.000"/>
+    <PartyStatus statusId="PARTY_ENABLED" partyId="20570" statusDate="2012-11-15 00:00:00.000"/>
+    <PartyStatus statusId="PARTY_ENABLED" partyId="20571" statusDate="2012-11-15 00:00:00.000"/>
+    <PartyStatus statusId="PARTY_ENABLED" partyId="20572" statusDate="2012-11-15 00:00:00.000"/>
+    <PartyStatus statusId="PARTY_ENABLED" partyId="20573" statusDate="2012-11-15 00:00:00.000"/>
+    <PartyStatus statusId="PARTY_ENABLED" partyId="20574" statusDate="2012-11-15 00:00:00.000"/>
+    <PartyStatus statusId="PARTY_ENABLED" partyId="20575" statusDate="2012-11-15 00:00:00.000"/>
+    <PartyStatus statusId="PARTY_ENABLED" partyId="20576" statusDate="2012-11-15 00:00:00.000"/>
+    <PartyStatus statusId="PARTY_ENABLED" partyId="20577" statusDate="2012-11-15 00:00:00.000"/>
+    <PartyStatus statusId="PARTY_ENABLED" partyId="20578" statusDate="2012-11-15 00:00:00.000"/>
+    <PartyStatus statusId="PARTY_ENABLED" partyId="20579" statusDate="2012-11-15 00:00:00.000"/>
+    <PartyStatus statusId="PARTY_ENABLED" partyId="20580" statusDate="2012-11-15 00:00:00.000"/>
+    <PartyStatus statusId="PARTY_ENABLED" partyId="20581" statusDate="2012-11-15 00:00:00.000"/>
+    <PartyStatus statusId="PARTY_ENABLED" partyId="20582" statusDate="2012-11-15 00:00:00.000"/>
+    <PartyStatus statusId="PARTY_ENABLED" partyId="20583" statusDate="2012-11-15 00:00:00.000"/>
+    <PartyStatus statusId="PARTY_ENABLED" partyId="20584" statusDate="2012-11-15 00:00:00.000"/>
+    <PartyStatus statusId="PARTY_ENABLED" partyId="20585" statusDate="2012-11-15 00:00:00.000"/>
+    <PartyStatus statusId="PARTY_ENABLED" partyId="20586" statusDate="2012-11-15 00:00:00.000"/>
+    <PartyStatus statusId="PARTY_ENABLED" partyId="20587" statusDate="2012-11-15 00:00:00.000"/>
+    <PartyStatus statusId="PARTY_ENABLED" partyId="20588" statusDate="2012-11-15 00:00:00.000"/>
+    <PartyStatus statusId="PARTY_ENABLED" partyId="20589" statusDate="2012-11-15 00:00:00.000"/>
+    <PartyStatus statusId="PARTY_ENABLED" partyId="20590" statusDate="2012-11-15 00:00:00.000"/>
+    <PartyStatus statusId="PARTY_ENABLED" partyId="20591" statusDate="2012-11-15 00:00:00.000"/>
+    <PartyStatus statusId="PARTY_ENABLED" partyId="20592" statusDate="2012-11-15 00:00:00.000"/>
+    <PartyStatus statusId="PARTY_ENABLED" partyId="20593" statusDate="2012-11-15 00:00:00.000"/>
+    <PartyStatus statusId="PARTY_ENABLED" partyId="20594" statusDate="2012-11-15 00:00:00.000"/>
+    <PartyStatus statusId="PARTY_ENABLED" partyId="20595" statusDate="2012-11-15 00:00:00.000"/>
+    <PartyStatus statusId="PARTY_ENABLED" partyId="20596" statusDate="2012-11-15 00:00:00.000"/>
+    <PartyStatus statusId="PARTY_ENABLED" partyId="20597" statusDate="2012-11-15 00:00:00.000"/>
+    <PartyStatus statusId="PARTY_ENABLED" partyId="20598" statusDate="2012-11-15 00:00:00.000"/>
+    <PartyStatus statusId="PARTY_ENABLED" partyId="20599" statusDate="2012-11-15 00:00:00.000"/>
+    <PartyStatus statusId="PARTY_ENABLED" partyId="20600" statusDate="2012-11-15 00:00:00.000"/>
+    <PartyStatus statusId="PARTY_ENABLED" partyId="20601" statusDate="2012-11-15 00:00:00.000"/>
+    <PartyStatus statusId="PARTY_ENABLED" partyId="20602" statusDate="2012-11-15 00:00:00.000"/>
+    <PartyStatus statusId="PARTY_ENABLED" partyId="20603" statusDate="2012-11-15 00:00:00.000"/>
+    <PartyStatus statusId="PARTY_ENABLED" partyId="20604" statusDate="2012-11-15 00:00:00.000"/>
+    <PartyStatus statusId="PARTY_ENABLED" partyId="20605" statusDate="2012-11-15 00:00:00.000"/>
+    <PartyStatus statusId="PARTY_ENABLED" partyId="20606" statusDate="2012-11-15 00:00:00.000"/>
+    <PartyStatus statusId="PARTY_ENABLED" partyId="20607" statusDate="2012-11-15 00:00:00.000"/>
+    <PartyStatus statusId="PARTY_ENABLED" partyId="20608" statusDate="2012-11-15 00:00:00.000"/>
+</entity-engine-xml>

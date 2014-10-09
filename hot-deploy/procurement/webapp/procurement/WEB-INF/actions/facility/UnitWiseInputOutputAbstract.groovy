@@ -11,6 +11,10 @@ import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.entity.condition.EntityCondition;
 import org.ofbiz.entity.condition.EntityOperator;
 
+import javolution.util.FastList;
+import javolution.util.FastMap;
+import javolution.util.FastSet;
+
 import java.security.Provider.Service;
 import java.sql.*;
 import java.text.Normalizer.Form;
@@ -45,6 +49,9 @@ shedId = parameters.shedId;
 shedFacility = delegator.findOne("Facility",[facilityId:shedId],false);
 context.put("shed",shedFacility);
 
+shedUnits = ProcurementNetworkServices.getShedUnitsByShed(dctx,[shedId : shedId]);
+unitIds = [];
+unitIds = shedUnits.unitsList;
 openingBalMap = [:];
 tmPreparationMap =[:];// it is one of the input
 closingBalList = [];
@@ -66,7 +73,16 @@ totInMap.putAll(tempMap);
 totOutMap.putAll(tempMap);
 tmPreparationMap.putAll(tempMap);
 
-
+if(UtilValidate.isEmpty(parameters.customTimePeriodId)){
+	Debug.logError("customTimePeriod Cannot Be Empty","");
+	context.errorMessage = "No Shed Has Been Selected.......!";
+	return;
+}
+if(UtilValidate.isEmpty(parameters.unitId)){
+	Debug.logError("unitId Cannot Be Empty","");
+	context.errorMessage = "No Unit Has Been Selected.......!";
+	return;
+}
 customTimePeriod=delegator.findOne("CustomTimePeriod",[customTimePeriodId : parameters.customTimePeriodId], false);
 fromDate= UtilDateTime.toTimestamp(customTimePeriod.getDate("fromDate"));
 thruDate= UtilDateTime.toTimestamp(customTimePeriod.getDate("thruDate"));
@@ -75,14 +91,15 @@ thruDate = UtilDateTime.getDayEnd(thruDate);
 context.put("fromDate", fromDate);
 context.put("thruDate", thruDate);
 openingBalMap = [:];
+List inputEntriesList = FastList.newInstance();
 openingBalMap = ProcurementReports.getOpeningBalance(dctx,[facilityId:facilityId,customTimePeriodId:parameters.customTimePeriodId,userLogin:userLogin,periodTypeId:"PROC_BILL_MONTH"]);
+Debug.log("openingBalMap========"+openingBalMap);
 if(UtilValidate.isNotEmpty(openingBalMap)){
 	totInMap.putAll(openingBalMap.get("openingBalance"));
 }
 procThruTransfers = [];
 if(UtilValidate.isNotEmpty(facility)){
 	presentPeriodTotals = dispatcher.runSync("getPeriodTransferTotals" , [fromDate: fromDate , thruDate: thruDate , facilityId: facilityId,userLogin:userLogin]);
-	if(UtilValidate.isNotEmpty(presentPeriodTotals)){
 		transfersMap = [:];
 		transfersMap =  presentPeriodTotals.get("periodTransferTotalsMap").get(facilityId).get("transfers");
 		procPeriodTotals = transfersMap.get("procurementPeriodTotals");
@@ -95,35 +112,48 @@ if(UtilValidate.isNotEmpty(facility)){
 				}				
 			}
 		}
-		if(UtilValidate.isNotEmpty(transfersMap)){
-				tmPreparationMap = transfersMap.get("tmPreparationOB");
-				for(key in totInMap.keySet()){
-					if(UtilValidate.isNotEmpty(tmPreparationMap.get(key))){
-						totInMap.put(key,((BigDecimal)totInMap.get(key)).add((BigDecimal)tmPreparationMap.get(key)));
-					}				
-				}
-				tempKgFat = (BigDecimal)(tmPreparationMap.get("kgFat"));
-				tempKgSnf = (BigDecimal)(tmPreparationMap.get("kgSnf"));
-				tempQtyKgs = (BigDecimal)(tmPreparationMap.get("qtyKgs"));
-				if(UtilValidate.isNotEmpty(tempQtyKgs)&& tempQtyKgs!=0){
-					tmPreparationMap.put("fat",ProcurementNetworkServices.calculateFatOrSnf(tempKgFat,tempQtyKgs));
-					tmPreparationMap.put("snf",ProcurementNetworkServices.calculateFatOrSnf(tempKgSnf,tempQtyKgs));
-				}else{
-					tmPreparationMap.put("fat",0);
-					tmPreparationMap.put("snf",0);
-				}
-		}
 		outputTotals  = transfersMap.get("output");
 		
 		if(UtilValidate.isNotEmpty(outputTotals)){
 			mpfReceiptsMap =  outputTotals.get("dayTotals").get("TOT");
-			mpfReceiptsMap.put("qtyLtrs",ProcurementNetworkServices.convertKGToLitre(mpfReceiptsMap.get("qtyKgs")));
+			mpfReceiptsMap.put("qtyLtrs",mpfReceiptsMap.get("qtyLts"));
+			//mpfReceiptsMap.put("qtyLtrs",ProcurementNetworkServices.convertKGToLitre(mpfReceiptsMap.get("qtyKgs")));
 			for(key in totOutMap.keySet()){
 				if(UtilValidate.isNotEmpty(mpfReceiptsMap.get(key))){
 					totOutMap.put(key,((BigDecimal)totOutMap.get(key)).add((BigDecimal)mpfReceiptsMap.get(key)));
 				}				
 			}
 		}
+		List inputEntries = FastList.newInstance();
+		 inputEntries.addAll(transfersMap.get("inputEntries"));
+		if(UtilValidate.isNotEmpty(inputEntries)){
+			for(inputEntry in inputEntries){
+				kgFat = (BigDecimal)(inputEntry.get("kgFat"));
+				kgSnf = (BigDecimal)(inputEntry.get("kgSnf"));
+				qtyKgs = (BigDecimal)(inputEntry.get("qtyKgs"));
+				Map inputEntryMap = FastMap.newInstance();
+				inputEntryMap.put("fat",ProcurementNetworkServices.calculateFatOrSnf(kgFat,qtyKgs));
+				inputEntryMap.put("snf",ProcurementNetworkServices.calculateFatOrSnf(kgSnf,qtyKgs));
+				inputEntryMap.put("kgFat",kgFat);
+				inputEntryMap.put("kgSnf",kgSnf);
+				inputEntryMap.put("qtyKgs",qtyKgs);
+				inputEntryMap.put("qtyLtrs",ProcurementNetworkServices.convertKGToLitre(inputEntryMap.get("qtyKgs")));
+				if(UtilValidate.isNotEmpty(inputEntryMap.get("qtyLtrs"))){
+					inputEntryMap.put("qtyLtrs",inputEntryMap.get("qtyLtrs"));
+				}
+				for(key in totInMap.keySet()){
+					if(UtilValidate.isNotEmpty(inputEntryMap.get(key))){
+						totInMap.put(key,((BigDecimal)totInMap.get(key)).add((BigDecimal)inputEntryMap.get(key)));
+					}				
+				}
+				tempInputEntryMap =[:];
+				tempInputEntryMap.putAll(inputEntryMap);
+				tempInputEntryMap.put("outputType",inputEntry.outputType);
+				inputEntriesList.add(tempInputEntryMap)	;
+			}
+		}
+		
+		
 		outputEntriesList = transfersMap.get("outputEntries");
 		if(UtilValidate.isNotEmpty(outputEntriesList)){
 			for(outputEntry in outputEntriesList){
@@ -151,12 +181,23 @@ if(UtilValidate.isNotEmpty(facility)){
 		}
 	}
 	// here we are getting the list of units transfers Milk to this unit
-	childFacilityCondList = [];
-	childFacilityCondList.add(EntityCondition.makeCondition("destinationFacilityId",EntityOperator.EQUALS,facilityId));
-	childFacilityCondList.add(EntityCondition.makeCondition("facilityId",EntityOperator.NOT_EQUAL,facilityId));
-	childFacilityCondition = EntityCondition.makeCondition(childFacilityCondList,EntityOperator.AND);
-	childFacilitiesList = delegator.findList("Facility",childFacilityCondition,null,null,null,false);
-	for(childFacility in childFacilitiesList){
+	List transferFacililityCondList = FastList.newInstance();
+	
+	transferFacililityCondList.add(EntityCondition.makeCondition("facilityId",EntityOperator.IN,unitIds));
+	transferFacililityCondList.add(EntityCondition.makeCondition("facilityIdTo",EntityOperator.EQUALS,facilityId));
+	transferFacililityCondList.add(EntityCondition.makeCondition("receiveDate",EntityOperator.LESS_THAN_EQUAL_TO,thruDate));
+	transferFacililityCondList.add(EntityCondition.makeCondition("receiveDate",EntityOperator.GREATER_THAN_EQUAL_TO,fromDate));
+	transferFacililityCondList.add(EntityCondition.makeCondition(EntityCondition.makeCondition("isMilkRcpt", EntityOperator.NOT_EQUAL, "Y"),EntityJoinOperator.OR,EntityCondition.makeCondition("isMilkRcpt", EntityOperator.EQUALS, null)));
+	EntityCondition transferFacilityCondition = EntityCondition.makeCondition(transferFacililityCondList,EntityOperator.AND);
+
+	transferFacilitiesList = delegator.findList("MilkTransfer",transferFacilityCondition,null,null,null,false);
+	
+	Set childFacilitiesSet= null;
+	childFacilitiesList = EntityUtil.getFieldListFromEntityList(transferFacilitiesList,"facilityId", true);
+	childFacilitiesSet = new HashSet(childFacilitiesList);
+	for(childFacilityId in childFacilitiesSet){
+		
+		childFacility = delegator.findOne("Facility",["facilityId":childFacilityId],false);
 		tranFacilityDetails = [:];
 		tranFacilityMap = [:];
 		tranFacilityId = childFacility.facilityId;
@@ -168,6 +209,7 @@ if(UtilValidate.isNotEmpty(facility)){
 		transfersCondList.add(EntityCondition.makeCondition("facilityIdTo",EntityOperator.EQUALS,facilityId));
 		transfersCondList.add(EntityCondition.makeCondition("receiveDate",EntityOperator.LESS_THAN_EQUAL_TO,thruDate));
 		transfersCondList.add(EntityCondition.makeCondition("receiveDate",EntityOperator.GREATER_THAN_EQUAL_TO,fromDate));
+		transfersCondList.add(EntityCondition.makeCondition(EntityCondition.makeCondition("isMilkRcpt", EntityOperator.NOT_EQUAL, "Y"),EntityJoinOperator.OR,EntityCondition.makeCondition("isMilkRcpt", EntityOperator.EQUALS, null)));
 		transfersCondition = EntityCondition.makeCondition(transfersCondList,EntityOperator.AND);
 		transfersList = delegator.findList("MilkTransfer",transfersCondition,null,null,null,false);
 		tranFacilityMap.put("facilityCode", tranFacilityCode);
@@ -177,11 +219,17 @@ if(UtilValidate.isNotEmpty(facility)){
 		tranFacilityMap.put("qtyKgs", BigDecimal.ZERO);
 		tranFacilityMap.put("qtyLtrs", BigDecimal.ZERO);
 		for(transfer in transfersList){
+			if(UtilValidate.isEmpty(transfer.get("receivedQuantityLtrs"))){
+				tranFacilityMap.put("qtyLtrs", tranFacilityMap.get("qtyLtrs")+ProcurementNetworkServices.convertKGToLitre(transfer.get("receivedQuantity")));
+				}else{
+				tranFacilityMap.put("qtyLtrs", tranFacilityMap.get("qtyLtrs")+transfer.get("receivedQuantityLtrs"));
+				}
 			tranFacilityMap.put("qtyKgs", tranFacilityMap.get("qtyKgs")+transfer.get("receivedQuantity"));
+			
 			tranFacilityMap.put("kgFat", tranFacilityMap.get("kgFat")+ProcurementNetworkServices.calculateKgFatOrKgSnf(transfer.get("receivedQuantity"),transfer.get("receivedFat")));
 			tranFacilityMap.put("kgSnf", tranFacilityMap.get("kgSnf")+ProcurementNetworkServices.calculateKgFatOrKgSnf(transfer.get("receivedQuantity"),transfer.get("receivedSnf")));
 		}
-		tranFacilityMap.put("qtyLtrs",ProcurementNetworkServices.convertKGToLitre(tranFacilityMap.get("qtyKgs")));
+		//tranFacilityMap.put("qtyLtrs",ProcurementNetworkServices.convertKGToLitre(tranFacilityMap.get("qtyKgs")));
 		tranFacilityMap.put("fat", ProcurementNetworkServices.calculateFatOrSnf(tranFacilityMap.get("kgFat"),tranFacilityMap.get("qtyKgs")));
 		tranFacilityMap.put("snf", ProcurementNetworkServices.calculateFatOrSnf(tranFacilityMap.get("kgSnf"),tranFacilityMap.get("qtyKgs")));
 		procThruTransfers.add(tranFacilityMap);
@@ -197,14 +245,14 @@ if(UtilValidate.isNotEmpty(facility)){
 	shedUnits = ProcurementNetworkServices.getShedUnitsByShed(dctx,[shedId : shedId]);
 	iutTransfers = [];
 	if(UtilValidate.isNotEmpty(shedUnits.unitsList)){
-			unitIds = [];	
+				
 			iutTransferMap =[:];
-			unitIds = shedUnits.unitsList;
 			iutTransfersCondList = [];
 			iutTransfersCondList.add(EntityCondition.makeCondition("facilityId",EntityOperator.NOT_IN,unitIds));
 			iutTransfersCondList.add(EntityCondition.makeCondition("facilityIdTo",EntityOperator.EQUALS,facilityId));
 			iutTransfersCondList.add(EntityCondition.makeCondition("receiveDate",EntityOperator.LESS_THAN_EQUAL_TO,thruDate));
 			iutTransfersCondList.add(EntityCondition.makeCondition("receiveDate",EntityOperator.GREATER_THAN_EQUAL_TO,fromDate));
+			iutTransfersCondList.add(EntityCondition.makeCondition(EntityCondition.makeCondition("isMilkRcpt", EntityOperator.NOT_EQUAL, "Y"),EntityJoinOperator.OR,EntityCondition.makeCondition("isMilkRcpt", EntityOperator.EQUALS, null)));
 			iutTransfersCondition = EntityCondition.makeCondition(iutTransfersCondList,EntityOperator.AND);
 			iutTransfersList = delegator.findList("MilkTransfer",iutTransfersCondition,["facilityId"] as Set,null,null,false);
 			if(UtilValidate.isNotEmpty(iutTransfersList)){
@@ -215,6 +263,7 @@ if(UtilValidate.isNotEmpty(facility)){
 							for(iutUnitId in iutUnitIdsSet){
 									iutTranFacility = delegator.findOne("Facility",[facilityId:iutUnitId],false);
 									iutTransfersCondList=[];
+									iutTransfersCondList.add(EntityCondition.makeCondition(EntityCondition.makeCondition("isMilkRcpt", EntityOperator.NOT_EQUAL, "Y"),EntityJoinOperator.OR,EntityCondition.makeCondition("isMilkRcpt", EntityOperator.EQUALS, null)));
 									iutTransfersCondList.add(EntityCondition.makeCondition("facilityId",EntityOperator.EQUALS,iutUnitId));
 									iutTransfersCondList.add(EntityCondition.makeCondition("facilityIdTo",EntityOperator.EQUALS,facilityId));
 									iutTransfersCondList.add(EntityCondition.makeCondition("receiveDate",EntityOperator.LESS_THAN_EQUAL_TO,thruDate));
@@ -225,11 +274,16 @@ if(UtilValidate.isNotEmpty(facility)){
 									iutTranFacilityMap = FastMap.newInstance();
 									iutTranFacilityMap.putAll(tempMap);
 									for(transfer in iutTransfersList){
+										if(UtilValidate.isEmpty(transfer.get("receivedQuantityLtrs"))){
+											iutTranFacilityMap.put("qtyLtrs", iutTranFacilityMap.get("qtyLtrs")+ProcurementNetworkServices.convertKGToLitre(transfer.get("receivedQuantity")));
+											}else{
+											iutTranFacilityMap.put("qtyLtrs", iutTranFacilityMap.get("qtyLtrs")+transfer.get("receivedQuantityLtrs"));
+											}
 										iutTranFacilityMap.put("qtyKgs", iutTranFacilityMap.get("qtyKgs")+transfer.get("receivedQuantity"));
 										iutTranFacilityMap.put("kgFat", iutTranFacilityMap.get("kgFat")+ProcurementNetworkServices.calculateKgFatOrKgSnf(transfer.get("receivedQuantity"),transfer.get("receivedFat")));
 										iutTranFacilityMap.put("kgSnf", iutTranFacilityMap.get("kgSnf")+ProcurementNetworkServices.calculateKgFatOrKgSnf(transfer.get("receivedQuantity"),transfer.get("receivedSnf")));
 										}
-									iutTranFacilityMap.put("qtyLtrs", ProcurementNetworkServices.convertKGToLitre(iutTranFacilityMap.get("qtyKgs")));
+									//iutTranFacilityMap.put("qtyLtrs", ProcurementNetworkServices.convertKGToLitre(iutTranFacilityMap.get("qtyKgs")));
 									for(key in totInMap.keySet()){
 										totInMap.put(key,((BigDecimal)totInMap.get(key)).add((BigDecimal)iutTranFacilityMap.get(key)));
 										}
@@ -265,10 +319,9 @@ if(UtilValidate.isNotEmpty(facility)){
 	context.putAt("dairyMap", dairyMap);
 	context.putAt("totInMap", totInMap);
 	context.putAt("totOutMap", totOutMap);
-	context.putAt("tmPreparationMap", tmPreparationMap);
+	context.putAt("inputEntriesList", inputEntriesList);
 	results = "N";
 	if((UtilValidate.isNotEmpty(iutTransfers))||(UtilValidate.isNotEmpty(openingBalMap))||(UtilValidate.isNotEmpty(tmPreparationMap))||(UtilValidate.isNotEmpty(closingBalList))||(UtilValidate.isNotEmpty(procTotalsMap))||(UtilValidate.isNotEmpty(procThruTransfers))||(UtilValidate.isNotEmpty(mpfReceiptsMap))||(UtilValidate.isNotEmpty(dairyMap))||(UtilValidate.isNotEmpty(totInMap))||(UtilValidate.isNotEmpty(totOutMap))){
 			results = "Y";
 	}
 	context.put("results",results);
-}

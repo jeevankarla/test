@@ -27,7 +27,17 @@ under the License.
                 <fo:region-after extent="1in"/>
             </fo:simple-page-master>
        </fo:layout-master-set>
-        <#if facilityShortagesList?has_content>
+       ${setRequestAttribute("OUTPUT_FILENAME", "shortagesRecovery.txt")}
+<#if errorMessage?has_content>
+<fo:page-sequence master-reference="main">
+   <fo:flow flow-name="xsl-region-body" font-family="Helvetica">
+      <fo:block font-size="14pt">
+              ${errorMessage}.
+   	  </fo:block>
+   </fo:flow>
+</fo:page-sequence>        
+<#else>        
+       <#if facilityShortagesList?has_content>
        <fo:page-sequence master-reference="main">
             <fo:static-content flow-name="xsl-region-before" font-family="Courier,monospace">
                 <fo:block text-align="left" white-space-collapse="false" font-size="7pt" keep-together="always">&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;STATEMENT SHOWING THE RECOVERABLE AMOUNT OF SHORTAGE KG-FAT, KG-SNF&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;</fo:block>
@@ -45,7 +55,6 @@ under the License.
                    <#assign totKgSnf = 0 > 
                    <#assign totKgFatAmt = 0>
                    <#assign totKgSnfAmt = 0>
-                   <#assign totSPrice = 0>
                    <#assign totRecoverableAmt = 0 >
                    
                     <fo:block font-size="6pt" keep-together="always">
@@ -58,28 +67,39 @@ under the License.
                                 <fo:table-column column-width="60pt"/>
                                 <fo:table-column column-width="60pt"/>
                                 <fo:table-column column-width="20mm"/>
-                              
+                              	<fo:table-column column-width="10pt"/>
                                 
                           <fo:table-body>
+                          <#assign facSourAmt = 0>
                           <#list facilityShortagesList as shortagesList>
                             <#if shortagesList.get("facilityCode")!="TOT">     
-                                <#assign totRecAmt = (shortagesList.kgFatAmt+shortagesList.kgSnfAmt+shortagesList.sPrice)>
-                                	<#assign kgFat = shortagesList.kgFat>
+                                <#assign facilityId = shortagesList.facilityId>
+                                <#assign sourAmt = 0>
+                                <#if sourDistributionMap?has_content>
+                                	<#if (sourDistributionMap.get(facilityId))?has_content>
+                                		<#assign sourAmt = sourAmt-sourDistributionMap.get(facilityId)>
+                                	</#if>
+                                </#if>
+                                <#assign facSourAmt = facSourAmt+ sourAmt>
+                                <#assign totRecAmt = (shortagesList.kgFatAmt+shortagesList.kgSnfAmt+sourAmt)>
+                                 <#assign kgFat = shortagesList.kgFat>
+                                 <#assign kgSnf = shortagesList.kgSnf>
+                                 <#if totRecAmt!=0 || (kgFat<0)||(kgSnf<0)> 
+                                	
                               		<#if (kgFat<0)>
                               			<#assign totKgFat = (shortagesList.get("kgFat")+totKgFat)>
                               			<#else>
                               			<#assign kgFat = 0>
                               		</#if>
-                              		<#assign kgSnf = shortagesList.kgSnf>
+                              		
                               		<#if (kgSnf<0)>
                               			<#assign totKgSnf = (shortagesList.get("kgSnf")+totKgSnf)>
                               			<#else>
                               			<#assign kgSnf = 0>
                               		</#if>
-                                 <#if totRecAmt!=0 > 	
                                 	<#assign totKgFatAmt = (shortagesList.get("kgFatAmt")+totKgFatAmt)>
                                 	<#assign totKgSnfAmt = (shortagesList.get("kgSnfAmt")+totKgSnfAmt)>
-                                	<#assign totSPrice = (shortagesList.get("sPrice")+totSPrice)>
+	                             	
 	                             	<fo:table-row>
 	                                  <fo:table-cell>
 	                                        <fo:block font-size="6pt" text-align="left">${shortagesList.facilityCode} </fo:block>
@@ -100,7 +120,7 @@ under the License.
 	                                        <fo:block font-size="6pt" text-align="right">${shortagesList.kgSnfAmt?if_exists?string("##0.00")}  </fo:block>
 	                                  </fo:table-cell>
 	                                  <fo:table-cell>
-	                                        <fo:block font-size="6pt" text-align="right"> ${shortagesList.sPrice?if_exists?string("##0.00")}</fo:block>
+	                                        <fo:block font-size="6pt" text-align="right"> ${sourAmt?if_exists?string("##0.00")}</fo:block>
 	                                  </fo:table-cell>
 	                                  <fo:table-cell>
 	                                        <fo:block font-size="6pt" text-align="right">${totRecAmt?if_exists?string("##0.00")} </fo:block>
@@ -108,17 +128,17 @@ under the License.
 	                               	</fo:table-row>
 	                              </#if> 	
                               <#else>
-                                <#assign totRecAmt = (shortagesList.kgFatAmt+shortagesList.kgSnfAmt+shortagesList.sPrice)>
+                              	
+                                <#assign totRecAmt = (shortagesList.kgFatAmt+shortagesList.kgSnfAmt+facSourAmt)>
                                 <#if totRecAmt!=0>
                                  <fo:table-row>
                                     <fo:table-cell>
                                         <fo:block font-size="7pt">----------------------------------------------------------------------------------------------------------------</fo:block>
-                                        <fo:block font-size="6pt" linefeed-treatment="preserve">&#xA;</fo:block>
                                     </fo:table-cell>
                                 </fo:table-row>
                                 <fo:table-row>
                                   <fo:table-cell>
-                                        <fo:block font-size="6pt" ></fo:block>
+                                        <fo:block font-size="6pt" > </fo:block>
                                   </fo:table-cell>
                                   <fo:table-cell>
                                         <fo:block font-size="6pt"  keep-together="always" text-align="left">${shortagesList.facilityName}  </fo:block>
@@ -136,15 +156,20 @@ under the License.
                                         <fo:block font-size="6pt" text-align="right">${shortagesList.kgSnfAmt?if_exists?string("##0.00")}  </fo:block>
                                   </fo:table-cell>
                                   <fo:table-cell>
-                                        <fo:block font-size="6pt" text-align="right"> ${shortagesList.sPrice?if_exists?string("##0.00")}</fo:block>
+                                        <fo:block font-size="6pt" text-align="right"> ${facSourAmt?if_exists?string("##0.00")}</fo:block>
+                                        <#assign facSourAmt = 0>
                                   </fo:table-cell>
                                   <fo:table-cell>
-                                        <fo:block font-size="6pt" text-align="right">${(shortagesList.kgFatAmt+shortagesList.kgSnfAmt+shortagesList.sPrice)?if_exists?string("##0.00")}* </fo:block>
+                                        <fo:block font-size="6pt" text-align="right">${totRecAmt?if_exists?string("##0.00")}  </fo:block>
+                                  </fo:table-cell>
+                                  <fo:table-cell>
+                                        <fo:block font-size="6pt" text-align="left">* </fo:block>
                                   </fo:table-cell>
                              </fo:table-row>
                              <fo:table-row> 
                                  <fo:table-cell>
                                         <fo:block font-size="7pt">----------------------------------------------------------------------------------------------------------------</fo:block>
+                                        <fo:block font-size="6pt" linefeed-treatment="preserve">&#xA;</fo:block>
                                   </fo:table-cell>
                              </fo:table-row>
                              </#if>
@@ -155,9 +180,15 @@ under the License.
                            			<fo:block font-size="7pt">----------------------------------------------------------------------------------------------------------------</fo:block>
                            		</fo:table-cell>
                            </fo:table-row>
-                           <#assign totRecoverableAmt = totRecoverableAmt+(totKgFatAmt+totKgSnfAmt+totSPrice)>
+                           <#assign totSourAmt = 0>
+						     <#if GrandTotalsMap?has_content>
+						    	<#if (GrandTotalsMap.get("sourAmt"))?has_content>
+						     		<#assign totSourAmt =totSourAmt-GrandTotalsMap.get("sourAmt")>
+						       	</#if>
+		                   </#if>
+		                   <#assign totRecoverableAmt = totRecoverableAmt+(totKgFatAmt+totKgSnfAmt+totSourAmt)>
                            <fo:table-row>
-                           		<fo:table-cell></fo:table-cell>
+                           		<fo:table-cell><fo:block>&#160; </fo:block></fo:table-cell>
                                 <fo:table-cell>
                                     <fo:block font-size="6pt" keep-together="always">${facility.facilityName}</fo:block>
                                 </fo:table-cell>
@@ -174,10 +205,11 @@ under the License.
                                     <fo:block font-size="6pt" text-align="right">${totKgSnfAmt?if_exists?string("##0.00")} </fo:block>
                                 </fo:table-cell>
                                 <fo:table-cell>
-                                    <fo:block font-size="6pt" text-align="right">${totSPrice?if_exists?string("##0.00")} </fo:block>
+                                		
+                                    <fo:block font-size="6pt" text-align="right">${totSourAmt?if_exists?string("##0.00")} </fo:block>
                                 </fo:table-cell>
                                 <fo:table-cell>
-                                    <fo:block font-size="6pt" text-align="right">${totRecoverableAmt?if_exists?string("##0.00")}* </fo:block>
+                                    <fo:block font-size="6pt" text-align="right">${totRecoverableAmt?if_exists?string("##0.00")} </fo:block>
                                 </fo:table-cell>
                            </fo:table-row>
                            <fo:table-row>
@@ -186,23 +218,26 @@ under the License.
                            		</fo:table-cell>
                            </fo:table-row>
                            <fo:table-row>
-                           		<fo:table-cell></fo:table-cell>
+                           		<fo:table-cell><fo:block>&#160; </fo:block></fo:table-cell>
                                 <fo:table-cell>
                                     <fo:block font-size="6pt" keep-together="always">* LESS TIP AMOUNT </fo:block>
                                 </fo:table-cell>
-                                <fo:table-cell>
+                                <fo:table-cell><fo:block>&#160; </fo:block>
+                                </fo:table-cell>
+                                <fo:table-cell><fo:block>&#160; </fo:block>
+                                </fo:table-cell>
+                                <fo:table-cell><fo:block>&#160; </fo:block>
+                                </fo:table-cell>
+                                <fo:table-cell><fo:block>&#160; </fo:block>
+                                </fo:table-cell>
+                                <fo:table-cell><fo:block>&#160; </fo:block>
                                 </fo:table-cell>
                                 <fo:table-cell>
+                                    <fo:block font-size="6pt" text-align="right">${tipAmt?if_exists?string("##0")} </fo:block>
                                 </fo:table-cell>
-                                <fo:table-cell>
-                                </fo:table-cell>
-                                <fo:table-cell>
-                                </fo:table-cell>
-                                <fo:table-cell>
-                                </fo:table-cell>
-                                <fo:table-cell>
-                                    <fo:block font-size="6pt" text-align="right">${tipAmt?if_exists?string("##0")} *</fo:block>
-                                </fo:table-cell>
+                                 <fo:table-cell>
+                                        <fo:block font-size="6pt" text-align="left">* </fo:block>
+                                  </fo:table-cell>
                            </fo:table-row>
                           </fo:table-body>
                        </fo:table>
@@ -217,6 +252,7 @@ under the License.
                         </fo:block>
                     </fo:flow>
                 </fo:page-sequence>
+     </#if>
      </#if>
    </fo:root> 
  </#escape>     

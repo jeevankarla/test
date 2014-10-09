@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<entity-engine-xml>
+    <SecurityPermission description="View operations in the MilkReceipts Component." permissionId="MILKRECEIPT_VIEW"/>
+    <SecurityPermission description="Create operations in the MilkReceipts Component." permissionId="MILKRECEIPT_CREATE"/>
+    <SecurityPermission description="Update operations in the MilkReceipts Component." permissionId="MILKRECEIPT_UPDATE"/>
+    <SecurityPermission description="Delete operations in the MilkReceipts Component." permissionId="MILKRECEIPT_DELETE"/>
+    <SecurityPermission description="ALL operations in the MilkReceipts Component." permissionId="MILKRECEIPT_ADMIN"/>
+    <SecurityGroupPermission groupId="FULLADMIN" permissionId="MILKRECEIPT_ADMIN"/>
+    <SecurityGroupPermission groupId="FLEXADMIN" permissionId="MILKRECEIPT_CREATE"/>
+    <SecurityGroupPermission groupId="FLEXADMIN" permissionId="MILKRECEIPT_DELETE"/>
+    <SecurityGroupPermission groupId="FLEXADMIN" permissionId="MILKRECEIPT_UPDATE"/>
+    <SecurityGroupPermission groupId="FLEXADMIN" permissionId="MILKRECEIPT_VIEW"/>
+    <SecurityGroupPermission groupId="VIEWADMIN" permissionId="MILKRECEIPT_VIEW"/>
+    <SecurityGroupPermission groupId="BIZADMIN" permissionId="MILKRECEIPT_ADMIN"/>
+    
+<!--Receipts Data Entry Operator -->
+         
+    <SecurityGroup groupId="MILKRECEIPT_ENTRY" description="Receipt Data Entry operator Group Permission"/>
+    <SecurityGroupPermission groupId="MILKRECEIPT_ENTRY" permissionId="MILKRECEIPT_VIEW"/>
+    <SecurityGroupPermission groupId="MILKRECEIPT_ENTRY" permissionId="MILKRECEIPT_CREATE"/>
+    <SecurityGroupPermission groupId="MILKRECEIPT_ENTRY" permissionId="MILKRECEIPT_UPDATE"/>
+    <SecurityGroupPermission groupId="MILKRECEIPT_ENTRY" permissionId="MILKRECEIPT_DELETE"/>
+    <SecurityGroupPermission groupId="MILKRECEIPT_ENTRY" permissionId="MILKRECEIPT_ADMIN"/>  
+</entity-engine-xml>

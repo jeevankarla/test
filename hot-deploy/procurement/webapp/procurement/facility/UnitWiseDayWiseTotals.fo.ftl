@@ -26,13 +26,22 @@ under the License.
             </fo:simple-page-master>
        </fo:layout-master-set>
        ${setRequestAttribute("OUTPUT_FILENAME", "unitDayWiseTotals.txt")}
+<#if errorMessage?has_content>
+	<fo:page-sequence master-reference="main">
+	       <fo:flow flow-name="xsl-region-body" font-family="Helvetica">
+	          <fo:block font-size="14pt">
+	                  ${errorMessage}.
+	       </fo:block>
+	       </fo:flow>
+	</fo:page-sequence>        
+<#else>
 		<#assign rowCount = 0> 
 		<#assign numberOfLines =57>
         <#if dayWiseEntriesList?has_content>
        <fo:page-sequence master-reference="main">
         <fo:static-content flow-name="xsl-region-before" font-family="Courier,monospace" >
             <fo:block linefeed-treatment="preserve">&#xA;</fo:block>
-            <fo:block text-align="left" white-space-collapse="false"  keep-together="always">&#160;           STATEMENT OF UNIT WISE TOTAL LTS,KGS</fo:block>
+            <fo:block text-align="left" white-space-collapse="false"  keep-together="always">&#160;           STATEMENT OF UNIT WISE TOTAL LTS,KGS      PAGE NO:<fo:page-number/>  </fo:block>
             <fo:block font-size="8pt">--------------------------------------------------------------------------------------------</fo:block>
             <fo:block text-align="left" keep-together="always" white-space-collapse="false" font-size="8pt">&#160; UNIT CODE           :${unitCode}                            UNIT NAME       :  ${unitName} </fo:block>
             <fo:block text-align="left" keep-together="always" white-space-collapse="false" font-size="8pt">&#160; TRANSACTIONS DATE   :${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(fromDate, "dd/MM/yyyy")} To ${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(thruDate, "dd/MM/yyyy")}   		COLLECTION      :  MORNING AND EVENING</fo:block>             
@@ -244,6 +253,7 @@ under the License.
               <fo:block font-size="14pt">${uiLabelMap.NoOrdersFound}. </fo:block>
            </fo:flow>
          </fo:page-sequence>
+     </#if>
      </#if>
    </fo:root> 
  </#escape>     

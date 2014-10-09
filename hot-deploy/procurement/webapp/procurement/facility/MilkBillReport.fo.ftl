@@ -26,6 +26,20 @@ under the License.
             </fo:simple-page-master>
         </fo:layout-master-set>
         ${setRequestAttribute("OUTPUT_FILENAME", "BM/CMMilkBill.txt")}
+		<#assign pageStart= parameters.pageStart>
+        <#assign pageEnd= parameters.pageEnd>       
+        ${setRequestAttribute("VST_PAGE_START", "${pageStart}")}
+        ${setRequestAttribute("VST_PAGE_END", "${pageEnd}")}
+<#if errorMessage?has_content>
+<fo:page-sequence master-reference="main">
+   <fo:flow flow-name="xsl-region-body" font-family="Helvetica">
+      <fo:block font-size="14pt">
+              ${errorMessage}.
+   	  </fo:block>
+   </fo:flow>
+</fo:page-sequence>    
+    
+<#else>         
         <#assign size =0>
         <#assign centerDetails =0>
         <#assign pageNo = 0>
@@ -48,6 +62,7 @@ under the License.
         		  			<#assign additions=0>
         		  			<#assign deductions=0>
         		  			<#assign cartage =0>
+        		  			<#assign cartageMap = (Static["javolution.util.FastMap"])>
         		  			<#assign deductionsMap = (Static["javolution.util.FastMap"])>
         					<#list adjustmentEntries as adjustmentEntry>
         						<#if adjustmentEntry.getKey() == dayTotalsEntry.getKey()>
@@ -55,6 +70,7 @@ under the License.
         							<#assign deductions= adjustmentEntry.getValue().get("DEDUCTIONS")>
         							<#assign deductionsMap = adjustmentEntry.getValue().get("dedValuesList")>
         							<#assign cartage = adjustmentEntry.getValue().get("cartage")>
+        							<#assign cartageMap = adjustmentEntry.getValue().get("cartageMap")>
         						</#if>
         					</#list>
         		  	</#if>
@@ -68,15 +84,15 @@ under the License.
         <fo:page-sequence master-reference="main">
         	<fo:static-content flow-name="xsl-region-before" font-family="Courier,monospace">
         		<#assign reportHeader = delegator.findOne("TenantConfiguration", {"propertyTypeEnumId" : "MILK_PROCUREMENT","propertyName" : "reportHeaderLable"}, true)>
-        		<fo:block text-align="left" white-space-collapse="false" font-size="8pt" keep-together="always">${reportHeader.description?if_exists}. MILL BILL FOR THE PERIOD FROM ${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(fromDateTime, "dd/MM/yyyy")} TO ${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(thruDateTime, "dd/MM/yyyy")}</fo:block>
+        		<fo:block text-align="left" white-space-collapse="false" font-size="8pt" keep-together="always">${reportHeader.description?if_exists}. MILL BILL FOR THE PERIOD FROM ${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(fromDateTime, "dd/MM/yyyy")} TO ${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(thruDateTime, "dd/MM/yyyy")}               PAGE NO:<fo:page-number/></fo:block>
         		<fo:block linefeed-treatment="preserve">&#xA;</fo:block>
         		<#assign routeDetails = delegator.findOne("Facility", {"facilityId" : centerDetails.get("parentFacilityId")}, true)>
         		<fo:block text-align="left" keep-together="always" white-space-collapse="false" font-size="8pt">UNIT :  ${agentDetails.get("facilityCode")} ${agentDetails.get("facilityName")}   ROUTE :${routeDetails.get("facilityCode")}  ${routeDetails.get("facilityName")}   CENTER:${centerDetails.get("facilityCode")} ${centerDetails.get("facilityName")}     MILK TYPE : ${productDetails.productName}    BILL NO:${pageNo}</fo:block>	 	 	  
-        		<fo:block font-size="8pt">------------------------------------------------------------------------------------------------------------------------------------------------------------</fo:block>
-        		<fo:block text-align="left" keep-together="always" white-space-collapse="false" font-size="8pt">.                         GOOD MILK                                                            SOUR MILK             CURDLED           TOTAL</fo:block>
-        		<fo:block keep-together="always" white-space-collapse="false" font-size="8pt">&#160;DTD   MOR   --------------------------------------------------------------------  ---------------------------------- ------- -------------------------------</fo:block>
-        		<fo:block keep-together="always" white-space-collapse="false" font-size="8pt">&#160;      EVE   QTY-LTS  QTY-KG  FAT%  RATE    VALUE    SNF     PREM/DED    AMOUNT    QTY-LTS   QTY-KG   FAT%   VALUE   QTY-LTS    LTS      KGS      AMOUNT</fo:block>
-        		<fo:block font-size="8pt">------------------------------------------------------------------------------------------------------------------------------------------------------------</fo:block>
+        		<fo:block font-size="8pt">-----------------------------------------------------------------------------------------------------------------------------------------------------------------</fo:block>
+        		<fo:block text-align="left" keep-together="always" white-space-collapse="false" font-size="8pt">.                         GOOD MILK                                                            SOUR MILK                  CURDLED               TOTAL</fo:block>
+        		<fo:block keep-together="always" white-space-collapse="false" font-size="8pt">&#160;DTD   MOR   --------------------------------------------------------------------  ---------------------------------- ---------------- -------------------------</fo:block>
+        		<fo:block keep-together="always" white-space-collapse="false" font-size="8pt">&#160;      EVE   QTY-LTS   QTY-KG  FAT%   RATE    VALUE    SNF     PREM/DED    AMOUNT    QTY-LTS   QTY-KG   FAT%   VALUE   QTY-LTS  QTY-KG   LTS      KGS      AMOUNT</fo:block>
+        		<fo:block font-size="8pt">-----------------------------------------------------------------------------------------------------------------------------------------------------------------</fo:block>
         	</fo:static-content>
        	<fo:flow flow-name="xsl-region-body" font-family="Courier,monospace"> 	   
         <#assign dayTotalValues= dayTotalsEntry.getValue().entrySet()> 
@@ -104,7 +120,7 @@ under the License.
                 	<#if dayWiseTotals.getKey() =="TOT"> 
                     	<fo:table-row>
                     		<fo:table-cell >	
-	                    		<fo:block font-size="7pt">------------------------------------------------------------------------------------------------------------------------------------------------------------</fo:block>
+	                    		<fo:block font-size="7pt">-----------------------------------------------------------------------------------------------------------------------------------------------------------------</fo:block>
 	                        </fo:table-cell>
                     	</fo:table-row>
                     </#if>                  
@@ -119,21 +135,22 @@ under the License.
                     							<fo:table-column column-width="20pt"/>
                     							<fo:table-column column-width="25pt"/>
                     							<fo:table-column column-width="30pt"/>
-                    							<fo:table-column column-width="35pt"/>
+                    							<fo:table-column column-width="37pt"/>
                     							<fo:table-column column-width="25pt"/>
-                    							<fo:table-column column-width="35pt"/>
-                    							<fo:table-column column-width="50pt"/>
-                    							<fo:table-column column-width="27pt"/>
-                    							<fo:table-column column-width="47pt"/>
+                    							<fo:table-column column-width="40pt"/>
+                    							<fo:table-column column-width="43pt"/>
+                    							<fo:table-column column-width="30pt"/>
+                    							<fo:table-column column-width="48pt"/>
                     							<fo:table-column column-width="47pt"/>
                     							<fo:table-column column-width="35pt"/>
                     							<fo:table-column column-width="35pt"/>
                     							<fo:table-column column-width="35pt"/>
                     							<fo:table-column column-width="37pt"/>
-                    							<fo:table-column column-width="35pt"/>
-                    							<fo:table-column column-width="42pt"/>
-                    							<fo:table-column column-width="42pt"/>
-                    							<fo:table-column column-width="50pt"/>
+                    							<fo:table-column column-width="30pt"/>
+                    							<fo:table-column column-width="30pt"/>
+                    							<fo:table-column column-width="40pt"/>
+                    							<fo:table-column column-width="43pt"/>
+                    							<fo:table-column column-width="48pt"/>
                     							 <fo:table-body>                    							
                     							 <#list procurementProductList as procProducts>                    							 	
                     								<fo:table-row>
@@ -141,7 +158,7 @@ under the License.
 	                        						<#if  productDetails.productName == procProducts.productName>
 	                        						<#assign size = dayWiseTotalsEntries.size()>
 	                        							<#assign billReportEntries = (dayWiseTotalsEntry.getValue()).get(productDetails.productName)>
-	                        							<#if billReportEntries.get("qtyKgs") !=0>
+	                        						<#if (billReportEntries.get("qtyKgs")+billReportEntries.get("sQtyLtrs")) !=0 || billReportEntries.get("cQtyLtrs") !=0>
 	                        							<fo:table-cell >	
 	                        							<#if dayWiseTotals.getKey() !="TOT">
 	                        								<fo:block text-align="left" >${dayWiseTotals.getKey().substring(8)}</fo:block>
@@ -151,8 +168,7 @@ under the License.
 	                        							</fo:table-cell>
 	                        							<fo:table-cell >	
 	                        								<fo:block >${dayWiseTotalsEntry.getKey()}</fo:block>
-	                        							</fo:table-cell>
-	                        								                        							               	  
+	                        							</fo:table-cell>	                        								                        							               	  
 	                        							<fo:table-cell>
 	                        								<fo:block text-align="right">${(billReportEntries.get("qtyLtrs"))?string("##0.0")}</fo:block>
 	                        							</fo:table-cell>
@@ -168,8 +184,12 @@ under the License.
 	                        							</fo:table-cell>
 	                        							<fo:table-cell>
 	                        								<#if dayWiseTotals.getKey() !="TOT">	
-	                        									<#assign slabRate= Static["in.vasista.vbiz.procurement.PriceServices"].getProcurementProductPrice(dctx,Static["org.ofbiz.base.util.UtilMisc"].toMap("userLogin",userLogin,"facilityId",centerDetails.get("facilityId"),"productId",procProducts.productId,"fatPercent",billReportEntries.get("fat"),"snfPercent",billReportEntries.get("snf")))>                								                     								
-	                        									<fo:block text-align="right">${(slabRate.get("defaultRate"))?if_exists?string("##0.00")} </fo:block>
+	                        									<#assign slabRate= Static["in.vasista.vbiz.procurement.PriceServices"].getProcurementProductPrice(dctx,Static["org.ofbiz.base.util.UtilMisc"].toMap("userLogin",userLogin,"facilityId",centerDetails.get("facilityId"),"priceDate",fromDateTime,"productId",procProducts.productId,"fatPercent",billReportEntries.get("fat"),"snfPercent",billReportEntries.get("snf")))>                								                     								
+	                        									<#if billReportEntries.get("qtyKgs") !=0>
+	                        										 <fo:block text-align="right">${(slabRate.get("defaultRate"))?if_exists?string("##0.00")} </fo:block>
+	                        										<#else>
+	                        										  <fo:block text-align="right">0.00</fo:block>
+	                        								    </#if>
 	                        								</#if>	
 	                        							</fo:table-cell>
 	                        							<fo:table-cell>
@@ -195,7 +215,7 @@ under the License.
 	                        								<fo:block text-align="right">${(billReportEntries.get("sQtyLtrs"))?string("##0.0")}</fo:block>
 	                        							</fo:table-cell>
 	                        							<fo:table-cell>
-	                        								<fo:block text-align="right">${(billReportEntries.get("sQtyLtrs")*1.03)?string("##0.0")}</fo:block>
+	                        								<fo:block text-align="right">${(billReportEntries.get("sQtyKgs"))?string("##0.0")}</fo:block>
 	                        							</fo:table-cell>
 	                        							<fo:table-cell>
 	                        								<fo:block text-align="right">${(billReportEntries.get("sFat"))?string("##0.0")}</fo:block>
@@ -207,10 +227,13 @@ under the License.
 	                        								<fo:block text-align="right">${(billReportEntries.get("cQtyLtrs"))?string("##0.0")}</fo:block>
 	                        							</fo:table-cell>
 	                        							<fo:table-cell>
+	                        								<fo:block text-align="right">${(Static["in.vasista.vbiz.procurement.ProcurementNetworkServices"].convertLitresToKG(billReportEntries.get("cQtyLtrs")))?string("##0.0")}</fo:block>
+	                        							</fo:table-cell>
+	                        							<fo:table-cell>
 	                        								<fo:block text-align="right">${(billReportEntries.get("qtyLtrs")+billReportEntries.get("sQtyLtrs"))?string("##0.00")}</fo:block>
 	                        							</fo:table-cell>
 	                        							<fo:table-cell>
-	                        								<fo:block text-align="right">${((billReportEntries.get("sQtyLtrs")*1.03)+billReportEntries.get("qtyKgs"))?string("##0.00")}</fo:block>
+	                        								<fo:block text-align="right">${((billReportEntries.get("sQtyKgs"))+billReportEntries.get("qtyKgs"))?string("##0.00")}</fo:block>
 	                        							</fo:table-cell>
 	                        							<fo:table-cell>
 	                        								<fo:block text-align="right">${((billReportEntries.get("price")+billReportEntries.get("sPrice")))?string("##0.00")}</fo:block>
@@ -237,14 +260,63 @@ under the License.
 						</#if>
 					</#list>											
 				</#list>														
-					<fo:block font-size="8pt">------------------------------------------------------------------------------------------------------------------------------------------------------------</fo:block>
+					<fo:block font-size="8pt">-----------------------------------------------------------------------------------------------------------------------------------------------------------------</fo:block>
 					<fo:block font-size="8pt">
 						<fo:table>
-							<fo:table-column column-width="15pt"/>
-                    		<fo:table-column column-width="20pt"/>
+							<fo:table-column column-width="30pt"/>
+                    		<fo:table-column column-width="7pt"/>
+                    		<fo:table-column column-width="47pt"/>
+                    		<fo:table-column column-width="45pt"/>
+                    		<fo:table-column column-width="28pt"/>
+                    		<fo:table-column column-width="96pt"/>
+                    		<fo:table-column column-width="55pt"/>
+                    		<fo:table-column column-width="33pt"/>
+                    		<fo:table-column column-width="54pt"/>
+                    		<fo:table-column column-width="42pt"/>
+                    		<fo:table-column column-width="37pt"/>
+                    		<fo:table-column column-width="35pt"/>
+                    		<fo:table-column column-width="43pt"/>
+                    		<fo:table-column column-width="37pt"/>
+                    		<fo:table-column column-width="37pt"/>
+                    		<fo:table-column column-width="48pt"/>  
+                    		<fo:table-column column-width="49pt"/>
+                    		<fo:table-column column-width="53pt"/>
+                    		<fo:table-column column-width="50pt"/>
+                    		<fo:table-column column-width="50pt"/>                 		
+                    		<fo:table-body>                    			
+                    			<fo:table-row >
+                    				<fo:table-cell><fo:block >TOTAL</fo:block></fo:table-cell>
+                    				<fo:table-cell></fo:table-cell>
+                    				<fo:table-cell><fo:block text-align="right">${(GrTotEntries.get("qtyLtrs"))?if_exists?string("##0.0")}</fo:block></fo:table-cell>
+                    				<fo:table-cell><fo:block text-align="right">${(GrTotEntries.get("qtyKgs"))?if_exists?string("##0.0")}</fo:block></fo:table-cell>
+                    				<fo:table-cell><fo:block text-align="right">0.0</fo:block></fo:table-cell>
+                    				<fo:table-cell><fo:block text-align="right">${(GrTotEntries.get("price")-(GrTotEntries.get("totPrem")))?if_exists?string("##0.00")}</fo:block></fo:table-cell>
+                    				<fo:table-cell><fo:block text-align="right"></fo:block></fo:table-cell>
+                    				<fo:table-cell><fo:block text-align="right">${(GrTotEntries.get("totPrem"))?if_exists?string("##0.00")}</fo:block></fo:table-cell>
+                    				<fo:table-cell><fo:block text-align="right">${(GrTotEntries.get("price"))?if_exists?string("##0.00")}</fo:block></fo:table-cell>
+                    				<fo:table-cell><fo:block text-align="right">${(GrTotEntries.get("sQtyLtrs"))?string("##0.0")}</fo:block></fo:table-cell>
+                    				<fo:table-cell><fo:block text-align="right">${((GrTotEntries.get("sQtyKgs")))?if_exists?string("##0.0")}</fo:block></fo:table-cell>
+                    				<fo:table-cell><fo:block text-align="right" text-indent="5pt">0.0</fo:block></fo:table-cell>
+                    				<fo:table-cell><fo:block text-align="right">${(GrTotEntries.get("sPrice"))?if_exists?string("##0.00")}</fo:block></fo:table-cell>
+                    				<fo:table-cell><fo:block text-align="right" text-indent="8pt">${(GrTotEntries.get("cQtyLtrs"))?string("##0.0")}</fo:block></fo:table-cell>
+                    				<fo:table-cell><fo:block text-align="right" text-indent="8pt">${(Static["in.vasista.vbiz.procurement.ProcurementNetworkServices"].convertLitresToKG(GrTotEntries.get("cQtyLtrs")))?string("##0.0")}</fo:block></fo:table-cell>
+                    				<fo:table-cell><fo:block text-align="right">${(GrTotEntries.get("qtyLtrs")+GrTotEntries.get("sQtyLtrs"))?if_exists?string("##0.00")}</fo:block></fo:table-cell>
+                    				<fo:table-cell><fo:block text-align="right">${((GrTotEntries.get("qtyKgs")+GrTotEntries.get("sQtyKgs")))?if_exists?string("##0.00")}</fo:block></fo:table-cell>
+                    				<fo:table-cell><fo:block text-align="right">${((GrTotEntries.get("price")+GrTotEntries.get("sPrice")))?if_exists?string("##0.00")}</fo:block></fo:table-cell>
+                    			</fo:table-row>
+                    			<fo:table-row>
+                    				<fo:table-cell><fo:block font-size="8pt">-----------------------------------------------------------------------------------------------------------------------------------------------------------------</fo:block></fo:table-cell>
+                    			</fo:table-row>
+                    		</fo:table-body>					
+						</fo:table>
+					</fo:block>		
+                    <fo:block font-size="8pt">
+						<fo:table>
+							<fo:table-column column-width="25pt"/>
+                    		<fo:table-column column-width="7pt"/>
                     		<fo:table-column column-width="50pt"/>
                     		<fo:table-column column-width="47pt"/>
-                    		<fo:table-column column-width="40pt"/>
+                    		<fo:table-column column-width="45pt"/>
                     		<fo:table-column column-width="80pt"/>
                     		<fo:table-column column-width="55pt"/>
                     		<fo:table-column column-width="30pt"/>
@@ -260,29 +332,7 @@ under the License.
                     		<fo:table-column column-width="50pt"/>
                     		<fo:table-column column-width="50pt"/>
                     		<fo:table-column column-width="50pt"/>                 		
-                    		<fo:table-body>                    			
-                    			<fo:table-row font-size="8pt">
-                    				<fo:table-cell><fo:block >TOTAL</fo:block></fo:table-cell>
-                    				<fo:table-cell></fo:table-cell>
-                    				<fo:table-cell><fo:block text-align="right">${(GrTotEntries.get("qtyLtrs"))?if_exists?string("##0.0")}</fo:block></fo:table-cell>
-                    				<fo:table-cell><fo:block text-align="left" text-indent="2pt">${(GrTotEntries.get("qtyKgs"))?if_exists?string("##0.0")}</fo:block></fo:table-cell>
-                    				<fo:table-cell><fo:block text-align="left" text-indent="5pt">0.0</fo:block></fo:table-cell>
-                    				<fo:table-cell><fo:block text-align="right">${(GrTotEntries.get("price")-(GrTotEntries.get("totPrem")))?if_exists?string("##0.00")}</fo:block></fo:table-cell>
-                    				<fo:table-cell><fo:block text-align="right"></fo:block></fo:table-cell>
-                    				<fo:table-cell><fo:block text-align="right">${(GrTotEntries.get("totPrem"))?if_exists?string("##0.00")}</fo:block></fo:table-cell>
-                    				<fo:table-cell><fo:block text-align="right">${(GrTotEntries.get("price"))?if_exists?string("##0.00")}</fo:block></fo:table-cell>
-                    				<fo:table-cell><fo:block text-align="right">${(GrTotEntries.get("sQtyLtrs"))?string("##0.0")}</fo:block></fo:table-cell>
-                    				<fo:table-cell><fo:block text-align="right">${((GrTotEntries.get("sQtyLtrs")*1.03))?if_exists?string("##0.0")}</fo:block></fo:table-cell>
-                    				<fo:table-cell><fo:block text-align="right" text-indent="5pt">0.0</fo:block></fo:table-cell>
-                    				<fo:table-cell><fo:block text-align="right">${(GrTotEntries.get("sPrice"))?if_exists?string("##0.00")}</fo:block></fo:table-cell>
-                    				<fo:table-cell><fo:block text-align="right" text-indent="8pt">${(GrTotEntries.get("cQtyLtrs"))?string("##0.0")}</fo:block></fo:table-cell>
-                    				<fo:table-cell><fo:block text-align="right">${(GrTotEntries.get("qtyLtrs")+GrTotEntries.get("sQtyLtrs"))?if_exists?string("##0.00")}</fo:block></fo:table-cell>
-                    				<fo:table-cell><fo:block text-align="right">${((GrTotEntries.get("qtyKgs")+GrTotEntries.get("sQtyLtrs")*1.03))?if_exists?string("##0.00")}</fo:block></fo:table-cell>
-                    				<fo:table-cell><fo:block text-align="right">${((GrTotEntries.get("price")+GrTotEntries.get("sPrice")))?if_exists?string("##0.00")}</fo:block></fo:table-cell>
-                    			</fo:table-row>
-                    			<fo:table-row>
-                    				<fo:table-cell><fo:block font-size="8pt">------------------------------------------------------------------------------------------------------------------------------------------------------------</fo:block></fo:table-cell>
-                    			</fo:table-row>
+                    		<fo:table-body> 	
                     			<fo:table-row>
                     				<fo:table-cell>
                        				<fo:block keep-together="always" white-space-collapse="false">KGFAT  :  ${(GrTotEntries.get("kgFat").setScale(2,2))?string("##0.000")}</fo:block>
@@ -304,24 +354,30 @@ under the License.
                        			<fo:table-cell>
                        				<fo:block keep-together="always" white-space-collapse="false" text-indent="12pt">SHAR-CAP: 0.00 </fo:block>
                        				<fo:block keep-together="always" white-space-collapse="false" text-indent="14pt">CONSN   : 0.00</fo:block>
+                       				<#if cartageMap?has_content>
+                       					<#assign cartage = cartageMap[productDetails.productId]>
+                       				</#if>
                        				<fo:block keep-together="always" white-space-collapse="false" text-indent="12pt">CARTAGE : ${cartage?if_exists?string("##0.00")}</fo:block>
                        				<fo:block keep-together="always" white-space-collapse="false" text-indent="12pt">ADDTINS  :  <#if useTotSolidsMap[productDetails.productName] =="N">${additions?string("##0.00")}<#else>0.00</#if></fo:block>
                        			</fo:table-cell>
                        			   <fo:table-cell></fo:table-cell>             			
                        			<#assign dedTypes = adjustmentDedTypes.entrySet()>                     			
                        			<fo:table-cell>
+                       				<#assign orderAdjustmentDesc=Static["in.vasista.vbiz.procurement.ProcurementNetworkServices"].getShedOrderAdjustmentDescription( dctx,Static["org.ofbiz.base.util.UtilMisc"].toMap("shedId",agentDetails.get("parentFacilityId"))).get("shedAdjustmentDescriptionMap")>
                        				<#list dedTypes as adjType>
 	        							<#if (adjType.getKey() <= 3)>
 			        						<#if deductionsMap?has_content>	
 			        							<#assign dedEntry = deductionsMap.entrySet()>	        							
-			        							<#assign value =0>    
+			        							<#assign value =0>   
+			        							<#if dedEntry?has_content> 
 				        							<#list dedEntry as deduction>
 			    										<#if ((adjType.getValue()).orderAdjustmentTypeId) == deduction.getKey()>
 			    											<#assign value = deduction.getValue()>
 			    										</#if>
 			    										<#assign dedEntry =0>
-			        								</#list>   	
-		        								<fo:block text-align="left" keep-together="always" white-space-collapse="false" text-indent="28pt">${Static["org.ofbiz.order.order.OrderServices"].nameTrim((StringUtil.wrapString((adjType.getValue()).description?if_exists)),7)} : <#if useTotSolidsMap[productDetails.productName] =="N" || displayDed =="Y">${value?string("##0.00")}<#else>0.00</#if></fo:block>
+			        								</#list> 
+			        							</#if>     								
+		        								<fo:block text-align="left" keep-together="always" white-space-collapse="false" text-indent="28pt">${Static["org.ofbiz.order.order.OrderServices"].nameTrim((StringUtil.wrapString(orderAdjustmentDesc[(adjType.getValue()).orderAdjustmentTypeId]?if_exists)),7)} : <#if useTotSolidsMap[productDetails.productName] =="N" || displayDed =="Y">${value?string("##0.00")}<#else>0.00</#if></fo:block>
 	        								</#if>
 	        							</#if>
 	        						</#list>	        						                    				
@@ -333,13 +389,15 @@ under the License.
 	                       					<#if deductionsMap?has_content>  
 	                       						<#assign dedEntry = deductionsMap.entrySet()>                       					
 			        							<#assign dedValue = 0>    
+			        						<#if dedEntry?has_content> 	
 			        							<#list dedEntry as deduction>
 		    										<#if ((adjType.getValue()).orderAdjustmentTypeId) == deduction.getKey()>
 		    											<#assign dedValue = deduction.getValue()>
 		    										</#if>
 		    										<#assign dedEntry =0>	
-		        								</#list>     		        								 							
-	        								<fo:block text-align="left" keep-together="always" white-space-collapse="false">${Static["org.ofbiz.order.order.OrderServices"].nameTrim((StringUtil.wrapString((adjType.getValue()).description?if_exists)),7)} : <#if useTotSolidsMap[productDetails.productName] =="N" || displayDed =="Y">${dedValue?string("##0.00")}<#else>0.00</#if></fo:block>
+		        								</#list>     
+		        							</#if>			        								 							
+	        								<fo:block text-align="left" keep-together="always" white-space-collapse="false">${Static["org.ofbiz.order.order.OrderServices"].nameTrim((StringUtil.wrapString(orderAdjustmentDesc[(adjType.getValue()).orderAdjustmentTypeId]?if_exists)),7)} : <#if useTotSolidsMap[productDetails.productName] =="N" || displayDed =="Y">${dedValue?string("##0.00")}<#else>0.00</#if></fo:block>
 	        								</#if>	
 	        							</#if>
 	        						</#list>                       				
@@ -347,17 +405,19 @@ under the License.
                        			<fo:table-cell></fo:table-cell>                       			
                        			<fo:table-cell>                       				
 	        						<#list dedTypes as adjType>
-	        							<#if (adjType.getKey() > 7) && (adjType.getKey() < 11)>
+	        							<#if (adjType.getKey() > 7) && (adjType.getKey() < 12)>
 	        								<#if deductionsMap?has_content>
 	        									<#assign dedEntry = deductionsMap.entrySet()>
 		        								<#assign dedVal =0>    
+		        							<#if dedEntry?has_content> 	
 		        								<#list dedEntry as deduction>
 		    										<#if ((adjType.getValue()).orderAdjustmentTypeId) == deduction.getKey()>
 		    											<#assign dedVal = deduction.getValue()>
 		    										</#if>
 		    										<#assign dedEntry =0>
 	        									</#list>
-	        									<fo:block text-align="left" keep-together="always" white-space-collapse="false">${Static["org.ofbiz.order.order.OrderServices"].nameTrim((StringUtil.wrapString((adjType.getValue()).description?if_exists)),7)} : <#if useTotSolidsMap[productDetails.productName] =="N" || displayDed =="Y">${dedVal?string("##0.00")}<#else>0.00</#if></fo:block>
+	        								</#if>	
+	        									<fo:block text-align="left" keep-together="always" white-space-collapse="false">${Static["org.ofbiz.order.order.OrderServices"].nameTrim((StringUtil.wrapString(orderAdjustmentDesc[(adjType.getValue()).orderAdjustmentTypeId]?if_exists)),7)} : <#if useTotSolidsMap[productDetails.productName] =="N" || displayDed =="Y">${dedVal?string("##0.00")}<#else>0.00</#if></fo:block>
 	        								</#if>
 	        							</#if>
 	        						</#list>                       				
@@ -369,7 +429,7 @@ under the License.
                        				<fo:block keep-together="always" white-space-collapse="false" text-aling="left">NET AMOUNT   :</fo:block>
                        				<#assign ltrCost =(Static["java.math.BigDecimal"].ZERO)>	
                        				<#if GrTotEntries.get("qtyKgs") !=0>
-                       					<#assign ltrCost = (((GrTotEntries.get("price")+GrTotEntries.get("sPrice")))/(GrTotEntries.get("qtyKgs")+(GrTotEntries.get("sQtyLtrs")*1.03)))>                       					
+                       					<#assign ltrCost = (((GrTotEntries.get("price")+GrTotEntries.get("sPrice")))/(GrTotEntries.get("qtyKgs")+(GrTotEntries.get("sQtyKgs"))))>                       					
                        				</#if>
                        				<#assign ltrAmount = Static["in.vasista.vbiz.procurement.ProcurementNetworkServices"].calculateLtrAmt(ltrCost,(GrTotEntries.get("qtyLtrs")+(GrTotEntries.get("sQtyLtrs"))))>
                        				<#assign ltrCostValue = ltrCost?string("##0.00")>
@@ -399,7 +459,7 @@ under the License.
                     			</fo:table-row>
                     		</fo:table-body>					
 						</fo:table>
-					</fo:block>
+					</fo:block>					
 					</#list>
             	</fo:flow>		
 			</fo:page-sequence>
@@ -418,5 +478,6 @@ under the License.
 	    	</fo:flow>
 		</fo:page-sequence>
 		</#if> 
+		</#if>
 </fo:root>
 </#escape>
