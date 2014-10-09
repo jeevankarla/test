@@ -46,37 +46,38 @@ if (context.finAccount != null) {
 context.ctxFinAccountId = session.getAttribute("ctxFinAccountId");
 if (context.ctxFinAccountId != null) {
 	ctxFinAccount = delegator.findByPrimaryKey("FinAccount", [finAccountId : context.ctxFinAccountId]);
-	if(UtilValidate.isNotEmpty(ctxFinAccount) && "DEPOSIT_ACCOUNT" != ctxFinAccount.finAccountTypeId){
+	if(UtilValidate.isNotEmpty(ctxFinAccount)){
 		if("BANK_ACCOUNT"==ctxFinAccount.finAccountTypeId){
 			tabButtonItem="FindFinAccountAlt";
 			context.tabButtonItem="FindFinAccountAlt";
 			parameters.tabButtonItem="FindFinAccountAlt";
-		}else{
+		}
+		else if(parameters.screenFlag && parameters.screenFlag=="NON_BANKACCOUNT"){
 			tabButtonItem="FindNonBankAccount";
 			context.tabButtonItem="FindNonBankAccount";
 			parameters.tabButtonItem="FindNonBankAccount";
 		}
 	}
-	else{
-		tabButtonItem="FindDepositAccount";
-		context.tabButtonItem="FindDepositAccount";
-		parameters.tabButtonItem="FindDepositAccount";
-	}
+	
 	context.ctxFinAccount = ctxFinAccount;
 }
 
 //Debug.log("===finAccountId==="+finAccountId);
 //Debug.log("===tabButtonItem==="+tabButtonItem);
 
+finAccountTypes = delegator.findList("FinAccountAndType", EntityCondition.makeCondition("parentTypeId", EntityOperator.IN, UtilMisc.toList("DEPOSIT_RECEIPT", "DEPOSIT_PAID")), UtilMisc.toSet("finAccountTypeId"), null, null, false);
+finAccountTypeIds = EntityUtil.getFieldListFromEntityList(finAccountTypes, "finAccountTypeId", true);
+
 if(UtilValidate.isNotEmpty(parameters.screenFlag)){
 	conditionList = [];
 	if(parameters.screenFlag == "DEPOSIT_ACCOUNT"){
-		conditionList.add(EntityCondition.makeCondition("finAccountTypeId", EntityOperator.EQUALS, "DEPOSIT_ACCOUNT"));
+		conditionList.add(EntityCondition.makeCondition("finAccountTypeId", EntityOperator.IN, finAccountTypeIds));
 	}
 	else{
-		conditionList.add(EntityCondition.makeCondition("ownerPartyId", EntityOperator.EQUALS, "Company"));
 		conditionList.add(EntityCondition.makeCondition("finAccountTypeId", EntityOperator.NOT_EQUAL, "BANK_ACCOUNT"));
+		conditionList.add(EntityCondition.makeCondition("finAccountTypeId", EntityOperator.NOT_IN, finAccountTypeIds));
 	}
+	conditionList.add(EntityCondition.makeCondition("ownerPartyId", EntityOperator.EQUALS, "Company"));
 	conditionList.add(EntityCondition.makeCondition("statusId", EntityOperator.EQUALS, "FNACT_ACTIVE"));
 	List nonBankAccountsList = delegator.findList("FinAccount", EntityCondition.makeCondition(conditionList, EntityOperator.AND), null, null, null, false);
 	

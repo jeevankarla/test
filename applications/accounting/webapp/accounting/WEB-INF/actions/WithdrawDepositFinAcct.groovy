@@ -51,10 +51,12 @@ if(finAccount){
 partyAccountsList = [];
 conditionList = [];
 if(screenFlag == "DEPOSIT_ACCOUNT" && ownerParty){
-	conditionList.add(EntityCondition.makeCondition("finAccountTypeId", EntityOperator.EQUALS, "DEPOSIT_ACCOUNT"));
+	/*conditionList.add(EntityCondition.makeCondition("finAccountTypeId", EntityOperator.EQUALS, "DEPOSIT_ACCOUNT"));
 	conditionList.add(EntityCondition.makeCondition("ownerPartyId", EntityOperator.EQUALS, ownerParty));
 	conditionList.add(EntityCondition.makeCondition("statusId", EntityOperator.EQUALS, "FNACT_ACTIVE"));
-	partyAccountsList = delegator.findList("FinAccount", EntityCondition.makeCondition(conditionList, EntityOperator.AND), null, null, null, false);
+	*/
+	//partyAccountsList = delegator.findList("FinAccount", EntityCondition.makeCondition(conditionList, EntityOperator.AND), null, null, null, false);
+	partyAccountsList.add(finAccount);
 }
 
 conditionList.clear();

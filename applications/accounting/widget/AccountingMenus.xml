@@ -2134,7 +2134,7 @@
 				<parameter param-name="finAccountId" value="${ctxFinAccountId}" />
 			</link>
 		</menu-item>
-		<menu-item name="WithdrawFromDepositAcct" title="Withdraw from Acct">
+		<menu-item name="WithdrawFromDepositAcct" title="Receive Deposit">
 		  <condition>
 		  	<and>
 				<if-has-permission permission="ACCOUNTING"  action="_TREASURER"/>
@@ -2146,7 +2146,7 @@
 				<parameter param-name="finAccountId" value="${ctxFinAccountId}" />
 			</link>
 		</menu-item>
-		<menu-item name="DepositToDepositAcct" title="Deposit to Acct">
+		<menu-item name="DepositToDepositAcct" title="Refund Deposit">
 		  <condition>
 		  	<and>
 				<if-has-permission permission="ACCOUNTING"  action="_TREASURER"/>

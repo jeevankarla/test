@@ -132,37 +132,15 @@ under the License.
     <form name="ListDepositAccounts" type="list" separate-columns="true" default-entity-name="FinAccount"   list-name="nonBankAccountsList" paginate-target="FindDepositAccount" paginate="true"
         odd-row-style="alternate-row" default-table-style="basic-table hover-bar">
      
-    	<auto-fields-entity entity-name="FinAccount" default-field-type="display"/>
-        
         <field name="finAccountId"><hidden></hidden></field>
-        <field name="gbCode"><ignored></ignored></field>
-        <field name="bCode"><ignored></ignored></field>
-        <field name="bPlace"><ignored></ignored></field>
-        <field name="categoryTypeEnum"><ignored></ignored></field>
-        <field name="organizationPartyId"><ignored></ignored></field>
-        <field name="ownerPartyId"><ignored></ignored></field>
-        <field name="isRefundable"><ignored></ignored></field>
-        <field name="finAccountId"><ignored></ignored></field>
-        <field name="replenishPaymentId"><ignored></ignored></field>
-        <field name="replenishLevel"><ignored></ignored></field>
-        <field name="finAccountTypeId"><ignored></ignored></field>
-        <field name="statusId"><ignored></ignored></field> 
-        <field name="finAccountPin"><ignored></ignored></field>
-        <field name="micrNumber"><ignored></ignored></field>
-        <field name="fromDate"><ignored></ignored></field>
-        <field name="ifscCode"><ignored></ignored></field>
-        <field name="thruDate"><ignored></ignored></field>
-        <field name="availableBalance"><ignored></ignored></field>
         <field name="finAccountName">
             <hyperlink description="${finAccountName}" target="EditDepositFinAccount">
                 <parameter param-name="finAccountId"/>
             </hyperlink>
         </field>
-        <field name="ownerPartyId" title="Party Code">
-            <hyperlink target="/partymgr/control/viewprofile" description="${ownerPartyId}" target-type="inter-app">
-                <parameter param-name="partyId" from-field="ownerPartyId"/>
-            </hyperlink>
-        </field>
+		<field name="postToGlAccountId" title="GL AccountId"><display/></field>
+		<field name="actualBalance" title="Balance Amount"><display/></field>  
+		      
    </form>
     
     
@@ -360,7 +338,7 @@ under the License.
         <field name="finAccountTransId"><hidden/></field>
         <field name="finAccountTransTypeId"><hidden value="${parameters.finAccountTransTypeId}"/></field>
         <field name="entryType"><hidden value="Contra"/></field>
-        <field name="transactionDate"> <date-time/> </field>
+        <field name="transactionDate" title="Receipt Date"> <date-time/> </field>
         <field name="entryDate"><date-time/></field>
         <field name="parentPaymentTypeId" parameter-name="parentTypeId"><hidden value="${parameters.parentPaymentTypeId}"/></field>
         <field name="contraFinAccountId"  title="From Account">
@@ -398,7 +376,7 @@ under the License.
         <field name="finAccountTransId"><hidden/></field>
         <field name="finAccountTransTypeId"><hidden value="${parameters.finAccountTransTypeId}"/></field>
         <field name="entryType"><hidden value="Contra"/></field>
-        <field name="transactionDate"> <date-time/> </field>
+        <field name="transactionDate" title="Deposit Refund Date"> <date-time/> </field>
         <field name="entryDate"><date-time/></field>
         <field name="parentPaymentTypeId" parameter-name="parentTypeId"><hidden value="${parameters.parentPaymentTypeId}"/></field>
         <field name="paymentId" use-when="&quot;${entryType}&quot;==&quot;Payment&quot;" required-field="true"><lookup target-form-name="LookupPayment" target-parameter="parentTypeId"/></field> 
@@ -455,39 +433,37 @@ under the License.
     <form name="EditDepositAccount" type="single" target="updateDepositFinAccount" default-map-name="finAccount"
         header-row-style="header-row" default-table-style="basic-table">
         <actions>
-            <entity-one entity-name="StatusItem" value-field="currentStatus" auto-field-map="false">
+            <!-- <entity-one entity-name="StatusItem" value-field="currentStatus" auto-field-map="false">
                 <field-map field-name="statusId" from-field="finAccount.statusId"/>
-            </entity-one>
+            </entity-one> -->
+            <entity-condition entity-name="FinAccountType" list="depositAccountTypes">
+            	<condition-list combine="or">
+            		<condition-expr field-name="finAccountTypeId" operator="equals" value="DEPOSIT_RECEIPT"/>
+            		<condition-expr field-name="finAccountTypeId" operator="equals" value="DEPOSIT_PAID"/>
+            	</condition-list>
+            </entity-condition>
         </actions>
         <alt-target use-when="finAccount==null" target="createDepositFinAccount"/>
         <auto-fields-service service-name="updateBankAccount"/>
-
+        
+		<field name="parentTypeId" id-name="parentTypeId" use-when="finAccount==null&amp;&amp;finAccountId==null" title="Account Type" event="onchange" action="javascript:parentTypeOnchange();">
+        	<drop-down>
+        		<list-options key-name="finAccountTypeId" list-name="depositAccountTypes" description="${description}"/>
+        	</drop-down>
+        </field>
         <field name="finAccountId" use-when="finAccountId!=null" title="Account Id"  tooltip="${uiLabelMap.CommonNotModifRecreat}"><display/></field>
         <field name="finAccountId" use-when="finAccount==null&amp;&amp;finAccountId==null"><ignored/></field>
         <field name="finAccountId" use-when="finAccount==null&amp;&amp;finAccountId!=null" tooltip="${uiLabelMap.CommonCannotBeFound}: [${finAccountId}]"><display also-hidden="false"/></field>
-		<!-- <field name="finAccountBranch"><text size="20"/></field>
- -->
-        <field name="finAccountCode" title="Account Code"><text size="20"/></field>
-        <field name="finAccountCode" use-when="!hasFinEditPermission" title="Account Code"><display/></field>
-       <!--  <field name="categoryTypeEnum">
-			<drop-down>
-                <entity-options description="${description}" entity-name="Enumeration" key-field-name="enumId">
-                    <entity-constraint name="enumTypeId" operator="equals" value="FIN_ACCOUNT_CAT_ENUM"/>
-                    <entity-order-by field-name="description"/>
-                </entity-options>
-            </drop-down>
-		</field>     -->  
-        <!-- <field name="finAccountPin"><text size="10"/></field>
-        <field name="finAccountPin" use-when="!hasFinEditPermission"><display/></field> -->
-       <!--  <field name="finAccountTypeId" title="${uiLabelMap.FormFieldTitle_finAccountType}">
+        <field name="finAccountCode" title="Account Code"><ignored/></field>
+      	
+      	<field name="finAccountTypeId" id-name="finTypeId" use-when="finAccountId ==null" title="Deposit Account Type" >
             <drop-down no-current-selected-key="DEPOSIT_ACCOUNT">
                 <entity-options description="${description}" entity-name="FinAccountType">
                     <entity-order-by field-name="description"/>
                 </entity-options>
             </drop-down>
-        </field> -->
-        <field name="finAccountTypeId" title="Account Type" use-when="!hasFinEditPermission"><display/></field>
-        <field name="finAccountTypeId" title="Account Type" use-when="finAccountId ==null"><hidden value="DEPOSIT_ACCOUNT"/></field>
+        </field>
+        <field name="finAccountTypeId" title="Account Type" use-when="finAccountId !=null"><display/></field>
         <field name="currencyUomId" title="${uiLabelMap.CommonCurrency}">
             <drop-down no-current-selected-key="${defaultOrganizationPartyCurrencyUomId}">
                 <entity-options key-field-name="uomId" description="${description} - ${abbreviation}" entity-name="Uom">
@@ -496,6 +472,7 @@ under the License.
                 </entity-options>
             </drop-down>
         </field>
+        
         <field name="finAccountPin"><ignored/></field>
         <field name="ifscCode"><ignored/></field>
          <field name="currencyUomId"><hidden value="INR"/></field>
@@ -506,14 +483,7 @@ under the License.
         <field name="postToGlAccountId"><lookup target-form-name="LookupGlAccount"/></field>
         <field name="micrNumber" title="${uiLabelMap.micrNumber}"><hidden/></field>
        	<field name="postToGlAccountId" use-when="!hasFinEditPermission"><display/></field>
-        <field name="statusId" use-when="finAccount==null" title="${uiLabelMap.CommonStatus}">
-            <drop-down allow-empty="false">
-                <entity-options entity-name="StatusItem" description="${description}">
-                    <entity-constraint name="statusTypeId" value="FINACCT_STATUS"/>
-
-                </entity-options>
-            </drop-down>
-        </field>
+        <field name="statusId" use-when="finAccount==null" title="${uiLabelMap.CommonStatus}"><hidden value="FNACT_ACTIVE"/></field>
         <field name="statusId" use-when="finAccount!=null" title="${uiLabelMap.CommonStatus}">
             <drop-down allow-empty="false" current-description="${currentStatus.description}">
                 <entity-options entity-name="StatusValidChangeToDetail" key-field-name="statusIdTo" description="${transitionName} (${description})">
@@ -527,20 +497,25 @@ under the License.
             <drop-down no-current-selected-key="Y"><option key="Y" description="${uiLabelMap.CommonY}"/><option key="N" description="${uiLabelMap.CommonN}"/></drop-down>
         </field>
         <field name="isRefundable"><hidden value="Y"/></field>
-         <field name="actualBalance"><text size="20"/></field>
-         <field name="actualBalance" use-when="!hasFinEditPermission"><display/></field>
-        <field name="availableBalance"><hidden/></field>
+         <field name="actualBalance"><ignored/></field>
+         <!-- <field name="actualBalance" use-when="!hasFinEditPermission"><display/></field> -->
+        <field name="availableBalance"><ignored/></field>
         <field name="finAccountName" title="Account Name"><text size="20"/></field>
         <field name="finAccountName" use-when="!hasFinEditPermission" title="Account Name"><display/></field>
         <field name="finAccountBranch"><ignored/></field>
-        
-        <field name="fromDate" use-when="!hasFinEditPermission"><display/></field>
-        <field name="thruDate" use-when="!hasFinEditPermission"><display/></field>
+        <field name="fromDate"><ignored/></field>
+        <field name="thruDate"><ignored/></field>
+        <field name="ownerPartyId"><hidden value="Company"/></field>
+        <field name="organizationPartyId"><hidden value="Company"/></field>
         <field name="replenishLevel" use-when="!hasFinEditPermission"><hidden/></field>
         <field name="tenantId"><hidden/></field>
         <field name="replenishPaymentId" use-when="!hasFinEditPermission"><display/></field>
         <field name="submitButton" use-when="finAccountId==null &amp;&amp; hasFinEditPermission" title="${uiLabelMap.CommonCreate}" widget-style="smallSubmit"><submit button-type="button"/></field>
         <field name="submitButton" use-when="finAccountId!=null &amp;&amp; hasFinEditPermission" title="${uiLabelMap.CommonUpdate}" widget-style="smallSubmit"><submit button-type="button"/></field>
+        <sort-order>
+        	<sort-field name="parentTypeId"/>	
+        	<sort-field name="finAccountTypeId"/>
+        </sort-order>
     </form>
      <form name="EditBankAccount" type="single" target="updateFinAccount" default-map-name="finAccount"
         header-row-style="header-row" default-table-style="basic-table">

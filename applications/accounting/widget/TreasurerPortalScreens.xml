@@ -76,7 +76,7 @@
     <screen name="FindDepositAccount">
         <section>
             <actions>
-                <set field="titleProperty" value="Non Financial Accounts"/>
+                <set field="titleProperty" value="Deposit Accounts"/>
                   <set field="tabButtonItem" value="FindDepositAccount"/>
                  <set field="tabButtonItem2" value="FindDepositAccount"/>
                 <set field="viewIndex" from-field="parameters.VIEW_INDEX" type="Integer" default-value="0"/>
@@ -276,17 +276,23 @@
         <section>
             <actions>
                 <set field="titleProperty" value="Edit Deposit Account"/>
-                <set field="tabButtonItem"  value="${parameters.tabButtonItem}" default-value="${context.tabButtonItem}"/>
+                <set field="tabButtonItem"  value="FindDepositAccount"/>
                 <set field="tabButtonItem2" value="EditDepositFinAccount"/>
-                
                 <set field="finAccountId" from-field="parameters.finAccountId"/>
                 <property-to-field field="defaultCurrencyUomId" resource="general" property="currency.uom.id.default" default="INR"/>
                 <service service-name="acctgFinAcctPermissionCheck" result-map="permResult">
                     <field-map field-name="mainAction" value="FINACCOUNT_EDIT"/>
                 </service>
+                <set field="screenFlag" value="DEPOSIT_ACCOUNT"/>
                 <set field="hasFinEditPermission" from-field="permResult.hasPermission"/> 
                 <entity-one entity-name="FinAccount" value-field="finAccount"/>
-            <script location="component://accounting/webapp/accounting/WEB-INF/actions/EditFinaccount.groovy"/>
+            	<script location="component://accounting/webapp/accounting/WEB-INF/actions/EditFinaccount.groovy"/>
+            	<entity-condition list="receiptAccounts" entity-name="FinAccountType">
+            		<condition-expr field-name="parentTypeId" operator="equals" value="DEPOSIT_RECEIPT"/>
+            	</entity-condition>
+            	<entity-condition list="paidAccounts" entity-name="FinAccountType">
+            		<condition-expr field-name="parentTypeId" operator="equals" value="DEPOSIT_PAID"/>
+            	</entity-condition>
             </actions>
             <widgets>
               <decorator-screen name="CommonTreasurerPortalDecorator" location="component://accounting/widget/CommonScreens.xml">
@@ -298,10 +304,10 @@
                                 <not><if-empty field="finAccountId" /></not>
                             </condition>
                             <widgets>
-                                <!-- <container style="button-bar">
-                                    <link target="EditDepositFinAccount" text="Create Deposit Account" style="buttontext create"/>
-                                </container> -->
                                 <label style="h1" text="${uiLabelMap.AccountingEditDepositAcct}" ></label>
+                                <platform-specific>
+                                    <html><html-template location="component://accounting/webapp/accounting/finaccounttrans/SetDepositAccntTypeDropDown.ftl"/></html>
+                                </platform-specific>
                                 <screenlet title="Edit Deposit Account">
                                     <include-form name="EditDepositAccount" location="component://accounting/widget/TreasurerPortalForms.xml"/>
                                 </screenlet>
