@@ -35,7 +35,7 @@ under the License.
 		        	<fo:flow flow-name="xsl-region-body"   font-family="Courier,monospace">
         			<fo:block  keep-together="always" text-align="center" font-size="12pt" font-family="Courier,monospace" white-space-collapse="false" font-weight="bold">${uiLabelMap.KMFDairyHeader}</fo:block>
 					<fo:block  keep-together="always" text-align="center" font-size="12pt" font-family="Courier,monospace" white-space-collapse="false" font-weight="bold">${uiLabelMap.KMFDairySubHeader}</fo:block>
-					<fo:block  keep-together="always" text-align="center" font-size="12pt" font-family="Courier,monospace" white-space-collapse="false" font-weight="bold">PAYMENT GROUP VOUCHER</fo:block>
+					<fo:block  keep-together="always" text-align="center" font-size="12pt" font-family="Courier,monospace" white-space-collapse="false" font-weight="bold">GROUP PAYMENT VOUCHER</fo:block>
             		<fo:block linefeed-treatment="preserve">&#xA;</fo:block>
             		<fo:block>
                  	<fo:table>
@@ -43,18 +43,7 @@ under the License.
         			<fo:table-column column-width="25%"/>
         			<fo:table-column column-width="25%"/>
 	                    <fo:table-body>
-        						<#assign sno=0>
-        						  <#list printPaymentsList as paymentListReport>
-        						  <#assign sno=sno+1>
-        						  <#assign  partyName="">
-        						  <#assign  partyId="">
-        						  <#if paymentListReport.partyIdFrom?exists && paymentListReport.partyIdFrom == "Company">
-			            			  <#assign partyId = paymentListReport.partyIdTo>
-			            		  <#else>
-			            			  <#assign partyId = paymentListReport.partyIdFrom>
-			            		  </#if>
-        						 <#assign partyName = Static["org.ofbiz.party.party.PartyHelper"].getPartyName(delegator, partyId, false)>
-        						 	 <#assign paymentGroupDetails = {}>
+	                    		<#assign paymentGroupDetails = {}>
         						 	<#if paymentGroupId?has_content>
 								    	<#assign paymentGroupDetails = delegator.findOne("PaymentGroup", {"paymentGroupId" : paymentGroupId}, true)?if_exists/>
 								   </#if>
@@ -75,17 +64,17 @@ under the License.
 		        				</fo:table-row>
 		        				<fo:table-row> 
         						 	<fo:table-cell>
-        						 		<fo:block text-align="left" font-size="12pt" white-space-collapse="false" keep-together="always" font-weight="bold">&#160;PAYMENT ID:${paymentListReport.paymentId?if_exists}</fo:block>
+        						 		<fo:block text-align="left" font-size="12pt" white-space-collapse="false" keep-together="always" font-weight="bold"></fo:block>
         						 	</fo:table-cell>
         						 	<fo:table-cell>
-        						 		<fo:block text-align="left" font-size="12pt" white-space-collapse="false" keep-together="always" font-weight="bold"><#if paymentListReport.paymentMethodTypeId?has_content && (paymentListReport.paymentMethodTypeId == "CHEQUE_PAYIN" || paymentListReport.paymentMethodTypeId == "CHEQUE_PAYOUT")>CHEQUE</#if><#if paymentListReport.paymentMethodTypeId?has_content && (paymentListReport.paymentMethodTypeId == "CASH_PAYIN" || paymentListReport.paymentMethodTypeId == "CASH_PAYOUT")>CASH</#if></fo:block>
+        						 		<fo:block text-align="left" font-size="12pt" white-space-collapse="false" keep-together="always" font-weight="bold"><#if paymentGroupDetails.paymentMethodTypeId?has_content && (paymentGroupDetails.paymentMethodTypeId == "CHEQUE_PAYIN" || paymentGroupDetails.paymentMethodTypeId == "CHEQUE_PAYOUT")>CHEQUE</#if><#if paymentGroupDetails.paymentMethodTypeId?has_content && (paymentGroupDetails.paymentMethodTypeId == "CASH_PAYIN" || paymentGroupDetails.paymentMethodTypeId == "CASH_PAYOUT")>CASH</#if></fo:block>
         						 	</fo:table-cell>
         						 	<fo:table-cell>
         						 		<fo:block text-align="left" font-size="12pt" white-space-collapse="false" keep-together="always" font-weight="bold">PAYMENT DATE:${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(paymentGroupDetails.paymentDate?if_exists, "dd-MM-yyyy")}</fo:block>
         						 	</fo:table-cell>
 		        				</fo:table-row>
-        						 <#if paymentListReport.paymentMethodTypeId?has_content && (paymentListReport.paymentMethodTypeId == "CHEQUE_PAYIN" || paymentListReport.paymentMethodTypeId == "CHEQUE_PAYOUT")> 
-									 <#if (paymentListReport.paymentMethodTypeId == "CHEQUE_PAYIN" || paymentListReport.paymentMethodTypeId == "CHEQUE_PAYOUT")>   
+        						 <#if paymentGroupDetails.paymentMethodTypeId?has_content && (paymentGroupDetails.paymentMethodTypeId == "CHEQUE_PAYIN" || paymentGroupDetails.paymentMethodTypeId == "CHEQUE_PAYOUT")> 
+									 <#if (paymentGroupDetails.paymentMethodTypeId == "CHEQUE_PAYIN" || paymentGroupDetails.paymentMethodTypeId == "CHEQUE_PAYOUT")>   
 	        						 <fo:table-row> 
 	        						 	<fo:table-cell>
 	        						 		<fo:block text-align="left" font-size="12pt" white-space-collapse="false" keep-together="always" font-weight="bold">&#160;CHEQUE NO:${paymentGroupDetails.paymentRefNum?if_exists}</fo:block>
@@ -97,7 +86,7 @@ under the License.
 	        						 		<fo:block text-align="left" font-size="12pt" white-space-collapse="false" keep-together="always" font-weight="bold">CHEQUE DATE:${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(paymentGroupDetails.instrumentDate?if_exists, "dd-MM-yyyy")}</fo:block>
 	        						 	</fo:table-cell>
 	        						 </fo:table-row>
-	        						 <#if (paymentListReport.paymentMethodTypeId == "CHEQUE_PAYIN" || paymentListReport.paymentMethodTypeId == "CHEQUE_PAYOUT")>
+	        						 <#if (paymentGroupDetails.paymentMethodTypeId == "CHEQUE_PAYIN" || paymentGroupDetails.paymentMethodTypeId == "CHEQUE_PAYOUT")>
 	        						 <fo:table-row> 
 	        						 	<fo:table-cell>
 	        						 		<fo:block text-align="left" font-size="12pt" white-space-collapse="false" keep-together="always" font-weight="bold"><#if paymentGroupDetails?has_content>&#160;CHEQUE BANK DETAILS:${paymentGroupDetails.issuingAuthority?if_exists}</#if></fo:block>
@@ -112,6 +101,24 @@ under the License.
 	        						 </#if>
 	        					 </#if>
 		        				</#if>
+        						<#assign sno=0>
+        						<#assign totalAmount = 0>
+        						  <#list printPaymentsList as paymentListReport>
+        						  <#assign sno=sno+1>
+        						  <#assign  partyName="">
+        						  <#assign  partyId="">
+        						  <#if paymentListReport.partyIdFrom?exists && paymentListReport.partyIdFrom == "Company">
+			            			  <#assign partyId = paymentListReport.partyIdTo>
+			            		  <#else>
+			            			  <#assign partyId = paymentListReport.partyIdFrom>
+			            		  </#if>
+        						 <#assign partyName = Static["org.ofbiz.party.party.PartyHelper"].getPartyName(delegator, partyId, false)>
+        						 	<fo:table-row>
+		        						<fo:table-cell>
+		        								<fo:block text-align="left" font-size="12pt" white-space-collapse="false" keep-together="always" font-weight="bold"> &#160; </fo:block>
+		        								<fo:block text-align="left" font-size="12pt" white-space-collapse="false" keep-together="always" font-weight="bold">PAYMENT ID:${paymentListReport.paymentId?if_exists}</fo:block>
+		        						</fo:table-cell>
+	        						</fo:table-row>
 		        					<fo:table-row>
 		        						<fo:table-cell>
 		        		                    <fo:table  table-layout="fixed" width="100%" space-before="0.2in">
@@ -164,6 +171,7 @@ under the License.
 	        											<fo:block text-align="center" font-size="12pt" white-space-collapse="false">&#160; ${partyId?if_exists}</fo:block>
 	        							  		  </fo:table-cell>
 	        							  		  <#assign paymentAmount = paymentListReport.amount?if_exists>
+	        							  		  <#assign totalAmount = totalAmount+paymentAmount>
 	        							  		  <fo:table-cell border-style="solid">
 	        											<fo:block text-align="center" font-size="12pt" white-space-collapse="false" keep-together="always">&#160; <@ofbizCurrency amount=paymentAmount isoCode=currencyUomId/> </fo:block>
 	        							  		  </fo:table-cell>
@@ -172,13 +180,9 @@ under the License.
 			   		                    </fo:table>
 	        						</fo:table-cell> 
 	        					</fo:table-row>
-	        					<fo:table-row>
-									<fo:table-cell>
-					            		<fo:block linefeed-treatment="preserve">&#xA;</fo:block>
-					       			</fo:table-cell>
-								</fo:table-row>
-								 <#assign cheqFav = "">
-								 <#if (paymentListReport.paymentMethodTypeId == "CHEQUE_PAYIN" || paymentListReport.paymentMethodTypeId == "CHEQUE_PAYOUT")>
+							</#list>
+								 	<#assign cheqFav = "">
+								 <#if (paymentGroupDetails.paymentMethodTypeId == "CHEQUE_PAYIN" || paymentGroupDetails.paymentMethodTypeId == "CHEQUE_PAYOUT")>
 									 <fo:table-row>
 		        						<fo:table-cell>
 		        								<fo:block text-align="left" font-size="12pt" white-space-collapse="false" keep-together="always" font-weight="bold"> &#160; </fo:block>
@@ -191,12 +195,14 @@ under the License.
 					            		<fo:block>-------------------------------------------------------------------------------------------------------------------</fo:block>
 					       			</fo:table-cell>
 								 </fo:table-row>
-								 <fo:table-row>
-									<fo:table-cell>
-					            		<fo:block linefeed-treatment="preserve">&#xA;</fo:block>
-					       			</fo:table-cell>
-								</fo:table-row>
-							</#list>
+							<fo:table-row>
+        						<fo:table-cell>
+        								<fo:block text-align="left" font-size="12pt" white-space-collapse="false" keep-together="always" font-weight="bold"></fo:block>
+        						</fo:table-cell>
+        							<fo:table-cell>
+        								<fo:block text-align="left" font-size="12pt" white-space-collapse="false" keep-together="always" font-weight="bold">&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;Grand Total = &#160;&#160;&#160;&#160;&#160;&#160;&#160;<@ofbizCurrency amount=totalAmount isoCode=currencyUomId/></fo:block>
+        						</fo:table-cell>
+    						</fo:table-row>
 							<fo:table-row>
         						<fo:table-cell>
         								<fo:block text-align="left" font-size="12pt" white-space-collapse="false" keep-together="always" font-weight="bold"> &#160; </fo:block>
