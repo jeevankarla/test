@@ -463,7 +463,7 @@ under the License.
                 </entity-options>
             </drop-down>
         </field>
-        <field name="finAccountTypeId" title="Account Type" use-when="finAccountId !=null"><display/></field>
+        <field name="finAccountTypeId" title="Deposit Account Type" use-when="finAccountId !=null"><display-entity entity-name="FinAccountType" key-field-name="finAccountTypeId" description="${description}"/></field>
         <field name="currencyUomId" title="${uiLabelMap.CommonCurrency}">
             <drop-down no-current-selected-key="${defaultOrganizationPartyCurrencyUomId}">
                 <entity-options key-field-name="uomId" description="${description} - ${abbreviation}" entity-name="Uom">
