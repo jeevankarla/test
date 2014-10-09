@@ -1,9 +1,15 @@
 import org.ofbiz.base.util.*;
+import org.ofbiz.entity.GenericValue;
 import org.ofbiz.entity.condition.*;
 import org.ofbiz.entity.util.EntityUtil;
+import org.ofbiz.humanres.inout.PunchService;
+
 import java.sql.Timestamp;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.List;
+import java.util.Map;
 
 import javax.swing.RowFilter.NotFilter;
 
@@ -144,7 +150,32 @@ if(UtilValidate.isNotEmpty(timePeriodId)){
 		conList.add(EntityCondition.makeCondition(EntityCondition.makeCondition("encashmentStatus",EntityOperator.NOT_EQUAL,"LEAVE_ENCASHMENT"),EntityOperator.OR,
 			EntityCondition.makeCondition("encashmentStatus",EntityOperator.EQUALS,null)));
 		con=EntityCondition.makeCondition(conList,EntityOperator.AND);
-		workedHolidaysList = delegator.findList("EmplDailyAttendanceDetail", con ,null,null, null, false );
+		workedHolidaysListTemp = delegator.findList("EmplDailyAttendanceDetail", con ,null,null, null, false );
+		workedHolidaysList =[];
+		for(GenericValue workedHoliday: workedHolidaysListTemp){
+			Date tempDate = workedHoliday.getDate("date");
+			Map punMap = PunchService.emplDailyPunchReport(dctx, UtilMisc.toMap("partyId", partyId ,"punchDate",tempDate));
+			if(UtilValidate.isNotEmpty(punMap.get("punchDataList"))){
+				Map punchDetails = (Map)(((List)punMap.get("punchDataList")).get(0));
+				if(UtilValidate.isNotEmpty(punchDetails)){
+					String totalTime = (String)punchDetails.get("totalTime");
+					if(UtilValidate.isNotEmpty(totalTime)){
+						totalTime = totalTime.replace(" Hrs", "");
+						List<String> timeSplit = StringUtil.split(totalTime, ":");
+						if(UtilValidate.isNotEmpty(timeSplit)){
+							 int hours = Integer.parseInt(timeSplit.get(0));
+							 int minutes = Integer.parseInt(timeSplit.get(1));
+							 //if(((hours*60)+minutes) >=210){
+							 if(((hours*60)+minutes) >=480){
+								 workedHolidaysList.add(workedHoliday);
+							 }
+						}
+					}
+					
+				}
+				
+			}
+		}
 		
 		
 		//GH and SS Encashment
