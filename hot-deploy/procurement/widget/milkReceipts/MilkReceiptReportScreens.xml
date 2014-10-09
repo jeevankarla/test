@@ -1,0 +1,461 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+Licensed to the Apache Software Foundation (ASF) under one
+or more contributor license agreements.  See the NOTICE file
+distributed with this work for additional information
+regarding copyright ownership.  The ASF licenses this file
+to you under the Apache License, Version 2.0 (the
+"License"); you may not use this file except in compliance
+with the License.  You may obtain a copy of the License at
+
+http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing,
+software distributed under the License is distributed on an
+"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+KIND, either express or implied.  See the License for the
+specific language governing permissions and limitations
+under the License.
+-->
+<screens xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/widget-screen.xsd">
+<screen name="UnitWiseMilkReceipt">
+		<section>
+			<actions>
+                <property-map resource="ProductUiLabels" map-name="uiLabelMap" global="true"/>            
+                <property-map resource="HumanResUiLabels" map-name="uiLabelMap" global="true"/> 
+                <script location="component://procurement/webapp/milkreceipts/WEB-INF/actions/reports/UnitWiseMilkReceipt.groovy"/>
+            </actions> 
+			<widgets>                
+                  <platform-specific>
+		                    <xsl-fo><html-template location="component://procurement/webapp/milkreceipts/reports/UnitWiseMilkReceipt.fo.ftl"/></xsl-fo>
+		           </platform-specific>
+             </widgets>
+		</section>
+	</screen>
+    
+    <!-- Screens for Foxpro csvs  -->
+     <screen name="milkReceiptEntriesCsv">
+        <section>
+        	<actions>
+                <property-map resource="ProductUiLabels" map-name="uiLabelMap" global="true"/>            
+                <property-map resource="HumanResUiLabels" map-name="uiLabelMap" global="true"/>
+                <set field="headerItem" value="Milk Receipt Entry"/>
+            	<set field="tabButtonItem" value="reports" />
+            	<set field="viewSize" value="100000" type="Integer"/>
+                <script location="component://procurement/webapp/milkreceipts/WEB-INF/actions/reports/milkReceiptEntriesCsv.groovy"/>
+        	</actions>
+            <widgets>
+            	<!-- <include-form name="milkReceiptEntriesCsv" location="component://procurement/widget/ProcurementForms.xml"/> -->
+              	<include-form location="component://procurement/widget/milkreceipts/MilkReceiptsForms.xml" name="milkReceiptEntriesCsv"/>          	
+           </widgets>
+        </section>
+    </screen>
+<!-- END of FOXPRO -->    	
+	
+	<screen name="AbstractforUnitWiseMilkReceipt">
+		<section>
+			<actions>
+                <property-map resource="ProductUiLabels" map-name="uiLabelMap" global="true"/>            
+                <property-map resource="HumanResUiLabels" map-name="uiLabelMap" global="true"/> 
+                <script location="component://procurement/webapp/milkreceipts/WEB-INF/actions/reports/AbstractforUnitWiseMilkReceipt.groovy"/>
+            </actions> 
+			<widgets>                
+                  <platform-specific>
+		                    <xsl-fo><html-template location="component://procurement/webapp/milkreceipts/reports/AbstractforUnitWiseMilkReceipt.fo.ftl"/></xsl-fo>
+		           </platform-specific>
+             </widgets>
+		</section>
+	</screen>
+	<screen name="MilkReceiptChecklist">
+		<section>
+			<actions>
+                <property-map resource="ProductUiLabels" map-name="uiLabelMap" global="true"/>            
+                <property-map resource="HumanResUiLabels" map-name="uiLabelMap" global="true"/> 
+                <script location="component://procurement/webapp/milkreceipts/WEB-INF/actions/reports/MilkReceiptChecklist.groovy"/>
+            </actions> 
+			<widgets>                
+                  <platform-specific>
+		                    <xsl-fo><html-template location="component://procurement/webapp/milkreceipts/reports/MilkReceiptChecklist.fo.ftl"/></xsl-fo>
+		           </platform-specific>
+             </widgets>
+		</section>
+	</screen>
+	<screen name="MilkReceiptEntrylist">
+		<section>
+			<actions>
+                <property-map resource="ProductUiLabels" map-name="uiLabelMap" global="true"/>            
+                <property-map resource="HumanResUiLabels" map-name="uiLabelMap" global="true"/> 
+                <script location="component://procurement/webapp/milkreceipts/WEB-INF/actions/reports/MilkReceiptsEntryList.groovy"/>
+            </actions> 
+			<widgets>                
+                  <platform-specific>
+		                    <xsl-fo><html-template location="component://procurement/webapp/milkreceipts/reports/milkReceiptEntryList.fo.ftl"/></xsl-fo>
+		           </platform-specific>
+             </widgets>
+		</section>
+	</screen>
+	<screen name="MilkReceiptErrorlist">
+		<section>
+			<actions>
+                <property-map resource="ProductUiLabels" map-name="uiLabelMap" global="true"/>            
+                <property-map resource="HumanResUiLabels" map-name="uiLabelMap" global="true"/> 
+                <script location="component://procurement/webapp/milkreceipts/WEB-INF/actions/reports/MilkReceiptErrorList.groovy"/>
+            </actions> 
+			<widgets>                
+                  <platform-specific>
+		                    <xsl-fo><html-template location="component://procurement/webapp/milkreceipts/reports/milkReceiptErrorList.fo.ftl"/></xsl-fo>
+		           </platform-specific>
+             </widgets>
+		</section>
+	</screen>
+	<screen name="MilkReceiptSummerySms">
+        <section>
+           <actions>
+                <property-map resource="ProductUiLabels" map-name="uiLabelMap" global="true"/>            
+                <property-map resource="HumanResUiLabels" map-name="uiLabelMap" global="true"/> 
+                <script location="component://procurement/webapp/milkreceipts/WEB-INF/actions/reports/MilkReceiptSummerySms.groovy"/>  
+            </actions> 
+            <widgets>
+                <platform-specific>
+                    <xsl-fo><html-template location="component://procurement/webapp/milkreceipts/reports/MilkReceiptSummerySms.fo.ftl"/></xsl-fo>
+                </platform-specific>
+            </widgets>
+        </section>
+    </screen>
+	<screen name="UnionOrPrivateDairiesAbstract">
+		<section>
+			<actions>
+                <property-map resource="ProductUiLabels" map-name="uiLabelMap" global="true"/>            
+                <property-map resource="HumanResUiLabels" map-name="uiLabelMap" global="true"/> 
+                <script location="component://procurement/webapp/milkreceipts/WEB-INF/actions/reports/UnionOrPrivateDairiesAbst.groovy"/>
+            </actions> 
+			<widgets>                
+                  <platform-specific>
+		                    <xsl-fo><html-template location="component://procurement/webapp/milkreceipts/reports/UnionOrPrivateDairiesAbst.fo.ftl"/></xsl-fo>
+		           </platform-specific>
+             </widgets>
+		</section>
+	</screen>
+	<screen name="UnionOrPrivateAvgRatePerLtrKgFat">
+		<section>
+			<actions>
+                <property-map resource="ProductUiLabels" map-name="uiLabelMap" global="true"/>            
+                <property-map resource="HumanResUiLabels" map-name="uiLabelMap" global="true"/> 
+                <script location="component://procurement/webapp/milkreceipts/WEB-INF/actions/reports/UnionOrPrivateDairiesAbst.groovy"/>
+                <script location="component://procurement/webapp/milkreceipts/WEB-INF/actions/reports/UnionOrPrivateAvgRatePerLtrKgFat.groovy"/>
+            </actions> 
+			<widgets>                
+                  <platform-specific>
+		                    <xsl-fo><html-template location="component://procurement/webapp/milkreceipts/reports/UnionOrPrivateAvgRatePerLtrKgFat.fo.ftl"/></xsl-fo>
+		           </platform-specific>
+             </widgets>
+		</section>
+	</screen>
+	<screen name="UnionOrPrivateDairiesAbstractSupport" transaction-timeout="7200">
+		<section>
+			<actions>
+                <property-map resource="ProductUiLabels" map-name="uiLabelMap" global="true"/>            
+                <property-map resource="HumanResUiLabels" map-name="uiLabelMap" global="true"/> 
+                <script location="component://procurement/webapp/milkreceipts/WEB-INF/actions/reports/UnionOrPrivateDairiesAbstSupport.groovy"/>
+            </actions> 
+			<widgets>                
+                  <platform-specific>
+		                    <xsl-fo><html-template location="component://procurement/webapp/milkreceipts/reports/UnionOrPrivateDairiesAbstSupportTXT.fo.ftl"/></xsl-fo>
+		           </platform-specific>
+             </widgets>
+		</section>
+	</screen>
+	<screen name="AcknowledgementDetailReportTXT">
+		<section>
+			<actions>
+                <property-map resource="ProductUiLabels" map-name="uiLabelMap" global="true"/>            
+                <property-map resource="HumanResUiLabels" map-name="uiLabelMap" global="true"/> 
+                <script location="component://procurement/webapp/milkreceipts/WEB-INF/actions/reports/AcknowledgementDetailReportTXT.groovy"/>
+            </actions> 
+			<widgets>                
+                  <platform-specific>
+		                    <xsl-fo><html-template location="component://procurement/webapp/milkreceipts/reports/AcknowledgementDetailReportTXT.fo.ftl"/></xsl-fo>
+		           </platform-specific>
+             </widgets>
+		</section>
+	</screen>	
+	<screen name="ShedWiseUnitWiseMilkReceiptsTXT">
+		<section>
+			<actions>
+                <property-map resource="ProductUiLabels" map-name="uiLabelMap" global="true"/>            
+                <property-map resource="HumanResUiLabels" map-name="uiLabelMap" global="true"/> 
+                <script location="component://procurement/webapp/milkreceipts/WEB-INF/actions/reports/ShedWiseUnitWiseMilkReceiptsTXT.groovy"/>
+            </actions> 
+			<widgets>   
+				<platform-specific>
+					<html><html-template location="component://procurement/webapp/milkreceipts/reports/ShedWiseUnitWiseMilkReceiptsTXT.fo.ftl"></html-template></html>
+				</platform-specific>             
+             </widgets>
+		</section>
+	</screen>
+	<screen name="Day-WiseShed-WiseMilkReceipts">
+		<section>
+			<actions>
+                <property-map resource="ProductUiLabels" map-name="uiLabelMap" global="true"/>            
+                <property-map resource="HumanResUiLabels" map-name="uiLabelMap" global="true"/> 
+                <script location="component://procurement/webapp/milkreceipts/WEB-INF/actions/reports/Day-WiseShed-WiseMilkReceipts.groovy"/>
+            </actions> 
+			<widgets>   
+				<platform-specific>
+					<html><html-template location="component://procurement/webapp/milkreceipts/reports/Day-WiseShed-WiseMilkReceipts.fo.ftl"></html-template></html>
+				</platform-specific>             
+             </widgets>
+		</section>
+	</screen>
+	<screen name="DayWiseMpf">
+		<section>
+			<actions>
+                <property-map resource="ProductUiLabels" map-name="uiLabelMap" global="true"/>            
+                <property-map resource="HumanResUiLabels" map-name="uiLabelMap" global="true"/> 
+                <script location="component://procurement/webapp/milkreceipts/WEB-INF/actions/reports/DayWiseMpf.groovy"/>
+            </actions> 
+			<widgets>   
+				<platform-specific>
+					<html><html-template location="component://procurement/webapp/milkreceipts/reports/DayWiseMpf.fo.ftl"></html-template></html>
+				</platform-specific>             
+             </widgets>
+		</section>
+	</screen>
+    <screen name="DayWiseAbstract">
+		<section>
+			<actions>
+                <property-map resource="ProductUiLabels" map-name="uiLabelMap" global="true"/>            
+                <property-map resource="HumanResUiLabels" map-name="uiLabelMap" global="true"/> 
+                <script location="component://procurement/webapp/milkreceipts/WEB-INF/actions/reports/DayWiseAbstract.groovy"/>
+            </actions> 
+			<widgets>   
+				<platform-specific>
+					<html><html-template location="component://procurement/webapp/milkreceipts/reports/DayWiseAbstract.fo.ftl"></html-template></html>
+				</platform-specific>             
+             </widgets>
+		</section>
+	</screen>
+	<screen name="MilkReceiptsFairListAbstract">
+		<section>
+			<actions>
+                <property-map resource="ProductUiLabels" map-name="uiLabelMap" global="true"/>            
+                <property-map resource="HumanResUiLabels" map-name="uiLabelMap" global="true"/> 
+                <script location="component://procurement/webapp/milkreceipts/WEB-INF/actions/reports/MilkReceiptChecklist.groovy" />
+                <script location="component://procurement/webapp/milkreceipts/WEB-INF/actions/reports/MilkReceiptsFairListAbstract.groovy"/>
+            </actions> 
+			<widgets>   
+				<platform-specific>
+					<html><html-template location="component://procurement/webapp/milkreceipts/reports/MilkReceiptsFairListAbstract.fo.ftl"></html-template></html>
+				</platform-specific>             
+             </widgets>
+		</section>
+	</screen>	
+	<screen name="RequiredShedwiseAbstract">
+		<section>
+			<actions>
+                <property-map resource="ProductUiLabels" map-name="uiLabelMap" global="true"/>            
+                <property-map resource="HumanResUiLabels" map-name="uiLabelMap" global="true"/> 
+                <script location="component://procurement/webapp/milkreceipts/WEB-INF/actions/reports/RequiredShedwiseAbstract.groovy"/>
+            </actions> 
+			<widgets>   
+				<platform-specific>
+					<html><html-template location="component://procurement/webapp/milkreceipts/reports/RequiredShedwiseAbstract.fo.ftl"></html-template></html>
+				</platform-specific>             
+             </widgets>
+		</section>
+	</screen>
+	<screen name="MilkReceiptWeeklyAnalysis">
+		<section>
+			<actions>
+                <property-map resource="ProductUiLabels" map-name="uiLabelMap" global="true"/>            
+                <property-map resource="HumanResUiLabels" map-name="uiLabelMap" global="true"/> 
+                <script location="component://procurement/webapp/milkreceipts/WEB-INF/actions/reports/MilkReceiptWeeklyAnalysis.groovy"/>
+            </actions> 
+			<widgets>   
+				<platform-specific>
+					<html><html-template location="component://procurement/webapp/milkreceipts/reports/MilkReceiptWeeklyAnalysis.fo.ftl"></html-template></html>
+				</platform-specific>             
+             </widgets>
+		</section>
+	</screen>
+	<screen name="QualityQuantityReport">
+		<section>
+			<actions>
+                <property-map resource="ProductUiLabels" map-name="uiLabelMap" global="true"/>            
+                <property-map resource="HumanResUiLabels" map-name="uiLabelMap" global="true"/> 
+                <script location="component://procurement/webapp/milkreceipts/WEB-INF/actions/reports/QualityQuantityReport.groovy"/>
+            </actions> 
+			<widgets>   
+				<platform-specific>
+					<html><html-template location="component://procurement/webapp/milkreceipts/reports/QualityQuantityReport.fo.ftl"></html-template></html>
+				</platform-specific>             
+             </widgets>
+		</section>
+	</screen>
+	<screen name="unitMonthWiseReceiptAccount">
+		<section>
+			<actions>
+                <property-map resource="ProductUiLabels" map-name="uiLabelMap" global="true"/>            
+                <property-map resource="HumanResUiLabels" map-name="uiLabelMap" global="true"/> 
+                <script location="component://procurement/webapp/milkreceipts/WEB-INF/actions/reports/UnitMonthWiseReceiptAccount.groovy"/>
+            </actions> 
+			<widgets>   
+				<platform-specific>
+					<html><html-template location="component://procurement/webapp/milkreceipts/reports/UnitMonthWiseReceiptAccount.fo.ftl"></html-template></html>
+				</platform-specific>             
+             </widgets>
+		</section>
+	</screen>
+	<screen name="comparativeStatementOfMilkReceipts">
+		<section>
+			<actions>
+				<property-map resource="ProductUiLabels" map-name="uiLabelMap" global="true"/>
+				<property-map resource="HumanResUiLabels" map-name="uiLabelMap" global="true"/>
+				<script location="component://procurement/webapp/milkreceipts/WEB-INF/actions/reports/ComparativeStatementOfMilkReceipts.groovy"/>
+			</actions>
+			<widgets>
+				<platform-specific>
+					<html><html-template location="component://procurement/webapp/milkreceipts/reports/ComparativeStatementOfMilkReceipts.fo.ftl"></html-template></html>
+				</platform-specific>
+			</widgets>
+		</section>
+	</screen>
+	<screen name="DayWiseUnitWiseMilkReceipt">
+ 		<section>
+ 			<actions>
+                 <property-map resource="ProductUiLabels" map-name="uiLabelMap" global="true"/>            
+                 <property-map resource="HumanResUiLabels" map-name="uiLabelMap" global="true"/> 
+                 <script location="component://procurement/webapp/milkreceipts/WEB-INF/actions/reports/DayWiseUnitWiseMilkReceipt.groovy"/>
+             </actions> 
+ 			<widgets>   
+ 				<platform-specific>
+ 					<html><html-template location="component://procurement/webapp/milkreceipts/reports/DayWiseUnitWiseMilkReceipt.fo.ftl"></html-template></html>
+ 				</platform-specific>             
+              </widgets>
+ 		</section>
+	</screen>
+	 <screen name="MonthWiseUnitWiseMilkReceipt">
+ 		<section>
+ 			<actions>
+                 <property-map resource="ProductUiLabels" map-name="uiLabelMap" global="true"/>            
+                 <property-map resource="HumanResUiLabels" map-name="uiLabelMap" global="true"/> 
+               <script location="component://procurement/webapp/milkreceipts/WEB-INF/actions/reports/MonthWiseUnitWiseMilkReceipt.groovy"/>
+             </actions> 
+ 			<widgets>   
+ 				<platform-specific>
+ 					<html><html-template location="component://procurement/webapp/milkreceipts/reports/MonthWiseUnitWiseMilkReceipt.fo.ftl"></html-template></html>
+ 				</platform-specific>             
+              </widgets>
+ 		</section>
+ 	</screen>
+	<screen name="FederationUnitsMilkReceiptsValueFromShed">
+		<section>
+			<actions>
+                <property-map resource="ProductUiLabels" map-name="uiLabelMap" global="true"/>            
+                <property-map resource="HumanResUiLabels" map-name="uiLabelMap" global="true"/> 
+                <script location="component://procurement/webapp/milkreceipts/WEB-INF/actions/reports/FederationUnitsMilkRcptsValueFromShed.groovy"/>
+            </actions> 
+			<widgets>   
+				<platform-specific>
+					<html><html-template location="component://procurement/webapp/milkreceipts/reports/FederationMlkRcptsValueFromShedTXT.fo.ftl"></html-template></html>
+				</platform-specific>             
+             </widgets>
+		</section>
+	</screen>
+	<screen name="FederationBudgetSupport">
+		<section>
+			<actions>
+                <property-map resource="ProductUiLabels" map-name="uiLabelMap" global="true"/>            
+                <property-map resource="HumanResUiLabels" map-name="uiLabelMap" global="true"/> 
+                <script location="component://procurement/webapp/milkreceipts/WEB-INF/actions/reports/FederationUnitsMilkRcptsValueFromShed.groovy"/>
+            </actions> 
+			<widgets>   
+				<platform-specific>
+					<html><html-template location="component://procurement/webapp/milkreceipts/reports/FederationbudgetSupport.fo.ftl"></html-template></html>
+				</platform-specific>             
+             </widgets>
+		</section>
+	</screen>
+	<screen name="MonthWiseShedWiseMilkReceipts">
+		<section>
+			<actions>
+				<property-map resource="ProductUiLabels" map-name="uiLabelMap" global="true" />
+				<property-map resource="HumanResUiLabels" map-name="uiLabelMap" global="true" />
+				<script location="component://procurement/webapp/milkreceipts/WEB-INF/actions/reports/MonthWiseShedWiseMilkReceipts.groovy"/>
+			</actions>
+			<widgets>
+				<platform-specific>
+					<html>
+						<html-template
+							location="component://procurement/webapp/milkreceipts/reports/MonthWiseShedWiseMilkReceipts.fo.ftl"></html-template>
+					</html>
+				</platform-specific>
+			</widgets>
+		</section>
+	</screen>
+	<screen name="ShedwiseUnitwiseCapacityUtilization">
+		<section>
+			<actions>
+				<property-map resource="ProductUiLabels" map-name="uiLabelMap" global="true" />
+				<property-map resource="HumanResUiLabels" map-name="uiLabelMap" global="true" />
+				<script location="component://procurement/webapp/milkreceipts/WEB-INF/actions/reports/ShedwiseUnitwiseCapacityUtilization.groovy"/>
+			</actions>
+			<widgets>
+				<platform-specific>
+					<html>
+						<html-template
+							location="component://procurement/webapp/milkreceipts/reports/ShedwiseUnitwiseCapacityUtilization.fo.ftl"></html-template>
+					</html>
+				</platform-specific>
+			</widgets>
+		</section>
+	</screen>
+	<screen name="MonthWiseShedWiseKgFatAccount">
+		<section>
+			<actions>
+				<property-map resource="ProductUiLabels" map-name="uiLabelMap" global="true" />
+				<property-map resource="HumanResUiLabels" map-name="uiLabelMap" global="true" />
+				<script location="component://procurement/webapp/milkreceipts/WEB-INF/actions/reports/MonthWiseShedWiseMilkReceipts.groovy"/>
+			</actions>
+			<widgets>
+				<platform-specific>
+					<html>
+						<html-template
+							location="component://procurement/webapp/milkreceipts/reports/MonthWiseShedWiseKgFatAccount.fo.ftl"></html-template>
+					</html>
+				</platform-specific>
+			</widgets>
+		</section>
+	</screen>
+	<screen name="YearWiseMilkReceiptsAnalysis">
+			<section>
+				<actions>
+	                <property-map resource="ProductUiLabels" map-name="uiLabelMap" global="true"/>            
+	                <property-map resource="HumanResUiLabels" map-name="uiLabelMap" global="true"/> 
+	                <script location="component://procurement/webapp/milkreceipts/WEB-INF/actions/reports/YearWiseMilkReceiptsAnalysis.groovy"/>
+	            </actions> 
+				<widgets>   
+					<platform-specific>
+						<html><html-template location="component://procurement/webapp/milkreceipts/reports/YearWiseMilkReceiptsAnalysis.fo.ftl"></html-template></html>
+					</platform-specific>             
+	             </widgets>
+			</section>
+	</screen>
+	<screen name="MonthShedWiseComparingStatment">
+		<section>
+			<actions>
+				<property-map resource="ProductUiLabels" map-name="uiLabelMap" global="true" />
+				<property-map resource="HumanResUiLabels" map-name="uiLabelMap" global="true" />
+				<script location="component://procurement/webapp/milkreceipts/WEB-INF/actions/reports/MonthShedWiseComparingStatment.groovy"/>
+			</actions>
+			<widgets>
+				<platform-specific>
+					<html>
+						<html-template
+							location="component://procurement/webapp/milkreceipts/reports/MonthShedWiseComparingStatment.fo.ftl"></html-template>
+					</html>
+				</platform-specific>
+			</widgets>
+		</section>
+	</screen>
+</screens>

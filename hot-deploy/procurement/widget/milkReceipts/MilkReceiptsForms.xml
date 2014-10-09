@@ -1,0 +1,646 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<forms xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+        xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/widget-form.xsd">
+	<form name="MilkReceiptFacility" type="single"  target="createReceiptFacility"
+        odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
+        <actions>
+        	<entity-condition entity-name="Facility" list="shedList">
+        		<condition-list combine="and">
+        			<condition-expr field-name="facilityTypeId" value="SHED" operator="equals"/>
+        			<condition-list combine="or">
+        				<condition-expr field-name="mccTypeId" value="UNION" operator="equals"/>
+        				<condition-expr field-name="mccTypeId" value="OTHERS" operator="equals"/>
+        			</condition-list>
+        		</condition-list>
+        	</entity-condition>
+        </actions>
+        <field name="facilityDetails" title="Facility Details" title-style="group-label"><display description=" " also-hidden="false"/></field>
+        <field name="facilityTypeId"><hidden value="UNIT"/></field>
+        <field name="shedId" title="Shed" event="onchange" action="setShedUnitsDropDown(this)" id-name="shedId" >
+            <drop-down allow-empty="false">
+                <list-options key-name="facilityId" list-name="shedList" description="${facilityName}"/>	
+            </drop-down>
+        </field>
+        <field name="facilityName" title="Unit Name"><text size="25" /></field>
+        <field name="mccCode" title="Mcc Code" required-field="true"><text size="5" maxlength="4"></text> </field>
+        <field name="openedDate" title="Opening Date" required-field="true"><date-time type="date"/></field>
+        <field name="submitButton" title="Create" widget-style="smallSubmit"><submit button-type="button"/></field>
+    </form>
+    <form name="FinalizeMilkReceipts" odd-row-style="alternate-row" header-row-style="header-row" type="single"  default-table-style="basic-table hover-bar" separate-columns="true" target="FinalizeMilkReceipts" >    
+    	<field name="fromDate" title="From Date" required-field="true"><date-time type="timestamp"/></field>
+    	<field name="thruDate" title="To Date" required-field="true"><date-time/></field>
+	   <field name="submitButton" title="Finalize"><submit button-type="button"/></field>
+    </form>
+    <form name="milkReceiptEntriesCsv" type="list" list-name="foxproList" paginate="false"
+    		odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">	
+		<field name="RCNO" title="RCNO_N%L6"><display default-value="0"/></field>
+		<field name="RCTNO" title="RCTNO_N%L5"><display default-value="0"/></field>
+		<field name="GDATE" title="GDATE_D"><display/></field>
+		<field name="SCODE" title="SCODE_N%L2"><display default-value="0"/></field>
+		<field name="TCODE" title="TCODE_N%L2"><display default-value="0"/></field>
+		<field name="DCODE" title="DCODE_N%L2"><display default-value="0"/></field>
+		<field name="GCNO" title="GCNO_N%L3"><display default-value="0"/></field>
+		<field name="GNAME" title="GNAME_C%L31"><display default-value="0"/></field>
+		<field name="F_U" title="FU_N%L1"><display default-value="1"/></field>
+		<field name="GTKNO" title="GTKNO_N%L5"><display default-value="0"/></field>
+		<field name="GTIME1" title="GTIME1_N%L4"><display default-value="0"/></field>
+		<field name="GTM" title="GTM_N%L3"><display default-value="0"/></field>
+		<field name="MTYP" title="MTYP_C%L1"><display/></field>
+		<field name="GCELL" title="GCELL_C%L2"><display/></field>
+		<field name="GQTY1" title="GQTY1_N%L7%D1"><display default-value="0"/></field>
+		<field name="GFAT1" title="GFAT1_N%L5%D2"><display default-value="0"/></field>
+		<field name="GSNF1" title="GSNF1_N%L5%D2"><display default-value="0"/></field>
+		<field name="GCLR1" title="GCLR1_N%L5%D2"><display default-value="0"/></field>
+		<field name="GACID1" title="GACID1_N%L3"><display default-value="0"/></field>
+		<field name="GTEMP1" title="GTEMP1_N%L4%D1"><display default-value="0"/></field>
+		<field name="GC1" title="GC1_C%L2"><display/></field>
+		<field name="GTIME2" title="GTIME2_N%L4"><display default-value="0"/></field>
+		<field name="RECQTY" title="RECQTY_N%L7%D1"><display default-value="0"/></field>
+		<field name="GQTY2" title="GQTY2_N%L7%D1"><display default-value="0"/></field>
+		<field name="GFAT2" title="GFAT2_N%L5%D2"><display default-value="0"/></field>
+		<field name="GSNF2" title="GSNF2_N%L5%D2"><display default-value="0"/></field>
+		<field name="GCLR2" title="GCLR2_N%L6%D2"><display default-value="0"/></field>
+		<field name="GACID2" title="GACID2_N%L3"><display default-value="0"/></field>
+		<field name="GTEMP2" title="GTEMP2_N%L4%D1"><display default-value="0"/></field>
+		<field name="GC2" title="GC2_C%L2"><display/></field>
+		<field name="GKGT" title="GKGT_N%L8%D1"><display default-value="0"/></field>
+		<field name="GTKGF" title="GTKGF_N%L8%D2"><display default-value="0"/></field>
+		<field name="GTKGSNF" title="GTKGSNF_N%L8%D2"><display default-value="0"/></field>
+		<field name="GTS" title="GTS_N%L10%D2"><display default-value="0"/></field>
+		<field name="GCC" title="GCC_N%L10%D2"><display default-value="0"/></field>
+		<field name="GMA" title="GMA_N%L10%D2"><display default-value="0"/></field>
+		<field name="GSNF" title="GSNF_N%L8%D2"><display default-value="0"/></field>
+		<field name="GNM" title="GNM_N%L10%D2"><display default-value="0"/></field>
+		<field name="GOC" title="GOC_N%L8%D2"><display default-value="0"/></field>
+		<field name="GTC" title="GTC_N%L8%D2"><display default-value="0"/></field>
+		<field name="GCV" title="GCV_N%L8%D2"><display default-value="0"/></field>
+		<field name="GTA" title="GTA_N%L10%D2"><display default-value="0"/></field>
+		<field name="G" title="G_C%L2"><display default-value="MM"/></field>
+		<field name="GCAP" title="GCAP_C%L1"><display default-value="N"/></field>
+		<field name="DTKGS" title="DTKGS_N%L8%D1"><display default-value="0"/></field>
+		<field name="DTKGF" title="DTKGF_N%L8%D2"><display default-value="0"/></field>
+		<field name="DTKGSNF" title="DTKGSNF_N%L8%D2"><display default-value="0"/></field>
+     </form>
+    
+	<form name="MilkReceiptEntry" odd-row-style="alternate-row" header-row-style="header-row" type="single"  default-table-style="basic-table hover-bar" separate-columns="true" target="createMilkReceipt" >
+		<actions>
+			<set field="milkReceiptProductList" type="List" value="${groovy: import org.ofbiz.base.util.*; return (in.vasista.vbiz.procurement.ProcurementNetworkServices.getMilkReceiptProducts(dispatcher.getDispatchContext(),context)); }"/>
+		</actions>
+		<field name="facilityId" title="From" required-field="true"><lookup target-form-name="ProcurementUnitLookupFacility"></lookup></field>
+		<field name="facilityIdTo" title="To " required-field="true"><lookup target-form-name="ProcurementUnitLookupFacility"></lookup></field>
+		<field name="vehicleId" title="Tanker No" required-field="false"><text size="10"/></field>
+		<field name="sendDate" title="Send Date" required-field="true"><date-time default-value="${nowTimestamp}"/></field>
+		<field name="milkCondition" title="C/p">
+			<drop-down>
+				<option key=""/>
+				<option key="C"/>
+				<option key="P"/>
+			</drop-down>
+		</field>
+		<field name="cob" title="COB">
+			<drop-down>
+				<option key="N"/>
+				<option key="Y"/>
+			</drop-down>
+		</field>
+		<field name="capacity" title="Capacity">
+			<drop-down>
+				<option key="N"/>
+				<option key="Y"/>
+			</drop-down>
+		</field>
+		<field name="productId" title="Milk Type" required-field="true">
+            <drop-down allow-empty="false">
+       			<list-options key-name="productId" list-name="milkReceiptProductList" description="${description}"/>
+       		</drop-down>
+        </field>
+		
+		<field name="fcQtyKgs" title="Quantity(Kgs)"><text size="10"></text> </field>
+		<field name="fcQtyLtrs" title="Quantity(Ltrs)"><text size="10"></text> </field>
+		<field name="fcFat" title="fat" required-field="true"><text size="10" maxlength="4"></text> </field>
+		<field name="fcSnf" title="snf" required-field="true"><text size="10" maxlength="5"></text> </field>
+		<field name="fcAcid" title="acid"><text size="10" maxlength="3"></text> </field>
+		<field name="fcTemp" title="Temparature" required-field="false"><text size="10" maxlength="3"></text> </field>
+		<field name="fcLR" title="CLR" required-field="true"><text size="10" maxlength="5"></text> </field>
+		
+		<field name="mcQtyKgs" title="Quantity(Kgs)"><text size="10" default-value="0"></text> </field>
+		<field name="mcQtyLtrs" title="Quantity(Ltrs)"><text size="10" default-value="0"></text> </field>
+		<field name="mcFat" title="fat"><text size="10" maxlength="4" default-value="0"></text> </field>
+		<field name="mcSnf" title="snf"><text size="10" maxlength="5" default-value="0"></text> </field>
+		<field name="mcAcid" title="acid"><text size="10" maxlength="3" default-value="0"></text> </field>
+		<field name="mcTemp" title="Temparature"><text size="10" maxlength="3" default-value="0"></text> </field>
+		<field name="mcLR" title="CLR"><text size="10" maxlength="5" default-value="0"></text> </field>
+		
+		<field name="bcQtyKgs" title="Quantity(Kgs)" ><text size="10" default-value="0"></text> </field>
+		<field name="bcQtyLtrs" title="Quantity(Ltrs)"><text size="10" default-value="0"></text > </field>
+		<field name="bcFat" title="fat"><text size="10" maxlength="4" default-value="0"></text> </field>
+		<field name="bcSnf" title="snf"><text size="10" maxlength="5" default-value="0"></text> </field>
+		<field name="bcAcid" title="acid"><text size="10" maxlength="3" default-value="0"></text> </field>
+		<field name="bcTemp" title="Temparature"><text size="10" maxlength="3" default-value="0"></text> </field>
+		<field name="bcLR" title="CLR"><text size="10" maxlength="5" default-value="0"></text> </field>
+		<field name="submit" title="Submit"><submit/></field>
+	 	<sort-order>
+	 		<field-group>
+	 			<sort-field name="facilityId"/>
+	 			<sort-field name="facilityIdTo"/>
+	 			<sort-field name="sendDate"/>
+	 			<sort-field name="productId"/>
+	 			<sort-field name="vehicleId"/>
+	 			<sort-field name="capacity"/>
+	 			<sort-field name="cob"/>
+	 			<sort-field name="milkCondition"/>
+	 		</field-group>
+	 		<field-group title="First Cell" collapsible="true">
+	 			<sort-field name="fcQtyKgs"/>
+	 			<sort-field name="fcQtyLtrs"/>
+	 			<sort-field name="fcFat"/>
+	 			<sort-field name="fcSnf"/>
+	 			<sort-field name="fcAcid"/>
+	 			<sort-field name="fcTemp"/>
+	 			<sort-field name="fcLR"/>
+	 		</field-group>
+	 		<field-group title="Middle Cell" collapsible="true" >
+	 			<sort-field name="mcQtyKgs"/>
+	 			<sort-field name="mcQtyLtrs"/>
+	 			<sort-field name="mcFat"/>
+	 			<sort-field name="mcSnf"/>
+	 			<sort-field name="mcAcid"/>
+	 			<sort-field name="mcTemp"/>
+	 			<sort-field name="mcLR"/>
+	 		</field-group>
+	 		<field-group title="Back Cell" collapsible="true" >
+	 			<sort-field name="bcQtyKgs"/>
+	 			<sort-field name="bcQtyLtrs"/>
+	 			<sort-field name="bcFat"/>
+	 			<sort-field name="bcSnf"/>
+	 			<sort-field name="bcAcid"/>
+	 			<sort-field name="bcTemp"/>
+	 			<sort-field name="bcLR"/>
+	 		</field-group>
+	 	</sort-order>
+	</form>
+	
+	<form name="UpdateMilkReceiptEntry" odd-row-style="alternate-row" default-map-name="sendQtyDetailsMap" header-row-style="header-row" type="single"  default-table-style="basic-table hover-bar" separate-columns="true" target="updateMilkReceipt" >
+		<actions>
+			<set field="milkReceiptProductList" type="List" value="${groovy: import org.ofbiz.base.util.*; return (in.vasista.vbiz.procurement.ProcurementNetworkServices.getMilkReceiptProducts(dispatcher.getDispatchContext(),context)); }"/>
+		</actions>
+		<field name="milkTransferId"><hidden/></field>
+		<field name="vehicleId" title="Tanker No" required-field="false"><display/></field>
+		<field name="receivedDate" title="Received Date" required-field="true"><date-time default-value="${nowTimestamp}"/></field>
+		<field name="milkCondition" title="C/p">
+			<drop-down>
+				<option key=""/>
+				<option key="C"/>
+				<option key="P"/>
+			</drop-down>
+		</field>
+		<field name="recdCob" title="COB">
+			<drop-down no-current-selected-key="${cob}">
+				<option key="Y"/>
+				<option key="N"/>
+			</drop-down>
+		</field>
+		<field name="capacity" title="Capacity">
+			<drop-down>
+				<option key="N"/>
+				<option key="Y"/>
+			</drop-down>
+		</field>
+		<field name="recdProductId" title="Received Milk Type" required-field="true">
+            <drop-down allow-empty="false">
+       			<list-options key-name="productId" list-name="milkReceiptProductList" description="${description}"/>
+       		</drop-down>
+        </field>
+		<field name="fcRecdQtyKgs" title="Quantity(Kgs)" ><text size="10"></text> </field>
+		<field name="fcRecdQtyLtrs" title="Quantity(Ltrs)"><text size="10"></text> </field>
+		<field name="fcRecdFat" title="fat" required-field="true"><text size="10" maxlength="4"></text> </field>
+		<field name="fcRecdSnf" title="snf" required-field="true"><text size="10" maxlength="5"></text> </field>
+		<field name="fcRecdAcid" title="acid"><text size="10" maxlength="3"></text> </field>
+		<field name="fcRecdTemp" title="Temparature" required-field="false"><text size="10" maxlength="3"></text> </field>
+		<field name="fcRecdLR" title="CLR" required-field="true"><text size="10" maxlength="5"></text> </field>
+		
+		<field name="mcRecdQtyKgs" title="Quantity(Kgs)"><text size="10" default-value="0"></text> </field>
+		<field name="mcRecdQtyLtrs" title="Quantity(Ltrs)"><text size="10" default-value="0"></text> </field>
+		<field name="mcRecdFat" title="fat"><text size="10" maxlength="4" default-value="0"></text> </field>
+		<field name="mcRecdSnf" title="snf"><text size="10" maxlength="5" default-value="0"></text> </field>
+		<field name="mcRecdAcid" title="acid"><text size="10" maxlength="3" default-value="0"></text> </field>
+		<field name="mcRecdTemp" title="Temparature"><text size="10" maxlength="3" default-value="0"></text> </field>
+		<field name="mcRecdLR" title="CLR"><text size="10" maxlength="5" default-value="0"></text> </field>
+		
+		<field name="bcRecdQtyKgs" title="Quantity(Kgs)" ><text size="10" default-value="0"></text> </field>
+		<field name="bcRecdQtyLtrs" title="Quantity(Ltrs)"><text size="10" default-value="0"></text> </field>
+		<field name="bcRecdFat" title="fat"><text size="10" maxlength="4" default-value="0"></text> </field>
+		<field name="bcRecdSnf" title="snf"><text size="10" maxlength="5" default-value="0"></text> </field>
+		<field name="bcRecdAcid" title="acid"><text size="10" maxlength="3" default-value="0"></text> </field>
+		<field name="bcRecdTemp" title="Temparature"><text size="10" maxlength="3" default-value="0"></text> </field>
+		<field name="bcRecdLR" title="CLR"><text size="10" maxlength="5" default-value="0"></text> </field>
+
+		<field name="milkType" title="Sour / Curd" event="onchange" action="javascript:milkTypeChangeHandler(this);">
+			<drop-down>
+				<option key=""/>
+				<option key="C"/>
+				<option key="S"/>
+			</drop-down>
+		</field>
+		<field name="sQuantityLtrs" title="Sour Qty(Lts)"> <text size="10"></text></field>
+		<field name="sFat" title="Sour Fat"> <text size="10" maxlength="4"></text></field>
+		<field name="sSnf" title="Sour Snf"> <text size="10" maxlength="5"></text></field>
+		<field name="gheeYield" title="ghee Yeild(Kgs)"> <text size="10"></text></field>
+		<field name="cQuantityLtrs" title="Curd Qty(Lts)"> <text size="10"></text></field>
+
+		<field name="submit" title="Submit"><submit/></field>
+	 	<sort-order>
+	 		<field-group>
+	 			<sort-field name="facilityId"/>
+	 			<sort-field name="facilityIdTo"/>
+	 			<sort-field name="recdDate"/>
+	 			<sort-field name="receivedProductId"/>
+	 			<sort-field name="vehicleId"/>
+	 			<sort-field name="capacity"/>
+	 			<sort-field name="recdCob"/>
+	 			<sort-field name="milkCondition"/>
+	 		</field-group>
+	 		<field-group title="First Cell" collapsible="true">
+	 			<sort-field name="fcQtyKgs"/>
+	 			<sort-field name="fcQtyLtrs"/>
+	 			<sort-field name="fcFat"/>
+	 			<sort-field name="fcSnf"/>
+	 			<sort-field name="fcAcid"/>
+	 			<sort-field name="fcTemp"/>
+	 			<sort-field name="fcLR"/>
+	 		</field-group>
+	 		<field-group title="Middle Cell" collapsible="true" >
+	 			<sort-field name="mcQtyKgs"/>
+	 			<sort-field name="mcQtyLtrs"/>
+	 			<sort-field name="mcFat"/>
+	 			<sort-field name="mcSnf"/>
+	 			<sort-field name="mcAcid"/>
+	 			<sort-field name="mcTemp"/>
+	 			<sort-field name="mcLR"/>
+	 		</field-group>
+	 		<field-group title="Back Cell" collapsible="true" >
+	 			<sort-field name="bcQtyKgs"/>
+	 			<sort-field name="bcQtyLtrs"/>
+	 			<sort-field name="bcFat"/>
+	 			<sort-field name="bcSnf"/>
+	 			<sort-field name="bcAcid"/>
+	 			<sort-field name="bcTemp"/>
+	 			<sort-field name="bcLR"/>
+	 		</field-group>
+	 	</sort-order>
+	</form>
+	<form name="SendMilkReceiptsDisplay" odd-row-style="alternate-row" header-row-style="header-row" type="single"  default-table-style="basic-table hover-bar" separate-columns="true" default-map-name="sendQtyDetailsMap" >
+		<actions>
+			<set field="milkReceiptProductList" type="List" value="${groovy: import org.ofbiz.base.util.*; return (in.vasista.vbiz.procurement.ProcurementNetworkServices.getMilkReceiptProducts(dispatcher.getDispatchContext(),context)); }"/>
+		</actions>
+		<field name="facilityId" title="Received From" ><display-entity entity-name="Facility" description="${facilityName}" key-field-name="facilityId" /></field>
+		<field name="facilityIdTo" title="Facility " ><display-entity entity-name="Facility" description="${facilityName}" key-field-name="facilityId" /></field>
+		<field name="vehicleId" title="Tanker No" required-field="false"><display/></field>
+		<field name="sendDate" title="Send Date" ><display/></field>
+		<field name="milkCondition" title="C/p">
+			<display/>
+		</field>
+		<field name="cob" title="COB">
+			<display/>
+		</field>
+		<field name="capacity" title="Capacity">
+			<display/>
+		</field>
+		<field name="productId" title="Milk Type" >
+            <display-entity entity-name="Product" key-field-name="productId" description="${description}"></display-entity>
+        </field>
+		
+		<field name="fcQtyKgs" title="Quantity(Kgs)" ><display/> </field>
+		<field name="fcQtyLtrs" title="Quantity(Ltrs)" ><display/> </field>
+		<field name="fcFat" title="fat" ><display/></field>
+		<field name="fcSnf" title="snf" ><display/></field>
+		<field name="fcAcid" title="acid"><display/></field>
+		<field name="fcTemp" title="Temparature" required-field="false"><display/></field>
+		<field name="fcLR" title="CLR" required-field="true"><display/></field>
+		
+		<field name="mcQtyKgs" title="Quantity(Kgs)" ><display/> </field>
+		<field name="mcQtyLtrs" title="Quantity(Ltrs)" ><display default-value="0"/> </field>
+		<field name="mcFat" title="fat" ><display default-value="0" /></field>
+		<field name="mcSnf" title="snf" ><display default-value="0"/></field>
+		<field name="mcAcid" title="acid"><display default-value="0"/></field>
+		<field name="mcTemp" title="Temparature" required-field="false"><display default-value="0"/></field>
+		
+		<field name="bcQtyKgs" title="Quantity(Kgs)" ><display/> </field>
+		<field name="bcQtyLtrs" title="Quantity(Ltrs)" ><display default-value="0"/> </field>
+		<field name="bcFat" title="fat" ><display default-value="0" /></field>
+		<field name="bcSnf" title="snf" ><display default-value="0"/></field>
+		<field name="bcAcid" title="acid"><display default-value="0"/></field>
+		<field name="bcTemp" title="Temparature" required-field="false"><display default-value="0"/></field>
+		<field name="bcLR" title="CLR"><display default-value="0"/></field>
+		
+		
+	 	<sort-order>
+	 		<field-group>
+	 			<sort-field name="facilityId"/>
+	 			<sort-field name="facilityIdTo"/>
+	 			<sort-field name="sendDate"/>
+	 			<sort-field name="productId"/>
+	 			<sort-field name="vehicleId"/>
+	 			<sort-field name="capacity"/>
+	 			<sort-field name="cob"/>
+	 			<sort-field name="milkCondition"/>
+	 		</field-group>
+	 		<field-group title="First Cell" collapsible="true">
+	 			<sort-field name="fcQtyLtrs"/>
+	 			<sort-field name="fcFat"/>
+	 			<sort-field name="fcSnf"/>
+	 			<sort-field name="fcAcid"/>
+	 			<sort-field name="fcTemp"/>
+	 			<sort-field name="fcLR"/>
+	 		</field-group>
+	 		<field-group title="Middle Cell" collapsible="true" >
+	 			<sort-field name="mcQtyLtrs"/>
+	 			<sort-field name="mcFat"/>
+	 			<sort-field name="mcSnf"/>
+	 			<sort-field name="mcAcid"/>
+	 			<sort-field name="mcTemp"/>
+	 			<sort-field name="mcLR"/>
+	 		</field-group>
+	 		<field-group title="Back Cell" collapsible="true" >
+	 			<sort-field name="bcQtyLtrs"/>
+	 			<sort-field name="bcFat"/>
+	 			<sort-field name="bcSnf"/>
+	 			<sort-field name="bcAcid"/>
+	 			<sort-field name="bcTemp"/>
+	 			<sort-field name="bcLR"/>
+	 		</field-group>
+	 	</sort-order>
+	</form>
+	
+	<form name="GenerateMilkReceiptsBilling" odd-row-style="alternate-row" header-row-style="header-row" type="single"  default-table-style="basic-table hover-bar" separate-columns="true"  target="generateMlkReceiptsBilling">    
+		<field name="facilityId" title="Private Unit">
+		     <drop-down allow-empty="true">
+		         <list-options key-name="facilityId" list-name="privateDairiesList" description="${facilityName}"></list-options>
+		     </drop-down>
+		</field>
+	  	<field name="customTimePeriodId">
+			<drop-down allow-empty="true">
+	        	<list-options key-name="customTimePeriodId" list-name="timePeriodList" description="${groovy:org.ofbiz.base.util.UtilDateTime.toDateString(fromDate, &quot;MMMdd&quot;);}-${groovy:org.ofbiz.base.util.UtilDateTime.toDateString(thruDate, &quot;MMMdd yyyy&quot;);}"/>
+			</drop-down>
+		</field>
+	  	<field name="submitButton" title="Generate"><submit button-type="button"/></field>
+	</form>
+	
+	
+	<form name="ListReceivedMilkReceipt" odd-row-style="alternate-row" header-row-style="header-row" type="list"  default-table-style="basic-table hover-bar" separate-columns="true" list-name="listReceivedMilk" paginate-target="ReceiveMilkReceipts" >    
+       <actions>
+       		<script location="component://procurement/webapp/procurement/WEB-INF/actions/facility/filterMilkTransfersReceived.groovy"/>
+       </actions>
+       <field name="milkTransferId"><hidden/></field>
+       <field name="facilityIdTo" title="facilityId"><display-entity entity-name="Facility" description="${facilityName}" key-field-name="facilityId" /></field>
+       <field name="facilityId" title="Received from"><display-entity entity-name="Facility" description="${facilityName}" /></field>
+       <field name="receivedDate" title="Received Date"><display type="date-time" default-value="${nowTimestamp}"/></field>
+       <field name="productId" title="Milk Type"><display-entity entity-name="Product" description="${description}"/></field>
+      <!--  <field name="productId" title="Milk Type">
+            <drop-down  no-current-selected-key="101">
+                <option key="101" description="Buffalo"/>
+                <option key="102" description="Cow"/>
+            </drop-down>
+       </field> -->
+       <field name="containerId" title="Tanker Number"><display/></field>
+       <field name="quantity"><display/></field>
+       <field name="sendKgFat" title="Kg Fat"><display/></field>
+       <field name="sendKgSnf" title="Kg Snf"><display/></field>
+       <field name="fat" ><display/></field>
+       <field name="snf" ><display/></field>        
+       <field name="statusId" title="status"><display-entity entity-name="StatusItem" key-field-name="statusId" description="${description}"></display-entity></field>
+       <field name="Approve" title-style="buttontext"  separate-column="true" widget-style="button">
+          <hyperlink target="approveMilkReceipt" description="Approve">
+            <parameter param-name="milkTransferId"/>
+          </hyperlink>
+       </field>
+       <field  name="update"  title="UPDATE" title-style="buttontext" separate-column="true">
+          <hyperlink target="updateMilkRcptRecord" description="${uiLabelMap.CommonUpdate}">
+            <parameter param-name="milkTransferId"/>
+          </hyperlink>
+       </field>
+       <field use-when="&quot;${statusId}&quot;.equals(&quot;MXF_INPROCESS&quot;)"  name="delete"  title="Delete" title-style="buttontext" separate-column="true">
+          <hyperlink target="deleteMilkRcptRecord" description="${uiLabelMap.CommonDelete}">
+            <parameter param-name="milkTransferId"/>
+          </hyperlink>
+       </field>
+    </form>  
+    <form name="ListSendMilk" odd-row-style="alternate-row" header-row-style="header-row-2" type="list" list-name="listIt"  default-table-style="basic-table " separate-columns="true"  target="updateSendMilkRecord" paginate-target="FindMilkReceipt">    
+       <actions>
+     		<set field="parameters.statusId" value="${parameters.statusId}" default-value="MXF_INPROCESS"/>
+       		<set field="parameters.createdByUserLogin" from-field="parameters.createdByUserLogin" />
+       		<service service-name="performFindList" result-map="result" result-map-list="list" >
+                <field-map field-name="inputFields" from-field="parameters"/>
+                <field-map field-name="entityName" value="MilkTransfer"/>
+            </service>
+            <script location="component://procurement/webapp/procurement/WEB-INF/actions/facility/filterMilkTransfersSent.groovy"/>
+       </actions>       
+       <field name="milkTransferId" separate-column="true"><hidden/></field>
+       <field name="facilityId" separate-column="true"><display-entity entity-name="Facility" key-field-name="facilityId" description="${facilityName}"></display-entity></field>
+       <field name="facilityIdTo" separate-column="true"><display-entity entity-name="Facility" key-field-name="facilityId" description="${facilityName}"></display-entity></field>
+       <field name="sendDate"><display type="date-time"/></field>
+       <field name="productId" title="Milk Type"><display-entity entity-name="Product" key-field-name="productId" description="${description}"></display-entity>
+       </field>
+       <!-- <field name="supplyTypeEnumId" title="Purchase Time" use-when="&quot;${supplyTimeValue}&quot;==&quot;Y&quot;"><display></display></field> -->
+       <field name="quantity"><display/></field>
+       <field name="quantityLtrs"><display default-value="${quantity/1.03}"/></field>
+       <field name="fat"><display/></field>
+       <field name="snf"><display/></field>
+       <field name="sendKgFat" title="KgFat"><display/></field>
+       <field name="sendKgSnf" title="KgSnf"><display/></field>
+       <field name="containerId" title="Vehicle Number"><display/></field>
+       <field name="statusId" title="Status" separate-column="true"><display-entity entity-name="StatusItem" key-field-name="statusId" description="${description}"/></field>
+        <!--   <field  name="milkType"  title="Milk Type"><display/></field> 
+        <field use-when="&quot;${statusId}&quot;.equals(&quot;MXF_INPROCESS&quot;)" name="update" title-style="buttontext"> 
+        	<submit/>
+        </field> -->
+       <field use-when="&quot;${statusId}&quot;.equals(&quot;MXF_INPROCESS&quot;)"  name="delete"  title="Delete" title-style="buttontext" separate-column="true">
+          <hyperlink target="deleteMilkRecord" description="${uiLabelMap.CommonDelete}">
+            <parameter param-name="milkTransferId"/>
+          </hyperlink>
+       </field>
+       <sort-order>
+	        <sort-field name="milkTransferId"/>
+	        <sort-field name="facilityId"/>
+	        <sort-field name="facilityIdTo"/>
+	        <sort-field name="productId"/>
+	        <sort-field name="supplyTypeEnumId"/>	        
+	        <sort-field name="quantity"/>
+	        <sort-field name="quantityLtrs"/>
+	        <sort-field name="fat"/>
+	        <sort-field name="snf"/>
+	        <sort-field name="sendKgFat"/>
+	        <sort-field name="sendKgSnf"/>
+	        <sort-field name="containerId"/>	       
+	        <sort-field name="sendDate"/>
+	        <sort-field name="statusId"/>
+        	<!--<sort-field name="update"/>-->
+	        <sort-field name="delete"/>
+       </sort-order>
+    </form>    
+    <form name="ListMilkReceived" odd-row-style="alternate-row" header-row-style="header-row-2" type="list" list-name="milkDetailslist"  default-table-style="basic-table " separate-columns="true"  target="updateSendMilkRecord" paginate-target="FindMilkReceipt">    
+       <field name="milkTransferId" title="Record No"><display/></field>
+       <field name="facilityId" separate-column="true" title="FacilityId [mccCode]"><display-entity entity-name="Facility" key-field-name="facilityId" description="${facilityName}[${mccCode}]"></display-entity></field>
+       <field name="facilityIdTo" separate-column="true"><display-entity entity-name="Facility" key-field-name="facilityId" description="${facilityName}"></display-entity></field>
+       <field name="receiveDate" title="RecDate"><display type="date"/></field>
+       <field name="productId" title="Milktype"><display-entity entity-name="Product" key-field-name="productId" description="${description}"></display-entity></field>
+       <field name="receivedQuantity" title="Recquantity(Kgs)"><display/></field>
+       <field name="receivedQuantityLtrs" title="Recquantity(Ltrs)"><display default-value="${quantity/1.03}"/></field>
+       <field name="receivedFat" ><display/></field>
+       <field name="receivedSnf" ><display/></field>
+       <field name="receivedKgFat" title="RecKgFat"><display/></field>
+       <field name="receivedKgSnf" title="RecKgSnf"><display/></field>
+       <field name="containerId" title="Vehicle Number"><display/></field>
+       <field name="statusId" parameter-name="status" title="Status" separate-column="true"><display-entity entity-name="StatusItem" key-field-name="statusId" description="${description}"/></field>
+       <field   name="update"  title="Edit" title-style="buttontext" separate-column="true" widget-style="button">
+          <hyperlink target="updateMilkRecord" description="${uiLabelMap.CommonEdit}" link-type="hidden-form">
+            <parameter param-name="milkTransferId"/>
+          </hyperlink>
+       </field> 
+       <field use-when="&quot;${statusId}&quot;.equals(&quot;MXF_RECD&quot;)"  name="delete" title="${uiLabelMap.CommonDelete}" widget-style="buttontext" event="onclick" action="javascript:deleteTransferEntry(this,'${milkTransferId}');">
+            <hyperlink  description="delete" target-type="plain">
+           </hyperlink>
+        </field> 
+       <sort-order>
+	        <sort-field name="milkTransferId"/>
+	        <sort-field name="facilityId"/>
+	        <sort-field name="facilityIdTo"/>
+	        <sort-field name="productId"/>
+	        <sort-field name="receivedQuantity"/>
+	        <sort-field name="receivedQuantityLtrs"/>
+	        <sort-field name="receivedFat"/>
+	        <sort-field name="receivedSnf"/>
+	        <sort-field name="receivedKgFat"/>
+	        <sort-field name="receivedKgSnf"/>
+	        <sort-field name="containerId"/>
+	        <sort-field name="receiveDate"/>
+	        <sort-field name="statusId"/>
+	        <sort-field name="update"/>
+	        <sort-field name="delete"/>
+       </sort-order>
+    </form>
+    
+    <form name="createNewSalesEntry" odd-row-style="alternate-row" header-row-style="header-row" type="single"  default-table-style="basic-table hover-bar" separate-columns="true"  target="createSalesEntry">    
+       <field name="shedId" id-name="shedId" title="Shed Name"  event="onChange" action="javascript:getTimePeriodsByUnit(this.value)" >
+            <drop-down allow-empty="true">
+                <entity-options description="${description}" entity-name="Facility" key-field-name="facilityId">
+                	<entity-constraint name="facilityTypeId" operator="equals" value="SHED"/>
+                </entity-options>
+            </drop-down>
+       </field>
+       <field use-when="(shedId!=null)&amp;&amp;(shedCode!=null)" id-name="shedId" name="shedId" title="Shed Name"><display default-value="${shedId}"  description="${shedName}"/></field>
+	   <field name="customTimePeriodId">
+			<drop-down allow-empty="true">
+	        	<list-options key-name="customTimePeriodId" list-name="timePeriodList" description="${groovy:org.ofbiz.base.util.UtilDateTime.toDateString(fromDate, &quot;MMMdd&quot;);}-${groovy:org.ofbiz.base.util.UtilDateTime.toDateString(thruDate, &quot;MMMdd yyyy&quot;);}"/>
+			</drop-down>
+		</field>
+		<field name="amountTypeId"><hidden value="SALES"/></field>
+	   <field name="salesQtyKgs" title="Sales Quantity Kgs"><text size="15"/></field>
+	   <field name="kgFat" title="KgFat"><text size="15"/></field>
+	   <field name="kgSnf" title="KgSnf"><text size="15"/></field>
+	   <field name="amount" title="Total Sale Amount"><text size="15"/></field>
+		<field name="cashAmount" title="Cash Remmitance"><text size="15"/></field>
+	   <field name="submitButton" title="Create"><submit button-type="button"/></field>
+    </form>
+    
+	<form name="FindSalesEntries" odd-row-style="alternate-row" header-row-style="header-row" type="single"  default-table-style="basic-table hover-bar" separate-columns="true" target="MilkReceiptsSalesEntry" >    
+       <field name="shedId" id-name="shedId" title="Shed Name"  event="onChange" action="javascript:getTimePeriodsByUnit(this.value)" >
+            <drop-down allow-empty="true">
+                <entity-options description="${description}" entity-name="Facility" key-field-name="facilityId">
+                	<entity-constraint name="facilityTypeId" operator="equals" value="SHED"/>
+                </entity-options>
+            </drop-down>
+       </field>
+        <field use-when="(shedId!=null)&amp;&amp;(shedCode!=null)" id-name="shedId" name="shedId" title="Shed Name"><display default-value="${shedId}"  description="${shedName}"/></field>
+	   <field name="customTimePeriodId">
+			<drop-down allow-empty="true">
+	        	<list-options key-name="customTimePeriodId" list-name="timePeriodList" description="${groovy:org.ofbiz.base.util.UtilDateTime.toDateString(fromDate, &quot;MMMdd&quot;);}-${groovy:org.ofbiz.base.util.UtilDateTime.toDateString(thruDate, &quot;MMMdd yyyy&quot;);}"/>
+			</drop-down>
+		</field>		
+	   <field name="submitButton" title="Find"><submit button-type="button"/></field>
+    </form>
+    <form name="ListSalesEntries" odd-row-style="alternate-row" header-row-style="header-row" type="list" paginate-target="MilkReceiptsSalesEntry"
+    	default-table-style="basic-table hover-bar" separate-columns="true" list-name="saleEntryList" >		
+		<field name="facilityId" title="Shed"><display></display></field>
+		<field name="customTimePeriodId" title="CustomTimePeriodId"><display-entity entity-name="CustomTimePeriod" description="${groovy:org.ofbiz.base.util.UtilDateTime.toDateString(fromDate, &quot;MMMdd&quot;);}-${groovy:org.ofbiz.base.util.UtilDateTime.toDateString(thruDate, &quot;MMMdd yyyy&quot;);}" /></field>
+		<field name="amountTypeId" title="amountTypeId"><display-entity entity-name="Enumeration" key-field-name="enumId" description="${description}"></display-entity></field>
+		<field name="qtyKgs" title="QtyKgs"><display/></field>
+		<field name="kgFat" title="KgFat"><display/></field>
+		<field name="kgSnf" title="KgSnf"><display/></field>
+		<field name="amount" title="Total Sale Amount"><display/></field>
+		<field name="cashRemittance" title="CashRemmitance"><display/></field>
+		<field name="delete"  title="Delete" title-style="buttontext" separate-column="true">
+          <hyperlink target="deleteSalesEntry" description="${uiLabelMap.CommonDelete}">
+            <parameter param-name="facilityId"/>
+            <parameter param-name="customTimePeriodId"/>
+            <parameter param-name="amountTypeId"/>
+          </hyperlink></field>
+    </form> 
+    
+    <form name="SalariesEntry" odd-row-style="alternate-row" header-row-style="header-row" type="single"  default-table-style="basic-table hover-bar" separate-columns="true" target="createSalariesEntry">    
+       <field name="shedId" id-name="shedId" title="Shed Name">            
+       		<drop-down allow-empty="false">
+                <entity-options description="${description}" entity-name="Facility" key-field-name="facilityId">
+                	<entity-constraint name="facilityTypeId" operator="equals" value="SHED"/>
+                </entity-options>
+            </drop-down>
+       </field>
+	   <field name="customTimePeriodId">
+			<drop-down allow-empty="true">
+	        	<list-options key-name="customTimePeriodId" list-name="timePeriodList" description="${groovy:org.ofbiz.base.util.UtilDateTime.toDateString(fromDate, &quot;MMMdd&quot;);}-${groovy:org.ofbiz.base.util.UtilDateTime.toDateString(thruDate, &quot;MMMdd yyyy&quot;);}"/>
+			</drop-down>
+	   </field>
+	   <field name="amountTypeId" title="${uiLabelMap.AmountType}" position="1" event="onchange" action="javascript:amountTypeChange(this)">
+            <drop-down allow-empty="true">
+                <entity-options entity-name="Enumeration" description="${description}" key-field-name="enumId">
+                    <entity-constraint name="enumTypeId" operator="equals" value="FAC_EXP"/>
+                    <entity-order-by field-name="sequenceId"/>
+                </entity-options>
+            </drop-down>
+       </field>
+       <field name="productId" title="product" >
+            <drop-down allow-empty="true">
+       			<list-options key-name="productId" list-name="milkReceiptProductList" description="${description}"/>
+       		</drop-down>
+       </field>
+       <field name="salesQtyKgs" title="Qty(kgs)" ><text size="10" maxlength="8"></text>
+       </field>
+	   <field name="amount" title="Amount"> <text size="10" ></text></field>
+      <field name="submitButton" title="Create"><submit button-type="button"/></field>   
+    </form> 
+    <form name="FindSalaryEntries" odd-row-style="alternate-row" header-row-style="header-row" type="single"  default-table-style="basic-table hover-bar" separate-columns="true" >    
+       <field name="shedId" id-name="shedId" title="Shed Name"  event="onChange" action="javascript:getTimePeriodsByUnit(this.value)" >
+            <drop-down allow-empty="true">
+                <entity-options description="${description}" entity-name="Facility" key-field-name="facilityId">
+                	<entity-constraint name="facilityTypeId" operator="equals" value="SHED"/>
+                </entity-options>
+            </drop-down>
+       </field>
+       <field use-when="(shedId!=null)&amp;&amp;(shedCode!=null)" id-name="shedId" name="shedId" title="Shed Name"><display default-value="${shedId}"  description="${shedName}"/></field>
+	   <field name="customTimePeriodId">
+			<drop-down allow-empty="true">
+	        	<list-options key-name="customTimePeriodId" list-name="timePeriodList" description="${groovy:org.ofbiz.base.util.UtilDateTime.toDateString(fromDate, &quot;MMMdd&quot;);}-${groovy:org.ofbiz.base.util.UtilDateTime.toDateString(thruDate, &quot;MMMdd yyyy&quot;);}"/>
+			</drop-down>
+		</field>
+		<field name="amountTypeId">
+			<drop-down allow-empty="true">
+				<list-options key-name="enumId" list-name="amountTypeList" description="${description}"/>
+			</drop-down>
+		</field>
+	   <field name="submitButton" title="Find"><submit button-type="button"/></field>
+    </form>  
+    <form name="ListSalaryEntries" odd-row-style="alternate-row" header-row-style="header-row" type="list" paginate-target="MilkReceiptsSalariesEntry"
+    	default-table-style="basic-table hover-bar 2" separate-columns="true" list-name="salaryEntryList" >		
+		<field name="facilityId" title="Shed"><display/></field>
+		<field name="customTimePeriodId" title="CustomTimePeriodId"><display-entity entity-name="CustomTimePeriod" description="${groovy:org.ofbiz.base.util.UtilDateTime.toDateString(fromDate, &quot;MMMdd&quot;);}-${groovy:org.ofbiz.base.util.UtilDateTime.toDateString(thruDate, &quot;MMMdd yyyy&quot;);}" /></field>
+		<field name="amountTypeId" title="amountTypeId"><display-entity entity-name="Enumeration" key-field-name="enumId"  description="${description}"></display-entity></field>
+		<field name="productId" title="Milk Type"><display/></field>
+		<field name="amount" title="Amount"><display/></field>
+		<field name="delete"  title="Delete" title-style="buttontext" separate-column="true">
+          <hyperlink target="deleteSalaryEntry" description="${uiLabelMap.CommonDelete}">
+            <parameter param-name="facilityId"/>
+            <parameter param-name="customTimePeriodId"/>
+            <parameter param-name="amountTypeId"/>
+          </hyperlink></field>
+    </form> 
+</forms>

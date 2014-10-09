@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<menus xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/widget-menu.xsd">
+	<menu name="MainAppBar" title="${uiLabelMap.MilkReceiptsApplication}"
+		extends="CommonAppBarMenu" extends-resource="component://common/widget/CommonMenus.xml">
+		<menu-item name="main" title="${uiLabelMap.CommonMain}">
+			<link target="main" />
+		</menu-item>
+   </menu>
+	<menu name="MilkreceiptTabBar" extends="CommonTabBarMenu"
+		extends-resource="component://common/widget/CommonMenus.xml">
+		<actions> 
+			<script
+				location="component://product/webapp/facility/WEB-INF/actions/facility/GetFacilityUIPermissions.groovy" />
+		</actions>
+    	<menu-item name="MilkReceiptEntry" title="Milk Receipts" >
+            <link target="MilkReceiptSendEntry"></link>
+      	</menu-item>
+      	<menu-item name="Facility" title="Facility">
+			<link target="MilkReceiptFacility"></link>
+		</menu-item>
+     	<!-- <menu-item name="MilkReceiptsBilling" title="Billing">
+			<link target="findMilkReceiptsBilling"></link>
+		</menu-item> -->
+		<menu-item name="IncomeExpenditure" title="Income Expenditure">
+			<link target="MilkReceiptsSalesEntry"></link>
+		</menu-item>		
+		<menu-item name="reports" title="${uiLabelMap.CommonReports}">
+			<link target="ShedMilkReceiptReports"></link>
+		</menu-item>
+		<menu-item name="FinalizeMilkReceipts" title="Finalize MilkReceipts">
+			<link target="FinalMilkReceipts"></link>
+		</menu-item>
+	</menu>
+	<menu name="MilkreceiptFacilityTabBar" extends="CommonTabBarMenu"
+		extends-resource="component://common/widget/CommonMenus.xml">
+		<actions> 
+			<script
+				location="component://product/webapp/facility/WEB-INF/actions/facility/GetFacilityUIPermissions.groovy" />
+		</actions>
+    	<!-- <menu-item name="FindFacility" title="Facility">
+			<link target="MilkReceiptFindFacility"></link>
+		</menu-item> -->
+		<menu-item name="Facility" title="Facility">
+			<link target="MilkReceiptFacility"></link>
+		</menu-item>
+    	<!-- <menu-item name="Facility" title="Facility">
+			<link target="MilkReceiptFacility"></link>
+		</menu-item> -->
+	</menu>
+	<menu name="MilkreceiptReportTabBar" extends="CommonTabBarMenu"
+		extends-resource="component://common/widget/CommonMenus.xml"
+		selected-menuitem-context-field-name="tabButtonItem3">
+		<menu-item name="UnitMilkReceiptReports" title="Unit Reports">
+			<link target="UnitMilkReceiptReports"/>
+		</menu-item>
+		<menu-item name="ShedMilkReceiptReports" title="Shed Reports">
+			<link target="ShedMilkReceiptReports"/>
+		</menu-item>
+      <menu-item name="AnnualMilkReceiptReports" title="Annual Reports">
+			<link target="AnnualMilkReceiptReports"/>
+      </menu-item>   
+      <menu-item name="MilkReceiptsBillingReports" title="Billing Reports">
+			<link target="MilkReceiptsBillingReports"/>
+      	</menu-item>
+     </menu>
+     <menu name="MilkTransferReceiptTabBar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml" selected-menuitem-context-field-name="tabButtonItem3">
+		<menu-item name="SendMilkReceipt" title="Dispatched Milk">
+			<link target="MilkReceiptSendEntry"/>
+		</menu-item>
+		<!-- <menu-item name="RecdMilkReceipt" title="Acknowledgement Milk">
+			<link target="ReceiveMilkReceipts"/>
+		</menu-item> -->
+		<menu-item name="UpdateMilkReceipt" title="Update Milk Receipt">
+			<link target="updateMilkRecord">
+			</link>
+		</menu-item>
+		<menu-item name="FindMilkReceipt" title="Find Milk Receipts">
+			<link target="FindMilkReceipt"/>
+		</menu-item>
+     </menu>
+      <menu name="IncomeExpenditureTabBar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml" selected-menuitem-context-field-name="tabButtonItem3">
+        <menu-item name="MilkReceiptsSalesEntry" title="Sales Entry">
+			<link target="MilkReceiptsSalesEntry"></link>
+		</menu-item>
+		<menu-item name="MilkReceiptsSalariesEntry" title="${uiLabelMap.ExpenditureEntry}">
+			<link target="MilkReceiptsSalariesEntry"></link>
+		</menu-item>
+	</menu>  
+     
+</menus>

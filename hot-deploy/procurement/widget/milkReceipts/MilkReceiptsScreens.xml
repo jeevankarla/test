@@ -1,0 +1,537 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<screens xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/widget-screen.xsd">
+
+    <screen name="main">
+        <section>
+            <actions>
+                <set field="headerItem" value="main"/><!-- this highlights the selected menu-item with name "main" -->
+            </actions>
+            <widgets>
+                <decorator-screen name="MilkReceiptsCommonDecorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="body">
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    
+    <screen name="FinalizeMilkReceipts">
+        <section>
+            <actions>
+            	<set field="titleProperty" value="Finalize Milk Receipts"/>	
+        		 <set field="tabButtonItem" value="FinalizeMilkReceipts"/>
+            </actions>
+            <widgets>
+                <decorator-screen name="MilkReceiptsCommonDecorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="body">
+                    <include-form location="component://procurement/widget/milkreceipts/MilkReceiptsForms.xml" name="FinalizeMilkReceipts"/> 
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    <screen name="MilkReceiptFacility">
+        <section>
+            <actions>
+            	<set field="titleProperty" value="Milk Receipt Facility"/>	
+        		 <set field="tabButtonItem" value="Facility"/>
+        		 <set field="tabButtonItem2" value="Facility"/>
+            </actions>
+            <widgets>
+                <decorator-screen name="MilkReceiptsCommonDecorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="body">
+					<include-menu name="MilkreceiptFacilityTabBar" location="component://procurement/widget/milkreceipts/MilkReceiptsMenus.xml"/>                    
+                    <include-form location="component://procurement/widget/milkreceipts/MilkReceiptsForms.xml" name="MilkReceiptFacility"/> 
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    
+<screen name="reports">
+        <section>
+        	<actions>
+        		 <set field="titleProperty" value="Milk Receipt Reports"/>	
+        		 <set field="tabButtonItem" value="reports"/>
+        		 <script location="component://procurement/webapp/procurement/WEB-INF/actions/facility/getUserRelatedFacilies.groovy"/>
+        		  <script location="component://procurement/webapp/procurement/WEB-INF/actions/facility/FacilityCustomTimePeriods.groovy"/>
+        	</actions>
+            <widgets>
+                 <decorator-screen name="MilkReceiptsCommonDecorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="body">
+                    	<platform-specific><html><html-template location="component://procurement/webapp/procurement/facility/MilkReceiptDependentDropDown.ftl"></html-template></html></platform-specific>
+                    	<platform-specific><html><html-template location="component://procurement/webapp/procurement/facility/shedSelection.ftl"></html-template></html></platform-specific> 
+                		<platform-specific><html><html-template location="component://procurement/webapp/milkreceipts/reports/MilkReceiptReport.ftl"></html-template></html></platform-specific> 
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    <screen name="UnitMilkReceiptReports">
+        <section>
+        	<actions>
+        		 <set field="titleProperty" value="Milk Receipt Reports"/>	
+        		 <set field="tabButtonItem" value="reports"/> 
+        		 <set field="tabButtonItem3" value="UnitMilkReceiptReports"/>
+        		 <script location="component://procurement/webapp/procurement/WEB-INF/actions/facility/getUserRelatedFacilies.groovy"/>
+        		 <script location="component://procurement/webapp/procurement/WEB-INF/actions/facility/FacilityCustomTimePeriods.groovy"/>
+        		 <set field="reportFrequencyFlag" value="UnitMilkReceiptReports"/>
+        	</actions>
+            <widgets>
+                 <decorator-screen name="MilkReceiptsCommonDecorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="body">
+                    	<include-menu name="MilkreceiptReportTabBar" location="component://procurement/widget/milkreceipts/MilkReceiptsMenus.xml"/> 
+                    	<platform-specific><html><html-template location="component://procurement/webapp/procurement/facility/MilkReceiptDependentDropDown.ftl"></html-template></html></platform-specific>
+                    	<platform-specific><html><html-template location="component://procurement/webapp/procurement/facility/shedSelection.ftl"></html-template></html></platform-specific> 
+                		<platform-specific><html><html-template location="component://procurement/webapp/milkreceipts/reports/MilkReceiptReport.ftl"></html-template></html></platform-specific> 
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    <screen name="MilkReceiptsBillingReports">
+        <section>
+        	<actions>
+        		 <set field="titleProperty" value="Milk Receipt Reports"/>	
+        		 <set field="tabButtonItem" value="reports"/> 
+        		 <set field="tabButtonItem3" value="MilkReceiptsBillingReports"/>
+        		 <script location="component://procurement/webapp/procurement/WEB-INF/actions/facility/getUserRelatedFacilies.groovy"/>
+        		 <script location="component://procurement/webapp/procurement/WEB-INF/actions/facility/FacilityCustomTimePeriods.groovy"/>
+        		  <set field="milkReceiptProductList" type="List" value="${groovy: import org.ofbiz.base.util.*; return (in.vasista.vbiz.procurement.ProcurementNetworkServices.getMilkReceiptProducts(dispatcher.getDispatchContext(),context)); }"/>
+        		<set field="reportFrequencyFlag" value="BillingReports"/>
+        	</actions>
+            <widgets>
+                 <decorator-screen name="MilkReceiptsCommonDecorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="body">
+                    	<include-menu name="MilkreceiptReportTabBar" location="component://procurement/widget/milkreceipts/MilkReceiptsMenus.xml"/> 
+                    	<platform-specific><html><html-template location="component://procurement/webapp/procurement/facility/ProcurementDependentDropDown.ftl"></html-template></html></platform-specific>
+                    	<platform-specific><html><html-template location="component://procurement/webapp/procurement/facility/shedSelection.ftl"></html-template></html></platform-specific> 
+                		<platform-specific><html><html-template location="component://procurement/webapp/milkreceipts/reports/MilkReceiptReport.ftl"></html-template></html></platform-specific> 
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    <screen name="MilkReceiptEntry">
+        <section>
+        	<actions>
+        		 <set field="titleProperty" value="MILK RECEIPTS"/>	
+        		 <set field="tabButtonItem" value="MilkReceiptEntry"/>
+        		 <set field="tabButtonItem3" value="SendMilkReceipt"/> 
+        		 <set field="layoutSettings.javaScripts[]" value="/milkreceipts/images/milkReceiptTabing.js" global="true"/>
+        		 <script location="component://procurement/webapp/procurement/WEB-INF/actions/facility/getUserRelatedFacilies.groovy"/>
+        		 <script location="component://procurement/webapp/procurement/WEB-INF/actions/facility/FacilityCustomTimePeriods.groovy"/>
+        		 <set field="milkReceiptProductList" type="List" value="${groovy: import org.ofbiz.base.util.*; return (in.vasista.vbiz.procurement.ProcurementNetworkServices.getMilkReceiptProducts(dispatcher.getDispatchContext(),context)); }"/>
+        		 <script location="component://procurement/webapp/milkreceipts/WEB-INF/actions/reports/MilkReceiptEntry.groovy"/>
+        	</actions>
+            <widgets>
+                 <decorator-screen name="MilkReceiptsCommonDecorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="body">
+                    	<include-menu name="MilkTransferReceiptTabBar" location="component://procurement/widget/milkreceipts/MilkReceiptsMenus.xml"/>
+                    	<platform-specific><html><html-template location="component://procurement/webapp/milkreceipts/reports/milkReceiptEntry.ftl"></html-template></html></platform-specific> 
+                    	<!-- <include-form location="component://procurement/widget/milkreceipts/MilkReceiptsForms.xml" name="MilkReceiptEntry"/> -->
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    <screen name="UpdateMilkRecord">
+        <section>
+        	<actions>
+        		 <set field="titleProperty" value="MILK RECEIPTS"/>	
+        		 <set field="tabButtonItem" value="MilkReceiptEntry"/>
+        		 <set field="tabButtonItem3" value="UpdateMilkReceipt"/> 
+        		 <set field="milkTransferId" from-field="parameters.milkTransferId"/>
+        		 <set field="layoutSettings.javaScripts[]" value="/milkreceipts/images/milkReceiptTabing.js" global="true"/>
+        		 <set field="milkReceiptProductList" type="List" value="${groovy: import org.ofbiz.base.util.*; return (in.vasista.vbiz.procurement.ProcurementNetworkServices.getMilkReceiptProducts(dispatcher.getDispatchContext(),context)); }"/>
+        		 <script location="component://procurement/webapp/milkreceipts/WEB-INF/actions/reports/MilkReceiptEntry.groovy"/>
+        		 <script location="component://procurement/webapp/milkreceipts/WEB-INF/actions/facility/PrepareMilkReceiptItems.groovy"/>
+        	</actions>
+            <widgets>
+                 <decorator-screen name="MilkReceiptsCommonDecorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="body">
+                    	<include-menu name="MilkTransferReceiptTabBar" location="component://procurement/widget/milkreceipts/MilkReceiptsMenus.xml"/>
+                    	<platform-specific><html><html-template location="component://procurement/webapp/milkreceipts/facility/updateMilkReceiptEntry.ftl"></html-template></html></platform-specific> 
+                    	<!-- <include-form location="component://procurement/widget/milkreceipts/MilkReceiptsForms.xml" name="MilkReceiptEntry"/> -->
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    <screen name="approveMilkReceipt">
+        <section>
+            <actions>
+                <set field="titleProperty" value="MILK RECEIPTS"/>
+                <set field="headerItem" value="MILK RECEIPTS"/>
+                <set field="tabButtonItem" value="MilkReceiptEntry" />
+                <set field="tabButtonItem3" value="RecdMilkReceipt" />
+                <set field="milkTransferId" from-field="parameters.milkTransferId"/>
+                <entity-one value-field="milkRecordList" entity-name="MilkTransfer">
+                    <field-map field-name="milkTransferId" from-field="milkTransferId"/>
+                </entity-one>
+                <set field="receiveDate" value="${milkRecordList.sendDate}" />
+                <set field="layoutSettings.javaScripts[]" value="/milkreceipts/images/milkTypeChange.js" global="true"/>
+                <set field="milkReceiptProductList" type="List" value="${groovy: import org.ofbiz.base.util.*; return (in.vasista.vbiz.procurement.ProcurementNetworkServices.getMilkReceiptProducts(dispatcher.getDispatchContext(),context)); }"/>
+                <script location="component://procurement/webapp/milkreceipts/WEB-INF/actions/facility/getSendMilkReceiptsDetails.groovy"/>
+            </actions>
+            <widgets>
+                <decorator-screen name="MilkReceiptsCommonDecorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="body">
+                       <include-menu name="MilkTransferReceiptTabBar" location="component://procurement/widget/milkreceipts/MilkReceiptsMenus.xml"/>
+                       		<platform-specific><html><html-template location="component://procurement/webapp/milkreceipts/reports/MilkReceiptEntryApprove.ftl"></html-template></html></platform-specific> 
+                        <!-- <container style="lefthalf">
+                           <screenlet title="Send Milk Receipts">
+                                <include-form location="component://procurement/widget/milkreceipts/MilkReceiptsForms.xml" name="SendMilkReceiptsDisplay"/>
+                           </screenlet>
+                        </container>
+                        <container style="righthalf">
+                        	<screenlet title="Received Milk Receipts">
+                                <include-form location="component://procurement/widget/milkreceipts/MilkReceiptsForms.xml" name="UpdateMilkReceiptEntry"/>                          
+                           </screenlet>
+                        </container>  -->
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>   
+    <screen name="ReceiveMilkReceipts">
+        <section>
+            <actions>
+                <set field="titleProperty" value="MILK RECEIPTS"/>
+                <set field="headerItem" value="MilkReceiptEntry"/>
+                <set field="tabButtonItem" value="MilkReceiptEntry" />
+                <set field="tabButtonItem3" value="RecdMilkReceipt" />
+                <entity-condition list="listReceivedMilk" entity-name="MilkTransfer">
+                    <condition-expr field-name="statusId" value="MXF_INPROCESS"/>
+                </entity-condition>
+                <script location="component://procurement/webapp/procurement/WEB-INF/actions/facility/getUserRelatedFacilies.groovy"/>
+                <!-- <set field="context.listReceivedMilk" from-field="listReceivedMilk"/> -->
+                <script location="component://procurement/webapp/procurement/WEB-INF/actions/facility/filterMilkTransfersReceived.groovy"/>
+                <set field="productsList" type="List" value="${groovy: import org.ofbiz.base.util.*; return (in.vasista.vbiz.procurement.ProcurementNetworkServices.getMilkReceiptProducts(dispatcher.getDispatchContext(),context)); }"/>
+            </actions>
+            <widgets>
+                <decorator-screen name="MilkReceiptsCommonDecorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="body">
+                       <include-menu name="MilkTransferReceiptTabBar" location="component://procurement/widget/milkreceipts/MilkReceiptsMenus.xml"/>
+                       <section>
+                        <condition>
+                            <not><if-empty field="listReceivedMilk"/></not>
+                        </condition>
+                           <widgets>
+	                         <container style="full">
+	                           <screenlet title="Received Milk List">
+	                                <include-form location="component://procurement/widget/milkreceipts/MilkReceiptsForms.xml" name="ListReceivedMilkReceipt"/>                          
+	                           </screenlet>
+	                         </container>
+	                       </widgets>
+	                       <fail-widgets>
+	                           <label text=" No Milk is sent yet"></label>
+	                       </fail-widgets>   
+                        </section>                       
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen> 
+    <screen name="FindMilkReceipt">
+		<section>
+			<actions>
+				<set field="titleProperty" value="MILK RECEIPTS" />
+				<set field="headerItem" value="MILK RECEIPTS" />
+				<set field="tabButtonItem" value="MilkReceiptEntry" />
+				<set field="tabButtonItem3" value="FindMilkReceipt" />
+				<set field="productsList" type="List" value="${groovy: import org.ofbiz.base.util.*; return (in.vasista.vbiz.procurement.ProcurementNetworkServices.getMilkReceiptProducts(dispatcher.getDispatchContext(),context)); }"/>
+				<script location="component://procurement/webapp/milkreceipts/WEB-INF/actions/reports/MilkReceiptEntry.groovy"/>
+				<script location="component://procurement/webapp/milkreceipts/WEB-INF/actions/reports/MilkReceiptsEntrySerach.groovy"/>
+				 <set field="layoutSettings.javaScripts[]" value="/milkreceipts/images/findTransfer.js" global="true"/>
+			</actions>
+			<widgets>
+				<decorator-screen name="MilkReceiptsCommonDecorator"
+					location="${parameters.mainDecoratorLocation}">
+					<decorator-section name="body">
+                       <include-menu name="MilkTransferReceiptTabBar" location="component://procurement/widget/milkreceipts/MilkReceiptsMenus.xml"/>
+						<platform-specific><html><html-template location="component://procurement/webapp/milkreceipts/reports/facilityDetails.ftl"></html-template></html></platform-specific> 
+                    	<container style="button-bar">
+							<link url-mode="plain" target="javascript:showFacilityDetailsForm();" text="Facility Details" style="buttontext create"  link-type="anchor"/>
+						</container>
+						<container style="full">
+							<platform-specific><html><html-template location="component://procurement/webapp/milkreceipts/reports/findTransfer.ftl"></html-template></html></platform-specific>														
+							<screenlet title="Received Milk List">
+								<include-form location="component://procurement/widget/milkreceipts/MilkReceiptsForms.xml"	name="ListMilkReceived" />
+							</screenlet>
+						</container>
+					</decorator-section>
+				</decorator-screen>
+			</widgets>
+		</section>
+	</screen>
+     <screen name="ShedMilkReceiptReports">
+        <section>
+        	<actions>
+        		 <set field="titleProperty" value="Milk Receipt Reports"/>	
+        		 <set field="tabButtonItem" value="reports"/> 
+        		 <set field="tabButtonItem3" value="ShedMilkReceiptReports"/>
+        		 <script location="component://procurement/webapp/procurement/WEB-INF/actions/facility/getUserRelatedFacilies.groovy"/>
+        		 <script location="component://procurement/webapp/procurement/WEB-INF/actions/facility/FacilityCustomTimePeriods.groovy"/>
+        		 <set field="milkReceiptProductList" type="List" value="${groovy: import org.ofbiz.base.util.*; return (in.vasista.vbiz.procurement.ProcurementNetworkServices.getMilkReceiptProducts(dispatcher.getDispatchContext(),context)); }"/>
+        		<set field="reportFrequencyFlag" value="ShedMilkReceiptReports"/>
+        	</actions>
+            <widgets>
+                 <decorator-screen name="MilkReceiptsCommonDecorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="body">
+                    	<include-menu name="MilkreceiptReportTabBar" location="component://procurement/widget/milkreceipts/MilkReceiptsMenus.xml"/> 
+                    	<platform-specific><html><html-template location="component://procurement/webapp/procurement/facility/MilkReceiptDependentDropDown.ftl"></html-template></html></platform-specific>
+                    	<platform-specific><html><html-template location="component://procurement/webapp/procurement/facility/shedSelection.ftl"></html-template></html></platform-specific> 
+                		<platform-specific><html><html-template location="component://procurement/webapp/milkreceipts/reports/MilkReceiptReport.ftl"></html-template></html></platform-specific> 
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+     <screen name="FindMilkReceiptsBilling">
+        <section>
+        	<actions>
+        		 <set field="tabButtonItem" value="MilkReceiptsBilling"/>
+        	</actions>
+            <widgets>
+                 <decorator-screen name="MilkReceiptsCommonDecorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="body">
+                    	<container style="button-bar">
+							<link url-mode="plain" target="generateMlkReceiptsBilling" text="Generate Billing" style="buttontext create"  link-type="anchor"/>
+						</container>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+     <screen name="AnnualMilkReceiptReports">
+        <section>
+        	<actions>
+        		 <set field="titleProperty" value="Milk Receipt Reports"/>	
+        		 <set field="tabButtonItem" value="reports"/> 
+        		 <set field="tabButtonItem3" value="AnnualMilkReceiptReports"/>
+        		 <script location="component://procurement/webapp/procurement/WEB-INF/actions/facility/getUserRelatedFacilies.groovy"/>
+        		 <script location="component://procurement/webapp/procurement/WEB-INF/actions/facility/FacilityCustomTimePeriods.groovy"/>
+        		<set field="reportFrequencyFlag" value="AnnualMilkReceiptReports"/>
+        	</actions>
+            <widgets>
+                 <decorator-screen name="MilkReceiptsCommonDecorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="body">
+                    	<include-menu name="MilkreceiptReportTabBar" location="component://procurement/widget/milkreceipts/MilkReceiptsMenus.xml"/> 
+                    	<platform-specific><html><html-template location="component://procurement/webapp/procurement/facility/ProcurementDependentDropDown.ftl"></html-template></html></platform-specific>
+                    	<platform-specific><html><html-template location="component://procurement/webapp/procurement/facility/shedSelection.ftl"></html-template></html></platform-specific> 
+                		<platform-specific><html><html-template location="component://procurement/webapp/milkreceipts/reports/MilkReceiptReport.ftl"></html-template></html></platform-specific> 
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    <screen name="GenerateMlkRecptsBilling">
+        <section>
+        	<actions>
+        		 <set field="tabButtonItem" value="MilkReceiptsBilling"/>
+        		 <entity-condition list="privateDairiesList" entity-name="FacilityGroupMemberAndFacility">        		 	
+        		 	<condition-list combine="and">        		 	
+        		 		<condition-expr field-name="facilityGroupId" operator="equals" value="UNION_DAIRIES"/>
+        		 		<condition-expr field-name="facilityTypeId" operator="equals" value="UNIT"/>
+        		 	</condition-list>
+        		 </entity-condition>
+        		 <entity-condition list="timePeriodList" entity-name="CustomTimePeriod" use-cache="true" filter-by-date="false" >
+                	<condition-list combine="and">
+                		<condition-expr field-name="periodTypeId" operator="equals" value="PROC_BILL_MONTH"/>                	   
+                	</condition-list>             	
+                	<order-by field-name="-thruDate"/>
+               </entity-condition> 
+        		 <set field="privateDairiesList"  value="${privateDairiesList}"/>
+        	</actions>
+            <widgets>
+                 <decorator-screen name="MilkReceiptsCommonDecorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="body">
+                    	  <screenlet title="Milk Receipts Billing">
+				       	  		<include-form name="GenerateMilkReceiptsBilling" location="component://procurement/widget/milkreceipts/MilkReceiptsForms.xml"/>
+                  	      </screenlet>  
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    <screen name="MilkReceiptsSalesEntry">
+		<section>
+			<actions>
+				<set field="titleProperty" value="Income Expenditure"/>
+				<set field="headerItem" value="Income Expenditure" />	
+        		<set field="tabButtonItem" value="IncomeExpenditure"/> 
+        		<set field="tabButtonItem3" value="MilkReceiptsSalesEntry"/>
+				<script	location="component://procurement/webapp/procurement/WEB-INF/actions/facility/getUserRelatedFacilies.groovy" />
+				<set field="shedId" from-field="context.shedId" />
+				<set field="shedCode" from-field="context.shedCode" />
+				<set field="parameters.shedCode" from-field="context.shedCode" />
+				<entity-condition list="timePeriodList"
+					entity-name="CustomTimePeriod" use-cache="true" filter-by-date="false">
+					<condition-list combine="and">
+						<condition-expr field-name="periodTypeId" operator="equals"
+							value="PROC_BILL_MONTH" />
+					</condition-list>
+					<order-by field-name="-thruDate" />
+				</entity-condition>				
+				<entity-condition list="saleEntryList" entity-name="FacilityIncomeExpenditure"> 
+					<condition-list combine="and">
+						<condition-list combine="or">
+                        	<condition-expr field-name="facilityId" from-field="parameters.shedId" operator="equals"/>
+                        	<condition-expr field-name="customTimePeriodId" from-field="parameters.customTimePeriodId" operator="equals"/>                                                           
+                       </condition-list>  
+                       <condition-expr field-name="amountTypeId" value="SALES" operator="equals"/>  
+					</condition-list>                                     
+               </entity-condition>
+               <set field="saleEntryList" value="${saleEntryList}" global="true" />
+			</actions>
+			<widgets>
+				<decorator-screen name="MilkReceiptsCommonDecorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="body">
+                       <include-menu name="IncomeExpenditureTabBar" location="component://procurement/widget/milkreceipts/MilkReceiptsMenus.xml"/>
+						<container style="lefthalf">
+							<link url-mode="plain" target="createNewSalesEntry" text="Create New"
+								style="buttontext create" link-type="anchor" />
+							<screenlet title="Find Sales Entries">
+								<include-form location="component://procurement/widget/milkreceipts/MilkReceiptsForms.xml" name="FindSalesEntries" />					
+							</screenlet>
+							<screenlet title="List Sales Entries">
+								<include-form name="ListSalesEntries" location="component://procurement/widget/milkreceipts/MilkReceiptsForms.xml" />
+							</screenlet>
+						</container>
+					</decorator-section>
+				</decorator-screen>
+			</widgets>
+		</section>
+	</screen>
+	<screen name="MilkReceiptsSalariesEntry">
+		<section>
+			<actions>
+				<set field="titleProperty" value="Income Expenditure"/>	
+				<set field="headerItem" value="Income Expenditure" />
+        		<set field="tabButtonItem" value="IncomeExpenditure"/> 
+        		<set field="tabButtonItem3" value="MilkReceiptsSalariesEntry"/>
+				<script	location="component://procurement/webapp/procurement/WEB-INF/actions/facility/getUserRelatedFacilies.groovy" />
+				<set field="shedId" from-field="context.shedId" />
+				<set field="shedCode" from-field="context.shedCode" />
+				<set field="parameters.shedCode" from-field="context.shedCode" />
+				<entity-condition list="timePeriodList" entity-name="CustomTimePeriod" use-cache="true" filter-by-date="false" >
+                	<condition-list combine="and">
+                		<condition-expr field-name="periodTypeId" operator="equals" value="HR_MONTH"/>                	   
+                	</condition-list>             	
+                	<order-by field-name="-thruDate"/>
+               	</entity-condition> 
+               	<entity-condition list="amountTypeList" entity-name="Enumeration">
+               		<condition-expr field-name="enumTypeId" operator="equals" value="FAC_EXP"/>
+               	</entity-condition>
+			   	<entity-condition list="salaryEntryList" entity-name="FacilityIncomeExpenditure"> 
+               		<condition-list combine="and">
+                    	<condition-list combine="or">
+                        	<condition-expr field-name="facilityId" from-field="parameters.shedId" operator="equals"/>
+                            <condition-expr field-name="customTimePeriodId" from-field="parameters.customTimePeriodId" operator="equals"/>
+                        </condition-list>   
+                        <condition-expr field-name="amountTypeId" value="${parameters.amountTypeId}" operator="equals"/>
+                   	</condition-list>   
+               	</entity-condition>
+               <set field="salaryEntryList" value="salaryEntryList" global="true" />
+			</actions>
+			<widgets>
+				<decorator-screen name="MilkReceiptsCommonDecorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="body">
+                       <include-menu name="IncomeExpenditureTabBar" location="component://procurement/widget/milkreceipts/MilkReceiptsMenus.xml"/>
+						<container style="lefthalf">
+							<link url-mode="plain" target="newSalaryEntry" text="Create New"
+								style="buttontext create" link-type="anchor" />
+							<screenlet title="Find Salary Entries">
+								<include-form location="component://procurement/widget/milkreceipts/MilkReceiptsForms.xml" name="FindSalaryEntries" />
+								<platform-specific>
+									<html>
+										<html-template	location="component://procurement/webapp/procurement/facility/FindFacilityOutputEntry.ftl"></html-template>
+									</html>
+								</platform-specific>
+							</screenlet>
+							<screenlet title="List Salary Entries">
+								<include-form name="ListSalaryEntries" location="component://procurement/widget/milkreceipts/MilkReceiptsForms.xml" />
+							</screenlet>
+						</container>
+					</decorator-section>
+				</decorator-screen>
+			</widgets>
+		</section>
+	</screen>
+	<screen name="createNewSalesEntry">
+		<section>
+			<actions>
+				 <set field="titleProperty" value="Income Expenditure"/>	
+        		 <set field="tabButtonItem" value="IncomeExpenditure"/> 
+        		 <set field="tabButtonItem3" value="MilkReceiptsSalesEntry"/>
+				<script	location="component://procurement/webapp/procurement/WEB-INF/actions/facility/getUserRelatedFacilies.groovy" />
+				<set field="shedId" from-field="context.shedId" />
+				<set field="shedCode" from-field="context.shedCode" />
+				<set field="parameters.shedCode" from-field="context.shedCode" />
+				<entity-condition list="timePeriodList"
+					entity-name="CustomTimePeriod" use-cache="true" filter-by-date="false">
+					<condition-list combine="and">
+						<condition-expr field-name="periodTypeId" operator="equals"
+							value="PROC_BILL_MONTH" />
+					</condition-list>
+					<order-by field-name="-thruDate" />
+				</entity-condition>
+			</actions>
+			<widgets>
+				<decorator-screen name="MilkReceiptsCommonDecorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="body">
+                       <include-menu name="IncomeExpenditureTabBar" location="component://procurement/widget/milkreceipts/MilkReceiptsMenus.xml"/>
+						<platform-specific>
+							<html>
+								<html-template location="component://procurement/webapp/procurement/facility/ProcurementDependentDropDown.ftl"></html-template>
+							</html>
+						</platform-specific>
+						<screenlet title="Create New Sales Entry">
+							<include-form name="createNewSalesEntry"
+								location="component://procurement/widget/milkreceipts/MilkReceiptsForms.xml" />
+						</screenlet>
+					</decorator-section>
+				</decorator-screen>
+			</widgets>
+		</section>
+	</screen>
+	<screen name="newSalaryEntry">
+		<section>
+			<actions>
+				 <set field="titleProperty" value="Income Expenditure"/>	
+        		 <set field="tabButtonItem" value="IncomeExpenditure"/> 
+        		 <set field="tabButtonItem3" value="MilkReceiptsSalariesEntry"/>
+				<script	location="component://procurement/webapp/procurement/WEB-INF/actions/facility/ProcurementEntrySearch.groovy" />
+				<set field="milkReceiptProductList" type="List" value="${groovy: import org.ofbiz.base.util.*; return (in.vasista.vbiz.procurement.ProcurementNetworkServices.getMilkReceiptProducts(dispatcher.getDispatchContext(),context)); }"/>
+				<script	location="component://procurement/webapp/procurement/WEB-INF/actions/facility/getUserRelatedFacilies.groovy" />
+				<set field="shedId" from-field="context.shedId" />
+				<script	location="component://procurement/webapp/procurement/WEB-INF/actions/facility/FacilityCustomTimePeriods.groovy" />
+				<set field="layoutSettings.javaScripts[]" value="/milkreceipts/images/productChange.js" global="true"/>				
+				<entity-condition list="timePeriodList" entity-name="CustomTimePeriod" use-cache="true" filter-by-date="false" >
+                	<condition-list combine="and">
+                		<condition-expr field-name="periodTypeId" operator="equals" value="HR_MONTH"/>                	   
+                	</condition-list>             	
+                	<order-by field-name="-thruDate"/>
+               </entity-condition> 
+			</actions>
+			<widgets>
+				<decorator-screen name="MilkReceiptsCommonDecorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="body">
+                       <include-menu name="IncomeExpenditureTabBar" location="component://procurement/widget/milkreceipts/MilkReceiptsMenus.xml"/>
+						<container style="lefthalf">
+							<screenlet title="SalariesEntry">
+								<include-form location="component://procurement/widget/milkreceipts/MilkReceiptsForms.xml"	name="SalariesEntry" />
+							</screenlet>
+						</container>
+					</decorator-section>
+				</decorator-screen>
+			</widgets>
+		</section>
+	</screen>
+  </screens>
+  
+  
+  
+ 
