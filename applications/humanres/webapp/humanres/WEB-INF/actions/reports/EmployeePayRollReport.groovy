@@ -114,10 +114,11 @@ Map InstallmentFinalMap=FastMap.newInstance();
 Map EmplSalaryDetailsMap=FastMap.newInstance();
 if(UtilValidate.isNotEmpty(periodBillingList)){
 	periodBillDetails = EntityUtil.getFirst(periodBillingList);
+	periodBillingIds = EntityUtil.getFieldListFromEntityList(periodBillingList, "periodBillingId", true);
 	periodBillingId = periodBillDetails.get("periodBillingId");
 	payRollHeaderList=[];
 	payConList=[];
-	payConList.add(EntityCondition.makeCondition("periodBillingId", EntityOperator.EQUALS ,periodBillingId));
+	payConList.add(EntityCondition.makeCondition("periodBillingId", EntityOperator.IN ,periodBillingIds));
 	if(UtilValidate.isNotEmpty(parameters.employeeId))
 		payConList.add(EntityCondition.makeCondition("partyIdFrom", EntityOperator.EQUALS ,parameters.employeeId));
 		if(UtilValidate.isNotEmpty(deptId))
