@@ -84,7 +84,7 @@ under the License.
     </service>
 
     <service name="depositReceiptPayment" engine="java"
-        location="org.ofbiz.accounting.payment.PaymentWorker" invoke="depositReceiptPayment">
+        location="org.ofbiz.accounting.payment.PaymentWorker" invoke="depositReceiptPayment" transaction-timeout="2000">
         <description>Checks PaymentMethodType if it is cash then deposit directly into cash Account</description>
         <attribute name="paymentId" type="String" mode="IN" optional="false"/>
         <attribute name="finAccountId" type="String" mode="IN" optional="true"/>
