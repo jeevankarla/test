@@ -480,6 +480,7 @@ function makeDatePicker1(fromDateId ,thruDateId){
 									<td width="20%"><span class='h3'>Pay Slip Employee Wise</span></td>
 									<td width="30%"><span class='h3'>Organization Id </span>
 										<select name="partyIdFrom" class='h4'>
+											<option value=''></option>
 											<#list orgList as org>    
 												<option value='${org.partyId}'>${org.groupName}</option>
 											</#list> 
