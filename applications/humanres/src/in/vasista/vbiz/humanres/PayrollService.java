@@ -3084,6 +3084,14 @@ public class PayrollService {
                     EntityListIterator pli = delegator.findListIteratorByCondition(dynamicView, EntityCondition.makeCondition("loanId",EntityOperator.EQUALS, loan.getString("loanId")), null, null, UtilMisc.toList("-thruDate"), findOpts);
                     List<GenericValue> loanRecoveryList = pli.getCompleteList();
 					GenericValue loanRecovery = EntityUtil.getFirst(loanRecoveryList);
+					BigDecimal closingBalance = BigDecimal.ZERO;
+					if(UtilValidate.isNotEmpty(loan.getBigDecimal("principalAmount")))
+						closingBalance = closingBalance.add(loan.getBigDecimal("principalAmount"));
+					
+					if(UtilValidate.isNotEmpty(loan.getBigDecimal("interestAmount")))
+						closingBalance = closingBalance.add(loan.getBigDecimal("interestAmount"));
+					
+					
 					if(UtilValidate.isNotEmpty(isExternal) && isExternal.equalsIgnoreCase("Y")){
 						newEntityLoanRecovery.set("principalInstNum", new Long(1));
 						amount = loan.getBigDecimal("principalAmount");
@@ -3094,6 +3102,10 @@ public class PayrollService {
 							amount = loan.getBigDecimal("principalAmount").divide(new BigDecimal(loan.getLong("numPrincipalInst")), 0 ,BigDecimal.ROUND_UP);
 							newEntityLoanRecovery.set("principalAmount", amount);
 						}else{
+							closingBalance = BigDecimal.ZERO;
+							if(UtilValidate.isNotEmpty(loanRecovery.getBigDecimal("closingBalance")))
+							      closingBalance = loanRecovery.getBigDecimal("closingBalance");
+							
 							if(UtilValidate.isNotEmpty(loanRecovery.getLong("principalInstNum")) && (loanRecovery.getLong("principalInstNum")).compareTo(loan.getLong("numPrincipalInst"))<0){
 								amount = loan.getBigDecimal("principalAmount").divide(new BigDecimal(loan.getLong("numPrincipalInst")), 0,BigDecimal.ROUND_UP);
 								newEntityLoanRecovery.set("principalInstNum", new Long(loanRecovery.getLong("principalInstNum").intValue()+1));
@@ -3114,6 +3126,13 @@ public class PayrollService {
 					
 					pli.close();
 					if(UtilValidate.isNotEmpty(periodBillingId)){
+						if(UtilValidate.isNotEmpty(newEntityLoanRecovery.getBigDecimal("principalAmount")))
+							closingBalance = closingBalance.subtract(newEntityLoanRecovery.getBigDecimal("principalAmount"));
+						
+						if(UtilValidate.isNotEmpty(newEntityLoanRecovery.getBigDecimal("interestAmount")))
+							closingBalance = closingBalance.subtract(newEntityLoanRecovery.getBigDecimal("interestAmount"));
+						
+						newEntityLoanRecovery.set("closingBalance", closingBalance);
 						delegator.setNextSubSeqId(newEntityLoanRecovery,"sequenceNum", 5, 1);
 						delegator.createOrStore(newEntityLoanRecovery);
 					}
