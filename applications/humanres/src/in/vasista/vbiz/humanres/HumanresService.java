@@ -302,9 +302,17 @@ public class HumanresService {
 					
 					EntityCondition con= EntityCondition.makeCondition(conList,EntityOperator.AND);
 					List<GenericValue> tempWorkedHolidaysList = delegator.findList("EmplDailyAttendanceDetail", con ,null,UtilMisc.toList("date" ,"partyId"), null, false );
+					
 					for(GenericValue workedHoliday : tempWorkedHolidaysList){
 						Map tempDayMap = FastMap.newInstance();
+						if(UtilValidate.isEmpty(workedHoliday)){
+							continue;
+						}
 						Date tempDate = workedHoliday.getDate("date");
+						/*if(!holidays.contains(tempDate)){
+							
+							continue;
+						}*/
 						Map punMap = PunchService.emplDailyPunchReport(dctx, UtilMisc.toMap("partyId", partyId ,"punchDate",tempDate));
 						if(UtilValidate.isNotEmpty(punMap.get("punchDataList"))){
 							Map punchDetails = (Map)(((List)punMap.get("punchDataList")).get(0));
@@ -328,7 +336,8 @@ public class HumanresService {
 							}
 							
 						}
-						
+						tempWorkedHolidaysList.removeAll(EntityUtil.filterByAnd(tempWorkedHolidaysList, UtilMisc.toMap("date",tempDate)));
+						//holidays.remove(tempDate);
 					}
 				  result.put("workedHolidaysList", workedHolidaysList);
 			}catch(GenericEntityException e){
