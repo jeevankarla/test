@@ -36,6 +36,7 @@ under the License.
     -->
         </auto-attributes>
     </service>
+    
     <service name="updateFinAccount" engine="simple" default-entity-name="FinAccount"
             location="component://accounting/script/org/ofbiz/accounting/finaccount/FinAccountServices.xml" invoke="updateFinAccount">
         <description>Update a Financial Account</description>
@@ -52,7 +53,6 @@ under the License.
         <attribute name="replenishLevel" type="BigDecimal" mode="OUT" optional="true"/>
         <attribute name="actualBalance" type="BigDecimal" mode="INOUT" optional="true"/>
        <attribute name="availableBalance" type="BigDecimal" mode="INOUT" optional="true"/>
-       
     </service>
      <service name="updateBankAccount" engine="simple" default-entity-name="FinAccount"
             location="component://accounting/script/org/ofbiz/accounting/finaccount/FinAccountServices.xml" invoke="updateFinAccount">
@@ -159,7 +159,18 @@ under the License.
         <permission-service service-name="acctgFinAcctPermissionCheck" main-action="FINACCOUNTTX_EDIT"/>
         <attribute name="finAccountTransId" type="String" mode="IN" optional="false"/>
     </service>
-	
+     
+	<service name="updateFinancialAccount" engine="java" 
+            location="org.ofbiz.accounting.finaccount.FinAccountServices" invoke="updateFinancialAccount">
+        <description>Update a Financial Account Role</description>
+        <attribute name="finAccountCode" mode="IN" type="String" optional="true"/>
+        <attribute name="disbursmentBank" mode="IN" type="String" optional="true" />
+        <attribute name="partyId" mode="IN" type="String" optional="true"/>
+		<attribute name="date" mode="IN" type="String" optional="true"/>   
+		<attribute name="finAccountName" mode="IN" type="String" optional="true"/>  
+		<attribute name="finAccountBranch" mode="IN" type="String" optional="true"/>
+		<attribute name="ifscCode" mode="IN" type="String" optional="true"></attribute>   
+    </service>
     <service name="createFinAccountRole" engine="simple" default-entity-name="FinAccountRole"
             location="component://accounting/script/org/ofbiz/accounting/finaccount/FinAccountServices.xml" invoke="createFinAccountRole">
         <description>Create a new Financial Account Role</description>

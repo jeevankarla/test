@@ -1873,9 +1873,9 @@ under the License.
         <response name="success"  type="view" value="viewEmployeeProfile"/>
         <response name="error" type="view" value="viewEmployeeProfile"/>
     </request-map>
-    <request-map uri="updateFinAccount">
+    <request-map uri="updateEmplFinAccount">
         <security https="true" auth="true"/>
-        <event type="service" path="" invoke="updateFinAccount"/>
+        <event type="service" path="" invoke="updateFinancialAccount"/>
         <response name="success" type="view" value="viewEmployeeProfile"/>
         <response name="error" type="view" value="viewEmployeeProfile"/>
     </request-map>

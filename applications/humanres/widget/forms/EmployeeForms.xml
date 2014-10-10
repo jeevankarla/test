@@ -1073,13 +1073,24 @@
         <field name="resignationDate" entry-name="employment.resignationDate"><display description="${groovy:org.ofbiz.base.util.UtilDateTime.toDateString(employmentData.employment.resignationDate, &quot;dd/MM/yyyy&quot;);}"/></field>
     </form>
    
-	 <form name="EditAccountDetails" type="list" list-name="EditAccountDetails" default-table-style="basic-table hover-bar" target="updateFinAccount" >	
+	 <form name="EditAccountDetails" type="single" separate-columns="true"  target="updateEmplFinAccount" >
 		<field name="partyId"><hidden/></field>
 		<field name="finAccountId"><hidden/></field>
 		<field name="finAccountCode" title="Account No"  ><text size="20" maxlength="20"></text></field>
         <field name="finAccountName" title="Account Name" ><text size="20"></text></field>
         <field name="finAccountBranch" title="Account Branch" ><text size="20" maxlength="20"></text></field> 
-		<field name="ifscCode" title="Ifsc Code"><text size="15"></text></field>
+		<field name="ifscCode" title="Ifsc Code"><text size="10"></text></field>
+		<field name="disbursmentBank" title="Disbursment Bank">
+		<drop-down allow-empty="false" no-current-selected-key="${disbursment}" >
+			<entity-options description="${finAccountName}" key-field-name="finAccountId" entity-name="FinAccount">
+				 <entity-constraint name="ownerPartyId" operator="equals" value="Company"/>
+				<entity-order-by field-name="finAccountName"/> 
+				
+			</entity-options>
+			<!-- <list-options key-name="finAccoutId" list-name="finAccountList" description="${finAccountName}"/> -->
+		</drop-down>
+		</field>
+		<field name="date" title="Date"><date-time type="date" ></date-time></field>
 		 <field name="submitButton" title="${uiLabelMap.CommonUpdate}"><submit button-type="button"/></field>
 	</form>
 	

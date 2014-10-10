@@ -206,7 +206,21 @@ under the License.
                  <service service-name="humanResManagerPermission" result-map="permResult">
                     <field-map field-name="mainAction" value="EMPLOYEE_VIEW"/>
                 </service>
-                <set field="hasEmployeeViewPermission" from-field="permResult.hasPermission"/>    
+                <set field="hasEmployeeViewPermission" from-field="permResult.hasPermission"/> 
+                <entity-and list="EditAccountDetails" entity-name="FinAccount">
+					<field-map field-name="ownerPartyId" from-field="parameters.partyId" />
+				</entity-and>   
+				<set field="finAccountId" from-field="EditAccountDetails[0].finAccountId"/>
+				<set field="finAccountCode" from-field="EditAccountDetails[0].finAccountCode"/>
+				<set field="finAccountName" from-field="EditAccountDetails[0].finAccountName"/>
+				<set field="finAccountBranch" from-field="EditAccountDetails[0].finAccountBranch"/>
+				<set field="ifscCode" from-field="EditAccountDetails[0].ifscCode"/>
+ 				<entity-and list="finAccountList" entity-name="FinAccountRole" >
+					<field-map field-name="partyId" from-field="parameters.partyId" />
+					<field-map field-name="roleTypeId"  value="EMPLOYEE"  />
+					<field-map field-name="thruDate" value=" "/>
+				</entity-and>
+				<set field="disbursment"  from-field="finAccountList[0].finAccountId"/>
             </actions>
             <widgets>
                 <decorator-screen name="EmployeeDecorator" location="${parameters.mainDecoratorLocation}">
@@ -240,7 +254,6 @@ under the License.
                       									<include-form name="createEmplLICDetails" location="component://humanres/widget/forms/EmployeeForms.xml"/>
                     								 </screenlet>
                     								 </screenlet>
-                    								 	
 		                                        </container>
 		                                        <container style="profile-right">
 		                                            <include-screen name="EmployeeProfilePicture" location="component://humanres/widget/EmployeeScreens.xml"/>
@@ -262,11 +275,11 @@ under the License.
 		                                </container>
 		                            </fail-widgets>
 		                        </section>
-		                    </widgets>		
+		                    </widgets>	
 		                    <fail-widgets>
                                 <label style="h3">${uiLabelMap.HumanResViewPermissionError}</label>                        			                    
 		                    </fail-widgets>
-		            	</section>				                        
+		            	</section>	
                     </decorator-section>
                 </decorator-screen>
             </widgets>
@@ -672,7 +685,7 @@ under the License.
 			<widgets>
 			 <section>
 				<widgets>
-					<screenlet id="AccountPanel1" title="${uiLabelMap.EditAccountDetails}">
+					<screenlet id="AccountPanel1" title="Edit Account Details">
                        	<include-form name="EditAccountDetails" location="component://humanres/widget/forms/EmployeeForms.xml" />
 					</screenlet>
 			  </widgets>
