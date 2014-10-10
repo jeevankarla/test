@@ -1553,6 +1553,7 @@ under the License.
 	  <field name="lateMin" type="fixed-point"/>
 	  <field name="overrideLateMin" type="fixed-point"></field>
 	  <field name="overridenBy" type="id-vlong"></field>
+	  <field name="totalWorkMin" type="fixed-point"/><!-- this is to capture total working time for the shift -->
 	  <field name="extraMin" type="fixed-point"/>
 	  <field name="encashmentStatus" type="id"/>
 	  <field name="emplLeaveApplId" type="id"/>

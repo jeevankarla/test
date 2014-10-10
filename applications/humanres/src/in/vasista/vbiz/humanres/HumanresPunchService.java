@@ -580,6 +580,7 @@ public class HumanresPunchService {
 			}
 			double lateMin =0;
 			double extraMin =0;
+			double totalWorkMin =0;
 			Date shiftDate = punchdate; 
 			
 			if(UtilValidate.isEmpty(shiftType)){
@@ -592,10 +593,13 @@ public class HumanresPunchService {
 			   //shiftTypeId = shiftType.getString("shiftTypeId");
 				//late coming
 			     List<GenericValue> inPunchList = EntityUtil.filterByCondition(emplPunch, EntityCondition.makeCondition(EntityCondition.makeCondition("InOut",EntityOperator.EQUALS,"IN")));
-			   
+			     Timestamp firstInPunchTime = null;
+			     Timestamp lastOutPunchTime = null;
 			     if(UtilValidate.isNotEmpty(inPunchList)){
 			    	 inPunchList = EntityUtil.orderBy(inPunchList, UtilMisc.toList("punchdate","punchtime"));
 			    	 GenericValue firstInPunch = EntityUtil.getFirst(inPunchList);
+			    	 firstInPunchTime = firstInPunch.getTimestamp("punchDateTime");
+			    	 
 			    	 if(firstInPunch.getString("PunchType").equals("Normal")){
 			    		 shiftDate = firstInPunch.getDate("punchdate");
 			    		 dayShiftCalender = EntityUtil.filterByCondition(employeeShiftCalendarList , EntityCondition.makeCondition(EntityCondition.makeCondition("fromDate",EntityOperator.LESS_THAN_EQUAL_TO,shiftDate) , EntityOperator.AND,
@@ -656,6 +660,7 @@ public class HumanresPunchService {
 			   if(UtilValidate.isNotEmpty(outPunchList)){
 				    outPunchList = EntityUtil.orderBy(outPunchList, UtilMisc.toList("-punchdate","-punchtime"));
 			    	 GenericValue lastOutPunch = EntityUtil.getFirst(outPunchList);
+			    	 lastOutPunchTime = lastOutPunch.getTimestamp("punchDateTime");
 			    	 if(lastOutPunch.getString("PunchType").equals("Normal")){
 			    		 Timestamp lagPunchTime =
 								    Timestamp.valueOf(
@@ -683,6 +688,9 @@ public class HumanresPunchService {
 			    	 }
 			    	 
 			   }
+			  
+			   if(UtilValidate.isNotEmpty(lastOutPunchTime) && UtilValidate.isNotEmpty(firstInPunchTime))
+				   	totalWorkMin =((UtilDateTime.getInterval(firstInPunchTime ,lastOutPunchTime))/(60*1000));
 			  //calculate latemin for out between shifts
 			   if(UtilValidate.isNotEmpty(emplPunch)){
 				   for( GenericValue emplPunchEntry : emplPunch){
@@ -694,7 +702,8 @@ public class HumanresPunchService {
 					   GenericValue outPunchEntry = EntityUtil.getFirst(outPunchList);
 					   if(UtilValidate.isNotEmpty(inPunchEntry) && UtilValidate.isNotEmpty(outPunchEntry)){
 						   lateMin = lateMin+((UtilDateTime.getInterval(outPunchEntry.getTimestamp("punchDateTime"),inPunchEntry.getTimestamp("punchDateTime")))/(60*1000));
-					       emplPunch.remove(inPunchEntry);
+						   totalWorkMin = totalWorkMin -((UtilDateTime.getInterval(outPunchEntry.getTimestamp("punchDateTime"),inPunchEntry.getTimestamp("punchDateTime")))/(60*1000));
+						   emplPunch.remove(inPunchEntry);
 					       emplPunch.remove(outPunchEntry);
 					   }
 				   }
@@ -714,6 +723,8 @@ public class HumanresPunchService {
 				GenericValue employeeDailyAttendance = EntityUtil.getFirst(emplDailyAttendanceDetailList);
 				employeeDailyAttendance.set("lateMin",new BigDecimal(lateMin));
 				employeeDailyAttendance.set("extraMin",new BigDecimal(extraMin));
+				employeeDailyAttendance.set("totalWorkMin",new BigDecimal(totalWorkMin));
+				
 				if(UtilValidate.isNotEmpty(employeeDetail.getString("canteenFacin")) && ("Y").equalsIgnoreCase(employeeDetail.getString("canteenFacin"))){
 					employeeDailyAttendance.set("availedCanteen","Y");
 				}
@@ -725,6 +736,7 @@ public class HumanresPunchService {
 				employeeDailyAttendanceMap.put("shiftType", shiftTypeId);
 				employeeDailyAttendanceMap.put("lateMin",new BigDecimal(lateMin));
 				employeeDailyAttendanceMap.put("extraMin",new BigDecimal(extraMin));
+				employeeDailyAttendanceMap.put("totalWorkMin",new BigDecimal(totalWorkMin));
 				result = dispatcher.runSync("createorUpdateEmployeeDailyAttendance", employeeDailyAttendanceMap);
 			}
 			
@@ -830,6 +842,7 @@ public class HumanresPunchService {
       Date date = (java.sql.Date)context.get("date");
       BigDecimal lateMin= (BigDecimal)context.get("lateMin");
       BigDecimal extraMin= (BigDecimal)context.get("extraMin");
+      BigDecimal totalWorkMin = (BigDecimal)context.get("totalWorkMin");
       Locale locale = (Locale) context.get("locale");
       Map result = ServiceUtil.returnSuccess();
       
@@ -852,6 +865,7 @@ public class HumanresPunchService {
 				newEntity.set("shiftType", shiftType);
 				newEntity.set("lateMin", lateMin);
 				newEntity.set("extraMin", extraMin);
+				newEntity.set("totalWorkMin", totalWorkMin);
 		        try {		
 		        	delegator.setNextSubSeqId(newEntity, "seqId", 5, 1);
 		        	delegator.create(newEntity);
@@ -865,13 +879,13 @@ public class HumanresPunchService {
 					if(UtilValidate.isNotEmpty(employShiftDetails.getBigDecimal("lateMin"))){
 						lateMin = lateMin.add(employShiftDetails.getBigDecimal("lateMin"));
 					}
-					
 					employShiftDetails.set("partyId", employShiftDetails.getString("partyId"));
 					employShiftDetails.set("availedVehicleAllowance", availedVehicleAllowance);
 					employShiftDetails.set("availedCanteen", availedCanteen);
 					employShiftDetails.set("shiftType", shiftType);
 					employShiftDetails.set("lateMin", lateMin);
 					employShiftDetails.set("extraMin", extraMin);
+					employShiftDetails.set("totalWorkMin", totalWorkMin);
 					employShiftDetails.store();
 				}
 			}
