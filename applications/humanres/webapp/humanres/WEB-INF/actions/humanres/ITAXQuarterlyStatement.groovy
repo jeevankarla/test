@@ -83,29 +83,28 @@ Timestamp end=UtilDateTime.getMonthEnd(start, timeZone, locale);
 					periodTotals = customTimePeriodEntry.getValue().get("periodTotals");
 					grossBenefitAmt=periodTotals.get("grossBenefitAmt")
 					if(UtilValidate.isNotEmpty(grossBenefitAmt) && grossBenefitAmt>0){
-						tempMap.put("monthSno",monthSno);
-						tempMap.put("mode","");
-						tempMap.put("partyId",employment.partyId);
-						tempMap.put("name",name);
-						tempMap.put("panId",panId);
-						tempMap.put("endDate",UtilDateTime.toDateString(end, "dd/MM/yyyy"));
-						tempMap.put("ddDate",UtilDateTime.toDateString(end, "dd/MM/yyyy"));
-						tempMap.put("grossAmt",grossBenefitAmt);
 						incomeTax = periodTotals.get("PAYROL_DD_INC_TAX");
-						if(UtilValidate.isEmpty(incomeTax)){
-							incomeTax = 0;
+						if(UtilValidate.isNotEmpty(incomeTax) && -(incomeTax)>0){
+							tempMap.put("monthSno",monthSno);
+							tempMap.put("mode","");
+							tempMap.put("partyId",employment.partyId);
+							tempMap.put("name",name);
+							tempMap.put("panId",panId);
+							tempMap.put("endDate",UtilDateTime.toDateString(end, "dd/MM/yyyy"));
+							tempMap.put("ddDate",UtilDateTime.toDateString(end, "dd/MM/yyyy"));
+							tempMap.put("grossAmt",grossBenefitAmt);
+							tempMap.put("tdsAmt",-(incomeTax));
+							surcharge=0.00;
+							educationCess=0.00;
+							totalTds=surcharge+educationCess-(incomeTax);
+							totalTax=surcharge+educationCess-(incomeTax);
+							tempMap.put("surcharge",surcharge);
+							tempMap.put("educationCess",educationCess);
+							tempMap.put("totalTds",totalTds);
+							tempMap.put("totalTax",totalTax);
+							custTempMap.putAll(tempMap);
+							finalList.add(custTempMap);
 						}
-						tempMap.put("tdsAmt",-(incomeTax));
-						surcharge=0.00;
-						educationCess=0.00;
-						totalTds=surcharge+educationCess-(incomeTax);
-						totalTax=surcharge+educationCess-(incomeTax);
-						tempMap.put("surcharge",surcharge);
-						tempMap.put("educationCess",educationCess);
-						tempMap.put("totalTds",totalTds);
-						tempMap.put("totalTax",totalTax);
-						custTempMap.putAll(tempMap);
-						finalList.add(custTempMap);
 					}
 				}
 			}
