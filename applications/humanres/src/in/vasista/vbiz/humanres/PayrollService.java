@@ -1949,21 +1949,7 @@ public class PayrollService {
 	        int compare = 0;
 	        String  formulaId = payrollBenDedCond.getString("condFormulaId");
 	        String condValue = payrollBenDedCond.getString("condValue");
-	        //here handle formula based values
-	        if(UtilValidate.isNotEmpty(formulaId)){
-	        	 
-	        	Map formulaCtx = FastMap.newInstance();
-	            formulaCtx.putAll(context);
-	            formulaCtx.put("formulaId",formulaId);
-	             //formulaCtx.put("BASIC", (Double)fetchBasicSalaryAndGradeMap.get("amount"));
-	             Map formulaResult = evaluatePayrollAcctgFormula(dctx ,formulaCtx);
-	             if(ServiceUtil.isError(formulaResult)){
-	             	Debug.logError(ServiceUtil.getErrorMessage(formulaResult), module);
-	             	return false;
-	             }
-	             condValue = ((BigDecimal)formulaResult.get("amount")).toString();
-	             //priceInfoDescription.append(formulaResult.get("priceInfoDescription"));
-	        }
+	        
 	       
             //Debug.log("checking condtion for ::"+payrollBenDedCond);
 	        if ("PAYHD_BEDE_EMPID".equals(payrollBenDedCond.getString("inputParamEnumId"))) {
@@ -2026,6 +2012,30 @@ public class PayrollService {
 	        	int condValueTemp = Integer.parseInt(condValue);
 	            if (UtilValidate.isNotEmpty(noOfLeaveDays)) {
 	                compare = noOfLeaveDays-condValueTemp;
+	            } else {
+	                compare = 1;
+	            }
+	        }else if ("PAYHD_BEDE_FORMULA".equals(payrollBenDedCond.getString("inputParamEnumId"))) {
+	        	
+	        	//here handle formula based values
+	        	BigDecimal formulaValue = null;
+		        if(UtilValidate.isNotEmpty(formulaId)){
+		        	 
+		        	Map formulaCtx = FastMap.newInstance();
+		            formulaCtx.putAll(context);
+		            formulaCtx.put("formulaId",formulaId);
+		             //formulaCtx.put("BASIC", (Double)fetchBasicSalaryAndGradeMap.get("amount"));
+		             Map formulaResult = evaluatePayrollAcctgFormula(dctx ,formulaCtx);
+		             if(ServiceUtil.isError(formulaResult)){
+		             	Debug.logError(ServiceUtil.getErrorMessage(formulaResult), module);
+		             	return false;
+		             }
+		             formulaValue = new BigDecimal(formulaResult.get("amount").toString());
+		             //priceInfoDescription.append(formulaResult.get("priceInfoDescription"));
+		        }
+		        BigDecimal condValueTemp = new BigDecimal(condValue);
+		        if (UtilValidate.isNotEmpty(formulaValue)) {
+	                compare = formulaValue.compareTo(condValueTemp);
 	            } else {
 	                compare = 1;
 	            }
