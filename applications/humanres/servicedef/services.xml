@@ -1535,7 +1535,24 @@ under the License.emplpunch
        <attribute name="workedHolidaysList" mode="OUT" type="java.util.List"/>
    </service>
    <!-- Loan Services -->
-   
+   <!-- <service name="CreateOrUpdateVariables" engine="java" auth="true" invoke="CreateOrUpdateRateAmountVariables"
+   			location="in.vasista.vbiz.humanres.PayrollService">
+   <description>Create or Update RateAmount Variables</description>
+   		<attribute name="rateTypeId" mode="IN" type="String" optional="false"/>
+   		<attribute name="fromDate" mode="IN" type="Date" optional="false"/>
+   		<attribute name="rateAmount" mode="IN" type="BigDecimal" optional="false"/>
+   </service> -->
+   <service name="updateEmployeeFinancialAccount" engine="java" 
+            location="in.vasista.vbiz.humanres.HumanresService" invoke="updateEmployeeFinancialAccount">
+        <description>Update a Financial Account Role</description>
+        <attribute name="finAccountCode" mode="IN" type="String" optional="true"/>
+        <attribute name="disbursmentBank" mode="IN" type="String" optional="true" />
+        <attribute name="partyId" mode="IN" type="String" optional="true"/>
+		<attribute name="date" mode="IN" type="String" optional="true"/>   
+		<attribute name="finAccountName" mode="IN" type="String" optional="true"/>  
+		<attribute name="finAccountBranch" mode="IN" type="String" optional="true"/>
+		<attribute name="ifscCode" mode="IN" type="String" optional="true"></attribute>   
+    </service>
    <service name="createEmployeeLoan" engine="java" auth="true" invoke="createEmployeeLoan" 
         location="in.vasista.vbiz.humanres.HumanresService">
         <description>Create or update Loan</description>

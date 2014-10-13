@@ -704,6 +704,11 @@ under the License.
         <response name="success" type="view" value="EmployeeWisePayrollAnalysis"/>
     </request-map>
     
+    <request-map uri="EditVariables">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="EditVariables"/>
+    </request-map>
+    
      <request-map uri="EmployeeWisePayrollAnalysisInternal">
         <security https="true" auth="true"/>
         <response name="success" type="view" value="EmployeeWisePayrollAnalysisInternal"/>
@@ -1875,7 +1880,7 @@ under the License.
     </request-map>
     <request-map uri="updateEmplFinAccount">
         <security https="true" auth="true"/>
-        <event type="service" path="" invoke="updateFinancialAccount"/>
+        <event type="service" path="" invoke="updateEmployeeFinancialAccount"/>
         <response name="success" type="view" value="viewEmployeeProfile"/>
         <response name="error" type="view" value="viewEmployeeProfile"/>
     </request-map>
@@ -1922,7 +1927,14 @@ under the License.
     </request-map>
     	
     <!-- Loan -->
-
+	
+	<request-map uri="CreateOrUpdateVariables">
+    	<security https="true" auth="true"/>
+    	<event type="service" invoke="CreateOrUpdateVariables"/>
+    	<response name="success" type="view" value="EditVariables"/>
+    	<response name="error" type="view" value="EditVariables"/>
+    </request-map>
+	
 	<request-map uri="loan">
        	<security https="true" auth="true"/>
        	<response name="success" type="view" value="loan"></response>
@@ -2174,6 +2186,7 @@ under the License.
 	 <view-map name="TDSchallan" type="screenfop" page="component://humanres/widget/ReportHumanresSummaryScreens.xml#TDSchallan" content-type="application/pdf" encoding="none"/>
 	 <view-map name="FindPayrollBilling" type="screen" page="component://humanres/widget/HumanresScreens.xml#FindPayrollBilling"/>
 	 <view-map name="EmployeeWisePayrollAnalysis" type="screen" page="component://humanres/widget/HumanresScreens.xml#EmployeeWisePayrollAnalysis"/>
+	 <view-map name="EditVariables" type="screen" page="component://humanres/widget/HumanresScreens.xml#EditVariables"/>
 	 <view-map name="EmployeeWisePayrollAnalysisInternal" type="screen" page="component://humanres/widget/HumanresScreens.xml#EmployeeWisePayrollAnalysisInternal"/>
 	 <view-map name="BenefitDeductionCalculator" type="screen" page="component://humanres/widget/ReportHumanresSummaryScreens.xml#BenefitDeductionCalculator"/>
 	 <view-map name="EmployeeDailyAttendance" type="screen" page="component://humanres/widget/ReportHumanresSummaryScreens.xml#EmployeeDailyAttendance"/>
