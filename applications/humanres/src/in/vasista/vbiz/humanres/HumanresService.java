@@ -484,7 +484,7 @@ public class HumanresService {
 						if(UtilValidate.isNotEmpty(loanTypeDetails.getDouble("rateOfInterest"))){
 							rateOfInterest = loanTypeDetails.getDouble("rateOfInterest");
 						}
-						Long totalInstallments = numPrincipalInst + numInterestInst;
+						Long totalInstallments = numPrincipalInst;
 						if(UtilValidate.isNotEmpty(totalInstallments)){
 							Evaluator evltr = new Evaluator(dctx);
 							HashMap<String, Double> variables = new HashMap<String, Double>();
@@ -508,6 +508,7 @@ public class HumanresService {
 			result.put("interestAmount", interestAmount);
 			result.put("numPrincipalInst", numPrincipalInst);
 			result.put("numInterestInst", numInterestInst);
+			result.put("rateOfInterest", rateOfInterest);
 	        return result;
 	    }
 	 	

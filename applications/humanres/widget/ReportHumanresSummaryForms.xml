@@ -955,6 +955,7 @@
     	<field name="interestAmount" id-name="interestAmount" title="Interest Amount" required-field="true"><text size="20"/></field>
     	<field name="numInterestInst" id-name="numInterestInst" title="No of Interest Installments" required-field="true"><text size="20"/></field>
     	<field name="numPrincipalInst" id-name="numPrincipalInst" title="No of Principal Installments" required-field="true"><text size="20"/></field>
+    	<field name="rateOfInterest" id-name = "rateOfInterest" title="Rate Of Interest"><text></text></field>
     	<field name="extLoanRefNum" title="External Loan Reference Number" required-field="false"><text size="20"/></field>
     	<field name="disbDate" title="Loan Date" required-field="true" tooltip="Select date from calendar"><date-time type="date" ></date-time></field>
     	<field name="submitButton" title="${uiLabelMap.CommonCreate}"><submit/></field>

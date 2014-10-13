@@ -1566,5 +1566,6 @@ under the License.emplpunch
        <attribute name="interestAmount" mode="OUT" type="BigDecimal"/>
        <attribute name="numInterestInst" mode="OUT" type="Long"/>
        <attribute name="numPrincipalInst" mode="OUT" type="Long"/>
+       <attribute name="rateOfInterest" mode="OUT" type="Double"/>
    </service>
 </services>

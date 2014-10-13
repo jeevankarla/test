@@ -2,19 +2,17 @@ var prncplAmt;
 var prinplInst;
 var intrstInst;
 var intrstAmt;
+var rateOfInt;
 
 $(document).ready(function(){
-		
 	$("#principalAmount").blur(function(){
-			var prinAmount = $("#principalAmount").val();
-			if(prinAmount && !isNaN(prinAmount)){
-				if(prinAmount>prncplAmt){
-					$("#principalAmount").val(prncplAmt);
-					alert("You cannot give more than the predefined amount");
-				}
-				
+		var prinAmount = $("#principalAmount").val();
+		if(prinAmount && !isNaN(prinAmount)){
+			if(prinAmount>prncplAmt){
+				$("#principalAmount").val(prncplAmt);
+				alert("You cannot give more than the predefined amount");
 			}
-	
+		}
 	});
 	$("#numPrincipalInst").blur(function(){
 		var numPrinInst = $("#numPrincipalInst").val();
@@ -23,9 +21,7 @@ $(document).ready(function(){
 				$("#numPrincipalInst").val(prinplInst);
 				alert("You cannot give more than the predefined amount");
 			}
-			
 		}
-
 	});
 	$("#numInterestInst").blur(function(){
 		var numIntrstInst = $("#numInterestInst").val();
@@ -34,9 +30,7 @@ $(document).ready(function(){
 				$("#numInterestInst").val(intrstInst);
 				alert("You cannot give more than the predefined amount");
 			}
-			
 		}
-
 	});
 	$("#interestAmount").blur(function(){
 		var intrestAmount = $("#interestAmount").val();
@@ -45,11 +39,17 @@ $(document).ready(function(){
 				$("#interestAmount").val(intrstAmt);
 				alert("You cannot give more than the predefined amount");
 			}
-			
 		}
-
 	});
-		
+	$("#rateOfInterest").blur(function(){
+		var rateOfIntrst = $("#rateOfInterest").val();
+		if(rateOfIntrst && !isNaN(rateOfIntrst)){
+			if((rateOfIntrst>rateOfInt) || (rateOfIntrst<rateOfInt)){
+				$("#rateOfInterest").val(rateOfInt);
+				alert("You cannot modify rate of interest");
+			}
+		}
+	});
 });
 
 function loanTypesAmountChange(){
@@ -67,14 +67,19 @@ function loanTypesAmountChange(){
         	   	numPrincipalInst = result["numPrincipalInst"];
         	   	numInterestInst = result["numInterestInst"];
         	   	interestAmount = result["interestAmount"];
+        	   	rateOfInterest = result["rateOfInterest"];
+        	   	
         	   	prncplAmt = principalAmount;
         	   	prinplInst = numPrincipalInst;
         	   	intrstInst = numInterestInst;
         	   	intrstAmt = interestAmount;
+        	   	rateOfInt = rateOfInterest;
+        	   	
         	   	$("#principalAmount").val(principalAmount);
         	   	$("#numPrincipalInst").val(numPrincipalInst);
         	   	$("#numInterestInst").val(numInterestInst);
         	   	$("#interestAmount").val(interestAmount);
+        	   	$("#rateOfInterest").val(rateOfInterest);
            }
          } 
     });
