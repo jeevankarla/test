@@ -28,8 +28,10 @@
                             <include-form name="FindPartyGeoPoint" location="component://party/widget/partymgr/GeoForms.xml"/>
                         </screenlet>
                         <screenlet title="${locationPointsTitle}">
-                        	<include-screen name="geoChart" location="component://common/widget/CommonScreens.xml"/>
-						</screenlet>
+                <platform-specific>
+                    <html><html-template location="component://party/webapp/partymgr/party/geolocation.ftl"/></html>
+                </platform-specific>
+   						</screenlet>
                     </decorator-section>
                 </decorator-screen>
             </widgets>        

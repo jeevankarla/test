@@ -35,6 +35,8 @@ Debug.logInfo("exprList="+exprList,"");
 		geoPoint.facilityId = childLocation.partyId;
 		geoPoint.title = title;  
 		geoPoint.shortName = partyName; 	
+		geoPoint.noteName = childLocation.noteName ? childLocation.noteName : "";
+		geoPoint.noteInfo = childLocation.noteInfo ? childLocation.noteInfo : "";
 		points.add(geoPoint);
 	}
 }
