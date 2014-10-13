@@ -164,5 +164,11 @@ under the License.
     
     <EmplLeaveReasonType description="Medical" hasTable="N" parentTypeId="" emplLeaveReasonTypeId="Fever"/>
     <EmplLeaveReasonType description="Casual" hasTable="N" parentTypeId="" emplLeaveReasonTypeId="Personal Work"/>
-
+	
+	
+	<ProductMeterType description="Electricity" productMeterTypeId="ELECTRICITY"/> 
+	<ProductMeterType description="Water" productMeterTypeId="WATER"/>
+	<FixedAssetType fixedAssetTypeId="QUARTER_TYPE" hasTable="N" description="Quarter rent"/>
+	<RoleType description="Tenant" roleTypeId="TENANT"/> 
+	
 </entity-engine-xml>
