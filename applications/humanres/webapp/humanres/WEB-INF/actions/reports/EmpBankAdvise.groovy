@@ -50,8 +50,6 @@ if(UtilValidate.isNotEmpty(bankWiseEmplDetailsMap)){
 		}
 		emplIds.each{ emplId->
 			finalMap=[:];
-			finalMap.put("bankName",bankName);
-			finalMap.put("emplId",emplId);
 			name="";
 			acNo="";
 			netAmt="";
@@ -59,11 +57,15 @@ if(UtilValidate.isNotEmpty(bankWiseEmplDetailsMap)){
 				name=BankAdvicePayRollMap.get(emplId).get("empName");
 				acNo=BankAdvicePayRollMap.get(emplId).get("acNo");
 				netAmt=BankAdvicePayRollMap.get(emplId).get("netAmt");
+				finalMap.put("bankName",bankName);
+				finalMap.put("emplId",emplId);
+				finalMap.put("name",name);
+				finalMap.put("acNo",acNo);
+				finalMap.put("netAmt",netAmt);
 			}
-			finalMap.put("name",name);
-			finalMap.put("acNo",acNo);
-			finalMap.put("netAmt",netAmt);
-			finalList.add(finalMap);
+			if(UtilValidate.isNotEmpty(finalMap)){
+				finalList.add(finalMap);
+			}
 		}
 	}
 }
@@ -99,7 +101,9 @@ if(UtilValidate.isNotEmpty(CanaraBankMap)){
 				finalMap.put("netAmt",netAmt);
 				
 			}
+			if(UtilValidate.isNotEmpty(finalMap)){
 				finalList.add(finalMap);
+			}
 		}
 	}
 }

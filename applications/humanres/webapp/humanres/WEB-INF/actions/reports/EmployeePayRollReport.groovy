@@ -86,14 +86,16 @@ if(UtilValidate.isNotEmpty(deductionTypeList)){
 dedTypeIds = EntityUtil.getFieldListFromEntityList(deductionTypeList, "deductionTypeId", true);
 context.dedTypeIds=dedTypeIds;
 context.dedDescMap=dedDescMap;
-
 Map emplInputMap = FastMap.newInstance();
 deptId=parameters.deptId;
+bankAdvise_deptId=parameters.bankAdvise_deptId;
 if(UtilValidate.isNotEmpty(deptId)){
 	context.deptId=deptId;
 	emplInputMap.put("orgPartyId", deptId);
 }else if(UtilValidate.isNotEmpty(parameters.partyIdFrom)){
 	emplInputMap.put("orgPartyId", parameters.partyIdFrom);
+}else if(UtilValidate.isNotEmpty(bankAdvise_deptId)){
+	emplInputMap.put("orgPartyId", bankAdvise_deptId);
 }else{
 	emplInputMap.put("orgPartyId", "Company");
 }
@@ -105,7 +107,6 @@ Map EmploymentsMap = HumanresService.getActiveEmployements(dctx,emplInputMap);
 List<GenericValue> employementList = (List<GenericValue>)EmploymentsMap.get("employementList");
 employementList = EntityUtil.orderBy(employementList, UtilMisc.toList("partyIdTo"));
 employementIds = EntityUtil.getFieldListFromEntityList(employementList, "partyIdTo", true);
-
 Map payRollMap=FastMap.newInstance();
 Map payRollSummaryMap=FastMap.newInstance();
 Map payRollEmployeeMap=FastMap.newInstance();
@@ -122,6 +123,8 @@ if(UtilValidate.isNotEmpty(periodBillingList)){
 	if(UtilValidate.isNotEmpty(parameters.employeeId))
 		payConList.add(EntityCondition.makeCondition("partyIdFrom", EntityOperator.EQUALS ,parameters.employeeId));
 		if(UtilValidate.isNotEmpty(deptId))
+			payConList.add(EntityCondition.makeCondition("partyIdFrom", EntityOperator.IN ,employementIds));
+		if(UtilValidate.isNotEmpty(bankAdvise_deptId))
 			payConList.add(EntityCondition.makeCondition("partyIdFrom", EntityOperator.IN ,employementIds));
 	payCond = EntityCondition.makeCondition(payConList,EntityOperator.AND);
 	payRollHeaderList = delegator.findList("PayrollHeader", payCond, null, null, null, false);

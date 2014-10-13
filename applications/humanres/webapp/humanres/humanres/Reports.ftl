@@ -447,7 +447,7 @@ function makeDatePicker1(fromDateId ,thruDateId){
 								<tr class="alternate-row">
 									<td width="17%"><span class='h3'>Monthly Bank Advice Statement</span></td>
 									<td width="25%"><span class='h3'>Organization Id </span>
-										<select name="partyIdFrom" class='h4'>
+										<select name="bankAdvise_deptId" class='h4'>
 											<#list orgList as org>    
 												<option value='${org.partyId}'>${org.groupName?if_exists}</option>
 											</#list> 
