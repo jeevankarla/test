@@ -44,6 +44,20 @@ emplInputMap.put("userLogin", userLogin);
 emplInputMap.put("orgPartyId", "Company");
 emplInputMap.put("fromDate", timePeriodStart);
 emplInputMap.put("thruDate", timePeriodEnd);
+totMeterReading=parameters.totalReading;
+totAmount=parameters.totalAmt;
+unitRate=BigDecimal.ZERO;
+
+if((UtilValidate.isNotEmpty(totMeterReading))&& (UtilValidate.isNotEmpty(totAmount))){
+	BigDecimal totAmount=new BigDecimal(totAmount);
+	BigDecimal totMeterReading= new BigDecimal(totMeterReading);
+	unitRate= (totAmount/(totMeterReading));
+	unitRate=unitRate.setScale(2, BigDecimal.ROUND_HALF_UP);
+}
+if((unitRate.compareTo(BigDecimal.ZERO)==0)){
+	Debug.logError("Plz enter total Meter Reading and Total Amount..","");
+	context.errorMessage = "Plz enter total Meter Reading and Total Amount..";
+}
 Map resultMap = HumanresService.getActiveEmployements(dctx,emplInputMap);
 List<GenericValue> employementList = (List<GenericValue>)resultMap.get("employementList");
 employementList = EntityUtil.orderBy(employementList, UtilMisc.toList("partyIdTo"));
@@ -72,6 +86,7 @@ JSONArray headItemsJson = new JSONArray();
 if(UtilValidate.isNotEmpty(quarterEmplIds)){
 	quarterEmplIds.each{ qtyEmpl->
 		meterValue="";
+		prevMeterValue="";
 		conditionList=[];
 		EntityFindOptions findOptions = new EntityFindOptions();
 		findOptions.setMaxRows(1);
@@ -87,6 +102,20 @@ if(UtilValidate.isNotEmpty(quarterEmplIds)){
 			if(UtilValidate.isNotEmpty(partyFixedAssetAssesment)){
 				assessmentDetails = EntityUtil.getFirst(partyFixedAssetAssesment);
 				assetId=assessmentDetails.fixedAssetId;
+				
+				previousPeriodStart = UtilDateTime.getMonthStart(UtilDateTime.addDaysToTimestamp(timePeriodStart,-1), timeZone, locale);
+				previousMonthEnd =UtilDateTime.getMonthEnd(previousPeriodStart,  timeZone, locale);
+				prevMeterConditionList=[];
+				prevMeterConditionList.add(EntityCondition.makeCondition("fixedAssetId", EntityOperator.EQUALS ,assetId));
+				prevMeterConditionList.add(EntityCondition.makeCondition("productMeterTypeId", EntityOperator.EQUALS , parameters.chargeType));
+				prevMeterConditionList.add(EntityCondition.makeCondition("readingDate", EntityOperator.GREATER_THAN_EQUAL_TO ,previousPeriodStart));
+				prevMeterConditionList.add(EntityCondition.makeCondition("readingDate", EntityOperator.LESS_THAN_EQUAL_TO , previousMonthEnd));
+				prevMeterCondition = EntityCondition.makeCondition(prevMeterConditionList,EntityOperator.AND);
+				prevFixedAssetMeter = delegator.findList("FixedAssetMeter", prevMeterCondition, null, null, null, false);
+				if(UtilValidate.isNotEmpty(prevFixedAssetMeter)){
+					prevFixedAssetMeter = EntityUtil.getFirst(prevFixedAssetMeter);
+					prevMeterValue=prevFixedAssetMeter.meterValue;
+				}				
 				meterConditionList=[];
 				meterConditionList.add(EntityCondition.makeCondition("fixedAssetId", EntityOperator.EQUALS ,assetId));
 				meterConditionList.add(EntityCondition.makeCondition("productMeterTypeId", EntityOperator.EQUALS , parameters.chargeType));
@@ -115,6 +144,8 @@ if(UtilValidate.isNotEmpty(quarterEmplIds)){
 		newObj.put("id",qtyEmpl+"["+partyName+"]");
 		newObj.put("partyId",qtyEmpl);
 		newObj.put("periodId",parameters.customTimePeriodId);
+		newObj.put("prevMeter",prevMeterValue);
+		newObj.put("unitRate",unitRate);
 		newObj.put(parameters.chargeType,meterValue);
 		if(UtilValidate.isNotEmpty(deptName)){
 			newObj.put("deptName",deptName);

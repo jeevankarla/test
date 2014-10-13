@@ -5007,15 +5007,22 @@ public static Map<String, Object> generateEmployerContributionPayrollBilling(Dis
 	    GenericValue userLogin = (GenericValue) session.getAttribute("userLogin");		
 	    String partyId = (String) request.getParameter("partyId");	
 	    String periodId = (String) request.getParameter("periodId");
-	    String assetId = (String) request.getParameter("assetId");	    
+	    String assetId = (String) request.getParameter("assetId");	  
+	    String prevMeterStr = (String) request.getParameter("prevMeter");	
+	    String unitRateStr = (String) request.getParameter("unitRate");	    
 	    Map paramMap = UtilHttp.getParameterMap(request);	    
-	    List productMeterTypeIdsList=FastList.newInstance();
+	    List productMeterTypeIdsList=FastList.newInstance();    
+	    BigDecimal prevMeterVal= BigDecimal.ZERO;
+		if (UtilValidate.isNotEmpty(prevMeterStr)) {	
+			prevMeterVal = new BigDecimal(prevMeterStr);
+		}
+	    
 	    try{
 	    	List<GenericValue> productMeterType = delegator.findList("ProductMeterType",EntityCondition.makeCondition("productMeterTypeId", EntityOperator.IN ,UtilMisc.toList("WATER","ELECTRICITY")), null,null, null, true);
 	    	productMeterTypeIdsList.addAll(EntityUtil.getFieldListFromEntityList(productMeterType, "productMeterTypeId", true));
-	 } catch (GenericEntityException e) {
+	    } catch (GenericEntityException e) {
 	     Debug.logError(e, "Error getting payhead types", module);
-	 }
+	    }
 	 
 	 if(UtilValidate.isNotEmpty(productMeterTypeIdsList)){
 	 	for(int i=0;i<productMeterTypeIdsList.size();i++){
@@ -5028,9 +5035,15 @@ public static Map<String, Object> generateEmployerContributionPayrollBilling(Dis
 					if (UtilValidate.isNotEmpty(meterValStr)) {	
 						meterVal = new BigDecimal(meterValStr);
 					}
+					BigDecimal unitRate= BigDecimal.ZERO;
+					if (UtilValidate.isNotEmpty(unitRateStr)) {	
+						unitRate = new BigDecimal(unitRateStr);
+					}
 					payItemMap.put("userLogin",userLogin);
 					payItemMap.put("customTimePeriodId",periodId);
+					payItemMap.put("prevMeterVal",prevMeterVal);
 					payItemMap.put("meterVal",meterVal);
+					payItemMap.put("unitRate",unitRate);
 					payItemMap.put("partyId",partyId);
 					payItemMap.put("assetId",assetId);
 					payItemMap.put("meterTypeId",meterTypeId);	    				
@@ -5065,6 +5078,8 @@ public static Map<String, Object> generateEmployerContributionPayrollBilling(Dis
 	    String customTimePeriodId = (String)context.get("customTimePeriodId");
 	    String meterTypeId = (String)context.get("meterTypeId");
 	    BigDecimal meterVal = (BigDecimal)context.get("meterVal");
+	    BigDecimal unitRate = (BigDecimal)context.get("unitRate");
+	    BigDecimal prevMeterVal = (BigDecimal)context.get("prevMeterVal");
 	    Locale locale = (Locale) context.get("locale");
 	    Map result = ServiceUtil.returnSuccess();
 	    Timestamp fromDateTime  = null;
@@ -5092,8 +5107,39 @@ public static Map<String, Object> generateEmployerContributionPayrollBilling(Dis
 			newMeterEntity.set("productMeterTypeId", meterTypeId);
 			newMeterEntity.set("readingDate", thruDateEnd);
 			newMeterEntity.set("meterValue", meterVal);
-			delegator.createOrStore(newMeterEntity); 	
+			delegator.createOrStore(newMeterEntity);			
+			String payheadTypeId="";
+			if("WATER".equals(meterTypeId)){
+				payheadTypeId="PAYROL_DD_WATR";
+			}
+			if("ELECTRICITY".equals(meterTypeId)){
+				payheadTypeId="PAYROL_DD_ELECT";
+			}			
+			// creating or updating deductions
+			Map<String, Object> payItemMap=FastMap.newInstance();
+			if(UtilValidate.isNotEmpty(prevMeterVal)){	
+				BigDecimal meterReading= meterVal.subtract(prevMeterVal);
+				BigDecimal amount= unitRate.multiply(meterReading);
+				amount=amount.setScale(0, BigDecimal.ROUND_HALF_UP);
+				payItemMap.put("userLogin",userLogin);
+				payItemMap.put("customTimePeriodId",customTimePeriodId);
+				payItemMap.put("amount",amount);
+				payItemMap.put("partyId",partyId);
+				payItemMap.put("payHeadTypeId",payheadTypeId);	    				
+				try {
+					if(amount.compareTo(BigDecimal.ZERO) >=0){
+						Map resultValue = dispatcher.runSync("createOrUpdatePartyBenefitOrDeduction", payItemMap);
+						if( ServiceUtil.isError(resultValue)) {
+							String errMsg =ServiceUtil.getErrorMessage(resultValue);
+							Debug.logError(errMsg , module);
+							return ServiceUtil.returnError(errMsg);
+						}
+					}
 					
+				} catch (GenericServiceException s) {
+					s.printStackTrace();
+				} 
+			}			
 					
 			}catch (GenericEntityException e) {
 				Debug.logError(e, module);

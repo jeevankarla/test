@@ -127,7 +127,8 @@ function comparer(a, b) {
 			</#if>
 			var columns = [		
 					{id:"id", name:"Employee Id", field:"id", width:150, minWidth:100, cssClass:"cell-title", sortable:true},
-					{id:"deptName", name:"Department", field:"deptName", width:150, minWidth:100, cssClass:"cell-title", sortable:true},					
+					{id:"deptName", name:"Department", field:"deptName", width:150, minWidth:100, cssClass:"cell-title", sortable:true},
+					{id:"prevMeter", name:"Prev Month Meter", field:"prevMeter", width:150, minWidth:100, cssClass:"cell-title", sortable:true},					
 					{id:"${parameters.chargeType?if_exists}", name:"${parameters.chargeType?if_exists}", field:"${parameters.chargeType?if_exists}", width:100, minWidth:80, editor:FloatCellEditor}
 			];
 	
