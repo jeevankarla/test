@@ -638,10 +638,15 @@ public static Map emplDailyPunchReport(DispatchContext dctx, Map context) {
 			List<GenericValue> finalPunchIN = delegator.findList("EmplPunch",
 					condition1, null, null, null, false);
 			
-
+			GenericValue finalPunchINValue = EntityUtil.getFirst(finalPunchIN);
+           if(UtilValidate.isNotEmpty(finalPunchINValue) && UtilValidate.isNotEmpty(finalPunchINValue.getString("shiftType")) && (finalPunchINValue.getString("shiftType").equals("SHIFT_NIGHT"))){
+        	   selectedDate = UtilDateTime.toSqlDate(UtilDateTime.addDaysToTimestamp(UtilDateTime.toTimestamp(selectedDate), 1));
+        	   
+           }
 			List conditionList2 = UtilMisc.toList(EntityCondition
 					.makeCondition("punchdate", EntityOperator.EQUALS,
 							selectedDate));
+			
 			conditionList2.add(EntityCondition.makeCondition("partyId",
 					EntityOperator.IN, empPartyIds));
 			conditionList2.add(EntityCondition.makeCondition("InOut", "OUT"));
@@ -659,7 +664,7 @@ public static Map emplDailyPunchReport(DispatchContext dctx, Map context) {
 				String EmployeeId = ((emplPunchIn.get("partyId")).toString());
 				String EmployeeName = PartyHelper.getPartyName(delegator,
 						EmployeeId, false);
-
+                
 				emplPunchMap.put("Employee", EmployeeName);
 				emplPunchMap.put("inTime",(emplPunchIn.getTime("punchtime").getHours())+":"+(emplPunchIn.getTime("punchtime").getMinutes()));
 				//emplPunchMap.put("inTime", emplPunchIn.getString("punchtime"));
@@ -668,11 +673,27 @@ public static Map emplDailyPunchReport(DispatchContext dctx, Map context) {
 							emplPunchOut.get("partyId"))) {
 						SimpleDateFormat format = new SimpleDateFormat(
 								"HH:mm:ss");
-						Date inTime = format.parse((emplPunchIn
+						/*Date inTime = format.parse((emplPunchIn
 								.get("punchtime")).toString());
 						Date outTime = format.parse(emplPunchOut.get(
-								"punchtime").toString());
-						long timeDiff = outTime.getTime() - inTime.getTime();
+								"punchtime").toString());*/
+						//long timeDiff = outTime.getTime() - inTime.getTime();
+						Timestamp punchInTimestamp =
+							    Timestamp.valueOf(
+							        new SimpleDateFormat("yyyy-MM-dd ")
+							        .format(emplPunchIn.getDate("punchdate")) // get the current date as String
+							        .concat((emplPunchIn.get("punchtime")).toString())        // and append the time
+							    );
+						Timestamp punchOutTimestamp =
+							    Timestamp.valueOf(
+							        new SimpleDateFormat("yyyy-MM-dd ")
+							        .format(emplPunchOut.getDate("punchdate")) // get the current date as String
+							        .concat((emplPunchOut.get("punchtime")).toString())        // and append the time
+							    );
+						
+						
+						
+						long timeDiff = punchOutTimestamp.getTime() - punchInTimestamp.getTime();
 						Long diffHours = new Long(timeDiff / (60 * 60 * 1000));
 						long modOfDiffHours = timeDiff % (60 * 60 * 1000);
 						Long diffMinutes = new Long(modOfDiffHours
