@@ -79,7 +79,7 @@ under the License.
                     </fo:table-row>
                     <fo:table-row>	
                     		<fo:table-cell>
-                            		<fo:block  keep-together="always" text-align="left" font-weight = "bold">Cheque Date:${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(paymentListReport.instrumentDate?if_exists, "MMMM dd,yyyy")}</fo:block>  
+                            		<fo:block  keep-together="always" text-align="left" font-weight = "bold"><#if paymentListReport.instrumentDate?has_content>Cheque Date:${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(paymentListReport.instrumentDate?if_exists, "MMMM dd,yyyy")}</#if></fo:block>  
                        		</fo:table-cell>
                        		<fo:table-cell>
                             		<fo:block  text-align="right" font-weight = "bold" keep-together="always"></fo:block>  
