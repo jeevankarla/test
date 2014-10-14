@@ -766,8 +766,11 @@ under the License.
 		</#if>
 		</fo:root>
 </#escape>
-<#else>
-	<fo:root xmlns:fo="http://www.w3.org/1999/XSL/Format">
+</#if>
+	<#--  OBC Bank --> 
+<#if finAccountId?exists && finAccountId == "FIN_ACCNT6">
+<#escape x as x?xml>
+    <fo:root xmlns:fo="http://www.w3.org/1999/XSL/Format">
         <fo:layout-master-set>
             <fo:simple-page-master master-name="main" page-height="12in" page-width="8in"
                      margin-left=".2in" margin-right=".10in" margin-top=".1in" margin-bottom=".3in">
@@ -865,5 +868,6 @@ under the License.
 			</fo:page-sequence>
 		</#if>
 		</fo:root>
-	</#if>
+</#escape>
+</#if>
 </#if>
