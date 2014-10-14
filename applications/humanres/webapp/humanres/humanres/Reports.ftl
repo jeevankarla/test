@@ -80,6 +80,8 @@ function makeDatePicker1(fromDateId ,thruDateId){
 		makeDatePicker("ITAXthruDate","ITAXthruDate");
 		makeDatePicker("ESIForm6fromDate","ESIForm6fromDate");
 		makeDatePicker("ESIForm6thruDate","ESIForm6thruDate");
+		makeDatePicker("ESIForm7fromDate","ESIForm7fromDate");
+		makeDatePicker("ESIForm7thruDate","ESIForm7thruDate");
 		
 		$('#ui-datepicker-div').css('clip', 'auto');		
 	});
@@ -762,6 +764,18 @@ function makeDatePicker1(fromDateId ,thruDateId){
 									<td width="20%"><span class='h3'>ESI Form 6</span></td>
 									<td width="32%"><span class='h3'>From Date<input  type="text"  id="ESIForm6fromDate"   name="fromDate"/></span></td>
 									<td width="32%"><span class='h3'>Thru Date<input  type="text"  id="ESIForm6thruDate"   name="thruDate"/></span></td>	
+									<td width="15%"><span class='h3'><input type="submit" value="Download" class="buttontext"></span></td> 
+								</tr>
+							</table>	
+						</form>
+					</tr>
+					<tr class="alternate-row">
+						<form id="ESIFormSeven" name="ESIFormSeven" method="post" action="<@ofbizUrl>ESIFormSeven.pdf</@ofbizUrl>" >	
+							<table class="basic-table" cellspacing="5">
+								<tr class="alternate-row">
+									<td width="20%"><span class='h3'>ESI Form 7</span></td>
+									<td width="32%"><span class='h3'>From Date<input  type="text"  id="ESIForm7fromDate"   name="fromDate"/></span></td>
+									<td width="32%"><span class='h3'>Thru Date<input  type="text"  id="ESIForm7thruDate"   name="thruDate"/></span></td>	
 									<td width="15%"><span class='h3'><input type="submit" value="Download" class="buttontext"></span></td> 
 								</tr>
 							</table>	
