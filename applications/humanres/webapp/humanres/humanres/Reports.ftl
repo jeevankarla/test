@@ -78,6 +78,8 @@ function makeDatePicker1(fromDateId ,thruDateId){
 		makeDatePicker("OODthruDate","OODthruDate");
 		makeDatePicker("ITAXfromDate","ITAXfromDate");
 		makeDatePicker("ITAXthruDate","ITAXthruDate");
+		makeDatePicker("ESIForm6fromDate","ESIForm6fromDate");
+		makeDatePicker("ESIForm6thruDate","ESIForm6thruDate");
 		
 		$('#ui-datepicker-div').css('clip', 'auto');		
 	});
@@ -328,7 +330,7 @@ function makeDatePicker1(fromDateId ,thruDateId){
 				   </form>
 				   </tr>-->
 					
-					 <tr class="alternate-row">
+					<#-- <tr class="alternate-row">
 						<form id="EmployeeWiseAttendanceDetails" name="EmployeeWiseAttendanceDetails" mothed="post" action="<@ofbizUrl>EmplMonthAttendanceDetails</@ofbizUrl>" target="_blank">
 							<table class="basic-table" cellspacing="5">
 								<tr class="alternate-row">
@@ -345,7 +347,7 @@ function makeDatePicker1(fromDateId ,thruDateId){
 								</tr>
 							</table>
 						</form>
-					</tr>
+					</tr> -->
 					<tr class="alternate-row">
 						<form id="AttendanceExceptionReport" name="AttendanceExceptionReport" mothed="post" action="<@ofbizUrl>AttendanceExceptionReport.pdf</@ofbizUrl>" target="_blank">
 							<table class="basic-table" cellspacing="5">
@@ -751,6 +753,18 @@ function makeDatePicker1(fromDateId ,thruDateId){
 									<td width="15%"><span class='h3'><input type="submit" value="Download" class="buttontext"></span></td>
 								</tr>
 							</table>
+						</form>
+					</tr>
+					<tr class="alternate-row">
+						<form id="ESIFormSix" name="ESIFormSix" method="post" action="<@ofbizUrl>ESIFormSix.pdf</@ofbizUrl>" >	
+							<table class="basic-table" cellspacing="5">
+								<tr class="alternate-row">
+									<td width="20%"><span class='h3'>ESI Form 6</span></td>
+									<td width="32%"><span class='h3'>From Date<input  type="text"  id="ESIForm6fromDate"   name="fromDate"/></span></td>
+									<td width="32%"><span class='h3'>Thru Date<input  type="text"  id="ESIForm6thruDate"   name="thruDate"/></span></td>	
+									<td width="15%"><span class='h3'><input type="submit" value="Download" class="buttontext"></span></td> 
+								</tr>
+							</table>	
 						</form>
 					</tr>
 			   	</table>
