@@ -241,15 +241,10 @@ under the License.
         <field name="contraRefNum"><text></text></field>
        	<field name="submitButton" title="${uiLabelMap.CommonFind}" widget-style="smallSubmit"><submit/></field>       
     </form>
-    <form name="ListContraEntries" type="list" list-name="listIt" odd-row-style="alternate-row" 
+    <form name="ListContraEntries" type="list" list-name="finAccountTransList" odd-row-style="alternate-row" 
       default-entity-name="FinAccountTrans" default-table-style="basic-table hover-bar" >
-    	<actions>    	
-    	   <service service-name="performFind" result-map="result" result-map-list="listIt">
-                <field-map field-name="inputFields" from-field="parameters"/>
-                <field-map field-name="entityName" value="FinAccountTrans"/>
-                <field-map field-name="viewIndex" from-field="viewIndex"/>
-                <field-map field-name="viewSize" from-field="viewSize"/>
-            </service> 
+    	 <actions>
+			<script location="component://accounting/webapp/accounting/WEB-INF/actions/payment/ListContraEntries.groovy"/>	
         </actions>
     	<field name="finAccountId" title = "Fin Account">
           <display-entity entity-name="FinAccount" key-field-name="finAccountId" description="${finAccountName}"/>
