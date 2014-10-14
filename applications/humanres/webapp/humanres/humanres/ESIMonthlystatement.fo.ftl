@@ -201,7 +201,7 @@
 					                            	<fo:block text-align="center" border-style="solid" keep-together="always" font-size="11pt">&#160;</fo:block>
 					                            </fo:table-cell>
 					                            <fo:table-cell >	
-					                            	<fo:block text-align="right" border-style="solid" keep-together="always" font-size="11pt" font-weight="bold" >${pagetotPayableDays?if_exists?string("#0.00")}&#160;</fo:block>
+					                            	<fo:block text-align="right" border-style="solid" keep-together="always" font-size="11pt" font-weight="bold" >${pagetotPayableDays?if_exists?string("#0.0")}&#160;</fo:block>
 					                            </fo:table-cell>
 					                            <fo:table-cell >	
 					                            	<fo:block text-align="right" border-style="solid" keep-together="always" font-size="11pt" font-weight="bold" >${pagetotWages?if_exists?string("#0.00")}&#160;</fo:block>
@@ -237,7 +237,7 @@
 			                            	<fo:block text-align="center" border-style="solid" keep-together="always" font-size="11pt">&#160;</fo:block>
 			                            </fo:table-cell>
 			                            <fo:table-cell >	
-			                            	<fo:block text-align="right" border-style="solid" keep-together="always" font-size="11pt" font-weight="bold" >${totPayableDays?if_exists?string("#0.00")}&#160;</fo:block>
+			                            	<fo:block text-align="right" border-style="solid" keep-together="always" font-size="11pt" font-weight="bold" >${totPayableDays?if_exists?string("#0.0")}&#160;</fo:block>
 			                            </fo:table-cell>
 			                            <fo:table-cell >	
 			                            	<fo:block text-align="right" border-style="solid" keep-together="always" font-size="11pt" font-weight="bold" >${totWages?if_exists?string("#0.00")}&#160;</fo:block>
