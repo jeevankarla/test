@@ -778,16 +778,28 @@
 	     <field name="submitButton" title="${uiLabelMap.CommonUpdate}"><submit button-type="button"/></field>
     </form>
     <form name="EditHolidays" type="single" header-row-style="header-row" default-table-style="basic-table" target="findHolidays">
+    <actions>
+       <set field="nowTimeStamp" value="${groovy: return org.ofbiz.base.util.UtilDateTime.nowTimestamp()}"/>
+	   <entity-condition entity-name="CustomTimePeriod" list="customTimeList" >
+	  		<condition-list combine="and">
+	  		<condition-expr field-name="fromDate" operator="less-equals" from-field="nowTimeStamp"/>
+	  		<condition-expr field-name="periodTypeId" operator="equals" value="HR_MONTH"/>
+	  		</condition-list>
+	  		<order-by field-name="-fromDate"/>
+	  		<order-by field-name="periodNum"/>
+		</entity-condition>
+			<set field="timecustom" from-field="customTimeList[0].customTimePeriodId"/>
+    </actions>
 		<field name="hideSearch"><hidden value="Y" /></field>
 		 <field name="noConditionFind"><hidden value="Y"/><!-- if this isn't there then with all fields empty no query will be done --></field>
 		 <field name="partyId" title="Employee Id" required-field="true">
 			<lookup target-form-name="LookupEmployeeName"/>
 		</field>
 		<field name="customTimePeriodId" required-field="true">
-            <drop-down>
+            <drop-down no-current-selected-key="${timecustom}">
                 <entity-options entity-name="CustomTimePeriod" key-field-name="customTimePeriodId" description="${groovy:org.ofbiz.base.util.UtilDateTime.toDateString(fromDate, &quot;dd MMMMM, yyyy&quot;);} - ${groovy:org.ofbiz.base.util.UtilDateTime.toDateString(thruDate, &quot;dd MMMMM, yyyy&quot;);}" filter-by-date="false">
                     <entity-constraint name="periodTypeId" operator="equals" value="HR_MONTH"/>
-                    <entity-order-by field-name="-thruDate"/>
+                    <entity-order-by field-name="-fromDate"/>
                     <entity-order-by field-name="periodNum"/>
                 </entity-options>
             </drop-down>
@@ -985,6 +997,19 @@
     	<field name="extLoanRefNum" title="External Loan Ref Number"><text></text></field>
     	<field name="searchButton" title="${uiLabelMap.CommonFind}" widget-style="smallSubmit"><submit button-type="button"/></field>
     </form>
+     <!-- <form name="EditVariables" type="single" header-row-style="header-row" default-table-style="basic-table" target="CreateOrUpdateVariables" >
+    	<field name="rateTypeId" title="Rate Type" required-field="true" tooltip="Required" widget-style="required" >
+    		<drop-down allow-empty="false">
+    			<entity-options description="${description}" key-field-name="rateTypeId" entity-name="RateType">
+					<entity-constraint name="parentTypeId" operator="equals" value="PAYROLL_RATE"/>    			
+    			</entity-options>
+    		</drop-down>
+    	</field>
+    	<field name="fromDate" required-field="true" tooltip="Required" widget-style="required" ><date-time type="date"/> </field>
+    	<field name="thruDate" ><date-time type="date"/></field>
+    	<field name="rateAmount" required-field="true" widget-style="required" tooltip="Required"><text size="10" /></field>
+    	<field name="submitButton" title="${uiLabelMap.CommonCreate}"><submit/></field>
+    </form> -->
     <form name="ListEmployeeLoans" type="list" list-name="employeeLoanList"  odd-row-style="alternate-row" 
        default-table-style="basic-table hover-bar" target="updateEmployeeLoan">
     	<actions>
