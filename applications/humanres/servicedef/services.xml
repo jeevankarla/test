@@ -129,7 +129,10 @@ under the License.emplpunch
 	<service name="updatEncashmentStatus" engine="java" default-entity-name="EmplDailyAttendanceDetail"
     		location="in.vasista.vbiz.humanres.PayrollService" invoke="UpdateLateMins" auth="true">
     	<description>Upadate Encashment Status</description>
-    	<permission-service service-name="humanResManagerPermission" main-action="EMPLOYEE_EDIT"/>
+    	 <required-permissions join-type="OR">
+    	  <check-permission permission="HR_APPHOLIDAY" action="_VIEW"/>
+           <permission-service service-name="humanResManagerPermission" main-action="EMPLOYEE_EDIT"/>
+        </required-permissions>
 		<auto-attributes mode="IN" include="pk" optional="false"/>
 		<attribute name="timePeriodId" mode="IN" type="String" optional="false"></attribute>
         <auto-attributes mode="IN" include="nonpk" optional="true"/>    
@@ -1540,6 +1543,7 @@ under the License.emplpunch
    <description>Create or Update RateAmount Variables</description>
    		<attribute name="rateTypeId" mode="IN" type="String" optional="false"/>
    		<attribute name="fromDate" mode="IN" type="Date" optional="false"/>
+   		<attribute name="thruDate" mode="IN" type="Date" optional="true"/>
    		<attribute name="rateAmount" mode="IN" type="BigDecimal" optional="false"/>
    </service> -->
    <service name="updateEmployeeFinancialAccount" engine="java" 
