@@ -91,6 +91,8 @@ under the License.
     <SecurityGroup description="Employee PUNCH delete or Remove" groupId="EMP_PUNCH_DELETE"></SecurityGroup>
     <SecurityGroupPermission groupId="EMP_PUNCH_DELETE" permissionId="EMP_PUNCH_EDIT_REMOVE"/>
     
+    <SecurityGroup description="Approve Holidays ScreenView Only " groupId="APPROVEHOLIDAY_VIEW"></SecurityGroup>
+    <SecurityGroupPermission groupId="APPROVEHOLIDAY_VIEW" permissionId="HR_APPHOLIDAY_VIEW"/>
     
     <SecurityPermission description="Approve Worked Holidays Permission" permissionId="HR_APPHOLIDAY_VIEW"/>
     <SecurityPermission description="Edit Late hours screen View Permission" permissionId="HR_EDITLATE_VIEW"/>

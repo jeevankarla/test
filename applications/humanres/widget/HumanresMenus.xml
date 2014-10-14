@@ -163,7 +163,7 @@
             <condition>
                  <and>
                     <if-has-permission permission="HR"  action="_APPHOLIDAY_VIEW"/>
-	               <if-has-permission permission="HR"  action="_ATTENDANCE_VIEW"/>
+	               <!-- <if-has-permission permission="HR"  action="_ATTENDANCE_VIEW"/> -->
 	             </and> 
             </condition>  
         	<link target="EditHolidays"></link>
@@ -750,6 +750,9 @@
         <menu-item name="EmployeeWisePaySheet" title="Employee Wise Pay Sheet">
             <link target="EmployeeWisePaySheet"/>
         </menu-item>
+       <!-- <menu-item name="EditRateAmoutVariables" title="Edit Variables">
+            <link target="EditVariables"/>
+        </menu-item> -->
     </menu>    
 
 </menus>
