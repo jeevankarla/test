@@ -28,8 +28,8 @@
 		                	<fo:table-column column-width="80pt"/>
 		                    <fo:table-column column-width="220pt"/>
 		                    <fo:table-column column-width="110pt"/>                
-		                    <fo:table-column column-width="110pt"/>
-		                    <fo:table-column column-width="80pt"/>                
+		                    <fo:table-column column-width="90pt"/>
+		                    <fo:table-column column-width="110pt"/>                
 		                    <fo:table-column column-width="80pt"/>
 	                		<fo:table-body> 
 	                     		<fo:table-row >
@@ -43,10 +43,10 @@
 		                            	<fo:block text-align="left" keep-together="always" font-weight="bold" font-size="15pt">FromDate</fo:block>
 		                            </fo:table-cell>
 		                            <fo:table-cell >	
-		                            	<fo:block text-align="left" keep-together="always" font-weight="bold" font-size="15pt">ThruDate</fo:block>
+		                            	<fo:block text-align="left" keep-together="always" font-weight="bold" font-size="15pt">IN TIME</fo:block>
 		                            </fo:table-cell>
 		                            <fo:table-cell >	
-		                            	<fo:block text-align="left" keep-together="always" font-weight="bold" font-size="15pt">IN TIME</fo:block>
+		                            	<fo:block text-align="left" keep-together="always" font-weight="bold" font-size="15pt">ThruDate</fo:block>
 		                            </fo:table-cell>
 		                            <fo:table-cell >	
 		                            	<fo:block text-align="left" keep-together="always" font-weight="bold" font-size="15pt">OUT TIME</fo:block>
@@ -72,13 +72,13 @@
 				                            	<fo:block text-align="left" keep-together="always" font-size="15pt">${emplOODMapValues.getValue().get("punchindate")?if_exists}</fo:block>
 				                            </fo:table-cell>
 				                            <fo:table-cell >	
-				                            	<fo:block text-align="left" keep-together="always" font-size="15pt">${emplOODMapValues.getValue().get("punchOutdate")?if_exists}</fo:block>
-				                            </fo:table-cell>
-				                            <fo:table-cell >	
 				                            	<fo:block text-align="left" keep-together="always" font-size="15pt">${emplOODMapValues.getValue().get("punchintime")?if_exists?string("HH:mm")}</fo:block>
 				                            </fo:table-cell>
 				                            <fo:table-cell >	
-				                            	<fo:block text-align="left" keep-together="always" font-size="15pt">${emplOODMapValues.getValue().get("punchOuttime")?if_exists?string("HH:mm")}</fo:block>
+				                            	<fo:block text-align="left" keep-together="always" font-size="15pt">${emplOODMapValues.getValue().get("punchOutdate")?if_exists}</fo:block>
+				                            </fo:table-cell>
+				                            <fo:table-cell >	
+				                            	<fo:block text-align="left" keep-together="always" font-size="15pt"><#if emplOODMapValues.getValue().get("punchOuttime")?has_content>${emplOODMapValues.getValue().get("punchOuttime")?if_exists?string("HH:mm")}<#else>&#160;</#if></fo:block>
 				                            </fo:table-cell>
 					                   		<#assign noofLines=noofLines+1>
 					                   	</fo:table-row>
