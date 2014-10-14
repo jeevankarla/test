@@ -5,6 +5,7 @@ var intrstAmt;
 var rateOfInt;
 
 $(document).ready(function(){
+	
 	$("#principalAmount").blur(function(){
 		var prinAmount = $("#principalAmount").val();
 		if(prinAmount && !isNaN(prinAmount)){
@@ -54,10 +55,11 @@ $(document).ready(function(){
 
 function loanTypesAmountChange(){
 	var loanTypeId = $("#loanTypeId").val();
+	var partyId = $("[name='partyId']").val();
 	$.ajax({
          type: "POST",
          url: 'getLoanAmountsByLoanType',
-         data: {loanTypeId : loanTypeId},
+         data: {loanTypeId : loanTypeId, partyId: partyId},
          dataType: 'json',
          success: function(result) {
            if(result["_ERROR_MESSAGE_"] || result["_ERROR_MESSAGE_LIST_"]){
@@ -68,6 +70,7 @@ function loanTypesAmountChange(){
         	   	numInterestInst = result["numInterestInst"];
         	   	interestAmount = result["interestAmount"];
         	   	rateOfInterest = result["rateOfInterest"];
+        	   	retirementDate = result["retirementDate"];
         	   	
         	   	prncplAmt = principalAmount;
         	   	prinplInst = numPrincipalInst;
@@ -80,6 +83,7 @@ function loanTypesAmountChange(){
         	   	$("#numInterestInst").val(numInterestInst);
         	   	$("#interestAmount").val(interestAmount);
         	   	$("#rateOfInterest").val(rateOfInterest);
+        	   	$("#retirementDate").val(retirementDate);
            }
          } 
     });

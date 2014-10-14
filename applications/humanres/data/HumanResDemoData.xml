@@ -79,7 +79,7 @@ under the License.
     <AcctgFormula acctgFormulaId="HRA_BELL" createdStamp="2013-09-16 11:14:10.0" createdTxStamp="2013-09-16 11:14:10.0" description="HRA BELL" formula="0.1*(${BASIC})" hasTable="N" isSlabBased="N"/>
     <AcctgFormula acctgFormulaId="HRA_GULB" createdStamp="2013-09-16 11:14:10.0" createdTxStamp="2013-09-16 11:14:10.0" description="HRA GULD" formula="0.3*(${BASIC})" hasTable="N" isSlabBased="N"/>
     
-    <AcctgFormula acctgFormulaId="INTEREST_AMNT_CALC"  description="calculation of interest amount" formula="(${totalInstallments}*(${totalInstallments}+1)*${rateOfInterest}/100*${principalAmount}/2)/(12*100)" hasTable="N" isSlabBased="N" />
+    <AcctgFormula acctgFormulaId="INTEREST_AMNT_CALC"  description="calculation of interest amount" formula="(${totalInstallments}*(${totalInstallments}+1)*${rateOfInterest}*${principalAmount}/${totalInstallments})/(2*12*100)" hasTable="N" isSlabBased="N" />
     
     
     <PayrollBenDedRule payrollBenDedRuleId="200" ruleName="DA rule banglore location" payHeadTypeId="PAYROL_BEN_DA" fromDate="2001-01-01 12:00:00.0"/>

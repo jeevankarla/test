@@ -460,14 +460,23 @@ public class HumanresService {
 	 public static Map<String, Object> getLoanAmountsByLoanType(DispatchContext dctx, Map context) {
 	    	Map<String, Object> result = ServiceUtil.returnSuccess();
 	    	String loanTypeId = (String) context.get("loanTypeId");
+	    	String partyId = (String) context.get("partyId");
+	    	
 			GenericValue loanTypeDetails = null;
 	    	GenericDelegator delegator = (GenericDelegator) dctx.getDelegator();
 			LocalDispatcher dispatcher = dctx.getDispatcher();
+			
+			GenericValue userLogin = (GenericValue) context.get("userLogin");
 			BigDecimal principalAmount = BigDecimal.ZERO;
 			Long numPrincipalInst = null;
 			Long numInterestInst = null;
 			Double rateOfInterest = 1.0;
 			BigDecimal interestAmount = BigDecimal.ZERO;
+			
+			String retirementDate = null;
+			
+			Locale locale = new Locale("en","IN");
+			TimeZone timeZone = TimeZone.getDefault();
 			try {
 				loanTypeDetails = delegator.findOne("LoanType",UtilMisc.toMap("loanTypeId", loanTypeId), false);
 				if(UtilValidate.isNotEmpty(loanTypeDetails)){
@@ -499,6 +508,28 @@ public class HumanresService {
 							interestAmount = new BigDecimal( evltr.evaluate());
 							interestAmount = interestAmount.setScale(2, BigDecimal.ROUND_HALF_UP);
 						}
+						
+						List conditionList = FastList.newInstance();
+						conditionList.add(EntityCondition.makeCondition("partyId", EntityOperator.EQUALS, partyId));
+			        	EntityCondition cond = EntityCondition.makeCondition(conditionList,EntityOperator.AND);
+			        	List<GenericValue> employmentAndPersonList = delegator.findList("EmploymentAndPerson",cond, null, UtilMisc.toList("-thruDate"), null, false);
+			        	if(UtilValidate.isNotEmpty(employmentAndPersonList)){
+			        		GenericValue employmentAndPerson = EntityUtil.getFirst(employmentAndPersonList);
+			        		if(UtilValidate.isNotEmpty(employmentAndPerson)){
+			        			Date birthDate = employmentAndPerson.getDate("birthDate");
+			        			if(UtilValidate.isNotEmpty(birthDate)){
+				        			int day =  UtilDateTime.getDayOfMonth(UtilDateTime.toTimestamp(birthDate), timeZone, locale);
+				        			int month = UtilDateTime.getMonth(UtilDateTime.toTimestamp(birthDate), timeZone, locale) + 1;
+				        			if (day == 1) { // need to take the prev month last date
+				        				month--;
+				        			}
+				        			int year = UtilDateTime.getYear(UtilDateTime.toTimestamp(birthDate), timeZone, locale) + 60;
+				        			Timestamp retDate = UtilDateTime.toTimestamp(month, day, year, 0, 0, 0);
+				        			retDate = UtilDateTime.getMonthEnd(UtilDateTime.toTimestamp(retDate), timeZone, locale);
+				        			retirementDate = UtilDateTime.toDateString(retDate,"dd/MM/yyyy");
+			        			}
+			        		}
+			        	}
 					}
 				}
 	        }catch(GenericEntityException e){
@@ -509,6 +540,7 @@ public class HumanresService {
 			result.put("numPrincipalInst", numPrincipalInst);
 			result.put("numInterestInst", numInterestInst);
 			result.put("rateOfInterest", rateOfInterest);
+			result.put("retirementDate", retirementDate);
 	        return result;
 	    }
 	 	
