@@ -38,10 +38,10 @@ $(function() {
     
 	jQuery("#fromDate").datepicker({dateFormat:'dd-mm-yy',
 									onSelect: function( selectedDate ) {
-									var leaveTypeId = $('select[name=leaveTypeId]').val();
+									/* var leaveTypeId = $('select[name=leaveTypeId]').val();
 									if(leaveTypeId =="CH" || leaveTypeId =="CHGH" || leaveTypeId =="CHSS"){
 	     								return viewGHandSS();
-     								 }
+     								 } */
 									$( "#thruDate" ).datepicker( "option", {minDate: selectedDate});
 								     }
 						           }).datepicker("option", {});
@@ -179,9 +179,10 @@ function viewGHandSS(){
        
           return false;
      }
-     //if(leaveTypeId =="CH" || leaveTypeId =="CHGH" || leaveTypeId =="CHSS"){
-          //return viewGHandSS();
-     // }
+     if(leaveTypeId =="CH" || leaveTypeId =="CHGH" || leaveTypeId =="CHSS"){
+           return viewGHandSS();
+      }
+     
      
     $.ajax({
              type: "POST",
@@ -249,6 +250,17 @@ function viewGHandSS(){
                     
                 </td>
               </tr>
+               <tr>
+                <td class="label">From Date :</td>
+                <td>
+                  <#if !editFlag>
+                   	 <input type="text" name="fromDate" id="fromDate" value="${fromDate?if_exists}"/>
+                    <#else>
+                      <input type="hidden" name="fromDate" id="fromDate" value="${fromDate?if_exists}"/>
+                     ${fromDate?if_exists}
+                  </#if> 
+                </td>
+              </tr>
               <tr>
                 <td class="label">Leave Type :</td>
                 <td>
@@ -285,17 +297,6 @@ function viewGHandSS(){
 							</#if>
 						</#list>      
 					</select>
-                </td>
-              </tr>
-              <tr>
-                <td class="label">From Date :</td>
-                <td>
-                  <#if !editFlag>
-                   	 <input type="text" name="fromDate" id="fromDate" value="${fromDate?if_exists}"/>
-                    <#else>
-                      <input type="hidden" name="fromDate" id="fromDate" value="${fromDate?if_exists}"/>
-                     ${fromDate?if_exists}
-                  </#if> 
                 </td>
               </tr>
                <tr>
