@@ -217,15 +217,15 @@ if(UtilValidate.isNotEmpty(employmentsList)){
 								headerId = headerIdsList.payrollHeaderId;
 							}
 							
-							emplyerContrbtn=0;
-							List emplyrConditionList=[];
-							emplyrConditionList.add(EntityCondition.makeCondition("payrollHeaderId", EntityOperator.EQUALS, headerId));
-							emplyrConditionList.add(EntityCondition.makeCondition("payrollHeaderItemTypeId", EntityOperator.EQUALS, "PAYROL_DD_ESI_DED"));
-							emplyrCondition = EntityCondition.makeCondition(emplyrConditionList,EntityOperator.AND);
-							emplyrList = delegator.findList("PayrollHeaderItemEc", emplyrCondition, null, null, null, false);
-							if(UtilValidate.isNotEmpty(emplyrList)){
-								emplyrList = EntityUtil.getFirst(emplyrList);
-								emplyerContrbtn = emplyrList.amount;
+							emplyeeContrbtn=0;
+							List emplyeConditionList=[];
+							emplyeConditionList.add(EntityCondition.makeCondition("payrollHeaderId", EntityOperator.EQUALS, headerId));
+							emplyeConditionList.add(EntityCondition.makeCondition("payrollHeaderItemTypeId", EntityOperator.EQUALS, "PAYROL_DD_ESI_DED"));
+							emplyeCondition = EntityCondition.makeCondition(emplyeConditionList,EntityOperator.AND);
+							emplyeList = delegator.findList("PayrollHeaderItem", emplyeCondition, null, null, null, false);
+							if(UtilValidate.isNotEmpty(emplyeList)){
+								emplyeList = EntityUtil.getFirst(emplyeList);
+								emplyeeContrbtn = emplyeList.amount;
 							}
 							
 							List conditionList=[];
@@ -241,7 +241,7 @@ if(UtilValidate.isNotEmpty(employmentsList)){
 								}
 							}
 							detailsMap.put("Wages",Wages);
-							detailsMap.put("Contribution",emplyerContrbtn);
+							detailsMap.put("Contribution",emplyeeContrbtn);
 							detailsMap.put("employeeId",employeeId);
 							periodDetailsMap.put(Periodid,detailsMap);
 							periodList.add(Periodid);
