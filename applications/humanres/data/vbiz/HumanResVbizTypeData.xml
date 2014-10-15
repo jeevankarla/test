@@ -143,7 +143,7 @@
    
    <Enumeration description="Gross salary condition" enumCode="PAYHD_BEDE_GROSS_SAL" enumId="PAYHD_BEDE_GROSS_SAL" sequenceId="08" enumTypeId="PYHD_PRICE_IN_PARAM"/>
    <Enumeration description="No.of Leave Days" enumCode="PAYHD_BEDE_LEAVEDAYS" enumId="PAYHD_BEDE_LEAVEDAYS" sequenceId="09" enumTypeId="PYHD_PRICE_IN_PARAM"/>
-   
+   <Enumeration description="Formula Value" enumCode="PAYHD_BEDE_FORMULA" enumId="PAYHD_BEDE_FORMULA" enumTypeId="PYHD_PRICE_IN_PARAM" sequenceId="10"/>
    
     <PayHeadPriceActionType payHeadPriceActionTypeId="PRICE_FLAT"/>
     <PayHeadPriceActionType payHeadPriceActionTypeId="PRICE_SERVICE"/>

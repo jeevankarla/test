@@ -254,7 +254,7 @@ function viewGHandSS(){
                 <td class="label">From Date :</td>
                 <td>
                   <#if !editFlag>
-                   	 <input type="text" name="fromDate" id="fromDate" value="${fromDate?if_exists}"/>
+                   	 <input type="text" name="fromDate" id="fromDate" value="${fromDate?if_exists}" readonly/>
                     <#else>
                       <input type="hidden" name="fromDate" id="fromDate" value="${fromDate?if_exists}"/>
                      ${fromDate?if_exists}
@@ -302,7 +302,7 @@ function viewGHandSS(){
                <tr>
                 <td class="label">Thru Date :</td>
                 <td>
-                   <input type="text" name="thruDate" id="thruDate" value="${thruDate?if_exists}"/>
+                   <input type="text" name="thruDate" id="thruDate" value="${thruDate?if_exists}" readonly/>
                 </td>
               </tr>
               <tr id="ghssDropDown">

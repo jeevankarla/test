@@ -72,6 +72,7 @@ context.employeeList=employeeList;
 company = delegator.findByPrimaryKey("PartyAndGroup", [partyId : "Company"]);
 populateChildren(company, employeeList);
 
+
 def populateChildren(org, employeeList) {
 	EmploymentsMap=HumanresService.getActiveEmployements(dctx,[userLogin:userLogin,orgPartyId:parameters.partyId]);
 	employments=EmploymentsMap.get("employementList");
@@ -112,7 +113,7 @@ if(UtilValidate.isNotEmpty(leaveTypeIds)){
 			if(UtilValidate.isNotEmpty(parameters.employeeId)){
 				conditionList.add(EntityCondition.makeCondition("partyId", EntityOperator.EQUALS,parameters.employeeId));
 			}else{
-				conditionList.add(EntityCondition.makeCondition("partyId", EntityOperator.IN,empIds));
+			conditionList.add(EntityCondition.makeCondition("partyId", EntityOperator.IN,empIds));
 			}
 			conditionList.add(EntityCondition.makeCondition("leaveTypeId", EntityOperator.EQUALS, leaveTypeId));
 			conditionList.add(EntityCondition.makeCondition("fromDate",EntityOperator.GREATER_THAN_EQUAL_TO,fromDate));
@@ -154,7 +155,7 @@ if(UtilValidate.isNotEmpty(leaveTypeIds)){
 								balance = emplLeaveBalance.getAt(empLeaves.get("leaveTypeId"));
 						}else{
 							leaveBalances = delegator.findByAnd("EmplLeaveBalanceStatus",[partyId:empLeaves.get("partyId"),customTimePeriodId:customTimePeriodId,leaveTypeId:empLeaves.get("leaveTypeId")],["openingBalance"]);
-							if(UtilValidate.isNotEmpty(leaveBalances) && leaveTypeId=="CL" || leaveTypeId=="EL" || leaveTypeId=="HPL"){
+							if(UtilValidate.isNotEmpty(leaveBalances) && (leaveTypeId=="CL" || leaveTypeId=="EL" || leaveTypeId=="HPL")){
 								balance=leaveBalances.get(0).openingBalance;
 							}
 						}

@@ -35,4 +35,18 @@ finAccCond = EntityCondition.makeCondition(conditionList,EntityOperator.AND);
 companyAccList = delegator.findList("FinAccount", finAccCond, null, null, null, false);
 context.put("companyAccList",companyAccList);
 
+nowTimeStamp = UtilDateTime.nowTimestamp();
+conditionList.clear();
+conditionList.add(EntityCondition.makeCondition("periodTypeId", EntityOperator.EQUALS ,"HR_MONTH"));
+conditionList.add(EntityCondition.makeCondition("fromDate", EntityOperator.LESS_THAN_EQUAL_TO ,UtilDateTime.toSqlDate(nowTimeStamp)));
+cond = EntityCondition.makeCondition(conditionList,EntityOperator.AND);
+customTimeList = delegator.findList("CustomTimePeriod", cond, null , UtilMisc.toList("-fromDate"), null, false);
+context.put("defaultTimePeriodId","");
+if(customTimeList){
+	defaultTimePeriodId = (EntityUtil.getFirst(customTimeList)).get("customTimePeriodId");
+	context.put("defaultTimePeriodId",defaultTimePeriodId);
+}
+
+
+
 

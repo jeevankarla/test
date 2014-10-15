@@ -1555,7 +1555,7 @@ under the License.
 	  <field name="overridenBy" type="id-vlong"></field>
 	  <field name="totalWorkMin" type="fixed-point"/><!-- this is to capture total working time for the shift -->
 	  <field name="extraMin" type="fixed-point"/>
-	  <field name="encashmentStatus" type="id"/>
+	  <field name="encashmentStatus" type="id" enable-audit-log="true"/>
 	  <field name="emplLeaveApplId" type="id"/>
 	  <field name="overrideReason" type="id"></field>
 	  <prim-key field="partyId"/>

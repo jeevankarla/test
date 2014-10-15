@@ -664,10 +664,23 @@ public static Map emplDailyPunchReport(DispatchContext dctx, Map context) {
 				String EmployeeId = ((emplPunchIn.get("partyId")).toString());
 				String EmployeeName = PartyHelper.getPartyName(delegator,
 						EmployeeId, false);
-                
+				GenericValue employeeDetail = delegator.findOne("EmployeeDetail", UtilMisc.toMap("partyId",partyId), true);
 				emplPunchMap.put("Employee", EmployeeName);
 				emplPunchMap.put("inTime",(emplPunchIn.getTime("punchtime").getHours())+":"+(emplPunchIn.getTime("punchtime").getMinutes()));
 				//emplPunchMap.put("inTime", emplPunchIn.getString("punchtime"));
+				String inPunchTime = (emplPunchIn.get("punchtime")).toString();
+			     if(UtilValidate.isNotEmpty(employeeDetail.getString("companyBus")) && employeeDetail.getString("companyBus").equalsIgnoreCase("Y") && UtilValidate.isNotEmpty(emplPunchIn.getString("shiftType"))){
+			    	 List condList = FastList.newInstance();
+						condList.add(EntityCondition.makeCondition(EntityCondition.makeCondition("isDefault", EntityOperator.EQUALS, "Y"),EntityOperator.AND ,EntityCondition.makeCondition("isDefault", EntityOperator.NOT_EQUAL, null)));
+						condList.add(EntityCondition.makeCondition("shiftTypeId", EntityOperator.EQUALS, emplPunchIn.getString("shiftType")));
+						EntityCondition cond = EntityCondition.makeCondition(condList,EntityOperator.AND);
+						//punchTime 
+						List<GenericValue> workShiftTypePeriodAndMap = delegator.findList("WorkShiftTypePeriodAndMap", cond, null, UtilMisc.toList("-startTime"),null, false); 
+						if(UtilValidate.isNotEmpty(workShiftTypePeriodAndMap)){
+							inPunchTime = (EntityUtil.getFirst(workShiftTypePeriodAndMap)).getString("startTime");
+						}
+						 
+			     }
 				for (GenericValue emplPunchOut : finalPunchOUT) {
 					if (emplPunchIn.get("partyId").equals(
 							emplPunchOut.get("partyId"))) {
@@ -682,7 +695,7 @@ public static Map emplDailyPunchReport(DispatchContext dctx, Map context) {
 							    Timestamp.valueOf(
 							        new SimpleDateFormat("yyyy-MM-dd ")
 							        .format(emplPunchIn.getDate("punchdate")) // get the current date as String
-							        .concat((emplPunchIn.get("punchtime")).toString())        // and append the time
+							        .concat(inPunchTime)        // and append the time
 							    );
 						Timestamp punchOutTimestamp =
 							    Timestamp.valueOf(

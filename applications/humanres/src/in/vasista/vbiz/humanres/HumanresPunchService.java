@@ -275,7 +275,7 @@ public class HumanresPunchService {
 	  	    	if (UtilValidate.isNotEmpty(tenantShiftThreshold)) {
 	  	    		shiftThreshold = (new Double(tenantShiftThreshold.getString("propertyValue"))).intValue();
 	  	    	}
-	  	    	GenericValue employeeDetail = delegator.findOne("EmployeeDetail", UtilMisc.toMap("partyId",partyId), true);
+	  	    	GenericValue employeeDetail = delegator.findOne("EmployeeDetail", UtilMisc.toMap("partyId",partyId), false);
 	  	    	
 	  	    	
 				Time punchtime = UtilDateTime.toSqlTime(UtilDateTime.toDateString(punchDateTime, "HH:mm:ss"));

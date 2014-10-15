@@ -137,7 +137,7 @@ function makeDatePicker1(fromDateId ,thruDateId){
 							<td width="35%">Organization Id 
 								<select name="partyIdFrom" class='h4'>
 									<#list orgList as org>    
-									<option value='${org.partyId}'>${org.groupName?if_exists}</option>
+									    <option value='${org.partyId}'>${org.groupName?if_exists}</option>
 									</#list> 
 								</select>
 							</td>	
@@ -214,7 +214,15 @@ function makeDatePicker1(fromDateId ,thruDateId){
 							</td>	
 							<td width="15%">Period Id
 								<select name="customTimePeriodId" id="customTimePeriodId" class='h4'>
-									<#list customTimePeriodList as customTimePeriod><option value='${customTimePeriod.customTimePeriodId?if_exists}' >${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(customTimePeriod.fromDate, "dd MMMMM, yyyy")} -${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(customTimePeriod.thruDate, "dd MMMMM, yyyy")}</option></#list>
+									<#list customTimePeriodList as customTimePeriod>
+									 <#if defaultTimePeriodId?exists && (defaultTimePeriodId == customTimePeriod.customTimePeriodId)>
+				      					<option value='${customTimePeriod.customTimePeriodId?if_exists}' selected="selected">${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(customTimePeriod.fromDate, "dd MMMMM, yyyy")} -${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(customTimePeriod.thruDate, "dd MMMMM, yyyy")}</option>
+				      					<#else>
+				      						<option value='${customTimePeriod.customTimePeriodId?if_exists}' >${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(customTimePeriod.fromDate, "dd MMMMM, yyyy")} -${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(customTimePeriod.thruDate, "dd MMMMM, yyyy")}</option>
+				                  		</option>
+				      				</#if>
+									 
+									</#list>
 								</select>
 							</td>	
 							<td width="10%"></td>
@@ -233,6 +241,7 @@ function makeDatePicker1(fromDateId ,thruDateId){
 							</td>	
 							<td width="10%"></td>
 							<td width="10%"><input type="submit" value="Download" class="buttontext"></td>
+						
 						</form>											
 					</tr> -->
 				</table>
@@ -449,7 +458,14 @@ function makeDatePicker1(fromDateId ,thruDateId){
 										</td>
 										<td width="40%"><span class='h3'>Period Id</span>
 										<select name="customTimePeriodId" id="customTimePeriodId" class='h4'>
-											<#list customTimePeriodList as customTimePeriod><option value='${customTimePeriod.customTimePeriodId?if_exists}' >${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(customTimePeriod.fromDate, "dd MMMMM, yyyy")} -${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(customTimePeriod.thruDate, "dd MMMMM, yyyy")}</option></#list>
+											<#list customTimePeriodList as customTimePeriod>
+												 <#if defaultTimePeriodId?exists && (defaultTimePeriodId == customTimePeriod.customTimePeriodId)>
+							      					<option value='${customTimePeriod.customTimePeriodId?if_exists}' selected="selected">${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(customTimePeriod.fromDate, "dd MMMMM, yyyy")} -${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(customTimePeriod.thruDate, "dd MMMMM, yyyy")}</option>
+							      					<#else>
+							      						<option value='${customTimePeriod.customTimePeriodId?if_exists}' >${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(customTimePeriod.fromDate, "dd MMMMM, yyyy")} -${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(customTimePeriod.thruDate, "dd MMMMM, yyyy")}</option>
+							                  		</option>
+							      				</#if>
+											</#list>
 										</select>
 									</td>	
 									<td width="7%"><span class='h3'><input type="submit" value="Download" class="buttontext"></span></td>
@@ -479,7 +495,15 @@ function makeDatePicker1(fromDateId ,thruDateId){
 									</td>
 									<td width="35%"><span class='h3'>Period Id
 										<select name="customTimePeriodId" id="customTimePeriodId" class='h4'>
-											<#list customTimePeriodList?sort_by("fromDate") as customTimePeriod><option value='${customTimePeriod.customTimePeriodId?if_exists}' >${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(customTimePeriod.fromDate, "dd MMMMM, yyyy")} -${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(customTimePeriod.thruDate, "dd MMMMM, yyyy")}</option></#list>
+											<#list customTimePeriodList as customTimePeriod>
+												 <#if defaultTimePeriodId?exists && (defaultTimePeriodId == customTimePeriod.customTimePeriodId)>
+							      					<option value='${customTimePeriod.customTimePeriodId?if_exists}' selected="selected">${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(customTimePeriod.fromDate, "dd MMMMM, yyyy")} -${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(customTimePeriod.thruDate, "dd MMMMM, yyyy")}</option>
+							      					<#else>
+							      						<option value='${customTimePeriod.customTimePeriodId?if_exists}' >${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(customTimePeriod.fromDate, "dd MMMMM, yyyy")} -${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(customTimePeriod.thruDate, "dd MMMMM, yyyy")}</option>
+							                  		</option>
+							      				</#if>
+												 
+											</#list>
 										</select></span>
 									</td>
 									<td width="10%"><span class='h4'><input type="submit" value="PDF" onClick="javascript:appendParams('MonthlyBankAdviceStatement', '<@ofbizUrl>EmployeeBankDetailsPdf.pdf</@ofbizUrl>');" class="buttontext"/>
@@ -505,7 +529,15 @@ function makeDatePicker1(fromDateId ,thruDateId){
 									<td width="35%"><span class='h3'>Period Id</span>
 										<select name="customTimePeriodId" id="customTimePeriodId" class='h5'>
 											<#assign customTimePeriodList=customTimePeriodList?sort>
-											<#list customTimePeriodList?sort_by("fromDate") as customTimePeriod><option value='${customTimePeriod.customTimePeriodId?if_exists}' >${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(customTimePeriod.fromDate, "dd MMMMM, yyyy")} -${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(customTimePeriod.thruDate, "dd MMMMM, yyyy")}</option></#list>
+											<#list customTimePeriodList as customTimePeriod>
+											 <#if defaultTimePeriodId?exists && (defaultTimePeriodId == customTimePeriod.customTimePeriodId)>
+						      					<option value='${customTimePeriod.customTimePeriodId?if_exists}' selected="selected">${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(customTimePeriod.fromDate, "dd MMMMM, yyyy")} -${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(customTimePeriod.thruDate, "dd MMMMM, yyyy")}</option>
+						      					<#else>
+						      						<option value='${customTimePeriod.customTimePeriodId?if_exists}' >${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(customTimePeriod.fromDate, "dd MMMMM, yyyy")} -${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(customTimePeriod.thruDate, "dd MMMMM, yyyy")}</option>
+						                  		</option>
+						      				</#if>
+									 
+									      </#list>
 										</select>
 									</td>
 									<td width="15%"><span class='h3'>Employee Id<input type="text" id="PartyId" size="10pt" name="employeeId"/></span></td>
@@ -522,7 +554,14 @@ function makeDatePicker1(fromDateId ,thruDateId){
 									<td width="29%"><span class='h3'>Employee Id<input type="text" id="PartyId" size="10pt" name="employeeId"/></span></td>
 									<td width="40%"><span class='h3'>Period Id</span>
 										<select name="customTimePeriodId" id="customTimePeriodId" class='h5' >
-											<#list customTimePeriodList?sort_by("fromDate") as customTimePeriod><option value='${customTimePeriod.customTimePeriodId?if_exists}' >${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(customTimePeriod.fromDate, "dd MMMMM, yyyy")} -${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(customTimePeriod.thruDate, "dd MMMMM, yyyy")}</option></#list>
+											<#list customTimePeriodList as customTimePeriod>
+												 <#if defaultTimePeriodId?exists && (defaultTimePeriodId == customTimePeriod.customTimePeriodId)>
+							      					<option value='${customTimePeriod.customTimePeriodId?if_exists}' selected="selected">${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(customTimePeriod.fromDate, "dd MMMMM, yyyy")} -${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(customTimePeriod.thruDate, "dd MMMMM, yyyy")}</option>
+							      					<#else>
+							      						<option value='${customTimePeriod.customTimePeriodId?if_exists}' >${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(customTimePeriod.fromDate, "dd MMMMM, yyyy")} -${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(customTimePeriod.thruDate, "dd MMMMM, yyyy")}</option>
+							                  		</option>
+							      				</#if>
+									        </#list>
 										</select>
 									</td>
 									<td width="15%"><span class='h3'><input type="submit" value="PDF" onClick="javascript:appendParams('EmployeeWiseSalaryDetails', '<@ofbizUrl>EmployeeWiseSalaryDetailsPdf.pdf</@ofbizUrl>');" class="buttontext"/>
@@ -557,7 +596,14 @@ function makeDatePicker1(fromDateId ,thruDateId){
 									<td width="13%"><span class='h3'>GSLIS Report</span></td>
 									<td width="45%"><span class='h3'>Period Id</span>
 										<select name="customTimePeriodId" id="customTimePeriodId" class='h5' >
-											<#list customTimePeriodList?sort_by("fromDate") as customTimePeriod><option value='${customTimePeriod.customTimePeriodId?if_exists}' >${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(customTimePeriod.fromDate, "dd MMMMM, yyyy")} -${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(customTimePeriod.thruDate, "dd MMMMM, yyyy")}</option></#list>
+											<#list customTimePeriodList as customTimePeriod>
+												 <#if defaultTimePeriodId?exists && (defaultTimePeriodId == customTimePeriod.customTimePeriodId)>
+							      					<option value='${customTimePeriod.customTimePeriodId?if_exists}' selected="selected">${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(customTimePeriod.fromDate, "dd MMMMM, yyyy")} -${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(customTimePeriod.thruDate, "dd MMMMM, yyyy")}</option>
+							      					<#else>
+							      						<option value='${customTimePeriod.customTimePeriodId?if_exists}' >${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(customTimePeriod.fromDate, "dd MMMMM, yyyy")} -${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(customTimePeriod.thruDate, "dd MMMMM, yyyy")}</option>
+							                  		</option>
+							      				</#if>
+									        </#list>
 										</select>
 									</td>
 									<td width="10%"><span class='h3'><input type="submit" value="Download" class="buttontext"></span></td>
@@ -594,7 +640,14 @@ function makeDatePicker1(fromDateId ,thruDateId){
 									</td>	
 									<td width="30%"><span class='h3'>Period Id
 										<select name="customTimePeriodId" id="customTimePeriodId" class='h4'>
-											<#list customTimePeriodList as customTimePeriod><option value='${customTimePeriod.customTimePeriodId?if_exists}' >${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(customTimePeriod.fromDate, "dd MMMMM, yyyy")} -${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(customTimePeriod.thruDate, "dd MMMMM, yyyy")}</option></#list>
+											<#list customTimePeriodList as customTimePeriod>
+												 <#if defaultTimePeriodId?exists && (defaultTimePeriodId == customTimePeriod.customTimePeriodId)>
+							      					<option value='${customTimePeriod.customTimePeriodId?if_exists}' selected="selected">${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(customTimePeriod.fromDate, "dd MMMMM, yyyy")} -${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(customTimePeriod.thruDate, "dd MMMMM, yyyy")}</option>
+							      					<#else>
+							      						<option value='${customTimePeriod.customTimePeriodId?if_exists}' >${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(customTimePeriod.fromDate, "dd MMMMM, yyyy")} -${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(customTimePeriod.thruDate, "dd MMMMM, yyyy")}</option>
+							                  		</option>
+							      				</#if>
+											</#list>
 										</select></span>
 									</td>	
 									<td width="5%"></td>
@@ -652,7 +705,14 @@ function makeDatePicker1(fromDateId ,thruDateId){
 									<td>
 									<span class='h6'>
 										<select name="customTimePeriodId" id="customTimePeriodId" class='h4'>
-											<#list customTimePeriodList?sort_by("fromDate") as customTimePeriod><option value='${customTimePeriod.customTimePeriodId?if_exists}' >${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(customTimePeriod.fromDate, "dd MMMMM, yyyy")} -${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(customTimePeriod.thruDate, "dd MMMMM, yyyy")}</option></#list>
+											<#list customTimePeriodList as customTimePeriod>
+											 <#if defaultTimePeriodId?exists && (defaultTimePeriodId == customTimePeriod.customTimePeriodId)>
+						      					<option value='${customTimePeriod.customTimePeriodId?if_exists}' selected="selected">${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(customTimePeriod.fromDate, "dd MMMMM, yyyy")} -${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(customTimePeriod.thruDate, "dd MMMMM, yyyy")}</option>
+						      					<#else>
+						      						<option value='${customTimePeriod.customTimePeriodId?if_exists}' >${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(customTimePeriod.fromDate, "dd MMMMM, yyyy")} -${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(customTimePeriod.thruDate, "dd MMMMM, yyyy")}</option>
+						                  		</option>
+						      				</#if>
+											</#list>
 										</select>
 									</span>
 									</td>
@@ -717,7 +777,15 @@ function makeDatePicker1(fromDateId ,thruDateId){
 										</td>
 										<td width="32%"><span class='h3'>Period Id</span>
 											<select name="customTimePeriodId" id="customTimePeriodId" class='h4'>
-											<#list customTimePeriodList as customTimePeriod><option value='${customTimePeriod.customTimePeriodId?if_exists}' >${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(customTimePeriod.fromDate, "dd MMMMM, yyyy")} -${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(customTimePeriod.thruDate, "dd MMMMM, yyyy")}</option></#list>
+											    <#list customTimePeriodList as customTimePeriod>
+												 <#if defaultTimePeriodId?exists && (defaultTimePeriodId == customTimePeriod.customTimePeriodId)>
+							      					<option value='${customTimePeriod.customTimePeriodId?if_exists}' selected="selected">${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(customTimePeriod.fromDate, "dd MMMMM, yyyy")} -${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(customTimePeriod.thruDate, "dd MMMMM, yyyy")}</option>
+							      					<#else>
+							      						<option value='${customTimePeriod.customTimePeriodId?if_exists}' >${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(customTimePeriod.fromDate, "dd MMMMM, yyyy")} -${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(customTimePeriod.thruDate, "dd MMMMM, yyyy")}</option>
+							                  		</option>
+							      				</#if>
+												 
+											</#list>
 										</select>
 										</td>	
 										<td width="15%"><span class='h3'><input type="submit" value="Download" class="buttontext"></span></td> 
@@ -734,7 +802,14 @@ function makeDatePicker1(fromDateId ,thruDateId){
 									<td width="29%"></td>
 									<td width="30%"><span class='h3'>Period Id
 										<select name="customTimePeriodId" id="customTimePeriodId" class='h4'>
-											<#list customTimePeriodList as customTimePeriod><option value='${customTimePeriod.customTimePeriodId?if_exists}' >${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(customTimePeriod.fromDate, "dd MMMMM, yyyy")} -${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(customTimePeriod.thruDate, "dd MMMMM, yyyy")}</option></#list>
+											<#list customTimePeriodList as customTimePeriod>
+												 <#if defaultTimePeriodId?exists && (defaultTimePeriodId == customTimePeriod.customTimePeriodId)>
+							      					<option value='${customTimePeriod.customTimePeriodId?if_exists}' selected="selected">${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(customTimePeriod.fromDate, "dd MMMMM, yyyy")} -${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(customTimePeriod.thruDate, "dd MMMMM, yyyy")}</option>
+							      					<#else>
+							      						<option value='${customTimePeriod.customTimePeriodId?if_exists}' >${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(customTimePeriod.fromDate, "dd MMMMM, yyyy")} -${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(customTimePeriod.thruDate, "dd MMMMM, yyyy")}</option>
+							                  		</option>
+							      				</#if>
+											</#list>
 										</select></span>
 									</td>
 									<td width="15%"><span class='h3'><input type="submit" value="Download" class="buttontext"></span></td>
@@ -749,7 +824,15 @@ function makeDatePicker1(fromDateId ,thruDateId){
 									<td width="20%"><span class='h3'>ESI Monthly statement</span></td>
 									<td width="30%"><span class='h3'>Period Id
 										<select name="customTimePeriodId" id="customTimePeriodId" class='h4'>
-											<#list customTimePeriodList as customTimePeriod><option value='${customTimePeriod.customTimePeriodId?if_exists}' >${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(customTimePeriod.fromDate, "dd MMMMM, yyyy")} -${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(customTimePeriod.thruDate, "dd MMMMM, yyyy")}</option></#list>
+											<#list customTimePeriodList as customTimePeriod>
+												 <#if defaultTimePeriodId?exists && (defaultTimePeriodId == customTimePeriod.customTimePeriodId)>
+							      					<option value='${customTimePeriod.customTimePeriodId?if_exists}' selected="selected">${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(customTimePeriod.fromDate, "dd MMMMM, yyyy")} -${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(customTimePeriod.thruDate, "dd MMMMM, yyyy")}</option>
+							      					<#else>
+							      						<option value='${customTimePeriod.customTimePeriodId?if_exists}' >${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(customTimePeriod.fromDate, "dd MMMMM, yyyy")} -${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(customTimePeriod.thruDate, "dd MMMMM, yyyy")}</option>
+							                  		</option>
+							      				</#if>
+											 
+											</#list>
 										</select></span>
 									</td>	
 									<td width="15%"><span class='h3'><input type="submit" value="Download" class="buttontext"></span></td> 

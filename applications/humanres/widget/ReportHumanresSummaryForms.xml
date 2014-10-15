@@ -880,6 +880,7 @@
     	<drop-down allow-empty="true">
     		<entity-options entity-name="Enumeration" key-field-name="enumId" description="${description}">
     			<entity-constraint name="enumTypeId" operator="equals" value="ENCASHMENT_STATUS"/>
+    			<entity-constraint name="enumId" operator="not-equals" value="LEAVE_ENCASHMENT"/>
     		</entity-options>
     	</drop-down>
     	</field>
