@@ -529,6 +529,68 @@
             </hyperlink>
         </field>
 	</form>
+	 <form name="ListSuplyPayrollBilling" type="list" list-name="periodBillingList" odd-row-style="alternate-row"	default-table-style="basic-table hover-bar">
+		<actions>		    
+		    <entity-condition entity-name="PeriodBillingAndCustomTimePeriod" list="periodBillingList">
+		    	<condition-list combine="and">
+		    		<condition-expr field-name="billingTypeId" operator="equals" value="SP_MED_REIMB"/>
+		    		<condition-expr field-name="statusId" operator="not-equals" value="COM_CANCELLED"/>
+		    	</condition-list>
+		    	<order-by field-name="-thruDate"/>
+		    </entity-condition>
+			<script location="component://humanres/webapp/humanres/WEB-INF/actions/reports/employeePersonalProfile.groovy"/>
+			<set field="partyId" value="${partyId}"/>
+			<set field="nowTimeStamp" value="${groovy: return org.ofbiz.base.util.UtilDateTime.nowTimestamp()}"/>
+		</actions>
+		<field name="periodBillingId" title="Payroll Id">
+			<display description="${periodBillingId}" />
+		</field>
+		<field name="partyId" title="Department Id">
+			<display-entity entity-name="PartyGroup" key-field-name="partyId" description="${groupName}"></display-entity>
+		</field>
+		<field name="customTimePeriodId" title="Payroll Period">
+			<display-entity entity-name="CustomTimePeriod" description="${groovy:org.ofbiz.base.util.UtilDateTime.toDateString(fromDate, &quot;dd MMMMM, yyyy&quot;);} - ${groovy:org.ofbiz.base.util.UtilDateTime.toDateString(thruDate, &quot;dd MMMMM, yyyy&quot;);}"></display-entity>
+		</field>
+		<field name="statusId" title = "Status">
+          <display-entity entity-name="StatusItem" key-field-name="statusId" description="${description}"/>
+        </field>
+        <field use-when="statusId.equals(&quot;GENERATED&quot;)|| statusId.equals(&quot;APPROVED&quot;)" name="Bank Advice" widget-style="buttontext" >
+            <hyperlink target="EmployeeBankDetailsPdf.pdf" description="Bank Advice Report"  target-window="_BLANK">
+             	<parameter param-name="periodBillingId" from-field="periodBillingId"/>
+        		<parameter param-name="customTimePeriodId" from-field="customTimePeriodId"/>
+        		<parameter param-name="partyIdFrom" value="Company"/>
+        		<parameter param-name="billingTypeId" value="${billingTypeId}"/>
+            </hyperlink>
+        </field>        
+        <field use-when="statusId.equals(&quot;GENERATED&quot;)" name="approve" widget-style="buttontext cancel">
+			<hyperlink target="setPeriodBillingStatus" description="approve">
+	        	<parameter param-name="periodBillingId" from-field="periodBillingId"/>
+	        	<parameter param-name="statusId" value="APPROVED"/>
+	        	<parameter param-name="lastModifiedDate" value="${nowTimeStamp}"/>
+	        	<parameter param-name="lastModifiedByUserLogin" from-field="userLogin.userLoginId"/>
+	        </hyperlink>
+        </field>
+		
+        <field use-when="statusId.equals(&quot;GENERATED&quot;)" name="cancel" widget-style="buttontext cancel">
+			<hyperlink target="cancelPayrollBilling" description="Cancel" confirmation-message="Are You Sure You Want To Cancel">
+	        	<parameter param-name="periodBillingId" from-field="periodBillingId"/>
+	        </hyperlink>
+        </field>
+        <field use-when="statusId.equals(&quot;APPROVED&quot;)" name="reject" widget-style="buttontext cancel">
+			<hyperlink target="setPeriodBillingStatus" description="Reject" >
+	        	<parameter param-name="periodBillingId" from-field="periodBillingId"/>
+	        	<parameter param-name="statusId" value="GENERATED"/>
+	        	<parameter param-name="lastModifiedDate" value="${nowTimeStamp}"/>
+	        	<parameter param-name="lastModifiedByUserLogin" from-field="userLogin.userLoginId"/>
+	        </hyperlink>
+        </field>
+        <field use-when="(statusId.equals(&quot;APPROVED&quot;))&amp;&amp; ${groovy:((security.hasEntityPermission(&quot;SENDLVDSMS&quot;, &quot;_VIEW&quot;, session)))}" name="Sendsms" widget-style="buttontext">
+            <hyperlink target="sendPayrollSms" description="Send sms"  target-window="_BLANK" confirmation-message="Are You Sure You Want To send Sms">
+             	<parameter param-name="periodBillingId" from-field="periodBillingId"/>
+             	<parameter param-name="customTimePeriodId" from-field="customTimePeriodId"/>
+            </hyperlink>
+        </field>
+	</form>
 	<form name="createBenefitDeductionCalculator" type="single"  odd-row-style="header-row" default-table-style="basic-table"  target="calculateEmployeeBenefitDeduction">
        	<field name="employeeId">
 			<lookup target-form-name="LookupEmployeeName"/>

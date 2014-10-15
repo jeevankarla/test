@@ -675,6 +675,10 @@ under the License.
         <security https="true" auth="true"/>
         <response name="success" type="view" value="FindPayrollBilling"/>
     </request-map>
+    <request-map uri="EmplSupPayroll">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="EmplSupPayroll"/>
+    </request-map>
    <request-map uri="setPeriodBillingStatus">
         <security https="true" auth="true"/>
         <event type="service" invoke="SetPeriodBillingStatus"/>
@@ -2193,6 +2197,7 @@ under the License.
 	 <view-map name="TDSform16a" type="screenfop" page="component://humanres/widget/ReportHumanresSummaryScreens.xml#TDSform16a" content-type="application/pdf" encoding="none"/>
 	 <view-map name="TDSchallan" type="screenfop" page="component://humanres/widget/ReportHumanresSummaryScreens.xml#TDSchallan" content-type="application/pdf" encoding="none"/>
 	 <view-map name="FindPayrollBilling" type="screen" page="component://humanres/widget/HumanresScreens.xml#FindPayrollBilling"/>
+	 <view-map name="EmplSupPayroll" type="screen" page="component://humanres/widget/HumanresScreens.xml#EmplSupPayroll"/>
 	 <view-map name="EmployeeWisePayrollAnalysis" type="screen" page="component://humanres/widget/HumanresScreens.xml#EmployeeWisePayrollAnalysis"/>
 	 <view-map name="EditVariables" type="screen" page="component://humanres/widget/HumanresScreens.xml#EditVariables"/>
 	 <view-map name="EmployeeWisePayrollAnalysisInternal" type="screen" page="component://humanres/widget/HumanresScreens.xml#EmployeeWisePayrollAnalysisInternal"/>

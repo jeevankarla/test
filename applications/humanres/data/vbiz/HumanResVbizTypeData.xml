@@ -128,6 +128,7 @@
     <EnumerationType description="Period Billing Type" enumTypeId="PBILLING_TYPE" hasTable="N" parentTypeId=""/>
     <Enumeration description="Payroll Period Billing" enumCode="PAYROLL_BILL" enumId="PAYROLL_BILL" sequenceId="01" enumTypeId="PBILLING_TYPE"/>  
     <PeriodType description="Attendane Month" periodTypeId="ATTENDANCE_MONTH" periodLength="1" uomId="TF_mon"/>
+    <PeriodType description="HR Quarter" periodLength="3" periodTypeId="HR_QUARTER" uomId="TF_mon"/> 
     
     <EnumerationType description="Payhead Price Parent Enum Type" enumTypeId="PYHD_PRICE" hasTable="N" parentTypeId=""/>
     <EnumerationType description="Payhead Price Input Parameter" enumTypeId="PYHD_PRICE_IN_PARAM" hasTable="N" parentTypeId="PYHD_PRICE"/>

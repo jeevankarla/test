@@ -750,6 +750,9 @@
         <menu-item name="EmployeeWisePaySheet" title="Employee Wise Pay Sheet">
             <link target="EmployeeWisePaySheet"/>
         </menu-item>
+         <menu-item name="EmplSupPayroll" title="Suply Payroll">
+            <link target="EmplSupPayroll"/>
+        </menu-item>
        <!-- <menu-item name="EditRateAmoutVariables" title="Edit Variables">
             <link target="EditVariables"/>
         </menu-item> -->

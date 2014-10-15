@@ -520,7 +520,50 @@
             </widgets>
         </section>
     </screen>   
-    
+    <screen name="EmplSupPayroll">
+        <section>
+            <actions>
+                <set field="titleProperty" value="Payroll"/>
+                <set field="tabButtonItem" value="FindPayrollBilling"/> 
+ 				<set field="tabButtonItem2" value="EmplSupPayroll" />                  
+                <entity-and list="orgList" entity-name="PartyRoleAndPartyDetail">
+                     <field-map field-name="roleTypeId" value="INTERNAL_ORGANIZATIO"/>
+                     <order-by field-name="partyId"/>
+                </entity-and>
+                <entity-and list="customTimePeriodList" entity-name="CustomTimePeriod">
+                     <field-map field-name="periodTypeId" value="HR_QUARTER"/>
+                     <order-by field-name="-thruDate"/>
+                     <order-by field-name="periodNum"/>
+                </entity-and>
+                 <entity-condition list="payrollTypeList" entity-name="Enumeration">
+                 	<condition-list combine="and">
+                 		<condition-expr field-name="enumId" operator="not-equals" value="CR_INST_BILLING"/>
+                 		<condition-expr field-name="enumId" operator="not-equals" value="PB_HR_ATTN_FINAL"/>
+                 		<condition-expr field-name="enumTypeId" operator="equals" value="PERIOD_BILLING"/>
+                 	</condition-list>
+                 </entity-condition>
+            </actions>            
+            <widgets>
+				<decorator-screen name="HumanresCommonDecorator"
+					location="component://humanres/widget/CommonScreens.xml">
+					<decorator-section name="body">
+					    <include-menu location="component://humanres/widget/HumanresMenus.xml" name="EmplPayrollTabBar"/>                                                        					   					
+                    	<section>
+                    	  <widgets>
+                    	     <container style="button-bar">
+									<platform-specific><html><html-template location="component://humanres/webapp/humanres/humanres/generateSupplyPayrollForm.ftl"/></html></platform-specific>							  	        					
+									<link url-mode="plain" target="javascript:showSuplyPayrollGenerateForm();" text="Generate Suply Payroll" style="buttontext create"  link-type="anchor"/>
+							</container>            					
+            			 	<screenlet title="List Suply Payroll Billing">
+            				<include-form location="component://humanres/widget/ReportHumanresSummaryForms.xml" name="ListSuplyPayrollBilling"/>
+            			</screenlet>
+                  </widgets>
+               </section>
+               </decorator-section>         
+               </decorator-screen>    
+            </widgets>
+        </section>
+    </screen> 
 	 <screen name="EmployeeWisePayrollAnalysis">
         <section>
             <actions>
