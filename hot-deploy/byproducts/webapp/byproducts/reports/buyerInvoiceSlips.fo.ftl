@@ -46,6 +46,7 @@ under the License.
 		        <#assign billingAddress = invoiceDetail.get('billingAddress')>
 		        <#assign invoice = invoiceDetail.get('invoice')>
 		        <#assign invoiceItems = invoiceDetail.get('invoiceItems')>
+		        <#assign invoiceNo = invoiceDetail.get('invoiceNo')>
 		        <#assign invoiceTaxItems = invoiceDetail.get('invoiceTaxItems')>
 		        <#assign chapterMap = invoiceDetail.get('chapterMap')>
         		<fo:block>
@@ -70,7 +71,7 @@ under the License.
 					            	<fo:block linefeed-treatment="preserve">&#xA;</fo:block>
 					            	<#assign nowTime = Static["org.ofbiz.base.util.UtilDateTime"].nowTimestamp()>
 					            	<fo:block  keep-together="always" text-align="center" font-size="12pt" white-space-collapse="false">AUTHENTICATED BY: </fo:block>
-					            	<fo:block  keep-together="always" text-align="center" font-size="12pt" white-space-collapse="false">Date: ${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(nowTime, "dd-MMM-yyyy")}</fo:block> 
+					            	<fo:block  keep-together="always" text-align="center" font-size="12pt" white-space-collapse="false">Date: ${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(shipment.get('estimatedShipDate'), "dd-MMM-yyyy")}</fo:block>
 					            	<#--<fo:block  keep-together="always" text-align="center" font-size="13pt" white-space-collapse="false" font-weight="bold">TAX INVOICE</fo:block>-->
 					            	<fo:block linefeed-treatment="preserve">&#xA;</fo:block>
 					            	<fo:block linefeed-treatment="preserve">&#xA;</fo:block>
@@ -82,7 +83,10 @@ under the License.
 					            	<fo:block linefeed-treatment="preserve">&#xA;</fo:block> 
 					            	<fo:block  keep-together="always" text-align="right" font-size="12pt" white-space-collapse="false">Service Tax No: <#if fromPartyDetail?has_content>${fromPartyDetail.get('SERVICETAX_NUMBER')?if_exists}</#if></fo:block> 
 					            	<fo:block  keep-together="always" text-align="right" font-size="12pt" white-space-collapse="false">TIN: <#if fromPartyDetail?has_content>${fromPartyDetail.get('TIN_NUMBER')?if_exists}</#if></fo:block>
-					            	<fo:block  keep-together="always" text-align="right" font-size="12pt" white-space-collapse="false">CST: <#if fromPartyDetail?has_content>${fromPartyDetail.get('CST_NUMBER')?if_exists}</#if></fo:block> 
+					            	<fo:block  keep-together="always" text-align="right" font-size="12pt" white-space-collapse="false">CST: <#if fromPartyDetail?has_content>${fromPartyDetail.get('CST_NUMBER')?if_exists}</#if></fo:block>
+					            	<fo:block  keep-together="always" text-align="right" font-size="10pt" white-space-collapse="false">User Login: <#if userLogin?exists>${userLogin.userLoginId?if_exists}</#if></fo:block>
+					            	<fo:block  keep-together="always" text-align="right" font-size="10pt" white-space-collapse="false">Print Date: ${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(nowTime, "dd/MM/yy HH:mm:ss")}</fo:block> 
+					            	 
 					            </fo:table-cell>
 							</fo:table-row>
 							
@@ -100,7 +104,8 @@ under the License.
             						<fo:block linefeed-treatment="preserve">&#xA;</fo:block>  
             					</fo:table-cell>
             					<fo:table-cell>
-            						<fo:block  keep-together="always" text-align="left" font-size="12pt" white-space-collapse="false">Inv No: ${invoice.get('invoiceId')?if_exists}</fo:block>
+            						<fo:block  keep-together="always" text-align="left" font-size="12pt" white-space-collapse="false">Invoice No: ${invoiceNo?if_exists}</fo:block>
+            						<fo:block  keep-together="always" text-align="left" font-size="12pt" white-space-collapse="false">Internal No: ${invoice.get('invoiceId')?if_exists}</fo:block>
             						<fo:block  keep-together="always" text-align="left" font-size="12pt" white-space-collapse="false">Date: ${Static["org.ofbiz.base.util.UtilDateTime"].toDateString((invoice.get('invoiceDate')), "dd-MMM-yyyy")}</fo:block>
             						<fo:block  keep-together="always" text-align="left" font-size="12pt" white-space-collapse="false">Time: ${Static["org.ofbiz.base.util.UtilDateTime"].toDateString((invoice.get('createdStamp')), "HH:mm:ss")?if_exists}</fo:block>
             						<fo:block linefeed-treatment="preserve">&#xA;</fo:block>  
@@ -207,7 +212,7 @@ under the License.
 					            					</fo:table-cell>
 					            					<fo:table-cell border-style="solid">
 					            						<fo:block  keep-together="always" text-align="left" font-size="12pt" white-space-collapse="false">Date : </fo:block>
-					            						<fo:block  keep-together="always" text-align="left" font-size="12pt" white-space-collapse="false">${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(nowTime, 'dd/MM/yy')}</fo:block>
+					            						<fo:block  keep-together="always" text-align="left" font-size="12pt" white-space-collapse="false">${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(shipment.get('estimatedShipDate'), 'dd/MM/yy')}</fo:block>
 					            					</fo:table-cell>
 												</fo:table-row>
 			            					</fo:table-body>

@@ -101,6 +101,8 @@ invoiceIds.each { invoiceId ->
 	invoiceDetailMap.put("fromPartyDetail", fromPartyDetail);
 	invoiceDetailMap.put("toPartyDetail", toPartyDetail);
 	
+	invoiceSequence = delegator.findList("BillOfSaleInvoiceSequence", EntityCondition.makeCondition("invoiceId", EntityOperator.EQUALS, invoiceId), null, null,null, false);
+	
 	OrderHeader = delegator.findOne("OrderHeader", [orderId: orderId], false);
 	shipmentId = OrderHeader.shipmentId;
 	
@@ -194,6 +196,13 @@ invoiceIds.each { invoiceId ->
 			invoiceTaxItems.put(eachItem.invoiceItemTypeId, eachItem.amount);
 		}
 	}
+	if(invoiceSequence){
+		invoiceNo = (invoiceSequence.get(0)).get("sequenceId");
+	}
+	else{
+		invoiceNo = invoiceId
+	}
+	invoiceDetailMap.put("invoiceNo", invoiceNo);
 	invoiceDetailMap.put("chapterMap", chapterMap);
 	invoiceDetailMap.put("invoiceItems", invoiceItemDetail);
 	invoiceDetailMap.put("invoiceTaxItems", invoiceTaxItems);

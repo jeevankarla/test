@@ -37,6 +37,7 @@ ${setRequestAttribute("OUTPUT_FILENAME", "TaxInvoice.pdf")}
         <#assign shipment = invoiceDetail.get('shipment')>
         <#assign billingAddress = invoiceDetail.get('billingAddress')>
         <#assign invoice = invoiceDetail.get('invoice')>
+        <#assign invoiceNo = invoiceDetail.get('invoiceNo')>
         <#assign invoiceItems = invoiceDetail.get('invoiceItems')>
         <#assign invoiceTaxItems = invoiceDetail.get('invoiceTaxItems')>
 <fo:page-sequence master-reference="main" force-page-count="no-force" font-family="Courier,monospace">					
@@ -102,7 +103,7 @@ ${setRequestAttribute("OUTPUT_FILENAME", "TaxInvoice.pdf")}
 								  <fo:table-row> 
 									 <fo:table-cell> 
 									      <fo:block text-align="center" white-space-collapse="false" font-family="Courier,monospace" font-size="10pt" keep-together="always">Invoice No</fo:block>
-									       <fo:block text-align="center" white-space-collapse="false" font-family="Courier,monospace" font-size="10pt" font-weight="bold" keep-together="always">${invoice.get('invoiceId')?if_exists}</fo:block>
+									       <fo:block text-align="center" white-space-collapse="false" font-family="Courier,monospace" font-size="10pt" font-weight="bold" keep-together="always">${invoiceNo?if_exists}</fo:block>
 			   							  <fo:block text-align="center" white-space-collapse="false" font-family="Courier,monospace" font-size="10pt" keep-together="always">Delivery Note No</fo:block>
 									 		<fo:block text-align="center" white-space-collapse="false" font-family="Courier,monospace" font-size="10pt" keep-together="always" font-weight = "bold">${shipment.get('shipmentId')?if_exists}</fo:block>
 									 </fo:table-cell>   
@@ -178,8 +179,10 @@ ${setRequestAttribute("OUTPUT_FILENAME", "TaxInvoice.pdf")}
 								 </fo:table-row> 
 								  <fo:table-row> 
 									 <fo:table-cell > 
+									      <fo:block text-align="center" white-space-collapse="false" font-family="Courier,monospace" font-size="10pt" keep-together="always">Internal No</fo:block>
+									      <fo:block text-align="center" white-space-collapse="false" font-family="Courier,monospace" font-size="10pt" keep-together="always" font-weight="bold">${invoice.get("invoiceId")?if_exists}</fo:block>
 									      <fo:block text-align="center" white-space-collapse="false" font-family="Courier,monospace" font-size="10pt" keep-together="always">Ref:-Sale Order No</fo:block>
-									      <fo:block linefeed-treatment="preserve">&#xA;</fo:block> 
+									      <fo:block linefeed-treatment="preserve">&#xA;</fo:block>
 									 </fo:table-cell>   
 								 </fo:table-row> 
 							  </fo:table-body>
