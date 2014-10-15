@@ -54,19 +54,50 @@ import org.ofbiz.party.party.PartyHelper;
 
 finAccountTransList = [];
 finAccountId = parameters.finAccountId;
+amountStr = parameters.amount;
+contraRefNum = parameters.contraRefNum;
+transactionDate = parameters.transactionDate;
+finAccountTransTypeId = parameters.finAccountTransTypeId;
+transDate = null;
+transDateStart = null;
+transDateEnd = null;
+if(UtilValidate.isNotEmpty(transactionDate)){
+	def sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+	try {
+		transDate = new java.sql.Timestamp(sdf.parse(transactionDate+" 00:00:00").getTime());
+	} catch (ParseException e) {
+		Debug.logError(e, "Cannot parse date string: " + transactionDate, "");
+	}
+	transDateStart = UtilDateTime.getDayStart(transDate);
+	transDateEnd = UtilDateTime.getDayEnd(transDate);
+}
 List conditionList=[];
 if(UtilValidate.isNotEmpty(finAccountId)){
 	conditionList.add(EntityCondition.makeCondition("finAccountId", EntityOperator.EQUALS, finAccountId));
-	conditionList.add(EntityCondition.makeCondition("finAccountTransTypeId", EntityOperator.EQUALS, "WITHDRAWAL"));
-	conditionList.add(EntityCondition.makeCondition("reasonEnumId", EntityOperator.EQUALS, "FATR_CONTRA"));
-	conditionList.add(EntityCondition.makeCondition("statusId", EntityOperator.EQUALS, "FINACT_TRNS_CREATED"));
-	condition=EntityCondition.makeCondition(conditionList,EntityOperator.AND);
-	finAccountTransList = delegator.findList("FinAccountTrans", condition , null, null, null, false );
-	if(UtilValidate.isNotEmpty(finAccountTransList)){
-		context.put("finAccountTransList",finAccountTransList);
-	}
 }
-
+if(UtilValidate.isNotEmpty(amountStr)){
+	BigDecimal amount = new BigDecimal(amountStr);
+	conditionList.add(EntityCondition.makeCondition("amount", EntityOperator.EQUALS, amount));
+}
+if(UtilValidate.isNotEmpty(contraRefNum)){
+	conditionList.add(EntityCondition.makeCondition("contraRefNum", EntityOperator.EQUALS, contraRefNum));
+}
+if(UtilValidate.isNotEmpty(transactionDate)){
+	conditionList.add(EntityCondition.makeCondition("transactionDate", EntityOperator.GREATER_THAN_EQUAL_TO, transDateStart));
+	conditionList.add(EntityCondition.makeCondition("transactionDate", EntityOperator.LESS_THAN_EQUAL_TO, transDateEnd));
+}
+if(UtilValidate.isNotEmpty(finAccountTransTypeId)){
+	conditionList.add(EntityCondition.makeCondition("finAccountTransTypeId", EntityOperator.EQUALS, finAccountTransTypeId));
+}else{
+	conditionList.add(EntityCondition.makeCondition("finAccountTransTypeId", EntityOperator.EQUALS, "WITHDRAWAL"));
+}
+conditionList.add(EntityCondition.makeCondition("reasonEnumId", EntityOperator.EQUALS, "FATR_CONTRA"));
+conditionList.add(EntityCondition.makeCondition("statusId", EntityOperator.EQUALS, "FINACT_TRNS_CREATED"));
+condition=EntityCondition.makeCondition(conditionList,EntityOperator.AND);
+finAccountTransList = delegator.findList("FinAccountTrans", condition , null, null, null, false );
+if(UtilValidate.isNotEmpty(finAccountTransList)){
+	context.put("finAccountTransList",finAccountTransList);
+}
 
 
 

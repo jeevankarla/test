@@ -61,7 +61,10 @@ if(UtilValidate.isNotEmpty(acctgTransId)){
 }
 context.put("accountingTransEntryList",accountingTransEntryList);
 
-
+if(UtilValidate.isNotEmpty(parameters.reportTypeFlag)){
+	reportTypeFlag = parameters.reportTypeFlag;
+	context.put("reportTypeFlag",reportTypeFlag);
+}
 
 
 

@@ -228,7 +228,7 @@ under the License.
     	<field name="hideSearch"><hidden value="Y" /></field>
 		<field name="noConditionFind"><hidden value="N"/><!-- if this isn't there then with all fields empty no query will be done --></field>
     	<field name="finAccountId" title="From Financial Account" >
-            <drop-down>
+            <drop-down allow-empty="true">
                 <entity-options entity-name="FinAccount" description="${finAccountName}" key-field-name="finAccountId">
                    <entity-constraint name="organizationPartyId" value="Company"/> 
                     <entity-constraint name="ownerPartyId" value="Company"/>
@@ -237,8 +237,15 @@ under the License.
                 </entity-options>
             </drop-down>
         </field>
-        <field name="amount"><text></text></field>
+        <field name="transactionDate"><date-time type="timestamp"/></field>
+        <field name="amount" ><text ></text></field>
         <field name="contraRefNum"><text></text></field>
+        <field name="finAccountTransTypeId">
+        	<drop-down allow-empty="false">
+        		<option key="WITHDRAWAL" description="WITHDRAWAL"/>
+        		<option key="DEPOSIT" description="DEPOSIT"/>
+        	</drop-down>
+        </field>
        	<field name="submitButton" title="${uiLabelMap.CommonFind}" widget-style="smallSubmit"><submit/></field>       
     </form>
     <form name="ListContraEntries" type="list" list-name="finAccountTransList" odd-row-style="alternate-row" 
@@ -254,6 +261,7 @@ under the License.
     	<field name="createTransactionDetailReportPDF" title="Accounting Trans PDF" use-when="${isPosted=='Y'}" widget-style="buttontext">
             <hyperlink target="acctgTransDetailReportPdf.pdf" description="${uiLabelMap.AccountingInvoicePDF}" target-window="_blank">
                 <parameter param-name="finAccountTransId" from-field="finAccountTransId"/>
+                <parameter param-name="reportTypeFlag" value="contraCheque"/>
             </hyperlink>
         </field>
     	<field use-when="&quot;${finAccountTransTypeId}&quot;==&quot;WITHDRAWAL&quot;" name="Print Cheque" widget-style="buttontext" >

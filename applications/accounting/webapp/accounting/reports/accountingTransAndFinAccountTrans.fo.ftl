@@ -24,7 +24,7 @@ under the License.
 <fo:layout-master-set>
 	<fo:simple-page-master master-name="main" page-height="12in" page-width="10in"
             margin-top="0.2in" margin-bottom=".3in" margin-left=".5in" margin-right=".1in">
-        <fo:region-body margin-top="3.7in"/>
+        <fo:region-body margin-top="3.3in"/>
         <fo:region-before extent="1in"/>
         <fo:region-after extent="1in"/>        
     </fo:simple-page-master>   
@@ -64,8 +64,8 @@ under the License.
 		    	    
 					<fo:block  keep-together="always" text-align="center" font-weight = "bold" font-family="Courier,monospace" white-space-collapse="false">KARNATAKA CO-OPERATIVE MILK PRODUCERS FEDERATION LTD</fo:block>
 					<fo:block  keep-together="always" text-align="center" font-weight = "bold" font-family="Courier,monospace" white-space-collapse="false">UNIT: MOTHER DAIRY: G.K.V.K POST,YELAHANKA,BENGALORE:560065</fo:block>
-                    <fo:block text-align="right" linefeed-treatment="preserve">-</fo:block>
-                    <fo:block  keep-together="always" text-align="center" font-weight = "bold" font-family="Courier,monospace" white-space-collapse="false">JOURNAL VOUCHER</fo:block>
+                    <fo:block text-align="right" linefeed-treatment="preserve"></fo:block>
+                    <fo:block  keep-together="always" text-align="center" font-weight = "bold" font-family="Courier,monospace" white-space-collapse="false"><#if reportTypeFlag?has_content && reportTypeFlag == "contraCheque">CONTRA VOUCHER<#else>JOURNAL VOUCHER</#if></fo:block>
                     <fo:block text-align="left"  keep-together="always"  font-weight = "bold" white-space-collapse="false">Date:${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(nowTimestamp, "MMMM dd,yyyy")}&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;UserLogin : <#if userLogin?exists>${userLogin.userLoginId?if_exists}</#if>   </fo:block>
               		<fo:block>-------------------------------------------------------------------------------</fo:block>
             		<fo:block><fo:table>
@@ -136,7 +136,7 @@ under the License.
                     <fo:table-row>
                     		<#if transactionDate?has_content>
                 				<fo:table-cell>
-                            		<fo:block  keep-together="always" text-align="left" >Transaction Date:${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(transactionDate, "MM-dd-yyyy")}</fo:block>  
+                            		<fo:block  keep-together="always" text-align="left" >Transaction Date:${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(transactionDate, "dd-MM-yyyy")}</fo:block>  
                        			</fo:table-cell>
                        			<#else>
                        			<fo:table-cell>
@@ -153,13 +153,11 @@ under the License.
                             		<fo:block  text-align="left"  ></fo:block>  
                        			</fo:table-cell>
                        			</#if>
-                       			
                     </fo:table-row>
                     <fo:table-row>	
-                    
                     <#if postedDate?has_content>
                 				<fo:table-cell>
-                            		<fo:block  text-align="left"  keep-together="always">Posted Date:${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(postedDate, "MM-dd-yyyy")}</fo:block>  
+                            		<fo:block  text-align="left"  keep-together="always">Posted Date:${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(postedDate, "dd-MM-yyyy")}</fo:block>  
                        			</fo:table-cell>
                        			<#else>
                        			<fo:table-cell>
@@ -188,7 +186,7 @@ under the License.
                        			</fo:table-cell>
                        		</#if>
                      
-                     <#if glFiscalTypeId?has_content>
+                     <#--<#if glFiscalTypeId?has_content>
                     		<fo:table-cell>
                             		<fo:block  keep-together="always" text-align="left" >Fiscal GL Type Id:${glFiscalTypeId?if_exists}</fo:block>  
                        		</fo:table-cell>
@@ -196,7 +194,7 @@ under the License.
                        			<fo:table-cell>
                             		<fo:block  text-align="left"  ></fo:block>  
                        			</fo:table-cell>
-                       		</#if>
+                       		</#if>-->
                        		
                      </fo:table-row>
                      <fo:table-row>	
@@ -342,7 +340,32 @@ under the License.
                             		<fo:block  text-align="left"  ></fo:block>  
                        			</fo:table-cell>
                        		</#if>
-                     </fo:table-row>  
+                     </fo:table-row>
+                     <#if reportTypeFlag?has_content>
+                     	<#assign finAccountTransDetails = delegator.findOne("FinAccountTrans", {"finAccountTransId" : finAccountTransId}, false)?if_exists/>
+                    	<#if finAccountTransDetails?has_content>
+		                    <fo:table-row>	
+		                     		<#if finAccountTransDetails.contraRefNum?has_content>
+		                     		<fo:table-cell>
+		                            		<fo:block  text-align="left"  keep-together="always">Contra Ref Number:${finAccountTransDetails.contraRefNum?if_exists}</fo:block>  
+		                       		</fo:table-cell>
+		                       		<#else>
+		                       			<fo:table-cell>
+		                            		<fo:block  text-align="left"  ></fo:block>  
+		                       			</fo:table-cell>
+		                       		</#if>
+		                     		<#if finAccountTransDetails.comments?has_content>
+		                    		<fo:table-cell>
+		                            		<fo:block  keep-together="always" text-align="left" >Description:${finAccountTransDetails.comments?if_exists}</fo:block>  
+		                       		</fo:table-cell>
+		                       		<#else>
+		                       			<fo:table-cell>
+		                            		<fo:block  text-align="left"  ></fo:block>  
+		                       			</fo:table-cell>
+		                       		</#if>
+		                     </fo:table-row>
+                      	</#if> 
+                      </#if> 	   
                      </fo:table-body>
                       </fo:table>
             		</fo:block>

@@ -1215,6 +1215,7 @@ reportType:byAccount -->
 			<actions>
 				<property-map resource="AccountingUiLabels" map-name="uiLabelMap"
 					global="true" />
+					<set field="reportTypeFlag" from-field="parameters.reportTypeFlag"/>
 				<script	location="component://accounting/webapp/accounting/WEB-INF/actions/reports/accountingTransAndFinAccountTrans.groovy" />
 				<!-- <set field="acctgTransId" from-field="parameters.acctgTransId" />
 				<entity-one entity-name="AcctgTrans" value-field="acctgTrans" />
