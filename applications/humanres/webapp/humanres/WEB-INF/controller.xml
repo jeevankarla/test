@@ -712,7 +712,20 @@ under the License.
         <security https="true" auth="true"/>
         <response name="success" type="view" value="EditVariables"/>
     </request-map>
-    
+    <request-map uri="findVaribles">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="EditVariables"/>
+        <response name="error" type="view" value="EditVariables"/>
+    </request-map>
+    <request-map uri="NewVariable">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="NewVariable"/>
+    </request-map>
+    <request-map uri="deleteVariables">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="deleteVariables"/>
+        <response name="success" type="view" value="EditVariables"/>
+    </request-map>
      <request-map uri="EmployeeWisePayrollAnalysisInternal">
         <security https="true" auth="true"/>
         <response name="success" type="view" value="EmployeeWisePayrollAnalysisInternal"/>
@@ -1756,6 +1769,9 @@ under the License.
     <request-map uri="CashEncashmentReport.pdf"><security https="true" auth="true"/>
 		<response name="success" type="view" value="CashEncashmentReportPDF"></response>    
     </request-map>
+    <request-map uri="GHSSDepatmentCountReport.pdf"><security https="true" auth="true"/>
+		<response name="success" type="view" value="GHSSDepatmentCountReportPDF"></response>    
+    </request-map>
       <request-map uri="MonthlyAttendenceChecklist.pdf">
         <security https="true" auth="true"/>                        
         <response name="success" type="view" value="MonthlyAttendenceChecklist"/>        
@@ -1940,13 +1956,19 @@ under the License.
     	
     <!-- Loan -->
 	
-	<request-map uri="CreateOrUpdateVariables">
+	<request-map uri="CreateRateAmountVariables">
     	<security https="true" auth="true"/>
-    	<event type="service" invoke="CreateOrUpdateVariables"/>
+    	<event type="service" invoke="CreateRateAmountVariables"/>
     	<response name="success" type="view" value="EditVariables"/>
     	<response name="error" type="view" value="EditVariables"/>
     </request-map>
 	
+	<request-map uri="updateRateAmountVariables">
+    	<security https="true" auth="true"/>
+    	<event type="service" invoke="updateRateAmountVariables"/>
+    	<response name="success" type="view" value="EditVariables"/>
+    	<response name="error" type="view" value="EditVariables"/>
+    </request-map>
 	<request-map uri="loan">
        	<security https="true" auth="true"/>
        	<response name="success" type="view" value="loan"></response>
@@ -2200,6 +2222,7 @@ under the License.
 	 <view-map name="EmplSupPayroll" type="screen" page="component://humanres/widget/HumanresScreens.xml#EmplSupPayroll"/>
 	 <view-map name="EmployeeWisePayrollAnalysis" type="screen" page="component://humanres/widget/HumanresScreens.xml#EmployeeWisePayrollAnalysis"/>
 	 <view-map name="EditVariables" type="screen" page="component://humanres/widget/HumanresScreens.xml#EditVariables"/>
+	 <view-map name="NewVariable" type="screen" page="component://humanres/widget/HumanresScreens.xml#NewVariable"/>
 	 <view-map name="EmployeeWisePayrollAnalysisInternal" type="screen" page="component://humanres/widget/HumanresScreens.xml#EmployeeWisePayrollAnalysisInternal"/>
 	 <view-map name="BenefitDeductionCalculator" type="screen" page="component://humanres/widget/ReportHumanresSummaryScreens.xml#BenefitDeductionCalculator"/>
 	 <view-map name="EmployeeDailyAttendance" type="screen" page="component://humanres/widget/ReportHumanresSummaryScreens.xml#EmployeeDailyAttendance"/>
@@ -2223,6 +2246,7 @@ under the License.
     <view-map name="UpComing" type="screen" page="component://humanres/widget/CalendarScreens.xml#CalendarUpcoming"/>
     <view-map name="LeaveAvailedReport" type="screenfop" page="component://humanres/widget/ReportHumanresSummaryScreens.xml#LeaveAvailedReport" content-type="application/pdf" encoding="none" />
     <view-map name="CashEncashmentReportPDF" type="screenfop" page="component://humanres/widget/ReportHumanresSummaryScreens.xml#CashEncashmentReportPDF" content-type="application/pdf" encoding="none" />
+    <view-map name="GHSSDepatmentCountReportPDF" type="screenfop" page="component://humanres/widget/ReportHumanresSummaryScreens.xml#GHSSDepatmentCountReportPDF" content-type="application/pdf" encoding="none" />
     <view-map name="MonthlyAttendenceChecklist" type="screenfop" page="component://humanres/widget/ReportHumanresSummaryScreens.xml#MonthlyAttendenceChecklist" content-type="application/pdf" encoding="none"/>
     <view-map name="EmployeeMisPunchData" type="screenfop" page="component://humanres/widget/ReportHumanresSummaryScreens.xml#EmployeeMisPunchData" content-type="application/pdf" encoding="none"/>
     <view-map name="EmployeesLOPdays" type="screenfop" page="component://humanres/widget/ReportHumanresSummaryScreens.xml#EmployeesLOPdays" content-type="application/pdf" encoding="none"/>

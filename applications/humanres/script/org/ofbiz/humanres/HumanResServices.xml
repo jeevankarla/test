@@ -77,7 +77,10 @@
         <entity-one entity-name="DailyBusTimings" value-field="lookedUpValue"/>
         <remove-value value-field="lookedUpValue"/>
     </simple-method>
-	
+	<simple-method method-name="deleteVariables" short-description="Delete Rate Amount Variable">
+        <entity-one entity-name="RateAmount" value-field="lookedUpValue"/>
+        <remove-value value-field="lookedUpValue"/>
+    </simple-method>
 	<simple-method method-name="AddShiftCalender" short-description="Add Employee Shift Calender">
     	<make-value value-field="newEntity" entity-name="EmployeeShiftCalendar"/>
     	<set-pk-fields map="parameters" value-field="newEntity"/>

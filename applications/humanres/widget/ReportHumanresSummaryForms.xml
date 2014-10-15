@@ -1060,7 +1060,7 @@
     	<field name="extLoanRefNum" title="External Loan Ref Number"><text></text></field>
     	<field name="searchButton" title="${uiLabelMap.CommonFind}" widget-style="smallSubmit"><submit button-type="button"/></field>
     </form>
-     <!-- <form name="EditVariables" type="single" header-row-style="header-row" default-table-style="basic-table" target="CreateOrUpdateVariables" >
+     <form name="EditVariables" type="single" header-row-style="header-row" default-table-style="basic-table" target="CreateRateAmountVariables" >
     	<field name="rateTypeId" title="Rate Type" required-field="true" tooltip="Required" widget-style="required" >
     		<drop-down allow-empty="false">
     			<entity-options description="${description}" key-field-name="rateTypeId" entity-name="RateType">
@@ -1072,7 +1072,36 @@
     	<field name="thruDate" ><date-time type="date"/></field>
     	<field name="rateAmount" required-field="true" widget-style="required" tooltip="Required"><text size="10" /></field>
     	<field name="submitButton" title="${uiLabelMap.CommonCreate}"><submit/></field>
-    </form> -->
+    </form>
+    <form name="FindVariables" type="single" target="findVaribles" > 
+    <field name="rateTypeId" title="Rate Type" required-field="true" tooltip="Required" widget-style="required" >
+    		<drop-down allow-empty="false">
+    			<entity-options description="${description}" key-field-name="rateTypeId" entity-name="RateType">
+					<entity-constraint name="parentTypeId" operator="equals" value="PAYROLL_RATE"/>    			
+    			</entity-options>
+    		</drop-down>
+    	</field>
+    <field name="submitButton" title="${uiLabelMap.CommonFind}" widget-style="smallSubmit"><submit/></field> 
+    </form>
+    <form name="ListVariables" type="list" list-name="VariableList" header-row-style="header-row" default-table-style="basic-table" target="updateRateAmountVariables" separate-columns="true">
+    <field name="rateTypeId" title="Rate Type"><display-entity  entity-name="RateType"  key-field-name="rateTypeId" description="${description}"></display-entity></field>
+    <field name="fromDate"><display description="${groovy:org.ofbiz.base.util.UtilDateTime.toDateString(fromDate, &quot;dd-MM-yyyy&quot;);}"/> </field>
+    <field name="thruDate"><date-time type="date" /></field>
+    <field name="rateAmount" title="Amount" ><text size="10" /></field>
+    <field name="submitButton" title="${uiLabelMap.CommonUpdate}"><submit button-type="button"/></field>
+    <field name="deleteLink" title="Delete" widget-style="buttontext">
+      <hyperlink also-hidden="false" description="${uiLabelMap.CommonDelete}" target="deleteVariables">
+           <parameter param-name="rateTypeId"/>
+           <parameter param-name="rateCurrencyUomId" value="INR"/>
+           <parameter param-name="periodTypeId" value="RATE_HOUR"/>
+           <parameter param-name="workEffortId" value="_NA_"/>
+           <parameter param-name="partyId" value="_NA_"/>
+           <parameter param-name="productId" value="_NA_"/>
+           <parameter param-name="fromDate"/>
+           <parameter param-name="emplPositionTypeId" value="_NA_"/>
+      </hyperlink>
+    </field>
+    </form>
     <form name="ListEmployeeLoans" type="list" list-name="employeeLoanList"  odd-row-style="alternate-row" 
        default-table-style="basic-table hover-bar" target="updateEmployeeLoan">
     	<actions>

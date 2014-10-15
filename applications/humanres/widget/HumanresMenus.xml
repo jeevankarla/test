@@ -753,9 +753,12 @@
          <menu-item name="EmplSupPayroll" title="Suply Payroll">
             <link target="EmplSupPayroll"/>
         </menu-item>
-       <!-- <menu-item name="EditRateAmoutVariables" title="Edit Variables">
+       <menu-item name="EditRateAmoutVariables" title="Edit RateAmount Variables">
+       		<condition>
+            	<if-has-permission permission="HUMANRES" action="_RATEAMT_VAR_CREATE"/>
+            </condition>
             <link target="EditVariables"/>
-        </menu-item> -->
+        </menu-item>
     </menu>    
 
 </menus>

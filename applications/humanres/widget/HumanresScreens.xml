@@ -585,7 +585,70 @@
                 </decorator-screen>
             </widgets>
         </section>
-    </screen>   
+    </screen> 
+    
+    <screen name="EditVariables">
+        <section>
+            <actions>
+                <set field="titleProperty" value="Edit RateAmount Variables"/>
+                <set field="tabButtonItem" value="FindPayrollBilling"/>
+ 				<set field="tabButtonItem2" value="EditRateAmoutVariables" />       
+ 				<entity-and list="VariableList" entity-name="RateAmount">
+ 					<field-map field-name="rateTypeId" from-field="parameters.rateTypeId"/>
+ 				</entity-and>                                    
+            </actions>            
+            <widgets>
+				<decorator-screen name="HumanresCommonDecorator"
+					location="component://humanres/widget/CommonScreens.xml">
+					<decorator-section name="body"> 
+                        <include-menu location="component://humanres/widget/HumanresMenus.xml" name="EmplPayrollTabBar"/>                                                        					   
+                        <section>
+                        	<widgets>
+	                        	<container>
+		                        	<container style="button-bar">
+		                        		<link target="NewVariable" text="Create New Variable" style="buttontext"></link>
+		                        	</container>
+		                        	<container>
+			                        	<screenlet title="Search Options">
+			                        		<include-form location="component://humanres/widget/ReportHumanresSummaryForms.xml" name="FindVariables"/>
+				                        </screenlet>
+				                        <screenlet title="Search Result">
+			                        		<include-form location="component://humanres/widget/ReportHumanresSummaryForms.xml" name="ListVariables"/>
+				                        </screenlet>
+		                        	</container>
+		                        </container>
+                        	</widgets>
+                        </section> 
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>  
+    
+    <screen name="NewVariable">
+        <section>
+            <actions>
+                <set field="titleProperty" value="Edit RateAmount Variables"/>
+                <set field="tabButtonItem" value="FindPayrollBilling"/>
+ 				<set field="tabButtonItem2" value="EditRateAmoutVariables" />                                           
+            </actions>            
+            <widgets>
+				<decorator-screen name="HumanresCommonDecorator"
+					location="component://humanres/widget/CommonScreens.xml">
+					<decorator-section name="body"> 
+                        <include-menu location="component://humanres/widget/HumanresMenus.xml" name="EmplPayrollTabBar"/>                                                        					   
+                        <section>
+                        	<widgets>
+	                        	<screenlet title="Create RateAmount Variables">
+	                        		<include-form location="component://humanres/widget/ReportHumanresSummaryForms.xml" name="EditVariables"/>
+	                        	</screenlet>
+                        	</widgets>
+                        </section> 
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen> 
     
 	 <screen name="EmployeeWisePayrollAnalysisInternal">
         <section>

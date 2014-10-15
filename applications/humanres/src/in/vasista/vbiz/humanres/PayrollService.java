@@ -5147,6 +5147,109 @@ public static Map<String, Object> generateEmployerContributionPayrollBilling(Dis
 		}
 	    result = ServiceUtil.returnSuccess("Successfully Updated!!");
 	    return result;
-	}//end of service
+	}
+	public static Map<String, Object> CreateRateAmountVariables(DispatchContext dctx, Map<String, ? extends Object> context){
+	    Delegator delegator = dctx.getDelegator();
+      LocalDispatcher dispatcher = dctx.getDispatcher();
+      GenericValue userLogin = (GenericValue) context.get("userLogin");
+      String rateTypeId = (String)context.get("rateTypeId");
+      Date fromStartDate =  (Date)context.get("fromDate");
+      Date thruEndDate = (Date)context.get("thruDate");
+      BigDecimal rateAmount = (BigDecimal)context.get("rateAmount");
+      Map result = ServiceUtil.returnSuccess();
+      String rateCurrencyUomId="INR";
+      String periodTypeId="RATE_HOUR";
+      String workEffortId="_NA_";
+      String partyId="_NA_";
+      String productId="_NA_";
+      String emplPositionTypeId="_NA_";
+      Timestamp fromDate=UtilDateTime.toTimestamp(fromStartDate);
+      Timestamp innerThruDate=UtilDateTime.addDaysToTimestamp(UtilDateTime.toTimestamp(fromDate), -1);
+      Timestamp thruDate = UtilDateTime.toTimestamp(thruEndDate);
+      try{
+    	  List conditionList = FastList.newInstance();
+    	  conditionList.add(EntityCondition.makeCondition("rateTypeId",EntityOperator.EQUALS,rateTypeId));
+    	  conditionList.add(EntityCondition.makeCondition("thruDate",EntityOperator.EQUALS,null));
+    	  EntityCondition condition = EntityCondition.makeCondition(conditionList,EntityOperator.AND);
+    	  List<GenericValue> rateAmountList = delegator.findList("RateAmount", condition, null, null, null, false);
+    	  if(UtilValidate.isNotEmpty(rateAmountList)){
+    		  GenericValue rateAmounts = EntityUtil.getFirst(rateAmountList); 
+    		  if(rateTypeId.equals(rateAmounts.getString("rateTypeId")) && !(rateAmount).equals(rateAmounts.getString("rateAmount"))){
+    			  rateAmounts.set("thruDate",innerThruDate);
+    			  rateAmounts.store();
+    		  GenericValue newEntity = delegator.makeValue("RateAmount");
+    		  	newEntity.set("rateTypeId",rateTypeId);
+    		  	newEntity.set("rateCurrencyUomId",rateCurrencyUomId);
+    		  	newEntity.set("periodTypeId",periodTypeId);
+    		  	newEntity.set("fromDate",fromDate);
+    		  	newEntity.set("workEffortId",workEffortId);
+    		  	newEntity.set("partyId",partyId);
+    		  	newEntity.set("productId",productId);
+    		  	newEntity.set("emplPositionTypeId",emplPositionTypeId);
+    		  	newEntity.set("rateAmount",rateAmount);
+    		  	if(UtilValidate.isNotEmpty(thruDate)){
+    		  		newEntity.set("thruDate",thruDate);
+    		  	}	
+    		  	newEntity.create();
+    		  }	
+    	  }else{
+    		  GenericValue newEntity = delegator.makeValue("RateAmount");
+	  		  	newEntity.set("rateTypeId",rateTypeId);
+	  		  	newEntity.set("rateCurrencyUomId",rateCurrencyUomId);
+	  		  	newEntity.set("periodTypeId",periodTypeId);
+	  		  	newEntity.set("fromDate",fromDate);
+	  		  	newEntity.set("workEffortId",workEffortId);
+	  		  	newEntity.set("partyId",partyId);
+	  		  	newEntity.set("productId",productId);
+	  		  	newEntity.set("emplPositionTypeId",emplPositionTypeId);
+	  		  	newEntity.set("rateAmount",rateAmount);
+	  		  	if(UtilValidate.isNotEmpty(thruDate)){
+	  		  		newEntity.set("thruDate",thruDate);
+  		  		}	
+	  		  	newEntity.create();
+    	  }
+      }catch(GenericEntityException e){
+			Debug.logError("Error while creating new rateAmount Variable"+e.getMessage(), module);
+		}
+      result = ServiceUtil.returnSuccess("New RateAmount Variable Successfully Created....!");
+      return result;
+    }
+	public static Map<String, Object> UpdateRateAmountVariables(DispatchContext dctx, Map<String, ? extends Object> context){
+	    Delegator delegator = dctx.getDelegator();
+      LocalDispatcher dispatcher = dctx.getDispatcher();
+      GenericValue userLogin = (GenericValue) context.get("userLogin");
+      String rateTypeId = (String)context.get("rateTypeId");
+      Date fromStartDate =  (Date)context.get("fromDate");
+      Date thruEndDate = (Date)context.get("thruDate");
+      BigDecimal rateAmount = (BigDecimal)context.get("rateAmount");
+      Map result = ServiceUtil.returnSuccess();
+      Timestamp fromDate=UtilDateTime.toTimestamp(fromStartDate);
+      Timestamp thruDate = UtilDateTime.toTimestamp(thruEndDate);
+      try{
+    	  List conditionList = FastList.newInstance();
+    	  conditionList.add(EntityCondition.makeCondition("rateTypeId",EntityOperator.EQUALS,rateTypeId));
+    	  conditionList.add(EntityCondition.makeCondition("fromDate",EntityOperator.EQUALS,fromDate));
+    	  EntityCondition condition = EntityCondition.makeCondition(conditionList,EntityOperator.AND);
+    	  List<GenericValue> rateAmountList = delegator.findList("RateAmount", condition, null, null, null, false);
+    	  if(UtilValidate.isNotEmpty(rateAmountList)){
+    		  GenericValue rateAmounts = EntityUtil.getFirst(rateAmountList); 
+    		  if(UtilValidate.isNotEmpty(rateAmounts)){
+    			  if(UtilValidate.isNotEmpty(thruDate)){
+    				  rateAmounts.set("thruDate",thruDate);
+    			  }
+    			  if(UtilValidate.isNotEmpty(rateAmount)){
+    				  rateAmounts.set("rateAmount",rateAmount);
+    			  }
+    			  rateAmounts.store();
+    		  }
+    	  }
+      }catch(GenericEntityException e){
+			Debug.logError("Error while updating rateAmount Variable"+e.getMessage(), module);
+		}
+      result = ServiceUtil.returnSuccess("RateAmount Variable Successfully Updated....!");
+      return result;
+    }
+
+	//end of service
 	 
 }//end of class

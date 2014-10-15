@@ -118,6 +118,7 @@ under the License.emplpunch
     	</required-permissions>
         <auto-attributes mode="IN" include="pk" optional="false"/>
     </service>
+    
     <service name="updateLateMins" engine="java" default-entity-name="EmplDailyAttendanceDetail"
     		location="in.vasista.vbiz.humanres.PayrollService" invoke="UpdateLateMins" auth="true">
     	<description>Upadate Late Minutes</description>
@@ -1537,15 +1538,37 @@ under the License.emplpunch
        <attribute name="thruDate" mode="IN" type="Timestamp" optional="true"/>
        <attribute name="workedHolidaysList" mode="OUT" type="java.util.List"/>
    </service>
-   <!-- Loan Services -->
-   <!-- <service name="CreateOrUpdateVariables" engine="java" auth="true" invoke="CreateOrUpdateRateAmountVariables"
+   
+   <service name="CreateRateAmountVariables" engine="java" auth="true" invoke="CreateRateAmountVariables"
    			location="in.vasista.vbiz.humanres.PayrollService">
-   <description>Create or Update RateAmount Variables</description>
+   <description>Create RateAmount Variables</description>
+   <required-permissions join-type="OR">
+          <permission-service service-name="humanResManagerPermission" main-action="RATEAMT_VAR_CREATE"/>
+   </required-permissions>
    		<attribute name="rateTypeId" mode="IN" type="String" optional="false"/>
    		<attribute name="fromDate" mode="IN" type="Date" optional="false"/>
    		<attribute name="thruDate" mode="IN" type="Date" optional="true"/>
    		<attribute name="rateAmount" mode="IN" type="BigDecimal" optional="false"/>
-   </service> -->
+   </service>
+   <service name="updateRateAmountVariables" engine="java" auth="true" invoke="UpdateRateAmountVariables"
+   			location="in.vasista.vbiz.humanres.PayrollService">
+   		<description>Update RateAmount Variables</description>
+   	<required-permissions join-type="OR">
+        <permission-service service-name="humanResManagerPermission" main-action="RATEAMT_VAR_UPDATE"/>
+     </required-permissions>
+   		<attribute name="rateTypeId" mode="IN" type="String" optional="false"/>
+   		<attribute name="fromDate" mode="IN" type="Date" optional="false"/>
+   		<attribute name="thruDate" mode="IN" type="Date" optional="true"/>
+   		<attribute name="rateAmount" mode="IN" type="BigDecimal" optional="true"/>
+   </service>
+   <service name="deleteVariables" engine="simple" default-entity-name="RateAmount"
+             location="component://humanres/script/org/ofbiz/humanres/HumanResServices.xml" invoke="deleteVariables" auth="true">
+        <description>Delete RateAmount Variable</description>
+     <required-permissions join-type="OR">
+        <permission-service service-name="humanResManagerPermission" main-action="RATEAMT_VAR_DELETE"/>
+     </required-permissions>
+        <auto-attributes mode="IN" include="pk" optional="false"/>
+    </service>
    <service name="updateEmployeeFinancialAccount" engine="java" 
             location="in.vasista.vbiz.humanres.HumanresService" invoke="updateEmployeeFinancialAccount">
         <description>Update a Financial Account Role</description>
@@ -1557,6 +1580,7 @@ under the License.emplpunch
 		<attribute name="finAccountBranch" mode="IN" type="String" optional="true"/>
 		<attribute name="ifscCode" mode="IN" type="String" optional="true"></attribute>   
     </service>
+    <!-- Loan Services -->
    <service name="createEmployeeLoan" engine="java" auth="true" invoke="createEmployeeLoan" 
         location="in.vasista.vbiz.humanres.HumanresService">
         <description>Create or update Loan</description>

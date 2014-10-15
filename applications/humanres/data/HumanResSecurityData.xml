@@ -138,6 +138,22 @@ under the License.
     <SecurityGroupPermission groupId="EMP_SHIFT_CALENDER" permissionId="EMP_SHIFT_CALENDER_DELETE"/>
     <SecurityGroupPermission groupId="EMP_SHIFT_CALENDER" permissionId="EMP_SHIFT_CALENDER_UPDATE"/>
     
+    <SecurityPermission description="Creating Rate Amount Variable." permissionId="HUMANRES_RATEAMT_VAR_CREATE"/>
+    <SecurityPermission description="Deleting Rate Amount Variable." permissionId="HUMANRES_RATEAMT_VAR_DELETE"/>
+    <SecurityPermission description="Updating Rate Amount Variable." permissionId="HUMANRES_RATEAMT_VAR_UPDATE"/>
+    
+    <SecurityGroup description="Rate Amount Variable View and Creating" groupId="HR_RATEAMT_VIEW"/>
+    <SecurityGroupPermission groupId="FULLADMIN" permissionId="HUMANRES_RATEAMT_VAR_CREATE"/>
+    <SecurityGroupPermission groupId="HR_RATEAMT_VIEW" permissionId="HUMANRES_RATEAMT_VAR_CREATE"/>
+    
+    <SecurityGroup description="Rate Amount Variable Delete" groupId="HR_RATEAMT_DELETE"/>
+    <SecurityGroupPermission groupId="FULLADMIN" permissionId="HUMANRES_RATEAMT_VAR_DELETE"/>
+    <SecurityGroupPermission groupId="HR_RATEAMT_DELETE" permissionId="HUMANRES_RATEAMT_VAR_DELETE"/>
+    
+    <SecurityGroup description="Rate Amount Variable Update" groupId="HR_RATEAMT_UPDATE"/>
+    <SecurityGroupPermission groupId="FULLADMIN" permissionId="HUMANRES_RATEAMT_VAR_UPDATE"/>
+    <SecurityGroupPermission groupId="HR_RATEAMT_UPDATE" permissionId="HUMANRES_RATEAMT_VAR_UPDATE"/>
+    
     <SecurityGroup description="Loan deleting" groupId="HR_LOAN_DELETE"/>
     <SecurityGroupPermission groupId="FULLADMIN" permissionId="HR_LOAN_DELETE"/>
     <SecurityGroupPermission groupId="HR_LOAN_DELETE" permissionId="HR_LOAN_DELETE"/>
