@@ -73,10 +73,11 @@ conditionList=[];
 shipmentIds=[];
 routeIdsList=[];
 routeWiseSaleMap =[:];
-		
+         routeMktShipmentIds = ByProductNetworkServices.getByProdShipmentIds(delegator, startDate, endDate);
 		conditionList.add(EntityCondition.makeCondition("statusId", EntityOperator.EQUALS, "GENERATED"));
 		conditionList.add(EntityCondition.makeCondition("estimatedShipDate", EntityOperator.GREATER_THAN_EQUAL_TO ,startDate));
 		conditionList.add(EntityCondition.makeCondition("estimatedShipDate", EntityOperator.LESS_THAN_EQUAL_TO ,endDate));
+		conditionList.add(EntityCondition.makeCondition("shipmentId", EntityOperator.IN ,routeMktShipmentIds));
 		EntityCondition cond = EntityCondition.makeCondition(conditionList, EntityOperator.AND);
 		List<GenericValue> shipmentList = delegator.findList("Shipment", cond, null,UtilMisc.toList("routeId"), null, false);
 		shipmentIds.addAll(EntityUtil.getFieldListFromEntityList(shipmentList, "shipmentId", false));
@@ -151,6 +152,7 @@ routeWiseSaleMap =[:];
 				routeWiseSaleMap[routeId] = tempMap;
 			}
 		}
+		Debug.log("==Sucessful=====CratesAndCans Report=>");
 context.routeWiseSaleMap = routeWiseSaleMap;
 context.routeWiseCratesMap = routeWiseCratesMap;
 	
