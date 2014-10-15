@@ -166,7 +166,7 @@ if(UtilValidate.isNotEmpty(timePeriodId)){
 							 int hours = Integer.parseInt(timeSplit.get(0));
 							 int minutes = Integer.parseInt(timeSplit.get(1));
 							 //if(((hours*60)+minutes) >=210){
-							 if(((hours*60)+minutes) >=480){
+							 if(((hours*60)+minutes) >=465){
 								 workedHolidaysList.add(workedHoliday);
 							 }
 						}
