@@ -179,24 +179,24 @@ function makeDatePicker1(fromDateId ,thruDateId){
 				<table class="basic-table hover-bar h3" style="border-spacing: 0 10px;">
 					<tr class="alternate-row">
 						<form id="LeaveAvailedReport" name="LeaveAvailedReport" mothed="post" action="<@ofbizUrl>LeaveAvailedReport.pdf</@ofbizUrl>" target="_blank">
-							<td width="15%">Leave Availed Report</td>
-							<td width="15%">Organization Id 
+							<td width="20%">Leave Availed Report</td>
+							<td width="20%"><span class='h3'>Employee Id<@htmlTemplate.lookupField formName="LeaveAvailedReport" name="employeeId" id="employeeId" size="10pt" fieldFormName="LookupEmployeeName"/></span></td>
+							<td width="10%">Organization Id 
 								<select name="partyId" class='h5'>
 									<#list orgList as org>    
 									<option value='${org.partyId}'>${org.groupName?if_exists}</option>
 									</#list> 
 								</select>
 							</td>	
-							<td width="20%">Leave Type
+							<td width="10%">Leave Type
 								<select name="leaveTypeId" id="leaveTypeId" class='h5' >
 									<option value="ALL">ALL</option>
 										<#list leaveTypeList as leave>
 									<option value='${leave.leaveTypeId}'>${leave.description?if_exists}</option></#list>
 								</select>
 							</td>
-							<td width="15%">From Date<input  type="text"  id="larfromDate"   name="larFromDate"/></td>
-							<td width="15%">Thru Date<input  type="text"  id="larthruDate"   name="larThruDate"/></td>
-							<td width="10%"></td>
+							<td width="10%">From Date<input  type="text"  id="larfromDate"   name="larFromDate"/></td>
+							<td width="10%">Thru Date<input  type="text"  id="larthruDate"   name="larThruDate"/></td>
 							<td width="10%"><input type="submit" value="Download" class="buttontext"></td> 
 							</td>
 						</form>
@@ -204,6 +204,7 @@ function makeDatePicker1(fromDateId ,thruDateId){
 					<tr class="alternate-row">
 						<form id="CashEncashmentReport" name="CashEncashmentReport" mothed="post" action="<@ofbizUrl>CashEncashmentReport.pdf</@ofbizUrl>" target="_blank">
 							<td width="30%">Cash Encashment Report</td>
+							<td width="20%"><span class='h3'>Employee Id<@htmlTemplate.lookupField formName="LeaveAvailedReport" name="employeeId" id="employeeId" size="10pt" fieldFormName="LookupEmployeeName"/></span></td>
 							<td width="15%">Organization Id 
 								<select name="deptId" class='h5'>
 									<#list orgList as org>    
@@ -218,11 +219,22 @@ function makeDatePicker1(fromDateId ,thruDateId){
 							</td>	
 							<td width="10%"></td>
 							<td width="10%"></td>
-							<td width="10%"></td>
 							<td width="10%"><input type="submit" value="Download" class="buttontext"></td>
-						
 						</form>											
 					</tr>
+				<!--	<tr class="alternate-row">
+						<form id="GHSSDepatmentCountReport" name="GHSSDepatmentCountReport" mothed="post" action="<@ofbizUrl>GHSSDepatmentCountReport.pdf</@ofbizUrl>" target="_blank">
+							<td width="30%">GH and SS Department Count </td>
+							<td width="10%"></td>
+							<td width="45%">Period Id
+								<select name="customTimePeriodId" id="customTimePeriodId" class='h4'>
+									<#list customTimePeriodList as customTimePeriod><option value='${customTimePeriod.customTimePeriodId?if_exists}' >${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(customTimePeriod.fromDate, "dd MMMMM, yyyy")} -${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(customTimePeriod.thruDate, "dd MMMMM, yyyy")}</option></#list>
+								</select>
+							</td>	
+							<td width="10%"></td>
+							<td width="10%"><input type="submit" value="Download" class="buttontext"></td>
+						</form>											
+					</tr> -->
 				</table>
 			</div>
 		</div>

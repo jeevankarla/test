@@ -20,9 +20,11 @@ import in.vasista.vbiz.humanres.PayrollService;
 import in.vasista.vbiz.humanres.HumanresService;
 import in.vasista.vbiz.byproducts.ByProductServices;
 import in.vasista.vbiz.humanres.HumanresHelperServices;
+import org.ofbiz.party.party.PartyHelper;
 
 dctx = dispatcher.getDispatchContext();
 emplList=[];
+orgList=[];
 holidaysList=[];
 workedHolidaysList=[];
 List EncashmentList=[];
@@ -67,6 +69,7 @@ def populateChildren(org, employeeList) {
 		
 	}
 }
+
 if(UtilValidate.isNotEmpty(deptId))
 	context.orgName=orgName;
 
@@ -178,10 +181,14 @@ if(UtilValidate.isNotEmpty(timePeriodId)){
 		}
 		
 		
-		//GH and SS Encashment
+		//GH and SS Encashment Report
 		
 		List conGHSSList=[];
-		conGHSSList.add(EntityCondition.makeCondition("partyId", EntityOperator.IN,empIds));
+		if(UtilValidate.isNotEmpty(parameters.employeeId)){
+			conGHSSList.add(EntityCondition.makeCondition("partyId", EntityOperator.EQUALS,parameters.employeeId));
+		}else{
+			conGHSSList.add(EntityCondition.makeCondition("partyId", EntityOperator.IN,empIds));
+		}	
 		conGHSSList.add(EntityCondition.makeCondition("date",EntityOperator.IN,holidays));
 		conGHSSList.add(EntityCondition.makeCondition("encashmentStatus",EntityOperator.EQUALS,"CASH_ENCASHMENT"));
 		conGHSS=EntityCondition.makeCondition(conGHSSList,EntityOperator.AND);
@@ -203,6 +210,31 @@ if(UtilValidate.isNotEmpty(timePeriodId)){
 			EncashmentList.add(employee);
 			
 		}
+		
+		/*// GH and SS DepartmentWise Count Report
+		Debug.log("departments=============="+orgList);
+		if(UtilValidate.isNotEmpty(orgList)){
+			departmentList=orgList;
+		}
+		Debug.log("departmentList=============="+departmentList);
+		List conDepartmentList=[];
+		conDepartmentList.add(EntityCondition.makeCondition("partyId", EntityOperator.IN,empIds));
+		conDepartmentList.add(EntityCondition.makeCondition("date",EntityOperator.IN,holidays));
+		conDept=EntityCondition.makeCondition(conDepartmentList,EntityOperator.AND);
+		emplHolidayAttendanceList = delegator.findList("EmplDailyAttendanceDetail", conDept ,UtilMisc.toSet("partyId","date"),null, null, false );
+		departmentList.each{ department ->
+			Debug.log("department================="+department);
+			emplHolidayAttendanceList.each{ emplHolidayAttendance ->
+				Debug.log("emplHolidayAttendance================="+emplHolidayAttendance);
+				departmentDetails=delegator.findByAnd("Employment", [partyIdTo : emplHolidayAttendance.partyId]);
+				deptName="";
+				if(departmentDetails){
+					deptPartyId=departmentDetails[0].partyIdFrom;
+					deptName=PartyHelper.getPartyName(delegator, deptPartyId, false);
+					Debug.log("deptName================="+deptName);
+				}
+			}	
+		}*/
 	}
 }
 

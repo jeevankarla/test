@@ -72,7 +72,6 @@ context.employeeList=employeeList;
 company = delegator.findByPrimaryKey("PartyAndGroup", [partyId : "Company"]);
 populateChildren(company, employeeList);
 
-
 def populateChildren(org, employeeList) {
 	EmploymentsMap=HumanresService.getActiveEmployements(dctx,[userLogin:userLogin,orgPartyId:parameters.partyId]);
 	employments=EmploymentsMap.get("employementList");
@@ -110,7 +109,11 @@ if(UtilValidate.isNotEmpty(leaveTypeIds)){
 		leaveTypeIds.each { leaveTypeId ->
 			employeesList=[];
 			List conditionList=[];
-			conditionList.add(EntityCondition.makeCondition("partyId", EntityOperator.IN,empIds));
+			if(UtilValidate.isNotEmpty(parameters.employeeId)){
+				conditionList.add(EntityCondition.makeCondition("partyId", EntityOperator.EQUALS,parameters.employeeId));
+			}else{
+				conditionList.add(EntityCondition.makeCondition("partyId", EntityOperator.IN,empIds));
+			}
 			conditionList.add(EntityCondition.makeCondition("leaveTypeId", EntityOperator.EQUALS, leaveTypeId));
 			conditionList.add(EntityCondition.makeCondition("fromDate",EntityOperator.GREATER_THAN_EQUAL_TO,fromDate));
 			conditionList.add(EntityCondition.makeCondition("thruDate",EntityOperator.LESS_THAN_EQUAL_TO,thruDate));
