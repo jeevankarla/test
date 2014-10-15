@@ -176,6 +176,7 @@ function reportTypeChangeFunc() {
         makeDatePicker("saleInvoiceAbstractfDate","saleInvoiceAbstracttDate");
 	    makeDatePicker("regularIceCreamfDate","regularIceCreamtDate");
 	    makeDatePicker("purchaseFromDate","purchaseThruDate");
+	    makeDatePicker("purchaseFDate","purchaseTDate");
 		makeDatePicker("analysisCodeFromDate","analysisCodeThruDate");
 		makeDatePicker2("IcDealerOSDuesFDate","IcDealerOSDuesTDate");
 		makeDatePicker2("fdFromDate","");
@@ -1148,6 +1149,21 @@ function reportTypeChangeFunc() {
 						<td width="10%"><input type="submit" value="Download" class="buttontext"/></td>      
 					</form>
 	              </tr>
+	              <tr class="alternate-row">
+						<form id="purchaseReport" name="purchaseReport" method="post" action="<@ofbizUrl>purchaseReport.pdf</@ofbizUrl>" target="_blank">	
+							<td width="30%">Purchase Analysis Report</td>
+							<td width="15%">From<input  type="text" size="18pt" id="purchaseFDate" readonly  name="fromDate"/></td>
+						    <td width="15%">To<input  type="text" size="18pt" id="purchaseTDate" readonly  name="thruDate"/></td>
+			      			<td width="15%">Report Type 
+								<select name='reportTypeFlag' id = "reportTypeFlag">
+									<option value='PurchaseSummary'>PurchaseSummary</option>
+									<option value='PurchaseDetails'>PurchaseDetails</option>
+								</select>
+							</td>
+							<td width="15%"></td>
+							<td width="10%"><input type="submit" value="Download" class="buttontext"/></td> 
+						</form>
+	                </tr>
 			        <#-- 
       				<tr class="alternate-row">
 		        	<form id="duesAbstract" name="duesAbstract" method="post" action="<@ofbizUrl>duesAbstract.csv</@ofbizUrl>">	

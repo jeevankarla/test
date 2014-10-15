@@ -1414,6 +1414,10 @@
      <security https="true" auth="true"/>
     	<response name="success" type="view" value="InvoiceAbstractReport"/>
     </request-map>
+    <request-map uri="purchaseReport.pdf">
+     <security https="true" auth="true"/>
+    	<response name="success" type="view" value="PurchaseReportPDF"/>
+    </request-map>
     <request-map uri="purchaseRegisterBook.pdf">
      <security https="true" auth="true"/>
     	<response name="success" type="view" value="PurchaseRegisterBook"/>
@@ -1676,6 +1680,7 @@
 	<view-map name="PurchaseRegisterBook" type="screenfop" page="component://byproducts/widget/ByProductsReportScreens.xml#PurchaseRegisterBook" content-type="application/pdf"/>
 	<view-map name="PurchaseRegisterBookCSV" type="screencsv" page="component://byproducts/widget/ByProductsReportScreens.xml#PurchaseRegisterBookCSV" content-type="text/csv"/>
 	<view-map name="IcDealerOSDuesIntimationPDF" type="screenfop" page="component://byproducts/widget/ByProductsReportScreens.xml#IcDealerOSDuesIntimationPDF" content-type="application/pdf"/>
+	<view-map name="PurchaseReportPDF" type="screenfop" page="component://byproducts/widget/ByProductsReportScreens.xml#PurchaseReportPDF" content-type="application/pdf"/>
 	
 	<view-map name="PCMReportPDF" type="screenfop" page="component://byproducts/widget/ByProductsReportScreens.xml#RetailerSalesComparisonTXT" content-type="application/pdf"/>
 	<view-map name="DailySalesRevenueTrend" type="screen" page="component://byproducts/widget/ByProductsNgScreens.xml#DailySalesRevenueTrend"/>
