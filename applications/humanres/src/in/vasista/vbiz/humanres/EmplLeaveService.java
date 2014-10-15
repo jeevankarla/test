@@ -305,7 +305,7 @@ public class EmplLeaveService {
 										 int hours = Integer.parseInt(timeSplit.get(0));
 										 int minutes = Integer.parseInt(timeSplit.get(1));
 										 if(UtilValidate.isEmpty(dayFractionId)){
-											 if(((hours*60)+minutes) >=240 && ((hours*60)+minutes) <=480){
+											 if(((hours*60)+minutes) >=225 && ((hours*60)+minutes) <=465){
 												 return ServiceUtil.returnError("Full Day Leave Not Applicable for GH/SS: "+tempDate); 
 											 }
 										 }

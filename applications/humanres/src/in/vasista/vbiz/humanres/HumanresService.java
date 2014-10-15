@@ -324,8 +324,8 @@ public class HumanresService {
 									if(UtilValidate.isNotEmpty(timeSplit)){
 										 int hours = Integer.parseInt(timeSplit.get(0));
 										 int minutes = Integer.parseInt(timeSplit.get(1));
-										 //if(((hours*60)+minutes) >=210){
-										 if(((hours*60)+minutes) >=240){
+										 if(((hours*60)+minutes) >=225){
+										 //if(((hours*60)+minutes) >=240){
 											 tempDayMap.put("punchDetails", ((List)punMap.get("punchDataList")).get(0));
 											 tempDayMap.put("date",UtilDateTime.toDateString(tempDate,"dd-MM-yyyy"));
 											 workedHolidaysList.add(tempDayMap);
