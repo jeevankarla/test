@@ -136,7 +136,7 @@ under the License.
                     <fo:table-row>
                     		<#if transactionDate?has_content>
                 				<fo:table-cell>
-                            		<fo:block  keep-together="always" text-align="left" >Transaction Date:${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(transactionDate, "dd-MM-yyyy")}</fo:block>  
+                            		<fo:block  keep-together="always" text-align="left" >Transaction Date:${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(transactionDate, "dd-MM-yyyy HH:mm:ss")}</fo:block>  
                        			</fo:table-cell>
                        			<#else>
                        			<fo:table-cell>
@@ -157,7 +157,7 @@ under the License.
                     <fo:table-row>	
                     <#if postedDate?has_content>
                 				<fo:table-cell>
-                            		<fo:block  text-align="left"  keep-together="always">Posted Date:${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(postedDate, "dd-MM-yyyy")}</fo:block>  
+                            		<fo:block  text-align="left"  keep-together="always">Posted Date:${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(postedDate, "dd-MM-yyyy HH:mm:ss")}</fo:block>  
                        			</fo:table-cell>
                        			<#else>
                        			<fo:table-cell>
@@ -166,7 +166,7 @@ under the License.
                        			</#if>
                     <#if scheduledPostingDate?has_content>
                     		<fo:table-cell>
-                            		<fo:block  keep-together="always" text-align="left" >Schd Posting Date:${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(scheduledPostingDate, "MM-dd-yyyy")}</fo:block>  
+                            		<fo:block  keep-together="always" text-align="left" >Schd Posting Date:${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(scheduledPostingDate, "dd-MM-yyyy HH:mm:ss")}</fo:block>  
                        		</fo:table-cell>
                        		<#else>
                        			<fo:table-cell>
@@ -209,7 +209,7 @@ under the License.
                        		</#if>
                      <#if voucherDate?has_content>
                     		<fo:table-cell>
-                            		<fo:block  keep-together="always" text-align="left" >Voucher Date:${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(voucherDate, "MM-dd-yyyy")}</fo:block>  
+                            		<fo:block  keep-together="always" text-align="left" >Voucher Date:${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(voucherDate, "dd-MM-yyyy")}</fo:block>  
                        		</fo:table-cell>
                        		<#else>
                        			<fo:table-cell>
