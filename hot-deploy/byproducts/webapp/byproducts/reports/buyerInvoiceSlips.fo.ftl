@@ -93,9 +93,9 @@ under the License.
 							<fo:table-row border-style="solid">
             					<fo:table-cell >
             						<fo:block text-align="left" font-size="12pt" white-space-collapse="false" wrap-option="wrap">To: <#if billingAddress?has_content>${billingAddress.get("toName")?if_exists} </#if></fo:block>
-            						<fo:block  keep-together="always" text-align="left" font-size="12pt" white-space-collapse="false"><#if billingAddress?has_content>${billingAddress.get("address1")?if_exists} </#if></fo:block>
-            						<fo:block  keep-together="always" text-align="left" font-size="12pt" white-space-collapse="false"><#if billingAddress?has_content>${billingAddress.get("address2")?if_exists} </#if></fo:block>
-            						<fo:block  keep-together="always" text-align="left" font-size="12pt" white-space-collapse="false"><#if billingAddress?has_content>${billingAddress.get("city")?if_exists} - ${billingAddress.get("postalCode")?if_exists} </#if></fo:block>  
+            						<fo:block text-align="left" font-size="12pt" white-space-collapse="false" wrap-option="wrap"><#if billingAddress?has_content>${billingAddress.get("address1")?if_exists} </#if></fo:block>
+            						<fo:block text-align="left" font-size="12pt" white-space-collapse="false" wrap-option="wrap"><#if billingAddress?has_content>${billingAddress.get("address2")?if_exists} </#if></fo:block>
+            						<fo:block text-align="left" font-size="12pt" white-space-collapse="false" wrap-option="wrap"><#if billingAddress?has_content>${billingAddress.get("city")?if_exists} - ${billingAddress.get("postalCode")?if_exists} </#if></fo:block>  
             					</fo:table-cell>
             					<fo:table-cell>
             						<fo:block  keep-together="always" text-align="left" font-size="12pt" white-space-collapse="false">TIN: <#if toPartyDetail?has_content>${toPartyDetail.get('TIN_NUMBER')?if_exists}</#if></fo:block>
