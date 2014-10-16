@@ -129,6 +129,16 @@ if(UtilValidate.isNotEmpty(reportTypeFlag) && reportTypeFlag == "InvoiceSales"){
 						if(UtilValidate.isNotEmpty(invoice.getValue().totalRevenue)){
 							totalRevenue = invoice.getValue().totalRevenue;
 						}
+						invoiceSequenceId = null;
+						if(UtilValidate.isNotEmpty(invoiceId)){
+							invoiceSequenceList = delegator.findList("BillOfSaleInvoiceSequence",EntityCondition.makeCondition("invoiceId", EntityOperator.EQUALS, invoiceId) , null, null, null, false);
+							if(UtilValidate.isNotEmpty(invoiceSequenceList)){
+								invoiceSequence = EntityUtil.getFirst(invoiceSequenceList);
+								if(UtilValidate.isNotEmpty(invoiceSequence)){
+									invoiceSequenceId = invoiceSequence.sequenceId;
+								}
+							}
+						}
 						totalMap = [:];
 						totalMap["invoiceDate"]=invoiceDate;
 						totalMap["basicRevenue"]=basicRevenue;
@@ -139,6 +149,7 @@ if(UtilValidate.isNotEmpty(reportTypeFlag) && reportTypeFlag == "InvoiceSales"){
 						totalMap["cstRevenue"]=cstRevenue;
 						totalMap["totalRevenue"]=totalRevenue;
 						totalMap["idValue"]=idValue;
+						totalMap["invoiceSequenceId"]=invoiceSequenceId;
 						tempMap = [:];
 						tempMap.putAll(totalMap);
 						if(UtilValidate.isNotEmpty(tempMap)){
@@ -203,6 +214,16 @@ if(UtilValidate.isNotEmpty(reportTypeFlag) && reportTypeFlag == "InvoiceSalesAbs
 							if(UtilValidate.isNotEmpty(invoice.getValue().totalRevenue)){
 								totalRevenue = invoice.getValue().totalRevenue;
 							}
+							invoiceSequenceId = null;
+							if(UtilValidate.isNotEmpty(invoiceId)){
+								invoiceSequenceList = delegator.findList("BillOfSaleInvoiceSequence",EntityCondition.makeCondition("invoiceId", EntityOperator.EQUALS, invoiceId) , null, null, null, false);
+								if(UtilValidate.isNotEmpty(invoiceSequenceList)){
+									invoiceSequence = EntityUtil.getFirst(invoiceSequenceList);
+									if(UtilValidate.isNotEmpty(invoiceSequence)){
+										invoiceSequenceId = invoiceSequence.sequenceId;
+									}
+								}
+							}
 							totalMap = [:];
 							totalMap["invoiceId"]=invoiceId;
 							totalMap["basicRevenue"]=basicRevenue;
@@ -211,6 +232,7 @@ if(UtilValidate.isNotEmpty(reportTypeFlag) && reportTypeFlag == "InvoiceSalesAbs
 							totalMap["cstRevenue"]=cstRevenue;
 							totalMap["totalRevenue"]=totalRevenue;
 							totalMap["idValue"]=idValue;
+							totalMap["invoiceSequenceId"]=invoiceSequenceId;
 							invoicePartyList = [];
 							if(UtilValidate.isNotEmpty(invoicePartyMap[invoicePartyId])){
 								invoicePartyList = invoicePartyMap.get(invoicePartyId);

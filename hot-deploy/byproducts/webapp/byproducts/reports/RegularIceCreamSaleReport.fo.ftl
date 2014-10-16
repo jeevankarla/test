@@ -22,7 +22,7 @@ under the License.
     <fo:root xmlns:fo="http://www.w3.org/1999/XSL/Format">
         <fo:layout-master-set>
             <fo:simple-page-master master-name="main" page-height="12in" page-width="15in"  margin-left=".3in" margin-right=".3in" margin-top=".5in">
-                <fo:region-body margin-top="1.8in"/>
+                <fo:region-body margin-top="1.6in"/>
                 <fo:region-before extent="1in"/>
                 <fo:region-after extent="1in"/>
             </fo:simple-page-master>
@@ -45,17 +45,17 @@ under the License.
                 	<fo:block text-align="center" font-weight="bold"  keep-together="always"  white-space-collapse="false"> <#if categoryType=="ICE_CREAM_NANDINI">NANDINI</#if><#if categoryType=="ICE_CREAM_AMUL">AMUL</#if> ICE CREAM SALES BOOK FOR THE PERIOD- ${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(fromDate, "dd/MM/yyyy")} - ${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(thruDate, "dd/MM/yyyy")} </fo:block>
           			<fo:block text-align="left"  keep-together="always"  font-family="Courier,monospace" font-weight="bold" white-space-collapse="false"> UserLogin:<#if userLogin?exists>${userLogin.userLoginId?if_exists}</#if>               &#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;Print Date :${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(nowTimestamp, "dd/MM/yy HH:mm:ss")}</fo:block>
           			<fo:block>--------------------------------------------------------------------------------------------------------------------------------------------</fo:block>
-            	    <fo:block text-align="left" font-weight="bold" font-size="12pt" keep-together="always" font-family="Courier,monospace" white-space-collapse="false">Invoice Retailer                    Description          Quantity        Ex-factory    ED              VAT(Rs)    C.S.T(Rs)       Total(Rs)</fo:block>
-        			<fo:block text-align="left" font-weight="bold" font-size="12pt" keep-together="always" font-family="Courier,monospace" white-space-collapse="false">Number  Name                                             (In Ltrs)       Value(Rs)     Value(Rs)                                  Value</fo:block>
+            	    <fo:block text-align="left" font-weight="bold" font-size="12pt" keep-together="always" font-family="Courier,monospace" white-space-collapse="false">Invoice Invoice 					Retailer        	Description          Quantity        Ex-factory    ED          VAT(Rs)    		C.S.T(Rs)    Total(Rs)</fo:block>
+        			<fo:block text-align="left" font-weight="bold" font-size="12pt" keep-together="always" font-family="Courier,monospace" white-space-collapse="false">Number  Seq.Number 			Name                                 (In Ltrs)       Value(Rs)     Value(Rs)                               Value</fo:block>
 	        		<fo:block>--------------------------------------------------------------------------------------------------------------------------------------------</fo:block>
             	</fo:static-content>	        	
 	        	<fo:flow flow-name="xsl-region-body"   font-family="Courier,monospace">		
         			<fo:block>
         				<fo:table>
 		                    <fo:table-column column-width="60pt"/>
-		                    <fo:table-column column-width="200pt"/>
-		                    <fo:table-column column-width="1pt"/> 
-		               	    <fo:table-column column-width="60pt"/>
+		                    <fo:table-column column-width="90pt"/>
+		                    <fo:table-column column-width="120pt"/> 
+		               	    <fo:table-column column-width="85pt"/>
 		            		<fo:table-column column-width="80pt"/> 		
 		            		<fo:table-column column-width="95pt"/>
 		            		<fo:table-column column-width="90pt"/>
@@ -89,22 +89,30 @@ under the License.
                                 <#assign vat=0>
                                 <#assign cst=0>
                                 <#assign total=0>
+                                <#assign sequenceId = null>
           						 <#list invoiceMap as invoiceDetails>
           						 <#assign invoice = invoiceDetails.getValue()>
           						 <#list invoice as invoiceDtls>
           						 <#assign invoice = delegator.findOne("Invoice", {"invoiceId" : invoiceDetails.getKey()}, true)>
+          						 <#assign invoiceSeqDetails = delegator.findByAnd("BillOfSaleInvoiceSequence", {"invoiceId" : invoiceDetails.getKey()})/>
           						 <#assign partyName = Static["org.ofbiz.party.party.PartyHelper"].getPartyName(delegator, invoice.get("partyId")?if_exists, false)>
 							      <fo:table-row>
 							             <fo:table-cell>
 							            	<fo:block  keep-together="always" text-align="left" font-size="12pt" white-space-collapse="false" font-weight="bold">${invoiceDetails.getKey()}</fo:block>  
 							            </fo:table-cell>
+							            <#if invoiceSeqDetails?has_content>
+          						  			<#assign sequenceId = invoiceSeqDetails[0].get("sequenceId")?if_exists>
+							            <fo:table-cell>
+							            	<fo:block  keep-together="always" text-align="left" font-size="12pt" white-space-collapse="false" font-weight="bold">${sequenceId?if_exists}</fo:block>  
+							            </fo:table-cell>
+							            </#if>
 							             <fo:table-cell>
-							            	<fo:block  keep-together="always" text-align="left" font-size="12pt" white-space-collapse="false" font-weight="bold">${partyName}<#if categoryType=="ICE_CREAM_AMUL">[${invoice.get("partyId")?if_exists}]</#if></fo:block>  
+							            	<fo:block   text-align="left" font-size="12pt" white-space-collapse="false" font-weight="bold">${partyName}<#if categoryType=="ICE_CREAM_AMUL">[${invoice.get("partyId")?if_exists}]</#if></fo:block>  
 							            </fo:table-cell>
 							             <fo:table-cell>
 							            	<fo:block  keep-together="always" text-align="right" font-size="12pt" white-space-collapse="false" font-weight="bold">
 							            		<fo:table>
-								            		<fo:table-column column-width="100pt"/> 		
+								            		<fo:table-column column-width="80pt"/> 		
 								            		<fo:table-column column-width="110pt"/> 	
 								            		<fo:table-column column-width="110pt"/> 
 								            		<fo:table-column column-width="120pt"/> 
@@ -169,11 +177,14 @@ under the License.
 							             <fo:table-cell>
 							            	<fo:block  keep-together="always" text-align="left" font-size="12pt" white-space-collapse="false" font-weight="bold"></fo:block>  
 							            </fo:table-cell>
+							            <fo:table-cell>
+							            	<fo:block  keep-together="always" text-align="left" font-size="12pt" white-space-collapse="false" font-weight="bold"></fo:block>  
+							            </fo:table-cell>
 									<fo:table-cell>
 							            	<fo:block  keep-together="always" text-align="right" font-size="12pt" white-space-collapse="false" font-weight="bold">
 							            		<fo:table>
 								            		<fo:table-column column-width="100pt"/>
-								            		<fo:table-column column-width="110pt"/> 
+								            		<fo:table-column column-width="90pt"/> 
 								            		<fo:table-column column-width="110pt"/> 
 								            		<fo:table-column column-width="120pt"/> 
 								            		<fo:table-column column-width="85pt"/> 
@@ -273,7 +284,7 @@ under the License.
 							            	<fo:block  keep-together="always" text-align="right" font-size="12pt" white-space-collapse="false" font-weight="bold">
 							            		<fo:table>
 								            		<fo:table-column column-width="100pt"/> 		
-								            		<fo:table-column column-width="110pt"/> 	
+								            		<fo:table-column column-width="90pt"/> 	
 								            		<fo:table-column column-width="110pt"/> 
 								            		<fo:table-column column-width="120pt"/> 
 								            		<fo:table-column column-width="85pt"/> 
@@ -282,7 +293,7 @@ under the License.
 					                                <fo:table-body>
 													<fo:table-row>
 					                                 <fo:table-cell>
-							                           		<fo:block  keep-together="always" font-size="12pt" text-align="left" white-space-collapse="false">Total</fo:block>  
+							                           		<fo:block  keep-together="always" font-size="12pt" text-align="left" white-space-collapse="false">Grand Total</fo:block>  
 							                       		</fo:table-cell>
 					                                   <fo:table-cell>
 							                           		<fo:block  keep-together="always" font-size="12pt" text-align="right" white-space-collapse="false">${totalQty?string("#0.00")}</fo:block>  

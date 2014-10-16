@@ -51,8 +51,8 @@ under the License.
           			<fo:block text-align="center" font-weight="bold"  keep-together="always"  white-space-collapse="false"> <#if categoryType=="ICE_CREAM_NANDINI">NANDINI</#if><#if categoryType=="ICE_CREAM_AMUL">AMUL</#if> ICE CREAM SALES BOOK FOR THE PERIOD- ${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(fromDate, "dd/MM/yyyy")} - ${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(thruDate, "dd/MM/yyyy")} </fo:block>-->
           			<fo:block text-align="left"  keep-together="always"  font-family="Courier,monospace" font-weight="bold" white-space-collapse="false"> UserLogin:<#if userLogin?exists>${userLogin.userLoginId?if_exists}</#if>               &#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;Print Date :${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(nowTimestamp, "dd/MM/yy HH:mm:ss")}</fo:block>
           			<fo:block>-------------------------------------------------------------------------------------------------------------------------------------------</fo:block>
-            	    <fo:block text-align="left" font-weight="bold" font-size="12pt" keep-together="always" font-family="Courier,monospace" white-space-collapse="false">Invoice        Customer      								Invoice  	Ex-factory    							ED             			VAT(Rs)   		   C.S.T(Rs)      	Total(Rs)   				TIN</fo:block>
-        			<fo:block text-align="left" font-weight="bold" font-size="12pt" keep-together="always" font-family="Courier,monospace" white-space-collapse="false">Date           		          										Number					Value(Rs)    				Value(Rs)     &#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;Number</fo:block>
+            	    <fo:block text-align="left" font-weight="bold" font-size="12pt" keep-together="always" font-family="Courier,monospace" white-space-collapse="false">Invoice        Customer      								Invoice  				Invoice 					Ex-factory    							ED             VAT(Rs)   		  C.S.T(Rs)      Total(Rs)   				</fo:block>
+        			<fo:block text-align="left" font-weight="bold" font-size="12pt" keep-together="always" font-family="Courier,monospace" white-space-collapse="false">Date           		          										Number					Seq.Number					Value(Rs)    						Value(Rs)    	</fo:block>
 	        		<fo:block>-------------------------------------------------------------------------------------------------------------------------------------------</fo:block>
             	</fo:static-content>	        	
 	        	<fo:flow flow-name="xsl-region-body"   font-family="Courier,monospace">		
@@ -61,12 +61,12 @@ under the License.
 		                    <fo:table-column column-width="15pt"/>
 		                    <fo:table-column column-width="100pt"/>
 		                    <fo:table-column column-width="160pt"/> 
-		               	    <fo:table-column column-width="140pt"/>
-		            		<fo:table-column column-width="120pt"/> 		
-		            		<fo:table-column column-width="140pt"/>
-		            		<fo:table-column column-width="100pt"/>
+		               	    <fo:table-column column-width="130pt"/>
+		            		<fo:table-column column-width="100pt"/> 		
+		            		<fo:table-column column-width="130pt"/>
 		            		<fo:table-column column-width="120pt"/>
-		            		<fo:table-column column-width="95pt"/>
+		            		<fo:table-column column-width="110pt"/>
+		            		<fo:table-column column-width="110pt"/>
 		                    <fo:table-body>
 		                    
 		                    <#assign invoiceDetailsList = finalInvoiceDateMap.entrySet()>
@@ -87,7 +87,7 @@ under the License.
 						        				<fo:table>
 								                    <fo:table-column column-width="65pt"/>
 								                    <fo:table-column column-width="185pt"/>
-								                    <fo:table-column column-width="160pt"/> 
+								                    <fo:table-column column-width="140pt"/> 
 								               	    <fo:table-column column-width="170pt"/>
 								            		<fo:table-column column-width="140pt"/> 		
 								            		<fo:table-column column-width="120pt"/>
@@ -101,20 +101,20 @@ under the License.
 						            						</fo:table-cell>
 						            						<#assign partyName = Static["org.ofbiz.party.party.PartyHelper"].getPartyName(delegator, invoiceTot.getKey()?if_exists, false)>
 							             					<fo:table-cell>
-						            							<fo:block  keep-together="always" text-align="left" font-size="12pt" white-space-collapse="false" >${partyName}[${invoiceTot.getKey()?if_exists}]</fo:block>  
+						            							<fo:block   text-align="left" font-size="12pt" white-space-collapse="false" >${partyName}[${invoiceTot.getKey()?if_exists}]</fo:block>  
 						            						</fo:table-cell>
 						            						<fo:table-cell>
 												             	<fo:block>
 											        				<fo:table>
-													                    <fo:table-column column-width="50pt"/>
+													                    <fo:table-column column-width="80pt"/>
 													                    <fo:table-column column-width="100pt"/>
-													                    <fo:table-column column-width="120pt"/> 
-													               	    <fo:table-column column-width="140pt"/>
-													            		<fo:table-column column-width="100pt"/> 		
-													            		<fo:table-column column-width="120pt"/>
+													                    <fo:table-column column-width="60pt"/> 
+													               	    <fo:table-column column-width="130pt"/>
+													            		<fo:table-column column-width="120pt"/> 		
+													            		<fo:table-column column-width="110pt"/>
 													            		<fo:table-column column-width="110pt"/>
 													            		<fo:table-column column-width="125pt"/>
-													            		<fo:table-column column-width="95pt"/>
+													            		<fo:table-column column-width="110pt"/>
 													                    <fo:table-body>
 													                    <#assign totalBasicRev=0>
 													                    <#assign totalBedRev=0>
@@ -133,6 +133,9 @@ under the License.
 											            							<fo:block  keep-together="always" text-align="left" font-size="12pt" white-space-collapse="false">${invoicePartyTot.get("invoiceId")?if_exists}</fo:block>  
 											            						</fo:table-cell>
 											            						<fo:table-cell>
+											            							<fo:block  keep-together="always" text-align="left" font-size="12pt" white-space-collapse="false">${invoicePartyTot.get("invoiceSequenceId")?if_exists}</fo:block>  
+											            						</fo:table-cell>
+											            						<fo:table-cell>
 																	            	<fo:block  keep-together="always" text-align="right" font-size="12pt" white-space-collapse="false" >${invoicePartyTot.get("basicRevenue")?if_exists?string("#0.00")}</fo:block>  
 																	            </fo:table-cell>
 																	            <fo:table-cell>
@@ -147,10 +150,12 @@ under the License.
 																	            <fo:table-cell>
 																	            	<fo:block  keep-together="always" text-align="right" font-size="12pt" white-space-collapse="false" >${invoicePartyTot.get("totalRevenue")?if_exists?string("#0.00")}</fo:block>  
 																	            </fo:table-cell>
-																	            <fo:table-cell>
-																	            	<fo:block  keep-together="always" text-align="right" font-size="12pt" white-space-collapse="false" >${invoicePartyTot.get("idValue")?if_exists}</fo:block>  
-																	            </fo:table-cell>
 												            				</fo:table-row>
+												            				<fo:table-row>
+												            					<fo:table-cell number-columns-spanned="2">
+																	            	<fo:block  keep-together="always" text-align="left" font-size="12pt" font-weight="bold" white-space-collapse="false" >TIN : ${invoicePartyTot.get("idValue")?if_exists}</fo:block>  
+																	            </fo:table-cell>
+																	        </fo:table-row>
 												            				</#list> 
 												            				<fo:table-row> 
 																			      <fo:table-cell>   						
@@ -160,6 +165,9 @@ under the License.
 																			<fo:table-row>
 															                    <fo:table-cell>
 																	            	<fo:block  keep-together="always" text-align="left" font-size="12pt" white-space-collapse="false" font-weight="bold">Total</fo:block>  
+																	            </fo:table-cell>
+																	            <fo:table-cell>
+																	            	<fo:block  keep-together="always" text-align="left" font-size="12pt" white-space-collapse="false" font-weight="bold"></fo:block>  
 																	            </fo:table-cell>
 																	            <#assign dayTotalBasicRev = dayTotalBasicRev + totalBasicRev>
 																	             <fo:table-cell>
@@ -208,6 +216,9 @@ under the License.
 					             <fo:table-cell>
 									<fo:block  keep-together="always" text-align="left" font-size="12pt" white-space-collapse="false" font-weight="bold">Day Total</fo:block>  
 					             </fo:table-cell>
+					             <fo:table-cell>
+									<fo:block  keep-together="always" text-align="left" font-size="12pt" white-space-collapse="false" font-weight="bold"></fo:block>  
+					             </fo:table-cell>
 					             <#assign grandTotalBasicRev = grandTotalBasicRev + dayTotalBasicRev>
 					             <fo:table-cell>
 									<fo:block  keep-together="always" text-align="right" font-size="12pt" white-space-collapse="false" font-weight="bold">${dayTotalBasicRev?if_exists?string("#0.00")}</fo:block>  
@@ -244,6 +255,9 @@ under the License.
 					             </fo:table-cell>
 					             <fo:table-cell>
 									<fo:block  keep-together="always" text-align="left" font-size="12pt" white-space-collapse="false" font-weight="bold">Grand Total</fo:block>  
+					             </fo:table-cell>
+					             <fo:table-cell>
+									<fo:block  keep-together="always" text-align="left" font-size="12pt" white-space-collapse="false" font-weight="bold"></fo:block>  
 					             </fo:table-cell>
 					             <fo:table-cell>
 									<fo:block  keep-together="always" text-align="right" font-size="12pt" white-space-collapse="false" font-weight="bold">${grandTotalBasicRev?if_exists?string("#0.00")}</fo:block>  
