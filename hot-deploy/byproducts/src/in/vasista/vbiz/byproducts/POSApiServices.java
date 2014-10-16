@@ -631,6 +631,8 @@ Debug.logInfo("result:" + result, module);
 			Map location = locations.get(i);
 		  	double latitude = ((Double)location.get("latitude")).doubleValue();
 		  	double longitude = ((Double)location.get("longitude")).doubleValue();
+		  	String noteName = (String)location.get("noteName");
+		  	String noteInfo = (String)location.get("noteInfo");		  	
 		  	Timestamp createdTime = UtilDateTime.toTimestamp((Date)location.get("createdDate"));
 	        try {
 			  	GenericValue newEntity = delegator.makeValue("PartyLocation");
@@ -638,6 +640,12 @@ Debug.logInfo("result:" + result, module);
 			  	newEntity.set("fromDate", createdTime);		  	
 		        newEntity.set("latitude", latitude);
 		        newEntity.set("longitude", longitude);
+                if (UtilValidate.isNotEmpty(noteName)) {
+                	newEntity.set("noteName", noteName);
+                }
+                if (UtilValidate.isNotEmpty(noteInfo)) {
+                	newEntity.set("noteInfo", noteInfo);
+                }
 			  	delegator.create(newEntity);
 	        } catch (GenericEntityException e) {
 	            Debug.logError(e, module);
