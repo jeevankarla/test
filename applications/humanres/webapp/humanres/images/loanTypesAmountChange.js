@@ -71,6 +71,7 @@ function loanTypesAmountChange(){
         	   	interestAmount = result["interestAmount"];
         	   	rateOfInterest = result["rateOfInterest"];
         	   	retirementDate = result["retirementDate"];
+        	   	noOfMonthsToRetire = result["noOfMonthsToRetire"];
         	   	
         	   	prncplAmt = principalAmount;
         	   	prinplInst = numPrincipalInst;
@@ -84,6 +85,7 @@ function loanTypesAmountChange(){
         	   	$("#interestAmount").val(interestAmount);
         	   	$("#rateOfInterest").val(rateOfInterest);
         	   	$("#retirementDate").val(retirementDate);
+        	   	$("#noOfMonthsToRetire").val(noOfMonthsToRetire);
            }
          } 
     });

@@ -472,11 +472,15 @@ public class HumanresService {
 			Long numInterestInst = null;
 			Double rateOfInterest = 1.0;
 			BigDecimal interestAmount = BigDecimal.ZERO;
-			
 			String retirementDate = null;
+			String noOfMonthsToRetire = null;
 			
 			Locale locale = new Locale("en","IN");
 			TimeZone timeZone = TimeZone.getDefault();
+			
+			Timestamp fromDate = UtilDateTime.nowTimestamp();
+	    	Timestamp fromDateStart = UtilDateTime.getDayStart(fromDate);
+			
 			try {
 				loanTypeDetails = delegator.findOne("LoanType",UtilMisc.toMap("loanTypeId", loanTypeId), false);
 				if(UtilValidate.isNotEmpty(loanTypeDetails)){
@@ -526,7 +530,24 @@ public class HumanresService {
 				        			int year = UtilDateTime.getYear(UtilDateTime.toTimestamp(birthDate), timeZone, locale) + 60;
 				        			Timestamp retDate = UtilDateTime.toTimestamp(month, day, year, 0, 0, 0);
 				        			retDate = UtilDateTime.getMonthEnd(UtilDateTime.toTimestamp(retDate), timeZone, locale);
-				        			retirementDate = UtilDateTime.toDateString(retDate,"dd/MM/yyyy");
+				        			if(UtilValidate.isNotEmpty(retDate)){
+				        				double noOfCalenderDays = UtilDateTime.getIntervalInDays(fromDateStart, retDate);
+					        			BigDecimal calenderDays = new BigDecimal(noOfCalenderDays);
+					        			if(UtilValidate.isNotEmpty(calenderDays)){
+					        				BigDecimal retireMonths = (BigDecimal)(calenderDays.divide(new BigDecimal(30),1,BigDecimal.ROUND_HALF_UP));
+					        				if(UtilValidate.isNotEmpty(retireMonths)){
+					        					List<String> monthSplit = StringUtil.split(retireMonths.toString(), ".");
+												if(UtilValidate.isNotEmpty(monthSplit)){
+													 int months = Integer.parseInt(monthSplit.get(0));
+													 int days = Integer.parseInt(monthSplit.get(1));
+													 retirementDate = UtilDateTime.toDateString(retDate,"dd/MM/yyyy");
+								        			 int retirementMonths = months;
+								        			 int retirementDays = (days*3);								        			 
+								        			 noOfMonthsToRetire = + retirementMonths+ " Months " + " " + retirementDays+ " Days ";
+												}
+					        				}
+					        			}
+				        			}
 			        			}
 			        		}
 			        	}
@@ -541,6 +562,7 @@ public class HumanresService {
 			result.put("numInterestInst", numInterestInst);
 			result.put("rateOfInterest", rateOfInterest);
 			result.put("retirementDate", retirementDate);
+			result.put("noOfMonthsToRetire", noOfMonthsToRetire);
 	        return result;
 	    }
 	 	
