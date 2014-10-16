@@ -2968,7 +2968,7 @@
                     <field-map field-name="mainAction" value="PAYMENTSTATUS_CANCEL"/>
                 </service>
                 <set field="hasPaymentCancelPermission" value="true" type="Boolean"/><!--from-field="permResult.hasPermission"	-->
-                
+                <set field="parameters.noConditionFind" from-field="parameters.noConditionFind" default-value="N"/>
                 <service service-name="performFind" result-map="result">
 	                <field-map field-name="inputFields" from-field="parameters"/>
 	                <field-map field-name="entityName" value="PaymentAndType"/>
@@ -2977,30 +2977,31 @@
 	                <field-map field-name="viewSize" from-field="viewSize"/>
 	            </service>
 	            <set field="payments" from-field="result.listIt"/>
+	            
             </actions>
             <widgets>
-                        <section>
-                            <widgets>
-                                <decorator-screen name="FindScreenDecorator" location="component://common/widget/CommonScreens.xml">
-                                    <decorator-section name="menu-bar">
-                                        <container style="button-bar" >
-                                            <link target="NewNonRouteReceipt"  text="Create New Receipt" style="buttontext create" > 
-                                            <parameter param-name="paymentMethodTypeId" value="${parameters.paymentMethodTypeId}" />
-                                             <parameter param-name="subTabItem" value="${parameters.subTabItem}" />
-                                            </link>
-                                        </container>
-                                    </decorator-section>
-                                    <decorator-section name="search-options" > 
-                                        <include-form name="FindPaymentNonRoute" location="component://accounting/widget/PaymentForms.xml"/>
-                                    </decorator-section>
-                                    <decorator-section name="search-results">
-                                    	<platform-specific>
-                                           	<html><html-template location="component://accounting/webapp/accounting/payment/ListSearchPayments.ftl"/></html>
-                                       	</platform-specific>
-                                    </decorator-section>
-                                </decorator-screen>
-                            </widgets>
-                        </section>
+                 <section>
+                     <widgets>
+                         <decorator-screen name="FindScreenDecorator" location="component://common/widget/CommonScreens.xml">
+                             <decorator-section name="menu-bar">
+                                 <container style="button-bar" >
+                                     <link target="NewNonRouteReceipt"  text="Create New Receipt" style="buttontext create" > 
+                                     <parameter param-name="paymentMethodTypeId" value="${parameters.paymentMethodTypeId}" />
+                                      <parameter param-name="subTabItem" value="${parameters.subTabItem}" />
+                                     </link>
+                                 </container>
+                             </decorator-section>
+                             <decorator-section name="search-options" > 
+                                 <include-form name="FindPaymentNonRoute" location="component://accounting/widget/PaymentForms.xml"/>
+                             </decorator-section>
+                             <decorator-section name="search-results">
+                             	<platform-specific>
+                                    	<html><html-template location="component://accounting/webapp/accounting/payment/ListSearchPayments.ftl"/></html>
+                                	</platform-specific>
+                             </decorator-section>
+                         </decorator-screen>
+                     </widgets>
+                 </section>
             </widgets>
         </section>
     </screen>     

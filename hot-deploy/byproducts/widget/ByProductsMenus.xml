@@ -925,7 +925,7 @@
             </condition>
             <link target="FindPaymentNonRoute">
             	<parameter param-name="subTabItem" value="CashPayment"/>
-            	<parameter param-name="paymentMethodTypeId" value="CASH_PAYIN"/>
+            	<parameter param-name="defaultMethodTypeId" value="CASH_PAYIN"/>
             </link>
           </menu-item> 
           <menu-item name="ChequePayment" title="Cheque">
@@ -936,7 +936,7 @@
             </condition>
             <link target="FindPaymentNonRoute">
             	<parameter param-name="subTabItem" value="ChequePayment"/>
-            	<parameter param-name="paymentMethodTypeId" value="CHEQUE_PAYIN"/>
+            	<parameter param-name="defaultMethodTypeId" value="CHEQUE_PAYIN"/>
             </link>            
           </menu-item>
           <menu-item name="FundTransfer" title="Fund Transfer">
@@ -947,7 +947,7 @@
             </condition>
             <link target="FindPaymentNonRoute">
             	<parameter param-name="subTabItem" value="FundTransfer"/>
-            	<parameter param-name="paymentMethodTypeId" value="FUND_TRANSFER"/>
+            	<parameter param-name="defaultMethodTypeId" value="FUND_TRANSFER"/>
             </link>            
           </menu-item>
            <!-- 
