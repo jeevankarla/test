@@ -2971,7 +2971,7 @@
                 
                 <service service-name="performFind" result-map="result">
 	                <field-map field-name="inputFields" from-field="parameters"/>
-	                <field-map field-name="entityName" value="PaymentAndTypeAndCreditCard"/>
+	                <field-map field-name="entityName" value="PaymentAndType"/>
 	                <field-map field-name="orderBy" value="effectiveDate DESC"/>
 	                <field-map field-name="viewIndex" from-field="viewIndex"/>
 	                <field-map field-name="viewSize" from-field="viewSize"/>
@@ -3113,7 +3113,7 @@
             	 <decorator-section name="body">
             	 	<include-menu location="component://byproducts/widget/ByProductsMenus.xml" name="GroupPaymentSubTabBar"/>
             	 	<section>
-						<widgets>
+            	 		<widgets>
 							<screenlet title="Find Batch payments">
 								<include-form name="FindPaymentGroups" location="component://byproducts/widget/ByProductsNgForms.xml"/>
 							</screenlet>
@@ -3163,7 +3163,7 @@
             	 <decorator-section name="body">
             	 	<include-menu location="component://byproducts/widget/ByProductsMenus.xml" name="GroupPaymentSubTabBar"/>
             	 	<section>
-						<widgets>
+            	 		<widgets>
 							<screenlet title="Find Payments">
 								<include-form name="FindPaymentsForGrouping" location="component://byproducts/widget/ByProductsNgForms.xml"/>
 							</screenlet>
