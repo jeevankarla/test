@@ -5121,6 +5121,9 @@ public class InvoiceServices {
        			List<GenericValue> invoiceItems = delegator.findList("InvoiceAndItem", EntityCondition.makeCondition("invoiceId", EntityOperator.EQUALS, invoiceId), UtilMisc.toSet("invoiceItemTypeId", "dueDate"), null, null, false);
        			List invoiceItemTypeIds = EntityUtil.getFieldListFromEntityList(invoiceItems, "invoiceItemTypeId", true);
        			Timestamp invDate = (EntityUtil.getFirst(invoiceItems)).getTimestamp("dueDate");
+       			if(UtilValidate.isEmpty(invDate)){
+       				invDate = (EntityUtil.getFirst(invoiceItems)).getTimestamp("invoiceDate");
+       			}
        			Map finYearContext = FastMap.newInstance();
    				finYearContext.put("onlyIncludePeriodTypeIdList", UtilMisc.toList("FISCAL_YEAR"));
    				finYearContext.put("organizationPartyId", "Company");

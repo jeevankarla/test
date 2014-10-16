@@ -21,11 +21,14 @@ package org.ofbiz.accounting.finaccount;
 
 import java.math.BigDecimal;
 import java.sql.Timestamp;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.text.SimpleDateFormat;
 import java.text.ParseException;
 import java.util.Date;
+import java.util.Map.Entry;
+
 import javolution.util.FastMap;
 
 import org.ofbiz.base.util.Debug;
@@ -596,6 +599,161 @@ public class FinAccountServices {
 		            }
 		        }
          }
+
+        return result;
+    }
+    
+    public static Map<String, Object> updateFinAccountBalancesFromTransId(DispatchContext dctx, Map<String, Object> context) {
+        LocalDispatcher dispatcher = dctx.getDispatcher();
+        Delegator delegator = dctx.getDelegator();
+        GenericValue userLogin = (GenericValue) context.get("userLogin");
+        String finAccountTransId = (String) context.get("finAccountTransId");
+        String oldStatusId = (String) context.get("oldStatusId");
+        Map<String, Object> result = ServiceUtil.returnSuccess();
+        GenericValue finAccountTrans = null;
+        GenericValue finAccount = null;
+        try{
+        	finAccountTrans = delegator.findOne("FinAccountTrans", UtilMisc.toMap("finAccountTransId", finAccountTransId), false);
+        	
+    	}catch(GenericEntityException e){
+    		Debug.logError(e, module);
+            return ServiceUtil.returnError(e.getMessage());
+    	}
+        if(UtilValidate.isEmpty(finAccountTrans)){
+        	Debug.logError("No FinAccountTrans exists with id:"+finAccountTransId , module);
+		  	return ServiceUtil.returnError("No FinAccountTrans exists with id:"+finAccountTransId);
+        }
+        String status = finAccountTrans.getString("statusId");
+        String finAccountTransTypeId = finAccountTrans.getString("finAccountTransTypeId");
+        String finAccountId = finAccountTrans.getString("finAccountId");
+        
+        try{
+        	finAccount = delegator.findOne("FinAccount", UtilMisc.toMap("finAccountId", finAccountId), false);
+        	
+    	}catch(GenericEntityException e){
+    		Debug.logError(e, module);
+            return ServiceUtil.returnError(e.getMessage());
+    	}
+        BigDecimal balanceUpdateAmount = BigDecimal.ZERO;
+        BigDecimal actualBalance = BigDecimal.ZERO;
+        if(UtilValidate.isNotEmpty(finAccount.getBigDecimal("actualBalance"))){
+        	actualBalance = finAccount.getBigDecimal("actualBalance");
+        }
+        BigDecimal availableBalance = BigDecimal.ZERO;
+        if(UtilValidate.isNotEmpty(finAccount.getBigDecimal("availableBalance"))){
+        	availableBalance = finAccount.getBigDecimal("availableBalance");
+        }
+        
+        BigDecimal amountForCalc = finAccountTrans.getBigDecimal("amount");
+        if(finAccountTransTypeId.equals("WITHDRAWAL")){
+        	amountForCalc.negate();
+        }
+        try{
+        	if(UtilValidate.isEmpty(oldStatusId)){
+        		if(status.equals("FINACT_TRNS_CREATED")){
+                	balanceUpdateAmount = actualBalance.add(amountForCalc);
+                	finAccount.set("actualBalance", balanceUpdateAmount);
+                	finAccount.store();
+                }
+        	}
+        	else if(status.equals("FINACT_TRNS_APPROVED") && oldStatusId.equals("FINACT_TRNS_CREATED")){
+                	balanceUpdateAmount = availableBalance.add(amountForCalc);
+                	finAccount.set("availableBalance", balanceUpdateAmount);
+                	finAccount.store();
+        	}
+        	else if(status.equals("FINACT_TRNS_CANCELED") && oldStatusId.equals("FINACT_TRNS_CREATED")){
+        		balanceUpdateAmount = actualBalance.subtract(amountForCalc);
+            	finAccount.set("actualBalance", balanceUpdateAmount);
+            	finAccount.store();
+        	}
+        }catch(GenericEntityException e){
+    		Debug.logError(e, module);
+            return ServiceUtil.returnError(e.getMessage());
+    	}
+        return result;
+    }
+    
+    public static Map<String, Object> populateFinAccountBalancesFromTrans(DispatchContext dctx, Map<String, Object> context) {
+        LocalDispatcher dispatcher = dctx.getDispatcher();
+        Delegator delegator = dctx.getDelegator();
+        GenericValue userLogin = (GenericValue) context.get("userLogin");
+        String finAccountId = (String) context.get("finAccountId");
+        Map<String, Object> result = ServiceUtil.returnSuccess();
+        List conditionList = FastList.newInstance();
+        EntityListIterator eli = null;        
+        try{
+        	conditionList.add(EntityCondition.makeCondition("statusId", EntityOperator.NOT_EQUAL, "FINACT_TRNS_CANCELED"));
+        	if(UtilValidate.isNotEmpty(finAccountId)){
+        		conditionList.add(EntityCondition.makeCondition("finAccountId", EntityOperator.EQUALS, finAccountId));
+        	}
+        	EntityCondition condition = EntityCondition.makeCondition(conditionList, EntityOperator.AND);
+        	
+            eli = delegator.find("FinAccountTrans", condition, null, null, UtilMisc.toList("finAccountId"), null);
+            
+            GenericValue trans;
+            String finAccId = "";
+            String finAccTransType = "";
+            String statusId = "";
+            Map finAccountBalances = FastMap.newInstance();
+            while ((trans = eli.next()) != null) {
+                finAccId = trans.getString("finAccountId");
+                finAccTransType = trans.getString("finAccountTransTypeId");
+                BigDecimal amount = trans.getBigDecimal("amount");
+                BigDecimal actualAmt = BigDecimal.ZERO;
+                BigDecimal availAmt = BigDecimal.ZERO;
+                statusId = trans.getString("statusId");
+                if(finAccTransType.equals("WITHDRAWAL")){
+                	amount.negate();
+                }
+                if(statusId.equals("FINACT_TRNS_CREATED")){
+                	actualAmt = amount;
+                }
+                if(statusId.equals("FINACT_TRNS_APPROVED")){
+                	availAmt = amount;
+                	actualAmt = amount;
+                }
+                if(UtilValidate.isNotEmpty(finAccountBalances.get(finAccId))){
+                	Map extFinMap = (Map) finAccountBalances.get(finAccId);
+                	BigDecimal extActAmt = (BigDecimal)extFinMap.get("actualBalance");
+                	BigDecimal extAvlAmt = (BigDecimal)extFinMap.get("availableBalance");
+                	extFinMap.put("actualBalance", extActAmt.add(actualAmt));
+                	extFinMap.put("availableBalance", extAvlAmt.add(availAmt));
+                	finAccountBalances.put(finAccId, extFinMap);
+                }
+                else{
+                	Map tempMap = FastMap.newInstance();
+                	tempMap.put("actualBalance", actualAmt);
+                	tempMap.put("availableBalance", availAmt);
+                	finAccountBalances.put(finAccId, tempMap);
+                }
+                
+            }
+            Iterator tempIter = finAccountBalances.entrySet().iterator();
+			String accId = "";
+			while (tempIter.hasNext()) {
+				Map.Entry tempEntry = (Entry) tempIter.next();
+				accId = (String) tempEntry.getKey();
+				Map balances = (Map) tempEntry.getValue();
+				BigDecimal actBalance = (BigDecimal)balances.get("actualBalance");
+				BigDecimal avlBalance = (BigDecimal)balances.get("availableBalance");
+				GenericValue finAcctValue = delegator.findOne("FinAccount", UtilMisc.toMap("finAccountId", accId), false);
+				finAcctValue.set("actualBalance",actBalance);
+				finAcctValue.set("availableBalance",avlBalance);
+				finAcctValue.store();
+			}
+        	
+    	}catch(GenericEntityException e){
+    		Debug.logError(e, module);
+            return ServiceUtil.returnError(e.getMessage());
+    	}finally {
+            if (eli != null) {
+                try {
+                    eli.close();
+                } catch (GenericEntityException e) {
+                    Debug.logWarning(e, module);
+                }
+            }
+        }
 
         return result;
     }

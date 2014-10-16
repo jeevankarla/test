@@ -220,6 +220,17 @@ under the License.
         <attribute name="thruDate" type="Timestamp" mode="IN" optional="true"/>
         <attribute name="finAccountTransTypeId" type="String" mode="IN" optional="true"/>
     </service>
+    <service name="populateFinAccountBalancesFromTrans" engine="java"
+     location="org.ofbiz.accounting.finaccount.FinAccountServices" invoke="populateFinAccountBalancesFromTrans">
+        <description>Populate finAccount Transaction Balances</description>
+        <attribute name="finAccountId" type="String"  mode="IN" optional="true"/>
+    </service>
+    <service name="updateFinAccountBalancesFromTransId" engine="java"
+     location="org.ofbiz.accounting.finaccount.FinAccountServices" invoke="updateFinAccountBalancesFromTransId">
+        <description>Update FinAccount Balance From TransId</description>
+        <attribute name="finAccountTransId" type="String" mode="IN" optional="false"/>
+        <attribute name="oldStatusId" type="String" mode="IN" optional="true"/>
+    </service>
      <service name="createReconsileAndUpdateFinAccountTrans" engine="java"
      location="org.ofbiz.accounting.finaccount.FinAccountServices" invoke="createReconsileAndUpdateFinAccountTrans">
         <description>Simple finAccntTrans reconsilation Process </description>
