@@ -53,7 +53,6 @@ if(UtilValidate.isNotEmpty(TwoPunchEmployeesList)){
 	leaveConditionList.add(EntityCondition.makeCondition([EntityCondition.makeCondition("fromDate", EntityOperator.GREATER_THAN_EQUAL_TO, fromDate),
 		EntityCondition.makeCondition("thruDate", EntityOperator.LESS_THAN_EQUAL_TO, thruDate)]));
 	leavecondition=EntityCondition.makeCondition(leaveConditionList,EntityOperator.AND);
-	
 	empLeavedetailsList = delegator.findList("EmplLeave", leavecondition , null, null, null, false );
 	
 	List conditionList=[];
@@ -101,9 +100,8 @@ if(UtilValidate.isNotEmpty(TwoPunchEmployeesList)){
 							shiftoutconditionList.add(EntityCondition.makeCondition("InOut", EntityOperator.EQUALS, "OUT"));
 							shiftoutconditionList.add(EntityCondition.makeCondition("shiftType", EntityOperator.EQUALS, "SHIFT_NIGHT"));
 							shiftoutcondition=EntityCondition.makeCondition(shiftoutconditionList,EntityOperator.AND);
-							//shiftpunchoutdeatils = delegator.findList("EmplPunch", shiftoutcondition , null, null, null, false );
-							shiftpunchoutdeatils = EntityUtil.filterByCondition(empLeavedetailsList, shiftoutcondition);
-							
+							shiftpunchoutdeatils = delegator.findList("EmplPunch", shiftoutcondition , null, null, null, false );
+							//shiftpunchoutdeatils = EntityUtil.filterByCondition(empLeavedetailsList, shiftoutcondition);
 							if(UtilValidate.isEmpty(shiftpunchoutdeatils)){
 								shiftmispunchMap=[:];
 								shiftmispunchMap.put("date",dateStr);
