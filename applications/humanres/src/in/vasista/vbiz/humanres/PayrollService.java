@@ -5174,7 +5174,8 @@ public static Map<String, Object> generateEmployerContributionPayrollBilling(Dis
     	  List<GenericValue> rateAmountList = delegator.findList("RateAmount", condition, null, null, null, false);
     	  if(UtilValidate.isNotEmpty(rateAmountList)){
     		  GenericValue rateAmounts = EntityUtil.getFirst(rateAmountList); 
-    		  if(rateTypeId.equals(rateAmounts.getString("rateTypeId")) && !(rateAmount).equals(rateAmounts.getString("rateAmount"))){
+    		  
+    		  if(rateTypeId.equals(rateAmounts.getString("rateTypeId")) && !(rateAmount).equals(rateAmounts.getString("rateAmount")) && (fromDate.after(rateAmounts.getTimestamp("fromDate")))){
     			  rateAmounts.set("thruDate",innerThruDate);
     			  rateAmounts.store();
     		  GenericValue newEntity = delegator.makeValue("RateAmount");
@@ -5191,7 +5192,9 @@ public static Map<String, Object> generateEmployerContributionPayrollBilling(Dis
     		  		newEntity.set("thruDate",thruDate);
     		  	}	
     		  	newEntity.create();
-    		  }	
+    		  }else{
+    			  return ServiceUtil.returnError("Error while creating new rateAmount Variable....!");
+    		  }
     	  }else{
     		  GenericValue newEntity = delegator.makeValue("RateAmount");
 	  		  	newEntity.set("rateTypeId",rateTypeId);
