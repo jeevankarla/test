@@ -2115,7 +2115,20 @@ public class PayrollService {
 				supportedVaribules.add("NOOFARREARDAYS");
 				ModelEntity modelEntity = delegator.getModelEntity("PayrollAttendance");
 		        List<String> fieldNames = modelEntity.getAllFieldNames();
-		        varibuleKeyList.addAll(fieldNames);
+		        supportedVaribules.addAll(fieldNames);
+		        //payroll RateAmount variables
+		        List conditionList = FastList.newInstance();
+	        	conditionList = UtilMisc.toList(
+						EntityCondition.makeCondition("parentTypeId", EntityOperator.NOT_EQUAL, null));
+				conditionList.add(EntityCondition.makeCondition("parentTypeId", EntityOperator.EQUALS, "PAYROLL_RATE"));
+				
+				EntityCondition condition = EntityCondition.makeCondition(conditionList, EntityOperator.AND);
+	        	
+	        	List<GenericValue> payRollRateTypes = delegator.findList("RateType", condition, null,null, null, false);
+	        	if(UtilValidate.isNotEmpty(payRollRateTypes)){
+	        		 supportedVaribules.addAll(EntityUtil.getFieldListFromEntityList(payRollRateTypes, "rateTypeId", true));
+	        	}
+		        
 				for(int i= 0;i<varibuleKeyList.size();i++){
 					String varibuleKey = (String)varibuleKeyList.get(i);
 					if(supportedVaribules.contains(varibuleKey)){
