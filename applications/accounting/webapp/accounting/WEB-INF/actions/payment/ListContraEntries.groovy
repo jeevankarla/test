@@ -91,6 +91,7 @@ if(UtilValidate.isNotEmpty(finAccountTransTypeId)){
 }else{
 	conditionList.add(EntityCondition.makeCondition("finAccountTransTypeId", EntityOperator.EQUALS, "WITHDRAWAL"));
 }
+conditionList.add(EntityCondition.makeCondition("finAccountId", EntityOperator.NOT_EQUAL, "FIN_ACCNT1"));
 conditionList.add(EntityCondition.makeCondition("reasonEnumId", EntityOperator.EQUALS, "FATR_CONTRA"));
 conditionList.add(EntityCondition.makeCondition("statusId", EntityOperator.EQUALS, "FINACT_TRNS_CREATED"));
 condition=EntityCondition.makeCondition(conditionList,EntityOperator.AND);
