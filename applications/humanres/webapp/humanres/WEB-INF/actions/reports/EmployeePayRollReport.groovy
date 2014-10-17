@@ -285,8 +285,8 @@ if(UtilValidate.isNotEmpty(BankAdvicePayRollMap) && UtilValidate.isNotEmpty(para
 			}
 		}
 		
-	   String text = "Your remuneration of Rs "+amountMap.getAt("netAmt")+" for "+UtilDateTime.toDateString(customTimePeriod.getDate("fromDate") ,'MMMM yyyy')+" has been approved for bank payment. Automated message sent from Milkosoft, Mother Dairy.";
-	   Debug.log("Sms text: " + text);
+	   String text = "Your remuneration of Rs "+amountMap.getAt("netAmt").setScale(2,BigDecimal.ROUND_HALF_UP)+" for "+UtilDateTime.toDateString(customTimePeriod.getDate("fromDate") ,'MMMM yyyy')+" has been approved for bank payment. Automated message sent from Milkosoft, Mother Dairy.";
+	   //Debug.log("Sms text: " + text);
 	   Map<String, Object> sendSmsParams = FastMap.newInstance();
 	  if(UtilValidate.isNotEmpty(contactNumberTo)){
 			sendSmsParams.put("contactNumberTo", contactNumberTo);
