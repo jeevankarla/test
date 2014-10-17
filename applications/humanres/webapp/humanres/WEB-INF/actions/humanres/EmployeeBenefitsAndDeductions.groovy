@@ -95,6 +95,7 @@ context.dedDescMap=dedDescMap;
 
 conditionList = [];
 conditionList.add(EntityCondition.makeCondition("partyIdTo", EntityOperator.IN , employementIds));
+conditionList.add(EntityCondition.makeCondition("benefitTypeId", EntityOperator.IN , benefitTypeIds));
 conditionList.add(EntityCondition.makeCondition("fromDate", EntityOperator.LESS_THAN_EQUAL_TO, timePeriodEnd));
 conditionList.add(EntityCondition.makeCondition(EntityCondition.makeCondition("thruDate", EntityOperator.EQUALS, null), EntityOperator.OR,
 		EntityCondition.makeCondition("thruDate", EntityOperator.GREATER_THAN_EQUAL_TO, timePeriodStart)));
@@ -102,8 +103,14 @@ EntityCondition condition=EntityCondition.makeCondition(conditionList,EntityOper
 List<GenericValue> partyBenefitList = delegator.findList("PartyBenefit", condition, null, ["partyIdTo"], null, false);
 
 //Debug.logError("partyBenefitList="+partyBenefitList,"");
-
-List<GenericValue> partyDeductionList = delegator.findList("PartyDeduction", condition, null, ["partyIdTo"], null, false);
+conditionDedList = [];
+conditionDedList.add(EntityCondition.makeCondition("partyIdTo", EntityOperator.IN , employementIds));
+conditionDedList.add(EntityCondition.makeCondition("deductionTypeId", EntityOperator.IN , dedTypeIds));
+conditionDedList.add(EntityCondition.makeCondition("fromDate", EntityOperator.LESS_THAN_EQUAL_TO, timePeriodEnd));
+conditionDedList.add(EntityCondition.makeCondition(EntityCondition.makeCondition("thruDate", EntityOperator.EQUALS, null), EntityOperator.OR,
+		EntityCondition.makeCondition("thruDate", EntityOperator.GREATER_THAN_EQUAL_TO, timePeriodStart)));
+EntityCondition dedCondition=EntityCondition.makeCondition(conditionDedList,EntityOperator.AND);
+List<GenericValue> partyDeductionList = delegator.findList("PartyDeduction", dedCondition, null, ["partyIdTo"], null, false);
 
 Map headerDetailsMap=FastMap.newInstance();
 List benfitItemIdsList=FastList.newInstance();
@@ -176,6 +183,16 @@ if(UtilValidate.isNotEmpty(partyBenefitList)){
 Set benefitIds = new HashSet(benfitItemIdsList);
 List benfitIdsList =  benefitIds.toList();
 benfitItemIdsList=benfitIdsList;
+
+if(UtilValidate.isEmpty(benefitTypeFinalMap) && ("benefits".equals(parameters.type)) && (UtilValidate.isNotEmpty(parameters.benefitTypeId))){
+	employementIds.each{ emplId->
+		Map temBenfMap=FastMap.newInstance();
+		temBenfMap.put(parameters.benefitTypeId, "");
+		benefitTypeFinalMap.put(emplId,temBenfMap);
+	}
+}
+
+
 
 //Debug.logError("benefitTypeFinalMap="+benefitTypeFinalMap,"");
 
@@ -275,6 +292,13 @@ if(UtilValidate.isNotEmpty(partyDeductionList)){
 			}
 		}
 		
+	}
+}
+if(UtilValidate.isEmpty(deductionTypeValueMap) && ("deductions".equals(parameters.type)) && (UtilValidate.isNotEmpty(parameters.dedTypeId))){
+	employementIds.each{ emplId->
+		Map temMap=FastMap.newInstance();
+		temMap.put(parameters.dedTypeId, "");
+		deductionTypeValueMap.put(emplId,temMap);
 	}
 }
 Set deductionIds = new HashSet(dedItemIdsList);
