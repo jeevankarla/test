@@ -213,13 +213,13 @@ under the License.
         <set from-field="nowTimestamp" field="newInvoiceStatus.statusDate"/>
         <create-value value-field="newInvoiceStatus"/>
         
-        <if-compare field="newEntity.invoiceTypeId" operator="equals" value="PAYROL_INVOICE">
+       <!--  <if-compare field="newEntity.invoiceTypeId" operator="equals" value="PAYROL_INVOICE">
             <set from-field="newEntity.invoiceId" field="inputMap.invoiceId"/>
             <set from-field="newEntity.partyIdFrom" field="inputMap.partyId"/>
             <set from-field="parameters.timePeriodId" field="inputMap.timePeriodId"/>                      
         	<call-service service-name="createPayrolInvoiceItems" in-map-name="inputMap">
         	</call-service>        
-        </if-compare>
+        </if-compare> -->
 
         <if-compare field="parameters.isPartyGroupInvoice" operator="equals" value="Y">
             <set from-field="newEntity.invoiceId" field="inputMap.invoiceId"/>

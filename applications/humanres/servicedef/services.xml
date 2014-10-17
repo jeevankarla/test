@@ -1426,6 +1426,28 @@ under the License.emplpunch
         <description>Cancel Payroll Billing</description>
         <attribute name="periodBillingId" mode="IN" type="String" optional="false"/>
     </service>
+    <service name="setPayrollPeriodBillingStatus"  engine="java"
+                location="in.vasista.vbiz.humanres.PayrollService" invoke="setPayrollPeriodBillingStatus" auth="true">
+        <description>Cancel Payroll Billing</description>
+        <attribute name="periodBillingId" mode="IN" type="String" optional="false"/>
+        <attribute name="statusId" mode="IN" type="String" optional="false"/>
+    </service>
+    <service name="createInvoiceAndPaymentsForBilling"  engine="java"
+                location="in.vasista.vbiz.humanres.PayrollService" invoke="createInvoiceAndPaymentsForBilling" auth="true">
+        <description>Cancel Payroll Billing</description>
+        <attribute name="periodBillingId" mode="IN" type="String" optional="false"/>
+    </service>
+    <service name="cancelInvoiceAndPaymentsForBilling"  engine="java"
+                location="in.vasista.vbiz.humanres.PayrollService" invoke="cancelInvoiceAndPaymentsForBilling" auth="true">
+        <description>Cancel Payroll Billing</description>
+        <attribute name="periodBillingId" mode="IN" type="String" optional="false"/>
+    </service>
+     <service name="cancelInvoiceAndPaymentsForBillingInternal"  engine="java"
+                location="in.vasista.vbiz.humanres.PayrollService" invoke="cancelInvoiceAndPaymentsForBillingInternal" auth="true">
+        <description>Cancel Payroll Billing</description>
+        <attribute name="periodBillingId" mode="IN" type="String" optional="false"/>
+    </service>
+    
     <service name="createorUpdateEmployeeDailyAttendance"  engine="java"
                 location="in.vasista.vbiz.humanres.HumanresPunchService" invoke="createorUpdateEmployeeDailyAttendance" auth="true">
         <description>Create Or Update Employee Allowence</description>

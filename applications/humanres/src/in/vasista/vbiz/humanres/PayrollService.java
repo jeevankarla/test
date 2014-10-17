@@ -663,7 +663,160 @@ public class PayrollService {
 				result = ServiceUtil.returnSuccess("PayRoll Billing Successfully Cancelled..");
 				return result;
 		}// end of service
-			private static  Map<String, Object> fetchBasicSalaryAndGrade(DispatchContext dctx, Map context) {
+	    
+	public static Map<String, Object>  setPayrollPeriodBillingStatus(DispatchContext dctx, Map<String, ? extends Object> context)  {
+		    	GenericDelegator delegator = (GenericDelegator) dctx.getDelegator();
+				LocalDispatcher dispatcher = dctx.getDispatcher();
+				Map<String, Object> result = FastMap.newInstance();	
+				GenericValue userLogin = (GenericValue) context.get("userLogin");
+				String periodBillingId = (String) context.get("periodBillingId");
+				String statusId =(String) context.get("statusId");
+				GenericValue periodBilling = null;
+		    	try {
+					periodBilling = delegator.findOne("PeriodBilling", UtilMisc.toMap("periodBillingId", periodBillingId), false);
+					periodBilling.set("lastModifiedDate", UtilDateTime.nowTimestamp());
+	    			periodBilling.set("lastModifiedByUserLogin", userLogin.get("userLoginId"));
+					String oldStatusId =  periodBilling.getString("statusId");
+		    		//approve  billing
+		    		if(statusId.equalsIgnoreCase("APPROVED") && oldStatusId.equalsIgnoreCase("GENERATED")){
+		    			periodBilling.set("statusId", "APPROVE_INPROCES");
+		    			delegator.store(periodBilling);
+		    			Map<String,  Object> runSACOContext = UtilMisc.<String, Object>toMap("periodBillingId", periodBillingId, "userLogin", userLogin);
+				        dispatcher.runAsync("createInvoiceAndPaymentsForBilling", runSACOContext);
+		    		}
+		    		// reject  billing
+		    		if(statusId.equalsIgnoreCase("GENERATED") && oldStatusId.equalsIgnoreCase("APPROVED")){
+		    			periodBilling.set("statusId", "REJECT_INPROCES");
+		    			delegator.store(periodBilling);
+		    			Map<String,  Object> runSACOContext = UtilMisc.<String, Object>toMap("periodBillingId", periodBillingId, "userLogin", userLogin);
+				        dispatcher.runAsync("cancelInvoiceAndPaymentsForBilling", runSACOContext);
+		    		}
+		    	}catch (Exception e) {
+		    		 Debug.logError(e, module);
+		             return ServiceUtil.returnError("Failed to find payrollHeaderItemList " + e);
+				} 
+				result = ServiceUtil.returnSuccess("Payroll Billing Status Successfully Updated");
+				return result;
+		}// end of service
+     public static Map<String, Object>  createInvoiceAndPaymentsForBilling(DispatchContext dctx, Map<String, ? extends Object> context)  {
+    	GenericDelegator delegator = (GenericDelegator) dctx.getDelegator();
+		LocalDispatcher dispatcher = dctx.getDispatcher();
+		Map<String, Object> result = FastMap.newInstance();	
+		GenericValue userLogin = (GenericValue) context.get("userLogin");
+		String periodBillingId = (String) context.get("periodBillingId");
+		GenericValue periodBilling = null;
+		boolean beganTransaction = false;
+    	try {
+    		beganTransaction =TransactionUtil.begin(1000);
+			periodBilling = delegator.findOne("PeriodBilling", UtilMisc.toMap("periodBillingId", periodBillingId), false);
+			result = dispatcher.runSync("createPayrolInvoiceForPeriodBilling", UtilMisc.toMap("periodBillingId", periodBillingId, "userLogin", userLogin));
+    		if(ServiceUtil.isError(result)){
+    			TransactionUtil.rollback();
+    			 Debug.logError("Error while calculating price service:"+result, module);
+    			 periodBilling.set("statusId", "GENERATED");
+     			 delegator.store(periodBilling);
+		         // return ServiceUtil.returnError(ServiceUtil.getErrorMessage(result));
+    		}
+    		periodBilling.set("statusId", "APPROVED");
+			delegator.store(periodBilling);
+    	}catch (Exception e) {
+    		try{
+    	 		TransactionUtil.rollback();
+    	 		 periodBilling.set("statusId", "GENERATED");
+     			 delegator.store(periodBilling);
+    	 		}catch(Exception e1){}
+    		 Debug.logError(e, module);
+             return ServiceUtil.returnError("Failed to find payrollHeaderItemList " + e);
+		} 
+		result = ServiceUtil.returnSuccess("Payroll Billing Status Successfully Updated");
+		return result;
+    }// end of service
+	
+ public static Map<String, Object>  cancelInvoiceAndPaymentsForBilling(DispatchContext dctx, Map<String, ? extends Object> context)  {
+ 	GenericDelegator delegator = (GenericDelegator) dctx.getDelegator();
+		LocalDispatcher dispatcher = dctx.getDispatcher();
+		Map<String, Object> result = FastMap.newInstance();	
+		GenericValue userLogin = (GenericValue) context.get("userLogin");
+		String periodBillingId = (String) context.get("periodBillingId");
+		GenericValue periodBilling = null;
+		boolean beganTransaction = false;
+ 	try {
+ 		 beganTransaction =TransactionUtil.begin(1000);
+			periodBilling = delegator.findOne("PeriodBilling", UtilMisc.toMap("periodBillingId", periodBillingId), false);
+			//result = cancelInvoiceAndPaymentsForBillingInternal(dctx, UtilMisc.toMap("periodBillingId", periodBillingId, "userLogin", userLogin));
+			result = dispatcher.runSync("cancelInvoiceAndPaymentsForBillingInternal", UtilMisc.toMap("periodBillingId", periodBillingId, "userLogin", userLogin));
+			if(ServiceUtil.isError(result)){
+				TransactionUtil.rollback();
+	 			 Debug.logError("Error while calculating price service:"+result, module);
+	 			 periodBilling.set("statusId", "APPROVED");
+	  			 delegator.store(periodBilling);
+		         // return ServiceUtil.returnError(ServiceUtil.getErrorMessage(result));
+ 		}
+ 		   periodBilling.set("statusId", "GENERATED");
+			delegator.store(periodBilling);
+ 	}catch (Exception e) {
+ 		try{
+ 		TransactionUtil.rollback();
+ 		 Debug.logError(e, module);
+ 		 periodBilling.set("statusId", "APPROVED");
+		 delegator.store(periodBilling);
+ 		}catch(Exception e1){}
+ 		
+         return ServiceUtil.returnError("Failed to find payrollHeaderItemList " + e);
+		} 
+		result = ServiceUtil.returnSuccess("Payroll Billing Status Successfully Updated");
+		return result;
+ }// end of service
+	
+ public static Map<String, Object>  cancelInvoiceAndPaymentsForBillingInternal(DispatchContext dctx, Map<String, ? extends Object> context)  {
+	 	GenericDelegator delegator = (GenericDelegator) dctx.getDelegator();
+			LocalDispatcher dispatcher = dctx.getDispatcher();
+			Map<String, Object> result = FastMap.newInstance();	
+			GenericValue userLogin = (GenericValue) context.get("userLogin");
+			String periodBillingId = (String) context.get("periodBillingId");
+			GenericValue periodBilling = null;
+	 	try {
+			 periodBilling = delegator.findOne("PeriodBilling", UtilMisc.toMap("periodBillingId", periodBillingId), false);
+	 		 List condList = FastList.newInstance();
+	 		condList.add(EntityCondition.makeCondition("periodBillingId",EntityOperator.EQUALS, periodBillingId));
+	 		condList.add(EntityCondition.makeCondition("referenceNumber",EntityOperator.EQUALS, periodBilling.getString("billingTypeId")+"_"+periodBillingId));
+			EntityCondition cond = EntityCondition.makeCondition(condList,EntityOperator.AND);
+	 		List<GenericValue> invoices = delegator.findList("Invoice", cond, UtilMisc.toSet("invoiceId","periodBillingId","referenceNumber"), null, null, false);
+	 		for(GenericValue invoice : invoices){
+	 			String invoiceId = invoice.getString("invoiceId");
+	 			List<GenericValue> paymentApplications = delegator.findByAnd("PaymentApplication", UtilMisc.toMap("invoiceId",invoiceId));
+	 			for(GenericValue paymentApplication : paymentApplications){
+	 				String paymentId = paymentApplication.getString("paymentId");
+	 				Map paymentStatusMap = UtilMisc.toMap("userLogin", userLogin);
+	 				paymentStatusMap.put("paymentId", paymentId);
+	 				paymentStatusMap.put("statusId", "PMNT_VOID");
+	 				result = dispatcher.runSync("setPaymentStatus", paymentStatusMap);
+	 				if(ServiceUtil.isError(result)){
+	 		 			 Debug.logError("Error while calculating price service:"+result, module);
+	 				     return ServiceUtil.returnError(ServiceUtil.getErrorMessage(result));
+	 		 		  }
+	 			}
+	 			
+	 		}
+	 		//mass cancel invoices
+	 		Map invoiceStatusMap = UtilMisc.toMap("userLogin", userLogin);
+	 		invoiceStatusMap.put("invoiceIds", EntityUtil.getFieldListFromEntityList(invoices, "invoiceId", true));
+	 		invoiceStatusMap.put("statusId", "INVOICE_CANCELLED");
+			result = dispatcher.runSync("massChangeInvoiceStatus", invoiceStatusMap);
+			if(ServiceUtil.isError(result)){
+	 			 Debug.logError("Error while calculating price service:"+result, module);
+			     return ServiceUtil.returnError(ServiceUtil.getErrorMessage(result));
+	 		  }
+	 		
+	 	}catch (Exception e) {
+	 		 Debug.logError(e, module);
+	          return ServiceUtil.returnError("Failed to find payrollHeaderItemList " + e);
+			} 
+			
+	  return result;
+  }// end of service
+			
+	private static  Map<String, Object> fetchBasicSalaryAndGrade(DispatchContext dctx, Map context) {
 				 	GenericValue userLogin = (GenericValue) context.get("userLogin");
 			        String payHeadTypeId = (String) context.get("payHeadTypeId");
 			        String employeeId = (String) context.get("employeeId");

@@ -80,6 +80,19 @@ under the License.
         <attribute name="invoiceId" type="String" mode="OUT" optional="true"/>    
         <attribute name="invoices" type="List" mode="OUT" optional="true"/>                                   
     </service> 
+     <service name="createPayrolInvoiceForPeriodBilling" engine="java" auth="true" invoke="createPayrolInvoiceForPeriodBilling" 
+        location="org.ofbiz.accounting.invoice.InvoicePayrolWorkerNew" transaction-timeout="600">
+        <description>Create payroll invoice from period billing</description>
+        <attribute name="periodBillingId" type="String" mode="IN" optional="false"/>
+        <attribute name="invoices" type="List" mode="OUT" optional="true"/>  
+    </service> 
+     <service name="createPayrolPaymentAndAppclications" engine="java" auth="true" invoke="createPayrolPaymentAndAppclications" 
+        location="org.ofbiz.accounting.invoice.InvoicePayrolWorkerNew" transaction-timeout="600">
+        <description>Create payroll invoice from period billing</description>
+        <attribute name="invoiceId" type="String" mode="IN" optional="false"/>
+        <attribute name="paymentId" type="String" mode="OUT" optional="true"/>  
+    </service>
+    
     <service name="createInvoiceAttribute" engine="java" auth="true" invoke="createInvoiceAttribute" 
         location="org.ofbiz.accounting.invoice.InvoiceWorker">
         <description>Create specified invoice attribute</description>

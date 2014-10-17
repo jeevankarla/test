@@ -702,8 +702,13 @@ under the License.
         <response name="success" type="view" value="FindPayrollBilling"/>
         <response name="error" type="view" value="FindPayrollBilling"/>
     </request-map>
-
-     <request-map uri="EmployeeWisePaySheet">
+    <request-map uri="setPayrollPeriodBillingStatus">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="setPayrollPeriodBillingStatus"/>
+        <response name="success" type="view" value="FindPayrollBilling"/>
+        <response name="error" type="view" value="FindPayrollBilling"/>
+    </request-map>
+    <request-map uri="EmployeeWisePaySheet">
         <security https="true" auth="true"/>
         <response name="success" type="view" value="EmployeeWisePayrollAnalysis"/>
     </request-map>

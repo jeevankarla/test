@@ -501,11 +501,9 @@
             </hyperlink>
         </field>
         <field use-when="statusId.equals(&quot;GENERATED&quot;)" name="approve" widget-style="buttontext cancel">
-			<hyperlink target="setPeriodBillingStatus" description="approve">
+			<hyperlink target="setPayrollPeriodBillingStatus" description="approve">
 	        	<parameter param-name="periodBillingId" from-field="periodBillingId"/>
 	        	<parameter param-name="statusId" value="APPROVED"/>
-	        	<parameter param-name="lastModifiedDate" value="${nowTimeStamp}"/>
-	        	<parameter param-name="lastModifiedByUserLogin" from-field="userLogin.userLoginId"/>
 	        </hyperlink>
         </field>
 		
@@ -515,11 +513,9 @@
 	        </hyperlink>
         </field>
         <field use-when="statusId.equals(&quot;APPROVED&quot;)" name="reject" widget-style="buttontext cancel">
-			<hyperlink target="setPeriodBillingStatus" description="Reject" >
+			<hyperlink target="setPayrollPeriodBillingStatus" description="Reject" >
 	        	<parameter param-name="periodBillingId" from-field="periodBillingId"/>
 	        	<parameter param-name="statusId" value="GENERATED"/>
-	        	<parameter param-name="lastModifiedDate" value="${nowTimeStamp}"/>
-	        	<parameter param-name="lastModifiedByUserLogin" from-field="userLogin.userLoginId"/>
 	        </hyperlink>
         </field>
         <field use-when="(statusId.equals(&quot;APPROVED&quot;))&amp;&amp; ${groovy:((security.hasEntityPermission(&quot;SENDLVDSMS&quot;, &quot;_VIEW&quot;, session)))}" name="Sendsms" widget-style="buttontext">
@@ -563,11 +559,9 @@
             </hyperlink>
         </field>        
         <field use-when="statusId.equals(&quot;GENERATED&quot;)" name="approve" widget-style="buttontext cancel">
-			<hyperlink target="setPeriodBillingStatus" description="approve">
+			<hyperlink target="setPayrollPeriodBillingStatus" description="approve">
 	        	<parameter param-name="periodBillingId" from-field="periodBillingId"/>
 	        	<parameter param-name="statusId" value="APPROVED"/>
-	        	<parameter param-name="lastModifiedDate" value="${nowTimeStamp}"/>
-	        	<parameter param-name="lastModifiedByUserLogin" from-field="userLogin.userLoginId"/>
 	        </hyperlink>
         </field>
 		
@@ -577,19 +571,17 @@
 	        </hyperlink>
         </field>
         <field use-when="statusId.equals(&quot;APPROVED&quot;)" name="reject" widget-style="buttontext cancel">
-			<hyperlink target="setPeriodBillingStatus" description="Reject" >
+			<hyperlink target="setPayrollPeriodBillingStatus" description="Reject" >
 	        	<parameter param-name="periodBillingId" from-field="periodBillingId"/>
 	        	<parameter param-name="statusId" value="GENERATED"/>
-	        	<parameter param-name="lastModifiedDate" value="${nowTimeStamp}"/>
-	        	<parameter param-name="lastModifiedByUserLogin" from-field="userLogin.userLoginId"/>
 	        </hyperlink>
         </field>
-        <field use-when="(statusId.equals(&quot;APPROVED&quot;))&amp;&amp; ${groovy:((security.hasEntityPermission(&quot;SENDLVDSMS&quot;, &quot;_VIEW&quot;, session)))}" name="Sendsms" widget-style="buttontext">
+        <!-- <field use-when="(statusId.equals(&quot;APPROVED&quot;))&amp;&amp; ${groovy:((security.hasEntityPermission(&quot;SENDLVDSMS&quot;, &quot;_VIEW&quot;, session)))}" name="Sendsms" widget-style="buttontext">
             <hyperlink target="sendPayrollSms" description="Send sms"  target-window="_BLANK" confirmation-message="Are You Sure You Want To send Sms">
              	<parameter param-name="periodBillingId" from-field="periodBillingId"/>
              	<parameter param-name="customTimePeriodId" from-field="customTimePeriodId"/>
             </hyperlink>
-        </field>
+        </field> -->
 	</form>
 	<form name="createBenefitDeductionCalculator" type="single"  odd-row-style="header-row" default-table-style="basic-table"  target="calculateEmployeeBenefitDeduction">
        	<field name="employeeId">
