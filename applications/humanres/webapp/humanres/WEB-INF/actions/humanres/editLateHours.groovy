@@ -28,12 +28,13 @@ dctx = dispatcher.getDispatchContext();
 Locale locale = new Locale("en","IN");
 TimeZone timeZone = TimeZone.getDefault();
 emplList=[];
-orgList=[];
+departmentList=[];
 holidaysList=[];
 workedHolidaysList=[];
 List EncashmentList=[];
 employments=[];
-holidays=[];
+ holidays=[];
+ deptCountHolidays=[];
 empIds=[];
 empName=[:];
 orderDate=UtilDateTime.nowTimestamp();
@@ -41,6 +42,10 @@ context.orderDate=orderDate;
 partyId=parameters.partyId;
 deptId=parameters.deptId;
 timePeriodId=parameters.customTimePeriodId;
+if(UtilValidate.isNotEmpty(parameters.deptCount_TimePeriodId)){
+	timePeriodId=parameters.deptCount_TimePeriodId;
+	deptId="Company";
+}
 employeeList = [];
 internalOrgs=[];
 context.internalOrgs=internalOrgs;
@@ -140,10 +145,14 @@ if(UtilValidate.isNotEmpty(timePeriodId)){
 		secondSaturDay = UtilDateTime.addDaysToTimestamp(UtilDateTime.getWeekStart(UtilDateTime.getMonthStart(thruDateEnd),0,2,timeZone,locale), -1);
 		if(UtilValidate.isNotEmpty(holidaysList)){
 			holidaysList.each{ days ->
+				deptCountHolidays.add(UtilDateTime.toDateString(days.get("holiDayDate"),"MMM dd, yyyy"));
 				holidays.add(UtilDateTime.toSqlDate(days.get("holiDayDate")));
 			}
 		}
-		holidays.add(UtilDateTime.toSqlDate(secondSaturDay));
+		if(!holidays.contains(UtilDateTime.toSqlDate(secondSaturDay))){
+			holidays.add(UtilDateTime.toSqlDate(secondSaturDay));
+			deptCountHolidays.add(UtilDateTime.toDateString(secondSaturDay,"MMM dd, yyyy"));
+		}
 		//get employee EmployeeWeeklyOff Days and exclude those
 		employeeWeeklyOffInpuMap = [:];
 		employeeWeeklyOffInpuMap.put("employeeId",partyId);
@@ -215,30 +224,64 @@ if(UtilValidate.isNotEmpty(timePeriodId)){
 			
 		}
 		
-		/*// GH and SS DepartmentWise Count Report
-		Debug.log("departments=============="+orgList);
-		if(UtilValidate.isNotEmpty(orgList)){
-			departmentList=orgList;
-		}
-		Debug.log("departmentList=============="+departmentList);
-		List conDepartmentList=[];
-		conDepartmentList.add(EntityCondition.makeCondition("partyId", EntityOperator.IN,empIds));
-		conDepartmentList.add(EntityCondition.makeCondition("date",EntityOperator.IN,holidays));
-		conDept=EntityCondition.makeCondition(conDepartmentList,EntityOperator.AND);
-		emplHolidayAttendanceList = delegator.findList("EmplDailyAttendanceDetail", conDept ,UtilMisc.toSet("partyId","date"),null, null, false );
-		departmentList.each{ department ->
-			Debug.log("department================="+department);
-			emplHolidayAttendanceList.each{ emplHolidayAttendance ->
-				Debug.log("emplHolidayAttendance================="+emplHolidayAttendance);
-				departmentDetails=delegator.findByAnd("Employment", [partyIdTo : emplHolidayAttendance.partyId]);
+		// GH and SS DepartmentWise Count Report
+		if(UtilValidate.isNotEmpty(parameters.deptCount_TimePeriodId)){
+			context.fromStartDate=fromDateStart;
+			context.thruEndDate=thruDateEnd;
+			finalDeptCountMap=[:];
+			finalDayCountMap=[:];
+			if(UtilValidate.isNotEmpty(orgList)){
+				departmentList=orgList;
+			}
+		
+			List conDepartmentList=[];
+			conDepartmentList.add(EntityCondition.makeCondition("partyId", EntityOperator.IN,empIds));
+			conDepartmentList.add(EntityCondition.makeCondition("date",EntityOperator.IN,holidays));
+			conDept=EntityCondition.makeCondition(conDepartmentList,EntityOperator.AND);
+			emplHolidayAttendanceList = delegator.findList("EmplDailyAttendanceDetail", conDept ,UtilMisc.toSet("partyId","date"),null, null, false );
+			departmentList.each{ department ->
+				tempDayList=[];
 				deptName="";
-				if(departmentDetails){
-					deptPartyId=departmentDetails[0].partyIdFrom;
-					deptName=PartyHelper.getPartyName(delegator, deptPartyId, false);
-					Debug.log("deptName================="+deptName);
+			if(department.partyId!="Company"){
+				holidays.each{ holiday ->
+					daycount=0;
+					tempDayMap=[:];
+					emplHolidayAttendanceList.each{ emplHolidayAttendance ->
+						departmentDetails=delegator.findByAnd("Employment", [partyIdTo : emplHolidayAttendance.partyId]);
+						
+						if(departmentDetails){
+							deptPartyId=departmentDetails[0].partyIdFrom;
+							
+						}
+						if((emplHolidayAttendance.date==holiday) && (department.partyId==departmentDetails[0].partyIdFrom)){
+							daycount=daycount+1;
+						}
+					}
+					tempDayMap.put(UtilDateTime.toDateString(holiday,"MMM dd, yyyy"),daycount);
+					tempDayList.add(tempDayMap);
+				}	
+				deptName=PartyHelper.getPartyName(delegator, department.partyId, false);
+				finalDeptCountMap.put(deptName,tempDayList);
+			}
+			}
+			context.finalDeptCountMap=finalDeptCountMap;
+			context.deptCountHolidays=deptCountHolidays;
+			context.holidays=holidays
+			holidays.each{ holiday ->
+				deptTotal=0;
+				departmentList.each{ department ->
+					if(department.partyId!="Company"){
+						emplHolidayAttendanceList.each{ emplHolidayAttendance ->
+							if((emplHolidayAttendance.date==holiday) && (department.partyId==departmentDetails[0].partyIdFrom)){
+								deptTotal=deptTotal+1;
+							}	
+						}
+					}
 				}
-			}	
-		}*/
+				finalDayCountMap.put(UtilDateTime.toDateString(holiday,"MMM dd, yyyy"),deptTotal);
+			}
+			context.finalDayCountMap=finalDayCountMap;
+	   }
 	}
 }
 

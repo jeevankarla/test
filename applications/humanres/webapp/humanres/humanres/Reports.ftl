@@ -230,20 +230,29 @@ function makeDatePicker1(fromDateId ,thruDateId){
 							<td width="10%"><input type="submit" value="Download" class="buttontext"></td>
 						</form>											
 					</tr>
-				<!--	<tr class="alternate-row">
+				<tr class="alternate-row">
 						<form id="GHSSDepatmentCountReport" name="GHSSDepatmentCountReport" mothed="post" action="<@ofbizUrl>GHSSDepatmentCountReport.pdf</@ofbizUrl>" target="_blank">
-							<td width="30%">GH and SS Department Count </td>
+							<td width="40%">GH and SS Department Count </td>
 							<td width="10%"></td>
-							<td width="45%">Period Id
-								<select name="customTimePeriodId" id="customTimePeriodId" class='h4'>
-									<#list customTimePeriodList as customTimePeriod><option value='${customTimePeriod.customTimePeriodId?if_exists}' >${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(customTimePeriod.fromDate, "dd MMMMM, yyyy")} -${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(customTimePeriod.thruDate, "dd MMMMM, yyyy")}</option></#list>
+							<td width="10%"></td>
+							<td width="50%">Period Id
+								<select name="deptCount_TimePeriodId" id="deptCount_TimePeriodId" class='h4'>
+									<#assign customTimePeriodList=customTimePeriodList?sort>
+										<#list customTimePeriodList as customTimePeriod>
+										 <#if defaultTimePeriodId?exists && (defaultTimePeriodId == customTimePeriod.customTimePeriodId)>
+					      					<option value='${customTimePeriod.customTimePeriodId?if_exists}' selected="selected">${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(customTimePeriod.fromDate, "dd MMMMM, yyyy")} -${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(customTimePeriod.thruDate, "dd MMMMM, yyyy")}</option>
+					      					<#else>
+					      						<option value='${customTimePeriod.customTimePeriodId?if_exists}' >${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(customTimePeriod.fromDate, "dd MMMMM, yyyy")} -${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(customTimePeriod.thruDate, "dd MMMMM, yyyy")}</option>
+					                  		</option>
+					      				</#if>
+								 
+								      </#list>
 								</select>
 							</td>	
 							<td width="10%"></td>
 							<td width="10%"><input type="submit" value="Download" class="buttontext"></td>
-						
-						</form>											
-					</tr> -->
+						</form>										
+					</tr>
 				</table>
 			</div>
 		</div>
