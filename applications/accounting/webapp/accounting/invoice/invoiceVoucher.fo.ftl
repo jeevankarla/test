@@ -280,7 +280,19 @@ under the License.
 						        						 </#if>
 						        						 </#if>
 						        						 </#if>
-						        						 
+						        						 <#if paymentListReport.comments?has_content>
+						        						 <fo:table-row> 
+						        						 	<fo:table-cell>
+						        						 		<fo:block text-align="left" font-size="12pt" white-space-collapse="false" keep-together="always" font-weight="bold">&#160;COMMENTS: ${paymentListReport.comments?if_exists}</fo:block>
+						        						 	</fo:table-cell>
+						        						 	<fo:table-cell>
+						        						 		<fo:block text-align="left" font-size="12pt" white-space-collapse="false" keep-together="always" font-weight="bold"></fo:block>
+						        						 	</fo:table-cell>
+						        						 	<fo:table-cell>
+						        						 		<fo:block text-align="left" font-size="12pt" white-space-collapse="false" keep-together="always" font-weight="bold"></fo:block>
+						        						 	</fo:table-cell>
+						        						 </fo:table-row>
+						        						 </#if>
 						        						
 						        						<fo:table-row>
 						        						<fo:table-cell bottom="">

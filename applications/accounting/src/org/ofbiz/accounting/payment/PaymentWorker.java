@@ -571,9 +571,9 @@ public class PaymentWorker {
         }*/
         
         //store attribute
-       /* GenericValue paymentAttribute = delegator.makeValue("PaymentAttribute", UtilMisc.toMap("paymentId", paymentId, "attrName", "INFAVOUR_OF"));
-        paymentAttribute.put("attrValue",inFavourOf);
-        paymentAttribute.create();*/
+	        GenericValue paymentAttribute = delegator.makeValue("PaymentAttribute", UtilMisc.toMap("paymentId", paymentId, "attrName", "INFAVOUR_OF"));
+	        paymentAttribute.put("attrValue",inFavourOf);
+	        paymentAttribute.create();
         }catch (Exception e) {
         Debug.logError(e, e.toString(), module);
         return ServiceUtil.returnError(e.toString());
@@ -615,6 +615,7 @@ public class PaymentWorker {
 	  	  String invoiceId = "";
 	  	  String partyIdTo = "";
 	  	  String partyIdFrom = "";
+	  	  String comments = "";
   	
 		  	Map invoiceAmountMap = FastMap.newInstance();
 		  	List invoicesList = FastList.newInstance();
@@ -655,7 +656,7 @@ public class PaymentWorker {
 			  	instrumentDateStr = (String) paramMap.get("instrumentDate");
 			  	paymentDateStr = (String) paramMap.get("paymentDate");
 			  	paymentRefNum = (String) paramMap.get("paymentRefNum");
-	  	
+			  	comments = (String) paramMap.get("comments");
 		  	
 			  	//Timestamp instrumentDate=UtilDateTime.nowTimestamp();
 			  	Timestamp instrumentDate = null;
@@ -698,6 +699,7 @@ public class PaymentWorker {
 			  	        }
 			  	        paymentCtx.put("userLogin", userLogin);
 			  	        paymentCtx.put("amount", totalAmount);
+			  	        paymentCtx.put("comments", comments);
 			  	        paymentCtx.put("invoices", invoicesList);
 			  	        paymentCtx.put("invoiceAmountMap", invoiceAmountMap);
 			  			try{
@@ -739,9 +741,9 @@ public class PaymentWorker {
 			  		        return "error";
 			  		        }
 			  	        //store attribute
-			  	        /*GenericValue paymentAttribute = delegator.makeValue("PaymentAttribute", UtilMisc.toMap("paymentId", paymentId, "attrName", "INFAVOUR_OF"));
+			  	        GenericValue paymentAttribute = delegator.makeValue("PaymentAttribute", UtilMisc.toMap("paymentId", paymentId, "attrName", "INFAVOUR_OF"));
 			  	        paymentAttribute.put("attrValue",inFavourOf);
-			  	        paymentAttribute.create();*/
+			  	        paymentAttribute.create();
 		  			}
 		  		}catch (Exception e) {
 	  		        Debug.logError(e, e.toString(), module);
