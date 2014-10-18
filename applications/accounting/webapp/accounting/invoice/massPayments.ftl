@@ -84,6 +84,7 @@
 		var partyIdName;
 	    var partyId;
 	    var fromPartyId;
+	    var voucherTypeId;
 		
 		message = "";
 		message += "<form action='makeMassInvoicePayments' method='post' onsubmit='return disableSubmitButton();'>";
@@ -98,24 +99,33 @@
 				fromPartyId = $($(cell).find("#fromPartyId")).val();
 				partyIdName = $($(cell).find("#partyIdName")).val();
 				voucherTypeId = $($(cell).find("#voucherTypeId")).val();
+				
 				if(voucherTypeId != undefined && voucherTypeId != "" && voucherPaymentMethodTypeMap != undefined){
-				  payMethodList=voucherPaymentMethodTypeMap[voucherTypeId];
-			 	 if(payMethodList != undefined && payMethodList != ""){
-					$.each(payMethodList, function(key, item){
-					  methodOptionList.push('<option value="'+item.value+'">'+item.text+'</option>');
-					});
+					payMethodList=voucherPaymentMethodTypeMap[voucherTypeId];
+			 	 	if(payMethodList != undefined && payMethodList != ""){
+						$.each(payMethodList, function(key, item){
+						  methodOptionList.push('<option value="'+item.value+'">'+item.text+'</option>');
+						});
 			 	   }
 				 }else{
 			 	   payMethodList=voucherPaymentMethodTypeMap['ALL'];
 			 	   	$.each(payMethodList, function(key, item){
 					  methodOptionList.push('<option value="'+item.value+'">'+item.text+'</option>');
 					});
-			 	   }
-				  paymentMethodList = methodOptionList;		
+			 	  }
+				  paymentMethodList = methodOptionList;
 				message += "<tr class='h2'><td align='left'class='h3' width='60%'>Invoice:</td><td><input type=hidden name='invoiceId_o_"+i+"' value='"+inv+"'>"+inv+"</td>";
 				message += "<td align='left'class='h3' width='60%'>Amount:</td><td><input type=text name='amt_o_"+i+"' value='"+amt+"'></td></tr>";
 			});
 		});
+		
+		if(voucherTypeId == "/"){
+			payMethodList=voucherPaymentMethodTypeMap['ALL'];
+	 	   	$.each(payMethodList, function(key, item){
+			  methodOptionList.push('<option value="'+item.value+'">'+item.text+'</option>');
+			});
+		}
+		
 			message += "<tr class='h3'><td align='left' class='h3' width='60%'>Payment Type :</td><td align='left' width='60%'><select name='paymentTypeId' id='paymentTypeId'  class='h4'>"+
 						"<#if paymentTypes?has_content><#list paymentTypes as eachMethodType><option value='${eachMethodType.paymentTypeId?if_exists}' >${eachMethodType.description?if_exists}</option></#list></#if>"+            
 						"</select></td></tr>"+
