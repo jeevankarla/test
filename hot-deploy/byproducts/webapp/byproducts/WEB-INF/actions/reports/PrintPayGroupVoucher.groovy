@@ -77,6 +77,15 @@ if(UtilValidate.isNotEmpty(paymentGroupId)){
 		}
 	}
 }
-
+paymentGroup = delegator.findOne("PaymentGroup", UtilMisc.toMap("paymentGroupId", paymentGroupId), false);
+abstractDetails = [:];
+tempAmount = 0;
+if(paymentGroup.amount){
+	tempAmount = paymentGroup.amount;
+}
+amountInWords=UtilNumber.formatRuleBasedAmount(tempAmount,"%rupees-and-paise", locale).toUpperCase();
+abstractDetails.put("amount", tempAmount);
+abstractDetails.put("amountInWords", amountInWords);
+context.abstractDetails = abstractDetails;
 
 

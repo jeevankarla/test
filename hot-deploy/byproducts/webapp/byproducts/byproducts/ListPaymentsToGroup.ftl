@@ -134,7 +134,9 @@ under the License.
     			<input type="hidden" name="paymentGroupTypeId" id="paymentGroupTypeId" value="${roleTypeId?if_exists}">
     			<td><span class="label"> Amount:</span><input class='h3' type='text' id='payAmount' name='payAmount' readonly/></td>
     			<td><span class="label"> Payment Date (<font color='red'>*</font>):</span><input class='h3' type='text' id='paymentDate' name='paymentDate' onmouseover='datepick()'/></td>
-    			<td><input id="submitButton" type="button"  onclick="javascript:processPayments(this);" value="Make Payment"/></td>
+    			<#if security.hasEntityPermission("BATCHPAY", "_CREATE", session)>
+    				<td><input id="submitButton" type="button"  onclick="javascript:processPayments(this);" value="Make Payment"/></td>
+    			</#if>
     		</tr>
     	</table>
     	

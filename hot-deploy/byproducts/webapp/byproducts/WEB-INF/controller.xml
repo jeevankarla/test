@@ -427,6 +427,11 @@
         <security https="true" auth="true"/>
         <response name="success" type="view" value="PrintPayGroupVoucher"/>
     </request-map>
+    <request-map uri="printPayGroupVoucherAbstract.pdf">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="PrintPayGroupVoucherAbstract"/>
+    </request-map>
+    
     <request-map uri="lookupProductByCategory">
     	<security auth="true" https="true"/>
     	<response name="success" type="view" value="LookupProductByCategory"/>
@@ -1616,8 +1621,8 @@
     <view-map name="VehicleStatus" type="screen" page="component://byproducts/widget/ByProductsNgScreens.xml#VehicleStatus"/>
     <view-map name="VehicleStatusChange" type="screen" page="component://byproducts/widget/ByProductsNgScreens.xml#VehicleStatusChange"/>
  	<view-map name="PrintPayGroupCheque" type="screenfop" page="component://byproducts/widget/ByProductsNgScreens.xml#PrintPayGroupCheque" content-type="application/pdf" encoding="none"/> 
- 	<view-map name="PrintPayGroupVoucher" type="screenfop" page="component://byproducts/widget/ByProductsNgScreens.xml#PrintPayGroupVoucher" content-type="application/pdf" encoding="none"/>  
-
+ 	<view-map name="PrintPayGroupVoucher" type="screenfop" page="component://byproducts/widget/ByProductsNgScreens.xml#PrintPayGroupVoucher" content-type="application/pdf" encoding="none"/>
+ 	<view-map name="PrintPayGroupVoucherAbstract" type="screenfop" page="component://byproducts/widget/ByProductsNgScreens.xml#PrintPayGroupVoucherAbstract" content-type="application/pdf" encoding="none"/>  
 
     <view-map name="MilkDeliveryScheduleReport" type="screenfop" page="component://byproducts/widget/ByProductsNgScreens.xml#MilkDeliveryScheduleReport" content-type="text/plain"/> 
     <view-map name="RouteAbstractReportTXT" type="screenfop" page="component://byproducts/widget/ByProductsNgScreens.xml#TruckSheetReportTXT" content-type="text/plain"/>
