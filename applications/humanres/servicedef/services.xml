@@ -1433,17 +1433,17 @@ under the License.emplpunch
         <attribute name="statusId" mode="IN" type="String" optional="false"/>
     </service>
     <service name="createInvoiceAndPaymentsForBilling"  engine="java"
-                location="in.vasista.vbiz.humanres.PayrollService" invoke="createInvoiceAndPaymentsForBilling" auth="true">
+                location="in.vasista.vbiz.humanres.PayrollService" invoke="createInvoiceAndPaymentsForBilling" auth="true" transaction-timeout="500">
         <description>Cancel Payroll Billing</description>
         <attribute name="periodBillingId" mode="IN" type="String" optional="false"/>
     </service>
     <service name="cancelInvoiceAndPaymentsForBilling"  engine="java"
-                location="in.vasista.vbiz.humanres.PayrollService" invoke="cancelInvoiceAndPaymentsForBilling" auth="true">
+                location="in.vasista.vbiz.humanres.PayrollService" invoke="cancelInvoiceAndPaymentsForBilling" auth="true" transaction-timeout="500">
         <description>Cancel Payroll Billing</description>
         <attribute name="periodBillingId" mode="IN" type="String" optional="false"/>
     </service>
      <service name="cancelInvoiceAndPaymentsForBillingInternal"  engine="java"
-                location="in.vasista.vbiz.humanres.PayrollService" invoke="cancelInvoiceAndPaymentsForBillingInternal" auth="true">
+                location="in.vasista.vbiz.humanres.PayrollService" invoke="cancelInvoiceAndPaymentsForBillingInternal" auth="true" transaction-timeout="500">
         <description>Cancel Payroll Billing</description>
         <attribute name="periodBillingId" mode="IN" type="String" optional="false"/>
     </service>
