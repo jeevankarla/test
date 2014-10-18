@@ -143,6 +143,9 @@ public class InvoicePayrolWorkerNew {
 	        	EntityCondition condition = EntityCondition.makeCondition(conditionList, EntityOperator.AND);  		
 	        	List<GenericValue> payrollHeaders = delegator.findList("PayrollHeader", condition, null, null, null, false);
 			 //List<GenericValue> payrollHeaders = delegator.findByAnd("PayrollHeader", UtilMisc.toMap(""));
+	        	Timestamp startTimestamp = UtilDateTime.nowTimestamp();
+	        	int emplCounter =0;
+	        	double elapsedSeconds;
 	        	for (int i = 0; i < payrollHeaders.size(); ++i) {		
 	        		GenericValue payrollHeader = payrollHeaders.get(i);
 	        		input.put("partyId", payrollHeader.getString("partyId"));
@@ -180,6 +183,11 @@ public class InvoicePayrolWorkerNew {
                         return ServiceUtil.returnError(ServiceUtil.getErrorMessage(paymentResult), null, null, paymentResult);
                     }
 	        		invoiceList.add(invoice);
+	        		emplCounter++;
+               		if ((emplCounter % 20) == 0) {
+               			elapsedSeconds = UtilDateTime.getInterval(startTimestamp, UtilDateTime.nowTimestamp())/1000;
+               			Debug.logImportant("Completed " + emplCounter + " employee [ in " + elapsedSeconds + " seconds]", module);
+               		}
 	        	}
 		}
 		catch(GenericEntityException e) {
