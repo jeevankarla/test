@@ -175,6 +175,13 @@ public class InvoicePayrolWorkerNew {
                 		Debug.logError(invoiceResult.toString(), module);
                         return ServiceUtil.returnError(null, null, null, invoiceResult);
                     }
+                	invoiceCtx.put("userLogin", userLogin);
+	                invoiceCtx.put("statusId","INVOICE_READY");
+                	invoiceResult = dispatcher.runSync("setInvoiceStatus",invoiceCtx);
+                	if (ServiceUtil.isError(invoiceResult)) {
+                		Debug.logError(invoiceResult.toString(), module);
+                        return ServiceUtil.returnError(null, null, null, invoiceResult);
+                    }
                 	Map<String, Object> paymentCtx = UtilMisc.<String, Object>toMap("invoiceId", invoiceId);
                 	paymentCtx.put("userLogin", userLogin);
                 	Map<String, Object> paymentResult = dispatcher.runSync("createPayrolPaymentAndAppclications",paymentCtx);
