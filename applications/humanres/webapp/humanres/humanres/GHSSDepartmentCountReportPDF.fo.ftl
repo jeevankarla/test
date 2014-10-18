@@ -44,25 +44,7 @@ under the License.
 				 <fo:block text-align="left" keep-together="always"  >&#160;--------------------------------------------------------------------------------------------------------------------------------</fo:block>
 				 <fo:block font-family="Courier,monospace">
 				<fo:table >
-				<#if holidaysCount gte 5>	
-					<fo:table-column column-width="100pt"/>
-					<fo:table-column column-width="30pt"/>
-					<fo:table-column column-width="30pt"/>
-					<fo:table-column column-width="120pt"/>
-					<#list holidays as holiday>
-					<fo:table-column column-width="110pt"/>
-					</#list>
-				</#if>	
-				<#if holidaysCount = 4>	
-					<fo:table-column column-width="100pt"/>
-					<fo:table-column column-width="30pt"/>
-					<fo:table-column column-width="30pt"/>
-					<fo:table-column column-width="120pt"/>
-					<#list holidays as holiday>
-					<fo:table-column column-width="100pt"/>
-					</#list>
-				</#if>	
-				<#if holidaysCount = 3>	
+				<#if holidaysCount = 8>	
 					<fo:table-column column-width="100pt"/>
 					<fo:table-column column-width="30pt"/>
 					<fo:table-column column-width="30pt"/>
@@ -71,16 +53,61 @@ under the License.
 					<fo:table-column column-width="80pt"/>
 					</#list>
 				</#if>	
+				<#if holidaysCount = 7>	
+					<fo:table-column column-width="100pt"/>
+					<fo:table-column column-width="30pt"/>
+					<fo:table-column column-width="30pt"/>
+					<fo:table-column column-width="120pt"/>
+					<#list holidays as holiday>
+					<fo:table-column column-width="72pt"/>
+					</#list>
+				</#if>
+				<#if holidaysCount = 6>	
+					<fo:table-column column-width="100pt"/>
+					<fo:table-column column-width="30pt"/>
+					<fo:table-column column-width="30pt"/>
+					<fo:table-column column-width="120pt"/>
+					<#list holidays as holiday>
+					<fo:table-column column-width="65pt"/>
+					</#list>
+				</#if>
+				<#if holidaysCount = 5>	
+					<fo:table-column column-width="100pt"/>
+					<fo:table-column column-width="30pt"/>
+					<fo:table-column column-width="30pt"/>
+					<fo:table-column column-width="120pt"/>
+					<#list holidays as holiday>
+					<fo:table-column column-width="60pt"/>
+					</#list>
+				</#if>	
+				<#if holidaysCount = 4>	
+					<fo:table-column column-width="100pt"/>
+					<fo:table-column column-width="30pt"/>
+					<fo:table-column column-width="30pt"/>
+					<fo:table-column column-width="120pt"/>
+					<#list holidays as holiday>
+					<fo:table-column column-width="56pt"/>
+					</#list>
+				</#if>	
+				<#if holidaysCount = 3>	
+					<fo:table-column column-width="100pt"/>
+					<fo:table-column column-width="30pt"/>
+					<fo:table-column column-width="30pt"/>
+					<fo:table-column column-width="120pt"/>
+					<#list holidays as holiday>
+					<fo:table-column column-width="50pt"/>
+					</#list>
+				</#if>	
 				<#if holidaysCount lte 2>	
 					<fo:table-column column-width="100pt"/>
 					<fo:table-column column-width="30pt"/>
 					<fo:table-column column-width="30pt"/>
 					<fo:table-column column-width="120pt"/>
 					<#list holidays as holiday>
-					<fo:table-column column-width="70pt"/>
+					<fo:table-column column-width="51pt"/>
 					</#list>
 				</#if>	
-					<fo:table-column column-width="100pt"/>
+					<fo:table-column column-width="81pt"/>
 					<fo:table-body>
 					 <fo:table-row >
 					 		   <fo:table-cell><fo:block linefeed-treatment="preserve">&#xA;</fo:block></fo:table-cell>
@@ -108,7 +135,7 @@ under the License.
 			<fo:flow flow-name="xsl-region-body" font-family="Courier,monospace">
 				 <fo:block font-family="Courier,monospace"  font-size="14pt">
 				<fo:table >
-				<#assign deptCount=finalDeptCountMap.entrySet()>
+				 <#assign deptCount=finalDeptCountMap.entrySet()>
 					<#list deptCount as deptcount>
 						<#assign dates=deptcount.getValue()>
 						<fo:table-column column-width="10pt"/>
@@ -116,14 +143,21 @@ under the License.
 						<fo:table-column column-width="150pt"/>
 						<fo:table-column column-width="25pt"/>
 						<#list dates as date>
-			                    <#list deptCountHolidays as holiday>
-			                    <fo:table-column column-width="15pt"/>
-			                    </#list>
-			            <fo:table-column column-width="25pt"/>
-			            <fo:table-column column-width="25pt"/>
-			            <fo:table-column column-width="25pt"/>
-			            <fo:table-column column-width="25pt"/>
-			            <fo:table-column column-width="25pt"/>
+			            <fo:table-column column-width="9pt"/>
+			            <fo:table-column column-width="9pt"/>
+			            <fo:table-column column-width="9pt"/>
+			            <fo:table-column column-width="9pt"/>
+			            <fo:table-column column-width="9pt"/>
+			            <fo:table-column column-width="9pt"/>
+			            <fo:table-column column-width="9pt"/>
+			            <fo:table-column column-width="9pt"/>
+			            <fo:table-column column-width="9pt"/>
+			            <fo:table-column column-width="9pt"/>
+			            <fo:table-column column-width="9pt"/>
+			            <fo:table-column column-width="9pt"/>
+			            <fo:table-column column-width="9pt"/>
+			            <fo:table-column column-width="9pt"/>
+			            <fo:table-column column-width="9pt"/>
 			            </#list>   
 					</#list>	
 					<fo:table-body>
@@ -146,7 +180,8 @@ under the License.
 			                 <fo:table-cell><fo:block linefeed-treatment="preserve">&#xA;</fo:block></fo:table-cell>
 			                 <fo:table-cell><fo:block linefeed-treatment="preserve">&#xA;</fo:block></fo:table-cell>
 			                 <fo:table-cell><fo:block linefeed-treatment="preserve">&#xA;</fo:block></fo:table-cell>
-			                 <fo:table-cell><fo:block linefeed-treatment="preserve">${deptTotal}</fo:block></fo:table-cell>
+			                 <fo:table-cell><fo:block linefeed-treatment="preserve">&#xA;</fo:block></fo:table-cell>
+			                 <fo:table-cell><fo:block text-align="right" keep-together="always">${deptTotal}</fo:block></fo:table-cell>
 							</fo:table-row>
 						<fo:table-row>
 	                    <fo:table-cell><fo:block linefeed-treatment="preserve">&#xA;</fo:block></fo:table-cell>
@@ -157,43 +192,70 @@ under the License.
 				   <fo:block text-align="left" keep-together="always" >&#160;--------------------------------------------------------------------------------------------------------------------------</fo:block>
 				   <fo:block font-family="Courier,monospace" font-weight="bold">
 				<fo:table >
-				<#if holidaysCount gte 5>	
+				<#if holidaysCount = 8>	
+					<fo:table-column column-width="70pt"/>
+					<fo:table-column column-width="30pt"/>
+					<fo:table-column column-width="30pt"/>
+					<fo:table-column column-width="120pt"/>
+					<#list holidays as holiday>
 					<fo:table-column column-width="80pt"/>
-					<fo:table-column column-width="7pt"/>
-					<fo:table-column column-width="7pt"/>
+					</#list>
+				</#if>	
+				<#if holidaysCount = 7>	
+					<fo:table-column column-width="70pt"/>
+					<fo:table-column column-width="30pt"/>
+					<fo:table-column column-width="30pt"/>
+					<fo:table-column column-width="120pt"/>
+					<#list holidays as holiday>
+					<fo:table-column column-width="72pt"/>
+					</#list>
+				</#if>	
+				<#if holidaysCount = 6>	
+					<fo:table-column column-width="70pt"/>
+					<fo:table-column column-width="30pt"/>
+					<fo:table-column column-width="30pt"/>
+					<fo:table-column column-width="120pt"/>
+					<#list holidays as holiday>
+					<fo:table-column column-width="65pt"/>
+					</#list>
+				</#if>	
+				<#if holidaysCount = 5>	
+					<fo:table-column column-width="95pt"/>
+					<fo:table-column column-width="9pt"/>
+					<fo:table-column column-width="9pt"/>
 					<fo:table-column column-width="140pt"/>
 					<#list holidays as holiday>
-					<fo:table-column column-width="113pt"/>
+					<fo:table-column column-width="58pt"/>
 					</#list>
 				</#if>	
 				<#if holidaysCount = 4>	
-					<fo:table-column column-width="70pt"/>
+					<fo:table-column column-width="82pt"/>
 					<fo:table-column column-width="30pt"/>
-					<fo:table-column column-width="15pt"/>
+					<fo:table-column column-width="25pt"/>
 					<fo:table-column column-width="120pt"/>
 					<#list holidays as holiday>
-					<fo:table-column column-width="100pt"/>
+					<fo:table-column column-width="50pt"/>
 					</#list>
 				</#if>	
 				<#if holidaysCount = 3>	
-					<fo:table-column column-width="70pt"/>
+					<fo:table-column column-width="90pt"/>
 					<fo:table-column column-width="30pt"/>
 					<fo:table-column column-width="35pt"/>
 					<fo:table-column column-width="120pt"/>
 					<#list holidays as holiday>
-					<fo:table-column column-width="80pt"/>
+					<fo:table-column column-width="40pt"/>
 					</#list>
 				</#if>	
 				<#if holidaysCount lte 2>	
-					<fo:table-column column-width="100pt"/>
+					<fo:table-column column-width="120pt"/>
 					<fo:table-column column-width="20pt"/>
 					<fo:table-column column-width="20pt"/>
 					<fo:table-column column-width="120pt"/>
 					<#list holidays as holiday>
-					<fo:table-column column-width="70pt"/>
+					<fo:table-column column-width="35pt"/>
 					</#list>
 				</#if>	
-					<fo:table-column column-width="100pt"/>
+					<fo:table-column column-width="68pt"/>
 					<fo:table-body>
 					 <fo:table-row >
 					 		   <fo:table-cell><fo:block linefeed-treatment="preserve">&#xA;</fo:block></fo:table-cell>

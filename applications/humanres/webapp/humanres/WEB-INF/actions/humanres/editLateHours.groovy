@@ -248,12 +248,12 @@ if(UtilValidate.isNotEmpty(timePeriodId)){
 					tempDayMap=[:];
 					emplHolidayAttendanceList.each{ emplHolidayAttendance ->
 						departmentDetails=delegator.findByAnd("Employment", [partyIdTo : emplHolidayAttendance.partyId]);
-						
+						deptPartyId="";
 						if(departmentDetails){
 							deptPartyId=departmentDetails[0].partyIdFrom;
 							
 						}
-						if((emplHolidayAttendance.date==holiday) && (department.partyId==departmentDetails[0].partyIdFrom)){
+						if((emplHolidayAttendance.date==holiday) && (department.partyId==deptPartyId)){
 							daycount=daycount+1;
 						}
 					}
