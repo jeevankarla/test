@@ -709,15 +709,15 @@ public class PayrollService {
     	try {
     		beganTransaction =TransactionUtil.begin(1000);
 			periodBilling = delegator.findOne("PeriodBilling", UtilMisc.toMap("periodBillingId", periodBillingId), false);
+			periodBilling.set("statusId", "APPROVED");
 			result = dispatcher.runSync("createPayrolInvoiceForPeriodBilling", UtilMisc.toMap("periodBillingId", periodBillingId, "userLogin", userLogin));
     		if(ServiceUtil.isError(result)){
     			TransactionUtil.rollback();
     			 Debug.logError("Error while calculating price service:"+result, module);
     			 periodBilling.set("statusId", "GENERATED");
-     			 delegator.store(periodBilling);
+     			// delegator.store(periodBilling);
 		         // return ServiceUtil.returnError(ServiceUtil.getErrorMessage(result));
     		}
-    		periodBilling.set("statusId", "APPROVED");
 			delegator.store(periodBilling);
     	}catch (Exception e) {
     		try{
