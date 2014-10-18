@@ -36,7 +36,34 @@ under the License.
     -->
         </auto-attributes>
     </service>
-    
+    <service name="createDepositFinAccountAndDeposit" engine="java" default-entity-name="FinAccount"
+            location="org.ofbiz.accounting.finaccount.FinAccountServices" invoke="createDepositFinAccountAndDeposit">
+        <description>Create a new Deposit Account.  If no finAccountId is provided, an auto-sequenced one will be used.</description>
+        <permission-service service-name="acctgFinAcctPermissionCheck" main-action="FINACCOUNT_EDIT"/>
+        <auto-attributes mode="INOUT" optional="true" include="pk"/>
+        <auto-attributes mode="IN" optional="true" include="nonpk"/>
+		<attribute name="depositPartyId" mode="IN" optional="false" type="String"/>
+		<attribute name="entryType" mode="IN" optional="true" type="String"/>
+		<attribute name="transactionDate" mode="IN" optional="true" type="Timestamp"/>
+		<attribute name="finAccountIdTo" mode="IN" optional="false" type="String"/>
+		<attribute name="finAccountTransTypeId" mode="IN" optional="false" type="String"/>
+		<attribute name="amount" mode="IN" optional="false" type="BigDecimal"/>
+		<attribute name="contraRefNum" mode="IN" optional="true" type="String"/>
+		<attribute name="comments" mode="IN" optional="true" type="String"/>
+    </service>
+    <service name="refundDepositContraFinAccTrans" engine="java" location="org.ofbiz.accounting.finaccount.FinAccountServices" invoke="refundDepositContraFinAccTrans">
+        <description>Refund Deposit Contra Entry for FinAccount Trans</description>
+        <permission-service service-name="acctgFinAcctPermissionCheck" main-action="FINACCOUNT_EDIT"/>
+		<attribute name="finAccountId" mode="IN" optional="false" type="String"/>
+		<attribute name="contraFinAccountId" mode="IN" optional="false" type="String"/>
+		<attribute name="transactionDate" mode="IN" optional="true" type="String"/>
+		<attribute name="statusId" mode="IN" optional="false" type="String"/>
+		<attribute name="entryType" mode="IN" optional="false" type="String"/>
+		<attribute name="finAccountTransTypeId" mode="IN" optional="false" type="String"/>
+		<attribute name="amount" mode="IN" optional="false" type="BigDecimal"/>
+		<attribute name="contraRefNum" mode="IN" optional="true" type="String"/>
+		<attribute name="comments" mode="IN" optional="true" type="String"/>
+    </service>
     <service name="updateFinAccount" engine="simple" default-entity-name="FinAccount"
             location="component://accounting/script/org/ofbiz/accounting/finaccount/FinAccountServices.xml" invoke="updateFinAccount">
         <description>Update a Financial Account</description>

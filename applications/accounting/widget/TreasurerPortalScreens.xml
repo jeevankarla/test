@@ -73,7 +73,7 @@
                </widgets>
         </section>
     </screen>
-    <screen name="FindDepositAccount">
+    <!-- <screen name="FindDepositAccount">
         <section>
             <actions>
                 <set field="titleProperty" value="Deposit Accounts"/>
@@ -99,11 +99,6 @@
                    	<container style="button-bar">
 	                    <link target="EditDepositFinAccount" text="Create Deposit Account" style="buttontext create"/>
                     </container>
-                    
-                   <!--  <container style="button-bar">
-						<link target="FinAccountAlt.csv" text="Export As CSV" style="buttontext create"/>	
-						<link target="FinAccountAlt.pdf" text="Export As PDF" style="buttontext create"/>				
-					</container>  -->
                    	<section>
 						<widgets>
 							<screenlet title="Deposit Accounts List">				
@@ -111,6 +106,61 @@
 							</screenlet>
 						</widgets>      
                    	</section>
+                   </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen> -->
+    <screen name="FindDepositAccount">
+        <section>
+            <actions>
+                <set field="titleProperty" value="Find Deposit Accounts"/>
+                  <set field="tabButtonItem" value="FindDepositAccount"/>
+                 <set field="tabButtonItem2" value="FindDepositAccount"/>
+                <set field="viewIndex" from-field="parameters.VIEW_INDEX" type="Integer" default-value="0"/>
+                <set field="viewSize" from-field="parameters.VIEW_SIZE" type="Integer" default-value="20"/>
+                <set field="noConditionFind" value="N"/>
+                <service service-name="acctgFinAcctPermissionCheck" result-map="permResult">
+                    <field-map field-name="mainAction" value="FINACCOUNT_EDIT"/>
+                </service>
+                <set field="hasFinEditPermission" from-field="permResult.hasPermission"/>
+                <entity-condition list="finAccountTypes" entity-name="FinAccountType">
+                	<condition-list combine="or">
+                		<condition-expr field-name="parentTypeId" operator="equals" value="DEPOSIT_PAID"/>
+                		<condition-expr field-name="parentTypeId" operator="equals" value="DEPOSIT_RECEIPT"/>
+                	</condition-list>
+                </entity-condition>
+                <entity-condition list="companyBanksList" entity-name="FinAccount">
+            		<condition-list combine="and">
+            			<condition-list combine="or">
+            				<condition-expr field-name="finAccountTypeId" operator="equals" value="BANK_ACCOUNT"/>
+            				<condition-expr field-name="finAccountTypeId" operator="equals" value="CASH"/>
+            				<condition-expr field-name="finAccountTypeId" operator="equals" value="TAX_CREDIT"/>
+            			</condition-list>
+            			<condition-expr field-name="statusId" operator="equals" value="FNACT_ACTIVE"/>
+            			<condition-expr field-name="ownerPartyId" operator="equals" value="Company"/>
+            		</condition-list>
+            	</entity-condition>
+            </actions>
+            <widgets>
+            	<decorator-screen name="CommonTreasurerPortalDecorator" location="component://accounting/widget/CommonScreens.xml"> 
+              		<decorator-section name="body">
+                    	<container style="button-bar">
+	                    	<link target="EditDepositFinAccount" text="Create Deposit Account" style="buttontext create"/>
+                    	</container>
+                    	<section>
+							<widgets>
+								<screenlet title="Find Deposit Account">				
+									 <include-form name="FindDepositAccount" location="component://accounting/widget/TreasurerPortalForms.xml"/>
+								</screenlet>
+								<platform-specific>
+                                    <html><html-template location="component://accounting/webapp/accounting/finaccounttrans/DepositContraRefund.ftl"/></html>
+                                </platform-specific>
+								<screenlet title="List Deposit Account">				
+									 <include-form name="ListDepositAccounts" location="component://accounting/widget/TreasurerPortalForms.xml"/>
+								</screenlet>
+							</widgets>      
+	                   	</section>
                    </decorator-section>
                 </decorator-screen>
             </widgets>
@@ -293,11 +343,18 @@
             	<entity-condition list="paidAccounts" entity-name="FinAccountType">
             		<condition-expr field-name="parentTypeId" operator="equals" value="DEPOSIT_PAID"/>
             	</entity-condition>
+            	<entity-condition list="companyBanksList" entity-name="FinAccount">
+            		<condition-list combine="and">
+            			<condition-expr field-name="finAccountTypeId" operator="equals" value="BANK_ACCOUNT"/>
+            			<condition-expr field-name="statusId" operator="equals" value="FNACT_ACTIVE"/>
+            			<condition-expr field-name="ownerPartyId" operator="equals" value="Company"/>
+            		</condition-list>
+            	</entity-condition>
             </actions>
             <widgets>
               <decorator-screen name="CommonTreasurerPortalDecorator" location="component://accounting/widget/CommonScreens.xml">
                     <decorator-section name="body">
-                      <include-menu name="DepositAccountTabBar" location="component://accounting/widget/AccountingMenus.xml"/>
+                      <!-- <include-menu name="DepositAccountTabBar" location="component://accounting/widget/AccountingMenus.xml"/> -->
                         <section>
                             <condition>
                             	<if-service-permission service-name="acctgFinAcctPermissionCheck" main-action="FINACCOUNT_EDIT"/>
@@ -698,7 +755,7 @@
                 <set field="hasPaymentEditPermission" from-field="permResult.hasPermission"/>
                 <service service-name="performFind" result-map="result">
 	                <field-map field-name="inputFields" from-field="parameters"/>
-	                <field-map field-name="entityName" value="PaymentAndTypeAndCreditCard"/>
+	                <field-map field-name="entityName" value="PaymentAndType"/>
 	                <field-map field-name="orderBy" value="effectiveDate DESC"/>
 	                <field-map field-name="viewIndex" from-field="viewIndex"/>
 	                <field-map field-name="viewSize" from-field="viewSize"/>
@@ -792,7 +849,7 @@
                 <set field="hasPaymentEditPermission" from-field="permResult.hasPermission"/>
                 <service service-name="performFind" result-map="result">
 	                <field-map field-name="inputFields" from-field="parameters"/>
-	                <field-map field-name="entityName" value="PaymentAndTypeAndCreditCard"/>
+	                <field-map field-name="entityName" value="PaymentAndType"/>
 	                <field-map field-name="orderBy" value="effectiveDate DESC"/>
 	                <field-map field-name="viewIndex" from-field="viewIndex"/>
 	                <field-map field-name="viewSize" from-field="viewSize"/>
@@ -1003,7 +1060,7 @@
                 <set field="hasPaymentEditPermission" from-field="permResult.hasPermission"/>
                 <service service-name="performFind" result-map="result">
 	                <field-map field-name="inputFields" from-field="parameters"/>
-	                <field-map field-name="entityName" value="PaymentAndTypeAndCreditCard"/>
+	                <field-map field-name="entityName" value="PaymentAndType"/>
 	                <field-map field-name="orderBy" value="effectiveDate DESC"/>
 	                <field-map field-name="viewIndex" from-field="viewIndex"/>
 	                <field-map field-name="viewSize" from-field="viewSize"/>
@@ -1113,7 +1170,7 @@
                 <set field="hasPaymentEditPermission" from-field="permResult.hasPermission"/>
                 <service service-name="performFind" result-map="result">
 	                <field-map field-name="inputFields" from-field="parameters"/>
-	                <field-map field-name="entityName" value="PaymentAndTypeAndCreditCard"/>
+	                <field-map field-name="entityName" value="PaymentAndType"/>
 	                <field-map field-name="orderBy" value="effectiveDate DESC"/>
 	                <field-map field-name="viewIndex" from-field="viewIndex"/>
 	                <field-map field-name="viewSize" from-field="viewSize"/>
@@ -1310,7 +1367,7 @@
                 <set field="hasPaymentEditPermission" from-field="permResult.hasPermission"/>
                 <service service-name="performFind" result-map="result">
 	                <field-map field-name="inputFields" from-field="parameters"/>
-	                <field-map field-name="entityName" value="PaymentAndTypeAndCreditCard"/>
+	                <field-map field-name="entityName" value="PaymentAndType"/>
 	                <field-map field-name="orderBy" value="effectiveDate DESC"/>
 	                <field-map field-name="viewIndex" from-field="viewIndex"/>
 	                <field-map field-name="viewSize" from-field="viewSize"/>
@@ -1404,7 +1461,7 @@
                 <set field="hasPaymentEditPermission" from-field="permResult.hasPermission"/>
                 <service service-name="performFind" result-map="result">
 	                <field-map field-name="inputFields" from-field="parameters"/>
-	                <field-map field-name="entityName" value="PaymentAndTypeAndCreditCard"/>
+	                <field-map field-name="entityName" value="PaymentAndType"/>
 	                <field-map field-name="orderBy" value="effectiveDate DESC"/>
 	                <field-map field-name="viewIndex" from-field="viewIndex"/>
 	                <field-map field-name="viewSize" from-field="viewSize"/>
@@ -1497,7 +1554,7 @@
                 <set field="hasPaymentEditPermission" from-field="permResult.hasPermission"/>
                 <service service-name="performFind" result-map="result">
 	                <field-map field-name="inputFields" from-field="parameters"/>
-	                <field-map field-name="entityName" value="PaymentAndTypeAndCreditCard"/>
+	                <field-map field-name="entityName" value="PaymentAndType"/>
 	                <field-map field-name="orderBy" value="effectiveDate DESC"/>
 	                <field-map field-name="viewIndex" from-field="viewIndex"/>
 	                <field-map field-name="viewSize" from-field="viewSize"/>
@@ -1589,7 +1646,7 @@
                 <set field="hasPaymentEditPermission" from-field="permResult.hasPermission"/>
                 <service service-name="performFind" result-map="result">
 	                <field-map field-name="inputFields" from-field="parameters"/>
-	                <field-map field-name="entityName" value="PaymentAndTypeAndCreditCard"/>
+	                <field-map field-name="entityName" value="PaymentAndType"/>
 	                <field-map field-name="orderBy" value="effectiveDate DESC"/>
 	                <field-map field-name="viewIndex" from-field="viewIndex"/>
 	                <field-map field-name="viewSize" from-field="viewSize"/>

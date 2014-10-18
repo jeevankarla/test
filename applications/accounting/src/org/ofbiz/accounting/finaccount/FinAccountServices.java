@@ -181,6 +181,132 @@ public class FinAccountServices {
         result.put("finAccountId", finAccountId);
         return result;
     }
+    
+    public static Map<String, Object> refundDepositContraFinAccTrans(DispatchContext dctx, Map<String, Object> context) {
+        Delegator delegator = dctx.getDelegator();
+        LocalDispatcher dispatcher = dctx.getDispatcher();
+        GenericValue userLogin = (GenericValue) context.get("userLogin");
+        BigDecimal amount = (BigDecimal) context.get("amount");
+        amount = amount.abs();
+        context.put("amount", amount);
+        Map<String, Object> result = ServiceUtil.returnSuccess();
+        String transDateStr = (String) context.get("transactionDate");
+        SimpleDateFormat sdf = new SimpleDateFormat("dd MMMMM, yyyy");
+        Timestamp transactionDate = null;
+		if (UtilValidate.isNotEmpty(transDateStr)) {
+			try {
+				transactionDate = new java.sql.Timestamp(sdf.parse(transDateStr).getTime());
+			} catch (ParseException e) {
+				Debug.logError(e, "Cannot parse date string: " + transDateStr,	module);
+			} catch (NullPointerException e) {
+				Debug.logError(e, "Cannot parse date string: " + transDateStr,	module);
+			}
+		} 
+		else {
+			transactionDate = UtilDateTime.nowTimestamp();
+		}
+		String finAccountId = (String) context.get("finAccountId");
+		context.put("transactionDate", transactionDate);
+        try {
+        	GenericValue finAccount = delegator.findOne("FinAccount", UtilMisc.toMap("finAccountId", finAccountId), false);
+        	
+        	if(UtilValidate.isEmpty(finAccount)){
+        		return ServiceUtil.returnError("No Account with Id [" + finAccountId + "]");
+        	}
+        	BigDecimal acctAmt = BigDecimal.ZERO;
+        	if(UtilValidate.isNotEmpty(finAccount.get("actualBalance"))){
+        		acctAmt = finAccount.getBigDecimal("actualBalance");
+        		acctAmt = acctAmt.abs();
+        	}
+        	if(amount.compareTo(acctAmt)>0){
+        		return ServiceUtil.returnError("Cannot Refund more than balance amount");
+        	}
+        	 Map<String, Object> createResult = dispatcher.runSync("preCreateFinAccountTrans", context);
+             if (ServiceUtil.isError(createResult)) {
+                 return createResult;
+             }
+             
+
+        } catch (Exception ex) {
+            return ServiceUtil.returnError(ex.getMessage());
+        }
+        result = ServiceUtil.returnSuccess("Successfully refunded the deposit of amount : "+(BigDecimal)context.get("amount"));
+        return result;
+    }
+    
+    public static Map<String, Object> createDepositFinAccountAndDeposit(DispatchContext dctx, Map<String, Object> context) {
+        Delegator delegator = dctx.getDelegator();
+        LocalDispatcher dispatcher = dctx.getDispatcher();
+        GenericValue userLogin = (GenericValue) context.get("userLogin");
+        String depositPartyId = (String) context.get("depositPartyId");
+        String entryType = (String) context.get("entryType");
+        String finAccountIdTo = (String) context.get("finAccountIdTo");
+        String contraRefNum = (String) context.get("contraRefNum");
+        String comments = (String) context.get("comments");
+        Timestamp transactionDate = (Timestamp) context.get("transactionDate");
+        BigDecimal amount = (BigDecimal) context.get("amount");
+        amount = amount.abs();
+        String parentTypeId = (String) context.get("parentTypeId");
+        Map<String, Object> result = ServiceUtil.returnSuccess();
+        Timestamp fromDate = null;
+        if(UtilValidate.isEmpty(transactionDate)){
+        	transactionDate = UtilDateTime.nowTimestamp();
+        }
+        fromDate = transactionDate;
+        context.put("fromDate", fromDate);
+        String finAccountTransTypeId = "DEPOSIT";
+        try {
+            // get the product store id and use it to generate a unique fin account code
+        	 Map<String, Object> createResult = dispatcher.runSync("createFinAccount", context);
+        	 
+             if (ServiceUtil.isError(createResult)) {
+                 return createResult;
+             }
+             String roleTypeId = "DEPOSITEE";
+             String parentType = "DISBURSEMENT";
+             if(UtilValidate.isNotEmpty(parentTypeId) && parentTypeId.equals("DEPOSIT_RECEIPT")){
+            	 roleTypeId = "DEPOSITOR";
+            	 parentType = "RECEIPT";
+             }
+             
+             String finAccountId = (String)createResult.get("finAccountId");
+             Map<String, Object> inputCtx = FastMap.newInstance();
+             inputCtx.put("finAccountId", finAccountId);
+             inputCtx.put("partyId", depositPartyId);
+             inputCtx.put("fromDate", fromDate);
+             inputCtx.put("roleTypeId", roleTypeId);
+             inputCtx.put("userLogin", userLogin);
+             createResult = dispatcher.runSync("createFinAccountRole", inputCtx);
+
+             if (ServiceUtil.isError(createResult)) {
+                 return createResult;
+             }
+             
+             Map<String, Object> transCtxMap = FastMap.newInstance();
+             transCtxMap.put("statusId", "FINACT_TRNS_CREATED");
+             transCtxMap.put("entryType", entryType);
+             transCtxMap.put("transactionDate", transactionDate);
+             transCtxMap.put("comments", comments);
+             transCtxMap.put("amount", amount);
+             transCtxMap.put("userLogin", userLogin);
+             transCtxMap.put("contraFinAccountId", finAccountId);
+             transCtxMap.put("finAccountId", finAccountIdTo);
+             transCtxMap.put("contraRefNum", contraRefNum);
+             /*transCtxMap.put("parentTypeId", parentType);*/
+             transCtxMap.put("finAccountTransTypeId", finAccountTransTypeId);
+             createResult = dispatcher.runSync("preCreateFinAccountTrans", transCtxMap);
+
+             if (ServiceUtil.isError(createResult)) {
+                 return createResult;
+             }
+             
+
+        } catch (Exception ex) {
+            return ServiceUtil.returnError(ex.getMessage());
+        }
+        result = ServiceUtil.returnSuccess("Successfully created account and deposit for party : "+depositPartyId);
+        return result;
+    }
 
     public static Map<String, Object> createFinAccountForStore(DispatchContext dctx, Map<String, Object> context) {
         Delegator delegator = dctx.getDelegator();
@@ -646,7 +772,7 @@ public class FinAccountServices {
         
         BigDecimal amountForCalc = finAccountTrans.getBigDecimal("amount");
         if(finAccountTransTypeId.equals("WITHDRAWAL")){
-        	amountForCalc.negate();
+        	amountForCalc = amountForCalc.negate();
         }
         try{
         	if(UtilValidate.isEmpty(oldStatusId)){
@@ -703,7 +829,7 @@ public class FinAccountServices {
                 BigDecimal availAmt = BigDecimal.ZERO;
                 statusId = trans.getString("statusId");
                 if(finAccTransType.equals("WITHDRAWAL")){
-                	amount.negate();
+                	amount = amount.negate();
                 }
                 if(statusId.equals("FINACT_TRNS_CREATED")){
                 	actualAmt = amount;

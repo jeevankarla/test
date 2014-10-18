@@ -2069,12 +2069,19 @@ under the License.
         <response name="success" type="view" value="EditFinAccount"/>
         <response name="error" type="view" value="EditFinAccount"/>
     </request-map>
-    <request-map uri="createDepositFinAccount">
+    <request-map uri="createDepositFinAccountAndDeposit">
         <security https="true" auth="true"/>
-        <event type="service" path="" invoke="createFinAccount"/>
-        <response name="success" type="view" value="EditDepositFinAccount"/>
-        <response name="error" type="view" value="EditDepositFinAccount"/>
+        <event type="service" path="" invoke="createDepositFinAccountAndDeposit"/>
+        <response name="success" type="request-redirect-noparam" value="FindDepositAccount"/>
+        <response name="error" type="request-redirect-noparam" value="FindDepositAccount"/>
     </request-map>
+    <request-map uri="refundDepositContraFinAccTrans">
+        <security https="true" auth="true"/>
+        <event type="service" path="" invoke="refundDepositContraFinAccTrans"/>
+        <response name="success" type="request-redirect-noparam" value="FindDepositAccount"/>
+        <response name="error" type="request-redirect-noparam" value="FindDepositAccount"/>
+    </request-map>
+    
     <request-map uri="updateFinAccount">
         <security https="true" auth="true"/>
         <event type="service" path="" invoke="updateFinAccount"/>
