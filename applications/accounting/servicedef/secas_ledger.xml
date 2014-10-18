@@ -130,6 +130,7 @@ under the License.
 
     <eca service="createPaymentApplication" event="commit">
         <condition field-name="invoiceId" operator="is-not-empty"/>
+         <condition field-name="paymentApplicationId" operator="is-not-empty"/>
         <action service="createAcctgTransAndEntriesForPaymentApplication" mode="sync"/>
     </eca>
 

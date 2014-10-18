@@ -3558,7 +3558,7 @@
 	<entity entity-name="PaymentAttribute" package-name="org.ofbiz.accounting.payment"
 		title="Payment Attribute Entity">
 		<field name="paymentId" type="id-ne"></field>
-		<field name="attrName" type="id-long-ne"></field>
+		<field name="attrName" type="long-varchar"></field>
 		<field name="attrValue" type="value"></field>
 		<prim-key field="paymentId" />
 		<prim-key field="attrName" />
