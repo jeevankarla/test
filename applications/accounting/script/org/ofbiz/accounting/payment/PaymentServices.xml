@@ -221,11 +221,23 @@ under the License.
             </if-compare-field>
         </if-not-empty>
         <if-not-empty field="parameters.inFavourOf">
-        	<make-value entity-name="PaymentAttribute" value-field="newEntity"/>
-        	<set field="newEntity.paymentId" from-field="payment.paymentId"/>
-        	<set field="newEntity.attrName" value="INFAVOUR_OF"/>
-        	<set field="newEntity.attrValue" from-field="parameters.inFavourOf"/>
-        <store-value value-field="newEntity"/>
+        	<entity-one entity-name="PaymentAttribute" value-field="newEntity">
+                <field-map field-name="paymentId" from-field="payment.paymentId"/>
+                <field-map field-name="attrName" value="INFAVOUR_OF"/>
+            </entity-one>
+        	<if-empty field="newEntity">
+		       	<make-value entity-name="PaymentAttribute" value-field="newEntity"/>
+		        	<set field="newEntity.paymentId" from-field="payment.paymentId"/>
+		        	<set field="newEntity.attrName" value="INFAVOUR_OF"/>
+		        	<set field="newEntity.attrValue" from-field="parameters.inFavourOf"/>
+		        <create-value value-field="newEntity"/>
+	        <else>
+		        <set field="newEntity.paymentId" from-field="payment.paymentId"/>
+	        	<set field="newEntity.attrName" value="INFAVOUR_OF"/>
+	        	<set field="newEntity.attrValue" from-field="parameters.inFavourOf"/>
+	       		<store-value value-field="newEntity"/>
+	        </else>
+        	</if-empty>
         </if-not-empty>
     </simple-method>
     <simple-method method-name="createPaymentApplication" short-description="Create a Payment Application">
