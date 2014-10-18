@@ -397,7 +397,8 @@ under the License.
       <field name="isContinuous" type="indicator"></field>       
       <field name="hasTable" type="indicator"></field>
       <field name="description" type="description"></field>
-      <field name="internalCode" type="id"></field>      
+      <field name="internalCode" type="id"></field>
+      <field name="externalGlCode" type="id"></field>     
       <field name="isEmployerContribution" type="indicator"></field>
       <field name="employerPaidPercentage" type="floating-point"></field>
       <prim-key field="benefitTypeId"/>
