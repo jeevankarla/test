@@ -21,6 +21,7 @@
     <Enumeration description="Route Marketing Purpose" enumCode="ROUTE_MKTG" enumId="ROUTE_MKTG" enumTypeId="PAYMENT_PURPOSE"/>
     <TenantConfiguration propertyName="enableIndentSms" propertyValue="N" propertyTypeEnumId="SMS" description="Enable Indent Sms functionality"/>
 	<TenantConfiguration description="enable Tax Invoice Sequence" propertyName="enableTaxInvSeq" propertyTypeEnumId="LMS" propertyValue="N"/>
+	<TenantConfiguration description="Enable Fin Account Trans Sequence" propertyName="enableFinTransSequence" propertyTypeEnumId="LMS" propertyValue="N"/>
 	
    <TenantConfiguration propertyName="enableAdvancePaymentApp" propertyValue="N" propertyTypeEnumId="LMS" description="Enable Advance payment application while trucksheet generation"/>
     <EnumerationType description="Shoppee Rent" enumTypeId="SHOPEE_RENT" />
@@ -66,4 +67,10 @@
 	<PaymentGroupType description="DTC Batch Payments" hasTable="N" parentTypeId="CHECK_RUN" paymentGroupTypeId="DTC_BILL"/>
 	<PaymentGroupType description="PTC Billing" hasTable="N" parentTypeId="CHECK_RUN" paymentGroupTypeId="PTC_BILL"/>
 	
+	<FinAccountType description="Deposit Paid" finAccountTypeId="DEPOSIT_PAID" isRefundable="Y" replenishEnumId="FARP_MANUAL"/>
+	<FinAccountType description="Deposit Receipt" finAccountTypeId="DEPOSIT_RECEIPT" isRefundable="Y" replenishEnumId="FARP_MANUAL"/>
+	
+	<RoleType description="Depositee" hasTable="N" roleTypeId="DEPOSITEE"/>
+	 <RoleType description="Depositor" hasTable="N" roleTypeId="DEPOSITOR"/>
+
 </entity-engine-xml>

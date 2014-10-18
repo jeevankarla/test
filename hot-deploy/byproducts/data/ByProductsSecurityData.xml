@@ -34,7 +34,7 @@
     
     <!--Special Permissions   -->
     
-     <!-- General permission Id  -->
+    <!-- General permission Id  -->
     <SecurityPermission description="Byproducts Component indent entry Permission." permissionId="BYPRODUCTS_INDENT"/>
     <SecurityPermission description="Byproducts Component Parlour Sales entry Permission." permissionId="BYPRODUCTS_PSALES"/>
     <SecurityPermission description="Byproducts Component Payment entry Permission." permissionId="BYPRODUCTS_PAYMENT"/>
@@ -123,7 +123,7 @@
     
     <SecurityGroup description="ByProducts Parlour Sales admin group" groupId="BYPROD_PSALE_ADMIN"/>
     
-     <SecurityGroupPermission groupId="BYPROD_PSALE_ADMIN" permissionId="ACCOUNTING_ACCTFORMULA_EDIT"/>
+    <SecurityGroupPermission groupId="BYPROD_PSALE_ADMIN" permissionId="ACCOUNTING_ACCTFORMULA_EDIT"/>
     <SecurityGroupPermission groupId="BYPROD_PSALE_ADMIN" permissionId="ACCOUNTING_ARINVOICE_EDIT"/>
     <SecurityGroupPermission groupId="BYPROD_PSALE_ADMIN" permissionId="ACCOUNTING_READ"/>
     <SecurityGroupPermission groupId="BYPROD_PSALE_ADMIN" permissionId="ACCTG_PREF_VIEW"/>
@@ -282,6 +282,17 @@
     <SecurityGroup groupId="BYPRODUCTS_SPLREPO" description="Route Marketing Special permission for reports"/>
 	<SecurityPermission permissionId="BYPRODUCTS_LDRREP" description="Special permission to show Retailer ledger report" />
 	<SecurityGroupPermission groupId="BYPRODUCTS_SPLREPO" permissionId="BYPRODUCTS_LDRREP"/>
+    
+    <!--  Spl permission for batch Payment-->
+    <SecurityGroup groupId="BATCHPAY_ADMIN" description="Permission to CREATE and VIEW Batch Payment"/>
+    <SecurityGroup groupId="BATCHPAY_VIEW" description="Permission to VIEW Batch Payment"/>
+	<SecurityPermission permissionId="BATCHPAY_CHECK" description="Permission to View Batch Payment" />
+	<SecurityPermission permissionId="BATCHPAY_CREATE" description="Permission to Create Batch Payment" />
+	<SecurityGroupPermission groupId="BATCHPAY_ADMIN" permissionId="BATCHPAY_CHECK"/>
+	<SecurityGroupPermission groupId="BATCHPAY_ADMIN" permissionId="BATCHPAY_CREATE"/>
+	<SecurityGroupPermission groupId="BATCHPAY_VIEW" permissionId="BATCHPAY_CHECK"/>
+    <SecurityGroupPermission groupId="FULLADMIN" permissionId="BATCHPAY_CHECK"/>
+    <SecurityGroupPermission groupId="FULLADMIN" permissionId="BATCHPAY_CREATE"/>
     
     <!-- instead of adding each group one Permission group added -->
      <SecurityGroup groupId="BYPROD_PAYMENT_WING" description="Route Marketing All Types of Payment  Entry"/>

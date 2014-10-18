@@ -41,8 +41,8 @@
         <description>Create Crate and Can Return</description>
         <attribute name="fromDate" type="Timestamp" mode="IN" optional="false"/>
         <attribute name="thruDate" type="Timestamp" mode="IN" optional="false"/>
-        <attribute name="facilityIds" type="List" mode="IN" optional="true"/>
-        <attribute name="isByParty" type="Boolean" mode="IN" optional="true"/>
+        <!-- <attribute name="facilityIds" type="List" mode="IN" optional="true"/>
+        <attribute name="isByParty" type="Boolean" mode="IN" optional="true"/> -->
     </service>
     
     <service name="routeShiftEmpSubsidy" engine="java" 

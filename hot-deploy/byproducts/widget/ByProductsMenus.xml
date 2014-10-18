@@ -550,6 +550,12 @@
             </link>
         </menu-item>
         <menu-item name="GroupPaymentNew" title="Batch Payments">
+        	<condition>
+				<or>
+            		<if-has-permission permission="BATCHPAY"  action="_CREATE"/>
+            		<if-has-permission permission="BATCHPAY"  action="_CHECK"/>
+            	</or>
+            </condition>
             <link target="GroupPaymentNew">
             </link>
         </menu-item> 
@@ -557,9 +563,15 @@
     
     <menu name="GroupPaymentSubTabBar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml" selected-menuitem-context-field-name="tabButtonItem2">
         <menu-item name="GroupPaymentNew" title="Batch Payment">
+        	<condition>
+          		<if-has-permission permission="BATCHPAY" action="_CHECK"/>
+            </condition>
             <link target="GroupPaymentNew"/>
         </menu-item>
         <menu-item name="FindGroupPayment" title="Find Batch Payment">
+            <condition>
+         		<if-has-permission permission="BATCHPAY" action="_CHECK"/>
+            </condition>
             <link target="findGroupPayment"/>
         </menu-item>
      </menu>

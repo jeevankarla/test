@@ -3113,6 +3113,9 @@
             	 <decorator-section name="body">
             	 	<include-menu location="component://byproducts/widget/ByProductsMenus.xml" name="GroupPaymentSubTabBar"/>
             	 	<section>
+            	 		<condition>
+          					<if-has-permission permission="BATCHPAY" action="_CHECK"/>
+               			</condition>
             	 		<widgets>
 							<screenlet title="Find Batch payments">
 								<include-form name="FindPaymentGroups" location="component://byproducts/widget/ByProductsNgForms.xml"/>
@@ -3163,7 +3166,10 @@
             	 <decorator-section name="body">
             	 	<include-menu location="component://byproducts/widget/ByProductsMenus.xml" name="GroupPaymentSubTabBar"/>
             	 	<section>
-            	 		<widgets>
+            	 		<condition>
+          					<if-has-permission permission="BATCHPAY" action="_CHECK"/>
+               			</condition>
+						<widgets>
 							<screenlet title="Find Payments">
 								<include-form name="FindPaymentsForGrouping" location="component://byproducts/widget/ByProductsNgForms.xml"/>
 							</screenlet>

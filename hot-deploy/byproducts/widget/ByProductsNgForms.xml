@@ -677,7 +677,7 @@
                	  <parameter param-name="paymentGroupId" />
             </hyperlink>
         </field> 
-        <field name="cancelBatch" widget-style="buttontext">
+        <field use-when="${groovy:((security.hasEntityPermission(&quot;BATCHPAY&quot;, &quot;_CREATE&quot;, session)))}" name="cancelBatch" widget-style="buttontext">
             <hyperlink target="cancelPaymentGrouping" description="Cancel">
 	            <parameter param-name="paymentGroupId"/>
             </hyperlink>
