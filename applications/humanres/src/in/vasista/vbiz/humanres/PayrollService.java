@@ -715,8 +715,6 @@ public class PayrollService {
     			TransactionUtil.rollback();
     			 Debug.logError("Error while calculating price service:"+result, module);
     			 periodBilling.set("statusId", "GENERATED");
-     			// delegator.store(periodBilling);
-		         // return ServiceUtil.returnError(ServiceUtil.getErrorMessage(result));
     		}
 			delegator.store(periodBilling);
     	}catch (Exception e) {
@@ -743,17 +741,14 @@ public class PayrollService {
  	try {
  		 beganTransaction =TransactionUtil.begin(1000);
 			periodBilling = delegator.findOne("PeriodBilling", UtilMisc.toMap("periodBillingId", periodBillingId), false);
-			//result = cancelInvoiceAndPaymentsForBillingInternal(dctx, UtilMisc.toMap("periodBillingId", periodBillingId, "userLogin", userLogin));
+			periodBilling.set("statusId", "GENERATED");
 			result = dispatcher.runSync("cancelInvoiceAndPaymentsForBillingInternal", UtilMisc.toMap("periodBillingId", periodBillingId, "userLogin", userLogin));
 			if(ServiceUtil.isError(result)){
 				TransactionUtil.rollback();
 	 			 Debug.logError("Error while calculating price service:"+result, module);
 	 			 periodBilling.set("statusId", "APPROVED");
-	  			 delegator.store(periodBilling);
-		         // return ServiceUtil.returnError(ServiceUtil.getErrorMessage(result));
  		}
- 		   periodBilling.set("statusId", "GENERATED");
-			delegator.store(periodBilling);
+		delegator.store(periodBilling);
  	}catch (Exception e) {
  		try{
  		TransactionUtil.rollback();
@@ -762,7 +757,7 @@ public class PayrollService {
 		 delegator.store(periodBilling);
  		}catch(Exception e1){}
  		
-         return ServiceUtil.returnError("Failed to find payrollHeaderItemList " + e);
+         return ServiceUtil.returnSuccess("Payroll Billing Status Successfully Updated");
 		} 
 		result = ServiceUtil.returnSuccess("Payroll Billing Status Successfully Updated");
 		return result;
