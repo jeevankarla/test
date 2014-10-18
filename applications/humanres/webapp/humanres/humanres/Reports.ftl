@@ -232,10 +232,10 @@ function makeDatePicker1(fromDateId ,thruDateId){
 					</tr>
 				<tr class="alternate-row">
 						<form id="GHSSDepatmentCountReport" name="GHSSDepatmentCountReport" mothed="post" action="<@ofbizUrl>GHSSDepatmentCountReport.pdf</@ofbizUrl>" target="_blank">
-							<td width="40%">GH and SS Department Count </td>
+							<td width="40%">GH and SS Worked Employee's Count </td>
 							<td width="10%"></td>
 							<td width="10%"></td>
-							<td width="50%">Period Id
+							<td width="30%">Period Id
 								<select name="deptCount_TimePeriodId" id="deptCount_TimePeriodId" class='h4'>
 									<#assign customTimePeriodList=customTimePeriodList?sort>
 										<#list customTimePeriodList as customTimePeriod>
