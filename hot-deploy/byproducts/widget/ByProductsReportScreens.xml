@@ -1853,6 +1853,30 @@
 			</widgets>
 		</section>
 	</screen>
+	<screen name="IceCreamDueParticularsPDF">
+		<section>
+			<actions>
+				<property-map resource="CommonUiLabels" map-name="uiLabelMap" global="true"/>
+				<property-map resource="OrderUiLabels" map-name="uiLabelMap" global="true"/>
+				<property-map resource="ProductUiLabels" map-name="uiLabelMap" global="true"/>
+				<property-map resource="PartyUiLabels" map-name="uiLabelMap" global="true"/>
+				<script	location="component://byproducts/webapp/byproducts/WEB-INF/actions/reports/IceCreamDueParticulars.groovy" /> 	
+			</actions>
+			<widgets>
+				<section>
+					<widgets>
+						<platform-specific>
+							<xsl-fo>
+								<html-template
+									location="component://byproducts/webapp/byproducts/reports/IceCreamDueParticulars.fo.ftl" />
+							</xsl-fo>
+						</platform-specific>
+					</widgets>
+				</section>
+			</widgets>
+		</section>
+	</screen>
+	
 	<screen name="InvoiceAbstractReport">
 		<section>
 			<actions>

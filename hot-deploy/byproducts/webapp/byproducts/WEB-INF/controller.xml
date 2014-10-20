@@ -1395,6 +1395,11 @@
      <security https="true" auth="true"/>
     	<response name="success" type="view" value="NewOrTerminateRtlReportPDF"/>
     </request-map>
+    <request-map uri="iceCreamDueParticulars.pdf">
+     <security https="true" auth="true"/>
+    	<response name="success" type="view" value="IceCreamDueParticularsPDF"/>
+    </request-map>
+    
      <request-map uri="PCMReport.pdf">
      <security https="true" auth="true"/>
     	<response name="success" type="view" value="PCMReportPDF"/>
@@ -1681,6 +1686,8 @@
 	<!-- <view-map name="VatInvoiceSeqNoReportPDF" type="screenfop" page="component://byproducts/widget/ByProductsReportScreens.xml#VatInvoiceSeqNoReportPDF" content-type="application/pdf"/> -->
 	<view-map name="RegularIceCreamSaleBookPDF" type="screenfop" page="component://byproducts/widget/ByProductsReportScreens.xml#RegularIceCreamSaleBookPDF" content-type="application/pdf"/>
 	<view-map name="IceCreamSaleBookReportPDF" type="screenfop" page="component://byproducts/widget/ByProductsReportScreens.xml#IceCreamSaleBookReportPDF" content-type="application/pdf"/>
+	<view-map name="IceCreamDueParticularsPDF" type="screenfop" page="component://byproducts/widget/ByProductsReportScreens.xml#IceCreamDueParticularsPDF" content-type="application/pdf"/>
+	
 	<view-map name="InvoiceAbstractReport" type="screenfop" page="component://byproducts/widget/ByProductsReportScreens.xml#InvoiceAbstractReport" content-type="application/pdf"/>
 	<view-map name="PurchaseRegisterBook" type="screenfop" page="component://byproducts/widget/ByProductsReportScreens.xml#PurchaseRegisterBook" content-type="application/pdf"/>
 	<view-map name="PurchaseRegisterBookCSV" type="screencsv" page="component://byproducts/widget/ByProductsReportScreens.xml#PurchaseRegisterBookCSV" content-type="text/csv"/>

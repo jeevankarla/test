@@ -163,6 +163,7 @@ function reportTypeChangeFunc() {
 		makeDatePicker("DUCRFromDateId","DUCRThruDateId");
 		makeDatePicker("DueFromDateId","DueThruDateId");
 		makeDatePicker("DueAbsFromDateId","DueAbsThruDateId");
+		makeDatePicker("iceDueFromDateId","iceDueThruDateId");
 		makeDatePicker("catSalesFromDateId","catSalesThruDateId")
 		makeDatePicker("fwsFromDateId","fwsThruDateId");
 		makeDatePicker("cacFromDateId","cacThruDateId");
@@ -1134,6 +1135,19 @@ function reportTypeChangeFunc() {
 			             <td width="10%"><input type="submit" value="Download" class="buttontext"/></td>
 			           </form>
 			        </tr>
+			        <tr class="alternate-row">
+      					<form id="IceCreamDuesAbstractReport" name="IceCreamDuesAbstractReport" method="post" action="<@ofbizUrl>iceCreamDueParticulars.pdf</@ofbizUrl>" target="_blank">	
+      						<td width="30%">Ice Cream Sundry Debitor Report
+							<td width="15%">From<input  type="text" size="18pt" id="iceDueFromDateId" readonly  name="fromDate"/></td>
+			      			<td width="15%">Thru<input  type="text" size="18pt" id="iceDueThruDateId" readonly  name="thruDate"/></td>
+			      			<td width="15%">Category<select name="categoryType">
+				      			<option value="NANDINI">Nandini Ice Cream</option>
+				      			<option value="AMUL">Amul Ice Cream</option>
+			      			</select></td>
+	      					<td width="15%"></td>  
+							<td width="10%"><input type="submit" value="Download" class="buttontext"/></td>
+      					</form>
+      				</tr>
 			        <tr class="alternate-row">
 					<form id="fDExpiringOrMaturingReport" name="fDExpiringOrMaturingReport" method="post" action="<@ofbizUrl>fDExpiringOrMaturingReport.pdf</@ofbizUrl>" target="_blank">	
 						<td width="30%">Fixed Deposit expiring/maturing Report</td>
