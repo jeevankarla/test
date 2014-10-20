@@ -19,7 +19,7 @@ under the License.
 <#escape x as x?xml>
     <fo:root xmlns:fo="http://www.w3.org/1999/XSL/Format">
         <fo:layout-master-set>
-            <fo:simple-page-master master-name="main" page-height="12in" page-width="8in"
+            <fo:simple-page-master master-name="main" page-height="12in" page-width="10in"
                      margin-left=".1in" margin-right=".1in" margin-top=".1in" margin-bottom=".3in">
                 <fo:region-body margin-top=".7in"/>
                 <fo:region-before extent=".4in"/>
@@ -156,12 +156,12 @@ under the License.
 							</fo:table-row>
 							<fo:table-row>
 								<fo:table-cell>
-				            		<fo:block text-align="left" keep-together="always" font-size = "12pt">This is to inform you that your account has been <#if invoiceTypeId == "SALES_INVOICE" && invPartyIdFrom == "Company">DEBITED</#if><#if invoiceTypeId == "PURCHASE_INVOICE" && invPartyId == "Company">CREDITED</#if> with Rs: ${amount?if_exists?string("##0.00")}       on the basis of the </fo:block>     
+				            		<fo:block text-align="left" keep-together="always" font-size = "12pt">This is to inform you that your account has been <#if invoiceTypeId == "SALES_INVOICE" && invPartyIdFrom == "Company">DEBITED</#if><#if invoiceTypeId == "PURCHASE_INVOICE" && invPartyId == "Company">CREDITED</#if> with Rs: ${amount?if_exists?string("##0.00")}       on the basis of the following transactions.</fo:block>     
 				       			</fo:table-cell>
 							</fo:table-row>
 							<fo:table-row>
 								<fo:table-cell>
-				            		<fo:block text-align="left" keep-together="always" font-size = "12pt">following transactions.</fo:block>     
+				            		<fo:block text-align="left" keep-together="always" font-size = "12pt"></fo:block>     
 				       			</fo:table-cell>
 							</fo:table-row>
 							<fo:table-row>
@@ -185,15 +185,23 @@ under the License.
     	 	<fo:block>
                  	<fo:table border-style="solid">
                     <fo:table-column column-width="50pt"/>
-                    <fo:table-column column-width="350pt"/>
-                    <fo:table-column column-width="150pt"/>
+                    <fo:table-column column-width="300pt"/>
+                    <fo:table-column column-width="125pt"/>
+                    <fo:table-column column-width="125pt"/>
+                    <fo:table-column column-width="100pt"/>
                     <fo:table-body>
                     	<fo:table-row >
                    			<fo:table-cell border-style="solid">
                         		<fo:block  keep-together="always" text-align="left" font-size="12pt" white-space-collapse="false" font-weight="bold">S.No</fo:block> 
                    			</fo:table-cell>
                    			<fo:table-cell border-style="solid">
-                        		<fo:block  keep-together="always" text-align="center" font-size="12pt" white-space-collapse="false" font-weight="bold">Account Desc</fo:block> 
+                        		<fo:block  keep-together="always" text-align="left" font-size="12pt" white-space-collapse="false" font-weight="bold">Account Desc</fo:block> 
+                   			</fo:table-cell>
+                   			<fo:table-cell border-style="solid">
+                        		<fo:block  keep-together="always" text-align="left" font-size="12pt" white-space-collapse="false" font-weight="bold">Quantity(Ltrs/Kgs)</fo:block> 
+                   			</fo:table-cell>
+                   			<fo:table-cell border-style="solid">
+                        		<fo:block  keep-together="always" text-align="right" font-size="12pt" white-space-collapse="false" font-weight="bold">Rate</fo:block> 
                    			</fo:table-cell>
                    			<fo:table-cell border-style="solid">
                         		<fo:block  keep-together="always" text-align="right" font-size="12pt" white-space-collapse="false" font-weight="bold">Amount</fo:block> 
@@ -205,8 +213,10 @@ under the License.
              <fo:block>
                  	<fo:table border-style="solid">
                  	<fo:table-column column-width="50pt"/>
-                    <fo:table-column column-width="350pt"/>
-                    <fo:table-column column-width="150pt"/>
+                    <fo:table-column column-width="300pt"/>
+                    <fo:table-column column-width="125pt"/>
+                    <fo:table-column column-width="125pt"/>
+                    <fo:table-column column-width="100pt"/>
                     <fo:table-body>
                     	<#assign sno=0>
 						<#if invoiceItems?has_content>
@@ -225,12 +235,29 @@ under the License.
 				            <#elseif itemType.get("description",locale)?has_content>
 				                <#assign description=itemType.get("description",locale)>
 				            </#if>
+				            <#assign prodUnitPrice = "">
+				            <#if invoiceItem.unitPrice?has_content>
+				            	<#assign prodUnitPrice = invoiceItem.unitPrice?if_exists>
+				            </#if>
+				            <#assign invoiceQtyInc = "">
+				            <#if invoiceItem.quantity?has_content>
+				            	<#assign invoiceQty = invoiceItem.quantity?if_exists>
+				            	<#if invoiceQty?has_content && invoiceQty !=0>
+				            		<#assign invoiceQtyInc = invoiceQty*(productDetails.quantityIncluded?if_exists)>
+				            	</#if>
+				            </#if>
 							 <fo:table-row>
 	                   			<fo:table-cell border-style="solid">
 						        	<fo:block text-align="left" font-size="12pt" white-space-collapse="false" keep-together="always">&#160;${sno}</fo:block>
 						     	</fo:table-cell>
 	                   			<fo:table-cell border-style="solid">
-	                        		<fo:block  keep-together="always" text-align="center" font-size="12pt" white-space-collapse="false">${description?if_exists}</fo:block> 
+	                        		<fo:block  keep-together="always" text-align="left" font-size="12pt" white-space-collapse="false">${description?if_exists}</fo:block> 
+	                   			</fo:table-cell>
+	                   			<fo:table-cell border-style="solid">
+	                        		<fo:block  keep-together="always" text-align="left" font-size="12pt" white-space-collapse="false">${invoiceQtyInc?if_exists?string("#0.00")}</fo:block> 
+	                   			</fo:table-cell>
+	                   			<fo:table-cell border-style="solid">
+	                        		<fo:block  keep-together="always" text-align="right" font-size="12pt" white-space-collapse="false">${prodUnitPrice?if_exists?string("#0.00")}</fo:block> 
 	                   			</fo:table-cell>
 	                   			<fo:table-cell border-style="solid">
 	                        		<fo:block  keep-together="always" text-align="right" font-size="12pt" white-space-collapse="false"><@ofbizCurrency amount=(Static["org.ofbiz.accounting.invoice.InvoiceWorker"].getInvoiceItemTotal(invoiceItem)) isoCode=invoice.currencyUomId?if_exists/></fo:block> 
@@ -244,7 +271,13 @@ under the License.
 	                   			<fo:table-cell border-style="solid">
 	                        		<fo:block  keep-together="always" text-align="center" font-size="12pt" white-space-collapse="false"></fo:block> 
 	                   			</fo:table-cell>
-								<fo:table-cell border-style="solid">
+	                   			<fo:table-cell>
+	                        		<fo:block  keep-together="always" text-align="center" font-size="12pt" white-space-collapse="false"></fo:block> 
+	                   			</fo:table-cell>
+	                   			<fo:table-cell>
+	                        		<fo:block  keep-together="always" text-align="center" font-size="12pt" white-space-collapse="false"></fo:block> 
+	                   			</fo:table-cell>
+								<fo:table-cell>
 			        				<fo:block text-align="right" font-size="12pt" white-space-collapse="false" keep-together="always" font-weight="bold">Total:&#160;<@ofbizCurrency amount=invoiceTotal isoCode=invoice.currencyUomId?if_exists/></fo:block>
 			        			</fo:table-cell>
 			        		</fo:table-row>	
@@ -268,7 +301,9 @@ under the License.
                  	<fo:table>
                     <fo:table-column column-width="200pt"/>
                     <fo:table-column column-width="170pt"/>
-                    <fo:table-column column-width="195pt"/>  
+                    <fo:table-column column-width="195pt"/>
+                    <fo:table-column column-width="195pt"/>
+                    <fo:table-column column-width="195pt"/>
                     <fo:table-body>
                     	<fo:table-row>
 							<fo:table-cell>
@@ -298,13 +333,16 @@ under the License.
 						</fo:table-row>
 						<fo:table-row>
 							<fo:table-cell>
-			            		<fo:block  keep-together="always" font-weight="bold">Prepared By</fo:block>  
+			            		<fo:block  keep-together="always" font-weight="bold">Prepared By&#160;&#160;&#160;&#160;&#160;&#160;</fo:block>  
 			       			</fo:table-cell>
 			       			<fo:table-cell>
-			            		<fo:block  keep-together="always" font-weight="bold">&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;Pre-Auditor</fo:block>  
+			            		<fo:block  keep-together="always" font-weight="bold">&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;Pre-Auditor</fo:block>  
 			       			</fo:table-cell>
 			       			<fo:table-cell>
-			            		<fo:block  keep-together="always" font-weight="bold">&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;For MotherDairy</fo:block>  
+			            		<fo:block linefeed-treatment="preserve">&#xA;</fo:block>  
+			       			</fo:table-cell>
+			       			<fo:table-cell>
+			            		<fo:block  keep-together="always" font-weight="bold">&#160;&#160;&#160;&#160;&#160;&#160;For MotherDairy</fo:block>  
 			       			</fo:table-cell>
 						</fo:table-row>
 						<fo:table-row>
@@ -318,14 +356,17 @@ under the License.
 			       			</fo:table-cell>
 						</fo:table-row>
 						<fo:table-row>
-						<fo:table-cell>
+							<fo:table-cell>
 			            		<fo:block  keep-together="always" font-weight="bold"></fo:block>  
 			       			</fo:table-cell>
 			       			<fo:table-cell>
 			            		<fo:block  keep-together="always" font-weight="bold"></fo:block>  
 			       			</fo:table-cell>
+			       			<fo:table-cell>
+			            		<fo:block  keep-together="always" font-weight="bold">&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;D.Mgr(Finance)/Mgr(Finance)</fo:block>  
+			       			</fo:table-cell>
 							<fo:table-cell>
-			            		<fo:block  keep-together="always" font-weight="bold">&#160;&#160;&#160;&#160;&#160;&#160;D.Mgr(Finance)/Mgr(Finance)</fo:block>  
+			            		<fo:block  keep-together="always" font-weight="bold"></fo:block>  
 			       			</fo:table-cell>
 						</fo:table-row>
                     </fo:table-body>
