@@ -13,6 +13,9 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.TimeZone;
 
+import javolution.util.FastList;
+import javolution.util.FastMap;
+
 import javax.swing.RowFilter.NotFilter;
 
 import org.ofbiz.base.util.UtilDateTime;
@@ -233,45 +236,58 @@ if(UtilValidate.isNotEmpty(timePeriodId)){
 			if(UtilValidate.isNotEmpty(orgList)){
 				departmentList=orgList;
 			}
-		
-			List conDepartmentList=[];
-			conDepartmentList.add(EntityCondition.makeCondition("partyId", EntityOperator.IN,empIds));
-			conDepartmentList.add(EntityCondition.makeCondition("date",EntityOperator.IN,holidays));
-			conDept=EntityCondition.makeCondition(conDepartmentList,EntityOperator.AND);
-			emplHolidayAttendanceList = delegator.findList("EmplDailyAttendanceDetail", conDept ,UtilMisc.toSet("partyId","date"),null, null, false );
+			
 			departmentList.each{ department ->
+				if(department.partyId!="Company"){
 				tempDayList=[];
 				deptName="";
-			if(department.partyId!="Company"){
-				holidays.each{ holiday ->
-					daycount=0;
-					tempDayMap=[:];
-					emplHolidayAttendanceList.each{ emplHolidayAttendance ->
-						departmentDetails=delegator.findByAnd("Employment", [partyIdTo : emplHolidayAttendance.partyId]);
-						deptPartyId="";
-						if(departmentDetails){
-							deptPartyId=departmentDetails[0].partyIdFrom;
-							
-						}
-						if((emplHolidayAttendance.date==holiday) && (department.partyId==deptPartyId)){
-							daycount=daycount+1;
-						}
-					}
-					tempDayMap.put(UtilDateTime.toDateString(holiday,"MMM dd, yyyy"),daycount);
-					tempDayList.add(tempDayMap);
-				}	
-				deptName=PartyHelper.getPartyName(delegator, department.partyId, false);
-				finalDeptCountMap.put(deptName,tempDayList);
-			}
+				Map emplInputMap = FastMap.newInstance();
+				emplInputMap.put("userLogin", userLogin);
+				emplInputMap.put("orgPartyId", department.partyId);
+				emplInputMap.put("fromDate", fromDateStart);
+				emplInputMap.put("thruDate", thruDateEnd);
+				Map resultMap = HumanresService.getActiveEmployements(dctx,emplInputMap);
+				List<GenericValue> employementList = (List<GenericValue>)resultMap.get("employementList");
+				employementList = EntityUtil.orderBy(employementList, UtilMisc.toList("partyIdTo"));
+				employementIds = EntityUtil.getFieldListFromEntityList(employementList, "partyIdTo", true);
+				
+					holidays.each{ holiday ->
+						tempDayMap=[:];
+						List conDeptList=[];
+						conDeptList.add(EntityCondition.makeCondition("partyId", EntityOperator.IN,employementIds));
+						conDeptList.add(EntityCondition.makeCondition("date",EntityOperator.EQUALS,holiday));
+						conDept=EntityCondition.makeCondition(conDeptList,EntityOperator.AND);
+						emplHolidayAttendanceList = delegator.findList("EmplDailyAttendanceDetail", conDept ,UtilMisc.toSet("date"),null, null, false );
+						tempDayMap.put(UtilDateTime.toDateString(holiday,"MMM dd, yyyy"),emplHolidayAttendanceList.size());
+						tempDayList.add(tempDayMap);
+					}	
+					deptName=PartyHelper.getPartyName(delegator, department.partyId, false);
+					finalDeptCountMap.put(deptName,tempDayList);
+				}
 			}
 			context.finalDeptCountMap=finalDeptCountMap;
 			context.deptCountHolidays=deptCountHolidays;
 			context.holidays=holidays
+			Map emplInputMap = FastMap.newInstance();
+			emplInputMap.put("userLogin", userLogin);
+			emplInputMap.put("orgPartyId","Company");
+			emplInputMap.put("fromDate", fromDateStart);
+			emplInputMap.put("thruDate", thruDateEnd);
+			Map resultMap = HumanresService.getActiveEmployements(dctx,emplInputMap);
+			List<GenericValue> employementList = (List<GenericValue>)resultMap.get("employementList");
+			employementList = EntityUtil.orderBy(employementList, UtilMisc.toList("partyIdTo"));
+			employementIds = EntityUtil.getFieldListFromEntityList(employementList, "partyIdTo", true);
+			List conDepartmentList=[];
+			conDepartmentList.add(EntityCondition.makeCondition("partyId", EntityOperator.IN,employementIds));
+			conDepartmentList.add(EntityCondition.makeCondition("date",EntityOperator.IN,holidays));
+			conDeptmnt=EntityCondition.makeCondition(conDepartmentList,EntityOperator.AND);
+			emplHolidayAttendanceList = delegator.findList("EmplDailyAttendanceDetail", conDeptmnt ,UtilMisc.toSet("partyId","date"),null, null, false );
 			holidays.each{ holiday ->
 				deptTotal=0;
 				departmentList.each{ department ->
 					if(department.partyId!="Company"){
 						emplHolidayAttendanceList.each{ emplHolidayAttendance ->
+							departmentDetails=delegator.findByAnd("Employment", [partyIdTo : emplHolidayAttendance.partyId]);
 							if((emplHolidayAttendance.date==holiday) && (department.partyId==departmentDetails[0].partyIdFrom)){
 								deptTotal=deptTotal+1;
 							}	
@@ -288,3 +304,4 @@ if(UtilValidate.isNotEmpty(timePeriodId)){
 context.emplList=emplList;
 context.holidaysList=workedHolidaysList;
 context.EncashmentList=EncashmentList;
+asdsa
