@@ -19,7 +19,7 @@ under the License.
 <#escape x as x?xml>
     <fo:root xmlns:fo="http://www.w3.org/1999/XSL/Format">
         <fo:layout-master-set>
-            <fo:simple-page-master master-name="main" page-height="12in" page-width="10in"
+            <fo:simple-page-master master-name="main" page-height="12in" page-width="8in"
                      margin-left=".1in" margin-right=".1in" margin-top=".1in" margin-bottom=".3in">
                 <fo:region-body margin-top=".7in"/>
                 <fo:region-before extent=".4in"/>
@@ -156,12 +156,12 @@ under the License.
 							</fo:table-row>
 							<fo:table-row>
 								<fo:table-cell>
-				            		<fo:block text-align="left" keep-together="always" font-size = "12pt">This is to inform you that your account has been <#if invoiceTypeId == "SALES_INVOICE" && invPartyIdFrom == "Company">DEBITED</#if><#if invoiceTypeId == "PURCHASE_INVOICE" && invPartyId == "Company">CREDITED</#if> with Rs: ${amount?if_exists?string("##0.00")}       on the basis of the following transactions.</fo:block>     
+				            		<fo:block text-align="left" keep-together="always" font-size = "12pt">This is to inform you that your account has been <#if invoiceTypeId == "SALES_INVOICE" && invPartyIdFrom == "Company">DEBITED</#if><#if invoiceTypeId == "PURCHASE_INVOICE" && invPartyId == "Company">CREDITED</#if> with Rs: ${amount?if_exists?string("##0.00")}       on the basis of the </fo:block>     
 				       			</fo:table-cell>
 							</fo:table-row>
 							<fo:table-row>
 								<fo:table-cell>
-				            		<fo:block text-align="left" keep-together="always" font-size = "12pt"></fo:block>     
+				            		<fo:block text-align="left" keep-together="always" font-size = "12pt">following transactions.</fo:block>     
 				       			</fo:table-cell>
 							</fo:table-row>
 							<fo:table-row>
@@ -185,9 +185,9 @@ under the License.
     	 	<fo:block>
                  	<fo:table border-style="solid">
                     <fo:table-column column-width="50pt"/>
-                    <fo:table-column column-width="300pt"/>
-                    <fo:table-column column-width="125pt"/>
-                    <fo:table-column column-width="125pt"/>
+                    <fo:table-column column-width="200pt"/>
+                    <fo:table-column column-width="110pt"/>
+                    <fo:table-column column-width="100pt"/>
                     <fo:table-column column-width="100pt"/>
                     <fo:table-body>
                     	<fo:table-row >
@@ -198,7 +198,7 @@ under the License.
                         		<fo:block  keep-together="always" text-align="left" font-size="12pt" white-space-collapse="false" font-weight="bold">Account Desc</fo:block> 
                    			</fo:table-cell>
                    			<fo:table-cell border-style="solid">
-                        		<fo:block  keep-together="always" text-align="left" font-size="12pt" white-space-collapse="false" font-weight="bold">Quantity(Ltrs/Kgs)</fo:block> 
+                        		<fo:block  keep-together="always" text-align="right" font-size="12pt" white-space-collapse="false" font-weight="bold">Quantity(Ltrs/Kgs)</fo:block> 
                    			</fo:table-cell>
                    			<fo:table-cell border-style="solid">
                         		<fo:block  keep-together="always" text-align="right" font-size="12pt" white-space-collapse="false" font-weight="bold">Rate</fo:block> 
@@ -213,9 +213,9 @@ under the License.
              <fo:block>
                  	<fo:table border-style="solid">
                  	<fo:table-column column-width="50pt"/>
-                    <fo:table-column column-width="300pt"/>
-                    <fo:table-column column-width="125pt"/>
-                    <fo:table-column column-width="125pt"/>
+                    <fo:table-column column-width="200pt"/>
+                    <fo:table-column column-width="110pt"/>
+                    <fo:table-column column-width="100pt"/>
                     <fo:table-column column-width="100pt"/>
                     <fo:table-body>
                     	<#assign sno=0>
@@ -251,10 +251,10 @@ under the License.
 						        	<fo:block text-align="left" font-size="12pt" white-space-collapse="false" keep-together="always">&#160;${sno}</fo:block>
 						     	</fo:table-cell>
 	                   			<fo:table-cell border-style="solid">
-	                        		<fo:block  keep-together="always" text-align="left" font-size="12pt" white-space-collapse="false">${description?if_exists}</fo:block> 
+	                        		<fo:block text-align="left" font-size="12pt" white-space-collapse="false">${description?if_exists}</fo:block> 
 	                   			</fo:table-cell>
 	                   			<fo:table-cell border-style="solid">
-	                        		<fo:block  keep-together="always" text-align="left" font-size="12pt" white-space-collapse="false">${invoiceQtyInc?if_exists?string("#0.00")}</fo:block> 
+	                        		<fo:block  keep-together="always" text-align="right" font-size="12pt" white-space-collapse="false">${invoiceQtyInc?if_exists?string("#0.00")}</fo:block> 
 	                   			</fo:table-cell>
 	                   			<fo:table-cell border-style="solid">
 	                        		<fo:block  keep-together="always" text-align="right" font-size="12pt" white-space-collapse="false">${prodUnitPrice?if_exists?string("#0.00")}</fo:block> 
@@ -301,9 +301,7 @@ under the License.
                  	<fo:table>
                     <fo:table-column column-width="200pt"/>
                     <fo:table-column column-width="170pt"/>
-                    <fo:table-column column-width="195pt"/>
-                    <fo:table-column column-width="195pt"/>
-                    <fo:table-column column-width="195pt"/>
+                    <fo:table-column column-width="195pt"/>  
                     <fo:table-body>
                     	<fo:table-row>
 							<fo:table-cell>
@@ -333,16 +331,13 @@ under the License.
 						</fo:table-row>
 						<fo:table-row>
 							<fo:table-cell>
-			            		<fo:block  keep-together="always" font-weight="bold">Prepared By&#160;&#160;&#160;&#160;&#160;&#160;</fo:block>  
+			            		<fo:block  keep-together="always" font-weight="bold">Prepared By</fo:block>  
 			       			</fo:table-cell>
 			       			<fo:table-cell>
-			            		<fo:block  keep-together="always" font-weight="bold">&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;Pre-Auditor</fo:block>  
+			            		<fo:block  keep-together="always" font-weight="bold">&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;Pre-Auditor</fo:block>  
 			       			</fo:table-cell>
 			       			<fo:table-cell>
-			            		<fo:block linefeed-treatment="preserve">&#xA;</fo:block>  
-			       			</fo:table-cell>
-			       			<fo:table-cell>
-			            		<fo:block  keep-together="always" font-weight="bold">&#160;&#160;&#160;&#160;&#160;&#160;For MotherDairy</fo:block>  
+			            		<fo:block  keep-together="always" font-weight="bold">&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;For MotherDairy</fo:block>  
 			       			</fo:table-cell>
 						</fo:table-row>
 						<fo:table-row>
@@ -356,17 +351,14 @@ under the License.
 			       			</fo:table-cell>
 						</fo:table-row>
 						<fo:table-row>
-							<fo:table-cell>
+						<fo:table-cell>
 			            		<fo:block  keep-together="always" font-weight="bold"></fo:block>  
 			       			</fo:table-cell>
 			       			<fo:table-cell>
 			            		<fo:block  keep-together="always" font-weight="bold"></fo:block>  
 			       			</fo:table-cell>
-			       			<fo:table-cell>
-			            		<fo:block  keep-together="always" font-weight="bold">&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;D.Mgr(Finance)/Mgr(Finance)</fo:block>  
-			       			</fo:table-cell>
 							<fo:table-cell>
-			            		<fo:block  keep-together="always" font-weight="bold"></fo:block>  
+			            		<fo:block  keep-together="always" font-weight="bold">&#160;&#160;&#160;&#160;&#160;&#160;D.Mgr(Finance)/Mgr(Finance)</fo:block>  
 			       			</fo:table-cell>
 						</fo:table-row>
                     </fo:table-body>
