@@ -186,9 +186,9 @@ under the License.
                  	<fo:table border-style="solid">
                     <fo:table-column column-width="50pt"/>
                     <fo:table-column column-width="200pt"/>
-                    <fo:table-column column-width="110pt"/>
+                    <fo:table-column column-width="90pt"/>
                     <fo:table-column column-width="100pt"/>
-                    <fo:table-column column-width="100pt"/>
+                    <fo:table-column column-width="120pt"/>
                     <fo:table-body>
                     	<fo:table-row >
                    			<fo:table-cell border-style="solid">
@@ -198,7 +198,7 @@ under the License.
                         		<fo:block  keep-together="always" text-align="left" font-size="12pt" white-space-collapse="false" font-weight="bold">Account Desc</fo:block> 
                    			</fo:table-cell>
                    			<fo:table-cell border-style="solid">
-                        		<fo:block  keep-together="always" text-align="right" font-size="12pt" white-space-collapse="false" font-weight="bold">Quantity(Ltrs/Kgs)</fo:block> 
+                        		<fo:block  keep-together="always" text-align="right" font-size="12pt" white-space-collapse="false" font-weight="bold">Qty(Ltrs/Kgs)</fo:block> 
                    			</fo:table-cell>
                    			<fo:table-cell border-style="solid">
                         		<fo:block  keep-together="always" text-align="right" font-size="12pt" white-space-collapse="false" font-weight="bold">Rate</fo:block> 
@@ -212,11 +212,11 @@ under the License.
              </fo:block>
              <fo:block>
                  	<fo:table border-style="solid">
-                 	<fo:table-column column-width="50pt"/>
+                    <fo:table-column column-width="50pt"/>
                     <fo:table-column column-width="200pt"/>
-                    <fo:table-column column-width="110pt"/>
+                    <fo:table-column column-width="90pt"/>
                     <fo:table-column column-width="100pt"/>
-                    <fo:table-column column-width="100pt"/>
+                    <fo:table-column column-width="120pt"/>
                     <fo:table-body>
                     	<#assign sno=0>
 						<#if invoiceItems?has_content>
