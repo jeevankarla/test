@@ -68,10 +68,16 @@ under the License.
 						                    			<#assign value=payRollSummaryMap.get(benefitType)>	
 						                    		</#if>
 						                    		<#if value !=0>
+						                    		<#assign extrnalGlCodeGroup = delegator.findOne("BenefitType", {"benefitTypeId" :benefitType}, true)>
 							                    		<fo:table-row>                      
 								                    		<fo:table-cell >                    		
-								                      			<#assign totalEarnings=(totalEarnings+(value))>                 			
-								                    			<fo:block keep-together="always">${benefitDescMap[benefitType]?if_exists}</fo:block>                			
+								                      			<#assign totalEarnings=(totalEarnings+(value))>  
+								                      			<#if extrnalGlCodeGroup.externalGlCode?exists >               			
+								                    			<fo:block keep-together="always">${benefitDescMap[benefitType]?if_exists}&#160;${extrnalGlCodeGroup.externalGlCode?if_exists}</fo:block>
+								                    			<#else>
+								                    			<#assign extrnalGlCodeGroup = delegator.findOne("InvoiceItemType", {"invoiceItemTypeId" :benefitType}, true)>
+								                    			<fo:block keep-together="always">${benefitDescMap[benefitType]?if_exists}&#160;${extrnalGlCodeGroup.defaultGlAccountId?if_exists}</fo:block>
+								                    			</#if>                			
 								                    		</fo:table-cell>                 	              		
 								                    		<fo:table-cell><fo:block text-align="right">${value?if_exists?string("#0")}&#160;&#160;</fo:block></fo:table-cell>
 								                    	</fo:table-row>
@@ -94,10 +100,16 @@ under the License.
 						                    			<#assign dedValue=payRollSummaryMap.get(deductionType)>	
 						                    		</#if>
 						                    		<#if dedValue !=0>
+						                    		<#assign extrnalGlCodeGroup = delegator.findOne("DeductionType", {"deductionTypeId" :deductionType}, true)>
 							                    		<fo:table-row>                      
 								                    		<fo:table-cell>                    		
-								                      			<#assign totalDeductions=(totalDeductions+(dedValue))>								                      			               			
-								                    			<fo:block keep-together="always">${dedDescMap[deductionType]?if_exists}</fo:block>                			
+								                      			<#assign totalDeductions=(totalDeductions+(dedValue))>	
+								                      			<#if extrnalGlCodeGroup.externalGlCode?exists >  							                      			               			
+								                    			<fo:block keep-together="always">${dedDescMap[deductionType]?if_exists}&#160;${extrnalGlCodeGroup.externalGlCode?if_exists}</fo:block>  
+								                    			<#else>        
+								                    			<#assign extrnalGlCodeGroup = delegator.findOne("InvoiceItemType", {"invoiceItemTypeId" :deductionType}, true)>
+								                    			<fo:block keep-together="always">${dedDescMap[deductionType]?if_exists}&#160;${extrnalGlCodeGroup.defaultGlAccountId?if_exists}</fo:block>
+								                    			</#if>      			
 								                    		</fo:table-cell>                 	              		
 								                    		<fo:table-cell><fo:block text-align="right">${((-1)*(dedValue))?if_exists?string("#0")}&#160;&#160;</fo:block></fo:table-cell>
 								                    	</fo:table-row>
