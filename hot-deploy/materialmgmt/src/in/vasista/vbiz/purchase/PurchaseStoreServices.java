@@ -109,8 +109,9 @@ public static String processPurchaseOrder(HttpServletRequest request, HttpServle
 	String SInvoiceDateStr=(String) request.getParameter("SInvoiceDate");
 	String insurenceStr=(String) request.getParameter("insurence");
 	
-	
-	
+	String packAndFowdgStr=(String) request.getParameter("packAndFowdg");
+	String otherChargesStr=(String) request.getParameter("otherCharges");
+		
 	String subscriptionTypeId = "AM";
 	String partyIdFrom = "";
 	String shipmentId = "";
@@ -188,6 +189,9 @@ public static String processPurchaseOrder(HttpServletRequest request, HttpServle
 	BigDecimal freightCharges = BigDecimal.ZERO;
 	BigDecimal discount = BigDecimal.ZERO;
 	BigDecimal insurence = BigDecimal.ZERO;
+	BigDecimal packAndFowdg = BigDecimal.ZERO;
+	BigDecimal otherCharges = BigDecimal.ZERO;
+	
 	try {
 		if (!freightChargesStr.equals("")) {
 			freightCharges = new BigDecimal(freightChargesStr);
@@ -215,7 +219,25 @@ public static String processPurchaseOrder(HttpServletRequest request, HttpServle
 		request.setAttribute("_ERROR_MESSAGE_", "Problems parsing insurence string: " + insurenceStr);
 		return "error";
 	}
-  
+	try {
+		if (!packAndFowdgStr.equals("")) {
+			packAndFowdg = new BigDecimal(packAndFowdgStr);
+		}
+	} catch (Exception e) {
+		Debug.logError(e, "Problems parsing packAndFowdg string: " + packAndFowdgStr, module);
+		request.setAttribute("_ERROR_MESSAGE_", "Problems parsing packAndFowdg string: " + packAndFowdgStr);
+		return "error";
+	}
+	try {
+		if (!otherChargesStr.equals("")) {
+			otherCharges = new BigDecimal(otherChargesStr);
+		}
+	} catch (Exception e) {
+		Debug.logError(e, "Problems parsing otherCharges string: " + otherChargesStr, module);
+		request.setAttribute("_ERROR_MESSAGE_", "Problems parsing otherCharges string: " + otherChargesStr);
+		return "error";
+	}
+	
 	List indentProductList = FastList.newInstance();
 	for (int i = 0; i < rowCount; i++) {
 		
@@ -458,6 +480,8 @@ public static String processPurchaseOrder(HttpServletRequest request, HttpServle
 	processOrderContext.put("freightCharges", freightCharges);
 	processOrderContext.put("discount", discount);
 	processOrderContext.put("insurence", insurence);
+	processOrderContext.put("packAndFowdg", packAndFowdg);
+	processOrderContext.put("otherCharges", otherCharges);
 	processOrderContext.put("mrnNumber", mrnNumber);
 	processOrderContext.put("PONumber", PONumber);
 	processOrderContext.put("SInvNumber", SInvNumber);
@@ -490,6 +514,8 @@ public static Map<String, Object> createPurchaseOrder(DispatchContext dctx, Map<
   	//fright Charges
   	BigDecimal freightCharges = (BigDecimal) context.get("freightCharges");
   	BigDecimal discount = (BigDecimal) context.get("discount");
+  	BigDecimal packAndFowdg = (BigDecimal) context.get("packAndFowdg");
+	BigDecimal otherCharges = (BigDecimal) context.get("otherCharges");
 	/*BigDecimal freightCharges = BigDecimal.ZERO;
 	BigDecimal discount = BigDecimal.ZERO;*/
   	String mrnNumber = (String) context.get("mrnNumber");
@@ -749,7 +775,7 @@ public static Map<String, Object> createPurchaseOrder(DispatchContext dctx, Map<
 		BigDecimal totalPrice = unitPrice;//as of now For PurchaseOrder listPrice is same like unitPrice
 		
 		//BigDecimal totalTaxAmt = BigDecimal.ZERO;
-		//Debug.log("==totalPrice==="+totalPrice+"==totalTaxAmt="+totalTaxAmt+"=unitPrice="+unitPrice);
+		Debug.log("==totalPrice==="+totalPrice+"==totalTaxAmt="+totalTaxAmt+"=unitPrice="+unitPrice);
 		//List taxList = (List)priceResult.get("taxList");
 		//Debug.log("=========taxList====="+taxList);
 		//Debug.log("==prodPriceTypeList=====>"+prodPriceTypeList);
@@ -773,7 +799,8 @@ public static Map<String, Object> createPurchaseOrder(DispatchContext dctx, Map<
     ProductPromoWorker.doPromotions(cart, dispatcher);
     CheckOutHelper checkout = new CheckOutHelper(dispatcher, delegator, cart);
 
-	//Debug.log("=========prodPriceTypeList====="+prodPriceTypeList);
+	//Debug.log("==freightCharges=="+freightCharges+"===");
+    Debug.log("===packAndFowdg=====>"+packAndFowdg+"==otherCharges="+otherCharges);
 	
 	try {
 		//checkout.calcAndAddTax(prodPriceTypeList);
@@ -847,6 +874,42 @@ public static Map<String, Object> createPurchaseOrder(DispatchContext dctx, Map<
 		  	 		}
 		  	 	}catch (Exception e) {
 		  			  Debug.logError(e, "Error While Creating discount Adjustment for Purchase Order ", module);
+		  			  return adjResultMap;			  
+		  	 	}
+	    }
+		if(packAndFowdg.compareTo(BigDecimal.ZERO)>0){
+	    	Map adjustCtx = UtilMisc.toMap("userLogin",userLogin);	  	
+	    	adjustCtx.put("orderId", orderId);
+	    	adjustCtx.put("adjustmentTypeId", "PACKAndFOWDG");
+	    	adjustCtx.put("adjustmentAmount", packAndFowdg);
+	    	Map adjResultMap=FastMap.newInstance();
+		  	 	try{
+		  	 		 adjResultMap = dispatcher.runSync("createAdjustmentForPurchaseOrder",adjustCtx);  		  		 
+		  	 		if (ServiceUtil.isError(adjResultMap)) {
+		  	 			String errMsg =  ServiceUtil.getErrorMessage(adjResultMap);
+		  	 			Debug.logError(errMsg , module);
+		  	 		 return ServiceUtil.returnError(" Error While packAndFowdg Adjustment for Purchase Order !");
+		  	 		}
+		  	 	}catch (Exception e) {
+		  			  Debug.logError(e, "Error While Creating packAndFowdg Adjustment for Purchase Order ", module);
+		  			  return adjResultMap;			  
+		  	 	}
+	    }
+		if(otherCharges.compareTo(BigDecimal.ZERO)>0){
+	    	Map adjustCtx = UtilMisc.toMap("userLogin",userLogin);	  	
+	    	adjustCtx.put("orderId", orderId);
+	    	adjustCtx.put("adjustmentTypeId", "OTHERCHARGES"); 
+	    	adjustCtx.put("adjustmentAmount", otherCharges);
+	    	Map adjResultMap=FastMap.newInstance();
+		  	 	try{
+		  	 		 adjResultMap = dispatcher.runSync("createAdjustmentForPurchaseOrder",adjustCtx);  		  		 
+		  	 		if (ServiceUtil.isError(adjResultMap)) {
+		  	 			String errMsg =  ServiceUtil.getErrorMessage(adjResultMap);
+		  	 			Debug.logError(errMsg , module);
+		  	 		 return ServiceUtil.returnError(" Error While otherCharges Adjustment for Purchase Order !");
+		  	 		}
+		  	 	}catch (Exception e) {
+		  			  Debug.logError(e, "Error While Creating otherCharges Adjustment for Purchase Order ", module);
 		  			  return adjResultMap;			  
 		  	 	}
 	    }
@@ -1077,6 +1140,32 @@ public static Map<String, Object> createAdjustmentForPurchaseOrder(DispatchConte
 		}
 		if("INSURENCE".equalsIgnoreCase(adjustmentTypeId)){
 			String orderAdjustmentTypeId = "COGS_ITEM18";
+			 Map createOrderAdjustmentCtx = UtilMisc.toMap("userLogin",userLogin);
+	    	 createOrderAdjustmentCtx.put("orderId", orderId);
+	    	 createOrderAdjustmentCtx.put("orderAdjustmentTypeId", orderAdjustmentTypeId);    	
+	    	 createOrderAdjustmentCtx.put("amount", adjustmentAmount);//minus discount value from total order
+	    	 //Debug.log("createOrderAdjustment==FOR====DISCOUNT=="+createOrderAdjustmentCtx);
+	    	 result = dispatcher.runSync("createOrderAdjustment", createOrderAdjustmentCtx);
+	     	 if (ServiceUtil.isError(result)) {
+	                Debug.logWarning("There was an error while creating  the adjustment: " + ServiceUtil.getErrorMessage(result), module);
+	         		return ServiceUtil.returnError("There was an error while creating the adjustment: " + ServiceUtil.getErrorMessage(result));          	            
+	         } 
+		}
+		if("PACKAndFOWDG".equalsIgnoreCase(adjustmentTypeId)){
+			String orderAdjustmentTypeId = "COGS_ITEM19";
+			 Map createOrderAdjustmentCtx = UtilMisc.toMap("userLogin",userLogin);
+	    	 createOrderAdjustmentCtx.put("orderId", orderId);
+	    	 createOrderAdjustmentCtx.put("orderAdjustmentTypeId", orderAdjustmentTypeId);    	
+	    	 createOrderAdjustmentCtx.put("amount", adjustmentAmount);//minus discount value from total order
+	    	 //Debug.log("createOrderAdjustment==FOR====DISCOUNT=="+createOrderAdjustmentCtx);
+	    	 result = dispatcher.runSync("createOrderAdjustment", createOrderAdjustmentCtx);
+	     	 if (ServiceUtil.isError(result)) {
+	                Debug.logWarning("There was an error while creating  the adjustment: " + ServiceUtil.getErrorMessage(result), module);
+	         		return ServiceUtil.returnError("There was an error while creating the adjustment: " + ServiceUtil.getErrorMessage(result));          	            
+	         } 
+		}
+		if("OTHERCHARGES".equalsIgnoreCase(adjustmentTypeId)){
+			String orderAdjustmentTypeId = "COGS_ITEM20";
 			 Map createOrderAdjustmentCtx = UtilMisc.toMap("userLogin",userLogin);
 	    	 createOrderAdjustmentCtx.put("orderId", orderId);
 	    	 createOrderAdjustmentCtx.put("orderAdjustmentTypeId", orderAdjustmentTypeId);    	

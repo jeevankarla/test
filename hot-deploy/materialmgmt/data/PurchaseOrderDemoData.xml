@@ -60,13 +60,20 @@
      <OrderAdjustmentType orderAdjustmentTypeId="COGS_ITEM16" hasTable="N" parentTypeId="" description="FREIGHT CHARGES On Purchase"/>
      <OrderAdjustmentType orderAdjustmentTypeId="COGS_ITEM17" hasTable="N" parentTypeId="" description="DISCOUNTS On Purchase"/>
      <OrderAdjustmentType orderAdjustmentTypeId="COGS_ITEM18" hasTable="N" parentTypeId="" description="INSURENCE On Purchase "/>
+     <OrderAdjustmentType orderAdjustmentTypeId="COGS_ITEM19" hasTable="N" parentTypeId="" description="PACKAGE and FWD CHARGES On Purchase"/>
+     <OrderAdjustmentType orderAdjustmentTypeId="COGS_ITEM20" hasTable="N" parentTypeId="" description="OTHER CHARGES On Purchase "/>
+     
+     
+     
      
      <GlAccount accountCode="511300" accountName="INSURENCE" description="Insurance" glAccountClassId="COGS_EXPENSE" glAccountId="511300" glAccountTypeId="PURCHASE_ACCOUNT" glResourceTypeId="MONEY" parentGlAccountId="510000" postedBalance="0.00"/>
 
     <InvoiceItemType defaultGlAccountId="510000" description="FREIGHT CHARGES" hasTable="N" invoiceItemTypeId="COGS_ITEM16"/>
     <InvoiceItemType defaultGlAccountId="511100" description="DISCOUNTS" hasTable="N" invoiceItemTypeId="COGS_ITEM17"/>
     <InvoiceItemType defaultGlAccountId="511300" description="INSURENCE On Purchase" hasTable="N" invoiceItemTypeId="COGS_ITEM18"/>
-    
+    <InvoiceItemType defaultGlAccountId="510000" description="PACKAGE and FWD CHARGES" hasTable="N" invoiceItemTypeId="COGS_ITEM19"/>
+    <InvoiceItemType defaultGlAccountId="510000" description="OTHER CHARGES On Purchase" hasTable="N" invoiceItemTypeId="COGS_ITEM20"/>
+   
     <GlAccountOrganization  glAccountId="510000"  organizationPartyId="Company"/>
     <GlAccountOrganization  glAccountId="511100"  organizationPartyId="Company"/>
     <GlAccountOrganization  glAccountId="511300"  organizationPartyId="Company"/>  
@@ -75,6 +82,9 @@
     <InvoiceItemTypeMap  invoiceItemMapKey="COGS_ITEM16" invoiceItemTypeId="COGS_ITEM16" invoiceTypeId="PURCHASE_INVOICE"  organizationPartyId="Company"/>
     <InvoiceItemTypeMap  invoiceItemMapKey="COGS_ITEM17" invoiceItemTypeId="COGS_ITEM17" invoiceTypeId="PURCHASE_INVOICE"  organizationPartyId="Company"/> 
     <InvoiceItemTypeMap  invoiceItemMapKey="COGS_ITEM18" invoiceItemTypeId="COGS_ITEM18" invoiceTypeId="PURCHASE_INVOICE"  organizationPartyId="Company"/> 
+    <InvoiceItemTypeMap  invoiceItemMapKey="COGS_ITEM19" invoiceItemTypeId="COGS_ITEM19" invoiceTypeId="PURCHASE_INVOICE"  organizationPartyId="Company"/> 
+    <InvoiceItemTypeMap  invoiceItemMapKey="COGS_ITEM20" invoiceItemTypeId="COGS_ITEM20" invoiceTypeId="PURCHASE_INVOICE"  organizationPartyId="Company"/> 
+   
     <InvoiceItemTypeMap  invoiceItemMapKey="ROUNDING_ADJUSTMENT" invoiceItemTypeId="ROUNDING_ADJUSTMENT" invoiceTypeId="PURCHASE_INVOICE" /> 
     
     <InvoiceItemType  defaultGlAccountId="" description="Invoice Raw Material or Purchase Item" hasTable="N" invoiceItemTypeId="INV_RAWPROD_ITEM"  parentTypeId="INV_PROD_ITEM"/>

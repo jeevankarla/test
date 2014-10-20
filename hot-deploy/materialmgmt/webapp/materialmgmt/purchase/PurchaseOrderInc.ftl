@@ -162,10 +162,15 @@
 			var insurence = $("#insurence").val();
 			var SInvoiceDate = $("#SInvoiceDate").val();
 			
+			 var packAndFowdg = $("#packAndFowdg").val();
+			  var otherCharges = $("#otherCharges").val();
+			
 			
 			var mrnNumber=$("#mrnNumber").val();
 			var freightCharges=$("#freightCharges").val();
 			var discount=$("#discount").val();
+			 var packAndFowdg = $("#packAndFowdg").val();
+			 var otherCharges = $("#otherCharges").val();
 			//alert("=mrnNumber="+mrnNumber+"=freightCharges="+freightCharges+"=discount="+discount+"=sInvNumber="+sInvNumber+"=poNumber="+poNumber+"=insurence="+insurence);
 			var productStoreId = $("#productStoreId").val();
 			var party = jQuery("<input>").attr("type", "hidden").attr("name", "partyId").val(partyId);
@@ -179,6 +184,9 @@
 			var sInvNumberField=jQuery("<input>").attr("type", "hidden").attr("name", "SInvNumber").val(sInvNumber);
 			var insurenceField=jQuery("<input>").attr("type", "hidden").attr("name", "insurence").val(insurence);
 			var SInvoiceDateField=jQuery("<input>").attr("type", "hidden").attr("name", "SInvoiceDate").val(SInvoiceDate);
+			
+			var packAndFowdgField=jQuery("<input>").attr("type", "hidden").attr("name", "packAndFowdg").val(packAndFowdg);
+			var otherChargesField=jQuery("<input>").attr("type", "hidden").attr("name", "otherCharges").val(otherCharges);
 			<#if orderId?exists>
 				var order = '${orderId}';
 				var extOrder = jQuery("<input>").attr("type", "hidden").attr("name", "orderId").val(order);		
@@ -195,6 +203,10 @@
 			jQuery(formId).append(jQuery(sInvNumberField));
 			jQuery(formId).append(jQuery(insurenceField));
 			jQuery(formId).append(jQuery(SInvoiceDateField));
+			
+			jQuery(formId).append(jQuery(packAndFowdgField));
+			jQuery(formId).append(jQuery(otherChargesField));
+			
 		</#if>
 		
 		jQuery(formId).attr("action", action);	
@@ -269,7 +281,7 @@
 		if(isNaN(value)){
 					value = 0;
 		}		
-		var formatValue = parseFloat(value).toFixed(2);
+		var formatValue = parseFloat(value).toFixed(4);
         return formatValue;
     }
 	
@@ -755,7 +767,9 @@
 				 	var freightCharges=$("#freightCharges").val();
 			         var discount=$("#discount").val();
 			         var insurence = $("#insurence").val();
-			         //alert("<==totalAmount===>"+totalAmount+"=freightCharges="+freightCharges+"=discount="+discount+"=insurence="+insurence);
+			        
+			         
+			         //alert("<==totalAmount===>"+totalAmount+"=packAndFowdg="+packAndFowdg+"=otherCharges="+otherCharges+"=insurence="+insurence);
 			         if(freightCharges !=="" && (!isNaN(freightCharges))){
 			          freightCharges = parseFloat(freightCharges);
 			          //alert("<==totalAmount===>"+totalAmount+"==freightCharges=="+freightCharges);
@@ -770,7 +784,7 @@
 			        discount = parseFloat(discount);
 			         totalAmount -=discount;
 			         }
-			         
+			        
 			    //var amt = parseFloat(Math.round((totalAmount))); for total rounding
 				var amt = parseFloat(Math.round((totalAmount) * 100) / 100);
 			
@@ -843,6 +857,8 @@
 				 	var freightCharges=$("#freightCharges").val();
 			         var discount=$("#discount").val();
 			         var insurence = $("#insurence").val();
+			          var packAndFowdg = $("#packAndFowdg").val();
+			          var otherCharges = $("#otherCharges").val();
 			         //alert("<==totalAmount===>"+totalAmount+"=freightCharges="+freightCharges+"=discount="+discount+"=insurence="+insurence);
 			         if(freightCharges !=="" && (!isNaN(freightCharges))){
 			          freightCharges = parseFloat(freightCharges);
@@ -857,6 +873,14 @@
 			         if(discount !=="" && (!isNaN(discount))){
 			        discount = parseFloat(discount);
 			         totalAmount -=discount;
+			         }
+			         if(packAndFowdg !=="" && (!isNaN(packAndFowdg))){
+			           packAndFowdg = parseFloat(packAndFowdg);
+			         totalAmount +=packAndFowdg;
+			         }
+			         if(otherCharges !=="" && (!isNaN(otherCharges))){
+			        otherCharges = parseFloat(otherCharges);
+			         totalAmount +=otherCharges;
 			         }
 			         
 			    //var amt = parseFloat(Math.round((totalAmount))); for total rounding

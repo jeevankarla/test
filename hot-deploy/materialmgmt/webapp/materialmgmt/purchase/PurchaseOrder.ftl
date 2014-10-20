@@ -170,10 +170,21 @@ $(document).ready(function(){
              			<input class='h3' type="text" size="20" maxlength="30" name="insurence" id="insurence" onblur="javascript:addToInvoiceAmount();"/>          
           			</td>
           			<td>&nbsp;&nbsp;&nbsp;</td>
+          			<td align='left' valign='middle' nowrap="nowrap"><div class='h3'>Pack.&Fowdg: </div></td>
+		         	<td valign='middle' align='left'> 
+		         	 <input class='h3' type="text" size="20" maxlength="30" name="packAndFowdg" id="packAndFowdg" onblur="javascript:addToInvoiceAmount();"/>
+          			</td>
+ 		         </tr>
+ 		        <tr><td><br/></td></tr>
+ 		        <tr>
+		        	<td align='left' valign='middle' nowrap="nowrap"><div class='h3'>Other Charges: </div></td>
+       				<td valign='middle' align='left'> 
+           				<input class='h3' type="text" size="20" maxlength="30" name="otherCharges" id="otherCharges" onblur="javascript:addToInvoiceAmount();"/>          
+       				</td>
+          			<td>&nbsp;&nbsp;&nbsp;</td>
           			<td align='left' valign='middle' nowrap="nowrap"><div class='h3'>Add BED: </div></td>
 		         	<td valign='middle' align='left'> 
 		         	<input class='h3' type="checkbox" size="20" id="addBED" name="addBED" value="" onclick="javascript:addBedColumns();"/>
-             			      
           			</td>
  		         </tr>
  		          <tr><td><br/></td></tr>
