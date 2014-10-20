@@ -164,26 +164,31 @@ under the License.
     <SecurityGroupPermission groupId="HR_LEAVEREPORTSVIEW" permissionId="HR_LEAVE_REPORTS_VIEW"/>
     <SecurityGroupPermission groupId="FULLADMIN" permissionId="HR_LEAVE_REPORTS_VIEW"/>
     <SecurityGroupPermission groupId="HR_REPORTSVIEW" permissionId="HR_LEAVE_REPORTS_VIEW"/>
+    <SecurityGroupPermission groupId="HUMANRES_ADMIN" permissionId="HR_LEAVE_REPORTS_VIEW"/>
     
     <SecurityGroup description="For Viewing The MasterReports Screen." groupId="HR_MASTERREPORTSVIEW"/>
     <SecurityGroupPermission groupId="HR_MASTERREPORTSVIEW" permissionId="HR_MASTER_REPORTS_VIEW"/>
     <SecurityGroupPermission groupId="FULLADMIN" permissionId="HR_MASTER_REPORTS_VIEW"/>
     <SecurityGroupPermission groupId="HR_REPORTSVIEW" permissionId="HR_MASTER_REPORTS_VIEW"/>
+    <SecurityGroupPermission groupId="HUMANRES_ADMIN" permissionId="HR_MASTER_REPORTS_VIEW"/>
     
     <SecurityGroup description="For Viewing The AttendanceReports Screen." groupId="HR_ATTENREPORTSVIEW"/>
     <SecurityGroupPermission groupId="HR_ATTENREPORTSVIEW" permissionId="HR_ATTENDAN_REPORTS_VIEW"/>
     <SecurityGroupPermission groupId="FULLADMIN" permissionId="HR_ATTENDAN_REPORTS_VIEW"/>
     <SecurityGroupPermission groupId="HR_REPORTSVIEW" permissionId="HR_ATTENDAN_REPORTS_VIEW"/>
+    <SecurityGroupPermission groupId="HUMANRES_ADMIN" permissionId="HR_ATTENDAN_REPORTS_VIEW"/>
     
     <SecurityGroup description="For Viewing The PayrollReports Screen." groupId="HR_PAYROLREPORTSVIEW"/>
     <SecurityGroupPermission groupId="HR_PAYROLREPORTSVIEW" permissionId="HR_PAYROLL_REPORTS_VIEW"/>
     <SecurityGroupPermission groupId="FULLADMIN" permissionId="HR_PAYROLL_REPORTS_VIEW"/>
     <SecurityGroupPermission groupId="HR_REPORTSVIEW" permissionId="HR_PAYROLL_REPORTS_VIEW"/>
+    <SecurityGroupPermission groupId="HUMANRES_ADMIN" permissionId="HR_PAYROLL_REPORTS_VIEW"/>
     
     <SecurityGroup description="For Viewing The StatutoryReports Screen." groupId="HR_STATTREPORTSVIEW"/>
     <SecurityGroupPermission groupId="HR_STATTREPORTSVIEW" permissionId="HR_STATT_REPORTS_VIEW"/>
     <SecurityGroupPermission groupId="FULLADMIN" permissionId="HR_STATT_REPORTS_VIEW"/>
     <SecurityGroupPermission groupId="HR_REPORTSVIEW" permissionId="HR_STATT_REPORTS_VIEW"/>
+    <SecurityGroupPermission groupId="HUMANRES_ADMIN" permissionId="HR_STATT_REPORTS_VIEW"/>
     
     
     <SecurityGroup description="Loan deleting" groupId="HR_LOAN_DELETE"/>
