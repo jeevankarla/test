@@ -141,7 +141,7 @@ under the License.
         		<list-options key-name="finAccountTypeId" list-name="finAccountTypes" description="${description}"/>
         	</drop-down>
         </field>
-        <field name="partyId" position="2"><lookup target-form-name="LookupPartyName"/></field>
+        <field name="ownerPartyId" position="2"><lookup target-form-name="LookupPartyName"/></field>
         
         <field name="searchButton" widget-style="smallSubmit"><submit button-type="button"/></field>
     </form>
