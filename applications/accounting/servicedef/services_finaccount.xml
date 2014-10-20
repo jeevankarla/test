@@ -42,7 +42,7 @@ under the License.
         <permission-service service-name="acctgFinAcctPermissionCheck" main-action="FINACCOUNT_EDIT"/>
         <auto-attributes mode="INOUT" optional="true" include="pk"/>
         <auto-attributes mode="IN" optional="true" include="nonpk"/>
-		<attribute name="depositPartyId" mode="IN" optional="false" type="String"/>
+		<!-- <attribute name="depositPartyId" mode="IN" optional="false" type="String"/> -->
 		<attribute name="entryType" mode="IN" optional="true" type="String"/>
 		<attribute name="transactionDate" mode="IN" optional="true" type="Timestamp"/>
 		<attribute name="finAccountIdTo" mode="IN" optional="false" type="String"/>

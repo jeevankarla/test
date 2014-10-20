@@ -238,7 +238,7 @@ public class FinAccountServices {
         Delegator delegator = dctx.getDelegator();
         LocalDispatcher dispatcher = dctx.getDispatcher();
         GenericValue userLogin = (GenericValue) context.get("userLogin");
-        String depositPartyId = (String) context.get("depositPartyId");
+        String depositPartyId = (String) context.get("ownerPartyId");
         String entryType = (String) context.get("entryType");
         String finAccountIdTo = (String) context.get("finAccountIdTo");
         String contraRefNum = (String) context.get("contraRefNum");
@@ -262,26 +262,12 @@ public class FinAccountServices {
              if (ServiceUtil.isError(createResult)) {
                  return createResult;
              }
-             String roleTypeId = "DEPOSITEE";
              String parentType = "DISBURSEMENT";
              if(UtilValidate.isNotEmpty(parentTypeId) && parentTypeId.equals("DEPOSIT_RECEIPT")){
-            	 roleTypeId = "DEPOSITOR";
             	 parentType = "RECEIPT";
              }
              
              String finAccountId = (String)createResult.get("finAccountId");
-             Map<String, Object> inputCtx = FastMap.newInstance();
-             inputCtx.put("finAccountId", finAccountId);
-             inputCtx.put("partyId", depositPartyId);
-             inputCtx.put("fromDate", fromDate);
-             inputCtx.put("roleTypeId", roleTypeId);
-             inputCtx.put("userLogin", userLogin);
-             createResult = dispatcher.runSync("createFinAccountRole", inputCtx);
-
-             if (ServiceUtil.isError(createResult)) {
-                 return createResult;
-             }
-             
              Map<String, Object> transCtxMap = FastMap.newInstance();
              transCtxMap.put("statusId", "FINACT_TRNS_CREATED");
              transCtxMap.put("entryType", entryType);
@@ -292,7 +278,6 @@ public class FinAccountServices {
              transCtxMap.put("contraFinAccountId", finAccountId);
              transCtxMap.put("finAccountId", finAccountIdTo);
              transCtxMap.put("contraRefNum", contraRefNum);
-             /*transCtxMap.put("parentTypeId", parentType);*/
              transCtxMap.put("finAccountTransTypeId", finAccountTransTypeId);
              createResult = dispatcher.runSync("preCreateFinAccountTrans", transCtxMap);
 

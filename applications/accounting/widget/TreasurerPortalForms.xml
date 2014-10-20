@@ -150,7 +150,7 @@ under the License.
         <actions>
             <service service-name="performFind" result-map="result" result-map-list="listIt">
                 <field-map field-name="inputFields" from-field="parameters"/>
-                <field-map field-name="entityName" value="FinAccountAndRole"/>
+                <field-map field-name="entityName" value="FinAccount"/>
                 <field-map field-name="orderBy" value="fromDate DESC"/>
                 <field-map field-name="viewIndex" from-field="viewIndex"/>
                 <field-map field-name="viewSize" from-field="viewSize"/>
@@ -158,10 +158,9 @@ under the License.
         </actions>
         <field name="finAccountId" title="AccountId"><display/></field>
         <field name="finAccountTypeId" title="Deposit Acc Type"><display-entity entity-name="FinAccountType" key-field-name="finAccountTypeId" description="${description}"/></field>
-        <field name="roleTypeId" title="Role Type"><display-entity entity-name="RoleType" key-field-name="roleTypeId" description="${description}"/></field>
         <field name="finAccountName" title="Acc Name"><display/></field>
-        <field name="partyId" title="Owner Party"><display/></field>
-        <field name="roleFromDate" title="Acc Date"><display/></field>
+        <field name="ownerPartyId" title="Owner Party"><display/></field>
+        <field name="fromDate" title="Acc Date"><display/></field>
         <field name="actualBalance" title="Acc Balance"><display/></field>
         <field name="refund" widget-style="buttontext" event="onclick" action="" >
             <hyperlink target-type="plain" target="javascript:showDepositRefundEntry('${finAccountId}');" description="Refund">
@@ -498,8 +497,8 @@ under the License.
             </drop-down>
         </field>
         <field name="finAccountName" title="Account Name"><text size="20"/></field>
-        <field name="postToGlAccountId" required-field="true"><lookup target-form-name="LookupGlAccount"/></field>
-        <field name="depositPartyId" title="From/To PartyId" required-field="true"><lookup target-form-name="LookupPartyName"/></field>
+        <!-- <field name="postToGlAccountId" required-field="true"><lookup target-form-name="LookupGlAccount"/></field> -->
+        <field name="ownerPartyId" title="From/To PartyId" required-field="true"><lookup target-form-name="LookupPartyName"/></field>
         <field name="entryType"><hidden value="Contra"/></field>
         <field name="transactionDate" title="Receipt Date"> <date-time/> </field>
         <!-- <field name="contraFinAccountId"  title="From Account">
@@ -519,7 +518,7 @@ under the License.
         <field name="currencyUomId"><hidden value="INR"/></field>
         <field name="statusId" use-when="finAccount==null" title="${uiLabelMap.CommonStatus}"><hidden value="FNACT_ACTIVE"/></field>
         <field name="isRefundable"><hidden value="Y"/></field>
-        <field name="ownerPartyId"><hidden value="Company"/></field>
+        <!-- <field name="ownerPartyId"><hidden value="Company"/></field> -->
         <field name="organizationPartyId"><hidden value="Company"/></field>
         <field name="submitButton" use-when="finAccountId==null &amp;&amp; hasFinEditPermission" title="${uiLabelMap.CommonCreate}" widget-style="smallSubmit"><submit button-type="button"/></field>
     </form>
