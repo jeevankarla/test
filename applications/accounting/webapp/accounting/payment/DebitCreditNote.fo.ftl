@@ -235,16 +235,18 @@ under the License.
 				            <#elseif itemType.get("description",locale)?has_content>
 				                <#assign description=itemType.get("description",locale)>
 				            </#if>
-				            <#assign prodUnitPrice = "">
-				            <#if invoiceItem.unitPrice?has_content>
-				            	<#assign prodUnitPrice = invoiceItem.unitPrice?if_exists>
-				            </#if>
-				            <#assign invoiceQtyInc = "">
-				            <#if invoiceItem.quantity?has_content>
-				            	<#assign invoiceQty = invoiceItem.quantity?if_exists>
-				            	<#if invoiceQty?has_content && invoiceQty !=0>
-				            		<#assign invoiceQtyInc = invoiceQty*(productDetails.quantityIncluded?if_exists)>
-				            	</#if>
+				            <#if invoiceItem.productId?has_content>
+					            <#assign prodUnitPrice = "">
+					            <#if invoiceItem.unitPrice?has_content>
+					            	<#assign prodUnitPrice = invoiceItem.unitPrice?if_exists>
+					            </#if>
+					            <#assign invoiceQtyInc = "">
+					            <#if invoiceItem.quantity?has_content>
+					            	<#assign invoiceQty = invoiceItem.quantity?if_exists>
+					            	<#if invoiceQty?has_content && invoiceQty !=0>
+					            		<#assign invoiceQtyInc = invoiceQty*(productDetails.quantityIncluded?if_exists)>
+					            	</#if>
+					            </#if>
 				            </#if>
 							 <fo:table-row>
 	                   			<fo:table-cell border-style="solid">
@@ -253,12 +255,24 @@ under the License.
 	                   			<fo:table-cell border-style="solid">
 	                        		<fo:block text-align="left" font-size="12pt" white-space-collapse="false">${description?if_exists}</fo:block> 
 	                   			</fo:table-cell>
+	                   			<#if invoiceItem.productId?has_content>
 	                   			<fo:table-cell border-style="solid">
 	                        		<fo:block  keep-together="always" text-align="right" font-size="12pt" white-space-collapse="false">${invoiceQtyInc?if_exists?string("#0.00")}</fo:block> 
 	                   			</fo:table-cell>
+	                   			<#else>
+	                   			<fo:table-cell border-style="solid">
+	                        		<fo:block  keep-together="always" text-align="right" font-size="12pt" white-space-collapse="false"></fo:block> 
+	                   			</fo:table-cell>
+	                   			</#if>
+	                   			<#if invoiceItem.productId?has_content>
 	                   			<fo:table-cell border-style="solid">
 	                        		<fo:block  keep-together="always" text-align="right" font-size="12pt" white-space-collapse="false">${prodUnitPrice?if_exists?string("#0.00")}</fo:block> 
 	                   			</fo:table-cell>
+	                   			<#else>
+	                   			<fo:table-cell border-style="solid">
+	                        		<fo:block  keep-together="always" text-align="right" font-size="12pt" white-space-collapse="false"></fo:block> 
+	                   			</fo:table-cell>
+	                   			</#if>
 	                   			<fo:table-cell border-style="solid">
 	                        		<fo:block  keep-together="always" text-align="right" font-size="12pt" white-space-collapse="false"><@ofbizCurrency amount=(Static["org.ofbiz.accounting.invoice.InvoiceWorker"].getInvoiceItemTotal(invoiceItem)) isoCode=invoice.currencyUomId?if_exists/></fo:block> 
 	                   			</fo:table-cell>
