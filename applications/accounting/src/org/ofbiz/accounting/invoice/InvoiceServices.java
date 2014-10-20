@@ -5118,7 +5118,7 @@ public class InvoiceServices {
        			enableTaxInvSeq = Boolean.TRUE;
        		}
        		if(enableTaxInvSeq && UtilValidate.isNotEmpty(invoiceId)){
-       			List<GenericValue> invoiceItems = delegator.findList("InvoiceAndItem", EntityCondition.makeCondition("invoiceId", EntityOperator.EQUALS, invoiceId), UtilMisc.toSet("invoiceItemTypeId", "dueDate"), null, null, false);
+       			List<GenericValue> invoiceItems = delegator.findList("InvoiceAndItem", EntityCondition.makeCondition("invoiceId", EntityOperator.EQUALS, invoiceId), UtilMisc.toSet("invoiceItemTypeId", "dueDate", "invoiceDate"), null, null, false);
        			List invoiceItemTypeIds = EntityUtil.getFieldListFromEntityList(invoiceItems, "invoiceItemTypeId", true);
        			Timestamp invDate = (EntityUtil.getFirst(invoiceItems)).getTimestamp("dueDate");
        			if(UtilValidate.isEmpty(invDate)){
