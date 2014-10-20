@@ -45,4 +45,17 @@ under the License.
 	<TenantConfiguration propertyName="enableBudget" propertyValue="Y" propertyTypeEnumId="ACCOUNT_BUDGET" description="Enable Budget functionality"/>
 	<TenantConfiguration propertyName="enforceBudget" propertyValue="Y" propertyTypeEnumId="ACCOUNT_BUDGET" description="Enforce Budget controls"/>
 
+	<FinAccountType description="Earnest Money Deposit" finAccountTypeId="EMD_DEPOSIT" isRefundable="Y" parentTypeId="DEPOSIT_PAID" replenishEnumId="FARP_MANUAL"/>
+<FinAccountType description="Other Depost" finAccountTypeId="OTHER_DEPOSIT" isRefundable="Y" parentTypeId="DEPOSIT_PAID" replenishEnumId="FARP_MANUAL"/>
+<FinAccountType description="Govt. Agencies Depost" finAccountTypeId="GOVTAGENCY_DEPOSIT" isRefundable="Y" parentTypeId="DEPOSIT_PAID" replenishEnumId="FARP_MANUAL"/>
+
+<FinAccountType description="Contractor Security Deposit" finAccountTypeId="CONTRACTOR_DEPOSIT" isRefundable="Y" parentTypeId="DEPOSIT_RECEIPT" replenishEnumId="FARP_MANUAL"/>
+<FinAccountType description="Vendor Security Deposit" finAccountTypeId="VENDOR_DEPOSIT" isRefundable="Y" parentTypeId="DEPOSIT_RECEIPT" replenishEnumId="FARP_MANUAL"/>
+<FinAccountType description="ICP Dealer Security Deposit" finAccountTypeId="ICPDEALER_DEPOSIT" isRefundable="Y" parentTypeId="DEPOSIT_RECEIPT" replenishEnumId="FARP_MANUAL"/>
+<FinAccountType description="Retailer Security Deposit" finAccountTypeId="RETAILER_DEPOSIT" isRefundable="Y" parentTypeId="DEPOSIT_RECEIPT" replenishEnumId="FARP_MANUAL"/>
+<FinAccountType description="Institution Security Deposit" finAccountTypeId="INSTITUTION_DEPOSIT" isRefundable="Y" parentTypeId="DEPOSIT_RECEIPT" replenishEnumId="FARP_MANUAL"/>
+<FinAccountType description="Shoppee Security Deposit" finAccountTypeId="SHOPPEE_DEPOSIT" isRefundable="Y" parentTypeId="DEPOSIT_RECEIPT" replenishEnumId="FARP_MANUAL"/>
+<FinAccountType description="Walk-In Security Deposit" finAccountTypeId="WALKIN_DEPOSIT" isRefundable="Y" parentTypeId="DEPOSIT_RECEIPT" replenishEnumId="FARP_MANUAL"/>
+<FinAccountType description="Earnest Money Deposit" finAccountTypeId="EMDR_DEPOSIT" isRefundable="Y" parentTypeId="DEPOSIT_RECEIPT" replenishEnumId="FARP_MANUAL"/>
+
 </entity-engine-xml>
