@@ -80,6 +80,9 @@
         paginate-target="FindEmplLeaves" default-table-style="basic-table hover-bar">
         <actions>
         </actions>
+        <row-actions>
+        	<set field="GHSSdays" value="${groovy:return (compDateMap.get(emplLeaveApplId))}"/>
+        </row-actions>
         <auto-fields-entity entity-name="EmplLeave" default-field-type="display"/>
         <field name="effectedCreditDays"><hidden/></field>
         <field name="lossOfPayDays"><hidden/></field>
@@ -96,6 +99,7 @@
         <field name="fromDate" red-when="never"><display description="${groovy:org.ofbiz.base.util.UtilDateTime.toDateString(fromDate, &quot;dd MMM, yyyy&quot;);}"></display> </field>
         <field name="thruDate" red-when="never"><display description="${groovy:org.ofbiz.base.util.UtilDateTime.toDateString(thruDate, &quot;dd MMM, yyyy&quot;);}"/></field>
 		<field name="dayFractionId" title="1st/2nd Half"></field>
+		<field name="GHSSdays" title="Comp off Leave Days"><display></display></field>
         <field name="approverPartyId">
             <display-entity entity-name="PartyNameView" description="${firstName} ${lastName} [${partyId}]" key-field-name="partyId"><!--
                 <sub-hyperlink target="/partymgr/control/viewprofile" target-type="inter-app" description="${approverPartyId}" link-style="buttontext">
@@ -229,11 +233,15 @@
         </sort-order>
     </form>
     <form name="ListLeaveApprovals" list-name="employeeLeaveList" type="list" odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
-        <auto-fields-entity entity-name="EmplLeave" default-field-type="display"/>
+        <actions>
+        </actions>
+        <row-actions>
+        	<set field="GHSSdays" value="${groovy:return (compDateMap.get(emplLeaveApplId))}"/>
+        </row-actions>
         <field name="effectedCreditDays"><hidden/></field>
         <field name="lossOfPayDays"><hidden/></field>
         <field name="description"><hidden/></field>        
-		<field name="emplLeaveApplId" title="Leave Id"></field>                
+		<field name="emplLeaveApplId" title="Leave Id"><display></display></field>                
         <field name="partyId" field-name="partyId">
             <display-entity entity-name="PartyNameView" description="${firstName} ${lastName} [${partyId}]"><!--
                 <sub-hyperlink target="/partymgr/control/viewprofile" target-type="inter-app" description="${partyId}" link-style="buttontext">
@@ -241,11 +249,12 @@
                 </sub-hyperlink>
             --></display-entity>
         </field>
-		<field name="leaveTypeId" title="Type"></field>      
-		<field name="emplLeaveReasonTypeId" title="Reason"></field>                		          
+		<field name="leaveTypeId" title="Type"><display></display></field>      
+		<field name="emplLeaveReasonTypeId" title="Reason"><display></display></field>                		          
         <field name="fromDate" red-when="never"><display description="${groovy:org.ofbiz.base.util.UtilDateTime.toDateString(fromDate, &quot;dd MMM, yyyy&quot;);}"></display> </field>
         <field name="thruDate" red-when="never"><display description="${groovy:org.ofbiz.base.util.UtilDateTime.toDateString(thruDate, &quot;dd MMM, yyyy&quot;);}"/></field>
-		<field name="dayFractionId" title="1st/2nd Half"></field>
+		<field name="appliedBy" title="Applied By"><display></display></field>
+		<field name="dayFractionId" title="1st/2nd Half"><display></display></field>
         <field name="approverPartyId" field-name="approverPartyId">
             <display-entity entity-name="PartyNameView" description="${firstName} ${lastName} [${partyId}]" key-field-name="partyId"><!--
                 <sub-hyperlink target="/partymgr/control/viewprofile" target-type="inter-app" description="${approverPartyId}" link-style="buttontext">
@@ -253,8 +262,9 @@
                 </sub-hyperlink>
             --></display-entity>
         </field>
+        <field name="GHSSdays" title="Comp off Leave Days"><display></display></field>
         <field name="leaveStatus"><display-entity entity-name="StatusItem" key-field-name="statusId" description="${description}"></display-entity></field>
-		<field name="documentsProduced" title="Docs"></field>    
+		<field name="documentsProduced" title="Docs"><display></display></field>    
 		<field name="comment" title="Comment" ><display size="20"/></field> 
         <field name="UpdateStatus" use-when="&quot;${leaveStatus}&quot;!=&quot;LEAVE_REJECTED&quot;" title="${uiLabelMap.CommonUpdate}" widget-style="buttontext">
             <hyperlink target="EditEmplLeaveStatus" description="${uiLabelMap.CommonUpdate}" >

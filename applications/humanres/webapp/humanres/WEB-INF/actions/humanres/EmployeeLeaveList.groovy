@@ -71,19 +71,41 @@ if(UtilValidate.isNotEmpty(fromDate)){
 if(UtilValidate.isNotEmpty(thruDate)){
 	conditionList.add(EntityCondition.makeCondition("thruDate", EntityOperator.LESS_THAN_EQUAL_TO,ObjectType.simpleTypeConvert(thruDate, "Timestamp", null, null)));
 }
-
 condition=EntityCondition.makeCondition(conditionList,EntityOperator.AND);
-LeaveDetails = delegator.findList("EmplLeave", condition , null, UtilMisc.toList("-fromDate"), null, false );
-context.put("employeeLeaveList",LeaveDetails);
+leaveDetails = delegator.findList("EmplLeave", condition , null, UtilMisc.toList("-fromDate"), null, false );
+context.put("employeeLeaveList",leaveDetails);
 
-dateList = [];
-emplLeaveApplId = parameters.emplLeaveApplId;
-if(UtilValidate.isNotEmpty(emplLeaveApplId)){
-	emplDailyAttendanceDetailList = delegator.findList("EmplDailyAttendanceDetail",EntityCondition.makeCondition("emplLeaveApplId", EntityOperator.EQUALS, emplLeaveApplId) , null, null, null, false);
-	if(UtilValidate.isNotEmpty(emplDailyAttendanceDetailList)){
-		dateList = EntityUtil.getFieldListFromEntityList(emplDailyAttendanceDetailList,"date",true);
-		if(UtilValidate.isNotEmpty(dateList)){
-			context.put("dateList",dateList);
+compDateMap = [:];
+leaveDetails.each{ leave->
+	emplLeaveApplId = leave.emplLeaveApplId;
+	compDateList = [];
+	if(UtilValidate.isNotEmpty(emplLeaveApplId)){
+		emplDailyAttendanceDetailList = delegator.findList("EmplDailyAttendanceDetail",EntityCondition.makeCondition("emplLeaveApplId", EntityOperator.EQUALS, emplLeaveApplId) , null, null, null, false);
+		if(UtilValidate.isNotEmpty(emplDailyAttendanceDetailList)){
+			compDateList = EntityUtil.getFieldListFromEntityList(emplDailyAttendanceDetailList,"date",true);
+		}
+	}
+	if(UtilValidate.isNotEmpty(compDateList)){
+		tempMap = [:];
+		tempMap.put(emplLeaveApplId,compDateList);
+		if(UtilValidate.isNotEmpty(tempMap)){
+			compDateMap.putAll(tempMap);
 		}
 	}
 }
+context.put("compDateMap",compDateMap);
+
+emplLeaveApplId = parameters.emplLeaveApplId;
+if(UtilValidate.isNotEmpty(emplLeaveApplId)){
+	dateList = [];
+	if(UtilValidate.isNotEmpty(emplLeaveApplId)){
+		emplDailyAttendanceDetailList = delegator.findList("EmplDailyAttendanceDetail",EntityCondition.makeCondition("emplLeaveApplId", EntityOperator.EQUALS, emplLeaveApplId) , null, null, null, false);
+		if(UtilValidate.isNotEmpty(emplDailyAttendanceDetailList)){
+			dateList = EntityUtil.getFieldListFromEntityList(emplDailyAttendanceDetailList,"date",true);
+			if(UtilValidate.isNotEmpty(dateList)){
+				context.put("dateList",dateList);
+			}
+		}
+	}
+}
+
