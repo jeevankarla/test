@@ -68,16 +68,19 @@ under the License.
             <#assign paySlipNo=paySlipNo+1>
             <fo:block text-align="center" border-style="solid" font-weight="bold">
             	<fo:table>
-            		<fo:table-column column-width="7in"/>
-            		<fo:table-column column-width="7in"/>
-            		<fo:table-column column-width="7in"/>
-            		<fo:table-column column-width="7in"/>
+            		<fo:table-column column-width="0.9in"/>
+            		<fo:table-column column-width="4.9in"/>
+            		
             		<fo:table-body>
             			<fo:table-row>
-            				<fo:table-cell><fo:block keep-together="always" white-space-collapse="false" text-indent="150pt">${partyGroup.groupName?if_exists}                            PaySlip No: ${paySlipNo?if_exists}</fo:block></fo:table-cell>
-            			</fo:table-row>
-            			<fo:table-row>
-            				<fo:table-cell><fo:block keep-together="always"><#if partyAddressResult.address1?has_content>${partyAddressResult.address1?if_exists}</#if><#if (partyAddressResult.address2?has_content)>${partyAddressResult.address2?if_exists}</#if></fo:block></fo:table-cell>
+            				<fo:table-cell>
+            					<fo:block font-size="8pt" text-align="left">             
+		             				<#if logoImageUrl?has_content><fo:external-graphic src="<@ofbizContentUrl>${logoImageUrl}</@ofbizContentUrl>" width="40px" height="40px" content-height="scale-to-fit"/></#if>             
+		         				</fo:block>	
+            				</fo:table-cell>
+            				<fo:table-cell><fo:block keep-together="always" white-space-collapse="false" text-indent="150pt">${partyGroup.groupName?if_exists}                            PaySlip No: ${paySlipNo?if_exists}</fo:block>
+            					<fo:block keep-together="always"><#if partyAddressResult.address1?has_content>${partyAddressResult.address1?if_exists}</#if><#if (partyAddressResult.address2?has_content)>${partyAddressResult.address2?if_exists}</#if></fo:block>
+            				</fo:table-cell>
             			</fo:table-row>
             		</fo:table-body>
             	</fo:table>
@@ -403,6 +406,9 @@ under the License.
     <#else>    	
 		<fo:page-sequence master-reference="main">
 			<fo:flow flow-name="xsl-region-body" font-family="Courier,monospace">
+				<fo:block font-size="8pt" text-align="left">             
+     				<#if logoImageUrl?has_content><fo:external-graphic src="<@ofbizContentUrl>${logoImageUrl}</@ofbizContentUrl>" width="50px" height="50px" content-height="scale-to-fit"/></#if>             
+ 				</fo:block>
    		 		<fo:block font-size="14pt">
         			No Pay Slips Found.......!
    		 		</fo:block>
