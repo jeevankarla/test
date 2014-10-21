@@ -529,7 +529,10 @@
 		<actions>		    
 		    <entity-condition entity-name="PeriodBillingAndCustomTimePeriod" list="periodBillingList">
 		    	<condition-list combine="and">
-		    		<condition-expr field-name="billingTypeId" operator="equals" value="SP_MED_REIMB"/>
+		    		<condition-list combine="or">
+		    			<condition-expr field-name="billingTypeId" operator="equals" value="SP_MED_REIMB"/>
+		    			<condition-expr field-name="billingTypeId" operator="equals" value="SP_LEAVE_ENCASH"/>
+		    		</condition-list>
 		    		<condition-expr field-name="statusId" operator="not-equals" value="COM_CANCELLED"/>
 		    	</condition-list>
 		    	<order-by field-name="-thruDate"/>

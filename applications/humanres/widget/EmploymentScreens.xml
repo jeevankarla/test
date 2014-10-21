@@ -572,6 +572,7 @@
                 <set field="headerItem" value="Attendance"/>
                 <set field="tabButtonItem2" value="EditPayrollAttendance" /> 
 				<set field="tabButtonItem" value="Attendance" />
+				<set field="screenFlag" value="payrollAttendance"/> 
             </actions>
             <widgets>
 				<decorator-screen name="HumanresCommonDecorator" location="component://humanres/widget/CommonScreens.xml">
@@ -601,6 +602,45 @@
                     </platform-specific>
                 </widgets>
                 </section>
+            </widgets>
+        </section>
+    </screen>
+    <screen name="LeaveEncash">
+        <section>
+            <actions>
+            	<script location="component://humanres/webapp/humanres/WEB-INF/actions/humanres/EditPayrollAttedance.groovy"/>  
+            </actions>
+            <widgets>
+                <section>
+                <widgets>
+                    <platform-specific>
+                        <html><html-template location="component:///humanres/webapp/humanres/humanres/editLeaveEncashment.ftl"/></html>
+                    </platform-specific>
+                </widgets>
+                </section>
+            </widgets>
+        </section>
+    </screen>
+    <screen name="EditLeaveEncashment">
+        <section>
+            <actions>
+                <set field="titleProperty" value="Edit Leave Encash"/>
+                <set field="headerItem" value="Attendance"/>                
+				<set field="tabButtonItem" value="Attendance" />
+				<set field="tabButtonItem2" value="EditLeaveEncash"/>
+				<set field="screenFlag" value="leaveEncash"/> 
+            </actions>
+            <widgets>
+				<decorator-screen name="HumanresCommonDecorator" location="component://humanres/widget/CommonScreens.xml">
+                    <decorator-section name="body">
+                    	<include-menu location="component://humanres/widget/HumanresMenus.xml" name="AttendanceTabBar"/> 
+                    		<screenlet name="search-options" title="search-options">      
+                                <include-form name="editLeaveEncashment" location="component://humanres/widget/forms/EmploymentForms.xml"/>
+                            </screenlet>                     
+		                   <include-screen name="LeaveEncash" location="component://humanres/widget/EmploymentScreens.xml"/>
+		                            
+                    </decorator-section>
+                </decorator-screen>
             </widgets>
         </section>
     </screen>

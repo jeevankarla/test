@@ -530,11 +530,15 @@
                      <field-map field-name="roleTypeId" value="INTERNAL_ORGANIZATIO"/>
                      <order-by field-name="partyId"/>
                 </entity-and>
-                <entity-and list="customTimePeriodList" entity-name="CustomTimePeriod">
-                     <field-map field-name="periodTypeId" value="HR_QUARTER"/>
-                     <order-by field-name="-thruDate"/>
-                     <order-by field-name="periodNum"/>
-                </entity-and>
+               
+                <entity-condition list="customTimePeriodList" entity-name="CustomTimePeriod">
+                	<condition-list combine="or">
+                		<condition-expr field-name="periodTypeId" operator="equals" value="HR_QUARTER"/>
+                		<condition-expr field-name="periodTypeId" operator="equals" value="HR_LEAVEENCASH"/>                	
+                	</condition-list>
+                	<order-by field-name="-thruDate"/>
+                    <order-by field-name="periodNum"/>
+                </entity-condition>                
                  <entity-condition list="payrollTypeList" entity-name="Enumeration">
                  	<condition-list combine="and">
                  		<condition-expr field-name="enumId" operator="not-equals" value="CR_INST_BILLING"/>

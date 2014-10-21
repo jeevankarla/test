@@ -128,8 +128,7 @@
     <EnumerationType description="Period Billing Type" enumTypeId="PBILLING_TYPE" hasTable="N" parentTypeId=""/>
     <Enumeration description="Payroll Period Billing" enumCode="PAYROLL_BILL" enumId="PAYROLL_BILL" sequenceId="01" enumTypeId="PBILLING_TYPE"/>  
     <PeriodType description="Attendane Month" periodTypeId="ATTENDANCE_MONTH" periodLength="1" uomId="TF_mon"/>
-    <PeriodType description="HR Quarter" periodLength="3" periodTypeId="HR_QUARTER" uomId="TF_mon"/> 
-    
+    <PeriodType description="HR Quarter" periodLength="3" periodTypeId="HR_QUARTER" uomId="TF_mon"/>
     <EnumerationType description="Payhead Price Parent Enum Type" enumTypeId="PYHD_PRICE" hasTable="N" parentTypeId=""/>
     <EnumerationType description="Payhead Price Input Parameter" enumTypeId="PYHD_PRICE_IN_PARAM" hasTable="N" parentTypeId="PYHD_PRICE"/>
     <Enumeration description="Location" enumCode="PAYHD_BEDE_GEO" enumId="PAYHD_BEDE_GEO" sequenceId="01" enumTypeId="PYHD_PRICE_IN_PARAM"/>
@@ -211,6 +210,12 @@
    
    <PayrollType payrollTypeId="SP_MED_REIMB" parentTypeId="PAYROLL_BILL" periodTypeId="RATE_QUARTER" serviceName="generatePayrollMedicalReimbursement" />
    <PayrollTypePayheadTypeMap payrollTypeId="SP_MED_REIMB" payHeadTypeId="PAYROL_BEN_MED_REB"/>
+   <!-- Leave Encashment type data -->
+   <PeriodType description="HR Leave Encash" periodTypeId="HR_LEAVEENCASH" uomId="TF_mon"/>
+   <PayrollType payrollTypeId="SP_LEAVE_ENCASH" parentTypeId="PAYROLL_BILL" periodTypeId="HR_LEAVEENCASH" serviceName="generateLeaveEncashment" />
+   <PayrollTypePayheadTypeMap payrollTypeId="SP_LEAVE_ENCASH" payHeadTypeId="PAYROL_BEN_DA"/>
+   <PayrollTypePayheadTypeMap payrollTypeId="SP_LEAVE_ENCASH" payHeadTypeId="PAYROL_BEN_HRA"/>
+   <PayrollTypePayheadTypeMap payrollTypeId="SP_LEAVE_ENCASH" payHeadTypeId="PAYROL_BEN_CCA"/>
    
    <PayrollType payrollTypeId="PAYROLL_BILL" periodTypeId="RATE_MONTH" serviceName="generatePayrollBillingInternal"/>
    
@@ -219,8 +224,6 @@
         
     <PayrollBenDedRule payrollBenDedRuleId="BEN_MED_REB" ruleName="Medical Reimbursement  Rule" payHeadTypeId="PAYROL_BEN_MED_REB" fromDate="2001-01-01 12:00:00.0"/>
     <PayHeadPriceAction acctgFormulaId="BEN_MED_REB" amount="" payHeadPriceActionSeqId="01" payHeadPriceActionTypeId="PRICE_FLAT" payrollBenDedRuleId="BEN_MED_REB" />
-    
-   
    
    <TenantConfiguration propertyName="enableLeaveSms" propertyValue="N" propertyTypeEnumId="SMS" description="Enable Leave Sms functionality"/>
 	

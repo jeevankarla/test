@@ -178,6 +178,14 @@
 	             </and> 
             </condition> 
         	<link target="EditPayrollAtten"/>
+        </menu-item>
+        <menu-item name="EditLeaveEncash" title="Edit Leave Encashment Days">
+        	<!-- <condition>
+                 <and>
+                    <if-has-permission permission="EDIT_PAYROLL"  action="_VIEW"/>
+	             </and> 
+            </condition>  -->
+        	<link target="EditLeaveEncashment"/>
         </menu-item> 
         <menu-item name="EditShiftDays" title="Edit ShiftDays">
 			<link target="EditShiftDays"></link>        

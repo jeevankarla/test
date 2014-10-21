@@ -1636,6 +1636,10 @@ under the License.
        <security https="true" auth="true"/>
         <response name="success" type="view" value="EditPayrollAttendance"/>
     </request-map>
+    <request-map uri="EditLeaveEncashment">
+       <security https="true" auth="true"/>
+        <response name="success" type="view" value="EditLeaveEncashment"/>
+    </request-map>
     <request-map uri="EditShiftDays">
        <security https="true" auth="true"/>
         <response name="success" type="view" value="EditShiftDay"/>
@@ -2141,6 +2145,7 @@ under the License.
     <view-map name="EditPerfReviewItems" type="screen" page="component://humanres/widget/PerfReviewScreens.xml#EditPerfReviewItems"/>
     
     <view-map name="EditPayrollAttendance" type="screen" page="component://humanres/widget/EmploymentScreens.xml#EditPayrollAttendance"/>
+    <view-map name="EditLeaveEncashment" type="screen" page="component://humanres/widget/EmploymentScreens.xml#EditLeaveEncashment"/>
     <view-map name="EditShiftDay" type="screen" page="component://humanres/widget/EmploymentScreens.xml#EditShiftDay"/>
 
     <view-map name="EditPerformanceNotes" type="screen" page="component://humanres/widget/EmploymentScreens.xml#EditPerformanceNotes"/>

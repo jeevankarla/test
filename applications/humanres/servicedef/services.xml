@@ -1334,6 +1334,7 @@ under the License.emplpunch
         <attribute name="employeeId" mode="IN" type="String"/> 
         <attribute name="proportionalFlag" mode="IN" type="String" optional="true"/> 
         <attribute name="customTimePeriodId" mode="IN" type="String"/>
+        <attribute name="attendanceTimePeriodId" mode="IN" type="String" optional="true"/>
         <attribute name="amount" type="BigDecimal" mode="OUT" optional="false"/>
         <attribute name="priceInfos" type="List" mode="OUT" optional="true"/>
     </service> 
@@ -1391,6 +1392,7 @@ under the License.emplpunch
         <attribute name="orgPartyId" mode="IN" type="String"></attribute>
         <attribute name="customTimePeriodId" mode="IN" type="String"></attribute>
         <attribute name="billingTypeId" mode="IN" type="String" optional="true"/>
+        <attribute name="basicSalDate" mode="IN" type="String" optional="true"/>
         <attribute name="periodBillingId" mode="OUT" type="String"></attribute>
     </service>
     <service name="generatePayrollBilling"  engine="java"
@@ -1414,7 +1416,13 @@ under the License.emplpunch
         <attribute name="partyIdFrom" mode="IN" type="String"></attribute>
         <attribute name="periodBillingId" mode="INOUT" type="String"></attribute>
     </service>
-     
+    <service name="generateLeaveEncashment"  engine="java"
+                location="in.vasista.vbiz.humanres.PayrollService" invoke="generateLeaveEncashment" auth="true" transaction-timeout="5000">
+        <description>Create an ProductPriceRule</description>
+        <attribute name="partyId" mode="IN" type="String"></attribute>
+        <attribute name="partyIdFrom" mode="IN" type="String"></attribute>
+        <attribute name="periodBillingId" mode="INOUT" type="String"></attribute>
+    </service> 
     <service name="generateEmployerContributionPayrollBilling"  engine="java"
                 location="in.vasista.vbiz.humanres.PayrollService" invoke="generateEmployerContributionPayrollBilling" auth="true" transaction-timeout="5000">
         <description>Create an ProductPriceRule</description>
