@@ -76,7 +76,7 @@ under the License.
 	     					</fo:table>
 	     				</fo:block>
 	     			</#if>
-		       		<#if (headerDetails.getKey() != "PAYROL_DD_EPF") || (headerDetails.getKey() != "PAYROL_DD_APGLIF") || (headerDetails.getKey() != "PAYROL_DD_SSS")>
+		       		<#if (headerDetails.getKey() != "PAYROL_DD_EPF") && (headerDetails.getKey() != "PAYROL_DD_APGLIF") && (headerDetails.getKey() != "PAYROL_DD_SSS")>
 	     				<fo:block font-family="Courier,monospace">
 	     					<fo:table>
 		       					<fo:table-column column-width="50pt"/>
@@ -155,7 +155,7 @@ under the License.
 		       					<fo:table-column column-width="100pt"/>
 		       					<fo:table-column column-width="90pt"/>
 	       					</#if>
-		       				<#if (headerDetails.getKey() != "PAYROL_DD_EPF") || (headerDetails.getKey() != "PAYROL_DD_APGLIF") || (headerDetails.getKey() != "PAYROL_DD_SSS")>
+		       				<#if (headerDetails.getKey()!="PAYROL_DD_EPF") && (headerDetails.getKey()!="PAYROL_DD_APGLIF") && (headerDetails.getKey()!="PAYROL_DD_SSS")>
 		       					<fo:table-column column-width="50pt"/>
 		     					<fo:table-column column-width="60pt"/>
 		     					<fo:table-column column-width="150pt"/>
@@ -212,7 +212,7 @@ under the License.
 			       							<#assign totalPension =totalPension + deductionType.getValue().get("Pension")>
 			       						</fo:table-row>
 			       						</#if>
-		       							<#if (headerDetails.getKey() != "PAYROL_DD_EPF") || (headerDetails.getKey() != "PAYROL_DD_APGLIF") || (headerDetails.getKey() != "PAYROL_DD_SSS")>
+		       							<#if (headerDetails.getKey()!="PAYROL_DD_EPF") && (headerDetails.getKey()!="PAYROL_DD_APGLIF") && (headerDetails.getKey()!="PAYROL_DD_SSS")>
 				       						<#if deductionType.getValue().get("deductionAmt")!=0>
 				       							<fo:table-row>
 													<fo:table-cell><fo:block keep-together="always" border-style="solid">${sno}</fo:block></fo:table-cell>
@@ -233,18 +233,20 @@ under the License.
 				       						</#if>	
 			       						</#if>
 	     								<#if  headerDetails.getKey() == "PAYROL_DD_APGLIF">
-			       							<fo:table-row>
-												<fo:table-cell><fo:block keep-together="always" border-style="solid">${sno}</fo:block></fo:table-cell>
-												<fo:table-cell><fo:block keep-together="always" text-align="right" border-style="solid">${deductionType.getKey()?if_exists}</fo:block></fo:table-cell>
-												<fo:table-cell><fo:block keep-together="always"  text-align="left" border-style="solid" text-indent="5pt">${Static["org.ofbiz.order.order.OrderServices"].nameTrim((StringUtil.wrapString(Static["org.ofbiz.party.party.PartyHelper"].getPartyName(delegator, deductionType.getKey(), false))),15)}</fo:block></fo:table-cell>
-												<#assign designationId = emplPositionAndFulfilment[0].emplPositionTypeId>
-												<#assign designation = delegator.findOne("EmplPositionType", {"emplPositionTypeId" : designationId?if_exists}, true)>
-												<#assign designationName=emplPositionAndFulfilment[0].name?if_exists>
-					       						<fo:table-cell><fo:block keep-together="always"  text-align="left" border-style="solid" text-indent="5pt"><#if designationName?has_content>${designationName?if_exists}<#else><#if designation?has_content>${designation.description?if_exists}</#if></#if></fo:block></fo:table-cell>		       							
-						       					<fo:table-cell><fo:block keep-together="always" text-align="right" border-style="solid">${deductionType.getValue().get("deductionAmt")?if_exists}</fo:block></fo:table-cell>
-				       							<fo:table-cell><fo:block keep-together="always" text-align="right" border-style="solid">0</fo:block></fo:table-cell>
-				       							<#assign totalAmt =totalAmt + deductionType.getValue().get("deductionAmt")>
-			       							</fo:table-row>
+	     									<#if deductionType.getValue().get("deductionAmt")!=0>
+			       								<fo:table-row>
+													<fo:table-cell><fo:block keep-together="always" border-style="solid">${sno}</fo:block></fo:table-cell>
+													<fo:table-cell><fo:block keep-together="always" text-align="right" border-style="solid">${deductionType.getKey()?if_exists}</fo:block></fo:table-cell>
+													<fo:table-cell><fo:block keep-together="always"  text-align="left" border-style="solid" text-indent="5pt">${Static["org.ofbiz.order.order.OrderServices"].nameTrim((StringUtil.wrapString(Static["org.ofbiz.party.party.PartyHelper"].getPartyName(delegator, deductionType.getKey(), false))),15)}</fo:block></fo:table-cell>
+													<#assign designationId = emplPositionAndFulfilment[0].emplPositionTypeId>
+													<#assign designation = delegator.findOne("EmplPositionType", {"emplPositionTypeId" : designationId?if_exists}, true)>
+													<#assign designationName=emplPositionAndFulfilment[0].name?if_exists>
+						       						<fo:table-cell><fo:block keep-together="always"  text-align="left" border-style="solid" text-indent="5pt"><#if designationName?has_content>${designationName?if_exists}<#else><#if designation?has_content>${designation.description?if_exists}</#if></#if></fo:block></fo:table-cell>		       							
+							       					<fo:table-cell><fo:block keep-together="always" text-align="right" border-style="solid">${deductionType.getValue().get("deductionAmt")?if_exists}</fo:block></fo:table-cell>
+					       							<fo:table-cell><fo:block keep-together="always" text-align="right" border-style="solid">0</fo:block></fo:table-cell>
+					       							<#assign totalAmt =totalAmt + deductionType.getValue().get("deductionAmt")>
+			       								</fo:table-row>
+			       							</#if>
 			       						</#if>
 			       						<#if  headerDetails.getKey() == "PAYROL_DD_SSS">
 					       					<fo:table-row>
@@ -291,7 +293,7 @@ under the License.
 		       							<fo:table-cell><fo:block keep-together="always" text-align="right" border-style="solid">${totalPension?if_exists}</fo:block></fo:table-cell>
 		       						</fo:table-row>
 		       					</#if>
-		       					<#if (headerDetails.getKey() != "PAYROL_DD_EPF") || (headerDetails.getKey() != "PAYROL_DD_APGLIF") || (headerDetails.getKey() != "PAYROL_DD_SSS")>
+		       					<#if (headerDetails.getKey()!="PAYROL_DD_EPF") && (headerDetails.getKey()!="PAYROL_DD_APGLIF") && (headerDetails.getKey()!="PAYROL_DD_SSS")>
 		       							<fo:table-row>
 											<fo:table-cell><fo:block keep-together="always" border-style="solid"></fo:block></fo:table-cell>
 											<fo:table-cell><fo:block keep-together="always" text-align="right" border-style="solid"></fo:block></fo:table-cell>
