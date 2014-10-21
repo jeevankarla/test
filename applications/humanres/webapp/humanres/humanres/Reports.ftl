@@ -710,6 +710,12 @@ function makeDatePicker1(fromDateId ,thruDateId){
 							<table class="basic-table" cellspacing="5">
 								<tr class="alternate-row">
 									<td width="20%"><span class='h3'>Payroll Consolidated Summary Report</span></td>
+									<td width="10%"><span class='h3'>Gl Codes
+										<select name="netPayglCode" id="netPayglCode">
+											<option value="No" >No</option>
+											<option value="Yes">Yes</option>
+										</select>
+									</span></td>
 									<td width="30%"><spam class='h3'>Organization Id 
 										<select name="deptId" class='h4'>
 											<#list orgList as org>    
@@ -729,7 +735,6 @@ function makeDatePicker1(fromDateId ,thruDateId){
 											</#list>
 										</select></span>
 									</td>	
-									<td width="5%"></td>
 									<td width="30%"><span class="h3"><input type="submit" value="Download" class="buttontext"></span></td>
 								</tr>
 							</table>
@@ -923,8 +928,12 @@ function makeDatePicker1(fromDateId ,thruDateId){
 							<table class="basic-table" cellspacing="5">
 								<tr class="alternate-row">
 									<td width="19%"><span class='h3'>Quarterly IncomeTax Statement<input  type="hidden"  value="ITAXQuaerlyrtStatement"   name="reportTypeFlag"/></span></td>
-									<td width="15%"><span class='h3'>From: <input type='text' id='fromMonth' name='fromMonth' onmouseover='monthPicker()' class="monthPicker"/></span></td>
-			      		 			<td width="15%"><span class='h3'>Thru: <input type='text' id='thruMonth' name='thruMonth' onmouseover='monthPicker()' class="monthPicker"/></span></td>
+									<td width="15%"><span class='h3'>From Date: <input type='text' id='fromMonth' name='fromMonth' onmouseover='monthPicker()' class="monthPicker"/></span></td>
+			      		 			<td width="15%"><span class='h3'>Thru Date: <input type='text' id='thruMonth' name='thruMonth' onmouseover='monthPicker()' class="monthPicker"/></span></td>
+			      		 		<#--	<td width="15%"><span class='h3'>Report Type:<select name="reportType" id="reportType">
+			      		 			<option value="deductee">Deductee</option>
+			      		 			<option value="deductor">Deductor</option>
+			      		 			</select></span></td>  -->
 									<td width="15%"><span class='h3'><input type="submit" value="Download" class="buttontext"></span></td>
 								</tr>
 							</table>

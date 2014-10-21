@@ -40,8 +40,14 @@ under the License.
      			<fo:block white-space-collapse="false" font-weight="bold" text-align="center" keep-together="always">${partyGroup.groupName?if_exists?upper_case}  <#if partyAddressResult.address1?has_content>${partyAddressResult.address1?if_exists}</#if><#if (partyAddressResult.address2?has_content)>${partyAddressResult.address2?if_exists}</#if></fo:block>
         	 	<fo:block text-align="center" white-space-collapse="false" font-weight="bold">&#160; SUMMARY OF EARNINGS AND DEDUCTIONS FOR THE MONTH OF :  ${(Static["org.ofbiz.base.util.UtilDateTime"].toDateString(timePeriodEnd, "MMMMM-yyyy")).toUpperCase()}</fo:block>
         		<fo:block white-space-collapse="false" keep-together="always">&#160;${uiLabelMap.CommonPage}No: <fo:page-number/>                                                                                                                                     Date: ${(Static["org.ofbiz.base.util.UtilDateTime"].toDateString(nowTimestamp, "dd MMM, yyyy"))?upper_case}</fo:block>
-        		<fo:block text-align="left" keep-together="always" white-space-collapse="false">-------------------------------------------------------------------------------------------------------------------------------------------------------------------</fo:block>	 	 	  
-        		<fo:block text-align="left" white-space-collapse="false" keep-together="always" font-weight="bold">Earnings                                                             Amount      Deductions                                                             Amount</fo:block>
+        		<fo:block text-align="left" keep-together="always" white-space-collapse="false">-------------------------------------------------------------------------------------------------------------------------------------------------------------------</fo:block>
+        		<#if (parameters.netPayglCode?exists && parameters.netPayglCode == "Yes")>	 	 	  
+        			<fo:block text-align="left" white-space-collapse="false" keep-together="always" font-weight="bold">Gl Code   Earnings                                         Amount      |  Gl Code    Deductions                                          Amount</fo:block>
+        		<#elseif (parameters.netPayglCode?exists && parameters.netPayglCode == "No")>
+        			<fo:block text-align="left" white-space-collapse="false" keep-together="always" font-weight="bold">&#160;   		          Earnings                                         Amount               				 	     Deductions                                          Amount</fo:block>
+        		<#else>
+        			<fo:block text-align="left" white-space-collapse="false" keep-together="always" font-weight="bold">&#160;   		          Earnings                                         Amount               				 	     Deductions                                          Amount</fo:block>	
+        		</#if>
         		<fo:block text-align="left" keep-together="always" white-space-collapse="false">-------------------------------------------------------------------------------------------------------------------------------------------------------------------</fo:block>
         	</fo:static-content>       
           <fo:flow flow-name="xsl-region-body" font-family="Helvetica">
@@ -60,7 +66,9 @@ under the License.
        					 			<fo:block>
        					 				<fo:table>
        					 					<fo:table-column column-width="30pt"/>
-       					 					<fo:table-column column-width="270pt"/>
+       					 					<fo:table-column column-width="23pt"/>
+       					 					<fo:table-column column-width="100pt"/>
+       					 					<fo:table-column column-width="140pt"/>
        					 					<fo:table-body>       					 						
        					 						<#list benefitTypeIds as benefitType>
 						                    		<#assign value=0>
@@ -68,17 +76,25 @@ under the License.
 						                    			<#assign value=payRollSummaryMap.get(benefitType)>	
 						                    		</#if>
 						                    		<#if value !=0>
-						                    		<#assign extrnalGlCodeGroup = delegator.findOne("BenefitType", {"benefitTypeId" :benefitType}, true)>
 							                    		<fo:table-row>                      
-								                    		<fo:table-cell >                    		
-								                      			<#assign totalEarnings=(totalEarnings+(value))>  
+								                    		<fo:table-cell >  
+								                    		<#if (parameters.netPayglCode?exists && parameters.netPayglCode == "Yes")>                  		
+								                      			<#assign extrnalGlCodeGroup = delegator.findOne("BenefitType", {"benefitTypeId" :benefitType}, true)> 
 								                      			<#if extrnalGlCodeGroup.externalGlCode?exists >               			
-								                    			<fo:block keep-together="always">${benefitDescMap[benefitType]?if_exists}&#160;${extrnalGlCodeGroup.externalGlCode?if_exists}</fo:block>
+								                    			<fo:block text-align="left" keep-together="always">${extrnalGlCodeGroup.externalGlCode?if_exists}</fo:block>
 								                    			<#else>
 								                    			<#assign extrnalGlCodeGroup = delegator.findOne("InvoiceItemType", {"invoiceItemTypeId" :benefitType}, true)>
-								                    			<fo:block keep-together="always">${benefitDescMap[benefitType]?if_exists}&#160;${extrnalGlCodeGroup.defaultGlAccountId?if_exists}</fo:block>
-								                    			</#if>                			
-								                    		</fo:table-cell>                 	              		
+								                    			<fo:block text-align="left" keep-together="always">${extrnalGlCodeGroup.defaultGlAccountId?if_exists}</fo:block>
+								                    			</#if> 
+								                    		<#else>	 
+								                    		<fo:block linefeed-treatment="preserve">&#xA;</fo:block>
+								                    		</#if>	  
+								                    		</fo:table-cell>
+								                    		<fo:table-cell > 
+								                    		<fo:block linefeed-treatment="preserve">&#xA;</fo:block></fo:table-cell >
+								                    		 <fo:table-cell>
+								                    		 <#assign totalEarnings=(totalEarnings+(value))> 
+								                    		 <fo:block keep-together="always">${benefitDescMap[benefitType]?if_exists}</fo:block></fo:table-cell>               	              		
 								                    		<fo:table-cell><fo:block text-align="right">${value?if_exists?string("#0")}&#160;&#160;</fo:block></fo:table-cell>
 								                    	</fo:table-row>
 							                    	</#if>
@@ -92,7 +108,9 @@ under the License.
        					 			<fo:block>
        					 				<fo:table>
        					 					<fo:table-column column-width="30pt"/>
-       					 					<fo:table-column column-width="280pt"/>
+       					 					<fo:table-column column-width="30pt"/>
+       					 					<fo:table-column column-width="100pt"/>
+       					 					<fo:table-column column-width="160pt"/>
        					 					<fo:table-body>       					 						
        					 						<#list dedTypeIds as deductionType>
 						                    		<#assign dedValue=0>
@@ -100,17 +118,25 @@ under the License.
 						                    			<#assign dedValue=payRollSummaryMap.get(deductionType)>	
 						                    		</#if>
 						                    		<#if dedValue !=0>
-						                    		<#assign extrnalGlCodeGroup = delegator.findOne("DeductionType", {"deductionTypeId" :deductionType}, true)>
 							                    		<fo:table-row>                      
-								                    		<fo:table-cell>                    		
-								                      			<#assign totalDeductions=(totalDeductions+(dedValue))>	
+								                    		<fo:table-cell> 
+								                    		<#if (parameters.netPayglCode?exists && parameters.netPayglCode == "Yes")>  
+								                    			<#assign extrnalGlCodeGroup = delegator.findOne("DeductionType", {"deductionTypeId" :deductionType}, true)>                 		
 								                      			<#if extrnalGlCodeGroup.externalGlCode?exists >  							                      			               			
-								                    			<fo:block keep-together="always">${dedDescMap[deductionType]?if_exists}&#160;${extrnalGlCodeGroup.externalGlCode?if_exists}</fo:block>  
+								                    			<fo:block keep-together="always">|&#160;&#160;${extrnalGlCodeGroup.externalGlCode?if_exists}</fo:block>  
 								                    			<#else>        
 								                    			<#assign extrnalGlCodeGroup = delegator.findOne("InvoiceItemType", {"invoiceItemTypeId" :deductionType}, true)>
-								                    			<fo:block keep-together="always">${dedDescMap[deductionType]?if_exists}&#160;${extrnalGlCodeGroup.defaultGlAccountId?if_exists}</fo:block>
-								                    			</#if>      			
-								                    		</fo:table-cell>                 	              		
+								                    			<fo:block keep-together="always">|&#160;&#160;${extrnalGlCodeGroup.defaultGlAccountId?if_exists}</fo:block>
+								                    			</#if> 
+								                    		<#else>
+								                    		<fo:block linefeed-treatment="preserve">&#xA;</fo:block>
+								                    		</#if>	     			
+								                    		</fo:table-cell>  
+								                    		<fo:table-cell > 
+								                    		<fo:block linefeed-treatment="preserve">&#xA;</fo:block></fo:table-cell >
+								                    		 <fo:table-cell>
+								                    		 <#assign totalDeductions=(totalDeductions+(dedValue))>
+								                    		 <fo:block keep-together="always">${dedDescMap[deductionType]?if_exists}</fo:block></fo:table-cell>                	              		
 								                    		<fo:table-cell><fo:block text-align="right">${((-1)*(dedValue))?if_exists?string("#0")}&#160;&#160;</fo:block></fo:table-cell>
 								                    	</fo:table-row>
 							                    	</#if>
@@ -145,9 +171,16 @@ under the License.
            			</fo:table>
            		</fo:block>
            		<#assign netAmt= totalEarnings+totalDeductions>
-           		<fo:block keep-together="always" white-space-collapse="false" font-weight="bold">NET SALARY  :   <#if totalEarnings?has_content>
-                   					<#assign net = netAmt?if_exists />
+           		<#if (parameters.netPayglCode?exists && parameters.netPayglCode == "Yes")>
+           			<fo:block keep-together="always" white-space-collapse="false" font-weight="bold">09101    NET SALARY  :  <#if totalEarnings?has_content><#assign net = netAmt?if_exists />
                    			<@ofbizCurrency amount=net?string("#0") /></#if></fo:block>
+                 <#elseif (parameters.netPayglCode?exists && parameters.netPayglCode == "No")>
+                 	<fo:block keep-together="always" white-space-collapse="false" font-weight="bold">        NET SALARY  :  <#if totalEarnings?has_content><#assign net = netAmt?if_exists />
+                   			<@ofbizCurrency amount=net?string("#0") /></#if></fo:block>
+                 <#else>  
+                 	<fo:block keep-together="always" white-space-collapse="false" font-weight="bold">        NET SALARY  :  <#if totalEarnings?has_content><#assign net = netAmt?if_exists />
+                   			<@ofbizCurrency amount=net?string("#0") /></#if></fo:block>			
+                 </#if>
          		<fo:block linefeed-treatment="preserve"> &#xA;</fo:block>
          		<fo:block linefeed-treatment="preserve"> &#xA;</fo:block>
          		<fo:block keep-together="always" white-space-collapse="false" font-weight="bold">Director                                                                                   Manager/Deputy Manager Finance</fo:block>
