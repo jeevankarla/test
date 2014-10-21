@@ -1654,6 +1654,7 @@ under the License.
 		<field name="payrollTypeId" type="id-ne"></field>
 		<field name="parentTypeId" type="id-ne"></field>
 		<field name="periodTypeId" type="id"></field>
+		<field name="roundingMode" type="id-vlong"></field>
 		<field name="serviceName" type="id-vlong"></field>
 		<prim-key field="payrollTypeId" />
 		<relation type="one" fk-name="PT_PT" rel-entity-name="Enumeration">
