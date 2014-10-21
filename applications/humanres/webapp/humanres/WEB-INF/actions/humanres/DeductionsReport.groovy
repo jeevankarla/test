@@ -44,29 +44,13 @@ context.timePeriodStart= timePeriodStart;
 context.timePeriodEnd= timePeriodEnd;
 
 deductionTypeList = delegator.findList("DeductionType", null, null, ["sequenceNum"], null, false);
-dedDescMap=[:];
-if(UtilValidate.isNotEmpty(deductionTypeList)){
-	deductionTypeList.each{ deduction->
-		dedName =  deduction.get("deductionName");
-		dedType = deduction.get("deductionTypeId");
-		dedDescMap.put(dedType,dedName);
-	}
-}
 dedTypeIds = EntityUtil.getFieldListFromEntityList(deductionTypeList, "deductionTypeId", true);
 if(dedTypeIds.contains(parameters.dedTypeId)){
 	dedTypeIds=UtilMisc.toList(parameters.dedTypeId);
 }else{
 	dedTypeIds=dedTypeIds;
 }
-
-partyTypeIds = EntityUtil.getFieldListFromEntityList(deductionTypeList, "deductionTypeId", true);
-if(partyTypeIds.contains(parameters.partyId)){
-	partyTypeIds=UtilMisc.toList(parameters.partyId);
-}else{
-	partyTypeIds=partyTypeIds;
-}
 context.dedTypeIds=dedTypeIds;
-context.dedDescMap=dedDescMap;
 
 emplInputMap = [:];
 emplInputMap.put("userLogin", userLogin);
