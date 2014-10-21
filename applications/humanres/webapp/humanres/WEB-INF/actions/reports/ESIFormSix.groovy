@@ -75,6 +75,7 @@ PeriodIdsList.each{ Period ->
 	periodbillingCondition = EntityCondition.makeCondition(periodbillingConditionList,EntityOperator.AND);
 	BillingList = delegator.findList("PeriodBilling", periodbillingCondition, null, null, null, false);
 	if(UtilValidate.isNotEmpty(BillingList)){
+		BillingList = EntityUtil.getFirst(BillingList);
 		BillingId = BillingList.periodBillingId;
 		periodBillingIdMap.put(Period,BillingId);
 	}
@@ -206,6 +207,7 @@ if(UtilValidate.isNotEmpty(employmentsList)){
 							headerCondition = EntityCondition.makeCondition(headerConditionList,EntityOperator.AND);
 							headerIdsList = delegator.findList("PayrollHeader", headerCondition, null, null, null, false);
 							if(UtilValidate.isNotEmpty(headerIdsList)){
+								headerIdsList = EntityUtil.getFirst(headerIdsList);
 								headerId = headerIdsList.payrollHeaderId;
 							}
 							
@@ -216,6 +218,7 @@ if(UtilValidate.isNotEmpty(employmentsList)){
 							employeeCondition = EntityCondition.makeCondition(employeeConditionList,EntityOperator.AND);
 							employeeList = delegator.findList("PayrollHeaderItem", employeeCondition, null, null, null, false);
 							if(UtilValidate.isNotEmpty(employeeList)){
+								employeeList = EntityUtil.getFirst(employeeList);
 								emplyeContrbtn = employeeList.amount;
 							}
 							
@@ -333,7 +336,8 @@ periodList.each{ Period ->
 									PayrollHeaderConditionList.add(EntityCondition.makeCondition("partyIdFrom", EntityOperator.EQUALS, employeeId));
 									PayrollHeaderCondition = EntityCondition.makeCondition(PayrollHeaderConditionList,EntityOperator.AND);
 									headerIdList = delegator.findList("PayrollHeader", PayrollHeaderCondition, null, null, null, false);
-									if(UtilValidate.isNotEmpty(headerIdsList)){
+									if(UtilValidate.isNotEmpty(headerIdList)){
+										headerIdList = EntityUtil.getFirst(headerIdList);
 										PayrollHeaderId = headerIdList.payrollHeaderId;
 									}
 									
@@ -345,6 +349,7 @@ periodList.each{ Period ->
 									emplyeCondition = EntityCondition.makeCondition(emplyeConditionList,EntityOperator.AND);
 									emplyeList = delegator.findList("PayrollHeaderItem", emplyeCondition, null, null, null, false);
 									if(UtilValidate.isNotEmpty(emplyeList)){
+										emplyeList = EntityUtil.getFirst(emplyeList);
 										emplyeCont = emplyeList.amount;
 										employeeContribtn=employeeContribtn+emplyeCont;
 										totalContribution=totalContribution+emplyeCont;
@@ -355,6 +360,7 @@ periodList.each{ Period ->
 									emplyrCondition = EntityCondition.makeCondition(emplyrConditionList,EntityOperator.AND);
 									emplyrList = delegator.findList("PayrollHeaderItemEc", emplyrCondition, null, null, null, false);
 									if(UtilValidate.isNotEmpty(emplyrList)){
+										emplyrList = EntityUtil.getFirst(emplyrList);
 										employerCont = emplyrList.amount;
 										employerContribtn=employerContribtn+employerCont;
 										totalContribution=totalContribution+employerCont;
