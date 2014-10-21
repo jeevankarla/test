@@ -57,7 +57,7 @@ under the License.
       <field name="shipGroupSeqId" type="id"></field>
       <field name="comments" type="comment"></field>
       <field name="description" type="description"></field>
-      <field name="amount" type="currency-precise"></field>
+      <field name="amount" type="fixed-point"></field>
       <field name="recurringAmount" type="currency-precise"></field>
       <field name="amountAlreadyIncluded" type="currency-precise"><description>The amount here is already represented in the price, such as VAT taxes.</description></field>
       <field name="productPromoId" type="id"></field>
@@ -523,7 +523,7 @@ under the License.
       <field name="quantityKgs" type="fixed-point" ></field>
       <field name="cancelQuantity" type="fixed-point"></field>
       <field name="selectedAmount" type="fixed-point"></field>
-      <field name="unitPrice" type="currency-precise" ></field>
+      <field name="unitPrice" type="fixed-point" ></field>
       <field name="unitListPrice" type="currency-precise"></field>
       <field name="unitAverageCost" type="currency-amount"></field>
       <field name="unitRecurringPrice" type="currency-amount"></field>
