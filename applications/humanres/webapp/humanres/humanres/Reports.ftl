@@ -271,8 +271,8 @@ function makeDatePicker1(fromDateId ,thruDateId){
 							<form id="MonthlyAttendenceChecklist" name="MonthlyAttendenceChecklist" mothed="post" action="<@ofbizUrl>MonthlyAttendenceChecklist.pdf</@ofbizUrl>" target="_blank">
 								<table class="basic-table" cellspacing="5">
 									<tr class="alternate-row">
-										<td width="18%"><span class='h3'>Attendence And Leave Checklist</span></td>
-										<td width="13%"><span class="h3">Employee Id</span><input type="text" size="10pt" id="prtyId" name="partyIdTo"></td>
+										<td width="21%"><span class='h3'>Attendence And Leave Checklist</span></td>
+										<td width="20%"><span class='h3'>Employee Id<@htmlTemplate.lookupField formName="MonthlyAttendenceChecklist" name="partyIdTo" id="prtyId" fieldFormName="LookupEmployeeName"/></span></td>
 										<td width="15%"><span class='h3'>From Date</span><input  type="text" size="18pt" id="mclfromDate"   name="mclFromDate"/></td>
 										<td width="15%"><span class='h3'>Thru Date</span><input  type="text" size="18pt" id="mclthruDate"   name="mclThruDate"/></td>
 										<td width="20%"><span class='h3'></span><input type="submit" value="Download" class="buttontext"></td> 
@@ -366,8 +366,8 @@ function makeDatePicker1(fromDateId ,thruDateId){
 						<form id="EmployeeWiseAttendanceDetails" name="EmployeeWiseAttendanceDetails" mothed="post" action="<@ofbizUrl>EmplMonthAttendanceDetails</@ofbizUrl>" target="_blank">
 							<table class="basic-table" cellspacing="5">
 								<tr class="alternate-row">
-									<td width="19%"><span class='h3'>Employee Attendance Details</span></td>
-									<td width="15%"><span class='h3'>Employee Id</span><input type="text" size="10pt" id="PartyId" name="partyIdTo"/></td>
+									<td width="21%"><span class='h3'>Employee Attendance Details</span></td>
+									<td width="15%"><span class='h3'>Employee Id<@htmlTemplate.lookupField formName="EmployeeWiseAttendanceDetails" name="partyIdTo" id="PartyId" fieldFormName="LookupEmployeeName"/></span></td>
 									<td width="27%"><span class='h3'>Period Id</span>
 										<select name="customTimePeriodId" class='h4'>
 											<#list timePeriodList as timePeriod>    
@@ -413,10 +413,10 @@ function makeDatePicker1(fromDateId ,thruDateId){
 					 	<form id="OODReport" name="OODReport" mothed="post" action="<@ofbizUrl>OODReport.pdf</@ofbizUrl>" target="_blank">
 	      	   				<table class="basic-table" cellspacing="5">
 								<tr class="alternate-row">
-						      	   	<td width="20%"><span class='h3'>OOD Report</td></span></td>
+						      	   	<td width="25%"><span class='h3'>OOD Report</td></span></td>
 						      	   	<td width="20%"><span class='h3'>From Date</span><input  type="text"  id="OODfromDate" size="18pt" name="OODfromDate"/></td>
 						  			<td width="20%"><span class='h3'>Thru Date</span><input  type="text"  id="OODthruDate" size="18pt" name="OODthruDate"/></td>
-									<td width="15%"><span class='h3'>Employee Id<input type="text" id="PartyId" size="10pt" name="employeeId"/></span></td>
+									<td width="20%"><span class='h3'>Employee Id<@htmlTemplate.lookupField formName="OODReport" name="employeeId" id="PartyId" fieldFormName="LookupEmployeeName"/></span></td>
 									<td width="20%"><span class='h3'><input type="submit" value="Download" class="buttontext"></span></td> 
 								</tr>
 							</table>	
@@ -593,7 +593,7 @@ function makeDatePicker1(fromDateId ,thruDateId){
 							<table class="basic-table" cellspacing="5">
 								<tr class="alternate-row">
 									<td width="19%"><span class='h3'>Employee Wise Salary Details</span></td>
-									<td width="29%"><span class='h3'>Employee Id<input type="text" id="PartyId" size="10pt" name="employeeId"/></span></td>
+									<td width="29%"><span class='h3'>Employee Id<@htmlTemplate.lookupField formName="EmployeeWiseSalaryDetails" name="employeeId" fieldFormName="LookupEmployeeName"/></span></td>
 									<td width="40%"><span class='h3'>Period Id</span>
 										<select name="customTimePeriodId" id="customTimePeriodId" class='h5' >
 											<#list customTimePeriodList as customTimePeriod>
@@ -612,8 +612,8 @@ function makeDatePicker1(fromDateId ,thruDateId){
 							</table>
 						</form>
 					</tr>
-				   	<tr class="alternate-row">
-				   	<form id="DeductionsReport" name="DeductionsReport" mothed="post" action="<@ofbizUrl>DeductionsReport.pdf</@ofbizUrl>" target="_blank">
+						<tr class="alternate-row">
+						<form id="DeductionsReport" name="DeductionsReport" mothed="post" action="<@ofbizUrl>DeductionsReport.pdf</@ofbizUrl>" target="_blank">
 							<table class="basic-table" cellspacing="0">
 								<tr>
 									<td><span class='h3'>Deductions Report</span></td>
@@ -735,7 +735,7 @@ function makeDatePicker1(fromDateId ,thruDateId){
 							</table>
 						</form>
 					</tr>
-				   	<tr class="alternate-row">
+					<tr class="alternate-row">
 						<form id="BenefitsOrDeductionsExport" name="BenefitsOrDeductionsExport" mothed="post" action="<@ofbizUrl>ExportEmployeeBenefitsOrDeductions</@ofbizUrl>">
 							<table class="basic-table" cellspacing="0">
 								<tr>
