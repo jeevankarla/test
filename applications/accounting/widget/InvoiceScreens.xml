@@ -827,8 +827,8 @@
 						<section>
 							<condition>
 								<and>
-									<if-compare field="invoice.invoiceTypeId" operator="not-equals"
-										value="PAYROL_INVOICE" />
+									<!-- <if-compare field="invoice.invoiceTypeId" operator="not-equals"
+										value="PAYROL_INVOICE" /> -->
 									<or>
 										<if-compare operator="equals" value="true"
 											field="hasArInvoiceEditPermission" />
