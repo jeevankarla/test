@@ -150,6 +150,23 @@
 			
 		</section>
 	</screen>
+	<screen name="DeductionsReport">
+		<section>
+			<actions>
+				<property-map resource="OrderUiLabels" map-name="uiLabelMap" global="true"/>
+				<property-map resource="ProductUiLabels" map-name="uiLabelMap" global="true"/>
+				<property-map resource="PartyUiLabels" map-name="uiLabelMap" global="true"/>
+				<property-map resource="CommonUiLabels" map-name="uiLabelMap" global="true"/>
+				<script location="component://humanres/webapp/humanres/WEB-INF/actions/humanres/DeductionsReport.groovy"/>
+			</actions>
+			<widgets>
+				<platform-specific> 
+				  <xsl-fo><html-template location="component://humanres/webapp/humanres/humanres/DeductionsReport.fo.ftl"/></xsl-fo> 
+                </platform-specific>
+			</widgets>
+			
+		</section>
+	</screen>
 	<screen name="ITEarningsReport">
 		<section>
 			<actions>
