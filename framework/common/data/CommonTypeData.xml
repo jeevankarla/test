@@ -156,12 +156,20 @@ under the License.
     <StatusType description="Period Billing status" hasTable="N" parentTypeId="" statusTypeId="PERIODBILLING_STATUS"/>
     <StatusItem description="In-Process" sequenceId="1" statusCode="IN_PROCESS" statusId="IN_PROCESS" statusTypeId="PERIODBILLING_STATUS"/>
     <StatusItem description="Generated" sequenceId="2" statusCode="GENERATED" statusId="GENERATED" statusTypeId="PERIODBILLING_STATUS"/>
-    <StatusItem description="Approved" sequenceId="2" statusCode="APPROVED" statusId="APPROVED" statusTypeId="PERIODBILLING_STATUS"/>
+    <StatusItem description="Approved" sequenceId="3" statusCode="APPROVED" statusId="APPROVED" statusTypeId="PERIODBILLING_STATUS"/>
     <StatusItem description="Cancelled" sequenceId="99" statusCode="CANCELLED" statusId="CANCELLED" statusTypeId="PERIODBILLING_STATUS"/>
+    <StatusItem description="Approve In-Process" sequenceId="4" statusCode="APPROVE_INPROCES" statusId="APPROVE_INPROCES" statusTypeId="PERIODBILLING_STATUS"/>
+    <StatusItem description="Reject In-Process" sequenceId="5" statusCode="REJECT_INPROCES" statusId="REJECT_INPROCES" statusTypeId="PERIODBILLING_STATUS"/>
+     <StatusItem description="Cancel In-Process" sequenceId="5" statusCode="CANCEL_INPROCES" statusId="CANCEL_INPROCES" statusTypeId="PERIODBILLING_STATUS"/>
+     
     <StatusItem description="Generation Failed" sequenceId="02" statusCode="GENERATION_FAIL" statusId="GENERATION_FAIL" statusTypeId="PERIODBILLING_STATUS"/>
     <StatusValidChange condition="" statusId="IN_PROCESS" statusIdTo="GENERATED" transitionName="Set inprocess to Generated"/>
     <StatusValidChange condition="" statusId="GENERATED" statusIdTo="APPROVED" transitionName="Set Generated to Approved"/>
+    <StatusValidChange condition="" statusId="GENERATED" statusIdTo="APPROVE_INPROCES" transitionName="Set Generated to Approved In-Process"/>
+    <StatusValidChange condition="" statusId="GENERATED" statusIdTo="CANCEL_INPROCES" transitionName="Set Generated to Cancel In-Process"/>
     <StatusValidChange condition="" statusId="APPROVED" statusIdTo="GENERATED" transitionName="Set Approved to Canceled"/>
+    <StatusValidChange condition="" statusId="APPROVED" statusIdTo="REJECT_INPROCES" transitionName="Set Approved to Canceled"/>
+    
     <StatusValidChange condition="" statusId="GENERATED" statusIdTo="COM_CANCELLED" transitionName="Set Generated to Canceled"/>
     <StatusValidChange condition="" statusId="IN_PROCESS" statusIdTo="GENERATION_FAIL" transitionName="Generated"/>
      
