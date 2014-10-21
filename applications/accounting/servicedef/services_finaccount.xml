@@ -240,7 +240,7 @@ under the License.
         <attribute name="oldStatusId" type="String" mode="OUT" optional="true"/>
     </service>
     <service name="populateFinAccountTransSequence" engine="java"
-     location="org.ofbiz.accounting.finaccount.FinAccountServices" invoke="populateFinAccountTransSequence">
+     location="org.ofbiz.accounting.finaccount.FinAccountServices" invoke="populateFinAccountTransSequence" transaction-timeout="6000">
         <description>Populate finAccount Transaction Sequence</description>
         <attribute name="finAccountId" type="String"  mode="IN" optional="true"/>
         <attribute name="fromDate" type="Timestamp" mode="IN" optional="true"/>
