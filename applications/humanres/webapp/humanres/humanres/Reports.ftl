@@ -528,12 +528,45 @@ function makeDatePicker1(fromDateId ,thruDateId){
 								<tr class="alternate-row">
 									<td width="20%"><span class='h3'>Pay Slip Employee Wise</span></td>
 									<td width="30%"><span class='h3'>Organization Id </span>
-										<select name="partyIdFrom" class='h4'>
+										<select name="OrganizationId" class='h4'>
 											<option value=''></option>
 											<#list orgList as org>    
-												<option value='${org.partyId}'>${org.groupName}</option>
+												<option value='${org.partyId}'>${org.groupName?if_exists}</option>
 											</#list> 
+										</select></span>
+									</td>	
+									<td width="35%"><span class='h3'>Period Id</span>
+										<select name="customTimePeriodId" id="customTimePeriodId" class='h5'>
+											<#assign customTimePeriodList=customTimePeriodList?sort>
+											<#list customTimePeriodList as customTimePeriod>
+											 <#if defaultTimePeriodId?exists && (defaultTimePeriodId == customTimePeriod.customTimePeriodId)>
+						      					<option value='${customTimePeriod.customTimePeriodId?if_exists}' selected="selected">${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(customTimePeriod.fromDate, "dd MMMMM, yyyy")} -${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(customTimePeriod.thruDate, "dd MMMMM, yyyy")}</option>
+						      					<#else>
+						      						<option value='${customTimePeriod.customTimePeriodId?if_exists}' >${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(customTimePeriod.fromDate, "dd MMMMM, yyyy")} -${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(customTimePeriod.thruDate, "dd MMMMM, yyyy")}</option>
+						                  		</option>
+						      				</#if>
+									 
+									      </#list>
 										</select>
+									</td>
+									<td width="15%"><span class='h3'>Employee Id<input type="text" id="PartyId" size="10pt" name="employeeId"/></span></td>
+									<td width="15%"><span class='h3'><input type="submit" value="PDF" onClick="javascript:appendParams('paySlipEmployeewise', '<@ofbizUrl>PrintPaySlipsPdf.pdf</@ofbizUrl>');" class="buttontext"/></span></td>
+								</tr>
+							</table>
+						</form>
+				   	</tr>
+				   	<tr class="alternate-row">
+						<form id="PrePrintedpaySlip" name="PrePrintedpaySlip" mothed="post" action="<@ofbizUrl>PrePrintedpaySlip.pdf</@ofbizUrl>" target="_blank">
+							<table class="basic-table" cellspacing="5">
+								<tr class="alternate-row">
+									<td width="20%"><span class='h3'>Pre Printed Pay Slip Report</span></td>
+									<td width="30%"><span class='h3'>Organization Id </span>
+										<select name="OrganizationId" class='h4'>
+											<option value=''></option>
+											<#list orgList as org>    
+												<option value='${org.partyId}'>${org.groupName?if_exists}</option>
+											</#list> 
+										</select></span>
 									</td>	
 									<td width="35%"><span class='h3'>Period Id</span>
 										<select name="customTimePeriodId" id="customTimePeriodId" class='h5'>
@@ -727,7 +760,6 @@ function makeDatePicker1(fromDateId ,thruDateId){
 									</td>
 									<td ><input type="submit" value="Download" class="buttontext"></td>
 								</tr>
-								
 							</table>
 						</form>
 					</tr>

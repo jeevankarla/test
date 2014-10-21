@@ -1723,6 +1723,11 @@ under the License.
         <response name="success" type="view" value="PrintPaySlipsPdf"/>
         <response name="error" type="view" value="PrintPaySlipsPdf"></response>
     </request-map>
+    <request-map uri="PrePrintedpaySlip.pdf">
+    	<security https="true" auth="true"/>
+        <response name="success" type="view" value="PrePrintedpaySlip"/>
+        <response name="error" type="view" value="PrePrintedpaySlip"></response>
+    </request-map>
     <request-map uri="GSLISReport.pdf">
     	<security https="true" auth="true"/>
         <response name="success" type="view" value="GSLISReport"/>
@@ -2199,9 +2204,9 @@ under the License.
 	 
 	 <view-map name="PaySlipEmployeeWise" type="screen" page="component://humanres/widget/ReportHumanresSummaryScreens.xml#PaySlipEmployeeWise"/>
 	 <view-map name="PrintPaySlipsPdf" type="screenfop" page="component://humanres/widget/ReportHumanresSummaryScreens.xml#PrintPaySlipsPdf" content-type="application/pdf" encoding="none"></view-map>
+	 <view-map name="PrePrintedpaySlip" type="screenfop" page="component://humanres/widget/ReportHumanresSummaryScreens.xml#PrePrintedpaySlip" content-type="application/pdf" encoding="none"></view-map>
 	 <view-map name="GSLISReport" type="screenfop" page="component://humanres/widget/ReportHumanresSummaryScreens.xml#GSLISReport" content-type="application/pdf" encoding="none"></view-map>
 	 <view-map name="ProfessionalTaxReport" type="screenfop" page="component://humanres/widget/ReportHumanresSummaryScreens.xml#ProfessionalTaxReport" content-type="application/pdf" encoding="none"></view-map>
-	 
 	 <view-map name="PrintPayrollSummary" type="screenfop" page="component://humanres/widget/ReportHumanresSummaryScreens.xml#PrintPayrollSummary" content-type="application/pdf" encoding="none"></view-map>
 	 <view-map name="ExportBenefitsOrDeductionsPDF" type="screenfop" page="component://humanres/widget/ReportHumanresSummaryScreens.xml#ExportBenefitsOrDeductionsPDF" content-type="application/pdf" encoding="none"></view-map>
 	 <view-map name="EmployeeWiseSalaryDetails" type="screen" page="component://humanres/widget/ReportHumanresSummaryScreens.xml#EmployeeWiseSalaryDetails"/>

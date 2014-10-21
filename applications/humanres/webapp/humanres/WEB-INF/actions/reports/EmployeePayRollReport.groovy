@@ -29,6 +29,10 @@ dctx = dispatcher.getDispatchContext();
 
 orgPartyId = null;
 
+
+if(UtilValidate.isNotEmpty(parameters.OrganizationId)){
+	parameters.partyIdFrom=parameters.OrganizationId;
+}
 GenericValue customTimePeriod = delegator.findOne("CustomTimePeriod", [customTimePeriodId : parameters.customTimePeriodId], false);
 context.timePeriodStart= UtilDateTime.toTimestamp(customTimePeriod.getDate("fromDate"));
 context.timePeriodEnd= UtilDateTime.toTimestamp(customTimePeriod.getDate("thruDate"));
@@ -112,12 +116,15 @@ Map EmploymentsMap = HumanresService.getActiveEmployements(dctx,emplInputMap);
 List<GenericValue> employementList = (List<GenericValue>)EmploymentsMap.get("employementList");
 employementList = EntityUtil.orderBy(employementList, UtilMisc.toList("partyIdTo"));
 employementIds = EntityUtil.getFieldListFromEntityList(employementList, "partyIdTo", true);
+
+Map unitIdMap=FastMap.newInstance();
 Map payRollMap=FastMap.newInstance();
 Map payRollSummaryMap=FastMap.newInstance();
 Map payRollEmployeeMap=FastMap.newInstance();
 Map BankAdvicePayRollMap=FastMap.newInstance();
 Map InstallmentFinalMap=FastMap.newInstance();
 Map EmplSalaryDetailsMap=FastMap.newInstance();
+
 if(UtilValidate.isNotEmpty(periodBillingList)){
 	periodBillDetails = EntityUtil.getFirst(periodBillingList);
 	periodBillingIds = EntityUtil.getFieldListFromEntityList(periodBillingList, "periodBillingId", true);
@@ -125,12 +132,19 @@ if(UtilValidate.isNotEmpty(periodBillingList)){
 	payRollHeaderList=[];
 	payConList=[];
 	payConList.add(EntityCondition.makeCondition("periodBillingId", EntityOperator.IN ,periodBillingIds));
-	if(UtilValidate.isNotEmpty(parameters.employeeId))
+	if(UtilValidate.isNotEmpty(parameters.employeeId)){
 		payConList.add(EntityCondition.makeCondition("partyIdFrom", EntityOperator.EQUALS ,parameters.employeeId));
-		if(UtilValidate.isNotEmpty(deptId))
-			payConList.add(EntityCondition.makeCondition("partyIdFrom", EntityOperator.IN ,employementIds));
-		if(UtilValidate.isNotEmpty(bankAdvise_deptId))
-			payConList.add(EntityCondition.makeCondition("partyIdFrom", EntityOperator.IN ,employementIds));
+	}
+	if(UtilValidate.isEmpty(parameters.employeeId)){
+		payConList.add(EntityCondition.makeCondition("partyIdFrom", EntityOperator.IN ,employementIds));
+	}
+	/*if(UtilValidate.isNotEmpty(deptId)){
+		payConList.add(EntityCondition.makeCondition("partyIdFrom", EntityOperator.IN ,employementIds));
+	}*/
+	if(UtilValidate.isNotEmpty(bankAdvise_deptId)){
+		payConList.add(EntityCondition.makeCondition("partyIdFrom", EntityOperator.IN ,employementIds));
+	}
+	payConList.add(EntityCondition.makeCondition("partyIdFrom", EntityOperator.IN ,employementIds));
 	payCond = EntityCondition.makeCondition(payConList,EntityOperator.AND);
 	payRollHeaderList = delegator.findList("PayrollHeader", payCond, null, null, null, false);
 	if(UtilValidate.isNotEmpty(payRollHeaderList)){
@@ -175,7 +189,6 @@ if(UtilValidate.isNotEmpty(periodBillingList)){
 								InstallmentNoMap.put(payrollHeaderItemTypeId,instNum);
 						}
 					}
-					
 					amount=payRollHeaderItem.get("amount");
 					if(amount >0){
 						tempAmount +=amount;
@@ -206,6 +219,15 @@ if(UtilValidate.isNotEmpty(periodBillingList)){
 				if(UtilValidate.isNotEmpty(payRollItemsMap) || tempAmount !=0){
 					payRollMap.put(payrollHeaderId,payRollItemsMap);
 					payRollEmployeeMap.put(partyId,payRollItemsMap);
+					
+					unitDetails = delegator.findList("Employment", EntityCondition.makeCondition("partyIdTo", EntityOperator.EQUALS , partyId), null, null, null, false);
+					if(UtilValidate.isNotEmpty(unitDetails)){
+						unitDetails = EntityUtil.getFirst(unitDetails);
+						if(UtilValidate.isNotEmpty(unitDetails))	{
+							locationGeoId=unitDetails.get("locationGeoId");
+						}
+						unitIdMap.put(partyId,locationGeoId);
+					}
 				}
 			}
 			netAmount=totEarnings+totDeductions;
@@ -298,9 +320,12 @@ if(UtilValidate.isNotEmpty(BankAdvicePayRollMap) && UtilValidate.isNotEmpty(para
 }
 
 parameters.partyId=orgPartyId;
+context.put("unitIdMap",unitIdMap);
 context.put("InstallmentFinalMap",InstallmentFinalMap);
 context.put("BankAdvicePayRollMap",BankAdvicePayRollMap);
 context.put("payRollSummaryMap",payRollSummaryMap);
 context.put("payRollMap",payRollMap);
 context.put("payRollEmployeeMap",payRollEmployeeMap);
 context.put("EmplSalaryDetailsMap",EmplSalaryDetailsMap);
+
+
