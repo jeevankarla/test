@@ -328,4 +328,17 @@ context.put("payRollMap",payRollMap);
 context.put("payRollEmployeeMap",payRollEmployeeMap);
 context.put("EmplSalaryDetailsMap",EmplSalaryDetailsMap);
 
+if(UtilValidate.isEmpty(orgPartyId)){
+	orgPartyId = "Company";
+}
+
+// Fetch Organisation logo url
+logoImageUrl = null;
+
+partyGroup = delegator.findByPrimaryKey("PartyGroup", [partyId : orgPartyId]);
+if (partyGroup?.logoImageUrl) {
+   logoImageUrl = partyGroup.logoImageUrl;
+}
+context.logoImageUrl = logoImageUrl;
+
 
