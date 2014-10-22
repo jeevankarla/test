@@ -114,7 +114,7 @@ if(UtilValidate.isNotEmpty(reportTypeFlag) && reportTypeFlag == "contraCheque"){
 		}
 	}else{
 		Debug.logError("finAccountId Cannot Be Empty","");
-		context.errorMessage = "Not a contra payment...!";
+		context.errorMessage = "Not a valid bank account...!";
 		return;
 	}
 }else{

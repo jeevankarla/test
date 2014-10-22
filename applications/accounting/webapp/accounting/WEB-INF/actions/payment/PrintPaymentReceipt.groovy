@@ -56,7 +56,19 @@ import org.ofbiz.party.party.PartyHelper;
 reportTypeFlag = context.reportTypeFlag;
 if(UtilValidate.isNotEmpty(reportTypeFlag) && reportTypeFlag == "depositCheque"){
 	finAccountId = parameters.finAccountId;
+	description = null;
 	if(UtilValidate.isNotEmpty(finAccountId)){
+		finAccountDetails = delegator.findOne("FinAccount", [finAccountId : finAccountId], false);
+		if(UtilValidate.isNotEmpty(finAccountId)){
+			finAccountTypeId = finAccountDetails.finAccountTypeId;
+			if(UtilValidate.isNotEmpty(finAccountTypeId)){
+				finAccountTypeDetails = delegator.findOne("FinAccountType", [finAccountTypeId : finAccountTypeId], false);
+				if(UtilValidate.isNotEmpty(finAccountTypeDetails.description)){
+					description = finAccountTypeDetails.description;
+					context.put("description",description);
+				}
+			}
+		}
 		finAccountTransList = delegator.findList("FinAccountTrans", EntityCondition.makeCondition("finAccountId", EntityOperator.EQUALS, finAccountId), null, null, null, false);
 		if(UtilValidate.isNotEmpty(finAccountTransList)){
 			finAccountTransDetails = EntityUtil.getFirst(finAccountTransList);
