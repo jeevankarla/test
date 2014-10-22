@@ -3914,6 +3914,7 @@ public class PayrollService {
 	 public static String updateBenefitsOrDeductions(HttpServletRequest request, HttpServletResponse response) {
 	    	Delegator delegator = (Delegator) request.getAttribute("delegator");
 	        LocalDispatcher dispatcher = (LocalDispatcher) request.getAttribute("dispatcher");
+	        
 	        Locale locale = UtilHttp.getLocale(request);
 	        Map<String, Object> result = ServiceUtil.returnSuccess();
 	        HttpSession session = request.getSession();
@@ -3921,7 +3922,11 @@ public class PayrollService {
 	        String partyId = (String) request.getParameter("partyId");	
 	        String periodId = (String) request.getParameter("periodId");
 	        String billingTypeId = "PAYROLL_BILL";	
-	        
+	        Timestamp fromDateTime  = null;
+	        Timestamp thruDateTime  = null;
+	        Timestamp previousDayEnd = null;
+	        Timestamp fromDateStart  = null;
+	        Timestamp thruDateEnd  = null;
 	        Map paramMap = UtilHttp.getParameterMap(request);
 	        FastList payheadTypeIdsList = FastList.newInstance();
 	        // Returning error if payroll already generated
@@ -3932,19 +3937,35 @@ public class PayrollService {
 	    	conditionList.add(EntityCondition.makeCondition("billingTypeId", EntityOperator.EQUALS , billingTypeId));
 	    	//code to edit benefits(or)deductions values department wise
 	    	try {
+	    		  GenericValue customTimePeriod = delegator.findOne("CustomTimePeriod", UtilMisc.toMap("customTimePeriodId", periodId),false);
+		        	if (UtilValidate.isNotEmpty(customTimePeriod)) {
+		        		fromDateTime = UtilDateTime.toTimestamp(customTimePeriod.getDate("fromDate"));
+		        		thruDateTime = UtilDateTime.toTimestamp(customTimePeriod.getDate("thruDate"));
+		        		fromDateStart = UtilDateTime.getDayStart(fromDateTime);
+		        		thruDateEnd = UtilDateTime.getDayEnd(thruDateTime);
+					    previousDayEnd = UtilDateTime.getDayEnd(UtilDateTime.addDaysToTimestamp(fromDateTime, -1));
+		        	}
 		    	GenericValue tenantConfiguration = delegator.findOne("TenantConfiguration", UtilMisc.toMap("propertyName", "PAYBILL_DEPTWISE_GEN","propertyTypeEnumId","HUMANRES"), false);
 		    	 if(UtilValidate.isNotEmpty(tenantConfiguration)&& ("Y".equals(tenantConfiguration.get("propertyValue")))){
-		    		 List emplconditionList = FastList.newInstance();
+		    		 /*List emplconditionList = FastList.newInstance();
 		    		 emplconditionList.add(EntityCondition.makeCondition("partyIdTo", EntityOperator.EQUALS, partyId));
 		    		 EntityCondition	emplCond = EntityCondition.makeCondition(emplconditionList, EntityOperator.AND);  		
 						List<GenericValue> employments = delegator.findList("Employment", emplCond, null, null, null, false);
-						employments = EntityUtil.filterByDate(employments, true);
-			            GenericValue employment = EntityUtil.getFirst(employments);
+						employments = EntityUtil.filterByDate(employments, true);*/
+		    		    Map input = FastMap.newInstance();
+			        	input.put("userLogin", userLogin);
+			        	input.put("orgPartyId", partyId);
+			        	input.put("fromDate", fromDateStart);
+			        	input.put("thruDate", thruDateEnd);
+			        	//Map resultMap = HumanresService.getActiveEmployements(dctx,input);
+			        	Map resultMap = dispatcher.runSync("getActiveEmployements", input);
+			        	List<GenericValue> employementList = (List<GenericValue>)resultMap.get("employementList");
+			            GenericValue employment = EntityUtil.getFirst(employementList);
 			            if(UtilValidate.isNotEmpty(employment)){
 			            	conditionList.add(EntityCondition.makeCondition("partyId", EntityOperator.EQUALS , employment.getString("partyIdFrom"))); 
 			        	}		 
 		    	 }
-	    	}catch(GenericEntityException e){
+	    	}catch(Exception e){
 	    		 Debug.logError(e, module);    
 	    	}
 	    	EntityCondition condition=EntityCondition.makeCondition(conditionList,EntityOperator.AND);
