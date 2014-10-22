@@ -127,19 +127,20 @@
 								"</td>"+
 							"</tr>"+
 						"</#if>"+
-						
+						/*
 						"<tr class='noncash'><td align='left' class='h3' width='40%'>Instrument Date:</td><td align='left' width='80%'><input class='h4' type='text' readonly id='effectiveDate' name='instrumentDate' onmouseover='datepick()'/></td></tr>" +
 						"<tr class='noncash'><td align='left' class='h3' width='40%'>Instrument Number:</td><td align='left' width='80%'><input class='h4' type='text'  id='paymentRefNum' name='paymentRefNum'/></td></tr>" +
+						*/
 						"<tr class='noncash'>"+
-							"<td align='left' class='h3' width='40%'>Issuing Authority:</td><td align='left' width='80%'>"+
-								"<input class='h4' type='text' id='issuingAuthority' name='issuingAuthority'/>"+
+							"<td>"+
+								/*"<input class='h4' type='text' id='issuingAuthority' name='issuingAuthority'/>"+*/
 								"<input class='h4' type='hidden' id='partyIdFrom' name='partyIdFrom' value='"+partyIdTo+"'/>"+
 								"<input class='h4' type='hidden' id='partyIdTo' name='partyIdTo' value='"+partyIdFrom+"'/>"+
 								"<input class='h4' type='hidden' id='paymentId' name='paymentId' value='"+paymentId+"'/>"+
-								"<input class='h4' type='hidden' id='statusId' name='statusId' value='PMNT_SENT'/>"+
+								"<input class='h4' type='hidden' id='statusId' name='statusId' value='PMNT_NOT_PAID'/>"+
 								"<input class='h4' type='hidden' id='paymentTypeId' name='paymentTypeId' value='"+paymentTypeId+"'/>"+
-								"<input class='h4' type='text' id='isDepositWithDrawPayment' name='isDepositWithDrawPayment' value='"+isDepositWithDrawPayment+"'/>"+
-								"<input class='h4' type='text' id='finAccountTransTypeId' name='finAccountTransTypeId' value='"+finAccountTransTypeId+"'/>"+
+								"<input class='h4' type='hidden' id='isDepositWithDrawPayment' name='isDepositWithDrawPayment' value='"+isDepositWithDrawPayment+"'/>"+
+								"<input class='h4' type='hidden' id='finAccountTransTypeId' name='finAccountTransTypeId' value='"+finAccountTransTypeId+"'/>"+
 							"</td>"+
 						"</tr>" +
 						"<tr class='h3'><td align='center'><span align='right'><input type='submit' value='Submit' class='smallSubmit'/></span></td><td class='h3' width='100%' align='left'><span align='left'><button value='${uiLabelMap.CommonCancel}' onclick='return cancelForm();' class='smallSubmit'>${uiLabelMap.CommonCancel}</button></span></td></tr>";
@@ -193,15 +194,18 @@
 							"</tr>"+
 						"</#if>"+
 						
+						/*
 						"<tr class='noncash'><td align='left' class='h3' width='40%'>Instrument Date:</td><td align='left' width='80%'><input class='h4' type='text' readonly id='effectiveDate' name='instrumentDate' onmouseover='datepick()'/></td></tr>" +
 						"<tr class='noncash'><td align='left' class='h3' width='40%'>Instrument Number:</td><td align='left' width='80%'><input class='h4' type='text'  id='paymentRefNum' name='paymentRefNum'/></td></tr>" +
+						*/
+						
 						"<tr class='noncash'>"+
-							"<td align='left' class='h3' width='40%'>Issuing Authority:</td><td align='left' width='80%'>"+
-								"<input class='h4' type='text' id='issuingAuthority' name='issuingAuthority'/>"+
+							"<td>"+
+								//"<input class='h4' type='text' id='issuingAuthority' name='issuingAuthority'/>"+
 								"<input class='h4' type='hidden' id='partyIdFrom' name='partyIdFrom' value='"+partyIdTo+"'/>"+
 								"<input class='h4' type='hidden' id='partyIdTo' name='partyIdTo' value='"+partyIdFrom+"'/>"+
 								"<input class='h4' type='hidden' id='paymentId' name='paymentId' value='"+paymentId+"'/>"+
-								"<input class='h4' type='hidden' id='statusId' name='statusId' value='PMNT_RECEIVED'/>"+
+								"<input class='h4' type='hidden' id='statusId' name='statusId' value='PMNT_NOT_PAID'/>"+
 								"<input class='h4' type='hidden' id='paymentTypeId' name='paymentTypeId' value='"+paymentTypeId+"'/>"+
 								"<input class='h4' type='hidden' id='isDepositWithDrawPayment' name='isDepositWithDrawPayment' value='"+isDepositWithDrawPayment+"'/>"+
 								"<input class='h4' type='hidden' id='finAccountTransTypeId' name='finAccountTransTypeId' value='"+finAccountTransTypeId+"'/>"+

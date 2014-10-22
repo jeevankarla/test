@@ -924,9 +924,8 @@ public class PaymentWorker {
             Debug.logError(e, e.toString(), module);
             return ServiceUtil.returnError(e.toString());
         }
-        
         result = ServiceUtil.returnSuccess("Refund has been successfully issued to Party "+partyIdTo+" ..!");
-        result.put("paymentId",paymentId);
+        result.put("paymentId",toPaymentId);
         result.put("noConditionFind","N");
         result.put("hideSearch","N");
         return result; 
