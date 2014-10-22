@@ -166,7 +166,18 @@ under the License.
             <hyperlink target-type="plain" target="javascript:showDepositRefundEntry('${finAccountId}');" description="Refund">
             </hyperlink>
         </field>
-        
+        <field name="printReceipt" widget-style="buttontext">
+            <hyperlink target="printDepositReport.pdf" description="Print Receipt" target-window="_BLANK">
+                <parameter param-name="finAccountId"/>
+                <parameter param-name="reportTypeFlag" value="depositCheque"/>
+            </hyperlink>
+        </field>
+        <field name="Print Cheque" widget-style="buttontext" >
+            <hyperlink target="printChecks.pdf" description="Print Cheque" target-window="_blank">
+             <parameter param-name="finAccountId"/>
+             <parameter param-name="reportTypeFlag" value="depositCheque"/>
+            </hyperlink>
+        </field>
     </form>
     <!-- <form name="ListDepositAccounts" type="list" separate-columns="true" default-entity-name="FinAccount"   list-name="nonBankAccountsList" paginate-target="FindDepositAccount" paginate="true"
         odd-row-style="alternate-row" default-table-style="basic-table hover-bar">

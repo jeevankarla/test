@@ -949,6 +949,23 @@ under the License.
             </widgets>
         </section>
     </screen>
+    <screen name="PrintDepositReceipt">
+        <section>
+            <actions>
+                <property-map resource="CommonUiLabels" map-name="uiLabelMap" global="true"/>
+                <property-map resource="AccountingUiLabels" map-name="uiLabelMap" global="true"/>
+                <property-map resource="ManufacturingUiLabels" map-name="uiLabelMap" global="true"/>
+                <set field="reportTypeFlag" from-field="parameters.reportTypeFlag"/>
+                <script location="component://accounting/webapp/accounting/WEB-INF/actions/payment/PrintPaymentReceipt.groovy"/>
+            </actions>
+            <widgets>
+                <platform-specific>
+                <html><html-template location="component://byproducts/webapp/byproducts/reports/PrintDepositReceipt.fo.ftl"/></html>
+	            	<!-- <html><html-template location="component://byproducts/webapp/byproducts/reports/PaymentReciept.fo.ftl"/></html> -->
+	            </platform-specific>	
+            </widgets>
+        </section>
+    </screen>
 <screen name="FindPayableInvoices">
 	<section>
 		<actions>

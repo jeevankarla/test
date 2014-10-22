@@ -75,42 +75,98 @@ finAccountId = "";
 partyName = "";
 paymentDate = "";
 amountStr = BigDecimal.ZERO;
+comments = "";
 // for contra 
 reportTypeFlag = context.reportTypeFlag;
 if(UtilValidate.isNotEmpty(reportTypeFlag) && reportTypeFlag == "contraCheque"){
 	finAccountId = parameters.finAccountId;
-	amount = parameters.amount;
-	BigDecimal amount = new BigDecimal(amount);
-	amountWords = UtilFormatOut.formatCurrency(amount, context.get("currencyUomId"), locale);
-	amountStr = amountWords.replace("Rs"," ");
-	comments = parameters.comments;
-	Timestamp transactionDate = (Timestamp)
-	String transactionDateStr = parameters.transactionDate;
-	def sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-	try {
-		paymentDate = new java.sql.Timestamp(sdf.parse(transactionDateStr+" 00:00:00").getTime());
-	} catch (ParseException e) {
-		Debug.logError(e, "Cannot parse date string: " + transactionDateStr, "");
-	}
-	
-	if(UtilValidate.isNotEmpty(finAccountId)){
-		context.put("finAccountId",finAccountId);
-	}
-	if(UtilValidate.isNotEmpty(comments)){
-		context.put("attrValue",comments);
-	}
-	if(UtilValidate.isNotEmpty(paymentDate)){
-		context.put("paymentDate",paymentDate);
-	}
-	if(UtilValidate.isNotEmpty(amount)){
-		context.put("amount",amount);
-	}
-	if(UtilValidate.isNotEmpty(amountStr)){
-		context.put("amountStr",amountStr);
+	if(finAccountId.contains("FIN_ACCNT")){
+		if(UtilValidate.isNotEmpty(finAccountId)){
+			amount = parameters.amount;
+			BigDecimal amount = new BigDecimal(amount);
+			amountWords = UtilFormatOut.formatCurrency(amount, context.get("currencyUomId"), locale);
+			amountStr = amountWords.replace("Rs"," ");
+			comments = parameters.comments;
+			Timestamp transactionDate = (Timestamp)
+			String transactionDateStr = parameters.transactionDate;
+			def sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+			try {
+				paymentDate = new java.sql.Timestamp(sdf.parse(transactionDateStr+" 00:00:00").getTime());
+			} catch (ParseException e) {
+				Debug.logError(e, "Cannot parse date string: " + transactionDateStr, "");
+			}
+			
+			if(UtilValidate.isNotEmpty(finAccountId)){
+				context.put("finAccountId",finAccountId);
+			}
+			if(UtilValidate.isNotEmpty(comments)){
+				context.put("attrValue",comments);
+			}
+			if(UtilValidate.isNotEmpty(paymentDate)){
+				context.put("paymentDate",paymentDate);
+			}
+			if(UtilValidate.isNotEmpty(amount)){
+				context.put("amount",amount);
+			}
+			if(UtilValidate.isNotEmpty(amountStr)){
+				context.put("amountStr",amountStr);
+			}
+		}
+	}else{
+		Debug.logError("finAccountId Cannot Be Empty","");
+		context.errorMessage = "Not a contra payment...!";
+		return;
 	}
 }else{
-
-	//for cheque printing
+	// for Deposit Cheque
+	if(UtilValidate.isNotEmpty(reportTypeFlag) && reportTypeFlag == "depositCheque"){
+		finAccountId = parameters.finAccountId;
+		if(UtilValidate.isNotEmpty(finAccountId)){
+			finAccountTransList = delegator.findList("FinAccountTrans", EntityCondition.makeCondition("finAccountId", EntityOperator.EQUALS, finAccountId), null, null, null, false);
+			if(UtilValidate.isNotEmpty(finAccountTransList)){
+				finAccountTransDetails = EntityUtil.getFirst(finAccountTransList);
+				if(UtilValidate.isNotEmpty(finAccountTransDetails)){
+					finAccountTransId = finAccountTransDetails.finAccountTransId;
+					if(UtilValidate.isNotEmpty(finAccountTransId)){
+						finAccountTransAttributeDetails = delegator.findOne("FinAccountTransAttribute", [finAccountTransId : finAccountTransId, attrName : "FATR_CONTRA"], false);
+						if(UtilValidate.isNotEmpty(finAccountTransAttributeDetails)){
+							newFinAccountTransId = finAccountTransAttributeDetails.attrValue;
+							if(UtilValidate.isNotEmpty(finAccountTransAttributeDetails)){
+								newfinAccountTransDetails = delegator.findOne("FinAccountTrans", [finAccountTransId : newFinAccountTransId], false);
+								if(UtilValidate.isNotEmpty(newfinAccountTransDetails)){
+									finAccountId = newfinAccountTransDetails.finAccountId;
+									amount = newfinAccountTransDetails.amount;
+									paymentDate = newfinAccountTransDetails.transactionDate;
+									comments = newfinAccountTransDetails.comments;
+									
+									BigDecimal amount = new BigDecimal(amount);
+									amountWords = UtilFormatOut.formatCurrency(amount, context.get("currencyUomId"), locale);
+									amountStr = amountWords.replace("Rs"," ");
+									
+									if(UtilValidate.isNotEmpty(finAccountId)){
+										context.put("finAccountId",finAccountId);
+									}
+									if(UtilValidate.isNotEmpty(comments)){
+										context.put("attrValue",comments);
+									}
+									if(UtilValidate.isNotEmpty(paymentDate)){
+										context.put("paymentDate",paymentDate);
+									}
+									if(UtilValidate.isNotEmpty(amount)){
+										context.put("amount",amount);
+									}
+									if(UtilValidate.isNotEmpty(amountStr)){
+										context.put("amountStr",amountStr);
+									}
+								}
+							}
+						}
+					}
+				}
+			}
+		}
+	}else{
+	//for cheque printing of Ap and Ar Screens
 	paymentMethodId = "";
 	paymentId = parameters.paymentId;
 	invoiceId = parameters.invoiceId;
@@ -199,6 +255,7 @@ if(UtilValidate.isNotEmpty(reportTypeFlag) && reportTypeFlag == "contraCheque"){
 		payments.add(paymentGropupMember.getRelatedOne("Payment"));
 	}
 	context.payments = payments;
+	}
 }
 
 
