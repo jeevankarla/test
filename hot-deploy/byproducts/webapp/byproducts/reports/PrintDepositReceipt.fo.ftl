@@ -65,12 +65,12 @@ under the License.
                             		<fo:block  text-align="left"  ></fo:block>  
                        			</fo:table-cell>
                 				<fo:table-cell>
-                            		<fo:block  keep-together="always" text-align="right" font-weight = "bold">Receipt Date:${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(paymentDate, "MMMM dd,yyyy")}</fo:block>  
+                            		<fo:block  keep-together="always" text-align="right" font-weight = "bold">Receipt Date:${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(paymentDate?if_exists, "MMMM dd,yyyy")}</fo:block>  
                        			</fo:table-cell>
                     </fo:table-row>
                     <fo:table-row>
                 				<fo:table-cell>
-                            		<fo:block  text-align="left" font-weight = "bold" keep-together="always">Cheque No:${contraRefNum?if_exists}</fo:block>  
+                            		<fo:block  text-align="left" font-weight = "bold" keep-together="always">Instrument No:${contraRefNum?if_exists}</fo:block>  
                        			</fo:table-cell>
                     </fo:table-row>
                      </fo:table-body>
@@ -94,11 +94,11 @@ under the License.
                             		<fo:block  text-align="left"  white-space-collapse="false">&#160;&#160;&#160;${newFinAccountTransId?if_exists}</fo:block>  
                        			</fo:table-cell>
                 				<fo:table-cell>
-                            		<fo:block  keep-together="always" text-align="left">${partyName}</fo:block>  
+                            		<fo:block  keep-together="always" text-align="left">${partyName?if_exists}</fo:block>  
                        			</fo:table-cell>
                        			
                        			<fo:table-cell>
-                            		<fo:block  text-align="right"  white-space-collapse="false">${partyId}</fo:block>  
+                            		<fo:block  text-align="right"  white-space-collapse="false">${partyId?if_exists}</fo:block>  
                        			</fo:table-cell>
                        			<fo:table-cell>
                             		<fo:block  text-align="right"  white-space-collapse="false">${amount?if_exists?string("#0.00")}</fo:block>  
@@ -109,20 +109,40 @@ under the License.
                     				<fo:block linefeed-treatment="preserve">&#xA;</fo:block>
                					</fo:table-cell>
 		  					</fo:table-row>
+		  					
 		  					<fo:table-row>
             				     <fo:table-cell font-weight = "bold">
-                    				<fo:block>Towards:</fo:block>
+                    				<fo:block keep-together="always">Deposit Type:</fo:block>
                					</fo:table-cell>
-               					<fo:table-cell number-columns-spanned="2">
-               					<fo:block>${comments?if_exists}</fo:block>
+               					<fo:table-cell >
+                    				<fo:block linefeed-treatment="preserve">&#xA;</fo:block>
+               					</fo:table-cell>
+               					<fo:table-cell >
+               					<fo:block keep-together="always">${description?if_exists}</fo:block>
                					</fo:table-cell>
 		  					</fo:table-row>
+		  					
+		  					<fo:table-row>
+            				     <fo:table-cell font-weight = "bold">
+                    				<fo:block keep-together="always">Towards:</fo:block>
+               					</fo:table-cell>
+               					<fo:table-cell >
+                    				<fo:block linefeed-treatment="preserve">&#xA;</fo:block>
+               					</fo:table-cell>
+               					<fo:table-cell>
+               					<fo:block keep-together="always">${comments?if_exists}</fo:block>
+               					</fo:table-cell>
+		  					</fo:table-row>
+		  					
 		  					<fo:table-row>
                					 <fo:table-cell font-weight = "bold">
-                    				<fo:block>Transferred To:</fo:block>
+                    				<fo:block keep-together="always">Transferred To:</fo:block>
                					</fo:table-cell>
-               					<fo:table-cell number-columns-spanned="2">
-               					<fo:block>${finAccountName?if_exists}</fo:block>
+               					<fo:table-cell >
+                    				<fo:block linefeed-treatment="preserve">&#xA;</fo:block>
+               					</fo:table-cell>
+               					<fo:table-cell>
+               					<fo:block keep-together="always">${finAccountName?if_exists}</fo:block>
                					</fo:table-cell>
 		  					</fo:table-row>
 		  					</#if>
