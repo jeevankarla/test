@@ -278,7 +278,7 @@ under the License.
         </field>
         <field name="transactionDate"><date-time type="timestamp"/></field>
         <field name="amount" ><text ></text></field>
-        <field name="contraRefNum"><text></text></field>
+        <field name="contraRefNum" title="Instrument Number"><text></text></field>
         <field name="finAccountTransTypeId">
         	<drop-down allow-empty="false">
         		<option key="WITHDRAWAL" description="WITHDRAWAL"/>
@@ -295,7 +295,8 @@ under the License.
     	<field name="finAccountId" title = "Fin Account">
           <display-entity entity-name="FinAccount" key-field-name="finAccountId" description="${finAccountName}"/>
         </field>
-        <field name="contraRefNum"><display></display></field>    	
+        <field name="contraRefNum" title="Instrument Number"><display></display></field>
+        <field name="transactionDate"><display></display></field>
     	<field name="amount" title="Amount(Rs)"><display/></field>
     	<field name="createTransactionDetailReportPDF" title="Accounting Trans PDF" use-when="${isPosted=='Y'}" widget-style="buttontext">
             <hyperlink target="acctgTransDetailReportPdf.pdf" description="${uiLabelMap.AccountingInvoicePDF}" target-window="_blank">
@@ -365,8 +366,8 @@ under the License.
                 </entity-options>
             </drop-down>
         </field>
-        <field name="contraRefNum" title="Contra Ref Num"><text></text></field>         
-        <field name="comments"><text/></field>
+        <field name="contraRefNum" title="Instrument Number"><text></text></field>         
+        <field name="comments" title="Cheque in favour"><text/></field>
         <field name="submitButton" title="${uiLabelMap.Create}" widget-style="smallSubmit"><submit button-type="button"/></field>
     </form>
     

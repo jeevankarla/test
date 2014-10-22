@@ -82,15 +82,28 @@ under the License.
                         		<fo:block  text-align="left"  font-weight = "bold"></fo:block>  
                    			</fo:table-cell>
                    			</#if>
-                   			<#if acctgTransTypeId?has_content>
-            				<fo:table-cell>
-                        		<fo:block  keep-together="always" text-align="left">Acctg Trans Type Id:${acctgTransTypeId?if_exists}</fo:block>  
-                   			</fo:table-cell>
-                   			<#else>
-                   			<fo:table-cell>
-                        		<fo:block  text-align="left"  font-weight = "bold"></fo:block>  
-                   			</fo:table-cell>
-                   			</#if>
+                   			<#if reportTypeFlag?has_content>
+                     			<#assign finAccountTransDetails = delegator.findOne("FinAccountTrans", {"finAccountTransId" : finAccountTransId}, false)?if_exists/>
+                    				<#if finAccountTransDetails?has_content>
+	            				<fo:table-cell>
+	                        		<fo:block  keep-together="always" text-align="left">Acctg Trans Type Id:${finAccountTransDetails.finAccountTransTypeId?if_exists}</fo:block>  
+	                   			</fo:table-cell>
+	                   			<#else>
+	                   			<fo:table-cell>
+	                        		<fo:block  text-align="left"  font-weight = "bold"></fo:block>  
+	                   			</fo:table-cell>
+	                   			</#if>
+	                   		<#else>		
+	                   			<#if acctgTransTypeId?has_content>
+	            				<fo:table-cell>
+	                        		<fo:block  keep-together="always" text-align="left">Acctg Trans Type Id:${acctgTransTypeId?if_exists}</fo:block>  
+	                   			</fo:table-cell>
+	                   			<#else>
+	                   			<fo:table-cell>
+	                        		<fo:block  text-align="left"  font-weight = "bold"></fo:block>  
+	                   			</fo:table-cell>
+	                   			</#if>
+	                   		</#if>
                     </fo:table-row>	
                     <fo:table-row>	
                      <#if invoiceId?has_content>
@@ -347,7 +360,7 @@ under the License.
 		                    <fo:table-row>	
 		                     		<#if finAccountTransDetails.contraRefNum?has_content>
 		                     		<fo:table-cell>
-		                            		<fo:block  text-align="left"  keep-together="always">Contra Ref Number:${finAccountTransDetails.contraRefNum?if_exists}</fo:block>  
+		                            		<fo:block  text-align="left"  keep-together="always">Instrument Number:${finAccountTransDetails.contraRefNum?if_exists}</fo:block>  
 		                       		</fo:table-cell>
 		                       		<#else>
 		                       			<fo:table-cell>
@@ -356,7 +369,7 @@ under the License.
 		                       		</#if>
 		                     		<#if finAccountTransDetails.comments?has_content>
 		                    		<fo:table-cell>
-		                            		<fo:block  keep-together="always" text-align="left" >Description:${finAccountTransDetails.comments?if_exists}</fo:block>  
+		                            		<fo:block  keep-together="always" text-align="left" >Cheque in favour:${finAccountTransDetails.comments?if_exists}</fo:block>  
 		                       		</fo:table-cell>
 		                       		<#else>
 		                       			<fo:table-cell>
@@ -449,8 +462,42 @@ under the License.
                        			</fo:table-cell>
             				</fo:table-row>
 		  					</#if>
-		              </fo:table-body>
+		  					<fo:table-row>
+								<fo:table-cell>
+				            		<fo:block linefeed-treatment="preserve">&#xA;</fo:block>
+				       			</fo:table-cell>
+				       		</fo:table-row>
+				       		<fo:table-row>
+								<fo:table-cell>
+				            		<fo:block linefeed-treatment="preserve">&#xA;</fo:block>
+				       			</fo:table-cell>
+				       		</fo:table-row>
+				       		</fo:table-body>
 		                </fo:table>
+		               </fo:block>
+				       		<fo:block>
+			                 	<fo:table>
+			                    <fo:table-column column-width="100pt"/>
+			                    <fo:table-column column-width="200pt"/>
+			                    <fo:table-column column-width="200pt"/>
+			                    <fo:table-column column-width="100pt"/>
+			                    <fo:table-body>
+									  	<fo:table-row>
+			               					<fo:table-cell>
+			                    				<fo:block>PROCD.</fo:block>
+			               					</fo:table-cell>
+			               					<fo:table-cell>
+			                    				<fo:block>PRE AUDIT</fo:block>
+			               					</fo:table-cell>
+			               					<fo:table-cell>
+			                    				<fo:block keep-together="always">DY.MGR/MGR/GM(FIN)</fo:block>
+			               					</fo:table-cell>
+			               					<fo:table-cell>
+			                    				<fo:block text-align = "right">DIRECTOR</fo:block>
+			               					</fo:table-cell>
+					  					</fo:table-row>
+					              </fo:table-body>
+		                	</fo:table>
 		               </fo:block>		
 					 </fo:flow>
 					 </fo:page-sequence>
