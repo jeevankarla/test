@@ -495,7 +495,7 @@ under the License.
             </entity-condition>
         </actions>
         
-		<field name="parentTypeId" id-name="parentTypeId" use-when="finAccount==null&amp;&amp;finAccountId==null" title="Account Type" event="onchange" action="javascript:parentTypeOnchange();">
+		<field name="acctParentTypeId" id-name="parentTypeId" use-when="finAccount==null&amp;&amp;finAccountId==null" title="Account Type" event="onchange" action="javascript:parentTypeOnchange();">
         	<drop-down>
         		<list-options key-name="finAccountTypeId" list-name="depositAccountTypes" description="${description}"/>
         	</drop-down>
@@ -518,7 +518,7 @@ under the License.
             	<list-options key-name="finAccountId" list-name="companyAccountsList" description="${finAccountName}"/>
             </drop-down>
         </field> -->
-        <field name="finAccountIdTo" title="To Account" >
+        <field name="finAccountIdTo" title="From/To Account" >
             <drop-down allow-empty="false">
             	<list-options key-name="finAccountId" list-name="companyBanksList" description="${finAccountName}"/>
             </drop-down>

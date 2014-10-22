@@ -81,7 +81,7 @@
 						"</select>";
 		message += "<form action='refundDepositContraFinAccTrans' method='post' onsubmit='return disableGenerateButton();'><table cellspacing=10 cellpadding=10>" ;
 		message += "<input type=hidden name=entryType value=Contra><input type=hidden name=finAccountTransTypeId value=DEPOSIT><input type=hidden name=statusId value=FINACT_TRNS_CREATED><input type=hidden name=finAccountId value="+finAccId+">";
-		message += "<tr class='h3'><td>From Account</td><td>"+htmlMsg+"</td></tr>";
+		message += "<tr class='h3'><td>From/To Account</td><td>"+htmlMsg+"</td></tr>";
 		message += "<tr class='h3'><td>Transaction Date</td><td><input type=text name=transactionDate id=transactionDate onmouseover='datepick()'></td></tr>";
 		message += "<tr class='h3'><td>Amount</td><td><input type=text name=amount></td></tr>";
 		message += "<tr class='h3'><td>Reference Num</td><td><input type=text name=contraRefNum></td></tr>";

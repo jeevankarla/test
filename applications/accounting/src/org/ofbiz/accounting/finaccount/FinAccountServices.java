@@ -208,11 +208,20 @@ public class FinAccountServices {
 		String finAccountId = (String) context.get("finAccountId");
 		context.put("transactionDate", transactionDate);
         try {
-        	GenericValue finAccount = delegator.findOne("FinAccount", UtilMisc.toMap("finAccountId", finAccountId), false);
+        	GenericValue finAccount = delegator.findOne("FinAccountAndType", UtilMisc.toMap("finAccountId", finAccountId), false);
         	
         	if(UtilValidate.isEmpty(finAccount)){
         		return ServiceUtil.returnError("No Account with Id [" + finAccountId + "]");
         	}
+        	String parentTypeId = finAccount.getString("parentTypeId");
+        	
+        	if(UtilValidate.isNotEmpty(parentTypeId) && parentTypeId.equals("DEPOSIT_RECEIPT")){
+        			context.put("finAccountTransTypeId", "DEPOSIT");
+        	}
+        	if(UtilValidate.isNotEmpty(parentTypeId) && parentTypeId.equals("DEPOSIT_PAID")){
+    			context.put("finAccountTransTypeId", "WITHDRAWAL");
+        	}
+        	
         	BigDecimal acctAmt = BigDecimal.ZERO;
         	if(UtilValidate.isNotEmpty(finAccount.get("actualBalance"))){
         		acctAmt = finAccount.getBigDecimal("actualBalance");
@@ -246,7 +255,7 @@ public class FinAccountServices {
         Timestamp transactionDate = (Timestamp) context.get("transactionDate");
         BigDecimal amount = (BigDecimal) context.get("amount");
         amount = amount.abs();
-        String parentTypeId = (String) context.get("parentTypeId");
+        String parentTypeId = (String) context.get("acctParentTypeId");
         Map<String, Object> result = ServiceUtil.returnSuccess();
         Timestamp fromDate = null;
         if(UtilValidate.isEmpty(transactionDate)){
@@ -262,9 +271,8 @@ public class FinAccountServices {
              if (ServiceUtil.isError(createResult)) {
                  return createResult;
              }
-             String parentType = "DISBURSEMENT";
              if(UtilValidate.isNotEmpty(parentTypeId) && parentTypeId.equals("DEPOSIT_RECEIPT")){
-            	 parentType = "RECEIPT";
+            	 finAccountTransTypeId = "WITHDRAWAL";
              }
              
              String finAccountId = (String)createResult.get("finAccountId");
@@ -274,11 +282,11 @@ public class FinAccountServices {
              transCtxMap.put("transactionDate", transactionDate);
              transCtxMap.put("comments", comments);
              transCtxMap.put("amount", amount);
-             transCtxMap.put("userLogin", userLogin);
-             transCtxMap.put("contraFinAccountId", finAccountId);
-             transCtxMap.put("finAccountId", finAccountIdTo);
+           	 transCtxMap.put("contraFinAccountId", finAccountIdTo);
+             transCtxMap.put("finAccountId", finAccountId); 
+           	 transCtxMap.put("finAccountTransTypeId", finAccountTransTypeId);
              transCtxMap.put("contraRefNum", contraRefNum);
-             transCtxMap.put("finAccountTransTypeId", finAccountTransTypeId);
+             transCtxMap.put("userLogin", userLogin);
              createResult = dispatcher.runSync("preCreateFinAccountTrans", transCtxMap);
 
              if (ServiceUtil.isError(createResult)) {

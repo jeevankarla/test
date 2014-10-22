@@ -46,6 +46,7 @@ under the License.
 		<attribute name="entryType" mode="IN" optional="true" type="String"/>
 		<attribute name="transactionDate" mode="IN" optional="true" type="Timestamp"/>
 		<attribute name="finAccountIdTo" mode="IN" optional="false" type="String"/>
+		<attribute name="acctParentTypeId" mode="IN" optional="true" type="String"/>
 		<attribute name="finAccountTransTypeId" mode="IN" optional="false" type="String"/>
 		<attribute name="amount" mode="IN" optional="false" type="BigDecimal"/>
 		<attribute name="contraRefNum" mode="IN" optional="true" type="String"/>
