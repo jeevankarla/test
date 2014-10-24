@@ -1568,6 +1568,14 @@ under the License.emplpunch
        <attribute name="thruDate" mode="IN" type="Timestamp" optional="true"/>
        <attribute name="workedHolidaysList" mode="OUT" type="java.util.List"/>
    </service>
+   <service name="getActiveEmployements" engine="java" auth="true" invoke="getActiveEmployements" 
+        location="in.vasista.vbiz.humanres.HumanresService">
+        <description>populateEmplPunch from </description>
+        <attribute name="orgPartyId" mode="IN" type="String"/>
+        <attribute name="fromDate" mode="IN" type="Timestamp"/>
+        <attribute name="thruDate" mode="IN" type="Timestamp"/>  
+        <attribute name="employementList" mode="OUT" type="List" optional="true"/>
+   </service>
    
    <service name="CreateRateAmountVariables" engine="java" auth="true" invoke="CreateRateAmountVariables"
    			location="in.vasista.vbiz.humanres.PayrollService">
