@@ -45,14 +45,14 @@ if(UtilValidate.isNotEmpty(BankAdvicePayRollMap)){
 			}
 		}
 		
-	   String text = "Your Gross Salary  for"+UtilDateTime.toDateString(timePeriodStart ,'MMMM yyyy')+"- Rs."+amountMap.getAt("totEarnings").setScale(2,BigDecimal.ROUND_HALF_UP)+
-	                   ", Deductions - Rs."+amountMap.getAt("totDeductions").setScale(2,BigDecimal.ROUND_HALF_UP)+", Net Pay - Rs."+amountMap.getAt("netAmt").setScale(2,BigDecimal.ROUND_HALF_UP)+" Automated message sent from Milkosoft,MIS";
-	   //Debug.log("Sms text: " + text);
+	   String text = "Your Gross Salary  for "+UtilDateTime.toDateString(timePeriodStart ,'MMMM yyyy')+"- Rs."+amountMap.getAt("totEarnings").setScale(2,BigDecimal.ROUND_HALF_UP)+
+	                   ", Deductions - Rs."+amountMap.getAt("totDeductions").setScale(2,BigDecimal.ROUND_HALF_UP).abs()+", Net Pay - Rs."+amountMap.getAt("netAmt").setScale(2,BigDecimal.ROUND_HALF_UP)+" Automated message sent from Milkosoft,MIS";
+	   Debug.log("Sms text: " + text);
 	   Map<String, Object> sendSmsParams = FastMap.newInstance();
 	  if(UtilValidate.isNotEmpty(contactNumberTo)){
 			sendSmsParams.put("contactNumberTo", contactNumberTo);
 			sendSmsParams.put("text",text);
-			dispatcher.runAsync("sendSms", sendSmsParams,false);
+			//dispatcher.runAsync("sendSms", sendSmsParams,false);
 		}
 	}
 }
