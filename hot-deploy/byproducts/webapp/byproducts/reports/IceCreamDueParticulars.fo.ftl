@@ -27,7 +27,7 @@ under the License.
                 <fo:region-after extent="1in"/>
             </fo:simple-page-master>
         </fo:layout-master-set>
-        ${setRequestAttribute("OUTPUT_FILENAME", "ICPSundryDebitorReport.pdf")}
+        ${setRequestAttribute("OUTPUT_FILENAME", "ICPSundryDebtorReport.pdf")}
         <#if errorMessage?has_content>
 	<fo:page-sequence master-reference="main">
 	<fo:flow flow-name="xsl-region-body" font-family="Helvetica">
@@ -42,7 +42,7 @@ under the License.
 	        	<fo:static-content flow-name="xsl-region-before" font-family="Courier,monospace">
 	        		<fo:block text-align="center" font-weight="bold" keep-together="always"  font-family="Courier,monospace" white-space-collapse="false">${uiLabelMap.KMFDairyHeader}</fo:block>
 	        		<fo:block  keep-together="always" text-align="center" font-family="Courier,monospace" white-space-collapse="false" font-weight="bold">${uiLabelMap.KMFDairySubHeader}</fo:block>
-                	<fo:block text-align="center"  keep-together="always"  white-space-collapse="false" font-weight="bold">STATEMENT FOR SUNDRY DEBITOR - ${categoryType} ICE CREAM SALES</fo:block>
+                	<fo:block text-align="center"  keep-together="always"  white-space-collapse="false" font-weight="bold">STATEMENT FOR SUNDRY DEBTOR - ${categoryType} ICE CREAM SALES</fo:block>
           			<fo:block text-align="center" font-weight="bold"  keep-together="always"  white-space-collapse="false">FOR THE PERIOD- ${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(fromDateTime, "dd/MMM/yyyy")} - ${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(thruDateTime, "dd/MMM/yyyy")} </fo:block>
           			<fo:block text-align="left" font-size="10pt" keep-together="always"  font-family="Courier,monospace" white-space-collapse="false"> UserLogin:<#if userLogin?exists>${userLogin.userLoginId?if_exists}</#if>               &#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;Print Date :${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(nowTimestamp, "dd/MM/yy HH:mm:ss")}</fo:block>
           			<fo:block>----------------------------------------------------------------------------------------------------------------------------------</fo:block>
