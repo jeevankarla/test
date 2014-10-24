@@ -1656,6 +1656,7 @@ under the License.
 		<field name="periodTypeId" type="id"></field>
 		<field name="roundingMode" type="id-vlong"></field>
 		<field name="serviceName" type="id-vlong"></field>
+		<field name="smsServicePath" type="id-vlong"></field>
 		<prim-key field="payrollTypeId" />
 		<relation type="one" fk-name="PT_PT" rel-entity-name="Enumeration">
         	<key-map field-name="payrollTypeId" rel-field-name="enumId"/>

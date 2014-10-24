@@ -34,6 +34,7 @@ if(UtilValidate.isNotEmpty(parameters.OrganizationId)){
 	parameters.partyIdFrom=parameters.OrganizationId;
 }
 GenericValue customTimePeriod = delegator.findOne("CustomTimePeriod", [customTimePeriodId : parameters.customTimePeriodId], false);
+//context.put("customTimePeriod",customTimePeriod);
 context.timePeriodStart= UtilDateTime.toTimestamp(customTimePeriod.getDate("fromDate"));
 context.timePeriodEnd= UtilDateTime.toTimestamp(customTimePeriod.getDate("thruDate"));
 timePeriodStart=UtilDateTime.toTimestamp(customTimePeriod.getDate("fromDate"));
@@ -48,11 +49,14 @@ if(UtilValidate.isNotEmpty(resultMap.get("lastCloseAttedancePeriod"))){
 List stautsList = UtilMisc.toList("GENERATED","APPROVED");
 conditionList=[];
 
-if(UtilValidate.isNotEmpty(parameters.billingTypeId)){
-	conditionList.add(EntityCondition.makeCondition("billingTypeId", EntityOperator.EQUALS , parameters.billingTypeId));
-}else{
+if(UtilValidate.isEmpty(parameters.billingTypeId)){
+	//conditionList.add(EntityCondition.makeCondition("billingTypeId", EntityOperator.EQUALS , parameters.billingTypeId));
+	parameters.billingTypeId = "PAYROLL_BILL";
+}/*else{
 	conditionList.add(EntityCondition.makeCondition("billingTypeId", EntityOperator.EQUALS ,"PAYROLL_BILL"));
-}
+}*/
+
+conditionList.add(EntityCondition.makeCondition("billingTypeId", EntityOperator.EQUALS , parameters.billingTypeId));
 conditionList.add(EntityCondition.makeCondition("statusId", EntityOperator.IN  ,stautsList));
 conditionList.add(EntityCondition.makeCondition("customTimePeriodId", EntityOperator.EQUALS ,parameters.customTimePeriodId));
 if(UtilValidate.isNotEmpty(parameters.periodBillingId)){
@@ -163,8 +167,8 @@ if(UtilValidate.isNotEmpty(periodBillingList)){
 			itemConList.add(EntityCondition.makeCondition("payrollHeaderId", EntityOperator.EQUALS ,payrollHeaderId));
 			itemCond = EntityCondition.makeCondition(itemConList,EntityOperator.AND);
 			payRollHeaderItemsList = delegator.findList("PayrollHeaderItem", itemCond, null, ["payrollItemSeqId"], null, false);
-			totEarnings=0;
-			totDeductions=0;
+			totEarnings=0.0;
+			totDeductions=0.0;
 			if(UtilValidate.isNotEmpty(payRollHeaderItemsList)){
 				tempAmount =0;
 				payRollHeaderItemsList.each{ payRollHeaderItem->
@@ -231,6 +235,8 @@ if(UtilValidate.isNotEmpty(periodBillingList)){
 				}
 			}
 			netAmount=totEarnings+totDeductions;
+			bankAdviceDetailsMap.put("totEarnings",totEarnings);
+			bankAdviceDetailsMap.put("totDeductions",totDeductions);
 			accountDetails = delegator.findList("FinAccount", EntityCondition.makeCondition("ownerPartyId", EntityOperator.EQUALS , partyId), null, null, null, false);
 			if(UtilValidate.isNotEmpty(accountDetails)){
 				accDetails = EntityUtil.getFirst(accountDetails);
@@ -283,46 +289,50 @@ if(UtilValidate.isNotEmpty(periodBillingList)){
 		}
 	}
 }
-
+context.put("BankAdvicePayRollMap",BankAdvicePayRollMap);
 
 if(UtilValidate.isNotEmpty(BankAdvicePayRollMap) && UtilValidate.isNotEmpty(parameters.sendSms) && (parameters.sendSms).equals("Y")){
-	for(Map.Entry entry : BankAdvicePayRollMap.entrySet()){
-		partyId = entry.getKey();
-		amountMap = entry.getValue();
-		Map<String, Object> getTelParams = FastMap.newInstance();
-		contactNumberTo = null;
-		getTelParams.put("partyId", partyId);
-		if(UtilValidate.isNotEmpty(partyId)){
+	payrollType = delegator.findOne("PayrollType", [ payrollTypeId : parameters.billingTypeId], false);
+	if (UtilValidate.isNotEmpty(payrollType)  && UtilValidate.isNotEmpty(payrollType.getString("smsServicePath"))) {
+		smsResult = GroovyUtil.runScriptAtLocation(payrollType.getString("smsServicePath"), context);
+	}else{
+		for(Map.Entry entry : BankAdvicePayRollMap.entrySet()){
+			partyId = entry.getKey();
+			amountMap = entry.getValue();
+			Map<String, Object> getTelParams = FastMap.newInstance();
+			contactNumberTo = null;
 			getTelParams.put("partyId", partyId);
-		}
-		getTelParams.put("userLogin", userLogin);
-		serviceResult = dispatcher.runSync("getPartyTelephone", getTelParams);
-		if (ServiceUtil.isError(serviceResult)) {
-			 Debug.logError(ServiceUtil.getErrorMessage(serviceResult),"");
-		}
-		if(UtilValidate.isNotEmpty(serviceResult.get("contactNumber"))){
-			contactNumberTo = (String) serviceResult.get("contactNumber");
-			if(!UtilValidate.isEmpty(serviceResult.get("countryCode"))){
-				contactNumberTo = (String) serviceResult.get("countryCode") + (String) serviceResult.get("contactNumber");
+			if(UtilValidate.isNotEmpty(partyId)){
+				getTelParams.put("partyId", partyId);
+			}
+			getTelParams.put("userLogin", userLogin);
+			serviceResult = dispatcher.runSync("getPartyTelephone", getTelParams);
+			if (ServiceUtil.isError(serviceResult)) {
+				 Debug.logError(ServiceUtil.getErrorMessage(serviceResult),"");
+			}
+			if(UtilValidate.isNotEmpty(serviceResult.get("contactNumber"))){
+				contactNumberTo = (String) serviceResult.get("contactNumber");
+				if(!UtilValidate.isEmpty(serviceResult.get("countryCode"))){
+					contactNumberTo = (String) serviceResult.get("countryCode") + (String) serviceResult.get("contactNumber");
+				}
+			}
+			
+		   String text = "Your remuneration of Rs "+amountMap.getAt("netAmt").setScale(2,BigDecimal.ROUND_HALF_UP)+" for "+UtilDateTime.toDateString(customTimePeriod.getDate("fromDate") ,'MMMM yyyy')+" has been approved for bank payment. Automated message sent from Milkosoft, Mother Dairy.";
+		   //Debug.log("Sms text: " + text);
+		   Map<String, Object> sendSmsParams = FastMap.newInstance();
+		  if(UtilValidate.isNotEmpty(contactNumberTo)){
+				sendSmsParams.put("contactNumberTo", contactNumberTo);
+				sendSmsParams.put("text",text);
+				dispatcher.runAsync("sendSms", sendSmsParams,false);
 			}
 		}
-		
-	   String text = "Your remuneration of Rs "+amountMap.getAt("netAmt").setScale(2,BigDecimal.ROUND_HALF_UP)+" for "+UtilDateTime.toDateString(customTimePeriod.getDate("fromDate") ,'MMMM yyyy')+" has been approved for bank payment. Automated message sent from Milkosoft, Mother Dairy.";
-	   //Debug.log("Sms text: " + text);
-	   Map<String, Object> sendSmsParams = FastMap.newInstance();
-	  if(UtilValidate.isNotEmpty(contactNumberTo)){
-			sendSmsParams.put("contactNumberTo", contactNumberTo);
-			sendSmsParams.put("text",text);
-			dispatcher.runAsync("sendSms", sendSmsParams,false);
-		}
 	}
-	
 }
 
 parameters.partyId=orgPartyId;
 context.put("unitIdMap",unitIdMap);
 context.put("InstallmentFinalMap",InstallmentFinalMap);
-context.put("BankAdvicePayRollMap",BankAdvicePayRollMap);
+
 context.put("payRollSummaryMap",payRollSummaryMap);
 context.put("payRollMap",payRollMap);
 context.put("payRollEmployeeMap",payRollEmployeeMap);
