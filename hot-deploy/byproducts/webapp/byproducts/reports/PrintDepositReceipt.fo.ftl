@@ -24,7 +24,7 @@ under the License.
 <fo:layout-master-set>
 	<fo:simple-page-master master-name="main" page-height="12in" page-width="10in"
             margin-top="0.2in" margin-bottom=".3in" margin-left=".5in" margin-right=".1in">
-        <fo:region-body margin-top="3.3in"/>
+        <fo:region-body margin-top="3in"/>
         <fo:region-before extent="1in"/>
         <fo:region-after extent="1in"/>        
     </fo:simple-page-master>   
@@ -56,21 +56,15 @@ under the License.
                             		<fo:block  text-align="left"  font-weight = "bold">&#160;</fo:block>  
                        			</fo:table-cell>
                        			</#if>
-                				<fo:table-cell>
-                            		<fo:block  keep-together="always" text-align="right" font-weight = "bold">Receipt Number:${newFinAccountTransId?if_exists}&#160;&#160;&#160;</fo:block>  
-                       			</fo:table-cell>
                     </fo:table-row>	
+                    <fo:table-row>
+                    		<fo:table-cell>
+                            	<fo:block  keep-together="always" text-align="left" font-weight = "bold">Receipt Number:${newFinAccountTransId?if_exists}&#160;&#160;&#160;</fo:block>  
+                       		</fo:table-cell>
+                     </fo:table-row>	
                      <fo:table-row>
                 				<fo:table-cell>
-                            		<fo:block  text-align="left"  ></fo:block>  
-                       			</fo:table-cell>
-                				<fo:table-cell>
-                            		<fo:block  keep-together="always" text-align="right" font-weight = "bold">Receipt Date:${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(paymentDate?if_exists, "MMMM dd,yyyy")}</fo:block>  
-                       			</fo:table-cell>
-                    </fo:table-row>
-                    <fo:table-row>
-                				<fo:table-cell>
-                            		<fo:block  text-align="left" font-weight = "bold" keep-together="always">Instrument No:${contraRefNum?if_exists}</fo:block>  
+                            		<fo:block  keep-together="always" text-align="left" font-weight = "bold">Receipt Date:${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(paymentDate?if_exists, "MMMM dd,yyyy")}</fo:block>  
                        			</fo:table-cell>
                     </fo:table-row>
                      </fo:table-body>
@@ -83,9 +77,9 @@ under the License.
             <fo:flow flow-name="xsl-region-body"   font-family="Courier,monospace">	
             	<fo:block>
                  	<fo:table>
-                    <fo:table-column column-width="130pt"/>
                     <fo:table-column column-width="165pt"/>
                     <fo:table-column column-width="165pt"/>
+                    <fo:table-column column-width="120pt"/>
                     <fo:table-column column-width="140pt"/> 
                     <fo:table-body>
                     <#if newFinAccountTransId?exists>
@@ -124,7 +118,7 @@ under the License.
 		  					
 		  					<fo:table-row>
             				     <fo:table-cell font-weight = "bold">
-                    				<fo:block keep-together="always">Towards:</fo:block>
+                    				<fo:block keep-together="always">Cheque in favour/Comments:</fo:block>
                					</fo:table-cell>
                					<fo:table-cell >
                     				<fo:block linefeed-treatment="preserve">&#xA;</fo:block>
@@ -135,8 +129,20 @@ under the License.
 		  					</fo:table-row>
 		  					
 		  					<fo:table-row>
+            				     <fo:table-cell font-weight = "bold">
+                    				<fo:block keep-together="always">Instrument No:</fo:block>
+               					</fo:table-cell>
+               					<fo:table-cell >
+                    				<fo:block linefeed-treatment="preserve">&#xA;</fo:block>
+               					</fo:table-cell>
+               					<fo:table-cell>
+               					<fo:block keep-together="always">${contraRefNum?if_exists}</fo:block>
+               					</fo:table-cell>
+		  					</fo:table-row>
+		  					
+		  					<fo:table-row>
                					 <fo:table-cell font-weight = "bold">
-                    				<fo:block keep-together="always">Transferred To:</fo:block>
+                    				<fo:block keep-together="always">Transferred To/From:</fo:block>
                					</fo:table-cell>
                					<fo:table-cell >
                     				<fo:block linefeed-treatment="preserve">&#xA;</fo:block>

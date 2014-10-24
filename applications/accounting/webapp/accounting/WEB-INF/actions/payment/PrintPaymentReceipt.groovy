@@ -57,10 +57,23 @@ reportTypeFlag = context.reportTypeFlag;
 if(UtilValidate.isNotEmpty(reportTypeFlag) && reportTypeFlag == "depositCheque"){
 	finAccountId = parameters.finAccountId;
 	description = null;
+	partyId = null;
+	partyName = null;
 	if(UtilValidate.isNotEmpty(finAccountId)){
 		finAccountDetails = delegator.findOne("FinAccount", [finAccountId : finAccountId], false);
-		if(UtilValidate.isNotEmpty(finAccountId)){
+		if(UtilValidate.isNotEmpty(finAccountDetails)){
 			finAccountTypeId = finAccountDetails.finAccountTypeId;
+			partyId = finAccountDetails.ownerPartyId;
+			if(UtilValidate.isNotEmpty(partyId)){
+				partyName = PartyHelper.getPartyName(delegator, partyId, false);
+			}
+			if(UtilValidate.isNotEmpty(partyId)){
+				context.put("partyId",partyId);
+			}
+			if(UtilValidate.isNotEmpty(partyName)){
+				context.put("partyName",partyName);
+			}
+			
 			if(UtilValidate.isNotEmpty(finAccountTypeId)){
 				finAccountTypeDetails = delegator.findOne("FinAccountType", [finAccountTypeId : finAccountTypeId], false);
 				if(UtilValidate.isNotEmpty(finAccountTypeDetails.description)){
@@ -81,8 +94,6 @@ if(UtilValidate.isNotEmpty(reportTypeFlag) && reportTypeFlag == "depositCheque")
 					paymentDate = null;
 					comments = null;
 					contraRefNum = null;
-					performedByPartyId = null;
-					partyName = null;
 					amountWords = null;
 					finAccountName = null;
 					newFinAccountTransId = null;
@@ -106,8 +117,6 @@ if(UtilValidate.isNotEmpty(reportTypeFlag) && reportTypeFlag == "depositCheque")
 								paymentDate = newfinAccountTransDetails.transactionDate;
 								comments = newfinAccountTransDetails.comments;
 								contraRefNum = newfinAccountTransDetails.contraRefNum;
-								performedByPartyId = newfinAccountTransDetails.performedByPartyId;
-								partyName = PartyHelper.getPartyName(delegator, performedByPartyId, false);
 								amountWords=UtilNumber.formatRuleBasedAmount(amount,"%rupees-and-paise", locale).toUpperCase();
 								
 								if(UtilValidate.isNotEmpty(finAccountTransTypeId)){
@@ -127,12 +136,6 @@ if(UtilValidate.isNotEmpty(reportTypeFlag) && reportTypeFlag == "depositCheque")
 								}
 								if(UtilValidate.isNotEmpty(amountWords)){
 									context.put("amountWords",amountWords);
-								}
-								if(UtilValidate.isNotEmpty(performedByPartyId)){
-									context.put("partyId",performedByPartyId);
-								}
-								if(UtilValidate.isNotEmpty(partyName)){
-									context.put("partyName",partyName);
 								}
 								if(UtilValidate.isNotEmpty(contraRefNum)){
 									context.put("contraRefNum",contraRefNum);
