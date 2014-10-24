@@ -3348,6 +3348,10 @@ under the License.
         <security https="true" auth="true"/>
         <response name="success" type="view" value="PrintDepositReceipt"/>
     </request-map>
+    <request-map uri="viewDepositTransactions">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="ViewDepositTransactions"/>
+    </request-map>
      <request-map uri="showCashierReports">
         <security https="true" auth="true"/>
         <response name="success" type="view" value="ShowCashierReports"/>
@@ -3504,6 +3508,8 @@ under the License.
 	<view-map name="FindApInvoices" type="screen" page="component://accounting/widget/TreasurerPortalScreens.xml#FindApInvoices"/>
 	<view-map name="CreateAPInvoice" type="screen" page="component://accounting/widget/TreasurerPortalScreens.xml#CreateAPInvoice"/>
 	<view-map name="APInvoiceOverview" type="screen" page="component://accounting/widget/TreasurerPortalScreens.xml#APInvoiceOverview"/>
+	
+	<view-map name="ViewDepositTransactions" type="screen" page="component://accounting/widget/TreasurerPortalScreens.xml#ViewDepositTransactions"/>
     
     <!--================= AR Invoices ==================== -->
     

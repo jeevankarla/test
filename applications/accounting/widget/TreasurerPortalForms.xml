@@ -161,6 +161,7 @@ under the License.
         <field name="finAccountName" title="Acc Name"><display/></field>
         <field name="ownerPartyId" title="Owner Party"><display/></field>
         <field name="fromDate" title="Acc Date"><display/></field>
+        <field name="finAccountType"><display></display></field>
         <field name="actualBalance" title="Acc Balance"><display/></field>
         <field name="refund" widget-style="buttontext" event="onclick" action="" >
             <hyperlink target-type="plain" target="javascript:showDepositRefundEntry('${finAccountId}');" description="Refund">
@@ -172,13 +173,32 @@ under the License.
                 <parameter param-name="reportTypeFlag" value="depositCheque"/>
             </hyperlink>
         </field>
-        <field name="Print Cheque" widget-style="buttontext" >
+        <field name="transactionView" widget-style="buttontext" >
+            <hyperlink target="viewDepositTransactions" description="View Transactions" target-window="_blank">
+             	<parameter param-name="finAccountId"/>
+             	<parameter param-name="reportTypeFlag" value="depositCheque"/>
+            </hyperlink>
+        </field>
+    </form>
+    <form name="ListDepositTransactions" type="list" separate-columns="true"  list-name="finAccountTransList" paginate-target="FindDepositAccount" paginate="true"
+        odd-row-style="alternate-row" default-table-style="basic-table hover-bar">
+        <actions>
+			<script location="component://accounting/webapp/accounting/WEB-INF/actions/payment/ListContraEntries.groovy"/>
+        </actions>
+        <field name="finAccountId" title = "Financial Account">
+          	<display-entity entity-name="FinAccount" key-field-name="finAccountId" description="${finAccountId}(${finAccountName})"/>
+        </field>
+        <field name="contraRefNum" title="Instrument Number"><display></display></field>
+        <field name="transactionDate" title="Transaction Date"><display></display></field>
+        <field name="amount" title="Amount"><display></display></field>
+        <field use-when="&quot;${finAccountTransTypeId}&quot;==&quot;WITHDRAWAL&quot;" name="Print Cheque" widget-style="buttontext" >
             <hyperlink target="printChecks.pdf" description="Print Cheque" target-window="_blank">
              <parameter param-name="finAccountId"/>
              <parameter param-name="reportTypeFlag" value="depositCheque"/>
             </hyperlink>
-        </field>
+        </field> 
     </form>
+    
     <!-- <form name="ListDepositAccounts" type="list" separate-columns="true" default-entity-name="FinAccount"   list-name="nonBankAccountsList" paginate-target="FindDepositAccount" paginate="true"
         odd-row-style="alternate-row" default-table-style="basic-table hover-bar">
      
