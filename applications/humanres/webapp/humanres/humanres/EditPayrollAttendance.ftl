@@ -292,7 +292,8 @@ function updatePayrollAttendanceInternal(formName, action, row) {
             	    $('div#updateEntryMsg').removeClass("errorMessage");           	 
             	   $('div#updateEntryMsg').addClass("messageStr");
             	   $('div#updateEntryMsg').html('<label>Succesfully Updated.</label>'); 
-            	   $('div#updateEntryMsg').delay(5000).fadeOut('slow');  
+            	   $('div#updateEntryMsg').delay(5000).fadeOut('slow'); 
+            	   $($('.grid-canvas').children()[row]).css('background-color','#FAAC58'); 
                }
                
              } ,
@@ -300,7 +301,7 @@ function updatePayrollAttendanceInternal(formName, action, row) {
             	 	populateError(result["_ERROR_MESSAGE_"]);
             	 }
                });
-		
+   		
 	}//end of updatePayrollAttendanceInternal
 
 </script>
