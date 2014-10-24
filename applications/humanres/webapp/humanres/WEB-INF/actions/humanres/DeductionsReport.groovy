@@ -72,6 +72,7 @@ BillingList = delegator.findList("PeriodBillingAndCustomTimePeriod", periodbilli
 if(UtilValidate.isNotEmpty(BillingList)){
 	BillingId = BillingList.periodBillingId;
 }
+
 Map allDeductionMap=FastMap.newInstance();
 dedTypeIds.each{ dedTypeId->
 	if(UtilValidate.isNotEmpty(employmentsList)){
@@ -94,7 +95,7 @@ dedTypeIds.each{ dedTypeId->
 								Map.Entry customTimePeriodEntry = customTimePeriodIter.next();
 								if(customTimePeriodEntry.getKey() != "customTimePeriodTotals"){
 									periodTotals = customTimePeriodEntry.getValue().get("periodTotals");
-									wages =0;
+									Wages =0;
 									basic = 0;
 									dearnessAllowance =0;
 									houseRentAllowance =0;
@@ -120,133 +121,129 @@ dedTypeIds.each{ dedTypeId->
 									if(UtilValidate.isEmpty(basic)){
 										basic = 0;
 									}
-									if(basic>=15000){
-										dearnessAllowance = periodTotals.get("PAYROL_BEN_DA");
-										if(UtilValidate.isEmpty(dearnessAllowance)){
-											dearnessAllowance = 0;
+									dearnessAllowance = periodTotals.get("PAYROL_BEN_DA");
+									if(UtilValidate.isEmpty(dearnessAllowance)){
+										dearnessAllowance = 0;
+									}
+									houseRentAllowance = periodTotals.get("PAYROL_BEN_HRA");
+									if(UtilValidate.isEmpty(houseRentAllowance)){
+										houseRentAllowance = 0;
+									}
+									cityComp = periodTotals.get("PAYROL_BEN_CITYCOMP");
+									if(UtilValidate.isEmpty(cityComp)){
+										cityComp = 0;
+									}
+									HeatAllowance = periodTotals.get("PAYROL_BEN_HEATALLOW");
+									if(UtilValidate.isEmpty(HeatAllowance)){
+										HeatAllowance = 0;
+									}
+									CashAllowance = periodTotals.get("PAYROL_BEN_CASH");
+									if(UtilValidate.isEmpty(CashAllowance)){
+										CashAllowance = 0;
+									}
+									coldAllowance = periodTotals.get("PAYROL_BEN_COLDALLOW");
+									if(UtilValidate.isEmpty(coldAllowance)){
+										coldAllowance = 0;
+									}
+									convey = periodTotals.get("PAYROL_BEN_CONVEY");
+									if(UtilValidate.isEmpty(convey)){
+										convey = 0;
+									}
+									ShiftAllowance = periodTotals.get("PAYROL_BEN_SHIFT");
+									if(UtilValidate.isEmpty(ShiftAllowance)){
+										ShiftAllowance = 0;
+									}
+									CanteenAllowance = periodTotals.get("PAYROL_BEN_CANTN");
+									if(UtilValidate.isEmpty(CanteenAllowance)){
+										CanteenAllowance = 0;
+									}
+									AttendanceBonus = periodTotals.get("PAYROL_BEN_ATNDBON");
+									if(UtilValidate.isEmpty(AttendanceBonus)){
+										AttendanceBonus = 0;
+									}
+									FieldAllowance = periodTotals.get("PAYROL_BEN_FIELD");
+									if(UtilValidate.isEmpty(FieldAllowance)){
+										FieldAllowance = 0;
+									}
+									SpecialPay = periodTotals.get("PAYROL_BEN_SPELPAY");
+									if(UtilValidate.isEmpty(SpecialPay)){
+										SpecialPay = 0;
+									}
+									GeneralHolidayWages = periodTotals.get("PAYROL_BEN_GEN_HOL_W");
+									if(UtilValidate.isEmpty(GeneralHolidayWages)){
+										GeneralHolidayWages = 0;
+									}
+									SecondSaturdayWages = periodTotals.get("PAYROL_BEN_SECSATDAY");
+									if(UtilValidate.isEmpty(SecondSaturdayWages)){
+										SecondSaturdayWages = 0;
+									}
+									EmployeeStateInsurance = periodTotals.get("PAYROL_DD_ESI");
+									if(UtilValidate.isEmpty(EmployeeStateInsurance)){
+										MedicalAllowance = periodTotals.get("PAYROL_BEN_MED_ALLOW");
+										if(UtilValidate.isEmpty(MedicalAllowance)){
+											MedicalAllowance = 0;
 										}
-										houseRentAllowance = periodTotals.get("PAYROL_BEN_HRA");
-										if(UtilValidate.isEmpty(houseRentAllowance)){
-											houseRentAllowance = 0;
+									}
+									others = basic+dearnessAllowance+houseRentAllowance+cityComp+HeatAllowance+CashAllowance+coldAllowance+convey+ShiftAllowance;
+									Wages = others+CanteenAllowance+attendanceBonus+FieldAllowance+SpecialPay+GeneralHolidayWages+SecondSaturdayWages+MedicalAllowance;
+									detailsMap.put("Wages",Wages);
+									employeeContribtn=0;
+									employerContribtn=0;
+									pensionAmount = 0;
+									headerIdsList.each{ headerId ->
+										headerId = headerId.payrollHeaderId;
+										employeCont=0;
+										employerCont=0;
+										pension=0;
+										List employeeConditionList=[];
+										employeeConditionList.add(EntityCondition.makeCondition("payrollHeaderId", EntityOperator.EQUALS, headerId));
+										employeeConditionList.add(EntityCondition.makeCondition("payrollHeaderItemTypeId", EntityOperator.EQUALS, "PAYROL_DD_EPF"));
+										employeeCondition = EntityCondition.makeCondition(employeeConditionList,EntityOperator.AND);
+										employeeList = delegator.findList("PayrollHeaderItem", employeeCondition, null, null, null, false);
+										if(UtilValidate.isNotEmpty(employeeList)){
+											employeeList.each{ empList ->
+												employeCont = empList.amount;
+												employeCont = employeCont.abs();
+												employeeContribtn = employeeContribtn+employeCont;
+											}
+											detailsMap.put("employeeContribtn",employeeContribtn);
 										}
-										cityComp = periodTotals.get("PAYROL_BEN_CITYCOMP");
-										if(UtilValidate.isEmpty(cityComp)){
-											cityComp = 0;
-										}
-										HeatAllowance = periodTotals.get("PAYROL_BEN_HEATALLOW");
-										if(UtilValidate.isEmpty(HeatAllowance)){
-											HeatAllowance = 0;
-										}
-										CashAllowance = periodTotals.get("PAYROL_BEN_CASH");
-										if(UtilValidate.isEmpty(CashAllowance)){
-											CashAllowance = 0;
-										}
-										coldAllowance = periodTotals.get("PAYROL_BEN_COLDALLOW");
-										if(UtilValidate.isEmpty(coldAllowance)){
-											coldAllowance = 0;
-										}
-										convey = periodTotals.get("PAYROL_BEN_CONVEY");
-										if(UtilValidate.isEmpty(convey)){
-											convey = 0;
-										}
-										ShiftAllowance = periodTotals.get("PAYROL_BEN_SHIFT");
-										if(UtilValidate.isEmpty(ShiftAllowance)){
-											ShiftAllowance = 0;
-										}
-										CanteenAllowance = periodTotals.get("PAYROL_BEN_CANTN");
-										if(UtilValidate.isEmpty(CanteenAllowance)){
-											CanteenAllowance = 0;
-										}
-										AttendanceBonus = periodTotals.get("PAYROL_BEN_ATNDBON");
-										if(UtilValidate.isEmpty(AttendanceBonus)){
-											AttendanceBonus = 0;
-										}
-										FieldAllowance = periodTotals.get("PAYROL_BEN_FIELD");
-										if(UtilValidate.isEmpty(FieldAllowance)){
-											FieldAllowance = 0;
-										}
-										SpecialPay = periodTotals.get("PAYROL_BEN_SPELPAY");
-										if(UtilValidate.isEmpty(SpecialPay)){
-											SpecialPay = 0;
-										}
-										GeneralHolidayWages = periodTotals.get("PAYROL_BEN_GEN_HOL_W");
-										if(UtilValidate.isEmpty(GeneralHolidayWages)){
-											GeneralHolidayWages = 0;
-										}
-										SecondSaturdayWages = periodTotals.get("PAYROL_BEN_SECSATDAY");
-										if(UtilValidate.isEmpty(SecondSaturdayWages)){
-											SecondSaturdayWages = 0;
-										}
-										EmployeeStateInsurance = periodTotals.get("PAYROL_DD_ESI");
-										if(UtilValidate.isEmpty(EmployeeStateInsurance)){
-											MedicalAllowance = periodTotals.get("PAYROL_BEN_MED_ALLOW");
-											if(UtilValidate.isEmpty(MedicalAllowance)){
-												MedicalAllowance = 0;
+										List emplyrConditionList=[];
+										emplyrConditionList.add(EntityCondition.makeCondition("payrollHeaderId", EntityOperator.EQUALS, headerId));
+										emplyrConditionList.add(EntityCondition.makeCondition("payrollHeaderItemTypeId", EntityOperator.EQUALS, "PAYROL_BEN_PFEMPLYR"));
+										emplyrCondition = EntityCondition.makeCondition(emplyrConditionList,EntityOperator.AND);
+										employerList = delegator.findList("PayrollHeaderItemEc", emplyrCondition, null, null, null, false);
+										if(UtilValidate.isNotEmpty(employerList)){
+											employerList.each{ emplyrList ->
+												employerCont = emplyrList.amount;
+												employerContribtn = employerContribtn+employerCont;
 											}
 										}
-										others = basic+dearnessAllowance+houseRentAllowance+cityComp+HeatAllowance+CashAllowance+coldAllowance+convey+ShiftAllowance;
-										Wages = others+CanteenAllowance+attendanceBonus+FieldAllowance+SpecialPay+GeneralHolidayWages+SecondSaturdayWages+MedicalAllowance;
-										employeeContribtn=0;
-										employerContribtn=0;
-										pensionAmount = 0;
-										deductionAmt = 0;
-										headerIdsList.each{ headerId ->
-											headerId = headerId.payrollHeaderId;
-											employeCont=0;
-											employerCont=0;
-											pension=0;
-											List employeeConditionList=[];
-											employeeConditionList.add(EntityCondition.makeCondition("payrollHeaderId", EntityOperator.EQUALS, headerId));
-											employeeConditionList.add(EntityCondition.makeCondition("payrollHeaderItemTypeId", EntityOperator.EQUALS, "PAYROL_DD_EPF"));
-											employeeCondition = EntityCondition.makeCondition(employeeConditionList,EntityOperator.AND);
-											employeeList = delegator.findList("PayrollHeaderItem", employeeCondition, null, null, null, false);
-											if(UtilValidate.isNotEmpty(employeeList)){
-												employeeList.each{ empList ->
-													employeCont = empList.amount;
-													employeCont = -(employeCont);
-													employeeContribtn = employeeContribtn+employeCont;
-												}
-											}
-											List emplyrConditionList=[];
-											emplyrConditionList.add(EntityCondition.makeCondition("payrollHeaderId", EntityOperator.EQUALS, headerId));
-											emplyrConditionList.add(EntityCondition.makeCondition("payrollHeaderItemTypeId", EntityOperator.EQUALS, "PAYROL_BEN_PFEMPLYR"));
-											emplyrCondition = EntityCondition.makeCondition(emplyrConditionList,EntityOperator.AND);
-											employerList = delegator.findList("PayrollHeaderItemEc", emplyrCondition, null, null, null, false);
-											if(UtilValidate.isNotEmpty(employerList)){
-												employerList.each{ emplyrList ->
-													employerCont = emplyrList.amount;
-													employerContribtn = employerContribtn+employerCont;
-												}
-											}
-											List pensionList=[];
-											pensionList.add(EntityCondition.makeCondition("payrollHeaderId", EntityOperator.EQUALS, headerId));
-											pensionList.add(EntityCondition.makeCondition("payrollHeaderItemTypeId", EntityOperator.EQUALS, "PAYROL_BEN_PENS"));
-											pensionCondition = EntityCondition.makeCondition(pensionList,EntityOperator.AND);
-											pensionList = delegator.findList("PayrollHeaderItemEc", pensionCondition, null, null, null, false);
-											if(UtilValidate.isNotEmpty(pensionList)){
-												pensionList.each{ penList ->
-													pension = penList.amount;
-													pensionAmount = pensionAmount+pension;
-												}
-											}
-											if(dedTypeId == "PAYROL_DD_EPF"){
-												detailsMap.put("wages",wages);
-												detailsMap.put("employeeContribtn",employeeContribtn);
-												detailsMap.put("employerContribtn",employerContribtn);
-												detailsMap.put("Pension",pensionAmount);
+										detailsMap.put("employerContribtn",employerContribtn);
+										List pensionList=[];
+										pensionList.add(EntityCondition.makeCondition("payrollHeaderId", EntityOperator.EQUALS, headerId));
+										pensionList.add(EntityCondition.makeCondition("payrollHeaderItemTypeId", EntityOperator.EQUALS, "PAYROL_BEN_PENS"));
+										pensionCondition = EntityCondition.makeCondition(pensionList,EntityOperator.AND);
+										pensionList = delegator.findList("PayrollHeaderItemEc", pensionCondition, null, null, null, false);
+										if(UtilValidate.isNotEmpty(pensionList)){
+											pensionList.each{ penList ->
+												pension = penList.amount;
+												pensionAmount = pensionAmount+pension;
 											}
 										}
+										detailsMap.put("pensionAmount",pensionAmount);
 									}
 								}
 							}
 						}
 					}
+					accountNo = 0;
 					deductionAmt=0;
 					balance = 0;
+					gisNo = 0;
 					headerIdsList.each{ headerId ->
 						headerId = headerId.payrollHeaderId;
 						deductionAmount = 0;
-						accountNo = 0;
 						closingBalance = 0;
 						polNo = 0;
 						premium = 0;
@@ -255,17 +252,16 @@ dedTypeIds.each{ dedTypeId->
 						deductionsList.add(EntityCondition.makeCondition("partyIdFrom", EntityOperator.EQUALS, employeeId));
 						deductionsList.add(EntityCondition.makeCondition("payrollHeaderItemTypeId", EntityOperator.EQUALS, dedTypeId));
 						deductionsCondition = EntityCondition.makeCondition(deductionsList,EntityOperator.AND);
+						def orderBy = UtilMisc.toList("amount","partyIdFrom");
 						payrollHeaderList = delegator.findList("PayrollHeaderAndHeaderItem", deductionsCondition, null, null, null, false);
 						if(UtilValidate.isNotEmpty(payrollHeaderList)){
 							payrollHeaderList.each{ payrollList ->
 								deductionAmount = payrollList.amount;
-								deductionAmount = -(deductionAmount);
+								deductionAmount = deductionAmount.abs();
 								deductionAmt = deductionAmt+deductionAmount;
 							}
 						}
-						detailsMap.put("accountNo",accountNo);
 						detailsMap.put("deductionAmt",deductionAmt);
-						detailsMap.put("balance",balance);
 					}
 					List loanRecoveryList=[];
 					loanRecoveryList.add(EntityCondition.makeCondition("partyId", EntityOperator.EQUALS, employeeId));
@@ -281,6 +277,8 @@ dedTypeIds.each{ dedTypeId->
 							}
 						}
 					}
+					detailsMap.put("accountNo",accountNo);
+					detailsMap.put("balance",balance);
 					List partyInsuranceConditionList=[];
 					partyInsuranceConditionList.add(EntityCondition.makeCondition("partyId", EntityOperator.EQUALS, employeeId));
 					partyInsuranceConditionList.add(EntityCondition.makeCondition("insuranceTypeId", EntityOperator.EQUALS, dedTypeId));
@@ -296,6 +294,15 @@ dedTypeIds.each{ dedTypeId->
 							detailsMap.put("polDetails",polacyDetailsMap);
 						}
 					}
+					gisNoDetails = [];
+					gisNoDetails = delegator.findOne("EmployeeDetail",[partyId : employeeId ], false);
+					if(UtilValidate.isNotEmpty(gisNoDetails)){
+						gisNum = gisNoDetails.presentEpf;
+					}
+					if(UtilValidate.isNotEmpty(gisNum)){
+						gisNo = gisNum.trim()
+					}
+					detailsMap.put("gisNo",gisNo);
 				}
 			}
 			if(UtilValidate.isNotEmpty(detailsMap)){
