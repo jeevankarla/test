@@ -52,7 +52,7 @@ if(UtilValidate.isNotEmpty(BankAdvicePayRollMap)){
 	  if(UtilValidate.isNotEmpty(contactNumberTo)){
 			sendSmsParams.put("contactNumberTo", contactNumberTo);
 			sendSmsParams.put("text",text);
-			//dispatcher.runAsync("sendSms", sendSmsParams,false);
+			dispatcher.runAsync("sendSms", sendSmsParams,false);
 		}
 	}
 }
