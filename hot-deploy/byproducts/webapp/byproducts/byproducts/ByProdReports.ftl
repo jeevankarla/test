@@ -1137,7 +1137,7 @@ function reportTypeChangeFunc() {
 			        </tr>
 			        <tr class="alternate-row">
       					<form id="IceCreamDuesAbstractReport" name="IceCreamDuesAbstractReport" method="post" action="<@ofbizUrl>iceCreamDueParticulars.pdf</@ofbizUrl>" target="_blank">	
-      						<td width="30%">Ice Cream Sundry Debitor Report
+      						<td width="30%">Ice Cream Sundry Debtor Report
 							<td width="15%">From<input  type="text" size="18pt" id="iceDueFromDateId" readonly  name="fromDate"/></td>
 			      			<td width="15%">Thru<input  type="text" size="18pt" id="iceDueThruDateId" readonly  name="thruDate"/></td>
 			      			<td width="15%">Category<select name="categoryType">
