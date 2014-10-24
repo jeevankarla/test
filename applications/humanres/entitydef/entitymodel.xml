@@ -1823,6 +1823,7 @@ under the License.
       <field name="partyId" type="id-ne"></field>
       <field name="loanTypeId" type="id-ne"></field>
       <field name="statusId" type="id-ne"></field>
+      <field name="loanFinAccountId" type="id-ne"></field>
       <field name="description" type="description"></field>
       <field name="sanctionedAmount" type="currency-amount"></field>
       <field name="principalAmount" type="currency-amount"></field>
