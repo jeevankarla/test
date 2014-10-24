@@ -544,7 +544,8 @@ under the License.
             </drop-down>
         </field>
         <field name="amount" required-field="true"><text/></field>
-        <field name="contraRefNum" title="Trans Ref. Num"><text/></field>         
+        <field name="contraRefNum" title="Instrument No"><text/></field>
+        <field name="inFavor" title="Cheque Infavor of"><text/></field>         
         <field name="comments"><text/></field>
         <field name="finAccountTransTypeId"><hidden value="WITHDRAWAL"/></field>
         <field name="currencyUomId"><hidden value="INR"/></field>

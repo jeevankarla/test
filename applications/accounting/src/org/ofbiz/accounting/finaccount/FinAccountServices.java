@@ -264,6 +264,7 @@ public class FinAccountServices {
         String comments = (String) context.get("comments");
         Timestamp transactionDate = (Timestamp) context.get("transactionDate");
         BigDecimal amount = (BigDecimal) context.get("amount");
+        String inFavor = (String) context.get("inFavor");
         amount = amount.abs();
         String parentTypeId = (String) context.get("acctParentTypeId");
         Map<String, Object> result = ServiceUtil.returnSuccess();
@@ -303,6 +304,15 @@ public class FinAccountServices {
                  return createResult;
              }
              
+             String finAccountTransId = (String)createResult.get("finAccountTransId");
+             if(UtilValidate.isNotEmpty(inFavor)){
+             	
+             	GenericValue newTransAttr = delegator.makeValue("FinAccountTransAttribute");        	 
+             	newTransAttr.set("finAccountTransId", finAccountTransId);
+             	newTransAttr.set("attrName", "INFAVOUR_OF");
+             	newTransAttr.set("attrValue", inFavor);
+             	delegator.createOrStore(newTransAttr);
+             }
 
         } catch (Exception ex) {
             return ServiceUtil.returnError(ex.getMessage());
