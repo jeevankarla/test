@@ -191,7 +191,7 @@ under the License.
         <field name="contraRefNum" title="Instrument Number"><display></display></field>
         <field name="transactionDate" title="Transaction Date"><display></display></field>
         <field name="amount" title="Amount"><display></display></field>
-        <field use-when="&quot;${finAccountTransTypeId}&quot;==&quot;WITHDRAWAL&quot;" name="Print Cheque" widget-style="buttontext" >
+        <field use-when="&quot;${finAccountTransTypeId}&quot;==&quot;DEPOSIT&quot;" name="Print Cheque" widget-style="buttontext" >
             <hyperlink target="printChecks.pdf" description="Print Cheque" target-window="_blank">
              <parameter param-name="finAccountId"/>
              <parameter param-name="reportTypeFlag" value="depositCheque"/>
