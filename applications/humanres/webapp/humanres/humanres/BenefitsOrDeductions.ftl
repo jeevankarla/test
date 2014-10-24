@@ -289,7 +289,8 @@ function updateEmployeeBenefitsOrDedEntryInternal(formName, action, row) {
             	    $('div#updateEntryMsg').removeClass("errorMessage");           	 
             	   $('div#updateEntryMsg').addClass("messageStr");
             	   $('div#updateEntryMsg').html('<label>succesfully updated.</label>'); 
-            	   $('div#updateEntryMsg').delay(5000).fadeOut('slow');  
+            	   $('div#updateEntryMsg').delay(5000).fadeOut('slow');
+            	   $($('.grid-canvas').children()[row]).css('background-color','#FAAC58');   
                }
                
              } ,
