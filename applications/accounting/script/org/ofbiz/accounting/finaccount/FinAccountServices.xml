@@ -292,6 +292,27 @@ under the License.
 				<result-to-result result-name="finAccountTransId"/>
 				<result-to-field result-name="finAccountTransId" field="finAccountTransId1"/>
 			</call-service>
+			<if-not-empty field="parameters.comments">
+				<if-not-empty field="finAccountTransId1">
+		        	<entity-one entity-name="FinAccountTransAttribute" value-field="newEntity">
+		                <field-map field-name="finAccountTransId" from-field="finAccountTransId1"/>
+		                <field-map field-name="attrName" value="INFAVOUR_OF"/>
+		            </entity-one>
+		        	<if-empty field="newEntity">
+				       	<make-value entity-name="FinAccountTransAttribute" value-field="newEntity"/>
+				        	<set field="newEntity.finAccountTransId" from-field="finAccountTransId1"/>
+				        	<set field="newEntity.attrName" value="INFAVOUR_OF"/>
+				        	<set field="newEntity.attrValue" from-field="parameters.comments"/>
+				        <create-value value-field="newEntity"/>
+			        <else>
+				        <set field="newEntity.finAccountTransId" from-field="finAccountTransId1"/>
+			        	<set field="newEntity.attrName" value="INFAVOUR_OF"/>
+			        	<set field="newEntity.attrValue" from-field="parameters.comments"/>
+			       		<store-value value-field="newEntity"/>
+			        </else>
+        			</if-empty>
+        		</if-not-empty>
+			</if-not-empty>
 			<check-errors/>
 			<!--creating  transaction in other contra FinAccount  -->
 			<set field="createContraFinAccountTransMap" from-field="createFinAccountTransMap"/>

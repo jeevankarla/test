@@ -80,6 +80,7 @@ comments = "";
 reportTypeFlag = context.reportTypeFlag;
 if(UtilValidate.isNotEmpty(reportTypeFlag) && reportTypeFlag == "contraCheque"){
 	finAccountId = parameters.finAccountId;
+	finAccountTransId = parameters.finAccountTransId;
 	if(finAccountId.contains("FIN_ACCNT")){
 		if(UtilValidate.isNotEmpty(finAccountId)){
 			amount = parameters.amount;
@@ -96,10 +97,19 @@ if(UtilValidate.isNotEmpty(reportTypeFlag) && reportTypeFlag == "contraCheque"){
 				Debug.logError(e, "Cannot parse date string: " + transactionDateStr, "");
 			}
 			
+			if(UtilValidate.isNotEmpty(finAccountTransId)){
+				finAccountTransAttrDetails = delegator.findOne("FinAccountTransAttribute", [finAccountTransId : finAccountTransId, attrName : "INFAVOUR_OF"], false);
+				if(UtilValidate.isNotEmpty(finAccountTransAttrDetails)){
+					attrValue = finAccountTransAttrDetails.attrValue;
+				}
+			}
+			
 			if(UtilValidate.isNotEmpty(finAccountId)){
 				context.put("finAccountId",finAccountId);
 			}
-			if(UtilValidate.isNotEmpty(comments)){
+			if(UtilValidate.isNotEmpty(attrValue)){
+				context.put("attrValue",attrValue);
+			}else{
 				context.put("attrValue",comments);
 			}
 			if(UtilValidate.isNotEmpty(paymentDate)){
@@ -139,6 +149,13 @@ if(UtilValidate.isNotEmpty(reportTypeFlag) && reportTypeFlag == "contraCheque"){
 									paymentDate = newfinAccountTransDetails.transactionDate;
 									comments = newfinAccountTransDetails.comments;
 									
+									if(UtilValidate.isNotEmpty(newFinAccountTransId)){
+										finAccountTransAttrDetails = delegator.findOne("FinAccountTransAttribute", [finAccountTransId : newFinAccountTransId, attrName : "INFAVOUR_OF"], false);
+										if(UtilValidate.isNotEmpty(finAccountTransAttrDetails)){
+											attrValue = finAccountTransAttrDetails.attrValue;
+										}
+									}
+									
 									BigDecimal amount = new BigDecimal(amount);
 									amountWords = UtilFormatOut.formatCurrency(amount, context.get("currencyUomId"), locale);
 									amountStr = amountWords.replace("Rs"," ");
@@ -146,7 +163,9 @@ if(UtilValidate.isNotEmpty(reportTypeFlag) && reportTypeFlag == "contraCheque"){
 									if(UtilValidate.isNotEmpty(finAccountId)){
 										context.put("finAccountId",finAccountId);
 									}
-									if(UtilValidate.isNotEmpty(comments)){
+									if(UtilValidate.isNotEmpty(attrValue)){
+										context.put("attrValue",attrValue);
+									}else{
 										context.put("attrValue",comments);
 									}
 									if(UtilValidate.isNotEmpty(paymentDate)){
