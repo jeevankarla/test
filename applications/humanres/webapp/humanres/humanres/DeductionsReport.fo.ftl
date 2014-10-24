@@ -76,7 +76,7 @@ under the License.
 	     					</fo:table>
 	     				</fo:block>
 	     			</#if>
-		       		<#if (headerDetails.getKey() != "PAYROL_DD_EPF") && (headerDetails.getKey() != "PAYROL_DD_APGLIF") && (headerDetails.getKey() != "PAYROL_DD_SSS") && (headerDetails.getKey() != "PAYROL_DD_GIS")>
+		       		<#if (headerDetails.getKey() != "PAYROL_DD_EPF") && (headerDetails.getKey() != "PAYROL_DD_APGLIF") && (headerDetails.getKey() != "PAYROL_DD_SSS") && (headerDetails.getKey() != "PAYROL_DD_GIS") && (headerDetails.getKey() != "PAYROL_DD_PTAX")>
 	     				<fo:block font-family="Courier,monospace">
 	     					<fo:table>
 		       					<fo:table-column column-width="50pt"/>
@@ -114,6 +114,26 @@ under the License.
 		       						<fo:table-cell><fo:block text-align="center" keep-together="always" font-size="12pt" font-weight="bold" border-style="solid">DESIGNATION</fo:block></fo:table-cell>
 		       						<fo:table-cell><fo:block text-align="center" keep-together="always" font-size="12pt" font-weight="bold" border-style="solid">APGLIF</fo:block></fo:table-cell>
 		       						<fo:table-cell><fo:block text-align="center" keep-together="always" font-size="10pt" font-weight="bold" border-style="solid">APG.LN</fo:block></fo:table-cell>
+		       					</fo:table-body>
+	     					</fo:table>
+	     				</fo:block>
+	     			</#if>
+	     			<#if headerDetails.getKey() == "PAYROL_DD_PTAX">
+	     				<fo:block font-family="Courier,monospace">
+	     					<fo:table>
+	           					<fo:table-column column-width="50pt"/>
+		     					<fo:table-column column-width="60pt"/>
+		     					<fo:table-column column-width="150pt"/>
+		     					<fo:table-column column-width="180pt"/>
+		     					<fo:table-column column-width="150pt"/>
+		       					<fo:table-column column-width="150pt"/>
+		       					<fo:table-body>
+		       						<fo:table-cell><fo:block text-align="center" keep-together="always" font-size="12pt" font-weight="bold" border-style="solid">SL NO:</fo:block></fo:table-cell>
+		       						<fo:table-cell><fo:block text-align="center" keep-together="always" font-size="12pt" font-weight="bold" border-style="solid">EMPNO</fo:block></fo:table-cell>
+		       						<fo:table-cell><fo:block text-align="center" keep-together="always" font-size="12pt" font-weight="bold" border-style="solid">EMP NAME</fo:block></fo:table-cell>
+		       						<fo:table-cell><fo:block text-align="center" keep-together="always" font-size="12pt" font-weight="bold" border-style="solid">DESIGNATION</fo:block></fo:table-cell>
+		       						<fo:table-cell><fo:block text-align="center" keep-together="always" font-size="12pt" font-weight="bold" border-style="solid">GROSS</fo:block></fo:table-cell>
+		       						<fo:table-cell><fo:block text-align="center" keep-together="always" font-size="10pt" font-weight="bold" border-style="solid">AMOUNT</fo:block></fo:table-cell>
 		       					</fo:table-body>
 	     					</fo:table>
 	     				</fo:block>
@@ -175,7 +195,7 @@ under the License.
 		       					<fo:table-column column-width="100pt"/>
 		       					<fo:table-column column-width="90pt"/>
 	       					</#if>
-		       				<#if (headerDetails.getKey()!="PAYROL_DD_EPF") && (headerDetails.getKey()!="PAYROL_DD_APGLIF") && (headerDetails.getKey()!="PAYROL_DD_SSS") && (headerDetails.getKey() != "PAYROL_DD_GIS")>
+		       				<#if (headerDetails.getKey()!="PAYROL_DD_EPF") && (headerDetails.getKey()!="PAYROL_DD_APGLIF") && (headerDetails.getKey()!="PAYROL_DD_SSS") && (headerDetails.getKey() != "PAYROL_DD_GIS") && (headerDetails.getKey() != "PAYROL_DD_PTAX")>
 		       					<fo:table-column column-width="50pt"/>
 		     					<fo:table-column column-width="60pt"/>
 		     					<fo:table-column column-width="150pt"/>
@@ -185,6 +205,14 @@ under the License.
 		       					<fo:table-column column-width="90pt"/>
 		       				</#if>
 	     					<#if  headerDetails.getKey() == "PAYROL_DD_APGLIF">
+	           					<fo:table-column column-width="50pt"/>
+		     					<fo:table-column column-width="60pt"/>
+		     					<fo:table-column column-width="150pt"/>
+		     					<fo:table-column column-width="180pt"/>
+		     					<fo:table-column column-width="150pt"/>
+		       					<fo:table-column column-width="150pt"/>
+	       					</#if>
+	       					<#if  headerDetails.getKey() == "PAYROL_DD_PTAX">
 	           					<fo:table-column column-width="50pt"/>
 		     					<fo:table-column column-width="60pt"/>
 		     					<fo:table-column column-width="150pt"/>
@@ -215,7 +243,10 @@ under the License.
    							<#assign totalPension =0>
    							<#assign totalRecovery =0>
    							<#assign totalBalance = 0>
+   							<#assign totalGisAmt = 0>
    							<#assign totalAmt =0>
+   							<#assign totalApglifAmt =0>
+   							<#assign totalPfAmt =0>
    							<#assign totalDeduction =0>
 							<fo:table-body>
 								<#list deductionTypes as deductionType>
@@ -242,7 +273,7 @@ under the License.
 				       						</fo:table-row>
 			       						</#if>
 			       					</#if>
-		       						<#if (headerDetails.getKey()!="PAYROL_DD_EPF") && (headerDetails.getKey()!="PAYROL_DD_APGLIF") && (headerDetails.getKey()!="PAYROL_DD_SSS") && (headerDetails.getKey() != "PAYROL_DD_GIS")>
+		       						<#if (headerDetails.getKey()!="PAYROL_DD_EPF") && (headerDetails.getKey()!="PAYROL_DD_APGLIF") && (headerDetails.getKey()!="PAYROL_DD_SSS") && (headerDetails.getKey() != "PAYROL_DD_GIS") && (headerDetails.getKey() != "PAYROL_DD_PTAX")>
 		       							<fo:table-row>
 											<fo:table-cell><fo:block keep-together="always" border-style="solid">${sno}</fo:block></fo:table-cell>
 											<fo:table-cell><fo:block keep-together="always" text-align="right" border-style="solid">${deductionType.getKey()}</fo:block></fo:table-cell>
@@ -272,9 +303,23 @@ under the License.
 					       						<fo:table-cell><fo:block keep-together="always"  text-align="left" border-style="solid" text-indent="5pt"><#if designationName?has_content>${designationName?if_exists}<#else><#if designation?has_content>${designation.description?if_exists}</#if></#if></fo:block></fo:table-cell>		       							
 						       					<fo:table-cell><fo:block keep-together="always" text-align="right" border-style="solid">${deductionType.getValue().get("deductionAmt")?if_exists}</fo:block></fo:table-cell>
 				       							<fo:table-cell><fo:block keep-together="always" text-align="right" border-style="solid">0</fo:block></fo:table-cell>
-				       							<#assign totalAmt =totalAmt + deductionType.getValue().get("deductionAmt")>
+				       							<#assign totalApglifAmt =totalApglifAmt + deductionType.getValue().get("deductionAmt")>
 		       								</fo:table-row>
 		       							</#if>
+		       						</#if>
+		       						<#if  headerDetails.getKey() == "PAYROL_DD_PTAX">
+			       							<fo:table-row>
+												<fo:table-cell><fo:block keep-together="always" border-style="solid">${sno}</fo:block></fo:table-cell>
+												<fo:table-cell><fo:block keep-together="always" text-align="right" border-style="solid">${deductionType.getKey()?if_exists}</fo:block></fo:table-cell>
+												<fo:table-cell><fo:block keep-together="always"  text-align="left" border-style="solid" text-indent="5pt">${Static["org.ofbiz.order.order.OrderServices"].nameTrim((StringUtil.wrapString(Static["org.ofbiz.party.party.PartyHelper"].getPartyName(delegator, deductionType.getKey(), false))),15)}</fo:block></fo:table-cell>
+												<#assign designationId = emplPositionAndFulfilment[0].emplPositionTypeId>
+												<#assign designation = delegator.findOne("EmplPositionType", {"emplPositionTypeId" : designationId?if_exists}, true)>
+												<#assign designationName=emplPositionAndFulfilment[0].name?if_exists>
+					       						<fo:table-cell><fo:block keep-together="always"  text-align="left" border-style="solid" text-indent="5pt"><#if designationName?has_content>${designationName?if_exists}<#else><#if designation?has_content>${designation.description?if_exists}</#if></#if></fo:block></fo:table-cell>		       							
+						       					<fo:table-cell><fo:block keep-together="always" text-align="right" border-style="solid">${deductionType.getValue().get("gross")?if_exists}</fo:block></fo:table-cell>
+				       							<fo:table-cell><fo:block keep-together="always" text-align="right" border-style="solid">${deductionType.getValue().get("deductionAmt")?if_exists}</fo:block></fo:table-cell>
+				       							<#assign totalPfAmt =totalPfAmt + deductionType.getValue().get("deductionAmt")>
+		       								</fo:table-row>
 		       						</#if>
 		       						<#if  headerDetails.getKey() == "PAYROL_DD_GIS">
 		       								<fo:table-row>
@@ -287,7 +332,7 @@ under the License.
 					       						<fo:table-cell><fo:block keep-together="always"  text-align="left" border-style="solid" text-indent="5pt"><#if designationName?has_content>${designationName?if_exists}<#else><#if designation?has_content>${designation.description?if_exists}</#if></#if></fo:block></fo:table-cell>		       							
 						       					<fo:table-cell><fo:block keep-together="always" text-align="right" border-style="solid">${deductionType.getValue().get("gisNo")?if_exists}</fo:block></fo:table-cell>
 						       					<fo:table-cell><fo:block keep-together="always" text-align="right" border-style="solid">${deductionType.getValue().get("deductionAmt")?if_exists}</fo:block></fo:table-cell>
-				       							<#assign totalAmt =totalAmt + deductionType.getValue().get("deductionAmt")>
+				       							<#assign totalGisAmt =totalGisAmt + deductionType.getValue().get("deductionAmt")>
 		       								</fo:table-row>
 		       						</#if>
 			       						<#if  headerDetails.getKey() == "PAYROL_DD_SSS">
@@ -335,7 +380,7 @@ under the License.
 		       							<fo:table-cell><fo:block keep-together="always" text-align="right" border-style="solid">${totalPension?if_exists}</fo:block></fo:table-cell>
 		       						</fo:table-row>
 		       					</#if>
-		       					<#if (headerDetails.getKey()!="PAYROL_DD_EPF") && (headerDetails.getKey()!="PAYROL_DD_APGLIF") && (headerDetails.getKey()!="PAYROL_DD_SSS") && (headerDetails.getKey() != "PAYROL_DD_GIS")>
+		       					<#if (headerDetails.getKey()!="PAYROL_DD_EPF") && (headerDetails.getKey()!="PAYROL_DD_APGLIF") && (headerDetails.getKey()!="PAYROL_DD_SSS") && (headerDetails.getKey() != "PAYROL_DD_GIS") && (headerDetails.getKey() != "PAYROL_DD_PTAX")>
 		       							<fo:table-row>
 											<fo:table-cell><fo:block keep-together="always" border-style="solid"></fo:block></fo:table-cell>
 											<fo:table-cell><fo:block keep-together="always" text-align="right" border-style="solid"></fo:block></fo:table-cell>
@@ -351,8 +396,17 @@ under the License.
 											<fo:table-cell><fo:block keep-together="always" border-style="solid"></fo:block></fo:table-cell>
 											<fo:table-cell><fo:block keep-together="always" text-align="right" border-style="solid"></fo:block></fo:table-cell>
 											<fo:table-cell><fo:block keep-together="always"  text-align="left" border-style="solid" text-indent="5pt">TOTAL:</fo:block></fo:table-cell>
-			       							<fo:table-cell><fo:block keep-together="always" text-align="right" border-style="solid">${totalAmt?if_exists}</fo:block></fo:table-cell>
+			       							<fo:table-cell><fo:block keep-together="always" text-align="right" border-style="solid">${totalApglifAmt?if_exists}</fo:block></fo:table-cell>
 			       							<fo:table-cell><fo:block keep-together="always" text-align="right" border-style="solid">0</fo:block></fo:table-cell>
+		       							</fo:table-row>
+		       					</#if>
+		       					<#if  parameters.dedTypeId == "PAYROL_DD_PTAX">
+		       							<fo:table-row>
+											<fo:table-cell><fo:block keep-together="always" border-style="solid"></fo:block></fo:table-cell>
+											<fo:table-cell><fo:block keep-together="always" text-align="right" border-style="solid"></fo:block></fo:table-cell>
+											<fo:table-cell><fo:block keep-together="always"  text-align="left" border-style="solid" text-indent="5pt">TOTAL:</fo:block></fo:table-cell>
+			       							<fo:table-cell><fo:block keep-together="always" text-align="right" border-style="solid">.</fo:block></fo:table-cell>
+			       							<fo:table-cell><fo:block keep-together="always" text-align="right" border-style="solid">${totalPfAmt?if_exists}</fo:block></fo:table-cell>
 		       							</fo:table-row>
 		       					</#if>
 		       					<#if  parameters.dedTypeId == "PAYROL_DD_GIS">
@@ -361,7 +415,7 @@ under the License.
 											<fo:table-cell><fo:block keep-together="always" text-align="right" border-style="solid"></fo:block></fo:table-cell>
 											<fo:table-cell><fo:block keep-together="always"  text-align="left" border-style="solid" text-indent="5pt">TOTAL:</fo:block></fo:table-cell>
 			       							<fo:table-cell><fo:block keep-together="always" text-align="right" border-style="solid">.</fo:block></fo:table-cell>
-			       							<fo:table-cell><fo:block keep-together="always" text-align="right" border-style="solid">${totalAmt?if_exists}</fo:block></fo:table-cell>
+			       							<fo:table-cell><fo:block keep-together="always" text-align="right" border-style="solid">${totalGisAmt?if_exists}</fo:block></fo:table-cell>
 		       							</fo:table-row>
 		       					</#if>
 			       				<#if  parameters.dedTypeId == "PAYROL_DD_SSS">

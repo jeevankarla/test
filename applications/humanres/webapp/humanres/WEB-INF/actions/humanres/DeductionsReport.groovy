@@ -87,36 +87,19 @@ dedTypeIds.each{ dedTypeId->
 				headerCondition = EntityCondition.makeCondition(headerConditionList,EntityOperator.AND);
 				headerIdsList = delegator.findList("PayrollHeader", headerCondition, null, null, null, false);
 				if(UtilValidate.isNotEmpty(headerIdsList)){
-					if(dedTypeId.equals("PAYROL_DD_EPF")){
-						customTimePeriodTotals = PayrollService.getEmployeeSalaryTotalsForPeriod(dctx,UtilMisc.toMap("partyId",employeeId,"fromDate",timePeriodStart,"thruDate",timePeriodEnd,"userLogin",userLogin)).get("periodTotalsForParty");
+					customTimePeriodTotals = PayrollService.getEmployeeSalaryTotalsForPeriod(dctx,UtilMisc.toMap("partyId",employeeId,"fromDate",timePeriodStart,"thruDate",timePeriodEnd,"userLogin",userLogin)).get("periodTotalsForParty");
 						if(UtilValidate.isNotEmpty(customTimePeriodTotals)){
 							Iterator customTimePeriodIter = customTimePeriodTotals.entrySet().iterator();
 							while(customTimePeriodIter.hasNext()){
 								Map.Entry customTimePeriodEntry = customTimePeriodIter.next();
 								if(customTimePeriodEntry.getKey() != "customTimePeriodTotals"){
 									periodTotals = customTimePeriodEntry.getValue().get("periodTotals");
+									if(dedTypeId.equals("PAYROL_DD_EPF")){
 									Wages =0;
 									basic = 0;
 									dearnessAllowance =0;
-									houseRentAllowance =0;
-									cityComp = 0;
-									HeatAllowance=0;
-									CashAllowance = 0;
-									coldAllowance = 0;
-									convey = 0;
-									ShiftAllowance = 0;
-									CanteenAllowance = 0;
-									attendanceBonus =0;
-									FieldAllowance = 0;
-									SpecialPay = 0;
-									GeneralHolidayWages = 0;
-									SecondSaturdayWages = 0;
-									personalPay =0;
-									secndSatDay =0;
-									shift =0;
-									washing =0;
-									others = 0;
-									totalBenefits = 0;
+									irAllowance =0;
+									personalPay = 0;
 									basic = periodTotals.get("PAYROL_BEN_SALARY");
 									if(UtilValidate.isEmpty(basic)){
 										basic = 0;
@@ -125,67 +108,15 @@ dedTypeIds.each{ dedTypeId->
 									if(UtilValidate.isEmpty(dearnessAllowance)){
 										dearnessAllowance = 0;
 									}
-									houseRentAllowance = periodTotals.get("PAYROL_BEN_HRA");
-									if(UtilValidate.isEmpty(houseRentAllowance)){
-										houseRentAllowance = 0;
+									irAllowance = periodTotals.get("PAYROL_BEN_IR");
+									if(UtilValidate.isEmpty(irAllowance)){
+										irAllowance = 0;
 									}
-									cityComp = periodTotals.get("PAYROL_BEN_CITYCOMP");
-									if(UtilValidate.isEmpty(cityComp)){
-										cityComp = 0;
+									personalPay = periodTotals.get("PAYROL_BEN_PNLPAY");
+									if(UtilValidate.isEmpty(personalPay)){
+										personalPay = 0;
 									}
-									HeatAllowance = periodTotals.get("PAYROL_BEN_HEATALLOW");
-									if(UtilValidate.isEmpty(HeatAllowance)){
-										HeatAllowance = 0;
-									}
-									CashAllowance = periodTotals.get("PAYROL_BEN_CASH");
-									if(UtilValidate.isEmpty(CashAllowance)){
-										CashAllowance = 0;
-									}
-									coldAllowance = periodTotals.get("PAYROL_BEN_COLDALLOW");
-									if(UtilValidate.isEmpty(coldAllowance)){
-										coldAllowance = 0;
-									}
-									convey = periodTotals.get("PAYROL_BEN_CONVEY");
-									if(UtilValidate.isEmpty(convey)){
-										convey = 0;
-									}
-									ShiftAllowance = periodTotals.get("PAYROL_BEN_SHIFT");
-									if(UtilValidate.isEmpty(ShiftAllowance)){
-										ShiftAllowance = 0;
-									}
-									CanteenAllowance = periodTotals.get("PAYROL_BEN_CANTN");
-									if(UtilValidate.isEmpty(CanteenAllowance)){
-										CanteenAllowance = 0;
-									}
-									AttendanceBonus = periodTotals.get("PAYROL_BEN_ATNDBON");
-									if(UtilValidate.isEmpty(AttendanceBonus)){
-										AttendanceBonus = 0;
-									}
-									FieldAllowance = periodTotals.get("PAYROL_BEN_FIELD");
-									if(UtilValidate.isEmpty(FieldAllowance)){
-										FieldAllowance = 0;
-									}
-									SpecialPay = periodTotals.get("PAYROL_BEN_SPELPAY");
-									if(UtilValidate.isEmpty(SpecialPay)){
-										SpecialPay = 0;
-									}
-									GeneralHolidayWages = periodTotals.get("PAYROL_BEN_GEN_HOL_W");
-									if(UtilValidate.isEmpty(GeneralHolidayWages)){
-										GeneralHolidayWages = 0;
-									}
-									SecondSaturdayWages = periodTotals.get("PAYROL_BEN_SECSATDAY");
-									if(UtilValidate.isEmpty(SecondSaturdayWages)){
-										SecondSaturdayWages = 0;
-									}
-									EmployeeStateInsurance = periodTotals.get("PAYROL_DD_ESI");
-									if(UtilValidate.isEmpty(EmployeeStateInsurance)){
-										MedicalAllowance = periodTotals.get("PAYROL_BEN_MED_ALLOW");
-										if(UtilValidate.isEmpty(MedicalAllowance)){
-											MedicalAllowance = 0;
-										}
-									}
-									others = basic+dearnessAllowance+houseRentAllowance+cityComp+HeatAllowance+CashAllowance+coldAllowance+convey+ShiftAllowance;
-									Wages = others+CanteenAllowance+attendanceBonus+FieldAllowance+SpecialPay+GeneralHolidayWages+SecondSaturdayWages+MedicalAllowance;
+									Wages = basic+dearnessAllowance+irAllowance+personalPay;
 									detailsMap.put("Wages",Wages);
 									employeeContribtn=0;
 									employerContribtn=0;
@@ -234,6 +165,12 @@ dedTypeIds.each{ dedTypeId->
 										detailsMap.put("pensionAmount",pensionAmount);
 									}
 								}
+								grossBenefitAmt = 0;
+								gross = periodTotals.get("grossBenefitAmt");
+								if(UtilValidate.isEmpty(gross)){
+									gross = 0;
+								}
+								detailsMap.put("gross",gross);
 							}
 						}
 					}
