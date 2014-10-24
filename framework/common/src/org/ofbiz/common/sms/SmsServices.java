@@ -13,6 +13,8 @@ import java.util.Map;
 import java.util.List;
 import java.util.Set;
 
+import javolution.util.FastList;
+
 import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.UtilProperties;
@@ -29,6 +31,7 @@ import org.ofbiz.entity.util.EntityListIterator;
 import org.ofbiz.entity.Delegator;
 import org.ofbiz.entity.GenericEntityException;
 import org.ofbiz.entity.GenericValue;
+import java.util.Arrays;
 
 public class SmsServices {
     public final static String module = SmsServices.class.getName();
@@ -63,7 +66,20 @@ public class SmsServices {
 		String mtype = UtilProperties.getPropertyValue("general.properties", "sms.mtype");
 		String DR = UtilProperties.getPropertyValue("general.properties", "sms.DR");
 		String gateway = UtilProperties.getPropertyValue("general.properties", "sms.gateway.url");		
-		String allowedtestlist = UtilProperties.getPropertyValue("general.properties", "sms.allowedtestlist");	
+		String allowedtestlist = UtilProperties.getPropertyValue("general.properties", "sms.allowedtestlist");
+		String allowedTenants = UtilProperties.getPropertyValue("general.properties", "sms.allowedTenants");
+		List allowedTenantList = FastList.newInstance();
+		if(UtilValidate.isNotEmpty(allowedTenants)){
+			String[] temp = allowedTenants.split(",");
+			allowedTenantList = Arrays.asList(temp);
+			String delegatorTenantId = delegator.getDelegatorTenantId().toUpperCase();
+			if(!allowedTenantList.contains(delegatorTenantId)){
+				  String errMsg = "Not sending sms to " + "[" + mobileNumber + "]. Test sms not enabled for this TenantId: "+delegatorTenantId;
+					Debug.logError(errMsg, module);
+		            return ServiceUtil.returnError(errMsg);	 
+			  }
+			
+		}
 		if (UtilValidate.isNotEmpty(allowedtestlist)) {
             boolean allowSms = false;
 			try {	
@@ -79,7 +95,7 @@ public class SmsServices {
 	            eli = delegator.find("ContactListPartyAndContactMechAndTelecomNumber", conditions, null, fieldsToSelect, null,
 	            		new EntityFindOptions(true, EntityFindOptions.TYPE_SCROLL_INSENSITIVE, EntityFindOptions.CONCUR_READ_ONLY, true));
 	            for (GenericValue contactListPartyAndContactMech; (contactListPartyAndContactMech = eli.next()) != null;) {
-	Debug.logInfo("Contact info: " + contactListPartyAndContactMech, module);
+	            			Debug.logInfo("Contact info: " + contactListPartyAndContactMech, module);
 	                String contactListItemNo = contactListPartyAndContactMech.getString("countryCode") + 
 	                	contactListPartyAndContactMech.getString("contactNumber");
 	                if (UtilValidate.isNotEmpty(contactListItemNo) && contactListItemNo.equals(mobileNumber)) {
