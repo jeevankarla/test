@@ -63,6 +63,7 @@ under the License.
 		<attribute name="finAccountTransTypeId" mode="IN" optional="false" type="String"/>
 		<attribute name="amount" mode="IN" optional="false" type="BigDecimal"/>
 		<attribute name="contraRefNum" mode="IN" optional="true" type="String"/>
+		<attribute name="inFavor" mode="IN" optional="true" type="String"/>
 		<attribute name="comments" mode="IN" optional="true" type="String"/>
     </service>
     <service name="updateFinAccount" engine="simple" default-entity-name="FinAccount"

@@ -193,6 +193,7 @@ public class FinAccountServices {
         String transDateStr = (String) context.get("transactionDate");
         SimpleDateFormat sdf = new SimpleDateFormat("dd MMMMM, yyyy");
         Timestamp transactionDate = null;
+        String inFavor = (String) context.get("inFavor");
 		if (UtilValidate.isNotEmpty(transDateStr)) {
 			try {
 				transactionDate = new java.sql.Timestamp(sdf.parse(transDateStr).getTime());
@@ -230,11 +231,20 @@ public class FinAccountServices {
         	if(amount.compareTo(acctAmt)>0){
         		return ServiceUtil.returnError("Cannot Refund more than balance amount");
         	}
-        	 Map<String, Object> createResult = dispatcher.runSync("preCreateFinAccountTrans", context);
-             if (ServiceUtil.isError(createResult)) {
-                 return createResult;
-             }
-             
+        	context.remove("inFavor");
+        	Map<String, Object> createResult = dispatcher.runSync("preCreateFinAccountTrans", context);
+            if (ServiceUtil.isError(createResult)) {
+            	return createResult;
+            }
+            String finAccountTransId = (String)createResult.get("finAccountTransId");
+            if(UtilValidate.isNotEmpty(inFavor)){
+            	
+            	GenericValue newTransAttr = delegator.makeValue("FinAccountTransAttribute");        	 
+            	newTransAttr.set("finAccountTransId", finAccountTransId);
+            	newTransAttr.set("attrName", "INFAVOUR_OF");
+            	newTransAttr.set("attrValue", inFavor);
+            	delegator.createOrStore(newTransAttr);
+            }
 
         } catch (Exception ex) {
             return ServiceUtil.returnError(ex.getMessage());

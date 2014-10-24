@@ -84,7 +84,8 @@
 		message += "<tr class='h3'><td>From/To Account</td><td>"+htmlMsg+"</td></tr>";
 		message += "<tr class='h3'><td>Transaction Date</td><td><input type=text name=transactionDate id=transactionDate onmouseover='datepick()'></td></tr>";
 		message += "<tr class='h3'><td>Amount</td><td><input type=text name=amount></td></tr>";
-		message += "<tr class='h3'><td>Reference Num</td><td><input type=text name=contraRefNum></td></tr>";
+		message += "<tr class='h3'><td>Instrument No</td><td><input type=text name=contraRefNum></td></tr>";
+		message += "<tr class='h3'><td>Cheque In Favor of</td><td><input type=text name=inFavor></td></tr>";
 		message += "<tr class='h3'><td>Comment</td><td><input type=text name=comments></td></tr>";
 		message += "<tr class='h3'><td><input type='submit' value='Submit' class='smallSubmit' onclick='javascript: return submitFormParam();'/></td><td><button value='${uiLabelMap.CommonCancel}' onclick='return cancelForm();' class='smallSubmit'>${uiLabelMap.CommonCancel}</button></td></tr>";
 		title = "<h2><center><font color='#0A007A'>Deposit Refund</font> </center></h2>";
