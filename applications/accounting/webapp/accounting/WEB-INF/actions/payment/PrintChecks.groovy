@@ -154,6 +154,17 @@ if(UtilValidate.isNotEmpty(reportTypeFlag) && reportTypeFlag == "contraCheque"){
 						amountWords = UtilFormatOut.formatCurrency(amount, context.get("currencyUomId"), locale);
 						amountStr = amountWords.replace("Rs"," ");
 						
+						if(UtilValidate.isEmpty(finAccountId)){
+							Debug.logError("finAccountId Cannot Be Empty","");
+							context.errorMessage = "Accounting Transactions not done...!";
+							return;
+						}
+						if(UtilValidate.isNotEmpty(finAccountId) && finAccountId.equals("FIN_ACCNT1")){
+							Debug.logError("finAccountId Cannot Be Empty","");
+							context.errorMessage = "Fin account is cash...!";
+							return;
+						}
+						
 						if(UtilValidate.isNotEmpty(finAccountId)){
 							context.put("finAccountId",finAccountId);
 						}
