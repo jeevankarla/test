@@ -652,7 +652,7 @@ function makeDatePicker1(fromDateId ,thruDateId){
 							</table>
 						</form>
 					</tr>
-						<tr class="alternate-row">
+					<tr class="alternate-row">
 						<form id="DeductionsReport" name="DeductionsReport" mothed="post" action="<@ofbizUrl>DeductionsReport.pdf</@ofbizUrl>" target="_blank">
 							<table class="basic-table" cellspacing="0">
 								<tr>
@@ -672,6 +672,43 @@ function makeDatePicker1(fromDateId ,thruDateId){
 												<option value='' ></option>
 												<#list allDeductionTypeList as deductions>
 													<option value='${deductions.deductionTypeId}'>${deductions.deductionName?if_exists}</option>
+												</#list>	
+											</select>
+										</span>
+									</td>
+									<td><span class='h3'>Period Id</span></td>
+									<td>
+									<span class='h6'>
+										<select name="customTimePeriodId" id="customTimePeriodId" class='h4'>
+											<#list customTimePeriodList?sort_by("fromDate") as customTimePeriod><option value='${customTimePeriod.customTimePeriodId?if_exists}' >${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(customTimePeriod.fromDate, "dd MMMMM, yyyy")} -${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(customTimePeriod.thruDate, "dd MMMMM, yyyy")}</option></#list>
+										</select>
+									</span>
+									</td>
+									<td ><input type="submit" value="Download" class="buttontext"></td>
+								</tr>
+							</table>
+						</form>
+					</tr>
+					<tr class="alternate-row">
+						<form id="BenefitReport" name="DeductionsReport" mothed="post" action="<@ofbizUrl>BenefitReport.pdf</@ofbizUrl>" target="_blank">
+							<table class="basic-table" cellspacing="0">
+								<tr>
+									<td><span class='h3'>Benefit Report</span></td>
+									<td width="30%"><span class='h3'>Organization Id </span>
+										<select name="partyId" class='h4'>
+											<option value=''></option>
+											<#list orgList as org>    
+												<option value='${org.partyId}'>${org.groupName}</option>
+											</#list> 
+										</select>
+									</td>
+									<td ><span class='h3'>Benefit</span></td>
+									<td >
+										<span class='h6'>
+											<select name="benefitTypeId" class='h6'>
+												<option value=''></option>
+												<#list allBenefitsTypeList as benefits>
+													<option value='${benefits.benefitTypeId}'>${benefits.benefitName?if_exists}</option>
 												</#list>	
 											</select>
 										</span>
