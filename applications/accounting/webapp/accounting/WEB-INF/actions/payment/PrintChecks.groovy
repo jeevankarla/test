@@ -130,55 +130,46 @@ if(UtilValidate.isNotEmpty(reportTypeFlag) && reportTypeFlag == "contraCheque"){
 }else{
 	// for Deposit Cheque
 	if(UtilValidate.isNotEmpty(reportTypeFlag) && reportTypeFlag == "depositCheque"){
-		finAccountId = parameters.finAccountId;
-		if(UtilValidate.isNotEmpty(finAccountId)){
-			finAccountTransList = delegator.findList("FinAccountTrans", EntityCondition.makeCondition("finAccountId", EntityOperator.EQUALS, finAccountId), null, null, null, false);
-			if(UtilValidate.isNotEmpty(finAccountTransList)){
-				finAccountTransDetails = EntityUtil.getFirst(finAccountTransList);
-				if(UtilValidate.isNotEmpty(finAccountTransDetails)){
-					finAccountTransId = finAccountTransDetails.finAccountTransId;
-					if(UtilValidate.isNotEmpty(finAccountTransId)){
-						finAccountTransAttributeDetails = delegator.findOne("FinAccountTransAttribute", [finAccountTransId : finAccountTransId, attrName : "FATR_CONTRA"], false);
-						if(UtilValidate.isNotEmpty(finAccountTransAttributeDetails)){
-							newFinAccountTransId = finAccountTransAttributeDetails.attrValue;
-							if(UtilValidate.isNotEmpty(finAccountTransAttributeDetails)){
-								newfinAccountTransDetails = delegator.findOne("FinAccountTrans", [finAccountTransId : newFinAccountTransId], false);
-								if(UtilValidate.isNotEmpty(newfinAccountTransDetails)){
-									finAccountId = newfinAccountTransDetails.finAccountId;
-									amount = newfinAccountTransDetails.amount;
-									paymentDate = newfinAccountTransDetails.transactionDate;
-									comments = newfinAccountTransDetails.comments;
-									
-									if(UtilValidate.isNotEmpty(newFinAccountTransId)){
-										finAccountTransAttrDetails = delegator.findOne("FinAccountTransAttribute", [finAccountTransId : newFinAccountTransId, attrName : "INFAVOUR_OF"], false);
-										if(UtilValidate.isNotEmpty(finAccountTransAttrDetails)){
-											attrValue = finAccountTransAttrDetails.attrValue;
-										}
-									}
-									
-									BigDecimal amount = new BigDecimal(amount);
-									amountWords = UtilFormatOut.formatCurrency(amount, context.get("currencyUomId"), locale);
-									amountStr = amountWords.replace("Rs"," ");
-									
-									if(UtilValidate.isNotEmpty(finAccountId)){
-										context.put("finAccountId",finAccountId);
-									}
-									if(UtilValidate.isNotEmpty(attrValue)){
-										context.put("attrValue",attrValue);
-									}else{
-										context.put("attrValue",comments);
-									}
-									if(UtilValidate.isNotEmpty(paymentDate)){
-										context.put("paymentDate",paymentDate);
-									}
-									if(UtilValidate.isNotEmpty(amount)){
-										context.put("amount",amount);
-									}
-									if(UtilValidate.isNotEmpty(amountStr)){
-										context.put("amountStr",amountStr);
-									}
-								}
+		finAccountTransId = parameters.finAccountTransId;
+		if(UtilValidate.isNotEmpty(finAccountTransId)){
+			finAccountTransAttributeDetails = delegator.findOne("FinAccountTransAttribute", [finAccountTransId : finAccountTransId, attrName : "FATR_CONTRA"], false);
+			if(UtilValidate.isNotEmpty(finAccountTransAttributeDetails)){
+				newFinAccountTransId = finAccountTransAttributeDetails.attrValue;
+				if(UtilValidate.isNotEmpty(finAccountTransAttributeDetails)){
+					newfinAccountTransDetails = delegator.findOne("FinAccountTrans", [finAccountTransId : newFinAccountTransId], false);
+					if(UtilValidate.isNotEmpty(newfinAccountTransDetails)){
+						finAccountId = newfinAccountTransDetails.finAccountId;
+						amount = newfinAccountTransDetails.amount;
+						paymentDate = newfinAccountTransDetails.transactionDate;
+						comments = newfinAccountTransDetails.comments;
+						
+						if(UtilValidate.isNotEmpty(newFinAccountTransId)){
+							finAccountTransAttrDetails = delegator.findOne("FinAccountTransAttribute", [finAccountTransId : newFinAccountTransId, attrName : "INFAVOUR_OF"], false);
+							if(UtilValidate.isNotEmpty(finAccountTransAttrDetails)){
+								attrValue = finAccountTransAttrDetails.attrValue;
 							}
+						}
+						
+						BigDecimal amount = new BigDecimal(amount);
+						amountWords = UtilFormatOut.formatCurrency(amount, context.get("currencyUomId"), locale);
+						amountStr = amountWords.replace("Rs"," ");
+						
+						if(UtilValidate.isNotEmpty(finAccountId)){
+							context.put("finAccountId",finAccountId);
+						}
+						if(UtilValidate.isNotEmpty(attrValue)){
+							context.put("attrValue",attrValue);
+						}else{
+							context.put("attrValue",comments);
+						}
+						if(UtilValidate.isNotEmpty(paymentDate)){
+							context.put("paymentDate",paymentDate);
+						}
+						if(UtilValidate.isNotEmpty(amount)){
+							context.put("amount",amount);
+						}
+						if(UtilValidate.isNotEmpty(amountStr)){
+							context.put("amountStr",amountStr);
 						}
 					}
 				}
