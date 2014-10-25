@@ -185,6 +185,37 @@
 		<field name="acNo" title="Account Number"><display/></field>
 		<field name="netAmt" title="Net Amount"><display/></field>
 	</form>	
+	<form name="EcsBankDetailsCsv" type="list" list-name="finalList" 
+		odd-row-style="alternate-row" default-table-style="basic-table hover-bar">
+		<field name="txnType" title="Txn Type"><display/></field>
+		<field name="acNo" title="Account Number"><display/></field>
+		<field name="branchCode" title="Branch Code"><display/></field>
+		<field name="txnCode" title="Txn Code"><display/></field>
+		<field name="dateStr" title="Txn Date"><display type="date"/> </field>
+		<field name="credit" title="Dr / Cr"><display/></field>
+		<field name="dateStr2" title="Value Dt"><display type="date"/></field>
+		<field name="txnCcy" title="Txn CCY"><display/></field>
+		<field name="netAmt" title="Amt LCY"><display/></field>
+		<field name="netAmt2" title="Amt TCY"><display/></field>
+		<field name="ratCon" title="Rate Con"><display/></field>
+		<field name="refNo" title="Ref No"><display/></field>
+		<field name="refDocNo" title="Ref Doc No"><display/></field>
+		<field name="txnDes" title="Transaction Description"><display/></field>
+		<field name="benefIc" title="Benef IC"><display/></field>
+		<field name="benefName" title="Benef Name"><display/></field>
+		<field name="benefAdd1" title="Benef Add 1"><display/></field>
+		<field name="benefAdd2" title="Benef Add 2"><display/></field>
+		<field name="benefAdd3" title="Benef Add 3"><display/></field>
+		<field name="benefCity" title="Benef City"><display/></field>
+		<field name="benefState" title="Benef State"><display/></field>
+		<field name="benefCntry" title="Benef Cntry"><display/></field>
+		<field name="benefZip" title="Benef Zip"><display/></field>
+		<field name="option" title="Option"><display/></field>
+		<field name="issueCode" title="Issuer Code"><display/></field>
+		<field name="payable" title="Payable At"><display/></field>
+		<field name="flgFdt" title="Flg FDT"><display/></field>
+		<field name="mis" title="MIS Account Number"><display/></field>
+	</form>	
 	<form name="ITAXQuarterlyStatement" type="list" list-name="finalList" odd-row-style="alternate-row" default-table-style="basic-table hover-bar">
 	    <field name="serialNo" title="Sl No"><display /></field>
 		<field name="monthSno" title="Sr.No.in Challan as Per"><display/></field>
@@ -500,6 +531,13 @@
         		<parameter param-name="partyId" value="${partyId}"/>
             </hyperlink>
         </field>
+        <!-- <field use-when="statusId.equals(&quot;GENERATED&quot;) || statusId.equals(&quot;APPROVED&quot;)" name="PayEcs Report" widget-style="buttontext" >
+            <hyperlink target="EcsBankDetailsCsv.csv" description="Payroll Ecs Report"  target-window="_BLANK">
+             	<parameter param-name="periodBillingId" from-field="periodBillingId"/>
+        		<parameter param-name="customTimePeriodId" from-field="customTimePeriodId"/>
+        		<parameter param-name="partyId" value="${partyId}"/>
+            </hyperlink>
+        </field> -->
         <field use-when="statusId.equals(&quot;GENERATED&quot;)" name="approve" widget-style="buttontext cancel">
 			<hyperlink target="setPayrollPeriodBillingStatus" description="approve">
 	        	<parameter param-name="periodBillingId" from-field="periodBillingId"/>

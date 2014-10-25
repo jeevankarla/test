@@ -523,6 +523,46 @@ function makeDatePicker1(fromDateId ,thruDateId){
 						</form>
 					</tr>
 				   <tr class="alternate-row">
+						<form id="EcsBankDetailsStatement" name="EcsBankDetailsStatement" mothed="post" action="<@ofbizUrl>EcsBankDetailsCsv.csv</@ofbizUrl>" target="_blank">
+							<table class="basic-table" cellspacing="5">
+								<tr class="alternate-row">
+									<td width="17%"><span class='h3'>Ecs Bank Details Statement</span></td>
+									<td width="25%"><span class='h3'>Organization Id </span>
+										<select name="bankAdvise_deptId" class='h4'>
+											<#list orgList as org>    
+												<option value='${org.partyId}'>${org.groupName?if_exists}</option>
+											</#list> 
+										</select>
+									</td>
+									<td width="25%"><span class='h3'>Bank</span>
+										<select name="finAccountId" class='h4'>
+											<option value='All'>All</option>
+											<#list companyAccList as bank>    
+												<option value='${bank.finAccountId?if_exists}'>${bank.finAccountName?if_exists}</option>
+											</#list> 
+										</select>
+									</td>
+									<td width="35%"><span class='h3'>Period Id
+										<select name="customTimePeriodId" id="customTimePeriodId" class='h4'>
+											<#list customTimePeriodList as customTimePeriod>
+												 <#if defaultTimePeriodId?exists && (defaultTimePeriodId == customTimePeriod.customTimePeriodId)>
+							      					<option value='${customTimePeriod.customTimePeriodId?if_exists}' selected="selected">${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(customTimePeriod.fromDate, "dd MMMMM, yyyy")} -${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(customTimePeriod.thruDate, "dd MMMMM, yyyy")}</option>
+							      					<#else>
+							      						<option value='${customTimePeriod.customTimePeriodId?if_exists}' >${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(customTimePeriod.fromDate, "dd MMMMM, yyyy")} -${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(customTimePeriod.thruDate, "dd MMMMM, yyyy")}</option>
+							                  		</option>
+							      				</#if>
+												 
+											</#list>
+										</select></span>
+									</td>
+									<td width="10%"><span class='h4'>
+									 <input type="submit" value="CSV" onClick="javascript:appendParams('EcsBankDetailsStatement', '<@ofbizUrl>EcsBankDetailsCsv.csv</@ofbizUrl>');" class="buttontext"/></span></td> 
+									</td>
+								</tr>
+							</table>
+						</form>
+					</tr>	
+				   <tr class="alternate-row">
 						<form id="paySlipEmployeewise" name="paySlipEmployeewise" mothed="post" action="<@ofbizUrl>PrintPaySlipsPdf.pdf</@ofbizUrl>" target="_blank">
 							<table class="basic-table" cellspacing="5">
 								<tr class="alternate-row">
