@@ -108,7 +108,7 @@
 		      		}
 		if(paymentMethodType == 'FUND_TRANSFER' || paymentMethodType == 'CHEQUE_PAYIN'|| paymentMethod == 'PAYMENTMETHOD4' || paymentMethod == 'PAYMENTMETHOD6'){      		
 			message +=  "<tr class='h3'><td align='left' class='h3' width='40%'>Instrument Number:</td><td align='left' width='60%'><input class='h4' type='text' class='required' id='paymentRefNum' name='paymentRefNum'/></td></tr>";
-			message +=	"<tr class='h3'><td align='left' class='h3' width='40%'>Instrument Date:</td><td align='left' width='60%'><input class='h4' type='text' class='required' readonly id='instrumentDate' name='instrumentDate' onmouseover='datepick()'/></td></tr>";
+			message +=	"<tr class='h3'><td align='left' class='h3' width='40%'>Instrument Date:</td><td align='left' width='60%'><input class='h4' type='text' class='required' readonly id='instrumentDate' name='instrumentDate' onmouseover='datepick()' required /></td></tr>";
 			if(paymentMethod == 'PAYMENTMETHOD4' || paymentMethodType == 'CHEQUE_PAYIN'){
 					message +=	"<tr class='h3'><td align='left' class='h3' width='40%'>Cheque In favour of:</td><td align='left' width='60%'><input class='h4' type='text'  id='inFavourOf' name='inFavourOf'/></td></tr>";
 			}
