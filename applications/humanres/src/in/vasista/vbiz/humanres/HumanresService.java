@@ -401,7 +401,6 @@ public class HumanresService {
 				List conditionList=FastList.newInstance();
 				conditionList.add(EntityCondition.makeCondition("partyId", EntityOperator.EQUALS, partyId));
 				conditionList.add(EntityCondition.makeCondition("loanTypeId", EntityOperator.EQUALS, loanTypeId));
-				conditionList.add(EntityCondition.makeCondition("statusId", EntityOperator.EQUALS, statusId));
 				conditionList.add(EntityCondition.makeCondition("setlDate", EntityOperator.EQUALS, null));
 				EntityCondition condition = EntityCondition.makeCondition(conditionList,EntityOperator.AND);
 	    		List<GenericValue> loanList = FastList.newInstance();
@@ -432,20 +431,64 @@ public class HumanresService {
 	 public static Map<String, Object> updateEmployeeLoan(DispatchContext dctx, Map context) {
 	    	Map<String, Object> result = ServiceUtil.returnSuccess();
 	    	String loanId = (String) context.get("loanId");
-	    	Date setlDate = (Date) context.get("setlDate");
+	    	String statusId = (String) context.get("statusId");
 	    	
-	    	Timestamp setlDateTime = UtilDateTime.toTimestamp(setlDate);
-	    	Timestamp setlDateStart = UtilDateTime.getDayStart(setlDateTime);
-	    	Timestamp setlDateEnd = UtilDateTime.getDayEnd(setlDateTime);
+	    	Timestamp setlDate = null;
+	    	String setlDateStr = (String) context.get("setlDate");
+	        if (UtilValidate.isNotEmpty(setlDateStr)) {
+				SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+				try {
+					setlDate = new java.sql.Timestamp(sdf.parse(setlDateStr).getTime());
+				} catch (ParseException e) {
+					Debug.logError(e, "Cannot parse date string: "+ setlDateStr, module);
+				} catch (NullPointerException e) {
+					Debug.logError(e, "Cannot parse date string: "	+ setlDateStr, module);
+				}
+			}
+	    	
+	    	Timestamp setlDateTime = null;
+	    	Timestamp setlDateStart = null;
+	    	Timestamp setlDateEnd = null;
+	    	
+	    	if(UtilValidate.isNotEmpty(setlDate)){
+	    		setlDateTime = UtilDateTime.toTimestamp(setlDate);
+		    	setlDateStart = UtilDateTime.getDayStart(setlDateTime);
+		    	setlDateEnd = UtilDateTime.getDayEnd(setlDateTime);
+	    	}
 	    	
 	    	GenericValue userLogin = (GenericValue) context.get("userLogin");
 			GenericValue loanDetails = null;
 	    	GenericDelegator delegator = (GenericDelegator) dctx.getDelegator();
 			LocalDispatcher dispatcher = dctx.getDispatcher();
+			
+			if(UtilValidate.isEmpty(setlDateEnd)){
+				if(UtilValidate.isNotEmpty(statusId)){
+					Timestamp fromDate = UtilDateTime.nowTimestamp();
+					Timestamp fromDateStart = UtilDateTime.getDayStart(fromDate);
+					Map customTimePeriodIdMap = PayrollService.checkPayrollGeneratedOrNotForDate(dctx,UtilMisc.toMap("userLogin",userLogin,"date",UtilDateTime.toSqlDate(fromDateStart)));
+					if (ServiceUtil.isError(customTimePeriodIdMap)) {
+						return customTimePeriodIdMap;
+					}
+				}
+			}else{
+				if(UtilValidate.isNotEmpty(statusId)){
+					Timestamp fromDate = UtilDateTime.nowTimestamp();
+					Timestamp fromDateStart = UtilDateTime.getDayStart(fromDate);
+					Map customTimePeriodIdMap = PayrollService.checkPayrollGeneratedOrNotForDate(dctx,UtilMisc.toMap("userLogin",userLogin,"date",UtilDateTime.toSqlDate(fromDateStart)));
+					if (ServiceUtil.isError(customTimePeriodIdMap)) {
+						return customTimePeriodIdMap;
+					}
+				}
+			}
 			try {
 				loanDetails = delegator.findOne("Loan",UtilMisc.toMap("loanId", loanId), false);
 				if(UtilValidate.isNotEmpty(loanDetails)){
-					loanDetails.set("setlDate", setlDateEnd);
+					if(UtilValidate.isNotEmpty(setlDateEnd)){
+						loanDetails.set("setlDate", setlDateEnd);
+					}
+					if(UtilValidate.isNotEmpty(statusId)){
+						loanDetails.set("statusId", statusId);
+					}
 					loanDetails.set("lastModifiedDate", UtilDateTime.nowTimestamp());
 					loanDetails.set("lastModifiedByUserLogin", userLogin.get("userLoginId"));
 					loanDetails.store();
@@ -565,6 +608,118 @@ public class HumanresService {
 			result.put("noOfMonthsToRetire", noOfMonthsToRetire);
 	        return result;
 	    }
+	 public static Map<String, Object> createEmployeeLoanRecovery(DispatchContext dctx, Map context) {
+	    	Map<String, Object> result = ServiceUtil.returnSuccess();
+	    	String employeeId = (String) context.get("employeeId");
+	    	String loanTypeId = (String) context.get("loanTypeId");
+	    	String description = (String)context.get("description");
+	    	String finAccountId = (String)context.get("finAccountId");
+	    	BigDecimal loanRecoveryAmount = (BigDecimal)context.get("amount");
+	    	Date loanRecoveryDate =  (Date)context.get("loanRecoveryDate");
+	    	
+	    	Timestamp loanRecDateTime = UtilDateTime.toTimestamp(loanRecoveryDate);
+	    	Timestamp loanRecoveryDateStart = UtilDateTime.getDayStart(loanRecDateTime);
+	    	Timestamp loanRecoveryDateEnd = UtilDateTime.getDayEnd(loanRecDateTime);
+	    	
+	    	GenericValue userLogin = (GenericValue) context.get("userLogin");
+	    	GenericDelegator delegator = (GenericDelegator) dctx.getDelegator();
+			LocalDispatcher dispatcher = dctx.getDispatcher();
+			String payHeadTypeId = null;
+			String loanId = null;
+			try {
+				GenericValue loanTypeDetails = delegator.findOne("LoanType",UtilMisc.toMap("loanTypeId", loanTypeId), false);
+				if(UtilValidate.isNotEmpty(loanTypeDetails)){
+					payHeadTypeId = loanTypeDetails.getString("payHeadTypeId");
+				}
+				Map loanRecoveryMap = FastMap.newInstance();
+				loanRecoveryMap.put("userLogin",userLogin);
+				loanRecoveryMap.put("employeeId",employeeId);
+				loanRecoveryMap.put("payHeadTypeId",payHeadTypeId);
+				loanRecoveryMap.put("timePeriodStart",loanRecoveryDateStart);
+				loanRecoveryMap.put("timePeriodEnd",loanRecoveryDateEnd);
+				try {
+					Map resultValue = dispatcher.runSync("calculateLoanPayHeadAmount", loanRecoveryMap);
+					if(ServiceUtil.isError(resultValue)){
+						Debug.logError(ServiceUtil.getErrorMessage(resultValue), module);
+						return resultValue;
+					}
+					if(UtilValidate.isNotEmpty(resultValue)){
+						Map loanRecovery = (Map) resultValue.get("loanRecovery");
+						if(UtilValidate.isEmpty(loanRecovery)){
+							Debug.logError(ServiceUtil.getErrorMessage(loanRecovery), module);
+							return ServiceUtil.returnError("Error while getting loan amounts for Employee"+employeeId);
+						}
+						if(UtilValidate.isNotEmpty(loanRecovery)){
+							loanId = (String) loanRecovery.get("loanId");
+							BigDecimal principalAmount = (BigDecimal) loanRecovery.get("principalAmount");
+							Long principalInstNum = (Long) loanRecovery.get("principalInstNum");
+							BigDecimal interestAmount = (BigDecimal) loanRecovery.get("interestAmount");
+							Long interestInstNum = (Long) loanRecovery.get("interestInstNum");
+							if(UtilValidate.isNotEmpty(loanId)){
+								List conditionList = FastList.newInstance();
+								conditionList.add(EntityCondition.makeCondition("loanId", EntityOperator.EQUALS, loanId));
+								conditionList.add(EntityCondition.makeCondition("recoveryDate", EntityOperator.GREATER_THAN_EQUAL_TO ,loanRecoveryDateStart));
+								conditionList.add(EntityCondition.makeCondition("recoveryDate", EntityOperator.LESS_THAN_EQUAL_TO ,loanRecoveryDateEnd));
+					        	EntityCondition condition = EntityCondition.makeCondition(conditionList,EntityOperator.AND);
+					        	List<GenericValue> loanRecoveryList = delegator.findList("LoanRecovery",condition, null, null, null, false);
+					        	if(UtilValidate.isNotEmpty(loanRecoveryList)){
+					        		return ServiceUtil.returnError("Loan Recovery already exists for that loan type for Employee "+employeeId);
+					        	}else{
+					        		GenericValue newEntity = delegator.makeValue("LoanRecovery");
+									newEntity.set("loanId", loanId);
+									newEntity.set("recoveryDate", loanRecoveryDateStart);
+									newEntity.set("principalInstNum", principalInstNum);
+									newEntity.set("principalAmount", principalAmount);
+									newEntity.set("interestAmount", interestAmount);
+									newEntity.set("interestInstNum", interestInstNum);
+									delegator.setNextSubSeqId(newEntity,"sequenceNum", 5, 1);
+									delegator.createOrStore(newEntity);
+									
+									GenericValue loanDetails = null;
+									if(UtilValidate.isNotEmpty(loanRecoveryAmount)){
+										loanDetails = delegator.findOne("Loan",UtilMisc.toMap("loanId", loanId), false);
+										if(UtilValidate.isNotEmpty(loanDetails)){
+											String loanFinAccountId = (String) loanDetails.get("loanFinAccountId");
+											if(UtilValidate.isEmpty(loanFinAccountId)){
+												return ServiceUtil.returnError("Loan Fin Account Id does not exists for Employee "+employeeId);
+											}
+											if(UtilValidate.isNotEmpty(loanFinAccountId)){
+									             Map<String, Object> transCtxMap = FastMap.newInstance();
+									             transCtxMap.put("statusId", "FINACT_TRNS_CREATED");
+									             transCtxMap.put("entryType", "Contra");
+									             transCtxMap.put("transactionDate", loanRecoveryDateStart);
+									             transCtxMap.put("amount", loanRecoveryAmount);
+									             transCtxMap.put("comments", description);
+									           	 transCtxMap.put("contraFinAccountId", loanFinAccountId);
+									             transCtxMap.put("finAccountId", finAccountId); 
+									           	 transCtxMap.put("finAccountTransTypeId", "DEPOSIT");
+									             transCtxMap.put("userLogin", userLogin);
+									             Map<String, Object> createResult = dispatcher.runSync("preCreateFinAccountTrans", transCtxMap);
+									             if (ServiceUtil.isError(createResult)) {
+									                 return createResult;
+									             }
+									             String finAccountTransId = (String)createResult.get("finAccountTransId");
+									             if(UtilValidate.isNotEmpty(finAccountTransId)){
+									            	 newEntity.set("finAccountTransId", finAccountTransId);
+									            	 delegator.store(newEntity);
+									             }
+											}
+										}
+									}
+					        	}
+							}
+						}
+					}
+				} catch (GenericServiceException s) {
+					Debug.logError("Error while creating loan recovery"+s.getMessage(), module);
+				} 
+	        }catch(GenericEntityException e){
+				Debug.logError("Error while creating Loan"+e.getMessage(), module);
+			}
+	        result = ServiceUtil.returnSuccess("Loan Recovery Created Sucessfully for Employee "  +employeeId);
+	        return result;
+	    }
+	 
 	 	
 	 public static Map<String, Object> createNewEmployment(DispatchContext dctx, Map context) {
 	    	Map<String, Object> result = ServiceUtil.returnSuccess();

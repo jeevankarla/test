@@ -1383,7 +1383,8 @@ under the License.emplpunch
         <attribute name="timePeriodEnd" mode="IN" type="Timestamp"/>  
         <attribute name="timePeriodId" mode="IN" type="String"/>
         <attribute name="amount" type="BigDecimal" mode="OUT" optional="false"/>
-        <attribute name="priceInfos" type="List" mode="OUT" optional="true"/>       
+        <attribute name="priceInfos" type="List" mode="OUT" optional="true"/>
+        <attribute name="newEntityLoanRecovery" type="Map" mode="OUT" optional="true"/>
     </service> 
     
 	<service name="createPayrollBilling"  engine="java"
@@ -1637,7 +1638,8 @@ under the License.emplpunch
         location="in.vasista.vbiz.humanres.HumanresService">
         <description>Create or update Loan</description>
        <attribute name="loanId" mode="IN" type="String" optional="false"/>
-       <attribute name="setlDate" mode="IN" type="Date" optional="false"/>
+       <attribute name="setlDate" mode="IN" type="String" optional="true"/>
+       <attribute name="statusId" mode="IN" type="String" optional="true"/>	
    </service>
    <service name="deleteEmployeeLoan" default-entity-name="Loan" engine="entity-auto" invoke="delete" auth="true">
         <description>Delete Loan</description>
@@ -1655,5 +1657,16 @@ under the License.emplpunch
        <attribute name="rateOfInterest" mode="OUT" type="Double" optional="true"/>
        <attribute name="retirementDate" mode="OUT" type="String" optional="true"/>
        <attribute name="noOfMonthsToRetire" mode="OUT" type="String" optional="true"/>
+   </service>
+   <!-- Loan Recovery Services -->
+   <service name="createEmployeeLoanRecovery" engine="java" auth="true" invoke="createEmployeeLoanRecovery" 
+        location="in.vasista.vbiz.humanres.HumanresService">
+        <description>Create or update Loan</description>
+       <attribute name="employeeId" mode="IN" type="String" optional="false"/>
+       <attribute name="loanTypeId" mode="IN" type="String" optional="false"/>
+       <attribute name="description" mode="IN" type="String" optional="true"/>
+       <attribute name="amount" mode="IN" type="BigDecimal" optional="false"/>
+       <attribute name="loanRecoveryDate" mode="IN" type="Date" optional="false"/>
+       <attribute name="finAccountId" mode="IN" type="String" optional="false"/>
    </service>
 </services>

@@ -718,5 +718,53 @@
 				</decorator-screen>
 			</widgets>
 		</section>
+	 </screen>
+	 <screen name="loanRecovery">
+	 	<section>
+			<actions>
+				<set field="headerItem" value="loanRecovery" />
+				<set field="tabButtonItem" value="loanRecovery" />
+				<set field="titleProperty" value="Loan Recovery" />
+			</actions>
+			<widgets>
+				<decorator-screen name="HumanresCommonDecorator"
+					location="component://humanres/widget/CommonScreens.xml">
+					<decorator-section name="body">
+						<container>
+							<container style="button-bar">
+                        		<link target="NewLoanRecovery" text="New Loan Recovery" style="buttontext"></link>
+                        	</container>
+							<screenlet title="Find Loan Recovery">
+								<include-form location="component://humanres/widget/ReportHumanresSummaryForms.xml" name="findLoanRecovery"/>
+							</screenlet>
+							<screenlet title="Loan Recovery Results">
+								<include-form location="component://humanres/widget/ReportHumanresSummaryForms.xml" name="listEmployeeLoanRecoveries"/>
+							</screenlet>
+						</container>
+					</decorator-section>
+				</decorator-screen>
+			</widgets>
+		</section>
+	 </screen>
+	 <screen name="CreateNewLoanRecovery">
+	 	<section>
+			<actions>
+				<set field="headerItem" value="loanRecovery" />
+				<set field="tabButtonItem" value="loanRecovery" />
+				<set field="titleProperty" value="Loan Recovery" />
+			</actions>
+			<widgets>
+				<decorator-screen name="HumanresCommonDecorator"
+					location="component://humanres/widget/CommonScreens.xml">
+					<decorator-section name="body">
+						<container>
+							<screenlet title="New Loan Recovery">
+								<include-form location="component://humanres/widget/ReportHumanresSummaryForms.xml" name="CreateLoanRecovery"/>
+							</screenlet>
+						</container>
+					</decorator-section>
+				</decorator-screen>
+			</widgets>
+		</section>
 	 </screen>         
 </screens>

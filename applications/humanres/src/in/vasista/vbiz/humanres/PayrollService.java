@@ -3366,6 +3366,7 @@ public class PayrollService {
 	        String periodBillingId = (String)context.get("periodBillingId");
 	        BigDecimal amount = BigDecimal.ZERO;
 	        List priceInfos =FastList.newInstance();
+	        GenericValue newEntityLoanRecovery = null;
 	        try{
 	        	StringBuilder priceInfoDescription = new StringBuilder();
 	        	
@@ -3392,7 +3393,7 @@ public class PayrollService {
                     dynamicView.addAlias("CT", "thruDate");
                     dynamicView.addViewLink("LR", "CT", Boolean.FALSE, ModelKeyMap.makeKeyMapList("customTimePeriodId"));
                     String isExternal =  loan.getString("isExternal");
-                    GenericValue newEntityLoanRecovery = delegator.makeValue("LoanRecovery");
+                    newEntityLoanRecovery = delegator.makeValue("LoanRecovery");
                     newEntityLoanRecovery.set("loanId", loan.getString("loanId"));
                     newEntityLoanRecovery.set("customTimePeriodId", timePeriodId);
                     EntityFindOptions findOpts = new EntityFindOptions();
@@ -3463,6 +3464,7 @@ public class PayrollService {
 	                		"om the database while calculating price , employeeId:"+employeeId, module);
 	                return ServiceUtil.returnError(e.toString());
 	            }
+	          result.put("loanRecovery", newEntityLoanRecovery);
 	          result.put("amount", amount);
 	          result.put("priceInfos", priceInfos);
 	        return result;
@@ -5078,13 +5080,12 @@ public class PayrollService {
 			    	GenericValue lastClosePeriod = (GenericValue)customMap.get("lastCloseAttedancePeriod");
 			    	if(UtilValidate.isNotEmpty(lastClosePeriod))
 			    	customTimePeriodId=lastClosePeriod.getString("customTimePeriodId");
-			    	
 			    	Date fromDate = (Date)lastClosePeriod.get("fromDate");
 					 fromDateStart=UtilDateTime.toTimestamp(fromDate);
 					Date thruDate = (Date)lastClosePeriod.get("thruDate");
 					 thruDateEnd=UtilDateTime.toTimestamp(thruDate);
 					 thruDateEnd=UtilDateTime.getDayEnd(thruDateEnd);
-			    	if(UtilValidate.isNotEmpty(periodBillingList) && (dateTime.before(thruDateEnd))){	    			
+			    	if(UtilValidate.isNotEmpty(periodBillingList) && (dateTime.before(thruDateEnd))){	
 			    		return ServiceUtil.returnError("Payroll Already Generated.");
 			        }
 				}

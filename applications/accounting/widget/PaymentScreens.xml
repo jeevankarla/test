@@ -959,11 +959,27 @@ under the License.
                 <script location="component://accounting/webapp/accounting/WEB-INF/actions/payment/PrintPaymentReceipt.groovy"/>
             </actions>
             <widgets>
-                <platform-specific>
-                <html><html-template location="component://byproducts/webapp/byproducts/reports/PrintDepositReceipt.fo.ftl"/></html>
-	            	<!-- <html><html-template location="component://byproducts/webapp/byproducts/reports/PaymentReciept.fo.ftl"/></html> -->
-	            </platform-specific>	
-            </widgets>
+				<section>
+					<condition>
+						<if-compare operator="equals" value="depositCheque" field="reportTypeFlag" />
+					</condition>
+					<widgets>
+						<platform-specific>
+                			<html><html-template location="component://byproducts/webapp/byproducts/reports/PrintDepositReceipt.fo.ftl"/></html>
+	            		</platform-specific>
+					</widgets>
+				</section>
+				<section>
+					<condition>
+						<if-compare operator="equals" value="loanRecovery" field="reportTypeFlag" />
+					</condition>
+					<widgets>
+						<platform-specific>
+                			<html><html-template location="component://byproducts/webapp/byproducts/reports/employeeLoanRecoveryReceipt.fo.ftl"/></html>
+	            		</platform-specific>
+					</widgets>
+				</section>
+			</widgets>
         </section>
     </screen>
 <screen name="FindPayableInvoices">

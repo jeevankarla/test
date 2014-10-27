@@ -148,6 +148,77 @@ if(UtilValidate.isNotEmpty(reportTypeFlag) && reportTypeFlag == "depositCheque")
 		}
 	}
 }else{
+	if(UtilValidate.isNotEmpty(reportTypeFlag) && reportTypeFlag == "loanRecovery"){
+		finAccountTransId = parameters.finAccountTransId;
+		if(UtilValidate.isNotEmpty(finAccountTransId)){
+			finAccountTransAttributeDetails = delegator.findOne("FinAccountTransAttribute", [finAccountTransId : finAccountTransId, attrName : "FATR_CONTRA"], false);
+			finAccountTransTypeId = null;
+			amount = BigDecimal.ZERO;
+			paymentDate = null;
+			comments = null;
+			contraRefNum = null;
+			amountWords = null;
+			finAccountName = null;
+			newFinAccountTransId = null;
+			if(UtilValidate.isNotEmpty(finAccountTransAttributeDetails)){
+				newFinAccountTransId = finAccountTransAttributeDetails.attrValue;
+				if(UtilValidate.isNotEmpty(finAccountTransAttributeDetails)){
+					newfinAccountTransDetails = delegator.findOne("FinAccountTrans", [finAccountTransId : newFinAccountTransId], false);
+					if(UtilValidate.isNotEmpty(newfinAccountTransDetails)){
+						finAccountId = newfinAccountTransDetails.finAccountId;
+						if(UtilValidate.isNotEmpty(finAccountId)){
+							finAccountDetails = delegator.findOne("FinAccount", [finAccountId : finAccountId], false);
+							if(UtilValidate.isNotEmpty(finAccountId)){
+								finAccountName = finAccountDetails.finAccountName;
+								if(UtilValidate.isNotEmpty(finAccountName)){
+									context.put("finAccountName",finAccountName);
+								}
+							}
+						}
+						finAccountTransTypeId = newfinAccountTransDetails.finAccountTransTypeId;
+						amount = newfinAccountTransDetails.amount;
+						paymentDate = newfinAccountTransDetails.transactionDate;
+						comments = newfinAccountTransDetails.comments;
+						contraRefNum = newfinAccountTransDetails.contraRefNum;
+						amountWords=UtilNumber.formatRuleBasedAmount(amount,"%rupees-and-paise", locale).toUpperCase();
+						
+						if(UtilValidate.isNotEmpty(finAccountTransTypeId)){
+							context.put("finAccountTransTypeId",finAccountTransTypeId);
+						}
+						if(UtilValidate.isNotEmpty(finAccountTransId)){
+							context.put("newFinAccountTransId",finAccountTransId);
+						}
+						
+						if(UtilValidate.isNotEmpty(paymentDate)){
+							context.put("paymentDate",paymentDate);
+						}
+						if(UtilValidate.isNotEmpty(amount)){
+							context.put("amount",amount);
+						}
+						if(UtilValidate.isNotEmpty(amountWords)){
+							context.put("amountWords",amountWords);
+						}
+						if(UtilValidate.isNotEmpty(parameters.employeeId)){
+							context.put("partyId",parameters.employeeId);
+						}
+						if(UtilValidate.isNotEmpty(parameters.partyName)){
+							context.put("partyName",parameters.partyName);
+						}
+						loanTypeId = parameters.loanTypeId;
+						if(UtilValidate.isNotEmpty(loanTypeId)){
+							employeeLoanType = delegator.findOne("LoanType", [loanTypeId : loanTypeId], false);
+							if(UtilValidate.isNotEmpty(employeeLoanType)){
+								description = employeeLoanType.description;
+								if(UtilValidate.isNotEmpty(description)){
+									context.put("loanRecoveryType",description);
+								}
+							}
+						}
+					}
+				}
+			}
+		}
+	}else{
 	paymentIds=FastList.newInstance();
 	tempPaymentIds=FastList.newInstance();
 	conditionList=[];
@@ -204,10 +275,11 @@ if(UtilValidate.isNotEmpty(reportTypeFlag) && reportTypeFlag == "depositCheque")
 	//	reportType = "PAYMENT";
 	//}
 	
-	
 	context.paymentTypeDescription = paymentType[0].get("description");
 	context.reportType = reportType;
 	context.put("printPaymentsList",printPaymentsList);
+	}
+	
 }
 
 

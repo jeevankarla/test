@@ -33,6 +33,11 @@ under the License.
     <SecurityGroupPermission groupId="FULLADMIN" permissionId="LOAN_TAB_VIEW"/>
     <SecurityGroupPermission groupId="LOAN_TAB" permissionId="LOAN_TAB_VIEW"/>
     
+    <SecurityPermission description="View Permission for Loan Recovery Tab." permissionId="LOAN_RECOVERY_TAB_VIEW"/>
+    <SecurityGroup description="View Loan Tab" groupId="LOAN_RECOVERY_TAB"/>
+    <SecurityGroupPermission groupId="FULLADMIN" permissionId="LOAN_RECOVERY_TAB_VIEW"/>
+    <SecurityGroupPermission groupId="LOAN_RECOVERY_TAB" permissionId="LOAN_RECOVERY_TAB_VIEW"/>
+    
     <SecurityGroupPermission groupId="FULLADMIN" permissionId="HUMANRES_ADMIN"/>
     <SecurityGroupPermission groupId="FLEXADMIN" permissionId="HUMANRES_CREATE"/>
     <SecurityGroupPermission groupId="FLEXADMIN" permissionId="HUMANRES_DELETE"/>

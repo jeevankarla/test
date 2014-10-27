@@ -104,6 +104,14 @@
           </and> 
         </condition> 
         	<link target="loan"/>
+        </menu-item>
+        <menu-item name="loanRecovery" title="Loan Recovery">
+        <condition>
+             <and>
+                <if-has-permission permission="LOAN_RECOVERY_TAB"  action="_VIEW"/>
+          </and> 
+        </condition> 
+        	<link target="loanRecovery"/>
         </menu-item> 
          <menu-item name="WaterElectricityCharges" title="Water&amp;Electricity Charges">
          	 <condition>
