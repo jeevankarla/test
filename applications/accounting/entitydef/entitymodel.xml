@@ -1524,14 +1524,14 @@
 		<field name="uomId" type="id"></field>
 		<field name="taxableFlag" type="indicator"></field>
 		<field name="quantity" type="fixed-point"></field>
-		<field name="amount" type="currency-precise"></field>
+		<field name="amount" type="fixed-point"></field>
 		<field name="description" type="description"></field>
 		<field name="taxAuthPartyId" type="id-ne" />
 		<field name="taxAuthGeoId" type="id-ne" />
 		<field name="taxAuthorityRateSeqId" type="id-ne"></field>
 		<field name="salesOpportunityId" type="id-ne"></field>
-		<field name="unitPrice" type="currency-precise" ></field>
-      	<field name="unitListPrice" type="currency-precise"></field>
+		<field name="unitPrice" type="fixed-point" ></field>
+      	<field name="unitListPrice" type="fixed-point"></field>
         <field name="vatPercent" type="fixed-point"></field>
         <field name="vatAmount" type="currency-precise" ></field>
         <field name="bedPercent" type="fixed-point"></field>
