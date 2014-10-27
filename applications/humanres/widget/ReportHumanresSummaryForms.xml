@@ -236,6 +236,10 @@
 		<field name="nonDdOrLowerdd" title="Reason For Non Deduction/Lower Deduction,if any (Annexure 6) (326) "><display/></field>
 		<field name="certificate" title="Number Of Certificate Under Section 197 Issued By The Assessing Officer Non Deduction/Lower Deduction (327)"><display/></field>
 	</form>	
+	<form name="ITAXQuarterlyDeductorStatement" type="list" list-name="finalList" default-table-style="basic-table" >
+	    <field name="key1" title="Header" ><display/></field>
+		<field name="key2" title="Value" ><display/></field>
+	</form>	
 	 <form name="employeeLookup" type="single"  odd-row-style="header-row" default-table-style="basic-table"  target="EmployeeWiseSalaryDetails">
        	<field name="employeeId">
 			<lookup target-form-name="LookupEmployeeName"/>

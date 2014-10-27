@@ -882,6 +882,36 @@ function makeDatePicker1(fromDateId ,thruDateId){
 							</table>
 						</form>
 					</tr>
+				<#-- <tr class="alternate-row">
+						<form id="DepartmentTotalsReport" name="DepartmentTotalsReport" mothed="post" action="<@ofbizUrl>DepartmentTotalsReport.txt</@ofbizUrl>" target="_blank">
+							<table class="basic-table" cellspacing="5">
+								<tr class="alternate-row">
+									<td width="11%"><span class='h3'>Department Totals </span></td>
+										<td width="25%"><span class='h3'>Organization Id </span>
+											<select name="ShedId" class='h4'>
+											    <option></option>
+												<#list orgList as org>    
+													<option value='${org.partyId}'>${org.groupName?if_exists}</option>
+												</#list> 
+											</select>
+										</td>
+										<td width="40%"><span class='h3'>Period Id</span>
+										<select name="customTimePeriodId" id="customTimePeriodId" class='h4'>
+											<#list customTimePeriodList as customTimePeriod>
+												 <#if defaultTimePeriodId?exists && (defaultTimePeriodId == customTimePeriod.customTimePeriodId)>
+							      					<option value='${customTimePeriod.customTimePeriodId?if_exists}' selected="selected">${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(customTimePeriod.fromDate, "dd MMMMM, yyyy")} -${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(customTimePeriod.thruDate, "dd MMMMM, yyyy")}</option>
+							      					<#else>
+							      						<option value='${customTimePeriod.customTimePeriodId?if_exists}' >${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(customTimePeriod.fromDate, "dd MMMMM, yyyy")} -${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(customTimePeriod.thruDate, "dd MMMMM, yyyy")}</option>
+							                  		</option>
+							      				</#if>
+											</#list>
+										</select>
+									</td>	
+									<td width="7%"><span class='h3'><input type="submit" value="Download" class="buttontext"></span></td>
+								</tr>
+							</table>	
+						</form>
+				   </tr> -->
 			   	</table>
 			</div>
 		</div>
@@ -1007,10 +1037,10 @@ function makeDatePicker1(fromDateId ,thruDateId){
 									<td width="19%"><span class='h3'>Quarterly IncomeTax Statement<input  type="hidden"  value="ITAXQuaerlyrtStatement"   name="reportTypeFlag"/></span></td>
 									<td width="15%"><span class='h3'>From Date: <input type='text' id='fromMonth' name='fromMonth' onmouseover='monthPicker()' class="monthPicker"/></span></td>
 			      		 			<td width="15%"><span class='h3'>Thru Date: <input type='text' id='thruMonth' name='thruMonth' onmouseover='monthPicker()' class="monthPicker"/></span></td>
-			      		 		<#--	<td width="15%"><span class='h3'>Report Type:<select name="reportType" id="reportType">
+			      		 			<td width="15%"><span class='h3'>Report Type:<select name="reportType" id="reportType">
 			      		 			<option value="deductee">Deductee</option>
 			      		 			<option value="deductor">Deductor</option>
-			      		 			</select></span></td>  -->
+			      		 			</select></span></td>  
 									<td width="15%"><span class='h3'><input type="submit" value="Download" class="buttontext"></span></td>
 								</tr>
 							</table>
