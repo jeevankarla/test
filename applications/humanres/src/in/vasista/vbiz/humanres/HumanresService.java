@@ -401,6 +401,7 @@ public class HumanresService {
 				List conditionList=FastList.newInstance();
 				conditionList.add(EntityCondition.makeCondition("partyId", EntityOperator.EQUALS, partyId));
 				conditionList.add(EntityCondition.makeCondition("loanTypeId", EntityOperator.EQUALS, loanTypeId));
+				conditionList.add(EntityCondition.makeCondition("statusId", EntityOperator.EQUALS, statusId));
 				conditionList.add(EntityCondition.makeCondition("setlDate", EntityOperator.EQUALS, null));
 				EntityCondition condition = EntityCondition.makeCondition(conditionList,EntityOperator.AND);
 	    		List<GenericValue> loanList = FastList.newInstance();
