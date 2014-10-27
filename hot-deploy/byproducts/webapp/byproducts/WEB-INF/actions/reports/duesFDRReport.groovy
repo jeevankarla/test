@@ -62,7 +62,6 @@ if(isByParty){
 
 boothsList.each{ eachBoothId ->
 	//facility
-	Debug.log("eachBoothId"+eachBoothId);
 	facilityFDRMap = [:];
 	facilityFDRMap.putAt("facilityId", eachBoothId);
 	facilityDet = [];
@@ -79,7 +78,6 @@ boothsList.each{ eachBoothId ->
 	boothFDRDet = FDRDetail.get(eachBoothId);
 	fdrAmt = 0;
 	fdrNums = "";
-	Debug.log("boothFDRDet====");
 	if(boothFDRDet){
 		if(UtilValidate.isNotEmpty(boothFDRDet.get("totalAmount"))){
 			fdrAmt = boothFDRDet.get("totalAmount");
@@ -100,6 +98,5 @@ boothsList.each{ eachBoothId ->
 	facilityFDRMap.putAt("fdrAmount", fdrAmt);
 	facilityFDRMap.putAt("diffAmount", (openingBalance-fdrAmt));
 	duesFDRList.add(facilityFDRMap);
-	Debug.log("next====");
 }
 context.duesFDRList = duesFDRList;
