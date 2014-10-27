@@ -276,22 +276,24 @@ under the License.
 			       						</#if>
 			       					</#if>
 		       						<#if (headerDetails.getKey()!="PAYROL_DD_EPF") && (headerDetails.getKey()!="PAYROL_DD_APGLIF") && (headerDetails.getKey()!="PAYROL_DD_SSS") && (headerDetails.getKey() != "PAYROL_DD_GIS") && (headerDetails.getKey() != "PAYROL_DD_PTAX")>
+	       								<#if deductionType.getValue().get("deductionAmt")!=0>
 	       								<#assign accnumber = deductionType.getValue().get("accountNo")>
-	       								<fo:table-row>
-											<fo:table-cell><fo:block keep-together="always" border-style="solid">${sno}</fo:block></fo:table-cell>
-											<fo:table-cell><fo:block keep-together="always" text-align="right" border-style="solid">${deductionType.getKey()}</fo:block></fo:table-cell>
-		       								<fo:table-cell><fo:block keep-together="always"  text-align="left" border-style="solid" text-indent="5pt">${Static["org.ofbiz.order.order.OrderServices"].nameTrim((StringUtil.wrapString(Static["org.ofbiz.party.party.PartyHelper"].getPartyName(delegator, deductionType.getKey(), false))),15)}</fo:block></fo:table-cell>
-				       						<#assign designationId = emplPositionAndFulfilment[0].emplPositionTypeId>
-											<#assign designation = delegator.findOne("EmplPositionType", {"emplPositionTypeId" : designationId?if_exists}, true)>
-											<#assign designationName=emplPositionAndFulfilment[0].name?if_exists>
-				       						<fo:table-cell><fo:block keep-together="always"  text-align="left" border-style="solid" text-indent="5pt"><#if designationName?has_content>${designationName?if_exists}<#else><#if designation?has_content>${designation.description?if_exists}</#if></#if></fo:block></fo:table-cell>		       							
-		       								<fo:table-cell><fo:block keep-together="always" text-align="right" border-style="solid">${accnumber?if_exists}</fo:block></fo:table-cell>
-		       								<fo:table-cell><fo:block keep-together="always" text-align="right" border-style="solid">${deductionType.getValue().get("deductionAmt")?if_exists?string('0.00')}</fo:block></fo:table-cell>
-						       				<#assign balance = deductionType.getValue().get("balance")>
-						       				<fo:table-cell><fo:block keep-together="always" text-align="right" border-style="solid"><#if balance == 0>-<#else>${balance?if_exists}</#if></fo:block></fo:table-cell>
-						       				<#assign totalRecovery =totalRecovery + deductionType.getValue().get("deductionAmt")>
-						       				<#assign totalBalance =totalBalance + deductionType.getValue().get("balance")>
-	       								</fo:table-row>
+		       								<fo:table-row>
+												<fo:table-cell><fo:block keep-together="always" border-style="solid">${sno}</fo:block></fo:table-cell>
+												<fo:table-cell><fo:block keep-together="always" text-align="right" border-style="solid">${deductionType.getKey()}</fo:block></fo:table-cell>
+			       								<fo:table-cell><fo:block keep-together="always"  text-align="left" border-style="solid" text-indent="5pt">${Static["org.ofbiz.order.order.OrderServices"].nameTrim((StringUtil.wrapString(Static["org.ofbiz.party.party.PartyHelper"].getPartyName(delegator, deductionType.getKey(), false))),15)}</fo:block></fo:table-cell>
+					       						<#assign designationId = emplPositionAndFulfilment[0].emplPositionTypeId>
+												<#assign designation = delegator.findOne("EmplPositionType", {"emplPositionTypeId" : designationId?if_exists}, true)>
+												<#assign designationName=emplPositionAndFulfilment[0].name?if_exists>
+					       						<fo:table-cell><fo:block keep-together="always"  text-align="left" border-style="solid" text-indent="5pt"><#if designationName?has_content>${designationName?if_exists}<#else><#if designation?has_content>${designation.description?if_exists}</#if></#if></fo:block></fo:table-cell>		       							
+			       								<fo:table-cell><fo:block keep-together="always" text-align="right" border-style="solid">${accnumber?if_exists}</fo:block></fo:table-cell>
+			       								<fo:table-cell><fo:block keep-together="always" text-align="right" border-style="solid">${deductionType.getValue().get("deductionAmt")?if_exists?string('0.00')}</fo:block></fo:table-cell>
+							       				<#assign balance = deductionType.getValue().get("balance")>
+							       				<fo:table-cell><fo:block keep-together="always" text-align="right" border-style="solid"><#if balance == 0>-<#else>${balance?if_exists}</#if></fo:block></fo:table-cell>
+							       				<#assign totalRecovery =totalRecovery + deductionType.getValue().get("deductionAmt")>
+							       				<#assign totalBalance =totalBalance + deductionType.getValue().get("balance")>
+		       								</fo:table-row>
+	       								</#if>
 			       					</#if>
 	     							<#if  headerDetails.getKey() == "PAYROL_DD_APGLIF">
 	     								<#if deductionType.getValue().get("deductionAmt")!=0>
@@ -374,7 +376,7 @@ under the License.
 			       				</#list>
 							</fo:table-body>
 							<fo:table-body>
-								<#if  parameters.dedTypeId == "PAYROL_DD_EPF">
+								<#if  headerDetails.getKey() == "PAYROL_DD_EPF">
 									<fo:table-row>
 										<fo:table-cell><fo:block keep-together="always" border-style="solid"></fo:block></fo:table-cell>
 										<fo:table-cell><fo:block keep-together="always" text-align="right" border-style="solid"></fo:block></fo:table-cell>
@@ -397,7 +399,7 @@ under the License.
 			       							<fo:table-cell><fo:block keep-together="always" text-align="right" border-style="solid">${totalBalance?if_exists?string('0.0')}</fo:block></fo:table-cell>
 		       							</fo:table-row>
 		       					</#if>
-	     						<#if  parameters.dedTypeId == "PAYROL_DD_APGLIF">
+	     						<#if  headerDetails.getKey() == "PAYROL_DD_APGLIF">
 		       							<fo:table-row>
 											<fo:table-cell><fo:block keep-together="always" border-style="solid"></fo:block></fo:table-cell>
 											<fo:table-cell><fo:block keep-together="always" text-align="right" border-style="solid"></fo:block></fo:table-cell>
@@ -407,7 +409,7 @@ under the License.
 			       							<fo:table-cell><fo:block keep-together="always" text-align="right" border-style="solid">0</fo:block></fo:table-cell>
 		       							</fo:table-row>
 		       					</#if>
-		       					<#if  parameters.dedTypeId == "PAYROL_DD_PTAX">
+		       					<#if  headerDetails.getKey() == "PAYROL_DD_PTAX">
 		       							<fo:table-row>
 											<fo:table-cell><fo:block keep-together="always" border-style="solid"></fo:block></fo:table-cell>
 											<fo:table-cell><fo:block keep-together="always" text-align="right" border-style="solid"></fo:block></fo:table-cell>
@@ -417,7 +419,7 @@ under the License.
 			       							<fo:table-cell><fo:block keep-together="always" text-align="right" border-style="solid">${totalPfAmt?if_exists}</fo:block></fo:table-cell>
 		       							</fo:table-row>
 		       					</#if>
-		       					<#if  parameters.dedTypeId == "PAYROL_DD_GIS">
+		       					<#if  headerDetails.getKey() == "PAYROL_DD_GIS">
 		       							<fo:table-row>
 											<fo:table-cell><fo:block keep-together="always" border-style="solid"></fo:block></fo:table-cell>
 											<fo:table-cell><fo:block keep-together="always" text-align="right" border-style="solid"></fo:block></fo:table-cell>
@@ -427,7 +429,7 @@ under the License.
 			       							<fo:table-cell><fo:block keep-together="always" text-align="right" border-style="solid">${totalGisAmt?if_exists}</fo:block></fo:table-cell>
 		       							</fo:table-row>
 		       					</#if>
-			       				<#if  parameters.dedTypeId == "PAYROL_DD_SSS">
+			       				<#if  headerDetails.getKey() == "PAYROL_DD_SSS">
 	       							<fo:table-row>
 										<fo:table-cell><fo:block keep-together="always" border-style="solid"></fo:block></fo:table-cell>
 										<fo:table-cell><fo:block keep-together="always" text-align="right" border-style="solid"></fo:block></fo:table-cell>

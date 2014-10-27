@@ -196,8 +196,9 @@ if(UtilValidate.isNotEmpty(BillingList)){
 									deductionAmount = deductionAmount.abs();
 									deductionAmt = deductionAmt+deductionAmount;
 								}
+								detailsMap.put("deductionAmt",deductionAmt);
 							}
-							detailsMap.put("deductionAmt",deductionAmt);
+							
 						}
 						List loanRecoveryList=[];
 						loanRecoveryList.add(EntityCondition.makeCondition("partyId", EntityOperator.EQUALS, employeeId));
@@ -244,7 +245,7 @@ if(UtilValidate.isNotEmpty(BillingList)){
 						detailsMap.put("gisNo",gisNo);
 					}
 				}
-				if(UtilValidate.isNotEmpty(detailsMap)){
+				if(UtilValidate.isNotEmpty(detailsMap) && UtilValidate.isNotEmpty(detailsMap.get("deductionAmt")) && detailsMap.get("deductionAmt") !=0){
 					periodTotalsMap.put(employeeId,detailsMap);
 				}
 			}
