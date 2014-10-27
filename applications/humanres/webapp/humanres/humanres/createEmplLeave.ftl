@@ -29,6 +29,7 @@ $(function() {
 				var chDate = $('select[name=chDate]').val();
 				if(!chDate){
 					alert("Please select GH/SS date");
+					return false;
 				}
 			 }
     	});
@@ -311,6 +312,7 @@ function viewGHandSS(){
                     <select name="chDate" id="chDate" class='h4' multiple="multiple">
                        <option value=''></option>
 					</select>
+					<em style="color:red; font-size:20pt; font-style:bold">*</em>
                 </td>
               </tr>
               <tr>
