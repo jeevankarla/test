@@ -112,6 +112,7 @@ if(UtilValidate.isNotEmpty(salesInvoiceTotals)){
 				if(UtilValidate.isNotEmpty(invoice.getValue().bedRevenue)){
 					bedRevenue = invoice.getValue().bedRevenue;
 				}
+				
 				if(UtilValidate.isNotEmpty(invoice.getValue().bedCessRevenue)){
 					bedCessRevenue = invoice.getValue().bedCessRevenue;
 				}
@@ -124,11 +125,13 @@ if(UtilValidate.isNotEmpty(salesInvoiceTotals)){
 				if(UtilValidate.isNotEmpty(invoice.getValue().totalRevenue)){
 					totalRevenue = invoice.getValue().totalRevenue;
 				}
-				totalBedRevenue = bedRevenue+bedCessRevenue+bedCessRevenue;
+				totalBedRevenue = bedRevenue+bedCessRevenue+bedSecCessRevenue;
 				
 				freightAmount = 0;
 				discountAmount = 0;
 				insuranceAmount = 0;
+				packForwAmount = 0;
+				otherAmount = 0;
 				invoiceItemsList = delegator.findList("InvoiceItem",EntityCondition.makeCondition("invoiceId", EntityOperator.EQUALS , invoiceId)  , null, null, null, false );
 				if(UtilValidate.isNotEmpty(invoiceItemsList)){
 					invoiceItemsList.each{ invoiceItem ->
@@ -150,6 +153,20 @@ if(UtilValidate.isNotEmpty(salesInvoiceTotals)){
 								insuranceAmount = invoiceItem.amount;
 							}
 						}
+						if(UtilValidate.isNotEmpty(invoiceItem)){
+							invoiceItemTypeId = invoiceItem.invoiceItemTypeId;
+							if(UtilValidate.isNotEmpty(invoiceItemTypeId) && invoiceItemTypeId.equals("COGS_ITEM19")){
+								packForwAmount = invoiceItem.amount;
+							}
+						}
+						if(UtilValidate.isNotEmpty(invoiceItem)){
+							invoiceItemTypeId = invoiceItem.invoiceItemTypeId;
+							if(UtilValidate.isNotEmpty(invoiceItemTypeId) && invoiceItemTypeId.equals("COGS_ITEM20")){
+								otherAmount = invoiceItem.amount;
+							}
+						}
+						totalFreight = 0;
+						totalFreight = freightAmount+packForwAmount+otherAmount;
 					}
 				}
 				orderId = null;
@@ -193,7 +210,7 @@ if(UtilValidate.isNotEmpty(salesInvoiceTotals)){
 					}
 				}
 				grandTotal = 0;
-				grandTotal = totalRevenue+freightAmount+discountAmount+insuranceAmount;
+				grandTotal = totalRevenue+totalFreight+discountAmount+insuranceAmount;
 				
 				totalMap = [:];
 				totalMap["invoiceId"]=invoiceId;
@@ -204,9 +221,10 @@ if(UtilValidate.isNotEmpty(salesInvoiceTotals)){
 				totalMap["vatRevenue"]=vatRevenue;
 				totalMap["cstRevenue"]=cstRevenue;
 				totalMap["totalRevenue"]=totalRevenue;
-				totalMap["freightAmount"]=freightAmount;
+				totalMap["freightAmount"]=totalFreight;
 				totalMap["discountAmount"]=discountAmount;
 				totalMap["insuranceAmount"]=insuranceAmount;
+				totalMap["otherAmount"]=otherAmount;
 				totalMap["grandTotal"]=grandTotal;
 				totalMap["tinNumber"]=tinNumber;
 				totalMap["mrrNumber"]=mrrNumber;
