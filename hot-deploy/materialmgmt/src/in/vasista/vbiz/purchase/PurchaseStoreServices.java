@@ -971,7 +971,7 @@ public static Map<String, Object> createPurchaseOrder(DispatchContext dctx, Map<
 			
 		
 	// let's handle order rounding here
-    try{   
+   /* try{   
     	Map roundAdjCtx = UtilMisc.toMap("userLogin",userLogin);	  	
     	roundAdjCtx.put("orderId", orderId);
   	 	result = dispatcher.runSync("adjustRoundingDiffForOrder",roundAdjCtx);  		  		 
@@ -984,7 +984,7 @@ public static Map<String, Object> createPurchaseOrder(DispatchContext dctx, Map<
 	 		Debug.logError(e, "Error while Creating Order", module);
         return ServiceUtil.returnError(e+"==Error While  Rounding Order !");
   		//return resultMap;			  
-  	}
+  	}*/
     // approve the order
     if (UtilValidate.isNotEmpty(orderId)) {
         boolean approved = OrderChangeHelper.approveOrder(dispatcher, userLogin, orderId);
