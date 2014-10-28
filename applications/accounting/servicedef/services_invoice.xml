@@ -86,8 +86,15 @@ under the License.
         <attribute name="periodBillingId" type="String" mode="IN" optional="false"/>
         <attribute name="invoices" type="List" mode="OUT" optional="true"/>  
     </service> 
+     <service name="createPayrolTaxInvoices" engine="java" auth="true" invoke="createPayrolTaxInvoices" 
+        location="org.ofbiz.accounting.invoice.InvoicePayrolWorkerNew" transaction-timeout="1000">
+        <description>Create payroll invoice from period billing</description>
+        <attribute name="periodBillingId" type="String" mode="IN" optional="false"/>
+        <attribute name="invoiceId" type="String" mode="IN" optional="true"/>  
+    </service>
+    
      <service name="createPayrolPaymentAndAppclications" engine="java" auth="true" invoke="createPayrolPaymentAndAppclications" 
-        location="org.ofbiz.accounting.invoice.InvoicePayrolWorkerNew" transaction-timeout="600">
+        location="org.ofbiz.accounting.invoice.InvoicePayrolWorkerNew" transaction-timeout="1000">
         <description>Create payroll invoice from period billing</description>
         <attribute name="invoiceId" type="String" mode="IN" optional="false"/>
         <attribute name="paymentId" type="String" mode="OUT" optional="true"/>  
@@ -543,13 +550,13 @@ under the License.
         <!-- <attribute name="statusId" type="String" mode="IN" optional="false"/> -->
         <attribute name="errorMessage" type="String" optional="true" mode="OUT"/>
     </service>
-    <service name="createPayrolInvoiceItems" engine="java" auth="true" invoke="createPayrolInvoiceItems" 
+    <!-- <service name="createPayrolInvoiceItems" engine="java" auth="true" invoke="createPayrolInvoiceItems" 
         location="org.ofbiz.accounting.invoice.InvoicePayrolWorker">
         <description>Create Payrol Invoice Items</description>
         <attribute name="invoiceId" mode="IN" type="String"/> 
         <attribute name="partyId" mode="IN" type="String"/>       
         <attribute name="timePeriodId" type="String" mode="IN" optional="false"/>                             
-    </service>  
+    </service>  --> 
     
     <service name="createPartyGroupInvoiceItems" engine="java" auth="true" invoke="createPartyGroupInvoiceItems" 
         location="org.ofbiz.accounting.invoice.InvoicePartyGroupWorker">
@@ -560,12 +567,14 @@ under the License.
         <attribute name="currencyUomId" mode="IN" type="String"/>                                      
     </service>
      <service name="createTaxInvoice" engine="java" auth="true" invoke="createTaxInvoice" 
-        location="org.ofbiz.accounting.invoice.InvoiceWorker">
+        location="org.ofbiz.accounting.invoice.InvoiceWorker" default-entity-name="Invoice">
         <description>Create Tax Invoice</description>
+        <auto-attributes mode="INOUT" include="pk" optional="true"/>
+        <auto-attributes mode="IN" include="nonpk" optional="true"/>
         <attribute name="invoiceId" mode="IN" type="String"/>
         <attribute name="invoiceItemTypeId" mode="IN" type="String"/>
         <attribute name="amount" mode="IN" type="BigDecimal"/>
-        <attribute name="invoiceItemSeqId" mode="IN" type="String"/>
+        <attribute name="invoiceItemSeqId" mode="IN" type="String" optional="true"/>
         <attribute name="quantity" mode="IN" type="String"/>
         <attribute name="currencyUomId" mode="IN" type="String"/>
         <attribute name="taxAuthPartyId" mode="IN" type="String"/>

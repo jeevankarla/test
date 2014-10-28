@@ -782,11 +782,11 @@ public class InvoiceWorker {
 		String invoiceId = (String) context.get("invoiceId");
 		String invoiceItemTypeId=(String)context.get("invoiceItemTypeId");
 		String taxAuthPartyId =(String)context.get("taxAuthPartyId");
-		BigDecimal amount=(BigDecimal)context.get("amount");
-		BigDecimal quantity=BigDecimal.ONE;
+		BigDecimal amount= (BigDecimal)context.get("amount");
+		BigDecimal quantity = BigDecimal.ONE;
 		String taxPayingPartyId= null;
 		if(context.get("quantity") != null){
-		quantity=new BigDecimal((String)context.get("quantity"));
+		   quantity=new BigDecimal((String)context.get("quantity"));
 		}		
 		String invoiceItemSeqId=(String)context.get("invoiceItemSeqId");		
 	    Map input = UtilMisc.toMap("userLogin", context.get("userLogin"));
@@ -800,7 +800,9 @@ public class InvoiceWorker {
 		try {
 			GenericValue invoiceRow = delegator.findOne("Invoice",
 					UtilMisc.toMap("invoiceId", invoiceId), false);
-			if (invoiceRow != null) {
+			if (UtilValidate.isEmpty(invoiceRow)) {
+				return serviceResults;
+			}
 				String partyId=invoiceRow.getString("partyId");
 				String partyIdFrom=invoiceRow.getString("partyIdFrom");
 				String invoiceTypeId=invoiceRow.getString("invoiceTypeId");
@@ -863,6 +865,8 @@ public class InvoiceWorker {
 				Timestamp dueDate = UtilDateTime.getDayStart(monthEnd,(taxAuthPartyDuedates.get(0).getLong("taxDueDayOfMonth")).intValue());
 				input.put("dueDate", dueDate);
 				input.put("currencyUomId",invoiceRow.getString("currencyUomId"));
+				input.put("referenceNumber", context.get("referenceNumber"));
+				input.put("periodBillingId", context.get("periodBillingId"));
 				
 				serviceResults = dispatcher.runSync("createInvoice", input);
 				if (ServiceUtil.isError(serviceResults)) {
@@ -879,8 +883,11 @@ public class InvoiceWorker {
 				taxInputItemMap.put("invoiceItemTypeId", invoiceItemTypeId);
 				taxInputItemMap.put("amount", amount);
 				taxInputItemMap.put("quantity", quantity);
-				taxInputItemMap.put("parentInvoiceId", invoiceId);
-				taxInputItemMap.put("parentInvoiceItemSeqId", invoiceItemSeqId);
+				if(UtilValidate.isNotEmpty(invoiceItemSeqId)){
+					taxInputItemMap.put("parentInvoiceId", invoiceId);
+					taxInputItemMap.put("parentInvoiceItemSeqId", invoiceItemSeqId);
+				}
+				
 				taxInputItemMap.put("quantity", quantity);
 				taxInputItemMap.put("description",invoiceItemTypeRow.getString("description"));
 				serviceResults = dispatcher.runSync("createInvoiceItem",taxInputItemMap);
@@ -890,6 +897,9 @@ public class InvoiceWorker {
 				}
 				String taxInvoiceinvoiceItemSeqId=(String)serviceResults.get("invoiceItemSeqId");				
 				Map taxInvoiceStatusMap = UtilMisc.toMap("userLogin", context.get("approverUserLogin"));
+				if(UtilValidate.isEmpty(context.get("approverUserLogin"))){
+					taxInvoiceStatusMap.put("userLogin", context.get("userLogin"));
+				}
 				 taxInvoiceStatusMap.put("invoiceId", taxInvoiceId);
 				 taxInvoiceStatusMap.put("statusId", "INVOICE_APPROVED");
 				 serviceResults = dispatcher.runSync("setInvoiceStatus",taxInvoiceStatusMap);				
@@ -898,15 +908,13 @@ public class InvoiceWorker {
 								serviceResults);
 					}
 				taxInvoiceItemAssocTypeMap.put("invoiceItemSeqIdTo",taxInvoiceinvoiceItemSeqId);
-				serviceResults = dispatcher.runSync("createInvoiceItemAssoc",taxInvoiceItemAssocTypeMap);				
-				if (ServiceUtil.isError(serviceResults)) {
-					return ServiceUtil.returnError(errorMsg, null, null,
-							serviceResults);
+				if(UtilValidate.isNotEmpty(invoiceItemSeqId)){
+					serviceResults = dispatcher.runSync("createInvoiceItemAssoc",taxInvoiceItemAssocTypeMap);				
+					if (ServiceUtil.isError(serviceResults)) {
+						return ServiceUtil.returnError(errorMsg, null, null,
+								serviceResults);
+					}
 				}
-				 
-			}
-
-		
 
 		} catch (GenericEntityException e) {
 			Debug.logError(e, module);
@@ -917,7 +925,7 @@ public class InvoiceWorker {
 			return ServiceUtil.returnError(errorMsg + e.getMessage());
 		}
 		
-		return serviceResults;
+		return ServiceUtil.returnSuccess();
 	}
 	
 	public static Map<String, Object> createInvoiceAttribute(DispatchContext dctx, Map<String, Object> context) {

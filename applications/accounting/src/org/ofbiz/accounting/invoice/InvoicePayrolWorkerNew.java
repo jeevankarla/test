@@ -26,6 +26,7 @@ import org.ofbiz.entity.GenericEntityException;
 import org.ofbiz.entity.GenericValue;
 import org.ofbiz.entity.condition.EntityCondition;
 import org.ofbiz.entity.condition.EntityOperator;
+import org.ofbiz.entity.util.EntityUtil;
 import org.ofbiz.party.party.PartyWorker;
 import org.ofbiz.service.DispatchContext;
 import org.ofbiz.service.GenericServiceException;
@@ -61,7 +62,7 @@ public class InvoicePayrolWorkerNew {
 		// Create invoice items
 		try {
 			    List<GenericValue> payrollHeaderItems = delegator.findByAnd("PayrollHeaderItem", UtilMisc.toMap("payrollHeaderId",payrollHeaderId));
-			for (int i = 0; i < payrollHeaderItems.size(); ++i) {		
+			    for (int i = 0; i < payrollHeaderItems.size(); ++i) {		
 				GenericValue payrollHeaderItem = payrollHeaderItems.get(i);
 				String payrollHeaderItemTypeId = payrollHeaderItem.getString("payrollHeaderItemTypeId");				
 				Map input = UtilMisc.toMap("userLogin", userLogin,"invoiceId", invoiceId);				
@@ -196,8 +197,8 @@ public class InvoicePayrolWorkerNew {
                			Debug.logImportant("Completed " + emplCounter + " employee [ in " + elapsedSeconds + " seconds]", module);
                		}
 	        	}
-		}
-		catch(GenericEntityException e) {
+	        //create consolidated tax invoices here	
+		}catch(GenericEntityException e) {
 			Debug.logError(e, module);
 	        return ServiceUtil.returnError("Unable to create payroll Invoice record");			
 		}		
@@ -210,6 +211,71 @@ public class InvoicePayrolWorkerNew {
 		return serviceResults;      
 	}
  
+ public static Map<String, Object> createPayrolTaxInvoices(DispatchContext dctx, Map<String, Object> context) {
+     Delegator delegator = dctx.getDelegator();
+     LocalDispatcher dispatcher = dctx.getDispatcher();
+     String periodBillingId = (String) context.get("periodBillingId");
+	 String invoiceId = (String) context.get("invoiceId");
+     String errorMsg = "createPayrol Tax Invoice failed";		
+     GenericValue userLogin = (GenericValue) context.get("userLogin");            
+	 Map<String, Object> serviceResults;
+		try {
+				GenericValue periodBilling = delegator.findOne("PeriodBilling", UtilMisc.toMap("periodBillingId",periodBillingId), false);
+				if(UtilValidate.isEmpty(periodBilling)){
+					Debug.logError(errorMsg, module);
+				}
+			    List<GenericValue> payrollHeaderItems = delegator.findByAnd("PayrollHeaderAndHeaderItem", UtilMisc.toMap("periodBillingId",periodBillingId));
+			    List condList  = FastList.newInstance();
+			    condList.add(EntityCondition.makeCondition("invoiceItemTypeId",EntityOperator.IN,EntityUtil.getFieldListFromEntityList(payrollHeaderItems, "payrollHeaderItemTypeId", true)));
+			    condList.add(EntityCondition.makeCondition("taxAuthPartyId",EntityOperator.NOT_EQUAL,null));
+			    EntityCondition cond = EntityCondition.makeCondition(condList,EntityOperator.AND);
+			    
+			    List<GenericValue> invoiceItemTypes = delegator.findList("InvoiceItemType", cond, null, null, null, false);
+			    Debug.log("InvoiceItemType===="+invoiceItemTypes);
+			    for(GenericValue invoiceItemType : invoiceItemTypes){
+			    	String invoiceItemTypeId = invoiceItemType.getString("invoiceItemTypeId");
+			    	BigDecimal amount = BigDecimal.ZERO;
+			    	List<GenericValue> headerItems = EntityUtil.filterByCondition(payrollHeaderItems, EntityCondition.makeCondition("payrollHeaderItemTypeId",EntityOperator.EQUALS,invoiceItemTypeId));
+			    	for(GenericValue headerItem : headerItems){
+			    		amount = amount.add(headerItem.getBigDecimal("amount"));
+			    	}
+			    	Map input = UtilMisc.toMap("userLogin", userLogin,"invoiceId", invoiceId);
+			    	input.put("periodBillingId",periodBillingId);
+					input.put("referenceNumber",periodBilling.getString("billingTypeId")+"_"+periodBillingId);
+					input.put("invoiceItemTypeId", invoiceItemTypeId);
+					input.put("taxAuthPartyId", invoiceItemType.getString("taxAuthPartyId"));
+					input.put("quantity","1");
+					input.put("amount", amount);
+					Debug.log("input===="+input);
+		            serviceResults = dispatcher.runSync("createTaxInvoice", input);
+		            if (ServiceUtil.isError(serviceResults)) {
+		            	Debug.logError(errorMsg+"===invoiceItemTypeId ::"+invoiceItemTypeId, module);
+		                return ServiceUtil.returnError(errorMsg+"===invoiceItemTypeId ::"+invoiceItemTypeId, null, null, serviceResults);
+		            }	
+			    	
+			    }
+			    /*for (int i = 0; i < payrollHeaderItems.size(); ++i) {		
+				GenericValue payrollHeaderItem = payrollHeaderItems.get(i);
+				String payrollHeaderItemTypeId = payrollHeaderItem.getString("payrollHeaderItemTypeId");				
+				Map input = UtilMisc.toMap("userLogin", userLogin,"invoiceId", invoiceId);				
+				input.put("invoiceItemTypeId", payrollHeaderItemTypeId);			  
+				input.put("quantity", BigDecimal.ONE);
+				input.put("amount", payrollHeaderItem.getBigDecimal("amount"));
+	            serviceResults = dispatcher.runSync("createInvoiceItem", input);
+	            if (ServiceUtil.isError(serviceResults)) {
+	            	Debug.logError(errorMsg+"===invoiceItemTypeId ::"+payrollHeaderItemTypeId, module);
+	                return ServiceUtil.returnError(errorMsg+"===invoiceItemTypeId ::"+payrollHeaderItemTypeId, null, null, serviceResults);
+	            }				
+			}  */
+			
+	        			
+		}catch (Exception e) {
+			Debug.logError(e, errorMsg + "Unable to create payroll InvoiceItem records: " + e.getMessage(), module);
+	        return ServiceUtil.returnError(errorMsg + "Unable to create payroll InvoiceItem records: " + e.getMessage());
+	    }   		
+				
+		return ServiceUtil.returnSuccess();   	
+	}
  
  public static Map<String, Object> createPayrolPaymentAndAppclications(DispatchContext dctx, Map<String, Object> context) {
         Delegator delegator = dctx.getDelegator();
