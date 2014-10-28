@@ -233,7 +233,6 @@
                 <condition-list combine="and">
                     <condition-expr field-name="roleTypeIdFrom" operator="equals" from-field="parameters.roleTypeIdFrom"/>
                     <condition-expr field-name="roleTypeIdTo" operator="equals" from-field="parameters.roleTypeIdTo"/>
-                    <condition-expr field-name="partyIdFrom" operator="equals" from-field="parameters.partyIdFrom"/>
                     <condition-expr field-name="partyIdTo" operator="equals" from-field="parameters.partyIdTo"/>
                    <!-- <condition-expr field-name="fromDate" operator="equals" from-field="parameters.fromDate"/> -->
                 </condition-list>
