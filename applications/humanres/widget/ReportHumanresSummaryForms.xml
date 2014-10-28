@@ -1158,7 +1158,7 @@
         </sort-order>
     </form>
     <form name="CreateLoanRecovery" type="single" header-row-style="header-row" default-table-style="basic-table" target="createEmployeeLoanRecovery">
-    	<field name="employeeId" title="Employee">
+    	<field name="employeeId" title="Employee" required-field="true">
 			<lookup target-form-name="LookupEmployeeName"/>
 		</field>
     	<field name="loanTypeId" id-name="loanTypeId" title="Loan Type" tooltip="${uiLabelMap.CommonRequired}">
@@ -1167,6 +1167,8 @@
     			</entity-options>
     		</drop-down>
     	</field>
+    	<field name="roleTypeId"><hidden value="UNITS"/></field>
+    	<field name="deducteePartyId" required-field="true"><lookup target-form-name="LookupPartyName" target-parameter="roleTypeId" /></field>
     	<field name="amount" title="Recovery Amount" required-field="true"><text size="20"/></field>
     	<field name="description" title="Description" required-field="false"><text size="20"/></field>
     	<field name="finAccountId"  title="Financial Account"  >
@@ -1179,6 +1181,7 @@
                 </entity-options>
             </drop-down>
         </field>
+        <field name="contraRefNum" title="Instrument Number"><text></text></field>
         <field name="loanRecoveryDate" title="Loan Recovery Date" required-field="true" tooltip="Select date from calendar"><date-time type="date" ></date-time></field>
     	<field name="submitButton" title="${uiLabelMap.CommonCreate}"><submit/></field>
     </form>
@@ -1211,6 +1214,7 @@
         </field> -->
     	<field name="finAccountTransId" title="FinAccountTransId" ><display></display></field>
     	<field name="loanRecoveryAmount" title="Loan Recovery Amount" ><display></display></field>
+    	<field name="deducteePartyId" title="Unit"><display></display></field>
     	<field name="printReceipt" widget-style="buttontext">
             <hyperlink target="printDepositReport.pdf" description="Print Receipt" target-window="_BLANK">
                 <parameter param-name="loanId"/>
@@ -1218,6 +1222,7 @@
                 <parameter param-name="partyName"/>
                 <parameter param-name="loanTypeId"/>
                 <parameter param-name="finAccountTransId"/>
+                <parameter param-name="deducteePartyId"/>
                 <parameter param-name="reportTypeFlag" value="loanRecovery"/>
             </hyperlink>
         </field>

@@ -70,6 +70,7 @@ if(UtilValidate.isNotEmpty(emplyLoanRecoveryList)){
 			loanRecoveryDate = emplyLoanRecovery.recoveryDate;
 			finAccountTransId = emplyLoanRecovery.finAccountTransId;
 			customTimePeriodId = emplyLoanRecovery.customTimePeriodId;
+			deducteePartyId = emplyLoanRecovery.deducteePartyId;
 			
 			if(UtilValidate.isNotEmpty(finAccountTransId)){
 				finAccountTransDetails = delegator.findOne("FinAccountTrans", [finAccountTransId : finAccountTransId], false);
@@ -105,6 +106,7 @@ if(UtilValidate.isNotEmpty(emplyLoanRecoveryList)){
 			employeeLoanRecoveryMap["loanRecoveryDate"] = UtilDateTime.toDateString(loanRecoveryDate,"dd-MM-yyyy");
 			employeeLoanRecoveryMap["finAccountTransId"] = finAccountTransId;
 			employeeLoanRecoveryMap["loanRecoveryAmount"] = amount;
+			employeeLoanRecoveryMap["deducteePartyId"] = deducteePartyId;
 			employeeLoanRecoveryMap["customTimePeriodId"] = customTimePeriodId;
 			tempMap = [:];
 			tempMap.putAll(employeeLoanRecoveryMap);

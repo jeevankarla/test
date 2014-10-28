@@ -66,7 +66,7 @@ else{
 	StringToURL stringToUrl=new StringToURL();
 	URL refererUri= stringToUrl.convert(request.getHeader("referer"));		
 	pathInfo=refererUri.getPath();	
-	if(pathInfo == "/ap/control/newInvoice" || pathInfo == "/ar/control/newInvoice" || pathInfo == "/byproducts/control/NewRequest" ){	
+	if(pathInfo == "/ap/control/newInvoice" || pathInfo == "/ar/control/newInvoice" || pathInfo == "/byproducts/control/NewRequest" || pathInfo == "/humanres/control/NewLoanRecovery"){	
 		context.defaultRoleTypeList= new Boolean(false);
 		context.roleTypeId=parameters.parm0;
 		invoiceTypeId=parameters.parm1;		

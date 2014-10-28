@@ -24,7 +24,7 @@ under the License.
 <fo:layout-master-set>
 	<fo:simple-page-master master-name="main" page-height="12in" page-width="10in"
             margin-top="0.2in" margin-bottom=".3in" margin-left=".5in" margin-right=".1in">
-        <fo:region-body margin-top="2.6in"/>
+        <fo:region-body margin-top="2.8in"/>
         <fo:region-before extent="1in"/>
         <fo:region-after extent="1in"/>        
     </fo:simple-page-master>   
@@ -62,7 +62,13 @@ under the License.
                      </fo:table-row>	
                      <fo:table-row>
                 				<fo:table-cell>
-                            		<fo:block  keep-together="always" text-align="left" font-weight = "bold">Receipt Date:${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(paymentDate?if_exists, "MMMM dd,yyyy")}</fo:block>  
+                            		<fo:block  keep-together="always" text-align="left" font-weight = "bold">Receipt Date:${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(paymentDate?if_exists, "MMMM dd,yyyy")}            </fo:block>  
+                       			</fo:table-cell>
+                    </fo:table-row>
+                    <fo:table-row>
+                     			<#assign unitName = Static["org.ofbiz.party.party.PartyHelper"].getPartyName(delegator, deducteePartyId?if_exists, false)>
+                				<fo:table-cell>
+                            		<fo:block  keep-together="always" text-align="left" font-weight = "bold">Unit:${unitName?if_exists}</fo:block>  
                        			</fo:table-cell>
                     </fo:table-row>
                      </fo:table-body>
@@ -99,6 +105,17 @@ under the License.
             				<fo:table-row>
                					<fo:table-cell >
                     				<fo:block linefeed-treatment="preserve">&#xA;</fo:block>
+               					</fo:table-cell>
+		  					</fo:table-row>
+		  					<fo:table-row>
+            				     <fo:table-cell font-weight = "bold">
+                    				<fo:block keep-together="always">Instrument Number:</fo:block>
+               					</fo:table-cell>
+               					<fo:table-cell >
+                    				<fo:block linefeed-treatment="preserve">&#xA;</fo:block>
+               					</fo:table-cell>
+               					<fo:table-cell>
+               					<fo:block keep-together="always">${contraRefNum?if_exists}</fo:block>
                					</fo:table-cell>
 		  					</fo:table-row>
 		  					<fo:table-row>

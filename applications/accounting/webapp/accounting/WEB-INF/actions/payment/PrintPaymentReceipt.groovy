@@ -204,6 +204,13 @@ if(UtilValidate.isNotEmpty(reportTypeFlag) && reportTypeFlag == "depositCheque")
 						if(UtilValidate.isNotEmpty(parameters.partyName)){
 							context.put("partyName",parameters.partyName);
 						}
+						if(UtilValidate.isNotEmpty(contraRefNum)){
+							context.put("contraRefNum",contraRefNum);
+						}
+						if(UtilValidate.isNotEmpty(parameters.deducteePartyId)){
+							context.put("deducteePartyId",parameters.deducteePartyId);
+						}
+						
 						loanTypeId = parameters.loanTypeId;
 						if(UtilValidate.isNotEmpty(loanTypeId)){
 							employeeLoanType = delegator.findOne("LoanType", [loanTypeId : loanTypeId], false);

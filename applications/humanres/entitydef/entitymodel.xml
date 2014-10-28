@@ -1894,6 +1894,7 @@ under the License.
       <field name="payrollItemSeqId" type="id"></field>
       <field name="paymentId" type="id"></field>
       <field name="finAccountTransId" type="id"></field>
+      <field name="deducteePartyId" type="id"></field>
       <prim-key field="loanId"/>
       <prim-key field="sequenceNum"/>
       <relation type="one" fk-name="LOR_CUST_TP" rel-entity-name="CustomTimePeriod">
@@ -1911,6 +1912,9 @@ under the License.
       </relation>
        <relation type="one" fk-name="LOR_FINTRANSID" rel-entity-name="FinAccountTrans">
         <key-map field-name="finAccountTransId"/>
+      </relation>
+      <relation type="one" fk-name="LOR_DEDPARTYID" rel-entity-name="Party">
+        <key-map field-name="deducteePartyId" rel-field-name="partyId"/>
       </relation>
     </entity>
    <view-entity entity-name="LoanAndType"

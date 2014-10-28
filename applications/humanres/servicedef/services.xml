@@ -1668,5 +1668,7 @@ under the License.emplpunch
        <attribute name="amount" mode="IN" type="BigDecimal" optional="false"/>
        <attribute name="loanRecoveryDate" mode="IN" type="Date" optional="false"/>
        <attribute name="finAccountId" mode="IN" type="String" optional="false"/>
+       <attribute name="deducteePartyId" mode="IN" type="String" optional="false"/>
+       <attribute name="contraRefNum" mode="IN" type="String" optional="true"/>
    </service>
 </services>

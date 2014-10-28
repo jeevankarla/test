@@ -615,6 +615,8 @@ public class HumanresService {
 	    	String loanTypeId = (String) context.get("loanTypeId");
 	    	String description = (String)context.get("description");
 	    	String finAccountId = (String)context.get("finAccountId");
+	    	String contraRefNum = (String) context.get("contraRefNum");
+	    	String deducteePartyId = (String) context.get("deducteePartyId");
 	    	BigDecimal loanRecoveryAmount = (BigDecimal)context.get("amount");
 	    	Date loanRecoveryDate =  (Date)context.get("loanRecoveryDate");
 	    	
@@ -673,6 +675,7 @@ public class HumanresService {
 									newEntity.set("principalAmount", principalAmount);
 									newEntity.set("interestAmount", interestAmount);
 									newEntity.set("interestInstNum", interestInstNum);
+									newEntity.set("deducteePartyId", deducteePartyId);
 									delegator.setNextSubSeqId(newEntity,"sequenceNum", 5, 1);
 									delegator.createOrStore(newEntity);
 									
@@ -691,6 +694,7 @@ public class HumanresService {
 									             transCtxMap.put("transactionDate", loanRecoveryDateStart);
 									             transCtxMap.put("amount", loanRecoveryAmount);
 									             transCtxMap.put("comments", description);
+									             transCtxMap.put("contraRefNum", contraRefNum);
 									           	 transCtxMap.put("contraFinAccountId", loanFinAccountId);
 									             transCtxMap.put("finAccountId", finAccountId); 
 									           	 transCtxMap.put("finAccountTransTypeId", "DEPOSIT");
