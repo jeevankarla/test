@@ -224,6 +224,27 @@ if(UtilValidate.isNotEmpty(reportTypeFlag) && reportTypeFlag == "InvoiceSalesAbs
 									}
 								}
 							}
+							totalMrpValue = 0;
+							invoiceItemsList = delegator.findList("InvoiceItem",EntityCondition.makeCondition("invoiceId", EntityOperator.EQUALS , invoiceId)  , null, null, null, false );
+							if(UtilValidate.isNotEmpty(invoiceItemsList)){
+								invoiceItemsList.each{ invoiceItem ->
+									cxt = [:];
+									cxt.put("userLogin", userLogin);
+									cxt.put("productId", invoiceItem.productId);
+									cxt.put("partyId", invoicePartyId);
+									cxt.put("priceDate", UtilDateTime.nowTimestamp());
+									cxt.put("productStoreId", "_NA_");
+									cxt.put("productPriceTypeId", "MRP_IS");
+									cxt.put("geoTax", "VAT");
+									quantity = invoiceItem.quantity;
+									result = ByProductNetworkServices.calculateStoreProductPrices(delegator, dispatcher, cxt);
+									mrpPrice = result.get("totalPrice");
+									if(UtilValidate.isNotEmpty(mrpPrice)){
+										totQtyMrpPrice = quantity*mrpPrice;
+										totalMrpValue = totalMrpValue+totQtyMrpPrice;
+									}
+								}
+							}
 							totalMap = [:];
 							totalMap["invoiceId"]=invoiceId;
 							totalMap["basicRevenue"]=basicRevenue;
@@ -233,11 +254,13 @@ if(UtilValidate.isNotEmpty(reportTypeFlag) && reportTypeFlag == "InvoiceSalesAbs
 							totalMap["totalRevenue"]=totalRevenue;
 							totalMap["idValue"]=idValue;
 							totalMap["invoiceSequenceId"]=invoiceSequenceId;
+							totalMap["totalMrpValue"]=totalMrpValue;
 							invoicePartyList = [];
 							if(UtilValidate.isNotEmpty(invoicePartyMap[invoicePartyId])){
 								invoicePartyList = invoicePartyMap.get(invoicePartyId);
 							}
 							invoicePartyList.add(totalMap);
+							invoicePartyList = UtilMisc.sortMaps(invoicePartyList, UtilMisc.toList("invoiceSequenceId"));
 							invoicePartyMap[invoicePartyId] = invoicePartyList;
 						}
 					}
