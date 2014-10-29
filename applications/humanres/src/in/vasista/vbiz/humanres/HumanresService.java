@@ -240,7 +240,7 @@ public class HumanresService {
 					}
 					if(UtilValidate.isNotEmpty(isWeeklyOff) && isWeeklyOff.equals("Y")){
 						if(UtilValidate.isEmpty(fromDate)){
-							fromDate = UtilDateTime.getDayStart(UtilDateTime.addDaysToTimestamp(thruDate, -30));
+							fromDate = UtilDateTime.getDayStart(UtilDateTime.addDaysToTimestamp(thruDate, -365));
 						}
 						GenericValue employeeDetail = delegator.findOne("EmployeeDetail",UtilMisc.toMap("partyId",partyId),false);
 						List conditionList = FastList.newInstance();
@@ -251,7 +251,6 @@ public class HumanresService {
 								EntityOperator.OR,EntityCondition.makeCondition("encashmentStatus",EntityOperator.NOT_IN,UtilMisc.toList("CASH_ENCASHMENT","LEAVE_ENCASHMENT"))));
 					    EntityCondition condition= EntityCondition.makeCondition(conditionList,EntityOperator.AND);
 					    List<GenericValue> emplDailyAttendanceDetailList = delegator.findList("EmplDailyAttendanceDetail", condition, null,null, null, false);
-                         
 					    String emplWeeklyOffDay = "SUNDAY";
 			    		
 				        if(UtilValidate.isNotEmpty(employeeDetail) && UtilValidate.isNotEmpty(employeeDetail.getString("weeklyOff"))){
@@ -279,7 +278,6 @@ public class HumanresService {
 			    					
 			    				}
 			    				holidays.add(UtilDateTime.toSqlDate(cTime));
-			    				
 			    			}
 			    			c1.add(Calendar.DATE,1);
 						}	
@@ -302,42 +300,44 @@ public class HumanresService {
 					
 					EntityCondition con= EntityCondition.makeCondition(conList,EntityOperator.AND);
 					List<GenericValue> tempWorkedHolidaysList = delegator.findList("EmplDailyAttendanceDetail", con ,null,UtilMisc.toList("date" ,"partyId"), null, false );
-					
-					for(GenericValue workedHoliday : tempWorkedHolidaysList){
-						Map tempDayMap = FastMap.newInstance();
-						if(UtilValidate.isEmpty(workedHoliday)){
-							continue;
-						}
-						Date tempDate = workedHoliday.getDate("date");
-						/*if(!holidays.contains(tempDate)){
-							
-							continue;
-						}*/
-						Map punMap = PunchService.emplDailyPunchReport(dctx, UtilMisc.toMap("partyId", partyId ,"punchDate",tempDate));
-						if(UtilValidate.isNotEmpty(punMap.get("punchDataList"))){
-							Map punchDetails = (Map)(((List)punMap.get("punchDataList")).get(0));
-							if(UtilValidate.isNotEmpty(punchDetails)){
-								String totalTime = (String)punchDetails.get("totalTime");
-								if(UtilValidate.isNotEmpty(totalTime)){
-									totalTime = totalTime.replace(" Hrs", "");
-									List<String> timeSplit = StringUtil.split(totalTime, ":");
-									if(UtilValidate.isNotEmpty(timeSplit)){
-										 int hours = Integer.parseInt(timeSplit.get(0));
-										 int minutes = Integer.parseInt(timeSplit.get(1));
-										 if(((hours*60)+minutes) >=225){
-										 //if(((hours*60)+minutes) >=240){
-											 tempDayMap.put("punchDetails", ((List)punMap.get("punchDataList")).get(0));
-											 tempDayMap.put("date",UtilDateTime.toDateString(tempDate,"dd-MM-yyyy"));
-											 workedHolidaysList.add(tempDayMap);
-										 }
+					if(UtilValidate.isNotEmpty(tempWorkedHolidaysList)){
+						for(int i=0;i<tempWorkedHolidaysList.size();i++){
+							GenericValue workedHoliday = tempWorkedHolidaysList.get(i);
+							Map tempDayMap = FastMap.newInstance();
+							if(UtilValidate.isEmpty(workedHoliday)){
+								continue;
+							}
+							Date tempDate = workedHoliday.getDate("date");
+							/*if(!holidays.contains(tempDate)){
+								
+								continue;
+							}*/
+							Map punMap = PunchService.emplDailyPunchReport(dctx, UtilMisc.toMap("partyId", partyId ,"punchDate",tempDate));
+							if(UtilValidate.isNotEmpty(punMap.get("punchDataList"))){
+								Map punchDetails = (Map)(((List)punMap.get("punchDataList")).get(0));
+								if(UtilValidate.isNotEmpty(punchDetails)){
+									String totalTime = (String)punchDetails.get("totalTime");
+									if(UtilValidate.isNotEmpty(totalTime)){
+										totalTime = totalTime.replace(" Hrs", "");
+										List<String> timeSplit = StringUtil.split(totalTime, ":");
+										if(UtilValidate.isNotEmpty(timeSplit)){
+											 int hours = Integer.parseInt(timeSplit.get(0));
+											 int minutes = Integer.parseInt(timeSplit.get(1));
+											 if(((hours*60)+minutes) >=225){
+											 //if(((hours*60)+minutes) >=240){
+												 tempDayMap.put("punchDetails", ((List)punMap.get("punchDataList")).get(0));
+												 tempDayMap.put("date",UtilDateTime.toDateString(tempDate,"dd-MM-yyyy"));
+												 workedHolidaysList.add(tempDayMap);
+											 }
+										}
 									}
+									
 								}
 								
 							}
-							
+							tempWorkedHolidaysList.removeAll(EntityUtil.filterByAnd(tempWorkedHolidaysList, UtilMisc.toMap("date",tempDate)));
+							//holidays.remove(tempDate);
 						}
-						tempWorkedHolidaysList.removeAll(EntityUtil.filterByAnd(tempWorkedHolidaysList, UtilMisc.toMap("date",tempDate)));
-						//holidays.remove(tempDate);
 					}
 				  result.put("workedHolidaysList", workedHolidaysList);
 			}catch(GenericEntityException e){
