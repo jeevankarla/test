@@ -634,19 +634,18 @@ public class HumanresService {
 				if(UtilValidate.isNotEmpty(loanTypeDetails)){
 					payHeadTypeId = loanTypeDetails.getString("payHeadTypeId");
 				}
-				Map loanRecoveryMap = FastMap.newInstance();
-				loanRecoveryMap.put("userLogin",userLogin);
-				loanRecoveryMap.put("employeeId",employeeId);
-				loanRecoveryMap.put("payHeadTypeId",payHeadTypeId);
-				loanRecoveryMap.put("timePeriodStart",loanRecoveryDateStart);
-				loanRecoveryMap.put("timePeriodEnd",loanRecoveryDateEnd);
 				try {
-					Map resultValue = dispatcher.runSync("calculateLoanPayHeadAmount", loanRecoveryMap);
-					if(ServiceUtil.isError(resultValue)){
-						Debug.logError(ServiceUtil.getErrorMessage(resultValue), module);
-						return resultValue;
-					}
-					if(UtilValidate.isNotEmpty(resultValue)){
+						Map loanRecoveryMap = FastMap.newInstance();
+						loanRecoveryMap.put("userLogin",userLogin);
+						loanRecoveryMap.put("employeeId",employeeId);
+						loanRecoveryMap.put("payHeadTypeId",payHeadTypeId);
+						loanRecoveryMap.put("timePeriodStart",loanRecoveryDateStart);
+						loanRecoveryMap.put("timePeriodEnd",loanRecoveryDateEnd);
+						Map resultValue = dispatcher.runSync("calculateLoanPayHeadAmount", loanRecoveryMap);
+						if(ServiceUtil.isError(resultValue)){
+							Debug.logError(ServiceUtil.getErrorMessage(resultValue), module);
+							return resultValue;
+						}
 						Map loanRecovery = (Map) resultValue.get("loanRecovery");
 						if(UtilValidate.isEmpty(loanRecovery)){
 							Debug.logError(ServiceUtil.getErrorMessage(loanRecovery), module);
@@ -655,9 +654,15 @@ public class HumanresService {
 						if(UtilValidate.isNotEmpty(loanRecovery)){
 							loanId = (String) loanRecovery.get("loanId");
 							BigDecimal principalAmount = (BigDecimal) loanRecovery.get("principalAmount");
-							Long principalInstNum = (Long) loanRecovery.get("principalInstNum");
+							if(UtilValidate.isNotEmpty(principalAmount)){
+								principalAmount = loanRecoveryAmount;
+							}
+							//Long principalInstNum = (Long) loanRecovery.get("principalInstNum");
 							BigDecimal interestAmount = (BigDecimal) loanRecovery.get("interestAmount");
-							Long interestInstNum = (Long) loanRecovery.get("interestInstNum");
+							if(UtilValidate.isNotEmpty(interestAmount)){
+								interestAmount = loanRecoveryAmount;
+							}
+							//Long interestInstNum = (Long) loanRecovery.get("interestInstNum");
 							if(UtilValidate.isNotEmpty(loanId)){
 								List conditionList = FastList.newInstance();
 								conditionList.add(EntityCondition.makeCondition("loanId", EntityOperator.EQUALS, loanId));
@@ -667,52 +672,54 @@ public class HumanresService {
 					        	List<GenericValue> loanRecoveryList = delegator.findList("LoanRecovery",condition, null, null, null, false);
 					        	if(UtilValidate.isNotEmpty(loanRecoveryList)){
 					        		return ServiceUtil.returnError("Loan Recovery already exists for that loan type for Employee "+employeeId);
-					        	}else{
-					        		GenericValue newEntity = delegator.makeValue("LoanRecovery");
-									newEntity.set("loanId", loanId);
-									newEntity.set("recoveryDate", loanRecoveryDateStart);
-									newEntity.set("principalInstNum", principalInstNum);
-									newEntity.set("principalAmount", principalAmount);
-									newEntity.set("interestAmount", interestAmount);
-									newEntity.set("interestInstNum", interestInstNum);
-									newEntity.set("deducteePartyId", deducteePartyId);
-									delegator.setNextSubSeqId(newEntity,"sequenceNum", 5, 1);
-									delegator.createOrStore(newEntity);
-									
-									GenericValue loanDetails = null;
-									if(UtilValidate.isNotEmpty(loanRecoveryAmount)){
-										loanDetails = delegator.findOne("Loan",UtilMisc.toMap("loanId", loanId), false);
-										if(UtilValidate.isNotEmpty(loanDetails)){
-											String loanFinAccountId = (String) loanDetails.get("loanFinAccountId");
-											if(UtilValidate.isEmpty(loanFinAccountId)){
-												return ServiceUtil.returnError("Loan Fin Account Id does not exists for Employee "+employeeId);
-											}
-											if(UtilValidate.isNotEmpty(loanFinAccountId)){
-									             Map<String, Object> transCtxMap = FastMap.newInstance();
-									             transCtxMap.put("statusId", "FINACT_TRNS_CREATED");
-									             transCtxMap.put("entryType", "Contra");
-									             transCtxMap.put("transactionDate", loanRecoveryDateStart);
-									             transCtxMap.put("amount", loanRecoveryAmount);
-									             transCtxMap.put("comments", description);
-									             transCtxMap.put("contraRefNum", contraRefNum);
-									           	 transCtxMap.put("contraFinAccountId", loanFinAccountId);
-									             transCtxMap.put("finAccountId", finAccountId); 
-									           	 transCtxMap.put("finAccountTransTypeId", "DEPOSIT");
-									             transCtxMap.put("userLogin", userLogin);
-									             Map<String, Object> createResult = dispatcher.runSync("preCreateFinAccountTrans", transCtxMap);
-									             if (ServiceUtil.isError(createResult)) {
-									                 return createResult;
-									             }
-									             String finAccountTransId = (String)createResult.get("finAccountTransId");
-									             if(UtilValidate.isNotEmpty(finAccountTransId)){
-									            	 newEntity.set("finAccountTransId", finAccountTransId);
-									            	 delegator.store(newEntity);
-									             }
-											}
-										}
-									}
 					        	}
+					    GenericValue newEntity = delegator.makeValue("LoanRecovery");	
+						newEntity.set("loanId", loanId);
+						newEntity.set("recoveryDate", loanRecoveryDateStart);
+						newEntity.set("principalInstNum", loanRecovery.get("principalInstNum"));
+						newEntity.set("principalAmount", principalAmount);
+						newEntity.set("interestAmount", interestAmount);
+						newEntity.set("interestInstNum", loanRecovery.get("interestInstNum"));
+						newEntity.set("deducteePartyId", deducteePartyId);
+						delegator.setNextSubSeqId(newEntity,"sequenceNum", 5, 1);
+						delegator.createOrStore(newEntity);
+					
+					if(UtilValidate.isNotEmpty(loanRecoveryAmount)){
+						GenericValue loanDetails = delegator.findOne("Loan",UtilMisc.toMap("loanId", loanId), false);
+							if(UtilValidate.isEmpty(loanDetails)){
+								Debug.logError("Loan  Id does not exists for Employee ", module);
+								return ServiceUtil.returnError("Loan  Id does not exists for Employee "+loanId);
 							}
+							String loanFinAccountId = (String) loanDetails.get("loanFinAccountId");
+							if(UtilValidate.isEmpty(loanFinAccountId)){
+								Debug.logError("Loan Fin Account Id does not exists for Employee ", module);
+								return ServiceUtil.returnError("Loan Fin Account Id does not exists for Employee "+employeeId);
+							}
+							
+				             Map<String, Object> transCtxMap = FastMap.newInstance();
+				             transCtxMap.put("statusId", "FINACT_TRNS_CREATED");
+				             transCtxMap.put("entryType", "Contra");
+				             transCtxMap.put("transactionDate", loanRecoveryDateStart);
+				             transCtxMap.put("amount", loanRecoveryAmount);
+				             transCtxMap.put("comments", description);
+				             transCtxMap.put("contraRefNum", contraRefNum);
+				           	 transCtxMap.put("contraFinAccountId", loanFinAccountId);
+				             transCtxMap.put("finAccountId", finAccountId); 
+				           	 transCtxMap.put("finAccountTransTypeId", "DEPOSIT");
+				             transCtxMap.put("userLogin", userLogin);
+				             Map<String, Object> createResult = dispatcher.runSync("preCreateFinAccountTrans", transCtxMap);
+				             if (ServiceUtil.isError(createResult)) {
+				                 return createResult;
+				             }
+				             String finAccountTransId = (String)createResult.get("finAccountTransId");
+				             if(UtilValidate.isNotEmpty(finAccountTransId)){
+				            	 newEntity.set("finAccountTransId", finAccountTransId);
+				            	 delegator.store(newEntity);
+				             }
+									
+								
+							}
+				        	
 						}
 					}
 				} catch (GenericServiceException s) {
