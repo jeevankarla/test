@@ -631,6 +631,7 @@
         <attribute name="paymentDate" mode="IN" type="Timestamp" optional="true"/>
         <attribute name="paymentMethodTypeId" mode="INOUT" type="String" optional="true"/>             
         <attribute name="amount" mode="IN" type="String" optional="false"/>
+        <attribute name="comments" mode="IN" type="String" optional="true"/>
         <attribute name="sendSMS" mode="IN" type="Boolean" optional="true"/>        
         <attribute name="paymentLocationId" mode="IN" type="String" optional="true"/>
         <attribute name="paymentPurposeType" mode="IN" type="String" optional="true"/>
@@ -665,6 +666,7 @@
         <attribute name="paymentDate" mode="IN" type="String" optional="true"/>
         <attribute name="paymentMethodTypeId" mode="INOUT" type="String" optional="true"/>             
         <attribute name="amount" mode="IN" type="String" optional="false"/>
+        <attribute name="comments" mode="IN" type="String" optional="true"/>
         <attribute name="facilityId" mode="OUT" type="String" optional="true"/>
         <attribute name="routeId" mode="IN" type="String" optional="true"/>
         <attribute name="statusId" mode="OUT" type="String" optional="true"/>

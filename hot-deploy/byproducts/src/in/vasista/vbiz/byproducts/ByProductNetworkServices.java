@@ -7562,6 +7562,7 @@ public class ByProductNetworkServices {
 		Timestamp paymentDate = (Timestamp) context.get("paymentDate");
 		String paymentLocationId = (String) context.get("paymentLocationId");
 		String paymentRefNum = (String) context.get("paymentRefNum");
+		String comments = (String) context.get("comments");
 		String paymentPurposeType = (String) context.get("paymentPurposeType");
 		String issuingAuthority = (String) context.get("issuingAuthority");
 		String issuingAuthorityBranch = (String) context.get("issuingAuthorityBranch");
@@ -7755,6 +7756,7 @@ public class ByProductNetworkServices {
 				paymentCtx.put("paymentRefNum", paymentRefNum);
 			}
 			paymentCtx.put("paymentDate", paymentDate);
+			paymentCtx.put("comments", comments);
 			paymentCtx.put("issuingAuthority", issuingAuthority);
 			paymentCtx.put("issuingAuthorityBranch", issuingAuthorityBranch);
 			if (UtilValidate.isNotEmpty(instrumentDate)) {

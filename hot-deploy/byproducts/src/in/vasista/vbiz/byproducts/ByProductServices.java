@@ -3158,6 +3158,7 @@ public class ByProductServices {
         String paymentMethodType = (String) context.get("paymentMethodTypeId");
         String paymentLocationId = (String) context.get("paymentLocationId");                
         String paymentRefNum = (String) context.get("paymentRefNum");
+        String comments = (String) context.get("comments");
         String paymentPurposeType = (String) context.get("paymentPurposeType");
         String issuingAuthority = (String) context.get("issuingAuthority");
         String issuingAuthorityBranch = (String) context.get("issuingAuthorityBranch");
@@ -3221,6 +3222,7 @@ public class ByProductServices {
         	paymentCtx.put("amount",amount.toString());
         	paymentCtx.put("useFifo",true);
         	paymentCtx.put("paymentDate", paymentDate);
+        	paymentCtx.put("comments", comments);
         	paymentCtx.put("paymentRefNum", paymentRefNum);
         	paymentCtx.put("issuingAuthorityBranch", issuingAuthorityBranch);  
         	paymentCtx.put("instrumentDate", instrumentDate);
