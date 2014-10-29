@@ -1757,6 +1757,11 @@ under the License.
         <response name="success" type="view" value="ExportBenefitsOrDeductionsPDF"/>
         <response name="error" type="view" value="ExportBenefitsOrDeductionsPDF"></response>
     </request-map>
+    <request-map uri="IncrementCertificate.pdf">
+   		<security https="true" auth="true"/>
+       	<response name="success" type="view" value="IncrementCertificate"/>
+       	<response name="error" type="view" value="IncrementCertificate"></response>
+    </request-map>
     <request-map uri="EmployeeWiseSalaryDetails">
        <security https="true" auth="true"/>
         <response name="success" type="view" value="EmployeeWiseSalaryDetails"/>
@@ -2243,6 +2248,7 @@ under the License.
 	 <view-map name="ProfessionalTaxReport" type="screenfop" page="component://humanres/widget/ReportHumanresSummaryScreens.xml#ProfessionalTaxReport" content-type="application/pdf" encoding="none"></view-map>
 	 <view-map name="PrintPayrollSummary" type="screenfop" page="component://humanres/widget/ReportHumanresSummaryScreens.xml#PrintPayrollSummary" content-type="application/pdf" encoding="none"></view-map>
 	 <view-map name="ExportBenefitsOrDeductionsPDF" type="screenfop" page="component://humanres/widget/ReportHumanresSummaryScreens.xml#ExportBenefitsOrDeductionsPDF" content-type="application/pdf" encoding="none"></view-map>
+	 <view-map name="IncrementCertificate" type="screenfop" page="component://humanres/widget/ReportHumanresSummaryScreens.xml#IncrementCertificate" content-type="application/pdf" encoding="none"></view-map>
 	 <view-map name="EmployeeWiseSalaryDetails" type="screen" page="component://humanres/widget/ReportHumanresSummaryScreens.xml#EmployeeWiseSalaryDetails"/>
 	 <view-map name="EmployeeWiseSalaryDetailsCsv" type="screencsv" page="component://humanres/widget/ReportHumanresSummaryScreens.xml#EmployeeWiseSalaryDetailsCsv" content-type="text/csv" encoding="none"/>
 	 <view-map name="EmployeeWiseSalaryDetailsPdf" type="screenfop" page="component://humanres/widget/ReportHumanresSummaryScreens.xml#EmployeeWiseSalaryDetailsPdf" content-type="application/pdf" encoding="none"/>
@@ -2351,7 +2357,7 @@ under the License.
     <view-map name="loanRecovery" type="screen" page="component://humanres/widget/HumanresScreens.xml#loanRecovery"></view-map>
     <view-map name="CreateNewLoanRecovery" type="screen" page="component://humanres/widget/HumanresScreens.xml#CreateNewLoanRecovery"></view-map>
     
-    <view-map name="PrintDepositReceipt" type="screenfop" page="component://accounting/widget/PaymentScreens.xml#PrintDepositReceipt" content-type="application/pdf" encoding="none"/>
+    <view-map name="PrintDepositReceipt" type="screenfop" page="component://accounting/widget/PaymentScreens.xml#PrintDepositReceipt" content-type="application/pdf" encoding="none"/>  
 	<!-- Employee Content -->
 	<view-map name="AddEmployeeNote" type="screen" page="component://humanres/widget/EmployeeScreens.xml#AddEmployeeNote"/>
 	

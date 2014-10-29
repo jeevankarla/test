@@ -1358,6 +1358,28 @@
 		</widgets>	
 	</section>
 </screen>
+<screen name="IncrementCertificate">
+    	<section>
+    		<actions>
+               	<property-map resource="OrderUiLabels" map-name="uiLabelMap" global="true"/>
+    			<property-map resource="ProductUiLabels" map-name="uiLabelMap" global="true"/>
+    			<property-map resource="PartyUiLabels" map-name="uiLabelMap" global="true"/>
+    			<property-map resource="CommonUiLabels" map-name="uiLabelMap" global="true"/>
+                <script location="component://humanres/webapp/humanres/WEB-INF/actions/reports/IncrementCertificate.groovy"/>      
+       		</actions> 
+    		<widgets>
+    			<section>                                                      
+    				<widgets>
+    					<platform-specific>
+    						<xsl-fo>
+    							<html-template location="component://humanres/webapp/humanres/humanres/IncrementCertificate.fo.ftl" />
+    						</xsl-fo>
+    					</platform-specific>
+    				</widgets>
+    			</section>
+    		</widgets>		
+    	</section>
+</screen>
 <screen name="EmployeeBankDetails">
 	<section>
 		<actions>
