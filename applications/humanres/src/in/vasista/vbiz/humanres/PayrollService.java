@@ -3638,71 +3638,137 @@ public class PayrollService {
 	        String customTimePeriodId = (String) request.getParameter("customTimePeriodId");
 	        String timePeriodId = (String) request.getParameter("timePeriodId");
 	        
+	        BigDecimal noOfPayableDays=BigDecimal.ZERO;
 	        String noOfPayableDaysStr=(String)request.getParameter("noOfPayableDays");
-	        BigDecimal noOfPayableDays=new BigDecimal(noOfPayableDaysStr);
+	        if(UtilValidate.isNotEmpty(noOfPayableDaysStr)){
+	        	noOfPayableDays=new BigDecimal(noOfPayableDaysStr);
+	        }	
 	        
+	        BigDecimal noOfAttendedDays=BigDecimal.ZERO;
 	        String noOfAttendedDaysStr=(String)request.getParameter("noOfAttendedDays");
-	        BigDecimal noOfAttendedDays=new BigDecimal(noOfAttendedDaysStr);
+	        if(UtilValidate.isNotEmpty(noOfAttendedDaysStr)){
+	        	noOfAttendedDays=new BigDecimal(noOfAttendedDaysStr);
+	        }	
 	        
+	        BigDecimal noOfCalenderDays=BigDecimal.ZERO;
 	        String noOfCalenderDaysStr=(String)request.getParameter("noOfCalenderDays");
-	        BigDecimal noOfCalenderDays=new BigDecimal(noOfCalenderDaysStr);
+	        if(UtilValidate.isNotEmpty(noOfCalenderDaysStr)){
+	        	noOfCalenderDays=new BigDecimal(noOfCalenderDaysStr);
+	        }
 	        
+	        BigDecimal casualLeaveDays=BigDecimal.ZERO;
 	        String casualLeaveDaysStr=(String)request.getParameter("casualLeaveDays");
-	        BigDecimal casualLeaveDays=new BigDecimal(casualLeaveDaysStr);
+	        if(UtilValidate.isNotEmpty(casualLeaveDaysStr)){
+	        	casualLeaveDays=new BigDecimal(casualLeaveDaysStr);
+	        }	
 	        
+	        BigDecimal earnedLeaveDays=BigDecimal.ZERO;
 	        String earnedLeaveDaysStr=(String)request.getParameter("earnedLeaveDays");
-	        BigDecimal earnedLeaveDays=new BigDecimal(earnedLeaveDaysStr);
+	        if(UtilValidate.isNotEmpty(earnedLeaveDaysStr)){
+	        	earnedLeaveDays=new BigDecimal(earnedLeaveDaysStr);
+	        }
 	        
+	        BigDecimal disabilityLeaveDays=BigDecimal.ZERO;
 	        String disabilityLeaveDaysStr=(String)request.getParameter("disabilityLeaveDays");
-	        BigDecimal disabilityLeaveDays=new BigDecimal(disabilityLeaveDaysStr);
+	        if(UtilValidate.isNotEmpty(disabilityLeaveDaysStr)){
+	        	disabilityLeaveDays=new BigDecimal(disabilityLeaveDaysStr);
+	        }	
 	        
+	        BigDecimal extraOrdinaryLeaveDays=BigDecimal.ZERO;
 	        String extraOrdinaryLeaveDaysStr=(String)request.getParameter("extraOrdinaryLeaveDays");
-	        BigDecimal extraOrdinaryLeaveDays=new BigDecimal(extraOrdinaryLeaveDaysStr);
+	        if(UtilValidate.isNotEmpty(extraOrdinaryLeaveDaysStr)){
+	        	extraOrdinaryLeaveDays=new BigDecimal(extraOrdinaryLeaveDaysStr);
+	        }
 	        
+	        BigDecimal commutedLeaveDays=BigDecimal.ZERO;
 	        String commutedLeaveDaysStr=(String)request.getParameter("commutedLeaveDays");
-	        BigDecimal commutedLeaveDays=new BigDecimal(commutedLeaveDaysStr);
+	        if(UtilValidate.isNotEmpty(commutedLeaveDaysStr)){
+	        	commutedLeaveDays=new BigDecimal(commutedLeaveDaysStr);
+	        }
 	        
+	        BigDecimal noOfAttendedHoliDays=BigDecimal.ZERO;
 	        String noOfAttendedHoliDaysStr=(String)request.getParameter("noOfAttendedHoliDays");
-	        BigDecimal noOfAttendedHoliDays=new BigDecimal(noOfAttendedHoliDaysStr);
+	        if(UtilValidate.isNotEmpty(noOfAttendedHoliDaysStr)){
+	        	noOfAttendedHoliDays=new BigDecimal(noOfAttendedHoliDaysStr);
+	        }	
 	        
+	        BigDecimal noOfAttendedSsDays=BigDecimal.ZERO;
 	        String noOfAttendedSsDaysStr=(String)request.getParameter("noOfAttendedSsDays");
-	        BigDecimal noOfAttendedSsDays=new BigDecimal(noOfAttendedSsDaysStr);
+	        if(UtilValidate.isNotEmpty(noOfAttendedSsDaysStr)){
+	        	noOfAttendedSsDays=new BigDecimal(noOfAttendedSsDaysStr);
+	        }
 	        
+	        BigDecimal noOfAttendedWeeklyOffDays=BigDecimal.ZERO;
 	        String noOfAttendedWeeklyOffDaysStr=(String)request.getParameter("noOfAttendedWeeklyOffDays");
-	        BigDecimal noOfAttendedWeeklyOffDays=new BigDecimal(noOfAttendedWeeklyOffDaysStr);
+	        if(UtilValidate.isNotEmpty(noOfAttendedWeeklyOffDaysStr)){
+	        	noOfAttendedWeeklyOffDays=new BigDecimal(noOfAttendedWeeklyOffDaysStr);
+	        }
 	        
+	        BigDecimal noOfCompoffAvailed=BigDecimal.ZERO;
 	        String noOfCompoffAvailedStr=(String)request.getParameter("noOfCompoffAvailed");
-	        BigDecimal noOfCompoffAvailed=new BigDecimal(noOfCompoffAvailedStr);
+	        if(UtilValidate.isNotEmpty(noOfCompoffAvailedStr)){
+	        	noOfCompoffAvailed=new BigDecimal(noOfCompoffAvailedStr);
+	        }
 	        
+	        BigDecimal noOfArrearDays=BigDecimal.ZERO;
 	        String noOfArrearDaysStr=(String)request.getParameter("noOfArrearDays");
-	        BigDecimal noOfArrearDays=new BigDecimal(noOfArrearDaysStr);
+	        if(UtilValidate.isNotEmpty(noOfArrearDaysStr)){
+	        	noOfArrearDays=new BigDecimal(noOfArrearDaysStr);
+	        }
 	        
+	        BigDecimal noOfNightAllowanceDays=BigDecimal.ZERO;
 	        String noOfNightAllowanceDaysStr=(String)request.getParameter("noOfNightAllowanceDays");
-	        BigDecimal noOfNightAllowanceDays=new BigDecimal(noOfNightAllowanceDaysStr);
+	        if(UtilValidate.isNotEmpty(noOfNightAllowanceDaysStr)){
+	        	noOfNightAllowanceDays=new BigDecimal(noOfNightAllowanceDaysStr);
+	        }
 	        
+	        BigDecimal coldOrBoiledAllowanceDays=BigDecimal.ZERO;
 	        String coldOrBoiledAllowanceDaysStr=(String)request.getParameter("coldOrBoiledAllowanceDays");
-	        BigDecimal coldOrBoiledAllowanceDays=new BigDecimal(coldOrBoiledAllowanceDaysStr);
+	        if(UtilValidate.isNotEmpty(coldOrBoiledAllowanceDaysStr)){
+	        	coldOrBoiledAllowanceDays=new BigDecimal(coldOrBoiledAllowanceDaysStr);
+	        }
 	        
+	        BigDecimal noOfRiskAllowanceDays=BigDecimal.ZERO;
 	        String noOfRiskAllowanceDaysStr=(String)request.getParameter("noOfRiskAllowanceDays");
-	        BigDecimal noOfRiskAllowanceDays=new BigDecimal(noOfRiskAllowanceDaysStr);
+	        if(UtilValidate.isNotEmpty(noOfRiskAllowanceDaysStr)){
+	        	noOfRiskAllowanceDays=new BigDecimal(noOfRiskAllowanceDaysStr);
+	        }
 	        
+	        BigDecimal heavyTankerAllowanceDays=BigDecimal.ZERO;
 	        String heavyTankerAllowanceDaysStr=(String)request.getParameter("heavyTankerAllowanceDays");
-	        BigDecimal heavyTankerAllowanceDays=new BigDecimal(heavyTankerAllowanceDaysStr);
+	        if(UtilValidate.isNotEmpty(heavyTankerAllowanceDaysStr)){
+	        	heavyTankerAllowanceDays=new BigDecimal(heavyTankerAllowanceDaysStr);
+	        }
 	        
+	        BigDecimal trTankerAllowanceDays=BigDecimal.ZERO;
 	        String trTankerAllowanceDaysStr=(String)request.getParameter("trTankerAllowanceDays");
-	        BigDecimal trTankerAllowanceDays=new BigDecimal(trTankerAllowanceDaysStr);
+	        if(UtilValidate.isNotEmpty(trTankerAllowanceDaysStr)){
+	        	trTankerAllowanceDays=new BigDecimal(trTankerAllowanceDaysStr);
+	        }
 	        
+	        BigDecimal operatingAllowanceDays=BigDecimal.ZERO;
 	        String operatingAllowanceDaysStr=(String)request.getParameter("operatingAllowanceDays");
-	        BigDecimal operatingAllowanceDays=new BigDecimal(operatingAllowanceDaysStr);
+	        if(UtilValidate.isNotEmpty(operatingAllowanceDaysStr)){
+	        	operatingAllowanceDays=new BigDecimal(operatingAllowanceDaysStr);
+	        }
 	        
+	        BigDecimal inChargeAllowanceDays=BigDecimal.ZERO;
 	        String inChargeAllowanceDaysStr=(String)request.getParameter("inChargeAllowanceDays");
-	        BigDecimal inChargeAllowanceDays=new BigDecimal(inChargeAllowanceDaysStr);
+	        if(UtilValidate.isNotEmpty(inChargeAllowanceDaysStr)){
+	        	inChargeAllowanceDays=new BigDecimal(inChargeAllowanceDaysStr);
+	        }
 	        
+	        BigDecimal lossOfPayDays=BigDecimal.ZERO;
 	        String lossOfPayDaysStr=(String)request.getParameter("lossOfPayDays");
-	        BigDecimal lossOfPayDays=new BigDecimal(lossOfPayDaysStr);
+	        if(UtilValidate.isNotEmpty(lossOfPayDaysStr)){
+	        	lossOfPayDays=new BigDecimal(lossOfPayDaysStr);
+	        }
 	        
+	        BigDecimal noOfHalfPayDays=BigDecimal.ZERO;
 	        String noOfHalfPayDaysStr=(String)request.getParameter("noOfHalfPayDays");
-	        BigDecimal noOfHalfPayDays=new BigDecimal(noOfHalfPayDaysStr);
+	        if(UtilValidate.isNotEmpty(noOfHalfPayDaysStr)){
+	        	noOfHalfPayDays=new BigDecimal(noOfHalfPayDaysStr);
+	        }
 	        
 	        String billingTypeId = "PAYROLL_BILL";	
 	        // Returning error if payroll already generated
@@ -3739,28 +3805,72 @@ public class PayrollService {
 						
       			
       					if(UtilValidate.isNotEmpty(employPayrollDetails)){
-      						employPayrollDetails.set("noOfPayableDays",noOfPayableDays);
-      						employPayrollDetails.set("noOfAttendedDays",noOfAttendedDays);
-      						employPayrollDetails.set("noOfCalenderDays",noOfCalenderDays);
-      						employPayrollDetails.set("casualLeaveDays",casualLeaveDays);
-      						employPayrollDetails.set("earnedLeaveDays",earnedLeaveDays);
-      						employPayrollDetails.set("noOfAttendedHoliDays",noOfAttendedHoliDays);
-      						employPayrollDetails.set("noOfAttendedSsDays",noOfAttendedSsDays);
-      						employPayrollDetails.set("noOfAttendedWeeklyOffDays",noOfAttendedWeeklyOffDays);
-      						employPayrollDetails.set("noOfCompoffAvailed",noOfCompoffAvailed);
-      						employPayrollDetails.set("lossOfPayDays",lossOfPayDays);
-      						employPayrollDetails.set("noOfArrearDays",noOfArrearDays);
-      						employPayrollDetails.set("noOfNightAllowanceDays",noOfNightAllowanceDays);
-      						employPayrollDetails.set("coldOrBoiledAllowanceDays",coldOrBoiledAllowanceDays);
-      						employPayrollDetails.set("noOfRiskAllowanceDays",noOfRiskAllowanceDays);
-      						employPayrollDetails.set("heavyTankerAllowanceDays",heavyTankerAllowanceDays);
-      						employPayrollDetails.set("trTankerAllowanceDays",trTankerAllowanceDays);
-      						employPayrollDetails.set("operatingAllowanceDays",operatingAllowanceDays);
-      						employPayrollDetails.set("inChargeAllowanceDays",inChargeAllowanceDays);
-      						employPayrollDetails.set("noOfHalfPayDays",noOfHalfPayDays);
-      						employPayrollDetails.set("commutedLeaveDays",commutedLeaveDays);
-      						employPayrollDetails.set("disabilityLeaveDays",disabilityLeaveDays);
-      						employPayrollDetails.set("extraOrdinaryLeaveDays",extraOrdinaryLeaveDays);
+      						if(UtilValidate.isNotEmpty(noOfPayableDaysStr)){
+      							employPayrollDetails.set("noOfPayableDays",noOfPayableDays);
+      						}	
+      						if(UtilValidate.isNotEmpty(noOfAttendedDaysStr)){
+      							employPayrollDetails.set("noOfAttendedDays",noOfAttendedDays);
+      						}
+      						if(UtilValidate.isNotEmpty(noOfCalenderDaysStr)){
+      							employPayrollDetails.set("noOfCalenderDays",noOfCalenderDays);
+      						}
+      						if(UtilValidate.isNotEmpty(casualLeaveDaysStr)){
+      							employPayrollDetails.set("casualLeaveDays",casualLeaveDays);
+      						}	
+      						if(UtilValidate.isNotEmpty(earnedLeaveDaysStr)){
+      							employPayrollDetails.set("earnedLeaveDays",earnedLeaveDays);
+      						}
+      						if(UtilValidate.isNotEmpty(noOfAttendedHoliDaysStr)){
+      							employPayrollDetails.set("noOfAttendedHoliDays",noOfAttendedHoliDays);
+      						}
+      						if(UtilValidate.isNotEmpty(noOfAttendedSsDaysStr)){
+      							employPayrollDetails.set("noOfAttendedSsDays",noOfAttendedSsDays);
+      						}
+      						if(UtilValidate.isNotEmpty(noOfAttendedWeeklyOffDaysStr)){
+      							employPayrollDetails.set("noOfAttendedWeeklyOffDays",noOfAttendedWeeklyOffDays);
+      						}
+      						if(UtilValidate.isNotEmpty(noOfCompoffAvailedStr)){
+      							employPayrollDetails.set("noOfCompoffAvailed",noOfCompoffAvailed);
+      						}
+      						if(UtilValidate.isNotEmpty(lossOfPayDaysStr)){
+      							employPayrollDetails.set("lossOfPayDays",lossOfPayDays);
+      						}
+      						if(UtilValidate.isNotEmpty(noOfArrearDaysStr)){
+      							employPayrollDetails.set("noOfArrearDays",noOfArrearDays);
+      						}
+      						if(UtilValidate.isNotEmpty(noOfNightAllowanceDaysStr)){
+      							employPayrollDetails.set("noOfNightAllowanceDays",noOfNightAllowanceDays);
+      						}
+      						if(UtilValidate.isNotEmpty(coldOrBoiledAllowanceDaysStr)){
+      							employPayrollDetails.set("coldOrBoiledAllowanceDays",coldOrBoiledAllowanceDays);
+      						}
+      						if(UtilValidate.isNotEmpty(noOfRiskAllowanceDaysStr)){
+      							employPayrollDetails.set("noOfRiskAllowanceDays",noOfRiskAllowanceDays);
+      						}
+      						if(UtilValidate.isNotEmpty(heavyTankerAllowanceDaysStr)){
+      							employPayrollDetails.set("heavyTankerAllowanceDays",heavyTankerAllowanceDays);
+      						}
+      						if(UtilValidate.isNotEmpty(trTankerAllowanceDaysStr)){
+      							employPayrollDetails.set("trTankerAllowanceDays",trTankerAllowanceDays);
+      						}
+      						if(UtilValidate.isNotEmpty(operatingAllowanceDaysStr)){
+      							employPayrollDetails.set("operatingAllowanceDays",operatingAllowanceDays);
+      						}
+      						if(UtilValidate.isNotEmpty(inChargeAllowanceDaysStr)){
+      							employPayrollDetails.set("inChargeAllowanceDays",inChargeAllowanceDays);
+      						}
+      						if(UtilValidate.isNotEmpty(noOfHalfPayDaysStr)){
+      							employPayrollDetails.set("noOfHalfPayDays",noOfHalfPayDays);
+      						}
+      						if(UtilValidate.isNotEmpty(commutedLeaveDaysStr)){
+      							employPayrollDetails.set("commutedLeaveDays",commutedLeaveDays);
+      						}
+      						if(UtilValidate.isNotEmpty(disabilityLeaveDaysStr)){
+      							employPayrollDetails.set("disabilityLeaveDays",disabilityLeaveDays);
+      						}
+      						if(UtilValidate.isNotEmpty(extraOrdinaryLeaveDaysStr)){
+      							employPayrollDetails.set("extraOrdinaryLeaveDays",extraOrdinaryLeaveDays);
+      						}
       				        delegator.createOrStore(employPayrollDetails);
       					}
     	      	

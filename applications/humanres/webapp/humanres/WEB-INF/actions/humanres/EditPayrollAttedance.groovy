@@ -83,7 +83,7 @@ if(UtilValidate.isNotEmpty(employementList)){
 		tempFinalMap.put("customTimePeriodId",customTimePeriodId);
 		tempFinalMap.put("timePeriodId",timePeriodId);
 		tempFinalMap.put("Dates",dates);
-		tempFinalMap["noOfPayableDays"]=0;
+		tempFinalMap["noOfPayableDays"]="";
 		if(!"leaveEncash".equals(screenFlag)){
 			tempFinalMap["noOfAttendedDays"]=0;
 			tempFinalMap["noOfCalenderDays"]=0;
@@ -119,112 +119,112 @@ if(UtilValidate.isNotEmpty(employementList)){
 			
 			noOfPayableDays=payrollAttendance.get("noOfPayableDays");
 			if(UtilValidate.isEmpty(noOfPayableDays))
-			noOfPayableDays=0;
+			noOfPayableDays="";
 			tempFinalMap.put("noOfPayableDays",noOfPayableDays);
 			if(!"leaveEncash".equals(screenFlag)){
 				noOfAttendedDays=payrollAttendance.get("noOfAttendedDays");
 				if(UtilValidate.isEmpty(noOfAttendedDays))
-				noOfAttendedDays=0;
+				noOfAttendedDays="";
 				tempFinalMap.put("noOfAttendedDays",noOfAttendedDays);
 				
 				noOfCalenderDays=payrollAttendance.get("noOfCalenderDays");
 				if(UtilValidate.isEmpty(noOfCalenderDays))
-				noOfCalenderDays=0;
+				noOfCalenderDays="";
 				tempFinalMap.put("noOfCalenderDays",noOfCalenderDays);
 				
 				casualLeaveDays=payrollAttendance.get("casualLeaveDays");
 				if(UtilValidate.isEmpty(casualLeaveDays))
-				casualLeaveDays=0;
+				casualLeaveDays="";
 				tempFinalMap.put("casualLeaveDays",casualLeaveDays);
 				
 				earnedLeaveDays=payrollAttendance.get("earnedLeaveDays");
 				if(UtilValidate.isEmpty(earnedLeaveDays))
-				earnedLeaveDays=0;
+				earnedLeaveDays="";
 				tempFinalMap.put("earnedLeaveDays",earnedLeaveDays);
 				
 				commutedLeaveDays=payrollAttendance.get("commutedLeaveDays");
 				if(UtilValidate.isEmpty(commutedLeaveDays))
-				commutedLeaveDays=0;
+				commutedLeaveDays="";
 				tempFinalMap.put("commutedLeaveDays",commutedLeaveDays);
 				
 				disabilityLeaveDays=payrollAttendance.get("disabilityLeaveDays");
 				if(UtilValidate.isEmpty(disabilityLeaveDays))
-				disabilityLeaveDays=0;
+				disabilityLeaveDays="";
 				tempFinalMap.put("disabilityLeaveDays",disabilityLeaveDays);
 				
 				extraOrdinaryLeaveDays=payrollAttendance.get("extraOrdinaryLeaveDays");
 				if(UtilValidate.isEmpty(extraOrdinaryLeaveDays))
-				extraOrdinaryLeaveDays=0;
+				extraOrdinaryLeaveDays="";
 				tempFinalMap.put("extraOrdinaryLeaveDays",extraOrdinaryLeaveDays);
 				
 				noOfAttendedHoliDays=payrollAttendance.get("noOfAttendedHoliDays");
 				if(UtilValidate.isEmpty(noOfAttendedHoliDays))
-				noOfAttendedHoliDays=0;
+				noOfAttendedHoliDays="";
 				tempFinalMap.put("noOfAttendedHoliDays",noOfAttendedHoliDays);
 				
 				noOfAttendedSsDays=payrollAttendance.get("noOfAttendedSsDays");
 				if(UtilValidate.isEmpty(noOfAttendedSsDays))
-				noOfAttendedSsDays=0;
+				noOfAttendedSsDays="";
 				tempFinalMap.put("noOfAttendedSsDays",noOfAttendedSsDays);
 				
 				noOfAttendedWeeklyOffDays=payrollAttendance.get("noOfAttendedWeeklyOffDays");
 				if(UtilValidate.isEmpty(noOfAttendedWeeklyOffDays))
-				noOfAttendedWeeklyOffDays=0;
+				noOfAttendedWeeklyOffDays="";
 				tempFinalMap.put("noOfAttendedWeeklyOffDays",noOfAttendedWeeklyOffDays);
 				
 				noOfCompoffAvailed=payrollAttendance.get("noOfCompoffAvailed");
 				if(UtilValidate.isEmpty(noOfCompoffAvailed))
-				noOfCompoffAvailed=0;
+				noOfCompoffAvailed="";
 				tempFinalMap.put("noOfCompoffAvailed",noOfCompoffAvailed);
 				
 				lossOfPayDays=payrollAttendance.get("lossOfPayDays");
 				if(UtilValidate.isEmpty(lossOfPayDays))
-				lossOfPayDays=0;
+				lossOfPayDays="";
 				tempFinalMap.put("lossOfPayDays",lossOfPayDays);
 				
 				noOfArrearDays=payrollAttendance.get("noOfArrearDays");
 				if(UtilValidate.isEmpty(noOfArrearDays))
-				noOfArrearDays=0;
+				noOfArrearDays="";
 				tempFinalMap.put("noOfArrearDays",noOfArrearDays);
 							
 				noOfNightAllowanceDays=payrollAttendance.get("noOfNightAllowanceDays");
 				if(UtilValidate.isEmpty(noOfNightAllowanceDays))
-				noOfNightAllowanceDays=0;
+				noOfNightAllowanceDays="";
 				tempFinalMap.put("noOfNightAllowanceDays",noOfNightAllowanceDays);
 				
 				coldOrBoiledAllowanceDays=payrollAttendance.get("coldOrBoiledAllowanceDays");
 				if(UtilValidate.isEmpty(coldOrBoiledAllowanceDays))
-				coldOrBoiledAllowanceDays=0;
+				coldOrBoiledAllowanceDays="";
 				tempFinalMap.put("coldOrBoiledAllowanceDays",coldOrBoiledAllowanceDays);
 				
 				noOfRiskAllowanceDays=payrollAttendance.get("noOfRiskAllowanceDays");
 				if(UtilValidate.isEmpty(noOfRiskAllowanceDays))
-				noOfRiskAllowanceDays=0;
+				noOfRiskAllowanceDays="";
 				tempFinalMap.put("noOfRiskAllowanceDays",noOfRiskAllowanceDays);
 				
 				heavyTankerAllowanceDays=payrollAttendance.get("heavyTankerAllowanceDays");
 				if(UtilValidate.isEmpty(heavyTankerAllowanceDays))
-				heavyTankerAllowanceDays=0;
+				heavyTankerAllowanceDays="";
 				tempFinalMap.put("heavyTankerAllowanceDays",heavyTankerAllowanceDays);
 				
 				trTankerAllowanceDays=payrollAttendance.get("trTankerAllowanceDays");
 				if(UtilValidate.isEmpty(trTankerAllowanceDays))
-				trTankerAllowanceDays=0;
+				trTankerAllowanceDays="";
 				tempFinalMap.put("trTankerAllowanceDays",trTankerAllowanceDays);
 	
 				operatingAllowanceDays=payrollAttendance.get("operatingAllowanceDays");
 				if(UtilValidate.isEmpty(operatingAllowanceDays))
-				operatingAllowanceDays=0;
+				operatingAllowanceDays="";
 				tempFinalMap.put("operatingAllowanceDays",operatingAllowanceDays);
 				
 				inChargeAllowanceDays=payrollAttendance.get("inChargeAllowanceDays");
 				if(UtilValidate.isEmpty(inChargeAllowanceDays))
-				inChargeAllowanceDays=0;
+				inChargeAllowanceDays="";
 				tempFinalMap.put("inChargeAllowanceDays",inChargeAllowanceDays);
 				
 				noOfHalfPayDays=payrollAttendance.get("noOfHalfPayDays");
 				if(UtilValidate.isEmpty(noOfHalfPayDays))
-				noOfHalfPayDays=0;
+				noOfHalfPayDays="";
 				tempFinalMap.put("noOfHalfPayDays",noOfHalfPayDays);
 			}
 		}
