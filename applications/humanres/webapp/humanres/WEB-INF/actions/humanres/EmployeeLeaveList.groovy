@@ -19,9 +19,11 @@ def sdf = new SimpleDateFormat("yyyy-MM-dd");
 try {
 	if (fromDate) {
 		fromDate = UtilDateTime.getDayStart(new java.sql.Timestamp(sdf.parse(fromDate).getTime()));
+		parameters.fromDate = fromDate;
 	}
 	if (thruDate) {
 		thruDate = UtilDateTime.getDayEnd(new java.sql.Timestamp(sdf.parse(thruDate).getTime()));
+		parameters.thruDate =thruDate;
 	}
 } catch (ParseException e) {
 	Debug.logError(e, "Cannot parse date string: " + e, "");
@@ -29,10 +31,10 @@ try {
 	return;
 }
 
-if(UtilValidate.isEmpty(parameters.fromDate)){
+if(UtilValidate.isEmpty(parameters.fDate)){
 	parameters.fromDate = UtilDateTime.toSqlDate(UtilDateTime.addDaysToTimestamp(UtilDateTime.nowTimestamp(),-40));
 }
-if(UtilValidate.isEmpty(parameters.thruDate)){
+if(UtilValidate.isEmpty(parameters.tDate)){
 	parameters.thruDate =UtilDateTime.toSqlDate(UtilDateTime.nowTimestamp());
 }
 
