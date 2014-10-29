@@ -29,12 +29,21 @@ try {
 	return;
 }
 
+if(UtilValidate.isEmpty(parameters.fromDate)){
+	parameters.fromDate = UtilDateTime.toSqlDate(UtilDateTime.addDaysToTimestamp(UtilDateTime.nowTimestamp(),-40));
+}
+if(UtilValidate.isEmpty(parameters.thruDate)){
+	parameters.thruDate =UtilDateTime.toSqlDate(UtilDateTime.nowTimestamp());
+}
+
 if(UtilValidate.isNotEmpty(parameters.fromDate)){
 	fromDate = parameters.fromDate;
 }
 if(UtilValidate.isNotEmpty(parameters.thruDate)){
 	thruDate = parameters.thruDate;
 }
+
+
 
 List employeeLeaveList = [];
 List conditionList=[];
@@ -51,8 +60,6 @@ if(UtilValidate.isNotEmpty(parameters.partyId)){
 
 if(UtilValidate.isNotEmpty(parameters.leaveTypeId)){
 	conditionList.add(EntityCondition.makeCondition("leaveTypeId", EntityOperator.EQUALS, parameters.leaveTypeId));
-}else{
-	
 }
 if(UtilValidate.isNotEmpty(parameters.emplLeaveReasonTypeId)){
 	conditionList.add(EntityCondition.makeCondition("emplLeaveReasonTypeId", EntityOperator.EQUALS, parameters.emplLeaveReasonTypeId));
@@ -60,11 +67,13 @@ if(UtilValidate.isNotEmpty(parameters.emplLeaveReasonTypeId)){
 if(UtilValidate.isNotEmpty(approverPartyId)){
 	conditionList.add(EntityCondition.makeCondition("approverPartyId", EntityOperator.EQUALS, approverPartyId));
 }
-if(UtilValidate.isNotEmpty(parameters.leaveStatus)){
-	conditionList.add(EntityCondition.makeCondition("leaveStatus", EntityOperator.EQUALS,parameters.leaveStatus ));
+if(UtilValidate.isEmpty(parameters.leaveStatus)){
+	parameters.leaveStatus = "LEAVE_CREATED";
 }/*else{
+   
 	conditionList.add(EntityCondition.makeCondition("leaveStatus", EntityOperator.EQUALS, "LEAVE_CREATED"));
 }*/
+conditionList.add(EntityCondition.makeCondition("leaveStatus", EntityOperator.EQUALS,parameters.leaveStatus ));
 if(UtilValidate.isNotEmpty(fromDate)){
 	conditionList.add(EntityCondition.makeCondition("fromDate", EntityOperator.GREATER_THAN_EQUAL_TO, ObjectType.simpleTypeConvert(fromDate, "Timestamp", null, null) ));
 }
@@ -72,6 +81,7 @@ if(UtilValidate.isNotEmpty(thruDate)){
 	conditionList.add(EntityCondition.makeCondition("thruDate", EntityOperator.LESS_THAN_EQUAL_TO,ObjectType.simpleTypeConvert(thruDate, "Timestamp", null, null)));
 }
 condition=EntityCondition.makeCondition(conditionList,EntityOperator.AND);
+
 leaveDetails = delegator.findList("EmplLeave", condition , null, UtilMisc.toList("-fromDate"), null, false );
 context.put("employeeLeaveList",leaveDetails);
 
