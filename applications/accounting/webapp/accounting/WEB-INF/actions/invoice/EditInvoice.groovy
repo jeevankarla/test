@@ -175,7 +175,6 @@ if (invoice) {
 	context.put("invoiceItemList",invoiceItemList);
 	context.vatTaxesByType = vatTaxesByType;
 	context.vatTaxIds = vatTaxesByType.keySet().asList();
-	Debug.log("invoiceItemsConv==========="+invoiceItemsConv);
 	context.invoiceItems = invoiceItemsConv;
 	invoiceTotal = InvoiceWorker.getInvoiceTotal(invoice).multiply(conversionRate).setScale(decimals, rounding);
 	invoiceNoTaxTotal = InvoiceWorker.getInvoiceNoTaxTotal(invoice).multiply(conversionRate).setScale(decimals, rounding);
