@@ -859,7 +859,8 @@ public class InvoiceServices {
             }
             // TODO: perhaps consider billing account net days term as well?
             Long orderTermNetDays = orh.getOrderTermNetDays();
-            Timestamp dueDate = null;
+            //Timestamp dueDate = null;
+            Timestamp dueDate = invoiceDate;
             if (orderTermNetDays != null) {
                 dueDate = UtilDateTime.getDayEnd(invoiceDate, orderTermNetDays);
             } 
