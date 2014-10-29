@@ -103,6 +103,11 @@ under the License.
                 <parameter param-name="paymentId"/>
             </hyperlink>
         </field>
+        <field name="creditNote" title="Credit Advice" widget-style="buttontext">
+            <hyperlink target="DebitNote" description="Credit Note" target-window="_BLANK">
+                <parameter param-name="paymentId"/>
+            </hyperlink>
+        </field>
 <!--        <field name="amountToApply"><display also-hidden="false" type="currency" currency="${currencyUomId}"/></field>-->
     </form>
 

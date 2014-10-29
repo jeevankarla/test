@@ -64,6 +64,11 @@ if(UtilValidate.isEmpty(invoiceId)){
 		invoiceDetails = EntityUtil.getFirst(paymentApplication);
 		if(UtilValidate.isNotEmpty(invoiceDetails)){
 			invoiceId = invoiceDetails.invoiceId;
+			if(UtilValidate.isEmpty(invoiceId)){
+				Debug.logError("no InvoiceId","");
+				context.errorMessage = "No Invoices Found....!";
+				return;
+			}
 		}
 	}
 }
@@ -170,7 +175,7 @@ if (invoice) {
 	context.put("invoiceItemList",invoiceItemList);
 	context.vatTaxesByType = vatTaxesByType;
 	context.vatTaxIds = vatTaxesByType.keySet().asList();
-	//Debug.log("invoiceItemsConv==========="+invoiceItemsConv);
+	Debug.log("invoiceItemsConv==========="+invoiceItemsConv);
 	context.invoiceItems = invoiceItemsConv;
 	invoiceTotal = InvoiceWorker.getInvoiceTotal(invoice).multiply(conversionRate).setScale(decimals, rounding);
 	invoiceNoTaxTotal = InvoiceWorker.getInvoiceNoTaxTotal(invoice).multiply(conversionRate).setScale(decimals, rounding);

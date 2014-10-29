@@ -5301,11 +5301,17 @@ public class InvoiceServices {
             			statusId = "PMNT_SENT";
             		}
             	}
-                Map<String, Object> pmntResults = dispatcher.runSync("setPaymentStatus", UtilMisc.toMap("userLogin", userLogin, "paymentId", paymentId, "statusId", statusId));
-                if (ServiceUtil.isError(pmntResults)) {
-                	Debug.logError(pmntResults.toString(), module);    			
-                    return ServiceUtil.returnError(null, null, null, pmntResults);
-                }
+            	Map<String, Object> setPaymentStatusMap = UtilMisc.<String, Object>toMap("userLogin", userLogin);
+	        	setPaymentStatusMap.put("paymentId", paymentId);
+	        	setPaymentStatusMap.put("statusId", statusId);
+	        	if(UtilValidate.isNotEmpty(finAccountId)){
+	        		setPaymentStatusMap.put("finAccountId", finAccountId);
+	        	}
+	            Map<String, Object> pmntResults = dispatcher.runSync("setPaymentStatus", setPaymentStatusMap);
+	            if (ServiceUtil.isError(pmntResults)) {
+  	            	Debug.logError(pmntResults.toString(), module);
+  	            	return ServiceUtil.returnError(null, null, null, pmntResults);
+  	            }
             } catch (Exception e) {
                 Debug.logError(e, "Unable to change Payment Status", module);
             }

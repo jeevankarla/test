@@ -16,6 +16,36 @@ KIND, either express or implied.  See the License for the
 specific language governing permissions and limitations
 under the License.
 -->
+
+
+<#if errorMessage?exists>
+<#escape x as x?xml>
+<fo:root xmlns:fo="http://www.w3.org/1999/XSL/Format">
+
+<#-- do not display columns associated with values specified in the request, ie constraint values -->
+
+<fo:layout-master-set>
+    <fo:simple-page-master master-name="main" page-height="12in" page-width="8in"
+            margin-top="0.5in" margin-bottom="1in" margin-left=".5in" margin-right=".5in">
+        <fo:region-body margin-top=".8in"/>
+        <fo:region-before extent="1in"/>
+        <fo:region-after extent="1in"/>
+    </fo:simple-page-master>
+</fo:layout-master-set> 
+	<fo:page-sequence master-reference="main">
+	    	<fo:flow flow-name="xsl-region-body" font-family="Helvetica">
+	       		 <fo:block font-size="14pt">
+	            	${errorMessage}.
+	       		 </fo:block>
+	    	</fo:flow>
+	</fo:page-sequence>
+</fo:root>
+</#escape>
+<#else>
+
+
+
+
 <#escape x as x?xml>
     <fo:root xmlns:fo="http://www.w3.org/1999/XSL/Format">
         <fo:layout-master-set>
@@ -56,7 +86,7 @@ under the License.
 					<#assign invoiceTypeId = invoice.invoiceTypeId?if_exists>
 					<#assign invPartyIdFrom = invoice.partyIdFrom?if_exists>
 					<#assign invPartyId = invoice.partyId?if_exists>
-					<fo:block  keep-together="always" text-align="center" font-size = "14pt" font-family="Courier,monospace" white-space-collapse="false" font-weight="bold"><#if invoiceTypeId == "SALES_INVOICE" && invPartyIdFrom == "Company">DEBIT ADVICE</#if><#if invoiceTypeId == "PURCHASE_INVOICE" && invPartyId == "Company">CREDIT ADVICE</#if></fo:block>
+					<fo:block  keep-together="always" text-align="center" font-size = "14pt" font-family="Courier,monospace" white-space-collapse="false" font-weight="bold"><#if invPartyIdFrom == "Company">DEBIT ADVICE <#else>CREDIT ADVICE</#if></fo:block>
         	</fo:static-content>
         	<fo:flow flow-name="xsl-region-body">
               <fo:block linefeed-treatment="preserve">&#xA;</fo:block>
@@ -156,7 +186,7 @@ under the License.
 							</fo:table-row>
 							<fo:table-row>
 								<fo:table-cell>
-				            		<fo:block text-align="left" keep-together="always" font-size = "12pt">This is to inform you that your account has been <#if invoiceTypeId == "SALES_INVOICE" && invPartyIdFrom == "Company">DEBITED</#if><#if invoiceTypeId == "PURCHASE_INVOICE" && invPartyId == "Company">CREDITED</#if> with Rs: ${amount?if_exists?string("##0.00")}       on the basis of the </fo:block>     
+				            		<fo:block text-align="left" keep-together="always" font-size = "12pt">This is to inform you that your account has been <#if invPartyIdFrom == "Company">DEBITED<#else>CREDITED</#if> with Rs: ${amount?if_exists?string("##0.00")}       on the basis of the </fo:block>     
 				       			</fo:table-cell>
 							</fo:table-row>
 							<fo:table-row>
@@ -224,7 +254,7 @@ under the License.
 						 <#assign sno=sno+1>
 				         <#assign itemType = invoiceItem.getRelatedOne("InvoiceItemType")>
 				         <#assign isItemAdjustment = Static["org.ofbiz.entity.util.EntityTypeUtil"].hasParentType(delegator, "InvoiceItemType", "invoiceItemTypeId", itemType.getString("invoiceItemTypeId"), "parentTypeId", "INVOICE_ADJ")/>
-						 <#if invoiceItem.description?has_content>
+						 <#if invoiceItem.productId?has_content>
 				                <#assign productId=invoiceItem.productId>
 				                <#assign productDetails = delegator.findOne("Product", {"productId" :productId}, true)>
 				                <#if productDetails?has_content>
@@ -392,3 +422,4 @@ under the License.
 		</#if>
 		</fo:root>
 </#escape>
+</#if>
