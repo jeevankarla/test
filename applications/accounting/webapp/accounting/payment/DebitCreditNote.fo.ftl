@@ -42,10 +42,6 @@ under the License.
 </fo:root>
 </#escape>
 <#else>
-
-
-
-
 <#escape x as x?xml>
     <fo:root xmlns:fo="http://www.w3.org/1999/XSL/Format">
         <fo:layout-master-set>
@@ -282,9 +278,15 @@ under the License.
 	                   			<fo:table-cell border-style="solid">
 						        	<fo:block text-align="left" font-size="12pt" white-space-collapse="false" keep-together="always">&#160;${sno}</fo:block>
 						     	</fo:table-cell>
+						     	<#if description?has_content>
 	                   			<fo:table-cell border-style="solid">
 	                        		<fo:block text-align="left" font-size="12pt" white-space-collapse="false">${description?if_exists}</fo:block> 
 	                   			</fo:table-cell>
+	                   			<#else>
+	                   			<fo:table-cell border-style="solid">
+	                        		<fo:block  keep-together="always" text-align="right" font-size="12pt" white-space-collapse="false"></fo:block> 
+	                   			</fo:table-cell>
+	                   			</#if>
 	                   			<#if invoiceItem.productId?has_content>
 	                   			<fo:table-cell border-style="solid">
 	                        		<fo:block  keep-together="always" text-align="right" font-size="12pt" white-space-collapse="false">${invoiceQtyInc?if_exists?string("#0.00")}</fo:block> 

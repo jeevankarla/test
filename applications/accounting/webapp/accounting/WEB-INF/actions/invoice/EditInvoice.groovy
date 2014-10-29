@@ -60,15 +60,15 @@ if(UtilValidate.isNotEmpty(reportTypeFlag) && reportTypeFlag == "debitNote"){
 //for debit credit note
 if(UtilValidate.isEmpty(invoiceId)){
 	paymentApplication = delegator.findByAnd("PaymentApplication", [paymentId :paymentId]);
+	if(UtilValidate.isEmpty(paymentApplication)){
+		Debug.logError("no InvoiceId","");
+		context.errorMessage = "No Invoices Found....!";
+		return;
+	}
 	if(UtilValidate.isNotEmpty(paymentApplication)){
 		invoiceDetails = EntityUtil.getFirst(paymentApplication);
 		if(UtilValidate.isNotEmpty(invoiceDetails)){
 			invoiceId = invoiceDetails.invoiceId;
-			if(UtilValidate.isEmpty(invoiceId)){
-				Debug.logError("no InvoiceId","");
-				context.errorMessage = "No Invoices Found....!";
-				return;
-			}
 		}
 	}
 }
