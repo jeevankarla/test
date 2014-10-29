@@ -75,7 +75,7 @@ import in.vasista.vbiz.humanres.PayrollService;
 	}
 	
 	headerConditionList=[];
-	headerConditionList.add(EntityCondition.makeCondition("periodBillingId", EntityOperator.EQUALS ,periodBillingId));
+	headerConditionList.add(EntityCondition.makeCondition("periodBillingId", EntityOperator.IN ,periodBillingId));
 	headerConditionList.add(EntityCondition.makeCondition("partyIdFrom", EntityOperator.IN ,partyIdsList));
 	headerCondition = EntityCondition.makeCondition(headerConditionList,EntityOperator.AND);
 	def orderBy = UtilMisc.toList("partyIdFrom");
