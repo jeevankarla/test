@@ -128,7 +128,13 @@ under the License.
                 <check-errors/>
             </else>
         </if>
-
+		   <if-empty field="parameters.finAccountBranch"><set field="parameters.finAccountBranch"  value=" "/></if-empty>
+	       <if-empty field="parameters.finAccountCode"><set field="parameters.finAccountCode"  value=" "/></if-empty>
+	       <if-empty field="parameters.gbCode"><set field="parameters.gbCode"  value=" "/></if-empty>
+	       <if-empty field="parameters.bCode"><set field="parameters.bCode"  value=" "/></if-empty>
+	       <if-empty field="parameters.bPlace"><set field="parameters.bPlace"  value=" "/></if-empty>
+	       <if-empty field="parameters.ifscCode"><set field="parameters.ifscCode"  value=" "/></if-empty>
+	       <if-empty field="parameters.shortName"><set field="parameters.shortName"  value=" "/></if-empty>
         <set-nonpk-fields map="parameters" value-field="lookedUpValue"/>
 
         <!-- make sure the replenishLevel is a sane number -->
@@ -818,15 +824,16 @@ under the License.
 			</entity-and>
 			<iterate entry="acctransFin" list="acctransListFin">
 				<set field="acctransIds[+0]" from-field="acctransFin.acctgTransId"/>			
-			</iterate>		
-			<entity-condition list="relatedAcctgTransToFinAcctrans" entity-name="AcctgTransAttribute">
-				<condition-list>			
-					<condition-expr field-name="attrValue" from-field="payment.paymentId" />
-					<condition-expr field-name="attrName" value="FIN_CREATED_ACCTG_TRANS_ID" />
-					<condition-expr field-name="acctgTransId" operator="in" from-field="acctransIds" />
-				</condition-list>				
-			</entity-condition>	
-			<iterate entry="relatedAcctgTransToFinAcctran" list="relatedAcctgTransToFinAcctrans">
+			</iterate>	
+		   <if-not-empty field="acctransIds">	
+				<entity-condition list="relatedAcctgTransToFinAcctrans" entity-name="AcctgTransAttribute">
+					<condition-list>			
+						<condition-expr field-name="attrValue" from-field="payment.paymentId" />
+						<condition-expr field-name="attrName" value="FIN_CREATED_ACCTG_TRANS_ID" />
+						<condition-expr field-name="acctgTransId" operator="in" from-field="acctransIds" />
+					</condition-list>				
+				</entity-condition>
+				<iterate entry="relatedAcctgTransToFinAcctran" list="relatedAcctgTransToFinAcctrans">
 				<set field="copyAcctgTransCtx.fromAcctgTransId" from-field="relatedAcctgTransToFinAcctran.acctgTransId" />
 				<set field="copyAcctgTransCtx.revert" value="Y" />
 				<call-service service-name="copyAcctgTransAndEntries"
@@ -853,7 +860,9 @@ under the License.
 				<create-value value-field="acctgTransAttribute" />
 				<clear-field field="acctgTransAttribute" />
 				<clear-field field="copyAcctgTransCtx" />
-			</iterate>
+			</iterate>	
+		</if-not-empty>
+			
 			<call-service service-name="updatePayment" in-map-name="updatePaymentMap" />
 			<clear-field field="updatePaymentMap" />
 		</iterate>
