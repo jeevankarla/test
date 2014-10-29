@@ -3365,7 +3365,10 @@
 		</relation>
 		<relation type="one" fk-name="PAYMENT_FACI" rel-entity-name="Facility">
 			<key-map field-name="facilityId" />
-		</relation>		
+		</relation>
+       <index name="PMT_ISFULLYAPPLIED">
+			<index-field name="isFullyApplied"/>
+		</index>	
 	</entity>
 	<view-entity entity-name="PaymentAndTypePartyNameView"
 		package-name="org.ofbiz.accounting.payment"
@@ -4825,6 +4828,10 @@
 		<field name="partyId" type="id" />
 		<field name="productId" type="id-ne" /><!-- added productId for discount rates for product -->
 		<field name="emplPositionTypeId" type="id" />
+		<field name="createdDate" type="date-time"></field>
+		<field name="createdByUserLogin" type="id-vlong"></field>
+        <field name="lastModifiedDate" type="date-time"></field>
+        <field name="lastModifiedByUserLogin" type="id-vlong"></field>
 		<field name="fromDate" type="date-time">
 			<description>Describes when a rate amount will be valid. If null, valid immediately.</description>
 		</field>
