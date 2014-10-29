@@ -270,14 +270,16 @@ under the License.
                 </entity-condition>
                 <entity-condition entity-name="PartyRoleDetailAndPartyDetail" list="parties">
                     <condition-expr field-name="roleTypeId" operator="equals" value="INTERNAL_ORGANIZATIO"/>
-                </entity-condition>               
+                </entity-condition> 
+                <script
+					location="component://accounting/webapp/accounting/WEB-INF/actions/invoice/InvoiceAnalytics.groovy" />               
             </actions>
             <widgets>
                 <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
-                        <screenlet title="${uiLabelMap.AccountingMainPage}">
+                        <container>
                             <platform-specific><html><html-template location="component://accounting/webapp/accounting/main.ftl"/></html></platform-specific>
-                        </screenlet>
+                        </container>
                     </decorator-section>
                 </decorator-screen>
             </widgets>
