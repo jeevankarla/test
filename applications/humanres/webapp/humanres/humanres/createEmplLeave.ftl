@@ -24,6 +24,7 @@ under the License.
 
 $(function() {
        $('input[name=submit]').click (function (){
+          
     	  	var leaveTypeId = $('select[name=leaveTypeId]').val();
 			if(leaveTypeId =="CH" || leaveTypeId =="CHGH" || leaveTypeId =="CHSS"){
 				var chDate = $('select[name=chDate]').val();
@@ -32,7 +33,13 @@ $(function() {
 					return false;
 				}
 			 }
+			
     	});
+    	
+    	$('#EditEmplLeave').submit(function() {
+		   $('#submit').attr('disabled',true);
+		});
+     	
   });
 
   jQuery(document).ready(function () {
