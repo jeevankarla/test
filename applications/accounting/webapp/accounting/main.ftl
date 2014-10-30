@@ -70,43 +70,6 @@ under the License.
 		</td>
 	</tr>
 
-	<tr>
-     	<td colspan="5"><h1 class="h1">${uiLabelMap.AccountingReports}</h1></td>
-	</tr>
-
-<#if parties?size == 1>
-	<tr valignas="top">
-		<td/>
-		<td>
-			<ul style="margin-bottom:8px;">
-				<li style="margin-bottom:8px;"><a href="<@ofbizUrl>TrialBalance?organizationPartyId=${parties[0].partyId}&amp;skipDecorator=Y</@ofbizUrl>">${uiLabelMap.AccountingTrialBalance}</a></li>
-				<li style="margin-bottom:8px;"><a href="<@ofbizUrl>IncomeStatement?organizationPartyId=${parties[0].partyId}&amp;skipDecorator=Y</@ofbizUrl>">${uiLabelMap.AccountingIncomeStatement}</a></li>
-				<li style="margin-bottom:8px;"><a href="<@ofbizUrl>CashFlowStatement?organizationPartyId=${parties[0].partyId}&amp;skipDecorator=Y</@ofbizUrl>">${uiLabelMap.AccountingCashFlowStatement}</a></li>
-				<li style="margin-bottom:8px;"><a href="<@ofbizUrl>BalanceSheet?organizationPartyId=${parties[0].partyId}&amp;skipDecorator=Y</@ofbizUrl>">${uiLabelMap.AccountingBalanceSheet}</a></li>
-			</ul>
-		</td>
-		<br />     
-	</tr>
-<#else>
-	<#list parties as party>
-	<tr valignas="top">
-		<td>	
-			<h3 class="h3">${party.groupName}</h3> 
-		</td>	
-     	<td>
-			<ul style="margin-bottom:8px;">
-				<li style="margin-bottom:8px;"><a href="<@ofbizUrl>TrialBalance?organizationPartyId=${party.partyId}&amp;skipDecorator=Y</@ofbizUrl>">${uiLabelMap.AccountingTrialBalance}</a></li>
-				<li style="margin-bottom:8px;"><a href="<@ofbizUrl>IncomeStatement?organizationPartyId=${party.partyId}&amp;skipDecorator=Y</@ofbizUrl>">${uiLabelMap.AccountingIncomeStatement}</a></li>
-				<li style="margin-bottom:8px;"><a href="<@ofbizUrl>CashFlowStatement?organizationPartyId=${party.partyId}&amp;skipDecorator=Y</@ofbizUrl>">${uiLabelMap.AccountingCashFlowStatement}</a></li>
-				<li style="margin-bottom:8px;"><a href="<@ofbizUrl>BalanceSheet?organizationPartyId=${party.partyId}&amp;skipDecorator=Y</@ofbizUrl>">${uiLabelMap.AccountingBalanceSheet}</a></li>
-			</ul>
-	 	</td>
-	 </tr>
-	</#list>
-	<br />     
-
-</#if>
-
 </table>
 </div>
 </div>
