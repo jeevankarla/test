@@ -5102,6 +5102,7 @@ public class PayrollService {
 	      String timePeriodId = (String)context.get("timePeriodId");
 	      String overrideReason= (String)context.get("overrideReason");
 	      String encashmentStatus=(String) context.get("encashmentStatus");
+	      String seqId = (String) context.get("seqId");
 	      BigDecimal overrideLateMin=(BigDecimal)context.get("overrideLateMin");
 	      Map result = ServiceUtil.returnSuccess();
   		try{
@@ -5117,6 +5118,7 @@ public class PayrollService {
 		  		List conditionList = FastList.newInstance();
   				conditionList.add(EntityCondition.makeCondition("partyId", EntityOperator.EQUALS ,partyId));
   				conditionList.add(EntityCondition.makeCondition("date", EntityOperator.EQUALS , date));
+  				conditionList.add(EntityCondition.makeCondition("seqId", EntityOperator.EQUALS ,seqId));
   				EntityCondition condition=EntityCondition.makeCondition(conditionList,EntityOperator.AND); 		
   				List<GenericValue> EmplDailyAttendanceDetail = delegator.findList("EmplDailyAttendanceDetail", condition, null, null, null, false);
   				for (int i = 0; i < EmplDailyAttendanceDetail.size(); ++i) {

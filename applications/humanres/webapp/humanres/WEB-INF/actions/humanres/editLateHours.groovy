@@ -164,6 +164,7 @@ if(UtilValidate.isNotEmpty(timePeriodId)){
 		List employeeWeeklyOffDays = (List)((HumanresHelperServices.getEmployeeWeeklyOffDays(dctx,employeeWeeklyOffInpuMap)).get("weeklyOffDays"));
 		List conList=[];
 		conList.add(EntityCondition.makeCondition("partyId", EntityOperator.EQUALS,partyId));
+		conList.add(EntityCondition.makeCondition("seqId", EntityOperator.EQUALS,"00001"));
 		conList.add(EntityCondition.makeCondition("date",EntityOperator.IN,holidays));
 		conList.add(EntityCondition.makeCondition("date",EntityOperator.NOT_IN,employeeWeeklyOffDays));
 		conList.add(EntityCondition.makeCondition(EntityCondition.makeCondition("encashmentStatus",EntityOperator.NOT_EQUAL,"LEAVE_ENCASHMENT"),EntityOperator.OR,
