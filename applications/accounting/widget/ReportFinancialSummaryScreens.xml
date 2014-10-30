@@ -2700,6 +2700,8 @@
 				<set field="tabButtonItem" value="OrganizationAccountingReports" />
 				<set field="tabButtonItem2" value="FinancialAccountingTrans" />
 				<set field="organizationPartyId" from-field="parameters.organizationPartyId" />
+				<set field="reportTypeFlag" from-field="context.reportTypeFlag"/>
+				<set field="layoutSettings.javaScripts[]" value="/accounting/images/cashBook.js" global="true"/>
 				<script	location="component://accounting/webapp/accounting/WEB-INF/actions/reports/newFinancialAccountTrans.groovy" />
 				<script	location="component://accounting/webapp/accounting/WEB-INF/actions/reports/GetApplicableFinancialAccntIds.groovy" />
 				<service service-name="basicGeneralLedgerPermissionCheck"
@@ -2774,7 +2776,9 @@
 				<property-map resource="ProductUiLabels" map-name="uiLabelMap" global="true"/>
 				<property-map resource="PartyUiLabels" map-name="uiLabelMap" global="true"/>
 				<property-map resource="CommonUiLabels" map-name="uiLabelMap" global="true"/>
+				<set field="layoutSettings.javaScripts[]" value="/accounting/images/cashBook.js" global="true"/>
 				<set field="organizationPartyId" from-field="parameters.organizationPartyId" />
+				<set field="reportTypeFlag" from-field="parameters.reportTypeFlag"/>
 				<script	location="component://accounting/webapp/accounting/WEB-INF/actions/reports/newFinancialAccountTrans.groovy" />
 				<service service-name="basicGeneralLedgerPermissionCheck"
 					result-map="permResult">
@@ -2789,12 +2793,32 @@
 							field="hasReportsEditPermission" />
 					</condition>
 					<widgets>
-						<platform-specific>
-							<xsl-fo>
-								<html-template
-									location="component://accounting/webapp/accounting/reports/cashBookReport.fo.ftl" />
-							</xsl-fo>
-						</platform-specific>
+						<section>
+							<condition>
+								<if-compare operator="equals" value="" field="reportTypeFlag" />
+							</condition>
+							<widgets>
+								<platform-specific>
+				                    <xsl-fo>
+										<html-template
+											location="component://accounting/webapp/accounting/reports/cashBookReport.fo.ftl" />
+									</xsl-fo>
+				                </platform-specific>
+							</widgets>
+						</section>
+						<section>
+							<condition>
+								<if-compare operator="equals" value="bankBook" field="reportTypeFlag" />
+							</condition>
+							<widgets>
+								<platform-specific>
+				                   <xsl-fo>
+										<html-template
+											location="component://accounting/webapp/accounting/reports/bankBookReport.fo.ftl" />
+									</xsl-fo>
+				                </platform-specific>
+							</widgets>
+						</section>
 					</widgets>
 					<fail-widgets>
 						<decorator-screen name="main-decorator"
@@ -2817,7 +2841,9 @@
 					global="true" />
 				<property-map resource="ProductUiLabels" map-name="uiLabelMap"
 					global="true" />
+				<set field="layoutSettings.javaScripts[]" value="/accounting/images/cashBook.js" global="true"/>
 				<set field="organizationPartyId" from-field="parameters.organizationPartyId" />
+				<set field="reportTypeFlag" from-field="parameters.reportTypeFlag"/>
 				<script
 					location="component://accounting/webapp/accounting/WEB-INF/actions/reports/newFinancialAccountTrans.groovy" />
 				<service service-name="basicGeneralLedgerPermissionCheck"
@@ -3614,6 +3640,7 @@
 				<set field="layoutSettings.javaScripts[]" value="/accounting/images/cashBook.js" global="true"/>
 				<set field="hasReportsEditPermission" from-field="permResult.hasPermission" />
 				<set field="formTargetRequest" value="FinancialAccountingTrans" />
+				<set field="reportTypeFlag" from-field="context.reportTypeFlag"/>
 			</actions>
 			<widgets>
 				<section>
@@ -3651,6 +3678,8 @@
 				<set field="titleProperty" value="FinancialAccountingTrans" />
 				<set field="labelTitleProperty" value="Financial Accounting Trans" />
 				<set field="organizationPartyId" from-field="parameters.organizationPartyId" />
+				<set field="reportTypeFlag" from-field="context.reportTypeFlag"/>
+				<set field="layoutSettings.javaScripts[]" value="/accounting/images/cashBook.js" global="true"/>
 				<script	location="component://accounting/webapp/accounting/WEB-INF/actions/reports/newFinancialAccountTrans.groovy" />
 				<script	location="component://accounting/webapp/accounting/WEB-INF/actions/reports/GetApplicableFinancialAccntIds.groovy" />
 				<service service-name="basicGeneralLedgerPermissionCheck"
@@ -3732,6 +3761,8 @@
 				</service>
 				<set field="hasReportsEditPermission" from-field="permResult.hasPermission" />
 				<set field="formTargetRequest"    value="FinancialAccountingTransCASH" />
+				<set field="layoutSettings.javaScripts[]" value="/accounting/images/cashBook.js" global="true"/>
+				<set field="reportTypeFlag" from-field="parameters.reportTypeFlag"/>
 			</actions>
 			<widgets>
 				<section>

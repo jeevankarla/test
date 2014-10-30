@@ -598,6 +598,7 @@ under the License.
         <field name="fromDate" title="From Date" id-name="fromDate"><date-time type="timestamp"/></field>
         <field name="thruDate" title="Thru Date" id-name="thruDate"><date-time type="timestamp"/></field>
         <field name="organizationPartyId"><hidden/></field>
+        <field name="reportTypeFlag"><hidden/></field>
         <field name="finAccountId" title="Financial Account" id-name="finAccountId">
         	<drop-down allow-empty="false">
                 <list-options list-name="financialAccnt" key-name="finAccountId" description="${finAccountName}"/>
@@ -632,6 +633,7 @@ under the License.
                	  <parameter param-name="thruDate" from-field="thruDate" />
                	  <parameter param-name="isPosted" from-field="isPosted" />
                	  <parameter param-name="openingBalance" from-field="openingBalance" />
+               	  <parameter param-name="reportTypeFlag" from-field="reportTypeFlag" />
             </hyperlink>
         </field>
         <field name="submitButton"  widget-style="buttontext" action=""><submit button-type="text-link"/></field>

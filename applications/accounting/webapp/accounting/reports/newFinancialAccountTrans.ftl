@@ -21,9 +21,9 @@ under the License.
         <div>
             <form name="glAccountTrialBalanceReport" id="glAccountTrialBalanceReport">
                 <div>
-                    <a href="<@ofbizUrl>FinancialAccountTransForMonth.csv?organizationPartyId=${organizationPartyId}&amp;fromDate=${parameters.fromDate}&amp;thruDate=${parameters.thruDate}&amp;openingBalance=${parameters.openingBalance}&amp;isPosted=${parameters.isPosted}&amp;finAccountId=${parameters.finAccountId}</@ofbizUrl>" target="_blank" class="buttontext">${uiLabelMap.AccountingExportAsCsv}</a>
+                    <a href="<@ofbizUrl>FinancialAccountTransForMonth.csv?organizationPartyId=${organizationPartyId}&amp;fromDate=${parameters.fromDate}&amp;thruDate=${parameters.thruDate}&amp;openingBalance=${parameters.openingBalance}&amp;isPosted=${parameters.isPosted}&amp;finAccountId=${parameters.finAccountId}&amp;reportTypeFlag=${context.reportTypeFlag}</@ofbizUrl>" target="_blank" class="buttontext">${uiLabelMap.AccountingExportAsCsv}</a>
 		               		&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;   		                   
-               		<a href="<@ofbizUrl>FinancialAccountTransForMonth.pdf?organizationPartyId=${organizationPartyId}&amp;fromDate=${parameters.fromDate}&amp;thruDate=${parameters.thruDate}&amp;openingBalance=${parameters.openingBalance}&amp;isPosted=${parameters.isPosted}&amp;finAccountId=${parameters.finAccountId}</@ofbizUrl>" target="_blank" class="buttontext">${uiLabelMap.AccountingExportAsPdf}</a>
+               		<a href="<@ofbizUrl>FinancialAccountTransForMonth.pdf?organizationPartyId=${organizationPartyId}&amp;fromDate=${parameters.fromDate}&amp;thruDate=${parameters.thruDate}&amp;openingBalance=${parameters.openingBalance}&amp;isPosted=${parameters.isPosted}&amp;finAccountId=${parameters.finAccountId}&amp;reportTypeFlag=${context.reportTypeFlag}</@ofbizUrl>" target="_blank" class="buttontext">${uiLabelMap.AccountingExportAsPdf}</a>
                 </div>
                 <#--<div>
                     <a href="<@ofbizUrl>FinancialAccountTrans.pdf?organizationPartyId=${organizationPartyId}&amp;timePeriod=${parameters.timePeriod}&amp;isPosted=${parameters.isPosted}&amp;glAccountId=${parameters.finAccountId}</@ofbizUrl>" target="_BLANK" class="buttontext">${uiLabelMap.AccountingInvoicePDF}</a>

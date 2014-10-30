@@ -30,6 +30,7 @@ import java.text.SimpleDateFormat;
 import java.text.ParseException;
 import org.ofbiz.party.party.PartyHelper;
 
+
 if (organizationPartyId) {
     onlyIncludePeriodTypeIdList = [];
     onlyIncludePeriodTypeIdList.add("FISCAL_MONTH");
@@ -208,6 +209,9 @@ if (organizationPartyId) {
 		partyName = "";
 		paymentTypeDescription = "";
 		finAccountDescription = "";
+		paymentMethodTypeDes = "";
+		instrumentNum = "";
+		
 		glAcctgTrialBalanceList = UtilMisc.sortMaps(glAcctgTrialBalanceList, UtilMisc.toList("paymentId"));
 		if(UtilValidate.isNotEmpty(glAcctgTrialBalanceList)){
 			for(i=0; i<glAcctgTrialBalanceList.size(); i++){
@@ -220,6 +224,14 @@ if (organizationPartyId) {
 					payment = delegator.findOne("Payment", [paymentId : paymentId], false);
 					if(UtilValidate.isNotEmpty(payment)){
 						partyId = payment.partyIdFrom;
+						paymentMethodTypeId = payment.paymentMethodTypeId;
+						if(UtilValidate.isNotEmpty(paymentMethodTypeId)){
+							paymentMethodType = delegator.findOne("PaymentMethodType", [paymentMethodTypeId : paymentMethodTypeId], false);
+							if(UtilValidate.isNotEmpty(paymentMethodType)){
+								paymentMethodTypeDes = paymentMethodType.description;
+							}
+						}
+						instrumentNum = payment.paymentRefNum;
 					}
 					if(UtilValidate.isEmpty(paymentId)){
 						accTransPartyId = acctgTransEntry.partyId;
@@ -319,6 +331,8 @@ if (organizationPartyId) {
 						acctgTransEntryMap["partyName"] = partyName;
 						acctgTransEntryMap["description"] = paymentTypeDescription;
 						acctgTransEntryMap["comments"] = paymentComments;
+						acctgTransEntryMap["paymentMethodTypeDes"] = paymentMethodTypeDes;
+						acctgTransEntryMap["instrumentNum"] = instrumentNum;
 					}else{
 						acctgTransEntryMap["paymentId"] = acctgTransId;
 						acctgTransEntryMap["partyId"] = accTransPartyId;
@@ -401,6 +415,8 @@ financialAcctgTransList.each{ dayFinAccount ->
 			dayFinAccountMap["partyName"] = dayFinAccount.partyName;
 			dayFinAccountMap["description"] = dayFinAccount.description;
 			dayFinAccountMap["comments"] = dayFinAccount.comments;
+			dayFinAccountMap["paymentMethodTypeDes"] = dayFinAccount.paymentMethodTypeDes;
+			dayFinAccountMap["instrumentNum"] = dayFinAccount.instrumentNum;
 			dayFinAccountMap["openingBalance"] = dayFinAccount.openingBalance;
 			dayFinAccountMap["debitAmount"] = dayFinAccount.debitAmount;
 			dayFinAccountMap["creditAmount"] = dayFinAccount.creditAmount;
