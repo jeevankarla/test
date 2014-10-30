@@ -1945,6 +1945,11 @@ under the License.
     
     <!-- Generate Report request -->
     
+    <request-map uri="DepartmentTotalsReport.txt">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="DepartmentTotalsReport"/>
+    </request-map>
+    
     <request-map uri="CompanyPunchReport">
         <security https="true" auth="true"/>
         <response name="success" type="view" value="CompanyPunchReport"/>
@@ -2360,5 +2365,6 @@ under the License.
     <view-map name="PrintDepositReceipt" type="screenfop" page="component://accounting/widget/PaymentScreens.xml#PrintDepositReceipt" content-type="application/pdf" encoding="none"/>  
 	<!-- Employee Content -->
 	<view-map name="AddEmployeeNote" type="screen" page="component://humanres/widget/EmployeeScreens.xml#AddEmployeeNote"/>
-	
+	<!-- text Reports -->
+	 <view-map name="DepartmentTotalsReport" type="screenfop" page="component://humanres/widget/ReportHumanresSummaryScreens.xml#DepartmentTotalsReport" content-type="text/plain" encoding="none"/>
 </site-conf>

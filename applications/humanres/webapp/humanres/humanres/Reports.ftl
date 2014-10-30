@@ -897,7 +897,7 @@ function makeDatePicker1(fromDateId ,thruDateId){
 							</table>
 						</form>
 					</tr>
-				<#-- <tr class="alternate-row">
+				<tr class="alternate-row">
 						<form id="DepartmentTotalsReport" name="DepartmentTotalsReport" mothed="post" action="<@ofbizUrl>DepartmentTotalsReport.txt</@ofbizUrl>" target="_blank">
 							<table class="basic-table" cellspacing="5">
 								<tr class="alternate-row">
@@ -926,7 +926,7 @@ function makeDatePicker1(fromDateId ,thruDateId){
 								</tr>
 							</table>	
 						</form>
-				   </tr> -->
+				   </tr>
 			   	</table>
 			</div>
 		</div>
