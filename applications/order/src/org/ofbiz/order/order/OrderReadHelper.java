@@ -67,6 +67,7 @@ public class OrderReadHelper {
 
     // scales and rounding modes for BigDecimal math
     public static final int scale = UtilNumber.getBigDecimalScale("order.decimals");
+    public static final int qtyScale = UtilNumber.getBigDecimalScale("order.qtyDecimals");
     public static final int rounding = UtilNumber.getBigDecimalRoundingMode("order.rounding");
     public static final int taxCalcScale = UtilNumber.getBigDecimalScale("salestax.calc.decimals");
     public static final int taxFinalScale = UtilNumber.getBigDecimalScale("salestax.final.decimals");
@@ -2290,8 +2291,9 @@ public class OrderReadHelper {
 
         if (cancelQty == null) cancelQty = ZERO;
         if (orderQty == null) orderQty = ZERO;
-
-        return orderQty.subtract(cancelQty).setScale(scale, rounding);
+        
+        return orderQty.subtract(cancelQty).setScale(qtyScale, rounding);
+      
     }
 
     public static BigDecimal getOrderItemShipGroupQuantity(GenericValue shipGroupAssoc) {
