@@ -241,8 +241,9 @@ if (organizationPartyId) {
 					}
 					
 					finAccountTransId = acctgTransEntry.finAccountTransId;
-					acctgTransId = acctgTransEntry.acctgTransId;
 					
+					
+					acctgTransId = acctgTransEntry.acctgTransId;
 					finAccountId = "";
 					finAccount = [:];
 					finAccountTransTypeId = "";
@@ -250,6 +251,9 @@ if (organizationPartyId) {
 					finAccountTrans = [:];
 					finAccountTransType =[:];
 					paymentComments = "";
+					finAccountOwnerPartyId = "";
+					finAccountPartyName = "";
+					
 					if(UtilValidate.isEmpty(paymentId)){
 						finAccountTransAttr = delegator.findOne("FinAccountTransAttribute", [finAccountTransId : finAccountTransId, attrName : "FATR_CONTRA"], false);
 						if(UtilValidate.isNotEmpty(finAccountTransAttr)){
@@ -260,6 +264,12 @@ if (organizationPartyId) {
 							finAccountDescription = finAccountTransType.description;
 							finAccountId = finAccountTrans.finAccountId;
 							finAccount = delegator.findOne("FinAccount", [finAccountId : finAccountId], false);
+							if(UtilValidate.isNotEmpty(finAccount)){
+								finAccountOwnerPartyId = finAccount.ownerPartyId;
+								if(UtilValidate.isNotEmpty(finAccountOwnerPartyId)){
+									finAccountPartyName = PartyHelper.getPartyName(delegator, finAccountOwnerPartyId, false);
+								}
+							}
 							finAccountName = finAccount.finAccountName;
 						}
 					}
@@ -338,6 +348,8 @@ if (organizationPartyId) {
 						acctgTransEntryMap["partyId"] = accTransPartyId;
 						if(UtilValidate.isNotEmpty(finAccountId)){
 							acctgTransEntryMap["partyName"] = finAccountName;
+							acctgTransEntryMap["finAccountOwnerPartyId"] = finAccountOwnerPartyId;
+							acctgTransEntryMap["finAccountPartyName"] = finAccountPartyName;
 						}
 						acctgTransEntryMap["description"] = finAccountDescription;
 					}
@@ -413,6 +425,8 @@ financialAcctgTransList.each{ dayFinAccount ->
 			dayFinAccountMap["paymentId"] = dayFinAccount.paymentId;
 			dayFinAccountMap["partyId"] = dayFinAccount.partyId;
 			dayFinAccountMap["partyName"] = dayFinAccount.partyName;
+			dayFinAccountMap["finAccountOwnerPartyId"] = dayFinAccount.finAccountOwnerPartyId;
+			dayFinAccountMap["finAccountPartyName"] = dayFinAccount.finAccountPartyName;
 			dayFinAccountMap["description"] = dayFinAccount.description;
 			dayFinAccountMap["comments"] = dayFinAccount.comments;
 			dayFinAccountMap["paymentMethodTypeDes"] = dayFinAccount.paymentMethodTypeDes;

@@ -123,7 +123,8 @@ ${setRequestAttribute("OUTPUT_FILENAME", "cashBookReport.pdf")}
 	                		<#assign comments = (finAcctngDetails.get("comments")?if_exists)/>
 	                		<#assign paymentMethodTypeDes = (finAcctngDetails.get("paymentMethodTypeDes")?if_exists)/>
 	                		<#assign instrumentNum = (finAcctngDetails.get("instrumentNum")?if_exists)/>
-	                		
+	                		<#assign finAccountOwnerPartyId = (finAcctngDetails.get("finAccountOwnerPartyId")?if_exists)/>
+	                		<#assign finAccountPartyName = (finAcctngDetails.get("finAccountPartyName")?if_exists)/>
 								<fo:table-row border-style="solid">
 									<fo:table-cell border-style="solid">
 	                            		<fo:block  text-align="left" keep-together="always" font-size="13pt" white-space-collapse="false"> 
@@ -173,14 +174,29 @@ ${setRequestAttribute("OUTPUT_FILENAME", "cashBookReport.pdf")}
 	                                </fo:table-cell>
                                  	<#else>
                                  	<fo:table-cell border-style="solid">
-	                                    <fo:block text-align="center"></fo:block>
+	                                    <fo:block text-align="center">${finAccountOwnerPartyId?if_exists}</fo:block>
 	                                </fo:table-cell>
                                 	</#if>
-	                       			<fo:table-cell border-style="solid">
-                                    <fo:block text-align="left" font-size="13pt" font-weight="bold">
-                                            ${partyName?if_exists}
-                                    </fo:block>
-	                                </fo:table-cell>
+                                	<#if (paymentId != "DAY TOTAL")>
+                                		<#if finAccountPartyName?has_content>
+                                		<fo:table-cell border-style="solid">
+                                    		<fo:block text-align="left" font-size="13pt" font-weight="bold">
+                                            	${partyName?if_exists}/${finAccountPartyName?if_exists}
+                                    		</fo:block>
+	                                	</fo:table-cell>
+	                                	 <#else>
+	                                	 <fo:table-cell border-style="solid">
+                                    		<fo:block text-align="left" font-size="13pt" font-weight="bold">
+                                            	${partyName?if_exists}
+                                    		</fo:block>
+	                                	</fo:table-cell>
+	                                	</#if>
+	                                <#else>
+	                                	<fo:table-cell border-style="solid">
+                                    		<fo:block text-align="left" font-size="13pt" font-weight="bold">
+                                    		</fo:block>
+                                    	 </fo:table-cell>
+                                	</#if>
 	                                <#if (paymentId != "DAY TOTAL")>
 	                                <fo:table-cell border-style="solid">
 	                                    <fo:block text-align="right" font-size="13pt">
