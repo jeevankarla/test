@@ -168,7 +168,7 @@ under the License.
             </hyperlink>
         </field>
         <field name="printReceipt" widget-style="buttontext">
-            <hyperlink target="printDepositReport.pdf" description="Print Receipt" target-window="_BLANK">
+            <hyperlink target="printDepositReport.pdf" description="Print Receipt" target-window="_blank">
                 <parameter param-name="finAccountId"/>
                 <parameter param-name="reportTypeFlag" value="depositCheque"/>
             </hyperlink>
