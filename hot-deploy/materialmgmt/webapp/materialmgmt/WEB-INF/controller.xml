@@ -80,8 +80,19 @@
          <response name="success"  type="request-redirect-noparam" value="FindInterUnitPurchase"></response>
         <response name="error" type="view" value="FindInterUnitPurchase"/>
     </request-map>
-    
+   
+   <request-map uri="StoreReports">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="StoreReports"/>
+    </request-map>
+   
     <!-- View Mappings -->
+     <request-map uri="purchaseTaxReport.pdf">
+     <security https="true" auth="true"/>
+    	<response name="success" type="view" value="purchaseTaxReportPDF"/>
+    </request-map>
+    
+    
     <view-map name="main" type="screen" page="component://materialmgmt/widget/materialmgmtScreens.xml#main"/>
      <!-- purchaseOrder views -->  
      <view-map name="FindPurchaseOrder" type="screen" page="component://materialmgmt/widget/materialmgmtScreens.xml#FindPurchaseOrder"/>
@@ -89,5 +100,9 @@
      <view-map name="PurchaseOrderInit" type="screen" page="component://materialmgmt/widget/materialmgmtScreens.xml#PurchaseOrderInit"/>
     <view-map name="FindInterUnitPurchase" type="screen" page="component://materialmgmt/widget/materialmgmtScreens.xml#FindInterUnitPurchase"/>
     <view-map name="InterUnitPurchaseOrderInit" type="screen" page="component://materialmgmt/widget/materialmgmtScreens.xml#InterUnitPurchaseOrderInit"/>
-   
+    
+    <view-map name="StoreReports" type="screen" page="component://materialmgmt/widget/materialmgmtReportScreens.xml#StoreReports" />
+    <view-map name="purchaseTaxReportPDF" type="screenfop" page="component://materialmgmt/widget/materialmgmtReportScreens.xml#PurchaseTaxReportPDF" content-type="application/pdf"/>
+    
+    
 </site-conf>
