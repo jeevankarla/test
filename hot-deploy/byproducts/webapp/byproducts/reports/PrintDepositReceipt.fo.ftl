@@ -31,16 +31,30 @@ under the License.
 </fo:layout-master-set>
    ${setRequestAttribute("OUTPUT_FILENAME", "payrcpt.pdf")}
         <#assign SNO=0> 
-        <#if newFinAccountTransId?has_content> 
+         <#if finAccountTransMap?has_content> 
+        <#assign finAccountTrans = finAccountTransMap.entrySet()>
+        <#list finAccountTrans as finAccountTransList>
+        <#assign paymentDate = finAccountTransList.getValue().get("paymentDate")?if_exists>
+        <#assign finAccountTransTypeId = finAccountTransList.getValue().get("finAccountTransTypeId")?if_exists>
+        <#assign partyName = finAccountTransList.getValue().get("partyName")?if_exists>
+        <#assign newFinAccountTransId = finAccountTransList.getValue().get("newFinAccountTransId")?if_exists>
+        <#assign partyId = finAccountTransList.getValue().get("partyId")?if_exists>
+        <#assign amount = finAccountTransList.getValue().get("amount")?if_exists>
+        <#assign description = finAccountTransList.getValue().get("description")?if_exists>
+        <#assign comments = finAccountTransList.getValue().get("comments")?if_exists>
+        <#assign contraRefNum = finAccountTransList.getValue().get("contraRefNum")?if_exists>
+        <#assign finAccountName = finAccountTransList.getValue().get("finAccountName")?if_exists>
+        <#assign amountWords = finAccountTransList.getValue().get("amountWords")?if_exists>
+        
            <fo:page-sequence master-reference="main" force-page-count="no-force" font-size="14pt" font-family="Courier,monospace">					
 		    	<fo:static-content flow-name="xsl-region-before">
 		    	   <fo:block  keep-together="always" text-align="center" font-weight = "bold" font-family="Courier,monospace" white-space-collapse="false">&#160;  </fo:block>
 			       <fo:block  keep-together="always" text-align="center" font-weight = "bold" font-family="Courier,monospace" white-space-collapse="false">&#160;  </fo:block>
 					<fo:block  keep-together="always" text-align="center" font-weight = "bold" font-family="Courier,monospace" white-space-collapse="false">&#160;  &#160;&#160;   KARNATAKA CO-OPERATIVE MILK PRODUCERS FEDERATION LTD</fo:block>
 					<fo:block  keep-together="always" text-align="center" font-weight = "bold" font-family="Courier,monospace" white-space-collapse="false">&#160;      UNIT: MOTHER DAIRY: G.K.V.K POST,YELAHANKA,BENGALORE:560065</fo:block>
-                    <fo:block text-align="left"  keep-together="always"  font-weight = "bold" white-space-collapse="false">&#160;&#160;&#160;&#160;&#160; &#160;Date:${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(paymentDate, "MMMM dd,yyyy HH:MM:SS")}&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;UserLogin : <#if userLogin?exists>${userLogin.userLoginId?if_exists}</#if>   </fo:block>
+                    <fo:block text-align="left"  keep-together="always"  font-weight = "bold" white-space-collapse="false">&#160;&#160;&#160;&#160;&#160; &#160;Date:${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(paymentDate?if_exists, "MMMM dd,yyyy HH:MM:SS")}&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;UserLogin : <#if userLogin?exists>${userLogin.userLoginId?if_exists}</#if>   </fo:block>
               		<fo:block>-------------------------------------------------------------------------------</fo:block>
-              		<fo:block font-weight = "bold">Paid with thanks the RECEIPT by way of ${finAccountTransTypeId?if_exists}										</fo:block>
+              		<fo:block font-weight = "bold"><#if finAccountTransTypeId == "WITHDRAWAL">Paid<#else>Received</#if> with thanks the RECEIPT by way of ${finAccountTransTypeId?if_exists}										</fo:block>
             		<fo:block>
             		<fo:table>
                     <fo:table-column column-width="38%"/>
@@ -197,6 +211,7 @@ under the License.
 		               </fo:block> 		
 					 </fo:flow>
 					 </fo:page-sequence>
+					 </#list>
 			  <#else>
 	    	<fo:page-sequence master-reference="main">
 			<fo:flow flow-name="xsl-region-body" font-family="Helvetica">

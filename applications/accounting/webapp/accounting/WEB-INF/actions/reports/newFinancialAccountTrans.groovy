@@ -241,8 +241,6 @@ if (organizationPartyId) {
 					}
 					
 					finAccountTransId = acctgTransEntry.finAccountTransId;
-					
-					
 					acctgTransId = acctgTransEntry.acctgTransId;
 					finAccountId = "";
 					finAccount = [:];
@@ -253,6 +251,7 @@ if (organizationPartyId) {
 					paymentComments = "";
 					finAccountOwnerPartyId = "";
 					finAccountPartyName = "";
+					transSequenceId = "";
 					
 					if(UtilValidate.isEmpty(paymentId)){
 						finAccountTransAttr = delegator.findOne("FinAccountTransAttribute", [finAccountTransId : finAccountTransId, attrName : "FATR_CONTRA"], false);
@@ -271,6 +270,14 @@ if (organizationPartyId) {
 								}
 							}
 							finAccountName = finAccount.finAccountName;
+							//fin account sequence logic here
+							finAccntTransSequenceList = delegator.findList("FinAccntTransSequence", EntityCondition.makeCondition("finAccountTransId", EntityOperator.EQUALS, finAccountTransId), null, null, null, false);
+							if(UtilValidate.isNotEmpty(finAccntTransSequenceList)){
+								finAccntTransSequence = EntityUtil.getFirst(finAccntTransSequenceList);
+								if(UtilValidate.isNotEmpty(finAccntTransSequence)){
+									transSequenceId = finAccntTransSequence.transSequenceId;
+								}
+							}
 						}
 					}
 					if(UtilValidate.isNotEmpty(partyId)){
@@ -344,7 +351,11 @@ if (organizationPartyId) {
 						acctgTransEntryMap["paymentMethodTypeDes"] = paymentMethodTypeDes;
 						acctgTransEntryMap["instrumentNum"] = instrumentNum;
 					}else{
-						acctgTransEntryMap["paymentId"] = acctgTransId;
+						if(UtilValidate.isNotEmpty(transSequenceId)){
+							acctgTransEntryMap["paymentId"] = transSequenceId;
+						}else{
+						    acctgTransEntryMap["paymentId"] = acctgTransId;
+						}
 						acctgTransEntryMap["partyId"] = accTransPartyId;
 						if(UtilValidate.isNotEmpty(finAccountId)){
 							acctgTransEntryMap["partyName"] = finAccountName;

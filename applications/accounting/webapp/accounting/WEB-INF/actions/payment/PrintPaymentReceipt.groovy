@@ -55,6 +55,7 @@ import org.ofbiz.party.party.PartyHelper;
 //${Static["org.ofbiz.base.util.UtilNumber"].formatRuleBasedAmount(Static["java.lang.Double"].parseDouble(totalAmount?string("#0")), "%rupees-and-paise", locale).toUpperCase()}
 reportTypeFlag = context.reportTypeFlag;
 if(UtilValidate.isNotEmpty(reportTypeFlag) && reportTypeFlag == "depositCheque"){
+	finAccountTransMap = [:];
 	finAccountId = parameters.finAccountId;
 	description = null;
 	partyId = null;
@@ -84,64 +85,72 @@ if(UtilValidate.isNotEmpty(reportTypeFlag) && reportTypeFlag == "depositCheque")
 		}
 		finAccountTransList = delegator.findList("FinAccountTrans", EntityCondition.makeCondition("finAccountId", EntityOperator.EQUALS, finAccountId), null, null, null, false);
 		if(UtilValidate.isNotEmpty(finAccountTransList)){
-			finAccountTransDetails = EntityUtil.getFirst(finAccountTransList);
-			if(UtilValidate.isNotEmpty(finAccountTransDetails)){
-				finAccountTransId = finAccountTransDetails.finAccountTransId;
-				if(UtilValidate.isNotEmpty(finAccountTransId)){
-					finAccountTransAttributeDetails = delegator.findOne("FinAccountTransAttribute", [finAccountTransId : finAccountTransId, attrName : "FATR_CONTRA"], false);
-					finAccountTransTypeId = null;
-					amount = BigDecimal.ZERO;
-					paymentDate = null;
-					comments = null;
-					contraRefNum = null;
-					amountWords = null;
-					finAccountName = null;
-					newFinAccountTransId = null;
-					if(UtilValidate.isNotEmpty(finAccountTransAttributeDetails)){
-						newFinAccountTransId = finAccountTransAttributeDetails.attrValue;
+			finAccountTransList.each{ finAccountTransDetails->
+				tempMap = [:];
+				if(UtilValidate.isNotEmpty(finAccountTransDetails)){
+					finAccountTransId = finAccountTransDetails.finAccountTransId;
+					if(UtilValidate.isNotEmpty(finAccountTransId)){
+						finAccountTransAttributeDetails = delegator.findOne("FinAccountTransAttribute", [finAccountTransId : finAccountTransId, attrName : "FATR_CONTRA"], false);
+						finAccountTransTypeId = null;
+						amount = BigDecimal.ZERO;
+						paymentDate = null;
+						comments = null;
+						contraRefNum = null;
+						amountWords = null;
+						finAccountName = null;
+						newFinAccountTransId = null;
 						if(UtilValidate.isNotEmpty(finAccountTransAttributeDetails)){
-							newfinAccountTransDetails = delegator.findOne("FinAccountTrans", [finAccountTransId : newFinAccountTransId], false);
-							if(UtilValidate.isNotEmpty(newfinAccountTransDetails)){
-								finAccountId = newfinAccountTransDetails.finAccountId;
-								if(UtilValidate.isNotEmpty(finAccountId)){
-									finAccountDetails = delegator.findOne("FinAccount", [finAccountId : finAccountId], false);
+							newFinAccountTransId = finAccountTransAttributeDetails.attrValue;
+							if(UtilValidate.isNotEmpty(finAccountTransAttributeDetails)){
+								newfinAccountTransDetails = delegator.findOne("FinAccountTrans", [finAccountTransId : newFinAccountTransId], false);
+								if(UtilValidate.isNotEmpty(newfinAccountTransDetails)){
+									finAccountId = newfinAccountTransDetails.finAccountId;
 									if(UtilValidate.isNotEmpty(finAccountId)){
-										finAccountName = finAccountDetails.finAccountName;
-										if(UtilValidate.isNotEmpty(finAccountName)){
-											context.put("finAccountName",finAccountName);
+										finAccountDetails = delegator.findOne("FinAccount", [finAccountId : finAccountId], false);
+										if(UtilValidate.isNotEmpty(finAccountId)){
+											finAccountName = finAccountDetails.finAccountName;
+											if(UtilValidate.isNotEmpty(finAccountName)){
+												context.put("finAccountName",finAccountName);
+											}
 										}
 									}
-								}
-								finAccountTransTypeId = newfinAccountTransDetails.finAccountTransTypeId;
-								amount = newfinAccountTransDetails.amount;
-								paymentDate = newfinAccountTransDetails.transactionDate;
-								comments = newfinAccountTransDetails.comments;
-								contraRefNum = newfinAccountTransDetails.contraRefNum;
-								amountWords=UtilNumber.formatRuleBasedAmount(amount,"%rupees-and-paise", locale).toUpperCase();
-								
-								if(UtilValidate.isNotEmpty(finAccountTransTypeId)){
-									context.put("finAccountTransTypeId",finAccountTransTypeId);
-								}
-								if(UtilValidate.isNotEmpty(newFinAccountTransId)){
-									context.put("newFinAccountTransId",newFinAccountTransId);
-								}
-								if(UtilValidate.isNotEmpty(comments)){
-									context.put("comments",comments);
-								}
-								if(UtilValidate.isNotEmpty(paymentDate)){
-									context.put("paymentDate",paymentDate);
-								}
-								if(UtilValidate.isNotEmpty(amount)){
-									context.put("amount",amount);
-								}
-								if(UtilValidate.isNotEmpty(amountWords)){
-									context.put("amountWords",amountWords);
-								}
-								if(UtilValidate.isNotEmpty(contraRefNum)){
-									context.put("contraRefNum",contraRefNum);
+									finAccountTransTypeId = newfinAccountTransDetails.finAccountTransTypeId;
+									amount = newfinAccountTransDetails.amount;
+									paymentDate = newfinAccountTransDetails.transactionDate;
+									comments = newfinAccountTransDetails.comments;
+									contraRefNum = newfinAccountTransDetails.contraRefNum;
+									amountWords=UtilNumber.formatRuleBasedAmount(amount,"%rupees-and-paise", locale).toUpperCase();
+									
+									if(UtilValidate.isNotEmpty(finAccountTransTypeId)){
+										tempMap.put("finAccountTransTypeId",finAccountTransTypeId);
+									}
+									if(UtilValidate.isNotEmpty(newFinAccountTransId)){
+										tempMap.put("newFinAccountTransId",newFinAccountTransId);
+									}
+									if(UtilValidate.isNotEmpty(comments)){
+										tempMap.put("comments",comments);
+									}
+									if(UtilValidate.isNotEmpty(paymentDate)){
+										tempMap.put("paymentDate",paymentDate);
+									}
+									if(UtilValidate.isNotEmpty(amount)){
+										tempMap.put("amount",amount);
+									}
+									if(UtilValidate.isNotEmpty(amountWords)){
+										tempMap.put("amountWords",amountWords);
+									}
+									if(UtilValidate.isNotEmpty(contraRefNum)){
+										tempMap.put("contraRefNum",contraRefNum);
+									}
 								}
 							}
 						}
+					}
+				}
+				if(UtilValidate.isNotEmpty(tempMap)){
+					finAccountTransMap.put(finAccountTransId,tempMap);
+					if(UtilValidate.isNotEmpty(finAccountTransMap)){
+						context.put("finAccountTransMap",finAccountTransMap);
 					}
 				}
 			}
