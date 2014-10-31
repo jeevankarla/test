@@ -60,6 +60,7 @@ if(UtilValidate.isNotEmpty(reportTypeFlag) && reportTypeFlag == "depositCheque")
 	description = null;
 	partyId = null;
 	partyName = null;
+	tempMap = [:];
 	if(UtilValidate.isNotEmpty(finAccountId)){
 		finAccountDetails = delegator.findOne("FinAccount", [finAccountId : finAccountId], false);
 		if(UtilValidate.isNotEmpty(finAccountDetails)){
@@ -69,10 +70,10 @@ if(UtilValidate.isNotEmpty(reportTypeFlag) && reportTypeFlag == "depositCheque")
 				partyName = PartyHelper.getPartyName(delegator, partyId, false);
 			}
 			if(UtilValidate.isNotEmpty(partyId)){
-				context.put("partyId",partyId);
+				tempMap.put("partyId",partyId);
 			}
 			if(UtilValidate.isNotEmpty(partyName)){
-				context.put("partyName",partyName);
+				tempMap.put("partyName",partyName);
 			}
 			
 			if(UtilValidate.isNotEmpty(finAccountTypeId)){
@@ -86,7 +87,6 @@ if(UtilValidate.isNotEmpty(reportTypeFlag) && reportTypeFlag == "depositCheque")
 		finAccountTransList = delegator.findList("FinAccountTrans", EntityCondition.makeCondition("finAccountId", EntityOperator.EQUALS, finAccountId), null, null, null, false);
 		if(UtilValidate.isNotEmpty(finAccountTransList)){
 			finAccountTransList.each{ finAccountTransDetails->
-				tempMap = [:];
 				if(UtilValidate.isNotEmpty(finAccountTransDetails)){
 					finAccountTransId = finAccountTransDetails.finAccountTransId;
 					if(UtilValidate.isNotEmpty(finAccountTransId)){
@@ -110,7 +110,7 @@ if(UtilValidate.isNotEmpty(reportTypeFlag) && reportTypeFlag == "depositCheque")
 										if(UtilValidate.isNotEmpty(finAccountId)){
 											finAccountName = finAccountDetails.finAccountName;
 											if(UtilValidate.isNotEmpty(finAccountName)){
-												context.put("finAccountName",finAccountName);
+												tempMap.put("finAccountName",finAccountName);
 											}
 										}
 									}
