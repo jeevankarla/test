@@ -212,9 +212,10 @@ under the License.
                  	<fo:table border-style="solid">
                     <fo:table-column column-width="50pt"/>
                     <fo:table-column column-width="200pt"/>
-                    <fo:table-column column-width="90pt"/>
-                    <fo:table-column column-width="100pt"/>
-                    <fo:table-column column-width="120pt"/>
+                    <fo:table-column column-width="80pt"/>
+                    <fo:table-column column-width="70pt"/>
+                    <fo:table-column column-width="70pt"/>
+                    <fo:table-column column-width="95pt"/>
                     <fo:table-body>
                     	<fo:table-row >
                    			<fo:table-cell border-style="solid">
@@ -225,6 +226,9 @@ under the License.
                    			</fo:table-cell>
                    			<fo:table-cell border-style="solid">
                         		<fo:block  keep-together="always" text-align="right" font-size="12pt" white-space-collapse="false" font-weight="bold">Qty(Ltrs/Kgs)</fo:block> 
+                   			</fo:table-cell>
+                   			<fo:table-cell border-style="solid">
+                        		<fo:block  keep-together="always" text-align="right" font-size="12pt" white-space-collapse="false" font-weight="bold">Qty</fo:block> 
                    			</fo:table-cell>
                    			<fo:table-cell border-style="solid">
                         		<fo:block  keep-together="always" text-align="right" font-size="12pt" white-space-collapse="false" font-weight="bold">Rate</fo:block> 
@@ -240,9 +244,10 @@ under the License.
                  	<fo:table border-style="solid">
                     <fo:table-column column-width="50pt"/>
                     <fo:table-column column-width="200pt"/>
-                    <fo:table-column column-width="90pt"/>
-                    <fo:table-column column-width="100pt"/>
-                    <fo:table-column column-width="120pt"/>
+                    <fo:table-column column-width="80pt"/>
+                    <fo:table-column column-width="70pt"/>
+                    <fo:table-column column-width="70pt"/>
+                    <fo:table-column column-width="95pt"/>
                     <fo:table-body>
                     	<#assign sno=0>
 						<#if invoiceItems?has_content>
@@ -267,6 +272,7 @@ under the License.
 					            	<#assign prodUnitPrice = invoiceItem.unitPrice?if_exists>
 					            </#if>
 					            <#assign invoiceQtyInc = "">
+					            <#assign invoiceQty = "">
 					            <#if invoiceItem.quantity?has_content>
 					            	<#assign invoiceQty = invoiceItem.quantity?if_exists>
 					            	<#if invoiceQty?has_content && invoiceQty !=0>
@@ -298,6 +304,15 @@ under the License.
 	                   			</#if>
 	                   			<#if invoiceItem.productId?has_content>
 	                   			<fo:table-cell border-style="solid">
+	                        		<fo:block  keep-together="always" text-align="right" font-size="12pt" white-space-collapse="false">${invoiceQty?if_exists?string("#0.00")}</fo:block> 
+	                   			</fo:table-cell>
+	                   			<#else>
+	                   			<fo:table-cell border-style="solid">
+	                        		<fo:block  keep-together="always" text-align="right" font-size="12pt" white-space-collapse="false"></fo:block> 
+	                   			</fo:table-cell>
+	                   			</#if>
+	                   			<#if invoiceItem.productId?has_content>
+	                   			<fo:table-cell border-style="solid">
 	                        		<fo:block  keep-together="always" text-align="right" font-size="12pt" white-space-collapse="false">${prodUnitPrice?if_exists?string("#0.00")}</fo:block> 
 	                   			</fo:table-cell>
 	                   			<#else>
@@ -312,6 +327,9 @@ under the License.
 							</#list>
 							<fo:table-row>	
 								<fo:table-cell border-style="solid">
+						        	<fo:block text-align="left" font-size="12pt" white-space-collapse="false" keep-together="always"></fo:block>
+						     	</fo:table-cell>
+						     	<fo:table-cell border-style="solid">
 						        	<fo:block text-align="left" font-size="12pt" white-space-collapse="false" keep-together="always"></fo:block>
 						     	</fo:table-cell>
 	                   			<fo:table-cell border-style="solid">
