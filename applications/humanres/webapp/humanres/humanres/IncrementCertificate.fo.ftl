@@ -30,12 +30,12 @@
 	                	<fo:table border-style="solid">
 		                	<fo:table-column column-width="30pt"/>
 		                    <fo:table-column column-width="60pt"/>
-		                    <fo:table-column column-width="100pt"/>                
+		                    <fo:table-column column-width="125pt"/>                
 		                    <fo:table-column column-width="120pt"/>
 		                    <fo:table-column column-width="260pt"/>
 		                    <fo:table-column column-width="70pt"/>
 		                    <fo:table-column column-width="80pt"/>
-		                    <fo:table-column column-width="80pt"/>                
+		                    <fo:table-column column-width="55pt"/>                
 		                    <fo:table-column column-width="80pt"/>
 		                    <fo:table-column column-width="80pt"/>
 	                		<fo:table-body> 
@@ -81,12 +81,12 @@
 	                	<fo:table border-style="solid">
 		                	<fo:table-column column-width="30pt"/>
 		                    <fo:table-column column-width="60pt"/>
-		                    <fo:table-column column-width="100pt"/>                
+		                    <fo:table-column column-width="125pt"/>                
 		                    <fo:table-column column-width="120pt"/>
 		                    <fo:table-column column-width="260pt"/>
 		                    <fo:table-column column-width="70pt"/>
 		                    <fo:table-column column-width="80pt"/>
-		                    <fo:table-column column-width="80pt"/>                
+		                    <fo:table-column column-width="55pt"/>                
 		                    <fo:table-column column-width="80pt"/>
 		                    <fo:table-column column-width="80pt"/>
 	                		<fo:table-body> 
@@ -112,7 +112,7 @@
 			                            	<fo:block text-align="right" font-size="11pt">${employeeValues.getValue().get("PersonalPay")?if_exists}</fo:block>
 			                            </fo:table-cell>
 			                            <fo:table-cell border-style="solid">	
-			                            	<fo:block text-align="center" font-size="11pt">${employeeValues.getValue().get("dateOfLastIncre")?if_exists}</fo:block>
+			                            	<fo:block text-align="center" font-size="11pt"> </fo:block>
 			                            </fo:table-cell>
 			                            <fo:table-cell border-style="solid">	
 			                            	<fo:block text-align="right" font-size="11pt">${employeeValues.getValue().get("LastPay")?if_exists}</fo:block>

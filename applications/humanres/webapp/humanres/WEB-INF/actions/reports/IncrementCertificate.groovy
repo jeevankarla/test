@@ -17,7 +17,12 @@ dctx = dispatcher.getDispatchContext();
 
 GenericValue customTimePeriodId = delegator.findOne("CustomTimePeriod", [customTimePeriodId : parameters.customTimePeriodId], false);
 timePeriodStart=UtilDateTime.toTimestamp(customTimePeriodId.getDate("fromDate"));
+currentDayTimeStart = UtilDateTime.getDayStart(timePeriodStart);
+//Debug.l
+startdate = UtilDateTime.toDateString(currentDayTimeStart);
 timePeriodEnd=UtilDateTime.toTimestamp(customTimePeriodId.getDate("thruDate"));
+currentDayTimeEnd = UtilDateTime.getDayEnd(timePeriodEnd);
+endDate = UtilDateTime.toDateString(currentDayTimeEnd);
 context.put("fromDate",timePeriodStart);
 context.put("thruDate",timePeriodEnd);
 
@@ -36,18 +41,21 @@ employmentsIds = EntityUtil.getFieldListFromEntityList(employments, "partyId", t
 employmentList=[];
 conditionList=[];
 conditionList.add(EntityCondition.makeCondition("customTimePeriodId", EntityOperator.EQUALS ,parameters.customTimePeriodId));
-conditionList.add(EntityCondition.makeCondition("statusId", EntityOperator.EQUALS ,"GENERATED"));
+conditionList.add(EntityCondition.makeCondition("statusId", EntityOperator.IN , UtilMisc.toList("GENERATED","APPROVED")));
 condition = EntityCondition.makeCondition(conditionList,EntityOperator.AND);
 payrollDetailsList = delegator.findList("PeriodBillingAndCustomTimePeriod", condition, null, null, null, false);
 
 if(UtilValidate.isNotEmpty(payrollDetailsList)){
 	if(UtilValidate.isNotEmpty(employmentsIds)){
 		employmentsIds.each{ employeeId ->
-			PayHistoryDetails = delegator.findList("PayHistory",EntityCondition.makeCondition("partyIdTo", EntityOperator.EQUALS, employeeId)  , null, null, null, false );
-			if(UtilValidate.isNotEmpty(PayHistoryDetails)){
-				PayHistoryDetails.each{ pay ->
+			payHistoryDetails = delegator.findList("PayHistory",EntityCondition.makeCondition("partyIdTo", EntityOperator.EQUALS, employeeId)  , null, null, null, false );
+			payHistoryDetailsList = UtilMisc.sortMaps(payHistoryDetails, UtilMisc.toList("partyIdTo"));
+			
+			if(UtilValidate.isNotEmpty(payHistoryDetailsList)){
+				payHistoryDetailsList.each{ pay ->
 					partyId=pay.get("partyIdTo");
 					employmentList.add(partyId);
+					
 				}
 			}
 		}
@@ -55,7 +63,6 @@ if(UtilValidate.isNotEmpty(payrollDetailsList)){
 }
 
 EmployeeFinalMap = [:];
-employmentList = (new HashSet(employmentList)).toList();
 if(UtilValidate.isNotEmpty(employmentList)){
 	employmentList.each{ employee ->
 		detailsMap=[:];
@@ -93,7 +100,15 @@ if(UtilValidate.isNotEmpty(employmentList)){
 				}
 			}
 		}
-		PayGradeHistory = delegator.findList("PayGradePayHistory", EntityCondition.makeCondition("partyIdTo", EntityOperator.EQUALS, employee), null, ["-fromDate"], null, false);
+		
+		payConditionList=[];
+		payConditionList.add(EntityCondition.makeCondition("partyIdTo", EntityOperator.EQUALS ,employee));
+		payConditionList.add(EntityCondition.makeCondition([EntityCondition.makeCondition("fromDate", EntityOperator.GREATER_THAN_EQUAL_TO, (currentDayTimeStart)),
+			EntityCondition.makeCondition("fromDate", EntityOperator.LESS_THAN_EQUAL_TO, (currentDayTimeEnd))]));
+		payCondition = EntityCondition.makeCondition(payConditionList,EntityOperator.AND);
+		PayGradeHistory = delegator.findList("PayGradePayHistory", payCondition, null, ["-fromDate"], null, false);
+		
+		//PayGradeHistory = delegator.findList("PayGradePayHistory", EntityCondition.makeCondition("partyIdTo", EntityOperator.EQUALS, employee), null, ["-fromDate"], null, false);
 		if(UtilValidate.isNotEmpty(PayGradeHistory)){
 			PayGradeHistory.each{ PayGradeId ->
 				if(iteration.equals(1)){
@@ -115,7 +130,6 @@ if(UtilValidate.isNotEmpty(employmentList)){
 						return;
 					}
 					detailsMap.put("dateOfPresentIncre",presentDateStr);
-					presentPayScale="11600-200-12000-250-13000-300-14200-350-15600-400-17200-450-19000-500-21000";
 					if(UtilValidate.isNotEmpty(presentPayScale)){
 						detailsMap.put("presentPayScale",(presentPayScale.substring(0,(presentPayScale.length()/2).intValue())+" "+presentPayScale.substring(((presentPayScale.length()/2).intValue()),presentPayScale.length())));
 					}
@@ -146,7 +160,9 @@ if(UtilValidate.isNotEmpty(employmentList)){
 				}
 			}
 		}
-		EmployeeFinalMap.put(employee,detailsMap);
+		if(UtilValidate.isNotEmpty(detailsMap)){
+			EmployeeFinalMap.put(employee,detailsMap);
+		}
 	}
 }
 
