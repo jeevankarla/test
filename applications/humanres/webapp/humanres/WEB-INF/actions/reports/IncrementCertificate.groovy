@@ -67,39 +67,6 @@ if(UtilValidate.isNotEmpty(employmentList)){
 	employmentList.each{ employee ->
 		detailsMap=[:];
 		iteration=1;
-		String partyName = PartyHelper.getPartyName(delegator, employee, false);
-		detailsMap.put("partyName",partyName);
-		EmplPositionDetails = delegator.findList("EmplPositionAndFulfillment", EntityCondition.makeCondition("employeePartyId", EntityOperator.EQUALS, employee), null, null, null, false);
-		if(UtilValidate.isNotEmpty(EmplPositionDetails)){
-			EmplPositionDetails.each{ EmplPositionId ->
-				EmployeePositionId=EmplPositionId.get("emplPositionTypeId");
-				EmplPositionNames = delegator.findList("EmplPositionType", EntityCondition.makeCondition("emplPositionTypeId", EntityOperator.EQUALS, EmployeePositionId), null, null, null, false);
-				if(UtilValidate.isNotEmpty(EmplPositionNames)){
-					EmplPositionNames.each{ EmplPosition ->
-						EmployeePosition=EmplPosition.get("description");
-						detailsMap.put("Designation",EmployeePosition);
-					}
-				}
-			}
-		}
-		if(UtilValidate.isNotEmpty(payrollDetailsList)){
-			payrollDetailsList.each { payrollDetails->
-				billingId=payrollDetails.get("periodBillingId");
-				TypeConditionList=[];
-				TypeConditionList.add(EntityCondition.makeCondition("periodBillingId", EntityOperator.EQUALS ,billingId));
-				TypeConditionList.add(EntityCondition.makeCondition("partyIdFrom", EntityOperator.EQUALS ,employee));
-				TypeConditionList.add(EntityCondition.makeCondition("payrollHeaderItemTypeId", EntityOperator.EQUALS ,"PAYROL_BEN_PERS_PAY"));
-				typecondition = EntityCondition.makeCondition(TypeConditionList,EntityOperator.AND);
-				def orderBy = UtilMisc.toList("amount","partyIdFrom");
-				PersonalPayList = delegator.findList("PayrollHeaderAndHeaderItem", typecondition, null, orderBy, null, false);
-				if(UtilValidate.isNotEmpty(PersonalPayList)){
-					PersonalPayList.each { PersnlPay->
-						PersonalPay=PersnlPay.get("amount");
-						detailsMap.put("PersonalPay",PersonalPay);
-					}
-				}
-			}
-		}
 		
 		payConditionList=[];
 		payConditionList.add(EntityCondition.makeCondition("partyIdTo", EntityOperator.EQUALS ,employee));
@@ -111,6 +78,41 @@ if(UtilValidate.isNotEmpty(employmentList)){
 		//PayGradeHistory = delegator.findList("PayGradePayHistory", EntityCondition.makeCondition("partyIdTo", EntityOperator.EQUALS, employee), null, ["-fromDate"], null, false);
 		if(UtilValidate.isNotEmpty(PayGradeHistory)){
 			PayGradeHistory.each{ PayGradeId ->
+				
+				String partyName = PartyHelper.getPartyName(delegator, employee, false);
+				detailsMap.put("partyName",partyName);
+				EmplPositionDetails = delegator.findList("EmplPositionAndFulfillment", EntityCondition.makeCondition("employeePartyId", EntityOperator.EQUALS, employee), null, null, null, false);
+				if(UtilValidate.isNotEmpty(EmplPositionDetails)){
+					EmplPositionDetails.each{ EmplPositionId ->
+						EmployeePositionId=EmplPositionId.get("emplPositionTypeId");
+						EmplPositionNames = delegator.findList("EmplPositionType", EntityCondition.makeCondition("emplPositionTypeId", EntityOperator.EQUALS, EmployeePositionId), null, null, null, false);
+						if(UtilValidate.isNotEmpty(EmplPositionNames)){
+							EmplPositionNames.each{ EmplPosition ->
+								EmployeePosition=EmplPosition.get("description");
+								detailsMap.put("Designation",EmployeePosition);
+							}
+						}
+					}
+				}
+				if(UtilValidate.isNotEmpty(payrollDetailsList)){
+					payrollDetailsList.each { payrollDetails->
+						billingId=payrollDetails.get("periodBillingId");
+						TypeConditionList=[];
+						TypeConditionList.add(EntityCondition.makeCondition("periodBillingId", EntityOperator.EQUALS ,billingId));
+						TypeConditionList.add(EntityCondition.makeCondition("partyIdFrom", EntityOperator.EQUALS ,employee));
+						TypeConditionList.add(EntityCondition.makeCondition("payrollHeaderItemTypeId", EntityOperator.EQUALS ,"PAYROL_BEN_PERS_PAY"));
+						typecondition = EntityCondition.makeCondition(TypeConditionList,EntityOperator.AND);
+						def orderBy = UtilMisc.toList("amount","partyIdFrom");
+						PersonalPayList = delegator.findList("PayrollHeaderAndHeaderItem", typecondition, null, orderBy, null, false);
+						if(UtilValidate.isNotEmpty(PersonalPayList)){
+							PersonalPayList.each { PersnlPay->
+								PersonalPay=PersnlPay.get("amount");
+								detailsMap.put("PersonalPay",PersonalPay);
+							}
+						}
+					}
+				}
+				
 				if(iteration.equals(1)){
 					dateOfPresentIncre=PayGradeId.get("fromDate");
 					presentPayScale=PayGradeId.get("payScale");
