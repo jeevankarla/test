@@ -308,10 +308,10 @@ public class HumanresService {
 								continue;
 							}
 							Date tempDate = workedHoliday.getDate("date");
-							/*if(!holidays.contains(tempDate)){
+							if(!holidays.contains(tempDate)){
 								
 								continue;
-							}*/
+							}
 							Map punMap = PunchService.emplDailyPunchReport(dctx, UtilMisc.toMap("partyId", partyId ,"punchDate",tempDate));
 							if(UtilValidate.isNotEmpty(punMap.get("punchDataList"))){
 								Map punchDetails = (Map)(((List)punMap.get("punchDataList")).get(0));
@@ -336,7 +336,7 @@ public class HumanresService {
 								
 							}
 							//tempWorkedHolidaysList.removeAll(EntityUtil.filterByAnd(tempWorkedHolidaysList, UtilMisc.toMap("date",tempDate)));
-							//holidays.remove(tempDate);
+							holidays.remove(tempDate);
 						}
 					}
 				  result.put("workedHolidaysList", workedHolidaysList);
