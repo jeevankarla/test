@@ -812,7 +812,14 @@ function reportTypeChangeFunc() {
       					<form id="DuesFDRReport" name="DuesFDRReport" method="post" action="<@ofbizUrl>duesDiffFDR.pdf</@ofbizUrl>" target="_blank">	
       						<td width="30%">Dues in excess of FDR</td>
       						<td width="15%">Date<input  type="text" size="18pt" id="FDRDateId" readonly  name="effectiveDate"/></td>
-      						<td width="15%"></td>
+      						<td width="15%">Category:<select name="categoryTypeEnum" id="categoryTypeEnum" class='h4'>
+		                		<#list categoryTypeList as categoryType>    
+		                  	    	<option value='${categoryType.enumId}'>
+			                    		${categoryType.description}
+			                        </option>
+		                		</#list>            
+								</select>
+			      			</td>
 	      					<td width="15%"></td>
 	      					<td width="15%"></td>
 							<td width="10%"><input type="submit" value="Download" class="buttontext"/></td>       			

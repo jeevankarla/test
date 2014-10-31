@@ -26,6 +26,7 @@ import in.vasista.vbiz.byproducts.ByProductReportServices;
 
 dctx=dispatcher.getDispatchContext();
 effectiveDateStr = parameters.effectiveDate;
+categoryTypeEnum = parameters.categoryTypeEnum;
 effectiveDate = null;
 if (UtilValidate.isNotEmpty(effectiveDateStr)) {
 	def sdf = new SimpleDateFormat("MMMM dd, yyyy");
@@ -43,7 +44,7 @@ dayEnd = UtilDateTime.getDayEnd(effectiveDate);
 context.displayDate = UtilDateTime.toDateString(dayBegin, "dd MMMMM, yyyy");
 conditionList=[];
 isByParty = Boolean.TRUE;
-resultCtx = ByProductNetworkServices.getAllBooths(delegator,null);
+resultCtx = ByProductNetworkServices.getAllBooths(delegator, categoryTypeEnum);
 boothsList= resultCtx.get("boothsList");
 boothsDetailsList = resultCtx.get("boothsDetailsList");
 boothTotals=[:];
@@ -52,16 +53,16 @@ boothTotalsWithReturn=[:];
 periodBoothTotals=[:];
 FDRDetail = ByProductNetworkServices.getFacilityFixedDeposit( dctx , [userLogin: userLogin, effectiveDate: dayBegin]).get("FacilityFDRDetail");
 duesFDRList = [];
-//boothsList.clear();
-//boothsList.add("9598");
+/*//boothsList.clear();
+//boothsList.add("B80902");
+//boothsDetailsList = delegator.findList("Facility", EntityCondition.makeCondition("facilityId", EntityOperator.EQUALS, "B80902"), null, null, null, false);
+*/
 if(isByParty){
 	ownerPartyList = delegator.findList("Facility", EntityCondition.makeCondition("facilityId", EntityOperator.IN, boothsList), UtilMisc.toSet("ownerPartyId"), null, null, false);
 	boothsList.clear();
 	boothsList = EntityUtil.getFieldListFromEntityList(ownerPartyList, "ownerPartyId", true);
 }
-
 boothsList.each{ eachBoothId ->
-	//facility
 	facilityFDRMap = [:];
 	facilityFDRMap.putAt("facilityId", eachBoothId);
 	facilityDet = [];
@@ -94,9 +95,13 @@ boothsList.each{ eachBoothId ->
 		}
 		
 	}
+	diffAmount = openingBalance-fdrAmt;
 	facilityFDRMap.putAt("fdrNumber", fdrNums);
 	facilityFDRMap.putAt("fdrAmount", fdrAmt);
-	facilityFDRMap.putAt("diffAmount", (openingBalance-fdrAmt));
-	duesFDRList.add(facilityFDRMap);
+	facilityFDRMap.putAt("diffAmount", diffAmount);
+	if(diffAmount>0){
+		duesFDRList.add(facilityFDRMap);
+	}
+	
 }
 context.duesFDRList = duesFDRList;
