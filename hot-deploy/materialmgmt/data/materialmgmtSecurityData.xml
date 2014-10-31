@@ -18,7 +18,10 @@
     
     <SecurityGroup description="Material Management admin group for Purchase And Stores !" groupId="MATERIALMNG_ADMIN"/>
     <SecurityGroupPermission groupId="MATERIALMNG_ADMIN"  permissionId="materialmgmt_ADMIN"/>
+   
+   
     
+     
     <SecurityGroupPermission groupId="MATERIALMNG_ADMIN" permissionId="ACCOUNTING_ACCTFORMULA_EDIT"/>
     <SecurityGroupPermission groupId="MATERIALMNG_ADMIN" permissionId="ACCOUNTING_ARINVOICE_EDIT"/>
     <SecurityGroupPermission groupId="MATERIALMNG_ADMIN" permissionId="ACCOUNTING_READ"/>
@@ -33,4 +36,9 @@
     <SecurityGroupPermission groupId="MATERIALMNG_ADMIN" permissionId="ORDERMGR_SALES_UPDATE"/>
     <SecurityGroupPermission groupId="MATERIALMNG_ADMIN" permissionId="ORDERMGR_UPDATE"/>
     <SecurityGroupPermission groupId="MATERIALMNG_ADMIN" permissionId="ORDERMGR_VIEW"/>
+    
+     <SecurityGroup description="Material Management Reports Admin group" groupId="MATERIALMNG_REPADMIN"/> 
+      <SecurityPermission description="Special Permission to View  Monthly Store Reports Tab" permissionId="MATERIALMNG_MNTHREPOR"/>
+    <SecurityGroupPermission groupId="MATERIALMNG_REPADMIN" permissionId="MATERIALMNG_MNTHREPOR"/>
+     <SecurityGroupPermission groupId="FULLADMIN" permissionId="MATERIALMNG_MNTHREPOR"/>
 </entity-engine-xml>
