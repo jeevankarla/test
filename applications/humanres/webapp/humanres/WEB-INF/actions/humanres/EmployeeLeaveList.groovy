@@ -34,9 +34,9 @@ try {
 if(UtilValidate.isEmpty(parameters.fDate)){
 	parameters.fromDate = UtilDateTime.toSqlDate(UtilDateTime.addDaysToTimestamp(UtilDateTime.nowTimestamp(),-40));
 }
-if(UtilValidate.isEmpty(parameters.tDate)){
+/*if(UtilValidate.isEmpty(parameters.tDate)){
 	parameters.thruDate =UtilDateTime.toSqlDate(UtilDateTime.nowTimestamp());
-}
+}*/
 
 if(UtilValidate.isNotEmpty(parameters.fromDate)){
 	fromDate = parameters.fromDate;
