@@ -267,7 +267,7 @@ public class HumanresService {
 			    			String weekName = (c1.getDisplayName(Calendar.DAY_OF_WEEK, Calendar.LONG, locale));
 			    			List<GenericValue> dayShiftList = EntityUtil.filterByCondition(emplDailyAttendanceDetailList, EntityCondition.makeCondition("date",EntityOperator.EQUALS,UtilDateTime.toSqlDate(cTime)));
 			    			
-			    			if(weekName.equalsIgnoreCase(emplWeeklyOffDay) && UtilValidate.isNotEmpty(dayShiftList) || (dayShiftList.size() >= 2)){
+			    			if((weekName.equalsIgnoreCase(emplWeeklyOffDay) && UtilValidate.isNotEmpty(dayShiftList)) || (dayShiftList.size() >= 2)){
 			    				for(int i=0 ;i<dayShiftList.size() ;i++){
 			    					GenericValue dayShift = dayShiftList.get(i);
 			    					List<GenericValue> emplPunchList = delegator.findByAnd("EmplPunch", UtilMisc.toMap("shiftType",dayShift.get("shiftType"),"punchdate", dayShift.get("date")));
@@ -335,7 +335,7 @@ public class HumanresService {
 								}
 								
 							}
-							tempWorkedHolidaysList.removeAll(EntityUtil.filterByAnd(tempWorkedHolidaysList, UtilMisc.toMap("date",tempDate)));
+							//tempWorkedHolidaysList.removeAll(EntityUtil.filterByAnd(tempWorkedHolidaysList, UtilMisc.toMap("date",tempDate)));
 							//holidays.remove(tempDate);
 						}
 					}
