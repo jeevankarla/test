@@ -125,7 +125,7 @@ tax14pt5TotalMap["vatAmount"]=BigDecimal.ZERO;
 				tax5pt5TotalMap["vatAmount"]+=vatRevenue;
 				fromPartyDetail = (Map)(org.ofbiz.party.party.PartyWorker.getPartyIdentificationDetails(delegator, invoiceItem.partyIdFrom)).get("partyDetails");
 					if(UtilValidate.isNotEmpty(fromPartyDetail)){
-						innerTaxItemMap["tinNumber"]=fromPartyDetail('TIN_NUMBER');
+						innerTaxItemMap["tinNumber"]=fromPartyDetail.get('TIN_NUMBER');
 				      }
 				taxDetails5pt5List.addAll(innerTaxItemMap);
 				//Debug.log("=invoiceId==ForFIVE++++"+invoiceItem.invoiceId+"==ANdAmouunt=="+invoiceItem.vatAmount+"==percent="+invoiceItem.vatPercent+"=Total="+invTotalVal);
@@ -139,7 +139,7 @@ tax14pt5TotalMap["vatAmount"]=BigDecimal.ZERO;
 					innerTaxItemMap["tinNumber"]="";
 					fromPartyDetail = (Map)(org.ofbiz.party.party.PartyWorker.getPartyIdentificationDetails(delegator, invoiceItem.partyIdFrom)).get("partyDetails");
 						if(UtilValidate.isNotEmpty(fromPartyDetail)){
-							innerTaxItemMap["tinNumber"]=fromPartyDetail('TIN_NUMBER');
+							innerTaxItemMap["tinNumber"]=fromPartyDetail.get('TIN_NUMBER');
 						 }
 					innerTaxItemMap["vchrType"]="Purchase";
 					innerTaxItemMap["crOrDbId"]="D";
