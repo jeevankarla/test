@@ -767,7 +767,8 @@
 				 	var freightCharges=$("#freightCharges").val();
 			         var discount=$("#discount").val();
 			         var insurence = $("#insurence").val();
-			        
+			         var packAndFowdg = $("#packAndFowdg").val();
+			          var otherCharges = $("#otherCharges").val();
 			         
 			         //alert("<==totalAmount===>"+totalAmount+"=packAndFowdg="+packAndFowdg+"=otherCharges="+otherCharges+"=insurence="+insurence);
 			         if(freightCharges !=="" && (!isNaN(freightCharges))){
@@ -783,6 +784,14 @@
 			         if(discount !=="" && (!isNaN(discount))){
 			        discount = parseFloat(discount);
 			         totalAmount -=discount;
+			         }
+			         if(packAndFowdg !=="" && (!isNaN(packAndFowdg))){
+			           packAndFowdg = parseFloat(packAndFowdg);
+			         totalAmount +=packAndFowdg;
+			         }
+			         if(otherCharges !=="" && (!isNaN(otherCharges))){
+			        otherCharges = parseFloat(otherCharges);
+			         totalAmount +=otherCharges;
 			         }
 			        
 			    //var amt = parseFloat(Math.round((totalAmount))); for total rounding
