@@ -403,9 +403,9 @@
 																		                     			<fo:table-cell >
 																		                     				<fo:block linefeed-treatment="preserve" >&#xA;</fo:block>
 																		                     				<fo:block linefeed-treatment="preserve" >&#xA;</fo:block>
-																		                     				<fo:block text-align="center" font-size="12pt" font-weight="bold"><#if payRollHeader.getValue().get("PAYROL_BEN_CONVEY")?has_content>${payRollHeader.getValue().get("PAYROL_BEN_CONVEY")?if_exists}<#else>&#160;</#if></fo:block>
-																		                     				<#if payRollHeader.getValue().get("PAYROL_BEN_CONVEY")?has_content>
-																		                     					<#assign totalEarnings=totalEarnings+payRollHeader.getValue().get("PAYROL_BEN_CONVEY")>
+																		                     				<fo:block text-align="center" font-size="12pt" font-weight="bold"><#if payRollHeader.getValue().get("PAYROL_BEN_CONALW")?has_content>${payRollHeader.getValue().get("PAYROL_BEN_CONALW")?if_exists}<#else>&#160;</#if></fo:block>
+																		                     				<#if payRollHeader.getValue().get("PAYROL_BEN_CONALW")?has_content>
+																		                     					<#assign totalEarnings=totalEarnings+payRollHeader.getValue().get("PAYROL_BEN_CONALW")>
 																		                     				</#if>
 																		                     			</fo:table-cell>
 																		                     			<fo:table-cell >
@@ -424,7 +424,7 @@
 																		                     			<fo:table-cell >
 																		                     				<fo:block linefeed-treatment="preserve" >&#xA;</fo:block>
 																		                     				<fo:block linefeed-treatment="preserve" >&#xA;</fo:block>
-																		                     				<fo:block text-align="center" font-size="12pt" font-weight="bold">${(noOfPayableDays?if_exists)}  days</fo:block>
+																		                     				<fo:block text-align="center" font-size="12pt" font-weight="bold">${(noOfPayableDays?if_exists)}  </fo:block>
 																		                     			</fo:table-cell>
 																	                     			</fo:table-row>
 																	                           </fo:table-body>
@@ -531,7 +531,7 @@
 																		                     			</fo:table-cell>
 																		                     			<fo:table-cell >
 																		                     				<fo:block linefeed-treatment="preserve" >&#xA;</fo:block>
-																		                     				<fo:block text-align="left" font-size="12pt" font-weight="bold">${totalEarnings?if_exists?string("#0.00")}</fo:block>
+																		                     				<fo:block text-align="left" font-size="12pt" font-weight="bold">${totalEarnings?if_exists?string("#0")}</fo:block>
 																		                     			</fo:table-cell>
 																	                     			</fo:table-row>
 																	                           </fo:table-body>
@@ -735,12 +735,12 @@
 																		                     			</fo:table-cell>
 																		                     			<fo:table-cell >
 																		                     				<fo:block linefeed-treatment="preserve" >&#xA;</fo:block>
-																		                     				<fo:block text-align="center" font-size="12pt" font-weight="bold">${(totalEarnings-totalDeductions)?if_exists?string("#0.00")}</fo:block>
+																		                     				<fo:block text-align="center" font-size="12pt" font-weight="bold">${(totalEarnings-totalDeductions)?if_exists?string("#0")}</fo:block>
 																		                     				<fo:block linefeed-treatment="preserve" >&#xA;</fo:block>
 																		                     			</fo:table-cell>
 																		                     			<fo:table-cell >
 																		                     				<fo:block linefeed-treatment="preserve" >&#xA;</fo:block>
-																		                     				<fo:block text-align="center" font-size="12pt" font-weight="bold">${(totalEarnings-totalDeductions)?if_exists?string("#0")}</fo:block>
+																		                     				<fo:block text-align="left" font-size="12pt" font-weight="bold">${(totalEarnings-totalDeductions)?if_exists?string("#0.00")}</fo:block>
 																		                     				<fo:block linefeed-treatment="preserve" >&#xA;</fo:block>
 																		                     			</fo:table-cell>
 																	                     			</fo:table-row>
@@ -1156,9 +1156,9 @@
 																		                     			<fo:table-cell >
 																		                     				<fo:block linefeed-treatment="preserve" >&#xA;</fo:block>
 																		                     				<fo:block linefeed-treatment="preserve" >&#xA;</fo:block>
-																		                     				<fo:block text-align="center" font-size="12pt" font-weight="bold"><#if payRollHeader.getValue().get("PAYROL_BEN_CONVEY")?has_content>${payRollHeader.getValue().get("PAYROL_BEN_CONVEY")?if_exists}<#else>&#160;</#if></fo:block>
-																		                     				<#if payRollHeader.getValue().get("PAYROL_BEN_CONVEY")?has_content>
-																		                     					<#assign totalEarnings=totalEarnings+payRollHeader.getValue().get("PAYROL_BEN_CONVEY")>
+																		                     				<fo:block text-align="center" font-size="12pt" font-weight="bold"><#if payRollHeader.getValue().get("PAYROL_BEN_CONALW")?has_content>${payRollHeader.getValue().get("PAYROL_BEN_CONALW")?if_exists}<#else>&#160;</#if></fo:block>
+																		                     				<#if payRollHeader.getValue().get("PAYROL_BEN_CONALW")?has_content>
+																		                     					<#assign totalEarnings=totalEarnings+payRollHeader.getValue().get("PAYROL_BEN_CONALW")>
 																		                     				</#if>
 																		                     			</fo:table-cell>
 																		                     			<fo:table-cell >
@@ -1177,7 +1177,7 @@
 																		                     			<fo:table-cell >
 																		                     				<fo:block linefeed-treatment="preserve" >&#xA;</fo:block>
 																		                     				<fo:block linefeed-treatment="preserve" >&#xA;</fo:block>
-																		                     				<fo:block text-align="center" font-size="12pt" font-weight="bold">${(noOfPayableDays?if_exists)}  days</fo:block>
+																		                     				<fo:block text-align="center" font-size="12pt" font-weight="bold">${(noOfPayableDays?if_exists)}  </fo:block>
 																		                     			</fo:table-cell>
 																	                     			</fo:table-row>
 																	                           </fo:table-body>
@@ -1296,7 +1296,7 @@
 																		                     			</fo:table-cell>
 																		                     			<fo:table-cell >
 																		                     				<fo:block linefeed-treatment="preserve" >&#xA;</fo:block>
-																		                     				<fo:block text-align="left" font-size="12pt" font-weight="bold">${totalEarnings?if_exists?string("#0.00")}</fo:block>
+																		                     				<fo:block text-align="left" font-size="12pt" font-weight="bold">${totalEarnings?if_exists?string("#0")}</fo:block>
 																		                     				<fo:block linefeed-treatment="preserve" >&#xA;</fo:block>
 																		                     			</fo:table-cell>
 																	                     			</fo:table-row>
@@ -1489,11 +1489,11 @@
 																		                     				<fo:block linefeed-treatment="preserve" >&#xA;</fo:block>
 																		                     			</fo:table-cell>
 																		                     			<fo:table-cell >
-																		                     				<fo:block text-align="center" font-size="12pt" font-weight="bold">${(totalEarnings-totalDeductions)?if_exists?string("#0.00")}</fo:block>
+																		                     				<fo:block text-align="center" font-size="12pt" font-weight="bold">${(totalEarnings-totalDeductions)?if_exists?string("#0")}</fo:block>
 																		                     				<fo:block linefeed-treatment="preserve" >&#xA;</fo:block>
 																		                     			</fo:table-cell>
 																		                     			<fo:table-cell >
-																		                     				<fo:block text-align="center" font-size="12pt" font-weight="bold">${(totalEarnings-totalDeductions)?if_exists?string("#0")}</fo:block>
+																		                     				<fo:block text-align="left" font-size="12pt" font-weight="bold">${(totalEarnings-totalDeductions)?if_exists?string("#0.00")}</fo:block>
 																		                     				<fo:block linefeed-treatment="preserve" >&#xA;</fo:block>
 																		                     			</fo:table-cell>
 																	                     			</fo:table-row>
@@ -1911,9 +1911,9 @@
 																		                     			<fo:table-cell >
 																		                     				<fo:block linefeed-treatment="preserve" >&#xA;</fo:block>
 																		                     				<fo:block linefeed-treatment="preserve" >&#xA;</fo:block>
-																		                     				<fo:block text-align="center" font-size="12pt" font-weight="bold"><#if payRollHeader.getValue().get("PAYROL_BEN_CONVEY")?has_content>${payRollHeader.getValue().get("PAYROL_BEN_CONVEY")?if_exists}<#else>&#160;</#if></fo:block>
-																		                     				<#if payRollHeader.getValue().get("PAYROL_BEN_CONVEY")?has_content>
-																		                     					<#assign totalEarnings=totalEarnings+payRollHeader.getValue().get("PAYROL_BEN_CONVEY")>
+																		                     				<fo:block text-align="center" font-size="12pt" font-weight="bold"><#if payRollHeader.getValue().get("PAYROL_BEN_CONALW")?has_content>${payRollHeader.getValue().get("PAYROL_BEN_CONALW")?if_exists}<#else>&#160;</#if></fo:block>
+																		                     				<#if payRollHeader.getValue().get("PAYROL_BEN_CONALW")?has_content>
+																		                     					<#assign totalEarnings=totalEarnings+payRollHeader.getValue().get("PAYROL_BEN_CONALW")>
 																		                     				</#if>
 																		                     			</fo:table-cell>
 																		                     			<fo:table-cell >
@@ -1932,7 +1932,7 @@
 																		                     			<fo:table-cell >
 																		                     				<fo:block linefeed-treatment="preserve" >&#xA;</fo:block>
 																		                     				<fo:block linefeed-treatment="preserve" >&#xA;</fo:block>
-																		                     				<fo:block text-align="center" font-size="12pt" font-weight="bold">${(noOfPayableDays?if_exists)}  days</fo:block>
+																		                     				<fo:block text-align="center" font-size="12pt" font-weight="bold">${(noOfPayableDays?if_exists)}  </fo:block>
 																		                     			</fo:table-cell>
 																	                     			</fo:table-row>
 																	                           </fo:table-body>
@@ -2039,7 +2039,7 @@
 																		                     			</fo:table-cell>
 																		                     			<fo:table-cell >
 																		                     				<fo:block linefeed-treatment="preserve" >&#xA;</fo:block>
-																		                     				<fo:block text-align="left" font-size="12pt" font-weight="bold">${totalEarnings?if_exists?string("#0.00")}</fo:block>
+																		                     				<fo:block text-align="left" font-size="12pt" font-weight="bold">${totalEarnings?if_exists?string("#0")}</fo:block>
 																		                     			</fo:table-cell>
 																	                     			</fo:table-row>
 																	                           </fo:table-body>
@@ -2232,11 +2232,11 @@
 																		                     			</fo:table-cell>
 																		                     			<fo:table-cell >
 																		                     				<fo:block linefeed-treatment="preserve" >&#xA;</fo:block>
-																		                     				<fo:block text-align="center" font-size="12pt" font-weight="bold">${(totalEarnings-totalDeductions)?if_exists?string("#0.00")}</fo:block>
+																		                     				<fo:block text-align="center" font-size="12pt" font-weight="bold">${(totalEarnings-totalDeductions)?if_exists?string("#0")}</fo:block>
 																		                     			</fo:table-cell>
 																		                     			<fo:table-cell >
 																		                     				<fo:block linefeed-treatment="preserve" >&#xA;</fo:block>
-																		                     				<fo:block text-align="center" font-size="12pt" font-weight="bold">${(totalEarnings-totalDeductions)?if_exists?string("#0")}</fo:block>
+																		                     				<fo:block text-align="left" font-size="12pt" font-weight="bold">${(totalEarnings-totalDeductions)?if_exists?string("#0.00")}</fo:block>
 																		                     			</fo:table-cell>
 																	                     			</fo:table-row>
 																	                           </fo:table-body>
