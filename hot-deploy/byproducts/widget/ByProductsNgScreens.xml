@@ -2637,7 +2637,7 @@
                       <decorator-section name="body">
                       	<section>
                         	<widgets>
-                        	<link target="createFacilityRate" text="Create" style="buttontext"></link>
+                        	<!-- <link target="createFacilityRate" text="Create" style="buttontext"></link> -->
                         		<screenlet title="Facility Rate Search Form">
                         			<include-form name="FacilityRateSearchForm" location="component://byproducts/widget/ByProductsNgForms.xml"/>
                         		</screenlet>
