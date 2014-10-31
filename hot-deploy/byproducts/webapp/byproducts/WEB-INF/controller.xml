@@ -1549,6 +1549,13 @@
         <response name="success" type="view" value="ArPaymentsSearch"/>
         <response name="error" type="view" value="ArPaymentsSearch"/>
     </request-map>
+    <!-- later we have to move it MaterialMgmt controller -->
+     <request-map uri="purchaseTaxReport.pdf">
+     <security https="true" auth="true"/>
+    	<response name="success" type="view" value="purchaseTaxReportPDF"/>
+    </request-map>
+     <view-map name="purchaseTaxReportPDF" type="screenfop" page="component://materialmgmt/widget/materialmgmtReportScreens.xml#PurchaseTaxReportPDF" content-type="application/pdf"/>
+    
     
     <!-- View Mappings -->
     <view-map name="main" type="screen" page="component://byproducts/widget/ByProductsNgScreens.xml#mainNg"/>
