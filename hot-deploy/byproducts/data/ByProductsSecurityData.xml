@@ -294,6 +294,19 @@
     <SecurityGroupPermission groupId="FULLADMIN" permissionId="BATCHPAY_CHECK"/>
     <SecurityGroupPermission groupId="FULLADMIN" permissionId="BATCHPAY_CREATE"/>
     
+    <!--  Spl permission to cancel ICP Sales shipment-->
+    <SecurityGroup groupId="CANCELICP_SHIPMENT" description="Permission to Cancel ICP Shipment"/>
+	<SecurityPermission permissionId="ICPSALE_SHIP_CANCEL" description="Permission to Cancel ICP Shipment" />
+	<SecurityGroupPermission groupId="CANCELICP_SHIPMENT" permissionId="ICPSALE_SHIP_CANCEL"/>
+    <SecurityGroupPermission groupId="FULLADMIN" permissionId="ICPSALE_SHIP_CANCEL"/>
+    
+    <!--  Spl permission to cancel FGS shipment-->
+    <SecurityGroup groupId="CANCELFGS_SHIPMENT" description="Permission to Cancel FGS Shipment"/>
+	<SecurityPermission permissionId="FGSSALE_SHIP_CANCEL" description="Permission to Cancel FGS Shipment" />
+	<SecurityGroupPermission groupId="CANCELFGS_SHIPMENT" permissionId="FGSSALE_SHIP_CANCEL"/>
+    <SecurityGroupPermission groupId="FULLADMIN" permissionId="FGSSALE_SHIP_CANCEL"/>
+    
+    
     <!-- instead of adding each group one Permission group added -->
      <SecurityGroup groupId="BYPROD_PAYMENT_WING" description="Route Marketing All Types of Payment  Entry"/>
      <SecurityGroupPermission groupId="BYPROD_PAYMENT_WING" permissionId="BYPRODUCTS_CASH"/>
@@ -327,5 +340,14 @@
      <SecurityGroup description="View Employee Subsidy Milk" groupId="SUBSIDYVIEW"/>    
      <SecurityGroupPermission groupId="FULLADMIN" permissionId="SUBSIDY_VIEW"/>
      <SecurityGroupPermission groupId="SUBSIDYVIEW" permissionId="SUBSIDY_VIEW"/>
+	
+	
+	<SecurityGroup description="All 'ICP SALES' permissions to view and create transactions" groupId="ICPSALE_VIEW"/>
+    <SecurityGroup description="All 'FGS SALES' permissions to view and create transactions" groupId="FGSSALE_VIEW"/>    
+    <SecurityGroupPermission groupId="ICPSALE_VIEW" permissionId="ICPSALE_VIEW"/>
+    <SecurityGroupPermission groupId="FGSSALE_VIEW" permissionId="FGSSALE_VIEW"/>
+    <SecurityGroupPermission groupId="FULLADMIN" permissionId="ICPSALE_VIEW"/>
+    <SecurityGroupPermission groupId="FULLADMIN" permissionId="FGSSALE_VIEW"/>
+   
 	
 </entity-engine-xml>
