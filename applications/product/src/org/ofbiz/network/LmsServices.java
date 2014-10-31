@@ -1724,94 +1724,85 @@ public class LmsServices {
 	 					Debug.logError("Error in creating Facility Rate: "+facilityId+ "\t"+e.toString(),module);
 	 					return ServiceUtil.returnError(e.getMessage());
 	 				}
-				  }
-			  if (ServiceUtil.isError(resultMap)) {
-				 Debug.logError(ServiceUtil.getErrorMessage(resultMap), module);
-	            return resultMap;
-	         }
-		 }
+				 }
+				 if (ServiceUtil.isError(resultMap)) {
+					 Debug.logError(ServiceUtil.getErrorMessage(resultMap), module);
+					 return resultMap;
+				 }
+		 	}
 			if (UtilValidate.isNotEmpty(categoryTypeEnum)&& categoryTypeEnum.equals("SHP_RTLR")){
-				if (UtilValidate.isNotEmpty(reopen)){
-				      input.clear();
-					  input = UtilMisc.toMap("userLogin", userLogin, "fromDate",UtilDateTime.nowTimestamp(),"facilityId", facilityId,
-								 "rateTypeId", "SHOPEE_RENT","productId","_NA_","rateAmount",rateAmount,"supplyTypeEnumId","_NA_","rateCurrencyUomId","INR");
-				      dispatcher.runSync("createOrUpdateFacilityRate",input);
-				      if (ServiceUtil.isError(resultMap)) {
-						  Debug.logError(ServiceUtil.getErrorMessage(resultMap), module);
-				          return resultMap;
-				       }
-				}else{
-				  input.clear();
-				  List<GenericValue> facilityRateList = FastList.newInstance();
-			      List<GenericValue> activeFacilityRate = FastList.newInstance();
-			      Timestamp tempfromDate=null;
-			      Timestamp fromDate=UtilDateTime.getDayStart(UtilDateTime.nowTimestamp());
-			      Timestamp thruDate=null;
-				    if(UtilValidate.isNotEmpty(closedDate)){
-				       thruDate=UtilDateTime.getDayEnd(closedDate);
-				    }
-			      boolean isNewShpRtlr = true;
-				  List conditionList = UtilMisc.toList(
-			                EntityCondition.makeCondition("facilityId", EntityOperator.EQUALS, facilityId));
-			                conditionList.add( EntityCondition.makeCondition("rateTypeId", EntityOperator.EQUALS, "SHOPEE_RENT"));
-			                conditionList.add( EntityCondition.makeCondition("productId", EntityOperator.EQUALS, "_NA_"));
-			                conditionList.add( EntityCondition.makeCondition("supplyTypeEnumId", EntityOperator.EQUALS, "_NA_"));
-			                conditionList.add( EntityCondition.makeCondition("rateCurrencyUomId", EntityOperator.EQUALS, "INR"));
-			                EntityCondition condition = EntityCondition.makeCondition(conditionList, EntityOperator.AND);
-			                try {
-								 facilityRateList = delegator.findList("FacilityRate", condition, null, UtilMisc.toList("-fromDate"), null, false);
-								 GenericValue newEntity = delegator.makeValue("FacilityRate");
-								 if(UtilValidate.isNotEmpty(facilityRateList)){
-										GenericValue activeRate = facilityRateList.get(0);
-								       	tempfromDate = activeRate.getTimestamp("fromDate");
-								    	if(fromDate.compareTo(UtilDateTime.getDayStart(tempfromDate))>0){
-								    		if(UtilValidate.isNotEmpty(thruDate)){
-								    		   activeRate.set("thruDate", thruDate);
-								    		   isNewShpRtlr=false;
-								    		}else if(fromDate.compareTo(UtilDateTime.getDayStart(tempfromDate))!=0){
-								    			activeRate.set("rateAmount",rateAmount);
-								    			activeRate.set("thruDate", UtilDateTime.getDayEnd(UtilDateTime.addDaysToTimestamp(fromDate, -1), TimeZone.getDefault(), locale));
-								    			isNewShpRtlr=true;
-								    		}
-								       		activeRate.store();
-								       		
-									    }
-								       	if(fromDate.compareTo(UtilDateTime.getDayStart(tempfromDate))==0){
-								       		activeRate.set("lastModifiedByUserLogin", userLogin.get("userLoginId"));
-								       		activeRate.set("lastModifiedDate", UtilDateTime.nowTimestamp());
-								       		activeRate.set("rateAmount",rateAmount);
-								       		activeRate.set("thruDate",thruDate);
-								       		activeRate.store();
-								       		isNewShpRtlr=false;
-								       	}
-								 }
-								 if(isNewShpRtlr ){
-						     	        newEntity.set("facilityId", facilityId);
-						     	        newEntity.set("productId", "_NA_");
-						     	        newEntity.set("rateTypeId", "SHOPEE_RENT");
-						     	        newEntity.set("supplyTypeEnumId", "_NA_");
-						     	        newEntity.set("rateCurrencyUomId", "INR");
-						     	        newEntity.set("rateAmount", rateAmount);
-						     	        newEntity.set("fromDate", fromDate);
-						     	        newEntity.set("thruDate", thruDate);
-						     	        newEntity.set("createdDate", UtilDateTime.nowTimestamp());
-						    	        newEntity.set("createdByUserLogin", userLogin.get("userLoginId"));
-						 		        try {
-						 					delegator.create(newEntity);
-						 				}catch (GenericEntityException e) {
-						 					Debug.logError("Error in creating Facility Rate: "+facilityId+ "\t"+e.toString(),module);
-						 					return ServiceUtil.returnError(e.getMessage());
-						 				}
-									  }
-			      if (ServiceUtil.isError(resultMap)) {
-					  Debug.logError(ServiceUtil.getErrorMessage(resultMap), module);
-			          return resultMap;
-			       }
+				List<GenericValue> facilityRateList = FastList.newInstance();
+				Timestamp tempfromDate=null;
+				Timestamp fromDate=UtilDateTime.getDayStart(UtilDateTime.nowTimestamp());
+				boolean createNewRentEntry = false;
+				List conditionList = UtilMisc.toList( EntityCondition.makeCondition("facilityId", EntityOperator.EQUALS, facilityId));
+			    conditionList.add( EntityCondition.makeCondition("rateTypeId", EntityOperator.EQUALS, "SHOPEE_RENT"));
+			    conditionList.add( EntityCondition.makeCondition("rateCurrencyUomId", EntityOperator.EQUALS, "INR"));
+			    EntityCondition condition = EntityCondition.makeCondition(conditionList, EntityOperator.AND);
+	            try {
+	            	facilityRateList = delegator.findList("FacilityRate", condition, null, null, null, false);
+					facilityRateList = EntityUtil.filterByDate(facilityRateList, UtilDateTime.getDayStart(UtilDateTime.nowTimestamp()));
+					BigDecimal rentAmt = BigDecimal.ZERO;
+					GenericValue facilityRent = null; 
+					if(UtilValidate.isNotEmpty(facilityRateList)){
+						facilityRent = EntityUtil.getFirst(facilityRateList);
+						rentAmt = facilityRent.getBigDecimal("rateAmount");
+					}
+					if(rateAmount.compareTo(rentAmt) != 0 && UtilValidate.isEmpty(facilityRent)){
+						createNewRentEntry = true;
+					}
+					
+					if(rateAmount.compareTo(rentAmt) != 0 && UtilValidate.isNotEmpty(facilityRent)){
+						
+						Timestamp tempDate = facilityRent.getTimestamp("fromDate"); 
+						
+						if(fromDate.compareTo(UtilDateTime.getDayStart(tempDate)) == 0){
+							facilityRent.set("rateAmount", rateAmount);
+							facilityRent.set("lastModifiedByUserLogin", userLogin.get("userLoginId"));
+							facilityRent.set("lastModifiedDate", UtilDateTime.nowTimestamp());
+							createNewRentEntry = false;
+						}
+						else{
+							facilityRent.set("thruDate", UtilDateTime.getDayEnd(UtilDateTime.addDaysToTimestamp(UtilDateTime.nowTimestamp(), -1)));
+							facilityRent.set("lastModifiedByUserLogin", userLogin.get("userLoginId"));
+							facilityRent.set("lastModifiedDate", UtilDateTime.nowTimestamp());
+							createNewRentEntry = true;
+						}
+							 	
+					 	try {
+					 		facilityRent.store();
+		 				}catch (GenericEntityException e) {
+		 					Debug.logError("Error in creating Facility Rate: "+facilityId+ "\t"+e.toString(),module);
+		 					return ServiceUtil.returnError(e.getMessage());
+		 				}
+					 	
+					}
+					
+					if(createNewRentEntry){
+						GenericValue newEntity = delegator.makeValue("FacilityRate");
+						newEntity.set("facilityId", facilityId);
+			     	    newEntity.set("productId", "_NA_");
+			     	    newEntity.set("rateTypeId", "SHOPEE_RENT");
+			     	    newEntity.set("supplyTypeEnumId", "_NA_");
+			     	    newEntity.set("rateCurrencyUomId", "INR");
+			     	    newEntity.set("rateAmount", rateAmount);
+			     	    newEntity.set("fromDate", fromDate);
+			     	    newEntity.set("createdDate", UtilDateTime.nowTimestamp());
+			    	    newEntity.set("createdByUserLogin", userLogin.get("userLoginId"));
+			    	    newEntity.set("lastModifiedByUserLogin", userLogin.get("userLoginId"));
+			    	    newEntity.set("lastModifiedDate", UtilDateTime.nowTimestamp());
+						 	
+		    	        try {
+		 					delegator.create(newEntity);
+		 				}catch (GenericEntityException e) {
+		 					Debug.logError("Error in creating Facility Rate: "+facilityId+ "\t"+e.toString(),module);
+		 					return ServiceUtil.returnError(e.getMessage());
+		 				}
+					 }
 				}catch (GenericEntityException e) {
 					Debug.logError(e, module);
 		            return ServiceUtil.returnError(e.getMessage());
 				} 
-			  }
 			}
 			if (UtilValidate.isNotEmpty(amRoute)||UtilValidate.isNotEmpty(pmRoute)){
 				 input = UtilMisc.toMap("userLogin", userLogin, "facilityId", facilityId, "amRoute", amRoute,"pmRoute",pmRoute,"fromDate",openedDate,"thruDate",closedDate);

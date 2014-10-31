@@ -76,6 +76,7 @@ under the License.
         <field name="postalCode" title="Pin" ><display/></field>
        <!--<field name="contactNumber" title="Phone Number"><display/></field>-->
         <field name="mobileNumber" title="${uiLabelMap.Mobile}"><display/></field>
+        <field name="rateAmount" use-when="rateAmount!= null" title="Shoppee Rent"><display/></field>
         <field name="emailAddress" title="${uiLabelMap.Email}"><display/></field>
         <field name="facilityName" title="Name"><display description="${facility.facilityName}"/></field>
         <field name="sequenceNum" title="sequence"><display description="${facility.sequenceNum}"/></field>

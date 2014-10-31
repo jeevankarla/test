@@ -98,9 +98,10 @@ if (UtilValidate.isNotEmpty(facilityId)) {
 	condList.add(EntityCondition.makeCondition("facilityId", EntityOperator.EQUALS,facilityId));
 	condList.add(EntityCondition.makeCondition("rateTypeId", EntityOperator.EQUALS,"SHOPEE_RENT"));
 	condList.add(EntityCondition.makeCondition("rateCurrencyUomId", EntityOperator.EQUALS, "INR"));
-	condList.add(EntityCondition.makeCondition("supplyTypeEnumId", EntityOperator.EQUALS, "_NA_"));
+	/*condList.add(EntityCondition.makeCondition("supplyTypeEnumId", EntityOperator.EQUALS, "_NA_"));*/
 	cond1=EntityCondition.makeCondition(condList,EntityOperator.AND);
 	facilityRates = delegator.findList("FacilityRate", cond1, null , null, null, false);
+	facilityRate = null;
 	if (UtilValidate.isNotEmpty(facilityTypes)) {
 	   facilityRate = EntityUtil.filterByDate(facilityRates,UtilDateTime.getDayStart(UtilDateTime.nowTimestamp()));
 	}
