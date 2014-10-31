@@ -664,10 +664,14 @@ public class SalesInvoiceServices {
 		if(UtilValidate.isNotEmpty(context.get("isQuantityLtrs"))){
 			isQuantityLtrs = (Boolean)context.get("isQuantityLtrs");
 		}
-		 boolean isPurchaseInvoice = Boolean.FALSE;
-			if(UtilValidate.isNotEmpty(context.get("isPurchaseInvoice"))){
-				isPurchaseInvoice = (Boolean)context.get("isPurchaseInvoice");
-			}
+		boolean isPurchaseInvoice = Boolean.FALSE;
+		if(UtilValidate.isNotEmpty(context.get("isPurchaseInvoice"))){
+			isPurchaseInvoice = (Boolean)context.get("isPurchaseInvoice");
+		}
+		boolean isAllSalesInvoice = Boolean.FALSE;
+		if(UtilValidate.isNotEmpty(context.get("isAllSalesInvoice"))){
+			isAllSalesInvoice = (Boolean)context.get("isAllSalesInvoice");
+		}
 		Timestamp fromDate = (Timestamp) context.get("fromDate");
 		if (UtilValidate.isEmpty(fromDate)) {
 			Debug.logError("fromDate cannot be empty", module);
@@ -695,6 +699,39 @@ public class SalesInvoiceServices {
 				dayWiseSaleMap.put(UtilDateTime.toDateString(saleDate, "yyyy-MM-dd"),null);
 			}
 			Debug.log("====>dayWiseSaleMap ===!"+dayWiseSaleMap);*/
+			
+			// to skip route marketing party invoices in Ice cream Reports
+			List invoiceIds = FastList.newInstance();
+			if(!(isAllSalesInvoice)){
+				List shipCondList = FastList.newInstance();
+				shipCondList.add(EntityCondition.makeCondition("statusId",EntityOperator.EQUALS, "GENERATED"));
+				shipCondList.add(EntityCondition.makeCondition("estimatedShipDate", EntityOperator.GREATER_THAN_EQUAL_TO,dayBegin));
+				shipCondList.add(EntityCondition.makeCondition("estimatedShipDate", EntityOperator.LESS_THAN_EQUAL_TO,dayEnd));
+				try {
+					List<GenericValue> shipmentTypeIds = delegator.findList("ShipmentType", EntityCondition.makeCondition("parentTypeId", EntityOperator.EQUALS, "DIRECT_SHIPMENT"),null, null, null, false);
+					shipCondList.add(EntityCondition.makeCondition("shipmentTypeId",EntityOperator.IN, EntityUtil.getFieldListFromEntityList(shipmentTypeIds, "shipmentTypeId", true)));
+				} catch (Exception e) {
+					Debug.logError(e, "Exception while getting shipment ids ", module);
+				}			
+				EntityCondition shipCond = EntityCondition.makeCondition(shipCondList,	EntityOperator.AND);
+				List<GenericValue> shipmentList = delegator.findList("Shipment", shipCond,null, null, null, false);
+				if(UtilValidate.isNotEmpty(shipmentList)){
+					List shipmentIdList = EntityUtil.getFieldListFromEntityList(shipmentList, "shipmentId", false);
+					if(UtilValidate.isNotEmpty(shipmentIdList)){
+						List<GenericValue> orderHeaderList = delegator.findList("OrderHeader",	EntityCondition.makeCondition("shipmentId",EntityOperator.IN, shipmentIdList), null, null,null, false);
+						if(UtilValidate.isNotEmpty(orderHeaderList)){
+							List orderIds = EntityUtil.getFieldListFromEntityList(orderHeaderList, "orderId", true);
+							if(UtilValidate.isNotEmpty(orderIds)){
+								List<GenericValue> orderItemList = delegator.findList("OrderItemBillingAndInvoiceAndInvoiceItem",	EntityCondition.makeCondition("orderId",EntityOperator.IN, orderIds), null, null,null, false);
+								if(UtilValidate.isNotEmpty(orderItemList)){
+									invoiceIds = EntityUtil.getFieldListFromEntityList(orderItemList, "invoiceId", true);
+									Debug.log("invoiceIds===================="+invoiceIds+"flag================"+isAllSalesInvoice);
+								}
+							}
+						}
+					}
+				}
+			}
 			List conditionList = FastList.newInstance();
 			conditionList.add(EntityCondition.makeCondition("statusId",EntityOperator.NOT_EQUAL, "INVOICE_CANCELLED"));
 			conditionList.add(EntityCondition.makeCondition("productId",EntityOperator.NOT_EQUAL, null));//want to skip other than product items
@@ -720,9 +757,10 @@ public class SalesInvoiceServices {
 					Debug.logError("partyIds cannot be empty", module);
 					return ServiceUtil.returnError("partyIds cannot be empty");
 				}*/
+				if(!(isAllSalesInvoice)){
+					conditionList.add(EntityCondition.makeCondition("invoiceId", EntityOperator.IN, invoiceIds));
+				}
 			}
-			conditionList.add(EntityCondition.makeCondition("invoiceDate", EntityOperator.GREATER_THAN_EQUAL_TO,dayBegin));
-			
 			conditionList.add(EntityCondition.makeCondition("invoiceDate", EntityOperator.GREATER_THAN_EQUAL_TO,dayBegin));
 			conditionList.add(EntityCondition.makeCondition("invoiceDate",EntityOperator.LESS_THAN_EQUAL_TO, dayEnd));
 			EntityCondition condition = EntityCondition.makeCondition(conditionList, EntityOperator.AND);
@@ -970,7 +1008,6 @@ public class SalesInvoiceServices {
 			//invoiceId Wise Totals
 			String invoiceId = "";
 			invoiceId = invoiceItem.getString("invoiceId");
-			
 			//String currentSaleDate=UtilDateTime.toDateString(invoiceItem.getTimestamp("invoiceDate"), "yyyy-MM-dd");
 			
 			if (invoiceIdTotals.get(invoiceId) == null) {
