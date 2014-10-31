@@ -740,7 +740,7 @@
                	  <parameter param-name="shipmentId" /> 
             </hyperlink>
         </field>
-        <field name="cancelShipment" widget-style="buttontext">
+        <field use-when="${groovy:((security.hasEntityPermission(&quot;ICPSALE_SHIP&quot;, &quot;_CANCEL&quot;, session)))}" name="cancelShipment" widget-style="buttontext">
             <hyperlink target="cancelICPNandiniShipment" description="Cancel Shipment">
 	            <parameter param-name="shipmentId"/>
             </hyperlink>
@@ -772,7 +772,7 @@
             </hyperlink>
         </field>
       
-        <field name="cancelShipment" widget-style="buttontext">
+        <field use-when="${groovy:((security.hasEntityPermission(&quot;ICPSALE_SHIP&quot;, &quot;_CANCEL&quot;, session)))}" name="cancelShipment" widget-style="buttontext">
             <hyperlink target="cancelICPBellaryShipment" description="Cancel Shipment">
 	            <parameter param-name="shipmentId"/>
             </hyperlink>
@@ -804,7 +804,7 @@
             </hyperlink>
         </field>
       
-        <field name="cancelShipment" widget-style="buttontext">
+        <field use-when="${groovy:((security.hasEntityPermission(&quot;ICPSALE_SHIP&quot;, &quot;_CANCEL&quot;, session)))}" name="cancelShipment" widget-style="buttontext">
             <hyperlink target="cancelICPAmulShipment" description="Cancel Shipment">
 	            <parameter param-name="shipmentId"/>
             </hyperlink>
@@ -847,7 +847,7 @@
                	  <parameter param-name="reportTypeFlag" value="debitNote"/> 
             </hyperlink>
         </field>
-        <field name="cancelShipment" widget-style="buttontext">
+        <field use-when="${groovy:((security.hasEntityPermission(&quot;FGSSALE_SHIP&quot;, &quot;_CANCEL&quot;, session)))}" name="cancelShipment" widget-style="buttontext">
             <hyperlink target="cancelInterUnitShipment" description="Cancel Shipment">
 	            <parameter param-name="shipmentId"/>
             </hyperlink>
@@ -883,7 +883,7 @@
                	  <parameter param-name="shipmentId" /> 
             </hyperlink>
         </field>
-        <field name="cancelShipment" widget-style="buttontext">
+        <field use-when="${groovy:((security.hasEntityPermission(&quot;FGSSALE_SHIP&quot;, &quot;_CANCEL&quot;, session)))}" name="cancelShipment" widget-style="buttontext">
             <hyperlink target="cancelInterUnitShipment" description="Cancel Shipment">
 	            <parameter param-name="shipmentId"/>
             </hyperlink>
@@ -919,7 +919,7 @@
                	  <parameter param-name="shipmentId" /> 
             </hyperlink>
         </field>
-        <field name="cancelShipment" widget-style="buttontext">
+        <field use-when="${groovy:((security.hasEntityPermission(&quot;FGSSALE_SHIP&quot;, &quot;_CANCEL&quot;, session)))}" name="cancelShipment" widget-style="buttontext">
             <hyperlink target="cancelFGSShipment" description="Cancel Shipment">
 	            <parameter param-name="shipmentId"/>
             </hyperlink>

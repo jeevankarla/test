@@ -485,9 +485,7 @@
         <menu-item name="IcpSalesAmul" title="Amul Icp Sales"> 
         <condition>
         	<or>
-        		<if-has-permission permission="FACILITY"  action="_ADMIN"/>
         		<if-has-permission permission="ICPSALE"  action="_VIEW"/>
-        		
         	</or>        		
         </condition>  
       	 <link target="IcpSalesAmul">    
@@ -496,7 +494,6 @@
         <menu-item name="IcpSalesBellary" title="Bellary Icp Sale"> 
         <condition>
         	<or>
-        		<if-has-permission permission="FACILITY"  action="_ADMIN"/>
         		<if-has-permission permission="ICPSALE"  action="_VIEW"/>
         	</or>        		
         </condition>  
@@ -507,9 +504,7 @@
         <menu-item name="DepotSale" title="Depot Sales"> 
         <condition>
         	<or>
-        		<if-has-permission permission="FACILITY"  action="_ADMIN"/>
         		<if-has-permission permission="ICPSALE"  action="_VIEW"/>
-        		
         	</or>        		
         </condition>  
       	 <link target="DepotSale">    
@@ -519,9 +514,7 @@
         <menu-item name="FGSProductSale" title="Sale To Union"> 
 	        <condition>
 	        	<or>
-	        		<if-has-permission permission="FACILITY"  action="_ADMIN"/>
-	        		<if-has-permission permission="ICPSALE"  action="_VIEW"/>
-	        		
+	        		<if-has-permission permission="FGSSALE"  action="_VIEW"/>
 	        	</or>        		
 	        </condition>  
       	 	<link target="FGSProductSale">    
@@ -530,9 +523,7 @@
        <menu-item name="InterUnitStkTr" title="Inter Unit Transfer"> 
         <condition>
         	<or>
-        		<if-has-permission permission="FACILITY"  action="_ADMIN"/>
-        		<if-has-permission permission="ICPSALE"  action="_VIEW"/>
-        		
+        		<if-has-permission permission="FGSSALE"  action="_VIEW"/>
         	</or>        		
         </condition>  
       	 <link target="InterUnitStkTr">    
@@ -542,8 +533,9 @@
         <menu-item name="InvoiceAndPaymentProcess" title="Payment Processing">
             <condition>
 	        	<or>
-	        		<if-has-permission permission="FACILITY"  action="_ADMIN"/>
 	        		<if-has-permission permission="ICPSALE"  action="_VIEW"/>
+	        		<if-has-permission permission="FGSSALE"  action="_VIEW"/>
+	        		<if-has-permission permission="FACILITY"  action="_ADMIN"/>
 	        	</or>        		
 	        </condition> 
             <link target="InvoiceAndPaymentProcess">
