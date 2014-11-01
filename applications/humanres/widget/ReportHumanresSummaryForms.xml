@@ -1407,13 +1407,13 @@
 				<option key="N" />
 			</drop-down>		
 		</field>
-		<!-- <field name="paymentMode" title="${uiLabelMap.PaymentMode}">	
+		<field name="paymentMode" title="${uiLabelMap.PaymentMode}">	
 			<drop-down allow-empty="true">
                 <entity-options entity-name="PaymentMethodType" description="${description}" key-field-name="paymentMethodTypeId">
                     <entity-order-by field-name="description"/>
                 </entity-options>
             </drop-down>
-        </field> -->
+        </field>
 		<field name="canteenFacin" title="${uiLabelMap.CanteenFacin}">
 			<drop-down allow-empty="false" no-current-selected-key="N">
 				<option key="Y"></option>
