@@ -3904,7 +3904,54 @@
                 </decorator-screen>
             </widgets>            
         </section>
-    </screen> 
+    </screen>
+    <screen name="IcpStockTransfer">
+        <section>
+            <actions>
+               <set field="titleProperty" value="ICP Stock Transfer"/>              
+			   <set field="tabButtonItem" value="IcpStockTransfer" />	
+			   <set field="tabButtonItem2" value="IcpStockTransfer"/>  
+			    <set field="changeFlag" value="ICPTransferSale"/>  
+               <set field="supplyDate" from-field="parameters.supplyDate"/>
+                <set field="isFormSubmitted" from-field="parameters.isFormSubmitted"/>
+               <set field="defaultEffectiveDateTime" value="${supplyDate}" default-value="${bsh:org.ofbiz.base.util.UtilDateTime.nowTimestamp()}"/>
+			   <set field="defaultEffectiveDate" 
+					value="${groovy:org.ofbiz.base.util.UtilDateTime.toDateString(defaultEffectiveDateTime, &quot;dd MMMMM, yyyy&quot;);}" />
+			   <set field="parameters.roleTypeId" value="ICP_TRANS_CUSTOMER"/>
+			   <set field="productStoreResult"	value="${groovy:in.vasista.vbiz.byproducts.icp.ICPServices.getProductStoreByGroupId(delegator, 'ICE_CREAM_NANDINI')}" />
+				<set field="productStoreId" value="${productStoreResult.factoryStoreId}"/>
+				<set field="productCategoryResult" value="${groovy:org.ofbiz.product.product.ProductWorker.getProductsByCategoryAssoc(delegator, 'INDENT_PROD_CAT', 'ICP_TRNF_INDENT', null)}" />
+				 <set field="productStoreResult" value="${groovy:in.vasista.vbiz.byproducts.icp.ICPServices.getProductStoreByGroupId(delegator, 'FG_STORE')}" />
+				<set field="categoryList" value="${productCategoryResult.productCategory}"/>		
+			   					  					  
+            </actions>
+            <widgets>
+              <decorator-screen name="ByProductsNgCommonDecorator" location="component://byproducts/widget/CommonScreens.xml">
+                      <decorator-section name="body">   
+                      <include-menu name="ICPTransferTabBar" location="component://byproducts/widget/ByProductsMenus.xml"/>
+                      	<section>
+	                      	  <condition>
+	                             <if-compare operator="equals" field="isFormSubmitted" value=""/>
+	                         </condition>
+	                      		<widgets>
+	           						<include-screen name="AdhocSaleInner"/>
+	                      		</widgets>
+                      	</section>
+                      <section>
+                      <condition>
+                      <if-compare operator="equals" field="isFormSubmitted" value="YES"/>
+                      </condition>
+                         <widgets>
+     						 <include-screen name="SalesInnerScreen"/>
+                		</widgets>
+                      </section>
+                      
+                    </decorator-section>                                       
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+     
      <screen name="InterUnitStkTr">
         <section>
             <actions>
@@ -3981,6 +4028,73 @@
                					<screenlet title="Inter Unit Transfer Orders">
                						<platform-specific><html><html-template location="component://byproducts/webapp/byproducts/byproducts/ListSearchIceCreamOrders.ftl"/></html></platform-specific>
                					</screenlet>
+                            </widgets>
+                        </section>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>            
+        </section>
+    </screen>
+    <screen name="ProcessICPStkTrans">
+        <section>
+            <actions>
+                <set field="titleProperty" value="Inter Unit Transfer"/>              
+			    <set field="tabButtonItem" value="IcpStockTransfer" />	
+			   <set field="tabButtonItem2" value="ProcessICPStkTrans"/>       
+               <set field="headerItem" value="byProductsOrderEntry"/>
+               <set field="viewSize" from-field="parameters.VIEW_SIZE"/>
+               <set field="defaultEffectiveDateTime" value="${bsh:org.ofbiz.base.util.UtilDateTime.getDayStart(org.ofbiz.base.util.UtilDateTime.nowTimestamp())}"/>
+			    <set field="defaultEffectiveDate" 
+					value="${groovy:org.ofbiz.base.util.UtilDateTime.toDateString(defaultEffectiveDateTime, &quot;dd MMMMM, yyyy&quot;);}" />
+               <set field="shipmentTypeId" from-field="parameters.shipmentTypeId"/>
+               <set field="salesChannelEnumId" from-field="parameters.salesChannelEnumId" />
+               <set field="screenFlag" value="icpStkTrSale"/>
+               <script	location="component://byproducts/webapp/byproducts/WEB-INF/actions/facility/getIcpSalesOrder.groovy" />
+            </actions>
+            <widgets>
+                   <decorator-screen name="ByProductsNgCommonDecorator" location="component://byproducts/widget/CommonScreens.xml">
+                      <decorator-section name="body">  
+                      <include-menu name="ICPTransferTabBar" location="component://byproducts/widget/ByProductsMenus.xml"/> 
+                        <section>
+                            <widgets>
+               					<screenlet title="ICP Stock Transfer Orders">
+               						<platform-specific><html><html-template location="component://byproducts/webapp/byproducts/byproducts/ListSearchIceCreamOrders.ftl"/></html></platform-specific>
+               					</screenlet>
+                            </widgets>
+                        </section>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>            
+        </section>
+    </screen>
+    
+    <screen name="FindICPTranferShipment">
+        <section>
+            <actions>
+                <set field="titleProperty" value="Find Stock Transfer Shipment"/>              
+			    <set field="tabButtonItem" value="IcpStockTransfer" />	
+			   <set field="tabButtonItem2" value="FindICPTranferShipment"/>       
+               <set field="viewSize" from-field="parameters.VIEW_SIZE"/>
+               <set field="targetRequest" value="FindICPTranferShipment"/>
+               <set field="shipmentTypeId" value="ICP_TR_SHIPMENT"/> 
+               <set field="screenFlag" value="ICPTransferSale"/> 
+            </actions>
+            <widgets>
+                  <decorator-screen name="ByProductsNgCommonDecorator" location="component://byproducts/widget/CommonScreens.xml">
+                      <decorator-section name="body">  
+                      <include-menu name="ICPTransferTabBar" location="component://byproducts/widget/ByProductsMenus.xml"/> 
+                        <section>
+                            <widgets>
+                                <decorator-screen name="FindScreenDecorator" location="component://common/widget/CommonScreens.xml">
+                                    <decorator-section name="search-options">
+                            			<include-form name="FindICPShipment" location="component://byproducts/widget/ByProductsNgForms.xml"/>
+                      				</decorator-section>
+                      				<decorator-section name="search-results">
+                      					<screenlet title="ICP Stock Transfer Shipments">
+                      						<include-form name="listICPTransferShipments" location="component://byproducts/widget/ByProductsNgForms.xml"/>
+                      					</screenlet>
+                      				</decorator-section>
+                                </decorator-screen>
                             </widgets>
                         </section>
                     </decorator-section>

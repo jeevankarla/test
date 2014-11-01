@@ -49,7 +49,9 @@
 	<ShipmentType description="Depot Shipment" hasTable="N"  parentTypeId="DIRECT_SHIPMENT" shipmentTypeId="DEPOT_SHIPMENT"/>
     <ShipmentType description="FGS Shipment" hasTable="N" parentTypeId="DIRECT_SHIPMENT" shipmentTypeId="FGS_SHIPMENT"/>
     <ShipmentType description="Inter Unit Transfer Shipment" hasTable="N" parentTypeId="DIRECT_SHIPMENT" shipmentTypeId="INTUNIT_TR_SHIPMENT"/>
+    <ShipmentType description="ICP Stock Transfer Shipment" hasTable="N" parentTypeId="DIRECT_SHIPMENT" shipmentTypeId="ICP_TR_SHIPMENT"/>
      
+     <Enumeration description="ICP Transfer Channel" enumCode="ICP STOCK TRANSFER CHANNEL" enumId="ICP_TRANS_CHANNEL" enumTypeId="ORDER_SALES_CHANNEL"/>
     <Enumeration description="FGS Product Channel" enumCode="FGS CHANNEL" enumId="FGS_PRODUCT_CHANNEL" enumTypeId="ORDER_SALES_CHANNEL"/>
     <Enumeration description="Depot Channel" enumCode="DEPOT CHANNEL" enumId="DEPOT_CHANNEL" enumTypeId="ORDER_SALES_CHANNEL"/>
 	<Enumeration description="ICP Amul channel" enumCode="ICP AMUL" enumId="ICP_AMUL_CHANNEL" enumTypeId="ORDER_SALES_CHANNEL"/>

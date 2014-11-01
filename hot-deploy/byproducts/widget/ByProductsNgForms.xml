@@ -715,6 +715,7 @@
         <field name="vehicleId" title="Vehicle Number"><text-find/></field>
         <field name="submitButton" title="${uiLabelMap.CommonFind}" widget-style="smallSubmit"><submit button-type="button"/></field>
     </form>
+    
     <form name="listICPNandiniShipments" type="list" list-name="listIt" paginate-target="FindICPNandiniShipment"
         odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
         <actions>
@@ -849,6 +850,48 @@
         </field>
         <field use-when="${groovy:((security.hasEntityPermission(&quot;FGSSALE_SHIP&quot;, &quot;_CANCEL&quot;, session)))}" name="cancelShipment" widget-style="buttontext">
             <hyperlink target="cancelInterUnitShipment" description="Cancel Shipment">
+	            <parameter param-name="shipmentId"/>
+            </hyperlink>
+        </field> 
+    </form>
+    <form name="listICPTransferShipments" type="list" list-name="listIt" paginate-target="FindICPTranferShipment" 
+        odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
+        <actions>
+            <service service-name="performFind" result-map="result" result-map-list="listIt">
+                <field-map field-name="inputFields" from-field="parameters"/>
+                <field-map field-name="entityName" value="OrderHeaderAndRolesAndShipment"/>
+                <field-map field-name="orderBy" from-field="parameters.sortField" value="-estimatedShipDate"/>
+                <field-map field-name="viewIndex" from-field="viewIndex"/>
+                <field-map field-name="viewSize" from-field="viewSize"/>
+            </service>
+        </actions>
+        <field name="shipmentId" ><display/></field>
+        <field name="estimatedShipDate" title="Ship Date"><display description="${groovy:org.ofbiz.base.util.UtilDateTime.toDateString(estimatedShipDate, &quot;dd/MM/yyyy&quot;);}"/></field>
+        <field name="vehicleId" title="Vehicle Number"><display/></field>
+        <field name="GatePass" widget-style="buttontext" >
+            <hyperlink target="nonRouteGatePass.pdf" description="GatePass" target-window="_blank">
+               	  <parameter param-name="shipmentId" />
+               	  <parameter param-name="screenFlag" /> 
+            </hyperlink>
+        </field> 
+        <field name="buyerInvoice" widget-style="buttontext" id-name = "invoiceSlips">
+            <hyperlink target="buyerInvoice.pdf" description="Invoice Slips" target-window="_blank"> 	
+               	  <parameter param-name="shipmentId" /> 
+            </hyperlink>
+        </field>
+        <field name="taxInvoice" widget-style="buttontext" id-name = "taxInvoice">
+            <hyperlink target="taxInvoice.pdf" description="Tax Invoice" target-window="_blank"> 	
+               	  <parameter param-name="shipmentId" /> 
+            </hyperlink>
+        </field>
+        <field name="debitNote" title="Debit/Credit Note" widget-style="buttontext" id-name = "DebitNote">
+            <hyperlink target="DebitNote" description="Debit/Credit Note" target-window="_blank"> 	
+               	  <parameter param-name="shipmentId" /> 
+               	  <parameter param-name="reportTypeFlag" value="debitNote"/> 
+            </hyperlink>
+        </field>
+        <field use-when="${groovy:((security.hasEntityPermission(&quot;ICPSALE_SHIP&quot;, &quot;_CANCEL&quot;, session)))}" name="cancelShipment" widget-style="buttontext">
+            <hyperlink target="cancelICPTransferShipment" description="Cancel Shipment">
 	            <parameter param-name="shipmentId"/>
             </hyperlink>
         </field> 

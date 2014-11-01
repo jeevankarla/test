@@ -98,6 +98,9 @@ orderIds.each{ eachOrderId ->
 		if(salesChannelEnumId == "INTUNIT_TR_CHANNEL"){
 			reportFlag = "INTERUNIT";
 		}
+		if(salesChannelEnumId == "ICP_TRANS_CHANNEL"){
+			reportFlag = "ICP";
+		}
 	}
 	conditionList.clear();
 	conditionList.add(EntityCondition.makeCondition("orderId", EntityOperator.EQUALS, eachOrderId));

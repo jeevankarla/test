@@ -194,13 +194,13 @@ under the License.
 								            <fo:table-column column-width="200pt"/>
 								            <fo:table-column column-width="90pt"/>
 								            
-								            <#if screenFlag?exists && (screenFlag != 'fgsSales' && screenFlag != 'InterUnitTransferSale')>
+								            <#if screenFlag?exists && (screenFlag != 'fgsSales' && screenFlag != 'InterUnitTransferSale' && screenFlag != 'ICPTransferSale')>
 								            	<fo:table-column column-width="60pt"/>
 								            	<fo:table-column column-width="60pt"/>
 								            	<fo:table-column column-width="70pt"/>
 								            	<fo:table-column column-width="80pt"/>
 								            </#if>
-								            <#if screenFlag?exists && (screenFlag == 'fgsSales' || screenFlag == 'InterUnitTransferSale')>
+								            <#if screenFlag?exists && (screenFlag == 'fgsSales' || screenFlag == 'InterUnitTransferSale' || screenFlag == 'ICPTransferSale')>
 								            	<fo:table-column column-width="60pt"/>
 								            	<fo:table-column column-width="60pt"/>
 								            	<fo:table-column column-width="70pt"/>
@@ -219,7 +219,7 @@ under the License.
 										            <fo:table-cell border-style="solid">
 										            	<fo:block  keep-together="always" text-align="center" font-size="12pt" white-space-collapse="false" font-weight="bold">BATCH NO</fo:block>  
 										            </fo:table-cell>
-										            <#if screenFlag?exists && (screenFlag != 'fgsSales' && screenFlag != 'InterUnitTransferSale')>
+										            <#if screenFlag?exists && (screenFlag != 'fgsSales' && screenFlag != 'InterUnitTransferSale' && screenFlag != 'ICPTransferSale')>
 								            			<fo:table-cell border-style="solid">
 										            		<fo:block  keep-together="always" text-align="center" font-size="12pt" white-space-collapse="false" font-weight="bold">NO. OF</fo:block>
 										            		<fo:block  keep-together="always" text-align="center" font-size="12pt" white-space-collapse="false" font-weight="bold">CRATES</fo:block>  
@@ -269,7 +269,7 @@ under the License.
 												            <fo:table-cell>
 												            	<fo:block  keep-together="always" text-align="left" font-size="12pt" white-space-collapse="false">${eachItem.get('batchNo')?if_exists}</fo:block>
 												            </fo:table-cell>
-												            <#if screenFlag?exists && (screenFlag != 'fgsSales' && screenFlag != 'InterUnitTransferSale')>
+												            <#if screenFlag?exists && (screenFlag != 'fgsSales' && screenFlag != 'InterUnitTransferSale' && screenFlag != 'ICPTransferSale')>
 												            	<fo:table-cell>
 												            		<fo:block  keep-together="always" text-align="right" font-size="12pt" white-space-collapse="false">${eachItem.get('qtyInCrate')?if_exists?string("#0.00")}</fo:block>
 												           		</fo:table-cell>
@@ -303,7 +303,7 @@ under the License.
 														<#assign slNo = slNo+1>
 													</#list>
 													</#if>
-													<#if screenFlag?exists && (screenFlag != 'fgsSales' && screenFlag != 'InterUnitTransferSale')>
+													<#if screenFlag?exists && (screenFlag != 'fgsSales' && screenFlag != 'InterUnitTransferSale' && screenFlag != 'ICPTransferSale')>
 														<fo:table-row border-style="solid">
 										                    <fo:table-cell>
 												            	<fo:block  keep-together="always" text-align="center" font-size="12pt" white-space-collapse="false"></fo:block>

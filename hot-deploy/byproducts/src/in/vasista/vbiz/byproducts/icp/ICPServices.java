@@ -287,7 +287,7 @@ public static Map<String, Object> approveICPOrder(DispatchContext dctx, Map cont
 				applTaxTypeList.remove("VAT_SALE");
 			}
 		}
-	  	if(UtilValidate.isEmpty(geoTax) && UtilValidate.isNotEmpty(salesChannel) && salesChannel.equals("INTUNIT_TR_CHANNEL")){
+	  	if(UtilValidate.isEmpty(geoTax) && UtilValidate.isNotEmpty(salesChannel) && (salesChannel.equals("INTUNIT_TR_CHANNEL") || salesChannel.equals("ICP_TRANS_CHANNEL"))){
 	  		isSale = Boolean.FALSE;
 		}
 	  	List<GenericValue> productPriceTaxCalc = FastList.newInstance();
@@ -602,7 +602,7 @@ public static Map<String, Object> approveICPOrder(DispatchContext dctx, Map cont
 					partyIdFrom = invoice.getString("partyId");
 				}
 		        //creditNote is created here
-		        if("INTUNIT_TR_CHANNEL".equals(salesChannelEnumId)){
+		        if("INTUNIT_TR_CHANNEL".equals(salesChannelEnumId) || "ICP_TRANS_CHANNEL".equals(salesChannelEnumId)){
 		    		  Map paymentInputMap = FastMap.newInstance();
 			  		  paymentInputMap.put("userLogin", userLogin);
 			  		  paymentInputMap.put("paymentTypeId", "SALES_PAYIN");
@@ -1008,6 +1008,24 @@ public static Map<String, Object> approveICPOrder(DispatchContext dctx, Map cont
    		 	shipment.put("lastModifiedByUserLogin", userLogin.get("userLoginId"));
    		 	shipment.put("lastModifiedDate", UtilDateTime.nowTimestamp());
      		shipment.store();
+     		
+     		List conditionList = FastList.newInstance();
+     		conditionList.add(EntityCondition.makeCondition("paymentMethodTypeId", EntityOperator.EQUALS, "CREDITNOTE_PAYIN"));
+     		conditionList.add(EntityCondition.makeCondition("paymentPurposeType", EntityOperator.EQUALS, "NON_ROUTE_MKTG"));
+     		conditionList.add(EntityCondition.makeCondition("paymentRefNum", EntityOperator.IN, invoiceIds));
+     		EntityCondition cond = EntityCondition.makeCondition(conditionList, EntityOperator.AND);
+     		List<GenericValue> creditNotes = delegator.findList("Payment", cond, null, null, null, false);
+     		List paymentIds = EntityUtil.getFieldListFromEntityList(creditNotes, "paymentId", true);
+     		if(UtilValidate.isNotEmpty(paymentIds)){
+     			for(int i=0;i<paymentIds.size();i++){
+     				String paymentId = (String)paymentIds.get(i);
+     				Map resultPayMap = dispatcher.runSync("voidPayment", UtilMisc.toMap("paymentId", paymentId, "userLogin", userLogin));
+    				if (ServiceUtil.isError(resultPayMap)) {
+    					Debug.logError("There was an error in cancelling credit note: " + ServiceUtil.getErrorMessage(resultPayMap), module);
+	                    return ServiceUtil.returnError("There was an error in cancelling credit note: " + ServiceUtil.getErrorMessage(resultPayMap));          	            
+	                }
+     			}
+     		}
 			
 		}catch(GenericEntityException e){
 			Debug.logError("Error in fetching shipment : "+ shipmentId, module);

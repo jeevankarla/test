@@ -127,6 +127,8 @@ under the License.
 		action="cancelDepotOrder"
 	<#elseif screenFlag?exists && screenFlag=="fgsSales">
 		action="cancelFGSOrder"
+	<#elseif screenFlag?exists && screenFlag=="icpStkTrSale">
+		action="cancelICPStkTrOrder"
 	<#elseif screenFlag?exists && screenFlag=="InterUnitTransferSale">
 		action="cancelIUSTransferOrder"
 	</#if>>
@@ -142,6 +144,8 @@ under the License.
 		action="approveDepotOrder"
 	<#elseif screenFlag?exists && screenFlag=="fgsSales">
 		action="approveFGSOrder"
+	<#elseif screenFlag?exists && screenFlag=="icpStkTrSale">
+		action="approveICPStkTrOrder"
 	<#elseif screenFlag?exists && screenFlag=="InterUnitTransferSale">
 		action="approveIUSTransferOrder"
 	</#if>>
@@ -158,6 +162,8 @@ under the License.
 		action="createShipmentAndInvoiceForDepotOrders"
 	<#elseif screenFlag?exists && screenFlag=="fgsSales">
 		action="createShipmentAndInvoiceForFGSOrders"
+	<#elseif screenFlag?exists && screenFlag=="icpStkTrSale">
+		action="createShipAndInvForICPTransferOrders"
 	<#elseif screenFlag?exists && screenFlag=="InterUnitTransferSale">
 		action="createShipAndInvForIUSTransferOrders"
 	</#if>>
@@ -177,6 +183,8 @@ under the License.
     		<input class='h3' type='hidden' id='shipmentTypeId' name='shipmentTypeId' value='DEPOT_SHIPMENT'/>
     	<#elseif screenFlag?exists && screenFlag=="fgsSales">
     		<input class='h3' type='hidden' id='shipmentTypeId' name='shipmentTypeId' value='FGS_SHIPMENT'/>
+    	<#elseif screenFlag?exists && screenFlag=="icpStkTrSale">
+    		<input class='h3' type='hidden' id='shipmentTypeId' name='shipmentTypeId' value='ICP_TR_SHIPMENT'/>
     	<#elseif screenFlag?exists && screenFlag=="InterUnitTransferSale">
     		<input class='h3' type='hidden' id='shipmentTypeId' name='shipmentTypeId' value='INTUNIT_TR_SHIPMENT'/>
     	</#if>

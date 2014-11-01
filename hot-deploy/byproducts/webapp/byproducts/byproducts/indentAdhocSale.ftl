@@ -106,6 +106,8 @@ $(document).ready(function(){
     	<form method="post" name="indententryinit" action="<@ofbizUrl>FGSProductSale</@ofbizUrl>" id="indententryinit">  
     <#elseif changeFlag?exists && changeFlag=='InterUnitTransferSale'>
     	<form method="post" name="indententryinit" action="<@ofbizUrl>InterUnitStkTr</@ofbizUrl>" id="indententryinit">
+    <#elseif changeFlag?exists && changeFlag=='ICPTransferSale'>
+    	<form method="post" name="indententryinit" action="<@ofbizUrl>IcpStockTransfer</@ofbizUrl>" id="indententryinit">
     <#else>
     	<form method="post" name="indententryinit" action="<@ofbizUrl>AdhocSaleNew</@ofbizUrl>" id="indententryinit">  
     </#if>
@@ -171,6 +173,9 @@ $(document).ready(function(){
 		        <#elseif changeFlag?exists && changeFlag=='InterUnitTransferSale'>
 		         	<input type="hidden" name="shipmentTypeId" id="shipmentTypeId" value="INTUNIT_TR_SHIPMENT"/> 
 		           	<input type="hidden" name="salesChannel" id="salesChannel" value="INTUNIT_TR_CHANNEL"/>
+		        <#elseif changeFlag?exists && changeFlag=='ICPTransferSale'>
+		         	<input type="hidden" name="shipmentTypeId" id="shipmentTypeId" value="ICP_TR_SHIPMENT"/> 
+		           	<input type="hidden" name="salesChannel" id="salesChannel" value="ICP_TRANS_CHANNEL"/>
 		        <#else>
 		          	<input type="hidden" name="shipmentTypeId" id="shipmentTypeId" value="RM_DIRECT_SHIPMENT"/>
 		          	<input type="hidden" name="salesChannel" id="salesChannel" value="RM_DIRECT_CHANNEL"/>
@@ -209,7 +214,7 @@ $(document).ready(function(){
 	   			</#if>
 	    	</tr>
 	    	<tr><td><br/></td></tr>
-	    	<#if changeFlag?exists && (changeFlag == "FgsSales" || changeFlag == "InterUnitTransferSale")>
+	    	<#if changeFlag?exists && (changeFlag == "FgsSales" || changeFlag == "InterUnitTransferSale" || changeFlag == "ICPTransferSale")>
 		    	<tr>
 		      		<td>&nbsp;</td>
 		      		<td align='left' valign='middle' nowrap="nowrap"><div class='h2'>Product Category:</div></td>
@@ -246,7 +251,7 @@ $(document).ready(function(){
        			</#if>
         	</tr>
         <#else>
-        	<#if changeFlag?exists && changeFlag !='InterUnitTransferSale'>
+        	<#if changeFlag?exists && changeFlag !='InterUnitTransferSale' && changeFlag !='ICPTransferSale'>
         		<tr>
 	          		<td>&nbsp;</td>
 	          		<td align='left' valign='middle' nowrap="nowrap"><div class='h2'>Order Tax Type:</div></td>
@@ -472,6 +477,8 @@ $(document).ready(function(){
 		         <#assign formAction='processFGSProductSale'>     
 		 	<#elseif changeFlag?exists && changeFlag=='InterUnitTransferSale'>
 		         <#assign formAction='processInterUnitStkTrSale'> 
+		    <#elseif changeFlag?exists && changeFlag=='ICPTransferSale'>
+		         <#assign formAction='processICPStkTrSale'> 
 		 	<#else>
 				<#assign formAction='processIcpSale'>		 					 	
 			</#if>				

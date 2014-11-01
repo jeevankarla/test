@@ -500,11 +500,20 @@
       	 <link target="IcpSalesBellary">    
          </link>
         </menu-item>
+        <menu-item name="IcpStockTransfer" title="Icp Stock Transfer"> 
+        <condition>
+        	<or>
+        		<if-has-permission permission="ICPSALE"  action="_VIEW"/>
+        	</or>        		
+        </condition>  
+      	 <link target="IcpStockTransfer">    
+         </link>
+        </menu-item>
          
         <menu-item name="DepotSale" title="Depot Sales"> 
         <condition>
         	<or>
-        		<if-has-permission permission="ICPSALE"  action="_VIEW"/>
+        		<if-has-permission permission="FGSSALE"  action="_VIEW"/>
         	</or>        		
         </condition>  
       	 <link target="DepotSale">    
@@ -889,7 +898,20 @@
         	<link target="FindStockTranferShipment" />
         </menu-item>
       </menu>
-      
+      <menu name="ICPTransferTabBar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml" selected-menuitem-context-field-name="tabButtonItem2">
+         <menu-item name="IcpStockTransfer" title="Order Entry">
+        	<link target="IcpStockTransfer"/>
+        </menu-item>
+        <menu-item name="ProcessICPStkTrans" title="Process Stock Transfers">
+        	<link target="ProcessICPStkTrans">
+        		<parameter param-name="salesChannelEnumId" value="ICP_TRANS_CHANNEL"/>
+        		<parameter param-name="shipmentTypeId" value="ICP_TR_SHIPMENT"/>
+        	</link>
+        </menu-item>
+        <menu-item name="FindICPTranferShipment" title="Find Shipments">
+        	<link target="FindICPTranferShipment" />
+        </menu-item>
+      </menu>
       <menu name="FGSSaleTabBar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml" selected-menuitem-context-field-name="tabButtonItem2">
          <menu-item name="FGSProductSale" title="Order Entry">
         	<link target="FGSProductSale"/>

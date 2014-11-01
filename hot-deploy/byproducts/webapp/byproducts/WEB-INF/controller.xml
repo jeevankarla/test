@@ -93,6 +93,12 @@
         <response name="success" type="request" value="FindStockTranferShipment"/>
         <response name="error" type="request" value="FindStockTranferShipment"/>
     </request-map>
+    <request-map uri="cancelICPTransferShipment">
+     	<security https="true" auth="true"/>     	
+        <event type="service" invoke="cancelICPShipment"/>
+        <response name="success" type="request" value="FindICPTranferShipment"/>
+        <response name="error" type="request" value="FindICPTranferShipment"/>
+    </request-map>
     
     <request-map uri="cancelFGSShipment">
      	<security https="true" auth="true"/>     	
@@ -747,17 +753,32 @@
         <response name="success" type="view" value="InterUnitStkTr"/>   
        <response name="failed" type="view" value="InterUnitStkTr"/>  
     </request-map>
+    <request-map uri="IcpStockTransfer">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="IcpStockTransfer"/>   
+       <response name="failed" type="view" value="IcpStockTransfer"/>  
+    </request-map>
+    
      <request-map uri="ProcessInterUnitStkTr">
         <security https="true" auth="true"/>
         <response name="success" type="view" value="ProcessInterUnitStkTr"/>   
        <response name="failed" type="view" value="ProcessInterUnitStkTr"/>  
+    </request-map>
+    <request-map uri="ProcessICPStkTrans">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="ProcessICPStkTrans"/>   
+       <response name="failed" type="view" value="ProcessICPStkTrans"/>  
     </request-map>
     <request-map uri="FindStockTranferShipment">
         <security https="true" auth="true"/>
         <response name="success" type="view" value="FindStockTranferShipment"/>   
        <response name="failed" type="view" value="FindStockTranferShipment"/>  
     </request-map>
-    
+    <request-map uri="FindICPTranferShipment">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="FindICPTranferShipment"/>   
+       <response name="failed" type="view" value="FindICPTranferShipment"/>  
+    </request-map>
     
     <request-map uri="editNandiniOrderBatchNumber">
         <security https="true" auth="true"/>
@@ -831,17 +852,35 @@
         <response name="success" type="view" value="ProcessInterUnitStkTr"/>   
        <response name="failed" type="view" value="ProcessInterUnitStkTr"/>  
     </request-map>
+    <request-map uri="approveICPStkTrOrder">
+        <security https="true" auth="true"/>
+        <event type="service" path="" invoke="approveICPOrder"/>
+        <response name="success" type="view" value="ProcessICPStkTrans"/>   
+       <response name="failed" type="view" value="ProcessICPStkTrans"/>  
+    </request-map>
      <request-map uri="cancelIUSTransferOrder">
         <security https="true" auth="true"/>
         <event type="service" path="" invoke="cancelICPOrder"/>
         <response name="success" type="view" value="ProcessInterUnitStkTr"/>   
        <response name="failed" type="view" value="ProcessInterUnitStkTr"/>  
     </request-map>
+    <request-map uri="cancelICPStkTrOrder">
+        <security https="true" auth="true"/>
+        <event type="service" path="" invoke="cancelICPOrder"/>
+        <response name="success" type="view" value="ProcessICPStkTrans"/>   
+       <response name="failed" type="view" value="ProcessICPStkTrans"/>  
+    </request-map>
     <request-map uri="createShipAndInvForIUSTransferOrders">
         <security https="true" auth="true"/>
         <event type="java" path="in.vasista.vbiz.byproducts.icp.ICPServices" invoke="createShipmentAndInvoiceForOrders"/>
         <response name="success" type="view" value="ProcessInterUnitStkTr"/>   
        <response name="failed" type="view" value="ProcessInterUnitStkTr"/>  
+    </request-map>
+    <request-map uri="createShipAndInvForICPTransferOrders">
+        <security https="true" auth="true"/>
+        <event type="java" path="in.vasista.vbiz.byproducts.icp.ICPServices" invoke="createShipmentAndInvoiceForOrders"/>
+        <response name="success" type="view" value="ProcessICPStkTrans"/>   
+       <response name="failed" type="view" value="ProcessICPStkTrans"/>  
     </request-map>
     
     <request-map uri="cancelFGSOrder">
@@ -1002,6 +1041,16 @@
      		<redirect-parameter name="orderId"/>
      		<redirect-parameter name="supplyDate"/></response>
         <response name="error" type="view" value="InterUnitStkTr"/>
+    </request-map>
+    
+    <request-map uri="processICPStkTrSale">
+        <security https="true" auth="true"/>
+     	<event type="java"  path="in.vasista.vbiz.byproducts.icp.ICPServices"  invoke="processIcpSale" global-transaction="true"/>
+        <response name="success"  type="request-redirect-noparam" value="IcpStockTransfer">
+        <redirect-parameter name="orderStatus"/>
+     		<redirect-parameter name="orderId"/>
+     		<redirect-parameter name="supplyDate"/></response>
+        <response name="error" type="view" value="IcpStockTransfer"/>
     </request-map>
     
     <request-map uri="processFGSProductSale">
@@ -1781,9 +1830,11 @@
  <view-map name="FGSProductSale" type="screen" page="component://byproducts/widget/ByProductsNgScreens.xml#FGSProductSale"/>
  <view-map name="FindIcpAmulOrder" type="screen" page="component://byproducts/widget/ByProductsNgScreens.xml#FindIcpAmulOrder"/>
  <view-map name="InterUnitStkTr" type="screen" page="component://byproducts/widget/ByProductsNgScreens.xml#InterUnitStkTr"/>
+ <view-map name="IcpStockTransfer" type="screen" page="component://byproducts/widget/ByProductsNgScreens.xml#IcpStockTransfer"/>
  <view-map name="ProcessInterUnitStkTr" type="screen" page="component://byproducts/widget/ByProductsNgScreens.xml#ProcessInterUnitStkTr"/>
+ <view-map name="ProcessICPStkTrans" type="screen" page="component://byproducts/widget/ByProductsNgScreens.xml#ProcessICPStkTrans"/>
  <view-map name="FindStockTranferShipment" type="screen" page="component://byproducts/widget/ByProductsNgScreens.xml#FindStockTranferShipment"/>
- 
+ <view-map name="FindICPTranferShipment" type="screen" page="component://byproducts/widget/ByProductsNgScreens.xml#FindICPTranferShipment"/>
  <!-- Department Portal Views -->
  
  <!-- <view-map name="findArDeptInvoices" type="screen" page="component://byproducts/widget/DepartmentPortalScreens.xml#findArDeptInvoices"/> -->
