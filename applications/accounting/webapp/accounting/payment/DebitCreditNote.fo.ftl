@@ -266,10 +266,13 @@ under the License.
 				            <#elseif itemType.get("description",locale)?has_content>
 				                <#assign description=itemType.get("description",locale)>
 				            </#if>
-				            <#assign prodUnitPrice = "">
+				             <#assign prodUnitPriceInc = "">
 				            <#if invoiceItem.productId?has_content>
 					            <#if invoiceItem.unitListPrice?has_content>
 					            	<#assign prodUnitPrice = invoiceItem.unitListPrice?if_exists>
+					            	<#if productDetails.quantityIncluded?has_content && productDetails.quantityIncluded !=0>
+					            		<#assign prodUnitPriceInc = (prodUnitPrice/productDetails.quantityIncluded)>
+					            	</#if>
 					            </#if>
 					            <#assign invoiceQtyInc = "">
 					            <#assign invoiceQty = "">
@@ -313,7 +316,7 @@ under the License.
 	                   			</#if>
 	                   			<#if invoiceItem.productId?has_content>
 	                   			<fo:table-cell border-style="solid">
-	                        		<fo:block  keep-together="always" text-align="right" font-size="12pt" white-space-collapse="false">${prodUnitPrice?if_exists?string("#0.00")}</fo:block> 
+	                        		<fo:block  keep-together="always" text-align="right" font-size="12pt" white-space-collapse="false">${prodUnitPriceInc?if_exists?string("#0.00")}</fo:block> 
 	                   			</fo:table-cell>
 	                   			<#else>
 	                   			<fo:table-cell border-style="solid">

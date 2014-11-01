@@ -150,6 +150,9 @@ orderIds.each{ eachOrderId ->
 		prodDetail = EntityUtil.getFirst(prodDetails);
 		crateQty = (eachItem.quantity).divide(new BigDecimal(prodCrateValue) , 2, rounding);
 		qtyLtr = (eachItem.quantity).multiply(prodDetail.quantityIncluded).setScale(2, rounding);
+		if(prodDetail.quantityIncluded != 0){
+			unitPriceInc = (eachItem.unitListPrice/prodDetail.quantityIncluded);
+		}
 		tempMap = [:];
 		tempMap.put("productId",eachItem.productId);
 		tempMap.put("description",prodDetail.description);
@@ -159,7 +162,7 @@ orderIds.each{ eachOrderId ->
 		tempMap.put("qtyInCrate", crateQty);
 		tempMap.put("qtyPerCrate", prodCrateValue);
 		tempMap.put("qtyLtr", qtyLtr);
-		tempMap.put("unitPrice", eachItem.unitListPrice);
+		tempMap.put("unitPrice", unitPriceInc);
 		tempMap.put("totalAmt", eachItem.quantity*eachItem.unitListPrice);
 		orderItemsList.add(tempMap);
 	}
