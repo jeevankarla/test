@@ -266,10 +266,10 @@ under the License.
 				            <#elseif itemType.get("description",locale)?has_content>
 				                <#assign description=itemType.get("description",locale)>
 				            </#if>
+				            <#assign prodUnitPrice = "">
 				            <#if invoiceItem.productId?has_content>
-					            <#assign prodUnitPrice = "">
-					            <#if invoiceItem.unitPrice?has_content>
-					            	<#assign prodUnitPrice = invoiceItem.unitPrice?if_exists>
+					            <#if invoiceItem.unitListPrice?has_content>
+					            	<#assign prodUnitPrice = invoiceItem.unitListPrice?if_exists>
 					            </#if>
 					            <#assign invoiceQtyInc = "">
 					            <#assign invoiceQty = "">
