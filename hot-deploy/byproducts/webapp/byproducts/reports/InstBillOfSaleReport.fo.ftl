@@ -42,6 +42,7 @@ ${setRequestAttribute("OUTPUT_FILENAME", "BILLOFSALEReport.txt")}
 	         </#if>	
 	         
 <#list itemsList as itemlst>
+
 <fo:page-sequence master-reference="main" force-page-count="no-force" font-size="14pt" font-family="Courier,monospace">					
 			 <fo:flow flow-name="xsl-region-body"   font-family="Courier,monospace">	
 
@@ -53,6 +54,7 @@ ${setRequestAttribute("OUTPUT_FILENAME", "BILLOFSALEReport.txt")}
 	    		<#assign cstNumber = (partyGroup.cstNumber)?if_exists>
 	         </#if>	
 			 	     <fo:block>
+			 	     <fo:block font-size = "8pt"> ${uiLabelMap.CommonPage}<fo:page-number/></fo:block>	
 		            <fo:table width="100%" table-layout="fixed" space-after="0.0in">
 		              <fo:table-column column-width="130pt"/>
 		              <fo:table-column column-width="200pt"/>
@@ -238,8 +240,8 @@ ${setRequestAttribute("OUTPUT_FILENAME", "BILLOFSALEReport.txt")}
 								<fo:block  text-align="left" font-size = "12pt" font-weight="bold">NAME</fo:block>
 							</fo:table-cell>
 							<fo:table-cell>
-								<fo:block  text-align="right" font-size = "12pt" font-weight="bold">TOTAL</fo:block>
-								<fo:block  text-align="right" font-size = "12pt" font-weight="bold">QTY&#160;</fo:block>
+								<fo:block  text-align="right" font-size = "12pt" font-weight="bold">TOTAL QTY</fo:block>
+								<fo:block  text-align="right" font-size = "12pt" font-weight="bold">(Ltr/Kgs)</fo:block>
 							</fo:table-cell>
 							<fo:table-cell>
 								<fo:block  text-align="right" font-size = "12pt" font-weight="bold">TOTAL</fo:block>
@@ -269,7 +271,8 @@ ${setRequestAttribute("OUTPUT_FILENAME", "BILLOFSALEReport.txt")}
 					 <#assign totalAmount=0>
 					 <#assign totalReturnQuantity=0>
 					 <#assign totalReturnAmount=0>
-					 <#assign finalToatlQty=0>
+					 <#assign finalTotalQty=0>
+					 <#assign finalTotalQtyInLtr = 0>
 					 <#assign finalTotalAmnt=0>
 
 	              	<#assign orderItemsList= itemlst.getValue()?if_exists>	
@@ -294,8 +297,12 @@ ${setRequestAttribute("OUTPUT_FILENAME", "BILLOFSALEReport.txt")}
 						<#assign returnAmount=eachItem.get("returnAmount")>
 						<#assign prodTotal=(quantity-returnQuantity)>
 						<#assign prodTotalAmount=(amount-returnAmount)>
-						<#assign finalToatlQty=finalToatlQty+prodTotal>
+						<#assign finalTotalQty=finalTotalQty+prodTotal>
+						
 						<#assign finalTotalAmnt=finalTotalAmnt+prodTotalAmount>
+						<#assign prodTotalInLtr = prodTotal * eachItem.get('quantityIncluded')>
+						<#assign finalTotalQtyInLtr = finalTotalQtyInLtr+prodTotalInLtr>
+						
 						<fo:table-row>
 							<fo:table-cell>
 								<fo:block  font-size = "12pt" font-weight="bold" text-align="left">${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(eachItem.get("estimatedShipDate"), "dd-MM-yy")}</fo:block>
@@ -312,8 +319,11 @@ ${setRequestAttribute("OUTPUT_FILENAME", "BILLOFSALEReport.txt")}
 							<fo:table-cell>
 								<fo:block  text-align="left" font-weight="bold" font-size="12pt">${Static["org.ofbiz.order.order.OrderServices"].nameTrim((StringUtil.wrapString(eachItem.get("productName")?if_exists)),26)}</fo:block>
 							</fo:table-cell>
-							<fo:table-cell>
+							<#--<fo:table-cell>
 								<fo:block  text-align="right" font-weight="bold" font-size="12pt">${prodTotal?string("#0.0")?if_exists}</fo:block>
+							</fo:table-cell>-->
+							<fo:table-cell>
+								<fo:block  text-align="right" font-weight="bold" font-size="12pt">${prodTotalInLtr?string("#0.00")?if_exists}</fo:block>
 							</fo:table-cell>
 							<fo:table-cell>
 								<fo:block  text-align="right" font-weight="bold" font-size="12pt">${prodTotalAmount?string("#0.00")?if_exists}</fo:block>
@@ -337,7 +347,7 @@ ${setRequestAttribute("OUTPUT_FILENAME", "BILLOFSALEReport.txt")}
 								<fo:block  text-align="left" font-weight="bold" font-size="12pt">TOTAL </fo:block>
 							</fo:table-cell>
 							<fo:table-cell>
-								<fo:block  text-align="right" font-size="12pt">${finalToatlQty?string("#0.0")}</fo:block>
+								<fo:block  text-align="right" font-size="12pt">${finalTotalQtyInLtr?string("#0.00")}</fo:block>
 							</fo:table-cell>
 							<fo:table-cell>
 								<fo:block  text-align="right" font-size="12pt">${finalTotalAmnt?string("#0.00")}</fo:block>

@@ -102,7 +102,7 @@
 	conditionList.add(EntityCondition.makeCondition("ownerPartyId", EntityOperator.IN, facilityIds));
 	conditionList.add(EntityCondition.makeCondition("shipmentId", EntityOperator.IN , shipmentIds));
 	condition1=EntityCondition.makeCondition(conditionList,EntityOperator.AND);
-	fieldsToSelect = ["ownerPartyId","estimatedShipDate","orderId","externalId","productId","shipmentTypeId","itemDescription","productName","quantity","unitPrice","unitListPrice", "shipmentId", "vatPercent"] as Set;
+	fieldsToSelect = ["ownerPartyId","estimatedShipDate","orderId","externalId","productId","shipmentTypeId","itemDescription","productName","quantity","unitPrice","unitListPrice", "shipmentId", "vatPercent", "quantityIncluded"] as Set;
 	orderItemsList = delegator.findList("OrderHeaderItemProductShipmentAndFacility", condition1, fieldsToSelect , ["estimatedDeliveryDate"], null, false);
 	
 	if(UtilValidate.isNotEmpty(reportTypeFlag)){
@@ -169,6 +169,7 @@
 				tempMap.orderId=eachEntry.orderId;
 				tempMap.externalId=eachEntry.externalId;
 				tempMap.quantity = eachEntry.quantity;
+				tempMap.quantityIncluded = eachEntry.quantityIncluded;
 				tempMap.productName=eachEntry.productName;
 				tempMap.unitListPrice = eachEntry.unitListPrice;
 				tempMap.itemDescription = eachEntry.itemDescription;
@@ -239,7 +240,6 @@
 	}
 	context.itemsReturnListMap=returnItemMap;	
 	context.itemsListMap=itemsListMap;
-
 		periodBillingIds.each{eachperiodBillingId->
 		conditionList.clear();
 //		conditionList.add(EntityCondition.makeCondition("statusId", EntityOperator.EQUALS , "INVOICE_APPROVED"));
