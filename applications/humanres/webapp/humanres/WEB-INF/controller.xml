@@ -1000,6 +1000,12 @@ under the License.
         <response name="success" type="request" value="EmployeeProfile"/>
         <response name="error" type="view" value="NewEmployee"/>
     </request-map>
+     <request-map uri="createEmployeeMaster">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="createNewEmployeeMasters"/>     
+        <response name="success" type="request" value="EmployeeProfile"/>
+        <response name="error" type="view" value="EmployeeProfile"/>
+    </request-map>
     <request-map uri="updatePreviousEmployment">
         <security https="true" auth="true"/>
         <event type="service" invoke="updatePreviousEmployment"/>     
@@ -1685,6 +1691,14 @@ under the License.
     	<security https="true" auth="true"/>
     	<response name="success" type="view" value="WaterElectricityCharges"></response>
     </request-map>
+    <request-map uri="findMasters">
+    	<security https="true" auth="true"/>
+    	<response name="success" type="view" value="findMasters"></response>
+    </request-map>
+    <request-map uri="NewEmployeeDetails">
+    	<security https="true" auth="true"/>
+    	<response name="success" type="view" value="CreateNewEmployee"></response>
+    </request-map>
      <request-map uri="EmployeeAttendanceInternal">
        <security https="true" auth="true"/>
         <response name="success" type="view" value="EmployeeAttendanceInternal"/>
@@ -2216,6 +2230,9 @@ under the License.
     <view-map name="DailyBusTimings" type="screen" page="component://humanres/widget/HumanresScreens.xml#DailyBusTimings"></view-map>
     <view-map name="WaterElectricityCharges" type="screen" page="component://humanres/widget/HumanresScreens.xml#WaterElectricityCharges"></view-map>
     <view-map name="EmployeeAttendanceInternal" type="screen" page="component://humanres/widget/HumanresScreens.xml#EmployeeAttendanceInternal"/>
+   
+    <view-map name="findMasters" type="screen" page="component://humanres/widget/HumanresScreens.xml#findMasters"></view-map>
+    <view-map name="CreateNewEmployee" type="screen" page="component://humanres/widget/HumanresScreens.xml#CreateNewEmployee"></view-map>
 
  <!--====================Reports View===================================-->
     <view-map name="HRReports" type="screen" page="component://humanres/widget/ReportHumanresSummaryScreens.xml#LeaveTypes"/>

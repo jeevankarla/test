@@ -1270,5 +1270,194 @@
       </hyperlink>
     </field>
     </form>
+    <form name="createEmployee" type="single" header-row-style="header-row" default-table-style="basic-table"  target="createEmployeeMaster">
+    	<field name="firstName" tooltip="${uiLabelMap.CommonRequired}" widget-style="required" required-field="true"><text/></field>
+       	<field name="middleName" title="${uiLabelMap.PartyMiddleName}"><text></text></field>
+        <field name="lastName"  tooltip="${uiLabelMap.CommonRequired}" widget-style="required" required-field="true"><text/></field>
+        <field name="postalAddContactMechPurpTypeId"><hidden value="PRIMARY_LOCATION"/></field>
+        <field name="partyId" parameter-name="partyIdFrom" title="Organisation" tooltip="${uiLabelMap.CommonRequired}" widget-style="required" required-field="true">
+            <drop-down allow-empty="false">
+                <entity-options entity-name="PartyRoleAndPartyDetail" description="${groupName}">
+                    <entity-constraint name="roleTypeId" operator="equals" value="INTERNAL_ORGANIZATIO" />
+                    <entity-order-by field-name="partyId" />
+                </entity-options>
+            </drop-down>
+        </field>
+    	<field name="birthDate" title="${uiLabelMap.DateOfBirth}" tooltip="${uiLabelMap.CommonRequired}" widget-style="required" required-field="true"><date-time></date-time></field>
+    	<field name="birthPlace" title="Place Of Birth" required-field="false"><text size="20"/></field>
+    	<field name="bloodGroup" title="${uiLabelMap.BloodGroup}">
+			<drop-down allow-empty="true">
+			<entity-options entity-name="Enumeration" key-field-name="enumId" description="${description}">
+				<entity-constraint name="enumTypeId" value="BLOOD_TYPE" />
+				<entity-order-by field-name="sequenceId" />
+			</entity-options>
+			</drop-down>
+		</field>
+    	<field name="gender" title="${uiLabelMap.FormFieldTitle_gender}" tooltip="${uiLabelMap.CommonRequired}" widget-style="required" required-field="true">
+		<drop-down allow-empty="false" no-current-selected-key="m">
+			<option key="F"></option>
+			<option key="M" />
+		</drop-down>		
+		</field>
+		<field name="maritalStatus" title="${uiLabelMap.MaritalStatus}">
+		<drop-down allow-empty="false" no-current-selected-key="S">
+			<option key="S" description="${uiLabelMap.PartyMaritalStatusSingle}" />
+			<option key="M" description="${uiLabelMap.PartyMaritalStatusMarried}" />
+			<option key="P" description="${uiLabelMap.PartyMaritalStatusSeparated}" />
+			<option key="D" description="${uiLabelMap.PartyMaritalStatusDivorced}" />
+			<option key="W" description="${uiLabelMap.PartyMaritalStatusWidowed}" />
+		</drop-down>
+		</field>
+		<field name="countryCode" title="${uiLabelMap.PartyCountryCode}"><text size="4" maxlength="10"/></field>
+		<field name="mobileNumber" title="${uiLabelMap.PartyPhoneNumber}" tooltip="${uiLabelMap.CommonRequired}" widget-style="required" required-field="true"><text size="15" maxlength="15"/></field>
+	    <field name="emergencyContactName" title="${uiLabelMap.EmergencyContactName}"><text></text></field>
+		<field name="emergencyContactNumber" title="${uiLabelMap.EmergencyContactNumber}"><text></text></field>
+		<field name="address1" title="${uiLabelMap.CommonAddress1}" tooltip="${uiLabelMap.CommonRequired}" widget-style="required"><text size="30" maxlength="60"/></field>
+        <field name="address2" title="${uiLabelMap.CommonAddress2}"><text size="30" maxlength="60"/></field>
+        <field name="city" title="${uiLabelMap.CommonCity}" tooltip="${uiLabelMap.CommonRequired}" widget-style="required"><text size="30" maxlength="60"/></field>
+        <field name="state" title="${uiLabelMap.CommonState}" tooltip="${uiLabelMap.CommonRequired}" widget-style="required">
+            <drop-down allow-empty="false" no-current-selected-key="IND">
+                <entity-options entity-name="Geo" key-field-name="geoId" description="${geoName}">
+                    <entity-constraint name="geoTypeId" value="STATE"/>
+                    <entity-order-by field-name="geoName"/>
+                </entity-options>
+            </drop-down>
+        </field>
+        <field name="postalCode" title="${uiLabelMap.CommonZipPostalCode}" tooltip="${uiLabelMap.CommonRequired}" widget-style="required"><text size="10" maxlength="30"/></field>
+        <field name="country" title="${uiLabelMap.CommonCountry}" tooltip="${uiLabelMap.CommonRequired}" widget-style="required">
+            <drop-down allow-empty="false" no-current-selected-key="IND">
+                <entity-options entity-name="Geo" key-field-name="geoId" description="${geoName}: ${geoId}">
+                    <entity-constraint name="geoTypeId" value="COUNTRY"/>
+                    <entity-order-by field-name="geoName"/>
+                </entity-options>
+            </drop-down>
+        </field>
+		<field use-when="require_email!=null" name="email" title="${uiLabelMap.CommonEmail}" tooltip="${uiLabelMap.CommonRequired}" widget-style="required"><text size="60" maxlength="250"/></field>
+        <field use-when="require_email==null" name="email" title="${uiLabelMap.CommonEmail}" widget-style="required"><text size="60" maxlength="250"/></field>
+        <field name="vehicleType" title="${uiLabelMap.VehicleType}">
+			<drop-down allow-empty="true">
+				<entity-options entity-name="Enumeration" key-field-name="enumId" description="${description}">
+					<entity-constraint name="enumTypeId" value="EMPL_REC_VHT" />
+					<entity-order-by field-name="sequenceId" />
+				</entity-options>
+			</drop-down>
+		</field>
+		<field name="quarterType" title="${uiLabelMap.QuarterType}">
+			<drop-down allow-empty="true">
+				<entity-options entity-name="Enumeration" key-field-name="enumId" description="${description}">
+					<entity-constraint name="enumTypeId" value="EMPL_REC_QTP" />
+					<entity-order-by field-name="sequenceId" />
+				</entity-options>
+			</drop-down>
+		</field>
+	    <field name="motherTongue" title="${uiLabelMap.MotherTongue}">
+			<drop-down allow-empty="true">
+				<entity-options entity-name="Enumeration" key-field-name="enumId" description="${description}">
+					<entity-constraint name="enumTypeId" value="EMPL_REC_MT" />
+					<entity-order-by field-name="sequenceId" />
+				</entity-options>
+			</drop-down>
+		</field>
+		<field name="religion" title="${uiLabelMap.Religion}">
+		     <drop-down allow-empty="true">
+				<entity-options entity-name="Enumeration" key-field-name="enumId" description="${description}">
+					<entity-constraint name="enumTypeId" value="EMPL_REC_RE" />
+					<entity-order-by field-name="sequenceId" />
+				</entity-options>
+			</drop-down>
+		</field>
+		<field name="caste" title="${uiLabelMap.Caste}" >
+			<drop-down allow-empty="true">
+				<entity-options entity-name="PartyClassificationGroup" key-field-name="partyClassificationGroupId" description="${description}">
+					<entity-constraint name="partyClassificationTypeId" value="PCG_REC_CA" />
+					<entity-order-by field-name="partyClassificationGroupId"/>
+				</entity-options>
+			</drop-down>
+		</field> 
+		 <field name="nationality" title="${uiLabelMap.Nationality}" tooltip="${uiLabelMap.CommonRequired}" widget-style="required" required-field="true">
+			<drop-down allow-empty="true">
+				<entity-options entity-name="Enumeration" key-field-name="enumId" description="${description}">
+					<entity-constraint name="enumTypeId" value="PERSON_REC_NA" />
+					<entity-order-by field-name="sequenceId" />
+				</entity-options>
+			</drop-down>
+		</field>
+		<field name="punchType" title="${uiLabelMap.PunchType}" tooltip="${uiLabelMap.CommonRequired}" widget-style="required" required-field="true">
+		     <drop-down allow-empty="true">
+				<entity-options entity-name="Enumeration" key-field-name="enumId" description="${description}">
+					<entity-constraint name="enumTypeId" value="EMPL_REC_PUN" />
+					<entity-order-by field-name="sequenceId" />
+				</entity-options>
+			</drop-down>
+		</field>
+		<field name="weeklyOff" title="${uiLabelMap.WeeklyOff}" tooltip="${uiLabelMap.CommonRequired}" widget-style="required" required-field="true">
+			<drop-down allow-empty="false" no-current-selected-key="Y">
+				<option key="Sunday"/>
+				<option key="Monday" />
+				<option key="Tuesday"/>
+				<option key="Wednesday" />
+				<option key="Thursday"/>
+				<option key="Friday" />
+				<option key="SaturDay" />
+			</drop-down>
+		</field>
+		<field name="attendanceIndn" title="${uiLabelMap.AttendanceIndn}">
+			<drop-down allow-empty="false" no-current-selected-key="N">
+				<option key="Y"></option>
+				<option key="N" />
+			</drop-down>		
+		</field>
+		<!-- <field name="paymentMode" title="${uiLabelMap.PaymentMode}">	
+			<drop-down allow-empty="true">
+                <entity-options entity-name="PaymentMethodType" description="${description}" key-field-name="paymentMethodTypeId">
+                    <entity-order-by field-name="description"/>
+                </entity-options>
+            </drop-down>
+        </field> -->
+		<field name="canteenFacin" title="${uiLabelMap.CanteenFacin}">
+			<drop-down allow-empty="false" no-current-selected-key="N">
+				<option key="Y"></option>
+				<option key="N" />
+			</drop-down>
+		</field>
+		<field name="companyBus" title="${uiLabelMap.CompanyBus}">
+			<drop-down allow-empty="false" no-current-selected-key="N">
+				<option key="Y"></option>
+				<option key="N" />
+			</drop-down>		
+		</field>
+		<field name="busRouteNo" title="Bus Route Number" tooltip="${uiLabelMap.CommonRequired}">
+    		<drop-down>
+    			<entity-options entity-name="Enumeration" key-field-name="description" description="${description}" filter-by-date="false">
+    				<entity-constraint name="enumTypeId" operator="equals" value="BUS_ROUTE"/>
+    			</entity-options>
+    		</drop-down>
+    	</field>
+		<field name="flexibleShift" title="${uiLabelMap.FlexibleShift}">
+			<drop-down allow-empty="false" no-current-selected-key="Y">
+				<option key="Y"></option>
+				<option key="N" />
+			</drop-down>
+		</field>
+		<field name="shiftType" title="${uiLabelMap.ShiftType}">
+			<drop-down allow-empty="true">
+				<entity-options entity-name="Enumeration" key-field-name="enumId" description="${description}">
+					<entity-constraint name="enumTypeId" value="EMPL_REC_SHT" />
+					<entity-order-by field-name="sequenceId" />
+				</entity-options>
+			</drop-down>
+		</field>
+		<field name="passportNumber" title="${uiLabelMap.FormFieldTitle_passportNumber}"><text></text></field>
+		<field name="pfNumber" title="${uiLabelMap.PreviousPfNumber}"><text></text></field>
+		<field name="dateOfJoining" title="${uiLabelMap.DateOfJoining}" tooltip="${uiLabelMap.CommonRequired}" widget-style="required" required-field="true"><date-time></date-time></field>
+		<field name="passportExpireDate" title="${uiLabelMap.FormFieldTitle_passportExpireDate}"><date-time></date-time></field>
+		<field name="backgroundVerification" title="${uiLabelMap.BackgroundVerification}">
+			<drop-down allow-empty="false" no-current-selected-key="Y">
+				<option key="N"></option>
+				<option key="Y" />
+			</drop-down>
+		</field>  
+    	<field name="submitButton" title="${uiLabelMap.CommonCreate}"><submit/></field>
+    </form>
 </forms>
         

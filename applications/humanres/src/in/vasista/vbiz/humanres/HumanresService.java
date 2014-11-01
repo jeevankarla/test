@@ -893,4 +893,192 @@ public class HumanresService {
 	      result = ServiceUtil.returnSuccess("Success");
 	      return result;
 	    }
+	    
+	    public static Map<String, Object> createNewEmployeeMasters(DispatchContext dctx, Map context) {
+			GenericDelegator delegator = (GenericDelegator) dctx.getDelegator();
+			LocalDispatcher dispatcher = dctx.getDispatcher();
+			Map<String, Object> result = ServiceUtil.returnSuccess();
+		
+			GenericValue userLogin = (GenericValue) context.get("userLogin");
+			String ownerPartyId = null;
+			String address1 = null;
+			String address2 = null;
+			String contactMechId = null;
+			String partyId = null;
+			
+			String firstName = (String) context.get("firstName");
+			String lastName = (String) context.get("lastName");
+			String middleName = (String) context.get("middleName");
+			Date birthDate =  (Date)context.get("birthDate");
+			String birthPlace = (String) context.get("birthPlace");
+			String bloodGroup =(String)context.get("bloodGroup");
+			String gender =(String)context.get("gender");
+			String maritalStatus =(String)context.get("maritalStatus");
+			String emergencyContactName =(String)context.get("emergencyContactName");
+			String emergencyContactNumber =(String)context.get("emergencyContactNumber");
+			String countryCode =(String)context.get("countryCode");
+			String mobileNumber =(String)context.get("mobileNumber");
+			address1 =(String)context.get("address1");
+			address2 =(String)context.get("address2");
+			String city =(String)context.get("city");
+			String state =(String)context.get("state");
+			String postalCode =(String)context.get("postalCode");
+			String country =(String)context.get("country");
+			String email =(String)context.get("email");
+			String userName =(String)context.get("userName");
+			String pasword =(String)context.get("pasword");
+			String confirmPassword =(String)context.get("confirmPassword");
+			String vehicleType =(String)context.get("vehicleType");
+			String quarterType =(String)context.get("quarterType");
+			String motherTongue =(String)context.get("motherTongue");
+			String religion =(String)context.get("religion");
+			String caste =(String)context.get("caste");
+			String nationality =(String)context.get("nationality");
+			String punchType =(String)context.get("punchType");
+			String weeklyOff =(String)context.get("weeklyOff");
+			String attendanceIndn =(String)context.get("attendanceIndn");
+			String paymentMode =(String)context.get("paymentMode");
+			String canteenFacin =(String)context.get("canteenFacin");
+			String companyBus =(String)context.get("companyBus");
+			String flexibleShift =(String)context.get("flexibleShift");
+			String busRouteNo =(String)context.get("busRouteNo");
+			String shiftType =(String)context.get("shiftType");
+			String passportNumber =(String)context.get("passportNumber");
+			String pfNumber =(String)context.get("pfNumber");
+			String partyIdFrom =(String)context.get("partyIdFrom");
+			Date dateOfJoining =  (Date)context.get("dateOfJoining");
+			Date passportExpireDate =  (Date)context.get("passportExpireDate");
+			String backgroundVerification =(String)context.get("backgroundVerification");
+			
+			Map<String, Object> resultMap = FastMap.newInstance();
+			Map<String, Object> input = FastMap.newInstance();
+			Map<String, Object> outMap = FastMap.newInstance();
+			Timestamp openedDate = null;
+			GenericValue parentFacility=null;
+			GenericValue facility;
+			try{
+				// create Person / Party
+				Object tempInput = "PARTY_ENABLED";
+				input = UtilMisc.toMap("firstName", firstName, "lastName", lastName, "middleName",middleName, "birthDate",birthDate, "placeOfBirth",birthPlace, "bloodGroup",bloodGroup,"gender",gender, "maritalStatus",maritalStatus, "motherTongue",motherTongue, "religion",religion,  "nationality",nationality, "passportNumber",passportNumber, "passportExpireDate",passportExpireDate, "statusId", tempInput);
+				resultMap = dispatcher.runSync("createPerson", input);
+				if (ServiceUtil.isError(resultMap)) {
+					Debug.logError(ServiceUtil.getErrorMessage(resultMap), module);
+	                return resultMap;
+	            }
+				ownerPartyId = (String) resultMap.get("partyId");
+			
+				//create partyrole
+				Object tempInputId = "EMPLOYEE";
+				input = UtilMisc.toMap("userLogin", userLogin, "partyId", ownerPartyId, "roleTypeId", tempInputId);
+				resultMap = dispatcher.runSync("createPartyRole", input);
+				if (ServiceUtil.isError(resultMap)) {
+					Debug.logError(ServiceUtil.getErrorMessage(resultMap), module);
+	                return resultMap;
+	            }
+				
+				// create phone number
+				if (UtilValidate.isNotEmpty(mobileNumber)){
+					if (UtilValidate.isEmpty(countryCode)){
+						countryCode	="91";
+					}
+		            input.clear();
+		            input.put("userLogin", userLogin);
+		            input.put("contactNumber",mobileNumber);
+		            input.put("contactMechPurposeTypeId","PRIMARY_PHONE");
+		            input.put("countryCode",countryCode);	
+		            input.put("partyId", ownerPartyId);
+		            outMap = dispatcher.runSync("createPartyTelecomNumber", input);
+		            if(ServiceUtil.isError(outMap)){
+		           	 	Debug.logError("failed service create party contact telecom number:"+ServiceUtil.getErrorMessage(outMap), module);
+		           	 	return ServiceUtil.returnError(ServiceUtil.getErrorMessage(outMap));
+		            }
+				}
+				
+				// create PostalAddress
+				if (UtilValidate.isNotEmpty(address1)){
+					input = UtilMisc.toMap("userLogin", userLogin, "partyId",ownerPartyId, "address1",address1, "address2", address2, "city", (String)context.get("city"), "stateProvinceGeoId", (String)context.get("stateProvinceGeoId"), "postalCode", (String)context.get("postalCode"), "contactMechId", contactMechId);
+					resultMap =  dispatcher.runSync("createPartyPostalAddress", input);
+					if (ServiceUtil.isError(resultMap)) {
+						Debug.logError(ServiceUtil.getErrorMessage(resultMap), module);
+		                return resultMap;
+		            }
+				}	
+				
+				// Create Party Email
+				if (UtilValidate.isNotEmpty(email)){
+		            input.clear();
+		            input.put("userLogin", userLogin);
+		            input.put("contactMechPurposeTypeId", "PRIMARY_EMAIL");
+		            input.put("emailAddress", email);
+		            input.put("partyId", ownerPartyId);
+		            input.put("verified", "Y");
+		            input.put("fromDate", UtilDateTime.nowTimestamp());
+		            outMap = dispatcher.runSync("createPartyEmailAddress", input);
+		            if(ServiceUtil.isError(outMap)){
+		           	 	Debug.logError("faild service create party Email:"+ServiceUtil.getErrorMessage(outMap), module);
+		           	 	return ServiceUtil.returnError(ServiceUtil.getErrorMessage(outMap));
+		            }
+				}
+				
+				// create Partyclassification
+				try{
+					GenericValue newPartyClassification = delegator.makeValue("PartyClassification");
+					newPartyClassification.set("partyId", ownerPartyId);
+					newPartyClassification.set("partyClassificationGroupId", caste);
+					newPartyClassification.set("fromDate", UtilDateTime.nowTimestamp());
+					delegator.create(newPartyClassification);
+				}catch (Exception e) {
+					Debug.logError(e, module);
+					return ServiceUtil.returnError("Error while creating  PartyClassification" + e);	
+				}
+				
+				// Create Employement
+				if (UtilValidate.isNotEmpty(ownerPartyId)){
+		            input.clear();
+		            input.put("userLogin", userLogin);
+		            input.put("partyIdTo", ownerPartyId);
+		            input.put("roleTypeIdFrom", "INTERNAL_ORGANIZATIO");
+		            input.put("roleTypeIdTo", "EMPLOYEE");
+		            input.put("fromDate", UtilDateTime.nowTimestamp());
+		            input.put("partyIdFrom", partyIdFrom);
+		            input.put("appointmentDate", dateOfJoining);
+		            outMap = dispatcher.runSync("createEmployment", input);
+		            if(ServiceUtil.isError(outMap)){
+		           	 	Debug.logError("faild service create Employee:"+ServiceUtil.getErrorMessage(outMap), module);
+		           	 	return ServiceUtil.returnError(ServiceUtil.getErrorMessage(outMap));
+		            }
+				}
+				
+				// Create Employee Detail
+				try{
+					GenericValue newEntity = delegator.makeValue("EmployeeDetail");
+					newEntity.set("partyId", ownerPartyId);
+					newEntity.set("emergencyContactName", emergencyContactName);
+					newEntity.set("emergencyContactNumber", emergencyContactNumber);
+					newEntity.set("weeklyOff", weeklyOff);
+					newEntity.set("attendanceIndn", attendanceIndn);
+					newEntity.set("paymentMode", paymentMode);
+					newEntity.set("canteenFacin", canteenFacin);
+					newEntity.set("vehicleType", vehicleType);
+					newEntity.set("quarterType", quarterType);
+					newEntity.set("companyBus", companyBus);
+					newEntity.set("busRouteNo", busRouteNo);
+					newEntity.set("flexibleShift", flexibleShift);
+					newEntity.set("presentEpf", pfNumber);
+					newEntity.set("punchType", punchType);
+					newEntity.set("shiftType", shiftType);
+					newEntity.set("backgroundVerification", backgroundVerification);
+					delegator.setNextSubSeqId(newEntity,"employeeId", 5, 1);
+					delegator.create(newEntity);
+				}catch (Exception e) {
+					Debug.logError(e, module);
+					return ServiceUtil.returnError("Error while creating  EmployeeDetail" + e);	
+				}
+			}catch (Exception e) {
+					Debug.logError(e, module);
+					return ServiceUtil.returnError("Error while creating Employee" + e);	
+				}
+			  result.put("partyId", ownerPartyId);
+		      return result;
+	    }
 }

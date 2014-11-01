@@ -669,6 +669,49 @@
             </widgets>
         </section>
     </screen>
+	<screen name="findMasters">
+	 	<section>
+			<actions>
+				<set field="headerItem" value="findMasters" />
+				<set field="tabButtonItem" value="Masters" />
+				<set field="titleProperty" value="New Employee" />
+			</actions>
+			<widgets>
+				<decorator-screen name="HumanresCommonDecorator"
+					location="component://humanres/widget/CommonScreens.xml">
+					<decorator-section name="body">
+						<container>
+							<container style="button-bar">
+                        		<link target="NewEmployeeDetails" text="Create New Employee" style="buttontext"></link>
+                        	</container>
+						</container>
+					</decorator-section>
+				</decorator-screen>
+			</widgets>
+		</section>
+	</screen>
+	<screen name="CreateNewEmployee">
+	 	<section>
+			<actions>
+				<set field="headerItem" value="findMasters" />
+				<set field="tabButtonItem" value="Masters" />
+				<set field="titleProperty" value="New Employee" />
+				<script location="component://humanres/webapp/humanres/WEB-INF/actions/humanres/reports.groovy"/>
+			</actions>
+			<widgets>
+				<decorator-screen name="HumanresCommonDecorator"
+					location="component://humanres/widget/CommonScreens.xml">
+					<decorator-section name="body">
+						<container>
+							<screenlet title="Create New Employee">
+								<include-form location="component://humanres/widget/ReportHumanresSummaryForms.xml" name="createEmployee"/>
+							</screenlet>
+						</container>
+					</decorator-section>
+				</decorator-screen>
+			</widgets>
+		</section>
+	 </screen>  
     <screen name="loan">
 	 	<section>
 			<actions>

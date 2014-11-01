@@ -1671,4 +1671,61 @@ under the License.emplpunch
        <attribute name="deducteePartyId" mode="IN" type="String" optional="false"/>
        <attribute name="contraRefNum" mode="IN" type="String" optional="true"/>
    </service>
+    <service name="createNewEmployeeMasters"  engine="java"  auth="true"
+        location="in.vasista.vbiz.humanres.HumanresService" invoke="createNewEmployeeMasters">
+        <description>Create A New Employee</description>
+        <auto-attributes entity-name="Person" mode="IN" optional="true">
+            <exclude field-name="partyId"/>
+        </auto-attributes>
+        <auto-attributes entity-name="PostalAddress" mode="IN" optional="true">
+            <exclude field-name="contactMechId"/>
+        </auto-attributes>
+        <auto-attributes entity-name="TelecomNumber" mode="IN" optional="true">
+            <exclude field-name="contactMechId"/>
+        </auto-attributes>
+        <auto-attributes entity-name="PartyContactMechPurpose" mode="IN" optional="true">
+            <exclude field-name="partyId"/>
+        </auto-attributes> 
+        <auto-attributes entity-name="PartyGroup" mode="IN" optional="true">
+            <exclude field-name="partyId"/>
+        </auto-attributes>
+        <attribute name="firstName" mode="IN" type="String" optional="false"></attribute>
+        <attribute name="middleName" mode="IN" type="String" optional="true"></attribute>
+        <attribute name="lastName" mode="IN" type="String" optional="false"></attribute>
+        <attribute name="birthDate" mode="IN" type="Date" optional="true"></attribute> 
+        <attribute name="birthPlace" mode="IN" type="String" optional="true"></attribute>
+        <attribute name="bloodGroup" mode="IN" type="String" optional="true"></attribute>
+        <attribute name="gender" mode="IN" type="String" optional="false"></attribute>  
+        <attribute name="maritalStatus" mode="IN" type="String" optional="true"></attribute>
+        <attribute name="emergencyContactName" mode="IN" type="String" optional="true"></attribute>
+        <attribute name="emergencyContactNumber" mode="IN" type="String" optional="true"></attribute>
+        <attribute name="countryCode" mode="IN" type="String" optional="true"></attribute>
+        <attribute name="mobileNumber" mode="IN" type="String" optional="false"></attribute>
+        <attribute name="address1" mode="IN" type="String" optional="false"></attribute>
+        <attribute name="address2" mode="IN" type="String" optional="true"></attribute>
+        <attribute name="city" mode="IN" type="String" optional="false"></attribute>
+        <attribute name="state" mode="IN" type="String" optional="false"></attribute>
+        <attribute name="postalCode" mode="IN" type="String" optional="true"></attribute>
+        <attribute name="country" mode="IN" type="String" optional="true"></attribute>
+        <attribute name="email" mode="IN" type="String" optional="true"></attribute>
+        <attribute name="vehicleType" mode="IN" type="String" optional="true"></attribute>
+        <attribute name="quarterType" mode="IN" type="String" optional="true"></attribute>
+        <attribute name="punchType" mode="IN" type="String" optional="false"></attribute>
+        <attribute name="weeklyOff" mode="IN" type="String" optional="true"></attribute>
+        <attribute name="attendanceIndn" mode="IN" type="String" optional="true"></attribute>
+        <attribute name="paymentMode" mode="IN" type="String" optional="true"></attribute>
+        <attribute name="canteenFacin" mode="IN" type="String" optional="true"></attribute>
+        <attribute name="companyBus" mode="IN" type="String" optional="true"></attribute>
+        <attribute name="flexibleShift" mode="IN" type="String" optional="true"></attribute>
+        <attribute name="busRouteNo" mode="IN" type="String" optional="true"></attribute>
+        <attribute name="shiftType" mode="IN" type="String" optional="false"></attribute>
+        <attribute name="passportNumber" mode="IN" type="String" optional="true"></attribute>
+        <attribute name="pfNumber" mode="IN" type="String" optional="true"></attribute>
+        <attribute name="dateOfJoining" mode="IN" type="Date" optional="true"></attribute>
+        <attribute name="passportExpireDate" mode="IN" type="Date" optional="true"></attribute> 
+        <attribute name="caste" mode="IN" type="String" optional="true"></attribute>
+        <attribute name="backgroundVerification" mode="IN" type="String" optional="true"></attribute>
+        <attribute name="partyIdFrom" mode="IN" type="String" optional="false"></attribute>
+        <attribute name="partyId" mode="OUT" type="String" optional="false"></attribute>
+    </service>
 </services>
