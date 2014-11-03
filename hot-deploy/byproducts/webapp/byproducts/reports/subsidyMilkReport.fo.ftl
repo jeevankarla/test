@@ -34,7 +34,7 @@ ${setRequestAttribute("OUTPUT_FILENAME", "subsidyMilkReport.pdf")}
  <#if unionFacilityPartyMap?has_content> 
  <#assign unionFacilityList = unionFacilityPartyMap.entrySet()>
   <#list unionFacilityList as unionFacility>
-  <#if unionFacility.getKey() != "MD" && unionFacility.getKey() != "MD ">
+  <#if unionFacility.getKey() != "MD ">
 <fo:page-sequence master-reference="main" force-page-count="no-force" font-family="Courier,monospace">					
 			<fo:static-content flow-name="xsl-region-before">
 			    <fo:block  keep-together="always" text-align="right" font-family="Courier,monospace" white-space-collapse="false"> &#160;${uiLabelMap.CommonPage}- <fo:page-number/></fo:block>
