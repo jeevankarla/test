@@ -141,7 +141,7 @@ function makeDatePicker1(fromDateId ,thruDateId){
 									</#list> 
 								</select>
 							</td>	
-							<td width="25%">Employee Id<input type="text" id="PartyId" name="employeeId"/></td>
+							<td width="25%">Employee Id<@htmlTemplate.lookupField formName="EmployeePersonalProfile" name="employeeId" fieldFormName="LookupEmployeeName"/></span></td>
 							<td width="10%"><input type="submit" value="PDF" onClick="javascript:appendParams('EmployeePersonalProfile', '<@ofbizUrl>EmployeeProfilePdf.pdf</@ofbizUrl>');" class="buttontext"/>
 							<input type="submit" value="CSV" onClick="javascript:appendParams('EmployeePersonalProfile', '<@ofbizUrl>EmployeeProfileCsv.csv</@ofbizUrl>');" class="buttontext"/></td>
 					   </form>
@@ -575,7 +575,7 @@ function makeDatePicker1(fromDateId ,thruDateId){
 											</#list> 
 										</select></span>
 									</td>	
-									<td width="35%"><span class='h3'>Period Id</span>
+									<td width="30%"><span class='h3'>Period Id</span>
 										<select name="customTimePeriodId" id="customTimePeriodId" class='h5'>
 											<#assign customTimePeriodList=customTimePeriodList?sort>
 											<#list customTimePeriodList as customTimePeriod>
@@ -589,7 +589,7 @@ function makeDatePicker1(fromDateId ,thruDateId){
 									      </#list>
 										</select>
 									</td>
-									<td width="15%"><span class='h3'>Employee Id<input type="text" id="PartyId" size="10pt" name="employeeId"/></span></td>
+									<td width="20%"><span class='h3'>Employee Id<@htmlTemplate.lookupField formName="paySlipEmployeewise" name="employeeId" fieldFormName="LookupEmployeeName"/></span></td>
 									<td width="15%"><span class='h3'><input type="submit" value="PDF" onClick="javascript:appendParams('paySlipEmployeewise', '<@ofbizUrl>PrintPaySlipsPdf.pdf</@ofbizUrl>');" class="buttontext"/></span></td>
 								</tr>
 							</table>
@@ -608,7 +608,7 @@ function makeDatePicker1(fromDateId ,thruDateId){
 											</#list> 
 										</select></span>
 									</td>	
-									<td width="35%"><span class='h3'>Period Id</span>
+									<td width="30%"><span class='h3'>Period Id</span>
 										<select name="customTimePeriodId" id="customTimePeriodId" class='h5'>
 											<#assign customTimePeriodList=customTimePeriodList?sort>
 											<#list customTimePeriodList as customTimePeriod>
@@ -622,7 +622,7 @@ function makeDatePicker1(fromDateId ,thruDateId){
 									      </#list>
 										</select>
 									</td>
-									<td width="15%"><span class='h3'>Employee Id<input type="text" id="PartyId" size="10pt" name="employeeId"/></span></td>
+									<td width="20%"><span class='h3'>Employee Id<@htmlTemplate.lookupField formName="PrePrintedpaySlip" name="employeeId" fieldFormName="LookupEmployeeName"/></span></td>
 									<td width="15%"><span class='h3'><input type="submit" value="PDF" onClick="javascript:appendParams('paySlipEmployeewise', '<@ofbizUrl>PrintPaySlipsPdf.pdf</@ofbizUrl>');" class="buttontext"/></span></td>
 								</tr>
 							</table>
