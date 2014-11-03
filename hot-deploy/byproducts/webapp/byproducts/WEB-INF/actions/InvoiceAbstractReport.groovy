@@ -79,6 +79,10 @@ if(categoryType.equals("DEPOT_CUSTOMER")||categoryType.equals("All")){
 	depotPartyIds = ByProductNetworkServices.getPartyByRoleType(dctx, [userLogin: userLogin, roleTypeId: "DEPOT_CUSTOMER"]).get("partyIds");
 	partyIds.addAll(depotPartyIds);
 }
+if(categoryType.equals("ICP_TRANS_CUSTOMER")||categoryType.equals("All")){
+	depotPartyIds = ByProductNetworkServices.getPartyByRoleType(dctx, [userLogin: userLogin, roleTypeId: "ICP_TRANS_CUSTOMER"]).get("partyIds");
+	partyIds.addAll(depotPartyIds);
+}
 
 
 // Invoice No Sales report

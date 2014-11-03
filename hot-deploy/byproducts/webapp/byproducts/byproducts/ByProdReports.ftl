@@ -1100,6 +1100,7 @@ function reportTypeChangeFunc() {
 				      			<option value="ICE_CREAM_NANDINI">Nandini Ice Cream</option>
 				      			<option value="ICE_CREAM_AMUL">Amul Ice Cream</option>
 				      			<option value="UNITS">Inter Unit Transfer</option>
+				      			<option value="ICP_TRANS_CUSTOMER">ICP Inter Unit Transfer</option>
 				      			<option value="UNION">Sale to Union</option>
 				      			<option value="DEPOT_CUSTOMER">Depot Sale</option>
 				      			</select>
