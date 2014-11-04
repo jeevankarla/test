@@ -732,12 +732,17 @@ function makeDatePicker1(fromDateId ,thruDateId){
 								<table class="basic-table" cellspacing="5">
 									<tr class="alternate-row">
 										<td width="13%"><span class='h3'>Canteen Report</span></td>
-										<td width="45%"><span class='h3'>Period Id</span>
-											<select name="customTimePeriodId" class='h4'>
-												<#list timePeriodList as timePeriod>    
-													<option value='${timePeriod.customTimePeriodId}'>${timePeriod.fromDate?if_exists}-${timePeriod.thruDate?if_exists}</option>
-												</#list>      
-											</select>
+										<td width="30%"><span class='h3'>Period Id
+											<select name="customTimePeriodId" id="customTimePeriodId" class='h4'>
+												<#list customTimePeriodList as customTimePeriod>
+													 <#if defaultTimePeriodId?exists && (defaultTimePeriodId == customTimePeriod.customTimePeriodId)>
+								      					<option value='${customTimePeriod.customTimePeriodId?if_exists}' selected="selected">${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(customTimePeriod.fromDate, "dd MMMMM, yyyy")} -${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(customTimePeriod.thruDate, "dd MMMMM, yyyy")}</option>
+								      					<#else>
+								      						<option value='${customTimePeriod.customTimePeriodId?if_exists}' >${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(customTimePeriod.fromDate, "dd MMMMM, yyyy")} -${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(customTimePeriod.thruDate, "dd MMMMM, yyyy")}</option>
+								                  		</option>
+								      				</#if>
+												</#list>
+											</select></span>
 										</td>	
 										<td width="10%"><span class='h3'><input type="submit" value="Download" class="buttontext"></span></td> 
 									</tr>
@@ -967,7 +972,7 @@ function makeDatePicker1(fromDateId ,thruDateId){
 						</form>
 					</tr>
 					<tr class="alternate-row">
-						<form id="PFMonthlyStatement" name="PFMonthlyStatement" method="post" action="<@ofbizUrl>PFMonthlyStatement.pdf</@ofbizUrl>" >	
+						<form id="PFMonthlyStatement" name="PFMonthlyStatement" method="post" action="<@ofbizUrl>PFMonthlyStatement.pdf</@ofbizUrl>" target="_blank">	
 							<table class="basic-table" cellspacing="5">
 									<tr class="alternate-row">
 										<td width="20%"><span class='h3'>PF Monthly Statement</span></td>
@@ -1062,7 +1067,7 @@ function makeDatePicker1(fromDateId ,thruDateId){
 						</form>
 					</tr>
 					<tr class="alternate-row">
-						<form id="ESIFormSix" name="ESIFormSix" method="post" action="<@ofbizUrl>ESIFormSix.pdf</@ofbizUrl>" >	
+						<form id="ESIFormSix" name="ESIFormSix" method="post" action="<@ofbizUrl>ESIFormSix.pdf</@ofbizUrl>" target="_blank">	
 							<table class="basic-table" cellspacing="5">
 								<tr class="alternate-row">
 									<td width="20%"><span class='h3'>ESI Form 6</span></td>
@@ -1074,7 +1079,7 @@ function makeDatePicker1(fromDateId ,thruDateId){
 						</form>
 					</tr>
 					<tr class="alternate-row">
-						<form id="ESIFormSeven" name="ESIFormSeven" method="post" action="<@ofbizUrl>ESIFormSeven.pdf</@ofbizUrl>" >	
+						<form id="ESIFormSeven" name="ESIFormSeven" method="post" action="<@ofbizUrl>ESIFormSeven.pdf</@ofbizUrl>" target="_blank">	
 							<table class="basic-table" cellspacing="5">
 								<tr class="alternate-row">
 									<td width="20%"><span class='h3'>ESI Form 7</span></td>
