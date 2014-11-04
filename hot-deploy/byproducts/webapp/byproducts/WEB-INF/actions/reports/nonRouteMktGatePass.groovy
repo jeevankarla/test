@@ -154,7 +154,7 @@ orderIds.each{ eachOrderId ->
 		crateQty = (eachItem.quantity).divide(new BigDecimal(prodCrateValue) , 2, rounding);
 		qtyLtr = (eachItem.quantity).multiply(prodDetail.quantityIncluded).setScale(2, rounding);
 		if(prodDetail.quantityIncluded != 0){
-			unitPriceInc = (eachItem.unitListPrice/prodDetail.quantityIncluded);
+			unitPriceInc = (eachItem.unitPrice/prodDetail.quantityIncluded);
 		}
 		tempMap = [:];
 		tempMap.put("productId",eachItem.productId);

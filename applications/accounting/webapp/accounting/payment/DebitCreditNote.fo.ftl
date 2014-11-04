@@ -268,8 +268,8 @@ under the License.
 				            </#if>
 				             <#assign prodUnitPriceInc = "">
 				            <#if invoiceItem.productId?has_content>
-					            <#if invoiceItem.unitListPrice?has_content>
-					            	<#assign prodUnitPrice = invoiceItem.unitListPrice?if_exists>
+					            <#if invoiceItem.unitPrice?has_content>
+					            	<#assign prodUnitPrice = invoiceItem.unitPrice?if_exists>
 					            	<#if productDetails.quantityIncluded?has_content && productDetails.quantityIncluded !=0>
 					            		<#assign prodUnitPriceInc = (prodUnitPrice/productDetails.quantityIncluded)>
 					            	</#if>

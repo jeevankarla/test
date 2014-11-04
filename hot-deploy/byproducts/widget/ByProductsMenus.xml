@@ -336,11 +336,12 @@
       
          -->
          <menu-item name="EmployeeSearch" title="Employee Subsidy Milk">
-            <condition>
-        		<and>
+        	<condition>
+        		<or>
         			<if-has-permission permission="FACILITY"  action="_ADMIN"/>
-        		</and>        		
-        	</condition>   
+        			<if-has-permission permission="SUBSIDY"  action="_VIEW"/>
+        		</or>        		
+        	</condition> 
             <link target="EmployeeSearch">
             </link>
         </menu-item>
