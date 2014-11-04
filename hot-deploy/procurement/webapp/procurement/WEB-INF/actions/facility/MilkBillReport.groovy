@@ -115,6 +115,11 @@ for(route in unitRoutesList){
 			 }
 			 agentAdjustments = ProcurementServices.getPeriodAdjustmentsForAgent(dctx , [userLogin: userLogin ,fromDate: fromDateTime , thruDate: thruDateTime, facilityId: agents.facilityId]);
 			 adjustmentsMap =[:];
+			 Map additionsList = FastMap.newInstance();
+			 Map deductionsList = FastMap.newInstance();
+			 adjustmentsMap.put("additionsList", additionsList);
+			 adjustmentsMap.put("dedValuesList", deductionsList);
+			 
 			 adjustmentsMap["ADDITIONS"]=0;
 			 adjustmentsMap["DEDUCTIONS"]=0;
 			if(UtilValidate.isNotEmpty(agentAdjustments)){

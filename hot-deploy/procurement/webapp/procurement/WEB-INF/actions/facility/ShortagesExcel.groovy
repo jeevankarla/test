@@ -456,8 +456,8 @@ if(UtilValidate.isNotEmpty(facility)){
 			Map totInputMap = FastMap.newInstance();
 			Map totOutputMap = FastMap.newInstance();
 			Map totShrtMap = FastMap.newInstance();
-			totInputMap.putAll(tempMap);
-			totOutputMap.putAll(tempMap);
+			//totInputMap.putAll(tempMap);
+			//totOutputMap.putAll(tempMap);
 			totShrtMap.putAll(tempMap);
 			totShrtMap.remove("qtyLtrs");
 			totShrtMap.remove("qtyKgs");
