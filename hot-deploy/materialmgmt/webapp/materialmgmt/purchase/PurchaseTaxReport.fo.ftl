@@ -108,7 +108,8 @@ under the License.
 		                    <fo:table-body>
 		                    <#assign totalRevenue=0>
 		                    <#assign totalTaxRevenue=0>
-       							<#list taxDetails5pt5List as invTaxMap>
+       							<#list taxDetails5pt5List as invTaxMapObj>
+       							<#assign invTaxMap= invTaxMapObj.getValue()>
        							<fo:table-row>
        							       <fo:table-cell>
 							            	<fo:block  keep-together="always" text-align="left" font-size="12pt" white-space-collapse="false" font-weight="bold">${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(invTaxMap.get("invoiceDate"),"dd-MMM-yy")}</fo:block>  
@@ -255,7 +256,8 @@ under the License.
 		                    <fo:table-body>
 		                    <#assign totalRevenue=0>
 		                    <#assign totalTaxRevenue=0>
-       							<#list taxDetails14pt5List as invTaxMap>
+       							<#list taxDetails14pt5List as invTaxMapObj>
+       							<#assign invTaxMap= invTaxMapObj.getValue()>
        							<fo:table-row>
        							       <fo:table-cell>
 							            	<fo:block  keep-together="always" text-align="left" font-size="12pt" white-space-collapse="false" font-weight="bold">${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(invTaxMap.get("invoiceDate"),"dd-MMM-yy")}</fo:block>  

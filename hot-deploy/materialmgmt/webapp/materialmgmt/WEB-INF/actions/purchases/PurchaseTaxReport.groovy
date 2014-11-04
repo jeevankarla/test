@@ -69,6 +69,10 @@ taxDetails5pt5List=[];
 taxDetails14pt5List=[];
 taxDetailsOthrList=[];
 
+taxDetails5pt5Map=[:];
+taxDetails14pt5Map=[:];
+
+
 tax5pt5TotalMap=[:];
 tax5pt5TotalMap["invTotalVal"]=BigDecimal.ZERO;
 tax5pt5TotalMap["vatAmount"]=BigDecimal.ZERO;
@@ -104,54 +108,70 @@ tax14pt5TotalMap["vatAmount"]=BigDecimal.ZERO;
 		} catch (GenericEntityException e) {
 			Debug.logError(e, module);
 		}
-		
 		invoiceItemsIter.each{invoiceItem->
-			innerTaxItemMap=[:];
+			//innerTaxItemMap=[:];
 			
 			if(UtilValidate.isNotEmpty((invoiceItem.vatPercent)&&(invoiceItem.vatAmount))){
 				if(invoiceItem.vatPercent==5.5){
 				BigDecimal vatRevenue = invoiceItem.vatAmount;
-				innerTaxItemMap=[:];
-				innerTaxItemMap["invoiceDate"]=invoiceItem.invoiceDate;
-				innerTaxItemMap["invoiceId"]=invoiceItem.invoiceId;
-				innerTaxItemMap["partyId"]=invoiceItem.partyIdFrom;
-				innerTaxItemMap["tinNumber"]="";
-				innerTaxItemMap["vchrType"]="Purchase";
-				innerTaxItemMap["crOrDbId"]="D";
-				invTotalVal=org.ofbiz.accounting.invoice.InvoiceWorker.getInvoiceTotal(delegator,invoiceItem.invoiceId);
-				innerTaxItemMap["invTotalVal"]=invTotalVal;
-				innerTaxItemMap["vatAmount"]=vatRevenue;
-				tax5pt5TotalMap["invTotalVal"]+=invTotalVal;
-				tax5pt5TotalMap["vatAmount"]+=vatRevenue;
-				fromPartyDetail = (Map)(org.ofbiz.party.party.PartyWorker.getPartyIdentificationDetails(delegator, invoiceItem.partyIdFrom)).get("partyDetails");
-					if(UtilValidate.isNotEmpty(fromPartyDetail)){
-						innerTaxItemMap["tinNumber"]=fromPartyDetail.get('TIN_NUMBER');
-				      }
-				taxDetails5pt5List.addAll(innerTaxItemMap);
-				//Debug.log("=invoiceId==ForFIVE++++"+invoiceItem.invoiceId+"==ANdAmouunt=="+invoiceItem.vatAmount+"==percent="+invoiceItem.vatPercent+"=Total="+invTotalVal);
-				}
-				if(invoiceItem.vatPercent==14.5){
-					BigDecimal vatRevenue = invoiceItem.vatAmount;
+				invDetailMap=taxDetails5pt5Map[invoiceItem.invoiceId];
+					if(UtilValidate.isEmpty(invDetailMap)){
 					innerTaxItemMap=[:];
 					innerTaxItemMap["invoiceDate"]=invoiceItem.invoiceDate;
 					innerTaxItemMap["invoiceId"]=invoiceItem.invoiceId;
 					innerTaxItemMap["partyId"]=invoiceItem.partyIdFrom;
 					innerTaxItemMap["tinNumber"]="";
-					fromPartyDetail = (Map)(org.ofbiz.party.party.PartyWorker.getPartyIdentificationDetails(delegator, invoiceItem.partyIdFrom)).get("partyDetails");
-						if(UtilValidate.isNotEmpty(fromPartyDetail)){
-							innerTaxItemMap["tinNumber"]=fromPartyDetail.get('TIN_NUMBER');
-						 }
 					innerTaxItemMap["vchrType"]="Purchase";
 					innerTaxItemMap["crOrDbId"]="D";
 					invTotalVal=org.ofbiz.accounting.invoice.InvoiceWorker.getInvoiceTotal(delegator,invoiceItem.invoiceId);
 					innerTaxItemMap["invTotalVal"]=invTotalVal;
 					innerTaxItemMap["vatAmount"]=vatRevenue;
-					
-					tax14pt5TotalMap["invTotalVal"]+=invTotalVal;
-					tax14pt5TotalMap["vatAmount"]+=vatRevenue;
-					taxDetails14pt5List.addAll(innerTaxItemMap);
-					//Debug.log("=invoiceId==FOR FOURTEEnnn=="+invoiceItem.invoiceId+"==ANdAmouunt=="+invoiceItem.vatAmount+"==percent="+invoiceItem.vatPercent+"=Total="+invTotalVal);
+					tax5pt5TotalMap["invTotalVal"]+=invTotalVal;
+					tax5pt5TotalMap["vatAmount"]+=vatRevenue;
+					fromPartyDetail = (Map)(org.ofbiz.party.party.PartyWorker.getPartyIdentificationDetails(delegator, invoiceItem.partyIdFrom)).get("partyDetails");
+						if(UtilValidate.isNotEmpty(fromPartyDetail)){
+							innerTaxItemMap["tinNumber"]=fromPartyDetail.get('TIN_NUMBER');
+					      }
+					taxDetails5pt5List.addAll(innerTaxItemMap);
+					//intilize inner map when empty
+					taxDetails5pt5Map[invoiceItem.invoiceId]=innerTaxItemMap;
+					}else if(UtilValidate.isNotEmpty(invDetailMap)){
+					invDetailMap["vatAmount"]+=vatRevenue;
+					tax5pt5TotalMap["vatAmount"]+=vatRevenue;
+					taxDetails5pt5Map[invoiceItem.invoiceId]=invDetailMap;
+					}
 				}
+				if(invoiceItem.vatPercent==14.5){
+					BigDecimal vatRevenue = invoiceItem.vatAmount;
+					invDetailMap=taxDetails14pt5Map[invoiceItem.invoiceId];
+						if(UtilValidate.isEmpty(invDetailMap)){
+						innerTaxItemMap=[:];
+						innerTaxItemMap["invoiceDate"]=invoiceItem.invoiceDate;
+						innerTaxItemMap["invoiceId"]=invoiceItem.invoiceId;
+						innerTaxItemMap["partyId"]=invoiceItem.partyIdFrom;
+						innerTaxItemMap["tinNumber"]="";
+						fromPartyDetail = (Map)(org.ofbiz.party.party.PartyWorker.getPartyIdentificationDetails(delegator, invoiceItem.partyIdFrom)).get("partyDetails");
+							if(UtilValidate.isNotEmpty(fromPartyDetail)){
+								innerTaxItemMap["tinNumber"]=fromPartyDetail.get('TIN_NUMBER');
+							 }
+						innerTaxItemMap["vchrType"]="Purchase";
+						innerTaxItemMap["crOrDbId"]="D";
+						invTotalVal=org.ofbiz.accounting.invoice.InvoiceWorker.getInvoiceTotal(delegator,invoiceItem.invoiceId);
+						innerTaxItemMap["invTotalVal"]=invTotalVal;
+						innerTaxItemMap["vatAmount"]=vatRevenue;
+						
+						tax14pt5TotalMap["invTotalVal"]+=invTotalVal;
+						tax14pt5TotalMap["vatAmount"]+=vatRevenue;
+						taxDetails14pt5List.addAll(innerTaxItemMap);
+						//intilize inner map when empty
+						taxDetails14pt5Map[invoiceItem.invoiceId]=innerTaxItemMap;
+						//Debug.log("=invoiceId==FOR FOURTEEnnn=="+invoiceItem.invoiceId+"==ANdAmouunt=="+invoiceItem.vatAmount+"==percent="+invoiceItem.vatPercent+"=Total="+invTotalVal);
+						}else if(UtilValidate.isNotEmpty(invDetailMap)){
+						invDetailMap["vatAmount"]+=vatRevenue;
+						tax5pt5TotalMap["vatAmount"]+=vatRevenue;
+						taxDetails14pt5Map[invoiceItem.invoiceId]=invDetailMap;
+						}
+					}
 			}
 			//Debug.log("=invoiceItem=="+invoiceItem);
 		}
@@ -162,16 +182,17 @@ tax14pt5TotalMap["vatAmount"]=BigDecimal.ZERO;
 				Debug.logWarning(e, module);
 			}
 		}
-		
-		
-		//Debug.log("=taxDetails14pt5List===="+taxDetails14pt5List);
 		if(UtilValidate.isNotEmpty(taxType)&&(taxType=="VAT5PT5")){
-			context.put("taxDetails5pt5List",taxDetails5pt5List);
+			//context.put("taxDetails5pt5List",taxDetails5pt5List);
+			context.put("taxDetails5pt5List",taxDetails5pt5Map.entrySet());
 		}else if(UtilValidate.isNotEmpty(taxType)&&(taxType=="VAT14PT5")){
-		    context.put("taxDetails14pt5List",taxDetails14pt5List);
+		     context.put("taxDetails14pt5List",taxDetails14pt5Map.entrySet());
+		    //context.put("taxDetails14pt5List",taxDetails14pt5List);
 		}else{
-		context.put("taxDetails5pt5List",taxDetails5pt5List);
-		context.put("taxDetails14pt5List",taxDetails14pt5List);
+		//context.put("taxDetails5pt5List",taxDetails5pt5List);
+		//context.put("taxDetails14pt5List",taxDetails14pt5List);
+		context.put("taxDetails5pt5List",taxDetails5pt5Map.entrySet());
+		context.put("taxDetails14pt5List",taxDetails14pt5Map.entrySet());
 		}
 		context.put("tax5pt5TotalMap",tax5pt5TotalMap);
 		context.put("tax14pt5TotalMap",tax14pt5TotalMap);
