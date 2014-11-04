@@ -3459,6 +3459,7 @@
                 <set field="shipmentTypeId" value="${parameters.shipmentTypeId}"/>
                 <set field="priceTypeId" from-field="parameters.priceTypeId"/>
                 <set field="PONumber" from-field="parameters.PONumber"/>
+                <set field="promotionAdj" from-field="parameters.promotionAdj"/>
                 <set field="productCategoryId" from-field="parameters.productCategoryId"/>
                 <set field="vehicleId" from-field="parameters.vehicleId"/>
                 <script location="component://byproducts/webapp/byproducts/WEB-INF/actions/facility/AdhocIndentForm.groovy"/>

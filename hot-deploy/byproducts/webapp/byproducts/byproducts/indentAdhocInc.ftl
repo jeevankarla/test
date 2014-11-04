@@ -166,10 +166,11 @@
 			var partyId = $("#partyId").val();
 			var orderTaxType = $("#orderTaxType").val();
 			var poNumber = $("#PONumber").val();
-			
+			var promoAdj = $("#promotionAdj").val();
 			var productStoreId = $("#productStoreId").val();
 			var party = jQuery("<input>").attr("type", "hidden").attr("name", "partyId").val(partyId);
 			var POField = jQuery("<input>").attr("type", "hidden").attr("name", "PONumber").val(poNumber);
+			var promoField = jQuery("<input>").attr("type", "hidden").attr("name", "promotionAdjAmt").val(promoAdj);
 			var productStore = jQuery("<input>").attr("type", "hidden").attr("name", "productStoreId").val(productStoreId);
 			var tax = jQuery("<input>").attr("type", "hidden").attr("name", "orderTaxType").val(orderTaxType);
 			<#if orderId?exists>
@@ -180,6 +181,7 @@
 			
 			jQuery(formId).append(jQuery(party));
 			jQuery(formId).append(jQuery(POField));
+			jQuery(formId).append(jQuery(promoField));
 			jQuery(formId).append(jQuery(tax));
 			jQuery(formId).append(jQuery(productStore));
 		</#if>

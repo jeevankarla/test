@@ -557,6 +557,13 @@
         <attribute name="statusId" mode="IN" type="String" optional="false"/>
         <!-- <attribute name="oldStatusId" mode="OUT" type="String" optional="false"/> -->
     </service>
+    
+    <service name="adjustPromotionAmtForOrder" engine="java"
+                location="in.vasista.vbiz.byproducts.icp.ICPServices" invoke="adjustPromotionAmtForOrder" auth="true">
+        <attribute name="orderId" mode="IN" type="String" optional="false"/>
+        <attribute name="promoAdjAmt" mode="IN" type="BigDecimal" optional="false"/>
+    </service>
+    
     <!-- Migrated services -->
     <service name="processDispatchReconcilHelper" engine="java"
             location="in.vasista.vbiz.byproducts.ByProductServices" invoke="processDispatchReconcilHelper" auth="true">

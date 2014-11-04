@@ -213,6 +213,25 @@ $(document).ready(function(){
 	      			</td>
 	   			</#if>
 	    	</tr>
+	    	<#if changeFlag?exists && changeFlag == "IcpSales">
+		    	<tr><td><br/></td></tr>
+		    	<tr>
+		      		<td>&nbsp;</td>
+		      		<td align='left' valign='middle' nowrap="nowrap"><div class='h2'>Promotion Adj. Amt:</div></td>
+		      		<td>&nbsp;</td>
+		   			<#if promotionAdj?exists && promotionAdj?has_content>  
+		  	  			<input type="hidden" name="promotionAdj" id="promotionAdj" value="${promotionAdj?if_exists}"/>  
+		      			<td valign='middle'>
+		        			<div class='tabletext h3'>Rs. ${promotionAdj?if_exists}</div>
+		      			</td>       	
+		   			<#else>      	         
+		      			<td valign='middle'>
+		      				<input type="text" name="promotionAdj" id="promotionAdj" />    
+		         			<span class="tooltip">Fill Promotion Adjustment Amount if applicable</span>       
+		      			</td>
+		   			</#if>
+		    	</tr>
+	    	</#if>
 	    	<tr><td><br/></td></tr>
 	    	<#if changeFlag?exists && (changeFlag == "FgsSales" || changeFlag == "InterUnitTransferSale" || changeFlag == "ICPTransferSale")>
 		    	<tr>

@@ -12,16 +12,21 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
 import java.util.TimeZone;
+
 import org.ofbiz.order.order.OrderChangeHelper;
 import org.ofbiz.order.shoppingcart.CheckOutHelper;
 import org.ofbiz.order.shoppingcart.product.ProductPromoWorker;
+
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+
 import org.ofbiz.entity.GenericDelegator;
+
 import javolution.util.FastList;
 import javolution.util.FastMap;
+
 import org.ofbiz.order.shoppingcart.ShoppingCart;
 import org.ofbiz.order.shoppingcart.ShoppingCartEvents;
 import org.ofbiz.order.shoppingcart.ShoppingCartItem;
@@ -46,6 +51,7 @@ import org.ofbiz.service.GenericServiceException;
 import org.ofbiz.service.LocalDispatcher;
 import org.ofbiz.service.ServiceUtil;
 import org.ofbiz.security.Security;
+
 import in.vasista.vbiz.byproducts.ByProductNetworkServices;
 import in.vasista.vbiz.byproducts.ByProductServices;
 public class ICPServices {
@@ -166,6 +172,7 @@ public static Map<String, Object> approveICPOrder(DispatchContext dctx, Map cont
 	  	String partyId = (String) context.get("partyId");
 	  	String orderId = (String) context.get("orderId");
 	  	String PONumber = (String) context.get("PONumber");
+	  	String promotionAdjAmt = (String) context.get("promotionAdjAmt");
 	  	String currencyUomId = "INR";
 		Timestamp nowTimeStamp = UtilDateTime.nowTimestamp();
 		Timestamp effectiveDate = UtilDateTime.getDayStart(supplyDate);
@@ -247,6 +254,11 @@ public static Map<String, Object> approveICPOrder(DispatchContext dctx, Map cont
 			}else{
 				geoTax = "VAT";
 			}
+		}
+		
+		BigDecimal promoAmt = BigDecimal.ZERO;
+		if(UtilValidate.isNotEmpty(promotionAdjAmt)){
+			promoAmt = new BigDecimal(promotionAdjAmt);
 		}
 		
 		ShoppingCart cart = new ShoppingCart(delegator, productStoreId, locale,currencyUomId);
@@ -377,44 +389,44 @@ public static Map<String, Object> approveICPOrder(DispatchContext dctx, Map cont
 			}
 			BigDecimal totalPrice = (BigDecimal)priceResult.get("totalPrice");
 			List<Map> taxList = (List)priceResult.get("taxList");
-			ShoppingCartItem item = null;
-			try{
-				int itemIndx = cart.addItem(0, ShoppingCartItem.makeItem(Integer.valueOf(0), productId, null,	quantity, (BigDecimal)priceResult.get("basicPrice"),
-				            null, null, null, null, null, null, null, null, null, null, null, null, null, dispatcher,
-				            cart, Boolean.FALSE, Boolean.FALSE, null, Boolean.TRUE, Boolean.TRUE));
-				
-				item = cart.findCartItem(itemIndx);
-				item.setListPrice(totalPrice);
-        		item.setTaxDetails(taxList);
-			}
-			catch (Exception exc) {
-				Debug.logError("Error adding product with id " + productId + " to the cart: " + exc.getMessage(), module);
-				return ServiceUtil.returnError("Error adding product with id " + productId + " to the cart: ");
-	        }
-			List<GenericValue> productTaxes = EntityUtil.filterByCondition(prodPriceType, EntityCondition.makeCondition("productId", EntityOperator.EQUALS, productId));
-			for (Map eachTaxType : taxList) {
-				String taxId = (String)eachTaxType.get("taxType");
-				BigDecimal amount = (BigDecimal) eachTaxType.get("amount");
-				List<GenericValue> productTaxTypesList = EntityUtil.filterByCondition(productTaxes, EntityCondition.makeCondition("productPriceTypeId", EntityOperator.EQUALS, taxId));
-				if(UtilValidate.isNotEmpty(productTaxTypesList)){
-					GenericValue prodTaxType = EntityUtil.getFirst(productTaxTypesList);
-					if(UtilValidate.isNotEmpty(amount) && amount.compareTo(BigDecimal.ZERO)>0){
-						prodTaxType.set("price", amount);
+				ShoppingCartItem item = null;
+				try{
+					int itemIndx = cart.addItem(0, ShoppingCartItem.makeItem(Integer.valueOf(0), productId, null,	quantity, (BigDecimal)priceResult.get("basicPrice"),
+					            null, null, null, null, null, null, null, null, null, null, null, null, null, dispatcher,
+					            cart, Boolean.FALSE, Boolean.FALSE, null, Boolean.TRUE, Boolean.TRUE));
+					
+					item = cart.findCartItem(itemIndx);
+					item.setListPrice(totalPrice);
+	        		item.setTaxDetails(taxList);
+				}
+				catch (Exception exc) {
+					Debug.logError("Error adding product with id " + productId + " to the cart: " + exc.getMessage(), module);
+					return ServiceUtil.returnError("Error adding product with id " + productId + " to the cart: ");
+		        }
+				List<GenericValue> productTaxes = EntityUtil.filterByCondition(prodPriceType, EntityCondition.makeCondition("productId", EntityOperator.EQUALS, productId));
+				for (Map eachTaxType : taxList) {
+					String taxId = (String)eachTaxType.get("taxType");
+					BigDecimal amount = (BigDecimal) eachTaxType.get("amount");
+					List<GenericValue> productTaxTypesList = EntityUtil.filterByCondition(productTaxes, EntityCondition.makeCondition("productPriceTypeId", EntityOperator.EQUALS, taxId));
+					if(UtilValidate.isNotEmpty(productTaxTypesList)){
+						GenericValue prodTaxType = EntityUtil.getFirst(productTaxTypesList);
+						if(UtilValidate.isNotEmpty(amount) && amount.compareTo(BigDecimal.ZERO)>0){
+							prodTaxType.set("price", amount);
+						}
+						productPriceTaxCalc.add(prodTaxType);
 					}
-					productPriceTaxCalc.add(prodTaxType);
-				}
-				else{
-					GenericValue productPrice = delegator.makeValue("ProductPrice");        	 
-					productPrice.set("productId", productId);
-					productPrice.set("productPriceTypeId", taxId);
-					productPrice.set("productPricePurposeId", "SALE_PRICE");
-					productPrice.set("productStoreGroupId", "_NA_");
-					productPrice.set("currencyUomId", "INR");
-					productPrice.set("price", amount);
-					productPriceTaxCalc.add(productPrice);
+					else{
+						GenericValue productPrice = delegator.makeValue("ProductPrice");        	 
+						productPrice.set("productId", productId);
+						productPrice.set("productPriceTypeId", taxId);
+						productPrice.set("productPricePurposeId", "SALE_PRICE");
+						productPrice.set("productStoreGroupId", "_NA_");
+						productPrice.set("currencyUomId", "INR");
+						productPrice.set("price", amount);
+						productPriceTaxCalc.add(productPrice);
+					}
 				}
 			}
-		}
 		cart.setDefaultCheckoutOptions(dispatcher);
         ProductPromoWorker.doPromotions(cart, dispatcher);
         CheckOutHelper checkout = new CheckOutHelper(dispatcher, delegator, cart);
@@ -430,6 +442,22 @@ public static Map<String, Object> approveICPOrder(DispatchContext dctx, Map cont
 		Map<String, Object> orderCreateResult = checkout.createOrder(userLogin);
 		orderId = (String) orderCreateResult.get("orderId");
 		
+		if(promoAmt.compareTo(BigDecimal.ZERO)>0){
+			Map promoAdjCtx = UtilMisc.toMap("userLogin",userLogin);	  	
+			promoAdjCtx.put("orderId", orderId);
+			promoAdjCtx.put("promoAdjAmt", promoAmt);
+		  	 	  	 
+		  	try{
+		  		Map resultCtx = dispatcher.runSync("adjustPromotionAmtForOrder",promoAdjCtx);  		  		 
+		  		if (ServiceUtil.isError(result)) {
+		  	 		String errMsg =  ServiceUtil.getErrorMessage(result);
+		  	 		Debug.logError(errMsg , module);
+		  		}	
+	         }catch (GenericServiceException e) {
+	        	 Debug.logError(e , module);
+	             return ServiceUtil.returnError(e+" Error While Creation Promotion for order");
+	         }
+		}
 		
 		if(UtilValidate.isNotEmpty(orderId) && (batchNumExists || daysToStoreExists)){
 			try{
@@ -472,6 +500,55 @@ public static Map<String, Object> approveICPOrder(DispatchContext dctx, Map cont
 		result.put("orderId", orderId);
 		return result;
     }
+	public static Map<String, Object> adjustPromotionAmtForOrder(DispatchContext dctx, Map<String, ? extends Object> context){
+        Delegator delegator = dctx.getDelegator();
+        LocalDispatcher dispatcher = dctx.getDispatcher();
+        GenericValue userLogin = (GenericValue) context.get("userLogin");
+        String orderId = (String) context.get("orderId");
+        BigDecimal promoAdjAmt = (BigDecimal) context.get("promoAdjAmt");
+        Locale locale = (Locale) context.get("locale");     
+        Map result = ServiceUtil.returnSuccess();
+		try {
+			
+			if(UtilValidate.isEmpty(promoAdjAmt) || promoAdjAmt.compareTo(BigDecimal.ZERO)<=0){
+				Debug.logWarning("promoAdjAmt cannot be zero", module);
+         		return ServiceUtil.returnError("promoAdjAmt cannot be zero");
+			}
+			
+			// add employee subsidy adjustment "EMPSUBSID_ADJUSTMENT"
+			 String promoAdjustmentTypeId = "EMPSUBSID_ADJUSTMENT";
+			 Map createOrderAdjustmentCtx = UtilMisc.toMap("userLogin",userLogin);
+	    	 createOrderAdjustmentCtx.put("orderId", orderId);
+	    	 createOrderAdjustmentCtx.put("orderItemSeqId", "00001");
+	    	 createOrderAdjustmentCtx.put("orderAdjustmentTypeId", promoAdjustmentTypeId);    	
+	    	 createOrderAdjustmentCtx.put("amount", promoAdjAmt.negate());
+	    	 result = dispatcher.runSync("createOrderAdjustment", createOrderAdjustmentCtx);
+	     	 if (ServiceUtil.isError(result)) {
+	                Debug.logWarning("There was an error while creating  promotion adjustment: " + ServiceUtil.getErrorMessage(result), module);
+	         		return ServiceUtil.returnError("There was an error while creating promotion adjustment: " + ServiceUtil.getErrorMessage(result));          	            
+	         }
+	     	 
+	     	 BigDecimal taxAdj = (promoAdjAmt.multiply(new BigDecimal(14.5))).divide(new BigDecimal(100), 2, BigDecimal.ROUND_HALF_UP);
+	     	 String taxAdjustmentTypeId = "VAT_SALE";
+			 Map createTaxAdjustmentCtx = UtilMisc.toMap("userLogin",userLogin);
+			 createTaxAdjustmentCtx.put("orderId", orderId);
+			 createOrderAdjustmentCtx.put("orderItemSeqId", "00002");
+			 createTaxAdjustmentCtx.put("orderAdjustmentTypeId", taxAdjustmentTypeId);    	
+			 createTaxAdjustmentCtx.put("amount", taxAdj.negate());
+	    	 result = dispatcher.runSync("createOrderAdjustment", createTaxAdjustmentCtx);
+	     	 if (ServiceUtil.isError(result)) {
+	                Debug.logWarning("There was an error while creating  tax adjustment: " + ServiceUtil.getErrorMessage(result), module);
+	         		return ServiceUtil.returnError("There was an error while creating tax adjustment: " + ServiceUtil.getErrorMessage(result));          	            
+	         }
+		
+		} catch (Exception e) {
+			Debug.logError(e, module);
+			return ServiceUtil.returnError(e.toString());
+		}
+        result = ServiceUtil.returnSuccess("Successfully added the adjustment!!");
+        return result;
+    }
+	
 	
 	public static String createShipmentAndInvoiceForOrders(HttpServletRequest request, HttpServletResponse response) {
 		Delegator delegator = (Delegator) request.getAttribute("delegator");
@@ -699,6 +776,7 @@ public static Map<String, Object> approveICPOrder(DispatchContext dctx, Map cont
 		String orderTaxType = (String) request.getParameter("orderTaxType");
 		String orderId = (String) request.getParameter("orderId");
 		String PONumber = (String) request.getParameter("PONumber");
+		String promotionAdjAmt = (String) request.getParameter("promotionAdjAmt");
 		String productSubscriptionTypeId = (String) request.getParameter("productSubscriptionTypeId");
 		String subscriptionTypeId = "AM";
 		String partyIdFrom = "";
@@ -868,6 +946,7 @@ public static Map<String, Object> approveICPOrder(DispatchContext dctx, Map cont
 		processOrderContext.put("enableAdvancePaymentApp", Boolean.TRUE);
 		processOrderContext.put("productStoreId", productStoreId);
 		processOrderContext.put("PONumber", PONumber);
+		processOrderContext.put("promotionAdjAmt", promotionAdjAmt);
 		result = processICPSaleOrder(dctx, processOrderContext);
 		if(ServiceUtil.isError(result)){
 			Debug.logError("Unable to generate order: " + ServiceUtil.getErrorMessage(result), module);
