@@ -161,7 +161,7 @@ function comparer(a, b) {
         					return '';
         					}
         	 			}
- 					   });
+ 					   }); 
 	
 	
 			var options = {
@@ -217,17 +217,17 @@ function comparer(a, b) {
 	        grid.onKeyDown.subscribe(function(e){
 	        	var cell = grid.getCellFromEvent(e);
 				if (e.which == $.ui.keyCode.ENTER) {
-				     if(cell && cell.cell == 6){
-				          $(grid.getCellNode((cell.row),7)).click();
-				          grid.getEditController().commitCurrentEdit();
-				     
-				     }else{
 					      editClickHandler(cell.row);
-					      $(grid.getCellNode(cell.row +1, 6)).click();
-					      grid.getEditController().commitCurrentEdit();
-				     }
-				     
+					      if(data.length>1){
+					      	$(grid.getCellNode(cell.row +1, 3)).click();
+					      	 grid.getEditController().commitCurrentEdit();
+					      }else{
+					      	$(grid.getCellNode(cell.row , 3)).click();
+					      	 grid.getEditController().commitCurrentEdit();
+					      }
+					     
 				}
+				
 				if (e.which == 90 && (e.ctrlKey || e.metaKey)) {    // CTRL + (shift) + Z
       				if (e.shiftKey){
         				undoRedoBuffer.redo();
@@ -243,7 +243,6 @@ function comparer(a, b) {
 			dataView2.setItems(data);
 			dataView2.endUpdate();
 			
-		
 	
 	}
 	$(document).ready(function() {			
@@ -301,7 +300,6 @@ function updatePayrollAttendanceInternal(formName, action, row) {
             	 	populateError(result["_ERROR_MESSAGE_"]);
             	 }
                });
-   		
 	}//end of updatePayrollAttendanceInternal
 
 </script>

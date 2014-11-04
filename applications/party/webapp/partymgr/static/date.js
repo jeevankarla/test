@@ -1,6 +1,7 @@
 jQuery(document).ready(function () {
 	
 	change();
+	selectDept();
 });
 
 function change(){
@@ -14,4 +15,22 @@ function change(){
 		
 	}
 	
+}
+
+function selectDept(){
+	var partyIdTo=jQuery("#editPayrollAttendance_partyIdTo").val();
+	var data = "partyIdTo="+partyIdTo;
+	$.ajax({
+        type: "POST",
+        url: "getEmployeeOrgId",
+        data: data,
+        dataType: 'json',
+        success: function(result) {
+       	   partyId=result["partyId"];
+       	$("#editPayrollAttendance_partyId").val(partyId);
+       	 },
+       error: function() {
+       	 	alert(result["_ERROR_MESSAGE_"]);
+       	 }
+});
 }

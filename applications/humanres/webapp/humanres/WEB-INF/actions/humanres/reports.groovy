@@ -4,6 +4,7 @@ import org.ofbiz.entity.condition.*;
 import org.ofbiz.entity.util.EntityUtil;
 import net.sf.json.JSONObject;
 import net.sf.json.JSONArray;
+import org.ofbiz.party.party.PartyHelper;
 import in.vasista.vbiz.humanres.PayrollService;
 
 dctx = dispatcher.getDispatchContext();
@@ -47,6 +48,15 @@ if(customTimeList){
 	context.put("defaultTimePeriodId",defaultTimePeriodId);
 }
 
+//Json For EditPayrollAttendance : getting depatmentId for employeeId
 
-
-
+if(UtilValidate.isNotEmpty(parameters.partyIdTo)){
+JSONArray deptJSON = new JSONArray();
+	JSONObject newObj = new JSONObject();
+		departmentDetails=delegator.findByAnd("Employment", [partyIdTo : parameters.partyIdTo]);
+		partyId="";
+		if(departmentDetails){
+			partyId=departmentDetails[0].partyIdFrom;
+		}
+		request.setAttribute("partyId",partyId);
+}

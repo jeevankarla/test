@@ -549,6 +549,26 @@
             </widgets>
         </section>
     </screen>
+    <!-- <screen name="CreditLeaves">
+        <section>
+            <actions>
+                <set field="titleProperty" value="Credit Leaves"/>
+                <set field="headerItem" value="Attendance"/>
+                <set field="tabButtonItem2" value="creditLeaves" /> 
+				<set field="tabButtonItem" value="Attendance" />
+            </actions>
+            <widgets>
+				<decorator-screen name="HumanresCommonDecorator" location="component://humanres/widget/CommonScreens.xml">
+                    <decorator-section name="body">
+                    	<include-menu location="component://humanres/widget/HumanresMenus.xml" name="AttendanceTabBar"/> 
+                   		<screenlet name="search-options" title="search-options">      
+                           <include-form name="creditLeaves" location="component://humanres/widget/forms/EmploymentForms.xml"/>
+                        </screenlet>	
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen> -->
      <screen name="EditshiftDays">
         <section>
             <actions>
@@ -573,6 +593,7 @@
                 <set field="tabButtonItem2" value="EditPayrollAttendance" /> 
 				<set field="tabButtonItem" value="Attendance" />
 				<set field="screenFlag" value="payrollAttendance"/> 
+				<set field="layoutSettings.javaScripts[]" value="/partymgr/static/date.js" global="true"/>
             </actions>
             <widgets>
 				<decorator-screen name="HumanresCommonDecorator" location="component://humanres/widget/CommonScreens.xml">

@@ -49,6 +49,12 @@ under the License.
         <response name="success" type="request" value="json"/>
     </request-map>
     
+    <request-map uri="getEmployeeOrgId">
+        <security https="true" auth="true"/>
+        <event type="groovy" path="component://humanres/webapp/humanres/WEB-INF/actions/humanres/" invoke="reports.groovy"/>
+        <response name="success" type="request" value="json"/>
+    </request-map>
+    
     <request-map uri="getPartyBenefitCost">
         <security auth="true" https="true"/>    
         <event type="service" invoke="getPartyBenefitCost"/>
@@ -1650,6 +1656,10 @@ under the License.
        <security https="true" auth="true"/>
         <response name="success" type="view" value="EditShiftDay"/>
     </request-map>
+    <request-map uri="CreditLeaves">
+       <security https="true" auth="true"/>
+        <response name="success" type="view" value="CreditLeaves"/>
+    </request-map>
     <request-map uri="DailyPunchEditTable">
        <security https="true" auth="true"/>
         <response name="success" type="view" value="DailyPunchEditTable"/>
@@ -2196,6 +2206,7 @@ under the License.
     <view-map name="EditPayrollAttendance" type="screen" page="component://humanres/widget/EmploymentScreens.xml#EditPayrollAttendance"/>
     <view-map name="EditLeaveEncashment" type="screen" page="component://humanres/widget/EmploymentScreens.xml#EditLeaveEncashment"/>
     <view-map name="EditShiftDay" type="screen" page="component://humanres/widget/EmploymentScreens.xml#EditShiftDay"/>
+    <view-map name="CreditLeaves" type="screen" page="component://humanres/widget/EmploymentScreens.xml#CreditLeaves"/>
 
     <view-map name="EditPerformanceNotes" type="screen" page="component://humanres/widget/EmploymentScreens.xml#EditPerformanceNotes"/>
     <view-map name="EditSkillTypes" type="screen" page="component://humanres/widget/GlobalHRSettingScreens.xml#EditSkillTypes"/>
