@@ -1115,6 +1115,7 @@ function reportTypeChangeFunc() {
 							<td width="10%"><input type="submit" value="Download" class="buttontext"/></td> 
 						</form>
 	                  </tr>
+	                  <#-->
 	                  <tr class="alternate-row">
 						<form id="purchaseRegisterBook" name="purchaseRegisterBook" method="post" action="<@ofbizUrl>purchaseRegisterBook.pdf</@ofbizUrl>" target="_blank">	
 							<td width="30%">Purchase Register Book Report</td>
@@ -1125,7 +1126,7 @@ function reportTypeChangeFunc() {
 							<td width="10%"><input type="submit" value="PDF" onClick="javascript:appendParams('purchaseRegisterBook', '<@ofbizUrl>purchaseRegisterBook.pdf</@ofbizUrl>');" class="buttontext"/>
 							<input type="submit" value="CSV" onClick="javascript:appendParams('purchaseRegisterBook', '<@ofbizUrl>purchaseRegisterBook.csv</@ofbizUrl>');" class="buttontext"/></td>         			
 						</form>
-	                  </tr>
+	                  </tr> -->
 	                  <tr class="alternate-row">
 			      	   <form id="IcDealerOSDuesIntimation" name="IcDealerOSDuesIntimation" method="post" action="<@ofbizUrl>IcDealerOSDuesIntimation.pdf</@ofbizUrl>" target="_blank">        
 			             <td width="30%">Icecream Dealers Outstanding Dues intimation Report</td>
@@ -1173,6 +1174,7 @@ function reportTypeChangeFunc() {
 						<td width="10%"><input type="submit" value="Download" class="buttontext"/></td>      
 					</form>
 	              </tr>
+	              <#--
 	              <tr class="alternate-row">
 						<form id="purchaseReport" name="purchaseReport" method="post" action="<@ofbizUrl>purchaseReport.pdf</@ofbizUrl>" target="_blank">	
 							<td width="30%">Purchase Analysis Report</td>
@@ -1187,23 +1189,8 @@ function reportTypeChangeFunc() {
 							<td width="15%"></td>
 							<td width="10%"><input type="submit" value="Download" class="buttontext"/></td> 
 						</form>
-	                </tr>
-	                <tr class="alternate-row">
-						<form id="purchaseReport" name="purchaseReport" method="post" action="<@ofbizUrl>purchaseTaxReport.pdf</@ofbizUrl>" target="_blank">	
-							<td width="30%">Purchase Tax Classification Report</td>
-							<td width="15%">From<input  type="text" size="18pt" id="purchaseTaxFDate" readonly  name="fromDate"/></td>
-						    <td width="15%">To<input  type="text" size="18pt" id="purchaseTaxTDate" readonly  name="thruDate"/></td>
-			      			<td width="15%">Tax Type
-								<select name='taxType' id = "taxType">
-								    <option value=''>All</option>
-								    <option value='VAT5PT5'>Vat(5.5)</option>
-									<option value='VAT14PT5'>Vat(14.5)</option>
-								</select>
-							</td>
-							<td width="15%"></td>
-							<td width="10%"><input type="submit" value="Download" class="buttontext"/></td> 
-						</form>
-	                </tr>
+	                </tr> -->
+	               
 			        <#-- 
       				<tr class="alternate-row">
 		        	<form id="duesAbstract" name="duesAbstract" method="post" action="<@ofbizUrl>duesAbstract.csv</@ofbizUrl>">	
