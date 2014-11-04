@@ -21,7 +21,7 @@ under the License.
     <fo:root xmlns:fo="http://www.w3.org/1999/XSL/Format">
         <fo:layout-master-set>
             <fo:simple-page-master master-name="main" page-height="12in" page-width="10in"  margin-left=".3in" margin-right=".3in" margin-top=".5in" margin-bottom="0.5in">
-                <fo:region-body margin-top="1.8in"/>
+                <fo:region-body margin-top="2in"/>
                 <fo:region-before extent="1in"/>
                 <fo:region-after extent="1in"/>
             </fo:simple-page-master>
@@ -33,14 +33,14 @@ under the License.
         <fo:static-content flow-name="xsl-region-before">
               		<fo:block  keep-together="always" text-align="right" font-family="Courier,monospace" white-space-collapse="false"></fo:block>
               		<fo:block text-align="left"  keep-together="always"  white-space-collapse="false" linefeed-treatment="preserve">&#xA;</fo:block> 
-              		<fo:block font-weight="bold" font-size="12pt" text-align="center">KARNATAKA CO-OPERATIVE MILK PRODUCERS FEDERATION LTD</fo:block>
-                    <fo:block text-align="center" font-size="12pt" font-weight="bold">UNIT : MOTHER DAIRY , G.K.V.K POST, YELAHANKA, BANGALORE -560065.</fo:block>
+              		<fo:block font-weight="bold" font-size="14pt" text-align="center">KARNATAKA CO-OPERATIVE MILK PRODUCERS FEDERATION LTD</fo:block>
+                    <fo:block text-align="center" font-size="14pt" font-weight="bold">UNIT : MOTHER DAIRY , G.K.V.K POST, YELAHANKA, BANGALORE -560065.</fo:block>
                     <fo:block text-align="center" linefeed-treatment="preserve">&#xA;</fo:block>
-                    <fo:block text-align="center" font-size="12pt" font-weight="bold">Dues In Excess Of Fixed Deposit As On ${displayDate?if_exists}</fo:block>
-                    <fo:block keep-together="always" text-align="left" white-space-collapse="false" font-size="10pt">UserLogin: <#if userLogin?exists>${userLogin.userLoginId?if_exists}</#if>                                                       Print Date: ${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(nowTimestamp, "dd/MM/yy HH:mm:ss")}</fo:block>
-              		<fo:block text-align="left"  keep-together="always"  white-space-collapse="false">=====================================================================================</fo:block> 
-		        	<fo:block text-align="left"  keep-together="always"  white-space-collapse="false" font-size="11pt" font-weight="bold">SL  AGENT-CODE        AGENT-NAME            OPENING-BALANCE     FD-AMOUNT       DIFF-AMOUNT</fo:block> 
-		        	<fo:block text-align="left"  keep-together="always"  white-space-collapse="false">=====================================================================================</fo:block> 
+                    <fo:block text-align="center" font-size="14pt" font-weight="bold">Dues In Excess Of Fixed Deposit As On ${displayDate?if_exists}</fo:block>
+                    <fo:block keep-together="always" text-align="left" white-space-collapse="false" font-size="12pt">UserLogin: <#if userLogin?exists>${userLogin.userLoginId?if_exists}</#if>                                         Print Date: ${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(nowTimestamp, "dd/MM/yy HH:mm:ss")}</fo:block>
+              		<fo:block text-align="left"  keep-together="always"  white-space-collapse="false">==============================================================================================</fo:block> 
+		        	<fo:block text-align="left"  keep-together="always"  white-space-collapse="false" font-size="14pt" font-weight="bold">SL  CODE       AGENT-NAME                 OB      FD-AMOUNT    DIFF-AMOUNT</fo:block> 
+		        	<fo:block text-align="left"  keep-together="always"  white-space-collapse="false">==============================================================================================</fo:block> 
 		           	
             </fo:static-content>		    	
 		        	<fo:flow flow-name="xsl-region-body"  font-family="Courier,monospace">	
@@ -59,16 +59,16 @@ under the License.
                     		<#assign sno = sno+1>
                     		<fo:table-row>
                					<fo:table-cell>
-                           			<fo:block  keep-together="always" text-align="left" white-space-collapse="false" font-size="11pt">&#160;${sno?if_exists}</fo:block>  
+                           			<fo:block  keep-together="always" text-align="left" white-space-collapse="false" font-size="14pt">&#160;${sno?if_exists}</fo:block>  
                        			</fo:table-cell>
                        			<fo:table-cell>
-                           			<fo:block  keep-together="always" text-align="left" white-space-collapse="false" font-size="11pt">${eachPartyDetail.get("facilityId")?if_exists}</fo:block>  
+                           			<fo:block  keep-together="always" text-align="left" white-space-collapse="false" font-size="14pt">${eachPartyDetail.get("facilityId")?if_exists}</fo:block>  
                        			</fo:table-cell>
                        			<fo:table-cell>
-                           			<fo:block text-align="left" white-space-collapse="false" font-size="11pt" wrap-option="wrap">${eachPartyDetail.get("facilityName")?if_exists}</fo:block>  
+                           			<fo:block text-align="left" white-space-collapse="false" font-size="14pt" wrap-option="wrap">${eachPartyDetail.get("facilityName")?if_exists}</fo:block>  
                        			</fo:table-cell>
                        			<fo:table-cell>
-                           			<fo:block  keep-together="always" text-align="right" white-space-collapse="false" font-size="11pt">${eachPartyDetail.get("openingBalance")?if_exists?string("#0.00")}</fo:block>  
+                           			<fo:block  keep-together="always" text-align="right" white-space-collapse="false" font-size="14pt">${eachPartyDetail.get("openingBalance")?if_exists?string("#0.00")}</fo:block>  
                        			</fo:table-cell>
                        			<#-- <fo:table-cell>
                        				<#assign fdrsize = 0>
@@ -89,10 +89,10 @@ under the License.
                            			</#if> 
                        			</fo:table-cell> -->
                        			<fo:table-cell>
-                           			<fo:block  keep-together="always" text-align="right" white-space-collapse="false" font-size="11pt">${eachPartyDetail.get("fdrAmount")?if_exists?string("#0.00")}</fo:block>  
+                           			<fo:block  keep-together="always" text-align="right" white-space-collapse="false" font-size="14pt">${eachPartyDetail.get("fdrAmount")?if_exists?string("#0.00")}</fo:block>  
                        			</fo:table-cell>
                        			<fo:table-cell>
-                           			<fo:block  keep-together="always" text-align="right" white-space-collapse="false" font-size="11pt">${eachPartyDetail.get("diffAmount")?if_exists?string("#0.00")}</fo:block>  
+                           			<fo:block  keep-together="always" text-align="right" white-space-collapse="false" font-size="14pt">${eachPartyDetail.get("diffAmount")?if_exists?string("#0.00")}</fo:block>  
                        			</fo:table-cell>
                        		</fo:table-row>
                        	</#list>
