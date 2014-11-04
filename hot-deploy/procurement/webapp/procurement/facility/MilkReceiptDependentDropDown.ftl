@@ -18,9 +18,6 @@
 	  setUnitDropdown();
 	  shedDisplayOnChange($("#masterShedDropDown option:selected").text());	
 	  shedValueOnChange(selection.value);
-	  getTimePeriodsByUnit(selection.value,$('[name=unitId]').val());
-	  getUnitRouteByValue($('[name=unitId]').val());
-	  
 	}
 	function setShedUnitsDropDownByValue(shedId){
 	    getDependentUnitsTimePeFinAcc(shedId);
@@ -213,11 +210,6 @@
 function getDependentUnitsTimePeFinAcc(shedId){
          var dataString  = 'shedId='+ shedId;
          var tempDataString=dataString;
-         var isTimePeriodClosed = $('[name=isTimePeriodClosed]').val();
-         if(isTimePeriodClosed!=="undefined"){
-           var dataJson = "shedId=" + shedId + "&isTimePeriodClosed=" + isTimePeriodClosed;
-           dataString=dataJson;
-       	 }
             //get timeperiods and routes
      $.ajax({
              type: "POST",

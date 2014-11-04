@@ -199,6 +199,7 @@ function makeDatePicker(fromDateId ,thruDateId){
 			dateFormat:'dd-mm-yy',
 			changeMonth: true,
 			numberOfMonths: 1,
+			maxDate:fromDateId,
 			onSelect: function( selectedDate ) {
 				$( "#"+thruDateId ).datepicker( "option", "minDate", selectedDate );
 			}
