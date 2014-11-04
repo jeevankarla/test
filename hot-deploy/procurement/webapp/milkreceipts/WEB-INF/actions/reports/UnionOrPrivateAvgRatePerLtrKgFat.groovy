@@ -17,7 +17,7 @@ import java.sql.Timestamp;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import org.ofbiz.base.util.UtilNumber;
-import org.ofbiz.network.NetworkServices;
+
 import java.util.Map;
 import org.ofbiz.entity.util.EntityFindOptions;
 import org.ofbiz.service.ServiceUtil;
