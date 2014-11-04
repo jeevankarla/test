@@ -45,6 +45,13 @@
         <attribute name="isByParty" type="Boolean" mode="IN" optional="true"/> -->
     </service>
     
+    <service name="setInvoiceStatusToReadyForCRInst" engine="java" 
+        location="in.vasista.vbiz.byproducts.ByProductNetworkServices" invoke="setInvoiceStatusToReadyForCRInst" transaction-timeout="20000">
+        <description>set Invoice Status To Ready For CRInst</description>
+        <attribute name="fromDate" type="Timestamp" mode="IN" optional="false"/>
+        <attribute name="thruDate" type="Timestamp" mode="IN" optional="true"/>
+    </service>
+    
     <service name="routeShiftEmpSubsidy" engine="java" 
         location="in.vasista.vbiz.byproducts.ByProductChangeIndentServices" invoke="routeShiftEmpSubsidy">
         <description>Shift employee subsidy to temp route</description>

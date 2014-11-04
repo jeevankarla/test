@@ -4300,6 +4300,23 @@ public class ByProductServices {
 				    	  
 				    	  String invoiceId = (String)resultCtx.get("invoiceId");
 				    	  
+				    	  Map<String, Object> invoiceStatusCtx = FastMap.newInstance();
+				    	  invoiceStatusCtx.put("invoiceId", invoiceId);
+	     		 	      invoiceStatusCtx.put("statusId", "INVOICE_READY");
+	     		 	      invoiceStatusCtx.put("userLogin", userLogin);
+	     		 	      Map<String, Object> resultMap = null;
+	     		 	      resultMap = dispatcher.runSync("setInvoiceStatus", invoiceStatusCtx);
+	     		 	      if(ServiceUtil.isError(resultMap)){
+	     		 	    	  Debug.logError("Error in service setInvoiceStatus while invoice status to ready", module);
+	     		 	 	      return ServiceUtil.returnError("Error in service setInvoiceStatus while invoice status to ready");
+	     		 	      }
+	     		 	      
+	     		 	      Map<String, Object> resultPaymentApp = dispatcher.runSync("settleInvoiceAndPayments", UtilMisc.<String, Object>toMap("invoiceId", invoiceId, "userLogin", userLogin));
+	     		 	      if (ServiceUtil.isError(resultPaymentApp)) {						  
+	     		 	    	  Debug.logError("There was an error while  adjusting payment" + ServiceUtil.getErrorMessage(resultPaymentApp), module);			             
+	     		 	    	  return ServiceUtil.returnError("There was an error while  adjusting payment" + ServiceUtil.getErrorMessage(resultPaymentApp));  
+	     		 	      }
+				    	  
 				    	  GenericValue newEntity = delegator.makeValue("PeriodBilling");
 				    	  newEntity.set("billingTypeId", "CR_INST_BILLING");
 				    	  newEntity.set("customTimePeriodId", customTimePeriodId);

@@ -72,6 +72,7 @@ import org.ofbiz.accounting.invoice.InvoiceServices;
 
 
 
+
 import in.vasista.vbiz.byproducts.ByProductServices;
 
 public class ByProductNetworkServices {
@@ -8001,6 +8002,57 @@ public class ByProductNetworkServices {
 			}
 		} catch (GenericEntityException e) {
 			Debug.logError(e, module);
+		}
+		return result;
+	}
+	
+	public static Map<String, Object> setInvoiceStatusToReadyForCRInst(DispatchContext dctx, Map context) {
+		GenericDelegator delegator = (GenericDelegator) dctx.getDelegator();
+		LocalDispatcher dispatcher = dctx.getDispatcher();
+		Map<String, Object> result = ServiceUtil.returnSuccess();
+		Timestamp fromDate = (Timestamp) context.get("fromDate");
+		Timestamp thruDate = (Timestamp) context.get("thruDate");
+		GenericValue userLogin = (GenericValue) context.get("userLogin");
+		
+		List boothIdsList = (List)getAllBooths(delegator, "CR_INST").get("boothsList");
+
+		List conditionList = FastList.newInstance();
+		
+		List<GenericValue> extInvoices = FastList.newInstance();
+		List<String> invoiceIds = FastList.newInstance();
+		if(UtilValidate.isNotEmpty(boothIdsList)){
+			conditionList.add(EntityCondition.makeCondition("facilityId",EntityOperator.IN, boothIdsList));
+			conditionList.add(EntityCondition.makeCondition("statusId",EntityOperator.NOT_EQUAL, "INVOICE_CANCELLED"));
+			conditionList.add(EntityCondition.makeCondition("statusId",EntityOperator.EQUALS, "INVOICE_APPROVED"));
+			conditionList.add(EntityCondition.makeCondition("dueDate",EntityOperator.GREATER_THAN_EQUAL_TO, fromDate));
+			conditionList.add(EntityCondition.makeCondition("dueDate",EntityOperator.LESS_THAN_EQUAL_TO, thruDate));
+			EntityCondition condition = EntityCondition.makeCondition(conditionList, EntityOperator.AND);
+			try {
+				extInvoices = delegator.findList("Invoice", condition, UtilMisc.toSet("invoiceId"), UtilMisc.toList("dueDate", "facilityId"), null, false);
+				invoiceIds = EntityUtil.getFieldListFromEntityList(extInvoices, "invoiceId", true);
+			} catch (GenericEntityException e) {
+				Debug.logError(e, module);
+				return ServiceUtil.returnError(e.getMessage());
+			}
+			try{
+				for(int i=0; i<invoiceIds.size();i++){
+					String invId = (String)invoiceIds.get(i);
+					Map<String, Object> invoiceStatusCtx = FastMap.newInstance();
+			    	invoiceStatusCtx.put("invoiceId", invId);
+			 	    invoiceStatusCtx.put("statusId", "INVOICE_READY");
+			 	    invoiceStatusCtx.put("userLogin", userLogin);
+			 	    Map<String, Object> resultMap = null;
+			 	    resultMap = dispatcher.runSync("setInvoiceStatus", invoiceStatusCtx);
+			 	    if(ServiceUtil.isError(resultMap)){
+			 	    	Debug.logError("Error in service setInvoiceStatus while invoice status to ready", module);
+			 	 	    return ServiceUtil.returnError("Error in service setInvoiceStatus while invoice status to ready");
+			 	    }
+				}
+			}
+			catch(GenericServiceException e){
+				Debug.logError(e, module);
+				return ServiceUtil.returnError(e.getMessage());
+			}
 		}
 		return result;
 	}
