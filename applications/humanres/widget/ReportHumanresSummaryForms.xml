@@ -1100,7 +1100,7 @@
     	<field name="searchButton" title="${uiLabelMap.CommonFind}" widget-style="smallSubmit"><submit button-type="button"/></field>
     </form>
     <form name="ListEmployeeLoans" list-name="employeeLoanList" type="list" odd-row-style="alternate-row" header-row-style="header-row-2"
-        separate-columns="true" default-table-style="basic-table hover-bar" target="updateEmployeeLoan" >
+       paginate-target="loan" separate-columns="true" default-table-style="basic-table hover-bar" target="updateEmployeeLoan" >
     	<actions>
             <script location="component://humanres/webapp/humanres/WEB-INF/actions/reports/employeeLoanList.groovy"/>
     	</actions>
@@ -1193,7 +1193,7 @@
     	<field name="searchButton" title="${uiLabelMap.CommonFind}" widget-style="smallSubmit"><submit button-type="button"/></field>
     </form>
     <form name="listEmployeeLoanRecoveries" list-name="employeeLoanRecoveryList" type="list" odd-row-style="alternate-row" header-row-style="header-row-2"
-         separate-columns="true" default-table-style="basic-table hover-bar" group-columns="false" >
+        paginate-target="loanRecovery"  separate-columns="true" default-table-style="basic-table hover-bar" group-columns="false" >
     	<actions>
             <script location="component://humanres/webapp/humanres/WEB-INF/actions/reports/employeeLoanRecoveryList.groovy"/>
     	</actions>
