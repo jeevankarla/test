@@ -515,11 +515,9 @@ public static Map<String, Object> approveICPOrder(DispatchContext dctx, Map cont
          		return ServiceUtil.returnError("promoAdjAmt cannot be zero");
 			}
 			
-			// add employee subsidy adjustment "EMPSUBSID_ADJUSTMENT"
-			 String promoAdjustmentTypeId = "EMPSUBSID_ADJUSTMENT";
+			 String promoAdjustmentTypeId = "PROMOTION_ADJUSTMENT";
 			 Map createOrderAdjustmentCtx = UtilMisc.toMap("userLogin",userLogin);
 	    	 createOrderAdjustmentCtx.put("orderId", orderId);
-	    	 createOrderAdjustmentCtx.put("orderItemSeqId", "00001");
 	    	 createOrderAdjustmentCtx.put("orderAdjustmentTypeId", promoAdjustmentTypeId);    	
 	    	 createOrderAdjustmentCtx.put("amount", promoAdjAmt.negate());
 	    	 result = dispatcher.runSync("createOrderAdjustment", createOrderAdjustmentCtx);
@@ -532,7 +530,6 @@ public static Map<String, Object> approveICPOrder(DispatchContext dctx, Map cont
 	     	 String taxAdjustmentTypeId = "VAT_SALE";
 			 Map createTaxAdjustmentCtx = UtilMisc.toMap("userLogin",userLogin);
 			 createTaxAdjustmentCtx.put("orderId", orderId);
-			 createOrderAdjustmentCtx.put("orderItemSeqId", "00002");
 			 createTaxAdjustmentCtx.put("orderAdjustmentTypeId", taxAdjustmentTypeId);    	
 			 createTaxAdjustmentCtx.put("amount", taxAdj.negate());
 	    	 result = dispatcher.runSync("createOrderAdjustment", createTaxAdjustmentCtx);
