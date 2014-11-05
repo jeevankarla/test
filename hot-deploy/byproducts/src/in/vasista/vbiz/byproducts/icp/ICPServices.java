@@ -514,19 +514,20 @@ public static Map<String, Object> approveICPOrder(DispatchContext dctx, Map cont
 				Debug.logWarning("promoAdjAmt cannot be zero", module);
          		return ServiceUtil.returnError("promoAdjAmt cannot be zero");
 			}
-			
+			BigDecimal taxAdj = (promoAdjAmt.multiply(new BigDecimal(14.5))).divide(new BigDecimal(100), 2, BigDecimal.ROUND_HALF_UP);
+			BigDecimal promoAmtRevised = promoAdjAmt.subtract(taxAdj);
 			 String promoAdjustmentTypeId = "PROMOTION_ADJUSTMENT";
 			 Map createOrderAdjustmentCtx = UtilMisc.toMap("userLogin",userLogin);
 	    	 createOrderAdjustmentCtx.put("orderId", orderId);
 	    	 createOrderAdjustmentCtx.put("orderAdjustmentTypeId", promoAdjustmentTypeId);    	
-	    	 createOrderAdjustmentCtx.put("amount", promoAdjAmt.negate());
+	    	 createOrderAdjustmentCtx.put("amount", promoAmtRevised.negate());
 	    	 result = dispatcher.runSync("createOrderAdjustment", createOrderAdjustmentCtx);
 	     	 if (ServiceUtil.isError(result)) {
 	                Debug.logWarning("There was an error while creating  promotion adjustment: " + ServiceUtil.getErrorMessage(result), module);
 	         		return ServiceUtil.returnError("There was an error while creating promotion adjustment: " + ServiceUtil.getErrorMessage(result));          	            
 	         }
 	     	 
-	     	 BigDecimal taxAdj = (promoAdjAmt.multiply(new BigDecimal(14.5))).divide(new BigDecimal(100), 2, BigDecimal.ROUND_HALF_UP);
+	     	 
 	     	 String taxAdjustmentTypeId = "VAT_SALE";
 			 Map createTaxAdjustmentCtx = UtilMisc.toMap("userLogin",userLogin);
 			 createTaxAdjustmentCtx.put("orderId", orderId);
