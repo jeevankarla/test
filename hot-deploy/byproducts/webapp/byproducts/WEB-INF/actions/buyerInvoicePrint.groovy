@@ -154,6 +154,7 @@ invoiceIds.each { invoiceId ->
 	orderItemAttributes = delegator.findList("OrderItemAttribute", EntityCondition.makeCondition("orderId", EntityOperator.EQUALS, orderId), null, null, null, false);
 	invoiceItemDetail = [];
 	invoiceTaxItems = [:];
+	taxList = [];
 	invoiceItems.each{ eachItem ->
 		
 		if(eachItem.productId){
@@ -193,7 +194,9 @@ invoiceIds.each { invoiceId ->
 			invoiceItemDetail.add(tempMap);
 		}
 		else{
-			invoiceTaxItems.put(eachItem.invoiceItemTypeId, eachItem.amount);
+			tempTaxMap = [:];
+			tempTaxMap.put(eachItem.invoiceItemTypeId, eachItem.amount);
+			taxList.add(tempTaxMap);
 		}
 	}
 	if(invoiceSequence){
@@ -205,10 +208,9 @@ invoiceIds.each { invoiceId ->
 	invoiceDetailMap.put("invoiceNo", invoiceNo);
 	invoiceDetailMap.put("chapterMap", chapterMap);
 	invoiceDetailMap.put("invoiceItems", invoiceItemDetail);
-	invoiceDetailMap.put("invoiceTaxItems", invoiceTaxItems);
+	invoiceDetailMap.put("invoiceTaxItems", taxList);
 	invoiceSlipsMap.put(partyIdTo, invoiceDetailMap);
 }
-
 taxParty = delegator.findOne("Party", UtilMisc.toMap("partyId", "TAX10"), false);
 taxAuthority = delegator.findOne("TaxAuthority", UtilMisc.toMap("taxAuthGeoId","IND", "taxAuthPartyId","TAX10"), false);
 context.invoiceSlipsMap = invoiceSlipsMap;

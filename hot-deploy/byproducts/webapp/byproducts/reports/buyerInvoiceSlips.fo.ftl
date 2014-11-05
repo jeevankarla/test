@@ -367,7 +367,8 @@ under the License.
 					            					</fo:table-cell>
 												</fo:table-row>
 												<#if invoiceTaxItems?has_content>
-													<#assign taxDetails = invoiceTaxItems.entrySet()>
+													<#list invoiceTaxItems as eachTaxItem>
+													<#assign taxDetails = eachTaxItem.entrySet()>
 													<#list taxDetails as eachTax>
 														<fo:table-row border-style="solid">
 					                    					<fo:table-cell number-columns-spanned="3" >
@@ -380,8 +381,14 @@ under the License.
 							            						<#assign text = "Central Sales Tax(CST) 2.0%">
 							            					<#elseif eachTax.getKey()=="SERTAX_SALE">
 							            						<#assign text = "Service Tax ">
-							            					<#else>
+							            					<#elseif eachTax.getKey()=="VAT_SALE" && (eachTax.getValue()>0)>
 							            						<#assign text = "Value Added Tax(VAT) ">
+							            					<#elseif eachTax.getKey()=="VAT_SALE" && (eachTax.getValue()<0)>
+							            						<#assign text = "VAT Adjustment">
+							            					<#elseif eachTax.getKey()=="PROMOTION_ADJUSTMENT">
+							            						<#assign text = "Promotion Adjustment">
+							            					<#else>
+							            						<#assign text = "Other Adjustments">
 							            					</#if>
 							            					<fo:table-cell number-columns-spanned="6" >
 							            						<fo:block  keep-together="always" text-align="center" font-size="12pt" white-space-collapse="false"> ${text?if_exists}</fo:block>
@@ -391,6 +398,7 @@ under the License.
 							            					</fo:table-cell>
 							            					<#assign grandTotal = grandTotal+eachTax.getValue()>
 														</fo:table-row>
+													</#list>
 													</#list>
 												</#if>
 												<fo:table-row border-style="solid">
