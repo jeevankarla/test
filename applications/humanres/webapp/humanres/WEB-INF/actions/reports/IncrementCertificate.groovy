@@ -73,7 +73,7 @@ if(UtilValidate.isNotEmpty(employmentList)){
 		payConditionList.add(EntityCondition.makeCondition([EntityCondition.makeCondition("fromDate", EntityOperator.GREATER_THAN_EQUAL_TO, (currentDayTimeStart)),
 			EntityCondition.makeCondition("fromDate", EntityOperator.LESS_THAN_EQUAL_TO, (currentDayTimeEnd))]));
 		payCondition = EntityCondition.makeCondition(payConditionList,EntityOperator.AND);
-		PayGradeHistory = delegator.findList("PayGradePayHistory", payCondition, null, ["-fromDate"], null, false);
+		PayGradeHistory = delegator.findList("PayHistory", payCondition, null, ["-fromDate"], null, false);
 		
 		//PayGradeHistory = delegator.findList("PayGradePayHistory", EntityCondition.makeCondition("partyIdTo", EntityOperator.EQUALS, employee), null, ["-fromDate"], null, false);
 		if(UtilValidate.isNotEmpty(PayGradeHistory)){
@@ -115,8 +115,21 @@ if(UtilValidate.isNotEmpty(employmentList)){
 				
 				if(iteration.equals(1)){
 					dateOfPresentIncre=PayGradeId.get("fromDate");
-					presentPayScale=PayGradeId.get("payScale");
-					presentPay=PayGradeId.get("amount");
+					//presentPayScale=PayGradeId.get("payScale");
+					//presentPay=PayGradeId.get("amount");
+					presentSalaryStepSeqId = PayGradeId.get("salaryStepSeqId");
+					presentPayGradeId = PayGradeId.get("payGradeId");
+					presentSalaryConditionList=[];
+					presentSalaryConditionList.add(EntityCondition.makeCondition("salaryStepSeqId", EntityOperator.EQUALS ,presentSalaryStepSeqId));
+					presentSalaryConditionList.add(EntityCondition.makeCondition("payGradeId", EntityOperator.EQUALS ,presentPayGradeId));
+					presentSalaryCondition = EntityCondition.makeCondition(presentSalaryConditionList,EntityOperator.AND);
+					presentSalaryList = delegator.findList("PayGradeSalaryStep", presentSalaryCondition, null, null, null, false);
+					if(UtilValidate.isNotEmpty(presentSalaryList)){
+						presentSalaryList.each { presentSalary->
+							presentPayScale = presentSalary.get("payScale");
+							presentPay = presentSalary.get("amount");
+						}
+					}
 					iteration=iteration+1;
 					dateOfPresentIncre = UtilDateTime.getDayStart(dateOfPresentIncre);
 					dateOfPresentIncre = UtilDateTime.toDateString(dateOfPresentIncre);
@@ -139,10 +152,19 @@ if(UtilValidate.isNotEmpty(employmentList)){
 				}else
 				if(iteration.equals(2)){
 					dateOfLastIncre=PayGradeId.get("fromDate");
-					LastPayScale=PayGradeId.get("payScale");
-					LastPay=PayGradeId.get("amount");
+					//LastPayScale=PayGradeId.get("payScale");
+					//LastPay=PayGradeId.get("amount");
 					iteration=iteration+1;
-					
+					lastSalaryConditionList=[];
+					lastSalaryConditionList.add(EntityCondition.makeCondition("salaryStepSeqId", EntityOperator.EQUALS ,presentSalaryStepSeqId));
+					lastSalaryConditionList.add(EntityCondition.makeCondition("payGradeId", EntityOperator.EQUALS ,presentPayGradeId));
+					lastSalaryCondition = EntityCondition.makeCondition(lastSalaryConditionList,EntityOperator.AND);
+					lastSalaryList = delegator.findList("PayGradeSalaryStep", lastSalaryCondition, null, null, null, false);
+					if(UtilValidate.isNotEmpty(lastSalaryList)){
+						lastSalaryList.each { lastSalary->
+							LastPay = lastSalary.get("amount");
+						}
+					}
 					dateOfLastIncre = UtilDateTime.getDayStart(dateOfLastIncre);
 					dateOfLastIncre = UtilDateTime.toDateString(dateOfLastIncre);
 					def sdf2 = new SimpleDateFormat("MM/dd/yyyy");
