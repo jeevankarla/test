@@ -698,8 +698,15 @@ public class PayrollService {
 		    		if(statusId.equalsIgnoreCase("APPROVED") && oldStatusId.equalsIgnoreCase("GENERATED")){
 		    			periodBilling.set("statusId", "APPROVE_INPROCES");
 		    			delegator.store(periodBilling);
-		    			Map<String,  Object> runSACOContext = UtilMisc.<String, Object>toMap("periodBillingId", periodBillingId, "userLogin", userLogin);
-				        dispatcher.runAsync("createInvoiceAndPaymentsForBilling", runSACOContext);
+		    			GenericValue tenantConfigPayrolInvoice = delegator.findOne("TenantConfiguration", UtilMisc.toMap("propertyTypeEnumId","HUMANRES", "propertyName","enablePayrollInvoice"), false);
+		    			if (UtilValidate.isNotEmpty(tenantConfigPayrolInvoice) && ("Y".equalsIgnoreCase(tenantConfigPayrolInvoice.getString("propertyValue")))) {
+			  	    		Map<String,  Object> runSACOContext = UtilMisc.<String, Object>toMap("periodBillingId", periodBillingId, "userLogin", userLogin);
+					        dispatcher.runAsync("createInvoiceAndPaymentsForBilling", runSACOContext);
+			  	    	 }else{
+			  	    		periodBilling.set("statusId",statusId);
+			    			delegator.store(periodBilling); 
+			  	    	 }
+		    			
 		    		}
 		    		// reject  billing
 		    		if(statusId.equalsIgnoreCase("GENERATED") && oldStatusId.equalsIgnoreCase("APPROVED")){
@@ -790,10 +797,12 @@ public class PayrollService {
 	 	try {
 			 periodBilling = delegator.findOne("PeriodBilling", UtilMisc.toMap("periodBillingId", periodBillingId), false);
 	 		 List condList = FastList.newInstance();
+	 		condList.add(EntityCondition.makeCondition("statusId",EntityOperator.NOT_IN, UtilMisc.toList("INVOICE_CANCELLED","INVOICE_WRITEOFF")));
 	 		condList.add(EntityCondition.makeCondition("periodBillingId",EntityOperator.EQUALS, periodBillingId));
 	 		condList.add(EntityCondition.makeCondition("referenceNumber",EntityOperator.EQUALS, periodBilling.getString("billingTypeId")+"_"+periodBillingId));
 			EntityCondition cond = EntityCondition.makeCondition(condList,EntityOperator.AND);
 	 		List<GenericValue> invoices = delegator.findList("Invoice", cond, UtilMisc.toSet("invoiceId","periodBillingId","referenceNumber"), null, null, false);
+	 		Debug.logImportant("No.of Invoice's to cancel:"+invoices.size(), module);
 	 		for(GenericValue invoice : invoices){
 	 			String invoiceId = invoice.getString("invoiceId");
 	 			List<GenericValue> paymentApplications = delegator.findByAnd("PaymentApplication", UtilMisc.toMap("invoiceId",invoiceId));
@@ -4634,6 +4643,11 @@ public class PayrollService {
 			    		newEntity.set("noOfLeaveDays", resultMap.get("noOfLeaveDays"));
 			    		List<GenericValue> leaves = (List)resultMap.get("leaves");
 			    		GenericValue employeeDetail = delegator.findOne("EmployeeDetail", UtilMisc.toMap("partyId",employeeId), true);
+			    		if(UtilValidate.isEmpty(employeeDetail)){
+			    			Debug.logError("Invalid employee Id or configuration missing ::"+employeeId, module);
+			            	return ServiceUtil.returnError("Invalid employee Id or configuration missing ::"+employeeId, 
+			            			null, null, null);
+			    		}
 			    		//here handle no punch's in second half off the attendance month 
 			    		//List<GenericValue> payrollPeriodPunchList = EntityUtil.filterByCondition(punchList, EntityCondition.makeCondition("punchDateTime",EntityOperator.BETWEEN,UtilMisc.toList(timePeriodStart,attdTimePeriodEnd)));
 			    		List<GenericValue> payrollPeriodPunchList = EntityUtil.filterByCondition(punchList, EntityCondition.makeCondition(EntityCondition.makeCondition("punchdate",EntityOperator.GREATER_THAN_EQUAL_TO,UtilDateTime.toSqlDate(timePeriodStart)),EntityOperator.AND

@@ -1935,8 +1935,10 @@ under the License.
       <member-entity entity-alias="LOR" entity-name="LoanRecovery"/>
       <alias-all entity-alias="LOR"></alias-all>
       <alias name="loanId" entity-alias="LO"/>
+      <alias name="loanFinAccountId" entity-alias="LO"/>
       <alias name="partyId" entity-alias="LO"/>
       <alias name="loanTypeId" entity-alias="LO"/>
+      <alias name="description" entity-alias="LOT"/>
       <alias name="statusId" entity-alias="LO"/>
       <alias name="payHeadTypeId" entity-alias="LOT"/>
       <view-link entity-alias="LO" rel-entity-alias="LOT">

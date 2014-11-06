@@ -62,19 +62,25 @@ public class InvoicePayrolWorkerNew {
 		// Create invoice items
 		try {
 			    List<GenericValue> payrollHeaderItems = delegator.findByAnd("PayrollHeaderItem", UtilMisc.toMap("payrollHeaderId",payrollHeaderId));
+			   // here exclude internal loan payHeads and create invoice for gross(includes taxes and external loans) amount 
+			    List<GenericValue> loanTypes = delegator.findList("LoanType", EntityCondition.makeCondition(EntityCondition.makeCondition("isExternal",EntityOperator.EQUALS,null),EntityOperator.OR ,EntityCondition.makeCondition("isExternal",EntityOperator.NOT_EQUAL,"Y")), UtilMisc.toSet("loanTypeId","payHeadTypeId"), null, null, false);
+			    if(UtilValidate.isNotEmpty(loanTypes) && UtilValidate.isNotEmpty(EntityUtil.getFieldListFromEntityList(loanTypes, "payHeadTypeId", true))){
+			    	payrollHeaderItems = EntityUtil.filterByCondition(payrollHeaderItems, EntityCondition.makeCondition("payrollHeaderItemTypeId",EntityOperator.NOT_IN,EntityUtil.getFieldListFromEntityList(loanTypes, "payHeadTypeId", true)));
+			    }
+			    
 			    for (int i = 0; i < payrollHeaderItems.size(); ++i) {		
-				GenericValue payrollHeaderItem = payrollHeaderItems.get(i);
-				String payrollHeaderItemTypeId = payrollHeaderItem.getString("payrollHeaderItemTypeId");				
-				Map input = UtilMisc.toMap("userLogin", userLogin,"invoiceId", invoiceId);				
-				input.put("invoiceItemTypeId", payrollHeaderItemTypeId);			  
-				input.put("quantity", BigDecimal.ONE);
-				input.put("amount", payrollHeaderItem.getBigDecimal("amount"));
-	            serviceResults = dispatcher.runSync("createInvoiceItem", input);
-	            if (ServiceUtil.isError(serviceResults)) {
-	            	Debug.logError(errorMsg+"===invoiceItemTypeId ::"+payrollHeaderItemTypeId, module);
-	                return ServiceUtil.returnError(errorMsg+"===invoiceItemTypeId ::"+payrollHeaderItemTypeId, null, null, serviceResults);
+					GenericValue payrollHeaderItem = payrollHeaderItems.get(i);
+					String payrollHeaderItemTypeId = payrollHeaderItem.getString("payrollHeaderItemTypeId");				
+					Map input = UtilMisc.toMap("userLogin", userLogin,"invoiceId", invoiceId);				
+					input.put("invoiceItemTypeId", payrollHeaderItemTypeId);			  
+					input.put("quantity", BigDecimal.ONE);
+					input.put("amount", payrollHeaderItem.getBigDecimal("amount"));
+		            serviceResults = dispatcher.runSync("createInvoiceItem", input);
+		            if (ServiceUtil.isError(serviceResults)) {
+		            	Debug.logError(errorMsg+"===invoiceItemTypeId ::"+payrollHeaderItemTypeId, module);
+		                return ServiceUtil.returnError(errorMsg+"===invoiceItemTypeId ::"+payrollHeaderItemTypeId, null, null, serviceResults);
 	            }				
-			}  
+			 }  
 			
 	        			
 		}catch (Exception e) {
@@ -185,6 +191,7 @@ public class InvoicePayrolWorkerNew {
                     }
                 	Map<String, Object> paymentCtx = UtilMisc.<String, Object>toMap("invoiceId", invoiceId);
                 	paymentCtx.put("userLogin", userLogin);
+                	paymentCtx.put("payrollHeaderId", payrollHeader.getString("payrollHeaderId"));
                 	Map<String, Object> paymentResult = dispatcher.runSync("createPayrolPaymentAndAppclications",paymentCtx);
                 	if (ServiceUtil.isError(paymentResult)) {
                 		Debug.logError(paymentResult.toString(), module);
@@ -231,7 +238,6 @@ public class InvoicePayrolWorkerNew {
 			    EntityCondition cond = EntityCondition.makeCondition(condList,EntityOperator.AND);
 			    
 			    List<GenericValue> invoiceItemTypes = delegator.findList("InvoiceItemType", cond, null, null, null, false);
-			    Debug.log("InvoiceItemType===="+invoiceItemTypes);
 			    for(GenericValue invoiceItemType : invoiceItemTypes){
 			    	String invoiceItemTypeId = invoiceItemType.getString("invoiceItemTypeId");
 			    	BigDecimal amount = BigDecimal.ZERO;
@@ -281,23 +287,101 @@ public class InvoicePayrolWorkerNew {
         Delegator delegator = dctx.getDelegator();
         LocalDispatcher dispatcher = dctx.getDispatcher();
 		String invoiceId = (String) context.get("invoiceId");
+		String payrollHeaderId = (String) context.get("payrollHeaderId");
 			
        String errorMsg = "create Payment for PayrolInvoice failed for invoiceId '" + invoiceId + "': ";			
        GenericValue userLogin = (GenericValue) context.get("userLogin");            
 		Map<String, Object> serviceResults= ServiceUtil.returnSuccess();
 		// Create invoice items
 		try {
-			GenericValue invoice = delegator.findOne("Invoice", UtilMisc.toMap("invoiceId", invoiceId), false);
-			List<GenericValue> paymentApplication = delegator.findByAnd("PaymentApplication", UtilMisc.toMap("invoiceId",invoiceId));
+			 GenericValue invoice = delegator.findOne("Invoice", UtilMisc.toMap("invoiceId", invoiceId), false);
+			  List<GenericValue> payrollLoanHeaderItems = FastList.newInstance();
+			  List<GenericValue> payrollHeaderItems = delegator.findByAnd("PayrollHeaderItem", UtilMisc.toMap("payrollHeaderId",payrollHeaderId));
+		     // here exclude internal loan payHeads and create invoice for gross(includes taxes and external loans) amount 
+		     List<GenericValue> loanTypes = delegator.findList("LoanType", EntityCondition.makeCondition(EntityCondition.makeCondition("isExternal",EntityOperator.EQUALS,null),EntityOperator.OR ,EntityCondition.makeCondition("isExternal",EntityOperator.NOT_EQUAL,"Y")), UtilMisc.toSet("loanTypeId","payHeadTypeId"), null, null, false);
+		     if(UtilValidate.isNotEmpty(loanTypes) && UtilValidate.isNotEmpty(EntityUtil.getFieldListFromEntityList(loanTypes, "payHeadTypeId", true))){
+		    	payrollLoanHeaderItems = EntityUtil.filterByCondition(payrollHeaderItems, EntityCondition.makeCondition("payrollHeaderItemTypeId",EntityOperator.IN,EntityUtil.getFieldListFromEntityList(loanTypes, "payHeadTypeId", true)));
+		     }
+		     BigDecimal loanRecoveryAmount = BigDecimal.ZERO;
+			for(GenericValue payrollLoanHeaderItem : payrollLoanHeaderItems){
+				List<GenericValue> loanAndRecoveryAndTypes = delegator.findList("LoanAndRecoveryAndType", EntityCondition.makeCondition(EntityCondition.makeCondition("payrollHeaderId",EntityOperator.EQUALS,payrollLoanHeaderItem.getString("payrollHeaderId")),EntityOperator.AND ,EntityCondition.makeCondition("payrollItemSeqId",EntityOperator.EQUALS,payrollLoanHeaderItem.getString("payrollItemSeqId"))),null, null, null, false);
+				GenericValue loanAndRecoveryAndType = EntityUtil.getFirst(loanAndRecoveryAndTypes);
+				BigDecimal amount  = BigDecimal.ZERO;
+				if(UtilValidate.isEmpty(loanAndRecoveryAndType)){
+					continue;
+				}
+				if(UtilValidate.isNotEmpty(loanAndRecoveryAndType.getBigDecimal("principalAmount"))){
+					amount  = amount.add(loanAndRecoveryAndType.getBigDecimal("principalAmount"));
+				}
+				if(UtilValidate.isNotEmpty(loanAndRecoveryAndType.getBigDecimal("interestAmount"))){
+					amount  = amount.add(loanAndRecoveryAndType.getBigDecimal("interestAmount"));
+				}
+				
+				loanRecoveryAmount = loanRecoveryAmount.add(amount);
+				
+				Map newp = UtilMisc.toMap("userLogin",userLogin);
+				 newp.put("partyIdFrom", invoice.getString("partyId"));
+				 newp.put("partyIdTo", invoice.getString("partyIdFrom"));
+				 newp.put("paymentMethodTypeId", "DEBITNOTE_TRNSF");
+				 newp.put("paymentTypeId", "LOANRECOVERY_PAYOUT");
+				 newp.put("statusId", "PMNT_NOT_PAID");
+				 newp.put("comments",loanAndRecoveryAndType.getString("description")+"(loanId :"+loanAndRecoveryAndType.getString("loanId") +")" +"Loan Recovery,for Payroll Period["+"]");
+				 newp.put("paymentRefNum", invoice.getString("referenceNumber"));
+				 newp.put("amount", amount);
+				 Map<String, Object> paymentResult = dispatcher.runSync("createPayment",newp);
+            	if (ServiceUtil.isError(paymentResult)) {
+            		Debug.logError(paymentResult.toString(), module);
+                    return ServiceUtil.returnError(ServiceUtil.getErrorMessage(paymentResult), null, null, paymentResult);
+                }
+            	Map<String, Object> setPaymentStatusMap = UtilMisc.<String, Object>toMap("userLogin", userLogin);
+	        	setPaymentStatusMap.put("paymentId", paymentResult.get("paymentId"));
+	        	setPaymentStatusMap.put("statusId", "PMNT_SENT");
+	        	if(UtilValidate.isNotEmpty(loanAndRecoveryAndType.getString("loanFinAccountId"))){
+	        		setPaymentStatusMap.put("finAccountId", loanAndRecoveryAndType.getString("loanFinAccountId"));
+	        	}
+	            Map<String, Object> pmntResults = dispatcher.runSync("setPaymentStatus", setPaymentStatusMap);
+            	serviceResults.put("paymentId",paymentResult.get("paymentId"));
+            	Map newPayappl = UtilMisc.toMap("userLogin",userLogin);
+            	newPayappl.put("invoiceId", invoiceId);
+            	newPayappl.put("paymentId", paymentResult.get("paymentId"));
+            	newPayappl.put("amountApplied", amount);
+				paymentResult = dispatcher.runSync("createPaymentApplication",newPayappl);
+           	if (ServiceUtil.isError(paymentResult)) {
+           		Debug.logError(paymentResult.toString(), module);
+                   return ServiceUtil.returnError(ServiceUtil.getErrorMessage(paymentResult), null, null, paymentResult);
+               }
+           	// here update loan recover record and withdraw from loan finaccount
+				GenericValue loanRecovery = delegator.findOne("LoanRecovery", UtilMisc.toMap("loanId",loanAndRecoveryAndType.get("loanId"),"sequenceNum",loanAndRecoveryAndType.get("sequenceNum")), false);
+				loanRecovery.set("paymentId", paymentResult.get("paymentId"));
+				delegator.store(loanRecovery);
+				/*if(UtilValidate.isNotEmpty(loanAndRecoveryAndType.getString("loanFinAccountId"))){
+					Map<String, Object> depositPaymentCtx = UtilMisc.<String, Object>toMap("userLogin", userLogin);
+					depositPaymentCtx.put("paymentIds", UtilMisc.toList((String)paymentResult.get("paymentId")));
+					depositPaymentCtx.put("finAccountId", loanAndRecoveryAndType.getString("loanFinAccountId")); 
+		        	Debug.log("depositPaymentCtx======="+depositPaymentCtx);
+		            Map<String, Object> paymentDepositResult = dispatcher.runSync("depositWithdrawPayments", depositPaymentCtx);
+		            
+		            if (ServiceUtil.isError(paymentDepositResult)) {
+		            	Debug.logError(paymentDepositResult.toString(), module);    			
+		                return ServiceUtil.returnError(null, null, null, paymentDepositResult);
+		            }
+				}*/
+				
+			}	
+			
+			//List<GenericValue> paymentApplication = delegator.findByAnd("PaymentApplication", UtilMisc.toMap("invoiceId",invoiceId));
 			//only generate payment if no application exist yet
-			if(UtilValidate.isEmpty(paymentApplication)){
+			//if(UtilValidate.isEmpty(paymentApplication)){
 				 Map newp = UtilMisc.toMap("userLogin",userLogin);
 				 newp.put("partyIdFrom", invoice.getString("partyId"));
 				 newp.put("partyIdTo", invoice.getString("partyIdFrom"));
 				 newp.put("paymentMethodTypeId", "CHEQUE_PAYIN");
 				 newp.put("paymentTypeId", "PAYROL_PAYMENT");
 				 newp.put("statusId", "PMNT_NOT_PAID");
+				 newp.put("paymentRefNum", invoice.getString("referenceNumber"));
+				 
 				 BigDecimal amount = InvoiceWorker.getInvoiceTotal(invoice);
+				 amount = amount.subtract(loanRecoveryAmount);
 				 newp.put("amount", amount);
 				 Map<String, Object> paymentResult = dispatcher.runSync("createPayment",newp);
              	if (ServiceUtil.isError(paymentResult)) {
@@ -315,7 +399,7 @@ public class InvoicePayrolWorkerNew {
                     return ServiceUtil.returnError(ServiceUtil.getErrorMessage(paymentResult), null, null, paymentResult);
                 }
 				
-			}
+			//}
 			
 	        			
 		}catch (Exception e) {

@@ -246,11 +246,11 @@ public class PunchService {
 
 			if (subb % 2 != 0) {
 
-				if (!PunchType.equals("Break")) {
+				/*if (!PunchType.equals("Break")) {
 
 					return ServiceUtil
 							.returnError(" Please PunchOut for Break First ");
-				}
+				}*/
 			}
 		} catch (GenericEntityException e) {
 			return ServiceUtil

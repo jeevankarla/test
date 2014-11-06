@@ -97,6 +97,7 @@ under the License.
         location="org.ofbiz.accounting.invoice.InvoicePayrolWorkerNew" transaction-timeout="1000">
         <description>Create payroll invoice from period billing</description>
         <attribute name="invoiceId" type="String" mode="IN" optional="false"/>
+         <attribute name="payrollHeaderId" type="String" mode="IN" optional="false"/>
         <attribute name="paymentId" type="String" mode="OUT" optional="true"/>  
     </service>
     

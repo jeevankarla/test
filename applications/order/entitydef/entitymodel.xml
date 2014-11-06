@@ -524,7 +524,7 @@ under the License.
       <field name="cancelQuantity" type="fixed-point"></field>
       <field name="selectedAmount" type="fixed-point"></field>
       <field name="unitPrice" type="fixed-point" ></field>
-      <field name="unitListPrice" type="currency-precise"></field>
+      <field name="unitListPrice" type="fixed-point"></field>
       <field name="unitAverageCost" type="currency-amount"></field>
       <field name="unitRecurringPrice" type="currency-amount"></field>
       <field name="isModifiedPrice" type="indicator"></field>
