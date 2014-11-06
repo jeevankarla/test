@@ -322,7 +322,7 @@ public class InvoicePayrolWorkerNew {
 				Map newp = UtilMisc.toMap("userLogin",userLogin);
 				 newp.put("partyIdFrom", invoice.getString("partyId"));
 				 newp.put("partyIdTo", invoice.getString("partyIdFrom"));
-				 newp.put("paymentMethodTypeId", "DEBITNOTE_TRNSF");
+				 newp.put("paymentMethodId", "DEBITNOTE");
 				 newp.put("paymentTypeId", "LOANRECOVERY_PAYOUT");
 				 newp.put("statusId", "PMNT_NOT_PAID");
 				 newp.put("comments",loanAndRecoveryAndType.getString("description")+"(loanId :"+loanAndRecoveryAndType.getString("loanId") +")" +"Loan Recovery,for Payroll Period["+"]");
