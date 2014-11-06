@@ -523,7 +523,7 @@
                 <set field="parameters.finAccountId" value="${finAccountId}"/>
                  <set field="parameters.statusId" value="FINACT_TRNS_CREATED"/>
                  <set field="glReconciliationId" value="${glReconciliationId}"/>
-                 <set field="parameters.noConditionFind" value="Y"/>
+               <!--   <set field="parameters.noConditionFind" value="Y"/> -->
                  
                 <service service-name="getFinAccountTransListAndTotals" result-map="finAccountTransListAndTotals" auto-field-map="true"/>
                 <set field="finAccountTransList" type="List" from-field="finAccountTransListAndTotals.finAccountTransList"/>
