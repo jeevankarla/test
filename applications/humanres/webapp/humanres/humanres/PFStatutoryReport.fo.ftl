@@ -24,14 +24,14 @@
             			<#assign noOfLines=1>
             			<fo:table table-layout="fixed" width="50%" >
 							<fo:table-column column-width="30pt"/>
-							<fo:table-column column-width="85pt"/>
+							<fo:table-column column-width="115pt"/>
 							<fo:table-column column-width="50pt"/>
-							<fo:table-column column-width="140pt"/>
+							<fo:table-column column-width="160pt"/>
 							<fo:table-column column-width="70pt"/>
 							<fo:table-column column-width="70pt"/>
 							<fo:table-column column-width="70pt"/>
 							<fo:table-column column-width="60pt"/>
-							<fo:table-column column-width="70pt"/>
+							<fo:table-column column-width="30pt"/>
 							<fo:table-column column-width="70pt"/>
 							<fo:table-column column-width="70pt"/>
 							<fo:table-column column-width="70pt"/>
@@ -59,14 +59,14 @@
 						</fo:table>
 						<fo:table table-layout="fixed" width="50%" >
 							<fo:table-column column-width="30pt"/>
-							<fo:table-column column-width="85pt"/>
+							<fo:table-column column-width="115pt"/>
 							<fo:table-column column-width="50pt"/>
-							<fo:table-column column-width="140pt"/>
+							<fo:table-column column-width="160pt"/>
 							<fo:table-column column-width="70pt"/>
 							<fo:table-column column-width="70pt"/>
 							<fo:table-column column-width="70pt"/>
 							<fo:table-column column-width="60pt"/>
-							<fo:table-column column-width="70pt"/>
+							<fo:table-column column-width="30pt"/>
 							<fo:table-column column-width="70pt"/>
 							<fo:table-column column-width="70pt"/>
 							<fo:table-column column-width="70pt"/>
@@ -98,9 +98,9 @@
 									<#assign employerTotal=	employeeMapvalues.getValue().get("EmployersMap").get("employerEpf")?if_exists+employeeMapvalues.getValue().get("EmployersMap").get("employerFpf")?if_exists>
 								 	<fo:table-row font-size="10pt">	
 										<fo:table-cell border-style="solid"><fo:block keep-together="always" text-align="center"> ${noOfLines} </fo:block></fo:table-cell>
-										<fo:table-cell border-style="solid"><fo:block keep-together="always" text-align="center"> ${employeeMapvalues.getValue().get("EmployeesMap").get("pfNum")?if_exists} </fo:block></fo:table-cell>
+										<fo:table-cell border-style="solid"><fo:block text-align="center"> ${employeeMapvalues.getValue().get("EmployeesMap").get("pfNum")?if_exists} </fo:block></fo:table-cell>
 								        <fo:table-cell border-style="solid"><fo:block keep-together="always" text-align="center">${employeeMapvalues.getValue().get("EmployeesMap").get("partyId")?if_exists} </fo:block></fo:table-cell>
-								        <fo:table-cell border-style="solid"><fo:block keep-together="always" text-align="left">&#160;&#160;${employeeMapvalues.getValue().get("EmployeesMap").get("firstName")?if_exists} ${employeeMapvalues.getValue().get("EmployeesMap").get("lastName")?if_exists}&#160; </fo:block></fo:table-cell>
+								        <fo:table-cell border-style="solid"><fo:block text-align="left">&#160;&#160;${employeeMapvalues.getValue().get("EmployeesMap").get("firstName")?if_exists} ${employeeMapvalues.getValue().get("EmployeesMap").get("lastName")?if_exists}&#160; </fo:block></fo:table-cell>
 								        <fo:table-cell border-style="solid"><fo:block keep-together="always" text-align="right">${employeeMapvalues.getValue().get("EmployeesMap").get("wages")?string("0.##")?if_exists}</fo:block></fo:table-cell>
 										<#assign pageEmplwage=pageEmplwage+employeeMapvalues.getValue().get("EmployeesMap").get("wages")?if_exists>
 										<#assign totEmplwage=totEmplwage+employeeMapvalues.getValue().get("EmployeesMap").get("wages")?if_exists>
