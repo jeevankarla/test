@@ -74,7 +74,6 @@ loanCondition=EntityCondition.makeCondition(loanConList,EntityOperator.AND);
 loanTypeList=delegator.findList("LoanType",loanCondition,null,null,null,false);
 loanTypes = EntityUtil.getFieldListFromEntityList(loanTypeList, "payHeadTypeId", true);
 
-
 List stautsList = UtilMisc.toList("GENERATED","APPROVED");
 conditionList=[];
 conditionList.add(EntityCondition.makeCondition("billingTypeId", EntityOperator.EQUALS , "PAYROLL_BILL"));
@@ -114,6 +113,7 @@ Map emplInputMap = FastMap.newInstance();
 	
 Map unitIdMap=FastMap.newInstance();
 Map finalMap=FastMap.newInstance();
+Map grandTotalMap=FastMap.newInstance();
 employementList.each{ employement->
 	unitIdMap.put(employement.partyIdTo,employement.locationGeoId);
 }
@@ -127,6 +127,20 @@ if(UtilValidate.isNotEmpty(periodBillingList)){
 	payConList.add(EntityCondition.makeCondition("partyIdFrom", EntityOperator.IN ,employementIds));
 	payCond = EntityCondition.makeCondition(payConList,EntityOperator.AND);
 	payRollHeaderList = delegator.findList("PayrollHeader", payCond, null, null, null, false);
+	
+	
+	grTotalEarnings=0.0;
+	grTotalDeductions=0.0;
+	grNetAmt=0.0;
+	grRndNetAmt=0.0;
+	grLoanAmt=0.0;
+	
+	grandTotalMap["grTotalEarnings"]=grTotalEarnings;
+	grandTotalMap["grTotalDeductions"]=grTotalDeductions;
+	grandTotalMap["grNetAmt"]=grNetAmt;
+	grandTotalMap["grRndNetAmt"]=grRndNetAmt;
+	grandTotalMap["grLoanAmt"]=grLoanAmt;
+	
 	if(UtilValidate.isNotEmpty(payRollHeaderList)){
 		locationGeoIds.each{ locationGeoId->
 			totEarnings=0.0;
@@ -156,18 +170,27 @@ if(UtilValidate.isNotEmpty(periodBillingList)){
 							amount=payRollHeaderItem.get("amount");
 							if(benefitTypeIds.contains(payrollHeaderItemTypeId)){
 								totEarnings=totEarnings+amount;
+								grTotalEarnings=grTotalEarnings+amount;
 							}
 							if(dedTypeIds.contains(payrollHeaderItemTypeId)){
 								totDeductions=totDeductions+amount;
+								grTotalDeductions=grTotalDeductions+amount;
 							}
 							if(loanTypes.contains(payrollHeaderItemTypeId)){
 								loanAmount=loanAmount+amount;
+								grLoanAmt=grLoanAmt+amount;
 							}
 							//payroll Summary Map
 							if(UtilValidate.isEmpty(payRollSummaryMap.get(payrollHeaderItemTypeId))){
 								payRollSummaryMap[payrollHeaderItemTypeId]=amount;
 							}else{
 								payRollSummaryMap[payrollHeaderItemTypeId]+=amount;
+							}
+							//grand Totals
+							if(UtilValidate.isEmpty(grandTotalMap.get(payrollHeaderItemTypeId))){
+								grandTotalMap[payrollHeaderItemTypeId]=amount;
+							}else{
+								grandTotalMap[payrollHeaderItemTypeId]+=amount;
 							}
 						}
 						
@@ -180,8 +203,15 @@ if(UtilValidate.isNotEmpty(periodBillingList)){
 					payRollSummaryMap["loanAmount"]=loanAmount;
 				}
 			}
+			grNetAmt=grTotalEarnings+grTotalDeductions;
+			grandTotalMap["grTotalEarnings"]=grTotalEarnings;
+			grandTotalMap["grTotalDeductions"]=grTotalDeductions;
+			grandTotalMap["grNetAmt"]=grNetAmt;
+			grandTotalMap["grRndNetAmt"]=(grNetAmt).setScale(2,BigDecimal.ROUND_HALF_UP);
+			grandTotalMap["grLoanAmt"]=grLoanAmt;
 			finalMap.put(locationGeoId,payRollSummaryMap);
 		}
 	}
 }
 context.finalMap=finalMap;
+context.grandTotalMap=grandTotalMap;
