@@ -286,8 +286,8 @@ under the License.
         </field> -->
         <field name="fromTransactionDate" position="1"><date-time/></field>
         <field name="thruTransactionDate" position="2"><date-time/></field>
-        <field name="fromEntryDate" position="1"><date-time/></field>
-        <field name="thruEntryDate" position="2"><date-time/></field>
+       <!--  <field name="fromEntryDate" position="1"><date-time/></field>
+        <field name="thruEntryDate" position="2"><date-time/></field> -->
         <field name="searchButton" widget-style="smallSubmit"><submit button-type="button"/></field>
     </form>
     

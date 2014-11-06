@@ -894,6 +894,7 @@ under the License.
     <simple-method method-name="getFinAccountTransListAndTotals" short-description="Retrieve Financial Account Transaction List and Totals">
         <entity-condition entity-name="FinAccountTrans" list="finAccountTransactions">
             <condition-expr field-name="finAccountId" from-field="parameters.finAccountId"/>
+             <order-by field-name="transactionDate"/>
             <use-iterator/>
         </entity-condition>
         <set field="grandTotal" type="BigDecimal" value="0"/>
@@ -952,6 +953,7 @@ under the License.
                     <condition-expr field-name="entryDate" operator="greater-equals" from-field="parameters.fromEntryDate" ignore-if-empty="true"/>
                     <condition-expr field-name="entryDate" operator="less-equals" from-field="parameters.thruEntryDate" ignore-if-empty="true"/>
                 </condition-list>
+                <order-by field-name="transactionDate"/>
             </entity-condition>
         <else>
             <entity-condition entity-name="FinAccountTrans" list="finAccountTransList">
@@ -965,6 +967,7 @@ under the License.
                     <condition-expr field-name="entryDate" operator="greater-equals" from-field="parameters.fromEntryDate" ignore-if-empty="true"/>
                     <condition-expr field-name="entryDate" operator="less-equals" from-field="parameters.thruEntryDate" ignore-if-empty="true"/>
                 </condition-list>
+                <order-by field-name="transactionDate"/>
             </entity-condition>
         </else>
         </if-compare>

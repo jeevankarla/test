@@ -159,16 +159,18 @@ function toggleFinAccntTransId(master) {
           <th>${uiLabelMap.FormFieldTitle_finAccountTransId}</th>
           <th>${uiLabelMap.FormFieldTitle_finAccountTransTypeId}</th>
           <th>${uiLabelMap.PartyParty}</th>
+           <th>PaymentParty</th>
           <#--<th>${uiLabelMap.FinAccountReconciliationName}</th>-->
           <th>${uiLabelMap.FormFieldTitle_transactionDate}</th>
-          <th>${uiLabelMap.FormFieldTitle_entryDate}</th>
+          <th>InstrumentNo.</th>
+          <#--<th>${uiLabelMap.FormFieldTitle_entryDate}</th>-->
           <th>${uiLabelMap.CommonAmount}</th>
           <th>${uiLabelMap.FormFieldTitle_paymentId}</th>
           <th>${uiLabelMap.OrderPaymentType}</th>
           <th>${uiLabelMap.FormFieldTitle_paymentMethodTypeId}</th>
           <th>${uiLabelMap.CommonStatus}</th>
-          <th>${uiLabelMap.CommonComments}</th>
-          <#--
+         <#--  <th>${uiLabelMap.CommonComments}</th>
+          
           <#if grandTotal?exists>
             <th>${uiLabelMap.AccountingCancelTransactionStatus}</th>
           </#if>-->
@@ -200,6 +202,9 @@ function toggleFinAccntTransId(master) {
           <#assign paymentMethodType = "">
           <#assign glReconciliation = "">
           <#assign partyName = "">
+           <#assign paymentPartyName = "">
+           <#assign paymentPartyId = "">
+           <#assign paymentRefNum = "">
           <#assign companyCheck = ""/>
           <#if finAccountTrans.paymentId?has_content>
             <#assign payment = delegator.findOne("Payment", {"paymentId" : finAccountTrans.paymentId}, true)>
@@ -210,11 +215,22 @@ function toggleFinAccntTransId(master) {
           <#if finAccountTrans.statusId?has_content>
             <#assign status = delegator.findOne("StatusItem", {"statusId" : finAccountTrans.statusId}, true)>
           </#if>
-          <#if payment?has_content && payment.paymentTypeId?has_content>
+          <#if payment?has_content && payment.partyIdTo?has_content>
             <#assign paymentType = delegator.findOne("PaymentType", {"paymentTypeId" : payment.paymentTypeId}, true)>
           </#if>
+          <#if payment?has_content && finAccountTrans.finAccountTransTypeId?has_content>
+	            <#if finAccountTrans.finAccountTransTypeId=="WITHDRAWAL">
+		             <#assign paymentPartyName = Static["org.ofbiz.party.party.PartyHelper"].getPartyName(delegator, payment.partyIdTo, false)>
+		             <#assign paymentPartyId = payment.partyIdTo>
+	            <#elseif finAccountTrans.finAccountTransTypeId=="DEPOSIT">
+		             <#assign paymentPartyName = Static["org.ofbiz.party.party.PartyHelper"].getPartyName(delegator, payment.partyIdFrom, false)>
+		             <#assign paymentPartyId = payment.partyIdFrom>
+	             </#if>
+          </#if>
+           
           <#if payment?has_content && payment.paymentMethodTypeId?has_content>
             <#assign paymentMethodType = delegator.findOne("PaymentMethodType", {"paymentMethodTypeId" : payment.paymentMethodTypeId}, true)>
+            <#assign paymentRefNum = payment.paymentRefNum?if_exists>
           </#if>
           <#if finAccountTrans.glReconciliationId?has_content>
             <#assign glReconciliation = delegator.findOne("GlReconciliation", {"glReconciliationId" : finAccountTrans.glReconciliationId}, true)>
@@ -251,6 +267,8 @@ function toggleFinAccntTransId(master) {
                         <#assign fromPartyName = delegator.findOne("PartyNameView", {"partyId" : fromParty.partyId}, true) />
                         <#assign toParty = payment.getRelatedOne("ToParty")?if_exists />
                         <#assign toPartyName = delegator.findOne("PartyNameView", {"partyId" : toParty.partyId}, true) />
+                        <#assign toPartyDetail = toPartyName />
+                        
                         <#if paymentGroupMembers?has_content>
                           <#assign paymentGroupMember = Static["org.ofbiz.entity.util.EntityUtil"].getFirst(paymentGroupMembers) />
                         </#if>
@@ -286,11 +304,13 @@ function toggleFinAccntTransId(master) {
             </td>
             <td>${finAccountTransType.description?if_exists}</td>
             <td><#if partyName?has_content>${(partyName.firstName)!} ${(partyName.lastName)!} ${(partyName.groupName)!}<a href="/partymgr/control/viewprofile?partyId=${partyName.partyId}">[${(partyName.partyId)!}]</a></#if></td>
+            <td><#if paymentPartyName?has_content> ${paymentPartyName?if_exists}<a href="/partymgr/control/viewprofile?partyId=${paymentPartyId?if_exists}">[${paymentPartyId?if_exists}]</a></#if></td>
             <#--
             <td><#if glReconciliation?has_content>${glReconciliation.glReconciliationName?if_exists}<a href="ViewGlReconciliationWithTransaction?glReconciliationId=${glReconciliation.glReconciliationId?if_exists}&amp;finAccountId=${parameters.finAccountId?if_exists}">[${glReconciliation.glReconciliationId?if_exists}]</a></#if></td>
             -->
             <td>${finAccountTrans.transactionDate?if_exists}</td>
-            <td>${finAccountTrans.entryDate?if_exists}</td>
+             <td>${paymentRefNum?if_exists}</td>
+             <#--<td>${finAccountTrans.entryDate?if_exists}</td>-->
             <td>${finAccountTrans.amount?if_exists}</td>
             <td>
               <#if finAccountTrans.paymentId?has_content>
@@ -303,7 +323,7 @@ function toggleFinAccntTransId(master) {
 	            </#if>
 	        </td>
             <td><#if status?has_content>${status.description?if_exists}</#if></td>
-            <td>${finAccountTrans.comments?if_exists}</td>
+             <#--<td>${finAccountTrans.comments?if_exists}</td> -->
             <input name="finAccountTransId_o_${finAccountTrans_index}" type="hidden" value="${finAccountTrans.finAccountTransId}"/>
             <input name="organizationPartyId_o_${finAccountTrans_index}" type="hidden" value="${defaultOrganizationPartyId}"/>
             <#if glReconciliationId?has_content && glReconciliationId != "_NA_">

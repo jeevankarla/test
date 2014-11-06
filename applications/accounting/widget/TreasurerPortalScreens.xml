@@ -564,7 +564,7 @@
                         </section>
                         <decorator-screen name="FindScreenDecorator" location="component://common/widget/CommonScreens.xml">
                              <decorator-section name="search-options">
-                              <!--   <include-form name="FinAccountTransForReconsile" location="component://accounting/widget/TreasurerPortalForms.xml"/> -->
+                                 <include-form name="FinAccountTransForReconsile" location="component://accounting/widget/TreasurerPortalForms.xml"/> 
                             </decorator-section>  
                             <decorator-section name="search-results">
                                 <platform-specific>
