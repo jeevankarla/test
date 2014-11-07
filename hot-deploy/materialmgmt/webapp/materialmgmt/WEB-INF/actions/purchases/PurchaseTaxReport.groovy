@@ -124,6 +124,7 @@ tax14pt5TotalMap["vatAmount"]=BigDecimal.ZERO;
 					innerTaxItemMap["vchrType"]="Purchase";
 					innerTaxItemMap["crOrDbId"]="D";
 					invTotalVal=org.ofbiz.accounting.invoice.InvoiceWorker.getInvoiceTotal(delegator,invoiceItem.invoiceId);
+					invTotalVal=invTotalVal-vatRevenue;
 					innerTaxItemMap["invTotalVal"]=invTotalVal;
 					innerTaxItemMap["vatAmount"]=vatRevenue;
 					tax5pt5TotalMap["invTotalVal"]+=invTotalVal;
@@ -138,6 +139,10 @@ tax14pt5TotalMap["vatAmount"]=BigDecimal.ZERO;
 					}else if(UtilValidate.isNotEmpty(invDetailMap)){
 					invDetailMap["vatAmount"]+=vatRevenue;
 					tax5pt5TotalMap["vatAmount"]+=vatRevenue;
+					
+					invDetailMap["invTotalVal"]-=vatRevenue;
+					tax5pt5TotalMap["invTotalVal"]-=vatRevenue;
+					
 					taxDetails5pt5Map[invoiceItem.invoiceId]=invDetailMap;
 					}
 				}
@@ -157,6 +162,7 @@ tax14pt5TotalMap["vatAmount"]=BigDecimal.ZERO;
 						innerTaxItemMap["vchrType"]="Purchase";
 						innerTaxItemMap["crOrDbId"]="D";
 						invTotalVal=org.ofbiz.accounting.invoice.InvoiceWorker.getInvoiceTotal(delegator,invoiceItem.invoiceId);
+						invTotalVal=invTotalVal-vatRevenue;
 						innerTaxItemMap["invTotalVal"]=invTotalVal;
 						innerTaxItemMap["vatAmount"]=vatRevenue;
 						
@@ -168,7 +174,11 @@ tax14pt5TotalMap["vatAmount"]=BigDecimal.ZERO;
 						//Debug.log("=invoiceId==FOR FOURTEEnnn=="+invoiceItem.invoiceId+"==ANdAmouunt=="+invoiceItem.vatAmount+"==percent="+invoiceItem.vatPercent+"=Total="+invTotalVal);
 						}else if(UtilValidate.isNotEmpty(invDetailMap)){
 						invDetailMap["vatAmount"]+=vatRevenue;
-						tax5pt5TotalMap["vatAmount"]+=vatRevenue;
+						tax14pt5TotalMap["vatAmount"]+=vatRevenue;
+						
+						invDetailMap["invTotalVal"]-=vatRevenue;
+						tax14pt5TotalMap["invTotalVal"]-=vatRevenue;
+						
 						taxDetails14pt5Map[invoiceItem.invoiceId]=invDetailMap;
 						}
 					}
