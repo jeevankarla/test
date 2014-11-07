@@ -2017,6 +2017,10 @@ under the License.
         <security https="true" auth="true"/>
         <response name="success" type="view" value="FinAccountTransForReconsile"/>
     </request-map>
+    <request-map uri="FinAccountTransForReconsile.csv">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="FinAccountTransForReconsileCSV"/>
+    </request-map>
     
      <request-map uri="FinancialAccountingTransBANK">
         <security https="true" auth="true"/>
@@ -3630,6 +3634,10 @@ under the License.
     <view-map name="CreateNewContra" type="screen" page="component://accounting/widget/TreasurerPortalScreens.xml#CreateNewContra"/>
     <view-map name="FindBankDepositOrWithdraw" type="screen" page="component://accounting/widget/TreasurerPortalScreens.xml#PaymentsDepositWithdraw"/>
     <view-map name="FinAccountTransForReconsile" type="screen" page="component://accounting/widget/TreasurerPortalScreens.xml#FinAccountTransForReconsile"/>
+    
+    <view-map name="FinAccountTransForReconsileNEWWW" type="screen" page="component://accounting/widget/TreasurerPortalScreens.xml#FinAccountTransForReconsileNNNN"/>
+    <view-map name="FinAccountTransForReconsileCSV" type="screencsv" page="component://accounting/widget/TreasurerPortalScreens.xml#FinAccountTransForReconsileCSV" content-type="text/csv" encoding="none"/>
+     
     <view-map name="FindFinAccountReconciliationsNew" type="screen" page="component://accounting/widget/TreasurerPortalScreens.xml#FindFinAccountReconciliationsNew"/>
     <!-- TO BE REMOVED
     <view-map name="ListFinAccount" type="screen" page="component://accounting/widget/FinAccountScreens.xml#ListFinAccount"/>
