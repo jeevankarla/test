@@ -26,6 +26,8 @@ import java.text.SimpleDateFormat;
 import java.math.BigDecimal;
 import java.sql.Timestamp;
 import org.ofbiz.base.util.UtilMisc;
+import java.text.ParseException;
+
 
 userLogin= context.userLogin;
 
@@ -97,7 +99,29 @@ if(UtilValidate.isNotEmpty(parameters.findPaymentMethodType)){
 	context.paymentMethodTypeList=paymentMethodTypeList;
 }
 
-//Debug.log("===nonBankAccountsList==="+nonBankAccountsList);
+
+SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+if(UtilValidate.isNotEmpty(parameters.fromTransDate)){
+	Timestamp daystart;
+try {
+	daystart = UtilDateTime.toTimestamp(dateFormat.parse(parameters.fromTransDate));
+} catch (ParseException e) {
+	Debug.logError(e, "Cannot parse date string: " + parameters.fromTransDate, ""); 
+} 
+	parameters.fromTransactionDate=UtilDateTime.getDayStart(daystart);
+	parameters.fromTransDate=null;
+}
+if(UtilValidate.isNotEmpty(parameters.thruTransDate)){
+	Timestamp dayend;
+	try {
+		dayend = UtilDateTime.toTimestamp(dateFormat.parse(parameters.thruTransDate));
+	} catch (ParseException e) {
+		Debug.logError(e, "Cannot parse date string: " + parameters.thruTransDate, "");
+	   
+	}
+	parameters.thruTransactionDate=UtilDateTime.getDayEnd(dayend);
+	parameters.thruTransDate=null;
+}
 
 
 
