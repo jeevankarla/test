@@ -250,6 +250,7 @@ under the License.
         <field name="thruEntryDate" position="2"><date-time/></field>
         <field name="searchButton" widget-style="smallSubmit"><submit button-type="button"/></field>
     </form>
+    
      <form name="FinAccountTransForReconsile" type="single" target="FinAccountTransForReconsile">
         <actions>
             <entity-and entity-name="GlReconciliation" list="glReconciliations">
@@ -260,6 +261,7 @@ under the License.
         
         <field name="glReconciliationId"><hidden value="${glReconciliationId}"></hidden></field>
         <field name="noConditionFind"><hidden value="Y"/><!-- if this isn't there then with all fields empty no query will be done --></field>
+        
         <field name="finAccountId"><hidden value="${finAccountId}"/></field>
         <field name="statusId"><hidden value="FINACT_TRNS_CREATED"/></field>
         <field name="finAccountTransTypeId">
@@ -284,8 +286,8 @@ under the License.
                     description="${glReconciliationName}[[${glReconciliationId}] [${reconciledDate}] [${reconciledBalance}]]"/>
             </drop-down>
         </field> -->
-        <field name="fromTransactionDate" position="1"><date-time/></field>
-        <field name="thruTransactionDate" position="2"><date-time/></field>
+        <field name="fromTransDate"  position="1"><date-time  type="timestamp" /></field>
+        <field name="thruTransDate" position="2"><date-time type="timestamp" /></field>
        <!--  <field name="fromEntryDate" position="1"><date-time/></field>
         <field name="thruEntryDate" position="2"><date-time/></field> -->
         <field name="searchButton" widget-style="smallSubmit"><submit button-type="button"/></field>

@@ -169,8 +169,8 @@ function toggleFinAccntTransId(master) {
           <th>${uiLabelMap.OrderPaymentType}</th>
           <th>${uiLabelMap.FormFieldTitle_paymentMethodTypeId}</th>
           <th>${uiLabelMap.CommonStatus}</th>
-         <#--  <th>${uiLabelMap.CommonComments}</th>
-          
+          <th>${uiLabelMap.CommonComments}</th>
+          <#-- 
           <#if grandTotal?exists>
             <th>${uiLabelMap.AccountingCancelTransactionStatus}</th>
           </#if>-->
@@ -226,6 +226,18 @@ function toggleFinAccntTransId(master) {
 		             <#assign paymentPartyName = Static["org.ofbiz.party.party.PartyHelper"].getPartyName(delegator, payment.partyIdFrom, false)>
 		             <#assign paymentPartyId = payment.partyIdFrom>
 	             </#if>
+	       <#elseif finAccountTrans.reasonEnumId?has_content && finAccountTrans.reasonEnumId=="FATR_CONTRA" >    
+	         <#assign contraFinTransEntry = delegator.findOne("FinAccountTransAttribute", {"finAccountTransId" : finAccountTrans.finAccountTransId,"attrName" : "FATR_CONTRA"}, true)>
+	           
+	           <#if contraFinTransEntry?has_content >
+	                  <#assign contraFinAccountTrans = delegator.findOne("FinAccountTrans", {"finAccountTransId" : contraFinTransEntry.finAccountTransId}, false)>
+	                  <#if contraFinAccountTrans?has_content && contraFinAccountTrans.finAccountId?has_content>
+	                   <#assign contraFinAccount= delegator.findOne("FinAccount", {"finAccountId" :contraFinAccountTrans.finAccountId}, false)>
+	                     <#assign paymentPartyName = Static["org.ofbiz.party.party.PartyHelper"].getPartyName(delegator, contraFinAccount.ownerPartyId, false)>
+			             <#assign paymentPartyId = contraFinAccount.ownerPartyId>
+	                  </#if>
+                </#if>
+              <#assign paymentRefNum = finAccountTrans.contraRefNum?if_exists>    
           </#if>
            
           <#if payment?has_content && payment.paymentMethodTypeId?has_content>
@@ -323,7 +335,7 @@ function toggleFinAccntTransId(master) {
 	            </#if>
 	        </td>
             <td><#if status?has_content>${status.description?if_exists}</#if></td>
-             <#--<td>${finAccountTrans.comments?if_exists}</td> -->
+             <td>${finAccountTrans.comments?if_exists}</td>
             <input name="finAccountTransId_o_${finAccountTrans_index}" type="hidden" value="${finAccountTrans.finAccountTransId}"/>
             <input name="organizationPartyId_o_${finAccountTrans_index}" type="hidden" value="${defaultOrganizationPartyId}"/>
             <#if glReconciliationId?has_content && glReconciliationId != "_NA_">
