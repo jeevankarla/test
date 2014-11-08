@@ -247,8 +247,14 @@ if(UtilValidate.isNotEmpty(reportTypeFlag) && reportTypeFlag == "depositCheque")
 	paymentDescription = "";
 	printPaymentsList = FastList.newInstance();
 	if(parameters.paymentIds){
-		
 		paymentIds.addAll(parameters.paymentIds);
+		paymentApplication = delegator.findList("PaymentApplication",EntityCondition.makeCondition("toPaymentId", EntityOperator.IN , paymentIds)  , null, null, null, false );
+		if(UtilValidate.isNotEmpty(paymentApplication)){
+			paymentApplication.each{ payApplication ->
+				paymentIdApp = payApplication.get("paymentId");
+				paymentIds.addAll(paymentIdApp);
+			}
+		}
 		tempprintPaymentsList = delegator.findList("Payment",EntityCondition.makeCondition("paymentId", EntityOperator.IN , paymentIds)  , null, null, null, false );
 		tempprintPaymentsList.each{paymentRecipt->
 			tempprintPaymentMap=[:];
