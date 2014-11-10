@@ -88,7 +88,7 @@ if(UtilValidate.isNotEmpty(lastClosePeriod)){
 										shiftFinalMap.put(partyId,shift2finalMap);
 									}
 								}
-								if((employee.get("shiftTypeId")).equals("SHIFT_03")){
+								if((employee.get("shiftTypeId")).equals("SHIFT_NIGHT")){
 									shiftMap=[:];
 									shiftTypeId=employee.get("shiftTypeId");
 									sh3noOfDays=employee.get("availedCanteenDays");
