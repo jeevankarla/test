@@ -170,7 +170,11 @@ under the License.
         <entity-one entity-name="Party" value-field="party"/>
         <if-not-empty field="party.preferredCurrencyUomId">
             <set field="parameters.currencyUomId" from-field="party.preferredCurrencyUomId"/>
+	        <else>
+	            <property-to-field resource="general" property="currency.uom.id.default" field="parameters.currencyUomId"/>
+	        </else>
         </if-not-empty>
+        
         <if-not-empty field="parameters.roleTypeId">
         	 <entity-one value-field="invoiceType" entity-name="InvoiceType">
         	 	<field-map field-name="invoiceTypeId" from-field="parameters.invoiceTypeId"/>
