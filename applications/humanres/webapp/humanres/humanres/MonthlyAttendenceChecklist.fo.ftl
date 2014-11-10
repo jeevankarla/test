@@ -234,7 +234,7 @@ under the License.
                     <#assign shift_gen=employee.SHIFT_GEN>
                     <fo:table-cell><fo:block text-align="right" keep-together="always"><#if shift_gen !=0>${shift_gen?if_exists?string("##0.0")}</#if></fo:block></fo:table-cell>
                     <#assign lateHours=0>
-                    <#assign lateHours=((employee.lateMin)*480)>
+                    <#assign lateHours=(employee.lateMin)*480>
                     <fo:table-cell><fo:block text-align="right" keep-together="always"><#if lateHours !=0>${lateHours?if_exists?string("##0.0000")}</#if></fo:block></fo:table-cell>
                     <#assign extraHours=0>
                     <#assign extraHours=(employee.extraMin)*480>
