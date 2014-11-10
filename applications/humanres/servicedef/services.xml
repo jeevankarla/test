@@ -1568,7 +1568,43 @@ under the License.emplpunch
        <attribute name="leaveBalanceDate" mode="OUT" type="java.sql.Date"/>
        <attribute name="leaveBalanceDateStr" mode="OUT" type="String"/>
    </service>
-   
+   <service name="getLeaveTypeValidRules" engine="java" auth="true" invoke="getLeaveTypeValidRules" 
+        location="in.vasista.vbiz.humanres.EmplLeaveService">
+        <description>Rules Validation Check</description>
+       <attribute name="partyId" mode="IN" type="String" optional="false"/>
+       <attribute name="leaveTypeId" mode="IN" type="String" optional="false"/>
+       <attribute name="fromDate" mode="IN" type="Timestamp" optional="false"/>
+       <attribute name="thruDate" mode="IN" type="Timestamp" optional="false"/>
+       <attribute name="dayFractionId" mode="IN" type="String" optional="true"/>
+   </service>
+   <service name="getHalfPayLeaveRules" engine="java" auth="true" invoke="getHalfPayLeaveRules" 
+        location="in.vasista.vbiz.humanres.EmplLeaveService">
+        <description>Rules Validation Check</description>
+       <attribute name="leaveTypeId" mode="IN" type="String" optional="false"/>
+       <attribute name="maxFullDayHours" mode="IN" type="Integer" optional="false"/>
+       <attribute name="maxHalfDayHours" mode="IN" type="Integer" optional="false"/>
+   </service>
+   <service name="getEarnedLeaveRules" engine="java" auth="true" invoke="getEarnedLeaveRules" 
+        location="in.vasista.vbiz.humanres.EmplLeaveService">
+        <description>Rules Validation Check</description>
+       <attribute name="leaveTypeId" mode="IN" type="String" optional="false"/>
+       <attribute name="maxFullDayHours" mode="IN" type="Integer" optional="false"/>
+       <attribute name="maxHalfDayHours" mode="IN" type="Integer" optional="false"/>
+   </service>
+   <service name="getCasualLeaveRules" engine="java" auth="true" invoke="getCasualLeaveRules" 
+        location="in.vasista.vbiz.humanres.EmplLeaveService">
+        <description>Rules Validation Check</description>
+       <attribute name="leaveTypeId" mode="IN" type="String" optional="false"/>
+       <attribute name="maxFullDayHours" mode="IN" type="Integer" optional="false"/>
+       <attribute name="maxHalfDayHours" mode="IN" type="Integer" optional="false"/>
+   </service>
+   <service name="getPaternityLeaveRules" engine="java" auth="true" invoke="getPaternityLeaveRules" 
+        location="in.vasista.vbiz.humanres.EmplLeaveService">
+        <description>Rules Validation Check</description>
+       <attribute name="leaveTypeId" mode="IN" type="String" optional="false"/>
+       <attribute name="maxFullDayHours" mode="IN" type="Integer" optional="false"/>
+       <attribute name="maxHalfDayHours" mode="IN" type="Integer" optional="false"/>
+   </service>
    <service name="getGeneralHoliDayOrSSWorkedDays" engine="java" auth="true" invoke="getGeneralHoliDayOrSSWorkedDays" 
         location="in.vasista.vbiz.humanres.HumanresService">
         <description>populateEmplPunch from </description>

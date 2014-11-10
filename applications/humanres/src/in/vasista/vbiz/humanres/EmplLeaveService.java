@@ -568,5 +568,183 @@ public class EmplLeaveService {
 			return ServiceUtil.returnError(e.getMessage());
 		}       
         return ServiceUtil.returnSuccess();
-    }	
+    }
+    public static Map<String, Object> getLeaveTypeValidRules(DispatchContext dctx, Map context) {
+    	Map<String, Object> result = ServiceUtil.returnSuccess();
+    	String leaveTypeId = (String) context.get("leaveTypeId");
+    	String dayFractionId = (String) context.get("dayFractionId");
+    	Timestamp fromDate = (Timestamp) context.get("fromDate");
+    	Timestamp thruDate = (Timestamp) context.get("thruDate");
+		GenericValue EmplLeaveTypeDetails = null;
+    	GenericDelegator delegator = (GenericDelegator) dctx.getDelegator();
+		LocalDispatcher dispatcher = dctx.getDispatcher();
+		GenericValue userLogin = (GenericValue) context.get("userLogin");
+		Locale locale = new Locale("en","IN");
+		TimeZone timeZone = TimeZone.getDefault();
+    	Timestamp fromDateStart = UtilDateTime.getDayStart(fromDate);
+    	Timestamp thruDateEnd = UtilDateTime.getDayEnd(thruDate);
+    	int intervalDays = (UtilDateTime.getIntervalInDays(fromDateStart, thruDateEnd)+1);
+    	int maxFullDayHours = (intervalDays*24);
+    	int maxHalfDayHours = 0;
+    	if(UtilValidate.isNotEmpty(dayFractionId)){
+    		maxHalfDayHours = (intervalDays*12);
+    	}
+    	Map<String, Object> serviceResult = ServiceUtil.returnSuccess();
+		try {
+			EmplLeaveTypeDetails = delegator.findOne("EmplLeaveType",UtilMisc.toMap("leaveTypeId", leaveTypeId), false);
+			if(UtilValidate.isNotEmpty(EmplLeaveTypeDetails)){
+				//Half Pay Leave Rule
+				if(UtilValidate.isNotEmpty(leaveTypeId) && leaveTypeId.equals("HPL")){
+					Map halfPayLeaveRuleMap = FastMap.newInstance();
+					halfPayLeaveRuleMap.put("userLogin",userLogin);
+					halfPayLeaveRuleMap.put("leaveTypeId",leaveTypeId);
+					halfPayLeaveRuleMap.put("maxFullDayHours",maxFullDayHours);
+					halfPayLeaveRuleMap.put("maxHalfDayHours",maxHalfDayHours);
+					try{
+						serviceResult = dispatcher.runSync("getHalfPayLeaveRules", halfPayLeaveRuleMap);
+			            if (ServiceUtil.isError(serviceResult)) {
+			            	Debug.logError(ServiceUtil.getErrorMessage(serviceResult), module);
+			            	return ServiceUtil.returnSuccess();
+			            } 
+					}catch(Exception e){
+						Debug.logError("Error while getting Half Pay Leave Type Rules"+e.getMessage(), module);
+					}
+				}
+				//Earned Leave Rules
+				if(UtilValidate.isNotEmpty(leaveTypeId) && leaveTypeId.equals("EL")){
+					Map earnedLeaveRuleMap = FastMap.newInstance();
+					earnedLeaveRuleMap.put("userLogin",userLogin);
+					earnedLeaveRuleMap.put("leaveTypeId",leaveTypeId);
+					earnedLeaveRuleMap.put("maxFullDayHours",maxFullDayHours);
+					earnedLeaveRuleMap.put("maxHalfDayHours",maxHalfDayHours);
+		            try{
+						serviceResult = dispatcher.runSync("getEarnedLeaveRules", earnedLeaveRuleMap);
+			            if (ServiceUtil.isError(serviceResult)) {
+			            	Debug.logError(ServiceUtil.getErrorMessage(serviceResult), module);
+			            	return ServiceUtil.returnSuccess();
+			            } 
+					}catch(Exception e){
+						Debug.logError("Error while getting Earned Leave Type Rules"+e.getMessage(), module);
+					}
+				}
+				//Casual Leave Rules
+				if(UtilValidate.isNotEmpty(leaveTypeId) && leaveTypeId.equals("CL")){
+					Map casualLeaveRuleMap = FastMap.newInstance();
+					casualLeaveRuleMap.put("userLogin",userLogin);
+					casualLeaveRuleMap.put("leaveTypeId",leaveTypeId);
+					casualLeaveRuleMap.put("maxFullDayHours",maxFullDayHours);
+					casualLeaveRuleMap.put("maxHalfDayHours",maxHalfDayHours);
+		            try{
+						serviceResult = dispatcher.runSync("getCasualLeaveRules", casualLeaveRuleMap);
+			            if (ServiceUtil.isError(serviceResult)) {
+			            	Debug.logError(ServiceUtil.getErrorMessage(serviceResult), module);
+			            	return ServiceUtil.returnSuccess();
+			            } 
+					}catch(Exception e){
+						Debug.logError("Error while getting Casual Leave Type Rules"+e.getMessage(), module);
+					}
+				}
+				//Paternity Leave Rules
+				if(UtilValidate.isNotEmpty(leaveTypeId) && leaveTypeId.equals("PL")){
+					Map paternityLeaveRuleMap = FastMap.newInstance();
+					paternityLeaveRuleMap.put("userLogin",userLogin);
+					paternityLeaveRuleMap.put("leaveTypeId",leaveTypeId);
+					paternityLeaveRuleMap.put("maxFullDayHours",maxFullDayHours);
+					paternityLeaveRuleMap.put("maxHalfDayHours",maxHalfDayHours);
+		            try{
+						serviceResult = dispatcher.runSync("getPaternityLeaveRules", paternityLeaveRuleMap);
+			            if (ServiceUtil.isError(serviceResult)) {
+			            	Debug.logError(ServiceUtil.getErrorMessage(serviceResult), module);
+			            	return ServiceUtil.returnSuccess();
+			            } 
+					}catch(Exception e){
+						Debug.logError("Error while getting Paternity Leave Type Rules"+e.getMessage(), module);
+					}
+				}
+			}
+		}catch(GenericEntityException e){
+			Debug.logError("Error while getting Leave Type Details"+e.getMessage(), module);
+		}
+        return result;
+    }
+    // Half Pay Leave Rules
+    public static Map<String, Object> getHalfPayLeaveRules(DispatchContext dctx, Map context) {
+    	Map<String, Object> result = ServiceUtil.returnSuccess();
+    	String leaveTypeId = (String) context.get("leaveTypeId");
+        int maxFullDayHours = (Integer) context.get("maxFullDayHours");
+        int maxHalfDayHours = (Integer) context.get("maxHalfDayHours");
+    	GenericDelegator delegator = (GenericDelegator) dctx.getDelegator();
+		LocalDispatcher dispatcher = dctx.getDispatcher();
+		GenericValue userLogin = (GenericValue) context.get("userLogin");
+		try {
+			if(UtilValidate.isNotEmpty(leaveTypeId)){
+				if(maxFullDayHours>72 || (maxHalfDayHours!=0 && maxHalfDayHours>72)){
+					return ServiceUtil.returnError("You cannot apply leave more than 3 full days or 6 half days for leave type : Half Pay Leave"); 
+				}
+			}
+		}catch(Exception e){
+			Debug.logError("Error while getting valid rules for leave type"+e.getMessage(), module);
+		}
+		return result;
+    }
+    // Earned Leave Rules
+    public static Map<String, Object> getEarnedLeaveRules(DispatchContext dctx, Map context) {
+    	Map<String, Object> result = ServiceUtil.returnSuccess();
+    	String leaveTypeId = (String) context.get("leaveTypeId");
+        int maxFullDayHours = (Integer) context.get("maxFullDayHours");
+        int maxHalfDayHours = (Integer) context.get("maxHalfDayHours");
+    	GenericDelegator delegator = (GenericDelegator) dctx.getDelegator();
+		LocalDispatcher dispatcher = dctx.getDispatcher();
+		GenericValue userLogin = (GenericValue) context.get("userLogin");
+		try {
+			if(UtilValidate.isNotEmpty(leaveTypeId)){
+				if(maxFullDayHours<120 || (maxHalfDayHours!=0 && maxHalfDayHours<120)){
+					return ServiceUtil.returnError("You have to apply minimum 5 days for leave type : Earned Leave"); 
+				}
+			}
+		}catch(Exception e){
+			Debug.logError("Error while getting valid rules for leave type"+e.getMessage(), module);
+		}
+		return result;
+    }
+    //Casual Leave Rules
+    public static Map<String, Object> getCasualLeaveRules(DispatchContext dctx, Map context) {
+    	Map<String, Object> result = ServiceUtil.returnSuccess();
+    	String leaveTypeId = (String) context.get("leaveTypeId");
+        int maxFullDayHours = (Integer) context.get("maxFullDayHours");
+        int maxHalfDayHours = (Integer) context.get("maxHalfDayHours");
+    	GenericDelegator delegator = (GenericDelegator) dctx.getDelegator();
+		LocalDispatcher dispatcher = dctx.getDispatcher();
+		GenericValue userLogin = (GenericValue) context.get("userLogin");
+		try {
+			if(UtilValidate.isNotEmpty(leaveTypeId)){
+				if(maxFullDayHours>240 || (maxHalfDayHours!=0 && maxHalfDayHours>240)){
+					return ServiceUtil.returnError("You cannot apply leave more than 10 full days or 20 half days for leave type : Casual Leave");
+				}
+			}
+		}catch(Exception e){
+			Debug.logError("Error while getting valid rules for leave type"+e.getMessage(), module);
+		}
+		return result;
+    }
+    //Paternity Leave Rules
+    public static Map<String, Object> getPaternityLeaveRules(DispatchContext dctx, Map context) {
+    	Map<String, Object> result = ServiceUtil.returnSuccess();
+    	String leaveTypeId = (String) context.get("leaveTypeId");
+        int maxFullDayHours = (Integer) context.get("maxFullDayHours");
+        int maxHalfDayHours = (Integer) context.get("maxHalfDayHours");
+    	GenericDelegator delegator = (GenericDelegator) dctx.getDelegator();
+		LocalDispatcher dispatcher = dctx.getDispatcher();
+		GenericValue userLogin = (GenericValue) context.get("userLogin");
+		try {
+			if(UtilValidate.isNotEmpty(leaveTypeId)){
+				if(maxFullDayHours>360 || (maxHalfDayHours!=0 && maxHalfDayHours>360)){
+					return ServiceUtil.returnError("You cannot apply leave more than 15 full days or 30 half days for leave type : Paternity Leave");
+				}
+			}
+		}catch(Exception e){
+			Debug.logError("Error while getting valid rules for leave type"+e.getMessage(), module);
+		}
+		return result;
+    }
 }
