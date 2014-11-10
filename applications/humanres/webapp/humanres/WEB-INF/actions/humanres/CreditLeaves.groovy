@@ -38,7 +38,10 @@ if(parameters.partyIdTo && parameters.customTimePeriodId){
 			leaveMap[leaveType]=0;
 			emplLeaveBalanceList.each{ emplLeave ->
 				if(emplLeave.leaveTypeId==leaveType){
-				BigDecimal	noOfDays=(BigDecimal)emplLeave.adjustedDays;
+					BigDecimal	noOfDays=BigDecimal.ZERO;
+					if(UtilValidate.isNotEmpty(emplLeave.adjustedDays)){
+						noOfDays=(BigDecimal)emplLeave.adjustedDays;
+					}
 					leaveMap.put(leaveType, noOfDays);
 					BigDecimal openingBalance=(BigDecimal)emplLeave.openingBalance;
 					leaveMap.put(leaveType+"_openingBalance", openingBalance);

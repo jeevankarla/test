@@ -5770,7 +5770,11 @@ public static Map<String, Object> generateEmployerContributionPayrollBilling(Dis
 			      	  	adjustedDays=(BigDecimal)leadaysMap.get(leaveTypeIds.get(i));
 			      	  	adjustedDays=(adjustedDays).setScale(1,BigDecimal.ROUND_HALF_UP);
 			      	  	if(UtilValidate.isNotEmpty(adjustedDays) && (!adjustedDays.equals(openingBalance))){
-			      	  		openingBalance=openingBalance.subtract(emplLeaves.getBigDecimal("adjustedDays"));
+			      	  		BigDecimal adjDays=BigDecimal.ZERO;
+			      	  		if(UtilValidate.isNotEmpty(emplLeaves.getBigDecimal("adjustedDays"))){
+			      	  			adjDays=emplLeaves.getBigDecimal("adjustedDays");
+			      	  		}
+			      	  		openingBalance=openingBalance.subtract(adjDays);
 			      	  		openingBalance=openingBalance.add(adjustedDays);
 				      	  	emplLeaves.set("openingBalance", openingBalance);
 					      	emplLeaves.set("adjustedDays", adjustedDays);
