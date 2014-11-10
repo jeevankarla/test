@@ -1659,6 +1659,18 @@ under the License.
     <request-map uri="CreditLeaves">
        <security https="true" auth="true"/>
         <response name="success" type="view" value="CreditLeaves"/>
+        <response name="error" type="view" value="CreditLeaves"/>
+    </request-map>
+    <request-map uri="findLeaveBalances">
+       <security https="true" auth="true"/>
+        <response name="success" type="view" value="CreditLeaves"/>
+        <response name="error" type="view" value="CreditLeaves"/>
+    </request-map>
+    <request-map uri="UpdateCreditLeaves">
+    	<security https="true" auth="true"/>
+    	<event type="service" invoke="UpdateCreditLeaves"/>
+    	<response name="success" type="view" value="CreditLeaves"/>
+    	<response name="error" type="view" value="CreditLeaves"/>
     </request-map>
     <request-map uri="DailyPunchEditTable">
        <security https="true" auth="true"/>

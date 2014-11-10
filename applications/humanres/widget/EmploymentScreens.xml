@@ -549,7 +549,7 @@
             </widgets>
         </section>
     </screen>
-    <!-- <screen name="CreditLeaves">
+    <screen name="CreditLeaves">
         <section>
             <actions>
                 <set field="titleProperty" value="Credit Leaves"/>
@@ -563,12 +563,25 @@
                     	<include-menu location="component://humanres/widget/HumanresMenus.xml" name="AttendanceTabBar"/> 
                    		<screenlet name="search-options" title="search-options">      
                            <include-form name="creditLeaves" location="component://humanres/widget/forms/EmploymentForms.xml"/>
-                        </screenlet>	
+                        </screenlet>
+                        <include-screen name="listLeaves" location="component://humanres/widget/EmploymentScreens.xml"/>	
                     </decorator-section>
                 </decorator-screen>
             </widgets>
         </section>
-    </screen> -->
+    </screen>
+    <screen name="listLeaves">
+      <section>
+			<actions>
+				<script location="component://humanres/webapp/humanres/WEB-INF/actions/humanres/CreditLeaves.groovy"/>
+			</actions>
+			<widgets>
+				<screenlet  title="Search-Results">
+                      	<include-form name="ListLeaves" location="component://humanres/widget/forms/EmploymentForms.xml" />
+				</screenlet>
+			</widgets>
+		</section>
+    </screen>
      <screen name="EditshiftDays">
         <section>
             <actions>

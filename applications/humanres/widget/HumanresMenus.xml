@@ -205,7 +205,10 @@
         </menu-item> 
         <menu-item name="EditShiftDays" title="Edit ShiftDays">
 			<link target="EditShiftDays"></link>        
-        </menu-item>                        
+        </menu-item> 
+        <menu-item name="creditLeaves" title="Credit Leaves">
+			<link target="CreditLeaves"></link>        
+        </menu-item>                         
     </menu>	 	
 	<menu name="AnalyticsTabBar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml" 
 		selected-menuitem-context-field-name="tabButtonItem2">

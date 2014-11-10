@@ -771,7 +771,7 @@
         </field>       
 	        <field name="searchButton" title="${uiLabelMap.CommonFind}" widget-style="smallSubmit"><submit button-type="button"/></field>
     </form>
-    <!-- <form name="creditLeaves" type="single" target="findLeaveBalances" >
+    <form name="creditLeaves" type="single" target="findLeaveBalances" >
 	    <actions>
 	       <set field="nowTimeStamp" value="${groovy: return org.ofbiz.base.util.UtilDateTime.nowTimestamp()}"/>
 		   <entity-condition entity-name="CustomTimePeriod" list="customTimeList" >
@@ -795,5 +795,21 @@
             </drop-down>
         </field>
         <field name="searchButton" title="${uiLabelMap.CommonFind}" widget-style="smallSubmit"><submit button-type="button"/></field>
-    </form> -->
+    </form>
+    <form name="ListLeaves" type="list" list-name="leavesList" default-table-style="basic-table hover-bar" target="UpdateCreditLeaves" separate-columns="true" >
+    	<actions>
+    	</actions>
+    	<field name="partyId" title="Employee Id"><display/></field>
+    	<field name="customTimePeriodId" title="TimePeriod"><display/></field>
+    	<field name="CL_openingBalance" title="CL Opening Balance"><display/></field>
+    	<field name="EL_openingBalance" title=" EL Opening Balance"><display/></field>
+    	<field name="HPL_openingBalance" title="HPL Opening Balance"><display/></field>
+    	<field name="CL" title="casual Leaves"><text size="10"/></field>
+    	
+    	<field name="EL" title="Earned Leaves"><text size="10"/></field>
+    	
+    	<field name="HPL" title="HalfPay Leaves"><text size="10"/></field>
+    	<field name="submitButton" title="${uiLabelMap.CommonUpdate}"><submit button-type="button"/></field> 
+    	 
+    </form>
 </forms>
