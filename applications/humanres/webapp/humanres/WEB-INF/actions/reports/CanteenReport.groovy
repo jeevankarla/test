@@ -43,83 +43,77 @@ if(UtilValidate.isNotEmpty(lastClosePeriod)){
 	if(UtilValidate.isNotEmpty(employments)){
 		employments.each { employment ->
 			partyId=employment.get("partyId");
-			canteenFacility=delegator.findOne("EmployeeDetail",[partyId:partyId],false);
-			if(UtilValidate.isNotEmpty(canteenFacility)){
-				canteenFac = canteenFacility.get("canteenFacin");
-				if(canteenFac == 'Y'){
-					if(UtilValidate.isNotEmpty(partyId)){
-						List conditionList=[];
-						conditionList.add(EntityCondition.makeCondition("partyId", EntityOperator.EQUALS, partyId));
-						conditionList.add(EntityCondition.makeCondition("customTimePeriodId", EntityOperator.EQUALS,customTimePeriodId));
-						condition=EntityCondition.makeCondition(conditionList,EntityOperator.AND);
-						attendanceDetails = delegator.findList("PayrollAttendanceShiftWise", condition , null, null, null, false);
-						if(UtilValidate.isNotEmpty(attendanceDetails)){
-							attendanceDetails.each { employee ->
-								if((employee.get("shiftTypeId")).equals("SHIFT_01")){
-									shift1Map=[:];
-									sh1noOfDays =0;
-									shiftTypeId=employee.get("shiftTypeId");
-									sh1noOfDays=employee.get("availedCanteenDays");
-									employeeName=employment.get("firstName");
-									shift1Map.put("employeeName",employeeName);
-									shift1Map.put("sh1noOfDays",sh1noOfDays);
-									shift1Map.put("shiftTypeId",shiftTypeId);
-									shift1Map.put("partyId",partyId);
-									if(UtilValidate.isNotEmpty(shift1Map)){
-										shift1finalMap.put(partyId,shift1Map);
-									}
-									if(UtilValidate.isNotEmpty(shift1finalMap)){
-										shiftFinalMap.put(partyId,shift1finalMap);
-									}
-								}
-								if((employee.get("shiftTypeId")).equals("SHIFT_02")){
-									shift2Map=[:];
-									shiftTypeId=employee.get("shiftTypeId");
-									sh2noOfDays=employee.get("availedCanteenDays");
-									employeeName=employment.get("firstName");
-									shift2Map.put("employeeName",employeeName);
-									shift2Map.put("sh2noOfDays",sh2noOfDays);
-									shift2Map.put("shiftTypeId",shiftTypeId);
-									shift2Map.put("partyId",partyId);
-									if(UtilValidate.isNotEmpty(shift2Map)){
-										shift2finalMap.put(partyId,shift2Map);
-									}
-									if(UtilValidate.isNotEmpty(shift2finalMap)){
-										shiftFinalMap.put(partyId,shift2finalMap);
-									}
-								}
-								if((employee.get("shiftTypeId")).equals("SHIFT_NIGHT")){
-									shiftMap=[:];
-									shiftTypeId=employee.get("shiftTypeId");
-									sh3noOfDays=employee.get("availedCanteenDays");
-									employeeName=employment.get("firstName");
-									shiftMap.put("employeeName",employeeName);
-									shiftMap.put("sh3noOfDays",sh3noOfDays);
-									shiftMap.put("shiftTypeId",shiftTypeId);
-									shiftMap.put("partyId",partyId);
-									if(UtilValidate.isNotEmpty(shiftMap)){
-										shift3finalMap.put(partyId,shiftMap);
-									}
-									if(UtilValidate.isNotEmpty(shift3finalMap)){
-										shiftFinalMap.put(partyId,shift3finalMap);
-									}
-								}
-								if((employee.get("shiftTypeId")).equals("SHIFT_GEN")){
-									genshiftMap=[:];
-									shiftTypeId=employee.get("shiftTypeId");
-									shgennoOfDays=employee.get("availedCanteenDays");
-									employeeName=employment.get("firstName");
-									genshiftMap.put("employeeName",employeeName);
-									genshiftMap.put("shgennoOfDays",shgennoOfDays);
-									genshiftMap.put("shiftTypeId",shiftTypeId);
-									genshiftMap.put("partyId",partyId);
-									if(UtilValidate.isNotEmpty(genshiftMap)){
-										genshiftfinalMap.put(partyId,genshiftMap);
-									}
-									if(UtilValidate.isNotEmpty(genshiftfinalMap)){
-										shiftFinalMap.put(partyId,genshiftfinalMap);
-									}
-								}
+			if(UtilValidate.isNotEmpty(partyId)){
+				List conditionList=[];
+				conditionList.add(EntityCondition.makeCondition("partyId", EntityOperator.EQUALS, partyId));
+				conditionList.add(EntityCondition.makeCondition("customTimePeriodId", EntityOperator.EQUALS,customTimePeriodId));
+				condition=EntityCondition.makeCondition(conditionList,EntityOperator.AND);
+				attendanceDetails = delegator.findList("PayrollAttendanceShiftWise", condition , null, null, null, false);
+				if(UtilValidate.isNotEmpty(attendanceDetails)){
+					attendanceDetails.each { employee ->
+						if((employee.get("shiftTypeId")).equals("SHIFT_01")){
+							shift1Map=[:];
+							sh1noOfDays =0;
+							shiftTypeId=employee.get("shiftTypeId");
+							sh1noOfDays=employee.get("availedCanteenDays");
+							employeeName=employment.get("firstName");
+							shift1Map.put("employeeName",employeeName);
+							shift1Map.put("sh1noOfDays",sh1noOfDays);
+							shift1Map.put("shiftTypeId",shiftTypeId);
+							shift1Map.put("partyId",partyId);
+							if(UtilValidate.isNotEmpty(shift1Map)){
+								shift1finalMap.put(partyId,shift1Map);
+							}
+							if(UtilValidate.isNotEmpty(shift1finalMap)){
+								shiftFinalMap.put(partyId,shift1finalMap);
+							}
+						}
+						if((employee.get("shiftTypeId")).equals("SHIFT_02")){
+							shift2Map=[:];
+							shiftTypeId=employee.get("shiftTypeId");
+							sh2noOfDays=employee.get("availedCanteenDays");
+							employeeName=employment.get("firstName");
+							shift2Map.put("employeeName",employeeName);
+							shift2Map.put("sh2noOfDays",sh2noOfDays);
+							shift2Map.put("shiftTypeId",shiftTypeId);
+							shift2Map.put("partyId",partyId);
+							if(UtilValidate.isNotEmpty(shift2Map)){
+								shift2finalMap.put(partyId,shift2Map);
+							}
+							if(UtilValidate.isNotEmpty(shift2finalMap)){
+								shiftFinalMap.put(partyId,shift2finalMap);
+							}
+						}
+						if((employee.get("shiftTypeId")).equals("SHIFT_NIGHT")){
+							shiftMap=[:];
+							shiftTypeId=employee.get("shiftTypeId");
+							sh3noOfDays=employee.get("availedCanteenDays");
+							employeeName=employment.get("firstName");
+							shiftMap.put("employeeName",employeeName);
+							shiftMap.put("sh3noOfDays",sh3noOfDays);
+							shiftMap.put("shiftTypeId",shiftTypeId);
+							shiftMap.put("partyId",partyId);
+							if(UtilValidate.isNotEmpty(shiftMap)){
+								shift3finalMap.put(partyId,shiftMap);
+							}
+							if(UtilValidate.isNotEmpty(shift3finalMap)){
+								shiftFinalMap.put(partyId,shift3finalMap);
+							}
+						}
+						if((employee.get("shiftTypeId")).equals("SHIFT_GEN")){
+							genshiftMap=[:];
+							shiftTypeId=employee.get("shiftTypeId");
+							shgennoOfDays=employee.get("availedCanteenDays");
+							employeeName=employment.get("firstName");
+							genshiftMap.put("employeeName",employeeName);
+							genshiftMap.put("shgennoOfDays",shgennoOfDays);
+							genshiftMap.put("shiftTypeId",shiftTypeId);
+							genshiftMap.put("partyId",partyId);
+							if(UtilValidate.isNotEmpty(genshiftMap)){
+								genshiftfinalMap.put(partyId,genshiftMap);
+							}
+							if(UtilValidate.isNotEmpty(genshiftfinalMap)){
+								shiftFinalMap.put(partyId,genshiftfinalMap);
 							}
 						}
 					}
