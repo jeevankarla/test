@@ -51,25 +51,30 @@ ${setRequestAttribute("OUTPUT_FILENAME", "TaxInvoice.pdf")}
 	     <fo:table-column column-width="20%"/>
 	     <fo:table-body>
 		     <fo:table-row> 
-			     <fo:table-cell number-columns-spanned="3">   						
-			 	     <fo:block text-align="center" white-space-collapse="false" font-weight="bold" keep-together="always">TAX INVOICE</fo:block>
-			 	</fo:table-cell>
 			 	<fo:table-cell> 
 			      <fo:block text-align="left" white-space-collapse="false" font-family="Courier,monospace" font-size="10pt" keep-together="always" font-weight = "bold">TIN NO: <#if fromPartyDetail?has_content>${fromPartyDetail.get('TIN_NUMBER')?if_exists}</#if></fo:block>
 				  <fo:block text-align="left" white-space-collapse="false" font-family="Courier,monospace" font-size="10pt" keep-together="always" font-weight = "bold">CST NO: <#if fromPartyDetail?has_content>${fromPartyDetail.get('CST_NUMBER')?if_exists}</#if></fo:block>
 				  <fo:block linefeed-treatment="preserve">&#xA;</fo:block> 
 				</fo:table-cell>
+				<fo:table-cell>   						
+			 	     <fo:block text-align="center" white-space-collapse="false" font-weight="bold" keep-together="always">TAX INVOICE</fo:block>
+			 	</fo:table-cell>
 		 	  </fo:table-row>	
 		 	  <fo:table-row> 
 			     <fo:table-cell border-style="solid" >   						
 					<fo:block>
 						<fo:table  table-layout="fixed" width="100%" space-before="0.2in">
 							 <fo:table-body>
-								 <fo:table-row> 
+							 	<fo:table-row> 
 									 <fo:table-cell border-style="solid" > 
-									    <fo:block linefeed-treatment="preserve">&#xA;</fo:block>
-									    <fo:block linefeed-treatment="preserve">&#xA;</fo:block>
-									    <fo:block linefeed-treatment="preserve">&#xA;</fo:block> 
+									    <fo:block font-weight="bold">SELLER'S NAME </fo:block>  
+									 </fo:table-cell>   
+								 </fo:table-row> 
+								 <#assign fromPartyAddressResult = dispatcher.runSync("getPartyPostalAddress", Static["org.ofbiz.base.util.UtilMisc"].toMap("partyId", "Company"?if_exists, "userLogin", userLogin))/>
+								 <fo:table-row> 
+									<fo:table-cell>
+									    <fo:block  keep-together="always" text-align="left" font-size="10pt" white-space-collapse="false" font-weight = "bold">From: <#if fromPartyAddressResult?has_content>MOTHER DAIRY, </#if></fo:block>
+	            						<fo:block  keep-together="always" text-align="left" font-size="10pt" white-space-collapse="false" font-weight = "bold"><#if fromPartyAddressResult.address1?has_content>${fromPartyAddressResult.address1?if_exists} </#if></fo:block>
 									 </fo:table-cell>   
 								 </fo:table-row> 
 								  <fo:table-row> 
@@ -231,36 +236,36 @@ ${setRequestAttribute("OUTPUT_FILENAME", "TaxInvoice.pdf")}
 	 	 </fo:table-body> 
  	</fo:table>
  	<fo:table  table-layout="fixed" width="100%">
-		 <fo:table-column column-width="10%"/>
-		 <fo:table-column column-width="30%"/>
-	     <fo:table-column column-width="15%"/>
-	     <fo:table-column column-width="15%"/>
+		 <fo:table-column column-width="5%"/>
+		 <fo:table-column column-width="35%"/>
+	     <fo:table-column column-width="17%"/>
+	     <fo:table-column column-width="13%"/>
 	     <fo:table-column column-width="15%"/>
 	     <fo:table-column column-width="15%"/>
 		     <fo:table-body>
 			     <fo:table-row> 
 				     <fo:table-cell border-style="solid">   						
-				 	     <fo:block text-align="center" white-space-collapse="false" font-family="Courier,monospace" font-size="10pt" 
+				 	     <fo:block text-align="left" white-space-collapse="false" font-family="Courier,monospace" font-size="11pt" 
 				 	     font-weight="bold" keep-together="always">S No</fo:block>
 				 	</fo:table-cell>
 				     <fo:table-cell border-style="solid">   						
-				 	     <fo:block text-align="center" white-space-collapse="false" font-family="Courier,monospace" font-size="10pt" 
+				 	     <fo:block text-align="left" white-space-collapse="false" font-family="Courier,monospace" font-size="11pt" 
 				 	     font-weight="bold" keep-together="always">Description of Goods</fo:block>
 				 	</fo:table-cell>
 				 	 <fo:table-cell border-style="solid">   						
-				 	     <fo:block text-align="center" white-space-collapse="false" font-family="Courier,monospace" font-size="10pt" 
+				 	     <fo:block text-align="right" white-space-collapse="false" font-family="Courier,monospace" font-size="11pt" 
 				 	     font-weight="bold" keep-together="always">Quantity(Kg/Ltr)</fo:block>
 				 	</fo:table-cell>
 				 	<fo:table-cell border-style="solid">   						
-				 	     <fo:block text-align="right" white-space-collapse="false" font-family="Courier,monospace" font-size="10pt" 
+				 	     <fo:block text-align="right" white-space-collapse="false" font-family="Courier,monospace" font-size="11pt" 
 				 	     font-weight="bold" keep-together="always">DC No</fo:block>
 				 	</fo:table-cell>
 				 	  <fo:table-cell border-style="solid">   						
-				 	     <fo:block text-align="right" white-space-collapse="false" font-family="Courier,monospace" font-size="10pt" 
+				 	     <fo:block text-align="right" white-space-collapse="false" font-family="Courier,monospace" font-size="11pt" 
 				 	     font-weight="bold" keep-together="always">Unit Rate</fo:block>
 				 	</fo:table-cell>
 				 	  <fo:table-cell border-style="solid">   						
-				 	     <fo:block text-align="right" white-space-collapse="false" font-family="Courier,monospace" font-size="10pt" 
+				 	     <fo:block text-align="right" white-space-collapse="false" font-family="Courier,monospace" font-size="11pt" 
 				 	     font-weight="bold" keep-together="always">Amount (Rs)</fo:block>
 				 	</fo:table-cell>
 			 	  </fo:table-row>
@@ -271,25 +276,25 @@ ${setRequestAttribute("OUTPUT_FILENAME", "TaxInvoice.pdf")}
 					<#list invoiceItems as eachItem>
 						<fo:table-row>
         					<fo:table-cell border-style="dotted" border-width="thin" border-color="black">
-        						<fo:block  keep-together="always" text-align="center" font-size="10pt" white-space-collapse="false">${slNo?if_exists}</fo:block>
+        						<fo:block  keep-together="always" text-align="left" font-size="11pt" white-space-collapse="false">${slNo?if_exists}</fo:block>
         					</fo:table-cell>
         					<fo:table-cell border-style="dotted" border-width="thin" border-color="black">
-        						<fo:block  keep-together="always" text-align="center" font-size="10pt" white-space-collapse="false">${eachItem.get('itemDescription')?if_exists}</fo:block>
+        						<fo:block  keep-together="always" text-align="left" font-size="11pt" white-space-collapse="false">${eachItem.get('itemDescription')?if_exists}</fo:block>
         					</fo:table-cell>
         					<fo:table-cell border-style="dotted" border-width="thin" border-color="black">
-        						<fo:block  keep-together="always" text-align="right" font-size="10pt" white-space-collapse="false">${eachItem.get('quantityLtr')?if_exists}</fo:block>
+        						<fo:block  keep-together="always" text-align="right" font-size="11pt" white-space-collapse="false">${eachItem.get('quantityLtr')?if_exists?string("#0.00")}</fo:block>
         					</fo:table-cell>
         					<fo:table-cell border-style="dotted" border-width="thin" border-color="black">
-        						<fo:block  keep-together="always" text-align="right" font-size="10pt" white-space-collapse="false">${shipment.get('shipmentId')?if_exists}</fo:block>
+        						<fo:block  keep-together="always" text-align="right" font-size="11pt" white-space-collapse="false">${shipment.get('shipmentId')?if_exists}</fo:block>
         					</fo:table-cell>
         					<fo:table-cell border-style="dotted" border-width="thin" border-color="black">
-        						<fo:block  keep-together="always" text-align="right" font-size="10pt" white-space-collapse="false">${eachItem.get('defaultPrice')?if_exists?string("#0.00")}</fo:block>
+        						<fo:block  keep-together="always" text-align="right" font-size="11pt" white-space-collapse="false">${eachItem.get('defaultPrice')?if_exists?string("#0.00")}</fo:block>
         					</fo:table-cell>
         					<#assign totalItemAmt = eachItem.get('defaultPrice')*eachItem.get('quantity')>
         					<#assign grandTotal = grandTotal+totalItemAmt>
         					<#assign totalAmt = totalAmt+totalItemAmt>
         					<fo:table-cell border-style="dotted" border-width="thin" border-color="black">
-        						<fo:block  keep-together="always" text-align="right" font-size="10pt" white-space-collapse="false" font-weight = "bold">${totalItemAmt?if_exists?string("#0.00")}</fo:block>
+        						<fo:block  keep-together="always" text-align="right" font-size="11pt" white-space-collapse="false" font-weight = "bold">${totalItemAmt?if_exists?string("#0.00")}</fo:block>
         					</fo:table-cell>
         					<#assign slNo = slNo+1>
 						</fo:table-row>
