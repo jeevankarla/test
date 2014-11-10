@@ -326,8 +326,14 @@ ${setRequestAttribute("OUTPUT_FILENAME", "TaxInvoice.pdf")}
             						<#assign text = "Central Sales Tax(CST) 2.0%">
             					<#elseif eachTax.getKey()=="SERTAX_SALE">
             						<#assign text = "Service Tax ">
-            					<#else>
+            					<#elseif eachTax.getKey()=="VAT_SALE" && (eachTax.getValue()>0)>
             						<#assign text = "Value Added Tax(VAT) ">
+            					<#elseif eachTax.getKey()=="VAT_SALE" && (eachTax.getValue()<0)>
+            						<#assign text = "VAT Adjustment">
+            					<#elseif eachTax.getKey()=="PROMOTION_ADJUSTMENT">
+            						<#assign text = "Promotion Adjustment">
+            					<#else>
+            						<#assign text = "Other Adjustments">
             					</#if>
             					<fo:table-cell border-bottom-style="dotted" border-bottom-width="thin" border-color="black">
 									<fo:block linefeed-treatment="preserve">&#xA;</fo:block>
