@@ -591,17 +591,17 @@ public class EmplLeaveService {
     	}
     	Map<String, Object> serviceResult = ServiceUtil.returnSuccess();
 		try {
-			EmplLeaveTypeDetails = delegator.findOne("EmplLeaveType",UtilMisc.toMap("leaveTypeId", leaveTypeId), false);
-			if(UtilValidate.isNotEmpty(EmplLeaveTypeDetails)){
-				//Half Pay Leave Rule
+			//EmplLeaveTypeDetails = delegator.findOne("EmplLeaveType",UtilMisc.toMap("leaveTypeId", leaveTypeId), false);
+			if(UtilValidate.isNotEmpty(leaveTypeId)){
+				Map validLeaveRulesMap = FastMap.newInstance();
+				validLeaveRulesMap.put("userLogin",userLogin);
+				validLeaveRulesMap.put("leaveTypeId",leaveTypeId);
+				validLeaveRulesMap.put("maxFullDayHours",maxFullDayHours);
+				validLeaveRulesMap.put("maxHalfDayHours",maxHalfDayHours);
+				//Half Pay Leave Rules
 				if(UtilValidate.isNotEmpty(leaveTypeId) && leaveTypeId.equals("HPL")){
-					Map halfPayLeaveRuleMap = FastMap.newInstance();
-					halfPayLeaveRuleMap.put("userLogin",userLogin);
-					halfPayLeaveRuleMap.put("leaveTypeId",leaveTypeId);
-					halfPayLeaveRuleMap.put("maxFullDayHours",maxFullDayHours);
-					halfPayLeaveRuleMap.put("maxHalfDayHours",maxHalfDayHours);
 					try{
-						serviceResult = dispatcher.runSync("getHalfPayLeaveRules", halfPayLeaveRuleMap);
+						serviceResult = dispatcher.runSync("getHalfPayLeaveRules", validLeaveRulesMap);
 			            if (ServiceUtil.isError(serviceResult)) {
 			            	Debug.logError(ServiceUtil.getErrorMessage(serviceResult), module);
 			            	return ServiceUtil.returnSuccess();
@@ -612,13 +612,8 @@ public class EmplLeaveService {
 				}
 				//Earned Leave Rules
 				if(UtilValidate.isNotEmpty(leaveTypeId) && leaveTypeId.equals("EL")){
-					Map earnedLeaveRuleMap = FastMap.newInstance();
-					earnedLeaveRuleMap.put("userLogin",userLogin);
-					earnedLeaveRuleMap.put("leaveTypeId",leaveTypeId);
-					earnedLeaveRuleMap.put("maxFullDayHours",maxFullDayHours);
-					earnedLeaveRuleMap.put("maxHalfDayHours",maxHalfDayHours);
-		            try{
-						serviceResult = dispatcher.runSync("getEarnedLeaveRules", earnedLeaveRuleMap);
+					try{
+						serviceResult = dispatcher.runSync("getEarnedLeaveRules", validLeaveRulesMap);
 			            if (ServiceUtil.isError(serviceResult)) {
 			            	Debug.logError(ServiceUtil.getErrorMessage(serviceResult), module);
 			            	return ServiceUtil.returnSuccess();
@@ -629,13 +624,8 @@ public class EmplLeaveService {
 				}
 				//Casual Leave Rules
 				if(UtilValidate.isNotEmpty(leaveTypeId) && leaveTypeId.equals("CL")){
-					Map casualLeaveRuleMap = FastMap.newInstance();
-					casualLeaveRuleMap.put("userLogin",userLogin);
-					casualLeaveRuleMap.put("leaveTypeId",leaveTypeId);
-					casualLeaveRuleMap.put("maxFullDayHours",maxFullDayHours);
-					casualLeaveRuleMap.put("maxHalfDayHours",maxHalfDayHours);
-		            try{
-						serviceResult = dispatcher.runSync("getCasualLeaveRules", casualLeaveRuleMap);
+					try{
+						serviceResult = dispatcher.runSync("getCasualLeaveRules", validLeaveRulesMap);
 			            if (ServiceUtil.isError(serviceResult)) {
 			            	Debug.logError(ServiceUtil.getErrorMessage(serviceResult), module);
 			            	return ServiceUtil.returnSuccess();
@@ -646,13 +636,8 @@ public class EmplLeaveService {
 				}
 				//Paternity Leave Rules
 				if(UtilValidate.isNotEmpty(leaveTypeId) && leaveTypeId.equals("PL")){
-					Map paternityLeaveRuleMap = FastMap.newInstance();
-					paternityLeaveRuleMap.put("userLogin",userLogin);
-					paternityLeaveRuleMap.put("leaveTypeId",leaveTypeId);
-					paternityLeaveRuleMap.put("maxFullDayHours",maxFullDayHours);
-					paternityLeaveRuleMap.put("maxHalfDayHours",maxHalfDayHours);
-		            try{
-						serviceResult = dispatcher.runSync("getPaternityLeaveRules", paternityLeaveRuleMap);
+					try{
+						serviceResult = dispatcher.runSync("getPaternityLeaveRules", validLeaveRulesMap);
 			            if (ServiceUtil.isError(serviceResult)) {
 			            	Debug.logError(ServiceUtil.getErrorMessage(serviceResult), module);
 			            	return ServiceUtil.returnSuccess();
@@ -662,7 +647,7 @@ public class EmplLeaveService {
 					}
 				}
 			}
-		}catch(GenericEntityException e){
+		}catch(Exception e){
 			Debug.logError("Error while getting Leave Type Details"+e.getMessage(), module);
 		}
         return result;
@@ -695,7 +680,7 @@ public class EmplLeaveService {
         int maxHalfDayHours = (Integer) context.get("maxHalfDayHours");
     	GenericDelegator delegator = (GenericDelegator) dctx.getDelegator();
 		LocalDispatcher dispatcher = dctx.getDispatcher();
-		GenericValue userLogin = (GenericValue) context.get("userLogin");
+		Generic	Value userLogin = (GenericValue) context.get("userLogin");
 		try {
 			if(UtilValidate.isNotEmpty(leaveTypeId)){
 				if(maxFullDayHours<120 || (maxHalfDayHours!=0 && maxHalfDayHours<120)){
