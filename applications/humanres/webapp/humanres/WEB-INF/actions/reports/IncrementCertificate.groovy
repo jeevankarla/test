@@ -65,16 +65,16 @@ if(UtilValidate.isNotEmpty(payrollDetailsList)){
 EmployeeFinalMap = [:];
 if(UtilValidate.isNotEmpty(employmentList)){
 	employmentList.each{ employee ->
+		presentPay = 0;
 		detailsMap=[:];
 		iteration=1;
-		
+		recordIter = 1;
 		payConditionList=[];
 		payConditionList.add(EntityCondition.makeCondition("partyIdTo", EntityOperator.EQUALS ,employee));
 		payConditionList.add(EntityCondition.makeCondition([EntityCondition.makeCondition("fromDate", EntityOperator.GREATER_THAN_EQUAL_TO, (currentDayTimeStart)),
 			EntityCondition.makeCondition("fromDate", EntityOperator.LESS_THAN_EQUAL_TO, (currentDayTimeEnd))]));
 		payCondition = EntityCondition.makeCondition(payConditionList,EntityOperator.AND);
 		PayGradeHistory = delegator.findList("PayHistory", payCondition, null, ["-fromDate"], null, false);
-		
 		//PayGradeHistory = delegator.findList("PayGradePayHistory", EntityCondition.makeCondition("partyIdTo", EntityOperator.EQUALS, employee), null, ["-fromDate"], null, false);
 		if(UtilValidate.isNotEmpty(PayGradeHistory)){
 			PayGradeHistory.each{ PayGradeId ->
@@ -149,7 +149,7 @@ if(UtilValidate.isNotEmpty(employmentList)){
 						detailsMap.put("presentPayScale",(presentPayScale.substring(0,(presentPayScale.length()/2).intValue())+" "+presentPayScale.substring(((presentPayScale.length()/2).intValue()),presentPayScale.length())));
 					}
 					detailsMap.put("presentPay",presentPay);
-				}else
+				}/*else
 				if(iteration.equals(2)){
 					dateOfLastIncre=PayGradeId.get("fromDate");
 					//LastPayScale=PayGradeId.get("payScale");
@@ -181,6 +181,51 @@ if(UtilValidate.isNotEmpty(employmentList)){
 					
 					detailsMap.put("dateOfLastIncre",LastDateStr);
 					detailsMap.put("LastPay",LastPay);
+				}*/
+			}
+		}
+		if(presentPay != 0){
+			dateConditionList=[];
+			dateConditionList.add(EntityCondition.makeCondition("partyIdTo", EntityOperator.EQUALS ,employee));
+			dateCondition = EntityCondition.makeCondition(dateConditionList,EntityOperator.AND);
+			payHistoryDetails = delegator.findList("PayHistory", dateCondition, null, ["-fromDate"], null, false);
+			if(UtilValidate.isNotEmpty(payHistoryDetails)){
+				payHistoryDetails.each{ payHistory ->
+					if(recordIter.equals(1)){
+						recordIter=recordIter+1;
+					}else
+					if(recordIter.equals(2)){
+						dateOfLastIncre=payHistory.get("fromDate");
+						lastsalaryStepSeqId = payHistory.get("salaryStepSeqId");
+						lastPayGradeId = payHistory.get("payGradeId");
+						recordIter=recordIter+1;
+						lastSalaryConditionList=[];
+						lastSalaryConditionList.add(EntityCondition.makeCondition("salaryStepSeqId", EntityOperator.EQUALS ,lastsalaryStepSeqId));
+						lastSalaryConditionList.add(EntityCondition.makeCondition("payGradeId", EntityOperator.EQUALS ,lastPayGradeId));
+						lastSalaryCondition = EntityCondition.makeCondition(lastSalaryConditionList,EntityOperator.AND);
+						lastSalaryList = delegator.findList("PayGradeSalaryStep", lastSalaryCondition, null, null, null, false);
+						if(UtilValidate.isNotEmpty(lastSalaryList)){
+							lastSalaryList.each { lastSalary->
+								LastPay = lastSalary.get("amount");
+							}
+						}
+						dateOfLastIncre = UtilDateTime.getDayStart(dateOfLastIncre);
+						dateOfLastIncre = UtilDateTime.toDateString(dateOfLastIncre);
+						def sdf2 = new SimpleDateFormat("MM/dd/yyyy");
+						try {
+							if (dateOfLastIncre) {
+								dateTimestamp = new java.sql.Timestamp(sdf2.parse(dateOfLastIncre).getTime());
+								LastDateStr = UtilDateTime.toDateString(dateTimestamp,"dd-MMM-yy");
+							}
+						} catch (ParseException e) {
+							Debug.logError(e, "Cannot parse date string: " + e, "");
+							context.errorMessage = "Cannot parse date string: " + e;
+							return;
+						}
+						
+						detailsMap.put("dateOfLastIncre",LastDateStr);
+						detailsMap.put("LastPay",LastPay);
+					}
 				}
 			}
 		}
@@ -191,5 +236,4 @@ if(UtilValidate.isNotEmpty(employmentList)){
 }
 
 context.put("EmployeeFinalMap",EmployeeFinalMap);
-
 
