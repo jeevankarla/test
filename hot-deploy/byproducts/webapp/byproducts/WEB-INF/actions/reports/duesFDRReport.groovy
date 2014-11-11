@@ -25,26 +25,62 @@ import org.ofbiz.product.price.PriceServices;
 import in.vasista.vbiz.byproducts.ByProductReportServices;
 
 dctx=dispatcher.getDispatchContext();
-effectiveDateStr = parameters.effectiveDate;
-categoryTypeEnum = parameters.categoryTypeEnum;
-effectiveDate = null;
-if (UtilValidate.isNotEmpty(effectiveDateStr)) {
-	def sdf = new SimpleDateFormat("MMMM dd, yyyy");
-	try {
-		effectiveDate = new java.sql.Timestamp(sdf.parse(effectiveDateStr+" 00:00:00").getTime());
-	} catch (ParseException e) {
-		Debug.logError(e, "Cannot parse date string: " + effectiveDateStr, "");
+reportTypeFlag = parameters.reportTypeFlag;
+
+if(UtilValidate.isEmpty(reportTypeFlag)){
+	effectiveDateStr = parameters.effectiveDate;
+	categoryTypeEnum = parameters.categoryTypeEnum;
+	effectiveDate = null;
+	if (UtilValidate.isNotEmpty(effectiveDateStr)) {
+		def sdf = new SimpleDateFormat("MMMM dd, yyyy");
+		try {
+			effectiveDate = new java.sql.Timestamp(sdf.parse(effectiveDateStr+" 00:00:00").getTime());
+		} catch (ParseException e) {
+			Debug.logError(e, "Cannot parse date string: " + effectiveDateStr, "");
+		}
 	}
+	else{
+		effectiveDate = UtilDateTime.nowTimestamp();
+	}
+	dayBegin = UtilDateTime.getDayStart(effectiveDate);
+	dayEnd = UtilDateTime.getDayEnd(effectiveDate);
+	resultCtx = ByProductNetworkServices.getAllBooths(delegator, categoryTypeEnum);
+}else{
+	fromDateStr = parameters.fromDate;
+	thruDateStr = parameters.thruDate;
+	fromDate = null;
+	thruDate = null;
+	if (UtilValidate.isNotEmpty(fromDateStr)) {
+		def sdf = new SimpleDateFormat("MMMM dd, yyyy");
+		try {
+			fromDate = new java.sql.Timestamp(sdf.parse(fromDateStr+" 00:00:00").getTime());
+		} catch (ParseException e) {
+			Debug.logError(e, "Cannot parse date string: " + fromDateStr, "");
+		}
+	}
+	else{
+		fromDate = UtilDateTime.nowTimestamp();
+	}
+	if (UtilValidate.isNotEmpty(thruDateStr)) {
+		def sdf = new SimpleDateFormat("MMMM dd, yyyy");
+		try {
+			thruDate = new java.sql.Timestamp(sdf.parse(thruDateStr+" 00:00:00").getTime());
+		} catch (ParseException e) {
+			Debug.logError(e, "Cannot parse date string: " + thruDateStr, "");
+		}
+	}
+	else{
+		thruDate = UtilDateTime.nowTimestamp();
+	}
+	dayBegin = UtilDateTime.getDayStart(fromDate);
+	dayEnd = UtilDateTime.getDayEnd(thruDate);
+	resultCtx = ByProductNetworkServices.getAllBooths(delegator, "");
 }
-else{
-	effectiveDate = UtilDateTime.nowTimestamp();
-}
-dayBegin = UtilDateTime.getDayStart(effectiveDate);
-dayEnd = UtilDateTime.getDayEnd(effectiveDate);
+conditionList=[];
+isByParty = Boolean.TRUE;
 context.displayDate = UtilDateTime.toDateString(dayBegin, "dd MMMMM, yyyy");
 conditionList=[];
 isByParty = Boolean.TRUE;
-resultCtx = ByProductNetworkServices.getAllBooths(delegator, categoryTypeEnum);
 boothsList= resultCtx.get("boothsList");
 boothsDetailsList = resultCtx.get("boothsDetailsList");
 boothTotals=[:];
@@ -61,6 +97,10 @@ if(isByParty){
 	ownerPartyList = delegator.findList("Facility", EntityCondition.makeCondition("facilityId", EntityOperator.IN, boothsList), UtilMisc.toSet("ownerPartyId"), null, null, false);
 	boothsList.clear();
 	boothsList = EntityUtil.getFieldListFromEntityList(ownerPartyList, "ownerPartyId", true);
+}
+if(UtilValidate.isNotEmpty(reportTypeFlag)&&reportTypeFlag=="DuesFDRAvgReport"){
+	curntMonthDays= UtilDateTime.getIntervalInDays(dayBegin,dayEnd)+1;
+	dayTotals = ByProductNetworkServices.getPeriodTotals(dispatcher.getDispatchContext(), [facilityIds:boothsList,fromDate: dayBegin, thruDate: dayEnd, includeReturnOrders:true, isByParty: isByParty]).get("boothTotals");
 }
 boothsList.each{ eachBoothId ->
 	facilityFDRMap = [:];
@@ -95,6 +135,24 @@ boothsList.each{ eachBoothId ->
 		}
 		
 	}
+	if(UtilValidate.isNotEmpty(reportTypeFlag) && reportTypeFlag=="DuesFDRAvgReport"){
+		milkAvgTotal=0;
+		if(UtilValidate.isNotEmpty(dayTotals)&& dayTotals.containsKey(eachBoothId)){
+			boothTotal = dayTotals.get(eachBoothId).get("totalRevenue");
+			milkAvgTotal=(boothTotal/curntMonthDays);
+		}
+		partyProfileDetail = delegator.findList("PartyProfileDefault", EntityCondition.makeCondition("partyId", EntityOperator.EQUALS, eachBoothId), null, null, null, false);
+		partyProfileDetail = EntityUtil.filterByDate(partyProfileDetail, dayEnd);
+		if(partyProfileDetail){
+			partyPayType = EntityUtil.getFirst(partyProfileDetail);
+			partyPayMeth = partyPayType.defaultPayMeth;
+		}
+		paymentMethodType = delegator.findList("PaymentMethodType", EntityCondition.makeCondition("paymentMethodTypeId",EntityOperator.EQUALS, partyPayMeth), null, null, null, false);
+		paymentType = EntityUtil.getFirst(paymentMethodType);
+		facilityFDRMap.putAt("milkAvgTotal", milkAvgTotal);
+		facilityFDRMap.putAt("paymentMethodType", paymentType.description);
+	}
+	
 	diffAmount = openingBalance-fdrAmt;
 	facilityFDRMap.putAt("fdrNumber", fdrNums);
 	facilityFDRMap.putAt("fdrAmount", fdrAmt);

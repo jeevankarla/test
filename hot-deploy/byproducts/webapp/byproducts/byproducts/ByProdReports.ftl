@@ -182,7 +182,7 @@ function reportTypeChangeFunc() {
 		makeDatePicker2("IcDealerOSDuesFDate","IcDealerOSDuesTDate");
 		makeDatePicker2("fdFromDate","");
 		makeDatePicker("purchaseTaxFDate","purchaseTaxTDate");
-		
+		makeDatePicker("AvgFDRFDate","AvgFDRTDate");
 		$('#ui-datepicker-div').css('clip', 'auto');		
 	});
 //for Month Picker
@@ -823,6 +823,16 @@ function reportTypeChangeFunc() {
 	      					<td width="15%"></td>
 	      					<td width="15%"></td>
 							<td width="10%"><input type="submit" value="Download" class="buttontext"/></td>       			
+      					</form>
+      				</tr>
+      				<tr class="alternate-row">
+      					<form id="DuesFDRAvgReport" name="DuesFDRAvgReport" method="post" action="<@ofbizUrl>DuesFDRAvgReport.csv</@ofbizUrl>" target="_blank">	
+      						<td width="30%">Dues FDR With Average Sales<input  type="hidden"  value="DuesFDRAvgReport"   name="reportTypeFlag"/></td>
+      						<td width="15%">From<input  type="text" size="18pt" id="AvgFDRFDate" readonly  name="fromDate"/></td>
+      						<td width="15%">Thru<input  type="text" size="18pt" id="AvgFDRTDate" readonly  name="thruDate"/></td>
+	      					<td width="15%"></td>
+	      					<td width="15%"></td>
+							<td width="10%"><input type="submit" value="Download" class="buttontext"></td>       			
       					</form>
       				</tr>
       				<#--<tr class="alternate-row">

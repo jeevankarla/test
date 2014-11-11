@@ -153,4 +153,13 @@
         <field name="grandTotal" title="Total Amount"><display/></field>
         <field name="tinNumber" title="Tin Number"><display/></field>
     </form>
+     <form name="DuesFDRAvgReportCSV" type="list" list-name="duesFDRList" view-size="99999">
+        <field name="facilityId" title="Retailer Code"><display/></field>
+        <field name="facilityName" title="Retailer Name"><display/></field>
+        <field name="fdrAmount" title="FDR Amt"><display/></field>
+        <field name="openingBalance" title="Due Amt"><display/></field>
+        <field name="diffAmount" title="Difference Amt"><display/></field>
+        <field name="milkAvgTotal" title="Average sales per day"><display/></field>
+        <field name="paymentMethodType" title="Payment Mode"><display/></field>
+    </form>
 </forms>

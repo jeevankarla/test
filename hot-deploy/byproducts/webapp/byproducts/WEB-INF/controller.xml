@@ -253,7 +253,10 @@
     	<security https="true" auth="true"/>
     	<response name="success" type="view" value="duesFDRReportPDF"/>
     </request-map>
-    
+    <request-map uri="DuesFDRAvgReport.csv">
+     <security https="true" auth="true"/>
+    	<response name="success" type="view" value="DuesFDRAvgReportCSV"/>
+    </request-map>
     <request-map uri="crInstAbstractReport.pdf">
     	<security https="true" auth="true"/>
     	<response name="success" type="view" value="CrInstAbstractReportPDF"/>
@@ -710,7 +713,13 @@
         <response name="success" type="view" value="EmployeeSubsidy"/>
     </request-map> 
     
-     <request-map uri="createEmployee">
+    <request-map uri="updateSubsidyEmployee">
+        <security https="true" auth="true"/>
+        <event type="service" path="" invoke="updateSubsidyEmployee"/>
+        <response name="success" type="view" value="EmployeeSearch"/>
+        <response name="error" type="view" value="EmployeeSearch"/>
+    </request-map>
+    <request-map uri="createEmployee">
         <security https="true" auth="true"/>
         <event type="service"  invoke="createOrUpdateEmployeeSubsidy"/>
         <response name="success" type="view" value="EmployeeSearch"/>
@@ -1493,6 +1502,11 @@
      <security https="true" auth="true"/>
     	<response name="success" type="view" value="RegularIceCreamSaleBookPDF"/>
     </request-map>
+    <!-- <request-map uri="channelWiseSalesReport.pdf">
+     <security https="true" auth="true"/>
+    	<response name="success" type="view" value="ChannelWiseSalesReportPDF"/>
+    </request-map>-->
+    
     <request-map uri="chequeReturnReport.pdf">
      <security https="true" auth="true"/>
     	<response name="success" type="view" value="chequeReturnReportPDF"/>
@@ -1637,7 +1651,8 @@
     <view-map name="PrintPaymentRecieptPDF" type="screenfop" page="component://byproducts/widget/ByProductsReportScreens.xml#PrintPaymentRecieptPDF" content-type="application/pdf"/>
     <view-map name="chequeReturnReportPDF" type="screenfop" page="component://byproducts/widget/ByProductsReportScreens.xml#chequeReturnReportPDF" content-type="application/pdf"/>
     <view-map name="duesFDRReportPDF" type="screenfop" page="component://byproducts/widget/ByProductsReportScreens.xml#duesFDRReportPDF" content-type="application/pdf"/>
-    
+	<view-map name="DuesFDRAvgReportCSV" type="screencsv" page="component://byproducts/widget/ByProductsReportScreens.xml#DuesFDRAvgReportCSV" content-type="text/csv"/>
+  
     <view-map name="DailyPaymentCheckList" type="screenfop" page="component://byproducts/widget/ByProductsReportScreens.xml#DailyPaymentCheckList" content-type="application/pdf" encoding="none"/>
     <view-map name="PrintBoothPayments" type="screen" page="component://byproducts/widget/ByProductsReportScreens.xml#PrintBoothPayments"/>
     <view-map name="InvoicePrePrnt" type="screenfop" page="component://byproducts/widget/ByProductsReportScreens.xml#InvoicePrePrnt" content-type="text/plain"/>
