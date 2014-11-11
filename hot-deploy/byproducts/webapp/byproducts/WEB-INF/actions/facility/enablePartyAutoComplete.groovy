@@ -17,9 +17,21 @@ import in.vasista.vbiz.byproducts.ByProductNetworkServices;
 
 JSONArray partyJSON = new JSONArray();
 dctx = dispatcher.getDispatchContext();
+
 if(UtilValidate.isNotEmpty(parameters.roleTypeId)){//to handle IceCream Parties
 	roleTypeId =parameters.roleTypeId;
 	partyDetailsList = ByProductNetworkServices.getPartyByRoleType(dctx, [userLogin: userLogin, roleTypeId: roleTypeId]).get("partyDetails");
+	   //To handle KMFUnions along with OtherSuppliers in PurchaseOrder tab.
+		if("MAINSTORE_VENDOR"==parameters.roleTypeId){
+			unionPartyDetailsList = ByProductNetworkServices.getPartyByRoleType(dctx, [userLogin: userLogin, roleTypeId: "UNION"]).get("partyDetails");
+			//Debug.log("======unionPartyDetailsList=="+unionPartyDetailsList.size());
+			if(UtilValidate.isNotEmpty(unionPartyDetailsList)&&(UtilValidate.isNotEmpty(partyDetailsList))){
+				partyDetailsList.addAll(unionPartyDetailsList);
+			}
+			if(UtilValidate.isNotEmpty(unionPartyDetailsList)&&(UtilValidate.isEmpty(partyDetailsList))){
+				partyDetailsList=unionPartyDetailsList;
+			}
+		}
 	partyDetailsList.each{eachParty ->
 		JSONObject newPartyObj = new JSONObject();
 		newPartyObj.put("value",eachParty.partyId);
