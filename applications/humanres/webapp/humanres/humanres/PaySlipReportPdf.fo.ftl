@@ -47,6 +47,16 @@
 	            				</#if>
 	            			</#list>
 	            		</#if>
+	            		<#if payRateMap?has_content>
+	            			<#assign payRateMapList = payRateMap.entrySet()>
+	            			<#list payRateMapList as payRate>
+	            				<#if payRate.getKey()== partyId>
+	            					<#assign emplPayRate = payRate.getValue()>
+	            				</#if>
+	            			</#list>
+	            		</#if>
+	            		<#assign organizationDetails = delegator.findOne("PartyGroup", {"partyId" : parameters.OrganizationId}, true)>
+	            		<#assign oragnizationId = organizationDetails.get("comments")>
 		            	<#if listNo=1>
 		            		<fo:block font-family="Courier,monospace">
 			                	<fo:table> 
@@ -94,11 +104,11 @@
 																		                     				<fo:block linefeed-treatment="preserve" >&#xA;</fo:block>
 																		                     			</fo:table-cell>
 																		                     			<fo:table-cell >
-																		                     				<fo:block text-align="center" font-size="12pt" font-weight="bold">&#160;</fo:block>
+																		                     				<fo:block text-align="center" font-size="12pt" font-weight="bold">${emplPayRate?if_exists}</fo:block>
 																		                     				<fo:block linefeed-treatment="preserve" >&#xA;</fo:block>
 																		                     			</fo:table-cell>
 																		                     			<fo:table-cell >
-																		                     				<fo:block text-align="center" font-size="12pt" font-weight="bold">&#160;</fo:block>
+																		                     				<fo:block text-align="center" font-size="12pt" font-weight="bold">${oragnizationId?if_exists}</fo:block>
 																		                     				<fo:block linefeed-treatment="preserve" >&#xA;</fo:block>
 																		                     			</fo:table-cell>
 																		                     			<fo:table-cell >
@@ -474,11 +484,17 @@
 																		                     			</fo:table-cell>
 																		                     			<fo:table-cell >
 																		                     				<fo:block linefeed-treatment="preserve" >&#xA;</fo:block>
-																		                     				<fo:block text-align="center" font-size="12pt" font-weight="bold">&#160;</fo:block>
+																		                     				<fo:block text-align="center" font-size="12pt" font-weight="bold"><#if payRollHeader.getValue().get("PAYROL_DD_GPFLN")?has_content>${(payRollHeader.getValue().get("PAYROL_DD_GPFLN")*(-1))?if_exists}<#else>&#160;</#if></fo:block>
+																		                     				<#if payRollHeader.getValue().get("PAYROL_DD_GPFLN")?has_content>
+																		                     					<#assign totalDeductions=totalDeductions+(payRollHeader.getValue().get("PAYROL_DD_GPFLN")*(-1))>
+																		                     				</#if>
 																		                     			</fo:table-cell>
 																		                     			<fo:table-cell >
 																		                     				<fo:block linefeed-treatment="preserve" >&#xA;</fo:block>
-																		                     				<fo:block text-align="center" font-size="12pt" font-weight="bold">&#160;</fo:block>
+																		                     				<fo:block text-align="center" font-size="12pt" font-weight="bold"><#if payRollHeader.getValue().get("PAYROL_DD_DEDRS01")?has_content>${(payRollHeader.getValue().get("PAYROL_DD_DEDRS01")*(-1))?if_exists}<#else>&#160;</#if></fo:block>
+																		                     				<#if payRollHeader.getValue().get("PAYROL_DD_DEDRS01")?has_content>
+																		                     					<#assign totalDeductions=totalDeductions+(payRollHeader.getValue().get("PAYROL_DD_DEDRS01")*(-1))>
+																		                     				</#if>
 																		                     			</fo:table-cell>
 																		                     			<fo:table-cell >
 																		                     				<fo:block linefeed-treatment="preserve" >&#xA;</fo:block>
@@ -561,7 +577,10 @@
 																	                     				<fo:table-cell >
 																		                     				<fo:block linefeed-treatment="preserve" >&#xA;</fo:block>
 																		                     				<fo:block linefeed-treatment="preserve" >&#xA;</fo:block>
-																		                     				<fo:block text-align="center" font-size="12pt" font-weight="bold">&#160;</fo:block>
+																		                     				<fo:block text-align="center" font-size="12pt" font-weight="bold"><#if payRollHeader.getValue().get("PAYROL_DD_DEDID17")?has_content>${(payRollHeader.getValue().get("PAYROL_DD_GPFLN")*(-1))?if_exists}<#else>&#160;</#if></fo:block>
+																		                     				<#if payRollHeader.getValue().get("PAYROL_DD_DEDID17")?has_content>
+																		                     					<#assign totalDeductions=totalDeductions+(payRollHeader.getValue().get("PAYROL_DD_DEDID17")*(-1))>
+																		                     				</#if>
 																		                     			</fo:table-cell>
 																		                     			<fo:table-cell >
 																		                     				<fo:block linefeed-treatment="preserve" >&#xA;</fo:block>
