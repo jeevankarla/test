@@ -121,6 +121,7 @@ List<GenericValue> employementList = (List<GenericValue>)EmploymentsMap.get("emp
 employementList = EntityUtil.orderBy(employementList, UtilMisc.toList("partyIdTo"));
 employementIds = EntityUtil.getFieldListFromEntityList(employementList, "partyIdTo", true);
 
+Map payRateMap=FastMap.newInstance();
 Map unitIdMap=FastMap.newInstance();
 Map payRollMap=FastMap.newInstance();
 Map payRollSummaryMap=FastMap.newInstance();
@@ -232,6 +233,24 @@ if(UtilValidate.isNotEmpty(periodBillingList)){
 						}
 						unitIdMap.put(partyId,locationGeoId);
 					}
+					payRateList=[];
+					payRateList.add(EntityCondition.makeCondition("partyIdTo", EntityOperator.EQUALS ,partyId));
+					payRateList.add(EntityCondition.makeCondition("partyIdFrom", EntityOperator.EQUALS ,parameters.OrganizationId));
+					payRateList.add(EntityCondition.makeCondition("roleTypeIdFrom", EntityOperator.EQUALS ,"INTERNAL_ORGANIZATIO"));
+					payRateList.add(EntityCondition.makeCondition("fromDate", EntityOperator.BETWEEN, UtilMisc.toList(timePeriodStart,timePeriodEnd)));
+					payRateCond = EntityCondition.makeCondition(payRateList,EntityOperator.AND);
+					payRateList = delegator.findList("PayHistory", payRateCond, null, null, null, false);
+					if(UtilValidate.isNotEmpty(payRateList)){
+						payRateList.each { pay ->
+							salaryStepSeqId = pay.get("salaryStepSeqId");
+							payGradeId = pay.get("payGradeId");
+							payRateSalary = delegator.findOne("SalaryStep", [salaryStepSeqId : salaryStepSeqId, payGradeId : payGradeId], false);
+							if(UtilValidate.isNotEmpty(payRateSalary)){
+								salary = payRateSalary.get("amount");
+								payRateMap.put(partyId, salary);
+							}
+						}
+					}
 				}
 			}
 			netAmount=totEarnings+totDeductions;
@@ -331,8 +350,8 @@ if(UtilValidate.isNotEmpty(BankAdvicePayRollMap) && UtilValidate.isNotEmpty(para
 
 parameters.partyId=orgPartyId;
 context.put("unitIdMap",unitIdMap);
+context.put("payRateMap",payRateMap);
 context.put("InstallmentFinalMap",InstallmentFinalMap);
-
 context.put("payRollSummaryMap",payRollSummaryMap);
 context.put("payRollMap",payRollMap);
 context.put("payRollEmployeeMap",payRollEmployeeMap);
