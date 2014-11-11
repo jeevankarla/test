@@ -970,6 +970,28 @@ function makeDatePicker1(fromDateId ,thruDateId){
 							</table>	
 						</form>
 				   	</tr>
+				   	<tr class="alternate-row">
+						<form id="IncomeTaxReport" name="IncomeTaxReport" mothed="post" action="<@ofbizUrl>IncomeTaxReport.txt</@ofbizUrl>" target="_blank">
+							<table class="basic-table" cellspacing="5">
+								<tr class="alternate-row">
+									<td width="11%"><span class='h3'>Income Tax Report</span></td>
+				   					<td width="40%"><span class='h3'>Period Id</span>
+										<select name="customTimePeriodId" id="customTimePeriodId" class='h4'>
+											<#list customTimePeriodIdsList as customTimePeriod>
+												 <#if defaultTimePeriodId?exists && (defaultTimePeriodId == customTimePeriod.customTimePeriodId)>
+							      					<option value='${customTimePeriod.customTimePeriodId?if_exists}' selected="selected">${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(customTimePeriod.fromDate, "dd MMMMM, yyyy")} -${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(customTimePeriod.thruDate, "dd MMMMM, yyyy")}</option>
+							      					<#else>
+							      						<option value='${customTimePeriod.customTimePeriodId?if_exists}' >${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(customTimePeriod.fromDate, "dd MMMMM, yyyy")} -${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(customTimePeriod.thruDate, "dd MMMMM, yyyy")}</option>
+							                  		</option>
+							      				</#if>
+											</#list>
+										</select>
+									</td>	
+									<td width="7%"><span class='h3'><input type="submit" value="Download" class="buttontext"></span></td>
+								</tr>
+							</table>	
+						</form>
+				   </tr>
 			   	</table>
 			</div>
 		</div>
@@ -1098,6 +1120,7 @@ function makeDatePicker1(fromDateId ,thruDateId){
 			      		 			<td width="15%"><span class='h3'>Report Type:<select name="reportType" id="reportType">
 			      		 			<option value="deductee">Deductee</option>
 			      		 			<option value="deductor">Deductor</option>
+			      		 		<#--	<option value="challan">Challan</option>  -->
 			      		 			</select></span></td>  
 									<td width="15%"><span class='h3'><input type="submit" value="Download" class="buttontext"></span></td>
 								</tr>

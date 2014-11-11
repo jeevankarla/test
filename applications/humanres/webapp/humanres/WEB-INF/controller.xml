@@ -1951,6 +1951,10 @@ under the License.
         <response name="success"  type="view" value="viewEmployeeProfile"/>
         <response name="error" type="view" value="viewEmployeeProfile"/>
     </request-map>
+    <request-map uri="IncomeTaxReport.txt">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="IncomeTaxReport"/>
+    </request-map>
     <request-map uri="createPartyInsurance">
         <security https="true" auth="true"/>
         <event type="service"  invoke="createPartyInsurance"/>
@@ -2296,6 +2300,7 @@ under the License.
 	 <view-map name="PrintPayrollSummary" type="screenfop" page="component://humanres/widget/ReportHumanresSummaryScreens.xml#PrintPayrollSummary" content-type="application/pdf" encoding="none"></view-map>
 	 <view-map name="ExportBenefitsOrDeductionsPDF" type="screenfop" page="component://humanres/widget/ReportHumanresSummaryScreens.xml#ExportBenefitsOrDeductionsPDF" content-type="application/pdf" encoding="none"></view-map>
 	 <view-map name="IncrementCertificate" type="screenfop" page="component://humanres/widget/ReportHumanresSummaryScreens.xml#IncrementCertificate" content-type="application/pdf" encoding="none"></view-map>
+	 <view-map name="IncomeTaxReport" type="screenfop" page="component://humanres/widget/ReportHumanresSummaryScreens.xml#IncomeTaxReport" content-type="application/pdf" encoding="none"></view-map>
 	 <view-map name="EmployeeWiseSalaryDetails" type="screen" page="component://humanres/widget/ReportHumanresSummaryScreens.xml#EmployeeWiseSalaryDetails"/>
 	 <view-map name="EmployeeWiseSalaryDetailsCsv" type="screencsv" page="component://humanres/widget/ReportHumanresSummaryScreens.xml#EmployeeWiseSalaryDetailsCsv" content-type="text/csv" encoding="none"/>
 	 <view-map name="EmployeeWiseSalaryDetailsPdf" type="screenfop" page="component://humanres/widget/ReportHumanresSummaryScreens.xml#EmployeeWiseSalaryDetailsPdf" content-type="application/pdf" encoding="none"/>

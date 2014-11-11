@@ -912,7 +912,17 @@
 									<include-form name="ITAXQuarterlyDeductorStatement" location="component://humanres/widget/ReportHumanresSummaryForms.xml" />
 								</container>
 							</widgets>	
-						</section>	
+						</section>
+						<!-- <section>
+	                 	 	<condition>
+	                 	 		<if-compare operator="equals" value="challan" field="reportType"/>
+	                 	 	</condition>
+		                 	<widgets>
+								<container>
+									<include-form name="ITAXQuarterlyChallanStatement" location="component://humanres/widget/ReportHumanresSummaryForms.xml" />
+								</container>
+							</widgets>	
+						</section> -->	
 					</widgets>
 					<fail-widgets>
                     			<label style="h3">${uiLabelMap.HumanResViewPermissionError}</label>                        			                    					
@@ -1904,6 +1914,20 @@
                 </platform-specific>
             </widgets>
         </section>
+    </screen>
+    <screen name="IncomeTaxReport">
+            <section>
+               <actions>
+                    <property-map resource="ProductUiLabels" map-name="uiLabelMap" global="true"/>            
+                    <property-map resource="HumanResUiLabels" map-name="uiLabelMap" global="true"/> 
+                    <script location="component://humanres/webapp/humanres/WEB-INF/actions/reports/IncomeTaxReport.groovy"/>                              
+                </actions> 
+                <widgets>
+                    <platform-specific> 
+    				  <xsl-fo><html-template location="component://humanres/webapp/humanres/humanres/IncomeTaxReport.fo.ftl"/></xsl-fo> 
+                    </platform-specific>
+                </widgets>
+            </section>
     </screen>
 </screens>
 
