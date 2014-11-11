@@ -913,7 +913,7 @@
 								</container>
 							</widgets>	
 						</section>
-						<!-- <section>
+						<section>
 	                 	 	<condition>
 	                 	 		<if-compare operator="equals" value="challan" field="reportType"/>
 	                 	 	</condition>
@@ -922,7 +922,7 @@
 									<include-form name="ITAXQuarterlyChallanStatement" location="component://humanres/widget/ReportHumanresSummaryForms.xml" />
 								</container>
 							</widgets>	
-						</section> -->	
+						</section>	
 					</widgets>
 					<fail-widgets>
                     			<label style="h3">${uiLabelMap.HumanResViewPermissionError}</label>                        			                    					

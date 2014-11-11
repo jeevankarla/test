@@ -1120,7 +1120,7 @@ function makeDatePicker1(fromDateId ,thruDateId){
 			      		 			<td width="15%"><span class='h3'>Report Type:<select name="reportType" id="reportType">
 			      		 			<option value="deductee">Deductee</option>
 			      		 			<option value="deductor">Deductor</option>
-			      		 		<#--	<option value="challan">Challan</option>  -->
+			      		 			<option value="challan">Challan</option>
 			      		 			</select></span></td>  
 									<td width="15%"><span class='h3'><input type="submit" value="Download" class="buttontext"></span></td>
 								</tr>

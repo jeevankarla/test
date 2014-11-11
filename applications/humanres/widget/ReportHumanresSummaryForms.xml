@@ -240,6 +240,25 @@
 	    <field name="key1" title="Header" ><display/></field>
 		<field name="key2" title="Value" ><display/></field>
 	</form>	
+	<form name="ITAXQuarterlyChallanStatement" type="list" list-name="finalList" odd-row-style="alternate-row" default-table-style="basic-table hover-bar">
+	    <field name="serialNo" title="Running Serial No(301)"><display /></field>
+		<field name="sectionCode" title="Section Code"><display/></field>
+		<field name="tdsAmt" title="TDS (302)"><display/></field>
+		<field name="surcharge" title="Surcharge (303)"><display/></field>
+		<field name="educationCess" title="Education Cess (304)"><display/></field>
+		<field name="interest" title="Interest(305)"><display/></field>
+		<field name="others" title="Others(306)"><display/></field>
+		<field name="totalTax" title="Total Tax Deposited(302+303+304+305+306)(307)"><display /></field>
+		<field name="chequeNo" title="Chequee No/DD No (308)"><display /></field>
+		<field name="bsrCode" title="BSR Code(309)"><display/></field>
+		<field name="taxDeptDate" title="Date On Which Tax Deposited(310)"><display/></field>
+		<field name="challanSerialNo" title="Transfer Voucher/ Challan Serial No. (311)"><display/></field>
+		<field name="tdsBookEntry" title="Whether TDS Deposited by Book Entry (312)"><display/></field>
+		<field name="intersetAllocated" title="Interest  Allocated"><display/></field>
+		<field name="otherAmtAllocated" title="Other Amt Allocated"><display/></field>
+		<field name="nilChallanIndicator" title="NIL Challan Indicator"><display/></field>
+		<field name="remarkes" title="Remarks"><display/></field>
+	</form>	
 	 <form name="employeeLookup" type="single"  odd-row-style="header-row" default-table-style="basic-table"  target="EmployeeWiseSalaryDetails">
        	<field name="employeeId">
 			<lookup target-form-name="LookupEmployeeName"/>

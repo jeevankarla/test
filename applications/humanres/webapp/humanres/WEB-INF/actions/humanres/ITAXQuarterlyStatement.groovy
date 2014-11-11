@@ -60,7 +60,6 @@ if(reportType=="deductee"){
 		Map EmploymentsMap = HumanresService.getActiveEmployements(dctx,emplInputMap);
 		List<GenericValue> employementList = (List<GenericValue>)EmploymentsMap.get("employementList");
 		employementList = EntityUtil.orderBy(employementList, UtilMisc.toList("partyIdTo"));
-		
 		employementList.each{employment->
 			String lastName="";
 			if(employment.lastName!=null){
@@ -109,12 +108,13 @@ if(reportType=="deductee"){
 						}
 					}
 				}
-			}			
+			}
 		}	
 		start=UtilDateTime.getDayStart(UtilDateTime.addDaysToTimestamp(UtilDateTime.toTimestamp(end), 1));
 		monthSno=monthSno+1;
 	}
 	finalList = UtilMisc.sortMaps(finalList, UtilMisc.toList("partyId"));
+	
 	tempFinalList =[];
 	for(int i=0;i<finalList.size();i++){
 		Map tempMap = finalList.get(i);
@@ -341,5 +341,74 @@ if(reportType=="deductor"){
  
 context.finalList=finalList;
 }
-
+if(reportType=="challan"){
+	Timestamp start=monthBegin;
+	monthSno=1;
+	while(start<=monthEnd){
+	Timestamp end=UtilDateTime.getMonthEnd(start, timeZone, locale);
+		emplInputMap = [:];
+		emplInputMap.put("userLogin", userLogin);
+		emplInputMap.put("orgPartyId", "Company");
+		emplInputMap.put("fromDate", start);
+		emplInputMap.put("thruDate", end);
+		Map EmploymentsMap = HumanresService.getActiveEmployements(dctx,emplInputMap);
+		List<GenericValue> employementList = (List<GenericValue>)EmploymentsMap.get("employementList");
+		employementList = EntityUtil.orderBy(employementList, UtilMisc.toList("partyIdTo"));
+		monthTDS=0;
+		tempMap=[:];
+		employementList.each{employment->
+			customTimePeriodTotals = PayrollService.getEmployeeSalaryTotalsForPeriod(dctx,UtilMisc.toMap("partyId",employment.partyId,"fromDate",start,"thruDate",end,"userLogin",userLogin)).get("periodTotalsForParty");
+			if(UtilValidate.isNotEmpty(customTimePeriodTotals)){
+				Iterator customTimePeriodIter = customTimePeriodTotals.entrySet().iterator();
+				while(customTimePeriodIter.hasNext()){
+					Map.Entry customTimePeriodEntry = customTimePeriodIter.next();
+					if(customTimePeriodEntry.getKey() != "customTimePeriodTotals"){
+						periodTotals = customTimePeriodEntry.getValue().get("periodTotals");
+						grossBenefitAmt=periodTotals.get("grossBenefitAmt")
+						if(UtilValidate.isNotEmpty(grossBenefitAmt) && grossBenefitAmt>0){
+							incomeTax = periodTotals.get("PAYROL_DD_INC_TAX");
+							if(UtilValidate.isNotEmpty(incomeTax) && -(incomeTax)>0){
+								monthTDS=monthTDS-(incomeTax);
+								tempMap.put("monthSno",monthSno);
+								tempMap.put("tdsAmt",monthTDS);
+								surcharge=0.00;
+								educationCess=0.00;
+								interest=0.00;
+								others=0.00;
+								totalTax=surcharge+educationCess+interest+others+monthTDS;
+								tempMap.put("surcharge",surcharge);
+								tempMap.put("chequeNo","");
+								tempMap.put("bsrCode","6360218");
+								tempMap.put("taxDeptDate","");
+								tempMap.put("challanSerialNo","");
+								tempMap.put("tdsBookEntry","N");
+								tempMap.put("intersetAllocated","");
+								tempMap.put("otherAmtAllocated","");
+								tempMap.put("nilChallanIndicator","N");
+								tempMap.put("remarkes","");
+								tempMap.put("sectionCode","92B");
+								tempMap.put("educationCess",educationCess);
+								tempMap.put("totalTax",totalTax);
+								tempMap.put("interest",interest);
+								tempMap.put("others",others);
+							}
+						}
+					}
+				}
+			}
+			
+		}
+		finalList.add(tempMap);
+		start=UtilDateTime.getDayStart(UtilDateTime.addDaysToTimestamp(UtilDateTime.toTimestamp(end), 1));
+		monthSno=monthSno+1;
+	}
+	finalList = UtilMisc.sortMaps(finalList, UtilMisc.toList("partyId"));
+	tempFinalList =[];
+	for(int i=0;i<finalList.size();i++){
+		Map tempMap = finalList.get(i);
+		tempMap.put("serialNo",i+1);
+		tempFinalList.add(tempMap);
+	}
+	context.finalList=tempFinalList;
+}
 
