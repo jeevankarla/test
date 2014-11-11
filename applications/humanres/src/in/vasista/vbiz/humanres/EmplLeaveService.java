@@ -680,7 +680,7 @@ public class EmplLeaveService {
         int maxHalfDayHours = (Integer) context.get("maxHalfDayHours");
     	GenericDelegator delegator = (GenericDelegator) dctx.getDelegator();
 		LocalDispatcher dispatcher = dctx.getDispatcher();
-		Generic	Value userLogin = (GenericValue) context.get("userLogin");
+		GenericValue userLogin = (GenericValue) context.get("userLogin");
 		try {
 			if(UtilValidate.isNotEmpty(leaveTypeId)){
 				if(maxFullDayHours<120 || (maxHalfDayHours!=0 && maxHalfDayHours<120)){
