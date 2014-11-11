@@ -99,8 +99,6 @@ tax14pt5TotalMap["vatAmount"]=BigDecimal.ZERO;
 				conditionList.add(EntityCondition.makeCondition("partyIdFrom", EntityOperator.IN, partyIds));
 			}*/
 			conditionList.add(EntityCondition.makeCondition("invoiceDate", EntityOperator.GREATER_THAN_EQUAL_TO,dayBegin));
-			
-			conditionList.add(EntityCondition.makeCondition("invoiceDate", EntityOperator.GREATER_THAN_EQUAL_TO,dayBegin));
 			conditionList.add(EntityCondition.makeCondition("invoiceDate",EntityOperator.LESS_THAN_EQUAL_TO, dayEnd));
 			EntityCondition condition = EntityCondition.makeCondition(conditionList, EntityOperator.AND);
 			List<String> orderBy = UtilMisc.toList("invoiceDate","invoiceId","partyId");
@@ -114,6 +112,7 @@ tax14pt5TotalMap["vatAmount"]=BigDecimal.ZERO;
 			if(UtilValidate.isNotEmpty((invoiceItem.vatPercent)&&(invoiceItem.vatAmount))){
 				if(invoiceItem.vatPercent==5.5){
 				BigDecimal vatRevenue = invoiceItem.vatAmount;
+				invTotalVal=org.ofbiz.accounting.invoice.InvoiceWorker.getInvoiceItemTotal(invoiceItem);
 				invDetailMap=taxDetails5pt5Map[invoiceItem.invoiceId];
 					if(UtilValidate.isEmpty(invDetailMap)){
 					innerTaxItemMap=[:];
@@ -123,8 +122,10 @@ tax14pt5TotalMap["vatAmount"]=BigDecimal.ZERO;
 					innerTaxItemMap["tinNumber"]="";
 					innerTaxItemMap["vchrType"]="Purchase";
 					innerTaxItemMap["crOrDbId"]="D";
-					invTotalVal=org.ofbiz.accounting.invoice.InvoiceWorker.getInvoiceTotal(delegator,invoiceItem.invoiceId);
-					invTotalVal=invTotalVal-vatRevenue;
+					//invTotalVal=org.ofbiz.accounting.invoice.InvoiceWorker.getInvoiceTotal(delegator,invoiceItem.invoiceId);
+					//invTotalVal=org.ofbiz.accounting.invoice.InvoiceWorker.getInvoiceItemTotal(invoiceItem);
+					
+					//invTotalVal=invTotalVal-vatRevenue;
 					innerTaxItemMap["invTotalVal"]=invTotalVal;
 					innerTaxItemMap["vatAmount"]=vatRevenue;
 					tax5pt5TotalMap["invTotalVal"]+=invTotalVal;
@@ -140,14 +141,16 @@ tax14pt5TotalMap["vatAmount"]=BigDecimal.ZERO;
 					invDetailMap["vatAmount"]+=vatRevenue;
 					tax5pt5TotalMap["vatAmount"]+=vatRevenue;
 					
-					invDetailMap["invTotalVal"]-=vatRevenue;
-					tax5pt5TotalMap["invTotalVal"]-=vatRevenue;
+					invDetailMap["invTotalVal"]+=invTotalVal;
+					tax5pt5TotalMap["invTotalVal"]+=invTotalVal;
 					
 					taxDetails5pt5Map[invoiceItem.invoiceId]=invDetailMap;
 					}
 				}
 				if(invoiceItem.vatPercent==14.5){
 					BigDecimal vatRevenue = invoiceItem.vatAmount;
+					invTotalVal=org.ofbiz.accounting.invoice.InvoiceWorker.getInvoiceItemTotal(invoiceItem);
+					
 					invDetailMap=taxDetails14pt5Map[invoiceItem.invoiceId];
 						if(UtilValidate.isEmpty(invDetailMap)){
 						innerTaxItemMap=[:];
@@ -161,8 +164,9 @@ tax14pt5TotalMap["vatAmount"]=BigDecimal.ZERO;
 							 }
 						innerTaxItemMap["vchrType"]="Purchase";
 						innerTaxItemMap["crOrDbId"]="D";
-						invTotalVal=org.ofbiz.accounting.invoice.InvoiceWorker.getInvoiceTotal(delegator,invoiceItem.invoiceId);
-						invTotalVal=invTotalVal-vatRevenue;
+						//invTotalVal=org.ofbiz.accounting.invoice.InvoiceWorker.getInvoiceTotal(delegator,invoiceItem.invoiceId);
+						
+						//invTotalVal=invTotalVal-vatRevenue;
 						innerTaxItemMap["invTotalVal"]=invTotalVal;
 						innerTaxItemMap["vatAmount"]=vatRevenue;
 						
@@ -176,8 +180,8 @@ tax14pt5TotalMap["vatAmount"]=BigDecimal.ZERO;
 						invDetailMap["vatAmount"]+=vatRevenue;
 						tax14pt5TotalMap["vatAmount"]+=vatRevenue;
 						
-						invDetailMap["invTotalVal"]-=vatRevenue;
-						tax14pt5TotalMap["invTotalVal"]-=vatRevenue;
+						invDetailMap["invTotalVal"]+=invTotalVal;
+						tax14pt5TotalMap["invTotalVal"]+=invTotalVal;
 						
 						taxDetails14pt5Map[invoiceItem.invoiceId]=invDetailMap;
 						}
