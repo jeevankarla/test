@@ -382,19 +382,19 @@ under the License.
                         </if-compare>
                     </else>
                 </if-compare>
-                <log level="verbose" message="GL account: [${acctgTransEntry.glAccountId}] initial balance: [${glAccountOrganization.postedBalance}] ${acctgTransEntry.debitCreditFlag} [${acctgTransEntry.amount}]"/>
-                <!-- calculate the new posted balance for this gl account -->
+                <!-- <log level="verbose" message="GL account: [${acctgTransEntry.glAccountId}] initial balance: [${glAccountOrganization.postedBalance}] ${acctgTransEntry.debitCreditFlag} [${acctgTransEntry.amount}]"/>
+                calculate the new posted balance for this gl account
                 <calculate field="postedBalance" type="BigDecimal">
                     <calcop operator="get" field="glAccountOrganization.postedBalance"/>
                     <calcop operator="get" field="postingAmount"/>
                 </calculate>
                 <log level="verbose" message="GL account: [${acctgTransEntry.glAccountId}] final balance: [${postedBalance}]"/>
 
-                <!-- update the gl account's posted balance for this organization -->
+                update the gl account's posted balance for this organization
                 <set from-field="glAccount.glAccountId" field="updateGlAccountParams.glAccountId"/>
                 <set from-field="postedBalance" field="updateGlAccountParams.postedBalance" type="BigDecimal"/>
                 <set from-field="acctgTransEntry.organizationPartyId" field="updateGlAccountParams.organizationPartyId"/>
-                <call-service service-name="updateGlAccountOrganization" in-map-name="updateGlAccountParams"/>
+                <call-service service-name="updateGlAccountOrganization" in-map-name="updateGlAccountParams"/> -->
 
                 <!-- assemble the glAccountHistoryList, we will update all of these -->
                 <set from-field="customTimePeriodListByOrganizationPartyIdMap[acctgTransEntry.organizationPartyId]" field="customTimePeriodList"/>
