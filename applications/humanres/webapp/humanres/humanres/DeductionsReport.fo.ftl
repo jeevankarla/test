@@ -42,8 +42,15 @@ under the License.
  			<#assign partyAddressResult = dispatcher.runSync("getPartyPostalAddress", Static["org.ofbiz.base.util.UtilMisc"].toMap("partyId", "Company", "userLogin", userLogin))/>
      		<#list HeaderDetailsList as headerDetails>
      		<#assign deductionTypes= headerDetails.getValue().entrySet()>
+     		
+     		
 	     		<fo:page-sequence master-reference="main"> 	
 	     			<fo:static-content flow-name="xsl-region-before">
+	     			   <#list deductionTypes as dedType>
+	     			   		<#assign deductionAmt = dedType.getValue().get("employeeContribtn")>
+	     			   
+	     			   </#list>
+	     			   		     			<fo:block  keep-together="always" text-align="center" font-family="Courier,monospace" white-space-collapse="false" font-weight="bold" font-size="13pt">${partyGroup.groupName?if_exists}</fo:block>
 		     			<fo:block  keep-together="always" text-align="center" font-family="Courier,monospace" white-space-collapse="false" font-weight="bold" font-size="13pt">${partyGroup.groupName?if_exists}</fo:block>
 						<fo:block  keep-together="always" text-align="center" font-family="Courier,monospace" white-space-collapse="false" font-weight="bold" font-size="13pt"><#if partyAddressResult.address1?has_content>${partyAddressResult.address1?if_exists}</#if><#if (partyAddressResult.address2?has_content)>${partyAddressResult.address2?if_exists}</#if></fo:block>
 	     				<#assign headerCode = delegator.findOne("DeductionType", {"deductionTypeId" : headerDetails.getKey()}, true)>
@@ -250,11 +257,13 @@ under the License.
    							<#assign totalGrossAmt =0>
    							<#assign totalDeduction =0>
    							<#assign totalPremium = 0>
+   							
 							<fo:table-body>
 								<#list deductionTypes as deductionType>
 									<#assign sno=sno+1>
 									<#assign emplPositionAndFulfilment=delegator.findByAnd("EmplPositionAndFulfillment", {"employeePartyId" : deductionType.getKey()})/>
 									<#if  headerDetails.getKey() == "PAYROL_DD_EPF">
+									
 										<#if deductionType.getValue().get("employeeContribtn")!=0>
 											<fo:table-row>
 												<fo:table-cell><fo:block keep-together="always" border-style="solid">${sno}</fo:block></fo:table-cell>
