@@ -80,7 +80,7 @@ $(document).ready(function(){
         <tr><td><br/></td></tr>
         <tr>
           <td>&nbsp;</td>
-            <td align='left' valign='middle' nowrap="nowrap"><div class='h2'><#if changeFlag?exists && changeFlag=='InterUnitPurchase'>KMF Unit ID:<#else>Supplier Id:</#if></div></td>
+            <td align='left' valign='middle' nowrap="nowrap"><div class='h2'><#if changeFlag?exists && changeFlag=='InterUnitPurchase'>KMF Unit ID:<#else>Supplier/Union Id:</#if></div></td>
           <td>&nbsp;</td>
 			<#if party?exists && party?has_content>  
 	  	  		<input type="hidden" name="partyId" id="partyId" value="${party.partyId.toUpperCase()}"/>  

@@ -79,7 +79,6 @@ if(partyPostalAddress){
 	partyAddress = partyPostalAddress.address1;
 	context.partyAddress = partyAddress;
 }
-Debug.log("=changeFlag==="+changeFlag);
 prodList=[];
 
 if(UtilValidate.isNotEmpty(changeFlag) && changeFlag == "PurchaseOrder"){
@@ -104,12 +103,13 @@ if(UtilValidate.isNotEmpty(changeFlag) && changeFlag == "PurchaseOrder"){
 		prodList =delegator.findList("Product", discontinuationDateCondition,null, null, null, false);
 		
 }*/
-if(UtilValidate.isNotEmpty(changeFlag) && changeFlag == "InterUnitPurchase"){
-	prodList=ProductWorker.getProductsByCategory(delegator,"PUR_WSD",null);
+if(UtilValidate.isNotEmpty(changeFlag) &&( (changeFlag == "InterUnitPurchase")||(changeFlag == "PurchaseOrder"))){
+	tempProdList=ProductWorker.getProductsByCategory(delegator,"PUR_WSD",null);
+	Debug.log("===WSD==prodList==Size==="+tempProdList.size()+"prodList==Size==="+prodList.size());
+	prodList.addAll(tempProdList);
 }
 Debug.log("=====prodList=Size==="+prodList.size());
 productStoreId =PurchaseStoreServices.getPurchaseFactoryStore(delegator).get("factoryStoreId");
-Debug.log("=====productStoreId===="+productStoreId);
 Map inputProductRate = FastMap.newInstance();
 inputProductRate.put("productStoreId", "9000");
 inputProductRate.put("fromDate",effDateDayBegin);
