@@ -812,6 +812,9 @@
                 	<condition-expr field-name="periodTypeId" operator="equals" value="ATTENDANCE_MONTH"/>
                 	<order-by field-name="-thruDate"/>
                 </entity-condition>	
+                <entity-and list="customTimePeriodIdsList" entity-name="CustomTimePeriod">
+					<field-map field-name="periodTypeId" value="FISCAL_YEAR" />
+				</entity-and>
 	    		<entity-condition list="allBenefitsTypeList" entity-name="BenefitType">
 					<condition-expr field-name="benefitTypeId" operator="not-equals" value="PAYROL_BEN_SALARY"/>
 					<order-by field-name="sequenceNum"/>
