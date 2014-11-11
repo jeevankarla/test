@@ -6822,8 +6822,8 @@ public class ByProductNetworkServices {
 				if(taxType.equals("BED_SALE")){
 					BigDecimal taxPercent = priceType.getBigDecimal("taxPercentage");
 					if(UtilValidate.isNotEmpty(taxPercent) && taxPercent.compareTo(BigDecimal.ZERO)>0){
-						BigDecimal excisableAmount = (MRPPrice.multiply(new BigDecimal(65))).divide(new BigDecimal(100), 2, rounding);
-						BigDecimal amount = (excisableAmount.multiply(taxPercent)).divide(new BigDecimal(100), 2, rounding);
+						BigDecimal excisableAmount = (MRPPrice.multiply(new BigDecimal(65))).divide(new BigDecimal(100), 3, BigDecimal.ROUND_HALF_UP);
+						BigDecimal amount = (excisableAmount.multiply(taxPercent)).divide(new BigDecimal(100), 3, BigDecimal.ROUND_HALF_UP);
 						priceType.set("price", amount);
 						exciseInvolvedFlag = true;
 						tempPrice = tempPrice.add(amount);
@@ -6839,7 +6839,7 @@ public class ByProductNetworkServices {
 				if(taxType.equals("VAT_SALE") || taxType.equals("CST_SALE")){
 					BigDecimal taxPercent = priceType.getBigDecimal("taxPercentage");
 					if(UtilValidate.isNotEmpty(taxPercent) && taxPercent.compareTo(BigDecimal.ZERO)>0 && exciseInvolvedFlag){
-						BigDecimal amount = (tempPrice.multiply(taxPercent)).divide(new BigDecimal(100), 2, rounding);
+						BigDecimal amount = (tempPrice.multiply(taxPercent)).divide(new BigDecimal(100), 3, BigDecimal.ROUND_HALF_UP);
 						priceType.set("price", amount);
 					}
 				}
@@ -6866,7 +6866,7 @@ public class ByProductNetworkServices {
 				if(UtilValidate.isNotEmpty(taxItem.get("sourcePercentage")) && amount.compareTo(BigDecimal.ZERO)== 0){
 					percentage = (BigDecimal) taxItem.get("sourcePercentage");
 					if(UtilValidate.isNotEmpty(percentage) && UtilValidate.isNotEmpty(basicPrice)){
-						amount = (basicPrice.multiply(percentage)).divide(new BigDecimal(100), 2, rounding);
+						amount = (basicPrice.multiply(percentage)).divide(new BigDecimal(100), 3, BigDecimal.ROUND_HALF_UP);
 					}
 				}
 
@@ -6893,7 +6893,6 @@ public class ByProductNetworkServices {
 	    BigDecimal price = basicPrice.add(totalExciseDuty);
 	    price = price.subtract(discountAmount);
 	    BigDecimal totalPrice = price.add(totalTaxAmt);
-
 	    result.put("basicPrice", basicPrice);
 	    result.put("mrpPrice", MRPPrice);	    
 	    result.put("price", price);
