@@ -37,7 +37,7 @@ under the License.
 						<fo:block  keep-together="always" text-align="center" font-family="Courier,monospace" white-space-collapse="false" font-weight="bold">&#160;      ${uiLabelMap.KMFDairySubHeader}</fo:block>
 						<fo:block text-align="center" font-weight="bold" font-size="10pt" keep-together="always"> ROUTE WISE DISTRIBUTION TRANSPORT COST ABSTRACT REPORT</fo:block>
 						<fo:block text-align="center" font-weight="bold" font-size="10pt" keep-together="always" white-space-collapse="false">FROM: ${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(fromDateTime, "dd/MM/yyyy")}   TO:${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(thruDateTime, "dd/MM/yyyy")}</fo:block>				    		
-		            <fo:block >--------------------------------------------------------------------------------------------------------</fo:block>
+		            <fo:block >-------------------------------------------------------------------------------------------------------</fo:block>
 		            <fo:block>
 		            <fo:table >
                     <fo:table-column column-width="50pt"/>
@@ -50,7 +50,7 @@ under the License.
             		<fo:table-column column-width="80pt"/>
             		<fo:table-column column-width="90pt"/>                 										
                     			<fo:table-body>
-                    			<fo:table-row font-weight = "bold">
+                    			<fo:table-row font-weight = "bold" >
                     				<fo:table-cell>
                     		       		<fo:block text-align="left" font-size="10pt" keep-together="always">S.No</fo:block>
                     		       </fo:table-cell>
@@ -58,10 +58,10 @@ under the License.
                     		       		<fo:block text-align="left" font-size="10pt" keep-together="always">ROUTE</fo:block>
                     		       </fo:table-cell>
                     		       <fo:table-cell>
-                    		      		 <fo:block text-align="left" font-size="10pt" keep-together="always">FacilityRate</fo:block>
+                    		      		 <fo:block text-align="left" font-size="10pt" keep-together="always">Unit Rate</fo:block>
                     		       </fo:table-cell>
                     		       <fo:table-cell>
-                    		       		<fo:block text-align="left" font-size="10pt" keep-together="always">FacilitySize</fo:block>
+                    		       		<fo:block text-align="left" font-size="10pt" keep-together="always">Route Length</fo:block>
                     		       </fo:table-cell>
                     		        <fo:table-cell>
                     		        	<fo:block text-align="right" font-size="10pt" keep-together="always">Distribution</fo:block>
@@ -87,7 +87,7 @@ under the License.
                     		     </fo:table-body>
                     		     </fo:table>
                         </fo:block>
-		           <fo:block >--------------------------------------------------------------------------------------------------------</fo:block>
+		           <fo:block >-------------------------------------------------------------------------------------------------------</fo:block>
 		            </fo:static-content>
 					<fo:flow flow-name="xsl-region-body" font-family="Courier,monospace">
 						<fo:block>
@@ -160,7 +160,7 @@ under the License.
                     												 
                     												<#assign totGrTotNetPayable = totGrTotNetPayable.add(netPayable)>
                     												 
-                    											<fo:table-row>
+                    											<fo:table-row border-style="solid">
                     												<fo:table-cell><fo:block>${sno?if_exists}</fo:block></fo:table-cell>
                     												<fo:table-cell><fo:block>${trnsptMarginValues.getKey()?if_exists}</fo:block></fo:table-cell>
                     												<fo:table-cell><fo:block text-align="right">${facilityRate?if_exists}</fo:block></fo:table-cell>
@@ -183,7 +183,7 @@ under the License.
 												</#list>
 		 	    							</#list>
 		 	    							<fo:table-row>
-                    							<fo:table-cell><fo:block >-----------------------------------------------------------------------------------------------</fo:block></fo:table-cell>
+                    							<fo:table-cell><fo:block >-------------------------------------------------------------------------------------------------------</fo:block></fo:table-cell>
                     						</fo:table-row> 
                     						<fo:table-row font-weight = "bold">
                     							<fo:table-cell><fo:block>TOTAL</fo:block></fo:table-cell>
@@ -197,7 +197,7 @@ under the License.
                     							<fo:table-cell><fo:block text-align="right" font-size="10pt" keep-together="always">${totGrTotNetPayable?string("#0")?if_exists}.00</fo:block></fo:table-cell>
                     						</fo:table-row> 
                     						<fo:table-row>
-                    							<fo:table-cell><fo:block >-----------------------------------------------------------------------------------------------</fo:block></fo:table-cell>
+                    							<fo:table-cell><fo:block >-------------------------------------------------------------------------------------------------------</fo:block></fo:table-cell>
                     						</fo:table-row>                   							
                     					</fo:table-body>
                     				</fo:table>								
