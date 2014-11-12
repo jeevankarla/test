@@ -46,6 +46,7 @@ import org.ofbiz.entity.Delegator;
 import org.ofbiz.entity.GenericEntityException;
 import org.ofbiz.entity.GenericValue;
 import org.ofbiz.entity.condition.EntityCondition;
+import org.ofbiz.entity.condition.EntityConditionList;
 import org.ofbiz.entity.condition.EntityExpr;
 import org.ofbiz.entity.condition.EntityOperator;
 import org.ofbiz.entity.util.EntityFindOptions;
@@ -5040,6 +5041,10 @@ public class InvoiceServices {
         	BigDecimal amountAppliedRunningTotal = (BigDecimal)result.get("amountTotal");        	
         	List<GenericValue> payments = PaymentWorker.getNotAppliedPaymentsForParty(dctx ,UtilMisc.toMap("partyIdFrom",invoiceDetails.get("partyId"),"partyIdTo",invoiceDetails.get("partyIdFrom")));
         	//filter out the SecurityDeposit  payment  from not applied payments list
+        	EntityConditionList<EntityExpr> dateCondition = EntityCondition.makeCondition(UtilMisc.toList(
+                    EntityCondition.makeCondition("effectiveDate", EntityOperator.EQUALS, null),
+                    EntityCondition.makeCondition("effectiveDate", EntityOperator.LESS_THAN_EQUAL_TO, UtilDateTime.nowTimestamp())), EntityOperator.OR);
+        	payments = EntityUtil.filterByCondition(payments, dateCondition);
         	String securityDepositPmtType = "SECURITYDEPSIT_PAYIN";
         	payments = EntityUtil.filterByCondition(payments, EntityCondition.makeCondition("paymentTypeId",EntityOperator.NOT_EQUAL , securityDepositPmtType));
         	if (UtilValidate.isNotEmpty(payments)) {	
