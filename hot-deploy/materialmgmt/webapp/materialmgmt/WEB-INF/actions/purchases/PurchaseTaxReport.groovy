@@ -80,6 +80,7 @@ tax14pt5TotalMap=[:];
 tax14pt5TotalMap["invTotalVal"]=BigDecimal.ZERO;
 tax14pt5TotalMap["vatAmount"]=BigDecimal.ZERO;
 
+
 		invoiceMap = [:];
 		invoiceDtlsMap = [:];
 		
@@ -109,10 +110,21 @@ tax14pt5TotalMap["vatAmount"]=BigDecimal.ZERO;
 		invoiceItemsIter.each{invoiceItem->
 			//innerTaxItemMap=[:];
 			
-			if(UtilValidate.isNotEmpty((invoiceItem.vatPercent)&&(invoiceItem.vatAmount))){
+			if(UtilValidate.isNotEmpty(invoiceItem.vatPercent) && UtilValidate.isNotEmpty(invoiceItem.vatAmount)){
 				if(invoiceItem.vatPercent==5.5){
 				BigDecimal vatRevenue = invoiceItem.vatAmount;
 				invTotalVal=org.ofbiz.accounting.invoice.InvoiceWorker.getInvoiceItemTotal(invoiceItem);
+				BigDecimal totalBed = BigDecimal.ZERO;
+				   if(UtilValidate.isNotEmpty(invoiceItem.bedPercent) && UtilValidate.isNotEmpty(invoiceItem.bedAmount)){
+						totalBed+=invoiceItem.bedAmount;
+					}
+					if(UtilValidate.isNotEmpty(invoiceItem.bedcessPercent) && UtilValidate.isNotEmpty(invoiceItem.bedcessAmount)){
+						 totalBed+=invoiceItem.bedcessAmount;
+					}
+					if(UtilValidate.isNotEmpty(invoiceItem.bedseccessPercent) && UtilValidate.isNotEmpty(invoiceItem.bedseccessAmount)){
+					totalBed+=invoiceItem.bedseccessAmount;
+					}
+				invTotalVal+=totalBed;
 				invDetailMap=taxDetails5pt5Map[invoiceItem.invoiceId];
 					if(UtilValidate.isEmpty(invDetailMap)){
 					innerTaxItemMap=[:];
@@ -150,7 +162,17 @@ tax14pt5TotalMap["vatAmount"]=BigDecimal.ZERO;
 				if(invoiceItem.vatPercent==14.5){
 					BigDecimal vatRevenue = invoiceItem.vatAmount;
 					invTotalVal=org.ofbiz.accounting.invoice.InvoiceWorker.getInvoiceItemTotal(invoiceItem);
-					
+					BigDecimal totalBed = BigDecimal.ZERO;
+					if(UtilValidate.isNotEmpty(invoiceItem.bedPercent) && UtilValidate.isNotEmpty(invoiceItem.bedAmount)){
+						totalBed+=invoiceItem.bedAmount;
+					}
+					if(UtilValidate.isNotEmpty(invoiceItem.bedcessPercent) && UtilValidate.isNotEmpty(invoiceItem.bedcessAmount)){
+						 totalBed+=invoiceItem.bedcessAmount;
+					}
+					if(UtilValidate.isNotEmpty(invoiceItem.bedseccessPercent) && UtilValidate.isNotEmpty(invoiceItem.bedseccessAmount)){
+					totalBed+=invoiceItem.bedseccessAmount;
+					}
+					invTotalVal+=totalBed;
 					invDetailMap=taxDetails14pt5Map[invoiceItem.invoiceId];
 						if(UtilValidate.isEmpty(invDetailMap)){
 						innerTaxItemMap=[:];
