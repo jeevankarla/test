@@ -515,7 +515,7 @@ public static Map<String, Object> approveICPOrder(DispatchContext dctx, Map cont
          		return ServiceUtil.returnError("promoAdjAmt cannot be zero");
 			}
 			BigDecimal taxAdj = (promoAdjAmt.multiply(new BigDecimal(14.5))).divide(new BigDecimal(100), 2, BigDecimal.ROUND_HALF_UP);
-			 String promoAdjustmentTypeId = "PROMOTION_ADJUSTMENT";
+			 String promoAdjustmentTypeId = "PPD_PROMO_ADJ";
 			 Map createOrderAdjustmentCtx = UtilMisc.toMap("userLogin",userLogin);
 	    	 createOrderAdjustmentCtx.put("orderId", orderId);
 	    	 createOrderAdjustmentCtx.put("orderAdjustmentTypeId", promoAdjustmentTypeId);    	
