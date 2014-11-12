@@ -156,14 +156,14 @@ if (organizationPartyId) {
         BigDecimal totalOfYearToDateCredit = BigDecimal.ZERO;
         isPosted = parameters.isPosted;
 
-        while (customTimePeriodEndDate <= UtilDateTime.addDaysToTimestamp(UtilDateTime.toTimestamp(currentTimePeriod.thruDate), 1)){
+        //while (customTimePeriodEndDate <= UtilDateTime.addDaysToTimestamp(UtilDateTime.toTimestamp(currentTimePeriod.thruDate), 1)){
             if ("ALL".equals(isPosted)) {
                 isPosted = "";
             }
-			/*acctgTransEntriesAndTransTotal = dispatcher.runSync("getAcctgTransEntriesAndTransTotal",
-				[customTimePeriodStartDate : fromDateTimestamp, customTimePeriodEndDate : UtilDateTime.getDayEnd(fromDateTimestamp), organizationPartyId : organizationPartyId, glAccountId : glAccountId, isPosted : isPosted, userLogin : userLogin]);*/
-			 acctgTransEntriesAndTransTotal = dispatcher.runSync("getAcctgTransEntriesAndTransTotal", 
-                    [customTimePeriodStartDate : customTimePeriodStartDate, customTimePeriodEndDate : customTimePeriodEndDate, organizationPartyId : organizationPartyId, glAccountId : glAccountId, isPosted : isPosted, userLogin : userLogin]);
+			acctgTransEntriesAndTransTotal = dispatcher.runSync("getAcctgTransEntriesAndTransTotal",
+				[customTimePeriodStartDate : dayBegin, customTimePeriodEndDate : dayEnd, organizationPartyId : organizationPartyId, glAccountId : glAccountId, isPosted : isPosted, userLogin : userLogin]);
+			 //acctgTransEntriesAndTransTotal = dispatcher.runSync("getAcctgTransEntriesAndTransTotal", 
+                    //[customTimePeriodStartDate : customTimePeriodStartDate, customTimePeriodEndDate : customTimePeriodEndDate, organizationPartyId : organizationPartyId, glAccountId : glAccountId, isPosted : isPosted, userLogin : userLogin]);
             totalOfYearToDateDebit = totalOfYearToDateDebit + acctgTransEntriesAndTransTotal.debitTotal;
             acctgTransEntriesAndTransTotal.totalOfYearToDateDebit = totalOfYearToDateDebit.setScale(decimals, rounding);
             totalOfYearToDateCredit = totalOfYearToDateCredit + acctgTransEntriesAndTransTotal.creditTotal;
@@ -184,7 +184,7 @@ if (organizationPartyId) {
             retStampStartDate.setNanos(0);
             customTimePeriodStartDate = retStampStartDate;
             customTimePeriodEndDate = UtilDateTime.getMonthEnd(UtilDateTime.toTimestamp(retStampStartDate), timeZone, locale);
-        }
+        //}
 		
 		closingBalance = openingBalance;
 		totOpeningBalance = openingBalance;
@@ -345,6 +345,41 @@ if (organizationPartyId) {
 							}
 						}
 					}
+					//invoice item type here
+					invoicePaymentMap = [:];
+					if(UtilValidate.isNotEmpty(paymentId)){
+						paymentApplicationList = delegator.findList("PaymentApplication", EntityCondition.makeCondition("paymentId", EntityOperator.EQUALS, paymentId), null, null, null, false);
+						if(UtilValidate.isNotEmpty(paymentApplicationList)){
+							paymentApplicationList.each { paymentApplication->
+								invoiceId = paymentApplication.invoiceId;
+								totalsMap = [:];
+								if(UtilValidate.isNotEmpty(invoiceId)){
+									invoiceItemList = delegator.findList("InvoiceItem", EntityCondition.makeCondition("invoiceId", EntityOperator.EQUALS, invoiceId), null, null, null, false);
+									if(UtilValidate.isNotEmpty(invoiceItemList)){
+										invoiceItemList.each { invoiceItem->
+											quantity = invoiceItem.quantity;
+											qtyAmnt = invoiceItem.amount;
+											amountApplied = 0;
+											if(UtilValidate.isNotEmpty(quantity) && quantity!=0){
+												amountApplied = (quantity*qtyAmnt);
+											}
+											invoiceItemTypeId = invoiceItem.invoiceItemTypeId;
+											if(UtilValidate.isNotEmpty(invoiceItemTypeId)){
+												if(UtilValidate.isEmpty(totalsMap[invoiceItemTypeId])){
+													totalsMap[invoiceItemTypeId] = amountApplied;
+												}else{
+													totalsMap[invoiceItemTypeId] += amountApplied;
+												}
+											}
+										}
+									}
+								}
+								if(UtilValidate.isNotEmpty(totalsMap)){
+									invoicePaymentMap.put(invoiceId,totalsMap);
+								}
+							}
+						}
+					}
 					// Prepare List for CSV
 					debitAmount = BigDecimal.ZERO;
 					creditAmount = BigDecimal.ZERO;
@@ -427,6 +462,9 @@ if (organizationPartyId) {
 							acctgTransEntryMap["comments"] = paymentComments;
 							acctgTransEntryMap["paymentMethodTypeDes"] = paymentMethodTypeDes;
 							acctgTransEntryMap["instrumentNum"] = instrumentNum;
+							if(UtilValidate.isNotEmpty(invoicePaymentMap)){
+								acctgTransEntryMap["invoicePaymentMap"] = invoicePaymentMap;
+							}
 						}
 					}else{
 						if(UtilValidate.isNotEmpty(transSequenceId)){
@@ -525,6 +563,7 @@ financialAcctgTransList.each{ dayFinAccount ->
 			dayFinAccountMap["debitAmount"] = dayFinAccount.debitAmount;
 			dayFinAccountMap["creditAmount"] = dayFinAccount.creditAmount;
 			dayFinAccountMap["closingBalance"] = dayFinAccount.closingBalance;
+			dayFinAccountMap["invoicePaymentMap"] = dayFinAccount.invoicePaymentMap;
 			tempDayTotalsMap = [:];
 			tempDayTotalsMap.putAll(dayFinAccountMap);
 			dayFinAccountTransList.add(tempDayTotalsMap);
@@ -545,7 +584,7 @@ financialAcctgTransList.each{ dayFinAccount ->
 		}
 		//dayFinAccountTransList = UtilMisc.sortMaps(dayFinAccountTransList, UtilMisc.toList("paymentId"));
 		context.dayFinAccountTransList = dayFinAccountTransList;
+		
 }
-
 
 
