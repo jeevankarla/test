@@ -340,8 +340,8 @@ ${setRequestAttribute("OUTPUT_FILENAME", "TaxInvoice.pdf")}
             						<#assign text = "Value Added Tax(VAT) ">
             					<#elseif eachTax.getKey()=="VAT_SALE" && (eachTax.getValue()<0)>
             						<#assign text = "VAT Adjustment">
-            					<#elseif eachTax.getKey()=="PROMOTION_ADJUSTMENT">
-            						<#assign text = "Promotion Adjustment">
+            					<#elseif eachTax.getKey()=="PPD_PROMO_ADJ">
+            						<#assign text = "PPD Promotion Adjustment">
             					<#else>
             						<#assign text = "Other Adjustments">
             					</#if>
