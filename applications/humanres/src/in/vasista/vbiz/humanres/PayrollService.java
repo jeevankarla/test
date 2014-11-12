@@ -5722,6 +5722,7 @@ public static Map<String, Object> generateEmployerContributionPayrollBilling(Dis
         leadaysMap.put("CL", casualLeaves);
         leadaysMap.put("EL", earnedLeaves);
         leadaysMap.put("HPL", HPLeaves);
+        
         try{
         	List<GenericValue> leaveTypeList=delegator.findList("EmplLeaveType",null,null,null,null,false);
         	leaveTypeIds=EntityUtil.getFieldListFromEntityList(leaveTypeList, "leaveTypeId", true);
@@ -5731,6 +5732,11 @@ public static Map<String, Object> generateEmployerContributionPayrollBilling(Dis
         		if((leaveTypeIds.get(i)).equals("CL") || (leaveTypeIds.get(i)).equals("EL") || (leaveTypeIds.get(i)).equals("HPL")){
         			GenericValue customTimePeriod = delegator.findOne("CustomTimePeriod",UtilMisc.toMap("customTimePeriodId", customTimePeriodId), false);
         			Timestamp fromDateTime=UtilDateTime.toTimestamp(customTimePeriod.getDate("fromDate"));
+        			
+        			Map customTimePeriodIdMap = PayrollService.checkPayrollGeneratedOrNotForDate(dctx,UtilMisc.toMap("userLogin",userLogin,"punchdate",fromDateTime));
+        			if (ServiceUtil.isError(customTimePeriodIdMap)) {
+        				return customTimePeriodIdMap;
+        			}
         			
         			List conditionList = FastList.newInstance();
         			conditionList.add(EntityCondition.makeCondition("thruDate",EntityOperator.LESS_THAN,UtilDateTime.toSqlDate(fromDateTime)));

@@ -207,6 +207,11 @@
 			<link target="EditShiftDays"></link>        
         </menu-item> 
         <menu-item name="creditLeaves" title="Credit Leaves">
+        <condition>
+             <and>
+                <if-has-permission permission="CREDIT_LEAVES_TAB"  action="_VIEW"/>
+          </and> 
+        </condition> 
 			<link target="CreditLeaves"></link>        
         </menu-item>                         
     </menu>	 	

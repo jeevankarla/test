@@ -33,6 +33,12 @@ under the License.
     <SecurityGroupPermission groupId="FULLADMIN" permissionId="LOAN_TAB_VIEW"/>
     <SecurityGroupPermission groupId="LOAN_TAB" permissionId="LOAN_TAB_VIEW"/>
     
+    <SecurityPermission description="View Permission for Credit Leave Days." permissionId="CREDIT_LEAVES_TAB_VIEW"/>
+    <SecurityGroup description="View Credit Leave Days" groupId="CREDIT_LEAVES_TAB"/>
+    <SecurityGroupPermission groupId="FULLADMIN" permissionId="CREDIT_LEAVES_TAB_VIEW"/>
+    <SecurityGroupPermission groupId="HUMANRES_ADMIN" permissionId="CREDIT_LEAVES_TAB_VIEW"/>
+    <SecurityGroupPermission groupId="CREDIT_LEAVES_TAB" permissionId="CREDIT_LEAVES_TAB_VIEW"/>
+    
     <SecurityPermission description="View Permission for Loan Recovery Tab." permissionId="LOAN_RECOVERY_TAB_VIEW"/>
     <SecurityGroup description="View Loan Tab" groupId="LOAN_RECOVERY_TAB"/>
     <SecurityGroupPermission groupId="FULLADMIN" permissionId="LOAN_RECOVERY_TAB_VIEW"/>

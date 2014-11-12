@@ -164,7 +164,6 @@ under the License.emplpunch
 	<service name="UpdateCreditLeaves" engine="java" 
     		location="in.vasista.vbiz.humanres.PayrollService" invoke="UpdateCreditLeaves" auth="true">
     	<description>Credit Leaves for Probationary Staff</description>
-    	<permission-service service-name="humanResManagerPermission" main-action="EMPLOYEE_EDIT"/>
     	<attribute name="partyId" mode="IN" type="String" optional="false"/>
     	<attribute name="customTimePeriodId" mode="IN" type="String" optional="false"/>
         <attribute name="CL" mode="IN" type="BigDecimal" optional="true"/>
