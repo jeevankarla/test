@@ -366,7 +366,9 @@ under the License.
 					            						<fo:block  keep-together="always" text-align="right" font-size="12pt" white-space-collapse="false" font-weight="bold">${totalAmt?if_exists?string("#0.00")}</fo:block>
 					            					</fo:table-cell>
 												</fo:table-row>
+												<#assign exduty = "N">
 												<#if invoiceTaxItems?has_content>
+												<#assign totWithBedSale=0>
 													<#list invoiceTaxItems as eachTaxItem>
 													<#assign taxDetails = eachTaxItem.entrySet()>
 													<#list taxDetails as eachTax>
@@ -377,6 +379,8 @@ under the License.
 							            					<#assign text = "">
 							            					<#if eachTax.getKey()=="BED_SALE">
 							            						<#assign text = "Excise Duty (Deposit) Including CESS 2.06%">
+							            						<#assign exduty = "Y">
+							            						<#assign totWithBedSale = totWithBedSale+totalAmt+eachTax.getValue()>
 							            					<#elseif eachTax.getKey()=="CST_SALE">
 							            						<#assign text = "Central Sales Tax(CST) 2.0%">
 							            					<#elseif eachTax.getKey()=="SERTAX_SALE">
@@ -398,6 +402,17 @@ under the License.
 							            					</fo:table-cell>
 							            					<#assign grandTotal = grandTotal+eachTax.getValue()>
 														</fo:table-row>
+														<#if exduty == "Y">
+														<fo:table-row border-style="solid">
+															<fo:table-cell number-columns-spanned="9" >
+							            						<fo:block  keep-together="always" text-align="center" font-size="12pt" font-weight="bold" white-space-collapse="false">Total</fo:block>
+							            					</fo:table-cell>
+							            					<fo:table-cell >
+							            						<fo:block  keep-together="always" text-align="right" font-size="12pt" white-space-collapse="false">${totWithBedSale?string("#0.00")}</fo:block>
+							            					</fo:table-cell>
+							            					</fo:table-row>
+							            					<#assign exduty = "N">
+														</#if>
 													</#list>
 													</#list>
 												</#if>
