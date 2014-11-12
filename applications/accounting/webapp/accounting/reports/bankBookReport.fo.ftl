@@ -47,9 +47,9 @@ ${setRequestAttribute("OUTPUT_FILENAME", "cashBookReport.pdf")}
                     	<fo:table-column column-width="100pt"/>
                     	<fo:table-column column-width="100pt"/>
                     	<fo:table-column column-width="100pt"/>  
-               	    	<fo:table-column column-width="175pt"/>
-            			<fo:table-column column-width="150pt"/> 		
-            			<fo:table-column column-width="150pt"/>
+               	    	<fo:table-column column-width="200pt"/>
+            			<fo:table-column column-width="125pt"/> 		
+            			<fo:table-column column-width="125pt"/>
 	                    <fo:table-body>
 	                    <fo:table-row >
                        			<fo:table-cell border-style="solid">
@@ -85,9 +85,9 @@ ${setRequestAttribute("OUTPUT_FILENAME", "cashBookReport.pdf")}
                     	<fo:table-column column-width="100pt"/>
                     	<fo:table-column column-width="100pt"/>
                     	<fo:table-column column-width="100pt"/>  
-               	    	<fo:table-column column-width="175pt"/>
-            			<fo:table-column column-width="150pt"/> 		
-            			<fo:table-column column-width="150pt"/>
+               	    	<fo:table-column column-width="200pt"/>
+            			<fo:table-column column-width="125pt"/> 		
+            			<fo:table-column column-width="125pt"/>
                     <fo:table-body>
                     	<#assign lineNo = 0>
                     	<#assign oldTransactionDate =  "nodate">
@@ -106,8 +106,6 @@ ${setRequestAttribute("OUTPUT_FILENAME", "cashBookReport.pdf")}
 	                		<#assign instrumentNum = (finAcctngDetails.get("instrumentNum")?if_exists)/>
 	                		<#assign finAccountOwnerPartyId = (finAcctngDetails.get("finAccountOwnerPartyId")?if_exists)/>
 	                		<#assign finAccountPartyName = (finAcctngDetails.get("finAccountPartyName")?if_exists)/>
-	                		<#assign invoicePaymentMap = (finAcctngDetails.get("invoicePaymentMap")?if_exists)/>
-	                		
 	                		
 	                		<#if ((paymentId)?has_content)>
 								<#if (paymentId != "DAY TOTAL")>
@@ -131,8 +129,10 @@ ${setRequestAttribute("OUTPUT_FILENAME", "cashBookReport.pdf")}
 				            			<fo:block linefeed-treatment="preserve">&#xA;</fo:block>
 				       				</fo:table-cell>
 				       				<fo:table-cell>
-									      <fo:block text-align="left"  font-weight="bold" font-size="13pt" keep-together="always">Opening Balance : </fo:block>
-									</fo:table-cell>
+	                                    <fo:block text-align="right" font-size="13pt" font-weight = "bold" keep-together="always"> 
+	                                        Opening Balance:
+	                                    </fo:block>
+	                                </fo:table-cell>
 	                       			<fo:table-cell>
 	                                    <fo:block text-align="right" font-size="13pt" font-weight = "bold" keep-together="always"> 
 	                                         <#if openingBalance?has_content>${(openingBalance)?string("##0.00")}<#else>0.00</#if>
@@ -249,51 +249,14 @@ ${setRequestAttribute("OUTPUT_FILENAME", "cashBookReport.pdf")}
                               <fo:table-row>
 									<#if ((comments)?has_content)>
                                 	<fo:table-cell>
-	                                    <fo:block text-align="left" keep-together="always" font-weight="bold" font-size="12pt">Description: ${(comments)}</fo:block>
+	                                    <fo:block text-align="left" keep-together="always" font-size="12pt">Description:  ${(comments)}</fo:block>
 	                                </fo:table-cell>
                                  	<#else>
                                  	<fo:table-cell>
 	                                    <fo:block text-align="center"></fo:block>
 	                                </fo:table-cell>
                                 	</#if>
-                                	<fo:table-cell>
-				            			<fo:block linefeed-treatment="preserve">&#xA;</fo:block>
-				       				</fo:table-cell>
-				       				</fo:table-row>
-				       				<#if (paymentId != "DAY TOTAL")>
-				       				<#if invoicePaymentMap?has_content>
-                                	<#assign invPayMapEntry = invoicePaymentMap.entrySet()>
-                                		<#list invPayMapEntry as invPayList>
-                                			<#assign invPayMap = invPayList.getValue().entrySet()>
-                                			<#list invPayMap as invPayMapList>
-									       		<fo:table-row>
-									       				<fo:table-cell>
-									            			<fo:block text-align="left"  font-weight="bold" font-size="12pt" keep-together="always">InvoiceItemType: </fo:block>
-									       				</fo:table-cell>
-									       				<#assign invoiceItemTypeDetails = delegator.findOne("InvoiceItemType", {"invoiceItemTypeId" : invPayMapList.getKey()}, false)?if_exists/>		
-									       				<#if invoiceItemTypeDetails?has_content>
-									       				<#assign invItemDescription = invoiceItemTypeDetails.description?if_exists>
-									       				<fo:table-cell>
-									            			<fo:block text-align="left"  font-weight="bold" font-size="12pt" keep-together="always">${(invItemDescription)}</fo:block>
-									       				</fo:table-cell>
-									       				</#if>
-									       				<fo:table-cell>
-				            								<fo:block linefeed-treatment="preserve">&#xA;</fo:block>
-				       									</fo:table-cell>
-				       									<fo:table-cell>
-				            								<fo:block linefeed-treatment="preserve">&#xA;</fo:block>
-				       									</fo:table-cell>
-				       									<fo:table-cell>
-									            			<fo:block text-align="left"  font-weight="bold" font-size="12pt" keep-together="always">Amount Applied: </fo:block>
-									       				</fo:table-cell>
-									       				<fo:table-cell>
-									            			<fo:block text-align="left"  font-weight="bold" font-size="12pt" keep-together="always">${(invPayMapList.getValue()?if_exists?string("#0.00"))}</fo:block>
-									       				</fo:table-cell>
-						                       	</fo:table-row>	
-						                       	</#list>
-				       					</#list>
-				       				</#if>
-	                       		</#if>
+	                       		</fo:table-row>	
                               <#if (paymentId == "DAY TOTAL")>
                               <fo:table-row>
 									<fo:table-cell>
@@ -301,29 +264,21 @@ ${setRequestAttribute("OUTPUT_FILENAME", "cashBookReport.pdf")}
 				       				</fo:table-cell>
 								</fo:table-row>
                               <fo:table-row>
-                             		 <fo:table-cell>
-	                                    <fo:block text-align="left" font-size="13pt" keep-together="always" font-weight = "bold"> 
-	                                        Debit Amount : 
-	                                    </fo:block>
-	                                </fo:table-cell>
-				       				<fo:table-cell >
-	                                    <fo:block text-align="right" keep-together="always" font-weight = "bold" font-size="13pt">
-	                                             <#if debitAmount?has_content>${(debitAmount)?string("##0.00")}<#else>0.00</#if>
-	                                    </fo:block>
-	                                </fo:table-cell>
-	                                <fo:table-cell>
+                              		<fo:table-cell>
 				            			<fo:block linefeed-treatment="preserve">&#xA;</fo:block>
 				       				</fo:table-cell>
-	                                <fo:table-cell>
-	                                    <fo:block text-align="left" font-size="13pt" keep-together="always" font-weight = "bold"> 
-	                                        Credit Amount : 
-	                                    </fo:block>
-	                                </fo:table-cell>
-	                                <fo:table-cell >
-	                                    <fo:block text-align="right" keep-together="always" font-weight = "bold" font-size="13pt">
-	                                          <#if creditAmount?has_content>${(creditAmount)?string("##0.00")}<#else>0.00</#if>
-	                                    </fo:block>
-	                                </fo:table-cell>
+				       				<fo:table-cell>
+				            			<fo:block linefeed-treatment="preserve">&#xA;</fo:block>
+				       				</fo:table-cell>
+				       				<fo:table-cell>
+				            			<fo:block linefeed-treatment="preserve">&#xA;</fo:block>
+				       				</fo:table-cell>
+				       				<fo:table-cell>
+				            			<fo:block linefeed-treatment="preserve">&#xA;</fo:block>
+				       				</fo:table-cell>
+				       				<fo:table-cell>
+				            			<fo:block linefeed-treatment="preserve">&#xA;</fo:block>
+				       				</fo:table-cell>
 				       				<fo:table-cell>
 	                                    <fo:block text-align="right" font-size="13pt" keep-together="always" font-weight = "bold"> 
 	                                        Closing Balance:
@@ -334,13 +289,8 @@ ${setRequestAttribute("OUTPUT_FILENAME", "cashBookReport.pdf")}
 	                                      	<#if closingBalance?has_content>${(closingBalance)?string("##0.00")}<#else>0.00</#if>
 	                                    </fo:block>
 	                                </fo:table-cell>
-	                           </fo:table-row> 
+	                           </fo:table-row>     
                               </#if>
-                              <fo:table-row>
-									<fo:table-cell>
-				            			<fo:block linefeed-treatment="preserve">&#xA;</fo:block>
-				       				</fo:table-cell>
-								</fo:table-row>
                           </#list>
                           <fo:table-row>
 							<fo:table-cell>
