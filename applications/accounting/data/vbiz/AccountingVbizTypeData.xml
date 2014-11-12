@@ -731,6 +731,6 @@
 
 
    <PaymentType  description="Loan Recovery Payment" hasTable="N" parentTypeId="DISBURSEMENT" paymentTypeId="LOANRECOVERY_PAYOUT"/>
-   <PaymentGlAccountTypeMap glAccountTypeId="ACC_REC_UN" organizationPartyId="Company" paymentTypeId="LOANRECOVERY_PAYOUT"/>
+   <PaymentGlAccountTypeMap glAccountTypeId="ACC_PAY_UN" organizationPartyId="Company" paymentTypeId="LOANRECOVERY_PAYOUT"/>
    
 </entity-engine-xml>
