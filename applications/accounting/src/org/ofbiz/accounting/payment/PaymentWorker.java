@@ -422,7 +422,20 @@ public class PaymentWorker {
      */
     public static List<GenericValue> getNotAppliedPaymentsForParty(DispatchContext dctx, Map<String, Object> context) {
     	Delegator delegator = dctx.getDelegator();
+        
+    	Map result = getNotAppliedPaymentDetailsForParty(dctx, context);
+    	
+    	List<GenericValue> paymentsNotAppliedList = FastList.newInstance();
+    	
+    	if(UtilValidate.isNotEmpty(result.get("unAppliedPaymentList"))){
+    		paymentsNotAppliedList = (List) result.get("unAppliedPaymentList");
+    	}
+        return paymentsNotAppliedList;
+    }
+    public static Map<String, Object> getNotAppliedPaymentDetailsForParty(DispatchContext dctx, Map<String, Object> context) {
+    	Delegator delegator = dctx.getDelegator();
         List<GenericValue> paymentsNotAppliedList = FastList.newInstance();
+        Map paymentDetails = FastMap.newInstance();
         try {
         	List condList = FastList.newInstance();
         	condList.add(EntityCondition.makeCondition("partyIdFrom", EntityOperator.EQUALS, (String)context.get("partyIdFrom")));
@@ -431,6 +444,8 @@ public class PaymentWorker {
         	condList.add(EntityCondition.makeCondition("statusId", EntityOperator.NOT_IN, UtilMisc.toList("PMNT_VOID","PMNT_CANCELLED" ,"PMNT_CONFIRMED")));
         	EntityCondition cond = EntityCondition.makeCondition(condList ,EntityOperator.AND);
             List<GenericValue> tempPaymentsNotAppliedList = delegator.findList("Payment", cond, null, null, null, false);
+            Map paymentUnApplied = FastMap.newInstance();
+            BigDecimal unAppliedTotalAmt = BigDecimal.ZERO;
             for (GenericValue payment : tempPaymentsNotAppliedList) {            	
 	        	BigDecimal paymentNotAppliedAmount = PaymentWorker.getPaymentNotApplied(payment);
 	        	if(paymentNotAppliedAmount.compareTo(BigDecimal.ZERO) == 0){
@@ -439,14 +454,21 @@ public class PaymentWorker {
 	        		delegator.store(payment);
 	        		continue;	        		
 	        	}
+	        	unAppliedTotalAmt = unAppliedTotalAmt.add(paymentNotAppliedAmount);
+	        	paymentUnApplied.put(payment.getString("paymentId"), paymentNotAppliedAmount);
 	        	paymentsNotAppliedList.add(payment);
                
             }
+            paymentDetails.put("unAppliedPaymentTotalAmt", unAppliedTotalAmt);
+            paymentDetails.put("UnAppliedPaymentDetails", paymentUnApplied);
+            paymentDetails.put("unAppliedPaymentList", paymentsNotAppliedList);
+      
         } catch (GenericEntityException e) {
             Debug.logWarning(e, module);
         }
-        return paymentsNotAppliedList;
+        return paymentDetails;
     }
+    
     public static Map<String, Object> createVoucherPayment(DispatchContext dctx, Map<String, ? extends Object> context){
         Delegator delegator = dctx.getDelegator();
         LocalDispatcher dispatcher = dctx.getDispatcher();
