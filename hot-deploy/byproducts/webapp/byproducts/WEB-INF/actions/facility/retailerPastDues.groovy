@@ -14,6 +14,7 @@ import org.ofbiz.entity.condition.EntityCondition;
 import org.ofbiz.entity.condition.EntityOperator;
 import org.ofbiz.entity.util.EntityUtil;
 import org.ofbiz.entity.util.EntityFindOptions;
+import org.ofbiz.accounting.payment.PaymentWorker;
 
 dctx = dispatcher.getDispatchContext();
 if(parameters.boothId){
@@ -34,6 +35,12 @@ if(facility){
 		boothDuesDetail = ByProductNetworkServices.getDaywiseBoothDues(dctx, [userLogin: userLogin, facilityId:facilityId, isByParty:Boolean.TRUE, enableCRInst:Boolean.TRUE]);
 	}
 	
+	resultCtx = PaymentWorker.getNotAppliedPaymentDetailsForParty(dctx, [userLogin: userLogin, partyIdFrom:facility.ownerPartyId, partyIdTo: "Company"]);
+	
+	unAppliedTotalAmt = resultCtx.get("unAppliedPaymentTotalAmt");
+	unappliedAmtDetail = resultCtx.get("UnAppliedPaymentDetails");
+	unAppliedPaymentList = resultCtx.get("unAppliedPaymentList");
+	
 	duesList = boothDuesDetail["boothDuesList"];
 	JSONArray boothDuesList= new JSONArray();
 	duesList.each { due ->
@@ -43,9 +50,26 @@ if(facility){
 		dueJSON.put("amount", UtilFormatOut.formatCurrency(due.amount, context.get("currencyUomId"), locale));
 		boothDuesList.add(dueJSON);
 	}
+	
+	JSONArray boothUnAppPaymentList= new JSONArray();
+	unAppliedPaymentList.each { eachPay ->
+		JSONObject advPayJSON = new JSONObject();
+		paymentId = eachPay.paymentId;
+		unAppAmt = unappliedAmtDetail.get(paymentId);
+		
+		advPayJSON.put("supplyDate", UtilDateTime.toDateString(eachPay.paymentDate, "dd MMM, yyyy"));
+		advPayJSON.put("amount", unAppAmt);
+		advPayJSON.put("amount", UtilFormatOut.formatCurrency(unAppAmt, context.get("currencyUomId"), locale));
+		boothUnAppPaymentList.add(advPayJSON);
+	}
 	JSONObject boothDuesMap = new JSONObject();
-	boothDuesMap.put("totalAmount", UtilFormatOut.formatCurrency(boothDuesDetail["totalAmount"], context.get("currencyUomId"), locale));
+	if(!unAppliedTotalAmt){
+		unAppliedTotalAmt = 0;
+	}
+	totalDueAmt = boothDuesDetail["totalAmount"]-unAppliedTotalAmt;
+	boothDuesMap.put("totalAmount", UtilFormatOut.formatCurrency(totalDueAmt, context.get("currencyUomId"), locale));
 	boothDuesMap.put("boothDuesList", boothDuesList);
+	boothDuesMap.put("boothAdvPaymentList", boothUnAppPaymentList);
 	boothsDuesDaywiseJSON.put(facilityId, boothDuesMap);
 	context.boothsDuesDaywiseJSON = boothsDuesDaywiseJSON;
 	request.setAttribute("boothsDuesDaywiseJSON", boothsDuesDaywiseJSON);

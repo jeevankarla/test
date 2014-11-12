@@ -604,9 +604,10 @@ public class ByProductNetworkServices {
 	public static List getByProdShipmentIds(Delegator delegator,Timestamp fromDate, Timestamp thruDate, List routeIds) {
 
 		List conditionList = FastList.newInstance();
-		List shipmentList = FastList.newInstance();
+		//List shipmentList = FastList.newInstance();
 		List shipments = FastList.newInstance();
 		Timestamp dayBegin = UtilDateTime.nowTimestamp();
+		EntityListIterator shipmentIter = null;
 		Timestamp dayEnd = UtilDateTime.getDayEnd(thruDate);
 		try {
 			List<GenericValue> shipmentTypeIds = delegator.findList("ShipmentType", EntityCondition.makeCondition("parentTypeId", EntityOperator.IN, UtilMisc.toList("LMS_SHIPMENT", "LMS_SHIPMENT_SUPPL")),null, null, null, false);
@@ -627,13 +628,23 @@ public class ByProductNetworkServices {
 		conditionList.add(EntityCondition.makeCondition("estimatedShipDate",EntityOperator.LESS_THAN_EQUAL_TO, dayEnd));
 		EntityCondition condition = EntityCondition.makeCondition(conditionList, EntityOperator.AND);
 		try {
-			shipmentList = delegator.findList("Shipment", condition, null,null, null, false);
+			//shipmentList = delegator.findList("Shipment", condition, null,null, null, false);
+			shipmentIter = delegator.find("Shipment", condition, null, UtilMisc.toSet("shipmentId"), null, null);
+			GenericValue shipment;
+			while( shipmentIter != null && (shipment = shipmentIter.next()) != null) {
+				String shipmentId = shipment.getString("shipmentId");
+				shipments.add(shipmentId);
+			}
 		} catch (Exception e) {
 			Debug.logError(e, "Exception while getting shipment ids ", module);
 		}
-		if (!UtilValidate.isEmpty(shipmentList)) {
-			shipments.addAll(EntityUtil.getFieldListFromEntityList(shipmentList, "shipmentId", false));
-		}
+		if (shipmentIter != null) {
+            try {
+            	shipmentIter.close();
+            } catch (GenericEntityException e) {
+                Debug.logWarning(e, module);
+            }
+        }
 
 		return shipments;
 	}
@@ -3638,7 +3649,7 @@ public class ByProductNetworkServices {
 			conditionList.add(EntityCondition.makeCondition("estimatedShipDate", EntityOperator.LESS_THAN_EQUAL_TO,	dayEnd));
 			EntityCondition condition = EntityCondition.makeCondition(conditionList, EntityOperator.AND);
 			try {
-				shipmentList = delegator.findList("Shipment", condition, null,null, null, false);
+				shipmentList = delegator.findList("Shipment", condition, UtilMisc.toSet("shipmentId"),null, null, false);
 			} catch (Exception e) {
 				Debug.logError(e, "Cannot parse date string: "+ estimatedDeliveryDateStr, module);
 			}
@@ -3675,7 +3686,7 @@ public class ByProductNetworkServices {
 			}
 			condition = EntityCondition.makeCondition(conditionList,EntityOperator.AND);
 			try {
-				shipmentList = delegator.findList("Shipment", condition, null,	null, null, false);
+				shipmentList = delegator.findList("Shipment", condition, UtilMisc.toSet("shipmentId"),	null, null, false);
 			} catch (Exception e) {
 				Debug.logError(e, "Cannot parse date string: "	+ estimatedDeliveryDateStr, module);
 			}
@@ -3693,7 +3704,7 @@ public class ByProductNetworkServices {
 			}
 			EntityCondition condition = EntityCondition.makeCondition(conditionList, EntityOperator.AND);
 			try {
-				shipmentList = delegator.findList("Shipment", condition, null,null, null, false);
+				shipmentList = delegator.findList("Shipment", condition, UtilMisc.toSet("shipmentId"),null, null, false);
 			} catch (Exception e) {
 				Debug.logError(e, "Cannot parse date string: "+ estimatedDeliveryDateStr, module);
 			}
@@ -5670,29 +5681,37 @@ public class ByProductNetworkServices {
 		BigDecimal roundedtotalDueAmount = ZERO;
 		Map<String, Object> boothPayments = FastMap.newInstance();
 		boothPayments = getBoothPayments(delegator, ctx.getDispatcher(),
-				userLogin, UtilDateTime.toDateString(UtilDateTime.nowTimestamp(), "yyyy-MM-dd HH:mm:ss"),null, boothId, null, Boolean.FALSE, Boolean.TRUE, Boolean.TRUE);
+				userLogin, UtilDateTime.toDateString(UtilDateTime.nowTimestamp(), "yyyy-MM-dd HH:mm:ss"),null, boothId, null, Boolean.TRUE, Boolean.TRUE, Boolean.TRUE);
 		List boothPaymentsList = (List) boothPayments.get("boothPaymentsList");
-		List boothPaymentsUnRoundedList = (List) boothPayments.get("boothPaymentsUnRoundedList");
+		/*List boothPaymentsUnRoundedList = (List) boothPayments.get("boothPaymentsUnRoundedList");*/
 		if (boothPaymentsList.size() != 0) {
 			Map boothPayment = (Map) boothPaymentsList.get(0);
 			roundedAmount = (BigDecimal) boothPayment.get("grandTotal");
 			roundedtotalDueAmount = (BigDecimal) boothPayment.get("totalDue");
 		}
-		if (boothPaymentsUnRoundedList.size() != 0) {
-			Map boothPayment = (Map) boothPaymentsUnRoundedList.get(0);
-			unRoundedAmount = (BigDecimal) boothPayment.get("grandTotal");
-			unRoundedtotalDueAmount = (BigDecimal) boothPayment.get("totalDue");
+		Timestamp nowTime = UtilDateTime.getDayStart(UtilDateTime.nowTimestamp());
+		Timestamp OBDate = UtilDateTime.addDaysToTimestamp(nowTime, 1);
+		BigDecimal openingBalance = (BigDecimal)getOpeningBalanceForBooth(ctx, UtilMisc.toMap("userLogin", userLogin ,"isForCalOB","Y","saleDate", OBDate, "facilityId", boothId, "isByParty",Boolean.TRUE)).get("openingBalance");
+		
+		if(openingBalance.compareTo(BigDecimal.ZERO)<0){
+			openingBalance = BigDecimal.ZERO;
 		}
+		
+		/*Map resultCtx = getBoothUnappliedPayments(ctx, UtilMisc.toMap("boothId", boothId, "userLogin", userLogin));
+		BigDecimal unappliedAmt = (BigDecimal)resultCtx.get("boothAdvanceAmount");
+		if(unappliedAmt.compareTo(BigDecimal.ZERO)>0){
+			unRoundedtotalDueAmount = unRoundedtotalDueAmount.subtract(unappliedAmt);
+		}*/
 		boothDues.put("amount", roundedAmount.doubleValue());
-		boothTotalDues.put("amount", unRoundedAmount.doubleValue());
-		boothTotalDues.put("totalDueAmount",unRoundedtotalDueAmount.doubleValue());
+		boothTotalDues.put("amount", roundedAmount.doubleValue());
+		boothTotalDues.put("totalDueAmount",openingBalance.doubleValue());
 		result = ServiceUtil.returnSuccess();
 		result.put("boothDues", boothDues);
 		result.put("boothTotalDues", boothTotalDues);
 		Debug.logInfo("result= " + result, module);
 		return result;
 	}
-
+	
 	/**
 	 * Get booth dues running Total
 	 * 

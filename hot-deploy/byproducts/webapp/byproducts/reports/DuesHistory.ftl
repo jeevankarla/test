@@ -72,15 +72,24 @@
 		
 			var boothMap = boothsData[boothId];
 			var boothPayments = boothMap["boothDuesList"];
-		 		
-			for (i = 0; i < boothPayments.length; ++i) {
+		 	var boothAdvPayments = boothMap["boothAdvPaymentList"];
+		 	
+		 	message += "<tr><td align='left'><h2>Date</h2></td><td align='right'><h2>Amount</h2></td></tr>";
+			message += "<tr><td align='left' colspan='2' align='center'><h3><i>Invoice Outstanding</i></h3></td></tr>";
+						
+			for (var i = 0; i < boothPayments.length; ++i) {
 				message += "<tr><td align='left'>" + boothPayments[i].supplyDate + "</td><td align='right'>" +
 					boothPayments[i].amount + "</td></tr>";
-				
-					
+			}
+			if(boothAdvPayments.length>0){
+				message += "<tr><td align='left' colspan='2' align='center'><h3><i>Payment Unapplied</h3></i></td></tr>";
+			}
+			for (var i = 0; i < boothAdvPayments.length; ++i) {
+				message += "<tr><td align='left'>" + boothAdvPayments[i].supplyDate + "</td><td align='right'>" +
+					boothAdvPayments[i].amount + "</td></tr>";
 			}
 			message += "<tr class='h3'><td></td><td class='h3' align='left'><span align='center'><button onclick='return cancelForm();' class='submit'>Close</button></span></td></tr>";
-			title = "Dues for Booth " + boothId + "<br /> [Total: " + boothMap["totalAmount"] + "]";
+			title = "Dues for Party " + boothId + "<br /> [Total: " + boothMap["totalAmount"] + "]";
 			message += "</table>";
 			Alert(message, title);
 		}
