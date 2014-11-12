@@ -295,30 +295,39 @@ if (organizationPartyId) {
 					finAccountOwnerPartyId = "";
 					finAccountPartyName = "";
 					transSequenceId = "";
+					finAccountMethodType = "";
 					
 					if(UtilValidate.isEmpty(paymentId)){
 						finAccountTransAttr = delegator.findOne("FinAccountTransAttribute", [finAccountTransId : finAccountTransId, attrName : "FATR_CONTRA"], false);
 						if(UtilValidate.isNotEmpty(finAccountTransAttr)){
 							attrValue = finAccountTransAttr.attrValue;
 							finAccountTrans = delegator.findOne("FinAccountTrans", [finAccountTransId : attrValue], false);
-							finAccountTransTypeId = finAccountTrans.finAccountTransTypeId;
-							finAccountTransType = delegator.findOne("FinAccountTransType", [finAccountTransTypeId : finAccountTransTypeId], false);
-							finAccountDescription = finAccountTransType.description;
-							finAccountId = finAccountTrans.finAccountId;
-							finAccount = delegator.findOne("FinAccount", [finAccountId : finAccountId], false);
-							if(UtilValidate.isNotEmpty(finAccount)){
-								finAccountOwnerPartyId = finAccount.ownerPartyId;
-								if(UtilValidate.isNotEmpty(finAccountOwnerPartyId)){
-									finAccountPartyName = PartyHelper.getPartyName(delegator, finAccountOwnerPartyId, false);
+							if(UtilValidate.isNotEmpty(finAccountTrans)){
+								finAccountTransTypeId = finAccountTrans.finAccountTransTypeId;
+								reasonEnumId = finAccountTrans.reasonEnumId;
+								if(UtilValidate.isNotEmpty(reasonEnumId) && reasonEnumId.equals("FATR_CONTRA")){
+									finAccountMethodType = "Contra";
 								}
-							}
-							finAccountName = finAccount.finAccountName;
-							//fin account sequence logic here
-							finAccntTransSequenceList = delegator.findList("FinAccntTransSequence", EntityCondition.makeCondition("finAccountTransId", EntityOperator.EQUALS, finAccountTransId), null, null, null, false);
-							if(UtilValidate.isNotEmpty(finAccntTransSequenceList)){
-								finAccntTransSequence = EntityUtil.getFirst(finAccntTransSequenceList);
-								if(UtilValidate.isNotEmpty(finAccntTransSequence)){
-									transSequenceId = finAccntTransSequence.transSequenceId;
+								if(UtilValidate.isNotEmpty(finAccountTransTypeId)){
+									finAccountTransType = delegator.findOne("FinAccountTransType", [finAccountTransTypeId : finAccountTransTypeId], false);
+									finAccountDescription = finAccountTransType.description;
+									finAccountId = finAccountTrans.finAccountId;
+									finAccount = delegator.findOne("FinAccount", [finAccountId : finAccountId], false);
+									if(UtilValidate.isNotEmpty(finAccount)){
+										finAccountOwnerPartyId = finAccount.ownerPartyId;
+										if(UtilValidate.isNotEmpty(finAccountOwnerPartyId)){
+											finAccountPartyName = PartyHelper.getPartyName(delegator, finAccountOwnerPartyId, false);
+										}
+									}
+									finAccountName = finAccount.finAccountName;
+									//fin account sequence logic here
+									finAccntTransSequenceList = delegator.findList("FinAccntTransSequence", EntityCondition.makeCondition("finAccountTransId", EntityOperator.EQUALS, finAccountTransId), null, null, null, false);
+									if(UtilValidate.isNotEmpty(finAccntTransSequenceList)){
+										finAccntTransSequence = EntityUtil.getFirst(finAccntTransSequenceList);
+										if(UtilValidate.isNotEmpty(finAccntTransSequence)){
+											transSequenceId = finAccntTransSequence.transSequenceId;
+										}
+									}
 								}
 							}
 						}
@@ -430,6 +439,7 @@ if (organizationPartyId) {
 							acctgTransEntryMap["partyName"] = finAccountName;
 							acctgTransEntryMap["finAccountOwnerPartyId"] = finAccountOwnerPartyId;
 							acctgTransEntryMap["finAccountPartyName"] = finAccountPartyName;
+							acctgTransEntryMap["paymentMethodTypeDes"] = finAccountMethodType;
 						}
 						acctgTransEntryMap["description"] = finAccountDescription;
 					}
