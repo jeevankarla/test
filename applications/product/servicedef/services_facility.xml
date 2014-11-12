@@ -35,6 +35,14 @@ under the License.
         <implements service="permissionInterface"/>
     </service>
     <!-- Product Inventory Services -->
+    <service name="updateInventoryItemDetailFatSnf" default-entity-name="InventoryItemDetail" engine="simple"
+                location="component://product/script/org/ofbiz/product/inventory/InventoryServices.xml" invoke="updateInventoryItemDetailFatSnf" auth="false">
+        <description>Create an InventoryItem</description>
+        <permission-service service-name="facilityGenericPermission" main-action="CREATE"/>
+        <auto-attributes include="pk" mode="INOUT" optional="true"/>
+        <auto-attributes include="nonpk" mode="IN" optional="true"/>
+    </service>
+    
     <service name="createInventoryItem" default-entity-name="InventoryItem" engine="simple"
                 location="component://product/script/org/ofbiz/product/inventory/InventoryServices.xml" invoke="createInventoryItem" auth="true">
         <description>Create an InventoryItem</description>
@@ -434,6 +442,8 @@ under the License.
         <permission-service service-name="facilityGenericPermission" main-action="CREATE"/>
         <implements service="interfaceInventoryTransfer"/>
         <attribute name="xferQty" type="BigDecimal" mode="IN" optional="false"/>
+        <attribute name="fatPercent" type="BigDecimal" mode="IN" optional="true"/>
+        <attribute name="snfPercent" type="BigDecimal" mode="IN" optional="true"/>
         <attribute name="inventoryTransferId" type="String" mode="OUT" optional="false"/>
     </service>
     <service name="updateInventoryTransfer" engine="simple"

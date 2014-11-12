@@ -2025,6 +2025,8 @@ under the License.
       <field name="activationNumber" type="value"></field>
       <field name="activationValidThru" type="date-time"></field>
       <field name="unitCost" type="fixed-point"><description>Higher precision in case it is a calculated number</description></field>
+      <field name="fatPercent" type="fixed-point"></field>  
+      <field name="snfPercent" type="fixed-point"></field>  
       <field name="currencyUomId" type="id"><description>The currency Uom of the unit cost.</description></field>
       <prim-key field="inventoryItemId"/>
       <relation type="one" fk-name="INV_ITEM_TYPE" rel-entity-name="InventoryItemType">
@@ -2167,6 +2169,8 @@ under the License.
       <field name="physicalInventoryId" type="id"></field>
       <field name="reasonEnumId" type="id"></field>
       <field name="description" type="description"></field>
+      <field name="fatPercent" type="fixed-point"></field>  
+      <field name="snfPercent" type="fixed-point"></field>  
       <prim-key field="inventoryItemId"/>
       <prim-key field="inventoryItemDetailSeqId"/>
       <relation type="one" fk-name="INV_ITDTL_INVIT" rel-entity-name="InventoryItem">
@@ -2395,6 +2399,8 @@ under the License.
       <field name="saleDate" type="date-time"></field>
       <field name="openingBalance" type="fixed-point"></field>
       <field name="receipts" type="fixed-point"></field>
+      <field name="fatPercent" type="fixed-point"></field>
+      <field name="snfPercent" type="fixed-point"></field>
       <field name="sales" type="fixed-point"></field>
       <field name="xferIn" type="fixed-point"></field>
       <field name="xferOut" type="fixed-point"></field>

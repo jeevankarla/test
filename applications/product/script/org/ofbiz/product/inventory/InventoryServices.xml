@@ -1370,4 +1370,18 @@ under the License.
             </else>
         </if-empty>
     </simple-method>
+    <simple-method method-name="updateInventoryItemDetailFatSnf" short-description="update Inventory Item Detail fat and snf">
+    	<entity-one value-field="inventoryItem" entity-name="InventoryItem"></entity-one>
+         <entity-and list="inventoryItemDetailList" entity-name="InventoryItemDetail">
+         		<field-map field-name="inventoryItemId" from-field="inventoryItem.inventoryItemId"/>
+         </entity-and>
+         <if-not-empty field="inventoryItemDetailList">
+         	 <set field="listSize" value="${util:size(inventoryItemDetailList)}" type="Long"/>
+           <iterate entry="inventoryItemDetail" list="inventoryItemDetailList">
+           		<set field="inventoryItemDetail.fatPercent" from-field="inventoryItem.fatPercent"/>
+           		<set field="inventoryItemDetail.snfPercent" from-field="inventoryItem.snfPercent"/>
+           		<store-value value-field="inventoryItemDetail"/>
+           </iterate>
+        </if-not-empty>
+    </simple-method>
 </simple-methods>

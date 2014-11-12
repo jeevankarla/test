@@ -34,6 +34,7 @@ import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.UtilDateTime;
 import org.ofbiz.base.util.UtilGenerics;
 import org.ofbiz.base.util.UtilMisc;
+import org.ofbiz.base.util.UtilNumber;
 import org.ofbiz.base.util.UtilProperties;
 import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.entity.Delegator;
@@ -61,6 +62,17 @@ public class InventoryServices {
     public static final String resource = "ProductUiLabels";
     public static final MathContext generalRounding = new MathContext(10);
 
+    private static BigDecimal ZERO = BigDecimal.ZERO;
+    private static int decimals;
+    private static int rounding;
+    public static final String resource_error = "OrderErrorUiLabels";
+    static {
+        decimals = 3;//UtilNumber.getBigDecimalScale("order.decimals");
+        rounding = UtilNumber.getBigDecimalRoundingMode("order.rounding");
+
+        // set zero to the proper scale
+        if (decimals != -1) ZERO = ZERO.setScale(decimals); 
+    }	
     public static Map<String, Object> prepareInventoryTransfer(DispatchContext dctx, Map<String, ? extends Object> context) {
         Delegator delegator = dctx.getDelegator();
         String inventoryItemId = (String) context.get("inventoryItemId");
@@ -858,6 +870,126 @@ public class InventoryServices {
     }
 
 
+    public static Map<String, Object> consolidateInventoryForRawMilk(DispatchContext dctx, Map<String, ? extends Object> context) {
+        Delegator delegator = dctx.getDelegator();
+        LocalDispatcher dispatcher = dctx.getDispatcher();
+        Timestamp checkTime = (Timestamp)context.get("checkTime");
+        String facilityId = (String)context.get("facilityId");
+        String productId = (String)context.get("productId");
+        String minimumStockStr = (String)context.get("minimumStock");
+        Locale locale = (Locale) context.get("locale");
+        GenericValue userLogin = (GenericValue)context.get("userLogin");
+        Map<String, Object> result = FastMap.newInstance();
+        Map<String, Object> resultOutput = FastMap.newInstance();
+       String inventoryItemTypeId = null;
+       String ownerPartyId = null;
+        /*Map<String, String> contextInput = UtilMisc.toMap("productId", productId, "facilityId", facilityId, "statusId", statusId);
+        GenericValue product = null;
+        try {
+            product = delegator.findByPrimaryKey("Product", UtilMisc.toMap("productId", productId));
+        } catch (GenericEntityException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }*/
+        // filter for quantities
+        BigDecimal minimumStock = BigDecimal.ZERO;
+        if (minimumStockStr != null) {
+            minimumStock = new BigDecimal(minimumStockStr);
+        }
+        
+        try{
+        	List condList = FastList.newInstance();
+        	condList.add(EntityCondition.makeCondition("facilityId", EntityOperator.EQUALS, facilityId));
+        	condList.add(EntityCondition.makeCondition("productId", EntityOperator.EQUALS, productId));
+        	condList.add(EntityCondition.makeCondition("availableToPromiseTotal", EntityOperator.GREATER_THAN, BigDecimal.ZERO));
+        	
+        	EntityCondition cond = EntityCondition.makeCondition(condList, EntityOperator.AND);
+        	
+        	List<GenericValue> inventoryItemList = delegator.findList("InventoryItem", cond, null, null, null, false);
+        	if(UtilValidate.isEmpty(inventoryItemList) || inventoryItemList.size() < 2){
+        		Debug.logWarning("Not Inventory Items found", module);
+        		return result;
+        	}
+        	BigDecimal totalKgs = BigDecimal.ZERO;
+        	BigDecimal totalKgFat = BigDecimal.ZERO;
+        	BigDecimal totalKgSnf = BigDecimal.ZERO;
+        	BigDecimal totalCost = BigDecimal.ZERO;
+        	for(GenericValue inventoryItem : inventoryItemList ){
+        		inventoryItemTypeId = inventoryItem.getString("inventoryItemTypeId");
+        	    ownerPartyId = inventoryItem.getString("ownerPartyId");
+        		BigDecimal quantityOnHandTotal = inventoryItem.getBigDecimal("quantityOnHandTotal");
+        		BigDecimal availableToPromiseTotal = inventoryItem.getBigDecimal("availableToPromiseTotal");
+        		BigDecimal fatPercent = inventoryItem.getBigDecimal("fatPercent");
+        		BigDecimal snfPercent = inventoryItem.getBigDecimal("snfPercent");
+        		if(UtilValidate.isNotEmpty(snfPercent) && UtilValidate.isNotEmpty(fatPercent)){
+	        		 Map<String, Object> createNewDetailMap = UtilMisc.toMap("availableToPromiseDiff", availableToPromiseTotal.negate(), "quantityOnHandDiff",
+	        				 quantityOnHandTotal.negate(),
+	                         "inventoryItemId", inventoryItem.get("inventoryItemId"), "userLogin", userLogin);
+	        		
+	        			
+	        		
+	        		 BigDecimal kgSnf = (quantityOnHandTotal.multiply(snfPercent.divide(new BigDecimal(100), decimals, rounding))).setScale(decimals, rounding);
+	        		 BigDecimal kgFat = (quantityOnHandTotal.multiply(fatPercent.divide(new BigDecimal(100), decimals, rounding))).setScale(decimals, rounding);
+	        		 
+	        		 totalKgs = totalKgs.add(quantityOnHandTotal);
+	        		 totalKgFat = totalKgFat.add(kgFat);
+	        		 totalKgSnf = totalKgSnf.add(kgSnf);
+	        		 totalCost = totalCost.add(quantityOnHandTotal.multiply(inventoryItem.getBigDecimal("unitCost")));
+	                 try {
+	                     Map<String, Object> resultNew = dispatcher.runSync("createInventoryItemDetail", createNewDetailMap);
+	                     if (ServiceUtil.isError(resultNew)) {
+	                         return ServiceUtil.returnError(UtilProperties.getMessage(resource, 
+	                                 "ProductInventoryItemDetailCreateProblem", 
+	                                 UtilMisc.toMap("errorString", ""), locale), null, null, resultNew);
+	                     }
+	                 }catch (Exception e) {
+						// TODO: handle exception
+	                	Debug.logError(e, module);
+	 					return ServiceUtil.returnError(e.toString());
+					} 
+        		  }   
+	        		
+	        }// end of item detail update
+	        	// now lets create new reciept with averagf fat and snf
+        	if(totalKgFat.compareTo(BigDecimal.ZERO) != 0 && totalKgSnf.compareTo(BigDecimal.ZERO) != 0){
+	        	BigDecimal fatPercent = (((totalKgFat.divide(totalKgs, 5, rounding)).multiply(new BigDecimal(100)))).setScale(5, rounding);
+	        	BigDecimal snfPercent = (((totalKgSnf.divide(totalKgs, 5, rounding)).multiply(new BigDecimal(100)))).setScale(5, rounding);
+	        	BigDecimal unitCost = (totalCost.divide(totalKgs , 5, rounding )).setScale(decimals, rounding);
+	        	/*receiveInventoryProduct*/
+	        	 Map<String, Object> receiveInventoryResult;
+	             Map<String, Object> receiveInventoryContext = FastMap.newInstance();
+	             receiveInventoryContext.put("userLogin", userLogin);   
+	             receiveInventoryContext.put("ownerPartyId", ownerPartyId);                    
+	             receiveInventoryContext.put("productId", productId);
+	             receiveInventoryContext.put("inventoryItemTypeId", inventoryItemTypeId); 
+	             receiveInventoryContext.put("facilityId", facilityId);
+	             receiveInventoryContext.put("datetimeReceived", UtilDateTime.nowTimestamp());
+	             receiveInventoryContext.put("quantityAccepted", totalKgs);
+	             receiveInventoryContext.put("quantityRejected", BigDecimal.ZERO);
+	             receiveInventoryContext.put("consolidateInventoryReceive", "Y");
+	             receiveInventoryContext.put("unitCost", unitCost);
+	             receiveInventoryContext.put("fatPercent", fatPercent);
+	             receiveInventoryContext.put("snfPercent", snfPercent);
+	            try {
+						receiveInventoryResult = dispatcher.runSync("receiveInventoryProduct", receiveInventoryContext);
+						if (ServiceUtil.isError(receiveInventoryResult)) {
+							Debug.logWarning("There was an error adding inventory: " + ServiceUtil.getErrorMessage(receiveInventoryResult), module);
+							return ServiceUtil.returnError(null, null, null, receiveInventoryResult);
+			            }
+				} catch (GenericServiceException e) {
+						Debug.logError(e, module);
+						return ServiceUtil.returnError(e.toString());
+					}
+				
+          }//end of if	
+        }catch(Exception e){
+        	Debug.logError(e.toString(), module);
+        	return ServiceUtil.returnError(e.toString());
+        }
+        
+        return result;
+    }
+    
     public static Map<String, Object> getProductInventoryAndFacilitySummary(DispatchContext dctx, Map<String, ? extends Object> context) {
         Delegator delegator = dctx.getDelegator();
         LocalDispatcher dispatcher = dctx.getDispatcher();
