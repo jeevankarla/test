@@ -1017,4 +1017,46 @@ Debug.logInfo("==========>ensureInvoiceAlreadyNotExists=" + infoMsg, module);
         context.put("periodName", periodRow.getString("periodName"));        
         return ServiceUtil.returnSuccess(); 
 	}	
+	/**
+     * Method to return the total amount including tax of an invoice item i.e. quantity * amount * tax components
+     * @param invoice GenericValue object of the Invoice
+     * @return the invoice total as BigDecimal
+     */
+    public static BigDecimal getPurchaseInvoiceItemTotal(GenericValue invoiceItem,Boolean includeTax) {
+    	BigDecimal itemTotalVal = BigDecimal.ZERO;
+        BigDecimal quantity = invoiceItem.getBigDecimal("quantity");
+        if (quantity == null) {
+            quantity = BigDecimal.ONE;
+        }
+        BigDecimal amount = invoiceItem.getBigDecimal("amount");
+        if (amount == null) {
+            amount = ZERO;
+        }
+        BigDecimal totalBed = BigDecimal.ZERO;
+        
+		if(UtilValidate.isNotEmpty(invoiceItem.getBigDecimal("bedPercent")) && UtilValidate.isNotEmpty(invoiceItem.getBigDecimal("bedAmount"))){
+			totalBed=totalBed.add(invoiceItem.getBigDecimal("bedAmount"));
+		}
+		if(UtilValidate.isNotEmpty(invoiceItem.getBigDecimal("bedcessPercent")) && UtilValidate.isNotEmpty(invoiceItem.getBigDecimal("bedcessAmount"))){
+			totalBed=totalBed.add(invoiceItem.getBigDecimal("bedcessAmount"));
+		}
+		if(UtilValidate.isNotEmpty(invoiceItem.getBigDecimal("bedseccessPercent")) && UtilValidate.isNotEmpty(invoiceItem.getBigDecimal("bedseccessAmount"))){
+			totalBed=totalBed.add(invoiceItem.getBigDecimal("bedseccessAmount"));
+		}
+		itemTotalVal=quantity.multiply(amount);
+		itemTotalVal=itemTotalVal.add(totalBed);
+		Debug.log("=includeTax=="+includeTax);
+		if(includeTax){
+			 BigDecimal totalTax = BigDecimal.ZERO;
+			if(UtilValidate.isNotEmpty(invoiceItem.getBigDecimal("vatPercent")) && UtilValidate.isNotEmpty(invoiceItem.getBigDecimal("vatAmount"))){
+				totalTax=totalTax.add(invoiceItem.getBigDecimal("bedAmount"));
+			}
+			if(UtilValidate.isNotEmpty(invoiceItem.getBigDecimal("cstPercent")) && UtilValidate.isNotEmpty(invoiceItem.getBigDecimal("cstAmount"))){
+				totalTax=totalTax.add(invoiceItem.getBigDecimal("cstAmount"));
+			}
+			Debug.log("=totalTax====="+totalTax+"=includeTax====="+includeTax);
+			itemTotalVal=itemTotalVal.add(totalTax);
+		}
+        return itemTotalVal;
+    }
 }
