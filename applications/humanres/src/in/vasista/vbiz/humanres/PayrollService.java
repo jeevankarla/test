@@ -2159,7 +2159,7 @@ public class PayrollService {
 	                            formulaCtx.put("BASIC", (Double)fetchBasicSalaryAndGradeMap.get("amount"));
 	                            Map formulaResult = evaluatePayrollAcctgFormula(dctx ,formulaCtx);
 	                            if(ServiceUtil.isError(formulaResult)){
-	                            	Debug.logError(ServiceUtil.getErrorMessage(formulaResult), module);
+	                            	Debug.logError(ServiceUtil.getErrorMessage(formulaResult)+"  :::: employee Id ::"+employeeId, module);
 	                            	return formulaResult;
 	                            }
 	                            modifyAmount = (BigDecimal)formulaResult.get("amount");
