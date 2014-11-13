@@ -80,6 +80,16 @@ tax14pt5TotalMap=[:];
 tax14pt5TotalMap["invTotalVal"]=BigDecimal.ZERO;
 tax14pt5TotalMap["vatAmount"]=BigDecimal.ZERO;
 
+taxExTotalMap=[:];
+taxExTotalMap["invTotalVal"]=BigDecimal.ZERO;
+taxExTotalMap["cstAmount"]=BigDecimal.ZERO;
+
+taxDetailsCstMap=[:];
+
+taxCstTotalMap=[:];
+taxCstTotalMap["invTotalVal"]=BigDecimal.ZERO;
+taxCstTotalMap["cstAmount"]=BigDecimal.ZERO;
+
 
 		invoiceMap = [:];
 		invoiceDtlsMap = [:];
@@ -209,8 +219,55 @@ tax14pt5TotalMap["vatAmount"]=BigDecimal.ZERO;
 						}
 					}
 			}
-			//Debug.log("=invoiceItem=="+invoiceItem);
+			//Caliculating CST
+			if(UtilValidate.isNotEmpty(invoiceItem.cstPercent) && UtilValidate.isNotEmpty(invoiceItem.cstAmount)){
+				BigDecimal cstAmount = invoiceItem.cstAmount;
+				invTotalVal=org.ofbiz.accounting.invoice.InvoiceWorker.getInvoiceItemTotal(invoiceItem);
+				BigDecimal totalBed = BigDecimal.ZERO;
+				if(UtilValidate.isNotEmpty(invoiceItem.bedPercent) && UtilValidate.isNotEmpty(invoiceItem.bedAmount)){
+					totalBed+=invoiceItem.bedAmount;
+				}
+				if(UtilValidate.isNotEmpty(invoiceItem.bedcessPercent) && UtilValidate.isNotEmpty(invoiceItem.bedcessAmount)){
+					 totalBed+=invoiceItem.bedcessAmount;
+				}
+				if(UtilValidate.isNotEmpty(invoiceItem.bedseccessPercent) && UtilValidate.isNotEmpty(invoiceItem.bedseccessAmount)){
+				totalBed+=invoiceItem.bedseccessAmount;
+				}
+				invTotalVal+=totalBed;
+				invDetailMap=taxDetailsCstMap[invoiceItem.invoiceId];
+				if(UtilValidate.isEmpty(invDetailMap)){
+				innerTaxItemMap=[:];
+				innerTaxItemMap["invoiceDate"]=invoiceItem.invoiceDate;
+				innerTaxItemMap["invoiceId"]=invoiceItem.invoiceId;
+				innerTaxItemMap["partyId"]=invoiceItem.partyIdFrom;
+				innerTaxItemMap["tinNumber"]="";
+				fromPartyDetail = (Map)(org.ofbiz.party.party.PartyWorker.getPartyIdentificationDetails(delegator, invoiceItem.partyIdFrom)).get("partyDetails");
+					if(UtilValidate.isNotEmpty(fromPartyDetail)){
+						innerTaxItemMap["tinNumber"]=fromPartyDetail.get('TIN_NUMBER');
+					 }
+				innerTaxItemMap["vchrType"]="Purchase";
+				innerTaxItemMap["crOrDbId"]="D";
+				innerTaxItemMap["invTotalVal"]=invTotalVal;
+				innerTaxItemMap["cstAmount"]=cstAmount;
+				
+				taxCstTotalMap["invTotalVal"]+=invTotalVal;
+				taxCstTotalMap["cstAmount"]+=cstAmount;
+				
+				taxDetailsCstMap[invoiceItem.invoiceId]=innerTaxItemMap;
+				//Debug.log("=invoiceId==FOR FOURTEEnnn=="+invoiceItem.invoiceId+"==ANdAmouunt=="+invoiceItem.vatAmount+"==percent="+invoiceItem.vatPercent+"=Total="+invTotalVal);
+				}else if(UtilValidate.isNotEmpty(invDetailMap)){
+				invDetailMap["cstAmount"]+=cstAmount;
+				taxCstTotalMap["cstAmount"]+=cstAmount;
+				
+				invDetailMap["invTotalVal"]+=invTotalVal;
+				taxCstTotalMap["invTotalVal"]+=invTotalVal;
+				
+				taxDetailsCstMap[invoiceItem.invoiceId]=invDetailMap;
+				}
+				
+			}
 		}
+		//Debug.log("=taxDetailsCstMap==="+taxDetailsCstMap);
 		if (invoiceItemsIter != null) {
 			try {
 				invoiceItemsIter.close();
@@ -224,14 +281,20 @@ tax14pt5TotalMap["vatAmount"]=BigDecimal.ZERO;
 		}else if(UtilValidate.isNotEmpty(taxType)&&(taxType=="VAT14PT5")){
 		     context.put("taxDetails14pt5List",taxDetails14pt5Map.entrySet());
 		    //context.put("taxDetails14pt5List",taxDetails14pt5List);
+		}else if(UtilValidate.isNotEmpty(taxType)&&(taxType=="CST")){
+		     context.put("taxDetailsCstList",taxDetailsCstMap.entrySet());
+		    
+		    //context.put("taxDetails14pt5List",taxDetails14pt5List);
 		}else{
 		//context.put("taxDetails5pt5List",taxDetails5pt5List);
 		//context.put("taxDetails14pt5List",taxDetails14pt5List);
 		context.put("taxDetails5pt5List",taxDetails5pt5Map.entrySet());
 		context.put("taxDetails14pt5List",taxDetails14pt5Map.entrySet());
+		context.put("taxDetailsCstList",taxDetailsCstMap.entrySet());
 		}
 		context.put("tax5pt5TotalMap",tax5pt5TotalMap);
 		context.put("tax14pt5TotalMap",tax14pt5TotalMap);
+		context.put("taxCstTotalMap",taxCstTotalMap);
 		
 		
 		
@@ -241,6 +304,14 @@ tax14pt5TotalMap["vatAmount"]=BigDecimal.ZERO;
 		context.taxAuthority = taxAuthority;
 		invItemTypeGl = delegator.findOne("InvoiceItemType", UtilMisc.toMap("invoiceItemTypeId", "VAT_PUR"), false);
 		context.invItemTypeGl = invItemTypeGl;
+		//cst GL
+		taxCstParty = delegator.findOne("Party", UtilMisc.toMap("partyId", "TAX9"), false);
+		taxCstAuthority = delegator.findOne("TaxAuthority", UtilMisc.toMap("taxAuthGeoId","IND", "taxAuthPartyId","TAX9"), false);
+		context.taxCstParty = taxCstParty;
+		context.taxCstAuthority = taxCstAuthority;
+		invItemCstTypeGl = delegator.findOne("InvoiceItemType", UtilMisc.toMap("invoiceItemTypeId", "CST_PUR"), false);
+		context.invItemCstTypeGl = invItemCstTypeGl;
+		
 // Purchase Abstract report
 
 
