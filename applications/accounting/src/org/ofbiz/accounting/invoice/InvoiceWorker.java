@@ -1045,16 +1045,14 @@ Debug.logInfo("==========>ensureInvoiceAlreadyNotExists=" + infoMsg, module);
 		}
 		itemTotalVal=quantity.multiply(amount);
 		itemTotalVal=itemTotalVal.add(totalBed);
-		Debug.log("=includeTax=="+includeTax);
 		if(includeTax){
 			 BigDecimal totalTax = BigDecimal.ZERO;
 			if(UtilValidate.isNotEmpty(invoiceItem.getBigDecimal("vatPercent")) && UtilValidate.isNotEmpty(invoiceItem.getBigDecimal("vatAmount"))){
-				totalTax=totalTax.add(invoiceItem.getBigDecimal("bedAmount"));
+				totalTax=totalTax.add(invoiceItem.getBigDecimal("vatAmount"));
 			}
 			if(UtilValidate.isNotEmpty(invoiceItem.getBigDecimal("cstPercent")) && UtilValidate.isNotEmpty(invoiceItem.getBigDecimal("cstAmount"))){
 				totalTax=totalTax.add(invoiceItem.getBigDecimal("cstAmount"));
 			}
-			Debug.log("=totalTax====="+totalTax+"=includeTax====="+includeTax);
 			itemTotalVal=itemTotalVal.add(totalTax);
 		}
         return itemTotalVal;
