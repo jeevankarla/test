@@ -264,6 +264,7 @@ if (organizationPartyId) {
 							}
 						}
 					}
+					paymentTransSequenceId = "";
 					payment = delegator.findOne("Payment", [paymentId : paymentId], false);
 					if(UtilValidate.isNotEmpty(payment)){
 						partyId = payment.partyIdFrom;
@@ -275,6 +276,17 @@ if (organizationPartyId) {
 							}
 						}
 						instrumentNum = payment.paymentRefNum;
+						finAccountTransId = payment.finAccountTransId;
+						//fin account sequence logic here
+						if(UtilValidate.isNotEmpty(finAccountTransId)){
+							finAccntTransSequenceList = delegator.findList("FinAccntTransSequence", EntityCondition.makeCondition("finAccountTransId", EntityOperator.EQUALS, finAccountTransId), null, null, null, false);
+							if(UtilValidate.isNotEmpty(finAccntTransSequenceList)){
+								finAccntTransSequence = EntityUtil.getFirst(finAccntTransSequenceList);
+								if(UtilValidate.isNotEmpty(finAccntTransSequence)){
+									paymentTransSequenceId = finAccntTransSequence.transSequenceId;
+								}
+							}
+						}
 					}
 					if(UtilValidate.isEmpty(paymentId)){
 						accTransPartyId = acctgTransEntry.partyId;
@@ -420,6 +432,9 @@ if (organizationPartyId) {
 							acctgTransEntryMap["paymentMethodTypeDes"] = paymentGroupMethodTypeDes;
 							acctgTransEntryMap["instrumentNum"] = paymentGroupRefNum;
 						}else{
+							if(UtilValidate.isNotEmpty(paymentTransSequenceId)){
+								acctgTransEntryMap["paymentTransSequenceId"] = paymentTransSequenceId;
+							}
 							acctgTransEntryMap["paymentId"] = paymentId;
 							acctgTransEntryMap["partyId"] = partyId;
 							acctgTransEntryMap["partyName"] = partyName;
@@ -430,10 +445,9 @@ if (organizationPartyId) {
 						}
 					}else{
 						if(UtilValidate.isNotEmpty(transSequenceId)){
-							acctgTransEntryMap["paymentId"] = transSequenceId;
-						}else{
-						    acctgTransEntryMap["paymentId"] = acctgTransId;
+							acctgTransEntryMap["paymentTransSequenceId"] = transSequenceId;
 						}
+						acctgTransEntryMap["paymentId"] = acctgTransId;
 						acctgTransEntryMap["partyId"] = accTransPartyId;
 						if(UtilValidate.isNotEmpty(finAccountId)){
 							acctgTransEntryMap["partyName"] = finAccountName;
@@ -512,6 +526,7 @@ financialAcctgTransList.each{ dayFinAccount ->
 		if((dayBegin <= transactionDateBegin) && (dayEnd >= transactionDateEnd)){
 			getDayTot = "Y";
 			dayFinAccountMap["transactionDate"] = dayFinAccount.transactionDate;
+			dayFinAccountMap["paymentTransSequenceId"] = dayFinAccount.paymentTransSequenceId;
 			dayFinAccountMap["paymentId"] = dayFinAccount.paymentId;
 			dayFinAccountMap["partyId"] = dayFinAccount.partyId;
 			dayFinAccountMap["partyName"] = dayFinAccount.partyName;
