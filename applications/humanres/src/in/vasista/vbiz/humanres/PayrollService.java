@@ -4622,7 +4622,7 @@ public class PayrollService {
 					    conditionList.add(EntityCondition.makeCondition("date", EntityOperator.GREATER_THAN_EQUAL_TO , UtilDateTime.toSqlDate(attdTimePeriodStart)));
 					    conditionList.add(EntityCondition.makeCondition("date", EntityOperator.LESS_THAN_EQUAL_TO , UtilDateTime.toSqlDate(attdTimePeriodEnd)));
 					    condition= EntityCondition.makeCondition(conditionList,EntityOperator.AND);
-					    List<GenericValue> emplDailyAttendanceDetailList = delegator.findList("EmplDailyAttendanceDetail", condition, null,null, null, false);
+					    List<GenericValue> emplDailyAttendanceDetailList = delegator.findList("EmplDailyAttendanceDetail", condition, null,UtilMisc.toList("seqId"), null, false);
 			    		if(UtilValidate.isEmpty(emplDailyAttendanceDetailList)){
 			    			Debug.logWarning("No shift details for employee"+employeeId, module);
 			    		}
@@ -4721,7 +4721,9 @@ public class PayrollService {
 			    			//TO:DO need to handle SHIFT_NIGHT mispunch
 			    			Boolean shiftFalg = Boolean.FALSE;
 			    			if(UtilValidate.isNotEmpty(dayShiftList)){
-			    				for(GenericValue dayShift :dayShiftList){
+			    				//consider only single shift  late min for lossofpay 
+			    				List<GenericValue> dayShiftListLop = UtilMisc.toList(EntityUtil.getFirst(dayShiftList));
+			    				for(GenericValue dayShift :dayShiftListLop){
 			    					if(UtilValidate.isEmpty(cDayLeaveFraction) && (UtilValidate.isEmpty(employeeDetail.getString("punchType"))||((UtilValidate.isNotEmpty(employeeDetail.getString("punchType")) 
 			    										&& (!(employeeDetail.getString("punchType").equalsIgnoreCase("O")))))) && (!(emplWeeklyOffDay.equalsIgnoreCase(weekName))) && UtilValidate.isEmpty(cHoliDayList) && (cTime.compareTo(secondSaturDay) != 0)){
 			    						if(UtilValidate.isNotEmpty(dayShift.getBigDecimal("overrideLateMin"))){
