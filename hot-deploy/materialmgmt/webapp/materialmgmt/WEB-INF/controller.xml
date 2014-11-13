@@ -87,10 +87,15 @@
     </request-map>
    
     <!-- View Mappings -->
-     <request-map uri="purchaseTaxReport.pdf">
-     <security https="true" auth="true"/>
+    <request-map uri="purchaseTaxReport.pdf">
+        <security https="true" auth="true"/>
     	<response name="success" type="view" value="purchaseTaxReportPDF"/>
     </request-map>
+     <request-map uri="purchaseAccountSummery.pdf">
+        <security https="true" auth="true"/>
+    	<response name="success" type="view" value="purchaseAccountSummeryPDF"/>
+    </request-map>
+    
     
     
     <view-map name="main" type="screen" page="component://materialmgmt/widget/materialmgmtScreens.xml#main"/>
@@ -103,6 +108,7 @@
     
     <view-map name="StoreReports" type="screen" page="component://materialmgmt/widget/materialmgmtReportScreens.xml#StoreReports" />
     <view-map name="purchaseTaxReportPDF" type="screenfop" page="component://materialmgmt/widget/materialmgmtReportScreens.xml#PurchaseTaxReportPDF" content-type="application/pdf"/>
+    <view-map name="purchaseAccountSummeryPDF" type="screenfop" page="component://materialmgmt/widget/materialmgmtReportScreens.xml#purchaseAccountSummeryPDF" content-type="application/pdf"/>
     
     
 </site-conf>

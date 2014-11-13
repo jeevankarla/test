@@ -225,18 +225,25 @@ function reportTypeChangeFunc() {
 								<td width="10%"><input type="submit" value="Download" class="buttontext"/></td> 
 							</form>
 		                </tr>
-		                <#--
+		                
 		                <tr class="alternate-row">
 							<form id="purchaseSummeryReport" name="purchaseSummeryReport" method="post" action="<@ofbizUrl>purchaseAccountSummery.pdf</@ofbizUrl>" target="_blank">	
 								<td width="30%">Purchase Analysis Report Summary</td>
 								<td width="15%">From<input  type="text" size="18pt" id="purchaseSumFDate" readonly  name="fromDate"/></td>
 							    <td width="15%">To<input  type="text" size="18pt" id="purchaseSumTDate" readonly  name="thruDate"/></td>
-							    
+							    <#--
+				      			<td width="15%">Tax Type
+									<select name='taxType' id = "taxType">
+									    <option value=''>All</option>
+									    <option value='VAT5PT5'>Vat(5.5)</option>
+										<option value='VAT14PT5'>Vat(14.5)</option>
+									</select>
+								</td> -->
 								<td width="15%"></td>
 								<td width="15%"></td>
 								<td width="10%"><input type="submit" value="Download" class="buttontext"/></td> 
 							</form>
-		                </tr> -->
+		                </tr>
 	  			
 					</#if>
 				
