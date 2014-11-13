@@ -5761,28 +5761,24 @@ public static Map<String, Object> generateEmployerContributionPayrollBilling(Dis
 		      	  	if(UtilValidate.isEmpty(emplLeavesList)){
 		      	  		BigDecimal closingBalance=(BigDecimal) resultValue.get("closingBalance");
 		      	  		adjustedDays=(BigDecimal)leadaysMap.get(leaveTypeIds.get(i));
-		      	  		openingBalance=closingBalance.add(adjustedDays);
 			      	  	GenericValue newEntity = delegator.makeValue("EmplLeaveBalanceStatus");
 						newEntity.set("partyId", partyId);
 						newEntity.set("leaveTypeId", leaveTypeIds.get(i));
 						newEntity.set("customTimePeriodId", customTimePeriodId);
-						newEntity.set("openingBalance", openingBalance);
+						newEntity.set("openingBalance", closingBalance);
 						newEntity.set("adjustedDays", adjustedDays);
 						newEntity.create();
 		      	  	}else{
 			      	  	GenericValue emplLeaves = EntityUtil.getFirst(emplLeavesList);
-			      	  	openingBalance=(BigDecimal)emplLeaves.getBigDecimal("openingBalance");
-			      	  	openingBalance=(openingBalance).setScale(1,BigDecimal.ROUND_HALF_UP);
+			      	  	
 			      	  	adjustedDays=(BigDecimal)leadaysMap.get(leaveTypeIds.get(i));
 			      	  	adjustedDays=(adjustedDays).setScale(1,BigDecimal.ROUND_HALF_UP);
-			      	  	if(UtilValidate.isNotEmpty(adjustedDays) && (!adjustedDays.equals(openingBalance))){
-			      	  		BigDecimal adjDays=BigDecimal.ZERO;
-			      	  		if(UtilValidate.isNotEmpty(emplLeaves.getBigDecimal("adjustedDays"))){
-			      	  			adjDays=emplLeaves.getBigDecimal("adjustedDays");
-			      	  		}
-			      	  		openingBalance=openingBalance.subtract(adjDays);
-			      	  		openingBalance=openingBalance.add(adjustedDays);
-				      	  	emplLeaves.set("openingBalance", openingBalance);
+			      	  	
+			      	  	BigDecimal adjDays=BigDecimal.ZERO;
+		      	  		if(UtilValidate.isNotEmpty(emplLeaves.getBigDecimal("adjustedDays"))){
+		      	  			adjDays=emplLeaves.getBigDecimal("adjustedDays");
+		      	  		}
+			      	  	if(UtilValidate.isNotEmpty(adjustedDays) && (!adjustedDays.equals(adjDays))){
 					      	emplLeaves.set("adjustedDays", adjustedDays);
 					      	emplLeaves.store();
 			      	  	}
