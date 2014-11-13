@@ -14,6 +14,9 @@ import java.util.TimeZone;
 import javolution.util.FastList;
 import javolution.util.FastMap;
 import java.util.HashMap;
+import java.util.HashSet;
+import java.util.ArrayList;
+import java.util.Set;
 
 import org.apache.fop.fo.properties.CondLengthProperty;
 import org.ofbiz.base.util.Debug;
@@ -211,7 +214,7 @@ public class HumanresService {
 	        Locale locale = new Locale("en","IN");
 			TimeZone timeZone = TimeZone.getDefault();
 	        String orgPartyId = "Company";
-			List<GenericValue> holiDayList = FastList.newInstance(); 
+			List<GenericValue> holiDayList = FastList.newInstance();
 			Map result = FastMap.newInstance();
 			if(UtilValidate.isEmpty(fromDate) && UtilValidate.isEmpty(thruDate)){
 				thruDate = UtilDateTime.getDayEnd(UtilDateTime.nowTimestamp());
@@ -308,10 +311,9 @@ public class HumanresService {
 								continue;
 							}
 							Date tempDate = workedHoliday.getDate("date");
-							if(!holidays.contains(tempDate)){
-								
+							/*if(!holidays.contains(tempDate)){
 								continue;
-							}
+							}*/
 							Map punMap = PunchService.emplDailyPunchReport(dctx, UtilMisc.toMap("partyId", partyId ,"punchDate",tempDate));
 							if(UtilValidate.isNotEmpty(punMap.get("punchDataList"))){
 								Map punchDetails = (Map)(((List)punMap.get("punchDataList")).get(0));
@@ -331,15 +333,15 @@ public class HumanresService {
 											 }
 										}
 									}
-									
 								}
-								
 							}
 							//tempWorkedHolidaysList.removeAll(EntityUtil.filterByAnd(tempWorkedHolidaysList, UtilMisc.toMap("date",tempDate)));
-							holidays.remove(tempDate);
+							//holidays.remove(tempDate);
 						}
 					}
-				  result.put("workedHolidaysList", workedHolidaysList);
+					Set workedHolidaysSet = new HashSet(workedHolidaysList);
+					List workedHolList = new ArrayList(workedHolidaysSet);
+				    result.put("workedHolidaysList", workedHolList);
 			}catch(GenericEntityException e){
 	  			Debug.logError("Error fetching  holidays worked " + e.getMessage(), module);
 	  		}
