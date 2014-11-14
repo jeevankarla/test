@@ -1849,9 +1849,13 @@ under the License.
         <security https="true" auth="true"/>                        
         <response name="success" type="view" value="EmployeePunchData"/>        
     </request-map>
-    <request-map uri="EditedLateHoursReport.pdf">
+    <request-map uri="DayWiseEditedLateHoursReport.pdf">
         <security https="true" auth="true"/>                        
-        <response name="success" type="view" value="EditedLateHoursReport"/>        
+        <response name="success" type="view" value="DayWiseEditedLateHoursReport"/>        
+    </request-map>
+    <request-map uri="ConsolidatedEditedLateHoursReport.pdf">
+        <security https="true" auth="true"/>                        
+        <response name="success" type="view" value="ConsolidatedEditedLateHoursReport"/>        
     </request-map>
     <request-map uri="AttendanceExceptionReport.pdf">
         <security https="true" auth="true"/>                        
@@ -2358,7 +2362,8 @@ under the License.
     <view-map name="DeductionsReport" type="screenfop" page="component://humanres/widget/ReportHumanresSummaryScreens.xml#DeductionsReport" content-type="application/pdf" encoding="none"/>
     <view-map name="BenefitReport" type="screenfop" page="component://humanres/widget/ReportHumanresSummaryScreens.xml#BenefitReport" content-type="application/pdf" encoding="none"/>
     <view-map name="EmployeePunchData" type="screenfop" page="component://humanres/widget/ReportHumanresSummaryScreens.xml#EmployeePunchData" content-type="application/pdf" encoding="none"/>
-	<view-map name="EditedLateHoursReport" type="screenfop" page="component://humanres/widget/EmployeeScreens.xml#EditedLateHoursReport" content-type="application/pdf" encoding="none"/>
+	<view-map name="DayWiseEditedLateHoursReport" type="screenfop" page="component://humanres/widget/EmployeeScreens.xml#DayWiseEditedLateHoursReport" content-type="application/pdf" encoding="none"/>
+	<view-map name="ConsolidatedEditedLateHoursReport" type="screenfop" page="component://humanres/widget/EmployeeScreens.xml#ConsolidatedEditedLateHoursReport" content-type="application/pdf" encoding="none"/>
     <view-map name="AttendanceExceptionReport" type="screenfop" page="component://humanres/widget/ReportHumanresSummaryScreens.xml#AttendanceExceptionReport" content-type="application/pdf" encoding="none"/>
     <view-map name="BusArrivalReport" type="screenfop" page="component://humanres/widget/ReportHumanresSummaryScreens.xml#BusArrivalReport" content-type="application/pdf" encoding="none"/>
     <view-map name="OODReport" type="screenfop" page="component://humanres/widget/ReportHumanresSummaryScreens.xml#OODReport" content-type="application/pdf" encoding="none"/>

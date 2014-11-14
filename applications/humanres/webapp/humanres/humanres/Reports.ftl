@@ -307,10 +307,29 @@ function makeDatePicker1(fromDateId ,thruDateId){
       	  			</tr>
 					<tr class="alternate-row">
 						<table class="basic-table" cellspacing="3">
-							<form id="EditedLateHoursReport" name="EditedLateHoursReport" mothed="post" action="<@ofbizUrl>EditedLateHoursReport.pdf</@ofbizUrl>" target="_blank">
+							<form id="DayWiseEditedLateHoursReport" name="DayWiseEditedLateHoursReport" mothed="post" action="<@ofbizUrl>DayWiseEditedLateHoursReport.pdf</@ofbizUrl>" target="_blank">
 								<table class="basic-table" cellspacing="5">
 									<tr class="alternate-row">
 										<td width="12%"><span class='h3'>Edited Late Hours Report</span></td>
+										<td width="24%"><span class='h3'>Period Id</span>
+											<select name="customTimePeriodId" class='h4'>
+												<#list timePeriodList as timePeriod>    
+													<option value='${timePeriod.customTimePeriodId}'>${timePeriod.periodName?if_exists}:${timePeriod.fromDate?if_exists}-${timePeriod.thruDate?if_exists}</option>
+												</#list>      
+											</select>
+										</td>	
+										<td width="12%"><input type="submit" value="Download" class="buttontext"></td> 
+									</tr>
+								</table>	
+							</form>
+						</table>
+					</tr>
+					<tr class="alternate-row">
+						<table class="basic-table" cellspacing="3">
+							<form id="ConsolidatedEditedLateHoursReport" name="ConsolidatedEditedLateHoursReport" mothed="post" action="<@ofbizUrl>ConsolidatedEditedLateHoursReport.pdf</@ofbizUrl>" target="_blank">
+								<table class="basic-table" cellspacing="5">
+									<tr class="alternate-row">
+										<td width="12%"><span class='h3'>Consolidated Edited Late Hours Report</span></td>
 										<td width="24%"><span class='h3'>Period Id</span>
 											<select name="customTimePeriodId" class='h4'>
 												<#list timePeriodList as timePeriod>    
