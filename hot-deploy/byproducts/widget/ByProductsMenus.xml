@@ -521,7 +521,7 @@
          </link>
         </menu-item>
         
-        <menu-item name="FGSProductSale" title="Sale To Union"> 
+        <menu-item name="FGSProductSale" title="FGS Sale"> 
 	        <condition>
 	        	<or>
 	        		<if-has-permission permission="FGSSALE"  action="_VIEW"/>

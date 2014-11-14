@@ -3208,7 +3208,7 @@
     <screen name="FGSProductSale">
         <section>
             <actions>
-               <set field="titleProperty" value="Sale To Union"/>              
+               <set field="titleProperty" value="FGS Sale"/>              
 			   <set field="tabButtonItem" value="FGSProductSale" />	
 			   <set field="tabButtonItem2" value="FGSProductSale"/>  
 			    <set field="changeFlag" value="FgsSales"/>  
@@ -3220,7 +3220,7 @@
                <set field="defaultEffectiveDateTime" value="${supplyDate}" default-value="${bsh:org.ofbiz.base.util.UtilDateTime.nowTimestamp()}"/>
 			   <set field="defaultEffectiveDate" 
 					value="${groovy:org.ofbiz.base.util.UtilDateTime.toDateString(defaultEffectiveDateTime, &quot;dd MMMMM, yyyy&quot;);}" />	
-				 <set field="parameters.roleTypeId" value="UNION"/>
+				 <set field="parameters.roleTypeId" value="FGS_CUSTOMER"/>
 				 <set field="productCategoryResult" value="${groovy:org.ofbiz.product.product.ProductWorker.getProductsByCategoryAssoc(delegator, 'INDENT_PROD_CAT', 'FGS_INDENT', null)}" />
 				 <set field="productStoreResult" value="${groovy:in.vasista.vbiz.byproducts.icp.ICPServices.getProductStoreByGroupId(delegator, 'FG_STORE')}" />
 				<set field="productStoreId" value="${productStoreResult.factoryStoreId}"/>
