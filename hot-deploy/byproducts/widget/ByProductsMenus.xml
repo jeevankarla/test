@@ -115,14 +115,14 @@
                 <parameter param-name="facilityId" from-field="ctxFacilityId"/>
             </link>
         </menu-item>        
-        <menu-item name="FindFacilityLocation" title="${uiLabelMap.ProductLocations}">
+       <!--  <menu-item name="FindFacilityLocation" title="${uiLabelMap.ProductLocations}">
             <condition>
                 <if-compare field="enableInventory" operator="equals" value="true"/>
             </condition>          
             <link target="FindFacilityLocation">
                 <parameter param-name="facilityId"/>
             </link>
-        </menu-item>
+        </menu-item> -->
         <menu-item name="EditFacilityParties" title="${uiLabelMap.PartyRoles}">
         	<condition>
         		<and>
@@ -134,7 +134,7 @@
                 <parameter param-name="facilityId"/>
             </link>
         </menu-item>
-       <menu-item name="ViewFacilityInventoryByProduct" title="${uiLabelMap.ProductInventory}">
+      <!--  <menu-item name="ViewFacilityInventoryByProduct" title="${uiLabelMap.ProductInventory}">
             <condition>
                 <if-compare field="enableInventory" operator="equals" value="true"/>
             </condition>          
@@ -255,7 +255,7 @@
                 <parameter param-name="originFacilityId" from-field="facilityId"/>
                 <parameter param-name="lookupFlag" value="Y"/>
             </link>
-        </menu-item>
+        </menu-item> -->
         <menu-item name="ChangeIndentInit" title="${uiLabelMap.Indent}">
 			<condition>
 				<or>
