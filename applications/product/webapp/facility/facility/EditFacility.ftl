@@ -294,6 +294,21 @@ var pmRouteList = ${StringUtil.wrapString(pmRouteList)}
           </select>
        </td>
   </tr>
+   <tr>
+    <td class="label">closedReason </td>
+       <td>
+          <select name="closedReason" >  
+          	<option value="">Select Reason</option>
+          <#-- 
+          	<option value="${facility.closedReason?if_exists}" selected>${facility.closedReason?if_exists}</option> -->
+          	<#list facCloseReasonList as reasonObj>
+        			<option value='${reasonObj.enumId}' <#if (facility.closedReason?has_content)&& (reasonObj.enumId==facility.closedReason)> selected="selected"  </#if> > ${reasonObj.get("description",locale)?default(reasonObj.enumId)}</option>  
+        	</#list>
+          </select>
+       </td>
+  </tr>
+  <tr>
+  <td></td></tr>
 <#if (enableShipping?if_exists && enableShipping)>  
   <tr>
     <td class="label">${uiLabelMap.ProductDefaultDaysToShip}</td>

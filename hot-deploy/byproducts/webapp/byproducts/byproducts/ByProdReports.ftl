@@ -136,6 +136,8 @@ function reportTypeChangeFunc() {
 //call one method for one time fromDATE And thruDATE
 
 	$(document).ready(function(){
+	
+       makeDatePicker("TRLFromDateId","TRLThruDateId");		
 		makeDatePicker("RLAFromDateId","RLAThruDateId");
 		makeDatePicker("CLRFromDateId","thuDateId");
 		makeDatePicker("DBCFromDateId","thuDateId");
@@ -243,6 +245,7 @@ function reportTypeChangeFunc() {
 </div>
 </div>
 </#if>
+
 <#if screenFlag?exists && screenFlag.equals("DailyReports")  && (security.hasEntityPermission("BYPRODUCTS", "_DAILREPOR", session) || security.hasEntityPermission("ACCOUNTING", "_CASHIER", session))>
 <div class="full">
 <div class="screenlet">
@@ -769,7 +772,17 @@ function reportTypeChangeFunc() {
 			             <td width="10%"><input type="submit" value="Download" class="buttontext"/></td>
 			           </form>
 			        </tr>
-			        
+			     
+			        <tr class="alternate-row">
+			        		<form id="TerminatedRetailerReports" name="TerminatedRetailerReports" method="post" action="<@ofbizUrl>TerminatedRetailers.pdf</@ofbizUrl>" target="_blank">
+				   			 <td width="30%">Terminated Retailers Report</td>
+				             <td width="15%" >From<input  type="text" size="10pt" id="TRLFromDateId" readonly  name="fromDate"/></td>
+						     <td width="15%">Thru<input  type="text" size="10pt" id="TRLThruDateId"  readonly name="thruDate"/></td>
+				             <td width="15%"><input type="hidden" name="TerminatedReportFlag" value="TerminatedReportFlag"/></td>
+				             <td width="15%"></td>
+				             <td width="10%"><input type="submit" value="Download" class="buttontext"/></td>
+				           </form>
+				        </tr>
 			        <#if security.hasEntityPermission("BYPRODUCTS", "_LDRREP", session)>
 				        <tr class="alternate-row">
 				      	   <form id="RetailerLedgerAbstract" name="RetailerLedgerAbstract" method="post" action="<@ofbizUrl>RetailerLedgerAbstract.pdf</@ofbizUrl>" target="_blank">        
@@ -1000,6 +1013,9 @@ function reportTypeChangeFunc() {
 	      					<td width="10%"><input type="submit" value="Download" class="buttontext"/></td> 
 	      				</form>
 					</tr>
+					
+					
+					
 					<tr class="alternate-row">
 						<form id="PCMRetailerReport" name="PCMRetailerReport" method="post" action="<@ofbizUrl>RetailerSalesComparison.txt</@ofbizUrl>" target="_blank">	
 							<td width="30%">Retailer Sales  Comparison Report<input  type="hidden"  value="RetailerSalesComparison"   name="reportTypeFlag"/></td>
@@ -1017,6 +1033,7 @@ function reportTypeChangeFunc() {
 	      				</form>
 					</tr>
 					</#if>
+					
 					<tr class="alternate-row">
 	  					<form id="PCMReport" name="PCMReport" method="post" action="<@ofbizUrl>PCMReport.pdf</@ofbizUrl>" target="_blank">	
 	  						<td width="30%">PCM Report<input  type="hidden"  value="PCMReport"  name="reportTypeFlag"/></td>
@@ -1169,6 +1186,7 @@ function reportTypeChangeFunc() {
 							<td width="10%"><input type="submit" value="Download" class="buttontext"/></td>
       					</form>
       				</tr>
+      				
 			        <tr class="alternate-row">
 					<form id="fDExpiringOrMaturingReport" name="fDExpiringOrMaturingReport" method="post" action="<@ofbizUrl>fDExpiringOrMaturingReport.pdf</@ofbizUrl>" target="_blank">	
 						<td width="30%">Fixed Deposit expiring/maturing Report</td>
@@ -1272,4 +1290,5 @@ function reportTypeChangeFunc() {
 </div>
 </div>
 </#if>
+
   </div>

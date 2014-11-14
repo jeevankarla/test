@@ -1433,6 +1433,10 @@
         <response name="success" type="request" value="json"/>
         <response name="error" type="request" value="json"/>
     </request-map>
+    <request-map uri="TerminatedRetailers.pdf">
+     <security https="true" auth="true"/>
+    	<response name="success" type="view" value="TerminatedRetailerspdf"/>
+    </request-map>
      <request-map uri="RetailerLedgerAbstract.pdf">
      <security https="true" auth="true"/>
     	<response name="success" type="view" value="RetailerLedgerAbstractPDF"/>
@@ -1735,6 +1739,11 @@
 	<view-map name="IndentManualCollection" type="screenfop" page="component://byproducts/widget/ByProductsReportScreens.xml#IndentManualCollection" content-type="text/plain"/>
 	<view-map name="IndentAbstractReport" type="screenfop" page="component://byproducts/widget/ByProductsReportScreens.xml#IndentAbstractReport" content-type="text/plain"/>
 	<view-map name="ProductIndentAbstractReport" type="screenfop" page="component://byproducts/widget/ByProductsReportScreens.xml#ProductIndentAbstractReport" content-type="text/plain"/>
+	
+	
+	<view-map name="TerminatedRetailerspdf" type="screenfop" page="component://byproducts/widget/ByProductsReportScreens.xml#TerminatedRetailerspdf" content-type="application/pdf"/>
+	
+	
 	<view-map name="RetailerLedgerAbstractPDF" type="screenfop" page="component://byproducts/widget/ByProductsReportScreens.xml#RetailerLedgerAbstractPDF" content-type="application/pdf"/>
 	<view-map name="ShoppeRentReportPDF" type="screenfop" page="component://byproducts/widget/ByProductsReportScreens.xml#ShoppeRentReportPDF" content-type="application/pdf"/>
 	<view-map name="MonthlyVatReportPDF" type="screenfop" page="component://byproducts/widget/ByProductsReportScreens.xml#MonthlyVatReportPDF" content-type="application/pdf"/>

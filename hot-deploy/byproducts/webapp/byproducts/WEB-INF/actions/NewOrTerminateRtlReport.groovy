@@ -49,38 +49,81 @@ context.newOrTerminateDate = openedDate;
 printDate = UtilDateTime.toDateString(UtilDateTime.nowTimestamp(), "dd/MM/yyyy");
 context.printDate = printDate;
 conditionList=[];
-
-conditionList.add(EntityCondition.makeCondition("openedDate", EntityOperator.GREATER_THAN_EQUAL_TO ,openedDate));
-conditionList.add(EntityCondition.makeCondition("openedDate", EntityOperator.LESS_THAN_EQUAL_TO ,closeDate));
-conditionList.add(EntityCondition.makeCondition("facilityTypeId",  EntityOperator.EQUALS,"BOOTH"));
-condition = EntityCondition.makeCondition(conditionList,EntityOperator.AND);
-List<GenericValue> facilityList = delegator.findList("Facility", condition, null, null, null, false);
-facilitySaleMap = [:];
-Map SCTMap=FastMap.newInstance();
-if(UtilValidate.isNotEmpty(facilityList)){
-	for(i=0;i<facilityList.size();i++){
-		categoryType=facilityList.get(i).get("categoryTypeEnum");
-		facilityId=facilityList.get(i).get("facilityId");
-		if(UtilValidate.isNotEmpty(categoryType)){
-			if(UtilValidate.isEmpty(facilitySaleMap[categoryType])){
-				tempMap=[:];
-				Map finalMap=FastMap.newInstance();
-				tempMap.putAt("name",facilityList.get(i).get("facilityName"));
-				tempMap.putAt("date",facilityList.get(i).get("openedDate"));
-				if(UtilValidate.isEmpty(finalMap[facilityId])){
-					finalMap.put(facilityId,tempMap);
-					facilitySaleMap.put(categoryType,finalMap);
-				}
-			 }else{
-				 tempMap = [:];
-				 Map finalMap=FastMap.newInstance();
-				 finalMap.putAll(facilitySaleMap.get(categoryType));
-				 tempMap.putAt("name",facilityList.get(i).get("facilityName"));
-				 tempMap.putAt("date",facilityList.get(i).get("openedDate"));
-				 finalMap.put(facilityId,tempMap);
-				 facilitySaleMap[categoryType] = finalMap;
-			 }
-		   }
+TerminatedReportFlag=parameters.TerminatedReportFlag;
+if(UtilValidate.isEmpty(TerminatedReportFlag)){
+	conditionList.add(EntityCondition.makeCondition("openedDate", EntityOperator.GREATER_THAN_EQUAL_TO ,openedDate));
+	conditionList.add(EntityCondition.makeCondition("openedDate", EntityOperator.LESS_THAN_EQUAL_TO ,closeDate));
+	conditionList.add(EntityCondition.makeCondition("facilityTypeId",  EntityOperator.EQUALS,"BOOTH"));
+	condition = EntityCondition.makeCondition(conditionList,EntityOperator.AND);
+	List<GenericValue> facilityList = delegator.findList("Facility", condition, null, null, null, false);
+	facilitySaleMap = [:];
+	Map SCTMap=FastMap.newInstance();
+	if(UtilValidate.isNotEmpty(facilityList)){
+		for(i=0;i<facilityList.size();i++){
+			categoryType=facilityList.get(i).get("categoryTypeEnum");
+			facilityId=facilityList.get(i).get("facilityId");
+			if(UtilValidate.isNotEmpty(categoryType)){
+				if(UtilValidate.isEmpty(facilitySaleMap[categoryType])){
+					tempMap=[:];
+					Map finalMap=FastMap.newInstance();
+					tempMap.putAt("name",facilityList.get(i).get("facilityName"));
+					tempMap.putAt("date",facilityList.get(i).get("openedDate"));
+					if(UtilValidate.isEmpty(finalMap[facilityId])){
+						finalMap.put(facilityId,tempMap);
+						facilitySaleMap.put(categoryType,finalMap);
+					}
+				 }else{
+					 tempMap = [:];
+					 Map finalMap=FastMap.newInstance();
+					 finalMap.putAll(facilitySaleMap.get(categoryType));
+					 tempMap.putAt("name",facilityList.get(i).get("facilityName"));
+					 tempMap.putAt("date",facilityList.get(i).get("openedDate"));
+					 finalMap.put(facilityId,tempMap);
+					 facilitySaleMap[categoryType] = finalMap;
+				 }
+			   }
+		}
 	}
-}
-context.facilitySaleMap = facilitySaleMap;
+	context.facilitySaleMap = facilitySaleMap;
+}else{
+		conditionList.add(EntityCondition.makeCondition("closedDate", EntityOperator.GREATER_THAN_EQUAL_TO ,openedDate));
+		conditionList.add(EntityCondition.makeCondition("closedDate", EntityOperator.LESS_THAN_EQUAL_TO ,closeDate));
+		conditionList.add(EntityCondition.makeCondition("closedReason", EntityOperator.EQUALS,"PERMANENT"));
+		condition = EntityCondition.makeCondition(conditionList,EntityOperator.AND);
+		List<GenericValue> facilityList = delegator.findList("Facility", condition, null, null, null, false);
+		
+		facilitySaleMap = [:];
+		Map SCTMap=FastMap.newInstance();
+		if(UtilValidate.isNotEmpty(facilityList)){
+			for(i=0;i<facilityList.size();i++){
+				categoryType=facilityList.get(i).get("categoryTypeEnum");
+				facilityId=facilityList.get(i).get("facilityId");
+				if(UtilValidate.isNotEmpty(categoryType)){
+					if(UtilValidate.isEmpty(facilitySaleMap[categoryType])){
+						tempMap=[:];
+						Map finalMap=FastMap.newInstance();
+						tempMap.putAt("name",facilityList.get(i).get("facilityName"));
+						tempMap.putAt("opndate",facilityList.get(i).get("openedDate"));
+						tempMap.putAt("closeddate",facilityList.get(i).get("closedDate"));
+						tempMap.putAt("closedReason",facilityList.get(i).get("closedReason"));
+						if(UtilValidate.isEmpty(finalMap[facilityId])){
+							finalMap.put(facilityId,tempMap);
+							facilitySaleMap.put(categoryType,finalMap);
+						}
+					 }else{
+						 tempMap = [:];
+						 Map finalMap=FastMap.newInstance();
+						 finalMap.putAll(facilitySaleMap.get(categoryType));
+						 tempMap.putAt("name",facilityList.get(i).get("facilityName"));
+						 tempMap.putAt("opndate",facilityList.get(i).get("openedDate"));
+						 tempMap.putAt("closeddate",facilityList.get(i).get("closedDate"));
+						 tempMap.putAt("closedReason",facilityList.get(i).get("closedReason"));
+	//					 tempMap.putAt("date",facilityList.get(i).get("openedDate"));
+						 finalMap.put(facilityId,tempMap);
+						 facilitySaleMap[categoryType] = finalMap;
+					 }
+				   }
+			}
+		}
+		context.facilitySaleMap = facilitySaleMap;
+	}

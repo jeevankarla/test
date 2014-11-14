@@ -83,6 +83,7 @@ under the License.
         <field name="description"><display description="${facility.description}"/></field>
         <field name="openedDate"><display description="${groovy:org.ofbiz.base.util.UtilDateTime.toDateString(facility.openedDate, &quot;dd/MM/yyyy&quot;);}"/></field>
         <field name="closedDate"><display description="${groovy:org.ofbiz.base.util.UtilDateTime.toDateString(facility.closedDate, &quot;dd/MM/yyyy&quot;);}"/></field>
+        <field name="closedReason"><display description="${facility.closedReason}"/></field>
         <field name="securityDeposit"><display description="${facility.securityDeposit}"/></field>
     </form>
     <form name="FacilityFinAccount" type="list" list-name="finAccountList" 

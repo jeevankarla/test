@@ -1052,6 +1052,7 @@ under the License.
       	<field name="cashDues" type="currency-amount"></field>
       	<field name="district" type="name"></field>
       	<field name="useEcs" type="indicator"><description>If this facility wants ecs then check this flag.</description></field>      	       	         	    	   
+        <field name="closedReason" type="id"><description>If this facility wants close permanently then check this flag.</description></field>      	       	         	    	   
         
         <prim-key field="facilityId"/>
         <relation type="one" fk-name="FACILITY_FCTYP" rel-entity-name="FacilityType">
@@ -1108,7 +1109,10 @@ under the License.
       </relation>  
       <relation type="one" fk-name="FACILITY_DES_FA" title="Destination Facility" rel-entity-name="Facility">
         <key-map field-name="destinationFacilityId" rel-field-name="facilityId"/>
-      </relation>       
+      </relation> 
+      <relation type="one" fk-name="FAC_CLOSE_REASON" title="closedReason" rel-entity-name="Enumeration"> 
+        <key-map field-name="closedReason" rel-field-name="enumId"/> 
+      </relation>  
       <index name="FACILITY_SEQ_GENLKP">
       	<index-field name="sequenceNum"/>
       </index>
