@@ -769,7 +769,7 @@
         </field>
         <field name="dependentFirstName" title="${uiLabelMap.FormFieldTitle_firstName}" tooltip="${uiLabelMap.CommonRequired}" required-field="true" widget-style="required"><text></text></field>
         <field name="dependentLastName" title="${uiLabelMap.FormFieldTitle_lastName}" tooltip="${uiLabelMap.CommonRequired}" required-field="true" widget-style="required"><text></text></field>
-        <field name="dependentBirthDate" title="${uiLabelMap.DateOfBirth}" tooltip="${uiLabelMap.CommonRequired}" required-field="true" widget-style="required"><date-time></date-time></field>
+        <field name="dependentBirthDate" title="${uiLabelMap.DateOfBirth}" tooltip="${uiLabelMap.CommonRequired}" required-field="true" widget-style="required"><date-time type="date" ></date-time></field>
 		<field name="fromDate"><hidden value="nowTimestamp"></hidden></field>
 		<field name="priorityTypeId" title="${uiLabelMap.IsNominee}" tooltip="${uiLabelMap.CommonRequired}">
 			<drop-down allow-empty="true">
