@@ -5055,6 +5055,7 @@
       <field name="partyId" type="id"></field>
       <field name="statusId" type="id-ne"></field>
       <field name="facilityId" type="id"></field>
+      <field name="basicSalDate" type="date-time"></field>
       <field name="createdDate" type="date-time"></field>
       <field name="createdByUserLogin" type="id-vlong"></field>
       <field name="lastModifiedDate" type="date-time"></field>
