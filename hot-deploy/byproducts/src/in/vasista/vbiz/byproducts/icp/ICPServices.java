@@ -715,13 +715,13 @@ public static Map<String, Object> approveICPOrder(DispatchContext dctx, Map cont
 		        
     	        if(enableAdvancePaymentApp){
     		            // apply invoice if any adavance payments from this  party
-    	     		Map<String, Object> resultPaymentApp = dispatcher.runSync("settleInvoiceAndPayments", UtilMisc.<String, Object>toMap("invoiceId", invoiceId,"userLogin", userLogin));
+    	     		/*Map<String, Object> resultPaymentApp = dispatcher.runSync("settleInvoiceAndPayments", UtilMisc.<String, Object>toMap("invoiceId", invoiceId,"userLogin", userLogin));
     	     		if (ServiceUtil.isError(resultPaymentApp)) {						  
     	     			Debug.logError(resultPaymentApp.toString(), module);
     			        request.setAttribute("_ERROR_MESSAGE_", "There was an error in service settleInvoiceAndPayments");
     			        TransactionUtil.rollback();
     			        return "error";
-    	     		}
+    	     		}*/
     	    	}
     		}
 			
