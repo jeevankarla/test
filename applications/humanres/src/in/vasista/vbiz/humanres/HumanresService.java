@@ -400,6 +400,34 @@ public class HumanresService {
 				} catch (GenericServiceException s) {
 					Debug.logError("Error while creating Party Deduction"+s.getMessage(), module);
 				} 
+				//Creating finAccount related to loan
+				GenericValue LoanTypeDetails=null;
+				String finAccountTypeId="";
+				LoanTypeDetails =delegator.findOne("LoanType", UtilMisc.toMap("loanTypeId", loanTypeId), false);
+				if(UtilValidate.isNotEmpty(LoanTypeDetails)){
+					finAccountTypeId=LoanTypeDetails.getString("finAccountTypeId");
+				}	
+				String finAccountId=null;
+				List finCondList=FastList.newInstance();
+				finCondList.add(EntityCondition.makeCondition("ownerPartyId", EntityOperator.EQUALS, partyId));
+				finCondList.add(EntityCondition.makeCondition("finAccountTypeId", EntityOperator.EQUALS, finAccountTypeId));
+				finCondList.add(EntityCondition.makeCondition("statusId", EntityOperator.EQUALS, "FNACT_ACTIVE"));
+				finCondList.add(EntityCondition.makeCondition("organizationPartyId", EntityOperator.EQUALS, "Company"));
+				EntityCondition finCondition = EntityCondition.makeCondition(finCondList, EntityOperator.AND);
+				List<GenericValue> finAccountList=FastList.newInstance();
+				finAccountList = delegator.findList("FinAccount", finCondition, null,null, null, false);
+				if(UtilValidate.isEmpty(finAccountList)){
+					GenericValue finAccount = delegator.makeValue("FinAccount");
+					finAccount.set("ownerPartyId", partyId);
+					finAccount.set("finAccountTypeId", finAccountTypeId);
+					finAccount.set("statusId", "FNACT_ACTIVE");
+					finAccount.set("organizationPartyId", "Company");
+		 			delegator.createSetNextSeqId(finAccount);
+		 			if(UtilValidate.isNotEmpty(finAccount)){
+		 				finAccountId=finAccount.getString("finAccountId");
+		 			}	
+				}
+				
 				List conditionList=FastList.newInstance();
 				conditionList.add(EntityCondition.makeCondition("partyId", EntityOperator.EQUALS, partyId));
 				conditionList.add(EntityCondition.makeCondition("loanTypeId", EntityOperator.EQUALS, loanTypeId));
@@ -422,6 +450,7 @@ public class HumanresService {
 				loan.set("numInterestInst", numInterestInst);
 				loan.set("numPrincipalInst", numPrincipalInst);
 				loan.set("disbDate", disbDateStart);
+				loan.set("loanFinAccountId", finAccountId);
 				loan.set("createdDate", UtilDateTime.nowTimestamp());
 				loan.set("createdByUserLogin", userLogin.get("userLoginId"));
 	 			delegator.createSetNextSeqId(loan);
@@ -431,6 +460,7 @@ public class HumanresService {
 	        result = ServiceUtil.returnSuccess("Loan Created Sucessfully for Employee "  +partyId);
 	        return result;
 	    }
+	 
 	 public static Map<String, Object> updateEmployeeLoan(DispatchContext dctx, Map context) {
 	    	Map<String, Object> result = ServiceUtil.returnSuccess();
 	    	String loanId = (String) context.get("loanId");
