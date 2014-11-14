@@ -1868,6 +1868,47 @@ public class PartyServices {
 			return ServiceUtil.returnError("Failed to create a new Entry "+ e);
 		}
 		result.put("insuranceId", insuranceId);
+		//getting deduction TypeId and creating PartyDeduction 
+		String deductionTypeId="";
+		String partyIdFrom=null;
+		try{
+			GenericValue insuranceTypeDetails=null;
+			insuranceTypeDetails =delegator.findOne("InsuranceType", UtilMisc.toMap("insuranceTypeId", insuranceTypeId), false);
+			if(UtilValidate.isNotEmpty(insuranceTypeDetails)){
+				deductionTypeId=insuranceTypeDetails.getString("deductionTypeId");
+			}	
+			List<GenericValue> departmentDetails=FastList.newInstance();
+			departmentDetails=delegator.findByAnd("Employment", UtilMisc.toMap("partyIdTo", partyId));
+			if(UtilValidate.isNotEmpty(departmentDetails)){
+				GenericValue depatment=EntityUtil.getFirst(departmentDetails);
+				partyIdFrom=depatment.getString("partyIdFrom");
+			}
+			List conditionList=FastList.newInstance();
+			conditionList.add(EntityCondition.makeCondition("partyIdTo", EntityOperator.EQUALS, partyId));
+			conditionList.add(EntityCondition.makeCondition("deductionTypeId", EntityOperator.EQUALS, deductionTypeId));
+			conditionList.add(EntityCondition.makeCondition("thruDate", EntityOperator.EQUALS, null));
+			EntityCondition condition = EntityCondition.makeCondition(conditionList,EntityOperator.AND);
+			List<GenericValue> partyDeductionList = FastList.newInstance();
+			partyDeductionList = delegator.findList("PartyDeduction", condition, null,null, null, false);
+			if(UtilValidate.isNotEmpty(partyDeductionList)){
+				return ServiceUtil.returnError("Insurance already exists for that Insurance Type for Employee "+partyId); 
+			}else{
+				GenericValue partyDeduction = delegator.makeValue("PartyDeduction");
+				partyDeduction.set("roleTypeIdFrom", "INTERNAL_ORGANIZATIO");
+				partyDeduction.set("roleTypeIdTo", "EMPLOYEE");
+				partyDeduction.set("partyIdFrom", partyIdFrom);
+				partyDeduction.set("partyIdTo", partyId);
+				partyDeduction.set("fromDate", fromDate);
+				partyDeduction.set("deductionTypeId", deductionTypeId);
+				partyDeduction.set("thruDate", thruDate);
+				partyDeduction.set("periodTypeId", "RATE_MONTH");
+				partyDeduction.set("cost", premiumAmount);
+				partyDeduction.create();
+			}
+		} catch (GenericEntityException e) {
+			Debug.logError(e, module);
+			return ServiceUtil.returnError("Failed get deduction Type"+ e);
+		}
 		return result; 
 	}
     
