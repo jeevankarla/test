@@ -1806,6 +1806,7 @@ under the License.
             title="LoanType Entity">
       <field name="loanTypeId" type="id-ne"></field>
       <field name="payHeadTypeId" type="id-ne"></field>
+      <field name="finAccountTypeId" type="id-ne"></field>
       <field name="isActive" type="indicator"></field>
       <field name="isExternal" type="indicator"></field>
       <field name="description" type="description"></field>
@@ -1815,6 +1816,9 @@ under the License.
       <field name="numInterestInst" type="numeric"></field>
       <field name="rateOfInterest" type="floating-point"></field>
       <prim-key field="loanTypeId"/>
+      <relation type="one" fk-name="LNTYPE_LFINACCTYPID" rel-entity-name="FinAccountType">
+        <key-map field-name="finAccountTypeId" rel-field-name="finAccountTypeId"/>
+      </relation>
     </entity>
    <entity entity-name="Loan"
             package-name="org.ofbiz.humanres"
