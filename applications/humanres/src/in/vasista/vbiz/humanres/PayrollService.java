@@ -242,6 +242,7 @@ public class PayrollService {
 		        	
 				try {
 					beganTransaction = TransactionUtil.begin(72000);
+					//Debug.log("beganTransaction====="+beganTransaction);
 					periodBilling =delegator.findOne("PeriodBilling", UtilMisc.toMap("periodBillingId", periodBillingId), false);
 					String customPayrollCalcService = "generatePayrollBillingInternal";
 					GenericValue payrollType = delegator.findOne("PayrollType", UtilMisc.toMap("payrollTypeId", periodBilling.getString("billingTypeId")), false);
@@ -2577,7 +2578,7 @@ public class PayrollService {
 
 	       
 	         result.put("variables", variables);
-	         Debug.log("variables====="+variables);
+	        // Debug.log("variables====="+variables);
 	        return result;
 	    }
 	  
