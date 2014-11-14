@@ -28,60 +28,60 @@ under the License.
     </eca>
 
     <!-- create the accounting transactions for a sales shipment issuance every time the inventory is issued to the shipment -->
-    <eca service="createItemIssuance" event="commit">
+    <!-- <eca service="createItemIssuance" event="commit">
         <condition field-name="orderId" operator="is-not-empty"/>
         <condition field-name="inventoryItemId" operator="is-not-empty"/>
         <action service="createAcctgTransForSalesShipmentIssuance" mode="sync"/>
-    </eca>
+    </eca> -->
 
     <!-- create an accounting transactions every time an issuance to sales shipment is canceled -->
-    <eca service="cancelOrderItemIssuanceFromSalesShipment" event="commit">
+    <!-- <eca service="cancelOrderItemIssuanceFromSalesShipment" event="commit">
         <condition field-name="canceledQuantity" operator="greater" value="0" type="BigDecimal"/>
         <action service="createAcctgTransForCanceledSalesShipmentIssuance" mode="sync"/>
-    </eca>
+    </eca> -->
 
     <!-- create the accounting transactions for a shipment receipt every time the inventory is received -->
-    <eca service="createShipmentReceipt" event="commit">
+    <!-- <eca service="createShipmentReceipt" event="commit">
         <action service="createAcctgTransForShipmentReceipt" mode="sync"/>
-    </eca>
+    </eca> -->
 
     <!-- work effort related transactions -->
-    <eca service="assignInventoryToWorkEffort" event="commit">
+    <!-- <eca service="assignInventoryToWorkEffort" event="commit">
         <action service="createAcctgTransForWorkEffortIssuance" mode="sync"/>
-    </eca>
-    <eca service="createWorkEffortInventoryProduced" event="commit">
+    </eca> -->
+    <!-- <eca service="createWorkEffortInventoryProduced" event="commit">
         <action service="createAcctgTransForWorkEffortInventoryProduced" mode="sync"/>
-    </eca>
-    <eca service="createCostComponent" event="commit">
+    </eca> -->
+    <!-- <eca service="createCostComponent" event="commit">
         <condition field-name="workEffortId" operator="is-not-empty"/>
         <condition field-name="costComponentTypeId" operator="not-equals" value="ACTUAL_MAT_COST"/>
         <action service="createAcctgTransForWorkEffortCost" mode="sync"/>
-    </eca>
+    </eca> -->
 
-    <eca service="updateInventoryItem" event="commit">
+    <!-- <eca service="updateInventoryItem" event="commit">
         <condition field-name="ownerPartyId" operator="is-not-empty"/>
         <condition-field field-name="ownerPartyId" operator="not-equals" to-field-name="oldOwnerPartyId"/>
         <action service="createAcctgTransForInventoryItemOwnerChange" mode="sync"/>
-    </eca>
+    </eca> -->
 
     <!-- creating inventory item detail when unitCost is not empty and receiptId is empty -->
-    <eca service="createInventoryItemDetail" event="commit">
+    <!-- <eca service="createInventoryItemDetail" event="commit">
         <condition field-name="unitCost" operator="is-not-empty"/>
         <condition field-name="receiptId" operator="is-empty"/>
         <action service="createAcctgTransForInventoryItemCostChange" mode="sync"/>
-    </eca>
+    </eca> -->
 
     <!-- attempt to create AcctgTrans Physical Inventory Variance when Physical InventoryAndVariance is created-->
-    <eca service="createPhysicalInventoryAndVariance" event="commit">
+    <!-- <eca service="createPhysicalInventoryAndVariance" event="commit">
         <condition field-name="physicalInventoryId" operator="is-not-empty"/>
         <action service="createAcctgTransForPhysicalInventoryVariance" mode="sync"/>
-    </eca>
+    </eca> -->
 
     <!--create the accounting transactions when Fixed AssetMaint Issuance issues Inventory for fixed asset maintenance-->
-    <eca service="createItemIssuance" event="commit">
+   <!--  <eca service="createItemIssuance" event="commit">
         <condition field-name="fixedAssetId" operator="is-not-empty"/>
         <action service="createAcctgTransForFixedAssetMaintIssuance" mode="sync"/>
-    </eca>
+    </eca> -->
     <!-- accounting transactions for Purchase (AP) and Sales Invoices (AR) -->
     <eca service="setInvoiceStatus" event="commit">
         <condition field-name="invoiceId" operator="is-not-empty"/>

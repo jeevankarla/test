@@ -36,7 +36,7 @@ under the License.
             </service>
         </row-actions>        
         <field name="facilityId" title="Booth Id">
-            <hyperlink target="FacilityProfile" description="${facilityId}">
+            <hyperlink target="EditFacility" description="${facilityId}">
                 <parameter param-name="facilityId"/>
             </hyperlink>
         </field>
@@ -178,7 +178,69 @@ under the License.
     <form name="FindFacilityOptions" extends="lookupFacility" extends-resource="component://product/widget/facility/FieldLookupForms.xml" target="FindFacility">
         <field name="submitButton" title="${uiLabelMap.CommonFind}"><submit button-type="button"/></field>
     </form>
-
+     <form name="EditFacilityForm" type="single"  target="CreateBooth"
+        odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
+        <field name="facilityId" title="${uiLabelMap.BoothId}"><text size="10" maxlength="9"/></field>
+        <field name="facilityTypeId">
+            <drop-down allow-empty="true">
+                <entity-options description="${description}" entity-name="FacilityType" key-field-name="facilityTypeId">
+                    <entity-order-by field-name="description"/>
+                </entity-options>
+            </drop-down>
+        </field>
+        <field name="parentFacilityId" title="Route/ParentFacilityId"><lookup target-form-name="LookupFacility"/></field>
+        <field name="categoryTypeEnum" title="${uiLabelMap.ProductFacilityCategoryType}">
+            <drop-down allow-empty="true">
+                <entity-options entity-name="Enumeration" description="${description}" key-field-name="enumId">
+                    <entity-constraint name="enumTypeId" value="BOOTH_CAT_TYPE"/>
+                    <entity-order-by field-name="sequenceId"/>
+                </entity-options>
+            </drop-down>
+        </field>
+        <field name="facilityName" title="Name Of The Booth" required-field="true"><text/></field>    
+        <field name="sequenceNum" title="sequence"><hidden/></field>
+        <field name="description" title="Description"><text maxlength="25"/></field>
+        <field name="securityDeposit" title="Security Deposit" required-field="true"><text maxlength="25"></text></field>
+        <field name="fssLicenseNumber" title="FSS License Number"><text maxlength="25"></text></field>
+        <field name="fssExpiryDate" title="FSS Expiry Date"><date-time/></field>
+		<field name="useEcs" title="${uiLabelMap.UseEcs}">
+			<drop-down allow-empty="true">
+                <option key="Y" description="${uiLabelMap.CommonYes}"/>
+                <option key="N" description="${uiLabelMap.CommonNo}"/>
+            </drop-down>
+		</field>        
+        <field name="ownerDetails" title="${uiLabelMap.OwnerDetails}" title-area-style="group-label"><display description=" " also-hidden="false"/></field>
+        <field name="firstName" required-field="true"><text maxlength="25"/></field>
+        <!-- <field name="middleName" title="${uiLabelMap.PartyMiddleInitial}"><text size="5" maxlength="5"/></field> -->
+        <field name="lastName" required-field="true"><text maxlength="25"/></field>
+        <field name="contactNumber" title="${uiLabelMap.PartyPhoneNumber}"><text size="15" maxlength="15"/></field>
+        <field name="panNumber" title="Pan Number"><text maxlength="25"></text></field>
+        <field name="partyGroup" title="${uiLabelMap.PartyGroup}" title-area-style="group-label"><display description=" " also-hidden="false"/></field>
+        <field name="groupName"><text/></field>
+        <field name="permanentAddress" title="${uiLabelMap.OrderAddress}" title-area-style="group-label"><display description=" " also-hidden="false"/></field>
+        <field name="address1" title="${uiLabelMap.CommonAddress1}"><text size="30" maxlength="60"/></field>
+        <field name="address2" title="${uiLabelMap.CommonAddress2}"><text size="30" maxlength="60"/></field>
+        <field name="city" title="${uiLabelMap.CommonCity}"><text size="30" maxlength="60" default-value="HYDERABAD"/></field>
+        <field name="stateProvinceGeoId" title="${uiLabelMap.CommonState}"><hidden value="IN-AP"/></field>
+        <!--  <field name="countryGeoId" title="${uiLabelMap.CommonCountry}" tooltip="${uiLabelMap.CommonRequired}" widget-style="required">
+           <hidden value="IND"/>
+        </field>
+       <field name="stateProvinceGeoId" title="${uiLabelMap.CommonState}">
+            <drop-down allow-empty="false" no-current-selected-key="${defaultStateProvinceGeoId}">
+                <entity-options entity-name="Geo" key-field-name="geoId" description="${geoName} - ${geoId}">
+                    <entity-constraint name="geoTypeId" operator="in" value="STATE,PROVINCE"/>
+                    <entity-order-by field-name="geoName"/>
+                </entity-options>
+            </drop-down>
+        </field> -->
+        <field name="postalCode" title="${uiLabelMap.CommonZipPostalCode}"><hidden value="500007"/></field>
+        <field name="submitButton" title="${uiLabelMap.CommonSave}" widget-style="smallSubmit"><submit button-type="button"/></field>
+        <field name="cancelLink" title="${uiLabelMap.CommonEmptyHeader}" widget-style="smallSubmit">
+            <hyperlink target="FindFacility" also-hidden="false" description="${uiLabelMap.CommonCancel}" target-type="intra-app">
+                <parameter param-name="facilityId" />
+            </hyperlink>
+        </field>
+    </form>
     <form name="SearchInventoryItemsParams" type="single" target="EditFacilityInventoryItems"
         header-row-style="header-row" default-table-style="basic-table">
         <field name="facilityId">

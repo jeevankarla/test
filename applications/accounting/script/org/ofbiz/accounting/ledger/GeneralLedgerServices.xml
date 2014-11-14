@@ -1444,6 +1444,7 @@ under the License.
         <set field="createAcctgTransAndEntriesInMap.acctgTransTypeId" value="SHIPMENT_RECEIPT"/>
         <set field="createAcctgTransAndEntriesInMap.shipmentId" from-field="shipmentReceipt.shipmentId"/>
         <set field="createAcctgTransAndEntriesInMap.partyId" from-field="shipment.partyIdFrom"/>
+        <set field="createAcctgTransAndEntriesInMap.receiptId" from-field="shipmentReceipt.receiptId"/>
         <set field="createAcctgTransAndEntriesInMap.acctgTransEntries" from-field="acctgTransEntries"/>
         <call-service service-name="createAcctgTransAndEntries" in-map-name="createAcctgTransAndEntriesInMap">
             <result-to-field result-name="acctgTransId"/>

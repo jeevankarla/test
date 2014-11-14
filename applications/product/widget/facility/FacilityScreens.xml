@@ -3109,5 +3109,313 @@ under the License.
                 </decorator-screen>
             </widgets>
          </section>
-    </screen>  
+    </screen> 
+     <screen name="EditFacility">
+        <section>
+            <actions>
+                <set field="titleProperty" value="ProductNewFacility"/>
+                <set field="tabButtonItem" value="EditFacility" />
+				<set field="subTabButtonItem" value="createnewlocation" />
+                <script location="component://product/webapp/facility/WEB-INF/actions/facility/EditFacility.groovy"/>
+            </actions>
+            <widgets>
+                <section>
+                    <condition>
+                        <not><if-empty field="facility"/></not>
+                    </condition>
+                    <actions>
+                        <set field="titleProperty" value="ProductEditFacility"/>
+                    </actions>
+                    <widgets>
+                        <decorator-screen name="CommonFacilityDecorator" location="component://product/widget/facility/CommonScreens.xml">
+                            <decorator-section name="body">
+                                <section>
+                                    <condition>
+                                        <if-service-permission service-name="facilityGenericPermission" main-action="VIEW"/>
+                                    </condition>
+                                    <widgets>
+                                        <section>
+                                            <condition>
+                                                <not><if-empty field="facilityId"/></not>
+                                            </condition>
+                                            <widgets>
+                                                <container style="button-bar">
+                                                    <link target="EditFacility" text="${uiLabelMap.ProductNewFacility}" style="buttontext create"/><!--
+                                                    <link target="/workeffort/control/calendar" text="${uiLabelMap.CommonViewCalendar}" style="buttontext" url-mode="inter-app">
+                                                        <parameter param-name="facilityId"/>
+                                                        <parameter param-name="externalLoginKey" from-field="parameters.externalLoginKey"/>
+                                                    </link>
+                                                --></container>
+                                                <label style="h1">${uiLabelMap.ProductEditFacility} ${facility.facilityName} [${facilityId}]</label>
+                                                <platform-specific><html><html-template location="component://product/webapp/facility/facility/EditFacility.ftl"/></html></platform-specific>
+                                            </widgets>
+                                        </section>
+                                    </widgets>
+                                    <fail-widgets>
+                                        <label style="h3">${uiLabelMap.ProductFacilityViewPermissionError}</label>
+                                    </fail-widgets>
+                                </section>
+                            </decorator-section>
+                        </decorator-screen>
+                    </widgets>
+                    <fail-widgets>
+                        <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
+                            <decorator-section name="body">
+                                <section>
+                                    <condition>
+                                        <if-service-permission service-name="facilityGenericPermission" main-action="VIEW"/>
+                                    </condition>
+                                    <actions>
+                                        <property-to-field field="defaultCountryGeoId" resource="general" property="country.geo.id.default" default="AP"/>
+                                        <set field="dependentForm" value="EditFacilityForm"/>
+                                        <set field="paramKey" value="countryGeoId"/>                                        
+                                        <set field="mainId" value="countryGeoId"/>
+                                        <set field="dependentId" value="stateProvinceGeoId"/>
+                                        <set field="requestName" value="getAssociatedStateList"/>
+                                        <set field="responseName" value="stateList"/>
+                                        <set field="dependentKeyName" value="geoId"/>
+                                        <set field="descName" value="geoName"/>
+                                        <set field="selectedDependentOption" value="_none_"/>
+                                    </actions>
+                                    <widgets>
+                                        <include-menu name="FacilityTabBar" location="component://product/widget/facility/FacilityMenus.xml"/>
+                                        <include-menu name="FindLocationsTabBar"
+									           location="component://product/widget/facility/FacilityMenus.xml"/>
+                                        <label style="h1">${uiLabelMap.ProductNewFacility}</label>
+                                        <platform-specific><html><html-template location="component://common/webcommon/includes/setDependentDropdownValuesJs.ftl"/></html></platform-specific>
+                               
+                                        <include-form name="EditFacilityForm" location="component://product/widget/facility/FacilityForms.xml"/>
+                                        <!-- <platform-specific><html><html-template location="component://product/webapp/facility/facility/EditFacility.ftl"/></html></platform-specific>
+ -->                                    </widgets>
+                                    <fail-widgets>
+                                        <label style="h3">${uiLabelMap.ProductFacilityViewPermissionError}</label>
+                                    </fail-widgets>
+                                </section>
+                            </decorator-section>
+                        </decorator-screen>
+                    </fail-widgets>
+                </section>
+            </widgets>
+        </section>
+    </screen>
+    <screen name="FindFacility">
+        <section>
+            <actions>
+                <set field="titleProperty" value="ProductFindFacilities"/>
+                <set field="tabButtonItem" value="facility" />
+                <set field="subTabButtonItem" value="facility"/>                
+                <script location="component://product/webapp/facility/WEB-INF/actions/facility/FindFacility.groovy"/>
+            </actions>           
+            <widgets>
+            	<decorator-screen name="CommonFacilityDecorator" location="component://product/widget/facility/CommonScreens.xml">
+                    <decorator-section name="body">
+                        <section>
+                            <condition>
+                                <if-service-permission service-name="facilityGenericPermission" main-action="VIEW"/>
+                            </condition>
+                            <widgets>
+                                <section>
+                                    <condition>
+                                        <if-compare field="showScreen" value="one" operator="equals"/>
+                                    </condition>
+                                    <actions>
+                                        <script location="component://product/webapp/facility/WEB-INF/actions/facility/EditFacility.groovy"/>
+                                    </actions>
+                                    <widgets>
+                                        <section>
+                                            <condition>
+                                                <if-service-permission service-name="facilityGenericPermission" main-action="VIEW"/>
+                                            </condition>
+                                            <widgets>
+                                                <include-menu name="FacilityTabBar" location="component://product/widget/facility/FacilityMenus.xml"/>
+                                                <include-menu name="FindLocationsTabBar"
+									                 location="component://product/widget/facility/FacilityMenus.xml"/>
+                                                <section>
+                                                    <condition>
+                                                        <not><if-empty field="facilityId"/></not>
+                                                    </condition>
+                                                    <widgets>
+                                                        <container style="button-bar">
+                                                            <link target="EditFacility" text="${uiLabelMap.ProductNewFacility}" style="buttontext create"/>
+                                                            <link target="/workeffort/control/calendar" text="${uiLabelMap.CommonViewCalendar}" style="buttontext" url-mode="inter-app">
+                                                                <parameter param-name="facilityId"/>
+                                                                <parameter param-name="externalLoginKey" from-field="parameters.externalLoginKey"/>
+                                                            </link>
+                                                        </container>
+                                                        <label style="h1">${uiLabelMap.ProductEditFacility} ${facility.facilityName} [${facilityId}]</label>
+                                                        <platform-specific><html><html-template location="component://product/webapp/facility/facility/EditFacility.ftl"/></html></platform-specific>
+                                                    </widgets>
+                                                    <fail-widgets>
+                                                        <label style="h1">${uiLabelMap.ProductNewFacility}"</label>
+                                                        <platform-specific><html><html-template location="component://product/webapp/facility/facility/EditFacility.ftl"/></html></platform-specific>
+                                                    </fail-widgets>
+                                                </section>
+                                            </widgets>
+                                            <fail-widgets>
+                                                <label style="h3">${uiLabelMap.ProductFacilityViewPermissionError}</label>
+                                            </fail-widgets>
+                                        </section>
+                                    </widgets>
+                                </section>
+                                <section>
+                                    <condition>
+                                        <if-compare field="showScreen" value="ten" operator="equals"/>
+                                    </condition>
+                                    <widgets>
+                                        <label text="${uiLabelMap.FacilitySelection}" style="h1"/>
+                                        <section>
+                                            <condition>
+                                                <if-service-permission service-name="facilityGenericPermission" main-action="CREATE"/>
+                                            </condition>
+                                            <widgets>
+                                                <container style="button-bar"><link target="EditFacility" text="${uiLabelMap.ProductCreateNewFacility}" style="buttontext create"/></container>
+                                            </widgets>
+                                        </section>
+                                        <screenlet>
+                                            <include-form name="FindFacility10" location="component://product/widget/facility/FacilityForms.xml"/>
+                                        </screenlet>
+                                        
+                                    </widgets>
+                                </section>
+                                <section>
+                                    <condition>
+                                        <if-compare field="showScreen" value="more" operator="equals"/>
+                                    </condition>
+                                    <widgets>
+                                        <decorator-screen name="FindScreenDecorator" location="component://common/widget/CommonScreens.xml">
+                                            <decorator-section name="menu-bar">
+                                                <section>
+                                                    <condition>
+                                                        <if-service-permission service-name="facilityGenericPermission" main-action="CREATE"/>
+                                                    </condition>
+                                                    <widgets>
+                                                        <container style="button-bar">
+                                                        <link target="EditFacility" text="${uiLabelMap.ProductCreateNewFacility}" style="buttontext"/>
+                                                        <link target="boothMaster.csv" text="Export As CSV" style="buttontext create" />		
+                                                        </container>
+                                                    </widgets>
+                                                </section>
+                                            </decorator-section>
+                                            <decorator-section name="search-options">
+                                                <include-form name="FindFacilityOptions" location="component://product/widget/facility/FacilityForms.xml"/>
+                                            </decorator-section>
+                                            <decorator-section name="search-results">
+                                                <include-screen name="FacilitySearchResults"/>
+                                            </decorator-section>
+                                        </decorator-screen>
+                                    </widgets>
+                                </section>
+                            </widgets>
+                            <fail-widgets>
+                                <label style="h3">${uiLabelMap.ProductFacilityViewPermissionError}</label>
+                            </fail-widgets>
+                        </section>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+     <screen name="FacilitySearchResults">
+        <section>
+            <condition>
+                <if-service-permission service-name="facilityGenericPermission" main-action="VIEW"/>
+            </condition>
+            <actions>
+                <property-map resource="ProductUiLabels" map-name="uiLabelMap" global="true"/>
+                <property-map resource="CommonUiLabels" map-name="uiLabelMap" global="true"/>
+            </actions>
+            <widgets>
+                <include-form name="FindFacility" location="component://product/widget/facility/FacilityForms.xml"/>
+            </widgets>
+        </section>
+    </screen>
+
+    <screen name="EditFacility">
+        <section>
+            <actions>
+                <set field="titleProperty" value="ProductNewFacility"/>
+                <set field="tabButtonItem" value="EditFacility" />
+				<set field="subTabButtonItem" value="createnewlocation" />
+                <script location="component://product/webapp/facility/WEB-INF/actions/facility/EditFacility.groovy"/>
+            </actions>
+            <widgets>
+                <section>
+                    <condition>
+                        <not><if-empty field="facility"/></not>
+                    </condition>
+                    <actions>
+                        <set field="titleProperty" value="ProductEditFacility"/>
+                    </actions>
+                    <widgets>
+                        <decorator-screen name="CommonFacilityDecorator" location="component://product/widget/facility/CommonScreens.xml">
+                            <decorator-section name="body">
+                                <section>
+                                    <condition>
+                                        <if-service-permission service-name="facilityGenericPermission" main-action="VIEW"/>
+                                    </condition>
+                                    <widgets>
+                                        <section>
+                                            <condition>
+                                                <not><if-empty field="facilityId"/></not>
+                                            </condition>
+                                            <widgets>
+                                                <container style="button-bar">
+                                                    <link target="EditFacility" text="${uiLabelMap.ProductNewFacility}" style="buttontext create"/><!--
+                                                    <link target="/workeffort/control/calendar" text="${uiLabelMap.CommonViewCalendar}" style="buttontext" url-mode="inter-app">
+                                                        <parameter param-name="facilityId"/>
+                                                        <parameter param-name="externalLoginKey" from-field="parameters.externalLoginKey"/>
+                                                    </link>
+                                                --></container>
+                                                <label style="h1">${uiLabelMap.ProductEditFacility} ${facility.facilityName} [${facilityId}]</label>
+                                                <platform-specific><html><html-template location="component://product/webapp/facility/facility/EditFacility.ftl"/></html></platform-specific>
+                                            </widgets>
+                                        </section>
+                                    </widgets>
+                                    <fail-widgets>
+                                        <label style="h3">${uiLabelMap.ProductFacilityViewPermissionError}</label>
+                                    </fail-widgets>
+                                </section>
+                            </decorator-section>
+                        </decorator-screen>
+                    </widgets>
+                    <fail-widgets>
+                        <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
+                            <decorator-section name="body">
+                                <section>
+                                    <condition>
+                                        <if-service-permission service-name="facilityGenericPermission" main-action="VIEW"/>
+                                    </condition>
+                                    <actions>
+                                        <property-to-field field="defaultCountryGeoId" resource="general" property="country.geo.id.default" default="AP"/>
+                                        <set field="dependentForm" value="EditFacilityForm"/>
+                                        <set field="paramKey" value="countryGeoId"/>                                        
+                                        <set field="mainId" value="countryGeoId"/>
+                                        <set field="dependentId" value="stateProvinceGeoId"/>
+                                        <set field="requestName" value="getAssociatedStateList"/>
+                                        <set field="responseName" value="stateList"/>
+                                        <set field="dependentKeyName" value="geoId"/>
+                                        <set field="descName" value="geoName"/>
+                                        <set field="selectedDependentOption" value="_none_"/>
+                                    </actions>
+                                    <widgets>
+                                        <include-menu name="FacilityTabBar" location="component://product/widget/facility/FacilityMenus.xml"/>
+                                        <include-menu name="FindLocationsTabBar"
+									           location="component://product/widget/facility/FacilityMenus.xml"/>
+                                        <label style="h1">${uiLabelMap.ProductNewFacility}</label>
+                                        <platform-specific><html><html-template location="component://common/webcommon/includes/setDependentDropdownValuesJs.ftl"/></html></platform-specific>
+                               
+                                        <include-form name="EditFacilityForm" location="component://product/widget/facility/FacilityForms.xml"/>
+                                        <!-- <platform-specific><html><html-template location="component://product/webapp/facility/facility/EditFacility.ftl"/></html></platform-specific>
+ -->                                    </widgets>
+                                    <fail-widgets>
+                                        <label style="h3">${uiLabelMap.ProductFacilityViewPermissionError}</label>
+                                    </fail-widgets>
+                                </section>
+                            </decorator-section>
+                        </decorator-screen>
+                    </fail-widgets>
+                </section>
+            </widgets>
+        </section>
+    </screen>
 </screens>
