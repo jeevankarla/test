@@ -3208,7 +3208,7 @@
     <screen name="FGSProductSale">
         <section>
             <actions>
-               <set field="titleProperty" value="FGS Sale"/>              
+               <set field="titleProperty" value="Sale"/>              
 			   <set field="tabButtonItem" value="FGSProductSale" />	
 			   <set field="tabButtonItem2" value="FGSProductSale"/>  
 			    <set field="changeFlag" value="FgsSales"/>  
