@@ -3647,7 +3647,7 @@ public class PayrollService {
 	        String partyId = (String) request.getParameter("partyId");	
 	        String customTimePeriodId = (String) request.getParameter("customTimePeriodId");
 	        String timePeriodId = (String) request.getParameter("timePeriodId");
-	        
+	        String deptId = (String) request.getParameter("deptId");
 	        BigDecimal noOfPayableDays=BigDecimal.ZERO;
 	        String noOfPayableDaysStr=(String)request.getParameter("noOfPayableDays");
 	        if(UtilValidate.isNotEmpty(noOfPayableDaysStr)){
@@ -3787,6 +3787,7 @@ public class PayrollService {
 	        conditionList.add(EntityCondition.makeCondition("statusId", EntityOperator.IN , UtilMisc.toList("GENERATED","IN_PROCESS","APPROVED")));
 	        conditionList.add(EntityCondition.makeCondition("customTimePeriodId", EntityOperator.EQUALS ,timePeriodId));
 	    	conditionList.add(EntityCondition.makeCondition("billingTypeId", EntityOperator.EQUALS , billingTypeId));
+	    	conditionList.add(EntityCondition.makeCondition("partyId", EntityOperator.EQUALS , deptId));
 	    	EntityCondition condition=EntityCondition.makeCondition(conditionList,EntityOperator.AND);
 	    	try {
 	    		periodBillingList = delegator.findList("PeriodBilling", condition, null,null, null, false);

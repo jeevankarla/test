@@ -83,6 +83,7 @@ if(UtilValidate.isNotEmpty(employementList)){
 		tempFinalMap.put("customTimePeriodId",customTimePeriodId);
 		tempFinalMap.put("timePeriodId",timePeriodId);
 		tempFinalMap.put("Dates",dates);
+		tempFinalMap.put("deptId", deptId);
 		tempFinalMap["noOfPayableDays"]="";
 		if(!"leaveEncash".equals(screenFlag)){
 			tempFinalMap["noOfAttendedDays"]=0;

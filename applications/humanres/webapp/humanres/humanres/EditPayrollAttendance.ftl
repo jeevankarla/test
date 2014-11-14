@@ -130,6 +130,7 @@ function comparer(a, b) {
 			var columns = [		
 					{id:"id", name:"Employee Id", field:"id", width:150, minWidth:100, cssClass:"cell-title", sortable:true},
 					{id:"deptName", name:"Department", field:"deptName", width:150, minWidth:100, cssClass:"cell-title", sortable:true},
+					{id:"deptId",width:10, minWidth:10},
 					{id:"Dates", name:"TimePeriod", field:"Dates", width:160, minWidth:100, cssClass:"cell-title", sortable:true},
 					{id:"noOfAttendedDays", name:"Physical Presence Days", field:"noOfAttendedDays", width:160, minWidth:100, cssClass:"cell-title", sortable:true, editor:FloatCellEditor},
 					{id:"noOfAttendedHoliDays", name:"Weekly Off/OH/Public Holiday", field:"noOfAttendedHoliDays", width:180, minWidth:100, cssClass:"cell-title", sortable:true, editor:FloatCellEditor},
