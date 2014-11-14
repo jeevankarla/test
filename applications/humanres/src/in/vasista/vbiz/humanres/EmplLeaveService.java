@@ -663,8 +663,8 @@ public class EmplLeaveService {
 		GenericValue userLogin = (GenericValue) context.get("userLogin");
 		try {
 			if(UtilValidate.isNotEmpty(leaveTypeId)){
-				if(maxFullDayHours>72 || (maxHalfDayHours!=0 && maxHalfDayHours>72)){
-					return ServiceUtil.returnError("You cannot apply leave more than 3 full days or 6 half days for leave type : Half Pay Leave"); 
+				if(maxFullDayHours<72 || (maxHalfDayHours!=0 && maxHalfDayHours<72)){
+					return ServiceUtil.returnError("You have to apply minimum 3 Full days or 6 Half Days for leave type :  Half Pay Leave"); 
 				}
 			}
 		}catch(Exception e){
