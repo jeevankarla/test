@@ -156,14 +156,14 @@ if (organizationPartyId) {
         BigDecimal totalOfYearToDateCredit = BigDecimal.ZERO;
         isPosted = parameters.isPosted;
 
-        while (customTimePeriodEndDate <= UtilDateTime.addDaysToTimestamp(UtilDateTime.toTimestamp(currentTimePeriod.thruDate), 1)){
+       // while (customTimePeriodEndDate <= UtilDateTime.addDaysToTimestamp(UtilDateTime.toTimestamp(currentTimePeriod.thruDate), 1)){
             if ("ALL".equals(isPosted)) {
                 isPosted = "";
             }
-			/*acctgTransEntriesAndTransTotal = dispatcher.runSync("getAcctgTransEntriesAndTransTotal",
-				[customTimePeriodStartDate : fromDateTimestamp, customTimePeriodEndDate : UtilDateTime.getDayEnd(fromDateTimestamp), organizationPartyId : organizationPartyId, glAccountId : glAccountId, isPosted : isPosted, userLogin : userLogin]);*/
-			 acctgTransEntriesAndTransTotal = dispatcher.runSync("getAcctgTransEntriesAndTransTotal", 
-                    [customTimePeriodStartDate : customTimePeriodStartDate, customTimePeriodEndDate : customTimePeriodEndDate, organizationPartyId : organizationPartyId, glAccountId : glAccountId, isPosted : isPosted, userLogin : userLogin]);
+			acctgTransEntriesAndTransTotal = dispatcher.runSync("getAcctgTransEntriesAndTransTotal",
+				[customTimePeriodStartDate : dayBegin, customTimePeriodEndDate : dayEnd, organizationPartyId : organizationPartyId, glAccountId : glAccountId, isPosted : isPosted, userLogin : userLogin]);
+			 /*acctgTransEntriesAndTransTotal = dispatcher.runSync("getAcctgTransEntriesAndTransTotal", 
+                    [customTimePeriodStartDate : customTimePeriodStartDate, customTimePeriodEndDate : customTimePeriodEndDate, organizationPartyId : organizationPartyId, glAccountId : glAccountId, isPosted : isPosted, userLogin : userLogin]);*/
             totalOfYearToDateDebit = totalOfYearToDateDebit + acctgTransEntriesAndTransTotal.debitTotal;
             acctgTransEntriesAndTransTotal.totalOfYearToDateDebit = totalOfYearToDateDebit.setScale(decimals, rounding);
             totalOfYearToDateCredit = totalOfYearToDateCredit + acctgTransEntriesAndTransTotal.creditTotal;
@@ -184,7 +184,7 @@ if (organizationPartyId) {
             retStampStartDate.setNanos(0);
             customTimePeriodStartDate = retStampStartDate;
             customTimePeriodEndDate = UtilDateTime.getMonthEnd(UtilDateTime.toTimestamp(retStampStartDate), timeZone, locale);
-        }
+       // }
 		
 		closingBalance = openingBalance;
 		totOpeningBalance = openingBalance;
@@ -220,7 +220,7 @@ if (organizationPartyId) {
 		paymentMethodTypeId = "";
 		
 		
-		glAcctgTrialBalanceList = UtilMisc.sortMaps(glAcctgTrialBalanceList, UtilMisc.toList("paymentId"));
+		glAcctgTrialBalanceList = UtilMisc.sortMaps(glAcctgTrialBalanceList, UtilMisc.toList("transactionDate","paymentId"));
 		if(UtilValidate.isNotEmpty(glAcctgTrialBalanceList)){
 			for(i=0; i<glAcctgTrialBalanceList.size(); i++){
 				acctgTransIt = glAcctgTrialBalanceList[i];
@@ -308,6 +308,8 @@ if (organizationPartyId) {
 					finAccountPartyName = "";
 					transSequenceId = "";
 					finAccountMethodType = "";
+					finAccountDes = "";
+					finAccountTypeDes = "";
 					
 					if(UtilValidate.isEmpty(paymentId)){
 						finAccountTransAttr = delegator.findOne("FinAccountTransAttribute", [finAccountTransId : finAccountTransId, attrName : "FATR_CONTRA"], false);
@@ -317,6 +319,7 @@ if (organizationPartyId) {
 							if(UtilValidate.isNotEmpty(finAccountTrans)){
 								finAccountTransTypeId = finAccountTrans.finAccountTransTypeId;
 								reasonEnumId = finAccountTrans.reasonEnumId;
+								finAccountDes = finAccountTrans.comments;
 								if(UtilValidate.isNotEmpty(reasonEnumId) && reasonEnumId.equals("FATR_CONTRA")){
 									finAccountMethodType = "Contra";
 								}
@@ -329,6 +332,13 @@ if (organizationPartyId) {
 										finAccountOwnerPartyId = finAccount.ownerPartyId;
 										if(UtilValidate.isNotEmpty(finAccountOwnerPartyId)){
 											finAccountPartyName = PartyHelper.getPartyName(delegator, finAccountOwnerPartyId, false);
+										}
+										finAccountTypeId = finAccount.finAccountTypeId;
+										if(UtilValidate.isNotEmpty(finAccountTypeId)){
+											finAccountType = delegator.findOne("FinAccountType", [finAccountTypeId : finAccountTypeId], false);
+											if(UtilValidate.isNotEmpty(finAccountType)){
+												finAccountTypeDes = finAccountType.description;
+											}
 										}
 									}
 									finAccountName = finAccount.finAccountName;
@@ -419,7 +429,9 @@ if (organizationPartyId) {
 					isNew = "MAYBE";
 					prevDateStr = transactionDateStr;
 					
-					acctgTransEntryMap = [:];
+					
+					SortedMap acctgTransEntryMap = new TreeMap();
+					
 					acctgTransEntryMap["transactionDate"] = transactionDateStr;
 					
 					if(UtilValidate.isNotEmpty(paymentId)){
@@ -456,7 +468,9 @@ if (organizationPartyId) {
 							acctgTransEntryMap["paymentMethodTypeDes"] = finAccountMethodType;
 						}
 						acctgTransEntryMap["description"] = finAccountDescription;
+						acctgTransEntryMap["finAccountTypeDes"] = finAccountTypeDes;
 					}
+					acctgTransEntryMap["comments"] = finAccountDes;
 					acctgTransEntryMap["openingBalance"] = openingBalance;
 					acctgTransEntryMap["debitAmount"] = debitAmount;
 					acctgTransEntryMap["creditAmount"] = creditAmount;
@@ -535,6 +549,7 @@ financialAcctgTransList.each{ dayFinAccount ->
 			dayFinAccountMap["description"] = dayFinAccount.description;
 			dayFinAccountMap["comments"] = dayFinAccount.comments;
 			dayFinAccountMap["paymentMethodTypeDes"] = dayFinAccount.paymentMethodTypeDes;
+			dayFinAccountMap["finAccountTypeDes"] = dayFinAccount.finAccountTypeDes;
 			dayFinAccountMap["instrumentNum"] = dayFinAccount.instrumentNum;
 			dayFinAccountMap["openingBalance"] = dayFinAccount.openingBalance;
 			dayFinAccountMap["debitAmount"] = dayFinAccount.debitAmount;
@@ -558,7 +573,6 @@ financialAcctgTransList.each{ dayFinAccount ->
 			tempDayTotalsMap.putAll(dayFinAccountMap);
 			dayFinAccountTransList.add(tempDayTotalsMap);
 		}
-		//dayFinAccountTransList = UtilMisc.sortMaps(dayFinAccountTransList, UtilMisc.toList("paymentId"));
 		context.dayFinAccountTransList = dayFinAccountTransList;
 }
 

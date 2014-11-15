@@ -44,11 +44,11 @@ ${setRequestAttribute("OUTPUT_FILENAME", "cashBookReport.pdf")}
               		<fo:block>
 	                 	<fo:table border-style="solid">
                     	<fo:table-column column-width="100pt"/>
-                    	<fo:table-column column-width="100pt"/>
+                    	<fo:table-column column-width="125pt"/>
                     	<fo:table-column column-width="100pt"/>
                     	<fo:table-column column-width="100pt"/>
                     	<fo:table-column column-width="100pt"/>  
-               	    	<fo:table-column column-width="175pt"/>
+               	    	<fo:table-column column-width="150pt"/>
             			<fo:table-column column-width="125pt"/> 		
             			<fo:table-column column-width="125pt"/>
 	                    <fo:table-body>
@@ -86,11 +86,11 @@ ${setRequestAttribute("OUTPUT_FILENAME", "cashBookReport.pdf")}
             	<fo:block>
                  	<fo:table border-style="solid">
                     	<fo:table-column column-width="100pt"/>
-                    	<fo:table-column column-width="100pt"/>
+                    	<fo:table-column column-width="125pt"/>
                     	<fo:table-column column-width="100pt"/>
                     	<fo:table-column column-width="100pt"/>
                     	<fo:table-column column-width="100pt"/>  
-               	    	<fo:table-column column-width="175pt"/>
+               	    	<fo:table-column column-width="150pt"/>
             			<fo:table-column column-width="125pt"/> 		
             			<fo:table-column column-width="125pt"/>
                     <fo:table-body>
@@ -112,6 +112,7 @@ ${setRequestAttribute("OUTPUT_FILENAME", "cashBookReport.pdf")}
 	                		<#assign instrumentNum = (finAcctngDetails.get("instrumentNum")?if_exists)/>
 	                		<#assign finAccountOwnerPartyId = (finAcctngDetails.get("finAccountOwnerPartyId")?if_exists)/>
 	                		<#assign finAccountPartyName = (finAcctngDetails.get("finAccountPartyName")?if_exists)/>
+	                		<#assign finAccountTypeDes = (finAcctngDetails.get("finAccountTypeDes")?if_exists)/>
 	                		
 	                		<#if ((paymentId)?has_content)>
 								<#if (paymentId != "DAY TOTAL")>
@@ -198,7 +199,7 @@ ${setRequestAttribute("OUTPUT_FILENAME", "cashBookReport.pdf")}
 	                                </#if>	
                                 	<#if ((paymentMethodTypeDes)?has_content)>
                                 	<fo:table-cell>
-	                                    <fo:block font-size="13pt" text-align="center">${(paymentMethodTypeDes)}</fo:block>
+	                                    <fo:block font-size="13pt" text-align="left">${(paymentMethodTypeDes)}<#if finAccountTypeDes?has_content>/${finAccountTypeDes}</#if></fo:block>
 	                                </fo:table-cell>
                                  	<#else>
                                  	<fo:table-cell >
@@ -326,6 +327,11 @@ ${setRequestAttribute("OUTPUT_FILENAME", "cashBookReport.pdf")}
 	                                </fo:table-cell>
 	                           </fo:table-row>     
                               </#if>
+                              <fo:table-row>
+								<fo:table-cell>
+				            		<fo:block linefeed-treatment="preserve">&#xA;</fo:block>
+				       			</fo:table-cell>
+							</fo:table-row>
                           </#list>
                           <fo:table-row>
 							<fo:table-cell>
