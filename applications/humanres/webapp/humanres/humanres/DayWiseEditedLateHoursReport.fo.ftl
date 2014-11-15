@@ -14,7 +14,7 @@
 	        		<fo:block  keep-together="always" text-align="center" font-family="Courier,monospace" white-space-collapse="false" font-weight="bold">&#160;      ${uiLabelMap.KMFDairyHeader}</fo:block>
 					<fo:block  keep-together="always" text-align="center" font-family="Courier,monospace" white-space-collapse="false" font-weight="bold">&#160;      ${uiLabelMap.KMFDairySubHeader}</fo:block>
 	        		<fo:block  keep-together="always" text-align="center" font-family="Courier,monospace" white-space-collapse="false" font-weight="bold">&#160;      </fo:block>
-	        		<fo:block text-align="center" keep-together="always" white-space-collapse="false">&#160;   DAY WISE EDITED LATE HOURS REPORT FOR THE MONTH OF ${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(fromDateStart, "MMM-yyyy")}</fo:block>	  
+	        		<fo:block text-align="center" keep-together="always" white-space-collapse="false">&#160;   DAY WISE EDITED LATE HOURS REPORT FOR THE MONTH OF ${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(thruDateEnd, "MMM-yyyy")}</fo:block>	  
 	        		<fo:block text-align="left" keep-together="always" white-space-collapse="false">&#160;                                                                              DATE: ${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(nowTimestamp, "dd-MMM-yyyy")}</fo:block>	 
 	        		<fo:block text-align="left" keep-together="always" white-space-collapse="false">&#160;                                                                              PAGE: <fo:page-number/></fo:block>	 	 	  	 	  
 	        		<fo:block text-align="left" keep-together="always" white-space-collapse="false">&#160;</fo:block>
@@ -36,8 +36,7 @@
 	                    <fo:table-column column-width="120pt"/>
 	                    <fo:table-column column-width="100pt"/>
 	                    <fo:table-column column-width="60pt"/>
-	                    <fo:table-column column-width="100pt"/>
-	                    <fo:table-column column-width="200pt"/>
+	                    <fo:table-column column-width="180pt"/>
                      	<fo:table-body>
                      		<#list attendanceDetailList as empAttendence>
                      		<#assign sno=sno+1>
@@ -67,7 +66,7 @@
 											<fo:block text-align="right" keep-together="always" font-size="12pt"><#if empAttendence.get("lastUpdatedStamp")?has_content>${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(empAttendence.get("lastUpdatedStamp") ,"HH:mm")?if_exists}<#else></#if></fo:block>
 				                    	</fo:table-cell>
 				                    	<fo:table-cell>	
-				                    		<fo:block text-align="right" keep-together="always" font-size="12pt"><#if empAttendence.get("overrideReason")?has_content>${empAttendence.get("overrideReason")?if_exists}<#else></#if></fo:block>
+				                    		<fo:block text-align="center" keep-together="always" font-size="12pt"><#if empAttendence.get("overrideReason")?has_content>${empAttendence.get("overrideReason")?if_exists}<#else></#if></fo:block>
 				                    	</fo:table-cell>
 			                    		<#assign noofLines=noofLines+1>
 			               			</fo:table-row>

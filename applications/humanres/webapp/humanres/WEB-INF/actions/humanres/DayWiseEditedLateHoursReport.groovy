@@ -18,7 +18,7 @@ if (parameters.customTimePeriodId == null) {
 GenericValue customTimePeriod = delegator.findOne("CustomTimePeriod", [customTimePeriodId : parameters.customTimePeriodId], false);
 fromDateStart=UtilDateTime.toTimestamp(customTimePeriod.getDate("fromDate"));
 thruDateEnd=UtilDateTime.toTimestamp(customTimePeriod.getDate("thruDate"));
-context.putAt("fromDateStart", fromDateStart);
+context.putAt("thruDateEnd", thruDateEnd);
 
 fromDayBegin = UtilDateTime.getDayStart(fromDateStart);
 thruDayEnd = UtilDateTime.getDayEnd(thruDateEnd);
@@ -32,14 +32,3 @@ def orderBy = UtilMisc.toList("date","partyId");
 attendanceDetailList = delegator.findList("EmplDailyAttendanceDetail", condition , null, orderBy, null, false);
 
 context.put("attendanceDetailList",attendanceDetailList);
-
-List consolidateList=[];
-consolidateList.add(EntityCondition.makeCondition("changedDate", EntityOperator.GREATER_THAN_EQUAL_TO,  fromDayBegin));
-consolidateList.add(EntityCondition.makeCondition("changedDate", EntityOperator.LESS_THAN_EQUAL_TO,  thruDayEnd));
-consolidateList.add(EntityCondition.makeCondition("changedEntityName", EntityOperator.EQUALS, "PayrollAttendance"));
-consolidateList.add(EntityCondition.makeCondition("changedFieldName", EntityOperator.EQUALS, "lateMin"));
-consolidateCondition=EntityCondition.makeCondition(consolidateList,EntityOperator.AND);
-def orderBy1 = UtilMisc.toList("changedDate","auditHistorySeqId");
-aduitLogDetailList = delegator.findList("EntityAuditLog", consolidateCondition , null, orderBy1, null, false);
-
-context.put("aduitLogDetailList",aduitLogDetailList);

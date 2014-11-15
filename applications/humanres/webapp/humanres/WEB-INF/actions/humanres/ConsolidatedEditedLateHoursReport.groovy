@@ -18,7 +18,7 @@ if (parameters.customTimePeriodId == null) {
 GenericValue customTimePeriod = delegator.findOne("CustomTimePeriod", [customTimePeriodId : parameters.customTimePeriodId], false);
 fromDateStart=UtilDateTime.toTimestamp(customTimePeriod.getDate("fromDate"));
 thruDateEnd=UtilDateTime.toTimestamp(customTimePeriod.getDate("thruDate"));
-context.putAt("fromDateStart", fromDateStart);
+context.putAt("thruDateEnd", thruDateEnd);
 
 fromDayBegin = UtilDateTime.getDayStart(fromDateStart);
 thruDayEnd = UtilDateTime.getDayEnd(thruDateEnd);
