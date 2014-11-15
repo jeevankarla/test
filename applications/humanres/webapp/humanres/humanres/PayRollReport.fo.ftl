@@ -208,21 +208,27 @@ under the License.
                     			<fo:block text-align="left" keep-together="always" white-space-collapse="false">&#160;Net Paid Days          </fo:block>
                     		</fo:table-cell>
                     		<#assign totalDays=0>
+                    		<#assign lateMin=0>
                     		<#assign lossOfPay=0>
                     		<#assign netPaidDays=0>
                     		<#assign arrearDays=0>
                     		<#assign noOfPayableDays=0>
                     		<#if emplLeavesDetails?has_content>
                     			<#assign totalDays=emplLeavesDetails.get("noOfCalenderDays")?if_exists>
+                    			<#assign lateMin=emplLeavesDetails.get("lateMin")?if_exists>
                     			<#assign lossOfPay=emplLeavesDetails.get("lossOfPayDays")?if_exists>
                     			<#assign arrearDays=emplLeavesDetails.get("noOfArrearDays")?if_exists>
                     			<#assign noOfPayableDays=emplLeavesDetails.get("noOfPayableDays")?if_exists>
-                    		</#if>    
+                    		</#if> 
+                    		<#assign lossOfpay=0>
+                    		<#assign latemin=0>
+                    		<#if lossOfPay?has_content><#assign lossOfpay=lossOfPay></#if>
+                    		<#if lateMin?has_content><#assign latemin=lateMin></#if>
                     		<#assign netPaidDays=(noOfPayableDays-arrearDays)>                		
                      		<fo:table-cell border-style="solid">
                      			<fo:block linefeed-treatment="preserve">&#xA;</fo:block>
                         		<fo:block text-align="center" white-space-collapse="false">${totalDays?if_exists}  days</fo:block>
-                        		<fo:block text-align="center" white-space-collapse="false">${lossOfPay?if_exists}  days</fo:block>
+                        		<fo:block text-align="center" white-space-collapse="false">${(lossOfpay-latemin)?if_exists}  days</fo:block>
                         		<fo:block text-align="center" white-space-collapse="false">${arrearDays?if_exists}  days</fo:block>
                         		<fo:block text-align="center" white-space-collapse="false">${(netPaidDays?if_exists)}  days</fo:block>                        		
                      		</fo:table-cell> 
@@ -230,7 +236,7 @@ under the License.
                     				<fo:block linefeed-treatment="preserve">&#xA;</fo:block>
                     				
                     				<#--<fo:block text-indent="5pt" white-space-collapse="false" wrap-option="wrap">Pay Scale :</fo:block><fo:block text-indent="3pt"  wrap-option="wrap">${payGrade.get(0).payScale?if_exists}</fo:block>-->
-                    				<fo:block text-indent="5pt" white-space-collapse="false" keep-together="always">Late Minutes      :  <#if emplLeavesDetails?has_content>${(emplLeavesDetails.lateMin*480)?if_exists}</#if></fo:block>
+                    				<fo:block text-indent="5pt" white-space-collapse="false" keep-together="always">Late Minutes      :  <#if lateMin?has_content>${(lateMin*480)?if_exists}<#else>0</#if></fo:block>
                     			<#--<fo:block>
                     				<fo:table width="100%">
                     					<fo:table-column column-width="1.5in"/>
