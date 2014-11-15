@@ -164,8 +164,15 @@ if(UtilValidate.isNotEmpty(BillingList)){
 											detailsMap.put("pensionAmount",pensionAmount);
 										}
 									}
+									conveyanceAmt= periodTotals.get("PAYROL_BEN_CCA");
+									if(UtilValidate.isEmpty(conveyanceAmt)){
+										conveyanceAmt = 0;
+									}
 									grossBenefitAmt = 0;
-									gross = periodTotals.get("grossBenefitAmt");
+									grossAmt = (periodTotals.get("grossBenefitAmt"));
+									if(UtilValidate.isNotEmpty(grossAmt)){
+										gross = (periodTotals.get("grossBenefitAmt")-conveyanceAmt);
+									}
 									if(UtilValidate.isEmpty(gross)){
 										gross = 0;
 									}
@@ -198,7 +205,6 @@ if(UtilValidate.isNotEmpty(BillingList)){
 								}
 								detailsMap.put("deductionAmt",deductionAmt);
 							}
-							
 						}
 						List loanRecoveryList=[];
 						loanRecoveryList.add(EntityCondition.makeCondition("partyId", EntityOperator.EQUALS, employeeId));
@@ -256,14 +262,14 @@ if(UtilValidate.isNotEmpty(BillingList)){
 	}
 	context.put("allDeductionMap",allDeductionMap);
 }else{
-
 	conditionList = [];
 	conditionList.add(EntityCondition.makeCondition("partyIdTo", EntityOperator.IN , employmentsList));
+	conditionList.add(EntityCondition.makeCondition("partyIdFrom", EntityOperator.EQUALS , parameters.partyId));
 	conditionList.add(EntityCondition.makeCondition("fromDate", EntityOperator.LESS_THAN_EQUAL_TO, timePeriodEnd));
 	conditionList.add(EntityCondition.makeCondition(EntityCondition.makeCondition("thruDate", EntityOperator.EQUALS, null), EntityOperator.OR,
 			EntityCondition.makeCondition("thruDate", EntityOperator.GREATER_THAN_EQUAL_TO, timePeriodStart)));
 	EntityCondition condition=EntityCondition.makeCondition(conditionList,EntityOperator.AND);
-	def orderBy = UtilMisc.toList("cost","partyIdTo");
+	def orderBy = UtilMisc.toList("partyIdTo","cost");
 	List<GenericValue> partyDeductionList = delegator.findList("PartyDeduction", condition, null, orderBy, null, false);
 	periodTotalsMap=[:];
 	if(UtilValidate.isNotEmpty(partyDeductionList)){
