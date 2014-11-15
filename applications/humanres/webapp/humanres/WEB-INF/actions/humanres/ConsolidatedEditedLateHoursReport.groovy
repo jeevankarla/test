@@ -9,6 +9,7 @@ import net.sf.json.JSONObject;
 import net.sf.json.JSONArray;
 import in.vasista.vbiz.humanres.HumanresService;
 import in.vasista.vbiz.byproducts.ByProductServices;
+import in.vasista.vbiz.humanres.PayrollService;
 
 dctx = dispatcher.getDispatchContext();
 
@@ -20,16 +21,41 @@ fromDateStart=UtilDateTime.toTimestamp(customTimePeriod.getDate("fromDate"));
 thruDateEnd=UtilDateTime.toTimestamp(customTimePeriod.getDate("thruDate"));
 context.putAt("thruDateEnd", thruDateEnd);
 
-fromDayBegin = UtilDateTime.getDayStart(fromDateStart);
-thruDayEnd = UtilDateTime.getDayEnd(thruDateEnd);
+resultMap = [:];
+resultMap=PayrollService.getPayrollAttedancePeriod(dctx,[userLogin:userLogin,timePeriodStart:fromDateStart,timePeriodEnd:thruDateEnd,timePeriodId:parameters.customTimePeriodId,locale:locale]);
+lastClosePeriod=resultMap.get("lastCloseAttedancePeriod");
+if(UtilValidate.isNotEmpty(lastClosePeriod)){
+	customTimePeriodId=lastClosePeriod.get("customTimePeriodId");
+}
 
-List consolidateList=[];
-consolidateList.add(EntityCondition.makeCondition("changedDate", EntityOperator.GREATER_THAN_EQUAL_TO,  fromDayBegin));
-consolidateList.add(EntityCondition.makeCondition("changedDate", EntityOperator.LESS_THAN_EQUAL_TO,  thruDayEnd));
-consolidateList.add(EntityCondition.makeCondition("changedEntityName", EntityOperator.EQUALS, "PayrollAttendance"));
-consolidateList.add(EntityCondition.makeCondition("changedFieldName", EntityOperator.EQUALS, "lateMin"));
-consolidateCondition=EntityCondition.makeCondition(consolidateList,EntityOperator.AND);
-def orderBy1 = UtilMisc.toList("changedDate","auditHistorySeqId");
-aduitLogDetailList = delegator.findList("EntityAuditLog", consolidateCondition , null, orderBy1, null, false);
+consolidatedFinalMap = [:];
+List conditionList=[];
+conditionList.add(EntityCondition.makeCondition("customTimePeriodId", EntityOperator.EQUALS, parameters.customTimePeriodId));
+condition=EntityCondition.makeCondition(conditionList,EntityOperator.AND);
+attendanceDetails = delegator.findList("PayrollAttendance", condition , null, null, null, false);
+if(UtilValidate.isNotEmpty(attendanceDetails)){
+	attendanceDetails.each { employee ->
+		attendanceMap=[:];
+		empPartyId=employee.get("partyId");
+		appendedPartyId = empPartyId + "::" + parameters.customTimePeriodId;
+		List consolidateList=[];
+		consolidateList.add(EntityCondition.makeCondition("pkCombinedValueText", EntityOperator.EQUALS, appendedPartyId));
+		consolidateList.add(EntityCondition.makeCondition("changedEntityName", EntityOperator.EQUALS, "PayrollAttendance"));
+		consolidateList.add(EntityCondition.makeCondition("changedFieldName", EntityOperator.EQUALS, "lateMin"));
+		consolidateCondition=EntityCondition.makeCondition(consolidateList,EntityOperator.AND);
+		def orderBy1 = UtilMisc.toList("changedDate","auditHistorySeqId");
+		consolidatedDetailsList = delegator.findList("EntityAuditLog", consolidateCondition , null, orderBy1, null, false);
+		if(UtilValidate.isNotEmpty(consolidatedDetailsList)){
+			consolidatedDetailsList.each { consolidatedDetails ->
+				consolidatedMap=[:];
+				consolidatedMap.put("oldValueText",consolidatedDetails.get("oldValueText"));
+				consolidatedMap.put("newValueText",consolidatedDetails.get("newValueText"));
+				consolidatedMap.put("changedDate",consolidatedDetails.get("changedDate"));
+				consolidatedMap.put("changedByInfo",consolidatedDetails.get("changedByInfo"));
+			}
+		}
+		consolidatedFinalMap.put(empPartyId,consolidatedMap);
+	}
+}
+context.put("consolidatedFinalMap",consolidatedFinalMap);
 
-context.put("aduitLogDetailList",aduitLogDetailList);

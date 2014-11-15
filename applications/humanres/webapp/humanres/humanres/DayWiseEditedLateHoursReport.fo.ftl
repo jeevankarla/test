@@ -81,7 +81,7 @@
 			                 </#list>
 			               		<fo:table-row>
 			               			<fo:table-cell >	
-			                			<fo:block keep-together="always" font-weight="bold">---------------------------------------------------------------------------------------------</fo:block>
+			                			<fo:block keep-together="always" font-weight="bold">--------------------------------------------------------------------------------------------------------------</fo:block>
 			                		</fo:table-cell>
 			               		</fo:table-row>
                      	</fo:table-body>

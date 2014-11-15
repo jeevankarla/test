@@ -8,7 +8,8 @@
             </fo:simple-page-master>
         </fo:layout-master-set>
         ${setRequestAttribute("OUTPUT_FILENAME", "ConsolidatedEditLateHoursReport.pdf")}
-        <#if (aduitLogDetailList?has_content)>
+        <#if consolidatedFinalMap?has_content>
+        <#assign consolidatedDetails=consolidatedFinalMap.entrySet()>
 			<fo:page-sequence master-reference="main">
         		<fo:static-content font-size="12pt" font-family="Courier,monospace"  flow-name="xsl-region-before" font-weight="bold">        
 	        		<fo:block  keep-together="always" text-align="center" font-family="Courier,monospace" white-space-collapse="false" font-weight="bold">&#160;      ${uiLabelMap.KMFDairyHeader}</fo:block>
@@ -18,10 +19,10 @@
 	        		<fo:block text-align="left" keep-together="always" white-space-collapse="false">&#160;                                                                              DATE: ${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(nowTimestamp, "dd-MMM-yyyy")}</fo:block>	 
 	        		<fo:block text-align="left" keep-together="always" white-space-collapse="false">&#160;                                                                              PAGE: <fo:page-number/></fo:block>	 	 	  	 	  
 	        		<fo:block text-align="left" keep-together="always" white-space-collapse="false">&#160;</fo:block>
-	        		<fo:block text-align="left" keep-together="always">------------------------------------------------------------------------------------------------------------------------------</fo:block>
-	        		<fo:block text-align="left" font-family="Courier,monospace" font-weight="bold" white-space-collapse="false">&#160;SNo     Emp		     Date	   Original	  Edited	   Edited	         Edit       Edit       Remarks  </fo:block>	 
-	        		<fo:block text-align="left" font-family="Courier,monospace" font-weight="bold" white-space-collapse="false">&#160;       Code	                Mins      Mins	      By            Date       Time                </fo:block>	 
-	        		<fo:block text-align="left" keep-together="always">--------------------------------------------------------------------------------------------------------------------</fo:block>
+	        		<fo:block text-align="left" keep-together="always">---------------------------------------------------------------------------------------------------------</fo:block>
+	        		<fo:block text-align="left" font-family="Courier,monospace" font-weight="bold" white-space-collapse="false">&#160;SNo     Emp		     Date	   Original	  Edited	   Edited	         Edit         Edit       Remarks  </fo:block>	 
+	        		<fo:block text-align="left" font-family="Courier,monospace" font-weight="bold" white-space-collapse="false">&#160;       Code	                Mins      Mins	      By            Date         Time                </fo:block>	 
+	        		<fo:block text-align="left" keep-together="always">---------------------------------------------------------------------------------------------------------</fo:block>
           		</fo:static-content>
         	<fo:flow flow-name="xsl-region-body" font-family="Courier,monospace">
 	            <fo:block font-family="Courier,monospace">
@@ -32,26 +33,26 @@
 	                    <fo:table-column column-width="80pt"/>
 	                    <fo:table-column column-width="50pt"/>
 	                    <fo:table-column column-width="60pt"/>
-	                    <fo:table-column column-width="70pt"/>
-	                    <fo:table-column column-width="120pt"/>
+	                    <fo:table-column column-width="80pt"/>
 	                    <fo:table-column column-width="100pt"/>
-	                    <fo:table-column column-width="60pt"/>
+	                    <fo:table-column column-width="110pt"/>
+	                    <fo:table-column column-width="80pt"/>
 	                    <fo:table-column column-width="180pt"/>
                      	<fo:table-body>
-                     		<#list aduitLogDetailList as aduitLogList>
+                     		<#list consolidatedDetails as consolidatedDet>
                      		<#assign sno=sno+1>
 				         			<fo:table-row>
-				         			<fo:table-cell>	
+				         				<fo:table-cell>	
 				                    		<fo:block text-align="center" keep-together="always" font-size="12pt">${sno}</fo:block>
 				                   		</fo:table-cell>
 				                   		<fo:table-cell>	
-				                    		<fo:block text-align="center" keep-together="always" font-size="12pt">${aduitLogList.get("auditHistorySeqId")?if_exists}</fo:block>
+				                    		<fo:block text-align="center" keep-together="always" font-size="12pt">${consolidatedDet.getKey()?if_exists}</fo:block>
 				                   		</fo:table-cell>
 				                   		<fo:table-cell>	
-			                    			<fo:block text-align="left" keep-together="always" font-size="12pt">${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(aduitLogList.get("changedDate"), "dd/MM/yy")?if_exists}</fo:block>
+			                    			<fo:block text-align="left" keep-together="always" font-size="12pt"></fo:block>
 			                    		</fo:table-cell>
 			                    		<#assign originalMinutes = 0>
-			                    		<#assign originalMinutes = aduitLogList.get("oldValueText")> 
+			                    		<#assign originalMinutes = consolidatedDet.getValue().get("oldValueText")> 
 			                    		<#if (originalMinutes)?has_content> 
 			                    			<#assign originalMin = originalMinutes.substring(0,originalMinutes.indexOf(".")+3)>
 			                    			<fo:table-cell>	
@@ -64,7 +65,7 @@
 			                    			</fo:table-cell> 
 			                    		</#if> 
 			                    		<#assign editedMinutes = 0>
-			                    		<#assign editedMinutes = aduitLogList.get("newValueText")> 
+			                    		<#assign editedMinutes = consolidatedDet.getValue().get("newValueText")> 
 			                    		<#if (editedMinutes)?has_content> 
 			                    			<#assign editedMin = editedMinutes.substring(0,editedMinutes.indexOf(".")+3)>
 			                    			<fo:table-cell>	
@@ -77,13 +78,13 @@
 			                    			</fo:table-cell> 
 			                    		</#if> 
 			                    		<fo:table-cell>	
-			                    			<fo:block text-align="right" keep-together="always" font-size="12pt"><#if aduitLogList.get("changedByInfo")?has_content>${aduitLogList.get("changedByInfo")?if_exists}<#else>0</#if></fo:block>
+			                    			<fo:block text-align="right" keep-together="always" font-size="12pt"><#if consolidatedDet.getValue().get("changedByInfo")?has_content>${consolidatedDet.getValue().get("changedByInfo")?if_exists}<#else>0</#if></fo:block>
 			                    		</fo:table-cell>
 			                    		<fo:table-cell>	
-											<fo:block text-align="right" keep-together="always" font-size="12pt"><#if aduitLogList.get("lastUpdatedStamp")?has_content>${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(aduitLogList.get("lastUpdatedStamp") ,"dd/MM/yy")?if_exists}<#else></#if></fo:block>
+											<fo:block text-align="right" keep-together="always" font-size="12pt"><#if consolidatedDet.getValue().get("changedDate")?has_content>${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(consolidatedDet.getValue().get("changedDate") ,"dd/MM/yy")?if_exists}<#else></#if></fo:block>
 			                    		</fo:table-cell>
 			                    		<fo:table-cell>	
-											<fo:block text-align="right" keep-together="always" font-size="12pt"><#if aduitLogList.get("lastUpdatedStamp")?has_content>${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(aduitLogList.get("lastUpdatedStamp") ,"HH:mm")?if_exists}<#else></#if></fo:block>
+											<fo:block text-align="right" keep-together="always" font-size="12pt"><#if consolidatedDet.getValue().get("changedDate")?has_content>${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(consolidatedDet.getValue().get("changedDate") ,"HH:mm")?if_exists}<#else></#if></fo:block>
 			                    		</fo:table-cell>
 			                    		<fo:table-cell>	
 											<fo:block text-align="center" keep-together="always" font-size="12pt"></fo:block>
@@ -101,7 +102,7 @@
 			                 </#list>
 			               		<fo:table-row>
 			               			<fo:table-cell >	
-			                			<fo:block keep-together="always" font-weight="bold">---------------------------------------------------------------------------------------------</fo:block>
+			                			<fo:block keep-together="always" font-weight="bold">--------------------------------------------------------------------------------------------------------</fo:block>
 			                		</fo:table-cell>
 			               		</fo:table-row>
                      	</fo:table-body>
