@@ -485,10 +485,10 @@ if (organizationPartyId) {
 						acctgTransEntryMap["finAccountTypeDes"] = finAccountTypeDes;
 					}
 					acctgTransEntryMap["comments"] = finAccountDes;
-					//acctgTransEntryMap["openingBalance"] = 0;
+					acctgTransEntryMap["openingBalance"] = openingBalance;
 					acctgTransEntryMap["debitAmount"] = debitAmount;
 					acctgTransEntryMap["creditAmount"] = creditAmount;
-					//acctgTransEntryMap["closingBalance"] = closingBalance;
+					acctgTransEntryMap["closingBalance"] = closingBalance;
 					tempAcctgTransMap = [:];
 					tempAcctgTransMap.putAll(acctgTransEntryMap);
 					financialAcctgTransList.add(tempAcctgTransMap);
@@ -585,10 +585,10 @@ financialAcctgTransList.each{ dayFinAccount ->
 			dayFinAccountMap["paymentMethodTypeDes"] = dayFinAccount.paymentMethodTypeDes;
 			dayFinAccountMap["finAccountTypeDes"] = dayFinAccount.finAccountTypeDes;
 			dayFinAccountMap["instrumentNum"] = dayFinAccount.instrumentNum;
-			dayFinAccountMap["openingBalance"] = 0;
+			dayFinAccountMap["openingBalance"] = dayFinAccount.openingBalance;
 			dayFinAccountMap["debitAmount"] = dayFinAccount.debitAmount;
 			dayFinAccountMap["creditAmount"] = dayFinAccount.creditAmount;
-			//dayFinAccountMap["closingBalance"] = dayFinAccount.closingBalance;
+			dayFinAccountMap["closingBalance"] = dayFinAccount.closingBalance;
 			tempDayTotalsMap = [:];
 			tempDayTotalsMap.putAll(dayFinAccountMap);
 			dayFinAccountTransList.add(tempDayTotalsMap);
