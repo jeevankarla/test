@@ -29,6 +29,8 @@ import org.ofbiz.base.util.*;
 import java.text.SimpleDateFormat;
 import java.text.ParseException;
 import org.ofbiz.party.party.PartyHelper;
+import javolution.util.FastList;
+import javolution.util.FastMap;
 
 
 if (organizationPartyId) {
@@ -185,13 +187,13 @@ if (organizationPartyId) {
             customTimePeriodStartDate = retStampStartDate;
             customTimePeriodEndDate = UtilDateTime.getMonthEnd(UtilDateTime.toTimestamp(retStampStartDate), timeZone, locale);
        // }
-		
 		closingBalance = openingBalance;
 		totOpeningBalance = openingBalance;
 		totYearOpeningBalance = openingBalance;
 	
 		
 		prevDateStr = null;
+		prevDateStamp = null;
 		dayTotalDebit = BigDecimal.ZERO;
 		dayTotalCredit = BigDecimal.ZERO;
 		dayTotalOB = BigDecimal.ZERO;
@@ -220,7 +222,9 @@ if (organizationPartyId) {
 		paymentMethodTypeId = "";
 		
 		
-		glAcctgTrialBalanceList = UtilMisc.sortMaps(glAcctgTrialBalanceList, UtilMisc.toList("transactionDate","paymentId"));
+		dayTotalFinalMap = [:];
+		
+		glAcctgTrialBalanceList = UtilMisc.sortMaps(glAcctgTrialBalanceList, UtilMisc.toList("transactionDate"));
 		if(UtilValidate.isNotEmpty(glAcctgTrialBalanceList)){
 			for(i=0; i<glAcctgTrialBalanceList.size(); i++){
 				acctgTransIt = glAcctgTrialBalanceList[i];
@@ -396,8 +400,8 @@ if (organizationPartyId) {
 					closingBalance = (openingBalance+debitAmount-creditAmount);
 					
 					transactionDate = acctgTransEntry.transactionDate;
+					transactionDateBegin = UtilDateTime.getDayStart(transactionDate);
 					transactionDateStr=UtilDateTime.toDateString(transactionDate ,"dd-MM-yy");
-					
 					if(prevDateStr == transactionDateStr){
 						// Add Credit and Debit
 						dayTotalDebit = debitAmount + dayTotalDebit;
@@ -416,10 +420,13 @@ if (organizationPartyId) {
 							dayWiseTotMap["debitAmount"] = dayTotalDebit;
 							dayWiseTotMap["creditAmount"] = dayTotalCredit;
 							dayWiseTotMap["closingBalance"] = dayTotalCB;
+							//dayWiseTotMap["transactionDate"] = prevDateStr;
 							
 							tempDayTotalMap = [:];
 							tempDayTotalMap.putAll(dayWiseTotMap);
-							financialAcctgTransList.add(tempDayTotalMap);
+							dayTotalFinalMap.put(prevDateStamp,tempDayTotalMap);
+							//financialAcctgTransList.add(tempDayTotalMap);
+							
 						}
 						dayTotalOB = openingBalance;
 						dayTotalDebit = debitAmount;
@@ -427,13 +434,20 @@ if (organizationPartyId) {
 						dayTotalCB = dayTotalOB+(dayTotalDebit)-(dayTotalCredit);
 					}
 					isNew = "MAYBE";
+					
 					prevDateStr = transactionDateStr;
 					
-					
-					SortedMap acctgTransEntryMap = new TreeMap();
-					
+					if (UtilValidate.isNotEmpty(prevDateStr)) {
+						def sdf1 = new SimpleDateFormat("dd-MM-yy");
+						try {
+							prevDateStamp = new java.sql.Timestamp(sdf1.parse(prevDateStr+" 00:00:00").getTime());
+						} catch (ParseException e) {
+							Debug.logError(e, "Cannot parse date string: " + prevDateStr, "");
+						}
+					}
+					acctgTransEntryMap = [:];
 					acctgTransEntryMap["transactionDate"] = transactionDateStr;
-					
+					acctgTransEntryMap["transactionDateStamp"] = transactionDate;
 					if(UtilValidate.isNotEmpty(paymentId)){
 						if(UtilValidate.isNotEmpty(paymentGroupId)){
 							acctgTransEntryMap["paymentId"] = paymentGroupId;
@@ -471,11 +485,10 @@ if (organizationPartyId) {
 						acctgTransEntryMap["finAccountTypeDes"] = finAccountTypeDes;
 					}
 					acctgTransEntryMap["comments"] = finAccountDes;
-					acctgTransEntryMap["openingBalance"] = openingBalance;
+					//acctgTransEntryMap["openingBalance"] = 0;
 					acctgTransEntryMap["debitAmount"] = debitAmount;
 					acctgTransEntryMap["creditAmount"] = creditAmount;
-					acctgTransEntryMap["closingBalance"] = closingBalance;
-					
+					//acctgTransEntryMap["closingBalance"] = closingBalance;
 					tempAcctgTransMap = [:];
 					tempAcctgTransMap.putAll(acctgTransEntryMap);
 					financialAcctgTransList.add(tempAcctgTransMap);
@@ -488,9 +501,12 @@ if (organizationPartyId) {
 						dayWiseTotMap["debitAmount"] = dayTotalDebit;
 						dayWiseTotMap["creditAmount"] = dayTotalCredit;
 						dayWiseTotMap["closingBalance"] = dayTotalCB;
+						//dayWiseTotMap["transactionDate"] = transactionDateStr;
 						tempDayTotalMap = [:];
 						tempDayTotalMap.putAll(dayWiseTotMap);
-						financialAcctgTransList.add(tempDayTotalMap);
+						//financialAcctgTransList.add(tempDayTotalMap);
+						
+						dayTotalFinalMap.put(transactionDateBegin,tempDayTotalMap);
 					}
 					isMonthEnd = "N";
 				}
@@ -512,20 +528,26 @@ if (organizationPartyId) {
 				}*/
 			}	
 		}	
-    }
-		context.financialAcctgTransList = financialAcctgTransList;
+    }	
+	    financialAcctgTransList = UtilMisc.sortMaps(financialAcctgTransList, UtilMisc.toList("transactionDateStamp","paymentTransSequenceId"));
+		context.financialAcctgTransList	 = financialAcctgTransList;
         context.glAcctgTrialBalanceList = glAcctgTrialBalanceList;
 		context.paymentInvType = paymentInvType;
 }
 
 //for each day in cash Book
+int k = 0;
 dayFinAccountTransList= [];
 getDayTot = "N";
+prevDate = null;
 financialAcctgTransList.each{ dayFinAccount ->
+	
+	
 	dayFinAccountMap = [:];
 	
 	transactionDate = null;
 	transactionDateStr = dayFinAccount.transactionDate;
+	
 	if(transactionDateStr != null){
 		def sdf1 = new SimpleDateFormat("dd-MM-yy");
 		try {
@@ -533,10 +555,22 @@ financialAcctgTransList.each{ dayFinAccount ->
 		} catch (ParseException e) {
 			Debug.logError(e, "Cannot parse date string: " + transactionDateStr, "");
 		}
-	
 		transactionDateBegin = UtilDateTime.getDayStart(transactionDate);
 		transactionDateEnd = UtilDateTime.getDayEnd(transactionDate);
 		
+		if(prevDate == null){
+			prevDate = transactionDate;
+		}
+		
+		currentDate = transactionDate;
+		if(prevDate != currentDate){
+			if(UtilValidate.isNotEmpty(dayTotalFinalMap.get(prevDate))){
+				tempDayTotalsMap = [:];
+				tempDayTotalsMap.putAll(dayTotalFinalMap.get(prevDate));
+				dayFinAccountTransList.add(tempDayTotalsMap);
+			}
+			prevDate = currentDate;
+		}
 		if((dayBegin <= transactionDateBegin) && (dayEnd >= transactionDateEnd)){
 			getDayTot = "Y";
 			dayFinAccountMap["transactionDate"] = dayFinAccount.transactionDate;
@@ -551,30 +585,69 @@ financialAcctgTransList.each{ dayFinAccount ->
 			dayFinAccountMap["paymentMethodTypeDes"] = dayFinAccount.paymentMethodTypeDes;
 			dayFinAccountMap["finAccountTypeDes"] = dayFinAccount.finAccountTypeDes;
 			dayFinAccountMap["instrumentNum"] = dayFinAccount.instrumentNum;
-			dayFinAccountMap["openingBalance"] = dayFinAccount.openingBalance;
+			dayFinAccountMap["openingBalance"] = 0;
 			dayFinAccountMap["debitAmount"] = dayFinAccount.debitAmount;
 			dayFinAccountMap["creditAmount"] = dayFinAccount.creditAmount;
-			dayFinAccountMap["closingBalance"] = dayFinAccount.closingBalance;
+			//dayFinAccountMap["closingBalance"] = dayFinAccount.closingBalance;
 			tempDayTotalsMap = [:];
 			tempDayTotalsMap.putAll(dayFinAccountMap);
 			dayFinAccountTransList.add(tempDayTotalsMap);
 		}
 	}
-		if((getDayTot == "Y") && (dayFinAccount.get("paymentId") == "DAY TOTAL")){
-			getDayTot = "N";
-			dayFinAccountMap["transactionDate"] = dayFinAccount.transactionDate;
-			dayFinAccountMap["paymentId"] = dayFinAccount.paymentId;
-			dayFinAccountMap["partyId"] = dayFinAccount.partyId;
-			dayFinAccountMap["openingBalance"] = dayFinAccount.openingBalance;
-			dayFinAccountMap["debitAmount"] = dayFinAccount.debitAmount;
-			dayFinAccountMap["creditAmount"] = dayFinAccount.creditAmount;
-			dayFinAccountMap["closingBalance"] = dayFinAccount.closingBalance;
+	if(k == ((financialAcctgTransList.size())-1)){
+		if(UtilValidate.isNotEmpty(dayTotalFinalMap.get(transactionDate))){
 			tempDayTotalsMap = [:];
-			tempDayTotalsMap.putAll(dayFinAccountMap);
+			tempDayTotalsMap.putAll(dayTotalFinalMap.get(transactionDate));
 			dayFinAccountTransList.add(tempDayTotalsMap);
+			
 		}
-		context.dayFinAccountTransList = dayFinAccountTransList;
+	}
+	k++;
+		/*if((getDayTot == "Y")){
+			getDayTot = "N";
+			if(UtilValidate.isNotEmpty(dayTotalFinalMap.get(transactionDate))){
+				tempDayTotalsMap = [:];
+				tempDayTotalsMap.putAll(dayTotalFinalMap.get(transactionDate));
+				dayFinAccountTransList.add(tempDayTotalsMap);
+			}
+		}*/
+		
+	//dayFinAccountTransList = UtilMisc.sortMaps(dayFinAccountTransList, UtilMisc.toList("transactionDate"));
 }
+
+openingBal = 0;
+closingBal = openingBal;
+finalFinAccntTransList = [];
+if(UtilValidate.isNotEmpty(dayFinAccountTransList)){
+	dayFinAccountTransList.each { dayFinAccountTrans ->
+		if(UtilValidate.isNotEmpty(dayFinAccountTrans)){
+			finalFinAccountTransMap = [:];
+			paymentId = dayFinAccountTrans.paymentId;
+			if(paymentId != "DAY TOTAL"){
+				debitAmnt = dayFinAccountTrans.debitAmount;
+				creditAmnt = dayFinAccountTrans.creditAmount;
+				closingBal = (openingBal+debitAmnt-creditAmnt);
+				tempMap = [:];
+				tempMap["openingBal"] = openingBal;
+				tempMap["closingBal"] = closingBal;
+				if(UtilValidate.isNotEmpty(tempMap)){
+					finalFinAccountTransMap.putAll(tempMap);
+				}
+				openingBal = closingBal;
+			}
+			finalFinAccountTransMap.putAll(dayFinAccountTrans);
+			if(UtilValidate.isNotEmpty(finalFinAccountTransMap)){
+				finalFinAccntTransList.addAll(finalFinAccountTransMap);
+			}
+		}
+	}
+}
+context.dayFinAccountTransList = finalFinAccntTransList;
+
+
+
+
+
 
 
 

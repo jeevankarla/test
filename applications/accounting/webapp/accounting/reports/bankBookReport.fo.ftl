@@ -113,6 +113,8 @@ ${setRequestAttribute("OUTPUT_FILENAME", "cashBookReport.pdf")}
 	                		<#assign finAccountOwnerPartyId = (finAcctngDetails.get("finAccountOwnerPartyId")?if_exists)/>
 	                		<#assign finAccountPartyName = (finAcctngDetails.get("finAccountPartyName")?if_exists)/>
 	                		<#assign finAccountTypeDes = (finAcctngDetails.get("finAccountTypeDes")?if_exists)/>
+	                		<#assign openingBal = (finAcctngDetails.get("openingBal")?if_exists)/>
+	                		<#assign closingBal = (finAcctngDetails.get("closingBal")?if_exists)/>
 	                		
 	                		<#if ((paymentId)?has_content)>
 								<#if (paymentId != "DAY TOTAL")>
@@ -129,6 +131,7 @@ ${setRequestAttribute("OUTPUT_FILENAME", "cashBookReport.pdf")}
 				       				<fo:table-cell>
 				            			<fo:block linefeed-treatment="preserve">&#xA;</fo:block>
 				       				</fo:table-cell>
+				       				
 				       				<fo:table-cell>
 				            			<fo:block linefeed-treatment="preserve">&#xA;</fo:block>
 				       				</fo:table-cell>
@@ -145,7 +148,7 @@ ${setRequestAttribute("OUTPUT_FILENAME", "cashBookReport.pdf")}
 	                                </fo:table-cell>
 	                       			<fo:table-cell>
 	                                    <fo:block text-align="right" font-size="13pt" font-weight = "bold" keep-together="always"> 
-	                                         <#if openingBalance?has_content>${(openingBalance)?string("##0.00")}<#else>0.00</#if>
+	                                         <#if openingBal?has_content>${(openingBal)?string("##0.00")}<#else>0.00</#if>
 	                                    </fo:block>
 	                                </fo:table-cell>
 	                       	</fo:table-row>
@@ -164,7 +167,6 @@ ${setRequestAttribute("OUTPUT_FILENAME", "cashBookReport.pdf")}
 				            			<fo:block linefeed-treatment="preserve">&#xA;</fo:block>
 				       				</fo:table-cell>
 								</fo:table-row>
-	                       	<#assign oldTransactionDate = transactionDate>
 								<fo:table-row>
 									<#if ((paymentId)?has_content)>
 										<#if (paymentId != "DAY TOTAL")>
@@ -332,6 +334,7 @@ ${setRequestAttribute("OUTPUT_FILENAME", "cashBookReport.pdf")}
 				            		<fo:block linefeed-treatment="preserve">&#xA;</fo:block>
 				       			</fo:table-cell>
 							</fo:table-row>
+							<#assign oldTransactionDate = transactionDate>
                           </#list>
                           <fo:table-row>
 							<fo:table-cell>

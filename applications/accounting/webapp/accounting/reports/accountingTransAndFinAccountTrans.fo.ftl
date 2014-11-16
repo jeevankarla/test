@@ -24,7 +24,7 @@ under the License.
 <fo:layout-master-set>
 	<fo:simple-page-master master-name="main" page-height="12in" page-width="10in"
             margin-top="0.2in" margin-bottom=".3in" margin-left=".5in" margin-right=".1in">
-        <fo:region-body margin-top="3.3in"/>
+        <fo:region-body margin-top="3.7in"/>
         <fo:region-before extent="1in"/>
         <fo:region-after extent="1in"/>        
     </fo:simple-page-master>   
