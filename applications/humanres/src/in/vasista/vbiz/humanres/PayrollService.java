@@ -284,27 +284,23 @@ public class PayrollService {
 					 result = ServiceUtil.returnSuccess("Error While Finding PeriodBilling" + e1);
 				     result.put("periodBillingId", periodBillingId);
 					return result;
-					
-					//For ESI Employer Contribution calculation
-					Map<String, Object> serviceResult = ServiceUtil.returnSuccess();
-					Map ESIEmployerMap = FastMap.newInstance();
-					ESIEmployerMap.put("userLogin",userLogin);
-					ESIEmployerMap.put("periodBillingId",periodBillingId);
-					ESIEmployerMap.put("partyIdFrom",partyIdFrom);
-					
-					try{
-						serviceResult = dispatcher.runSync("calculateESIEmployerContribution", ESIEmployerMap);
-			            if (ServiceUtil.isError(serviceResult)) {
-			            	Debug.logError(ServiceUtil.getErrorMessage(serviceResult), module);
-			            	return ServiceUtil.returnSuccess();
-			            } 
-					}catch(Exception e){
-						Debug.logError("Error while getting ESI Employer Contribution"+e.getMessage(), module);
-					}
-					
+				}
+				//For ESI Employer Contribution calculation
+				Map<String, Object> serviceResult = ServiceUtil.returnSuccess();
+				Map ESIEmployerMap = FastMap.newInstance();
+				ESIEmployerMap.put("userLogin",userLogin);
+				ESIEmployerMap.put("periodBillingId",periodBillingId);
+				ESIEmployerMap.put("partyIdFrom",partyIdFrom);
+				try{
+					serviceResult = dispatcher.runSync("calculateESIEmployerContribution", ESIEmployerMap);
+		            if (ServiceUtil.isError(serviceResult)) {
+		            	Debug.logError(ServiceUtil.getErrorMessage(serviceResult), module);
+		            	return ServiceUtil.returnSuccess();
+		            } 
+				}catch(Exception e){
+					Debug.logError("Error while getting ESI Employer Contribution"+e.getMessage(), module);
 				}
 				return result;
-				
 			}
 			
 			public static Map<String, Object> generatePayrollBillingInternal(DispatchContext dctx, Map<String, Object> context) throws Exception{
