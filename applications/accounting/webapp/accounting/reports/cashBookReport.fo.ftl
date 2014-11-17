@@ -111,6 +111,9 @@ ${setRequestAttribute("OUTPUT_FILENAME", "cashBookReport.pdf")}
 	                		<#assign partyName = (finAcctngDetails.get("partyName")?if_exists)/>
 	                		<#assign description = (finAcctngDetails.get("description")?if_exists)/>
 	                		<#assign comments = (finAcctngDetails.get("comments")?if_exists)/>
+	                		<#assign openingBal = (finAcctngDetails.get("openingBal")?if_exists)/>
+	                		<#assign closingBal = (finAcctngDetails.get("closingBal")?if_exists)/>
+	                		
 								<fo:table-row border-style="solid">
 									<fo:table-cell border-style="solid">
 	                            		<fo:block  text-align="left" keep-together="always" font-size="13pt" white-space-collapse="false"> 
@@ -153,7 +156,7 @@ ${setRequestAttribute("OUTPUT_FILENAME", "cashBookReport.pdf")}
 	                                <#if (paymentId != "DAY TOTAL")>
 	                                <fo:table-cell border-style="solid">
 	                                    <fo:block text-align="right" font-size="13pt">
-	                                            <#if openingBalance?has_content>${(openingBalance)?string("##0.00")}<#else>0.00</#if>
+	                                            <#if openingBal?has_content>${(openingBal)?string("##0.00")}<#else>0.00</#if>
 	                                    </fo:block>
 	                                </fo:table-cell>
 	                                <fo:table-cell border-style="solid">
@@ -168,7 +171,7 @@ ${setRequestAttribute("OUTPUT_FILENAME", "cashBookReport.pdf")}
 	                                </fo:table-cell>
 	                                <fo:table-cell border-style="solid">
 	                                    <fo:block text-align="right" font-size="13pt">
-	                                            <#if closingBalance?has_content>${(closingBalance)?string("##0.00")}<#else>0.00</#if>
+	                                            <#if closingBal?has_content>${(closingBal)?string("##0.00")}<#else>0.00</#if>
 	                                    </fo:block>
 	                                </fo:table-cell>
 	                                <#else>
