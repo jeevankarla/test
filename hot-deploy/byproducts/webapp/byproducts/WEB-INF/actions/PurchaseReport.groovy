@@ -63,102 +63,122 @@ reportTypeFlag = parameters.reportTypeFlag;
 if(UtilValidate.isNotEmpty(reportTypeFlag) && reportTypeFlag == "PurchaseDetails"){
 		invoiceMap = [:];
 		invoiceDtlsMap = [:];
-		tempVariantMap =FastMap.newInstance();
+		prodCatAnalysisMap =FastMap.newInstance();
 		finalMap=FastMap.newInstance();
-			salesInvoiceTotals = SalesInvoiceServices.getPeriodSalesInvoiceTotals(dctx, [isPurchaseInvoice:true, isQuantityLtrs:true,isQuantityLtrs:true,fromDate:dayBegin, thruDate:dayEnd]);
-			if(UtilValidate.isNotEmpty(salesInvoiceTotals)){
-				invoiceTotals = salesInvoiceTotals.get("invoiceIdTotals");
-				if(UtilValidate.isNotEmpty(invoiceTotals)){
-					invoiceTotals.each { invoice ->
-						if(UtilValidate.isNotEmpty(invoice)){
-							invoiceId = "";
-							totalRevenue=0;
-							invoiceId = invoice.getKey();
-							if(UtilValidate.isNotEmpty(invoice.getValue().invoiceDateStr)){
-								invoiceDate = invoice.getValue().invoiceDateStr;
-							}
-							invoiceDetails = delegator.findOne("Invoice",[invoiceId : invoiceId] , false);
-							supInvNumber="";
-							orderItemBillingList = delegator.findList("OrderItemBilling",EntityCondition.makeCondition("invoiceId", EntityOperator.EQUALS , invoiceId)  , null, null, null, false );
-							if(UtilValidate.isNotEmpty(orderItemBillingList)){
-								orderItemBilling = EntityUtil.getFirst(orderItemBillingList);
-								if(UtilValidate.isNotEmpty(orderItemBilling)){
-									orderId = orderItemBilling.orderId;
-									if(UtilValidate.isNotEmpty(orderId)){
-										supInvOrderAttributeDetails = delegator.findOne("OrderAttribute", [orderId : orderId, attrName : "SUP_INV_NUMBER"], false);
-										if(UtilValidate.isNotEmpty(supInvOrderAttributeDetails)){
-											supInvNumber = supInvOrderAttributeDetails.attrValue;
-										}
+		exprList=[];
+		exprList.add(EntityCondition.makeCondition("glAccountTypeId", EntityOperator.EQUALS, "PURCHASE_ACCOUNT"));
+		//exprList.add(EntityCondition.makeCondition("productCategoryId", EntityOperator.EQUALS, product.primaryProductCategoryId));
+		condition = EntityCondition.makeCondition(exprList, EntityOperator.AND);
+		productcatList = delegator.findList("ProductCategoryGlAccount", condition, null, null, null, false);
+		prodGlCategoryList=[];
+		if(UtilValidate.isNotEmpty(productcatList)){
+			prodGlCategoryList =EntityUtil.getFieldListFromEntityList(productcatList, "productCategoryId", true) ;
+		}
+		
+		salesInvoiceTotals = SalesInvoiceServices.getPeriodSalesInvoiceTotals(dctx, [isPurchaseInvoice:true, isQuantityLtrs:true,isQuantityLtrs:true,fromDate:dayBegin, thruDate:dayEnd]);
+		if(UtilValidate.isNotEmpty(salesInvoiceTotals)){
+			invoiceTotals = salesInvoiceTotals.get("invoiceIdTotals");
+			if(UtilValidate.isNotEmpty(invoiceTotals)){
+				invoiceTotals.each { invoice ->
+					if(UtilValidate.isNotEmpty(invoice)){
+						invoiceId = "";
+						totalRevenue=0;
+						invoiceId = invoice.getKey();
+						if(UtilValidate.isNotEmpty(invoice.getValue().invoiceDateStr)){
+							invoiceDate = invoice.getValue().invoiceDateStr;
+						}
+						invoiceDetails = delegator.findOne("Invoice",[invoiceId : invoiceId] , false);
+						supInvNumber="";
+						orderItemBillingList = delegator.findList("OrderItemBilling",EntityCondition.makeCondition("invoiceId", EntityOperator.EQUALS , invoiceId)  , null, null, null, false );
+						if(UtilValidate.isNotEmpty(orderItemBillingList)){
+							orderItemBilling = EntityUtil.getFirst(orderItemBillingList);
+							if(UtilValidate.isNotEmpty(orderItemBilling)){
+								orderId = orderItemBilling.orderId;
+								if(UtilValidate.isNotEmpty(orderId)){
+									supInvOrderAttributeDetails = delegator.findOne("OrderAttribute", [orderId : orderId, attrName : "SUP_INV_NUMBER"], false);
+									if(UtilValidate.isNotEmpty(supInvOrderAttributeDetails)){
+										supInvNumber = supInvOrderAttributeDetails.attrValue;
 									}
 								}
 							}
-							
-							prodTotals = invoice.getValue().get("productTotals");
-							if(UtilValidate.isNotEmpty(prodTotals)){
-								prodTotals.each{productValue ->
-									virtualProductId="";
-									if(UtilValidate.isNotEmpty(productValue)){
-										currentProduct = productValue.getKey();
-										product = delegator.findOne("Product", [productId : currentProduct], false);
-										productId = productValue.getKey();
-											exprList=[];
-											prodMap=[:];
-											exprList.add(EntityCondition.makeCondition("glAccountTypeId", EntityOperator.EQUALS, "PURCHASE_ACCOUNT"));
-											exprList.add(EntityCondition.makeCondition("productCategoryId", EntityOperator.EQUALS, product.primaryProductCategoryId));
-											condition = EntityCondition.makeCondition(exprList, EntityOperator.AND);
-											productcatList = delegator.findList("ProductCategoryGlAccount", condition, null, null, null, false);
-												if(UtilValidate.isNotEmpty(productcatList)){
-												 productcatList=EntityUtil.getFirst(productcatList);
-												}
-												if(UtilValidate.isNotEmpty(productcatList)){
-													virtualProductId = productcatList.get("productCategoryId");
-													if(UtilValidate.isEmpty(tempVariantMap[virtualProductId])){
-														totalRevenue = productValue.getValue().get("totalRevenue");
-														invoiceMap=[:];
-														tempMap = [:];
-														tempMap["invoiceDate"] = invoiceDate;
-														tempMap["supInvNumber"] = supInvNumber;
-														tempMap[productId] = totalRevenue;
-														invoiceMap[invoiceId]=tempMap;
-														temp=FastMap.newInstance();
-														temp.putAll(invoiceMap);
-														tempVariantMap[virtualProductId] = temp;
-													}else{
-														tempMap = [:];
-														tempMap.putAll(tempVariantMap.get(virtualProductId));
-														if(UtilValidate.isEmpty(tempMap[invoiceId])){
-															totalRevenue = productValue.getValue().get("totalRevenue");
-															prodMap=[:];
-															invoiceMap=[:]
-															prodMap["invoiceDate"] = invoiceDate;
-															prodMap["supInvNumber"] = supInvNumber;
-															prodMap[productId] = totalRevenue;
-															tempMap[invoiceId]=prodMap;
-															temp=FastMap.newInstance();
-															temp.putAll(tempMap);
-															tempVariantMap[virtualProductId] = temp;
-														}else{
-														    invoiceMap=[:];
-															productMap = [:];
-															totalRevenue = productValue.getValue().get("totalRevenue");
-															tempInvoiceMap=[:];
-															tempInvoiceMap.putAll(tempMap.get(invoiceId));
-															tempInvoiceMap[productId]=totalRevenue;
-															tempMap[invoiceId] = tempInvoiceMap;
-															temp=FastMap.newInstance();
-															temp.putAll(tempMap);
-															tempVariantMap[virtualProductId] = temp;
-														}
-													}
-										    } 
+						}
+						
+						prodTotals = invoice.getValue().get("productTotals");
+						invoiceItemList = delegator.findList("InvoiceAndItem",EntityCondition.makeCondition("invoiceId", EntityOperator.EQUALS , invoiceId)  , null, null, null, false );
+						
+						if(UtilValidate.isNotEmpty(prodTotals)){
+							prodTotals.each{productValue ->
+								virtualProductId="";
+								if(UtilValidate.isNotEmpty(productValue)){
+									currentProduct = productValue.getKey();
+									product = delegator.findOne("Product", [productId : currentProduct], false);
+									productId = productValue.getKey();
+									GenericValue prodInvoiceItem=null;
+									List<GenericValue> prodInvoiceItemList = EntityUtil.filterByCondition(invoiceItemList, EntityCondition.makeCondition(EntityCondition.makeCondition("invoiceId", EntityOperator.EQUALS, invoiceId),EntityOperator.AND,
+										EntityCondition.makeCondition("productId", EntityOperator.EQUALS, productId)));
+									if(UtilValidate.isNotEmpty(prodInvoiceItemList)){
+										prodInvoiceItem=prodInvoiceItemList.getFirst();
 									}
+									Debug.log("==prodInvoiceItem=="+prodInvoiceItem);
+									//to Exlude Tax Total call with Parameter False 
+									invItemVal=org.ofbiz.accounting.invoice.InvoiceWorker.getPurchaseInvoiceItemTotal(prodInvoiceItem,false);
+									if(prodGlCategoryList.contains(product.primaryProductCategoryId)){
+										prodCategoryId=product.primaryProductCategoryId;
+										if(UtilValidate.isEmpty(prodCatAnalysisMap[prodCategoryId])){
+											//totalRevenue = productValue.getValue().get("totalRevenue");
+											invoiceMap=[:];
+											
+											tempMap = [:];
+											tempMap["invoiceDate"] = invoiceDate;
+											tempMap["supInvNumber"] = supInvNumber;
+											//tempMap[productId] = totalRevenue;
+											tempMap[productId] = invItemVal;
+											
+											invoiceMap[invoiceId]=tempMap;
+											
+											temp=FastMap.newInstance();
+											temp.putAll(invoiceMap);
+											
+											prodCatAnalysisMap[prodCategoryId] = temp;
+										}else{
+											tempMap = [:];
+											tempMap.putAll(prodCatAnalysisMap.get(prodCategoryId));
+											if(UtilValidate.isEmpty(tempMap[invoiceId])){
+												//totalRevenue = productValue.getValue().get("totalRevenue");
+												prodMap=[:];
+												invoiceMap=[:]
+												prodMap["invoiceDate"] = invoiceDate;
+												prodMap["supInvNumber"] = supInvNumber;
+												//prodMap[productId] = totalRevenue;
+												prodMap[productId] = invItemVal;
+												tempMap[invoiceId]=prodMap;
+												temp=FastMap.newInstance();
+												temp.putAll(tempMap);
+												prodCatAnalysisMap[prodCategoryId] = temp;
+											}else{
+												invoiceMap=[:];
+												//totalRevenue = productValue.getValue().get("totalRevenue");
+												tempInvoiceMap=[:];
+												tempInvoiceMap.putAll(tempMap.get(invoiceId));
+												//tempInvoiceMap[productId]=totalRevenue;
+												tempInvoiceMap[productId]=invItemVal;
+												tempMap[invoiceId] = tempInvoiceMap;
+												temp=FastMap.newInstance();
+												temp.putAll(tempMap);
+												prodCatAnalysisMap[prodCategoryId] = temp;
+											}
+										}
+										
+									}
+									//end of Classfication		
 								}
 							}
 						}
 					}
 				}
 			}
-	context.put("dayWiseInvoice",tempVariantMap);
+		}
+	context.put("dayWiseInvoice",prodCatAnalysisMap);
 }
 // Purchase Abstract report
 if(UtilValidate.isNotEmpty(reportTypeFlag) && reportTypeFlag == "PurchaseSummary"){
