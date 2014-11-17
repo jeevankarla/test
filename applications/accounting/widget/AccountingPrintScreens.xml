@@ -27,6 +27,7 @@ under the License.
     <screen name="InvoicePDF">
         <section>
             <actions>
+            	<property-map resource="OrderUiLabels" map-name="uiLabelMap" global="true"/>
                 <property-map resource="AccountingUiLabels" map-name="uiLabelMap" global="true"/>
                 <property-map resource="ProductUiLabels" map-name="uiLabelMap" global="true"/>
                 <property-map resource="PartyUiLabels" map-name="uiLabelMap" global="true"/>
@@ -34,6 +35,7 @@ under the License.
                 <set field="titleProperty" value="AccountingInvoice"/>
                 <script location="component://accounting/webapp/accounting/WEB-INF/actions/invoice/EditInvoice.groovy"/>
                 <script location="component://party/webapp/partymgr/WEB-INF/actions/party/GetMyCompany.groovy"/>
+                 <script location="component://order/webapp/ordermgr/WEB-INF/actions/order/CompanyHeader.groovy"/>
             </actions>
             <widgets>
                 <section>
@@ -50,14 +52,12 @@ under the License.
                     </condition>
                     <widgets>
                         <decorator-screen name="FoReportDecorator" location="component://common/widget/CommonScreens.xml">
-                            <decorator-section name="topLeft">
-                                <include-screen name="CompanyLogo" location="component://order/widget/ordermgr/OrderPrintScreens.xml"/>
-                            </decorator-section>
-                            <decorator-section name="topRight">
-                               <platform-specific>
+                <platform-specific><xsl-fo><html-template location="component://order/webapp/ordermgr/order/companyHeader.fo.ftl"/></xsl-fo></platform-specific>
+                            <decorator-section name="topRight"> 
+                                 <platform-specific>
                                     <xsl-fo><html-template location="component://accounting/webapp/accounting/invoice/invoiceReportHeaderInfo.fo.ftl"/></xsl-fo>
                                 </platform-specific>
-                            </decorator-section>
+                            </decorator-section> 
                             <decorator-section name="body">
                                <platform-specific>
                                    <xsl-fo><html-template location="component://accounting/webapp/accounting/invoice/invoiceReportContactMechs.fo.ftl"/></xsl-fo>

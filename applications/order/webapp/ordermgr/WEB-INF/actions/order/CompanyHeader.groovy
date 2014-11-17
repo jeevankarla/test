@@ -61,7 +61,7 @@ if (quoteId) {
 // defaults:
 def logoImageUrl = null; // the default value, "/images/ofbiz_powered.gif", is set in the screen decorators
 def partyId = null;
-
+Debug.log("partyId------------------IC\\\\\\--------------"+partyId);
 // get the logo partyId from order or invoice - note that it is better to do comparisons this way in case the there are null values
 if (orderHeader) {
     orh = new OrderReadHelper(orderHeader);
@@ -147,9 +147,10 @@ if (address)    {
    if (stateProvince) {
        context.stateProvinceAbbr = stateProvince.abbreviation;
    }
+   
 }
 context.postalAddress = address;
-
+//Debug.log("postalAddress--------------------------------"+postalAddress);
 //telephone
 phones = delegator.findByAnd("PartyContactMechPurpose", [partyId : partyId, contactMechPurposeTypeId : "PRIMARY_PHONE"]);
 selPhones = EntityUtil.filterByDate(phones, nowTimestamp, "fromDate", "thruDate", true);
@@ -226,3 +227,4 @@ if (partyTaxAuthInfoList) {
         context.sendingPartyTaxId = partyTaxAuthInfoList[0].partyTaxId;
     }
 }
+

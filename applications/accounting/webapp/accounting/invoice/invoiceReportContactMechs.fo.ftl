@@ -19,26 +19,61 @@ under the License.
 <#escape x as x?xml>
 <fo:table table-layout="fixed" width="100%" space-after="0.3in">
    <fo:table-column column-width="3.5in"/>
-    <fo:table-body>
-      <fo:table-row >
-        <fo:table-cell>
-              <fo:block>${uiLabelMap.CommonTo}:${parameters.customerName?if_exists} </fo:block>
-       <#if billingAddress?has_content>
-        <#assign billingPartyNameResult = dispatcher.runSync("getPartyNameForDate", Static["org.ofbiz.base.util.UtilMisc"].toMap("partyId", dispalyParty.partyId, "compareDate", invoice.invoiceDate, "userLogin", userLogin))/>
-        <fo:block>${billingPartyNameResult.fullName?default(billingAddress.toName)?default("Billing Name Not Found")}</fo:block>
-        <#if billingAddress.attnName?exists>
-            <fo:block>${billingAddress.attnName}</fo:block>
-        </#if>
-            <fo:block>${billingAddress.address1?if_exists}</fo:block>
-        <#if billingAddress.address2?exists>
-            <fo:block>${billingAddress.address2}</fo:block>
-        </#if>
-        <fo:block>${billingAddress.city?if_exists} ${billingAddress.stateProvinceGeoId?if_exists} ${billingAddress.postalCode?if_exists}</fo:block>
-    <#else>
-        <fo:block>${Static["org.ofbiz.party.party.PartyHelper"].getPartyName(delegator, dispalyParty.partyId, false)}</fo:block>
-    </#if>
-        </fo:table-cell>
-    </fo:table-row>
-  </fo:table-body>
-</fo:table>
-</#escape>
+    <fo:table-column column-width="3.5in"/>
+	    <fo:table-body>
+	        <fo:table-row>
+                <fo:table-cell><fo:block text-align="left" keep-together="always" white-space-collapse="false" linefeed-treatment="preserve">&#xA;</fo:block></fo:table-cell>
+                    </fo:table-row>
+              <fo:table-row>
+                  <fo:table-cell><fo:block text-align="left" keep-together="always" white-space-collapse="false" linefeed-treatment="preserve">&#xA;</fo:block></fo:table-cell>
+              </fo:table-row>   
+	          <fo:table-row>
+                <fo:table-cell><fo:block text-align="left" keep-together="always" white-space-collapse="false" linefeed-treatment="preserve">&#xA;</fo:block></fo:table-cell>
+                    </fo:table-row>
+              <fo:table-row>
+                  <fo:table-cell><fo:block text-align="left" keep-together="always" white-space-collapse="false" linefeed-treatment="preserve">&#xA;</fo:block></fo:table-cell>
+              </fo:table-row> 
+              <fo:table-row>
+                <fo:table-cell><fo:block text-align="left" keep-together="always" white-space-collapse="false" linefeed-treatment="preserve">&#xA;</fo:block></fo:table-cell>
+               </fo:table-row>
+               <fo:table-row>
+                <fo:table-cell><fo:block text-align="left" keep-together="always" white-space-collapse="false" linefeed-treatment="preserve">&#xA;</fo:block></fo:table-cell>
+               </fo:table-row>
+               <fo:table-row >
+                   <fo:table-cell>
+                      <fo:block>${uiLabelMap.CommonTo}:${parameters.customerName?if_exists} </fo:block>
+                      <#if billingAddress?has_content>
+                      <#assign billingPartyNameResult = dispatcher.runSync("getPartyNameForDate", Static["org.ofbiz.base.util.UtilMisc"].toMap("partyId", dispalyParty.partyId, "compareDate", invoice.invoiceDate, "userLogin", userLogin))/>
+                      <fo:block>${billingPartyNameResult.fullName?default(billingAddress.toName)?default("Billing Name Not Found")}</fo:block>
+                      <#if billingAddress.attnName?exists>
+                      <fo:block>${billingAddress.attnName}</fo:block>
+                      </#if>
+                      <fo:block>${billingAddress.address1?if_exists}</fo:block>
+                      <#if billingAddress.address2?exists>
+                     <fo:block>${billingAddress.address2}</fo:block>
+                     </#if><fo:block>${billingAddress.city?if_exists} ${billingAddress.stateProvinceGeoId?if_exists} ${billingAddress.postalCode?if_exists}</fo:block>
+                     <#else><fo:block>${Static["org.ofbiz.party.party.PartyHelper"].getPartyName(delegator, dispalyParty.partyId, false)}</fo:block>
+                     </#if>
+                     <fo:block>TIN_NUMBER: ${partyTinNumber?if_exists}</fo:block>
+                </fo:table-cell>
+               </fo:table-row>
+                <fo:table-row>
+                <fo:table-cell><fo:block text-align="left" keep-together="always" white-space-collapse="false" linefeed-treatment="preserve">&#xA;</fo:block></fo:table-cell>
+               </fo:table-row>
+ </fo:table-body>
+  </fo:table> 
+ <fo:table>   
+<fo:table-column column-width="10%"/>
+<fo:table-column column-width="10%"/>
+     <fo:table-body>
+         
+         <fo:table-row text-align="center" keep-together="always">
+             <fo:table-cell><fo:block text-align="left" keep-together="always" white-space-collapse="false" linefeed-treatment="preserve">&#xA;</fo:block></fo:table-cell>
+             
+             <#if invoice?has_content && invoice.description?has_content>
+              <fo:table-cell><fo:block  font-size="10pt" border=".5pt solid" border-width=".05mm" text-align="left">Description: ${invoice.description}</fo:block><fo:block></fo:block></fo:table-cell>
+         </fo:table-row>
+              </#if>
+ </fo:table-body>
+ </fo:table>  
+  </#escape>

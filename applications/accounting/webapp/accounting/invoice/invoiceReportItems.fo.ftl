@@ -198,6 +198,19 @@ under the License.
               <fo:block><@ofbizCurrency amount=invoiceTotal isoCode=invoice.currencyUomId?if_exists/></fo:block>
            </fo:table-cell>
         </fo:table-row>
+        <fo:table-row>
+			<fo:table-cell>
+			    <fo:block  font-family="Courier,monospace" text-align="left">================================================================================</fo:block>	
+			</fo:table-cell>
+	   </fo:table-row>	
+         <fo:table-row>
+		   <fo:table-cell   number-columns-spanned="5">
+			    <#if invoiceTotal?has_content>
+				<fo:block keep-together="always" text-align="left" font-size="10pt">&#160;${Static["org.ofbiz.base.util.UtilNumber"].formatRuleBasedAmount(Static["java.lang.Double"].parseDouble(invoiceTotal?string("#0.00")), "%rupees-and-paise", locale).toUpperCase()}</fo:block>
+			    </#if>
+		   </fo:table-cell>
+	   </fo:table-row>
+       
         <fo:table-row height="7px">
            <fo:table-cell number-columns-spanned="5">
               <fo:block/>

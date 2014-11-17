@@ -18,7 +18,9 @@
  */
 
 import java.util.*;
+import java.lang.*;
 import org.ofbiz.entity.*;
+import org.ofbiz.entity.condition.*;
 import org.ofbiz.entity.util.EntityUtil;
 import org.ofbiz.base.util.*;
 import org.ofbiz.base.util.collections.*;
@@ -32,10 +34,12 @@ import javolution.util.FastList;
 import javolution.util.FastMap;
 import org.ofbiz.entity.condition.EntityCondition;
 import org.ofbiz.entity.condition.EntityOperator;
-
+import org.ofbiz.service.GenericServiceException;
+import org.ofbiz.service.ServiceUtil;
 paymentId = parameters.paymentId;
 invoiceId = parameters.get("invoiceId");
 reportTypeFlag = context.reportTypeFlag;
+invoiceIds=[];
 if(UtilValidate.isNotEmpty(reportTypeFlag) && reportTypeFlag == "debitNote"){
 	shipmentId = parameters.shipmentId;
 	conditionList = [];
@@ -95,7 +99,6 @@ if (invoice) {
 		context.billingAddress = billingAddress;
 	}
 	billingParty = InvoiceWorker.getBillToParty(invoice);
-	Debug.logInfo(" billingParty==="+ billingParty,"");
 	context.billingParty = billingParty;
 	sendingParty = InvoiceWorker.getSendFromParty(invoice);
 	context.sendingParty = sendingParty;
@@ -260,10 +263,64 @@ if (invoice) {
 	} else {
 		context.invoiceDate = "N/A";
 	}
+
+	partyTinNumber="";
+	companyTinNumber="";
+	partyDetail = (Map)(org.ofbiz.party.party.PartyWorker.getPartyIdentificationDetails(delegator,invoice.partyId)).get("partyDetails");
+	if(UtilValidate.isNotEmpty(partyDetail)){
+		partyTinNumber=partyDetail.get('TIN_NUMBER');
+	 }
+	context.put("partyTinNumber",partyTinNumber);
+	//get Comapny tin
+	
+	companyDetail = (Map)(org.ofbiz.party.party.PartyWorker.getPartyIdentificationDetails(delegator, "Company")).get("partyDetails");
+	if(UtilValidate.isNotEmpty(companyDetail)){
+	  companyTinNumber=companyDetail.get('TIN_NUMBER');
+	}
+	context.put("companyTinNumber",companyTinNumber);
+    
 }
+
 context.paymentId = paymentId;
+//to display VAT Invoice Number
 
+List customTimePeriodList = FastList.newInstance();
+Map resultCtx = FastMap.newInstance();
+finYearContext = [:];
+finYearContext.put("onlyIncludePeriodTypeIdList", UtilMisc.toList("FISCAL_YEAR"));
+finYearContext.put("organizationPartyId", "Company");
+finYearContext.put("userLogin", userLogin);
+finYearContext.put("findDate", UtilDateTime.nowTimestamp());
+finYearContext.put("excludeNoOrganizationPeriods", "Y");
+try{
+	resultCtx = dispatcher.runSync("findCustomTimePeriods", finYearContext);
+	if(ServiceUtil.isError(resultCtx)){
+		Debug.logError("Problem in fetching financial year ", module);
+		return ServiceUtil.returnError("Problem in fetching financial year ");
+	}
+}catch(GenericServiceException e){
+	Debug.logError(e, module);
+	return ServiceUtil.returnError(e.getMessage());
+}
+customTimePeriodList = (List)resultCtx.get("customTimePeriodList");
+String finYearId = "";
+if(UtilValidate.isNotEmpty(customTimePeriodList)){
+	GenericValue customTimePeriod = EntityUtil.getFirst(customTimePeriodList);
+	finYearId = (String)customTimePeriod.get("customTimePeriodId");
+}
+//invoiceIds.add("37652");
+invoiceSequenceNumMap = [:];
+condList=[];
+condList.add(EntityCondition.makeCondition("billOfSaleTypeId", EntityOperator.EQUALS , "VAT_INV"));
+condList.add(EntityCondition.makeCondition("finYearId", EntityOperator.EQUALS , finYearId));
+condList.add(EntityCondition.makeCondition("invoiceId",EntityOperator.EQUALS , invoiceId));
+cond = EntityCondition.makeCondition(condList,EntityOperator.AND);
+sequenceList = delegator.findList("BillOfSaleInvoiceSequence", cond, null, null, null, false);
+sequenceList.each{eachItem ->
+	invoiceSequenceNumMap.put(eachItem.invoiceId, eachItem.sequenceId);
+}
 
+context.invoiceSequenceNumMap = invoiceSequenceNumMap;
 
 
 
