@@ -144,18 +144,35 @@ if(UtilValidate.isNotEmpty(timePeriodId)){
 		holidayconditionList.add(EntityCondition.makeCondition("holiDayDate",EntityOperator.LESS_THAN_EQUAL_TO,thruDateEnd));
 		holidaycondition=EntityCondition.makeCondition(holidayconditionList,EntityOperator.AND);
 		holidaysList = delegator.findList("HolidayCalendar", holidaycondition ,null,null, null, false );
-		
+		holidaysString=[];
 		secondSaturDay = UtilDateTime.addDaysToTimestamp(UtilDateTime.getWeekStart(UtilDateTime.getMonthStart(thruDateEnd),0,2,timeZone,locale), -1);
 		if(UtilValidate.isNotEmpty(holidaysList)){
 			holidaysList.each{ days ->
 				deptCountHolidays.add(UtilDateTime.toDateString(days.get("holiDayDate"),"MMM dd, yyyy"));
-				holidays.add(UtilDateTime.toSqlDate(days.get("holiDayDate")));
+				String dateStr = UtilDateTime.toSqlDate(days.get("holiDayDate")).toString();
+				holidaysString.add(dateStr);
 			}
 		}
-		if(!holidays.contains(UtilDateTime.toSqlDate(secondSaturDay))){
-			holidays.add(UtilDateTime.toSqlDate(secondSaturDay));
+		String dateStr = (UtilDateTime.toSqlDate(secondSaturDay)).toString();
+		if(!holidaysString.contains(dateStr)){
+			holidaysString.add(dateStr);
 			deptCountHolidays.add(UtilDateTime.toDateString(secondSaturDay,"MMM dd, yyyy"));
 		}
+		holidaysString.each{holiday->
+			def sdff = new SimpleDateFormat("yyyy-MM-dd");
+			try {
+				if (holiday) {
+					fromStart =new java.sql.Date(sdff.parse(holiday).getTime());
+					holidays.add(fromStart);
+				}
+				
+			} catch (ParseException e) {
+			Debug.logError(e, "Cannot parse date string: " + e, "");
+			context.errorMessage = "Cannot parse date string: " + e;
+			return;
+			}
+		}
+		
 		//get employee EmployeeWeeklyOff Days and exclude those
 		employeeWeeklyOffInpuMap = [:];
 		employeeWeeklyOffInpuMap.put("employeeId",partyId);

@@ -172,8 +172,12 @@ under the License.
 		                    <fo:table-cell><fo:block linefeed-treatment="preserve">&#xA;</fo:block></fo:table-cell>
 		                    <#list dates as date>
 			                    <#list deptCountHolidays as holiday>
-			                    <#assign deptTotal=deptTotal+date[holiday]>
-			                    	<fo:table-cell><fo:block text-align="right" keep-together="always">${date[holiday]?if_exists}</fo:block></fo:table-cell>
+			                    <#assign value=0>
+			                    <#assign value=date.get(holiday)?if_exists>
+			                    <#if value?has_content>
+			                    <#assign deptTotal=deptTotal+value>
+			                    </#if>
+			                    	<fo:table-cell><fo:block text-align="right" keep-together="always">${date.get(holiday)?if_exists}</fo:block></fo:table-cell>
 			                    </#list>
 			                 </#list>   
 			                 <fo:table-cell><fo:block linefeed-treatment="preserve">&#xA;</fo:block></fo:table-cell>
