@@ -25,7 +25,7 @@ under the License.
 <#-- do not display columns associated with values specified in the request, ie constraint values -->
 
 <fo:layout-master-set>
-    <fo:simple-page-master master-name="main" page-height="12in" page-width="8in"
+    <fo:simple-page-master master-name="main" page-height="12in" page-width="10in"
             margin-top="0.5in" margin-bottom="1in" margin-left=".5in" margin-right=".5in">
         <fo:region-body margin-top=".8in"/>
         <fo:region-before extent="1in"/>
@@ -45,7 +45,7 @@ under the License.
 <#escape x as x?xml>
     <fo:root xmlns:fo="http://www.w3.org/1999/XSL/Format">
         <fo:layout-master-set>
-            <fo:simple-page-master master-name="main" page-height="12in" page-width="8in"
+            <fo:simple-page-master master-name="main" page-height="12in" page-width="10in"
                      margin-left=".1in" margin-right=".1in" margin-top=".1in" margin-bottom=".3in">
                 <fo:region-body margin-top=".7in"/>
                 <fo:region-before extent=".4in"/>
@@ -215,6 +215,9 @@ under the License.
                     <fo:table-column column-width="80pt"/>
                     <fo:table-column column-width="70pt"/>
                     <fo:table-column column-width="70pt"/>
+                    <#if productMrpPriceMap?has_content>
+                    <fo:table-column column-width="70pt"/>
+                    </#if>
                     <fo:table-column column-width="95pt"/>
                     <fo:table-body>
                     	<fo:table-row >
@@ -233,6 +236,11 @@ under the License.
                    			<fo:table-cell border-style="solid">
                         		<fo:block  keep-together="always" text-align="right" font-size="12pt" white-space-collapse="false" font-weight="bold">Rate</fo:block> 
                    			</fo:table-cell>
+                   			<#if productMrpPriceMap?has_content>
+	                   			<fo:table-cell border-style="solid">
+	                        		<fo:block  keep-together="always" text-align="right" font-size="12pt" white-space-collapse="false" font-weight="bold">MRP</fo:block>  
+	                   			</fo:table-cell>
+	                   		</#if>
                    			<fo:table-cell border-style="solid">
                         		<fo:block  keep-together="always" text-align="right" font-size="12pt" white-space-collapse="false" font-weight="bold">Amount</fo:block> 
                    			</fo:table-cell>
@@ -247,6 +255,9 @@ under the License.
                     <fo:table-column column-width="80pt"/>
                     <fo:table-column column-width="70pt"/>
                     <fo:table-column column-width="70pt"/>
+                    <#if productMrpPriceMap?has_content>
+                    <fo:table-column column-width="70pt"/>
+                    </#if>
                     <fo:table-column column-width="95pt"/>
                     <fo:table-body>
                     	<#assign sno=0>
@@ -258,6 +269,7 @@ under the License.
 						 <#if invoiceItem.productId?has_content>
 				                <#assign productId=invoiceItem.productId>
 				                <#assign productDetails = delegator.findOne("Product", {"productId" :productId}, true)>
+				                <#assign productMrp = delegator.findOne("Product", {"productId" :productId}, true)>
 				                <#if productDetails?has_content>
 				                  <#assign description=productDetails.get("description")>
 				                </#if>
@@ -323,35 +335,39 @@ under the License.
 	                        		<fo:block  keep-together="always" text-align="right" font-size="12pt" white-space-collapse="false"></fo:block> 
 	                   			</fo:table-cell>
 	                   			</#if>
+	                   			<#if productMrpPriceMap?has_content>
+	                   			<#if invoiceItem.productId?has_content>
+	                   			<#if productMrpPriceMap.get(invoiceItem.productId)?has_content>
+	                   			<fo:table-cell border-style="solid">
+	                        		<fo:block  keep-together="always" text-align="right" font-size="12pt" white-space-collapse="false">${productMrpPriceMap.get(invoiceItem.productId)?if_exists?string("#0.00")}</fo:block> 
+	                   			</fo:table-cell>
+	                   			</#if>
+	                   			<#else>
+	                   			<fo:table-cell border-style="solid">
+	                        		<fo:block  keep-together="always" text-align="right" font-size="12pt" white-space-collapse="false"></fo:block> 
+	                   			</fo:table-cell>
+	                   			</#if>
+	                   			</#if>
 	                   			<fo:table-cell border-style="solid">
 	                        		<fo:block  keep-together="always" text-align="right" font-size="12pt" white-space-collapse="false"><@ofbizCurrency amount=(Static["org.ofbiz.accounting.invoice.InvoiceWorker"].getInvoiceItemTotal(invoiceItem)) isoCode=invoice.currencyUomId?if_exists/></fo:block> 
 	                   			</fo:table-cell>
             				</fo:table-row>
 							</#list>
 							<fo:table-row>	
-								<fo:table-cell border-style="solid">
-						        	<fo:block text-align="left" font-size="12pt" white-space-collapse="false" keep-together="always"></fo:block>
-						     	</fo:table-cell>
-						     	<fo:table-cell border-style="solid">
-						        	<fo:block text-align="left" font-size="12pt" white-space-collapse="false" keep-together="always"></fo:block>
-						     	</fo:table-cell>
-	                   			<fo:table-cell border-style="solid">
-	                        		<fo:block  keep-together="always" text-align="center" font-size="12pt" white-space-collapse="false"></fo:block> 
+	                   			<#if productMrpPriceMap?has_content>
+	                   			<fo:table-cell  number-columns-spanned="7">
+	                        		<fo:block  keep-together="always" text-align="right" font-size="12pt" white-space-collapse="false">Total:&#160;<@ofbizCurrency amount=invoiceTotal isoCode=invoice.currencyUomId?if_exists/></fo:block> 
 	                   			</fo:table-cell>
-	                   			<fo:table-cell>
-	                        		<fo:block  keep-together="always" text-align="center" font-size="12pt" white-space-collapse="false"></fo:block> 
-	                   			</fo:table-cell>
-	                   			<fo:table-cell>
-	                        		<fo:block  keep-together="always" text-align="center" font-size="12pt" white-space-collapse="false"></fo:block> 
-	                   			</fo:table-cell>
-								<fo:table-cell>
+	                   			<#else>
+								<fo:table-cell number-columns-spanned="6">
 			        				<fo:block text-align="right" font-size="12pt" white-space-collapse="false" keep-together="always" font-weight="bold">Total:&#160;<@ofbizCurrency amount=invoiceTotal isoCode=invoice.currencyUomId?if_exists/></fo:block>
 			        			</fo:table-cell>
+			        			</#if>
 			        		</fo:table-row>	
                     	<#else>
                     	<fo:table-row >
                    			<fo:table-cell border-style="solid">
-						        	<fo:block text-align="left" font-size="12pt" white-space-collapse="false" keep-together="always">&#160;1</fo:block>
+						        	<fo:block text-align="left" font-size="12pt" white-space-collapse="false" keep-together="always">&#160;</fo:block>
 						     	</fo:table-cell>
                    			<fo:table-cell border-style="solid">
                         		<fo:block  keep-together="always" text-align="center" font-size="12pt" white-space-collapse="false">${comments?if_exists}</fo:block> 

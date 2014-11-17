@@ -120,6 +120,7 @@ if (invoice) {
 	invoiceItemsConv = FastList.newInstance();
 	invoiceItemList = FastList.newInstance();
 	vatTaxesByType = FastMap.newInstance();
+	productMrpPriceMap = FastMap.newInstance();
 	invoiceItems.each { invoiceItem ->
 		invoiceItem.amount = invoiceItem.getBigDecimal("amount").multiply(conversionRate).setScale(decimals, rounding);
 		invoiceItemsConv.add(invoiceItem);
@@ -143,13 +144,26 @@ if (invoice) {
 		}
 		quantity = invoiceItem.quantity;
 		unitPrice = invoiceItem.unitPrice;
-		
+		bedPercent=invoiceItem.bedPercent;
 		if(UtilValidate.isNotEmpty(unitPrice) && unitPrice != 0){
 			amount = quantity*unitPrice;
 		}else{
 			amount = invoiceItem.amount;
 		}
-		
+		if(UtilValidate.isNotEmpty(bedPercent) && bedPercent != 0){
+			conditionList.clear();
+			conditionList.add(EntityCondition.makeCondition("productId", EntityOperator.EQUALS, invoiceItem.productId));
+			conditionList.add(EntityCondition.makeCondition("productPricePurposeId", EntityOperator.EQUALS, "MRP_PRICE"));
+			conditionList.add(EntityCondition.makeCondition("productPriceTypeId", EntityOperator.EQUALS, "MRP_IS"));
+			cond = EntityCondition.makeCondition(conditionList,EntityOperator.AND);
+			
+			productMrpPriceList =delegator.findList("ProductPrice", cond, null, null, null, false);
+			// Here we are populating product wise Mrp
+			productMrpPriceList.each{ productMrp ->
+				productMrpPriceMap[productMrp.productId] = productMrp.price;
+			}
+			Debug.log("productMrpPriceMap==="+productMrpPriceMap);
+		}
 		invoiceItemMap = [:];
 		invoiceItemMap["description"] = invoiceItem.description;
 		invoiceItemMap["invoiceItemTypeId"] = invoiceItem.invoiceItemTypeId;
@@ -183,7 +197,7 @@ if (invoice) {
 	invoiceNoTaxTotal = InvoiceWorker.getInvoiceNoTaxTotal(invoice).multiply(conversionRate).setScale(decimals, rounding);
 	context.invoiceTotal = invoiceTotal;
 	context.invoiceNoTaxTotal = invoiceNoTaxTotal;
-
+	context.productMrpPriceMap = productMrpPriceMap;
 				//*________________this snippet was added for adding Tax ID in invoice header if needed _________________
 
 			   sendingTaxInfos = sendingParty.getRelated("PartyTaxAuthInfo");
