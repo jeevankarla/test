@@ -157,9 +157,15 @@ boothsList.each{ eachBoothId ->
 	facilityFDRMap.putAt("fdrNumber", fdrNums);
 	facilityFDRMap.putAt("fdrAmount", fdrAmt);
 	facilityFDRMap.putAt("diffAmount", diffAmount);
-	if(diffAmount>0){
+	if(UtilValidate.isNotEmpty(reportTypeFlag) && reportTypeFlag=="DuesFDRAvgReport"){
 		duesFDRList.add(facilityFDRMap);
 	}
+	else{
+		if(diffAmount>0){
+			duesFDRList.add(facilityFDRMap);
+		}
+	}
+	
 	
 }
 context.duesFDRList = duesFDRList;
