@@ -616,6 +616,9 @@ financialAcctgTransList.each{ dayFinAccount ->
 }
 
 openingBal = 0;
+if (UtilValidate.isNotEmpty(parameters.openingBalance)) {
+	openingBal = new BigDecimal(parameters.openingBalance);
+}
 closingBal = openingBal;
 finalFinAccntTransList = [];
 if(UtilValidate.isNotEmpty(dayFinAccountTransList)){
