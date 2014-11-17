@@ -843,8 +843,12 @@ public class HumanresService {
 						newEntity.set("finAccountId", partyId);
 						newEntity.set("finAccountCode", finAccountCode);
 						newEntity.set("finAccountName", finAccountName);
-						newEntity.set("finAccountBranch", finAccountBranch);
-						newEntity.set("ifscCode", ifscCode);
+						if(UtilValidate.isNotEmpty(finAccountBranch)){
+							newEntity.set("finAccountBranch", finAccountBranch);
+						}
+						if(UtilValidate.isNotEmpty(ifscCode)){
+							newEntity.set("ifscCode", ifscCode);
+						}
 						newEntity.create();
 					}else{	
 						GenericValue finAccount = finAccountList.get(0);
@@ -854,11 +858,15 @@ public class HumanresService {
 						if(!finAccountName.equals(finAccount.getString("finAccountName"))){
 							finAccount.set("finAccountName",finAccountName);
 						}
-						if(!finAccountBranch.equals(finAccount.getString("finAccountBranch"))){
-							finAccount.set("finAccountBranch", finAccountBranch);
-						}
-						if(!ifscCode.equals(finAccount.getString("ifscCode"))){
-							finAccount.set("ifscCode", ifscCode);
+						if((UtilValidate.isNotEmpty(finAccountBranch))){
+							if(!finAccountBranch.equals(finAccount.getString("finAccountBranch"))){
+								finAccount.set("finAccountBranch", finAccountBranch);
+							}
+						}						
+						if((UtilValidate.isNotEmpty(ifscCode))){
+							if(!ifscCode.equals(finAccount.getString("ifscCode"))){
+								finAccount.set("ifscCode", ifscCode);
+							}
 						}
 						finAccount.store();
 					}
