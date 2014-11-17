@@ -228,6 +228,8 @@ public class PayrollService {
 					Debug.logError(e,"Unable  To get Tenant Configuration", module);
 						return ServiceUtil.returnError("Unable  To get Tenant Configuration");
 			}	       
+		     
+		     
 		    	return result;
 		
 			}
@@ -235,11 +237,13 @@ public class PayrollService {
 				GenericDelegator delegator = (GenericDelegator) dctx.getDelegator();
 				LocalDispatcher dispatcher = dctx.getDispatcher();
 				String periodBillingId = (String) context.get("periodBillingId");
+				String partyIdFrom = (String) context.get("partyIdFrom");
+				GenericValue userLogin = (GenericValue) context.get("userLogin");
 				GenericValue periodBilling = null;
 				Map result = ServiceUtil.returnSuccess();
 				result.put("periodBillingId", periodBillingId);
 				boolean beganTransaction = false;
-		        	
+		        
 				try {
 					beganTransaction = TransactionUtil.begin(72000);
 					//Debug.log("beganTransaction====="+beganTransaction);
@@ -280,6 +284,24 @@ public class PayrollService {
 					 result = ServiceUtil.returnSuccess("Error While Finding PeriodBilling" + e1);
 				     result.put("periodBillingId", periodBillingId);
 					return result;
+					
+					//For ESI Employer Contribution calculation
+					Map<String, Object> serviceResult = ServiceUtil.returnSuccess();
+					Map ESIEmployerMap = FastMap.newInstance();
+					ESIEmployerMap.put("userLogin",userLogin);
+					ESIEmployerMap.put("periodBillingId",periodBillingId);
+					ESIEmployerMap.put("partyIdFrom",partyIdFrom);
+					
+					try{
+						serviceResult = dispatcher.runSync("calculateESIEmployerContribution", ESIEmployerMap);
+			            if (ServiceUtil.isError(serviceResult)) {
+			            	Debug.logError(ServiceUtil.getErrorMessage(serviceResult), module);
+			            	return ServiceUtil.returnSuccess();
+			            } 
+					}catch(Exception e){
+						Debug.logError("Error while getting ESI Employer Contribution"+e.getMessage(), module);
+					}
+					
 				}
 				return result;
 				
@@ -5850,5 +5872,136 @@ public static Map<String, Object> generateEmployerContributionPayrollBilling(Dis
       return result;  
  }
 	//end of service
-	 
+	public static Map<String, Object> calculateESIEmployerContribution(DispatchContext dctx, Map<String, ? extends Object> context) {
+		Delegator delegator = dctx.getDelegator();
+        LocalDispatcher dispatcher = dctx.getDispatcher();
+		String periodBillingId = (String) context.get("periodBillingId");
+		String partyIdFrom = (String) context.get("partyIdFrom");
+		GenericValue userLogin = (GenericValue) context.get("userLogin");
+		Map result = ServiceUtil.returnSuccess();
+		TimeZone timeZone = TimeZone.getDefault();
+		Locale locale = Locale.getDefault();
+		GenericValue periodBilling = null;
+		String customTimePeriodId = null;
+		boolean generationFailed = false;
+		boolean janFlag = false;
+		boolean julFlag = false;
+		GenericValue customTimePeriod;
+		
+		try {
+			periodBilling =delegator.findOne("PeriodBilling", UtilMisc.toMap("periodBillingId", periodBillingId), false);
+			if(UtilValidate.isNotEmpty(periodBilling)){
+				customTimePeriodId = periodBilling.getString("customTimePeriodId");
+			}
+		} catch (GenericEntityException e1) {
+			Debug.logError(e1,"Error While Finding PeriodBilling");
+			return ServiceUtil.returnError("Error While Finding PeriodBilling" + e1);
+		}
+		try {
+			customTimePeriod = delegator.findOne("CustomTimePeriod",UtilMisc.toMap("customTimePeriodId", customTimePeriodId), false);
+		} catch (GenericEntityException e1) {
+			Debug.logError(e1,"Error While Finding Customtime Period");
+			return ServiceUtil.returnError("Error While Finding Customtime Period" + e1);
+		}
+		if(customTimePeriod == null){
+			generationFailed = true;
+		}
+		Timestamp fromDateTime=UtilDateTime.toTimestamp(customTimePeriod.getDate("fromDate"));
+		Timestamp thruDateTime=UtilDateTime.toTimestamp(customTimePeriod.getDate("thruDate"));
+		
+		Timestamp monthBegin = UtilDateTime.getDayStart(fromDateTime, timeZone, locale);
+		Timestamp monthEnd = UtilDateTime.getDayEnd(thruDateTime, timeZone, locale);
+		try {
+	    	List firstMonthList=FastList.newInstance();
+	    	firstMonthList.add("Jan");
+	    	firstMonthList.add("Feb");
+	    	firstMonthList.add("Mar");
+	    	firstMonthList.add("Apr");
+	    	firstMonthList.add("May");
+	    	firstMonthList.add("Jun");
+	    	
+	    	List secondMonthList=FastList.newInstance();
+	    	secondMonthList.add("Jul");
+	    	secondMonthList.add("Aug");
+	    	secondMonthList.add("Sep");
+	    	secondMonthList.add("Oct");
+	    	secondMonthList.add("Nov");
+	    	secondMonthList.add("Dec");
+	    	
+	    	String monthName = UtilDateTime.toDateString(monthBegin,"MMM");
+	    	
+	    	Map emplInputMap = FastMap.newInstance();
+			emplInputMap.put("userLogin", userLogin);
+			emplInputMap.put("orgPartyId", partyIdFrom);
+			emplInputMap.put("fromDate", monthBegin);
+			emplInputMap.put("thruDate", monthEnd);
+	    	Map resultMap = HumanresService.getActiveEmployements(dctx,emplInputMap);
+	    	if(UtilValidate.isNotEmpty(resultMap)){
+	    		List<GenericValue> employementList = (List<GenericValue>)resultMap.get("employementList");
+	    		if(UtilValidate.isNotEmpty(employementList)){
+			    	for (int i = 0; i < employementList.size(); ++i) {		
+			    		GenericValue employment = employementList.get(i);
+			        	String employeeId = employment.getString("partyIdTo");
+			        	if(firstMonthList.contains(monthName)){
+							janFlag =true;
+							if(janFlag == true){
+								Timestamp yearStartDate = UtilDateTime.getYearStart(fromDateTime);
+								Timestamp monthStartDate = UtilDateTime.getMonthStart(yearStartDate, timeZone, locale);
+								Timestamp monthEndDate = UtilDateTime.getMonthEnd(monthStartDate, timeZone, locale);
+								Map payHeadCtx = UtilMisc.toMap("userLogin", userLogin);				
+								payHeadCtx.put("payHeadTypeId", "PAYROL_BEN_ESIEMPLYR");
+								payHeadCtx.put("timePeriodStart", monthStartDate);
+								payHeadCtx.put("timePeriodEnd", monthEndDate);
+								payHeadCtx.put("timePeriodId", customTimePeriodId);
+								payHeadCtx.put("employeeId", employeeId);
+								payHeadCtx.put("periodBillingId", periodBillingId);
+								//payHeadCtx.put("proportionalFlag",context.get("proportionalFlag"));
+								Map<String, Object> payHeadresult = getPayHeadAmount(dctx,payHeadCtx);
+								if(UtilValidate.isNotEmpty(payHeadresult)){
+									BigDecimal amount = (BigDecimal) payHeadresult.get("amount");
+									if(amount != BigDecimal.ZERO){
+										GenericValue benefitTypeRow = delegator.findOne("BenefitType", UtilMisc.toMap(
+							        			"benefitTypeId", "PAYROL_BEN_ESIEMPLYR"), false);
+										benefitTypeRow.set("isEmployerContribution", "Y");
+										benefitTypeRow.store();
+									}
+								}
+							}
+						}else if(secondMonthList.contains(monthName)){
+				    		julFlag =true;
+				    		if(julFlag == true){
+				    			Timestamp yearStartDate = UtilDateTime.getYearStart(fromDateTime); 
+				    			Timestamp fromDate = UtilDateTime.getDayStart(UtilDateTime.addDaysToTimestamp(yearStartDate, 181));
+				    			Timestamp monthStartDate = UtilDateTime.getMonthStart(fromDate, timeZone, locale);
+								Timestamp monthEndDate = UtilDateTime.getMonthEnd(monthStartDate, timeZone, locale);
+								Map payHeadCtx = UtilMisc.toMap("userLogin", userLogin);				
+								payHeadCtx.put("payHeadTypeId", "PAYROL_BEN_ESIEMPLYR");
+								payHeadCtx.put("timePeriodStart", monthStartDate);
+								payHeadCtx.put("timePeriodEnd", monthEndDate);
+								payHeadCtx.put("timePeriodId", customTimePeriodId);
+								payHeadCtx.put("employeeId", employeeId);
+								payHeadCtx.put("periodBillingId", periodBillingId);
+								//payHeadCtx.put("proportionalFlag",context.get("proportionalFlag"));
+								Map<String, Object> payHeadresult = getPayHeadAmount(dctx,payHeadCtx);
+								if(UtilValidate.isNotEmpty(payHeadresult)){
+									BigDecimal amount = (BigDecimal) payHeadresult.get("amount");
+									if(amount != BigDecimal.ZERO){
+										GenericValue benefitTypeRow = delegator.findOne("BenefitType", UtilMisc.toMap(
+							        			"benefitTypeId", "PAYROL_BEN_ESIEMPLYR"), false);
+										benefitTypeRow.set("isEmployerContribution", "Y");
+										benefitTypeRow.store();
+									}
+								}
+				    		}
+						}
+			    	}
+	    		}
+	    	}
+		}catch (Exception e) {
+			Debug.logError(e, module);
+			return ServiceUtil.returnError("Error While Calculating ESI Employer Contribution" + e);
+		}
+    	//result.put("periodBillingId", periodBillingId);
+		return result;
+	}
 }//end of class
