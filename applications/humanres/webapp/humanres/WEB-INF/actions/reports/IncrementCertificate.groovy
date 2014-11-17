@@ -39,24 +39,17 @@ employments=EmploymentsMap.get("employementList");
 employments = UtilMisc.sortMaps(employments, UtilMisc.toList("partyId"));
 employmentsIds = EntityUtil.getFieldListFromEntityList(employments, "partyId", true);
 employmentList=[];
-conditionList=[];
-conditionList.add(EntityCondition.makeCondition("customTimePeriodId", EntityOperator.EQUALS ,parameters.customTimePeriodId));
-conditionList.add(EntityCondition.makeCondition("statusId", EntityOperator.IN , UtilMisc.toList("GENERATED","APPROVED")));
-condition = EntityCondition.makeCondition(conditionList,EntityOperator.AND);
-payrollDetailsList = delegator.findList("PeriodBillingAndCustomTimePeriod", condition, null, null, null, false);
 
-if(UtilValidate.isNotEmpty(payrollDetailsList)){
-	if(UtilValidate.isNotEmpty(employmentsIds)){
-		employmentsIds.each{ employeeId ->
-			payHistoryDetails = delegator.findList("PayHistory",EntityCondition.makeCondition("partyIdTo", EntityOperator.EQUALS, employeeId)  , null, null, null, false );
-			payHistoryDetailsList = UtilMisc.sortMaps(payHistoryDetails, UtilMisc.toList("partyIdTo"));
-			
-			if(UtilValidate.isNotEmpty(payHistoryDetailsList)){
-				payHistoryDetailsList.each{ pay ->
-					partyId=pay.get("partyIdTo");
-					employmentList.add(partyId);
-					
-				}
+if(UtilValidate.isNotEmpty(employmentsIds)){
+	employmentsIds.each{ employeeId ->
+		payHistoryDetails = delegator.findList("PayHistory",EntityCondition.makeCondition("partyIdTo", EntityOperator.EQUALS, employeeId)  , null, null, null, false );
+		payHistoryDetailsList = UtilMisc.sortMaps(payHistoryDetails, UtilMisc.toList("partyIdTo"));
+		
+		if(UtilValidate.isNotEmpty(payHistoryDetailsList)){
+			payHistoryDetailsList.each{ pay ->
+				partyId=pay.get("partyIdTo");
+				employmentList.add(partyId);
+				
 			}
 		}
 	}
@@ -78,7 +71,6 @@ if(UtilValidate.isNotEmpty(employmentList)){
 		//PayGradeHistory = delegator.findList("PayGradePayHistory", EntityCondition.makeCondition("partyIdTo", EntityOperator.EQUALS, employee), null, ["-fromDate"], null, false);
 		if(UtilValidate.isNotEmpty(PayGradeHistory)){
 			PayGradeHistory.each{ PayGradeId ->
-				
 				String partyName = PartyHelper.getPartyName(delegator, employee, false);
 				detailsMap.put("partyName",partyName);
 				EmplPositionDetails = delegator.findList("EmplPositionAndFulfillment", EntityCondition.makeCondition("employeePartyId", EntityOperator.EQUALS, employee), null, null, null, false);
@@ -94,25 +86,14 @@ if(UtilValidate.isNotEmpty(employmentList)){
 						}
 					}
 				}
-				if(UtilValidate.isNotEmpty(payrollDetailsList)){
-					payrollDetailsList.each { payrollDetails->
-						billingId=payrollDetails.get("periodBillingId");
-						TypeConditionList=[];
-						TypeConditionList.add(EntityCondition.makeCondition("periodBillingId", EntityOperator.EQUALS ,billingId));
-						TypeConditionList.add(EntityCondition.makeCondition("partyIdFrom", EntityOperator.EQUALS ,employee));
-						TypeConditionList.add(EntityCondition.makeCondition("payrollHeaderItemTypeId", EntityOperator.EQUALS ,"PAYROL_BEN_PERS_PAY"));
-						typecondition = EntityCondition.makeCondition(TypeConditionList,EntityOperator.AND);
-						def orderBy = UtilMisc.toList("amount","partyIdFrom");
-						PersonalPayList = delegator.findList("PayrollHeaderAndHeaderItem", typecondition, null, orderBy, null, false);
-						if(UtilValidate.isNotEmpty(PersonalPayList)){
-							PersonalPayList.each { PersnlPay->
-								PersonalPay=PersnlPay.get("amount");
-								detailsMap.put("PersonalPay",PersonalPay);
-							}
-						}
+				payHeadMap=PayrollService.getPayHeadAmount(dctx,[userLogin:userLogin,payHeadTypeId:"PAYROL_BEN_PERS_PAY",employeeId:employee,customTimePeriodId: parameters.customTimePeriodId,locale:locale]);
+				
+				if(UtilValidate.isNotEmpty(payHeadMap)){
+					PersonalPay = payHeadMap.get("amount");
+					if(PersonalPay != 0){
+						detailsMap.put("PersonalPay",PersonalPay);
 					}
 				}
-				
 				if(iteration.equals(1)){
 					dateOfPresentIncre=PayGradeId.get("fromDate");
 					//presentPayScale=PayGradeId.get("payScale");
