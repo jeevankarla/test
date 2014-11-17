@@ -42,11 +42,11 @@ under the License.
 	        	<fo:static-content flow-name="xsl-region-before" font-family="Courier,monospace">
 	        		<fo:block text-align="center" font-weight="bold" keep-together="always"  font-family="Courier,monospace" white-space-collapse="false">${uiLabelMap.KMFDairyHeader}</fo:block>
 	        		<fo:block  keep-together="always" text-align="center" font-family="Courier,monospace" white-space-collapse="false" font-weight="bold">${uiLabelMap.KMFDairySubHeader}</fo:block>
-                	<fo:block text-align="center" font-weight="bold"  keep-together="always"  white-space-collapse="false"> <#if categoryType=="ICE_CREAM_NANDINI">NANDINI</#if><#if categoryType=="ICE_CREAM_AMUL">AMUL</#if> ICE CREAM SALES BOOK FOR THE PERIOD- ${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(fromDate, "dd/MM/yyyy")} - ${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(thruDate, "dd/MM/yyyy")} </fo:block>
+                	<fo:block text-align="center" font-weight="bold"  keep-together="always"  white-space-collapse="false"> <#if categoryType=="ICE_CREAM_NANDINI">NANDINI</#if><#if categoryType=="ICE_CREAM_AMUL">AMUL</#if>SALES BOOK FOR THE PERIOD- ${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(fromDate, "dd/MM/yyyy")} - ${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(thruDate, "dd/MM/yyyy")} </fo:block>
           			<fo:block text-align="left"  keep-together="always"  font-family="Courier,monospace" font-weight="bold" white-space-collapse="false"> UserLogin:<#if userLogin?exists>${userLogin.userLoginId?if_exists}</#if>               &#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;Print Date :${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(nowTimestamp, "dd/MM/yy HH:mm:ss")}</fo:block>
           			<fo:block>--------------------------------------------------------------------------------------------------------------------------------------------</fo:block>
-            	    <fo:block text-align="left" font-weight="bold" font-size="12pt" keep-together="always" font-family="Courier,monospace" white-space-collapse="false">Invoice Invoice 					Retailer        	Description          Quantity        Ex-factory    ED          VAT(Rs)    		C.S.T(Rs)    Total(Rs)</fo:block>
-        			<fo:block text-align="left" font-weight="bold" font-size="12pt" keep-together="always" font-family="Courier,monospace" white-space-collapse="false">Number  Seq.Number 			Name                                 (In Ltrs)       Value(Rs)     Value(Rs)                               Value</fo:block>
+            	    <fo:block text-align="left" font-weight="bold" font-size="12pt" keep-together="always" font-family="Courier,monospace" white-space-collapse="false">Invoice Invoice 					Retailer        	Description        Quantity        Ex-factory    ED          VAT(Rs)    		C.S.T(Rs)      Total(Rs)</fo:block>
+        			<fo:block text-align="left" font-weight="bold" font-size="12pt" keep-together="always" font-family="Courier,monospace" white-space-collapse="false">Number  Seq.Number 		Name                               <#if categoryType=="UNITS">(Ltrs/Kgs)<#else> (In Ltrs)</#if>       Value(Rs)     Value(Rs)                               Value</fo:block>
 	        		<fo:block>--------------------------------------------------------------------------------------------------------------------------------------------</fo:block>
             	</fo:static-content>	        	
 	        	<fo:flow flow-name="xsl-region-body"   font-family="Courier,monospace">		
@@ -100,12 +100,14 @@ under the License.
 							             <fo:table-cell>
 							            	<fo:block  keep-together="always" text-align="left" font-size="12pt" white-space-collapse="false" font-weight="bold">${invoiceDetails.getKey()}</fo:block>  
 							            </fo:table-cell>
+							            <#assign sequenceId="">
 							            <#if invoiceSeqDetails?has_content>
           						  			<#assign sequenceId = invoiceSeqDetails[0].get("sequenceId")?if_exists>
+          						  	    </#if>
 							            <fo:table-cell>
-							            	<fo:block  keep-together="always" text-align="left" font-size="12pt" white-space-collapse="false" font-weight="bold">${sequenceId?if_exists}</fo:block>  
+							            	<fo:block  keep-together="always" text-align="left" font-size="12pt" white-space-collapse="false" font-weight="bold">${sequenceId}</fo:block>  
 							            </fo:table-cell>
-							            </#if>
+							           
 							             <fo:table-cell>
 							            	<fo:block   text-align="left" font-size="12pt" white-space-collapse="false" font-weight="bold">${partyName}<#if categoryType=="ICE_CREAM_AMUL">[${invoice.get("partyId")?if_exists}]</#if></fo:block>  
 							            </fo:table-cell>
@@ -114,9 +116,9 @@ under the License.
 							            		<fo:table>
 								            		<fo:table-column column-width="80pt"/> 		
 								            		<fo:table-column column-width="110pt"/> 	
-								            		<fo:table-column column-width="110pt"/> 
-								            		<fo:table-column column-width="120pt"/> 
-								            		<fo:table-column column-width="85pt"/> 
+								            		<fo:table-column column-width="140pt"/> 
+								            		<fo:table-column column-width="100pt"/> 
+								            		<fo:table-column column-width="75pt"/> 
 								            		<fo:table-column column-width="90pt"/> 
 								            		<fo:table-column column-width="115pt"/> 
 					                                <fo:table-body>
@@ -183,11 +185,11 @@ under the License.
 									<fo:table-cell>
 							            	<fo:block  keep-together="always" text-align="right" font-size="12pt" white-space-collapse="false" font-weight="bold">
 							            		<fo:table>
-								            		<fo:table-column column-width="100pt"/>
-								            		<fo:table-column column-width="90pt"/> 
-								            		<fo:table-column column-width="110pt"/> 
-								            		<fo:table-column column-width="120pt"/> 
-								            		<fo:table-column column-width="85pt"/> 
+								            		<fo:table-column column-width="80pt"/> 		
+								            		<fo:table-column column-width="110pt"/> 	
+								            		<fo:table-column column-width="140pt"/> 
+								            		<fo:table-column column-width="100pt"/> 
+								            		<fo:table-column column-width="75pt"/> 
 								            		<fo:table-column column-width="90pt"/> 
 								            		<fo:table-column column-width="115pt"/> 
 					                                <fo:table-body>
@@ -283,11 +285,11 @@ under the License.
 							             <fo:table-cell>
 							            	<fo:block  keep-together="always" text-align="right" font-size="12pt" white-space-collapse="false" font-weight="bold">
 							            		<fo:table>
-								            		<fo:table-column column-width="100pt"/> 		
-								            		<fo:table-column column-width="90pt"/> 	
-								            		<fo:table-column column-width="110pt"/> 
-								            		<fo:table-column column-width="120pt"/> 
-								            		<fo:table-column column-width="85pt"/> 
+								            		<fo:table-column column-width="80pt"/> 		
+								            		<fo:table-column column-width="110pt"/> 	
+								            		<fo:table-column column-width="140pt"/> 
+								            		<fo:table-column column-width="100pt"/> 
+								            		<fo:table-column column-width="75pt"/> 
 								            		<fo:table-column column-width="90pt"/> 
 								            		<fo:table-column column-width="115pt"/> 
 					                                <fo:table-body>
@@ -319,6 +321,24 @@ under the License.
 							            	</fo:block>  
 							            </fo:table-cell>
 							     </fo:table-row>
+	                     <#if prodTempMap?has_content>  	
+                               <fo:table-row>
+	                            <fo:table-cell>
+                            		<fo:block  keep-together="always" text-align="left"  white-space-collapse="false" font-weight="bold">Total Products</fo:block>  
+                       			</fo:table-cell>
+                       			</fo:table-row>		
+							 <#assign productDetails = prodTempMap.entrySet()>
+	                	      <#list productDetails as prodTotals>
+		                       <fo:table-row>
+                    				<fo:table-cell>
+	                            		<fo:block  keep-together="always" text-align="left"   font-size="12pt" white-space-collapse="false">${prodTotals.getKey()}</fo:block>  
+	                       			</fo:table-cell>
+	                       			<fo:table-cell>
+	                            		<fo:block  keep-together="always" text-align="right"   font-size="12pt" white-space-collapse="false">${prodTotals.getValue()?string("#0.00")}</fo:block>  
+	                       			</fo:table-cell>
+	                       		</fo:table-row>
+		                    </#list>
+		                    </#if>
 							<fo:table-row> 
 							       <fo:table-cell number-columns-spanned="2">   						
 							 	         <fo:block linefeed-treatment="preserve">&#xA;</fo:block> 

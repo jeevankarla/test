@@ -77,6 +77,7 @@ if(categoryType.equals("DEPOT_CUSTOMER")||categoryType.equals("All")){
 //dayWiseTotals = SalesInvoiceServices.getPeriodSalesInvoiceTotals(dctx, [partyIds:partyIds, isQuantityLtrs:true,fromDate:dayBegin, thruDate:dayEnd]).get("invoiceIdTotals");
 facilityMap=[:];
 dayWiseInvoice=FastMap.newInstance();
+prodTempMap=[:];
 // Invoice Sales Abstract
 	finalInvoiceDateMap = [:];
 	for( i=0 ; i <= (totalDays); i++){
@@ -133,6 +134,7 @@ dayWiseInvoice=FastMap.newInstance();
 									virtualProductId="";
 									if(UtilValidate.isNotEmpty(productValue)){
 										currentProduct = productValue.getKey();
+										virtualProductId = currentProduct;
 										product = delegator.findOne("Product", [productId : currentProduct], false);
 										productId = productValue.getKey();
 											exprList=[];
@@ -140,11 +142,29 @@ dayWiseInvoice=FastMap.newInstance();
 											exprList.add(EntityCondition.makeCondition("productId", EntityOperator.EQUALS, productId));
 											condition = EntityCondition.makeCondition(exprList, EntityOperator.AND);
 											productList = delegator.findList("ProductCategoryAndMember", condition, null, null, null, false);
-											if(UtilValidate.isNotEmpty(productList)){
-											 productList=EntityUtil.getFirst(productList);
-											}
-												if(UtilValidate.isNotEmpty(productList)){
-													virtualProductId = productList.get("productCategoryId");
+											 if(UtilValidate.isNotEmpty(productList)){
+												productList=EntityUtil.getFirst(productList);
+											    virtualProductId = productList.get("productCategoryId");
+											 }
+											  if(categoryType.equals("UNITS")){
+												/*productAssoc = EntityUtil.getFirst(delegator.findList("ProductAssoc", EntityCondition.makeCondition(["productAssocTypeId": "PRODUCT_VARIANT", "productIdTo": currentProduct,"thruDate":null]), null, ["-fromDate"], null, false));
+													if(UtilValidate.isNotEmpty(productAssoc)){
+														virtualProductId = productAssoc.productId;
+														Debug.log("virtualProductId==="+virtualProductId);
+													}*/
+												    if(UtilValidate.isEmpty(prodTempMap[product.brandName])){
+													  qtyLtrs = productValue.getValue().get("total");
+													  prodTempMap.put(product.brandName, qtyLtrs);
+													  Debug.log("prodTempMap==="+prodTempMap);
+													}else{
+														totProd =0;
+														totProd=prodTempMap.get(product.brandName);
+														totProd += productValue.getValue().get("total");
+														Debug.log("totProd==="+totProd);
+														prodTempMap.put(product.brandName,totProd);
+													}
+												    virtualProductId = product.brandName;
+													context.prodTempMap=prodTempMap;
 												}
 												if(UtilValidate.isEmpty(tempVariantMap[virtualProductId])){
 													quantity =productValue.getValue().get("total");
