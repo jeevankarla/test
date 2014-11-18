@@ -78,6 +78,7 @@ if(UtilValidate.isNotEmpty(parameters.partyIdFrom)){
 }else{
 	parameters.partyIdFrom=parameters.partyId;
 }
+bankAdvPayrollMap= context.get("BankAdvicePayRollMap");
 	conditionList.add(EntityCondition.makeCondition("ownerPartyId", EntityOperator.EQUALS ,parameters.partyIdFrom));
 	conditionList.add(EntityCondition.makeCondition("statusId", EntityOperator.EQUALS ,"FNACT_ACTIVE"));
 	if(UtilValidate.isNotEmpty(parameters.finAccountId) && (!"All".equals(parameters.finAccountId))){
@@ -124,7 +125,10 @@ if(UtilValidate.isNotEmpty(companyBankAccountList)){
 						if(UtilValidate.isNotEmpty(gbCode) && "CNRB".equals(gbCode)){
 							canraBankPartyIds.add(ownerPartyId);
 						}else{
-							emplPartyIds.add(ownerPartyId);
+							// Adding whose employee NetAmount is not equal to zero
+							if(UtilValidate.isNotEmpty(bankAdvPayrollMap.get(ownerPartyId)) && (bankAdvPayrollMap.get(ownerPartyId).get("netAmt") !=0)){
+								emplPartyIds.add(ownerPartyId);
+							}							
 						}
 						
 					}
@@ -133,7 +137,9 @@ if(UtilValidate.isNotEmpty(companyBankAccountList)){
 					}
 				}
 				partyIds = EntityUtil.getFieldListFromEntityList(finAccountDetailsList, "ownerPartyId", true);
-				bankWiseEmplDetailsMap.put(finAccountId,emplPartyIds);
+				if(UtilValidate.isNotEmpty(emplPartyIds)){
+					bankWiseEmplDetailsMap.put(finAccountId,emplPartyIds);
+				}
 			}
 		}
 		
