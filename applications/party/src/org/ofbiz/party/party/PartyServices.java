@@ -1886,13 +1886,10 @@ public class PartyServices {
 			List conditionList=FastList.newInstance();
 			conditionList.add(EntityCondition.makeCondition("partyIdTo", EntityOperator.EQUALS, partyId));
 			conditionList.add(EntityCondition.makeCondition("deductionTypeId", EntityOperator.EQUALS, deductionTypeId));
-			conditionList.add(EntityCondition.makeCondition("thruDate", EntityOperator.EQUALS, null));
 			EntityCondition condition = EntityCondition.makeCondition(conditionList,EntityOperator.AND);
 			List<GenericValue> partyDeductionList = FastList.newInstance();
 			partyDeductionList = delegator.findList("PartyDeduction", condition, null,null, null, false);
-			if(UtilValidate.isNotEmpty(partyDeductionList)){
-				return ServiceUtil.returnError("Insurance already exists for that Insurance Type for Employee "+partyId); 
-			}else{
+			if(UtilValidate.isEmpty(partyDeductionList)){
 				GenericValue partyDeduction = delegator.makeValue("PartyDeduction");
 				partyDeduction.set("roleTypeIdFrom", "INTERNAL_ORGANIZATIO");
 				partyDeduction.set("roleTypeIdTo", "EMPLOYEE");
@@ -1902,7 +1899,6 @@ public class PartyServices {
 				partyDeduction.set("deductionTypeId", deductionTypeId);
 				partyDeduction.set("thruDate", thruDate);
 				partyDeduction.set("periodTypeId", "RATE_MONTH");
-				partyDeduction.set("cost", premiumAmount);
 				partyDeduction.create();
 			}
 		} catch (GenericEntityException e) {
