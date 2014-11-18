@@ -39,7 +39,7 @@
 	                    <fo:table-column column-width="180pt"/>
                      	<fo:table-body>
                      	<#list attendanceDetailList as empAttendence>
-                     		<#if (empAttendence.getValue().get("lateMin"))!=0>
+                     	<#if empAttendence.get("lateMin")!=0>
                      		<#assign sno=sno+1>
 				         			<fo:table-row>
 				         				<fo:table-cell>	
