@@ -44,6 +44,14 @@ function makeDatePicker(fromDateId ,thruDateId){
 			jQuery("#rateAmount").parent().parent().hide();
 		}
 	}
+	
+	function changeToUpperCase(){
+		var facId = $("#facilityId").val();
+		if(facId != null || facId != undefined){
+			facId = facId.toUpperCase();
+			$("#facilityId").val(facId);
+		}
+	}
 	function hideorShowBankDtls(){
 	  var paymentMethodTypeId =$( "#paymentMethodTypeId option:selected" ).val();
 		if(paymentMethodTypeId == "CHALLAN_PAYIN"){
@@ -209,7 +217,7 @@ function makeDatePicker(fromDateId ,thruDateId){
     					<tr>
 						    <td class="label"><b> Retailer Id*</b></td>
 						    <td>
-						      	<input type="text" name="facilityId" id="facilityId" size="18" maxlength="60" autocomplete="off" value="${emailAddress?if_exists}"/>
+						      	<input type="text" name="facilityId" id="facilityId" size="18" maxlength="60" autocomplete="off" onblur="javascript: changeToUpperCase();"/>
 						    </td>
 						</tr>
  						 <tr>
