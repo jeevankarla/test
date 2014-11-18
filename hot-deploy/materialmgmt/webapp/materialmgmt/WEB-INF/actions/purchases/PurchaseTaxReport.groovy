@@ -89,7 +89,25 @@ taxDetailsCstMap=[:];
 taxCstTotalMap=[:];
 taxCstTotalMap["invTotalVal"]=BigDecimal.ZERO;
 taxCstTotalMap["cstAmount"]=BigDecimal.ZERO;
+//to get Discounts and Other-Charges
+/*exprList=[];
+exprList.add(EntityCondition.makeCondition("statusId",EntityOperator.NOT_EQUAL, "INVOICE_CANCELLED"));
+exprList.add(EntityCondition.makeCondition("productId",EntityOperator.NOT_EQUAL, null));//want to skip other than product items
+exprList.add(EntityCondition.makeCondition("invoiceTypeId", EntityOperator.EQUALS,"PURCHASE_INVOICE"));
+conditionList.add(EntityCondition.makeCondition("partyId", EntityOperator.EQUALS,"Company"));
+conditionList.add(EntityCondition.makeCondition("invoiceDate", EntityOperator.GREATER_THAN_EQUAL_TO,dayBegin));
+conditionList.add(EntityCondition.makeCondition("invoiceDate",EntityOperator.LESS_THAN_EQUAL_TO, dayEnd));
+EntityCondition condition = EntityCondition.makeCondition(conditionList, EntityOperator.AND);
+List<String> orderBy = UtilMisc.toList("invoiceDate","invoiceId","partyId");
 
+exprList.add(EntityCondition.makeCondition("productId", EntityOperator.NOT_EQUAL, "_NA_"));
+exprList.add(EntityCondition.makeCondition("isVirtual", EntityOperator.NOT_EQUAL, "Y"));
+exprList.add(EntityCondition.makeCondition("primaryProductCategoryId", EntityOperator.EQUALS, "Milk"));
+exprList.add(EntityCondition.makeCondition(EntityCondition.makeCondition("salesDiscontinuationDate", EntityOperator.EQUALS, null),EntityOperator.OR,
+  EntityCondition.makeCondition("salesDiscontinuationDate", EntityOperator.GREATER_THAN, fromDate)));
+  EntityCondition discontinuationDateCondition = EntityCondition.makeCondition(exprList, EntityOperator.AND);
+	prodList =delegator.findList("Product", discontinuationDateCondition,null, null, null, false);
+	prodIdsList=EntityUtil.getFieldListFromEntityList(prodList, "productId", false);*/
 
 		invoiceMap = [:];
 		invoiceDtlsMap = [:];
@@ -144,10 +162,18 @@ taxCstTotalMap["cstAmount"]=BigDecimal.ZERO;
 					innerTaxItemMap["tinNumber"]="";
 					innerTaxItemMap["vchrType"]="Purchase";
 					innerTaxItemMap["crOrDbId"]="D";
+					invoiceDisItemList = delegator.findList("InvoiceAndItem",EntityCondition.makeCondition(EntityCondition.makeCondition("invoiceId", EntityOperator.EQUALS, invoiceItem.invoiceId),EntityOperator.AND,
+							                                              EntityCondition.makeCondition("invoiceItemTypeId", EntityOperator.EQUALS, "COGS_ITEM17"))  , null, null, null, false );
+					  if(UtilValidate.isNotEmpty(invoiceDisItemList)){
+						  discountInvoiceItem=invoiceDisItemList.getFirst();
+						  invTotalVal+=org.ofbiz.accounting.invoice.InvoiceWorker.getPurchaseInvoiceItemTotal(discountInvoiceItem,false);
+					  }
+					//
 					//invTotalVal=org.ofbiz.accounting.invoice.InvoiceWorker.getInvoiceTotal(delegator,invoiceItem.invoiceId);
 					//invTotalVal=org.ofbiz.accounting.invoice.InvoiceWorker.getInvoiceItemTotal(invoiceItem);
 					
 					//invTotalVal=invTotalVal-vatRevenue;
+					
 					innerTaxItemMap["invTotalVal"]=invTotalVal;
 					innerTaxItemMap["vatAmount"]=vatRevenue;
 					tax5pt5TotalMap["invTotalVal"]+=invTotalVal;
@@ -157,6 +183,7 @@ taxCstTotalMap["cstAmount"]=BigDecimal.ZERO;
 							innerTaxItemMap["tinNumber"]=fromPartyDetail.get('TIN_NUMBER');
 					      }
 					taxDetails5pt5List.addAll(innerTaxItemMap);
+					
 					//intilize inner map when empty
 					taxDetails5pt5Map[invoiceItem.invoiceId]=innerTaxItemMap;
 					}else if(UtilValidate.isNotEmpty(invDetailMap)){
@@ -196,6 +223,13 @@ taxCstTotalMap["cstAmount"]=BigDecimal.ZERO;
 							 }
 						innerTaxItemMap["vchrType"]="Purchase";
 						innerTaxItemMap["crOrDbId"]="D";
+						//to get Discount Item
+						invoiceDisItemList = delegator.findList("InvoiceAndItem",EntityCondition.makeCondition(EntityCondition.makeCondition("invoiceId", EntityOperator.EQUALS, invoiceItem.invoiceId),EntityOperator.AND,
+							EntityCondition.makeCondition("invoiceItemTypeId", EntityOperator.EQUALS, "COGS_ITEM17")) , null, null, null, false );
+						if(UtilValidate.isNotEmpty(invoiceDisItemList)){
+						discountInvoiceItem=invoiceDisItemList.getFirst();
+						invTotalVal+=org.ofbiz.accounting.invoice.InvoiceWorker.getPurchaseInvoiceItemTotal(discountInvoiceItem,false);
+						}
 						//invTotalVal=org.ofbiz.accounting.invoice.InvoiceWorker.getInvoiceTotal(delegator,invoiceItem.invoiceId);
 						
 						//invTotalVal=invTotalVal-vatRevenue;
@@ -247,6 +281,13 @@ taxCstTotalMap["cstAmount"]=BigDecimal.ZERO;
 					 }
 				innerTaxItemMap["vchrType"]="Purchase";
 				innerTaxItemMap["crOrDbId"]="D";
+				//to get Discount Item
+				invoiceDisItemList = delegator.findList("InvoiceAndItem",EntityCondition.makeCondition(EntityCondition.makeCondition("invoiceId", EntityOperator.EQUALS, invoiceItem.invoiceId),EntityOperator.AND,
+					EntityCondition.makeCondition("invoiceItemTypeId", EntityOperator.EQUALS, "COGS_ITEM17"))  , null, null, null, false );
+				if(UtilValidate.isNotEmpty(invoiceDisItemList)){
+				discountInvoiceItem=invoiceDisItemList.getFirst();
+				invTotalVal+=org.ofbiz.accounting.invoice.InvoiceWorker.getPurchaseInvoiceItemTotal(discountInvoiceItem,false);
+				}
 				innerTaxItemMap["invTotalVal"]=invTotalVal;
 				innerTaxItemMap["cstAmount"]=cstAmount;
 				
@@ -296,7 +337,8 @@ taxCstTotalMap["cstAmount"]=BigDecimal.ZERO;
 		context.put("tax14pt5TotalMap",tax14pt5TotalMap);
 		context.put("taxCstTotalMap",taxCstTotalMap);
 		
-		
+		/*invTaxTotalmap=org.ofbiz.accounting.invoice.InvoiceWorker.getPeriodPurchaseInvoiceTotals(dctx, [fromDate:dayBegin, thruDate:dayEnd]);
+		Debug.log("invTaxTotalmap====="+invTaxTotalmap);*/
 		
 		taxParty = delegator.findOne("Party", UtilMisc.toMap("partyId", "TAX4"), false);
 		taxAuthority = delegator.findOne("TaxAuthority", UtilMisc.toMap("taxAuthGeoId","IND", "taxAuthPartyId","TAX4"), false);
