@@ -199,18 +199,7 @@ if(UtilValidate.isNotEmpty(parameters.customTimePeriodId)){
 			if(UtilValidate.isNotEmpty(periodWiseEmployeeMap)){
 				periodWiseEmployeeMap.put("empName",empName);
 				periodWiseEmployeeMap.put("unitId",locationGeoId);
-				if(partyId.equals("10165")){
-					payRollEmployeeMap.put(partyId,periodWiseEmployeeMap);
-				}
-				if(partyId.equals("10187")){
-					payRollEmployeeMap.put(partyId,periodWiseEmployeeMap);
-				}
-				if(partyId.equals("10193")){
-					payRollEmployeeMap.put(partyId,periodWiseEmployeeMap);
-				}
-				if(partyId.equals("10214")){
-					payRollEmployeeMap.put(partyId,periodWiseEmployeeMap);
-				}
+				payRollEmployeeMap.put(partyId,periodWiseEmployeeMap);
 			}
 		}
 	}
