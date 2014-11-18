@@ -858,16 +858,28 @@
     	<field name="submitButton" title="Find" widget-style="smallSubmit"><submit/></field>
     </form>
    <form name="EditLateHours" type="single" header-row-style="header-row" default-table-style="basic-table" target="findEmplDetails">
+	   <actions>
+	   	 <set field="nowTimeStamp" value="${groovy: return org.ofbiz.base.util.UtilDateTime.nowTimestamp()}"/>
+	   	<entity-condition entity-name="CustomTimePeriod" list="customTimeList" >
+	  		<condition-list combine="and">
+	  		<condition-expr field-name="fromDate" operator="less-equals" from-field="nowTimeStamp"/>
+	  		<condition-expr field-name="periodTypeId" operator="equals" value="HR_MONTH"/>
+	  		</condition-list>
+	  		<order-by field-name="-fromDate"/>
+	  		<order-by field-name="periodNum"/>
+		</entity-condition>
+			<set field="timecustom" from-field="customTimeList[0].customTimePeriodId"/>
+	   </actions>
     	<field name="hideSearch"><hidden value="Y" /></field>
 		 <field name="noConditionFind"><hidden value="Y"/><!-- if this isn't there then with all fields empty no query will be done --></field>
 		 <field name="partyId" title="Employee Id" required-field="true">
 			<lookup target-form-name="LookupEmployeeName"/>
 		</field>
 		<field name="customTimePeriodId" required-field="true">
-            <drop-down>
+            <drop-down no-current-selected-key="${timecustom}">
                 <entity-options entity-name="CustomTimePeriod" key-field-name="customTimePeriodId" description="${groovy:org.ofbiz.base.util.UtilDateTime.toDateString(fromDate, &quot;dd MMMMM, yyyy&quot;);} - ${groovy:org.ofbiz.base.util.UtilDateTime.toDateString(thruDate, &quot;dd MMMMM, yyyy&quot;);}" filter-by-date="false">
                     <entity-constraint name="periodTypeId" operator="equals" value="HR_MONTH"/>
-                    <entity-order-by field-name="-thruDate"/>
+                    <entity-order-by field-name="-fromDate"/>
                     <entity-order-by field-name="periodNum"/>
                 </entity-options>
             </drop-down>
