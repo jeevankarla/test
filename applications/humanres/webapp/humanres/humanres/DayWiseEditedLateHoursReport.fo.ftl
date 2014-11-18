@@ -38,7 +38,8 @@
 	                    <fo:table-column column-width="60pt"/>
 	                    <fo:table-column column-width="180pt"/>
                      	<fo:table-body>
-                     		<#list attendanceDetailList as empAttendence>
+                     	<#list attendanceDetailList as empAttendence>
+                     		<#if (empAttendence.getValue().get("lateMin"))!=0>
                      		<#assign sno=sno+1>
 				         			<fo:table-row>
 				         				<fo:table-cell>	
@@ -70,6 +71,7 @@
 				                    	</fo:table-cell>
 			                    		<#assign noofLines=noofLines+1>
 			               			</fo:table-row>
+			               		</#if>
 			               		<#if (noofLines == 35)>
 	                            	<fo:table-row>
 	                            		<fo:table-cell>
