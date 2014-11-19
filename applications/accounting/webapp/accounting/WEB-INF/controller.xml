@@ -2287,6 +2287,10 @@ under the License.
         <security https="true" auth="true"/>
         <response name="success" type="view" value="ViewGlReconciliationWithTransaction"/>
     </request-map>
+    <request-map uri="ViewGlReconciliationWithTransactionNew">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="ViewGlReconciliationWithTransactionNew"/>
+    </request-map>
     <request-map uri="callReconcileFinAccountTrans">
         <security https="true" auth="true"/>
         <event type="service-multi" invoke="reconcileFinAccountTrans"/>
@@ -3652,6 +3656,7 @@ under the License.
     <view-map name="FinancialAccountReconciliation" type="screen" page="component://accounting/widget/FinAccountScreens.xml#FinancialAccountReconciliation"/>
     <view-map name="EditFinAccountReconciliations" type="screen" page="component://accounting/widget/FinAccountScreens.xml#EditFinAccountReconciliations"/>
     <view-map name="ViewGlReconciliationWithTransaction" type="screen" page="component://accounting/widget/FinAccountScreens.xml#ViewGlReconciliationWithTransaction"/>
+    <view-map name="ViewGlReconciliationWithTransactionNew" type="screen" page="component://accounting/widget/FinAccountScreens.xml#ViewGlReconciliationWithTransactionNew"/>
     <view-map name="FindFinAccountReconciliations" type="screen" page="component://accounting/widget/FinAccountScreens.xml#FindFinAccountReconciliations"/>
     <view-map name="EditFinAccountTransAlt" type="screen" page="component://accounting/widget/FinAccountScreens.xml#EditFinAccountTransAlt"/>
 

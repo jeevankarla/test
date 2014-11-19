@@ -516,7 +516,8 @@ under the License.
         </row-actions>
         <auto-fields-service service-name="updateGlReconciliation" default-field-type="display" map-name="glReconciliation"/>
         <field name="glReconciliationId" title="${uiLabelMap.FinAccountReconciliationId}">
-            <hyperlink target="ViewGlReconciliationWithTransaction" description="${glReconciliation.glReconciliationId}">
+            <!--  <hyperlink target="ViewGlReconciliationWithTransaction" description="${glReconciliation.glReconciliationId}"> -->
+            <hyperlink target="ViewGlReconciliationWithTransactionNew" description="${glReconciliation.glReconciliationId}">
                 <parameter param-name="glReconciliationId" from-field="glReconciliation.glReconciliationId"/>
                 <parameter param-name="finAccountId"/>
             </hyperlink>
