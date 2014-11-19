@@ -465,11 +465,10 @@ public class HumanresService {
 	    	Map<String, Object> result = ServiceUtil.returnSuccess();
 	    	String loanId = (String) context.get("loanId");
 	    	String statusId = (String) context.get("statusId");
-	    	
 	    	Timestamp setlDate = null;
 	    	String setlDateStr = (String) context.get("setlDate");
 	        if (UtilValidate.isNotEmpty(setlDateStr)) {
-				SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+				SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 				try {
 					setlDate = new java.sql.Timestamp(sdf.parse(setlDateStr).getTime());
 				} catch (ParseException e) {
@@ -478,22 +477,18 @@ public class HumanresService {
 					Debug.logError(e, "Cannot parse date string: "	+ setlDateStr, module);
 				}
 			}
-	    	
 	    	Timestamp setlDateTime = null;
 	    	Timestamp setlDateStart = null;
 	    	Timestamp setlDateEnd = null;
-	    	
 	    	if(UtilValidate.isNotEmpty(setlDate)){
 	    		setlDateTime = UtilDateTime.toTimestamp(setlDate);
 		    	setlDateStart = UtilDateTime.getDayStart(setlDateTime);
 		    	setlDateEnd = UtilDateTime.getDayEnd(setlDateTime);
 	    	}
-	    	
 	    	GenericValue userLogin = (GenericValue) context.get("userLogin");
 			GenericValue loanDetails = null;
 	    	GenericDelegator delegator = (GenericDelegator) dctx.getDelegator();
 			LocalDispatcher dispatcher = dctx.getDispatcher();
-			
 			if(UtilValidate.isEmpty(setlDateEnd)){
 				if(UtilValidate.isNotEmpty(statusId)){
 					Timestamp fromDate = UtilDateTime.nowTimestamp();
