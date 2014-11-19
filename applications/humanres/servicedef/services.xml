@@ -1563,6 +1563,7 @@ under the License.emplpunch
        <attribute name="leaveTypeId" mode="IN" type="String" optional="true"/>
        <attribute name="fromDate" mode="IN" type="Timestamp" optional="true"/>
        <attribute name="customTimePeriodId" mode="IN" type="String" optional="true"/>
+       <attribute name="balanceDate" mode="IN" type="Date" optional="true"/>
        <attribute name="leaveBalances" mode="OUT" type="java.util.Map"/>
        <attribute name="leaveBalanceDate" mode="OUT" type="java.sql.Date"/>
        <attribute name="leaveBalanceDateStr" mode="OUT" type="String"/>
@@ -1604,6 +1605,16 @@ under the License.emplpunch
        <attribute name="maxFullDayHours" mode="IN" type="Integer" optional="false"/>
        <attribute name="maxHalfDayHours" mode="IN" type="Integer" optional="false"/>
    </service>
+    <service name="populateELBalanceCredit" engine="java" auth="true" invoke="populateELBalanceCredit" 
+        location="in.vasista.vbiz.humanres.EmplLeaveService">
+        <description>Rules Validation Check</description>
+       <attribute name="customTimePeriodId" mode="IN" type="String" optional="false"/>
+       <attribute name="leaveTypeId" mode="IN" type="String" optional="false"/>
+       <attribute name="partyId" mode="IN" type="String" optional="false"/>
+       <attribute name="allotedDays" mode="IN" type="BigDecimal" optional="false"/>
+       
+   </service>
+   
    <service name="getGeneralHoliDayOrSSWorkedDays" engine="java" auth="true" invoke="getGeneralHoliDayOrSSWorkedDays" 
         location="in.vasista.vbiz.humanres.HumanresService">
         <description>populateEmplPunch from </description>

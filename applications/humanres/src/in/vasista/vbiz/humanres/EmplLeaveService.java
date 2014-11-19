@@ -294,8 +294,10 @@ public class EmplLeaveService {
 						Date tempDate = UtilDateTime.toSqlDate(sdf.parse(chDate));
 						Map tempDayMap = FastMap.newInstance();
 						Map punMap = PunchService.emplDailyPunchReport(dctx, UtilMisc.toMap("partyId", partyId ,"punchDate",tempDate));
+						//Debug.log("punMap==================="+punMap);
 						if(UtilValidate.isNotEmpty(punMap.get("punchDataList"))){
 							Map punchDetails = (Map)(((List)punMap.get("punchDataList")).get(0));
+							//Debug.log("punchDetails==================="+punchDetails);
 							if(UtilValidate.isNotEmpty(punchDetails)){
 								String totalTime = (String)punchDetails.get("totalTime");
 								if(UtilValidate.isNotEmpty(totalTime)){
@@ -731,5 +733,71 @@ public class EmplLeaveService {
 			Debug.logError("Error while getting valid rules for leave type"+e.getMessage(), module);
 		}
 		return result;
+    }
+  //Earned Leave Half Yearly Credit
+    public static Map<String, Object> populateELBalanceCredit(DispatchContext dctx, Map context) {
+    	Map<String, Object> result = ServiceUtil.returnSuccess();
+    	GenericDelegator delegator = (GenericDelegator) dctx.getDelegator();
+		LocalDispatcher dispatcher = dctx.getDispatcher();
+		GenericValue userLogin = (GenericValue) context.get("userLogin");
+	    String customTimePeriodId = (String) context.get("customTimePeriodId");
+	    String partyId = (String) context.get("partyId");
+	    String leaveTypeId = (String) context.get("leaveTypeId");
+	    BigDecimal allotedDays = (BigDecimal) context.get("allotedDays");
+	    Locale locale = new Locale("en","IN");
+		TimeZone timeZone = TimeZone.getDefault();
+	    Map<String, Object> serviceResult = ServiceUtil.returnSuccess();
+	    Timestamp previousDayEnd = null;
+	    try {
+	        GenericValue customTimePeriod = delegator.findOne("CustomTimePeriod", UtilMisc.toMap("customTimePeriodId", customTimePeriodId),false);
+        	if (UtilValidate.isNotEmpty(customTimePeriod)) {
+        		Timestamp fromDateTime = UtilDateTime.toTimestamp(customTimePeriod.getDate("fromDate"));
+        		Timestamp thruDateTime = UtilDateTime.toTimestamp(customTimePeriod.getDate("thruDate"));
+        		previousDayEnd = UtilDateTime.getDayEnd(UtilDateTime.addDaysToTimestamp(fromDateTime, -1));
+        	}
+        }catch (GenericEntityException e) {
+        	Debug.logError(e, module);
+        	return ServiceUtil.returnError(e.getMessage());
+		}
+	    if(UtilValidate.isNotEmpty(leaveTypeId)){
+			Map getEmplLeaveBalMap = FastMap.newInstance();
+			getEmplLeaveBalMap.put("userLogin",userLogin);
+			getEmplLeaveBalMap.put("leaveTypeId",leaveTypeId);
+			getEmplLeaveBalMap.put("employeeId",partyId);
+			getEmplLeaveBalMap.put("balanceDate",new java.sql.Date(previousDayEnd.getTime()));
+			if(UtilValidate.isNotEmpty(getEmplLeaveBalMap)){
+				try{
+					serviceResult = dispatcher.runSync("getEmployeeLeaveBalance", getEmplLeaveBalMap);
+		            if (ServiceUtil.isError(serviceResult)){
+		            	Debug.logError(ServiceUtil.getErrorMessage(serviceResult), module);
+		            	return ServiceUtil.returnSuccess();
+		            } 
+	    			Map leaveBalances = (Map)serviceResult.get("leaveBalances");
+	    			BigDecimal leaveClosingBalance = (BigDecimal) leaveBalances.get(leaveTypeId);
+	    		    if(UtilValidate.isNotEmpty(customTimePeriodId) && customTimePeriodId.equals("HR_JUL_14") || customTimePeriodId.equals("HR_JAN_15")){
+	    		    	GenericValue emplLeaveBalanceStatus = delegator.findOne("EmplLeaveBalanceStatus",UtilMisc.toMap("partyId",partyId, "leaveTypeId", leaveTypeId, "customTimePeriodId",customTimePeriodId), false);
+	    		    	if(UtilValidate.isEmpty(emplLeaveBalanceStatus)){
+	    		    		if (UtilValidate.isNotEmpty(leaveClosingBalance) && UtilValidate.isNotEmpty(allotedDays)) {
+	    						leaveClosingBalance = leaveClosingBalance.add(allotedDays);
+	    						emplLeaveBalanceStatus = delegator.makeValue("EmplLeaveBalanceStatus");
+	    						emplLeaveBalanceStatus.set("customTimePeriodId",customTimePeriodId);
+	    						emplLeaveBalanceStatus.set("leaveTypeId",leaveTypeId);
+	    						emplLeaveBalanceStatus.set("partyId",partyId);
+	    						emplLeaveBalanceStatus.set("openingBalance",leaveClosingBalance);
+		    					emplLeaveBalanceStatus.create();
+	    					}
+	    				}else{
+	    					if(UtilValidate.isNotEmpty(allotedDays)){
+	    		    			emplLeaveBalanceStatus.set("allotedDays",allotedDays);
+		    					emplLeaveBalanceStatus.store();
+	    		    		}
+	    				}
+	    		    }
+				}catch(Exception e){
+					Debug.logError("Error while getting Employee Leave Balance"+e.getMessage(), module);
+				}
+			}
+	    }
+	    return result;
     }
 }
