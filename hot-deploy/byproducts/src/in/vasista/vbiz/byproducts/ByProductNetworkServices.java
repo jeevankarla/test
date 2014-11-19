@@ -11175,7 +11175,7 @@ public class ByProductNetworkServices {
 		conditionList.add(EntityCondition.makeCondition("paymentDate",EntityOperator.GREATER_THAN_EQUAL_TO, fromDate));
 		conditionList.add(EntityCondition.makeCondition("paymentDate",EntityOperator.LESS_THAN_EQUAL_TO, thruDate));
 		conditionList.add(EntityCondition.makeCondition("paymentMethodTypeId", EntityOperator.NOT_EQUAL,"CREDITNOTE_PAYIN"));
-		conditionList.add(EntityCondition.makeCondition(EntityCondition.makeCondition("statusId", EntityOperator.EQUALS, UtilMisc.toList("PMNT_RECEIVED","PMNT_CONFIRMED")), EntityOperator.OR, EntityCondition.makeCondition(EntityCondition.makeCondition("statusId",EntityOperator.EQUALS, "PMNT_VOID"),EntityOperator.AND, EntityCondition.makeCondition("chequeReturns", EntityOperator.EQUALS, "Y"))));
+		conditionList.add(EntityCondition.makeCondition(EntityCondition.makeCondition("statusId", EntityOperator.IN, UtilMisc.toList("PMNT_RECEIVED","PMNT_CONFIRMED")), EntityOperator.OR, EntityCondition.makeCondition(EntityCondition.makeCondition("statusId",EntityOperator.EQUALS, "PMNT_VOID"),EntityOperator.AND, EntityCondition.makeCondition("chequeReturns", EntityOperator.EQUALS, "Y"))));
 		EntityCondition condition = EntityCondition.makeCondition(conditionList, EntityOperator.AND);
 		try {
 			payments = delegator.findList("Payment", condition, null, UtilMisc.toList("paymentDate", "partyIdFrom"), null,false);
