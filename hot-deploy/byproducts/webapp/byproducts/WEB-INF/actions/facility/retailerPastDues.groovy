@@ -56,11 +56,16 @@ if(facility){
 		JSONObject advPayJSON = new JSONObject();
 		paymentId = eachPay.paymentId;
 		unAppAmt = unappliedAmtDetail.get(paymentId);
-		
-		advPayJSON.put("supplyDate", UtilDateTime.toDateString(eachPay.paymentDate, "dd MMM, yyyy"));
-		advPayJSON.put("amount", unAppAmt);
-		advPayJSON.put("amount", UtilFormatOut.formatCurrency(unAppAmt, context.get("currencyUomId"), locale));
-		boothUnAppPaymentList.add(advPayJSON);
+		paymentType = eachPay.paymentTypeId;
+		if(paymentType != "SECURITYDEPSIT_PAYIN"){
+			advPayJSON.put("supplyDate", UtilDateTime.toDateString(eachPay.paymentDate, "dd MMM, yyyy"));
+			advPayJSON.put("amount", unAppAmt);
+			advPayJSON.put("amount", UtilFormatOut.formatCurrency(unAppAmt, context.get("currencyUomId"), locale));
+			boothUnAppPaymentList.add(advPayJSON);
+		}
+		else{
+			unAppliedTotalAmt = unAppliedTotalAmt-unAppAmt;
+		}
 	}
 	JSONObject boothDuesMap = new JSONObject();
 	if(!unAppliedTotalAmt){
