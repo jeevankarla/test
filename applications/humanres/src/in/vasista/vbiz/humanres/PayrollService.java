@@ -285,7 +285,7 @@ public class PayrollService {
 				     result.put("periodBillingId", periodBillingId);
 					return result;
 				}
-				//For ESI Employer Contribution calculation
+				/*//For ESI Employer Contribution calculation
 				Map<String, Object> serviceResult = ServiceUtil.returnSuccess();
 				Map ESIEmployerMap = FastMap.newInstance();
 				ESIEmployerMap.put("userLogin",userLogin);
@@ -299,7 +299,7 @@ public class PayrollService {
 		            } 
 				}catch(Exception e){
 					Debug.logError("Error while getting ESI Employer Contribution"+e.getMessage(), module);
-				}
+				}*/
 				return result;
 			}
 			
@@ -391,6 +391,8 @@ public class PayrollService {
 		       				}
 							List payHeaderItemList = (List)payHeadItemResult.get("itemsList");
 							List employerItemsList = (List)payHeadItemResult.get("employerItemsList");
+							List<GenericValue> loanTypeList = delegator.findList("LoanType", null, UtilMisc.toSet("loanTypeId","payHeadTypeId"), null, null, false);
+							List loanPayHeadTypeIds = EntityUtil.getFieldListFromEntityList(loanTypeList, "payHeadTypeId", true);
 							for(int j=0;j< payHeaderItemList.size();j++){
 								Map payHeaderItemValue = (Map)payHeaderItemList.get(j);
 								if(UtilValidate.isEmpty(payHeaderItemValue.get("amount")) || (((BigDecimal)payHeaderItemValue.get("amount")).compareTo(BigDecimal.ZERO) ==0) ){
@@ -403,19 +405,35 @@ public class PayrollService {
 		       				    delegator.setNextSubSeqId(payHeaderItem, "payrollItemSeqId", 5, 1);
 					            delegator.create(payHeaderItem);
 					            //now populate item ref to loan recovery ,if the current head is loan deduction
-					            List condList = FastList.newInstance();
+					            /*List condList = FastList.newInstance();
 					            condList.add(EntityCondition.makeCondition("payHeadTypeId" ,EntityOperator.EQUALS ,payHeaderItemValue.get("payrollItemTypeId")));
 					            condList.add(EntityCondition.makeCondition("statusId" ,EntityOperator.EQUALS ,"LOAN_DISBURSED"));
 					            condList.add(EntityCondition.makeCondition("customTimePeriodId" ,EntityOperator.EQUALS ,customTimePeriodId));
 					            condList.add(EntityCondition.makeCondition("partyId" ,EntityOperator.EQUALS ,payHeader.get("partyIdFrom")));
 					            EntityCondition cond = EntityCondition.makeCondition(condList,EntityOperator.AND);
-					            List<GenericValue> revoveryList = delegator.findList("LoanAndRecoveryAndType", cond, null, null, null, false);
-					            if(UtilValidate.isNotEmpty(revoveryList)){
-					            	GenericValue entry = EntityUtil.getFirst(revoveryList);
+					            List<GenericValue> revoveryList = delegator.findList("LoanAndRecoveryAndType", cond, null, null, null, false);*/
+					           
+					            
+					            if(UtilValidate.isNotEmpty(loanPayHeadTypeIds) && loanPayHeadTypeIds.contains(payHeaderItem.getString("payrollHeaderItemTypeId"))){
+					            	 Map recoveryCtx = UtilMisc.toMap("userLogin",userLogin);
+					            	
+					            	 recoveryCtx.put("periodBillingId", periodBillingId);
+					            	 recoveryCtx.put("employeeId", payHeader.get("partyIdFrom"));
+					            	 recoveryCtx.put("timePeriodStart", monthBegin);
+					            	 recoveryCtx.put("timePeriodEnd", monthEnd);
+					            	 recoveryCtx.put("payHeadTypeId", payHeaderItem.get("payrollHeaderItemTypeId"));
+					            	 recoveryCtx.put("amount", ((BigDecimal)payHeaderItem.get("amount")).negate());
+					            	 recoveryCtx.put("payrollHeaderId", payHeaderItem.getString("payrollHeaderId"));
+					            	 recoveryCtx.put("payrollItemSeqId", payHeaderItem.getString("payrollItemSeqId"));
+					            	 result = populatePayrollLoanRecovery(dctx,recoveryCtx);
+					            	 if(ServiceUtil.isError(result)){
+					            		 generationFailed = true;
+					            	 }
+					            	/*GenericValue entry = EntityUtil.getFirst(revoveryList);
 					            	GenericValue recovery = delegator.findOne("LoanRecovery",UtilMisc.toMap("loanId",entry.getString("loanId"),"sequenceNum",entry.getString("sequenceNum")),false);
 					            	recovery.set("payrollHeaderId", payHeaderItem.getString("payrollHeaderId"));
 					            	recovery.set("payrollItemSeqId", payHeaderItem.getString("payrollItemSeqId"));
-					            	delegator.store(recovery);
+					            	delegator.store(recovery);*/
 					            	
 					            }
 					            
@@ -3471,7 +3489,7 @@ public class PayrollService {
 					}
 					
 					pli.close();
-					if(UtilValidate.isNotEmpty(periodBillingId)){
+					/*if(UtilValidate.isNotEmpty(periodBillingId)){
 						if(UtilValidate.isNotEmpty(newEntityLoanRecovery.getBigDecimal("principalAmount")))
 							closingBalance = closingBalance.subtract(newEntityLoanRecovery.getBigDecimal("principalAmount"));
 						
@@ -3481,7 +3499,7 @@ public class PayrollService {
 						newEntityLoanRecovery.set("closingBalance", closingBalance);
 						delegator.setNextSubSeqId(newEntityLoanRecovery,"sequenceNum", 5, 1);
 						delegator.createOrStore(newEntityLoanRecovery);
-					}
+					}*/
 					
 				}
 				priceInfoDescription.append("found "+ loanList.size()+" active loans");
@@ -3497,7 +3515,130 @@ public class PayrollService {
 	          result.put("priceInfos", priceInfos);
 	        return result;
 	    }
-	    
+	   public static Map<String, Object> populatePayrollLoanRecovery(DispatchContext dctx, Map<String, ? extends Object> context) {
+		     
+	        Delegator delegator = dctx.getDelegator();
+	        LocalDispatcher dispatcher = dctx.getDispatcher();
+	        Map<String, Object> result = FastMap.newInstance();
+	        Timestamp nowTimestamp = UtilDateTime.nowTimestamp();
+	        GenericValue userLogin = (GenericValue) context.get("userLogin");
+	        String payHeadTypeId = (String) context.get("payHeadTypeId");
+	        String employeeId = (String) context.get("employeeId");
+	        //String orgPartyId = (String) context.get("orgPartyId");
+	        Timestamp timePeriodStart = (Timestamp)context.get("timePeriodStart");
+			Timestamp timePeriodEnd = (Timestamp)context.get("timePeriodEnd");
+			String timePeriodId = (String) context.get("timePeriodId");
+	        Locale locale = (Locale) context.get("locale");
+	        String periodBillingId = (String)context.get("periodBillingId");
+	        //BigDecimal amount = BigDecimal.ZERO;
+	       BigDecimal amount = (BigDecimal)context.get("amount");
+	        List priceInfos =FastList.newInstance();
+	        GenericValue newEntityLoanRecovery = null;
+	        try{
+	        	StringBuilder priceInfoDescription = new StringBuilder();
+	        	
+				priceInfoDescription.append(" \n ");
+	        	List condList = FastList.newInstance();
+	        	condList.add(EntityCondition.makeCondition("partyId",EntityOperator.EQUALS, employeeId));
+	        	condList.add(EntityCondition.makeCondition("payHeadTypeId",EntityOperator.EQUALS, payHeadTypeId));
+	        	condList.add(EntityCondition.makeCondition("disbDate", EntityOperator.LESS_THAN_EQUAL_TO, timePeriodStart));
+	        	condList.add(EntityCondition.makeCondition("statusId" ,EntityOperator.EQUALS ,"LOAN_DISBURSED"));
+	        	condList.add(EntityCondition.makeCondition(EntityCondition.makeCondition("setlDate", EntityOperator.EQUALS, null), EntityOperator.OR, 
+			        		EntityCondition.makeCondition("setlDate", EntityOperator.GREATER_THAN_EQUAL_TO, timePeriodEnd)));
+	        	EntityCondition cond = EntityCondition.makeCondition(condList,EntityOperator.AND);
+	        	
+	        	List<GenericValue> loanList = delegator.findList("LoanAndType", cond, null, null, null, false);
+	        	GenericValue loan = EntityUtil.getFirst(loanList);
+				if(UtilValidate.isEmpty(loan)){
+					Debug.logError("Zero Active loan for party :"+employeeId, module);
+					return result;
+				}	
+				   DynamicViewEntity dynamicView = new DynamicViewEntity();
+				   dynamicView.addMemberEntity("LR", "LoanRecovery");
+                   dynamicView.addAliasAll("LR", null, null);
+                   dynamicView.addMemberEntity("CT", "CustomTimePeriod");
+                   dynamicView.addAliasAll("CT", null, null);
+                   dynamicView.addAlias("CT", "customTimePeriodId");
+                   dynamicView.addAlias("CT", "fromDate");
+                   dynamicView.addAlias("CT", "thruDate");
+                   dynamicView.addViewLink("LR", "CT", Boolean.FALSE, ModelKeyMap.makeKeyMapList("customTimePeriodId"));
+                   String isExternal =  loan.getString("isExternal");
+                   newEntityLoanRecovery = delegator.makeValue("LoanRecovery");
+                   newEntityLoanRecovery.set("loanId", loan.getString("loanId"));
+                   newEntityLoanRecovery.set("customTimePeriodId", timePeriodId);
+                   EntityFindOptions findOpts = new EntityFindOptions();
+                   findOpts.setFetchSize(1);
+                   findOpts.setMaxRows(1);
+                   EntityListIterator pli = delegator.findListIteratorByCondition(dynamicView, EntityCondition.makeCondition("loanId",EntityOperator.EQUALS, loan.getString("loanId")), null, null, UtilMisc.toList("-thruDate"), findOpts);
+                   List<GenericValue> loanRecoveryList = pli.getCompleteList();
+					GenericValue loanRecovery = EntityUtil.getFirst(loanRecoveryList);
+					BigDecimal closingBalance = BigDecimal.ZERO;
+					if(UtilValidate.isNotEmpty(loan.getBigDecimal("principalAmount")))
+						closingBalance = closingBalance.add(loan.getBigDecimal("principalAmount"));
+					
+					if(UtilValidate.isNotEmpty(loan.getBigDecimal("interestAmount")))
+						closingBalance = closingBalance.add(loan.getBigDecimal("interestAmount"));
+					
+					
+					if(UtilValidate.isNotEmpty(isExternal) && isExternal.equalsIgnoreCase("Y")){
+						newEntityLoanRecovery.set("principalInstNum", new Long(1));
+						//amount = loan.getBigDecimal("principalAmount");
+						newEntityLoanRecovery.set("principalAmount", amount);
+					}else{
+						if(UtilValidate.isEmpty(loanRecovery)){
+							newEntityLoanRecovery.set("principalInstNum", new Long(1));
+							//amount = loan.getBigDecimal("principalAmount").divide(new BigDecimal(loan.getLong("numPrincipalInst")), 0 ,BigDecimal.ROUND_UP);
+							newEntityLoanRecovery.set("principalAmount", amount);
+						}else{
+							closingBalance = BigDecimal.ZERO;
+							if(UtilValidate.isNotEmpty(loanRecovery.getBigDecimal("closingBalance")))
+							      closingBalance = loanRecovery.getBigDecimal("closingBalance");
+							
+							if(UtilValidate.isNotEmpty(loanRecovery.getLong("principalInstNum")) && (loanRecovery.getLong("principalInstNum")).compareTo(loan.getLong("numPrincipalInst"))<0){
+								//amount = loan.getBigDecimal("principalAmount").divide(new BigDecimal(loan.getLong("numPrincipalInst")), 0,BigDecimal.ROUND_UP);
+								newEntityLoanRecovery.set("principalInstNum", new Long(loanRecovery.getLong("principalInstNum").intValue()+1));
+								newEntityLoanRecovery.set("principalAmount", amount);
+							}else{
+								
+								if((UtilValidate.isEmpty(loanRecovery.getLong("interestInstNum")) && (loan.getLong("numInterestInst")).intValue() !=0 ) || (UtilValidate.isNotEmpty(loanRecovery.getLong("interestInstNum")) && UtilValidate.isNotEmpty(loan.getBigDecimal("interestAmount")) && ((loan.getLong("numInterestInst")).intValue() !=0 ) &&  (loanRecovery.getLong("interestInstNum")).compareTo(loan.getLong("numInterestInst"))<0)){
+									//amount = loan.getBigDecimal("interestAmount").divide(new BigDecimal(loan.getLong("numInterestInst")), 0,BigDecimal.ROUND_UP);
+									newEntityLoanRecovery.set("interestInstNum",new Long(1));
+									if(UtilValidate.isNotEmpty(loanRecovery.getLong("interestInstNum"))){
+										newEntityLoanRecovery.set("interestInstNum", new Long(loanRecovery.getLong("interestInstNum").intValue()+1));
+									}
+									newEntityLoanRecovery.set("interestAmount", amount);
+								}
+							}
+						}
+					}
+					
+					pli.close();
+					//Debug.log("periodBillingId=============="+periodBillingId);
+					if(UtilValidate.isNotEmpty(periodBillingId)){
+						
+						if(UtilValidate.isNotEmpty(newEntityLoanRecovery.getBigDecimal("principalAmount")))
+							closingBalance = closingBalance.subtract(newEntityLoanRecovery.getBigDecimal("principalAmount"));
+						
+						if(UtilValidate.isNotEmpty(newEntityLoanRecovery.getBigDecimal("interestAmount")))
+							closingBalance = closingBalance.subtract(newEntityLoanRecovery.getBigDecimal("interestAmount"));
+						
+						newEntityLoanRecovery.set("closingBalance", closingBalance);
+						delegator.setNextSubSeqId(newEntityLoanRecovery,"sequenceNum", 5, 1);
+						newEntityLoanRecovery.set("payrollHeaderId", (String)context.get("payrollHeaderId"));
+						newEntityLoanRecovery.set("payrollItemSeqId", (String)context.get("payrollItemSeqId"));
+						delegator.createOrStore(newEntityLoanRecovery);
+					}
+				
+	            } catch (Exception e) {
+	                Debug.logError(e, "Error getting rules fr" +
+	                		"om the database while calculating price , employeeId:"+employeeId, module);
+	                return ServiceUtil.returnError(e.toString());
+	            }
+	          //result.put("loanRecovery", newEntityLoanRecovery);
+	          //result.put("amount", amount);
+	          //result.put("priceInfos", priceInfos);
+	        return result;
+	    }
 	 public static Map<String, Object> getPayheadTypes(DispatchContext dctx, Map<String, ? extends Object> context) {
 
 	        Delegator delegator = dctx.getDelegator();
@@ -5147,7 +5288,7 @@ public class PayrollService {
   			
   			List conditionLis=FastList.newInstance();
   			conditionLis.add(EntityCondition.makeCondition("customTimePeriodId",EntityOperator.EQUALS,timePeriodId));
-  			conditionLis.add(EntityCondition.makeCondition("statusId",EntityOperator.NOT_IN,UtilMisc.toList("COM_CANCELLED","CANCEL_FAILED")));
+  			conditionLis.add(EntityCondition.makeCondition("statusId",EntityOperator.NOT_IN,UtilMisc.toList("COM_CANCELLED","CANCEL_FAILED","GENERATION_FAIL")));
   			EntityCondition conditon=EntityCondition.makeCondition(conditionLis,EntityOperator.AND);
   			List<GenericValue> statusList=delegator.findList("PeriodBilling",conditon, null, null,null,false);
 		  	if(UtilValidate.isEmpty(statusList)){
@@ -5915,7 +6056,7 @@ public static Map<String, Object> generateEmployerContributionPayrollBilling(Dis
 	    	firstMonthList.add("Apr");
 	    	firstMonthList.add("May");
 	    	firstMonthList.add("Jun");
-	    	
+	 
 	    	List secondMonthList=FastList.newInstance();
 	    	secondMonthList.add("Jul");
 	    	secondMonthList.add("Aug");
