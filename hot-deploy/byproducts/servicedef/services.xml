@@ -321,6 +321,19 @@
         <attribute name="routeId" mode="IN" type="String" optional="true"/>        
         <attribute name="excludeInvoiceForFacilityIds" mode="IN" type="List" optional="true"/>        
     </service>
+    <service name="runSubscriptionAutoCreateByprodOrdersInternal" engine="java" auth="true" transaction-timeout="3000"
+        location="in.vasista.vbiz.byproducts.ByProductServices" invoke="runSubscriptionAutoCreateByprodOrdersInternal" >
+        <description>Bulk create test sales orders.</description>
+        <attribute name="estimatedDeliveryDate" mode="IN" type="java.sql.Timestamp" optional="false"/>
+        <attribute name="facilityGroupId" mode="IN" type="String" optional="true"/>
+        <attribute name="shipmentId" mode="IN" type="String" optional="false"/>
+        <attribute name="stopShipList" mode="IN" type="List" optional="true"/>
+        <attribute name="subscriptionTypeId" type="String" mode="IN" optional="true"/>
+        <attribute name="routeId" mode="IN" type="String" optional="true"/>        
+        <attribute name="excludeInvoiceForFacilityIds" mode="IN" type="List" optional="true"/>
+        <attribute name="orderCounter" mode="OUT" type="Integer" optional="true"/>         
+    </service>
+    
     <service name="cancelByProdShipment" engine="java" auth="true" transaction-timeout="300"
         location="in.vasista.vbiz.byproducts.ByProductServices" invoke="cancelByProdShipment">
         <description>Create Shipment.</description>        

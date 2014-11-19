@@ -485,8 +485,59 @@ public class ByProductServices {
         result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_SUCCESS);
         return result;
     }
-	
-	public static Map<String, Object> runSubscriptionAutoCreateByprodOrders(DispatchContext dctx, Map<String,  Object> context) {
+ public static Map<String, Object> runSubscriptionAutoCreateByprodOrders(DispatchContext dctx, Map<String,  Object> context) {
+        Delegator delegator = dctx.getDelegator();
+        LocalDispatcher dispatcher = dctx.getDispatcher();
+        List shipmentIds = (List) context.get("shipmentIds");
+        GenericValue userLogin = (GenericValue) context.get("userLogin");
+        Locale locale = (Locale) context.get("locale");
+        Map<String ,Object>result = ServiceUtil.returnSuccess();
+        int orderCounter = 0;
+        double elapsedSeconds;
+        Timestamp startTimestamp = UtilDateTime.nowTimestamp();
+        for(int shipNo=0 ; shipNo <shipmentIds.size() ;  shipNo++){
+     	    String shipmentId = (String)shipmentIds.get(shipNo);
+     	    GenericValue shipment= null;
+     	   String routeId = null;
+     	   try{
+     	    	shipment=delegator.findOne("Shipment",UtilMisc.toMap("shipmentId", shipmentId), false);
+	           	if (shipment == null) {
+	           		Debug.logError("Shipment does not exist " + shipmentId, module);
+	           	}
+	           	
+	            routeId = shipment.getString("routeId");
+	     	    Map runSubscriptionCtx = UtilMisc.toMap("userLogin",userLogin);
+	     	    runSubscriptionCtx.putAll(context);
+	     	    runSubscriptionCtx.remove("shipmentIds");
+	     	    runSubscriptionCtx.put("shipmentId",shipmentId);
+		   		result = dispatcher.runSync("runSubscriptionAutoCreateByprodOrdersInternal",runSubscriptionCtx,3000,true);
+	   		    if (ServiceUtil.isError(result)) {
+	   			   String errMsg =  ServiceUtil.getErrorMessage(result);
+    			   shipment.set("statusId", "GENERATION_FAIL");
+    			   shipment.store();
+	   			   Debug.logError(errMsg +" #### falid trucksheet for routeId::"+routeId, module);
+	   			 
+	   		    }else{
+	   		       orderCounter += ((Integer)result.get("orderCounter")).intValue();
+				   elapsedSeconds = UtilDateTime.getInterval(startTimestamp, UtilDateTime.nowTimestamp())/1000;
+				   Debug.logImportant("Route  '"+routeId+"' Completed " + orderCounter + " orders [ in " + elapsedSeconds + " seconds]", module);
+	   		    }
+	   		  
+     	    }catch(Exception e){
+     	    	 String errMsg =  e.toString();
+	     	     shipment.set("statusId", "GENERATION_FAIL");
+	     	     try{
+	     	    	shipment.store(); 
+	     	     }catch(Exception e1){
+	     	    	Debug.logError(errMsg +"falild trucksheet for routeId::"+routeId, module);
+	     	     }
+	 			 
+	   			 Debug.logError(errMsg +"falild trucksheet for routeId::"+routeId, module);
+     	    }
+        }
+        return ServiceUtil.returnSuccess();
+  }    
+ public static Map<String, Object> runSubscriptionAutoCreateByprodOrdersInternal(DispatchContext dctx, Map<String,  Object> context) {
         Delegator delegator = dctx.getDelegator();
         LocalDispatcher dispatcher = dctx.getDispatcher();       
         GenericValue userLogin = (GenericValue) context.get("userLogin");
@@ -496,7 +547,7 @@ public class ByProductServices {
         Timestamp nowTimeStamp=UtilDateTime.nowTimestamp();
         List stopShipList = (List)context.get("stopShipList");
         Timestamp estimatedDeliveryDate = (Timestamp) context.get("estimatedDeliveryDate");
-        List shipmentIds = (List) context.get("shipmentIds");
+        //List shipmentIds = (List) context.get("shipmentIds");
         List excludeInvoiceForFacilityIds = (List) context.get("excludeInvoiceForFacilityIds");
         //String facilityGroupId = (String) context.get("facilityGroupId");
        // String routeId = (String) context.get("routeId");
@@ -516,8 +567,7 @@ public class ByProductServices {
       		Debug.logError(e, "Error fetching PO Numbers", module);
       		return ServiceUtil.returnError("Error fetching PO Numbers : " + e);         	
        }
-       for(int shipNo=0 ; shipNo <shipmentIds.size() ;  shipNo++){
-    	   String shipmentId = (String)shipmentIds.get(shipNo);
+    	   String shipmentId = (String)context.get("shipmentId");
     	   GenericValue shipment;
            try {
         	    beganTransaction = TransactionUtil.begin(72000);
@@ -567,7 +617,6 @@ public class ByProductServices {
                //::TODO:: set shipment status
            }
            
-           
            List indentedProduct = EntityUtil.getFieldListFromEntityList(subscriptionProductsList,"productId", true);
            List prodQtyList = FastList.newInstance();
            for(int i=0;i< indentedProduct.size();i++){
@@ -594,19 +643,19 @@ public class ByProductServices {
      		  if (ServiceUtil.isError(result)) {
      			  String errMsg =  ServiceUtil.getErrorMessage(result);
      			  Debug.logError(errMsg , module);
-     			 shipment.store();
-     			 shipment.set("statusId", "GENERATION_FAIL");
+     			 /*shipment.store();
+     			 shipment.set("statusId", "GENERATION_FAIL");*/
                  return result;
      		  }
      		  
      	  }catch (Exception e) {
      		  	Debug.logError(e, "Problem updating ItemIssuance for Route " + routeId, module); 
-     		  	shipment.set("statusId", "GENERATION_FAIL");
+     		  	/*shipment.set("statusId", "GENERATION_FAIL");
      		  	try{
      		  		shipment.store();
      		  	}catch (Exception ex) {
 					// TODO: handle exception
-				}
+				}*/
                 return ServiceUtil.returnError(e.toString());
      	  }	
            
@@ -646,10 +695,10 @@ public class ByProductServices {
                			totalQuantity = totalQuantity.add(quantity);
                		}*/
                		orderCounter++;
-               		if ((orderCounter % 10) == 0) {
+               		/*if ((orderCounter % 10) == 0) {
                			elapsedSeconds = UtilDateTime.getInterval(startTimestamp, UtilDateTime.nowTimestamp())/1000;
                			Debug.logImportant("Completed " + orderCounter + " orders [ in " + elapsedSeconds + " seconds]", module);
-               		}
+               		}*/
                		orderSubProdsList.clear();
                		tempSubId = subId;
                		tempTypeId = typeId;
@@ -667,6 +716,7 @@ public class ByProductServices {
    				if (ServiceUtil.isError(result)) {
    	    			Debug.logError("Unable to generate order: " + ServiceUtil.getErrorMessage(result), module);
    	    			generationFailed = true;
+   	    			return result;
    	    		}  
 
    			/*BigDecimal quantity = (BigDecimal)result.get("quantity");
@@ -762,6 +812,7 @@ public class ByProductServices {
 		  		  	if (ServiceUtil.isError(result)) {
 		  		  		String errMsg =  ServiceUtil.getErrorMessage(result);
 		  		  		Debug.logError(errMsg , module);
+		  		  		return result;
 		  		  	}
       		  	}
     	  		
@@ -823,25 +874,24 @@ public class ByProductServices {
     	  		  	}*/
             }catch(Exception e){
          	   	Debug.logError(e, "Failed to calculate Crates For Shipment" + shipmentId, module);
-         		shipment.set("statusId", "GENERATION_FAIL");
+         		/*shipment.set("statusId", "GENERATION_FAIL");
      		  	try{
      		  		shipment.store();
      		  	}catch (Exception ex) {
 					// TODO: handle exception
-				}
+				}*/
            		return ServiceUtil.returnError("Failed to calculate Crates For Shipment" + shipmentId + ": " + e);
             }
         }
-        
-        
-       } // shipment list
        
-       if(!generationFailed){
+       /*if(!generationFailed){
     	   elapsedSeconds = UtilDateTime.getInterval(startTimestamp, UtilDateTime.nowTimestamp())/1000;
      	   Debug.logImportant("Completed " + orderCounter + " orders [ in " + elapsedSeconds + " seconds]", module);
-       }
-      
-       return ServiceUtil.returnSuccess();
+       }*/
+       
+       result = ServiceUtil.returnSuccess();
+       result.put("orderCounter", orderCounter);
+       return result;
     }
 	
 	public static Map<String, Object> createSalesOrderSubscriptionProductType(DispatchContext dctx, Map<String, ? extends Object> context) {
