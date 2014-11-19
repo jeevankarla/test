@@ -1886,6 +1886,7 @@ public class PartyServices {
 			List conditionList=FastList.newInstance();
 			conditionList.add(EntityCondition.makeCondition("partyIdTo", EntityOperator.EQUALS, partyId));
 			conditionList.add(EntityCondition.makeCondition("deductionTypeId", EntityOperator.EQUALS, deductionTypeId));
+			conditionList.add(EntityCondition.makeCondition("thruDate", EntityOperator.EQUALS, null));
 			EntityCondition condition = EntityCondition.makeCondition(conditionList,EntityOperator.AND);
 			List<GenericValue> partyDeductionList = FastList.newInstance();
 			partyDeductionList = delegator.findList("PartyDeduction", condition, null,null, null, false);
