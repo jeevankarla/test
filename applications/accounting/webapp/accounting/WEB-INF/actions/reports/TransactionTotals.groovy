@@ -262,7 +262,7 @@ if (allTransactionTotals) {
                         timePeriodAndExprs.add(EntityCondition.makeCondition("glAccountId", EntityOperator.EQUALS, allTransactionTotal.glAccountId));
                         timePeriodAndExprs.add(EntityCondition.makeCondition("customTimePeriodId", EntityOperator.EQUALS, lastClosedTimePeriod.customTimePeriodId));
                         lastTimePeriodHistory = EntityUtil.getFirst(delegator.findList("GlAccountAndHistory", EntityCondition.makeCondition(timePeriodAndExprs, EntityOperator.AND), null, null, null, false));
-                        if (lastTimePeriodHistory) {
+						if (lastTimePeriodHistory) {
                             accountMap = UtilMisc.toMap("glAccountId", lastTimePeriodHistory.glAccountId, "accountCode", lastTimePeriodHistory.accountCode, "accountName", lastTimePeriodHistory.accountName, "balance", lastTimePeriodHistory.getBigDecimal("endingBalance"), "openingD", lastTimePeriodHistory.getBigDecimal("postedDebits"), "openingC", lastTimePeriodHistory.getBigDecimal("postedCredits"), "D", BigDecimal.ZERO, "C", BigDecimal.ZERO);
                         }
                     }
@@ -280,7 +280,7 @@ if (allTransactionTotals) {
             List mainAndExprs = FastList.newInstance();
             mainAndExprs.add(EntityCondition.makeCondition("isPosted", EntityOperator.EQUALS, "N"));
             mainAndExprs.add(EntityCondition.makeCondition("glAccountId", EntityOperator.EQUALS, allTransactionTotal.glAccountId));
-			andCond = EntityCondition.makeCondition(andExprs, EntityOperator.AND);			
+			andCond = EntityCondition.makeCondition(mainAndExprs, EntityOperator.AND);
 			List transactionTotals = EntityUtil.filterByCondition(allOpeningTransactionTotals, andCond);
             transactionTotals.each { transactionTotal ->
                 UtilMisc.addToBigDecimalInMap(accountMap, "opening" + transactionTotal.debitCreditFlag, transactionTotal.amount);
