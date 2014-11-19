@@ -291,9 +291,6 @@
                 <set field="noConditionFind" value="Y"/>
                 <!-- <field name="noConditionFind"><hidden value="Y"/> -->
                 <set field="screenFlag" value="BANKACCOUNT" /> 
-                
-                
-                
                 <service service-name="acctgFinAcctPermissionCheck" result-map="permResult">
                     <field-map field-name="mainAction" value="FINACCOUNT_EDIT"/>
                 </service>
@@ -1765,6 +1762,7 @@
                 <entity-one entity-name="FinAccount"  value-field="finAccount"/>
                 <set field="glReconciliationId" from-field="parameters.glReconciliationId"/> 
                 <set field="finAccountTransId" from-field="parameters.finAccountTransId"/>
+                  <script location="component://accounting/webapp/accounting/WEB-INF/actions/finaccounttrans/FindFinAccountTrans.groovy"/>
             </actions>
 			<widgets>
 				<platform-specific> 
@@ -2850,7 +2848,7 @@
 		<section>
 			<actions>
 				<set field="viewSize" value="99999" />
-				 <script location="component://accounting/webapp/accounting/WEB-INF/actions/EditFinaccount.groovy"/>
+				 <script location="component://accounting/webapp/accounting/WEB-INF/actions/EditFinaccount.groovy"/> 
                 <set field="parameters.glReconciliationId" value="${glReconciliationId}"/><!-- instead of Form we are setting in Screen  -->
                 <set field="parameters.finAccountId" value="${finAccountId}"/>
                  <set field="parameters.statusId" value="FINACT_TRNS_CREATED"/>
@@ -2879,6 +2877,57 @@
 				<section>
 					<widgets>
 					  <include-form name="ReconcilationFormListCSV" location="component://accounting/widget/TreasurerPortalForms.xml"/>
+					</widgets>
+				</section>
+			</widgets>
+		</section>
+	</screen>
+<screen name="FinAccountTransForReconciledCSV">
+		<section>
+			<actions>
+			 <set field="tabButtonItem" value="FindFinAccountReconciliations"/>
+                <set field="titleProperty" value="AccountingEditFinAccountReconciliations"/>
+                <set field="finAccountId" from-field="parameters.finAccountId"/>
+                <set field="glReconciliationId" from-field="parameters.glReconciliationId"/>
+                <service service-name="acctgFinAcctPermissionCheck" result-map="permResult">
+                    <field-map field-name="mainAction" value="FINACCOUNTREC_EDIT"/>
+                </service>
+                <set field="hasFinRecEditPermission" from-field="permResult.hasPermission"/> 
+                <entity-one entity-name="FinAccount" value-field="finAccount"/>
+                <entity-one entity-name="GlReconciliation" value-field="currentGlReconciliation"/>
+                <entity-condition entity-name="GlReconciliation" list="glReconciliationList">
+                    <condition-list combine="and">
+                        <condition-expr field-name="reconciledDate" operator="less" from-field="currentGlReconciliation.reconciledDate" ignore-if-empty="true"/>
+                        <condition-expr field-name="glAccountId" operator="equals" from-field="finAccount.postToGlAccountId"/>
+                    </condition-list>
+                    <order-by field-name="reconciledDate DESC"/>
+                </entity-condition>
+                <set field="previousGlReconciliation" from-field="glReconciliationList[0]"/>
+                <service service-name="getFinAccountTransListAndTotals" result-map="transactionTotalAmount"/>
+                <set field="finAccountTransList" from-field="transactionTotalAmount.finAccountTransList" type="List"/>
+                <set field="finAccountTransIds" value="${groovy:org.ofbiz.entity.util.EntityUtil.getFieldListFromEntityList(finAccountTransList, 'finAccountTransId', true);}" type="List"/>
+                <entity-condition entity-name="FinAccountTrans" list="finAccountTransactions">
+                    <condition-list>
+                        <condition-expr field-name="finAccountTransId" operator="in" from-field="finAccountTransIds"/>
+                        <condition-expr field-name="statusId" value="FINACT_TRNS_CREATED"/>
+                    </condition-list>
+                </entity-condition>
+                <service service-name="isGlReconciliationReconciled" result-map="reconciledMap"/>
+                <set field="isReconciled" from-field="reconciledMap.isReconciled"/>
+                <service service-name="getReconciliationClosingBalance" result-map="currentRecnciliationClosingBalance"/>
+                <set field="currentClosingBalance" from-field="currentRecnciliationClosingBalance.closingBalance"/>
+                <set field="previousGlReconciliationId" from-field="previousGlReconciliation.glReconciliationId" default-value="${glReconciliationId}"/>
+                <service service-name="getReconciliationClosingBalance" result-map="previousReconciliationClosingBalance">
+                    <field-map field-name="glReconciliationId" from-field="previousGlReconciliationId"/>
+                </service>
+                <set field="previousClosingBalance" from-field="previousReconciliationClosingBalance.closingBalance"/>
+                <script location="component://accounting/webapp/accounting/WEB-INF/actions/finaccounttrans/FindFinAccountTrans.groovy"/> 
+			</actions>
+			<widgets>
+			<label text="${parameters}"></label>
+				<section>
+					<widgets>
+					  <include-form name="ReconcilationFormBatchListCSV" location="component://accounting/widget/TreasurerPortalForms.xml"/>
 					</widgets>
 				</section>
 			</widgets>

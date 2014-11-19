@@ -536,7 +536,13 @@ under the License.
             </hyperlink>
         </field>
         <field name="reconciledBalance"><display type="currency" currency="${currencyUomId}"></display></field>
-        <field name="openingBalance"><display type="currency" currency="${currencyUomId}"></display></field>
+        <field name="openingBalance"><display type="currency" currency="${currencyUomId}"></display></field>        
+        <field name="exporasCSV" title="Export" widget-style="buttontext">
+            <hyperlink target="FinAccountTransForReconciled.csv" target-type="inter-app" description="ExportCSV">
+                <parameter param-name="glReconciliationId" from-field="glReconciliation.glReconciliationId"/>
+                <parameter param-name="finAccountId"/>
+            </hyperlink>
+        </field>
     </form>
     <form name="FindFinancialAccountReconciliation" type="single" target="${targetReuest}">
         <field name="finAccountId"><hidden value="${parameters.finAccountId}"/></field>
