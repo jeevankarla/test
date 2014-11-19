@@ -847,8 +847,8 @@ public class PayrollService {
 	 				String paymentId = paymentApplication.getString("paymentId");
 	 				Map paymentStatusMap = UtilMisc.toMap("userLogin", userLogin);
 	 				paymentStatusMap.put("paymentId", paymentId);
-	 				paymentStatusMap.put("statusId", "PMNT_VOID");
-	 				result = dispatcher.runSync("setPaymentStatus", paymentStatusMap);
+	 				//paymentStatusMap.put("statusId", "PMNT_VOID");
+	 				result = dispatcher.runSync("voidPayment", paymentStatusMap);
 	 				if(ServiceUtil.isError(result)){
 	 		 			 Debug.logError("Error while calculating price service:"+result, module);
 	 				     return ServiceUtil.returnError(ServiceUtil.getErrorMessage(result));
