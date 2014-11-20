@@ -56,6 +56,10 @@ if(UtilValidate.isNotEmpty(parameters.noConditionFind)){
 	approverPartyId = context.approverPartyId;
 }
 
+if(UtilValidate.isNotEmpty(parameters.emplLeaveApplId)){
+	conditionList.add(EntityCondition.makeCondition("emplLeaveApplId", EntityOperator.EQUALS, parameters.emplLeaveApplId));
+}
+
 if(UtilValidate.isNotEmpty(parameters.partyId)){
 	conditionList.add(EntityCondition.makeCondition("partyId", EntityOperator.EQUALS, parameters.partyId));
 }

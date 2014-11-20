@@ -24,6 +24,7 @@
         odd-row-style="header-row" default-table-style="basic-table">
         <actions>
         </actions>
+        <field name="emplLeaveApplId" title="Leave Appl Id"><text></text></field>
         <field name="partyId" title="Employee Id"><lookup target-form-name="LookupEmployeeName"/></field>
         <!-- <field name="partyId" title="${uiLabelMap.PartyPartyId}" use-when="!hasEmplLeaveApprovePermission"><hidden/></field> -->
         <field name="leaveTypeId">
@@ -64,6 +65,7 @@
         <field name="searchButton" title="${uiLabelMap.CommonFind}" widget-style="smallSubmit"><submit button-type="button"/></field>
         <sort-order>
 		<field-group title="" initially-collapsed="false">
+		<sort-field name="emplLeaveApplId"/>
 		<sort-field name="partyId"/>
 		<sort-field name="leaveTypeId"/>
 		<sort-field name="emplLeaveReasonTypeId"/>
