@@ -104,13 +104,13 @@ taxDetails5pt5Map=[:];
 taxDetails14pt5Map=[:];
 
 
-tax5pt5TotalMap=[:];
-tax5pt5TotalMap["invTotalVal"]=BigDecimal.ZERO;
-tax5pt5TotalMap["vatAmount"]=BigDecimal.ZERO;
-tax14pt5TotalMap=[:];
-tax14pt5TotalMap["invTotalVal"]=BigDecimal.ZERO;
-tax14pt5TotalMap["vatAmount"]=BigDecimal.ZERO;
+purchaseGrandTotMap=[:];
+purchaseGrandTotMap["DR"]=BigDecimal.ZERO;
+purchaseGrandTotMap["CR"]=BigDecimal.ZERO;
+purchaseGrandTotMap["total"]=BigDecimal.ZERO;
 
+
+prchaseCategoryDetaildMap=[:];
 prchaseCategorySummeryMap=[:];
 
 		try {
@@ -140,15 +140,34 @@ prchaseCategorySummeryMap=[:];
 		purchaseCatMap["DR"]=BigDecimal.ZERO;
 		purchaseCatMap["CR"]=BigDecimal.ZERO;
 		purchaseCatMap["total"]=BigDecimal.ZERO;
+		purchasExemptList=[];
 		
 		invoiceItemsIter.each{invoiceItem->
 			invTotalVal=org.ofbiz.accounting.invoice.InvoiceWorker.getPurchaseInvoiceItemTotal(invoiceItem,true);
 			//invTotalVal=org.ofbiz.accounting.invoice.InvoiceWorker.getInvoiceItemTotal(invoiceItem);
-			purchaseCatMap["DR"]+=invTotalVal
-			purchaseCatMap["total"]+=invTotalVal
+			purchaseCatMap["DR"]+=invTotalVal;
+			purchaseCatMap["total"]+=invTotalVal;
 			//Debug.log("=invoiceItem=="+invoiceItem);
+			purchaseGrandTotMap["DR"]+=invTotalVal;
+			purchaseGrandTotMap["total"]+=invTotalVal;
+			
+			innerTaxItemMap=[:];
+			innerTaxItemMap["invoiceDate"]=invoiceItem.invoiceDate;
+			innerTaxItemMap["invoiceId"]=invoiceItem.invoiceId;
+			innerTaxItemMap["partyId"]=invoiceItem.partyIdFrom;
+			innerTaxItemMap["tinNumber"]="";
+			innerTaxItemMap["vchrType"]="Purchase";
+			innerTaxItemMap["crOrDbId"]="D";
+			//invTotalVal=org.ofbiz.accounting.invoice.InvoiceWorker.getInvoiceTotal(delegator,invoiceItem.invoiceId);
+			//invTotalVal=invTotalVal-vatRevenue;
+			innerTaxItemMap["invTotalVal"]=invTotalVal;
+			purchasExemptList.addAll(innerTaxItemMap);
+			//innerTaxItemMap["vatAmount"]=vatRevenue;
+			
 		}
-		prchaseCategorySummeryMap["Purchase-Exempt"]=purchaseCatMap;
+		prchaseCategoryDetaildMap["Purchase-Exempt-Total"]=purchasExemptList;
+		prchaseCategorySummeryMap["Purchase-Exempt-Total"]=purchaseCatMap;
+		
 		if (invoiceItemsIter != null) {
 			try {
 				invoiceItemsIter.close();
@@ -191,6 +210,9 @@ prchaseCategorySummeryMap=[:];
 				//invTotalVal=org.ofbiz.accounting.invoice.InvoiceWorker.getInvoiceItemTotal(invoiceItem);
 				purchaseInterCatMap["DR"]+=invTotalVal;
 				purchaseInterCatMap["total"]+=invTotalVal;
+				
+				purchaseGrandTotMap["DR"]+=invTotalVal;
+				purchaseGrandTotMap["total"]+=invTotalVal;
 			}
 			//Debug.log("=invoiceItem=="+invoiceItem);
 		}
@@ -243,6 +265,9 @@ prchaseCategorySummeryMap=[:];
 				//invTotalVal=org.ofbiz.accounting.invoice.InvoiceWorker.getInvoiceItemTotal(invoiceItem);
 				purchaseDiselExCatMap["DR"]+=invTotalVal
 				purchaseDiselExCatMap["total"]+=invTotalVal
+				
+				purchaseGrandTotMap["DR"]+=invTotalVal;
+				purchaseGrandTotMap["total"]+=invTotalVal;
 		}
 		prchaseCategorySummeryMap["Purchase-DieselExempt"]=purchaseDiselExCatMap;
 		if (invoiceItemsIter != null) {
@@ -288,6 +313,9 @@ prchaseCategorySummeryMap=[:];
 				invTotalVal=org.ofbiz.accounting.invoice.InvoiceWorker.getPurchaseInvoiceItemTotal(invoiceItem,true);
 				purchaseDiselInterCatMap["DR"]+=invTotalVal;
 				purchaseDiselInterCatMap["total"]+=invTotalVal;
+				
+				purchaseGrandTotMap["DR"]+=invTotalVal;
+				purchaseGrandTotMap["total"]+=invTotalVal;
 			}
 			//Debug.log("=invoiceItem=="+invoiceItem);
 		}
@@ -333,6 +361,9 @@ prchaseCategorySummeryMap=[:];
 				invTotalVal=org.ofbiz.accounting.invoice.InvoiceWorker.getPurchaseInvoiceItemTotal(invoiceItem,false);
 				purchaseInterUnitStTrMap["DR"]+=invTotalVal;
 				purchaseInterUnitStTrMap["total"]+=invTotalVal;
+				
+				purchaseGrandTotMap["DR"]+=invTotalVal;
+				purchaseGrandTotMap["total"]+=invTotalVal;
 			//}
 			//Debug.log("=invoiceItem=="+invoiceItem);
 		}
@@ -378,6 +409,9 @@ prchaseCategorySummeryMap=[:];
 				invTotalVal=org.ofbiz.accounting.invoice.InvoiceWorker.getPurchaseInvoiceItemTotal(invoiceItem,true);
 				purchaseUnionWsdMap["DR"]+=invTotalVal;
 				purchaseUnionWsdMap["total"]+=invTotalVal;
+				
+				purchaseGrandTotMap["DR"]+=invTotalVal;
+				purchaseGrandTotMap["total"]+=invTotalVal;
 			//}
 			//Debug.log("=invoiceItem=="+invoiceItem);
 		}
@@ -398,7 +432,10 @@ prchaseCategorySummeryMap=[:];
 		Map tax14pt5TotalMap=context.get("tax14pt5TotalMap");
 		if(UtilValidate.isNotEmpty(tax14pt5TotalMap)){
 			purchaseAt14pt5Map["DR"]+=(tax14pt5TotalMap.get("invTotalVal")+tax14pt5TotalMap.get("vatAmount"));
-			purchaseAt14pt5Map["total"]+=(tax14pt5TotalMap.get("invTotalVal")+tax14pt5TotalMap.get("vatAmount"))
+			purchaseAt14pt5Map["total"]+=(tax14pt5TotalMap.get("invTotalVal")+tax14pt5TotalMap.get("vatAmount"));
+			
+			purchaseGrandTotMap["DR"]+=(tax14pt5TotalMap.get("invTotalVal")+tax14pt5TotalMap.get("vatAmount"));
+			purchaseGrandTotMap["total"]+=(tax14pt5TotalMap.get("invTotalVal")+tax14pt5TotalMap.get("vatAmount"));
 		}
 		prchaseCategorySummeryMap["Purchase-14.5%VAT"]=purchaseAt14pt5Map;
 		
@@ -410,12 +447,13 @@ prchaseCategorySummeryMap=[:];
 		Map tax5pt5TotalMap=context.get("tax5pt5TotalMap");
 		if(UtilValidate.isNotEmpty(tax5pt5TotalMap)){
 			purchaseAt5pt5Map["DR"]+=(tax5pt5TotalMap.get("invTotalVal")+tax5pt5TotalMap.get("vatAmount"));
-			purchaseAt5pt5Map["total"]+=(tax5pt5TotalMap.get("invTotalVal")+tax5pt5TotalMap.get("vatAmount"))
+			purchaseAt5pt5Map["total"]+=(tax5pt5TotalMap.get("invTotalVal")+tax5pt5TotalMap.get("vatAmount"));
+			
+			purchaseGrandTotMap["DR"]+=(tax5pt5TotalMap.get("invTotalVal")+tax5pt5TotalMap.get("vatAmount"));
+			purchaseGrandTotMap["total"]+=(tax5pt5TotalMap.get("invTotalVal")+tax5pt5TotalMap.get("vatAmount"));
 		}
 		prchaseCategorySummeryMap["Purchase-5.5%VAT"]=purchaseAt5pt5Map;
 		
-		Debug.log("=tax14pt5TotalMap=="+context.get("tax14pt5TotalMap"));
-		Debug.log("=tax5pt5TotalMap=="+context.get("tax5pt5TotalMap"));
 		
 		//fright Total Valu
 		purchaseFreightMap=[:];
@@ -445,10 +483,15 @@ prchaseCategorySummeryMap=[:];
 				invTotalVal=org.ofbiz.accounting.invoice.InvoiceWorker.getInvoiceItemTotal(invoiceItem);
 				purchaseFreightMap["DR"]+=invTotalVal;
 				purchaseFreightMap["total"]+=invTotalVal;
+				
+				purchaseGrandTotMap["DR"]+=invTotalVal;
+				purchaseGrandTotMap["total"]+=invTotalVal;
 			//}
 			//Debug.log("=invoiceItem=="+invoiceItem);
 		}
 		prchaseCategorySummeryMap["Purchase-FreightCharges"]=purchaseFreightMap;
+		
+		prchaseCategorySummeryMap["Total"]=purchaseGrandTotMap;
 		
 		if (invoiceItemsIter != null) {
 			try {
@@ -457,9 +500,11 @@ prchaseCategorySummeryMap=[:];
 				Debug.logWarning(e, module);
 			}
 		}
-		Debug.log("=prchaseCategorySummeryMap=="+prchaseCategorySummeryMap);
+		//Debug.log("=prchaseCategorySummeryMap=="+prchaseCategorySummeryMap);
 		
 		context.prchaseCategorySummeryMap = prchaseCategorySummeryMap;
+		context.prchaseCategoryDetaildMap = prchaseCategoryDetaildMap;
+		
 		
 		taxParty = delegator.findOne("Party", UtilMisc.toMap("partyId", "TAX4"), false);
 		taxAuthority = delegator.findOne("TaxAuthority", UtilMisc.toMap("taxAuthGeoId","IND", "taxAuthPartyId","TAX4"), false);
