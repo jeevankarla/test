@@ -57,7 +57,26 @@ if(totalDays > 32){
 	context.errorMessage = "You Cannot Choose More Than 31 Days";
 	return;
 }
+exprList=[];
+exprList.add(EntityCondition.makeCondition("glAccountTypeId", EntityOperator.EQUALS, "PURCHASE_ACCOUNT"));
+//exprList.add(EntityCondition.makeCondition("productCategoryId", EntityOperator.EQUALS, product.primaryProductCategoryId));
+condition = EntityCondition.makeCondition(exprList, EntityOperator.AND);
+productcatList = delegator.findList("ProductCategoryGlAccount", condition, null, null, null, false);
+productCategoryId = EntityUtil.getFieldListFromEntityList(productcatList, "productCategoryId", true);
+//get product from ProductCategory
+productCategoryMember = delegator.findList("ProductCategoryAndMember", EntityCondition.makeCondition("productCategoryId", EntityOperator.IN, productCategoryId), null, null, null, false);
+productCatMap=[:]
+productCategoryMember.each{prodCatMember ->
+	prodCatMember.productId
+	productCatMap[prodCatMember.productId] = prodCatMember.productCategoryId;
+}
+productIds = EntityUtil.getFieldListFromEntityList(productCategoryMember, "productId", true);
 
+prodGlCategoryList=[];
+if(UtilValidate.isNotEmpty(productcatList)){
+	prodGlCategoryList =EntityUtil.getFieldListFromEntityList(productcatList, "productCategoryId", true) ;
+}
+invoiceTotals = SalesInvoiceServices.getPeriodSalesInvoiceTotals(dctx, [isPurchaseInvoice:true, isQuantityLtrs:true,isQuantityLtrs:true,fromDate:dayBegin, thruDate:dayEnd]).get("invoiceIdTotals");
 // Purchase abstract Sales report
 reportTypeFlag = parameters.reportTypeFlag;
 if(UtilValidate.isNotEmpty(reportTypeFlag) && reportTypeFlag == "PurchaseDetails"){
@@ -65,19 +84,9 @@ if(UtilValidate.isNotEmpty(reportTypeFlag) && reportTypeFlag == "PurchaseDetails
 		invoiceDtlsMap = [:];
 		prodCatAnalysisMap =FastMap.newInstance();
 		finalMap=FastMap.newInstance();
-		exprList=[];
-		exprList.add(EntityCondition.makeCondition("glAccountTypeId", EntityOperator.EQUALS, "PURCHASE_ACCOUNT"));
-		//exprList.add(EntityCondition.makeCondition("productCategoryId", EntityOperator.EQUALS, product.primaryProductCategoryId));
-		condition = EntityCondition.makeCondition(exprList, EntityOperator.AND);
-		productcatList = delegator.findList("ProductCategoryGlAccount", condition, null, null, null, false);
-		prodGlCategoryList=[];
-		if(UtilValidate.isNotEmpty(productcatList)){
-			prodGlCategoryList =EntityUtil.getFieldListFromEntityList(productcatList, "productCategoryId", true) ;
-		}
-		
-		salesInvoiceTotals = SalesInvoiceServices.getPeriodSalesInvoiceTotals(dctx, [isPurchaseInvoice:true, isQuantityLtrs:true,isQuantityLtrs:true,fromDate:dayBegin, thruDate:dayEnd]);
+		/*salesInvoiceTotals = SalesInvoiceServices.getPeriodSalesInvoiceTotals(dctx, [isPurchaseInvoice:true, isQuantityLtrs:true,isQuantityLtrs:true,fromDate:dayBegin, thruDate:dayEnd]);
 		if(UtilValidate.isNotEmpty(salesInvoiceTotals)){
-			invoiceTotals = salesInvoiceTotals.get("invoiceIdTotals");
+			invoiceTotals = salesInvoiceTotals.get("invoiceIdTotals");*/
 			if(UtilValidate.isNotEmpty(invoiceTotals)){
 				invoiceTotals.each { invoice ->
 					if(UtilValidate.isNotEmpty(invoice)){
@@ -108,7 +117,7 @@ if(UtilValidate.isNotEmpty(reportTypeFlag) && reportTypeFlag == "PurchaseDetails
 						
 						if(UtilValidate.isNotEmpty(prodTotals)){
 							prodTotals.each{productValue ->
-								virtualProductId="";
+								prodCategoryId="";
 								if(UtilValidate.isNotEmpty(productValue)){
 									currentProduct = productValue.getKey();
 									product = delegator.findOne("Product", [productId : currentProduct], false);
@@ -119,11 +128,11 @@ if(UtilValidate.isNotEmpty(reportTypeFlag) && reportTypeFlag == "PurchaseDetails
 									if(UtilValidate.isNotEmpty(prodInvoiceItemList)){
 										prodInvoiceItem=prodInvoiceItemList.getFirst();
 									}
-									Debug.log("==prodInvoiceItem=="+prodInvoiceItem);
 									//to Exlude Tax Total call with Parameter False 
 									invItemVal=org.ofbiz.accounting.invoice.InvoiceWorker.getPurchaseInvoiceItemTotal(prodInvoiceItem,false);
-									if(prodGlCategoryList.contains(product.primaryProductCategoryId)){
-										prodCategoryId=product.primaryProductCategoryId;
+									if(UtilValidate.isNotEmpty(productCatMap)&& productCatMap.get(productId)){
+										// get category
+										prodCategoryId=productCatMap.get(productId);
 										if(UtilValidate.isEmpty(prodCatAnalysisMap[prodCategoryId])){
 											//totalRevenue = productValue.getValue().get("totalRevenue");
 											invoiceMap=[:];
@@ -144,24 +153,23 @@ if(UtilValidate.isNotEmpty(reportTypeFlag) && reportTypeFlag == "PurchaseDetails
 											tempMap = [:];
 											tempMap.putAll(prodCatAnalysisMap.get(prodCategoryId));
 											if(UtilValidate.isEmpty(tempMap[invoiceId])){
-												//totalRevenue = productValue.getValue().get("totalRevenue");
+												cstRevenue = productValue.getValue().get("cstRevenue");
 												prodMap=[:];
 												invoiceMap=[:]
 												prodMap["invoiceDate"] = invoiceDate;
 												prodMap["supInvNumber"] = supInvNumber;
 												//prodMap[productId] = totalRevenue;
-												prodMap[productId] = invItemVal;
+												prodMap[productId] = invItemVal+cstRevenue;
 												tempMap[invoiceId]=prodMap;
 												temp=FastMap.newInstance();
 												temp.putAll(tempMap);
 												prodCatAnalysisMap[prodCategoryId] = temp;
 											}else{
 												invoiceMap=[:];
-												//totalRevenue = productValue.getValue().get("totalRevenue");
+												cstRevenue = productValue.getValue().get("cstRevenue");
 												tempInvoiceMap=[:];
 												tempInvoiceMap.putAll(tempMap.get(invoiceId));
-												//tempInvoiceMap[productId]=totalRevenue;
-												tempInvoiceMap[productId]=invItemVal;
+												tempInvoiceMap[productId]=invItemVal+cstRevenue;
 												tempMap[invoiceId] = tempInvoiceMap;
 												temp=FastMap.newInstance();
 												temp.putAll(tempMap);
@@ -177,49 +185,53 @@ if(UtilValidate.isNotEmpty(reportTypeFlag) && reportTypeFlag == "PurchaseDetails
 					}
 				}
 			}
-		}
+		//end if of salesInvoiceTotals}
 	context.put("dayWiseInvoice",prodCatAnalysisMap);
 }
 // Purchase Abstract report
 if(UtilValidate.isNotEmpty(reportTypeFlag) && reportTypeFlag == "PurchaseSummary"){
 	finalInvoiceDateMap = [:];
-			salesInvoiceTotals = SalesInvoiceServices.getPeriodSalesInvoiceTotals(dctx, [isPurchaseInvoice:true, isQuantityLtrs:true,isQuantityLtrs:true,fromDate:dayBegin, thruDate:dayEnd]);
+			/*salesInvoiceTotals = SalesInvoiceServices.getPeriodSalesInvoiceTotals(dctx, [isPurchaseInvoice:true, isQuantityLtrs:true,isQuantityLtrs:true,fromDate:dayBegin, thruDate:dayEnd]);
 			if(UtilValidate.isNotEmpty(salesInvoiceTotals)){
-				invoiceTotals = salesInvoiceTotals.get("invoiceIdTotals");
-				tempVariantMap =FastMap.newInstance();
+				invoiceTotals = salesInvoiceTotals.get("invoiceIdTotals");*/
+				prodCatAnalysisMap =FastMap.newInstance();
 				if(UtilValidate.isNotEmpty(invoiceTotals)){
 					invoiceTotals.each { invoice ->
 						if(UtilValidate.isNotEmpty(invoice)){
+							invoiceId = invoice.getKey();
 							prodTotals = invoice.getValue().get("productTotals");
+							invoiceItemList = delegator.findList("InvoiceAndItem",EntityCondition.makeCondition("invoiceId", EntityOperator.EQUALS , invoiceId)  , null, null, null, false );
 							if(UtilValidate.isNotEmpty(prodTotals)){
 								prodTotals.each{productValue ->
-									virtualProductId="";
+									prodCategoryId="";
 									if(UtilValidate.isNotEmpty(productValue)){
 										currentProduct = productValue.getKey();
 										product = delegator.findOne("Product", [productId : currentProduct], false);
 										productId = productValue.getKey();
-											exprList=[];
-											exprList.add(EntityCondition.makeCondition("glAccountTypeId", EntityOperator.EQUALS, "PURCHASE_ACCOUNT"));
-											exprList.add(EntityCondition.makeCondition("productCategoryId", EntityOperator.EQUALS, product.primaryProductCategoryId));
-											condition = EntityCondition.makeCondition(exprList, EntityOperator.AND);
-											productcatList = delegator.findList("ProductCategoryGlAccount", condition, null, null, null, false);
-												if(UtilValidate.isNotEmpty(productcatList)){
-												 productcatList=EntityUtil.getFirst(productcatList);
-												}
-												if(UtilValidate.isNotEmpty(productcatList)){
-													virtualProductId = productcatList.get("productCategoryId");
-													if(UtilValidate.isEmpty(tempVariantMap[virtualProductId])){
-														totalRevenue = productValue.getValue().get("totalRevenue");
+										GenericValue prodInvoiceItem=null;
+										List<GenericValue> prodInvoiceItemList = EntityUtil.filterByCondition(invoiceItemList, EntityCondition.makeCondition(EntityCondition.makeCondition("invoiceId", EntityOperator.EQUALS, invoiceId),EntityOperator.AND,
+											EntityCondition.makeCondition("productId", EntityOperator.EQUALS, productId)));
+										if(UtilValidate.isNotEmpty(prodInvoiceItemList)){
+											prodInvoiceItem=prodInvoiceItemList.getFirst();
+										}
+										//to Exlude Tax Total call with Parameter False 
+										invItemVal=org.ofbiz.accounting.invoice.InvoiceWorker.getPurchaseInvoiceItemTotal(prodInvoiceItem,false);
+										if(UtilValidate.isNotEmpty(productCatMap)&& productCatMap.get(productId)){
+											// get category
+											prodCategoryId=productCatMap.get(productId);
+													prodCategoryId =prodCategoryId;
+													if(UtilValidate.isEmpty(prodCatAnalysisMap[prodCategoryId])){
+														cstRevenue = productValue.getValue().get("cstRevenue");
 														tempProdMap = FastMap.newInstance();
-														tempProdMap["totalRevenue"] = totalRevenue;
-														tempVariantMap[virtualProductId] = tempProdMap;
+														tempProdMap["totalRevenue"] = invItemVal+cstRevenue;
+														prodCatAnalysisMap[prodCategoryId] = tempProdMap;
 													}else{
 														tempMap = [:];
 														productMap = [:];
-														tempMap.putAll(tempVariantMap.get(virtualProductId));
+														tempMap.putAll(prodCatAnalysisMap.get(prodCategoryId));
 														totalRevenue = productValue.getValue().get("totalRevenue");
-														tempMap["totalRevenue"]+= productValue.getValue().get("totalRevenue");
-														tempVariantMap[virtualProductId] = tempMap;
+														tempMap["totalRevenue"]+= invItemVal+productValue.getValue().get("cstRevenue");
+														prodCatAnalysisMap[prodCategoryId] = tempMap;
 													}
 										    } 
 									}
@@ -228,8 +240,8 @@ if(UtilValidate.isNotEmpty(reportTypeFlag) && reportTypeFlag == "PurchaseSummary
 						}
 					}
 				}
-			}
+			//end if of salesInvoiceTotals}
 	context.put("reportTypeFlag",reportTypeFlag);
-	context.put("prodMap",tempVariantMap);
+	context.put("prodMap",prodCatAnalysisMap);
 }
 
