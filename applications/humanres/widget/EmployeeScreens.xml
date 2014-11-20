@@ -694,14 +694,25 @@ under the License.
 	<screen name="EditAccountDetails">
 		<section>
 			<actions>
-				<entity-and list="EditAccountDetails" entity-name="FinAccount">
+				<!-- <entity-and list="EditAccountDetails" entity-name="FinAccount">
+					<field-map field-name="finAccountTypeId" value="BANK_ACCOUNT"/>
 					<field-map field-name="ownerPartyId" from-field="parameters.partyId" />
-				</entity-and>
+				</entity-and> -->
+				<entity-condition list="EditAccountDetailsList" entity-name="FinAccount">
+					<condition-list combine="and">
+						<condition-expr field-name="finAccountTypeId"  operator="equals" value="BANK_ACCOUNT"/>
+						<condition-expr field-name="ownerPartyId"  operator="equals" from-field="parameters.partyId" />
+					</condition-list>
+				</entity-condition>
+				<set field="finAccountCode" value="${EditAccountDetailsList[0].finAccountCode}"/>
+				<set field="finAccountName" value="${EditAccountDetailsList[0].finAccountName}"/>
+				<set field="finAccountBranch" value="${EditAccountDetailsList[0].finAccountBranch}"/>
+				<set field="ifscCode" value="${EditAccountDetailsList[0].ifscCode}"/>
 			</actions>
 			<widgets>
 			 <section>
 				<widgets>
-					<screenlet id="AccountPanel1" title="Edit Account Details">
+					<screenlet id="AccountPanel1" title="Edit Account Details" >
                        	<include-form name="EditAccountDetails" location="component://humanres/widget/forms/EmployeeForms.xml" />
 					</screenlet>
 			  </widgets>
