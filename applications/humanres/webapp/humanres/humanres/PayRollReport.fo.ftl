@@ -230,13 +230,13 @@ under the License.
                         		<fo:block text-align="center" white-space-collapse="false">${totalDays?if_exists}  days</fo:block>
                         		<fo:block text-align="center" white-space-collapse="false">${(lossOfpay-latemin)?if_exists}  days</fo:block>
                         		<fo:block text-align="center" white-space-collapse="false">${arrearDays?if_exists}  days</fo:block>
-                        		<fo:block text-align="center" white-space-collapse="false">${(netPaidDays?if_exists)}  days</fo:block>                        		
+                        		<fo:block text-align="center" white-space-collapse="false">${(netPaidDays?if_exists?string("#0.00"))}  days</fo:block>                        		
                      		</fo:table-cell> 
                     		<fo:table-cell border-style="solid">
                     				<fo:block linefeed-treatment="preserve">&#xA;</fo:block>
                     				
                     				<#--<fo:block text-indent="5pt" white-space-collapse="false" wrap-option="wrap">Pay Scale :</fo:block><fo:block text-indent="3pt"  wrap-option="wrap">${payGrade.get(0).payScale?if_exists}</fo:block>-->
-                    				<fo:block text-indent="5pt" white-space-collapse="false" keep-together="always">Late Minutes      :  <#if lateMin?has_content>${(lateMin*480)?if_exists}<#else>0</#if></fo:block>
+                    				<fo:block text-indent="5pt" white-space-collapse="false" keep-together="always">Late Minutes      :  <#if lateMin?has_content>${(lateMin*480)?if_exists?string("#0.00")}<#else>0</#if></fo:block>
                     			<#--<fo:block>
                     				<fo:table width="100%">
                     					<fo:table-column column-width="1.5in"/>
