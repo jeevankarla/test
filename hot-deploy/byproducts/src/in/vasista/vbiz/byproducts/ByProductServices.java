@@ -6015,14 +6015,15 @@ public class ByProductServices {
 					    	  invoice.store();
 				            Map<String, Object> resMap = FastMap.newInstance();
 				            //to do tax calculation based on the configuration
-				            BigDecimal salesTaxrateAmount=BigDecimal.ZERO;
+				            BigDecimal serviceTaxAmount=BigDecimal.ZERO;
 				            if(rateAmount.intValue()>0){
-				                salesTaxrateAmount=rateAmount.divide(new BigDecimal(12.36), rounding);
+				               serviceTaxAmount=rateAmount.divide(new BigDecimal(12.36), rounding);
 				            }
+				            rateAmount=rateAmount.subtract(serviceTaxAmount);
 				            resMap = dispatcher.runSync("createInvoiceItem", UtilMisc.toMap("invoiceId", invoiceId, "invoiceItemTypeId", "SHOPEE_RENT",
 				                           "amount", rateAmount, "userLogin", userLogin));
-				            /*resMap = dispatcher.runSync("createInvoiceItem", UtilMisc.toMap("invoiceId", invoiceId, "invoiceItemTypeId", "SERTAX_SALE",
-			                           "amount", salesTaxrateAmount, "userLogin", userLogin));*/
+				            resMap = dispatcher.runSync("createInvoiceItem", UtilMisc.toMap("invoiceId", invoiceId, "invoiceItemTypeId", "SERTAX_SALE",
+			                           "amount", serviceTaxAmount, "userLogin", userLogin));
 			                if (ServiceUtil.isError(resMap)) {
 			                	Debug.logError("Error creating Invoice item for Shopee Rent", module);	
 			                    return ServiceUtil.returnError("Error creating Invoice item for Shopee Rent "+facilityId);

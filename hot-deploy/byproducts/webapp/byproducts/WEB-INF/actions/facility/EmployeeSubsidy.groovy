@@ -76,9 +76,9 @@ facilityPartyList.each{ facility->
 		facilityMap["partyId"]=partyId;
 		partyName=PartyHelper.getPartyName(delegator, partyId, false);
 		facilityMap["partyName"]=partyName;
-		facilityMap["fromDate"]=UtilDateTime.toDateString(facility.get("fromDate"), "dd/MM/yyyy");
+		facilityMap["fromDate"]=facility.get("fromDate");
 		if(UtilValidate.isNotEmpty(facilityPartyList)){
-		facilityMap["thruDate"]=UtilDateTime.toDateString(facility.get("thruDate"), "dd/MM/yyyy");
+		facilityMap["thruDate"]=facility.get("thruDate");
 		}
 		partyRelationship = delegator.findList("PartyRelationship", EntityCondition.makeCondition("partyIdTo", EntityOperator.EQUALS, partyId), null, null, null, false);
 		if(UtilValidate.isNotEmpty(partyRelationship)){
