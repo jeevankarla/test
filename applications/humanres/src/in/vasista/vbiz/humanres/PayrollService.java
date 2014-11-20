@@ -3547,7 +3547,7 @@ public class PayrollService {
 	        String employeeId = (String) context.get("employeeId");
 	        //String orgPartyId = (String) context.get("orgPartyId");
 	        Timestamp timePeriodStart = (Timestamp)context.get("timePeriodStart");
-			Timestamp timePeriodEnd = (Timestamp)context.get("timePeriodEnd");
+	        Timestamp timePeriodEnd = (Timestamp)context.get("timePeriodEnd");
 			String timePeriodId = (String) context.get("timePeriodId");
 	        Locale locale = (Locale) context.get("locale");
 	        String periodBillingId = (String)context.get("periodBillingId");
@@ -3567,13 +3567,13 @@ public class PayrollService {
 	        	condList.add(EntityCondition.makeCondition(EntityCondition.makeCondition("setlDate", EntityOperator.EQUALS, null), EntityOperator.OR, 
 			        		EntityCondition.makeCondition("setlDate", EntityOperator.GREATER_THAN_EQUAL_TO, timePeriodEnd)));
 	        	EntityCondition cond = EntityCondition.makeCondition(condList,EntityOperator.AND);
-	        	
+	            
 	        	List<GenericValue> loanList = delegator.findList("LoanAndType", cond, null, null, null, false);
 	        	GenericValue loan = EntityUtil.getFirst(loanList);
 				if(UtilValidate.isEmpty(loan)){
 					Debug.logError("Zero Active loan for party :"+employeeId, module);
 					return result;
-				}	
+	            }
 				   DynamicViewEntity dynamicView = new DynamicViewEntity();
 				   dynamicView.addMemberEntity("LR", "LoanRecovery");
                    dynamicView.addAliasAll("LR", null, null);
@@ -3845,7 +3845,10 @@ public class PayrollService {
 	        if(UtilValidate.isNotEmpty(noOfCalenderDaysStr)){
 	        	noOfCalenderDays=new BigDecimal(noOfCalenderDaysStr);
 	        }
-	        
+	        if(noOfPayableDays.compareTo(noOfCalenderDays) >=0){	    			
+	 			request.setAttribute("_ERROR_MESSAGE_", "Payable Days exceeds CalenderDays");
+					return "error";
+	 		}
 	        BigDecimal casualLeaveDays=BigDecimal.ZERO;
 	        String casualLeaveDaysStr=(String)request.getParameter("casualLeaveDays");
 	        if(UtilValidate.isNotEmpty(casualLeaveDaysStr)){
@@ -6077,7 +6080,7 @@ public static Map<String, Object> generateEmployerContributionPayrollBilling(Dis
 	    	firstMonthList.add("Apr");
 	    	firstMonthList.add("May");
 	    	firstMonthList.add("Jun");
-	 
+	    	
 	    	List secondMonthList=FastList.newInstance();
 	    	secondMonthList.add("Jul");
 	    	secondMonthList.add("Aug");
