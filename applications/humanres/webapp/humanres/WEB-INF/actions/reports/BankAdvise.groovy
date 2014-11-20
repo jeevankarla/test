@@ -78,6 +78,8 @@ if(UtilValidate.isNotEmpty(parameters.partyIdFrom)){
 }else{
 	parameters.partyIdFrom=parameters.partyId;
 }
+fromDate= context.getAt("timePeriodStart");
+thruDate= context.getAt("timePeriodEnd");
 bankAdvPayrollMap= context.get("BankAdvicePayRollMap");
 	conditionList.add(EntityCondition.makeCondition("ownerPartyId", EntityOperator.EQUALS ,parameters.partyIdFrom));
 	conditionList.add(EntityCondition.makeCondition("statusId", EntityOperator.EQUALS ,"FNACT_ACTIVE"));
@@ -92,8 +94,11 @@ if(UtilValidate.isNotEmpty(companyBankAccountList)){
 	companyBankAccountList.each{ bankDetails->		
 		finAccountId= bankDetails.finAccountId;
 		List conList=FastList.newInstance();
+		
 		conList=UtilMisc.toList(
 			EntityCondition.makeCondition("roleTypeId", EntityOperator.EQUALS, "EMPLOYEE"),
+			EntityCondition.makeCondition("fromDate", EntityOperator.LESS_THAN_EQUAL_TO, thruDate),
+			EntityCondition.makeCondition(EntityCondition.makeCondition("thruDate", EntityOperator.EQUALS, null), EntityOperator.OR, EntityCondition.makeCondition("thruDate", EntityOperator.GREATER_THAN_EQUAL_TO, fromDate)),
 			EntityCondition.makeCondition("finAccountId", EntityOperator.EQUALS, finAccountId));
 		  	EntityCondition cond = EntityCondition.makeCondition(conList, EntityOperator.AND);
 		finAccountRoleList=delegator.findList("FinAccountRole",cond, null,null, null, false);
@@ -101,7 +106,12 @@ if(UtilValidate.isNotEmpty(companyBankAccountList)){
 			partyIds = EntityUtil.getFieldListFromEntityList(finAccountRoleList, "partyId", true);
 			if(UtilValidate.isNotEmpty(partyIds)){
 				emplPartyIds=[];
-				List<GenericValue> finAccountDetailsList = delegator.findList("FinAccount", EntityCondition.makeCondition("ownerPartyId", EntityOperator.IN , partyIds), null, ["finAccountCode"], null, false);
+				List finAccConList=FastList.newInstance();
+					 finAccConList.add(EntityCondition.makeCondition("ownerPartyId", EntityOperator.IN ,partyIds));
+					 finAccConList.add(EntityCondition.makeCondition("statusId", EntityOperator.EQUALS ,"FNACT_ACTIVE"));
+					 finAccConList.add(EntityCondition.makeCondition("finAccountTypeId", EntityOperator.EQUALS ,"BANK_ACCOUNT"));
+					 EntityCondition finAccCond = EntityCondition.makeCondition(finAccConList, EntityOperator.AND);
+				List<GenericValue> finAccountDetailsList = delegator.findList("FinAccount", finAccCond, null, ["finAccountCode"], null, false);
 				List tempfinAccountList = FastList.newInstance();
 				partiesFinAccList = UtilMisc.sortMaps(finAccountDetailsList, UtilMisc.toList("finAccountCode"));
 				for(finAccount in partiesFinAccList){
