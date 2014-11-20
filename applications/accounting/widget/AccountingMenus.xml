@@ -453,7 +453,7 @@
 				<parameter param-name="statusId" value="INVOICE_PAID" />
 			</link>
 		</menu-item>
-		<menu-item name="statusToWriteoff"
+		<!-- <menu-item name="statusToWriteoff"
 			title="${uiLabelMap.AccountingInvoiceStatusToWriteoff}">
 			<condition>
 				<and>
@@ -474,7 +474,7 @@
 				<parameter param-name="invoiceId" from-field="invoice.invoiceId" />
 				<parameter param-name="statusId" value="INVOICE_WRITEOFF" />
 			</link>
-		</menu-item>
+		</menu-item> -->
 		<menu-item name="statusToInProcess"
 			title="${uiLabelMap.AccountingInvoiceStatusToInProcess}">
 			<condition>
@@ -2513,7 +2513,7 @@
 				<parameter param-name="statusId" value="INVOICE_PAID" />
 			</link>
 		</menu-item>
-		<menu-item name="statusToWriteoff"
+		<!-- <menu-item name="statusToWriteoff"
 			title="${uiLabelMap.AccountingInvoiceStatusToWriteoff}">
 			<condition>
 				<and>
@@ -2534,7 +2534,7 @@
 				<parameter param-name="invoiceId" from-field="invoice.invoiceId" />
 				<parameter param-name="statusId" value="INVOICE_WRITEOFF" />
 			</link>
-		</menu-item>
+		</menu-item> -->
 		<menu-item name="statusToInProcess"
 			title="${uiLabelMap.AccountingInvoiceStatusToInProcess}">
 			<condition>
@@ -2878,7 +2878,7 @@
 				<parameter param-name="statusId" value="INVOICE_PAID" />
 			</link>
 		</menu-item>
-		<menu-item name="statusToWriteoff"
+		<!-- <menu-item name="statusToWriteoff"
 			title="${uiLabelMap.AccountingInvoiceStatusToWriteoff}">
 			<condition>
 				<and>
@@ -2899,7 +2899,7 @@
 				<parameter param-name="invoiceId" from-field="invoice.invoiceId" />
 				<parameter param-name="statusId" value="INVOICE_WRITEOFF" />
 			</link>
-		</menu-item>
+		</menu-item> -->
 		<menu-item name="statusToInProcess"
 			title="${uiLabelMap.AccountingInvoiceStatusToInProcess}">
 			<condition>
@@ -3299,7 +3299,7 @@
 				<parameter param-name="statusId" value="INVOICE_PAID" />
 			</link>
 		</menu-item>
-		<menu-item name="statusToWriteoff"
+		<!-- <menu-item name="statusToWriteoff"
 			title="${uiLabelMap.AccountingInvoiceStatusToWriteoff}">
 			<condition>
 				<and>
@@ -3321,7 +3321,7 @@
 				<parameter param-name="invoiceId" from-field="invoice.invoiceId" />
 				<parameter param-name="statusId" value="INVOICE_WRITEOFF" />
 			</link>
-		</menu-item>
+		</menu-item> -->
 		<menu-item name="statusToInProcess"
 			title="${uiLabelMap.AccountingInvoiceStatusToInProcess}">
 			<condition>
@@ -3708,7 +3708,7 @@
 				<parameter param-name="statusId" value="INVOICE_PAID" />
 			</link>
 		</menu-item>
-		<menu-item name="statusToWriteoff"
+		<!-- <menu-item name="statusToWriteoff"
 			title="${uiLabelMap.AccountingInvoiceStatusToWriteoff}">
 			<condition>
 				<and>
@@ -3730,7 +3730,7 @@
 				<parameter param-name="invoiceId" from-field="invoice.invoiceId" />
 				<parameter param-name="statusId" value="INVOICE_WRITEOFF" />
 			</link>
-		</menu-item>
+		</menu-item> -->
 		<menu-item name="statusToInProcess"
 			title="${uiLabelMap.AccountingInvoiceStatusToInProcess}">
 			<condition>
