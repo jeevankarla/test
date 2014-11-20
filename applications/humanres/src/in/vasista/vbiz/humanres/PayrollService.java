@@ -18,6 +18,8 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Map.Entry;
+import java.util.concurrent.TimeUnit;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
@@ -2260,6 +2262,7 @@ public class PayrollService {
 			String otherCond = null;
 			String payGradeId = null;
 			String stateId =null;
+			String age = null;
 			//String grossSalary = null;
 			Map paramCtxMap = UtilMisc.toMap("userLogin",userLogin,"employeeId",employeeId,"timePeriodStart",fromDate,"timePeriodEnd" ,thruDate ,"timePeriodId",timePeriodId);
 	        if(UtilValidate.isNotEmpty(condParms)){
@@ -2269,6 +2272,7 @@ public class PayrollService {
 				 shiftTypeId = (String)condParms.get("shiftTypeId");
 				 otherCond = (String)condParms.get("otherCond");
 				 stateId = (String)condParms.get("stateId");
+				 age = (String)condParms.get("age");
 	        }else{
 	        	Map empPositionDetails = getEmployeePayrollCondParms(dctx, paramCtxMap);
 	        	if(ServiceUtil.isError(empPositionDetails)){
@@ -2281,6 +2285,7 @@ public class PayrollService {
 				departmentId = (String)empPositionDetails.get("departmentId");
 				shiftTypeId = (String)empPositionDetails.get("shiftTypeId");
 				payGradeId = (String)empPositionDetails.get("payGradeId");
+				age = (String)empPositionDetails.get("age");
 	        }
 
 	        int compare = 0;
@@ -2294,6 +2299,15 @@ public class PayrollService {
 	        } else if ("PAYHD_BEDE_POS".equals(payrollBenDedCond.getString("inputParamEnumId"))) {
 	            if (UtilValidate.isNotEmpty(emplPositionTypeId)) {
 	                compare = emplPositionTypeId.compareTo(condValue);
+	            } else {
+	                compare = 1;
+	            }
+	        }else if ("PAYHD_BEDE_AGE".equals(payrollBenDedCond.getString("inputParamEnumId"))) {
+	        	
+	            if (UtilValidate.isNotEmpty(age)) {
+	            	BigDecimal ageTemp = new BigDecimal(age);
+		        	BigDecimal condValueTemp = new BigDecimal(condValue);
+	                compare = ageTemp.compareTo(condValueTemp);
 	            } else {
 	                compare = 1;
 	            }
@@ -2659,11 +2673,18 @@ public class PayrollService {
 	        		result.put("departmentId", employment.getString("partyIdFrom"));
 	        	}
 	            
-	            GenericValue employeeDetail = delegator.findOne("EmployeeDetail", UtilMisc.toMap("partyId",employeeId), true);
+	            GenericValue employeeDetail = delegator.findOne("EmployeeDetail", UtilMisc.toMap("partyId",employeeId), false);
 	            if(UtilValidate.isNotEmpty(employeeDetail)){
 	            	result.put("vehicleType", employeeDetail.getString("vehicleType"));
 	            }
 	            
+	            GenericValue person = delegator.findOne("Person", UtilMisc.toMap("partyId",employeeId), false);
+	            result.put("age", "0");
+	            if(UtilValidate.isNotEmpty(person) && UtilValidate.isNotEmpty(person.getDate("birthDate"))){
+	            	long ageTime = (UtilDateTime.toSqlDate(timePeriodEnd)).getTime()- (person.getDate("birthDate")).getTime();
+	            	long age = (TimeUnit.MILLISECONDS.toDays(ageTime))/365;
+	            	result.put("age",(new Long(age)).toString());
+	            }
 	            // get pay grade here
 	            Map fetchBasicSalaryAndGradeMap = fetchBasicSalaryAndGrade(dctx, context);
 	            if(ServiceUtil.isError(fetchBasicSalaryAndGradeMap)){
