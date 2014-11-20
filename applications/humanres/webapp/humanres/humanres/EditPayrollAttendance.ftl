@@ -238,6 +238,22 @@ function comparer(a, b) {
     }
 				
 			});          
+			
+			 grid.onCellChange.subscribe(function(e,args) {        	
+				var weeklyOff = parseInt(data[args.row]["noOfAttendedHoliDays"]);
+				var physicalPresence = parseInt(data[args.row]["noOfAttendedDays"]);
+				var casualLeaves = parseInt(data[args.row]["casualLeaveDays"]);
+				var days = physicalPresence+weeklyOff+casualLeaves;
+				if(isNaN(days)){
+					days = 0;
+				}				
+				data[args.row]["noOfPayableDays"] = days;				
+				grid.updateRow(args.row);				
+				jQuery("#noOfPayableDays").html(days);			
+			
+		});		
+			
+			
 	         
 			// initialize the model after all the events have been hooked up
 			dataView2.beginUpdate();

@@ -41,7 +41,8 @@ if (UtilValidate.isEmpty(customTimePeriod)) {
 }
 timePeriodStart=UtilDateTime.getDayStart(UtilDateTime.toTimestamp(customTimePeriod.getDate("fromDate")));
 timePeriodEnd=UtilDateTime.getDayEnd(UtilDateTime.toTimestamp(customTimePeriod.getDate("thruDate")));
-
+totalDays= UtilDateTime.getIntervalInDays(timePeriodStart,timePeriodEnd);
+totalDays=totalDays+1;
 context.timePeriodStart= timePeriodStart;
 dates=UtilDateTime.toDateString(timePeriodStart,"dd MMM,yyyy")+"-"+UtilDateTime.toDateString(timePeriodEnd,"dd MMM,yyyy");
 finalMap=[:];
@@ -87,7 +88,7 @@ if(UtilValidate.isNotEmpty(employementList)){
 		tempFinalMap["noOfPayableDays"]="";
 		if(!"leaveEncash".equals(screenFlag)){
 			tempFinalMap["noOfAttendedDays"]="";
-			tempFinalMap["noOfCalenderDays"]="";
+			tempFinalMap["noOfCalenderDays"]=totalDays;
 			tempFinalMap["casualLeaveDays"]="";
 			tempFinalMap["earnedLeaveDays"]="";
 			tempFinalMap["commutedLeaveDays"]="";
@@ -129,7 +130,7 @@ if(UtilValidate.isNotEmpty(employementList)){
 				noOfAttendedDays=payrollAttendance.get("noOfAttendedDays");
 				tempFinalMap.put("noOfAttendedDays",noOfAttendedDays);
 				
-				noOfCalenderDays="";
+				noOfCalenderDays=totalDays;
 				if(UtilValidate.isNotEmpty(payrollAttendance.get("noOfCalenderDays")) && payrollAttendance.get("noOfCalenderDays")!=0)
 				noOfCalenderDays=payrollAttendance.get("noOfCalenderDays");
 				tempFinalMap.put("noOfCalenderDays",noOfCalenderDays);
