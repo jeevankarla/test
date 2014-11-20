@@ -67,15 +67,38 @@ else if(categoryType && categoryType == "AMUL"){
 	roleTypeId = "EXCLUSIVE_CUSTOMER";
 }
 result = ByProductNetworkServices.getPartyByRoleType(dctx, [userLogin: userLogin, roleTypeId: roleTypeId]);
+
 partyIdsList = result.get("partyIds");
 partyNameDetails = result.get("partyDetails");
 partyLedgerList = [];
+conditionList = [];
+conditionList.add(EntityCondition.makeCondition("statusId",EntityOperator.NOT_EQUAL, "PMNT_VOID"));
+conditionList.add(EntityCondition.makeCondition("paymentMethodTypeId",EntityOperator.EQUALS, "CREDITNOTE_PAYIN"));
+conditionList.add(EntityCondition.makeCondition("paymentDate",EntityOperator.GREATER_THAN_EQUAL_TO, dayBegin));
+conditionList.add(EntityCondition.makeCondition("paymentDate",EntityOperator.LESS_THAN_EQUAL_TO, dayEnd));
+conditionList.add(EntityCondition.makeCondition("partyIdFrom",EntityOperator.IN, partyIdsList));
+EntityCondition condition = EntityCondition.makeCondition(conditionList, EntityOperator.AND);
+creditNotes = delegator.findList("Payment", condition, UtilMisc.toSet("partyIdFrom", "amount"), null, null, false);
+partyCreditNoteMap = [:];
+
+creditNotes.each{ eachNote ->
+	if(partyCreditNoteMap.get(eachNote.partyIdFrom)){
+		extAmt = partyCreditNoteMap.get(eachNote.partyIdFrom);
+		totalAmt = extAmt+eachNote.amount;
+		partyCreditNoteMap.putAt(eachNote.partyIdFrom, totalAmt);
+	}
+	else{
+		partyCreditNoteMap.putAt(eachNote.partyIdFrom, eachNote.amount);
+	}
+	
+}
+
 partyIdsList.each{eachParty ->
 	partyDetail = [:];
 	partyReceipts = ByProductNetworkServices.getPartyPaymentDetails(dctx, UtilMisc.toMap("fromDate",dayBegin,"thruDate" ,dayEnd,"partyIdsList", [eachParty])).get("partyPaidMap");
 	partyInvoiceTotals = SalesInvoiceServices.getPeriodSalesInvoiceTotals(dctx, [partyIds:[eachParty], isQuantityLtrs:true,fromDate:dayBegin, thruDate:dayEnd]).get("partyTotals");
 	openingBalance = (ByProductNetworkServices.getOpeningBalanceForParty( dctx , [userLogin: userLogin, saleDate: dayBegin, partyId:eachParty])).get("openingBalance");
-
+	
 	if(openingBalance!=0 || partyInvoiceTotals || partyReceipts){
 		
 		partyName = EntityUtil.filterByCondition(partyNameDetails, EntityCondition.makeCondition("partyId", EntityOperator.EQUALS, eachParty));
@@ -105,6 +128,12 @@ partyIdsList.each{eachParty ->
 			partyDetail.putAt("saleCredit", saleReceipt);
 		}else{
 			partyDetail.putAt("saleCredit", 0);
+		}
+		
+		creditNoteAmt = partyCreditNoteMap.get(eachParty);
+		if(creditNoteAmt){
+			saleCr = partyDetail.get("saleCredit");
+			partyDetail.putAt("saleCredit", saleCr+creditNoteAmt);
 		}
 		
 		closingBalance=openingBalance+saleAmount-saleReceipt;
