@@ -1647,11 +1647,11 @@ under the License.
         <field name="statusId" title="Status"><display-entity entity-name="StatusItem"  description="${description}"/></field>
         <field name="comments" title="comments"><display/></field>
     </form>
-    <form name="ReconcilationFormBatchListCSV" type="list" list-name="finAccountReconciliationList"
+    <form name="ReconciledFormBatchList" type="list" list-name="finAccountReconciliationList"
         odd-row-style="alternate-row" default-table-style="basic-table hover-bar">
         <field name="sNo" title="SL.No" ><display/></field>
-        <field name="finAccountTransId" title = "FinAcntTransId"><display></display></field>
-        <field name="glReconciliationId" title = "glReconciliationId"><display></display></field>
+        <field name="finAccountTransId" title ="FinAcntTransId"><display></display></field>
+     <!--    <field name="glReconciliationId" title ="glReconciliationId"><display></display></field> -->
         <field name="finAccountTransTypeId" title="FinAcntTransType"><display-entity entity-name="FinAccountTransType"  description="${description}"/></field>
          <field name="partyId" title="Owner Party"><display></display></field>
          <field name="paymentPartyName" title="PaymentParty"><display></display></field>
