@@ -873,4 +873,25 @@
         <attribute name="fromDate" type="Timestamp" mode="IN" optional="false"/>
         <attribute name="thruDate" type="Timestamp" mode="IN" optional="false"/>
     </service>
+     <service name="updateSubsidyEmployee" engine="java"
+            location="in.vasista.vbiz.byproducts.ByProductServices" invoke="updateSubsidyEmployee">
+        <description>Create Employee</description>
+        <attribute name="facilityId" type="String" mode="INOUT" optional="false"/>
+        <attribute name="partyId" type="String" mode="INOUT" optional="false"/>
+        <attribute name="productId" type="String" mode="IN" optional="true"/>
+        <attribute name="shipmentTypeId" type="String" mode="IN" optional="true"/>
+        <attribute name="fromDate" type="Timestamp" mode="IN" optional="false"/>
+        <attribute name="thruDate" type="Timestamp" mode="IN" optional="true"/>
+    </service>
+     <service name="updateIndentHelper" engine="java"
+            location="in.vasista.vbiz.byproducts.ByProductChangeIndentServices" invoke="updateIndentHelper" auth="true">
+        <description>Change indent helper to store subscription</description>
+        <attribute name="subscriptionId" type="String" mode="INOUT" optional="false"/>
+        <attribute name="productSubscriptionTypeId" type="String" mode="IN" optional="false"/>
+        <attribute name="boothId" type="String" mode="IN" optional="false"/>
+        <attribute name="shipmentTypeId" type="String" mode="IN" optional="false"/>
+        <attribute name="effectiveDate" type="Timestamp" mode="IN" optional="false"/>
+        <attribute name="productQtyList" type="List" mode="IN" optional="false"/>
+        <attribute name="thruDate" type="Timestamp" mode="IN" optional="true"/>
+    </service>
 </services>
