@@ -91,6 +91,11 @@
         <security https="true" auth="true"/>
     	<response name="success" type="view" value="purchaseTaxReportPDF"/>
     </request-map>
+    <request-map uri="purchaseTaxProductReport.pdf">
+        <security https="true" auth="true"/>
+    	<response name="success" type="view" value="PurchaseTaxProductReportPDF"/>
+    </request-map>
+    
      <request-map uri="purchaseAccountSummery.pdf">
         <security https="true" auth="true"/>
     	<response name="success" type="view" value="purchaseAccountSummeryPDF"/>
@@ -109,6 +114,7 @@
     <view-map name="StoreReports" type="screen" page="component://materialmgmt/widget/materialmgmtReportScreens.xml#StoreReports" />
     <view-map name="purchaseTaxReportPDF" type="screenfop" page="component://materialmgmt/widget/materialmgmtReportScreens.xml#PurchaseTaxReportPDF" content-type="application/pdf"/>
     <view-map name="purchaseAccountSummeryPDF" type="screenfop" page="component://materialmgmt/widget/materialmgmtReportScreens.xml#purchaseAccountSummeryPDF" content-type="application/pdf"/>
+    <view-map name="PurchaseTaxProductReportPDF" type="screenfop" page="component://materialmgmt/widget/materialmgmtReportScreens.xml#PurchaseTaxProductReportPDF" content-type="application/pdf"/>
     
     
 </site-conf>
