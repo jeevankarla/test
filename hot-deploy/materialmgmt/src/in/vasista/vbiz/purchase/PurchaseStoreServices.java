@@ -1010,7 +1010,22 @@ public static Map<String, Object> createPurchaseOrder(DispatchContext dctx, Map<
    	      	if(enableAdvancePaymentApp){
    	      		Map<String, Object> invoiceCtx = UtilMisc.<String, Object>toMap("invoiceId", result.get("invoiceId"));
 	            invoiceCtx.put("userLogin", userLogin);
-	            invoiceCtx.put("statusId","INVOICE_READY");
+	            //use Tenant configuration
+	            Boolean enablePurchseInvoiceReady  = Boolean.FALSE;
+	        	try{        	 	
+	        		GenericValue tenantConfigEnableAdvancePaymentApp = delegator.findOne("TenantConfiguration", UtilMisc.toMap("propertyTypeEnumId","PURCHASE_OR_STORES", "propertyName","Enable-PurchseInv-ReadyStatus"), true);
+	           		if (UtilValidate.isNotEmpty(tenantConfigEnableAdvancePaymentApp) && (tenantConfigEnableAdvancePaymentApp.getString("propertyValue")).equals("Y")) {
+	           			enableAdvancePaymentApp = Boolean.TRUE;
+	           		} 
+	   	        }catch (GenericEntityException e) {
+	   	        	Debug.logError(e, module);
+	   			}
+		   	 	if(enablePurchseInvoiceReady){
+		   	 	 invoiceCtx.put("statusId","INVOICE_READY");
+		   	 	}else{
+		   	 	 invoiceCtx.put("statusId","INVOICE_IN_PROCESS");
+		   	 	}
+	           
 	            try{
 	            	Map<String, Object> invoiceResult = dispatcher.runSync("setInvoiceStatus",invoiceCtx);
 	             	if (ServiceUtil.isError(invoiceResult)) {
