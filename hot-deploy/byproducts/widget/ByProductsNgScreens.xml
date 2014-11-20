@@ -2683,7 +2683,7 @@
                <property-map resource="AccountingUiLabels" map-name="uiLabelMap" global="true"/>
                <property-map resource="OrderUiLabels" map-name="uiLabelMap" global="true"/> 
                 <set field="actionUrl" value="VehicleStatus"/>
-               <set field="formHeading" value="Find VehicleStatus"/> 
+               <set field="formHeading" value="Find Vehicle Status"/> 
                       
                 <set field="layoutSettings.javaScripts[]" value="/byproducts/images/date.js" global="true"/>   
                 <set field="layoutSettings.javaScripts[]" value="/byproducts/images/autoCompleteFacility.js" global="true"/>   

@@ -357,7 +357,7 @@
         <security https="true" auth="true"/>
         <response name="success" type="view" value="ByProdReports"/>
     </request-map>
-     -->
+     --> 
     <request-map uri="LookupVehicle">
 	    <security auth="true" https="true"/>
 	    <response name="success" type="view" value="LookupVehicle"/>
@@ -428,6 +428,10 @@
      <response name="success" type="view" value="FindIndent"/>
      <response name="error" type="view" value="FindIndent"/>
     </request-map>
+     <request-map uri="vehicleInOutReport.pdf">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="VehicleInOutReportPDF"/>
+     </request-map>
     <request-map uri="printPayGroupCheque.pdf">
         <security https="true" auth="true"/>
         <response name="success" type="view" value="PrintPayGroupCheque"/>
@@ -1689,6 +1693,7 @@
  	<view-map name="RelianceBillReportTXT" type="screenfop" page="component://byproducts/widget/ByProductsReportScreens.xml#RelianceBillReportTXT" content-type="text/plain"/>
  
     <!-- NG View Mappings -->
+    <view-map name="VehicleInOutReportPDF" type="screenfop" page="component://byproducts/widget/ByProductsReportScreens.xml#VehicleInOutReportPDF" content-type="application/pdf" encoding="none"/>
   
     <view-map name="TruckSheetMotherDairy" type="screen" page="component://byproducts/widget/ByProductsNgScreens.xml#TruckSheet"/>
     <view-map name="TruckSheetMotherDairyInternal" type="screen" page="component://byproducts/widget/ByProductsNgScreens.xml#TruckSheetInternal"/>

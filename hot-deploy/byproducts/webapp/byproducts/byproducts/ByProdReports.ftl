@@ -185,6 +185,7 @@ function reportTypeChangeFunc() {
 		makeDatePicker2("fdFromDate","");
 		makeDatePicker("purchaseTaxFDate","purchaseTaxTDate");
 		makeDatePicker("AvgFDRFDate","AvgFDRTDate");
+		makeDatePicker("IOFromDateId","IOThruDateId");
 		$('#ui-datepicker-div').css('clip', 'auto');		
 	});
 //for Month Picker
@@ -672,6 +673,16 @@ function reportTypeChangeFunc() {
 				<td width="10%"><input type="submit" value="Download" class="buttontext"/></td>
 			</form>
 	    </tr>
+	    <tr class="alternate-row">
+	      	   	<form id="InTimeOutTime" name="InTiemOutTime" method="post" action="<@ofbizUrl>vehicleInOutReport.pdf</@ofbizUrl>" target="_blank">	
+	      		  <td width="30%">Vehicle InTime OutTime Report</td>
+	      		  <td width="15%">Date<input  type="text" size="18pt" id="IOFromDateId" readonly  name="fromDate"/>
+	      		  <td width="15%"></td>
+	      		  <td width="15%"></td>
+	      		  <td width="15%"></td>
+	      		  <td width="10%"><input type="submit" target="_blank" value="Download" class="buttontext"/></td>
+	      	   </form>
+      		</tr>
       </table>
 	 </div>
     </div>
