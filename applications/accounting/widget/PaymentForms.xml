@@ -278,7 +278,7 @@ under the License.
         <field position="2" name="paymentMethodTypeId" use-when="&quot;${localDispatcherName}&quot;.equals(&quot;ap&quot;)"><hidden/>           
         </field>
         <field position="2" name="paymentMethodTypeId" use-when="&quot;${localDispatcherName}&quot;.equals(&quot;ar&quot;)">
-            <drop-down allow-empty="false">
+            <drop-down allow-empty="true">
                 <entity-options entity-name="PaymentMethodType"  description="${description}">
                 	<entity-constraint name="paymentMethodTypeId" operator="like" value="%_PAYIN%"/>
                     <entity-order-by field-name="description"/>
@@ -294,7 +294,7 @@ under the License.
             </drop-down>
         </field>
         <field position="1" name="paymentMethodId">
-            <drop-down allow-empty="false">
+            <drop-down allow-empty="true">
                 <entity-options  key-field-name="paymentMethodId" entity-name="PaymentMethod" description="${paymentMethodTypeId} (${paymentMethodId})">
                     <entity-constraint name="partyId" operator="equals" value="${payment.partyIdFrom}"/>
                     <entity-order-by field-name="paymentMethodTypeId"/>
@@ -318,6 +318,12 @@ under the License.
                     <entity-order-by field-name="description"/>
                 </entity-options>
             </drop-down>
+        </field>
+        <field name="chequeReturns">
+           <drop-down allow-empty="true">
+              <option key="Y"/>
+              <option key="N"/>
+           </drop-down>
         </field>       
         <field name="instrumentDate" position="2" title="${uiLabelMap.instrumentDate}"><date-time/></field>
         <field name="comments" position="2"><text/></field>
