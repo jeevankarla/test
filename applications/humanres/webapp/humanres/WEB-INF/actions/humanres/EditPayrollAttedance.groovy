@@ -41,8 +41,6 @@ if (UtilValidate.isEmpty(customTimePeriod)) {
 }
 timePeriodStart=UtilDateTime.getDayStart(UtilDateTime.toTimestamp(customTimePeriod.getDate("fromDate")));
 timePeriodEnd=UtilDateTime.getDayEnd(UtilDateTime.toTimestamp(customTimePeriod.getDate("thruDate")));
-totalDays= UtilDateTime.getIntervalInDays(timePeriodStart,timePeriodEnd);
-totalDays=totalDays+1;
 context.timePeriodStart= timePeriodStart;
 dates=UtilDateTime.toDateString(timePeriodStart,"dd MMM,yyyy")+"-"+UtilDateTime.toDateString(timePeriodEnd,"dd MMM,yyyy");
 finalMap=[:];
@@ -67,8 +65,14 @@ customMap=PayrollService.getPayrollAttedancePeriod(dctx,[userLogin:userLogin,tim
 lastClosePeriod=customMap.get("lastCloseAttedancePeriod");
 if(UtilValidate.isNotEmpty(lastClosePeriod))
 customTimePeriodId=lastClosePeriod.get("customTimePeriodId");
+GenericValue attnCustomTimePeriod = delegator.findOne("CustomTimePeriod", [customTimePeriodId : customTimePeriodId], false);
+attnTimePeriodStart=UtilDateTime.getDayStart(UtilDateTime.toTimestamp(attnCustomTimePeriod.getDate("fromDate")));
+attnTimePeriodEnd=UtilDateTime.getDayEnd(UtilDateTime.toTimestamp(attnCustomTimePeriod.getDate("thruDate")));
+totalDays= UtilDateTime.getIntervalInDays(attnTimePeriodStart,attnTimePeriodEnd);
+totalDays=totalDays+1;
+Debug.log("totalDays========"+totalDays);
 if("leaveEncash".equals(screenFlag)){
-	customTimePeriodId=timePeriodId
+	customTimePeriodId=timePeriodId;
 }
 conditionList = [];
 conditionList.add(EntityCondition.makeCondition("partyId", EntityOperator.IN , employementIds));
@@ -108,6 +112,8 @@ if(UtilValidate.isNotEmpty(employementList)){
 			tempFinalMap["operatingAllowanceDays"]="";
 			tempFinalMap["inChargeAllowanceDays"]="";
 			tempFinalMap["noOfHalfPayDays"]="";
+		}else{
+			tempFinalMap["noOfCalenderDays"]=30;
 		}
 		
 		 emplPayrollAttendanceList.each{payrollAttendance->
