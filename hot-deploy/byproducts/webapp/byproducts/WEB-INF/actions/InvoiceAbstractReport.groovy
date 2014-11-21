@@ -90,7 +90,7 @@ reportTypeFlag = parameters.reportTypeFlag;
 if(UtilValidate.isNotEmpty(reportTypeFlag) && reportTypeFlag == "InvoiceSales"){
 	invoiceMap = [:];
 	if(UtilValidate.isNotEmpty(partyIds)){
-		salesInvoiceTotals = SalesInvoiceServices.getPeriodSalesInvoiceTotals(dctx, [partyIds:partyIds, isQuantityLtrs:true,fromDate:dayBegin, thruDate:dayEnd]);
+		salesInvoiceTotals = SalesInvoiceServices.getPeriodSalesInvoiceTotals(dctx, [categoryType:categoryType,partyIds:partyIds, isQuantityLtrs:true,fromDate:dayBegin, thruDate:dayEnd]);
 		if(UtilValidate.isNotEmpty(salesInvoiceTotals)){
 			invoiceTotals = salesInvoiceTotals.get("invoiceIdTotals");
 			if(UtilValidate.isNotEmpty(invoiceTotals)){
@@ -175,7 +175,7 @@ if(UtilValidate.isNotEmpty(reportTypeFlag) && reportTypeFlag == "InvoiceSalesAbs
 		dayEnd=UtilDateTime.getDayEnd(currentDay);
 		invoicePartyMap = [:];
 		if(UtilValidate.isNotEmpty(partyIds)){
-			salesInvoiceTotals = SalesInvoiceServices.getPeriodSalesInvoiceTotals(dctx, [partyIds:partyIds, isQuantityLtrs:true,fromDate:dayBegin, thruDate:dayEnd]);
+			salesInvoiceTotals = SalesInvoiceServices.getPeriodSalesInvoiceTotals(dctx, [categoryType:categoryType,partyIds:partyIds, isQuantityLtrs:true,fromDate:dayBegin, thruDate:dayEnd]);
 			if(UtilValidate.isNotEmpty(salesInvoiceTotals)){
 				invoiceTotals = salesInvoiceTotals.get("invoiceIdTotals");
 				if(UtilValidate.isNotEmpty(invoiceTotals)){
