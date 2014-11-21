@@ -175,6 +175,7 @@ under the License.
     <SecurityPermission description="For Viewing The AttendanceReports Screen." permissionId="HR_ATTENDAN_REPORTS_VIEW"/>
     <SecurityPermission description="For Viewing The PayrollReports Screen." permissionId="HR_PAYROLL_REPORTS_VIEW"/>
     <SecurityPermission description="For Viewing The StatutoryReports Screen." permissionId="HR_STATT_REPORTS_VIEW"/>
+    <SecurityPermission description="For Viewing The SupplyPayrollReports Screen." permissionId="HR_SUPPAYROLL_REPORTS_VIEW"/>
     
     <SecurityGroup description="For Viewing The LeaveReports Screen." groupId="HR_LEAVEREPORTSVIEW"/>
     <SecurityGroupPermission groupId="HR_LEAVEREPORTSVIEW" permissionId="HR_LEAVE_REPORTS_VIEW"/>
@@ -205,6 +206,12 @@ under the License.
     <SecurityGroupPermission groupId="FULLADMIN" permissionId="HR_STATT_REPORTS_VIEW"/>
     <SecurityGroupPermission groupId="HR_REPORTSVIEW" permissionId="HR_STATT_REPORTS_VIEW"/>
     <SecurityGroupPermission groupId="HUMANRES_ADMIN" permissionId="HR_STATT_REPORTS_VIEW"/>
+    
+    <SecurityGroup description="For Viewing The SupplyPayrollReports Screen." groupId="HR_SUPPLYREPORTSVIEW"/>
+    <SecurityGroupPermission groupId="HR_SUPPLYREPORTSVIEW" permissionId="HR_SUPPAYROLL_REPORTS_VIEW"/>
+    <SecurityGroupPermission groupId="FULLADMIN" permissionId="HR_SUPPAYROLL_REPORTS_VIEW"/>
+    <SecurityGroupPermission groupId="HR_REPORTSVIEW" permissionId="HR_SUPPAYROLL_REPORTS_VIEW"/>
+    <SecurityGroupPermission groupId="HUMANRES_ADMIN" permissionId="HR_SUPPAYROLL_REPORTS_VIEW"/>
     
     
     <SecurityGroup description="Loan deleting" groupId="HR_LOAN_DELETE"/>

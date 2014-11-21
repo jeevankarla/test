@@ -61,6 +61,8 @@ function makeDatePicker1(fromDateId ,thruDateId){
 		makeDatePicker("mclthruDate","mclthruDate");
 		makeDatePicker("larfromDate","larfromDate");
 		makeDatePicker("larthruDate","larthruDate");
+		makeDatePicker("lerfromDate","lerfromDate");
+		makeDatePicker("lerthruDate","lerthruDate");
 		makeDatePicker("ITEarningsfromDate","ITEarningsfromDate");
 		makeDatePicker("ITEarningsthruDate","ITEarningsthruDate");
 		makeDatePicker("ITDeductionsfromDate","ITDeductionsfromDate");
@@ -179,7 +181,7 @@ function makeDatePicker1(fromDateId ,thruDateId){
 				<table class="basic-table hover-bar h3" style="border-spacing: 0 10px;">
 					<tr class="alternate-row">
 						<form id="LeaveAvailedReport" name="LeaveAvailedReport" mothed="post" action="<@ofbizUrl>LeaveAvailedReport.pdf</@ofbizUrl>" target="_blank">
-							<td width="20%">Leave Availed Report</td>
+							<td width="20%" class='h3'>Leave Availed Report</td>
 							<td width="20%"><span class='h3'>Employee Id<@htmlTemplate.lookupField formName="LeaveAvailedReport" name="employeeId" id="employeeId" size="10pt" fieldFormName="LookupEmployeeName"/></span></td>
 							<td width="10%">Organization Id 
 								<select name="partyId" class='h5'>
@@ -203,7 +205,7 @@ function makeDatePicker1(fromDateId ,thruDateId){
 					</tr>
 					<tr class="alternate-row">
 						<form id="CashEncashmentReport" name="CashEncashmentReport" mothed="post" action="<@ofbizUrl>CashEncashmentReport.pdf</@ofbizUrl>" target="_blank">
-							<td width="30%">Cash Encashment Report</td>
+							<td width="30%" class='h3'>Cash Encashment Report</td>
 							<td width="20%"><span class='h3'>Employee Id<@htmlTemplate.lookupField formName="LeaveAvailedReport" name="employeeId" id="employeeId" size="10pt" fieldFormName="LookupEmployeeName"/></span></td>
 							<td width="15%">Organization Id 
 								<select name="deptId" class='h5'>
@@ -232,7 +234,7 @@ function makeDatePicker1(fromDateId ,thruDateId){
 					</tr>
 				<tr class="alternate-row">
 						<form id="GHSSDepatmentCountReport" name="GHSSDepatmentCountReport" mothed="post" action="<@ofbizUrl>GHSSDepatmentCountReport.pdf</@ofbizUrl>" target="_blank">
-							<td width="40%">GH and SS Worked Employee's Count </td>
+							<td width="40%"class='h3' >GH and SS Worked Employee's Count </td>
 							<td width="10%"></td>
 							<td width="10%"></td>
 							<td width="30%">Period Id
@@ -1171,6 +1173,37 @@ function makeDatePicker1(fromDateId ,thruDateId){
 						</form>
 					</tr>
 			   	</table>
+			</div>
+		</div>
+	</div>
+</#if>
+<#if reportFrequencyFlag =="SupplyPayrollReports">
+	<div>
+		<div class="screenlet">
+			<div class="screenlet-title-bar">
+				<h3>Reports</h3>
+			</div>
+			<div class="screenlet-body">
+				<table class="basic-table hover-bar h3" style="border-spacing: 0 10px;">
+					<tr class="alternate-row">
+						<form id="LeaveEncashmentReport" name="LeaveEncashmentReport" mothed="post" action="<@ofbizUrl>LeaveEncashmentReport.pdf</@ofbizUrl>" target="_blank">
+							<td width="40%"><span class='h3'>Leave Encashment Report</span></td>
+							<td width="10%"></td>
+							<td width="10%"></td>
+							<td width="30%" class='h4'>TimePeriod 
+								<select name="customTimePeriodId" id="customTimePeriodId" class='h4'>
+										<#list SupplyCustomTimePeriodList as customTimePeriod>
+					      						<option value='${customTimePeriod.customTimePeriodId?if_exists}' >${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(customTimePeriod.fromDate, "dd MMMMM, yyyy")} -${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(customTimePeriod.thruDate, "dd MMMMM, yyyy")}</option>
+					                  		</option>
+								      </#list>
+								</select>
+							</td>
+							<td width="10%"></td>
+							<td width="10%" class='h4'><input type="submit" value="Download" class="buttontext"></td> 
+							</td>
+						</form>
+					</tr>
+				</table>
 			</div>
 		</div>
 	</div>

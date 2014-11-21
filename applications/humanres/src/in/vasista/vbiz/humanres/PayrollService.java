@@ -5932,7 +5932,6 @@ public static Map<String, Object> generateEmployerContributionPayrollBilling(Dis
         		if((leaveTypeIds.get(i)).equals("CL") || (leaveTypeIds.get(i)).equals("EL") || (leaveTypeIds.get(i)).equals("HPL")){
         			GenericValue customTimePeriod = delegator.findOne("CustomTimePeriod",UtilMisc.toMap("customTimePeriodId", customTimePeriodId), false);
         			Timestamp fromDateTime=UtilDateTime.toTimestamp(customTimePeriod.getDate("fromDate"));
-        			
         			Map customTimePeriodIdMap = PayrollService.checkPayrollGeneratedOrNotForDate(dctx,UtilMisc.toMap("userLogin",userLogin,"punchdate",fromDateTime));
         			if (ServiceUtil.isError(customTimePeriodIdMap)) {
         				return customTimePeriodIdMap;
@@ -5945,13 +5944,15 @@ public static Map<String, Object> generateEmployerContributionPayrollBilling(Dis
         			List<GenericValue> datesList=delegator.findList("CustomTimePeriod", condition, null, UtilMisc.toList("-thruDate"), null, false);
         			GenericValue dates=EntityUtil.getFirst(datesList);
         			Map inputMap =FastMap.newInstance();
-                	inputMap.put("userLogin", userLogin);
-                	inputMap.put("partyId", partyId);
-                	inputMap.put("timePeriodStart", dates.get("fromDate"));
-                	inputMap.put("timePeriodEnd", dates.get("thruDate"));
                 	inputMap.put("leaveTypeId", leaveTypeIds.get(i));
-        			Map resultValue = getClosingBalanceForTimePeriod(dctx, inputMap);
+        			inputMap.put("balanceDate", dates.get("thruDate"));
+        			inputMap.put("employeeId", partyId);
         			
+        			Map resultValue = EmplLeaveService.getEmployeeLeaveBalance(dctx,inputMap);
+        			Map leaveBalances=FastMap.newInstance();
+        			if(UtilValidate.isNotEmpty(resultValue.get("leaveBalances"))){
+        				leaveBalances=(Map)resultValue.get("leaveBalances");
+        			}
 		    		List conList = FastList.newInstance();
 		    		conList.add(EntityCondition.makeCondition("partyId",EntityOperator.EQUALS,partyId));
 		    		conList.add(EntityCondition.makeCondition("customTimePeriodId",EntityOperator.EQUALS,customTimePeriodId));
@@ -5959,7 +5960,10 @@ public static Map<String, Object> generateEmployerContributionPayrollBilling(Dis
 		      	  	EntityCondition con = EntityCondition.makeCondition(conList,EntityOperator.AND);
 		      	  	List<GenericValue> emplLeavesList = delegator.findList("EmplLeaveBalanceStatus", con, null, null, null, false);
 		      	  	if(UtilValidate.isEmpty(emplLeavesList)){
-		      	  		BigDecimal closingBalance=(BigDecimal) resultValue.get("closingBalance");
+		      	  	BigDecimal closingBalance=BigDecimal.ZERO;
+		      	  		if(UtilValidate.isNotEmpty(leaveBalances) && leaveBalances !=null ){
+		      	  			 closingBalance=(BigDecimal) leaveBalances.get(leaveTypeIds.get(i));
+		      	  		}
 		      	  		adjustedDays=(BigDecimal)leadaysMap.get(leaveTypeIds.get(i));
 			      	  	GenericValue newEntity = delegator.makeValue("EmplLeaveBalanceStatus");
 						newEntity.set("partyId", partyId);
@@ -5992,59 +5996,6 @@ public static Map<String, Object> generateEmployerContributionPayrollBilling(Dis
         result = ServiceUtil.returnSuccess("Successfully Updated!!");
         return result;
 	}
-	public static Map<String, Object> getClosingBalanceForTimePeriod(DispatchContext dctx, Map<String, ? extends Object> context) {
-
-        Delegator delegator = dctx.getDelegator();
-        LocalDispatcher dispatcher = dctx.getDispatcher();
-        Map<String, Object> result = FastMap.newInstance();
-        GenericValue userLogin = (GenericValue) context.get("userLogin");
-        Date timePeriodStart = (Date)context.get("timePeriodStart");
-		Date timePeriodEnd = (Date)context.get("timePeriodEnd");
-		String partyId = (String) context.get("partyId");
-		String leaveTypeId = (String) context.get("leaveTypeId");
-		BigDecimal leaveDays=BigDecimal.ZERO;
-		BigDecimal openingBalance=BigDecimal.ZERO;
-		BigDecimal closingBalance=BigDecimal.ZERO;
-        try{
-        	List condList = FastList.newInstance();
-        	condList.add(EntityCondition.makeCondition("periodTypeId",EntityOperator.EQUALS,"HR_MONTH"));
-        	condList.add(EntityCondition.makeCondition("fromDate",EntityOperator.LESS_THAN,timePeriodEnd));
-        	condList.add(EntityCondition.makeCondition("thruDate",EntityOperator.GREATER_THAN,timePeriodEnd));
-      	  	EntityCondition cond = EntityCondition.makeCondition(condList,EntityOperator.AND);
-      	  	List<GenericValue> CustomTimePeriodList = delegator.findList("CustomTimePeriod", cond, null, null, null, false);
-      	  	GenericValue CustomTimePeriod = EntityUtil.getFirst(CustomTimePeriodList);
-      	  	if(UtilValidate.isNotEmpty(CustomTimePeriod)){
-		      	  	String customTimePeriodId=CustomTimePeriod.getString("customTimePeriodId");
-		        	Map inputMap =FastMap.newInstance();
-		        	Map resultMap =FastMap.newInstance();
-		        	inputMap.put("userLogin", userLogin);
-		        	inputMap.put("partyId", partyId);
-		        	inputMap.put("timePeriodStart", UtilDateTime.toTimestamp(timePeriodStart));
-		        	inputMap.put("timePeriodEnd", UtilDateTime.toTimestamp(timePeriodEnd));
-		        	inputMap.put("leaveTypeId", leaveTypeId);
-		    		resultMap = EmplLeaveService.fetchLeaveDaysForPeriod(dctx, inputMap);
-		    		if(UtilValidate.isNotEmpty(resultMap)){
-		    			leaveDays=(BigDecimal)resultMap.get("noOfLeaveDays");
-		    		}
-		    		List conditionList = FastList.newInstance();
-		      	  	conditionList.add(EntityCondition.makeCondition("partyId",EntityOperator.EQUALS,partyId));
-		      	  	conditionList.add(EntityCondition.makeCondition("customTimePeriodId",EntityOperator.EQUALS,customTimePeriodId));
-		      	  	conditionList.add(EntityCondition.makeCondition("leaveTypeId",EntityOperator.EQUALS,leaveTypeId));
-		      	  	EntityCondition condition = EntityCondition.makeCondition(conditionList,EntityOperator.AND);
-		      	  	List<GenericValue> emplLeavesList = delegator.findList("EmplLeaveBalanceStatus", condition, null, null, null, false);
-		      	  	if(UtilValidate.isNotEmpty(emplLeavesList)){
-			      	  	GenericValue emplLeaves = EntityUtil.getFirst(emplLeavesList);
-			    	  	openingBalance=(BigDecimal)emplLeaves.getBigDecimal("openingBalance");
-			    	  	closingBalance=(BigDecimal)openingBalance.subtract(leaveDays);
-		      	  	}
-		    	  	resultMap.put("closingBalance", closingBalance);
-		  	    	result=resultMap;
-      	  	}
-        }catch (Exception e) {
-			// TODO: handle exception
-		}
-      return result;  
- }
 	//end of service
 	public static Map<String, Object> calculateESIEmployerContribution(DispatchContext dctx, Map<String, ? extends Object> context) {
 		Delegator delegator = dctx.getDelegator();
