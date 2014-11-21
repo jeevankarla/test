@@ -1371,7 +1371,7 @@
         </field>
 		<field use-when="require_email!=null" name="email" title="${uiLabelMap.CommonEmail}" tooltip="${uiLabelMap.CommonRequired}" widget-style="required"><text size="60" maxlength="250"/></field>
         <field use-when="require_email==null" name="email" title="${uiLabelMap.CommonEmail}" widget-style="required"><text size="60" maxlength="250"/></field>
-        <field name="vehicleType" title="${uiLabelMap.VehicleType}">
+        <!-- <field name="vehicleType" title="${uiLabelMap.VehicleType}">
 			<drop-down allow-empty="true">
 				<entity-options entity-name="Enumeration" key-field-name="enumId" description="${description}">
 					<entity-constraint name="enumTypeId" value="EMPL_REC_VHT" />
@@ -1402,7 +1402,7 @@
 					<entity-order-by field-name="sequenceId" />
 				</entity-options>
 			</drop-down>
-		</field>
+		</field> -->
 		<field name="caste" title="${uiLabelMap.Caste}" >
 			<drop-down allow-empty="true">
 				<entity-options entity-name="PartyClassificationGroup" key-field-name="partyClassificationGroupId" description="${description}">
@@ -1411,7 +1411,7 @@
 				</entity-options>
 			</drop-down>
 		</field> 
-		 <field name="nationality" title="${uiLabelMap.Nationality}" tooltip="${uiLabelMap.CommonRequired}" widget-style="required" required-field="true">
+		 <!-- <field name="nationality" title="${uiLabelMap.Nationality}" tooltip="${uiLabelMap.CommonRequired}" widget-style="required" required-field="true">
 			<drop-down allow-empty="true">
 				<entity-options entity-name="Enumeration" key-field-name="enumId" description="${description}">
 					<entity-constraint name="enumTypeId" value="PERSON_REC_NA" />
@@ -1426,7 +1426,7 @@
 					<entity-order-by field-name="sequenceId" />
 				</entity-options>
 			</drop-down>
-		</field>
+		</field> -->
 		<field name="weeklyOff" title="${uiLabelMap.WeeklyOff}" tooltip="${uiLabelMap.CommonRequired}" widget-style="required" required-field="true">
 			<drop-down allow-empty="false" no-current-selected-key="Y">
 				<option key="Sunday"/>
@@ -1444,7 +1444,7 @@
 				<option key="N" />
 			</drop-down>		
 		</field>
-		<field name="paymentMode" title="${uiLabelMap.PaymentMode}">	
+		<!-- <field name="paymentMode" title="${uiLabelMap.PaymentMode}">	
 			<drop-down allow-empty="true">
                 <entity-options entity-name="PaymentMethodType" description="${description}" key-field-name="paymentMethodTypeId">
                     <entity-order-by field-name="description"/>
@@ -1483,17 +1483,17 @@
 					<entity-order-by field-name="sequenceId" />
 				</entity-options>
 			</drop-down>
-		</field>
+		</field> -->
 		<field name="passportNumber" title="${uiLabelMap.FormFieldTitle_passportNumber}"><text></text></field>
 		<field name="pfNumber" title="${uiLabelMap.PreviousPfNumber}"><text></text></field>
 		<field name="dateOfJoining" title="${uiLabelMap.DateOfJoining}" tooltip="${uiLabelMap.CommonRequired}" widget-style="required" required-field="true"><date-time></date-time></field>
 		<field name="passportExpireDate" title="${uiLabelMap.FormFieldTitle_passportExpireDate}"><date-time></date-time></field>
-		<field name="backgroundVerification" title="${uiLabelMap.BackgroundVerification}">
+		<!-- <field name="backgroundVerification" title="${uiLabelMap.BackgroundVerification}">
 			<drop-down allow-empty="false" no-current-selected-key="Y">
 				<option key="N"></option>
 				<option key="Y" />
 			</drop-down>
-		</field>  
+		</field>  --> 
     	<field name="submitButton" title="${uiLabelMap.CommonCreate}"><submit/></field>
     </form>
 </forms>

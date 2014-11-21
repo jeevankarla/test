@@ -1767,7 +1767,7 @@ under the License.emplpunch
         <attribute name="email" mode="IN" type="String" optional="true"></attribute>
         <attribute name="vehicleType" mode="IN" type="String" optional="true"></attribute>
         <attribute name="quarterType" mode="IN" type="String" optional="true"></attribute>
-        <attribute name="punchType" mode="IN" type="String" optional="false"></attribute>
+        <attribute name="punchType" mode="IN" type="String" optional="true"></attribute>
         <attribute name="weeklyOff" mode="IN" type="String" optional="true"></attribute>
         <attribute name="attendanceIndn" mode="IN" type="String" optional="true"></attribute>
         <attribute name="paymentMode" mode="IN" type="String" optional="true"></attribute>
@@ -1775,7 +1775,7 @@ under the License.emplpunch
         <attribute name="companyBus" mode="IN" type="String" optional="true"></attribute>
         <attribute name="flexibleShift" mode="IN" type="String" optional="true"></attribute>
         <attribute name="busRouteNo" mode="IN" type="String" optional="true"></attribute>
-        <attribute name="shiftType" mode="IN" type="String" optional="false"></attribute>
+        <attribute name="shiftType" mode="IN" type="String" optional="true"></attribute> 
         <attribute name="passportNumber" mode="IN" type="String" optional="true"></attribute>
         <attribute name="pfNumber" mode="IN" type="String" optional="true"></attribute>
         <attribute name="dateOfJoining" mode="IN" type="Date" optional="true"></attribute>
