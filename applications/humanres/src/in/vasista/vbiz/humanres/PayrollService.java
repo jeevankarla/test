@@ -1986,21 +1986,32 @@ public class PayrollService {
 						emplInputMap.put("orgPartyId", partyIdFrom);
 						emplInputMap.put("fromDate", monthBegin);
 						emplInputMap.put("thruDate", monthEnd);
-			        	Map resultMap = HumanresService.getActiveEmployements(dctx,emplInputMap);
+			        	Map resultMap = HumanresService.getActiveEmployements(dctx,emplInputMap);			        	
 			        	List<GenericValue> employementList = (List<GenericValue>)resultMap.get("employementList");
+			        	//getting payroll Attendance Employees.			        	
+			        	 List attnConList = FastList.newInstance();
+			        	 	attnConList.add(EntityCondition.makeCondition("customTimePeriodId" ,EntityOperator.EQUALS ,customTimePeriodId));
+				            EntityCondition attnCond = EntityCondition.makeCondition(attnConList,EntityOperator.AND);
+				            List<GenericValue> payrollAttnEmployessList = delegator.findList("PayrollAttendance", attnCond, null, null, null, false);
+				            List payrollAttnEmplIds=FastList.newInstance();
+				            if(UtilValidate.isNotEmpty(payrollAttnEmployessList)){
+				            	payrollAttnEmplIds= EntityUtil.getFieldListFromEntityList(payrollAttnEmployessList, "partyId", true);
+				        	}
 			        	for (int i = 0; i < employementList.size(); ++i) {		
 			        		GenericValue employment = employementList.get(i);
 			        		String employeeId = employment.getString("partyIdTo");
-			        		context.put("employeeId", employeeId);
-			        		/*Map employeePayrollAttedance = getEmployeePayrollAttedance(dctx,context);
-			        		if(UtilValidate.isNotEmpty(employeePayrollAttedance.get("noOfPayableDays")) &&
-			        				(new BigDecimal((Double)employeePayrollAttedance.get("noOfPayableDays"))).compareTo(BigDecimal.ZERO)==0){
-			        			  continue;
-			        		}*/
-			        		input.put("partyIdFrom", employment.getString("partyIdTo"));
-							Map tempInputMap = FastMap.newInstance();
-							tempInputMap.putAll(input);
-							payHeaderList.add(tempInputMap);
+			        		if(payrollAttnEmplIds.contains(employeeId)){
+				        		context.put("employeeId", employeeId);
+				        		/*Map employeePayrollAttedance = getEmployeePayrollAttedance(dctx,context);
+				        		if(UtilValidate.isNotEmpty(employeePayrollAttedance.get("noOfPayableDays")) &&
+				        				(new BigDecimal((Double)employeePayrollAttedance.get("noOfPayableDays"))).compareTo(BigDecimal.ZERO)==0){
+				        			  continue;
+				        		}*/
+				        		input.put("partyIdFrom", employment.getString("partyIdTo"));
+								Map tempInputMap = FastMap.newInstance();
+								tempInputMap.putAll(input);
+								payHeaderList.add(tempInputMap);
+			        		}
 			        	}
 	       				
 	       				for(int i=0;i<payHeaderList.size();i++){
@@ -3845,6 +3856,7 @@ public class PayrollService {
 	        if(UtilValidate.isNotEmpty(noOfCalenderDaysStr)){
 	        	noOfCalenderDays=new BigDecimal(noOfCalenderDaysStr);
 	        }
+	        if((noOfPayableDays.compareTo(noOfCalenderDays)) >0){	    			
 	        if(noOfPayableDays.compareTo(noOfCalenderDays) >=0){
 	 			request.setAttribute("_ERROR_MESSAGE_", "Payable Days exceeds CalenderDays");
 					return "error";
