@@ -521,6 +521,8 @@
 		    	<condition-list combine="and">
 		    		<condition-expr field-name="billingTypeId" operator="equals" value="PAYROLL_BILL"/>
 		    		<condition-expr field-name="statusId" operator="not-equals" value="COM_CANCELLED"/>
+		    		<condition-expr field-name="statusId" operator="not-equals" value="GENERATION_FAIL"/>
+		    		<condition-expr field-name="statusId" operator="not-equals" value="CANCEL_FAILED"/>
 		    	</condition-list>
 		    	<order-by field-name="-thruDate"/>
 		    </entity-condition>
@@ -593,6 +595,7 @@
 		    		<condition-list combine="or">
 		    			<condition-expr field-name="billingTypeId" operator="equals" value="SP_MED_REIMB"/>
 		    			<condition-expr field-name="billingTypeId" operator="equals" value="SP_LEAVE_ENCASH"/>
+		    			<condition-expr field-name="billingTypeId" operator="equals" value="SP_INDIVIDUAL_EMPL"/>
 		    		</condition-list>
 		    		<condition-expr field-name="statusId" operator="not-equals" value="COM_CANCELLED"/>
 		    	</condition-list>
@@ -604,6 +607,9 @@
 		</actions>
 		<field name="periodBillingId" title="Payroll Id">
 			<display description="${periodBillingId}" />
+		</field>
+		<field name="billingTypeId" title="Payroll Type">
+			<display></display>
 		</field>
 		<field name="partyId" title="Department Id">
 			<display-entity entity-name="PartyGroup" key-field-name="partyId" description="${groupName}"></display-entity>
