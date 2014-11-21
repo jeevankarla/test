@@ -47,19 +47,24 @@ if(thruEffectiveDateStr){
 }
 
 dayBegin = UtilDateTime.getDayStart(fromDateTs);
-dayEnd = UtilDateTime.getDayEnd(fromDateTs);
-
-dayBegin2 = UtilDateTime.addDaysToTimestamp(dayBegin, -1);
-dayEnd2 = UtilDateTime.addDaysToTimestamp(dayEnd, 1); 
+dayEnd = UtilDateTime.getDayEnd(thruDateTs);
 
 context.put("effectiveDateStr",effectiveDateStr);
 context.put("thruEffectiveDateStr",thruEffectiveDateStr);
 
 shipmentIds = [];
-amShipmentIds = ByProductNetworkServices.getShipmentIdsSupplyType(delegator,dayBegin,dayEnd,"AM");
-shipmentIds.addAll(amShipmentIds);
-pmShipmentIds = ByProductNetworkServices.getShipmentIdsSupplyType(delegator,dayBegin,dayEnd,"PM");
-shipmentIds.addAll(pmShipmentIds);
+shipmentType = parameters.shipmentTypeId; 
+if(shipmentType.equals("AM"))
+	{
+		amShipmentIds = ByProductNetworkServices.getShipmentIdsSupplyType(delegator,dayBegin,dayEnd,"AM");
+		shipmentIds.addAll(amShipmentIds);
+		
+	}
+if(shipmentType.equals("PM"))
+	{
+		pmShipmentIds = ByProductNetworkServices.getShipmentIdsSupplyType(delegator,dayBegin,dayEnd,"PM");
+		shipmentIds.addAll(pmShipmentIds);
+	}
 
 vehicleMap =[:];
 List conditionList = [];

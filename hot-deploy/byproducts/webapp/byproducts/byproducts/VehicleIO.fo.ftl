@@ -49,7 +49,7 @@ ${setRequestAttribute("OUTPUT_FILENAME", "salesReport.txt")}
                     <fo:table-body>
                     <#assign vehicleInOutList = vehicleMap.entrySet()>        
                     	<#list vehicleInOutList as vehicleEach>
-                     		<fo:table-row border-style="solid" align="center">	
+                     		<fo:table-row border-style="solid" >	
                      				<#assign vehicleId = vehicleEach.getValue().get("vehicleNum")?if_exists>
                      				<#assign outTime = vehicleEach.getValue().get("outTime")?if_exists>
                      				<#assign dispatchTime =vehicleEach.getValue().get("dispatchedTime")?if_exists>

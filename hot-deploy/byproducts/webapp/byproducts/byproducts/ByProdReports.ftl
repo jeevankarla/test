@@ -676,9 +676,14 @@ function reportTypeChangeFunc() {
 	    <tr class="alternate-row">
 	      	   	<form id="InTimeOutTime" name="InTiemOutTime" method="post" action="<@ofbizUrl>vehicleInOutReport.pdf</@ofbizUrl>" target="_blank">	
 	      		  <td width="30%">Vehicle InTime OutTime Report</td>
-	      		  <td width="15%">Date<input  type="text" size="18pt" id="IOFromDateId" readonly  name="fromDate"/>
-	      		  <td width="15%"></td>
-	      		  <td width="15%"></td>
+	      		  <td width="15%">From<input  type="text" size="18pt" id="IOFromDateId" readonly  name="fromDate"/>
+      			  <td width="15%">Thru<input  type="text" size="18pt" id="IOThruDateId" readonly  name="thruDate"/>
+      			  <td width="15%">Type
+	      		  <select name='shipmentTypeId'>
+					<option value='AM'>AM</option>
+					<option value='PM'>PM</option>
+					</select></td>
+	      		  
 	      		  <td width="15%"></td>
 	      		  <td width="10%"><input type="submit" target="_blank" value="Download" class="buttontext"/></td>
 	      	   </form>
