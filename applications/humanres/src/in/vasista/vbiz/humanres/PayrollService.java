@@ -3845,7 +3845,7 @@ public class PayrollService {
 	        if(UtilValidate.isNotEmpty(noOfCalenderDaysStr)){
 	        	noOfCalenderDays=new BigDecimal(noOfCalenderDaysStr);
 	        }
-	        if(noOfPayableDays.compareTo(noOfCalenderDays) >=0){	    			
+	        if(noOfPayableDays.compareTo(noOfCalenderDays) >=0){
 	 			request.setAttribute("_ERROR_MESSAGE_", "Payable Days exceeds CalenderDays");
 					return "error";
 	 		}
@@ -3926,7 +3926,10 @@ public class PayrollService {
 	        if(UtilValidate.isNotEmpty(noOfRiskAllowanceDaysStr)){
 	        	noOfRiskAllowanceDays=new BigDecimal(noOfRiskAllowanceDaysStr);
 	        }
-	        
+	        if(noOfRiskAllowanceDays.compareTo(noOfAttendedDays) >0){
+	 			request.setAttribute("_ERROR_MESSAGE_", "Risk Allowance days should not be Greater than Physical Present days");
+					return "error";
+	 		}
 	        BigDecimal heavyTankerAllowanceDays=BigDecimal.ZERO;
 	        String heavyTankerAllowanceDaysStr=(String)request.getParameter("heavyTankerAllowanceDays");
 	        if(UtilValidate.isNotEmpty(heavyTankerAllowanceDaysStr)){
@@ -3980,6 +3983,15 @@ public class PayrollService {
 			} 
 	        if(UtilValidate.isNotEmpty(periodBillingList)){	    			
  			request.setAttribute("_ERROR_MESSAGE_", "Payroll Already generated for this period, you can not edit values");
+				return "error";
+	        }
+	        int leaveComparisionResult;
+	        
+	        BigDecimal leaveDaysSum=BigDecimal.ZERO;
+	        leaveDaysSum = casualLeaveDays.add(earnedLeaveDays).add(noOfHalfPayDays);
+	        leaveComparisionResult = leaveDaysSum.compareTo(noOfCalenderDays);
+	        if(leaveComparisionResult == 1){
+	        	request.setAttribute("_ERROR_MESSAGE_", "Addition of EL,CL,HD should not be more than Calendar days");
 				return "error";
 	        }
 	        try {
@@ -5324,8 +5336,9 @@ public class PayrollService {
   				List<GenericValue> EmplDailyAttendanceDetail = delegator.findList("EmplDailyAttendanceDetail", condition, null, null, null, false);
   				for (int i = 0; i < EmplDailyAttendanceDetail.size(); ++i) {
   					GenericValue DailyAttendanceDetail = EmplDailyAttendanceDetail.get(i);
-  					if(UtilValidate.isNotEmpty(encashmentStatus))
-  						DailyAttendanceDetail.set("encashmentStatus",encashmentStatus);
+  					if(UtilValidate.isNotEmpty(encashmentStatus)){
+  	  						DailyAttendanceDetail.set("encashmentStatus",encashmentStatus);
+  					}
   					if(UtilValidate.isNotEmpty(overrideLateMin)){
 	  					DailyAttendanceDetail.set("overrideLateMin",overrideLateMin);
 	  					DailyAttendanceDetail.set("overrideReason",overrideReason);
