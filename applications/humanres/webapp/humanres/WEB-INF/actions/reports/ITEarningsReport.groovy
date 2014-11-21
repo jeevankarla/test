@@ -205,9 +205,11 @@ employmentsList.each{ employeeId->
 					if(UtilValidate.isEmpty(gsls)){
 						gsls = 0;
 					}
-					licp = periodTotals.get("PAYROL_DD_LIC_PGS");
+					licOfPGS = periodTotals.get("PAYROL_DD_LIC_PGS");
+					licKmf = periodTotals.get("PAYROL_DD_LIC_KMF");
+					licDharwadMilk  = periodTotals.get("PAYROL_DD_LIC_DWD");
 					if(UtilValidate.isEmpty(licp)){
-						licp = 0;
+						licp = licOfPGS+licKmf+licDharwadMilk;
 					}
 					frf = periodTotals.get("PAYROL_DD_FD_RELF");
 					if(UtilValidate.isEmpty(frf)){
