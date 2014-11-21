@@ -70,7 +70,6 @@ attnTimePeriodStart=UtilDateTime.getDayStart(UtilDateTime.toTimestamp(attnCustom
 attnTimePeriodEnd=UtilDateTime.getDayEnd(UtilDateTime.toTimestamp(attnCustomTimePeriod.getDate("thruDate")));
 totalDays= UtilDateTime.getIntervalInDays(attnTimePeriodStart,attnTimePeriodEnd);
 totalDays=totalDays+1;
-Debug.log("totalDays========"+totalDays);
 if("leaveEncash".equals(screenFlag)){
 	customTimePeriodId=timePeriodId;
 }
