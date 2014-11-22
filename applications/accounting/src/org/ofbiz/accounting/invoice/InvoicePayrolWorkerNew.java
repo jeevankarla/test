@@ -307,16 +307,16 @@ public class InvoicePayrolWorkerNew {
 				List<GenericValue> loanAndRecoveryAndTypes = delegator.findList("LoanAndRecoveryAndType", EntityCondition.makeCondition(EntityCondition.makeCondition("payrollHeaderId",EntityOperator.EQUALS,payrollLoanHeaderItem.getString("payrollHeaderId")),EntityOperator.AND ,EntityCondition.makeCondition("payrollItemSeqId",EntityOperator.EQUALS,payrollLoanHeaderItem.getString("payrollItemSeqId"))),null, null, null, false);
 				GenericValue loanAndRecoveryAndType = EntityUtil.getFirst(loanAndRecoveryAndTypes);
 				BigDecimal amount  = BigDecimal.ZERO;
-				if(UtilValidate.isEmpty(loanAndRecoveryAndType)){
+				/*if(UtilValidate.isEmpty(loanAndRecoveryAndType)){
 					continue;
-				}
-				if(UtilValidate.isNotEmpty(loanAndRecoveryAndType.getBigDecimal("principalAmount"))){
+				}*/
+				/*if(UtilValidate.isNotEmpty(loanAndRecoveryAndType.getBigDecimal("principalAmount"))){
 					amount  = amount.add(loanAndRecoveryAndType.getBigDecimal("principalAmount"));
 				}
 				if(UtilValidate.isNotEmpty(loanAndRecoveryAndType.getBigDecimal("interestAmount"))){
 					amount  = amount.add(loanAndRecoveryAndType.getBigDecimal("interestAmount"));
-				}
-				
+				}*/
+				amount = payrollLoanHeaderItem.getBigDecimal("amount");
 				loanRecoveryAmount = loanRecoveryAmount.add(amount);
 				
 				Map newp = UtilMisc.toMap("userLogin",userLogin);
@@ -325,7 +325,9 @@ public class InvoicePayrolWorkerNew {
 				 newp.put("paymentMethodId", "DEBITNOTE");
 				 newp.put("paymentTypeId", "LOANRECOVERY_PAYOUT");
 				 newp.put("statusId", "PMNT_NOT_PAID");
-				 newp.put("comments",loanAndRecoveryAndType.getString("description")+"(loanId :"+loanAndRecoveryAndType.getString("loanId") +")" +"Loan Recovery,for Payroll Period["+"]");
+				 if(UtilValidate.isNotEmpty(loanAndRecoveryAndType)){
+					 newp.put("comments",loanAndRecoveryAndType.getString("description")+"(loanId :"+loanAndRecoveryAndType.getString("loanId") +")" +"Loan Recovery,for Payroll Period["+"]");
+				 }
 				 newp.put("paymentRefNum", invoice.getString("referenceNumber"));
 				 newp.put("amount", amount);
 				 Map<String, Object> paymentResult = dispatcher.runSync("createPayment",newp);
