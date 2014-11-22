@@ -55,6 +55,7 @@ import org.ofbiz.party.party.PartyHelper;
 //${Static["org.ofbiz.base.util.UtilNumber"].formatRuleBasedAmount(Static["java.lang.Double"].parseDouble(totalAmount?string("#0")), "%rupees-and-paise", locale).toUpperCase()}
 reportTypeFlag = context.reportTypeFlag;
 if(UtilValidate.isNotEmpty(reportTypeFlag) && reportTypeFlag == "depositCheque"){
+	finAccountFinalTransList = [];
 	finAccountTransMap = [:];
 	finAccountId = parameters.finAccountId;
 	description = null;
@@ -87,6 +88,7 @@ if(UtilValidate.isNotEmpty(reportTypeFlag) && reportTypeFlag == "depositCheque")
 		finAccountTransList = delegator.findList("FinAccountTrans", EntityCondition.makeCondition("finAccountId", EntityOperator.EQUALS, finAccountId), null, null, null, false);
 		if(UtilValidate.isNotEmpty(finAccountTransList)){
 			finAccountTransList.each{ finAccountTransDetails->
+				tempFinAccountTransMap = [:];
 				if(UtilValidate.isNotEmpty(finAccountTransDetails)){
 					finAccountTransId = finAccountTransDetails.finAccountTransId;
 					if(UtilValidate.isNotEmpty(finAccountTransId)){
@@ -114,13 +116,24 @@ if(UtilValidate.isNotEmpty(reportTypeFlag) && reportTypeFlag == "depositCheque")
 											}
 										}
 									}
+									if(UtilValidate.isNotEmpty(newFinAccountTransId)){
+										finAccntTransSequenceList = delegator.findList("FinAccntTransSequence", EntityCondition.makeCondition("finAccountTransId", EntityOperator.EQUALS, newFinAccountTransId), null, null, null, false);
+										if(UtilValidate.isNotEmpty(finAccntTransSequenceList)){
+											finAccntTransSequence = EntityUtil.getFirst(finAccntTransSequenceList);
+											if(UtilValidate.isNotEmpty(finAccntTransSequence)){
+												paymentTransSequenceId = finAccntTransSequence.transSequenceId;
+											}
+										}
+									}
 									finAccountTransTypeId = newfinAccountTransDetails.finAccountTransTypeId;
 									amount = newfinAccountTransDetails.amount;
 									paymentDate = newfinAccountTransDetails.transactionDate;
 									comments = newfinAccountTransDetails.comments;
 									contraRefNum = newfinAccountTransDetails.contraRefNum;
 									amountWords=UtilNumber.formatRuleBasedAmount(amount,"%rupees-and-paise", locale).toUpperCase();
-									
+									if(UtilValidate.isNotEmpty(paymentTransSequenceId)){
+										tempMap.put("paymentTransSequenceId",paymentTransSequenceId);
+									}
 									if(UtilValidate.isNotEmpty(finAccountTransTypeId)){
 										tempMap.put("finAccountTransTypeId",finAccountTransTypeId);
 									}
@@ -142,16 +155,15 @@ if(UtilValidate.isNotEmpty(reportTypeFlag) && reportTypeFlag == "depositCheque")
 									if(UtilValidate.isNotEmpty(contraRefNum)){
 										tempMap.put("contraRefNum",contraRefNum);
 									}
+									tempFinAccountTransMap.putAll(tempMap);
 								}
 							}
 						}
 					}
 				}
-				if(UtilValidate.isNotEmpty(tempMap)){
-					finAccountTransMap.put(finAccountTransId,tempMap);
-					if(UtilValidate.isNotEmpty(finAccountTransMap)){
-						context.put("finAccountTransMap",finAccountTransMap);
-					}
+				if(UtilValidate.isNotEmpty(tempFinAccountTransMap)){
+					finAccountFinalTransList.addAll(tempFinAccountTransMap);
+					context.put("finAccountFinalTransList",finAccountFinalTransList);
 				}
 			}
 		}

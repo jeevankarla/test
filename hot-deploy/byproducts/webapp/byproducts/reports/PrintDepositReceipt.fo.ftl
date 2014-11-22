@@ -31,21 +31,20 @@ under the License.
 </fo:layout-master-set>
    ${setRequestAttribute("OUTPUT_FILENAME", "payrcpt.pdf")}
         <#assign SNO=0> 
-         <#if finAccountTransMap?has_content> 
-        <#assign finAccountTrans = finAccountTransMap.entrySet()>
-        <#list finAccountTrans as finAccountTransList>
-        <#assign paymentDate = finAccountTransList.getValue().get("paymentDate")?if_exists>
-        <#assign finAccountTransTypeId = finAccountTransList.getValue().get("finAccountTransTypeId")?if_exists>
-        <#assign partyName = finAccountTransList.getValue().get("partyName")?if_exists>
-        <#assign newFinAccountTransId = finAccountTransList.getValue().get("newFinAccountTransId")?if_exists>
-        <#assign partyId = finAccountTransList.getValue().get("partyId")?if_exists>
-        <#assign amount = finAccountTransList.getValue().get("amount")?if_exists>
-        <#assign description = finAccountTransList.getValue().get("description")?if_exists>
-        <#assign comments = finAccountTransList.getValue().get("comments")?if_exists>
-        <#assign contraRefNum = finAccountTransList.getValue().get("contraRefNum")?if_exists>
-        <#assign finAccountName = finAccountTransList.getValue().get("finAccountName")?if_exists>
-        <#assign amountWords = finAccountTransList.getValue().get("amountWords")?if_exists>
-        
+          <#if finAccountFinalTransList?has_content> 
+            <#list finAccountFinalTransList as finAccountTransList>
+	        <#assign paymentDate = finAccountTransList.get("paymentDate")?if_exists>
+	        <#assign finAccountTransTypeId = finAccountTransList.get("finAccountTransTypeId")?if_exists>
+	        <#assign partyName = finAccountTransList.get("partyName")?if_exists>
+	        <#assign newFinAccountTransId = finAccountTransList.get("newFinAccountTransId")?if_exists>
+	        <#assign partyId = finAccountTransList.get("partyId")?if_exists>
+	        <#assign amount = finAccountTransList.get("amount")?if_exists>
+	        <#assign description = finAccountTransList.get("description")?if_exists>
+	        <#assign comments = finAccountTransList.get("comments")?if_exists>
+	        <#assign contraRefNum = finAccountTransList.get("contraRefNum")?if_exists>
+	        <#assign finAccountName = finAccountTransList.get("finAccountName")?if_exists>
+	        <#assign amountWords = finAccountTransList.get("amountWords")?if_exists>
+	        <#assign finAccountTransId = finAccountTransList.get("paymentTransSequenceId")?if_exists>
            <fo:page-sequence master-reference="main" force-page-count="no-force" font-size="14pt" font-family="Courier,monospace">					
 		    	<fo:static-content flow-name="xsl-region-before">
 		    	   <fo:block  keep-together="always" text-align="center" font-weight = "bold" font-family="Courier,monospace" white-space-collapse="false">&#160;  </fo:block>
@@ -85,31 +84,40 @@ under the License.
                       </fo:table>
             		</fo:block>
             		<fo:block>-------------------------------------------------------------------------------</fo:block>
-            		<fo:block font-weight = "bold">&#160;&#160;&#160;Receipt Id													&#160;&#160;&#160;&#160;&#160;&#160;&#160;Description 								&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;Party Code			&#160;&#160;&#160;&#160;&#160;&#160;&#160;Amount</fo:block>
+            		<fo:block font-weight = "bold">&#160;SequenceID       &#160;&#160;Receipt Id		&#160;&#160;&#160;Description 		&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;Party Code	&#160;&#160;&#160;&#160;Amount</fo:block>
             		<fo:block>-------------------------------------------------------------------------------</fo:block>
             </fo:static-content>		
             <fo:flow flow-name="xsl-region-body"   font-family="Courier,monospace">	
             	<fo:block>
                  	<fo:table>
-                    <fo:table-column column-width="165pt"/>
-                    <fo:table-column column-width="165pt"/>
+                 	<fo:table-column column-width="130pt"/>
+                    <fo:table-column column-width="80pt"/>
+                    <fo:table-column column-width="190pt"/>
                     <fo:table-column column-width="120pt"/>
-                    <fo:table-column column-width="140pt"/> 
+                    <fo:table-column column-width="120pt"/> 
                     <fo:table-body>
-                    <#if newFinAccountTransId?exists>
+                    	<#if newFinAccountTransId?exists>
+                    		<fo:table-row>
+               					<fo:table-cell >
+                    				<fo:block linefeed-treatment="preserve">&#xA;</fo:block>
+               					</fo:table-cell>
+		  					</fo:table-row>
 							<fo:table-row>
+								<fo:table-cell>
+                            		<fo:block   keep-together="always" text-align="left"  white-space-collapse="false">&#160;${finAccountTransId?if_exists}</fo:block>  
+                       			</fo:table-cell>
                 				<fo:table-cell>
-                            		<fo:block  text-align="left"  white-space-collapse="false">&#160;&#160;&#160;${newFinAccountTransId?if_exists}</fo:block>  
+                            		<fo:block   keep-together="always" text-align="left"  white-space-collapse="false">&#160;&#160;&#160;${newFinAccountTransId?if_exists}</fo:block>  
                        			</fo:table-cell>
                 				<fo:table-cell>
                             		<fo:block  keep-together="always" text-align="left">${partyName?if_exists}</fo:block>  
                        			</fo:table-cell>
                        			
                        			<fo:table-cell>
-                            		<fo:block  text-align="right"  white-space-collapse="false">${partyId?if_exists}</fo:block>  
+                            		<fo:block  keep-together="always" text-align="right"  white-space-collapse="false">${partyId?if_exists}</fo:block>  
                        			</fo:table-cell>
                        			<fo:table-cell>
-                            		<fo:block  text-align="right"  white-space-collapse="false">${amount?if_exists?string("#0.00")}</fo:block>  
+                            		<fo:block  keep-together="always" text-align="right"  white-space-collapse="false">${amount?if_exists?string("#0.00")}</fo:block>  
                        			</fo:table-cell>
             				</fo:table-row>
             				<fo:table-row>

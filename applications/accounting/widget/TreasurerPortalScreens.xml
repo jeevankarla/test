@@ -342,7 +342,10 @@
             	</entity-condition>
             	<entity-condition list="companyBanksList" entity-name="FinAccount">
             		<condition-list combine="and">
-            			<condition-expr field-name="finAccountTypeId" operator="equals" value="BANK_ACCOUNT"/>
+            			<condition-list combine="or">
+            				<condition-expr field-name="finAccountTypeId" operator="equals" value="BANK_ACCOUNT"/>
+            				<condition-expr field-name="finAccountTypeId" operator="equals" value="CASH"/>
+            			</condition-list>
             			<condition-expr field-name="statusId" operator="equals" value="FNACT_ACTIVE"/>
             			<condition-expr field-name="ownerPartyId" operator="equals" value="Company"/>
             		</condition-list>
