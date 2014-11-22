@@ -3857,7 +3857,7 @@ public class PayrollService {
 	        	noOfCalenderDays=new BigDecimal(noOfCalenderDaysStr);
 	        }
 	        if((noOfPayableDays.compareTo(noOfCalenderDays)) >0){	    			
-	        if(noOfPayableDays.compareTo(noOfCalenderDays) >=0){
+	       // if(noOfPayableDays.compareTo(noOfCalenderDays) >=0){
 	 			request.setAttribute("_ERROR_MESSAGE_", "Payable Days exceeds CalenderDays");
 					return "error";
 	 		}
