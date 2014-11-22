@@ -39,7 +39,8 @@
 	                    <fo:table-column column-width="80pt"/>
 	                    <fo:table-column column-width="180pt"/>
                      	<fo:table-body>
-                     		<#list consolidatedDetails as consolidatedDet>
+                     	<#list consolidatedDetails as consolidatedDet>
+                     	<#if (consolidatedDet.getValue().get("oldValueText")?has_content && consolidatedDet.getValue().get("oldValueText")!=0) && (consolidatedDet.getValue().get("newValueText")?has_content && consolidatedDet.getValue().get("newValueText")!=0) >
                      		<#assign sno=sno+1>
 				         			<fo:table-row>
 				         				<fo:table-cell>	
@@ -91,13 +92,14 @@
 			                    		</fo:table-cell>
 			                    		<#assign noofLines=noofLines+1>
 			               			</fo:table-row>
-			               		<#if (noofLines == 35)>
-	                            	<fo:table-row>
-	                            		<fo:table-cell>
-	   										<fo:block page-break-after="always" font-weight="bold" font-size="12pt" text-align="center"></fo:block>
-	   									</fo:table-cell>
-									</fo:table-row>
-	                           		<#assign noofLines =1>
+				               		<#if (noofLines == 35)>
+		                            	<fo:table-row>
+		                            		<fo:table-cell>
+		   										<fo:block page-break-after="always" font-weight="bold" font-size="12pt" text-align="center"></fo:block>
+		   									</fo:table-cell>
+										</fo:table-row>
+		                           		<#assign noofLines =1>
+									</#if>
 								</#if>
 			                 </#list>
 			               		<fo:table-row>
