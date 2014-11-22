@@ -41,16 +41,19 @@ if(UtilValidate.isNotEmpty(resultMap.get("lastCloseAttedancePeriod"))){
 }
 Map emplInputMap = FastMap.newInstance();
 emplInputMap.put("userLogin", userLogin);
-emplInputMap.put("orgPartyId", "Company");
 emplInputMap.put("fromDate", fromDayBegin);
 emplInputMap.put("thruDate", thruDayEnd);
 
 if(UtilValidate.isNotEmpty(parameters.partyId)){
 	emplInputMap.put("orgPartyId", parameters.partyId);
+}else{
+	emplInputMap.put("orgPartyId", "Company");
 }
+
 Map resultMap = HumanresService.getActiveEmployements(dctx,emplInputMap);
 List<GenericValue> employementList = (List<GenericValue>)resultMap.get("employementList");
 employementIds = EntityUtil.getFieldListFromEntityList(employementList, "partyIdTo", true);
+
 payrollDetailsMap=[:];
 if(UtilValidate.isNotEmpty(timePeriodId)){
 	conditionList=[];
