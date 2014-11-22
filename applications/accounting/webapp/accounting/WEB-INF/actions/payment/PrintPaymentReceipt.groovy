@@ -101,6 +101,7 @@ if(UtilValidate.isNotEmpty(reportTypeFlag) && reportTypeFlag == "depositCheque")
 						amountWords = null;
 						finAccountName = null;
 						newFinAccountTransId = null;
+						paymentTransSequenceId = null;
 						if(UtilValidate.isNotEmpty(finAccountTransAttributeDetails)){
 							newFinAccountTransId = finAccountTransAttributeDetails.attrValue;
 							if(UtilValidate.isNotEmpty(finAccountTransAttributeDetails)){
@@ -122,6 +123,9 @@ if(UtilValidate.isNotEmpty(reportTypeFlag) && reportTypeFlag == "depositCheque")
 											finAccntTransSequence = EntityUtil.getFirst(finAccntTransSequenceList);
 											if(UtilValidate.isNotEmpty(finAccntTransSequence)){
 												paymentTransSequenceId = finAccntTransSequence.transSequenceId;
+												if(UtilValidate.isNotEmpty(paymentTransSequenceId)){
+													tempMap.put("paymentTransSequenceId",paymentTransSequenceId);
+												}
 											}
 										}
 									}
@@ -131,9 +135,6 @@ if(UtilValidate.isNotEmpty(reportTypeFlag) && reportTypeFlag == "depositCheque")
 									comments = newfinAccountTransDetails.comments;
 									contraRefNum = newfinAccountTransDetails.contraRefNum;
 									amountWords=UtilNumber.formatRuleBasedAmount(amount,"%rupees-and-paise", locale).toUpperCase();
-									if(UtilValidate.isNotEmpty(paymentTransSequenceId)){
-										tempMap.put("paymentTransSequenceId",paymentTransSequenceId);
-									}
 									if(UtilValidate.isNotEmpty(finAccountTransTypeId)){
 										tempMap.put("finAccountTransTypeId",finAccountTransTypeId);
 									}
