@@ -28,7 +28,7 @@ List conditionList=[];
 conditionList.add(EntityCondition.makeCondition("date", EntityOperator.GREATER_THAN_EQUAL_TO,  UtilDateTime.toSqlDate(fromDateBeginStr)));
 conditionList.add(EntityCondition.makeCondition("date", EntityOperator.LESS_THAN_EQUAL_TO,  UtilDateTime.toSqlDate(thruDateEndStr)));
 condition=EntityCondition.makeCondition(conditionList,EntityOperator.AND);
-def orderBy = UtilMisc.toList("date","partyId");
+def orderBy = UtilMisc.toList("partyId","date");
 attendanceDetailList = delegator.findList("EmplDailyAttendanceDetail", condition , null, orderBy, null, false);
 
 context.put("attendanceDetailList",attendanceDetailList);
