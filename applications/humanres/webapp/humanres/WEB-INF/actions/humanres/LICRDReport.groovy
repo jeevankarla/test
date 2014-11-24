@@ -9,9 +9,13 @@ import net.sf.json.JSONObject;
 import net.sf.json.JSONArray;
 import javolution.util.FastList;
 import javolution.util.FastMap;
+import org.ofbiz.base.util.UtilDateTime;
 import in.vasista.vbiz.humanres.PayrollService;
 import in.vasista.vbiz.humanres.HumanresService;
 import in.vasista.vbiz.byproducts.ByProductServices;
+
+import java.util.Calendar;
+import org.ofbiz.base.util.UtilNumber;
 
 dctx = dispatcher.getDispatchContext();
 def sdf = new SimpleDateFormat("MMMM dd, yyyy");
@@ -22,6 +26,39 @@ thruDateEnd=UtilDateTime.toTimestamp(customTimePeriod.getDate("thruDate"));
 context.put("fromDate",fromDateStart);
 context.put("thruDate",thruDateEnd);
 
+
+List firstMonthList=FastList.newInstance();
+firstMonthList.add("Jan");
+firstMonthList.add("Feb");
+firstMonthList.add("Mar");
+
+List secondMonthList=FastList.newInstance();
+secondMonthList.add("Apr");
+secondMonthList.add("May");
+secondMonthList.add("Jun");
+secondMonthList.add("Jul");
+secondMonthList.add("Aug");
+secondMonthList.add("Sep");
+secondMonthList.add("Oct");
+secondMonthList.add("Nov");
+secondMonthList.add("Dec");
+
+Timestamp monthBegin;
+String monthName = UtilDateTime.toDateString(fromDateStart,"MMM");
+
+if(firstMonthList.contains(monthName)){
+	currentYearStart =  UtilDateTime.getYearStart(fromDateStart);
+	prevFromDate = UtilDateTime.addDaysToTimestamp(currentYearStart, -1);
+	prevYearStart = UtilDateTime.getYearStart(prevFromDate);
+	prevDate = UtilDateTime.addDaysToTimestamp(prevYearStart, 91);
+	monthBegin = UtilDateTime.getMonthStart(prevDate);
+}else{
+	currentYearStart =  UtilDateTime.getYearStart(fromDateStart);
+	tempFromDate = UtilDateTime.addDaysToTimestamp(currentYearStart, 91);
+	monthBegin = UtilDateTime.getMonthStart(tempFromDate);
+}
+
+
 LicFinalMap=[:];
 CumulativeFinalList=[:];
 emplInputMap = [:];
@@ -31,7 +68,6 @@ emplInputMap.put("fromDate", fromDateStart);
 emplInputMap.put("thruDate", thruDateEnd);
 Map EmploymentsMap = HumanresService.getActiveEmployements(dctx,emplInputMap);
 employments=EmploymentsMap.get("employementList");
-Debug.log("employments==================="+employments);
 
 //middleName:J, lastName:B
 employeeIdsList=[];
@@ -103,6 +139,7 @@ if(UtilValidate.isNotEmpty(LicFinalMap)){
 		List conditionList1=[];
 		conditionList1.add(EntityCondition.makeCondition("partyId", EntityOperator.EQUALS, rdpartyId));
 		conditionList1.add(EntityCondition.makeCondition("insuranceTypeId", EntityOperator.EQUALS, "RECCR_DEPOSIT"));
+		conditionList1.add(EntityCondition.makeCondition("fromDate", EntityOperator.GREATER_THAN_EQUAL_TO,monthBegin));
 		conditionList1.add(EntityCondition.makeCondition(EntityCondition.makeCondition("thruDate", EntityOperator.EQUALS, null), EntityOperator.OR,
 			EntityCondition.makeCondition("thruDate", EntityOperator.LESS_THAN_EQUAL_TO, thruDateEnd)));
 		condition2=EntityCondition.makeCondition(conditionList1,EntityOperator.AND);
