@@ -128,32 +128,32 @@ function comparer(a, b) {
 			 	 data =[];
 			</#if>
 			var columns = [		
-					{id:"id", name:"Employee Id", field:"id", width:150, minWidth:100, cssClass:"cell-title", sortable:true},
+					{id:"id", name:"Employee Id", field:"id", width:145, minWidth:100, cssClass:"cell-title", sortable:true},
 					{id:"deptName", name:"Department", field:"deptName", width:150, minWidth:100, cssClass:"cell-title", sortable:true},
 					{id:"deptId",width:10, minWidth:10},
-					{id:"Dates", name:"TimePeriod", field:"Dates", width:160, minWidth:100, cssClass:"cell-title", sortable:true},
-					{id:"noOfAttendedDays", name:"Physical Presence Days", field:"noOfAttendedDays", width:160, minWidth:100, cssClass:"cell-title", sortable:true, editor:FloatCellEditor},
-					{id:"noOfAttendedHoliDays", name:"Weekly Off/OH/Public Holiday", field:"noOfAttendedHoliDays", width:180, minWidth:100, cssClass:"cell-title", sortable:true, editor:FloatCellEditor},
-					{id:"casualLeaveDays", name:"Casual Leave", field:"casualLeaveDays", width:100, minWidth:100, cssClass:"cell-title", sortable:true, editor:FloatCellEditor},
-					{id:"earnedLeaveDays", name:"Earned Leave", field:"earnedLeaveDays", width:100, minWidth:100, cssClass:"cell-title", sortable:true, editor:FloatCellEditor},
-					{id:"noOfHalfPayDays", name:"HalfPay Leave", field:"noOfHalfPayDays", width:95, minWidth:100, cssClass:"cell-title", sortable:true, editor:FloatCellEditor},
-					{id:"commutedLeaveDays", name:"Commuted Leave", field:"commutedLeaveDays", width:130, minWidth:100, cssClass:"cell-title", sortable:true, editor:FloatCellEditor},
-					{id:"disabilityLeaveDays", name:"Disability Leave", field:"disabilityLeaveDays", width:130, minWidth:100, cssClass:"cell-title", sortable:true, editor:FloatCellEditor},
-					{id:"extraOrdinaryLeaveDays", name:"Extra Ordinary Leave", field:"extraOrdinaryLeaveDays", width:140, minWidth:100, cssClass:"cell-title", sortable:true, editor:FloatCellEditor},
-					{id:"noOfNightAllowanceDays", name:"Night Allowance Days", field:"noOfNightAllowanceDays", width:145, minWidth:100, cssClass:"cell-title", sortable:true, editor:FloatCellEditor},
-					{id:"coldOrBoiledAllowanceDays", name:"COLD/BOILER Allowance Days", field:"coldOrBoiledAllowanceDays", width:200, minWidth:100, cssClass:"cell-title", sortable:true, editor:FloatCellEditor},
-					{id:"noOfRiskAllowanceDays", name:"Risk Allowance Days", field:"noOfRiskAllowanceDays", width:150, minWidth:100, cssClass:"cell-title", sortable:true, editor:FloatCellEditor},
-					{id:"heavyTankerAllowanceDays", name:"Heavy Tanker Allowance Days", field:"heavyTankerAllowanceDays", width:200, minWidth:100, cssClass:"cell-title", sortable:true, editor:FloatCellEditor},
-					{id:"trTankerAllowanceDays", name:"Tr Tanker Allowance Days", field:"trTankerAllowanceDays", width:170, minWidth:100, cssClass:"cell-title", sortable:true, editor:FloatCellEditor},
-					{id:"operatingAllowanceDays", name:"Operating Allowance Days", field:"operatingAllowanceDays", width:170, minWidth:100, cssClass:"cell-title", sortable:true, editor:FloatCellEditor},
-					{id:"inChargeAllowanceDays", name:"In-Charge Allowance Days", field:"inChargeAllowanceDays", width:170, minWidth:100, cssClass:"cell-title", sortable:true, editor:FloatCellEditor},
-					{id:"lossOfPayDays", name:"Absent Days", field:"lossOfPayDays", width:90, minWidth:100, cssClass:"cell-title", sortable:true, editor:FloatCellEditor},
-					{id:"noOfPayableDays", name:"Salary to be Claimed", field:"noOfPayableDays", width:140, minWidth:100, cssClass:"cell-title", sortable:true, editor:FloatCellEditor},
-					{id:"noOfArrearDays", name:"Arrear Days", field:"noOfArrearDays", width:90, minWidth:100, cssClass:"cell-title", sortable:true, editor:FloatCellEditor},
-					{id:"noOfCalenderDays", name:"Calender Days", field:"noOfCalenderDays", width:110, minWidth:100, cssClass:"cell-title", sortable:true, editor:FloatCellEditor},
+					{id:"Dates", name:"TimePeriod", field:"Dates", width:140, minWidth:100, cssClass:"cell-title", sortable:true},
+					{id:"noOfAttendedDays", name:"WKD", field:"noOfAttendedDays", width:40, minWidth:100, cssClass:"cell-title", sortable:true, editor:FloatCellEditor},
+					{id:"noOfAttendedHoliDays", name:"OFFS", field:"noOfAttendedHoliDays", width:45, minWidth:100, cssClass:"cell-title", sortable:true, editor:FloatCellEditor},
+					{id:"casualLeaveDays", name:"CL", field:"casualLeaveDays", width:30, minWidth:100, cssClass:"cell-title", sortable:true, editor:FloatCellEditor},
+					{id:"earnedLeaveDays", name:"EL", field:"earnedLeaveDays", width:30, minWidth:100, cssClass:"cell-title", sortable:true, editor:FloatCellEditor},
+					{id:"noOfHalfPayDays", name:"HPL", field:"noOfHalfPayDays", width:35, minWidth:100, cssClass:"cell-title", sortable:true, editor:FloatCellEditor},
+					{id:"commutedLeaveDays", name:"CHPL", field:"commutedLeaveDays", width:43, minWidth:100, cssClass:"cell-title", sortable:true, editor:FloatCellEditor},
+					{id:"disabilityLeaveDays", name:"DBL", field:"disabilityLeaveDays", width:35, minWidth:100, cssClass:"cell-title", sortable:true, editor:FloatCellEditor},
+					{id:"extraOrdinaryLeaveDays", name:"EOL", field:"extraOrdinaryLeaveDays", width:38, minWidth:100, cssClass:"cell-title", sortable:true, editor:FloatCellEditor},
+					{id:"noOfNightAllowanceDays", name:"NIGHT ALW", field:"noOfNightAllowanceDays", width:75, minWidth:100, cssClass:"cell-title", sortable:true, editor:FloatCellEditor},
+					{id:"coldOrBoiledAllowanceDays", name:"CB ALW", field:"coldOrBoiledAllowanceDays", width:55, minWidth:100, cssClass:"cell-title", sortable:true, editor:FloatCellEditor},
+					{id:"noOfRiskAllowanceDays", name:"RSK ALW", field:"noOfRiskAllowanceDays", width:62, minWidth:100, cssClass:"cell-title", sortable:true, editor:FloatCellEditor},
+					{id:"heavyTankerAllowanceDays", name:"HTKR", field:"heavyTankerAllowanceDays", width:45, minWidth:100, cssClass:"cell-title", sortable:true, editor:FloatCellEditor},
+					{id:"trTankerAllowanceDays", name:"TTKR", field:"trTankerAllowanceDays", width:43, minWidth:100, cssClass:"cell-title", sortable:true, editor:FloatCellEditor},
+					{id:"operatingAllowanceDays", name:"OPER", field:"operatingAllowanceDays", width:45, minWidth:100, cssClass:"cell-title", sortable:true, editor:FloatCellEditor},
+					{id:"inChargeAllowanceDays", name:"I/C", field:"inChargeAllowanceDays", width:30, minWidth:100, cssClass:"cell-title", sortable:true, editor:FloatCellEditor},
+					{id:"lossOfPayDays", name:"ABS DAYS", field:"lossOfPayDays", width:70, minWidth:100, cssClass:"cell-title", sortable:true, editor:FloatCellEditor},
+					{id:"noOfPayableDays", name:"TDAYS", field:"noOfPayableDays", width:50, minWidth:100, cssClass:"cell-title", sortable:true, editor:FloatCellEditor},
+					{id:"noOfArrearDays", name:"ARR DAYS", field:"noOfArrearDays", width:70, minWidth:100, cssClass:"cell-title", sortable:true, editor:FloatCellEditor},
+					{id:"noOfCalenderDays", name:"CAL DAYS", field:"noOfCalenderDays", width:70, minWidth:100, cssClass:"cell-title", sortable:true, editor:FloatCellEditor},
 			];
 	
-			columns.push({id:"button", name:"Edit", field:"button", width:70, minWidth:70, cssClass:"cell-title",
+			columns.push({id:"button", name:"EDIT", field:"button", width:50, minWidth:70, cssClass:"cell-title",
 			 			formatter: function (row, cell, id, def, datactx) { 
 			 				if (dataView2.getItem(row).title != "New") {
         						return '<a href="#" class="button" onclick="editClickHandler('+row+')">Edit</a>'; 
@@ -163,7 +163,6 @@ function comparer(a, b) {
         					}
         	 			}
  					   }); 
-	
 	
 			var options = {
 				editable: true,		
@@ -235,6 +234,7 @@ function comparer(a, b) {
       				} else {
         			undoRedoBuffer.undo();
       			}
+      			
     }
 				
 			});          
