@@ -851,17 +851,18 @@ under the License.
                 <service service-name="getReconciliationClosingBalance" result-map="previousReconciliationClosingBalance">
                     <field-map field-name="glReconciliationId" from-field="previousGlReconciliationId"/>
                 </service>
+                  <script location="component://accounting/webapp/accounting/WEB-INF/actions/finaccounttrans/FindFinAccountTrans.groovy"/> 
                 <set field="previousClosingBalance" from-field="previousReconciliationClosingBalance.closingBalance"/>
             </actions>
             <widgets>
-                <decorator-screen name="CommonTreasurerPortalDecorator" location="component://accounting/widget/CommonScreens.xml">
-                    <decorator-section name="body"> 
-                     <include-menu name="CompanyFinAccountTabBar" location="component://accounting/widget/AccountingMenus.xml"/>                   
-                     <label style="h1" text="${uiLabelMap.AccountingGlReconciliationFor}"></label>
-                      <platform-specific>
-                            <html><html-template location="component://accounting/webapp/accounting/finaccounttrans/GlReconciledFinAccountTrans.ftl"/></html>
+               <decorator-screen name="CommonTreasurerPortalDecorator" location="component://accounting/widget/CommonScreens.xml">
+                    <decorator-section name="body">
+                     <include-menu name="CompanyFinAccountTabBar" location="component://accounting/widget/AccountingMenus.xml"/>
+                     <label style="h1" text="${uiLabelMap.AccountingGlReconciliationFor}"></label>                    
+                      <platform-specific> 
+                            <html><html-template location="component://accounting/webapp/accounting/finaccounttrans/GlReconciledFinAccountTransNew.ftl"/></html> 
                       </platform-specific>
-                    </decorator-section>
+					</decorator-section>
                 </decorator-screen>
             </widgets>
         </section>

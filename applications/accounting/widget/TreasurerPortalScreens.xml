@@ -573,6 +573,7 @@
                            <container>
                             <link target="FinAccountTransForReconsile.csv" text="Export as CSV" style="buttontext">
                                     <parameter param-name="finAccountId" from-field="finAccountId"/>
+                                    <parameter param-name="finAccountTransType" from-field="parameters.finAccountTransTypeId"/>
                                     <parameter param-name="statusId" value="FINACT_TRNS_CREATED"/>
                                      <parameter param-name="fromTransactionDate" from-field="parameters.fromTransactionDate"/>
                                       <parameter param-name="thruTransactionDate" from-field="parameters.thruTransactionDate"/>
@@ -2850,12 +2851,14 @@
     <screen name="FinAccountTransForReconsileCSV">
 		<section>
 			<actions>
+			
 				<set field="viewSize" value="99999" />
 				 <script location="component://accounting/webapp/accounting/WEB-INF/actions/EditFinaccount.groovy"/> 
                 <set field="parameters.glReconciliationId" value="${glReconciliationId}"/><!-- instead of Form we are setting in Screen  -->
                 <set field="parameters.finAccountId" value="${finAccountId}"/>
                  <set field="parameters.statusId" value="FINACT_TRNS_CREATED"/>
                  <set field="glReconciliationId" value="${glReconciliationId}"/>
+                 <set field="finAccountTransTypeId" from-field="parameters.finAccountTransType" />
 				 <service service-name="getFinAccountTransListAndTotals" result-map="finAccountTransListAndTotals" auto-field-map="true"/>
                 <set field="finAccountTransList" type="List" from-field="finAccountTransListAndTotals.finAccountTransList"/>
                 <set field="searchedNumberOfRecords" type="Integer" from-field="finAccountTransListAndTotals.searchedNumberOfRecords"/>
@@ -2926,13 +2929,12 @@
                 <set field="previousClosingBalance" from-field="previousReconciliationClosingBalance.closingBalance"/>
                 <script location="component://accounting/webapp/accounting/WEB-INF/actions/finaccounttrans/FindFinAccountTrans.groovy"/> 
 			</actions>
-			<widgets>
-			<label text="${parameters}"></label>
+			<widgets>		
 				<section>
-					<widgets>
-					  <include-form name="ReconcilationFormBatchListCSV" location="component://accounting/widget/TreasurerPortalForms.xml"/>
+					<widgets>		
+					  <include-form name="ReconcilationFormListCSV" location="component://accounting/widget/TreasurerPortalForms.xml"/>
 					</widgets>
-				</section>
+				</section>	
 			</widgets>
 		</section>
 	</screen>
