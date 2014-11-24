@@ -840,7 +840,7 @@ public class InvoiceServices {
             // get the billing parties
             String billToCustomerPartyId = orh.getBillToParty().getString("partyId");
             String billFromVendorPartyId = orh.getBillFromParty().getString("partyId");
-
+           
             // get some price totals
             BigDecimal shippableAmount = orh.getShippableTotal(null);
             BigDecimal orderSubTotal = orh.getOrderItemsSubTotal();
@@ -908,18 +908,21 @@ public class InvoiceServices {
             }
 
             // order roles to invoice roles
-           List<GenericValue> orderRoles = orderHeader.getRelated("OrderRole");
-            Map<String, Object> createInvoiceRoleContext = FastMap.newInstance();
-            /* createInvoiceRoleContext.put("invoiceId", invoiceId);
-            createInvoiceRoleContext.put("userLogin", userLogin);
-            for (GenericValue orderRole : orderRoles) {
-                createInvoiceRoleContext.put("partyId", orderRole.getString("partyId"));
-                createInvoiceRoleContext.put("roleTypeId", orderRole.getString("roleTypeId"));
-                Map<String, Object> createInvoiceRoleResult = dispatcher.runSync("createInvoiceRole", createInvoiceRoleContext);
-                if (ServiceUtil.isError(createInvoiceRoleResult)) {
-                    return ServiceUtil.returnError(UtilProperties.getMessage(resource,"AccountingErrorCreatingInvoiceFromOrder",locale), null, null, createInvoiceRoleResult);
+            //only get when invoice type for purchase
+		       List<GenericValue> orderRoles = orderHeader.getRelated("OrderRole");
+		        Map<String, Object> createInvoiceRoleContext = FastMap.newInstance();
+		         createInvoiceRoleContext.put("invoiceId", invoiceId);
+		        createInvoiceRoleContext.put("userLogin", userLogin);
+		        if(invoiceType.equals("PURCHASE_INVOICE")) {     
+			        for (GenericValue orderRole : orderRoles) {
+			            createInvoiceRoleContext.put("partyId", orderRole.getString("partyId"));
+			            createInvoiceRoleContext.put("roleTypeId", orderRole.getString("roleTypeId"));
+			            Map<String, Object> createInvoiceRoleResult = dispatcher.runSync("createInvoiceRole", createInvoiceRoleContext);
+			            if (ServiceUtil.isError(createInvoiceRoleResult)) {
+			                return ServiceUtil.returnError(UtilProperties.getMessage(resource,"AccountingErrorCreatingInvoiceFromOrder",locale), null, null, createInvoiceRoleResult);
+			            }
+			        }
                 }
-            }*/
 
             // order terms to invoice terms.
             // TODO: it might be nice to filter OrderTerms to only copy over financial terms.
