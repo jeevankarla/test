@@ -253,9 +253,10 @@ if (invoice) {
 							 finAccountTransId = finAccountTrans.finAccountTransId;
 							 if(UtilValidate.isNotEmpty(finAccountTransId)){
 								 finAccntTransSequenceList = delegator.findList("FinAccntTransSequence",EntityCondition.makeCondition("finAccountTransId", EntityOperator.EQUALS ,finAccountTransId)  , null, null, null, false );
-								 finAccntTransSequenceList.each { FinAccntTransSequence ->
+								 finAccntTransSequenceList.each { finAccntTransSequence ->
 									 transSequenceId = finAccntTransSequence.transSequenceId;
 									 context.transSequenceId=transSequenceId;
+									 Debug.log("transSequenceId"+transSequenceId);
 								 }
 							}
 					    }
