@@ -152,6 +152,7 @@ function setVoidPaymentParameters(currentPayment){
           <td>Facility</td>                          
           <td>${uiLabelMap.AccountingPaymentType}</td>
           <td>Payment Method</td>
+          <td>Comments</td>
           <td>${uiLabelMap.CommonStatus}</td>
           <td>${uiLabelMap.AccountingFromParty}</td>
           <td>${uiLabelMap.AccountingToParty}</td>
@@ -162,7 +163,7 @@ function setVoidPaymentParameters(currentPayment){
           <td>Cancel</td> 
            </#if>
           <td>PrintReceipt</td>
-          <td align="right">${uiLabelMap.CommonSelectAll} <input type="checkbox" id="checkAllPayments" name="checkAllPayments" onchange="javascript:togglePaymentId(this);"/></td>
+          <td align="right">${uiLabelMap.CommonSelectAll} <input type="checkbox" id="checkAllPayments" name="checkAllPayments" onchange="javascript:togglePaymentId(this);"/></td> 
         </tr>
       </thead>
       <tbody>
@@ -183,7 +184,10 @@ function setVoidPaymentParameters(currentPayment){
               	<input type="hidden" name="paymentMethodTypeId" id="paymentMethodTypeId" value="${payment.paymentMethodTypeId?if_exists}"> 
                 <#assign paymentMethodType = delegator.findOne("PaymentMethodType", {"paymentMethodTypeId" : payment.paymentMethodTypeId}, true) />
                 ${paymentMethodType.description?default(payment.paymentMethodTypeId)}
-              </td>              
+              </td>   
+               <td>
+              ${payment.comments?if_exists}
+              </td>            
               <td>
                 <#assign statusItem = delegator.findOne("StatusItem", {"statusId" : payment.statusId}, true) />
                 ${statusItem.description?default(payment.statusId)}
@@ -208,7 +212,9 @@ function setVoidPaymentParameters(currentPayment){
               		PrintReceipt
               	</a>
               </td>
-              
+              <td>
+              </td>
+             
              <#--  <td align="right"><input type="checkbox" id="paymentId_${payment_index}" name="paymentIds" value="${payment.paymentId}" onclick="javascript:getInvoiceRunningTotal();"/></td> -->
             </tr>
             <#-- toggle the row color -->
