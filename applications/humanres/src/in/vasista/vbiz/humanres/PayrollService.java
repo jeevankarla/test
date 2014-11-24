@@ -2885,7 +2885,8 @@ public class PayrollService {
 						String variableName = (String)tempEntry.getKey();
 						if(UtilValidate.isNotEmpty(tempEntry.getValue()) && tempEntry.getValue() instanceof BigDecimal){
 							result.put(variableName, 0.0);
-							result.put(variableName, (BigDecimal)tempEntry.getValue());
+							//result.put(variableName, (BigDecimal)tempEntry.getValue());
+							result.put(variableName, ((BigDecimal)tempEntry.getValue()).doubleValue());
 						}
 						
 					}
