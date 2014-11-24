@@ -185,11 +185,14 @@ under the License.
                     				<fo:block>-------------------------------------------------------------------------------</fo:block>
                					</fo:table-cell>
 		  					</fo:table-row>
-						  	<fo:table-row>
+		  					<fo:table-row>
+			                   	<#assign amountWords = Static["org.ofbiz.base.util.UtilNumber"].formatRuleBasedAmount(totalAmount, "%indRupees-and-paiseRupees", locale)>
+						  	
 			                   	<fo:table-cell number-columns-spanned="4">
-                   					<fo:block white-space-collapse="false" font-weight = "bold" keep-together="always">&#160;&#160;&#160;(In Words: ${paymentListReport.amountWords} only)</fo:block>
+                   					<fo:block white-space-collapse="false" >&#160;&#160;&#160;(In Words: ${amountWords} only)</fo:block>
 			                   	</fo:table-cell>
 						  	</fo:table-row>
+						  	
 						  	<fo:table-row>
                					<fo:table-cell>
                     				<fo:block linefeed-treatment="preserve">&#xA;</fo:block>
