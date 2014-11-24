@@ -243,7 +243,7 @@ public class HumanresService {
 					}
 					if(UtilValidate.isNotEmpty(isWeeklyOff) && isWeeklyOff.equals("Y")){
 						if(UtilValidate.isEmpty(fromDate)){
-							fromDate = UtilDateTime.getDayStart(UtilDateTime.addDaysToTimestamp(thruDate, -365));
+							fromDate = UtilDateTime.getDayStart(UtilDateTime.addDaysToTimestamp(thruDate, -60));
 						}
 						GenericValue employeeDetail = delegator.findOne("EmployeeDetail",UtilMisc.toMap("partyId",partyId),false);
 						List conditionList = FastList.newInstance();
