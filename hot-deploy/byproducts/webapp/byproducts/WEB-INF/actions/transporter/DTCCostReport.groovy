@@ -78,7 +78,7 @@ if(UtilValidate.isNotEmpty(routeIdsList)){
 					totalSaleQty=0;
 					averageDays = 0;
 					conditionList.clear();
-					conditionList.add(EntityCondition.makeCondition("statusId", EntityOperator.EQUALS , "GENERATED"));
+					conditionList.add(EntityCondition.makeCondition("statusId", EntityOperator.EQUALS , "APPROVED"));
 					conditionList.add(EntityCondition.makeCondition("routeId", EntityOperator.EQUALS , routeId));
 					conditionList.add(EntityCondition.makeCondition("estimatedShipDate", EntityOperator.GREATER_THAN_EQUAL_TO,dayBegin));
 					conditionList.add(EntityCondition.makeCondition("estimatedShipDate", EntityOperator.LESS_THAN_EQUAL_TO,dayEnd));

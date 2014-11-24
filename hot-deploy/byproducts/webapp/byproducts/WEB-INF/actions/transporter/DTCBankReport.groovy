@@ -46,6 +46,7 @@ monthEnd = UtilDateTime.getDayEnd(thruDateTime, timeZone, locale);
 conditionList=[];
 conditionList.add(EntityCondition.makeCondition("customTimePeriodId", EntityOperator.EQUALS, parameters.customTimePeriodId));
 conditionList.add(EntityCondition.makeCondition("billingTypeId", EntityOperator.EQUALS, "PB_LMS_TRSPT_MRGN"));
+conditionList.add(EntityCondition.makeCondition("statusId", EntityOperator.EQUALS, "APPROVED"));
 condition = EntityCondition.makeCondition(conditionList,EntityOperator.AND);
 periodBillingList = delegator.findList("PeriodBilling", condition, null, null, null, false);
 if(UtilValidate.isNotEmpty(periodBillingList)){
@@ -67,7 +68,6 @@ conditionList.add(EntityCondition.makeCondition("periodBillingId", EntityOperato
 condition = EntityCondition.makeCondition(conditionList,EntityOperator.AND);
 facilityCommissionList = delegator.findList("FacilityCommission",condition , null, null, null, false);
 facilityCommissionList = UtilMisc.sortMaps(facilityCommissionList, UtilMisc.toList("partyId"));
-
 finAccountId = parameters.finAccountId;
 dtcBankMap = [:];
 finAccountParties = [];
