@@ -132,7 +132,7 @@ if(UtilValidate.isNotEmpty(companyBankAccountList)){
 					tempfinAccountList.each{ finAcc->
 						gbCode = finAcc.get("gbCode");
 						ownerPartyId= finAcc.get("ownerPartyId");
-						if(UtilValidate.isNotEmpty(gbCode) && "CNRB".equals(gbCode)){
+						if(UtilValidate.isNotEmpty(gbCode) && "CNRB".equals(gbCode) &&(UtilValidate.isNotEmpty(bankAdvPayrollMap.get(ownerPartyId)) && (bankAdvPayrollMap.get(ownerPartyId).get("netAmt") !=0))){
 							canraBankPartyIds.add(ownerPartyId);
 						}else{
 							// Adding whose employee NetAmount is not equal to zero
