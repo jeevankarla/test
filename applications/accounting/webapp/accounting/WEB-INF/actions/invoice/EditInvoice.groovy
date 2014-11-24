@@ -256,7 +256,6 @@ if (invoice) {
 								 finAccntTransSequenceList.each { finAccntTransSequence ->
 									 transSequenceId = finAccntTransSequence.transSequenceId;
 									 context.transSequenceId=transSequenceId;
-									 Debug.log("transSequenceId"+transSequenceId);
 								 }
 							}
 					    }
