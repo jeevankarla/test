@@ -45,6 +45,7 @@ if(UtilValidate.isNotEmpty(attendanceDetails)){
 		consolidateCondition=EntityCondition.makeCondition(consolidateList,EntityOperator.AND);
 		def orderBy1 = UtilMisc.toList("changedDate","auditHistorySeqId");
 		consolidatedDetailsList = delegator.findList("EntityAuditLog", consolidateCondition , null, orderBy1, null, false);
+		consolidatedDetailsMap = [:];
 		if(UtilValidate.isNotEmpty(consolidatedDetailsList)){
 			consolidatedDetailsList.each { consolidatedDetails ->
 				consolidatedMap=[:];
@@ -52,10 +53,12 @@ if(UtilValidate.isNotEmpty(attendanceDetails)){
 				consolidatedMap.put("newValueText",consolidatedDetails.get("newValueText"));
 				consolidatedMap.put("changedDate",consolidatedDetails.get("changedDate"));
 				consolidatedMap.put("changedByInfo",consolidatedDetails.get("changedByInfo"));
+				consolidatedDetailsMap.putAll(consolidatedMap);
 			}
 		}
-		consolidatedFinalMap.put(empPartyId,consolidatedMap);
+		if(UtilValidate.isNotEmpty(consolidatedDetailsMap)){
+			consolidatedFinalMap.put(empPartyId,consolidatedDetailsMap);
+		}
 	}
 }
 context.put("consolidatedFinalMap",consolidatedFinalMap);
-
