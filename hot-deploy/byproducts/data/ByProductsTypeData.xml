@@ -181,6 +181,10 @@
     
     <InvoiceItemType description="TDS on Commission or Brokerage (Sec. 194 H)" hasTable="N" invoiceItemTypeId="TDS_194H" parentTypeId="" defaultGlAccountId="217113" taxAuthPartyId="TAX1"/>
     
+	<!-- PPD Scheme adjustments for nandini ice creams     -->
+    <OrderAdjustmentType description="PPD Adjustment" hasTable="N" orderAdjustmentTypeId="PPD_PROMO_ADJ"/>
+	<InvoiceItemType defaultGlAccountId="621001" description="PPD Promo Adjustment" hasTable="N" invoiceItemTypeId="PPD_PROMO_ADJ" />
+	<InvoiceItemTypeMap invoiceItemMapKey="PPD_PROMO_ADJ" invoiceItemTypeId="PPD_PROMO_ADJ" invoiceTypeId="SALES_INVOICE" />
      <!-- end of  transporter margin related -->
      <StatusItem description="Cancelled" sequenceId="99" statusCode="CANCELLED" statusId="COM_CANCELLED" statusTypeId="COM_EVENT_STATUS"/>
      <StatusItem description="Cancel Inprocess" sequenceId="79" statusCode="CANCEL_INPROCESS" statusId="CANCEL_INPROCESS" statusTypeId="COM_EVENT_STATUS"/>
