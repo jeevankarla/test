@@ -825,8 +825,8 @@ under the License.
                                 </fo:table-cell>
                                 <fo:table-cell>
                                 <#assign PAYROL_BEN_DA=0>
-                                <#if deptTotals.getValue().get("PAYROL_BEN_DA")?has_content>
-                                <#assign PAYROL_BEN_DA=deptTotals.getValue().get("PAYROL_BEN_DA")>
+                                <#if grandTotalMap.get("PAYROL_BEN_DA")?has_content>
+                                <#assign PAYROL_BEN_DA=grandTotalMap.get("PAYROL_BEN_DA")>
                                 </#if>
                                   <fo:block keep-together="always" text-align="right">${PAYROL_BEN_DA?if_exists?string("##0.00")}</fo:block>
                                 </fo:table-cell>
