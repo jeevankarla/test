@@ -238,6 +238,17 @@ under the License.
 											            		<fo:block linefeed-treatment="preserve">&#xA;</fo:block>
 											       			</fo:table-cell>
 				       									</fo:table-row>
+				       									<fo:table-row> 
+						        						 	<fo:table-cell>
+						        						 		<fo:block text-align="left" font-size="12pt" white-space-collapse="false" keep-together="always" font-weight="bold">&#160;SEQUENCE ID:${transSequenceId?if_exists}</fo:block>
+						        						 	</fo:table-cell>
+						        						 	<fo:table-cell>
+						        						 		<fo:block text-align="left" font-size="12pt" white-space-collapse="false" keep-together="always" font-weight="bold"></fo:block>
+						        						 	</fo:table-cell>
+						        						 	<fo:table-cell>
+						        						 		<fo:block text-align="left" font-size="12pt" white-space-collapse="false" keep-together="always" font-weight="bold"></fo:block>
+						        						 	</fo:table-cell>
+						        						 </fo:table-row>
 						        						 <fo:table-row> 
 						        						 	<fo:table-cell>
 						        						 		<fo:block text-align="left" font-size="12pt" white-space-collapse="false" keep-together="always" font-weight="bold">&#160;PAYMENT ID:${paymentListReport.paymentId?if_exists}</fo:block>
@@ -279,7 +290,26 @@ under the License.
 						        						 </fo:table-row>
 						        						 </#if>
 						        						 </#if>
-						        						 </#if>
+						        						 <#else>
+						        						 <#if paymentListReport.paymentMethodTypeId?has_content && (paymentListReport.paymentMethodTypeId == "NOTE" && (paymentListReport.paymentMethodId == "DEBITNOTE" || paymentListReport.paymentMethodId =="CREDITNOTE"))>
+														    	  <#if paymentListReport.paymentMethodId?has_content>
+														    	     <#assign paymentMethodDetails = delegator.findOne("PaymentMethod", {"paymentMethodId" : paymentListReport.paymentMethodId}, true)?if_exists/>
+														    	  </#if>
+														       <#if paymentListReport.paymentMethodTypeId?has_content && (paymentListReport.paymentMethodTypeId == "NOTE" && (paymentListReport.paymentMethodId == "DEBITNOTE" || paymentListReport.paymentMethodId =="CREDITNOTE"))>
+						        						        <fo:table-row> 
+						        						 	       <fo:table-cell>
+						        						 		      <fo:block text-align="left" font-size="12pt" white-space-collapse="false" keep-together="always" font-weight="bold">&#160;PAYMENT METHODTYPE:${paymentListReport.paymentMethodTypeId?if_exists}</fo:block>
+						        						 	       </fo:table-cell>
+						        						 	       <fo:table-cell>
+						        						 		       <fo:block text-align="left" font-size="12pt" white-space-collapse="false" keep-together="always" font-weight="bold"></fo:block>
+						        						 	       </fo:table-cell>
+						        						 	       <fo:table-cell>
+						        						 		       <fo:block text-align="left" font-size="12pt" white-space-collapse="false" keep-together="always" font-weight="bold">PAYMENT METHOD ID:${paymentListReport.paymentMethodId?if_exists}</fo:block>
+						        						 		       </fo:table-cell>
+						        						        </fo:table-row>
+						        						      </#if>
+						        						   </#if>
+						        						  </#if>
 						        						 <#if paymentListReport.comments?has_content>
 						        						 <fo:table-row> 
 						        						 	<fo:table-cell>

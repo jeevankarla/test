@@ -247,12 +247,24 @@ if (invoice) {
 					finalPaymentMap.putAll(tempprintPaymentMap);
 					printPaymentsList.add(finalPaymentMap);
 					context.put("printPaymentsList",printPaymentsList);
+					if(UtilValidate.isNotEmpty(paymentId)){
+						finAccountTransList = delegator.findList("FinAccountTrans",EntityCondition.makeCondition("paymentId", EntityOperator.EQUALS ,paymentId)  , null, null, null, false );
+					    finAccountTransList.each { finAccountTrans ->
+							 finAccountTransId = finAccountTrans.finAccountTransId;
+							 if(UtilValidate.isNotEmpty(finAccountTransId)){
+								 finAccntTransSequenceList = delegator.findList("FinAccntTransSequence",EntityCondition.makeCondition("finAccountTransId", EntityOperator.EQUALS ,finAccountTransId)  , null, null, null, false );
+								 finAccntTransSequenceList.each { FinAccntTransSequence ->
+									 transSequenceId = finAccntTransSequence.transSequenceId;
+									 context.transSequenceId=transSequenceId;
+								 }
+							}
+					    }
+				    }
 				}
 			}
 		}
 	}
 	context.payments = paymentAppls;
-	
 	orderItemBillings = delegator.findByAnd("OrderItemBilling", [invoiceId : invoiceId], ['orderId']);
 	orders = new LinkedHashSet();
 	orderItemBillings.each { orderIb ->
@@ -335,6 +347,8 @@ sequenceList.each{eachItem ->
 }
 
 context.invoiceSequenceNumMap = invoiceSequenceNumMap;
+
+
 
 
 
