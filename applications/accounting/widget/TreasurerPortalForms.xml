@@ -1647,21 +1647,5 @@ under the License.
         <field name="statusId" title="Status"><display-entity entity-name="StatusItem"  description="${description}"/></field>
         <field name="comments" title="comments"><display/></field>
     </form>
-    <form name="ReconciledFormBatchList" type="list" list-name="finAccountReconciliationList"
-        odd-row-style="alternate-row" default-table-style="basic-table hover-bar">
-        <field name="sNo" title="SL.No" ><display/></field>
-        <field name="finAccountTransId" title ="FinAcntTransId"><display></display></field>
-     <!--    <field name="glReconciliationId" title ="glReconciliationId"><display></display></field> -->
-        <field name="finAccountTransTypeId" title="FinAcntTransType"><display-entity entity-name="FinAccountTransType"  description="${description}"/></field>
-         <field name="partyId" title="Owner Party"><display></display></field>
-         <field name="paymentPartyName" title="PaymentParty"><display></display></field>
-        <field name="transactionDate"><display></display></field>
-          <field name="instrumentNo" title="InstrumentNo"><display></display></field>
-    	<field name="amount" title="Amount(Rs)"><display/></field>
-        <field name="paymentId" title="Payment Id" widget-style="buttontext"><display></display></field>
-        <field name="paymentType" title="Payment Type"><display size="20"  /></field>
-        <field name="paymentMethodTypeId" title="PaymentMethodType"><display/></field>
-        <field name="statusId" title="Status"><display-entity entity-name="StatusItem"  description="${description}"/></field>
-        <field name="comments" title="comments"><display/></field>
-    </form>
+    
 </forms>
