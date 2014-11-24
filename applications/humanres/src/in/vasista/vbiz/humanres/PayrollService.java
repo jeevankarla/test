@@ -6012,7 +6012,8 @@ public static Map<String, Object> generateEmployerContributionPayrollBilling(Dis
 	public static Map<String, Object> calculateESIEmployerContribution(DispatchContext dctx, Map<String, ? extends Object> context) {
 		Delegator delegator = dctx.getDelegator();
         LocalDispatcher dispatcher = dctx.getDispatcher();
-		String periodBillingId = (String) context.get("periodBillingId");
+        String periodBillingId = " ";
+		String customTimePeriodIdValue = (String) context.get("customTimePeriodId");
 		String partyIdFrom = (String) context.get("partyIdFrom");
 		GenericValue userLogin = (GenericValue) context.get("userLogin");
 		Map result = ServiceUtil.returnSuccess();
@@ -6026,6 +6027,22 @@ public static Map<String, Object> generateEmployerContributionPayrollBilling(Dis
 		GenericValue customTimePeriod;
 		
 		try {
+			List conList = FastList.newInstance();
+			conList.add(EntityCondition.makeCondition("customTimePeriodId",EntityOperator.EQUALS,customTimePeriodIdValue));
+			conList.add(EntityCondition.makeCondition("billingTypeId",EntityOperator.EQUALS,"PAYROLL_BILL"));
+			conList.add(EntityCondition.makeCondition("statusId",EntityOperator.IN , UtilMisc.toList("GENERATED","APPROVED")));
+	  	  	EntityCondition con = EntityCondition.makeCondition(conList,EntityOperator.AND);
+	  	  	List<GenericValue> periodBillngList = delegator.findList("PeriodBilling", con, null, null, null, false);
+	  	  	if(UtilValidate.isNotEmpty(periodBillngList)){
+	  	  		GenericValue periodBillngDetails = EntityUtil.getFirst(periodBillngList);
+	  	  		periodBillingId = periodBillngDetails.getString("periodBillingId");
+	  	  	}
+		} catch (GenericEntityException e1) {
+			Debug.logError(e1,"Error While Finding PeriodBilling");
+			return ServiceUtil.returnError("Error While Finding PeriodBilling" + e1);
+		}
+		
+		/*try {
 			periodBilling =delegator.findOne("PeriodBilling", UtilMisc.toMap("periodBillingId", periodBillingId), false);
 			if(UtilValidate.isNotEmpty(periodBilling)){
 				customTimePeriodId = periodBilling.getString("customTimePeriodId");
@@ -6033,9 +6050,10 @@ public static Map<String, Object> generateEmployerContributionPayrollBilling(Dis
 		} catch (GenericEntityException e1) {
 			Debug.logError(e1,"Error While Finding PeriodBilling");
 			return ServiceUtil.returnError("Error While Finding PeriodBilling" + e1);
-		}
+		}*/
+		
 		try {
-			customTimePeriod = delegator.findOne("CustomTimePeriod",UtilMisc.toMap("customTimePeriodId", customTimePeriodId), false);
+			customTimePeriod = delegator.findOne("CustomTimePeriod",UtilMisc.toMap("customTimePeriodId", customTimePeriodIdValue), false);
 		} catch (GenericEntityException e1) {
 			Debug.logError(e1,"Error While Finding Customtime Period");
 			return ServiceUtil.returnError("Error While Finding Customtime Period" + e1);
@@ -6043,6 +6061,8 @@ public static Map<String, Object> generateEmployerContributionPayrollBilling(Dis
 		if(customTimePeriod == null){
 			generationFailed = true;
 		}
+		
+		
 		Timestamp fromDateTime=UtilDateTime.toTimestamp(customTimePeriod.getDate("fromDate"));
 		Timestamp thruDateTime=UtilDateTime.toTimestamp(customTimePeriod.getDate("thruDate"));
 		

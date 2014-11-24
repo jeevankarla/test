@@ -1788,7 +1788,7 @@ under the License.emplpunch
     <service name="calculateESIEmployerContribution"  engine="java"
                 location="in.vasista.vbiz.humanres.PayrollService" invoke="calculateESIEmployerContribution" auth="true" transaction-timeout="5000">
         <description>ESI Contribution</description>
-        <attribute name="periodBillingId" mode="IN" type="String"></attribute>
-        <attribute name="partyIdFrom" mode="IN" type="String"></attribute>
+        <attribute name="customTimePeriodId" mode="IN" type="String" optional="false"></attribute>
+        <attribute name="partyIdFrom" mode="IN" type="String" optional="false"></attribute>
     </service>
 </services>
