@@ -122,7 +122,7 @@ import in.vasista.vbiz.humanres.PayrollService;
 						if(employer.get("payrollHeaderItemTypeId")=="PAYROL_BEN_PFEMPLYR"){
 							employerEpf=employer.get("amount");
 						}
-						if(employer.get("payrollHeaderItemTypeId")=="PAYROL_BEN_PENS"){
+						if(employer.get("payrollHeaderItemTypeId")=="PAYROL_BEN_PENSION"){
 							employerFpf=employer.get("amount");
 						}
 					}
