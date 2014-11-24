@@ -94,6 +94,7 @@ public static String processPurchaseOrder(HttpServletRequest request, HttpServle
 	DispatchContext dctx =  dispatcher.getDispatchContext();
 	Locale locale = UtilHttp.getLocale(request);
 	String partyId = (String) request.getParameter("partyId");
+	String billFromPartyId = (String) request.getParameter("billToPartyId");
 	Map resultMap = FastMap.newInstance();
 	List invoices = FastList.newInstance(); 
 	String vehicleId = (String) request.getParameter("vehicleId");
@@ -471,6 +472,7 @@ public static String processPurchaseOrder(HttpServletRequest request, HttpServle
 	processOrderContext.put("userLogin", userLogin);
 	processOrderContext.put("productQtyList", indentProductList);
 	processOrderContext.put("partyId", partyId);
+	processOrderContext.put("billFromPartyId", billFromPartyId);
 	processOrderContext.put("supplyDate", effectiveDate);
 	processOrderContext.put("salesChannel", salesChannel);
 	processOrderContext.put("vehicleId", vehicleId);
@@ -510,6 +512,7 @@ public static Map<String, Object> createPurchaseOrder(DispatchContext dctx, Map<
   	String salesChannel = (String) context.get("salesChannel");
   	String vehicleId = (String) context.get("vehicleId");
   	String partyId = (String) context.get("partyId");
+  	String billFromPartyId = (String) context.get("billFromPartyId");
   	boolean beganTransaction = false;
   	//fright Charges
   	BigDecimal freightCharges = (BigDecimal) context.get("freightCharges");
@@ -575,7 +578,12 @@ public static Map<String, Object> createPurchaseOrder(DispatchContext dctx, Map<
 		cart.setEndUserCustomerPartyId(billToPartyId);
 		//cart.setShipmentId(shipmentId);
 		//for PurchaseOrder we have to use for SupplierId
+		if(UtilValidate.isNotEmpty(billFromPartyId)){
+			 cart.setBillFromVendorPartyId(billFromPartyId);
+		}else{
 	    cart.setBillFromVendorPartyId(partyId);
+		}
+		//Debug.log("===billFromPartyId="+billFromPartyId+"===partyId==="+partyId);
 	    cart.setShipFromVendorPartyId(partyId);
 	    cart.setSupplierAgentPartyId(partyId);
 		

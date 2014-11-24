@@ -28,6 +28,13 @@ $(document).ready(function(){
 			}
 		});
 		
+		$('#billToPartyId').keypress(function (e) {
+	  			if (e.which == $.ui.keyCode.ENTER) {
+	    			$('#purchaseEntryInit').submit();
+	    			return false;   
+	  			}
+		});
+		
 		
 	});
 </script>
@@ -96,7 +103,24 @@ $(document).ready(function(){
           		</td>
           	</#if>
         </tr> 
-       <tr><td><br/></td></tr>    
+        <tr><td><br/></td></tr>    
+       <tr>
+       <td>&nbsp;</td>
+            <td align='left' valign='middle' nowrap="nowrap"><div class='h2'>Bill To Party/Employee ID:</div></td>
+          <td>&nbsp;</td>
+			<#if billToPartyId?exists>  
+	  	  		<input type="hidden" name="billToPartyId" id="billToPartyId" value="${billToPartyId?if_exists}"/>  
+          		<td valign='middle'>
+            		<div class='tabletext h2'>${billToPartyId?if_exists}<#if billToParty?exists && billToParty?has_content>[ ${billToPartyName?if_exists} ] ${partyAddress?if_exists}</#if> </div> <#--&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <a href="javascript:processChangeIndentParty()" class="buttontext">Party Change</a>-->
+          		</td>       
+       		<#else>               
+          		<td valign='middle'>
+          		<@htmlTemplate.lookupField value="${billToPartyId?if_exists}" formName="purchaseEntryInit" name="billToPartyId" id="billToPartyId" fieldFormName="LookupPartyName"/>
+          		 <span class="tooltip">If input given then invoice will raise against this Party </span>
+          		</td>
+          	</#if>
+        </tr> 
+       <tr><td><br/></td></tr> 
                        
       </table>
       <div id="sOFieldsDiv" >
@@ -111,6 +135,7 @@ $(document).ready(function(){
 	<input type="hidden" name="effectiveDate" id="effectiveDate" value="${parameters.effectiveDate?if_exists}"/>
 	<input type="hidden" name="boothId" id="boothId" value="${parameters.boothId?if_exists}"/>
 	<input type="hidden" name="partyId" id="partyId" value="${parameters.partyId?if_exists}"/>
+	<input type="hidden" name="billToPartyId" id="billToPartyId" value="${parameters.billToPartyId?if_exists}"/>
 	<input type="hidden" name="productSubscriptionTypeId" id="productSubscriptionTypeId" value="${parameters.productSubscriptionTypeId?if_exists}"/>   	   	   	   
 	<input type="hidden" name="subscriptionTypeId" id="subscriptionTypeId" value="${parameters.subscriptionTypeId?if_exists}"/>
 	<input type="hidden" name="destinationFacilityId" id="destinationFacilityId" value="${parameters.destinationFacilityId?if_exists}"/>

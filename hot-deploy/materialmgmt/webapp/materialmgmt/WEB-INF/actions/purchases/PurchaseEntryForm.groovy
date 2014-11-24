@@ -65,6 +65,8 @@ exprList = [];
 result = [:];
 routeId = parameters.routeId;
 partyId="";
+billToParty="";
+billToPartyId = parameters.billToPartyId;
 facility = null;
 prodPriceMap = [:];
 if(changeFlag == "PurchaseOrder" || changeFlag == "InterUnitPurchase"){
@@ -72,13 +74,29 @@ if(changeFlag == "PurchaseOrder" || changeFlag == "InterUnitPurchase"){
 	party = delegator.findOne("PartyGroup", UtilMisc.toMap("partyId", partyId), false);
 	context.party = party;
 }
+if(changeFlag == "PurchaseOrder" || changeFlag == "InterUnitPurchase"){
+	billToParty = delegator.findOne("PartyGroup", UtilMisc.toMap("partyId", billToPartyId), false);
+	context.billToParty = billToParty;
+}
 
+if(UtilValidate.isNotEmpty(billToPartyId)){
+	context.billToPartyId = billToPartyId;
+	context.billToPartyName = org.ofbiz.party.party.PartyHelper.getPartyName(delegator,billToPartyId, false);;
+	
+}
 partyPostalAddress = delegator.findList("PartyAndPostalAddress", EntityCondition.makeCondition("partyId", EntityOperator.EQUALS, partyId), null,null,null, false);
 if(partyPostalAddress){
 	partyPostalAddress = EntityUtil.getFirst(partyPostalAddress);
 	partyAddress = partyPostalAddress.address1;
 	context.partyAddress = partyAddress;
 }
+billToPartyPostalAddress = delegator.findList("PartyAndPostalAddress", EntityCondition.makeCondition("partyId", EntityOperator.EQUALS, billToPartyId), null,null,null, false);
+if(billToPartyPostalAddress){
+	billToPartyPostalAddress = EntityUtil.getFirst(billToPartyPostalAddress);
+	billToAddress = billToPartyPostalAddress.address1;
+	context.billToAddress = billToAddress;
+}
+
 prodList=[];
 
 if(UtilValidate.isNotEmpty(changeFlag) && changeFlag == "PurchaseOrder"){
