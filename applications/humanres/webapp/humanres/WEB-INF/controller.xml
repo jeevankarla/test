@@ -1735,6 +1735,7 @@ under the License.
     </request-map>
      <request-map uri="LeaveTypeListCsv.csv"><security https="true" auth="true"/><response name="success" type="view" value="LeaveTypeListCsv"></response></request-map>
     <request-map uri="LeaveTypeListPdf.pdf"><security https="true" auth="true"/><response name="success" type="view" value="LeaveTypeListPdf"></response></request-map>
+    <request-map uri="GratuitySupportReport.pdf"><security https="true" auth="true"/><response name="success" type="view" value="GratuitySupportReport"></response></request-map>
     
    
     <request-map uri="Employees">
@@ -2289,6 +2290,7 @@ under the License.
  	<view-map name="PayHeadTypes" type="screen" page="component://humanres/widget/ReportHumanresSummaryScreens.xml#PayHeadTypes"/>
 	<view-map name="PayHeadTypesCsv" type="screencsv" page="component://humanres/widget/ReportHumanresSummaryScreens.xml#PayHeadTypesCsv" content-type="text/csv" encoding="none"/>
 	<view-map name="PayHeadTypesPdf" type="screenfop" page="component://humanres/widget/ReportHumanresSummaryScreens.xml#PayHeadTypesPdf" content-type="application/pdf" encoding="none"/>
+	<view-map name="GratuitySupportReport" type="screenfop" page="component://humanres/widget/ReportHumanresSummaryScreens.xml#GratuitySupportReport" content-type="application/pdf" encoding="none"/>
  
  	<view-map name="EmployeeProfileReport" type="screen" page="component://humanres/widget/ReportHumanresSummaryScreens.xml#EmployeeProfileReport"/>
  	<view-map name="EmployeeProfileCsv" type="screencsv" page="component://humanres/widget/ReportHumanresSummaryScreens.xml#EmployeeProfileCsv" content-type="text/csv" encoding="none"/>

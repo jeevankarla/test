@@ -415,6 +415,18 @@
 			</widgets>
 		</section>
 	</screen>
+	<screen name="GratuitySupportReport">
+		<section>
+			<actions>
+				<script location="component://humanres/webapp/humanres/WEB-INF/actions/humanres/GratuitySupportReport.groovy"/>	
+			</actions>
+			<widgets>
+				<platform-specific> 
+				  <xsl-fo><html-template location="component://humanres/webapp/humanres/humanres/GratuitySupportReportPDF.fo.ftl"/></xsl-fo> 
+                </platform-specific>
+			</widgets>
+		</section>
+	</screen>
 	
 	<screen name="GHSSDepatmentCountReportPDF">
 		<section>
