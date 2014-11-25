@@ -197,4 +197,8 @@
 	<InvoiceItemTypeMap invoiceTypeId="SALES_INVOICE" invoiceItemMapKey="ROUNDING_ADJUSTMENT" invoiceItemTypeId="ROUNDING_ADJUSTMENT"/>
     
      
+     
+     <EnumerationType enumTypeId="FAC_CLOSE_REASON" /> 
+     <Enumeration sequenceId="01" description="Temporary Close" enumId="TEMPORARY"  enumTypeId="FAC_CLOSE_REASON"/>
+     <Enumeration  sequenceId="02"  description="Perminent Close"   enumId="PERMANENT" enumTypeId="FAC_CLOSE_REASON"/>
 </entity-engine-xml>
