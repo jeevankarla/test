@@ -48,6 +48,8 @@ under the License.
       <field name="orderId" type="id-ne"></field>
       <field name="orderItemSeqId" type="id-ne"></field>
       <field name="shipGroupSeqId" type="id-ne"></field>
+      <field name="custRequestId" type="id-ne"></field>
+      <field name="custRequestItemSeqId" type="id-ne"></field>
       <field name="inventoryItemId" type="id"></field>
       <field name="shipmentId" type="id"></field>
       <field name="shipmentItemSeqId" type="id"></field>
@@ -336,6 +338,7 @@ under the License.
       <field name="inventoryItemId" type="id"></field>
       <field name="productId" type="id"></field>
       <field name="shipmentId" type="id"></field>
+       <field name="statusId" type="id-ne"></field>
       <field name="shipmentItemSeqId" type="id"></field>
       <field name="shipmentPackageSeqId" type="id"></field>
       <field name="productSubscriptionTypeId" type="id"></field><!-- added to handle gifts  -->
@@ -357,6 +360,9 @@ under the License.
       <relation type="one" fk-name="SHP_RCPT_PROD" rel-entity-name="Product">
         <key-map field-name="productId"/>
       </relation>
+      <relation type="one" fk-name="SHP_RCPT_STTS" rel-entity-name="StatusItem">
+    	<key-map field-name="statusId"/>
+ 	  </relation>
       <relation type="one" fk-name="SHP_RCPT_SHPKG" rel-entity-name="ShipmentPackage">
         <key-map field-name="shipmentId"/>
         <key-map field-name="shipmentPackageSeqId"/>
