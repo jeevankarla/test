@@ -2321,7 +2321,7 @@ under the License.
 	
 	 <view-map name="EmployeeBankDetails" type="screen" page="component://humanres/widget/ReportHumanresSummaryScreens.xml#EmployeeBankDetails"/> 
 	 <view-map name="EmployeeBankDetailsPdf" type="screenfop" page="component://humanres/widget/ReportHumanresSummaryScreens.xml#EmployeeBankDetailsPdf" content-type="application/pdf" encoding="none"/>
-	 <view-map name="MonthlyBankStatementpdf" type="screenfop" page="component://humanres/widget/ReportHumanresSummaryScreens.xml#MonthlyBankStatementpdf" content-type="application/pdf" encoding="none"/>
+	 <view-map name="MonthlyBankStatementpdf" type="screenfop" page="component://humanres/widget/ReportHumanresSummaryScreens.xml#MonthlyBankStatementpdf" content-type="text/plain" encoding="none"/>
 	 <view-map name="EmployeeBankDetailsCsv" type="screencsv" page="component://humanres/widget/ReportHumanresSummaryScreens.xml#EmployeeBankDetailsCsv" content-type="text/csv" encoding="none"/>
 	 <view-map name="EcsBankDetailsCsv" type="screencsv" page="component://humanres/widget/ReportHumanresSummaryScreens.xml#EcsBankDetailsCsv" content-type="text/csv" encoding="none"/> 
 	 <view-map name="PFtransfer" type="screenfop" page="component://humanres/widget/ReportHumanresSummaryScreens.xml#PFtransfer" content-type="application/pdf" encoding="none"/>
