@@ -1473,6 +1473,8 @@ under the License.
       <alias entity-alias="CR" name="lastModifiedDate"/>
       <alias entity-alias="CR" name="lastModifiedByUserLogin"/>
       <alias entity-alias="CRI" name="productId"/>
+      <alias entity-alias="CRI" name="quantity"/>
+      <alias entity-alias="CRI" name="itemStatusId" field="statusId"/>
       <alias entity-alias="CRI" name="custRequestItemSeqId"/>
       <alias entity-alias="CRA" name="attrName"/>
       <alias entity-alias="CRA" name="attrValue"/>

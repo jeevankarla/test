@@ -2122,6 +2122,8 @@ under the License.
       <field name="facilityId" type="id"></field>
       <field name="deliverableId" type="id"></field>
       <field name="fixedAssetId" type="id"></field>
+      <field name="orderId" type="id-ne"></field>
+      <field name="orderItemSeqId" type="id"></field>
       <field name="productId" type="id"></field>
       <field name="statusId" type="id"></field>
       <field name="description" type="description"></field>
@@ -2150,6 +2152,13 @@ under the License.
       </relation>
       <relation type="one" fk-name="REQ_FIXED_ASSET" rel-entity-name="FixedAsset">
         <key-map field-name="fixedAssetId"/>
+      </relation>
+      <relation type="one" fk-name="REQ_ODR" rel-entity-name="OrderHeader">
+      		<key-map field-name="orderId"/>
+      </relation>
+      <relation type="one" fk-name="REQ_ODRIT" rel-entity-name="OrderItem">
+      		<key-map field-name="orderId"/>
+            <key-map field-name="orderItemSeqId"/>
       </relation>
       <relation type="one" fk-name="REQ_PRODUCT" rel-entity-name="Product">
         <key-map field-name="productId"/>

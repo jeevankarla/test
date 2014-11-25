@@ -38,10 +38,11 @@ under the License.
             location="component://order/script/org/ofbiz/order/request/CustRequestServices.xml" invoke="createCustRequest" auth="true">
         <description>Create a custRequest record and optionally create a custRequest item.</description>
         <permission-service service-name="custRequestPermissionCheck" main-action="CREATE"/>
-        <auto-attributes include="pk" mode="INOUT" optional="true"/>
+        <!-- <auto-attributes include="pk" mode="INOUT" optional="true"/> -->
         <auto-attributes include="nonpk" mode="IN" optional="true"/>
         <auto-attributes include="all" mode="IN" entity-name="CustRequestItem" optional="true"/>
         <attribute name="webSiteId" type="String" mode="IN" optional="true"/><!-- for notification services -->
+        <auto-attributes include="pk" mode="INOUT" optional="true"/>
         <override name="custRequestName" allow-html="safe"/>
         <override name="description" allow-html="safe"/>
         <override name="story" allow-html="safe"/>
