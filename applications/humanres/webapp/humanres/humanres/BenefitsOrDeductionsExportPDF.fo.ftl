@@ -39,10 +39,11 @@ under the License.
  		<#if headerDetailsMap?has_content>
  			<#assign partyGroup = delegator.findOne("PartyGroup", {"partyId" : "Company"}, true)>
  			<#assign partyAddressResult = dispatcher.runSync("getPartyPostalAddress", Static["org.ofbiz.base.util.UtilMisc"].toMap("partyId", "Company", "userLogin", userLogin))/>
+ 			<#assign SNo=1>
      		<fo:page-sequence master-reference="main"> 	 <#-- the footer -->
      			<fo:static-content flow-name="xsl-region-before">
 	     			<fo:block  keep-together="always" text-align="center" font-family="Courier,monospace" white-space-collapse="false" font-weight="bold" font-size="13pt">${partyGroup.groupName?if_exists}</fo:block>
-					<fo:block  keep-together="always" text-align="center" font-family="Courier,monospace" white-space-collapse="false" font-weight="bold" font-size="13pt"><#if partyAddressResult.address1?has_content>${partyAddressResult.address1?if_exists}</#if><#if (partyAddressResult.address2?has_content)>${partyAddressResult.address2?if_exists}</#if></fo:block>
+					<fo:block  keep-together="always" text-align="center" font-family="Courier,monospace" white-space-collapse="false" font-weight="bold" font-size="10pt"><#if partyAddressResult.address1?has_content>${partyAddressResult.address1?if_exists}</#if><#if (partyAddressResult.address2?has_content)>${partyAddressResult.address2?if_exists}</#if></fo:block>
 	     			<#if (parameters.type)=="benefits">
 	     				<fo:block keep-together="always" white-space-collapse="false" font-family="Courier,monospace" text-align="center" font-size="13pt" font-weight="bold">${benefitDescMap[(parameters.benefitTypeId)].toUpperCase()} FOR THE MONTH OF : ${(Static["org.ofbiz.base.util.UtilDateTime"].toDateString(timePeriodStart, "MMMMM-yyyy")).toUpperCase()}</fo:block>
 	     			</#if>
@@ -54,13 +55,15 @@ under the License.
 	     			<fo:block linefeed-treatment="preserve">&#xA;</fo:block>
 	     			<fo:block font-family="Courier,monospace">
 	     				<fo:table>
-	     					<fo:table-column column-width="150pt"/>
-	     					<fo:table-column column-width="200pt"/>
+	     					<fo:table-column column-width="60pt"/>
+	     					<fo:table-column column-width="120pt"/>
+	     					<fo:table-column column-width="180pt"/>
 	     					<#list headerItemIdsList as headerItem>
 	       					<fo:table-column column-width="200"/>
 	       					</#list>	
 	       					<fo:table-column column-width="180pt"/>
 	       					<fo:table-body>
+	       						<fo:table-cell><fo:block text-align="center" font-size="10pt" font-weight="bold" border-style="solid"> SNo:</fo:block></fo:table-cell>
 	       						<fo:table-cell><fo:block text-align="center" font-size="10pt" font-weight="bold" border-style="solid">EmplNo</fo:block></fo:table-cell>
 	       						<fo:table-cell><fo:block text-align="center" font-size="10pt" font-weight="bold" border-style="solid">Name</fo:block></fo:table-cell>
 	       						<#if parameters.type=="benefits">
@@ -78,8 +81,9 @@ under the License.
           		<#list headerDetailsList as header>	
            			<fo:block text-align="center">
            				<fo:table text-align="center">
-	           				<fo:table-column column-width="150pt"/>
-	           				<fo:table-column column-width="200pt"/>
+           					<fo:table-column column-width="60pt"/>
+	           				<fo:table-column column-width="120pt"/>
+	           				<fo:table-column column-width="180pt"/>
 	     					<#list headerItemIdsList as headerItem>
 	       					<fo:table-column column-width="200"/>
 	       					</#list>	
@@ -88,7 +92,8 @@ under the License.
 	       						<#list headerItemIdsList as headerItem>
 	       							<#if header.getValue().get(headerItem)!=0>
 	       								<fo:table-row>
-				       						<fo:table-cell><fo:block keep-together="always" border-style="solid">${header.getKey()}</fo:block></fo:table-cell>
+				       						<fo:table-cell><fo:block keep-together="always" border-style="solid">${(SNo)?if_exists}</fo:block><#assign SNo=SNo+1></fo:table-cell>
+	       									<fo:table-cell><fo:block keep-together="always" border-style="solid">${header.getKey()}</fo:block></fo:table-cell>
 				       						<fo:table-cell><fo:block keep-together="always"  text-align="left" border-style="solid" text-indent="5pt">${Static["org.ofbiz.order.order.OrderServices"].nameTrim((StringUtil.wrapString(Static["org.ofbiz.party.party.PartyHelper"].getPartyName(delegator, header.getKey(), false))),15)}</fo:block></fo:table-cell>
 			       							<#if parameters.type=="benefits">
 				       								<fo:table-cell border-style="solid"><fo:block text-align="right" keep-together="always" font-weight="bold">${header.getValue().get(headerItem)?if_exists}</fo:block></fo:table-cell>
@@ -105,8 +110,8 @@ under the License.
 	           	</#list>
 	           	<fo:block text-align="center">
 	       			<fo:table text-align="center">
-	       				<fo:table-column column-width="150pt"/>
-	       				<fo:table-column column-width="200pt"/>
+	       				<fo:table-column column-width="180pt"/>
+	       				<fo:table-column column-width="180pt"/>
 	 					<#list headerItemIdsList as headerItem>
 	   					<fo:table-column column-width="200"/>
 	   					</#list>	
