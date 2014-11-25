@@ -1,0 +1,196 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<forms xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"  xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/widget-form.xsd">
+
+	<form name="FindMaterialRequest" target="FindMaterialRequest" title="" type="single" default-map-name="parameters"
+        header-row-style="header-row" default-table-style="basic-table">
+        
+        <field name="custRequestId" title="Request Id"><text-find/></field>
+        <field name="custRequestTypeId"><hidden value="PRODUCT_REQUIREMENT"/></field>
+        <field name="statusId" title="Status">
+            <drop-down allow-empty="true">
+                <entity-options entity-name="StatusItem" description="${description}">
+                    <entity-constraint name="statusTypeId" operator="equals" value="CUSTREQ_STTS"/>
+                    <entity-order-by field-name="sequenceId"/>
+                </entity-options>
+            </drop-down>
+        </field>
+        <field name="custRequestName" title="Request Title"><text-find/></field>
+        <field name="fromPartyId" title="From Party"><lookup target-form-name="LookupPartyName"/></field>
+ 		<field name="custRequestDate" title="Request Date"><date-find/></field>   
+        <field name="submitButton" title="${uiLabelMap.CommonFind}" widget-style="smallSubmit">
+            <submit button-type="button"/>
+        </field>
+        <field name="noConditionFind"><hidden value="Y"/><!-- if this isn't there then with all fields empty no query will be done --></field>
+    </form>
+
+    <form name="ListRequests" type="list" extends="ListRequestList" list-name="listIt">
+        <actions>
+          <service service-name="performFind" result-map="result" result-map-list="listIt">
+            <field-map field-name="inputFields" from-field="parameters"/>
+            <field-map field-name="entityName" from-field="entityName"/>
+            <field-map field-name="orderBy" from-field="parameters.sortField"/>
+            <field-map field-name="viewIndex" from-field="viewIndex"/>
+            <field-map field-name="viewSize" from-field="viewSize"/>
+          </service>
+        </actions>
+    </form>
+
+    <form name="ListRequestList" type="list" use-row-submit="true" list-name="custRequests" title="List of customer requests"
+        odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
+        <field name="custRequestId" sort-field="true" title="RequestId" widget-style="buttontext">
+            <hyperlink description="${custRequestId}" target="ViewMaterialRequest" target-window="_blank">
+                <parameter param-name="custRequestId"/>
+            </hyperlink>
+        </field>
+        <field name="custRequestDate" sort-field="true" title="Request Date"><display description="${bsh:org.ofbiz.base.util.UtilDateTime.toDateString(custRequestDate,&quot;dd/MM/yyyy&quot;)}"/></field>
+        <field name="fromPartyId" sort-field="true">
+            <display-entity entity-name="PartyNameView" key-field-name="partyId" description="${firstName} ${middleName} ${lastName} ${groupName}">
+                <sub-hyperlink description="[${fromPartyId}]" target="/partymgr/control/viewprofile" target-type="inter-app">
+                    <parameter param-name="partyId" from-field="fromPartyId"/>
+                </sub-hyperlink>
+            </display-entity>
+        </field>
+        <field name="custRequestName" title="Request Title"><display/></field>
+        <field name="statusId" sort-field="true" title="Status">
+            <display-entity also-hidden="false" entity-name="StatusItem"/>
+        </field>
+        <field name="lastModifiedDate" sort-field="true"><display/></field>
+        <field name="createdByUserLogin" sort-field="true"><display/></field>
+        
+        <field use-when="&quot;${statusId}&quot;== &quot;CRQ_DRAFT&quot;" name="cancel" widget-style="buttontext">
+            <hyperlink target="setRequestStatus" description="Cancel">
+                <parameter param-name="custRequestId"/>
+                <parameter param-name="statusId" value="CRQ_CANCELLED"/>
+            </hyperlink>
+        </field>
+        
+    </form>
+    
+    <form name="ListRequestsToIssue" type="list" use-row-submit="true"  title="" list-name="custRequestItemsList"
+        odd-row-style="alternate-row" default-table-style="basic-table hover-bar" paginate-target="StoreProductIssue">
+        <row-actions>
+        	<set field="flag" value="${groovy: return (QOH > quantity)? 'Y' : 'N';}"/>
+        </row-actions>
+        <field name="custRequestId" title="Request Id"><display/></field>
+        <field name="custRequestItemSeqId" title="Item Id"><display/></field>
+        <field name="custRequestDate" title="Request Date"><display description="${groovy:org.ofbiz.base.util.UtilDateTime.toDateString(custRequestDate, &quot;dd/MM/yyyy&quot;)}"/></field>
+        <field name="fromPartyId" title="Requested Party">
+            <display-entity entity-name="PartyNameView" key-field-name="partyId" description="${firstName} ${middleName} ${lastName} ${groupName}"/>
+        </field>
+        <field name="productId" title="Product">
+            <display-entity entity-name="Product" key-field-name="productId" description="${productId} - ${productName}"/>
+        </field>
+        <field name="quantity" title="Required Qty"><display/></field>
+        <field name="QOH" title="Inventory Available"><display/></field>
+        <field use-when="flag == &quot;Y&quot;" name="issueProduct" widget-style="buttontext">
+            <hyperlink target="issueProductForRequest" description="Issue">
+                <parameter param-name="custRequestId"/>
+                <parameter param-name="custRequestItemSeqId"/>
+            </hyperlink>
+        </field>
+        <field use-when="flag == &quot;N&quot;" name="raiseRequirement" widget-style="buttontext">
+            <hyperlink target="createRequirementForCustRequestItem" description="Raise Requirement">
+                <parameter param-name="custRequestId"/>
+                <parameter param-name="custRequestItemSeqId"/>
+            </hyperlink>
+        </field>
+        
+    </form>
+    
+    <form name="ListRequestItems" type="list" use-row-submit="true"  title="" list-name="custRequestItems"
+        odd-row-style="alternate-row" default-table-style="basic-table hover-bar" paginate-target="RequestItems">
+        <auto-fields-entity entity-name="CustRequestItem" default-field-type="display"/>
+        <field name="sequenceNum"></field>
+        <field name="custRequestId"><hidden/></field>
+        <field name="custRequestItemSeqId" widget-style="buttontext">
+        	<display/>
+            <!-- <hyperlink description="${custRequestItemSeqId}" target="requestitem">
+                <parameter param-name="custRequestId"/>
+                <parameter param-name="custRequestItemSeqId"/>
+            </hyperlink> -->
+        </field>
+        <!-- <field name="story"><textarea read-only="true"/></field> -->
+        <field name="productId" title="Product">
+            <display-entity entity-name="Product" key-field-name="productId" description="${productId} - ${productName}"/>
+        </field>
+        <!-- <field name="custRequestResolutionId"><hidden/></field> -->
+        <field name="statusId">
+            <display-entity also-hidden="false" entity-name="StatusItem"/>
+        </field>
+        <!-- <field name="addNote" use-when="!custRequest.get(&quot;statusId&quot;).equals(&quot;CRQ_CANCELLED&quot;)&amp;&amp;!custRequest.get(&quot;statusId&quot;).equals(&quot;CRQ_COMPLETED&quot;)">
+            <hyperlink description="${uiLabelMap.FormFieldTitle_addNote}" target="requestitemnotes">
+                <parameter param-name="custRequestId"/>
+                <parameter param-name="custRequestItemSeqId"/>
+            </hyperlink>
+        </field> -->
+    </form>
+    <form name="OverviewRequestItems" extends="ListRequestItems">
+        <field name="priority"><ignored/></field>
+        <field name="sequenceNum"><ignored/></field>
+        <field name="sequenceNumber"><ignored/></field>
+        <field name="requiredByDate"><ignored/></field>
+        <field name="selectedAmount"><ignored/></field>
+        <field name="maximumAmount"><ignored/></field>
+        <field name="reservStart"><ignored/></field>
+        <field name="reservLength"><ignored/></field>
+        <field name="reservPersons"><ignored/></field>
+        <field name="configId"><ignored/></field>
+        <field name="story"><ignored/></field>
+        <field name="description"><ignored/></field>
+        <field name="custRequestResolutionId"><ignored/></field>
+    </form>
+
+    <form name="ViewRequestStatus" type="list"
+        odd-row-style="alternate-row" default-table-style="basic-table hover-bar">
+        <actions>
+            <entity-and entity-name="CustRequestStatus">
+                <field-map field-name="custRequestId" from-field="parameters.custRequestId"/>
+                <order-by field-name="custRequestStatusId"/>
+            </entity-and>
+        </actions>
+        <auto-fields-entity entity-name="CustRequestStatus" default-field-type="display"/>
+        <field name="custRequestId"><hidden/></field>
+        <field name="custRequestStatusId"><hidden/></field>
+        <field name="statusId"><display-entity entity-name="StatusItem" description="${description}"/></field>
+    </form>
+
+    <form name="ListRequestItemRequirements" type="list" title="" list-name="custRequestRequirements"
+        odd-row-style="alternate-row" default-table-style="basic-table hover-bar" paginate-target="RequestItemRequirements">
+        <auto-fields-entity entity-name="Requirement" default-field-type="display"/>
+        <field name="requirementId" widget-style="buttontext">
+            <hyperlink description="${requirementId}" target="EditRequirement">
+                <parameter param-name="requirementId"/>
+            </hyperlink>
+        </field>
+    </form>
+        <!-- request form -->
+    <form name="requestInfo" type="single" title="request information" default-map-name="custRequest"
+        header-row-style="header-row" default-table-style="basic-table">
+        <actions>
+            <set field="lookupPartyId" from-field="custRequest.fromPartyId" default-value="_NA_"/>
+            <service service-name="getPartyNameForDate" result-map="partyNameResultTo">
+                <field-map field-name="partyId" from-field="lookupPartyId"/>
+                <field-map field-name="compareDate" from-field="custRequest.custRequestDate"/>
+                <field-map field-name="lastNameFirst" value="Y"/>
+            </service>
+        </actions>
+        <field name="custRequestId"><hidden/></field>
+        <field name="custRequestTypeId" title="${uiLabelMap.CommonType}"><display-entity entity-name="CustRequestType" description="${description}"/></field>
+        <field name="statusId" title="${uiLabelMap.CommonStatus}"><display-entity entity-name="StatusItem" description="${description}"/></field>
+        <field name="fromPartyId" title="Party">
+        	<display description="${partyNameResultTo.fullName} [${custRequest.fromPartyId}]"/>
+            <!-- <hyperlink target="/partymgr/control/viewprofile" target-type="inter-app" description="${partyNameResultTo.fullName} [${custRequest.fromPartyId}]">
+                <parameter param-name="partyId" from-field="custRequest.fromPartyId"/>
+            </hyperlink> -->
+        </field>
+        <field name="custRequestName" title="${uiLabelMap.CommonName}" encode-output="false"><display/></field>
+        <!-- <field name="description" title="${uiLabelMap.CommonDescription}"><display/></field>
+        <field name="productStoreId" title="${uiLabelMap.ProductProductStore}"><display-entity entity-name="ProductStore" description="${storeName}"/></field>
+        <field name="internalComment" title="${uiLabelMap.CommonInternalComment}"><display/></field>
+        <field name="reason" title="${uiLabelMap.CommonReason}"><display/></field>
+         -->
+        <field name="custRequestDate" title="Request Date"><display/></field>
+        <field name="createdDate" title="Created Date"><display/></field>
+        <field name="lastModifiedDate" title="Last Modified Date"><display/></field>
+    </form>
+</forms>

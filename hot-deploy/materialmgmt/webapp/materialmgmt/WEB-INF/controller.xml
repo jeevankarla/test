@@ -24,6 +24,7 @@
 
     <!-- Request Mappings -->
     <request-map uri="main"><security https="true" auth="true"/><response name="success" type="view" value="main"/></request-map>
+    <request-map uri="mainNg"><security https="true" auth="true"/><response name="success" type="view" value="mainNg"/></request-map>
     
      <request-map uri="FindPurchaseOrder">
      <security https="true" auth="true"/>
@@ -35,7 +36,122 @@
        <response name="success" type="view" value="PurchaseOrderInit"/>
        <response name="error" type="view" value="PurchaseOrderInit"/>
      </request-map>
+     <request-map uri="FindMaterialRequest">
+       <security https="true" auth="true"/>
+       <response name="success" type="view" value="FindMaterialRequest"/>
+       <response name="error" type="view" value="FindMaterialRequest"/>
+     </request-map>
+     
+     <request-map uri="processCustRequestItems">
+       <security https="true" auth="true"/>
+       <event type="java" path="in.vasista.vbiz.purchase.MaterialRequestServices" invoke="processCustRequestItems" global-transaction="true"/>
+       <response name="success" type="view" value="CustRequestEntry"/>
+       <response name="error" type="view" value="CustRequestEntry"/>
+     </request-map>
+     <request-map uri="CustRequestEntry">
+       <security https="true" auth="true"/>
+       <response name="success" type="view" value="CustRequestEntry"/>
+       <response name="error" type="view" value="CustRequestEntry"/>
+     </request-map>
+     
+     <request-map uri="StoreProductIssue">
+       <security https="true" auth="true"/>
+       <response name="success" type="view" value="StoreProductIssue"/>
+       <response name="error" type="view" value="StoreProductIssue"/>
+     </request-map>
+     
+     <request-map uri="issueProductForRequest">
+       <security https="true" auth="true"/>
+       <event type="service" path="" invoke="issueProductForRequest" global-transaction="true"/>
+       <response name="success" type="view" value="StoreProductIssue"/>
+       <response name="error" type="view" value="StoreProductIssue"/>
+     </request-map>
+     
+     
+     <request-map uri="quickMatPurchaseOrderEntry">
+        <security https="true" auth="true"/>
+        <event type="java" path="org.ofbiz.order.shoppingcart.ShoppingCartEvents" invoke="quickInitPurchaseOrder"/>
+        <response name="success" type="request" value="quickAddMatRequirementsToCart"/>
+        <response name="error" type="view" value="ApprovedMatRequirementBySupplier"/>
+     </request-map>
+     
+     <request-map uri="quickAddMatRequirementsToCart">
+        <security https="true" auth="true"/>
+        <event type="java" path="org.ofbiz.order.shoppingcart.ShoppingCartEvents" invoke="addToCartBulkRequirements"/>
+        <response name="success" type="request" value="quickCheckoutMatOrderWithDefaultOptions"/>
+        <response name="error" type="request" value="ApprovedMatRequirementBySupplier"/>
+    </request-map>
     
+    <request-map uri="quickCheckoutMatOrderWithDefaultOptions">
+        <security https="true" auth="true"/>
+        <event type="java" path="org.ofbiz.order.shoppingcart.ShoppingCartEvents" invoke="quickCheckoutOrderWithDefaultOptions"/>
+        <response name="success" type="request" value="calcTaxForMatOrder"/>
+        <response name="error" type="request" value="ApprovedMatRequirementBySupplier"/>
+    </request-map>
+    
+    <request-map uri="calcTaxForMatOrder">
+        <security direct-request="false"/>
+        <event type="java" path="org.ofbiz.order.shoppingcart.CheckOutEvents" invoke="calcTax"/>
+        <response name="success" type="view" value="confirmPurchaseOrder"/>
+        <response name="error" type="request" value="ApprovedMatRequirementBySupplier"/>
+    </request-map>
+    
+    <request-map uri="processMaterialPurchaseOrder">
+        <security https="true" auth="true"/>
+        <event type="java" path="org.ofbiz.order.shoppingcart.CheckOutEvents" invoke="createOrder"/>
+        <response name="sales_order" type="request" value="checkBlackList"/>
+        <response name="work_order" type="request" value="checkBlackList"/>
+        <response name="purchase_order" type="request" value="FindMaterialPO"/>
+        <response name="error" type="view" value="confirmPurchaseOrder"/>
+    </request-map>
+    
+    
+    <request-map uri="POMaterialReceipts">
+       <security https="true" auth="true"/>
+       <response name="success" type="view" value="POMaterialReceipts"/>
+       <response name="error" type="view" value="POMaterialReceipts"/>
+     </request-map>
+     
+     <request-map uri="processReceiptItems">
+       <security https="true" auth="true"/>
+       <event type="java" path="in.vasista.vbiz.purchase.MaterialPurchaseServices" invoke="processReceiptItems" global-transaction="true"/>
+       <response name="success" type="request-redirect" value="POMaterialReceipts"/>
+       <response name="error" type="view" value="POMaterialReceipts"/>
+     </request-map>
+     
+     <request-map uri="createRequirementForCustRequestItem">
+       <security https="true" auth="true"/>
+       <event type="service" path="" invoke="createRequirementForCustRequestItem" global-transaction="true"/>
+       <response name="success" type="view" value="StoreProductIssue"/>
+       <response name="error" type="view" value="StoreProductIssue"/>
+     </request-map>
+     
+     <request-map uri="FindMaterialRequirement">
+       <security https="true" auth="true"/>
+       <response name="success" type="view" value="FindMaterialRequirement"/>
+       <response name="error" type="view" value="FindMaterialRequirement"/>
+     </request-map>
+     <request-map uri="ApproveMaterialRequirement">
+       <security https="true" auth="true"/>
+       <response name="success" type="view" value="ApproveMaterialRequirement"/>
+       <response name="error" type="view" value="ApproveMaterialRequirement"/>
+     </request-map>
+     
+     <request-map uri="setRequestStatus">
+       <security https="true" auth="true"/>
+       <event type="service" invoke="setRequestStatus"></event>
+       <response name="success" type="view" value="FindMaterialRequest"/>
+       <response name="error" type="view" value="FindMaterialRequest"/>
+     </request-map>
+     
+     
+     <request-map uri="ViewMaterialRequest">
+       <security https="true" auth="true"/>
+       <response name="success" type="view" value="ViewMaterialRequest"/>
+       <response name="error" type="view" value="ViewMaterialRequest"/>
+     </request-map>
+     
+     
       <request-map uri="FindInterUnitPurchase">
         <security https="true" auth="true"/>
        <response name="success" type="view" value="FindInterUnitPurchase"/>
@@ -46,8 +162,6 @@
        <response name="success" type="view" value="InterUnitPurchaseOrderInit"/>
        <response name="error" type="view" value="InterUnitPurchaseOrderInit"/>
      </request-map>
-    
-    
     
     <request-map uri="processPurchaseOrder">
         <security https="true" auth="true"/>
@@ -74,12 +188,32 @@
          <response name="success"  type="request-redirect-noparam" value="FindPurchaseOrder"></response>
         <response name="error" type="view" value="FindPurchaseOrder"/>
     </request-map>
+
     <request-map uri="cancelInterUnitPurchaseOrder">
         <security https="true" auth="true"/>
         <event type="service" path="" invoke="cancelPurchaseOrder"/>
          <response name="success"  type="request-redirect-noparam" value="FindInterUnitPurchase"></response>
         <response name="error" type="view" value="FindInterUnitPurchase"/>
     </request-map>
+    
+   <request-map uri="approveMaterialRequirementEnrties">
+       <security https="true" auth="true"/>
+       <event type="service-multi" invoke="approveRequirement"/>
+       <response name="success" type="view" value="ApproveMaterialRequirement"/>
+       <response name="error" type="view" value="ApproveMaterialRequirement"/>
+   </request-map>
+   
+   <request-map uri="ApprovedMatRequirementBySupplier">
+       <security https="true" auth="true"/>
+       <response name="success" type="view" value="ApprovedMatRequirementBySupplier"/>
+       <response name="error" type="view" value="ApprovedMatRequirementBySupplier"/>
+   </request-map>
+   
+   <request-map uri="FindMaterialPO">
+       <security https="true" auth="true"/>
+       <response name="success" type="view" value="FindMaterialPO"/>
+       <response name="error" type="view" value="FindMaterialPO"/>
+   </request-map>
    
    <request-map uri="StoreReports">
         <security https="true" auth="true"/>
@@ -104,6 +238,7 @@
     
     
     <view-map name="main" type="screen" page="component://materialmgmt/widget/materialmgmtScreens.xml#main"/>
+    <view-map name="mainNg" type="screen" page="component://materialmgmt/widget/materialmgmtScreens.xml#mainNG"/>
      <!-- purchaseOrder views -->  
      <view-map name="FindPurchaseOrder" type="screen" page="component://materialmgmt/widget/materialmgmtScreens.xml#FindPurchaseOrder"/>
      
@@ -116,5 +251,21 @@
     <view-map name="purchaseAccountSummeryPDF" type="screenfop" page="component://materialmgmt/widget/materialmgmtReportScreens.xml#purchaseAccountSummeryPDF" content-type="application/pdf"/>
     <view-map name="PurchaseTaxProductReportPDF" type="screenfop" page="component://materialmgmt/widget/materialmgmtReportScreens.xml#PurchaseTaxProductReportPDF" content-type="application/pdf"/>
     
+    <!-- custRequest views -->
+    <view-map name="FindMaterialRequest" type="screen" page="component://materialmgmt/widget/MaterialRequestScreens.xml#FindMaterialRequest"/>
+    <view-map name="ViewMaterialRequest" type="screen" page="component://materialmgmt/widget/MaterialRequestScreens.xml#ViewMaterialRequest"/>
+    <view-map name="CustRequestEntry" type="screen" page="component://materialmgmt/widget/MaterialRequestScreens.xml#CustRequestEntry"/>
+    
+    <view-map name="StoreProductIssue" type="screen" page="component://materialmgmt/widget/MaterialRequestScreens.xml#StoreProductIssue"/>
+    
+    <!-- Requirement views -->
+    <view-map name="FindMaterialRequirement" type="screen" page="component://materialmgmt/widget/MaterialRequirementScreens.xml#FindMaterialRequirement"/>
+    <view-map name="ApproveMaterialRequirement" type="screen" page="component://materialmgmt/widget/MaterialRequirementScreens.xml#ApproveMaterialRequirement"/>
+    <view-map name="ApprovedMatRequirementBySupplier" type="screen" page="component://materialmgmt/widget/MaterialRequirementScreens.xml#ApprovedMatRequirementBySupplier"/>
+    
+    <!-- PO views -->
+    <view-map name="confirmPurchaseOrder" type="screen" page="component://materialmgmt/widget/MaterialPurchaseScreens.xml#ConfirmPurchaseOrder"/>
+    <view-map name="POMaterialReceipts" type="screen" page="component://materialmgmt/widget/MaterialPurchaseScreens.xml#POMaterialReceipts"/>
+    <view-map name="FindMaterialPO" type="screen" page="component://materialmgmt/widget/MaterialPurchaseScreens.xml#FindMaterialPO"/>
     
 </site-conf>

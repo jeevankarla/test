@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<services xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/services.xsd">
+    <description>Purchases Services</description>
+    <vendor></vendor>
+    <version>1.0</version>
+    
+    <service name="setRequestStatus" engine="java" location="in.vasista.vbiz.purchase.MaterialRequestServices" invoke="setRequestStatus">
+        <description>Set cust Request status change wrapper service</description>
+        <attribute name="custRequestId" type="String" mode="IN" optional="false"/>
+        <attribute name="statusId" type="String" mode="IN" optional="false"/>
+    </service>
+    
+    <service name="setCustRequestItemStatus" engine="java" location="in.vasista.vbiz.purchase.MaterialRequestServices" invoke="setCustRequestItemStatus">
+        <description>Set cust Request Item status service</description>
+        <attribute name="custRequestId" type="String" mode="IN" optional="false"/>
+        <attribute name="custRequestItemSeqId" type="String" mode="IN" optional="false"/>
+        <attribute name="statusId" type="String" mode="IN" optional="false"/>
+    </service>
+    
+    
+    <service name="issueProductForRequest" engine="java" location="in.vasista.vbiz.purchase.MaterialRequestServices" invoke="issueInventoryItemToCustRequestItem">
+        <description>Issue Products to Customer Request Items</description>
+        <attribute name="custRequestId" type="String" mode="IN" optional="false"/>
+        <attribute name="custRequestItemSeqId" type="String" mode="IN" optional="false"/>
+        <attribute name="facilityId" type="String" mode="IN" optional="true"/>
+    </service>
+    
+    <service name="createRequirementForCustRequestItem" engine="java" location="in.vasista.vbiz.purchase.MaterialRequestServices" invoke="createRequirementForCustRequestItem">
+        <description>Issue Products to Customer Request Items</description>
+        <attribute name="custRequestId" type="String" mode="IN" optional="false"/>
+        <attribute name="custRequestItemSeqId" type="String" mode="IN" optional="false"/>
+    </service>
+    
+    <service name="createIssuanceForCustRequestItem" engine="java" location="in.vasista.vbiz.purchase.MaterialRequestServices" invoke="createIssuanceForCustRequestItem">
+        <description>Issue Products to Customer Request Items</description>
+        <attribute name="custRequestId" type="String" mode="IN" optional="false"/>
+        <attribute name="custRequestItemSeqId" type="String" mode="IN" optional="false"/>
+        <attribute name="inventoryItemId" type="String" mode="IN" optional="false"/>
+        <attribute name="quantity" type="BigDecimal" mode="IN" optional="false"/>
+        <attribute name="facilityId" type="String" mode="IN" optional="true"/>
+    </service>
+    
+</services>

@@ -1,4 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <entity-engine-xml>
 
+	<CustRequestType custRequestTypeId="PRODUCT_REQUIREMENT" description="Request For Material" hasTable="N" />
+	<ProductCategoryAssocType description="PURCHASE INDENT" parentTypeId="INDENT" productCategoryAssocTypeId="PUR_INDENT"/>
+	
+	<ShipmentType description="Purchase Shipment" hasTable="N" shipmentTypeId="PURCHASE_SHIPMENT"/>
+	<ShipmentType description="Material Purchase Shipment" hasTable="N"  parentTypeId="PURCHASE_SHIPMENT" shipmentTypeId="MATERIAL_SHIPMENT"/>
 </entity-engine-xml>

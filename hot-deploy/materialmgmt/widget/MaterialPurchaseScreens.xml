@@ -1,0 +1,159 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<screens xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/widget-screen.xsd">
+	
+	<screen name="ConfirmPurchaseOrder">
+        <section>
+            <actions>
+                <set field="stepTitleId" value="OrderConfirmation"/>
+                <set field="stepLabelId" value="OrderReviewOrder"/>
+                <set field="tabButtonItem" value="FindMaterialRequirement"/>
+                <!-- <set field="tabButtonItem2" value="ApproveMaterialRequirement"/> -->
+                <property-to-field resource="order" property="orderPreference.giftEnable" field="giftEnable" default="Y"/>
+                <script location="component://order/webapp/ordermgr/WEB-INF/actions/entry/CheckoutReview.groovy"/>
+            </actions>
+            <widgets>
+                <decorator-screen name="materialmgmtNgCommonDecorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="body">
+                    	<platform-specific>
+                            <html><html-template location="component://materialmgmt/webapp/materialmgmt/purchase/POEntryCheckOutTabBar.ftl"/></html>
+                        </platform-specific>
+                    
+                        <!-- <platform-specific>
+                            <html><html-template location="component://order/webapp/ordermgr/entry/order/orderheaderinfo.ftl"/></html>
+                        </platform-specific>
+                        <platform-specific>
+                            <html><html-template location="component://order/webapp/ordermgr/entry/order/orderpaymentinfo.ftl"/></html>
+                        </platform-specific>
+                        <platform-specific>
+                            <html><html-template location="component://order/webapp/ordermgr/entry/order/shipGroupConfirmSummary.ftl"/></html>
+                        </platform-specific> -->
+                        <platform-specific>
+                            <html><html-template location="component://order/webapp/ordermgr/entry/order/orderitems.ftl"/></html>
+                        </platform-specific>
+                    </decorator-section>
+                  </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    
+    <screen name="FindMaterialPO">
+        <section>
+            <actions>
+                <set field="titleProperty" value="Find Purchase Order"/>              
+			    <set field="tabButtonItem" value="FindMaterialPO" />	
+               <set field="viewSize" from-field="parameters.VIEW_SIZE"/>
+               <set field="targetRequest" value="FindMaterialPO"/>
+                <!-- <set field="ChannalType" value="PROD_PRCHSE_CHANNEL"/>  -->
+            </actions>
+            <widgets>
+                 <decorator-screen name="materialmgmtNgCommonDecorator" location="${parameters.mainDecoratorLocation}">
+                      <decorator-section name="body">  
+                        <section>
+                            <widgets>
+                                <decorator-screen name="FindScreenDecorator" location="component://common/widget/CommonScreens.xml">
+                                    <decorator-section name="search-options">
+                            			<include-form name="FindMaterialPurchaseOrder" location="component://materialmgmt/widget/MaterialPurchaseForms.xml"/>
+                      				</decorator-section>
+                      				<decorator-section name="search-results">
+                      					<screenlet title="">
+                          					<include-form name="listMaterialPurchaseOrders" location="component://materialmgmt/widget/MaterialPurchaseForms.xml"/>
+                      					</screenlet>
+                      				</decorator-section>
+                                </decorator-screen>
+                            </widgets>
+                        </section>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>            
+        </section>
+    </screen>
+    
+    <screen name="POMaterialReceipts">
+        <section>
+            <actions>
+                <set field="titleProperty" value="PO Receipts"/>              
+			    <set field="tabButtonItem" value="POMaterialReceipts" />	
+               <set field="viewSize" from-field="parameters.VIEW_SIZE"/>
+                <!-- <set field="ChannalType" value="PROD_PRCHSE_CHANNEL"/>  -->
+                <set field="supplyDate" from-field="parameters.supplyDate"/>
+               <set field="isFormSubmitted" from-field="parameters.isFormSubmitted"/>
+               <set field="defaultEffectiveDateTime" value="${supplyDate}" default-value="${bsh:org.ofbiz.base.util.UtilDateTime.nowTimestamp()}"/>
+			   <set field="defaultEffectiveDate" 
+					value="${groovy:org.ofbiz.base.util.UtilDateTime.toDateString(defaultEffectiveDateTime, &quot;dd MMMMM, yyyy&quot;);}" />
+			   <script location="component://materialmgmt/webapp/materialmgmt/WEB-INF/actions/purchases/purchaseOrderDetailsEntry.groovy"/>
+            </actions>
+            <widgets>
+                 <decorator-screen name="materialmgmtNgCommonDecorator" location="${parameters.mainDecoratorLocation}">
+                      <decorator-section name="body">  
+	                      <section>
+	                      	<widgets>
+	                        	<section>
+		                      		<condition>
+		                            	<if-compare operator="equals" field="isFormSubmitted" value=""/>
+		                         	</condition>
+		                      		<widgets>
+		           						<include-screen name="ReceiptInitEntry"/>
+		                      		</widgets>
+	                      		</section>
+	                      		<section>
+		                      		<condition>
+		                      			<if-compare operator="equals" field="isFormSubmitted" value="YES"/>
+		                      		</condition>
+	                         		<widgets>
+	     						 		<include-screen name="ReceiptInnerScreen"/>
+	                				</widgets>
+	                      		</section>
+                            </widgets>
+                        </section>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>            
+        </section>
+    </screen>
+    
+    <screen name="ReceiptInitEntry">
+        <section>
+            <actions>
+                
+               <entity-one value-field="showBoothAutoSuggestConf" entity-name="TenantConfiguration">
+               		<field-map field-name="propertyTypeEnumId" value="FACILITY_AUTOSUGGEST"/>
+               		<field-map field-name="propertyName" value="showBoothAutoSuggest"/>
+               		<select-field field-name="propertyValue"/>
+               </entity-one>
+               <set field="showBoothAutoSuggest" value="${showBoothAutoSuggestConf.propertyValue}"/>
+               <set field="supplyDate" from-field="parameters.supplyDate"/>
+               <set field="effectiveDate" value="${parameters.effectiveDate}"/>
+               <!-- <set field="shipmentTypeId" value="${parameters.shipmentTypeId}"/> -->
+                <entity-condition entity-name="Product" list="productList" use-cache="true">
+                </entity-condition>                
+            </actions>
+            <widgets>
+               	<section>
+                 	 <widgets>
+          					<platform-specific><html><html-template location="component://materialmgmt/webapp/materialmgmt/purchase/ReceiptEntry.ftl"/></html></platform-specific>
+                     </widgets>
+                     <fail-widgets>
+						<label style="h3">${uiLabelMap.ProductFacilityViewPermissionError}
+						</label>
+					</fail-widgets>
+             	</section>                  
+            </widgets>
+        </section>
+    </screen>
+    
+    <screen name="ReceiptInnerScreen">
+        <section>
+            <actions>
+                <set field="effectiveDate" value="${parameters.effectiveDate}"/>
+            </actions>
+            <widgets>
+            	<section>
+               		<widgets>
+               	    	<platform-specific><html><html-template location="component://materialmgmt/webapp/materialmgmt/purchase/ReceiptEntry.ftl"/></html></platform-specific>
+                	</widgets>
+                </section>
+            </widgets>
+        </section>
+    </screen>
+    
+</screens>

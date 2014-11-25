@@ -2,22 +2,55 @@
 <menus xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/widget-menu.xsd">
     <menu name="MtMgmtAppBar" title="${uiLabelMap.materialmgmtApplication}" extends="CommonAppBarMenu" extends-resource="component://common/widget/CommonMenus.xml">
         <menu-item name="main" title="${uiLabelMap.CommonMain}"><link target="main"/></menu-item>
+        <menu-item name="mainNg" title="${uiLabelMap.CommonMain} NG"><link target="mainNg"/></menu-item>
     </menu>
       <menu name="MtMgmtTabBar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml">
-        <menu-item name="FindPurchaseOrder" title="Purchase Order">
-        <link target="FindPurchaseOrder"/>
-        </menu-item>
         
-         <menu-item name="FindInterUnitPurchase" title="InterUnit Purchase">
-          <link target="FindInterUnitPurchase"/>
-        </menu-item>
+	        <menu-item name="FindPurchaseOrder" title="Purchase Order">
+	        <link target="FindPurchaseOrder"/>
+	        </menu-item>
+	        
+	         <menu-item name="FindInterUnitPurchase" title="InterUnit Purchase">
+	          <link target="FindInterUnitPurchase"/>
+	        </menu-item>
+	   		
+   		</menu>
         
-         <menu-item name="reports" title="${uiLabelMap.CommonReports}">
-        	        
-            <link target="StoreReports">
-                <parameter param-name="facilityId" from-field="ctxFacilityId"/>
-            </link>
-        </menu-item> 
+        <menu name="MaterailtMgmtNGTabBar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml">
+        
+	        <menu-item name="FindMaterialRequest" title="Requests">
+	        	<link target="FindMaterialRequest"/>
+	        </menu-item>
+	
+			<menu-item name="StoreProductIssue" title="Issue To Departments">
+	        	<link target="StoreProductIssue"/>
+	        </menu-item>
+	        
+	        <menu-item name="FindMaterialRequirement" title="Requirements">
+	        	<link target="FindMaterialRequirement"/>
+	        </menu-item>
+	        
+	   		<menu-item name="FindMaterialPO" title="Purchase Order">
+	        	<link target="FindMaterialPO"/>
+	        </menu-item>
+	        
+	        <menu-item name="POMaterialReceipts" title="PO Receipts">
+	        	<link target="POMaterialReceipts"/>
+	        </menu-item>
+	        
+	        <menu-item name="MaterialForQCApproval" title="QC Approval">
+	        	<link target="MaterialForQCApproval"/>
+	        </menu-item>
+	        
+	        <menu-item name="CreateInvoiceForQCApprovedItems" title="Invoice For Receipts">
+	        	<link target="CreateInvoiceForQCApprovedItems"/>
+	        </menu-item>
+	        
+	        <menu-item name="reports" title="${uiLabelMap.CommonReports}">
+	            <link target="StoreReports">
+	                <parameter param-name="facilityId" from-field="ctxFacilityId"/>
+	            </link>
+	        </menu-item> 
         </menu>
         
         <!-- Sub Tab Menus -->
@@ -29,6 +62,81 @@
         	<link target="PurchaseOrderInit"/>
         </menu-item>
       </menu>
+      
+      <menu name="RequestTabBar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml" selected-menuitem-context-field-name="tabButtonItem2">
+        <menu-item name="FindMaterialRequest" title="Find Requests">
+        	<link target="FindMaterialRequest"/>
+        </menu-item>
+         <menu-item name="CustRequestEntry" title="Request Entry">
+        	<link target="CustRequestEntry"/>
+        </menu-item>
+      </menu>
+      
+      <menu name="POTabBar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml" selected-menuitem-context-field-name="tabButtonItem2">
+        <menu-item name="FindMaterialPO" title="Find Purchase Order">
+        	<link target="FindMaterialPO"/>
+        </menu-item>
+         <menu-item name="POForQualityCheck" title="PO For QC">
+        	<link target="POForQualityCheck"/>
+        </menu-item>
+      </menu>
+      
+      <menu name="RequirementTabBar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml" selected-menuitem-context-field-name="tabButtonItem2">
+        <menu-item name="FindMaterialRequirement" title="Find Requirement">
+        	<link target="FindMaterialRequirement"/>
+        </menu-item>
+        <menu-item name="ApproveMaterialRequirement" title="Approve Requirement">
+        	<link target="ApproveMaterialRequirement"/>
+        </menu-item>
+        <menu-item name="ApprovedMatRequirementBySupplier" title=" Approved Requirement By Supplier">
+        	<link target="ApprovedMatRequirementBySupplier"/>
+        </menu-item>
+      </menu>
+      
+      <menu name="RequestSubTabBar" menu-container-style="button-bar button-style-2" default-selected-style="selected">
+		<!-- <menu-item name="pdf" title="${uiLabelMap.AccountingInvoicePDF}">
+			<condition>
+				<not>
+					<if-empty field="invoice.invoiceId" />
+				</not>
+			</condition>
+			<link target="invoice.pdf" target-window="_BLANK">
+				<parameter param-name="invoiceId" from-field="invoice.invoiceId" />
+			</link>
+		</menu-item> -->
+		
+		 <menu-item name="statusToSubmitted" title="Status To Submit">
+			<condition>
+				<and>
+					<not>
+						<if-empty field="custRequest.custRequestId" />
+					</not>
+					<if-compare field="custRequest.statusId" operator="equals" value="CRQ_DRAFT" />
+				</and>
+			</condition>
+			<link target="setRequestStatus">
+				<parameter param-name="custRequestId" from-field="custRequest.custRequestId" />
+				<parameter param-name="statusId" value="CRQ_SUBMITTED" />
+			</link>
+		</menu-item>
+				
+		<menu-item name="statusToReject" title="Status To Reject">
+			<condition>
+				<and>
+					<not>
+						<if-empty field="custRequest.custRequestId" />
+					</not>
+					<if-compare field="custRequest.statusId" operator="equals" value="CRQ_DRAFT" />
+				</and>
+			</condition>
+			<link target="setRequestStatus">
+				<parameter param-name="custRequestId" from-field="custRequest.custRequestId" />
+				<parameter param-name="statusId" value="CRQ_SUBMITTED" />
+			</link>
+		</menu-item>
+		
+	</menu>
+      
       
       <menu name="InterUnitPurchasesTabBar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml" selected-menuitem-context-field-name="tabButtonItem2">
         <menu-item name="FindInterUnitPurchase" title="Find InterUnit Purchase">
