@@ -294,10 +294,10 @@ public class EmplLeaveService {
 						Date tempDate = UtilDateTime.toSqlDate(sdf.parse(chDate));
 						Map tempDayMap = FastMap.newInstance();
 						Map punMap = PunchService.emplDailyPunchReport(dctx, UtilMisc.toMap("partyId", partyId ,"punchDate",tempDate));
-						//Debug.log("punMap==================="+punMap);
-						if(UtilValidate.isNotEmpty(punMap.get("punchDataList"))){
-							Map punchDetails = (Map)(((List)punMap.get("punchDataList")).get(0));
-							//Debug.log("punchDetails==================="+punchDetails);
+						List punchDataList = (List) punMap.get("punchDataList");
+						if(UtilValidate.isNotEmpty(punchDataList)){
+							//Map punchDetails = (Map)((punchDataList).get(0));
+							Map punchDetails =  (Map) punchDataList.get(punchDataList.size()-1);
 							if(UtilValidate.isNotEmpty(punchDetails)){
 								String totalTime = (String)punchDetails.get("totalTime");
 								if(UtilValidate.isNotEmpty(totalTime)){
