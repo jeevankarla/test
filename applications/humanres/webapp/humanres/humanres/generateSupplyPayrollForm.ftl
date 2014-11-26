@@ -86,7 +86,7 @@ function paymentOnchange(){
 }	
 function showSuplyPayrollGenerateForm() {	
 		var message = "";
-		message += "<form action='createPayrollBilling' method='post' onsubmit='return disableGenerateButton();'><table cellspacing=10 cellpadding=10>" ; 		
+		message += "<form action='createSuplyPayrollBilling' method='post' onsubmit='return disableGenerateButton();'><table cellspacing=10 cellpadding=10>" ; 		
 		
 			//message += "<br/><br/>";
 			message +="<tr class='h3'><td align='left' class='h3' width='30%'>Organization Party Id :</td><td align='left' width='40%'><select name='orgPartyId' allow-empty='true' id='orgPartyId' class='h3'>"+

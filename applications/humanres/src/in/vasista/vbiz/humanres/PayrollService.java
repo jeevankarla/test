@@ -26,7 +26,7 @@ import javax.servlet.http.HttpSession;
 
 import javolution.util.FastList;
 import javolution.util.FastMap;
-
+import java.util.HashSet;
 import org.ofbiz.accounting.invoice.InvoiceWorker;
 import org.ofbiz.accounting.util.formula.Evaluator;
 import org.ofbiz.base.util.Debug;
@@ -57,6 +57,7 @@ import org.ofbiz.entity.transaction.TransactionUtil;
 import org.ofbiz.entity.util.EntityFindOptions;
 import org.ofbiz.entity.util.EntityListIterator;
 import org.ofbiz.entity.util.EntityUtil;
+import javolution.util.FastSet;
 
 public class PayrollService {
 	
@@ -1512,7 +1513,7 @@ public class PayrollService {
 		        Debug.logInfo("==========>timePeriodStart=" + timePeriodStart.toString(), module);     
 		        Debug.logInfo("==========>timePeriodEnd=" + timePeriodEnd.toString(), module);   
 		        context.put("timePeriodStart", timePeriodStart);
-		        context.put("timePeriodEnd", timePeriodEnd);        
+		        context.put("timePeriodEnd", timePeriodEnd);       
 				
 				/*// First, lets generate pay Header item(s) for basic salary
 				try {
@@ -2022,7 +2023,6 @@ public class PayrollService {
 	       					payHeader.set("partyIdFrom", payHeaderValue.get("partyIdFrom"));
 	       					payHeader.setNextSeqId();
 	       					payHeader.create();
-	       					
 	       					//create payroll header Items here
 	       					Map inputItem = FastMap.newInstance();
 	       					inputItem.put("userLogin", userLogin);
@@ -2041,6 +2041,29 @@ public class PayrollService {
 		       				}
 							List payHeaderItemList = (List)payHeadItemResult.get("itemsList");
 							List employerItemsList = (List)payHeadItemResult.get("employerItemsList");
+							Set partyHeaderItemSet= new HashSet(payHeaderItemList);
+							payHeaderItemList = new ArrayList(partyHeaderItemSet);	
+							Map inputBasicSalItem = FastMap.newInstance();
+							inputBasicSalItem.put("userLogin", userLogin);
+							inputBasicSalItem.put("partyId", payHeaderValue.get("partyIdFrom"));
+							inputBasicSalItem.put("timePeriodStart", monthBegin);
+							inputBasicSalItem.put("timePeriodEnd", monthEnd);
+							inputBasicSalItem.put("timePeriodId", customTimePeriodId);
+							inputBasicSalItem.put("attendanceTimePeriodId", customTimePeriodId);
+							try {
+								Map serviceBasicSalResults = createPayrolBasicSalaryItems(dctx, inputBasicSalItem);
+						        if (ServiceUtil.isError(serviceBasicSalResults)) {
+						        	Debug.logError("Problems in service createPayrolBasicSalaryItems", module);
+						  			return ServiceUtil.returnError("Problems in service createPayrolBasicSalaryItems ");
+						        }
+						       if(UtilValidate.isNotEmpty(serviceBasicSalResults.get("itemsList"))){
+						    	   List payHeaderBasicSalList = (List)serviceBasicSalResults.get("itemsList");
+						    	   payHeaderItemList.addAll((List)payHeaderBasicSalList);						    	   
+						       }
+							}catch (Exception e) {
+								Debug.logError(e,"Unable to create payroll Item records for basic salary: " + e.getMessage(), module);
+						        return ServiceUtil.returnError("Unable to create payroll Item records for basic salary: " + e.getMessage());
+						    }   
 							for(int j=0;j< payHeaderItemList.size();j++){
 								Map payHeaderItemValue = (Map)payHeaderItemList.get(j);
 								if(UtilValidate.isEmpty(payHeaderItemValue.get("amount")) || (((BigDecimal)payHeaderItemValue.get("amount")).compareTo(BigDecimal.ZERO) ==0) ){
@@ -2824,15 +2847,14 @@ public class PayrollService {
 	        List<GenericValue> emplDailyAttendanceDetailList = FastList.newInstance();
 	        GenericValue lastCloseAttedancePeriod= null;
 	        String attendancePeriodId = timePeriodId;
-	        
 	        //check interval days, if no.of days >32 then call getEmployeePayrollAttedanceForPeriod to get attendance
-	        int intervalDays = UtilDateTime.getIntervalInDays(timePeriodStart, timePeriodEnd);
+	        /*int intervalDays = UtilDateTime.getIntervalInDays(timePeriodStart, timePeriodEnd);
 	        if(intervalDays >32){
 	        	return getEmployeePayrollAttedanceForPeriod(dctx,context);
-	        }
+	        }*/
 	        
 	        try{
-	        	if(UtilValidate.isEmpty(attendanceTimePeriodId)){ 
+	        	if(UtilValidate.isEmpty(attendanceTimePeriodId)){
 		        	result = getPayrollAttedancePeriod(dctx,context);
 		  	    	if(ServiceUtil.isError(result)){
 		 	 	    	Debug.logError("Error in service findLastClosed Attedance Date ", module);    			
@@ -2848,7 +2870,7 @@ public class PayrollService {
 	        }catch (Exception e) {
 				// TODO: handle exception
 			}
-	          
+	        
 	     try {
 	    	 
 			List<GenericValue> payrollAttendanceShiftWiseList = delegator.findByAnd("PayrollAttendanceShiftWise", UtilMisc.toMap("partyId",employeeId,"customTimePeriodId",attendancePeriodId));
@@ -2863,7 +2885,6 @@ public class PayrollService {
 	    			
 	    		}
     		}
-			
 			GenericValue payrollAttendance = delegator.findOne("PayrollAttendance", UtilMisc.toMap("partyId",employeeId,"customTimePeriodId",attendancePeriodId), false);
 			result.put("lossOfPayDays", 0.0);
 			result.put("noOfAttendedDays",0.0);

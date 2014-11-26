@@ -685,6 +685,18 @@ under the License.
         <security https="true" auth="true"/>
         <response name="success" type="view" value="EmplSupPayroll"/>
     </request-map>
+    <request-map uri="cancelSuplyPayrollBilling">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="cancelPayrollBilling"/>
+        <response name="success" type="view" value="EmplSupPayroll"/>
+        <response name="error" type="view" value="EmplSupPayroll"/>
+    </request-map>
+    <request-map uri="createSuplyPayrollBilling">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="createPayrollBilling"/>
+        <response name="success" type="view" value="EmplSupPayroll"/>
+        <response name="error" type="view" value="EmplSupPayroll"/>
+    </request-map>
    <request-map uri="setPeriodBillingStatus">
         <security https="true" auth="true"/>
         <event type="service" invoke="SetPeriodBillingStatus"/>
