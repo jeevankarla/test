@@ -1938,6 +1938,10 @@ under the License.
         <security https="true" auth="true"/>                        
         <response name="success" type="view" value="ESIFormSeven"/>        
     </request-map>
+    <request-map uri="EDLISReport.pdf">
+        <security https="true" auth="true"/>                        
+        <response name="success" type="view" value="EDLISReport"/>        
+    </request-map>
 	
      <!--====================Trainings Requests===================================-->
  <!--====================Cal Requests===================================-->
@@ -2404,6 +2408,7 @@ under the License.
     <view-map name="emplDailyPunchReport" type="screencsv" page="component://humanres/widget/ReportHumanresSummaryScreens.xml#emplDailyPunchReport" content-type="text/csv" encoding="none"/>
     <view-map name="emplMonthlyPunchReport" type="screencsv" page="component://humanres/widget/ReportHumanresSummaryScreens.xml#emplMonthlyPunchReport" content-type="text/csv" encoding="none"/>
     <view-map name="ITAXStatement" type="screenfop" page="component://humanres/widget/ReportHumanresSummaryScreens.xml#ITEarningsReport" content-type="application/pdf" encoding="none"/>
+    <view-map name="EDLISReport" type="screenfop" page="component://humanres/widget/ReportHumanresSummaryScreens.xml#EDLISReport" content-type="application/pdf" encoding="none"/>
     <!-- ==================Recruitment View Map===================== -->
     <view-map name="FindJobRequisitions" type="screen" page="component://humanres/widget/RecruitmentScreens.xml#FindJobRequisitions"/>
     <view-map name="EditJobRequisition" type="screen" page="component://humanres/widget/RecruitmentScreens.xml#EditJobRequisition"/>

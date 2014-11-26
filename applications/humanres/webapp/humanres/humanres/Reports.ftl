@@ -1173,6 +1173,7 @@ function makeDatePicker1(fromDateId ,thruDateId){
 							</table>	
 						</form>
 					</tr>
+					
 					<tr class="alternate-row">
 						<form id="GratuitySupportReport" name="GratuitySupportReport" method="post" action="<@ofbizUrl>GratuitySupportReport.pdf</@ofbizUrl>" target="_blank">	
 							<table class="basic-table" cellspacing="5">
@@ -1191,6 +1192,29 @@ function makeDatePicker1(fromDateId ,thruDateId){
 										</select></span>
 									</td>	
 									<td width="32%"><span class='h3'></span></td>	
+									<td width="15%"><span class='h3'><input type="submit" value="Download" class="buttontext"></span></td> 
+								</tr>
+							</table>	
+						</form>
+					</tr>
+					<tr class="alternate-row">
+						<form id="EDLISReport" name="EDLISReport" method="post" action="<@ofbizUrl>EDLISReport.pdf</@ofbizUrl>" target="_blank">	
+							<table class="basic-table" cellspacing="5">
+								<tr class="alternate-row">
+									<td width="20%"><span class='h3'>EDLIS Report</span></td>
+									<td width="30%"><span class='h3'>Period Id
+										<select name="customTimePeriodId" id="customTimePeriodId" class='h4'>
+											<#list customTimePeriodList as customTimePeriod>
+												 <#if defaultTimePeriodId?exists && (defaultTimePeriodId == customTimePeriod.customTimePeriodId)>
+							      					<option value='${customTimePeriod.customTimePeriodId?if_exists}' selected="selected">${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(customTimePeriod.fromDate, "dd MMMMM, yyyy")} -${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(customTimePeriod.thruDate, "dd MMMMM, yyyy")}</option>
+							      					<#else>
+							      						<option value='${customTimePeriod.customTimePeriodId?if_exists}' >${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(customTimePeriod.fromDate, "dd MMMMM, yyyy")} -${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(customTimePeriod.thruDate, "dd MMMMM, yyyy")}</option>
+							                  		</option>
+							      				</#if>
+											 
+											</#list>
+										</select></span>
+									</td>	
 									<td width="15%"><span class='h3'><input type="submit" value="Download" class="buttontext"></span></td> 
 								</tr>
 							</table>	
