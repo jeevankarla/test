@@ -4704,19 +4704,26 @@ public class ByProductNetworkServices {
 		String invoiceTypeId = (String) context.get("invoiceTypeId");
 		Timestamp invoiceDateParameter = (Timestamp) context.get("invoiceDate");
 		String description = (String) context.get("description");
-
 		String referenceNumber = (String) context.get("referenceNumber");
-
 		Timestamp invoiceDate = UtilDateTime.getDayStart(invoiceDateParameter);
 		String partyIdFrom = "Company";
 		String partyId = "";
 		GenericValue facility;
+		boolean isNonRouteMrktingChqReturn = Boolean.FALSE;// always excluding if externally not set
+		if (context.get("isNonRouteMrktingChqReturn") != null) {
+			isNonRouteMrktingChqReturn = (Boolean) context.get("isNonRouteMrktingChqReturn");		
+		}
 		try {
 			facility = delegator.findOne("Facility",UtilMisc.toMap("facilityId", facilityId), false);
-			if (UtilValidate.isEmpty(facility)) {
-				Debug.logError(facilityId + "====is not a booth", module);
-				return ServiceUtil.returnError(facilityId+ "====is not a booth");
-			}
+		    //no need to throw error for NONRouteMktng
+			if(isNonRouteMrktingChqReturn){
+		    	 partyId = (String) context.get("partyId");
+		    }else{
+				if (UtilValidate.isEmpty(facility)) {
+					Debug.logError(facilityId + "====is not a booth", module);
+					return ServiceUtil.returnError(facilityId+ "====is not a booth");
+				}
+		    }
 		} catch (GenericEntityException e) {
 			Debug.logError(e, module);
 			return ServiceUtil.returnError(e.toString());

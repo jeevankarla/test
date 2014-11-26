@@ -926,6 +926,19 @@ under the License.
          <field name="paymentMethodTypeId" ><hidden value="${parameters.defaultMethodTypeId}"/></field>
          <field name="subTabItem" ><hidden   value="${subTabItem}"/></field>
     </form>
+    <form name="FindPaymentRetrunCheqNonRoute" type="single" target="NonRouteFindChequeReturns" extends="FindNonRoutePayments" extends-resource="component://accounting/widget/PaymentForms.xml">
+        <field name="parentTypeId"><hidden value="RECEIPT"/></field>
+        <field name="paymentTypeId" position="1">
+            <drop-down allow-empty="true">
+                <entity-options entity-name="PaymentType" description="${description}">
+                    <entity-constraint name="parentTypeId" value="RECEIPT"/>
+                </entity-options>
+            </drop-down>
+        </field>
+        <field name="noConditionFind"><hidden value="Y"/></field>
+         <field name="paymentMethodTypeId" ><hidden value="${parameters.defaultMethodTypeId}"/></field>
+         <field name="subTabItem" ><hidden   value="${subTabItem}"/></field>
+    </form>
      <form name="NewNonRouteReceipt" type="single" target="createNonRouteReceipt" default-map-name="payment"
         header-row-style="header-row" default-table-style="basic-table">
       <!--   <field name="statusId"><hidden value="PMNT_NOT_PAID"/></field> -->

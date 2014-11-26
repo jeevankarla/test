@@ -108,6 +108,21 @@
 		Alert(message, title);
 		
 	}
-	
+		function nonroutechequeReturns(paymentId) {
+		var message = "";
+		message += "<html><head></head><body><form action='cancelNonRoutePaymentForChequeReturn' method='post' onsubmit='return disableGenerateButton();'><table cellspacing=10 cellpadding=10 width=400>";
+			message += "<tr class='h3'><td align='left' class='h3' width='60%'>Cheque Bounce/Returns :</td><td align='left' width='60%'><select name='chequeBounce'  id='chequeBounce' onchange='javascript:chequeBounceFieldsOnchange();' class='h4'>"+
+						"<option value='N' >No</option>"+  
+						"<option value='Y' >Yes</option>"+          
+						"</select></td></tr>"+
+						"<tr class='h3'><td align='left' class='h3' width='60%'>Return Date :</td><td align='left' width='70%'><input class='h4' type='text' id='returnDate' name='returnDate' onmouseover='datepick()'/></td></tr>" +
+						"<tr class='h3'><td align='left' class='h3' width='60%'>Reason For Bounce/Return :</td><td align='left' width='70%'><input class='h4' type='text' id='bounceReason' name='bounceReason' /></td></tr>" +
+						"<tr class='h3'><td></td><td><input type='hidden' name='paymentId' id='paymentId' value='"+paymentId+"'></td></tr>"+
+					"<tr class='h3'><td align='center'><span align='right'><input type='submit' value='Submit' class='smallSubmit'/></span></td><td class='h3' width='100%' align='left'><span align='left'><button value='${uiLabelMap.CommonCancel}' onclick='return cancelForm();' class='smallSubmit'>${uiLabelMap.CommonCancel}</button></span></td></tr>";
+					message +=	"</table></form></body></html>";
+		var title = "Cancel Payment For paymentId : "+paymentId;
+		Alert(message, title);
+		
+	}
 
 </script>

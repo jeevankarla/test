@@ -130,11 +130,16 @@
     </request-map>
     <request-map uri="cancelPaymentForChequeReturn"> 
      	<security https="true" auth="true"/>
-     	<event type="service" invoke="cancelPaymentForChequeReturn"/>
+     	<event type="service" invoke="cancelPaymentForChequeReturn"/>     	
      	<response name="success" type="view" value="FindChequeReturns"/>
     	<response name="error" type="view" value="FindChequeReturns"/>
     </request-map>
-    
+     <request-map uri="cancelNonRoutePaymentForChequeReturn"> 
+     	<security https="true" auth="true"/>
+     	<event type="service" invoke="cancelPaymentForChequeReturn"/>    	
+     	<response name="success" type="view" value="NonRouteFindChequeReturns"/>
+    	<response name="error" type="view" value="NonRouteFindChequeReturns"/>
+    </request-map>
 	<request-map uri="AbsenteeOverride">
     	<security https="true" auth="true"/>    	
     	<response name="success" type="view" value="AbsenteeOverride"/>    	
@@ -1275,6 +1280,10 @@
     	<security https="true" auth="true"/>    	
     	<response name="success" type="view" value="FindChequeReturns"/>    	
     </request-map>
+      <request-map uri="NonRouteFindChequeReturns">
+    	<security https="true" auth="true"/>    	
+    	<response name="success" type="view" value="NonRouteFindChequeReturns"/>    	
+    </request-map>
     
     <request-map uri="FindBoothPayments">
     	<security https="true" auth="true"/>    	
@@ -1826,7 +1835,9 @@
  <!-- Payment views -->
  <view-map name="FindPaymentByMethod" type="screen" page="component://byproducts/widget/ByProductsNgScreens.xml#FindPaymentByMethod"/>
  <view-map name="FindInstitutionPayment" type="screen" page="component://byproducts/widget/ByProductsNgScreens.xml#FindInstitutionPayment"/>
- <view-map name="FindChequeReturns" type="screen" page="component://byproducts/widget/ByProductsNgScreens.xml#FindChequeReturns"/>	
+ <view-map name="FindChequeReturns" type="screen" page="component://byproducts/widget/ByProductsNgScreens.xml#FindChequeReturns"/>
+  <view-map name="NonRouteFindChequeReturns" type="screen" page="component://byproducts/widget/ByProductsNgScreens.xml#NonRouteFindChequeReturns"/>
+ 	
 <view-map name="LookupVehicle" type="screen" page="component://byproducts/widget/ByProductsLookupScreens.xml#LookupVehicle"/> 
  
  <view-map name="FindPaymentNonRoute" type="screen" page="component://byproducts/widget/ByProductsNgScreens.xml#FindPaymentNonRoute"/>
