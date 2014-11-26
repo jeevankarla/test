@@ -37,7 +37,7 @@ under the License.
         						    <fo:table-column column-width="30%"/>
         						    <fo:table-column column-width="40%"/>
 
-        						   	<fo:table-header>
+        						   	<fo:table-body>
         						   	<fo:table-row>
         						   			<fo:table-cell border-style="solid"></fo:table-cell>
 		    								<fo:table-cell border-style="solid">
@@ -66,7 +66,7 @@ under the License.
 		    									<fo:block text-align="left" font-size="12pt" white-space-collapse="false" keep-together="always" font-weight="bold">&#160;&#160;VOUCHER DATE: ${invoiceDate?if_exists}</fo:block>
 		    									</fo:table-cell>
 		    						</fo:table-row>	
-        						   	</fo:table-header>
+        						   	</fo:table-body>
         						   		<fo:table-body>
         				                   <fo:table-row width="100%">
         						   				<fo:table-cell>
@@ -74,7 +74,7 @@ under the License.
 		        				    				<fo:table-column column-width="300pt"/>
 					        						<fo:table-column column-width="200pt"/>
 					        						<fo:table-column column-width="175pt"/>
-        						   	        	<fo:table-header>
+        						   	        	<fo:table-body>
 						        					<fo:table-row>
 						        						<#assign partyFullName = Static["org.ofbiz.party.party.PartyHelper"].getPartyName(delegator, dispalyParty.partyId?if_exists, false)>
 						        						<fo:table-cell>
@@ -398,11 +398,6 @@ under the License.
 											            		<fo:block linefeed-treatment="preserve">&#xA;</fo:block>
 											       			</fo:table-cell>
 														</fo:table-row>
-						        						<fo:table-row>
-															<fo:table-cell>
-											            		<fo:block>------------------------------------------------------------------------------------------------</fo:block>
-											       			</fo:table-cell>
-														 </fo:table-row>
 														 <#assign cheqFav = "">
 														 <#if (paymentListReport.paymentMethodTypeId == "CHEQUE_PAYIN" || paymentListReport.paymentMethodTypeId == "CHEQUE_PAYOUT")>
 															 <#if paymentListReport.paymentId?has_content>
@@ -422,6 +417,11 @@ under the License.
 							        						</fo:table-row>
 							        						</#if>
 						        						</#if>
+						        						<fo:table-row>
+															<fo:table-cell>
+											            		<fo:block>------------------------------------------------------------------------------------------------</fo:block>
+											       			</fo:table-cell>
+														 </fo:table-row>
 						        						 </#list>
 						        						</#if>
 						        						<fo:table-row>
@@ -447,13 +447,7 @@ under the License.
 							        								<fo:block text-align="right" font-size="12pt" white-space-collapse="false" keep-together="always" font-weight="bold">&#160; Director</fo:block>
 							        						</fo:table-cell>  
 						        						</fo:table-row>
-        						   			</fo:table-header>
-        						   			<fo:table-body>
-        						   			<fo:table-row>
-        						   			<fo:table-cell>
-        						   		    </fo:table-cell>
-        						   			</fo:table-row>
-        						   		</fo:table-body>
+        						   			</fo:table-body>
         				         </fo:table>
         				</fo:table-cell>
         			</fo:table-row>
