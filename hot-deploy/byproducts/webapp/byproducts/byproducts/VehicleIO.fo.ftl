@@ -22,7 +22,7 @@ under the License.
 
 <#-- do not display columns associated with values specified in the request, ie constraint values -->
 <fo:layout-master-set>
-	<fo:simple-page-master master-name="main" page-height="12in" page-width="15in"  margin-bottom=".1in" margin-left=".1in" margin-right=".3in">
+	<fo:simple-page-master master-name="main" page-height="12in" page-width="15in"  margin-bottom=".1in" margin-left="0.5in" margin-right=".3in">
         <fo:region-body margin-top="1.5in"/>
         <fo:region-before extent="1in"/>
         <fo:region-after extent="1in"/>        
@@ -34,37 +34,43 @@ ${setRequestAttribute("OUTPUT_FILENAME", "salesReport.txt")}
 			<fo:static-content flow-name="xsl-region-before">
 					<fo:block  keep-together="always" text-align="center" font-weight="bold" font-family="Courier,monospace" white-space-collapse="false">      ${uiLabelMap.KMFDairyHeader}</fo:block>
 					<fo:block  keep-together="always" text-align="center" font-weight="bold" font-family="Courier,monospace" white-space-collapse="false">      ${uiLabelMap.KMFDairySubHeader}</fo:block>
-                    <fo:block text-align="center"  font-weight="bold" keep-together="always"  font-family="Courier,monospace" white-space-collapse="false">        Vehicle_InTime_OutTime From :: ${effectiveDateStr?if_exists}  To:: ${thruEffectiveDateStr?if_exists}</fo:block>
-                     <fo:block  keep-together="always"  text-align="left" font-family="Courier,monospace" white-space-collapse="false">UserLogin:<#if userLogin?exists>${userLogin.userLoginId?if_exists}</#if>&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;Print Date : ${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(nowTimestamp, "dd/MM/yy HH:mm:ss")}</fo:block>
-              		<fo:block>-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------</fo:block>
-            		<fo:block  font-weight="bold" font-size="12pt">Vehicle_Number	&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;Vehicle_Load / Truck_Sheet_Generated_Time  &#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;Vehicle_Dispatch_Time &#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;Crates_Return_Time</fo:block>
-            		<fo:block>-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------</fo:block>
+                    <fo:block text-align="center"  font-weight="bold" keep-together="always"  font-family="Courier,monospace" white-space-collapse="false">        Vehicle InTime OutTime From :: ${effectiveDateStr?if_exists}  To:: ${thruEffectiveDateStr?if_exists}</fo:block>
+                     <fo:block  keep-together="always"  text-align="left" font-family="Courier,monospace" white-space-collapse="false">UserLogin:<#if userLogin?exists>${userLogin.userLoginId?if_exists}</#if>&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;${shipType}&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;Print Date : ${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(nowTimestamp, "dd/MM/yy HH:mm:ss")}</fo:block>
+                     <fo:block>-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------</fo:block>
+            		<fo:block  font-weight="bold" font-size="10pt">Route Id &#160;&#160;&#160;&#160;&#160;&#160;Vehicle Number	&#160;&#160;&#160;&#160;&#160;Vehicle Load / Truck Sheet Time&#160;&#160;&#160;&#160;&#160;&#160;Vehicle Dispatch Time &#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;Crates Return Time</fo:block>
+            		<fo:block>-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------</fo:block>	           
             </fo:static-content>		
             <fo:flow flow-name="xsl-region-body"   font-family="Courier,monospace">	
             <fo:table border-style="solid">
-                    <fo:table-column column-width="100pt"/>
-                    <fo:table-column column-width="300pt"/>
-               	    <fo:table-column column-width="300pt"/>
-               	    <fo:table-column column-width="300pt"/>
+                    <fo:table-column column-width="80pt"/>
+                    <fo:table-column column-width="120pt"/>
+                    <fo:table-column column-width="200pt"/>
+               	    <fo:table-column column-width="200pt"/>
+               	    <fo:table-column column-width="200pt"/>
                     <fo:table-body>
-                    <#assign vehicleInOutList = vehicleMap.entrySet()>        
-                    	<#list vehicleInOutList as vehicleEach>
+                                              
+                    	<#list vehicleList as vehicleEach>
                      		<fo:table-row border-style="solid" >	
-                     				<#assign vehicleId = vehicleEach.getValue().get("vehicleNum")?if_exists>
-                     				<#assign outTime = vehicleEach.getValue().get("outTime")?if_exists>
-                     				<#assign dispatchTime =vehicleEach.getValue().get("dispatchedTime")?if_exists>
-                     				<#assign returnTime = vehicleEach.getValue().get("returnTime")?if_exists>
+                     				<#assign routeId = vehicleEach.get("routeId")?if_exists>
+                     				<#assign vehicleId = vehicleEach.get("vehicleNum")?if_exists>
+                     				<#assign outTime = vehicleEach.get("outTime")?if_exists>
+                     				<#assign dispatchTime = vehicleEach.get("dispatchedTime")?if_exists>
+                     				<#assign returnTime = vehicleEach.get("returnTime")?if_exists>
+                     				
                      				<fo:table-cell>
-	                            		<fo:block  text-align="right"  font-size="12pt" white-space-collapse="false">${vehicleId}</fo:block>  
+	                            		<fo:block  text-align="center"  font-size="12pt" white-space-collapse="false">${routeId}</fo:block>  
+	                       			</fo:table-cell>
+                     				<fo:table-cell>
+	                            		<fo:block  text-align="center"  font-size="12pt" white-space-collapse="false">${vehicleId}</fo:block>  
 	                       			</fo:table-cell>
 	                       		   <fo:table-cell>
-	                            		<fo:block  text-align="right"  font-size="12pt" white-space-collapse="false">${outTime}</fo:block>  
+	                            		<fo:block  text-align="center"  font-size="12pt" white-space-collapse="false">${outTime}</fo:block>  
 	                       			</fo:table-cell>
 	                       			<fo:table-cell>
-	                            		<fo:block  text-align="right"  font-size="12pt" white-space-collapse="false">${dispatchTime}</fo:block>  
+	                            		<fo:block  text-align="center"  font-size="12pt" white-space-collapse="false">${dispatchTime}</fo:block>  
 	                       			</fo:table-cell>
 	                       			<fo:table-cell>
-										<fo:block  text-align="right"  font-size="12pt" white-space-collapse="false">${returnTime}</fo:block> 			       					
+										<fo:block  text-align="center"  font-size="12pt" white-space-collapse="false">${returnTime}</fo:block> 			       					
 									</fo:table-cell>
 	                         </fo:table-row>	
 	                      </#list>		

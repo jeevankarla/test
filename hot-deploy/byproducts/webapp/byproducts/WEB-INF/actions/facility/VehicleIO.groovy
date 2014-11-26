@@ -58,12 +58,14 @@ if(shipmentType.equals("AM"))
 	{
 		amShipmentIds = ByProductNetworkServices.getShipmentIdsSupplyType(delegator,dayBegin,dayEnd,"AM");
 		shipmentIds.addAll(amShipmentIds);
+		shipType = "Shipment Type: AM";
 		
 	}
 if(shipmentType.equals("PM"))
 	{
 		pmShipmentIds = ByProductNetworkServices.getShipmentIdsSupplyType(delegator,dayBegin,dayEnd,"PM");
 		shipmentIds.addAll(pmShipmentIds);
+		shipType = "Shipment Type: PM";
 	}
 
 vehicleMap =[:];
@@ -72,20 +74,24 @@ shipmentIds.each{ shipmentId ->
 	vehicleInOutList = delegator.findList("VehicleTripAndStatusAndShipment", EntityCondition.makeCondition("shipmentId", EntityOperator.EQUALS,shipmentId), null, null, null, false);
 	tempMap = [:];
 	tempMap["vehicleNum"] = "";
+	tempMap["routeId"] = "";
 	tempMap["outTime"] = "";
 	tempMap["dispatchedTime"] = "";
+	tempMap["dispatchedTimestamp"] = null;
 	tempMap["returnTime"]="";
 	tempMap["statusId"] = "";
 		vehicleInOutList.each{ vehicle ->
 			estStartDate = vehicle.estimatedStartDate;
 			statusId = vehicle.statusId;
 			tempMap["vehicleNum"]=vehicle.vehicleId;
+			tempMap["routeId"]=vehicle.routeId; 
 			if(statusId == "VEHICLE_OUT"){
 				tempMap["outTime"]=UtilDateTime.toDateString(vehicle.estimatedStartDate, "dd-MM-yyyy HH:mm:ss");
 						tempMap["statusId"] = statusId;
 			}
 			if(statusId == "VEHICLE_DISPACHED"){
 				tempMap["dispatchedTime"]=UtilDateTime.toDateString(vehicle.estimatedStartDate, "dd-MM-yyyy HH:mm:ss");
+				tempMap["dispatchedTimestamp"] = vehicle.estimatedStartDate;				
 						tempMap["statusId"] = statusId;
 			}
 			if(statusId == "VEHICLE_CRATE_RTN"){
@@ -95,7 +101,8 @@ shipmentIds.each{ shipmentId ->
 		}
 	if(UtilValidate.isNotEmpty(tempMap)){
 		vehicleMap.put(shipmentId,tempMap);
-
 	}
 }
-context.put("vehicleMap",vehicleMap);
+vehicleList=UtilMisc.sortMaps(vehicleMap.values().asList(), UtilMisc.toList("dispatchedTimestamp"));
+context.put("vehicleList",vehicleList);
+context.put("shipType",shipType);
