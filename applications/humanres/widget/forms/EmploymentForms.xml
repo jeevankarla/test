@@ -707,7 +707,7 @@
     </form>
 	<form name="editPayrollAttendance" odd-row-style="alternate-row" header-row-style="header-row" type="single"
 	    	default-table-style="basic-table hover-bar" separate-columns="true">  
-	     <field name="partyIdTo" title="${uiLabelMap.HumanResEmployeePartyIdTo}" event="onblur" action="javascript:selectDept();"><lookup target-form-name="LookupEmployeeName" size="15"/></field>
+	     <field name="partyIdTo" title="${uiLabelMap.HumanResEmployeePartyIdTo}" event="onKeyup" action="javascript:selectDept();"><lookup target-form-name="LookupEmployeeName" size="15"/></field>
 	     <field name="partyId" title="Organisation" >
 			<drop-down allow-empty="false">
 				<entity-options entity-name="PartyRoleAndPartyDetail" description="${groupName}">

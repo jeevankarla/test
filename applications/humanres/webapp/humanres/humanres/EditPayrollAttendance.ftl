@@ -219,10 +219,10 @@ function comparer(a, b) {
 				if (e.which == $.ui.keyCode.ENTER) {
 					      editClickHandler(cell.row);
 					      if(data.length>1){
-					      	$(grid.getCellNode(cell.row +1, 3)).click();
+					      	$(grid.getCellNode(cell.row +1, 4)).click();
 					      	 grid.getEditController().commitCurrentEdit();
 					      }else{
-					      	$(grid.getCellNode(cell.row , 3)).click();
+					      	$(grid.getCellNode(cell.row , 4)).click();
 					      	 grid.getEditController().commitCurrentEdit();
 					      }
 					     
@@ -331,7 +331,7 @@ function updatePayrollAttendanceInternal(formName, action, row) {
   
     <div>    	
  		<div class="grid-header" style="width:100%">
-			<font size="15" color="#22047F"><b>Employee Payroll Attendance<b/></font>:<font size="15" color="red"><b><#if timePeriodStart?has_content>[${(Static["org.ofbiz.base.util.UtilDateTime"].toDateString(timePeriodStart?if_exists, "MMMMM-yyyy"))}]</#if></b></font>
+			<font size="15" color="#22047F"><b>Employee Payroll Attendance<b/></font>:<font size="15" color="red"><b><#if timePeriodStart?has_content>[${(Static["org.ofbiz.base.util.UtilDateTime"].toDateString(timePeriodStart?if_exists, "MMMMM-yyyy"))}]</#if></b></font> 
 		</div>    
 		<div id="itemGrid2" style="width:100%;height:350px;">
 			

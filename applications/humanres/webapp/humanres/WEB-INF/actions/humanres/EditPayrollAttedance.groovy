@@ -30,6 +30,7 @@ if (parameters.customTimePeriodId == null) {
 }
 timePeriodId=parameters.customTimePeriodId;
 deptId=parameters.partyId;
+orgId=parameters.partyId;
 if(parameters.partyIdTo){
 	deptId=parameters.partyIdTo;
 }
@@ -47,7 +48,6 @@ finalMap=[:];
 finalList=[];
 Map emplInputMap = FastMap.newInstance();
 emplInputMap.put("userLogin", userLogin);
-
 emplInputMap.put("orgPartyId", deptId);
 emplInputMap.put("fromDate", timePeriodStart);
 emplInputMap.put("thruDate", timePeriodEnd);
@@ -55,6 +55,18 @@ Map resultMap = HumanresService.getActiveEmployements(dctx,emplInputMap);
 List<GenericValue> employementList = (List<GenericValue>)resultMap.get("employementList");
 employementList = EntityUtil.orderBy(employementList, UtilMisc.toList("partyIdTo"));
 employementIds = EntityUtil.getFieldListFromEntityList(employementList, "partyIdTo", true);
+
+Map InputMap = FastMap.newInstance();
+InputMap.put("userLogin", userLogin);
+InputMap.put("orgPartyId", orgId);
+InputMap.put("fromDate", timePeriodStart);
+InputMap.put("thruDate", timePeriodEnd);
+Map resultInputMap = HumanresService.getActiveEmployements(dctx,InputMap);
+List<GenericValue> employeesList = (List<GenericValue>)resultInputMap.get("employementList");
+employeesList = EntityUtil.orderBy(employeesList, UtilMisc.toList("partyIdTo"));
+employeeIds = EntityUtil.getFieldListFromEntityList(employeesList, "partyIdTo", true);
+
+context.totalEmpls=employeeIds.size();
 if(parameters.partyIdTo){
 	employementIds=UtilMisc.toList(parameters.partyIdTo);
 }else{
@@ -70,6 +82,14 @@ attnTimePeriodStart=UtilDateTime.getDayStart(UtilDateTime.toTimestamp(attnCustom
 attnTimePeriodEnd=UtilDateTime.getDayEnd(UtilDateTime.toTimestamp(attnCustomTimePeriod.getDate("thruDate")));
 totalDays= UtilDateTime.getIntervalInDays(attnTimePeriodStart,attnTimePeriodEnd);
 totalDays=totalDays+1;
+conList=[];
+conList.add(EntityCondition.makeCondition("customTimePeriodId",EntityOperator.EQUALS,customTimePeriodId));
+conList.add(EntityCondition.makeCondition("partyId",EntityOperator.IN,employeeIds));
+conList.add(EntityCondition.makeCondition(EntityCondition.makeCondition("noOfAttendedDays",EntityOperator.EQUALS,null),EntityOperator.OR,
+	EntityCondition.makeCondition("noOfAttendedDays",EntityOperator.GREATER_THAN,BigDecimal.ZERO)));
+EntityCondition con=EntityCondition.makeCondition(conList,EntityOperator.AND);
+List<GenericValue> payrollCountList=delegator.findList("PayrollAttendance",con,UtilMisc.toSet("partyId"),null,null,false);
+context.enteredEmpls=payrollCountList.size();
 if("leaveEncash".equals(screenFlag)){
 	customTimePeriodId=timePeriodId;
 }
@@ -248,7 +268,7 @@ if(UtilValidate.isNotEmpty(finalMap)){
 		emplyId= entry.getKey();
 		JSONObject newObj = new JSONObject();
 		partyName=PartyHelper.getPartyName(delegator, emplyId, false);
-		departmentDetails=delegator.findByAnd("Employment", [partyIdTo : emplyId]);
+		departmentDetails=delegator.findByAnd("Employment", [partyIdTo : emplyId,thruDate:null]);
 		deptName="";
 		if(departmentDetails){
 			deptPartyId=departmentDetails[0].partyIdFrom;

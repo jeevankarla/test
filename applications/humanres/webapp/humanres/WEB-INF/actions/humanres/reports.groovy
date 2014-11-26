@@ -53,7 +53,7 @@ if(customTimeList){
 if(UtilValidate.isNotEmpty(parameters.partyIdTo)){
 JSONArray deptJSON = new JSONArray();
 	JSONObject newObj = new JSONObject();
-		departmentDetails=delegator.findByAnd("Employment", [partyIdTo : parameters.partyIdTo]);
+		departmentDetails=delegator.findByAnd("Employment", [partyIdTo : parameters.partyIdTo,thruDate:null]);
 		partyId="";
 		if(departmentDetails){
 			partyId=departmentDetails[0].partyIdFrom;
