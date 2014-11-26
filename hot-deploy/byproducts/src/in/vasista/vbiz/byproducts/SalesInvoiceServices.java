@@ -1264,4 +1264,100 @@ public class SalesInvoiceServices {
 		
 		return result;
 	}
+	public static Map<String, Object> getInvoiceSalesTaxItems(DispatchContext ctx,Map<String, ? extends Object> context) {
+		Delegator delegator = ctx.getDelegator();
+	    List<String> partyIds = (List<String>) context.get("partyIds");
+		 boolean isPurchaseInvoice = Boolean.FALSE;
+			if(UtilValidate.isNotEmpty(context.get("isPurchaseInvoice"))){
+				isPurchaseInvoice = (Boolean)context.get("isPurchaseInvoice");
+		}
+		Timestamp fromDate = (Timestamp) context.get("fromDate");
+		if (UtilValidate.isEmpty(fromDate)) {
+			Debug.logError("fromDate cannot be empty", module);
+			return ServiceUtil.returnError("fromDate cannot be empty");
+		}
+		Timestamp thruDate = (Timestamp) context.get("thruDate");
+		if (UtilValidate.isEmpty(thruDate)) {
+			Debug.logError("thruDate cannot be empty", module);
+			return ServiceUtil.returnError("thruDate cannot be empty");
+		}
+		Timestamp dayBegin = UtilDateTime.getDayStart(fromDate);
+		Timestamp dayEnd = UtilDateTime.getDayEnd(thruDate);
+		
+		EntityListIterator invoiceItemsIter = null;
+		Map<String,Object> invoiceTaxMap =FastMap.newInstance();
+		try {
+			List conditionList = FastList.newInstance();
+			conditionList.add(EntityCondition.makeCondition("statusId",EntityOperator.NOT_EQUAL, "INVOICE_CANCELLED"));
+			conditionList.add(EntityCondition.makeCondition("productId",EntityOperator.EQUALS, null));//want to skip other than product items
+			if(isPurchaseInvoice){
+				conditionList.add(EntityCondition.makeCondition("invoiceTypeId", EntityOperator.EQUALS,"PURCHASE_INVOICE"));
+				conditionList.add(EntityCondition.makeCondition("partyId", EntityOperator.EQUALS,"Company"));
+				if (UtilValidate.isNotEmpty(partyIds)) {
+					conditionList.add(EntityCondition.makeCondition("partyIdFrom", EntityOperator.IN, partyIds));
+				}
+			}else{//no need to send Purchase Invoice
+				conditionList.add(EntityCondition.makeCondition("invoiceTypeId", EntityOperator.EQUALS,"SALES_INVOICE"));
+				conditionList.add(EntityCondition.makeCondition("partyIdFrom",EntityOperator.EQUALS,"Company"));
+				if (UtilValidate.isNotEmpty(partyIds)) {
+					conditionList.add(EntityCondition.makeCondition("partyId", EntityOperator.IN, partyIds));
+				}
+			}
+			conditionList.add(EntityCondition.makeCondition("invoiceDate", EntityOperator.GREATER_THAN_EQUAL_TO,dayBegin));
+			conditionList.add(EntityCondition.makeCondition("invoiceDate",EntityOperator.LESS_THAN_EQUAL_TO, dayEnd));
+			EntityCondition condition = EntityCondition.makeCondition(conditionList, EntityOperator.AND);
+			
+			invoiceItemsIter = delegator.find("InvoiceAndItem", condition, null, null, null, null);
+			GenericValue invoiceItem=null;
+			
+			 while( invoiceItemsIter != null && (invoiceItem = invoiceItemsIter.next()) != null) {
+				 BigDecimal amount=BigDecimal.ZERO;
+				 String itemType="";
+				 if(UtilValidate.isNotEmpty(invoiceItem.getBigDecimal("amount"))){
+				    amount=invoiceItem.getBigDecimal("amount");
+				 }
+				 if(UtilValidate.isNotEmpty(invoiceItem.getString("invoiceItemTypeId"))){
+					 itemType=invoiceItem.getString("invoiceItemTypeId");
+				 }
+				 if (invoiceTaxMap.get(invoiceItem.getString("invoiceId")) == null) {
+					 Map<String, BigDecimal> tempTaxMap = FastMap.newInstance();
+					 if(amount.intValue()>=0){
+						 tempTaxMap.put(itemType, amount);
+					 }else{
+						 if(itemType.equals("VAT_SALE")){
+						   tempTaxMap.put(itemType+"_ADJ", amount);
+						 }else{
+							 tempTaxMap.put(itemType, amount);
+						 }
+					 }
+				     invoiceTaxMap.put(invoiceItem.getString("invoiceId"),tempTaxMap);
+				 }else{
+					 Map invoiceMap =  (Map) invoiceTaxMap.get(invoiceItem.getString("invoiceId"));
+					 if(amount.intValue()>=0){
+						 invoiceMap.put(itemType, amount);
+					 }else{
+						 if(itemType.equals("VAT_SALE")){
+							 invoiceMap.put(itemType+"_ADJ", amount);
+						 }else{
+							 invoiceMap.put(itemType, amount);
+						 }
+					}
+					 invoiceTaxMap.put(invoiceItem.getString("invoiceId"), invoiceMap);
+				 }
+			}
+	} catch (GenericEntityException e) {
+		Debug.logError(e, module);
+	}finally{
+		if (invoiceItemsIter != null) {
+	           try {
+	        	   invoiceItemsIter.close();
+	           } catch (GenericEntityException e) {
+	               Debug.logWarning(e, module);
+	           }
+	       }
+	}
+		Map<String, Object> result = FastMap.newInstance();
+		result.putAll(invoiceTaxMap);
+		return result;
+	}
 }
