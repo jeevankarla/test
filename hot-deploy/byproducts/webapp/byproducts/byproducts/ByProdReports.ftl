@@ -185,6 +185,7 @@ function reportTypeChangeFunc() {
 		makeDatePicker2("fdFromDate","");
 		makeDatePicker("purchaseTaxFDate","purchaseTaxTDate");
 		makeDatePicker("AvgFDRFDate","AvgFDRTDate");
+		makeDatePicker("GPFHFromDate","GPFHThruDate");
 		makeDatePicker("IOFromDateId","IOThruDateId");
 		$('#ui-datepicker-div').css('clip', 'auto');		
 	});
@@ -683,7 +684,6 @@ function reportTypeChangeFunc() {
 					<option value='AM'>AM</option>
 					<option value='PM'>PM</option>
 					</select></td>
-	      		  
 	      		  <td width="15%"></td>
 	      		  <td width="10%"><input type="submit" target="_blank" value="Download" class="buttontext"/></td>
 	      	   </form>
@@ -784,6 +784,17 @@ function reportTypeChangeFunc() {
 			             <td width="15%">From<input  type="text" size="10pt" id="effFromDate" readonly  name="fromDate"/></td>
 			      		 <td width="15%">Thru<input  type="text" size="10pt" id="effThruDate" readonly  name="thruDate"/></td>
 			             <td width="15%">Retailer Code <input type="text" name="boothId" id="boothId" size="10" maxlength="22"></td>
+			             <td width="15%"></td>
+			             <td width="10%"><input type="submit" value="Download" class="buttontext"/></td>
+			           </form>
+			        </tr>
+			        <tr class="alternate-row">
+			      	   <form id="GenericPartyFinancialHistory" name="GenericPartyFinancialHistory" method="post" action="<@ofbizUrl>GenericPartyFinancialHistory.pdf</@ofbizUrl>" target="_blank">        
+			             <td width="30%">Generic Party Financial History</td>
+			             <td width="15%">From<input  type="text" size="10pt" id="GPFHFromDate" readonly  name="fromDate"/></td>
+			      		 <td width="15%">Thru<input  type="text" size="10pt" id="GPFHThruDate" readonly  name="thruDate"/></td>
+			             <td width="15%">Party Code<@htmlTemplate.lookupField size="10" maxlength="22" formName="GenericPartyFinancialHistory" name="partyId" id="partyId" fieldFormName="LookupPartyName"/>
+			            <#--> <input type="text" name="partyId" id="partyId" size="10" maxlength="22"> --></td>
 			             <td width="15%"></td>
 			             <td width="10%"><input type="submit" value="Download" class="buttontext"/></td>
 			           </form>
