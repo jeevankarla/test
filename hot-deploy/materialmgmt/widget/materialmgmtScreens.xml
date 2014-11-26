@@ -288,5 +288,68 @@
                 </decorator-screen>
             </widgets>
         </section>
+    </screen>
+    
+    <screen name="StockPosition">
+        <section>
+            <actions>
+                <property-map resource="OrderUiLabels" map-name="uiLabelMap" global="true"/>
+                 <property-map resource="ProductUiLabels" map-name="uiLabelMap" global="true"/>
+                <set field="titleProperty" value="StockPosition"/>              
+			    <set field="tabButtonItem" value="stockPosition" />	
+			   <set field="tabButtonItem2" value="stockPosition"/>       
+               <set field="headerItem" value="StockPosition"/>
+               <set field="ajaxUrl" value="StockPositionInternal" type="String"/>
+            </actions>
+            <widgets>
+                 <decorator-screen name="materialmgmtNgCommonDecorator" location="${parameters.mainDecoratorLocation}">
+                      <decorator-section name="body">  
+                         <!-- <include-menu name="PurchasesTabBar" location="component://materialmgmt/widget/materialmgmtMenus.xml"/> -->
+                        <section>
+                            <widgets>
+                               <platform-specific> 
+                            		<html><html-template location="component://materialmgmt/webapp/materialmgmt/reports/stockPosition_Select.ftl"/></html>
+                        		</platform-specific>  
+                            </widgets>
+                        </section>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>            
+        </section>
+    </screen> 
+     <screen name="StockPositionInternal">
+        <section>
+            <actions>
+                 <property-map resource="OrderUiLabels" map-name="uiLabelMap" global="true"/>
+                  <property-map resource="ProductUiLabels" map-name="uiLabelMap" global="true"/>
+                  <property-map resource="CommonUiLabels" map-name="uiLabelMap" global="true"/>
+				<script location="component://materialmgmt/webapp/materialmgmt/WEB-INF/actions/reports/stockPosition.groovy"/>  
+            </actions>            
+            <widgets>
+                  	<container>
+                  	    <platform-specific> 
+                            		<html><html-template location="component://materialmgmt/webapp/materialmgmt/reports/stockPosition.ftl"/></html>
+                        </platform-specific>
+	                  	<platform-specific>
+	                         <html><html-template location="component://materialmgmt/webapp/materialmgmt/reports/ProductInventorySummary.ftl"/></html>
+	                     </platform-specific>
+	                     <platform-specific>
+	                         <html><html-template location="component://materialmgmt/webapp/materialmgmt/reports/EditProductInventoryItems.ftl"/></html>
+	                     </platform-specific>
+	                     <screenlet title="${uiLabelMap.ProductOutstandingPurchaseOrders}">
+	                         <include-form name="OutstandingPurchaseOrders" location="component://materialmgmt/widget/materialmgmtForms.xml"/>
+	                     </screenlet>
+	                     <screenlet title="${uiLabelMap.ProductRequirements}">
+	                         <include-form name="ListRequirements" location="component://materialmgmt/widget/materialmgmtForms.xml"/>
+	                     </screenlet>
+	                     <screenlet title="${uiLabelMap.Indents}">
+	                         <include-form name="ListRequestList" location="component://materialmgmt/widget/materialmgmtForms.xml"/>
+	                     </screenlet>
+	                     <screenlet title="${uiLabelMap.ProductSuppliers}">
+	                         <include-form name="ListSupplierProducts" location="component://materialmgmt/widget/materialmgmtForms.xml"/>
+	                     </screenlet>
+                  	</container>   
+            </widgets>
+        </section>
     </screen> 
 </screens>

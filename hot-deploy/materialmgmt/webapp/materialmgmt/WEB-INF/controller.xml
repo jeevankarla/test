@@ -163,6 +163,8 @@
        <response name="error" type="view" value="InterUnitPurchaseOrderInit"/>
      </request-map>
     
+    
+    
     <request-map uri="processPurchaseOrder">
         <security https="true" auth="true"/>
      	<event type="java"  path="in.vasista.vbiz.purchase.PurchaseStoreServices"  invoke="processPurchaseOrder" global-transaction="true"/>
@@ -188,14 +190,13 @@
          <response name="success"  type="request-redirect-noparam" value="FindPurchaseOrder"></response>
         <response name="error" type="view" value="FindPurchaseOrder"/>
     </request-map>
-
     <request-map uri="cancelInterUnitPurchaseOrder">
         <security https="true" auth="true"/>
         <event type="service" path="" invoke="cancelPurchaseOrder"/>
          <response name="success"  type="request-redirect-noparam" value="FindInterUnitPurchase"></response>
         <response name="error" type="view" value="FindInterUnitPurchase"/>
     </request-map>
-    
+   
    <request-map uri="approveMaterialRequirementEnrties">
        <security https="true" auth="true"/>
        <event type="service-multi" invoke="approveRequirement"/>
@@ -235,6 +236,14 @@
     	<response name="success" type="view" value="purchaseAccountSummeryPDF"/>
     </request-map>
     
+    <request-map uri="stockPosition">
+        <security https="true" auth="true"/>
+    	<response name="success" type="view" value="StockPosition"/>
+    </request-map>
+    <request-map uri="StockPositionInternal">
+        <security https="true" auth="true"/>
+    	<response name="success" type="view" value="StockPositionInternal"/>
+    </request-map>
     
     
     <view-map name="main" type="screen" page="component://materialmgmt/widget/materialmgmtScreens.xml#main"/>
@@ -250,7 +259,9 @@
     <view-map name="purchaseTaxReportPDF" type="screenfop" page="component://materialmgmt/widget/materialmgmtReportScreens.xml#PurchaseTaxReportPDF" content-type="application/pdf"/>
     <view-map name="purchaseAccountSummeryPDF" type="screenfop" page="component://materialmgmt/widget/materialmgmtReportScreens.xml#purchaseAccountSummeryPDF" content-type="application/pdf"/>
     <view-map name="PurchaseTaxProductReportPDF" type="screenfop" page="component://materialmgmt/widget/materialmgmtReportScreens.xml#PurchaseTaxProductReportPDF" content-type="application/pdf"/>
-    
+    <view-map name="StockPosition" type="screen" page="component://materialmgmt/widget/materialmgmtScreens.xml#StockPosition"/>
+    <view-map name="StockPositionInternal" type="screen" page="component://materialmgmt/widget/materialmgmtScreens.xml#StockPositionInternal"/>
+   
     <!-- custRequest views -->
     <view-map name="FindMaterialRequest" type="screen" page="component://materialmgmt/widget/MaterialRequestScreens.xml#FindMaterialRequest"/>
     <view-map name="ViewMaterialRequest" type="screen" page="component://materialmgmt/widget/MaterialRequestScreens.xml#ViewMaterialRequest"/>

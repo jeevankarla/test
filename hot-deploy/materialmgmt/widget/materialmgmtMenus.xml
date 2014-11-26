@@ -51,6 +51,10 @@
 	                <parameter param-name="facilityId" from-field="ctxFacilityId"/>
 	            </link>
 	        </menu-item> 
+         <menu-item name="stockPosition" title="Stock Position">
+            <link target="stockPosition">
+            </link>
+        </menu-item>
         </menu>
         
         <!-- Sub Tab Menus -->
