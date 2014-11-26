@@ -638,6 +638,8 @@
 							value="PMNT_RECEIVED" />
 						<if-compare field="payment.statusId" operator="equals"
 							value="PMNT_SENT" />
+							<if-compare field="payment.statusId" operator="equals"
+							value="PMNT_CONFIRMED" />
 					</or>
 				</and>
 			</condition>
