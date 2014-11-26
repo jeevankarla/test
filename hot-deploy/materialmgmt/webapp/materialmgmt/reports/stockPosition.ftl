@@ -1,6 +1,6 @@
 
 
-<#if channelSize?exists &&(channelSize>0 || prodSize>0)>
+
 <style type="text/css">
 	.cell-title {
 		font-weight: normal;
@@ -236,9 +236,10 @@
  --> 
   
 $(document).ready(function(){
+<#if requirmentByStatusList?exists>
   var data = [
-<#list channelReportList as channelReport>
-    {label: "${StringUtil.wrapString(channelReport.name?default(""))}", data: ${channelReport.revenue?if_exists}}<#if channelReport_has_next>,</#if>
+<#list requirmentByStatusList as requirment>
+    {label: "${StringUtil.wrapString(requirment.name?default(""))}", data: ${requirment.count?if_exists}}<#if requirment_has_next>,</#if>
 </#list>    
   ];
   
@@ -276,13 +277,14 @@ $(document).ready(function(){
 			margin: [-220, 120]
 		}
 	});
-	
-		//setupGrid1();
+//setupGrid1();	
+
+</#if>		
 		
-		
+<#if custRequestsByStatusList?exists>		
 	var data2 = [
-<#list productReportList as prodReport>
-    {label: "${StringUtil.wrapString(prodReport.name?default(""))}", data: ${prodReport.revenue?if_exists}}<#if prodReport_has_next>,</#if>
+<#list custRequestsByStatusList as custRequest>
+    {label: "${StringUtil.wrapString(custRequest.name?default(""))}", data: ${custRequest.count?if_exists}}<#if custRequest_has_next>,</#if>
 </#list>    
   ];            
 	jQuery.plot($("#chart2"), data2, 
@@ -321,6 +323,7 @@ $(document).ready(function(){
 	});
 	
 	//	setupGrid2();
+</#if>
 
 <#--var data3 = [
 <#list productCatReportList as prodCatReport>
@@ -423,70 +426,50 @@ $(document).ready(function(){
 	<style type="text/css">
 		div.graph
 		{
-			width: 300px;
-			height: 300px;
+			width: 250px;
+			height: 250px;
 		}
 		label
 		{
 			display: block;
-			margin-left: 400px;
+			margin-left: 100px;
 			padding-left: 1em;
 		}
 		
 	</style>
+<div class="screenlet-body">
+<div class="righthalf">
+	<div class="screenlet">
+	    <div class="screenlet-title-bar">
+	      <h3>Requirement (${froDate?date} - ${toDate?date})<#if productId?exists> For Product : ${productId} </#if></h3>
+	    </div>
+	    <div class="screenlet-body">
+	   		<div id="chart" class="graph" style="margin-left:20px;margin-top:10px;"></div>
+	   		<br><br>
+	  
+			<div id="myGrid1" style="width:10px;height:10px;margin-left:10px;"></div>   		
+	    </div>
+	</div>
+</div>
 
 <div class="lefthalf">
-<div class="screenlet">
-    <div class="screenlet-title-bar">
-      <h3><#if chartType="SalesMix"> Requirement (${froDate?date} - ${toDate?date})<#if productId?exists> For Product : ${productId} </#if></#if></h3>
-    </div>
-    <div class="screenlet-body">
-   		<div id="chart" class="graph" style="margin-left:20px;margin-top:10px;"></div>
-   		<br><br>
-  
-		<div id="myGrid1" style="width:400px;height:250px;margin-left:20px;"></div>   		
-    </div>
-</div>
-<div class="screenlet">
-    <div class="screenlet-title-bar">
-      <h3><#if chartType="SalesMix">Product-wise Sales (${froDate?date} - ${toDate?date})<#if facilityId?exists> For Facility : ${facilityId} ,</#if><#if productId?exists> For Product : ${productId} </#if><#else>Product-wise Parlour Despatch (${froDate?date} - ${toDate?date})<#if facilityId?exists> For Facility : ${facilityId} ,</#if><#if productId?exists> For Product : ${productId} </#if></#if></h3>
-    </div>
-    <div class="screenlet-body">
-   		<div id="chart2" class="graph" style="margin-left:20px;margin-top:10px;"></div>
-   		<br><br>
-  
-		<div id="myGrid2" style="width:400px;height:250px;margin-left:20px;"></div>   		
-    </div>
+   
+	<div class="screenlet">
+	  
+	    <div class="screenlet-title-bar">
+	      <h3> Requests (${froDate?date} - ${toDate?date})<#if productId?exists> For Product : ${productId} </#if></h3>
+	    </div>
+	    <div class="screenlet-body">
+	   		<div id="chart2" class="graph" style="margin-left:20px;margin-top:10px;"></div>
+	   		<br><br>
+	  
+			<div id="myGrid2" style="width:10px;height:10px;margin-left:10px;"></div>   		
+	    </div>
+	    
+	</div>
+	
 </div>
 
+<div class="clear"></div>
 </div>
-<div class="righthalf">
 
-<div class="screenlet">
-    <div class="screenlet-title-bar">
-      <h3><#if chartType="SalesMix">Product Category-wise Sales (${froDate?date} - ${toDate?date})<#if facilityId?exists> For Facility : ${facilityId} ,</#if><#if productId?exists> For Product : ${productId} </#if><#else>Product Category-wise Parlour Despatch (${froDate?date} - ${toDate?date})<#if facilityId?exists> For Facility : ${facilityId} ,</#if><#if productId?exists> For Product : ${productId} </#if></#if></h3>
-    </div>
-    <div class="screenlet-body">
-   		<div id="chart3" class="graph" style="margin-left:20px;margin-top:10px;"></div>
-   		<br><br>
-  
-		<div id="myGrid3" style="width:400px;height:250px;margin-left:20px;"></div>   		
-    </div>
-</div>
-</div>
-<div class="righthalf">
-<div class="screenlet">
-    <div class="screenlet-title-bar">
-      <h3><#if chartType="SalesMix">Region-wise Sales (${froDate?date} - ${toDate?date})<#if facilityId?exists> For Facility : ${facilityId} ,</#if><#if productId?exists> For Product : ${productId} </#if><#else>Region-wise Parlour Despatch (${froDate?date} - ${toDate?date})<#if facilityId?exists> For Facility : ${facilityId} ,</#if><#if productId?exists> For Product : ${productId} </#if></#if></h3>
-    </div>
-    <div class="screenlet-body">
-   		<div id="chart4" class="graph" style="margin-left:20px;margin-top:10px;"></div>
-   		<br><br>
-  
-		<div id="myGrid4" style="width:400px;height:250px;margin-left:20px;"></div>   		
-    </div>
-</div>
-</div>
-<#else>
-  <h3>No Data found for ${froDate?date} - ${toDate?date}!</h3>
-</#if>

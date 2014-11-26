@@ -50,8 +50,8 @@
 		 context.froDate = parameters.fromDate;
 		 fromDate = UtilDateTime.getDayStart(new java.sql.Timestamp(sdf.parse(parameters.fromDate).getTime()));
 	 }else {
-	 froDate = UtilDateTime.getDayStart(UtilDateTime.nowTimestamp());
-		 //froDate = UtilDateTime.addDaysToTimestamp(UtilDateTime.getDayStart(UtilDateTime.nowTimestamp()),-30);
+	    //froDate = UtilDateTime.getDayStart(UtilDateTime.nowTimestamp());
+		 froDate = UtilDateTime.addDaysToTimestamp(UtilDateTime.getDayStart(UtilDateTime.nowTimestamp()),-7);
 		 context.froDate = froDate
 		 fromDate = froDate;
 	 }
@@ -85,6 +85,7 @@
  }
  
  productId = parameters.productId;
+ context.productId = productId;
  if (productId) {
 	 GenericValue product = delegator.findOne("Product", UtilMisc.toMap("productId",productId),false);
 	 context.product = product;
@@ -240,6 +241,30 @@
 	 EntityCondition cond = EntityCondition.makeCondition(condList,EntityOperator.AND);
 	 requirmentsList = delegator.findList("Requirement", cond, null, ['-createdDate'], null, false);
 	 context.requirmentsList = requirmentsList;
+	 requirmentBystatusMap =[:];
+	 for(GenericValue requirment : requirmentsList){
+		 String statusId = requirment.getString("statusId");
+		 Debug.log("statusId===="+statusId);
+		 if(UtilValidate.isEmpty(requirmentBystatusMap.get(statusId))){
+			 requirmentBystatusMap.put(statusId , 1);
+		 }else{
+		 	Debug.log("requirmentBystatusMap===="+requirmentBystatusMap.get(statusId));
+		 	requirmentBystatusMap.put(statusId , requirmentBystatusMap.get(statusId)+1);
+		 }
+	 }
+	 requirmentByStatusList = [];
+	 if(requirmentBystatusMap){
+		 for(Map.Entry entry : requirmentBystatusMap.entrySet()){
+			 tempMap = [:];
+			 statusId = entry.getKey();
+			
+			 tempMap.putAt("name", statusId);
+			 tempMap.putAt("count", entry.getValue());
+			 requirmentByStatusList.add(tempMap);
+		 }
+	 }
+	 
+	 context.requirmentByStatusList = requirmentByStatusList;
 	 // get requests here 
 	 condList.clear();
 	 condList.add(EntityCondition.makeCondition("productId", EntityOperator.EQUALS, productId));
@@ -247,10 +272,33 @@
 	 //condList.add(EntityCondition.makeCondition("custRequestDate", EntityOperator.GREATER_THAN_EQUAL_TO, fromDate));
 	 //condList.add(EntityCondition.makeCondition("custRequestDate", EntityOperator.LESS_THAN_EQUAL_TO, thruDate));
 	 cond = EntityCondition.makeCondition(condList,EntityOperator.AND);
-	 custRequestsList = delegator.findList("CustRequestAndItemAndAttribute", cond, UtilMisc.toSet("custRequestId","fromPartyId","custRequestDate","statusId","custRequestItemStatusId","responseRequiredDate"), ['-custRequestDate'], null, false);
+	 custRequestsList = delegator.findList("CustRequestAndItemAndAttribute", cond, UtilMisc.toSet("custRequestId","fromPartyId","custRequestDate","statusId","itemStatusId","responseRequiredDate"), ['-custRequestDate'], null, false);
 	 context.custRequestsList = custRequestsList;
+	 custRequestsByStatusMap =[:];
+	 for(GenericValue custRequest : custRequestsList){
+		 String statusId = custRequest.getString("itemStatusId");
+		 Debug.log("statusId****===="+statusId);
+		 if(UtilValidate.isEmpty(custRequestsByStatusMap.get(statusId))){
+			 custRequestsByStatusMap.put(statusId , 1);
+		 }else{
+		   Debug.log("statusId****===="+custRequestsByStatusMap.get(statusId));
+			 custRequestsByStatusMap.put(statusId , custRequestsByStatusMap.get(statusId)+1);
+		 }
+	 }
 	 
+	 custRequestsByStatusList = [];
+	 if(custRequestsByStatusMap){
+		 for(Map.Entry entry : custRequestsByStatusMap.entrySet()){
+			 tempMap = [:];
+			 statusId = entry.getKey();
+			
+			 tempMap.putAt("name", statusId);
+			 tempMap.putAt("count", entry.getValue());
+			 custRequestsByStatusList.add(tempMap);
+		 }
+	 }
 	 
+	context.custRequestsByStatusList = custRequestsByStatusList; 
 }
  
  

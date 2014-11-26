@@ -324,18 +324,26 @@
                   <property-map resource="ProductUiLabels" map-name="uiLabelMap" global="true"/>
                   <property-map resource="CommonUiLabels" map-name="uiLabelMap" global="true"/>
 				<script location="component://materialmgmt/webapp/materialmgmt/WEB-INF/actions/reports/stockPosition.groovy"/>  
-            </actions>            
+            </actions>  
+               <condition> 
+               <not><if-empty field="parameters.productId"/></not>
+            	</condition>     
             <widgets>
+               
                   	<container>
-                  	    <platform-specific> 
-                            		<html><html-template location="component://materialmgmt/webapp/materialmgmt/reports/stockPosition.ftl"/></html>
-                        </platform-specific>
-	                  	<platform-specific>
-	                         <html><html-template location="component://materialmgmt/webapp/materialmgmt/reports/ProductInventorySummary.ftl"/></html>
-	                     </platform-specific>
+	                  	    <platform-specific> 
+	                            		<html><html-template location="component://materialmgmt/webapp/materialmgmt/reports/stockPosition.ftl"/></html>
+	                        </platform-specific>
+                       
+                       
+		                  	<platform-specific>
+		                         <html><html-template location="component://materialmgmt/webapp/materialmgmt/reports/ProductInventorySummary.ftl"/></html>
+		                     </platform-specific>
+	                    
 	                     <platform-specific>
 	                         <html><html-template location="component://materialmgmt/webapp/materialmgmt/reports/EditProductInventoryItems.ftl"/></html>
 	                     </platform-specific>
+	                   
 	                     <screenlet title="${uiLabelMap.ProductOutstandingPurchaseOrders}">
 	                         <include-form name="OutstandingPurchaseOrders" location="component://materialmgmt/widget/materialmgmtForms.xml"/>
 	                     </screenlet>
