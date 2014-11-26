@@ -68,6 +68,10 @@ function getPaymentRunningTotal() {
 }
 // -->
 
+function depositWithdrawPaymentsSubmit(current) {
+jQuery(current).attr( "disabled", "disabled");
+document.depositWithdrawPaymentsForm.submit();
+}
 </script>
 <div class="screenlet">
     <div class="screenlet-body">
@@ -95,7 +99,7 @@ function getPaymentRunningTotal() {
                         <td>${uiLabelMap.AccountingPaymentType}</td>
                         <td>${uiLabelMap.AccountingFromParty}</td>
                         <td>${uiLabelMap.AccountingToParty}</td>
-                        <td>Bank Name</td>
+                        <td>Bank Name </td>
                         <td>${uiLabelMap.CommonAmount}</td>
                         <td>${uiLabelMap.CommonDate}</td>
                         <td align="right">${uiLabelMap.CommonSelectAll}<input type="checkbox" id="checkAllPayments" name="checkAllPayments" onchange="javascript:togglePaymentId(this);"/></td>
@@ -128,7 +132,7 @@ function getPaymentRunningTotal() {
                         <input type="checkbox" name="groupInOneTransaction" value="Y" checked="checked" /> -->
                         <b>Date<@htmlTemplate.renderDateTimeField name="transactionDate" event="" action="" value="" className="" alert="" title="Format: yyyy-MM-dd HH:mm:ss.SSS" size="18" maxlength="22" id="transactionDate" dateType="date" shortDateInput=false timeDropdownParamName="" defaultDateTimeString="" localizedIconTitle="" timeDropdown="" timeHourName="" classString="" hour1="" hour2="" timeMinutesName="" minutes="" isTwelveHour="" ampmName="" amSelected="" pmSelected="" compositeType="" formName=""/>
                         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;,</b>
-                        <input id="submitButton" type="button"  onclick="javascript:document.depositWithdrawPaymentsForm.submit();" value="${uiLabelMap.AccountingDepositWithdraw}" disabled="disabled"/>
+                        <input id="submitButton" type="button"  onclick="javascript:depositWithdrawPaymentsSubmit(this);" value="${uiLabelMap.AccountingDepositWithdraw}" disabled="disabled"/>
                     </div>
                   </#if>
                 </table>
