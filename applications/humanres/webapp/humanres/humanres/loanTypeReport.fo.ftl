@@ -36,16 +36,16 @@ ${setRequestAttribute("OUTPUT_FILENAME", "LoanAvailedReport.pdf")}
 			<fo:static-content flow-name="xsl-region-before">
 					<fo:block  keep-together="always" text-align="center" font-family="Courier,monospace" white-space-collapse="false">&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;UserLogin : <#if userLogin?exists>${userLogin.userLoginId?if_exists}</#if></fo:block>
 					<fo:block  keep-together="always" text-align="center" font-family="Courier,monospace" white-space-collapse="false">&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;Date:${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(nowTimestamp, "dd/MM/yy HH:mm:ss")}</fo:block>
-					<fo:block  keep-together="always" text-align="center" font-family="Courier,monospace" white-space-collapse="false" font-size="15pt" font-weight="bold">  MOTHER DAIRY A UNIT OF K.M.F </fo:block>
-					<fo:block  keep-together="always" text-align="center" font-family="Courier,monospace" white-space-collapse="false" font-size="15pt" font-weight="bold">  G.K.V.K POST, BANGALORE, KARNATAKA - 560065 </fo:block>
+					<fo:block  keep-together="always" text-align="center" font-family="Courier,monospace" white-space-collapse="false" font-size="13pt" font-weight="bold">  MOTHER DAIRY A UNIT OF K.M.F </fo:block>
+					<fo:block  keep-together="always" text-align="center" font-family="Courier,monospace" white-space-collapse="false" font-size="13pt" font-weight="bold">  G.K.V.K POST, BANGALORE, KARNATAKA - 560065 </fo:block>
 			
 					<#assign loanTypeId=parameters.loanTypeId>
 		          <#assign loanTypeName = delegator.findOne("LoanType", {"loanTypeId" : loanTypeId}, true)>
 		           <#if loanTypeName?has_content> 
 		          
-                    <fo:block text-align="center" font-size="13pt" keep-together="always"  white-space-collapse="false" font-weight="bold">&#160;&#160;LOAN AND ADVANCES REPORT PRINCIPLE AND INTEREST FOR: ${(loanTypeName.description)?if_exists}  </fo:block>
+                    <fo:block text-align="center" font-size="13pt" keep-together="always"  white-space-collapse="false" font-weight="bold">&#160;&#160;LOAN AND ADVANCES REPORT PRINCIPAL AND INTEREST FOR: ${(loanTypeName.description)?if_exists}  </fo:block>
               		   </#if>
-              		 <fo:block  keep-together="always" text-align="center" font-family="Courier,monospace" white-space-collapse="false" font-size="13pt" font-weight="bold">  For The Month Of :${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(fromDate?if_exists, "dd/MM/yy ")} TO ${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(thruDate?if_exists, "dd/MM/yy")} </fo:block>
+              		 <fo:block  keep-together="always" text-align="center" font-family="Courier,monospace" white-space-collapse="false" font-size="13pt" font-weight="bold">  For the month of :${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(fromDate?if_exists, "dd/MM/yy ")} TO ${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(thruDate?if_exists, "dd/MM/yy")} </fo:block>
               		<fo:block  keep-together="always" text-align="center" font-family="Courier,monospace" white-space-collapse="false" font-size="13pt" font-weight="bold"> &#160;&#160;  </fo:block>
               		   
               		 <fo:block>
@@ -68,49 +68,49 @@ ${setRequestAttribute("OUTPUT_FILENAME", "LoanAvailedReport.pdf")}
 	                    <fo:table-body>
 	                    <fo:table-row >
 	                    		<fo:table-cell border-style="solid">
-                            		<fo:block   text-align="left" font-size="12pt" white-space-collapse="false" font-weight="bold">SNO</fo:block>  
+                            		<fo:block   text-align="left" font-size="13pt" white-space-collapse="false" font-weight="bold">SNO</fo:block>  
                        			</fo:table-cell>                     
                        			<fo:table-cell border-style="solid">
-                            		<fo:block   text-align="left" font-size="12pt" white-space-collapse="false" font-weight="bold">Employee Code </fo:block>
+                            		<fo:block   text-align="left" font-size="13pt" white-space-collapse="false" font-weight="bold">Employee Code </fo:block>
                        			</fo:table-cell>
                        			<fo:table-cell border-style="solid">
-                            		<fo:block   text-align="left" font-size="12pt" white-space-collapse="false" font-weight="bold">Employee Name</fo:block> 
+                            		<fo:block   text-align="center" font-size="13pt" white-space-collapse="false" font-weight="bold">Employee Name</fo:block> 
                        			</fo:table-cell>
                        			<fo:table-cell border-style="solid">
-                            		<fo:block   text-align="left" font-size="12pt" white-space-collapse="false" font-weight="bold">Principal Amount</fo:block>  
+                            		<fo:block   text-align="right" font-size="13pt" white-space-collapse="false" font-weight="bold">Principal Amount</fo:block>  
                        			</fo:table-cell>
                        			<fo:table-cell border-style="solid">
-                            		<fo:block   text-align="left" font-size="12pt" white-space-collapse="false" font-weight="bold">Interest Amount</fo:block>  
+                            		<fo:block   text-align="right" font-size="13pt" white-space-collapse="false" font-weight="bold">Interest Amount</fo:block>  
                        			</fo:table-cell>
                        			<fo:table-cell border-style="solid">
-                            		<fo:block   text-align="left" font-size="12pt" white-space-collapse="false" font-weight="bold">PRN INST  EMI Rs </fo:block>  
+                            		<fo:block   text-align="right" font-size="13pt" white-space-collapse="false" font-weight="bold">PRN INST  EMI Rs </fo:block>  
                        			</fo:table-cell>
                         		<fo:table-cell border-style="solid">
-                            		<fo:block   text-align="left" font-size="12pt" white-space-collapse="false" font-weight="bold">PRN INST NO</fo:block>   
+                            		<fo:block   text-align="right" font-size="13pt" white-space-collapse="false" font-weight="bold">PRN INST NO</fo:block>   
                         		</fo:table-cell>
                         		<fo:table-cell border-style="solid">
-                            		<fo:block   text-align="left" font-size="12pt" white-space-collapse="false" font-weight="bold">INT  INST  EMI Rs </fo:block>  
+                            		<fo:block   text-align="right" font-size="13pt" white-space-collapse="false" font-weight="bold">INT  INST  EMI Rs </fo:block>  
                         		</fo:table-cell>
                         		<fo:table-cell border-style="solid">
-                            		<fo:block  text-align="left" font-size="12pt" white-space-collapse="false" font-weight="bold">INT INST NO</fo:block>  
+                            		<fo:block  text-align="right" font-size="13pt" white-space-collapse="false" font-weight="bold">INT INST NO</fo:block>  
                         		</fo:table-cell>
                         		<fo:table-cell border-style="solid">
-                            		<fo:block   text-align="left" font-size="12pt" white-space-collapse="false" font-weight="bold">TOT DEDN PRN </fo:block>  
+                            		<fo:block   text-align="right" font-size="13pt" white-space-collapse="false" font-weight="bold">TOT DEDN PRN </fo:block>  
                        			</fo:table-cell>
                        			<fo:table-cell border-style="solid">
-                            		<fo:block   text-align="left" font-size="12pt" white-space-collapse="false" font-weight="bold">TOT DEDN INT </fo:block>  
+                            		<fo:block   text-align="right" font-size="13pt" white-space-collapse="false" font-weight="bold">TOT DEDN INT </fo:block>  
                        			</fo:table-cell>
                         		<fo:table-cell border-style="solid">
-                            		<fo:block   text-align="left" font-size="12pt" white-space-collapse="false" font-weight="bold">BAL AMOUNT PRN </fo:block>   
+                            		<fo:block   text-align="right" font-size="13pt" white-space-collapse="false" font-weight="bold">BAL AMOUNT PRN </fo:block>   
                         		</fo:table-cell>
                         		<fo:table-cell border-style="solid">
-                            		<fo:block   text-align="left" font-size="12pt" white-space-collapse="false" font-weight="bold">BAL AMOUNT INT </fo:block>  
+                            		<fo:block   text-align="right" font-size="13pt" white-space-collapse="false" font-weight="bold">BAL AMOUNT INT </fo:block>  
                         		</fo:table-cell>
                         		<fo:table-cell border-style="solid">
-                            		<fo:block  text-align="left" font-size="12pt" white-space-collapse="false" font-weight="bold">BAL EMI PRN</fo:block>  
+                            		<fo:block  text-align="right" font-size="13pt" white-space-collapse="false" font-weight="bold">BAL EMI PRN</fo:block>  
                         		</fo:table-cell>
                         		<fo:table-cell border-style="solid">
-                            		<fo:block   text-align="left" font-size="12pt" white-space-collapse="false" font-weight="bold">BAL EMI INT</fo:block>  
+                            		<fo:block   text-align="right" font-size="13pt" white-space-collapse="false" font-weight="bold">BAL EMI INT</fo:block>  
                        			</fo:table-cell>
                 			</fo:table-row>
                     </fo:table-body>
@@ -180,72 +180,72 @@ ${setRequestAttribute("OUTPUT_FILENAME", "LoanAvailedReport.pdf")}
 								<fo:table-row border-style="solid">
 								
 									<fo:table-cell border-style="solid">
-	                            	 <fo:block  text-align="left"  font-size="13pt" > 	 ${sNo}</fo:block>                 			  
+	                            	 <fo:block  text-align="left"  font-size="12pt" > 	 ${sNo}</fo:block>                 			  
 	                       			</fo:table-cell>
                                 	<fo:table-cell border-style="solid" >
-	                                    <fo:block font-size="13pt" text-align="left">${employeeId?if_exists}</fo:block>
+	                                    <fo:block font-size="12pt" text-align="left">${employeeId?if_exists}</fo:block>
 	                                </fo:table-cell>
                                  	<fo:table-cell border-style="solid">
 	                                    <fo:block text-align="left">${employeeName?if_exists}</fo:block>
 	                                </fo:table-cell>
 	                       			<fo:table-cell border-style="solid">
-                                    <fo:block text-align="left" font-size="13pt" >
-                                            ${principalAmount?if_exists}
+                                    <fo:block text-align="right" font-size="12pt" >
+                                            ${principalAmount?if_exists?string("##0.00")}
                                     </fo:block>
 	                                </fo:table-cell>
 	                                <fo:table-cell border-style="solid">
-                                    <fo:block text-align="left" font-size="13pt" >
-                                            ${interestAmount?if_exists}
+                                    <fo:block text-align="right" font-size="12pt" >
+                                            ${interestAmount?if_exists?string("##0.00")}
                                     </fo:block>
 	                                </fo:table-cell>
 	                                <fo:table-cell border-style="solid">
-	                                    <fo:block text-align="left" font-size="13pt">
-	                                       ${prinAmtEmi?if_exists}
+	                                    <fo:block text-align="right" font-size="12pt">
+	                                       ${prinAmtEmi?if_exists?string("##0.00")}
 	                                    </fo:block>
 	                                </fo:table-cell>
 	                                <fo:table-cell border-style="solid">
-	                                    <fo:block text-align="left" font-size="13pt">
+	                                    <fo:block text-align="right" font-size="12pt">
 	                                     ${numPrincipalInst?if_exists}
 	                                    </fo:block>
 	                                </fo:table-cell>
 	                                <fo:table-cell border-style="solid">
-	                                    <fo:block text-align="left" font-size="13pt">
-	                                       ${interestAmount?if_exists}
+	                                    <fo:block text-align="right" font-size="12pt">
+	                                       ${interestAmount?if_exists?string("##0.00")}
 	                                    </fo:block>
 	                                </fo:table-cell>
 	                                
 	                                <fo:table-cell border-style="solid">
-	                                    <fo:block text-align="left" font-size="13pt">
+	                                    <fo:block text-align="right" font-size="12pt">
 	                                     ${numInterestInst?if_exists}
 	                                    </fo:block>
 	                                </fo:table-cell>
 	                               <fo:table-cell border-style="solid">
-	                                    <fo:block text-align="left" font-size="13pt">
-	                                     ${totalRecPrinAmount?if_exists}
+	                                    <fo:block text-align="right" font-size="12pt">
+	                                     ${totalRecPrinAmount?if_exists?string("##0.00")}
 	                                    </fo:block>
 	                                </fo:table-cell>
 	                               <fo:table-cell border-style="solid">
-	                                    <fo:block text-align="left" font-size="13pt">
-	                                     ${totalRecIntAmount?if_exists}
+	                                    <fo:block text-align="right" font-size="12pt">
+	                                     ${totalRecIntAmount?if_exists?string("##0.00")}
 	                                    </fo:block>
 	                                </fo:table-cell>
 	                               <fo:table-cell border-style="solid">
-	                                    <fo:block text-align="left" font-size="13pt">
-	                                     ${netPrinAmount?if_exists}
+	                                    <fo:block text-align="right" font-size="12pt">
+	                                     ${netPrinAmount?if_exists?string("##0.00")}
 	                                    </fo:block>
 	                                </fo:table-cell>
 	                               <fo:table-cell border-style="solid">
-	                                    <fo:block text-align="left" font-size="13pt">
-	                                     ${netIntAmount?if_exists}
+	                                    <fo:block text-align="right" font-size="12pt">
+	                                     ${netIntAmount?if_exists?string("##0.00")}
 	                                    </fo:block>
 	                                </fo:table-cell>
 	                               <fo:table-cell border-style="solid">
-	                                    <fo:block text-align="left" font-size="13pt">
+	                                    <fo:block text-align="right" font-size="12pt">
 	                                     ${netPrinInst?if_exists}
 	                                    </fo:block>
 	                                </fo:table-cell>
 	                               <fo:table-cell border-style="solid">
-	                                    <fo:block text-align="left" font-size="13pt">
+	                                    <fo:block text-align="right" font-size="12pt">
 	                                     ${netIntInst?if_exists}
 	                                    </fo:block>
 	                                </fo:table-cell>
@@ -260,70 +260,68 @@ ${setRequestAttribute("OUTPUT_FILENAME", "LoanAvailedReport.pdf")}
                           <fo:table-row border-style="solid">
 								
 									<fo:table-cell border-style="solid">
-	                            	 <fo:block  text-align="left"  font-size="13pt" > 	</fo:block>                 			  
+	                            	 <fo:block  text-align="left"  font-size="12pt" > 	</fo:block>                 			  
 	                       			</fo:table-cell>
                                 	<fo:table-cell border-style="solid" font-weight="bold">
-	                                    <fo:block font-size="13pt" text-align="left"></fo:block>
+	                                    <fo:block font-size="12pt" text-align="left"></fo:block>
 	                                </fo:table-cell>
                                  	<fo:table-cell border-style="solid">
-	                                    <fo:block text-align="left" font-weight="bold">TOTAL</fo:block>
+	                                    <fo:block text-align="left" font-size="12pt" font-weight="bold">TOTAL</fo:block>
 	                                </fo:table-cell>
 	                       			<fo:table-cell border-style="solid">
-                                    <fo:block text-align="left" font-size="13pt" font-weight="bold">
-                                       ${totalPRNAMT}    
+                                    <fo:block text-align="right" font-size="12pt" font-weight="bold">
+                                       ${totalPRNAMT?if_exists?string("##0.00")}    
                                     </fo:block>
 	                                </fo:table-cell>
 	                                <fo:table-cell border-style="solid">
-                                    <fo:block text-align="left" font-size="13pt" font-weight="bold">
-                                       ${totalINTAMT}    
+                                    <fo:block text-align="right" font-size="12pt" font-weight="bold">
+                                       ${totalINTAMT?if_exists?string("##0.00")}    
                                     </fo:block>
 	                                </fo:table-cell>
 	                                <fo:table-cell border-style="solid">
-	                                 <fo:block text-align="left" font-size="13pt" font-weight="bold">
-	                                    ${totalprinAmtEmi}    
+	                                 <fo:block text-align="right" font-size="12pt" font-weight="bold">
+	                                    ${totalprinAmtEmi?if_exists?string("##0.00")}    
 	                                  </fo:block>
 	                                </fo:table-cell>
 	                                <fo:table-cell border-style="solid">
-	                                 <fo:block text-align="left" font-size="13pt" font-weight="bold">
+	                                 <fo:block text-align="right" font-size="12pt" font-weight="bold">
 	                                </fo:block>
 	                                </fo:table-cell>
 	                                <fo:table-cell border-style="solid">
-	                                    <fo:block text-align="left" font-size="13pt" font-weight="bold">
-	                                     ${totalintrstAmtEmi}    
+	                                    <fo:block text-align="right" font-size="12pt" font-weight="bold">
+	                                     ${totalintrstAmtEmi?if_exists?string("##0.00")}    
 	                                    </fo:block>
 	                                </fo:table-cell>
 	                                <fo:table-cell border-style="solid">
-	                                    <fo:block text-align="left" font-size="13pt" font-weight="bold">
+	                                    <fo:block text-align="right" font-size="12pt" font-weight="bold">
 	                                    </fo:block>
 	                                </fo:table-cell>
 	                               <fo:table-cell border-style="solid">
-	                                    <fo:block text-align="left" font-size="13pt" font-weight="bold">
-	                                    ${totaloftotalRecPrinAmount}    
+	                                    <fo:block text-align="left" font-size="12pt" font-weight="bold">
+	                                    ${totaloftotalRecPrinAmount?if_exists?string("##0.00")}    
 	                                    </fo:block>
 	                                </fo:table-cell>
 	                               <fo:table-cell border-style="solid">
-	                                    <fo:block text-align="left" font-size="13pt" font-weight="bold">
-	                                     ${totaloftotalRecIntAmount}    
+	                                    <fo:block text-align="right" font-size="12pt" font-weight="bold">
+	                                     ${totaloftotalRecIntAmount?if_exists?string("##0.00")}    
 	                                    </fo:block>
 	                                </fo:table-cell>
 	                               <fo:table-cell border-style="solid">
-	                                    <fo:block text-align="left" font-size="13pt" font-weight="bold">
-	                                      ${totalnetPrinAmount}    
+	                                    <fo:block text-align="right" font-size="12pt" font-weight="bold">
+	                                      ${totalnetPrinAmount?if_exists?string("##0.00")}    
 	                                    </fo:block>
 	                                </fo:table-cell>
 	                               <fo:table-cell border-style="solid">
-	                                    <fo:block text-align="left" font-size="13pt" font-weight="bold">
-	                                     ${totalnetIntAmount}    
+	                                    <fo:block text-align="right" font-size="12pt" font-weight="bold">
+	                                     ${totalnetIntAmount?if_exists?string("##0.00")}    
 	                                    </fo:block>
 	                                </fo:table-cell>
 	                               <fo:table-cell border-style="solid">
-	                                    <fo:block text-align="left" font-size="13pt" font-weight="bold">
-                                         ${totalnetPrinInst}    
+	                                    <fo:block text-align="right" font-size="12pt" font-weight="bold">
 	                                    </fo:block>
 	                                </fo:table-cell>
 	                               <fo:table-cell border-style="solid">
-	                                    <fo:block text-align="left" font-size="13pt" font-weight="bold">
-	                                     ${totalnetIntInst}    
+	                                    <fo:block text-align="right" font-size="12pt" font-weight="bold">
 	                                    </fo:block>
 	                                </fo:table-cell>
 	                              	
