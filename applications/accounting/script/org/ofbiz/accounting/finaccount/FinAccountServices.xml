@@ -962,6 +962,8 @@ under the License.
                     <condition-expr field-name="finAccountTransTypeId" from-field="parameters.finAccountTransTypeId" ignore-if-empty="true"/>
                     <condition-expr field-name="statusId" from-field="parameters.statusId" ignore-if-empty="true"/>
                     <condition-expr field-name="glReconciliationId" from-field="parameters.glReconciliationId" ignore-if-empty="true"/>
+                    <condition-expr field-name="paymentId" from-field="parameters.paymentId" ignore-if-empty="true"/>
+                    <condition-expr field-name="finAccountTransId" from-field="parameters.finAccountTransId" ignore-if-empty="true"/>
                     <condition-expr field-name="transactionDate" operator="greater-equals" from-field="parameters.fromTransactionDate" ignore-if-empty="true"/>
                     <condition-expr field-name="transactionDate" operator="less-equals" from-field="parameters.thruTransactionDate" ignore-if-empty="true"/>
                     <condition-expr field-name="entryDate" operator="greater-equals" from-field="parameters.fromEntryDate" ignore-if-empty="true"/>

@@ -408,6 +408,9 @@ under the License.
         </actions>
         <field name="noConditionFind"><hidden value="Y"/><!-- if this isn't there then with all fields empty no query will be done --></field>
         <field name="finAccountId"><hidden value="${finAccountId}"/></field>
+        <field name="finAccountTransId">
+            <text></text>
+        </field>
         <field name="finAccountTransTypeId">
             <drop-down allow-empty="true">
                 <entity-options description="${description}" entity-name="FinAccountTransType">
@@ -428,6 +431,9 @@ under the License.
                 <list-options list-name="glReconciliations" key-name="glReconciliationId" 
                     description="${glReconciliationName}[[${glReconciliationId}] [${reconciledDate}] [${reconciledBalance}]]"/>
             </drop-down>
+        </field>
+        <field name="paymentId">
+            <text></text>
         </field>
         <field name="fromTransactionDate" position="1"><date-time/></field>
         <field name="thruTransactionDate" position="2"><date-time/></field>
