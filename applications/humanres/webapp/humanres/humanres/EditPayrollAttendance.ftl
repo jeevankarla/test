@@ -240,8 +240,17 @@ function comparer(a, b) {
 			
 			 grid.onCellChange.subscribe(function(e,args) {        	
 				var weeklyOff = parseInt(data[args.row]["noOfAttendedHoliDays"]);
+				if(isNaN(weeklyOff)){
+					weeklyOff=0;
+				}
 				var physicalPresence = parseInt(data[args.row]["noOfAttendedDays"]);
+				if(isNaN(physicalPresence)){
+					physicalPresence=0;
+				}
 				var casualLeaves = parseInt(data[args.row]["casualLeaveDays"]);
+				if(isNaN(casualLeaves)){
+					casualLeaves=0;
+				}
 				var days = physicalPresence+weeklyOff+casualLeaves;
 				if(isNaN(days)){
 					days = 0;
