@@ -205,7 +205,8 @@ function reportTypeChangeFunc() {
 									</select>
 								</td>
 								<td width="15%"></td>
-								<td width="10%"><input type="submit" value="Download" class="buttontext"/></td> 
+								<td width="10%"><input type="submit" value="PDF" onClick="javascript:appendParams('purchaseReport', '<@ofbizUrl>purchaseReport.pdf</@ofbizUrl>');" class="buttontext"/>
+							    <input type="submit" value="CSV" onClick="javascript:appendParams('purchaseReport', '<@ofbizUrl>purchaseReport.csv</@ofbizUrl>');" class="buttontext"/></td>         			
 							</form>
 		                </tr>
 				         <tr class="alternate-row">

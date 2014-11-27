@@ -114,5 +114,94 @@
 			</widgets>
 		</section>
 	</screen>
-  
+    <screen name="PurchaseReportPDF">
+		<section>
+			<actions>
+				<property-map resource="CommonUiLabels" map-name="uiLabelMap" global="true"/>
+				<property-map resource="OrderUiLabels" map-name="uiLabelMap" global="true"/>
+				<property-map resource="ProductUiLabels" map-name="uiLabelMap" global="true"/>
+				<property-map resource="PartyUiLabels" map-name="uiLabelMap" global="true"/>
+				<set field="reportTypeFlag" from-field="parameters.reportTypeFlag"/>
+			</actions>
+			<widgets>
+				<section>
+					<condition>
+					<and>
+					  <if-compare operator="equals" value="PurchaseSummary" field="reportTypeFlag" />
+					</and>
+					</condition>
+					<actions>
+						<script location="component://materialmgmt/webapp/materialmgmt/WEB-INF/actions/purchases/PurchaseReport.groovy" />	
+					</actions>
+					<widgets>
+						<platform-specific>
+		                    <xsl-fo>
+								<html-template
+									location="component://materialmgmt/webapp/materialmgmt/reports/PurchaseReport.fo.ftl" />
+							</xsl-fo>
+		                </platform-specific>
+					</widgets>
+				</section>
+				<section>
+					<condition>
+					<and>
+					  <if-compare operator="equals" value="PurchaseDetails" field="reportTypeFlag" />
+					</and>
+					</condition>
+					<actions>
+						<script location="component://materialmgmt/webapp/materialmgmt/WEB-INF/actions/purchases/PurchaseReport.groovy" />	
+					</actions>
+					<widgets>
+						<platform-specific>
+		                   <xsl-fo>
+								<html-template
+									location="component://materialmgmt/webapp/materialmgmt/reports/PurchaseAbstractReport.fo.ftl" />
+							</xsl-fo>
+		                </platform-specific>
+					</widgets>
+				</section>
+			</widgets>
+		</section>
+	</screen>
+	<screen name="PurchaseReportCSV">
+		<section>
+			<actions>
+				<property-map resource="CommonUiLabels" map-name="uiLabelMap" global="true"/>
+				<property-map resource="OrderUiLabels" map-name="uiLabelMap" global="true"/>
+				<property-map resource="ProductUiLabels" map-name="uiLabelMap" global="true"/>
+				<property-map resource="PartyUiLabels" map-name="uiLabelMap" global="true"/>
+				<set field="reportTypeFlag" from-field="parameters.reportTypeFlag"/>
+			</actions>
+			<widgets>
+				<section>
+					<condition>
+					<and>
+					  <if-compare operator="equals" value="PurchaseSummary" field="reportTypeFlag" />
+					</and>
+					</condition>
+					<actions>
+						<script location="component://materialmgmt/webapp/materialmgmt/WEB-INF/actions/purchases/PurchaseReport.groovy" />	
+						<script location="component://materialmgmt/webapp/materialmgmt/WEB-INF/actions/purchases/PurchaseCsvReport.groovy" />
+					</actions>
+					<widgets>
+							<include-form name="PurchaseReportForms" location="component://materialmgmt/widget/materialmgmtForms.xml" />
+					</widgets>
+				</section>
+				<section>
+					<condition>
+					<and>
+					  <if-compare operator="equals" value="PurchaseDetails" field="reportTypeFlag" />
+					</and>
+					</condition>
+					<actions>
+						<script location="component://materialmgmt/webapp/materialmgmt/WEB-INF/actions/purchases/PurchaseReport.groovy" />	
+						<script location="component://materialmgmt/webapp/materialmgmt/WEB-INF/actions/purchases/PurchaseCsvReport.groovy" />	
+					</actions>
+					<widgets>
+						<include-form name="PurchaseAbstractReportForms" location="component://materialmgmt/widget/materialmgmtForms.xml" />
+					</widgets>
+				</section>
+			</widgets>
+		</section>
+	</screen>
 </screens>

@@ -244,6 +244,14 @@
         <security https="true" auth="true"/>
     	<response name="success" type="view" value="StockPositionInternal"/>
     </request-map>
+    <request-map uri="purchaseReport.pdf">
+     <security https="true" auth="true"/>
+    	<response name="success" type="view" value="PurchaseReportPDF"/>
+    </request-map>
+     <request-map uri="purchaseReport.csv">
+     <security https="true" auth="true"/>
+    	<response name="success" type="view" value="PurchaseReportCSV"/>
+    </request-map>
     
     
     <view-map name="main" type="screen" page="component://materialmgmt/widget/materialmgmtScreens.xml#main"/>
@@ -261,6 +269,8 @@
     <view-map name="PurchaseTaxProductReportPDF" type="screenfop" page="component://materialmgmt/widget/materialmgmtReportScreens.xml#PurchaseTaxProductReportPDF" content-type="application/pdf"/>
     <view-map name="StockPosition" type="screen" page="component://materialmgmt/widget/materialmgmtScreens.xml#StockPosition"/>
     <view-map name="StockPositionInternal" type="screen" page="component://materialmgmt/widget/materialmgmtScreens.xml#StockPositionInternal"/>
+    <view-map name="PurchaseReportPDF" type="screenfop" page="component://materialmgmt/widget/materialmgmtReportScreens.xml#PurchaseReportPDF" content-type="application/pdf"/>
+    <view-map name="PurchaseReportCSV" type="screencsv" page="component://materialmgmt/widget/materialmgmtReportScreens.xml#PurchaseReportCSV" content-type="text/csv" encoding="none"/>
    
     <!-- custRequest views -->
     <view-map name="FindMaterialRequest" type="screen" page="component://materialmgmt/widget/MaterialRequestScreens.xml#FindMaterialRequest"/>
