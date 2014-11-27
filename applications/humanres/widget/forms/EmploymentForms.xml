@@ -706,10 +706,22 @@
         <field name="searchButton" title="${uiLabelMap.CommonFind}" widget-style="smallSubmit"><submit button-type="button"/></field>
     </form>
 	<form name="editPayrollAttendance" odd-row-style="alternate-row" header-row-style="header-row" type="single"
-	    	default-table-style="basic-table hover-bar" separate-columns="true">  
+	    	default-table-style="basic-table hover-bar" separate-columns="true"> 
+	    	<actions>
+	       <set field="nowTimeStamp" value="${groovy: return org.ofbiz.base.util.UtilDateTime.nowTimestamp()}"/>
+		   <entity-condition entity-name="CustomTimePeriod" list="customTimeList" >
+		  		<condition-list combine="and">
+		  		<condition-expr field-name="fromDate" operator="less-equals" from-field="nowTimeStamp"/>
+		  		<condition-expr field-name="periodTypeId" operator="equals" value="HR_MONTH"/>
+		  		</condition-list>
+		  		<order-by field-name="-fromDate"/>
+		  		<order-by field-name="periodNum"/>
+			</entity-condition>
+				<set field="timecustom" from-field="customTimeList[0].customTimePeriodId"/>
+	    </actions> 
 	     <field name="partyIdTo" title="${uiLabelMap.HumanResEmployeePartyIdTo}" event="onKeyup" action="javascript:selectDept();"><lookup target-form-name="LookupEmployeeName" size="15"/></field>
 	     <field name="partyId" title="Organisation" >
-			<drop-down allow-empty="false">
+			<drop-down allow-empty="false" >
 				<entity-options entity-name="PartyRoleAndPartyDetail" description="${groupName}">
 					<entity-constraint name="roleTypeId" operator="equals" value="INTERNAL_ORGANIZATIO" />
 					<entity-order-by field-name="partyId" />
@@ -717,7 +729,7 @@
 			</drop-down>
 		</field>
 	     <field name="customTimePeriodId" required-field="true" tooltip="Required">
-            <drop-down >
+            <drop-down no-current-selected-key="${timecustom}">
                 <entity-options entity-name="CustomTimePeriod" key-field-name="customTimePeriodId" description="${groovy:org.ofbiz.base.util.UtilDateTime.toDateString(fromDate, &quot;dd MMMMM, yyyy&quot;);} - ${groovy:org.ofbiz.base.util.UtilDateTime.toDateString(thruDate, &quot;dd MMMMM, yyyy&quot;);}" filter-by-date="false">
                     <entity-constraint name="periodTypeId" operator="equals" value="HR_MONTH"/>
                     <entity-order-by field-name="-thruDate"/>
