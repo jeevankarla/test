@@ -213,6 +213,11 @@ under the License.
     <SecurityGroupPermission groupId="HR_REPORTSVIEW" permissionId="HR_SUPPAYROLL_REPORTS_VIEW"/>
     <SecurityGroupPermission groupId="HUMANRES_ADMIN" permissionId="HR_SUPPAYROLL_REPORTS_VIEW"/>
     
+    <SecurityGroup description="For Viewing The Loan Reports Screen." groupId="HR_LOANREPORTSVIEW"/>
+    <SecurityGroupPermission groupId="HR_LOANREPORTSVIEW" permissionId="HR_LOAN_REPORTS_VIEW"/>
+    <SecurityGroupPermission groupId="FULLADMIN" permissionId="HR_LOAN_REPORTS_VIEW"/>
+    <SecurityGroupPermission groupId="HR_REPORTSVIEW" permissionId="HR_LOAN_REPORTS_VIEW"/>
+    <SecurityGroupPermission groupId="HUMANRES_ADMIN" permissionId="HR_LOAN_REPORTS_VIEW"/>
     
     <SecurityGroup description="Loan deleting" groupId="HR_LOAN_DELETE"/>
     <SecurityGroupPermission groupId="FULLADMIN" permissionId="HR_LOAN_DELETE"/>

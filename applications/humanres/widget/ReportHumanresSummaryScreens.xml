@@ -1970,6 +1970,18 @@
                 </widgets>
             </section>
     </screen>
+    <screen name="LoanTypeReport">
+		<section>
+			<actions>
+	    		<script location="component://humanres/webapp/humanres/WEB-INF/actions/humanres/LoanTypeReport.groovy"/>
+			</actions>
+			<widgets>
+				<platform-specific> 
+				  <xsl-fo><html-template location="component://humanres/webapp/humanres/humanres/loanTypeReport.fo.ftl"/></xsl-fo> 
+                </platform-specific>
+			</widgets>
+		</section>
+	</screen>
 </screens>
 
     

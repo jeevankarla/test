@@ -828,6 +828,10 @@ under the License.
     	<security https="true" auth="true"/>
     	<response name="success" type="view" value="LeaveReports"></response>
     </request-map>
+   <request-map uri="LoanReports">
+    	<security https="true" auth="true"/>
+    	<response name="success" type="view" value="LoanReports"></response>
+    </request-map>
     <request-map uri="AttendanceReports">
     	<security https="true" auth="true"/>
     	<response name="success" type="view" value="AttendanceReports"></response>
@@ -1942,6 +1946,10 @@ under the License.
         <security https="true" auth="true"/>                        
         <response name="success" type="view" value="EDLISReport"/>        
     </request-map>
+         <request-map uri="loanTypeReport.pdf"><security https="true" auth="true"/>
+		<response name="success" type="view" value="LoanTypeReport"></response>    
+    </request-map>
+    
 	
      <!--====================Trainings Requests===================================-->
  <!--====================Cal Requests===================================-->
@@ -2193,6 +2201,7 @@ under the License.
     <view-map name="FindBenefitsOrDeductions" type="screen" page="component://humanres/widget/EmploymentScreens.xml#FindBenefitsOrDeductions"/>
     <view-map name="MastersReports" type="screen" page="component://humanres/widget/EmploymentScreens.xml#MastersReports"></view-map>
     <view-map name="LeaveReports" type="screen" page="component://humanres/widget/EmploymentScreens.xml#LeaveReports"></view-map>
+    <view-map name="LoanReports" type="screen" page="component://humanres/widget/EmploymentScreens.xml#LoanReports"></view-map>
     <view-map name="AttendanceReports" type="screen" page="component://humanres/widget/EmploymentScreens.xml#AttendanceReports"></view-map>
     <view-map name="PayrollReports" type="screen" page="component://humanres/widget/EmploymentScreens.xml#PayrollReports"></view-map>
     <view-map name="StatutoryReports" type="screen" page="component://humanres/widget/EmploymentScreens.xml#StatutoryReports"></view-map>
@@ -2378,7 +2387,7 @@ under the License.
 	 <view-map name="AdminPunch" type="screen" page="component://humanres/widget/AdminPunchScreens.xml#EditAdminPunch"/>
      <view-map name="Month" type="screen" page="component://humanres/widget/CalendarScreens.xml#CalendarMonth"/>
     <view-map name="UpComing" type="screen" page="component://humanres/widget/CalendarScreens.xml#CalendarUpcoming"/>
-    <view-map name="LeaveAvailedReport" type="screenfop" page="component://humanres/widget/ReportHumanresSummaryScreens.xml#LeaveAvailedReport" content-type="application/pdf" encoding="none" />
+    <view-map name="LeaveAvailedReport" type="screenfop" page="component://humanres/widget/ReportHumanresSummaryScreens.xml#LeaveAvailedReport" content-type="application/pdf" encoding="none" />    
     <view-map name="LeaveEncashmentReport" type="screenfop" page="component://humanres/widget/ReportHumanresSummaryScreens.xml#LeaveEncashmentReport" content-type="application/pdf" encoding="none" />
     <view-map name="CashEncashmentReportPDF" type="screenfop" page="component://humanres/widget/ReportHumanresSummaryScreens.xml#CashEncashmentReportPDF" content-type="application/pdf" encoding="none" />
     <view-map name="GHSSDepatmentCountReportPDF" type="screenfop" page="component://humanres/widget/ReportHumanresSummaryScreens.xml#GHSSDepatmentCountReportPDF" content-type="application/pdf" encoding="none" />
@@ -2399,7 +2408,6 @@ under the License.
     <view-map name="EmployeePunchReport" type="screen" page="component://humanres/widget/ReportHumanresSummaryScreens.xml#EmployeePunchReport"/>
     <!-- <view-map name="EmployeePunchReport" type="screencsv" page="component://humanres/widget/ReportHumanresSummaryScreens.xml#EmployeePunchReport" content-type="text/csv" encoding="none"/> -->
     <view-map name="ITEarningsReport" type="screenfop" page="component://humanres/widget/ReportHumanresSummaryScreens.xml#ITEarningsReport" content-type="application/pdf" encoding="none"/>
-   
     <view-map name="PFMonthlyStatement" type="screenfop" page="component://humanres/widget/ReportHumanresSummaryScreens.xml#PFMonthlyStatement" content-type="application/pdf" encoding="none"/>
     <view-map name="ESIMonthlystatement" type="screenfop" page="component://humanres/widget/ReportHumanresSummaryScreens.xml#ESIMonthlystatement" content-type="application/pdf" encoding="none"/>
     <view-map name="ESIFormSix" type="screenfop" page="component://humanres/widget/ReportHumanresSummaryScreens.xml#ESIFormSix" content-type="application/pdf" encoding="none"/>
@@ -2409,6 +2417,7 @@ under the License.
     <view-map name="emplMonthlyPunchReport" type="screencsv" page="component://humanres/widget/ReportHumanresSummaryScreens.xml#emplMonthlyPunchReport" content-type="text/csv" encoding="none"/>
     <view-map name="ITAXStatement" type="screenfop" page="component://humanres/widget/ReportHumanresSummaryScreens.xml#ITEarningsReport" content-type="application/pdf" encoding="none"/>
     <view-map name="EDLISReport" type="screenfop" page="component://humanres/widget/ReportHumanresSummaryScreens.xml#EDLISReport" content-type="application/pdf" encoding="none"/>
+     <view-map name="LoanTypeReport" type="screenfop" page="component://humanres/widget/ReportHumanresSummaryScreens.xml#LoanTypeReport" content-type="application/pdf" encoding="none" />   
     <!-- ==================Recruitment View Map===================== -->
     <view-map name="FindJobRequisitions" type="screen" page="component://humanres/widget/RecruitmentScreens.xml#FindJobRequisitions"/>
     <view-map name="EditJobRequisition" type="screen" page="component://humanres/widget/RecruitmentScreens.xml#EditJobRequisition"/>

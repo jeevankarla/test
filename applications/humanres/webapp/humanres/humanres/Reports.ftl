@@ -1256,5 +1256,44 @@ function makeDatePicker1(fromDateId ,thruDateId){
 		</div>
 	</div>
 </#if>
+<#if reportFrequencyFlag =="LoanReports">
+	<div>
+		<div class="screenlet">
+			<div class="screenlet-title-bar">
+				<h3>Reports</h3>
+			</div>
+			<div class="screenlet-body">
+				<table class="basic-table hover-bar h3" style="border-spacing: 0 10px;">
+					<tr class="alternate-row">
+						<form id="loanTypeReport" name="loanTypeReport" mothed="post" action="<@ofbizUrl>loanTypeReport.pdf</@ofbizUrl>" target="_blank">
+							<td width="10%" class='h3'>Loan Type Report</td>
+							<td width="10%">Loan Type
+								<select name="loanTypeId" id="loanTypeId" class='h5' >
+										<#list loanTypeList as loan>
+									<option value='${loan.loanTypeId}'>${loan.description?if_exists}</option>
+									</#list>
+								</select>
+							</td>
+							<td width="15%">Period Id
+								<select name="customTimePeriodId" id="customTimePeriodId" class='h4'>
+									<#list customTimePeriodList as customTimePeriod>
+									 <#if defaultTimePeriodId?exists && (defaultTimePeriodId == customTimePeriod.customTimePeriodId)>
+				      					<option value='${customTimePeriod.customTimePeriodId?if_exists}' selected="selected">${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(customTimePeriod.fromDate, "dd MMMMM, yyyy")} -${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(customTimePeriod.thruDate, "dd MMMMM, yyyy")}</option>
+				      					<#else>
+				      						<option value='${customTimePeriod.customTimePeriodId?if_exists}' >${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(customTimePeriod.fromDate, "dd MMMMM, yyyy")} -${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(customTimePeriod.thruDate, "dd MMMMM, yyyy")}</option>
+				                  		</option>
+				      				</#if>									 
+									</#list>
+								</select>
+							</td>
+							<td width="10%"><input type="submit" value="Download" class="buttontext"></td> 
+							</td>
+						</form>
+					</tr>					
+				</table>
+			</div>
+		</div>
+	</div>
+</#if>
 
  
