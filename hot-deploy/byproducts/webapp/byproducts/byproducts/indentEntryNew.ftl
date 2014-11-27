@@ -76,7 +76,9 @@
         			</tr>
         			   
         			<tr><td><br/></td></tr>
-        			<input type="hidden" name="productSubscriptionTypeId" id="productSubscriptionTypeId" value="CASH"/>             
+        			<#if screenFlag?exists && screenFlag != 'DSCorrection'>
+        				<input type="hidden" name="productSubscriptionTypeId" id="productSubscriptionTypeId" value="CASH"/>
+        			</#if>
        				<#--<tr>
           				<td>&nbsp;</td>
 	          			<td align='left' valign='middle' nowrap="nowrap"><div class='h2'>Trip:</div></td>
@@ -130,7 +132,24 @@
 	         				
 				        </tr>
 			        	<tr><td><br/></td></tr>
-			        </#if>	           
+			        </#if>
+			        <#if screenFlag?exists && screenFlag == 'DSCorrection'>
+   	  			    	<#if security.hasEntityPermission("TRUCKSHEETCORRECTION", "_ADMIN", session) && screenFlag?exists && screenFlag == 'DSCorrection'>
+		          			
+							<tr>
+	    	      				<td>&nbsp;</td>
+		    	      			<td align='left' valign='middle' nowrap="nowrap"><div class='h2'>Subscription Type:</div></td>
+		        	  			<td>&nbsp;</td>
+		          				<td><select name="productSubscriptionTypeId" class='h2' id="productSubscriptionTypeId">
+	   								<option  value="EMP_SUBSIDY">Employee Subsidy</option>
+	   								<option  value="CASH">Cash</option>
+	   								<option  value="CREDIT">Credit</option>
+								</select> </td>
+			          		 </tr>
+			          		 <tr><td><br/></td></tr>
+						</#if>
+   	  			      
+   	  				</#if>	           
 			        <tr>
 			          <td>&nbsp;</td>
 			          <td align='left' valign='middle' nowrap="nowrap"><div class='h2'>${uiLabelMap.Retailer}:</div></td>
@@ -165,8 +184,7 @@
 	          			<td>&nbsp;</td>
 	          			<td> <input type="checkbox" name ="isNoShipment"/></td>
 	          		 </tr>	
-   	  			      
-   	  			</#if>
+	          	</#if>
    	  				<tr><td><br/></td></tr> 
    	  				<tr>
           				<td>&nbsp;</td>
