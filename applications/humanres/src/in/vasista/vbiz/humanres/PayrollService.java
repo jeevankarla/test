@@ -4007,7 +4007,9 @@ public class PayrollService {
 	        conditionList.add(EntityCondition.makeCondition("statusId", EntityOperator.IN , UtilMisc.toList("GENERATED","IN_PROCESS","APPROVED")));
 	        conditionList.add(EntityCondition.makeCondition("customTimePeriodId", EntityOperator.EQUALS ,timePeriodId));
 	    	conditionList.add(EntityCondition.makeCondition("billingTypeId", EntityOperator.EQUALS , billingTypeId));
-	    	conditionList.add(EntityCondition.makeCondition("partyId", EntityOperator.EQUALS , deptId));
+	    	if(!(partyId).equals(deptId)){
+	    		conditionList.add(EntityCondition.makeCondition("partyId", EntityOperator.EQUALS , deptId));
+	    	}
 	    	EntityCondition condition=EntityCondition.makeCondition(conditionList,EntityOperator.AND);
 	    	try {
 	    		periodBillingList = delegator.findList("PeriodBilling", condition, null,null, null, false);

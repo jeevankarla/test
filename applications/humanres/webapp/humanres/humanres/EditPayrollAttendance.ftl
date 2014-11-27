@@ -43,6 +43,7 @@
     color:#005e20;    
     text-transform:uppercase;
 }
+.reallyHidden { display: none }
 
 </style>			
 			
@@ -130,8 +131,6 @@ function comparer(a, b) {
 			var columns = [		
 					{id:"id", name:"Employee Id", field:"id", width:145, minWidth:100, cssClass:"cell-title", sortable:true},
 					{id:"deptName", name:"Department", field:"deptName", width:150, minWidth:100, cssClass:"cell-title", sortable:true},
-					{id:"deptId",width:10, minWidth:10},
-					{id:"Dates", name:"TimePeriod", field:"Dates", width:140, minWidth:100, cssClass:"cell-title", sortable:true},
 					{id:"noOfAttendedDays", name:"WKD", field:"noOfAttendedDays", width:40, minWidth:100, cssClass:"cell-title", sortable:true, editor:FloatCellEditor},
 					{id:"noOfAttendedHoliDays", name:"OFFS", field:"noOfAttendedHoliDays", width:45, minWidth:100, cssClass:"cell-title", sortable:true, editor:FloatCellEditor},
 					{id:"casualLeaveDays", name:"CL", field:"casualLeaveDays", width:30, minWidth:100, cssClass:"cell-title", sortable:true, editor:FloatCellEditor},
@@ -153,10 +152,10 @@ function comparer(a, b) {
 					{id:"noOfCalenderDays", name:"CAL DAYS", field:"noOfCalenderDays", width:70, minWidth:100, cssClass:"cell-title", sortable:true, editor:FloatCellEditor},
 			];
 	
-			columns.push({id:"button", name:"EDIT", field:"button", width:50, minWidth:70, cssClass:"cell-title",
+			columns.push({id:"button", name:"SAVE", field:"button", width:50, minWidth:70, cssClass:"cell-title",
 			 			formatter: function (row, cell, id, def, datactx) { 
 			 				if (dataView2.getItem(row).title != "New") {
-        						return '<a href="#" class="button" onclick="editClickHandler('+row+')">Edit</a>'; 
+        						return '<a href="#" class="button" onclick="editClickHandler('+row+')">Save</a>'; 
         					}
         					else {
         					return '';
@@ -219,10 +218,10 @@ function comparer(a, b) {
 				if (e.which == $.ui.keyCode.ENTER) {
 					      editClickHandler(cell.row);
 					      if(data.length>1){
-					      	$(grid.getCellNode(cell.row +1, 4)).click();
+					      	$(grid.getCellNode(cell.row +1, 2)).click();
 					      	 grid.getEditController().commitCurrentEdit();
 					      }else{
-					      	$(grid.getCellNode(cell.row , 4)).click();
+					      	$(grid.getCellNode(cell.row , 2)).click();
 					      	 grid.getEditController().commitCurrentEdit();
 					      }
 					     
@@ -310,6 +309,11 @@ function updatePayrollAttendanceInternal(formName, action, row) {
             	   $('div#updateEntryMsg').html('<label>Succesfully Updated.</label>'); 
             	   $('div#updateEntryMsg').delay(5000).fadeOut('slow'); 
             	   $($('.grid-canvas').children()[row]).css('background-color','#FAAC58'); 
+            	 /* var gridCanvas=$('.grid-canvas').children();
+            	  gridCanvas.each(function( index, element ){
+            	  	alert(index);
+            	  
+            	  });*/
                }
                
              } ,
@@ -331,7 +335,7 @@ function updatePayrollAttendanceInternal(formName, action, row) {
   
     <div>    	
  		<div class="grid-header" style="width:100%">
-			<font size="15" color="#22047F"><b>Employee Payroll Attendance<b/></font>:<font size="15" color="red"><b><#if timePeriodStart?has_content>[${(Static["org.ofbiz.base.util.UtilDateTime"].toDateString(timePeriodStart?if_exists, "MMMMM-yyyy"))}]</#if></b></font> 
+			<font size="15" color="#22047F"><b>Employee Payroll Attendance<b/></font>:<font size="15" color="red"><b><#if timePeriodStart?has_content>[${(Static["org.ofbiz.base.util.UtilDateTime"].toDateString(timePeriodStart?if_exists, "MMMMM-yyyy"))}]</#if></b></font>  
 		</div>    
 		<div id="itemGrid2" style="width:100%;height:350px;">
 			

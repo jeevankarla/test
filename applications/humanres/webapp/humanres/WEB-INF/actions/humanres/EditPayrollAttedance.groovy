@@ -90,6 +90,7 @@ conList.add(EntityCondition.makeCondition(EntityCondition.makeCondition("noOfAtt
 EntityCondition con=EntityCondition.makeCondition(conList,EntityOperator.AND);
 List<GenericValue> payrollCountList=delegator.findList("PayrollAttendance",con,UtilMisc.toSet("partyId"),null,null,false);
 context.enteredEmpls=payrollCountList.size();
+context.remainingEmpls=employeeIds.size()-payrollCountList.size();
 if("leaveEncash".equals(screenFlag)){
 	customTimePeriodId=timePeriodId;
 }
