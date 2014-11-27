@@ -106,19 +106,23 @@ if(UtilValidate.isNotEmpty(employmentsList)){
 						if(UtilValidate.isNotEmpty(loanRecoveryList)){
 							loanRecoveryList.each { loanRecovery->
 								if(UtilValidate.isNotEmpty(loanRecovery)){
-									recPrinAmount = loanRecovery.principalAmount;
-									recPrinInst = loanRecovery.principalInstNum;
-									
-									recIntAmount = loanRecovery.interestAmount;
-									recIntInst = loanRecovery.interestInstNum;
-									
-									totalRecPrinAmount = totalRecPrinAmount+recPrinAmount;
-									totalRecPrinInst =  totalRecPrinInst+recPrinInst;
-									
-									totalRecIntAmount = totalRecIntAmount+recIntAmount;
-									totalRecIntInst =  totalRecIntInst+recIntInst;
+									if(UtilValidate.isNotEmpty(loanRecovery.principalAmount)){
+										recPrinAmount = loanRecovery.principalAmount;
+										totalRecPrinAmount = totalRecPrinAmount+recPrinAmount;
+									}
+									if(UtilValidate.isNotEmpty(loanRecovery.principalInstNum)){
+										recPrinInst = loanRecovery.principalInstNum;
+										totalRecPrinInst =  totalRecPrinInst+recPrinInst;
+									}
+									if(UtilValidate.isNotEmpty(loanRecovery.interestAmount)){
+									    recIntAmount = loanRecovery.interestAmount;
+										totalRecIntAmount = totalRecIntAmount+recIntAmount;
+									}
+									if(UtilValidate.isNotEmpty(loanRecovery.interestInstNum)){
+										recIntInst = loanRecovery.interestInstNum;
+										totalRecIntInst =  totalRecIntInst+recIntInst;
+									}
 								}
-								
 							}
 						}
 					}

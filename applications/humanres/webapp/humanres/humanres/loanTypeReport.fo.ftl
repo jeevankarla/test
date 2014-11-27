@@ -210,7 +210,7 @@ ${setRequestAttribute("OUTPUT_FILENAME", "LoanAvailedReport.pdf")}
 	                                </fo:table-cell>
 	                                <fo:table-cell border-style="solid">
 	                                    <fo:block text-align="right" font-size="12pt">
-	                                       ${interestAmount?if_exists?string("##0.00")}
+	                                       ${intrstAmtEmi?if_exists?string("##0.00")}
 	                                    </fo:block>
 	                                </fo:table-cell>
 	                                
@@ -252,11 +252,6 @@ ${setRequestAttribute("OUTPUT_FILENAME", "LoanAvailedReport.pdf")}
 	                              	<#assign sNo=sNo+1>
                               </fo:table-row>
                           </#list>
-                          <fo:table-row >
-		                   		<fo:table-cell >	
-                            		<fo:block keep-together="always" font-weight="bold">&#160;&#160;</fo:block>
-                            	</fo:table-cell>
-                            </fo:table-row>
                           <fo:table-row border-style="solid">
 								
 									<fo:table-cell border-style="solid">
@@ -297,7 +292,7 @@ ${setRequestAttribute("OUTPUT_FILENAME", "LoanAvailedReport.pdf")}
 	                                    </fo:block>
 	                                </fo:table-cell>
 	                               <fo:table-cell border-style="solid">
-	                                    <fo:block text-align="left" font-size="12pt" font-weight="bold">
+	                                    <fo:block text-align="right" font-size="12pt" font-weight="bold">
 	                                    ${totaloftotalRecPrinAmount?if_exists?string("##0.00")}    
 	                                    </fo:block>
 	                                </fo:table-cell>
