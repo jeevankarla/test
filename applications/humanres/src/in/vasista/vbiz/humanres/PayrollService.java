@@ -1753,7 +1753,9 @@ public class PayrollService {
 			        		EntityCondition.makeCondition("thruDate", EntityOperator.GREATER_THAN_EQUAL_TO, timePeriodStart)));
 			        EntityCondition condition = EntityCondition.makeCondition(conditionList, EntityOperator.AND);  
 					List<GenericValue> payHeadTypesList = delegator.findList("PartyBenefit", condition, null, null, null, false);
-					
+					if(UtilValidate.isNotEmpty(basicSalDate)){
+						payHeadTypesList=EntityUtil.filterByDate(payHeadTypesList, basicSalDate);
+					}
 					conditionList.clear();
 					conditionList.add( EntityCondition.makeCondition("partyIdTo", EntityOperator.EQUALS, employeeId));
 					conditionList.add(EntityCondition.makeCondition("deductionTypeId", EntityOperator.EQUALS, payHeadTypeId));
@@ -4007,9 +4009,7 @@ public class PayrollService {
 	        conditionList.add(EntityCondition.makeCondition("statusId", EntityOperator.IN , UtilMisc.toList("GENERATED","IN_PROCESS","APPROVED")));
 	        conditionList.add(EntityCondition.makeCondition("customTimePeriodId", EntityOperator.EQUALS ,timePeriodId));
 	    	conditionList.add(EntityCondition.makeCondition("billingTypeId", EntityOperator.EQUALS , billingTypeId));
-	    	if(!(partyId).equals(deptId)){
-	    		conditionList.add(EntityCondition.makeCondition("partyId", EntityOperator.EQUALS , deptId));
-	    	}
+	    	conditionList.add(EntityCondition.makeCondition("partyId", EntityOperator.EQUALS , deptId));
 	    	EntityCondition condition=EntityCondition.makeCondition(conditionList,EntityOperator.AND);
 	    	try {
 	    		periodBillingList = delegator.findList("PeriodBilling", condition, null,null, null, false);
