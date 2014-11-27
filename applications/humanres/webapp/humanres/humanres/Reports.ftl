@@ -1266,7 +1266,7 @@ function makeDatePicker1(fromDateId ,thruDateId){
 				<table class="basic-table hover-bar h3" style="border-spacing: 0 10px;">
 					<tr class="alternate-row">
 						<form id="loanTypeReport" name="loanTypeReport" mothed="post" action="<@ofbizUrl>loanTypeReport.pdf</@ofbizUrl>" target="_blank">
-							<td width="10%" class='h3'>Loan Type Report</td>
+							<td width="10%" class='h3'>Loan and Advances Report</td>
 							<td width="10%">Loan Type
 								<select name="loanTypeId" id="loanTypeId" class='h5' >
 										<#list loanTypeList as loan>

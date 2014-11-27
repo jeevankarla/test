@@ -68,49 +68,49 @@ ${setRequestAttribute("OUTPUT_FILENAME", "LoanAvailedReport.pdf")}
 	                    <fo:table-body>
 	                    <fo:table-row >
 	                    		<fo:table-cell border-style="solid">
-                            		<fo:block   text-align="left" font-size="13pt" white-space-collapse="false" font-weight="bold">SNO</fo:block>  
+                            		<fo:block   text-align="center" font-size="13pt" white-space-collapse="false" font-weight="bold">SNO</fo:block>  
                        			</fo:table-cell>                     
                        			<fo:table-cell border-style="solid">
-                            		<fo:block   text-align="left" font-size="13pt" white-space-collapse="false" font-weight="bold">Employee Code </fo:block>
+                            		<fo:block   text-align="center" font-size="13pt" white-space-collapse="false" font-weight="bold">Employee Code </fo:block>
                        			</fo:table-cell>
                        			<fo:table-cell border-style="solid">
                             		<fo:block   text-align="center" font-size="13pt" white-space-collapse="false" font-weight="bold">Employee Name</fo:block> 
                        			</fo:table-cell>
                        			<fo:table-cell border-style="solid">
-                            		<fo:block   text-align="right" font-size="13pt" white-space-collapse="false" font-weight="bold">Principal Amount</fo:block>  
+                            		<fo:block   text-align="center" font-size="13pt" white-space-collapse="false" font-weight="bold">Principal Amount</fo:block>  
                        			</fo:table-cell>
                        			<fo:table-cell border-style="solid">
-                            		<fo:block   text-align="right" font-size="13pt" white-space-collapse="false" font-weight="bold">Interest Amount</fo:block>  
+                            		<fo:block   text-align="center" font-size="13pt" white-space-collapse="false" font-weight="bold">Interest Amount</fo:block>  
                        			</fo:table-cell>
                        			<fo:table-cell border-style="solid">
-                            		<fo:block   text-align="right" font-size="13pt" white-space-collapse="false" font-weight="bold">PRN INST  EMI Rs </fo:block>  
+                            		<fo:block   text-align="center" font-size="13pt" white-space-collapse="false" font-weight="bold">PRN INST  EMI Rs </fo:block>  
                        			</fo:table-cell>
                         		<fo:table-cell border-style="solid">
-                            		<fo:block   text-align="right" font-size="13pt" white-space-collapse="false" font-weight="bold">PRN INST NO</fo:block>   
+                            		<fo:block   text-align="center" font-size="13pt" white-space-collapse="false" font-weight="bold">PRN INST NO</fo:block>   
                         		</fo:table-cell>
                         		<fo:table-cell border-style="solid">
-                            		<fo:block   text-align="right" font-size="13pt" white-space-collapse="false" font-weight="bold">INT  INST  EMI Rs </fo:block>  
+                            		<fo:block   text-align="center" font-size="13pt" white-space-collapse="false" font-weight="bold">INT  INST  EMI Rs </fo:block>  
                         		</fo:table-cell>
                         		<fo:table-cell border-style="solid">
-                            		<fo:block  text-align="right" font-size="13pt" white-space-collapse="false" font-weight="bold">INT INST NO</fo:block>  
+                            		<fo:block  text-align="center" font-size="13pt" white-space-collapse="false" font-weight="bold">INT INST NO</fo:block>  
                         		</fo:table-cell>
                         		<fo:table-cell border-style="solid">
-                            		<fo:block   text-align="right" font-size="13pt" white-space-collapse="false" font-weight="bold">TOT DEDN PRN </fo:block>  
+                            		<fo:block   text-align="center" font-size="13pt" white-space-collapse="false" font-weight="bold">TOT DEDN PRN </fo:block>  
                        			</fo:table-cell>
                        			<fo:table-cell border-style="solid">
-                            		<fo:block   text-align="right" font-size="13pt" white-space-collapse="false" font-weight="bold">TOT DEDN INT </fo:block>  
+                            		<fo:block   text-align="center" font-size="13pt" white-space-collapse="false" font-weight="bold">TOT DEDN INT </fo:block>  
                        			</fo:table-cell>
                         		<fo:table-cell border-style="solid">
-                            		<fo:block   text-align="right" font-size="13pt" white-space-collapse="false" font-weight="bold">BAL AMOUNT PRN </fo:block>   
+                            		<fo:block   text-align="center" font-size="13pt" white-space-collapse="false" font-weight="bold">BAL AMOUNT PRN </fo:block>   
                         		</fo:table-cell>
                         		<fo:table-cell border-style="solid">
-                            		<fo:block   text-align="right" font-size="13pt" white-space-collapse="false" font-weight="bold">BAL AMOUNT INT </fo:block>  
+                            		<fo:block   text-align="center" font-size="13pt" white-space-collapse="false" font-weight="bold">BAL AMOUNT INT </fo:block>  
                         		</fo:table-cell>
                         		<fo:table-cell border-style="solid">
-                            		<fo:block  text-align="right" font-size="13pt" white-space-collapse="false" font-weight="bold">BAL EMI PRN</fo:block>  
+                            		<fo:block  text-align="center" font-size="13pt" white-space-collapse="false" font-weight="bold">BAL EMI PRN</fo:block>  
                         		</fo:table-cell>
                         		<fo:table-cell border-style="solid">
-                            		<fo:block   text-align="right" font-size="13pt" white-space-collapse="false" font-weight="bold">BAL EMI INT</fo:block>  
+                            		<fo:block   text-align="center" font-size="13pt" white-space-collapse="false" font-weight="bold">BAL EMI INT</fo:block>  
                        			</fo:table-cell>
                 			</fo:table-row>
                     </fo:table-body>
