@@ -764,6 +764,7 @@ public class ByProductChangeIndentServices {
   	    	  if (UtilValidate.isNotEmpty(tenantConfigEnableSubsidyShift) && (tenantConfigEnableSubsidyShift.getString("propertyValue")).equals("Y")) {
   	    		enableSubsidyRouteShift = Boolean.TRUE;
   	    	  }
+  	    	  boolean noRouteDispatchWithSubsidy = Boolean.TRUE;
   	    	  if(enableSubsidyRouteShift){
 	  	    	  condList.clear();
 	  	  		  condList.add(EntityCondition.makeCondition("subscriptionId", EntityOperator.EQUALS, subscriptionId));
@@ -782,6 +783,14 @@ public class ByProductChangeIndentServices {
 	  	  		  if(UtilValidate.isNotEmpty(subscription)){
 	  	  			  facilityId = subscription.getString("facilityId");
 	  	  		  }
+	  	  		  String tempSubscTypeId = subscription.getString("subscriptionTypeId");
+	  	  		  List shipmentIds = ByProductNetworkServices.getShipmentIdsSupplyType(delegator, UtilDateTime.getDayStart(effectiveDate),UtilDateTime.getDayEnd(effectiveDate), tempSubscTypeId);
+
+	  	  		  List genRouteIds = FastList.newInstance();
+	  	  		  if(UtilValidate.isNotEmpty(shipmentIds)){
+	  	  			  List<GenericValue> shipDetails = delegator.findList("Shipment", EntityCondition.makeCondition("shipmentId", EntityOperator.IN, shipmentIds), UtilMisc.toSet("routeId"), null, null, false);
+	  	  			  genRouteIds = EntityUtil.getFieldListFromEntityList(shipDetails, "routeId", true);
+	  	  		  }
 	  	  		  condList.clear();
 	  	  		  condList.add(EntityCondition.makeCondition("originFacilityId", EntityOperator.EQUALS, facilityId));
 	  	  		  condList.add(EntityCondition.makeCondition("orderStatusId", EntityOperator.NOT_EQUAL, "ORDER_CANCELLED"));
@@ -789,8 +798,19 @@ public class ByProductChangeIndentServices {
 	  	  		  condList.add(EntityCondition.makeCondition("estimatedDeliveryDate", EntityOperator.LESS_THAN_EQUAL_TO, UtilDateTime.getDayEnd(effectiveDate)));
 	  	  		  EntityCondition shipCond = EntityCondition.makeCondition(condList, EntityOperator.AND);
 	  	  		  List<GenericValue> OrderList = delegator.findList("OrderHeaderItemProductShipmentAndFacility", shipCond, null, null, null, false);
-	  	  		  List generatedRoutes = EntityUtil.getFieldListFromEntityList(OrderList, "routeId", true);
-
+	  	  		  List<String> generatedRoutes = EntityUtil.getFieldListFromEntityList(OrderList, "routeId", true);
+	  	  		  if(UtilValidate.isNotEmpty(generatedRoutes)){
+	  	  			  boolean shipmentNotGenerated = true;
+	  	  			  for(String shipedId : generatedRoutes){
+	  	  				  if(genRouteIds.contains(shipedId) && shipmentNotGenerated){
+	  	  					shipmentNotGenerated = false;
+	  	  					  
+	  	  				  }
+	  	  			  }
+	  	  			  if(!shipmentNotGenerated){
+	  	  				noRouteDispatchWithSubsidy = Boolean.FALSE;
+	  	  			  }
+	  	  		  }
 	  	  		  condList.clear();
 	  	  		  condList.add(EntityCondition.makeCondition("subscriptionId", EntityOperator.EQUALS, subscriptionId));
 	  	  		  condList.add(EntityCondition.makeCondition(EntityCondition.makeCondition("productId", EntityOperator.IN, altShiftProduct), EntityOperator.OR, EntityCondition.makeCondition("productId", EntityOperator.EQUALS, subsidyProduct)));
@@ -846,7 +866,7 @@ public class ByProductChangeIndentServices {
 			  				  //}  
 			  			  }
   	  				  }
-	  				  if(subsidyShift){
+	  				  if(subsidyShift && noRouteDispatchWithSubsidy){
 	  					  
 	  					  List productQtyList = FastList.newInstance();
 	  					  Map productQtyMap = FastMap.newInstance();

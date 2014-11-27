@@ -2328,14 +2328,19 @@ public class ByProductNetworkServices {
 			partyId = facility.getString("ownerPartyId");
 			facilityCategory = facility.getString("categoryTypeEnum");
 			// lets override productSubscriptionTypeId based on facility category
-			if (facility.getString("categoryTypeEnum").equals("SO_INST")) {
-				productSubscriptionTypeId = "SPECIAL_ORDER";
-			} else if (facility.getString("categoryTypeEnum").equals("CR_INST")) {
-				productSubscriptionTypeId = "CREDIT";
-			} else {
-				productSubscriptionTypeId = "CASH";
+			if((UtilValidate.isNotEmpty(productSubscriptionTypeId) && productSubscriptionTypeId.equals("EMP_SUBSIDY"))){
+				productSubscriptionTypeId = "EMP_SUBSIDY";
 			}
-
+			else{
+				if (facility.getString("categoryTypeEnum").equals("SO_INST")) {
+					productSubscriptionTypeId = "SPECIAL_ORDER";
+				} else if (facility.getString("categoryTypeEnum").equals("CR_INST")) {
+					productSubscriptionTypeId = "CREDIT";
+				} else {
+					productSubscriptionTypeId = "CASH";
+				}
+			}
+			
 			BigDecimal securityDeposit = BigDecimal.ZERO;
 			if (UtilValidate.isNotEmpty(facility.get("securityDeposit"))) {
 				securityDeposit = facility.getBigDecimal("securityDeposit");
@@ -4704,26 +4709,19 @@ public class ByProductNetworkServices {
 		String invoiceTypeId = (String) context.get("invoiceTypeId");
 		Timestamp invoiceDateParameter = (Timestamp) context.get("invoiceDate");
 		String description = (String) context.get("description");
+
 		String referenceNumber = (String) context.get("referenceNumber");
+
 		Timestamp invoiceDate = UtilDateTime.getDayStart(invoiceDateParameter);
 		String partyIdFrom = "Company";
 		String partyId = "";
 		GenericValue facility;
-		boolean isNonRouteMrktingChqReturn = Boolean.FALSE;// always excluding if externally not set
-		if (context.get("isNonRouteMrktingChqReturn") != null) {
-			isNonRouteMrktingChqReturn = (Boolean) context.get("isNonRouteMrktingChqReturn");		
-		}
 		try {
 			facility = delegator.findOne("Facility",UtilMisc.toMap("facilityId", facilityId), false);
-		    //no need to throw error for NONRouteMktng
-			if(isNonRouteMrktingChqReturn){
-		    	 partyId = (String) context.get("partyId");
-		    }else{
-				if (UtilValidate.isEmpty(facility)) {
-					Debug.logError(facilityId + "====is not a booth", module);
-					return ServiceUtil.returnError(facilityId+ "====is not a booth");
-				}
-		    }
+			if (UtilValidate.isEmpty(facility)) {
+				Debug.logError(facilityId + "====is not a booth", module);
+				return ServiceUtil.returnError(facilityId+ "====is not a booth");
+			}
 		} catch (GenericEntityException e) {
 			Debug.logError(e, module);
 			return ServiceUtil.returnError(e.toString());
@@ -4893,7 +4891,7 @@ public class ByProductNetworkServices {
 		 * conditionList.add(EntityCondition.makeCondition("facilityId",
 		 * EntityOperator.IN, facilityIds)); }
 		 */
-		conditionList.add(EntityCondition.makeCondition("statusId",EntityOperator.EQUALS, "PMNT_RECEIVED"));
+		conditionList.add(EntityCondition.makeCondition("statusId",EntityOperator.IN, UtilMisc.toList("PMNT_RECEIVED", "PMNT_CONFIRMED")));
 		conditionList.add(EntityCondition.makeCondition("paymentMethodTypeId",EntityOperator.EQUALS, "CREDITNOTE_PAYIN"));
 		conditionList.add(EntityCondition.makeCondition("paymentDate",EntityOperator.GREATER_THAN_EQUAL_TO, fromDate));
 		conditionList.add(EntityCondition.makeCondition("paymentDate",EntityOperator.LESS_THAN_EQUAL_TO, thruDate));
@@ -11238,7 +11236,7 @@ public class ByProductNetworkServices {
 		if (UtilValidate.isNotEmpty(partyIdsList)) {
 			conditionList.add(EntityCondition.makeCondition(EntityCondition.makeCondition("partyIdFrom", EntityOperator.IN,	partyIdsList)));
 		}
-		conditionList.add(EntityCondition.makeCondition("statusId",EntityOperator.EQUALS, "PMNT_RECEIVED"));
+		conditionList.add(EntityCondition.makeCondition("statusId",EntityOperator.IN, UtilMisc.toList("PMNT_RECEIVED", "PMNT_CONFIRMED")));
 		conditionList.add(EntityCondition.makeCondition("paymentMethodTypeId",EntityOperator.EQUALS, "CREDITNOTE_PAYIN"));
 		conditionList.add(EntityCondition.makeCondition("paymentDate",EntityOperator.GREATER_THAN_EQUAL_TO, fromDate));
 		conditionList.add(EntityCondition.makeCondition("paymentDate",EntityOperator.LESS_THAN_EQUAL_TO, thruDate));

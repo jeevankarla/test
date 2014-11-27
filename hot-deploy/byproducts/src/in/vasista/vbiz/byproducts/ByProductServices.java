@@ -5650,8 +5650,7 @@ public class ByProductServices {
     		inMap.put("userLogin", userLogin);
     		GenericValue payment = null;
     		SimpleDateFormat sdf = new SimpleDateFormat("dd MMMM, yyyy");
-  	  	  	Timestamp cancelDate = null; 
-		  	boolean isNonRouteMrktingChqReturn = Boolean.FALSE;// always excluding if externally not set
+  	  	  	Timestamp cancelDate = null;
     		if(UtilValidate.isNotEmpty(returnDateStr)){
   	  	  		try {
   	  	  		cancelDate = new java.sql.Timestamp(sdf.parse(returnDateStr).getTime());
@@ -5664,11 +5663,9 @@ public class ByProductServices {
   	  	  	else{
   	  	  		cancelDate = UtilDateTime.nowTimestamp();
   	  	  	}
+    		
     		try{
     			payment = delegator.findOne("Payment", UtilMisc.toMap("paymentId", paymentId), false);
-    			if("NON_ROUTE_MKTG".equals(payment.getString("paymentPurposeType"))) {
-    				isNonRouteMrktingChqReturn = Boolean.TRUE;    			
-    			}
     			payment.put("chequeReturns", chequeReturns);
     			payment.put("comments", comments);
     			payment.put("cancelDate", cancelDate);
@@ -5677,7 +5674,7 @@ public class ByProductServices {
     			Map<String, Object> cancelResults = dispatcher.runSync("voidPayment",inMap);
     			if (ServiceUtil.isError(cancelResults)) {
                 	Debug.logError("Error cancelling payment of retailer ", module);	
-                    return ServiceUtil.returnError("Error cancelling payment of retailer");
+                    return ServiceUtil.returnError("Error cancelling payment of retailer ");
 				}
     			if(chequeReturns.equals("Y")){
     				Map<String, Object> createInvoice = FastMap.newInstance();
@@ -5690,7 +5687,6 @@ public class ByProductServices {
     				createInvoice.put("invoiceTypeId", "MIS_INCOME_IN");
     				createInvoice.put("description", "Cheque Bounce");
     				createInvoice.put("invoiceDate", cancelDate);
-    				createInvoice.put("isNonRouteMrktingChqReturn", isNonRouteMrktingChqReturn );
     				createInvoiceResult = ByProductNetworkServices.createFacilityInvoice(ctx, createInvoice);
     				if (ServiceUtil.isError(createInvoiceResult)) {
 	                	Debug.logError("Error creating invoice for the retailer"+payment.get("facilityId"), module);	
@@ -5702,12 +5698,7 @@ public class ByProductServices {
     			Debug.logError("Unable to cancel the payment"+e, module);
         		return ServiceUtil.returnError("Unable to cancel the payment");
     		}
-    		if(isNonRouteMrktingChqReturn){
-    			result = ServiceUtil.returnSuccess("Payment Successfully cancelled For Party : "+payment.get("partyIdFrom"));
-    		}else{
-    			result = ServiceUtil.returnSuccess("Payment Successfully cancelled For Party : "+payment.get("facilityId"));
-    		}
-    		
+    		result = ServiceUtil.returnSuccess("Payment Successfully cancelled For Party : "+payment.get("facilityId"));
           	return result;
 	    }
 	    
