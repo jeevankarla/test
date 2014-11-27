@@ -653,6 +653,18 @@
 			</drop-down>
 		</field> -->
         <!-- <field name="employeeId" title="Employee Id"><text size="13"/></field> -->
+        <actions>
+	       <set field="nowTimeStamp" value="${groovy: return org.ofbiz.base.util.UtilDateTime.nowTimestamp()}"/>
+		   <entity-condition entity-name="CustomTimePeriod" list="customTimeList" >
+		  		<condition-list combine="and">
+		  		<condition-expr field-name="fromDate" operator="less-equals" from-field="nowTimeStamp"/>
+		  		<condition-expr field-name="periodTypeId" operator="equals" value="HR_MONTH"/>
+		  		</condition-list>
+		  		<order-by field-name="-fromDate"/>
+		  		<order-by field-name="periodNum"/>
+			</entity-condition>
+				<set field="timecustom" from-field="customTimeList[0].customTimePeriodId"/>
+	    </actions> 
         <field name="partyIdTo" title="${uiLabelMap.HumanResEmployeePartyIdTo}"><lookup target-form-name="LookupEmployeeName" size="15"/></field>
         <field name="type" title="Type" event="onchange" action="javascript:headerTypeHandler();">
         	<drop-down allow-empty="true">
@@ -673,7 +685,7 @@
         	</drop-down>
         </field> 
        <field name="customTimePeriodId" title="Period Id">
-             <drop-down allow-empty="true">
+             <drop-down allow-empty="true" no-current-selected-key="${timecustom}" >
                 <entity-options entity-name="CustomTimePeriod" key-field-name="customTimePeriodId" description="${periodName}: ${fromDate} - ${thruDate}" filter-by-date="false">
                     <entity-constraint name="periodTypeId" operator="equals" value="HR_MONTH"/>
                     <entity-order-by field-name="-thruDate"/>
