@@ -28,6 +28,7 @@ $(document).ready(function(){
 			}
 		});
 		
+		
 		$('#billToPartyId').keypress(function (e) {
 	  			if (e.which == $.ui.keyCode.ENTER) {
 	    			$('#purchaseEntryInit').submit();
@@ -108,7 +109,7 @@ $(document).ready(function(){
        <td>&nbsp;</td>
             <td align='left' valign='middle' nowrap="nowrap"><div class='h2'>Bill To Party/Employee ID:</div></td>
           <td>&nbsp;</td>
-			<#if billToPartyId?exists>  
+			<#if billToPartyId?exists || party?exists>  
 	  	  		<input type="hidden" name="billToPartyId" id="billToPartyId" value="${billToPartyId?if_exists}"/>  
           		<td valign='middle'>
             		<div class='tabletext h2'>${billToPartyId?if_exists}<#if billToParty?exists && billToParty?has_content>[ ${billToPartyName?if_exists} ] ${partyAddress?if_exists}</#if> </div> <#--&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <a href="javascript:processChangeIndentParty()" class="buttontext">Party Change</a>-->
@@ -117,6 +118,7 @@ $(document).ready(function(){
           		<td valign='middle'>
           		<@htmlTemplate.lookupField value="${billToPartyId?if_exists}" formName="purchaseEntryInit" name="billToPartyId" id="billToPartyId" fieldFormName="LookupPartyName"/>
           		 <span class="tooltip">If input given then invoice will raise against this Party </span>
+          		
           		</td>
           	</#if>
         </tr> 
@@ -233,7 +235,7 @@ $(document).ready(function(){
     	<div align="center">
     		<input type="submit" style="padding:.3em" id="changeSave" value="Submit" onclick="javascript:processIndentEntry('indententry','<@ofbizUrl>${formAction}</@ofbizUrl>');"/>
     		&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-    		<input type="submit" style="padding:.3em" id="changeCancel" value="Cancel" onclick="javascript:processIndentEntry('indententry','<@ofbizUrl>${formAction}</@ofbizUrl>');"/>   	
+    		<input type="submit" style="padding:.3em" id="changeCancel" value="Cancel" onclick="javascript:processIndentEntry('indententry','<@ofbizUrl>PurchaseOrderInit</@ofbizUrl>');"/>   	
     	</div>     
 	</#if>  
 	</div>
