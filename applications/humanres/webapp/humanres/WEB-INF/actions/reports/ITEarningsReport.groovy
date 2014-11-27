@@ -208,8 +208,9 @@ employmentsList.each{ employeeId->
 					licOfPGS = periodTotals.get("PAYROL_DD_LIC_PGS");
 					licKmf = periodTotals.get("PAYROL_DD_LIC_KMF");
 					licDharwadMilk  = periodTotals.get("PAYROL_DD_LIC_DWD");
+					rdAmount = periodTotals.get("PAYROL_DD_REC_DEP");
 					if(UtilValidate.isEmpty(licp)){
-						licp = licOfPGS+licKmf+licDharwadMilk;
+						licp = licOfPGS+licKmf+licDharwadMilk+rdAmount;
 					}
 					frf = periodTotals.get("PAYROL_DD_FD_RELF");
 					if(UtilValidate.isEmpty(frf)){
