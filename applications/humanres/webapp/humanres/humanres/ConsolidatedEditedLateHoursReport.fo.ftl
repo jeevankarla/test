@@ -31,7 +31,7 @@
 	                	<#assign noofLines=1>
 	                	<fo:table-column column-width="30pt"/>
 	                    <fo:table-column column-width="80pt"/>
-	                    <fo:table-column column-width="50pt"/>
+	                    <fo:table-column column-width="60pt"/>
 	                    <fo:table-column column-width="60pt"/>
 	                    <fo:table-column column-width="80pt"/>
 	                    <fo:table-column column-width="100pt"/>
@@ -40,75 +40,73 @@
 	                    <fo:table-column column-width="180pt"/>
                      	<fo:table-body>
                      	<#list consolidatedDetails as consolidatedDet>
-                     	<#if (consolidatedDet.getValue().get("oldValueText")?has_content && consolidatedDet.getValue().get("oldValueText")!=0) && (consolidatedDet.getValue().get("newValueText")?has_content && consolidatedDet.getValue().get("newValueText")!=0) >
-                     		<#assign sno=sno+1>
-				         			<fo:table-row>
-				         				<fo:table-cell>	
-				                    		<fo:block text-align="center" keep-together="always" font-size="12pt">${sno}</fo:block>
-				                   		</fo:table-cell>
-				                   		<fo:table-cell>	
-				                    		<fo:block text-align="center" keep-together="always" font-size="12pt">${consolidatedDet.getKey()?if_exists}</fo:block>
-				                   		</fo:table-cell>
-				                   		<fo:table-cell>	
-			                    			<fo:block text-align="left" keep-together="always" font-size="12pt"></fo:block>
-			                    		</fo:table-cell>
-			                    		<#assign originalMinutes = 0>
-			                    		<#assign originalMinutes = consolidatedDet.getValue().get("oldValueText")> 
-			                    		<#if (originalMinutes)?has_content> 
-			                    			<#assign originalMin = originalMinutes.substring(0,originalMinutes.indexOf(".")+3)>
-			                    			<fo:table-cell>	
-			                    				<fo:block text-align="right" keep-together="always" font-size="12pt"><#if originalMin?has_content>${originalMin?if_exists}<#else>0</#if></fo:block>
-			                    			</fo:table-cell> 
-			                    			<#assign originalMin = 0>
-			                    		<#else>
-			                    			<fo:table-cell>	
-			                    				<fo:block text-align="right" keep-together="always" font-size="12pt">0</fo:block>
-			                    			</fo:table-cell> 
-			                    		</#if> 
-			                    		<#assign editedMinutes = 0>
-			                    		<#assign editedMinutes = consolidatedDet.getValue().get("newValueText")> 
-			                    		<#if (editedMinutes)?has_content> 
-			                    			<#assign editedMin = editedMinutes.substring(0,editedMinutes.indexOf(".")+3)>
-			                    			<fo:table-cell>	
-			                    				<fo:block text-align="right" keep-together="always" font-size="12pt"><#if editedMin?has_content>${editedMin?if_exists}<#else>0</#if></fo:block>
-			                    			</fo:table-cell> 
-			                    			<#assign editedMin = 0>
-			                    		<#else>
-			                    			<fo:table-cell>	
-			                    				<fo:block text-align="right" keep-together="always" font-size="12pt">0</fo:block>
-			                    			</fo:table-cell> 
-			                    		</#if> 
-			                    		<fo:table-cell>	
-			                    			<fo:block text-align="right" keep-together="always" font-size="12pt"><#if consolidatedDet.getValue().get("changedByInfo")?has_content>${consolidatedDet.getValue().get("changedByInfo")?if_exists}<#else>0</#if></fo:block>
-			                    		</fo:table-cell>
-			                    		<fo:table-cell>	
-											<fo:block text-align="right" keep-together="always" font-size="12pt"><#if consolidatedDet.getValue().get("changedDate")?has_content>${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(consolidatedDet.getValue().get("changedDate") ,"dd/MM/yy")?if_exists}<#else></#if></fo:block>
-			                    		</fo:table-cell>
-			                    		<fo:table-cell>	
-											<fo:block text-align="right" keep-together="always" font-size="12pt"><#if consolidatedDet.getValue().get("changedDate")?has_content>${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(consolidatedDet.getValue().get("changedDate") ,"HH:mm")?if_exists}<#else></#if></fo:block>
-			                    		</fo:table-cell>
-			                    		<fo:table-cell>	
-											<fo:block text-align="center" keep-together="always" font-size="12pt"></fo:block>
-			                    		</fo:table-cell>
-			                    		<#assign noofLines=noofLines+1>
-			               			</fo:table-row>
-				               		<#if (noofLines == 35)>
-		                            	<fo:table-row>
-		                            		<fo:table-cell>
-		   										<fo:block page-break-after="always" font-weight="bold" font-size="12pt" text-align="center"></fo:block>
-		   									</fo:table-cell>
-										</fo:table-row>
-		                           		<#assign noofLines =1>
-									</#if>
+                 	           <#assign sno=sno+1>
+			         			<fo:table-row>
+			         				<fo:table-cell>	
+			                    		<fo:block text-align="center" keep-together="always" font-size="12pt">${sno}</fo:block>
+			                   		</fo:table-cell>
+			                   		<fo:table-cell>	
+			                    		<fo:block text-align="center" keep-together="always" font-size="12pt">${consolidatedDet.getKey()?if_exists}</fo:block>
+			                   		</fo:table-cell>
+			                   		<fo:table-cell>	
+		                    			<fo:block text-align="left" keep-together="always" font-size="12pt"></fo:block>
+		                    		</fo:table-cell>
+		                    		<#assign originalMinutes = 0>
+		                    		<#assign originalMinutes = consolidatedDet.getValue().get("oldValueText")> 
+		                    		<#if (originalMinutes)?has_content> 
+		                    			<#assign originalMin = originalMinutes.substring(0,originalMinutes.indexOf(".")+3)>
+		                    			<fo:table-cell>	
+		                    				<fo:block text-align="right" keep-together="always" font-size="12pt"><#if originalMin?has_content>${originalMin?if_exists}<#else>0</#if></fo:block>
+		                    			</fo:table-cell> 
+		                    			<#assign originalMin = 0>
+		                    		<#else>
+		                    			<fo:table-cell>	
+		                    				<fo:block text-align="right" keep-together="always" font-size="12pt">0</fo:block>
+		                    			</fo:table-cell> 
+		                    		</#if> 
+		                    		<#assign editedMinutes = 0>
+		                    		<#assign editedMinutes = consolidatedDet.getValue().get("newValueText")> 
+		                    		<#if (editedMinutes)?has_content> 
+		                    			<#assign editedMin = editedMinutes.substring(0,editedMinutes.indexOf(".")+3)>
+		                    			<fo:table-cell>	
+		                    				<fo:block text-align="right" keep-together="always" font-size="12pt"><#if editedMin?has_content>${editedMin?if_exists}<#else>0</#if></fo:block>
+		                    			</fo:table-cell> 
+		                    			<#assign editedMin = 0>
+		                    		<#else>
+		                    			<fo:table-cell>	
+		                    				<fo:block text-align="right" keep-together="always" font-size="12pt">0</fo:block>
+		                    			</fo:table-cell> 
+		                    		</#if> 
+		                    		<fo:table-cell>	
+		                    			<fo:block text-align="right" keep-together="always" font-size="12pt"><#if consolidatedDet.getValue().get("changedByInfo")?has_content>${consolidatedDet.getValue().get("changedByInfo")?if_exists}<#else>0</#if></fo:block>
+		                    		</fo:table-cell>
+		                    		<fo:table-cell>	
+										<fo:block text-align="right" keep-together="always" font-size="12pt"><#if consolidatedDet.getValue().get("changedDate")?has_content>${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(consolidatedDet.getValue().get("changedDate") ,"dd/MM/yy")?if_exists}<#else></#if></fo:block>
+		                    		</fo:table-cell>
+		                    		<fo:table-cell>	
+										<fo:block text-align="right" keep-together="always" font-size="12pt"><#if consolidatedDet.getValue().get("changedDate")?has_content>${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(consolidatedDet.getValue().get("changedDate") ,"HH:mm")?if_exists}<#else></#if></fo:block>
+		                    		</fo:table-cell>
+		                    		<fo:table-cell>	
+										<fo:block text-align="center" keep-together="always" font-size="12pt"></fo:block>
+		                    		</fo:table-cell>
+		                    		<#assign noofLines=noofLines+1>
+		               			</fo:table-row>
+			               		<#if (noofLines == 35)>
+	                            	<fo:table-row>
+	                            		<fo:table-cell>
+	   										<fo:block page-break-after="always" font-weight="bold" font-size="12pt" text-align="center"></fo:block>
+	   									</fo:table-cell>
+									</fo:table-row>
+	                           		<#assign noofLines =1>
 								</#if>
-			                 </#list>
+		                 </#list>
 			               		<fo:table-row>
 			               			<fo:table-cell >	
 			                			<fo:block keep-together="always" font-weight="bold">--------------------------------------------------------------------------------------------------------</fo:block>
 			                		</fo:table-cell>
 			               		</fo:table-row>
                      	</fo:table-body>
-                     </fo:table>
+                      </fo:table>
                       <fo:table>
                      	<fo:table-column column-width="650pt"/>
                      		<fo:table-body>

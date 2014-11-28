@@ -43,17 +43,19 @@ if(UtilValidate.isNotEmpty(attendanceDetails)){
 		consolidateList.add(EntityCondition.makeCondition("changedEntityName", EntityOperator.EQUALS, "PayrollAttendance"));
 		consolidateList.add(EntityCondition.makeCondition("changedFieldName", EntityOperator.EQUALS, "lateMin"));
 		consolidateCondition=EntityCondition.makeCondition(consolidateList,EntityOperator.AND);
-		def orderBy1 = UtilMisc.toList("changedDate","auditHistorySeqId");
+		def orderBy1 = UtilMisc.toList("auditHistorySeqId");
 		consolidatedDetailsList = delegator.findList("EntityAuditLog", consolidateCondition , null, orderBy1, null, false);
 		consolidatedDetailsMap = [:];
 		if(UtilValidate.isNotEmpty(consolidatedDetailsList)){
 			consolidatedDetailsList.each { consolidatedDetails ->
 				consolidatedMap=[:];
-				consolidatedMap.put("oldValueText",consolidatedDetails.get("oldValueText"));
-				consolidatedMap.put("newValueText",consolidatedDetails.get("newValueText"));
-				consolidatedMap.put("changedDate",consolidatedDetails.get("changedDate"));
-				consolidatedMap.put("changedByInfo",consolidatedDetails.get("changedByInfo"));
-				consolidatedDetailsMap.putAll(consolidatedMap);
+				if(UtilValidate.isNotEmpty(consolidatedDetails.get("newValueText"))){
+					consolidatedMap.put("oldValueText",consolidatedDetails.get("oldValueText"));
+					consolidatedMap.put("newValueText",consolidatedDetails.get("newValueText"));
+					consolidatedMap.put("changedDate",consolidatedDetails.get("changedDate"));
+					consolidatedMap.put("changedByInfo",consolidatedDetails.get("changedByInfo"));
+					consolidatedDetailsMap.putAll(consolidatedMap);
+				}
 			}
 		}
 		if(UtilValidate.isNotEmpty(consolidatedDetailsMap)){
