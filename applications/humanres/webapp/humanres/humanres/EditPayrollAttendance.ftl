@@ -251,7 +251,25 @@ function comparer(a, b) {
 				if(isNaN(casualLeaves)){
 					casualLeaves=0;
 				}
-				var days = physicalPresence+weeklyOff+casualLeaves;
+				var earnedLeaves = parseInt(data[args.row]["earnedLeaveDays"]);
+				if(isNaN(earnedLeaves)){
+					earnedLeaves=0;
+				}
+				var halfpayLeaves = parseInt(data[args.row]["noOfHalfPayDays"]);
+				if(isNaN(halfpayLeaves)){
+					halfpayLeaves=0;
+				}else{
+					halfpayLeaves=halfpayLeaves/2;
+				}
+				var commutedLeaves = parseInt(data[args.row]["commutedLeaveDays"]);
+				if(isNaN(commutedLeaves)){
+					commutedLeaves=0;
+				}
+				var disabilityLeaves = parseInt(data[args.row]["disabilityLeaveDays"]);
+				if(isNaN(disabilityLeaves)){
+					disabilityLeaves=0;
+				}
+				var days = physicalPresence+weeklyOff+casualLeaves+earnedLeaves+commutedLeaves+halfpayLeaves+disabilityLeaves;
 				if(isNaN(days)){
 					days = 0;
 				}				
