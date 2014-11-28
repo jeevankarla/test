@@ -97,6 +97,42 @@
         
     </form>
     
+    <form name="ListRequestsToApprove" type="list" use-row-submit="true"  title="" list-name="custRequestItemsList"
+        odd-row-style="alternate-row" target="approveRequestByHOD" default-table-style="basic-table hover-bar" paginate-target="StoreProductIssue" separate-columns="true">
+        <!-- <row-actions>
+        	<set field="setQty" from-field="quantity"/>
+        </row-actions> -->
+        <field name="custRequestId" title="Request Id"><display/></field>
+        <field name="custRequestItemSeqId" title="Item Id"><display/></field>
+        <field name="custRequestDate" title="Request Date"><display description="${groovy:org.ofbiz.base.util.UtilDateTime.toDateString(custRequestDate, &quot;dd/MM/yyyy&quot;)}"/></field>
+        <field name="fromPartyId" title="Requested Party">
+            <display-entity entity-name="PartyNameView" key-field-name="partyId" description="${firstName} ${middleName} ${lastName} ${groupName}"/>
+        </field>
+        <field name="productId" title="Product">
+            <display-entity entity-name="Product" key-field-name="productId" description="${productId} - ${productName}"/>
+        </field>
+        <field name="statusId"> <hidden value="CRQ_SUBMITTED"/></field>
+        <field name="requireQty" title="Required Qty"><display description="${quantity}"/></field>
+        <field name="quantity" title="Accepted Qty"><text/></field>
+        <field name="acceptButton" widget-style="buttontext">
+        	<submit/>
+            <!-- <hyperlink target="approveRequestByHOD" description="Accept">
+                <parameter param-name="custRequestId"/>
+                <parameter param-name="custRequestItemSeqId"/>
+                <parameter param-name="quantity" />
+                <parameter param-name="statusId" value="CRQ_SUBMITTED"/>
+            </hyperlink> -->
+        </field>
+        <field name="rejectButton" widget-style="buttontext">
+            <hyperlink target="rejectMaterialRequest" description="Reject">
+                <parameter param-name="custRequestId"/>
+                <parameter param-name="custRequestItemSeqId"/>
+                <parameter param-name="statusId" value="CRQ_REJECTED"/>
+            </hyperlink>
+        </field>
+        
+    </form>
+    
     <form name="ListRequestItems" type="list" use-row-submit="true"  title="" list-name="custRequestItems"
         odd-row-style="alternate-row" default-table-style="basic-table hover-bar" paginate-target="RequestItems">
         <auto-fields-entity entity-name="CustRequestItem" default-field-type="display"/>

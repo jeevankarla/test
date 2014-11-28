@@ -42,8 +42,8 @@
 	        	<link target="MaterialForQCApproval"/>
 	        </menu-item>
 	        
-	        <menu-item name="CreateInvoiceForQCApprovedItems" title="Invoice For Receipts">
-	        	<link target="CreateInvoiceForQCApprovedItems"/>
+	        <menu-item name="InvoiceForShippedGoods" title="Invoice For Receipts">
+	        	<link target="InvoiceForShippedGoods"/>
 	        </menu-item>
 	        
 	        <menu-item name="reports" title="${uiLabelMap.CommonReports}">
@@ -73,6 +73,12 @@
         </menu-item>
          <menu-item name="CustRequestEntry" title="Request Entry">
         	<link target="CustRequestEntry"/>
+        </menu-item>
+        <menu-item name="ApproveRequestsByDeptHead" title="Dept. Head Approvals">
+        	<link target="ApproveRequestsByDeptHead"/>
+        </menu-item>
+        <menu-item name="RequestsReceiptAcknowledgement" title="Receipt Acknowledgement">
+        	<link target="RequestsReceiptAcknowledgement"/>
         </menu-item>
       </menu>
       

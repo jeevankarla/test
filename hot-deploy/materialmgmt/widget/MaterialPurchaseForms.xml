@@ -53,5 +53,10 @@
             </hyperlink>
         </field> 
     </form>
+    
+    <form name="generateInvoiceForm" type="single" list-name="listIt" target="createInvoicesForMaterialShipment" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
+      	<field name="shipmentId"><text/></field>
+      	<field name="submitButton" title="Create Invoice" widget-style="smallSubmit"><submit button-type="button"/></field>
+    </form>
 	
 </forms>

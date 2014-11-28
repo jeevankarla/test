@@ -120,15 +120,13 @@ public class MaterialPurchaseServices {
             delegator.createSetNextSeqId(newEntity);            
             String shipmentId = (String) newEntity.get("shipmentId");
 	       
-	        String productId = "";
-	        String quantityStr = "";
-			BigDecimal quantity = BigDecimal.ZERO;
-			List productList = FastList.newInstance();
+	        List productList = FastList.newInstance();
 			
 			List<Map> prodQtyList = FastList.newInstance();
 			
 			List<GenericValue> orderItems = delegator.findList("OrderItem", EntityCondition.makeCondition("orderId", EntityOperator.EQUALS, orderId), null, null, null, false);
 			
+			productList = EntityUtil.getFieldListFromEntityList(orderItems, "productId", true);
 			List conditionList = FastList.newInstance();
 			conditionList.add(EntityCondition.makeCondition("orderId", EntityOperator.EQUALS, orderId));
 			conditionList.add(EntityCondition.makeCondition("roleTypeId", EntityOperator.EQUALS, "BILL_FROM_VENDOR"));
@@ -146,6 +144,10 @@ public class MaterialPurchaseServices {
 			
 			List<GenericValue> productsFacility = delegator.findList("ProductFacility", EntityCondition.makeCondition("productId", EntityOperator.IN, productList), null, null, null, false);
 
+			String productId = "";
+	        String quantityStr = "";
+			BigDecimal quantity = BigDecimal.ZERO;
+			
 			for (int i = 0; i < rowCount; i++) {
 				
 				Map productQtyMap = FastMap.newInstance();
@@ -215,7 +217,6 @@ public class MaterialPurchaseServices {
 				inventoryReceiptCtx.put("orderItemSeqId", ordItm.getString("orderItemSeqId"));
 				inventoryReceiptCtx.put("shipmentId", shipmentId);
 				inventoryReceiptCtx.put("shipmentItemSeqId", shipmentItemSeqId);
-				
 				Map<String, Object> receiveInventoryResult;
 				receiveInventoryResult = dispatcher.runSync("receiveInventoryProduct", inventoryReceiptCtx);
 				

@@ -143,7 +143,7 @@
 				<form method="post" id="indententry" action="<@ofbizUrl>IndentEntryInit</@ofbizUrl>">  
 					<input type="hidden" name="requestDate" id="requestDate" value="${parameters.effectiveDate?if_exists}"/>
 					<input type="hidden" name="custRequestTypeId" id="custRequestTypeId" value="PRODUCT_REQUIREMENT"/>
-					<input type="hidden" name="custRequestName" id="custRequestName" value="${parameters.custRequestName}"/>
+					<input type="hidden" name="custRequestName" id="custRequestName" value="${parameters.custRequestName?if_exists}"/>
 				</form>
     		</div>
 		</div>

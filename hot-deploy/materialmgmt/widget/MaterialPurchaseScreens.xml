@@ -68,6 +68,24 @@
         </section>
     </screen>
     
+    <screen name="InvoiceForShippedGoods">
+        <section>
+            <actions>
+                <set field="titleProperty" value="Invoice Receipts"/>              
+			    <set field="tabButtonItem" value="InvoiceForShippedGoods" />	
+            </actions>
+            <widgets>
+                 <decorator-screen name="materialmgmtNgCommonDecorator" location="${parameters.mainDecoratorLocation}">
+                      <decorator-section name="body">  
+                      <screenlet>
+                      		<include-form location="component://materialmgmt/widget/MaterialPurchaseForms.xml" name="generateInvoiceForm"/>
+                      </screenlet>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>            
+        </section>
+    </screen>
+    
     <screen name="POMaterialReceipts">
         <section>
             <actions>

@@ -84,6 +84,9 @@ public class MaterialRequestServices {
 			Debug.logError("Cannot create request without partyId: "+ partyId, module);
 			return "error";
 		}
+		if(UtilValidate.isEmpty(requestName)){
+			requestName = "_NA_";
+		}
 		Timestamp requestDate = null;
 		Map<String, Object> paramMap = UtilHttp.getParameterMap(request);
 		int rowCount = UtilHttp.getMultiFormRowCount(paramMap);
@@ -115,6 +118,7 @@ public class MaterialRequestServices {
 				TransactionUtil.rollback();
 		  		return "error";
 			}
+			
 			Map<String,Object> custRequestInMap = FastMap.newInstance();
 			custRequestInMap.put("custRequestTypeId",custRequestTypeId);
 			custRequestInMap.put("userLogin",userLogin);
@@ -164,6 +168,7 @@ public class MaterialRequestServices {
 		        itemInMap.put("userLogin",userLogin);
 		        itemInMap.put("productId",productId);
 		        itemInMap.put("quantity",quantity);
+		        itemInMap.put("origQuantity",quantity);
 		        resultMap = dispatcher.runSync("createCustRequestItem",itemInMap);
 		        
 		        if (ServiceUtil.isError(resultMap)) {
@@ -219,8 +224,69 @@ public class MaterialRequestServices {
 				Debug.logError("Request set status failed for RequestId: " + custRequestId, module);
 				return resultCtx;
 			}
-				
-		} catch (GenericServiceException e) {
+			
+			List<GenericValue> custRequestItems = delegator.findList("CustRequestItem", EntityCondition.makeCondition("custRequestId", EntityOperator.EQUALS, custRequestId), null, null, null, false);
+			for(GenericValue custReq : custRequestItems){
+				statusCtx.clear();
+				statusCtx.put("statusId", statusId);
+				statusCtx.put("custRequestId", custRequestId);
+				statusCtx.put("custRequestItemSeqId", custReq.getString("custRequestItemSeqId"));
+				statusCtx.put("userLogin", userLogin);
+				resultCtx = dispatcher.runSync("setCustRequestItemStatus", statusCtx);
+				if (ServiceUtil.isError(resultCtx)) {
+					Debug.logError("RequestItem set status failed for Request: " + custRequestId+" : "+custReq.getString("custRequestItemSeqId"), module);
+					return resultCtx;
+				}
+			}
+			
+		} catch (Exception e) {
+			// TODO: handle exception
+			Debug.logError(e, module);
+			return ServiceUtil.returnError(e.getMessage());
+		}
+		return result;
+	}
+	
+	public static Map<String, Object> approveRequestByHOD(DispatchContext ctx,Map<String, ? extends Object> context) {
+		Delegator delegator = ctx.getDelegator();
+		LocalDispatcher dispatcher = ctx.getDispatcher();
+		String statusId = (String) context.get("statusId");
+		String custRequestId = (String) context.get("custRequestId");
+		String custRequestItemSeqId = (String) context.get("custRequestItemSeqId");
+		BigDecimal acceptedQty = (BigDecimal) context.get("quantity");
+		GenericValue userLogin = (GenericValue) context.get("userLogin");
+		Map result = ServiceUtil.returnSuccess();
+		if(UtilValidate.isEmpty(acceptedQty) || (UtilValidate.isNotEmpty(acceptedQty) && acceptedQty.compareTo(BigDecimal.ZERO)<=0)){
+			return ServiceUtil.returnError("Cannot Accept Quantity ZERO ");
+		}
+		try{
+			GenericValue custRequestItem = delegator.findOne("CustRequestItem", UtilMisc.toMap("custRequestId", custRequestId, "custRequestItemSeqId", custRequestItemSeqId), false);
+			
+			custRequestItem.set("quantity", acceptedQty);
+			custRequestItem.store();
+			
+			Map statusItemCtx = FastMap.newInstance();
+			statusItemCtx.put("statusId", statusId);
+			statusItemCtx.put("custRequestId", custRequestId);
+			statusItemCtx.put("custRequestItemSeqId", custRequestItemSeqId);
+			statusItemCtx.put("userLogin", userLogin);
+			Map resultCtx = dispatcher.runSync("setCustRequestItemStatus", statusItemCtx);
+			if (ServiceUtil.isError(resultCtx)) {
+				Debug.logError("RequestItem set status failed for Request: " + custRequestId+":"+custRequestItemSeqId, module);
+				return resultCtx;
+			}
+			
+			Map statusCtx = FastMap.newInstance();
+			statusCtx.put("statusId", statusId);
+			statusCtx.put("custRequestId", custRequestId);
+			statusCtx.put("userLogin", userLogin);
+			resultCtx = dispatcher.runSync("setCustRequestStatus", statusCtx);
+			if (ServiceUtil.isError(resultCtx)) {
+				Debug.logError("RequestItem set status failed for Request: " + custRequestId, module);
+				return resultCtx;
+			}
+			
+		} catch (Exception e) {
 			// TODO: handle exception
 			Debug.logError(e, module);
 			return ServiceUtil.returnError(e.getMessage());
@@ -235,19 +301,127 @@ public class MaterialRequestServices {
 		String custRequestId = (String) context.get("custRequestId");
 		String custRequestItemSeqId = (String) context.get("custRequestItemSeqId");
 		GenericValue userLogin = (GenericValue) context.get("userLogin");
+		
 		Map result = ServiceUtil.returnSuccess();
 		try{
 			GenericValue custRequestItem = delegator.findOne("CustRequestItem", UtilMisc.toMap("custRequestId", custRequestId, "custRequestItemSeqId", custRequestItemSeqId),  false);
+			
 			if(UtilValidate.isEmpty(custRequestItem)){
 				return ServiceUtil.returnError("No CustRequestItem found with Id "+custRequestId+" : "+custRequestItemSeqId);
 			}
+
+			String oldStatusId = custRequestItem.getString("statusId");
+			if(!oldStatusId.equals(statusId)){
+				GenericValue statusValidChange = delegator.findOne("StatusValidChange", UtilMisc.toMap("statusId", oldStatusId, "statusIdTo", statusId), false);
+				if(UtilValidate.isEmpty(statusValidChange)){
+					Debug.logError("Not a Valid status change for the request", module);
+					return ServiceUtil.returnError("Not a Valid status change for the request");
+				}
+			}
 			custRequestItem.set("statusId", statusId);
 			custRequestItem.store();
-		} catch (GenericEntityException e) {
+			
+			Map inputCtx = FastMap.newInstance();
+			inputCtx.put("custRequestId", custRequestId);
+			inputCtx.put("custRequestItemSeqId", custRequestItemSeqId);
+			inputCtx.put("statusId", statusId);
+			inputCtx.put("userLogin", userLogin);
+			
+			Map<String, Object> resultMap = createCustRequestItemStatus(ctx, inputCtx);
+			
+			if(ServiceUtil.isError(resultMap)){
+				Debug.logError("Error in updating CustRequestItemStatus entity", module);
+				return ServiceUtil.returnError("Error in updating CustRequestItemStatus entity");
+			}
+
+		} catch (Exception e) {
 			// TODO: handle exception
 			Debug.logError(e, module);
 			return ServiceUtil.returnError(e.getMessage());
 		}
+		result.put("custRequestId", custRequestId);
+		result.put("custRequestItemSeqId", custRequestItemSeqId);
+		return result;
+	}
+	
+	public static Map<String, Object> checkRequestStatusByItems(DispatchContext ctx,Map<String, ? extends Object> context) {
+		Delegator delegator = ctx.getDelegator();
+		LocalDispatcher dispatcher = ctx.getDispatcher();
+		String custRequestId = (String) context.get("custRequestId");
+		String custRequestItemSeqId = (String) context.get("custRequestItemSeqId");
+		GenericValue userLogin = (GenericValue) context.get("userLogin");
+		
+		Map result = ServiceUtil.returnSuccess();
+		try{
+			
+			
+			List<GenericValue> custRequestItems = delegator.findList("CustRequestItem", EntityCondition.makeCondition("custRequestId", EntityOperator.EQUALS, custRequestId), null, null, null, false);
+			int itemsSize = custRequestItems.size();
+			if(UtilValidate.isEmpty(custRequestItems)){
+				return ServiceUtil.returnError("No CustRequestItems found with Id "+custRequestId);
+			}
+			Map inputCtx = FastMap.newInstance();
+			List<GenericValue> cancelledItems = EntityUtil.filterByCondition(custRequestItems, EntityCondition.makeCondition("statusId", EntityOperator.EQUALS, "CRQ_CANCELLED"));
+			String statusIdTo = "";
+			if(cancelledItems.size()==itemsSize){
+				statusIdTo = "CRQ_CANCELLED";
+			}
+			
+			List<GenericValue> rejectedItems = EntityUtil.filterByCondition(custRequestItems, EntityCondition.makeCondition("statusId", EntityOperator.EQUALS, "CRQ_REJECTED"));
+			
+			if(rejectedItems.size()==itemsSize){
+				statusIdTo = "CRQ_REJECTED";
+			}
+			
+			List<GenericValue> completedItems = EntityUtil.filterByCondition(custRequestItems, EntityCondition.makeCondition("statusId", EntityOperator.IN, UtilMisc.toList("CRQ_REJECTED", "CRQ_CANCELLED", "CRQ_COMPLETED")));
+			
+			if(completedItems.size()==itemsSize){
+				statusIdTo = "CRQ_COMPLETED";
+			}
+			
+			if(UtilValidate.isNotEmpty(statusIdTo)){
+				inputCtx.put("statusId", statusIdTo);
+				inputCtx.put("custRequestId", custRequestId);
+				inputCtx.put("userLogin", userLogin);
+				
+				result = dispatcher.runSync("setCustRequestStatus", inputCtx);
+				if(ServiceUtil.isError(result)){
+					Debug.logError("Error changing status for request with Id : "+custRequestId, module);
+					return ServiceUtil.returnError("Error changing status for request with Id : "+custRequestId);
+				}
+			}
+			
+		} catch (Exception e) {
+			// TODO: handle exception
+			Debug.logError(e, module);
+			return ServiceUtil.returnError(e.getMessage());
+		}
+		return result;
+	}
+	
+	
+	
+	public static Map<String, Object> createCustRequestItemStatus(DispatchContext ctx,Map<String, ? extends Object> context) {
+		Delegator delegator = ctx.getDelegator();
+		LocalDispatcher dispatcher = ctx.getDispatcher();
+		String statusId = (String) context.get("statusId");
+		String custRequestId = (String) context.get("custRequestId");
+		String custRequestItemSeqId = (String) context.get("custRequestItemSeqId");
+		GenericValue userLogin = (GenericValue) context.get("userLogin");
+		Map result = ServiceUtil.returnSuccess();
+		try{
+			
+			GenericValue newEntity = delegator.makeValue("CustRequestItemStatus");
+	        newEntity.set("custRequestId", custRequestId);
+	        newEntity.set("custRequestItemSeqId", custRequestItemSeqId);
+	        newEntity.set("statusId", statusId);
+	        newEntity.set("statusDatetime", UtilDateTime.nowTimestamp());
+	        newEntity.set("changedByUserLogin", userLogin.getString("userLoginId"));
+            delegator.createSetNextSeqId(newEntity);            
+        } catch (GenericEntityException e) {
+            Debug.logError(e, module);
+            return ServiceUtil.returnError("Failed to create a new shipment " + e);            
+        }
 		return result;
 	}
 	

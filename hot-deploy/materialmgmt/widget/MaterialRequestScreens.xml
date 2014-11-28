@@ -48,6 +48,37 @@
          </section>
     </screen>
     
+    <screen name="ApproveRequestsByDeptHead">
+        <section>
+            <actions>
+                <set field="titleProperty" value="Issue"/>
+                <set field="headerItem" value="Issue"/>
+                <set field="tabButtonItem" value="FindMaterialRequest" />
+                <set field="tabButtonItem2" value="ApproveRequestsByDeptHead" />
+                
+                <entity-condition list="custRequestItemsList" entity-name="CustRequestAndItemAndAttribute">
+                	<condition-list combine="and">
+                		<condition-list combine="or">
+                			<condition-expr field-name="statusId" operator="equals" value="CRQ_DRAFT"/>
+                			<condition-expr field-name="statusId" operator="equals" value="CRQ_SUBMITTED"/>
+                		</condition-list>
+						<condition-expr field-name="itemStatusId" operator="equals" value="CRQ_DRAFT"/>
+						<condition-expr field-name="custRequestTypeId" operator="equals" value="PRODUCT_REQUIREMENT"/>                	
+                	</condition-list>
+                </entity-condition>	
+            </actions>
+            <widgets>
+                <decorator-screen name="materialmgmtNgCommonDecorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="body">
+                     	<include-menu name="RequestTabBar" location="component://materialmgmt/widget/materialmgmtMenus.xml"/>
+                     	<screenlet title="List Requests to Approve">
+                     		<include-form name="ListRequestsToApprove" location="component://materialmgmt/widget/MaterialRequestForms.xml"/>
+                     	</screenlet>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+         </section>
+    </screen>
     
     <screen name="CustRequestEntry">
         <section>
@@ -201,7 +232,7 @@
             <widgets>
                <decorator-screen name="materialmgmtNgCommonDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
-                    	<include-menu name="RequestSubTabBar" location="component://materialmgmt/widget/materialmgmtMenus.xml"/>
+                    	<!-- <include-menu name="RequestSubTabBar" location="component://materialmgmt/widget/materialmgmtMenus.xml"/> -->
                         <include-screen name="ViewCustRequest"/>
                     </decorator-section>
                 </decorator-screen>

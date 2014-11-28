@@ -42,6 +42,21 @@
        <response name="error" type="view" value="FindMaterialRequest"/>
      </request-map>
      
+     <request-map uri="approveRequestByHOD">
+       <security https="true" auth="true"/>
+       <event type="service" path="" invoke="approveRequestByHOD"></event>
+       <response name="success" type="view" value="ApproveRequestsByDeptHead"/>
+       <response name="error" type="view" value="ApproveRequestsByDeptHead"/>
+     </request-map>
+     
+     <request-map uri="rejectMaterialRequest">
+       <security https="true" auth="true"/>
+       <event type="service" path="" invoke="setCustRequestItemStatus"></event>
+       <response name="success" type="view" value="ApproveRequestsByDeptHead"/>
+       <response name="error" type="view" value="ApproveRequestsByDeptHead"/>
+     </request-map>
+     
+     
      <request-map uri="processCustRequestItems">
        <security https="true" auth="true"/>
        <event type="java" path="in.vasista.vbiz.purchase.MaterialRequestServices" invoke="processCustRequestItems" global-transaction="true"/>
@@ -50,6 +65,19 @@
      </request-map>
      <request-map uri="CustRequestEntry">
        <security https="true" auth="true"/>
+       <response name="success" type="view" value="CustRequestEntry"/>
+       <response name="error" type="view" value="CustRequestEntry"/>
+     </request-map>
+     
+     <request-map uri="ApproveRequestsByDeptHead">
+       <security https="true" auth="true"/>
+       <response name="success" type="view" value="ApproveRequestsByDeptHead"/>
+       <response name="error" type="view" value="ApproveRequestsByDeptHead"/>
+     </request-map>
+     
+     <request-map uri="createInvoicesForMaterialShipment">
+       <security https="true" auth="true"/>
+       <event type="service" path="" invoke="createInvoicesFromShipment"></event>
        <response name="success" type="view" value="CustRequestEntry"/>
        <response name="error" type="view" value="CustRequestEntry"/>
      </request-map>
@@ -105,6 +133,11 @@
         <response name="error" type="view" value="confirmPurchaseOrder"/>
     </request-map>
     
+    <request-map uri="InvoiceForShippedGoods">
+       <security https="true" auth="true"/>
+       <response name="success" type="view" value="InvoiceForShippedGoods"/>
+       <response name="error" type="view" value="InvoiceForShippedGoods"/>
+    </request-map>
     
     <request-map uri="POMaterialReceipts">
        <security https="true" auth="true"/>
@@ -276,7 +309,7 @@
     <view-map name="FindMaterialRequest" type="screen" page="component://materialmgmt/widget/MaterialRequestScreens.xml#FindMaterialRequest"/>
     <view-map name="ViewMaterialRequest" type="screen" page="component://materialmgmt/widget/MaterialRequestScreens.xml#ViewMaterialRequest"/>
     <view-map name="CustRequestEntry" type="screen" page="component://materialmgmt/widget/MaterialRequestScreens.xml#CustRequestEntry"/>
-    
+    <view-map name="ApproveRequestsByDeptHead" type="screen" page="component://materialmgmt/widget/MaterialRequestScreens.xml#ApproveRequestsByDeptHead"/>
     <view-map name="StoreProductIssue" type="screen" page="component://materialmgmt/widget/MaterialRequestScreens.xml#StoreProductIssue"/>
     
     <!-- Requirement views -->
@@ -288,5 +321,6 @@
     <view-map name="confirmPurchaseOrder" type="screen" page="component://materialmgmt/widget/MaterialPurchaseScreens.xml#ConfirmPurchaseOrder"/>
     <view-map name="POMaterialReceipts" type="screen" page="component://materialmgmt/widget/MaterialPurchaseScreens.xml#POMaterialReceipts"/>
     <view-map name="FindMaterialPO" type="screen" page="component://materialmgmt/widget/MaterialPurchaseScreens.xml#FindMaterialPO"/>
+    <view-map name="InvoiceForShippedGoods" type="screen" page="component://materialmgmt/widget/MaterialPurchaseScreens.xml#InvoiceForShippedGoods"/>
     
 </site-conf>
