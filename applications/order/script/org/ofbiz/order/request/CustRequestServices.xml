@@ -237,6 +237,7 @@ under the License.
         <if-empty field="parameters.custRequestItemSeqId">
             <make-next-seq-id value-field="newEntity" seq-field-name="custRequestItemSeqId"/>
         </if-empty>
+        
         <if-empty field="parameters.statusId">
             <set value="CRQ_SUBMITTED" field="newEntity.statusId"/>
         </if-empty>
@@ -244,6 +245,10 @@ under the License.
         <field-to-result field="newEntity.custRequestId" result-name="custRequestId"/>
         <field-to-result field="newEntity.custRequestItemSeqId" result-name="custRequestItemSeqId"/>
         <call-simple-method method-name="updateCustRequestLastModifiedDate"/>
+        <set field="statusInput.statusId" from-field="newEntity.statusId"/>
+        <set field="statusInput.custRequestId" from-field="newEntity.custRequestId"/>
+        <set field="statusInput.custRequestItemSeqId" from-field="newEntity.custRequestItemSeqId"/>
+         <call-service service-name="setCustRequestItemStatus" in-map-name="statusInput"/>
     </simple-method>
     <simple-method method-name="updateCustRequestItem" short-description="Update Customer Request Item">
         <call-simple-method method-name="checkStatusCustRequest"/>        

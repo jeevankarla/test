@@ -1868,6 +1868,7 @@ under the License.
       <field name="requiredByDate" type="date-time"></field>
       <field name="productId" type="id"></field>
       <field name="quantity" type="fixed-point"></field>
+      <field name="origQuantity" type="fixed-point"></field>
       <field name="selectedAmount" type="fixed-point"></field>
       <field name="maximumAmount" type="currency-amount"></field>
       <field name="reservStart" type="date-time"></field>
@@ -2000,6 +2001,25 @@ under the License.
         <key-map field-name="custRequestItemSeqId"/>
       </relation>
     </entity>
+    
+    <entity entity-name="CustRequestItemStatus" package-name="org.ofbiz.order.request"
+            title="Customer Request Item Status Entity">
+      <field name="custRequestItemStatusId" type="id-ne"></field>
+      <field name="statusId" type="id"></field>
+      <field name="custRequestId" type="id"></field>
+      <field name="custRequestItemSeqId" type="id"></field>
+      <field name="statusDatetime" type="date-time"></field>
+      <field name="changedByUserLogin" type="id-vlong"></field>
+      <prim-key field="custRequestItemStatusId"/>
+      <relation type="one" fk-name="CUST_REQ_STTS" rel-entity-name="StatusItem">
+        <key-map field-name="statusId"/>
+      </relation>
+      <relation type="one" fk-name="CUST_REQITM_STTS" rel-entity-name="CustRequestItem">
+      	<key-map field-name="custRequestId"/>
+        <key-map field-name="custRequestItemId"/>
+      </relation>
+    </entity>
+    
     <entity entity-name="CustRequestType"
             package-name="org.ofbiz.order.request"
             default-resource-name="OrderEntityLabels"
