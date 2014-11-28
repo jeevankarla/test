@@ -1551,8 +1551,8 @@ under the License.
 	  <field name="availedVehicleAllowance" type="indicator"/>
 	  <field name="availedCanteen" type="indicator"/>
 	  <field name="isOnField" type="indicator"/>
-	  <field name="lateMin" type="fixed-point"/>
-	  <field name="overrideLateMin" type="fixed-point"></field>
+	  <field name="lateMin" type="fixed-point" />
+	  <field name="overrideLateMin" type="fixed-point" enable-audit-log="true"></field>
 	  <field name="overridenBy" type="id-vlong"></field>
 	  <field name="totalWorkMin" type="fixed-point"/><!-- this is to capture total working time for the shift -->
 	  <field name="extraMin" type="fixed-point"/>
