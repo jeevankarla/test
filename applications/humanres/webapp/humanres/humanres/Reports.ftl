@@ -110,8 +110,42 @@ function makeDatePicker1(fromDateId ,thruDateId){
 	        });    
 	     });
 	});
-	
+
 </script>
+<div>
+  <div class="screenlet">
+    <div class="screenlet-title-bar">
+      <h3>Organization Selection</h3>
+    </div>
+    <div class="screenlet-body">                                            
+      <table class="basic-table hover-bar h3" style="border-spacing: 0 10px;" >      	          	     	   
+      	<tr class="alternate-row">     		
+      			<td></td>
+      			<td align="center">
+	   				  Organization Id :
+      				<select name="partyId"  id="partyId"  onchange="javascript:setOrgPartyId();">
+      					<option value="Company">ANDHRA PRADESH DAIRY DEVELOPMENT CO-OP. FEDERATION LIMITED</option>
+                		<#list orgList as org>  
+                			<option value='${org.partyId}'>${org.groupName?if_exists}</option>
+                		</#list>             
+					</select>
+          		</td> 
+          	</tr>      	   	      	                 
+	  </table>
+    </div>
+  </div>
+</div> 
+
+<script type="text/javascript">
+function setOrgPartyId() {
+
+	$(".commonPartyId").each(function() {
+		$(this).val($("#partyId").val());
+    });                
+}	
+</script>
+
+
 <#if reportFrequencyFlag =="MastersReports">
 	<div>
 		<div class="screenlet">
@@ -120,51 +154,63 @@ function makeDatePicker1(fromDateId ,thruDateId){
 			</div>
 			<div class="screenlet-body">
 				<table class="basic-table hover-bar h3" style="border-spacing: 0 10px;">
-					<tr class="alternate-row">
-						<form id="masterEmployees" name="HR-Master" method="post" action="<@ofbizUrl>EmployeesListCsv.csv</@ofbizUrl>" target="_blank">	
-							<td width="20%">HR Master Information</td>
-							<td width="25%">Organization Id 
-								<select name="partyId" class='h4'>
-									<#list orgList as org>    
-									<option value='${org.partyId?if_exists}'>${org.groupName?if_exists}</option>
-									</#list> 
-								</select>
-							</td>	
-							<td width="30%">From Date<input  type="text" size="18pt" id="fromDate"   name="FromDate"/>Thru Date<input  type="text" size="18pt" id="thruDate"   name="ThruDate"/></td>
-							<td width="10%"><input type="submit" value="Download" class="buttontext"></td> 
+					<tr class="alternate-row"> 
+						<form id="masterEmployees" name="HR-Master" mothed="post" action="<@ofbizUrl>EmployeesListCsv.csv</@ofbizUrl>" target="_blank">
+							<table class="basic-table" cellspacing="5">
+								<tr class="alternate-row">
+									<td width="25%"><span class='h3'>HR Master Information</span></td>
+									<td><input type="hidden" name="partyId" class="commonPartyId"></td>
+									<td width="50%"><span class='h3'>
+											From Date<input  type="text" size="18pt" id="fromDate"   name="FromDate"/>
+											Thru Date<input  type="text" size="18pt" id="thruDate"   name="ThruDate"/>
+										</span>
+									</td>
+									<td width="25%"><span class='h3'><input type="submit" value="Download" class="buttontext"></span></td>
+								</tr>
+							</table>
 						</form>
 					</tr>
-					<tr class="alternate-row">
+					<tr class="alternate-row"> 
 						<form id="EmployeePersonalProfile" name="EmployeePersonalProfile" mothed="post" action="<@ofbizUrl>EmployeeProfilePdf.pdf</@ofbizUrl>" target="_blank">
-							<td width="25%">Employee Personal Profile</td>
-							<td width="35%">Organization Id 
-								<select name="partyIdFrom" class='h4'>
-									<#list orgList as org>    
-									    <option value='${org.partyId}'>${org.groupName?if_exists}</option>
-									</#list> 
-								</select>
-							</td>	
-							<td width="25%">Employee Id<@htmlTemplate.lookupField formName="EmployeePersonalProfile" name="employeeId" fieldFormName="LookupEmployeeName"/></span></td>
-							<td width="10%"><input type="submit" value="PDF" onClick="javascript:appendParams('EmployeePersonalProfile', '<@ofbizUrl>EmployeeProfilePdf.pdf</@ofbizUrl>');" class="buttontext"/>
-							<input type="submit" value="CSV" onClick="javascript:appendParams('EmployeePersonalProfile', '<@ofbizUrl>EmployeeProfileCsv.csv</@ofbizUrl>');" class="buttontext"/></td>
-					   </form>
+							<table class="basic-table" cellspacing="5">
+								<tr class="alternate-row">
+									<td width="25%"><span class='h3'>Employee Personal Profile</span></td>
+									<td><input type="hidden" name="partyIdFrom" class="commonPartyId"></td>
+									<td width="50%"><span class='h3'>
+											Employee Id<@htmlTemplate.lookupField formName="EmployeePersonalProfile" name="employeeId" fieldFormName="LookupEmployeeName"/>
+										</span>
+									</td>
+									
+									<td width="25%"><input type="submit" value="PDF" onClick="javascript:appendParams('EmployeePersonalProfile', '<@ofbizUrl>EmployeeProfilePdf.pdf</@ofbizUrl>');" class="buttontext"/>
+									<span class='h3'><input type="submit" value="CSV" onClick="javascript:appendParams('EmployeePersonalProfile', '<@ofbizUrl>EmployeeProfileCsv.csv</@ofbizUrl>');" class="buttontext"/></span></td>
+								</tr>
+							</table>
+						</form>
 					</tr>
-					<tr class="alternate-row">
+					
+					
+					<tr class="alternate-row"> 
 						<form id="LIC/RDReport" name="LIC/RDReport" mothed="post" action="<@ofbizUrl>LICRDReport.pdf</@ofbizUrl>" target="_blank">
-							<td width="20%">LIC/RD Report</td>
-							<td width="25%">Insurance Type 
-								<select name="insuranceTypeId" sclass='h4'>
-									<#list finalInsuranceTypeList as org>    
-										<option value='${org.insuranceTypeId}'>${org.description?if_exists}</option>
-									</#list> 
-								</select>
-							</td>
-							<td width="40%">Period Id
-								<select name="customTimePeriodId" id="customTimePeriodId" class='h4'>
-									<#list customTimePeriodList as customTimePeriod><option value='${customTimePeriod.customTimePeriodId?if_exists}' >${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(customTimePeriod.fromDate, "dd MMMMM, yyyy")} -${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(customTimePeriod.thruDate, "dd MMMMM, yyyy")}</option></#list>
-								</select>
-							</td>	
-							<td width="10%"><input type="submit" value="Download" class="buttontext"></td>
+							<table class="basic-table" cellspacing="5">
+								<tr class="alternate-row">
+									<td width="25%"><span class='h3'>LIC/RD Report</span></td>
+									<td width="30%"><span class='h3'>Insurance Type 
+											<select name="insuranceTypeId" sclass='h4'>
+												<#list finalInsuranceTypeList as org>    
+													<option value='${org.insuranceTypeId}'>${org.description?if_exists}</option>
+												</#list> 
+											</select>
+										</span>
+									</td>
+									<td width="50%"><span class='h3'>Period Id
+											<select name="customTimePeriodId" id="customTimePeriodId" class='h4'>
+												<#list customTimePeriodList as customTimePeriod><option value='${customTimePeriod.customTimePeriodId?if_exists}' >${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(customTimePeriod.fromDate, "dd MMMMM, yyyy")} -${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(customTimePeriod.thruDate, "dd MMMMM, yyyy")}</option></#list>
+											</select>
+										</span>
+									</td>	
+									<td width="25%"><span class='h3'><input type="submit" value="Download" class="buttontext"></span></td>
+								</tr>
+							</table>
 						</form>
 					</tr>
 				</table>
@@ -184,13 +230,7 @@ function makeDatePicker1(fromDateId ,thruDateId){
 						<form id="LeaveAvailedReport" name="LeaveAvailedReport" mothed="post" action="<@ofbizUrl>LeaveAvailedReport.pdf</@ofbizUrl>" target="_blank">
 							<td width="20%" class='h3'>Leave Availed Report</td>
 							<td width="20%"><span class='h3'>Employee Id<@htmlTemplate.lookupField formName="LeaveAvailedReport" name="employeeId" id="employeeId" size="10pt" fieldFormName="LookupEmployeeName"/></span></td>
-							<td width="10%">Organization Id 
-								<select name="partyId" class='h5'>
-									<#list orgList as org>    
-									<option value='${org.partyId}'>${org.groupName?if_exists}</option>
-									</#list> 
-								</select>
-							</td>	
+							<td><input type="hidden" name="partyId" class="commonPartyId"></td>
 							<td width="10%">Leave Type
 								<select name="leaveTypeId" id="leaveTypeId" class='h5' >
 									<option value="ALL">ALL</option>
@@ -208,14 +248,8 @@ function makeDatePicker1(fromDateId ,thruDateId){
 						<form id="CashEncashmentReport" name="CashEncashmentReport" mothed="post" action="<@ofbizUrl>CashEncashmentReport.pdf</@ofbizUrl>" target="_blank">
 							<td width="30%" class='h3'>Cash Encashment Report</td>
 							<td width="20%"><span class='h3'>Employee Id<@htmlTemplate.lookupField formName="LeaveAvailedReport" name="employeeId" id="employeeId" size="10pt" fieldFormName="LookupEmployeeName"/></span></td>
-							<td width="15%">Organization Id 
-								<select name="deptId" class='h5'>
-									<#list orgList as org>    
-									<option value='${org.partyId}'>${org.groupName?if_exists}</option>
-									</#list> 
-								</select>
-							</td>	
-							<td width="15%">Period Id
+							<td><input type="hidden" name="deptId" class="commonPartyId"></td>
+							<td width="30%">Period Id
 								<select name="customTimePeriodId" id="customTimePeriodId" class='h4'>
 									<#list customTimePeriodList as customTimePeriod>
 									 <#if defaultTimePeriodId?exists && (defaultTimePeriodId == customTimePeriod.customTimePeriodId)>
@@ -228,8 +262,6 @@ function makeDatePicker1(fromDateId ,thruDateId){
 									</#list>
 								</select>
 							</td>	
-							<td width="10%"></td>
-							<td width="10%"></td>
 							<td width="10%"><input type="submit" value="Download" class="buttontext"></td>
 						</form>											
 					</tr>
@@ -252,7 +284,6 @@ function makeDatePicker1(fromDateId ,thruDateId){
 								      </#list>
 								</select>
 							</td>	
-							<td width="10%"></td>
 							<td width="10%"><input type="submit" value="Download" class="buttontext"></td>
 						</form>										
 					</tr>
@@ -313,7 +344,7 @@ function makeDatePicker1(fromDateId ,thruDateId){
 							<form id="DayWiseEditedLateHoursReport" name="DayWiseEditedLateHoursReport" mothed="post" action="<@ofbizUrl>DayWiseEditedLateHoursReport.pdf</@ofbizUrl>" target="_blank">
 								<table class="basic-table" cellspacing="5">
 									<tr class="alternate-row">
-										<td width="12%"><span class='h3'>Edited Late Hours Report</span></td>
+										<td width="12%"><span class='h3'>Day Wise Edited Late Hours Report</span></td>
 										<td width="24%"><span class='h3'>Period Id</span>
 											<select name="customTimePeriodId" class='h4'>
 												<#list timePeriodList as timePeriod>    
@@ -478,16 +509,9 @@ function makeDatePicker1(fromDateId ,thruDateId){
 						<form id="PayrollExceptionReport" name="PayrollExceptionReport" mothed="post" action="<@ofbizUrl>PayrollExceptionReport.pdf</@ofbizUrl>" target="_blank">
 							<table class="basic-table" cellspacing="5">
 								<tr class="alternate-row">
-									<td width="11%"><span class='h3'>Payroll Exception Report</span></td>
-										<td width="25%"><span class='h3'>Organization Id </span>
-											<select name="partyId" class='h4'>
-											    <option></option>
-												<#list orgList as org>    
-													<option value='${org.partyId}'>${org.groupName?if_exists}</option>
-												</#list> 
-											</select>
-										</td>
-										<td width="40%"><span class='h3'>Period Id</span>
+									<td width="25%"><span class='h3'>Payroll Exception Report</span></td>
+									<td><input type="hidden" name="partyId" class="commonPartyId"></td>
+									<td width="50%"><span class='h3'>Period Id</span>
 										<select name="customTimePeriodId" id="customTimePeriodId" class='h4'>
 											<#list customTimePeriodList as customTimePeriod>
 												 <#if defaultTimePeriodId?exists && (defaultTimePeriodId == customTimePeriod.customTimePeriodId)>
@@ -499,7 +523,7 @@ function makeDatePicker1(fromDateId ,thruDateId){
 											</#list>
 										</select>
 									</td>	
-									<td width="7%"><span class='h3'><input type="submit" value="Download" class="buttontext"></span></td>
+									<td width="25%"><span class='h3'><input type="submit" value="Download" class="buttontext"></span></td>
 								</tr>
 							</table>	
 						</form>
@@ -508,15 +532,9 @@ function makeDatePicker1(fromDateId ,thruDateId){
 						<form id="MonthlyBankAdviceStatement" name="MonthlyBankAdviceStatement" mothed="post" action="<@ofbizUrl>EmployeeBankDetailsPdf.pdf</@ofbizUrl>" target="_blank">
 							<table class="basic-table" cellspacing="5">
 								<tr class="alternate-row">
-									<td width="17%"><span class='h3'>Monthly Bank Advice Statement</span></td>
-									<td width="25%"><span class='h3'>Organization Id </span>
-										<select name="bankAdvise_deptId" class='h4'>
-											<#list orgList as org>    
-												<option value='${org.partyId}'>${org.groupName?if_exists}</option>
-											</#list> 
-										</select>
-									</td>
-									<td width="25%"><span class='h3'>Bank</span>
+									<td><input type="hidden" name="bankAdvise_deptId" class="commonPartyId"></td>
+									<td width="25%"><span class='h3'>Monthly Bank Advice Statement</span></td>
+									<td width="30%"><span class='h3'>Bank</span>
 										<select name="finAccountId" class='h4'>
 											<option value='All'>All</option>
 											<#list companyAccList as bank>    
@@ -547,15 +565,9 @@ function makeDatePicker1(fromDateId ,thruDateId){
 					<form id="MonthlyBankStatement" name="MonthlyBankStatement" mothed="post" action="<@ofbizUrl>MonthlyBankStatement.pdf</@ofbizUrl>" target="_blank">
 						<table class="basic-table" cellspacing="5">
 							<tr class="alternate-row">
-								<td width="17%"><span class='h3'>Monthly Bank Statement</span></td>
-								<td width="25%"><span class='h3'>Organization Id </span>
-									<select name="bankAdvise_deptId" class='h4'>
-										<#list orgList as org>    
-											<option value='${org.partyId}'>${org.groupName?if_exists}</option>
-										</#list> 
-									</select>
-								</td>
-								<td width="25%"><span class='h3'>Bank</span>
+								<td width="25%"><span class='h3'>Monthly Bank Statement</span></td>
+								<td><input type="hidden" name="bankAdvise_deptId" class="commonPartyId"></td>
+								<td width="30%"><span class='h3'>Bank</span>
 									<select name="finAccountId" class='h4'>
 										<option value='All'>All</option>
 										<#list companyAccList as bank>    
@@ -572,7 +584,6 @@ function makeDatePicker1(fromDateId ,thruDateId){
 						      						<option value='${customTimePeriod.customTimePeriodId?if_exists}' >${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(customTimePeriod.fromDate, "dd MMMMM, yyyy")} -${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(customTimePeriod.thruDate, "dd MMMMM, yyyy")}</option>
 						                  		</option>
 						      				</#if>
-											 
 										</#list>
 									</select></span>
 								</td>
@@ -586,15 +597,9 @@ function makeDatePicker1(fromDateId ,thruDateId){
 						<form id="EcsBankDetailsStatement" name="EcsBankDetailsStatement" mothed="post" action="<@ofbizUrl>EcsBankDetailsCsv.csv</@ofbizUrl>" target="_blank">
 							<table class="basic-table" cellspacing="5">
 								<tr class="alternate-row">
-									<td width="17%"><span class='h3'>Ecs Bank Details Statement</span></td>
-									<td width="25%"><span class='h3'>Organization Id </span>
-										<select name="bankAdvise_deptId" class='h4'>
-											<#list orgList as org>    
-												<option value='${org.partyId}'>${org.groupName?if_exists}</option>
-											</#list> 
-										</select>
-									</td>
-									<td width="25%"><span class='h3'>Bank</span>
+									<td width="25%"><span class='h3'>Ecs Bank Details Statement</span></td>
+									<td><input type="hidden" name="bankAdvise_deptId" class="commonPartyId"></td>
+									<td width="30%"><span class='h3'>Bank</span>
 										<select name="finAccountId" class='h4'>
 											<option value='All'>All</option>
 											<#list companyAccList as bank>    
@@ -611,7 +616,6 @@ function makeDatePicker1(fromDateId ,thruDateId){
 							      						<option value='${customTimePeriod.customTimePeriodId?if_exists}' >${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(customTimePeriod.fromDate, "dd MMMMM, yyyy")} -${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(customTimePeriod.thruDate, "dd MMMMM, yyyy")}</option>
 							                  		</option>
 							      				</#if>
-												 
 											</#list>
 										</select></span>
 									</td>
@@ -626,16 +630,9 @@ function makeDatePicker1(fromDateId ,thruDateId){
 						<form id="paySlipEmployeewise" name="paySlipEmployeewise" mothed="post" action="<@ofbizUrl>PrintPaySlipsPdf.pdf</@ofbizUrl>" target="_blank">
 							<table class="basic-table" cellspacing="5">
 								<tr class="alternate-row">
-									<td width="20%"><span class='h3'>Pay Slip Employee Wise</span></td>
-									<td width="30%"><span class='h3'>Organization Id </span>
-										<select name="OrganizationId" class='h4'>
-											<option value=''></option>
-											<#list orgList as org>    
-												<option value='${org.partyId}'>${org.groupName?if_exists}</option>
-											</#list> 
-										</select></span>
-									</td>	
-									<td width="30%"><span class='h3'>Period Id</span>
+									<td width="25%"><span class='h3'>Pay Slip Employee Wise</span></td>
+									<td><input type="hidden" name="OrganizationId" class="commonPartyId"></td>
+									<td width="40%"><span class='h3'>Period Id</span>
 										<select name="customTimePeriodId" id="customTimePeriodId" class='h5'>
 											<#assign customTimePeriodList=customTimePeriodList?sort>
 											<#list customTimePeriodList as customTimePeriod>
@@ -645,7 +642,6 @@ function makeDatePicker1(fromDateId ,thruDateId){
 						      						<option value='${customTimePeriod.customTimePeriodId?if_exists}' >${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(customTimePeriod.fromDate, "dd MMMMM, yyyy")} -${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(customTimePeriod.thruDate, "dd MMMMM, yyyy")}</option>
 						                  		</option>
 						      				</#if>
-									 
 									      </#list>
 										</select>
 									</td>
@@ -659,16 +655,9 @@ function makeDatePicker1(fromDateId ,thruDateId){
 						<form id="PrePrintedpaySlip" name="PrePrintedpaySlip" mothed="post" action="<@ofbizUrl>PrePrintedpaySlip.pdf</@ofbizUrl>" target="_blank">
 							<table class="basic-table" cellspacing="5">
 								<tr class="alternate-row">
-									<td width="20%"><span class='h3'>Pre Printed Pay Slip Report</span></td>
-									<td width="30%"><span class='h3'>Organization Id </span>
-										<select name="OrganizationId" class='h4'>
-											<option value=''></option>
-											<#list orgList as org>    
-												<option value='${org.partyId}'>${org.groupName?if_exists}</option>
-											</#list> 
-										</select></span>
-									</td>	
-									<td width="30%"><span class='h3'>Period Id</span>
+									<td width="25%"><span class='h3'>Pre Printed Pay Slip Report</span></td>
+									<td><input type="hidden" name="OrganizationId" class="commonPartyId"></td>
+									<td width="40%"><span class='h3'>Period Id</span>
 										<select name="customTimePeriodId" id="customTimePeriodId" class='h5'>
 											<#assign customTimePeriodList=customTimePeriodList?sort>
 											<#list customTimePeriodList as customTimePeriod>
@@ -678,7 +667,6 @@ function makeDatePicker1(fromDateId ,thruDateId){
 						      						<option value='${customTimePeriod.customTimePeriodId?if_exists}' >${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(customTimePeriod.fromDate, "dd MMMMM, yyyy")} -${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(customTimePeriod.thruDate, "dd MMMMM, yyyy")}</option>
 						                  		</option>
 						      				</#if>
-									 
 									      </#list>
 										</select>
 									</td>
@@ -688,111 +676,13 @@ function makeDatePicker1(fromDateId ,thruDateId){
 							</table>
 						</form>
 				   	</tr>
-				   	 <tr class="alternate-row">
-						<form id="EmployeeWiseSalaryDetails" name="EmployeeWiseSalaryDetails" mothed="post" action="<@ofbizUrl>EmployeeWiseSalaryDetails</@ofbizUrl>" target="_blank">
-							<table class="basic-table" cellspacing="5">
-								<tr class="alternate-row">
-									<td width="19%"><span class='h3'>Employee Wise Salary Details</span></td>
-									<td width="29%"><span class='h3'>Employee Id<@htmlTemplate.lookupField formName="EmployeeWiseSalaryDetails" name="employeeId" fieldFormName="LookupEmployeeName"/></span></td>
-									<td width="40%"><span class='h3'>Period Id</span>
-										<select name="customTimePeriodId" id="customTimePeriodId" class='h5' >
-											<#list customTimePeriodList as customTimePeriod>
-												 <#if defaultTimePeriodId?exists && (defaultTimePeriodId == customTimePeriod.customTimePeriodId)>
-							      					<option value='${customTimePeriod.customTimePeriodId?if_exists}' selected="selected">${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(customTimePeriod.fromDate, "dd MMMMM, yyyy")} -${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(customTimePeriod.thruDate, "dd MMMMM, yyyy")}</option>
-							      					<#else>
-							      						<option value='${customTimePeriod.customTimePeriodId?if_exists}' >${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(customTimePeriod.fromDate, "dd MMMMM, yyyy")} -${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(customTimePeriod.thruDate, "dd MMMMM, yyyy")}</option>
-							                  		</option>
-							      				</#if>
-									        </#list>
-										</select>
-									</td>
-									<td width="15%"><span class='h3'><input type="submit" value="PDF" onClick="javascript:appendParams('EmployeeWiseSalaryDetails', '<@ofbizUrl>EmployeeWiseSalaryDetailsPdf.pdf</@ofbizUrl>');" class="buttontext"/>
-									<input type="submit" value="CSV" onClick="javascript:appendParams('EmployeeWiseSalaryDetails', '<@ofbizUrl>EmployeeWiseSalaryDetailsCsv.csv</@ofbizUrl>');" class="buttontext"/></span></td>
-								</tr>
-							</table>
-						</form>
-					</tr>
-					<tr class="alternate-row">
-						<form id="DeductionsReport" name="DeductionsReport" mothed="post" action="<@ofbizUrl>DeductionsReport.pdf</@ofbizUrl>" target="_blank">
-							<table class="basic-table" cellspacing="0">
-								<tr>
-									<td><span class='h3'>Deductions Report</span></td>
-									<td width="30%"><span class='h3'>Organization Id </span>
-										<select name="partyId" class='h4'>
-											<option value=''></option>
-											<#list orgList as org>    
-												<option value='${org.partyId}'>${org.groupName}</option>
-											</#list> 
-										</select>
-									</td>
-									<td ><span class='h3'>Deduction</span></td>
-									<td>
-										<span class='h6'>
-											<select name="dedTypeId" class='h6'>
-												<option value='' ></option>
-												<#list allDeductionTypeList as deductions>
-													<option value='${deductions.deductionTypeId}'>${deductions.deductionName?if_exists}</option>
-												</#list>	
-											</select>
-										</span>
-									</td>
-									<td><span class='h3'>Period Id</span></td>
-									<td>
-									<span class='h6'>
-										<select name="customTimePeriodId" id="customTimePeriodId" class='h4'>
-											<#list customTimePeriodList?sort_by("fromDate") as customTimePeriod><option value='${customTimePeriod.customTimePeriodId?if_exists}' >${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(customTimePeriod.fromDate, "dd MMMMM, yyyy")} -${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(customTimePeriod.thruDate, "dd MMMMM, yyyy")}</option></#list>
-										</select>
-									</span>
-									</td>
-									<td ><input type="submit" value="Download" class="buttontext"></td>
-								</tr>
-							</table>
-						</form>
-					</tr>
-					<tr class="alternate-row">
-						<form id="BenefitReport" name="DeductionsReport" mothed="post" action="<@ofbizUrl>BenefitReport.pdf</@ofbizUrl>" target="_blank">
-							<table class="basic-table" cellspacing="0">
-								<tr>
-									<td><span class='h3'>Benefit Report</span></td>
-									<td width="30%"><span class='h3'>Organization Id </span>
-										<select name="partyId" class='h4'>
-											<option value=''></option>
-											<#list orgList as org>    
-												<option value='${org.partyId}'>${org.groupName}</option>
-											</#list> 
-										</select>
-									</td>
-									<td ><span class='h3'>Benefit</span></td>
-									<td >
-										<span class='h6'>
-											<select name="benefitTypeId" class='h6'>
-												<option value=''></option>
-												<#list allBenefitsTypeList as benefits>
-													<option value='${benefits.benefitTypeId}'>${benefits.benefitName?if_exists}</option>
-												</#list>	
-											</select>
-										</span>
-									</td>
-									<td><span class='h3'>Period Id</span></td>
-									<td>
-									<span class='h6'>
-										<select name="customTimePeriodId" id="customTimePeriodId" class='h4'>
-											<#list customTimePeriodList?sort_by("fromDate") as customTimePeriod><option value='${customTimePeriod.customTimePeriodId?if_exists}' >${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(customTimePeriod.fromDate, "dd MMMMM, yyyy")} -${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(customTimePeriod.thruDate, "dd MMMMM, yyyy")}</option></#list>
-										</select>
-									</span>
-									</td>
-									<td ><input type="submit" value="Download" class="buttontext"></td>
-								</tr>
-							</table>
-						</form>
-					</tr>
 				   	<tr class="alternate-row">
 						<table class="basic-table" cellspacing="3">
 							<form id="CanteenReport" name="CanteenReport" mothed="post" action="<@ofbizUrl>CanteenReport.pdf</@ofbizUrl>" target="_blank">
 								<table class="basic-table" cellspacing="5">
 									<tr class="alternate-row">
-										<td width="13%"><span class='h3'>Canteen Report</span></td>
-										<td width="30%"><span class='h3'>Period Id
+										<td width="25%"><span class='h3'>Canteen Report</span></td>
+										<td width="50%"><span class='h3'>Period Id
 											<select name="customTimePeriodId" id="customTimePeriodId" class='h4'>
 												<#list customTimePeriodList as customTimePeriod>
 													 <#if defaultTimePeriodId?exists && (defaultTimePeriodId == customTimePeriod.customTimePeriodId)>
@@ -804,7 +694,7 @@ function makeDatePicker1(fromDateId ,thruDateId){
 												</#list>
 											</select></span>
 										</td>	
-										<td width="10%"><span class='h3'><input type="submit" value="Download" class="buttontext"></span></td> 
+										<td width="25%"><span class='h3'><input type="submit" value="Download" class="buttontext"></span></td> 
 									</tr>
 								</table>	
 							</form>
@@ -814,8 +704,8 @@ function makeDatePicker1(fromDateId ,thruDateId){
 						<form id="GSLISReport" name="GSLISReport" mothed="post" action="<@ofbizUrl>GSLISReport.pdf</@ofbizUrl>" target="_blank">
 							<table class="basic-table" cellspacing="5">
 								<tr class="alternate-row">
-									<td width="13%"><span class='h3'>GSLIS Report</span></td>
-									<td width="45%"><span class='h3'>Period Id</span>
+									<td width="25%"><span class='h3'>GSLIS Report</span></td>
+									<td width="50%"><span class='h3'>Period Id</span>
 										<select name="customTimePeriodId" id="customTimePeriodId" class='h5' >
 											<#list customTimePeriodList as customTimePeriod>
 												 <#if defaultTimePeriodId?exists && (defaultTimePeriodId == customTimePeriod.customTimePeriodId)>
@@ -827,13 +717,173 @@ function makeDatePicker1(fromDateId ,thruDateId){
 									        </#list>
 										</select>
 									</td>
+									<td width="25%"><span class='h3'><input type="submit" value="Download" class="buttontext"></span></td>
+								</tr>
+							</table>
+						</form>
+					</tr>
+				   	<tr class="alternate-row"> 
+						<form id="IncrementCertificate" name="IncrementCertificate" mothed="post" action="<@ofbizUrl>IncrementCertificate.pdf</@ofbizUrl>" target="_blank">
+							<table class="basic-table" cellspacing="5">
+								<tr class="alternate-row">
+									<td width="25%"><span class='h3'>Increment Certificate Report</span></td>
+									<td width="50%"><span class='h3'>Period Id</span>
+										<select name="customTimePeriodId" id="customTimePeriodId" class='h5' >
+											<#list customTimePeriodList?sort_by("fromDate") as customTimePeriod><option value='${customTimePeriod.customTimePeriodId?if_exists}' >${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(customTimePeriod.fromDate, "dd MMMMM, yyyy")} -${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(customTimePeriod.thruDate, "dd MMMMM, yyyy")}</option></#list>
+										</select>
+									</td>
+									<td width="25%"><span class='h3'><input type="submit" value="Download" class="buttontext"></span></td>
+								</tr>
+							</table>
+						</form>
+					</tr>
+					<tr class="alternate-row">
+						<form id="DepartmentTotalsReport" name="DepartmentTotalsReport" mothed="post" action="<@ofbizUrl>DepartmentTotalsReport.txt</@ofbizUrl>" target="_blank">
+							<table class="basic-table" cellspacing="5">
+								<tr class="alternate-row">
+									<td width="25%"><span class='h3'>Department Totals </span></td>
+									<td><input type="hidden" name="ShedId" class="commonPartyId"/> 
+									<td width="50%"><span class='h3'>Period Id</span>
+										<select name="customTimePeriodId" id="customTimePeriodId" class='h4'>
+											<#list customTimePeriodList as customTimePeriod>
+												 <#if defaultTimePeriodId?exists && (defaultTimePeriodId == customTimePeriod.customTimePeriodId)>
+							      					<option value='${customTimePeriod.customTimePeriodId?if_exists}' selected="selected">${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(customTimePeriod.fromDate, "dd MMMMM, yyyy")} -${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(customTimePeriod.thruDate, "dd MMMMM, yyyy")}</option>
+							      					<#else>
+							      						<option value='${customTimePeriod.customTimePeriodId?if_exists}' >${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(customTimePeriod.fromDate, "dd MMMMM, yyyy")} -${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(customTimePeriod.thruDate, "dd MMMMM, yyyy")}</option>
+							                  		</option>
+							      				</#if>
+											</#list>
+										</select>
+									</td>	
+									<td width="25%"><span class='h3'><input type="submit" value="Download" class="buttontext"></span></td>
+								</tr>
+							</table>	
+						</form>
+				   	</tr>
+				   	<tr class="alternate-row">
+						<form id="IncomeTaxReport" name="IncomeTaxReport" mothed="post" action="<@ofbizUrl>IncomeTaxReport.txt</@ofbizUrl>" target="_blank">
+							<table class="basic-table" cellspacing="5">
+								<tr class="alternate-row">
+									<td width="25%"><span class='h3'>Income Tax Report</span></td>
+				   					<td width="50%"><span class='h3'>Period Id</span>
+										<select name="customTimePeriodId" id="customTimePeriodId" class='h4'>
+											<#list customTimePeriodIdsList as customTimePeriod>
+												 <#if defaultTimePeriodId?exists && (defaultTimePeriodId == customTimePeriod.customTimePeriodId)>
+							      					<option value='${customTimePeriod.customTimePeriodId?if_exists}' selected="selected">${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(customTimePeriod.fromDate, "dd MMMMM, yyyy")} -${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(customTimePeriod.thruDate, "dd MMMMM, yyyy")}</option>
+							      					<#else>
+							      						<option value='${customTimePeriod.customTimePeriodId?if_exists}' >${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(customTimePeriod.fromDate, "dd MMMMM, yyyy")} -${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(customTimePeriod.thruDate, "dd MMMMM, yyyy")}</option>
+							                  		</option>
+							      				</#if>
+											</#list>
+										</select>
+									</td>	
+									<td width="25%"><span class='h3'><input type="submit" value="Download" class="buttontext"></span></td>
+								</tr>
+							</table>	
+						</form>
+				   </tr>
+				   <tr class="alternate-row"> 
+						<form id="CostCodeReport" name="CostCodeReport" mothed="post" action="<@ofbizUrl>CostCodeReport.txt</@ofbizUrl>" target="_blank">
+							<table class="basic-table" cellspacing="5">
+								<tr class="alternate-row">
+									<td width="25%"><span class='h3'>Cost Code Report</span></td>
+									<td><input type="hidden" name="ShedId" class="commonPartyId"></td>
+									<td width="50%"><span class='h3'>Period Id</span>
+										<select name="customTimePeriodId" id="customTimePeriodId" class='h5' >
+											<#list customTimePeriodList?sort_by("fromDate") as customTimePeriod><option value='${customTimePeriod.customTimePeriodId?if_exists}' >${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(customTimePeriod.fromDate, "dd MMMMM, yyyy")} -${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(customTimePeriod.thruDate, "dd MMMMM, yyyy")}</option></#list>
+										</select>
+									</td>
+									<td width="25%"><span class='h3'><input type="submit" value="Download" class="buttontext"></span></td>
+								</tr>
+							</table>
+						</form>
+					</tr>
+				   	 <tr class="alternate-row">
+						<form id="EmployeeWiseSalaryDetails" name="EmployeeWiseSalaryDetails" mothed="post" action="<@ofbizUrl>EmployeeWiseSalaryDetails</@ofbizUrl>" target="_blank">
+							<table class="basic-table" cellspacing="5">
+								<tr class="alternate-row">
+									<td width="19%"><span class='h3'>Employee Wise Salary Details</span></td>
+									<td width="33%"><span class='h3'>Employee Id<@htmlTemplate.lookupField formName="EmployeeWiseSalaryDetails" name="employeeId" fieldFormName="LookupEmployeeName"/></span></td>
+									<td width="37%"><span class='h3'>Period Id</span>
+										<select name="customTimePeriodId" id="customTimePeriodId" class='h5' >
+											<#list customTimePeriodList as customTimePeriod>
+												 <#if defaultTimePeriodId?exists && (defaultTimePeriodId == customTimePeriod.customTimePeriodId)>
+							      					<option value='${customTimePeriod.customTimePeriodId?if_exists}' selected="selected">${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(customTimePeriod.fromDate, "dd MMMMM, yyyy")} -${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(customTimePeriod.thruDate, "dd MMMMM, yyyy")}</option>
+							      					<#else>
+							      						<option value='${customTimePeriod.customTimePeriodId?if_exists}' >${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(customTimePeriod.fromDate, "dd MMMMM, yyyy")} -${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(customTimePeriod.thruDate, "dd MMMMM, yyyy")}</option>
+							                  		</option>
+							      				</#if>
+									        </#list>
+										</select>
+									</td>
+									<td width="10%"><span class='h3'><input type="submit" value="PDF" onClick="javascript:appendParams('EmployeeWiseSalaryDetails', '<@ofbizUrl>EmployeeWiseSalaryDetailsPdf.pdf</@ofbizUrl>');" class="buttontext"/>
+									<input type="submit" value="CSV" onClick="javascript:appendParams('EmployeeWiseSalaryDetails', '<@ofbizUrl>EmployeeWiseSalaryDetailsCsv.csv</@ofbizUrl>');" class="buttontext"/></span></td>
+								</tr>
+							</table>
+						</form>
+					</tr>
+					<tr class="alternate-row">
+						<form id="DeductionsReport" name="DeductionsReport" mothed="post" action="<@ofbizUrl>DeductionsReport.txt</@ofbizUrl>" target="_blank">
+							<table class="basic-table" cellspacing="0">
+								<tr>
+									<td width="20%"><span class='h3'>Deductions Report</span></td>
+									<td><input type="hidden" name="partyId" class="commonPartyId"/> 
+									<td width="5%"><span class='h3'>Deduction</span></td>
+									<td width="20%">
+										<span class='h3'>
+											<select name="dedTypeId" class='h3'>
+												<option value='' ></option>
+												<#list allDeductionTypeList as deductions>
+													<option value='${deductions.deductionTypeId}'>${deductions.deductionName?if_exists}</option>
+												</#list>	
+											</select>
+										</span>
+									</td>
+									<td width="5%"><span class='h3'>Period Id</span></td>
+									<td>
+									<span class='h3'>
+										<select name="customTimePeriodId" id="customTimePeriodId" class='h4'>
+											<#list customTimePeriodList?sort_by("fromDate") as customTimePeriod><option value='${customTimePeriod.customTimePeriodId?if_exists}' >${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(customTimePeriod.fromDate, "dd MMMMM, yyyy")} -${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(customTimePeriod.thruDate, "dd MMMMM, yyyy")}</option></#list>
+										</select>
+									</span>
+									</td>
+									<td width="10%"><span class='h3'><input type="submit" value="Download" class="buttontext"></span></td>
+								</tr>
+							</table>
+						</form>
+					</tr>
+					<tr class="alternate-row">
+						<form id="BenefitReport" name="DeductionsReport" mothed="post" action="<@ofbizUrl>BenefitReport.pdf</@ofbizUrl>" target="_blank">
+							<table class="basic-table" cellspacing="0">
+								<tr>
+									<td width="20%"><span class='h3'>Benefit Report</span></td>
+									<td><input type="hidden" name="partyId" class="commonPartyId"></td>
+									<td width="5%"><span class='h3'>Benefit</span></td>
+									<td width="27%">
+										<span class='h3'>
+											<select name="benefitTypeId" class='h6'>
+												<option value=''></option>
+												<#list allBenefitsTypeList as benefits>
+													<option value='${benefits.benefitTypeId}'>${benefits.benefitName?if_exists}</option>
+												</#list>	
+											</select>
+										</span>
+									</td>
+									<td width="5%"><span class='h3'>Period Id</span></td>
+									<td>
+									<span class='h3'>
+										<select name="customTimePeriodId" id="customTimePeriodId" class='h4'>
+											<#list customTimePeriodList?sort_by("fromDate") as customTimePeriod><option value='${customTimePeriod.customTimePeriodId?if_exists}' >${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(customTimePeriod.fromDate, "dd MMMMM, yyyy")} -${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(customTimePeriod.thruDate, "dd MMMMM, yyyy")}</option></#list>
+										</select>
+									</span>
+									</td>
 									<td width="10%"><span class='h3'><input type="submit" value="Download" class="buttontext"></span></td>
 								</tr>
 							</table>
 						</form>
 					</tr>
 					<#--  <tr class="alternate-row">
-						<form id="ProfessionalTaxReport" name="ProfessionalTaxReport" mothed="post" action="<@ofbizUrl>ProfessionalTaxReport.pdf</@ofbizUrl>" target="_blank">
+						<form id="ProfessionalTaxReport" name="ProfessionalTaxReport" mothed="post" action="<@ofbizUrl>ProfessionalTaxReport.pdf</@ofbizUrl" target="_blank">
 							<table class="basic-table" cellspacing="5">
 								<tr class="alternate-row">
 									<td width="13%"><span class='h3'>Professional Tax Report</span></td>
@@ -858,14 +908,8 @@ function makeDatePicker1(fromDateId ,thruDateId){
 											<option value="Yes">Yes</option>
 										</select>
 									</span></td>
-									<td width="30%"><spam class='h3'>Organization Id 
-										<select name="deptId" class='h4'>
-											<#list orgList as org>    
-												<option value='${org.partyId}'>${org.groupName?if_exists}</option>
-											</#list> 
-										</select></span>
-									</td>	
-									<td width="30%"><span class='h3'>Period Id
+									<td><input type="hidden" name="deptId" class="commonPartyId"/> 
+									<td width="36%"><span class='h3'>Period Id
 										<select name="customTimePeriodId" id="customTimePeriodId" class='h4'>
 											<#list customTimePeriodList as customTimePeriod>
 												 <#if defaultTimePeriodId?exists && (defaultTimePeriodId == customTimePeriod.customTimePeriodId)>
@@ -876,25 +920,18 @@ function makeDatePicker1(fromDateId ,thruDateId){
 							      				</#if>
 											</#list>
 										</select></span>
-									</td>	
-									<td width="30%"><span class="h3"><input type="submit" value="Download" class="buttontext"></span></td>
+									</td>
+									<td width="10%"><span class='h3'><input type="submit" value="Download" class="buttontext"></span></td>	
 								</tr>
 							</table>
 						</form>
 					</tr>
 					<tr class="alternate-row">
-						<form id="BenefitsOrDeductionsExport" name="BenefitsOrDeductionsExport" mothed="post" action="<@ofbizUrl>ExportEmployeeBenefitsOrDeductions</@ofbizUrl>">
+						<form id="BenefitsOrDeductionsExport" name="BenefitsOrDeductionsExport" mothed="post" action="<@ofbizUrl>ExportEmployeeBenefitsOrDeductions</@ofbizUrl>" target="_blank">
 							<table class="basic-table" cellspacing="0">
 								<tr>
 									<td><span class='h3'>BenefitsOrDeductions</span></td>
-									<td width="30%"><span class='h3'>Organization Id </span>
-										<select name="partyId" class='h4'>
-											<option value=''></option>
-											<#list orgList as org>    
-												<option value='${org.partyId}'>${org.groupName}</option>
-											</#list> 
-										</select>
-									</td>
+									<td><input type="hidden" name="partyId" class="commonPartyId"/> 
 									<td><span class='h3'>Type</span></td>
 									<td>
 										<span class='h6'>
@@ -947,73 +984,6 @@ function makeDatePicker1(fromDateId ,thruDateId){
 							</table>
 						</form>
 					</tr>
-					<tr class="alternate-row"> 
-						<form id="IncrementCertificate" name="IncrementCertificate" mothed="post" action="<@ofbizUrl>IncrementCertificate.pdf</@ofbizUrl>" target="_blank">
-							<table class="basic-table" cellspacing="5">
-								<tr class="alternate-row">
-									<td width="13%"><span class='h3'>Increment Certificate Report</span></td>
-									<td width="45%"><span class='h3'>Period Id</span>
-										<select name="customTimePeriodId" id="customTimePeriodId" class='h5' >
-											<#list customTimePeriodList?sort_by("fromDate") as customTimePeriod><option value='${customTimePeriod.customTimePeriodId?if_exists}' >${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(customTimePeriod.fromDate, "dd MMMMM, yyyy")} -${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(customTimePeriod.thruDate, "dd MMMMM, yyyy")}</option></#list>
-										</select>
-									</td>
-									<td width="10%"><span class='h3'><input type="submit" value="Download" class="buttontext"></span></td>
-								</tr>
-							</table>
-						</form>
-					</tr>
-					<tr class="alternate-row">
-						<form id="DepartmentTotalsReport" name="DepartmentTotalsReport" mothed="post" action="<@ofbizUrl>DepartmentTotalsReport.txt</@ofbizUrl>" target="_blank">
-							<table class="basic-table" cellspacing="5">
-								<tr class="alternate-row">
-									<td width="11%"><span class='h3'>Department Totals </span></td>
-										<td width="25%"><span class='h3'>Organization Id </span>
-											<select name="ShedId" class='h4'>
-											    <option></option>
-												<#list orgList as org>    
-													<option value='${org.partyId}'>${org.groupName?if_exists}</option>
-												</#list> 
-											</select>
-										</td>
-										<td width="40%"><span class='h3'>Period Id</span>
-										<select name="customTimePeriodId" id="customTimePeriodId" class='h4'>
-											<#list customTimePeriodList as customTimePeriod>
-												 <#if defaultTimePeriodId?exists && (defaultTimePeriodId == customTimePeriod.customTimePeriodId)>
-							      					<option value='${customTimePeriod.customTimePeriodId?if_exists}' selected="selected">${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(customTimePeriod.fromDate, "dd MMMMM, yyyy")} -${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(customTimePeriod.thruDate, "dd MMMMM, yyyy")}</option>
-							      					<#else>
-							      						<option value='${customTimePeriod.customTimePeriodId?if_exists}' >${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(customTimePeriod.fromDate, "dd MMMMM, yyyy")} -${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(customTimePeriod.thruDate, "dd MMMMM, yyyy")}</option>
-							                  		</option>
-							      				</#if>
-											</#list>
-										</select>
-									</td>	
-									<td width="7%"><span class='h3'><input type="submit" value="Download" class="buttontext"></span></td>
-								</tr>
-							</table>	
-						</form>
-				   	</tr>
-				   	<tr class="alternate-row">
-						<form id="IncomeTaxReport" name="IncomeTaxReport" mothed="post" action="<@ofbizUrl>IncomeTaxReport.txt</@ofbizUrl>" target="_blank">
-							<table class="basic-table" cellspacing="5">
-								<tr class="alternate-row">
-									<td width="11%"><span class='h3'>Income Tax Report</span></td>
-				   					<td width="40%"><span class='h3'>Period Id</span>
-										<select name="customTimePeriodId" id="customTimePeriodId" class='h4'>
-											<#list customTimePeriodIdsList as customTimePeriod>
-												 <#if defaultTimePeriodId?exists && (defaultTimePeriodId == customTimePeriod.customTimePeriodId)>
-							      					<option value='${customTimePeriod.customTimePeriodId?if_exists}' selected="selected">${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(customTimePeriod.fromDate, "dd MMMMM, yyyy")} -${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(customTimePeriod.thruDate, "dd MMMMM, yyyy")}</option>
-							      					<#else>
-							      						<option value='${customTimePeriod.customTimePeriodId?if_exists}' >${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(customTimePeriod.fromDate, "dd MMMMM, yyyy")} -${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(customTimePeriod.thruDate, "dd MMMMM, yyyy")}</option>
-							                  		</option>
-							      				</#if>
-											</#list>
-										</select>
-									</td>	
-									<td width="7%"><span class='h3'><input type="submit" value="Download" class="buttontext"></span></td>
-								</tr>
-							</table>	
-						</form>
-				   </tr>
 			   	</table>
 			</div>
 		</div>

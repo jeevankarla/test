@@ -1982,6 +1982,20 @@
 			</widgets>
 		</section>
 	</screen>
+    <screen name="CostCodeReport">
+            <section>
+               <actions>
+                    <property-map resource="ProductUiLabels" map-name="uiLabelMap" global="true"/>            
+                    <property-map resource="HumanResUiLabels" map-name="uiLabelMap" global="true"/> 
+                    <script location="component://humanres/webapp/humanres/WEB-INF/actions/reports/CostCodeReport.groovy"/>                              
+                </actions> 
+                <widgets>
+                    <platform-specific> 
+    				  <xsl-fo><html-template location="component://humanres/webapp/humanres/humanres/CostCodeReport.fo.ftl"/></xsl-fo> 
+                    </platform-specific>
+                </widgets>
+            </section>
+    </screen>
 </screens>
 
     
