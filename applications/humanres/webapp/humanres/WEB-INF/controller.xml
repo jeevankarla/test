@@ -54,7 +54,11 @@ under the License.
         <event type="groovy" path="component://humanres/webapp/humanres/WEB-INF/actions/humanres/" invoke="reports.groovy"/>
         <response name="success" type="request" value="json"/>
     </request-map>
-    
+    <request-map uri="getEmplsCount">
+        <security https="true" auth="true"/>
+        <event type="groovy" path="component://humanres/webapp/humanres/WEB-INF/actions/humanres/" invoke="GetEmplsCount.groovy"/>
+        <response name="success" type="request" value="json"/>
+    </request-map>
     <request-map uri="getPartyBenefitCost">
         <security auth="true" https="true"/>    
         <event type="service" invoke="getPartyBenefitCost"/>

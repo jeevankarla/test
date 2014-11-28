@@ -66,7 +66,7 @@ List<GenericValue> employeesList = (List<GenericValue>)resultInputMap.get("emplo
 employeesList = EntityUtil.orderBy(employeesList, UtilMisc.toList("partyIdTo"));
 employeeIds = EntityUtil.getFieldListFromEntityList(employeesList, "partyIdTo", true);
 
-context.totalEmpls=employeeIds.size();
+
 if(parameters.partyIdTo){
 	employementIds=UtilMisc.toList(parameters.partyIdTo);
 }else{
@@ -89,8 +89,7 @@ conList.add(EntityCondition.makeCondition(EntityCondition.makeCondition("noOfAtt
 	EntityCondition.makeCondition("noOfAttendedDays",EntityOperator.GREATER_THAN,BigDecimal.ZERO)));
 EntityCondition con=EntityCondition.makeCondition(conList,EntityOperator.AND);
 List<GenericValue> payrollCountList=delegator.findList("PayrollAttendance",con,UtilMisc.toSet("partyId"),null,null,false);
-context.enteredEmpls=payrollCountList.size();
-context.remainingEmpls=employeeIds.size()-payrollCountList.size();
+
 if("leaveEncash".equals(screenFlag)){
 	customTimePeriodId=timePeriodId;
 }
@@ -291,3 +290,16 @@ if(UtilValidate.isNotEmpty(finalMap)){
 	}
 }
 context.payrollJson=payrollJSON;
+totalEmpls=0;
+enteredEmpls=0;
+remainingEmpls=0;
+totalEmpls=employeeIds.size();
+enteredEmpls=payrollCountList.size();
+remainingEmpls=employeeIds.size()-payrollCountList.size();
+JSONObject emplsCountJson = new JSONObject();;
+if(UtilValidate.isNotEmpty(totalEmpls) && UtilValidate.isNotEmpty(enteredEmpls)){
+		emplsCountJson.put("totalEmpls",totalEmpls);
+		emplsCountJson.put("enteredEmpls",enteredEmpls);
+		emplsCountJson.put("remainingEmpls",remainingEmpls);
+}
+context.emplsCountJson=emplsCountJson;

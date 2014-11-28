@@ -71,7 +71,7 @@
 <script language="javascript" type="text/javascript" src="<@ofbizContentUrl>/images/jquery/plugins/autoTab/jquery.autotab-1.1b.js</@ofbizContentUrl>"></script>
 
 <script type="application/javascript">
-
+	
   var undoRedoBuffer = {
       commandQueue : [],
       commandCtr : 0,
@@ -272,11 +272,12 @@ function comparer(a, b) {
 	}
 	$(document).ready(function() {			
 		  	setUpItemList();
-		  	
+		  	setEmplsCount();
 	});
 	
 function editClickHandler(row) {
 		updatePayrollAttendanceInternal('updatePayrollAttendance', '<@ofbizUrl>EditPayrollAttendance</@ofbizUrl>', row);
+		getEmplDetails(row);
 	}
 function updatePayrollAttendanceInternal(formName, action, row) {
 		if (Slick.GlobalEditorLock.isActive() && !Slick.GlobalEditorLock.commitCurrentEdit()) {
@@ -286,9 +287,9 @@ function updatePayrollAttendanceInternal(formName, action, row) {
 		var changeItem = dataView2.getItem(row);			
 		var rowCount = 0;
 		for (key in changeItem){			
-			var value = changeItem[key];	
+			var value = changeItem[key];
 	 		if (key != "id") {	 			 		
-				var inputParam = jQuery("<input>").attr("type", "hidden").attr("name", key).val(value);										
+				var inputParam = jQuery("<input>").attr("type", "hidden").attr("name", key).val(value);	
 				jQuery(formId).append(jQuery(inputParam));				
 				 				
    			}
@@ -318,11 +319,7 @@ function updatePayrollAttendanceInternal(formName, action, row) {
             	   $('div#updateEntryMsg').html('<label>Succesfully Updated.</label>'); 
             	   $('div#updateEntryMsg').delay(5000).fadeOut('slow'); 
             	   $($('.grid-canvas').children()[row]).css('background-color','#FAAC58'); 
-            	 /* var gridCanvas=$('.grid-canvas').children();
-            	  gridCanvas.each(function( index, element ){
-            	  	alert(index);
-            	  
-            	  });*/
+            	 
                }
                
              } ,
@@ -331,7 +328,46 @@ function updatePayrollAttendanceInternal(formName, action, row) {
             	 }
                });
 	}//end of updatePayrollAttendanceInternal
-
+	function setEmplsCount(){
+			var  dataEmpValues;
+			<#if emplsCountJson?has_content>
+			 	dataEmpValues = ${StringUtil.wrapString(emplsCountJson)};
+			</#if>
+			totalEmpls=dataEmpValues['totalEmpls'];
+			enteredEmpls=dataEmpValues['enteredEmpls'];
+			remainingEmpls=dataEmpValues['remainingEmpls'];
+			jQuery("#totalEmpls").html(totalEmpls);
+        	jQuery("#enteredEmpls").html(enteredEmpls);
+        	jQuery("#remainingEmpls").html(remainingEmpls);
+	}
+ function getEmplDetails(row){
+ 	var changeItem = dataView2.getItem(row);
+ 		var customTimePeriodId=changeItem["customTimePeriodId"];
+ 		var noOfAttendedDays=changeItem["noOfAttendedDays"];
+ 		var deptId=changeItem["deptId"];
+ 		var partyId=changeItem["partyId"];
+ 		var timePeriodId=changeItem["timePeriodId"];
+ 		var data= "partyId="+partyId+"&customTimePeriodId="+customTimePeriodId+"&deptId="+deptId+"&noOfAttendedDays="+noOfAttendedDays+"&timePeriodId="+timePeriodId;
+ 		
+	$.ajax({
+        type: "POST",
+        url: "getEmplsCount",
+        data: data,
+        dataType: 'json',
+        success: function(result) {
+        totalEmpls=result["totalEmpls"];
+        enteredEmpls=result["enteredEmpls"];
+        remainingEmpls=result["remainingEmpls"];
+        jQuery("#totalEmpls").html(totalEmpls);
+        jQuery("#enteredEmpls").html(enteredEmpls);
+        jQuery("#remainingEmpls").html(remainingEmpls);
+       	 },
+       error: function() {
+       	 	alert(result["_ERROR_MESSAGE_"]);
+       	 }
+	});
+ 
+ }
 </script>
 	
 <div id="wrapper" style="width: 95%; height:100%">
@@ -344,7 +380,7 @@ function updatePayrollAttendanceInternal(formName, action, row) {
   
     <div>    	
  		<div class="grid-header" style="width:100%">
-			<font size="15" color="#22047F"><b>Employee Payroll Attendance<b/></font>:<font size="15" color="red"><b><#if timePeriodStart?has_content>[${(Static["org.ofbiz.base.util.UtilDateTime"].toDateString(timePeriodStart?if_exists, "MMMMM-yyyy"))}]</#if></b></font>  
+			<font size="15" color="#22047F"><b>Employee Payroll Attendance<b/></font>:<font size="15" color="red"><b><#if timePeriodStart?has_content>[${(Static["org.ofbiz.base.util.UtilDateTime"].toDateString(timePeriodStart?if_exists, "MMMMM-yyyy"))}]</#if></b></font>  <font size="15" color="#22047F"><b>Total Employees :<b/></font><font size="15" color="red"><b><span id="totalEmpls"></span></b></font><font size="15" color="#22047F"><b>Compleated Employees :<b/></font><font size="15" color="red"><b><span id="enteredEmpls"></span></b></font><font size="15" color="#22047F"><b>Remaining Employees :<b/></font><font size="15" color="red"><b><span id="remainingEmpls"></span></b></font>  
 		</div>    
 		<div id="itemGrid2" style="width:100%;height:350px;">
 			
