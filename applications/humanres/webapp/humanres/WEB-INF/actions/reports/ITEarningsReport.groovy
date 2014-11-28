@@ -209,8 +209,23 @@ employmentsList.each{ employeeId->
 					licKmf = periodTotals.get("PAYROL_DD_LIC_KMF");
 					licDharwadMilk  = periodTotals.get("PAYROL_DD_LIC_DWD");
 					rdAmount = periodTotals.get("PAYROL_DD_REC_DEP");
-					if(UtilValidate.isEmpty(licp)){
-						licp = licOfPGS+licKmf+licDharwadMilk+rdAmount;
+					lifeInsurance = periodTotals.get("PAYROL_DD_LIFE_IN");
+					if(UtilValidate.isEmpty(licp) || (licp == 0)){
+						if(UtilValidate.isNotEmpty(licOfPGS)){
+							licp = licp + licOfPGS;
+						}
+						if(UtilValidate.isNotEmpty(licKmf)){
+							licp = licp + licKmf;
+						}
+						if(UtilValidate.isNotEmpty(licDharwadMilk)){
+							licp = licp + licDharwadMilk;
+						}
+						if(UtilValidate.isNotEmpty(rdAmount)){
+							licp = licp + rdAmount;
+						}
+						if(UtilValidate.isNotEmpty(lifeInsurance)){
+							licp = licp + lifeInsurance;
+						}
 					}
 					frf = periodTotals.get("PAYROL_DD_FD_RELF");
 					if(UtilValidate.isEmpty(frf)){
