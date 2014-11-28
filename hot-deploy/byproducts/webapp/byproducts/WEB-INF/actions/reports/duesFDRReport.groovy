@@ -26,10 +26,9 @@ import in.vasista.vbiz.byproducts.ByProductReportServices;
 
 dctx=dispatcher.getDispatchContext();
 reportTypeFlag = parameters.reportTypeFlag;
-
+categoryTypeEnum = parameters.categoryTypeEnum;
 if(UtilValidate.isEmpty(reportTypeFlag)){
 	effectiveDateStr = parameters.effectiveDate;
-	categoryTypeEnum = parameters.categoryTypeEnum;
 	effectiveDate = null;
 	if (UtilValidate.isNotEmpty(effectiveDateStr)) {
 		def sdf = new SimpleDateFormat("MMMM dd, yyyy");
@@ -44,7 +43,7 @@ if(UtilValidate.isEmpty(reportTypeFlag)){
 	}
 	dayBegin = UtilDateTime.getDayStart(effectiveDate);
 	dayEnd = UtilDateTime.getDayEnd(effectiveDate);
-	resultCtx = ByProductNetworkServices.getAllBooths(delegator, categoryTypeEnum);
+	//resultCtx = ByProductNetworkServices.getAllBooths(delegator, categoryTypeEnum);
 }else{
 	fromDateStr = parameters.fromDate;
 	thruDateStr = parameters.thruDate;
@@ -74,8 +73,13 @@ if(UtilValidate.isEmpty(reportTypeFlag)){
 	}
 	dayBegin = UtilDateTime.getDayStart(fromDate);
 	dayEnd = UtilDateTime.getDayEnd(thruDate);
-	resultCtx = ByProductNetworkServices.getAllBooths(delegator, "");
+	//resultCtx = ByProductNetworkServices.getAllBooths(delegator, "");
 }
+ if(UtilValidate.isNotEmpty(categoryTypeEnum)){
+		resultCtx=ByProductNetworkServices.getAllBooths(delegator,categoryTypeEnum);
+ }else{
+	   resultCtx=ByProductNetworkServices.getAllBooths(delegator,null);
+ }
 conditionList=[];
 isByParty = Boolean.TRUE;
 context.displayDate = UtilDateTime.toDateString(dayBegin, "dd MMMMM, yyyy");
@@ -89,34 +93,37 @@ boothTotalsWithReturn=[:];
 periodBoothTotals=[:];
 FDRDetail = ByProductNetworkServices.getFacilityFixedDeposit( dctx , [userLogin: userLogin, effectiveDate: dayBegin]).get("FacilityFDRDetail");
 duesFDRList = [];
-/*//boothsList.clear();
-//boothsList.add("B80902");
-//boothsDetailsList = delegator.findList("Facility", EntityCondition.makeCondition("facilityId", EntityOperator.EQUALS, "B80902"), null, null, null, false);
-*/
+/*boothsList.clear();
+boothsList.add("S103B");
+boothsList.add("S117B");*/
+boothsDetailsList = delegator.findList("Facility", EntityCondition.makeCondition("facilityId", EntityOperator.IN, boothsList), null, null, null, false);
+
 if(isByParty){
-	ownerPartyList = delegator.findList("Facility", EntityCondition.makeCondition("facilityId", EntityOperator.IN, boothsList), UtilMisc.toSet("ownerPartyId"), null, null, false);
+	ownerPartyList = delegator.findList("Facility", EntityCondition.makeCondition("facilityId", EntityOperator.IN, boothsList), UtilMisc.toSet("facilityId","ownerPartyId"), null, null, false);
 	boothsList.clear();
-	boothsList = EntityUtil.getFieldListFromEntityList(ownerPartyList, "ownerPartyId", true);
+	boothsList = EntityUtil.getFieldListFromEntityList(ownerPartyList, "facilityId", true);
+	ownerPartyList = EntityUtil.getFieldListFromEntityList(ownerPartyList,"ownerPartyId", true);
 }
 if(UtilValidate.isNotEmpty(reportTypeFlag)&&reportTypeFlag=="DuesFDRAvgReport"){
 	curntMonthDays= UtilDateTime.getIntervalInDays(dayBegin,dayEnd)+1;
 	dayTotals = ByProductNetworkServices.getPeriodTotals(dispatcher.getDispatchContext(), [facilityIds:boothsList,fromDate: dayBegin, thruDate: dayEnd, includeReturnOrders:true, isByParty: isByParty]).get("boothTotals");
 }
-boothsList.each{ eachBoothId ->
+
+ownerPartyList.each{ eachPartyId ->
 	facilityFDRMap = [:];
-	facilityFDRMap.putAt("facilityId", eachBoothId);
 	facilityDet = [];
-	if(isByParty){
-		facilityDet = EntityUtil.filterByCondition(boothsDetailsList, EntityCondition.makeCondition("ownerPartyId", EntityOperator.EQUALS, eachBoothId));
-	}
-	else{
+	/*if(isByParty){
 		facilityDet = EntityUtil.filterByCondition(boothsDetailsList, EntityCondition.makeCondition("facilityId", EntityOperator.EQUALS, eachBoothId));
 	}
+	else{*/
+		facilityDet = EntityUtil.filterByCondition(boothsDetailsList, EntityCondition.makeCondition("ownerPartyId", EntityOperator.EQUALS, eachPartyId));
+	//}
 	facId = (EntityUtil.getFirst(facilityDet)).facilityId;
+	facilityFDRMap.putAt("facilityId", facId);
 	facilityFDRMap.putAt("facilityName", (EntityUtil.getFirst(facilityDet)).facilityName);
 	openingBalance =(ByProductNetworkServices.getOpeningBalanceForBooth( dctx , [userLogin: userLogin ,saleDate: dayBegin , facilityId:facId, isByParty:isByParty])).get("openingBalance");
 	facilityFDRMap.putAt("openingBalance", openingBalance);
-	boothFDRDet = FDRDetail.get(eachBoothId);
+	boothFDRDet = FDRDetail.get(facId);
 	fdrAmt = 0;
 	fdrNums = "";
 	if(boothFDRDet){
@@ -137,20 +144,22 @@ boothsList.each{ eachBoothId ->
 	}
 	if(UtilValidate.isNotEmpty(reportTypeFlag) && reportTypeFlag=="DuesFDRAvgReport"){
 		milkAvgTotal=0;
-		if(UtilValidate.isNotEmpty(dayTotals)&& dayTotals.containsKey(eachBoothId)){
-			boothTotal = dayTotals.get(eachBoothId).get("totalRevenue");
+		if(UtilValidate.isNotEmpty(dayTotals)&& dayTotals.containsKey(eachPartyId)){
+			boothTotal = dayTotals.get(eachPartyId).get("totalRevenue");
 			milkAvgTotal=(boothTotal/curntMonthDays);
 		}
-		partyProfileDetail = delegator.findList("PartyProfileDefault", EntityCondition.makeCondition("partyId", EntityOperator.EQUALS, eachBoothId), null, null, null, false);
+		facilityFDRMap.putAt("milkAvgTotal", milkAvgTotal);
+		partyProfileDetail = delegator.findList("PartyProfileDefault", EntityCondition.makeCondition("partyId", EntityOperator.EQUALS, eachPartyId), null, null, null, false);
 		partyProfileDetail = EntityUtil.filterByDate(partyProfileDetail, dayEnd);
 		if(partyProfileDetail){
-			partyPayType = EntityUtil.getFirst(partyProfileDetail);
-			partyPayMeth = partyPayType.defaultPayMeth;
+			 partyPayType = EntityUtil.getFirst(partyProfileDetail);
+			 partyPayMeth = partyPayType.defaultPayMeth;
 		}
-		paymentMethodType = delegator.findList("PaymentMethodType", EntityCondition.makeCondition("paymentMethodTypeId",EntityOperator.EQUALS, partyPayMeth), null, null, null, false);
-		paymentType = EntityUtil.getFirst(paymentMethodType);
-		facilityFDRMap.putAt("milkAvgTotal", milkAvgTotal);
-		facilityFDRMap.putAt("paymentMethodType", paymentType.description);
+		if(UtilValidate.isNotEmpty(partyPayMeth)){
+			  paymentMethodType = delegator.findList("PaymentMethodType", EntityCondition.makeCondition("paymentMethodTypeId",EntityOperator.EQUALS, partyPayMeth), null, null, null, false);
+			  paymentType = EntityUtil.getFirst(paymentMethodType);
+			  facilityFDRMap.putAt("paymentMethodType", paymentType.description);
+		}
 	}
 	
 	diffAmount = openingBalance-fdrAmt;

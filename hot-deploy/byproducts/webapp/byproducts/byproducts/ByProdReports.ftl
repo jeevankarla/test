@@ -870,7 +870,15 @@ function reportTypeChangeFunc() {
       						<td width="30%">Dues FDR With Average Sales<input  type="hidden"  value="DuesFDRAvgReport"   name="reportTypeFlag"/></td>
       						<td width="15%">From<input  type="text" size="18pt" id="AvgFDRFDate" readonly  name="fromDate"/></td>
       						<td width="15%">Thru<input  type="text" size="18pt" id="AvgFDRTDate" readonly  name="thruDate"/></td>
-	      					<td width="15%"></td>
+	      					<td width="15%">Category:<select name="categoryTypeEnum" id="categoryTypeEnum" class='h4'>
+		                		<option value="All">All</option>
+		                		<#list categoryTypeList as categoryType>  
+		                  	    	<option value='${categoryType.enumId}'>
+			                    		${categoryType.description}
+			                        </option>
+		                		</#list>            
+								</select>
+			      			</td>
 	      					<td width="15%"></td>
 							<td width="10%"><input type="submit" value="Download" class="buttontext"></td>       			
       					</form>
@@ -1105,7 +1113,7 @@ function reportTypeChangeFunc() {
 	                  </tr>-->
 	  				 <tr class="alternate-row">
 						<form id="regularIceCreamSaleReport" name="regularIceCreamSaleReport" method="post" action="<@ofbizUrl>RegularIceCreamSaleBookReport.pdf</@ofbizUrl>" target="_blank">	
-							<td width="30%">Regular Ice Cream Sale Book Report</td>
+							<td width="30%">Regular Sale Book Report</td>
 							<td width="15%">From<input  type="text" size="18pt" id="regularIceCreamfDate" readonly  name="fromDate"/></td>
 						    <td width="15%">To<input  type="text" size="18pt" id="regularIceCreamtDate" readonly  name="thruDate"/></td>
 			      			<td width="15%">By<select name="categoryType">
@@ -1163,6 +1171,7 @@ function reportTypeChangeFunc() {
 								<select name='reportTypeFlag' id = "reportTypeFlag">
 									<option value='InvoiceSales'>InvoiceSales</option>
 									<option value='InvoiceSalesAbstract'>InvoiceSalesAbstract</option>
+								<!--<option value='PPDNandiniSales'>PPDNandiniSales</option>-->
 								</select>
 							</td>
 	      					<td width="15%"></td>
