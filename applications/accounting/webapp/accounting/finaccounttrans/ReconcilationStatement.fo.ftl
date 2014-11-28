@@ -82,7 +82,7 @@ under the License.
                    			</#if>
                    			<#if finAccountTrans.transactionDate?has_content>
                    				<fo:table-cell border-style="solid">
-                       			<fo:block  keep-together="always" font-size="10pt">${finAccountTrans.transactionDate?if_exists}</fo:block>  
+                       			<fo:block  font-size="10pt">${finAccountTrans.transactionDate?if_exists}</fo:block>  
                    			</fo:table-cell>
                    			</#if>  
                   			<fo:table-cell border-style="solid">
@@ -167,7 +167,7 @@ under the License.
                    			</#if>
                    		<#if finAccountTrans.transactionDate?has_content>
                    				<fo:table-cell border-style="solid">
-                       			<fo:block  keep-together="always" font-size="10pt" text-align="left" white-space-collapse="false">${finAccountTrans.transactionDate?if_exists}</fo:block>  
+                       			<fo:block font-size="10pt" text-align="left" white-space-collapse="false">${finAccountTrans.transactionDate?if_exists}</fo:block>  
                    			</fo:table-cell>
                    		</#if>    
                    		<fo:table-cell border-style="solid">

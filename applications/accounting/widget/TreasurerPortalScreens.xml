@@ -1749,9 +1749,10 @@
                 <set field="parameters.glReconciliationId" value="${glReconciliationId}"/><!-- instead of Form we are setting in Screen  -->
                 <set field="parameters.finAccountId" value="${finAccountId}"/>
                  <set field="parameters.statusId" value="FINACT_TRNS_CREATED"/>
+                 <set field="fromTransactionDate" value="${parameters.fromDateReport}"/>
+                  <set field="thruTransactionDate" value="${parameters.thruDateReport}"/>
                  <set field="glReconciliationId" value="${glReconciliationId}"/>
-                 <set field="parameters.noConditionFind" value="Y"/>
-                 
+                 <set field="parameters.noConditionFind" value="Y"/>                       
                 <service service-name="getFinAccountTransListAndTotals" result-map="finAccountTransListAndTotals" auto-field-map="true"/>
                 <set field="finAccountTransList" type="List" from-field="finAccountTransListAndTotals.finAccountTransList"/>
                 <set field="searchedNumberOfRecords" type="Integer" from-field="finAccountTransListAndTotals.searchedNumberOfRecords"/>
@@ -2857,6 +2858,8 @@
                 <set field="parameters.glReconciliationId" value="${glReconciliationId}"/><!-- instead of Form we are setting in Screen  -->
                 <set field="parameters.finAccountId" value="${finAccountId}"/>
                  <set field="parameters.statusId" value="FINACT_TRNS_CREATED"/>
+                 <set field="fromTransactionDate" value="${parameters.fromDateReport}"/>
+                  <set field="thruTransactionDate" value="${parameters.thruDateReport}"/>                 
                  <set field="glReconciliationId" value="${glReconciliationId}"/>
                  <set field="finAccountTransTypeId" from-field="parameters.finAccountTransType" />
 				 <service service-name="getFinAccountTransListAndTotals" result-map="finAccountTransListAndTotals" auto-field-map="true"/>
@@ -2938,4 +2941,37 @@
 			</widgets>
 		</section>
 	</screen>
+	<screen name="AccountReports">
+        <section>
+            <actions>
+                <set field="titleProperty" value="Accounting Reports"/>
+                  <set field="tabButtonItem" value="Reports"/>
+                 <set field="tabButtonItem2" value="Reports"/>
+                <set field="viewIndex" from-field="parameters.VIEW_INDEX" type="Integer" default-value="0"/>
+                <set field="viewSize" from-field="parameters.VIEW_SIZE" type="Integer" default-value="20"/>
+               <!--  <set field="displayAdvancedSearch" from-field="parameters.displayAdvancedSearch"/> -->
+                <set field="parameters.ownerPartyId" value="Company"/>
+                <set field="parameters.finAccountTypeId" value="BANK_ACCOUNT"/>
+                <set field="noConditionFind" value="Y"/>
+                <!-- <field name="noConditionFind"><hidden value="Y"/> -->
+                <set field="screenFlag" value="REPORTS" /> 
+           <entity-condition entity-name="FinAccount" list="finAccounts">
+           <condition-list> 
+           <condition-expr field-name="finAccountTypeId" operator="equals" from-field="parameters.finAccountTypeId"/>
+		   <condition-expr field-name="ownerPartyId" operator="equals" from-field="parameters.ownerPartyId" />
+		   </condition-list> 
+				</entity-condition>     
+                <set field="hasFinEditPermission" from-field="permResult.hasPermission"/>
+            </actions>
+            <widgets>
+                 <decorator-screen name="CommonTreasurerPortalDecorator" location="component://accounting/widget/CommonScreens.xml"> 
+                    <decorator-section name="body">
+								<platform-specific>
+		                           	<html><html-template location="component://accounting/webapp/accounting/reports/AccountingReports.ftl"/></html>
+		                       	</platform-specific>						
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
 </screens>

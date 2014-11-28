@@ -2109,6 +2109,15 @@
 			<link target="FindTreasurerPayments">
 			</link>
 		</menu-item>
+		<menu-item name="Reports" title="Reports">
+		     <condition>
+				<or>
+				    <if-has-permission permission="ACCOUNTING"  action="_TREASURER"/>
+            	</or>            
+            </condition>
+			<link target="AccountReports">
+			</link>
+		</menu-item>
           
           <!-- <menu-item name="EditFinAccountTransAlt" title="${uiLabelMap.AccountingDepositWithdraw}">
           <condition>

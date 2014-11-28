@@ -30,21 +30,19 @@ import java.text.ParseException;
 
 
 userLogin= context.userLogin;
-
 finAccountId = parameters.finAccountId;
 if (!finAccountId && request.getAttribute("finAccountId")) {
   finAccountId = request.getAttribute("finAccountId");
 }
 //Debug.log("===finAccountId==sadasd="+finAccountId);
 finAccount = delegator.findOne("FinAccount", [finAccountId : finAccountId], false);
-
 context.finAccount = finAccount;
 context.finAccountId = finAccountId;
 tabButtonItem="FindFinAccountAlt";
+
 if (context.finAccount != null) {
 	session.setAttribute("ctxFinAccountId",context.finAccountId);
 }
-
 context.ctxFinAccountId = session.getAttribute("ctxFinAccountId");
 if (context.ctxFinAccountId != null) {
 	ctxFinAccount = delegator.findByPrimaryKey("FinAccount", [finAccountId : context.ctxFinAccountId]);
@@ -63,13 +61,11 @@ if (context.ctxFinAccountId != null) {
 	
 	context.ctxFinAccount = ctxFinAccount;
 }
-
 //Debug.log("===finAccountId==="+finAccountId);
 //Debug.log("===tabButtonItem==="+tabButtonItem);
 
 finAccountTypes = delegator.findList("FinAccountAndType", EntityCondition.makeCondition("parentTypeId", EntityOperator.IN, UtilMisc.toList("DEPOSIT_RECEIPT", "DEPOSIT_PAID")), UtilMisc.toSet("finAccountTypeId"), null, null, false);
 finAccountTypeIds = EntityUtil.getFieldListFromEntityList(finAccountTypes, "finAccountTypeId", true);
-
 if(UtilValidate.isNotEmpty(parameters.screenFlag)){
 	conditionList = [];
 	if(parameters.screenFlag == "DEPOSIT_ACCOUNT"){
@@ -98,8 +94,6 @@ if(UtilValidate.isNotEmpty(parameters.findPaymentMethodType)){
 	List paymentMethodTypeList = delegator.findList("PaymentMethodType", EntityCondition.makeCondition(conditionList, EntityOperator.AND), null, null, null, false);
 	context.paymentMethodTypeList=paymentMethodTypeList;
 }
-
-
 SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
 if(UtilValidate.isNotEmpty(parameters.fromTransDate)){
 	Timestamp daystart;
@@ -116,14 +110,31 @@ if(UtilValidate.isNotEmpty(parameters.thruTransDate)){
 	try {
 		dayend = UtilDateTime.toTimestamp(dateFormat.parse(parameters.thruTransDate));
 	} catch (ParseException e) {
-		Debug.logError(e, "Cannot parse date string: " + parameters.thruTransDate, "");
-	   
+		Debug.logError(e, "Cannot parse date string: " + parameters.thruTransDate, "");	   
 	}
 	parameters.thruTransactionDate=UtilDateTime.getDayEnd(dayend);
 	parameters.thruTransDate=null;
 }
-
-
-
-
+//finAccount Reconcilation Report will use this logic....
+SimpleDateFormat sdf = new SimpleDateFormat("yyyy, MMM dd");
+if(UtilValidate.isNotEmpty(parameters.fromDate)){
+	Timestamp daystart;
+     try {
+		 daystart = UtilDateTime.toTimestamp(sdf.parse(parameters.fromDate));
+	 	 } catch (ParseException e) {
+		  	Debug.logError(e, "Cannot parse date string: " + parameters.fromDate, "");
+		  	}
+	parameters.fromDateReport=UtilDateTime.getDayStart(daystart);
+	parameters.fromDate=null;
+}
+if(UtilValidate.isNotEmpty(parameters.thruDate)){
+	Timestamp dayend;
+	try {
+		dayend = UtilDateTime.toTimestamp(sdf.parse(parameters.thruDate));
+	} catch (ParseException e) {
+		Debug.logError(e, "Cannot parse date string: " + parameters.thruDate, "");	   
+	     }	
+	parameters.thruDateReport=UtilDateTime.getDayEnd(dayend);
+	parameters.thruDate=null;
+}
 
