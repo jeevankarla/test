@@ -46,16 +46,18 @@
  
  def sdf = new SimpleDateFormat("MMMM dd, yyyy");
  try {
-	 if (parameters.fromDate) {
+	 if (UtilValidate.isNotEmpty(parameters.fromDate)) {
 		 context.froDate = parameters.fromDate;
 		 fromDate = UtilDateTime.getDayStart(new java.sql.Timestamp(sdf.parse(parameters.fromDate).getTime()));
+		 context.froDate = fromDate;
 	 }else {
 	    //froDate = UtilDateTime.getDayStart(UtilDateTime.nowTimestamp());
 		 froDate = UtilDateTime.addDaysToTimestamp(UtilDateTime.getDayStart(UtilDateTime.nowTimestamp()),-7);
 		 context.froDate = froDate
 		 fromDate = froDate;
 	 }
-	 if (parameters.thruDate) {
+	 
+	 if (UtilValidate.isNotEmpty(parameters.thruDate)) {
 		 context.toDate = parameters.thruDate;
 		 thruDate = UtilDateTime.getDayEnd(new java.sql.Timestamp(sdf.parse(parameters.thruDate).getTime()));
 	 }else {
@@ -83,7 +85,6 @@
 	 conditionList.add(EntityCondition.makeCondition("productId", EntityOperator.EQUALS, parameters.productId));
 	 context.productId = parameters.productId;
  }
- 
  productId = parameters.productId;
  context.productId = productId;
  if (productId) {
@@ -244,12 +245,11 @@
 	 requirmentBystatusMap =[:];
 	 for(GenericValue requirment : requirmentsList){
 		 String statusId = requirment.getString("statusId");
-		 Debug.log("statusId===="+statusId);
+		 quantity = requirment.quantity;
 		 if(UtilValidate.isEmpty(requirmentBystatusMap.get(statusId))){
-			 requirmentBystatusMap.put(statusId , 1);
+			 requirmentBystatusMap.put(statusId , quantity);
 		 }else{
-		 	Debug.log("requirmentBystatusMap===="+requirmentBystatusMap.get(statusId));
-		 	requirmentBystatusMap.put(statusId , requirmentBystatusMap.get(statusId)+1);
+		 	requirmentBystatusMap.put(statusId , requirmentBystatusMap.get(statusId)+quantity);
 		 }
 	 }
 	 requirmentByStatusList = [];
@@ -272,17 +272,17 @@
 	 //condList.add(EntityCondition.makeCondition("custRequestDate", EntityOperator.GREATER_THAN_EQUAL_TO, fromDate));
 	 //condList.add(EntityCondition.makeCondition("custRequestDate", EntityOperator.LESS_THAN_EQUAL_TO, thruDate));
 	 cond = EntityCondition.makeCondition(condList,EntityOperator.AND);
-	 custRequestsList = delegator.findList("CustRequestAndItemAndAttribute", cond, UtilMisc.toSet("custRequestId","fromPartyId","custRequestDate","statusId","itemStatusId","responseRequiredDate"), ['-custRequestDate'], null, false);
+	 custRequestsList = delegator.findList("CustRequestAndItemAndAttribute", cond, UtilMisc.toSet("custRequestId","fromPartyId","custRequestDate","itemStatusId","responseRequiredDate" ,"quantity"), ['-custRequestDate'], null, false);
 	 context.custRequestsList = custRequestsList;
 	 custRequestsByStatusMap =[:];
 	 for(GenericValue custRequest : custRequestsList){
 		 String statusId = custRequest.getString("itemStatusId");
+		 quantity = custRequest.quantity;
 		 Debug.log("statusId****===="+statusId);
 		 if(UtilValidate.isEmpty(custRequestsByStatusMap.get(statusId))){
-			 custRequestsByStatusMap.put(statusId , 1);
+			 custRequestsByStatusMap.put(statusId , quantity);
 		 }else{
-		   Debug.log("statusId****===="+custRequestsByStatusMap.get(statusId));
-			 custRequestsByStatusMap.put(statusId , custRequestsByStatusMap.get(statusId)+1);
+			 custRequestsByStatusMap.put(statusId , custRequestsByStatusMap.get(statusId)+quantity);
 		 }
 	 }
 	 

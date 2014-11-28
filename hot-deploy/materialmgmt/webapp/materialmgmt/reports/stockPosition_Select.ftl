@@ -63,7 +63,7 @@ $(document).ready(function(){
 		$('#ui-datepicker-div').css('clip', 'auto');
 
 	// fetch the charts for today
-	  	    $('#loader').show();
+	  	 /*    $('#loader').show();
      		$('#result').hide(); 
 	        $.get(  
             "${ajaxUrl}",  
@@ -81,7 +81,7 @@ $(document).ready(function(){
         );  
         
 	// also set the click handler
-  	$("#getCharts").click(function(){  
+    $("#getCharts").click(function(){  
   	    $('#loader').show();
      	$('#result').hide(); 
   	    
@@ -100,9 +100,9 @@ $(document).ready(function(){
      			$('#result').show();            
             },  
             "html"  
-        );  
+        ); 
         return false;
-    });
+    });*/ 
 });
 
 </script>
@@ -112,16 +112,16 @@ $(document).ready(function(){
       	<h3>Select Period</h3>	
      </div>
     <div class="screenlet-body">
-	  <form name="StockAnalysis">
+	  <form name="StockAnalysis" action="stockPosition">
 		<table class="basic-table" cellspacing="0">
 			<tr>
 			    <input class='h2' type="hidden" id="showAllFacilities" name="showAllFacilities"/>
         		<td align="right" width="10%"><span class='h3'>From: </span></td>
-            	<td width="20%"><input class='h2' type="text" id="fromDate" name="fromDate"/></td>
+            	<td width="20%"><input class='h2' type="text" id="fromDate" name="fromDate" value="${parameters.fromDate?if_exists}"/></td>
 				<td width="2%"><span class='h3'>To: </span></td>
-				<td width="20%"><input class='h2' type="text" id="thruDate" name="thruDate"/></td>
+				<td width="20%"><input class='h2' type="text" id="thruDate" name="thruDate" value="${parameters.thruDate?if_exists}"/></td>
 				<td width="10%"><span class='h3'>Product: </span></td>
-				<td align="left" width="10%"><@htmlTemplate.lookupField value="${productId?if_exists}" formName="StockAnalysis" name="productId" id="productId" fieldFormName="LookupProduct"/></td>
+				<td align="left" width="10%"><@htmlTemplate.lookupField value="${parameters.productId?if_exists}" formName="StockAnalysis" name="productId" id="productId" fieldFormName="LookupProduct"/></td>
 				<td><input type="submit" value="Submit" id="getCharts" class="smallSubmit" /></td>
 			</tr>
     	</table> 
@@ -131,10 +131,10 @@ $(document).ready(function(){
 	</div>
 </div>
 
-<div id="loader" > 
+<#-- <div id="loader" > 
       <p align="center" style="font-size: large;">
         <img src="<@ofbizContentUrl>/images/ajax-loader64.gif</@ofbizContentUrl>">
       </p>
-</div>
+</div> -->
 
 <div id="result"/>

@@ -265,7 +265,7 @@ $(document).ready(function(){
 		},
 		tooltip: true,
 		tooltipOpts: {
-			content: "%s %p.2%  (%y)", // show percentages, rounding to 2 decimal places
+			content: "%s %p.2%  (Qty %y)", // show percentages, rounding to 2 decimal places
 			shifts: {
 				x: 20,
 				y: 0
@@ -308,7 +308,7 @@ $(document).ready(function(){
 		},
 		tooltip: true,
 		tooltipOpts: {
-			content: "%s %p.2%   (Rs %y)", // show percentages, rounding to 2 decimal places
+			content: "%s %p.2%   (Qty %y)", // show percentages, rounding to 2 decimal places
 			shifts: {
 				x: 20,
 				y: 0
@@ -444,10 +444,9 @@ $(document).ready(function(){
 	      <h3>Requirement (${froDate?date} - ${toDate?date})<#if productId?exists> For Product : ${productId} </#if></h3>
 	    </div>
 	    <div class="screenlet-body">
-	   		<div id="chart" class="graph" style="margin-left:20px;margin-top:10px;"></div>
+	   		<div id="chart" class="graph" style="margin-left:10px;margin-top:10px;"></div>
 	   		<br><br>
-	  
-			<div id="myGrid1" style="width:10px;height:10px;margin-left:10px;"></div>   		
+	  		
 	    </div>
 	</div>
 </div>
@@ -457,13 +456,12 @@ $(document).ready(function(){
 	<div class="screenlet">
 	  
 	    <div class="screenlet-title-bar">
-	      <h3> Requests (${froDate?date} - ${toDate?date})<#if productId?exists> For Product : ${productId} </#if></h3>
+	      <h3> Indents (${froDate?date} - ${toDate?date})<#if productId?exists> For Product : ${productId} </#if></h3>
 	    </div>
 	    <div class="screenlet-body">
-	   		<div id="chart2" class="graph" style="margin-left:20px;margin-top:10px;"></div>
+	   		<div id="chart2" class="graph" style="margin-left:10px;margin-top:10px;"></div>
 	   		<br><br>
-	  
-			<div id="myGrid2" style="width:10px;height:10px;margin-left:10px;"></div>   		
+	  		
 	    </div>
 	    
 	</div>
