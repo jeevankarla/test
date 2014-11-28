@@ -99,6 +99,7 @@ if(UtilValidate.isNotEmpty(BillingList)){
 										dearnessAllowance =0;
 										irAllowance =0;
 										personalPay = 0;
+										specialPay = 0;
 										basic = periodTotals.get("PAYROL_BEN_SALARY");
 										if(UtilValidate.isEmpty(basic)){
 											basic = 0;
@@ -115,7 +116,11 @@ if(UtilValidate.isNotEmpty(BillingList)){
 										if(UtilValidate.isEmpty(personalPay)){
 											personalPay = 0;
 										}
-										Wages = basic+dearnessAllowance+irAllowance+personalPay;
+										specialPay = periodTotals.get("PAYROL_BEN_SPLPAY");
+										if(UtilValidate.isEmpty(specialPay)){
+											specialPay = 0;
+										}
+										Wages = basic+dearnessAllowance+irAllowance+personalPay+specialPay;
 										detailsMap.put("Wages",Wages);
 										employeeContribtn=0;
 										employerContribtn=0;
@@ -172,8 +177,7 @@ if(UtilValidate.isNotEmpty(BillingList)){
 									grossAmt = (periodTotals.get("grossBenefitAmt"));
 									if(UtilValidate.isNotEmpty(grossAmt)){
 										gross = (periodTotals.get("grossBenefitAmt")-conveyanceAmt);
-									}
-									if(UtilValidate.isEmpty(gross)){
+									}else{
 										gross = 0;
 									}
 									detailsMap.put("gross",gross);
@@ -286,6 +290,7 @@ if(UtilValidate.isNotEmpty(BillingList)){
 								deductionAmount = 0;
 								accountNo = 0;
 								deductionAmt=0;
+								gross = 0;
 								balance = 0;
 								gisNo = 0;
 								closingBalance = 0;
@@ -304,6 +309,7 @@ if(UtilValidate.isNotEmpty(BillingList)){
 												dearnessAllowance =0;
 												irAllowance =0;
 												personalPay = 0;
+												specialPay = 0;
 												basic = periodTotals.get("PAYROL_BEN_SALARY");
 												if(UtilValidate.isEmpty(basic)){
 													basic = 0;
@@ -320,7 +326,11 @@ if(UtilValidate.isNotEmpty(BillingList)){
 												if(UtilValidate.isEmpty(personalPay)){
 													personalPay = 0;
 												}
-												Wages = basic+dearnessAllowance+irAllowance+personalPay;
+												specialPay = periodTotals.get("PAYROL_BEN_SPLPAY");
+												if(UtilValidate.isEmpty(specialPay)){
+													specialPay = 0;
+												}
+												Wages = basic+dearnessAllowance+irAllowance+personalPay+specialPay;
 												detailsMap.put("Wages",Wages);
 											}
 											deductionAmt= partyDed.cost;
@@ -333,9 +343,8 @@ if(UtilValidate.isNotEmpty(BillingList)){
 											gross = periodTotals.get("grossBenefitAmt");
 											if(UtilValidate.isEmpty(gross)){
 												gross = 0;
-											}else{
-												detailsMap.put("gross",gross);
 											}
+											detailsMap.put("gross",gross);
 											List loanRecoveryList=[];
 											loanRecoveryList.add(EntityCondition.makeCondition("partyId", EntityOperator.EQUALS, employeeId));
 											loanRecoveryList.add(EntityCondition.makeCondition("loanTypeId", EntityOperator.EQUALS, dedTypeId));
