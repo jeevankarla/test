@@ -100,6 +100,19 @@ under the License.emplpunch
         <auto-attributes mode="IN" include="pk" optional="false"/>
         <auto-attributes mode="IN" include="nonpk" optional="true"/>
     </service>
+    <service name="createDeputEmply" engine="simple" default-entity-name="PartyRole"
+             location="component://humanres/script/org/ofbiz/humanres/HumanResServices.xml" invoke="createDeputaionParty" auth="true">
+        <description>Create Deputation Role for a Party</description>
+        <permission-service service-name="humanResManagerPermission" main-action="EMPLOYEE_EDIT"/>
+        <auto-attributes mode="IN" include="pk" optional="false"/>
+        <auto-attributes mode="IN" include="nonpk" optional="true"/>
+    </service>
+    <service name="deleteDeputEmply" engine="simple" default-entity-name="PartyRole"
+             location="component://humanres/script/org/ofbiz/humanres/HumanResServices.xml" invoke="deleteDeputaionParty" auth="true">
+        <description>Delete Deputation for Party</description>
+        <permission-service service-name="humanResManagerPermission" main-action="EMPLOYEE_EDIT"/>
+        <auto-attributes mode="IN" include="pk" optional="false"/>
+    </service>
     <service name="createBusTimings" engine="simple" default-entity-name="DailyBusTimings"
     location="component://humanres/script/org/ofbiz/humanres/HumanResServices.xml" invoke="createBusTimings" auth="true">
     	<description>Create Bus Timings</description>

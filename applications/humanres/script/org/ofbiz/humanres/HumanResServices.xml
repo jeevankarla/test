@@ -131,6 +131,35 @@
         <entity-one entity-name="PartySkill" value-field="lookedUpValue"/>
         <remove-value value-field="lookedUpValue"/>
     </simple-method>
+    
+    <simple-method method-name="createDeputaionParty" short-description="Create Party Role">
+        <make-value entity-name="PartyRole" value-field="newEntity"/>
+        <set-pk-fields map="parameters" value-field="newEntity"/>
+        <set-nonpk-fields map="parameters" value-field="newEntity"/>
+        <entity-one entity-name="PartyRole" value-field="partyRole" auto-field-map="true"/>
+        <if>
+            <condition>
+                <and>
+                   <if-compare-field field="partyRole.partyId" to-field="parameters.partyId" operator="equals"/>
+                   <if-compare-field field="partyRole.roleTypeId" to-field="parameters.roleTypeId" operator="equals"/>
+                </and>
+            </condition>
+            <then>
+                 <add-error>
+                    <fail-message message="Record with the selected combination already exists.Please try with Other combination."/>
+                 </add-error>
+                 <check-errors/>
+            </then>
+            <else>
+                <create-value value-field="newEntity"/>
+            </else>
+        </if>
+    </simple-method>
+    
+    <simple-method method-name="deleteDeputaionParty" short-description="Delete Deputation of a Party">
+        <entity-one entity-name="PartyRole" value-field="lookedUpValue"/>
+        <remove-value value-field="lookedUpValue"/>
+    </simple-method>
 
     <simple-method method-name="createPerfReview" short-description="Create a Performance Review">
         <make-value entity-name="PerfReview" value-field="newEntity"/>

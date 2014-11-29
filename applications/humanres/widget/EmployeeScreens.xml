@@ -274,7 +274,7 @@ under the License.
 		                                        <container style="profile-right">
 		                                            <include-screen name="EmployeeProfilePicture" location="component://humanres/widget/EmployeeScreens.xml"/>
 		                                            <include-screen name="CurrentEmploymentData" location="component://humanres/widget/EmployeeScreens.xml"/>
-		                                           
+		                                           <include-screen name="DeputationEmply" location="component://humanres/widget/EmployeeScreens.xml"/>
 <!--		                                            <include-screen name="Attributes" location="component://party/widget/partymgr/ProfileScreens.xml"/>-->
 		                                            <include-screen name="Contact" location="component://party/widget/partymgr/ProfileScreens.xml"/>
 													 <include-screen name="EditAccountDetails" location="component://humanres/widget/EmployeeScreens.xml"/>
@@ -383,6 +383,24 @@ under the License.
 		                            <include-form name="AddLanguage" location="component://humanres/widget/forms/EmployeeForms.xml" />		                        
                             	<screenlet>                   
 		                        	<include-form name="ListLanguage" location="component://humanres/widget/forms/EmployeeForms.xml" />
+								</screenlet>
+								</screenlet>
+					</widgets>
+				</section>
+			</widgets>	
+		</section>
+	</screen>
+	<screen name="DeputationEmply">
+		<section>
+			<actions>
+			</actions>
+			<widgets>
+				<section>
+					<widgets>
+						<screenlet id="EmplType" title="Employee Type" collapsible="true">
+		                            <include-form name="AddDeputation" location="component://humanres/widget/forms/EmployeeForms.xml" />		                        
+                            	<screenlet>                   
+		                        	<include-form name="ListDeputation" location="component://humanres/widget/forms/EmployeeForms.xml" />
 								</screenlet>
 								</screenlet>
 					</widgets>

@@ -274,8 +274,9 @@ if(UtilValidate.isNotEmpty(timePeriodId)){
 						List conDeptList=[];
 						conDeptList.add(EntityCondition.makeCondition("partyId", EntityOperator.IN,employementIds));
 						conDeptList.add(EntityCondition.makeCondition("date",EntityOperator.EQUALS,holiday));
+						conDeptList.add(EntityCondition.makeCondition("encashmentStatus",EntityOperator.EQUALS,"CASH_ENCASHMENT"));
 						conDept=EntityCondition.makeCondition(conDeptList,EntityOperator.AND);
-						emplHolidayAttendanceList = delegator.findList("EmplDailyAttendanceDetail", conDept ,UtilMisc.toSet("date"),null, null, false );
+						emplHolidayAttendanceList = delegator.findList("EmplDailyAttendanceDetail", conDept ,UtilMisc.toSet("partyId","date"),null, null, false );
 						tempDayMap.put(UtilDateTime.toDateString(holiday,"MMM dd, yyyy"),emplHolidayAttendanceList.size());
 						tempDayList.add(tempDayMap);
 						

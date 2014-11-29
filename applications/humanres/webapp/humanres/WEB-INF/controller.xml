@@ -1064,6 +1064,18 @@ under the License.
         <response name="success" type="view" value="viewEmployeeProfile"/>
         <response name="error" type="view" value="viewEmployeeProfile"/>
     </request-map>
+    <request-map uri="createDeputEmply">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="createDeputEmply"/>
+        <response name="success" type="view" value="viewEmployeeProfile"/>
+        <response name="error" type="view" value="viewEmployeeProfile"/>
+    </request-map>
+    <request-map uri="deleteDeputEmply">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="deleteDeputEmply"/>
+        <response name="success" type="view" value="viewEmployeeProfile"/>
+        <response name="error" type="view" value="viewEmployeeProfile"/>
+    </request-map>
     <request-map uri="updateEmployeeSkill">
         <security https="true" auth="true"/>
         <event type="service" invoke="updatePartySkill"/>

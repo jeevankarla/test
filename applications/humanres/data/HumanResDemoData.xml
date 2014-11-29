@@ -209,4 +209,7 @@ under the License.
     <WorkShiftTypePeriodMap  shiftPeriodId="102" shiftTypeId="SHIFT_01" isDefault="Y"/> 
     <WorkShiftTypePeriodMap  shiftPeriodId="103" shiftTypeId="SHIFT_NIGHT" isDefault="Y"/> 
     
+    <!-- Deputation Empl Type -->
+     <RoleType  description="Deputation Employee"  roleTypeId="DEPUTATION_EMPLY"/>
+    
 </entity-engine-xml>

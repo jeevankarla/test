@@ -790,6 +790,39 @@
     </field>
    <field name="submitButton" title="${uiLabelMap.CommonAdd}"><submit button-type="button"/></field>
    </form>
+   
+   <form name="AddDeputation" type="single" target="createDeputEmply">
+    <field name="partyId"><hidden value="${partyId}"/></field>
+    <field name="roleTypeId" title="Employee Type" tooltip="${uiLabelMap.CommonRequired}" required-field="true" widget-style="required">
+    	<drop-down allow-empty="true">
+				<entity-options entity-name="RoleType" key-field-name="roleTypeId" description="${description}">
+					<entity-constraint name="roleTypeId" value="DEPUTATION_EMPLY" />
+				</entity-options>
+			</drop-down>
+    </field>
+   <field name="submitButton" title="${uiLabelMap.CommonAdd}"><submit button-type="button"/></field>
+   </form>
+   
+   <form name="ListDeputation" type="list" list-name="emplList" default-table-style="basic-table">
+	
+	<actions>
+		<entity-condition entity-name="PartyRole">
+			<condition-list combine="and" >
+		 		<condition-expr field-name="partyId" from-field="partyId"/>
+		 		<condition-expr field-name="roleTypeId"  value="DEPUTATION_EMPLY"/>
+		 	</condition-list>
+		</entity-condition>
+	</actions>
+		<field name="partyId"><hidden value="${partyId}"/></field>
+		<field name="roleTypeId" title="Employee Type"><display-entity entity-name="RoleType"  key-field-name="roleTypeId" description="${description}" /></field>
+		 <field name="deleteLink" title="${uiLabelMap.CommonDelete}" widget-style="buttontext">
+            <hyperlink target="deleteDeputEmply" description="${uiLabelMap.CommonDelete}" also-hidden="false">
+                <parameter param-name="roleTypeId"/>
+                <parameter param-name="partyId"/>
+            </hyperlink>
+        </field>
+	</form>
+   
 	<form name="ListDependentContacts" type="list" list-name="dependents" default-table-style="basic-table" target="updateDependent">	
 		<row-actions>
         	<set field="dependentBirthDate" value="${bsh:org.ofbiz.base.util.UtilDateTime.getIntervalInDays(org.ofbiz.base.util.UtilDateTime.toTimestamp(birthDate), org.ofbiz.base.util.UtilDateTime.nowTimestamp())/365}Yrs"/>
