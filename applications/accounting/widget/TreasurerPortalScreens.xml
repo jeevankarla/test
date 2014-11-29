@@ -2955,12 +2955,19 @@
                 <set field="noConditionFind" value="Y"/>
                 <!-- <field name="noConditionFind"><hidden value="Y"/> -->
                 <set field="screenFlag" value="REPORTS" /> 
-           <entity-condition entity-name="FinAccount" list="finAccounts">
-           <condition-list> 
-           <condition-expr field-name="finAccountTypeId" operator="equals" from-field="parameters.finAccountTypeId"/>
-		   <condition-expr field-name="ownerPartyId" operator="equals" from-field="parameters.ownerPartyId" />
-		   </condition-list> 
-				</entity-condition>     
+		        <entity-condition entity-name="FinAccount" list="finAccounts">
+		           <condition-list> 
+		           <condition-expr field-name="finAccountTypeId" operator="equals" from-field="parameters.finAccountTypeId"/>
+				   <condition-expr field-name="ownerPartyId" operator="equals" from-field="parameters.ownerPartyId" />
+				   </condition-list> 
+				</entity-condition>  
+				<!--<entity-condition entity-name="PaymentType" list="paymentTypes">
+	                <condition-list combine="or">
+	                    <condition-expr field-name="parentTypeId" operator="equals" value="ADVANCES_PAYOUT"/>
+	                </condition-list>
+	                <order-by field-name="description"/>
+	            </entity-condition>
+	            -->   
                 <set field="hasFinEditPermission" from-field="permResult.hasPermission"/>
             </actions>
             <widgets>
