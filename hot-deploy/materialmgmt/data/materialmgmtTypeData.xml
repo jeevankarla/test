@@ -2,8 +2,12 @@
 <entity-engine-xml>
 
 	<CustRequestType custRequestTypeId="PRODUCT_REQUIREMENT" description="Request For Material" hasTable="N" />
+	
+	
 	<ProductCategoryAssocType description="PURCHASE INDENT" parentTypeId="INDENT" productCategoryAssocTypeId="PUR_INDENT"/>
 	
 	<ShipmentType description="Purchase Shipment" hasTable="N" shipmentTypeId="PURCHASE_SHIPMENT"/>
 	<ShipmentType description="Material Purchase Shipment" hasTable="N"  parentTypeId="PURCHASE_SHIPMENT" shipmentTypeId="MATERIAL_SHIPMENT"/>
+    
+     <StatusItem description="In Enquiry"  sequenceId="01" statusCode="IN Enquiry" statusId="REQ_IN_ENQUIRY" statusTypeId="REQUIREMENT_STATUS"/>
 </entity-engine-xml>
