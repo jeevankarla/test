@@ -25,6 +25,9 @@
     <menu name="HumanresNGTabBar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml"
           default-menu-item-name="HumanresProfile">      
         <menu-item name="main" title="Lookup Employees">
+        	<condition>
+            	<if-has-permission permission="HR"  action="_EMPL_PROFILE_VIEW"/>
+            </condition> 
             <link target="main">
             </link>
         </menu-item>
@@ -54,10 +57,11 @@
 		</menu-item>      
         <menu-item name="EmployeeLeave" title="${uiLabelMap.HumanResEmployeeLeave}">
         	<condition>
-        	  <or>
-        	     <if-has-permission permission="HR"  action="_EMPLLEAVE_VIEW"/>
-        	     <if-has-permission permission="HR"  action="_LEAVE_APPROVAL"/>
-        	  </or>
+        	  	<or>
+        	  		<if-has-permission permission="HR"  action="_EMPL_PROFILE_VIEW"/>
+        	     	<if-has-permission permission="HR"  action="_EMPLLEAVE_VIEW"/>
+        	     	<if-has-permission permission="HR"  action="_LEAVE_APPROVAL"/>
+        	  	</or>
             </condition>
             <link target="FindEmplLeaves"/>
         </menu-item>
@@ -85,8 +89,9 @@
         <menu-item name="Attendance" title="Attendance">
         	<condition>
         	   <or>
-	              <if-has-permission permission="HR"  action="_ATTENDANCE_VIEW"/>
-	              <if-has-permission permission="EMP"  action="_PUNCH_EDIT_UPDATE"/>
+        	   		<if-has-permission permission="HR"  action="_EMPL_PROFILE_VIEW"/>
+	              	<if-has-permission permission="HR"  action="_ATTENDANCE_VIEW"/>
+	              	<if-has-permission permission="EMP"  action="_PUNCH_EDIT_UPDATE"/>
             	</or>
             </condition> 
             <link target="DailyPunch"/>

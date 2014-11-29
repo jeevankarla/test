@@ -183,4 +183,11 @@ under the License.
       <SecurityGroupPermission groupId="WATER_ELECTR_VIEW" permissionId="WATER_ELECTR_VIEW"/>
       <SecurityGroupPermission groupId="FULLADMIN" permissionId="WATER_ELECTR_VIEW"/>
       
+      <SecurityPermission description="Allow to Access Lookup , Attendance and Leave screens in HumanRes Manager." permissionId="HR_EMPL_PROFILE_VIEW"/>  
+      <SecurityGroup description="Allow to Access Lookup , Attendance and Leave screens in HumanRes Manager." groupId="HR_EMPL_PROFILE_VIEW"/>
+      <SecurityGroupPermission groupId="HR_EMPL_PROFILE_VIEW" permissionId="HR_EMPL_PROFILE_VIEW"/>
+      <SecurityGroupPermission groupId="HR_EMPL_PROFILE_VIEW" permissionId="MYPORTAL_FACILITY"/> 
+      <SecurityGroupPermission groupId="HR_EMPL_PROFILE_VIEW" permissionId="HUMANRES_EMPLOYEE"/>
+      <SecurityGroupPermission groupId="FULLADMIN" permissionId="HR_EMPL_PROFILE_VIEW"/> 
+      
 </entity-engine-xml>
