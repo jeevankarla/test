@@ -302,7 +302,7 @@
                <set field="ajaxUrl" value="StockPositionInternal" type="String"/>
             </actions>
             <widgets>
-                 <decorator-screen name="materialmgmtNgCommonDecorator" location="${parameters.mainDecoratorLocation}">
+                 <decorator-screen name="CommonInventoryDecorator" location="${parameters.mainDecoratorLocation}">
                       <decorator-section name="body">  
                          <!-- <include-menu name="PurchasesTabBar" location="component://materialmgmt/widget/materialmgmtMenus.xml"/> -->
                         <section>
@@ -310,6 +310,7 @@
                                <platform-specific> 
                             		<html><html-template location="component://materialmgmt/webapp/materialmgmt/reports/stockPosition_Select.ftl"/></html>
                         		</platform-specific>  
+                        		<include-screen name="StockPositionInternal"/>
                             </widgets>
                         </section>
                     </decorator-section>
@@ -325,22 +326,22 @@
                   <property-map resource="CommonUiLabels" map-name="uiLabelMap" global="true"/>
 				<script location="component://materialmgmt/webapp/materialmgmt/WEB-INF/actions/reports/stockPosition.groovy"/>  
             </actions>  
-               <condition> 
-               <not><if-empty field="parameters.productId"/></not>
-            	</condition>     
+               <condition> <or>
+               		<not><if-empty field="parameters.productId"/></not>
+               		<not><if-empty field="productId"/></not>
+               </or>
+            	</condition> 
             <widgets>
-               
                   	<container>
 	                  	    <platform-specific> 
 	                            		<html><html-template location="component://materialmgmt/webapp/materialmgmt/reports/stockPosition.ftl"/></html>
 	                        </platform-specific>
                        
-                       
-		                  	<platform-specific>
+<!--                           <platform-specific>
 		                         <html><html-template location="component://materialmgmt/webapp/materialmgmt/reports/ProductInventorySummary.ftl"/></html>
-		                     </platform-specific>
+		                   </platform-specific>
 	                    
-	                     <platform-specific>
+ -->	                     <platform-specific>
 	                         <html><html-template location="component://materialmgmt/webapp/materialmgmt/reports/EditProductInventoryItems.ftl"/></html>
 	                     </platform-specific>
 	                   

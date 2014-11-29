@@ -19,16 +19,68 @@
             </actions>
             <widgets>
                 <include-screen name="GlobalDecorator" location="component://common/widget/CommonScreens.xml"/>
+               <!--   <include-screen name="ApplicationDecorator" location="component://commonext/widget/CommonScreens.xml"/> -->
             </widgets>
         </section>
     </screen>
-    
+     <screen name="inventory-leftbar">
+        <section>
+            <widgets>
+                <include-screen name="keywordsearchbox"/>
+            </widgets>
+        </section>
+    </screen>
+    <screen name="keywordsearchbox">
+        <section>
+           <!-- <actions>
+               <script location="component://materialmgmt/webapp/materialmgmt/WEB-INF/actions/reports/stockPosition.groovy"/>
+           </actions> -->
+            <widgets>
+                <screenlet id="ProductKeywordsPanel" title="${uiLabelMap.ProductInventory}" collapsible="true">
+                    <!-- <platform-specific><html><html-template location="component://product/webapp/catalog/find/keywordsearchbox.ftl"/></html></platform-specific> -->
+                     <platform-specific>
+		                     <html><html-template location="component://materialmgmt/webapp/materialmgmt/reports/ProductInventoryAlt.ftl"/></html>
+		              </platform-specific>
+                </screenlet>
+            </widgets>
+        </section>
+    </screen>
+    <screen name="CommonInventoryDecorator">
+        <section>
+            <actions>
+                <set field="headerItem" value="products"/>
+                <property-map resource="PartyUiLabels" map-name="uiLabelMap" global="true"/>
+                <property-map resource="OrderUiLabels" map-name="uiLabelMap" global="true"/>
+                <set field="productId" from-field="parameters.productId"/>
+                <script location="component://materialmgmt/webapp/materialmgmt/WEB-INF/actions/reports/stockPosition.groovy"/> 
+            </actions>
+            <widgets>
+                <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="left-column">
+                        <include-screen name="inventory-leftbar" share-scope="true"/>
+                    </decorator-section>
+                    <decorator-section name="body">
+                        <section>
+                            <widgets>
+                                <include-menu name="MaterailtMgmtNGTabBar" location="component://materialmgmt/widget/materialmgmtMenus.xml"/>
+                                <decorator-section-include name="body"/>
+                            </widgets>
+                            <fail-widgets>
+                                <label style="h3">${uiLabelMap.ProductCatalogViewPermissionError}</label>
+                            </fail-widgets>
+                        </section>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
     <screen name="materialmgmtCommonDecorator">
         <section>
             <actions>
             </actions>
             <widgets>
                 <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
+                     
                     <decorator-section name="body">
                         <section>
                             <condition>
