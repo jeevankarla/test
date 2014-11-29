@@ -245,7 +245,7 @@ function comparer(a, b) {
 	}
 	$(document).ready(function() {			
 		  	setUpItemList();
-		  	
+		  	headerTypeHandler();
 	});
 	
 function editClickHandler(row) {
