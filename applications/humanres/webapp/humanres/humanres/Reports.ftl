@@ -124,7 +124,7 @@ function makeDatePicker1(fromDateId ,thruDateId){
       			<td align="center">
 	   				  Organization Id :
       				<select name="partyId"  id="partyId"  onchange="javascript:setOrgPartyId();">
-      					<option value="Company">ANDHRA PRADESH DAIRY DEVELOPMENT CO-OP. FEDERATION LIMITED</option>
+      					<option value="Company"></option>
                 		<#list orgList as org>  
                 			<option value='${org.partyId}'>${org.groupName?if_exists}</option>
                 		</#list>             
