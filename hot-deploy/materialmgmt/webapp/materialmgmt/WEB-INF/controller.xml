@@ -95,6 +95,12 @@
        <response name="error" type="view" value="StoreProductIssue"/>
      </request-map>
      
+     <request-map uri="draftEnquiryForApprovedRequirementsEvent">
+       <security https="true" auth="true"/>
+       <event type="java" path="in.vasista.vbiz.purchase.MaterialRequestServices" invoke="draftEnquiryForApprovedRequirementsEvent"/>
+       <response name="success" type="view" value="ApprovedMatRequirementBySupplier"/>
+       <response name="error" type="view" value="ApprovedMatRequirementBySupplier"/>
+     </request-map>
      
      <request-map uri="quickMatPurchaseOrderEntry">
         <security https="true" auth="true"/>
@@ -169,8 +175,8 @@
        <response name="success" type="view" value="ApproveMaterialRequirement"/>
        <response name="error" type="view" value="ApproveMaterialRequirement"/>
      </request-map>
-     
-     <request-map uri="setRequestStatus">
+    
+    <request-map uri="setRequestStatus">
        <security https="true" auth="true"/>
        <event type="service" invoke="setRequestStatus"></event>
        <response name="success" type="view" value="FindMaterialRequest"/>
@@ -235,6 +241,12 @@
        <event type="service-multi" invoke="approveRequirement"/>
        <response name="success" type="view" value="ApproveMaterialRequirement"/>
        <response name="error" type="view" value="ApproveMaterialRequirement"/>
+   </request-map>
+   <request-map uri="draftMaterialRequirementToEnquiry">
+       <security https="true" auth="true"/>
+       <event type="service-multi" invoke="draftMaterialRequirementToEnquiry"/>
+       <response name="success" type="view" value="draftMaterialRequirementToEnquiry"/>
+       <response name="error" type="view" value="draftMaterialRequirementToEnquiry"/>
    </request-map>
    
    <request-map uri="ApprovedMatRequirementBySupplier">

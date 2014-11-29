@@ -692,4 +692,163 @@ public class MaterialRequestServices {
 		return result;
 	}
 	
+	//send Requirements for Enquiry
+	public static String draftEnquiryForApprovedRequirementsEvent(HttpServletRequest request, HttpServletResponse response) {
+		Delegator delegator = (Delegator) request.getAttribute("delegator");
+		LocalDispatcher dispatcher = (LocalDispatcher) request.getAttribute("dispatcher");
+		DispatchContext dctx =  dispatcher.getDispatchContext();
+		Locale locale = UtilHttp.getLocale(request);
+		Map<String, Object> result = ServiceUtil.returnSuccess();
+	    HttpSession session = request.getSession();
+	    GenericValue userLogin = (GenericValue) session.getAttribute("userLogin");
+		Timestamp nowTimeStamp = UtilDateTime.nowTimestamp();
+		
+		Timestamp requestDate = null;
+		Map<String, Object> paramMap = UtilHttp.getParameterMap(request);
+		int rowCount = UtilHttp.getMultiFormRowCount(paramMap);
+		if (rowCount < 1) {
+			Debug.logError("No rows to process, as rowCount = " + rowCount, module);
+			return "error";
+		}
+	  	
+		boolean beganTransaction = false;
+		try{
+			
+	        List requirementList = FastList.newInstance();
+	        String requirementId = "";
+			for (int i = 0; i < rowCount; i++) {
+				  
+				String thisSuffix = UtilHttp.MULTI_ROW_DELIMITER + i;
+				if (!(paramMap.containsKey("requirementId" + thisSuffix)) || UtilValidate.isEmpty(paramMap.get("requirementId" + thisSuffix))) {
+					request.setAttribute("_ERROR_MESSAGE_", "Missing requirement id");
+					return "error";
+					
+				}
+				if (UtilValidate.isNotEmpty(paramMap.get("requirementId" + thisSuffix))) {
+					requirementId = (String) paramMap.get("requirementId" + thisSuffix);
+					requirementList.add(requirementId);
+				}
+			}
+			//
+			Map<String,Object> enquiryRequestInMap = FastMap.newInstance();
+			enquiryRequestInMap.put("userLogin",userLogin);
+			enquiryRequestInMap.put("requirementList",requirementList);
+			
+	        Map resultMap = dispatcher.runSync("draftEnquiryForApprovedRequirements",enquiryRequestInMap);
+	        
+	        if (ServiceUtil.isError(resultMap)) {
+	        	Debug.logError("Problem Filing Enquiry for requirements :"+requirementList, module);
+				request.setAttribute("_ERROR_MESSAGE_", "Problem Filing Enquiry for requirements :"+requirementList);	
+				TransactionUtil.rollback();
+		  		return "error";
+	        }
+	        String custRequestId = (String)resultMap.get("custRequestId");
+	        request.setAttribute("_EVENT_MESSAGE_", "Successfully made Enquiry ID:"+custRequestId);
+			
+		}catch (GenericEntityException e) {
+			try {
+				TransactionUtil.rollback(beganTransaction, "Error Fetching data", e);
+	  		} catch (GenericEntityException e2) {
+	  			Debug.logError(e2, "Could not rollback transaction: " + e2.toString(), module);
+	  		}
+	  		Debug.logError("An entity engine error occurred while fetching data", module);
+	  	}
+  	  	catch (GenericServiceException e) {
+  	  		try {
+  			  TransactionUtil.rollback(beganTransaction, "Error while calling services", e);
+  	  		} catch (GenericEntityException e2) {
+  			  Debug.logError(e2, "Could not rollback transaction: " + e2.toString(), module);
+  	  		}
+  	  		Debug.logError("An entity engine error occurred while calling services", module);
+  	  	}
+		return "success";
+    }
+	
+public static Map<String, Object> draftEnquiryForApprovedRequirements(DispatchContext ctx,Map<String, ? extends Object> context) {
+		
+		Delegator delegator = ctx.getDelegator();
+		LocalDispatcher dispatcher = ctx.getDispatcher();
+		List requirementList = (List) context.get("requirementList");
+		GenericValue userLogin = (GenericValue) context.get("userLogin");
+		Map result = ServiceUtil.returnSuccess();
+		String custRequestTypeId = "RF_PUR_QUOTE";
+		result = ServiceUtil.returnSuccess("Successfully create Enquiry for the requirements");
+		try{
+			
+			/*GenericValue custRequestItem = delegator.findOne("CustRequestItem", UtilMisc.toMap("custRequestId", custRequestId, "custRequestItemSeqId", custRequestItemSeqId), false);
+			
+			GenericValue custRequest = delegator.findOne("CustRequest", UtilMisc.toMap("custRequestId", custRequestId), false);
+			*/
+			
+			List conditionList = FastList.newInstance();
+			conditionList.add(EntityCondition.makeCondition("requirementId", EntityOperator.IN, requirementList));
+			EntityCondition condition = EntityCondition.makeCondition(conditionList, EntityOperator.AND);
+			List<GenericValue> requirements = delegator.findList("Requirement", condition, UtilMisc.toSet("requirementId","productId","quantity"), null, null, false);
+			
+			Map resultCtx = FastMap.newInstance();
+			if(UtilValidate.isEmpty(requirements)){
+				Debug.logError("Requirents not found.", module);
+				return ServiceUtil.returnError("Requirents not found.");
+			}
+			
+			Map<String,Object> custRequestInMap = FastMap.newInstance();
+			custRequestInMap.put("custRequestTypeId",custRequestTypeId);
+			custRequestInMap.put("userLogin",userLogin);
+			custRequestInMap.put("currencyUomId","INR");
+			custRequestInMap.put("maximumAmountUomId","INR");
+			custRequestInMap.put("fromPartyId","Company");
+			custRequestInMap.put("custRequestDate",UtilDateTime.nowTimestamp());
+	        Map resultMap = dispatcher.runSync("createCustRequest",custRequestInMap);
+	        
+	        if (ServiceUtil.isError(resultMap)) {
+	        	Debug.logError("Problem Filing Enquiry.", module);
+		  		return ServiceUtil.returnError("Problem Filing Enquiry.");
+	        }
+	        String custRequestId = (String)resultMap.get("custRequestId");
+	        result.put("custRequestId", custRequestId);
+	        
+			for(GenericValue requirement: requirements){
+				String productId = requirement.getString("productId");
+				BigDecimal quantity = requirement.getBigDecimal("quantity");
+				String requirementId = requirement.getString("requirementId");
+				Map<String,Object> itemInMap = FastMap.newInstance();
+		        itemInMap.put("custRequestId",custRequestId);
+		        itemInMap.put("statusId","CRQ_DRAFT");
+		        itemInMap.put("userLogin",userLogin);
+		        itemInMap.put("productId",productId);
+		        itemInMap.put("quantity",quantity);
+		        resultMap = dispatcher.runSync("createCustRequestItem",itemInMap);
+		        if (ServiceUtil.isError(resultMap)) {
+		        	Debug.logError("Problem Filing Enquiry.", module);
+			  		return ServiceUtil.returnError("Problem Filing Enquiry.");
+		        }
+		        String custRequestItemSeqId = (String)resultMap.get("custRequestItemSeqId");
+				Map associateReqCtx = FastMap.newInstance();
+				associateReqCtx.put("userLogin", userLogin);
+				associateReqCtx.put("requirementId", requirementId);
+				associateReqCtx.put("custRequestId", custRequestId);
+				associateReqCtx.put("custRequestItemSeqId", custRequestItemSeqId);
+				resultCtx = dispatcher.runSync("associatedRequirementWithRequestItem", associateReqCtx);
+				if (ServiceUtil.isError(resultCtx)) {
+					Debug.logError("Problem associating requirement to requested item : "+requirementId+" : ["+custRequestId+" : "+custRequestItemSeqId+"]", module);
+					return resultCtx;
+				}
+				requirement.set("statusId", "REQ_IN_ENQUIRY");
+				delegator.store(requirement);
+			}
+		
+		} catch (GenericEntityException e) {
+			// TODO: handle exception
+			Debug.logError(e, module);
+			return ServiceUtil.returnError(e.getMessage());
+		}
+		catch (GenericServiceException e) {
+			// TODO: handle exception
+			Debug.logError(e, module);
+			return ServiceUtil.returnError(e.getMessage());
+		}
+		
+		return result;
+	}
+	
 }

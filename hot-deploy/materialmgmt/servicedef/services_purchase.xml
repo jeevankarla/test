@@ -56,5 +56,10 @@
         <attribute name="quantity" type="BigDecimal" mode="IN" optional="false"/>
         <attribute name="facilityId" type="String" mode="IN" optional="true"/>
     </service>
-    
+     <service name="draftEnquiryForApprovedRequirements" engine="java"
+                location="in.vasista.vbiz.purchase.MaterialRequestServices" invoke="draftEnquiryForApprovedRequirements">
+        <description> Cancel Purchase Order</description>        
+        <attribute name="requirementList" mode="IN" type="List" optional="false"/>
+         <attribute name="custRequestId" type="String" mode="OUT" optional="false"/>
+   </service>
 </services>
