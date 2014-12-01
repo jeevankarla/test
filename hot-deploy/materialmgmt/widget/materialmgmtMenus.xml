@@ -13,6 +13,11 @@
 	         <menu-item name="FindInterUnitPurchase" title="InterUnit Purchase">
 	          <link target="FindInterUnitPurchase"/>
 	        </menu-item>
+	         <menu-item name="reports" title="${uiLabelMap.CommonReports}">
+	            <link target="StoreReports">
+	                <parameter param-name="facilityId" from-field="ctxFacilityId"/>
+	            </link>
+	        </menu-item> 
 	   		
    		</menu>
         
