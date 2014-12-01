@@ -107,6 +107,7 @@ if(partyIds){
 		Timestamp monthEnd=UtilDateTime.getMonthEnd(monthBegin,TimeZone.getDefault(),Locale.getDefault());
 		daywiseReceipts = ByProductNetworkServices.getPartyPaymentDetails(dctx, UtilMisc.toMap("fromDate",monthBegin,"thruDate" ,monthEnd,"partyIdsList", [eachParty])).get("partyPaidMap");
 		partyTotals = SalesInvoiceServices.getPeriodSalesInvoiceTotals(dctx, [partyIds:[eachParty], isQuantityLtrs:true,fromDate:monthBegin, thruDate:monthEnd]).get("partyTotals");
+		partyTaxMap = SalesInvoiceServices.getInvoiceSalesTaxItems(dctx, [partyIds:partyIds,fromDate:dayBegin, thruDate:dayEnd]).get("partyTaxMap");
 		openingBalance = (ByProductNetworkServices.getOpeningBalanceForParty( dctx , [userLogin: userLogin, saleDate: monthBegin, partyId:eachParty])).get("openingBalance");
 		
 		partyReturnTotals = ByProductNetworkServices.getPartyWiseReturnTotal(dctx, UtilMisc.toMap("fromDate",monthBegin,"thruDate" ,monthEnd,"partyIdsList", [eachParty])).get("partyReturnTotals");
@@ -119,6 +120,16 @@ if(partyIds){
 				}
 		        if(UtilValidate.isNotEmpty(partyTotals)){
 				     saleAmount=partyTotals.get(eachParty).get("totalRevenue");
+					 if(UtilValidate.isNotEmpty(partyTaxMap) && partyTaxMap.containsKey(eachParty)){
+						if(partyTaxMap.get(eachParty).containsKey("PPD_PROMO_ADJ") ){
+						 ppd=partyTaxMap.get(eachParty).get("PPD_PROMO_ADJ");
+						 vatAdj=partyTaxMap.get(eachParty).get("VAT_SALE_ADJ");
+						 saleAmount=saleAmount+ppd+vatAdj;
+						}
+					 }else{
+					    saleAmount=saleAmount;
+					 }
+						 
 		        }else{
 			         saleAmount=0;
 		        }

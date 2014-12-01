@@ -838,6 +838,22 @@ function reportTypeChangeFunc() {
 	      					<td width="10%"><input type="submit" value="Download" class="buttontext"/></td>
 	  					</form>
 	  				</tr>
+	  				<!--<tr class="alternate-row">
+	  					<form id="ConversionChargesReport" name="ConversionChargesReport" method="post" action="<@ofbizUrl>ConversionChargesReport.pdf</@ofbizUrl>" target="_blank">	
+	  						<td width="30%">Conversion Charges Report</td>
+	  						<td width="15%">Period
+	  							<select name="customTimePeriodId" class='h4'>
+	            					<#list shopeeTimePeriodList as timePeriod>    
+	              	    				<option value='${timePeriod.customTimePeriodId}'>${timePeriod.fromDate}-${timePeriod.thruDate}</option>
+	            					</#list>            
+								</select>
+	      					</td>
+	      					<td width="15%"></td>
+	      					<td width="15%"></td>
+	      					<td width="15%"></td>
+	      					<td width="10%"><input type="submit" value="Download" class="buttontext"/></td>
+	  					</form>
+	  				</tr>-->
 	  				<tr class="alternate-row">
       					<form id="ChequeReturnsReport" name="ChequeReturnsReport" method="post" action="<@ofbizUrl>chequeReturnReport.pdf</@ofbizUrl>" target="_blank">	
 	      					<td width="30%">Cheque Returns Report</td>
@@ -1171,7 +1187,8 @@ function reportTypeChangeFunc() {
 								<select name='reportTypeFlag' id = "reportTypeFlag">
 									<option value='InvoiceSales'>InvoiceSales</option>
 									<option value='InvoiceSalesAbstract'>InvoiceSalesAbstract</option>
-								<!--<option value='PPDNandiniSales'>PPDNandiniSales</option>-->
+								    <option value='PPDNandiniSales'>PPDNandiniSales</option>
+								    <option value='PPDNandiniSalesAbstract'>PPDNandiniSalesAbstract</option>
 								</select>
 							</td>
 	      					<td width="15%"></td>

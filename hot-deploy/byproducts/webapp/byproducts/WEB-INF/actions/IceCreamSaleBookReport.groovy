@@ -80,8 +80,11 @@ if(categoryType.equals("DEPOT_CUSTOMER")||categoryType.equals("All")){
 partWiseSaleMap=[:];
 if(UtilValidate.isNotEmpty(partyIds)){
 	//partWiseSaleMap=[:];
+	partyTaxMap = SalesInvoiceServices.getInvoiceSalesTaxItems(dctx, [partyIds:partyIds,fromDate:dayBegin, thruDate:dayEnd]).get("partyTaxMap");
+	
 	partyTotals = SalesInvoiceServices.getPeriodSalesInvoiceTotals(dctx, [partyIds:partyIds, isQuantityLtrs:true,fromDate:dayBegin, thruDate:dayEnd]).get("partyTotals");
 	partyTotals.each{ eachParty ->
+	if(UtilValidate.isNotEmpty(partyTaxMap) && !partyTaxMap.get(eachParty.getKey().toString()).get("PPD_PROMO_ADJ") ){
 		quantity=0;
 		basicRevenue=0;
 		bedRevenue=0;
@@ -109,6 +112,7 @@ if(UtilValidate.isNotEmpty(partyIds)){
 		if(quantity != 0){
 			partWiseSaleMap.put(eachParty.getKey(), totalMap);
 		}
+	}
 	}
 }
 context.categoryType=categoryType;

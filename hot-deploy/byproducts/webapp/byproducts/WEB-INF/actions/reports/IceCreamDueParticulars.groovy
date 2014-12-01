@@ -98,7 +98,7 @@ partyIdsList.each{eachParty ->
 	partyReceipts = ByProductNetworkServices.getPartyPaymentDetails(dctx, UtilMisc.toMap("fromDate",dayBegin,"thruDate" ,dayEnd,"partyIdsList", [eachParty])).get("partyPaidMap");
 	partyInvoiceTotals = SalesInvoiceServices.getPeriodSalesInvoiceTotals(dctx, [partyIds:[eachParty], isQuantityLtrs:true,fromDate:dayBegin, thruDate:dayEnd]).get("partyTotals");
 	openingBalance = (ByProductNetworkServices.getOpeningBalanceForParty( dctx , [userLogin: userLogin, saleDate: dayBegin, partyId:eachParty])).get("openingBalance");
-	
+	partyTaxMap = SalesInvoiceServices.getInvoiceSalesTaxItems(dctx, [partyIds:[eachParty],fromDate:dayBegin, thruDate:dayEnd]).get("partyTaxMap");
 	if(openingBalance!=0 || partyInvoiceTotals || partyReceipts){
 		
 		partyName = EntityUtil.filterByCondition(partyNameDetails, EntityCondition.makeCondition("partyId", EntityOperator.EQUALS, eachParty));
@@ -116,6 +116,15 @@ partyIdsList.each{eachParty ->
 		
 		if(UtilValidate.isNotEmpty(partyInvoiceTotals)){
 			saleAmount=partyInvoiceTotals.get(eachParty).get("totalRevenue");
+			if(UtilValidate.isNotEmpty(partyTaxMap) && partyTaxMap.containsKey(eachParty)){
+				if(partyTaxMap.get(eachParty).containsKey("PPD_PROMO_ADJ") ){
+							 ppd=partyTaxMap.get(eachParty).get("PPD_PROMO_ADJ");
+							 vatAdj=partyTaxMap.get(eachParty).get("VAT_SALE_ADJ");
+							 saleAmount=saleAmount+ppd+vatAdj;
+				}
+			}else{
+			   saleAmount=saleAmount;
+			}
 			partyDetail.putAt("saleDebit", saleAmount);
 		}else{
 		   	partyDetail.putAt("saleDebit", 0);

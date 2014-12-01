@@ -59,35 +59,11 @@ if(totalDays > 32){
 	return;
 }
 partyIds=[];
-if(categoryType.equals("ICE_CREAM_NANDINI")||categoryType.equals("All")){
-   nandiniPartyIds = ByProductNetworkServices.getPartyByRoleType(dctx, [userLogin: userLogin, roleTypeId: "IC_WHOLESALE"]).get("partyIds");
-   partyIds.addAll(nandiniPartyIds);
-}
-if(categoryType.equals("ICE_CREAM_AMUL")||categoryType.equals("All")){
-   amulPartyIds = ByProductNetworkServices.getPartyByRoleType(dctx, [userLogin: userLogin, roleTypeId: "EXCLUSIVE_CUSTOMER"]).get("partyIds");
-   partyIds.addAll(amulPartyIds);
-}
-if(categoryType.equals("UNITS")||categoryType.equals("All")){
-	unitPartyIds = ByProductNetworkServices.getPartyByRoleType(dctx, [userLogin: userLogin, roleTypeId: "UNITS"]).get("partyIds");
-	partyIds.addAll(unitPartyIds);
-}
-if(categoryType.equals("UNION")||categoryType.equals("All")){
-	unionPartyIds = ByProductNetworkServices.getPartyByRoleType(dctx, [userLogin: userLogin, roleTypeId: "UNION"]).get("partyIds");
-	partyIds.addAll(unionPartyIds);
-}
-if(categoryType.equals("DEPOT_CUSTOMER")||categoryType.equals("All")){
-	depotPartyIds = ByProductNetworkServices.getPartyByRoleType(dctx, [userLogin: userLogin, roleTypeId: "DEPOT_CUSTOMER"]).get("partyIds");
-	partyIds.addAll(depotPartyIds);
-}
-if(categoryType.equals("ICP_TRANS_CUSTOMER")||categoryType.equals("All")){
-	depotPartyIds = ByProductNetworkServices.getPartyByRoleType(dctx, [userLogin: userLogin, roleTypeId: "ICP_TRANS_CUSTOMER"]).get("partyIds");
-	partyIds.addAll(depotPartyIds);
-}
-
-
+nandiniPartyIds = ByProductNetworkServices.getPartyByRoleType(dctx, [userLogin: userLogin, roleTypeId: "IC_WHOLESALE"]).get("partyIds");
+partyIds.addAll(nandiniPartyIds);
 // Invoice No Sales report
 reportTypeFlag = parameters.reportTypeFlag;
-if(UtilValidate.isNotEmpty(reportTypeFlag) && reportTypeFlag == "InvoiceSales"){
+if(UtilValidate.isNotEmpty(reportTypeFlag) && reportTypeFlag == "PPDNandiniSales"){
 	invoiceMap = [:];
 	if(UtilValidate.isNotEmpty(partyIds)){
 		invoiceTaxMap = SalesInvoiceServices.getInvoiceSalesTaxItems(dctx, [partyIds:partyIds,fromDate:dayBegin, thruDate:dayEnd]).get("invoiceTaxMap");
@@ -105,73 +81,85 @@ if(UtilValidate.isNotEmpty(reportTypeFlag) && reportTypeFlag == "InvoiceSales"){
 						vatRevenue=0;
 						cstRevenue=0;
 						totalRevenue=0;
+						vatAdj=0;
+						ppd=0;
 						invoiceId = invoice.getKey();
-							if(UtilValidate.isNotEmpty(invoiceTaxMap) && invoiceTaxMap.containsKey(invoiceId)){
-						       if(!invoiceTaxMap.get(invoiceId).containsKey("PPD_PROMO_ADJ") ){
-								if(UtilValidate.isNotEmpty(invoice.getValue().invoiceDateStr)){
-									invoiceDate = invoice.getValue().invoiceDateStr;
-								}
-								invoiceDetails = delegator.findOne("Invoice",[invoiceId : invoiceId] , false);
-								invoicePartyId = invoiceDetails.partyId;
-								partyIdentificationDetails = delegator.findOne("PartyIdentification", [partyId : invoicePartyId, partyIdentificationTypeId : "TIN_NUMBER"], false);
-								if(UtilValidate.isNotEmpty(partyIdentificationDetails)){
-									idValue = partyIdentificationDetails.idValue;
-								}
-								if(UtilValidate.isNotEmpty(invoicePartyId)){
-									partyName = PartyHelper.getPartyName(delegator, invoicePartyId, false);
-								}
-								if(UtilValidate.isNotEmpty(invoice.getValue().basicRevenue)){
-									basicRevenue = invoice.getValue().basicRevenue;
-								}
-								if(UtilValidate.isNotEmpty(invoice.getValue().vatRevenue)){
-									vatRevenue = invoice.getValue().vatRevenue;
-								}
-								if(UtilValidate.isNotEmpty(invoice.getValue().bedRevenue)){
-									bedRevenue = invoice.getValue().bedRevenue;
-								}
-								if(UtilValidate.isNotEmpty(invoice.getValue().cstRevenue)){
-									cstRevenue = invoice.getValue().cstRevenue;
-								}
-								if(UtilValidate.isNotEmpty(invoice.getValue().totalRevenue)){
-									totalRevenue = invoice.getValue().totalRevenue;
-								}
-								invoiceSequenceId = null;
-								if(UtilValidate.isNotEmpty(invoiceId)){
-									invoiceSequenceList = delegator.findList("BillOfSaleInvoiceSequence",EntityCondition.makeCondition("invoiceId", EntityOperator.EQUALS, invoiceId) , null, null, null, false);
-									if(UtilValidate.isNotEmpty(invoiceSequenceList)){
-										invoiceSequence = EntityUtil.getFirst(invoiceSequenceList);
-										if(UtilValidate.isNotEmpty(invoiceSequence)){
-											invoiceSequenceId = invoiceSequence.sequenceId;
-										}
+						if(UtilValidate.isNotEmpty(invoice.getValue().invoiceDateStr)){
+							invoiceDate = invoice.getValue().invoiceDateStr;
+						}
+						invoiceDetails = delegator.findOne("Invoice",[invoiceId : invoiceId] , false);
+						invoicePartyId = invoiceDetails.partyId;
+						partyIdentificationDetails = delegator.findOne("PartyIdentification", [partyId : invoicePartyId, partyIdentificationTypeId : "TIN_NUMBER"], false);
+						if(UtilValidate.isNotEmpty(partyIdentificationDetails)){
+							idValue = partyIdentificationDetails.idValue;
+						}
+						if(UtilValidate.isNotEmpty(invoicePartyId)){
+							partyName = PartyHelper.getPartyName(delegator, invoicePartyId, false);
+						}
+						
+					if(UtilValidate.isNotEmpty(invoiceTaxMap) && invoiceTaxMap.containsKey(invoiceId)){
+						if(invoiceTaxMap.get(invoiceId).containsKey("PPD_PROMO_ADJ") ){
+								
+							if(UtilValidate.isNotEmpty(invoice.getValue().basicRevenue)){
+								basicRevenue = invoice.getValue().basicRevenue;
+							}
+							if(UtilValidate.isNotEmpty(invoice.getValue().vatRevenue)){
+								vatRevenue = invoice.getValue().vatRevenue;
+							}
+							if(UtilValidate.isNotEmpty(invoice.getValue().bedRevenue)){
+								bedRevenue = invoice.getValue().bedRevenue;
+							}
+							if(UtilValidate.isNotEmpty(invoice.getValue().cstRevenue)){
+								cstRevenue = invoice.getValue().cstRevenue;
+							}
+							if(UtilValidate.isNotEmpty(invoice.getValue().totalRevenue)){
+								totalRevenue = invoice.getValue().totalRevenue;
+							}
+							if(UtilValidate.isNotEmpty(invoiceTaxMap.get(invoiceId).get("PPD_PROMO_ADJ"))){
+								ppd = invoiceTaxMap.get(invoiceId).get("PPD_PROMO_ADJ");
+							}
+							if(UtilValidate.isNotEmpty(invoiceTaxMap.get(invoiceId).get("VAT_SALE_ADJ"))){
+								vatAdj = invoiceTaxMap.get(invoiceId).get("VAT_SALE_ADJ");
+							}
+							invoiceSequenceId = null;
+							if(UtilValidate.isNotEmpty(invoiceId)){
+								invoiceSequenceList = delegator.findList("BillOfSaleInvoiceSequence",EntityCondition.makeCondition("invoiceId", EntityOperator.EQUALS, invoiceId) , null, null, null, false);
+								if(UtilValidate.isNotEmpty(invoiceSequenceList)){
+									invoiceSequence = EntityUtil.getFirst(invoiceSequenceList);
+									if(UtilValidate.isNotEmpty(invoiceSequence)){
+										invoiceSequenceId = invoiceSequence.sequenceId;
 									}
 								}
-								totalMap = [:];
-								totalMap["invoiceDate"]=invoiceDate;
-								totalMap["basicRevenue"]=basicRevenue;
-								totalMap["partyName"]=partyName;
-								totalMap["invoicePartyId"]=invoicePartyId;
-								totalMap["bedRevenue"]=bedRevenue;
-								totalMap["vatRevenue"]=vatRevenue;
-								totalMap["cstRevenue"]=cstRevenue;
-								totalMap["totalRevenue"]=totalRevenue;
-								totalMap["idValue"]=idValue;
-								totalMap["invoiceSequenceId"]=invoiceSequenceId;
-								tempMap = [:];
-								tempMap.putAll(totalMap);
-								if(UtilValidate.isNotEmpty(tempMap)){
-									invoiceMap.put(invoiceId,tempMap);
-								}
+							}
+							totalMap = [:];
+							totalMap["invoiceDate"]=invoiceDate;
+							totalMap["basicRevenue"]=basicRevenue;
+							totalMap["partyName"]=partyName;
+							totalMap["invoicePartyId"]=invoicePartyId;
+							totalMap["bedRevenue"]=bedRevenue;
+							totalMap["vatRevenue"]=vatRevenue+vatAdj;
+							totalMap["cstRevenue"]=cstRevenue;
+							totalMap["totalRevenue"]=totalRevenue+vatAdj+ppd;
+							totalMap["ppd"]=ppd;
+							totalMap["idValue"]=idValue;
+							totalMap["invoiceSequenceId"]=invoiceSequenceId;
+							tempMap = [:];
+							tempMap.putAll(totalMap);
+							if(UtilValidate.isNotEmpty(tempMap)){
+								invoiceMap.put(invoiceId,tempMap);
 							}
 						}
 					}
+				  }
 				}
 			}
-			context.put("invoiceMap",invoiceMap);
 		}
 	}
+	context.put("invoiceMap",invoiceMap);
 }
+
 // Invoice Sales Abstract
-if(UtilValidate.isNotEmpty(reportTypeFlag) && reportTypeFlag == "InvoiceSalesAbstract"){
+if(UtilValidate.isNotEmpty(reportTypeFlag) && reportTypeFlag == "PPDNandiniSalesAbstract"){
 	finalInvoiceDateMap = [:];
 	for( i=0 ; i <= (totalDays); i++){
 		currentDay =UtilDateTime.addDaysToTimestamp(fromDateTime, i);
@@ -194,10 +182,11 @@ if(UtilValidate.isNotEmpty(reportTypeFlag) && reportTypeFlag == "InvoiceSalesAbs
 							vatRevenue=0;
 							cstRevenue=0;
 							totalRevenue=0;
-							
+							ppd=0;
 							invoiceId = invoice.getKey();
 							if(UtilValidate.isNotEmpty(invoiceTaxMap) && invoiceTaxMap.containsKey(invoiceId)){
-						       if(!invoiceTaxMap.get(invoiceId).containsKey("PPD_PROMO_ADJ") ){
+						       if(invoiceTaxMap.get(invoiceId).containsKey("PPD_PROMO_ADJ") ){
+								
 								if(UtilValidate.isNotEmpty(invoice.getValue().invoiceDateStr)){
 									invoiceDate = invoice.getValue().invoiceDateStr;
 								}
@@ -224,6 +213,12 @@ if(UtilValidate.isNotEmpty(reportTypeFlag) && reportTypeFlag == "InvoiceSalesAbs
 								}
 								if(UtilValidate.isNotEmpty(invoice.getValue().totalRevenue)){
 									totalRevenue = invoice.getValue().totalRevenue;
+								}
+								if(UtilValidate.isNotEmpty(invoiceTaxMap.get(invoiceId).get("PPD_PROMO_ADJ"))){
+									ppd = invoiceTaxMap.get(invoiceId).get("PPD_PROMO_ADJ");
+								}
+								if(UtilValidate.isNotEmpty(invoiceTaxMap.get(invoiceId).get("VAT_SALE_ADJ"))){
+									vatAdj = invoiceTaxMap.get(invoiceId).get("VAT_SALE_ADJ");
 								}
 								invoiceSequenceId = null;
 								if(UtilValidate.isNotEmpty(invoiceId)){
@@ -260,9 +255,10 @@ if(UtilValidate.isNotEmpty(reportTypeFlag) && reportTypeFlag == "InvoiceSalesAbs
 								totalMap["invoiceId"]=invoiceId;
 								totalMap["basicRevenue"]=basicRevenue;
 								totalMap["bedRevenue"]=bedRevenue;
-								totalMap["vatRevenue"]=vatRevenue;
+								totalMap["vatRevenue"]=vatRevenue+vatAdj;
 								totalMap["cstRevenue"]=cstRevenue;
-								totalMap["totalRevenue"]=totalRevenue;
+								totalMap["ppd"]=ppd;
+								totalMap["totalRevenue"]=totalRevenue+ppd;
 								totalMap["idValue"]=idValue;
 								totalMap["invoiceSequenceId"]=invoiceSequenceId;
 								totalMap["totalMrpValue"]=totalMrpValue;
@@ -275,7 +271,7 @@ if(UtilValidate.isNotEmpty(reportTypeFlag) && reportTypeFlag == "InvoiceSalesAbs
 								invoicePartyMap[invoicePartyId] = invoicePartyList;
 							}
 						}
-					    
+						
 					   }
 					}
 				}
@@ -290,14 +286,5 @@ if(UtilValidate.isNotEmpty(reportTypeFlag) && reportTypeFlag == "InvoiceSalesAbs
 	}
 	context.put("finalInvoiceDateMap",finalInvoiceDateMap);
 }
-
-
-
-
-
-
-
-
-
 
 

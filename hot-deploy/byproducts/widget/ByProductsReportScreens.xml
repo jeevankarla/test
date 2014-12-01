@@ -1977,6 +1977,44 @@
 				</section>
 				<section>
 					<condition>
+					<and>
+					  <if-compare operator="equals" value="PPDNandiniSalesAbstract" field="reportTypeFlag" />
+					  <if-compare operator="equals" value="centralExcise" field="vatType" />
+					</and>
+					</condition>
+					<actions>
+						<script location="component://byproducts/webapp/byproducts/WEB-INF/actions/PPDNandiniSalesReport.groovy" />	
+					</actions>
+					<widgets>
+						<platform-specific>
+		                   <xsl-fo>
+								<html-template
+									location="component://byproducts/webapp/byproducts/reports/PPDNandiniSalesAbstractReport.fo.ftl" />
+							</xsl-fo>
+		                </platform-specific>
+					</widgets>
+				</section>
+				<section>
+					<condition>
+					<and>
+					  <if-compare operator="equals" value="PPDNandiniSales" field="reportTypeFlag" />
+					  <if-compare operator="equals" value="centralExcise" field="vatType" />
+					</and>
+					</condition>
+					<actions>
+						<script location="component://byproducts/webapp/byproducts/WEB-INF/actions/PPDNandiniSalesReport.groovy" />	
+					</actions>
+					<widgets>
+						<platform-specific>
+		                   <xsl-fo>
+								<html-template
+									location="component://byproducts/webapp/byproducts/reports/PPDNandiniSalesReport.fo.ftl" />
+							</xsl-fo>
+		                </platform-specific>
+					</widgets>
+				</section>
+				<section>
+					<condition>
 						  <if-compare operator="equals" value="vat" field="vatType" />
 					</condition>
 					<actions>
@@ -2083,55 +2121,6 @@
 			</widgets>
 		</section>
 	</screen>-->
-	<screen name="PurchaseReportPDF">
-		<section>
-			<actions>
-				<property-map resource="CommonUiLabels" map-name="uiLabelMap" global="true"/>
-				<property-map resource="OrderUiLabels" map-name="uiLabelMap" global="true"/>
-				<property-map resource="ProductUiLabels" map-name="uiLabelMap" global="true"/>
-				<property-map resource="PartyUiLabels" map-name="uiLabelMap" global="true"/>
-				<set field="reportTypeFlag" from-field="parameters.reportTypeFlag"/>
-			</actions>
-			<widgets>
-				<section>
-					<condition>
-					<and>
-					  <if-compare operator="equals" value="PurchaseSummary" field="reportTypeFlag" />
-					</and>
-					</condition>
-					<actions>
-						<script location="component://byproducts/webapp/byproducts/WEB-INF/actions/PurchaseReport.groovy" />	
-					</actions>
-					<widgets>
-						<platform-specific>
-		                    <xsl-fo>
-								<html-template
-									location="component://byproducts/webapp/byproducts/reports/PurchaseReport.fo.ftl" />
-							</xsl-fo>
-		                </platform-specific>
-					</widgets>
-				</section>
-				<section>
-					<condition>
-					<and>
-					  <if-compare operator="equals" value="PurchaseDetails" field="reportTypeFlag" />
-					</and>
-					</condition>
-					<actions>
-						<script location="component://byproducts/webapp/byproducts/WEB-INF/actions/PurchaseReport.groovy" />	
-					</actions>
-					<widgets>
-						<platform-specific>
-		                   <xsl-fo>
-								<html-template
-									location="component://byproducts/webapp/byproducts/reports/PurchaseAbstractReport.fo.ftl" />
-							</xsl-fo>
-		                </platform-specific>
-					</widgets>
-				</section>
-			</widgets>
-		</section>
-	</screen>
 	<screen name="DuesFDRAvgReportCSV">
         <section>
             <actions>
@@ -2147,4 +2136,26 @@
             </widgets>          
         </section>
     </screen>
-</screens>        
+<screen name="ConversionChargesReportPDF">
+		<section>
+			<actions>
+				<property-map resource="OrderUiLabels" map-name="uiLabelMap" global="true"/>
+				<property-map resource="ProductUiLabels" map-name="uiLabelMap" global="true"/>
+				<property-map resource="PartyUiLabels" map-name="uiLabelMap" global="true"/>
+				<property-map resource="CommonUiLabels" map-name="uiLabelMap" global="true"/>
+				<script location="component://byproducts/webapp/byproducts/WEB-INF/actions/reports/conversionChargesReport.groovy" />	
+			</actions>
+			<widgets>
+				<section>
+					<widgets>
+						<platform-specific>
+							<xsl-fo>
+								<html-template
+									location="component://byproducts/webapp/byproducts/reports/ConversionChargesReport.fo.ftl" />
+							</xsl-fo>
+						</platform-specific>
+					</widgets>
+				</section>
+			</widgets>
+		</section>
+	</screen></screens>        
