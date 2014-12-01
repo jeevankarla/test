@@ -3522,7 +3522,12 @@ under the License.
         <security https="true" auth="true"/>
         <response name="success" type="view" value="AccountReports"/>
     </request-map>
-    
+    <request-map uri="AdvancesReport.pdf"><security https="true" auth="true"/>
+		<response name="success" type="view" value="AdvancesReport"></response>    
+    </request-map>
+    <request-map uri="SubLedgerReport.pdf"><security https="true" auth="true"/>
+		<response name="success" type="view" value="SubLedgerReport"></response>    
+    </request-map>
     <!-- end of request mappings -->
 
     <!-- View Mappings -->
@@ -3991,5 +3996,9 @@ under the License.
    
    <view-map name="GenericPartyFinancialHistoryPDF" type="screenfop" page="component://accounting/widget/ReportFinancialSummaryScreens.xml#GenericPartyFinancialHistoryPDF" content-type="application/pdf" encoding="none"/>
    <view-map name="AccountReports" type="screen" page="component://accounting/widget/TreasurerPortalScreens.xml#AccountReports" />
+   
+   <view-map name="AdvancesReport" type="screenfop" page="component://accounting/widget/TreasurerPortalScreens.xml#AdvancesReport" content-type="application/pdf" encoding="none"/>
+   <view-map name="SubLedgerReport" type="screenfop" page="component://accounting/widget/TreasurerPortalScreens.xml#SubLedgerReport" content-type="application/pdf" encoding="none"/>
+    
    <!-- end of view mappings -->
 </site-conf>

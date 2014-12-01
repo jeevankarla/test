@@ -106,8 +106,8 @@ function reportTypeChangeFunc() {
 	$(document).ready(function(){
 
 	    makeDatePicker("FinacialFromDate","FinacialThruDate");
-	    //makeDatePicker("advFromDate","advThruDate");
-	    //makeDatePicker("subLedgerFromDate","subLedgerThruDate");
+	    makeDatePicker("advFromDate","advThruDate");
+	    makeDatePicker("subLedgerFromDate","subLedgerThruDate");
 		
 		$('#ui-datepicker-div').css('clip', 'auto');		
 	});
@@ -160,7 +160,6 @@ function reportTypeChangeFunc() {
 		</table>     			     
 	</div> 	
 </div>
-<#--
 <div class="screenlet">
     <div class="screenlet-title-bar">
       <h3>Advances Reports</h3>
@@ -168,26 +167,34 @@ function reportTypeChangeFunc() {
     <div class="screenlet-body">
       <table class="basic-table hover-bar h3" style="border-spacing: 0 10px;" >  
       	<tr class="alternate-row"> 
-      		<form id="advancesReport" name="advancesReport" method="post" action="<@ofbizUrl>advancesReport.pdf</@ofbizUrl>" target="_blank">	
+      		<form id="advancesReport" name="advancesReport" method="post" action="<@ofbizUrl>AdvancesReport.pdf</@ofbizUrl>" target="_blank">	
       		  	<td width="20%">Advances Report</td>
 			  	<td width="25%">Payment Type
-			  	  	<select name='finAccountId' id ="finAccountId">	
+			  	  	<select name='paymentTypeId' id ="paymentTypeId">	
+					 	<option value="ADVTOVENDOR_PAYOUT">Advances To Vendor</option>								
+						<option value="EMPLADV_PAYOUT">Employees Advance</option>
+				 	</select>
+			  	</td>
+			  	<#--
+			  	<td width="25%">Payment Type
+			  	  	<select name='paymentTypeId' id ="paymentTypeId">	
 					 	<option value=""></option>								
 						<#list paymentTypes as paymentType> 	
 							<option value='${paymentType.paymentTypeId}'>${paymentType.description?if_exists}</option>
           		   		</#list>
 				 	</select>
 			  	</td>
+			  	-->
 				<td width="20%">From<input  type="text" size="18pt" id="advFromDate" readonly  name="fromDate"/></td>
 				<td width="20%">To<input  type="text" size="18pt" id="advThruDate" readonly  name="thruDate"/></td>
           		<td width="15%"><input type="submit" value="PDF" class="buttontext"/></td>
       		</form>
       	</tr>
       	<tr> 
-      		<form id="subLedgerReport" name="subLedgerReport" method="post" action="<@ofbizUrl>subLedgerReport.pdf</@ofbizUrl>" target="_blank">	
+      		<form id="subLedgerReport" name="subLedgerReport" method="post" action="<@ofbizUrl>SubLedgerReport.pdf</@ofbizUrl>" target="_blank">	
       		  	<td width="20%">Subledger Report</td>
 			  	<td width="25%">Payment Type
-			  	  	<select name='finAccountId' id ="finAccountId">	
+			  	  	<select name='paymentTypeId' id ="paymentTypeId">	
 					 	<option value=""></option>								
 						<#list paymentTypes as paymentType> 	
 							<option value='${paymentType.paymentTypeId}'>${paymentType.description?if_exists}</option>
@@ -201,5 +208,4 @@ function reportTypeChangeFunc() {
       	</tr>
 	</table>
 </div>
--->
 </div>

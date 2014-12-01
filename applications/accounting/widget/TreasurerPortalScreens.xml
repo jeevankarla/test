@@ -2961,13 +2961,12 @@
 				   <condition-expr field-name="ownerPartyId" operator="equals" from-field="parameters.ownerPartyId" />
 				   </condition-list> 
 				</entity-condition>  
-				<!--<entity-condition entity-name="PaymentType" list="paymentTypes">
+				<entity-condition entity-name="PaymentType" list="paymentTypes">
 	                <condition-list combine="or">
 	                    <condition-expr field-name="parentTypeId" operator="equals" value="ADVANCES_PAYOUT"/>
 	                </condition-list>
 	                <order-by field-name="description"/>
 	            </entity-condition>
-	            -->   
                 <set field="hasFinEditPermission" from-field="permResult.hasPermission"/>
             </actions>
             <widgets>
@@ -2981,4 +2980,16 @@
             </widgets>
         </section>
     </screen>
+    <screen name="AdvancesReport">
+		<section>
+			<actions>
+                 <script location="component://accounting/webapp/accounting/WEB-INF/actions/reports/AdvancesReport.groovy"/>
+            </actions>
+			<widgets>
+				<platform-specific> 
+				  <xsl-fo><html-template location="component://accounting/webapp/accounting/reports/AdvancesReport.fo.ftl"/></xsl-fo> 
+                </platform-specific>
+			</widgets>
+		</section>
+	</screen>
 </screens>
