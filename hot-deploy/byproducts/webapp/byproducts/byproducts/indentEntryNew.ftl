@@ -76,9 +76,9 @@
         			</tr>
         			   
         			<tr><td><br/></td></tr>
-        			<#if screenFlag?exists && screenFlag != 'DSCorrection'>
+        			<#--<#if screenFlag?exists && screenFlag != 'DSCorrection'>-->
         				<input type="hidden" name="productSubscriptionTypeId" id="productSubscriptionTypeId" value="CASH"/>
-        			</#if>
+        			<#--</#if>-->
        				<#--<tr>
           				<td>&nbsp;</td>
 	          			<td align='left' valign='middle' nowrap="nowrap"><div class='h2'>Trip:</div></td>
@@ -133,7 +133,7 @@
 				        </tr>
 			        	<tr><td><br/></td></tr>
 			        </#if>
-			        <#if screenFlag?exists && screenFlag == 'DSCorrection'>
+			       <#-- <#if screenFlag?exists && screenFlag == 'DSCorrection'>
    	  			    	<#if security.hasEntityPermission("TRUCKSHEETCORRECTION", "_ADMIN", session) && screenFlag?exists && screenFlag == 'DSCorrection'>
 		          			
 							<tr>
@@ -149,7 +149,7 @@
 			          		 <tr><td><br/></td></tr>
 						</#if>
    	  			      
-   	  				</#if>	           
+   	  				</#if>-->	           
 			        <tr>
 			          <td>&nbsp;</td>
 			          <td align='left' valign='middle' nowrap="nowrap"><div class='h2'>${uiLabelMap.Retailer}:</div></td>
