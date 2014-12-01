@@ -1747,7 +1747,8 @@
                 <!--   <set field="tabButtonItem" value="FindFinAccountAlt"/> -->
                  <script location="component://accounting/webapp/accounting/WEB-INF/actions/dateFindConvert.groovy"/>
                 <set field="parameters.glReconciliationId" value="${glReconciliationId}"/><!-- instead of Form we are setting in Screen  -->
-                <set field="parameters.finAccountId" value="${finAccountId}"/>
+               <!--  <set field="parameters.finAccountId" value="${parameters.finAccountId}"/> -->
+                <set field="finAccountId" from-field="parameters.finAccountId"/>
                  <set field="parameters.statusId" value="FINACT_TRNS_CREATED"/>
                  <set field="fromTransactionDate" value="${parameters.fromDateReport}"/>
                   <set field="thruTransactionDate" value="${parameters.thruDateReport}"/>
