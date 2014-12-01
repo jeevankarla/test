@@ -700,7 +700,7 @@
                                 <include-form name="FindFinancialAccountReconciliation" location="component://accounting/widget/FinAccountForms.xml"/>
                             </decorator-section> 
                             <decorator-section name="search-results">
-                                <include-form name="ListFinAccountReconciliations" location="component://accounting/widget/FinAccountForms.xml"/>
+                                <include-form name="ListFinAccountReconciliations" location="component://accounting/widget/TreasurerPortalForms.xml"/>
                             </decorator-section>
                         </decorator-screen>
                     </decorator-section>
@@ -1745,7 +1745,7 @@
 			<actions>
                 <set field="titleProperty" value="CreateBankAccountReconciliationsTitle"/>
                 <!--   <set field="tabButtonItem" value="FindFinAccountAlt"/> -->
-                 <script location="component://accounting/webapp/accounting/WEB-INF/actions/EditFinaccount.groovy"/>
+                 <script location="component://accounting/webapp/accounting/WEB-INF/actions/dateFindConvert.groovy"/>
                 <set field="parameters.glReconciliationId" value="${glReconciliationId}"/><!-- instead of Form we are setting in Screen  -->
                 <set field="parameters.finAccountId" value="${finAccountId}"/>
                  <set field="parameters.statusId" value="FINACT_TRNS_CREATED"/>

@@ -115,26 +115,5 @@ if(UtilValidate.isNotEmpty(parameters.thruTransDate)){
 	parameters.thruTransactionDate=UtilDateTime.getDayEnd(dayend);
 	parameters.thruTransDate=null;
 }
-//finAccount Reconcilation Report will use this logic....
-SimpleDateFormat sdf = new SimpleDateFormat("yyyy, MMM dd");
-if(UtilValidate.isNotEmpty(parameters.fromDate)){
-	Timestamp daystart;
-     try {
-		 daystart = UtilDateTime.toTimestamp(sdf.parse(parameters.fromDate));
-	 	 } catch (ParseException e) {
-		  	Debug.logError(e, "Cannot parse date string: " + parameters.fromDate, "");
-		  	}
-	parameters.fromDateReport=UtilDateTime.getDayStart(daystart);
-	parameters.fromDate=null;
-}
-if(UtilValidate.isNotEmpty(parameters.thruDate)){
-	Timestamp dayend;
-	try {
-		dayend = UtilDateTime.toTimestamp(sdf.parse(parameters.thruDate));
-	} catch (ParseException e) {
-		Debug.logError(e, "Cannot parse date string: " + parameters.thruDate, "");	   
-	     }	
-	parameters.thruDateReport=UtilDateTime.getDayEnd(dayend);
-	parameters.thruDate=null;
-}
+
 
