@@ -1,7 +1,7 @@
 <link type="text/css" href="<@ofbizContentUrl>/images/jquery/ui/css/ui-lightness/jquery-ui-1.8.13.custom.css</@ofbizContentUrl>" rel="Stylesheet" />	
 
 <script type="text/javascript">
-
+	
 $(document).ready(function(){
 		$( "#effectiveDate" ).datepicker({
 			dateFormat:'d MM, yy',
@@ -35,6 +35,8 @@ $(document).ready(function(){
 	    			return false;   
 	  			}
 		});
+		
+		
 		
 		
 	});
@@ -88,6 +90,30 @@ $(document).ready(function(){
         <tr><td><br/></td></tr>
         <tr>
           <td>&nbsp;</td>
+            <td align='left' valign='middle' nowrap="nowrap"><div class='h2'>Issue To Dept:</div></td>
+          <td>&nbsp;</td>
+			<#if issueToDept?exists && issueToDept?has_content>  
+	  	  		<input type="hidden" name="issueToDeptId" id="issueToDeptId" value="${issueToDept.partyId?if_exists}"/>  
+          		<td valign='middle'>
+            		<div class='tabletext h2'>
+               			${issueToDept.partyId?if_exists} [ ${issueToDept.groupName?if_exists} ] <#--&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <a href="javascript:processChangeIndentParty()" class="buttontext">Party Change</a>-->             
+            		</div>
+          		</td>       
+       		<#else>               
+          		<td valign='middle'>
+          		<select name="issueToDeptId"  id="issueToDeptId"  >
+                                 <option value=""></option>
+                               <#list orgList as org>  
+                                       <option value='${org.partyId}'>${org.groupName?if_exists}</option>
+                               </#list>             
+                               </select>
+          			 <span class="tooltip">Select Department</span>
+          		</td>
+          	</#if>
+        </tr> 
+        <tr><td><br/></td></tr>
+        <tr>
+          <td>&nbsp;</td>
             <td align='left' valign='middle' nowrap="nowrap"><div class='h2'><#if changeFlag?exists && changeFlag=='InterUnitPurchase'>KMF Unit ID:<#else>Supplier/Union Id:</#if></div></td>
           <td>&nbsp;</td>
 			<#if party?exists && party?has_content>  
@@ -138,6 +164,7 @@ $(document).ready(function(){
 	<input type="hidden" name="boothId" id="boothId" value="${parameters.boothId?if_exists}"/>
 	<input type="hidden" name="partyId" id="partyId" value="${parameters.partyId?if_exists}"/>
 	<input type="hidden" name="billToPartyId" id="billToPartyId" value="${parameters.billToPartyId?if_exists}"/>
+	<input type="hidden" name="issueToDeptId" id="issueToDeptId" value="${parameters.issueToDeptId?if_exists}"/>
 	<input type="hidden" name="productSubscriptionTypeId" id="productSubscriptionTypeId" value="${parameters.productSubscriptionTypeId?if_exists}"/>   	   	   	   
 	<input type="hidden" name="subscriptionTypeId" id="subscriptionTypeId" value="${parameters.subscriptionTypeId?if_exists}"/>
 	<input type="hidden" name="destinationFacilityId" id="destinationFacilityId" value="${parameters.destinationFacilityId?if_exists}"/>

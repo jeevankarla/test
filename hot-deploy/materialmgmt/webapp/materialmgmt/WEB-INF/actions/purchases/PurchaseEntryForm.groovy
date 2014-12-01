@@ -67,6 +67,8 @@ routeId = parameters.routeId;
 partyId="";
 billToParty="";
 billToPartyId = parameters.billToPartyId;
+
+issueToDeptId = parameters.issueToDeptId;
 facility = null;
 prodPriceMap = [:];
 if(changeFlag == "PurchaseOrder" || changeFlag == "InterUnitPurchase"){
@@ -77,6 +79,9 @@ if(changeFlag == "PurchaseOrder" || changeFlag == "InterUnitPurchase"){
 if(changeFlag == "PurchaseOrder" || changeFlag == "InterUnitPurchase"){
 	billToParty = delegator.findOne("PartyGroup", UtilMisc.toMap("partyId", billToPartyId), false);
 	context.billToParty = billToParty;
+	issueToDept = delegator.findOne("PartyGroup", UtilMisc.toMap("partyId", issueToDeptId), false);
+	context.issueToDept = issueToDept;
+	
 }
 
 if(UtilValidate.isNotEmpty(billToPartyId)){
@@ -169,3 +174,4 @@ context.productLabelIdJSON = productLabelIdJSON;
 if(displayGrid){
 	context.partyCode = facility;
 }
+
