@@ -95,6 +95,7 @@ public static String processPurchaseOrder(HttpServletRequest request, HttpServle
 	Locale locale = UtilHttp.getLocale(request);
 	String partyId = (String) request.getParameter("partyId");
 	String billFromPartyId = (String) request.getParameter("billToPartyId");
+	String issueToDeptId = (String) request.getParameter("issueToDeptId");
 	Map resultMap = FastMap.newInstance();
 	List invoices = FastList.newInstance(); 
 	String vehicleId = (String) request.getParameter("vehicleId");
@@ -473,6 +474,7 @@ public static String processPurchaseOrder(HttpServletRequest request, HttpServle
 	processOrderContext.put("productQtyList", indentProductList);
 	processOrderContext.put("partyId", partyId);
 	processOrderContext.put("billFromPartyId", billFromPartyId);
+	processOrderContext.put("issueToDeptId", issueToDeptId);
 	processOrderContext.put("supplyDate", effectiveDate);
 	processOrderContext.put("salesChannel", salesChannel);
 	processOrderContext.put("vehicleId", vehicleId);
@@ -513,6 +515,8 @@ public static Map<String, Object> createPurchaseOrder(DispatchContext dctx, Map<
   	String vehicleId = (String) context.get("vehicleId");
   	String partyId = (String) context.get("partyId");
   	String billFromPartyId = (String) context.get("billFromPartyId");
+	String issueToDeptId = (String) context.get("issueToDeptId");
+  	
   	boolean beganTransaction = false;
   	//fright Charges
   	BigDecimal freightCharges = (BigDecimal) context.get("freightCharges");
@@ -924,7 +928,25 @@ public static Map<String, Object> createPurchaseOrder(DispatchContext dctx, Map<
 		
 		/*String mrnNumber = (String) context.get("mrnNumber");
 	  	String PONumber=(String) context.get("PONumber");
-	  	String SInvNumber = (String) context.get("SInvNumber");*/
+	  	String SInvNumber = (String) context.get("SInvNumber");
+	  	
+	  	*/
+		//before save OrderRole save partyRole
+		try{
+		GenericValue issuePartyRole	=delegator.makeValue("PartyRole", UtilMisc.toMap("partyId", issueToDeptId, "roleTypeId", "ISSUE_TO_DEPT"));
+		delegator.createOrStore(issuePartyRole);
+		}catch (Exception e) {
+			  Debug.logError(e, "Error While Creating PartyRole(ISSUE_TO_DEPT)  for Purchase Order ", module);
+			  return ServiceUtil.returnError("Error While Creating PartyRole(ISSUE_TO_DEPT)  for Purchase Order : "+orderId);
+  	 	}
+		//creating OrderRole for issue to Dept
+		try{
+		GenericValue issueOrderRole	=delegator.makeValue("OrderRole", UtilMisc.toMap("orderId", orderId, "partyId", issueToDeptId, "roleTypeId", "ISSUE_TO_DEPT"));
+		delegator.createOrStore(issueOrderRole);
+		}catch (Exception e) {
+			  Debug.logError(e, "Error While Creating OrderRole(ISSUE_TO_DEPT)  for Purchase Order ", module);
+			  return ServiceUtil.returnError("Error While Creating OrderRole(ISSUE_TO_DEPT)  for Purchase Order : "+orderId);
+  	 	}
 		try{
 		GenericValue orderAttribute = delegator.makeValue("OrderAttribute");
 		orderAttribute.set("orderId", orderId);
