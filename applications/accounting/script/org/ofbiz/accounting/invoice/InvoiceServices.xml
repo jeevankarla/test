@@ -503,12 +503,12 @@ under the License.
                 <field-map field-name="paymentId" value="${paymentApplication.paymentId}"/>
         </entity-one>
         <if-not-empty field="paymentApplication.paymentId">           
-            <if-not-empty field="payment">
+            <!-- <if-not-empty field="payment">
                 <if-compare field="payment.statusId" operator="equals" value="PMNT_CONFIRMED">
                     <add-error><fail-message message="PaymentID [${payment.paymentId}] has status 'confirmed', cannot remove application."/></add-error>
                 </if-compare>
                 <check-errors/>
-            </if-not-empty>
+            </if-not-empty> -->
             <field-to-result field="paymentApplication.paymentId" result-name="paymentId"/>
             <set field="currencyUomId" from-field="paymentId.currencyUomId"/>
         </if-not-empty>

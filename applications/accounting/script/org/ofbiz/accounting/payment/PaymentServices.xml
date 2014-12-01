@@ -338,7 +338,10 @@ under the License.
                             <call-service service-name="updateOrderPaymentPreference" in-map-name="updateOrderPaymentPreferenceMap"/>
                         </if-not-empty>
                     </if-compare>
-
+                    <if-compare field="parameters.statusId" operator="equals" value="PMNT_VOID">
+                         <call-service service-name="voidPayment" in-map-name="parameters"/>
+                          <check-errors/>
+                    </if-compare>
                     <!-- everything ok so now change the status field -->
                     <set from-field="parameters.statusId" field="payment.statusId"/>
                     <if-not-empty field="parameters.transactionDate">
