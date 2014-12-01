@@ -103,7 +103,8 @@ prodTempMap=[:];
 							totalRevenue=0;
 							finalMap=FastMap.newInstance();
 							invoiceId = invoice.getKey();
-								if((UtilValidate.isNotEmpty(invoiceTaxMap)&& !invoiceTaxMap.get(invoiceId).get("PPD_PROMO_ADJ"))){
+								if(UtilValidate.isNotEmpty(invoiceTaxMap) && invoiceTaxMap.containsKey(invoiceId)){
+						          if(!invoiceTaxMap.get(invoiceId).containsKey("PPD_PROMO_ADJ") ){
 									if(UtilValidate.isNotEmpty(invoice.getValue().invoiceDateStr)){
 										invoiceDate = invoice.getValue().invoiceDateStr;
 									}
@@ -236,8 +237,9 @@ prodTempMap=[:];
 												finalMap.put("productTotals",tempVariantMap);
 												finalMap.put("invTotals",totalMap);
 										}
+									   }
 									}
-								}
+								
 								invoiceList = [];
 								if(UtilValidate.isNotEmpty(invoiceMap[invoiceId])){
 									invoiceList = invoiceMap.get(invoiceId);
@@ -245,6 +247,7 @@ prodTempMap=[:];
 								invoiceList.add(finalMap);
 								invoiceMap[invoiceId] = invoiceList;
 							 }
+							}
 						}
 					}
 				}

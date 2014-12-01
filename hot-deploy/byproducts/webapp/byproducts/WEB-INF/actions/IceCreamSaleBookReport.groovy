@@ -84,7 +84,8 @@ if(UtilValidate.isNotEmpty(partyIds)){
 	
 	partyTotals = SalesInvoiceServices.getPeriodSalesInvoiceTotals(dctx, [partyIds:partyIds, isQuantityLtrs:true,fromDate:dayBegin, thruDate:dayEnd]).get("partyTotals");
 	partyTotals.each{ eachParty ->
-	if(UtilValidate.isNotEmpty(partyTaxMap) && !partyTaxMap.get(eachParty.getKey().toString()).get("PPD_PROMO_ADJ") ){
+	if(UtilValidate.isNotEmpty(partyTaxMap) && partyTaxMap.containsKey(eachParty.getKey())){
+	 if(!partyTaxMap.get(eachParty.getKey()).containsKey("PPD_PROMO_ADJ") ){
 		quantity=0;
 		basicRevenue=0;
 		bedRevenue=0;
@@ -112,7 +113,8 @@ if(UtilValidate.isNotEmpty(partyIds)){
 		if(quantity != 0){
 			partWiseSaleMap.put(eachParty.getKey(), totalMap);
 		}
-	}
+	  }
+	 }
 	}
 }
 context.categoryType=categoryType;
