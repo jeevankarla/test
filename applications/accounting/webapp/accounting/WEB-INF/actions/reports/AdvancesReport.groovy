@@ -35,6 +35,8 @@
 	thruDateStr = parameters.thruDate;
 	Debug.log("fromDateStr ================"+fromDateStr);
 	Debug.log("thruDateStr ================"+thruDateStr);
+	context.fromDateStr = fromDateStr;
+	context.thruDateStr = thruDateStr;
 	
 	SimpleDateFormat formatter = new SimpleDateFormat("yyyy, MMM dd");
 	Timestamp fromDateTs = null;
@@ -79,32 +81,28 @@
 	partyPaymentsMap = [:];
 	for(i=0; i<partyIdsList.size(); i++){
 		partyId = partyIdsList.get(i);
+		Debug.log("partyId-------------------"+partyId);
 		partyPaymentsList = EntityUtil.filterByAnd(paymentList, [partyIdTo : partyId]);
-		
-		duringPeriodPayments = [];
-		duringPeriodPayments.addAll(partyPaymentsList);
-		
-		duringPaymentApplications = [];
-		duringPaymentApplications.addAll(paymentApplicationList);
+		partyPmntIdsList = EntityUtil.getFieldListFromEntityList(partyPaymentsList, "paymentId", true);
+		Debug.log("partyPaymentsList=============="+partyPaymentsList);
 		
 		advDetailsMap = [:];
 		
 		// Calculate Opening Balance
 		oldPmnts = EntityUtil.filterByCondition(partyPaymentsList, EntityCondition.makeCondition("paymentDate",EntityOperator.LESS_THAN, fromDate));
+		Debug.log("oldPmnts=============="+oldPmnts);
 		oldPmntIdsList = EntityUtil.getFieldListFromEntityList(oldPmnts, "paymentId", true);
 		
 		amountPaid = BigDecimal.ZERO;
 		for(j=0; j<oldPmnts.size(); j++){
 			amountPaid = amountPaid.add((oldPmnts.get(j)).getBigDecimal("amount"));
 		}
-		duringPeriodPayments.remove(oldPmnts);
 		
 		condList = [];
 		condList.add(EntityCondition.makeCondition("paymentId", EntityOperator.IN, oldPmntIdsList));
 		condList.add(EntityCondition.makeCondition("paymentDate",EntityOperator.LESS_THAN, fromDate));
 		condExpr = EntityCondition.makeCondition(condList, EntityOperator.AND);
 		oldPmntAppList = EntityUtil.filterByCondition(paymentApplicationList, condExpr);
-		duringPaymentApplications.remove(oldPmntAppList);
 		
 		amountApplied = BigDecimal.ZERO;
 		for(j=0; j<oldPmntAppList.size(); j++){
@@ -115,20 +113,35 @@
 		obMap = [:];
 		obMap.put("debit", openingBalance);
 		obMap.put("credit", BigDecimal.ZERO);
-		
-		advDetailsMap.put("openingBalance", obMap);
+		tempMap = [:];
+		tempMap.putAll(obMap);
+		advDetailsMap.put("openingBalance", tempMap);
 		
 		// Calculate During period credit and debit
 		
+		durationPmnts = EntityUtil.filterByCondition(partyPaymentsList, EntityCondition.makeCondition("paymentId",EntityOperator.NOT_IN, oldPmntIdsList));
 		duringAmountPaid = BigDecimal.ZERO;
-		for(j=0; j<oldPmnts.size(); j++){
-			duringAmountPaid = duringAmountPaid.add((duringPeriodPayments.get(j)).getBigDecimal("amount"));
+		for(j=0; j<durationPmnts.size(); j++){
+			duringAmountPaid = duringAmountPaid.add((durationPmnts.get(j)).getBigDecimal("amount"));
 		}
+		
+		condList = [];
+		condList.add(EntityCondition.makeCondition("paymentId", EntityOperator.IN, partyPmntIdsList));
+		condList.add(EntityCondition.makeCondition("paymentDate",EntityOperator.GREATER_THAN_EQUAL_TO, fromDate));
+		condExpr1 = EntityCondition.makeCondition(condList, EntityOperator.AND);
+		durationPmntApps = EntityUtil.filterByCondition(paymentApplicationList, condExpr1);
+		
 		duringAmountApplied = BigDecimal.ZERO;
-		for(j=0; j<duringPaymentApplications.size(); j++){
-			duringAmountApplied = duringAmountApplied.add((duringPaymentApplications.get(j)).getBigDecimal("amountApplied"));
+		for(j=0; j<durationPmntApps.size(); j++){
+			duringAmountApplied = duringAmountApplied.add((durationPmntApps.get(j)).getBigDecimal("amountApplied"));
 		}
-		advDetailsMap.put("openingBalance", UtilMisc.toMap("debit", duringAmountPaid, "credit", duringAmountApplied));
+		
+		dpMap = [:];
+		dpMap.put("debit", duringAmountPaid);
+		dpMap.put("credit", duringAmountApplied);
+		tempMap = [:];
+		tempMap.putAll(dpMap);
+		advDetailsMap.put("duringPeriod", tempMap);
 		
 		// Calculate Closing Balance
 		totalDebit = openingBalance.add(duringAmountPaid);
@@ -136,10 +149,20 @@
 		
 		closingBalance = totalDebit.subtract(totalCredit);
 		if(closingBalance > 0){
-			advDetailsMap.put("duringPeriod", UtilMisc.toMap("debit", closingBalance, "credit", BigDecimal.ZERO));
+			cbMap = [:];
+			cbMap.put("debit", closingBalance);
+			cbMap.put("credit", BigDecimal.ZERO);
+			tempMap = [:];
+			tempMap.putAll(cbMap);
+			advDetailsMap.put("closingBalance", tempMap);
 		}
 		else{
-			advDetailsMap.put("closingBalance", UtilMisc.toMap("debit", BigDecimal.ZERO, "credit", closingBalance));
+			cbMap = [:];
+			cbMap.put("debit", BigDecimal.ZERO);
+			cbMap.put("credit", closingBalance.negate());
+			tempMap = [:];
+			tempMap.putAll(cbMap);
+			advDetailsMap.put("closingBalance", tempMap);
 		}
 		
 		tempPmntAppMap = [:];
@@ -154,5 +177,5 @@
 	
 	
 	
-	adsfadsfl;
+	//adsfadsfl;
 	
