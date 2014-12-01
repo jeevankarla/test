@@ -35,6 +35,17 @@
 	        	<link target="FindMaterialRequirement"/>
 	        </menu-item>
 	        
+	        <menu-item name="FindMaterialEnquiry" title="Enquiry">
+	        	<link target="FindMaterialEnquiry"/>
+	        </menu-item>
+	        
+	        <menu-item name="FindMaterialQuotes" title="Find Quotations">
+	        	<link target="FindMaterialQuotes"/>
+	        </menu-item>
+	        
+	        <menu-item name="FindMaterialPO" title="Purchase Order">
+	        	<link target="FindMaterialPO"/>
+	        </menu-item>
 	   		<menu-item name="FindMaterialPO" title="Purchase Order">
 	        	<link target="FindMaterialPO"/>
 	        </menu-item>

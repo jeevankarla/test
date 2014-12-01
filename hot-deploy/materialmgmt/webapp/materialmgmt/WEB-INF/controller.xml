@@ -170,6 +170,13 @@
        <response name="success" type="view" value="FindMaterialRequirement"/>
        <response name="error" type="view" value="FindMaterialRequirement"/>
      </request-map>
+     
+     <request-map uri="FindMaterialEnquiry">
+       <security https="true" auth="true"/>
+       <response name="success" type="view" value="FindMaterialEnquiry"/>
+       <response name="error" type="view" value="FindMaterialEnquiry"/>
+     </request-map>
+     
      <request-map uri="ApproveMaterialRequirement">
        <security https="true" auth="true"/>
        <response name="success" type="view" value="ApproveMaterialRequirement"/>
@@ -323,6 +330,7 @@
     <view-map name="CustRequestEntry" type="screen" page="component://materialmgmt/widget/MaterialRequestScreens.xml#CustRequestEntry"/>
     <view-map name="ApproveRequestsByDeptHead" type="screen" page="component://materialmgmt/widget/MaterialRequestScreens.xml#ApproveRequestsByDeptHead"/>
     <view-map name="StoreProductIssue" type="screen" page="component://materialmgmt/widget/MaterialRequestScreens.xml#StoreProductIssue"/>
+    <view-map name="FindMaterialEnquiry" type="screen" page="component://materialmgmt/widget/MaterialRequestScreens.xml#FindMaterialEnquiry"/>
     
     <!-- Requirement views -->
     <view-map name="FindMaterialRequirement" type="screen" page="component://materialmgmt/widget/MaterialRequirementScreens.xml#FindMaterialRequirement"/>
@@ -334,5 +342,6 @@
     <view-map name="POMaterialReceipts" type="screen" page="component://materialmgmt/widget/MaterialPurchaseScreens.xml#POMaterialReceipts"/>
     <view-map name="FindMaterialPO" type="screen" page="component://materialmgmt/widget/MaterialPurchaseScreens.xml#FindMaterialPO"/>
     <view-map name="InvoiceForShippedGoods" type="screen" page="component://materialmgmt/widget/MaterialPurchaseScreens.xml#InvoiceForShippedGoods"/>
+    
     
 </site-conf>

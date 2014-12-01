@@ -3,9 +3,8 @@
 
 	<form name="FindMaterialRequest" target="FindMaterialRequest" title="" type="single" default-map-name="parameters"
         header-row-style="header-row" default-table-style="basic-table">
-        
         <field name="custRequestId" title="Request Id"><text-find/></field>
-        <field name="custRequestTypeId"><hidden value="PRODUCT_REQUIREMENT"/></field>
+        <field name="custRequestTypeId"><hidden value="parameters.custRequestTypeId"/></field>
         <field name="statusId" title="Status">
             <drop-down allow-empty="true">
                 <entity-options entity-name="StatusItem" description="${description}">
@@ -65,7 +64,72 @@
         </field>
         
     </form>
-    
+	
+	<form name="FindMaterialEnquiry" target="FindMaterialEnquiry" title="" type="single" default-map-name="parameters"
+        header-row-style="header-row" default-table-style="basic-table">
+        <field name="custRequestId" title="Request Id"><text-find/></field>
+        <field name="custRequestTypeId"><hidden value="parameters.custRequestTypeId"/></field>
+        <field name="statusId" title="Status">
+            <drop-down allow-empty="true">
+                <entity-options entity-name="StatusItem" description="${description}">
+                    <entity-constraint name="statusTypeId" operator="equals" value="CUSTREQ_STTS"/>
+                    <entity-order-by field-name="sequenceId"/>
+                </entity-options>
+            </drop-down>
+        </field>
+        <field name="custRequestName" title="Request Title"><text-find/></field>
+        <field name="fromPartyId" title="From Party"><lookup target-form-name="LookupPartyName"/></field>
+ 		<field name="custRequestDate" title="Request Date"><date-find/></field>   
+        <field name="submitButton" title="${uiLabelMap.CommonFind}" widget-style="smallSubmit">
+            <submit button-type="button"/>
+        </field>
+        <field name="noConditionFind"><hidden value="Y"/><!-- if this isn't there then with all fields empty no query will be done --></field>
+    </form>
+
+    <form name="ListEnquiry" type="list" extends="ListEnquiryList" list-name="listIt">
+        <actions>
+          <service service-name="performFind" result-map="result" result-map-list="listIt">
+            <field-map field-name="inputFields" from-field="parameters"/>
+            <field-map field-name="entityName" from-field="entityName"/>
+            <field-map field-name="orderBy" from-field="parameters.sortField"/>
+            <field-map field-name="viewIndex" from-field="viewIndex"/>
+            <field-map field-name="viewSize" from-field="viewSize"/>
+          </service>
+        </actions>
+    </form>
+
+    <form name="ListEnquiryList" type="list" use-row-submit="true" list-name="custRequests" title="List of customer requests"
+        odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
+        <field name="custRequestId" sort-field="true" title="RequestId" widget-style="buttontext">
+            <hyperlink description="${custRequestId}" target="ViewMaterialRequest" target-window="_blank">
+                <parameter param-name="custRequestId"/>
+            </hyperlink>
+        </field>
+        <field name="custRequestDate" sort-field="true" title="Request Date"><display description="${bsh:org.ofbiz.base.util.UtilDateTime.toDateString(custRequestDate,&quot;dd/MM/yyyy&quot;)}"/></field>
+        <field name="fromPartyId" sort-field="true">
+            <display-entity entity-name="PartyNameView" key-field-name="partyId" description="${firstName} ${middleName} ${lastName} ${groupName}">
+                <sub-hyperlink description="[${fromPartyId}]" target="/partymgr/control/viewprofile" target-type="inter-app">
+                    <parameter param-name="partyId" from-field="fromPartyId"/>
+                </sub-hyperlink>
+            </display-entity>
+        </field>
+        <field name="custRequestName" title="Request Title"><display/></field>
+        <field name="statusId" sort-field="true" title="Status">
+            <display-entity also-hidden="false" entity-name="StatusItem"/>
+        </field>
+        <field name="lastModifiedDate" sort-field="true"><display/></field>
+        <field name="createdByUserLogin" sort-field="true"><display/></field>
+        
+        <field use-when="&quot;${statusId}&quot;== &quot;CRQ_DRAFT&quot;" name="cancel" widget-style="buttontext">
+            <hyperlink target="setRequestStatus" description="Cancel">
+                <parameter param-name="custRequestId"/>
+                <parameter param-name="statusId" value="CRQ_CANCELLED"/>
+            </hyperlink>
+        </field>
+        
+    </form>
+	
+	    
     <form name="ListRequestsToIssue" type="list" use-row-submit="true"  title="" list-name="custRequestItemsList"
         odd-row-style="alternate-row" default-table-style="basic-table hover-bar" paginate-target="StoreProductIssue">
         <row-actions>
