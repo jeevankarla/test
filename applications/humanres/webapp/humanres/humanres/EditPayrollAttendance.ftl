@@ -129,27 +129,24 @@ function comparer(a, b) {
 			 	 data =[];
 			</#if>
 			var columns = [		
-					{id:"id", name:"Employee Id", field:"id", width:145, minWidth:100, cssClass:"cell-title", sortable:true},
-					{id:"deptName", name:"Department", field:"deptName", width:150, minWidth:100, cssClass:"cell-title", sortable:true},
-					{id:"noOfAttendedDays", name:"WKD", field:"noOfAttendedDays", width:40, minWidth:100, cssClass:"cell-title", sortable:true, editor:FloatCellEditor},
-					{id:"noOfAttendedHoliDays", name:"OFFS", field:"noOfAttendedHoliDays", width:50, minWidth:100, cssClass:"cell-title", sortable:true, editor:FloatCellEditor},
-					{id:"casualLeaveDays", name:"CL", field:"casualLeaveDays", width:35, minWidth:100, cssClass:"cell-title", sortable:true, editor:FloatCellEditor},
-					{id:"earnedLeaveDays", name:"EL", field:"earnedLeaveDays", width:35, minWidth:100, cssClass:"cell-title", sortable:true, editor:FloatCellEditor},
-					{id:"noOfHalfPayDays", name:"HPL", field:"noOfHalfPayDays", width:35, minWidth:100, cssClass:"cell-title", sortable:true, editor:FloatCellEditor},
+					{id:"id", name:"Employee Id", field:"id", width:200, minWidth:100, cssClass:"cell-title", sortable:true},
+					{id:"noOfAttendedDays", name:"WKD", field:"noOfAttendedDays", width:50, minWidth:100, cssClass:"cell-title", sortable:true, editor:FloatCellEditor},
+					{id:"noOfAttendedHoliDays", name:"OFFS", field:"noOfAttendedHoliDays", width:60, minWidth:100, cssClass:"cell-title", sortable:true, editor:FloatCellEditor},
+					{id:"casualLeaveDays", name:"CL", field:"casualLeaveDays", width:50, minWidth:100, cssClass:"cell-title", sortable:true, editor:FloatCellEditor},
+					{id:"earnedLeaveDays", name:"EL", field:"earnedLeaveDays", width:50, minWidth:100, cssClass:"cell-title", sortable:true, editor:FloatCellEditor},
+					{id:"noOfHalfPayDays", name:"HPL", field:"noOfHalfPayDays", width:50, minWidth:100, cssClass:"cell-title", sortable:true, editor:FloatCellEditor},
 					{id:"commutedLeaveDays", name:"CHPL", field:"commutedLeaveDays", width:50, minWidth:100, cssClass:"cell-title", sortable:true, editor:FloatCellEditor},
-					{id:"disabilityLeaveDays", name:"DBL", field:"disabilityLeaveDays", width:35, minWidth:100, cssClass:"cell-title", sortable:true, editor:FloatCellEditor},
-					{id:"extraOrdinaryLeaveDays", name:"EOL", field:"extraOrdinaryLeaveDays", width:40, minWidth:100, cssClass:"cell-title", sortable:true, editor:FloatCellEditor},
-					{id:"noOfNightAllowanceDays", name:"NIGHT ALW", field:"noOfNightAllowanceDays", width:80, minWidth:100, cssClass:"cell-title", sortable:true, editor:FloatCellEditor},
-					{id:"coldOrBoiledAllowanceDays", name:"CB ALW", field:"coldOrBoiledAllowanceDays", width:60, minWidth:100, cssClass:"cell-title", sortable:true, editor:FloatCellEditor},
-					{id:"noOfRiskAllowanceDays", name:"RSK ALW", field:"noOfRiskAllowanceDays", width:65, minWidth:100, cssClass:"cell-title", sortable:true, editor:FloatCellEditor},
-					{id:"heavyTankerAllowanceDays", name:"HTKR", field:"heavyTankerAllowanceDays", width:50, minWidth:100, cssClass:"cell-title", sortable:true, editor:FloatCellEditor},
-					{id:"trTankerAllowanceDays", name:"TTKR", field:"trTankerAllowanceDays", width:50, minWidth:100, cssClass:"cell-title", sortable:true, editor:FloatCellEditor},
-					{id:"operatingAllowanceDays", name:"OPER", field:"operatingAllowanceDays", width:50, minWidth:100, cssClass:"cell-title", sortable:true, editor:FloatCellEditor},
-					{id:"inChargeAllowanceDays", name:"I/C", field:"inChargeAllowanceDays", width:35, minWidth:100, cssClass:"cell-title", sortable:true, editor:FloatCellEditor},
-					{id:"lossOfPayDays", name:"ABS DAYS", field:"lossOfPayDays", width:70, minWidth:100, cssClass:"cell-title", sortable:true, editor:FloatCellEditor},
+					{id:"disabilityLeaveDays", name:"DBL", field:"disabilityLeaveDays", width:50, minWidth:100, cssClass:"cell-title", sortable:true, editor:FloatCellEditor},
+					{id:"extraOrdinaryLeaveDays", name:"EOL", field:"extraOrdinaryLeaveDays", width:50, minWidth:100, cssClass:"cell-title", sortable:true, editor:FloatCellEditor},
+					{id:"noOfNightAllowanceDays", name:"NIGHT ALW", field:"noOfNightAllowanceDays", width:85, minWidth:100, cssClass:"cell-title", sortable:true, editor:FloatCellEditor},
+					{id:"coldOrBoiledAllowanceDays", name:"CB ALW", field:"coldOrBoiledAllowanceDays", width:63, minWidth:100, cssClass:"cell-title", sortable:true, editor:FloatCellEditor},
+					{id:"noOfRiskAllowanceDays", name:"RSK ALW", field:"noOfRiskAllowanceDays", width:75, minWidth:100, cssClass:"cell-title", sortable:true, editor:FloatCellEditor},
+					{id:"heavyTankerAllowanceDays", name:"HTKR", field:"heavyTankerAllowanceDays", width:55, minWidth:100, cssClass:"cell-title", sortable:true, editor:FloatCellEditor},
+					{id:"trTankerAllowanceDays", name:"TTKR", field:"trTankerAllowanceDays", width:55, minWidth:100, cssClass:"cell-title", sortable:true, editor:FloatCellEditor},
+					{id:"operatingAllowanceDays", name:"OPER", field:"operatingAllowanceDays", width:55, minWidth:100, cssClass:"cell-title", sortable:true, editor:FloatCellEditor},
+					{id:"inChargeAllowanceDays", name:"I/C", field:"inChargeAllowanceDays", width:50, minWidth:100, cssClass:"cell-title", sortable:true, editor:FloatCellEditor},
+					{id:"lossOfPayDays", name:"ABS DAYS", field:"lossOfPayDays", width:75, minWidth:100, cssClass:"cell-title", sortable:true, editor:FloatCellEditor},
 					{id:"noOfPayableDays", name:"TDAYS", field:"noOfPayableDays", width:60, minWidth:100, cssClass:"cell-title", sortable:true, editor:FloatCellEditor},
-					{id:"noOfArrearDays", name:"ARR DAYS", field:"noOfArrearDays", width:73, minWidth:100, cssClass:"cell-title", sortable:true, editor:FloatCellEditor},
-					{id:"noOfCalenderDays", name:"CAL DAYS", field:"noOfCalenderDays", width:73, minWidth:100, cssClass:"cell-title", sortable:true, editor:FloatCellEditor},
 			];
 	
 			columns.push({id:"button", name:"SAVE", field:"button", width:50, minWidth:70, cssClass:"cell-title",
@@ -398,7 +395,7 @@ function updatePayrollAttendanceInternal(formName, action, row) {
   
     <div>    	
  		<div class="grid-header" style="width:100%">
-			<font size="15" color="#22047F"><b>Employee Payroll Attendance<b/></font>:<font size="15" color="red"><b><#if timePeriodStart?has_content>[${(Static["org.ofbiz.base.util.UtilDateTime"].toDateString(timePeriodStart?if_exists, "MMMMM-yyyy"))}]</#if></b></font>  <font size="15" color="#22047F"><b>Total Employees :<b/></font><font size="15" color="red"><b><span id="totalEmpls"></span></b></font><font size="15" color="#22047F"><b>Compleated Employees :<b/></font><font size="15" color="red"><b><span id="enteredEmpls"></span></b></font><font size="15" color="#22047F"><b>Remaining Employees :<b/></font><font size="15" color="red"><b><span id="remainingEmpls"></span></b></font>  
+			<font size="15" color="#22047F"><b>Employee Payroll Attendance<b/></font>:<font size="15" color="red"><b><#if timePeriodStart?has_content>[${(Static["org.ofbiz.base.util.UtilDateTime"].toDateString(timePeriodStart?if_exists, "MMMMM-yyyy"))}]</#if></b></font>  <font size="15" color="#22047F"><b>Total Employees :<b/></font><font size="15" color="red"><b><span id="totalEmpls"></span></b></font><font size="15" color="#22047F"><b>Completed Employees :<b/></font><font size="15" color="red"><b><span id="enteredEmpls"></span></b></font><font size="15" color="#22047F"><b>Remaining Employees :<b/></font><font size="15" color="red"><b><span id="remainingEmpls"></span></b></font>  
 		</div>    
 		<div id="itemGrid2" style="width:100%;height:350px;">
 			
