@@ -1286,6 +1286,7 @@ public class SalesInvoiceServices {
 		
 		EntityListIterator invoiceItemsIter = null;
 		Map<String,Object> invoiceTaxMap =FastMap.newInstance();
+		Map<String,Object> partyTaxMap =FastMap.newInstance();
 		try {
 			List conditionList = FastList.newInstance();
 			conditionList.add(EntityCondition.makeCondition("statusId",EntityOperator.NOT_EQUAL, "INVOICE_CANCELLED"));
@@ -1331,18 +1332,24 @@ public class SalesInvoiceServices {
 						 }
 					 }
 				     invoiceTaxMap.put(invoiceItem.getString("invoiceId"),tempTaxMap);
+				     partyTaxMap.put(invoiceItem.getString("partyId"), tempTaxMap);
 				 }else{
 					 Map invoiceMap =  (Map) invoiceTaxMap.get(invoiceItem.getString("invoiceId"));
+					 Map partyMap =  (Map) partyTaxMap.get(invoiceItem.getString("partyId"));
 					 if(amount.intValue()>=0){
 						 invoiceMap.put(itemType, amount);
+						 partyMap.put(itemType, amount);
 					 }else{
 						 if(itemType.equals("VAT_SALE")){
 							 invoiceMap.put(itemType+"_ADJ", amount);
+							 partyMap.put(itemType+"_ADJ", amount);
 						 }else{
 							 invoiceMap.put(itemType, amount);
+							 partyMap.put(itemType, amount);
 						 }
 					}
 					 invoiceTaxMap.put(invoiceItem.getString("invoiceId"), invoiceMap);
+					 partyTaxMap.put(invoiceItem.getString("partyId"), partyMap);
 				 }
 			}
 	} catch (GenericEntityException e) {
@@ -1357,7 +1364,8 @@ public class SalesInvoiceServices {
 	       }
 	}
 		Map<String, Object> result = FastMap.newInstance();
-		result.putAll(invoiceTaxMap);
+		result.put("invoiceTaxMap", invoiceTaxMap);
+		result.put("partyTaxMap", partyTaxMap);
 		return result;
 	}
 }
