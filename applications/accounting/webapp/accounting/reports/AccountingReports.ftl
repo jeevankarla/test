@@ -169,13 +169,14 @@ function reportTypeChangeFunc() {
       	<tr class="alternate-row"> 
       		<form id="advancesReport" name="advancesReport" method="post" action="<@ofbizUrl>AdvancesReport.pdf</@ofbizUrl>" target="_blank">	
       		  	<td width="20%">Advances Report</td>
+			  	<#--
 			  	<td width="25%">Payment Type
 			  	  	<select name='paymentTypeId' id ="paymentTypeId">	
 					 	<option value="ADVTOVENDOR_PAYOUT">Advances To Vendor</option>								
 						<option value="EMPLADV_PAYOUT">Employees Advance</option>
 				 	</select>
 			  	</td>
-			  	<#--
+			  	-->
 			  	<td width="25%">Payment Type
 			  	  	<select name='paymentTypeId' id ="paymentTypeId">	
 					 	<option value=""></option>								
@@ -184,7 +185,7 @@ function reportTypeChangeFunc() {
           		   		</#list>
 				 	</select>
 			  	</td>
-			  	-->
+			  	
 				<td width="20%">From<input  type="text" size="18pt" id="advFromDate" readonly  name="fromDate"/></td>
 				<td width="20%">To<input  type="text" size="18pt" id="advThruDate" readonly  name="thruDate"/></td>
           		<td width="15%"><input type="submit" value="PDF" class="buttontext"/></td>
