@@ -25,11 +25,26 @@ under the License.
         <check-permission permission="PERIOD_MAINT">
             <fail-property resource="CommonUiLabels" property="CommonGenericPermissionError"/>
         </check-permission>
-        <check-errors/>
-
+           <if-compare-field field="parameters.fromDate" operator="greater-equals" to-field="parameters.thruDate"> 
+            	<add-error>
+            		<fail-message message="FromDate Should Be LessThen The Thrudate"></fail-message>
+            	</add-error> 
+           </if-compare-field>	
+     		<entity-condition list="CustomTimePeriodList" entity-name="CustomTimePeriod" >
+        		<condition-list combine="and">
+					<condition-expr field-name="fromDate" operator="equals" from-field="parameters.fromDate"/>
+ 					<condition-expr field-name="thruDate" operator="equals" from-field="parameters.thruDate"/> 
+					<condition-expr field-name="periodTypeId" operator="equals" from-field="parameters.periodTypeId"/>
+ 		  		</condition-list>
+    		</entity-condition> 
+	 		<if-not-empty field="CustomTimePeriodList">
+	 			<add-error>
+	 				<fail-message message="This Time Period already Exist"></fail-message>
+	 			</add-error>
+            </if-not-empty> 
+       <check-errors/>
         <make-value value-field="newEntity" entity-name="CustomTimePeriod"/>
         <set-nonpk-fields map="parameters" value-field="newEntity"/>
-
         <sequenced-id sequence-name="CustomTimePeriod" field="customTimePeriodId"/>
         <set from-field="customTimePeriodId" field="newEntity.customTimePeriodId"/>
         <field-to-result field="customTimePeriodId" result-name="customTimePeriodId"/>
