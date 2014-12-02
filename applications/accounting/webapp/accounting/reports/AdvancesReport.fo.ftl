@@ -103,8 +103,8 @@ ${setRequestAttribute("OUTPUT_FILENAME", "abstractReport.pdf")}
 	                       			</fo:table-cell>
 	                       			<fo:table-cell border-style="solid">
 	                            		<fo:block  text-align="left" keep-together="always" font-size="13pt" white-space-collapse="false"> 
-                                             --
-                                      </fo:block>  
+                                             ${Static["org.ofbiz.party.party.PartyHelper"].getPartyName(delegator, partyId, false)}
+                                      	</fo:block>  
 	                       			</fo:table-cell>
 	                       			<fo:table-cell border-style="solid">
 	                            		<fo:block  text-align="left" keep-together="always" font-size="13pt" white-space-collapse="false"> 
