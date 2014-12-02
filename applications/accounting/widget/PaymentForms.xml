@@ -936,8 +936,8 @@ under the License.
             </drop-down>
         </field>
         <field name="noConditionFind"><hidden value="Y"/></field>
-         <field name="paymentMethodTypeId" ><hidden value="${parameters.defaultMethodTypeId}"/></field>
-         <field name="subTabItem" ><hidden   value="${subTabItem}"/></field>
+         <field name="paymentMethodTypeId" ><hidden value="CHEQUE_PAYIN"/></field>
+         <field name="subTabItem" ><hidden value="${subTabItem}"/></field>
     </form>
      <form name="NewNonRouteReceipt" type="single" target="createNonRouteReceipt" default-map-name="payment"
         header-row-style="header-row" default-table-style="basic-table">

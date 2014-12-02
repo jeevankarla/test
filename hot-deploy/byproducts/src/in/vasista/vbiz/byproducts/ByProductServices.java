@@ -5651,6 +5651,7 @@ public class ByProductServices {
     		GenericValue payment = null;
     		SimpleDateFormat sdf = new SimpleDateFormat("dd MMMM, yyyy");
   	  	  	Timestamp cancelDate = null;
+  	  	  	boolean isNonRouteMrktingChqReturn = Boolean.FALSE;// always excluding if externally not set
     		if(UtilValidate.isNotEmpty(returnDateStr)){
   	  	  		try {
   	  	  		cancelDate = new java.sql.Timestamp(sdf.parse(returnDateStr).getTime());
@@ -5663,9 +5664,11 @@ public class ByProductServices {
   	  	  	else{
   	  	  		cancelDate = UtilDateTime.nowTimestamp();
   	  	  	}
-    		
     		try{
     			payment = delegator.findOne("Payment", UtilMisc.toMap("paymentId", paymentId), false);
+    			if("NON_ROUTE_MKTG".equals(payment.getString("paymentPurposeType"))) {
+    				isNonRouteMrktingChqReturn = Boolean.TRUE;    			
+    			}
     			payment.put("chequeReturns", chequeReturns);
     			payment.put("comments", comments);
     			payment.put("cancelDate", cancelDate);
@@ -5676,6 +5679,10 @@ public class ByProductServices {
                 	Debug.logError("Error cancelling payment of retailer ", module);	
                     return ServiceUtil.returnError("Error cancelling payment of retailer ");
 				}
+    			// if it is from NonRouteMakting Then return from After payment void
+    			if(isNonRouteMrktingChqReturn){
+    				return result = ServiceUtil.returnSuccess("Payment Successfully cancelled For Party : "+payment.get("partyIdFrom"));
+        		}
     			if(chequeReturns.equals("Y")){
     				Map<String, Object> createInvoice = FastMap.newInstance();
     				createInvoice.put("userLogin", userLogin);
@@ -5694,11 +5701,13 @@ public class ByProductServices {
     				}
     			}
     			
+    			
     		}catch(Exception e){
     			Debug.logError("Unable to cancel the payment"+e, module);
         		return ServiceUtil.returnError("Unable to cancel the payment");
     		}
     		result = ServiceUtil.returnSuccess("Payment Successfully cancelled For Party : "+payment.get("facilityId"));
+    		
           	return result;
 	    }
 	    

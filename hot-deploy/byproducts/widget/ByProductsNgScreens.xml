@@ -4177,11 +4177,11 @@
 	<screen name="NonRouteFindChequeReturns">
 		<section>
 			<actions>
-			<set field="titleProperty" value="Non Route Recipts Search"/>
+				<set field="titleProperty" value="Non Route Recipts Search"/>
                 <set field="tabButtonItem" value="NonRouteCustomPayments"/>
                 <set field="subTabButtonItem" value="${parameters.subTabItem}" default-value="${context.subTabItem}"/>
                 <set field="paymentMethodTypeId" value="${parameters.paymentMethodTypeId}" default-value="${context.paymentMethodTypeId}"/>
-                 <set field="subTabItem" value="${parameters.subTabItem}" default-value="${context.subTabItem}"/>
+                <set field="subTabItem" value="ChequeReturn" default-value="${context.subTabItem}"/>
                 <set field="viewSize" from-field="parameters.VIEW_SIZE" type="Integer" default-value="1000"/>     
                 <service service-name="acctgInvoicePermissionCheck" result-map="permResult">
                     <field-map field-name="mainAction" value="PAYMENT_EDIT"/>
@@ -4211,12 +4211,13 @@
     			<service service-name="acctgInvoicePermissionCheck" result-map="permResult">
                     <field-map field-name="mainAction" value="PAYMENTSTATUS_CANCEL"/>
                 </service>
-    			 <set field="nowDate" value="${bsh:org.ofbiz.base.util.UtilDateTime.nowDateString(&quot;yyyy-MM-dd&quot;)}" type="String"/>
+    			<set field="nowDate" value="${bsh:org.ofbiz.base.util.UtilDateTime.nowDateString(&quot;yyyy-MM-dd&quot;)}" type="String"/>
                 <set field="hasPaymentEditPermission" from-field="permResult.hasPermission"/>
-                 <set field="isCashierPortalScreen" value="YES"/>
+                <set field="isCashierPortalScreen" value="YES"/>
                 <service service-name="acctgInvoicePermissionCheck" result-map="permResult">
                     <field-map field-name="mainAction" value="PAYMENTSTATUS_CANCEL"/>
                 </service>
+                <set field="parameters.defaultMethodTypeId" value="${parameters.defaultMethodTypeId}"/>
                 <set field="hasPaymentCancelPermission" value="true" type="Boolean"/><!--from-field="permResult.hasPermission"	--> 
                 <set field="parameters.noConditionFind" from-field="parameters.noConditionFind" default-value="N"/>
                 <service service-name="performFind" result-map="result">
@@ -4234,16 +4235,18 @@
 						<section>
 							<widgets>
 								<section>
-									        <widgets> 
-									         <decorator-screen name="FindScreenDecorator" location="component://common/widget/CommonScreens.xml">		
-									    		 <decorator-section name="search-options" > 
+									   <widgets> 
+									        <decorator-screen name="FindScreenDecorator" location="component://common/widget/CommonScreens.xml">		
+									    		<decorator-section name="search-options" > 
                                        					 <include-form name="FindPaymentRetrunCheqNonRoute" location="component://accounting/widget/PaymentForms.xml"/>
-                                   				 </decorator-section>
-                                   				 <decorator-section name="search-results">
+                                   				</decorator-section>
+                                   				<decorator-section name="search-results">
                                    				    <screenlet title="search result">
                                    				    <platform-specific>
+                                   				    
 	                                     					<html><html-template location="component://byproducts/webapp/byproducts/byproducts/ChequeReturnsCancel.ftl"/></html>
 	                                				</platform-specific>	
+	                                				
                                     					<platform-specific>
                                                          	<html><html-template location="component://accounting/webapp/accounting/payment/ChequeRtrnListPayment.ftl"/></html>
                                        	                </platform-specific>

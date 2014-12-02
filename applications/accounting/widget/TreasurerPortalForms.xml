@@ -75,13 +75,13 @@ under the License.
                 <parameter param-name="finAccountId"/>
             </hyperlink>
         </field> -->
-        <field name="statement" title="Bank Reconciliation Statement" widget-style="buttontext">
+<!--         <field name="statement" title="Bank Reconciliation Statement" widget-style="buttontext">
             <hyperlink target="recStatemetn.pdf" description="Statement" target-window="_BLANK"  also-hidden="false">
                 <parameter param-name="finAccountId"/>
                 <parameter param-name="glReconciliationId" value="_NA_" />
 				<parameter param-name="subTabItem" value="FinAccountTransForReconsile" />
             </hyperlink>
-        </field>
+        </field> -->
     </form>
     
     <form name="ListNonBankAccounts" type="list" separate-columns="true" default-entity-name="FinAccount"   list-name="nonBankAccountsList" paginate-target="FindNonBankAccount" paginate="true"
