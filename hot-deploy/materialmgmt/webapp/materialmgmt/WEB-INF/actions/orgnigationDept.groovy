@@ -29,4 +29,4 @@ context.orgList=orgList;
 	newPartyObj.put("label",eachOrg.groupName);
 	orgJSON.add(newPartyObj);
 }
-context.orgJSON = orgJSON;
+context.orgJSON = orgJSON;*/
