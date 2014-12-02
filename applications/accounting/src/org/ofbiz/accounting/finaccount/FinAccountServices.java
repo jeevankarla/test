@@ -31,6 +31,7 @@ import java.util.Map.Entry;
 
 import javolution.util.FastMap;
 
+import org.ofbiz.accounting.util.UtilAccounting;
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.GeneralException;
 import org.ofbiz.base.util.UtilDateTime;
@@ -800,6 +801,13 @@ public class FinAccountServices {
                 	finAccount.set("availableBalance", balanceUpdateAmount);
                 	finAccount.store();
         	}
+        	else if(status.equals("FINACT_TRNS_CREATED") && oldStatusId.equals("FINACT_TRNS_APPROVED")){
+        		Debug.log("==FINACT_TRNS_APPROVED==TO==FINACT_TRNS_CREATED=="+amountForCalc);
+        		//Then we have to less that transaction amount.
+            	balanceUpdateAmount = availableBalance.subtract(amountForCalc);
+            	finAccount.set("availableBalance", balanceUpdateAmount);
+            	finAccount.store();
+    	    }
         	else if(status.equals("FINACT_TRNS_CANCELED") && oldStatusId.equals("FINACT_TRNS_CREATED")){
         		balanceUpdateAmount = actualBalance.subtract(amountForCalc);
             	finAccount.set("actualBalance", balanceUpdateAmount);
@@ -1105,5 +1113,86 @@ public class FinAccountServices {
 		}
 		return result;
 	}
-       
+     
+    public static Map<String, Object> cancelFinancialAccountReconciliationNewVbiz(DispatchContext dctx, Map<String, Object> context) {
+        Delegator delegator = dctx.getDelegator();
+        LocalDispatcher dispatcher = dctx.getDispatcher();   
+        //List finAccountTransIdsList =  (List)context.get("finAccountTransIds");
+        GenericValue userLogin = (GenericValue) context.get("userLogin");
+        String  glReconciliationId=(String)context.get("glReconciliationId");
+        List finAccountTransIdsList =  FastList.newInstance();
+        List<String> glfinAccntTransPayIdsList =  FastList.newInstance();
+        Map glReconciliationMap= UtilMisc.toMap("statusId","GLREC_CREATED");
+        glReconciliationMap.put("userLogin", userLogin);
+        glReconciliationMap.put("glReconciliationId", glReconciliationId);
+        try{
+        	/*Map updateGlReconciliationRes=dispatcher.runSync("updateGlReconciliation",  glReconciliationMap);
+            if (ServiceUtil.isError(updateGlReconciliationRes)){
+  		  		String errMsg =  ServiceUtil.getErrorMessage(updateGlReconciliationRes);
+  		  		Debug.logError(errMsg , module);
+  		  	    return ServiceUtil.returnError("Problem for When Updating of glReconciliationId:" + glReconciliationId);    
+  		  	}*/
+            //before Calling cancelFinancialAccountReconciliation we have to Update FinAccntTrans status from FINACT_TRNS_APPROVED to FINACT_TRNS_CREATED
+        	List condList = FastList.newInstance();
+			condList.add(EntityCondition.makeCondition("glReconciliationId", EntityOperator.EQUALS ,glReconciliationId));
+	    	EntityCondition cond = EntityCondition.makeCondition(condList,EntityOperator.AND); 
+	    	List<GenericValue> finAccountTransList = delegator.findList("FinAccountTrans", cond, UtilMisc.toSet("finAccountTransId","paymentId"), null, null, false);
+	    	finAccountTransIdsList = EntityUtil.getFieldListFromEntityList(finAccountTransList, "finAccountTransId", true);
+	    	glfinAccntTransPayIdsList =EntityUtil.getFieldListFromEntityList(finAccountTransList, "paymentId", true);
+	    	Map setMassFinAccountTransStatusMap= UtilMisc.toMap("statusId","FINACT_TRNS_CREATED");
+	    	setMassFinAccountTransStatusMap.put("oldStatusId", "FINACT_TRNS_APPROVED");
+	    	setMassFinAccountTransStatusMap.put("finAccountTransIds", finAccountTransIdsList);
+	    	setMassFinAccountTransStatusMap.put("userLogin", userLogin);
+	    	Map setMassFinAccountTransStatusRes=dispatcher.runSync("setMassFinAccountTransStatus",  setMassFinAccountTransStatusMap);
+            if (ServiceUtil.isError(setMassFinAccountTransStatusRes)){
+  		  		String errMsg =  ServiceUtil.getErrorMessage(setMassFinAccountTransStatusRes);
+  		  		Debug.logError(errMsg , module);
+  		  	    return ServiceUtil.returnError("Problem  When Changing Status For finAccountTransIds Of glReconciliationId:" + glReconciliationId);    
+  		  	}
+            //Change Payment status  PMNT_CONFIRMED to PMNT_SENT/PMNT_RECEIVED
+            for (String paymentId :glfinAccntTransPayIdsList) {  
+            	GenericValue payment = delegator.findOne("Payment",UtilMisc.toMap("paymentId",paymentId) , false);
+            	Map<String, Object> setPaymentStatusMap = UtilMisc.<String, Object>toMap("userLogin", userLogin);
+	        	setPaymentStatusMap.put("paymentId", paymentId);
+		       	if(UtilValidate.isNotEmpty(payment)){
+		       		if(UtilAccounting.isReceipt(payment)){
+		       			setPaymentStatusMap.put("statusId", "PMNT_RECEIVED");
+		       		}
+		       		if(UtilAccounting.isDisbursement(payment)){
+		       			setPaymentStatusMap.put("statusId", "PMNT_SENT");
+		       		}
+		       	}
+	            Map<String, Object> pmntResults = dispatcher.runSync("setPaymentStatus", setPaymentStatusMap);
+	            if (ServiceUtil.isError(pmntResults)) {
+ 	            	Debug.logError(pmntResults.toString(), module);
+ 	            	return ServiceUtil.returnError(null, null, null, pmntResults);
+ 	            }
+            }
+            //cancel FinAccnt Reconciliation
+            Map glReconciliationCancelMap= UtilMisc.toMap("userLogin",userLogin);
+            glReconciliationCancelMap.put("glReconciliationId", glReconciliationId);
+            Map cancelFinAccountReconciliationRes=dispatcher.runSync("cancelFinancialAccountReconciliation",  glReconciliationCancelMap);
+            if (ServiceUtil.isError(cancelFinAccountReconciliationRes)){
+  		  		String errMsg =  ServiceUtil.getErrorMessage(cancelFinAccountReconciliationRes);
+  		  		Debug.logError(errMsg , module);
+  		  	    return ServiceUtil.returnError("Problem  When Removing GlReconciliationId From glReconciliationId:" + glReconciliationId);    
+  		  	}
+            ///*Map updateGlReconciliationRes=dispatcher.runSync("updateGlReconciliation",  glReconciliationMap);
+            glReconciliationMap.put("statusId", "GLREC_CANCELLED");
+            Map updateGlReconciliationRes=dispatcher.runSync("updateGlReconciliation",  glReconciliationMap);
+            if (ServiceUtil.isError(updateGlReconciliationRes)){
+  		  		String errMsg =  ServiceUtil.getErrorMessage(updateGlReconciliationRes);
+  		  		Debug.logError(errMsg , module);
+  		  	    return ServiceUtil.returnError("Problem When Change Status To Canceled for glReconciliationId:" + glReconciliationId);    
+  		  	}
+            
+        }catch (GenericEntityException e) {
+			Debug.logError(e, module);
+            return ServiceUtil.returnError(e.getMessage());
+		}catch (GenericServiceException e) {
+	        Debug.logError(e, "Reconcilation Cancelation Having Problem ", module);
+	        return ServiceUtil.returnError(e.getMessage());
+	    }
+        return ServiceUtil.returnSuccess("Reconcilation Canceld Successfully for glReconciliationId:"+glReconciliationId);
+    }
 }

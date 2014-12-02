@@ -240,7 +240,7 @@ under the License.
         <description>Set financial bulkaccount transaction status</description>
         <attribute name="finAccountTransIds" type="List"  mode="IN" optional="true"/>
         <attribute name="statusId" type="String" mode="IN" optional="true"/>
-        <attribute name="oldStatusId" type="String" mode="OUT" optional="true"/>
+        <attribute name="oldStatusId" type="String" mode="INOUT" optional="true"/>
     </service>
     <service name="populateFinAccountTransSequence" engine="java"
      location="org.ofbiz.accounting.finaccount.FinAccountServices" invoke="populateFinAccountTransSequence" transaction-timeout="6000">
@@ -667,7 +667,12 @@ under the License.
         <permission-service service-name="acctgFinAcctPermissionCheck" main-action="FINACCOUNTREC_EDIT"/>
         <attribute name="glReconciliationId" type="String" mode="IN" optional="false"/>
     </service>
-    
+    <service name="cancelFinancialAccountReconciliationNewVbiz" engine="java"
+            location="org.ofbiz.accounting.finaccount.FinAccountServices" invoke="cancelFinancialAccountReconciliationNewVbiz">
+        <description>Cancel financial account reconciliation by Vbiz</description>
+        <permission-service service-name="acctgFinAcctPermissionCheck" main-action="FINACCOUNTREC_EDIT"/>
+        <attribute name="glReconciliationId" type="String" mode="IN" optional="false"/>
+    </service>
     <service name="getAssociatedAcctgTransEntriesWithFinAccountTrans" engine="simple"
             location="component://accounting/script/org/ofbiz/accounting/finaccount/FinAccountServices.xml" invoke="getAssociatedAcctgTransEntriesWithFinAccountTrans">
         <description>Get associated acctgTransEntries with finAccountTrans</description>

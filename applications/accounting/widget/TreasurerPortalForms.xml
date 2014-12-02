@@ -1649,5 +1649,49 @@ under the License.
         <field name="statusId" title="Status"><display-entity entity-name="StatusItem"  description="${description}"/></field>
         <field name="comments" title="comments"><display/></field>
     </form>
+    <form name="ListFinAccountReconciliations" type="list" list-name="glReconciliations" list-entry-name="glReconciliation" separate-columns="true"
+            odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
+        <row-actions>
+            <entity-one entity-name="PartyNameView" value-field="partyName">
+                <field-map field-name="partyId" from-field="glReconciliation.organizationPartyId"/>
+            </entity-one>
+            <set field="currencyUomId" from-field="defaultOrganizationPartyCurrencyUomId"/>
+        </row-actions>
+        <auto-fields-service service-name="updateGlReconciliation" default-field-type="display" map-name="glReconciliation"/>
+        <field name="glReconciliationId" title="${uiLabelMap.FinAccountReconciliationId}">
+            <!--  <hyperlink target="ViewGlReconciliationWithTransaction" description="${glReconciliation.glReconciliationId}"> -->
+            <hyperlink target="ViewGlReconciliationWithTransactionNew" description="${glReconciliation.glReconciliationId}">
+                <parameter param-name="glReconciliationId" from-field="glReconciliation.glReconciliationId"/>
+                <parameter param-name="finAccountId"/>
+            </hyperlink>
+        </field>
+        <field name="glReconciliationName" title="${uiLabelMap.FinAccountReconciliationName}"><display/></field>        
+        <field name="statusId" title="${uiLabelMap.CommonStatus}"><display-entity entity-name="StatusItem"/></field>
+        <field name="organizationPartyId" title="${uiLabelMap.PartyParty}">
+            <hyperlink target="/partymgr/control/viewprofile" target-type="inter-app" description="${partyName.firstName} ${partyName.lastName}${partyName.groupName} [${partyName.partyId}]">
+                <parameter param-name="partyId" from-field="partyName.partyId"/>
+            </hyperlink>
+        </field>
+      <!--   <field name="cancelButton" title="${uiLabelMap.FinAccountReconciliationCancel}" use-when="${glReconciliation.statusId == 'GLREC_CREATED'} &amp;&amp; hasFinRecEditPermission" widget-style="buttontext">
+            <hyperlink also-hidden="false" description="${uiLabelMap.CommonCancel}" target="cancelReconciliation">
+                <parameter param-name="glReconciliationId" from-field="glReconciliation.glReconciliationId"/>
+                <parameter param-name="finAccountId"/>
+            </hyperlink>
+        </field> -->
+        <field name="reconciledBalance"><display type="currency" currency="${currencyUomId}"></display></field>
+        <field name="openingBalance"><display type="currency" currency="${currencyUomId}"></display></field>        
+        <field name="exporasCSV" title="Export" widget-style="buttontext">
+            <hyperlink target="FinAccountTransForReconciled.csv" target-type="inter-app" description="ExportCSV">
+                <parameter param-name="glReconciliationId" from-field="glReconciliation.glReconciliationId"/>
+                <parameter param-name="finAccountId"/>
+            </hyperlink>
+        </field>
+         <field name="cancelButton" title="${uiLabelMap.FinAccountReconciliationCancel}" use-when="${groovy:((security.hasEntityPermission(&quot;GLREC&quot;, &quot;_CANCELADMIN&quot;, session)))}" widget-style="buttontext">
+            <hyperlink target="processReconcilationCancel"  description="${uiLabelMap.CommonCancel}">
+                <parameter param-name="glReconciliationId" from-field="glReconciliation.glReconciliationId"/>
+                <parameter param-name="finAccountId"/>
+            </hyperlink>
+        </field>
+    </form>
     
 </forms>

@@ -1963,6 +1963,13 @@ under the License.
         <response name="success" type="view" value="FindFinAccountReconciliations"/>
         <response name="error" type="view" value="FindFinAccountReconciliations"/>
     </request-map>
+    <request-map uri="processReconcilationCancel">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="cancelFinancialAccountReconciliationNewVbiz"/>
+        <response name="success" type="view" value="FindFinAccountReconciliationsNew"/>
+        <response name="error" type="view" value="FindFinAccountReconciliationsNew"/>
+    </request-map>
+    
 
     <!-- ================ check requests ================= -->
     <request-map uri="listChecksToPrint">
