@@ -12,7 +12,7 @@ JSONArray orgJSON = new JSONArray();
 //orginazation Dept data
 orgList=[];
 def populateChildren(org, employeeList) {
-	internalOrgs = EntityUtil.filterByDate(delegator.findByAnd("PartyRelationshipAndDetail", [partyIdFrom : org.partyId, partyRelationshipTypeId : "GROUP_ROLLUP"],["partyIdFrom","groupName"]));
+	internalOrgs = EntityUtil.filterByDate(delegator.findByAnd("PartyRelationshipAndDetail", [partyIdFrom : org.partyId, partyRelationshipTypeId : "PUR_GROUP_ROLLUP"],["partyIdFrom","groupName"]));
 	internalOrgs.each { internalOrg ->
 		populateChildren(internalOrg, employeeList);
 	}
