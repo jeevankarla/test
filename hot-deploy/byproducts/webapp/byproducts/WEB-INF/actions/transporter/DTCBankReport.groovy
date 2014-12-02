@@ -46,7 +46,7 @@ monthEnd = UtilDateTime.getDayEnd(thruDateTime, timeZone, locale);
 conditionList=[];
 conditionList.add(EntityCondition.makeCondition("customTimePeriodId", EntityOperator.EQUALS, parameters.customTimePeriodId));
 conditionList.add(EntityCondition.makeCondition("billingTypeId", EntityOperator.EQUALS, "PB_LMS_TRSPT_MRGN"));
-conditionList.add(EntityCondition.makeCondition("statusId", EntityOperator.EQUALS, "APPROVED"));
+conditionList.add(EntityCondition.makeCondition("statusId", EntityOperator.IN, UtilMisc.toList("APPROVED","APPROVED_PAYMENT")));
 condition = EntityCondition.makeCondition(conditionList,EntityOperator.AND);
 periodBillingList = delegator.findList("PeriodBilling", condition, null, null, null, false);
 if(UtilValidate.isNotEmpty(periodBillingList)){
