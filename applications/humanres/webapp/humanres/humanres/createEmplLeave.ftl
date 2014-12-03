@@ -26,14 +26,15 @@ $(function() {
        $('input[name=submit]').click (function (){
           
     	  	var leaveTypeId = $('select[name=leaveTypeId]').val();
-			if(leaveTypeId =="CH" || leaveTypeId =="CHGH" || leaveTypeId =="CHSS"){
-				var chDate = $('select[name=chDate]').val();
-				if(!chDate){
-					alert("Please select GH/SS date");
-					return false;
+    	  	if(leaveTypeId){
+    	  		if(leaveTypeId =="CH" || leaveTypeId =="CHGH" || leaveTypeId =="CHSS"){
+					var chDate = $('select[name=chDate]').val();
+					if(!chDate){
+						alert("Please select GH/SS date");
+						return false;
+					}
 				}
-			 }
-			
+    	  	}
     	});
     	
     	$('#EditEmplLeave').submit(function() {
@@ -46,10 +47,12 @@ $(function() {
     
 	jQuery("#fromDate").datepicker({dateFormat:'dd-mm-yy',
 									onSelect: function( selectedDate ) {
-									/* var leaveTypeId = $('select[name=leaveTypeId]').val();
-									if(leaveTypeId =="CH" || leaveTypeId =="CHGH" || leaveTypeId =="CHSS"){
-	     								return viewGHandSS();
-     								 } */
+									var leaveTypeId = $('select[name=leaveTypeId]').val();
+     								if(leaveTypeId){
+										if(leaveTypeId =="CH" || leaveTypeId =="CHGH" || leaveTypeId =="CHSS"){
+	     									return viewGHandSS();
+     								 	}
+									}
 									$( "#thruDate" ).datepicker( "option", {minDate: selectedDate});
 								     }
 						           }).datepicker("option", {});
@@ -147,22 +150,24 @@ function viewGHandSS(){
              dataType: 'json',
              success: function(result) {
             	 var workedHolidaysList = result["workedHolidaysList"];
-            	 if(workedHolidaysList != undefined){
-            	    var innerHtmlStr ="";
-            	    //alert(workedHolidaysList.length);
-            	    var chDateDropDown ="";
-            	   for(var i=0;i<workedHolidaysList.length;++i){
-            	        tmepWork = workedHolidaysList[i];
-                        innerHtmlStr += "Date:"+tmepWork.date+",PunchDetails: IN-"+ tmepWork.punchDetails.inTime +",OUT-"+ tmepWork.punchDetails.outTime +",Total-"+tmepWork.punchDetails.totalTime +"<br/>";
-            	       chDateDropDown += "<option value="+ tmepWork.date+">"+tmepWork.date+"</option>";
-            	    }
-            	     jQuery('#ghssDropDown').show();
-            	     jQuery('#chDate').append(chDateDropDown);
-            	     $("#chDate").multiselect("refresh");
-            	    
-            	    $('#leaveBalance').html('<span style="color:green; font-size:11pt; font-stlye:bold">'+innerHtmlStr+'</span>');
+            	 if(workedHolidaysList.length > 0){
+            	 	if(workedHolidaysList != undefined){
+	            	    var innerHtmlStr ="";
+	            	    //alert(workedHolidaysList.length);
+	            	    var chDateDropDown ="";
+	            	   for(var i=0;i<workedHolidaysList.length;++i){
+	            	        tmepWork = workedHolidaysList[i];
+	                        innerHtmlStr += "Date:"+tmepWork.date+",PunchDetails: IN-"+ tmepWork.punchDetails.inTime +",OUT-"+ tmepWork.punchDetails.outTime +",Total-"+tmepWork.punchDetails.totalTime +"<br/>";
+	            	       chDateDropDown += "<option value="+ tmepWork.date+">"+tmepWork.date+"</option>";
+	            	    }
+	            	     jQuery('#ghssDropDown').show();
+	            	     jQuery('#chDate').append(chDateDropDown);
+	            	     $("#chDate").multiselect("refresh");
+	            	    $('#leaveBalance').html('<span style="color:green; font-size:11pt; font-stlye:bold">'+innerHtmlStr+'</span>');
+	            	 }
             	 }else{
             	     $('#leaveBalance').html('');
+            	     jQuery('#chDate').parent().parent().hide();
             	 }
             	 
             	},
