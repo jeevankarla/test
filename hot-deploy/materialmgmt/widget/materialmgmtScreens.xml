@@ -153,7 +153,9 @@
                <set field="shipmentTypeId" value="${parameters.shipmentTypeId}"/>
                <!--  <set field="parameters.roleTypeId" value="IC_WHOLESALE"/> -->
                <!--  <script location="component://byproducts/webapp/byproducts/WEB-INF/actions/facility/enableBoothAutoComplete.groovy"/> -->
+                
                 <script location="component://byproducts/webapp/byproducts/WEB-INF/actions/facility/enablePartyAutoComplete.groovy"/>
+                <script location="component://materialmgmt/webapp/materialmgmt/WEB-INF/actions/orgnigationDept.groovy"/>
             </actions>
             <widgets>
                	<section>
