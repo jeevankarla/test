@@ -2160,6 +2160,8 @@ under the License.
       <field name="unitCost" type="fixed-point"></field>
       <field name="orderId" type="id"></field>
       <field name="orderItemSeqId" type="id"></field>
+      <field name="custRequestId" type="id"></field>
+      <field name="custRequestItemSeqId" type="id"></field>
       <field name="shipGroupSeqId" type="id"></field>
       <field name="shipmentId" type="id"></field>
       <field name="shipmentItemSeqId" type="id"></field>

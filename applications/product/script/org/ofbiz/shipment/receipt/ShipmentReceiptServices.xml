@@ -477,9 +477,12 @@ under the License.
                         <field-map field-name="shipmentId" from-field="parameters.shipmentId"/>
                         <field-map field-name="shipmentItemSeqId" from-field="shipmentItem.shipmentItemSeqId"/>
                     </entity-and>
-                    <first-from-list entry="orderShipment" list="orderShipments"/>
-                    <set field="orderShipment.quantity" value="${orderShipment.quantity$bigDecimal + quantityToAdd$bigDecimal}" type="BigDecimal"/>
-                    <store-value value-field="orderShipment"/>
+                   <if-not-empty field="orderShipments">
+                   		<first-from-list entry="orderShipment" list="orderShipments" />
+                    	<set field="orderShipment.quantity" value="${orderShipment.quantity$bigDecimal + quantityToAdd$bigDecimal}" type="BigDecimal"/>
+                    	<store-value value-field="orderShipment"/>
+                    
+                   </if-not-empty>
                     <!--
                         TODO: if we want to record the role of the facility operation we have to re-implement this using ShipmentReceiptRole
                     <set field="itemIssuanceId" from-field="itemIssuance.itemIssuanceId"/>
