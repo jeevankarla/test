@@ -140,7 +140,12 @@ under the License.
 											       							<#assign totalCstRev=totalCstRev+invoicePartyTot.get("cstRevenue")?if_exists>
 											       							<#assign totalRevenue=totalRevenue+invoicePartyTot.get("totalRevenue")?if_exists>
 											       							<#assign totalMrpValue=totalMrpValue+invoicePartyTot.get("totalMrpValue")?if_exists>
-											       							<#assign totalPPD=totalPPD+invoicePartyTot.get("ppd")?if_exists>
+											       							<#if (invoicePartyTot.get("totalMrpValue"))??>
+											       							<#assign ppd=invoicePartyTot.get("ppd")>
+											       							<#assign totalPPD=totalPPD+invoicePartyTot.get("ppd")>
+											       							<#else>
+											       							<#assign ppd=0>
+											       							</#if>
 												             				<fo:table-row>
 												             					<fo:table-cell>
 											            							<fo:block  keep-together="always" text-align="left" font-size="12pt" white-space-collapse="false">${invoicePartyTot.get("invoiceId")?if_exists}</fo:block>  
@@ -164,7 +169,7 @@ under the License.
 																	            	<fo:block  keep-together="always" text-align="right" font-size="12pt" white-space-collapse="false" >${invoicePartyTot.get("cstRevenue")?if_exists?string("#0.00")}</fo:block>  
 																	            </fo:table-cell>
 																	            <fo:table-cell>
-																	            	<fo:block  keep-together="always" text-align="right" font-size="12pt" white-space-collapse="false" >${invoicePartyTot.get("ppd")?if_exists?string("#0.00")}</fo:block>  
+																	            	<fo:block  keep-together="always" text-align="right" font-size="12pt" white-space-collapse="false" >${ppd?string("#0.00")}</fo:block>  
 																	            </fo:table-cell>
 																	            <fo:table-cell>
 																	            	<fo:block  keep-together="always" text-align="right" font-size="12pt" white-space-collapse="false" >${invoicePartyTot.get("totalRevenue")?if_exists?string("#0.00")}</fo:block>  
@@ -210,7 +215,7 @@ under the License.
 																	            </fo:table-cell>
 																	            <#assign dayTotalPPD = dayTotalPPD + totalPPD>
 																	            <fo:table-cell>
-																	            	<fo:block  keep-together="always" text-align="right" font-size="12pt" white-space-collapse="false" font-weight="bold">${totalPPD?if_exists?string("#0.00")}</fo:block>  
+																	            	<fo:block  keep-together="always" text-align="right" font-size="12pt" white-space-collapse="false" font-weight="bold">${totalPPD?string("#0.00")}</fo:block>  
 																	            </fo:table-cell>
 																	            <#assign dayTotalRev = dayTotalRev + totalRevenue>
 																	            <fo:table-cell>
@@ -265,7 +270,7 @@ under the License.
 					             </fo:table-cell>
 					             <#assign grandTotalPPD = grandTotalPPD + dayTotalPPD>
 					             <fo:table-cell>
-									<fo:block  keep-together="always" text-align="right" font-size="12pt" white-space-collapse="false" font-weight="bold">${dayTotalPPD?if_exists?string("#0.00")}</fo:block>  
+									<fo:block  keep-together="always" text-align="right" font-size="12pt" white-space-collapse="false" font-weight="bold">${dayTotalPPD?string("#0.00")}</fo:block>  
 					             </fo:table-cell>
 					             <#assign grandTotalRev = grandTotalRev + dayTotalRev>
 					             <fo:table-cell>
@@ -304,7 +309,7 @@ under the License.
 									<fo:block  keep-together="always" text-align="right" font-size="12pt" white-space-collapse="false" font-weight="bold">${grandTotalCstRev?if_exists?string("#0.00")}</fo:block>  
 					             </fo:table-cell>
 					             <fo:table-cell>
-									<fo:block  keep-together="always" text-align="right" font-size="12pt" white-space-collapse="false" font-weight="bold">${grandTotalPPD?if_exists?string("#0.00")}</fo:block>  
+									<fo:block  keep-together="always" text-align="right" font-size="12pt" white-space-collapse="false" font-weight="bold">${grandTotalPPD?string("#0.00")}</fo:block>  
 					             </fo:table-cell>
 					             <fo:table-cell>
 									<fo:block  keep-together="always" text-align="right" font-size="12pt" white-space-collapse="false" font-weight="bold">${grandTotalRev?if_exists?string("#0.00")}</fo:block>  
