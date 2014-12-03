@@ -215,5 +215,10 @@ under the License.
     <SecurityGroup description="bulk Accounting transactions post" groupId="ACCTGTRANSBULKPOST"/>
     <SecurityGroupPermission groupId="ACCTGTRANSBULKPOST" permissionId="ACCTGTRANS_BULKPOST"/>
 	
+	       <!-- GLREC CANCEL  permissions -->
+    <SecurityGroup description="'GLRECONCILATION CANCEL(ACCTG)' GlReconciliationId Cancel Special Permission " groupId="GLREC_CANCELADMIN"/>    
+    <SecurityGroupPermission groupId="GLREC_CANCELADMIN" permissionId="GLREC_CANCELADMIN"/>
+    <SecurityGroupPermission groupId="FULLADMIN" permissionId="GLREC_CANCELADMIN"/>
+   
      
 </entity-engine-xml>
