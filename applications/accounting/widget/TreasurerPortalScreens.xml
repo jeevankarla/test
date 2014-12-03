@@ -2988,7 +2988,19 @@
             </actions>
 			<widgets>
 				<platform-specific> 
-				  <xsl-fo><html-template location="component://accounting/webapp/accounting/reports/AdvancesReport.fo.ftl"/></xsl-fo> 
+					<xsl-fo><html-template location="component://accounting/webapp/accounting/reports/AdvancesReport.fo.ftl"/></xsl-fo> 
+                </platform-specific>
+			</widgets>
+		</section>
+	</screen>
+	<screen name="SubLedgerReport">
+		<section>
+			<actions>
+                 <script location="component://accounting/webapp/accounting/WEB-INF/actions/reports/AdvancesReport.groovy"/>
+            </actions>
+			<widgets>
+				<platform-specific> 
+					<xsl-fo><html-template location="component://accounting/webapp/accounting/reports/AdvSubledgerReport.fo.ftl"/></xsl-fo> 
                 </platform-specific>
 			</widgets>
 		</section>

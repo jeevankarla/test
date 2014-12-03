@@ -33,10 +33,6 @@
 	
 	fromDateStr = parameters.fromDate;
 	thruDateStr = parameters.thruDate;
-	Debug.log("fromDateStr ================"+fromDateStr);
-	Debug.log("thruDateStr ================"+thruDateStr);
-	context.fromDateStr = fromDateStr;
-	context.thruDateStr = thruDateStr;
 	
 	SimpleDateFormat formatter = new SimpleDateFormat("yyyy, MMM dd");
 	Timestamp fromDateTs = null;
@@ -46,7 +42,6 @@
 		} catch (ParseException e) {
 		}
 	}
-	Debug.log("fromDateTs ================"+fromDateTs);
 	Timestamp thruDateTs = null;
 	if(thruDateStr){
 		try {
@@ -54,14 +49,20 @@
 		} catch (ParseException e) {
 		}
 	}
-	Debug.log("thruDateTs ================"+thruDateTs);
 	fromDate = UtilDateTime.getDayStart(fromDateTs, timeZone, locale);
 	thruDate = UtilDateTime.getDayEnd(thruDateTs, timeZone, locale);
-	
+	context.fromDate = fromDate;
+	context.thruDate = thruDate;
 	paymentTypeId = parameters.paymentTypeId;
-	Debug.log("fromDate ================"+fromDate);
-	Debug.log("thruDate ================"+thruDate);
-	Debug.log("paymentTypeId ================"+paymentTypeId);
+	
+	paymentType = delegator.findOne("PaymentType", [paymentTypeId : paymentTypeId], false);
+	context.paymentType = paymentType;
+	
+	paymentGlAccountTypeMap = delegator.findList("PaymentGlAccountTypeMap", EntityCondition.makeCondition([paymentTypeId : paymentTypeId]), null, null, null, false);
+	glList = EntityUtil.getFieldListFromEntityList(paymentGlAccountTypeMap, "glAccountId", true);
+	
+	GlAccount = delegator.findOne("GlAccount", [glAccountId : glList.get(0)], false);
+	context.GlAccount = GlAccount;
 	
 	conditionList = [];
 	conditionList.add(EntityCondition.makeCondition("statusId", EntityOperator.EQUALS, "PMNT_SENT"));
@@ -77,20 +78,47 @@
 	toPaymentIdsList = EntityUtil.getFieldListFromEntityList(paymentApplicationList, "toPaymentId", true);
 	invoiceIdsList = EntityUtil.getFieldListFromEntityList(paymentApplicationList, "invoiceId", true);
 	
+	// Get Applied Invoice Details
+	
+	allPmntIdsList = [];
+	allPmntIdsList.addAll(paymentIdsList);
+	allPmntIdsList.addAll(toPaymentIdsList);
+	
+	conditionList.clear();
+	conditionList.add(EntityCondition.makeCondition("invoiceId", EntityOperator.IN, invoiceIdsList));
+	List paymentInvApplicationList = delegator.findList("InvoiceAndItem", EntityCondition.makeCondition(conditionList, EntityOperator.AND), UtilMisc.toSet("invoiceId","invoiceItemSeqId","invoiceItemTypeId","quantity","amount","description", "invoiceDate","invoiceMessage"), UtilMisc.toList("invoiceDate"), null, false);
+	
+	invoiceDetailsMap = [:];
+	for(i=0; i<invoiceIdsList.size(); i++){
+		invoiceId = invoiceIdsList.get(i);
+		filteredInvoiceList = EntityUtil.filterByAnd(paymentInvApplicationList, [invoiceId : invoiceId]);
+		invoiceDetailsMap.put(invoiceId, filteredInvoiceList);
+	}
+	
+	// Get Applied Payment Details
+	
+	conditionList.clear();
+	conditionList.add(EntityCondition.makeCondition("paymentId", EntityOperator.IN, allPmntIdsList));
+	List appliedPmntList = delegator.findList("PaymentAndType", EntityCondition.makeCondition(conditionList, EntityOperator.AND), UtilMisc.toSet("paymentId","paymentTypeId","paymentMethodId","paymentDate","paymentRefNum","amount", "finAccountTransId", "comments"), UtilMisc.toList("paymentDate"), null, false);
+	
+	paymentDetailsMap = [:];
+	for(i=0; i<appliedPmntList.size(); i++){
+		appPmntId = (appliedPmntList.get(i)).get("paymentId");
+		filteredPmntList = EntityUtil.filterByAnd(appliedPmntList, [paymentId : appPmntId]);
+		paymentDetailsMap.put(appPmntId, filteredPmntList);
+	}
 	
 	partyPaymentsMap = [:];
+	partyPaymentDetailsMap = [:];
 	for(i=0; i<partyIdsList.size(); i++){
 		partyId = partyIdsList.get(i);
-		Debug.log("partyId-------------------"+partyId);
 		partyPaymentsList = EntityUtil.filterByAnd(paymentList, [partyIdTo : partyId]);
 		partyPmntIdsList = EntityUtil.getFieldListFromEntityList(partyPaymentsList, "paymentId", true);
-		Debug.log("partyPaymentsList=============="+partyPaymentsList);
 		
 		advDetailsMap = [:];
 		
 		// Calculate Opening Balance
 		oldPmnts = EntityUtil.filterByCondition(partyPaymentsList, EntityCondition.makeCondition("paymentDate",EntityOperator.LESS_THAN, fromDate));
-		Debug.log("oldPmnts=============="+oldPmnts);
 		oldPmntIdsList = EntityUtil.getFieldListFromEntityList(oldPmnts, "paymentId", true);
 		
 		amountPaid = BigDecimal.ZERO;
@@ -169,13 +197,58 @@
 		tempPmntAppMap.putAll(advDetailsMap);
 		
 		partyPaymentsMap.put(partyId, tempPmntAppMap);
+		
+		//durationPmntApps
+		paymentAndApplicationsList = [];
+		
+		SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
+		
+		paymentApplicationMap = [:]
+		for(j=0; j<durationPmnts.size(); j++){
+			partyPayment = durationPmnts.get(j);
+			partyPaymentId = partyPayment.get("paymentId");
+			
+			dateWisePmntApplications = [:];
+			dateWisePmntApplications.put("date", partyPayment.getTimestamp("paymentDate"));
+			dateWisePmntApplications.put("paymentId", partyPayment.get("paymentId"));
+			
+			tempDateWisePmntMap = [:];
+			tempDateWisePmntMap.putAll(dateWisePmntApplications);
+			
+			paymentAndApplicationsList.add(tempDateWisePmntMap);
+			
+		}
+		
+		
+		for(j=0; j<durationPmntApps.size(); j++){
+			dateWisePmntApplications = [:];
+			durationPmntApp = durationPmntApps.get(j);
+			if(UtilValidate.isNotEmpty(durationPmntApp.get("toPaymentId"))){
+				dateWisePmntApplications.put("date", (paymentDetailsMap.get(durationPmntApp.get("toPaymentId"))).getTimestamp("paymentDate"));
+				dateWisePmntApplications.put("paymentId", durationPmntApp.get("toPaymentId"));
+			}
+			if(UtilValidate.isNotEmpty(durationPmntApp.get("invoiceId"))){
+				dateWisePmntApplications.put("date", ((invoiceDetailsMap.get(durationPmntApp.get("invoiceId"))).get(0)).get("invoiceDate"));
+				dateWisePmntApplications.put("invoiceId", durationPmntApp.get("invoiceId"));
+			}
+			tempDateWisePmntMap = [:];
+			tempDateWisePmntMap.putAll(dateWisePmntApplications);
+			
+			paymentAndApplicationsList.add(tempDateWisePmntMap);
+		}
+		paymentAndApplicationsList=UtilMisc.sortMaps(paymentAndApplicationsList, UtilMisc.toList("date"));
+		
+		tempPmntAppDetList = [];
+		tempPmntAppDetList.addAll(paymentAndApplicationsList);
+		
+		partyPaymentDetailsMap.put(partyId, tempPmntAppDetList);
+		
 	}
-	Debug.log("partyPaymentsMap============="+partyPaymentsMap);
+	
 	context.partyPaymentsMap = partyPaymentsMap;
-	//context.invoiceDetailsMap = invoiceDetailsMap;
-	//context.paymentDetailsMap = paymentDetailsMap;
+	context.partyPaymentDetailsMap = partyPaymentDetailsMap;
+	context.invoiceDetailsMap = invoiceDetailsMap;
+	context.paymentDetailsMap = paymentDetailsMap;
 	
 	
-	
-	//adsfadsfl;
 	

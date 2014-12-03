@@ -22,9 +22,9 @@ under the License.
 
 <#-- do not display columns associated with values specified in the request, ie constraint values -->
 <fo:layout-master-set>
-	<fo:simple-page-master master-name="main" page-height="12in" page-width="15in"
+	<fo:simple-page-master master-name="main" page-height="12in" page-width="13in"
             margin-top="0.2in" margin-bottom=".3in" margin-left=".7in" margin-right=".5in">
-        <fo:region-body margin-top="1.4in"/>
+        <fo:region-body margin-top="1.6in"/>
         <fo:region-before extent="1.5in"/>
         <fo:region-after extent="1.5in"/>        
     </fo:simple-page-master>   
@@ -33,46 +33,55 @@ ${setRequestAttribute("OUTPUT_FILENAME", "abstractReport.pdf")}
  <#if partyPaymentsMap?has_content> 
 <fo:page-sequence master-reference="main" force-page-count="no-force" font-family="Courier,monospace">					
 			<fo:static-content flow-name="xsl-region-before">
-					<fo:block  keep-together="always" text-align="center" font-family="Courier,monospace" white-space-collapse="false">&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;UserLogin : <#if userLogin?exists>${userLogin.userLoginId?if_exists}</#if></fo:block>
+					<fo:block  keep-together="always" text-align="center" font-family="Courier,monospace" white-space-collapse="false">&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;UserLogin : <#if userLogin?exists>${userLogin.userLoginId?if_exists}</#if></fo:block>
 					<fo:block  keep-together="always" text-align="center" font-family="Courier,monospace" white-space-collapse="false">&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;Date:${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(nowTimestamp, "dd/MM/yy HH:mm:ss")}</fo:block>
 					<fo:block  keep-together="always" text-align="center" font-family="Courier,monospace" white-space-collapse="false" font-weight="bold">KARNATAKA CO-OPERATIVE MILK PRODUCERS FEDERATION  LTD</fo:block>
 					<fo:block  keep-together="always" text-align="center" font-family="Courier,monospace" white-space-collapse="false" font-weight="bold">UNIT: MOTHER DAIRY: G.K.V.K POST,YELAHANKA,BANGALORE:560065</fo:block>
-                    <fo:block text-align="center" font-size="12pt" keep-together="always"  white-space-collapse="false" font-weight="bold">&#160;&#160; Advances Abstract Report From ${fromDateStr} To ${thruDateStr}	</fo:block>
+                    <fo:block text-align="center" font-size="12pt" keep-together="always"  white-space-collapse="false" font-weight="bold">&#160;&#160; STATEMENT FOR ${GlAccount.get("accountCode")} - ${GlAccount.get("accountName")}</fo:block>
+              		<fo:block text-align="center" font-size="12pt" keep-together="always"  white-space-collapse="false" font-weight="bold">&#160;&#160; ${paymentType.get("description")} Abstract From ${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(fromDate, "dd/MM/yyyy")} To ${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(thruDate, "dd/MM/yyyy")}	</fo:block>
               		<fo:block>
 	                 	<fo:table border-style="solid">
 	                    <fo:table-column column-width="80pt"/>
 	                    <fo:table-column column-width="200pt"/>
-	                    <fo:table-column column-width="100pt"/>  
-	               	    <fo:table-column column-width="100pt"/>
-	            		<fo:table-column column-width="100pt"/> 		
-	            		<fo:table-column column-width="100pt"/>
-	            		<fo:table-column column-width="100pt"/>
-	            		<fo:table-column column-width="100pt"/>
+	                    <fo:table-column column-width="90pt"/>  
+	               	    <fo:table-column column-width="90pt"/>
+	            		<fo:table-column column-width="90pt"/> 		
+	            		<fo:table-column column-width="90pt"/>
+	            		<fo:table-column column-width="90pt"/>
+	            		<fo:table-column column-width="90pt"/>
 	                    <fo:table-body>
 	                    <fo:table-row >
-	                    		<fo:table-cell border-style="solid">
-                            		<fo:block  keep-together="always" text-align="left" font-size="11pt" white-space-collapse="false" font-weight="bold">SL Code</fo:block>  
+	                    		<fo:table-cell >
+                            		<fo:block  keep-together="always" text-align="left" font-size="11pt" white-space-collapse="false" font-weight="bold">&#160;</fo:block>
+                            		<fo:block  keep-together="always" text-align="center" font-size="11pt" white-space-collapse="false" font-weight="bold" border-style="solid">Party Code</fo:block>  
                        			</fo:table-cell>
-                       			<fo:table-cell border-style="solid">
-                            		<fo:block  keep-together="always" text-align="left" font-size="11pt" white-space-collapse="false" font-weight="bold">SL Description </fo:block>  
+                       			<fo:table-cell >
+                            		<fo:block  keep-together="always" text-align="left" font-size="11pt" white-space-collapse="false" font-weight="bold">&#160;</fo:block>
+                            		<fo:block  keep-together="always" text-align="center" font-size="11pt" white-space-collapse="false" font-weight="bold" border-style="solid">Party Name</fo:block>   
                        			</fo:table-cell>
-                       			<fo:table-cell border-style="solid">
-                            		<fo:block  keep-together="always" text-align="left" font-size="11pt" white-space-collapse="false" font-weight="bold">Debit </fo:block>
+                       			<fo:table-cell >
+                       				<fo:block  keep-together="always" text-align="right" font-size="11pt" white-space-collapse="false" font-weight="bold">Opening</fo:block> 
+                            		<fo:block  keep-together="always" text-align="center" font-size="11pt" white-space-collapse="false" font-weight="bold" border-style="solid">Debit </fo:block>
                        			</fo:table-cell>
-                       			<fo:table-cell border-style="solid">
-                            		<fo:block  keep-together="always" text-align="left" font-size="11pt" white-space-collapse="false" font-weight="bold">Credit</fo:block> 
+                       			<fo:table-cell >
+                       				<fo:block  keep-together="always" text-align="left" font-size="11pt" white-space-collapse="false" font-weight="bold">&#160;Balance</fo:block> 
+                            		<fo:block  keep-together="always" text-align="center" font-size="11pt" white-space-collapse="false" font-weight="bold" border-style="solid">Credit</fo:block> 
                        			</fo:table-cell>
-                       			<fo:table-cell border-style="solid">
-                            		<fo:block  keep-together="always" text-align="right" font-size="11pt" white-space-collapse="false" font-weight="bold">Debit</fo:block>  
+                       			<fo:table-cell >
+                       				<fo:block  keep-together="always" text-align="right" font-size="11pt" white-space-collapse="false" font-weight="bold">During the</fo:block> 
+                            		<fo:block  keep-together="always" text-align="center" font-size="11pt" white-space-collapse="false" font-weight="bold" border-style="solid">Debit</fo:block>  
                        			</fo:table-cell>
-                       			<fo:table-cell border-style="solid">
-                            		<fo:block  keep-together="always" text-align="right" font-size="11pt" white-space-collapse="false" font-weight="bold">Credit</fo:block>  
+                       			<fo:table-cell>
+                       				<fo:block  keep-together="always" text-align="left" font-size="11pt" white-space-collapse="false" font-weight="bold">&#160;Period</fo:block> 
+                            		<fo:block  keep-together="always" text-align="center" font-size="11pt" white-space-collapse="false" font-weight="bold" border-style="solid">Credit</fo:block>  
                        			</fo:table-cell>
-                        		<fo:table-cell border-style="solid">
-                            		<fo:block  keep-together="always" text-align="right" font-size="11pt" white-space-collapse="false" font-weight="bold">Debit</fo:block>   
+                        		<fo:table-cell>
+                        			<fo:block  keep-together="always" text-align="right" font-size="11pt" white-space-collapse="false" font-weight="bold">Closing</fo:block> 
+                            		<fo:block  keep-together="always" text-align="center" font-size="11pt" white-space-collapse="false" font-weight="bold" border-style="solid">Debit</fo:block>   
                         		</fo:table-cell>
-                        		<fo:table-cell border-style="solid">
-                            		<fo:block  keep-together="always" text-align="right" font-size="11pt" white-space-collapse="false" font-weight="bold">Credit</fo:block>  
+                        		<fo:table-cell>
+                        			<fo:block  keep-together="always" text-align="left" font-size="11pt" white-space-collapse="false" font-weight="bold">&#160;Balance</fo:block> 
+                            		<fo:block  keep-together="always" text-align="center" font-size="11pt" white-space-collapse="false" font-weight="bold" border-style="solid">Credit</fo:block>  
                         		</fo:table-cell>
                 			</fo:table-row>
                     </fo:table-body>
@@ -84,13 +93,14 @@ ${setRequestAttribute("OUTPUT_FILENAME", "abstractReport.pdf")}
                  	<fo:table border-style="solid">
                     <fo:table-column column-width="80pt"/>
                     <fo:table-column column-width="200pt"/>
-                    <fo:table-column column-width="100pt"/>  
-               	    <fo:table-column column-width="100pt"/>
-            		<fo:table-column column-width="100pt"/> 		
-            		<fo:table-column column-width="100pt"/>
-            		<fo:table-column column-width="100pt"/>
-            		<fo:table-column column-width="100pt"/>
+                    <fo:table-column column-width="90pt"/>  
+               	    <fo:table-column column-width="90pt"/>
+            		<fo:table-column column-width="90pt"/> 		
+            		<fo:table-column column-width="90pt"/>
+            		<fo:table-column column-width="90pt"/>
+            		<fo:table-column column-width="90pt"/>
                     <fo:table-body>
+                    	
 	                	<#assign partyAdvanceDetails = partyPaymentsMap.entrySet()>	
 	                	<#list partyAdvanceDetails as partyPayments>
 							<#assign partyId = partyPayments.getKey()>
@@ -102,34 +112,34 @@ ${setRequestAttribute("OUTPUT_FILENAME", "abstractReport.pdf")}
                                       </fo:block>  
 	                       			</fo:table-cell>
 	                       			<fo:table-cell border-style="solid">
-	                            		<fo:block  text-align="left" keep-together="always" font-size="13pt" white-space-collapse="false"> 
+	                            		<fo:block  text-align="left" wrap-option="wrap" font-size="13pt" white-space-collapse="false"> 
                                              ${Static["org.ofbiz.party.party.PartyHelper"].getPartyName(delegator, partyId, false)}
                                       	</fo:block>  
 	                       			</fo:table-cell>
 	                       			<fo:table-cell border-style="solid">
-	                            		<fo:block  text-align="left" keep-together="always" font-size="13pt" white-space-collapse="false"> 
-                                             ${paymentDetails.get("openingBalance").get("debit")?if_exists}
+	                            		<fo:block  text-align="right" keep-together="always" font-size="13pt" white-space-collapse="false"> 
+                                             ${paymentDetails.get("openingBalance").get("debit")?if_exists?string("#0.00")}
                                       </fo:block>  
 	                       			</fo:table-cell>
 	                       			<fo:table-cell border-style="solid">
-	                            		<fo:block  text-align="left" keep-together="always" font-size="13pt" white-space-collapse="false"> 
-                                             ${paymentDetails.get("openingBalance").get("credit")?if_exists}
+	                            		<fo:block  text-align="right" keep-together="always" font-size="13pt" white-space-collapse="false"> 
+                                             ${paymentDetails.get("openingBalance").get("credit")?if_exists?string("#0.00")}
                                       </fo:block>  
 	                       			</fo:table-cell><fo:table-cell border-style="solid">
-	                            		<fo:block  text-align="left" keep-together="always" font-size="13pt" white-space-collapse="false"> 
-                                             ${paymentDetails.get("duringPeriod").get("debit")?if_exists}
+	                            		<fo:block  text-align="right" keep-together="always" font-size="13pt" white-space-collapse="false"> 
+                                             ${paymentDetails.get("duringPeriod").get("debit")?if_exists?string("#0.00")}
                                       </fo:block>  
 	                       			</fo:table-cell><fo:table-cell border-style="solid">
-	                            		<fo:block  text-align="left" keep-together="always" font-size="13pt" white-space-collapse="false"> 
-                                             ${paymentDetails.get("duringPeriod").get("credit")?if_exists}
+	                            		<fo:block  text-align="right" keep-together="always" font-size="13pt" white-space-collapse="false"> 
+                                             ${paymentDetails.get("duringPeriod").get("credit")?if_exists?string("#0.00")}
                                       </fo:block>  
 	                       			</fo:table-cell><fo:table-cell border-style="solid">
-	                            		<fo:block  text-align="left" keep-together="always" font-size="13pt" white-space-collapse="false"> 
-                                             ${paymentDetails.get("closingBalance").get("debit")?if_exists}
+	                            		<fo:block  text-align="right" keep-together="always" font-size="13pt" white-space-collapse="false"> 
+                                             ${paymentDetails.get("closingBalance").get("debit")?if_exists?string("#0.00")}
                                       </fo:block>  
 	                       			</fo:table-cell><fo:table-cell border-style="solid">
-	                            		<fo:block  text-align="left" keep-together="always" font-size="13pt" white-space-collapse="false"> 
-                                             ${paymentDetails.get("closingBalance").get("credit")?if_exists}
+	                            		<fo:block  text-align="right" keep-together="always" font-size="13pt" white-space-collapse="false"> 
+                                             ${paymentDetails.get("closingBalance").get("credit")?if_exists?string("#0.00")}
                                       </fo:block>  
 	                       			</fo:table-cell>
 								</fo:table-row>
@@ -143,8 +153,9 @@ ${setRequestAttribute("OUTPUT_FILENAME", "abstractReport.pdf")}
     	<fo:page-sequence master-reference="main">
 		<fo:flow flow-name="xsl-region-body" font-family="Helvetica">
 			<fo:block font-size="14pt">
-	            	${uiLabelMap.NoOrdersFound}.
-	       		 </fo:block>
+	            	No Records Found For The Given Duration
+
+   		 </fo:block>
 		</fo:flow>
 	</fo:page-sequence>	
     </#if>  

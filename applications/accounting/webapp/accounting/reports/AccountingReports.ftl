@@ -191,7 +191,6 @@ function reportTypeChangeFunc() {
           		<td width="15%"><input type="submit" value="PDF" class="buttontext"/></td>
       		</form>
       	</tr>
-      	<#--
       	<tr> 
       		<form id="subLedgerReport" name="subLedgerReport" method="post" action="<@ofbizUrl>SubLedgerReport.pdf</@ofbizUrl>" target="_blank">	
       		  	<td width="20%">Subledger Report</td>
@@ -208,7 +207,6 @@ function reportTypeChangeFunc() {
           		<td width="15%"><input type="submit" value="PDF" class="buttontext"/></td>
       		</form>
       	</tr>
-      	-->
 	</table>
 </div>
 </div>
