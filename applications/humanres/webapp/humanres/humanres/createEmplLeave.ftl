@@ -184,7 +184,8 @@ function viewGHandSS(){
  function displayLeaveBalance(){
     var leaveTypeId = $('select[name=leaveTypeId]').val();
     var employeeId = $('input[name=partyId]').val();
-    var data = "employeeId="+employeeId+"&leaveTypeId="+leaveTypeId;
+    var flag="createLeave";
+    var data = "employeeId="+employeeId+"&leaveTypeId="+leaveTypeId+"&flag="+flag;
     $('#leaveBalance').html('');
     jQuery('#ghssDropDown').hide();
     jQuery('#chDate').html('')

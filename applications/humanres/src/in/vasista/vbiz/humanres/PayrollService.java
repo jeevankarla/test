@@ -5953,12 +5953,12 @@ public static Map<String, Object> generateEmployerContributionPayrollBilling(Dis
         BigDecimal casualLeaves=(BigDecimal) context.get("CL");
         BigDecimal earnedLeaves=(BigDecimal) context.get("EL");
         BigDecimal HPLeaves=(BigDecimal) context.get("HPL");
+        String flag ="creditLeaves";
         List leaveTypeIds=FastList.newInstance();
         Map<String, Object> leadaysMap=FastMap.newInstance();
         leadaysMap.put("CL", casualLeaves);
         leadaysMap.put("EL", earnedLeaves);
         leadaysMap.put("HPL", HPLeaves);
-        
         try{
         	List<GenericValue> leaveTypeList=delegator.findList("EmplLeaveType",null,null,null,null,false);
         	leaveTypeIds=EntityUtil.getFieldListFromEntityList(leaveTypeList, "leaveTypeId", true);
@@ -5972,18 +5972,22 @@ public static Map<String, Object> generateEmployerContributionPayrollBilling(Dis
         			if (ServiceUtil.isError(customTimePeriodIdMap)) {
         				return customTimePeriodIdMap;
         			}
+        			Map input = FastMap.newInstance();
+		        	input.put("timePeriodId", customTimePeriodId);
+		        	input.put("timePeriodEnd", fromDateTime);
+		        	
+		        	Map resultMap = getPayrollAttedancePeriod(dctx,input);
+		        	GenericValue lastCloseAttedancePeriod=null;
+		        	if(UtilValidate.isNotEmpty(resultMap.get("lastCloseAttedancePeriod"))){
+		  	    		lastCloseAttedancePeriod = (GenericValue)resultMap.get("lastCloseAttedancePeriod");
+		  	    	}
         			
-        			List conditionList = FastList.newInstance();
-        			conditionList.add(EntityCondition.makeCondition("thruDate",EntityOperator.LESS_THAN,UtilDateTime.toSqlDate(fromDateTime)));
-        			conditionList.add(EntityCondition.makeCondition("periodTypeId",EntityOperator.EQUALS,"ATTENDANCE_MONTH"));
-        			EntityCondition condition=EntityCondition.makeCondition(conditionList,EntityOperator.AND);
-        			List<GenericValue> datesList=delegator.findList("CustomTimePeriod", condition, null, UtilMisc.toList("-thruDate"), null, false);
-        			GenericValue dates=EntityUtil.getFirst(datesList);
+        			
         			Map inputMap =FastMap.newInstance();
                 	inputMap.put("leaveTypeId", leaveTypeIds.get(i));
-        			inputMap.put("balanceDate", dates.get("thruDate"));
+        			inputMap.put("balanceDate", lastCloseAttedancePeriod.get("fromDate"));
         			inputMap.put("employeeId", partyId);
-        			
+        			inputMap.put("flag",flag);
         			Map resultValue = EmplLeaveService.getEmployeeLeaveBalance(dctx,inputMap);
         			Map leaveBalances=FastMap.newInstance();
         			if(UtilValidate.isNotEmpty(resultValue.get("leaveBalances"))){

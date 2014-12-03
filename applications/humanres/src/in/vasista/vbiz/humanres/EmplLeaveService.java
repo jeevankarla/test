@@ -58,6 +58,7 @@ public class EmplLeaveService {
         Map<String, Object> result = FastMap.newInstance();
         String employeeId = (String) context.get("employeeId");
         Date balanceDate = (Date)context.get("balanceDate");
+        String flag = (String) context.get("flag");
         if(UtilValidate.isEmpty(balanceDate)){
         	balanceDate = UtilDateTime.toSqlDate(UtilDateTime.nowDate()); 
         }
@@ -87,6 +88,8 @@ public class EmplLeaveService {
             	if(UtilValidate.isNotEmpty(context.get("leaveTypeId"))){
             		if(leaveTypeIdCtx.equals("CML")){
             			conditionList.add(EntityCondition.makeCondition("leaveTypeId", EntityOperator.IN, UtilMisc.toList("HPL")));
+            		}else if(leaveTypeIdCtx.equals("CLP")){
+            			conditionList.add(EntityCondition.makeCondition("leaveTypeId", EntityOperator.IN, UtilMisc.toList("CL")));
             		}else{
             			conditionList.add(EntityCondition.makeCondition("leaveTypeId", EntityOperator.EQUALS, leaveTypeIdCtx));
             		}
@@ -124,6 +127,9 @@ public class EmplLeaveService {
 						leaveCtx.put("timePeriodStart", UtilDateTime.toTimestamp(leaveBalance.getDate("fromDate")));
 						leaveCtx.put("partyId", employeeId);
 						leaveCtx.put("leaveTypeId", leaveTypeId);
+						if(flag == "creditLeaves"){
+							leaveCtx.put("timePeriodEnd", UtilDateTime.toTimestamp(balanceDate));
+						}
 						Map leaveResult = fetchLeaveDaysForPeriod(dctx,leaveCtx);
 						if(!ServiceUtil.isError(leaveResult)){
 							//result.put("leaveBalanceDate", latestHRPeriod.get("thruDate"));
@@ -134,7 +140,6 @@ public class EmplLeaveService {
 						}
 						
 					}
-					
 				  if(UtilValidate.isNotEmpty(leaveTypeIdCtx) && (leaveTypeIdCtx.equals("CML") || leaveTypeIdCtx.equals("HPL"))){
 					  
 					 // closingBalance = closingBalance.divide(new BigDecimal(2), 1, BigDecimal.ROUND_HALF_UP);
@@ -142,6 +147,9 @@ public class EmplLeaveService {
 						leaveCtx.put("timePeriodStart", UtilDateTime.toTimestamp(leaveBalance.getDate("fromDate")));
 						leaveCtx.put("partyId", employeeId);
 						leaveCtx.put("leaveTypeId","CML");
+						if(flag == "creditLeaves"){
+							leaveCtx.put("timePeriodEnd", UtilDateTime.toTimestamp(balanceDate));
+						}
 						Map leaveResult = fetchLeaveDaysForPeriod(dctx,leaveCtx);
 						if(!ServiceUtil.isError(leaveResult)){
 							//result.put("leaveBalanceDate", latestHRPeriod.get("thruDate"));
@@ -151,13 +159,35 @@ public class EmplLeaveService {
 							}
 						}
 				  }
-				   if(UtilValidate.isNotEmpty(leaveTypeIdCtx) && leaveTypeIdCtx.equals("CML")){
+				   
+				  if(UtilValidate.isNotEmpty(leaveTypeIdCtx) && (leaveTypeIdCtx.equals("CL") || leaveTypeIdCtx.equals("CLP"))){
+						  
+						 // closingBalance = closingBalance.divide(new BigDecimal(2), 1, BigDecimal.ROUND_HALF_UP);
+						  Map leaveCtx = FastMap.newInstance();
+							leaveCtx.put("timePeriodStart", UtilDateTime.toTimestamp(leaveBalance.getDate("fromDate")));
+							leaveCtx.put("partyId", employeeId);
+							leaveCtx.put("leaveTypeId","CLP");
+							if(flag == "creditLeaves"){
+								leaveCtx.put("timePeriodEnd", UtilDateTime.toTimestamp(balanceDate));
+							}
+							Map leaveResult = fetchLeaveDaysForPeriod(dctx,leaveCtx);
+							if(!ServiceUtil.isError(leaveResult)){
+								//result.put("leaveBalanceDate", latestHRPeriod.get("thruDate"));
+								Map leaveDetailmap = (Map)leaveResult.get("leaveDetailmap");
+								if(UtilValidate.isNotEmpty(leaveDetailmap)){
+									closingBalance = closingBalance.subtract(((BigDecimal)leaveDetailmap.get("CLP")));
+								}
+							}
+					  }
+				  
+				  if(UtilValidate.isNotEmpty(leaveTypeIdCtx) && leaveTypeIdCtx.equals("CML")){
 					   closingBalance = closingBalance.divide(new BigDecimal(2), 1, BigDecimal.ROUND_HALF_UP);
+					   leaveBalancesMap.put(leaveTypeIdCtx, closingBalance);
+				   }else if(UtilValidate.isNotEmpty(leaveTypeIdCtx) && leaveTypeIdCtx.equals("CLP")){
 					   leaveBalancesMap.put(leaveTypeIdCtx, closingBalance);
 				   }else{
 					   leaveBalancesMap.put(leaveTypeId, closingBalance);
 				   }
-					
 					
 				}
 				result.put("leaveBalances", leaveBalancesMap);
