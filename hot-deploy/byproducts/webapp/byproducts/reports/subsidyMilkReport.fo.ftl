@@ -34,7 +34,7 @@ ${setRequestAttribute("OUTPUT_FILENAME", "subsidyMilkReport.pdf")}
  <#if unionFacilityPartyMap?has_content> 
  <#assign unionFacilityList = unionFacilityPartyMap.entrySet()>
   <#list unionFacilityList as unionFacility>
-  <#if unionFacility.getKey() != "MD ">
+  <#if unionFacility.getKey() != "MD " && unionFacility.getKey() !="TMU ">
 <fo:page-sequence master-reference="main" force-page-count="no-force" font-family="Courier,monospace">					
 			<fo:static-content flow-name="xsl-region-before">
 			    <fo:block  keep-together="always" text-align="right" font-family="Courier,monospace" white-space-collapse="false"> &#160;${uiLabelMap.CommonPage}- <fo:page-number/></fo:block>
@@ -50,10 +50,10 @@ ${setRequestAttribute("OUTPUT_FILENAME", "subsidyMilkReport.pdf")}
               		<fo:block font-size="10pt">-----------------------------------------------------------------------------------------</fo:block>
             	<fo:block>
                     <fo:table>
-				    <fo:table-column column-width="10%"/>
-			        <fo:table-column column-width="15%"/>
-			        <fo:table-column column-width="20%"/>
-			        <fo:table-column column-width="32%"/>
+				    <fo:table-column column-width="8%"/>
+			        <fo:table-column column-width="8%"/>
+			        <fo:table-column column-width="12%"/>
+			        <fo:table-column column-width="45%"/>
 			        <fo:table-column column-width="30%"/>
                     <fo:table-body>
                     	<fo:table-row>
@@ -68,7 +68,7 @@ ${setRequestAttribute("OUTPUT_FILENAME", "subsidyMilkReport.pdf")}
                     	</fo:table-row>
                     	<fo:table-row>
                 			<fo:table-cell>
-		                    	<fo:block font-weight="bold" font-size="11pt" keep-together="always">S.NO          &#160;&#160;Route 			         &#160;&#160;&#160;&#160;&#160;&#160;&#160;Code No   	&#160;&#160;&#160;&#160;&#160;&#160;&#160;Name of the Agent      &#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;Employee Name</fo:block>
+		                    	<fo:block font-weight="bold" font-size="11pt" keep-together="always">S.NO      &#160;Route 			         &#160;Code No   &#160;&#160;Name of the Agent      &#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;Employee Name</fo:block>
 		            			<fo:block font-size="10pt">-----------------------------------------------------------------------------------------</fo:block>	
                 			</fo:table-cell>
                     	</fo:table-row>
@@ -125,12 +125,18 @@ ${setRequestAttribute("OUTPUT_FILENAME", "subsidyMilkReport.pdf")}
 		                    			<fo:block  keep-together="always" text-align="left" font-weight="bold"  font-size="12pt" white-space-collapse="false"></fo:block>  
 		                			</fo:table-cell>
 		                			<fo:table-cell>
+		                    			<fo:block  keep-together="always" text-align="left" font-weight="bold"  font-size="12pt" white-space-collapse="false"></fo:block>  
+		                			</fo:table-cell>
+		                			<fo:table-cell>
 		                    			<fo:block  keep-together="always" text-align="left" font-size="12pt" white-space-collapse="false">&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;${totalSize}</fo:block>  
 		                			</fo:table-cell>
 		                		</fo:table-row>
 		                		<fo:table-row>
 		                			<fo:table-cell>
 		                    			<fo:block  keep-together="always" text-align="left" font-weight="bold"  font-size="12pt" white-space-collapse="false">Litres of Milk Supplied      =</fo:block>  
+		                			</fo:table-cell>
+		                			<fo:table-cell>
+		                    			<fo:block  keep-together="always" text-align="left" font-weight="bold"  font-size="12pt" white-space-collapse="false"></fo:block>  
 		                			</fo:table-cell>
 		                			<fo:table-cell>
 		                    			<fo:block  keep-together="always" text-align="left" font-weight="bold"  font-size="12pt" white-space-collapse="false"></fo:block>  
@@ -143,6 +149,9 @@ ${setRequestAttribute("OUTPUT_FILENAME", "subsidyMilkReport.pdf")}
 		                		<fo:table-row>
 		                			<fo:table-cell>
 		                    			<fo:block  keep-together="always" text-align="left" font-weight="bold"  font-size="12pt" white-space-collapse="false">Amount of Debit Advice       =</fo:block>  
+		                			</fo:table-cell>
+		                			<fo:table-cell>
+		                    			<fo:block  keep-together="always" text-align="left" font-weight="bold"  font-size="12pt" white-space-collapse="false"></fo:block>  
 		                			</fo:table-cell>
 		                			<fo:table-cell>
 		                    			<fo:block  keep-together="always" text-align="left" font-weight="bold"  font-size="12pt" white-space-collapse="false"></fo:block>  
