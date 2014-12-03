@@ -276,6 +276,7 @@ public class ByProductServices {
 		}else{
 			exclInvoiceFacilityIdsList.addAll(creditInstList);
 		}
+		
 		//checking for one route  or all routes
 		if(UtilValidate.isNotEmpty(routeId) && (routeId.equals("AllRoutes"))){
 			routesList = (List) getByproductRoutes(delegator).get("routeIdsList");
@@ -313,6 +314,19 @@ public class ByProductServices {
             return ServiceUtil.returnError("Failed to Generate TruckSheet ,Cannot parse date string:" + e);
             //::TODO:: set shipment status
         }
+        
+        // check if only employee subsidy is going to facility without indent, if so exclude it
+		List<GenericValue> subsidySubscriptions = EntityUtil.filterByCondition(subscriptionProductsList, EntityCondition.makeCondition("productSubscriptionTypeId", EntityOperator.EQUALS, "EMP_SUBSIDY"));
+		
+		List<String> subsidyFacility = EntityUtil.getFieldListFromEntityList(subsidySubscriptions, "facilityId", true);
+		for(int i=0; i< subsidyFacility.size();i++){
+			String eachFacility = (String)subsidyFacility.get(i);
+			List<GenericValue> facilitySubscriptions = EntityUtil.filterByCondition(subscriptionProductsList, EntityCondition.makeCondition("facilityId", EntityOperator.EQUALS, eachFacility));
+			List prodSubsTypeIds = EntityUtil.getFieldListFromEntityList(facilitySubscriptions, "productSubscriptionTypeId", true);
+			if(prodSubsTypeIds.size() == 1){
+				stopShipList.add(eachFacility);
+			}
+		}
 		
         // checking if shipment exists for the specified day then return without creating orders.
 		estimatedDeliveryDate = UtilDateTime.getDayStart(estimatedDeliveryDate);
@@ -603,8 +617,8 @@ public class ByProductServices {
             	   conditionList.add(EntityCondition.makeCondition("facilityId", EntityOperator.NOT_IN, stopShipList));
            	   }
               	EntityCondition condition = EntityCondition.makeCondition(conditionList, EntityOperator.AND); 
-               List<String> orderBy = UtilMisc.toList("subscriptionId", "productSubscriptionTypeId","-productId"); 
-           	subscriptionProductsList = delegator.findList("SubscriptionFacilityAndSubscriptionProduct", condition, null, orderBy, null, false);
+              	List<String> orderBy = UtilMisc.toList("subscriptionId", "productSubscriptionTypeId","-productId"); 
+           		subscriptionProductsList = delegator.findList("SubscriptionFacilityAndSubscriptionProduct", condition, null, orderBy, null, false);
            }catch (GenericEntityException e) {
                Debug.logError(e, "Problem getting Subscription Products", module);
                shipment.set("statusId", "GENERATION_FAIL");
