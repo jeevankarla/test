@@ -1055,6 +1055,7 @@ public class PayrollService {
 		        String periodBillingId= (String) context.get("periodBillingId");
 		        List benDedTypeList = (List)context.get("benDedTypeList");
 		        String attendanceTimePeriodId= (String) context.get("attendanceTimePeriodId");
+		        String isFlatAmount= (String) context.get("isFlatAmount");
 		        Boolean isCalc = Boolean.FALSE;
 		        List itemsList = FastList.newInstance();
 		        
@@ -1074,6 +1075,14 @@ public class PayrollService {
 		        
 		        EntityCondition condition = EntityCondition.makeCondition(conditionList, EntityOperator.AND);
 				List<GenericValue> partyBenefits = delegator.findList("BenefitTypeAndParty", condition, null, null, null, false);
+				GenericValue periodBilling = delegator.findOne("PeriodBilling",UtilMisc.toMap("periodBillingId", periodBillingId), false);
+				Timestamp basicSalDate=null;
+				if(UtilValidate.isNotEmpty(periodBilling)){
+					basicSalDate = (Timestamp) periodBilling.get("basicSalDate");
+				}
+				if(UtilValidate.isNotEmpty(basicSalDate)){
+					partyBenefits= EntityUtil.filterByDate(partyBenefits,basicSalDate);
+				}
 				for (int i = 0; i < partyBenefits.size(); ++i) {		
 					GenericValue benefit = partyBenefits.get(i);
 					String benefitTypeId = benefit.getString("benefitTypeId");				
@@ -1111,6 +1120,7 @@ public class PayrollService {
 					payHeadCtx.put("periodBillingId", periodBillingId);
 					payHeadCtx.put("proportionalFlag",context.get("proportionalFlag"));
 					payHeadCtx.put("attendanceTimePeriodId",attendanceTimePeriodId);
+					payHeadCtx.put("isFlatAmount",isFlatAmount);
 					Map<String, Object> result = getPayHeadAmount(dctx,payHeadCtx);
 					if(ServiceUtil.isError(result)){
 	        			 Debug.logError(ServiceUtil.getErrorMessage(result), module);
@@ -1713,6 +1723,10 @@ public class PayrollService {
 		        if(UtilValidate.isNotEmpty(context.get("timePeriodId"))){
 		        	timePeriodId = (String)context.get("timePeriodId");
 		        }
+		        String isFlatAmount= (String) context.get("isFlatAmount");
+		        if(UtilValidate.isEmpty(isFlatAmount)){
+		        	isFlatAmount="Y";
+		        }
 		        String attendanceTimePeriodId= (String) context.get("attendanceTimePeriodId");
 		        String payrollTypeId = "PAYROLL_BILL";
 		        Debug.logInfo("calculating ########:"+payHeadTypeId,module);
@@ -1797,44 +1811,45 @@ public class PayrollService {
                     if(UtilValidate.isNotEmpty(context.get("proportionalFlag"))){
                     	payheadAmtCtx.put("proportionalFlag", context.get("proportionalFlag"));
 		            }
-                    
-                    if(UtilValidate.isNotEmpty(paheadType) && UtilValidate.isNotEmpty(paheadType.getBigDecimal("cost"))){
-			        	 result.put("amount", paheadType.getBigDecimal("cost").setScale(0, rounding));
-			        	 if(UtilValidate.isNotEmpty(proportionalFormulaId)){
-			        		 //Debug.log("proportionalFormulaId==="+proportionalFormulaId);
-			        		 Map payAttCtx = FastMap.newInstance();
-			        		 payAttCtx.put("userLogin", userLogin);
-			        		 payAttCtx.put("employeeId", employeeId);
-			        		 payAttCtx.put("timePeriodStart", timePeriodStart);
-			        		 payAttCtx.put("timePeriodEnd", timePeriodEnd);
-			        		 payAttCtx.put("timePeriodId", timePeriodId);
-			        		 payAttCtx.put("attendanceTimePeriodId", attendanceTimePeriodId);
-			        		Map attendanceMap = getEmployeePayrollAttedance(dctx ,payAttCtx);
-			        		//Debug.log("attendanceMap==="+attendanceMap);
-			        		Evaluator evltr = new Evaluator(dctx);
-	    					HashMap<String, Double> variables = new HashMap<String, Double>();
- 							variables.put("NOOFCALENDERDAYS", (Double)attendanceMap.get("noOfCalenderDays"));
- 							variables.put("NOOFATTENDEDDAYS", (Double)attendanceMap.get("noOfAttendedDays"));
- 							variables.put("NOOFATTENDEDHOLIDAYS", (Double)attendanceMap.get("noOfAttendedHoliDays"));
- 							variables.put("LOSSOFPAYDAYS", (Double)attendanceMap.get("lossOfPayDays"));
- 							variables.put("NOOFATTENDEDSS", (Double)attendanceMap.get("noOfAttendedSsDays"));
- 							variables.put("NOOFATTENDEDWEEKLYOFF", (Double)attendanceMap.get("noOfAttendedWeeklyOffDays"));
- 							variables.put("NOOFLEAVEDAYS", (Double)attendanceMap.get("noOfLeaveDays"));
- 							variables.put("NOOFCOMPOFFSAVAILED", (Double)attendanceMap.get("noOfCompoffAvailed"));
- 							variables.put("NOOFAVAILEDVEHICLEDAYS", (new Double((Integer)attendanceMap.get("availedVehicleDays"))));
- 							variables.put("NOOFPAYABLEDAYS", (Double)attendanceMap.get("noOfPayableDays"));
- 							//Debug.log("variables==="+variables);
- 							double noOfAttendedDays = ((Double)attendanceMap.get("noOfAttendedDays")).doubleValue();
- 							evltr.setFormulaIdAndSlabAmount(proportionalFormulaId, noOfAttendedDays);
- 							evltr.addVariableValues(variables);  
- 							//Debug.log("variables==="+variables);
- 							BigDecimal proportionalFactor = new BigDecimal(evltr.evaluate());
- 							result.put("amount", (paheadType.getBigDecimal("cost").multiply(proportionalFactor)).setScale(0, rounding));
- 							
-			        	 }
-			        	 result.put("priceInfos",UtilMisc.toList("Party level price"));
-			        	 return result;
-			        }
+                    if("Y".equals(isFlatAmount)){
+	                    if(UtilValidate.isNotEmpty(paheadType) && UtilValidate.isNotEmpty(paheadType.getBigDecimal("cost"))){
+				        	 result.put("amount", paheadType.getBigDecimal("cost").setScale(0, rounding));
+				        	 if(UtilValidate.isNotEmpty(proportionalFormulaId)){
+				        		 //Debug.log("proportionalFormulaId==="+proportionalFormulaId);
+				        		 Map payAttCtx = FastMap.newInstance();
+				        		 payAttCtx.put("userLogin", userLogin);
+				        		 payAttCtx.put("employeeId", employeeId);
+				        		 payAttCtx.put("timePeriodStart", timePeriodStart);
+				        		 payAttCtx.put("timePeriodEnd", timePeriodEnd);
+				        		 payAttCtx.put("timePeriodId", timePeriodId);
+				        		 payAttCtx.put("attendanceTimePeriodId", attendanceTimePeriodId);
+				        		Map attendanceMap = getEmployeePayrollAttedance(dctx ,payAttCtx);
+				        		//Debug.log("attendanceMap==="+attendanceMap);
+				        		Evaluator evltr = new Evaluator(dctx);
+		    					HashMap<String, Double> variables = new HashMap<String, Double>();
+	 							variables.put("NOOFCALENDERDAYS", (Double)attendanceMap.get("noOfCalenderDays"));
+	 							variables.put("NOOFATTENDEDDAYS", (Double)attendanceMap.get("noOfAttendedDays"));
+	 							variables.put("NOOFATTENDEDHOLIDAYS", (Double)attendanceMap.get("noOfAttendedHoliDays"));
+	 							variables.put("LOSSOFPAYDAYS", (Double)attendanceMap.get("lossOfPayDays"));
+	 							variables.put("NOOFATTENDEDSS", (Double)attendanceMap.get("noOfAttendedSsDays"));
+	 							variables.put("NOOFATTENDEDWEEKLYOFF", (Double)attendanceMap.get("noOfAttendedWeeklyOffDays"));
+	 							variables.put("NOOFLEAVEDAYS", (Double)attendanceMap.get("noOfLeaveDays"));
+	 							variables.put("NOOFCOMPOFFSAVAILED", (Double)attendanceMap.get("noOfCompoffAvailed"));
+	 							variables.put("NOOFAVAILEDVEHICLEDAYS", (new Double((Integer)attendanceMap.get("availedVehicleDays"))));
+	 							variables.put("NOOFPAYABLEDAYS", (Double)attendanceMap.get("noOfPayableDays"));
+	 							//Debug.log("variables==="+variables);
+	 							double noOfAttendedDays = ((Double)attendanceMap.get("noOfAttendedDays")).doubleValue();
+	 							evltr.setFormulaIdAndSlabAmount(proportionalFormulaId, noOfAttendedDays);
+	 							evltr.addVariableValues(variables);  
+	 							//Debug.log("variables==="+variables);
+	 							BigDecimal proportionalFactor = new BigDecimal(evltr.evaluate());
+	 							result.put("amount", (paheadType.getBigDecimal("cost").multiply(proportionalFactor)).setScale(0, rounding));
+	 							
+				        	 }
+				        	 result.put("priceInfos",UtilMisc.toList("Party level price"));
+				        	 return result;
+				        }
+                    }
                     
                     
 	                Map<String, Object> calcResults = calculatePayHeadAmount(dctx,payheadAmtCtx);
@@ -1880,6 +1895,7 @@ public class PayrollService {
 				Timestamp timePeriodEnd = (Timestamp)context.get("timePeriodEnd");
 				String timePeriodId = (String) context.get("timePeriodId");
 				String attendanceTimePeriodId= (String) context.get("attendanceTimePeriodId");
+				Timestamp basicSalDate= (Timestamp) context.get("basicSalDate");
 		        Locale locale = (Locale) context.get("locale");
 		        BigDecimal amount = BigDecimal.ZERO;
 		        //Debug.log("In calculatePayHeadAmount ##################################"+payHeadTypeId);
@@ -1889,10 +1905,17 @@ public class PayrollService {
 		        	    makePayHedPrice.put("userLogin",userLogin);
 		        	    makePayHedPrice.put("payHeadTypeId",payHeadTypeId);
 		        	    makePayHedPrice.put("fromDate",timePeriodStart);
+		        	    if(UtilValidate.isNotEmpty(basicSalDate)){
+		        	    	makePayHedPrice.put("basicSalDate",basicSalDate);
+		                }
 		        	    //Debug.log("makePayHedPrice ######"+makePayHedPrice);
 		                List<GenericValue> allBenDedPriceRules = makePayHeadPriceRuleList(dctx, makePayHedPrice);
 		                Debug.logInfo("allBenDedPriceRules ######"+allBenDedPriceRules , module);
-		                allBenDedPriceRules = EntityUtil.filterByDate(allBenDedPriceRules, true);
+		                if(UtilValidate.isNotEmpty(basicSalDate)){
+		                	allBenDedPriceRules = EntityUtil.filterByDate(allBenDedPriceRules, basicSalDate);
+		                }else{
+		                	allBenDedPriceRules = EntityUtil.filterByDate(allBenDedPriceRules, true);
+		                }
 	               
 	                    Map priceResultRuleCtx = FastMap.newInstance();
 	                    priceResultRuleCtx.putAll(context);
@@ -1928,12 +1951,15 @@ public class PayrollService {
 				boolean generationFailed = false;
 				boolean beganTransaction = false;
 				List payrollTypeBenDedTypeIds = FastList.newInstance();
-				
+				Timestamp basicSalDate =null;
 				try{
 					beganTransaction = TransactionUtil.begin(7200);
 					try {
 						periodBilling =delegator.findOne("PeriodBilling", UtilMisc.toMap("periodBillingId", periodBillingId), false);
 						customTimePeriodId = periodBilling.getString("customTimePeriodId");
+						if(UtilValidate.isNotEmpty(periodBilling)){
+							basicSalDate = (Timestamp) periodBilling.get("basicSalDate");
+						}
 						List<GenericValue> payrollTypeBenDedItems = delegator.findByAnd("PayrollTypePayheadTypeMap", UtilMisc.toMap("payrollTypeId", periodBilling.getString("billingTypeId")));
 						
 						if(UtilValidate.isNotEmpty(payrollTypeBenDedItems)){
@@ -2035,16 +2061,14 @@ public class PayrollService {
 							inputItem.put("periodBillingId", periodBillingId);
 							inputItem.put("benDedTypeList", payrollTypeBenDedTypeIds);
 							inputItem.put("attendanceTimePeriodId", customTimePeriodId);
+							inputItem.put("isFlatAmount", "N");
 							Map payHeadItemResult = prepareSelectivePayrolItems(dctx,inputItem);
-							//Debug.log("payHeadItemResult========"+payHeadItemResult);
 							if(ServiceUtil.isError(payHeadItemResult)){
 		       					Debug.logError("Problems in service Parol Header Item", module);
 					  			return ServiceUtil.returnError("Problems in service Parol Header Item");
 		       				}
 							List payHeaderItemList = (List)payHeadItemResult.get("itemsList");
 							List employerItemsList = (List)payHeadItemResult.get("employerItemsList");
-							Set partyHeaderItemSet= new HashSet(payHeaderItemList);
-							payHeaderItemList = new ArrayList(partyHeaderItemSet);	
 							Map inputBasicSalItem = FastMap.newInstance();
 							inputBasicSalItem.put("userLogin", userLogin);
 							inputBasicSalItem.put("partyId", payHeaderValue.get("partyIdFrom"));
@@ -2052,6 +2076,7 @@ public class PayrollService {
 							inputBasicSalItem.put("timePeriodEnd", monthEnd);
 							inputBasicSalItem.put("timePeriodId", customTimePeriodId);
 							inputBasicSalItem.put("attendanceTimePeriodId", customTimePeriodId);
+							inputBasicSalItem.put("basicSalDate", basicSalDate);
 							try {
 								Map serviceBasicSalResults = createPayrolBasicSalaryItems(dctx, inputBasicSalItem);
 						        if (ServiceUtil.isError(serviceBasicSalResults)) {
@@ -2144,11 +2169,15 @@ public class PayrollService {
 			LocalDispatcher dispatcher = dctx.getDispatcher();
 			String payHeadTypeId= (String) context.get("payHeadTypeId");
 			Timestamp fromDate = (Timestamp) context.get("fromDate");
+			Timestamp basicSalDate=(Timestamp) context.get("basicSalDate");
 	        EntityCondition condition = EntityCondition.makeCondition("payHeadTypeId", EntityOperator.EQUALS,payHeadTypeId); 				
         	payHeadPriceRules = delegator.findList("PayrollBenDedRule", condition, null, null, null, false);
             if (payHeadPriceRules == null) payHeadPriceRules = FastList.newInstance();
-	        
-            payHeadPriceRules = EntityUtil.filterByDate(payHeadPriceRules, fromDate);
+	        if(UtilValidate.isNotEmpty(basicSalDate)){
+	        	payHeadPriceRules = EntityUtil.filterByDate(payHeadPriceRules, basicSalDate);
+	        }else{
+	        	payHeadPriceRules = EntityUtil.filterByDate(payHeadPriceRules, fromDate);
+	        }
 	        return payHeadPriceRules;
 	    } 
 	    public static Map<String, Object> calcPriceResultFromRules(DispatchContext dctx, Map<String, Object> context) throws GenericEntityException {
@@ -2163,6 +2192,7 @@ public class PayrollService {
 				Timestamp timePeriodStart = (Timestamp)context.get("timePeriodStart");
 				Timestamp timePeriodEnd = (Timestamp)context.get("timePeriodEnd");
 				String timePeriodId = (String) context.get("timePeriodId");
+				Timestamp basicSalDate=(Timestamp) context.get("basicSalDate");
 				Map condParms = (Map) context.get("condParms");
 				List<GenericValue> payHeadPriceRules= (List<GenericValue>) context.get("payHeadPriceRules");
 				 calcResults.put("amount", BigDecimal.ZERO);
@@ -2217,7 +2247,12 @@ public class PayrollService {
 	                	StringBuilder priceInfoDescription = new StringBuilder();
 	                	Map fetchBasicSalaryAndGradeMap = fetchBasicSalaryAndGrade(dctx, context);
 	                    List<GenericValue> payHeadPriceActions = delegator.findByAndCache("PayHeadPriceAction", UtilMisc.toMap("payrollBenDedRuleId", payHeadPriceRuleId));
-	                    payHeadPriceActions = EntityUtil.filterByDate(payHeadPriceActions,timePeriodStart);
+	                    if(UtilValidate.isNotEmpty(basicSalDate)){
+	                    	payHeadPriceActions = EntityUtil.filterByDate(payHeadPriceActions,basicSalDate);
+	                    }else{
+	                    	payHeadPriceActions = EntityUtil.filterByDate(payHeadPriceActions,timePeriodStart);
+	                    }
+	                   
 	                    for (GenericValue payHeadPriceAction: payHeadPriceActions) {
 	                        // yeah, finally here, perform the action, ie, modify the amount
 	     	                    priceInfoDescription.append(condsDescription.toString());
