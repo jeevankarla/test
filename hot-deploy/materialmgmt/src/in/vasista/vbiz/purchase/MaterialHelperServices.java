@@ -55,6 +55,7 @@ import org.ofbiz.security.Security;
 public class MaterialHelperServices{
 	
 	public static final String module = MaterialHelperServices.class.getName();
+	
 	public static Map<String, Object> getCustRequestIssuancesForPeriod(DispatchContext ctx,Map<String, ? extends Object> context) {
 		Delegator delegator = ctx.getDelegator();
 		LocalDispatcher dispatcher = ctx.getDispatcher();
@@ -106,7 +107,7 @@ public class MaterialHelperServices{
 		            Timestamp issuedDateTime =  custRequestitemIssue.getTimestamp("issuedDateTime");
 		            String issueDate = UtilDateTime.toDateString(UtilDateTime.toSqlDate(issuedDateTime));
 		            BigDecimal amount = price.multiply(quantity);
-		            String storeId = custRequestitemIssue.getString("storeId");
+		            //String storeId = custRequestitemIssue.getString("facilityId");
 		            GenericValue custRequest = EntityUtil.getFirst(EntityUtil.filterByAnd(custRequestsList, UtilMisc.toMap("custRequestId",custRequestId)));
 		            String deptId = custRequest.getString("fromPartyId");
 		            tempMap.putAll(custRequest);
@@ -123,7 +124,6 @@ public class MaterialHelperServices{
 	    				Map<String, Object> newMap = FastMap.newInstance();
 	    				Map<String, Object> dayWiseMap = FastMap.newInstance();
 	    				Map<String, Object> dayDetailMap = FastMap.newInstance();
-	    				dayDetailMap.put("deptId", deptId);
 	    				dayDetailMap.put("quantity", quantity);
 	    				dayDetailMap.put("amount", amount);
 	    				dayWiseMap.put(issueDate, dayDetailMap);
@@ -136,10 +136,10 @@ public class MaterialHelperServices{
 	    				Map productMap = (Map)productTotals.get(productId);
 	    				BigDecimal runningQuantity = (BigDecimal)productMap.get("quantity");
 	    				runningQuantity = runningQuantity.add(quantity);
-	    				productMap.put("quantity", quantity);
+	    				productMap.put("quantity", runningQuantity);
 	    				BigDecimal runningTotalAmount = (BigDecimal)productMap.get("amount");
 	    				runningTotalAmount = runningTotalAmount.add(amount);
-	    				productMap.put("runningTotalAmount", runningTotalAmount);
+	    				productMap.put("amount", runningTotalAmount);
 	    				
 	    				Map dayWiseMap = (Map) productMap.get("dayWiseMap");
 	    				if(dayWiseMap.get(issueDate)!= null){
@@ -149,24 +149,115 @@ public class MaterialHelperServices{
 	    					BigDecimal runningDayAmount = (BigDecimal)dayDetailMap.get("amount");
 	    					runningDayQuantity = runningDayQuantity.add(quantity);
 	    					runningDayAmount = runningDayAmount.add(amount);
-	    					dayDetailMap.put("deptId", deptId);
-		    				dayDetailMap.put("quantity", quantity);
-		    				dayDetailMap.put("amount", amount);
-	    					dayDetailMap.put(issueDate,dayDetailMap);
+		    				dayDetailMap.put("quantity", runningDayQuantity);
+		    				dayDetailMap.put("amount", runningDayAmount);
+		    				dayWiseMap.put(issueDate,dayDetailMap);
 	        				productMap.put("dayWiseMap", dayDetailMap);
 	    				}else{
 	    					Map<String, Object> dayDetailMap = FastMap.newInstance();
-	    					dayDetailMap.put("deptId", deptId);
 		    				dayDetailMap.put("quantity", quantity);
 		    				dayDetailMap.put("amount", amount);
-	    					dayDetailMap.put(issueDate,dayDetailMap);
-	        				productMap.put("dayWiseMap", dayDetailMap);
+		    				dayWiseMap.put(issueDate,dayDetailMap);
+	        				productMap.put("dayWiseMap", dayWiseMap);
 	    				}
-
+	    				productTotals.put(productId, productMap);
 	    			}
 			 }       
 			 custRequestIssuesItr.close();
 		   result.put("itemIssuanceList", itemIssuanceList);
+		   result.put("productTotals", productTotals);  
+		}catch(Exception e){
+			Debug.logError(e.toString(), module);
+			return ServiceUtil.returnError(e.toString());
+		}
+		
+		return result;
+	}	
+	public static Map<String, Object> getCustRequestReceiptsForPeriod(DispatchContext ctx,Map<String, ? extends Object> context) {
+		Delegator delegator = ctx.getDelegator();
+		LocalDispatcher dispatcher = ctx.getDispatcher();
+		String productId = (String) context.get("productId");
+		String facilityId = (String) context.get("facilityId");
+		Timestamp fromDate = (Timestamp) context.get("fromDate");
+		Timestamp thruDate = (Timestamp) context.get("thruDate");
+		GenericValue userLogin = (GenericValue) context.get("userLogin");
+		Map result = ServiceUtil.returnSuccess();
+		List condList=FastList.newInstance();
+		try{
+			condList.add(EntityCondition.makeCondition("datetimeReceived", EntityOperator.BETWEEN, UtilMisc.toList(fromDate,thruDate)));
+			
+			 if(UtilValidate.isNotEmpty(facilityId)){
+				 condList.add(EntityCondition.makeCondition("facilityId", EntityOperator.EQUALS, facilityId));
+			 }
+			 
+			 EntityCondition cond = EntityCondition.makeCondition(condList,EntityOperator.AND);
+			 EntityListIterator shipmentReceiptItr = null;
+			 shipmentReceiptItr = delegator.find("ShipmentReceiptAndItem", cond, null,UtilMisc.toSet("receiptId","facilityId","datetimeReceived" ,"quantityAccepted","unitCost"), null,null);
+			 GenericValue receiptItem;
+			 List receiptsList =FastList.newInstance();
+			 Map<String, Object> productTotals = new TreeMap<String, Object>();
+			 Map<String, Object> storeTotals = new TreeMap<String, Object>();
+			 while( shipmentReceiptItr != null && (receiptItem = shipmentReceiptItr.next()) != null) {
+				    Map tempMap = FastMap.newInstance();
+		            String receiptId = receiptItem.getString("receiptId");
+		            
+		            BigDecimal quantity  = receiptItem.getBigDecimal("quantityAccepted");
+		            BigDecimal price  = receiptItem.getBigDecimal("unitCost");
+		            Timestamp datetimeReceived =  receiptItem.getTimestamp("datetimeReceived");
+		            String datetReceived = UtilDateTime.toDateString(UtilDateTime.toSqlDate(datetimeReceived));
+		            BigDecimal amount = price.multiply(quantity);
+		            tempMap.put("datetReceived", datetReceived);
+		            tempMap.put("quantity", quantity);
+		            tempMap.put("amount", amount);
+		            tempMap.put("price", price);
+		            receiptsList.add(tempMap);
+		            
+		         // Handle product totals   			
+	    			if (productTotals.get(productId) == null) {
+	    				Map<String, Object> newMap = FastMap.newInstance();
+	    				Map<String, Object> dayWiseMap = FastMap.newInstance();
+	    				Map<String, Object> dayDetailMap = FastMap.newInstance();
+	    				dayDetailMap.put("quantity", quantity);
+	    				dayDetailMap.put("amount", amount);
+	    				dayWiseMap.put(datetReceived, dayDetailMap);
+	    				newMap.put("dayWiseMap", dayWiseMap);
+	    				newMap.put("quantity", quantity);
+	    				newMap.put("amount", amount);
+	    				productTotals.put(productId, newMap);
+	    				
+	    			}else {
+	    				Map productMap = (Map)productTotals.get(productId);
+	    				BigDecimal runningQuantity = (BigDecimal)productMap.get("quantity");
+	    				runningQuantity = runningQuantity.add(quantity);
+	    				productMap.put("quantity", runningQuantity);
+	    				BigDecimal runningTotalAmount = (BigDecimal)productMap.get("amount");
+	    				runningTotalAmount = runningTotalAmount.add(amount);
+	    				productMap.put("amount", runningTotalAmount);
+	    				
+	    				Map dayWiseMap = (Map) productMap.get("dayWiseMap");
+	    				if(dayWiseMap.get(datetReceived)!= null){
+	    					Map<String, Object> dayDetailMap = FastMap.newInstance();
+	    					dayDetailMap = (Map<String, Object>) dayWiseMap.get(datetReceived);
+	    					BigDecimal runningDayQuantity = (BigDecimal)dayDetailMap.get("quantity");
+	    					BigDecimal runningDayAmount = (BigDecimal)dayDetailMap.get("amount");
+	    					runningDayQuantity = runningDayQuantity.add(quantity);
+	    					runningDayAmount = runningDayAmount.add(amount);
+		    				dayDetailMap.put("quantity", runningDayQuantity);
+		    				dayDetailMap.put("amount", runningDayAmount);
+		    				dayWiseMap.put(datetReceived,dayDetailMap);
+	        				productMap.put("dayWiseMap", dayWiseMap);
+	    				}else{
+	    					Map<String, Object> dayDetailMap = FastMap.newInstance();
+		    				dayDetailMap.put("quantity", quantity);
+		    				dayDetailMap.put("amount", amount);
+		    				dayWiseMap.put(datetReceived,dayDetailMap);
+	        				productMap.put("dayWiseMap", dayWiseMap);
+	    				}
+	    				productTotals.put(productId, productMap);
+	    			}
+			 }       
+		   shipmentReceiptItr.close();
+		   result.put("receiptsList", receiptsList);
 		   result.put("productTotals", productTotals);  
 		}catch(Exception e){
 			Debug.logError(e.toString(), module);
