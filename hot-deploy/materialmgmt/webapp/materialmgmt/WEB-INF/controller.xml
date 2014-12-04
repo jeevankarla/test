@@ -42,6 +42,12 @@
        <response name="error" type="view" value="FindMaterialRequest"/>
      </request-map>
      
+    <request-map uri="enquiryItemsForQuote">
+     	<security auth="true" https="true"/>
+     	<response name="success" type="view" value="enquiryItemsForQuote"/>
+     	<response name="error" type="view" value="ViewMaterialEnquiry"/>
+    </request-map>
+    
      <request-map uri="approveRequestByHOD">
        <security https="true" auth="true"/>
        <event type="service" path="" invoke="approveRequestByHOD"></event>
@@ -197,6 +203,17 @@
        <response name="error" type="view" value="ViewMaterialRequest"/>
      </request-map>
      
+     <request-map uri="ViewMaterialEnquiry">
+       <security https="true" auth="true"/>
+       <response name="success" type="view" value="ViewMaterialEnquiry"/>
+       <response name="error" type="view" value="ViewMaterialEnquiry"/>
+     </request-map>
+     
+     <request-map uri="FindMaterialIssuance">
+       <security https="true" auth="true"/>
+       <response name="success" type="view" value="FindMaterialIssuance"/>
+       <response name="error" type="view" value="FindMaterialIssuance"/>
+     </request-map>
      
       <request-map uri="FindInterUnitPurchase">
         <security https="true" auth="true"/>
@@ -209,7 +226,12 @@
        <response name="error" type="view" value="InterUnitPurchaseOrderInit"/>
      </request-map>
     
-    
+    <request-map uri="createQuoteForEnquiry">
+        <security https="true" auth="true"/>
+        <event type="java" path="in.vasista.vbiz.purchase.MaterialQuoteServices" invoke="createQuoteForEnquiry"/>        
+        <response name="success" type="view" value="ViewMaterialEnquiry"/>
+        <response name="error" type="view" value="ViewMaterialEnquiry"/>
+    </request-map>
     
     <request-map uri="processPurchaseOrder">
         <security https="true" auth="true"/>
@@ -327,10 +349,13 @@
     <!-- custRequest views -->
     <view-map name="FindMaterialRequest" type="screen" page="component://materialmgmt/widget/MaterialRequestScreens.xml#FindMaterialRequest"/>
     <view-map name="ViewMaterialRequest" type="screen" page="component://materialmgmt/widget/MaterialRequestScreens.xml#ViewMaterialRequest"/>
+    <view-map name="ViewMaterialEnquiry" type="screen" page="component://materialmgmt/widget/MaterialRequestScreens.xml#ViewMaterialEnquiry"/>
     <view-map name="CustRequestEntry" type="screen" page="component://materialmgmt/widget/MaterialRequestScreens.xml#CustRequestEntry"/>
     <view-map name="ApproveRequestsByDeptHead" type="screen" page="component://materialmgmt/widget/MaterialRequestScreens.xml#ApproveRequestsByDeptHead"/>
     <view-map name="StoreProductIssue" type="screen" page="component://materialmgmt/widget/MaterialRequestScreens.xml#StoreProductIssue"/>
     <view-map name="FindMaterialEnquiry" type="screen" page="component://materialmgmt/widget/MaterialRequestScreens.xml#FindMaterialEnquiry"/>
+    <view-map name="enquiryItemsForQuote" type="screen" page="component://materialmgmt/widget/MaterialRequestScreens.xml#EnquiryItemsForQuote"/>
+    
     
     <!-- Requirement views -->
     <view-map name="FindMaterialRequirement" type="screen" page="component://materialmgmt/widget/MaterialRequirementScreens.xml#FindMaterialRequirement"/>
@@ -343,5 +368,7 @@
     <view-map name="FindMaterialPO" type="screen" page="component://materialmgmt/widget/MaterialPurchaseScreens.xml#FindMaterialPO"/>
     <view-map name="InvoiceForShippedGoods" type="screen" page="component://materialmgmt/widget/MaterialPurchaseScreens.xml#InvoiceForShippedGoods"/>
     
-    
+	<!-- Issuance     -->
+	<view-map name="FindMaterialIssuance" type="screen" page="component://materialmgmt/widget/MaterialRequestScreens.xml#FindMaterialIssuance"/>
+	
 </site-conf>

@@ -23,12 +23,12 @@
         
         <menu name="MaterailtMgmtNGTabBar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml">
         
-	        <menu-item name="FindMaterialRequest" title="Requests">
+	        <menu-item name="FindMaterialRequest" title="${uiLabelMap.MaterialMangement_CustRequest}">
 	        	<link target="FindMaterialRequest"/>
 	        </menu-item>
 	
-			<menu-item name="StoreProductIssue" title="Issue To Departments">
-	        	<link target="StoreProductIssue"/>
+			<menu-item name="FindMaterialIssuance" title="Store Issuance">
+	        	<link target="FindMaterialIssuance"/>
 	        </menu-item>
 	        
 	        <menu-item name="FindMaterialRequirement" title="Requirements">
@@ -39,14 +39,11 @@
 	        	<link target="FindMaterialEnquiry"/>
 	        </menu-item>
 	        
-	        <menu-item name="FindMaterialQuotes" title="Find Quotations">
+	        <menu-item name="FindMaterialQuotes" title="Quotation">
 	        	<link target="FindMaterialQuotes"/>
 	        </menu-item>
 	        
 	        <menu-item name="FindMaterialPO" title="Purchase Order">
-	        	<link target="FindMaterialPO"/>
-	        </menu-item>
-	   		<menu-item name="FindMaterialPO" title="Purchase Order">
 	        	<link target="FindMaterialPO"/>
 	        </menu-item>
 	        
@@ -84,13 +81,13 @@
       </menu>
       
       <menu name="RequestTabBar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml" selected-menuitem-context-field-name="tabButtonItem2">
-        <menu-item name="FindMaterialRequest" title="Find Requests">
+        <menu-item name="FindMaterialRequest" title="${uiLabelMap.MaterialMangement_CustRequest}">
         	<link target="FindMaterialRequest"/>
         </menu-item>
-         <menu-item name="CustRequestEntry" title="Request Entry">
+         <menu-item name="CustRequestEntry" title="${uiLabelMap.MaterialMangement_CustRequest} Entry">
         	<link target="CustRequestEntry"/>
         </menu-item>
-        <menu-item name="ApproveRequestsByDeptHead" title="Dept. Head Approvals">
+        <menu-item name="ApproveRequestsByDeptHead" title="Dept. Head Approval">
         	<link target="ApproveRequestsByDeptHead"/>
         </menu-item>
         <menu-item name="RequestsReceiptAcknowledgement" title="Receipt Acknowledgement">
@@ -98,6 +95,37 @@
         </menu-item>
       </menu>
       
+      <menu name="StoreIssueTabBar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml" selected-menuitem-context-field-name="tabButtonItem2">
+        <menu-item name="FindMaterialIssuance" title="${uiLabelMap.MaterialMangement_FindMaterialIssuance}">
+        	<link target="FindMaterialIssuance"/>
+        </menu-item>
+         <menu-item name="StoreProductIssue" title="Issuance Request">
+        	<link target="StoreProductIssue"/>
+        </menu-item>
+      </menu>
+      
+      <menu name="EnquiryTabBar" extends="CommonSubTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml" selected-menuitem-context-field-name="tabButtonItem2">
+        
+        <menu-item name="viewEnquiry" title="Enquiry Overview">
+            <link target="viewEnquiryItemDetails">
+                <parameter param-name="custRequestId" from-field="custRequest.custRequestId"/>
+            </link>
+        </menu-item>
+   
+        <menu-item name="quoteForEnquiry" title="Quotes for Enquiry">
+            <link target="quoteForEnquiry">
+                <parameter param-name="custRequestId" from-field="custRequest.custRequestId"/>
+            </link>
+        </menu-item>
+        
+        <menu-item name="enquiryNotes" title="Add/View Notes">
+            <link target="EditEnquiryNotes">
+                <parameter param-name="custRequestId" from-field="custRequest.custRequestId"/>
+            </link>
+        </menu-item>
+
+    </menu>
+    
       <menu name="POTabBar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml" selected-menuitem-context-field-name="tabButtonItem2">
         <menu-item name="FindMaterialPO" title="Find Purchase Order">
         	<link target="FindMaterialPO"/>

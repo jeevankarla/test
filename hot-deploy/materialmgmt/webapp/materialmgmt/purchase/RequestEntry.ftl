@@ -54,7 +54,7 @@
 		<div class="screenlet">
 			<div class="screenlet-title-bar">
          		<div class="grid-header" style="width:100%">
-					<label>Request Header </label>
+					<label>Indent Header </label>
 				</div>
 		     </div>
       
@@ -67,7 +67,7 @@
 				        	<td>
 						      	<input type="hidden" name="isFormSubmitted"  value="YES" />
 				           	</td>
-					        <td align='left' valign='middle' nowrap="nowrap"><div class='h2'>Request Date:</div></td>
+					        <td align='left' valign='middle' nowrap="nowrap"><div class='h2'>${uiLabelMap.MaterialMangement_CustRequestDate}:</div></td>
 					        <td>&nbsp;</td>
 					        <#if effectiveDate?exists && effectiveDate?has_content>  
 						  		<input type="hidden" name="effectiveDate" id="effectiveDate" value="${effectiveDate}"/>  
@@ -85,7 +85,7 @@
     					
     					<tr>
 				      		<td>&nbsp;</td>
-				      		<td align='left' valign='middle' nowrap="nowrap"><div class='h2'>Product Category:</div></td>
+				      		<td align='left' valign='middle' nowrap="nowrap"><div class='h2'>Material Category:</div></td>
 				      		<td>&nbsp;</td>
 				      		<td>
 				      		<#if productCategoryId?has_content>
@@ -101,7 +101,7 @@
         				<tr><td><br/></td></tr>
         				<tr>
 				      		<td>&nbsp;</td>
-				      		<td align='left' valign='middle' nowrap="nowrap"><div class='h2'>Request Title:</div></td>
+				      		<td align='left' valign='middle' nowrap="nowrap"><div class='h2'>${uiLabelMap.MaterialMangement_CustRequestName}</div></td>
 				      		<td>&nbsp;</td>
 				      		<td>
 				      		<#if custRequestName?has_content>
@@ -116,7 +116,7 @@
 						
 				        <tr>
 				          <td>&nbsp;</td>
-				          <td align='left' valign='middle' nowrap="nowrap"><div class='h2'>Department:</div></td>
+				          <td align='left' valign='middle' nowrap="nowrap"><div class='h2'>${uiLabelMap.MaterialMangement_CustRequestFromPartyId}</div></td>
 				          <td>&nbsp;</td>
 				          <#if party?exists && party?has_content>  
 					  	  		<input type="hidden" name="partyId" id="partyId" value="${party.partyId.toUpperCase()}"/>  
@@ -153,7 +153,7 @@
 		<div class="screenlet">
     		<div class="screenlet-body">
 		 		<div class="grid-header" style="width:100%">
-		 			<label>Request Items Entry</label>
+		 			<label>Indent Items</label>
 				</div>
 				<div id="myGrid1" style="width:100%;height:350px;"></div>
 			  
