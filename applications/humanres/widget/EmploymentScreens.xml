@@ -684,6 +684,10 @@
     		<actions>  
 	    		<entity-condition list="leaveTypeList" entity-name="EmplLeaveType">
 				</entity-condition>
+				 <entity-and list="PartyGroupList" entity-name="PartyGroup">
+					<field-map field-name="partyId" value="Company" />
+					<select-field field-name="groupName"/>
+				</entity-and>
 	    		<set field="titleProperty" value="Masters Reports"/>
 	            <set field="tabButtonItem" value="newReports"/>
 				<set field="tabButtonItem2" value="MastersReports" />   	
@@ -724,6 +728,10 @@
     		<actions>  
 	    		<entity-condition list="leaveTypeList" entity-name="EmplLeaveType">
 				</entity-condition>
+				 <entity-and list="PartyGroupList" entity-name="PartyGroup">
+					<field-map field-name="partyId" value="Company" />
+					<select-field field-name="groupName"/>
+				</entity-and>
 	    		<set field="titleProperty" value="Leave Reports"/>
 	            <set field="tabButtonItem" value="newReports"/>
 				<set field="tabButtonItem2" value="LeaveReports" />   	
@@ -773,6 +781,10 @@
     		<actions>  
 	    		<entity-condition list="leaveTypeList" entity-name="EmplLeaveType">
 				</entity-condition>
+				 <entity-and list="PartyGroupList" entity-name="PartyGroup">
+					<field-map field-name="partyId" value="Company" />
+					<select-field field-name="groupName"/>
+				</entity-and>
 	    		<set field="titleProperty" value="Attendance Reports"/>
 	            <set field="tabButtonItem" value="newReports"/>
 				<set field="tabButtonItem2" value="AttendanceReports" />   	
@@ -813,6 +825,10 @@
     		<actions>  
 	    		<entity-condition list="leaveTypeList" entity-name="EmplLeaveType">
 				</entity-condition>
+				 <entity-and list="PartyGroupList" entity-name="PartyGroup">
+					<field-map field-name="partyId" value="Company" />
+					<select-field field-name="groupName"/>
+				</entity-and>
 	    		<set field="titleProperty" value="Payroll Reports"/>
 	            <set field="tabButtonItem" value="newReports"/>
 				<set field="tabButtonItem2" value="PayrollReports" />   	
@@ -832,7 +848,7 @@
 					<order-by field-name="sequenceNum"/>					
 				</entity-condition>
     		 	<entity-condition entity-name="InsuranceType" list="finalInsuranceTypeList" use-cache="true">
-                </entity-condition>  	
+                </entity-condition>  
 	    		<script location="component://humanres/webapp/humanres/WEB-INF/actions/humanres/reports.groovy"/>
     			<set field="reportFrequencyFlag" value="PayrollReports"/>
     		</actions>
@@ -855,6 +871,10 @@
     		<actions>  
 	    		<entity-condition list="leaveTypeList" entity-name="EmplLeaveType">
 				</entity-condition>
+				 <entity-and list="PartyGroupList" entity-name="PartyGroup">
+					<field-map field-name="partyId" value="Company" />
+					<select-field field-name="groupName"/>
+				</entity-and>
 	    		<set field="titleProperty" value="Statutory Reports"/>
 	            <set field="tabButtonItem" value="newReports"/>
 				<set field="tabButtonItem2" value="StatutoryReports" />   	
@@ -894,6 +914,10 @@
     		<actions>  
 	    		<entity-condition list="leaveTypeList" entity-name="EmplLeaveType">
 				</entity-condition>
+				<entity-and list="PartyGroupList" entity-name="PartyGroup">
+					<field-map field-name="partyId" value="Company" />
+					<select-field field-name="groupName"/>
+				</entity-and>
 	    		<set field="titleProperty" value="Supplementary Payroll Reports"/>
 	            <set field="tabButtonItem" value="newReports"/>
 				<set field="tabButtonItem2" value="SupplyPayrollReports" />   	
@@ -942,12 +966,17 @@
     	<section>
     		<actions>  
 				<entity-condition list="loanTypeList" entity-name="LoanType">
-				</entity-condition>				
+				</entity-condition>	
+				<entity-and list="PartyGroupList" entity-name="PartyGroup">
+					<field-map field-name="partyId" value="Company" />
+					<select-field field-name="groupName"/>
+				</entity-and>			
 	    		<set field="titleProperty" value="Loan Reports"/>
 	            <set field="tabButtonItem" value="newReports"/>
 				<set field="tabButtonItem2" value="LoanReports" />   	
 	    		<set field="screenFlag" value="newReports"/>
-	    		<set field="reportFrequencyFlag" value="LoanReports"/>	    		
+	    		<set field="reportFrequencyFlag" value="LoanReports"/>
+	    		<script location="component://humanres/webapp/humanres/WEB-INF/actions/humanres/reports.groovy"/>    		
 	    		<entity-condition list="customTimePeriodList" entity-name="CustomTimePeriod" use-cache="true" filter-by-date="false" >
                 	<condition-expr field-name="periodTypeId" operator="equals" value="HR_MONTH"/>
                 	<order-by field-name="-thruDate"/>
