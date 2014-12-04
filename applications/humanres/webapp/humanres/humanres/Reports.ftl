@@ -109,6 +109,7 @@ function makeDatePicker1(fromDateId ,thruDateId){
 	            of: $(this)
 	        });    
 	     });
+	     setOrgPartyId();
 	});
 
 </script>
@@ -124,8 +125,10 @@ function makeDatePicker1(fromDateId ,thruDateId){
       			<td align="center">
 	   				  Organization Id :
       				<select name="partyId"  id="partyId"  onchange="javascript:setOrgPartyId();">
-      					<option value="Company"></option>
-                		<#list orgList as org>  
+      					<#list PartyGroupList as PartyList>
+                			<option value='Company'>${PartyList.groupName?if_exists}</option>
+                		</#list> 
+                		<#list orgList as org>
                 			<option value='${org.partyId}'>${org.groupName?if_exists}</option>
                 		</#list>             
 					</select>
@@ -141,7 +144,7 @@ function setOrgPartyId() {
 
 	$(".commonPartyId").each(function() {
 		$(this).val($("#partyId").val());
-    });                
+    });
 }	
 </script>
 
@@ -1259,7 +1262,7 @@ function setOrgPartyId() {
 							<td width="10%"><input type="submit" value="Download" class="buttontext"></td> 
 							</td>
 						</form>
-					</tr>					
+					</tr>		
 				</table>
 			</div>
 		</div>
