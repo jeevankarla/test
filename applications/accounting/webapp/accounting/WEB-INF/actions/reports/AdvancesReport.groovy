@@ -226,7 +226,12 @@
 			partyPaymentId = partyPayment.get("paymentId");
 			
 			dateWisePmntApplications = [:];
-			dateWisePmntApplications.put("date", partyPayment.get("paymentDate"));
+			if(UtilValidate.isEmpty(partyPayment.get("paymentDate"))){
+				dateWisePmntApplications.put("date", "");
+			}
+			else{
+				dateWisePmntApplications.put("date", partyPayment.get("paymentDate"));
+			}
 			dateWisePmntApplications.put("paymentId", partyPayment.get("paymentId"));
 			
 			tempDateWisePmntMap = [:];
@@ -241,11 +246,21 @@
 			dateWisePmntApplications = [:];
 			durationPmntApp = durationPmntApps.get(j);
 			if(UtilValidate.isNotEmpty(durationPmntApp.get("toPaymentId"))){
-				dateWisePmntApplications.put("date", (paymentDetailsMap.get(durationPmntApp.get("toPaymentId"))).get("paymentDate"));
+				if(UtilValidate.isEmpty(paymentDetailsMap.get(durationPmntApp.get("toPaymentId")).get("paymentDate"))){
+					dateWisePmntApplications.put("date", "");
+				}
+				else{
+					dateWisePmntApplications.put("date", (paymentDetailsMap.get(durationPmntApp.get("toPaymentId"))).get("paymentDate"));
+				}
 				dateWisePmntApplications.put("paymentId", durationPmntApp.get("toPaymentId"));
 			}
 			if(UtilValidate.isNotEmpty(durationPmntApp.get("invoiceId"))){
-				dateWisePmntApplications.put("date", ((invoiceDetailsMap.get(durationPmntApp.get("invoiceId"))).get(0)).get("invoiceDate"));
+				if(UtilValidate.isEmpty((invoiceDetailsMap.get(durationPmntApp.get("invoiceId")).get(0)).get("invoiceDate"))){
+					dateWisePmntApplications.put("date", "");
+				}
+				else{
+					dateWisePmntApplications.put("date", ((invoiceDetailsMap.get(durationPmntApp.get("invoiceId"))).get(0)).get("invoiceDate"));
+				}
 				dateWisePmntApplications.put("invoiceId", durationPmntApp.get("invoiceId"));
 			}
 			tempDateWisePmntMap = [:];
