@@ -16,4 +16,34 @@
         <value xml:lang="en">You are not allowed to view this page.</value>
         <value xml:lang="zh">不允许你浏览这个页面。</value>
     </property>
+     <property key="MaterialMangement_CustRequest">
+        <value xml:lang="en">Indent</value>
+    </property>
+    <property key="MaterialMangement_CustRequestId">
+        <value xml:lang="en">Indent No</value>
+    </property>
+    <property key="MaterialMangement_Product">
+        <value xml:lang="en">Material</value>
+    </property>
+    <property key="MaterialMangement_ProductId">
+        <value xml:lang="en">Material Code</value>
+    </property>
+    <property key="MaterialMangement_ProductName">
+        <value xml:lang="en">Material Name</value>
+    </property>
+    <property key="MaterialMangement_CustRequestItemSeqId">
+        <value xml:lang="en">Item No</value>
+    </property>
+    <property key="MaterialMangement_CustRequestName">
+        <value xml:lang="en">Indent Ref</value>
+    </property>
+    <property key="MaterialMangement_CustRequestDate">
+        <value xml:lang="en">Indent Date</value>
+    </property>
+    <property key="MaterialMangement_CustRequestFromPartyId">
+        <value xml:lang="en">From Department</value>
+    </property>
+    <property key="MaterialMangement_FindMaterialIssuance">
+        <value xml:lang="en">Find Material Issuance</value>
+    </property>
 </resource>

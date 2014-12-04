@@ -56,10 +56,21 @@
         <attribute name="quantity" type="BigDecimal" mode="IN" optional="false"/>
         <attribute name="facilityId" type="String" mode="IN" optional="true"/>
     </service>
-     <service name="draftEnquiryForApprovedRequirements" engine="java"
+    <service name="draftEnquiryForApprovedRequirements" engine="java"
                 location="in.vasista.vbiz.purchase.MaterialRequestServices" invoke="draftEnquiryForApprovedRequirements">
         <description> Cancel Purchase Order</description>        
         <attribute name="requirementList" mode="IN" type="List" optional="false"/>
          <attribute name="custRequestId" type="String" mode="OUT" optional="false"/>
-   </service>
+    </service>
+    <service name="createQuoteAndItems" engine="java"
+                location="in.vasista.vbiz.purchase.MaterialQuoteServices" invoke="createQuoteAndItems">
+        <description> Create Quote And Quote Items From Cust Request</description>  
+        <attribute name="quoteItemList" mode="IN" type="List" optional="false"/>
+        <attribute name="quoteTypeId" type="String" mode="IN" optional="false"/>
+        <attribute name="quoteName" type="String" mode="IN" optional="true"/>
+        <attribute name="issueDate" type="Timestamp" mode="IN" optional="true"/>
+        <attribute name="validFromDate" type="Timestamp" mode="IN" optional="true"/>
+        <attribute name="validThruDate" type="Timestamp" mode="IN" optional="true"/>
+        <attribute name="partyId" type="String" mode="IN" optional="false"/>
+    </service>
 </services>

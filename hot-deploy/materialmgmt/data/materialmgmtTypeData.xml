@@ -10,4 +10,7 @@
 	<ShipmentType description="Material Purchase Shipment" hasTable="N"  parentTypeId="PURCHASE_SHIPMENT" shipmentTypeId="MATERIAL_SHIPMENT"/>
     
      <StatusItem description="In Enquiry"  sequenceId="01" statusCode="IN Enquiry" statusId="REQ_IN_ENQUIRY" statusTypeId="REQUIREMENT_STATUS"/>
+     
+     <RoleType description="Request Taker for Quote" hasTable="N" roleTypeId="REQ_TAKER"/>
+     <QuoteType description="Material purchase Quote" hasTable="N" quoteTypeId="MATERIAL_PUR_QUOTE"/>
 </entity-engine-xml>

@@ -553,6 +553,9 @@ public class MaterialRequestServices {
 			itemIssueCtx.put("inventoryItemId", inventoryItemId);
 			itemIssueCtx.put("productId", custRequestItem.getString("productId"));
 			itemIssueCtx.put("quantity", quantity);
+			itemIssueCtx.put("issuedByUserLoginId", userLogin.getString("userLoginId"));
+			itemIssueCtx.put("modifiedByUserLoginId", userLogin.getString("userLoginId"));
+			itemIssueCtx.put("modifiedDateTime", UtilDateTime.nowTimestamp());
 			Map resultCtx = dispatcher.runSync("createItemIssuance", itemIssueCtx);
 			if (ServiceUtil.isError(resultCtx)) {
 				Debug.logError("Problem creating item issuance for requested item", module);
@@ -764,7 +767,7 @@ public class MaterialRequestServices {
 		return "success";
     }
 	
-public static Map<String, Object> draftEnquiryForApprovedRequirements(DispatchContext ctx,Map<String, ? extends Object> context) {
+	public static Map<String, Object> draftEnquiryForApprovedRequirements(DispatchContext ctx,Map<String, ? extends Object> context) {
 		
 		Delegator delegator = ctx.getDelegator();
 		LocalDispatcher dispatcher = ctx.getDispatcher();
