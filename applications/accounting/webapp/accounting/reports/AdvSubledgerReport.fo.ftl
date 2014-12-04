@@ -37,7 +37,7 @@ ${setRequestAttribute("OUTPUT_FILENAME", "abstractReport.pdf")}
 					<fo:block  keep-together="always" text-align="center" font-family="Courier,monospace" white-space-collapse="false">&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;Date:${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(nowTimestamp, "dd/MM/yy HH:mm:ss")}</fo:block>
 					<fo:block  keep-together="always" text-align="center" font-family="Courier,monospace" white-space-collapse="false" font-weight="bold">KARNATAKA CO-OPERATIVE MILK PRODUCERS FEDERATION  LTD</fo:block>
 					<fo:block  keep-together="always" text-align="center" font-family="Courier,monospace" white-space-collapse="false" font-weight="bold">UNIT: MOTHER DAIRY: G.K.V.K POST,YELAHANKA,BANGALORE:560065</fo:block>
-                    <fo:block text-align="center" font-size="12pt" keep-together="always"  white-space-collapse="false" font-weight="bold">${paymentType.get("description")} From ${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(fromDate, "dd/MM/yyyy")} To ${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(thruDate, "dd/MM/yyyy")}	</fo:block>
+                    <fo:block text-align="center" font-size="12pt" keep-together="always"  white-space-collapse="false" font-weight="bold">${paymentType.get("description")} Detailed Report From ${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(fromDate, "dd/MM/yyyy")} To ${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(thruDate, "dd/MM/yyyy")}	</fo:block>
               		<fo:block text-align="left" font-size="12pt" keep-together="always"  white-space-collapse="false" font-weight="bold">GL ACCOUNT CODE: ${GlAccount.get("accountCode")} &#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;	${GlAccount.get("accountName")}</fo:block>
               		
               		<fo:block>
@@ -109,12 +109,12 @@ ${setRequestAttribute("OUTPUT_FILENAME", "abstractReport.pdf")}
 							
 								<fo:table-row border-style="solid">
 									<fo:table-cell>
-	                            		<fo:block  text-align="left" keep-together="always" font-size="13pt" white-space-collapse="false" font-weight="bold"> 
+	                            		<fo:block  text-align="left" wrap-option="wrap" font-size="13pt" white-space-collapse="false" font-weight="bold"> 
                                             PartyId: ${partyId?if_exists}
                                       	</fo:block>  
 	                       			</fo:table-cell>
 	                       			<fo:table-cell>
-	                            		<fo:block  text-align="left" keep-together="always" font-size="13pt" white-space-collapse="false"> 
+	                            		<fo:block  text-align="left" wrap-option="wrap" font-size="13pt" white-space-collapse="false"> 
                                              ${Static["org.ofbiz.party.party.PartyHelper"].getPartyName(delegator, partyId, false)}
                                       	</fo:block>  
 	                       			</fo:table-cell>
@@ -162,7 +162,7 @@ ${setRequestAttribute("OUTPUT_FILENAME", "abstractReport.pdf")}
 			                       			</fo:table-cell>
 			                       			<fo:table-cell border-style="solid">
 			                            		<fo:block  text-align="left" font-size="13pt" wrap-option="wrap" white-space-collapse="false"> 
-			                            			${paymentGenericValue.get("comments")?if_exists}
+			                            			${paymentGenericValue.get("comments")?if_exists} <#if paymentGenericValue.get("paymentRefNum")?has_content> :${paymentGenericValue.get("paymentRefNum")?if_exists} </#if>
 		                                      	</fo:block>  
 			                       			</fo:table-cell>
 			                       			<fo:table-cell border-style="solid">
@@ -183,7 +183,7 @@ ${setRequestAttribute("OUTPUT_FILENAME", "abstractReport.pdf")}
 			                       			</fo:table-cell>
 			                       			<fo:table-cell border-style="solid">
 			                            		<fo:block  text-align="left" keep-together="always" font-size="13pt" white-space-collapse="false"> 
-			                            			 ${paymentGenericValue.get("finAccountTransId")?if_exists} 
+			                            			 ${finTransSeqMap.get(paymentGenericValue.get("finAccountTransId"))?if_exists} 
 		                                      	</fo:block>
 		                                    </fo:table-cell>
 		                                    <#if (paymentGenericValue.get("paymentTypeId")).indexOf("PAYOUT") != -1>
@@ -225,8 +225,8 @@ ${setRequestAttribute("OUTPUT_FILENAME", "abstractReport.pdf")}
 			                                      </fo:block>  
 				                       			</fo:table-cell>
 				                       			<fo:table-cell border-style="solid">
-				                            		<fo:block  text-align="left" keep-together="always" font-size="13pt" white-space-collapse="false"> 
-				                            			${eachInvItem.get("invoiceMessage")?if_exists}
+				                            		<fo:block  text-align="left" wrap-option="wrap" font-size="13pt" white-space-collapse="false"> 
+				                            			${eachInvItem.get("description")?if_exists}
 			                                      	</fo:block>  
 				                       			</fo:table-cell>
 				                       			<fo:table-cell border-style="solid">

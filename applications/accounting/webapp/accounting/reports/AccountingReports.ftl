@@ -168,7 +168,7 @@ function reportTypeChangeFunc() {
       <table class="basic-table hover-bar h3" style="border-spacing: 0 10px;" >  
       	<tr class="alternate-row"> 
       		<form id="advancesReport" name="advancesReport" method="post" action="<@ofbizUrl>AdvancesReport.pdf</@ofbizUrl>" target="_blank">	
-      		  	<td width="20%">Advances Report</td>
+      		  	<td width="10%">Advances Report</td>
 			  	<#--
 			  	<td width="25%">Payment Type
 			  	  	<select name='paymentTypeId' id ="paymentTypeId">	
@@ -177,7 +177,7 @@ function reportTypeChangeFunc() {
 				 	</select>
 			  	</td>
 			  	-->
-			  	<td width="25%">Payment Type
+			  	<td width="25%">Pmnt Type
 			  	  	<select name='paymentTypeId' id ="paymentTypeId">	
 					 	<option value=""></option>								
 						<#list paymentTypes as paymentType> 	
@@ -186,15 +186,19 @@ function reportTypeChangeFunc() {
 				 	</select>
 			  	</td>
 			  	
-				<td width="20%">From<input  type="text" size="18pt" id="advFromDate" readonly  name="fromDate"/></td>
-				<td width="20%">To<input  type="text" size="18pt" id="advThruDate" readonly  name="thruDate"/></td>
-          		<td width="15%"><input type="submit" value="PDF" class="buttontext"/></td>
+				<td width="15%">From<input  type="text" size="18pt" id="advFromDate" readonly  name="fromDate"/></td>
+				<td width="15%">To<input  type="text" size="18pt" id="advThruDate" readonly  name="thruDate"/></td>
+          		<td width="5%">&#160;</td>
+			  	<td width="25%">
+      		  		&#160;
+			  	</td>
+          		<td width="5%"><input type="submit" value="PDF" class="buttontext"/></td>
       		</form>
       	</tr>
       	<tr> 
       		<form id="subLedgerReport" name="subLedgerReport" method="post" action="<@ofbizUrl>SubLedgerReport.pdf</@ofbizUrl>" target="_blank">	
-      		  	<td width="20%">Subledger Report</td>
-			  	<td width="25%">Payment Type
+      		  	<td width="10%">Subledger Report</td>
+			  	<td width="25%">Pmnt Type
 			  	  	<select name='paymentTypeId' id ="paymentTypeId">	
 					 	<option value=""></option>								
 						<#list paymentTypes as paymentType> 	
@@ -202,9 +206,13 @@ function reportTypeChangeFunc() {
           		   		</#list>
 				 	</select>
 			  	</td>
-				<td width="20%">From<input  type="text" size="18pt" id="subLedgerFromDate" readonly  name="fromDate"/></td>
-				<td width="20%">To<input  type="text" size="18pt" id="subLedgerThruDate" readonly  name="thruDate"/></td>
-          		<td width="15%"><input type="submit" value="PDF" class="buttontext"/></td>
+				<td width="15%">From<input  type="text" size="18pt" id="subLedgerFromDate" readonly  name="fromDate"/></td>
+				<td width="15%">To<input  type="text" size="18pt" id="subLedgerThruDate" readonly  name="thruDate"/></td>
+          		<td width="5%">PartyId</td>
+      		  	<td width="25%">
+      		  		<@htmlTemplate.lookupField value='' formName="subLedgerReport" name="partyId" id="partyId" fieldFormName="LookupPartyName"/>
+			  	</td>
+          		<td width="5%"><input type="submit" value="PDF" class="buttontext"/></td>
       		</form>
       	</tr>
 	</table>
