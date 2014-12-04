@@ -10,6 +10,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Set;
 import java.util.TimeZone;
 import java.util.TreeMap;
 
@@ -181,6 +182,7 @@ public class MaterialHelperServices{
 		Timestamp fromDate = (Timestamp) context.get("fromDate");
 		Timestamp thruDate = (Timestamp) context.get("thruDate");
 		GenericValue userLogin = (GenericValue) context.get("userLogin");
+		String isForMRRReg = (String) context.get("isForMrrReg");
 		Map result = ServiceUtil.returnSuccess();
 		List condList=FastList.newInstance();
 		try{
@@ -192,11 +194,16 @@ public class MaterialHelperServices{
 			 
 			 EntityCondition cond = EntityCondition.makeCondition(condList,EntityOperator.AND);
 			 EntityListIterator shipmentReceiptItr = null;
-			 shipmentReceiptItr = delegator.find("ShipmentReceiptAndItem", cond, null,UtilMisc.toSet("receiptId","facilityId","datetimeReceived" ,"quantityAccepted","unitCost"), null,null);
+			 Set fieldsToSelect = UtilMisc.toSet("receiptId","facilityId","datetimeReceived" ,"quantityAccepted","unitCost");
+			 fieldsToSelect.add("orderId");
+			 fieldsToSelect.add("orderItemSeqId");
+			 shipmentReceiptItr = delegator.find("ShipmentReceiptAndItem", cond, null,fieldsToSelect, null,null);
 			 GenericValue receiptItem;
 			 List receiptsList =FastList.newInstance();
 			 Map<String, Object> productTotals = new TreeMap<String, Object>();
 			 Map<String, Object> storeTotals = new TreeMap<String, Object>();
+			 Map<String, Object> MaterialReceiptRegisterMap = new TreeMap<String, Object>();
+			 
 			 while( shipmentReceiptItr != null && (receiptItem = shipmentReceiptItr.next()) != null) {
 				    Map tempMap = FastMap.newInstance();
 		            String receiptId = receiptItem.getString("receiptId");
@@ -211,7 +218,49 @@ public class MaterialHelperServices{
 		            tempMap.put("amount", amount);
 		            tempMap.put("price", price);
 		            receiptsList.add(tempMap);
-		            
+		            if(UtilValidate.isNotEmpty(isForMRRReg) && isForMRRReg.equals("Y")){
+		            	if(UtilValidate.isEmpty(MaterialReceiptRegisterMap.get(receiptId))){
+		            		Map<String ,Object> receiptDetailsMap = FastMap.newInstance();
+		            		String orderId = receiptItem.getString("orderId");
+		            		//SUPPLIER_AGENT,ISSUE_TO_DEPT
+		            		
+		            		String supplierId =null;
+		            		String departmentId =null;
+		            		String billNo =null;
+		            		String billDate =null;
+		            		List<GenericValue> orderRoles = delegator.findByAnd("OrderRole", UtilMisc.toMap("orderId",orderId));
+		            		GenericValue supplierRole = EntityUtil.getFirst(EntityUtil.filterByAnd(orderRoles, UtilMisc.toMap("roleTypeId","SUPPLIER_AGENT")));
+		            		GenericValue deptRole = EntityUtil.getFirst(EntityUtil.filterByAnd(orderRoles, UtilMisc.toMap("roleTypeId","ISSUE_TO_DEPT")));
+		            		if(UtilValidate.isNotEmpty(supplierRole))
+		            			supplierId = supplierRole.getString("partyId");
+		            		
+		            		if(UtilValidate.isNotEmpty(deptRole))
+		            			departmentId = deptRole.getString("partyId");
+		            		
+		            		List<GenericValue> orderAttributes = delegator.findByAnd("OrderAttribute", UtilMisc.toMap("orderId",orderId));
+		            		GenericValue billNoAttr = EntityUtil.getFirst(EntityUtil.filterByAnd(orderAttributes, UtilMisc.toMap("attrName","SUP_INV_NUMBER")));
+		            		GenericValue billDateAttr = EntityUtil.getFirst(EntityUtil.filterByAnd(orderAttributes, UtilMisc.toMap("attrName","SUP_INV_DATE")));
+		            		
+		            		if(UtilValidate.isNotEmpty(billNoAttr))
+		            			billNo = billNoAttr.getString("attrValue");
+		            		
+		            		if(UtilValidate.isNotEmpty(billDateAttr))
+		            			billDate = billDateAttr.getString("attrValue");
+		            		
+		            		GenericValue orderHeader = delegator.findOne("OrderHeader", UtilMisc.toMap("orderId",orderId), false);
+		            		BigDecimal orderTotal = orderHeader.getBigDecimal("grandTotal");
+		            		
+		            		receiptDetailsMap.put("receiptId", receiptId);
+		            		receiptDetailsMap.put("datetimeReceived", datetimeReceived);
+		            		receiptDetailsMap.put("departmentId", departmentId);
+		            		receiptDetailsMap.put("supplierId", supplierId);
+		            		receiptDetailsMap.put("billNo", billNo);
+		            		receiptDetailsMap.put("billDate", billDate);
+		            		receiptDetailsMap.put("amount", orderTotal);
+		            		MaterialReceiptRegisterMap.put(receiptId, receiptDetailsMap);
+		            	}
+		            	
+		            }
 		         // Handle product totals   			
 	    			if (productTotals.get(productId) == null) {
 	    				Map<String, Object> newMap = FastMap.newInstance();
@@ -257,6 +306,7 @@ public class MaterialHelperServices{
 	    			}
 			 }       
 		   shipmentReceiptItr.close();
+		   result.put("MaterialReceiptRegisterMap",MaterialReceiptRegisterMap);
 		   result.put("receiptsList", receiptsList);
 		   result.put("productTotals", productTotals);  
 		}catch(Exception e){
