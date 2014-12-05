@@ -5387,6 +5387,7 @@ public class PayrollService {
 	      String overrideReason= (String)context.get("overrideReason");
 	      String encashmentStatus=(String) context.get("encashmentStatus");
 	      String seqId = (String) context.get("seqId");
+	      String checkBox = (String) context.get("checkBox");
 	      BigDecimal overrideLateMin=(BigDecimal)context.get("overrideLateMin");
 	      Map result = ServiceUtil.returnSuccess();
   		try{
@@ -5407,8 +5408,12 @@ public class PayrollService {
   				List<GenericValue> EmplDailyAttendanceDetail = delegator.findList("EmplDailyAttendanceDetail", condition, null, null, null, false);
   				for (int i = 0; i < EmplDailyAttendanceDetail.size(); ++i) {
   					GenericValue DailyAttendanceDetail = EmplDailyAttendanceDetail.get(i);
-  					if(UtilValidate.isNotEmpty(encashmentStatus)){
-  	  						DailyAttendanceDetail.set("encashmentStatus",encashmentStatus);
+  					if(UtilValidate.isNotEmpty(checkBox) && UtilValidate.isNotEmpty(encashmentStatus)){
+  						DailyAttendanceDetail.set("encashmentStatus",encashmentStatus);
+  					}else if(UtilValidate.isNotEmpty(checkBox) && (UtilValidate.isEmpty(encashmentStatus))){
+  	  					DailyAttendanceDetail.set("encashmentStatus","");
+  					}else{
+  				  		return ServiceUtil.returnError("Please select Check Box");
   					}
   					if(UtilValidate.isNotEmpty(overrideLateMin)){
 	  					DailyAttendanceDetail.set("overrideLateMin",overrideLateMin);

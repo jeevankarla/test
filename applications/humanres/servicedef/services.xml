@@ -149,7 +149,8 @@ under the License.emplpunch
         </required-permissions>
 		<auto-attributes mode="IN" include="pk" optional="false"/>
 		<attribute name="timePeriodId" mode="IN" type="String" optional="false"></attribute>
-        <auto-attributes mode="IN" include="nonpk" optional="true"/>    
+        <auto-attributes mode="IN" include="nonpk" optional="true"/>   
+        <attribute name="checkBox" mode="IN" type="String" optional="true"/> 
     </service>
     <service name="updatePartySkill" engine="simple" default-entity-name="PartySkill"
              location="component://humanres/script/org/ofbiz/humanres/HumanResServices.xml" invoke="updatePartySkill" auth="true">

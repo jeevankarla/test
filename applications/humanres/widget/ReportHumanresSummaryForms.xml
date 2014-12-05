@@ -958,6 +958,9 @@
     		</entity-options>
     	</drop-down>
     	</field>
+    	 <field name="checkBox" title="${uiLabelMap.CommonEnabled}">
+            <check/>
+        </field>
     	<field name="submitButton" title="${uiLabelMap.CommonUpdate}"><submit button-type="button"/></field>
     </form>
     <form name="ArrearDays" type="single" header-row-style="header-row" default-table-style="basic-table" target="findArrearDays">
