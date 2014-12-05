@@ -1372,14 +1372,16 @@
             <script location="component://humanres/webapp/humanres/WEB-INF/actions/reports/EmployeePayRollReport.groovy"/>      
    		</actions> 
 		<widgets>
-			<section>                                                      
-				<widgets>
-					<platform-specific>
-						<xsl-fo>
-							<html-template location="component://humanres/webapp/humanres/humanres/PayRollSummaryReport.fo.ftl" />
-						</xsl-fo>
-					</platform-specific>
-				</widgets>
+			<section>  
+				<condition>	
+                   	<if-has-permission permission="KMF" action="_VIEW"/>
+                </condition>
+                <widgets>
+                  	<platform-specific><html><html-template location="component://humanres/webapp/humanres/humanres/PayRollSummaryReport.fo.ftl"/></html></platform-specific>
+                </widgets>
+                <fail-widgets>
+ 					<platform-specific><html><html-template location="component://humanres/webapp/humanres/humanres/PayRollSummaryReportPdf.fo.ftl"/></html></platform-specific>                  		
+               	</fail-widgets>
 			</section>
 		</widgets>	
 	</section>
