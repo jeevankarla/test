@@ -41,6 +41,7 @@ import in.vasista.vbiz.humanres.PayrollService;
 	partyIdsList=[];
 	conditionList=[];
 	conditionList.add(EntityCondition.makeCondition("customTimePeriodId", EntityOperator.EQUALS ,parameters.customTimePeriodId));
+	conditionList.add(EntityCondition.makeCondition("billingTypeId", EntityOperator.EQUALS ,"PAYROLL_BILL"));
 	conditionList.add(EntityCondition.makeCondition("statusId", EntityOperator.IN , UtilMisc.toList("GENERATED","APPROVED")));
 	if(UtilValidate.isNotEmpty(parameters.periodBillingId)){
 		conditionList.add(EntityCondition.makeCondition("periodBillingId", EntityOperator.EQUALS ,parameters.periodBillingId));
@@ -59,19 +60,27 @@ import in.vasista.vbiz.humanres.PayrollService;
 	if(UtilValidate.isNotEmpty(employments)){
 		employmentsList = EntityUtil.getFieldListFromEntityList(employments, "partyIdTo", true);
 	}
-	
 	TypeconditionList=[];
 	if((parameters.EmplType).equals("MDStaff")){
-		TypeconditionList.add(EntityCondition.makeCondition("roleTypeIdTo", EntityOperator.EQUALS ,"EMPLOYEE"));
+		TypeconditionList.add(EntityCondition.makeCondition("roleTypeId", EntityOperator.EQUALS ,"EMPLOYEE"));
 	}
 	if((parameters.EmplType).equals("DeputationStaff")){
-		TypeconditionList.add(EntityCondition.makeCondition("roleTypeIdTo", EntityOperator.EQUALS ,"DEPUT_EMPL"));
+		TypeconditionList.add(EntityCondition.makeCondition("roleTypeId", EntityOperator.EQUALS ,"DEPUTATION_EMPLY"));
 	}
-	TypeconditionList.add(EntityCondition.makeCondition("partyIdTo", EntityOperator.IN ,employmentsList));
+	TypeconditionList.add(EntityCondition.makeCondition("partyId", EntityOperator.IN ,employmentsList));
 	emplTypecondition = EntityCondition.makeCondition(TypeconditionList,EntityOperator.AND);
-	StaffList = delegator.findList("PartyRelationship", emplTypecondition, null, null, null, false);
+	StaffList = delegator.findList("PartyRole", emplTypecondition, null, null, null, false);
+	
+	if((parameters.EmplType).equals("MDStaff")){
+		condList = [];
+		condList.add(EntityCondition.makeCondition("partyId", EntityOperator.IN ,EntityUtil.getFieldListFromEntityList(StaffList, "partyId", true)));
+		condList.add(EntityCondition.makeCondition("roleTypeId", EntityOperator.EQUALS ,"DEPUTATION_EMPLY"));
+		typecondn = EntityCondition.makeCondition(condList,EntityOperator.AND);
+		depStaffList = delegator.findList("PartyRole", typecondn, null, null, null, false);
+		StaffList = EntityUtil.filterByCondition(StaffList, EntityCondition.makeCondition("partyId", EntityOperator.NOT_IN, EntityUtil.getFieldListFromEntityList(depStaffList, "partyId", true)));
+	}
 	if(UtilValidate.isNotEmpty(StaffList)){
-		partyIdsList = EntityUtil.getFieldListFromEntityList(StaffList, "partyIdTo", true);
+		partyIdsList = EntityUtil.getFieldListFromEntityList(StaffList, "partyId", true);
 	}
 	
 	headerConditionList=[];
@@ -81,74 +90,85 @@ import in.vasista.vbiz.humanres.PayrollService;
 	def orderBy = UtilMisc.toList("partyIdFrom");
 	payrollHeader = delegator.findList("PayrollHeader", headerCondition, null, orderBy, null, false);
 	payrollHeaderIdsList = EntityUtil.getFieldListFromEntityList(payrollHeader, "payrollHeaderId", true);
+	partyIdFromList = EntityUtil.getFieldListFromEntityList(payrollHeader, "partyIdFrom", true);
 	
-	if(UtilValidate.isNotEmpty(payrollHeader)){
-		payrollHeader.each{ HeaderId ->
-			employeesMap=[:];
-			wages= 0;
-			epf = fpf = 0;
-			employerFpf = employerVpf = employerEpf = 0;
-			payrollHeaderId = HeaderId.get("payrollHeaderId");
-			partyId = HeaderId.get("partyIdFrom");
-			if(UtilValidate.isNotEmpty(partyId)){
-				pfNumList = delegator.findList("PartyPersonAndEmployeeDetail", EntityCondition.makeCondition(["partyId" : partyId]), null, null, null, false);
-				pfNum = pfNumList[0].presentEpf;
-				firstName = pfNumList[0].firstName;
-				lastName = pfNumList[0].lastName;
-				headerItemsList = delegator.findList("PayrollHeaderItem", EntityCondition.makeCondition(["payrollHeaderId" : payrollHeaderId]), null, null, null, false);
-				for(j=0; j<headerItemsList.size(); j++){
-					eachItem = headerItemsList[j];
-					if((eachItem.payrollHeaderItemTypeId=="PAYROL_BEN_SALARY")&&(eachItem.amount==0)){
-						break;
-					}
-					if((eachItem.payrollHeaderItemTypeId=="PAYROL_BEN_SALARY")||(eachItem.payrollHeaderItemTypeId=="PAYROL_BEN_DA")||(eachItem.payrollHeaderItemTypeId=="PAYROL_BEN_SPELPAY")){
-						wages = wages+eachItem.amount;
-					}
-					if((eachItem.payrollHeaderItemTypeId=="PAYROL_DD_EMP_PR")){
-						epf = epf-eachItem.amount;
-					}
-					if((eachItem.payrollHeaderItemTypeId=="PAYROL_BEN_SALARY")&&(eachItem.amount==0)){
-						break;
-					}
-					if((eachItem.payrollHeaderItemTypeId=="PAYROL_DD_VLNT_PR")){
-						employerVpf = employerVpf-eachItem.amount;
-					}
-				}
-			
-				employerPFList = delegator.findList("PayrollHeaderItemEc", EntityCondition.makeCondition(["payrollHeaderId" : payrollHeaderId]), null, null, null, false);
-				
-				if(UtilValidate.isNotEmpty(employerPFList)){
-					employerPFList.each{ employer ->
-						if(employer.get("payrollHeaderItemTypeId")=="PAYROL_BEN_PFEMPLYR"){
-							employerEpf=employer.get("amount");
+	pfConditionList=[];
+	pfConditionList.add(EntityCondition.makeCondition("partyId", EntityOperator.IN ,partyIdFromList));
+	pfCondition = EntityCondition.makeCondition(pfConditionList,EntityOperator.AND);
+	def pforderBy = UtilMisc.toList("presentEpf");
+	pfList = delegator.findList("PartyPersonAndEmployeeDetail", pfCondition, null, pforderBy, null, false);
+	
+if(UtilValidate.isNotEmpty(pfList)){
+	pfList.each{ pf ->
+		if(UtilValidate.isNotEmpty(payrollHeader)){
+			payrollHeader.each{ HeaderId ->
+				employeesMap=[:];
+				wages= 0;
+				epf = fpf = 0;
+				pfNum = pf.presentEpf;
+				firstName = pf.get("firstName");
+				lastName = pf.get("lastName");
+				pfPartyId = pf.get("partyId");
+				employerFpf = employerVpf = employerEpf = 0;
+				payrollHeaderId = HeaderId.get("payrollHeaderId");
+				partyId = HeaderId.get("partyIdFrom");
+				if((partyId).equals(pfPartyId)){
+					headerItemsList = delegator.findList("PayrollHeaderItem", EntityCondition.makeCondition(["payrollHeaderId" : payrollHeaderId]), null, null, null, false);
+					for(j=0; j<headerItemsList.size(); j++){
+						eachItem = headerItemsList[j];
+						if((eachItem.payrollHeaderItemTypeId=="PAYROL_BEN_SALARY")&&(eachItem.amount==0)){
+							break;
 						}
-						if(employer.get("payrollHeaderItemTypeId")=="PAYROL_BEN_PENSION"){
-							employerFpf=employer.get("amount");
+						if((eachItem.payrollHeaderItemTypeId=="PAYROL_BEN_SALARY")||(eachItem.payrollHeaderItemTypeId=="PAYROL_BEN_DA")||(eachItem.payrollHeaderItemTypeId=="PAYROL_BEN_SPELPAY")){
+							wages = wages+eachItem.amount;
+						}
+						if((eachItem.payrollHeaderItemTypeId=="PAYROL_DD_EMP_PR")){
+							epf = epf-eachItem.amount;
+						}
+						if((eachItem.payrollHeaderItemTypeId=="PAYROL_BEN_SALARY")&&(eachItem.amount==0)){
+							break;
+						}
+						if((eachItem.payrollHeaderItemTypeId=="PAYROL_DD_VLNT_PR")){
+							employerVpf = employerVpf-eachItem.amount;
 						}
 					}
-				}
-			
-				employeedetailMap = [:];
-				employeedetailMap.put("partyId", partyId);
-				employeedetailMap.put("wages", wages);
-				employeedetailMap.put("pfNum", pfNum);
-				employeedetailMap.put("firstName", firstName);
-				employeedetailMap.put("lastName", lastName);
-				employeedetailMap.put("epf", epf);
-				employeedetailMap.put("fpf", fpf);
-				employeedetailMap.put("total",epf+fpf);
 				
-				employerdetailMap = [:];
-				employerdetailMap.put("employerFpf", employerFpf);
-				employerdetailMap.put("employerVpf", employerVpf);
-				employerdetailMap.put("employerEpf", employerEpf);
-				employerdetailMap.put("total",employerEpf+employerFpf);
-				employeesMap.put("EmployeesMap",employeedetailMap);
-				employeesMap.put("EmployersMap",employerdetailMap);
-				EachEmployeeMap.put(partyId,employeesMap);
+					employerPFList = delegator.findList("PayrollHeaderItemEc", EntityCondition.makeCondition(["payrollHeaderId" : payrollHeaderId]), null, null, null, false);
+					
+					if(UtilValidate.isNotEmpty(employerPFList)){
+						employerPFList.each{ employer ->
+							if(employer.get("payrollHeaderItemTypeId")=="PAYROL_BEN_PFEMPLYR"){
+								employerEpf=employer.get("amount");
+							}
+							if(employer.get("payrollHeaderItemTypeId")=="PAYROL_BEN_PENSION"){
+								employerFpf=employer.get("amount");
+							}
+						}
+					}
+				
+					employeedetailMap = [:];
+					employeedetailMap.put("partyId", partyId);
+					employeedetailMap.put("wages", wages);
+					employeedetailMap.put("pfNum", pfNum);
+					employeedetailMap.put("firstName", firstName);
+					employeedetailMap.put("lastName", lastName);
+					employeedetailMap.put("epf", epf);
+					employeedetailMap.put("fpf", fpf);
+					employeedetailMap.put("total",epf+fpf);
+					
+					employerdetailMap = [:];
+					employerdetailMap.put("employerFpf", employerFpf);
+					employerdetailMap.put("employerVpf", employerVpf);
+					employerdetailMap.put("employerEpf", employerEpf);
+					employerdetailMap.put("total",employerEpf+employerFpf);
+					employeesMap.put("EmployeesMap",employeedetailMap);
+					employeesMap.put("EmployersMap",employerdetailMap);
+					EachEmployeeMap.put(partyId,employeesMap);
+				}
 			}
 		}
 	}
+}
 	context.EachEmployeeMap = EachEmployeeMap;
 		
 	
