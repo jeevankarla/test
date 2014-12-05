@@ -1688,6 +1688,14 @@ public class PayrollService {
 		        				(new BigDecimal((Double)employeePayrollAttedance.get("noOfPayableDays"))).compareTo(BigDecimal.ZERO)==0){
 		        			  continue;
 		        		}
+		        		GenericValue payrollType = delegator.findOne("PayrollType", UtilMisc.toMap("payrollTypeId", "PAYROLL_BILL"), false);
+		        		if(UtilValidate.isNotEmpty(payrollType)){
+		        			BigDecimal minDays = (BigDecimal) payrollType.get("minDays");
+		        			if(UtilValidate.isNotEmpty(minDays) &&
+			        				(new BigDecimal((Double)employeePayrollAttedance.get("noOfPayableDays"))).compareTo(minDays) < 0){
+			        			  continue;
+			        		}
+		        		}
 		        		input.put("partyIdFrom", employment.getString("partyIdTo"));
 						Map tempInputMap = FastMap.newInstance();
 						tempInputMap.putAll(input);
