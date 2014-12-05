@@ -119,6 +119,7 @@ if(UtilValidate.isNotEmpty(companyBankAccountList)){
 		List conList=FastList.newInstance();
 		conList=UtilMisc.toList(
 			EntityCondition.makeCondition("roleTypeId", EntityOperator.EQUALS, "EMPLOYEE"),
+			EntityCondition.makeCondition("partyId", EntityOperator.IN ,employementIds),
 			EntityCondition.makeCondition("fromDate", EntityOperator.LESS_THAN_EQUAL_TO, timePeriodEnd),
 			EntityCondition.makeCondition(EntityCondition.makeCondition("thruDate", EntityOperator.EQUALS, null), EntityOperator.OR, EntityCondition.makeCondition("thruDate", EntityOperator.GREATER_THAN_EQUAL_TO, timePeriodStart)),
 			EntityCondition.makeCondition("finAccountId", EntityOperator.EQUALS, finAccountId));
@@ -127,38 +128,17 @@ if(UtilValidate.isNotEmpty(companyBankAccountList)){
 			if(UtilValidate.isNotEmpty(finAccountRoleList)){
 			partyIds = EntityUtil.getFieldListFromEntityList(finAccountRoleList, "partyId", true);
 			if(UtilValidate.isNotEmpty(partyIds)){
-				emplPartyIds=[];
 				List finAccConList=FastList.newInstance();
-					 finAccConList.add(EntityCondition.makeCondition("ownerPartyId", EntityOperator.IN ,partyIds));
-					 finAccConList.add(EntityCondition.makeCondition("statusId", EntityOperator.EQUALS ,"FNACT_ACTIVE"));
-					 finAccConList.add(EntityCondition.makeCondition("finAccountTypeId", EntityOperator.EQUALS ,"BANK_ACCOUNT"));
-					 EntityCondition finAccCond = EntityCondition.makeCondition(finAccConList, EntityOperator.AND);
-				List<GenericValue> finAccountDetailsList = delegator.findList("FinAccount", finAccCond, null, ["finAccountCode"], null, false);
-				List tempfinAccountList = FastList.newInstance();
+				 finAccConList.add(EntityCondition.makeCondition("ownerPartyId", EntityOperator.IN ,partyIds));
+				 finAccConList.add(EntityCondition.makeCondition("statusId", EntityOperator.EQUALS ,"FNACT_ACTIVE"));
+				 finAccConList.add(EntityCondition.makeCondition("finAccountTypeId", EntityOperator.EQUALS ,"BANK_ACCOUNT"));
+				 EntityCondition finAccCond = EntityCondition.makeCondition(finAccConList, EntityOperator.AND);
+				List<GenericValue> finAccountDetailsList = delegator.findList("FinAccount", finAccCond, null, null, null, false);
 				partiesFinAccList = UtilMisc.sortMaps(finAccountDetailsList, UtilMisc.toList("finAccountCode"));
-				for(finAccount in partiesFinAccList){
-					Map tempAccNoMap = FastMap.newInstance();
-					tempAccNoMap.put("ownerPartyId", finAccount.get("ownerPartyId"));
-					tempAccNoMap.put("gbCode", finAccount.get("gbCode"));
-					tempAccNoMap.put("finAccountCode", finAccount.get("finAccountCode"));
-					if(UtilValidate.isNotEmpty(finAccount.get("finAccountCode"))){
-						BigDecimal accCodeBig = new BigDecimal(finAccount.get("finAccountCode"));
-						tempAccNoMap.put("finAccountCode", accCodeBig.intValue());
-					}
-					tempfinAccountList.add(tempAccNoMap);
-				}
 				
-				tempfinAccountList = UtilMisc.sortMaps(tempfinAccountList, UtilMisc.toList("finAccountCode"));
-				if(UtilValidate.isNotEmpty(tempfinAccountList)){
-					tempfinAccountList.each{ finAcc->
-						gbCode = finAcc.get("gbCode");
-						ownerPartyId= finAcc.get("ownerPartyId");
-						emplPartyIds.add(ownerPartyId);
-					}
-				}
-				partyIds = EntityUtil.getFieldListFromEntityList(finAccountDetailsList, "ownerPartyId", true);
-				if(UtilValidate.isNotEmpty(emplPartyIds)){
-					emplPartyIds.each{ employee->
+				if(UtilValidate.isNotEmpty(partiesFinAccList)){
+					partiesFinAccList.each{ partyFin->
+						employee = partyFin.get("ownerPartyId");
 						if(UtilValidate.isNotEmpty(periodBillingList)){
 							periodBillDetails = EntityUtil.getFirst(periodBillingList);
 							periodBillingIds = EntityUtil.getFieldListFromEntityList(periodBillingList, "periodBillingId", true);
@@ -202,20 +182,8 @@ if(UtilValidate.isNotEmpty(companyBankAccountList)){
 									netAmount=totEarnings+totDeductions;
 									bankAdviceDetailsMap.put("totEarnings",totEarnings);
 									bankAdviceDetailsMap.put("totDeductions",totDeductions);
-									List AccConList=FastList.newInstance();
-										AccConList.add(EntityCondition.makeCondition("ownerPartyId", EntityOperator.EQUALS ,partyId));
-										AccConList.add(EntityCondition.makeCondition("statusId", EntityOperator.EQUALS ,"FNACT_ACTIVE"));
-										AccConList.add(EntityCondition.makeCondition("finAccountTypeId", EntityOperator.EQUALS ,"BANK_ACCOUNT"));
-										EntityCondition AccCond = EntityCondition.makeCondition(AccConList, EntityOperator.AND);
-									List<GenericValue> AccountDetailsList = delegator.findList("FinAccount", AccCond, null, ["finAccountCode"], null, false);
-									if(UtilValidate.isNotEmpty(AccountDetailsList)){
-										accDetails = EntityUtil.getFirst(AccountDetailsList);
-										accNo=0;
-										if(UtilValidate.isNotEmpty(accDetails))	{
-											accNo= accDetails.get("finAccountCode");
-										}
-										bankAdviceDetailsMap.put("acNo",accNo);
-									}
+									accNo = partyFin.get("finAccountCode");
+									bankAdviceDetailsMap.put("acNo",accNo);
 									if(UtilValidate.isNotEmpty(partyDetails.employeeId)){
 										bankAdviceDetailsMap.put("emplNo",partyDetails.get("employeeId"));
 									}else{
@@ -239,9 +207,10 @@ if(UtilValidate.isNotEmpty(companyBankAccountList)){
 				}
 			}
 		}
-		bankWiseEmplDetailsMap.put(finAccountId,BankAdvicePayRollMap);
+		if(UtilValidate.isNotEmpty(BankAdvicePayRollMap)){
+			bankWiseEmplDetailsMap.put(finAccountId,BankAdvicePayRollMap);
+		}
 	}
 }
-
 context.put("bankWiseEmplDetailsMap",bankWiseEmplDetailsMap);
 
