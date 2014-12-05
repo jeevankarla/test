@@ -1,34 +1,6 @@
 <link type="text/css" href="<@ofbizContentUrl>/images/jquery/ui/css/ui-lightness/jquery-ui-1.8.13.custom.css</@ofbizContentUrl>" rel="Stylesheet" />	
 
-<script type="application/javascript">
-   var boothsList =  ${StringUtil.wrapString(boothsJSON)}
-	var routesList =  ${StringUtil.wrapString(routesJSON)}
-	<#if (showBoothAutoSuggest?has_content) && (showBoothAutoSuggest != 'N') >
-			var routeBoothsData = ${StringUtil.wrapString(facilityItemsJSON)}
-			var supplyRouteList =  ${StringUtil.wrapString(supplyRouteItemsJSON)}
-			function setRouteDropDown(selection){	
-				//routesList = routesList;
-				routesList = supplyRouteList[selection.value];
-				if(selection.value =="" || typeof selection.value == "undefined"){
-					routesList =  ${StringUtil.wrapString(routesJSON)}
-				}				
-			}	
-			function setRouteBoothsDropDown(selection){	
-				boothsList = routeBoothsData[selection.value];
-				
-				if(selection.value =="" || typeof selection.value == "undefined"){
-					boothsList =  ${StringUtil.wrapString(boothsJSON)}
-				}				
-			}
-			<#if subscriptionTypeId?exists && subscriptionTypeId?has_content> 
-				routesList =  supplyRouteList["${subscriptionTypeId}"]; 
-			</#if>		
-			<#if routeId?exists && routeId?has_content> 
-				 boothsList = routeBoothsData["${routeId}"];
-			</#if>	
-						
-	</#if>
-	</script>	
+	
 	<script type="text/javascript">
 	function appendParams(formName, action) {
 	var formId = "#" + formName;
@@ -230,7 +202,8 @@ function reportTypeChangeFunc() {
 		                 <tr class="alternate-row">
 							<form id="purchaseReportProductWise" name="purchaseReportProductWise" method="post" action="<@ofbizUrl>purchaseTaxProductReport.pdf</@ofbizUrl>" target="_blank">	
 								<td width="30%">Purchase Tax Classification Report(ProductWise)</td>
-								<td width="15%">From<input  type="text" size="18pt" id="purchaseTaxProdFDate" readonly  name="fromDate"/></td>
+								<td width="15%">From<input  type="text" size="18pt" id="purchaseTaxProdFDate" readonly  name="fromDate"/>
+								<input  type="hidden"  name="purchaseTaxDeptFlag" value="purchaseTaxDeptFlag" /></td>
 							    <td width="15%">To<input  type="text" size="18pt" id="purchaseTaxProdTDate" readonly  name="thruDate"/></td>
 				      			<td width="15%">Tax Type
 									<select name='taxType' id = "taxType">
@@ -238,10 +211,16 @@ function reportTypeChangeFunc() {
 									    <option value='VAT5PT5'>Vat(5.5)</option>
 										<option value='VAT14PT5'>Vat(14.5)</option>
 										<option value='CST'>CST</option>
-										
 									</select>
 								</td>
-								<td width="15%"></td>
+								<td width="18%">Dept:
+									<select name="issueToDeptId"  id="issueToDeptId"  >
+		                               <option value=""></option>
+		                               <#list orgList as org>  
+		                                 <option value='${org.partyId}'>${org.groupName?if_exists}</option>
+		                               </#list>             
+		                           </select>
+								</td>
 								<td width="10%"><input type="submit" value="Download" class="buttontext"/></td> 
 							</form>
 		                </tr>  

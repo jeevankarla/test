@@ -35,7 +35,7 @@
                 	</condition-list>
                  	<order-by field-name="-description"/>
            		</entity-condition>
-                 <set field="layoutSettings.javaScripts[]" value="/byproducts/images/autoCompleteFacility.js" global="true"/>   
+                <!--  <set field="layoutSettings.javaScripts[]" value="/byproducts/images/autoCompleteFacility.js" global="true"/>  -->  
                  <entity-one value-field="showBoothAutoSuggestConf" entity-name="TenantConfiguration">
                		<field-map field-name="propertyTypeEnumId" value="FACILITY_AUTOSUGGEST"/>
                		<field-map field-name="propertyName" value="showBoothAutoSuggest"/>
@@ -51,9 +51,9 @@
                     </condition-list>                    
                 </entity-condition>
                <set field="enableLmsPmSales" value="${groovy:session.getAttribute(&quot;enableLmsPmSales&quot;)}"/>
-               <script location="component://byproducts/webapp/byproducts/WEB-INF/actions/facility/enableBoothAutoComplete.groovy"/>
-                
-                <set field="routesList" value="${groovy:import org.ofbiz.base.util.*; return in.vasista.vbiz.byproducts.ByProductNetworkServices.getRoutes(dispatcher.getDispatchContext(),UtilMisc.toMap()).get(&quot;routesList&quot;);}" type="List"/>
+              <!--  <script location="component://byproducts/webapp/byproducts/WEB-INF/actions/facility/enableBoothAutoComplete.groovy"/> -->
+               <script location="component://materialmgmt/webapp/materialmgmt/WEB-INF/actions/orgnigationDept.groovy"/>
+               <!--  <set field="routesList" value="${groovy:import org.ofbiz.base.util.*; return in.vasista.vbiz.byproducts.ByProductNetworkServices.getRoutes(dispatcher.getDispatchContext(),UtilMisc.toMap()).get(&quot;routesList&quot;);}" type="List"/> -->
                 <set field="screenFlag" value="StoreReports"/>
             </actions>
             <widgets>
@@ -97,6 +97,7 @@
 				<property-map resource="ProductUiLabels" map-name="uiLabelMap" global="true"/>
 				<property-map resource="PartyUiLabels" map-name="uiLabelMap" global="true"/>
 				<property-map resource="CommonUiLabels" map-name="uiLabelMap" global="true"/>
+				 <script location="component://materialmgmt/webapp/materialmgmt/WEB-INF/actions/orgnigationDept.groovy"/>
 				 <script location="component://materialmgmt/webapp/materialmgmt/WEB-INF/actions/purchases/PurchaseTaxReport.groovy"/>
 			</actions>
 			<widgets>
@@ -223,6 +224,48 @@
 					</actions>
 					<widgets>
 						<include-form name="PurchaseAbstractReportForms" location="component://materialmgmt/widget/materialmgmtForms.xml" />
+					</widgets>
+				</section>
+			</widgets>
+		</section>
+	</screen>
+	<screen name="PurchaseRegisterBook">
+		<section>
+			<actions>
+				<property-map resource="CommonUiLabels" map-name="uiLabelMap" global="true"/>
+				<property-map resource="OrderUiLabels" map-name="uiLabelMap" global="true"/>
+				<property-map resource="ProductUiLabels" map-name="uiLabelMap" global="true"/>
+				<property-map resource="PartyUiLabels" map-name="uiLabelMap" global="true"/>
+				<script location="component://byproducts/webapp/byproducts/WEB-INF/actions/PurchaseRegisterBook.groovy" />	
+			</actions>
+			<widgets>
+				<section>
+					<widgets>
+						<platform-specific>
+							<xsl-fo>
+								<html-template
+									location="component://byproducts/webapp/byproducts/reports/PurchaseRegisterBook.fo.ftl" />
+							</xsl-fo>
+						</platform-specific>
+					</widgets>
+				</section>
+			</widgets>
+		</section>
+	</screen>
+	<screen name="PurchaseRegisterBookCSV">
+		<section>
+			<actions>
+				<set field="viewSize" value="99999" />
+				<property-map resource="OrderUiLabels" map-name="uiLabelMap" global="true"/>
+				<property-map resource="ProductUiLabels" map-name="uiLabelMap" global="true"/>
+				<property-map resource="PartyUiLabels" map-name="uiLabelMap" global="true"/>
+				<property-map resource="CommonUiLabels" map-name="uiLabelMap" global="true"/>
+				<script location="component://byproducts/webapp/byproducts/WEB-INF/actions/PurchaseRegisterBook.groovy" />
+			</actions>
+			<widgets>
+				<section>
+					<widgets>
+						<include-form name="PurchaseRegisterBookCSV" location="component://byproducts/widget/ByProductsReportForms.xml" />
 					</widgets>
 				</section>
 			</widgets>

@@ -20,8 +20,13 @@ def populateChildren(org, employeeList) {
 }
 
 employeeList = [];
+if(UtilValidate.isEmpty(parameters.issueToDeptId)){
 company = delegator.findByPrimaryKey("PartyAndGroup", [partyId : "Company"]);
 populateChildren(company, employeeList);
+}else{
+party = delegator.findByPrimaryKey("PartyAndGroup", [partyId : parameters.issueToDeptId]);
+populateChildren(party, employeeList);
+}
 context.orgList=orgList;
 /*orgList.each{eachOrg ->
 	JSONObject newPartyObj = new JSONObject();

@@ -21,7 +21,7 @@ under the License.
 <#escape x as x?xml>
     <fo:root xmlns:fo="http://www.w3.org/1999/XSL/Format">
         <fo:layout-master-set>
-            <fo:simple-page-master master-name="main" page-height="12in" page-width="10in"  margin-left=".3in" margin-right=".3in" margin-top=".5in">
+            <fo:simple-page-master master-name="main" page-height="12in" page-width="11in"  margin-left=".3in" margin-right=".3in" margin-top=".5in">
                 <fo:region-body margin-top="2.2in"/>
                 <fo:region-before extent="1in"/>
                 <fo:region-after extent="1in"/>
@@ -52,12 +52,12 @@ under the License.
         				<fo:table>
         				<fo:table-column column-width="82pt"/>
         				 <fo:table-column column-width="170pt"/>
-		                    <fo:table-column column-width="70pt"/>
+		                    <fo:table-column column-width="80pt"/>
 		                    <fo:table-column column-width="82pt"/>                
 		                    <fo:table-column column-width="50pt"/>
-		                    <fo:table-column column-width="40pt"/>
-		                    <fo:table-column column-width="90pt"/> 
-		                    <fo:table-column column-width="75pt"/>
+		                    <fo:table-column column-width="30pt"/>
+		                    <fo:table-column column-width="93pt"/> 
+		                    <fo:table-column column-width="80pt"/>
 		                    <fo:table-body>
        							<fo:table-row>
        							       <fo:table-cell>
@@ -99,13 +99,117 @@ under the License.
         				<fo:table>
         				<fo:table-column column-width="82pt"/>
         				 <fo:table-column column-width="170pt"/>
-		                    <fo:table-column column-width="70pt"/>
+		                    <fo:table-column column-width="80pt"/>
 		                    <fo:table-column column-width="82pt"/>                
 		                    <fo:table-column column-width="50pt"/>
 		                    <fo:table-column column-width="30pt"/>
 		                    <fo:table-column column-width="93pt"/> 
 		                    <fo:table-column column-width="80pt"/>
 		                    <fo:table-body>
+		                    <#-- catageory wise starts here -->
+		                    <#--
+		                    <#if tax5pt5CatMap?has_content>
+		                       <#assign tax5pt5CatList=tax5pt5CatMap.entrySet()>
+		                    	  <fo:table-row> 
+								      <fo:table-cell number-columns-spanned="5">   						
+										<fo:block>Analysis Wise</fo:block>
+		      						  </fo:table-cell>
+          						  </fo:table-row>
+          						  <#list tax5pt5CatList as tax5pt5Cat>
+          						  <#if tax5pt5Cat.getKey()!="discount">
+          						   <#assign codeId=tax5pt5Cat.getKey()>
+          						   <#assign codeIdMap=tax5pt5Cat.getValue()>
+          						    <#assign codeIdList=codeIdMap.get("invoiceList")>
+          						    
+          						    <#assign productCategory = delegator.findOne("ProductCategory", {"productCategoryId" : codeId}, true)?if_exists/>
+		   							<fo:table-row>
+		   							       <fo:table-cell number-columns-spanned="6">
+								            	<fo:block  keep-together="always" text-align="left" font-size="12pt" white-space-collapse="false" font-weight="bold">Analysis Code :${productCategory.description}</fo:block>  
+								            </fo:table-cell>
+								    </fo:table-row> 
+          						   <#list codeIdList as invTaxMap>
+          						   <fo:table-row>
+       							       <fo:table-cell>
+							            	<fo:block  keep-together="always" text-align="left" font-size="12pt" white-space-collapse="false" font-weight="bold">${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(invTaxMap.get("invoiceDate"),"dd-MMM-yy")}</fo:block>  
+							            </fo:table-cell>
+							            <#assign  partyName="">
+					            			<#if invTaxMap.get("partyId")?exists>
+					            			<#assign partyId=invTaxMap.get("partyId")>
+					            			<#assign partyName = Static["org.ofbiz.party.party.PartyHelper"].getPartyName(delegator, partyId, false)>
+					            			</#if>
+					                    <fo:table-cell>
+					                    <fo:block text-align="left" font-size="12pt">${Static["org.ofbiz.order.order.OrderServices"].nameTrim((StringUtil.wrapString(partyName?if_exists)),28)}</fo:block>
+							            </fo:table-cell>
+							             <fo:table-cell>
+							            	<fo:block  keep-together="always" text-align="left" font-size="11pt" white-space-collapse="false" >${invTaxMap.get("tinNumber")}</fo:block>  
+							            </fo:table-cell>
+							            <fo:table-cell>
+							            	<fo:block  keep-together="always" text-align="left" font-size="12pt" white-space-collapse="false" >${invTaxMap.get("vchrType")}</fo:block>  
+							            </fo:table-cell>
+							             <fo:table-cell>
+							            	<fo:block  keep-together="always" text-align="left" font-size="12pt" white-space-collapse="false" >${invTaxMap.get("invoiceId")}</fo:block>  
+							            </fo:table-cell>
+							            <fo:table-cell>
+							            	<fo:block  keep-together="always" text-align="center" font-size="12pt" white-space-collapse="false" >${invTaxMap.get("crOrDbId")}</fo:block>  
+							            </fo:table-cell>
+							            <fo:table-cell>
+							            	<fo:block  keep-together="always" text-align="right" font-size="11pt" white-space-collapse="false" >${invTaxMap.get("invTotalVal")?string("#0.00")}</fo:block>  
+							            </fo:table-cell>
+							            <fo:table-cell>
+							            	<fo:block  keep-together="always" text-align="right" font-size="11pt" white-space-collapse="false" >${invTaxMap.get("vatAmount")?string("#0.00")}</fo:block>  
+							            </fo:table-cell>
+							     </fo:table-row>
+          						    </#list>
+          						    <fo:table-row>
+					                   <fo:table-cell>
+							            	<fo:block  keep-together="always" text-align="left" font-size="12pt" white-space-collapse="false" font-weight="bold"></fo:block>  
+							            </fo:table-cell>
+					                   <fo:table-cell number-columns-spanned="3">
+					                    <fo:block text-align="left" font-weight="bold" font-size="11pt">Analysis Code-Total</fo:block>
+							            </fo:table-cell>
+							             <fo:table-cell>
+							            	<fo:block  keep-together="always" text-align="left" font-size="12pt" white-space-collapse="false" ></fo:block>  
+							            </fo:table-cell>
+							            <fo:table-cell>
+							            	<fo:block  keep-together="always" text-align="center" font-size="12pt" white-space-collapse="false" ></fo:block>  
+							            </fo:table-cell>
+							            <fo:table-cell>
+							            	<fo:block  keep-together="always" text-align="right" font-size="11pt" white-space-collapse="false" >${codeIdMap.get("totalValue")?string("#0.00")}</fo:block>  
+							            </fo:table-cell>
+							            <fo:table-cell>
+							            	<fo:block  keep-together="always" text-align="right" font-size="11pt" white-space-collapse="false" >${codeIdMap.get("vatAmount")?string("#0.00")}</fo:block>  
+							            </fo:table-cell>
+							     </fo:table-row>
+          						   </#if>
+          					  </#list>
+          					  <fo:table-row>
+					                   <fo:table-cell number-columns-spanned="3">
+					                    <fo:block text-align="left" font-weight="bold" >TOTAL-Discount For All Analysis Codes</fo:block>
+							            </fo:table-cell>
+							            <fo:table-cell>
+							            	<fo:block  keep-together="always" text-align="left" font-size="12pt" white-space-collapse="false" ></fo:block>  
+							            </fo:table-cell>
+							             <fo:table-cell>
+							            	<fo:block  keep-together="always" text-align="left" font-size="12pt" white-space-collapse="false" ></fo:block>  
+							            </fo:table-cell>
+							            <fo:table-cell>
+							            	<fo:block  keep-together="always" text-align="center" font-size="12pt" white-space-collapse="false" ></fo:block>  
+							            </fo:table-cell>
+							            <fo:table-cell>
+							            	<fo:block  keep-together="always" text-align="right" font-size="11pt" white-space-collapse="false" >${tax5pt5CatMap.get("discount")?if_exists}</fo:block>  
+							            </fo:table-cell>
+							            <fo:table-cell>
+							            	<fo:block  keep-together="always" text-align="right" font-size="11pt" white-space-collapse="false" ></fo:block>  
+							            </fo:table-cell>
+							     </fo:table-row>
+          					  <fo:table-row> 
+							      <fo:table-cell>   						
+									<fo:block>------------------------------------------------------------------------------------------------</fo:block>
+          						  </fo:table-cell>
+          						  </fo:table-row>
+          					</#if> -->
+          					 <#-- catageory wise ends here -->
+          					 
 		                    <#assign totalRevenue=0>
 		                    <#assign totalTaxRevenue=0>
        							<#list taxDetails5pt5List as invTaxMapObj>
@@ -121,10 +225,10 @@ under the License.
 					            			<#assign partyName = Static["org.ofbiz.party.party.PartyHelper"].getPartyName(delegator, partyId, false)>
 					            			</#if>
 					                    <fo:table-cell>
-					                    <fo:block text-align="left" font-size="13pt">${Static["org.ofbiz.order.order.OrderServices"].nameTrim((StringUtil.wrapString(partyName?if_exists)),28)}</fo:block>
+					                    <fo:block text-align="left" font-size="12pt">${Static["org.ofbiz.order.order.OrderServices"].nameTrim((StringUtil.wrapString(partyName?if_exists)),28)}</fo:block>
 							            </fo:table-cell>
 							             <fo:table-cell>
-							            	<fo:block  keep-together="always" text-align="left" font-size="12pt" white-space-collapse="false" ></fo:block>  
+							            	<fo:block  keep-together="always" text-align="left" font-size="11pt" white-space-collapse="false" >${invTaxMap.get("tinNumber")}</fo:block>  
 							            </fo:table-cell>
 							            <fo:table-cell>
 							            	<fo:block  keep-together="always" text-align="left" font-size="12pt" white-space-collapse="false" >${invTaxMap.get("vchrType")}</fo:block>  
@@ -200,12 +304,12 @@ under the License.
         				<fo:table>
         				<fo:table-column column-width="82pt"/>
         				 <fo:table-column column-width="170pt"/>
-		                    <fo:table-column column-width="70pt"/>
+		                    <fo:table-column column-width="80pt"/>
 		                    <fo:table-column column-width="82pt"/>                
 		                    <fo:table-column column-width="50pt"/>
-		                    <fo:table-column column-width="40pt"/>
-		                    <fo:table-column column-width="90pt"/> 
-		                    <fo:table-column column-width="75pt"/>
+		                    <fo:table-column column-width="30pt"/>
+		                    <fo:table-column column-width="93pt"/> 
+		                    <fo:table-column column-width="80pt"/>
 		                    <fo:table-body>
        							<fo:table-row>
        							       <fo:table-cell>
@@ -247,13 +351,116 @@ under the License.
         				<fo:table>
         				<fo:table-column column-width="82pt"/>
         				 <fo:table-column column-width="170pt"/>
-		                    <fo:table-column column-width="70pt"/>
+		                    <fo:table-column column-width="80pt"/>
 		                    <fo:table-column column-width="82pt"/>                
 		                    <fo:table-column column-width="50pt"/>
 		                    <fo:table-column column-width="30pt"/>
 		                    <fo:table-column column-width="93pt"/> 
 		                    <fo:table-column column-width="80pt"/>
 		                    <fo:table-body>
+		                    	   <#-- catageory wise starts here -->
+		                    	   <#-->
+		                    <#if tax14pt5CatMap?has_content>
+		                       <#assign tax14pt5CatList=tax14pt5CatMap.entrySet()>
+		                    	  <fo:table-row> 
+								      <fo:table-cell number-columns-spanned="5">   						
+										<fo:block>Analysis Wise</fo:block>
+		      						  </fo:table-cell>
+          						  </fo:table-row>
+          						  <#list tax14pt5CatList as tax14pt5Cat>
+          						  <#if tax14pt5Cat.getKey()!="discount">
+          						   <#assign codeId=tax14pt5Cat.getKey()>
+          						   <#assign codeIdMap=tax14pt5Cat.getValue()>
+          						    <#assign codeIdList=codeIdMap.get("invoiceList")>
+          						    
+          						    <#assign productCategory = delegator.findOne("ProductCategory", {"productCategoryId" : codeId}, true)?if_exists/>
+		   							  <fo:table-row> 
+		   							 <fo:table-cell number-columns-spanned="6">
+								            	<fo:block  keep-together="always" text-align="left" font-size="12pt" white-space-collapse="false" font-weight="bold">Analysis Code :${productCategory.description}</fo:block>  
+								      </fo:table-cell>
+								      </fo:table-row>
+          						   <#list codeIdList as invTaxMap>
+          						   <fo:table-row>
+       							       <fo:table-cell>
+							            	<fo:block  keep-together="always" text-align="left" font-size="12pt" white-space-collapse="false" font-weight="bold">${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(invTaxMap.get("invoiceDate"),"dd-MMM-yy")}</fo:block>  
+							            </fo:table-cell>
+							            <#assign  partyName="">
+					            			<#if invTaxMap.get("partyId")?exists>
+					            			<#assign partyId=invTaxMap.get("partyId")>
+					            			<#assign partyName = Static["org.ofbiz.party.party.PartyHelper"].getPartyName(delegator, partyId, false)>
+					            			</#if>
+					                    <fo:table-cell>
+					                    <fo:block text-align="left" font-size="12pt">${Static["org.ofbiz.order.order.OrderServices"].nameTrim((StringUtil.wrapString(partyName?if_exists)),28)}</fo:block>
+							            </fo:table-cell>
+							             <fo:table-cell>
+							            	<fo:block  keep-together="always" text-align="left" font-size="11pt" white-space-collapse="false" >${invTaxMap.get("tinNumber")}</fo:block>  
+							            </fo:table-cell>
+							            <fo:table-cell>
+							            	<fo:block  keep-together="always" text-align="left" font-size="12pt" white-space-collapse="false" >${invTaxMap.get("vchrType")}</fo:block>  
+							            </fo:table-cell>
+							             <fo:table-cell>
+							            	<fo:block  keep-together="always" text-align="left" font-size="12pt" white-space-collapse="false" >${invTaxMap.get("invoiceId")}</fo:block>  
+							            </fo:table-cell>
+							            <fo:table-cell>
+							            	<fo:block  keep-together="always" text-align="center" font-size="12pt" white-space-collapse="false" >${invTaxMap.get("crOrDbId")}</fo:block>  
+							            </fo:table-cell>
+							            <fo:table-cell>
+							            	<fo:block  keep-together="always" text-align="right" font-size="11pt" white-space-collapse="false" >${invTaxMap.get("invTotalVal")?string("#0.00")}</fo:block>  
+							            </fo:table-cell>
+							            <fo:table-cell>
+							            	<fo:block  keep-together="always" text-align="right" font-size="11pt" white-space-collapse="false" >${invTaxMap.get("vatAmount")?string("#0.00")}</fo:block>  
+							            </fo:table-cell>
+							     </fo:table-row>
+          						    </#list>
+          						    <fo:table-row>
+					                   <fo:table-cell>
+							            	<fo:block  keep-together="always" text-align="left" font-size="12pt" white-space-collapse="false" font-weight="bold"></fo:block>  
+							            </fo:table-cell>
+					                    <fo:table-cell number-columns-spanned="3">
+					                    <fo:block text-align="left" font-weight="bold" font-size="11pt">Analysis Code-Total</fo:block>
+							            </fo:table-cell>
+							             <fo:table-cell>
+							            	<fo:block  keep-together="always" text-align="left" font-size="12pt" white-space-collapse="false" ></fo:block>  
+							            </fo:table-cell>
+							            <fo:table-cell>
+							            	<fo:block  keep-together="always" text-align="center" font-size="12pt" white-space-collapse="false" ></fo:block>  
+							            </fo:table-cell>
+							            <fo:table-cell>
+							            	<fo:block  keep-together="always" text-align="right" font-size="11pt" white-space-collapse="false" >${codeIdMap.get("totalValue")?string("#0.00")}</fo:block>  
+							            </fo:table-cell>
+							            <fo:table-cell>
+							            	<fo:block  keep-together="always" text-align="right" font-size="11pt" white-space-collapse="false" >${codeIdMap.get("vatAmount")?string("#0.00")}</fo:block>  
+							            </fo:table-cell>
+							     </fo:table-row>
+          						   </#if>
+          					  </#list>
+          					  <fo:table-row>
+					                   <fo:table-cell number-columns-spanned="3">
+					                    <fo:block text-align="left" font-weight="bold" >TOTAL-Discount For All Analysis Codes</fo:block>
+							            </fo:table-cell>
+							            <fo:table-cell>
+							            	<fo:block  keep-together="always" text-align="left" font-size="12pt" white-space-collapse="false" ></fo:block>  
+							            </fo:table-cell>
+							             <fo:table-cell>
+							            	<fo:block  keep-together="always" text-align="left" font-size="12pt" white-space-collapse="false" ></fo:block>  
+							            </fo:table-cell>
+							            <fo:table-cell>
+							            	<fo:block  keep-together="always" text-align="center" font-size="12pt" white-space-collapse="false" ></fo:block>  
+							            </fo:table-cell>
+							            <fo:table-cell>
+							            	<fo:block  keep-together="always" text-align="right" font-size="11pt" white-space-collapse="false" >${tax14pt5CatMap.get("discount")?if_exists}</fo:block>  
+							            </fo:table-cell>
+							            <fo:table-cell>
+							            	<fo:block  keep-together="always" text-align="right" font-size="11pt" white-space-collapse="false" ></fo:block>  
+							            </fo:table-cell>
+							     </fo:table-row>
+          					  <fo:table-row> 
+							      <fo:table-cell>   						
+									<fo:block>------------------------------------------------------------------------------------------------</fo:block>
+          						  </fo:table-cell>
+          						  </fo:table-row>
+          					</#if> -->
+          					 <#-- catageory wise ends here -->
 		                    <#assign totalRevenue=0>
 		                    <#assign totalTaxRevenue=0>
        							<#list taxDetails14pt5List as invTaxMapObj>
@@ -269,10 +476,10 @@ under the License.
 					            			<#assign partyName = Static["org.ofbiz.party.party.PartyHelper"].getPartyName(delegator, partyId, false)>
 					            			</#if>
 					                    <fo:table-cell>
-					                    <fo:block text-align="left" font-size="13pt">${Static["org.ofbiz.order.order.OrderServices"].nameTrim((StringUtil.wrapString(partyName?if_exists)),28)}</fo:block>
+					                    <fo:block text-align="left" font-size="12pt">${Static["org.ofbiz.order.order.OrderServices"].nameTrim((StringUtil.wrapString(partyName?if_exists)),28)}</fo:block>
 							            </fo:table-cell>
 							             <fo:table-cell>
-							            	<fo:block  keep-together="always" text-align="left" font-size="12pt" white-space-collapse="false" ></fo:block>  
+							            	<fo:block  keep-together="always" text-align="left" font-size="11pt" white-space-collapse="false" >${invTaxMap.get("tinNumber")}</fo:block>  
 							            </fo:table-cell>
 							            <fo:table-cell>
 							            	<fo:block  keep-together="always" text-align="left" font-size="12pt" white-space-collapse="false" >${invTaxMap.get("vchrType")}</fo:block>  
@@ -349,12 +556,12 @@ under the License.
         				<fo:table>
         				<fo:table-column column-width="82pt"/>
         				 <fo:table-column column-width="170pt"/>
-		                    <fo:table-column column-width="70pt"/>
+		                    <fo:table-column column-width="80pt"/>
 		                    <fo:table-column column-width="82pt"/>                
 		                    <fo:table-column column-width="50pt"/>
-		                    <fo:table-column column-width="40pt"/>
-		                    <fo:table-column column-width="90pt"/> 
-		                    <fo:table-column column-width="75pt"/>
+		                    <fo:table-column column-width="30pt"/>
+		                    <fo:table-column column-width="93pt"/> 
+		                    <fo:table-column column-width="80pt"/>
 		                    <fo:table-body>
        							<fo:table-row>
        							       <fo:table-cell>
@@ -396,13 +603,116 @@ under the License.
         				<fo:table>
         				<fo:table-column column-width="82pt"/>
         				 <fo:table-column column-width="170pt"/>
-		                    <fo:table-column column-width="70pt"/>
+		                    <fo:table-column column-width="80pt"/>
 		                    <fo:table-column column-width="82pt"/>                
 		                    <fo:table-column column-width="50pt"/>
 		                    <fo:table-column column-width="30pt"/>
 		                    <fo:table-column column-width="93pt"/> 
 		                    <fo:table-column column-width="80pt"/>
 		                    <fo:table-body>
+		                       <#-- catageory wise starts here -->
+		                       <#-->
+		                    <#if taxCstCatMap?has_content>
+		                       <#assign taxCstCatList=taxCstCatMap.entrySet()>
+		                    	  <fo:table-row> 
+								      <fo:table-cell number-columns-spanned="5">   						
+										<fo:block>Analysis Wise</fo:block>
+		      						  </fo:table-cell>
+          						  </fo:table-row>
+          						  <#list taxCstCatList as taxCstCat>
+          						  <#if taxCstCat.getKey()!="discount">
+          						   <#assign codeId=taxCstCat.getKey()>
+          						   <#assign codeIdMap=taxCstCat.getValue()>
+          						    <#assign codeIdList=codeIdMap.get("invoiceList")>
+          						    
+          						    <#assign productCategory = delegator.findOne("ProductCategory", {"productCategoryId" : codeId}, true)?if_exists/>
+		   							  <fo:table-row> 
+		   							 <fo:table-cell number-columns-spanned="6">
+								            	<fo:block  keep-together="always" text-align="left" font-size="12pt" white-space-collapse="false" font-weight="bold">Analysis Code :${productCategory.description}</fo:block>  
+								      </fo:table-cell>
+								      </fo:table-row>
+          						   <#list codeIdList as invTaxMap>
+          						   <fo:table-row>
+       							       <fo:table-cell>
+							            	<fo:block  keep-together="always" text-align="left" font-size="12pt" white-space-collapse="false" font-weight="bold">${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(invTaxMap.get("invoiceDate"),"dd-MMM-yy")}</fo:block>  
+							            </fo:table-cell>
+							            <#assign  partyName="">
+					            			<#if invTaxMap.get("partyId")?exists>
+					            			<#assign partyId=invTaxMap.get("partyId")>
+					            			<#assign partyName = Static["org.ofbiz.party.party.PartyHelper"].getPartyName(delegator, partyId, false)>
+					            			</#if>
+					                    <fo:table-cell>
+					                    <fo:block text-align="left" font-size="12pt">${Static["org.ofbiz.order.order.OrderServices"].nameTrim((StringUtil.wrapString(partyName?if_exists)),28)}</fo:block>
+							            </fo:table-cell>
+							             <fo:table-cell>
+							            	<fo:block  keep-together="always" text-align="left" font-size="11pt" white-space-collapse="false" >${invTaxMap.get("tinNumber")}</fo:block>  
+							            </fo:table-cell>
+							            <fo:table-cell>
+							            	<fo:block  keep-together="always" text-align="left" font-size="12pt" white-space-collapse="false" >${invTaxMap.get("vchrType")}</fo:block>  
+							            </fo:table-cell>
+							             <fo:table-cell>
+							            	<fo:block  keep-together="always" text-align="left" font-size="12pt" white-space-collapse="false" >${invTaxMap.get("invoiceId")}</fo:block>  
+							            </fo:table-cell>
+							            <fo:table-cell>
+							            	<fo:block  keep-together="always" text-align="center" font-size="12pt" white-space-collapse="false" >${invTaxMap.get("crOrDbId")}</fo:block>  
+							            </fo:table-cell>
+							            <fo:table-cell>
+							            	<fo:block  keep-together="always" text-align="right" font-size="11pt" white-space-collapse="false" >${invTaxMap.get("invTotalVal")?string("#0.00")}</fo:block>  
+							            </fo:table-cell>
+							            <fo:table-cell>
+							            	<fo:block  keep-together="always" text-align="right" font-size="11pt" white-space-collapse="false" >${invTaxMap.get("cstAmount")?string("#0.00")}</fo:block>  
+							            </fo:table-cell>
+							     </fo:table-row>
+          						    </#list>
+          						    <fo:table-row>
+					                   <fo:table-cell>
+							            	<fo:block  keep-together="always" text-align="left" font-size="12pt" white-space-collapse="false" font-weight="bold"></fo:block>  
+							            </fo:table-cell>
+					                    <fo:table-cell number-columns-spanned="3">
+					                    <fo:block text-align="left" font-weight="bold" font-size="11pt">Analysis Code-Total</fo:block>
+							            </fo:table-cell>
+							             <fo:table-cell>
+							            	<fo:block  keep-together="always" text-align="left" font-size="12pt" white-space-collapse="false" ></fo:block>  
+							            </fo:table-cell>
+							            <fo:table-cell>
+							            	<fo:block  keep-together="always" text-align="center" font-size="12pt" white-space-collapse="false" ></fo:block>  
+							            </fo:table-cell>
+							            <fo:table-cell>
+							            	<fo:block  keep-together="always" text-align="right" font-size="11pt" white-space-collapse="false" >${codeIdMap.get("totalValue")?string("#0.00")}</fo:block>  
+							            </fo:table-cell>
+							            <fo:table-cell>
+							            	<fo:block  keep-together="always" text-align="right" font-size="11pt" white-space-collapse="false" >${codeIdMap.get("cstAmount")?string("#0.00")}</fo:block>  
+							            </fo:table-cell>
+							     </fo:table-row>
+          						   </#if>
+          					  </#list>
+          					  <fo:table-row>
+					                   <fo:table-cell number-columns-spanned="3">
+					                    <fo:block text-align="left" font-weight="bold" >TOTAL-Discount For All Analysis Codes</fo:block>
+							            </fo:table-cell>
+							            <fo:table-cell>
+							            	<fo:block  keep-together="always" text-align="left" font-size="12pt" white-space-collapse="false" ></fo:block>  
+							            </fo:table-cell>
+							             <fo:table-cell>
+							            	<fo:block  keep-together="always" text-align="left" font-size="12pt" white-space-collapse="false" ></fo:block>  
+							            </fo:table-cell>
+							            <fo:table-cell>
+							            	<fo:block  keep-together="always" text-align="center" font-size="12pt" white-space-collapse="false" ></fo:block>  
+							            </fo:table-cell>
+							            <fo:table-cell>
+							            	<fo:block  keep-together="always" text-align="right" font-size="11pt" white-space-collapse="false" >${taxCstCatMap.get("discount")?if_exists}</fo:block>  
+							            </fo:table-cell>
+							            <fo:table-cell>
+							            	<fo:block  keep-together="always" text-align="right" font-size="11pt" white-space-collapse="false" ></fo:block>  
+							            </fo:table-cell>
+							     </fo:table-row>
+          					  <fo:table-row> 
+							      <fo:table-cell>   						
+									<fo:block>------------------------------------------------------------------------------------------------</fo:block>
+          						  </fo:table-cell>
+          						  </fo:table-row>
+          					</#if>-->
+          					 <#-- catageory wise ends here -->
 		                    <#assign totalRevenue=0>
 		                    <#assign totalTaxRevenue=0>
        							<#list taxDetailsCstList as invTaxMapObj>
@@ -418,10 +728,10 @@ under the License.
 					            			<#assign partyName = Static["org.ofbiz.party.party.PartyHelper"].getPartyName(delegator, partyId, false)>
 					            			</#if>
 					                    <fo:table-cell>
-					                    <fo:block text-align="left" font-size="13pt">${Static["org.ofbiz.order.order.OrderServices"].nameTrim((StringUtil.wrapString(partyName?if_exists)),28)}</fo:block>
+					                    <fo:block text-align="left" font-size="12pt">${Static["org.ofbiz.order.order.OrderServices"].nameTrim((StringUtil.wrapString(partyName?if_exists)),28)}</fo:block>
 							            </fo:table-cell>
 							             <fo:table-cell>
-							            	<fo:block  keep-together="always" text-align="left" font-size="12pt" white-space-collapse="false" ></fo:block>  
+							            	<fo:block  keep-together="always" text-align="left" font-size="11pt" white-space-collapse="false" >${invTaxMap.get("tinNumber")}</fo:block>
 							            </fo:table-cell>
 							            <fo:table-cell>
 							            	<fo:block  keep-together="always" text-align="left" font-size="12pt" white-space-collapse="false" >${invTaxMap.get("vchrType")}</fo:block>  

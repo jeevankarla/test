@@ -37,7 +37,28 @@ under the License.
 	</fo:flow>
 	</fo:page-sequence>	
 	<#else>
-       <#if taxDetails5pt5List?has_content>
+	
+	 <#if issueToDeptInvMap?has_content>
+	  <#assign issueToDeptInvList=issueToDeptInvMap.entrySet()>
+	   <#list issueToDeptInvList as issueDeptDetailEach>
+	    <#assign deptId=issueDeptDetailEach.getKey()>
+	    <#assign issueDeptDetailMap=issueDeptDetailEach.getValue()>
+	    <#assign tax5pt5CatMap=issueDeptDetailMap.get("tax5pt5CatMap")?if_exists>
+	     <#assign tax5pt5TotalMap=issueDeptDetailMap.get("tax5pt5TotalMap")?if_exists>
+	    
+	     <#assign tax14pt5CatMap=issueDeptDetailMap.get("tax14pt5CatMap")?if_exists>
+	     <#assign tax14pt5TotalMap=issueDeptDetailMap.get("tax14pt5TotalMap")?if_exists>
+	     
+	      <#assign taxCstCatMap=issueDeptDetailMap.get("taxCstCatMap")?if_exists>
+	       <#assign taxCstTotalMap=issueDeptDetailMap.get("taxCstTotalMap")?if_exists>
+	       
+	       <#assign partyName="">
+	       <#if deptId!="OTHER">
+			<#assign partyName = Static["org.ofbiz.party.party.PartyHelper"].getPartyName(delegator, deptId, false)>
+			<#else>
+			 <#assign partyName="OTHER">
+			</#if>
+       <#if tax5pt5CatMap?has_content>
 	        <fo:page-sequence master-reference="main" font-size="12pt">	
 	        <fo:static-content font-size="12pt" flow-name="xsl-region-before">
               		<fo:block  keep-together="always" text-align="right" font-family="Courier,monospace" white-space-collapse="false"> &#160;${uiLabelMap.CommonPage}- <fo:page-number/></fo:block>
@@ -46,7 +67,7 @@ under the License.
           			<fo:block text-align="center"    keep-together="always"  white-space-collapse="false">VAT Classification Vouchers </fo:block>
           			<fo:block text-align="center"    keep-together="always"  white-space-collapse="false">VAT INPUT 5.5% </fo:block>
           			<fo:block text-align="center"   keep-together="always"  white-space-collapse="false"> ${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(fromDate, "dd-MMM-yyyy")} to ${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(thruDate, "dd-MMM-yyyy")} </fo:block>
-          			<fo:block text-align="left"  keep-together="always" >ACCOUNT CODE:${invItemTypeGl.defaultGlAccountId?if_exists} </fo:block>
+          			<fo:block text-align="left"     keep-together="always"  font-size="12pt" white-space-collapse="false" >ACCOUNT CODE:${invItemTypeGl.defaultGlAccountId?if_exists}  &#160;&#160;&#160;&#160;&#160;                                &#160;&#160;ISSUE TO DEPT.:${partyName?if_exists}</fo:block>
           			<fo:block>-------------------------------------------------------------------------------------------------------------------------------------------------------------------------</fo:block>
 	        		<fo:block>
         				<fo:table>
@@ -85,9 +106,10 @@ under the License.
 							            	<fo:block   text-align="left" font-size="11pt"  >ASSESSABLE</fo:block>  
 							            	<fo:block   text-align="left" font-size="11pt"  >VALUE</fo:block> 
 							            </fo:table-cell>
+							            <#--
 							            <fo:table-cell>
 							            	<fo:block   text-align="left" font-size="11pt"  >VAT AMOUNT</fo:block>  
-							            </fo:table-cell>
+							            </fo:table-cell> -->
 							     </fo:table-row>
 	    					</fo:table-body>
                 		</fo:table>
@@ -107,6 +129,7 @@ under the License.
 		                    <fo:table-column column-width="80pt"/>
 		                    <fo:table-body>
 		                    <#-- catageory wise starts here -->
+		                      <#assign totalAssRevenue=0>
 		                    <#if tax5pt5CatMap?has_content>
 		                       <#assign tax5pt5CatList=tax5pt5CatMap.entrySet()>
           						  <#list tax5pt5CatList as tax5pt5Cat>
@@ -151,12 +174,15 @@ under the License.
 							            <fo:table-cell>
 							            	<fo:block  keep-together="always" text-align="center" font-size="12pt" white-space-collapse="false" >${invTaxMap.get("crOrDbId")}</fo:block>  
 							            </fo:table-cell>
+							              <#assign assableValue=invTaxMap.get("invTotalVal")>
+							            <#assign totalAssRevenue=totalAssRevenue+assableValue>
 							            <fo:table-cell>
-							            	<fo:block  keep-together="always" text-align="right" font-size="11pt" white-space-collapse="false" >${invTaxMap.get("invTotalVal")?string("#0.00")}</fo:block>  
+							            	<fo:block  keep-together="always" text-align="right" font-size="11pt" white-space-collapse="false" >${assableValue?string("#0.00")}</fo:block>  
 							            </fo:table-cell>
+							            <#--
 							            <fo:table-cell>
 							            	<fo:block  keep-together="always" text-align="right" font-size="11pt" white-space-collapse="false" >${invTaxMap.get("vatAmount")?string("#0.00")}</fo:block>  
-							            </fo:table-cell>
+							            </fo:table-cell> -->
 							     </fo:table-row>
           						    </#list>
           						    <fo:table-row>
@@ -175,9 +201,10 @@ under the License.
 							            <fo:table-cell>
 							            	<fo:block  keep-together="always" text-align="right" font-size="11pt" white-space-collapse="false" >${codeIdMap.get("totalValue")?string("#0.00")}</fo:block>  
 							            </fo:table-cell>
+							            <#-->
 							            <fo:table-cell>
 							            	<fo:block  keep-together="always" text-align="right" font-size="11pt" white-space-collapse="false" >${codeIdMap.get("vatAmount")?string("#0.00")}</fo:block>  
-							            </fo:table-cell>
+							            </fo:table-cell> -->
 							     </fo:table-row>
           						   </#if>
           					  </#list>
@@ -194,6 +221,7 @@ under the License.
 							            <fo:table-cell>
 							            	<fo:block  keep-together="always" text-align="center" font-size="12pt" white-space-collapse="false" ></fo:block>  
 							            </fo:table-cell>
+							            <#assign totalAssRevenue=totalAssRevenue+tax5pt5CatMap.get("discount")>
 							            <fo:table-cell>
 							            	<fo:block  keep-together="always" text-align="right" font-size="11pt" white-space-collapse="false" >${tax5pt5CatMap.get("discount")?if_exists}</fo:block>  
 							            </fo:table-cell>
@@ -271,11 +299,12 @@ under the License.
 							            	<fo:block  keep-together="always" text-align="center" font-size="12pt" white-space-collapse="false" ></fo:block>  
 							            </fo:table-cell>
 							            <fo:table-cell>
-							            	<fo:block  keep-together="always" text-align="right" font-size="11pt" white-space-collapse="false" >${tax5pt5TotalMap.get("invTotalVal")?string("#0.00")}</fo:block>  
+							            	<fo:block  keep-together="always" text-align="right" font-size="11pt" white-space-collapse="false" >${totalAssRevenue?string("#0.00")}</fo:block>  
 							            </fo:table-cell>
+							            <#-->
 							            <fo:table-cell>
 							            	<fo:block  keep-together="always" text-align="right" font-size="11pt" white-space-collapse="false" >${tax5pt5TotalMap.get("vatAmount")?string("#0.00")}</fo:block>  
-							            </fo:table-cell>
+							            </fo:table-cell> -->
 							     </fo:table-row>
 								<fo:table-row> 
 							      <fo:table-cell>   						
@@ -288,7 +317,7 @@ under the License.
 				</fo:flow>
 			</fo:page-sequence>
 		    </#if>   
-			<#if taxDetails14pt5List?has_content>
+			<#if tax14pt5CatMap?has_content>
 	        <fo:page-sequence master-reference="main" font-size="12pt">	
 	        <fo:static-content font-size="12pt" flow-name="xsl-region-before">
               		<fo:block  keep-together="always" text-align="right" font-family="Courier,monospace" white-space-collapse="false"> &#160;${uiLabelMap.CommonPage}- <fo:page-number/></fo:block>
@@ -297,7 +326,7 @@ under the License.
           			<fo:block text-align="center"    keep-together="always"  white-space-collapse="false">VAT Classification Vouchers </fo:block>
           			<fo:block text-align="center"    keep-together="always"  white-space-collapse="false">VAT INPUT 14.5% </fo:block>
           			<fo:block text-align="center"   keep-together="always"  white-space-collapse="false"> ${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(fromDate, "dd-MMM-yyyy")} to ${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(thruDate, "dd-MMM-yyyy")} </fo:block>
-          			<fo:block text-align="left"  keep-together="always" >ACCOUNT CODE:${invItemTypeGl.defaultGlAccountId?if_exists} </fo:block>
+          			<fo:block text-align="left"     keep-together="always"  font-size="12pt" white-space-collapse="false" >ACCOUNT CODE:${invItemTypeGl.defaultGlAccountId?if_exists}  &#160;&#160;&#160;&#160;&#160;                                &#160;&#160;ISSUE TO DEPT.:${partyName?if_exists}</fo:block>
           			<fo:block>-------------------------------------------------------------------------------------------------------------------------------------------------------------------------</fo:block>
 	        		<fo:block>
         				<fo:table>
@@ -336,9 +365,10 @@ under the License.
 							            	<fo:block   text-align="left" font-size="11pt"  >ASSESSABLE</fo:block>  
 							            	<fo:block   text-align="left" font-size="11pt"  >VALUE</fo:block> 
 							            </fo:table-cell>
+							            <#-->
 							            <fo:table-cell>
 							            	<fo:block   text-align="left" font-size="11pt"  >VAT AMOUNT</fo:block>  
-							            </fo:table-cell>
+							            </fo:table-cell> -->
 							     </fo:table-row>
 	    					</fo:table-body>
                 		</fo:table>
@@ -359,6 +389,8 @@ under the License.
 		                    <fo:table-body>
 		                    	   <#-- catageory wise starts here -->
 		                    <#if tax14pt5CatMap?has_content>
+		                    
+		                     <#assign totalAssRevenue=0>
 		                       <#assign tax14pt5CatList=tax14pt5CatMap.entrySet()>
 		                    	  
           						  <#list tax14pt5CatList as tax14pt5Cat>
@@ -404,12 +436,15 @@ under the License.
 							            <fo:table-cell>
 							            	<fo:block  keep-together="always" text-align="center" font-size="12pt" white-space-collapse="false" >${invTaxMap.get("crOrDbId")}</fo:block>  
 							            </fo:table-cell>
+							            <#assign assableValue=invTaxMap.get("invTotalVal")>
+							            <#assign totalAssRevenue=totalAssRevenue+assableValue>
 							            <fo:table-cell>
 							            	<fo:block  keep-together="always" text-align="right" font-size="11pt" white-space-collapse="false" >${invTaxMap.get("invTotalVal")?string("#0.00")}</fo:block>  
 							            </fo:table-cell>
+							            <#-->
 							            <fo:table-cell>
 							            	<fo:block  keep-together="always" text-align="right" font-size="11pt" white-space-collapse="false" >${invTaxMap.get("vatAmount")?string("#0.00")}</fo:block>  
-							            </fo:table-cell>
+							            </fo:table-cell> -->
 							     </fo:table-row>
           						    </#list>
           						    <fo:table-row>
@@ -428,9 +463,10 @@ under the License.
 							            <fo:table-cell>
 							            	<fo:block  keep-together="always" text-align="right" font-size="11pt" white-space-collapse="false" >${codeIdMap.get("totalValue")?string("#0.00")}</fo:block>  
 							            </fo:table-cell>
+							            <#-->
 							            <fo:table-cell>
 							            	<fo:block  keep-together="always" text-align="right" font-size="11pt" white-space-collapse="false" >${codeIdMap.get("vatAmount")?string("#0.00")}</fo:block>  
-							            </fo:table-cell>
+							            </fo:table-cell> -->
 							     </fo:table-row>
           						   </#if>
           					  </#list>
@@ -447,12 +483,14 @@ under the License.
 							            <fo:table-cell>
 							            	<fo:block  keep-together="always" text-align="center" font-size="12pt" white-space-collapse="false" ></fo:block>  
 							            </fo:table-cell>
+							              <#assign totalAssRevenue=totalAssRevenue+tax14pt5CatMap.get("discount")>
 							            <fo:table-cell>
 							            	<fo:block  keep-together="always" text-align="right" font-size="11pt" white-space-collapse="false" >${tax14pt5CatMap.get("discount")?if_exists}</fo:block>  
 							            </fo:table-cell>
+							            <#-->
 							            <fo:table-cell>
 							            	<fo:block  keep-together="always" text-align="right" font-size="11pt" white-space-collapse="false" ></fo:block>  
-							            </fo:table-cell>
+							            </fo:table-cell> -->
 							     </fo:table-row>
           					  <fo:table-row> 
 							      <fo:table-cell>   						
@@ -524,11 +562,12 @@ under the License.
 							            	<fo:block  keep-together="always" text-align="center" font-size="12pt" white-space-collapse="false" ></fo:block>  
 							            </fo:table-cell>
 							            <fo:table-cell>
-							            	<fo:block  keep-together="always" text-align="right" font-size="11pt" white-space-collapse="false" >${tax14pt5TotalMap.get("invTotalVal")?string("#0.00")}</fo:block>  
+							            	<fo:block  keep-together="always" text-align="right" font-size="11pt" white-space-collapse="false" >${totalAssRevenue?string("#0.00")}</fo:block>  
 							            </fo:table-cell>
+							            <#-->
 							            <fo:table-cell>
 							            	<fo:block  keep-together="always" text-align="right" font-size="11pt" white-space-collapse="false" >${tax14pt5TotalMap.get("vatAmount")?string("#0.00")}</fo:block>  
-							            </fo:table-cell>
+							            </fo:table-cell> -->
 							     </fo:table-row>
 								<fo:table-row> 
 							      <fo:table-cell>   						
@@ -542,7 +581,7 @@ under the License.
 			</fo:page-sequence>
 			</#if>
 			<#-- CST Tax details listed here-->
-			<#if taxDetailsCstList?has_content>
+			<#if taxCstCatMap?has_content>
 	        <fo:page-sequence master-reference="main" font-size="12pt">	
 	        <fo:static-content font-size="12pt" flow-name="xsl-region-before">
               		<fo:block  keep-together="always" text-align="right" font-family="Courier,monospace" white-space-collapse="false"> &#160;${uiLabelMap.CommonPage}- <fo:page-number/></fo:block>
@@ -551,7 +590,7 @@ under the License.
           			<fo:block text-align="center"    keep-together="always"  white-space-collapse="false">TAX Classification Vouchers </fo:block>
           			<fo:block text-align="center"    keep-together="always"  white-space-collapse="false">CST</fo:block>
           			<fo:block text-align="center"   keep-together="always"  white-space-collapse="false"> ${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(fromDate, "dd-MMM-yyyy")} to ${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(thruDate, "dd-MMM-yyyy")} </fo:block>
-          			<fo:block text-align="left"  keep-together="always" >ACCOUNT CODE:${invItemCstTypeGl.defaultGlAccountId?if_exists} </fo:block>
+          			<fo:block text-align="left"     keep-together="always"  font-size="12pt" white-space-collapse="false" >ACCOUNT CODE:${invItemCstTypeGl.defaultGlAccountId?if_exists}  &#160;&#160;&#160;&#160;&#160;                                &#160;&#160;ISSUE TO DEPT.:${partyName?if_exists}</fo:block>
           			<fo:block>-------------------------------------------------------------------------------------------------------------------------------------------------------------------------</fo:block>
 	        		<fo:block>
         				<fo:table>
@@ -590,9 +629,10 @@ under the License.
 							            	<fo:block   text-align="left" font-size="11pt"  >ASSESSABLE</fo:block>  
 							            	<fo:block   text-align="left" font-size="11pt"  >VALUE</fo:block> 
 							            </fo:table-cell>
+							            <#-->
 							            <fo:table-cell>
 							            	<fo:block   text-align="left" font-size="11pt"  >CST AMOUNT</fo:block>  
-							            </fo:table-cell>
+							            </fo:table-cell> -->
 							     </fo:table-row>
 	    					</fo:table-body>
                 		</fo:table>
@@ -613,6 +653,7 @@ under the License.
 		                    <fo:table-body>
 		                       <#-- catageory wise starts here -->
 		                    <#if taxCstCatMap?has_content>
+		                     <#assign totalAssCstRevenue=0>
 		                       <#assign taxCstCatList=taxCstCatMap.entrySet()>
           						  <#list taxCstCatList as taxCstCat>
           						  <#if taxCstCat.getKey()!="discount">
@@ -656,12 +697,15 @@ under the License.
 							            <fo:table-cell>
 							            	<fo:block  keep-together="always" text-align="center" font-size="12pt" white-space-collapse="false" >${invTaxMap.get("crOrDbId")}</fo:block>  
 							            </fo:table-cell>
+							              <#assign assableValue=invTaxMap.get("invTotalVal")+invTaxMap.get("cstAmount")>
+							            <#assign totalAssCstRevenue=totalAssCstRevenue+assableValue>
 							            <fo:table-cell>
-							            	<fo:block  keep-together="always" text-align="right" font-size="11pt" white-space-collapse="false" >${invTaxMap.get("invTotalVal")?string("#0.00")}</fo:block>  
+							            	<fo:block  keep-together="always" text-align="right" font-size="11pt" white-space-collapse="false" >${assableValue?string("#0.00")}</fo:block>  
 							            </fo:table-cell>
+							            <#-->
 							            <fo:table-cell>
 							            	<fo:block  keep-together="always" text-align="right" font-size="11pt" white-space-collapse="false" >${invTaxMap.get("cstAmount")?string("#0.00")}</fo:block>  
-							            </fo:table-cell>
+							            </fo:table-cell>-->
 							     </fo:table-row>
           						    </#list>
           						    <fo:table-row>
@@ -678,11 +722,12 @@ under the License.
 							            	<fo:block  keep-together="always" text-align="center" font-size="12pt" white-space-collapse="false" ></fo:block>  
 							            </fo:table-cell>
 							            <fo:table-cell>
-							            	<fo:block  keep-together="always" text-align="right" font-size="11pt" white-space-collapse="false" >${codeIdMap.get("totalValue")?string("#0.00")}</fo:block>  
+							            	<fo:block  keep-together="always" text-align="right" font-size="11pt" white-space-collapse="false" >${(codeIdMap.get("totalValue")+codeIdMap.get("cstAmount"))?string("#0.00")}</fo:block>  
 							            </fo:table-cell>
+							            <#-->
 							            <fo:table-cell>
 							            	<fo:block  keep-together="always" text-align="right" font-size="11pt" white-space-collapse="false" >${codeIdMap.get("cstAmount")?string("#0.00")}</fo:block>  
-							            </fo:table-cell>
+							            </fo:table-cell>-->
 							     </fo:table-row>
           						   </#if>
           					  </#list>
@@ -699,6 +744,7 @@ under the License.
 							            <fo:table-cell>
 							            	<fo:block  keep-together="always" text-align="center" font-size="12pt" white-space-collapse="false" ></fo:block>  
 							            </fo:table-cell>
+							             <#assign totalAssCstRevenue=totalAssCstRevenue+taxCstCatMap.get("discount")>
 							            <fo:table-cell>
 							            	<fo:block  keep-together="always" text-align="right" font-size="11pt" white-space-collapse="false" >${taxCstCatMap.get("discount")?if_exists}</fo:block>  
 							            </fo:table-cell>
@@ -777,11 +823,12 @@ under the License.
 							            	<fo:block  keep-together="always" text-align="center" font-size="12pt" white-space-collapse="false" ></fo:block>  
 							            </fo:table-cell>
 							            <fo:table-cell>
-							            	<fo:block  keep-together="always" text-align="right" font-size="11pt" white-space-collapse="false" >${taxCstTotalMap.get("invTotalVal")?string("#0.00")}</fo:block>  
+							            	<fo:block  keep-together="always" text-align="right" font-size="11pt" white-space-collapse="false" >${totalAssCstRevenue?string("#0.00")}</fo:block>  
 							            </fo:table-cell>
+							            <#--
 							            <fo:table-cell>
 							            	<fo:block  keep-together="always" text-align="right" font-size="11pt" white-space-collapse="false" >${taxCstTotalMap.get("cstAmount")?string("#0.00")}</fo:block>  
-							            </fo:table-cell>
+							            </fo:table-cell>-->
 							     </fo:table-row>
 								<fo:table-row> 
 							      <fo:table-cell>   						
@@ -793,6 +840,8 @@ under the License.
         			</fo:block> 		
 				</fo:flow>
 			</fo:page-sequence>
+			</#if>
+			 </#list>
 			</#if>
 		<#if !(taxDetails14pt5List?has_content) && !(taxDetails5pt5List?has_content) && !(taxDetailsCstList?has_content)>
 			<fo:page-sequence master-reference="main">
