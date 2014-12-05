@@ -19,11 +19,10 @@ under the License.
 <div class="screenlet">
   <#if product?exists>
     <div class="screenlet-body">
-        <table>
+        <table style="width:100%; font-size:1.5em">
             <tr class="header-row">
-                <td><b>${uiLabelMap.ProductFacility}</b></td>
-                <td><b>${uiLabelMap.ProductAtp}</b></td>
-                <td><b>${uiLabelMap.ProductQoh}</b></td>
+                <td style="width:50%"><b>${uiLabelMap.ProductFacility}</b></td>
+                <td style="width:50%; text-align: right"><b>Quantity</b></td>
             </tr>
             <#assign rowClass = "2">
             <#list quantitySummaryByFacility.values() as quantitySummary>
@@ -41,11 +40,9 @@ under the License.
                     <#assign incomingQuantityTotal = manufacturingInQuantitySummary.estimatedQuantityTotal?if_exists>
                     <#assign outgoingProductionRunList = manufacturingOutQuantitySummary.outgoingProductionRunList?if_exists>
                     <#assign outgoingQuantityTotal = manufacturingOutQuantitySummary.estimatedQuantityTotal?if_exists>
-                    <tr valign="middle"<#if rowClass == "1"> class="alternate-row"</#if>>
-                        <td width="50%">${(facility.facilityName)?if_exists} [${facilityId?default("[No Facility]")}]
-                        <#-- <a href="/facility/control/ReceiveInventory?facilityId=${facilityId}&amp;productId=${productId}&amp;externLoginKey=${externalLoginKey}" class="buttontext">${uiLabelMap.ProductInventoryReceive}</a></td> -->
-                        <td><#if totalAvailableToPromise?exists>${totalAvailableToPromise}<#else>&nbsp;</#if></td>
-                        <td><#if totalQuantityOnHand?exists>${totalQuantityOnHand}<#else>&nbsp;</#if></td>
+                    <tr valign="middle"<#if rowClass == "1"> class="alternate-row"</#if> >
+                        <td style="padding-top: 1em; color: green; font-weight: bold; font-size:1.2em" width="50%">${(facility.facilityName)?if_exists}</td>
+                        <td style="padding-top: 1em; color: green; font-weight: bold; font-size:1.2em; text-align: right"><#if totalQuantityOnHand?exists>${totalQuantityOnHand}<#else>&nbsp;</#if></td>
                     </tr>
 
                 </#if>

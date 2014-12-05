@@ -36,7 +36,7 @@
                <script location="component://materialmgmt/webapp/materialmgmt/WEB-INF/actions/reports/stockPosition.groovy"/>
            </actions> -->
             <widgets>
-                <screenlet id="ProductKeywordsPanel" title="${uiLabelMap.ProductInventory}" collapsible="true">
+                <screenlet id="ProductKeywordsPanel" title="${uiLabelMap.ProductInventory} for ${product.brandName}" collapsible="true">
                     <!-- <platform-specific><html><html-template location="component://product/webapp/catalog/find/keywordsearchbox.ftl"/></html></platform-specific> -->
                      <platform-specific>
 		                     <html><html-template location="component://materialmgmt/webapp/materialmgmt/reports/ProductInventoryAlt.ftl"/></html>
