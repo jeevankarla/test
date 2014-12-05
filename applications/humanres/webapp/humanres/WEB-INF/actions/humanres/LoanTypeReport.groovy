@@ -46,6 +46,7 @@ context.putAt("thruDate", thruDate);
 
 Map EmploymentsMap = HumanresService.getActiveEmployements(dctx,emplInputMap);
 employments=EmploymentsMap.get("employementList");
+
 if(UtilValidate.isNotEmpty(employments)){
 	employmentsList = EntityUtil.getFieldListFromEntityList(employments, "partyIdTo", true);
 }
@@ -55,10 +56,11 @@ if(UtilValidate.isNotEmpty(employmentsList)){
 		List conditionList=[];
 		conditionList.add(EntityCondition.makeCondition("partyId", EntityOperator.EQUALS, employeeId));
 		conditionList.add(EntityCondition.makeCondition("loanTypeId", EntityOperator.EQUALS, loanTypeId));
-		conditionList.add(EntityCondition.makeCondition("disbDate", EntityOperator.GREATER_THAN_EQUAL_TO ,fromDateStart));
-		conditionList.add(EntityCondition.makeCondition("disbDate", EntityOperator.LESS_THAN_EQUAL_TO ,thruDateEnd));
-		condition=EntityCondition.makeCondition(conditionList,EntityOperator.AND);
+		conditionList.add(EntityCondition.makeCondition("disbDate", EntityOperator.LESS_THAN_EQUAL_TO ,thruDateEnd));  
+	    conditionList.add(EntityCondition.makeCondition("setlDate", EntityOperator.EQUALS, null));
+        condition=EntityCondition.makeCondition(conditionList,EntityOperator.AND);
 		loanAndTypeList = delegator.findList("LoanAndType", condition , null, null, null, false );
+		
 		if(UtilValidate.isNotEmpty(loanAndTypeList)){
 			loanAndTypeList.each { loanAndType ->
 				if(UtilValidate.isNotEmpty(loanAndType)){
@@ -90,11 +92,19 @@ if(UtilValidate.isNotEmpty(employmentsList)){
 						employeeName =  PartyHelper.getPartyName(delegator, employeeId, false);
 					}
 					disbDate = loanAndType.disbDate;
-					principalAmount = loanAndType.principalAmount;
-					interestAmount = loanAndType.interestAmount;
-					numInterestInst = loanAndType.numInterestInst;
-					numPrincipalInst = loanAndType.numPrincipalInst;
 					
+					if(UtilValidate.isNotEmpty(loanAndType.principalAmount)){
+						principalAmount = loanAndType.principalAmount;
+					}
+					if(UtilValidate.isNotEmpty(loanAndType.interestAmount)){
+						interestAmount = loanAndType.interestAmount;
+					}
+					if(UtilValidate.isNotEmpty(loanAndType.numInterestInst)){
+						numInterestInst = loanAndType.numInterestInst;
+					}
+					if(UtilValidate.isNotEmpty(loanAndType.numPrincipalInst)){
+						numPrincipalInst = loanAndType.numPrincipalInst;
+					}
 					if(UtilValidate.isNotEmpty(numPrincipalInst) && numPrincipalInst!=0){
 						prinAmtEmi = (principalAmount/numPrincipalInst);
 					}
@@ -103,6 +113,7 @@ if(UtilValidate.isNotEmpty(employmentsList)){
 					}
 					if(UtilValidate.isNotEmpty(loanId)){
 						loanRecoveryList = delegator.findList("LoanRecovery",EntityCondition.makeCondition("loanId", EntityOperator.EQUALS , loanId)  , null, null, null, false );
+						
 						if(UtilValidate.isNotEmpty(loanRecoveryList)){
 							loanRecoveryList.each { loanRecovery->
 								if(UtilValidate.isNotEmpty(loanRecovery)){
@@ -126,10 +137,18 @@ if(UtilValidate.isNotEmpty(employmentsList)){
 							}
 						}
 					}
-					netPrinAmount = principalAmount - totalRecPrinAmount;
-					netPrinInst = numPrincipalInst - totalRecPrinInst;
-					netIntAmount = interestAmount - totalRecIntAmount;
-					netIntInst = numInterestInst - totalRecIntInst;
+					if(UtilValidate.isNotEmpty(principalAmount)){
+					    netPrinAmount = principalAmount - totalRecPrinAmount;
+					}
+					if(UtilValidate.isNotEmpty(numPrincipalInst)){
+					   netPrinInst = numPrincipalInst - totalRecPrinInst;
+					}
+					if(UtilValidate.isNotEmpty(interestAmount)){
+						netIntAmount = interestAmount - totalRecIntAmount;
+					}
+					if(UtilValidate.isNotEmpty(numInterestInst)){
+	                    netIntInst = numInterestInst - totalRecIntInst;
+					}
 					
 					loanTypeMap = [:];
 					loanTypeMap["loanId"] = loanId;
@@ -162,7 +181,7 @@ if(UtilValidate.isNotEmpty(employmentsList)){
 		}
 	}
 }
+loanTypeList = UtilMisc.sortMaps(loanTypeList, UtilMisc.toList("disbDate"));
 context.putAt("loanTypeList", loanTypeList);
-
 
 

@@ -730,6 +730,12 @@
         	</condition>
         <link target="PayrollReports"></link>
         </menu-item>
+         <menu-item name="LoanReports" title="Loan Reports"> 
+        	<condition>
+        		<if-has-permission permission="HR" action="_LOAN_REPORTS_VIEW"/>
+        	</condition>
+        	<link target="LoanReports"></link>
+        </menu-item>         
          <menu-item name="StatutoryReports" title="Statutory Reports">
           	<condition>
         		<if-has-permission permission="HR" action="_STATT_REPORTS_VIEW"/>
@@ -742,12 +748,7 @@
         	</condition>
         <link target="SupplyPayrollReports"></link>
         </menu-item>        
-         <menu-item name="LoanReports" title="Loan Reports"> 
-        	<condition>
-        		<if-has-permission permission="HR" action="_LOAN_REPORTS_VIEW"/>
-        	</condition>
-        	<link target="LoanReports"/>
-        </menu-item>         
+        
     </menu>	
     <menu name="InternalJobPostingTabBar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml"
         default-menu-item-name="InternalJobPosting" type="simple" menu-container-style="button-bar tab-bar" 

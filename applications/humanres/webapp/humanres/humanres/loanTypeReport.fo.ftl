@@ -50,28 +50,28 @@ ${setRequestAttribute("OUTPUT_FILENAME", "LoanAvailedReport.pdf")}
               		   
               		 <fo:block>
 	                 	<fo:table border-style="solid">
-	                    <fo:table-column column-width="30pt"/>
-	                    <fo:table-column column-width="60pt"/>
-	                    <fo:table-column column-width="140pt"/>  
-	               	    <fo:table-column column-width="70pt"/>
-	               	    <fo:table-column column-width="80pt"/>
-	            		<fo:table-column column-width="80pt"/> 		
-	            		<fo:table-column column-width="50pt"/>
-	            		<fo:table-column column-width="80pt"/>
-	            		<fo:table-column column-width="50pt"/>
-	            		<fo:table-column column-width="70pt"/>
-	            		<fo:table-column column-width="70pt"/>
-	            		<fo:table-column column-width="80pt"/>
-	            		<fo:table-column column-width="80pt"/>
-	            		<fo:table-column column-width="50pt"/>
-	            		<fo:table-column column-width="50pt"/>
+                    <fo:table-column column-width="60pt"/>
+                    <fo:table-column column-width="40pt"/>
+                    <fo:table-column column-width="140pt"/>  
+               	    <fo:table-column column-width="75pt"/>
+               	    <fo:table-column column-width="80pt"/>
+            		<fo:table-column column-width="70pt"/> 		
+            		<fo:table-column column-width="30pt"/>
+            		<fo:table-column column-width="80pt"/>
+            		<fo:table-column column-width="30pt"/>
+            		<fo:table-column column-width="75pt"/>
+            		<fo:table-column column-width="70pt"/> 		
+            		<fo:table-column column-width="85pt"/>
+            		<fo:table-column column-width="85pt"/>
+            		<fo:table-column column-width="60pt"/>
+            		<fo:table-column column-width="60pt"/>
 	                    <fo:table-body>
 	                    <fo:table-row >
 	                    		<fo:table-cell border-style="solid">
-                            		<fo:block   text-align="center" font-size="13pt" white-space-collapse="false" font-weight="bold">SNO</fo:block>  
+                            		<fo:block   text-align="center" font-size="13pt" white-space-collapse="false" font-weight="bold">Disb Date d/m/y</fo:block>  
                        			</fo:table-cell>                     
                        			<fo:table-cell border-style="solid">
-                            		<fo:block   text-align="center" font-size="13pt" white-space-collapse="false" font-weight="bold">Employee Code </fo:block>
+                            		<fo:block   text-align="center" font-size="13pt" white-space-collapse="false" font-weight="bold">Emp Code </fo:block>
                        			</fo:table-cell>
                        			<fo:table-cell border-style="solid">
                             		<fo:block   text-align="center" font-size="13pt" white-space-collapse="false" font-weight="bold">Employee Name</fo:block> 
@@ -120,21 +120,21 @@ ${setRequestAttribute("OUTPUT_FILENAME", "LoanAvailedReport.pdf")}
            <fo:flow flow-name="xsl-region-body"   font-family="Courier,monospace">		
             	<fo:block>
                  	<fo:table border-style="solid">
-                    <fo:table-column column-width="30pt"/>
                     <fo:table-column column-width="60pt"/>
+                    <fo:table-column column-width="40pt"/>
                     <fo:table-column column-width="140pt"/>  
-               	    <fo:table-column column-width="70pt"/>
+               	    <fo:table-column column-width="75pt"/>
                	    <fo:table-column column-width="80pt"/>
-            		<fo:table-column column-width="80pt"/> 		
-            		<fo:table-column column-width="50pt"/>
-            		<fo:table-column column-width="80pt"/>
-            		<fo:table-column column-width="50pt"/>
-            		<fo:table-column column-width="70pt"/>
             		<fo:table-column column-width="70pt"/> 		
+            		<fo:table-column column-width="30pt"/>
             		<fo:table-column column-width="80pt"/>
-            		<fo:table-column column-width="80pt"/>
-            		<fo:table-column column-width="50pt"/>
-            		<fo:table-column column-width="50pt"/>
+            		<fo:table-column column-width="30pt"/>
+            		<fo:table-column column-width="75pt"/>
+            		<fo:table-column column-width="70pt"/> 		
+            		<fo:table-column column-width="85pt"/>
+            		<fo:table-column column-width="85pt"/>
+            		<fo:table-column column-width="60pt"/>
+            		<fo:table-column column-width="60pt"/>
                     <fo:table-body>
                 		<#assign sNo=1>
                 		<#assign totalPRNAMT=0>
@@ -150,7 +150,20 @@ ${setRequestAttribute("OUTPUT_FILENAME", "LoanAvailedReport.pdf")}
                 		
                 		
                     	<#list loanTypeList as loanAcctngDetails>
-                          <#-- <#assign disbDate = (loanAcctngDetails.get("disbDate")?if_exists)/> -->
+                    	    <#assign principalAmount =0>
+	                		<#assign interestAmount = 0>
+	                		<#assign prinAmtEmi = 0>
+	                		<#assign numPrincipalInst = 0>
+	                		<#assign intrstAmtEmi = 0>
+	                		<#assign numInterestInst = 0>
+	                		<#assign totalRecPrinAmount = 0>
+							<#assign totalRecIntAmount = 0>
+				     		<#assign netPrinAmount = 0>
+						    <#assign netIntAmount =0>
+							<#assign netPrinInst = 0>
+						    <#assign netIntInst =0>
+                    	
+                          <#assign disbDate = (loanAcctngDetails.get("disbDate")?if_exists)/> 
 	                		<#assign employeeId = (loanAcctngDetails.get("employeeId")?if_exists)/>
 	                		<#assign employeeName = (loanAcctngDetails.get("employeeName")?if_exists)/>
 	                		<#assign principalAmount = (loanAcctngDetails.get("principalAmount")?if_exists)/>
@@ -180,73 +193,85 @@ ${setRequestAttribute("OUTPUT_FILENAME", "LoanAvailedReport.pdf")}
 								<fo:table-row border-style="solid">
 								
 									<fo:table-cell border-style="solid">
-	                            	 <fo:block  text-align="left"  font-size="12pt" > 	 ${sNo}</fo:block>                 			  
+	                            	 <fo:block  text-align="left"  font-size="12pt" > ${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(disbDate?if_exists, "dd/MM/yy ")}</fo:block>                 			  
 	                       			</fo:table-cell>
                                 	<fo:table-cell border-style="solid" >
-	                                    <fo:block font-size="12pt" text-align="left">${employeeId?if_exists}</fo:block>
+	                                    <fo:block font-size="12pt" text-align="center">${employeeId?if_exists}</fo:block>
 	                                </fo:table-cell>
                                  	<fo:table-cell border-style="solid">
 	                                    <fo:block text-align="left">${employeeName?if_exists}</fo:block>
 	                                </fo:table-cell>
 	                       			<fo:table-cell border-style="solid">
                                     <fo:block text-align="right" font-size="12pt" >
-                                            ${principalAmount?if_exists?string("##0.00")}
+                                            <#if principalAmount?has_content>${(principalAmount)?if_exists?string("##0.00")}<#else>0.00</#if>
+                                            
                                     </fo:block>
 	                                </fo:table-cell>
 	                                <fo:table-cell border-style="solid">
                                     <fo:block text-align="right" font-size="12pt" >
-                                            ${interestAmount?if_exists?string("##0.00")}
+                                              <#if interestAmount?has_content>${(interestAmount?if_exists?string("##0.00"))}<#else>0.00</#if>
+                                            
                                     </fo:block>
 	                                </fo:table-cell>
 	                                <fo:table-cell border-style="solid">
 	                                    <fo:block text-align="right" font-size="12pt">
-	                                       ${prinAmtEmi?if_exists?string("##0.00")}
+	                                               <#if prinAmtEmi?has_content>${(prinAmtEmi)?if_exists?string("##0.00")}<#else>0.00</#if>
+	                                       
 	                                    </fo:block>
 	                                </fo:table-cell>
 	                                <fo:table-cell border-style="solid">
 	                                    <fo:block text-align="right" font-size="12pt">
-	                                     ${numPrincipalInst?if_exists}
+	                                         <#if numPrincipalInst?has_content>${(numPrincipalInst)?if_exists}<#else>0</#if>
+	                                     
 	                                    </fo:block>
 	                                </fo:table-cell>
 	                                <fo:table-cell border-style="solid">
 	                                    <fo:block text-align="right" font-size="12pt">
-	                                       ${intrstAmtEmi?if_exists?string("##0.00")}
+	                                        <#if intrstAmtEmi?has_content>${(intrstAmtEmi)?if_exists?string("##0.00")}<#else>0.00</#if>
+	                                       
 	                                    </fo:block>
 	                                </fo:table-cell>
 	                                
 	                                <fo:table-cell border-style="solid">
 	                                    <fo:block text-align="right" font-size="12pt">
-	                                     ${numInterestInst?if_exists}
+                                           <#if numInterestInst?has_content>${(numInterestInst)?if_exists}<#else>0</#if>
+	                                     
 	                                    </fo:block>
 	                                </fo:table-cell>
 	                               <fo:table-cell border-style="solid">
 	                                    <fo:block text-align="right" font-size="12pt">
-	                                     ${totalRecPrinAmount?if_exists?string("##0.00")}
+                               <#if totalRecPrinAmount?has_content>${(totalRecPrinAmount)?if_exists?string("##0.00")}<#else>0.00</#if>
+	                                     
 	                                    </fo:block>
 	                                </fo:table-cell>
 	                               <fo:table-cell border-style="solid">
 	                                    <fo:block text-align="right" font-size="12pt">
-	                                     ${totalRecIntAmount?if_exists?string("##0.00")}
+                             <#if totalRecIntAmount?has_content>${(totalRecIntAmount)?if_exists?string("##0.00")}<#else>0.00</#if>
+	                                     
 	                                    </fo:block>
 	                                </fo:table-cell>
 	                               <fo:table-cell border-style="solid">
 	                                    <fo:block text-align="right" font-size="12pt">
-	                                     ${netPrinAmount?if_exists?string("##0.00")}
+                               <#if netPrinAmount?has_content>${(netPrinAmount)?if_exists?string("##0.00")}<#else>0.00</#if>
+	                                     
 	                                    </fo:block>
 	                                </fo:table-cell>
 	                               <fo:table-cell border-style="solid">
 	                                    <fo:block text-align="right" font-size="12pt">
-	                                     ${netIntAmount?if_exists?string("##0.00")}
+                            <#if netIntAmount?has_content>${(netIntAmount)?if_exists?string("##0.00")}<#else>0.00</#if>
+	                                     
 	                                    </fo:block>
 	                                </fo:table-cell>
 	                               <fo:table-cell border-style="solid">
 	                                    <fo:block text-align="right" font-size="12pt">
-	                                     ${netPrinInst?if_exists}
+                        <#if netPrinInst?has_content>${(netPrinInst)?if_exists?string("##0.00")}<#else>0.00</#if>
+	                                     
 	                                    </fo:block>
 	                                </fo:table-cell>
 	                               <fo:table-cell border-style="solid">
 	                                    <fo:block text-align="right" font-size="12pt">
-	                                     ${netIntInst?if_exists}
+                       <#if netIntInst?has_content>${(netIntInst)?if_exists?string("##0.00")}<#else>0.00</#if>
+	                                     
 	                                    </fo:block>
 	                                </fo:table-cell>
 	                              	<#assign sNo=sNo+1>
@@ -265,17 +290,19 @@ ${setRequestAttribute("OUTPUT_FILENAME", "LoanAvailedReport.pdf")}
 	                                </fo:table-cell>
 	                       			<fo:table-cell border-style="solid">
                                     <fo:block text-align="right" font-size="12pt" font-weight="bold">
-                                       ${totalPRNAMT?if_exists?string("##0.00")}    
+                                  <#if totalPRNAMT?has_content>${(totalPRNAMT)?if_exists?string("##0.00")}<#else>0.00</#if>
+                                       
                                     </fo:block>
 	                                </fo:table-cell>
 	                                <fo:table-cell border-style="solid">
                                     <fo:block text-align="right" font-size="12pt" font-weight="bold">
-                                       ${totalINTAMT?if_exists?string("##0.00")}    
+                                  <#if totalINTAMT?has_content>${(totalINTAMT)?if_exists?string("##0.00")}<#else>0.00</#if>
                                     </fo:block>
 	                                </fo:table-cell>
 	                                <fo:table-cell border-style="solid">
 	                                 <fo:block text-align="right" font-size="12pt" font-weight="bold">
-	                                    ${totalprinAmtEmi?if_exists?string("##0.00")}    
+                                <#if totalprinAmtEmi?has_content>${(totalprinAmtEmi)?if_exists?string("##0.00")}<#else>0.00</#if>
+	                                    
 	                                  </fo:block>
 	                                </fo:table-cell>
 	                                <fo:table-cell border-style="solid">
@@ -284,7 +311,8 @@ ${setRequestAttribute("OUTPUT_FILENAME", "LoanAvailedReport.pdf")}
 	                                </fo:table-cell>
 	                                <fo:table-cell border-style="solid">
 	                                    <fo:block text-align="right" font-size="12pt" font-weight="bold">
-	                                     ${totalintrstAmtEmi?if_exists?string("##0.00")}    
+                               <#if totalintrstAmtEmi?has_content>${(totalintrstAmtEmi)?if_exists?string("##0.00")}<#else>0.00</#if>
+	                                     
 	                                    </fo:block>
 	                                </fo:table-cell>
 	                                <fo:table-cell border-style="solid">
@@ -293,22 +321,26 @@ ${setRequestAttribute("OUTPUT_FILENAME", "LoanAvailedReport.pdf")}
 	                                </fo:table-cell>
 	                               <fo:table-cell border-style="solid">
 	                                    <fo:block text-align="right" font-size="12pt" font-weight="bold">
-	                                    ${totaloftotalRecPrinAmount?if_exists?string("##0.00")}    
+	                              <#if totaloftotalRecPrinAmount?has_content>${(totaloftotalRecPrinAmount)?if_exists?string("##0.00")}<#else>0.00</#if>
+	                                     
 	                                    </fo:block>
 	                                </fo:table-cell>
 	                               <fo:table-cell border-style="solid">
 	                                    <fo:block text-align="right" font-size="12pt" font-weight="bold">
-	                                     ${totaloftotalRecIntAmount?if_exists?string("##0.00")}    
+                              <#if totaloftotalRecIntAmount?has_content>${(totaloftotalRecIntAmount)?if_exists?string("##0.00")}<#else>0.00</#if>
+	                                        
 	                                    </fo:block>
 	                                </fo:table-cell>
 	                               <fo:table-cell border-style="solid">
 	                                    <fo:block text-align="right" font-size="12pt" font-weight="bold">
-	                                      ${totalnetPrinAmount?if_exists?string("##0.00")}    
+                               <#if totalnetPrinAmount?has_content>${(totalnetPrinAmount)?if_exists?string("##0.00")}<#else>0.00</#if>
+	                                         
 	                                    </fo:block>
 	                                </fo:table-cell>
 	                               <fo:table-cell border-style="solid">
 	                                    <fo:block text-align="right" font-size="12pt" font-weight="bold">
-	                                     ${totalnetIntAmount?if_exists?string("##0.00")}    
+                             <#if totalnetIntAmount?has_content>${(totalnetIntAmount)?if_exists?string("##0.00")}<#else>0.00</#if>
+	                                     
 	                                    </fo:block>
 	                                </fo:table-cell>
 	                               <fo:table-cell border-style="solid">
