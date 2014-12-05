@@ -62,6 +62,13 @@
        <response name="error" type="view" value="ApproveRequestsByDeptHead"/>
      </request-map>
      
+     <request-map uri="acceptReceiptQtyByQC">
+       <security https="true" auth="true"/>
+       <event type="service" path="" invoke="acceptReceiptQtyByQC"></event>
+       <response name="success" type="view" value="MaterialForQCApproval"/>
+       <response name="error" type="view" value="MaterialForQCApproval"/>
+     </request-map>
+     
      
      <request-map uri="processCustRequestItems">
        <security https="true" auth="true"/>
@@ -177,6 +184,11 @@
        <response name="error" type="view" value="FindMaterialRequirement"/>
      </request-map>
      
+     <request-map uri="MaterialForQCApproval">
+       <security https="true" auth="true"/>
+       <response name="success" type="view" value="MaterialForQCApproval"/>
+       <response name="error" type="view" value="MaterialForQCApproval"/>
+     </request-map>
      <request-map uri="FindMaterialEnquiry">
        <security https="true" auth="true"/>
        <response name="success" type="view" value="FindMaterialEnquiry"/>
@@ -368,7 +380,9 @@
     <view-map name="FindMaterialPO" type="screen" page="component://materialmgmt/widget/MaterialPurchaseScreens.xml#FindMaterialPO"/>
     <view-map name="InvoiceForShippedGoods" type="screen" page="component://materialmgmt/widget/MaterialPurchaseScreens.xml#InvoiceForShippedGoods"/>
     
-	<!-- Issuance     -->
+	<!-- Issuance and Receipts  -->
 	<view-map name="FindMaterialIssuance" type="screen" page="component://materialmgmt/widget/MaterialRequestScreens.xml#FindMaterialIssuance"/>
+	<view-map name="MaterialForQCApproval" type="screen" page="component://materialmgmt/widget/MaterialPurchaseScreens.xml#MaterialForQCApproval"/>
+	
 	
 </site-conf>

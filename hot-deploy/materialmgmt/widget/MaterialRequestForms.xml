@@ -323,9 +323,7 @@
     
     <form name="ListRequestsToApprove" type="list" use-row-submit="true"  title="" list-name="custRequestItemsList"
         odd-row-style="alternate-row" target="approveRequestByHOD" default-table-style="basic-table hover-bar" paginate-target="StoreProductIssue" separate-columns="true">
-        <!-- <row-actions>
-        	<set field="setQty" from-field="quantity"/>
-        </row-actions> -->
+        
         <field name="custRequestId" title="${uiLabelMap.MaterialMangement_CustRequestId}"><display/></field>
         <field name="custRequestItemSeqId" title="${uiLabelMap.MaterialMangement_CustRequestItemSeqId}"><display/></field>
         <field name="custRequestDate" title="${uiLabelMap.MaterialMangement_CustRequestDate}"><display description="${groovy:org.ofbiz.base.util.UtilDateTime.toDateString(custRequestDate, &quot;dd/MM/yyyy&quot;)}"/></field>

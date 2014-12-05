@@ -68,6 +68,32 @@
         </section>
     </screen>
     
+    <screen name="MaterialForQCApproval">
+        <section>
+            <actions>
+                <set field="titleProperty" value="Receipts For QC"/>              
+			    <set field="tabButtonItem" value="MaterialForQCApproval" />	
+               <set field="viewSize" from-field="parameters.VIEW_SIZE"/>
+               <entity-condition list="receiptItems" entity-name="ShipmentReceipt">
+					<condition-list combine="and">
+						<condition-expr field-name="statusId" value="SR_RECEIVED"/>
+					</condition-list>		               
+               </entity-condition>
+            </actions>
+            <widgets>
+                 <decorator-screen name="materialmgmtNgCommonDecorator" location="${parameters.mainDecoratorLocation}">
+                      <decorator-section name="body">  
+                        <section>
+                            <widgets>
+                                <include-form location="component://materialmgmt/widget/MaterialPurchaseForms.xml" name="ListMaterialForQCApproval"/>
+                            </widgets>
+                        </section>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>            
+        </section>
+    </screen>
+    
     <screen name="InvoiceForShippedGoods">
         <section>
             <actions>

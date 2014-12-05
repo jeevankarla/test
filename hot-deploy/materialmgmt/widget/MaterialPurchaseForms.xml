@@ -54,6 +54,25 @@
         </field> 
     </form>
     
+    <form name="ListMaterialForQCApproval" type="list" list-name="receiptItems" paginate-target="${targetRequest}"
+        odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar" target="acceptReceiptQtyByQC" separate-columns="true">
+        
+      	<field name="receiptId" title ="GRN No">
+      		<display/>
+      	</field>
+        <field name="datetimeReceived" title="Received Time"><display description="${groovy:org.ofbiz.base.util.UtilDateTime.toDateString(datetimeReceived, &quot;dd/MM/yyyy HH:mm:ss&quot;);}"/></field>
+        <field name="productId" title="Product"><display-entity entity-name="Product" description="${productName} - [ ${productId} ] "/></field>
+        <field name="shipmentId"><display/></field>
+        <field name="statusIdTo"><hidden value="SR_QUALITYCHECK"/></field>
+        <field name="shipmentItemSeqId"><display/></field>
+ 		<field name="receivedByUserLoginId" title="Received By"><display/></field>
+        <field name="quantity"><display description="${quantityAccepted}"/></field>
+        <field name="quantityAccepted"><text size="15"/></field>
+        <field name="Accept" widget-style="buttontext">
+        	<submit/>
+        </field> 
+    </form>
+    
     <form name="generateInvoiceForm" type="single" list-name="listIt" target="createInvoicesForMaterialShipment" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
       	<field name="shipmentId"><text/></field>
       	<field name="submitButton" title="Create Invoice" widget-style="smallSubmit"><submit button-type="button"/></field>

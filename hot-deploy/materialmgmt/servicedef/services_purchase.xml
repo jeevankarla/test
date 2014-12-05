@@ -26,6 +26,16 @@
         <attribute name="custRequestItemSeqId" type="String" mode="IN" optional="true"/>
     </service>
     
+    
+    <service name="acceptReceiptQtyByQC" engine="java" location="in.vasista.vbiz.purchase.MaterialPurchaseServices" invoke="acceptReceiptQtyByQC">
+        <description>Accept Receipts By Quality Control Check</description>
+        <attribute name="receiptId" type="String" mode="IN" optional="false"/>
+        <attribute name="statusIdTo" type="String" mode="IN" optional="false"/>
+        <attribute name="quantityAccepted" type="BigDecimal" mode="IN" optional="false"/>
+        <attribute name="shipmentId" type="String" mode="IN" optional="true"/>
+        <attribute name="shipmentItemSeqId" type="String" mode="IN" optional="true"/>
+    </service>
+    
     <service name="approveRequestByHOD" engine="java" location="in.vasista.vbiz.purchase.MaterialRequestServices" invoke="approveRequestByHOD">
         <description>Approve Request By Department Head service</description>
         <attribute name="custRequestId" type="String" mode="IN" optional="false"/>

@@ -256,5 +256,68 @@ public class MaterialPurchaseServices {
 		request.setAttribute("_EVENT_MESSAGE_", "Successfully made request entries ");
 		return "success";
 	}
+	
+	public static Map<String, Object> acceptReceiptQtyByQC(DispatchContext ctx,Map<String, ? extends Object> context) {
+		Delegator delegator = ctx.getDelegator();
+		LocalDispatcher dispatcher = ctx.getDispatcher();
+		String statusId = (String) context.get("statusIdTo");
+		String receiptId = (String) context.get("receiptId");
+		String shipmentId = (String) context.get("shipmentId");
+		String shipmentItemSeqId = (String) context.get("shipmentItemSeqId");
+		BigDecimal quantityAccepted = (BigDecimal) context.get("quantityAccepted");
+		GenericValue userLogin = (GenericValue) context.get("userLogin");
+		Map result = ServiceUtil.returnSuccess();
+		if(UtilValidate.isEmpty(quantityAccepted)){
+			return ServiceUtil.returnError("Quantity accepted cannot be ZERO ");
+		}
+		if(quantityAccepted.compareTo(BigDecimal.ZERO) ==0){
+			statusId = "SR_REJECTED";
+		}
+		
+		try{
+			
+			GenericValue shipmentReceipt = delegator.findOne("ShipmentReceipt", UtilMisc.toMap("receiptId", receiptId), false);
+			
+			GenericValue shipmentItem = delegator.findOne("ShipmentItem", UtilMisc.toMap("shipmentId", shipmentId, "shipmentItemSeqId", shipmentItemSeqId), false);
+			
+			BigDecimal origReceiptQty = shipmentItem.getBigDecimal("quantity");
+			BigDecimal rejectedQty = origReceiptQty.subtract(quantityAccepted);
+			
+			shipmentReceipt.put("quantityAccepted", quantityAccepted);
+			shipmentReceipt.put("quantityRejected", rejectedQty);
+			shipmentReceipt.put("statusId", statusId);
+			shipmentReceipt.store();
+			
+			List conditionList = FastList.newInstance();
+			conditionList.add(EntityCondition.makeCondition("shipmentId", EntityOperator.EQUALS, shipmentId));
+			conditionList.add(EntityCondition.makeCondition("shipmentItemSeqId", EntityOperator.EQUALS, shipmentItemSeqId));
+			conditionList.add(EntityCondition.makeCondition("receiptId", EntityOperator.EQUALS, receiptId));
+			EntityCondition condition = EntityCondition.makeCondition(conditionList, EntityOperator.AND);
+			List<GenericValue> inventoryItemDetails = delegator.findList("InventoryItemDetail", condition, null, null, null, false);
+			
+			
+			String inventoryItemId = (EntityUtil.getFirst(inventoryItemDetails)).getString("inventoryItemId");
+			Map createInvDetail = FastMap.newInstance();
+			createInvDetail.put("shipmentId", shipmentId);
+			createInvDetail.put("shipmentItemSeqId", shipmentItemSeqId);
+			createInvDetail.put("userLogin", userLogin);
+			createInvDetail.put("inventoryItemId", inventoryItemId);
+			createInvDetail.put("receiptId", receiptId);
+			createInvDetail.put("quantityOnHandDiff", rejectedQty.negate());
+			createInvDetail.put("availableToPromiseDiff", rejectedQty.negate());
+			result = dispatcher.runSync("createInventoryItemDetail", createInvDetail);
+			if (ServiceUtil.isError(result)) {
+				Debug.logError("Problem decrementing inventory for rejected quantity ", module);
+				return ServiceUtil.returnError("Problem decrementing inventory for rejected quantity");
+			}
+			
+		} catch (Exception e) {
+			// TODO: handle exception
+			Debug.logError(e, module);
+			return ServiceUtil.returnError(e.getMessage());
+		}
+		result = ServiceUtil.returnSuccess("Quality check passed for GRN no: "+receiptId);
+		return result;
+	}
 		
 }
