@@ -783,7 +783,6 @@ public class FinAccountServices {
         if(UtilValidate.isNotEmpty(finAccount.getBigDecimal("availableBalance"))){
         	availableBalance = finAccount.getBigDecimal("availableBalance");
         }
-        
         BigDecimal amountForCalc = finAccountTrans.getBigDecimal("amount");
         if(finAccountTransTypeId.equals("WITHDRAWAL")){
         	amountForCalc = amountForCalc.negate();
@@ -802,7 +801,6 @@ public class FinAccountServices {
                 	finAccount.store();
         	}
         	else if(status.equals("FINACT_TRNS_CREATED") && oldStatusId.equals("FINACT_TRNS_APPROVED")){
-        		Debug.log("==FINACT_TRNS_APPROVED==TO==FINACT_TRNS_CREATED=="+amountForCalc);
         		//Then we have to less that transaction amount.
             	balanceUpdateAmount = availableBalance.subtract(amountForCalc);
             	finAccount.set("availableBalance", balanceUpdateAmount);
