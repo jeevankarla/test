@@ -2949,6 +2949,7 @@ public class PayrollService {
 	        	while (tempIter.hasNext()) {
 						Map.Entry tempEntry = (Entry) tempIter.next();
 						String variableName = (String)tempEntry.getKey();
+						result.put(variableName, 0.0);
 						if(UtilValidate.isNotEmpty(tempEntry.getValue()) && tempEntry.getValue() instanceof BigDecimal){
 							result.put(variableName, 0.0);
 							//result.put(variableName, (BigDecimal)tempEntry.getValue());
