@@ -1657,6 +1657,7 @@ under the License.
 		<field name="roundingMode" type="id-vlong"></field>
 		<field name="serviceName" type="id-vlong"></field>
 		<field name="smsServicePath" type="id-vlong"></field>
+		<field name="minDays" type="fixed-point"/>
 		<prim-key field="payrollTypeId" />
 		<relation type="one" fk-name="PT_PT" rel-entity-name="Enumeration">
         	<key-map field-name="payrollTypeId" rel-field-name="enumId"/>
