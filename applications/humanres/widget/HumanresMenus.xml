@@ -183,7 +183,7 @@
             </condition>  
         	<link target="EditLateHours"></link>
         </menu-item>
-        <menu-item name="EditHolidays" title="Approval Holidays">
+        <menu-item name="EditHolidays" title="Holiday Encashment">
             <condition>
                  <and>
                     <if-has-permission permission="HR"  action="_APPHOLIDAY_VIEW"/>
