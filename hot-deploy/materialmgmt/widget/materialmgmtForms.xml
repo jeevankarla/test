@@ -288,6 +288,7 @@
      <form name="PurchaseAbstractReportForms" type="list" list-name="prodCatAnalysisList" view-size="99999">
         <field name="voucherCode" title="Voucher Code"><display/></field>
         <field name="analysisCode" title="Narration"><display/></field>
+        <field name="primaryCategoryCode" title="primary Category Code"><display/></field>
         <field name="invoiceId" title="Invoice Id"><display/></field>
         <field name="invoiceDate" title="invoice Date"><display/></field>
         <field name="productId" title="product Id"><display/></field>

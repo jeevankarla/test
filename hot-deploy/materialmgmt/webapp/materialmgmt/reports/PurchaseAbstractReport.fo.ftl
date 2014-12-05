@@ -53,7 +53,7 @@ under the License.
             	
         			<fo:block>
         				<fo:table>
-		                    <fo:table-column column-width="120pt"/>
+		                    <fo:table-column column-width="130pt"/>
 		                    <fo:table-column column-width="70pt"/>
 		                    <fo:table-column column-width="130pt"/> 
 		               	    <fo:table-column column-width="190pt"/>
@@ -66,58 +66,70 @@ under the License.
 			                    <#assign grandTotal=0>
 		                        <#assign dayWiseTotalsMap = dayWiseInvoice.entrySet()>
        							<#list dayWiseTotalsMap as dayWiseTotalsDetails>
-       							<#assign productCategory = delegator.findOne("ProductCategory", {"productCategoryId" : dayWiseTotalsDetails.getKey()}, true)?if_exists/>
-       						
-       							<fo:table-row>
+                                 <#assign productCategoryMember=delegator.findByAnd("ProductCategoryAndMember", {"primaryParentCategoryId" : dayWiseTotalsDetails.getKey()})/>
+      	
+       								<#--<#assign productCategory = delegator.findOne("ProductCategory", {"primaryParentCategoryId" : dayWiseTotalsDetails.getKey()}, true)?if_exists/>-->
+       								<fo:table-row>
        							       <fo:table-cell>
-							            	<fo:block  keep-together="always" text-align="left" font-size="12pt" white-space-collapse="false" font-weight="bold">Analysis Code :</fo:block>  
+							            	<fo:block  keep-together="always" text-align="left" font-size="12pt" white-space-collapse="false" font-weight="bold">Primary Category : </fo:block>  
 							            </fo:table-cell>
        							        <fo:table-cell>
-							            	<fo:block  keep-together="always" text-align="left" font-size="12pt" white-space-collapse="false" font-weight="bold">${productCategory.description}</fo:block>  
+							            	<fo:block  keep-together="always" text-align="left" font-size="12pt" white-space-collapse="false" font-weight="bold">${productCategoryMember[0].description}</fo:block>  
 							            </fo:table-cell>
-							    </fo:table-row> 
-       							<#assign dayWiseTotals = dayWiseTotalsDetails.getValue().entrySet()>
-       							<#assign total=0>
-       							<#list dayWiseTotals as dayWiseTotal>
-       							<#assign purchaseMap = dayWiseTotal.getValue()>
-       							<#assign prodMap = dayWiseTotal.getValue().entrySet()>
-       							<fo:table-row>
-       							        <fo:table-cell>
-							            	<fo:block  keep-together="always" text-align="left" font-size="12pt" white-space-collapse="false" >${purchaseMap.get("supInvNumber")}</fo:block>  
-							            </fo:table-cell>
-       							        <fo:table-cell>
-							            	<fo:block  keep-together="always" text-align="left" font-size="12pt" white-space-collapse="false" >${dayWiseTotal.getKey()}</fo:block>  
-							            </fo:table-cell>
-							             <fo:table-cell>
-							            	<fo:block  keep-together="always" text-align="left" font-size="12pt" white-space-collapse="false" >${purchaseMap.get("invoiceDate")}</fo:block>  
-							            </fo:table-cell>
-							            <fo:table-cell>
-                       			        <fo:block   font-size="12pt" text-align="left" white-space-collapse="false">
-		                       			<fo:table>
-					            		<fo:table-column column-width="150pt"/> 		
-					            		<fo:table-column column-width="200pt"/> 	
-					            		<fo:table-column column-width="80pt"/> 
-		                                <fo:table-body>
-		                                <#list prodMap as prodTotal>
-		                                 <#if prodTotal.getKey()!=("supInvNumber") &&  prodTotal.getKey()!=("invoiceDate")>
-		                                 <#assign prodDetails = delegator.findOne("Product", {"productId" :prodTotal.getKey()}, true)>
-		                                 <#assign total=total+prodTotal.getValue()>
-		                                 <#assign grandTotal=grandTotal+prodTotal.getValue()>
-			                                <fo:table-row>
-			                                <fo:table-cell>
-					                           		<fo:block  keep-together="always" font-size="12pt" text-align="left" white-space-collapse="false">${prodDetails.description}</fo:block>  
-					                       		</fo:table-cell>
-			                                   <fo:table-cell>
-					                           		<fo:block   font-size="12pt" text-align="right" white-space-collapse="false">${prodTotal.getValue()?string("#0.00")}</fo:block>  
-					                       		</fo:table-cell>
-							             	</fo:table-row>
-							             	</#if>
-						             	 </#list>
-						             </fo:table-body>
-						             </fo:table>
-                       			</fo:block>  
-                   			  </fo:table-cell>
-							    </fo:table-row> 
+							    	</fo:table-row> 
+       								<#assign dayWiseTotals = dayWiseTotalsDetails.getValue().entrySet()>
+       								<#assign total=0>
+       								<#list dayWiseTotals as dayWiseTotal>
+       									<#assign productCategory = delegator.findOne("ProductCategory", {"productCategoryId" : dayWiseTotal.getKey()}, true)?if_exists/>
+       									<fo:table-row>
+	       							       <fo:table-cell>
+								            	<fo:block  keep-together="always" text-align="left" font-size="12pt" white-space-collapse="false" font-weight="bold">Analysis Code :</fo:block>  
+								            </fo:table-cell>
+	       							        <fo:table-cell>
+								            	<fo:block  keep-together="always" text-align="left" font-size="12pt" white-space-collapse="false" font-weight="bold">${productCategory.description}</fo:block>  
+								            </fo:table-cell>
+									    </fo:table-row> 
+		       							<#assign purchaseMap = dayWiseTotal.getValue().entrySet()>
+		       							<#list  purchaseMap as purchaseDtls>
+       										<#assign prodMap = purchaseDtls.getValue().entrySet()>
+       										<fo:table-row>
+									             <fo:table-cell>
+									            	<fo:block  keep-together="always" text-align="left" font-size="12pt" white-space-collapse="false" >${purchaseDtls.getValue().get("supInvNumber")}</fo:block>  
+									            </fo:table-cell>
+									            <fo:table-cell>
+									            	<fo:block  keep-together="always" text-align="left" font-size="12pt" white-space-collapse="false" >${purchaseDtls.getKey()?if_exists}</fo:block>  
+									            </fo:table-cell>
+		       							        <fo:table-cell>
+									            	<fo:block  keep-together="always" text-align="left" font-size="12pt" white-space-collapse="false" >${purchaseDtls.getValue().get("invoiceDate")}</fo:block>  
+									            </fo:table-cell>
+									            <fo:table-cell>
+		                       			        <fo:block   font-size="12pt" text-align="left" white-space-collapse="false">
+				                       			<fo:table>
+							            		<fo:table-column column-width="150pt"/> 		
+							            		<fo:table-column column-width="200pt"/> 	
+							            		<fo:table-column column-width="80pt"/> 
+				                                <fo:table-body>
+				                                <#list prodMap as prodTotal>
+				                                 <#if prodTotal.getKey()!=("supInvNumber") &&  prodTotal.getKey()!=("invoiceDate")>
+				                                 <#assign prodDetails = delegator.findOne("Product", {"productId" :prodTotal.getKey()}, true)>
+				                                 <#assign total=total+prodTotal.getValue()>
+				                                 <#assign grandTotal=grandTotal+prodTotal.getValue()>
+					                                <fo:table-row>
+					                                <fo:table-cell>
+							                           		<fo:block  keep-together="always" font-size="12pt" text-align="left" white-space-collapse="false">${prodDetails.description}</fo:block>  
+							                       		</fo:table-cell>
+					                                   <fo:table-cell>
+							                           		<fo:block   font-size="12pt" text-align="right" white-space-collapse="false">${prodTotal.getValue()?string("#0.00")}</fo:block>  
+							                       		</fo:table-cell>
+									             	</fo:table-row>
+									             	</#if>
+								             	 </#list>
+								             </fo:table-body>
+								             </fo:table>
+		                       			</fo:block>  
+		                   			  </fo:table-cell>
+							       </fo:table-row> 
+							  </#list>
 							  </#list>
 					           <fo:table-row> 
 							      <fo:table-cell>   						

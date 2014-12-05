@@ -36,9 +36,47 @@ reportTypeFlag = parameters.reportTypeFlag;
 Debug.log("reportTypeFlag==="+reportTypeFlag);
 
 if(UtilValidate.isNotEmpty(reportTypeFlag) && reportTypeFlag == "PurchaseDetails"){
-	prodCatAnalysisMap=context.get("dayWiseInvoice");
+	primaryCatMap=context.get("dayWiseInvoice");
 	prodCatAnalysisList=[];
-	prodCatAnalysisMap.each {eachValue->
+	
+	primaryCatMap.each {eachValue->
+		exprList=[];
+		exprList.add(EntityCondition.makeCondition("productCategoryTypeId", EntityOperator.EQUALS, "PUR_ANLS_CODE"));
+		exprList.add(EntityCondition.makeCondition("primaryParentCategoryId", EntityOperator.EQUALS, eachValue.getKey()));
+		condition = EntityCondition.makeCondition(exprList, EntityOperator.AND);
+		productList = delegator.findList("ProductCategoryAndMember", condition, null, null, null, false);
+		description="";
+		 if(UtilValidate.isNotEmpty(productList)){
+			productList=EntityUtil.getFirst(productList);
+			description = productList.get("description");
+		 }
+		 catMap=eachValue.getValue();
+		 catMap.each{eachCat->
+			productCategory = delegator.findOne("ProductCategory", ["productCategoryId" : eachCat.getKey()], true);
+			invMap=eachCat.getValue();
+			  invMap.each{invoice->
+				  invValue=invoice.getValue();
+				  invValue.each {invDtls->
+				  csvMap=[:]
+					  if(!invDtls.getKey().equals("invoiceDate") && !invDtls.getKey().equals("supInvNumber")){
+						  csvMap.put("analysisCode",productCategory.description);
+						  csvMap.put("primaryCategoryCode",description);
+						  csvMap.put("voucherCode","Analysis Code");
+						  csvMap.put("invoiceDate",invValue.get("invoiceDate"));
+						  csvMap.put("invoiceId",invoice.getKey());
+						  prodDetails = delegator.findOne("Product", ["productId" :invDtls.getKey()], true);
+						  csvMap.put("productId",prodDetails.description);
+						  csvMap.put("totalRevenue",invDtls.getValue());
+						  prodCatAnalysisList.add(csvMap);
+						  Debug.log("prodCatAnalysisList=="+prodCatAnalysisList);
+					  }
+			     }
+			 
+		    }
+		}
+	
+	}
+	/*prodCatAnalysisMap.each {eachValue->
 		productCategory = delegator.findOne("ProductCategory", ["productCategoryId" : eachValue.getKey()], true);
 		invMap = eachValue.getValue();
 		invMap.each {invoice->
@@ -58,7 +96,7 @@ if(UtilValidate.isNotEmpty(reportTypeFlag) && reportTypeFlag == "PurchaseDetails
 			}
 		}
 		
-	}
+	}*/
 context.put("prodCatAnalysisList",prodCatAnalysisList);
 }
 	

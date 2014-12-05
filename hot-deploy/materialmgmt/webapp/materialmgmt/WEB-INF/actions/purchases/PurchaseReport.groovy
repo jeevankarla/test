@@ -58,23 +58,16 @@ if(totalDays > 32){
 	return;
 }
 exprList=[];
-exprList.add(EntityCondition.makeCondition("glAccountTypeId", EntityOperator.EQUALS, "PURCHASE_ACCOUNT"));
-//exprList.add(EntityCondition.makeCondition("productCategoryId", EntityOperator.EQUALS, product.primaryProductCategoryId));
+exprList.add(EntityCondition.makeCondition("productCategoryTypeId", EntityOperator.EQUALS, "PUR_ANLS_CODE"));
 condition = EntityCondition.makeCondition(exprList, EntityOperator.AND);
-productcatList = delegator.findList("ProductCategoryGlAccount", condition, null, null, null, false);
-productCategoryId = EntityUtil.getFieldListFromEntityList(productcatList, "productCategoryId", true);
 //get product from ProductCategory
-productCategoryMember = delegator.findList("ProductCategoryAndMember", EntityCondition.makeCondition("productCategoryId", EntityOperator.IN, productCategoryId), null, null, null, false);
+productCategoryMember = delegator.findList("ProductCategoryAndMember", condition, null, null, null, false);
 productCatMap=[:]
+productPrimaryCatMap=[:]
 productCategoryMember.each{prodCatMember ->
 	prodCatMember.productId
 	productCatMap[prodCatMember.productId] = prodCatMember.productCategoryId;
-}
-productIds = EntityUtil.getFieldListFromEntityList(productCategoryMember, "productId", true);
-
-prodGlCategoryList=[];
-if(UtilValidate.isNotEmpty(productcatList)){
-	prodGlCategoryList =EntityUtil.getFieldListFromEntityList(productcatList, "productCategoryId", true) ;
+	productPrimaryCatMap[prodCatMember.productCategoryId] = prodCatMember.primaryParentCategoryId;
 }
 invoiceTotals = SalesInvoiceServices.getPeriodSalesInvoiceTotals(dctx, [isPurchaseInvoice:true, isQuantityLtrs:true,isQuantityLtrs:true,fromDate:dayBegin, thruDate:dayEnd]).get("invoiceIdTotals");
 // Purchase abstract Sales report
@@ -83,10 +76,8 @@ if(UtilValidate.isNotEmpty(reportTypeFlag) && reportTypeFlag == "PurchaseDetails
 		invoiceMap = [:];
 		invoiceDtlsMap = [:];
 		prodCatAnalysisMap =FastMap.newInstance();
+		prodPrimaryCategoryMap =FastMap.newInstance();
 		finalMap=FastMap.newInstance();
-		/*salesInvoiceTotals = SalesInvoiceServices.getPeriodSalesInvoiceTotals(dctx, [isPurchaseInvoice:true, isQuantityLtrs:true,isQuantityLtrs:true,fromDate:dayBegin, thruDate:dayEnd]);
-		if(UtilValidate.isNotEmpty(salesInvoiceTotals)){
-			invoiceTotals = salesInvoiceTotals.get("invoiceIdTotals");*/
 			if(UtilValidate.isNotEmpty(invoiceTotals)){
 				invoiceTotals.each { invoice ->
 					if(UtilValidate.isNotEmpty(invoice)){
@@ -130,53 +121,65 @@ if(UtilValidate.isNotEmpty(reportTypeFlag) && reportTypeFlag == "PurchaseDetails
 									}
 									//to Exlude Tax Total call with Parameter False 
 									invItemVal=org.ofbiz.accounting.invoice.InvoiceWorker.getPurchaseInvoiceItemTotal(prodInvoiceItem,false);
-									if(UtilValidate.isNotEmpty(productCatMap)&& productCatMap.get(productId)){
+									cstRevenue = productValue.getValue().get("cstRevenue");
+									if(UtilValidate.isNotEmpty(productCatMap)&& productCatMap.containsKey(productId)){
 										// get category
 										prodCategoryId=productCatMap.get(productId);
-										if(UtilValidate.isEmpty(prodCatAnalysisMap[prodCategoryId])){
-											//totalRevenue = productValue.getValue().get("totalRevenue");
+										prodPrimaryCategoryId=productPrimaryCatMap.get(prodCategoryId);
+									if(UtilValidate.isEmpty(prodPrimaryCategoryMap[prodPrimaryCategoryId])){
+										categoryInvoiceMap = [:];
+										invoiceMap=[:];
+										tempMap = [:];
+										tempMap["invoiceDate"] = invoiceDate;
+										tempMap["supInvNumber"] = supInvNumber;
+										tempMap[productId] = invItemVal+cstRevenue;
+										invoiceMap[invoiceId]=tempMap;
+										temp=FastMap.newInstance();
+										temp.putAll(invoiceMap);
+										categoryInvoiceMap[prodCategoryId] = temp;
+										prodPrimaryCategoryMap[prodPrimaryCategoryId]=categoryInvoiceMap;
+										
+									 }else{
+									    categoryInvoiceMap = [:];
+									    categoryInvoiceMap.putAll(prodPrimaryCategoryMap.get(prodPrimaryCategoryId));
+										if(UtilValidate.isEmpty(categoryInvoiceMap[prodCategoryId])){
 											invoiceMap=[:];
-											
 											tempMap = [:];
 											tempMap["invoiceDate"] = invoiceDate;
 											tempMap["supInvNumber"] = supInvNumber;
-											//tempMap[productId] = totalRevenue;
-											tempMap[productId] = invItemVal;
-											
+											tempMap[productId] = invItemVal+cstRevenue;
 											invoiceMap[invoiceId]=tempMap;
-											
 											temp=FastMap.newInstance();
 											temp.putAll(invoiceMap);
-											
-											prodCatAnalysisMap[prodCategoryId] = temp;
+											categoryInvoiceMap[prodCategoryId] = temp;
+											prodPrimaryCategoryMap[prodPrimaryCategoryId]=categoryInvoiceMap;
 										}else{
-											tempMap = [:];
-											tempMap.putAll(prodCatAnalysisMap.get(prodCategoryId));
-											if(UtilValidate.isEmpty(tempMap[invoiceId])){
-												cstRevenue = productValue.getValue().get("cstRevenue");
+										    catInvoiceMap = [:];
+											catInvoiceMap.putAll(categoryInvoiceMap.get(prodCategoryId));
+											if(UtilValidate.isEmpty(catInvoiceMap[invoiceId])){
 												prodMap=[:];
-												invoiceMap=[:]
 												prodMap["invoiceDate"] = invoiceDate;
 												prodMap["supInvNumber"] = supInvNumber;
-												//prodMap[productId] = totalRevenue;
 												prodMap[productId] = invItemVal+cstRevenue;
-												tempMap[invoiceId]=prodMap;
+												catInvoiceMap[invoiceId]=prodMap;
 												temp=FastMap.newInstance();
-												temp.putAll(tempMap);
-												prodCatAnalysisMap[prodCategoryId] = temp;
+												temp.putAll(catInvoiceMap);
+												categoryInvoiceMap[prodCategoryId] = temp;
+												prodPrimaryCategoryMap[prodPrimaryCategoryId]=categoryInvoiceMap;
 											}else{
-												invoiceMap=[:];
-												cstRevenue = productValue.getValue().get("cstRevenue");
-												tempInvoiceMap=[:];
-												tempInvoiceMap.putAll(tempMap.get(invoiceId));
-												tempInvoiceMap[productId]=invItemVal+cstRevenue;
-												tempMap[invoiceId] = tempInvoiceMap;
-												temp=FastMap.newInstance();
-												temp.putAll(tempMap);
-												prodCatAnalysisMap[prodCategoryId] = temp;
-											}
+												  tempInvoiceMap=[:];
+												  tempInvoiceMap.putAll(catInvoiceMap.get(invoiceId));
+												  tempInvoiceMap[productId]=invItemVal+cstRevenue;
+												  catInvoiceMap[invoiceId] = tempInvoiceMap;
+												  temp=FastMap.newInstance();
+												  temp.putAll(catInvoiceMap);
+												  categoryInvoiceMap[prodCategoryId] = temp;
+												  prodPrimaryCategoryMap[prodPrimaryCategoryId]=categoryInvoiceMap;
 										}
+									  
+									  }
 										
+									}
 									}
 									//end of Classfication		
 								}
@@ -186,7 +189,7 @@ if(UtilValidate.isNotEmpty(reportTypeFlag) && reportTypeFlag == "PurchaseDetails
 				}
 			}
 		//end if of salesInvoiceTotals}
-	context.put("dayWiseInvoice",prodCatAnalysisMap);
+	context.put("dayWiseInvoice",prodPrimaryCategoryMap);
 }
 // Purchase Abstract report
 if(UtilValidate.isNotEmpty(reportTypeFlag) && reportTypeFlag == "PurchaseSummary"){
