@@ -484,7 +484,7 @@ public class MaterialRequestServices {
             	conditionList.add(EntityCondition.makeCondition("facilityId", EntityOperator.EQUALS, facilityId));
             }
             EntityCondition condition = EntityCondition.makeCondition(conditionList, EntityOperator.AND);
-            List<GenericValue> inventoryItems = delegator.findList("InventoryItem", condition, null, null, null, false);
+            List<GenericValue> inventoryItems = delegator.findList("InventoryItem", condition, null, UtilMisc.toList("datetimeReceived"), null, false);
             Iterator<GenericValue> itr = inventoryItems.iterator();
             while ((requestedQty.compareTo(BigDecimal.ZERO) > 0) && itr.hasNext()) {
                 GenericValue inventoryItem = itr.next();
@@ -492,7 +492,7 @@ public class MaterialRequestServices {
                 atp = inventoryItem.getBigDecimal("availableToPromiseTotal");
                 findCurrInventoryParams = UtilMisc.toMap("inventoryItemId", inventoryItemId);
                 BigDecimal issueQuantity = null;
-                if (requestedQty.compareTo(atp) > 0) {
+                if (requestedQty.compareTo(atp) > 0) {	
                     issueQuantity = atp;
                 } else {
                     issueQuantity = requestedQty;

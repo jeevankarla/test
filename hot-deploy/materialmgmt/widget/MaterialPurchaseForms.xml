@@ -7,7 +7,7 @@
         <field name="orderTypeId"><hidden value="PURCHASE_ORDER"/></field>
         <field name="salesChannelEnumId" ><hidden value="${ChannalType}"  > </hidden></field>
         <field name="statusId">
-        	<drop-down>
+        	<drop-down allow-empty="true">
         		<option key="ORDER_CREATED" description="Created"/>
         		<option key="ORDER_APPROVED" description="Approved"/>
         		<option key="ORDER_CANCELLED" description="Cancelled"/>
@@ -54,6 +54,81 @@
         </field> 
     </form>
     
+    <form name="FindShipmentReceipt" title="" type="single" target="${targetRequest}" header-row-style="header-row" default-table-style="basic-table">
+        <field name="datetimeReceived"><date-find/></field>
+        <field name="productId"><text-find/></field>
+        <field name="receiptId" title="GRN No"><text-find/></field>
+        <field name="statusId">
+        	<drop-down allow-empty="true">
+        		<entity-options description="${description}" entity-name="StatusItem">
+        			<entity-constraint name="statusTypeId" operator="equals" value="RECEIPT_STATUS"/>
+        		</entity-options>
+        	</drop-down>
+        </field>
+        <field name="shipmentId"><text-find/></field>
+        <field name="orderId" title="PO Order"><text-find/></field>
+        <field name="noConditionFind"><hidden value="Y"/><!-- if this isn't there then with all fields empty no query will be done --></field>
+        <field name="submitButton" title="${uiLabelMap.CommonFind}" widget-style="smallSubmit"><submit button-type="button"/></field>
+    </form>
+    
+     <form name="listMaterialShipmentReceipt" type="list" list-name="listIt" paginate-target="${targetRequest}"
+        odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
+        <actions>
+            <service service-name="performFind" result-map="result" result-map-list="listIt">
+                <field-map field-name="inputFields" from-field="parameters"/>
+                <field-map field-name="entityName" value="ShipmentReceipt"/>
+                <field-map field-name="orderBy" from-field="parameters.sortField" value="-lastUpdatedStamp"/>
+                <field-map field-name="viewIndex" from-field="viewIndex"/>
+                <field-map field-name="viewSize" from-field="viewSize"/>
+            </service>
+        </actions>
+      	<field name="receiptId" title="GRN No">
+      		<display/>
+      	</field>
+      	<field name="productId" title="productId">
+      		<display-entity entity-name="Product" description="${description}"/>
+      	</field>
+        <field name="datetimeReceived" title="Received Date"><display description="${groovy:org.ofbiz.base.util.UtilDateTime.toDateString(datetimeReceived, &quot;dd/MM/yyyy HH:mm:ss&quot;);}"/></field>
+        <field name="shipmentId" title="ShipmentId"><display/></field>
+        <field name="orderId" title="PO No"><display/></field>
+        <field name="statusId" title="Status">
+        	<display-entity entity-name="StatusItem" description="${description}"/>
+        </field>
+      	<field name="quantityAccepted" title="Quantity"><display/></field>
+      	<field name="quantityRejected" title="Qty Rejected"><display/></field>
+      	<field name="receivedByUserLoginId" title="Entry by"><display/></field>	
+    </form>
+    
+    <form name="FindMaterialShipment" title="" type="single" target="${targetRequest}" header-row-style="header-row" default-table-style="basic-table">
+        
+        <field name="shipmentTypeId"><hidden value="MATERIAL_SHIPMENT"/></field>
+        <field name="estimatedShipDate" title="Ship Date"><date-find/></field>
+        <field name="primaryOrderId" title="PO no"><text-find/></field>
+        <field name="shipmentId"><text-find/></field>
+        <field name="vehicleId" title="Vehicle No"><text-find/></field>
+        <field name="noConditionFind"><hidden value="Y"/><!-- if this isn't there then with all fields empty no query will be done --></field>
+        <field name="submitButton" title="${uiLabelMap.CommonFind}" widget-style="smallSubmit"><submit button-type="button"/></field>
+    </form>
+    
+     <form name="listMaterialShipments" type="list" list-name="listIt" paginate-target="${targetRequest}"
+        odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
+        <actions>
+            <service service-name="performFind" result-map="result" result-map-list="listIt">
+                <field-map field-name="inputFields" from-field="parameters"/>
+                <field-map field-name="entityName" value="Shipment"/>
+                <field-map field-name="orderBy" from-field="parameters.sortField" value="-lastUpdatedStamp"/>
+                <field-map field-name="viewIndex" from-field="viewIndex"/>
+                <field-map field-name="viewSize" from-field="viewSize"/>
+            </service>
+        </actions>
+      	<field name="shipmentId"><display/></field>
+        <field name="estimatedShipDate" title="Ship Date"><display description="${groovy:org.ofbiz.base.util.UtilDateTime.toDateString(estimatedShipDate, &quot;dd/MM/yyyy HH:mm:ss&quot;);}"/></field>
+        <field name="shipmentId" title="ShipmentId"><display/></field>
+        <field name="primaryOrderId" title="PO No"><display/></field>
+        <field name="vehicleId" title="Vehicle No"><display/></field>
+        
+    </form>
+    
     <form name="ListMaterialForQCApproval" type="list" list-name="receiptItems" paginate-target="${targetRequest}"
         odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar" target="acceptReceiptQtyByQC" separate-columns="true">
         
@@ -73,9 +148,57 @@
         </field> 
     </form>
     
-    <form name="generateInvoiceForm" type="single" list-name="listIt" target="createInvoicesForMaterialShipment" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
+    <!-- <form name="generateInvoiceForm" type="single" list-name="listIt" target="createInvoicesForMaterialShipment" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
       	<field name="shipmentId"><text/></field>
       	<field name="submitButton" title="Create Invoice" widget-style="smallSubmit"><submit button-type="button"/></field>
+    </form> -->
+    <form name="generateInvoiceForm" type="single" list-name="listIt" target="InvoiceForShippedGoods" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
+      	<field name="shipmentId"><text/></field>
+      	<field name="submitButton"><submit button-type="button"/></field>
     </form>
-	
+	<form name="shipmentInfo" type="single" title="request information" default-map-name="shipmentHeader"
+        header-row-style="header-row" default-table-style="basic-table">
+        
+        <field name="shipmentId" title="shipment No"><display/></field>
+        <field name="primaryOrderId" title="PO no"><display/></field>
+        <field name="statusId" title="Status"><display/></field>
+        <field name="estimatedShipDate" title="Ship Date"><display/></field>
+        <field name="supplierId" title="Supplier">
+        	<display default-value="${supplierId}"/>
+        </field>
+        <field name="vehicleId" title="Vehicle No"><display/></field>
+        <field name="createdDate" title="Created Date"><display/></field>
+        <field name="createdByUserLogin" title="Created User Login"><display/></field>
+    </form>
+    
+    <form name="shipmentItemInfo" type="list" title="request information" default-map-name="" list-name="shipmentItems"
+        header-row-style="header-row" default-table-style="basic-table">
+        
+        <field name="shipmentItemSeqId" title="Item No"><display/></field>
+        <field name="productId" title="Material Code">
+        	<display-entity entity-name="Product" key-field-name="productId" description="${productName} - [${productId}]"/>
+        </field>
+        <field name="quantity" title="Qty"><display/></field>
+    </form>
+    
+    <form name="shipmentReceiptsForInvoice" type="list" title="request information" default-map-name="" list-name="shipmentReceipts"
+        header-row-style="header-row" default-table-style="basic-table" target="">
+        <field name="shipmentId"><hidden/></field>
+        <field name="receiptId" title="GRN No"><display/></field>
+        <field name="productId" title="Material Code">
+        	<display-entity entity-name="Product" key-field-name="productId" description="${productName} - [${productId}]"/>
+        </field>
+        <field name="orderId" title="Order Ref."><display/></field>
+        <field name="orderItemSeqId" title="Order Item Ref."><display/></field>
+        <field name="quantityAccepted" title="Accepted Qty"><display/></field>
+        <field name="quantityRejected" title="Rejected Qty"><display/></field>
+        <field name="statusId" title="Status"><display/></field>
+        
+        <field name="submitButton" title="Create Invoice" widget-style="smallSubmit">
+        	<hyperlink target="createInvoicesForMaterialShipment" description="">
+        		<parameter param-name="shipmentId"/>
+        	</hyperlink>
+        </field>
+    </form>
+    
 </forms>

@@ -47,16 +47,12 @@
 	        	<link target="FindMaterialPO"/>
 	        </menu-item>
 	        
-	        <menu-item name="POMaterialReceipts" title="PO Receipts">
-	        	<link target="POMaterialReceipts"/>
+	        <menu-item name="FindGRNReceipts" title="Material Receipts">
+	        	<link target="FindGRNReceipts"/>
 	        </menu-item>
 	        
 	        <menu-item name="MaterialForQCApproval" title="QC Approval">
 	        	<link target="MaterialForQCApproval"/>
-	        </menu-item>
-	        
-	        <menu-item name="InvoiceForShippedGoods" title="Invoice For Receipts">
-	        	<link target="InvoiceForShippedGoods"/>
 	        </menu-item>
 	        
 	        <menu-item name="reports" title="${uiLabelMap.CommonReports}">
@@ -102,6 +98,25 @@
          <menu-item name="StoreProductIssue" title="Issuance Request">
         	<link target="StoreProductIssue"/>
         </menu-item>
+      </menu>
+      
+      <menu name="ReceiptTabBar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml" selected-menuitem-context-field-name="tabButtonItem2">
+        <menu-item name="FindGRNReceipts" title="Find GRN">
+        	<link target="FindGRNReceipts"/>
+        </menu-item>
+        
+        <menu-item name="FindGRNShipments" title="Find GRN Shipments">
+        	<link target="FindGRNShipments"/>
+        </menu-item>
+        
+        <menu-item name="POMaterialReceipts" title="GRN Entry">
+        	<link target="POMaterialReceipts"/>
+        </menu-item>
+        
+        <menu-item name="InvoiceForShippedGoods" title="Invoice For GRN">
+        	<link target="InvoiceForShippedGoods"/>
+        </menu-item>
+        
       </menu>
       
       <menu name="EnquiryTabBar" extends="CommonSubTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml" selected-menuitem-context-field-name="tabButtonItem2">

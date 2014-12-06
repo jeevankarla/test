@@ -68,6 +68,72 @@
         </section>
     </screen>
     
+    <screen name="FindGRNReceipts">
+        <section>
+            <actions>
+                <set field="titleProperty" value="Find GRN"/>              
+			    <set field="tabButtonItem" value="FindGRNReceipts" />
+			    <set field="tabButtonItem2" value="FindGRNReceipts" />	
+               <set field="viewSize" from-field="parameters.VIEW_SIZE"/>
+               <set field="targetRequest" value="FindGRNReceipts"/>
+            </actions>
+            <widgets>
+                 <decorator-screen name="materialmgmtNgCommonDecorator" location="${parameters.mainDecoratorLocation}">
+                      <decorator-section name="body">
+                      	<include-menu name="ReceiptTabBar" location="component://materialmgmt/widget/materialmgmtMenus.xml"/>  
+                        <section>
+                            <widgets>
+                                <decorator-screen name="FindScreenDecorator" location="component://common/widget/CommonScreens.xml">
+                                    <decorator-section name="search-options">
+                            			<include-form name="FindShipmentReceipt" location="component://materialmgmt/widget/MaterialPurchaseForms.xml"/>
+                      				</decorator-section>
+                      				<decorator-section name="search-results">
+                      					<screenlet title="">
+                          					<include-form name="listMaterialShipmentReceipt" location="component://materialmgmt/widget/MaterialPurchaseForms.xml"/>
+                      					</screenlet>
+                      				</decorator-section>
+                                </decorator-screen>
+                            </widgets>
+                        </section>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>            
+        </section>
+    </screen>
+	
+	<screen name="FindGRNShipments">
+        <section>
+            <actions>
+                <set field="titleProperty" value="Find Shipments"/>              
+			    <set field="tabButtonItem" value="FindGRNReceipts" />
+			    <set field="tabButtonItem2" value="FindGRNShipments" />	
+               <set field="viewSize" from-field="parameters.VIEW_SIZE"/>
+               <set field="targetRequest" value="FindGRNShipments"/>
+            </actions>
+            <widgets>
+                 <decorator-screen name="materialmgmtNgCommonDecorator" location="${parameters.mainDecoratorLocation}">
+                      <decorator-section name="body">
+                      	<include-menu name="ReceiptTabBar" location="component://materialmgmt/widget/materialmgmtMenus.xml"/>  
+                        <section>
+                            <widgets>
+                                <decorator-screen name="FindScreenDecorator" location="component://common/widget/CommonScreens.xml">
+                                    <decorator-section name="search-options">
+                            			<include-form name="FindMaterialShipment" location="component://materialmgmt/widget/MaterialPurchaseForms.xml"/>
+                      				</decorator-section>
+                      				<decorator-section name="search-results">
+                      					<screenlet title="">
+                          					<include-form name="listMaterialShipments" location="component://materialmgmt/widget/MaterialPurchaseForms.xml"/>
+                      					</screenlet>
+                      				</decorator-section>
+                                </decorator-screen>
+                            </widgets>
+                        </section>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>            
+        </section>
+    </screen>
+	    
     <screen name="MaterialForQCApproval">
         <section>
             <actions>
@@ -98,25 +164,67 @@
         <section>
             <actions>
                 <set field="titleProperty" value="Invoice Receipts"/>              
-			    <set field="tabButtonItem" value="InvoiceForShippedGoods" />	
+			    <set field="tabButtonItem" value="FindGRNReceipts" />
+			    <set field="tabButtonItem2" value="InvoiceForShippedGoods" />
+			    <set field="shipmentId" from-field="parameters.shipmentId"/>
+			    <script location="component://materialmgmt/webapp/materialmgmt/WEB-INF/actions/purchases/getGRNDetailsForInvoice.groovy"/>
+			    <set field="supplierId" from-field="supplierId"/>
             </actions>
             <widgets>
                  <decorator-screen name="materialmgmtNgCommonDecorator" location="${parameters.mainDecoratorLocation}">
                       <decorator-section name="body">  
-                      <screenlet>
-                      		<include-form location="component://materialmgmt/widget/MaterialPurchaseForms.xml" name="generateInvoiceForm"/>
-                      </screenlet>
+	                      <include-menu name="ReceiptTabBar" location="component://materialmgmt/widget/materialmgmtMenus.xml"/>
+	                      <screenlet title="Create Invoice For Shipment ${showView} ${parameters.showView}">
+	                      		<include-form location="component://materialmgmt/widget/MaterialPurchaseForms.xml" name="generateInvoiceForm"/>
+	                      </screenlet>
+                      		<section>
+                      			<condition>
+                      				<if-compare operator="equals" value="Y" field="showView"/>
+                      			</condition>
+                      			<widgets>
+                      				<screenlet title="Overview">
+                      					<include-screen name="ShipmentOverviewforInvoice"/>
+                      				</screenlet>
+                      				
+                      			</widgets>
+                      		</section>
                     </decorator-section>
                 </decorator-screen>
             </widgets>            
         </section>
     </screen>
     
+    <screen name="ShipmentOverviewforInvoice">
+        <section>
+            <widgets>
+                <container style="lefthalf">
+                    <screenlet title="${uiLabelMap.CommonInformation} of ShipmentId : ${shipmentId}">
+                        <include-form name="shipmentInfo" location="component://materialmgmt/widget/MaterialPurchaseForms.xml"/>
+                    </screenlet>
+                </container>
+                <container style="righthalf">
+                    <screenlet title="Shipment Items">
+                        <include-form name="shipmentItemInfo" location="component://materialmgmt/widget/MaterialPurchaseForms.xml"/>
+                    </screenlet>
+                </container>
+                <container style="clear"/>
+               <screenlet title="GRN Items">
+               		<link target="createInvoicesForMaterialShipment" text="Create Invoice" style="buttontext create">
+						<parameter param-name="shipmentId"/>
+	  	        	</link>
+	  	        	 <horizontal-separator/>
+                    <include-form name="shipmentReceiptsForInvoice" location="component://materialmgmt/widget/MaterialPurchaseForms.xml"/>
+                </screenlet>
+            </widgets>
+        </section>
+    </screen>
+    
     <screen name="POMaterialReceipts">
         <section>
             <actions>
-                <set field="titleProperty" value="PO Receipts"/>              
-			    <set field="tabButtonItem" value="POMaterialReceipts" />	
+                <set field="titleProperty" value="PO Receipts"/>
+                <set field="tabButtonItem" value="FindGRNReceipts" />              
+			    <set field="tabButtonItem2" value="POMaterialReceipts" />	
                <set field="viewSize" from-field="parameters.VIEW_SIZE"/>
                 <!-- <set field="ChannalType" value="PROD_PRCHSE_CHANNEL"/>  -->
                 <set field="supplyDate" from-field="parameters.supplyDate"/>
@@ -128,7 +236,8 @@
             </actions>
             <widgets>
                  <decorator-screen name="materialmgmtNgCommonDecorator" location="${parameters.mainDecoratorLocation}">
-                      <decorator-section name="body">  
+                      <decorator-section name="body">
+                      <include-menu name="ReceiptTabBar" location="component://materialmgmt/widget/materialmgmtMenus.xml"/>  
 	                      <section>
 	                      	<widgets>
 	                        	<section>

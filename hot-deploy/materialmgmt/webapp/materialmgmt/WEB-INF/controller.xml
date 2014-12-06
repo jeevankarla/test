@@ -69,6 +69,17 @@
        <response name="error" type="view" value="MaterialForQCApproval"/>
      </request-map>
      
+     <request-map uri="FindGRNReceipts">
+       <security https="true" auth="true"/>
+       <response name="success" type="view" value="FindGRNReceipts"/>
+       <response name="error" type="view" value="FindGRNReceipts"/>
+     </request-map>
+     
+     <request-map uri="FindGRNShipments">
+       <security https="true" auth="true"/>
+       <response name="success" type="view" value="FindGRNShipments"/>
+       <response name="error" type="view" value="FindGRNShipments"/>
+     </request-map>
      
      <request-map uri="processCustRequestItems">
        <security https="true" auth="true"/>
@@ -383,6 +394,7 @@
 	<!-- Issuance and Receipts  -->
 	<view-map name="FindMaterialIssuance" type="screen" page="component://materialmgmt/widget/MaterialRequestScreens.xml#FindMaterialIssuance"/>
 	<view-map name="MaterialForQCApproval" type="screen" page="component://materialmgmt/widget/MaterialPurchaseScreens.xml#MaterialForQCApproval"/>
-	
+	<view-map name="FindGRNReceipts" type="screen" page="component://materialmgmt/widget/MaterialPurchaseScreens.xml#FindGRNReceipts"/>
+	<view-map name="FindGRNShipments" type="screen" page="component://materialmgmt/widget/MaterialPurchaseScreens.xml#FindGRNShipments"/>
 	
 </site-conf>
