@@ -69,7 +69,7 @@
     <service name="draftEnquiryForApprovedRequirements" engine="java"
                 location="in.vasista.vbiz.purchase.MaterialRequestServices" invoke="draftEnquiryForApprovedRequirements">
         <description> Cancel Purchase Order</description>        
-        <attribute name="requirementList" mode="IN" type="List" optional="false"/>
+        <attribute name="requirementIds" mode="IN" type="List" optional="false"/>
          <attribute name="custRequestId" type="String" mode="OUT" optional="false"/>
     </service>
     <service name="createQuoteAndItems" engine="java"

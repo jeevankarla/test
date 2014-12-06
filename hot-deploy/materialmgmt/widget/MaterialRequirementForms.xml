@@ -166,6 +166,40 @@
         <field name="requirementByDate"><date-find type="date"/></field>
         <field name="submitButton" title="${uiLabelMap.CommonFind}" widget-style="smallSubmit"><submit button-type="button"/></field>
     </form>
+     <form name="enquiryForApprovedProductRequirements" type="single" target="enquiryForApprovedProductRequirements" title=""
+        header-row-style="header-row" default-table-style="basic-table">
+        <actions>
+        	<entity-condition entity-name="ProductFacility" distinct="true" list="prodFacility" />
+        	
+			<set field="prodFacilityId" type="List" value="${groovy: org.ofbiz.entity.util.EntityUtil.getFieldListFromEntityList(prodFacility, 'facilityId', true);}"/>        	
+        	<entity-condition entity-name="Facility" distinct="true" list="facilityList">
+        		<condition-expr field-name="facilityId" operator="in" from-field="prodFacilityId"/>
+        	</entity-condition>
+        	
+        </actions>
+        <field name="showList"><hidden value="N"/></field>
+        <field name="requirementId"><text-find/></field>
+        <field name="billToCustomerPartyId">
+            <hidden value="Company"/>
+        </field>
+        <field name="partyId" title="Product Supplier" position="1">
+            <drop-down allow-empty="true">
+                <entity-options entity-name="PartyRoleAndPartyDetail" key-field-name="partyId" description="${groupName}${firstName}${lastName} [${partyId}]">
+                    <entity-constraint name="roleTypeId"  value="SUPPLIER" operator="equals"/>
+                    <entity-order-by field-name="partyId"/>
+                </entity-options>
+            </drop-down>
+        </field>
+        <field name="facilityId">
+            <drop-down allow-empty="true" >
+            	<list-options key-name="facilityId" list-name="facilityList" description="${facilityName}"/>
+            </drop-down>
+        </field>
+        <field name="productId" title="ProductId"><lookup target-form-name="LookupProduct"/></field>
+        <field name="requirementByDate"><date-find type="date"/></field>
+        <field name="submitButton" title="${uiLabelMap.CommonFind}" widget-style="smallSubmit"><submit button-type="button"/></field>
+    </form>
+    
     <form name="ApprovedMatProductRequirementsList" type="list" title="" list-name="requirementsForSupplier" paginate-target="RequirementsForSupplier"
         odd-row-style="alternate-row" default-table-style="basic-table hover-bar">
         <actions>

@@ -717,7 +717,7 @@ public class MaterialRequestServices {
 		boolean beganTransaction = false;
 		try{
 			
-	        List requirementList = FastList.newInstance();
+	        List requirementIds = FastList.newInstance();
 	        String requirementId = "";
 			for (int i = 0; i < rowCount; i++) {
 				  
@@ -729,19 +729,19 @@ public class MaterialRequestServices {
 				}
 				if (UtilValidate.isNotEmpty(paramMap.get("requirementId" + thisSuffix))) {
 					requirementId = (String) paramMap.get("requirementId" + thisSuffix);
-					requirementList.add(requirementId);
+					requirementIds.add(requirementId);
 				}
 			}
 			//
 			Map<String,Object> enquiryRequestInMap = FastMap.newInstance();
 			enquiryRequestInMap.put("userLogin",userLogin);
-			enquiryRequestInMap.put("requirementList",requirementList);
+			enquiryRequestInMap.put("requirementList",requirementIds);
 			
 	        Map resultMap = dispatcher.runSync("draftEnquiryForApprovedRequirements",enquiryRequestInMap);
 	        
 	        if (ServiceUtil.isError(resultMap)) {
-	        	Debug.logError("Problem Filing Enquiry for requirements :"+requirementList, module);
-				request.setAttribute("_ERROR_MESSAGE_", "Problem Filing Enquiry for requirements :"+requirementList);	
+	        	Debug.logError("Problem Filing Enquiry for requirements :"+requirementIds, module);
+				request.setAttribute("_ERROR_MESSAGE_", "Problem Filing Enquiry for requirements :"+requirementIds);	
 				TransactionUtil.rollback();
 		  		return "error";
 	        }
@@ -771,7 +771,7 @@ public class MaterialRequestServices {
 		
 		Delegator delegator = ctx.getDelegator();
 		LocalDispatcher dispatcher = ctx.getDispatcher();
-		List requirementList = (List) context.get("requirementList");
+		List requirementList = (List) context.get("requirementIds");
 		GenericValue userLogin = (GenericValue) context.get("userLogin");
 		Map result = ServiceUtil.returnSuccess();
 		String custRequestTypeId = "RF_PUR_QUOTE";

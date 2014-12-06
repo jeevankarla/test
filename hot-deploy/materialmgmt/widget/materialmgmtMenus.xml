@@ -160,6 +160,9 @@
         <menu-item name="ApprovedMatRequirementBySupplier" title=" Approved Requirement By Supplier">
         	<link target="ApprovedMatRequirementBySupplier"/>
         </menu-item>
+        <menu-item name="EnquiryForRequirements" title=" Enquiry For Requirements">
+        	<link target="EnquiryForApprovedMatRequirements"/>
+        </menu-item>
       </menu>
       
       <menu name="RequestSubTabBar" menu-container-style="button-bar button-style-2" default-selected-style="selected">
@@ -215,4 +218,14 @@
         	<link target="InterUnitPurchaseOrderInit"/>
         </menu-item>
       </menu>
+      
+       <menu name="FindEnquiryTabBar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml" selected-menuitem-context-field-name="tabButtonItem2">
+        <menu-item name="FindMaterialEnquiry" title="Find Enquiry">
+        	<link target="FindMaterialEnquiry"/>
+        </menu-item>
+         <menu-item name="CreateEnquiry" title="Create Enquiry">
+        </menu-item>
+        
+      </menu>
+      
 </menus>

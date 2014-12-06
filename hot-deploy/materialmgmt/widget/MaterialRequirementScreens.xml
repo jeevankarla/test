@@ -112,5 +112,47 @@
             </widgets>
         </section>
     </screen>
+    
+    <screen name="EnquiryForApprovedMatRequirements">
+        <section>
+            <actions>
+                <set field="titleProperty" value="Enquiry For Requirements"/>
+                <set field="headerItem" value="Requirement"/>
+                <set field="tabButtonItem" value="FindMaterialRequirement"/>
+                <set field="tabButtonItem2" value="EnquiryForRequirements"/>
+                <set field="viewIndex" from-field="parameters.VIEW_INDEX" type="Integer"/>
+                <set field="viewSize" from-field="parameters.VIEW_SIZE" type="Integer" default-value="50"/>
+                <set field="_rowSubmit" value="Y"/>
+                <!-- <script location="component://order/webapp/ordermgr/WEB-INF/actions/requirement/ApprovedProductRequirements.groovy"/> -->
+             <service service-name="prepareFind" result-map="resultConditions">
+                <field-map field-name="inputFields" from-field="requestParameters"/>
+                <field-map field-name="entityName" value="Requirement"/>
+            </service>
+            <service service-name="getRequirementsForSupplier" result-map="requirementsForSupplier"  >
+                <!--<field-map field-name="orderByList" from-field="resultConditions.orderByList"/>-->
+                <field-map field-name="requirementConditions" from-field="resultConditions.entityConditionList"/>
+                <field-map field-name="partyId" from-field="parameters.partyId"/>
+                <field-map field-name="unassignedRequirements" from-field="parameters.unassignedRequirements"/>
+            </service>
+        </actions>
+            <widgets>
+                <decorator-screen name="materialmgmtNgCommonDecorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="body">
+                    	<include-menu name="RequirementTabBar" location="component://materialmgmt/widget/materialmgmtMenus.xml"/>
+                        <screenlet title="Find Approved Requirements">
+                            <include-form name="enquiryForApprovedProductRequirements" location="component://materialmgmt/widget/MaterialRequirementForms.xml"/>
+                        </screenlet>
+                        <section>
+                           <widgets> 
+                                <screenlet title="Approved Product Requirements">
+                                    <platform-specific><html><html-template location="component://materialmgmt/webapp/materialmgmt/purchase/EnquiryForApprovedMatRequirements.ftl"></html-template></html></platform-specific>
+                                </screenlet>
+                          </widgets>
+                        </section>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
    
 </screens>

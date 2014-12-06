@@ -232,6 +232,7 @@
        <response name="error" type="view" value="ViewMaterialEnquiry"/>
      </request-map>
      
+     
      <request-map uri="FindMaterialIssuance">
        <security https="true" auth="true"/>
        <response name="success" type="view" value="FindMaterialIssuance"/>
@@ -305,6 +306,33 @@
        <security https="true" auth="true"/>
        <response name="success" type="view" value="ApprovedMatRequirementBySupplier"/>
        <response name="error" type="view" value="ApprovedMatRequirementBySupplier"/>
+   </request-map>
+   <request-map uri="enquiryForApprovedProductRequirements">
+       <security https="true" auth="true"/>
+       <response name="success" type="view" value="EnquiryForApprovedMatRequirements"/>
+       <response name="error" type="view" value="EnquiryForApprovedMatRequirements"/>
+   </request-map>
+   
+   <request-map uri="sendRequirementIds">
+     	<security https="true" auth="true"/>
+     	<event type="service"  path=""  invoke="draftEnquiryForApprovedRequirements" >
+     	</event>
+     	<response name="success" type="request-redirect" value="EnquiryForApprovedMatRequirements">
+        </response>     	
+        <response name="error" type="request-redirect" value="EnquiryForApprovedMatRequirements">
+        </response>
+    </request-map>
+    
+    <request-map uri="getRequrimentsRunningTotal">
+        <security https="true" auth="true"/>
+        <event type="groovy" path="component://materialmgmt/webapp/materialmgmt/WEB-INF/actions/purchases/" invoke="GetRequrimentsRunningTotal.groovy"/>
+        <response name="success" type="request" value="json"/>
+    </request-map>
+    
+   <request-map uri="EnquiryForApprovedMatRequirements">
+       <security https="true" auth="true"/>
+       <response name="success" type="view" value="EnquiryForApprovedMatRequirements"/>
+       <response name="error" type="view" value="EnquiryForApprovedMatRequirements"/>
    </request-map>
    
    <request-map uri="FindMaterialPO">
@@ -384,7 +412,7 @@
     <view-map name="FindMaterialRequirement" type="screen" page="component://materialmgmt/widget/MaterialRequirementScreens.xml#FindMaterialRequirement"/>
     <view-map name="ApproveMaterialRequirement" type="screen" page="component://materialmgmt/widget/MaterialRequirementScreens.xml#ApproveMaterialRequirement"/>
     <view-map name="ApprovedMatRequirementBySupplier" type="screen" page="component://materialmgmt/widget/MaterialRequirementScreens.xml#ApprovedMatRequirementBySupplier"/>
-    
+    <view-map name="EnquiryForApprovedMatRequirements" type="screen" page="component://materialmgmt/widget/MaterialRequirementScreens.xml#EnquiryForApprovedMatRequirements"/>
     <!-- PO views -->
     <view-map name="confirmPurchaseOrder" type="screen" page="component://materialmgmt/widget/MaterialPurchaseScreens.xml#ConfirmPurchaseOrder"/>
     <view-map name="POMaterialReceipts" type="screen" page="component://materialmgmt/widget/MaterialPurchaseScreens.xml#POMaterialReceipts"/>

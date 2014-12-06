@@ -35,13 +35,14 @@
                 <set field="titleProperty" value="Enquiry"/>
                 <set field="headerItem" value="request"/>
                 <set field="tabButtonItem" value="FindMaterialEnquiry" />	
+                <set field="tabButtonItem2" value="FindMaterialEnquiry"/>
                 <set field="entityName" value="CustRequest"/>
                 <set field="parameters.custRequestTypeId" value="RF_PUR_QUOTE"/>
             </actions>
             <widgets>
                 <decorator-screen name="materialmgmtNgCommonDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
-                    	<!-- <include-menu name="RequestTabBar" location="component://materialmgmt/widget/materialmgmtMenus.xml"/> -->
+                    	<include-menu name="FindEnquiryTabBar" location="component://materialmgmt/widget/materialmgmtMenus.xml"/>
                         <decorator-screen name="FindScreenDecorator" location="component://common/widget/CommonScreens.xml">
                             <decorator-section name="search-options">
                                 <include-form name="FindMaterialEnquiry" location="component://materialmgmt/widget/MaterialRequestForms.xml"/>
