@@ -269,11 +269,17 @@ function comparer(a, b) {
 				var days = physicalPresence+weeklyOff+casualLeaves+earnedLeaves+commutedLeaves+halfpayLeaves+disabilityLeaves;
 				if(isNaN(days)){
 					days = 0;
-				}				
+				}		
+				var noOfCalenderDays = parseInt(data[args.row]["noOfCalenderDays"]);
+				var cell = grid.getCellFromEvent(e);
+				if(days > noOfCalenderDays){
+					alert("Payable Days exceeds CalenderDays");
+					$(grid.getCellNode(cell.row +1, 2)).click();
+					return false;
+				}
 				data[args.row]["noOfPayableDays"] = days;				
 				grid.updateRow(args.row);				
 				jQuery("#noOfPayableDays").html(days);			
-			
 		});		
 			
 			
