@@ -483,8 +483,8 @@ if (organizationPartyId) {
 						}
 						acctgTransEntryMap["description"] = finAccountDescription;
 						acctgTransEntryMap["finAccountTypeDes"] = finAccountTypeDes;
+						acctgTransEntryMap["comments"] = finAccountDes;
 					}
-					acctgTransEntryMap["comments"] = finAccountDes;
 					//acctgTransEntryMap["openingBalance"] = openingBalance;
 					acctgTransEntryMap["debitAmount"] = debitAmount;
 					acctgTransEntryMap["creditAmount"] = creditAmount;
