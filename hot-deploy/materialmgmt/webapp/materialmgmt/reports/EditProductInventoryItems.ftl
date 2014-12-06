@@ -36,18 +36,10 @@ under the License.
             <table cellspacing="0" class="basic-table">
             <tr class="header-row">
                 <td><b>${uiLabelMap.ProductItemId}</b></td>
-                <td><b>${uiLabelMap.ProductItemType}</b></td>
-                <td><b>${uiLabelMap.CommonStatus}</b></td>
                 <td><b>${uiLabelMap.CommonReceived}</b></td>
-                <td><b>${uiLabelMap.CommonExpire}</b></td>
-                <td><b>${uiLabelMap.ProductFacilityContainerId}</b></td>
-                <td><b>${uiLabelMap.ProductLocation}</b></td>
-                <td><b>${uiLabelMap.ProductLotId}</b></td>
-                <td><b>${uiLabelMap.ProductBinNum}</b></td>
-                <td align="right"><b>${uiLabelMap.ProductPerUnitPrice}</b></td>
-                <td>&nbsp;</td>
-                <td align="right"><b>${uiLabelMap.ProductInventoryItemInitialQuantity}</b></td>
-                <td align="right"><b>${uiLabelMap.ProductAtpQohSerial}</b></td>
+                <td><b>${uiLabelMap.ProductPerUnitPrice}</b></td>
+                <td><b>${uiLabelMap.OrderId}</b></td>
+                <td align="right"><b>Quantity</b></td>
             </tr>
             <#assign rowClass = "2">
             <#list productInventoryItems as inventoryItem>
@@ -62,46 +54,18 @@ under the License.
                     <#if curInventoryItemType?exists>
                         <tr valign="middle"<#if rowClass == "1"> class="alternate-row"</#if>>
                             <td><a href="/facility/control/EditInventoryItem?inventoryItemId=${(inventoryItem.inventoryItemId)?if_exists}${externalKeyParam}" class="buttontext">${(inventoryItem.inventoryItemId)?if_exists}</a></td>
-                            <td>&nbsp;${(curInventoryItemType.get("description",locale))?if_exists}</td>
-                            <td>
-                                <div>
-                                    <#if curStatusItem?has_content>
-                                        ${(curStatusItem.get("description",locale))?if_exists}
-                                    <#elseif inventoryItem.statusId?has_content>
-                                        [${inventoryItem.statusId}]
-                                    <#else>
-                                        ${uiLabelMap.CommonNotSet}&nbsp;
-                                    </#if>
-                                </div>
-                            </td>
-                            <td>&nbsp;${(inventoryItem.datetimeReceived)?if_exists}</td>
-                            <td>&nbsp;${(inventoryItem.expireDate)?if_exists}</td>
-                            <#if inventoryItem.facilityId?exists && inventoryItem.containerId?exists>
-                                <td style="color: red;">${uiLabelMap.ProductErrorFacility} (${inventoryItem.facilityId})
-                                    ${uiLabelMap.ProductAndContainer} (${inventoryItem.containerId}) ${uiLabelMap.CommonSpecified}</td>
-                            <#elseif inventoryItem.facilityId?exists>
-                                <td>${uiLabelMap.ProductFacilityLetter}:&nbsp;<a href="/facility/control/EditFacility?facilityId=${inventoryItem.facilityId}${externalKeyParam}" class="linktext">${inventoryItem.facilityId}</a></td>
-                            <#elseif (inventoryItem.containerId)?exists>
-                                <td>${uiLabelMap.ProductContainerLetter}:&nbsp;<a href="<@ofbizUrl>EditContainer?containerId=${inventoryItem.containerId }</@ofbizUrl>" class="linktext">${inventoryItem.containerId}</a></td>
-                            <#else>
-                                <td>&nbsp;</td>
-                            </#if>
-                            <td><a href="/facility/control/EditFacilityLocation?facilityId=${(inventoryItem.facilityId)?if_exists}&amp;locationSeqId=${(inventoryItem.locationSeqId)?if_exists}${externalKeyParam}" class="linktext"><#if facilityLocation?exists>${facilityLocation.areaId?if_exists}:${facilityLocation.aisleId?if_exists}:${facilityLocation.sectionId?if_exists}:${facilityLocation.levelId?if_exists}:${facilityLocation.positionId?if_exists}</#if><#if facilityLocationTypeEnum?has_content> (${facilityLocationTypeEnum.get("description",locale)})</#if> [${(inventoryItem.locationSeqId)?if_exists}]</a></td>
-                            <td>&nbsp;${(inventoryItem.lotId)?if_exists}</td>
-                            <td>&nbsp;${(inventoryItem.binNumber)?if_exists}</td>
-                            <td align="right"><@ofbizCurrency amount=inventoryItem.unitCost isoCode=inventoryItem.currencyUomId/></td>
+                            <td>&nbsp;${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(inventoryItem.datetimeReceived?if_exists, "dd/MM/yyyy")}</td>
+                            <td><@ofbizCurrency amount=inventoryItem.unitCost isoCode=inventoryItem.currencyUomId/></td>
                             <td>
                                 <#if inventoryItemDetailFirst?exists && inventoryItemDetailFirst.workEffortId?exists>
                                     <b>${uiLabelMap.ProductionRunId}</b> ${inventoryItemDetailFirst.workEffortId}
                                 <#elseif inventoryItemDetailFirst?exists && inventoryItemDetailFirst.orderId?exists>
-                                    <b>${uiLabelMap.OrderId}</b> ${inventoryItemDetailFirst.orderId}
+                                     ${inventoryItemDetailFirst.orderId}
                                 </#if>
                             </td>
-                            <td align="right">${inventoryItemDetailFirst?if_exists.quantityOnHandDiff?if_exists}</td>
                             <#if inventoryItem.inventoryItemTypeId?if_exists == "NON_SERIAL_INV_ITEM">
                                 <td align="right">
-                                    <div>${(inventoryItem.availableToPromiseTotal)?default("NA")}
-                                    / ${(inventoryItem.quantityOnHandTotal)?default("NA")}</div>
+                                    <div>${(inventoryItem.quantityOnHandTotal)?default("NA")}</div>
                                 </td>
                             <#elseif inventoryItem.inventoryItemTypeId?if_exists == "SERIALIZED_INV_ITEM">
                                 <td align="right">&nbsp;${(inventoryItem.serialNumber)?if_exists}</td>
