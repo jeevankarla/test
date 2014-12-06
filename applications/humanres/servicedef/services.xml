@@ -1802,9 +1802,19 @@ under the License.emplpunch
     <service name="calculateESIEmployerContribution"  engine="java"
                 location="in.vasista.vbiz.humanres.PayrollService" invoke="calculateESIEmployerContribution" auth="true" transaction-timeout="5000">
         <description>ESI Contribution</description>
-        <attribute name="payHeadTypeId" mode="IN" type="String"/> 
-        <attribute name="employeeId" mode="IN" type="String"/> 
-        <attribute name="timePeriodId" mode="IN" type="String"/>
+        <attribute name="basicSalDate" mode="IN" type="Timestamp" optional="true"/>
+        <attribute name="noOfPayableDays" mode="IN" type="Double" optional="true"/>
+        <attribute name="proportionalFlag" mode="IN" type="String" optional="true"/>
+        <attribute name="attendanceTimePeriodId" mode="IN" type="String" optional="true"/>
+        <attribute name="payHeadPriceRules" mode="IN" type="List" optional="true"/>
+         <attribute name="condParms" mode="IN" type="Map" optional="true"/>
+        <attribute name="periodBillingId" mode="IN" type="String" optional="true"/>
+        <attribute name="noOfCalenderDays" mode="IN" type="Double" optional="true"/>
+        <attribute name="timePeriodStart" mode="IN" type="Timestamp" optional="true"/>
+        <attribute name="timePeriodEnd" mode="IN" type="Timestamp" optional="true"/>
+        <attribute name="payHeadTypeId" mode="IN" type="String" optional="true"/> 
+        <attribute name="employeeId" mode="IN" type="String" optional="true"/> 
+        <attribute name="timePeriodId" mode="IN" type="String" optional="true"/>
         <attribute name="amount" type="BigDecimal" mode="OUT" optional="false"/>
     </service>
 </services>
