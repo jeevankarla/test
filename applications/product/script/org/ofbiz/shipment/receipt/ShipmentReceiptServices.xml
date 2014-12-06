@@ -33,7 +33,11 @@ under the License.
             <now-timestamp field="nowTimestamp"/>
             <set field="newEntity.datetimeReceived" from-field="nowTimestamp"/>
         </if-empty>
-
+		
+		<if-empty field="newEntity.statusId">
+            <set field="newEntity.statusId" value="SR_RECEIVED"/>
+        </if-empty>
+        
         <set field="newEntity.receivedByUserLoginId" from-field="userLogin.userLoginId"/>
         <create-value value-field="newEntity"/>
 
