@@ -50,6 +50,20 @@ under the License.
     <OrderAdjustmentType description="Warranty" hasTable="N" orderAdjustmentTypeId="WARRANTY_ADJUSTMENT" parentTypeId=""/>
     <OrderAdjustmentType description="Marketing Package Adjustment" hasTable="N" orderAdjustmentTypeId="MKTG_PKG_AUTO_ADJUST" parentTypeId=""/>
 
+
+<OrderAdjustmentType orderAdjustmentTypeId="PURCHASE_TAX" hasTable="N" parentTypeId="" description="PURCHASE TAX"/>
+
+<OrderAdjustmentType orderAdjustmentTypeId="BEDCESS_PUR" hasTable="N" parentTypeId="PURCHASE_TAX" description="Educational Cess Bed On Purchase"/>
+    <OrderAdjustmentType orderAdjustmentTypeId="BEDSECCESS_PUR" hasTable="N" parentTypeId="PURCHASE_TAX" description="Sec. Educational Cess Bed On Purchase"/>
+    <OrderAdjustmentType orderAdjustmentTypeId="BED_PUR" hasTable="N"  parentTypeId="PURCHASE_TAX" description="Basic Excise Duty On Purchase"/>
+    <OrderAdjustmentType orderAdjustmentTypeId="CSTCESS_PUR" hasTable="N" parentTypeId="PURCHASE_TAX" description="CST - Education Cess On?Purchase"/>
+    <OrderAdjustmentType orderAdjustmentTypeId="CSTSECCESS_PUR" hasTable="N" parentTypeId="PURCHASE_TAX" description="CST - SEC. Education Cess On?Purchase?"/>
+    <OrderAdjustmentType orderAdjustmentTypeId="CST_PUR"  hasTable="N" parentTypeId="PURCHASE_TAX" description="Central Sales Tax On Purchase"/>
+    <OrderAdjustmentType orderAdjustmentTypeId="SERVICE_TAX_PUR" hasTable="N" parentTypeId="PURCHASE_TAX" description="Service Tax Purchase"/>
+    <OrderAdjustmentType orderAdjustmentTypeId="VATCESS_PUR" hasTable="N" parentTypeId="PURCHASE_TAX" description="Educational Cess VAT On Purchase"/>
+    <OrderAdjustmentType orderAdjustmentTypeId="VATSECCESS_PUR" hasTable="N" parentTypeId="PURCHASE_TAX" description="Sec. Educational Cess VAT On?Purchase"/>
+    <OrderAdjustmentType orderAdjustmentTypeId="VAT_PUR" hasTable="N" parentTypeId="PURCHASE_TAX" description="Value Added Tax On Purchase"/>
+    
 <!-- ::TEMP:: -->
 <OrderAdjustmentType description="Basic Excise Duty  On Sale" hasTable="N" orderAdjustmentTypeId="BED_SALE" parentTypeId="SALES_TAX"/>
 <OrderAdjustmentType description="Educational Cess Bed On Sale" hasTable="N" orderAdjustmentTypeId="BEDCESS_SALE" parentTypeId="SALES_TAX" />
@@ -402,5 +416,8 @@ under the License.
     <EmailTemplateSetting emailTemplateSettingId="CUST_REQ_NOTE_ADDED"
         bodyScreenLocation="component://order/widget/ordermgr/CustRequestScreens.xml#AddNoteCustRequestNotification"
         subject="OFBiz - A Note has been added to your request: '${custRequestName}' #CR${custRequestId}"/>
+        
+    <EnumerationType description="Order Purchase Channel" enumTypeId="ORDER_PRCHSE_CHANNEL" hasTable="N" parentTypeId=""/>
+    <Enumeration description="Products  Purchase Channel" enumCode="PROD_PRCHSE_CHANNEL" enumId="PROD_PRCHSE_CHANNEL" sequenceId="01" enumTypeId="ORDER_PRCHSE_CHANNEL"/>
     
 </entity-engine-xml>
