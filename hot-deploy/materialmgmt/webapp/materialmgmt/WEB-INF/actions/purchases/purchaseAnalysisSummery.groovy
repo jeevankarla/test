@@ -75,7 +75,7 @@ productCatMap=[:];
 productCategoryMember.each{prodCatMember ->
 	productCatMap[prodCatMember.productId] = prodCatMember.productCategoryId;
 }
-
+//Debug.log("==productCatMap="+productCatMap.size()+"==productCatMap=="+productCatMap);
 EntityListIterator invoiceItemsIter = null;
 //get KMf Units
 kmfUnitPartyIdsList=[];
@@ -97,13 +97,12 @@ oilLubProdIdsList=EntityUtil.getFieldListFromEntityList(oilLubProdList, "product
 
 wsdProdList=org.ofbiz.product.product.ProductWorker.getProductsByCategory(delegator,"PUR_WSD",null);
 wsdProdIdsList=EntityUtil.getFieldListFromEntityList(oilLubProdList, "productId", true);
-Debug.log("===WSD===Size==="+wsdProdIdsList.size()+"==fuelProdIdsList="+fuelProdIdsList.size()+"==oilLubProdIdsList=="+oilLubProdIdsList.size());
+
 purchaseExemptProdList=[];
 purchaseExemptProdList.addAll(fuelProdIdsList);
 purchaseExemptProdList.addAll(oilLubProdIdsList);
 purchaseExemptProdList.addAll(wsdProdIdsList);
 
-Debug.log("==purchaseExemptProdList="+purchaseExemptProdList.size());
 
 /*Debug.log("==kmfUnitPartyIdsList="+kmfUnitPartyIdsList);
 Debug.log("==kmfUnionPartyIdsList="+kmfUnionPartyIdsList);
@@ -126,6 +125,8 @@ purchaseGrandTotMap["total"]=BigDecimal.ZERO;
 prchaseCategoryDetaildMap=[:];
 prchaseCategorySummeryMap=[:];
 purchaseSumCatDetaildMap=[:];
+purchaseSumInvDetaildMap=[:];
+
 
 		try {
 			List conditionList = FastList.newInstance();
@@ -157,7 +158,9 @@ purchaseSumCatDetaildMap=[:];
 		purchaseCatMap["CR"]=BigDecimal.ZERO;
 		purchaseCatMap["total"]=BigDecimal.ZERO;
 		purchasExemptList=[];
+		
 		purchasExemptProdCatMap=[:];
+		purchasExemptProdCatMap["discount"]=BigDecimal.ZERO;
 		
 		invoiceItemsIter.each{invoiceItem->
 			invTotalVal=org.ofbiz.accounting.invoice.InvoiceWorker.getPurchaseInvoiceItemTotal(invoiceItem,true);
@@ -170,17 +173,8 @@ purchaseSumCatDetaildMap=[:];
 			purchaseGrandTotMap["total"]+=invTotalVal;
 			
 			//Detailed Map starts Here
-			innerTaxItemMap=[:];
-			innerTaxItemMap["invoiceDate"]=invoiceItem.invoiceDate;
-			innerTaxItemMap["invoiceId"]=invoiceItem.invoiceId;
-			innerTaxItemMap["partyId"]=invoiceItem.partyIdFrom;
-			innerTaxItemMap["tinNumber"]="";
-			innerTaxItemMap["vchrType"]="Purchase";
-			innerTaxItemMap["crOrDbId"]="D";
-			//invTotalVal=org.ofbiz.accounting.invoice.InvoiceWorker.getInvoiceTotal(delegator,invoiceItem.invoiceId);
-			//invTotalVal=invTotalVal-vatRevenue;
-			innerTaxItemMap["invTotalVal"]=invTotalVal;
-			purchasExemptList.addAll(innerTaxItemMap);
+			
+			
 			//innerTaxItemMap["vatAmount"]=vatRevenue;
 			
 			//preparing Another Map here for Category
@@ -194,6 +188,7 @@ purchaseSumCatDetaildMap=[:];
 			innerItemMap["crOrDbId"]="D";
 			innerItemMap["invTotalVal"]=invTotalVal;
 			innerItemMap["taxAmount"]=0;
+			purchasExemptList.addAll(innerItemMap);
 			// get category
 			if(UtilValidate.isNotEmpty(productCatMap)&& productCatMap.get(productId)){
 				prodCategoryId=productCatMap.get(productId);
@@ -218,10 +213,9 @@ purchaseSumCatDetaildMap=[:];
 			//category ends here
 			
 		}
-		prchaseCategoryDetaildMap["Purchase-Exempt-Total"]=purchasExemptList;
+		purchaseSumInvDetaildMap["Purchase-Exempt-Total"]=purchasExemptList;
 		prchaseCategorySummeryMap["Purchase-Exempt-Total"]=purchaseCatMap;
 		purchaseSumCatDetaildMap["Purchase-Exempt-Total"]=purchasExemptProdCatMap;
-		Debug.log("==#####==purchasExemptProdCatMap=="+purchasExemptProdCatMap);
 		
 		if (invoiceItemsIter != null) {
 			try {
@@ -258,6 +252,10 @@ purchaseSumCatDetaildMap=[:];
 		purchaseInterCatMap["CR"]=BigDecimal.ZERO;
 		purchaseInterCatMap["total"]=BigDecimal.ZERO;
 		
+		purchaseCstProdCatMap=[:];
+		purchaseCstProdCatMap["discount"]=BigDecimal.ZERO;
+		purchaseCstInvList=[];
+		
 		invoiceItemsIter.each{invoiceItem->
 			if(UtilValidate.isNotEmpty((invoiceItem.cstPercent)&&(invoiceItem.cstAmount))){
 				BigDecimal cstRevenue = invoiceItem.cstAmount;
@@ -275,25 +273,26 @@ purchaseSumCatDetaildMap=[:];
 				innerItemMap["crOrDbId"]="D";
 				innerItemMap["invTotalVal"]=invTotalVal;
 				innerItemMap["taxAmount"]=cstRevenue;
+				purchaseCstInvList.addAll(innerItemMap)
 				// get category
 				if(UtilValidate.isNotEmpty(productCatMap)&& productCatMap.get(productId)){
 					prodCategoryId=productCatMap.get(productId);
-					if(UtilValidate.isEmpty(purchaseInterCatMap[prodCategoryId])){
+					if(UtilValidate.isEmpty(purchaseCstProdCatMap[prodCategoryId])){
 						innerTaxCatMap=[:];
 						innerTaxCatMap["totalValue"]=invTotalVal;
 						innerTaxCatMap["taxAmount"]=cstRevenue;
 						invoiceList=[];
 						invoiceList.addAll(innerItemMap);
 						innerTaxCatMap["invoiceList"]=invoiceList;
-						purchaseInterCatMap[prodCategoryId]=innerTaxCatMap;
-					}else if(UtilValidate.isNotEmpty(purchaseInterCatMap[prodCategoryId])){
-						Map innerTaxCatMap=purchaseInterCatMap[prodCategoryId];
+						purchaseCstProdCatMap[prodCategoryId]=innerTaxCatMap;
+					}else if(UtilValidate.isNotEmpty(purchaseCstProdCatMap[prodCategoryId])){
+						Map innerTaxCatMap=purchaseCstProdCatMap[prodCategoryId];
 						innerTaxCatMap["totalValue"]+=invTotalVal;
 						innerTaxCatMap["taxAmount"]+=cstRevenue;
 						invoiceList=innerTaxCatMap["invoiceList"];
 						invoiceList.addAll(innerItemMap);
 						innerTaxCatMap["invoiceList"]=invoiceList;
-						purchaseInterCatMap[prodCategoryId]=innerTaxCatMap;
+						purchaseCstProdCatMap[prodCategoryId]=innerTaxCatMap;
 					}
 				}
 				//category ends here
@@ -306,8 +305,8 @@ purchaseSumCatDetaildMap=[:];
 			//Debug.log("=invoiceItem=="+invoiceItem);
 		}
 		//get Category of CST from other groovy
-		Debug.log("==#####==purchaseInterCatMap=="+purchaseInterCatMap);
-		purchaseSumCatDetaildMap["Purchase-InterState"]=purchaseInterCatMap;
+		purchaseSumInvDetaildMap["Purchase-InterState"]=purchaseCstInvList;
+		purchaseSumCatDetaildMap["Purchase-InterState"]=purchaseCstProdCatMap;
 		prchaseCategorySummeryMap["Purchase-InterState"]=purchaseInterCatMap;
 		if (invoiceItemsIter != null) {
 			try {
@@ -352,6 +351,8 @@ purchaseSumCatDetaildMap=[:];
 			Debug.logError(e, module);
 		}
 		purchasDiselExProdCatMap=[:];
+		purchaseDiselExInvList=[];
+		purchasDiselExProdCatMap["discount"]=BigDecimal.ZERO;
 		invoiceItemsIter.each{invoiceItem->
 			invTotalVal=org.ofbiz.accounting.invoice.InvoiceWorker.getPurchaseInvoiceItemTotal(invoiceItem,true);
 				//invTotalVal=org.ofbiz.accounting.invoice.InvoiceWorker.getInvoiceItemTotal(invoiceItem);
@@ -368,6 +369,7 @@ purchaseSumCatDetaildMap=[:];
 			innerItemMap["crOrDbId"]="D";
 			innerItemMap["invTotalVal"]=invTotalVal;
 			innerItemMap["taxAmount"]=0;
+			purchaseDiselExInvList.addAll(innerItemMap);
 			// get category
 			if(UtilValidate.isNotEmpty(productCatMap)&& productCatMap.get(productId)){
 				prodCategoryId=productCatMap.get(productId);
@@ -396,9 +398,9 @@ purchaseSumCatDetaildMap=[:];
 				purchaseGrandTotMap["DR"]+=invTotalVal;
 				purchaseGrandTotMap["total"]+=invTotalVal;
 		}
+		purchaseSumInvDetaildMap["Purchase-DieselExempt"]=purchaseDiselExInvList;
 		purchaseSumCatDetaildMap["Purchase-DieselExempt"]=purchasDiselExProdCatMap;
 		prchaseCategorySummeryMap["Purchase-DieselExempt"]=purchaseDiselExCatMap;
-		Debug.log("==#####==purchasDiselExProdCatMap=="+purchasDiselExProdCatMap);
 		
 		if (invoiceItemsIter != null) {
 			try {
@@ -437,6 +439,8 @@ purchaseSumCatDetaildMap=[:];
 			Debug.logError(e, module);
 		}
 		purchasDiselCSTProdCatMap=[:];
+		purchasDiselCSTProdCatMap["discount"]=BigDecimal.ZERO;
+		purchasDiselCSTInvList=[];
 		invoiceItemsIter.each{invoiceItem->
 			if(UtilValidate.isNotEmpty((invoiceItem.cstPercent)&&(invoiceItem.cstAmount))){
 				BigDecimal cstRevenue = invoiceItem.cstAmount;
@@ -454,6 +458,7 @@ purchaseSumCatDetaildMap=[:];
 				innerItemMap["crOrDbId"]="D";
 				innerItemMap["invTotalVal"]=invTotalVal;
 				innerItemMap["taxAmount"]=cstRevenue;
+				purchasDiselCSTInvList.addAll(innerItemMap);
 				// get category
 				if(UtilValidate.isNotEmpty(productCatMap)&& productCatMap.get(productId)){
 					prodCategoryId=productCatMap.get(productId);
@@ -484,7 +489,7 @@ purchaseSumCatDetaildMap=[:];
 			}
 			//Debug.log("=invoiceItem=="+invoiceItem);
 		}
-		Debug.log("==#####==purchasDiselCSTProdCatMap=="+purchasDiselCSTProdCatMap);
+		purchaseSumInvDetaildMap["Purchase-FurnaceOilInterState"]=purchasDiselCSTInvList;
 		purchaseSumCatDetaildMap["Purchase-FurnaceOilInterState"]=purchasDiselCSTProdCatMap;
 		prchaseCategorySummeryMap["Purchase-FurnaceOilInterState"]=purchaseDiselInterCatMap;
 		if (invoiceItemsIter != null) {
@@ -523,7 +528,8 @@ purchaseSumCatDetaildMap=[:];
 			Debug.logError(e, module);
 		}
 		purchasInterStateProdCatMap=[:];
-		
+		purchasInterStateProdCatMap["discount"]=BigDecimal.ZERO;
+		purchasInterStateInvList=[];
 		invoiceItemsIter.each{invoiceItem->
 			//if(UtilValidate.isNotEmpty((invoiceItem.cstPercent)&&(invoiceItem.cstAmount))){
 				invTotalVal=org.ofbiz.accounting.invoice.InvoiceWorker.getPurchaseInvoiceItemTotal(invoiceItem,false);
@@ -540,6 +546,7 @@ purchaseSumCatDetaildMap=[:];
 				innerItemMap["crOrDbId"]="D";
 				innerItemMap["invTotalVal"]=invTotalVal;
 				innerItemMap["taxAmount"]=0;
+				purchasInterStateInvList.addAll(innerItemMap);
 				// get category
 				if(UtilValidate.isNotEmpty(productCatMap)&& productCatMap.get(productId)){
 					prodCategoryId=productCatMap.get(productId);
@@ -570,7 +577,7 @@ purchaseSumCatDetaildMap=[:];
 			//}
 			//Debug.log("=invoiceItem=="+invoiceItem);
 		}
-		Debug.log("==#####==purchasInterStateProdCatMap=="+purchasInterStateProdCatMap);
+		purchaseSumInvDetaildMap["Purchase-InterUnitStkTransfer"]=purchasInterStateInvList;
 		purchaseSumCatDetaildMap["Purchase-InterUnitStkTransfer"]=purchasInterStateProdCatMap;
 		prchaseCategorySummeryMap["Purchase-InterUnitStkTransfer"]=purchaseInterUnitStTrMap;
 		if (invoiceItemsIter != null) {
@@ -609,6 +616,8 @@ purchaseSumCatDetaildMap=[:];
 			Debug.logError(e, module);
 		}
 		purchaseUnionProdCatMap=[:];
+		purchaseUnionProdCatMap["discount"]=BigDecimal.ZERO;
+		purchaseUnionInvList=[];
 		invoiceItemsIter.each{invoiceItem->
 			//if(UtilValidate.isNotEmpty((invoiceItem.cstPercent)&&(invoiceItem.cstAmount))){
 				invTotalVal=org.ofbiz.accounting.invoice.InvoiceWorker.getPurchaseInvoiceItemTotal(invoiceItem,true);
@@ -624,6 +633,7 @@ purchaseSumCatDetaildMap=[:];
 				innerItemMap["crOrDbId"]="D";
 				innerItemMap["invTotalVal"]=invTotalVal;
 				innerItemMap["taxAmount"]=0;
+				purchaseUnionInvList.addAll(innerItemMap);
 				// get category
 				if(UtilValidate.isNotEmpty(productCatMap)&& productCatMap.get(productId)){
 					prodCategoryId=productCatMap.get(productId);
@@ -654,7 +664,7 @@ purchaseSumCatDetaildMap=[:];
 			//}
 			//Debug.log("=invoiceItem=="+invoiceItem);
 		}
-		Debug.log("==#####==purchaseUnionProdCatMap=="+purchaseUnionProdCatMap);
+		purchaseSumInvDetaildMap["Purchase-WSD-ProductsFromKMF"]=purchaseUnionInvList;
 		purchaseSumCatDetaildMap["Purchase-WSD-ProductsFromKMF"]=purchaseUnionProdCatMap;
 		prchaseCategorySummeryMap["Purchase-WSD-ProductsFromKMF"]=purchaseUnionWsdMap;
 		if (invoiceItemsIter != null) {
@@ -672,6 +682,8 @@ purchaseSumCatDetaildMap=[:];
 		
 		Map tax14pt5TotalMap=context.get("tax14pt5TotalMap");
 		Map tax14pt5CatMap=context.get("tax14pt5CatMap");
+		List tax14pt5InvList=context.get("tax14pt5InvList");
+		
 		if(UtilValidate.isNotEmpty(tax14pt5TotalMap)){
 			purchaseAt14pt5Map["DR"]+=(tax14pt5TotalMap.get("invTotalVal"));
 			purchaseAt14pt5Map["total"]+=(tax14pt5TotalMap.get("invTotalVal"));
@@ -685,9 +697,9 @@ purchaseSumCatDetaildMap=[:];
 			purchaseGrandTotMap["DR"]+=(tax14pt5TotalMap.get("invTotalVal")+tax14pt5TotalMap.get("vatAmount"));
 			purchaseGrandTotMap["total"]+=(tax14pt5TotalMap.get("invTotalVal")+tax14pt5TotalMap.get("vatAmount"));*/
 		}
+		purchaseSumInvDetaildMap["Purchase-14.5%VAT"]=tax14pt5InvList;
 		prchaseCategorySummeryMap["Purchase-14.5%VAT"]=purchaseAt14pt5Map;
 		purchaseSumCatDetaildMap["Purchase-14.5%VAT"]=tax14pt5CatMap;
-		
 		purchaseAt5pt5Map=[:];
 		purchaseAt5pt5Map["DR"]=BigDecimal.ZERO;
 		purchaseAt5pt5Map["CR"]=BigDecimal.ZERO;
@@ -695,6 +707,7 @@ purchaseSumCatDetaildMap=[:];
 		
 		Map tax5pt5TotalMap=context.get("tax5pt5TotalMap");
 		Map tax5pt5CatMap=context.get("tax5pt5CatMap");
+		List tax5pt5InvList=context.get("tax5pt5InvList");
 		if(UtilValidate.isNotEmpty(tax5pt5TotalMap)){
 			purchaseAt5pt5Map["DR"]+=(tax5pt5TotalMap.get("invTotalVal"));
 			purchaseAt5pt5Map["total"]+=(tax5pt5TotalMap.get("invTotalVal"));
@@ -708,9 +721,9 @@ purchaseSumCatDetaildMap=[:];
 			purchaseGrandTotMap["DR"]+=(tax5pt5TotalMap.get("invTotalVal")+tax5pt5TotalMap.get("vatAmount"));
 			purchaseGrandTotMap["total"]+=(tax5pt5TotalMap.get("invTotalVal")+tax5pt5TotalMap.get("vatAmount"));*/
 		}
+		purchaseSumInvDetaildMap["Purchase-5.5%VAT"]=tax5pt5InvList;
 		prchaseCategorySummeryMap["Purchase-5.5%VAT"]=purchaseAt5pt5Map;
 		purchaseSumCatDetaildMap["Purchase-5.5%VAT"]=tax5pt5CatMap;
-		
 		
 		//fright Total Value
 		purchaseFreightMap=[:];
@@ -735,7 +748,8 @@ purchaseSumCatDetaildMap=[:];
 			Debug.logError(e, module);
 		}
 		purchasFreightProdCatMap=[:];
-		
+		purchasFreightProdCatMap["discount"]=BigDecimal.ZERO;
+		purchasFreightInvList=[];
 		invoiceItemsIter.each{invoiceItem->
 			//if(UtilValidate.isNotEmpty((invoiceItem.cstPercent)&&(invoiceItem.cstAmount))){
 				invTotalVal=org.ofbiz.accounting.invoice.InvoiceWorker.getInvoiceItemTotal(invoiceItem);
@@ -752,6 +766,7 @@ purchaseSumCatDetaildMap=[:];
 				innerItemMap["crOrDbId"]="D";
 				innerItemMap["invTotalVal"]=invTotalVal;
 				innerItemMap["taxAmount"]=0;
+				purchasFreightInvList.addAll(innerItemMap);
 				// get category
 				if(UtilValidate.isNotEmpty(productCatMap)&& productCatMap.get(productId)){
 					prodCategoryId=productCatMap.get(productId);
@@ -782,7 +797,9 @@ purchaseSumCatDetaildMap=[:];
 			//}
 			//Debug.log("=invoiceItem=="+invoiceItem);
 		}
-		Debug.log("==#####==purchaseFreightMap=="+purchaseFreightMap);
+		//Debug.log("==#####==purchasFreightProdCatMap=="+purchasFreightProdCatMap);
+		
+		purchaseSumInvDetaildMap["Purchase-FreightCharges"]=purchasFreightInvList;
 		prchaseCategorySummeryMap["Purchase-FreightCharges"]=purchaseFreightMap;
 		purchaseSumCatDetaildMap["Purchase-FreightCharges"]=purchasFreightProdCatMap;
 		
@@ -795,10 +812,12 @@ purchaseSumCatDetaildMap=[:];
 				Debug.logWarning(e, module);
 			}
 		}
-		//Debug.log("=prchaseCategorySummeryMap=="+prchaseCategorySummeryMap);
+		//Debug.log("=purchaseSumInvDetaildMap####=="+purchaseSumInvDetaildMap);
 		
 		context.prchaseCategorySummeryMap = prchaseCategorySummeryMap;
 		context.prchaseCategoryDetaildMap = prchaseCategoryDetaildMap;
+		context.purchaseSumCatDetaildMap = purchaseSumCatDetaildMap;
+		context.purchaseSumInvDetaildMap = purchaseSumInvDetaildMap;
 		
 		
 		taxParty = delegator.findOne("Party", UtilMisc.toMap("partyId", "TAX4"), false);

@@ -92,7 +92,6 @@ orgList=[];
 	   allInvoiceRoleList = delegator.findList("InvoiceAndRole", conditionInvRole , null, null, null, false );
 	   allInvoiceIdsRoleList=EntityUtil.getFieldListFromEntityList(allInvoiceRoleList, "invoiceId", true);
 	   deptInvoiceIdRoleList=[];
-	    Debug.log("orgList============================>"+orgList+"==parameters.purchaseTaxDeptFlag=="+parameters.purchaseTaxDeptFlag);
 	       orgList.each{orgDept->
 			partyId=orgDept.partyId;
 			invoiceRoleList = delegator.findList("InvoiceRole",EntityCondition.makeCondition(EntityCondition.makeCondition("partyId", EntityOperator.EQUALS, partyId),EntityOperator.AND,EntityCondition.makeCondition("roleTypeId", EntityOperator.EQUALS, "ISSUE_TO_DEPT"))  , null, null, null, false );
@@ -117,7 +116,7 @@ orgList=[];
 		   condition = EntityCondition.makeCondition(exprList, EntityOperator.AND);
 		   invoiceRoleOthrList = delegator.findList("InvoiceAndRole", condition, null, null, null, false);
 		   invoiceRoleOthrIdsList=EntityUtil.getFieldListFromEntityList(invoiceRoleOthrList, "invoiceId", true);
-		   Debug.log("invoiceRoleOthrIdsList============>"+invoiceRoleOthrIdsList);
+		  // Debug.log("invoiceRoleOthrIdsList============>"+invoiceRoleOthrIdsList);
 		   /*if(UtilValidate.isNotEmpty(invoiceRoleOthrIdsList) && UtilValidate.isEmpty(parameters.issueToDeptId)){
 		   populateDeptInvoiceDetail("Other",invoiceRoleOthrIdsList);
 		   }*/
@@ -133,14 +132,14 @@ orgList=[];
 //function  for Each Dept	
 def populateDeptInvoiceDetail(departmentId, invoiceIdsList){
 	EntityListIterator invoiceItemsIter = null;
-	taxDetails5pt5List=[];
-	taxDetails14pt5List=[];
+	List taxDetails5pt5List=[];
+	List taxDetails14pt5List=[];
 	taxDetailsOthrList=[];
 
 	taxDetails5pt5Map=[:];
 	taxDetails14pt5Map=[:];
 
-	Debug.log("invoiceIdsList====="+invoiceIdsList);
+	//Debug.log("invoiceIdsList====="+invoiceIdsList);
 	tax5pt5TotalMap=[:];
 	tax5pt5TotalMap["invTotalVal"]=BigDecimal.ZERO;
 	tax5pt5TotalMap["vatAmount"]=BigDecimal.ZERO;
@@ -228,6 +227,7 @@ def populateDeptInvoiceDetail(departmentId, invoiceIdsList){
 						innerTaxCatMap=[:];
 						innerTaxCatMap["totalValue"]=invTotalVal;
 						innerTaxCatMap["vatAmount"]=vatRevenue;
+						
 						invoiceList=[];
 						invoiceList.addAll(innerItemMap);
 						innerTaxCatMap["invoiceList"]=invoiceList;
@@ -362,7 +362,7 @@ def populateDeptInvoiceDetail(departmentId, invoiceIdsList){
 
 					tax14pt5TotalMap["invTotalVal"]+=invTotalVal;
 					tax14pt5TotalMap["vatAmount"]+=vatRevenue;
-					taxDetails14pt5List.addAll(innerTaxItemMap);
+					//taxDetails14pt5List.addAll(innerTaxItemMap);
 					//intilize inner map when empty
 					taxDetails14pt5Map[invoiceItem.invoiceId]=innerTaxItemMap;
 					//Debug.log("=invoiceId==FOR FOURTEEnnn=="+invoiceItem.invoiceId+"==ANdAmouunt=="+invoiceItem.vatAmount+"==percent="+invoiceItem.vatPercent+"=Total="+invTotalVal);
@@ -494,6 +494,10 @@ def populateDeptInvoiceDetail(departmentId, invoiceIdsList){
 	context.put("tax14pt5TotalMap",tax14pt5TotalMap);
 	context.put("taxCstTotalMap",taxCstTotalMap);
 
+	context.put("tax5pt5InvList",taxDetails5pt5List);
+	context.put("tax14pt5InvList",taxDetails14pt5List);
+	//Debug.log("taxDetails5pt5List====="+taxDetails5pt5List+"==taxDetails14pt5List="+taxDetails14pt5List);
+	
 	//preparing catageoryMap for Vat and CST
 
 	context.put("tax5pt5CatMap",tax5pt5CatMap);
@@ -516,17 +520,16 @@ def populateDeptInvoiceDetail(departmentId, invoiceIdsList){
 			if(UtilValidate.isNotEmpty(taxDetails5pt5Map)){
 				tempDeptCatItemMap.put("tax5pt5CatMap",tax5pt5CatMap);
 				tempDeptCatItemMap.put("tax5pt5TotalMap",tax5pt5TotalMap)
-				Debug.log("taxDetails5pt5Map====="+taxDetails5pt5Map+"==tempDeptCatItemMap="+tempDeptCatItemMap);
+				
 			}
 			if(UtilValidate.isNotEmpty(taxDetails14pt5Map)){
 				tempDeptCatItemMap.put("tax14pt5CatMap",tax14pt5CatMap);
 				tempDeptCatItemMap.put("tax14pt5TotalMap",tax14pt5TotalMap);
-				Debug.log("==taxDetails5pt5Map=="+taxDetails14pt5Map+"==tempDeptCatItemMap="+tempDeptCatItemMap);
+				//Debug.log("==taxDetails5pt5Map=="+taxDetails14pt5Map+"==tempDeptCatItemMap="+tempDeptCatItemMap);
 			}
 			if(UtilValidate.isNotEmpty(taxDetailsCstMap)){
 				tempDeptCatItemMap.put("taxCstCatMap",taxCstCatMap);
 				tempDeptCatItemMap.put("taxCstTotalMap",taxCstTotalMap);
-				Debug.log("==taxDetailsCstMap=="+taxDetailsCstMap+"==tempDeptCatItemMap="+tempDeptCatItemMap);
 			}
 		}
 		if(UtilValidate.isNotEmpty(tempDeptCatItemMap)){
@@ -540,7 +543,7 @@ def populateDeptInvoiceDetail(departmentId, invoiceIdsList){
 		
 			
 		
-		Debug.log("issueToDeptInvMap====="+issueToDeptInvMap);
+		//Debug.log("issueToDeptInvMap====="+issueToDeptInvMap);
 		
 		taxParty = delegator.findOne("Party", UtilMisc.toMap("partyId", "TAX4"), false);
 		taxAuthority = delegator.findOne("TaxAuthority", UtilMisc.toMap("taxAuthGeoId","IND", "taxAuthPartyId","TAX4"), false);
