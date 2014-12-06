@@ -1872,7 +1872,9 @@ public class InvoiceServices {
         for (String tmpShipmentId : shipmentIds) {
             try {
                 GenericValue shipment = delegator.findByPrimaryKey("Shipment", UtilMisc.toMap("shipmentId", tmpShipmentId));
-                if ((shipment.getString("shipmentTypeId") != null) && (shipment.getString("shipmentTypeId").equals("PURCHASE_SHIPMENT"))) {
+                String shipmentTypeId = shipment.getString("shipmentTypeId");
+                GenericValue shipmentType = delegator.findByPrimaryKey("ShipmentType", UtilMisc.toMap("shipmentTypeId", shipmentTypeId));
+                if ((shipment.getString("shipmentTypeId") != null) && ((shipment.getString("shipmentTypeId").equals("PURCHASE_SHIPMENT")) || (shipmentType.getString("parentTypeId").equals("PURCHASE_SHIPMENT")))) {
                     purchaseShipmentFound = true;
                 } else if ((shipment.getString("shipmentTypeId") != null) && (shipment.getString("shipmentTypeId").equals("DROP_SHIPMENT"))) {
                     dropShipmentFound = true;
@@ -1890,7 +1892,6 @@ public class InvoiceServices {
         }
         EntityCondition shipmentIdsCond = EntityCondition.makeCondition("shipmentId", EntityOperator.IN, shipmentIds);
         // check the status of the shipment
-
         // get the items of the shipment.  They can come from ItemIssuance if the shipment were from a sales order, ShipmentReceipt
         // if it were a purchase order or from the order items of the (possibly linked) orders if the shipment is a drop shipment
         List<GenericValue> items = null;
@@ -1985,7 +1986,6 @@ public class InvoiceServices {
             // update the map with modified list
             shippedOrderItems.put(orderId, itemsByOrder);
         }
-
         // make sure we aren't billing items already invoiced i.e. items billed as digital (FINDIG)
         Set<String> orders = shippedOrderItems.keySet();
         for (String orderId : orders) {
@@ -2083,7 +2083,6 @@ public class InvoiceServices {
 
             GenericValue productStore = orh.getProductStore();
             String prorateShipping = productStore != null ? productStore.getString("prorateShipping") : "N";
-
             // If shipping charges are not prorated, the shipments need to be examined for additional shipping charges
             if ("N".equalsIgnoreCase(prorateShipping)) {
 
@@ -2130,7 +2129,6 @@ public class InvoiceServices {
                     Debug.logError(e, errMsg, module);
                     return ServiceUtil.returnError(errMsg);
                 }
-
                 // Total the additional shipping charges for the shipments
                 Map<GenericValue, BigDecimal> additionalShippingCharges = FastMap.newInstance();
                 BigDecimal totalAdditionalShippingCharges = ZERO;
@@ -2142,7 +2140,6 @@ public class InvoiceServices {
                         totalAdditionalShippingCharges = totalAdditionalShippingCharges.add(shipmentAdditionalShippingCharges);
                     }
                 }
-
                 // If the additional shipping charges are greater than zero, process them
                 if (totalAdditionalShippingCharges.signum() == 1) {
 
@@ -2170,7 +2167,6 @@ public class InvoiceServices {
                             Debug.logError(e, errMsg, module);
                             return ServiceUtil.returnError(errMsg);
                         }
-
                         // Obtain a list of OrderAdjustments due to tax on the shipping charges, if any
                         GenericValue billToParty = orh.getBillToParty();
                         GenericValue payToParty = orh.getBillFromParty();
@@ -2206,7 +2202,6 @@ public class InvoiceServices {
                             return ServiceUtil.returnError(errMsg);
                         }
                         List<GenericValue> orderAdjustments = UtilGenerics.checkList(calcTaxResult.get("orderAdjustments"));
-
                         // If we have any OrderAdjustments due to tax on shipping, store them and add them to the total
                         if (orderAdjustments != null) {
                             for (GenericValue orderAdjustment : orderAdjustments) {
@@ -2225,7 +2220,6 @@ public class InvoiceServices {
                                 return ServiceUtil.returnError(errMsg);
                             }
                         }
-
                         // If part of the order was paid via credit card, try to charge it for the additional shipping
                         List<GenericValue> orderPaymentPreferences = null;
                         try {
@@ -2242,7 +2236,6 @@ public class InvoiceServices {
                         if (cardOrderPaymentPref != null) {
                             paymentMethodId = cardOrderPaymentPref.getString("paymentMethodId");
                         }
-
                         if (paymentMethodId != null) {
 
                             // Release all outstanding (not settled or cancelled) authorizations, while keeping a running
@@ -2327,7 +2320,7 @@ public class InvoiceServices {
                 GenericValue shipmentItemBilling = EntityUtil.getFirst(shipmentItemBillings);
                 invoiceId = shipmentItemBilling.getString("invoiceId");
             }
-
+            
             // call the createInvoiceForOrder service for each order
             Map<String, Object> serviceContext = UtilMisc.toMap("orderId", orderId, "billItems", toBillItems, "invoiceId", invoiceId, "eventDate", context.get("eventDate"), "userLogin", context.get("userLogin"));
             try {
