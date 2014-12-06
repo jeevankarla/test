@@ -175,17 +175,36 @@ ${setRequestAttribute("OUTPUT_FILENAME", "abstractReport.pdf")}
 			                            			${paymentGenericValue.get("paymentId")?if_exists} 
 		                                      	</fo:block>  
 			                       			</fo:table-cell>
-			                       			<#assign paymentMethod = delegator.findOne("PaymentMethod", {"paymentMethodId" : paymentGenericValue.get("paymentMethodId")}, true)>
-			                       			<fo:table-cell border-style="solid">
-			                            		<fo:block  text-align="left" wrap-option="wrap" font-size="13pt" white-space-collapse="false"> 
-			                            			${paymentMethod.get("description")?if_exists} 
-		                                      	</fo:block>  
-			                       			</fo:table-cell>
-			                       			<fo:table-cell border-style="solid">
-			                            		<fo:block  text-align="left" keep-together="always" font-size="13pt" white-space-collapse="false"> 
-			                            			 ${finTransSeqMap.get(paymentGenericValue.get("finAccountTransId"))?if_exists} 
-		                                      	</fo:block>
-		                                    </fo:table-cell>
+			                       			<#if paymentGenericValue.get("paymentMethodId")?has_content>
+			                       				<#assign paymentMethod = delegator.findOne("PaymentMethod", {"paymentMethodId" : paymentGenericValue.get("paymentMethodId")}, true)>
+				                       			<fo:table-cell border-style="solid">
+				                            		<fo:block  text-align="left" wrap-option="wrap" font-size="13pt" white-space-collapse="false"> 
+				                            			${paymentMethod.get("description")?if_exists} 
+			                                      	</fo:block>  
+				                       			</fo:table-cell>
+				                       			<#else>
+				                       			<fo:table-cell border-style="solid">
+				                            		<fo:block  text-align="left" wrap-option="wrap" font-size="13pt" white-space-collapse="false"> 
+				                            			- 
+			                                      	</fo:block>  
+				                       			</fo:table-cell>
+			                       			</#if>
+			                       			
+			                       			<#if paymentGenericValue.get("finAccountTransId")?has_content>
+				                       			<fo:table-cell border-style="solid">
+				                            		<fo:block  text-align="left" keep-together="always" font-size="13pt" white-space-collapse="false"> 
+				                            			 ${finTransSeqMap.get(paymentGenericValue.get("finAccountTransId"))?if_exists} 
+			                                      	</fo:block>
+			                                    </fo:table-cell>
+				                       			<#else>
+				                       			<fo:table-cell border-style="solid">
+				                            		<fo:block  text-align="left" keep-together="always" font-size="13pt" white-space-collapse="false"> 
+				                            			- 
+			                                      	</fo:block>  
+				                       			</fo:table-cell>
+			                       			</#if>
+			                       			
+			                       			
 		                                    <#if (paymentGenericValue.get("paymentTypeId")).indexOf("PAYOUT") != -1>
 			                                      <#assign debitTotal = debitTotal + paymentGenericValue.get("amount")>
 			                                      <fo:table-cell border-style="solid">
