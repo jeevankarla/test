@@ -12,10 +12,10 @@ $(document).ready(function(){
             this.checked = master.checked;
             
         });
-       // getRequrimentsRunningTotal();
+        getRequrimentsRunningTotal();
     }
     
- /*	function getRequrimentsRunningTotal() {
+ 	function getRequrimentsRunningTotal() {
   		var requirementsList=[];
 		var requirements = jQuery("#EnquiryForApprovedMatRequirements :checkbox[name='requirementIds']");
 		jQuery.each(requirements,function(){
@@ -23,6 +23,14 @@ $(document).ready(function(){
 				requirementsList.push($(this).val());
 			}		
 		});
+		if(requirementsList.length==0){
+			totalCount=0;
+			productCount=0;
+			totalAmt=0;
+			jQuery("#totalCount").html(totalCount);
+			jQuery("#productCount").html(productCount);
+			jQuery("#totalAmt").html(totalAmt);
+		}
 		var data="list="+requirementsList;
 		$.ajax({
 	        type: "POST",
@@ -33,15 +41,15 @@ $(document).ready(function(){
         		totalCount=result["totalCount"];
         		productCount=result["productCount"];
         		totalAmt=result["totalAmt"];
-        			$("#totalCount").val(totalCount);
-        			$("#productCount").val(productCount);
-        			$("#totalAmt").val(totalAmt);
+        			jQuery("#totalCount").html(totalCount);
+        			jQuery("#productCount").html(productCount);
+        			jQuery("#totalAmt").html(totalAmt);
        		 },
        		error: function() {
        	 		alert(result["_ERROR_MESSAGE_"]);
        	 	}
 		});
-	}*/
+	}
 	
  	function massRequirementsSubmit(current){
 		jQuery(current).attr( "disabled", "disabled");
@@ -60,8 +68,10 @@ $(document).ready(function(){
 <#assign requirements=requirementsForSupplier.get("requirementsForSupplier")>
 <form id="sendRequirementIds" name="sendRequirementIds" action="sendRequirementIds" method="post">
 </form>
+<div align="left">
+	  <font size="15" color="blue"><b>Total Selected :<b/></font><font size="15" color="red"><b><span id="totalCount"></span></b></font>&nbsp;&nbsp;&nbsp;<font size="15" color="blue"><b>No Of Products :<b/></font><font size="15" color="red"><b><span id="productCount"></span></b></font>&nbsp;&nbsp;&nbsp;<font size="15" color="blue"><b>Total Amount :<b/></font><font size="15" color="red"><b><span id="totalAmt"></span></b></font>
+	</div>
 <form id="EnquiryForApprovedMatRequirements" name="EnquiryForApprovedMatRequirements" action="" method="post">
-	
 	<div align="right">
 		<input id="submitButton" type="button"  onclick="javascript:massRequirementsSubmit(this);" value="Submit" />
 	</div>
