@@ -90,7 +90,7 @@
 	
 	conditionList.clear();
 	conditionList.add(EntityCondition.makeCondition("invoiceId", EntityOperator.IN, invoiceIdsList));
-	List paymentInvApplicationList = delegator.findList("InvoiceAndItem", EntityCondition.makeCondition(conditionList, EntityOperator.AND), UtilMisc.toSet("invoiceId","invoiceItemSeqId","invoiceItemTypeId","quantity","amount","description", "invoiceDate", "invoiceMessage"), UtilMisc.toList("invoiceDate"), null, false);
+	List paymentInvApplicationList = delegator.findList("InvoiceAndItem", EntityCondition.makeCondition(conditionList, EntityOperator.AND), null, UtilMisc.toList("invoiceDate"), null, false);
 	
 	invoiceDetailsMap = [:];
 	for(i=0; i<invoiceIdsList.size(); i++){
@@ -103,7 +103,7 @@
 	
 	conditionList.clear();
 	conditionList.add(EntityCondition.makeCondition("paymentId", EntityOperator.IN, allPmntIdsList));
-	List appliedPmntList = delegator.findList("PaymentAndType", EntityCondition.makeCondition(conditionList, EntityOperator.AND), UtilMisc.toSet("paymentId","paymentTypeId","paymentMethodId","paymentDate","paymentRefNum","amount", "finAccountTransId", "comments"), UtilMisc.toList("paymentDate"), null, false);
+	List appliedPmntList = delegator.findList("PaymentAndType", EntityCondition.makeCondition(conditionList, EntityOperator.AND), null, UtilMisc.toList("paymentDate"), null, false);
 	finAccTransSeqIds = EntityUtil.getFieldListFromEntityList(appliedPmntList, "finAccountTransId", true);
 	paymentDetailsMap = [:];
 	for(i=0; i<appliedPmntList.size(); i++){
@@ -246,21 +246,15 @@
 			dateWisePmntApplications = [:];
 			durationPmntApp = durationPmntApps.get(j);
 			if(UtilValidate.isNotEmpty(durationPmntApp.get("toPaymentId"))){
-				if(UtilValidate.isEmpty(paymentDetailsMap.get(durationPmntApp.get("toPaymentId")).get("paymentDate"))){
-					dateWisePmntApplications.put("date", "");
-				}
-				else{
-					dateWisePmntApplications.put("date", (paymentDetailsMap.get(durationPmntApp.get("toPaymentId"))).get("paymentDate"));
-				}
-				dateWisePmntApplications.put("paymentId", durationPmntApp.get("toPaymentId"));
+				toPaymentId = durationPmntApp.get("toPaymentId");
+				pmntDetails = (paymentDetailsMap.get(toPaymentId)).get(0);
+				dateWisePmntApplications.put("date", pmntDetails.get("paymentDate"));
+				dateWisePmntApplications.put("paymentId", toPaymentId);
 			}
 			if(UtilValidate.isNotEmpty(durationPmntApp.get("invoiceId"))){
-				if(UtilValidate.isEmpty((invoiceDetailsMap.get(durationPmntApp.get("invoiceId")).get(0)).get("invoiceDate"))){
-					dateWisePmntApplications.put("date", "");
-				}
-				else{
-					dateWisePmntApplications.put("date", ((invoiceDetailsMap.get(durationPmntApp.get("invoiceId"))).get(0)).get("invoiceDate"));
-				}
+				toInvoiceId = durationPmntApp.get("invoiceId");
+				invoiceDetails = (invoiceDetailsMap.get(toInvoiceId)).get(0);
+				dateWisePmntApplications.put("date", invoiceDetails.get("invoiceDate"));
 				dateWisePmntApplications.put("invoiceId", durationPmntApp.get("invoiceId"));
 			}
 			tempDateWisePmntMap = [:];

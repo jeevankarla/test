@@ -160,11 +160,30 @@ ${setRequestAttribute("OUTPUT_FILENAME", "abstractReport.pdf")}
 		                                           ${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(paymentGenericValue.get("paymentDate"), "dd/MM/yyyy")}
 		                                      </fo:block>  
 			                       			</fo:table-cell>
-			                       			<fo:table-cell border-style="solid">
-			                            		<fo:block  text-align="left" font-size="13pt" wrap-option="wrap" white-space-collapse="false"> 
-			                            			${paymentGenericValue.get("comments")?if_exists} <#if paymentGenericValue.get("paymentRefNum")?has_content> :${paymentGenericValue.get("paymentRefNum")?if_exists} </#if>
-		                                      	</fo:block>  
-			                       			</fo:table-cell>
+			                       			<#if paymentGenericValue.get("comments")?has_content>
+			                       				<#assign paymentMethod = delegator.findOne("PaymentMethod", {"paymentMethodId" : paymentGenericValue.get("paymentMethodId")}, true)>
+				                       			<fo:table-cell border-style="solid">
+				                            		<fo:block  text-align="left" font-size="13pt" wrap-option="wrap" white-space-collapse="false"> 
+					                            			${paymentGenericValue.get("comments")?if_exists} <#if paymentGenericValue.get("paymentRefNum")?has_content> ;${paymentGenericValue.get("paymentRefNum")?if_exists} </#if>
+				                                      	</fo:block>  
+					                       		</fo:table-cell>
+				                       			<#else>
+				                       			<#if paymentGenericValue.get("paymentMethodTypeId")?has_content>
+				                       				<#assign paymentMethodType = delegator.findOne("PaymentMethodType", {"paymentMethodTypeId" : paymentGenericValue.get("paymentMethodTypeId")}, true)>
+					                       			<fo:table-cell border-style="solid">
+					                            		<fo:block  text-align="left" font-size="13pt" wrap-option="wrap" white-space-collapse="false"> 
+						                            		${paymentMethodType.get("description")?if_exists} <#if paymentGenericValue.get("paymentRefNum")?has_content> ;${paymentGenericValue.get("paymentRefNum")?if_exists} </#if>
+					                                    </fo:block>  
+						                       		</fo:table-cell>
+						                       		<#else>
+						                       		<fo:table-cell border-style="solid">
+					                            		<fo:block  text-align="left" font-size="13pt" wrap-option="wrap" white-space-collapse="false"> 
+						                            		<#if paymentGenericValue.get("paymentRefNum")?has_content> :${paymentGenericValue.get("paymentRefNum")?if_exists} </#if>
+					                                    </fo:block>  
+						                       		</fo:table-cell>
+				                       			</#if>
+			                       			</#if>
+			                       			
 			                       			<fo:table-cell border-style="solid">
 			                            		<fo:block  text-align="left" keep-together="always" font-size="13pt" white-space-collapse="false"> 
 		                                      		
@@ -244,7 +263,11 @@ ${setRequestAttribute("OUTPUT_FILENAME", "abstractReport.pdf")}
 			                                      </fo:block>  
 				                       			</fo:table-cell>
 				                       			<fo:table-cell border-style="solid">
-				                            		<fo:block  text-align="left" wrap-option="wrap" font-size="13pt" white-space-collapse="false"> 
+				                            		<fo:block  text-align="left" wrap-option="wrap" font-size="13pt" white-space-collapse="false">
+				                            			<#if eachInvItem.get("invoiceTypeId")?has_content>
+				                       						<#assign invoiceType = delegator.findOne("InvoiceType", {"invoiceTypeId" : eachInvItem.get("invoiceTypeId")}, true)>
+				                            				${invoiceType.get("description")?if_exists}, 
+				                            			</#if>
 				                            			${eachInvItem.get("description")?if_exists}
 			                                      	</fo:block>  
 				                       			</fo:table-cell>

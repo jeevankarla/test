@@ -100,11 +100,25 @@ ${setRequestAttribute("OUTPUT_FILENAME", "abstractReport.pdf")}
             		<fo:table-column column-width="90pt"/>
             		<fo:table-column column-width="90pt"/>
                     <fo:table-body>
-                    	
+                    	<#assign totalOBCredit = 0>
+                    	<#assign totalOBDebit = 0>
+                    	<#assign totalduCredit = 0>
+                    	<#assign totalduDebit = 0>
+                    	<#assign totalCBCredit = 0>
+                    	<#assign totalCBDebit = 0>
 	                	<#assign partyAdvanceDetails = partyPaymentsMap.entrySet()>	
 	                	<#list partyAdvanceDetails as partyPayments>
 							<#assign partyId = partyPayments.getKey()>
 							<#assign paymentDetails = partyPayments.getValue()>
+								
+								<#assign totalOBDebit = totalOBDebit + (paymentDetails.get("openingBalance").get("debit"))>
+        						<#assign totalOBCredit = totalOBCredit + (paymentDetails.get("openingBalance").get("credit"))>
+        						 
+        						<#assign totalduDebit = totalduDebit + (paymentDetails.get("duringPeriod").get("debit"))>
+        						<#assign totalduCredit = totalduCredit + (paymentDetails.get("duringPeriod").get("credit"))>
+        						 
+        						<#assign totalCBDebit = totalCBDebit + (paymentDetails.get("closingBalance").get("debit"))>
+        						<#assign totalCBCredit = totalCBCredit + (paymentDetails.get("closingBalance").get("credit"))>
 								<fo:table-row border-style="solid">
 									<fo:table-cell border-style="solid">
 	                            		<fo:block  text-align="left" keep-together="always" font-size="13pt" white-space-collapse="false"> 
@@ -143,7 +157,45 @@ ${setRequestAttribute("OUTPUT_FILENAME", "abstractReport.pdf")}
                                       </fo:block>  
 	                       			</fo:table-cell>
 								</fo:table-row>
-						</#list>		
+						</#list>	
+						<fo:table-row border-style="solid">
+								<fo:table-cell border-style="solid">
+                            		<fo:block font-weight="bold" text-align="left" keep-together="always" font-size="13pt" white-space-collapse="false"> 
+                                         TOTALS
+                                  </fo:block>  
+                       			</fo:table-cell>
+                       			<fo:table-cell border-style="solid">
+                            		<fo:block  text-align="left" wrap-option="wrap" font-size="13pt" white-space-collapse="false"> 
+                                         
+                                  	</fo:block>  
+                       			</fo:table-cell>
+                       			<fo:table-cell border-style="solid">
+                            		<fo:block font-weight="bold" text-align="right" keep-together="always" font-size="13pt" white-space-collapse="false"> 
+                                         ${totalOBDebit?if_exists?string("#0.00")}
+                                  </fo:block>  
+                       			</fo:table-cell>
+                       			<fo:table-cell border-style="solid">
+                            		<fo:block font-weight="bold" text-align="right" keep-together="always" font-size="13pt" white-space-collapse="false"> 
+                                         ${totalOBCredit?if_exists?string("#0.00")}
+                                  </fo:block>  
+                       			</fo:table-cell><fo:table-cell border-style="solid">
+                            		<fo:block font-weight="bold" text-align="right" keep-together="always" font-size="13pt" white-space-collapse="false"> 
+                                         ${totalduDebit?if_exists?string("#0.00")}
+                                  </fo:block>  
+                       			</fo:table-cell><fo:table-cell border-style="solid">
+                            		<fo:block font-weight="bold" text-align="right" keep-together="always" font-size="13pt" white-space-collapse="false"> 
+                                         ${totalduDebit?if_exists?string("#0.00")}
+                                  </fo:block>  
+                       			</fo:table-cell><fo:table-cell border-style="solid">
+                            		<fo:block font-weight="bold" text-align="right" keep-together="always" font-size="13pt" white-space-collapse="false"> 
+                                         ${totalCBDebit?if_exists?string("#0.00")}
+                                  </fo:block>  
+                       			</fo:table-cell><fo:table-cell border-style="solid">
+                            		<fo:block  font-weight="bold" text-align="right" keep-together="always" font-size="13pt" white-space-collapse="false"> 
+                                         ${totalCBDebit?if_exists?string("#0.00")}
+                                  </fo:block>  
+                       			</fo:table-cell>
+							</fo:table-row>	
                     </fo:table-body>
                 </fo:table>
                </fo:block> 		
