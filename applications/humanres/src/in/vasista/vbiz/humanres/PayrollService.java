@@ -6138,9 +6138,7 @@ public static Map<String, Object> generateEmployerContributionPayrollBilling(Dis
         		BigDecimal adjustedDays=BigDecimal.ZERO;
         		if((leaveTypeIds.get(i)).equals("CL") || (leaveTypeIds.get(i)).equals("EL") || (leaveTypeIds.get(i)).equals("HPL")){
         			GenericValue customTimePeriod = delegator.findOne("CustomTimePeriod",UtilMisc.toMap("customTimePeriodId", customTimePeriodId), false);
-        			Debug.log("customTimePeriod============="+customTimePeriod);
         			Timestamp fromDateTime=UtilDateTime.toTimestamp(customTimePeriod.getDate("fromDate"));
-        			Debug.log("fromDateTime============="+fromDateTime);
         			Map customTimePeriodIdMap = PayrollService.checkPayrollGeneratedOrNotForDate(dctx,UtilMisc.toMap("userLogin",userLogin,"punchdate",fromDateTime));
         			if (ServiceUtil.isError(customTimePeriodIdMap)) {
         				return customTimePeriodIdMap;
