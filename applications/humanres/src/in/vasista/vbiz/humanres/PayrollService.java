@@ -6172,7 +6172,6 @@ public static Map<String, Object> generateEmployerContributionPayrollBilling(Dis
 		    		conList.add(EntityCondition.makeCondition("leaveTypeId",EntityOperator.EQUALS,leaveTypeIds.get(i)));
 		      	  	EntityCondition con = EntityCondition.makeCondition(conList,EntityOperator.AND);
 		      	  	List<GenericValue> emplLeavesList = delegator.findList("EmplLeaveBalanceStatus", con, null, null, null, false);
-		      	  	Debug.log("emplLeavesList============="+emplLeavesList);
 		      	  	if(UtilValidate.isEmpty(emplLeavesList)){
 		      	  		BigDecimal closingBalance=BigDecimal.ZERO;
 		      	  		if(UtilValidate.isNotEmpty(leaveBalances) && leaveBalances !=null ){
@@ -6192,7 +6191,6 @@ public static Map<String, Object> generateEmployerContributionPayrollBilling(Dis
 						}
 						newEntity.create();
 		      	  	}else{
-		      	  		Debug.log("emplLeavesList======="+emplLeavesList);
 			      	  	GenericValue emplLeaves = EntityUtil.getFirst(emplLeavesList);
 			      	  	
 			      	  if(((leaveTypeIds.get(i)).equals("EL")) && UtilValidate.isNotEmpty(enCashedDays)){
