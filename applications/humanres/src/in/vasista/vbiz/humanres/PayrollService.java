@@ -185,9 +185,11 @@ public class PayrollService {
 	 			    	EntityCondition condition=EntityCondition.makeCondition(conditionList,EntityOperator.AND);
 	 			    	try {
 	 			    		periodBillingList = delegator.findList("PeriodBilling", condition, null,null, null, false);
-	 			    		if(!UtilValidate.isEmpty(periodBillingList)){
-	 			    			Debug.logError("Failed to create 'MarginReport': Already generated or In-process for the specified period", module);
-	 			    			return ServiceUtil.returnError("Failed to create 'MarginReport': Already generated or In-process for the specified period");
+	 			    		if(!"SP_LEAVE_ENCASH".equals(billingTypeId)){
+		 			    		if(!UtilValidate.isEmpty(periodBillingList)){
+		 			    			Debug.logError("Failed to create 'MarginReport': Already generated or In-process for the specified period", module);
+		 			    			return ServiceUtil.returnError("Failed to create 'MarginReport': Already generated or In-process for the specified period");
+		 			    		}
 	 			    		}
 	 			    	}catch (GenericEntityException e) {
 	 			    		 Debug.logError(e, module);             
@@ -679,9 +681,11 @@ public class PayrollService {
 				GenericValue userLogin = (GenericValue) context.get("userLogin");
 				String periodBillingId = (String) context.get("periodBillingId");
 				GenericValue periodBilling = null;
+				String billingTypeId =null;
 		    	try {
 		    		try {
 						periodBilling = delegator.findOne("PeriodBilling", UtilMisc.toMap("periodBillingId", periodBillingId), false);
+						billingTypeId =(String) periodBilling.get("billingTypeId");
 					} catch (GenericEntityException e1) {
 						Debug.logError(e1,"Error While Finding PeriodBilling");
 						return ServiceUtil.returnError("Error While Finding PeriodBilling" + e1);
@@ -689,6 +693,45 @@ public class PayrollService {
 		    		List<GenericValue> payrollHeaderList = delegator.findList("PayrollHeader", EntityCondition.makeCondition("periodBillingId", EntityOperator.EQUALS, periodBillingId), null, null, null, false);
 		    		if(UtilValidate.isNotEmpty(payrollHeaderList)){
 		    			List payrollHeaderIds = EntityUtil.getFieldListFromEntityList(payrollHeaderList, "payrollHeaderId", false);
+		    			//Code to update leave balance after cancellation
+		    			if(UtilValidate.isNotEmpty(billingTypeId) && (billingTypeId.equals("SP_LEAVE_ENCASH")) && UtilValidate.isNotEmpty(payrollHeaderList)){
+		    				Timestamp dateStart = UtilDateTime.getDayStart(UtilDateTime.nowTimestamp());
+							Timestamp dateEnd = UtilDateTime.getDayEnd(UtilDateTime.nowTimestamp());
+							List condPeriodList = FastList.newInstance();
+							condPeriodList.add(EntityCondition.makeCondition("periodTypeId", EntityOperator.EQUALS ,"HR_MONTH"));
+							condPeriodList.add(EntityCondition.makeCondition("fromDate", EntityOperator.LESS_THAN_EQUAL_TO,new java.sql.Date((dateStart).getTime())));
+							condPeriodList.add(EntityCondition.makeCondition("thruDate", EntityOperator.GREATER_THAN_EQUAL_TO, new java.sql.Date(dateEnd.getTime())));
+							EntityCondition periodCond = EntityCondition.makeCondition(condPeriodList,EntityOperator.AND); 	
+							List<GenericValue> hrCustomTimePeriodList = delegator.findList("CustomTimePeriod", periodCond, null, null, null, false);
+							String hrCustomTimePeriodId=null;
+							if(UtilValidate.isNotEmpty(hrCustomTimePeriodList)){
+								GenericValue hrCustomTimePeriod = EntityUtil.getFirst(hrCustomTimePeriodList);
+								hrCustomTimePeriodId = hrCustomTimePeriod.getString("customTimePeriodId");
+							}
+							for(int j=0;j< payrollHeaderList.size();j++){
+								Map payHeaderItemValue = (Map)payrollHeaderList.get(j);
+								Map leaveBalanceCtx = FastMap.newInstance();
+								leaveBalanceCtx.put("userLogin", userLogin);
+								leaveBalanceCtx.put("partyId", payHeaderItemValue.get("partyIdFrom"));
+								//leaveBalanceCtx.put("EL", new BigDecimal(15));
+								leaveBalanceCtx.put("enCashedDays", new BigDecimal(-15));								
+								leaveBalanceCtx.put("customTimePeriodId", hrCustomTimePeriodId);
+								try {
+									Map serviceLeaveBalanceResults = UpdateCreditLeaves(dctx, leaveBalanceCtx);
+									Debug.log("serviceLeaveBalanceResults======="+serviceLeaveBalanceResults);
+							        if (ServiceUtil.isError(serviceLeaveBalanceResults)) {
+							        	Debug.logError("Problems in service UpdateCreditLeaves", module);
+							  			return ServiceUtil.returnError("Problems in service UpdateCreditLeaves ");
+							        }
+							       
+								}catch (Exception e) {
+									Debug.logError(e,"Unable to Update Leave Balance " + e.getMessage(), module);
+							        return ServiceUtil.returnError("Unable to Update Leave Balance: " + e.getMessage());
+							    }
+							}
+							
+		    			}	    			
+		    			
 		    			if(UtilValidate.isNotEmpty(payrollHeaderIds)){
 		    				List<GenericValue> payrollHeaderItemList = delegator.findList("PayrollHeaderItem", EntityCondition.makeCondition("payrollHeaderId", EntityOperator.IN, payrollHeaderIds), null, null, null, false);
 		    				if(UtilValidate.isNotEmpty(payrollHeaderItemList) && (periodBilling.getString("statusId").equals("GENERATED"))){
@@ -2033,12 +2076,33 @@ public class PayrollService {
 				            List payrollAttnEmplIds=FastList.newInstance();
 				            if(UtilValidate.isNotEmpty(payrollAttnEmployessList)){
 				            	payrollAttnEmplIds= EntityUtil.getFieldListFromEntityList(payrollAttnEmployessList, "partyId", true);
-				        	}
+				        	} 
+				        //Code to Exclude already suplyPayroll Generated Employees 
+				            List billingConList = FastList.newInstance();
+				            billingConList.add(EntityCondition.makeCondition("customTimePeriodId" ,EntityOperator.EQUALS ,customTimePeriodId));
+				            billingConList.add(EntityCondition.makeCondition("statusId" ,EntityOperator.EQUALS , "GENERATED"));
+				            EntityCondition billingCond = EntityCondition.makeCondition(billingConList,EntityOperator.AND);
+				            List<GenericValue> custBillingIdsList = delegator.findList("PeriodBillingAndCustomTimePeriod", billingCond, null, null, null, false);   
+				            List billingIds=FastList.newInstance();
+				            if(UtilValidate.isNotEmpty(custBillingIdsList)){
+				            	billingIds= EntityUtil.getFieldListFromEntityList(custBillingIdsList, "periodBillingId", true);
+				        	} 
+				            List headerConList = FastList.newInstance();
+				            headerConList.add(EntityCondition.makeCondition("periodBillingId" ,EntityOperator.IN , billingIds));
+				            EntityCondition headerCond = EntityCondition.makeCondition(headerConList,EntityOperator.AND);
+				            List<GenericValue> payrollHeaderIdsList = delegator.findList("PayrollHeader", headerCond, null, null, null, false);   
+				            List emplIds=FastList.newInstance();
+				            if(UtilValidate.isNotEmpty(payrollHeaderIdsList)){
+				            	emplIds= EntityUtil.getFieldListFromEntityList(payrollHeaderIdsList, "partyIdFrom", true);
+				        	} 
+				            
+				            Debug.log("emplIds========="+emplIds);
 			        	for (int i = 0; i < employementList.size(); ++i) {		
 			        		GenericValue employment = employementList.get(i);
 			        		String employeeId = employment.getString("partyIdTo");
-			        		if(payrollAttnEmplIds.contains(employeeId)){
+			        		if(payrollAttnEmplIds.contains(employeeId) && ((UtilValidate.isNotEmpty(emplIds) &&(!emplIds.contains(employeeId))) || (UtilValidate.isEmpty(emplIds)))){
 				        		context.put("employeeId", employeeId);
+				        		Debug.log("employeeId========="+employeeId);
 				        		/*Map employeePayrollAttedance = getEmployeePayrollAttedance(dctx,context);
 				        		if(UtilValidate.isNotEmpty(employeePayrollAttedance.get("noOfPayableDays")) &&
 				        				(new BigDecimal((Double)employeePayrollAttedance.get("noOfPayableDays"))).compareTo(BigDecimal.ZERO)==0){
@@ -2050,7 +2114,25 @@ public class PayrollService {
 								payHeaderList.add(tempInputMap);
 			        		}
 			        	}
-	       				
+	       				if(UtilValidate.isEmpty(payHeaderList)){
+	       					periodBilling.set("statusId", "GENERATION_FAIL");
+							Debug.logError("No Employees Found", module);
+							return ServiceUtil.returnError("No Employees Found");
+	       				}
+	       			//getting Latest HR Period
+						Timestamp dateStart = UtilDateTime.getDayStart(UtilDateTime.nowTimestamp());
+						Timestamp dateEnd = UtilDateTime.getDayEnd(UtilDateTime.nowTimestamp());
+						List condPeriodList = FastList.newInstance();
+						condPeriodList.add(EntityCondition.makeCondition("periodTypeId", EntityOperator.EQUALS ,"HR_MONTH"));
+						condPeriodList.add(EntityCondition.makeCondition("fromDate", EntityOperator.LESS_THAN_EQUAL_TO,new java.sql.Date((dateStart).getTime())));
+						condPeriodList.add(EntityCondition.makeCondition("thruDate", EntityOperator.GREATER_THAN_EQUAL_TO, new java.sql.Date(dateEnd.getTime())));
+						EntityCondition periodCond = EntityCondition.makeCondition(condPeriodList,EntityOperator.AND); 	
+						List<GenericValue> hrCustomTimePeriodList = delegator.findList("CustomTimePeriod", periodCond, null, null, null, false);
+						String hrCustomTimePeriodId=null;
+						if(UtilValidate.isNotEmpty(hrCustomTimePeriodList)){
+							GenericValue hrCustomTimePeriod = EntityUtil.getFirst(hrCustomTimePeriodList);
+							hrCustomTimePeriodId = hrCustomTimePeriod.getString("customTimePeriodId");
+						}
 	       				for(int i=0;i<payHeaderList.size();i++){
 	       					Map payHeaderValue = (Map)payHeaderList.get(i);
 	       					GenericValue payHeader = delegator.makeValue("PayrollHeader");
@@ -2098,7 +2180,28 @@ public class PayrollService {
 							}catch (Exception e) {
 								Debug.logError(e,"Unable to create payroll Item records for basic salary: " + e.getMessage(), module);
 						        return ServiceUtil.returnError("Unable to create payroll Item records for basic salary: " + e.getMessage());
-						    }   
+						    }  							
+							
+							Map leaveBalanceCtx = FastMap.newInstance();
+							leaveBalanceCtx.put("userLogin", userLogin);
+							leaveBalanceCtx.put("partyId", payHeaderValue.get("partyIdFrom"));
+							//leaveBalanceCtx.put("EL", new BigDecimal(15));
+							leaveBalanceCtx.put("enCashedDays", new BigDecimal(15));
+							
+							leaveBalanceCtx.put("customTimePeriodId", hrCustomTimePeriodId);
+							try {
+								Map serviceLeaveBalanceResults = UpdateCreditLeaves(dctx, leaveBalanceCtx);
+						        if (ServiceUtil.isError(serviceLeaveBalanceResults)) {
+						        	Debug.logError("Problems in service UpdateCreditLeaves", module);
+						  			return ServiceUtil.returnError("Problems in service UpdateCreditLeaves ");
+						        }
+						       
+							}catch (Exception e) {
+								Debug.logError(e,"Unable to Update Leave Balance " + e.getMessage(), module);
+						        return ServiceUtil.returnError("Unable to Update Leave Balance: " + e.getMessage());
+						    }
+							
+							
 							for(int j=0;j< payHeaderItemList.size();j++){
 								Map payHeaderItemValue = (Map)payHeaderItemList.get(j);
 								if(UtilValidate.isEmpty(payHeaderItemValue.get("amount")) || (((BigDecimal)payHeaderItemValue.get("amount")).compareTo(BigDecimal.ZERO) ==0) ){
@@ -2107,7 +2210,11 @@ public class PayrollService {
 		       					GenericValue payHeaderItem = delegator.makeValue("PayrollHeaderItem");
 		       					payHeaderItem.set("payrollHeaderId", payHeader.get("payrollHeaderId"));
 		       					payHeaderItem.set("payrollHeaderItemTypeId",payHeaderItemValue.get("payrollItemTypeId"));
-		       					payHeaderItem.set("amount", ((BigDecimal)payHeaderItemValue.get("amount")).setScale(0, BigDecimal.ROUND_HALF_UP));
+		       					BigDecimal itemAmount=(BigDecimal)payHeaderItemValue.get("amount");
+		       					if((payHeaderItemValue.get("payrollItemTypeId")).equals("PAYROL_BEN_SPELPAY")){
+		       						itemAmount=itemAmount.multiply(new BigDecimal(0.5));
+		       					}
+		       					payHeaderItem.set("amount", (itemAmount).setScale(0, BigDecimal.ROUND_HALF_UP));
 		       				    delegator.setNextSubSeqId(payHeaderItem, "payrollItemSeqId", 5, 1);
 					            delegator.create(payHeaderItem);
 					            //now populate item ref to loan recovery ,if the current head is loan deduction
@@ -2137,7 +2244,11 @@ public class PayrollService {
 		       					GenericValue payHeaderItem = delegator.makeValue("PayrollHeaderItemEc");
 		       					payHeaderItem.set("payrollHeaderId", payHeader.get("payrollHeaderId"));
 		       					payHeaderItem.set("payrollHeaderItemTypeId",payHeaderItemValue.get("payrollItemTypeId"));
-		       					payHeaderItem.set("amount", ((BigDecimal)payHeaderItemValue.get("amount")).setScale(0, BigDecimal.ROUND_HALF_UP));
+		       					BigDecimal payItemAmount=(BigDecimal)payHeaderItemValue.get("amount");
+		       					if((payHeaderItemValue.get("payrollItemTypeId")).equals("PAYROL_BEN_SPELPAY")){
+		       						payItemAmount=payItemAmount.multiply(new BigDecimal(0.5));
+		       					}
+		       					payHeaderItem.set("amount", (payItemAmount).setScale(0, BigDecimal.ROUND_HALF_UP));
 		       				    delegator.setNextSubSeqId(payHeaderItem, "payrollItemSeqId", 5, 1);
 					            delegator.create(payHeaderItem);
 							}
@@ -3909,10 +4020,21 @@ public class PayrollService {
 	        String deptId = (String) request.getParameter("deptId");
 	        BigDecimal noOfPayableDays=BigDecimal.ZERO;
 	        String noOfPayableDaysStr=(String)request.getParameter("noOfPayableDays");
+	        String screenFlag=(String)request.getParameter("screenFlag");
 	        if(UtilValidate.isNotEmpty(noOfPayableDaysStr)){
 	        	noOfPayableDays=new BigDecimal(noOfPayableDaysStr);
 	        }	
-	        
+	        //Added Check for payableDays of LeaveEncashment not exceeds 15
+	        if(UtilValidate.isNotEmpty(screenFlag) && (screenFlag.equals("leaveEncash"))){
+	        	if((noOfPayableDays.compareTo(new BigDecimal(15))) >0){	    	
+	        		request.setAttribute("_ERROR_MESSAGE_", "Payable Days exceeds 15");
+					return "error";
+	        	}
+	        	if((noOfPayableDays.compareTo(new BigDecimal(15))) <0){	    	
+	        		request.setAttribute("_ERROR_MESSAGE_", "Payable Days less than 15");
+					return "error";
+	        	}
+	        }
 	        BigDecimal noOfAttendedDays=BigDecimal.ZERO;
 	        String noOfAttendedDaysStr=(String)request.getParameter("noOfAttendedDays");
 	        if(UtilValidate.isNotEmpty(noOfAttendedDaysStr)){
@@ -3925,7 +4047,6 @@ public class PayrollService {
 	        	noOfCalenderDays=new BigDecimal(noOfCalenderDaysStr);
 	        }
 	        if((noOfPayableDays.compareTo(noOfCalenderDays)) >0){	    			
-	       // if(noOfPayableDays.compareTo(noOfCalenderDays) >=0){
 	 			request.setAttribute("_ERROR_MESSAGE_", "Payable Days exceeds CalenderDays");
 					return "error";
 	 		}
@@ -6002,6 +6123,7 @@ public static Map<String, Object> generateEmployerContributionPayrollBilling(Dis
         BigDecimal casualLeaves=(BigDecimal) context.get("CL");
         BigDecimal earnedLeaves=(BigDecimal) context.get("EL");
         BigDecimal HPLeaves=(BigDecimal) context.get("HPL");
+        BigDecimal enCashedDays=(BigDecimal) context.get("enCashedDays");
         String flag ="creditLeaves";
         List leaveTypeIds=FastList.newInstance();
         Map<String, Object> leadaysMap=FastMap.newInstance();
@@ -6016,7 +6138,9 @@ public static Map<String, Object> generateEmployerContributionPayrollBilling(Dis
         		BigDecimal adjustedDays=BigDecimal.ZERO;
         		if((leaveTypeIds.get(i)).equals("CL") || (leaveTypeIds.get(i)).equals("EL") || (leaveTypeIds.get(i)).equals("HPL")){
         			GenericValue customTimePeriod = delegator.findOne("CustomTimePeriod",UtilMisc.toMap("customTimePeriodId", customTimePeriodId), false);
+        			Debug.log("customTimePeriod============="+customTimePeriod);
         			Timestamp fromDateTime=UtilDateTime.toTimestamp(customTimePeriod.getDate("fromDate"));
+        			Debug.log("fromDateTime============="+fromDateTime);
         			Map customTimePeriodIdMap = PayrollService.checkPayrollGeneratedOrNotForDate(dctx,UtilMisc.toMap("userLogin",userLogin,"punchdate",fromDateTime));
         			if (ServiceUtil.isError(customTimePeriodIdMap)) {
         				return customTimePeriodIdMap;
@@ -6048,8 +6172,9 @@ public static Map<String, Object> generateEmployerContributionPayrollBilling(Dis
 		    		conList.add(EntityCondition.makeCondition("leaveTypeId",EntityOperator.EQUALS,leaveTypeIds.get(i)));
 		      	  	EntityCondition con = EntityCondition.makeCondition(conList,EntityOperator.AND);
 		      	  	List<GenericValue> emplLeavesList = delegator.findList("EmplLeaveBalanceStatus", con, null, null, null, false);
+		      	  	Debug.log("emplLeavesList============="+emplLeavesList);
 		      	  	if(UtilValidate.isEmpty(emplLeavesList)){
-		      	  	BigDecimal closingBalance=BigDecimal.ZERO;
+		      	  		BigDecimal closingBalance=BigDecimal.ZERO;
 		      	  		if(UtilValidate.isNotEmpty(leaveBalances) && leaveBalances !=null ){
 		      	  			 closingBalance=(BigDecimal) leaveBalances.get(leaveTypeIds.get(i));
 		      	  		}
@@ -6058,23 +6183,46 @@ public static Map<String, Object> generateEmployerContributionPayrollBilling(Dis
 						newEntity.set("partyId", partyId);
 						newEntity.set("leaveTypeId", leaveTypeIds.get(i));
 						newEntity.set("customTimePeriodId", customTimePeriodId);
-						newEntity.set("openingBalance", closingBalance);
-						newEntity.set("adjustedDays", adjustedDays);
+						if(((leaveTypeIds.get(i)).equals("EL")) && UtilValidate.isNotEmpty(enCashedDays)){
+							newEntity.set("openingBalance", closingBalance.subtract(enCashedDays));
+							newEntity.set("encashedDays", enCashedDays);
+						}else{
+							newEntity.set("openingBalance", closingBalance);
+							newEntity.set("adjustedDays", adjustedDays);
+						}
 						newEntity.create();
 		      	  	}else{
+		      	  		Debug.log("emplLeavesList======="+emplLeavesList);
 			      	  	GenericValue emplLeaves = EntityUtil.getFirst(emplLeavesList);
 			      	  	
-			      	  	adjustedDays=(BigDecimal)leadaysMap.get(leaveTypeIds.get(i));
-			      	  	adjustedDays=(adjustedDays).setScale(1,BigDecimal.ROUND_HALF_UP);
+			      	  if(((leaveTypeIds.get(i)).equals("EL")) && UtilValidate.isNotEmpty(enCashedDays)){
+			      		  	BigDecimal encashDays=BigDecimal.ZERO;
+		      	  			if(UtilValidate.isNotEmpty(emplLeaves.getBigDecimal("encashedDays"))){
+		      	  				encashDays=emplLeaves.getBigDecimal("encashedDays");
+		      	  			}
+		      	  			BigDecimal openingBal=BigDecimal.ZERO;
+		      	  			if(UtilValidate.isNotEmpty(emplLeaves.getBigDecimal("openingBalance"))){
+		      	  				openingBal=emplLeaves.getBigDecimal("openingBalance");
+		      	  			}		      	  			
+		      	  		   emplLeaves.set("openingBalance", openingBal.subtract(encashDays));
+			      		   emplLeaves.set("encashedDays", enCashedDays.add(encashDays));
+			      		   emplLeaves.store();
+						}else{
+							if(UtilValidate.isNotEmpty(leadaysMap.get(leaveTypeIds.get(i)))){
+								adjustedDays=(BigDecimal)leadaysMap.get(leaveTypeIds.get(i));
+					      	  	adjustedDays=(adjustedDays).setScale(1,BigDecimal.ROUND_HALF_UP);
+					      	  	
+					      	  	BigDecimal adjDays=BigDecimal.ZERO;
+				      	  		if(UtilValidate.isNotEmpty(emplLeaves.getBigDecimal("adjustedDays"))){
+				      	  			adjDays=emplLeaves.getBigDecimal("adjustedDays");
+				      	  		}
+					      	  	if(UtilValidate.isNotEmpty(adjustedDays)){
+							      	emplLeaves.set("adjustedDays", adjustedDays.add(adjDays));
+							      	emplLeaves.store();
+					      	  	}
+							}
+						}
 			      	  	
-			      	  	BigDecimal adjDays=BigDecimal.ZERO;
-		      	  		if(UtilValidate.isNotEmpty(emplLeaves.getBigDecimal("adjustedDays"))){
-		      	  			adjDays=emplLeaves.getBigDecimal("adjustedDays");
-		      	  		}
-			      	  	if(UtilValidate.isNotEmpty(adjustedDays) && (!adjustedDays.equals(adjDays))){
-					      	emplLeaves.set("adjustedDays", adjustedDays);
-					      	emplLeaves.store();
-			      	  	}
 		      	  	} 
         		}
         	}

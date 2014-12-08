@@ -183,6 +183,7 @@ under the License.emplpunch
         <attribute name="CL" mode="IN" type="BigDecimal" optional="true"/>
 		<attribute name="EL" mode="IN" type="BigDecimal" optional="true"/>
 		<attribute name="HPL" mode="IN" type="BigDecimal" optional="true"/> 
+		<attribute name="enCashedDays" mode="IN" type="BigDecimal" optional="true"/> 
     </service>
 
     <service name="createPerfReview" engine="simple" default-entity-name="PerfReview"
