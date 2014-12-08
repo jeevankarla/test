@@ -6185,7 +6185,8 @@ public static Map<String, Object> generateEmployerContributionPayrollBilling(Dis
 						newEntity.set("leaveTypeId", leaveTypeIds.get(i));
 						newEntity.set("customTimePeriodId", customTimePeriodId);
 						if(((leaveTypeIds.get(i)).equals("EL")) && UtilValidate.isNotEmpty(enCashedDays)){
-							newEntity.set("openingBalance", closingBalance.subtract(enCashedDays));
+							 newEntity.set("openingBalance", closingBalance);
+							//newEntity.set("openingBalance", closingBalance.subtract(enCashedDays));
 							newEntity.set("encashedDays", enCashedDays);
 						}else{
 							newEntity.set("openingBalance", closingBalance);
@@ -6200,12 +6201,14 @@ public static Map<String, Object> generateEmployerContributionPayrollBilling(Dis
 		      	  			if(UtilValidate.isNotEmpty(emplLeaves.getBigDecimal("encashedDays"))){
 		      	  				encashDays=emplLeaves.getBigDecimal("encashedDays");
 		      	  			}
-		      	  			BigDecimal openingBal=BigDecimal.ZERO;
+		      	  			/*BigDecimal openingBal=BigDecimal.ZERO;
 		      	  			if(UtilValidate.isNotEmpty(emplLeaves.getBigDecimal("openingBalance"))){
 		      	  				openingBal=emplLeaves.getBigDecimal("openingBalance");
 		      	  			}		      	  			
-		      	  		   emplLeaves.set("openingBalance", openingBal.subtract(encashDays));
-			      		   emplLeaves.set("encashedDays", enCashedDays.add(encashDays));
+		      	  		   emplLeaves.set("openingBalance", openingBal.subtract(encashDays));*/
+			      		  if((!enCashedDays.equals(encashDays))){
+			      		   		emplLeaves.set("encashedDays", enCashedDays);
+			      		  }
 			      		   emplLeaves.store();
 						}else{
 							if(UtilValidate.isNotEmpty(leadaysMap.get(leaveTypeIds.get(i)))){
@@ -6216,8 +6219,8 @@ public static Map<String, Object> generateEmployerContributionPayrollBilling(Dis
 				      	  		if(UtilValidate.isNotEmpty(emplLeaves.getBigDecimal("adjustedDays"))){
 				      	  			adjDays=emplLeaves.getBigDecimal("adjustedDays");
 				      	  		}
-					      	  	if(UtilValidate.isNotEmpty(adjustedDays)){
-							      	emplLeaves.set("adjustedDays", adjustedDays.add(adjDays));
+					      	  	if(UtilValidate.isNotEmpty(adjustedDays) && (!adjustedDays.equals(adjDays))){
+							      	emplLeaves.set("adjustedDays", adjustedDays);
 							      	emplLeaves.store();
 					      	  	}
 							}
