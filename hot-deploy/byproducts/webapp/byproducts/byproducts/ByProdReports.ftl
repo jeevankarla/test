@@ -187,6 +187,8 @@ function reportTypeChangeFunc() {
 		makeDatePicker("AvgFDRFDate","AvgFDRTDate");
 		makeDatePicker("GPFHFromDate","GPFHThruDate");
 		makeDatePicker("IOFromDateId","IOThruDateId");
+		makeDatePicker("conversionFDateId","conversionTDateId");
+		makeDatePicker("taxEnclosuerFDate","taxEnclosuerTDate");
 		$('#ui-datepicker-div').css('clip', 'auto');		
 	});
 //for Month Picker
@@ -838,22 +840,6 @@ function reportTypeChangeFunc() {
 	      					<td width="10%"><input type="submit" value="Download" class="buttontext"/></td>
 	  					</form>
 	  				</tr>
-	  				<!--<tr class="alternate-row">
-	  					<form id="ConversionChargesReport" name="ConversionChargesReport" method="post" action="<@ofbizUrl>ConversionChargesReport.pdf</@ofbizUrl>" target="_blank">	
-	  						<td width="30%">Conversion Charges Report</td>
-	  						<td width="15%">Period
-	  							<select name="customTimePeriodId" class='h4'>
-	            					<#list shopeeTimePeriodList as timePeriod>    
-	              	    				<option value='${timePeriod.customTimePeriodId}'>${timePeriod.fromDate}-${timePeriod.thruDate}</option>
-	            					</#list>            
-								</select>
-	      					</td>
-	      					<td width="15%"></td>
-	      					<td width="15%"></td>
-	      					<td width="15%"></td>
-	      					<td width="10%"><input type="submit" value="Download" class="buttontext"/></td>
-	  					</form>
-	  				</tr>-->
 	  				<tr class="alternate-row">
       					<form id="ChequeReturnsReport" name="ChequeReturnsReport" method="post" action="<@ofbizUrl>chequeReturnReport.pdf</@ofbizUrl>" target="_blank">	
 	      					<td width="30%">Cheque Returns Report</td>
@@ -1157,7 +1143,8 @@ function reportTypeChangeFunc() {
 				      			<option value="UNION">Sale to Union</option>
 				      			<option value="DEPOT_CUSTOMER">Depot Sale</option>
 			      			</select></td>
-	      					<td width="15%"></td>
+			      			<td width="15%"></td>
+	      					<#--<td width="15%">Party Code <input type="text" name="partyId" id="partyId" size="10" maxlength="22"></td>-->
 							<td width="10%"><input type="submit" value="Download" class="buttontext"/></td> 
 						</form>
 	                  </tr>
@@ -1255,6 +1242,44 @@ function reportTypeChangeFunc() {
 						<td width="10%"><input type="submit" value="Download" class="buttontext"/></td>      
 					</form>
 	              </tr>
+	             <#--<tr class="alternate-row">
+	  					<form id="ConversionChargesReport" name="ConversionChargesReport" method="post" action="<@ofbizUrl>ConversionChargesReport.pdf</@ofbizUrl>" target="_blank">	
+	  						<td width="30%">Conversion Charges Report</td>
+	  						<td width="15%">From<input  type="text" size="18pt" id="conversionFDateId" readonly  name="fromDate"/></td>
+	      					<td width="15%">Thru<input  type="text" size="18pt" id="conversionTDateId" readonly  name="thruDate"/></td>
+	      					<td width="15%">Category<select name="categoryType">
+				      			<option value="CON_CHG">Conversion Charges</option>
+				      			<option value="COPAC_CHG">Copacking Charges</option>
+				      			<option value="STOR_CHG">Storage Charges</option>
+			      			</select></td>
+	      					<td width="15%"></td>
+	      					<td width="10%"><input type="submit" value="Download" class="buttontext"/></td>
+	  					</form>
+	  				</tr>-->
+	  				<tr class="alternate-row">
+						<form id="iceCreamTaxEnclosuerReport" name="iceCreamTaxEnclosuerReport" method="post" action="<@ofbizUrl>iceCreamTaxEnclosuerReport.csv</@ofbizUrl>" target="_blank">	
+							<td width="30%">Vat Enclosure Report</td>
+							<td width="15%">From<input  type="text" size="18pt" id="taxEnclosuerFDate" readonly  name="fromDate"/></td>
+						    <td width="15%">To<input  type="text" size="18pt" id="taxEnclosuerTDate" readonly  name="thruDate"/></td>
+			      			<td width="15%">By<select name="categoryType">
+				      			<option value="ICE_CREAM_NANDINI">Nandini Ice Cream</option>
+				      			<option value="ICE_CREAM_AMUL">Amul Ice Cream</option>
+			      			</select></td>
+	      					  <#--<td width="15%">Report Type 
+								<select name='reportTypeFlag' id = "reportTypeFlag">
+								    <option value='VatEnclosueDetailed'>Vat Enclosure Detailed</option>
+								    <option value='VatEnclosueAbstract'>Vat Enclosure Abstract</option>
+								</select>
+							</td>-->	
+							 <td width="15%">Type
+			      			  <select name='taxType' id = "taxType" >
+				      			<option value="CST">CST</option>
+				      			<option value="VAT">VAT</option>
+				      			</select>
+				      		</td>
+							<td width="10%"><input type="submit" value="Download" class="buttontext"/></td> 
+						</form>
+	                  </tr>
 	              <#--
 	              <tr class="alternate-row">
 						<form id="purchaseReport" name="purchaseReport" method="post" action="<@ofbizUrl>purchaseReport.pdf</@ofbizUrl>" target="_blank">	

@@ -162,4 +162,16 @@
         <field name="milkAvgTotal" title="Average sales per day"><display/></field>
         <field name="paymentMethodType" title="Payment Mode"><display/></field>
     </form>
+    <form name="IceCreamTaxEnclosuerCSV" type="list" list-name="invoiceList" view-size="99999">
+        <field name="invoice" title="InVoice Number"><display/></field>
+        <field name="invoiceSequenceId" title="Central Excise Invoice Number"><display/></field>
+        <field name="invoiceDate" title="InVoice Date"><display/></field>
+        <field name="partyName" title="PartyName"><display/></field>
+        <field name="state" title="State"><display/></field>
+        <field name="idValue" title="TIN"><display/></field>
+        <field name="quantity" title="Quantity"><display/></field>
+        <field name="basicValue" title="Basic Value"><display/></field>
+        <field name="tax" title="Tax"><display/></field>
+        <field name="total" title="Total"><display/></field>
+    </form>
 </forms>

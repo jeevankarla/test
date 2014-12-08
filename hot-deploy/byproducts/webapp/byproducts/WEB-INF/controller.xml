@@ -1458,6 +1458,10 @@
      <security https="true" auth="true"/>
     	<response name="success" type="view" value="ShoppeRentReportPDF"/>
     </request-map>
+    <request-map uri="ConversionChargesReport.pdf">
+     <security https="true" auth="true"/>
+    	<response name="success" type="view" value="ConversionChargesReportPDF"/>
+    </request-map>
     <request-map uri="DTCFinesAndPenaltiesReport.pdf">
      <security https="true" auth="true"/>
     	<response name="success" type="view" value="DTCFinesAndPenaltiesReportPDF"/>
@@ -1494,6 +1498,10 @@
      <request-map uri="iceCreamSaleBookReport.pdf">
      <security https="true" auth="true"/>
     	<response name="success" type="view" value="IceCreamSaleBookReportPDF"/>
+    </request-map>
+     <request-map uri="iceCreamTaxEnclosuerReport.csv">
+     <security https="true" auth="true"/>
+    	<response name="success" type="view" value="IceCreamTaxEnclosuerReportCSV"/>
     </request-map>
     <request-map uri="saleInvoiceAbstractReport.pdf">
      <security https="true" auth="true"/>
@@ -1753,7 +1761,7 @@
 	
 	<view-map name="TerminatedRetailerspdf" type="screenfop" page="component://byproducts/widget/ByProductsReportScreens.xml#TerminatedRetailerspdf" content-type="application/pdf"/>
 	
-	
+	<view-map name="ConversionChargesReportPDF" type="screenfop" page="component://byproducts/widget/ByProductsReportScreens.xml#ConversionChargesReportPDF" content-type="application/pdf"/>
 	<view-map name="RetailerLedgerAbstractPDF" type="screenfop" page="component://byproducts/widget/ByProductsReportScreens.xml#RetailerLedgerAbstractPDF" content-type="application/pdf"/>
 	<view-map name="ShoppeRentReportPDF" type="screenfop" page="component://byproducts/widget/ByProductsReportScreens.xml#ShoppeRentReportPDF" content-type="application/pdf"/>
 	<view-map name="MonthlyVatReportPDF" type="screenfop" page="component://byproducts/widget/ByProductsReportScreens.xml#MonthlyVatReportPDF" content-type="application/pdf"/>
@@ -1772,6 +1780,7 @@
 	<view-map name="RegularIceCreamSaleBookPDF" type="screenfop" page="component://byproducts/widget/ByProductsReportScreens.xml#RegularIceCreamSaleBookPDF" content-type="application/pdf"/>
 	<view-map name="IceCreamSaleBookReportPDF" type="screenfop" page="component://byproducts/widget/ByProductsReportScreens.xml#IceCreamSaleBookReportPDF" content-type="application/pdf"/>
 	<view-map name="IceCreamDueParticularsPDF" type="screenfop" page="component://byproducts/widget/ByProductsReportScreens.xml#IceCreamDueParticularsPDF" content-type="application/pdf"/>
+	<view-map name="IceCreamTaxEnclosuerReportCSV" type="screencsv" page="component://byproducts/widget/ByProductsReportScreens.xml#IceCreamTaxEnclosuerReportCSV" content-type="text/csv"/>
 	
 	<view-map name="InvoiceAbstractReport" type="screenfop" page="component://byproducts/widget/ByProductsReportScreens.xml#InvoiceAbstractReport" content-type="application/pdf"/>
 	<view-map name="PurchaseRegisterBook" type="screenfop" page="component://byproducts/widget/ByProductsReportScreens.xml#PurchaseRegisterBook" content-type="application/pdf"/>
