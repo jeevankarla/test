@@ -133,6 +133,7 @@ if(UtilValidate.isNotEmpty(employementList)){
 			tempFinalMap["noOfHalfPayDays"]="";
 		}else{
 			tempFinalMap["noOfCalenderDays"]=30;
+			tempFinalMap["screenFlag"]=screenFlag;
 		}
 		
 		 emplPayrollAttendanceList.each{payrollAttendance->
@@ -143,6 +144,7 @@ if(UtilValidate.isNotEmpty(employementList)){
 				customTimePeriodId=timePeriodId
 				noOfCalenderDays=30;
 				tempFinalMap.put("noOfCalenderDays",noOfCalenderDays);
+				tempFinalMap["screenFlag"]=screenFlag;
 			}
 			
 			noOfPayableDays="";
