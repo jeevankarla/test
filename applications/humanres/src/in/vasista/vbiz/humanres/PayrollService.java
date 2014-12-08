@@ -2071,6 +2071,7 @@ public class PayrollService {
 			        	//getting payroll Attendance Employees.			        	
 			        	 List attnConList = FastList.newInstance();
 			        	 	attnConList.add(EntityCondition.makeCondition("customTimePeriodId" ,EntityOperator.EQUALS ,customTimePeriodId));
+			        	 	attnConList.add(EntityCondition.makeCondition("noOfPayableDays" ,EntityOperator.NOT_EQUAL ,BigDecimal.ZERO));
 				            EntityCondition attnCond = EntityCondition.makeCondition(attnConList,EntityOperator.AND);
 				            List<GenericValue> payrollAttnEmployessList = delegator.findList("PayrollAttendance", attnCond, null, null, null, false);
 				            List payrollAttnEmplIds=FastList.newInstance();
@@ -2281,7 +2282,7 @@ public class PayrollService {
 			result.put("periodBillingId", periodBillingId);
 			return result;
 		
-			}
+		}
 	    public static List<GenericValue> makePayHeadPriceRuleList(DispatchContext dctx,Map<String, Object> context) throws GenericEntityException {
 	        List<GenericValue> payHeadPriceRules = null;
 	        GenericDelegator delegator = (GenericDelegator) dctx.getDelegator();
@@ -2299,6 +2300,9 @@ public class PayrollService {
 	        }
 	        return payHeadPriceRules;
 	    } 
+	    
+	    
+	    
 	    public static Map<String, Object> calcPriceResultFromRules(DispatchContext dctx, Map<String, Object> context) throws GenericEntityException {
 
 	            Map<String, Object> calcResults = FastMap.newInstance();
@@ -4030,7 +4034,7 @@ public class PayrollService {
 	        		request.setAttribute("_ERROR_MESSAGE_", "Payable Days exceeds 15");
 					return "error";
 	        	}
-	        	if((noOfPayableDays.compareTo(new BigDecimal(15))) <0){	    	
+	        	if(((noOfPayableDays.compareTo(new BigDecimal(15))) <0)&& ((noOfPayableDays.compareTo(BigDecimal.ZERO)) !=0)){	    	
 	        		request.setAttribute("_ERROR_MESSAGE_", "Payable Days less than 15");
 					return "error";
 	        	}
