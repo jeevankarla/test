@@ -64,17 +64,18 @@
 	function datepick()	{
 	  var startDate = new Date('${payment.paymentDate?if_exists}');		
 		$( "#transactionDate" ).datetimepicker({
-			dateFormat:'dd-mm-yy',
+			dateFormat:'yy-mm-dd',
+			showSecond: true,
+			timeFormat: 'hh:mm:ss',
 			//onSelect: function(onlyDate){ // Just a work around to append current time without time picker
 	        //    var nowTime = new Date(); 
 	        //    onlyDate=onlyDate+" "+nowTime.getHours()+":"+nowTime.getMinutes()+":"+nowTime.getSeconds();
 	        //    $('#transactionDate').val(onlyDate);
 	        //},
-			changeMonth: false,
+	        changeMonth: false,
 			minDate:startDate,
 			numberOfMonths: 1});		
 		$('#ui-datepicker-div').css('clip', 'auto');
-		
 	}
 	
 	function datepick1()	{
