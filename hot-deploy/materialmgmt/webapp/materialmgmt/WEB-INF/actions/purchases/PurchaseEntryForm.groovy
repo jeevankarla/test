@@ -104,7 +104,8 @@ if(billToPartyPostalAddress){
 
 prodList=[];
 
-if(UtilValidate.isNotEmpty(changeFlag) && changeFlag == "PurchaseOrder"){
+//if(UtilValidate.isNotEmpty(changeFlag) && changeFlag == "PurchaseOrder"){
+if(UtilValidate.isNotEmpty(changeFlag) &&( (changeFlag == "InterUnitPurchase")||(changeFlag == "PurchaseOrder"))){
 	exprList.clear();
 	exprList.add(EntityCondition.makeCondition("productId", EntityOperator.NOT_EQUAL, "_NA_"));
 	exprList.add(EntityCondition.makeCondition("productTypeId", EntityOperator.EQUALS, "RAW_MATERIAL"));
