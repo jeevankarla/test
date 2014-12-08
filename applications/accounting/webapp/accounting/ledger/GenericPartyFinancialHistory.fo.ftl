@@ -221,8 +221,9 @@ under the License.
               </fo:block> 		
 			</fo:flow>
 		</fo:page-sequence>
+		</#if>
 		<#-- AP LEDGER -->
-		<#elseif dayWiseApDetailMap?has_content>
+		<#if dayWiseApDetailMap?has_content>
        <#assign partyLedgerList = dayWiseApDetailMap.entrySet()>
       
 		        <fo:page-sequence master-reference="main" font-size="10pt">	
@@ -406,16 +407,16 @@ under the License.
               </fo:block> 		
 			</fo:flow>
 		</fo:page-sequence>
-		
-	<#else>
-	<fo:page-sequence master-reference="main">
-    	<fo:flow flow-name="xsl-region-body" font-family="Helvetica">
-       		 <fo:block font-size="14pt">
-            	${uiLabelMap.NoOrdersFound}.
-       		 </fo:block>
-    	</fo:flow>
-	</fo:page-sequence>	
-  </#if>   
+		 </#if>
+			<#if !(dayWiseArDetailMap?has_content) && !(dayWiseApDetailMap?has_content) >
+			<fo:page-sequence master-reference="main">
+				<fo:flow flow-name="xsl-region-body" font-family="Helvetica">
+			   		 <fo:block font-size="14pt">
+			        	${uiLabelMap.NoOrdersFound}
+			   		 </fo:block>
+				</fo:flow>
+			</fo:page-sequence>	
+		</#if>   
  </#if>
  </fo:root>
 </#escape>
