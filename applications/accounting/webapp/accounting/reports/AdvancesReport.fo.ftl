@@ -184,7 +184,7 @@ ${setRequestAttribute("OUTPUT_FILENAME", "abstractReport.pdf")}
                                   </fo:block>  
                        			</fo:table-cell><fo:table-cell border-style="solid">
                             		<fo:block font-weight="bold" text-align="right" keep-together="always" font-size="13pt" white-space-collapse="false"> 
-                                         ${totalduDebit?if_exists?string("#0.00")}
+                                         ${totalduCredit?if_exists?string("#0.00")}
                                   </fo:block>  
                        			</fo:table-cell><fo:table-cell border-style="solid">
                             		<fo:block font-weight="bold" text-align="right" keep-together="always" font-size="13pt" white-space-collapse="false"> 
@@ -192,7 +192,7 @@ ${setRequestAttribute("OUTPUT_FILENAME", "abstractReport.pdf")}
                                   </fo:block>  
                        			</fo:table-cell><fo:table-cell border-style="solid">
                             		<fo:block  font-weight="bold" text-align="right" keep-together="always" font-size="13pt" white-space-collapse="false"> 
-                                         ${totalCBDebit?if_exists?string("#0.00")}
+                                         ${totalCBCredit?if_exists?string("#0.00")}
                                   </fo:block>  
                        			</fo:table-cell>
 							</fo:table-row>	
