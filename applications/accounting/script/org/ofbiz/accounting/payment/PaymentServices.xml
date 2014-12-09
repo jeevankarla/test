@@ -245,7 +245,7 @@ under the License.
     <simple-method method-name="createPaymentApplication" short-description="Create a Payment Application">
  		<entity-one entity-name="Payment" value-field="payment"/>
       	<set field="paymentToApply" type="BigDecimal" value="${bsh:org.ofbiz.accounting.payment.PaymentWorker.getPaymentNotApplied(payment)}"/>
-    	<if-compare operator="equals" field="parameters.amountApplied" value="0.0" type="BigDecimal">
+    	<if-compare operator="equals" field="parameters.amountApplied" value="0.00" type="BigDecimal">
     		 <log level="always" message="payment application not creating  because amountApplied is ZERO"/>
     		<return/>
     	</if-compare>
