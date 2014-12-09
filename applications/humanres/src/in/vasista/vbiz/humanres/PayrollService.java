@@ -2097,13 +2097,11 @@ public class PayrollService {
 				            	emplIds= EntityUtil.getFieldListFromEntityList(payrollHeaderIdsList, "partyIdFrom", true);
 				        	} 
 				            
-				            Debug.log("emplIds========="+emplIds);
 			        	for (int i = 0; i < employementList.size(); ++i) {		
 			        		GenericValue employment = employementList.get(i);
 			        		String employeeId = employment.getString("partyIdTo");
 			        		if(payrollAttnEmplIds.contains(employeeId) && ((UtilValidate.isNotEmpty(emplIds) &&(!emplIds.contains(employeeId))) || (UtilValidate.isEmpty(emplIds)))){
 				        		context.put("employeeId", employeeId);
-				        		Debug.log("employeeId========="+employeeId);
 				        		/*Map employeePayrollAttedance = getEmployeePayrollAttedance(dctx,context);
 				        		if(UtilValidate.isNotEmpty(employeePayrollAttedance.get("noOfPayableDays")) &&
 				        				(new BigDecimal((Double)employeePayrollAttedance.get("noOfPayableDays"))).compareTo(BigDecimal.ZERO)==0){
@@ -2208,10 +2206,17 @@ public class PayrollService {
 								if(UtilValidate.isEmpty(payHeaderItemValue.get("amount")) || (((BigDecimal)payHeaderItemValue.get("amount")).compareTo(BigDecimal.ZERO) ==0) ){
 									continue;
 								}
+								GenericValue employeeDetail = delegator.findOne("EmployeeDetail", UtilMisc.toMap("partyId", payHeaderValue.get("partyIdFrom")), false);
+						        if(UtilValidate.isNotEmpty(employeeDetail.get("quarterType"))){
+						        	
+						        }
 		       					GenericValue payHeaderItem = delegator.makeValue("PayrollHeaderItem");
 		       					payHeaderItem.set("payrollHeaderId", payHeader.get("payrollHeaderId"));
 		       					payHeaderItem.set("payrollHeaderItemTypeId",payHeaderItemValue.get("payrollItemTypeId"));
 		       					BigDecimal itemAmount=(BigDecimal)payHeaderItemValue.get("amount");
+		       					if(UtilValidate.isNotEmpty(employeeDetail.get("quarterType")) && ((payHeaderItemValue.get("payrollItemTypeId")).equals("PAYROL_BEN_HRA"))){
+		       						itemAmount=BigDecimal.ZERO;
+						        }
 		       					if((payHeaderItemValue.get("payrollItemTypeId")).equals("PAYROL_BEN_SPELPAY")){
 		       						itemAmount=itemAmount.multiply(new BigDecimal(0.5));
 		       					}
@@ -6319,5 +6324,6 @@ public static Map<String, Object> generateEmployerContributionPayrollBilling(Dis
 		}
 		result.put("amount", amount);
 		return result;
-	}
+	}	
+	
 }//end of class
