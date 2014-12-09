@@ -703,28 +703,6 @@ function setOrgPartyId() {
 							</form>
 						</table>
 					</tr>
-					<tr class="alternate-row"> 
-						<form id="GSLISReport" name="GSLISReport" mothed="post" action="<@ofbizUrl>GSLISReport.pdf</@ofbizUrl>" target="_blank">
-							<table class="basic-table" cellspacing="5">
-								<tr class="alternate-row">
-									<td width="25%"><span class='h3'>GSLIS Report</span></td>
-									<td width="50%"><span class='h3'>Period Id</span>
-										<select name="customTimePeriodId" id="customTimePeriodId" class='h5' >
-											<#list customTimePeriodList as customTimePeriod>
-												 <#if defaultTimePeriodId?exists && (defaultTimePeriodId == customTimePeriod.customTimePeriodId)>
-							      					<option value='${customTimePeriod.customTimePeriodId?if_exists}' selected="selected">${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(customTimePeriod.fromDate, "dd MMMMM, yyyy")} -${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(customTimePeriod.thruDate, "dd MMMMM, yyyy")}</option>
-							      					<#else>
-							      						<option value='${customTimePeriod.customTimePeriodId?if_exists}' >${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(customTimePeriod.fromDate, "dd MMMMM, yyyy")} -${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(customTimePeriod.thruDate, "dd MMMMM, yyyy")}</option>
-							                  		</option>
-							      				</#if>
-									        </#list>
-										</select>
-									</td>
-									<td width="25%"><span class='h3'><input type="submit" value="Download" class="buttontext"></span></td>
-								</tr>
-							</table>
-						</form>
-					</tr>
 				   	<tr class="alternate-row"> 
 						<form id="IncrementCertificate" name="IncrementCertificate" mothed="post" action="<@ofbizUrl>IncrementCertificate.pdf</@ofbizUrl>" target="_blank">
 							<table class="basic-table" cellspacing="5">
@@ -1191,6 +1169,37 @@ function setOrgPartyId() {
 									<td width="15%"><span class='h3'><input type="submit" value="Download" class="buttontext"></span></td> 
 								</tr>
 							</table>	
+						</form>
+					</tr>
+					<tr class="alternate-row"> 
+						<form id="GSLISReport" name="GSLISReport" mothed="post" action="<@ofbizUrl>GSLISReport.pdf</@ofbizUrl>" target="_blank">
+							<table class="basic-table" cellspacing="5">
+								<tr class="alternate-row">
+									<td width="25%"><span class='h3'>GSLIS Report</span></td>
+									<td width="30%">
+										<span class='h6'>
+											<select name="EmplType" class='h6'>
+												<option value=''></option>
+												<option value='MDStaff'>MDStaff</option>
+												<option value='DeputationStaff'>DeputationStaff</option>
+											</select>
+										</span>
+									</td>
+									<td width="32%"><span class='h3'>Period Id</span>
+										<select name="customTimePeriodId" id="customTimePeriodId" class='h5' >
+											<#list customTimePeriodList as customTimePeriod>
+												 <#if defaultTimePeriodId?exists && (defaultTimePeriodId == customTimePeriod.customTimePeriodId)>
+							      					<option value='${customTimePeriod.customTimePeriodId?if_exists}' selected="selected">${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(customTimePeriod.fromDate, "dd MMMMM, yyyy")} -${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(customTimePeriod.thruDate, "dd MMMMM, yyyy")}</option>
+							      					<#else>
+							      						<option value='${customTimePeriod.customTimePeriodId?if_exists}' >${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(customTimePeriod.fromDate, "dd MMMMM, yyyy")} -${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(customTimePeriod.thruDate, "dd MMMMM, yyyy")}</option>
+							                  		</option>
+							      				</#if>
+									        </#list>
+										</select>
+									</td>
+									<td width="25%"><span class='h3'><input type="submit" value="Download" class="buttontext"></span></td>
+								</tr>
+							</table>
 						</form>
 					</tr>
 			   	</table>
