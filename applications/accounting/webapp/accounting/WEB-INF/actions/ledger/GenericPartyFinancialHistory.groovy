@@ -75,6 +75,7 @@ totalInvSaApplied         = BigDecimal.ZERO;
 totalInvSaNotApplied     = BigDecimal.ZERO;
 totalInvPuApplied         = BigDecimal.ZERO;
 totalInvPuNotApplied     = BigDecimal.ZERO;
+
 conditionList=[];
 
 conditionList.add(EntityCondition.makeCondition("statusId", EntityOperator.NOT_EQUAL, "INVOICE_IN_PROCESS"));
@@ -153,6 +154,7 @@ while (invoice = invIterator.next()) {
 	innerMap=[:];
 	curntDay=UtilDateTime.toDateString(invoiceDate ,"dd-MM-yyyy");
 	//Debug.log("=curntDay=="+curntDay);
+	//Debug.log("=curntDay=="+curntDay+"==invId=="+invoice.invoiceId);
 	innerMap["partyId"]="";
 	innerMap["date"]=curntDay;
 	innerMap["purposeTypeId"]=invoice.purposeTypeId;
@@ -276,7 +278,7 @@ while (payment = payIterator.next()) {
 	payCounter=payCounter+1;
 	innerMap=[:];
 	curntDay=UtilDateTime.toDateString(paymentDate ,"dd-MM-yyyy");
-	//Debug.log("=curntDay===in=Payment=="+curntDay);
+	//Debug.log("=curntDay===in=Payment=="+curntDay+"==paymentId=");
 	innerMap["partyId"]="";
 	innerMap["date"]=curntDay;
 	innerMap["paymentDate"]=payment.paymentDate;
@@ -302,7 +304,7 @@ while (payment = payIterator.next()) {
 			 dayPaymentList.addAll(innerMap);
 			apPaymentDetailsMap.put(curntDay, dayPaymentList);
 		}
-		apPaymentDetailsMap.put("amount",arPaymentDetailsMap.get("amount").add(payment.amount));
+		apPaymentDetailsMap.put("amount",apPaymentDetailsMap.get("amount").add(payment.amount));
     }
     else if ("RECEIPT".equals(payment.parentTypeId)) {
 		innerMap["partyId"]=payment.partyIdFrom;
@@ -340,6 +342,9 @@ dayBegin = UtilDateTime.getDayStart(fromDateTime);
 dayEnd = UtilDateTime.getDayEnd(thruDateTime);
 context.fromDate=dayBegin;
 context.thruDate=dayEnd;
+//Debug.log("=curntDay===in=dayBegin=="+dayBegin+"==dayEnd==="+dayEnd);
+//Debug.log("=======arInvoiceDetailsMap==>"+arInvoiceDetailsMap);
+//Debug.log("=======apInvoiceDetailsMap==>"+apInvoiceDetailsMap);
 totalDays= UtilDateTime.getIntervalInDays(dayBegin,dayEnd)+1;
 dayWiseArDetailMap=[:];
 dayWiseApDetailMap=[:];
@@ -374,12 +379,41 @@ dayWiseApDetailMap["totInvoiceValue"]=apInvoiceDetailsMap.get("invTotal");
 dayWiseApDetailMap["totPaymentValue"]=apInvoiceDetailsMap.get("amount");*/
 context.arInvoiceDetailsMap=arInvoiceDetailsMap;
 context.apInvoiceDetailsMap=apInvoiceDetailsMap;
+
 context.arPaymentDetailsMap=arPaymentDetailsMap;
 context.apPaymentDetailsMap=apPaymentDetailsMap;
+
 context.dayWiseArDetailMap=dayWiseArDetailMap;
 context.dayWiseApDetailMap=dayWiseApDetailMap;
 
+//Debug.log("=======dayWiseArDetailMap==>"+dayWiseArDetailMap);
+//Debug.log("=======dayWiseApDetailMap==>"+dayWiseApDetailMap);
 
+arOpeningBalance  =BigDecimal.ZERO;
+arClosingBalance  =BigDecimal.ZERO;
+
+apOpeningBalance  =BigDecimal.ZERO;
+apClosingBalance  =BigDecimal.ZERO;
+
+if(UtilValidate.isNotEmpty(parameters.partyId)){
+	arOpeningBalance = (org.ofbiz.accounting.ledger.GeneralLedgerServices.getGenericOpeningBalanceForParty( dctx , [userLogin: userLogin, tillDate: dayBegin, partyId:parameters.partyId])).get("openingBalance");
+	//openingBalance2 = (in.vasista.vbiz.byproducts.ByProductNetworkServices.getOpeningBalanceForParty( dctx , [userLogin: userLogin, saleDate: dayBegin, partyId:parameters.partyId])).get("openingBalance");
+	//Debug.log("=======openingBalance====openingBalance2===>"+openingBalance2);
+	apOpeningBalance = (org.ofbiz.accounting.ledger.GeneralLedgerServices.getGenericOpeningBalanceForParty( dctx , [userLogin: userLogin, tillDate: dayBegin, partyId:parameters.partyId,isOBCallForAP:Boolean.TRUE])).get("openingBalance");
+	}
+	
+	arClosingBalance=(arOpeningBalance+arInvoiceDetailsMap.get("invTotal"))-(arPaymentDetailsMap.get("amount"));
+	
+	apClosingBalance=(apOpeningBalance+apInvoiceDetailsMap.get("invTotal"))-(apPaymentDetailsMap.get("amount"));
+	Debug.log("====FINALLL==ARRRR=arClosingBalance==>"+arClosingBalance+"=arOpeningBalance==="+arOpeningBalance);
+	Debug.log("====FINALLL=APPPP==apClosingBalance==>"+apClosingBalance+"=apOpeningBalance==="+apOpeningBalance);
+	
+	context.arOpeningBalance=arOpeningBalance;
+	context.arClosingBalance=arClosingBalance;
+	
+	context.apOpeningBalance=apOpeningBalance;
+	context.apClosingBalance=apClosingBalance;
+	
 //transferAmount = totalInvSaApplied.add(totalInvSaNotApplied).subtract(totalInvPuApplied.add(totalInvPuNotApplied)).subtract(totalPayInApplied.add(totalPayInNotApplied).add(totalPayOutApplied.add(totalPayOutNotApplied)));
 
 
