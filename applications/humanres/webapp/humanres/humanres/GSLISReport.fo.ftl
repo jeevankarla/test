@@ -20,7 +20,13 @@
 	        		<fo:block  keep-together="always" text-align="center" font-family="Courier,monospace" white-space-collapse="false" font-weight="bold"> ${partyGroup.groupName?if_exists}</fo:block>
 					<fo:block  keep-together="always" text-align="center" font-family="Courier,monospace" white-space-collapse="false" font-weight="bold"> ${postalAddress[0].address1?if_exists}</fo:block>
 	        		<fo:block  keep-together="always" text-align="center" font-family="Courier,monospace" white-space-collapse="false" font-weight="bold">&#160;      </fo:block>
-	        		<fo:block text-align="center" keep-together="always" white-space-collapse="false">GSLIS REPORT FOR THE MONTH OF ${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(fromDate, "MMMM yyyy")}</fo:block>	
+	        		if((parameters.EmplType).equals("DeputationStaff")){
+	        		<#if parameters.EmplType == "MDStaff">
+	        			<fo:block text-align="center" keep-together="always" white-space-collapse="false">GSLIS REPORT FOR MOTHER DAIRY STAFF FOR THE MONTH OF ${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(fromDate, "MMMM yyyy")}</fo:block>	
+	        		</#if>
+	        		<#if parameters.EmplType == "DeputationStaff">
+	        			<fo:block text-align="center" keep-together="always" white-space-collapse="false">GSLIS REPORT FOR DEPUTATION STAFF THE MONTH OF ${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(fromDate, "MMMM yyyy")}</fo:block>	
+	        		</#if>
 	        		<fo:block  keep-together="always" text-align="center" font-family="Courier,monospace" white-space-collapse="false" font-weight="bold">&#160;      </fo:block> 
 	        		<fo:block text-align="left" keep-together="always" white-space-collapse="false">&#160;                                                                         PAGE NO: <fo:page-number/></fo:block>	 	 	  	 	  
 	        		<fo:block text-align="left" keep-together="always" font-size="12pt">---------------------------------------------------------------------------------------------</fo:block>
