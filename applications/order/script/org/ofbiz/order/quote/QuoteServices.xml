@@ -154,7 +154,6 @@ under the License.
     </simple-method>
 	
 	<simple-method method-name="createQuoteStatus" short-description="Create Quote Status">
-		<log level="always" message="######### create Quote status called for params ${parameters}"></log>
         <make-value value-field="newEntity" entity-name="QuoteStatus"/>
         <sequenced-id sequence-name="QuoteStatus" field="newEntity.quoteStatusId"/>
         <set-nonpk-fields map="parameters" value-field="newEntity"/>
@@ -162,7 +161,6 @@ under the License.
             <now-timestamp field="nowTimestamp"/>
             <set from-field="nowTimestamp" field="newEntity.statusDatetime"/>
         </if-empty>
-        <log level="always" message="######### create Quote status  ${newEntity}"></log>
         <create-value value-field="newEntity"/>
     </simple-method>
     
@@ -324,7 +322,6 @@ under the License.
     <!-- create a new QuoteItem -->
     <simple-method method-name="createQuoteItem" short-description="Create a QuoteItem">
         <entity-one entity-name="Quote" value-field="quote" auto-field-map="true"/>
-        <log level="always" message="#### quoteitem service started"></log>
         <if>
             <condition>
                 <and>
@@ -405,9 +402,7 @@ under the License.
         <set field="createQuoteStatusInMap.statusId" from-field="newEntity.statusId"/>
         <set field="createQuoteStatusInMap.quoteId" from-field="newEntity.quoteId"/>
         <set field="createQuoteStatusInMap.quoteItemSeqId" from-field="newEntity.quoteItemSeqId"/>
-        <log level="always" message="###### test ${createQuoteStatusInMap}"></log>
 		<call-service service-name="setQuoteAndItemStatus" in-map-name="createQuoteStatusInMap" />
-		<log level="always" message="###### testafter create"></log>
         <check-errors/>
     </simple-method>
 
