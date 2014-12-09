@@ -52,6 +52,15 @@ under the License.
         <auto-attributes include="pk" mode="IN" optional="false"/>
         <auto-attributes include="nonpk" mode="IN" optional="true"/>
     </service>
+    
+    <service name="createQuoteStatus" default-entity-name="QuoteStatus" engine="simple"
+                location="component://order/script/org/ofbiz/order/quote/QuoteServices.xml" invoke="createQuoteStatus" auth="true">
+        <description>create Quote Status</description>
+        <attribute name="quoteId" mode="IN" type="String" optional="false"/>
+        <attribute name="quoteItemSeqId" mode="IN" type="String" optional="true"/>
+        <attribute name="statusId" mode="IN" type="String" optional="false"/>
+    </service>
+    
     <service name="copyQuote" default-entity-name="Quote" engine="simple"
                 location="component://order/script/org/ofbiz/order/quote/QuoteServices.xml" invoke="copyQuote" auth="true">
         <description>Copy a Quote</description>

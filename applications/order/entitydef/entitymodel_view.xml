@@ -1664,6 +1664,41 @@ under the License.
         <key-map field-name="currentStatusId" rel-field-name="statusId"/>
       </relation>
     </view-entity>
+    <view-entity entity-name="QuoteAndItemAndCustRequest"
+      package-name="org.ofbiz.order.quote"
+      title="Quote And Quote Item And CustRequest">
+      <description>Shows Items for a Quote And CustRequest</description>
+      <member-entity entity-alias="QUO" entity-name="Quote"/>
+      <member-entity entity-alias="CR" entity-name="CustRequest"/>
+      <member-entity entity-alias="QITM" entity-name="QuoteItem"/>
+      <alias-all entity-alias="Quote" />
+      <alias name="fromPartyId" entity-alias="CR"/>
+      <alias name="crStatusId" field="statusId" entity-alias="CR"/>
+      <alias name="custRequestDate" entity-alias="CR"/>
+      <alias name="quoteItemSeqId" entity-alias="QITM"/>
+      <alias name="qiStatusId" field="statusId" entity-alias="QITM"/>
+      <alias name="productId" entity-alias="QITM"/>
+      <alias name="custRequestId" entity-alias="QITM"/>
+      <alias name="custRequestItemSeqId" entity-alias="QITM"/>
+      <alias name="quantity" entity-alias="QITM"/>
+      <alias name="quoteUnitPrice" entity-alias="QITM"/>
+      <alias name="quoteId" entity-alias="QUO"/>
+      <alias name="quoteTypeId" entity-alias="QUO"/>
+      <alias name="partyId" entity-alias="QUO"/>
+      <alias name="issueDate" entity-alias="QUO"/>
+      <alias name="statusId" entity-alias="QUO"/>
+      <alias name="validFromDate" entity-alias="QUO"/>
+      <alias name="validThruDate" entity-alias="QUO"/>
+      <alias name="quoteName" entity-alias="QUO"/>
+      
+      <view-link entity-alias="QITM" rel-entity-alias="QUO">
+        <key-map field-name="quoteId"/>
+      </view-link>
+      <view-link entity-alias="QITM" rel-entity-alias="CR">
+        <key-map field-name="custRequestId"/>
+      </view-link>
+    </view-entity>
+    
     <view-entity entity-name="RequirementAndRole"
             package-name="org.ofbiz.order.request"
             title="Requirement And Role View Entity">

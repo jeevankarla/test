@@ -146,10 +146,26 @@ under the License.
             <set value="REQ_TAKER" field="takerMap.roleTypeId"/>
             <call-service service-name="createQuoteRole" in-map-name="takerMap"/>
         </if-compare-field>
-
+        
+        <set field="createQuoteStatusInMap.statusId" from-field="newEntity.statusId"/>
+        <set field="createQuoteStatusInMap.quoteId" from-field="newEntity.quoteId"/>
+		<call-service service-name="setQuoteAndItemStatus" in-map-name="createQuoteStatusInMap" />
         <check-errors/>
     </simple-method>
-
+	
+	<simple-method method-name="createQuoteStatus" short-description="Create Quote Status">
+		<log level="always" message="######### create Quote status called for params ${parameters}"></log>
+        <make-value value-field="newEntity" entity-name="QuoteStatus"/>
+        <sequenced-id sequence-name="QuoteStatus" field="newEntity.quoteStatusId"/>
+        <set-nonpk-fields map="parameters" value-field="newEntity"/>
+        <if-empty field="newEntity.statusDatetime">
+            <now-timestamp field="nowTimestamp"/>
+            <set from-field="nowTimestamp" field="newEntity.statusDatetime"/>
+        </if-empty>
+        <log level="always" message="######### create Quote status  ${newEntity}"></log>
+        <create-value value-field="newEntity"/>
+    </simple-method>
+    
     <!-- update an existing Quote -->
     <simple-method method-name="updateQuote" short-description="Update an existing Quote">
         <check-permission permission="ORDERMGR" action="_UPDATE">
@@ -308,6 +324,7 @@ under the License.
     <!-- create a new QuoteItem -->
     <simple-method method-name="createQuoteItem" short-description="Create a QuoteItem">
         <entity-one entity-name="Quote" value-field="quote" auto-field-map="true"/>
+        <log level="always" message="#### quoteitem service started"></log>
         <if>
             <condition>
                 <and>
@@ -335,9 +352,13 @@ under the License.
             <make-next-seq-id value-field="newEntity" seq-field-name="quoteItemSeqId"/>
             <set from-field="quoteItemSeqId" field="newEntity.quoteItemSeqId"/>
         </if-empty>
+        <if-empty field="newEntity.statusId">
+            <set field="newEntity.statusId" value="QTITM_CREATED"/>
+        </if-empty>
+        
         <field-to-result field="newEntity.quoteId" result-name="quoteId"/>
         <field-to-result field="newEntity.quoteItemSeqId" result-name="quoteItemSeqId"/>
-
+		
         <!-- if there is no price and a productItem is supplied fill the price from the product record -->
         <if-empty field="parameters.quoteUnitPrice">
             <if-not-empty field="parameters.productId">
@@ -381,6 +402,12 @@ under the License.
 
         <!-- finally create the record (should not exist already)-->
         <create-value value-field="newEntity"/>
+        <set field="createQuoteStatusInMap.statusId" from-field="newEntity.statusId"/>
+        <set field="createQuoteStatusInMap.quoteId" from-field="newEntity.quoteId"/>
+        <set field="createQuoteStatusInMap.quoteItemSeqId" from-field="newEntity.quoteItemSeqId"/>
+        <log level="always" message="###### test ${createQuoteStatusInMap}"></log>
+		<call-service service-name="setQuoteAndItemStatus" in-map-name="createQuoteStatusInMap" />
+		<log level="always" message="###### testafter create"></log>
         <check-errors/>
     </simple-method>
 

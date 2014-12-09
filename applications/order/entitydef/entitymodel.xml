@@ -1472,6 +1472,26 @@ under the License.
             <key-map field-name="quoteId"/>
         </relation>
     </entity>
+    <entity entity-name="QuoteStatus"
+            package-name="org.ofbiz.order.quote"
+            title="Quote Status Entity">
+      <field name="quoteStatusId" type="id-ne"></field>
+      <field name="statusId" type="id"></field>
+      <field name="quoteId" type="id"></field>
+      <field name="quoteItemSeqId" type="id"></field>
+      <field name="statusDatetime" type="date-time"></field>
+      <prim-key field="quoteStatusId"/>
+      <relation type="one" fk-name="QUOTE_STTS" rel-entity-name="StatusItem">
+        <key-map field-name="statusId"/>
+      </relation>
+      <relation type="one" fk-name="QUOTE_STRQ" rel-entity-name="Quote">
+        <key-map field-name="quoteId"/>
+      </relation>
+      <relation type="one-nofk" rel-entity-name="QuoteItem">
+        <key-map field-name="quoteId"/>
+        <key-map field-name="quoteItemSeqId"/>
+      </relation>
+    </entity>
     <entity entity-name="QuoteItem"
             package-name="org.ofbiz.order.quote"
             title="Quote Item Entity">
@@ -1480,6 +1500,7 @@ under the License.
       <field name="productId" type="id"></field>
       <field name="productFeatureId" type="id"></field>
       <field name="deliverableTypeId" type="id"></field>
+      <field name="statusId" type="id"></field>
       <field name="skillTypeId" type="id"></field>
       <field name="uomId" type="id"></field>
       <field name="workEffortId" type="id"></field>
@@ -1511,6 +1532,9 @@ under the License.
       </relation>
       <relation type="one" fk-name="QUOTE_ITM_SKLT" rel-entity-name="SkillType">
         <key-map field-name="skillTypeId"/>
+      </relation>
+      <relation type="one" fk-name="QUOTE_ITM_STTS" rel-entity-name="StatusItem">
+        <key-map field-name="statusId"/>
       </relation>
       <relation type="one" fk-name="QUOTE_ITM_UOM" rel-entity-name="Uom">
         <key-map field-name="uomId"/>
