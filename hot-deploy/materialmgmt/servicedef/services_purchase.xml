@@ -83,4 +83,13 @@
         <attribute name="validThruDate" type="Timestamp" mode="IN" optional="true"/>
         <attribute name="partyId" type="String" mode="IN" optional="false"/>
     </service>
+    
+    <service name="setQuoteAndItemStatus" engine="java"
+                location="in.vasista.vbiz.purchase.MaterialQuoteServices" invoke="setQuoteAndItemStatus">
+        <description> Set Quote or Quote Item status</description>  
+        <attribute name="quoteId" type="String" mode="IN" optional="false"/>
+        <attribute name="quoteItemSeqId" type="String" mode="IN" optional="true"/>
+        <attribute name="statusId" type="String" mode="IN" optional="false"/>
+    </service>
+    
 </services>

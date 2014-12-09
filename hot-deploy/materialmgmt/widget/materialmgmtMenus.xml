@@ -55,11 +55,11 @@
 	        	<link target="MaterialForQCApproval"/>
 	        </menu-item>
 	        
-	        <menu-item name="reports" title="${uiLabelMap.CommonReports}">
+	        <!-- <menu-item name="reports" title="${uiLabelMap.CommonReports}">
 	            <link target="StoreReports">
 	                <parameter param-name="facilityId" from-field="ctxFacilityId"/>
 	            </link>
-	        </menu-item> 
+	        </menu-item>  -->
          <menu-item name="stockPosition" title="Stock Position">
             <link target="stockPosition">
             </link>
@@ -96,6 +96,15 @@
         	<link target="FindMaterialIssuance"/>
         </menu-item>
          <menu-item name="StoreProductIssue" title="Issuance Request">
+        	<link target="StoreProductIssue"/>
+        </menu-item>
+      </menu>
+      
+      <menu name="QuoteTabBar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml" selected-menuitem-context-field-name="tabButtonItem2">
+        <menu-item name="FindMaterialQuotes" title="Find Quotes">
+        	<link target="FindMaterialQuotes"/>
+        </menu-item>
+         <menu-item name="StoreProductIssue" title="Edit Quote">
         	<link target="StoreProductIssue"/>
         </menu-item>
       </menu>

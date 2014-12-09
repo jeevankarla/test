@@ -258,6 +258,61 @@ public class MaterialQuoteServices {
 		request.setAttribute("_EVENT_MESSAGE_", "Successfully made request entries ");
 		return "success";
 	}
+	
+	public static Map<String,Object> setQuoteAndItemStatus(DispatchContext ctx, Map<String, ? extends Object> context){
+    	Map<String, Object> result = FastMap.newInstance();
+        Map<String, Object> inMap  = FastMap.newInstance();
+    	Delegator delegator = ctx.getDelegator();
+        Locale locale = (Locale) context.get("locale");
+        LocalDispatcher dispatcher = ctx.getDispatcher();
+        GenericValue userLogin = (GenericValue) context.get("userLogin");
+        Map<String,Object> quoteResult = FastMap.newInstance();
+        String quoteId = (String)context.get("quoteId");
+        String quoteItemSeqId = (String)context.get("quoteItemSeqId");
+        String statusId = (String)context.get("statusId");
+        try{
+        	if(UtilValidate.isEmpty(quoteId)){
+        		Debug.logError("Error in  setting Quote status for empty quoteId", module);
+  	  			return ServiceUtil.returnError("Error in  setting Quote status for empty quoteId");
+        	}
+        	if(UtilValidate.isEmpty(statusId)){
+        		Debug.logError("Error in  setting Quote Item status for empty status", module);
+  	  			return ServiceUtil.returnError("Error in  setting Quote status for empty status");
+        	}
+        	GenericValue quote = null;
+        	String oldStatusId = "";
+        	if(UtilValidate.isNotEmpty(quoteItemSeqId)){
+        		quote = delegator.findOne("QuoteItem", UtilMisc.toMap("quoteId", quoteId, "quoteItemSeqId", quoteItemSeqId), false);
+        		oldStatusId = quote.getString("statusId");
+        	}
+        	else{
+        		quote = delegator.findOne("Quote", UtilMisc.toMap("quoteId", quoteId), false);
+        		oldStatusId = quote.getString("statusId");
+        	}
+        	if(!(statusId.equals("QTITM_CREATED") || statusId.equals("QUO_CREATED"))){
+        		GenericValue statusValidChange = delegator.findOne("StatusValidChange", UtilMisc.toMap("statusId",oldStatusId, "statusIdTo", statusId), false);
+            	if(UtilValidate.isEmpty(statusValidChange)){
+            		Debug.logError("Not a valid status change for quote", module);
+      	  			return ServiceUtil.returnError("Not a valid status change for quote");
+            	}
+        	}
+        	
+        	quote.set("statusId", statusId);
+        	quote.store();
+        	
+        	result = dispatcher.runSync("createQuoteStatus", UtilMisc.toMap("userLogin", userLogin, "quoteId", quoteId, "quoteItemSeqId", quoteItemSeqId, "statusId", statusId));
+        	if(ServiceUtil.isError(result)){
+        		Debug.logError("Error updating QuoteStatus", module);
+  	  			return ServiceUtil.returnError("Error updating QuoteStatus");
+        	}
+        	
+        }catch(Exception e){
+        	Debug.logError("Error updating quote status", module);
+		    return ServiceUtil.returnError("Error updating quote status");
+        }
+		return result;
+    }//End of Service
+	
 
 	public static Map<String,Object> createQuoteAndItems(DispatchContext ctx, Map<String, ? extends Object> context){
     	Map<String, Object> result = FastMap.newInstance();
