@@ -258,7 +258,7 @@ if(UtilValidate.isNotEmpty(reportTypeFlag) && reportTypeFlag == "PPDNandiniSales
 								totalMap["vatRevenue"]=vatRevenue+vatAdj;
 								totalMap["cstRevenue"]=cstRevenue;
 								totalMap["ppd"]=ppd;
-								totalMap["totalRevenue"]=totalRevenue+ppd;
+								totalMap["totalRevenue"]=totalRevenue+ppd+vatAdj;
 								totalMap["idValue"]=idValue;
 								totalMap["invoiceSequenceId"]=invoiceSequenceId;
 								totalMap["totalMrpValue"]=totalMrpValue;
