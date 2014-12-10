@@ -584,6 +584,15 @@
 				<parameter param-name="paymentId" value="${payment[0].paymentId}" />
 			</link>
 		</menu-item>
+		<menu-item name="DebitNote"
+			title="Debit/Credit Note">
+			<link target="DebitNote" target-window="_BLANK">
+<!-- 				<parameter param-name="paymentId" from-field="payment.paymentId"/> -->
+				<parameter param-name="invoiceflag" value="Y"/>
+				<parameter param-name="reportTypeFlag" value="debitNote"/>
+				<parameter param-name="invoiceId" from-field="invoice.invoiceId" />
+			</link>
+		</menu-item>
 		<!-- <menu-item name="saveInvoiceAsTemplate" title="${uiLabelMap.ProjectMgrSaveAsTemplate}"> 
 			<condition> <and> <not><if-empty field="invoice.invoiceId"/></not> <or> <if-compare 
 			field="invoice.invoiceTypeId" operator="equals" value="SALES_INVOICE"/> <if-compare 
