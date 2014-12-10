@@ -388,7 +388,7 @@ public class MaterialQuoteServices {
     	BigDecimal quantity = BigDecimal.ZERO;
     	String salesChannel = (String) context.get("salesChannelEnumId");
     	List<GenericValue> quoteItemList = FastList.newInstance();
-    	String productStoreId = "";
+    	String productStoreId = null;
          if (UtilValidate.isEmpty(salesChannel)) {
              salesChannel = "MATERIAL_PUR_CHANNEL";
          }     
@@ -481,7 +481,8 @@ public class MaterialQuoteServices {
              } 
              result.put("orderId", orderId);
          }        
-*/       	
+*/      
+         result = ServiceUtil.returnSuccess("Create Purchase Order for Quote : "+quoteId);
          return result;
     }
 	
