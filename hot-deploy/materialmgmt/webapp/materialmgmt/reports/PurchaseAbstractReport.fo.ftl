@@ -66,15 +66,13 @@ under the License.
 			                    <#assign grandTotal=0>
 		                        <#assign dayWiseTotalsMap = dayWiseInvoice.entrySet()>
        							<#list dayWiseTotalsMap as dayWiseTotalsDetails>
-                                 <#assign productCategoryMember=delegator.findByAnd("ProductCategoryAndMember", {"primaryParentCategoryId" : dayWiseTotalsDetails.getKey()})/>
-      	
-       								<#--<#assign productCategory = delegator.findOne("ProductCategory", {"primaryParentCategoryId" : dayWiseTotalsDetails.getKey()}, true)?if_exists/>-->
+       								<#assign primaryProductCategory = delegator.findOne("ProductCategory", {"productCategoryId" : dayWiseTotalsDetails.getKey()}, true)?if_exists/>
        								<fo:table-row>
        							       <fo:table-cell>
 							            	<fo:block  keep-together="always" text-align="left" font-size="12pt" white-space-collapse="false" font-weight="bold">Primary Category : </fo:block>  
 							            </fo:table-cell>
        							        <fo:table-cell>
-							            	<fo:block  keep-together="always" text-align="left" font-size="12pt" white-space-collapse="false" font-weight="bold">${productCategoryMember[0].description}</fo:block>  
+							            	<fo:block  keep-together="always" text-align="left" font-size="12pt" white-space-collapse="false" font-weight="bold">${primaryProductCategory.description}</fo:block>  
 							            </fo:table-cell>
 							    	</fo:table-row> 
        								<#assign dayWiseTotals = dayWiseTotalsDetails.getValue().entrySet()>
@@ -105,8 +103,8 @@ under the License.
 									            <fo:table-cell>
 		                       			        <fo:block   font-size="12pt" text-align="left" white-space-collapse="false">
 				                       			<fo:table>
-							            		<fo:table-column column-width="150pt"/> 		
-							            		<fo:table-column column-width="200pt"/> 	
+							            		<fo:table-column column-width="280pt"/> 		
+							            		<fo:table-column column-width="70pt"/> 	
 							            		<fo:table-column column-width="80pt"/> 
 				                                <fo:table-body>
 				                                <#list prodMap as prodTotal>
@@ -116,7 +114,7 @@ under the License.
 				                                 <#assign grandTotal=grandTotal+prodTotal.getValue()>
 					                                <fo:table-row>
 					                                <fo:table-cell>
-							                           		<fo:block  keep-together="always" font-size="12pt" text-align="left" white-space-collapse="false">${prodDetails.description}</fo:block>  
+							                           		<fo:block   font-size="12pt" text-align="left" white-space-collapse="false">${prodDetails.description}</fo:block>  
 							                       		</fo:table-cell>
 					                                   <fo:table-cell>
 							                           		<fo:block   font-size="12pt" text-align="right" white-space-collapse="false">${prodTotal.getValue()?string("#0.00")}</fo:block>  
