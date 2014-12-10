@@ -1242,9 +1242,9 @@ function reportTypeChangeFunc() {
 						<td width="10%"><input type="submit" value="Download" class="buttontext"/></td>      
 					</form>
 	              </tr>
-	             <#--<tr class="alternate-row">
-	  					<form id="ConversionChargesReport" name="ConversionChargesReport" method="post" action="<@ofbizUrl>ConversionChargesReport.pdf</@ofbizUrl>" target="_blank">	
-	  						<td width="30%">Conversion Charges Report</td>
+	             <tr class="alternate-row">
+	  					<form id="ServiceProductsReport" name="ServiceProductsReport" method="post" action="<@ofbizUrl>ServiceProductsReport.pdf</@ofbizUrl>" target="_blank">	
+	  						<td width="30%">Service Products Report</td>
 	  						<td width="15%">From<input  type="text" size="18pt" id="conversionFDateId" readonly  name="fromDate"/></td>
 	      					<td width="15%">Thru<input  type="text" size="18pt" id="conversionTDateId" readonly  name="thruDate"/></td>
 	      					<td width="15%">Category<select name="categoryType">
@@ -1255,7 +1255,7 @@ function reportTypeChangeFunc() {
 	      					<td width="15%"></td>
 	      					<td width="10%"><input type="submit" value="Download" class="buttontext"/></td>
 	  					</form>
-	  				</tr>-->
+	  				</tr>
 	  				<tr class="alternate-row">
 						<form id="iceCreamTaxEnclosuerReport" name="iceCreamTaxEnclosuerReport" method="post" action="<@ofbizUrl>iceCreamTaxEnclosuerReport.csv</@ofbizUrl>" target="_blank">	
 							<td width="30%">Vat Enclosure Report</td>

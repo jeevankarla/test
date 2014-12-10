@@ -1458,9 +1458,9 @@
      <security https="true" auth="true"/>
     	<response name="success" type="view" value="ShoppeRentReportPDF"/>
     </request-map>
-    <request-map uri="ConversionChargesReport.pdf">
+    <request-map uri="ServiceProductsReport.pdf">
      <security https="true" auth="true"/>
-    	<response name="success" type="view" value="ConversionChargesReportPDF"/>
+    	<response name="success" type="view" value="ServiceProductsReportPDF"/>
     </request-map>
     <request-map uri="DTCFinesAndPenaltiesReport.pdf">
      <security https="true" auth="true"/>
@@ -1761,7 +1761,7 @@
 	
 	<view-map name="TerminatedRetailerspdf" type="screenfop" page="component://byproducts/widget/ByProductsReportScreens.xml#TerminatedRetailerspdf" content-type="application/pdf"/>
 	
-	<view-map name="ConversionChargesReportPDF" type="screenfop" page="component://byproducts/widget/ByProductsReportScreens.xml#ConversionChargesReportPDF" content-type="application/pdf"/>
+	<view-map name="ServiceProductsReportPDF" type="screenfop" page="component://byproducts/widget/ByProductsReportScreens.xml#ServiceProductsReportPDF" content-type="application/pdf"/>
 	<view-map name="RetailerLedgerAbstractPDF" type="screenfop" page="component://byproducts/widget/ByProductsReportScreens.xml#RetailerLedgerAbstractPDF" content-type="application/pdf"/>
 	<view-map name="ShoppeRentReportPDF" type="screenfop" page="component://byproducts/widget/ByProductsReportScreens.xml#ShoppeRentReportPDF" content-type="application/pdf"/>
 	<view-map name="MonthlyVatReportPDF" type="screenfop" page="component://byproducts/widget/ByProductsReportScreens.xml#MonthlyVatReportPDF" content-type="application/pdf"/>
