@@ -438,7 +438,31 @@ public class MaterialHelperServices{
 		
 		return result;
 	}	
-	
+public static Map<String, Object> getMaterialStores(DispatchContext ctx,Map<String, ? extends Object> context) {
+		
+		Delegator delegator = ctx.getDelegator();
+		GenericValue userLogin = (GenericValue) context.get("userLogin");
+		Map result = ServiceUtil.returnSuccess();
+		List productFacilities=FastList.newInstance();
+		List storesList=FastList.newInstance();
+		try{
+			List<GenericValue> productFacilitiesList=delegator.findList("ProductFacility",null,null,null,null,false);
+			if(UtilValidate.isNotEmpty(productFacilitiesList)){
+				productFacilities=EntityUtil.getFieldListFromEntityList(productFacilitiesList, "facilityId", true);
+			}
+			if(UtilValidate.isNotEmpty(productFacilities)){
+				for(int i=0;i<productFacilities.size();i++){
+					GenericValue Facility=delegator.findOne("Facility",UtilMisc.toMap("facilityId",productFacilities.get(i)),false);
+					storesList.add(Facility);
+				}
+			}
+			result.put("storesList",storesList);
+		}catch(Exception e){
+			Debug.logError(e.toString(), module);
+			return ServiceUtil.returnError(e.toString());
+		}
+		return result;
+	}	
 	
 }
 

@@ -402,6 +402,9 @@
                         			<platform-specific>
 	                            		<html><html-template location="component://materialmgmt/webapp/materialmgmt/purchase/POterms.ftl"/></html>
 	                        		</platform-specific>
+	                        		<screenlet title="Receipts For Order">
+					                 	<include-form location="component://materialmgmt/widget/MaterialPurchaseForms.xml" name="listMaterialShipmentReceipt"/>
+					                </screenlet>
                 				</container>
 	            			</widgets>
 	            		</section>
@@ -429,23 +432,5 @@
             </widgets>
         </section>
     </screen>
-    <screen name="FindReceipts">
-        <section>
-            <actions>
-            <set field="titleProperty" value="Receipts For Order"/> 
-            <set field="tabButtonItem" value="FindMaterialPO" />	
-			<set field="tabButtonItem2" value="receipts"/> 
-            </actions>
-            <widgets>
-            <decorator-screen name="POOverViewDecorator" location="${parameters.mainDecoratorLocation}">
-	            <decorator-section name="body"> 
-	            <include-menu name="FindMaterialPOSubTabBar" location="component://materialmgmt/widget/materialmgmtMenus.xml"/>
-                 <screenlet title="Receipts For Order">
-                 	<include-form location="component://materialmgmt/widget/MaterialPurchaseForms.xml" name="listMaterialShipmentReceipt"/>
-                 </screenlet>
-                </decorator-section>
-            </decorator-screen>
-            </widgets>
-        </section>
-    </screen>
+    
 </screens>
