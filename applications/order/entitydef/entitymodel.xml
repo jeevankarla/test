@@ -1598,6 +1598,26 @@ under the License.
         <key-map field-name="termTypeId"/>
       </relation>
     </entity>
+    
+    <entity entity-name="QuoteItemContent" package-name="org.ofbiz.order.quote" title="Quote Item Content Entity">
+      <field name="quoteId" type="id-ne"></field>
+      <field name="quoteItemSeqId" type="id-ne"></field>      
+      <field name="contentId" type="id-ne"></field>
+      <field name="fromDate" type="date-time"></field>
+      <field name="thruDate" type="date-time"></field>
+      <prim-key field="quoteId"/>
+      <prim-key field="quoteItemSeqId"/>
+      <prim-key field="contentId"/>
+      <prim-key field="fromDate"/>
+      <relation type="one" fk-name="QUOTEITM_CNT_QITM" rel-entity-name="QuoteItem">
+        <key-map field-name="quoteId"/>
+        <key-map field-name="quoteItemSeqId"/>        
+      </relation>
+      <relation type="one" fk-name="QUOTEITM_CNT_CNT" rel-entity-name="Content">
+        <key-map field-name="contentId"/>
+      </relation>
+    </entity>
+    
     <entity entity-name="QuoteTermAttribute"
             package-name="org.ofbiz.order.quote"
             title="Quote Term Attribute Entity">

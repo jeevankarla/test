@@ -1637,6 +1637,20 @@ under the License.
         <key-map field-name="noteParty" rel-field-name="partyId"/>
       </view-link>
     </view-entity>
+    <view-entity entity-name="QuoteItemAndContent"
+      package-name="org.ofbiz.order.request"
+      title="Quote Item And Content View Entity">
+      <description>Show Content of Quote</description>
+      <member-entity entity-alias="QIC" entity-name="QuoteItemContent"/>
+      <member-entity entity-alias="CT" entity-name="Content"/>
+      <alias-all entity-alias="QIC">
+        <exclude field="contentId"/>
+      </alias-all>
+      <alias-all entity-alias="CT"/>
+      <view-link entity-alias="QIC" rel-entity-alias="CT">
+        <key-map field-name="contentId"/>
+      </view-link>
+    </view-entity>
     <view-entity entity-name="QuoteWorkEffortView"
       package-name="org.ofbiz.order.quote"
       title="Quote And Workeffort">
