@@ -40,16 +40,7 @@ if(UtilValidate.isNotEmpty(reportTypeFlag) && reportTypeFlag == "PurchaseDetails
 	prodCatAnalysisList=[];
 	
 	primaryCatMap.each {eachValue->
-		exprList=[];
-		exprList.add(EntityCondition.makeCondition("productCategoryTypeId", EntityOperator.EQUALS, "PUR_ANLS_CODE"));
-		exprList.add(EntityCondition.makeCondition("primaryParentCategoryId", EntityOperator.EQUALS, eachValue.getKey()));
-		condition = EntityCondition.makeCondition(exprList, EntityOperator.AND);
-		productList = delegator.findList("ProductCategoryAndMember", condition, null, null, null, false);
-		description="";
-		 if(UtilValidate.isNotEmpty(productList)){
-			productList=EntityUtil.getFirst(productList);
-			description = productList.get("description");
-		 }
+		primaryProductCategory = delegator.findOne("ProductCategory", ["productCategoryId" : eachValue.getKey()], true);
 		 catMap=eachValue.getValue();
 		 catMap.each{eachCat->
 			productCategory = delegator.findOne("ProductCategory", ["productCategoryId" : eachCat.getKey()], true);
@@ -60,7 +51,7 @@ if(UtilValidate.isNotEmpty(reportTypeFlag) && reportTypeFlag == "PurchaseDetails
 				  csvMap=[:]
 					  if(!invDtls.getKey().equals("invoiceDate") && !invDtls.getKey().equals("supInvNumber")){
 						  csvMap.put("analysisCode",productCategory.description);
-						  csvMap.put("primaryCategoryCode",description);
+						  csvMap.put("primaryCategoryCode",primaryProductCategory.description);
 						  csvMap.put("voucherCode","Analysis Code");
 						  csvMap.put("invoiceDate",invValue.get("invoiceDate"));
 						  csvMap.put("invoiceId",invoice.getKey());
@@ -76,44 +67,30 @@ if(UtilValidate.isNotEmpty(reportTypeFlag) && reportTypeFlag == "PurchaseDetails
 		}
 	
 	}
-	/*prodCatAnalysisMap.each {eachValue->
-		productCategory = delegator.findOne("ProductCategory", ["productCategoryId" : eachValue.getKey()], true);
-		invMap = eachValue.getValue();
-		invMap.each {invoice->
-		invValue=invoice.getValue();
-			invValue.each {invDtls->
-				csvMap=[:]
-				if(!invDtls.getKey().equals("invoiceDate") && !invDtls.getKey().equals("supInvNumber")){
-					csvMap.put("analysisCode",productCategory.description);
-					csvMap.put("voucherCode","Analysis Code");
-					csvMap.put("invoiceDate",invValue.get("invoiceDate"));
-					csvMap.put("invoiceId",invoice.getKey());
-					prodDetails = delegator.findOne("Product", ["productId" :invDtls.getKey()], true);
-					csvMap.put("productId",prodDetails.description);
-					csvMap.put("totalRevenue",invDtls.getValue());
-					prodCatAnalysisList.add(csvMap);
-				}
-			}
-		}
-		
-	}*/
 context.put("prodCatAnalysisList",prodCatAnalysisList);
 }
 	
 // Purchase Abstract report
 if(UtilValidate.isNotEmpty(reportTypeFlag) && reportTypeFlag == "PurchaseSummary"){
-	prodCatAnalysisMap=context.get("prodMap");
+	primaryCatMap=context.get("prodMap");
 	prodCatAnalysisList=[];
 	totAmount=0;
 	count=0;
-	prodCatAnalysisMap.each {eachValue->
-		count++;
-		csvMap=[:]
-		productCategory = delegator.findOne("ProductCategory", ["productCategoryId" : eachValue.getKey()], true);
-		csvMap.put("analysisCode",productCategory.description);
-		csvMap.put("totalRevenue",eachValue.getValue().get("totalRevenue"));
-		csvMap.put("voucherCode","Analysis Code");
-		prodCatAnalysisList.add(csvMap);
+	primaryCatMap.each {eachValue->
+		 primaryProductCategory = delegator.findOne("ProductCategory", ["productCategoryId" : eachValue.getKey()], true);
+		 catMap=eachValue.getValue();
+		 catMap.each{eachCat->
+			productCategory = delegator.findOne("ProductCategory", ["productCategoryId" : eachCat.getKey()], true);
+			partyMap=eachCat.getValue();
+			partyMap.each{party->
+		          csvMap=[:]
+				  csvMap.put("analysisCode",productCategory.description);
+				  csvMap.put("primaryCategoryCode",primaryProductCategory.description);
+				  csvMap.put("voucherCode","Analysis Code");
+				  csvMap.put("totalRevenue",party.getValue());
+				  prodCatAnalysisList.add(csvMap);
+		    }
+		}
 	}
 context.put("prodCatAnalysisList",prodCatAnalysisList);
 }

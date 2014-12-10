@@ -59,20 +59,38 @@ under the License.
 		            		<fo:table-column column-width="130pt"/> 		
 		            		<fo:table-column column-width="120pt"/>
 		                    <fo:table-body>
-		                    <#assign prodDetails = prodMap.entrySet()>
+		                    <#assign primaryProdDetails = prodMap.entrySet()>
 		                    <#assign totalRevenue=0>
-       							<#list prodDetails as prod>
-       							  <#assign totalRevenue=totalRevenue+prod.getValue().get("totalRevenue")?if_exists>
-       							  <#assign productCategory = delegator.findOne("ProductCategory", {"productCategoryId" : prod.getKey()}, true)?if_exists/>
-       							<fo:table-row>
+       							<#list primaryProdDetails as primaryProd>
+       							   <#assign prodDetails = primaryProd.getValue().entrySet()>
+       							   <#assign primaryProductCategory=delegator.findOne("ProductCategory", {"productCategoryId" : primaryProd.getKey()}, true)?if_exists/>
+       							  <fo:table-row>
        							       <fo:table-cell>
-							            	<fo:block  keep-together="always" text-align="left" font-size="12pt" white-space-collapse="false" font-weight="bold">Analysis Code :</fo:block>  
+							            	<fo:block  keep-together="always" text-align="left" font-size="12pt" white-space-collapse="false" font-weight="bold">Primary Code :</fo:block>  
 							            </fo:table-cell>
 					                    <fo:table-cell>
-							            	<fo:block  keep-together="always" text-align="left" font-size="12pt" white-space-collapse="false" font-weight="bold">${productCategory.description}</fo:block>  
+							            	<fo:block  keep-together="always" text-align="left" font-size="12pt" white-space-collapse="false" font-weight="bold">${primaryProductCategory.description}</fo:block>  
+							            </fo:table-cell>
+							     </fo:table-row>
+       							  <#list prodDetails as prod>
+       							  <#assign totalRevenue=totalRevenue+prod.getValue().get("totalRevenue")?if_exists>
+       							  <#assign productCategory = delegator.findOne("ProductCategory", {"productCategoryId" : prod.getKey()}, true)?if_exists/>
+       							  <#assign prodDetails = prodMap.entrySet()>
+       							<fo:table-row>
+       							       <fo:table-cell>
+							            	<fo:block  keep-together="always" text-align="left" font-size="12pt" white-space-collapse="false" >Analysis Code :</fo:block>  
+							            </fo:table-cell>
+					                    <fo:table-cell>
+							            	<fo:block  keep-together="always" text-align="left" font-size="12pt" white-space-collapse="false" >${productCategory.description}</fo:block>  
 							            </fo:table-cell>
 							             <fo:table-cell>
 							            	<fo:block  keep-together="always" text-align="right" font-size="12pt" white-space-collapse="false" >${prod.getValue().get("totalRevenue")?string("#0.00")}</fo:block>  
+							            </fo:table-cell>
+							     </fo:table-row>
+								</#list>
+								<fo:table-row>
+       							       <fo:table-cell>
+							            	<fo:block  keep-together="always" text-align="left" font-size="12pt" white-space-collapse="false" font-weight="bold"></fo:block>  
 							            </fo:table-cell>
 							     </fo:table-row>
 								</#list>
