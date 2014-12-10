@@ -382,13 +382,13 @@ public class MaterialQuoteServices {
     	GenericValue userLogin = (GenericValue) context.get("userLogin");
     	LocalDispatcher dispatcher = ctx.getDispatcher();
     	String currencyUomId = (String) context.get("defaultOrganizationPartyCurrencyUomId");
-    	String productStoreId ="";
     	String quoteId = (String)context.get("quoteId");
     	GenericValue quote =null;
     	String partyId ="";
     	BigDecimal quantity = BigDecimal.ZERO;
     	String salesChannel = (String) context.get("salesChannelEnumId");
     	List<GenericValue> quoteItemList = FastList.newInstance();
+    	String productStoreId = "";
          if (UtilValidate.isEmpty(salesChannel)) {
              salesChannel = "MATERIAL_PUR_CHANNEL";
          }     
@@ -402,7 +402,6 @@ public class MaterialQuoteServices {
     		partyId = quote.getString("partyId");
          	/*GenericValue product=delegator.findOne("Product",UtilMisc.toMap("productId", (String)quoteItemList.get(0).getString("productId")), false);*/
          	
-         	productStoreId= "1003";
          } catch (GenericEntityException e) {
              Debug.logError(e, "Problem getting product store Id", module);
      		return ServiceUtil.returnError("Problem getting product store Id: " + e);          	
