@@ -83,6 +83,33 @@
        <response name="success" type="view" value="ApproveRequestsByDeptHead"/>
        <response name="error" type="view" value="ApproveRequestsByDeptHead"/>
      </request-map>
+     <request-map uri="updateMaterialQuoteTerm">
+       <security https="true" auth="true"/>
+       <event type="service" path="" invoke="updateQuoteTerm"></event>
+       <response name="success" type="view" value="ViewMaterialQuote"/>
+       <response name="error" type="view" value="ViewMaterialQuote"/>
+     </request-map>
+     
+     <request-map uri="createMaterialQuoteTerm">
+       <security https="true" auth="true"/>
+       <event type="service" path="" invoke="createQuoteTerm"></event>
+       <response name="success" type="view" value="ViewMaterialQuote"/>
+       <response name="error" type="view" value="ViewMaterialQuote"/>
+     </request-map>
+     
+     <request-map uri="createQuoteContent">
+       <security https="true" auth="true"/>
+       <event type="service" path="" invoke="createQuoteContent"></event>
+       <response name="success" type="view" value="EditQuoteContent"/>
+       <response name="error" type="view" value="EditQuoteContent"/>
+     </request-map>
+     
+     <request-map uri="createPOForQuote">
+       <security https="true" auth="true"/>
+       <event type="service" path="" invoke="createPOForQuote"></event>
+       <response name="success" type="view" value="ViewMaterialQuote"/>
+       <response name="error" type="view" value="ViewMaterialQuote"/>
+     </request-map>
      
      <request-map uri="rejectMaterialRequest">
        <security https="true" auth="true"/>
@@ -337,6 +364,29 @@
        <response name="error" type="view" value="draftMaterialRequirementToEnquiry"/>
    </request-map>
    
+   <request-map uri="ViewMaterialQuote">
+       <security https="true" auth="true"/>
+       <response name="success" type="view" value="ViewMaterialQuote"/>
+       <response name="error" type="view" value="ViewMaterialQuote"/>
+   </request-map>
+   <request-map uri="EditMaterialQuoteTerms">
+       <security https="true" auth="true"/>
+       <response name="success" type="view" value="EditMaterialQuoteTerms"/>
+       <response name="error" type="view" value="EditMaterialQuoteTerms"/>
+   </request-map>
+   <request-map uri="EditQuoteContent">
+       <security https="true" auth="true"/>
+       <response name="success" type="view" value="EditQuoteContent"/>
+       <response name="error" type="view" value="EditQuoteContent"/>
+   </request-map>
+   
+   <request-map uri="deleteMaterialQuoteTerm">
+       <security https="true" auth="true"/>
+       <event type="service"  path=""  invoke="deleteQuoteTerm" />
+       <response name="success" type="view" value="ViewMaterialQuote"/>
+       <response name="error" type="view" value="ViewMaterialQuote"/>
+   </request-map>
+   
    <request-map uri="ApprovedMatRequirementBySupplier">
        <security https="true" auth="true"/>
        <response name="success" type="view" value="ApprovedMatRequirementBySupplier"/>
@@ -465,6 +515,9 @@
 	
 	<!-- Quote views  -->
 	<view-map name="FindMaterialQuotes" type="screen" page="component://materialmgmt/widget/MaterialQuoteScreens.xml#FindMaterialQuotes"/>
+	<view-map name="ViewMaterialQuote" type="screen" page="component://materialmgmt/widget/MaterialQuoteScreens.xml#ViewMaterialQuote"/>
+	<view-map name="EditMaterialQuoteTerms" type="screen" page="component://materialmgmt/widget/MaterialQuoteScreens.xml#EditMaterialQuoteTerms"/>
+	<view-map name="EditQuoteContent" type="screen" page="component://materialmgmt/widget/MaterialQuoteScreens.xml#EditQuoteContent"/>
 	
 	
 </site-conf>
