@@ -37,7 +37,7 @@
     <form name="ListQuoteList" type="list" use-row-submit="true" list-name="custRequests" title="List of Quote Items"
         odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
         <field name="quoteId" sort-field="true" title="Quote No" widget-style="buttontext">
-            <hyperlink description="${quoteId}" target="ViewMaterialQuote" target-window="_blank">
+            <hyperlink description="${quoteId}" target="ViewMaterialQuote">
                 <parameter param-name="quoteId"/>
             </hyperlink>
         </field>
@@ -61,4 +61,160 @@
         <field name="quoteUnitPrice" title="Quote Unit Price"><display/></field>
         
     </form>
+    
+    <form name="viewQuotation" type="single"  title="" default-map-name="quote" 
+        header-row-style="header-row" default-table-style="basic-table">
+        
+       <field name="quoteId" title="Quote No"><display/></field>
+       <field name="partyId" title="Supplier Party">
+       	<display-entity also-hidden="false" entity-name="PartyNameView" key-field-name="partyId" description="${groupName} ${firstName} ${lastName}">
+       	</display-entity>
+       </field>   
+       <field name="statusId" title="Quote Status">
+       		<display-entity entity-name="StatusItem" key-field-name="statusId" description="${description}"></display-entity>
+       </field>
+       <field name="validFromDate" title="Valid from"><display/></field>
+       <field name="validThruDate" title="Valid till"><display/></field>
+       <field name="createdStamp" title="Quote created"><display/></field>
+    </form>
+    
+    <form name="viewQuoteItemDetails" type="list" title="" default-map-name="item" list-name="quoteItemList" 
+        header-row-style="header-row" default-table-style="basic-table" >
+        <field name="quoteItemSeqId" title="Item" widget-style="buttontext">
+        	<hyperlink target="BidItemOverview" description="${quoteItemSeqId}">
+				<parameter param-name="quoteId"/>
+				<parameter param-name="quoteItemSeqId"/>        
+        	</hyperlink>
+        </field>
+        <field name="custRequestId" title="Enquiry Ref No"><display-entity entity-name="CustRequest"  key-field-name="custRequestId" description="${custRequestName} [${custRequestId}]">
+            <!-- <sub-hyperlink target="ViewTenderItemDetails" description="[${custRequestId}]">
+                <parameter param-name="custRequestId"/>
+            </sub-hyperlink> -->
+        </display-entity> </field>
+        <field name="custRequestItemSeqId" title="Enquiry Item No"><hidden/></field> 
+        <field name="productId" title="Item">
+            <display-entity entity-name="Product" description="${description}">
+                <sub-hyperlink  description="[${productId}]" target="EditProduct">
+                    <parameter param-name="productId"/>
+                </sub-hyperlink>
+            </display-entity>
+        </field>
+        <field name="quantity" title="Quantity"><display/> </field>
+        <field name="quoteUnitPrice" title="Quote Unit Price"><display/> </field>
+        <field name="statusId" title="Status"><display-entity entity-name="StatusItem" key-field-name="statusId" description="${description}"/> </field>
+  </form>
+  <form name="EditQuoteTerm" type="single" target="updateMaterialQuoteTerm" title="" default-map-name="quoteTerm"
+        header-row-style="header-row" default-table-style="basic-table">
+        <actions>
+            <entity-one entity-name="StatusItem" value-field="currentStatus" auto-field-map="false">
+                <field-map field-name="statusId" from-field="quote.statusId"/>
+            </entity-one>
+            <set field="tabButtonItem" from-field="parameters.tabButtonItems"/>
+        </actions>
+        <alt-target use-when="quoteTerm==null" target="createMaterialQuoteTerm"/>
+        <auto-fields-entity entity-name="QuoteTerm" default-field-type="edit"/>
+        <field name="tabButtonItems"><hidden value="${tabButtonItem}"/></field>
+        <field name="quoteItemSeqId" tooltip="${uiLabelMap.OrderQuoteEmpty}">
+            <drop-down allow-empty="true">
+                <entity-options description="${quoteItemSeqId}" entity-name="QuoteItem">
+                    <entity-constraint name="quoteId" operator="equals" value="${quoteId}"/>
+                    <entity-order-by field-name="quoteItemSeqId"/>
+                </entity-options>
+            </drop-down>
+        </field>
+        <field name="quoteItemSeqId" use-when="quoteItemSeqId!=null" tooltip="${uiLabelMap.CommonRequired}"><display/></field>
+        <field name="termTypeId" tooltip="${uiLabelMap.CommonRequired}">
+            <drop-down current-description="">
+                <entity-options description="${description}" entity-name="TermType" key-field-name="termTypeId"/>
+            </drop-down>
+        </field>
+        <field name="termTypeId" use-when="termTypeId!=null" tooltip="${uiLabelMap.CommonRequired}">
+            <display-entity entity-name="TermType" description="${description} [${termTypeId}]" key-field-name="termTypeId"/>
+        </field>
+        <field name="quoteId"><hidden/></field>
+        
+        <field name="uomId"><hidden value="INR"/></field>
+        <field name="submitButton" title="${uiLabelMap.CommonSubmit}" widget-style="smallSubmit"><submit button-type="button"/></field>
+    </form>
+    <form name="ListQuoteTerms" type="list" list-name="quoteTerms"
+        odd-row-style="alternate-row" default-table-style="basic-table hover-bar" paginate-target="ListQuoteTerms">
+        <auto-fields-entity entity-name="QuoteTerm" default-field-type="display"/>
+        <field name="termTypeId" >
+            <display-entity entity-name="TermType" description="${description}" key-field-name="termTypeId"/>
+        </field>
+        <!-- <field name="uomId" title="${uiLabelMap.OrderOrderQuoteUomId}">
+            <display-entity entity-name="Uom" description="${description}" key-field-name="uomId"/>
+        </field> -->
+        <field name="editLink" title="${uiLabelMap.CommonEmptyHeader}" widget-style="buttontext">
+            <hyperlink target="EditMaterialQuoteTerms" description="${uiLabelMap.CommonEdit}" also-hidden="false">
+                <parameter param-name="termTypeId"/>
+                <parameter param-name="quoteItemSeqId"/>
+                <parameter param-name="quoteId"/>
+                <parameter param-name="target" value="updateMaterialQuoteTerm"/>
+                <parameter param-name="tabButtonItems" value="FindMaterialQuotes"/>
+            </hyperlink>
+        </field>
+        <field name="deleteLink" title="${uiLabelMap.CommonEmptyHeader}" widget-style="buttontext">
+            <hyperlink target="deleteMaterialQuoteTerm" description="${uiLabelMap.CommonRemove}" also-hidden="false">
+                <parameter param-name="termTypeId"/>
+                <parameter param-name="quoteItemSeqId"/>
+                <parameter param-name="quoteId"/>
+            </hyperlink>
+        </field>
+    </form>
+    
+    <form name="AddQuoteContent" type="upload" default-map-name="content" 
+        focus-field-name="contentId" header-row-style="header-row" default-table-style="basic-table" target="createQuoteContent">
+        <actions>
+            <set field="quoteId" from-field="parameters.quoteId"/>
+            <set field="quoteItemSeqId" from-field="quoteItemSeqId"/>
+            <!-- <set field="custRequestId" from-field="parameters.custRequestId"/>
+            <set field="custRequestItemSeqId" from-field="parameters.custRequestItemSeqId"/> --> 
+            <entity-one entity-name="DataResource" value-field="dataResource" auto-field-map="false">
+                <field-map field-name="dataResourceId" from-field="content.dataResourceId"/>
+            </entity-one>
+        </actions>
+        <field name="quoteId" map-name="parameters"><display></display></field>
+        <field name="quoteItemSeqId">
+        	<drop-down allow-empty="true">
+        		<entity-options description="${quoteItemSeqId}" entity-name="QuoteItem">
+        			<entity-constraint name="quoteId" operator="equals" value="${quoteId}"/>
+        		</entity-options>
+        	</drop-down>
+        </field>
+        <field name="dataResourceTypeId"><hidden value="IMAGE_OBJECT"/></field>                
+        
+        <field name="contentTypeId" >
+            <drop-down allow-empty="false" no-current-selected-key="DOCUMENT" >
+                <entity-options description="${description}" entity-name="ContentType">
+                    <entity-order-by field-name="description"/>
+                </entity-options>
+            </drop-down>
+        </field>
+        <field name="dataResourceName" title="${uiLabelMap.CommonUpload}*"><file/></field>
+         <field name="createButton"><submit button-type="button"/></field>
+    </form>
+
+	<form name="ListQuoteContent" type="list" list-name="quoteItemContents"
+        odd-row-style="alternate-row" default-table-style="basic-table hover-bar" paginate-target="EditBidContent">
+        <field name="quoteId"><hidden/></field>
+        <field name="quoteItemSeqId"><hidden/></field>
+        <field name="contentId" title="contentName">
+            <display-entity entity-name="Content" key-field-name="contentId" description="${contentName}" also-hidden="true">
+                <sub-hyperlink target="/content/control/ViewSimpleContent" description="${uiLabelMap.CommonView}" link-style="buttontext" target-type="inter-app">
+                    <parameter param-name="contentId"/>
+                </sub-hyperlink>
+            </display-entity>
+        </field>
+        <field name="fromDate" title="Uploaded Date"><display/></field>
+        <field name="deleteLink" title="Delete" widget-style="buttontext" >
+           <hyperlink also-hidden="false" description="${uiLabelMap.CommonDelete}" target="deleteQuoteItemContent">
+                <parameter param-name="quoteId"/>
+                <parameter param-name="quoteItemSeqId"/>
+                <parameter param-name="contentId"/>
+                <parameter param-name="fromDate"/>
+                </hyperlink>
+        </field>
+    </form>
+    
 </forms>

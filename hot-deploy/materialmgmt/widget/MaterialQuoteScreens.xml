@@ -7,13 +7,12 @@
                 <set field="titleProperty" value="Quotes"/>
                 <set field="headerItem" value="quote"/>
                 <set field="tabButtonItem" value="FindMaterialQuotes" />	
-			    <set field="tabButtonItem2" value="FindMaterialQuotes"/> 
                 <set field="entityName" value="QuoteAndItemAndCustRequest"/>
             </actions>
             <widgets>
                 <decorator-screen name="materialmgmtNgCommonDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
-                    	<include-menu name="QuoteTabBar" location="component://materialmgmt/widget/materialmgmtMenus.xml"/>
+                    	<!-- <include-menu name="QuoteTabBar" location="component://materialmgmt/widget/materialmgmtMenus.xml"/> -->
                         <decorator-screen name="FindScreenDecorator" location="component://common/widget/CommonScreens.xml">
                             <decorator-section name="search-options">
                                 <include-form name="FindMaterialQuote" location="component://materialmgmt/widget/MaterialQuoteForms.xml"/>
@@ -28,5 +27,140 @@
          </section>
     </screen>
     
+    <screen name="ViewMaterialQuote">
+        <section>
+            <actions>
+                <set field="titleProperty" value="Quote Overview"/>
+                <set field="headerItem" value="Quotes"/>
+                <set field="tabButtonItem" value="FindMaterialQuotes"/>
+                <set field="tabButtonItem2" value="overviewQuote"/>
+                <set field="quoteId" from-field="parameters.quoteId"/>
+                <entity-condition list="quoteItemList" entity-name="QuoteItem"  >
+                 	<condition-expr field-name="quoteId" value="${quoteId}" operator="equals"/>
+                </entity-condition>
+                <entity-one entity-name="Quote" value-field="quote"/>
+                <set field="custRequestId" value="${quoteItemList[0].custRequestId}"/>
+              	<set field="custRequestItemSeqId" value="${quoteItemList[0].custRequestItemSeqId}"/>
+              	
+              	<entity-and entity-name="QuoteItemContent" list="quoteItemContents" filter-by-date="true">
+                    <field-map field-name="quoteId" from-field="quoteId"/>
+                </entity-and>
+                <entity-condition list="quoteTerms" entity-name="QuoteTerm">
+                	<condition-expr field-name="quoteId" from-field="quoteId"/>
+                </entity-condition>
+                <entity-one entity-name="QuoteTerm" value-field="quoteTerm"/>
+                <!-- <entity-and entity-name="QuoteItemAndContent" list="quoteItemAndContents">
+                    <field-map field-name="quoteId" from-field="quoteId"/>
+                </entity-and> -->
+                <!-- <script location="component://procurement/webapp/procurement/WEB-INF/actions/CheckCreatePO.groovy" /> -->
+            </actions>
+            <widgets>
+           	  <decorator-screen name="materialmgmtNgCommonDecorator" location="${parameters.mainDecoratorLocation}">
+                <decorator-section name="body">
+                <include-menu name="QuoteTabBar" location="component://materialmgmt/widget/materialmgmtMenus.xml" />
+                   <container style="lefthalf">
+                     <section>
+                   		<!-- <condition>
+                   			<and>
+                   				<if-compare operator="equals" value="createPO" field="checkFlag"/>
+                   			</and>
+                   		</condition> -->
+                   		<widgets>
+                   		<link target="createPOForQuote" text="Create PO" style="buttontext h2" >
+           					<parameter param-name="quoteId" from-field="quoteId"/>
+           				</link>
+                   		</widgets>
+                     </section>
+                     <!-- <section>
+                   		<condition>
+                   			<and>
+                   				<if-compare operator="equals" value="BID_ACCEPTED" field="quote.statusId"/>
+                   			</and>
+                   		</condition>
+                   		<widgets>
+                   		<link target="CreatePOForBid" text="Create PO" style="buttontext h2" >
+           					<parameter param-name="quoteId" from-field="quoteId"/>
+           				</link>
+                   		</widgets>
+                   </section> -->
+                   <screenlet title="Overview">
+                       <include-form location="component://materialmgmt/widget/MaterialQuoteForms.xml" name="viewQuotation"/>
+                     </screenlet>                      
+                  </container>
+                 <container style="righthalf">
+                 	<screenlet title="Bid Contents">
+                   		<include-form location="component://materialmgmt/widget/MaterialQuoteForms.xml" name="ListQuoteContent"/>
+                 	 </screenlet>
+                 </container>
+                 <container style="clear" />
+                 <container style="full">
+                 	<screenlet title="Items In Quote" >
+                      <include-form location="component://materialmgmt/widget/MaterialQuoteForms.xml" name="viewQuoteItemDetails"/>
+                 	</screenlet>
+                 	<screenlet title="Quote Terms" >
+                      <include-form location="component://materialmgmt/widget/MaterialQuoteForms.xml" name="ListQuoteTerms"/>
+                 	</screenlet>
+                 </container>
+                </decorator-section>
+              </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    
+    <screen name="EditMaterialQuoteTerms">
+        <section>
+            <actions>
+                <set field="titleProperty" value="Quote Term"/>
+                <set field="tabButtonItem" value="FindMaterialQuotes"/>
+                <set field="tabButtonItem2" value="AddQuoteTerms"/>
+                <set field="quoteId" from-field="parameters.quoteId"/>
+                <set field="termTypeId" from-field="parameters.termTypeId"/>
+                <set field="quoteItemSeqId" from-field="parameters.quoteItemSeqId"/>
+                <entity-one entity-name="QuoteTerm" value-field="quoteTerm"/>
+                <entity-one entity-name="Quote" value-field="quote" auto-field-map="true"/>
+                <set field="target" from-field="parameters.target"/>
+            </actions>
+            <widgets>
+                <decorator-screen name="materialmgmtNgCommonDecorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="body">
+                    	<include-menu name="QuoteTabBar" location="component://materialmgmt/widget/materialmgmtMenus.xml" />
+                        <screenlet title="Quote Terms">
+                            <include-form name="EditQuoteTerm" location="component://materialmgmt/widget/MaterialQuoteForms.xml"/>
+                        </screenlet>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    
+    <screen name="EditQuoteContent">
+        <section>
+            <actions>
+                <set field="titleProperty" value="Quote Content"/>
+                <set field="tabButtonItem" value="FindMaterialQuotes"/>
+                <set field="tabButtonItem2" value="QuoteContent"/>
+                <set field="headerItem" value="request" />
+                <!-- <set field="quoteItemSeqId" value="00001"/> -->
+                <set field="quoteId" from-field="parameters.quoteId" />
+                <!-- <set field="custRequestId" from-field="parameters.custRequestId" />
+                <set field="custRequestItemSeqId" from-field="parameters.custRequestItemSeqId" /> -->
+                <entity-and entity-name="QuoteItemAndContent" list="quoteItemContents" filter-by-date="true">
+                    <field-map field-name="quoteId" from-field="quoteId"/>
+                </entity-and>
+                
+            </actions>
+            <widgets>
+               <decorator-screen name="materialmgmtNgCommonDecorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="body">
+                        <include-menu name="QuoteTabBar" location="component://materialmgmt/widget/materialmgmtMenus.xml"/>
+                        <screenlet id="AddBidContentsPanel" title="Bid content : ${quoteId}" collapsible="true">
+                            <include-form name="AddQuoteContent" location="component://materialmgmt/widget/MaterialQuoteForms.xml"/>
+                        </screenlet>
+                        <include-form name="ListQuoteContent" location="component://materialmgmt/widget/MaterialQuoteForms.xml"/>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
     
 </screens>

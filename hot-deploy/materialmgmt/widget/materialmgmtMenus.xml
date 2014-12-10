@@ -86,9 +86,9 @@
         <menu-item name="ApproveRequestsByDeptHead" title="Dept. Head Approval">
         	<link target="ApproveRequestsByDeptHead"/>
         </menu-item>
-        <menu-item name="RequestsReceiptAcknowledgement" title="Receipt Acknowledgement">
+        <!-- <menu-item name="RequestsReceiptAcknowledgement" title="Receipt Acknowledgement">
         	<link target="RequestsReceiptAcknowledgement"/>
-        </menu-item>
+        </menu-item> -->
       </menu>
       
       <menu name="StoreIssueTabBar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml" selected-menuitem-context-field-name="tabButtonItem2">
@@ -101,11 +101,31 @@
       </menu>
       
       <menu name="QuoteTabBar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml" selected-menuitem-context-field-name="tabButtonItem2">
-        <menu-item name="FindMaterialQuotes" title="Find Quotes">
-        	<link target="FindMaterialQuotes"/>
+        <menu-item name="overviewQuote" title="Quote Overview">
+        	<condition>
+        		<if-compare operator="not-equals" value="" field="quoteId"/>
+        	</condition>
+            <link target="ViewMaterialQuote">
+                <parameter param-name="quoteId" from-field="quote.quoteId"/>
+            </link>
         </menu-item>
-         <menu-item name="StoreProductIssue" title="Edit Quote">
-        	<link target="StoreProductIssue"/>
+        <!-- <menu-item name="EditQuote" title="Edit Quote">
+            <link target="EditQuote">
+                <parameter param-name="quoteId" from-field="quote.quoteId"/>
+            </link>
+        </menu-item> -->
+        <menu-item name="AddQuoteTerms" title="Quote Terms">
+            <link target="EditMaterialQuoteTerms">
+                <parameter param-name="quoteId" from-field="quote.quoteId"/>
+            </link>
+        </menu-item>
+        <menu-item name="QuoteContent" title="Quote Content">
+            <condition>
+        		<if-compare operator="not-equals" value="" field="quoteId"/>
+        	</condition>
+            <link target="EditQuoteContent">
+                <parameter param-name="quoteId" from-field="parameters.quoteId"/>
+            </link>
         </menu-item>
       </menu>
       
@@ -166,9 +186,9 @@
         <menu-item name="ApproveMaterialRequirement" title="Approve Requirement">
         	<link target="ApproveMaterialRequirement"/>
         </menu-item>
-        <menu-item name="ApprovedMatRequirementBySupplier" title=" Approved Requirement By Supplier">
+        <!-- <menu-item name="ApprovedMatRequirementBySupplier" title=" Approved Requirement By Supplier">
         	<link target="ApprovedMatRequirementBySupplier"/>
-        </menu-item>
+        </menu-item> -->
         <menu-item name="EnquiryForRequirements" title=" Enquiry For Requirements">
         	<link target="EnquiryForApprovedMatRequirements"/>
         </menu-item>

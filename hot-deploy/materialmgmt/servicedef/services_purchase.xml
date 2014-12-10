@@ -26,6 +26,27 @@
         <attribute name="custRequestItemSeqId" type="String" mode="IN" optional="true"/>
     </service>
     
+    <service name="createQuoteContent" engine="simple"
+        location="component://materialmgmt/script/MaterialMgmtServices.xml"
+        invoke="createQuoteContent"
+        default-entity-name="QuoteItemContent" auth="true">
+        <description>Create a Customer Request Item Content</description>
+        <auto-attributes include="pk" mode="IN" optional="false"/>
+        <auto-attributes include="nonpk" mode="IN" optional="true"/>
+        <attribute name="contentId" mode="OUT" type="String" optional="false"></attribute>
+        <attribute name="custRequestId" mode="OUT" type="String" optional="true"></attribute>
+        <attribute name="custRequestItemSeqId" mode="OUT" type="String" optional="true"></attribute>
+        <attribute name="quoteId" mode="OUT" type="String" optional="true"></attribute>
+        <attribute name="quoteItemSeqId" mode="OUT" type="String" optional="false"></attribute>
+        <override name="fromDate" optional="true"/>
+    </service> 
+    
+    <service name="createPOForQuote" engine="java" auth="true"
+         location="in.vasista.vbiz.purchase.MaterialQuoteServices" invoke="createPOForQuote">
+         <attribute name="quoteId" mode="IN" type="String" optional="false"/>
+         <attribute name="salesChannelEnumId" mode="IN" type="String" optional="true"/>
+         <attribute name="orderId" mode="OUT" type="String" optional="true"/>
+    </service>
     
     <service name="acceptReceiptQtyByQC" engine="java" location="in.vasista.vbiz.purchase.MaterialPurchaseServices" invoke="acceptReceiptQtyByQC">
         <description>Accept Receipts By Quality Control Check</description>

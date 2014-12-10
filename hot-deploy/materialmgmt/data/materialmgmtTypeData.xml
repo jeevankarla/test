@@ -55,5 +55,5 @@
      <StatusValidChange statusId="QTITM_APPROVED" statusIdTo="QTITM_ORDERED" transitionName="Ordered"/>
      <StatusValidChange statusId="QTITM_APPROVED" statusIdTo="QTITM_REJECTED" transitionName="Reject"/>
      <StatusValidChange statusId="QTITM_ORDERED" statusIdTo="QTITM_REJECTED" transitionName="Reject"/>
-     
+     <Enumeration description="Material Purchase Channel" enumCode="Material Purchase Channel" enumId="MATERIAL_PUR_CHANNEL" enumTypeId="ORDER_PRCHSE_CHANNEL"/>
 </entity-engine-xml>

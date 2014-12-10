@@ -375,4 +375,115 @@ public class MaterialQuoteServices {
 		return result;
     }//End of Service
 	
+	public static Map<String, Object> createPOForQuote(DispatchContext ctx, Map<String, ? extends Object> context){ 
+		Map<String, Object> result = FastMap.newInstance();
+    	Delegator delegator = ctx.getDelegator();
+    	Locale locale = (Locale) context.get("locale");
+    	GenericValue userLogin = (GenericValue) context.get("userLogin");
+    	LocalDispatcher dispatcher = ctx.getDispatcher();
+    	String currencyUomId = (String) context.get("defaultOrganizationPartyCurrencyUomId");
+    	String productStoreId ="";
+    	String quoteId = (String)context.get("quoteId");
+    	GenericValue quote =null;
+    	String partyId ="";
+    	BigDecimal quantity = BigDecimal.ZERO;
+    	String salesChannel = (String) context.get("salesChannelEnumId");
+    	List<GenericValue> quoteItemList = FastList.newInstance();
+         if (UtilValidate.isEmpty(salesChannel)) {
+             salesChannel = "MATERIAL_PUR_CHANNEL";
+         }     
+    	
+    	 try {  
+    		quote=delegator.findOne("Quote",UtilMisc.toMap("quoteId", quoteId), false);
+    		List conditionList = UtilMisc.toList(EntityCondition.makeCondition("quoteId", EntityOperator.EQUALS, quoteId));
+	        /*conditionList.add(EntityCondition.makeCondition("statusId", EntityOperator.EQUALS, "QTITM_APPROVED"));*/
+	        EntityCondition condition = EntityCondition.makeCondition(conditionList, EntityOperator.AND);
+    		quoteItemList = delegator.findList("QuoteItem", condition, null, null, null, false);
+    		partyId = quote.getString("partyId");
+         	/*GenericValue product=delegator.findOne("Product",UtilMisc.toMap("productId", (String)quoteItemList.get(0).getString("productId")), false);*/
+         	
+         	productStoreId= "1003";
+         } catch (GenericEntityException e) {
+             Debug.logError(e, "Problem getting product store Id", module);
+     		return ServiceUtil.returnError("Problem getting product store Id: " + e);          	
+             
+         }
+    	 ShoppingCart cart = new ShoppingCart(delegator, productStoreId, locale, currencyUomId);
+         cart.setOrderType("PURCHASE_ORDER");
+         cart.setChannelType(salesChannel);
+         cart.setProductStoreId(productStoreId);
+         cart.setBillToCustomerPartyId(partyId);
+         cart.setPlacingCustomerPartyId(partyId);
+         cart.setShipToCustomerPartyId(partyId);
+         cart.setEndUserCustomerPartyId(partyId);
+         cart.setQuoteId(quoteId); 
+         try {
+             cart.setUserLogin(userLogin, dispatcher);
+         } catch (Exception exc) {
+             Debug.logWarning("Error setting userLogin in the cart: " + exc.getMessage(), module);
+     		return ServiceUtil.returnError("Error setting userLogin in the cart: " + exc.getMessage());          	            
+         }   
+         Iterator<GenericValue> i = quoteItemList.iterator();
+         while (i.hasNext()) {
+             GenericValue quoteItem = i.next();
+             if (quoteItem != null) {
+             	try { 
+             		 Map<String, Object> priceResult;
+                     Map<String, Object> priceContext = FastMap.newInstance();
+                     priceContext.put("userLogin", userLogin);   
+                     priceContext.put("productStoreId", productStoreId);                    
+                     priceContext.put("productId", quoteItem.getString("productId"));
+                     priceContext.put("partyId", partyId); 
+                     
+             		List<ShoppingCartItem> tempCartItems =cart.findAllCartItems(quoteItem.getString("productId"));
+             		if(tempCartItems.size() >0){
+             			 ShoppingCartItem item = tempCartItems.get(0);
+                         item.setQuantity(item.getQuantity().add(new BigDecimal(quoteItem.getString("quantity"))), dispatcher, cart);
+                         item.setBasePrice(BigDecimal.ONE);
+             			
+             		}else{
+             			cart.addItem(0, ShoppingCartItem.makeItem(Integer.valueOf(0), quoteItem.getString("productId"), BigDecimal.ONE, 
+                 		      new BigDecimal(quoteItem.getString("quantity")), quoteItem.getBigDecimal("quoteUnitPrice"),
+                              null, null, null, null, null, null, null,
+                              null, null, null, null, null, null, dispatcher,
+                              cart, Boolean.FALSE, Boolean.FALSE, null, Boolean.TRUE, Boolean.TRUE)); 
+             		}
+ 					GenericValue productDetail = delegator.findOne("Product", UtilMisc.toMap("productId", quoteItem.getString("productId")), false);
+ 					if (productDetail != null) {
+ 						BigDecimal tempQuantity  = quoteItem.getBigDecimal("quantity");
+ 						quantity = quantity.add(tempQuantity);
+ 					}
+             		
+                 } catch (Exception exc) {
+                     Debug.logWarning("Error adding product with id " + quoteItem.getString("productId") + " to the cart: " + exc.getMessage(), module);
+             		return ServiceUtil.returnError("Error adding product with id " + quoteItem.getString("productId") + " to the cart: " + exc.getMessage());          	            
+                 }
+                
+             }  
+         }      
+         cart.setDefaultCheckoutOptions(dispatcher);
+         CheckOutHelper checkout = new CheckOutHelper(dispatcher, delegator, cart);
+         Map<String, Object> orderCreateResult = checkout.createOrder(userLogin);
+         String orderId = (String) orderCreateResult.get("orderId");
+         // approve the order
+/*         if (UtilValidate.isNotEmpty(orderId)) {
+             boolean approved = OrderChangeHelper.approveOrder(dispatcher, userLogin, orderId); 
+             
+             try{            	
+         		//result = dispatcher.runSync("createInvoiceForOrderAllItems", UtilMisc.<String, Object>toMap("orderId", orderId,"userLogin", userLogin));
+         		if (ServiceUtil.isError(result)) {
+                     Debug.logWarning("There was an error while creating  the invoice: " + ServiceUtil.getErrorMessage(result), module);
+             		 return ServiceUtil.returnError("There was an error while creating the invoice: " + ServiceUtil.getErrorMessage(result));          	            
+                 } 
+             	         	 
+              //OrderChangeHelper.orderStatusChanges(dispatcher, userLogin, orderId, "ORDER_COMPLETED", "ITEM_APPROVED", "ITEM_COMPLETED", null);           	 
+             }catch (Exception e) {
+                 Debug.logError(e, module);
+             } 
+             result.put("orderId", orderId);
+         }        
+*/       	
+         return result;
+    }
+	
 }
