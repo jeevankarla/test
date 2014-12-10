@@ -190,4 +190,19 @@ under the License.
       <SecurityGroupPermission groupId="HR_EMPL_PROFILE_VIEW" permissionId="HUMANRES_EMPLOYEE"/>
       <SecurityGroupPermission groupId="FULLADMIN" permissionId="HR_EMPL_PROFILE_VIEW"/> 
       
+      <!-- view employee profile permissions -->
+       <SecurityPermission description="View Shift Calender in Employee Profile" permissionId="HR_SHIFTCALVIEW"/>
+       <SecurityPermission description="View Previous Employment in Employee Profile" permissionId="HR_PREVEMPVIEW"/>
+       <SecurityPermission description="View list Employments in Employee Profile" permissionId="HR_LISTEMPLVIEW"/>
+       <SecurityPermission description="View Employee Positions in Employee Profile" permissionId="HR_LSTEMPPOSVIEW"/>
+       <SecurityPermission description="View Employee Skills in Employee Profile" permissionId="HR_EMPSKLVIEW"/>
+       <SecurityPermission description="View Employee Qualification in Employee Profile" permissionId="HR_EMPLQUALVIEW"/>
+       <SecurityPermission description="View Employee Leave in Employee Profile" permissionId="HR_EMPLEAVEVIEW"/>
+       <SecurityPermission description="View Payroll Items in Employee Profile" permissionId="HR_PAYITEMSVIEW"/>
+       
+       <!-- view employee attendance permissions -->
+       <SecurityPermission groupId="HR_ATTENDANCEVIEW" description="View Daily Punch" permissionId="HR_DAILYPUNCHVIEW"/>
+       <SecurityPermission groupId="HR_ATTENDANCEVIEW" description="View payroll attendance" permissionId="HR_PAYATTNDNCEVIEW"/>
+       <SecurityPermission groupId="HR_ATTENDANCEVIEW" description="View leave encashment" permissionId="HR_LEAVEENCASHVIEW"/>
+      
 </entity-engine-xml>

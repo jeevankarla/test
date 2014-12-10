@@ -254,14 +254,17 @@ function viewGHandSS(){
               <tr>
                 <td class="label">${uiLabelMap.EmployeeId} :</td>
                 <td>
-                   <#if !editFlag>
-                      <@htmlTemplate.lookupField value="${parameters.partyId?if_exists}" formName="EditEmplLeave" name="partyId" id="partyId" fieldFormName="LookupEmployeeName"/>
-                    <span class="tooltip"></span>
-                    <#else>
-                     <input type="hidden" name="partyId" id="partyId" value="${partyId?if_exists}"/>
-                     ${partyId?if_exists}
-                  </#if> 
-                    
+                	<#if security.hasEntityPermission("MYPORTAL", "_HREMPLVIEW", session)>
+                		<input type="display" name="partyId" id="partyId" value="${userLogin.partyId?if_exists}" readonly/>
+                	<#else>
+                		<#if !editFlag>
+                      		<@htmlTemplate.lookupField value="${parameters.partyId?if_exists}" formName="EditEmplLeave" name="partyId" id="partyId" fieldFormName="LookupEmployeeName"/>
+                    		<span class="tooltip"></span>
+                    	<#else>
+                    	 <input type="hidden" name="partyId" id="partyId" value="${partyId?if_exists}"/>
+                     		${partyId?if_exists}
+                  		</#if> 
+                	</#if>
                 </td>
               </tr>
                <tr>

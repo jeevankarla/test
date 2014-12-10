@@ -133,12 +133,48 @@
            	<link target="findMasters"/>
         </menu-item>
 	</menu>
+	
+	 <menu name="HumanresEmplViewNGTabBar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml"
+          default-menu-item-name="HumanresProfile">      
+        <menu-item name="main" title="Lookup Employees">
+        	<condition>
+            	<if-has-permission permission="HR"  action="_EMPL_PROFILE_VIEW"/>
+            </condition> 
+            <link target="main">
+            </link>
+        </menu-item>
+        <menu-item name="EmployeeLeave" title="${uiLabelMap.HumanResEmployeeLeave}">
+        	<condition>
+        	  	<or>
+        	  		<if-has-permission permission="HR"  action="_EMPL_PROFILE_VIEW"/>
+        	     	<if-has-permission permission="HR"  action="_EMPLLEAVE_VIEW"/>
+        	     	<if-has-permission permission="HR"  action="_LEAVE_APPROVAL"/>
+        	  	</or>
+            </condition>
+            <link target="FindEmplLeaves"/>
+        </menu-item>
+        <menu-item name="Attendance" title="Attendance">
+        	<condition>
+        	   <or>
+        	   		<if-has-permission permission="HR"  action="_EMPL_PROFILE_VIEW"/>
+	              	<if-has-permission permission="HR"  action="_ATTENDANCE_VIEW"/>
+	              	<if-has-permission permission="EMP"  action="_PUNCH_EDIT_UPDATE"/>
+            	</or>
+            </condition> 
+            <link target="EmployeeAttendance"/>
+        </menu-item>
+	</menu>
+	
+	
 	<menu name="AttendanceTabBar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml" 
 		selected-menuitem-context-field-name="tabButtonItem2">
         <menu-item name="DailyPunch" title="Daily Punch Details">
-            <condition>
-	              <if-has-permission permission="HR"  action="_ATTENDANCE_VIEW"/>
-            </condition>  
+        	<condition>
+                   <and>
+                     <if-has-permission permission="HR"  action="_ATTENDANCE_VIEW"/>
+                     <if-has-permission permission="HR"  action="_DAILYPUNCHVIEW"/>
+                   </and>
+            </condition>
         	<link target="DailyPunch"/>
         </menu-item>
          <menu-item name="DailyPunchEditTable" title="OOD/Manual Punch Entry"> 
@@ -195,20 +231,25 @@
         <menu-item name="EditPayrollAttendance" title="Edit Payroll Attendance">
         	<condition>
                  <and>
-                    <if-has-permission permission="EDIT_PAYROLL"  action="_VIEW"/>
+                    <if-has-permission permission="HR"  action="_PAYATTNDNCEVIEW"/>
 	             </and> 
             </condition> 
         	<link target="EditPayrollAtten"/>
         </menu-item>
         <menu-item name="EditLeaveEncash" title="Edit Leave Encashment Days">
-        	<!-- <condition>
+        	<condition>
                  <and>
-                    <if-has-permission permission="EDIT_PAYROLL"  action="_VIEW"/>
+                    <if-has-permission permission="HR"  action="_LEAVEENCASHVIEW"/>
 	             </and> 
-            </condition>  -->
+            </condition>
         	<link target="EditLeaveEncashment"/>
         </menu-item> 
         <menu-item name="EditShiftDays" title="Edit ShiftDays">
+        	<condition>
+                 <and>
+                    <if-has-permission permission="EDIT_PAYROLL"  action="_VIEW"/>
+	             </and> 
+            </condition>
 			<link target="EditShiftDays"></link>        
         </menu-item> 
         <menu-item name="creditLeaves" title="Credit Leaves">
@@ -564,33 +605,75 @@
             </link>
         </menu-item>
         <menu-item name="ShiftCalender" title="Shift Calender">
+        	<condition>
+                  <or>
+                  	<if-has-permission permission="HR"  action="_SHIFTCALVIEW"/>
+                    <if-has-permission permission="HUMANRES"  action="_ADMIN"/>
+	                <if-has-permission permission="FULL"  action="_ADMIN"/>
+	               </or>
+            </condition> 
         	<link target="empShiftCalender" >
         		<parameter param-name="partyId"/>
         	</link>
         </menu-item>
         
         <menu-item name="PreviousEmployementProfile" title="${uiLabelMap.PreviousEmployementProfile}">
+            <condition>
+                  <or>
+                    <if-has-permission permission="HUMANRES"  action="_ADMIN"/>
+	                <if-has-permission permission="FULL"  action="_ADMIN"/>
+	                <if-has-permission permission="HR"  action="_PREVEMPVIEW"/>
+	               </or> 
+            </condition>
             <link target="PreviousEmployementProfile">
                 <parameter param-name="partyId"/>
             </link>
         </menu-item>
              
         <menu-item name="ListEmployment" title="${uiLabelMap.HumanResEmployment}">
+            <condition>
+                  <or>
+                    <if-has-permission permission="HUMANRES"  action="_ADMIN"/>
+	                <if-has-permission permission="FULL"  action="_ADMIN"/>
+	                <if-has-permission permission="HR"  action="_LISTEMPLVIEW"/>
+	               </or> 
+            </condition>
             <link target="ListEmployments">
                 <parameter param-name="partyId" from-field="parameters.partyId"/>
             </link>
         </menu-item>
         <menu-item name="ListEmplPositions" title="${uiLabelMap.HumanResEmployeePosition}">
+            <condition>
+                  <or>
+                    <if-has-permission permission="HUMANRES"  action="_ADMIN"/>
+	                <if-has-permission permission="FULL"  action="_ADMIN"/>
+	                <if-has-permission permission="HR"  action="_LSTEMPPOSVIEW"/>
+	               </or> 
+            </condition>
             <link target="ListEmplPositions">
                 <parameter param-name="partyId" from-field="parameters.partyId"/>
             </link>
         </menu-item>
         <menu-item name="EditEmployeeSkills" title="${uiLabelMap.HumanResSkills}">
+            <condition>
+                  <or>
+                    <if-has-permission permission="HUMANRES"  action="_ADMIN"/>
+	                <if-has-permission permission="FULL"  action="_ADMIN"/>
+	                <if-has-permission permission="HR"  action="_EMPSKLVIEW"/>
+	               </or> 
+            </condition>
             <link target="EditEmployeeSkills">
                 <parameter param-name="partyId"/>
             </link>
         </menu-item>
         <menu-item name="EditEmployeeQuals" title="${uiLabelMap.HumanResPartyQualification}">
+            <condition>
+                  <or>
+                    <if-has-permission permission="HUMANRES"  action="_ADMIN"/>
+	                <if-has-permission permission="FULL"  action="_ADMIN"/>
+	                <if-has-permission permission="HR"  action="_EMPLQUALVIEW"/>
+	               </or> 
+            </condition>
             <link target="EditEmployeeQuals">
                 <parameter param-name="partyId"/>
             </link>
@@ -617,11 +700,25 @@
             </link>
         </menu-item> -->
         <menu-item name="EditEmployeeLeaves" title="${uiLabelMap.HumanResEmplLeave}">
+            <condition>
+                  <or>
+                    <if-has-permission permission="HUMANRES"  action="_ADMIN"/>
+	                <if-has-permission permission="FULL"  action="_ADMIN"/>
+	                <if-has-permission permission="HR"  action="_EMPLEAVEVIEW"/>
+	               </or> 
+            </condition>
             <link target="EditEmployeeLeaves">
                 <parameter param-name="partyId"/>
             </link>
         </menu-item>
         <menu-item name="PayrollItems" title="Salary">
+        	<condition>
+                  <or>
+                    <if-has-permission permission="HUMANRES"  action="_ADMIN"/>
+	                <if-has-permission permission="FULL"  action="_ADMIN"/>
+	                <if-has-permission permission="HR"  action="_PAYITEMSVIEW"/>
+	               </or> 
+            </condition>
         	<link target="ListPayHistories">
         		<parameter param-name="roleTypeIdFrom" from-field="parameters.roleTypeIdFrom"/>
                 <parameter param-name="roleTypeIdTo" from-field="parameters.roleTypeIdTo"/>

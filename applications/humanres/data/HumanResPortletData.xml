@@ -23,6 +23,33 @@
         screenLocation="component://humanres/widget/EmplLeaveScreens.xml"
         description="Attendance"/>
         
-    <PortletPortletCategory portalPortletId="Leave" portletCategoryId="HUMANRES"/>       
-
+    <PortletPortletCategory portalPortletId="Leave" portletCategoryId="HUMANRES"/>  
+    
+    
+  <!-- New Portal for Employee to view profile, attendance and leaves -->
+	 	
+	 	<PortalPortlet portalPortletId="HREMPLVIEW"  portletName="HR Employee Profile View"  screenName="MyportalHREMPLVIEW" screenLocation="component://humanres/widget/HumanresScreens.xml"
+        description="Employee Profile View" securityServiceName="portalPermissionIsEmployee" securityMainAction="VIEW"/>
+    	
+    	<PortalPage portalPageId="MYPORTAL_HREMPLVIEW" sequenceNum="0" portalPageName="HR EMPLOYEE VIEW" description="The HR Employee Page" ownerUserLoginId="_NA_" securityGroupId="MYPORTAL_HREMPLVIEW"/>
+    	
+    	<PortalPageColumn portalPageId="MYPORTAL_HREMPLVIEW" columnSeqId="00001"/>
+    	
+    	<PortalPagePortlet portalPageId="MYPORTAL_HREMPLVIEW" portalPortletId="HREMPLVIEW" portletSeqId="00001" columnSeqId="00001" sequenceNum="0"/>
+	 	
+    	<SecurityGroup description="Customer user of MYPORTAL, Limited access to Employee to view profile, attendance and leaves" groupId="MYPORTAL_HREMPLVIEW"/>
+    	<SecurityGroupPermission groupId="MYPORTAL_HREMPLVIEW" permissionId="HUMANRES_VIEW"/>
+    	<SecurityGroupPermission groupId="MYPORTAL_HREMPLVIEW" permissionId="HUMANRES_EMPLOYEE"/>
+    	<SecurityGroupPermission groupId="MYPORTAL_HREMPLVIEW" permissionId="HR_EMPLLEAVE_VIEW"/>
+    	<SecurityGroupPermission groupId="MYPORTAL_HREMPLVIEW" permissionId="HR_ATTENDANCE_VIEW"/>
+    	<SecurityGroupPermission groupId="MYPORTAL_HREMPLVIEW" permissionId="HUMANRES_LEAVE_EDIT"/>
+    	<SecurityGroupPermission groupId="MYPORTAL_HREMPLVIEW" permissionId="MYPORTAL_EMPLOYEE"/>
+    	<SecurityGroupPermission groupId="MYPORTAL_HREMPLVIEW" permissionId="MYPORTALBASE_ADMIN"/>
+    	<SecurityGroupPermission groupId="MYPORTAL_HREMPLVIEW" permissionId="HR_EMPL_PROFILE_VIEW"/>
+    	<SecurityGroupPermission groupId="MYPORTAL_HREMPLVIEW" permissionId="HUMANRES_EMPLOYEE_VIEW"/>
+    	<SecurityGroupPermission groupId="MYPORTAL_HREMPLVIEW" permissionId="OFBTOOLS_VIEW"/>
+    	
+    	<SecurityGroupPermission groupId="MYPORTAL_HREMPLVIEW" permissionId="MYPORTAL_HREMPLVIEW"/>
+    	<SecurityPermission permissionId="MYPORTAL_HREMPLVIEW" description="View Employee profile, attendance and leaves"/>
+    	
 </entity-engine-xml>

@@ -138,8 +138,12 @@ $("#fromDate").glDatePicker(
 	  <form name="attendance">
 		<table class="basic-table" cellspacing="0">
         	<tr>
-        		<td align="right" width="10%"><span class='h3'>Employee: </span></td>        	
-				<td width="20%"><select id="employeeId" name="employeeId" class="flexselect"></select></td>        
+        		<td align="right" width="10%"><span class='h3'>Employee: </span></td>
+        		<#if security.hasEntityPermission("MYPORTAL", "_HREMPLVIEW", session)>
+                	<td width="20%"><input type="display" name="employeeId" id="employeeId" value="${userLogin.partyId?if_exists}" readonly/></td> 
+                <#else>
+                	<td width="20%"><select id="employeeId" name="employeeId" class="flexselect"></select></td> 
+                </#if>        	
         		<td align="right" width="10%"><span class='h3'>From Date: </span></td>
             	<td width="20%"><input class="mycalendar" type="text" id="fromDate" name="fromDate"/></td>        	
         		<td align="right" width="10%"><span class='h3'>Thru Date: </span></td>

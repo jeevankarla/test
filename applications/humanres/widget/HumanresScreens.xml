@@ -31,6 +31,29 @@
 		</section>
 	</screen>
 	
+	<screen name="MyportalHREMPLVIEW">
+        <section>
+            <actions>
+				<set field="tabButtonItem" value="main" />
+				<set field="titleProperty" value="Lookup Employees" />
+				<script	location="component://humanres/webapp/humanres/WEB-INF/actions/humanres/employeeTable.groovy" />
+            </actions>            
+           <widgets>
+				<include-menu location="component://humanres/widget/HumanresMenus.xml" name="HumanresEmplViewNGTabBar"/>
+					<container>
+						<screenlet title="Company Employees">
+							<platform-specific>
+								<html>
+									<html-template
+										location="component://humanres/webapp/humanres/humanres/summaryTable.ftl"></html-template>
+								</html>
+							</platform-specific>
+						</screenlet>
+					</container>
+			</widgets>
+        </section>
+    </screen>
+	
 	 <screen name="MyportalLeaveApprove">
         <section>
             <actions>
@@ -534,7 +557,7 @@
                 <entity-condition list="customTimePeriodList" entity-name="CustomTimePeriod">
                 	<condition-list combine="or">
                 		<condition-expr field-name="periodTypeId" operator="equals" value="HR_QUARTER"/>
-                		<condition-expr field-name="periodTypeId" operator="equals" value="HR_LEAVEENCASH"/>                	
+                		<condition-expr field-name="periodTypeId" operator="equals" value="HR_LEAVEENCASH"/>               	
                 	</condition-list>
                 	<order-by field-name="-thruDate"/>
                     <order-by field-name="periodNum"/>
