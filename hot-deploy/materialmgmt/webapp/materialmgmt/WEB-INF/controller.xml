@@ -41,6 +41,35 @@
        <response name="success" type="view" value="FindMaterialRequest"/>
        <response name="error" type="view" value="FindMaterialRequest"/>
      </request-map>
+     <request-map uri="POoverview">
+       <security https="true" auth="true"/>
+       <response name="success" type="view" value="PurchageOrderOverView"/>
+       <response name="error" type="view" value="PurchageOrderOverView"/>
+     </request-map>
+     
+     <request-map uri="creatNewnote">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="creatNewnote"/>
+    </request-map>
+    
+    <request-map uri="createPONote">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="createOrderNote"/>
+        <response name="success" type="view" value="PurchageOrderOverView"/>
+        <response name="error" type="view" value="PurchageOrderOverView"/>
+    </request-map>
+    
+    <request-map uri="updatePONote">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="updateOrderNote"/>
+        <response name="success" type="view" value="PurchageOrderOverView"/>
+        <response name="error" type="view" value="PurchageOrderOverView"/>
+    </request-map>
+    
+     <request-map uri="FindReceipts">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="FindReceipts"/>
+    </request-map>
      
     <request-map uri="enquiryItemsForQuote">
      	<security auth="true" https="true"/>
@@ -393,6 +422,9 @@
      <view-map name="PurchaseOrderInit" type="screen" page="component://materialmgmt/widget/materialmgmtScreens.xml#PurchaseOrderInit"/>
     <view-map name="FindInterUnitPurchase" type="screen" page="component://materialmgmt/widget/materialmgmtScreens.xml#FindInterUnitPurchase"/>
     <view-map name="InterUnitPurchaseOrderInit" type="screen" page="component://materialmgmt/widget/materialmgmtScreens.xml#InterUnitPurchaseOrderInit"/>
+    <view-map name="PurchageOrderOverView" type="screen" page="component://materialmgmt/widget/materialmgmtScreens.xml#PurchageOrderOverView"/>
+    <view-map name="creatNewnote" type="screen" page="component://materialmgmt/widget/materialmgmtScreens.xml#OrderNewNote"/>
+    <view-map name="FindReceipts" type="screen" page="component://materialmgmt/widget/materialmgmtScreens.xml#FindReceipts"/>
     
     <view-map name="StoreReports" type="screen" page="component://materialmgmt/widget/materialmgmtReportScreens.xml#StoreReports" />
     <view-map name="purchaseTaxReportPDF" type="screenfop" page="component://materialmgmt/widget/materialmgmtReportScreens.xml#PurchaseTaxReportPDF" content-type="application/pdf"/>

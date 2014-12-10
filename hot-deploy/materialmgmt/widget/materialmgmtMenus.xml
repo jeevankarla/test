@@ -234,7 +234,28 @@
         </menu-item>
          <menu-item name="CreateEnquiry" title="Create Enquiry">
         </menu-item>
+       </menu>
+       <menu name="FindMaterialPOSubTabBar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml" selected-menuitem-context-field-name="tabButtonItem2">
+        <menu-item name="FindMaterialPO" title="Find Purchase Order">
+        	<link target="FindMaterialPO"/>
+        </menu-item>
         
+        <menu-item name="POoverView" title="Purchase Order OverView">
+        	<condition>
+        		<not>
+					<if-empty  field="parameters.orderId"/>
+				</not>
+        	</condition>
+        	<link target="POoverview"> <parameter param-name="orderId" from-field="parameters.orderId" /> </link>
+        </menu-item>
+         <menu-item name="receipts" title="Receipts">
+         <condition>
+        		<not>
+					<if-empty field="parameters.orderId" />
+				</not>
+        	</condition>
+        	<link target="FindReceipts"> <parameter param-name="orderId" from-field="parameters.orderId" /> </link>
+        </menu-item>
       </menu>
       
 </menus>

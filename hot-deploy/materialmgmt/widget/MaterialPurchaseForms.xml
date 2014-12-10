@@ -37,7 +37,7 @@
       		</entity-condition>
       	</row-actions>
       	<field name="orderId" widget-style="buttontext">
-      		<hyperlink target="orderview" description="${orderId}" target-window="_blank">
+      		<hyperlink target="POoverview" description="${orderId}" target-window="_blank">
       			<parameter param-name="orderId"/>
       		</hyperlink>
       	</field>

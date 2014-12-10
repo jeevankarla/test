@@ -100,6 +100,31 @@
         </section>
     </screen>
     
+    <screen name="POOverViewDecorator">
+        <section>
+            <actions>
+            </actions>
+            <widgets>
+                <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="body">
+                        <section>
+                            <condition>
+                                <if-has-permission permission="materialmgmt" action="_VIEW"/>
+                            </condition>
+                            <widgets>
+                            <include-menu name="MaterailtMgmtNGTabBar" location="component://materialmgmt/widget/materialmgmtMenus.xml"/>
+                                <decorator-section-include name="body"/>
+                            </widgets>
+                            <fail-widgets>
+                                <label style="h3">${uiLabelMap.materialmgmtViewPermissionError}</label>
+                            </fail-widgets>
+                        </section>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    
     <screen name="materialmgmtNgCommonDecorator">
         <section>
             <actions>

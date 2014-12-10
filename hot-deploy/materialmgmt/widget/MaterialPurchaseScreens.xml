@@ -41,6 +41,7 @@
             <actions>
                 <set field="titleProperty" value="Find Purchase Order"/>              
 			    <set field="tabButtonItem" value="FindMaterialPO" />	
+			      <set field="tabButtonItem2" value="FindMaterialPO"/>
                <set field="viewSize" from-field="parameters.VIEW_SIZE"/>
                <set field="targetRequest" value="FindMaterialPO"/>
                 <!-- <set field="ChannalType" value="PROD_PRCHSE_CHANNEL"/>  -->
@@ -48,6 +49,7 @@
             <widgets>
                  <decorator-screen name="materialmgmtNgCommonDecorator" location="${parameters.mainDecoratorLocation}">
                       <decorator-section name="body">  
+                      <include-menu name="FindMaterialPOSubTabBar" location="component://materialmgmt/widget/materialmgmtMenus.xml"/>
                         <section>
                             <widgets>
                                 <decorator-screen name="FindScreenDecorator" location="component://common/widget/CommonScreens.xml">
