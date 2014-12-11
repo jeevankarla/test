@@ -45,29 +45,29 @@ context.invoiceDebit = invoiceDebit;
 
 invoiceIds=[];
 
-shipmentId = parameters.shipmentId;
-conditionList = [];
-if(UtilValidate.isNotEmpty(parameters.orderId)){
-	conditionList.add(EntityCondition.makeCondition("orderId", EntityOperator.EQUALS, parameters.orderId));
-}else{
-conditionList.add(EntityCondition.makeCondition("shipmentId", EntityOperator.EQUALS, shipmentId));
-}
-conditionList.add(EntityCondition.makeCondition("statusId", EntityOperator.NOT_EQUAL, "ORDER_CANCELLED"));
-condition = EntityCondition.makeCondition(conditionList, EntityOperator.AND);
-orderHeaders = delegator.findList("OrderHeader", condition, UtilMisc.toSet("orderId"), null, null, false);
-orderIds = EntityUtil.getFieldListFromEntityList(orderHeaders, "orderId", true);
-
-conditionList.clear();
-conditionList.add(EntityCondition.makeCondition("orderId", EntityOperator.IN, orderIds));
-conditionList.add(EntityCondition.makeCondition("statusId", EntityOperator.NOT_EQUAL, "INVOICE_CANCELLED"));
-cond = EntityCondition.makeCondition(conditionList, EntityOperator.AND);
-invoices = delegator.findList("OrderItemBillingAndInvoiceAndInvoiceItem", cond, UtilMisc.toSet("invoiceId"), null, null, false);
-invoiceIds = EntityUtil.getFieldListFromEntityList(invoices, "invoiceId", true);
-invoiceId = invoiceIds.get(0);
-
 //for debit credit note
 if(UtilValidate.isNotEmpty(reportTypeFlag) && reportTypeFlag == "debitNote"){
-	if(UtilValidate.isEmpty(invoiceId)){
+	shipmentId = parameters.shipmentId;
+	conditionList = [];
+	if(UtilValidate.isNotEmpty(parameters.orderId)){
+		conditionList.add(EntityCondition.makeCondition("orderId", EntityOperator.EQUALS, parameters.orderId));
+	}else{
+	conditionList.add(EntityCondition.makeCondition("shipmentId", EntityOperator.EQUALS, shipmentId));
+	}
+	conditionList.add(EntityCondition.makeCondition("statusId", EntityOperator.NOT_EQUAL, "ORDER_CANCELLED"));
+	condition = EntityCondition.makeCondition(conditionList, EntityOperator.AND);
+	orderHeaders = delegator.findList("OrderHeader", condition, UtilMisc.toSet("orderId"), null, null, false);
+	orderIds = EntityUtil.getFieldListFromEntityList(orderHeaders, "orderId", true);
+	
+	conditionList.clear();
+	conditionList.add(EntityCondition.makeCondition("orderId", EntityOperator.IN, orderIds));
+	conditionList.add(EntityCondition.makeCondition("statusId", EntityOperator.NOT_EQUAL, "INVOICE_CANCELLED"));
+	cond = EntityCondition.makeCondition(conditionList, EntityOperator.AND);
+	invoices = delegator.findList("OrderItemBillingAndInvoiceAndInvoiceItem", cond, UtilMisc.toSet("invoiceId"), null, null, false);
+	invoiceIds = EntityUtil.getFieldListFromEntityList(invoices, "invoiceId", true);
+	invoiceId = invoiceIds.get(0);
+	
+	if(UtilValidate.isEmpty(invoiceId)&& UtilValidate.isNotEmpty(paymentId)){
 		paymentApplication = delegator.findByAnd("PaymentApplication", [paymentId :paymentId]);
 		if(UtilValidate.isEmpty(paymentApplication)){
 			Debug.logError("no InvoiceId","");
@@ -81,16 +81,12 @@ if(UtilValidate.isNotEmpty(reportTypeFlag) && reportTypeFlag == "debitNote"){
 			}
 		}
 	}else{
-	    invoiceId = parameters.get("invoiceId");
+		if(UtilValidate.isEmpty(shipmentId)){
+			invoiceId = parameters.get("invoiceId");
+		}
 	}
 	if(UtilValidate.isEmpty(paymentId)&& UtilValidate.isNotEmpty(invoiceId) ){
 		paymentApplication = delegator.findByAnd("PaymentApplication", [invoiceId :invoiceId]);
-/*//		if(UtilValidate.isEmpty(paymentApplication)){
-//			Debug.logError("no paymentId","");
-//			context.errorMessage = "No Invoices Found....!";
-//			return;
-//		}
-//*/		
 		if(UtilValidate.isNotEmpty(paymentApplication)){
 			invoiceDetails = EntityUtil.getFirst(paymentApplication);
 			if(UtilValidate.isNotEmpty(invoiceDetails)){
@@ -101,6 +97,9 @@ if(UtilValidate.isNotEmpty(reportTypeFlag) && reportTypeFlag == "debitNote"){
 		paymentId = parameters.get("paymentId");
 	}
 }
+
+
+
 invoice = delegator.findByPrimaryKey("Invoice", [invoiceId : invoiceId]);
 context.invoice = invoice;
 currency = parameters.currency;        // allow the display of the invoice in the original currency, the default is to display the invoice in the default currency
