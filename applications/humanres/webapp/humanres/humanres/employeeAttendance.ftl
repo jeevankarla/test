@@ -139,7 +139,7 @@ $("#fromDate").glDatePicker(
 		<table class="basic-table" cellspacing="0">
         	<tr>
         		<td align="right" width="10%"><span class='h2'>Employee: </span></td>
-        		<#if security.hasEntityPermission("MYPORTAL", "_HREMPLVIEW", session)>
+        		<#if security.hasEntityPermission("MYPORTAL", "_HREMPLVIEW", session) || security.hasEntityPermission("MYPORTAL", "_EMPLEAVE_AP", session)>
         			<#assign partyName= Static["org.ofbiz.party.party.PartyHelper"].getPartyName(delegator, userLogin.partyId, false)?if_exists/>
                 	<td width="20%" class = "h3"><input type="hidden" name="employeeId" id="employeeId" value="${userLogin.partyId?if_exists}"/>
                 	${partyName}[${userLogin.partyId?if_exists}]</td> 
