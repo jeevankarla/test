@@ -3064,6 +3064,7 @@ public class PayrollService {
 			result.put("lateMin", 0.0);
 			result.put("extraMin", 0.0);
 			result.put("availedVehicleDays" , availedVehicleDays);
+			result.put("lastModifiedByUserLogin", userLogin.get("userLoginId"));
 			if(UtilValidate.isNotEmpty(payrollAttendance)){
 				Iterator tempIter = payrollAttendance.entrySet().iterator();
 	        	while (tempIter.hasNext()) {
@@ -3115,6 +3116,9 @@ public class PayrollService {
 				}
 				if(UtilValidate.isNotEmpty(payrollAttendance.get("extraMin"))){
 					result.put("extraMin", (payrollAttendance.getBigDecimal("extraMin")).doubleValue());
+				}
+				if(UtilValidate.isNotEmpty(userLogin)){
+					result.put("lastModifiedByUserLogin", userLogin.get("userLoginId"));
 				}
 			}
     		
@@ -4287,6 +4291,12 @@ public class PayrollService {
       						if(UtilValidate.isNotEmpty(extraOrdinaryLeaveDaysStr)){
       							employPayrollDetails.set("extraOrdinaryLeaveDays",extraOrdinaryLeaveDays);
       						}
+      						if(UtilValidate.isNotEmpty(userLogin)){
+      							employPayrollDetails.set("createdByUserLogin",userLogin.get("userLoginId"));
+      						}
+      						if(UtilValidate.isNotEmpty(userLogin)){
+      							employPayrollDetails.set("lastModifiedByUserLogin",userLogin.get("userLoginId"));
+      						}
       				        delegator.createOrStore(employPayrollDetails);
       					}
     	      	
@@ -4989,6 +4999,8 @@ public class PayrollService {
 	        		newEntity.set("noOfCompoffAvailed", BigDecimal.ZERO);
 	        		newEntity.set("lateMin", BigDecimal.ZERO);
 	        		newEntity.set("extraMin", BigDecimal.ZERO);
+	        		newEntity.set("createdByUserLogin", userLogin.get("userLoginId"));
+	        		newEntity.set("lastModifiedByUserLogin", userLogin.get("userLoginId"));
 	        		double noOfAttendedSsDays = 0;
 	        		double lossOfPayDays =0;
 	        		double lateMin =0;
@@ -5208,6 +5220,7 @@ public class PayrollService {
 			    		newEntity.set("noOfAttendedSsDays", new BigDecimal(noOfAttendedSsDays));
 			    		newEntity.set("noOfAttendedWeeklyOffDays", new BigDecimal(noOfAttendedWeeklyOffDays));
 			    		newEntity.set("noOfPayableDays",noOfEmployementDays.subtract(newEntity.getBigDecimal("lossOfPayDays")));
+			    		newEntity.set("lastModifiedByUserLogin", userLogin.get("userLoginId"));
 			    		//Debug.log("newEntity============="+newEntity);
 			    		delegator.createOrStore(newEntity);
 			    		
@@ -5487,6 +5500,7 @@ public class PayrollService {
 	      						employPayrollDetails.set("noOfPayableDays",noOfPayableDays);
 	      						employPayrollDetails.set("lossOfPayDays",lossOfPayDays);
 	      						employPayrollDetails.set("lateMin",lateMin);
+	      						employPayrollDetails.set("lastModifiedByUserLogin", userLogin.get("userLoginId"));
 	      						employPayrollDetails.store();
 	      					}
 	    	      	}

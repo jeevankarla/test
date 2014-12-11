@@ -680,6 +680,8 @@ under the License.
         <field name="commutedLeaveDays" type="fixed-point"/>
         <field name="disabilityLeaveDays" type="fixed-point"/>
         <field name="extraOrdinaryLeaveDays" type="fixed-point"/>
+        <field name="createdByUserLogin" type="id-vlong"></field>
+	  	<field name="lastModifiedByUserLogin" type="id-vlong"></field>
         <prim-key field="partyId"/>
         <prim-key field="customTimePeriodId"/>
         <relation type="one" fk-name="PAYROLL_PERIOD_CUST_TP" rel-entity-name="CustomTimePeriod">
