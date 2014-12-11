@@ -131,4 +131,28 @@
        <log level="always" message="quoteItemSeq look ${lookedUpValue.quoteId} ${lookedUpValue.quoteItemSeqId} param ${parameters.quoteId} ${parameters.quoteItemSeqId}"></log> -->
     </simple-method>
     
+    <simple-method method-name="createPOContent" short-description="Create Order Content Entity">
+        <make-value value-field="orderContent" entity-name="OrderContent"/>
+        <set-pk-fields value-field="orderContent" map="parameters"/>
+        <set-nonpk-fields value-field="orderContent" map="parameters"/>
+
+        <if-empty field="orderContent.fromDate">
+            <now-timestamp field="nowTimestamp"/>
+            <set field="orderContent.fromDate" from-field="nowTimestamp"/>
+        </if-empty>
+        <if-empty field="parameters.orderItemSeqId">
+                <make-next-seq-id value-field="orderContent" seq-field-name="orderItemSeqId" />
+        </if-empty>
+
+        <create-value value-field="orderContent"/>
+    </simple-method>
+    
+    <simple-method method-name="removePOcontent" short-description="Remove Order Content Entity">
+        <make-value value-field="lookupPkMap" entity-name="OrderContent"/>
+        <set-pk-fields value-field="lookupPkMap" map="parameters"/>
+
+        <find-by-primary-key map="lookupPkMap" value-field="orderContent"/>
+        <remove-value value-field="orderContent"/>
+    </simple-method>
+    
 </simple-methods>   

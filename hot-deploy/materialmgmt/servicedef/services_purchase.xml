@@ -122,4 +122,25 @@
         <attribute name="statusId" type="String" mode="IN" optional="false"/>
     </service>
     
+    <service name="uploadPOContentFile" engine="group" transaction-timeout="300">
+        <description>Upload and attach a file to a Purchase Order</description>
+        <group>
+            <invoke name="createContentFromUploadedFile" result-to-context="true"/>
+            <invoke name="createPOContent"/>
+        </group>
+    </service>
+    
+     <service name="createPOContent" engine="simple" default-entity-name="OrderContent"
+            location="component://materialmgmt/script/MaterialMgmtServices.xml" invoke="createPOContent" auth="true">
+        <description>Create a OrderContent record</description>
+        <auto-attributes mode="IN" include="pk" optional="false"/>
+        <auto-attributes mode="IN" include="nonpk" optional="true"/>
+        <override name="fromDate" optional="true"/>
+    </service>
+    
+    <service name="removePOcontent" engine="simple" default-entity-name="OrderContent"
+            location="component://materialmgmt/script/MaterialMgmtServices.xml" invoke="removePOcontent" auth="true">
+        <description>Remove a OrderContent record</description>
+        <auto-attributes mode="IN" include="pk" optional="false"/>
+    </service>
 </services>

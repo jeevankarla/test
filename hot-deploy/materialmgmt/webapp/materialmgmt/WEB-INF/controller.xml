@@ -70,6 +70,20 @@
         <security https="true" auth="true"/>
         <response name="success" type="view" value="FindReceipts"/>
     </request-map>
+    
+    <request-map uri="createPOContent">
+        <security auth="true" https="true"/>
+        <event type="service" invoke="uploadPOContentFile"/>
+        <response name="success" type="view" value="PurchageOrderOverView"/>
+        <response name="error" type="view" value="PurchageOrderOverView"/>
+    </request-map>
+    
+    <request-map uri="removePOcontent">
+        <security auth="true" https="true"/>
+        <event type="service" invoke="removePOcontent"/>
+        <response name="success" type="view" value="PurchageOrderOverView"/>
+        <response name="error" type="view" value="PurchageOrderOverView"/>
+    </request-map>
      
     <request-map uri="enquiryItemsForQuote">
      	<security auth="true" https="true"/>

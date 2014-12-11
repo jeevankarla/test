@@ -314,6 +314,22 @@ under the License.
             <key-map field-name="orderContentTypeId"/>
         </relation>
     </entity>
+    
+    <view-entity entity-name="OrderContentAndDataResource" package-name="org.ofbiz.content.content" title="Order Content and DataResource View Entity">
+        <member-entity entity-alias="OCT" entity-name="OrderContent"/>
+        <member-entity entity-alias="CNT" entity-name="Content"/>
+        <member-entity entity-alias="DR" entity-name="DataResource"/>        
+        <alias-all entity-alias="OCT"/>
+        <alias-all entity-alias="CNT"/>
+        <alias-all entity-alias="DR"/>        
+        <view-link entity-alias="OCT" rel-entity-alias="CNT">
+            <key-map field-name="contentId"/>
+        </view-link>
+        <view-link entity-alias="CNT" rel-entity-alias="DR">
+            <key-map field-name="dataResourceId"/>
+        </view-link>        
+    </view-entity>   
+    
     <entity entity-name="OrderContentType" package-name="org.ofbiz.order.order" default-resource-name="OrderEntityLabels"
         title="Order Content Type Entity">
         <field name="orderContentTypeId" type="id-ne"></field>
