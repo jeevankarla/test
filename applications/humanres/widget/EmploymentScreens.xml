@@ -515,7 +515,9 @@
 		                        <decorator-screen name="FindScreenDecorator" location="component://common/widget/CommonScreens.xml">
 		                            <decorator-section name="search-options">
 		                                <include-form name="FindBenefitsOrDeductions" location="component://humanres/widget/forms/EmploymentForms.xml"/>
-		                            </decorator-section>		                           	 
+		                                <link text="My Check List" style="button" target="benDedCheckList"><parameter param-name="all" value="N"></parameter></link>									
+									  	<link text="All Check List" style="button" target="benDedCheckList"><parameter param-name="all" value="Y"></parameter></link>
+		                            </decorator-section>	
 		                            <decorator-section name="search-results">
 		                               <section>
 		                               		 <widgets>
@@ -604,6 +606,38 @@
             </widgets>
         </section>
     </screen>
+    <screen name="benDedCheckList">
+        <section>
+            <actions>
+            	<script location="component://humanres/webapp/humanres/WEB-INF/actions/humanres/benDedCheckList.groovy"/>  
+            </actions>
+            <widgets>
+                <section>
+                <widgets>
+                    <platform-specific>
+                        <html><html-template location="component:///humanres/webapp/humanres/humanres/benDedCheckList.fo.ftl"/></html>
+                    </platform-specific>
+                </widgets>
+                </section>
+            </widgets>
+        </section>
+    </screen>
+    <screen name="attendanceCheckList">
+        <section>
+            <actions>
+            	<script location="component://humanres/webapp/humanres/WEB-INF/actions/humanres/attendanceCheckList.groovy"/>  
+            </actions>
+            <widgets>
+                <section>
+                <widgets>
+                    <platform-specific>
+                        <html><html-template location="component:///humanres/webapp/humanres/humanres/attendanceCheckList.fo.ftl"/></html>
+                    </platform-specific>
+                </widgets>
+                </section>
+            </widgets>
+        </section>
+    </screen>
      <screen name="EditPayrollAttendance">
         <section>
             <actions>
@@ -620,6 +654,8 @@
                     	<include-menu location="component://humanres/widget/HumanresMenus.xml" name="AttendanceTabBar"/> 
 		                    		<screenlet name="search-options" title="search-options">      
 		                                <include-form name="editPayrollAttendance" location="component://humanres/widget/forms/EmploymentForms.xml"/>
+		                                <link text="My Check List" style="button" target="attendanceCheckList"><parameter param-name="all" value="N"></parameter></link>									
+									  	<link text="All Check List" style="button" target="attendanceCheckList"><parameter param-name="all" value="Y"></parameter></link>
 		                            </screenlet>		                           	 
 		                            
 				                   <include-screen name="EditPayroll" location="component://humanres/widget/EmploymentScreens.xml"/>

@@ -824,6 +824,14 @@ under the License.
         <security https="true" auth="true"/>
         <response name="success" type="view" value="FindBenefitsOrDeductions"/>
     </request-map>
+    <request-map uri="benDedCheckList">
+    	<security https="true" auth="true"/>
+    	<response name="success" type="view" value="benDedCheckList"></response>
+    </request-map>
+    <request-map uri="attendanceCheckList">
+    	<security https="true" auth="true"/>
+    	<response name="success" type="view" value="attendanceCheckList"></response>
+    </request-map>
     <request-map uri="MastersReports">
     	<security https="true" auth="true"/>
     	<response name="success" type="view" value="MastersReports"></response>
@@ -2224,6 +2232,8 @@ under the License.
     <view-map name="EditPartyBenefits" type="screen" page="component://humanres/widget/EmploymentScreens.xml#EditPartyBenefits"/>
     <view-map name="EditPartyDeductions" type="screen" page="component://humanres/widget/EmploymentScreens.xml#EditPartyDeductions"/>
     <view-map name="FindBenefitsOrDeductions" type="screen" page="component://humanres/widget/EmploymentScreens.xml#FindBenefitsOrDeductions"/>
+    <view-map name="benDedCheckList" type="screenfop" page="component://humanres/widget/EmploymentScreens.xml#benDedCheckList" content-type="text/plain"/>
+    <view-map name="attendanceCheckList" type="screenfop" page="component://humanres/widget/EmploymentScreens.xml#attendanceCheckList" content-type="text/plain"/>
     <view-map name="MastersReports" type="screen" page="component://humanres/widget/EmploymentScreens.xml#MastersReports"></view-map>
     <view-map name="LeaveReports" type="screen" page="component://humanres/widget/EmploymentScreens.xml#LeaveReports"></view-map>
     <view-map name="LoanReports" type="screen" page="component://humanres/widget/EmploymentScreens.xml#LoanReports"></view-map>
