@@ -965,7 +965,7 @@ under the License.
 					</condition>
 					<widgets>
 						<platform-specific>
-                			<html><html-template location="component://byproducts/webapp/byproducts/reports/PrintDepositReceipt.fo.ftl"/></html>
+                			<html><html-template location="component://byproducts/webapp/byproducts/reports/PrintDepositReceiptAlt.fo.ftl"/></html>
 	            		</platform-specific>
 					</widgets>
 				</section>
@@ -1186,4 +1186,54 @@ under the License.
             </widgets>
         </section>
     </screen>
+    
+    <screen name="TDSRelatedReportScreen">
+    	<section>
+    		<actions>  	    		
+	    		 <set field="titleProperty" value="TDS Related Reports"/>
+	    		 <!--
+	            <set field="tabButtonItem" value="newReports"/>
+				<set field="tabButtonItem2" value="StatutoryReports" />   	
+	    		<set field="screenFlag" value="newReports"/>
+	    		-->
+	    		<set field="reportFrequencyFlag" value="TDSReport"/>
+    		</actions>
+    		<widgets>
+    		<decorator-screen name="CommonPaymentDecorator" location="${parameters.mainDecoratorLocation}">
+    			<decorator-section name="body">
+    				<section>
+    					<widgets>
+    					<platform-specific><html><html-template location="component://accounting/webapp/accounting/payment/TDSReports.ftl"></html-template></html></platform-specific>
+    					</widgets>
+    				</section>    	
+    			</decorator-section>    		
+    		</decorator-screen>
+    		</widgets>    		
+    	</section>
+    </screen>    
+    <screen name="TDSRelatedReportScreenPDF">
+        <section>
+            <actions>
+                <!-- pass in paymentId to print one check, otherwise use multi form input -->
+               <script location="component://humanres/webapp/humanres/WEB-INF/actions/humanres/ITAXQuarterlyStatement.groovy"/>
+            </actions>
+            <widgets>
+                <platform-specific>
+                   <xsl-fo><html-template location="component://accounting/webapp/accounting/payment/TDSReport.fo.ftl"/></xsl-fo>
+                </platform-specific>
+            </widgets>
+        </section>
+    </screen>
+<screen name="FORM27APDF">
+        <section>
+            
+            <widgets>
+                <platform-specific>
+                   <xsl-fo><html-template location="component://accounting/webapp/accounting/payment/Form27A.fo.ftl"/></xsl-fo>
+                </platform-specific>
+            </widgets>
+        </section>
+    </screen>
+    
 </screens>
+
