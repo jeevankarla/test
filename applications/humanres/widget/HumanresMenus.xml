@@ -133,16 +133,6 @@
         <menu-item name="EmployeeProfile" title="Profile">
             <link target="EmployeeProfile"><parameter param-name="partyId" from-field="userLogin.partyId"/>  </link>
         </menu-item>
-        <menu-item name="EmployeeLeave" title="${uiLabelMap.HumanResEmployeeLeave}">
-        	<condition>
-        	  	<or>
-        	  		<if-has-permission permission="HR"  action="_EMPL_PROFILE_VIEW"/>
-        	     	<if-has-permission permission="HR"  action="_EMPLLEAVE_VIEW"/>
-        	     	<if-has-permission permission="HR"  action="_LEAVE_APPROVAL"/>
-        	  	</or>
-            </condition>
-            <link target="FindEmplLeaves"/>
-        </menu-item>
         <menu-item name="Attendance" title="Attendance">
         	<condition>
         	   <or>
@@ -152,6 +142,16 @@
             	</or>
             </condition> 
             <link target="EmployeeAttendance"/>
+        </menu-item>
+        <menu-item name="EmployeeLeave" title="Leaves">
+        	<condition>
+        	  	<or>
+        	  		<if-has-permission permission="HR"  action="_EMPL_PROFILE_VIEW"/>
+        	     	<if-has-permission permission="HR"  action="_EMPLLEAVE_VIEW"/>
+        	     	<if-has-permission permission="HR"  action="_LEAVE_APPROVAL"/>
+        	  	</or>
+            </condition>
+            <link target="FindEmplLeaves"/>
         </menu-item>
 	</menu>
 	
