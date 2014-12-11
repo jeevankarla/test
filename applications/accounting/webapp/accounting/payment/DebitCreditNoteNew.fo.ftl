@@ -180,7 +180,7 @@ under the License.
 	                             <#assign partyId = partyIdFrom>
 	                        </#if>
 	                        <#if invPartyIdFrom?exists && invPartyIdFrom == "Company">
-	                             <#assign partyId = invpartyIdTo>
+	                             <#assign partyId = invPartyId>
 	                        <#else>
 	                             <#assign partyId = invPartyIdFrom>
 	                        </#if>

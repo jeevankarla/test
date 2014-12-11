@@ -578,7 +578,7 @@
 				<decorator-screen name="HumanresCommonDecorator"
 					location="component://humanres/widget/CommonScreens.xml">
 					<decorator-section name="body">
-					    <!-- <include-menu location="component://humanres/widget/HumanresMenus.xml" name="EmplPayrollTabBar"/>  -->                                                       					   					
+					    <include-menu location="component://humanres/widget/HumanresMenus.xml" name="SuplyPayRollTabBar"/>                                                      					   					
                     	<section>
                     	  <widgets>
                     	     <container style="button-bar">

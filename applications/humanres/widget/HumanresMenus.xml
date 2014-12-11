@@ -226,14 +226,6 @@
             </condition> 
         	<link target="EditPayrollAtten"/>
         </menu-item>
-        <menu-item name="EditLeaveEncash" title="Edit Leave Encashment Days">
-        	<condition>
-                 <and>
-                    <if-has-permission permission="HR"  action="_LEAVEENCASHVIEW"/>
-	             </and> 
-            </condition>
-        	<link target="EditLeaveEncashment"/>
-        </menu-item> 
         <menu-item name="EditShiftDays" title="Edit ShiftDays">
         	<condition>
                  <and>
@@ -276,6 +268,24 @@
             	<if-has-permission permission="WATER_ELECTR"  action="_VIEW"/>
             </condition>
            	<link target="waterElectricityCharges"/>
+        </menu-item>
+    </menu>
+    
+    <menu name="SuplyPayRollTabBar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml" 
+		selected-menuitem-context-field-name="tabButtonItem2">
+		<menu-item name="EmplSupPayroll" title="Supplementary Payroll">
+			<condition>
+            	<if-has-permission permission="HR"  action="_SUPLYPAYROLL_VIEW"/>
+            </condition>
+            <link target="EmplSupPayroll"/>
+        </menu-item>
+        <menu-item name="EditLeaveEncash" title="Edit Leave Encashment Days">
+        	<condition>
+                 <and>
+                    <if-has-permission permission="HR"  action="_LEAVEENCASHVIEW"/>
+	             </and> 
+            </condition>
+        	<link target="EditLeaveEncashment"/>
         </menu-item>
     </menu>
     

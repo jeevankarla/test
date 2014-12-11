@@ -665,15 +665,15 @@
         <section>
             <actions>
                 <set field="titleProperty" value="Edit Leave Encash"/>
-                <set field="headerItem" value="Attendance"/>                
-				<set field="tabButtonItem" value="Attendance" />
+                <set field="headerItem" value="EmplSupPayroll"/>                
+				<set field="tabButtonItem" value="EmplSupPayroll" />
 				<set field="tabButtonItem2" value="EditLeaveEncash"/>
 				<set field="screenFlag" value="leaveEncash"/> 
             </actions>
             <widgets>
 				<decorator-screen name="HumanresCommonDecorator" location="component://humanres/widget/CommonScreens.xml">
                     <decorator-section name="body">
-                    	<include-menu location="component://humanres/widget/HumanresMenus.xml" name="AttendanceTabBar"/> 
+                    	<include-menu location="component://humanres/widget/HumanresMenus.xml" name="SuplyPayRollTabBar"/> 
                     		<screenlet name="search-options" title="search-options">      
                                 <include-form name="editLeaveEncashment" location="component://humanres/widget/forms/EmploymentForms.xml"/>
                             </screenlet>                     
