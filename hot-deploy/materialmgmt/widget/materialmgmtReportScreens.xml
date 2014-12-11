@@ -271,4 +271,77 @@
 			</widgets>
 		</section>
 	</screen>
+	<screen name="newReports">
+             <section>
+     			<actions>
+     			    <set field="titleProperty" value="New Reports"/>
+     			    <set field="tabButtonItem" value="newReports"/> 
+     				<property-map resource="OrderUiLabels" map-name="uiLabelMap" global="true"/>
+     				<property-map resource="ProductUiLabels" map-name="uiLabelMap" global="true"/>
+     				<property-map resource="PartyUiLabels" map-name="uiLabelMap" global="true"/>
+     				<property-map resource="CommonUiLabels" map-name="uiLabelMap" global="true"/>     	     				
+     				<set field="screenFlag" value="NewReports"/>
+     			</actions>
+                <widgets>
+     				<section>
+     					<widgets>
+     						<decorator-screen name="materialmgmtNgCommonDecorator" location="${parameters.mainDecoratorLocation}">
+                                <decorator-section name="body">
+         				          <platform-specific><html><html-template location="component://materialmgmt/webapp/materialmgmt/reports/StoreReportsNew.ftl"></html-template></html></platform-specific>
+         					   </decorator-section>    		
+     		               </decorator-screen>
+     					</widgets>
+     				</section>
+     			</widgets>
+     		</section>
+    </screen> 
+	<screen name="StoreIssueReport">
+		<section>
+			<actions>
+				<property-map resource="OrderUiLabels" map-name="uiLabelMap" global="true"/>
+				<property-map resource="ProductUiLabels" map-name="uiLabelMap" global="true"/>
+				<property-map resource="PartyUiLabels" map-name="uiLabelMap" global="true"/>
+				<property-map resource="CommonUiLabels" map-name="uiLabelMap" global="true"/>
+				<script location="component://materialmgmt/webapp/materialmgmt/WEB-INF/actions/reports/StoreIssueReport.groovy"/>
+			</actions>
+			<widgets>
+				<platform-specific> 
+				  <xsl-fo><html-template location="component://materialmgmt/webapp/materialmgmt/reports/StoreIssueReport.fo.ftl" /></xsl-fo> 
+                </platform-specific>
+			</widgets>
+			
+		</section>
+	</screen>
+	<screen name="StoreIssueAbstractReport">
+		<section>
+			<actions>
+				<property-map resource="OrderUiLabels" map-name="uiLabelMap" global="true"/>
+				<property-map resource="ProductUiLabels" map-name="uiLabelMap" global="true"/>
+				<property-map resource="PartyUiLabels" map-name="uiLabelMap" global="true"/>
+				<property-map resource="CommonUiLabels" map-name="uiLabelMap" global="true"/>
+			</actions>
+			<widgets>
+				<platform-specific> 
+				  <xsl-fo><html-template location="component://materialmgmt/webapp/materialmgmt/reports/StoreIssueAbstractReport.fo.ftl" /></xsl-fo> 
+                </platform-specific>
+			</widgets>
+			
+		</section>
+	</screen>
+	<screen name="StoreReport">
+		<section>
+			<actions>
+				<property-map resource="OrderUiLabels" map-name="uiLabelMap" global="true"/>
+				<property-map resource="ProductUiLabels" map-name="uiLabelMap" global="true"/>
+				<property-map resource="PartyUiLabels" map-name="uiLabelMap" global="true"/>
+				<property-map resource="CommonUiLabels" map-name="uiLabelMap" global="true"/>
+			</actions>
+			<widgets>
+				<platform-specific> 
+				  <xsl-fo><html-template location="component://materialmgmt/webapp/materialmgmt/reports/StoreIssueDetailReport.fo.ftl" /></xsl-fo> 
+                </platform-specific>
+			</widgets>
+			
+		</section>
+	</screen>
 </screens>

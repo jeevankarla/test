@@ -64,6 +64,10 @@
             <link target="stockPosition">
             </link>
         </menu-item>
+        <menu-item name="newReports" title="New Reports">
+            <link target="newReports">
+            </link>
+        </menu-item>
         </menu>
         
         <!-- Sub Tab Menus -->

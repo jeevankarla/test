@@ -87,7 +87,10 @@ public class MaterialHelperServices{
 			
 			 condList.clear();
 			 condList.add(EntityCondition.makeCondition("custRequestId", EntityOperator.IN, EntityUtil.getFieldListFromEntityList(custRequestsList, "custRequestId", true)));
-			 condList.add(EntityCondition.makeCondition("productId", EntityOperator.EQUALS, productId));
+			 if(UtilValidate.isNotEmpty(productId)){
+				 condList.add(EntityCondition.makeCondition("productId", EntityOperator.EQUALS, productId));
+			 }		
+			 //condList.add(EntityCondition.makeCondition("productId", EntityOperator.EQUALS, productId));
 			 //condList.add(EntityCondition.makeCondition("issuedDateTime", EntityOperator.BETWEEN, UtilMisc.toList(fromDate,thruDate)));
 			 if(UtilValidate.isNotEmpty(facilityId)){
 				 condList.add(EntityCondition.makeCondition("facilityId", EntityOperator.EQUALS, facilityId));
@@ -198,6 +201,7 @@ public class MaterialHelperServices{
 			 Set fieldsToSelect = UtilMisc.toSet("receiptId","facilityId","datetimeReceived" ,"quantityAccepted","unitCost");
 			 fieldsToSelect.add("orderId");
 			 fieldsToSelect.add("orderItemSeqId");
+			 fieldsToSelect.add("productId");
 			 shipmentReceiptItr = delegator.find("ShipmentReceiptAndItem", cond, null,fieldsToSelect, null,null);
 			 GenericValue receiptItem;
 			 List receiptsList =FastList.newInstance();
