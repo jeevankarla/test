@@ -550,7 +550,7 @@
     <screen name="EmplSupPayroll">
         <section>
             <actions>
-                <set field="titleProperty" value="Payroll"/>
+                <set field="titleProperty" value="Supplementary Payroll"/>
                 <set field="tabButtonItem" value="EmplSupPayroll"/> 
  				<set field="tabButtonItem2" value="EmplSupPayroll" />                  
                 <entity-and list="orgList" entity-name="PartyRoleAndPartyDetail">
