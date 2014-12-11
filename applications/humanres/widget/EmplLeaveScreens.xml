@@ -29,7 +29,7 @@
                 <set field="tabButtonItem2" value="EmployeeLeave"/>                
                 <set field="partyId" from-field="parameters.partyId"/>
                 <set field="leaveTypeId" from-field="parameters.leaveTypeId"/>
-                <!-- <set field="fromDate" from-field="parameters.fromDate"/> -->
+                <set field="fromDate" from-field="parameters.fromDate"/>
                 <set field="emplLeaveCtx" from-field="parameters"/>
                 <script location="component://humanres/webapp/humanres/WEB-INF/actions/humanres/EmployeeLeaveList.groovy"/>
                 <service service-name="humanResManagerPermission" result-map="permResult">
@@ -53,7 +53,6 @@
                                    <if-has-permission permission="HUMANRES" action="_VIEW"/>
                                     <if-has-permission permission="HR" action="_EMPLLEAVE_VIEW"/>
                                 </or>
-                               
                             </condition>
                             <widgets>
                                 <decorator-screen name="FindScreenDecorator" location="component://common/widget/CommonScreens.xml">
