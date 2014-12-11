@@ -23,7 +23,7 @@ function setOrgPartyId() {
 					
 				   <tr class="alternate-row">
 						<form id="paySlipEmployeewise" name="paySlipEmployeewise" mothed="post" action="<@ofbizUrl>PrintPaySlipsPdf.pdf</@ofbizUrl>" target="_blank">
-							<table class="basic-table" cellspacing="5">
+							<table class="basic-table" cellspacing="5">	
 								<tr class="alternate-row">
 									<td width="15%"><span class='h3'>Pay Slip</span></td>
 									<td><span class='h3'>Period Id</span>
@@ -38,8 +38,8 @@ function setOrgPartyId() {
 						      				</#if>
 									      </#list>
 										</select>
-									<input type="hidden" name="OrganizationId" class="commonPartyId">
-									<input  type="hidden"  id="partyId"   name="partyId" value = "${userLogin.partyId}"/>
+									<input type="hidden" name="OrganizationId" class="commonPartyId" value ="Company">
+									<input  type="hidden"  id="employeeId"   name="employeeId" value = "${userLogin.partyId}"/>
 									<span class='h3'><input type="submit" value="PDF" onClick="javascript:appendParams('paySlipEmployeewise', '<@ofbizUrl>PrintPaySlipsPdf.pdf</@ofbizUrl>');" class="buttontext"/></span></td>
 								</tr>
 							</table>
