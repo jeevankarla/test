@@ -1,6 +1,3 @@
-
-
-
 <style type="text/css">
 	.cell-title {
 		font-weight: normal;
@@ -13,98 +10,98 @@
 		text-align: center;
 	}
 </style>			
+<style type="text/css">
+		div.graph
+		{
+			width: 600px;
+			height: 200px;
+		}
+		label
+		{
+			display: block;
+			margin-left: 100px;
+			padding-left: 5em;
+		}
+		
+	</style>
 
 <script type="application/javascript">   
 
   
 $(document).ready(function(){
-<#if requirmentByStatusList?exists>
-  var data = [
-<#list requirmentByStatusList as requirment>
-    {label: "${StringUtil.wrapString(requirment.name?default(""))}", data: ${requirment.count?if_exists}}<#if requirment_has_next>,</#if>
-</#list>    
-  ];
-  
-	jQuery.plot($("#chart"), data, 
-	{
-		series: {
-			pie: { 
-				show: true,
-                radius: 1,
-                label: {
-                    show: true,
-                    radius: 2/3,
-                    formatter: function(label, series){
-                        return '<div style="font-size:9pt;text-align:center;padding:2px;color:white;">'+label+'<br/>'+Math.round(series.percent)+'%</div>';
-                    },
-                    threshold: 0.1
-                    
-                }				
-			}
-		},
-		grid: {
-				hoverable: true 
-		},
-		tooltip: true,
-		tooltipOpts: {
-			content: "%s %p.2%  (Qty %y)", // show percentages, rounding to 2 decimal places
-			shifts: {
-				x: 20,
-				y: 0
-			},
-			defaultTheme: false
-		},
-		legend: {
-			show: true,
-			margin: [-220, 120]
-		}
-	});
-//setupGrid1();	
 
-</#if>		
-		
 <#if custRequestsByStatusList?exists>		
-	var data2 = [
-<#list custRequestsByStatusList as custRequest>
-    {label: "${StringUtil.wrapString(custRequest.name?default(""))}", data: ${custRequest.count?if_exists}}<#if custRequest_has_next>,</#if>
-</#list>    
-  ];            
-	jQuery.plot($("#chart2"), data2, 
-	{
-		series: {
-			pie: { 
-				show: true,
-                radius: 1,
-                label: {
-                    show: true,
-                    radius: 2/3,
-                    formatter: function(label, series){
-                        return '<div style="font-size:9pt;text-align:center;padding:2px;color:white;">'+label+'<br/>'+Math.round(series.percent)+'%</div>';
-                    },
-                    threshold: 0.1,
-                }				
-			}
-		},
-		grid: {
-				hoverable: true 
-		},
-		tooltip: true,
-		tooltipOpts: {
-			content: "%s %p.2%   (Qty %y)", // show percentages, rounding to 2 decimal places
-			shifts: {
-				x: 20,
-				y: 0
-			},
-			defaultTheme: false
-		},			
-		legend: {
-			show: true,
-			noColumns: 3,
-			margin: [-240, -10]
-		}
-	});
 	
-	//	setupGrid2();
+            
+	jQuery.plot($("#chart3"), [{data: ${StringUtil.wrapString(productDataListJSON)},
+		points: { show: false },
+									bars: {show: true,
+                   						   	barWidth: 0.4,
+                   							points: { show: false }, 
+                   							align: 'center'}},
+                   							
+								  ],
+				{ 
+					series: {
+                   		points: { show: true } 
+                	}, 
+               		grid: { hoverable: true},                 	 
+                  	yaxes: [
+                      { position: 'left',
+                      	min: 0,
+ 						axisLabel : 'Qty' },
+                      { position: 'right', 
+                      	min: 0,
+ 						axisLabel : 'Quality'}
+                  	],                	 
+     				xaxis: {
+         				min: 0,
+         				max : ${productDataListJSON.size()} + 1,
+         				ticks:${StringUtil.wrapString(labelsJSON)},
+         				rotateTicks: 140,
+         			    mode: "categories"
+     				},
+     				                 	         		             		            		
+				});
+	
+
+
+    function showTooltip(x, y, contents) {
+        $('<div id="tooltip">' + contents + '</div>').css( {
+            position: 'absolute',
+            display: 'none',
+            top: y + 5,
+            left: x + 5,
+            border: '1px solid #fdd',
+            padding: '2px',
+            'background-color': '#fee',
+            opacity: 0.80
+        }).appendTo("body").fadeIn(200);
+    }
+
+    var previousPoint = null;
+    $("#graph").bind("plothover", function (event, pos, item) {
+        $("#x").text(pos.x.toFixed(2));
+        $("#y").text(pos.y.toFixed(2));
+        if (item) {
+            if (previousPoint != item.dataIndex) {
+                previousPoint = item.dataIndex;
+                
+                $("#tooltip").remove();
+                var x = item.datapoint[0].toFixed(2),
+                    y = item.datapoint[1].toFixed(2);
+                
+                showTooltip(item.pageX, item.pageY,
+                            y);
+            }
+        }
+        else {
+            $("#tooltip").remove();
+            previousPoint = null;            
+        }
+    });       	
+	
+	
 </#if>
 
     jQuery(".grid-header .ui-icon")
@@ -118,21 +115,20 @@ $(document).ready(function(){
                        
 });
 </script>
-	<style type="text/css">
-		div.graph
-		{
-			width: 250px;
-			height: 250px;
-		}
-		label
-		{
-			display: block;
-			margin-left: 100px;
-			padding-left: 1em;
-		}
-		
-	</style>
+	
 <div class="screenlet-body">
+	<div class="screenlet">
+	    <div class="screenlet-title-bar">
+	      <h3>For Product : ${productId}</h3>
+	    </div>
+	    <div class="screenlet-body">
+	   		<div id="chart3" class="graph">ll-${productDataListJSON.size()}</div>
+	   		
+	    </div>
+	     </div>
+</div>	
+
+<!--<div class="screenlet-body">
 <div class="righthalf">
 	<div class="screenlet">
 	    <div class="screenlet-title-bar">
@@ -161,7 +157,7 @@ $(document).ready(function(){
 	    
 	</div>
 	
-</div>
+</div>-->
 
 <div class="clear"></div>
 </div>

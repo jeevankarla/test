@@ -29,17 +29,13 @@ under the License.
                 <#if quantitySummary.facilityId?exists>
                     <#assign facilityId = quantitySummary.facilityId>
                     <#assign facility = delegator.findByPrimaryKey("Facility", Static["org.ofbiz.base.util.UtilMisc"].toMap("facilityId", facilityId))>
-                    <#assign manufacturingInQuantitySummary = manufacturingInQuantitySummaryByFacility.get(facilityId)?if_exists>
-                    <#assign manufacturingOutQuantitySummary = manufacturingOutQuantitySummaryByFacility.get(facilityId)?if_exists>
+                   
                     <#assign totalQuantityOnHand = quantitySummary.totalQuantityOnHand?if_exists>
                     <#assign totalAvailableToPromise = quantitySummary.totalAvailableToPromise?if_exists>
                     <#assign mktgPkgATP = quantitySummary.mktgPkgATP?if_exists>
                     <#assign mktgPkgQOH = quantitySummary.mktgPkgQOH?if_exists>
                     <#assign incomingShipmentAndItemList = quantitySummary.incomingShipmentAndItemList?if_exists>
-                    <#assign incomingProductionRunList = manufacturingInQuantitySummary.incomingProductionRunList?if_exists>
-                    <#assign incomingQuantityTotal = manufacturingInQuantitySummary.estimatedQuantityTotal?if_exists>
-                    <#assign outgoingProductionRunList = manufacturingOutQuantitySummary.outgoingProductionRunList?if_exists>
-                    <#assign outgoingQuantityTotal = manufacturingOutQuantitySummary.estimatedQuantityTotal?if_exists>
+                   
                     <tr valign="middle"<#if rowClass == "1"> class="alternate-row"</#if> >
                         <td style="padding-top: 1em; color: green; font-weight: bold; font-size:1.2em" width="50%">${(facility.facilityName)?if_exists}</td>
                         <td style="padding-top: 1em; color: green; font-weight: bold; font-size:1.2em; text-align: right"><#if totalQuantityOnHand?exists>${totalQuantityOnHand}<#else>&nbsp;</#if></td>

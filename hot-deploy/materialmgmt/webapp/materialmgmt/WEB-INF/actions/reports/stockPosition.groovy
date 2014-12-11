@@ -20,21 +20,22 @@
  import in.vasista.vbiz.byproducts.ByProductNetworkServices;
  
  import java.math.BigDecimal;
- import java.util.*;
- import java.sql.Timestamp;
- import org.ofbiz.entity.*;
- import org.ofbiz.entity.condition.*;
- import org.ofbiz.entity.util.*;
- import org.ofbiz.base.util.*;
- import java.util.*;
- import java.text.ParseException;
- import java.text.SimpleDateFormat;
- import net.sf.json.JSONArray;
- import java.util.SortedMap;
- import java.math.RoundingMode;
- import javolution.util.FastList;
- import org.ofbiz.entity.util.EntityTypeUtil;
- import org.ofbiz.product.inventory.InventoryWorker;
+import java.util.*;
+import java.sql.Timestamp;
+import org.ofbiz.entity.*;
+import org.ofbiz.entity.condition.*;
+import org.ofbiz.entity.util.*;
+import org.ofbiz.base.util.*;
+import java.util.*;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import net.sf.json.JSONArray;
+import java.util.SortedMap;
+import java.math.RoundingMode;
+import javolution.util.FastList;
+import org.ofbiz.entity.util.EntityTypeUtil;
+import org.ofbiz.product.inventory.InventoryWorker;
+import in.vasista.vbiz.purchase.MaterialHelperServices;
  rounding = RoundingMode.HALF_UP;
  
  fromDate = parameters.fromDate;
@@ -50,9 +51,10 @@
 		 context.froDate = parameters.fromDate;
 		 fromDate = UtilDateTime.getDayStart(new java.sql.Timestamp(sdf.parse(parameters.fromDate).getTime()));
 		 context.froDate = fromDate;
+		 froDate = UtilDateTime.addDaysToTimestamp(UtilDateTime.getDayStart(UtilDateTime.nowTimestamp()),-100);
 	 }else {
 	    //froDate = UtilDateTime.getDayStart(UtilDateTime.nowTimestamp());
-		 froDate = UtilDateTime.addDaysToTimestamp(UtilDateTime.getDayStart(UtilDateTime.nowTimestamp()),-7);
+		 froDate = UtilDateTime.addDaysToTimestamp(UtilDateTime.getDayStart(UtilDateTime.nowTimestamp()),-100);
 		 context.froDate = froDate
 		 fromDate = froDate;
 	 }
@@ -87,7 +89,18 @@
  }
  productId = parameters.productId;
  context.productId = productId;
+ int i=0;
  if (productId) {
+	 JSONArray productDataListJSON = new JSONArray();
+	 JSONArray labelsJSON = new JSONArray();
+	/* for(int i=0;i<2;i++){
+		 JSONArray dayList= new JSONArray();
+		 dayList.add(i);
+		 dayList.add(50+(i*10));
+		 productDataListJSON.add(dayList);
+		 labelsJSON.add(dayList);
+	 }*/
+	 
 	 GenericValue product = delegator.findOne("Product", UtilMisc.toMap("productId",productId),false);
 	 context.product = product;
 	 boolean isMarketingPackage = EntityTypeUtil.hasParentType(delegator, "ProductType", "productTypeId", product.productTypeId, "parentTypeId", "MARKETING_PKG");
@@ -154,7 +167,15 @@
 			 quantitySummary.facilityId = facility.facilityId;
 			 quantitySummary.totalQuantityOnHand = resultOutput.quantityOnHandTotal;
 			 quantitySummary.totalAvailableToPromise = resultOutput.availableToPromiseTotal;
-	 
+			 JSONArray jsonArray= new JSONArray();
+			 jsonArray.add(i++);
+			 jsonArray.add(resultOutput.quantityOnHandTotal);
+			 productDataListJSON.add(jsonArray);
+			 JSONArray labelArray= new JSONArray();
+			 labelArray.add(jsonArray.get(0));
+			 labelArray.add("Inventory");
+			 labelsJSON.add(labelArray);
+			 
 			 // if the product is a MARKETING_PKG_AUTO/PICK, then also get the quantity which can be produced from components
 			 if (isMarketingPackage) {
 				 resultOutput = dispatcher.runSync("getMktgPackagesAvailable", [productId : productId, facilityId : facility.facilityId]);
@@ -191,10 +212,13 @@
 		 findIncomingShipmentsStatusCondition = EntityCondition.makeCondition(findIncomingShipmentsConds, EntityOperator.AND);
 		 incomingShipmentAndItems = delegator.findList("ShipmentAndItem", findIncomingShipmentsStatusCondition, null, ['-estimatedArrivalDate'], null, false);
 		 incomingShipmentAndItemIter = incomingShipmentAndItems.iterator();
+		 receiptQty = 0;
 		 while (incomingShipmentAndItemIter) {
+			 
 			 incomingShipmentAndItem = incomingShipmentAndItemIter.next();
 			 facilityId = incomingShipmentAndItem.destinationFacilityId;
-	 
+			 quantity =  incomingShipmentAndItem.quantity;
+			 
 			 quantitySummary = quantitySummaryByFacility.get(facilityId);
 			 if (!quantitySummary) {
 				 quantitySummary = [:];
@@ -209,16 +233,25 @@
 			 }
 	 
 			 incomingShipmentAndItemList.add(incomingShipmentAndItem);
+			 receiptQty = receiptQty+quantity;
 		 }
-	 
+		 
+		 jsonArray= new JSONArray();
+		 jsonArray.add(i++);
+		 jsonArray.add(receiptQty);
+		 productDataListJSON.add(jsonArray);
+		 JSONArray labelArray= new JSONArray();
+		 labelArray.add(jsonArray.get(0));
+		 labelArray.add("Receipts");
+		 labelsJSON.add(labelArray);
 		 // --------------------
 		 // Production Runs
-		 resultOutput = dispatcher.runSync("getProductManufacturingSummaryByFacility",
+		/* resultOutput = dispatcher.runSync("getProductManufacturingSummaryByFacility",
 						[productId : productId, userLogin : userLogin]);
 		 // incoming products
 		 manufacturingInQuantitySummaryByFacility = resultOutput.summaryInByFacility;
 		 // outgoing products (materials)
-		 manufacturingOutQuantitySummaryByFacility = resultOutput.summaryOutByFacility;
+		 manufacturingOutQuantitySummaryByFacility = resultOutput.summaryOutByFacility;*/
 	 
 		 showEmpty = "true".equals(request.getParameter("showEmpty"));
 	 
@@ -227,10 +260,22 @@
 	 
 		 context.productInventoryItems = productInventoryItems;
 		 context.quantitySummaryByFacility = quantitySummaryByFacility;
-		 context.manufacturingInQuantitySummaryByFacility = manufacturingInQuantitySummaryByFacility;
-		 context.manufacturingOutQuantitySummaryByFacility = manufacturingOutQuantitySummaryByFacility;
+		/* context.manufacturingInQuantitySummaryByFacility = manufacturingInQuantitySummaryByFacility;
+		 context.manufacturingOutQuantitySummaryByFacility = manufacturingOutQuantitySummaryByFacility;*/
 		 context.showEmpty = showEmpty;
 		 context.purchaseOrders = purchaseOrders;
+		purchaseOrderQty = 0;
+		for(GenericValue purchaseOrder : purchaseOrders){
+			purchaseOrderQty = purchaseOrderQty+purchaseOrder.quantity;
+		}
+		jsonArray= new JSONArray();
+		jsonArray.add(i++);
+		jsonArray.add(purchaseOrderQty);
+		productDataListJSON.add(jsonArray);
+		labelArray= new JSONArray();
+		labelArray.add(jsonArray.get(0));
+		labelArray.add("PO");
+		labelsJSON.add(labelArray);
 	 }
 	 
 	 // get requirments here
@@ -269,22 +314,31 @@
 	 condList.clear();
 	 condList.add(EntityCondition.makeCondition("productId", EntityOperator.EQUALS, productId));
 	 condList.add(EntityCondition.makeCondition("custRequestTypeId", EntityOperator.EQUALS, "PRODUCT_REQUIREMENT"));
-	 //condList.add(EntityCondition.makeCondition("custRequestDate", EntityOperator.GREATER_THAN_EQUAL_TO, fromDate));
-	 //condList.add(EntityCondition.makeCondition("custRequestDate", EntityOperator.LESS_THAN_EQUAL_TO, thruDate));
+	 condList.add(EntityCondition.makeCondition("custRequestDate", EntityOperator.GREATER_THAN_EQUAL_TO, fromDate));
+	 condList.add(EntityCondition.makeCondition("custRequestDate", EntityOperator.LESS_THAN_EQUAL_TO, thruDate));
 	 cond = EntityCondition.makeCondition(condList,EntityOperator.AND);
 	 custRequestsList = delegator.findList("CustRequestAndItemAndAttribute", cond, UtilMisc.toSet("custRequestId","fromPartyId","custRequestDate","itemStatusId","responseRequiredDate" ,"quantity"), ['-custRequestDate'], null, false);
 	 context.custRequestsList = custRequestsList;
 	 custRequestsByStatusMap =[:];
+	 indentQty = 0;
 	 for(GenericValue custRequest : custRequestsList){
 		 String statusId = custRequest.getString("itemStatusId");
 		 quantity = custRequest.quantity;
-		 Debug.log("statusId****===="+statusId);
 		 if(UtilValidate.isEmpty(custRequestsByStatusMap.get(statusId))){
 			 custRequestsByStatusMap.put(statusId , quantity);
 		 }else{
 			 custRequestsByStatusMap.put(statusId , custRequestsByStatusMap.get(statusId)+quantity);
 		 }
+		 indentQty = indentQty+quantity;
 	 }
+	 JSONArray jsonArray= new JSONArray();
+	 jsonArray.add(i++);
+	 jsonArray.add(indentQty);
+	 productDataListJSON.add(jsonArray);
+	 JSONArray labelArray= new JSONArray();
+	 labelArray.add(jsonArray.get(0));
+	 labelArray.add("Indent");
+	 labelsJSON.add(labelArray);
 	 
 	 custRequestsByStatusList = [];
 	 if(custRequestsByStatusMap){
@@ -299,9 +353,17 @@
 	 }
 	 
 	context.custRequestsByStatusList = custRequestsByStatusList; 
+	context.productDataListJSON = productDataListJSON;
+	context.labelsJSON = labelsJSON;
 }
  
  
-// SortedMap DataMap = new TreeMap();
+ 
+/* String productId = (String) context.get("productId");
+ String facilityId = (String) context.get("facilityId");
+ Timestamp fromDate = (Timestamp) context.get("fromDate");
+ Timestamp thruDate = (Timestamp) context.get("thruDate");*/
+ 
+ //resultMap = MaterialHelperServices.getCustRequestIssuancesForPeriod(dctx,UtilMisc.toMap("productId","RM1210","facilityId","STORE","fromDate",fromDate,"thruDate",thruDate));
  
  

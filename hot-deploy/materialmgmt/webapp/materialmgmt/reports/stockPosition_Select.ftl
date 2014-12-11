@@ -7,6 +7,7 @@
 
 <script  language="javascript" type="text/javascript" src="<@ofbizContentUrl>/images/jquery/plugins/flot/jquery.flot.pie.js"</@ofbizContentUrl>></script>
 <script  language="javascript" type="text/javascript" src="<@ofbizContentUrl>/images/jquery/plugins/flot/jquery.flot.tooltip.js"</@ofbizContentUrl>></script>
+<script  language="javascript" type="text/javascript" src="<@ofbizContentUrl>/images/jquery/plugins/flot/jquery.flot.resize.js"</@ofbizContentUrl>></script>
 <link rel="stylesheet" href="<@ofbizContentUrl>/images/jquery/plugins/slickgrid/slick.grid.css</@ofbizContentUrl>" type="text/css" media="screen" charset="utf-8" />
 <link rel="stylesheet" href="<@ofbizContentUrl>/images/jquery/plugins/slickgrid/controls/slick.pager.css</@ofbizContentUrl>" type="text/css" media="screen" charset="utf-8" />
 <link rel="stylesheet" href="<@ofbizContentUrl>/images/jquery/plugins/slickgrid/examples/examples.css</@ofbizContentUrl>" type="text/css" media="screen" charset="utf-8" />
@@ -116,12 +117,13 @@ $(document).ready(function(){
 		<table class="basic-table" cellspacing="0">
 			<tr>
 			    <input class='h2' type="hidden" id="showAllFacilities" name="showAllFacilities"/>
-        		<td align="right" width="10%"><span class='h3'>From: </span></td>
+        		<!--<td align="right" width="10%"><span class='h3'>From: </span></td>
             	<td width="20%"><input class='h2' type="text" id="fromDate" name="fromDate" value="${parameters.fromDate?if_exists}"/></td>
 				<td width="2%"><span class='h3'>To: </span></td>
-				<td width="20%"><input class='h2' type="text" id="thruDate" name="thruDate" value="${parameters.thruDate?if_exists}"/></td>
-				<td width="10%"><span class='h3'>Product: </span></td>
+				<td width="20%"><input class='h2' type="text" id="thruDate" name="thruDate" value="${parameters.thruDate?if_exists}"/></td> -->
+				<td width="10%"><span class='h3'>Product: </span></td> 
 				<td align="left" width="10%"><@htmlTemplate.lookupField value="${parameters.productId?if_exists}" formName="StockAnalysis" name="productId" id="productId" fieldFormName="LookupProduct"/></td>
+				<td width="2%"><span class='h3'></span></td>
 				<td><input type="submit" value="Submit" id="getCharts" class="smallSubmit" /></td>
 			</tr>
     	</table> 
