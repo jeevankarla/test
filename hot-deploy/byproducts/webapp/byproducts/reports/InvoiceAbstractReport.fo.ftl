@@ -46,34 +46,37 @@ under the License.
           			<fo:block text-align="center" font-weight="bold"  keep-together="always"  white-space-collapse="false"> <#if categoryType=="ICE_CREAM_NANDINI">NANDINI</#if><#if categoryType=="ICE_CREAM_AMUL">AMUL</#if> ICE CREAM SALES BOOK FOR THE PERIOD- ${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(fromDate, "dd/MM/yyyy")} - ${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(thruDate, "dd/MM/yyyy")} </fo:block>-->
           			<fo:block text-align="left"  keep-together="always"  font-family="Courier,monospace" font-weight="bold" white-space-collapse="false"> UserLogin:<#if userLogin?exists>${userLogin.userLoginId?if_exists}</#if>               &#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;Print Date :${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(nowTimestamp, "dd/MM/yy HH:mm:ss")}</fo:block>
           			<fo:block>------------------------------------------------------------------------------------------------------------------------------------------------</fo:block>
-            	    <fo:block text-align="left" font-weight="bold" font-size="12pt" keep-together="always" font-family="Courier,monospace" white-space-collapse="false">Invoice        Invoice     Central Excise 				Retailer Name        	Ex-factory    						ED            VAT(Rs)   		   C.S.T(Rs)      	Total(Rs)</fo:block>
-        			<fo:block text-align="left" font-weight="bold" font-size="12pt" keep-together="always" font-family="Courier,monospace" white-space-collapse="false">Date           Number      Inv.Number		                												Value(Rs)    		  	Value(Rs)     																	  																</fo:block>
+            	    <fo:block text-align="left" font-weight="bold" font-size="12pt" keep-together="always" font-family="Courier,monospace" white-space-collapse="false">Invoice      Invoice Central Excise Retailer Name       Ex-factory    				ED            VAT(Rs)   		   C.S.T(Rs)          PPD	       Total(Rs)</fo:block>
+        			<fo:block text-align="left" font-weight="bold" font-size="12pt" keep-together="always" font-family="Courier,monospace" white-space-collapse="false">Date         Number  Inv.Number		                						 Value(Rs)    		  	Value(Rs)     																	  																</fo:block>
 	        		<fo:block>------------------------------------------------------------------------------------------------------------------------------------------------</fo:block>
             	</fo:static-content>	        	
 	        	<fo:flow flow-name="xsl-region-body"   font-family="Courier,monospace">		
         			<fo:block>
         				<fo:table>
 		                    <fo:table-column column-width="100pt"/>
-		                    <fo:table-column column-width="100pt"/>
-		                    <fo:table-column column-width="100pt"/> 
-		               	    <fo:table-column column-width="130pt"/>
-		            		<fo:table-column column-width="90pt"/> 		
-		            		<fo:table-column column-width="130pt"/>
+		                    <fo:table-column column-width="60pt"/>
+		                    <fo:table-column column-width="90pt"/> 
+		               	    <fo:table-column column-width="140pt"/>
+		            		<fo:table-column column-width="70pt"/> 		
+		            		<fo:table-column column-width="110pt"/>
 		            		<fo:table-column column-width="120pt"/>
 		            		<fo:table-column column-width="110pt"/>
-		            		<fo:table-column column-width="130pt"/>
+		            		<fo:table-column column-width="110pt"/>
+		            		<fo:table-column column-width="110pt"/>
 		                    <fo:table-body>
 		                    <#assign invoiceDetails = invoiceMap.entrySet()>
 		                    <#assign totalBasicRev=0>
 		                    <#assign totalBedRev=0>
 		                    <#assign totalVatRev=0>
 		                    <#assign totalCstRev=0>
+		                    <#assign totalPpd=0>
 		                    <#assign totalRevenue=0>
        							<#list invoiceDetails as invoiceDet>
        							<#assign totalBasicRev=totalBasicRev+invoiceDet.getValue().get("basicRevenue")?if_exists>
        							<#assign totalBedRev=totalBedRev+invoiceDet.getValue().get("bedRevenue")?if_exists>
        							<#assign totalVatRev=totalVatRev+invoiceDet.getValue().get("vatRevenue")?if_exists>
        							<#assign totalCstRev=totalCstRev+invoiceDet.getValue().get("cstRevenue")?if_exists>
+       							<#assign totalPpd=totalPpd+invoiceDet.getValue().get("ppd")?if_exists>
        							<#assign totalRevenue=totalRevenue+invoiceDet.getValue().get("totalRevenue")?if_exists>
        							 <fo:table-row>
 							     		<fo:table-cell>
@@ -104,6 +107,9 @@ under the License.
 							            </fo:table-cell>
 							            <fo:table-cell>
 							            	<fo:block  keep-together="always" text-align="right" font-size="12pt" white-space-collapse="false" >${invoiceDet.getValue().get("cstRevenue")?if_exists?string("#0.00")}</fo:block>  
+							            </fo:table-cell>
+							             <fo:table-cell>
+							            	<fo:block  keep-together="always" text-align="right" font-size="12pt" white-space-collapse="false" >${invoiceDet.getValue().get("ppd")?if_exists?string("#0.00")}</fo:block>  
 							            </fo:table-cell>
 							            <fo:table-cell>
 							            	<fo:block  keep-together="always" text-align="right" font-size="12pt" white-space-collapse="false" >${invoiceDet.getValue().get("totalRevenue")?if_exists?string("#0.00")}</fo:block>  
@@ -139,6 +145,9 @@ under the License.
 							            </fo:table-cell>
 							            <fo:table-cell>
 							            	<fo:block  keep-together="always" text-align="right" font-size="12pt" white-space-collapse="false" font-weight="bold">${totalCstRev?if_exists?string("#0.00")}</fo:block>  
+							            </fo:table-cell>
+							             <fo:table-cell>
+							            	<fo:block  keep-together="always" text-align="right" font-size="12pt" white-space-collapse="false" font-weight="bold">${totalPpd?if_exists?string("#0.00")}</fo:block>  
 							            </fo:table-cell>
 							            <fo:table-cell>
 							            	<fo:block  keep-together="always" text-align="right" font-size="12pt" white-space-collapse="false" font-weight="bold">${totalRevenue?if_exists?string("#0.00")}</fo:block>  

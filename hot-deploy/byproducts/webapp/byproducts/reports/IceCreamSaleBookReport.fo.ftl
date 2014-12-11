@@ -45,10 +45,10 @@ under the License.
                 	<fo:block text-align="center"  keep-together="always"  white-space-collapse="false" font-weight="bold">CUSTOMERWISE SALES REGISTER REPORT</fo:block>
           			<fo:block text-align="center" font-weight="bold"  keep-together="always"  white-space-collapse="false"> <#if categoryType=="ICE_CREAM_NANDINI">NANDINI</#if><#if categoryType=="ICE_CREAM_AMUL">AMUL</#if> ICE CREAM SALES BOOK FOR THE PERIOD- ${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(fromDate, "dd/MM/yyyy")} - ${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(thruDate, "dd/MM/yyyy")} </fo:block>
           			<fo:block text-align="left"  keep-together="always"  font-family="Courier,monospace" font-weight="bold" white-space-collapse="false"> UserLogin:<#if userLogin?exists>${userLogin.userLoginId?if_exists}</#if>               &#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;Print Date :${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(nowTimestamp, "dd/MM/yy HH:mm:ss")}</fo:block>
-          			<fo:block>----------------------------------------------------------------------------------------------------------------------------------</fo:block>
-            	    <fo:block text-align="left" font-weight="bold" font-size="12pt" keep-together="always" font-family="Courier,monospace" white-space-collapse="false">Retailer                        Quantity       Average        Ex-factory    ED             VAT(Rs)    C.S.T(Rs)       Total(Rs)</fo:block>
+          			<fo:block>------------------------------------------------------------------------------------------------------------------------------------------------</fo:block>
+            	    <fo:block text-align="left" font-weight="bold" font-size="12pt" keep-together="always" font-family="Courier,monospace" white-space-collapse="false">Retailer                        Quantity       Average        Ex-factory    ED             VAT(Rs)    C.S.T(Rs)             PPD     Total(Rs)</fo:block>
         			<fo:block text-align="left" font-weight="bold" font-size="12pt" keep-together="always" font-family="Courier,monospace" white-space-collapse="false">Name                            (In Ltrs)                     Value(Rs)     Value(Rs)     </fo:block>
-	        		<fo:block>----------------------------------------------------------------------------------------------------------------------------------</fo:block>
+	        		<fo:block>------------------------------------------------------------------------------------------------------------------------------------------------</fo:block>
             	</fo:static-content>	        	
 	        	<fo:flow flow-name="xsl-region-body"   font-family="Courier,monospace">		
         			<fo:block>
@@ -70,14 +70,20 @@ under the License.
 		                    <#assign totalBedRev=0>
 		                    <#assign totalVatRev=0>
 		                    <#assign totalCstRev=0>
+		                    <#assign totalPpd=0>
 		                    <#assign total=0>
        							<#list partWiseSales as partWiseSaleDetails>
+       							<#assign ppd=0>
        							<#assign totalQty=totalQty+partWiseSaleDetails.getValue().get("quantity")>
        							<#assign totalAvg=totalAvg+partWiseSaleDetails.getValue().get("average")>
        							<#assign totalBasicRev=totalBasicRev+partWiseSaleDetails.getValue().get("basicRevenue")>
        							<#assign totalBedRev=totalBedRev+partWiseSaleDetails.getValue().get("bedRevenue")>
        							<#assign totalVatRev=totalVatRev+partWiseSaleDetails.getValue().get("vatRevenue")>
        							<#assign totalCstRev=totalCstRev+partWiseSaleDetails.getValue().get("cstRevenue")>
+       							<#if partWiseSaleDetails.getValue().get("total")??>
+       							  <#assign ppd=partWiseSaleDetails.getValue().get("ppd")>
+       							  <#assign totalPpd=totalPpd+partWiseSaleDetails.getValue().get("ppd")>
+       							</#if>
        							<#assign total=total+partWiseSaleDetails.getValue().get("total")>
        							<#assign partyName = Static["org.ofbiz.party.party.PartyHelper"].getPartyName(delegator, partWiseSaleDetails.getKey()?if_exists, false)>
        							<fo:table-row>
@@ -102,6 +108,9 @@ under the License.
 							            <fo:table-cell>
 							            	<fo:block  keep-together="always" text-align="right" font-size="12pt" white-space-collapse="false" font-weight="bold"><#if partWiseSaleDetails.getValue().get("cstRevenue") !=0>${partWiseSaleDetails.getValue().get("cstRevenue")?string("#0.00")}<#else></#if></fo:block>  
 							            </fo:table-cell>
+							             <fo:table-cell>
+							            	<fo:block  keep-together="always" text-align="right" font-size="12pt" white-space-collapse="false" font-weight="bold"><#if partWiseSaleDetails.getValue().get("ppd") !=0>${ppd?string("#0.00")}<#else></#if></fo:block>  
+							            </fo:table-cell>
 							            <fo:table-cell>
 							            	<fo:block  keep-together="always" text-align="right" font-size="12pt" white-space-collapse="false" font-weight="bold">${partWiseSaleDetails.getValue().get("total")?string("#0.00")}</fo:block>  
 							            </fo:table-cell>
@@ -109,7 +118,7 @@ under the License.
 								</#list>
 								<fo:table-row> 
 							      <fo:table-cell>   						
-									<fo:block>----------------------------------------------------------------------------------------------------------------------------------</fo:block>
+									<fo:block>------------------------------------------------------------------------------------------------------------------------------------------------</fo:block>
           						  </fo:table-cell>
           						  </fo:table-row> 
 								<fo:table-row>
@@ -134,13 +143,16 @@ under the License.
 							            <fo:table-cell>
 							            	<fo:block  keep-together="always" text-align="right" font-size="12pt" white-space-collapse="false" font-weight="bold"><#if totalCstRev !=0>${totalCstRev?string("#0.00")}<#else></#if></fo:block>  
 							            </fo:table-cell>
+							             <fo:table-cell>
+							            	<fo:block  keep-together="always" text-align="right" font-size="12pt" white-space-collapse="false" font-weight="bold"><#if totalPpd !=0>${totalPpd?string("#0.00")}<#else></#if></fo:block>  
+							            </fo:table-cell>
 							            <fo:table-cell>
 							            	<fo:block  keep-together="always" text-align="right" font-size="12pt" white-space-collapse="false" font-weight="bold">${total?string("#0.00")}</fo:block>  
 							            </fo:table-cell>
 							     </fo:table-row>
 								<fo:table-row> 
 							      <fo:table-cell>   						
-									<fo:block>----------------------------------------------------------------------------------------------------------------------------------</fo:block>
+									<fo:block>------------------------------------------------------------------------------------------------------------------------------------------------</fo:block>
           						  </fo:table-cell>
           						  </fo:table-row> 
 								<fo:table-row> 

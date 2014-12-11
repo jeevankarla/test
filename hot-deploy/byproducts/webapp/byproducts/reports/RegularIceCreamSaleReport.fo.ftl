@@ -69,6 +69,10 @@ under the License.
 			                    <#assign totalBedRev=0>
 			                    <#assign totalVatRev=0>
 			                    <#assign totalCstRev=0>
+			                    <#assign totalCstRev=0>
+			                    <#assign totalPpd=0>
+			                    <#assign totalVatAdj=0>
+			                    <#assign totalVat=0>
 			                    <#assign grandTotal=0>
 		                        <#assign dayWiseTotalsMap = dayWiseInvoice.entrySet()>
        							<#list dayWiseTotalsMap as dayWiseTotalsDetails>
@@ -93,6 +97,12 @@ under the License.
           						 <#list invoiceMap as invoiceDetails>
           						 <#assign invoice = invoiceDetails.getValue()>
           						 <#list invoice as invoiceDtls>
+          						 <#if ppdMap.get(invoiceDetails.getKey())??>
+       							   <#assign totalPpd=totalPpd+ppdMap.get(invoiceDetails.getKey())>
+       							 </#if>
+       							 <#if vatAdjMap.get(invoiceDetails.getKey())??>
+       							   <#assign totalVatAdj=totalVatAdj+vatAdjMap.get(invoiceDetails.getKey())>
+       							 </#if>
           						 <#assign invoice = delegator.findOne("Invoice", {"invoiceId" : invoiceDetails.getKey()}, true)>
           						 <#assign invoiceSeqDetails = delegator.findByAnd("BillOfSaleInvoiceSequence", {"invoiceId" : invoiceDetails.getKey()})/>
           						 <#assign partyName = Static["org.ofbiz.party.party.PartyHelper"].getPartyName(delegator, invoice.get("partyId")?if_exists, false)>
@@ -204,7 +214,88 @@ under the License.
 								                       		</fo:table-cell>
 								                       		</#list>
 										            </fo:table-row>
-									             	
+									             	<#--<#assign ppdTotals=invoiceDtls.get("ppdTotals").entrySet()>
+					                               <fo:table-row>
+						                                   <fo:table-cell>
+								                           		<fo:block  keep-together="always" font-size="12pt" text-align="left" white-space-collapse="false">Total</fo:block>  
+								                       		</fo:table-cell>
+					                                        <#list ppdTotals as ppdDtls>
+															<fo:table-cell>
+								                           		<fo:block  keep-together="always" font-size="12pt" text-align="right" white-space-collapse="false">${ppdDtls.getValue()?string("#0.00")}</fo:block>  
+								                       		</fo:table-cell>
+								                       		</#list>
+										            </fo:table-row>-->
+										            <#if ppdMap.get(invoiceDetails.getKey())??>
+										            <fo:table-row>
+						                                   <fo:table-cell>
+								                           		<fo:block  keep-together="always" font-size="12pt" text-align="left" white-space-collapse="false">PPD</fo:block>  
+								                       		</fo:table-cell>
+								                       		 <fo:table-cell>
+								                           		<fo:block  keep-together="always" font-size="12pt" text-align="left" white-space-collapse="false"></fo:block>  
+								                       		</fo:table-cell>
+								                       		 <fo:table-cell>
+								                           		<fo:block  keep-together="always" font-size="12pt" text-align="left" white-space-collapse="false"></fo:block>  
+								                       		</fo:table-cell>
+								                       		 <fo:table-cell>
+								                           		<fo:block  keep-together="always" font-size="12pt" text-align="left" white-space-collapse="false"></fo:block>  
+								                       		</fo:table-cell>
+								                       		 <fo:table-cell>
+								                           		<fo:block  keep-together="always" font-size="12pt" text-align="left" white-space-collapse="false"></fo:block>  
+								                       		</fo:table-cell>
+								                       		<fo:table-cell>
+								                           		<fo:block  keep-together="always" font-size="12pt" text-align="left" white-space-collapse="false"></fo:block>  
+								                       		</fo:table-cell>
+															<fo:table-cell>
+								                           		<fo:block  keep-together="always" font-size="12pt" text-align="right" white-space-collapse="false">${(ppdMap.get(invoiceDetails.getKey()))?if_exists?string("#0.00")}</fo:block>  
+								                       		</fo:table-cell>
+										            </fo:table-row>
+										            <fo:table-row>
+						                                   <fo:table-cell>
+								                           		<fo:block  keep-together="always" font-size="12pt" text-align="left" white-space-collapse="false">Vat Adjustment</fo:block>  
+								                       		</fo:table-cell>
+								                       		 <fo:table-cell>
+								                           		<fo:block  keep-together="always" font-size="12pt" text-align="left" white-space-collapse="false"></fo:block>  
+								                       		</fo:table-cell>
+								                       		 <fo:table-cell>
+								                           		<fo:block  keep-together="always" font-size="12pt" text-align="right" white-space-collapse="false"></fo:block>  
+								                       		</fo:table-cell>
+								                       		 <fo:table-cell>
+								                           		<fo:block  keep-together="always" font-size="12pt" text-align="right" white-space-collapse="false"></fo:block>  
+								                       		</fo:table-cell>
+								                       		 <fo:table-cell>
+								                           		<fo:block  keep-together="always" font-size="12pt" text-align="right" white-space-collapse="false">${(vatAdjMap.get(invoiceDetails.getKey()))?if_exists?string("#0.00")}</fo:block>  
+								                       		</fo:table-cell>
+								                       		<fo:table-cell>
+								                           		<fo:block  keep-together="always" font-size="12pt" text-align="left" white-space-collapse="false"></fo:block>  
+								                       		</fo:table-cell>
+															<fo:table-cell>
+								                           		<fo:block  keep-together="always" font-size="12pt" text-align="right" white-space-collapse="false"></fo:block>  
+								                       		</fo:table-cell>
+										            </fo:table-row>
+										             <fo:table-row>
+						                                   <fo:table-cell>
+								                           		<fo:block  keep-together="always" font-size="12pt" text-align="left" white-space-collapse="false">invoice Total</fo:block>  
+								                       		</fo:table-cell>
+								                       		 <fo:table-cell>
+								                           		<fo:block  keep-together="always" font-size="12pt" text-align="left" white-space-collapse="false"></fo:block>  
+								                       		</fo:table-cell>
+								                       		 <fo:table-cell>
+								                           		<fo:block  keep-together="always" font-size="12pt" text-align="right" white-space-collapse="false"></fo:block>  
+								                       		</fo:table-cell>
+								                       		 <fo:table-cell>
+								                           		<fo:block  keep-together="always" font-size="12pt" text-align="right" white-space-collapse="false"></fo:block>  
+								                       		</fo:table-cell>
+								                       		 <fo:table-cell>
+								                           		<fo:block  keep-together="always" font-size="12pt" text-align="right" white-space-collapse="false">${(vatMap.get(invoiceDetails.getKey()))?if_exists?string("#0.00")}</fo:block>  
+								                       		</fo:table-cell>
+								                       		<fo:table-cell>
+								                           		<fo:block  keep-together="always" font-size="12pt" text-align="right" white-space-collapse="false"></fo:block>  
+								                       		</fo:table-cell>
+															<fo:table-cell>
+								                           		<fo:block  keep-together="always" font-size="12pt" text-align="right" white-space-collapse="false">${(invAdjMap.get(invoiceDetails.getKey()))?if_exists?string("#0.00")}</fo:block>  
+								                       		</fo:table-cell>
+										            </fo:table-row>
+										            </#if>
 									             </fo:table-body>
 									             </fo:table>
 							            	</fo:block>  
@@ -272,6 +363,8 @@ under the License.
 							            </fo:table-cell>
 							     </fo:table-row>-->
 								</#list>
+								
+								<#assign grandTotal=grandTotal+totalPpd+totalVatAdj>
 								 <fo:table-row>
 					                    <fo:table-cell>
 							            	<fo:block  keep-together="always" text-align="left" font-size="12pt" white-space-collapse="false" font-weight="bold"></fo:block>  

@@ -75,11 +75,14 @@ if(categoryType.equals("DEPOT_CUSTOMER")||categoryType.equals("All")){
 	partyIds.addAll(depotPartyIds);
 }
 //dayWiseTotals = SalesInvoiceServices.getPeriodSalesInvoiceTotals(dctx, [partyIds:partyIds, isQuantityLtrs:true,fromDate:dayBegin, thruDate:dayEnd]).get("invoiceIdTotals");
-facilityMap=[:];
 dayWiseInvoice=FastMap.newInstance();
 prodTempMap=[:];
+ppdMap=[:];
+vatAdjMap=[:];
+invAdjMap=[:];
+vatMap=[:];
 // Invoice Sales Abstract
-	finalInvoiceDateMap = [:];
+	dayWisePpdMap = [:];
 	for( i=0 ; i <= (totalDays); i++){
 		currentDay =UtilDateTime.addDaysToTimestamp(fromDateTime, i);
 		dayBegin=UtilDateTime.getDayStart(currentDay);
@@ -101,10 +104,18 @@ prodTempMap=[:];
 							vatRevenue=0;
 							cstRevenue=0;
 							totalRevenue=0;
+							ppd=0;
+							vatAdj=0;
 							finalMap=FastMap.newInstance();
 							invoiceId = invoice.getKey();
-								if(UtilValidate.isNotEmpty(invoiceTaxMap) && invoiceTaxMap.containsKey(invoiceId)){
-						          if(!invoiceTaxMap.get(invoiceId).containsKey("PPD_PROMO_ADJ") ){
+									if(UtilValidate.isNotEmpty(invoiceTaxMap) && invoiceTaxMap.containsKey(invoiceId)){
+							          if(invoiceTaxMap.get(invoiceId).containsKey("PPD_PROMO_ADJ") ){
+										  ppd=invoiceTaxMap.get(invoiceId).get("PPD_PROMO_ADJ");
+										  vatAdj=invoiceTaxMap.get(invoiceId).get("VAT_SALE_ADJ");
+										  ppdMap[invoiceId]=ppd;
+										  vatAdjMap[invoiceId]=vatAdj;
+							          }
+									}
 									if(UtilValidate.isNotEmpty(invoice.getValue().invoiceDateStr)){
 										invoiceDate = invoice.getValue().invoiceDateStr;
 									}
@@ -131,6 +142,8 @@ prodTempMap=[:];
 									totalMap["vatRevenue"]=vatRevenue;
 									totalMap["cstRevenue"]=cstRevenue;
 									totalMap["totalRevenue"]=totalRevenue;
+									invAdjMap[invoiceId]=totalRevenue+vatAdj+ppd;
+									vatMap[invoiceId]=vatAdj+vatRevenue;
 									tempVariantMap =FastMap.newInstance();
 									if(UtilValidate.isNotEmpty(prodTotals)){
 										prodTotals.each{productValue ->
@@ -150,20 +163,13 @@ prodTempMap=[:];
 													    virtualProductId = productList.get("productCategoryId");
 													 }
 													  if(categoryType.equals("UNITS")){
-														/*productAssoc = EntityUtil.getFirst(delegator.findList("ProductAssoc", EntityCondition.makeCondition(["productAssocTypeId": "PRODUCT_VARIANT", "productIdTo": currentProduct,"thruDate":null]), null, ["-fromDate"], null, false));
-															if(UtilValidate.isNotEmpty(productAssoc)){
-																virtualProductId = productAssoc.productId;
-																Debug.log("virtualProductId==="+virtualProductId);
-															}*/
 														    if(UtilValidate.isEmpty(prodTempMap[product.brandName])){
 															  qtyLtrs = productValue.getValue().get("total");
 															  prodTempMap.put(product.brandName, qtyLtrs);
-															  Debug.log("prodTempMap==="+prodTempMap);
 															}else{
 																totProd =0;
 																totProd=prodTempMap.get(product.brandName);
 																totProd += productValue.getValue().get("total");
-																Debug.log("totProd==="+totProd);
 																prodTempMap.put(product.brandName,totProd);
 															}
 														    virtualProductId = product.brandName;
@@ -236,6 +242,7 @@ prodTempMap=[:];
 														//tempVariantMap["InvoiceId"]=invoiceId;
 												finalMap.put("productTotals",tempVariantMap);
 												finalMap.put("invTotals",totalMap);
+												//finalMap.put("ppdTotals",ppdMap);
 										}
 									   }
 									}
@@ -246,8 +253,8 @@ prodTempMap=[:];
 								}
 								invoiceList.add(finalMap);
 								invoiceMap[invoiceId] = invoiceList;
-							 }
-							}
+							 //}
+							//}
 						}
 					}
 				}
@@ -257,9 +264,16 @@ prodTempMap=[:];
 			tempMap = [:];
 			tempMap.putAll(invoiceMap);
 			dayWiseInvoice.put(dayBegin,tempMap);
+			//dayWisePpdMap.put(dayBegin, ppdMap);
 		}
 	}
+	//Debug.log("ppd------------------------------------------------"+dayWisePpdMap);
+	
 context.categoryType=categoryType;
+context.ppdMap=ppdMap;
+context.vatAdjMap=vatAdjMap;
+context.invAdjMap=invAdjMap;
+context.vatMap=vatMap;
 context.dayWiseInvoice=dayWiseInvoice;
 
 

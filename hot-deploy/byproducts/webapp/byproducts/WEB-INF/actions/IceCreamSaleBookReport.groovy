@@ -31,7 +31,7 @@ context.put("dctx",dctx);
 fromDate=parameters.fromDate;
 thruDate=parameters.thruDate;
 categoryType=parameters.categoryType;
-dctx = dispatcher.getDispatchContext();
+partyId=parameters.partyId;
 fromDateTime = null;
 thruDateTime = null;
 def sdf = new SimpleDateFormat("MMMM dd, yyyy");
@@ -56,36 +56,52 @@ if(maxIntervalDays > 32){
 }
 
 partyIds=[];
-if(categoryType.equals("ICE_CREAM_NANDINI")||categoryType.equals("All")){
+if((categoryType.equals("ICE_CREAM_NANDINI")&& UtilValidate.isEmpty(partyId))||categoryType.equals("All")){
    nandiniPartyIds = ByProductNetworkServices.getPartyByRoleType(dctx, [userLogin: userLogin, roleTypeId: "IC_WHOLESALE"]).get("partyIds");
    partyIds.addAll(nandiniPartyIds);
+   Debug.log("partyId==="+partyIds);
+}else if(categoryType.equals("ICE_CREAM_NANDINI")&& UtilValidate.isNotEmpty(partyId)){
+     partyIds.addAll(partyId);
+	 Debug.log("partyId==="+partyIds);
 }
-if(categoryType.equals("ICE_CREAM_AMUL")||categoryType.equals("All")){
+if((categoryType.equals("ICE_CREAM_AMUL")&& UtilValidate.isEmpty(partyId))||categoryType.equals("All")){
    amulPartyIds = ByProductNetworkServices.getPartyByRoleType(dctx, [userLogin: userLogin, roleTypeId: "EXCLUSIVE_CUSTOMER"]).get("partyIds");
    partyIds.addAll(amulPartyIds);
+}else if(categoryType.equals("ICE_CREAM_AMUL")&& UtilValidate.isNotEmpty(partyId)){
+   partyIds.addAll(partyId);
 }
-if(categoryType.equals("UNITS")||categoryType.equals("All")){
+if((categoryType.equals("UNITS")&& UtilValidate.isEmpty(partyId))||categoryType.equals("All")){
 	unitPartyIds = ByProductNetworkServices.getPartyByRoleType(dctx, [userLogin: userLogin, roleTypeId: "UNITS"]).get("partyIds");
 	partyIds.addAll(unitPartyIds);
+}else if(categoryType.equals("UNITS")&& UtilValidate.isNotEmpty(partyId)){
+   partyIds.addAll(partyId);
 }
-if(categoryType.equals("UNION")||categoryType.equals("All")){
+if((categoryType.equals("UNION")&& UtilValidate.isEmpty(partyId))||categoryType.equals("All")){
 	unionPartyIds = ByProductNetworkServices.getPartyByRoleType(dctx, [userLogin: userLogin, roleTypeId: "UNION"]).get("partyIds");
 	partyIds.addAll(unionPartyIds);
+}else if(categoryType.equals("UNION")&& UtilValidate.isNotEmpty(partyId)){
+	partyIds.addAll(partyId);
 }
-if(categoryType.equals("DEPOT_CUSTOMER")||categoryType.equals("All")){
+if((categoryType.equals("DEPOT_CUSTOMER")&& UtilValidate.isEmpty(partyId))||categoryType.equals("All")){
 	depotPartyIds = ByProductNetworkServices.getPartyByRoleType(dctx, [userLogin: userLogin, roleTypeId: "DEPOT_CUSTOMER"]).get("partyIds");
 	partyIds.addAll(depotPartyIds);
+}else if(categoryType.equals("DEPOT_CUSTOMER")&& UtilValidate.isNotEmpty(partyId)){
+	partyIds.addAll(partyId);
 }
 
 partWiseSaleMap=[:];
 if(UtilValidate.isNotEmpty(partyIds)){
-	//partWiseSaleMap=[:];
 	partyTaxMap = SalesInvoiceServices.getInvoiceSalesTaxItems(dctx, [partyIds:partyIds,fromDate:dayBegin, thruDate:dayEnd]).get("partyTaxMap");
-	
 	partyTotals = SalesInvoiceServices.getPeriodSalesInvoiceTotals(dctx, [partyIds:partyIds, isQuantityLtrs:true,fromDate:dayBegin, thruDate:dayEnd]).get("partyTotals");
 	partyTotals.each{ eachParty ->
-	if(UtilValidate.isNotEmpty(partyTaxMap) && partyTaxMap.containsKey(eachParty.getKey())){
-	 if(!partyTaxMap.get(eachParty.getKey()).containsKey("PPD_PROMO_ADJ") ){
+		ppd=0;
+		vatAdj=0;
+		if(UtilValidate.isNotEmpty(partyTaxMap) && partyTaxMap.containsKey(eachParty.getKey())){
+			 if(partyTaxMap.get(eachParty.getKey()).containsKey("PPD_PROMO_ADJ") ){
+				 ppd=partyTaxMap.get(eachParty.getKey()).get("PPD_PROMO_ADJ");
+				 vatAdj=partyTaxMap.get(eachParty.getKey()).get("VAT_SALE_ADJ");
+			 }
+		}
 		quantity=0;
 		basicRevenue=0;
 		bedRevenue=0;
@@ -107,19 +123,20 @@ if(UtilValidate.isNotEmpty(partyIds)){
 		}
 		totalMap["basicRevenue"]=basicRevenue;
 		totalMap["bedRevenue"]=bedRevenue;
-		totalMap["vatRevenue"]=vatRevenue;
+		totalMap["vatRevenue"]=vatRevenue+vatAdj;
 		totalMap["cstRevenue"]=cstRevenue;
-		totalMap["total"]=total;
+		totalMap["ppd"]=ppd;
+		totalMap["total"]=total+ppd+vatAdj;
 		if(quantity != 0){
 			partWiseSaleMap.put(eachParty.getKey(), totalMap);
 		}
-	  }
-	 }
+	  //}
+	 //}
 	}
 }
 context.categoryType=categoryType;
 context.partWiseSaleMap=partWiseSaleMap;
-
+Debug.log("partWiseSaleMap==="+partWiseSaleMap);
 
 
 
