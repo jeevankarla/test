@@ -101,7 +101,7 @@
             </condition>
 			<link target="FindPayrollBilling"/>
 		</menu-item> 
-		<menu-item name="EmplSupPayroll" title="SuplyPayroll">
+		<menu-item name="EmplSupPayroll" title="Supplementary Payroll">
 			<condition>
             	<if-has-permission permission="HR"  action="_SUPLYPAYROLL_VIEW"/>
             </condition>
