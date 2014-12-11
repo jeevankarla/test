@@ -875,7 +875,6 @@ public class InvoiceServices {
             if(orderIds.size()>1){
             	dueDate = invoiceDate;
             }
-            Debug.log("==BEfore==SERVICE==RUN==!!!!!!!!!!!!!!!!!!==invoiceId=="+invoiceId);
             // create the invoice record
             if (UtilValidate.isEmpty(invoiceId)) {
                 Map<String, Object> createInvoiceContext = FastMap.newInstance();
@@ -915,9 +914,7 @@ public class InvoiceServices {
 		        createInvoiceRoleContext.put("userLogin", userLogin);
 		        
 		       // if(invoiceType.equals("PURCHASE_INVOICE")) { 
-		        Debug.log("==salesChannelEnumId==="+orderHeader.getString("salesChannelEnumId"));
 		         if( UtilValidate.isNotEmpty(orderHeader.getString("salesChannelEnumId")) && (!"BYPROD_SALES_CHANNEL".equalsIgnoreCase(orderHeader.getString("salesChannelEnumId")))){     
-		        	   Debug.log("==salesChannelEnumId=ORDER==ROLE==INVOKINGGG=="+orderHeader.getString("salesChannelEnumId"));
 		        	 for (GenericValue orderRole : orderRoles) {
 			            createInvoiceRoleContext.put("partyId", orderRole.getString("partyId"));
 			            createInvoiceRoleContext.put("roleTypeId", orderRole.getString("roleTypeId"));
