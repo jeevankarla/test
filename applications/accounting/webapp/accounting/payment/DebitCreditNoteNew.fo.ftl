@@ -25,8 +25,8 @@ under the License.
 <#-- do not display columns associated with values specified in the request, ie constraint values -->
 
 <fo:layout-master-set>
-    <fo:simple-page-master master-name="main" page-height="12in" page-width="10in"
-            margin-top="0.5in" margin-bottom="1in" margin-left=".5in" margin-right=".5in">
+    <fo:simple-page-master master-name="main" page-height="12in" page-width="8in"
+            margin-top="0.5in" margin-bottom="1in" margin-left="1in" margin-right=".2in">
         <fo:region-body margin-top=".8in"/>
         <fo:region-before extent="1in"/>
         <fo:region-after extent="1in"/>
@@ -150,12 +150,41 @@ under the License.
 			            		<fo:block linefeed-treatment="preserve">&#xA;</fo:block>
 			       			</fo:table-cell>
 							</fo:table-row>
-								</#if>
+							
+							<#else>
+							<fo:table-row>
+	                        	<fo:table-cell>	
+	                            	<fo:block text-align="left" keep-together="always" font-weight="bold" font-size = "12pt">Invoice ID     </fo:block>                               
+	                            </fo:table-cell>
+	                            <fo:table-cell>	
+	                            	<fo:block text-align="left" keep-together="always" font-size = "12pt">&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;:  &#160;&#160;&#160;&#160;${invoice.invoiceId?if_exists}</fo:block>                               
+	                            </fo:table-cell>
+	                        </fo:table-row>
+	                        <fo:table-row> 
+	                            <fo:table-cell>	
+	                            	<fo:block text-align="left" keep-together="always" font-weight="bold" font-size = "12pt">Date</fo:block>                               
+	                            </fo:table-cell>
+	                            <fo:table-cell>	
+	                            	<fo:block text-align="left" keep-together="always" font-size = "12pt">&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;:   &#160;&#160;&#160;&#160;${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(invoice.invoiceDate?if_exists, "dd/MM/yyyy")}</fo:block>                               
+	                            </fo:table-cell>
+	                        </fo:table-row>
+	                        <fo:table-row>
+							<fo:table-cell>
+			            		<fo:block linefeed-treatment="preserve">&#xA;</fo:block>
+			       			</fo:table-cell>
+							</fo:table-row>
+							</#if>
 							<#if partyIdFrom?exists && partyIdFrom == "Company">
 	                             <#assign partyId = partyIdTo>
 	                        <#else>
 	                             <#assign partyId = partyIdFrom>
 	                        </#if>
+	                        <#if invPartyIdFrom?exists && invPartyIdFrom == "Company">
+	                             <#assign partyId = invpartyIdTo>
+	                        <#else>
+	                             <#assign partyId = invPartyIdFrom>
+	                        </#if>
+	                        
 							<#assign partyAddressResult = dispatcher.runSync("getPartyPostalAddress", Static["org.ofbiz.base.util.UtilMisc"].toMap("partyId", partyId?if_exists, "userLogin", userLogin))/> 
 	                        <fo:table-row> 
 	                            <fo:table-cell>	
@@ -209,6 +238,32 @@ under the License.
 				       			</fo:table-cell>
 							</fo:table-row>
 							
+							<fo:table-row>
+								<fo:table-cell>
+				            		<fo:block linefeed-treatment="preserve">&#xA;</fo:block>
+				       			</fo:table-cell>
+							</fo:table-row>
+							<fo:table-row>
+								<fo:table-cell>
+				            		<fo:block text-align="left" keep-together="always" font-size = "12pt" font-weight = "bold">Towards:                  ${comments?if_exists}</fo:block>     
+				       			</fo:table-cell>
+							</fo:table-row>
+							<fo:table-row>
+								<fo:table-cell>
+				            		<fo:block linefeed-treatment="preserve">&#xA;</fo:block>
+				       			</fo:table-cell>
+							</fo:table-row>
+							<#else>
+								<fo:table-row>
+								<fo:table-cell>
+				            		<fo:block text-align="left" keep-together="always" font-size = "12pt">This is to inform you that your account has been <#if invPartyIdFrom == "Company">DEBITED<#else>CREDITED</#if> with Rs: ${invoiceTotal?if_exists?string("##0.00")}       on the basis of the </fo:block>     
+				       			</fo:table-cell>
+							</fo:table-row>
+							<fo:table-row>
+								<fo:table-cell>
+				            		<fo:block text-align="left" keep-together="always" font-size = "12pt">following transactions.</fo:block>     
+				       			</fo:table-cell>
+							</fo:table-row>
 							<fo:table-row>
 								<fo:table-cell>
 				            		<fo:block linefeed-treatment="preserve">&#xA;</fo:block>
@@ -429,32 +484,17 @@ under the License.
 			       			</fo:table-cell>
 						</fo:table-row>					
                     	<fo:table-row >
-                          		<#assign amountWords = Static["org.ofbiz.base.util.UtilNumber"].formatRuleBasedAmount(amount, "%indRupees-and-paise", locale)>
+                    			<#if amount?has_content>
+                    				<#assign amountWords = Static["org.ofbiz.base.util.UtilNumber"].formatRuleBasedAmount(amount, "%indRupees-and-paise", locale)>
+                    			<#else>
+                    				<#assign amountWords = Static["org.ofbiz.base.util.UtilNumber"].formatRuleBasedAmount(invoiceTotal, "%indRupees-and-paise", locale)>
+                    			</#if>
+                          		
 			                   <fo:table-cell>
 			                        	<fo:block keep-together="always" font-size="12pt" font-weight = "bold">Amount Payable:(${StringUtil.wrapString(amountWords?default(""))}  ONLY)</fo:block>
 			                   </fo:table-cell>
 			             </fo:table-row>
 			             <fo:table-row>
-							<fo:table-cell>
-			            		<fo:block linefeed-treatment="preserve">&#xA;</fo:block>  
-			       			</fo:table-cell>
-						</fo:table-row>
-						<fo:table-row>
-							<fo:table-cell>
-			            		<fo:block linefeed-treatment="preserve">&#xA;</fo:block>  
-			       			</fo:table-cell>
-						</fo:table-row>
-			             <fo:table-row>
-							<fo:table-cell>
-			            		<fo:block linefeed-treatment="preserve">&#xA;</fo:block>  
-			       			</fo:table-cell>
-						</fo:table-row>
-						<fo:table-row>
-							<fo:table-cell>
-			            		<fo:block linefeed-treatment="preserve">&#xA;</fo:block>  
-			       			</fo:table-cell>
-						</fo:table-row>
-						<fo:table-row>
 							<fo:table-cell>
 			            		<fo:block linefeed-treatment="preserve">&#xA;</fo:block>  
 			       			</fo:table-cell>
