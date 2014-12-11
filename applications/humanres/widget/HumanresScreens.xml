@@ -277,7 +277,8 @@
             <actions>
                 <set field="titleProperty" value="HumanResFindEmployment"/>
                 <set field="headerItem" value="WaterElectricityCharges"/>
-				<set field="tabButtonItem" value="WaterElectricityCharges" />
+				<set field="tabButtonItem" value="benefitOrDeduction" />
+				<set field="tabButtonItem2" value="WaterElectricityCharges" />
 				<entity-condition list="allBenefitsTypeList" entity-name="BenefitType">
 					<condition-expr field-name="benefitTypeId" operator="not-equals" value="PAYROL_BEN_SALARY"/>
 					<order-by field-name="sequenceNum"/>
@@ -291,6 +292,7 @@
             <widgets>
 				<decorator-screen name="HumanresCommonDecorator" location="component://humanres/widget/CommonScreens.xml">
                     <decorator-section name="body">
+                    <include-menu location="component://humanres/widget/HumanresMenus.xml" name="BenDedTabBar"/>
                     	<section>
 		                    <widgets>                       
 		                        <decorator-screen name="FindScreenDecorator" location="component://common/widget/CommonScreens.xml">

@@ -209,8 +209,17 @@ under the License.
        
        <!-- view employee attendance permissions -->
        <SecurityPermission groupId="HR_ATTENDANCEVIEW" description="View Daily Punch" permissionId="HR_DAILYPUNCHVIEW"/>
+       <SecurityGroupPermission groupId="FULLADMIN" permissionId="HR_DAILYPUNCHVIEW"/>
+       <SecurityGroupPermission groupId="HUMANRES_ADMIN" permissionId="HR_DAILYPUNCHVIEW"/>
+       
+       
        <SecurityPermission groupId="HR_ATTENDANCEVIEW" description="View payroll attendance" permissionId="HR_PAYATTNDNCEVIEW"/>
+       <SecurityGroupPermission groupId="FULLADMIN" permissionId="HR_PAYATTNDNCEVIEW"/>
+       <SecurityGroupPermission groupId="HUMANRES_ADMIN" permissionId="HR_PAYATTNDNCEVIEW"/>
+       
        <SecurityPermission groupId="HR_ATTENDANCEVIEW" description="View leave encashment" permissionId="HR_LEAVEENCASHVIEW"/>
+       <SecurityGroupPermission groupId="FULLADMIN" permissionId="HR_LEAVEENCASHVIEW"/>
+       <SecurityGroupPermission groupId="HUMANRES_ADMIN" permissionId="HR_LEAVEENCASHVIEW"/>
        
        <!-- view employee profile permissions -->
        

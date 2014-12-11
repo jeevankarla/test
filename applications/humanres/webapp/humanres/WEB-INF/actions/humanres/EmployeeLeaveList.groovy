@@ -45,8 +45,9 @@ if(UtilValidate.isNotEmpty(parameters.thruDate)){
 	thruDate = parameters.thruDate;
 }
 
-
-
+if (security.hasEntityPermission("MYPORTAL", "_HREMPLVIEW", session)) {
+	parameters.partyId = userLogin.partyId;
+}
 List employeeLeaveList = [];
 List conditionList=[];
 
