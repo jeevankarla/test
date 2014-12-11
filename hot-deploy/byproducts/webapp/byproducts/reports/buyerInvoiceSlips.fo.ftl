@@ -378,17 +378,26 @@ under the License.
 							            					</fo:table-cell>
 							            					<#assign text = "">
 							            					<#if eachTax.getKey()=="BED_SALE">
-							            						<#assign text = "Excise Duty (Deposit) Including CESS 2.06%">
+							            						<#assign text = "Excise Duty (Deposit) Including CESS [2.06%]">
 							            						<#assign exduty = "Y">
 							            						<#assign totWithBedSale = totWithBedSale+totalAmt+eachTax.getValue()>
 							            					<#elseif eachTax.getKey()=="CST_SALE">
-							            						<#assign text = "Central Sales Tax(CST) 2.0%">
+							            						<#assign text = "Central Sales Tax(CST) [2.0%]">
 							            					<#elseif eachTax.getKey()=="SERTAX_SALE">
 							            						<#assign text = "Service Tax ">
 							            					<#elseif eachTax.getKey()=="VAT_SALE" && (eachTax.getValue()>0)>
-							            						<#assign text = "Value Added Tax(VAT) ">
+							            						<#if taxLabelFlag?has_content && taxLabelFlag == "icpChannel">
+							            							<#assign text = "Value Added Tax(VAT) [14.5%]">
+							            						<#else>
+							            							<#assign text = "Value Added Tax(VAT) ">
+							            						</#if>
 							            					<#elseif eachTax.getKey()=="VAT_SALE" && (eachTax.getValue()<0)>
-							            						<#assign text = "VAT Adjustment">
+							            						<#if taxLabelFlag?has_content && taxLabelFlag == "icpChannel">
+							            							<#assign text = "VAT Adjustment [14.5 %]">
+							            						<#else>
+							            							<#assign text = "VAT Adjustment">
+							            						</#if>
+							            						
 							            					<#elseif eachTax.getKey()=="PPD_PROMO_ADJ">
 							            						<#assign text = "PPD Promotion Adjustment">
 							            					<#else>

@@ -75,8 +75,17 @@ conditionList = [];
 conditionList.add(EntityCondition.makeCondition("shipmentId", EntityOperator.EQUALS, shipmentId));
 conditionList.add(EntityCondition.makeCondition("statusId", EntityOperator.NOT_EQUAL, "ORDER_CANCELLED"));
 condition = EntityCondition.makeCondition(conditionList, EntityOperator.AND);
-orderHeaders = delegator.findList("OrderHeader", condition, UtilMisc.toSet("orderId"), null, null, false);
+orderHeaders = delegator.findList("OrderHeader", condition, UtilMisc.toSet("orderId", "salesChannelEnumId"), null, null, false);
 orderIds = EntityUtil.getFieldListFromEntityList(orderHeaders, "orderId", true);
+
+taxLabelFlag = "otherChannel";
+if(orderHeaders){
+	ordHdr = EntityUtil.getFirst(orderHeaders);
+	if(ordHdr.salesChannelEnumId && (ordHdr.salesChannelEnumId == "ICP_BELLARY_CHANNEL" || ordHdr.salesChannelEnumId == "ICP_NANDINI_CHANNEL" || ordHdr.salesChannelEnumId == "ICP_AMUL_CHANNEL")){
+		taxLabelFlag = "icpChannel";
+	}
+}
+
 
 conditionList.clear();
 conditionList.add(EntityCondition.makeCondition("orderId", EntityOperator.IN, orderIds));
@@ -216,4 +225,5 @@ taxAuthority = delegator.findOne("TaxAuthority", UtilMisc.toMap("taxAuthGeoId","
 context.invoiceSlipsMap = invoiceSlipsMap;
 context.taxParty = taxParty;
 context.taxAuthority = taxAuthority;
+context.taxLabelFlag = taxLabelFlag;
 
