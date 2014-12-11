@@ -39,27 +39,23 @@
                  	<condition-expr field-name="quoteId" value="${quoteId}" operator="equals"/>
                 </entity-condition>
                 <entity-one entity-name="Quote" value-field="quote"/>
-                <set field="custRequestId" value="${quoteItemList[0].custRequestId}"/>
-              	<set field="custRequestItemSeqId" value="${quoteItemList[0].custRequestItemSeqId}"/>
-              	
-              	<entity-and entity-name="QuoteItemContent" list="quoteItemContents" filter-by-date="true">
+                <entity-and entity-name="QuoteContent" list="quoteItemContents" filter-by-date="true">
                     <field-map field-name="quoteId" from-field="quoteId"/>
                 </entity-and>
                 <entity-condition list="quoteTerms" entity-name="QuoteTerm">
                 	<condition-expr field-name="quoteId" from-field="quoteId"/>
                 </entity-condition>
                 <entity-one entity-name="QuoteTerm" value-field="quoteTerm"/>
-                <!-- <entity-and entity-name="QuoteItemAndContent" list="quoteItemAndContents">
+                <entity-and entity-name="QuoteItemAndContent" list="quoteItemAndContents">
                     <field-map field-name="quoteId" from-field="quoteId"/>
-                </entity-and> -->
+                </entity-and>
                 <!-- <script location="component://procurement/webapp/procurement/WEB-INF/actions/CheckCreatePO.groovy" /> -->
             </actions>
             <widgets>
            	  <decorator-screen name="materialmgmtNgCommonDecorator" location="${parameters.mainDecoratorLocation}">
                 <decorator-section name="body">
                 <include-menu name="QuoteTabBar" location="component://materialmgmt/widget/materialmgmtMenus.xml" />
-                   <container style="lefthalf">
-                     <section>
+                   <section>
                    		<!-- <condition>
                    			<and>
                    				<if-compare operator="equals" value="createPO" field="checkFlag"/>
@@ -71,36 +67,29 @@
            				</link>
                    		</widgets>
                      </section>
-                     <!-- <section>
-                   		<condition>
-                   			<and>
-                   				<if-compare operator="equals" value="BID_ACCEPTED" field="quote.statusId"/>
-                   			</and>
-                   		</condition>
-                   		<widgets>
-                   		<link target="CreatePOForBid" text="Create PO" style="buttontext h2" >
-           					<parameter param-name="quoteId" from-field="quoteId"/>
-           				</link>
-                   		</widgets>
-                   </section> -->
-                   <screenlet title="Overview">
-                       <include-form location="component://materialmgmt/widget/MaterialQuoteForms.xml" name="viewQuotation"/>
-                     </screenlet>                      
-                  </container>
-                 <container style="righthalf">
-                 	<screenlet title="Bid Contents">
-                   		<include-form location="component://materialmgmt/widget/MaterialQuoteForms.xml" name="ListQuoteContent"/>
-                 	 </screenlet>
-                 </container>
-                 <container style="clear" />
-                 <container style="full">
-                 	<screenlet title="Items In Quote" >
-                      <include-form location="component://materialmgmt/widget/MaterialQuoteForms.xml" name="viewQuoteItemDetails"/>
-                 	</screenlet>
-                 	<screenlet title="Quote Terms" >
-                      <include-form location="component://materialmgmt/widget/MaterialQuoteForms.xml" name="ListQuoteTerms"/>
-                 	</screenlet>
-                 </container>
+                     <container style="full">
+                    	<container style="lefthalf">
+                     
+                   	 		<screenlet title="Overview">
+                       			<include-form location="component://materialmgmt/widget/MaterialQuoteForms.xml" name="viewQuotation"/>
+                     		</screenlet>                      
+                  		</container>
+                 		<container style="righthalf">
+                 			<screenlet title="Quote Documents">
+                   				<include-form location="component://materialmgmt/widget/MaterialQuoteForms.xml" name="ListQuoteContent"/>
+                 	 		</screenlet>
+                 		</container>
+                 		<container style="clear" />
+               			<container style="full">
+               				<screenlet title="Items In Quote" >
+                    				<include-form location="component://materialmgmt/widget/MaterialQuoteForms.xml" name="viewQuoteItemDetails"/>
+               				</screenlet>
+               				<screenlet title="Quote Terms" >
+                    				<include-form location="component://materialmgmt/widget/MaterialQuoteForms.xml" name="ListQuoteTerms"/>
+               				</screenlet>
+               			</container> 	
+                    </container>
+                   	
                 </decorator-section>
               </decorator-screen>
             </widgets>

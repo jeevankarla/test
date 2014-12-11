@@ -99,7 +99,14 @@
      
      <request-map uri="createQuoteContent">
        <security https="true" auth="true"/>
-       <event type="service" path="" invoke="createQuoteContent"></event>
+       <event path="component://materialmgmt/script/MaterialMgmtServices.xml" invoke="createContentDocument" type="simple"/>
+       <response name="success" type="view" value="EditQuoteContent"/>
+       <response name="error" type="view" value="EditQuoteContent"/>
+     </request-map>
+     
+     <request-map uri="deleteQuoteContent">
+       <security https="true" auth="true"/>
+       <event type="service" invoke="deleteQuoteContent" />
        <response name="success" type="view" value="EditQuoteContent"/>
        <response name="error" type="view" value="EditQuoteContent"/>
      </request-map>

@@ -196,7 +196,7 @@
     </form>
 
 	<form name="ListQuoteContent" type="list" list-name="quoteItemContents"
-        odd-row-style="alternate-row" default-table-style="basic-table hover-bar" paginate-target="EditBidContent">
+        odd-row-style="alternate-row" default-table-style="basic-table hover-bar" paginate-target="EditQuoteContent">
         <field name="quoteId"><hidden/></field>
         <field name="quoteItemSeqId"><hidden/></field>
         <field name="contentId" title="contentName">
@@ -208,7 +208,7 @@
         </field>
         <field name="fromDate" title="Uploaded Date"><display/></field>
         <field name="deleteLink" title="Delete" widget-style="buttontext" >
-           <hyperlink also-hidden="false" description="${uiLabelMap.CommonDelete}" target="deleteQuoteItemContent">
+           <hyperlink also-hidden="false" description="${uiLabelMap.CommonDelete}" target="deleteQuoteContent">
                 <parameter param-name="quoteId"/>
                 <parameter param-name="quoteItemSeqId"/>
                 <parameter param-name="contentId"/>

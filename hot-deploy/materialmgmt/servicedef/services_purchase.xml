@@ -29,17 +29,26 @@
     <service name="createQuoteContent" engine="simple"
         location="component://materialmgmt/script/MaterialMgmtServices.xml"
         invoke="createQuoteContent"
-        default-entity-name="QuoteItemContent" auth="true">
-        <description>Create a Customer Request Item Content</description>
+        default-entity-name="QuoteContent" auth="true">
+        <description>Create a Quote Content</description>
         <auto-attributes include="pk" mode="IN" optional="false"/>
         <auto-attributes include="nonpk" mode="IN" optional="true"/>
-        <attribute name="contentId" mode="OUT" type="String" optional="false"></attribute>
-        <attribute name="custRequestId" mode="OUT" type="String" optional="true"></attribute>
-        <attribute name="custRequestItemSeqId" mode="OUT" type="String" optional="true"></attribute>
-        <attribute name="quoteId" mode="OUT" type="String" optional="true"></attribute>
-        <attribute name="quoteItemSeqId" mode="OUT" type="String" optional="false"></attribute>
+        <attribute name="contentId" mode="OUT" type="String" optional="true"></attribute>
+        <attribute name="quoteId" mode="OUT" type="String" optional="false"></attribute>
+        <attribute name="quoteItemSeqId" mode="OUT" type="String" optional="true"></attribute>
         <override name="fromDate" optional="true"/>
     </service> 
+    
+    <service name="deleteQuoteContent" engine="simple"
+        location="component://materialmgmt/script/MaterialMgmtServices.xml"
+        invoke="deleteQuoteContent"
+        default-entity-name="QuoteContent" auth="true">
+        <description>delete a Quote Content</description>
+        <auto-attributes include="pk" mode="IN" optional="false"/>
+        <auto-attributes include="nonpk" mode="IN" optional="true"/>
+        <attribute name="quoteId" mode="OUT" type="String" optional="false"/>
+        <attribute name="quoteItemSeqId" mode="OUT" type="String" optional="true"/>
+    </service>
     
     <service name="createPOForQuote" engine="java" auth="true"
          location="in.vasista.vbiz.purchase.MaterialQuoteServices" invoke="createPOForQuote">
