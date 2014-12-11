@@ -97,6 +97,16 @@
       	<field name="quantityAccepted" title="Quantity"><display/></field>
       	<field name="quantityRejected" title="Qty Rejected"><display/></field>
       	<field name="receivedByUserLoginId" title="Entry by"><display/></field>	
+      	
+      	 <field name="report" widget-style="buttontext" >
+            <hyperlink target="MRRreport.pdf" description="Report" target-window="_blank">
+             	<parameter param-name="shipmentId" value="${shipmentId}"/>
+             	<parameter param-name="orderId" value="${orderId}"/>
+              	<parameter param-name="receiptId" value="${receiptId}"/>
+               	<parameter param-name="datetimeReceived" value="${groovy:org.ofbiz.base.util.UtilDateTime.toDateString(datetimeReceived, &quot;dd/MM/yyyy HH:mm:ss&quot;);}"/>
+            </hyperlink>
+        </field>
+      	
     </form>
     
     <form name="FindMaterialShipment" title="" type="single" target="${targetRequest}" header-row-style="header-row" default-table-style="basic-table">

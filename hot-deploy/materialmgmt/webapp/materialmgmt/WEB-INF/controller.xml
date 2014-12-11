@@ -131,6 +131,10 @@
        <response name="success" type="view" value="ViewMaterialQuote"/>
        <response name="error" type="view" value="ViewMaterialQuote"/>
      </request-map>
+     <request-map uri="MRRreport.pdf">
+        <security https="true" auth="true"/>
+    	<response name="success" type="view" value="MRRreportPDF"/>
+    </request-map>
      
      <request-map uri="rejectMaterialRequest">
        <security https="true" auth="true"/>
@@ -501,7 +505,7 @@
     </request-map>
     
     
-    
+     <view-map name="MRRreportPDF" type="screenfop" page="component://materialmgmt/widget/materialmgmtReportScreens.xml#MRRreportPDF" content-type="application/pdf"/>
     <view-map name="main" type="screen" page="component://materialmgmt/widget/materialmgmtScreens.xml#main"/>
     <view-map name="mainNg" type="screen" page="component://materialmgmt/widget/materialmgmtScreens.xml#mainNG"/>
      <!-- purchaseOrder views -->  
