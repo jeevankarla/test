@@ -157,7 +157,8 @@ $(document).ready(function(){
 		      	<input type="hidden" name="changeFlag"  value="${changeFlag?if_exists}" />
 		        <#if changeFlag?exists && changeFlag=='IcpSalesAmul'>
 		        	<input type="hidden" name="shipmentTypeId" id="shipmentTypeId" value="ICP_AMUL_SHIPMENT"/> 
-		          	<input type="hidden" name="salesChannel" id="salesChannel" value="ICP_AMUL_CHANNEL"/> 
+		          	<input type="hidden" name="salesChannel" id="salesChannel" value="ICP_AMUL_CHANNEL"/>
+		          	<input type="hidden" name="billToCustomer" id="billToCustomer" value="GCMMF"/>  
 		        <#elseif changeFlag?exists && changeFlag=='IcpSales'>
 		         	<input type="hidden" name="shipmentTypeId" id="shipmentTypeId" value="ICP_NANDINI_SHIPMENT"/> 
 		           	<input type="hidden" name="salesChannel" id="salesChannel" value="ICP_NANDINI_CHANNEL"/>
@@ -410,6 +411,7 @@ $(document).ready(function(){
 	<input type="hidden" name="shipmentTypeId" id="shipmentTypeId" value="${parameters.shipmentTypeId?if_exists}"/>
 	<input type="hidden" name="vehicleId" id="vehicleId" value="${parameters.vehicleId?if_exists}"/>
 	<input type="hidden" name="salesChannel" id="salesChannel" value="${parameters.salesChannel?if_exists}"/>
+	<input type="hidden" name="billToCustomer" id="billToCustomer" value="${parameters.billToCustomer?if_exists}"/>
 	<br>
 </form>
     </div>
