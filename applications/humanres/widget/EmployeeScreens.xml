@@ -239,8 +239,9 @@ under the License.
 				<set field="disbursment"  from-field="finAccountList[0].finAccountId"/>
             </actions>
             <widgets>
-                <decorator-screen name="EmployeeDecorator" location="${parameters.mainDecoratorLocation}">
+                <decorator-screen name="HumanresCommonDecorator" location="component://humanres/widget/CommonScreens.xml">
                     <decorator-section name="body">
+                    <include-menu location="component://humanres/widget/HumanresMenus.xml" name="EmployeeProfileTabBar"/>
                     	<section>
                     	    <condition>
                             	<if-compare field="hasEmployeeViewPermission" operator="equals" value="true" type="Boolean"/>
@@ -253,7 +254,7 @@ under the License.
 		                            <widgets>
 		                                <section>
 		                                    <widgets>
-		                                        <container style="profile-left">
+		                                        <container style="lefthalf">
 		                                            <include-screen name="EmployeeInformation" location="component://humanres/widget/EmployeeScreens.xml"/>
 <!--		                                            <include-screen name="contactsAndAccounts" location="component://party/widget/partymgr/ProfileScreens.xml"/>-->
 													<include-screen name="LanguagesKnown" location="component://humanres/widget/EmployeeScreens.xml"/>
@@ -271,7 +272,7 @@ under the License.
                     								 </screenlet>
                     								 </screenlet>
 		                                        </container>
-		                                        <container style="profile-right">
+		                                        <container style="righthalf">
 		                                            <include-screen name="EmployeeProfilePicture" location="component://humanres/widget/EmployeeScreens.xml"/>
 		                                            <include-screen name="CurrentEmploymentData" location="component://humanres/widget/EmployeeScreens.xml"/>
 		                                           <include-screen name="DeputationEmply" location="component://humanres/widget/EmployeeScreens.xml"/>
@@ -307,13 +308,15 @@ under the License.
 		<section>
 			<actions>
 				<set field="titleProperty" value="PageTitlePreviousEmploymentProfile"/>
-				<set field="tabButtonItem" value="PreviousEmployementProfile" ></set>
+				<set field="tabButtonItem" value="EmployeeProfile" />
+ 				<set field="tabButtonItem2" value="PreviousEmployementProfile" />
 				<set field="labelTitleProperty" value="PageTitlePreviousEmploymentProfile"/> 
 				<entity-one entity-name="EmployeeDetail" value-field="EmployeeDetail" use-cache="true" />
 			</actions>
 			<widgets>
-				 <decorator-screen name="EmployeeDecorator" location="${parameters.mainDecoratorLocation}">
+				 <decorator-screen name="HumanresCommonDecorator" location="component://humanres/widget/CommonScreens.xml">
                     <decorator-section name="body">
+                    <include-menu location="component://humanres/widget/HumanresMenus.xml" name="EmployeeProfileTabBar"/>
 						<screenlet title="${uiLabelMap.PageTitlePreviousEmploymentProfile}" id="EmployeeInformationPanel">
 							<include-form name="PreviousEmploymentDetails" location="component://humanres/widget/forms/EmployeeForms.xml" />
 						</screenlet>
@@ -325,16 +328,18 @@ under the License.
 	<screen name="ShiftCalender">
 		<section>
 			<actions>
-				<set field="titleProperty" value="PageTitlePreviousEmploymentProfile"/>
-				<set field="tabButtonItem" value="ShiftCalender" ></set>
+				<set field="titleProperty" value="Shift Calender"/>
+				<set field="tabButtonItem" value="EmployeeProfile" />
+ 				<set field="tabButtonItem2" value="ShiftCalender" />
 				<set field="partyId" from-field="parameters.partyId"/>
 				<entity-and list="ShiftList" entity-name="EmployeeShiftCalendar">
 					<field-map field-name="partyId" from-field="parameters.partyId"/>
 				</entity-and>
 			</actions>
 			<widgets>
-				 <decorator-screen name="EmployeeDecorator" location="${parameters.mainDecoratorLocation}">
+				 <decorator-screen name="HumanresCommonDecorator" location="component://humanres/widget/CommonScreens.xml">
                     <decorator-section name="body">
+                    <include-menu location="component://humanres/widget/HumanresMenus.xml" name="EmployeeProfileTabBar"/>
 						<screenlet title="Employee Shift Calender">
 							<include-form name="ShiftCalender" location="component://humanres/widget/forms/EmployeeForms.xml" />
 						</screenlet>
@@ -424,7 +429,10 @@ under the License.
                     <widgets>
                         <section>
                          	<condition>
-                               <if-service-permission service-name="humanResManagerPermission" main-action="EMPLOYMENT_EDIT"/>
+                         		<or>
+                         			<if-service-permission service-name="humanResManagerPermission" main-action="EMPLOYMENT_EDIT"/>
+                         			<if-has-permission permission="HR_PROFILE" action="_ADMIN"/>
+                         		</or>
                             </condition>
                             <widgets>
                                 <screenlet title="${uiLabelMap.EmployeeInformation}" navigation-menu-name="EmployeeUpdate" id="EmployeeInformationPanel">
@@ -447,8 +455,11 @@ under the License.
     <screen name="EditEmployeeSkills">
         <section>
             <actions>
-                <set field="titleProperty" value="PageTitleViewPartySkill"/>
-                <set field="tabButtonItem" value="EditEmployeeSkills"/>
+                <set field="titleProperty" value="PageTitleViewPartySkill" />
+                <set field="headerItem" value="EmployeeProfile" />
+				<set field="tabButtonItem" value="EmployeeProfile" />
+ 				<set field="tabButtonItem2" value="EditEmployeeSkills" />  
+				
                 <set field="partyId" from-field="parameters.partyId"/>
                 <set field="skillTypeId" from-field="parameters.skillTypeId"/>
                 <set field="partySkillsCtx.partyId" from-field="parameters.partyId"/>
@@ -463,8 +474,9 @@ under the License.
                 <set field="hasEmployeeViewPermission" from-field="permResult.hasPermission"/>                 
             </actions>
             <widgets>
-                <decorator-screen name="EmployeeDecorator" location="${parameters.mainDecoratorLocation}">
+                <decorator-screen name="HumanresCommonDecorator" location="component://humanres/widget/CommonScreens.xml">
                     <decorator-section name="body">
+                    <include-menu location="component://humanres/widget/HumanresMenus.xml" name="EmployeeProfileTabBar"/>
                     	<section>
                     	    <condition>
                             	<if-compare field="hasEmployeeViewPermission" operator="equals" value="true" type="Boolean"/>
@@ -502,8 +514,8 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="HumanResEditPartyQual"/>
-                <set field="headerItem" value="Employee"/>
-                <set field="tabButtonItem" value="EditEmployeeQuals"/>
+                <set field="tabButtonItem" value="EmployeeProfile" />
+ 				<set field="tabButtonItem2" value="EditEmployeeQuals" />
                 <set field="partyId" from-field="parameters.partyId"/>
                 <set field="partyQualCtx.partyId" from-field="parameters.partyId"/>
                 <set field="parameters.insideEmployee" value="true"/>
@@ -517,8 +529,9 @@ under the License.
                 <set field="hasEmployeeViewPermission" from-field="permResult.hasPermission"/>                  
             </actions>
             <widgets>
-                <decorator-screen name="EmployeeDecorator" location="${parameters.mainDecoratorLocation}">
+                <decorator-screen name="HumanresCommonDecorator" location="component://humanres/widget/CommonScreens.xml">
                     <decorator-section name="body">
+                    <include-menu location="component://humanres/widget/HumanresMenus.xml" name="EmployeeProfileTabBar"/>
                     	<section>
                     	    <condition>
                             	<if-compare field="hasEmployeeViewPermission" operator="equals" value="true" type="Boolean"/>
@@ -560,6 +573,7 @@ under the License.
             <widgets>
                 <decorator-screen name="EmployeeDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
+                    <include-menu location="component://humanres/widget/HumanresMenus.xml" name="EmployeeProfileTabBar"/>
                         <screenlet id="TrainingStatus" title="${uiLabelMap.HumanResTrainingStatus}" collapsible="true">
                             <include-form name="ListTrainingStatus" location="component://humanres/widget/forms/PersonTrainingForms.xml"/>
                         </screenlet>
@@ -582,8 +596,9 @@ under the License.
                 <set field="hasEmployeeViewPermission" from-field="permResult.hasPermission"/>                 
             </actions>
             <widgets>
-                <decorator-screen name="EmployeeDecorator" location="${parameters.mainDecoratorLocation}">
+                <decorator-screen name="HumanresCommonDecorator" location="component://humanres/widget/CommonScreens.xml">
                     <decorator-section name="body">
+                    <include-menu location="component://humanres/widget/HumanresMenus.xml" name="EmployeeProfileTabBar"/>
                     	<section>
                     	    <condition>
                             	<if-compare field="hasEmployeeViewPermission" operator="equals" value="true" type="Boolean"/>
@@ -632,7 +647,7 @@ under the License.
                 <set field="partyId" from-field="parameters.partyId"/>
             </actions>
             <widgets>
-                <decorator-screen name="EmployeeDecorator" location="${parameters.mainDecoratorLocation}">
+                <decorator-screen name="HumanresCommonDecorator" location="component://humanres/widget/CommonScreens.xml">
                     <decorator-section name="body">
                         <include-form name="ListPerformanceNotes" location="component://humanres/widget/forms/EmploymentForms.xml"/>
                         <screenlet id="AddPerformanceNotePanel" title="${uiLabelMap.HumanResAddPerfNote}" collapsible="true">
@@ -647,7 +662,8 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="HumanResEditEmplLeave"/>
-                <set field="tabButtonItem" value="EditEmployeeLeaves"/>
+                <set field="tabButtonItem" value="EmployeeProfile"/>
+                <set field="tabButtonItem2" value="EditEmployeeLeaves"/>
                 <set field="partyId" from-field="parameters.partyId"/>
                 <entity-one entity-name="EmplLeave" value-field="leaveApp"/>
                 <service service-name="humanResManagerPermission" result-map="permResult">
@@ -660,8 +676,9 @@ under the License.
                 <set field="hasEmployeeViewPermission" from-field="permResult.hasPermission"/>                      
             </actions>
             <widgets>
-                <decorator-screen name="EmployeeDecorator" location="${parameters.mainDecoratorLocation}">
+                <decorator-screen name="HumanresCommonDecorator" location="component://humanres/widget/CommonScreens.xml">
                     <decorator-section name="body">
+                    <include-menu location="component://humanres/widget/HumanresMenus.xml" name="EmployeeProfileTabBar"/>
                     	<section>
                     	    <condition>
                             	<if-compare field="hasEmployeeViewPermission" operator="equals" value="true" type="Boolean"/>
@@ -770,6 +787,38 @@ under the License.
                         <screenlet title="${uiLabelMap.PageTitleNewPartyNote}">
                             <include-form name="AddEmployeeNote" location="component://humanres/widget/forms/EmployeeForms.xml"/>
                         </screenlet>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    <screen name="paySlip">
+        <section>
+            <actions>
+                <set field="titleProperty" value="My Pay Slip"/>
+                <set field="headerItem" value="paySlip"/>
+				<set field="tabButtonItem" value="EmployeeProfile" />
+				<set field="tabButtonItem2" value="paySlip" />
+				<entity-condition list="customTimePeriodList" entity-name="CustomTimePeriod" use-cache="true" filter-by-date="false" >
+                	<condition-expr field-name="periodTypeId" operator="equals" value="HR_MONTH"/>
+                	<order-by field-name="-thruDate"/>
+                </entity-condition>		
+            </actions>
+            <widgets>
+				<decorator-screen name="HumanresCommonDecorator" location="component://humanres/widget/CommonScreens.xml">
+                    <decorator-section name="body">
+                    <include-menu location="component://humanres/widget/HumanresMenus.xml" name="EmployeeProfileTabBar"/>
+                    	<section>
+		                    <widgets>                       
+	                               <section>
+	                               		 <widgets>
+			                                 <platform-specific>
+			                                     <html><html-template location="component:///humanres/webapp/humanres/humanres/paySlip.ftl"/></html>
+			                                 </platform-specific>
+			                             </widgets>
+	                               </section>
+		                    </widgets>                    
+		            	</section>				                        
                     </decorator-section>
                 </decorator-screen>
             </widgets>

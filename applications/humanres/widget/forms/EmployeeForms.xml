@@ -607,9 +607,9 @@
 		<field name="idValue" title="Number"><text size="13"></text></field>
 		<field name="issueDate" title="Issue Date"><date-time type="date"></date-time></field>
 		<field name="expiryDate" title="Expiry Date"><date-time type="date"></date-time></field>
-		<field name="submitButton" title="Update" separate-column="true">
+		<field name="submitButton" use-when="${groovy:((security.hasEntityPermission(&quot;HR_PROFILE&quot;, &quot;_ADMIN&quot;, session)))}" title="Update" separate-column="true">
             <submit button-type="button"/></field>
-        <field name="deleteLink" title="Delete" widget-style="buttontext">
+        <field name="deleteLink" title="Delete" use-when="${groovy:((security.hasEntityPermission(&quot;HR_PROFILE&quot;, &quot;_ADMIN&quot;, session)))}"   widget-style="buttontext">
            <hyperlink also-hidden="false" description="${uiLabelMap.CommonDelete}" target="deletePartyIdentification">
                 <parameter param-name="partyId"/>
                 <parameter param-name="partyIdentificationTypeId"/>
@@ -631,7 +631,7 @@
 		<field name="idValue" title="Number"><text size="22"></text></field>
 		<field name="issueDate" title="Issue Date"><date-time type="date" ></date-time></field>
 		<field name="expiryDate" title="Expiry Date"><date-time type="date"></date-time></field>
-		<field name="submitButton" title="Create" separate-column="true">
+		<field name="submitButton" use-when="${groovy:((security.hasEntityPermission(&quot;HR_PROFILE&quot;, &quot;_ADMIN&quot;, session)))}" title="Create" separate-column="true">
             <submit button-type="button"/></field>
 	</form>
 	<form name="ListInsurance" type="list" odd-row-style="alternate-row" header-row-style="header-row" 
@@ -650,9 +650,9 @@
 		<field name="premiumAmount" title="Amount"><display></display></field>
 		<field name="fromDate"><display description="${groovy:org.ofbiz.base.util.UtilDateTime.toDateString(fromDate, &quot;dd/MM/yyyy&quot;);}" also-hidden="true"/></field>
 		<field name="thruDate"><date-time type="date"/></field>
-		<field name="submitButton" title="Update" separate-column="true">
+		<field name="submitButton" title="Update" use-when="${groovy:((security.hasEntityPermission(&quot;HR_PROFILE&quot;, &quot;_ADMIN&quot;, session)))}" separate-column="true">
             <submit button-type="button"/></field>
-        <field name="deleteLink" title="Delete" widget-style="buttontext">
+        <field name="deleteLink" title="Delete" use-when="${groovy:((security.hasEntityPermission(&quot;HR_PROFILE&quot;, &quot;_ADMIN&quot;, session)))}" widget-style="buttontext">
            <hyperlink description="${uiLabelMap.CommonDelete}" target="deletePartyInsurance">
                 <parameter param-name="insuranceId"/>  
                 <parameter param-name="partyId"/>  
@@ -675,7 +675,7 @@
 		<field name="premiumAmount" title="Premium Amount"><text size="15"></text></field>
 		<field name="fromDate"><date-time type="date" ></date-time></field>
         <!-- <field name="thruDate"><date-time type="date"/></field> -->
-		<field name="submitButton" title="Create" separate-column="true">
+		<field name="submitButton" use-when="${groovy:((security.hasEntityPermission(&quot;HR_PROFILE&quot;, &quot;_ADMIN&quot;, session)))}" title="Create" separate-column="true">
             <submit button-type="button"/></field>
 	</form>	
     <form name="PreviousEmploymentDetails" type="single" target="updatePreviousEmployment" default-map-name="EmployeeDetail">
@@ -777,7 +777,7 @@
 				<option key="N" description="N" ></option>
 			</drop-down>		
 		</field>
-        <field name="submitButton" title="${uiLabelMap.CommonAdd}"><submit button-type="button"/></field>
+        <field name="submitButton" use-when="${groovy:((security.hasEntityPermission(&quot;HR_PROFILE&quot;, &quot;_ADMIN&quot;, session)))}" title="${uiLabelMap.CommonAdd}"><submit button-type="button"/></field>
     </form> 
     <form name="AddLanguage" type="single" target="createLanguage">
     <field name="partyId"><hidden value="${partyId}"/></field>
@@ -788,7 +788,7 @@
     		</entity-options>
     	</drop-down>
     </field>
-   <field name="submitButton" title="${uiLabelMap.CommonAdd}"><submit button-type="button"/></field>
+   <field use-when="${groovy:((security.hasEntityPermission(&quot;HR_PROFILE&quot;, &quot;_ADMIN&quot;, session)))}" name="submitButton" title="${uiLabelMap.CommonAdd}"><submit button-type="button"/></field>
    </form>
    
    <form name="AddDeputation" type="single" target="createDeputEmply">
@@ -800,7 +800,7 @@
 				</entity-options>
 			</drop-down>
     </field>
-   <field name="submitButton" title="${uiLabelMap.CommonAdd}"><submit button-type="button"/></field>
+   <field name="submitButton" use-when="${groovy:((security.hasEntityPermission(&quot;HR_PROFILE&quot;, &quot;_ADMIN&quot;, session)))}" title="${uiLabelMap.CommonAdd}"><submit button-type="button"/></field>
    </form>
    
    <form name="ListDeputation" type="list" list-name="emplList" default-table-style="basic-table">
@@ -815,7 +815,7 @@
 	</actions>
 		<field name="partyId"><hidden value="${partyId}"/></field>
 		<field name="roleTypeId" title="Employee Type"><display-entity entity-name="RoleType"  key-field-name="roleTypeId" description="${description}" /></field>
-		 <field name="deleteLink" title="${uiLabelMap.CommonDelete}" widget-style="buttontext">
+		 <field name="deleteLink" title="${uiLabelMap.CommonDelete}" use-when="${groovy:((security.hasEntityPermission(&quot;HR_PROFILE&quot;, &quot;_ADMIN&quot;, session)))}" widget-style="buttontext">
             <hyperlink target="deleteDeputEmply" description="${uiLabelMap.CommonDelete}" also-hidden="false">
                 <parameter param-name="roleTypeId"/>
                 <parameter param-name="partyId"/>
@@ -842,10 +842,10 @@
 		</field>
 		<field name="roleTypeIdFrom" > <hidden value="EMPLOYEE"/></field>
 		<field name="roleTypeIdTo" > <hidden value="FAMILY_MEMBER"/></field>
-        <field name="updateButton" widget-style="smallSubmit" separate-column="true">
+        <field name="updateButton" widget-style="smallSubmit" use-when="${groovy:((security.hasEntityPermission(&quot;HR_PROFILE&quot;, &quot;_ADMIN&quot;, session)))}" separate-column="true">
             <submit button-type="button"/>
         </field>
-     	<field name="deletePartyRelationship" title="${uiLabelMap.CommonDelete}" widget-style="buttontext">
+     	<field name="deletePartyRelationship" use-when="${groovy:((security.hasEntityPermission(&quot;HR_PROFILE&quot;, &quot;_ADMIN&quot;, session)))}" title="${uiLabelMap.CommonDelete}" widget-style="buttontext">
             <hyperlink target="deleteDependent" description="${uiLabelMap.CommonDelete}" also-hidden="false">
                	<parameter param-name="partyIdTo"/>
                	<parameter param-name="partyIdFrom" from-field="parameters.empPartyId"/>
@@ -863,7 +863,7 @@
 	</entity-condition></actions>
 	<field name="partyId"><hidden value="${partyId}"/></field>
 		<field name="skillTypeId" title="Languages known"><display default-value="${description}"></display></field>
-		 <field name="deleteLink" title="${uiLabelMap.CommonDelete}" widget-style="buttontext">
+		 <field name="deleteLink" use-when="${groovy:((security.hasEntityPermission(&quot;HR_PROFILE&quot;, &quot;_ADMIN&quot;, session)))}" title="${uiLabelMap.CommonDelete}" widget-style="buttontext">
             <hyperlink target="deleteLanguage" description="${uiLabelMap.CommonDelete}" also-hidden="false">
                 <parameter param-name="skillTypeId"/>
                 <parameter param-name="partyId"/>
@@ -1124,7 +1124,7 @@
 		</drop-down>
 		</field>
 		<field name="date" title="Date"><date-time type="date" ></date-time></field>
-		 <field name="submitButton" title="${uiLabelMap.CommonUpdate}"><submit button-type="button"/></field>
+		 <field name="submitButton" use-when="${groovy:((security.hasEntityPermission(&quot;HR_PROFILE&quot;, &quot;_ADMIN&quot;, session)))}"  title="${uiLabelMap.CommonUpdate}"><submit button-type="button"/></field>
 	</form>
 	
 	<form name="EmployeeProfilePicture" target="createEmployeeContent" type="upload" 
@@ -1143,7 +1143,7 @@
         <field name="dataCategoryId"><hidden value="PROFILE_PIC"/></field>
         <field name="isPublic"><hidden value="N"/></field>
              
-        <field name="createButton" title="Upload Pic"><submit button-type="button"/></field>
+        <field name="createButton" use-when="${groovy:((security.hasEntityPermission(&quot;HR_PROFILE&quot;, &quot;_ADMIN&quot;, session)))}" title="Upload Pic"><submit button-type="button"/></field>
     </form> 
     <form name="AddEmployeeNote" type="single" target="createEmployeeNote"
         focus-field-name="noteId" header-row-style="header-row" default-table-style="basic-table">

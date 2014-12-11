@@ -253,9 +253,11 @@ function viewGHandSS(){
             <table class="basic-table" cellspacing="0">
               <tr>
                 <td class="label">${uiLabelMap.EmployeeId} :</td>
-                <td>
+                <td class= "h2">
                 	<#if security.hasEntityPermission("MYPORTAL", "_HREMPLVIEW", session)>
-                		<input type="display" name="partyId" id="partyId" value="${userLogin.partyId?if_exists}" readonly/>
+                		<#assign partyName= Static["org.ofbiz.party.party.PartyHelper"].getPartyName(delegator, userLogin.partyId, false)?if_exists/>
+                		<input type="hidden" name="partyId" id="partyId" value="${userLogin.partyId?if_exists}" readonly/>
+                		${partyName}[${userLogin.partyId?if_exists}]
                 	<#else>
                 		<#if !editFlag>
                       		<@htmlTemplate.lookupField value="${parameters.partyId?if_exists}" formName="EditEmplLeave" name="partyId" id="partyId" fieldFormName="LookupEmployeeName"/>

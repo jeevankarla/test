@@ -23,10 +23,11 @@
     <form name="FindEmplLeaves" type="single" target="FindEmplLeaves"
         odd-row-style="header-row" default-table-style="basic-table">
         <actions>
+       	 <set field="partyName" value="${groovy:org.ofbiz.party.party.PartyHelper.getPartyName(delegator,userLogin.partyId, false)}"/>
         </actions>
         <field name="emplLeaveApplId" title="Leave Appl Id"><text></text></field>
         <field name="partyId" title="Employee Id"><lookup target-form-name="LookupEmployeeName"/></field>
-        <field name="partyId" use-when="${groovy:((security.hasEntityPermission(&quot;MYPORTAL&quot;, &quot;_HREMPLVIEW&quot;, session)))}"><display default-value="${userLogin.partyId}"></display></field>
+        <field name="partyId" use-when="${groovy:((security.hasEntityPermission(&quot;MYPORTAL&quot;, &quot;_HREMPLVIEW&quot;, session)))}"><display size="200" default-value="${partyName}[${userLogin.partyId}]"></display></field>
         <!-- <field name="partyId" title="${uiLabelMap.PartyPartyId}" use-when="!hasEmplLeaveApprovePermission"><hidden/></field> -->
         <field name="leaveTypeId">
             <drop-down allow-empty="true">

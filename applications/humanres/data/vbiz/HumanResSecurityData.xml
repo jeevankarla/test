@@ -109,10 +109,17 @@ under the License.
       <SecurityGroup description="HumanRes Reports screen View group, has complete permission to View Reports screen." groupId="HR_REPORTSVIEW"/>
       <SecurityGroupPermission groupId="HR_REPORTSVIEW" permissionId="HR_REPORTS_VIEW"/> 
       
-    <!-- permission for LookUp Employees screen --> 
+    <!-- permission for  Employees Payroll screen --> 
       <SecurityPermission description="Allow view of  Payroll Screen in the HumanRes Manager." permissionId="HR_PAYROLL_VIEW"/>  
       <SecurityGroup description="HumanRes Payroll screen View group, has complete permission to View Payroll  screen." groupId="HR_PAYROLLVIEW"/>
-      <SecurityGroupPermission groupId="HR_PAYROLLVIEW" permissionId="HR_PAYROLL_VIEW"/>     
+      <SecurityGroupPermission groupId="HR_PAYROLLVIEW" permissionId="HR_PAYROLL_VIEW"/>   
+      
+      <!-- permission for Employees Suply Payroll screen --> 
+      <SecurityPermission description="Allow view of  Payroll Screen in the HumanRes Manager." permissionId="HR_SUPLYPAYROLL_VIEW"/>  
+      <SecurityGroup description="HumanRes Payroll screen View group, has complete permission to View Payroll  screen." groupId="HR_SUPLYPAYROLL_VIEW"/>
+      <SecurityGroupPermission groupId="HR_SUPLYPAYROLL_VIEW" permissionId="HR_SUPLYPAYROLL_VIEW"/>   
+      <SecurityGroupPermission groupId="FULLADMIN" permissionId="HR_SUPLYPAYROLL_VIEW"/>
+      <SecurityGroupPermission groupId="HUMANRES_ADMIN" permissionId="HR_SUPLYPAYROLL_VIEW"/>  
       
      <!-- permission for LookUp Employees screen --> 
       <SecurityPermission description="Allow view of  Employee Leave Screen in the HumanRes Manager." permissionId="HR_EMPLLEAVE_VIEW"/>  
@@ -204,5 +211,26 @@ under the License.
        <SecurityPermission groupId="HR_ATTENDANCEVIEW" description="View Daily Punch" permissionId="HR_DAILYPUNCHVIEW"/>
        <SecurityPermission groupId="HR_ATTENDANCEVIEW" description="View payroll attendance" permissionId="HR_PAYATTNDNCEVIEW"/>
        <SecurityPermission groupId="HR_ATTENDANCEVIEW" description="View leave encashment" permissionId="HR_LEAVEENCASHVIEW"/>
+       
+       <!-- view employee profile permissions -->
+       
+       <SecurityGroup description="Permissions for Employee profile deleting and updating" groupId="HR_PROFILE_ADMIN"/>
+       <SecurityGroupPermission groupId="FULLADMIN" permissionId="HR_PROFILE_ADMIN"/>
+       <SecurityGroupPermission groupId="HUMANRES_ADMIN" permissionId="HR_PROFILE_ADMIN"/>
+       <SecurityGroupPermission groupId="HR_PROFILE_ADMIN" permissionId="HR_PROFILE_ADMIN"/>
+       
+       <!-- view employee portal permissions -->
+       
+       <SecurityGroup description="Customer user of MYPORTAL, Limited access to Employee to view profile, attendance and leaves" groupId="HR_EMPLVIEW_ADMIN"/>
+        <SecurityGroupPermission groupId="HR_EMPLVIEW_ADMIN" permissionId="HUMANRES_VIEW"/>
+    	<SecurityGroupPermission groupId="HR_EMPLVIEW_ADMIN" permissionId="HUMANRES_EMPLOYEE"/>
+    	<SecurityGroupPermission groupId="HR_EMPLVIEW_ADMIN" permissionId="HR_EMPLLEAVE_VIEW"/>
+    	<SecurityGroupPermission groupId="HR_EMPLVIEW_ADMIN" permissionId="HR_ATTENDANCE_VIEW"/>
+    	<SecurityGroupPermission groupId="HR_EMPLVIEW_ADMIN" permissionId="HUMANRES_LEAVE_EDIT"/>
+    	<SecurityGroupPermission groupId="HR_EMPLVIEW_ADMIN" permissionId="MYPORTAL_EMPLOYEE"/>
+    	<SecurityGroupPermission groupId="HR_EMPLVIEW_ADMIN" permissionId="MYPORTALBASE_ADMIN"/>
+    	<SecurityGroupPermission groupId="HR_EMPLVIEW_ADMIN" permissionId="HR_EMPL_PROFILE_VIEW"/>
+    	<SecurityGroupPermission groupId="HR_EMPLVIEW_ADMIN" permissionId="HUMANRES_EMPLOYEE_VIEW"/>
+    	<SecurityGroupPermission groupId="HR_EMPLVIEW_ADMIN" permissionId="OFBTOOLS_VIEW"/>
       
 </entity-engine-xml>

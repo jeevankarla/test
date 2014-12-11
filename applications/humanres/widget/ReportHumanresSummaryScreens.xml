@@ -1807,13 +1807,14 @@
             <actions>
 			    <set field="tabButtonItem" value="HRReports"/>            
                 <set field="titleProperty" value="BenefitDeductionCalculator"/>
+                <set field="tabButtonItem" value="benefitOrDeduction"/>
                 <set field="tabButtonItem2" value="BenefitDeductionCalculator"/>  
             </actions>            
             <widgets>
 				<decorator-screen name="HumanresCommonDecorator"
 					location="component://humanres/widget/CommonScreens.xml">
 					<decorator-section name="body">
-						<include-menu location="component://humanres/widget/HumanresMenus.xml" name="HumanresReportsTabBar"/>                                                        
+						<include-menu location="component://humanres/widget/HumanresMenus.xml" name="BenDedTabBar"/>                                                        
 
                     	<section>
                     	  <widgets>

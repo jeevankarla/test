@@ -123,7 +123,8 @@
         <section>
             <actions>
                 <set field="titleProperty" value="HumanResListEmployments"/>
-                <set field="tabButtonItem" value="ListEmployment"/>
+                <set field="tabButtonItem" value="EmployeeProfile" />
+                <set field="tabButtonItem2" value="ListEmployment"/>
                 <set field="employmentCtx.partyIdTo" from-field="parameters.partyId"/>
                 <set field="partyId" from-field="parameters.partyId"/>
                 <service service-name="humanResManagerPermission" result-map="permResult">
@@ -135,6 +136,7 @@
                 <decorator-screen name="HumanresCommonDecorator"
 					location="component://humanres/widget/CommonScreens.xml">
                     <decorator-section name="body">
+                    <include-menu location="component://humanres/widget/HumanresMenus.xml" name="EmployeeProfileTabBar"/>
                    	<link target="javascript:newEmployment(${partyId});"  text="Create New Employment" style="buttontext" url-mode="plain"/>
                     	<section>
                     	    <condition>
@@ -166,8 +168,9 @@
 	            <set field="partyName" value="${groovy:org.ofbiz.party.party.PartyHelper.getPartyName(party, true)}"/>
                 <set field="titleProperty" value="ListPayHistories   ${parameters.partyIdTo} ${partyName}  "/>
                 <set field="headerItem" value="PayrollItems"/>
-                <set field="tabButtonItem" value="PayrollItems"/>
-                <set field="tabButtonItem2" value="ListPayHistories"/>
+                <set field="tabButtonItem" value="EmployeeProfile"/>
+                <set field="tabButtonItem2" value="PayrollItems"/>
+                <set field="tabButtonItem3" value="ListPayHistories"/>
                 <set field="roleTypeIdFrom" from-field="parameters.roleTypeIdFrom"/>
                 <set field="roleTypeIdTo" from-field="parameters.roleTypeIdTo"/>
                 <set field="partyIdTo" from-field="parameters.partyIdTo"/>
@@ -183,7 +186,7 @@
                 <set field="hasEmploymentViewPermission" from-field="permResult.hasPermission"/>                    
             </actions>
             <widgets>
-                <decorator-screen name="EmployeeDecorator" location="${parameters.mainDecoratorLocation}">
+               <decorator-screen name="HumanresCommonDecorator" location="component://humanres/widget/CommonScreens.xml">
                    <decorator-section name="body">
                     <include-menu location="component://humanres/widget/HumanresMenus.xml" name="EmployeeProfileTabBar"/>
                     <include-menu location="component://humanres/widget/HumanresMenus.xml" name="PayrollItemsTabBar"/>
@@ -246,7 +249,7 @@
                 <set field="hasEmploymentViewPermission" from-field="permResult.hasPermission"/>                    
             </actions>
             <widgets>
-                <decorator-screen name="EmployeeDecorator" location="${parameters.mainDecoratorLocation}">
+               <decorator-screen name="HumanresCommonDecorator" location="component://humanres/widget/CommonScreens.xml">
                    <decorator-section name="body">
                     <include-menu location="component://humanres/widget/HumanresMenus.xml" name="EmployeeProfileTabBar"/>
                     <include-menu location="component://humanres/widget/HumanresMenus.xml" name="PayrollItemsTabBar"/>
@@ -288,9 +291,10 @@
                 <set field="layoutSettings.styleSheets[+0]" value="/images/jquery/plugins/loading/jquery.loading.1.6.css" global="true"/>            
 				<set field="layoutSettings.javaScripts[]" value="/accounting/images/payrolFetcher.js" global="true"/>            
                 <set field="titleProperty" value="EditPartyBenefit ${parameters.partyIdTo} ${partyName}"/>
-                <set field="headerItem" value="PayrollItems"/>
-                <set field="tabButtonItem" value="PayrollItems"/>
-                <set field="tabButtonItem2" value="EditPartyBenefit"/>
+                
+                <set field="tabButtonItem" value="EmployeeProfile"/>
+                <set field="tabButtonItem2" value="PayrollItems"/>
+                <set field="tabButtonItem3" value="EditPartyBenefit"/>
                 <set field="roleTypeIdFrom" from-field="parameters.roleTypeIdFrom"/>
                 <set field="roleTypeIdTo" from-field="parameters.roleTypeIdTo"/>
                 <set field="partyIdTo" from-field="parameters.partyIdTo"/>
@@ -306,7 +310,7 @@
                 <set field="hasEmploymentViewPermission" from-field="permResult.hasPermission"/>                             
             </actions>
             <widgets>
-                <decorator-screen name="EmployeeDecorator" location="${parameters.mainDecoratorLocation}">
+                <decorator-screen name="HumanresCommonDecorator" location="component://humanres/widget/CommonScreens.xml">
                    <decorator-section name="body">
                     <include-menu location="component://humanres/widget/HumanresMenus.xml" name="EmployeeProfileTabBar"/>
                     <include-menu location="component://humanres/widget/HumanresMenus.xml" name="PayrollItemsTabBar"/>
@@ -355,9 +359,9 @@
                 <set field="layoutSettings.styleSheets[+0]" value="/images/jquery/plugins/loading/jquery.loading.1.6.css" global="true"/>                        
 				<set field="layoutSettings.javaScripts[]" value="/accounting/images/payrolFetcher.js" global="true"/>   
 				<set field="titleProperty" value="EditPartyDeduction ${parameters.partyIdTo} ${partyName}"/>
-                <set field="headerItem" value="PayrollItems"/>
-                <set field="tabButtonItem" value="PayrollItems"/>
-                <set field="tabButtonItem2" value="EditPartyDeduction"/>                     
+                <set field="tabButtonItem" value="EmployeeProfile"/>
+                <set field="tabButtonItem2" value="PayrollItems"/>
+                <set field="tabButtonItem3" value="EditPartyDeduction"/>                   
                 <set field="roleTypeIdFrom" from-field="parameters.roleTypeIdFrom"/>
                 <set field="roleTypeIdTo" from-field="parameters.roleTypeIdTo"/>
                 <set field="partyIdTo" from-field="parameters.partyIdTo"/>
@@ -377,7 +381,7 @@
                 <set field="hasEmploymentViewPermission" from-field="permResult.hasPermission"/>                                
             </actions>
             <widgets>
-                <decorator-screen name="EmployeeDecorator" location="${parameters.mainDecoratorLocation}">
+                <decorator-screen name="HumanresCommonDecorator" location="component://humanres/widget/CommonScreens.xml">
                    <decorator-section name="body">
                     <include-menu location="component://humanres/widget/HumanresMenus.xml" name="EmployeeProfileTabBar"/>
                     <include-menu location="component://humanres/widget/HumanresMenus.xml" name="PayrollItemsTabBar"/>
@@ -492,6 +496,7 @@
                 <set field="titleProperty" value="HumanResFindEmployment"/>
                 <set field="headerItem" value="benefitOrDeduction"/>
 				<set field="tabButtonItem" value="benefitOrDeduction" />
+				<set field="tabButtonItem2" value="benefitOrDeduction" />
 				<entity-condition list="allBenefitsTypeList" entity-name="BenefitType">
 					<condition-expr field-name="benefitTypeId" operator="not-equals" value="PAYROL_BEN_SALARY"/>
 					<order-by field-name="sequenceNum"/>
@@ -504,6 +509,7 @@
             <widgets>
 				<decorator-screen name="HumanresCommonDecorator" location="component://humanres/widget/CommonScreens.xml">
                     <decorator-section name="body">
+                    <include-menu location="component://humanres/widget/HumanresMenus.xml" name="BenDedTabBar"/>
                     	<section>
 		                    <widgets>                       
 		                        <decorator-screen name="FindScreenDecorator" location="component://common/widget/CommonScreens.xml">
@@ -553,14 +559,14 @@
         <section>
             <actions>
                 <set field="titleProperty" value="Credit Leaves"/>
-                <set field="headerItem" value="Attendance"/>
-                <set field="tabButtonItem2" value="creditLeaves" /> 
-				<set field="tabButtonItem" value="Attendance" />
+				<set field="headerItem" value="Leave"/>
+                <set field="tabButtonItem" value="EmployeeLeave"/>
+                 <set field="tabButtonItem2" value="creditLeaves" />
             </actions>
             <widgets>
 				<decorator-screen name="HumanresCommonDecorator" location="component://humanres/widget/CommonScreens.xml">
                     <decorator-section name="body">
-                    	<include-menu location="component://humanres/widget/HumanresMenus.xml" name="AttendanceTabBar"/> 
+                    	<include-menu location="component://humanres/widget/HumanresMenus.xml" name="EmplLeaveTabBar"/> 
                    		<screenlet name="search-options" title="search-options">      
                            <include-form name="creditLeaves" location="component://humanres/widget/forms/EmploymentForms.xml"/>
                         </screenlet>

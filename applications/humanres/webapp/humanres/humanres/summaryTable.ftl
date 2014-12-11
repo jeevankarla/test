@@ -63,10 +63,10 @@ $(document).ready(function() {
 		    $('td:eq(0)', nRow).html('<a href="EmployeeProfile?partyId=' + aData[1] + '">' +
                 aData[0] + '</a>');
             </#if> 
-            if(aData[1]==${userLogin.partyId}){
-            	$('td:eq(0)', nRow).html('<a href="/humanres/control/EmployeeProfile?partyId=' + aData[1] + '">' +
-                aData[0] + '</a>');
-            }   
+            //if(aData[1]==${userLogin.partyId}){
+            	//$('td:eq(0)', nRow).html('<a href="/humanres/control/EmployeeProfile?partyId=' + aData[1] + '">' +
+                //aData[0] + '</a>');
+            //}   
             return nRow;
 			//$(nRow).click(function () {
         		//document.location.href = "viewprofile?partyId=" + aData[1];

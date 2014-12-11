@@ -25,11 +25,14 @@
     <menu name="HumanresNGTabBar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml"
           default-menu-item-name="HumanresProfile">      
         <menu-item name="main" title="Lookup Employees">
-        	<condition>
+        	<!-- <condition>
             	<if-has-permission permission="HR"  action="_EMPL_PROFILE_VIEW"/>
-            </condition> 
+            </condition> --> 
             <link target="main">
             </link>
+        </menu-item>
+        <menu-item name="EmployeeProfile" title="Profile">
+            <link target="EmployeeProfile"><parameter param-name="partyId" from-field="userLogin.partyId"/>  </link>
         </menu-item>
         <menu-item name="FindEmployments" title="Employments"> 
         	<condition>
@@ -37,25 +40,31 @@
             </condition>  
         	<link target="FindEmployments"/>
         </menu-item>
-        <menu-item name="FindEmplPositions" title="Employee Positions">    
+        <menu-item name="Masters" title="Masters">
         	<condition>
-            	<if-has-permission permission="HR"  action="_EMPLPOSITION_VIEW"/>
-            </condition>   
-        	<link target="FindEmplPositions"/>
-        </menu-item> 
-        <menu-item name="HRReports" title="${uiLabelMap.AccountingReports}">
+             <and>
+                <if-has-permission permission="HRMASTERS_TAB"  action="_VIEW"/>
+	          </and> 
+	        </condition>
+           	<link target="findMasters"/>
+        </menu-item>
+       <!--  <menu-item name="HRReports" title="${uiLabelMap.AccountingReports}">
         	 <condition>
             	<if-has-permission permission="HR"  action="_REPORTS_VIEW"/>
             </condition>  
         	<link target="HRReports"><parameter param-name="organizationPartyId"/>  </link>
-        </menu-item>        
-		<menu-item name="FindPayrollBilling" title="Payroll">
-			<condition>
-            	<if-has-permission permission="HR"  action="_PAYROLL_VIEW"/>
-            </condition>
-			<link target="FindPayrollBilling"/>
-		</menu-item>      
-        <menu-item name="EmployeeLeave" title="${uiLabelMap.HumanResEmployeeLeave}">
+        </menu-item> --> 
+        <menu-item name="Attendance" title="Attendance">
+        	<condition>
+        	   <or>
+        	   		<if-has-permission permission="HR"  action="_EMPL_PROFILE_VIEW"/>
+	              	<if-has-permission permission="HR"  action="_ATTENDANCE_VIEW"/>
+	              	<if-has-permission permission="EMP"  action="_PUNCH_EDIT_UPDATE"/>
+            	</or>
+            </condition> 
+            <link target="EmployeeAttendance"/>
+        </menu-item>       
+        <menu-item name="EmployeeLeave" title="Leaves">
         	<condition>
         	  	<or>
         	  		<if-has-permission permission="HR"  action="_EMPL_PROFILE_VIEW"/>
@@ -65,13 +74,46 @@
             </condition>
             <link target="FindEmplLeaves"/>
         </menu-item>
+        <menu-item name="benefitOrDeduction" title="Benefits/Deductions">
+        	<condition>
+            	<if-has-permission permission="HR"  action="_BENFDED_VIEW"/>
+            </condition> 
+            <link target="benefitOrDeduction"/>
+        </menu-item>
+        <menu-item name="loan" title="Loans">
+        <condition>
+             <or>
+                <if-has-permission permission="LOAN_TAB"  action="_VIEW"/>
+                <if-has-permission permission="LOAN_RECOVERY_TAB"  action="_VIEW"/>
+          </or> 
+        </condition> 
+        	<link target="loan"/>
+        </menu-item>
+         <menu-item name="WaterElectricityCharges" title="Water&amp;Electricity Charges">
+         	 <condition>
+            	<if-has-permission permission="WATER_ELECTR"  action="_VIEW"/>
+            </condition>
+           	<link target="waterElectricityCharges"/>
+        </menu-item>
+        <menu-item name="FindPayrollBilling" title="Payroll">
+			<condition>
+            	<if-has-permission permission="HR"  action="_PAYROLL_VIEW"/>
+            </condition>
+			<link target="FindPayrollBilling"/>
+		</menu-item> 
+		<menu-item name="EmplSupPayroll" title="SuplyPayroll">
+			<condition>
+            	<if-has-permission permission="HR"  action="_SUPLYPAYROLL_VIEW"/>
+            </condition>
+            <link target="EmplSupPayroll"/>
+        </menu-item>
         <menu-item name="analytics" title="Analytics">
         	<condition>
             	<if-has-permission permission="HR"  action="_ANALYTICS_VIEW"/>
             </condition>
             <link target="analytics"/>
         </menu-item> 
-        <menu-item name="newReports" title="New Reports">
+        <menu-item name="newReports" title="Reports">
              <condition >
              	<or>
              	<if-has-permission permission="HR"  action="_LEAVE_REPORTS_VIEW"></if-has-permission>
@@ -79,58 +121,6 @@
             	</or>
             </condition>
         		<link target="LeaveReports"/>
-        </menu-item>	   
-        <menu-item name="benefitOrDeduction" title="Benefits/Deductions">
-        	<condition>
-            	<if-has-permission permission="HR"  action="_BENFDED_VIEW"/>
-            </condition> 
-            <link target="benefitOrDeduction"/>
-        </menu-item>
-        <menu-item name="Attendance" title="Attendance">
-        	<condition>
-        	   <or>
-        	   		<if-has-permission permission="HR"  action="_EMPL_PROFILE_VIEW"/>
-	              	<if-has-permission permission="HR"  action="_ATTENDANCE_VIEW"/>
-	              	<if-has-permission permission="EMP"  action="_PUNCH_EDIT_UPDATE"/>
-            	</or>
-            </condition> 
-            <link target="DailyPunch"/>
-        </menu-item>     
-        <menu-item name="busTimings" title="Daily Bus Timings">
-           <condition>
-            	<if-has-permission permission="HR"  action="_DAILYBUS_VIEW"/>
-            </condition> 
-        	<link target="busTimings"/>
-        </menu-item>
-        <menu-item name="loan" title="Loan">
-        <condition>
-             <and>
-                <if-has-permission permission="LOAN_TAB"  action="_VIEW"/>
-          </and> 
-        </condition> 
-        	<link target="loan"/>
-        </menu-item>
-        <menu-item name="loanRecovery" title="Loan Recovery">
-        <condition>
-             <and>
-                <if-has-permission permission="LOAN_RECOVERY_TAB"  action="_VIEW"/>
-          </and> 
-        </condition> 
-        	<link target="loanRecovery"/>
-        </menu-item> 
-         <menu-item name="WaterElectricityCharges" title="Water&amp;Electricity Charges">
-         	 <condition>
-            	<if-has-permission permission="WATER_ELECTR"  action="_VIEW"/>
-            </condition>
-           	<link target="waterElectricityCharges"/>
-        </menu-item>
-        <menu-item name="Masters" title="Masters">
-        	<condition>
-             <and>
-                <if-has-permission permission="HRMASTERS_TAB"  action="_VIEW"/>
-	          </and> 
-	        </condition>
-           	<link target="findMasters"/>
         </menu-item>
 	</menu>
 	
@@ -142,6 +132,9 @@
             </condition> 
             <link target="main">
             </link>
+        </menu-item>
+        <menu-item name="EmployeeProfile" title="Profile">
+            <link target="EmployeeProfile"><parameter param-name="partyId" from-field="userLogin.partyId"/>  </link>
         </menu-item>
         <menu-item name="EmployeeLeave" title="${uiLabelMap.HumanResEmployeeLeave}">
         	<condition>
@@ -168,6 +161,13 @@
 	
 	<menu name="AttendanceTabBar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml" 
 		selected-menuitem-context-field-name="tabButtonItem2">
+		
+		<menu-item name="EmployeeAttendance" title="Employee Attendance Details">
+            <condition>
+	              <if-has-permission permission="HR"  action="_ATTENDANCE_VIEW"/>
+            </condition>   
+        	<link target="EmployeeAttendance"/>
+        </menu-item>
         <menu-item name="DailyPunch" title="Daily Punch Details">
         	<condition>
                    <and>
@@ -185,13 +185,6 @@
             </condition> 
         	<link target="DailyPunchEditTable"/>
         </menu-item>
-           
-        <menu-item name="EmployeeAttendance" title="Employee Attendance Details">
-            <condition>
-	              <if-has-permission permission="HR"  action="_ATTENDANCE_VIEW"/>
-            </condition>   
-        	<link target="EmployeeAttendance"/>
-        </menu-item>  
         <menu-item name="ArrearDays" title="Arrear Days">
             <condition>
                    <and>
@@ -252,14 +245,13 @@
             </condition>
 			<link target="EditShiftDays"></link>        
         </menu-item> 
-        <menu-item name="creditLeaves" title="Credit Leaves">
-        <condition>
-             <and>
-                <if-has-permission permission="CREDIT_LEAVES_TAB"  action="_VIEW"/>
-          </and> 
-        </condition> 
-			<link target="CreditLeaves"></link>        
-        </menu-item>                         
+        
+        <menu-item name="busTimings" title="Daily Bus Timings">
+           <condition>
+            	<if-has-permission permission="HR"  action="_DAILYBUS_VIEW"/>
+            </condition> 
+        	<link target="busTimings"/>
+        </menu-item>
     </menu>	 	
 	<menu name="AnalyticsTabBar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml" 
 		selected-menuitem-context-field-name="tabButtonItem2">
@@ -269,6 +261,39 @@
         <menu-item name="salaryAnalysisChart" title="Salary Analysis"> 
         	<link target="salaryAnalysisChart"/>
         </menu-item>               
+    </menu>
+    
+    <menu name="BenDedTabBar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml" 
+		selected-menuitem-context-field-name="tabButtonItem2">
+		<menu-item name="benefitOrDeduction" title="Benefits/Deductions">
+        	<condition>
+            	<if-has-permission permission="HR"  action="_BENFDED_VIEW"/>
+            </condition> 
+            <link target="benefitOrDeduction"/>
+        </menu-item>
+		<menu-item name="BenefitDeductionCalculator" title="Benefit Deduction Calculator">
+			<link target="BenefitDeductionCalculator"/>
+		</menu-item>
+    </menu>
+    
+    <menu name="LoanTabBar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml" 
+		selected-menuitem-context-field-name="tabButtonItem2">
+		<menu-item name="loan" title="Loan">
+        <condition>
+             <and>
+                <if-has-permission permission="LOAN_TAB"  action="_VIEW"/>
+          </and> 
+        </condition> 
+        	<link target="loan"/>
+        </menu-item>
+        <menu-item name="loanRecovery" title="Loan Recovery">
+        <condition>
+             <and>
+                <if-has-permission permission="LOAN_RECOVERY_TAB"  action="_VIEW"/>
+          </and> 
+        </condition> 
+        	<link target="loanRecovery"/>
+        </menu-item>
     </menu>	     
 
 	<menu name="Day"  extends="Calendar">
@@ -577,7 +602,12 @@
         </menu-item>
         <menu-item name="PayGrade" title="${uiLabelMap.HumanResPayGrade}">
             <link target="FindPayGrades"/>
-
+        </menu-item>
+        <menu-item name="FindEmplPositions" title="Employee Positions">    
+        	<condition>
+            	<if-has-permission permission="HR"  action="_EMPLPOSITION_VIEW"/>
+            </condition>   
+        	<link target="FindEmplPositions"/>
         </menu-item>
 <menu-item name="FindBenefits" title="${uiLabelMap.PartyBenefits}">
             <link target="FindBenefits"/>
@@ -592,10 +622,10 @@
             <link target="EditTrainingTypes"/>
         </menu-item>-->
     </menu>
-
+    
     <menu name="EmployeeProfileTabBar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml"
-          default-menu-item-name="EditEmployeeSkills">
-        <menu-item name="EmployeeProfile" title="${uiLabelMap.PartyProfile}">
+          default-menu-item-name="EmployeeProfile" selected-menuitem-context-field-name="tabButtonItem2">
+        <menu-item name="EmployeeProfile" title="OverView">
             <link target="EmployeeProfile">
                 <parameter param-name="partyId"/>
                 <parameter param-name="roleTypeIdFrom"/>
@@ -726,10 +756,15 @@
                 <parameter param-name="partyIdTo" from-field="parameters.partyId"/>
         	</link>
         </menu-item>
+        <menu-item name="paySlip" title="Pay Slip">
+        	<link target="paySlip">
+        		<parameter param-name="partyId" from-field="userLogin.partyId"/>
+        	</link>
+        </menu-item>
     </menu>
 	
 	<menu name="PayrollItemsTabBar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml" 
-		selected-menuitem-context-field-name="tabButtonItem2">
+		selected-menuitem-context-field-name="tabButtonItem3">
         <menu-item name="ListPayHistories" title="Pay History"> 
         	<link target="ListPayHistories">
         	<parameter param-name="roleTypeIdFrom"/>
@@ -904,6 +939,14 @@
             </condition>
             <link target="FindLeaveApprovals"/>
         </menu-item>
+         <menu-item name="creditLeaves" title="Credit Leaves">
+        <condition>
+             <and>
+                <if-has-permission permission="CREDIT_LEAVES_TAB"  action="_VIEW"/>
+          </and> 
+        </condition> 
+			<link target="CreditLeaves"></link>        
+        </menu-item> 
     </menu>
     
     <menu name="EmplPayrollTabBar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml"
@@ -914,9 +957,6 @@
         </menu-item>
         <menu-item name="EmployeeWisePaySheet" title="Employee Wise Pay Sheet">
             <link target="EmployeeWisePaySheet"/>
-        </menu-item>
-         <menu-item name="EmplSupPayroll" title="Suply Payroll">
-            <link target="EmplSupPayroll"/>
         </menu-item>
        <menu-item name="EditRateAmoutVariables" title="Edit RateAmount Variables">
        		<condition>

@@ -138,9 +138,11 @@ $("#fromDate").glDatePicker(
 	  <form name="attendance">
 		<table class="basic-table" cellspacing="0">
         	<tr>
-        		<td align="right" width="10%"><span class='h3'>Employee: </span></td>
+        		<td align="right" width="10%"><span class='h2'>Employee: </span></td>
         		<#if security.hasEntityPermission("MYPORTAL", "_HREMPLVIEW", session)>
-                	<td width="20%"><input type="display" name="employeeId" id="employeeId" value="${userLogin.partyId?if_exists}" readonly/></td> 
+        			<#assign partyName= Static["org.ofbiz.party.party.PartyHelper"].getPartyName(delegator, userLogin.partyId, false)?if_exists/>
+                	<td width="20%" class = "h3"><input type="hidden" name="employeeId" id="employeeId" value="${userLogin.partyId?if_exists}"/>
+                	${partyName}[${userLogin.partyId?if_exists}]</td> 
                 <#else>
                 	<td width="20%"><select id="employeeId" name="employeeId" class="flexselect"></select></td> 
                 </#if>        	

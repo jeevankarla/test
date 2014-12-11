@@ -77,8 +77,9 @@
         <section>
             <actions>
                 <set field="titleProperty" value="HumanResFindEmplPosition"/>
-                <set field="headerItem" value="EmplPosition"/>
-                <set field="tabButtonItem" value="FindEmplPositions"/>
+                <set field="headerItem" value="ListEmplPositions"/>
+                <set field="tabButtonItem" value="EmployeeProfile" />
+                <set field="tabButtonItem2" value="ListEmplPositions"/>
                 <service service-name="humanResManagerPermission" result-map="permResult">
                     <field-map field-name="mainAction" value="EMPLOYEEPOS_VIEW"/>
                 </service>
@@ -88,6 +89,7 @@
                <decorator-screen name="HumanresCommonDecorator"
 					location="component://humanres/widget/CommonScreens.xml">
 					<decorator-section name="body">
+					 <include-menu location="component://humanres/widget/HumanresMenus.xml" name="EmployeeProfileTabBar"/>
                     	<section>
                     	    <condition>
                             	<if-compare field="hasEmployeePosViewPermission" operator="equals" value="true" type="Boolean"/>

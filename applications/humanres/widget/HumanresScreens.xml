@@ -230,7 +230,8 @@
 	 	<section>
 			<actions>
 				<set field="headerItem" value="busTimings" />
-				<set field="tabButtonItem" value="busTimings" />
+				<set field="tabButtonItem" value="Attendance" />
+				<set field="tabButtonItem2" value="busTimings" />
 				<set field="titleProperty" value="Daily Bus Timings" />
 				<set field="layoutSettings.javaScripts[]" value="/partymgr/static/inTime.js" global="true"/>
 			</actions>
@@ -238,6 +239,7 @@
 				<decorator-screen name="HumanresCommonDecorator"
 					location="component://humanres/widget/CommonScreens.xml">
 					<decorator-section name="body">
+					<include-menu location="component://humanres/widget/HumanresMenus.xml" name="AttendanceTabBar"/>
 						<container>
 							<screenlet title="Daily Bus Timings">
 								<include-form location="component://humanres/widget/ReportHumanresSummaryForms.xml" name="DailyBusTimings"/>
@@ -547,7 +549,7 @@
         <section>
             <actions>
                 <set field="titleProperty" value="Payroll"/>
-                <set field="tabButtonItem" value="FindPayrollBilling"/> 
+                <set field="tabButtonItem" value="EmplSupPayroll"/> 
  				<set field="tabButtonItem2" value="EmplSupPayroll" />                  
                 <entity-and list="orgList" entity-name="PartyRoleAndPartyDetail">
                      <field-map field-name="roleTypeId" value="INTERNAL_ORGANIZATIO"/>
@@ -574,7 +576,7 @@
 				<decorator-screen name="HumanresCommonDecorator"
 					location="component://humanres/widget/CommonScreens.xml">
 					<decorator-section name="body">
-					    <include-menu location="component://humanres/widget/HumanresMenus.xml" name="EmplPayrollTabBar"/>                                                        					   					
+					    <!-- <include-menu location="component://humanres/widget/HumanresMenus.xml" name="EmplPayrollTabBar"/>  -->                                                       					   					
                     	<section>
                     	  <widgets>
                     	     <container style="button-bar">
@@ -741,12 +743,14 @@
 				<set field="headerItem" value="loan" />
 				<set field="tabButtonItem" value="loan" />
 				<set field="titleProperty" value="Loan" />
+				<set field="tabButtonItem2" value="loan" />
 				<script location="component://humanres/webapp/humanres/WEB-INF/actions/reports/employeeLoanList.groovy"/>
 			</actions>
 			<widgets>
 				<decorator-screen name="HumanresCommonDecorator"
 					location="component://humanres/widget/CommonScreens.xml">
 					<decorator-section name="body">
+					 <include-menu location="component://humanres/widget/HumanresMenus.xml" name="LoanTabBar"/>
 						<container>
 							<container style="button-bar">
                         		<link target="NewLoan" text="New Loan" style="buttontext"></link>
@@ -769,12 +773,14 @@
 				<set field="headerItem" value="loan" />
 				<set field="tabButtonItem" value="loan" />
 				<set field="titleProperty" value="Loan" />
+				<set field="tabButtonItem2" value="loan" />
 				<set field="layoutSettings.javaScripts[]" value="/humanres/images/loanTypesAmountChange.js" global="true"/>
 			</actions>
 			<widgets>
 				<decorator-screen name="HumanresCommonDecorator"
 					location="component://humanres/widget/CommonScreens.xml">
 					<decorator-section name="body">
+					<include-menu location="component://humanres/widget/HumanresMenus.xml" name="LoanTabBar"/>
 						<container>
 							<screenlet title="New Loan">
 								<include-form location="component://humanres/widget/ReportHumanresSummaryForms.xml" name="CreateLoan"/>
@@ -789,13 +795,15 @@
 	 	<section>
 			<actions>
 				<set field="headerItem" value="loanRecovery" />
-				<set field="tabButtonItem" value="loanRecovery" />
+				<set field="tabButtonItem" value="loan" />
+				<set field="tabButtonItem2" value="loanRecovery" />
 				<set field="titleProperty" value="Loan Recovery" />
 			</actions>
 			<widgets>
 				<decorator-screen name="HumanresCommonDecorator"
 					location="component://humanres/widget/CommonScreens.xml">
 					<decorator-section name="body">
+					<include-menu location="component://humanres/widget/HumanresMenus.xml" name="LoanTabBar"/>
 						<container>
 							<container style="button-bar">
                         		<link target="NewLoanRecovery" text="New Loan Recovery" style="buttontext"></link>
@@ -816,13 +824,15 @@
 	 	<section>
 			<actions>
 				<set field="headerItem" value="loanRecovery" />
-				<set field="tabButtonItem" value="loanRecovery" />
+				<set field="tabButtonItem" value="loan" />
+				<set field="tabButtonItem2" value="loanRecovery" />
 				<set field="titleProperty" value="Loan Recovery" />
 			</actions>
 			<widgets>
 				<decorator-screen name="HumanresCommonDecorator"
 					location="component://humanres/widget/CommonScreens.xml">
 					<decorator-section name="body">
+					<include-menu location="component://humanres/widget/HumanresMenus.xml" name="LoanTabBar"/>
 						<container>
 							<screenlet title="New Loan Recovery">
 								<include-form location="component://humanres/widget/ReportHumanresSummaryForms.xml" name="CreateLoanRecovery"/>
