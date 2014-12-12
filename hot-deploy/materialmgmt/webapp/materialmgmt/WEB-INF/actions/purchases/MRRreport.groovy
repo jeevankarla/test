@@ -35,7 +35,6 @@ receiptId = parameters.receiptId;
 ordId = parameters.orderId;
 dateReceived = parameters.datetimeReceived;
 
-Debug.log("dateReceived========"+dateReceived);
 
 shipmentMap=[:];
 shipmentList=[];
@@ -56,6 +55,7 @@ conditionlist.add(EntityCondition.makeCondition("roleTypeId", EntityOperator.EQU
 condition=EntityCondition.makeCondition(conditionlist,EntityOperator.AND);
 deptDetails = delegator.findList("OrderRole", condition , null, null, null, false );
 partyId=deptDetails.partyId;
+
 //get deptName
 if(UtilValidate.isNotEmpty(partyId)){
 	deptName =  PartyHelper.getPartyName(delegator, partyId, false);
@@ -128,11 +128,8 @@ if(UtilValidate.isNotEmpty(shipmentId)){
 /*total=0;
 grnList.each{grnlist->
 	
-	Debug.log("grnList======"+grnList);
 	totalAmt=grnlist.amount;
-	Debug.log("totalAmt========"+totalAmt);
 	total=total+totalAmt;
-	Debug.log("total==========="+total);
 }
 shipmentMap["total"]=total;
 */
