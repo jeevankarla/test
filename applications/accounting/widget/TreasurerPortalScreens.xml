@@ -2969,7 +2969,16 @@
 	                <order-by field-name="description"/>
 	            </entity-condition>
                 <set field="hasFinEditPermission" from-field="permResult.hasPermission"/>
-            </actions>
+                <set field="organizationPartyId" value="Company"></set>
+                <entity-condition list="customtimeperiodlist" entity-name="CustomTimePeriod"  filter-by-date="false">
+                <condition-list>
+                <condition-expr field-name="periodTypeId" operator="like" value="FISCAL_%"/>
+                  <condition-expr field-name="organizationPartyId" operator="equals" value="Company"/>
+                    </condition-list>
+                    <order-by field-name="-thruDate"/>
+                     <order-by field-name="periodNum"/>
+               </entity-condition>
+              </actions>
             <widgets>
                  <decorator-screen name="CommonTreasurerPortalDecorator" location="component://accounting/widget/CommonScreens.xml"> 
                     <decorator-section name="body">
