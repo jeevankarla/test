@@ -746,8 +746,7 @@
 					<order-by field-name="sequenceNum"/>					
 				</entity-condition>
     		 	<entity-condition entity-name="InsuranceType" list="finalInsuranceTypeList" use-cache="true">
-                </entity-condition> 
-                <script location="component://humanres/webapp/humanres/WEB-INF/actions/humanres/getUserRelatedReports.groovy"/> 
+                </entity-condition>  	
 	    		<script location="component://humanres/webapp/humanres/WEB-INF/actions/humanres/reports.groovy"/>
 	    		<set field="reportFrequencyFlag" value="MastersReports"/>
     		</actions>
@@ -801,7 +800,7 @@
                 	<order-by field-name="thruDate"/>
                     <order-by field-name="periodNum"/>
                 </entity-condition> 
-                <script location="component://humanres/webapp/humanres/WEB-INF/actions/humanres/getUserRelatedReports.groovy"/>
+                
 	    		<script location="component://humanres/webapp/humanres/WEB-INF/actions/humanres/reports.groovy"/>
 	    		<set field="reportFrequencyFlag" value="LeaveReports"/>
     		</actions>
@@ -844,8 +843,7 @@
 					<order-by field-name="sequenceNum"/>					
 				</entity-condition>
     		 	<entity-condition entity-name="InsuranceType" list="finalInsuranceTypeList" use-cache="true">
-                </entity-condition> 
-                <script location="component://humanres/webapp/humanres/WEB-INF/actions/humanres/getUserRelatedReports.groovy"/> 	
+                </entity-condition>  	
 	    		<script location="component://humanres/webapp/humanres/WEB-INF/actions/humanres/reports.groovy"/>
     			<set field="reportFrequencyFlag" value="AttendanceReports"/>
     		</actions>
@@ -892,8 +890,7 @@
 					<order-by field-name="sequenceNum"/>					
 				</entity-condition>
     		 	<entity-condition entity-name="InsuranceType" list="finalInsuranceTypeList" use-cache="true">
-                </entity-condition> 
-                <script location="component://humanres/webapp/humanres/WEB-INF/actions/humanres/getUserRelatedReports.groovy"/> 
+                </entity-condition>  
 	    		<script location="component://humanres/webapp/humanres/WEB-INF/actions/humanres/reports.groovy"/>
     			<set field="reportFrequencyFlag" value="PayrollReports"/>
     		</actions>
@@ -936,8 +933,7 @@
 					<order-by field-name="sequenceNum"/>					
 				</entity-condition>
     		 	<entity-condition entity-name="InsuranceType" list="finalInsuranceTypeList" use-cache="true">
-                </entity-condition>  
-                <script location="component://humanres/webapp/humanres/WEB-INF/actions/humanres/getUserRelatedReports.groovy"/>	
+                </entity-condition>  	
 	    		<script location="component://humanres/webapp/humanres/WEB-INF/actions/humanres/reports.groovy"/>
     			<set field="reportFrequencyFlag" value="StatutoryReports"/>
     		</actions>
@@ -990,7 +986,7 @@
                 	<order-by field-name="thruDate"/>
                     <order-by field-name="periodNum"/>
                 </entity-condition> 
-                <script location="component://humanres/webapp/humanres/WEB-INF/actions/humanres/getUserRelatedReports.groovy"/>
+                
 	    		<script location="component://humanres/webapp/humanres/WEB-INF/actions/humanres/reports.groovy"/>
 	    		<set field="reportFrequencyFlag" value="SupplyPayrollReports"/>
     		</actions>
@@ -1022,7 +1018,6 @@
 				<set field="tabButtonItem2" value="LoanReports" />   	
 	    		<set field="screenFlag" value="newReports"/>
 	    		<set field="reportFrequencyFlag" value="LoanReports"/>
-	    		<script location="component://humanres/webapp/humanres/WEB-INF/actions/humanres/getUserRelatedReports.groovy"/>
 	    		<script location="component://humanres/webapp/humanres/WEB-INF/actions/humanres/reports.groovy"/>    		
 	    		<entity-condition list="customTimePeriodList" entity-name="CustomTimePeriod" use-cache="true" filter-by-date="false" >
                 	<condition-expr field-name="periodTypeId" operator="equals" value="HR_MONTH"/>

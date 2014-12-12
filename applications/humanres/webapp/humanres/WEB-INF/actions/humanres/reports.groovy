@@ -8,8 +8,6 @@ import org.ofbiz.party.party.PartyHelper;
 import in.vasista.vbiz.humanres.PayrollService;
 
 dctx = dispatcher.getDispatchContext();
-tenantId = delegator.getDelegatorTenantId();
-context.put("tenantId",tenantId);
 orgList=[];
 def populateChildren(org, employeeList) {
 	internalOrgs = EntityUtil.filterByDate(delegator.findByAnd("PartyRelationshipAndDetail", [partyIdFrom : org.partyId, partyRelationshipTypeId : "GROUP_ROLLUP"],["partyIdFrom","groupName"]));
