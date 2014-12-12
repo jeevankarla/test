@@ -503,9 +503,16 @@
         <security https="true" auth="true"/>                        
         <response name="success" type="view" value="StoreReport"/>        
     </request-map>
+     <request-map uri="storeStockDetails.pdf">
+        <security https="true" auth="true"/>
+    	<response name="success" type="view" value="storeStockDetailsPDF"/>
+    </request-map>
+     <request-map uri="MRRregister.pdf">
+        <security https="true" auth="true"/>
+    	<response name="success" type="view" value="MRRregisterPDF"/>
+    </request-map>
     
     
-     <view-map name="MRRreportPDF" type="screenfop" page="component://materialmgmt/widget/materialmgmtReportScreens.xml#MRRreportPDF" content-type="application/pdf"/>
     <view-map name="main" type="screen" page="component://materialmgmt/widget/materialmgmtScreens.xml#main"/>
     <view-map name="mainNg" type="screen" page="component://materialmgmt/widget/materialmgmtScreens.xml#mainNG"/>
      <!-- purchaseOrder views -->  
@@ -531,7 +538,9 @@
     <view-map name="StoreIssueReport" type="screenfop" page="component://materialmgmt/widget/materialmgmtReportScreens.xml#StoreIssueReport" content-type="application/pdf" encoding="none"/>
     <view-map name="StoreIssueAbstractReport" type="screenfop" page="component://materialmgmt/widget/materialmgmtReportScreens.xml#StoreIssueAbstractReport" content-type="application/pdf" encoding="none"/>
     <view-map name="StoreReport" type="screenfop" page="component://materialmgmt/widget/materialmgmtReportScreens.xml#StoreReport" content-type="application/pdf" encoding="none"/>
-    
+    <view-map name="MRRreportPDF" type="screenfop" page="component://materialmgmt/widget/materialmgmtReportScreens.xml#MRRreportPDF" content-type="application/pdf"/>
+    <view-map name="storeStockDetailsPDF" type="screenfop" page="component://materialmgmt/widget/materialmgmtReportScreens.xml#storeStockDetailsPDF" content-type="application/pdf"/>
+    <view-map name="MRRregisterPDF" type="screenfop" page="component://materialmgmt/widget/materialmgmtReportScreens.xml#MRRregisterPDF" content-type="application/pdf"/>
     <!-- custRequest views -->
     <view-map name="FindMaterialRequest" type="screen" page="component://materialmgmt/widget/MaterialRequestScreens.xml#FindMaterialRequest"/>
     <view-map name="ViewMaterialRequest" type="screen" page="component://materialmgmt/widget/MaterialRequestScreens.xml#ViewMaterialRequest"/>

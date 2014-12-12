@@ -93,7 +93,10 @@ function makeDatePicker1(fromDateId ,thruDateId){
 
 	    
 		makeDatePicker("fromDate","thruDate");
+		makeDatePicker("fromDateMr","thruDateMr");
+		makeDatePicker("fromDateStock","thruDateStock");
 		
+		Stock
 		
 		$('#ui-datepicker-div').css('clip', 'auto');		
 	});
@@ -188,6 +191,43 @@ function makeDatePicker1(fromDateId ,thruDateId){
 				 </table>
 			 </form>
 		  </tr>
+		 
+		 <tr class="alternate-row"> 
+				<form id="storeStockDetails" name="storeStockDetails" mothed="post" action="<@ofbizUrl>storeStockDetails.pdf</@ofbizUrl>" target="_blank">
+					<table class="basic-table" cellspacing="5">
+						<tr class="alternate-row">
+							<td width="20%"><span class='h3'>storeStockDetails</span></td>
+							<td width="50%">
+							     <span class='h3'>
+									From <input  type="text" size="18pt" id="fromDateStock"   name="fromDateStock"/>
+									To   <input  type="text" size="18pt" id="thruDateStock"   name="thruDateStock"/>
+								 </span>
+							</td>
+						    <td width="25%"><span class='h3'><input type="submit" value="Download" class="buttontext"></span></td>
+						</tr>
+					 </table>
+				</form>
+			</tr>
+			<tr class="alternate-row"> 
+				<form id="MRRregister" name="MRRregister" mothed="post" action="<@ofbizUrl>MRRregister.pdf</@ofbizUrl>" target="_blank">
+				   <table class="basic-table" cellspacing="5">
+					  <tr class="alternate-row">
+					     <td width="20%"><span class='h3'>MRRregister</span></td>
+						 <td width="50%">
+						 <span class='h3'>
+						    From <input  type="text" size="18pt" id="fromDateMr"   name="fromDateMr"/>
+							To   <input  type="text" size="18pt" id="thruDateMr"   name="thruDateMr"/>
+						 </span>
+						 </td>
+						 <td width="25%"><span class='h3'><input type="submit" value="Download" class="buttontext"></span></td>
+		 		    </tr>
+				 </table>
+			 </form>
+		  </tr>
+		   
+		  
+		  
+		  
 	  </table>
     </div>
   </div>
