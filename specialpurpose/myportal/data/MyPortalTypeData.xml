@@ -112,11 +112,11 @@
 
 <!--    <PortalPagePortlet portalPageId="MYPORTAL_EMPLOYEE" portalPortletId="SystemInfoNotes" portletSeqId="00001" columnSeqId="00001" sequenceNum="0"/>-->
 <!--    <PortalPagePortlet portalPageId="MYPORTAL_EMPLOYEE" portalPortletId="SystemInfoStatus" portletSeqId="00001" columnSeqId="00001" sequenceNum="1"/>-->
-    <PortalPagePortlet portalPageId="MYPORTAL_EMPLOYEE" portalPortletId="ArPastDueInvoices" portletSeqId="00001"  columnSeqId="00001" sequenceNum="0"/>
+<!--     <PortalPagePortlet portalPageId="MYPORTAL_EMPLOYEE" portalPortletId="ArPastDueInvoices" portletSeqId="00001"  columnSeqId="00001" sequenceNum="0"/>
     <PortalPagePortlet portalPageId="MYPORTAL_EMPLOYEE" portalPortletId="ArInvoicesDueSoon" portletSeqId="00001"  columnSeqId="00001" sequenceNum="1"/>
     <PortalPagePortlet portalPageId="MYPORTAL_EMPLOYEE" portalPortletId="ApPastDueInvoices" portletSeqId="00001"  columnSeqId="00001" sequenceNum="2"/>
     <PortalPagePortlet portalPageId="MYPORTAL_EMPLOYEE" portalPortletId="ApInvoicesDueSoon" portletSeqId="00001"  columnSeqId="00001" sequenceNum="3"/>
-    <PortalPagePortlet portalPageId="MYPORTAL_EMPLOYEE" portalPortletId="MyCommunications" portletSeqId="00001"  columnSeqId="00001" sequenceNum="4"/>
+ -->    <PortalPagePortlet portalPageId="MYPORTAL_EMPLOYEE" portalPortletId="MyCommunications" portletSeqId="00001"  columnSeqId="00001" sequenceNum="4"/>
 	<PortalPagePortlet portalPageId="MYPORTAL_EMPLOYEE" portalPortletId="mytasks" portletSeqId="00001"  columnSeqId="00001" sequenceNum="5"/>
     <PortalPagePortlet portalPageId="MYPORTAL_EMPLOYEE" portalPortletId="INCOM_CUST_REQUESTS" portletSeqId="00001" columnSeqId="00001" sequenceNum="6"/>
     <PortalPagePortlet portalPageId="MYPORTAL_EMPLOYEE" portalPortletId="Calendar" portletSeqId="00001"  columnSeqId="00001" sequenceNum="7"/>	
