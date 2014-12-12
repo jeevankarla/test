@@ -34,7 +34,6 @@ if(UtilValidate.isNotEmpty(parameters.ShedId)){
 	parameters.partyIdFrom=parameters.ShedId;
 }
 GenericValue customTimePeriod = delegator.findOne("CustomTimePeriod", [customTimePeriodId : parameters.customTimePeriodId], false);
-//context.put("customTimePeriod",customTimePeriod);
 if(UtilValidate.isNotEmpty(customTimePeriod)){
 	timePeriodStart=UtilDateTime.toTimestamp(customTimePeriod.getDate("fromDate"));
 	timePeriodEnd=UtilDateTime.toTimestamp(customTimePeriod.getDate("thruDate"));
@@ -42,7 +41,6 @@ if(UtilValidate.isNotEmpty(customTimePeriod)){
 	context.timePeriodEnd=timePeriodEnd;
 	context.ShedId=parameters.partyIdFrom;
 }
-
 resultMap = PayrollService.getPayrollAttedancePeriod(dctx, [timePeriodStart:timePeriodStart, timePeriodEnd: timePeriodEnd, timePeriodId: parameters.customTimePeriodId, userLogin : userLogin]);
 if(UtilValidate.isNotEmpty(resultMap.get("lastCloseAttedancePeriod"))){
 	lastCloseAttedancePeriod=resultMap.get("lastCloseAttedancePeriod");
@@ -53,7 +51,6 @@ if(UtilValidate.isNotEmpty(resultMap.get("lastCloseAttedancePeriod"))){
 //getting benefits
 sortBy = UtilMisc.toList("sequenceNum");
 //description
-
 benefitTypeList = delegator.findList("BenefitType", null, null, sortBy, null, false);
 benefitDescMap=[:];
 if(UtilValidate.isNotEmpty(benefitTypeList)){
@@ -85,7 +82,6 @@ if(UtilValidate.isNotEmpty(parameters.partyIdFrom) && (!"Company".equals(paramet
 }
 condition = EntityCondition.makeCondition(conditionList,EntityOperator.AND);
 periodBillingList = delegator.findList("PeriodBilling", condition, null, null, null, false);
-//getting deductions
 
 deductionTypeList = delegator.findList("DeductionType", null, null, sortBy, null, false);
 dedDescMap=[:];
@@ -108,15 +104,36 @@ Map emplInputMap = FastMap.newInstance();
 	List<GenericValue> employementList = (List<GenericValue>)EmploymentsMap.get("employementList");
 	employementList = EntityUtil.orderBy(employementList, UtilMisc.toList("partyIdTo"));
 	employementIds = EntityUtil.getFieldListFromEntityList(employementList, "partyIdTo", true);
-	locationGeoIds = EntityUtil.getFieldListFromEntityList(employementList, "locationGeoId", true);
-	
 	
 Map unitIdMap=FastMap.newInstance();
+	partyRelationconditionList=[];
+	partyRelationconditionList.add(EntityCondition.makeCondition("roleTypeIdFrom", EntityOperator.EQUALS , "DEPARTMENT"));
+	partyRelationconditionList.add(EntityCondition.makeCondition("partyIdTo", EntityOperator.IN ,employementIds));
+	partyCondition = EntityCondition.makeCondition(partyRelationconditionList,EntityOperator.AND);
+	def orderBy = UtilMisc.toList("comments");
+	partyRelationList = delegator.findList("PartyRelationship", partyCondition, null, orderBy, null, false);
+	if(UtilValidate.isNotEmpty(partyRelationList)){
+		partyRelationList.each{ partyRelation->
+			costCode=partyRelation.get("comments");
+			partyIdsList = [];
+			employementId = 0;
+			conditionList=[];
+			conditionList.add(EntityCondition.makeCondition("comments", EntityOperator.EQUALS , costCode));
+			condition = EntityCondition.makeCondition(conditionList,EntityOperator.AND);
+			partyLists = delegator.findList("PartyRelationship", condition, null, null, null, false);
+			if(UtilValidate.isNotEmpty(partyLists)){
+				partyLists.each{ partyList->
+					employementId = partyList.get("partyIdTo");
+					partyIdsList.addAll(employementId);
+				}
+			}
+			if(UtilValidate.isNotEmpty(partyIdsList)){
+				unitIdMap.put(costCode,partyIdsList);
+			}
+		}
+	}
+Map payRollSummaryMap=FastMap.newInstance();
 Map finalMap=FastMap.newInstance();
-Map grandTotalMap=FastMap.newInstance();
-employementList.each{ employement->
-	unitIdMap.put(employement.partyIdTo,employement.locationGeoId);
-}
 if(UtilValidate.isNotEmpty(periodBillingList)){
 	periodBillDetails = EntityUtil.getFirst(periodBillingList);
 	periodBillingIds = EntityUtil.getFieldListFromEntityList(periodBillingList, "periodBillingId", true);
@@ -128,90 +145,79 @@ if(UtilValidate.isNotEmpty(periodBillingList)){
 	payCond = EntityCondition.makeCondition(payConList,EntityOperator.AND);
 	payRollHeaderList = delegator.findList("PayrollHeader", payCond, null, null, null, false);
 	
-	
-	grTotalEarnings=0.0;
-	grTotalDeductions=0.0;
-	grNetAmt=0.0;
-	grRndNetAmt=0.0;
-	grLoanAmt=0.0;
-	
-	grandTotalMap["grTotalEarnings"]=grTotalEarnings;
-	grandTotalMap["grTotalDeductions"]=grTotalDeductions;
-	grandTotalMap["grNetAmt"]=grNetAmt;
-	grandTotalMap["grRndNetAmt"]=grRndNetAmt;
-	grandTotalMap["grLoanAmt"]=grLoanAmt;
-	
 	if(UtilValidate.isNotEmpty(payRollHeaderList)){
-		locationGeoIds.each{ locationGeoId->
-			totEarnings=0.0;
-			totDeductions=0.0;
-			netAmount=0.0;
-			rndNetAmt=0.0;
-			amount=0.0;
-			loanAmount=0.0;
-			Map payRollSummaryMap=FastMap.newInstance();
-			payRollSummaryMap["totEarnings"]=totEarnings;
-			payRollSummaryMap["totDeductions"]=totDeductions;
-			payRollSummaryMap["netAmount"]=netAmount;
-			payRollSummaryMap["rndNetAmt"]=rndNetAmt;
-			payRollSummaryMap["loanAmount"]=loanAmount;
-			payRollHeaderList.each{ payRollHead->
-				payrollHeaderId=payRollHead.get("payrollHeaderId");
-				partyId=payRollHead.get("partyIdFrom");
-				if(locationGeoId==unitIdMap.get(partyId)){
-					itemConList=[];
-					itemConList.add(EntityCondition.makeCondition("payrollHeaderId", EntityOperator.EQUALS ,payrollHeaderId));
-					itemCond = EntityCondition.makeCondition(itemConList,EntityOperator.AND);
-					payRollHeaderItemsList = delegator.findList("PayrollHeaderItem", itemCond, null, ["payrollItemSeqId"], null, false);
-					if(UtilValidate.isNotEmpty(payRollHeaderItemsList)){
-						payRollHeaderItemsList.each{ payRollHeaderItem->
-							payrollItemSeqId=payRollHeaderItem.get("payrollItemSeqId");
-							payrollHeaderItemTypeId=payRollHeaderItem.get("payrollHeaderItemTypeId");
-							amount=payRollHeaderItem.get("amount");
-							if(benefitTypeIds.contains(payrollHeaderItemTypeId)){
-								totEarnings=totEarnings+amount;
-								grTotalEarnings=grTotalEarnings+amount;
+		if(UtilValidate.isNotEmpty(unitIdMap)){
+			Iterator unitIter = unitIdMap.entrySet().iterator();
+			while(unitIter.hasNext()){
+				Map.Entry mccEntry = unitIter.next();
+				Map costCodeMap=FastMap.newInstance();
+				locationGeoId = mccEntry.getKey();
+				totEarnings=0.0;
+				totDeductions=0.0;
+				netAmount=0.0;
+				rndNetAmt=0.0;
+				amount=0.0;
+				loanAmount=0.0;
+				reqPartyIds = mccEntry.getValue();
+				reqPartyIds.each{ reqPartyId->
+					payRollHeaderList.each{ payRollHead->
+						payrollHeaderId=payRollHead.get("payrollHeaderId");
+						partyId=payRollHead.get("partyIdFrom");
+							if(reqPartyId==partyId){
+								itemConList=[];
+								itemConList.add(EntityCondition.makeCondition("payrollHeaderId", EntityOperator.EQUALS ,payrollHeaderId));
+								itemCond = EntityCondition.makeCondition(itemConList,EntityOperator.AND);
+								payRollHeaderItemsList = delegator.findList("PayrollHeaderItem", itemCond, null, ["payrollItemSeqId"], null, false);
+								if(UtilValidate.isNotEmpty(payRollHeaderItemsList)){
+									payRollHeaderItemsList.each{ payRollHeaderItem->
+										payrollItemSeqId=payRollHeaderItem.get("payrollItemSeqId");
+										payrollHeaderItemTypeId=payRollHeaderItem.get("payrollHeaderItemTypeId");
+										amount=payRollHeaderItem.get("amount");
+										if(benefitTypeIds.contains(payrollHeaderItemTypeId)){
+											totEarnings=totEarnings+amount;
+										}
+										if(dedTypeIds.contains(payrollHeaderItemTypeId)){
+											totDeductions=totDeductions+amount;
+										}
+										if(loanTypes.contains(payrollHeaderItemTypeId)){
+											loanAmount=loanAmount+amount;
+										}
+										deductionTypeMap = [:];
+										if(UtilValidate.isEmpty(payRollSummaryMap[locationGeoId])){
+											deductionTypeMap[payrollHeaderItemTypeId] = amount;
+										}
+										else{
+											deductionTypeMap = payRollSummaryMap[locationGeoId];
+											if(UtilValidate.isEmpty(deductionTypeMap[payrollHeaderItemTypeId])){
+												deductionTypeMap[payrollHeaderItemTypeId] = amount;
+											}
+											else{
+												deductionTypeMap[payrollHeaderItemTypeId] += amount;
+											}
+										}
+										payRollSummaryMap[locationGeoId] = deductionTypeMap;
+									}
+								}
 							}
-							if(dedTypeIds.contains(payrollHeaderItemTypeId)){
-								totDeductions=totDeductions+amount;
-								grTotalDeductions=grTotalDeductions+amount;
-							}
-							if(loanTypes.contains(payrollHeaderItemTypeId)){
-								loanAmount=loanAmount+amount;
-								grLoanAmt=grLoanAmt+amount;
-							}
-							//payroll Summary Map
-							if(UtilValidate.isEmpty(payRollSummaryMap.get(payrollHeaderItemTypeId))){
-								payRollSummaryMap[payrollHeaderItemTypeId]=amount;
-							}else{
-								payRollSummaryMap[payrollHeaderItemTypeId]+=amount;
-							}
-							//grand Totals
-							if(UtilValidate.isEmpty(grandTotalMap.get(payrollHeaderItemTypeId))){
-								grandTotalMap[payrollHeaderItemTypeId]=amount;
-							}else{
-								grandTotalMap[payrollHeaderItemTypeId]+=amount;
-							}
+							
+							
+							
+							
 						}
-						
 					}
 					netAmount=totEarnings+totDeductions;
-					payRollSummaryMap["totEarnings"]=totEarnings;
-					payRollSummaryMap["totDeductions"]=totDeductions;
-					payRollSummaryMap["netAmount"]=netAmount;
-					payRollSummaryMap["rndNetAmt"]=(netAmount).setScale(2,BigDecimal.ROUND_HALF_UP);
-					payRollSummaryMap["loanAmount"]=loanAmount;
+					payRollMap = [:];
+					payRollMap["totEarnings"] = totEarnings;
+					payRollMap["totDeductions"] = totDeductions;
+					payRollMap["netAmount"] = netAmount;
+					payRollMap["rndNetAmt"] = netAmount.setScale(2,BigDecimal.ROUND_HALF_UP);
+					payRollMap["loanAmount"] = loanAmount;
+					tempPRMap = [:]
+					tempPRMap.putAll(payRollMap);
+					finalMap.put(locationGeoId, tempPRMap)
 				}
 			}
-			grNetAmt=grTotalEarnings+grTotalDeductions;
-			grandTotalMap["grTotalEarnings"]=grTotalEarnings;
-			grandTotalMap["grTotalDeductions"]=grTotalDeductions;
-			grandTotalMap["grNetAmt"]=grNetAmt;
-			grandTotalMap["grRndNetAmt"]=(grNetAmt).setScale(2,BigDecimal.ROUND_HALF_UP);
-			grandTotalMap["grLoanAmt"]=grLoanAmt;
-			finalMap.put(locationGeoId,payRollSummaryMap);
 		}
 	}
-}
+context.payRollSummaryMap=payRollSummaryMap;
 context.finalMap=finalMap;
-context.grandTotalMap=grandTotalMap;
