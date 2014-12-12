@@ -44,6 +44,7 @@ if(parameters.facilityId){
 if(parameters.partyId){
 	conditionList.add(EntityCondition.makeCondition(EntityCondition.makeCondition("partyId", EntityOperator.EQUALS,parameters.partyId)));
 }
+partyIds = [];
 condition = EntityCondition.makeCondition(conditionList,EntityOperator.AND);
 facilityPartyList = delegator.findList("FacilityParty", condition, null, UtilMisc.toList("facilityId"), null, false);
 if(UtilValidate.isNotEmpty(facilityPartyList)){
