@@ -17,8 +17,8 @@
 		   </fo:flow>
 		</fo:page-sequence>        
 	<#else>
-	<#if costCodeSummaryMap?has_content>
-	<#assign costCodeDetailList = costCodeSummaryMap.entrySet()>
+	<#if finalMap?has_content>
+	<#assign costCodeDetailList = finalMap.entrySet()>
 		<fo:page-sequence master-reference="main">
 			<fo:static-content flow-name="xsl-region-before" font-size="8pt">
 				<fo:block font-size="5pt" white-space-collapse="false" font-weight="bold">&#160;.  </fo:block>
@@ -29,11 +29,11 @@
 				<fo:block font-family="Courier,monospace" font-size="9pt">
 					<fo:table>
 		  				<fo:table-column column-width="15pt"/>
-						<fo:table-column column-width="15pt"/>
-						<fo:table-column column-width="50pt"/>
-						<fo:table-column column-width="43pt"/>
-						<fo:table-column column-width="43pt"/>
+						<fo:table-column column-width="23pt"/>
+						<fo:table-column column-width="42pt"/>
 						<fo:table-column column-width="45pt"/>
+						<fo:table-column column-width="45pt"/>
+						<fo:table-column column-width="42pt"/>
 						<fo:table-column column-width="45pt"/>
                        	<fo:table-body>
                        		<fo:table-row>
@@ -77,8 +77,8 @@
 					<fo:block font-family="Courier,monospae" font-size="9pt">
 						<fo:table>
 							<fo:table-column column-width="15pt"/>
-							<fo:table-column column-width="20pt"/>
-							<fo:table-column column-width="45pt"/>
+							<fo:table-column column-width="23pt"/>
+							<fo:table-column column-width="42pt"/>
 							<fo:table-column column-width="45pt"/>
 							<fo:table-column column-width="45pt"/>
 							<fo:table-column column-width="42pt"/>
@@ -89,23 +89,24 @@
 							<#assign totalRndNetAmt =0>
 							<fo:table-body>
 								<#list costCodeDetailList as costCodeDetList>
-								<#assign costCode = costCodeDetList.getKey()>
+								<#assign deptId = costCodeDetList.getValue().get("deptId")>
+								<#assign department = delegator.findOne("PartyGroup", {"partyId" : deptId}, true)>
 									<fo:table-row>	
 										<fo:table-cell>
-											<fo:block font-size="5pt"  keep-together="always" text-align="left">${costCodeMap.get(costCode).get("centerCode")}</fo:block>
+											<fo:block font-size="5pt"  keep-together="always" text-align="left">${costCodeDetList.getValue().get("unitCode")?if_exists}</fo:block>
 										</fo:table-cell>
 										<fo:table-cell>
 											<fo:block font-size="5pt"  keep-together="always" text-align="left">${costCodeDetList.getKey()?if_exists}</fo:block>
 										</fo:table-cell>
 										<fo:table-cell>
-											<fo:block font-size="5pt"  keep-together="always" text-align="left">${Static["org.ofbiz.order.order.OrderServices"].nameTrim((StringUtil.wrapString(costCodeMap.get(costCode).get("centerName"))),12)}</fo:block>
+											<fo:block font-size="5pt"  keep-together="always" text-align="left"><#if department?has_content>${Static["org.ofbiz.order.order.OrderServices"].nameTrim((StringUtil.wrapString(department.groupName)),14)}</#if> </fo:block>
 										</fo:table-cell>
 										<fo:table-cell>
 											<fo:block font-size="5pt"  keep-together="always" text-align="right" >${costCodeDetList.getValue().get("totEarnings")?if_exists?string('0.00')}</fo:block>
 										</fo:table-cell>
 										<#assign totalEarnings =totalEarnings + costCodeDetList.getValue().get("totEarnings")>
 										<fo:table-cell>
-											<fo:block font-size="5pt"  keep-together="always" text-align="right" >${costCodeDetList.getValue().get("totDeductions")?if_exists?string('0.00')}</fo:block>
+											<fo:block font-size="5pt"  keep-together="always" text-align="right" >${((-1)*costCodeDetList.getValue().get("totDeductions"))?if_exists?string('0.00')}</fo:block>
 										</fo:table-cell>
 										<#assign totalDeductions =totalDeductions + costCodeDetList.getValue().get("totDeductions")>
 										<fo:table-cell>
@@ -142,7 +143,7 @@
 										<fo:block font-size="5pt" text-align="right">${totalEarnings?if_exists?string('0.00')}</fo:block>
 									</fo:table-cell>
 									<fo:table-cell>
-										<fo:block font-size="5pt" text-align="right">${totalDeductions?if_exists?string('0.00')}</fo:block>
+										<fo:block font-size="5pt" text-align="right">${((-1)*totalDeductions)?if_exists?string('0.00')}</fo:block>
 									</fo:table-cell>
 									<fo:table-cell>
 										<fo:block font-size="5pt" text-align="right">${totalNetAmount?if_exists?string('0.00')}</fo:block>
