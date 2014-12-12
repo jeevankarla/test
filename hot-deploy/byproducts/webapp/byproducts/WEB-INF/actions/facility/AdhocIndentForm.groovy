@@ -42,9 +42,9 @@ if(changeFlag=="IcpSalesAmul"){
 if(changeFlag=="IcpSalesBellary"){
 	productCatageoryId="ICE_CREAM_BELLARY";
 }
-if(changeFlag=="DepotSales"){
+/*if(changeFlag=="DepotSales"){
 	productCatageoryId="DEPO_STORE";
-}
+}*/
 /*if(changeFlag=="FgsSales"){
 	productCatageoryId="FGS_INDENT";
 }

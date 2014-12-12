@@ -3318,7 +3318,9 @@
 					value="${groovy:org.ofbiz.base.util.UtilDateTime.toDateString(defaultEffectiveDateTime, &quot;dd MMMMM, yyyy&quot;);}" />
 			   	<set field="parameters.roleTypeId" value="DEPOT_CUSTOMER"/>
 			   	<set field="productStoreResult"	value="${groovy:in.vasista.vbiz.byproducts.icp.ICPServices.getProductStoreByGroupId(delegator, 'FG_STORE')}" />
-				<set field="productStoreId" value="${productStoreResult.factoryStoreId}"/>							  					  
+				<set field="productStoreId" value="${productStoreResult.factoryStoreId}"/>
+				<set field="productCategoryResult" value="${groovy:org.ofbiz.product.product.ProductWorker.getProductsByCategoryAssoc(delegator, 'INDENT_PROD_CAT', 'DEPOT_INDENT', null)}" />
+				<set field="categoryList" value="${productCategoryResult.productCategory}"/>							  					  
             </actions>
             <widgets>
               <decorator-screen name="ByProductsNgCommonDecorator" location="component://byproducts/widget/CommonScreens.xml">

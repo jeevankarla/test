@@ -234,7 +234,7 @@ $(document).ready(function(){
 		    	</tr>
 	    	</#if>
 	    	<tr><td><br/></td></tr>
-	    	<#if changeFlag?exists && (changeFlag == "FgsSales" || changeFlag == "InterUnitTransferSale" || changeFlag == "ICPTransferSale")>
+	    	<#if changeFlag?exists && (changeFlag == "FgsSales" || changeFlag == "InterUnitTransferSale" || changeFlag == "ICPTransferSale" || changeFlag == "DepotSales")>
 		    	<tr>
 		      		<td>&nbsp;</td>
 		      		<td align='left' valign='middle' nowrap="nowrap"><div class='h2'>Product Category:</div></td>
