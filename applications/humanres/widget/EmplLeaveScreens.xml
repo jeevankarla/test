@@ -139,11 +139,13 @@
                 <set field="tabButtonItem" value="EmployeeLeave"/>                
                 <set field="tabButtonItem2" value="Approval"/>
                 <set field="headerItem" value="Leave"/>
+                <set field="leaveTypeId" from-field="parameters.leaveTypeId"/>
+                <set field="fromDate" from-field="parameters.fromDate"/>
                 <service service-name="humanResManagerPermission" result-map="permResult">
                     <field-map field-name="mainAction" value="ADMIN"/>
                 </service>
                 <set field="hasAdminPermission" from-field="permResult.hasPermission"/>
-                <set field="approverPartyId" from-field="parameters.userLogin.partyId"/>
+                <!-- <set field="approverPartyId" from-field="parameters.userLogin.partyId"/> -->
                 <script location="component://humanres/webapp/humanres/WEB-INF/actions/humanres/EmployeeLeaveList.groovy"/>
             </actions>
             <widgets>

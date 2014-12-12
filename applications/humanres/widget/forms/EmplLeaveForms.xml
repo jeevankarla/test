@@ -217,7 +217,7 @@
         <field name="appliedBy"><hidden/></field>
 		<field name="comment"><hidden/></field>
 		<field name="documentsProduced"><hidden/></field>
-		<field name="approverPartyId" use-when="${groovy:((security.hasEntityPermission(&quot;HUMANRES&quot;, &quot;_ADMIN&quot;, session)))}"><lookup target-form-name="LookupEmployeeName" default-value="${userLogin.partyId}"></lookup></field>
+		<field name="approverPartyId" use-when="${groovy:((security.hasEntityPermission(&quot;HUMANRES&quot;, &quot;_ADMIN&quot;, session)))}"><lookup target-form-name="LookupEmployeeName"></lookup></field>
         <field name="approverPartyId" use-when="${groovy:(!(security.hasEntityPermission(&quot;HUMANRES&quot;, &quot;_ADMIN&quot;, session)))}"><display description="${userLogin.partyId}"></display></field>
         <field name="description"><hidden/></field>
         <field name="noConditionFind"><hidden value="Y"/><!-- if this isn't there then with all fields empty no query will be done --></field>
