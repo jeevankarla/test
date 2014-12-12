@@ -314,6 +314,7 @@ if (organizationPartyId) {
 					finAccountMethodType = "";
 					finAccountDes = "";
 					finAccountTypeDes = "";
+					finAccountContraNum = "";
 					
 					if(UtilValidate.isEmpty(paymentId)){
 						finAccountTransAttr = delegator.findOne("FinAccountTransAttribute", [finAccountTransId : finAccountTransId, attrName : "FATR_CONTRA"], false);
@@ -324,6 +325,7 @@ if (organizationPartyId) {
 								finAccountTransTypeId = finAccountTrans.finAccountTransTypeId;
 								reasonEnumId = finAccountTrans.reasonEnumId;
 								finAccountDes = finAccountTrans.comments;
+								finAccountContraNum = finAccountTrans.contraRefNum;
 								if(UtilValidate.isNotEmpty(reasonEnumId) && reasonEnumId.equals("FATR_CONTRA")){
 									finAccountMethodType = "Contra";
 								}
@@ -480,6 +482,7 @@ if (organizationPartyId) {
 							acctgTransEntryMap["finAccountOwnerPartyId"] = finAccountOwnerPartyId;
 							acctgTransEntryMap["finAccountPartyName"] = finAccountPartyName;
 							acctgTransEntryMap["paymentMethodTypeDes"] = finAccountMethodType;
+							acctgTransEntryMap["instrumentNum"] = finAccountContraNum;
 						}
 						acctgTransEntryMap["description"] = finAccountDescription;
 						acctgTransEntryMap["finAccountTypeDes"] = finAccountTypeDes;
