@@ -18,19 +18,23 @@
  */
 
 import org.ofbiz.base.util.*;
+import javolution.util.FastList;
 import org.ofbiz.entity.condition.*;
 import org.ofbiz.entity.util.EntityUtil;
 import net.sf.json.JSONObject;
 import net.sf.json.JSONArray;
 import org.ofbiz.entity.Delegator;
+import org.ofbiz.base.util.Debug;
+import org.ofbiz.entity.GenericValue;
+import org.ofbiz.service.ServiceUtil;
 
 import javolution.util.FastMap;
 import javolution.util.FastList;
 import javolution.util.FastSet;
 import org.ofbiz.accounting.util.*;
-
   asOnDate = parameters.asOnDate;
-
+//Debug.log("customTimePeriodId========================="+parameters.customTimePeriodId);
+//Debug.log("organizationPartyId========================="+parameters.organizationPartyId);
   dctx = dispatcher.getDispatchContext();
  glAccountAndHistories =[];
  condList = [];
@@ -78,5 +82,40 @@ import org.ofbiz.accounting.util.*;
 		 }
 	 }
   context.glAccountAndHistories = glAccountAndHistories;
-
-
+  accountCodeList=[];
+  if(UtilValidate.isNotEmpty(parameters.customTimePeriodId))
+  {
+	  GenericValue customTimePeriod = delegator.findOne("CustomTimePeriod", [customTimePeriodId : parameters.customTimePeriodId], false);
+	  dayBegin = UtilDateTime.getDayStart(UtilDateTime.toTimestamp(customTimePeriod.fromDate));
+	  dayEnd = UtilDateTime.getDayEnd(UtilDateTime.toTimestamp(customTimePeriod.thruDate));
+	  totalDays=UtilDateTime.getIntervalInDays(dayBegin,dayEnd);
+	 
+ }
+     JSONArray dataJSONList= new JSONArray();
+   if (glAccountAndHistories.size() > 0) {
+	  JSONObject retObj = new JSONObject();
+	  if(totalDays > 32){
+		  //no need to showAll if then
+	 }else{
+	 JSONObject forall = new JSONObject();
+	 forall.put("value","");
+	 forall.put("text","All");
+	 dataJSONList.add(forall);
+	 }
+	  glAccountAndHistories.eachWithIndex {sub, idx ->
+		  //retObj.put("id",idx+1);
+		// retObj.put("item", "");
+		  retObj.put("value", sub.accountCode);
+		  retObj.put("text", sub.accountName+" ["+sub.accountCode+" ]");
+		  dataJSONList.add(retObj);
+		  accountCodeList.add(sub.accountCode);
+	  }
+  }
+   context.put("accountCodeList", accountCodeList);
+  if (dataJSONList.size() > 0) {
+	  context.dataJSON = dataJSONList.toString();
+	  Debug.logInfo("dataJSONList="+dataJSONList,"");
+	  request.setAttribute("dataJSON",dataJSONList);
+  }
+  //Debug.log("dataJSONList =========="+dataJSONList);
+  //Debug.log("accountCodeList =========="+accountCodeList);

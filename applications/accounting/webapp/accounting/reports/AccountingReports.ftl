@@ -1,5 +1,59 @@
 <link type="text/css" href="<@ofbizContentUrl>/images/jquery/ui/css/ui-lightness/jquery-ui-1.8.13.custom.css</@ofbizContentUrl>" rel="Stylesheet" />	
 <script type= "text/javascript">
+//Get AccountCodeList for AccountingTransactions
+var accountCodeList;
+    function setAccountCode(customTimePeriodId)
+    {
+    //alert("customTimePeriodId   "+customTimePeriodId);
+    var customTimePeriodId=customTimePeriodId;
+    var organizationPartyId="Company";
+    var methodOptionList =[];
+    //var accountCodeList = ${StringUtil.wrapString(dataJSON)!'[]'};
+    //alert(accountCodeList);
+    var dataString="customTimePeriodId=" + customTimePeriodId + "&organizationPartyId=" + organizationPartyId ;
+    $.ajax({
+             type: "POST",
+             url: "getAccountCode",
+             data: dataString ,
+             dataType: 'json',
+             async: false,
+         success: function(result) {
+               if(result["_ERROR_MESSAGE_"] || result["_ERROR_MESSAGE_LIST_"]){            	  
+            	   alert(result["_ERROR_MESSAGE_"]);
+               }else{
+               		// alert("=result==="+result);
+            	   var glAccountCodelist =result["dataJSON"];
+            	  // alert((result["dataJSON"]).stringify());
+                   if(isEmpty(glAccountCodelist))
+                      {
+            	 			 //            	 alert("There is No Acccount Transactions");
+			   				  methodOptionList.push('<option value=""></option>');
+			 		  		
+			  
+            			 // alert("=glAccountCodelist=in loop===="+methodOptionList);
+            			  $('#AccountCode').html(methodOptionList.join(''));
+            	              	 
+            	 	 }
+            	 	 else
+            	 	 {
+            			// alert("=glAccountCodelist==="+glAccountCodelist);
+            			$.each(glAccountCodelist, function(key, item){
+			    		 methodOptionList.push('<option value="'+item.value+'">'+item.text+'</option>');
+			  				 });
+			  
+            				 // alert("=glAccountCodelist=in loop===="+methodOptionList);
+            	 		 $('#AccountCode').html(methodOptionList.join(''));
+            		}   
+               }
+               
+             } ,
+             error: function() {
+            	 	alert(result["_ERROR_MESSAGE_"]);
+            	 }
+            }); 
+           
+       }
+  //end of AccountCodeList ajax      
 	function appendParams(formName, action) {
 	var formId = "#" + formName;
 	jQuery(formId).attr("action", action);	
@@ -108,6 +162,9 @@ function reportTypeChangeFunc() {
 	    makeDatePicker("FinacialFromDate","FinacialThruDate");
 	    makeDatePicker("advFromDate","advThruDate");
 	    makeDatePicker("subLedgerFromDate","subLedgerThruDate");
+	    makeDatePicker("TrlLedgerFromDate","TrlLedgerThruDate");
+	    makeDatePicker("glLedgerFromDate","glLedgerThruDate");
+	    
 		
 		$('#ui-datepicker-div').css('clip', 'auto');		
 	});
@@ -156,7 +213,8 @@ function reportTypeChangeFunc() {
 					<td width="10%"><input type="submit" value="PDF" onClick="javascript:appendParams('BankReconciliationReports', '<@ofbizUrl>recStatemetn.pdf</@ofbizUrl>');" class="buttontext"/>
 					<input type="submit" value="CSV" onClick="javascript:appendParams('BankReconciliationReports', '<@ofbizUrl>FinAccountTransForReconsile.csv</@ofbizUrl>');" class="buttontext"/></td>         			
 				</form>
-              </tr> 
+              </tr>
+              	
 		</table>     			     
 	</div> 	
 </div>
@@ -217,4 +275,41 @@ function reportTypeChangeFunc() {
       	</tr>
 	</table>
 </div>
+<div class="screenlet">
+    <div class="screenlet-title-bar">
+      <h3>Accounting Transactions History Report</h3>
+    </div>
+    <div class="screenlet-body">
+      <table class="basic-table hover-bar h3" style="border-spacing: 0 10px;" >  
+       	<tr> 
+      	   <form id="GlLedgerReport" name="GlLedgerReport" method="post" action="<@ofbizUrl>AcctgTransEntriesSearchResultsNewPdf.pdf</@ofbizUrl>" target="_blank">	
+      		  	<td width="30%">Transaction History Report</td>
+				<#-- <td width="25%">From<input  type="text" size="18pt" id="glLedgerFromDate" readonly  name="fromDate"/></td>
+				<td width="25%">To<input  type="text" size="18pt" id="glLedgerThruDate" readonly  name="thruDate"/></td>-->
+      		  	  <td width="50%">CustomTimePeriod
+			  	  	<select name='customTimePeriodId' id ="customTimePeriodId" onclick="javascript:setAccountCode(this.value);">	
+						<#list customtimeperiodlist as ctplist> 	
+							<option value='${ctplist.customTimePeriodId}'>${ctplist.periodName}: ${ctplist.fromDate} - ${ctplist.thruDate}</option>
+          		   		</#list>
+				 	</select>
+			  	  </td>
+			  	  <td width="25%"> &#160;</td>
+			  	  <td width="25%"> &#160;</td>
+			  	  <td width="75%"><input type="hidden" name="organizationPartyId" value="Company"/></td>&#160;</td> 
+			</tr>
+			 <tr>
+			  	 <td width="25%"> &#160;</td>
+			  	 <td width="50%">AccountCode
+			  	  	<select name='AccountCode' id ="AccountCode">	
+					 	
+				 	</select>
+			  	 </td>
+			  	 <td width="25%"><input type="hidden" name="reportType" value="byAccount"/>&#160;</td>
+			 	 <td width="25%"> &#160;</td>
+          		 <td width="25%"><input type="submit" value="PDF" class="buttontext"/></td>
+          	</tr>
+      		</form>
+      	</tr>
+	</table>
+   </div>
 </div>
