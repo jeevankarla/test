@@ -6825,7 +6825,7 @@ public class ByProductNetworkServices {
 			if(!isSale){
 				applicableTaxTypeList.remove("CST_SALE");
 				applicableTaxTypeList.remove("VAT_SALE");
-				applicableTaxTypeList.remove("SERTAX_SALE");
+				//applicableTaxTypeList.remove("SERTAX_SALE");
 				taxFilter = true;
 			}
 			
