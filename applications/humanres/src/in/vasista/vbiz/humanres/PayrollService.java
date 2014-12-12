@@ -42,6 +42,7 @@ import org.ofbiz.entity.Delegator;
 import org.ofbiz.entity.GenericDelegator;
 import org.ofbiz.entity.GenericEntityException;
 import org.ofbiz.party.party.PartyWorker;
+import org.ofbiz.party.party.PartyHelper;
 import org.ofbiz.service.DispatchContext;
 import org.ofbiz.service.GenericServiceException;
 import org.ofbiz.service.LocalDispatcher;
@@ -5543,8 +5544,13 @@ public class PayrollService {
 	      String checkBox = (String) context.get("checkBox");
 	      BigDecimal overrideLateMin=(BigDecimal)context.get("overrideLateMin");
 	      Map result = ServiceUtil.returnSuccess();
+	      Boolean smsFlag = Boolean.FALSE;
   		try{
   			
+  			GenericValue tenantConfigEnableIndentSms = delegator.findOne("TenantConfiguration", UtilMisc.toMap("propertyTypeEnumId","SMS", "propertyName","enableCashEncashSms"), true);
+			if (UtilValidate.isNotEmpty(tenantConfigEnableIndentSms) && (tenantConfigEnableIndentSms.getString("propertyValue")).equals("Y")) {
+				 smsFlag = Boolean.TRUE;
+			}
   			String userId= (String) userLogin.get("userLoginId");
   			
   			List conditionLis=FastList.newInstance();
@@ -5586,9 +5592,67 @@ public class PayrollService {
   				return ServiceUtil.returnError(e.toString());
   			}
   		result = ServiceUtil.returnSuccess("Successfully Updated!!");
+  		result.put("smsFlag", smsFlag);
   		return result;
   	}
-	 
+	
+	 public static Map<String, Object>  sendCashEncashSms(DispatchContext dctx, Map<String, Object> context)  {
+	        GenericValue userLogin = (GenericValue) context.get("userLogin");      
+	        Delegator delegator = dctx.getDelegator();
+	        LocalDispatcher dispatcher = dctx.getDispatcher();  
+	        Map<String, Object> serviceResult;
+	        String partyId =  (String)context.get("partyId");
+	        Timestamp date=(Timestamp)context.get("date");
+		    String encashmentStatus=(String) context.get("encashmentStatus");
+		    String checkBox = (String) context.get("checkBox");
+	        String dateTimeStr = "";
+	        if (UtilValidate.isNotEmpty(date)) {
+	        	dateTimeStr = UtilDateTime.toDateString(date, "dd,MMM yyyy");
+	        }
+	            
+	        String text = null;
+	        String smsPartyId = partyId;
+	       
+			String employeeName = PartyHelper.getPartyName(delegator,
+					partyId, false);
+			if(UtilValidate.isNotEmpty(checkBox) && UtilValidate.isNotEmpty(encashmentStatus)){
+				text = "Cash encashment for " + dateTimeStr + " has been approved for " + employeeName + 
+	        			"(" + partyId + ").";
+			}
+			if(UtilValidate.isNotEmpty(checkBox) && (UtilValidate.isEmpty(encashmentStatus))){
+				text = "Cash encashment for " + dateTimeStr + " has been rejected for " + employeeName + 
+	        			"(" + partyId + ").";
+			}
+			try {
+	            Map<String, Object> getTelParams = FastMap.newInstance();
+	            getTelParams.put("partyId", smsPartyId);
+	            getTelParams.put("userLogin", userLogin);                    	
+	            serviceResult = dispatcher.runSync("getPartyTelephone", getTelParams);
+	            if (ServiceUtil.isError(serviceResult)) {
+	            	Debug.logError(ServiceUtil.getErrorMessage(serviceResult), module);
+	            	return ServiceUtil.returnSuccess();
+	            } 
+	            if(UtilValidate.isEmpty(serviceResult.get("contactNumber"))){
+	            	Debug.logError( "No  contactNumber found for employee : "+smsPartyId, module);
+	            	return ServiceUtil.returnSuccess();
+	            }
+	            String contactNumberTo = (String) serviceResult.get("countryCode") + (String) serviceResult.get("contactNumber");            
+	            Map<String, Object> sendSmsParams = FastMap.newInstance();      
+	            sendSmsParams.put("contactNumberTo", contactNumberTo);          
+	            sendSmsParams.put("text", text);             
+	            serviceResult  = dispatcher.runSync("sendSms", sendSmsParams);       
+	            if (ServiceUtil.isError(serviceResult)) {
+	            	Debug.logError(ServiceUtil.getErrorMessage(serviceResult), module);
+	            	return ServiceUtil.returnSuccess();
+	            }               
+	            Debug.logInfo("text: " + text + " : " + smsPartyId + " : " + contactNumberTo, module);            
+			}
+			catch (Exception e) {
+				Debug.logError(e, "Problem sending leave status sms", module);
+				return ServiceUtil.returnError(e.getMessage());
+			}       
+	        return ServiceUtil.returnSuccess();
+	    }
 	 
 	public static  Map<String, Object> checkPayrollGeneratedOrNotForDate(DispatchContext dctx, Map context) {
 		 	GenericValue userLogin = (GenericValue) context.get("userLogin");

@@ -44,6 +44,13 @@
        <condition operator="equals" field-name="smsFlag" type="Boolean" value="true"/>
         <action service="sendLeaveStatusSms" mode="async" />
     </eca>    
+    <eca service="updatEncashmentStatus" event="commit">
+        <condition field-name="partyId" operator="is-not-empty"/>
+        <condition field-name="checkBox" operator="is-not-empty"/>
+        <condition field-name="date" operator="is-not-empty"/>
+        <condition operator="equals" field-name="smsFlag" type="Boolean" value="true"/>
+        <action service="sendCashEncashSms" mode="async" />
+    </eca>
    
 </service-eca>     
      

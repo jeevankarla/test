@@ -171,4 +171,5 @@ under the License.
 	<FixedAssetType fixedAssetTypeId="QUARTER_TYPE" hasTable="N" description="Quarter rent"/>
 	<RoleType description="Tenant" roleTypeId="TENANT"/> 
 	
+	 <TenantConfiguration createdStamp="2014-12-12 16:01:39.0" createdTxStamp="2014-12-12 16:01:39.0" description="Enable Cash Encashment Sms functionality" lastUpdatedStamp="2014-12-12 16:01:39.0" lastUpdatedTxStamp="2014-12-12 16:01:39.0" propertyName="enableCashEncashSms" propertyTypeEnumId="SMS" propertyValue="Y"/>
 </entity-engine-xml>
