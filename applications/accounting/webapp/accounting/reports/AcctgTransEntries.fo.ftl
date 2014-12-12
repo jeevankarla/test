@@ -56,7 +56,8 @@ under the License.
                     	
                     	 <fo:block>${uiLabelMap.FormFieldTitle_glAccountId}: ${accountCodeId} </fo:block>
                     	
-                    	<fo:block>Gl Account Name:</fo:block>
+                    	  <#assign glAccount = delegator.findOne("GlAccount", {"glAccountId" : accountCodeId}, true)>
+                    	<fo:block>Gl Account Name:${glAccount.accountName?if_exists}</fo:block>
 					            
               <fo:block>&#160;</fo:block>
                    <fo:block>
