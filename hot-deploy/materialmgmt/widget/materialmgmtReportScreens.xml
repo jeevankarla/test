@@ -279,10 +279,11 @@
      				<property-map resource="OrderUiLabels" map-name="uiLabelMap" global="true"/>
      				<property-map resource="ProductUiLabels" map-name="uiLabelMap" global="true"/>
      				<property-map resource="PartyUiLabels" map-name="uiLabelMap" global="true"/>
-     				<property-map resource="CommonUiLabels" map-name="uiLabelMap" global="true"/>     	     				
+     				<property-map resource="CommonUiLabels" map-name="uiLabelMap" global="true"/> 
+     				<set field="storeList" value="${groovy:import org.ofbiz.base.util.*; return in.vasista.vbiz.purchase.MaterialHelperServices.getMaterialStores(dispatcher.getDispatchContext(),UtilMisc.toMap()).get(&quot;storesList&quot;);}" type="List"/>	     				
      				<set field="screenFlag" value="NewReports"/>
      			</actions>
-                <widgets>
+                <widgets>                
      				<section>
      					<widgets>
      						<decorator-screen name="materialmgmtNgCommonDecorator" location="${parameters.mainDecoratorLocation}">

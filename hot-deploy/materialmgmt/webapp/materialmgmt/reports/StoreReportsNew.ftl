@@ -143,11 +143,13 @@ function makeDatePicker1(fromDateId ,thruDateId){
 						    </td>
 						    <td width="15%"><span class='h3'>Material Code<@htmlTemplate.lookupField size="10" maxlength="22" formName="StoreIssueReport" name="productId" id="productId" fieldFormName="LookupProduct"/>
 							</span></td>
-							<td width="8%"><span class='h3'>Store
-								<select name='store' id = "store">
-								 <option value=''>All</option>
-								 <option value='MAIN STORE'>MAIN STORE</option>										
-							    </select>
+							<td width="15%"><span class='h3'>Store
+							    <select name="issueToFacilityId" id="issueToFacilityId">
+							        <option value=""></option>
+							        <#list  storeList as store>
+							          <option value='${store.facilityId?if_exists}'>${store.facilityId?if_exists}</option>
+							        </#list> 
+							    </select>    								
 						   </span></td>
 						    <td width="6%"><span class='h3'><input type="submit" value="Download" class="buttontext"></span></td>
 						</tr>

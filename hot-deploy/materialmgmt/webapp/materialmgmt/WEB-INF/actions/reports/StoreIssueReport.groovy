@@ -35,6 +35,9 @@ dctx = dispatcher.getDispatchContext();
 context.put("dctx",dctx);
 fromDate=parameters.fromDate;
 thruDate=parameters.thruDate;
+productId=parameters.productId;
+issueToFacilityId=parameters.issueToFacilityId;
+context.put("issueToFacilityId",issueToFacilityId);
 reportTypeFlag = parameters.reportTypeFlag;
 dctx = dispatcher.getDispatchContext();
 fromDateTime = null;
@@ -46,7 +49,6 @@ try {
 } catch (ParseException e) {
 	Debug.logError(e, "Cannot parse date string: "+fromDate, "");
 }
-
 fromDateTime = UtilDateTime.getDayStart(fromDateTime);
 dayBegin = UtilDateTime.getDayStart(fromDateTime);
 dayEnd = UtilDateTime.getDayEnd(thruDateTime);
@@ -58,6 +60,11 @@ if(totalDays > 32){
 	Debug.logError("You Cannot Choose More Than 31 Days.","");
 	context.errorMessage = "You Cannot Choose More Than 31 Days";
 	return;
+}
+prodDetails = delegator.findOne("Product", [productId : productId], false);
+if(UtilValidate.isNotEmpty(prodDetails)){
+   materialName = prodDetails.productName;
+  context.put("materialName",materialName);
 }
 storeIssueReceipts = MaterialHelperServices.getMaterialReceiptsForPeriod(dctx, [fromDate:dayBegin, thruDate:dayEnd,isForMrrReg:"Y"]);
 MaterialReceiptRegister=storeIssueReceipts.get("MaterialReceiptRegisterMap");
@@ -100,7 +107,6 @@ if(UtilValidate.isNotEmpty(ProdTotalsList)){
  	}
 }
 context.materialList=materialList;
-Debug.log("materialList==============="+materialList);
 storeIssue=MaterialHelperServices.getCustRequestIssuancesForPeriod(dctx,[fromDate:dayBegin, thruDate:dayEnd,userLogin : userLogin]);
 StoreIssueList=storeIssue.get("itemIssuanceList");
 issueList=[];
@@ -115,24 +121,3 @@ if(UtilValidate.isNotEmpty(StoreIssueList)){
 	}
 }
 context.issueList=issueList;
-//storeDetails=MaterialHelperServices.getMaterialStores(dctx,[fromDate:dayBegin, thruDate:dayEnd,userLogin : userLogin]);
-//StoreList=storeDetails.get("storesList");
-//finalList=[];
-//if(UtilValidate.isNotEmpty(StoreList)){
-//	StoreList.each{StoreListDetails->
-//		StoreListDetailsMap=[:];
-//		StoreListDetailsMap.put("facilityId",StoreListDetails.get("facilityId"));
-//		finalList.add(StoreListDetailsMap);
-//	}
-//}
-//context.finalList=finalList;		
-//Debug.log("store========================"+store);
-
-
-//f(UtilValidate.isNotEmpty(productId)){
-//	prodDetails = delegator.findList("Product",EntityCondition.makeCondition("productId", EntityOperator.EQUALS , productId)  , null, null, null, false );
-//	prodName=prodDetails.productName;
-//	prodCAtegory=prodDetails.primaryProductCategoryId;
-//	materialCode=prodDetails.internalName;
-
-
