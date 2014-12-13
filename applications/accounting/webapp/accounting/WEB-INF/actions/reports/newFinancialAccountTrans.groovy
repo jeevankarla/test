@@ -217,7 +217,7 @@ if (organizationPartyId) {
 		paymentGroupMethodTypeDes = "";
 		paymentGroupTypeDes = "";
 		paymentGroupRefNum = "";
-		paymentGroupAmount = "";
+		paymentGroupAmount = 0;
 		paymentGroupComments = "";
 		paymentMethodTypeId = "";
 		
@@ -325,7 +325,9 @@ if (organizationPartyId) {
 								finAccountTransTypeId = finAccountTrans.finAccountTransTypeId;
 								reasonEnumId = finAccountTrans.reasonEnumId;
 								finAccountDes = finAccountTrans.comments;
-								finAccountContraNum = finAccountTrans.contraRefNum;
+								if(UtilValidate.isNotEmpty(finAccountTrans.contraRefNum)){
+									finAccountContraNum = finAccountTrans.contraRefNum;
+								}
 								if(UtilValidate.isNotEmpty(reasonEnumId) && reasonEnumId.equals("FATR_CONTRA")){
 									finAccountMethodType = "Contra";
 								}
