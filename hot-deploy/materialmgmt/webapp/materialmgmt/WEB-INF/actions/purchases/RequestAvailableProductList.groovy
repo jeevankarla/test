@@ -39,7 +39,7 @@ conditionList.add(EntityCondition.makeCondition("itemStatusId", EntityOperator.I
 conditionList.add(EntityCondition.makeCondition("custRequestTypeId", EntityOperator.EQUALS, "PRODUCT_REQUIREMENT"));
 condition = EntityCondition.makeCondition(conditionList, EntityOperator.AND);
 
-custRequestItems = delegator.findList("CustRequestAndItemAndAttribute", condition, null, null, null, false);
+custRequestItems = delegator.findList("CustRequestAndItemAndAttribute", condition, null, UtilMisc.toList("-custRequestDate"), null, false);
 
 productIds = EntityUtil.getFieldListFromEntityList(custRequestItems, "productId", true);
 
