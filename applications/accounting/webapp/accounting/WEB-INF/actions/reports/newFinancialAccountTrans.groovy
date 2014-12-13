@@ -16,10 +16,12 @@
  * specific language governing permissions and limitations
  * under the License.
  */
+import org.ofbiz.entity.GenericValue;
 import org.ofbiz.entity.condition.EntityCondition;
 import org.ofbiz.entity.condition.EntityOperator;
 import org.ofbiz.entity.util.EntityUtil;
 import org.ofbiz.base.util.UtilDateTime;
+import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.base.util.UtilNumber;
 import org.ofbiz.accounting.util.UtilAccounting;
@@ -237,36 +239,40 @@ if (organizationPartyId) {
 					paymentGroupId = null;
 					//for group payments
 					if(UtilValidate.isNotEmpty(paymentId)){
-						paymentGroupMemberList = delegator.findList("PaymentGroupMember", EntityCondition.makeCondition("paymentId", EntityOperator.EQUALS, paymentId), null, null, null, false);
-						if(UtilValidate.isNotEmpty(paymentGroupMemberList)){
-							paymentGroupMemberList.each { paymentGroupMember->
-								paymentGroupId = paymentGroupMember.paymentGroupId;
-								if(UtilValidate.isNotEmpty(paymentGroupId)){
-									if(UtilValidate.isNotEmpty(paymentGroupId)){
-										paymentGroup = delegator.findOne("PaymentGroup", [paymentGroupId : paymentGroupId], false);
-										if(UtilValidate.isNotEmpty(paymentGroup)){
-											paymentGroupTypeId = paymentGroup.paymentGroupTypeId;
-											if(UtilValidate.isNotEmpty(paymentMethodTypeId)){
-												paymentGroupType = delegator.findOne("PaymentGroupType", [paymentGroupTypeId : paymentGroupTypeId], false);
-												if(UtilValidate.isNotEmpty(paymentGroupType)){
-													paymentGroupTypeDes = paymentGroupType.description;
-												}
-											}
-											paymentMethodTypeId = paymentGroup.paymentMethodTypeId;
-											if(UtilValidate.isNotEmpty(paymentMethodTypeId)){
-												paymentMethodType = delegator.findOne("PaymentMethodType", [paymentMethodTypeId : paymentMethodTypeId], false);
-												if(UtilValidate.isNotEmpty(paymentMethodType)){
-													paymentGroupMethodTypeDes = paymentMethodType.description;
-												}
-											}
-											paymentGroupRefNum = paymentGroup.paymentRefNum;	
-											paymentGroupAmount = paymentGroup.amount;
-											paymentGroupComments = paymentGroup.inFavor;
-										}
-									}
-								}
-							}
-						}
+						GenericValue paymentIsValidForGroup = delegator.findOne("Payment",UtilMisc.toMap("paymentId",paymentId) , false);
+					   //ignore IF it is From AR Side
+					   if(!UtilAccounting.isReceipt(paymentIsValidForGroup)){
+						   paymentGroupMemberList = delegator.findList("PaymentGroupMember", EntityCondition.makeCondition("paymentId", EntityOperator.EQUALS, paymentId), null, null, null, false);
+						   if(UtilValidate.isNotEmpty(paymentGroupMemberList)){
+							   paymentGroupMemberList.each { paymentGroupMember->
+								   paymentGroupId = paymentGroupMember.paymentGroupId;
+								   if(UtilValidate.isNotEmpty(paymentGroupId)){
+									   if(UtilValidate.isNotEmpty(paymentGroupId)){
+										   paymentGroup = delegator.findOne("PaymentGroup", [paymentGroupId : paymentGroupId], false);
+										   if(UtilValidate.isNotEmpty(paymentGroup)){
+											   paymentGroupTypeId = paymentGroup.paymentGroupTypeId;
+											   if(UtilValidate.isNotEmpty(paymentMethodTypeId)){
+												   paymentGroupType = delegator.findOne("PaymentGroupType", [paymentGroupTypeId : paymentGroupTypeId], false);
+												   if(UtilValidate.isNotEmpty(paymentGroupType)){
+													   paymentGroupTypeDes = paymentGroupType.description;
+												   }
+											   }
+											   paymentMethodTypeId = paymentGroup.paymentMethodTypeId;
+											   if(UtilValidate.isNotEmpty(paymentMethodTypeId)){
+												   paymentMethodType = delegator.findOne("PaymentMethodType", [paymentMethodTypeId : paymentMethodTypeId], false);
+												   if(UtilValidate.isNotEmpty(paymentMethodType)){
+													   paymentGroupMethodTypeDes = paymentMethodType.description;
+												   }
+											   }
+											   paymentGroupRefNum = paymentGroup.paymentRefNum;
+											   paymentGroupAmount = paymentGroup.amount;
+											   paymentGroupComments = paymentGroup.inFavor;
+										   }
+									   }
+								   }
+							   }
+						   }
+					   }//end of isReceipt Logic	
 					}
 					paymentTransSequenceId = "";
 					payment = delegator.findOne("Payment", [paymentId : paymentId], false);
