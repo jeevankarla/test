@@ -177,8 +177,8 @@ under the License.
                                         </fo:table-cell>
                                         <fo:table-cell border="1pt solid" border-width=".1mm">
                                             <fo:block text-align="center" font-size="10pt">
-                                                <#if (acctgTransEntry.paymentId)??>
-                                                    <#assign paymentType = (delegator.findOne("Payment", {"paymentId" : (acctgTransEntry.paymentId)!}, false)).getRelatedOne("PaymentType")/>
+                                                <#if (acctgTransEntry.paymentId)?exists>
+                                                    <#assign paymentType = (delegator.findOne("Payment", {"paymentId" : (acctgTransEntry.paymentId)}, false)).getRelatedOne("PaymentType")/>
                                                     ${(acctgTransEntry.paymentId)!}<#if (paymentType?has_content)> -(${(paymentType.description)!})</#if>
                                                 </#if>
                                             </fo:block>
@@ -227,17 +227,17 @@ under the License.
                                          <fo:table-cell border="1pt solid" border-width=".1mm">
                                             <fo:block text-align="center" font-size="10pt">
                                            <#if acctgTransEntry.invoiceId?has_content>
-                                             <#assign invoice = delegator.findOne("Invoice", {"invoiceId" : acctgTransEntry.invoiceId!}, true)>
+                                             <#assign invoice = delegator.findOne("Invoice", {"invoiceId" : (acctgTransEntry.invoiceId)}, true)>
           						              <#if invoice.comments?has_content>
           						                 ${invoice.comments}
           						              </#if>
-                                            <#elseif acctgTransEntry.paymentId?has_content>
-                                               <#assign payment = delegator.findOne("Payment", {"paymentId" : acctgTransEntry.paymentId!}, true)>
+                                            <#elseif  acctgTransEntry.paymentId?exists>
+                                               <#assign payment = delegator.findOne("Payment", {"paymentId" : (acctgTransEntry.paymentId)}, true)>
                                                 <#if payment.comments?has_content>
                                                 ${payment.comments}
                                                 </#if>
                                             <#elseif acctgTransEntry.finAccountTransId?has_content>
-                                             <#assign finAccountTrans = delegator.findOne("FinAccountTrans", {"finAccountTransId" : (acctgTransEntry.finAccountTransId)!}, true)>
+                                             <#assign finAccountTrans = delegator.findOne("FinAccountTrans", {"finAccountTransId" : (acctgTransEntry.finAccountTransId)}, true)>
 									           <#if finAccountTrans.comments?has_content>
 									            ${finAccountTrans.comments}
 									           </#if>
@@ -248,8 +248,8 @@ under the License.
                                         </fo:table-cell>
                                         <fo:table-cell border="1pt solid" border-width=".1mm">
                                             <fo:block text-align="center" font-size="10pt">
-                                                <#if (acctgTransEntry.acctgTransTypeId)??>
-                                                    <#assign acctgTransType = (delegator.findOne("AcctgTransType", {"acctgTransTypeId" : (acctgTransEntry.acctgTransTypeId)!}, false))!/>
+                                                <#if (acctgTransEntry.acctgTransTypeId)?exists>
+                                                    <#assign acctgTransType = (delegator.findOne("AcctgTransType", {"acctgTransTypeId" : (acctgTransEntry.acctgTransTypeId)}, false))!/>
                                                     <#if acctgTransType?has_content>${acctgTransType.description}</#if>
                                                 </#if>
                                             </fo:block>        
