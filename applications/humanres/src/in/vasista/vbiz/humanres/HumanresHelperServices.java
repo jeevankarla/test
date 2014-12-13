@@ -90,4 +90,65 @@ public class HumanresHelperServices {
 	        return result;
 	    }
 	 
+	 public static Map<String, Object> getLoanClosingBalanceByLoanType(DispatchContext dctx, Map context) {
+	    	Map<String, Object> result = ServiceUtil.returnSuccess();
+	    	String loanTypeId = (String) context.get("loanTypeId");
+	    	String partyId = (String) context.get("partyId");
+	    	String customTimePeriodId = (String) context.get("customTimePeriodId");
+	    	
+			GenericValue loanTypeDetails = null;
+	    	GenericDelegator delegator = (GenericDelegator) dctx.getDelegator();
+			LocalDispatcher dispatcher = dctx.getDispatcher();
+			
+			GenericValue userLogin = (GenericValue) context.get("userLogin");
+			
+			Timestamp fromDateStart = null;
+	    	Timestamp thruDateEnd = null;
+	    	
+	    	Map loanClosingBalMap = FastMap.newInstance();
+			try {
+				GenericValue customTimePeriod = delegator.findOne("CustomTimePeriod", UtilMisc.toMap("customTimePeriodId", customTimePeriodId),false);
+	        	if (UtilValidate.isNotEmpty(customTimePeriod)) {
+	        		Timestamp fromDate = UtilDateTime.toTimestamp(customTimePeriod.getDate("fromDate"));
+	        		Timestamp thruDate = UtilDateTime.toTimestamp(customTimePeriod.getDate("thruDate"));
+	        		
+	        		fromDateStart = UtilDateTime.getDayStart(fromDate);
+	        		thruDateEnd = UtilDateTime.getDayEnd(thruDate);
+	        		
+	        		List conditionList = FastList.newInstance();
+					conditionList.add(EntityCondition.makeCondition("partyId", EntityOperator.EQUALS, partyId));
+					conditionList.add(EntityCondition.makeCondition("loanTypeId", EntityOperator.EQUALS, loanTypeId));
+					conditionList.add(EntityCondition.makeCondition("disbDate", EntityOperator.GREATER_THAN_EQUAL_TO ,fromDateStart));
+					conditionList.add(EntityCondition.makeCondition("disbDate", EntityOperator.LESS_THAN_EQUAL_TO ,thruDateEnd));
+					conditionList.add(EntityCondition.makeCondition("setlDate", EntityOperator.EQUALS ,null));
+		        	EntityCondition condition = EntityCondition.makeCondition(conditionList,EntityOperator.AND);
+		        	List<GenericValue> loanList = delegator.findList("Loan",condition, null, null, null, false);
+		        	if(UtilValidate.isNotEmpty(loanList)){
+		        		for(GenericValue loan:loanList){
+		        			BigDecimal principalAmount = BigDecimal.ZERO;
+		        			BigDecimal interestAmount = BigDecimal.ZERO;
+        					if(UtilValidate.isNotEmpty(loan.getBigDecimal("principalAmount"))){
+    							principalAmount = loan.getBigDecimal("principalAmount");
+    						}
+    						if(UtilValidate.isNotEmpty(loan.getBigDecimal("interestAmount"))){
+    							interestAmount = loan.getBigDecimal("interestAmount");
+    						}		
+    						Timestamp disbDate = loan.getTimestamp("disbDate");
+    						Map loanAmountsMap = FastMap.newInstance();
+    						loanAmountsMap.put("principalAmount",principalAmount);
+    						loanAmountsMap.put("interestAmount",interestAmount);
+    						loanAmountsMap.put("disbDate",disbDate);
+    						if(UtilValidate.isNotEmpty(loanAmountsMap)){
+    							loanClosingBalMap.put(partyId, loanAmountsMap);
+    						}
+		        		}
+		        	}
+	        	}
+	        }catch(GenericEntityException e){
+				Debug.logError("Error while getting Loan Amounts"+e.getMessage(), module);
+			}
+			result.put("loanClosingBalMap", loanClosingBalMap);
+	        return result;
+	    }
+	 
 }
