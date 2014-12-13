@@ -27,7 +27,7 @@
           <service service-name="performFind" result-map="result" result-map-list="listIt">
             <field-map field-name="inputFields" from-field="parameters"/>
             <field-map field-name="entityName" from-field="entityName"/>
-            <field-map field-name="orderBy" from-field="parameters.sortField"/>
+            <field-map field-name="orderBy" value="-custRequestDate"/>
             <field-map field-name="viewIndex" from-field="viewIndex"/>
             <field-map field-name="viewSize" from-field="viewSize"/>
           </service>
@@ -36,13 +36,13 @@
 
     <form name="ListRequestList" type="list" use-row-submit="true" list-name="custRequests" title="List of customer requests"
         odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
-        <field name="custRequestId" sort-field="true" title="${uiLabelMap.MaterialMangement_CustRequestId}" widget-style="buttontext">
+        <field name="custRequestId"  title="${uiLabelMap.MaterialMangement_CustRequestId}" widget-style="buttontext">
             <hyperlink description="${custRequestId}" target="ViewMaterialRequest" target-window="_blank">
                 <parameter param-name="custRequestId"/>
             </hyperlink>
         </field>
-        <field name="custRequestDate" sort-field="true" title="${uiLabelMap.MaterialMangement_CustRequestDate}"><display description="${bsh:org.ofbiz.base.util.UtilDateTime.toDateString(custRequestDate,&quot;dd/MM/yyyy&quot;)}"/></field>
-        <field name="fromPartyId" sort-field="true" title="${uiLabelMap.MaterialMangement_CustRequestFromPartyId}">
+        <field name="custRequestDate"  title="${uiLabelMap.MaterialMangement_CustRequestDate}"><display description="${bsh:org.ofbiz.base.util.UtilDateTime.toDateString(custRequestDate,&quot;dd/MM/yyyy&quot;)}"/></field>
+        <field name="fromPartyId"  title="${uiLabelMap.MaterialMangement_CustRequestFromPartyId}">
             <display-entity entity-name="PartyNameView" key-field-name="partyId" description="${firstName} ${middleName} ${lastName} ${groupName}">
                 <sub-hyperlink description="[${fromPartyId}]" target="/partymgr/control/viewprofile" target-type="inter-app">
                     <parameter param-name="partyId" from-field="fromPartyId"/>
@@ -50,11 +50,11 @@
             </display-entity>
         </field>
         <field name="custRequestName" title="${uiLabelMap.MaterialMangement_CustRequestName}"><display/></field>
-        <field name="statusId" sort-field="true" title="Status">
+        <field name="statusId"  title="Status">
             <display-entity also-hidden="false" entity-name="StatusItem"/>
         </field>
-        <field name="lastModifiedDate" sort-field="true"><display/></field>
-        <field name="createdByUserLogin" sort-field="true"><display/></field>
+        <field name="lastModifiedDate" ><display/></field>
+        <field name="createdByUserLogin" ><display/></field>
         
         <field use-when="&quot;${statusId}&quot;== &quot;CRQ_DRAFT&quot;" name="cancel" widget-style="buttontext">
             <hyperlink target="setRequestStatus" description="Cancel">
@@ -85,7 +85,7 @@
           <service service-name="performFind" result-map="result" result-map-list="listIt">
             <field-map field-name="inputFields" from-field="parameters"/>
             <field-map field-name="entityName" value="CustRequestAndIssuance"/>
-            <field-map field-name="orderBy" from-field="parameters.sortField"/>
+            <field-map field-name="orderBy" value="-custRequestDate"/>
             <field-map field-name="viewIndex" from-field="viewIndex"/>
             <field-map field-name="viewSize" from-field="viewSize"/>
           </service>
@@ -142,7 +142,7 @@
           <service service-name="performFind" result-map="result" result-map-list="listIt">
             <field-map field-name="inputFields" from-field="parameters"/>
             <field-map field-name="entityName" from-field="entityName"/>
-            <field-map field-name="orderBy" from-field="parameters.sortField"/>
+            <field-map field-name="orderBy" value="-custRequestDate"/>
             <field-map field-name="viewIndex" from-field="viewIndex"/>
             <field-map field-name="viewSize" from-field="viewSize"/>
           </service>
@@ -451,5 +451,30 @@
         <field name="custRequestDate" title="${uiLabelMap.MaterialMangement_CustRequestDate}"><display/></field>
         <field name="createdDate" title="Created Date"><display/></field>
         <field name="lastModifiedDate" title="Last Modified Date"><display/></field>
+    </form>
+    <form name="AddRequirement" type="single" target="createNewRequirement" >
+    	<actions>
+    		<entity-condition entity-name="ProductFacility" distinct="true" list="prodFacility" />
+        	
+			<set field="prodFacilityId" type="List" value="${groovy: org.ofbiz.entity.util.EntityUtil.getFieldListFromEntityList(prodFacility, 'facilityId', true);}"/>        	
+        	<entity-condition entity-name="Facility" distinct="true" list="facilityList">
+        		<condition-expr field-name="facilityId" operator="in" from-field="prodFacilityId"/>
+        	</entity-condition>
+    	</actions>
+    	<field name="productId" title="Product" required-field="true" >
+            <lookup target-form-name="LookupProduct"/>
+        </field>
+        <field name="facilityId" required-field="true" >
+            <drop-down allow-empty="false" >
+            	<list-options key-name="facilityId" list-name="facilityList" description="${facilityName}"/>
+            </drop-down>
+        </field>
+        <field name="requirementTypeId" title="Requirement Type"><hidden value="PRODUCT_REQUIREMENT"/></field>
+        <field name="quantity" title="Quantity" required-field="true"><text size="10"  /></field>
+        <field name="requirementStartDate" title="Requirement Date"><date-time type="date"/></field>
+    	<field name="description" title="Description"><textarea  /></field>
+    	<field name="submitButton" title="${uiLabelMap.Create}" widget-style="smallSubmit">
+            <submit/>
+        </field>
     </form>
 </forms>

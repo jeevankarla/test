@@ -19,4 +19,25 @@
         <attribute name="partyId" mode="IN" type="String" optional="true"/>
         <attribute name="statusId" mode="IN" type="String" optional="false"/>
    </service>
+   
+   <service name="createNewRequirement" engine="simple"
+            location="component://order/script/org/ofbiz/order/requirement/RequirementServices.xml" invoke="createRequirement">
+        <description>Create a new requirement</description>
+        <implements service="RequirementInterface"/>
+        <attribute name="requirementTypeId" type="String" mode="IN" optional="false"/>
+        <attribute name="custRequestId" type="String" mode="IN" optional="true"/>
+        <attribute name="custRequestItemSeqId" type="String" mode="IN" optional="true"/>
+        <attribute name="requirementId" type="String" mode="INOUT" optional="true"/>
+    </service>
+    
+    <service name="RequirementInterface" engine="interface" location="" invoke="">
+        <description>Requirement Interface</description>
+        <auto-attributes mode="IN" entity-name="Requirement" include="nonpk" optional="true">
+            <exclude field-name="createdDate"/>
+            <exclude field-name="createdByUserLogin"/>
+            <exclude field-name="lastModifiedDate"/>
+            <exclude field-name="lastModifiedByUserLogin"/>
+        </auto-attributes>
+    </service>
+   
 </services>

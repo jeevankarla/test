@@ -18,6 +18,7 @@ $(document).ready(function(){
  	function getRequrimentsRunningTotal() {
   		var requirementsList=[];
 		var requirements = jQuery("#EnquiryForApprovedMatRequirements :checkbox[name='requirementIds']");
+		
 		jQuery.each(requirements,function(){
 			if(jQuery(this).is(':checked')){
 				requirementsList.push($(this).val());
@@ -26,10 +27,8 @@ $(document).ready(function(){
 		if(requirementsList.length==0){
 			totalCount=0;
 			productCount=0;
-			totalAmt=0;
 			jQuery("#totalCount").html(totalCount);
 			jQuery("#productCount").html(productCount);
-			jQuery("#totalAmt").html(totalAmt);
 		}
 		var data="list="+requirementsList;
 		$.ajax({
@@ -40,10 +39,8 @@ $(document).ready(function(){
         	success: function(result) {
         		totalCount=result["totalCount"];
         		productCount=result["productCount"];
-        		totalAmt=result["totalAmt"];
         			jQuery("#totalCount").html(totalCount);
         			jQuery("#productCount").html(productCount);
-        			jQuery("#totalAmt").html(totalAmt);
        		 },
        		error: function() {
        	 		alert(result["_ERROR_MESSAGE_"]);
@@ -64,12 +61,11 @@ $(document).ready(function(){
        
  	}	
 </script>
-<#if requirementsForSupplier?has_content>
-<#assign requirements=requirementsForSupplier.get("requirementsForSupplier")>
+<#if requirements?has_content>
 <form id="sendRequirementIds" name="sendRequirementIds" action="sendRequirementIds" method="post">
 </form>
 <div align="left">
-	  <font size="15" color="blue"><b>Total Selected :<b/></font><font size="15" color="red"><b><span id="totalCount"></span></b></font>&nbsp;&nbsp;&nbsp;<font size="15" color="blue"><b>No Of Products :<b/></font><font size="15" color="red"><b><span id="productCount"></span></b></font>&nbsp;&nbsp;&nbsp;<font size="15" color="blue"><b>Total Amount :<b/></font><font size="15" color="red"><b><span id="totalAmt"></span></b></font>
+	  <font size="15" color="blue"><b>Total Selected :<b/></font><font size="15" color="red"><b><span id="totalCount"></span></b></font>&nbsp;&nbsp;&nbsp;<font size="15" color="blue"><b>No Of Products :<b/></font><font size="15" color="red"><b><span id="productCount"></span></b></font>
 	</div>
 <form id="EnquiryForApprovedMatRequirements" name="EnquiryForApprovedMatRequirements" action="" method="post">
 	<div align="right">
@@ -82,11 +78,7 @@ $(document).ready(function(){
 		  <td>Product Id</td>
 		  <td>Product Name</td>
 		  <td>Facility Id</td>
-		  <td>Supplier</td>
-		  <td>Min Order Quantity</td>
-		  <td>Last Price</td>
 		  <td>Quantity</td>
-		  <td>Comments</td>
 		  <td align="right">${uiLabelMap.CommonSelectAll} <input type="checkbox" id="checkAllRequirements" name="checkAllRequirements" onchange="javascript:toggleRequirementId(this);"/></td>
 		  </tr>
 		</thead>
@@ -98,11 +90,7 @@ $(document).ready(function(){
 				<td>${requirement.productId?if_exists}</td>
 				<td>  <#assign productName = delegator.findOne("Product", {"productId" : requirement.productId}, true) /> ${productName.productName}</td>
 				<td>${requirement.facilityId?if_exists}</td>
-				<td><#assign partyName = delegator.findOne("PartyNameView", {"partyId" : requirement.partyId}, true) /> ${partyName.LastName?if_exists} ${partyName.firstName?if_exists} ${partyName.middleName?if_exists} ${partyName.groupName?if_exists}</td>
-				<td>${requirement.minimumOrderQuantity?if_exists}</td>
-				<td><#if requirement.lastPrice?has_content><#assign amt=requirement.lastPrice><#else><#assign amt=0></#if>Rs ${amt?if_exists?string("##0.00")}</td>
 				<td>${requirement.quantity?if_exists}</td>
-				<td>${requirement.comments?if_exists}</td>
 				<td align="right"><input type="checkbox" id="requirementId_${requirement.requirementId?if_exists}" name="requirementIds" value="${requirement.requirementId?if_exists}" onclick="javascript:getRequrimentsRunningTotal();"/></td>
 			</tr>
 			<#assign alt_row = !alt_row>

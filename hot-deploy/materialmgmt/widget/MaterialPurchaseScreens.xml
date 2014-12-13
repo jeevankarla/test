@@ -145,7 +145,8 @@
                <entity-condition list="receiptItems" entity-name="ShipmentReceipt">
 					<condition-list combine="and">
 						<condition-expr field-name="statusId" value="SR_RECEIVED"/>
-					</condition-list>		               
+					</condition-list>		
+					<order-by field-name="-datetimeReceived"/>        
                </entity-condition>
             </actions>
             <widgets>

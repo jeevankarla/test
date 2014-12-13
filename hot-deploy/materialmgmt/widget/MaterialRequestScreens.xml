@@ -120,8 +120,9 @@
                 			<condition-expr field-name="statusId" operator="equals" value="CRQ_SUBMITTED"/>
                 		</condition-list>
 						<condition-expr field-name="itemStatusId" operator="equals" value="CRQ_DRAFT"/>
-						<condition-expr field-name="custRequestTypeId" operator="equals" value="PRODUCT_REQUIREMENT"/>                	
+						<condition-expr field-name="custRequestTypeId" operator="equals" value="PRODUCT_REQUIREMENT"/> 
                 	</condition-list>
+                	<order-by field-name="-custRequestDate"/>
                 </entity-condition>	
             </actions>
             <widgets>
@@ -410,6 +411,23 @@
                 </decorator-screen>
             </widgets>
         </section>
+    </screen>
+    
+    <screen name="NewRequirement">
+    	<section>
+    		<actions>
+    		</actions>
+    		<widgets>
+    			<decorator-screen name="materialmgmtNgCommonDecorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="body">
+                    	<include-menu name="StoreIssueTabBar" location="component://materialmgmt/widget/materialmgmtMenus.xml"/>
+                    	<screenlet title="Create New Requirement" >
+                    		<include-form location="component://materialmgmt/widget/MaterialRequestForms.xml" name="AddRequirement"/>
+                    	</screenlet>
+                    </decorator-section>
+                </decorator-screen>    
+    		</widgets>
+    	</section>
     </screen>
     
 </screens>

@@ -15,6 +15,7 @@
                 <decorator-screen name="materialmgmtNgCommonDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                     	<include-menu name="RequirementTabBar" location="component://materialmgmt/widget/materialmgmtMenus.xml"/>
+                    	<link target="newRequirement"  text="Create New Requirement" style="buttontext" url-mode="plain"/>
                         <decorator-screen name="FindScreenDecorator" location="component://common/widget/CommonScreens.xml">
                             <decorator-section name="search-options">
                                 <include-form name="FindMaterialRequirements" location="component://materialmgmt/widget/MaterialRequirementForms.xml"/>
@@ -123,17 +124,8 @@
                 <set field="viewIndex" from-field="parameters.VIEW_INDEX" type="Integer"/>
                 <set field="viewSize" from-field="parameters.VIEW_SIZE" type="Integer" default-value="50"/>
                 <set field="_rowSubmit" value="Y"/>
-                <!-- <script location="component://order/webapp/ordermgr/WEB-INF/actions/requirement/ApprovedProductRequirements.groovy"/> -->
-             <service service-name="prepareFind" result-map="resultConditions">
-                <field-map field-name="inputFields" from-field="requestParameters"/>
-                <field-map field-name="entityName" value="Requirement"/>
-            </service>
-            <service service-name="getRequirementsForSupplier" result-map="requirementsForSupplier"  >
-                <!--<field-map field-name="orderByList" from-field="resultConditions.orderByList"/>-->
-                <field-map field-name="requirementConditions" from-field="resultConditions.entityConditionList"/>
-                <field-map field-name="partyId" from-field="parameters.partyId"/>
-                <field-map field-name="unassignedRequirements" from-field="parameters.unassignedRequirements"/>
-            </service>
+                 <script location="component://materialmgmt/webapp/materialmgmt/WEB-INF/actions/purchases/EnquiryForRequirement.groovy"/> 
+             
         </actions>
             <widgets>
                 <decorator-screen name="materialmgmtNgCommonDecorator" location="${parameters.mainDecoratorLocation}">

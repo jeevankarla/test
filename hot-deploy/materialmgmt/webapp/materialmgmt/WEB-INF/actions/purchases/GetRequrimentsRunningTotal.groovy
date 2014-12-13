@@ -8,7 +8,6 @@ import in.vasista.vbiz.humanres.PayrollService;
 
 
 requirementsList=[];
-
 if(UtilValidate.isNotEmpty(parameters.list)){
 	list=parameters.list;
 	requirementsList=list.tokenize(',');
@@ -23,21 +22,10 @@ requirementsList.each{ requirement->
 	JSONObject newObj = new JSONObject();
 	requirmntsList=delegator.findOne("Requirement",[requirementId:requirement],false);
 	productId=requirmntsList.productId;
-	if(UtilValidate.isEmpty(productCountList) || !(productCountList).contains(productId)){
-		productCountList.add(productId);
-	}
-	productCount=productCountList.size();
-	conList=[];
-	conList.add(EntityCondition.makeCondition("productId", EntityOperator.EQUALS, productId));
-	condition=EntityCondition.makeCondition(conList,EntityOperator.AND);
-	productsList=delegator.findList("SupplierProduct",condition,null,null,null,false);
-	productList=EntityUtil.getFirst(productsList);
-	lastPrice=0;
-	if(UtilValidate.isNotEmpty(productList.lastPrice)){
-		lastPrice=productList.lastPrice;
-	}
-	totalAmt=totalAmt+lastPrice;
+		if(UtilValidate.isEmpty(productCountList) || !(productCountList).contains(productId)){
+			productCountList.add(productId);
+		}
+		productCount=productCountList.size();
 	}
 request.setAttribute("totalCount",totalCount);
 request.setAttribute("productCount",productCount);
-request.setAttribute("totalAmt",totalAmt);

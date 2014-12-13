@@ -85,6 +85,19 @@
         <response name="error" type="view" value="PurchageOrderOverView"/>
     </request-map>
      
+     <request-map uri="newRequirement">
+        <security auth="true" https="true"/>
+        <response name="success" type="view" value="NewRequirement"/>
+        <response name="error" type="view" value="NewRequirement"/>
+    </request-map>
+     
+     <request-map uri="createNewRequirement">
+        <security auth="true" https="true"/>
+        <event type="service" invoke="createRequirement" ></event>
+        <response name="success" type="view" value="FindMaterialRequirement"/>
+        <response name="error" type="view" value="FindMaterialRequirement"/>
+    </request-map>
+     
     <request-map uri="enquiryItemsForQuote">
      	<security auth="true" https="true"/>
      	<response name="success" type="view" value="enquiryItemsForQuote"/>
@@ -550,13 +563,14 @@
     <view-map name="StoreProductIssue" type="screen" page="component://materialmgmt/widget/MaterialRequestScreens.xml#StoreProductIssue"/>
     <view-map name="FindMaterialEnquiry" type="screen" page="component://materialmgmt/widget/MaterialRequestScreens.xml#FindMaterialEnquiry"/>
     <view-map name="enquiryItemsForQuote" type="screen" page="component://materialmgmt/widget/MaterialRequestScreens.xml#EnquiryItemsForQuote"/>
-    
+     <view-map name="NewRequirement" type="screen" page="component://materialmgmt/widget/MaterialRequestScreens.xml#NewRequirement"/>
     
     <!-- Requirement views -->
     <view-map name="FindMaterialRequirement" type="screen" page="component://materialmgmt/widget/MaterialRequirementScreens.xml#FindMaterialRequirement"/>
     <view-map name="ApproveMaterialRequirement" type="screen" page="component://materialmgmt/widget/MaterialRequirementScreens.xml#ApproveMaterialRequirement"/>
     <view-map name="ApprovedMatRequirementBySupplier" type="screen" page="component://materialmgmt/widget/MaterialRequirementScreens.xml#ApprovedMatRequirementBySupplier"/>
     <view-map name="EnquiryForApprovedMatRequirements" type="screen" page="component://materialmgmt/widget/MaterialRequirementScreens.xml#EnquiryForApprovedMatRequirements"/>
+    
     <!-- PO views -->
     <view-map name="confirmPurchaseOrder" type="screen" page="component://materialmgmt/widget/MaterialPurchaseScreens.xml#ConfirmPurchaseOrder"/>
     <view-map name="POMaterialReceipts" type="screen" page="component://materialmgmt/widget/MaterialPurchaseScreens.xml#POMaterialReceipts"/>
