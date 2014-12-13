@@ -125,22 +125,21 @@ public class HumanresHelperServices {
 		        	List<GenericValue> loanList = delegator.findList("Loan",condition, null, null, null, false);
 		        	if(UtilValidate.isNotEmpty(loanList)){
 		        		for(GenericValue loan:loanList){
-		        			BigDecimal principalAmount = BigDecimal.ZERO;
-		        			BigDecimal interestAmount = BigDecimal.ZERO;
-        					if(UtilValidate.isNotEmpty(loan.getBigDecimal("principalAmount"))){
-    							principalAmount = loan.getBigDecimal("principalAmount");
-    						}
-    						if(UtilValidate.isNotEmpty(loan.getBigDecimal("interestAmount"))){
-    							interestAmount = loan.getBigDecimal("interestAmount");
-    						}		
-    						Timestamp disbDate = loan.getTimestamp("disbDate");
-    						Map loanAmountsMap = FastMap.newInstance();
-    						loanAmountsMap.put("principalAmount",principalAmount);
-    						loanAmountsMap.put("interestAmount",interestAmount);
-    						loanAmountsMap.put("disbDate",disbDate);
-    						if(UtilValidate.isNotEmpty(loanAmountsMap)){
-    							loanClosingBalMap.put(partyId, loanAmountsMap);
-    						}
+		        			String loanId = loan.getString("loanId");
+		        			List condList = FastList.newInstance();
+		        			condList.add(EntityCondition.makeCondition("loanId", EntityOperator.EQUALS, loanId));
+		        			condList.add(EntityCondition.makeCondition("customTimePeriodId", EntityOperator.EQUALS, customTimePeriodId));
+				        	EntityCondition cond = EntityCondition.makeCondition(condList,EntityOperator.AND);
+				        	List<GenericValue> loanRecoveryList = delegator.findList("LoanRecovery",cond, null, null, null, false);
+				        	for(GenericValue loanRecovery : loanRecoveryList){
+				        		BigDecimal closingBalance = BigDecimal.ZERO;
+				        		if(UtilValidate.isNotEmpty(loanRecovery.getBigDecimal("closingBalance"))){
+				        			closingBalance = loanRecovery.getBigDecimal("closingBalance");
+				        			if(UtilValidate.isNotEmpty(closingBalance)){
+		    							loanClosingBalMap.put(partyId, closingBalance);
+		    						}	
+	    						}
+				        	}
 		        		}
 		        	}
 	        	}
