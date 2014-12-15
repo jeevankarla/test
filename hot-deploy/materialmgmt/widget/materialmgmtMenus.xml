@@ -84,6 +84,22 @@
         <menu-item name="FindMaterialRequest" title="${uiLabelMap.MaterialMangement_CustRequest}">
         	<link target="FindMaterialRequest"/>
         </menu-item>
+        <menu-item name="viewIndent" title="Indent Overview">
+        	<condition>
+        		<if-compare operator="not-equals" value="" field="custRequestId"/>
+        	</condition>
+            <link target="ViewMaterialRequest">
+                <parameter param-name="custRequestId" from-field="custRequest.custRequestId"/>
+            </link>
+        </menu-item>
+        <menu-item name="addIndentContent" title="Add Indent Documents">
+        	<condition>
+        		<if-compare operator="not-equals" value="" field="custRequestId"/>
+        	</condition>
+            <link target="AddIndentContent">
+                <parameter param-name="custRequestId" from-field="custRequest.custRequestId"/>
+            </link>
+        </menu-item>
          <menu-item name="CustRequestEntry" title="${uiLabelMap.MaterialMangement_CustRequest} Entry">
         	<link target="CustRequestEntry"/>
         </menu-item>
@@ -155,22 +171,44 @@
       <menu name="EnquiryTabBar" extends="CommonSubTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml" selected-menuitem-context-field-name="tabButtonItem2">
         
         <menu-item name="viewEnquiry" title="Enquiry Overview">
-            <link target="viewEnquiryItemDetails">
+        	<condition>
+        		<if-compare operator="not-equals" value="" field="custRequestId"/>
+        	</condition>
+            <link target="ViewMaterialEnquiry">
                 <parameter param-name="custRequestId" from-field="custRequest.custRequestId"/>
             </link>
         </menu-item>
-   
-        <menu-item name="quoteForEnquiry" title="Quotes for Enquiry">
-            <link target="quoteForEnquiry">
+   		
+   		<menu-item name="AddEnquiryContent" title="Enquiry Documents">
+        	<condition>
+        		<if-compare operator="not-equals" value="" field="custRequestId"/>
+        	</condition>
+            <link target="AddEnquiryContent">
+                <parameter param-name="custRequestId" from-field="custRequest.custRequestId"/>
+            </link>
+        </menu-item>
+   		
+   		<menu-item name="quoteForAcceptance" title="Quotes for Acceptance">
+            <link target="quoteForAcceptance">
                 <parameter param-name="custRequestId" from-field="custRequest.custRequestId"/>
             </link>
         </menu-item>
         
-        <menu-item name="enquiryNotes" title="Add/View Notes">
-            <link target="EditEnquiryNotes">
+        <menu-item name="quoteForEvaluation" title="Quotes for Evaluation">
+            <link target="QuoteForEvalution">
                 <parameter param-name="custRequestId" from-field="custRequest.custRequestId"/>
             </link>
         </menu-item>
+        <menu-item name="quoteForShortlist" title="Shortlist">
+            <link target="QuoteForShortlist">
+                <parameter param-name="custRequestId" from-field="custRequest.custRequestId"/>
+            </link>
+        </menu-item>
+        <!-- <menu-item name="enquiryNotes" title="Add/View Notes">
+            <link target="EditEnquiryNotes">
+                <parameter param-name="custRequestId" from-field="custRequest.custRequestId"/>
+            </link>
+        </menu-item> -->
 
     </menu>
     

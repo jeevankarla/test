@@ -37,7 +37,7 @@
     <form name="ListRequestList" type="list" use-row-submit="true" list-name="custRequests" title="List of customer requests"
         odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
         <field name="custRequestId"  title="${uiLabelMap.MaterialMangement_CustRequestId}" widget-style="buttontext">
-            <hyperlink description="${custRequestId}" target="ViewMaterialRequest" target-window="_blank">
+            <hyperlink description="${custRequestId}" target="ViewMaterialRequest">
                 <parameter param-name="custRequestId"/>
             </hyperlink>
         </field>
@@ -452,7 +452,86 @@
         <field name="createdDate" title="Created Date"><display/></field>
         <field name="lastModifiedDate" title="Last Modified Date"><display/></field>
     </form>
-    <form name="AddRequirement" type="single" target="createNewRequirement" >
+    <form name="AddCustRequestContent" type="upload" default-map-name="content" 
+        focus-field-name="contentId" header-row-style="header-row" default-table-style="basic-table" target="createCustRequestContent">
+        <actions>
+            <set field="custRequest" from-field="custRequestId"/>
+            <entity-one entity-name="DataResource" value-field="dataResource" auto-field-map="false">
+                <field-map field-name="dataResourceId" from-field="content.dataResourceId"/>
+            </entity-one>
+        </actions>
+        <field name="custRequestId"><hidden/></field>
+        <field name="dataResourceTypeId"><hidden value="IMAGE_OBJECT"/></field>                
+        <field name="contentTypeId" >
+            <drop-down allow-empty="false" no-current-selected-key="DOCUMENT" >
+                <entity-options description="${description}" entity-name="ContentType">
+                    <entity-order-by field-name="description"/>
+                </entity-options>
+            </drop-down>
+        </field>
+        <field name="dataResourceName" title="${uiLabelMap.CommonUpload}*"><file/></field>
+         <field name="createButton"><submit button-type="button"/></field>
+    </form>
+    <form name="ListEnquiryContent" type="list" list-name="custRequestContents"
+        odd-row-style="alternate-row" default-table-style="basic-table hover-bar" paginate-target="AddEnquiryContent">
+        <field name="custRequestId"><hidden/></field>
+        <field name="contentId" title="contentName">
+            <display-entity entity-name="Content" key-field-name="contentId" description="${contentName}" also-hidden="true">
+                <sub-hyperlink target="/content/control/ViewSimpleContent" description="${uiLabelMap.CommonView}" link-style="buttontext" target-type="inter-app">
+                    <parameter param-name="contentId"/>
+                </sub-hyperlink>
+            </display-entity>
+        </field>
+        <field name="fromDate" title="Uploaded Date"><display/></field>
+        <field name="deleteLink" title="Delete" widget-style="buttontext" >
+           <hyperlink also-hidden="false" description="${uiLabelMap.CommonDelete}" target="deleteEnquiryContent">
+                <parameter param-name="custRequestId"/>
+                <parameter param-name="contentId"/>
+                <parameter param-name="fromDate"/>
+           </hyperlink>
+        </field>
+    </form>
+    
+    <form name="AddIndentContent" type="upload" default-map-name="content" 
+        focus-field-name="contentId" header-row-style="header-row" default-table-style="basic-table" target="createIndentContent">
+        <actions>
+            <set field="custRequest" from-field="custRequestId"/>
+            <entity-one entity-name="DataResource" value-field="dataResource" auto-field-map="false">
+                <field-map field-name="dataResourceId" from-field="content.dataResourceId"/>
+            </entity-one>
+        </actions>
+        <field name="custRequestId"><hidden/></field>
+        <field name="dataResourceTypeId"><hidden value="IMAGE_OBJECT"/></field>                
+        <field name="contentTypeId" >
+            <drop-down allow-empty="false" no-current-selected-key="DOCUMENT" >
+                <entity-options description="${description}" entity-name="ContentType">
+                    <entity-order-by field-name="description"/>
+                </entity-options>
+            </drop-down>
+        </field>
+        <field name="dataResourceName" title="${uiLabelMap.CommonUpload}*"><file/></field>
+         <field name="createButton"><submit button-type="button"/></field>
+    </form>
+    <form name="ListIndentContent" type="list" list-name="custRequestContents"
+        odd-row-style="alternate-row" default-table-style="basic-table hover-bar" paginate-target="AddIndentContent">
+        <field name="custRequestId"><hidden/></field>
+        <field name="contentId" title="contentName">
+            <display-entity entity-name="Content" key-field-name="contentId" description="${contentName}" also-hidden="true">
+                <sub-hyperlink target="/content/control/ViewSimpleContent" description="${uiLabelMap.CommonView}" link-style="buttontext" target-type="inter-app">
+                    <parameter param-name="contentId"/>
+                </sub-hyperlink>
+            </display-entity>
+        </field>
+        <field name="fromDate" title="Uploaded Date"><display/></field>
+        <field name="deleteLink" title="Delete" widget-style="buttontext" >
+           <hyperlink also-hidden="false" description="${uiLabelMap.CommonDelete}" target="deleteIndentContent">
+                <parameter param-name="custRequestId"/>
+                <parameter param-name="contentId"/>
+                <parameter param-name="fromDate"/>
+           </hyperlink>
+        </field>
+    </form>
+	<form name="AddRequirement" type="single" target="createNewRequirement" >
     	<actions>
     		<entity-condition entity-name="ProductFacility" distinct="true" list="prodFacility" />
         	

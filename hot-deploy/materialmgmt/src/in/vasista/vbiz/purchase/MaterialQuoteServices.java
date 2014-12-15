@@ -227,6 +227,9 @@ public class MaterialQuoteServices {
 	  			return "error";
 			}
 			
+			String quoteId = (String)result.get("quoteId");
+			
+			request.setAttribute("quoteId", quoteId);
 		}
 		catch (GenericEntityException e) {
 			request.setAttribute("_ERROR_MESSAGE_", "Error in fetching data ");
@@ -258,6 +261,79 @@ public class MaterialQuoteServices {
 		request.setAttribute("_EVENT_MESSAGE_", "Successfully made request entries ");
 		return "success";
 	}
+	
+	public static Map<String,Object> changeQuoteItemStatus(DispatchContext ctx, Map<String, ? extends Object> context){
+    	Map<String, Object> result = FastMap.newInstance();
+    	Delegator delegator = ctx.getDelegator();
+        Locale locale = (Locale) context.get("locale");
+        LocalDispatcher dispatcher = ctx.getDispatcher();
+        GenericValue userLogin = (GenericValue) context.get("userLogin");
+        String quoteId = (String)context.get("quoteId");
+        String quoteItemSeqId = (String)context.get("quoteItemSeqId");
+        String statusId = (String)context.get("statusId");
+        String custRequestId = (String)context.get("custRequestId");
+        
+        try{
+        	Map inputMap = FastMap.newInstance();
+        	inputMap.put("userLogin", userLogin);
+        	inputMap.put("quoteId", quoteId);
+        	inputMap.put("quoteItemSeqId", quoteItemSeqId);
+        	inputMap.put("statusId", statusId);
+        	
+        	result = dispatcher.runSync("setQuoteAndItemStatus", inputMap);
+        	if(ServiceUtil.isError(result)){
+        		Debug.logError("Error updating QuoteStatus", module);
+  	  			return ServiceUtil.returnError("Error updating QuoteStatus");
+        	}
+        	
+        }catch(Exception e){
+        	Debug.logError("Error updating quote status", module);
+		    return ServiceUtil.returnError("Error updating quote status");
+        }
+        result = ServiceUtil.returnSuccess("Updated Quote Status!");
+        result.put("custRequestId", custRequestId);
+		return result;
+    }//End of Service
+	
+	public static Map<String,Object> quoteNegotiateAndStatusChange(DispatchContext ctx, Map<String, ? extends Object> context){
+    	Map<String, Object> result = FastMap.newInstance();
+    	Delegator delegator = ctx.getDelegator();
+        Locale locale = (Locale) context.get("locale");
+        LocalDispatcher dispatcher = ctx.getDispatcher();
+        GenericValue userLogin = (GenericValue) context.get("userLogin");
+        String quoteId = (String)context.get("quoteId");
+        String quoteItemSeqId = (String)context.get("quoteItemSeqId");
+        BigDecimal quoteUnitPrice = (BigDecimal)context.get("quoteUnitPrice");
+        String custRequestId = (String)context.get("custRequestId");
+        
+        try{
+        	
+        	GenericValue quoteItem = delegator.findOne("QuoteItem", UtilMisc.toMap("quoteId", quoteId, "quoteItemSeqId", quoteItemSeqId), false);
+        	
+        	quoteItem.set("quoteUnitPrice", quoteUnitPrice);
+        	quoteItem.store();
+        	
+        	Map inputMap = FastMap.newInstance();
+        	inputMap.put("userLogin", userLogin);
+        	inputMap.put("quoteId", quoteId);
+        	inputMap.put("quoteItemSeqId", quoteItemSeqId);
+        	inputMap.put("statusId", "QTITM_NEGOTIATION");
+        	
+        	result = dispatcher.runSync("setQuoteAndItemStatus", inputMap);
+        	if(ServiceUtil.isError(result)){
+        		Debug.logError("Error updating QuoteStatus", module);
+  	  			return ServiceUtil.returnError("Error updating QuoteStatus");
+        	}
+        	
+        }catch(Exception e){
+        	Debug.logError("Error updating quote status", module);
+		    return ServiceUtil.returnError("Error updating quote status");
+        }
+        result = ServiceUtil.returnSuccess("Updated Quote Status!");
+        result.put("custRequestId", custRequestId);
+		return result;
+    }//End of Service
+	
 	
 	public static Map<String,Object> setQuoteAndItemStatus(DispatchContext ctx, Map<String, ? extends Object> context){
     	Map<String, Object> result = FastMap.newInstance();
@@ -313,7 +389,113 @@ public class MaterialQuoteServices {
 		return result;
     }//End of Service
 	
+	public static String updateQuotesStatusOfEnquiry(HttpServletRequest request, HttpServletResponse response) {
+		
+		Delegator delegator = (Delegator) request.getAttribute("delegator");
+		LocalDispatcher dispatcher = (LocalDispatcher) request.getAttribute("dispatcher");
+		DispatchContext dctx =  dispatcher.getDispatchContext();
+		Locale locale = UtilHttp.getLocale(request);
+		Map<String, Object> result = ServiceUtil.returnSuccess();
+	    String quoteStatusId = (String) request.getParameter("quoteStatusId");
+	    String quoteItemStatusId = (String) request.getParameter("quoteItemStatusId");
+	    HttpSession session = request.getSession();
+	    GenericValue userLogin = (GenericValue) session.getAttribute("userLogin");
+		if (UtilValidate.isEmpty(quoteStatusId)) {
+			Debug.logError("Quote status is empty", module);
+			return "error";
+		}
+		if (UtilValidate.isEmpty(quoteItemStatusId)) {
+			Debug.logError("Quote item status is empty", module);
+			return "error";
+		}
+		Map<String, Object> paramMap = UtilHttp.getParameterMap(request);
+		int rowCount = UtilHttp.getMultiFormRowCount(paramMap);
+		if (rowCount < 1) {
+			Debug.logError("No rows to process, as rowCount = " + rowCount, module);
+			return "error";
+		}
 
+		boolean beganTransaction = false;
+		try{
+			beganTransaction = TransactionUtil.begin(7200);
+			
+			String quoteId = "";
+			Map quoteInputCtx = FastMap.newInstance();
+			
+			for (int i = 0; i < rowCount; i++) {
+				  
+				Map quoteItemMap = FastMap.newInstance();
+				String thisSuffix = UtilHttp.MULTI_ROW_DELIMITER + i;
+				
+				if (paramMap.containsKey("quoteId" + thisSuffix)) {
+					quoteId = (String) paramMap.get("quoteId" + thisSuffix);
+				}
+				else {
+					request.setAttribute("_ERROR_MESSAGE_", "Missing Quote Id");
+					return "error";			  
+				}
+				GenericValue quote = delegator.findOne("Quote", UtilMisc.toMap("quoteId", quoteId), false);
+				
+				List<GenericValue> quoteItems = delegator.findList("QuoteItem", EntityCondition.makeCondition("quoteId", EntityOperator.EQUALS, quoteId), null, null, null, false);
+				
+				quoteInputCtx.clear();
+				quoteInputCtx.put("quoteId", quoteId);
+				quoteInputCtx.put("statusId", quoteStatusId);
+				quoteInputCtx.put("userLogin", userLogin);
+				result = dispatcher.runSync("setQuoteAndItemStatus", quoteInputCtx);
+				if(ServiceUtil.isError(result)){
+					Debug.logError(ServiceUtil.getErrorMessage(result), module);
+		  			request.setAttribute("_ERROR_MESSAGE_", "Error updating quote status to  : " +quoteStatusId+" for QuoteId : "+quoteId);
+		  			TransactionUtil.rollback();
+		  			return "error";
+				}
+				for(GenericValue quoteItem : quoteItems){
+					quoteInputCtx.clear();
+					quoteInputCtx.put("quoteId", quoteId);
+					quoteInputCtx.put("quoteItemSeqId", quoteItem.getString("quoteItemSeqId"));
+					quoteInputCtx.put("statusId", quoteItemStatusId);
+					quoteInputCtx.put("userLogin", userLogin);
+					result = dispatcher.runSync("setQuoteAndItemStatus", quoteInputCtx);
+					if(ServiceUtil.isError(result)){
+						Debug.logError(ServiceUtil.getErrorMessage(result), module);
+			  			request.setAttribute("_ERROR_MESSAGE_", "Error updating quote item status to  : " +quoteItemStatusId+" for QuoteId : "+quoteId);
+			  			TransactionUtil.rollback();
+			  			return "error";
+					}
+				}
+			}
+		}
+		catch (GenericEntityException e) {
+			request.setAttribute("_ERROR_MESSAGE_", "Error in fetching data ");
+			try {
+				TransactionUtil.rollback(beganTransaction, "Error Fetching data", e);
+	  		} catch (GenericEntityException e2) {
+	  			Debug.logError(e2, "Could not rollback transaction: " + e2.toString(), module);
+	  		}
+	  		Debug.logError("An entity engine error occurred while fetching data", module);
+	  		return "error";
+	  	}
+  	  	catch (GenericServiceException e) {
+  	  		request.setAttribute("_ERROR_MESSAGE_", "Error in service setQuoteAndItemStatus ");
+  	  		try {
+  			  TransactionUtil.rollback(beganTransaction, "Error while calling services", e);
+  	  		} catch (GenericEntityException e2) {
+  			  Debug.logError(e2, "Could not rollback transaction: " + e2.toString(), module);
+  	  		}
+  	  		Debug.logError("An service engine error occurred while calling services", module);
+  	  		return "error";
+  	  	}
+	  	finally {
+	  		try {
+	  			TransactionUtil.commit(beganTransaction);
+	  		} catch (GenericEntityException e) {
+	  			Debug.logError(e, "Could not commit transaction for entity engine error occurred while fetching data", module);
+	  		}
+	  	}
+		request.setAttribute("_EVENT_MESSAGE_", "Quote status changed successfully");
+		return "success";
+	}
+	
 	public static Map<String,Object> createQuoteAndItems(DispatchContext ctx, Map<String, ? extends Object> context){
     	Map<String, Object> result = FastMap.newInstance();
         Map<String, Object> inMap  = FastMap.newInstance();
@@ -372,6 +554,7 @@ public class MaterialQuoteServices {
       	  	
     	}
     	result = ServiceUtil.returnSuccess("Items added to quote Successfully with Id: "+quoteId);
+    	result.put("quoteId", quoteId);
 		return result;
     }//End of Service
 	
@@ -396,9 +579,9 @@ public class MaterialQuoteServices {
     	 try {  
     		quote=delegator.findOne("Quote",UtilMisc.toMap("quoteId", quoteId), false);
     		List conditionList = UtilMisc.toList(EntityCondition.makeCondition("quoteId", EntityOperator.EQUALS, quoteId));
-	        /*conditionList.add(EntityCondition.makeCondition("statusId", EntityOperator.EQUALS, "QTITM_APPROVED"));*/
+	        conditionList.add(EntityCondition.makeCondition("statusId", EntityOperator.EQUALS, "QTITM_QUALIFIED"));
 	        EntityCondition condition = EntityCondition.makeCondition(conditionList, EntityOperator.AND);
-    		quoteItemList = delegator.findList("QuoteItem", condition, null, null, null, false);
+    		quoteItemList = delegator.findList("QuoteItem", condition, null, UtilMisc.toList("quoteItemSeqId"), null, false);
     		partyId = quote.getString("partyId");
          	/*GenericValue product=delegator.findOne("Product",UtilMisc.toMap("productId", (String)quoteItemList.get(0).getString("productId")), false);*/
          	
@@ -427,14 +610,18 @@ public class MaterialQuoteServices {
              GenericValue quoteItem = i.next();
              if (quoteItem != null) {
              	try { 
-             		 Map<String, Object> priceResult;
-                     Map<String, Object> priceContext = FastMap.newInstance();
-                     priceContext.put("userLogin", userLogin);   
-                     priceContext.put("productStoreId", productStoreId);                    
-                     priceContext.put("productId", quoteItem.getString("productId"));
-                     priceContext.put("partyId", partyId); 
-                     
-             		List<ShoppingCartItem> tempCartItems =cart.findAllCartItems(quoteItem.getString("productId"));
+                    
+             		ShoppingCartItem item = null;
+    				int itemIndx = cart.addItem(0, ShoppingCartItem.makeItem(Integer.valueOf(0), quoteItem.getString("productId"), null, quoteItem.getBigDecimal("quantity"), quoteItem.getBigDecimal("quoteUnitPrice"),
+    					            null, null, null, null, null, null, null, null, null, null, null, null, null, dispatcher,
+    					            cart, Boolean.FALSE, Boolean.FALSE, null, Boolean.TRUE, Boolean.TRUE));
+    					
+    					item = cart.findCartItem(itemIndx);
+    					//item.setListPrice(totalPrice);
+    	        		//item.setTaxDetails(taxList);
+    	        		item.setQuoteId(quoteItem.getString("quoteId"));
+    	        		item.setQuoteItemSeqId(quoteItem.getString("quoteItemSeqId"));
+             		/*List<ShoppingCartItem> tempCartItems =cart.findAllCartItems(quoteItem.getString("productId"));
              		if(tempCartItems.size() >0){
              			 ShoppingCartItem item = tempCartItems.get(0);
                          item.setQuantity(item.getQuantity().add(new BigDecimal(quoteItem.getString("quantity"))), dispatcher, cart);
@@ -446,12 +633,13 @@ public class MaterialQuoteServices {
                               null, null, null, null, null, null, null,
                               null, null, null, null, null, null, dispatcher,
                               cart, Boolean.FALSE, Boolean.FALSE, null, Boolean.TRUE, Boolean.TRUE)); 
-             		}
- 					GenericValue productDetail = delegator.findOne("Product", UtilMisc.toMap("productId", quoteItem.getString("productId")), false);
+             		}*/
+             		
+ 					/*GenericValue productDetail = delegator.findOne("Product", UtilMisc.toMap("productId", quoteItem.getString("productId")), false);
  					if (productDetail != null) {
  						BigDecimal tempQuantity  = quoteItem.getBigDecimal("quantity");
  						quantity = quantity.add(tempQuantity);
- 					}
+ 					}*/
              		
                  } catch (Exception exc) {
                      Debug.logWarning("Error adding product with id " + quoteItem.getString("productId") + " to the cart: " + exc.getMessage(), module);

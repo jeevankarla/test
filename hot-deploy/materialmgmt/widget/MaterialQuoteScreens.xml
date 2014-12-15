@@ -96,6 +96,129 @@
         </section>
     </screen>
     
+    <screen name="QuoteForAcceptance">
+        <section>
+            <actions>
+                <set field="titleProperty" value="Enquiry"/>
+                <set field="headerItem" value="quote"/>
+                <set field="tabButtonItem" value="FindMaterialEnquiry" />
+                <set field="tabButtonItem2" value="quoteForAcceptance" />
+                
+                <set field="custRequestId" from-field="parameters.custRequestId"/>
+                <entity-one entity-name="CustRequest" value-field="custRequest" auto-field-map="true"/>
+                
+                <entity-condition list="quotesList" entity-name="Quote">
+                	<condition-list combine="and">
+                		<condition-expr field-name="statusId" operator="equals" value="QUO_CREATED"/>
+                	</condition-list>
+                </entity-condition>
+            </actions>
+            <widgets>
+                <decorator-screen name="materialmgmtNgCommonDecorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="body">
+                    	<include-menu name="EnquiryTabBar" location="component://materialmgmt/widget/materialmgmtMenus.xml"/>
+                    	<screenlet title="Items For Acceptance">
+                    		<platform-specific><html><html-template location="component://materialmgmt/webapp/materialmgmt/purchase/ListQuoteForAcceptance.ftl"></html-template></html></platform-specific>
+                    		<!-- <include-form name="ListQuotesForAcceptance" location="component://materialmgmt/widget/MaterialQuoteForms.xml"/> -->
+                    	</screenlet>
+                    	<section >
+                    		<widgets>
+                    			
+                    		</widgets>
+                    	</section>
+                        
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+         </section>
+    </screen>
+    
+    <screen name="QuoteForShortlist">
+        <section>
+            <actions>
+                <set field="titleProperty" value="Enquiry"/>
+                <set field="headerItem" value="quote"/>
+                <set field="tabButtonItem" value="FindMaterialEnquiry" />
+                <set field="tabButtonItem2" value="quoteForShortlist" />
+                <set field="custRequestId" from-field="parameters.custRequestId"/>
+                <entity-one entity-name="CustRequest" value-field="custRequest" auto-field-map="true"/>
+                
+                <entity-condition list="quotesList" entity-name="QuoteAndItemAndCustRequest">
+                	<condition-list combine="or">
+                		<condition-expr field-name="qiStatusId" operator="equals" value="QTITM_NEGOTIATION"/>
+                		<condition-expr field-name="qiStatusId" operator="equals" value="QTITM_APPROVED"/>
+                	</condition-list>
+                	<order-by field-name="productId"/>
+                	<order-by field-name="quoteUnitPrice"/>
+                </entity-condition>
+                
+                <entity-condition list="quoteQualifiedList" entity-name="QuoteAndItemAndCustRequest">
+                	<condition-list combine="and">
+                		<condition-expr field-name="qiStatusId" operator="equals" value="QTITM_QUALIFIED"/>
+                	</condition-list>
+                	<order-by field-name="productId"/>
+                </entity-condition>
+                
+            </actions>
+            <widgets>
+                <decorator-screen name="materialmgmtNgCommonDecorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="body">
+                    	<include-menu name="EnquiryTabBar" location="component://materialmgmt/widget/materialmgmtMenus.xml"/>
+                    	<screenlet title="Qualified For PO">
+                    		<include-form name="ListQualifiedQuotesForPO" location="component://materialmgmt/widget/MaterialQuoteForms.xml"/>
+                    	</screenlet>
+                    	
+                    	<screenlet title="Shortlisting">
+                    		<include-form name="ListQuotesForShortlisting" location="component://materialmgmt/widget/MaterialQuoteForms.xml"/>
+                    	</screenlet>
+                    	<section >
+                    		<widgets>
+                    			
+                    		</widgets>
+                    	</section>
+                        
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+         </section>
+    </screen>
+    
+    
+    <screen name="QuoteForEvalution">
+        <section>
+            <actions>
+                <set field="titleProperty" value="Enquiry"/>
+                <set field="headerItem" value="quote"/>
+                <set field="tabButtonItem" value="FindMaterialEnquiry" />
+                <set field="tabButtonItem2" value="quoteForEvaluation" />
+                <set field="custRequestId" from-field="parameters.custRequestId"/>
+                <entity-one entity-name="CustRequest" value-field="custRequest" auto-field-map="true"/>
+                
+                <entity-condition list="quotesList" entity-name="QuoteAndItemAndCustRequest">
+                	<condition-list combine="and">
+                		<condition-expr field-name="qiStatusId" operator="not-equals" value="QTITM_REJECTED"/>
+                	</condition-list>
+                </entity-condition>
+            </actions>
+            <widgets>
+                <decorator-screen name="materialmgmtNgCommonDecorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="body">
+                    	<include-menu name="EnquiryTabBar" location="component://materialmgmt/widget/materialmgmtMenus.xml"/>
+                    	<screenlet title="Items For Evaluation">
+                    		<include-form name="ListQuotesForEvaluation" location="component://materialmgmt/widget/MaterialQuoteForms.xml"/>
+                    	</screenlet>
+                    	<section >
+                    		<widgets>
+                    			
+                    		</widgets>
+                    	</section>
+                        
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+         </section>
+    </screen>
+    
     <screen name="EditMaterialQuoteTerms">
         <section>
             <actions>
@@ -142,7 +265,7 @@
                <decorator-screen name="materialmgmtNgCommonDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <include-menu name="QuoteTabBar" location="component://materialmgmt/widget/materialmgmtMenus.xml"/>
-                        <screenlet id="AddBidContentsPanel" title="Bid content : ${quoteId}" collapsible="true">
+                        <screenlet id="AddBidContentsPanel" title="Quote content : ${quoteId}" collapsible="true">
                             <include-form name="AddQuoteContent" location="component://materialmgmt/widget/MaterialQuoteForms.xml"/>
                         </screenlet>
                         <include-form name="ListQuoteContent" location="component://materialmgmt/widget/MaterialQuoteForms.xml"/>

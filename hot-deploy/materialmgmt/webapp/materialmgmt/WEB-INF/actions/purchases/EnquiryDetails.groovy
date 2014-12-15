@@ -25,3 +25,8 @@ if(validTenderList.size() > 0){
 	tenderList.add(tenderDetailsMap);
 }
 context.put("enquiryDetailsMap",tenderDetailsMap);
+poCreateFlag = "N";
+if(poCreateFlag){
+	poCreateFlag = "Y";
+}
+context.poCreateFlag = poCreateFlag;

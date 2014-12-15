@@ -137,10 +137,10 @@ under the License.
     			<td><span class="label h3">Quote Ref No :</span></td><td><input class='h3' type='text' id='quoteName' name='quoteName'/></td>
     		</tr>
     		<tr>
-    			<td><span class="label h3">Valid From Date (<font color='red'>*</font>):</span></td><td><input class='h3' type='text' id='validFromDate' name='validFromDate' onmouseover='datepick()'/></td>
+    			<td><span class="label h3">Valid From Date :</span></td><td><input class='h3' type='text' id='validFromDate' name='validFromDate' onmouseover='datepick()'/></td>
     		</tr>
     		<tr>
-    			<td><span class="label h3">Valid Thru Date (<font color='red'>*</font>):</span></td><td><input class='h3' type='text' id='validThruDate' name='validThruDate' onmouseover='datepick()'/></td>
+    			<td><span class="label h3">Valid Thru Date :</span></td><td><input class='h3' type='text' id='validThruDate' name='validThruDate' onmouseover='datepick()'/></td>
     		</tr>
     		
     	</table>

@@ -256,7 +256,11 @@
                 <!-- <entity-and list="requestWorkEfforts" entity-name="CustRequestAndWorkEffort">
                     <field-map field-name="custRequestId" from-field="parameters.custRequestId"/>
                 </entity-and>
-                 --><get-related value-field="custRequest" relation-name="CustRequestParty" list="requestParties"/>
+                 -->
+                 <entity-and entity-name="CustRequestAndContent" list="custRequestContents" filter-by-date="true">
+                    <field-map field-name="custRequestId" from-field="custRequestId"/>
+                </entity-and>
+                 <get-related value-field="custRequest" relation-name="CustRequestParty" list="requestParties"/>
                 <set field="orderBy[]" value="sequenceNum"/>
                 <get-related value-field="custRequest" relation-name="CustRequestItem" list="custRequestItems" order-by-list="orderBy"/>
             </actions>
@@ -270,6 +274,9 @@
                     <screenlet title="${uiLabelMap.MaterialMangement_CustRequest} Status" navigation-form-name="ViewRequest">
                         <include-form name="ViewRequestStatus" location="component://materialmgmt/widget/MaterialRequestForms.xml"/>
                     </screenlet>
+                    <screenlet title="Indent Contents">
+                   		<include-form location="component://materialmgmt/widget/MaterialRequestForms.xml" name="ListIndentContent"/>
+                  	</screenlet>
                 </container>
                 <container style="clear"/>
                 <screenlet title="${uiLabelMap.MaterialMangement_CustRequest} Items">
@@ -284,13 +291,14 @@
             <actions>
                 <set field="headerItem" value="request"/>
                 <set field="tabButtonItem" value="FindMaterialRequest" />
+                <set field="tabButtonItem2" value="viewIndent"/>
                 <set field="custRequestId" from-field="parameters.custRequestId" default-value="${parameters.id}"/>
                 <entity-one entity-name="CustRequest" value-field="custRequest"/>	
             </actions>
             <widgets>
                <decorator-screen name="materialmgmtNgCommonDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
-                    	<!-- <include-menu name="RequestSubTabBar" location="component://materialmgmt/widget/materialmgmtMenus.xml"/> -->
+                    	<include-menu name="RequestTabBar" location="component://materialmgmt/widget/materialmgmtMenus.xml"/>
                         <include-screen name="ViewCustRequest"/>
                     </decorator-section>
                 </decorator-screen>
@@ -304,8 +312,17 @@
                 <set field="headerItem" value="request"/>
                 <set field="tabButtonItem" value="FindMaterialEnquiry" />
                 <set field="tabButtonItem2" value="viewEnquiry" />
-                <set field="custRequestId" from-field="parameters.custRequestId" default-value="${parameters.id}"/>
+                <set field="custRequestId" from-field="parameters.custRequestId"/>
                 <entity-one entity-name="CustRequest" value-field="custRequest"/>
+                <entity-condition list="quoteQualifiedList" entity-name="QuoteAndItemAndCustRequest">
+                	<condition-list combine="and">
+                		<condition-expr field-name="qiStatusId" operator="equals" value="QTITM_QUALIFIED"/>
+                	</condition-list>
+                	<order-by field-name="productId"/>
+                </entity-condition>
+                <entity-and entity-name="CustRequestAndContent" list="custRequestContents" filter-by-date="true">
+                    <field-map field-name="custRequestId" from-field="custRequestId"/>
+                </entity-and>
                 <script location="component://materialmgmt/webapp/materialmgmt/WEB-INF/actions/purchases/EnquiryDetails.groovy" />	
             </actions>
             <widgets>
@@ -316,15 +333,19 @@
 		                    <section>
 			                  	 <!-- <condition> 
 			                  	   <and>
-			                  	   	<if-compare operator="greater-equals" value="${bsh:org.ofbiz.base.util.UtilDateTime.toDateString(nowTimestamp,&quot;yyyy-MM-dd HH:mm:ss&quot;)}" type="Timestamp"  field="closeDate"/>
-			                  	   	<if-compare operator="not-equals" value="TNDR_CANCELLED" field="statusId"/>
+				                  	   	<if-compare operator="equals" value="N" field="poCreateFlag"/>
 			                  	   </and>
 			                  	 </condition> -->
 		                  	 	<widgets>
-		                  	 		<link target="enquiryItemsForQuote" text="Proceed for Quote" style="buttontext create h3" >
+		                  	 		<link target="enquiryItemsForQuote" text="Add Quotation" style="buttontext create h3" >
                   	 					<parameter param-name="custRequestId"/>
                   	 				</link>
 		                  	 	</widgets>
+		                  	 	<!-- <fail-widgets>
+		                  	 		<link target="createPOForQuote" text="Create PO" style="buttontext h2" >
+           								<parameter param-name="quoteId" from-field="quoteId"/>
+           							</link>
+		                  	 	</fail-widgets> -->
 		                  </section>
 	                  </container>                                              
                       
@@ -333,7 +354,7 @@
 		                  	 <include-form location="component://materialmgmt/widget/MaterialRequestForms.xml" name="EnquiryItemDetails"/>
 		                  </screenlet>
 		                  <screenlet title="Enquiry Contents">
-                   			<include-form location="component://materialmgmt/widget/MaterialRequestForms.xml" name="ListCustRequestContent"/>
+                   			<include-form location="component://materialmgmt/widget/MaterialRequestForms.xml" name="ListEnquiryContent"/>
                   	  	  </screenlet>
                  	  </container>
                  
@@ -376,9 +397,9 @@
                  
                   <container style="clear"></container>
                   <container style="full">
-                  	<screenlet title="Qualified Enquiry Item Status">
-                   		<include-form location="component://materialmgmt/widget/MaterialRequestForms.xml" name="QualifiedQuoteItemStatus"/>
-                  	</screenlet>
+                  	<screenlet title="Qualified Enquiry Item">
+                    	<include-form name="ListQualifiedQuotesForPO" location="component://materialmgmt/widget/MaterialQuoteForms.xml"/>
+                    </screenlet>
                   </container>
                  
                   </decorator-section>
@@ -412,7 +433,6 @@
             </widgets>
         </section>
     </screen>
-    
     <screen name="NewRequirement">
     	<section>
     		<actions>
@@ -430,4 +450,55 @@
     	</section>
     </screen>
     
+    <screen name="AddEnquiryContent">
+        <section>
+            <actions>
+                <set field="titleProperty" value="Enquiry Document"/>
+                <set field="tabButtonItem" value="FindMaterialEnquiry"/>
+                <set field="tabButtonItem2" value="AddEnquiryContent"/>
+                <set field="headerItem" value="request"/>
+                <set field="custRequestId" from-field="parameters.custRequestId" />
+                <entity-and entity-name="CustRequestAndContent" list="custRequestContents" filter-by-date="true">
+                    <field-map field-name="custRequestId" from-field="custRequestId"/>
+                </entity-and>
+            </actions>
+            <widgets>
+                <decorator-screen name="materialmgmtNgCommonDecorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="body">
+                    	<include-menu name="EnquiryTabBar" location="component://materialmgmt/widget/materialmgmtMenus.xml"/>
+                     	<screenlet title="Enquiry content : ${custRequestId}">
+                            <include-form name="AddCustRequestContent" location="component://materialmgmt/widget/MaterialRequestForms.xml"/>
+                        </screenlet>
+                        <include-form name="ListEnquiryContent" location="component://materialmgmt/widget/MaterialRequestForms.xml"/>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    
+    <screen name="AddIndentContent">
+        <section>
+            <actions>
+                <set field="titleProperty" value="Enquiry Document"/>
+                <set field="tabButtonItem" value="FindMaterialRequest"/>
+                <set field="tabButtonItem2" value="addIndentContent"/>
+                <set field="headerItem" value="request"/>
+                <set field="custRequestId" from-field="parameters.custRequestId" />
+                <entity-and entity-name="CustRequestAndContent" list="custRequestContents" filter-by-date="true">
+                    <field-map field-name="custRequestId" from-field="custRequestId"/>
+                </entity-and>
+            </actions>
+            <widgets>
+                <decorator-screen name="materialmgmtNgCommonDecorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="body">
+                    	<include-menu name="RequestTabBar" location="component://materialmgmt/widget/materialmgmtMenus.xml"/>
+                     	<screenlet title="Indent content : ${custRequestId}">
+                            <include-form name="AddIndentContent" location="component://materialmgmt/widget/MaterialRequestForms.xml"/>
+                        </screenlet>
+                        <include-form name="ListIndentContent" location="component://materialmgmt/widget/MaterialRequestForms.xml"/>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
 </screens>

@@ -112,6 +112,7 @@
         <attribute name="validFromDate" type="Timestamp" mode="IN" optional="true"/>
         <attribute name="validThruDate" type="Timestamp" mode="IN" optional="true"/>
         <attribute name="partyId" type="String" mode="IN" optional="false"/>
+        <attribute name="quoteId" mode="OUT" type="String" optional="true"></attribute>
     </service>
     
     <service name="setQuoteAndItemStatus" engine="java"
@@ -120,6 +121,26 @@
         <attribute name="quoteId" type="String" mode="IN" optional="false"/>
         <attribute name="quoteItemSeqId" type="String" mode="IN" optional="true"/>
         <attribute name="statusId" type="String" mode="IN" optional="false"/>
+    </service>
+    
+    <service name="changeQuoteItemStatus" engine="java"
+                location="in.vasista.vbiz.purchase.MaterialQuoteServices" invoke="changeQuoteItemStatus">
+        <description> Change Quote Item status</description>  
+        <attribute name="quoteId" type="String" mode="IN" optional="false"/>
+        <attribute name="quoteItemSeqId" type="String" mode="IN" optional="false"/>
+        <attribute name="statusId" type="String" mode="IN" optional="false"/>
+        <attribute name="custRequestId" type="String" mode="INOUT" optional="true"/>
+        
+    </service>
+    
+    <service name="quoteNegotiateAndStatusChange" engine="java"
+                location="in.vasista.vbiz.purchase.MaterialQuoteServices" invoke="quoteNegotiateAndStatusChange">
+        <description> Quote Negotiation And Status Change</description>  
+        <attribute name="quoteId" type="String" mode="IN" optional="false"/>
+        <attribute name="quoteItemSeqId" type="String" mode="IN" optional="false"/>
+        <attribute name="custRequestId" type="String" mode="INOUT" optional="true"/>
+        <attribute name="quoteUnitPrice" type="BigDecimal" mode="IN" optional="false"/>
+        
     </service>
     
     <service name="uploadPOContentFile" engine="group" transaction-timeout="300">

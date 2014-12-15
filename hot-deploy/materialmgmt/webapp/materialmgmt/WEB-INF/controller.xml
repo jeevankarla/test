@@ -104,6 +104,18 @@
      	<response name="error" type="view" value="ViewMaterialEnquiry"/>
     </request-map>
     
+    <request-map uri="AddEnquiryContent">
+     	<security auth="true" https="true"/>
+     	<response name="success" type="view" value="AddEnquiryContent"/>
+     	<response name="error" type="view" value="AddEnquiryContent"/>
+    </request-map>
+    
+    <request-map uri="AddIndentContent">
+     	<security auth="true" https="true"/>
+     	<response name="success" type="view" value="AddIndentContent"/>
+     	<response name="error" type="view" value="AddIndentContent"/>
+    </request-map>
+    
      <request-map uri="approveRequestByHOD">
        <security https="true" auth="true"/>
        <event type="service" path="" invoke="approveRequestByHOD"></event>
@@ -136,6 +148,34 @@
        <event type="service" invoke="deleteQuoteContent" />
        <response name="success" type="view" value="EditQuoteContent"/>
        <response name="error" type="view" value="EditQuoteContent"/>
+     </request-map>
+     
+     <request-map uri="createCustRequestContent">
+       <security https="true" auth="true"/>
+       <event path="component://materialmgmt/script/MaterialMgmtServices.xml" invoke="createRequestContentDocument" type="simple"/>
+       <response name="success" type="view" value="AddEnquiryContent"/>
+       <response name="error" type="view" value="AddEnquiryContent"/>
+     </request-map>
+     
+     <request-map uri="createIndentContent">
+       <security https="true" auth="true"/>
+       <event path="component://materialmgmt/script/MaterialMgmtServices.xml" invoke="createRequestContentDocument" type="simple"/>
+       <response name="success" type="view" value="AddIndentContent"/>
+       <response name="error" type="view" value="AddIndentContent"/>
+     </request-map>
+     
+     <request-map uri="deleteEnquiryContent">
+       <security https="true" auth="true"/>
+       <event type="service" invoke="deleteCustRequestContent" />
+       <response name="success" type="view" value="AddEnquiryContent"/>
+       <response name="error" type="view" value="AddEnquiryContent"/>
+     </request-map>
+     
+     <request-map uri="deleteIndentContent">
+       <security https="true" auth="true"/>
+       <event type="service" invoke="deleteCustRequestContent" />
+       <response name="success" type="view" value="AddIndentContent"/>
+       <response name="error" type="view" value="AddIndentContent"/>
      </request-map>
      
      <request-map uri="createPOForQuote">
@@ -353,8 +393,34 @@
     <request-map uri="createQuoteForEnquiry">
         <security https="true" auth="true"/>
         <event type="java" path="in.vasista.vbiz.purchase.MaterialQuoteServices" invoke="createQuoteForEnquiry"/>        
-        <response name="success" type="view" value="ViewMaterialEnquiry"/>
-        <response name="error" type="view" value="ViewMaterialEnquiry"/>
+        <response name="success" type="view" value="ViewMaterialQuote"/>
+        <response name="error" type="view" value="ViewMaterialQuote"/>
+    </request-map>
+    
+    <request-map uri="QuoteForEvalution">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="QuoteForEvalution"/>
+        <response name="error" type="view" value="QuoteForEvalution"/>
+    </request-map>
+    
+    <request-map uri="quoteNegotiateAndStatusChange">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="quoteNegotiateAndStatusChange"></event>
+        <response name="success" type="view" value="QuoteForEvalution"/>
+        <response name="error" type="view" value="QuoteForEvalution"/>
+    </request-map>
+    
+    <request-map uri="QuoteForShortlist">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="QuoteForShortlist"/>
+        <response name="error" type="view" value="QuoteForShortlist"/>
+    </request-map>
+    
+    <request-map uri="changeQuoteItemStatus">
+        <security https="true" auth="true"/>
+     	<event type="service"  path="in.vasista.vbiz.purchase.MaterialQuoteServices"  invoke="changeQuoteItemStatus" global-transaction="true"/>
+        <response name="success" type="view" value="QuoteForEvalution"/>
+        <response name="error" type="view" value="QuoteForEvalution"/>
     </request-map>
     
     <request-map uri="processPurchaseOrder">
@@ -407,6 +473,20 @@
        <response name="success" type="view" value="ViewMaterialQuote"/>
        <response name="error" type="view" value="ViewMaterialQuote"/>
    </request-map>
+   
+   <request-map uri="quoteForAcceptance">
+       <security https="true" auth="true"/>
+       <response name="success" type="view" value="QuoteForAcceptance"/>
+       <response name="error" type="view" value="QuoteForAcceptance"/>
+   </request-map>
+   
+   <request-map uri="updateQuotesStatusOfEnquiry">
+       <security https="true" auth="true"/>
+       <event type="java" path="in.vasista.vbiz.purchase.MaterialQuoteServices" invoke="updateQuotesStatusOfEnquiry" global-transaction="true"/>
+       <response name="success" type="view" value="QuoteForAcceptance"/>
+       <response name="error" type="view" value="QuoteForAcceptance"/>
+   </request-map>
+   
    <request-map uri="EditMaterialQuoteTerms">
        <security https="true" auth="true"/>
        <response name="success" type="view" value="EditMaterialQuoteTerms"/>
@@ -563,7 +643,9 @@
     <view-map name="StoreProductIssue" type="screen" page="component://materialmgmt/widget/MaterialRequestScreens.xml#StoreProductIssue"/>
     <view-map name="FindMaterialEnquiry" type="screen" page="component://materialmgmt/widget/MaterialRequestScreens.xml#FindMaterialEnquiry"/>
     <view-map name="enquiryItemsForQuote" type="screen" page="component://materialmgmt/widget/MaterialRequestScreens.xml#EnquiryItemsForQuote"/>
-     <view-map name="NewRequirement" type="screen" page="component://materialmgmt/widget/MaterialRequestScreens.xml#NewRequirement"/>
+    <view-map name="AddEnquiryContent" type="screen" page="component://materialmgmt/widget/MaterialRequestScreens.xml#AddEnquiryContent"/>
+    <view-map name="AddIndentContent" type="screen" page="component://materialmgmt/widget/MaterialRequestScreens.xml#AddIndentContent"/>
+    <view-map name="NewRequirement" type="screen" page="component://materialmgmt/widget/MaterialRequestScreens.xml#NewRequirement"/>
     
     <!-- Requirement views -->
     <view-map name="FindMaterialRequirement" type="screen" page="component://materialmgmt/widget/MaterialRequirementScreens.xml#FindMaterialRequirement"/>
@@ -588,6 +670,8 @@
 	<view-map name="ViewMaterialQuote" type="screen" page="component://materialmgmt/widget/MaterialQuoteScreens.xml#ViewMaterialQuote"/>
 	<view-map name="EditMaterialQuoteTerms" type="screen" page="component://materialmgmt/widget/MaterialQuoteScreens.xml#EditMaterialQuoteTerms"/>
 	<view-map name="EditQuoteContent" type="screen" page="component://materialmgmt/widget/MaterialQuoteScreens.xml#EditQuoteContent"/>
-	
+	<view-map name="QuoteForEvalution" type="screen" page="component://materialmgmt/widget/MaterialQuoteScreens.xml#QuoteForEvalution"/>
+	<view-map name="QuoteForAcceptance" type="screen" page="component://materialmgmt/widget/MaterialQuoteScreens.xml#QuoteForAcceptance"/>
+	<view-map name="QuoteForShortlist" type="screen" page="component://materialmgmt/widget/MaterialQuoteScreens.xml#QuoteForShortlist"/>
 	
 </site-conf>
