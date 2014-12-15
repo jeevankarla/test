@@ -62,7 +62,11 @@ orderIds = EntityUtil.getFieldListFromEntityList(orderHeaders, "orderId", true);
 conditionList.clear();
 conditionList.add(EntityCondition.makeCondition("orderId", EntityOperator.IN, orderIds));
 conditionList.add(EntityCondition.makeCondition("partyId", EntityOperator.EQUALS, partyId));
+if(UtilValidate.isNotEmpty(changeFlag) && "IcpSalesAmul"==changeFlag){
+conditionList.add(EntityCondition.makeCondition("roleTypeId", EntityOperator.EQUALS, "SHIP_TO_CUSTOMER"));
+}else{
 conditionList.add(EntityCondition.makeCondition("roleTypeId", EntityOperator.EQUALS, "BILL_TO_CUSTOMER"));
+}
 expr = EntityCondition.makeCondition(conditionList, EntityOperator.AND);
 partyOrders = delegator.findList("OrderRole", expr, UtilMisc.toSet("orderId"), null, null, false);
 
@@ -70,6 +74,12 @@ JSONArray orderItemsJSON = new JSONArray();
 partyOrderIds = EntityUtil.getFieldListFromEntityList(partyOrders, "orderId", true);
 if(partyOrderIds){
 	updateOrderId = partyOrderIds.get(0);
+	
+	orderHeaderTemp=delegator.findOne("OrderHeader",[orderId :updateOrderId], false);
+	if(UtilValidate.isNotEmpty(orderHeaderTemp)){
+		context.orderMessage=orderHeaderTemp.orderMessage;
+	}
+	
 	conditionList.clear();
 	conditionList.add(EntityCondition.makeCondition("orderId", EntityOperator.EQUALS, updateOrderId));
 	/*conditionList.add(EntityCondition.makeCondition("attrName", EntityOperator.EQUALS, "batchNumber"));*/

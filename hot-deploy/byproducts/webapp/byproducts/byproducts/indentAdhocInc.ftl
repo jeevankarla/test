@@ -168,11 +168,13 @@
 			var poNumber = $("#PONumber").val();
 			var promoAdj = $("#promotionAdj").val();
 			var productStoreId = $("#productStoreId").val();
+			var orderMessage = $("#orderMessage").val();
 			var party = jQuery("<input>").attr("type", "hidden").attr("name", "partyId").val(partyId);
 			var POField = jQuery("<input>").attr("type", "hidden").attr("name", "PONumber").val(poNumber);
 			var promoField = jQuery("<input>").attr("type", "hidden").attr("name", "promotionAdjAmt").val(promoAdj);
 			var productStore = jQuery("<input>").attr("type", "hidden").attr("name", "productStoreId").val(productStoreId);
 			var tax = jQuery("<input>").attr("type", "hidden").attr("name", "orderTaxType").val(orderTaxType);
+			var orderMessageInPut = jQuery("<input>").attr("type", "hidden").attr("name", "orderMessage").val(orderMessage);
 			<#if orderId?exists>
 				var order = '${orderId}';
 				var extOrder = jQuery("<input>").attr("type", "hidden").attr("name", "orderId").val(order);		
@@ -184,6 +186,7 @@
 			jQuery(formId).append(jQuery(promoField));
 			jQuery(formId).append(jQuery(tax));
 			jQuery(formId).append(jQuery(productStore));
+			jQuery(formId).append(jQuery(orderMessageInPut));
 		</#if>
 		
 		jQuery(formId).attr("action", action);	

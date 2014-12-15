@@ -174,6 +174,7 @@ public static Map<String, Object> approveICPOrder(DispatchContext dctx, Map cont
 	  	String orderId = (String) context.get("orderId");
 	  	String PONumber = (String) context.get("PONumber");
 	  	String promotionAdjAmt = (String) context.get("promotionAdjAmt");
+	  	String orderMessage = (String) context.get("orderMessage");
 	  	String currencyUomId = "INR";
 		Timestamp nowTimeStamp = UtilDateTime.nowTimestamp();
 		Timestamp effectiveDate = UtilDateTime.getDayStart(supplyDate);
@@ -282,6 +283,7 @@ public static Map<String, Object> approveICPOrder(DispatchContext dctx, Map cont
 			cart.setEstimatedDeliveryDate(effectiveDate);
 			cart.setOrderDate(effectiveDate);
 			cart.setUserLogin(userLogin, dispatcher);
+			//cart.setOrderMessage(orderMessage);
 		} catch (Exception e) {
 			Debug.logError(e, "Error in setting cart parameters", module);
 			return ServiceUtil.returnError("Error in setting cart parameters");
@@ -498,6 +500,18 @@ public static Map<String, Object> approveICPOrder(DispatchContext dctx, Map cont
 			}catch (GenericEntityException e) {
 				Debug.logError("Error in creating shipmentId for DirectOrder", module);
 				return ServiceUtil.returnError("Error in creating shipmentId for DirectOrder");
+			}
+			
+		}
+		//store OrderMessage
+		if(UtilValidate.isNotEmpty(orderId) && UtilValidate.isNotEmpty(orderMessage )){
+			try{
+				GenericValue orderHeader = delegator.findOne("OrderHeader", UtilMisc.toMap("orderId", orderId), false);
+				orderHeader.set("orderMessage", orderMessage.trim());
+				orderHeader.store();
+			}catch (GenericEntityException e) {
+				Debug.logError("Error While Saving Order Message ", module);
+				return ServiceUtil.returnError("Error While Saving Order Message");
 			}
 			
 		}
@@ -780,6 +794,7 @@ public static Map<String, Object> approveICPOrder(DispatchContext dctx, Map cont
 		String orderId = (String) request.getParameter("orderId");
 		String PONumber = (String) request.getParameter("PONumber");
 		String promotionAdjAmt = (String) request.getParameter("promotionAdjAmt");
+		String orderMessage=(String) request.getParameter("orderMessage");
 		String productSubscriptionTypeId = (String) request.getParameter("productSubscriptionTypeId");
 		String subscriptionTypeId = "AM";
 		String partyIdFrom = "";
@@ -951,6 +966,8 @@ public static Map<String, Object> approveICPOrder(DispatchContext dctx, Map cont
 		processOrderContext.put("productStoreId", productStoreId);
 		processOrderContext.put("PONumber", PONumber);
 		processOrderContext.put("promotionAdjAmt", promotionAdjAmt);
+		processOrderContext.put("orderMessage", orderMessage);
+		
 		result = processICPSaleOrder(dctx, processOrderContext);
 		if(ServiceUtil.isError(result)){
 			Debug.logError("Unable to generate order: " + ServiceUtil.getErrorMessage(result), module);

@@ -1,6 +1,12 @@
 <link type="text/css" href="<@ofbizContentUrl>/images/jquery/ui/css/ui-lightness/jquery-ui-1.8.13.custom.css</@ofbizContentUrl>" rel="Stylesheet" />	
 <link type="text/css" href="<@ofbizContentUrl>/images/jquery/plugins/multiSelect/jquery.multiselect.css</@ofbizContentUrl>" rel="Stylesheet" />
 
+<style type="text/css">
+ .labelFontCSS {
+    font-size: 13px;
+}
+
+</style>
 
 <script type="text/javascript">
 
@@ -210,7 +216,6 @@ $(document).ready(function(){
 	   			<#else>      	         
 	      			<td valign='middle'>
 	      				<input type="text" name="PONumber" id="PONumber" />    
-	         			<span class="tooltip">Fill if PO Number exists</span>       
 	      			</td>
 	   			</#if>
 	    	</tr>
@@ -266,7 +271,6 @@ $(document).ready(function(){
        			<#else>      	         
           			<td valign='middle'>
           				<input type="text" name="vehicleId" id="vehicleId" />    
-             			<span class="tooltip">Fill if Vehicle Number exists</span>       
           			</td>
        			</#if>
         	</tr>
@@ -293,7 +297,49 @@ $(document).ready(function(){
         	</#if>
         	
 		</#if>
-          
+		<#-- Order Message Field Starts -->
+		<#if changeFlag?exists && !(changeFlag=='AdhocSaleNew')>
+        <tr><td><br/></td></tr>
+        <#if parameters.orderMessage?exists && parameters.orderMessage?has_content>  
+        <tr>
+          <td>&nbsp;</td>
+          <td align='left' valign='middle' nowrap="nowrap"><div class='h2'>Message:</div></td>
+          <td>&nbsp;</td>
+	  	  		<input type="hidden" name="orderMessage" id="orderMessage" value="${parameters.orderMessage?if_exists}"/>  
+          		<td valign='middle'>
+            		<div class='tabletext h3'>
+               			${parameters.orderMessage?if_exists}              
+            	</div>
+          	</td> 
+         </tr>
+        <#elseif orderMessage?exists && orderMessage?has_content> 
+         <tr>
+         <td colspan="4" >
+         <table  border="0" cellspacing="0" cellpadding="0">
+         <tbody>
+            <tr>
+                <td width="20%" align="right" class="label labelFontCSS">&nbsp; Message: &nbsp; &nbsp; &nbsp; &nbsp;</td>
+                <td width="50%"><textarea name="orderMessage" id="orderMessage" cols="25" rows="4">${orderMessage?if_exists}</textarea></td>
+            </tr>
+         </tbody>
+         </table>
+		</td> 
+        </tr> 
+        <#else> 
+        <tr>
+         <td colspan="4" >
+         <table  border="0" cellspacing="0" cellpadding="0">
+         <tbody>
+            <tr>
+                <td width="20%" align="right" class="label labelFontCSS">&nbsp; Message: &nbsp; &nbsp; &nbsp; &nbsp;</td>
+                <td width="50%"><textarea name="orderMessage" id="orderMessage"  cols="25" rows="4"></textarea></td>
+            </tr>
+         </tbody>
+         </table>
+		</td> 
+        </tr> 
+        </#if>
+        </#if>
         <tr><td><br/></td></tr>
         <tr>
           <td>&nbsp;</td>
@@ -330,6 +376,7 @@ $(document).ready(function(){
           	</#if>
         </#if>
         </tr> 
+       
          <tr><td><br/></td></tr>    
          <#-- 
            <tr>

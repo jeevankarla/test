@@ -895,6 +895,7 @@ public class InvoiceServices {
                 createInvoiceContext.put("statusId", "INVOICE_IN_PROCESS");
                 createInvoiceContext.put("currencyUomId", orderHeader.getString("currencyUom"));
                 createInvoiceContext.put("userLogin", userLogin);
+                createInvoiceContext.put("invoiceMessage", orderHeader.getString("orderMessage"));
 
                 // store the invoice first
                 Map<String, Object> createInvoiceResult = dispatcher.runSync("createInvoice", createInvoiceContext);

@@ -414,6 +414,7 @@ under the License.
       <field name="isViewed" type="indicator"></field>
       <field name="productSubscriptionTypeId" type="id-ne"></field>
       <field name="purposeTypeId" type="id"></field>
+      <field name="orderMessage" type="long-varchar"></field>
       <prim-key field="orderId"/>
       <relation type="one" fk-name="ORDER_HDR_TYPE" rel-entity-name="OrderType">
         <key-map field-name="orderTypeId"/>
