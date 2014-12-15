@@ -35,6 +35,13 @@
       				<condition-expr field-name="roleTypeId" operator="equals" value="BILL_FROM_VENDOR"/>
       			</condition-list>
       		</entity-condition>
+      		<entity-condition entity-name="OrderItem" list="orderItemList" >
+      			<condition-expr field-name="orderId" operator="equals" value="${orderId}" />
+      		</entity-condition>
+      		<entity-condition entity-name="SupplierProduct" list="SupplierProductList" >
+      			<condition-expr field-name="productId" operator="equals" value="${orderItemList[0].productId}"/>
+      		</entity-condition>
+      		<set field="partyId" value="${SupplierProductList[0].partyId}" />
       	</row-actions>
       	<field name="orderId" widget-style="buttontext">
       		<hyperlink target="POoverview" description="${orderId}" target-window="_blank">
@@ -44,12 +51,21 @@
         <field name="entryDate" title="Entry Date"><display description="${groovy:org.ofbiz.base.util.UtilDateTime.toDateString(entryDate, &quot;dd/MM/yyyy&quot;);}"/></field>
         <field name="createdBy" title="Created By"><display/></field>
         <field name="salesChannelEnumId"><display/></field>
-      
-        <field name="cancelOrder" widget-style="buttontext">
-            <hyperlink target="cancelPurchaseOrder" description="Cancel Order">
+      	<field name="ApproveOrder" widget-style="buttontext" use-when="statusId.equals(&quot;ORDER_CREATED&quot;)" >
+            <hyperlink target="ApproveOrder" description="Approve">
                 <parameter param-name="orderId"/>
-                <parameter param-name="statusId"/>
-                <parameter param-name="partyId" from-field="partyIdFrom"/>
+                <parameter param-name="statusId" value="ORDER_APPROVED" />
+                <parameter param-name="setItemStatus" value="Y" />
+            </hyperlink>
+        </field> 
+        <field name="ApproveOrder" widget-style="buttontext" use-when="statusId.equals(&quot;ORDER_APPROVED&quot;)" ><display description="Order Approved" /></field>
+        <field name="ApproveOrder" widget-style="buttontext" use-when="statusId.equals(&quot;ORDER_COMPLETED&quot;)" ><display description="Order Completed" /></field>
+        <field name="ApproveOrder" widget-style="buttontext" use-when="statusId.equals(&quot;ORDER_CANCELLED&quot;)" ><display description="Order Cancelled" /></field>
+        <field name="cancelOrder" widget-style="buttontext" use-when="statusId.equals(&quot;ORDER_APPROVED&quot;) || statusId.equals(&quot;ORDER_CREATED&quot;)" >
+            <hyperlink target="CancelOrder" description="Cancel Order">
+                 <parameter param-name="orderId"/>
+                <parameter param-name="statusId" value="ORDER_CANCELLED" />
+                <parameter param-name="setItemStatus" value="Y" />
             </hyperlink>
         </field> 
     </form>

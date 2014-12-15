@@ -556,4 +556,73 @@
             <submit/>
         </field>
     </form>
+   <form name="FindMaterialInvoice" type="single" target="findMaterialInvoices">
+   	<actions>
+   		<entity-condition entity-name="ProductFacility" distinct="true" list="prodFacility" />
+		<set field="prodFacilityId" type="List" value="${groovy: org.ofbiz.entity.util.EntityUtil.getFieldListFromEntityList(prodFacility, 'facilityId', true);}"/>        	
+        <entity-condition entity-name="Facility" distinct="true" list="facilityList">
+        		<condition-expr field-name="facilityId" operator="in" from-field="prodFacilityId"/>
+      	</entity-condition>
+   	</actions>
+   	<field name="invoiceId" title="Invoice Id"><text-find size="10"/> </field>
+   	<field name="facilityId">
+            <drop-down allow-empty="true" >
+            	<list-options key-name="facilityId" list-name="facilityList" description="${facilityName}"/>
+            </drop-down>
+    </field>
+    <field name="statusId">
+            <drop-down allow-empty="true" >
+            	<entity-options description="${description}" entity-name="StatusItem">
+            		<entity-constraint name="statusTypeId" value="INVOICE_STATUS"/>
+            	</entity-options>
+            </drop-down>
+    </field>
+   	<field name="invoiceDate" title="Date"><date-find/></field>
+   	<field name="submitButton" title="${uiLabelMap.CommonFind}" widget-style="smallSubmit">
+            <submit button-type="button"/>
+        </field>
+    <field name="noConditionFind"><hidden value="Y"/><!-- if this isn't there then with all fields empty no query will be done --></field>
+   </form>
+   <form name="ListMaterialInvoice" type="list" extends="MaterialInvoiceList" list-name="listIt">
+        <actions>
+          <service service-name="performFind" result-map="result" result-map-list="listIt">
+            <field-map field-name="inputFields" from-field="parameters"/>
+            <field-map field-name="entityName" from-field="entityName"/>
+            <field-map field-name="orderBy" value="-invoiceId"/>
+            <field-map field-name="viewIndex" from-field="viewIndex"/>
+            <field-map field-name="viewSize" from-field="viewSize"/>
+          </service>
+        </actions>
+    </form>
+    <form name="MaterialInvoiceList" type="list" use-row-submit="true" 
+        odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
+        <row-actions>
+        	<service service-name="getPartyNameForDate" result-map="partyNameResultFrom">
+                <field-map field-name="partyId" from-field="partyIdFrom"/>
+                <field-map field-name="compareDate" from-field="invoiceDate"/>
+                <field-map field-name="lastNameFirst" value="Y"/>
+            </service>
+            <service service-name="getPartyNameForDate" result-map="partyNameResultTo">
+                <field-map field-name="partyId" from-field="partyId"/>
+                <field-map field-name="compareDate" from-field="invoiceDate"/>
+                <field-map field-name="lastNameFirst" value="Y"/>
+            </service>
+        
+       </row-actions>
+   	 <field name="invoiceId" title="Invoice Id" widget-style="buttontext"><hyperlink  target="/accounting/control/invoiceOverview" target-type="inter-app" target-window="_blank" description="${invoiceId}"> <parameter param-name="invoiceId"/></hyperlink></field>
+   	 <field name="invoiceTypeId"><display-entity entity-name="InvoiceType"/></field>
+   	<field name="facilityId"><display/></field>
+   	<field name="statusId"><display-entity entity-name="StatusItem" key-field-name="statusId"  description="${description}" /> </field>
+   	<field name="partyIdFrom" title="From Party">
+            <hyperlink target="/partymgr/control/viewprofile" target-type="inter-app" description="${partyNameResultFrom.fullName} [${partyIdFrom}]">
+                <parameter param-name="partyId" from-field="partyIdFrom"/>
+            </hyperlink>
+        </field>
+   	<field name="invoiceDate"><display/></field>
+   	<field name="partyIdTo" entry-name="partyId" title="To Party">
+            <hyperlink target="/partymgr/control/viewprofile" target-type="inter-app" description="${partyNameResultTo.fullName} [${partyId}]">
+                <parameter param-name="partyId" from-field="partyId"/>
+            </hyperlink>
+        </field>
+   </form>
 </forms>

@@ -449,7 +449,27 @@
     		</widgets>
     	</section>
     </screen>
-    
+    <screen name="FindMaterialInvoices">
+    	<section>
+    		<actions>
+    			 <set field="titleProperty" value="Find Material Invoice"/>
+                <set field="tabButtonItem" value="FindMaterialInvoices"/>
+                <set field="entityName" value="Invoice"/>
+    		</actions>
+    		<widgets>
+    			<decorator-screen name="materialmgmtNgCommonDecorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="body">
+    					<screenlet title="Search Options">
+    						<include-form location="component://materialmgmt/widget/MaterialRequestForms.xml" name="FindMaterialInvoice"/>
+    					</screenlet>
+    					<screenlet title="Search Results">
+    						<include-form location="component://materialmgmt/widget/MaterialRequestForms.xml" name="ListMaterialInvoice"/>
+    					</screenlet>
+    				</decorator-section>
+    			</decorator-screen>	
+    		</widgets>
+    	</section>
+    </screen>
     <screen name="AddEnquiryContent">
         <section>
             <actions>
@@ -476,6 +496,7 @@
         </section>
     </screen>
     
+   
     <screen name="AddIndentContent">
         <section>
             <actions>

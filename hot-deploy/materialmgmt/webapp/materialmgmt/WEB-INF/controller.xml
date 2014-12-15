@@ -97,7 +97,17 @@
         <response name="success" type="view" value="FindMaterialRequirement"/>
         <response name="error" type="view" value="FindMaterialRequirement"/>
     </request-map>
-     
+    
+    <request-map uri="FindMaterialInvoices">
+        <security auth="true" https="true"/>
+        <response name="success" type="view" value="FindMaterialInvoices"/>
+        <response name="error" type="view" value="FindMaterialInvoices"/>
+    </request-map>
+     <request-map uri="findMaterialInvoices">
+        <security auth="true" https="true"/>
+        <response name="success" type="view" value="FindMaterialInvoices"/>
+        <response name="error" type="view" value="FindMaterialInvoices"/>
+    </request-map>
     <request-map uri="enquiryItemsForQuote">
      	<security auth="true" https="true"/>
      	<response name="success" type="view" value="enquiryItemsForQuote"/>
@@ -448,6 +458,20 @@
          <response name="success"  type="request-redirect-noparam" value="FindPurchaseOrder"></response>
         <response name="error" type="view" value="FindPurchaseOrder"/>
     </request-map>
+    
+    <request-map uri="ApproveOrder">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="ChangeOrderStatus"/>
+        <response name="success" type="view" value="FindMaterialPO"/>
+        <response name="error" type="view" value="FindMaterialPO"/>
+    </request-map>
+    <request-map uri="CancelOrder">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="ChangeOrderStatus"/>
+        <response name="success" type="view" value="FindMaterialPO"/>
+        <response name="error" type="view" value="FindMaterialPO"/>
+    </request-map>
+    
     <request-map uri="cancelInterUnitPurchaseOrder">
         <security https="true" auth="true"/>
         <event type="service" path="" invoke="cancelPurchaseOrder"/>
@@ -664,6 +688,7 @@
 	<view-map name="MaterialForQCApproval" type="screen" page="component://materialmgmt/widget/MaterialPurchaseScreens.xml#MaterialForQCApproval"/>
 	<view-map name="FindGRNReceipts" type="screen" page="component://materialmgmt/widget/MaterialPurchaseScreens.xml#FindGRNReceipts"/>
 	<view-map name="FindGRNShipments" type="screen" page="component://materialmgmt/widget/MaterialPurchaseScreens.xml#FindGRNShipments"/>
+	<view-map name="FindMaterialInvoices" type="screen" page="component://materialmgmt/widget/MaterialRequestScreens.xml#FindMaterialInvoices"/>
 	
 	<!-- Quote views  -->
 	<view-map name="FindMaterialQuotes" type="screen" page="component://materialmgmt/widget/MaterialQuoteScreens.xml#FindMaterialQuotes"/>

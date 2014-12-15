@@ -22,7 +22,12 @@
    		</menu>
         
         <menu name="MaterailtMgmtNGTabBar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml">
-        
+        	
+        	<menu-item name="stockPosition" title="Stock Position">
+            <link target="stockPosition">
+            </link>
+        	</menu-item>
+        	
 	        <menu-item name="FindMaterialRequest" title="${uiLabelMap.MaterialMangement_CustRequest}">
 	        	<link target="FindMaterialRequest"/>
 	        </menu-item>
@@ -60,14 +65,13 @@
 	                <parameter param-name="facilityId" from-field="ctxFacilityId"/>
 	            </link>
 	        </menu-item>  -->
-         <menu-item name="stockPosition" title="Stock Position">
-            <link target="stockPosition">
-            </link>
-        </menu-item>
-        <menu-item name="newReports" title="New Reports">
-            <link target="newReports">
-            </link>
-        </menu-item>
+	        <menu-item name="FindMaterialInvoices" title="Find Material Invoice">
+            <link target="FindMaterialInvoices"/>
+	        </menu-item>
+	        <menu-item name="newReports" title="New Reports">
+	            <link target="newReports">
+	            </link>
+	        </menu-item>
         </menu>
         
         <!-- Sub Tab Menus -->
