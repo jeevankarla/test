@@ -45,7 +45,7 @@ public class SalesHistoryServices {
 			String billingTypeId = (String) context.get("billingTypeId");			
 			List conditionList = FastList.newInstance();
 	        List periodBillingList = FastList.newInstance();
-	        conditionList.add(EntityCondition.makeCondition("statusId", EntityOperator.IN , UtilMisc.toList("GENERATED","IN_PROCESS")));
+	        conditionList.add(EntityCondition.makeCondition("statusId", EntityOperator.IN , UtilMisc.toList("GENERATED","IN_PROCESS","APPROVED","APPROVED_PAYMENT")));
 	        conditionList.add(EntityCondition.makeCondition("customTimePeriodId", EntityOperator.EQUALS ,customTimePeriodId));
 	    	conditionList.add(EntityCondition.makeCondition("billingTypeId", EntityOperator.EQUALS , billingTypeId));
 	    	EntityCondition condition=EntityCondition.makeCondition(conditionList,EntityOperator.AND);

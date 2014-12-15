@@ -1698,17 +1698,29 @@ import java.text.SimpleDateFormat;
 		    	String recoveryTypeId = (String)context.get("recoveryTypeId");
 		    	String recoveryId = (String)context.get("recoveryId");
 		    	GenericValue customTimePeriod = null;
+				List conditionList = FastList.newInstance();
+				List periodBillingList = FastList.newInstance();
+
+
 		    	try {
 		    		try {
-						customTimePeriod = delegator.findOne("CustomTimePeriod", UtilMisc.toMap("customTimePeriodId", customTimePeriodId), false);
+						conditionList.add(EntityCondition.makeCondition("statusId", EntityOperator.IN , UtilMisc.toList("GENERATED","IN_PROCESS","APPROVED","APPROVED_PAYMENT")));
+				        conditionList.add(EntityCondition.makeCondition("customTimePeriodId", EntityOperator.EQUALS ,customTimePeriodId));
+				    	EntityCondition condition=EntityCondition.makeCondition(conditionList,EntityOperator.AND);
+				    	periodBillingList = delegator.findList("PeriodBilling", condition, null,null, null, false);
+
 					} catch (GenericEntityException e1) {
-						Debug.logError(e1,"Error While Finding CustomTimePeriod");
-						return ServiceUtil.returnError("Error While Finding CustomTimePeriod" + e1);
+						Debug.logError(e1,"Error While Finding PeriodBilling");
+						return ServiceUtil.returnError("Error While Finding PeriodBilling" + e1);
+					}
+					if(UtilValidate.isNotEmpty(periodBillingList)){
+						 return ServiceUtil.returnError("Failed to cancel Recovery. Billing already generated! ");
 					}
 					GenericValue facilityRecovery = delegator.findOne("FineRecovery", UtilMisc.toMap("recoveryId",recoveryId), false);
 					if(UtilValidate.isNotEmpty(facilityRecovery)){
 						delegator.removeValue(facilityRecovery);    
 		            }
+						
 		    	}catch (GenericEntityException e) {
 		    		 Debug.logError(e, module);
 		             return ServiceUtil.returnError("Failed to find FineRecovery " + e);
