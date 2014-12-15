@@ -1234,59 +1234,86 @@
 				<parameter param-name="organizationPartyId" />
 			</link>
 		</menu-item>
-		<!-- <menu-item name="IncomeStatement" title="${uiLabelMap.AccountingIncomeStatement}">
+		<menu-item name="IncomeStatement" title="${uiLabelMap.AccountingIncomeStatement}">
+		   <condition>
+			  <if-has-permission permission="ACCOUNTINGR"  action="_BLS_VIEW"/>				
+			</condition>
 			<link target="IncomeStatement">
 				<parameter param-name="organizationPartyId" />
 			</link>
 		</menu-item>
 		<menu-item name="CashFlowStatement" title="${uiLabelMap.AccountingCashFlowStatement}">
+		    <condition>
+			  <if-has-permission permission="ACCOUNTINGR"  action="_BLS_VIEW"/>				
+			</condition>
 			<link target="CashFlowStatement">
 				<parameter param-name="organizationPartyId" />
 			</link>
 		</menu-item>
 		<menu-item name="BalanceSheet" title="${uiLabelMap.AccountingBalanceSheet}">
+		     <condition>
+			  <if-has-permission permission="ACCOUNTINGR"  action="_BLS_VIEW"/>				
+			</condition>
 			<link target="BalanceSheet">
 				<parameter param-name="organizationPartyId" />
 			</link>
 		</menu-item>
-				<menu-item name="BalanceSheetForIndian" title="Indian Format Balance Sheet">
+	  <menu-item name="BalanceSheetForIndian" title="Indian Format Balance Sheet">
+	       <condition>
+			  <if-has-permission permission="ACCOUNTINGR"  action="_BLS_VIEW"/>				
+			</condition>
 			<link target="BalanceSheetForIndian">
 				<parameter param-name="organizationPartyId" />
 			</link>
 		</menu-item>
 		<menu-item name="ComparativeIncomeStatement"
 			title="${uiLabelMap.AccountingComparativeIncomeStatement}">
+			 <condition>
+			  <if-has-permission permission="ACCOUNTINGR"  action="_BLS_VIEW"/>				
+			</condition>
 			<link target="ComparativeIncomeStatement">
 				<parameter param-name="organizationPartyId" />
 			</link>
 		</menu-item>
 		<menu-item name="ComparativeCashFlowStatement"
 			title="${uiLabelMap.AccountingComparativeCashFlowStatement}">
+			<condition>
+			  <if-has-permission permission="ACCOUNTINGR"  action="_BLS_VIEW"/>				
+			</condition>
 			<link target="ComparativeCashFlowStatement">
 				<parameter param-name="organizationPartyId" />
 			</link>
 		</menu-item>
 		<menu-item name="ComparativeBalanceSheet"
 			title="${uiLabelMap.AccountingComparativeBalanceSheet}">
+			<condition>
+			  <if-has-permission permission="ACCOUNTINGR"  action="_BLS_VIEW"/>				
+			</condition>
 			<link target="ComparativeBalanceSheet">
 				<parameter param-name="organizationPartyId" />
 			</link>
 		</menu-item>
 		<menu-item name="GlAccountTrialBalance"
 			title="${uiLabelMap.AccountingGlAccountTrialBalance}">
+			 <condition>
+			  <if-has-permission permission="ACCOUNTINGR"  action="_BLS_VIEW"/>				
+			</condition>
 			<link target="GlAccountTrialBalance">
 				<parameter param-name="organizationPartyId" />
 			</link>
 		</menu-item>
-		<menu-item name="InventoryValuation" title="${uiLabelMap.AccountingInventoryValuation}"> 
+		<!-- <menu-item name="InventoryValuation" title="${uiLabelMap.AccountingInventoryValuation}"> 
 			<link target="InventoryValuation"> <parameter param-name="organizationPartyId"/> 
-			</link> </menu-item>
+			</link> </menu-item> -->
 		<menu-item name="GlAccountBalanceByCostCenter" title="${uiLabelMap.FormFieldTitle_costCenters}">
+		     <condition>
+			  <if-has-permission permission="ACCOUNTINGR"  action="_BLS_VIEW"/>				
+			</condition>
 			<link target="GlAccountBalanceByCostCenter">
 				<parameter param-name="organizationPartyId" />
 			</link>
 		</menu-item>
-		<menu-item name="AgingAnalysis" title="${uiLabelMap.AccountingAgingAnalysis}">
+		<!-- <menu-item name="AgingAnalysis" title="${uiLabelMap.AccountingAgingAnalysis}">
 			<link target="AgingAnalysis">
 				<parameter param-name="organizationPartyId" />
 			</link>
