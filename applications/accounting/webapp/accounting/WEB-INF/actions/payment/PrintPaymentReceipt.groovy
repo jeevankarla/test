@@ -184,7 +184,7 @@ if(UtilValidate.isNotEmpty(reportTypeFlag) && reportTypeFlag == "depositCheque")
 			newFinAccountTransId = null;
 			if(UtilValidate.isNotEmpty(finAccountTransAttributeDetails)){
 				newFinAccountTransId = finAccountTransAttributeDetails.attrValue;
-				if(UtilValidate.isNotEmpty(finAccountTransAttributeDetails)){
+				if(UtilValidate.isNotEmpty(newFinAccountTransId)){
 					newfinAccountTransDetails = delegator.findOne("FinAccountTrans", [finAccountTransId : newFinAccountTransId], false);
 					if(UtilValidate.isNotEmpty(newfinAccountTransDetails)){
 						finAccountId = newfinAccountTransDetails.finAccountId;
@@ -194,6 +194,18 @@ if(UtilValidate.isNotEmpty(reportTypeFlag) && reportTypeFlag == "depositCheque")
 								finAccountName = finAccountDetails.finAccountName;
 								if(UtilValidate.isNotEmpty(finAccountName)){
 									context.put("finAccountName",finAccountName);
+								}
+							}
+						}
+						if(UtilValidate.isNotEmpty(finAccountTransId)){
+							finAccntTransSequenceList = delegator.findList("FinAccntTransSequence", EntityCondition.makeCondition("finAccountTransId", EntityOperator.EQUALS, finAccountTransId), null, null, null, false);
+							if(UtilValidate.isNotEmpty(finAccntTransSequenceList)){
+								finAccntTransSequence = EntityUtil.getFirst(finAccntTransSequenceList);
+								if(UtilValidate.isNotEmpty(finAccntTransSequence)){
+									sequenceId = finAccntTransSequence.transSequenceId;
+									if(UtilValidate.isNotEmpty(sequenceId)){
+										context.put("sequenceId",sequenceId);
+									}
 								}
 							}
 						}

@@ -38,7 +38,7 @@ under the License.
 					<fo:block  keep-together="always" text-align="center" font-weight = "bold" font-family="Courier,monospace" white-space-collapse="false">&#160;      UNIT: MOTHER DAIRY: G.K.V.K POST,YELAHANKA,BENGALORE:560065</fo:block>
                     <fo:block text-align="left"  keep-together="always"  font-weight = "bold" white-space-collapse="false">&#160;&#160;&#160;&#160;&#160; &#160;Date:${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(paymentDate, "MMMM dd,yyyy HH:MM:SS")}&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;UserLogin : <#if userLogin?exists>${userLogin.userLoginId?if_exists}</#if>   </fo:block>
               		<fo:block>-------------------------------------------------------------------------------</fo:block>
-              		<fo:block font-weight = "bold">Received with thanks the RECEIPT by way of ${finAccountTransTypeId?if_exists}										</fo:block>
+              		<fo:block font-weight = "bold">Received with thanks the RECEIPT by way of LOAN RECOVERY voucher										</fo:block>
             		<fo:block>
             		<fo:table>
                     <fo:table-column column-width="38%"/>
@@ -55,11 +55,11 @@ under the License.
                        			</fo:table-cell>
                        			</#if>
                     </fo:table-row>	
-                    <fo:table-row>
+                    <#--><fo:table-row>
                     		<fo:table-cell>
                             	<fo:block  keep-together="always" text-align="left" font-weight = "bold">Receipt Number:${newFinAccountTransId?if_exists}&#160;&#160;&#160;</fo:block>  
                        		</fo:table-cell>
-                     </fo:table-row>	
+                     </fo:table-row>-->	
                      <fo:table-row>
                 				<fo:table-cell>
                             		<fo:block  keep-together="always" text-align="left" font-weight = "bold">Receipt Date:${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(paymentDate?if_exists, "MMMM dd,yyyy")}            </fo:block>  
@@ -71,6 +71,11 @@ under the License.
                             		<fo:block  keep-together="always" text-align="left" font-weight = "bold">Unit:${unitName?if_exists}</fo:block>  
                        			</fo:table-cell>
                     </fo:table-row>
+                    <fo:table-row>
+                    		<fo:table-cell>
+                            	<fo:block  keep-together="always" text-align="left" font-weight = "bold">Fin Account Seq Number:${sequenceId?if_exists}&#160;&#160;&#160;</fo:block>  
+                       		</fo:table-cell>
+                     </fo:table-row>
                      </fo:table-body>
                       </fo:table>
             		</fo:block>
@@ -94,7 +99,6 @@ under the License.
                 				<fo:table-cell>
                             		<fo:block  keep-together="always" text-align="left">${partyName?if_exists}</fo:block>  
                        			</fo:table-cell>
-                       			
                        			<fo:table-cell>
                             		<fo:block  text-align="right"  white-space-collapse="false">${partyId?if_exists}</fo:block>  
                        			</fo:table-cell>
@@ -215,7 +219,7 @@ under the License.
 		  					</fo:table-row>
 						  	<fo:table-row>
 			                   <fo:table-cell>
-			                        	<fo:block keep-together="always" font-weight = "bold">&#160;&#160;SUPDT/DMF/AM                     &#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;Authorised Signatory</fo:block>
+			                        	<fo:block keep-together="always" font-weight = "bold">&#160;&#160;PROCD                   &#160;&#160;&#160;&#160;&#160;&#160;&#160;DY.MGR/MGR/GM(FINANCE)&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;PRE-AUDIT      &#160;&#160;&#160;&#160;&#160;&#160;&#160;DIRECTOR</fo:block>
 			                   </fo:table-cell>
 						  	</fo:table-row>
 		              </fo:table-body>

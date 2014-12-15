@@ -1255,8 +1255,8 @@
     	<field name="finAccountTransId" title="FinAccountTransId" ><display></display></field>
     	<field name="loanRecoveryAmount" title="Loan Recovery Amount" ><display></display></field>
     	<field name="deducteePartyId" title="Unit"><display></display></field>
-    	<field name="printReceipt" widget-style="buttontext">
-            <hyperlink target="printDepositReport.pdf" description="Print Receipt" target-window="_BLANK">
+    	<field name="printVoucher" widget-style="buttontext">
+            <hyperlink target="printDepositReport.pdf" description="Print Voucher" target-window="_BLANK">
                 <parameter param-name="loanId"/>
                 <parameter param-name="employeeId"/>
                 <parameter param-name="partyName"/>
