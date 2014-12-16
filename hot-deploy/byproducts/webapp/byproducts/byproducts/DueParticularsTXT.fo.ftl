@@ -50,7 +50,7 @@ under the License.
   <#if (reportTypeFlag=="DuesAbstractReport")>            	
 <fo:layout-master-set>
 	<fo:simple-page-master master-name="main" page-height="10in" page-width="14in"  margin-bottom="1in" margin-left=".1in" >
-         <fo:region-body margin-top="1.2in"/>
+         <fo:region-body margin-top="1.3in"/>
         <fo:region-before extent="1in"/>
         <fo:region-after extent="1in"/>        
     </fo:simple-page-master>   
@@ -404,7 +404,8 @@ under the License.
 			<fo:static-content font-size="10pt" flow-name="xsl-region-before">
 					<fo:block text-align="center"  keep-together="always"  white-space-collapse="false">&#160;   ${uiLabelMap.KMFDairyHeader}</fo:block>
 					<fo:block text-align="center"  keep-together="always"  white-space-collapse="false">&#160;   ${uiLabelMap.KMFDairySubHeader}</fo:block>				
-              		<fo:block text-align="center"  keep-together="always"  white-space-collapse="false">&#160; <#if categoryTypeEnum?exists && categoryTypeEnum?has_content>  	<#assign enumeration = delegator.findOne("Enumeration", {"enumId" : categoryTypeEnum}, true)>${enumeration.description?if_exists}<#else>ALL </#if> DUES ABSTRACT FOR DATE/MONTH :${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(fromDateTime, "dd,MMM yy")} - ${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(thruDateTime, "dd,MMM yy")}           ${uiLabelMap.CommonPage}:<fo:page-number/></fo:block>
+              		<fo:block text-align="center"  keep-together="always"  white-space-collapse="false">&#160; <#if categoryTypeEnum?exists && categoryTypeEnum?has_content>  	<#assign enumeration = delegator.findOne("Enumeration", {"enumId" : categoryTypeEnum}, true)>${enumeration.description?if_exists}<#else>ALL </#if> DUES ABSTRACT FOR DATE/MONTH :${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(fromDateTime, "dd,MMM yy")} - ${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(thruDateTime, "dd,MMM yy")}           </fo:block>
+              		<fo:block text-align="left"  keep-together="always"  white-space-collapse="false">UserLogin: <#if userLogin?exists>${userLogin.userLoginId?if_exists}</#if>                                                              Print Date: ${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(nowTimestamp, "dd/MM/yy HH:mm:ss")}                                         ${uiLabelMap.CommonPage}:<fo:page-number/></fo:block>
               		<fo:block >--------------------------------------------------------------------------------------------------------------------------------------------------------------------</fo:block>
               		<fo:block>
                  	<fo:table border-width="1pt" >
