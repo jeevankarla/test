@@ -96,7 +96,7 @@ function makeDatePicker1(fromDateId ,thruDateId){
 		makeDatePicker("fromDateMr","thruDateMr");
 		makeDatePicker("fromDateStock","thruDateStock");
 		
-		Stock
+	
 		
 		$('#ui-datepicker-div').css('clip', 'auto');		
 	});
@@ -223,6 +223,19 @@ function makeDatePicker1(fromDateId ,thruDateId){
 				 </table>
 			 </form>
 		  </tr>
+		  
+		  <tr class="alternate-row"> 
+				<form id="PurchaseOrder" name="PurchaseOrder" mothed="post" action="<@ofbizUrl>PurchaseOrder.pdf</@ofbizUrl>" target="_blank">
+				   <table class="basic-table" cellspacing="5">
+					  <tr class="alternate-row">
+					     <td width="20%"><span class='h3'>Purchase Order</span></td>
+				    <td width="25%"><span class='h3'>PO No<input type="textfield" id="orderId"name="orderId"></span></td>
+						 <td width="25%"><span class='h3'><input type="submit" value="Download" class="buttontext"></span></td>
+		 		    </tr>
+				 </table>
+			 </form>
+		  </tr>
+		  
 		  <tr class="alternate-row"> 
 				<form id="MaterialEnquiryReport" name="PurchaseEnquiryReport" mothed="post" action="<@ofbizUrl>MaterialEnquiryReport.pdf</@ofbizUrl>" target="_blank">
 				   <table class="basic-table" cellspacing="5">

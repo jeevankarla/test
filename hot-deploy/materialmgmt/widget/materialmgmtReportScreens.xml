@@ -441,4 +441,29 @@
 		</section>
 	</screen>
 	
+	
+	<screen name="PurchaseOrderPDF">
+		<section>
+			<actions>
+				<property-map resource="OrderUiLabels" map-name="uiLabelMap" global="true"/>
+				<property-map resource="ProductUiLabels" map-name="uiLabelMap" global="true"/>
+				<property-map resource="PartyUiLabels" map-name="uiLabelMap" global="true"/>
+				<property-map resource="CommonUiLabels" map-name="uiLabelMap" global="true"/>
+				<script location="component://materialmgmt/webapp/materialmgmt/WEB-INF/actions/purchases/purchaseOrder.groovy"/> -->
+			</actions>
+			<widgets>
+				<section>
+					<widgets>
+						<platform-specific>
+						 	<xsl-fo>
+								<html-template
+								location="component://materialmgmt/webapp/materialmgmt/purchase/purchaseOrder.fo.ftl" />
+							</xsl-fo>
+						</platform-specific>
+					</widgets>
+				</section>
+			</widgets>
+		</section>
+	</screen>
+	
 </screens>
