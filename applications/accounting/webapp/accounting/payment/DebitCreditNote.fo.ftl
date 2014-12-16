@@ -125,7 +125,7 @@ under the License.
 	                            	<fo:block text-align="left" keep-together="always" font-weight="bold" font-size = "12pt">Date</fo:block>                               
 	                            </fo:table-cell>
 	                            <fo:table-cell>	
-	                            	<fo:block text-align="left" keep-together="always" font-size = "12pt">&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;:   &#160;&#160;&#160;&#160;${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(paymentDate?if_exists, "dd/MM/yyyy")}</fo:block>                               
+	                            	<fo:block text-align="left" keep-together="always" font-size = "12pt">&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;:   &#160;&#160;&#160;&#160;${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(invoice.invoiceDate?if_exists, "dd/MM/yyyy")}</fo:block>                               
 	                            </fo:table-cell>
 	                        </fo:table-row>
 	                        <fo:table-row>
