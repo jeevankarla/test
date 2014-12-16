@@ -41,8 +41,7 @@ under the License.
 				    <fo:block text-align="center" keep-together="always">                                               ENQUIRY                                                  </fo:block>				    
 			        </fo:static-content>	
 			        <fo:flow flow-name="xsl-region-body"   font-family="Courier,monospace">	 			       
-			        <fo:block linefeed-treatment="preserve">&#xA;</fo:block>
-				    <fo:block linefeed-treatment="preserve">&#xA;</fo:block>
+			        <fo:block linefeed-treatment="preserve">&#xA;</fo:block>				   
 				    <fo:block text-align="left" keep-together="always" white-space-collapse="false">&#160;&#160; ENQUIRY NO.: ${parameters.issueToCustReqId}                                                          ENQUIRY DATE: ${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(custReqDate, "dd-MMM-yyyy")}</fo:block>
 			        <fo:block  keep-together="always" text-align="left" font-family="Courier,monospace" white-space-collapse="false" font-size="12pt" >&#160;&#160; To:                                                                         FAX NO:</fo:block>
 				    <fo:block text-align="left" white-space-collapse="false">&#160;&#160; ${partyAddressMap.get("address1")?if_exists}</fo:block>
