@@ -309,7 +309,7 @@ public class MaterialRequestServices {
 			if(UtilValidate.isEmpty(custRequestItem)){
 				return ServiceUtil.returnError("No CustRequestItem found with Id "+custRequestId+" : "+custRequestItemSeqId);
 			}
-
+			
 			String oldStatusId = custRequestItem.getString("statusId");
 			if(!oldStatusId.equals(statusId)){
 				GenericValue statusValidChange = delegator.findOne("StatusValidChange", UtilMisc.toMap("statusId", oldStatusId, "statusIdTo", statusId), false);
@@ -582,7 +582,7 @@ public class MaterialRequestServices {
 			itemStatusCtx.put("custRequestId", custRequestId);
 			itemStatusCtx.put("custRequestItemSeqId", custRequestItemSeqId);
 			itemStatusCtx.put("userLogin", userLogin);
-			itemStatusCtx.put("statusId", "CRQ_COMPLETED");
+			itemStatusCtx.put("statusId", "CRQ_ISSUED");
 			resultCtx = dispatcher.runSync("setCustRequestItemStatus", itemStatusCtx);
 			if (ServiceUtil.isError(resultCtx)) {
 				Debug.logError("Problem changing status for requested item ", module);
@@ -673,7 +673,7 @@ public class MaterialRequestServices {
 			itemStatusCtx.put("custRequestId", custRequestId);
 			itemStatusCtx.put("custRequestItemSeqId", custRequestItemSeqId);
 			itemStatusCtx.put("userLogin", userLogin);
-			itemStatusCtx.put("statusId", "CRQ_ACCEPTED");
+			itemStatusCtx.put("statusId", "CRQ_INPROCESS");
 			resultCtx = dispatcher.runSync("setCustRequestItemStatus", itemStatusCtx);
 			if (ServiceUtil.isError(resultCtx)) {
 				Debug.logError("Problem changing status for requested item ", module);
@@ -766,6 +766,83 @@ public class MaterialRequestServices {
   	  	}
 		return "success";
     }
+	
+	public static String updateRequestAcknowledgmentStatus(HttpServletRequest request, HttpServletResponse response) {
+		Delegator delegator = (Delegator) request.getAttribute("delegator");
+		LocalDispatcher dispatcher = (LocalDispatcher) request.getAttribute("dispatcher");
+		DispatchContext dctx =  dispatcher.getDispatchContext();
+		Locale locale = UtilHttp.getLocale(request);
+		Map<String, Object> result = ServiceUtil.returnSuccess();
+	    HttpSession session = request.getSession();
+	    String custRequestItemStatusId = (String) request.getParameter("custRequestItemStatusId");
+	    GenericValue userLogin = (GenericValue) session.getAttribute("userLogin");
+		Map<String, Object> paramMap = UtilHttp.getParameterMap(request);
+		int rowCount = UtilHttp.getMultiFormRowCount(paramMap);
+		if (rowCount < 1) {
+			Debug.logError("No rows to process, as rowCount = " + rowCount, module);
+			return "error";
+		}
+	  	
+	  	
+		boolean beganTransaction = false;
+		try{
+			
+	        String custRequestId = "";
+	        String custRequestItemSeqId = "";
+	        Map statusCtx = FastMap.newInstance();
+			for (int i = 0; i < rowCount; i++) {
+				  
+				String thisSuffix = UtilHttp.MULTI_ROW_DELIMITER + i;
+				
+				if (paramMap.containsKey("custRequestId" + thisSuffix)) {
+					custRequestId = (String) paramMap.get("custRequestId" + thisSuffix);
+				}
+				else {
+					request.setAttribute("_ERROR_MESSAGE_", "Missing custRequeset Id");
+				}
+				
+				if (paramMap.containsKey("custRequestItemSeqId" + thisSuffix)) {
+					custRequestItemSeqId = (String) paramMap.get("custRequestItemSeqId" + thisSuffix);
+				}
+				else {
+					request.setAttribute("_ERROR_MESSAGE_", "Missing custRequestItemSeqId");
+				}
+				
+				statusCtx.clear();
+				statusCtx.put("statusId", custRequestItemStatusId);
+				statusCtx.put("custRequestId", custRequestId);
+				statusCtx.put("custRequestItemSeqId", custRequestItemSeqId);
+				statusCtx.put("userLogin", userLogin);
+				Map resultCtx = dispatcher.runSync("setCustRequestItemStatus", statusCtx);
+				if (ServiceUtil.isError(resultCtx)) {
+					Debug.logError("RequestItem set status failed for Request: " + custRequestId+" : "+custRequestItemSeqId, module);
+					request.setAttribute("_ERROR_MESSAGE_", "Problem changing request status :"+custRequestId+":"+custRequestItemSeqId);	
+					TransactionUtil.rollback();
+					return "error";
+				}
+			}
+			
+	        request.setAttribute("_EVENT_MESSAGE_", "User Department acknowledgement successful");
+			
+		}catch (GenericEntityException e) {
+			try {
+				TransactionUtil.rollback(beganTransaction, "Error Fetching data", e);
+	  		} catch (GenericEntityException e2) {
+	  			Debug.logError(e2, "Could not rollback transaction: " + e2.toString(), module);
+	  		}
+	  		Debug.logError("An entity engine error occurred while fetching data", module);
+	  	}
+  	  	catch (GenericServiceException e) {
+  	  		try {
+  			  TransactionUtil.rollback(beganTransaction, "Error while calling services", e);
+  	  		} catch (GenericEntityException e2) {
+  			  Debug.logError(e2, "Could not rollback transaction: " + e2.toString(), module);
+  	  		}
+  	  		Debug.logError("An entity engine error occurred while calling services", module);
+  	  	}
+		return "success";
+    }
+	
 	
 	public static Map<String, Object> draftEnquiryForApprovedRequirements(DispatchContext ctx,Map<String, ? extends Object> context) {
 		

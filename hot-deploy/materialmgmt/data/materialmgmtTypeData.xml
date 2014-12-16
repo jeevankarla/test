@@ -30,15 +30,15 @@
      <StatusValidChange statusId="QUO_ACCEPTED" statusIdTo="QUO_REJECTED" transitionName="Reject Quote"/>
      
      <StatusType description="Quote Item Status" hasTable="N" statusTypeId="QTITEM_STATUS"/>
-     <StatusItem description="Quote Item Created" statusCode="CREATED" statusId="QTITM_CREATED" statusTypeId="QTITEM_STATUS"/>
-      <StatusItem description="Quote Item Accepted" statusCode="ACCEPTED" statusId="QTITM_ACCEPTED" statusTypeId="QTITEM_STATUS"/>
-      <StatusItem description="Quote Item Qualified" statusCode="QUALIFIED" statusId="QTITM_QUALIFIED" statusTypeId="QTITEM_STATUS"/>
-      <StatusItem description="Quote Item Tech. Evaluation" statusCode="TECHNICAL_EVALUATION" statusId="QTITM_TECH_EVAL" statusTypeId="QTITEM_STATUS"/>
-      <StatusItem description="Quote Item Financial Evaluation" statusCode="FINANCIAL_EVALUATION" statusId="QTITM_FIN_EVAL" statusTypeId="QTITEM_STATUS"/>
-      <StatusItem description="Quote Item Negotiation" statusCode="NEGOTIATION" statusId="QTITM_NEGOTIATION" statusTypeId="QTITEM_STATUS"/>
-      <StatusItem description="Quote Item Approved" statusCode="APPROVED" statusId="QTITM_APPROVED" statusTypeId="QTITEM_STATUS"/>
-      <StatusItem description="Quote Item Rejected" statusCode="REJECTED" statusId="QTITM_REJECTED" statusTypeId="QTITEM_STATUS"/>
-      <StatusItem description="Quote Item Ordered" statusCode="ORDERED" statusId="QTITM_ORDERED" statusTypeId="QTITEM_STATUS"/>
+     <StatusItem description="Created" statusCode="CREATED" statusId="QTITM_CREATED" statusTypeId="QTITEM_STATUS"/>
+     <StatusItem description="Accepted" statusCode="ACCEPTED" statusId="QTITM_ACCEPTED" statusTypeId="QTITEM_STATUS"/>
+     <StatusItem description="Qualified" statusCode="QUALIFIED" statusId="QTITM_QUALIFIED" statusTypeId="QTITEM_STATUS"/>
+     <StatusItem description="Tech. Evaluation" statusCode="TECHNICAL_EVALUATION" statusId="QTITM_TECH_EVAL" statusTypeId="QTITEM_STATUS"/>
+     <StatusItem description="Financial Evaluation" statusCode="FINANCIAL_EVALUATION" statusId="QTITM_FIN_EVAL" statusTypeId="QTITEM_STATUS"/>
+     <StatusItem description="Negotiation" statusCode="NEGOTIATION" statusId="QTITM_NEGOTIATION" statusTypeId="QTITEM_STATUS"/>
+     <StatusItem description="Approved" statusCode="APPROVED" statusId="QTITM_APPROVED" statusTypeId="QTITEM_STATUS"/>
+     <StatusItem description="Rejected" statusCode="REJECTED" statusId="QTITM_REJECTED" statusTypeId="QTITEM_STATUS"/>
+     <StatusItem description="Ordered" statusCode="ORDERED" statusId="QTITM_ORDERED" statusTypeId="QTITEM_STATUS"/>
       
      <StatusValidChange statusId="QTITM_CREATED" statusIdTo="QTITM_ACCEPTED" transitionName="Accept"/>
      <StatusValidChange statusId="QTITM_CREATED" statusIdTo="QTITM_REJECTED" transitionName="Reject"/>
@@ -48,12 +48,52 @@
      <StatusValidChange statusId="QTITM_TECH_EVAL" statusIdTo="QTITM_FIN_EVAL" transitionName="Fin Evaluation Passed"/>
      <StatusValidChange statusId="QTITM_FIN_EVAL" statusIdTo="QTITM_NEGOTIATION" transitionName="Negotiation"/>
      <StatusValidChange statusId="QTITM_FIN_EVAL" statusIdTo="QTITM_REJECTED" transitionName="Reject"/>
-     <StatusValidChange statusId="QTITM_NEGOTIATION" statusIdTo="QTITM_QUALIFIED" transitionName="Qualified"/>
+     <StatusValidChange statusId="QTITM_NEGOTIATION" statusIdTo="QTITM_APPROVED" transitionName="Approved"/>
      <StatusValidChange statusId="QTITM_NEGOTIATION" statusIdTo="QTITM_REJECTED" transitionName="Reject"/>
-     <StatusValidChange statusId="QTITM_QUALIFIED" statusIdTo="QTITM_APPROVED" transitionName="Approved"/>
+     <StatusValidChange statusId="QTITM_APPROVED" statusIdTo="QTITM_QUALIFIED" transitionName="Qualified"/>
      <StatusValidChange statusId="QTITM_QUALIFIED" statusIdTo="QTITM_REJECTED" transitionName="Reject"/>
      <StatusValidChange statusId="QTITM_APPROVED" statusIdTo="QTITM_ORDERED" transitionName="Ordered"/>
      <StatusValidChange statusId="QTITM_APPROVED" statusIdTo="QTITM_REJECTED" transitionName="Reject"/>
      <StatusValidChange statusId="QTITM_ORDERED" statusIdTo="QTITM_REJECTED" transitionName="Reject"/>
      <Enumeration description="Material Purchase Channel" enumCode="Material Purchase Channel" enumId="MATERIAL_PUR_CHANNEL" enumTypeId="ORDER_PRCHSE_CHANNEL"/>
+     
+     <StatusType description="Indent Status" hasTable="N" statusTypeId="CUSTREQ_STTS"/>
+     <StatusItem description="Submitted" sequenceId="00" statusCode="DRAFT" statusId="CRQ_DRAFT" statusTypeId="CUSTREQ_STTS"/>
+     <StatusItem description="Dept. Head Approved" sequenceId="01" statusCode="SUBMITTED" statusId="CRQ_SUBMITTED" statusTypeId="CUSTREQ_STTS"/>
+     <StatusItem description="Rejected" sequenceId="05" statusCode="REJECTED" statusId="CRQ_REJECTED" statusTypeId="CUSTREQ_STTS"/>
+     <StatusItem description="Cancelled" sequenceId="04" statusCode="CANCELLED" statusId="CRQ_CANCELLED" statusTypeId="CUSTREQ_STTS"/>
+     <StatusItem description="Completed" sequenceId="03" statusCode="COMPLETED" statusId="CRQ_COMPLETED" statusTypeId="CUSTREQ_STTS"/>
+     <StatusItem description="Stores Issued" sequenceId="02" statusCode="ISSUED" statusId="CRQ_ISSUED" statusTypeId="CUSTREQ_STTS"/>
+     <StatusItem description="Raise Requirement" sequenceId="06" statusCode="INPROCESS" statusId="CRQ_INPROCESS" statusTypeId="CUSTREQ_STTS"/>
+     
+     <StatusValidChange statusId="CRQ_DRAFT" statusIdTo="CRQ_CANCELLED" transitionName="Cancel"/>
+     <StatusValidChange statusId="CRQ_DRAFT" statusIdTo="CRQ_REJECTED" transitionName="Reject"/>
+     <StatusValidChange statusId="CRQ_DRAFT" statusIdTo="CRQ_SUBMITTED" transitionName="Approved"/>
+     
+     <StatusValidChange statusId="CRQ_SUBMITTED" statusIdTo="CRQ_ISSUED" transitionName="Issuance"/>
+     <StatusValidChange statusId="CRQ_SUBMITTED" statusIdTo="CRQ_INPROCESS" transitionName="Procure"/>
+     <StatusValidChange statusId="CRQ_SUBMITTED" statusIdTo="CRQ_REJECTED" transitionName="Reject"/>
+     
+     <StatusValidChange statusId="CRQ_ISSUED" statusIdTo="CRQ_COMPLETED" transitionName="Fulfill"/>
+     <StatusValidChange statusId="CRQ_ISSUED" statusIdTo="CRQ_REJECTED" transitionName="Reject"/>
+     
+     <StatusValidChange statusId="CRQ_INPROCESS" statusIdTo="CRQ_ISSUED" transitionName="Receipts"/>
+     <StatusValidChange statusId="CRQ_INPROCESS" statusIdTo="CRQ_REJECTED" transitionName="Reject"/>
+     
+	 <StatusType description="Enquiry Status" hasTable="N" statusTypeId="ENQ_STTS"/>
+     <StatusItem description="Submitted" sequenceId="00" statusCode="DRAFT" statusId="ENQ_DRAFT" statusTypeId="ENQ_STTS"/>
+     <StatusItem description="Accepted" sequenceId="01" statusCode="ACCEPTED" statusId="ENQ_ACCEPTED" statusTypeId="ENQ_STTS"/>
+     <StatusItem description="Rejected" sequenceId="05" statusCode="REJECTED" statusId="ENQ_REJECTED" statusTypeId="ENQ_STTS"/>
+     <StatusItem description="Cancelled" sequenceId="04" statusCode="CANCELLED" statusId="ENQ_CANCELLED" statusTypeId="ENQ_STTS"/>
+     <StatusItem description="Completed" sequenceId="03" statusCode="COMPLETED" statusId="ENQ_COMPLETED" statusTypeId="ENQ_STTS"/>
+     
+     <StatusValidChange statusId="ENQ_DRAFT" statusIdTo="ENQ_ACCEPTED" transitionName="Accept"/>
+     <StatusValidChange statusId="ENQ_DRAFT" statusIdTo="ENQ_REJECTED" transitionName="Reject"/>
+     <StatusValidChange statusId="ENQ_DRAFT" statusIdTo="ENQ_CANCELLED" transitionName="Cancelled"/>
+     
+     <StatusValidChange statusId="ENQ_ACCEPTED" statusIdTo="ENQ_COMPLETED" transitionName="Complete"/>
+     <StatusValidChange statusId="ENQ_ACCEPTED" statusIdTo="ENQ_REJECTED" transitionName="Reject"/>
+	     
+     
+     
 </entity-engine-xml>

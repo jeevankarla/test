@@ -262,6 +262,14 @@
        <response name="error" type="view" value="StoreProductIssue"/>
      </request-map>
      
+     
+     <request-map uri="RequestsReceiptAcknowledgement">
+       <security https="true" auth="true"/>
+       <response name="success" type="view" value="RequestsReceiptAcknowledgement"/>
+       <response name="error" type="view" value="RequestsReceiptAcknowledgement"/>
+     </request-map>
+     
+     
      <request-map uri="issueProductForRequest">
        <security https="true" auth="true"/>
        <event type="service" path="" invoke="issueProductForRequest" global-transaction="true"/>
@@ -405,6 +413,13 @@
         <event type="java" path="in.vasista.vbiz.purchase.MaterialQuoteServices" invoke="createQuoteForEnquiry"/>        
         <response name="success" type="view" value="ViewMaterialQuote"/>
         <response name="error" type="view" value="ViewMaterialQuote"/>
+    </request-map>
+    
+    <request-map uri="updateRequestAcknowledgmentStatus">
+        <security https="true" auth="true"/>
+        <event type="java" path="in.vasista.vbiz.purchase.MaterialRequestServices" invoke="updateRequestAcknowledgmentStatus"/>        
+        <response name="success" type="view" value="RequestsReceiptAcknowledgement"/>
+        <response name="error" type="view" value="RequestsReceiptAcknowledgement"/>
     </request-map>
     
     <request-map uri="QuoteForEvalution">
@@ -675,6 +690,7 @@
     <view-map name="AddEnquiryContent" type="screen" page="component://materialmgmt/widget/MaterialRequestScreens.xml#AddEnquiryContent"/>
     <view-map name="AddIndentContent" type="screen" page="component://materialmgmt/widget/MaterialRequestScreens.xml#AddIndentContent"/>
     <view-map name="NewRequirement" type="screen" page="component://materialmgmt/widget/MaterialRequestScreens.xml#NewRequirement"/>
+    <view-map name="RequestsReceiptAcknowledgement" type="screen" page="component://materialmgmt/widget/MaterialRequestScreens.xml#RequestsReceiptAcknowledgement"/>
     
     <!-- Requirement views -->
     <view-map name="FindMaterialRequirement" type="screen" page="component://materialmgmt/widget/MaterialRequirementScreens.xml#FindMaterialRequirement"/>

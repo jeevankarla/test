@@ -522,4 +522,35 @@
             </widgets>
         </section>
     </screen>
+    
+    <screen name="RequestsReceiptAcknowledgement">
+        <section>
+            <actions>
+                <set field="titleProperty" value="Material Receipt Acknowledgment"/>
+                <set field="tabButtonItem" value="FindMaterialRequest"/>
+                <set field="tabButtonItem2" value="RequestsReceiptAcknowledgement"/>
+                <set field="headerItem" value="request"/>
+                <set field="custRequestId" from-field="parameters.custRequestId" from-scope="screen" to-scope="screen"/>
+                <entity-condition list="indentItems" entity-name="CustRequestAndItemAndAttribute">
+                	<condition-expr field-name="itemStatusId" operator="equals" value="CRQ_ISSUED"/>
+                	<order-by field-name="fromPartyId"/>
+                </entity-condition>
+            </actions>
+            <widgets>
+                <decorator-screen name="materialmgmtNgCommonDecorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="body">
+                    <include-menu name="RequestTabBar" location="component://materialmgmt/widget/materialmgmtMenus.xml"/>
+                     <screenlet title="Acknowledge Receipts">
+                          <platform-specific>
+                            <html>
+                                <html-template location="component://materialmgmt/webapp/materialmgmt/purchase/ListIndentForAcceptance.ftl"/>
+                            </html>
+                          </platform-specific>
+                        </screenlet>  
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    
 </screens>
