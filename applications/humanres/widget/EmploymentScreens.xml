@@ -502,6 +502,10 @@
 					<order-by field-name="sequenceNum"/>
 				</entity-condition>
 				<entity-condition list="allDeductionTypeList" entity-name="DeductionType">
+					<condition-list combine="and">
+						<condition-expr field-name="deductionTypeId" operator="not-equals" value="PAYROL_DD_ELECT"/>
+						<condition-expr field-name="deductionTypeId" operator="not-equals" value="PAYROL_DD_WATR"/>
+					</condition-list>
 					<order-by field-name="sequenceNum"/>					
 				</entity-condition>
 				<script location="component://humanres/webapp/humanres/WEB-INF/actions/humanres/EmployeeBenefitsAndDeductions.groovy" />  
