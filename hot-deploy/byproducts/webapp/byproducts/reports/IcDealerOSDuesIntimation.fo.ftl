@@ -164,6 +164,9 @@ under the License.
 	                   <#assign partyAddressResult = dispatcher.runSync("getPartyPostalAddress", Static["org.ofbiz.base.util.UtilMisc"].toMap("partyId", eachPartyLedger.getKey(), "userLogin", userLogin))/>
                         <fo:table-row>
                                <fo:table-cell>
+                                        <#if (partyName?has_content)>
+							   				<fo:block text-align="left" wrap-option="wrap" keep-together="always" font-size="12pt" white-space-collapse="false">&#160;${partyName?if_exists}</fo:block>
+										</#if>
 	            	                    <#if (partyAddressResult.address1?has_content)>
 							   				<fo:block text-align="left" wrap-option="wrap" keep-together="always" font-size="12pt" white-space-collapse="false">&#160;${partyAddressResult.address1?if_exists}</fo:block>
 										</#if>
