@@ -164,6 +164,15 @@ under the License.
 	</fo:page-sequence>
 	</#if>
 	</#if>
+	<#else>
+	       <fo:page-sequence master-reference="main">
+	    			<fo:flow flow-name="xsl-region-body" font-family="Courier,monospace">
+	       		 		<fo:block font-size="14pt" text-align="center">
+	            			 No Records Found....!
+	       		 		</fo:block>
+	    			</fo:flow>
+				</fo:page-sequence>
+				
 	</#if>
 </fo:root>
 </#escape>	    
