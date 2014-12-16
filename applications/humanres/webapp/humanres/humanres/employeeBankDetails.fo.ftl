@@ -60,6 +60,9 @@ under the License.
                      <fo:table-cell number-columns-spanned="1" border-style="solid" width="170px">
                         <fo:block text-align="center" font-weight="bold" >${uiLabelMap.EmployeeName}</fo:block>
                      </fo:table-cell> 
+                     <fo:table-cell number-columns-spanned="1" border-style="solid" width="130px">
+                        <fo:block text-align="center" font-weight="bold" >${uiLabelMap.Designation}</fo:block>
+                     </fo:table-cell> 
                     <fo:table-cell number-columns-spanned="1" border-style="solid" width="150px">
                         <fo:block font-weight="bold" text-align="center" >${uiLabelMap.AccountNumber}</fo:block>
                     </fo:table-cell>
@@ -71,6 +74,7 @@ under the License.
          <fo:table-body font-size="10pt">
          	<#assign totalNetAmt=0>
          	<#assign recordCnt=0>
+         	<#assign emplPosition=0 />
          	<#assign bankAdviceDetailsList=BankAdvicePayRollMap.entrySet()>
          	  <#assign partyIdList=companyBankDetails.getValue()>
                <#list partyIdList as partyId>               	
@@ -84,8 +88,12 @@ under the License.
 		                   <fo:table-cell border="solid">
 		                    	<fo:block text-align="center">${BankAdvicePayRollMap.get(partyId).get("emplNo")?if_exists}</fo:block>
 		                   </fo:table-cell>
+		                   <#assign emplPosition=delegator.findByAnd("EmplPosition", {"partyId" : BankAdvicePayRollMap.get(partyId).get("emplNo")})/>  	
 		                   <fo:table-cell  border="solid">
 		                        <fo:block text-align="left" keep-together="always" white-space-collapse="false">&#160;  ${BankAdvicePayRollMap.get(partyId).get("empName")?if_exists}</fo:block>
+		                   </fo:table-cell>
+		                   <fo:table-cell  border="solid">
+		                        <fo:block text-align="left" keep-together="always" white-space-collapse="false">&#160;  ${(emplPosition[0].emplPositionId)?if_exists}</fo:block>
 		                   </fo:table-cell>
 		                    <fo:table-cell  border="solid">
 		                        <fo:block text-align="left" white-space-collapse="false" keep-together="always">&#160;  ${BankAdvicePayRollMap.get(partyId).get("acNo")?if_exists}</fo:block>
@@ -131,7 +139,7 @@ under the License.
        			 <#if canaraBankIds?has_content>
        			 	<#assign sno=0>	
 	              <#list canaraBankIds as partyId>            
-	              	 <#if BankAdvicePayRollMap.get(partyId)?has_content>   	
+	              	 <#if BankAdvicePayRollMap.get(partyId)?has_content> 
 	                   <fo:table-row height="14px" space-start=".15in">
 		                   <fo:table-cell  border="solid">
 		                   		<#assign sno=(sno+1)>
@@ -142,6 +150,9 @@ under the License.
 		                   </fo:table-cell>
 		                   <fo:table-cell  border="solid">
 		                        <fo:block text-align="left" keep-together="always" white-space-collapse="false">&#160;  ${BankAdvicePayRollMap.get(partyId).get("empName")?if_exists}</fo:block>
+		                   </fo:table-cell>
+		                   <fo:table-cell  border="solid">
+		                        <fo:block text-align="left" keep-together="always" white-space-collapse="false">&#160;  ${(emplPosition[0].emplPositionId)?if_exists}</fo:block>
 		                   </fo:table-cell>
 		                    <fo:table-cell  border="solid">
 		                        <fo:block text-align="left" white-space-collapse="false" keep-together="always">&#160;  ${BankAdvicePayRollMap.get(partyId).get("acNo")?if_exists}</fo:block>
