@@ -125,6 +125,7 @@
         <field name="productId" title="${uiLabelMap.MaterialMangement_ProductId} - ${uiLabelMap.MaterialMangement_ProductName}">
             <display-entity entity-name="Product" key-field-name="productId" description="${productId} - ${productName}"/>
         </field>
+        <field name="statusId"><hidden/></field>
         <field name="requirementStartDate" title="Requirement Date"><display/></field>
         <!-- <field name="requiredByDate"><display/></field> -->
         <field name="quantity" title="${uiLabelMap.CommonQuantity}"><display/></field>

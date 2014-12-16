@@ -55,6 +55,9 @@
      <StatusValidChange statusId="QTITM_APPROVED" statusIdTo="QTITM_ORDERED" transitionName="Ordered"/>
      <StatusValidChange statusId="QTITM_APPROVED" statusIdTo="QTITM_REJECTED" transitionName="Reject"/>
      <StatusValidChange statusId="QTITM_ORDERED" statusIdTo="QTITM_REJECTED" transitionName="Reject"/>
+     
+      <StatusValidChange statusId="REQ_APPROVED" statusIdTo="REQ_IN_ENQUIRY" transitionName="Requirement In Enquiry"/>
+     
      <Enumeration description="Material Purchase Channel" enumCode="Material Purchase Channel" enumId="MATERIAL_PUR_CHANNEL" enumTypeId="ORDER_PRCHSE_CHANNEL"/>
      
      <StatusType description="Indent Status" hasTable="N" statusTypeId="CUSTREQ_STTS"/>

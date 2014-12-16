@@ -34,6 +34,11 @@ under the License.
         <set field="newEntity.createdByUserLogin" from-field="userLogin.userLoginId"/>
         <set field="newEntity.lastModifiedByUserLogin" from-field="userLogin.userLoginId"/>
         <create-value value-field="newEntity"/>
+        <make-value value-field="newRequirementStatus" entity-name="RequirementStatus"/>
+        <set value="REQ_CREATED" field="newRequirementStatus.statusId"/>
+        <set field="newRequirementStatus.statusDate" from-field="nowTimestamp"/>
+        <set field="newRequirementStatus.requirementId" from-field="requirementId"/>
+        <create-value value-field="newRequirementStatus"/>
         <field-to-result field="requirementId" result-name="requirementId"/>
     </simple-method>
 

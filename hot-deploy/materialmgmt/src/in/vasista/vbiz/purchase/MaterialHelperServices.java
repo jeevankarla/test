@@ -467,6 +467,54 @@ public static Map<String, Object> getMaterialStores(DispatchContext ctx,Map<Stri
 		}
 		return result;
 	}	
+public static Map<String, Object> setStatusId(DispatchContext ctx,Map<String, ? extends Object> context) {
 	
+		Delegator delegator = ctx.getDelegator();
+		GenericValue userLogin = (GenericValue) context.get("userLogin");
+		String statusId = (String) context.get("statusId");
+		String requirementId = (String) context.get("requirementId");
+		Map result = ServiceUtil.returnSuccess();
+		String oldStatusId = null;
+		Timestamp statusDate = UtilDateTime.nowTimestamp();
+		try{
+			GenericValue requirements= delegator.findOne("Requirement",UtilMisc.toMap("requirementId",requirementId),false);
+			if(UtilValidate.isNotEmpty(requirements)){
+				oldStatusId = requirements.getString("statusId");
+				Map checkStatusChange = MaterialHelperServices.checkValidChangeOrNot(ctx,UtilMisc.toMap("statusId",oldStatusId,"statusIdTo",statusId));
+				if(ServiceUtil.isError(checkStatusChange)){
+					return checkStatusChange;
+				}
+				GenericValue newEntity = delegator.makeValue("RequirementStatus");
+				newEntity.set("requirementId", requirementId);
+				newEntity.set("statusId", statusId);
+				newEntity.set("statusDate", statusDate);
+				newEntity.create();
+			}
+			
+		}catch(Exception e){
+			Debug.logError(e.toString(), module);
+			return ServiceUtil.returnError(e.toString());
+		}
+		return result;
+	}	
+public static Map<String, Object> checkValidChangeOrNot(DispatchContext ctx,Map<String, ? extends Object> context) {
+	
+	Delegator delegator = ctx.getDelegator();
+	String statusId = (String) context.get("statusId");
+	String statusIdTo = (String) context.get("statusIdTo");
+	Map result = ServiceUtil.returnSuccess();
+	try{
+		GenericValue StatusValidChange= delegator.findOne("StatusValidChange",UtilMisc.toMap("statusId",statusId,"statusIdTo",statusIdTo),false);
+		if(UtilValidate.isEmpty(StatusValidChange)){
+			return ServiceUtil.returnError("This is not a Valid Change.");
+		}
+	}catch(Exception e){
+		Debug.logError(e.toString(), module);
+		return ServiceUtil.returnError(e.toString());
+	}
+	return result;
+}	
+
+
 }
 

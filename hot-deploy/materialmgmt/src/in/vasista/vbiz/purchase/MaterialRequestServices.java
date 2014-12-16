@@ -912,8 +912,16 @@ public class MaterialRequestServices {
 					Debug.logError("Problem associating requirement to requested item : "+requirementId+" : ["+custRequestId+" : "+custRequestItemSeqId+"]", module);
 					return resultCtx;
 				}
-				requirement.set("statusId", "REQ_IN_ENQUIRY");
-				delegator.store(requirement);
+				/*requirement.set("statusId", "REQ_IN_ENQUIRY");
+				delegator.store(requirement);*/
+				Map reqMap = FastMap.newInstance();
+				reqMap.put("userLogin",userLogin);
+				reqMap.put("requirementId",requirementId);
+				reqMap.put("statusId","REQ_IN_ENQUIRY");
+				resultCtx = dispatcher.runSync("updateRequirement", reqMap);
+				if(ServiceUtil.isError(resultCtx)){
+					return resultCtx;
+				}
 			}
 		
 		} catch (GenericEntityException e) {

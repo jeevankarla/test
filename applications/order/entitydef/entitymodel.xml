@@ -2332,8 +2332,7 @@ under the License.
       <field name="requirementId" type="id-ne"></field>
       <field name="statusId" type="id-ne"></field>
       <field name="statusDate" type="date-time"></field>
-      <prim-key field="requirementId"/>
-      <prim-key field="statusId"/>
+      <prim-key field="statusDate"/>
       <relation type="one" fk-name="REQ_STTS_REQ" rel-entity-name="Requirement">
         <key-map field-name="requirementId"/>
       </relation>
