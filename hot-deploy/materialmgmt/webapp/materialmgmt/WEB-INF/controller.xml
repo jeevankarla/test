@@ -597,6 +597,20 @@
        <response name="error" type="view" value="FindMaterialPO"/>
    </request-map>
    
+   <request-map uri="CreateMPO">
+     <security https="true" auth="true"/>
+    	<response name="success" type="view" value="CreateMPO"/>
+    </request-map>
+     <request-map uri="CreateMaterialPO">
+        <security https="true" auth="true"/>
+        <!-- <event type="service" path="" invoke="CreateMaterialPO"/> -->
+        <event type="java" path="in.vasista.vbiz.purchase.MaterialPurchaseServices" invoke="CreateMaterialPOEvent" global-transaction="true"/>
+         <response name="success"  type="request-redirect-noparam" value="FindMaterialPO"></response>
+        <response name="error" type="view" value="CreateMPO"/>
+    </request-map>
+   
+   
+   
    <request-map uri="StoreReports">
         <security https="true" auth="true"/>
         <response name="success" type="view" value="StoreReports"/>
@@ -671,6 +685,7 @@
     <view-map name="mainNg" type="screen" page="component://materialmgmt/widget/materialmgmtScreens.xml#mainNG"/>
      <!-- purchaseOrder views -->  
      <view-map name="FindPurchaseOrder" type="screen" page="component://materialmgmt/widget/materialmgmtScreens.xml#FindPurchaseOrder"/>
+     <view-map name="CreateMPO" type="screen" page="component://materialmgmt/widget/MaterialPurchaseScreens.xml#CreateMPO"/>
      
      <view-map name="PurchaseOrderInit" type="screen" page="component://materialmgmt/widget/materialmgmtScreens.xml#PurchaseOrderInit"/>
     <view-map name="FindInterUnitPurchase" type="screen" page="component://materialmgmt/widget/materialmgmtScreens.xml#FindInterUnitPurchase"/>

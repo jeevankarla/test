@@ -306,7 +306,6 @@
             <widgets>
                  <decorator-screen name="CommonInventoryDecorator" location="${parameters.mainDecoratorLocation}">
                       <decorator-section name="body">  
-                         <!-- <include-menu name="PurchasesTabBar" location="component://materialmgmt/widget/materialmgmtMenus.xml"/> -->
                         <section>
                             <widgets>
                                <platform-specific> 
@@ -339,11 +338,12 @@
 	                            		<html><html-template location="component://materialmgmt/webapp/materialmgmt/reports/stockPosition.ftl"/></html>
 	                        </platform-specific>
                        
-<!--                           <platform-specific>
+                         <!--  <platform-specific>
 		                         <html><html-template location="component://materialmgmt/webapp/materialmgmt/reports/ProductInventorySummary.ftl"/></html>
 		                   </platform-specific>
-	                    
- -->	                     <platform-specific>
+	                     -->
+	                   
+                      <platform-specific>
 	                         <html><html-template location="component://materialmgmt/webapp/materialmgmt/reports/EditProductInventoryItems.ftl"/></html>
 	                     </platform-specific>
 	                   

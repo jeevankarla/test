@@ -36,6 +36,29 @@
         </section>
     </screen>
     
+    <screen name="CreateMPO">
+        <section>
+            <actions>
+                <set field="titleProperty" value="Find Purchase Order"/>              
+			    <set field="tabButtonItem" value="FindMaterialPO" />	
+               <set field="targetRequest" value="FindMaterialPO"/>
+                <!-- <set field="ChannalType" value="PROD_PRCHSE_CHANNEL"/>  -->
+            </actions>
+            <widgets>
+                 <decorator-screen name="materialmgmtNgCommonDecorator" location="${parameters.mainDecoratorLocation}">
+                      <decorator-section name="body">  
+                        <section>
+                            <widgets>
+                               <label style="h1">New PO</label>
+                               <platform-specific><html><html-template location="component://materialmgmt/webapp/materialmgmt/purchase/CreateMPO.ftl"/></html></platform-specific>
+                            </widgets>
+                        </section>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>            
+        </section>
+    </screen>
+    
     <screen name="FindMaterialPO">
         <section>
             <actions>
@@ -52,6 +75,7 @@
                       <include-menu name="FindMaterialPOSubTabBar" location="component://materialmgmt/widget/materialmgmtMenus.xml"/>
                         <section>
                             <widgets>
+                               <link target="CreateMPO" text="Create PO" style="buttontext"/>
                                 <decorator-screen name="FindScreenDecorator" location="component://common/widget/CommonScreens.xml">
                                     <decorator-section name="search-options">
                             			<include-form name="FindMaterialPurchaseOrder" location="component://materialmgmt/widget/MaterialPurchaseForms.xml"/>

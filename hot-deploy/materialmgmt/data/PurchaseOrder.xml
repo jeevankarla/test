@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <entity-engine-xml>
+     <ProductStore productStoreId="_NA_"/>
     <RoleType description="Supplier" hasTable="N" parentTypeId="ORGANIZATION_ROLE" roleTypeId="SUPPLIER"/>
     <Facility facilityId="Godown1" facilityTypeId="WAREHOUSE" facilityName="PrintPack Facility" description="Manufacturing Facility" ownerPartyId="Company" defaultInventoryItemTypeId="NON_SERIAL_INV_ITEM" defaultWeightUomId="WT_lb" defaultDaysToShip="25" geoPointId="9000"/>
     <ProductStore productStoreId="9000" storeName="KMF Store" companyName="MDKMF" title="MDKMF"
