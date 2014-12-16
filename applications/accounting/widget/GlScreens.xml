@@ -194,6 +194,7 @@
 													<link text="${uiLabelMap.BulkPostEntries}" style="buttontext"
 														target="postBulkAcctg">
 														<parameter param-name="organizationPartyId" />
+														<parameter param-name="acctgTransId" from-field="parameters.acctgTransId"/>
 														<parameter param-name="acctgTransTypeId" from-field="parameters.acctgTransTypeId"/>
 														<parameter param-name="glFiscalTypeId" from-field="parameters.glFiscalTypeId"/>
 														<parameter param-name="glJournalId" from-field="parameters.glJournalId"/>
@@ -211,6 +212,7 @@
 											<link text="${uiLabelMap.AccountingExportAsCsv}" style="buttontext"
 												target="AcctgTransSearchResultsCsv.csv">
 												<parameter param-name="organizationPartyId" />
+												<parameter param-name="acctgTransId" from-field="parameters.acctgTransId"/>
 												<parameter param-name="acctgTransTypeId" from-field="parameters.acctgTransTypeId"/>
 												<parameter param-name="glFiscalTypeId" from-field="parameters.glFiscalTypeId"/>
 												<parameter param-name="glJournalId" from-field="parameters.glJournalId"/>
