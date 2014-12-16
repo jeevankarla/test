@@ -191,8 +191,7 @@ function makeDatePicker1(fromDateId ,thruDateId){
 				 </table>
 			 </form>
 		  </tr>
-		 
-		 <tr class="alternate-row"> 
+		  <tr class="alternate-row"> 
 				<form id="storeStockDetails" name="storeStockDetails" mothed="post" action="<@ofbizUrl>storeStockDetails.pdf</@ofbizUrl>" target="_blank">
 					<table class="basic-table" cellspacing="5">
 						<tr class="alternate-row">
@@ -224,10 +223,19 @@ function makeDatePicker1(fromDateId ,thruDateId){
 				 </table>
 			 </form>
 		  </tr>
-		   
-		  
-		  
-		  
+		  <tr class="alternate-row"> 
+				<form id="MaterialEnquiryReport" name="PurchaseEnquiryReport" mothed="post" action="<@ofbizUrl>MaterialEnquiryReport.pdf</@ofbizUrl>" target="_blank">
+				   <table class="basic-table" cellspacing="5">
+					  <tr class="alternate-row">
+					     <td width="20%"><span class='h3'>Material Enquiry Report</span></td>
+						 <td width="15%">
+							 <span class='h3'>Enquiry NO.<input type="textfield"  id="issueToCustReqId"  name="issueToCustReqId"/></span>   								
+						  </td>
+						 <td width="25%"><span class='h3'><input type="submit" value="Download" class="buttontext"></span></td>
+		 		    </tr>
+				 </table>
+			 </form>
+		  </tr>
 	  </table>
     </div>
   </div>
