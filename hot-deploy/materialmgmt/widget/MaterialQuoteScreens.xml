@@ -107,8 +107,9 @@
                 <set field="custRequestId" from-field="parameters.custRequestId"/>
                 <entity-one entity-name="CustRequest" value-field="custRequest" auto-field-map="true"/>
                 
-                <entity-condition list="quotesList" entity-name="Quote">
+                <entity-condition list="quotesList" entity-name="QuoteAndItemAndCustRequest">
                 	<condition-list combine="and">
+                		<condition-expr field-name="custRequestId" operator="equals" value="${parameters.custRequestId}"/>
                 		<condition-expr field-name="statusId" operator="equals" value="QUO_CREATED"/>
                 	</condition-list>
                 </entity-condition>
