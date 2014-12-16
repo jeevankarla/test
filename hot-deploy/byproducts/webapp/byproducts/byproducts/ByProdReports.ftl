@@ -1143,9 +1143,7 @@ function reportTypeChangeFunc() {
 				      			<option value="UNION">Sale to Union</option>
 				      			<option value="DEPOT_CUSTOMER">Depot Sale</option>
 			      			</select></td>
-			      			<td width="15%"></td>
-	      					<#--<td width="15%">Party Code <input type="text" name="partyId" id="partyId" size="10" maxlength="22"></td>-->
-							<td width="10%"><input type="submit" value="Download" class="buttontext"/></td> 
+	      					<td width="15%">Party Code<@htmlTemplate.lookupField size="10" maxlength="22" formName="GenericPartyFinancialHistory" name="partyId" id="partyId" fieldFormName="LookupPartyName"/>	<td width="10%"><input type="submit" value="Download" class="buttontext"/></td> 
 						</form>
 	                  </tr>
 	                  <tr class="alternate-row">
