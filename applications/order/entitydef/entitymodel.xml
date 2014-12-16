@@ -2048,6 +2048,7 @@ under the License.
       <field name="custRequestId" type="id"></field>
       <field name="custRequestItemSeqId" type="id"></field>
       <field name="statusDatetime" type="date-time"></field>
+      <field name="changedByUserLogin" type="id-vlong"></field>
       <prim-key field="custRequestStatusId"/>
       <relation type="one" fk-name="CUST_REQST_STTS" rel-entity-name="StatusItem">
         <key-map field-name="statusId"/>
@@ -2061,7 +2062,7 @@ under the License.
       </relation>
     </entity>
     
-    <entity entity-name="CustRequestItemStatus" package-name="org.ofbiz.order.request"
+    <!-- <entity entity-name="CustRequestItemStatus" package-name="org.ofbiz.order.request"
             title="Customer Request Item Status Entity">
       <field name="custRequestItemStatusId" type="id-ne"></field>
       <field name="statusId" type="id"></field>
@@ -2077,7 +2078,7 @@ under the License.
       	<key-map field-name="custRequestId"/>
         <key-map field-name="custRequestItemId"/>
       </relation>
-    </entity>
+    </entity> -->
     
     <entity entity-name="CustRequestType"
             package-name="org.ofbiz.order.request"

@@ -77,8 +77,8 @@ under the License.
         <field-to-result field="newEntity.custRequestId" result-name="custRequestId"/>
 
         <!-- set status fields and history if provided -->
-        <if-not-empty field="parameters.statusId">
-            <set field="setStat.statusId" from-field="parameters.statusId"/>
+        <if-not-empty field="newEntity.statusId">
+            <set field="setStat.statusId" from-field="newEntity.statusId"/>
             <set field="setStat.custRequestId" from-field="newEntity.custRequestId"/>
             <if-not-empty field="parameters.webSiteId">
                 <set field="setStat.webSiteId" from-field="parameters.webSiteId"/>
@@ -248,7 +248,7 @@ under the License.
         <set field="statusInput.statusId" from-field="newEntity.statusId"/>
         <set field="statusInput.custRequestId" from-field="newEntity.custRequestId"/>
         <set field="statusInput.custRequestItemSeqId" from-field="newEntity.custRequestItemSeqId"/>
-         <call-service service-name="setCustRequestItemStatus" in-map-name="statusInput"/>
+        <call-service service-name="setCustRequestItemStatus" in-map-name="statusInput"/>
     </simple-method>
     <simple-method method-name="updateCustRequestItem" short-description="Update Customer Request Item">
         <call-simple-method method-name="checkStatusCustRequest"/>        
