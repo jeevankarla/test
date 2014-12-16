@@ -403,6 +403,7 @@
         <actions>
             <entity-and entity-name="CustRequestStatus">
                 <field-map field-name="custRequestId" from-field="parameters.custRequestId"/>
+                <order-by field-name="custRequestItemSeqId"/>
                 <order-by field-name="custRequestStatusId"/>
             </entity-and>
         </actions>

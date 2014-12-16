@@ -326,9 +326,7 @@ public class MaterialRequestServices {
 			inputCtx.put("custRequestItemSeqId", custRequestItemSeqId);
 			inputCtx.put("statusId", statusId);
 			inputCtx.put("userLogin", userLogin);
-			
-			Map<String, Object> resultMap = createCustRequestItemStatus(ctx, inputCtx);
-			
+			Map<String, Object> resultMap = createCustRequestStatus(ctx, inputCtx);
 			if(ServiceUtil.isError(resultMap)){
 				Debug.logError("Error in updating CustRequestItemStatus entity", module);
 				return ServiceUtil.returnError("Error in updating CustRequestItemStatus entity");
@@ -401,7 +399,7 @@ public class MaterialRequestServices {
 	
 	
 	
-	public static Map<String, Object> createCustRequestItemStatus(DispatchContext ctx,Map<String, ? extends Object> context) {
+	public static Map<String, Object> createCustRequestStatus(DispatchContext ctx,Map<String, ? extends Object> context) {
 		Delegator delegator = ctx.getDelegator();
 		LocalDispatcher dispatcher = ctx.getDispatcher();
 		String statusId = (String) context.get("statusId");
@@ -411,7 +409,7 @@ public class MaterialRequestServices {
 		Map result = ServiceUtil.returnSuccess();
 		try{
 			
-			GenericValue newEntity = delegator.makeValue("CustRequestItemStatus");
+			GenericValue newEntity = delegator.makeValue("CustRequestStatus");
 	        newEntity.set("custRequestId", custRequestId);
 	        newEntity.set("custRequestItemSeqId", custRequestItemSeqId);
 	        newEntity.set("statusId", statusId);
