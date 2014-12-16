@@ -38,8 +38,7 @@ if(UtilValidate.isNotEmpty(custReqDetails)){
        if(UtilValidate.isNotEmpty(partyPostalAddress.address1)){
         address1=partyPostalAddress.address1;
 		partyAddressMap.put("address1",address1);
-       }
-	  
+       }	  
 	  if(UtilValidate.isNotEmpty(partyPostalAddress.address2)){
 		  address2=partyPostalAddress.address2;
 		  partyAddressMap.put("address2",address2);
@@ -53,6 +52,7 @@ if(UtilValidate.isNotEmpty(custReqDetails)){
 		  partyAddressMap.put("postalCode",postalCode);
 	  }	  
    } 
+   
    partyContactDetails=dispatcher.runSync("getPartyTelephone", [partyId:fromPartyId, userLogin: userLogin]);
    if(UtilValidate.isNotEmpty(partyContactDetails)){
 	   if(UtilValidate.isNotEmpty(partyContactDetails.contactNumber)){
@@ -60,11 +60,12 @@ if(UtilValidate.isNotEmpty(custReqDetails)){
 		   context.put("contactNumber",contactNumber);
 	   }
    }
-   context.partyAddressMap=partyAddressMap;
+   context.partyAddressMap=partyAddressMap;   
    context.put("custReqDate",custReqDate);
    context.put("responseRequiredDate",responseRequiredDate);
 }
 enquiryMap=[:];
+productId ="";
 custReqItemDetails = delegator.findList("CustRequestItem",EntityCondition.makeCondition("custRequestId", EntityOperator.EQUALS , custRequestId)  , null, null, null, false );
 if(UtilValidate.isNotEmpty(custReqItemDetails)){
    custReqItemDetails=EntityUtil.getFirst(custReqItemDetails);	

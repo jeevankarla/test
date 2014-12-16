@@ -29,7 +29,6 @@ under the License.
     </fo:simple-page-master>   
 </fo:layout-master-set>
 		<#if enquiryMap?has_content>
-		<#if partyAddressMap?has_content>
 			<fo:page-sequence master-reference="main">
 			    <fo:static-content font-size="13pt" font-family="Courier,monospace"  flow-name="xsl-region-before" font-weight="bold">
 				    <fo:block  keep-together="always" text-align="center" font-weight = "bold" font-family="Courier,monospace" white-space-collapse="false">${uiLabelMap.KMFDairyHeader}</fo:block>
@@ -146,15 +145,14 @@ under the License.
 	              <fo:block  font-size="12pt" keep-together="always"  white-space-collapse="false"  text-align="left">&#160;                                                                                 MANAGER(PURCHASE)</fo:block>
 	           </fo:flow>   
 	      </fo:page-sequence>
-	      <#else>
-				<fo:page-sequence master-reference="main">
+         <#else>
+           <fo:page-sequence master-reference="main">
 	    			<fo:flow flow-name="xsl-region-body" font-family="Courier,monospace">
 	       		 		<fo:block font-size="14pt" text-align="center">
 	            			 No Records Found....!
 	       		 		</fo:block>
 	    			</fo:flow>
-				</fo:page-sequence>
-	    </#if>  
+		  </fo:page-sequence>				
 	    </#if>  
      </fo:root>
 </#escape>	    
