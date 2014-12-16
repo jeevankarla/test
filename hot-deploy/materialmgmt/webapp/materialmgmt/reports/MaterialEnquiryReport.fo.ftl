@@ -19,12 +19,11 @@ under the License.
 
 <#escape x as x?xml>
 <fo:root xmlns:fo="http://www.w3.org/1999/XSL/Format">
-
 <#-- do not display columns associated with values specified in the request, ie constraint values -->
 <fo:layout-master-set>
-	<fo:simple-page-master master-name="main" page-height="15in" page-width="12in"
+	<fo:simple-page-master master-name="main" page-height="10in" page-width="12in"
             margin-top="0.1in" margin-bottom=".7in" margin-left=".5in" margin-right=".5in">
-        <fo:region-body margin-top="4.6in"/>
+        <fo:region-body margin-top="1.6in"/>
         <fo:region-before extent="1.in"/>
         <fo:region-after extent="1.5in"/>        
     </fo:simple-page-master>   
@@ -37,41 +36,44 @@ under the License.
 				    <fo:block  keep-together="always" text-align="center" font-family="Courier,monospace" white-space-collapse="false" font-weight="bold">${uiLabelMap.KMFDairySubHeader}</fo:block>
 				    <fo:block text-align="center" keep-together="always"  >&#160;--------------------------------------------------------------</fo:block>
 				    <fo:block  keep-together="always" text-align="left" font-family="Courier,monospace" white-space-collapse="false" font-size="12pt" >&#160;&#160;        TEL NOS:22179004 /41        FAX :   080-20462652                    TIN:  ${companyTinNumber?if_exists} </fo:block>
-                 <fo:block  keep-together="always" text-align="center" font-family="Courier,monospace" white-space-collapse="false" font-size="12pt" >       &#160; 22179074 /55        Email: purchase@motherdairykmf.in       KST NO: 90700065  </fo:block>
-                 <fo:block  keep-together="always" text-align="right" font-family="Courier,monospace" white-space-collapse="false" font-size="12pt" >                CST NO: 90750060              &#160;&#160; </fo:block>
-                <fo:block  keep-together="always" text-align="center" font-family="Courier,monospace" white-space-collapse="false" font-size="12pt" >----------------------------------------------------------------------------------------------------- </fo:block>
-				<fo:block text-align="center" keep-together="always">                                               ENQUIRY                                                  </fo:block>
-				<fo:block linefeed-treatment="preserve">&#xA;</fo:block>
-				<fo:block linefeed-treatment="preserve">&#xA;</fo:block>
-				<fo:block text-align="left" keep-together="always" white-space-collapse="false">&#160;&#160; ENQUIRY NO.: ${parameters.issueToCustReqId}                                                 ENQUIRY DATE: ${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(custReqDate, "dd-MMM-yyyy")}</fo:block>
-			    <fo:block  keep-together="always" text-align="left" font-family="Courier,monospace" white-space-collapse="false" font-size="12pt" >&#160;&#160; To:                                                                      FAX NO:</fo:block>
-				<fo:block text-align="left" white-space-collapse="false">&#160;&#160; ${partyAddressMap.get("address1")}</fo:block>
-				<fo:block text-align="left" white-space-collapse="false">&#160;&#160; ${partyAddressMap.get("address2")}</fo:block>
-				<fo:block text-align="left" white-space-collapse="false">&#160;&#160; ${partyAddressMap.get("city")}</fo:block>
-				<fo:block text-align="left" white-space-collapse="false">&#160;&#160; ${partyAddressMap.get("postalCode")}</fo:block>
-				</fo:static-content>
-	            <fo:flow flow-name="xsl-region-body"   font-family="Courier,monospace">	           
-	            <fo:block  font-size="12pt" text-align="left">&#160;  Dear Sir,                                                                                                     </fo:block> 	             
-	            <fo:block  font-size="12pt" keep-together="always" text-align="center">&#160; We Intend to purchase the following items from the regular manufacturer/dealer and requested </fo:block>   
-	            <fo:block  font-size="12pt" keep-together="always"  white-space-collapse="false">&#160;to quote your lowest competitive rate subjected to the terms and conditions stipulated below.The sealed</fo:block>     
-	            <fo:block  font-size="12pt" keep-together="always" white-space-collapse="false">&#160;quotation duly superscribed mentioning the enquiry no,date and due date should reach this office on or </fo:block>      
-	            <fo:block  font-size="12pt" keep-together="always" white-space-collapse="false">&#160;before  </fo:block>
-	            <fo:block linefeed-treatment="preserve">&#xA;</fo:block>
-	            <fo:table>
+                    <fo:block  keep-together="always" text-align="center" font-family="Courier,monospace" white-space-collapse="false" font-size="12pt" >       &#160; 22179074 /55        Email: purchase@motherdairykmf.in       KST NO: 90700065  </fo:block>
+                    <fo:block  keep-together="always" text-align="right" font-family="Courier,monospace" white-space-collapse="false" font-size="12pt" >                CST NO: 90750060              &#160;&#160; </fo:block>
+                    <fo:block  keep-together="always" text-align="center" font-family="Courier,monospace" white-space-collapse="false" font-size="12pt" >------------------------------------------------------------------------------------------------------- </fo:block>
+				    <fo:block text-align="center" keep-together="always">                                               ENQUIRY                                                  </fo:block>				    
+			        </fo:static-content>	
+			        <fo:flow flow-name="xsl-region-body"   font-family="Courier,monospace">	 			       
+			        <fo:block linefeed-treatment="preserve">&#xA;</fo:block>
+				    <fo:block linefeed-treatment="preserve">&#xA;</fo:block>
+				    <fo:block text-align="left" keep-together="always" white-space-collapse="false">&#160;&#160; ENQUIRY NO.: ${parameters.issueToCustReqId}                                                          ENQUIRY DATE: ${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(custReqDate, "dd-MMM-yyyy")}</fo:block>
+			        <fo:block  keep-together="always" text-align="left" font-family="Courier,monospace" white-space-collapse="false" font-size="12pt" >&#160;&#160; To:                                                                         FAX NO:</fo:block>
+				    <fo:block text-align="left" white-space-collapse="false">&#160;&#160; ${partyAddressMap.get("address1")?if_exists}</fo:block>
+				    <fo:block text-align="left" white-space-collapse="false">&#160;&#160; ${partyAddressMap.get("address2")?if_exists}</fo:block>
+				    <fo:block text-align="left" white-space-collapse="false">&#160;&#160; ${partyAddressMap.get("city")?if_exists}</fo:block>				 
+				    <fo:block text-align="left" white-space-collapse="false">&#160;&#160; ${partyAddressMap.get("postalCode")?if_exists}</fo:block>
+				    <fo:block text-align="left" white-space-collapse="false">&#160;&#160; PHONE NO: ${contactNumber?if_exists}</fo:block>	                
+	                <fo:block linefeed-treatment="preserve">&#xA;</fo:block>
+	                <fo:block  font-size="12pt" text-align="left">&#160;&#160;   Dear Sir,                                                                                                     </fo:block> 	             
+	                <fo:block  font-size="12pt" keep-together="always" text-align="center">&#160;&#160;          We Intend to purchase the following items from the regular manufacturer/dealer and requested to</fo:block>   
+	                <fo:block  font-size="12pt" keep-together="always"  white-space-collapse="false">&#160;&#160; quote your lowest competitive rate subjected to the terms and conditions stipulated below.The sealed</fo:block>     
+	                <fo:block  font-size="12pt" keep-together="always" white-space-collapse="false">&#160;&#160; quotation duly superscribed mentioning the enquiry no,date and due date should reach this office on or </fo:block>      
+	                <fo:block  font-size="12pt" keep-together="always" white-space-collapse="false">&#160;&#160; before ${responseRequiredDate?if_exists} </fo:block>
+	                <fo:block linefeed-treatment="preserve">&#xA;</fo:block>
+	                <fo:block font-family="Courier,monospace">
+	                <fo:table>
+					<fo:table-column column-width="80pt"/>
 					<fo:table-column column-width="120pt"/>
-					<fo:table-column column-width="100pt"/>
-					<fo:table-column column-width="200pt"/>
-					<fo:table-column column-width="150pt"/>
+					<fo:table-column column-width="220pt"/>
+					<fo:table-column column-width="180pt"/>
 					<fo:table-column column-width="120pt"/>
 					     <fo:table-body>
 					         <fo:table-row >
 							   <fo:table-cell >
-									 <fo:block text-align="left" keep-together="always"  >&#160;-----------------------------------------------------------------------------------------------------</fo:block>
+									 <fo:block text-align="left" keep-together="always"  >&#160;&#160;-----------------------------------------------------------------------------------------------------</fo:block>
 								</fo:table-cell>
 						   </fo:table-row>
 					         <fo:table-row>
 					            <fo:table-cell>
-									<fo:block text-align="left" >SL.No</fo:block>
+									<fo:block text-align="center" >SL.No</fo:block>
 								</fo:table-cell>
 								<fo:table-cell >
 									<fo:block text-align="left"  >ITEM CODE</fo:block>
@@ -88,23 +90,24 @@ under the License.
 					    </fo:table-row>
 					    <fo:table-row >
 							<fo:table-cell >
-							    <fo:block text-align="left" keep-together="always"  >&#160;-----------------------------------------------------------------------------------------------------</fo:block>
+							    <fo:block text-align="left" keep-together="always"  >&#160;&#160;-----------------------------------------------------------------------------------------------------</fo:block>
 							</fo:table-cell>
 						</fo:table-row>
 					 </fo:table-body> 
-			       </fo:table>		   			 
+			       </fo:table>
+			       </fo:block>		             	   			 
 	               <fo:block font-family="Courier,monospace"  font-size="10pt">
 	                   <fo:table>
+					      <fo:table-column column-width="80pt"/>
 					      <fo:table-column column-width="120pt"/>
-					      <fo:table-column column-width="100pt"/>
-					      <fo:table-column column-width="200pt"/>
-					      <fo:table-column column-width="150pt"/>
+					      <fo:table-column column-width="220pt"/>
+					      <fo:table-column column-width="180pt"/>
 					      <fo:table-column column-width="120pt"/>
 					          <fo:table-body>
 					          <#assign sno=1>
 				                  <fo:table-row >
 					                 <fo:table-cell>
-									    <fo:block text-align="left" keep-together="always" >${sno?if_exists}</fo:block>
+									    <fo:block text-align="center" keep-together="always" >${sno?if_exists}</fo:block>
 								     </fo:table-cell>
 								     <fo:table-cell >
 									    <fo:block text-align="left"  >${enquiryMap.get("itemCode")?if_exists}</fo:block>
@@ -122,9 +125,8 @@ under the License.
 					      <#assign sno=sno+1>
 					     </fo:table-body>  
 					  </fo:table>
-					 <fo:block text-align="left" keep-together="always"  >&#160;--------------------------------------------------------------------------------------------------------------------------</fo:block>
+					 <fo:block text-align="left" keep-together="always"  >&#160;&#160;--------------------------------------------------------------------------------------------------------------------------</fo:block>
 	               </fo:block>
-	               <fo:block linefeed-treatment="preserve">&#xA;</fo:block>
 	               <fo:block linefeed-treatment="preserve">&#xA;</fo:block>
 	               <fo:block  font-size="12pt" keep-together="always"  white-space-collapse="false"  text-align="left">&#160;Terms and Conditions :</fo:block>     
 	               <fo:block  font-size="12pt" keep-together="always"  white-space-collapse="false"  text-align="left">&#160;1.Mother Dairy is not responsible for the premature opening of the quatations.When they are not properly </fo:block> 
@@ -144,6 +146,14 @@ under the License.
 	              <fo:block  font-size="12pt" keep-together="always"  white-space-collapse="false"  text-align="left">&#160;                                                                                 MANAGER(PURCHASE)</fo:block>
 	           </fo:flow>   
 	      </fo:page-sequence>
+	      <#else>
+				<fo:page-sequence master-reference="main">
+	    			<fo:flow flow-name="xsl-region-body" font-family="Courier,monospace">
+	       		 		<fo:block font-size="14pt" text-align="center">
+	            			 No Records Found....!
+	       		 		</fo:block>
+	    			</fo:flow>
+				</fo:page-sequence>
 	    </#if>  
 	    </#if>  
      </fo:root>

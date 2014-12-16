@@ -31,28 +31,38 @@ partyAddressMap=[:];
 custReqDetails = delegator.findOne("CustRequest", [custRequestId : custRequestId], false);
 if(UtilValidate.isNotEmpty(custReqDetails)){
    custReqDate = custReqDetails.custRequestDate;
-   fromPartyId	 = custReqDetails.fromPartyId;
+   responseRequiredDate=custReqDetails.responseRequiredDate;   
+   fromPartyId	 = custReqDetails.fromPartyId;  
    partyPostalAddress= dispatcher.runSync("getPartyPostalAddress", [partyId:fromPartyId, userLogin: userLogin]);
-   if(partyPostalAddress){     
-      if(partyPostalAddress.address1){
+   if(UtilValidate.isNotEmpty(partyPostalAddress)){
+       if(UtilValidate.isNotEmpty(partyPostalAddress.address1)){
         address1=partyPostalAddress.address1;
+		partyAddressMap.put("address1",address1);
        }
-	  partyAddressMap.put("address1",address1);
-	  if(partyPostalAddress.address2){
+	  
+	  if(UtilValidate.isNotEmpty(partyPostalAddress.address2)){
 		  address2=partyPostalAddress.address2;
+		  partyAddressMap.put("address2",address2);
 	  }
-	  partyAddressMap.put("address2",address2);
-	  if(partyPostalAddress.city){
-		  city=partyPostalAddress.city;
-	  }
-	  partyAddressMap.put("city",city);
-	  if(partyPostalAddress.postalCode){
+	  if(UtilValidate.isNotEmpty(partyPostalAddress.city)){
+		  city=partyPostalAddress.city;		
+		  partyAddressMap.put("city",city);
+	  }	  
+	  if(UtilValidate.isNotEmpty(partyPostalAddress.postalCode)){
 		  postalCode=partyPostalAddress.postalCode;
-	  }
-	  partyAddressMap.put("postalCode",postalCode);	  
+		  partyAddressMap.put("postalCode",postalCode);
+	  }	  
    } 
+   partyContactDetails=dispatcher.runSync("getPartyTelephone", [partyId:fromPartyId, userLogin: userLogin]);
+   if(UtilValidate.isNotEmpty(partyContactDetails)){
+	   if(UtilValidate.isNotEmpty(partyContactDetails.contactNumber)){
+		   contactNumber=partyContactDetails.contactNumber;
+		   context.put("contactNumber",contactNumber);
+	   }
+   }
    context.partyAddressMap=partyAddressMap;
- context.put("custReqDate",custReqDate);
+   context.put("custReqDate",custReqDate);
+   context.put("responseRequiredDate",responseRequiredDate);
 }
 enquiryMap=[:];
 custReqItemDetails = delegator.findList("CustRequestItem",EntityCondition.makeCondition("custRequestId", EntityOperator.EQUALS , custRequestId)  , null, null, null, false );
