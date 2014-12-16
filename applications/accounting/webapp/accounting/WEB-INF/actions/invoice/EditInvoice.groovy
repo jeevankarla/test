@@ -58,6 +58,14 @@ if(UtilValidate.isNotEmpty(reportTypeFlag) && reportTypeFlag == "debitNote"){
 	condition = EntityCondition.makeCondition(conditionList, EntityOperator.AND);
 	orderHeaders = delegator.findList("OrderHeader", condition, UtilMisc.toSet("orderId"), null, null, false);
 	orderIds = EntityUtil.getFieldListFromEntityList(orderHeaders, "orderId", true);
+	orderId = orderIds.get(0);
+	if(UtilValidate.isNotEmpty(orderId)){
+		orderHeader = delegator.findByPrimaryKey("OrderHeader", [orderId : orderId]);
+		if(UtilValidate.isNotEmpty(orderHeader)){
+			orderMessage = orderHeader.orderMessage;
+			context.put("orderMessage",orderMessage);
+		}
+	}
 	
 	conditionList.clear();
 	conditionList.add(EntityCondition.makeCondition("orderId", EntityOperator.IN, orderIds));

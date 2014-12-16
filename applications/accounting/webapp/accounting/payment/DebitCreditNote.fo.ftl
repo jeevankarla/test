@@ -170,6 +170,21 @@ under the License.
 									</#if>   
 								</fo:table-cell>
 	                         </fo:table-row>
+	                         <#if orderMessage?has_content>
+	                         <fo:table-row>
+								<fo:table-cell>
+				            		<fo:block linefeed-treatment="preserve">&#xA;</fo:block>
+				       			</fo:table-cell>
+							</fo:table-row>
+	                         <fo:table-row>
+								<fo:table-cell>
+				            		<fo:block text-align="left" keep-together="always" font-size = "12pt" font-weight="bold">Invoice Message          &#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;:</fo:block>     
+				       			</fo:table-cell>
+				       			<fo:table-cell>
+				            		<fo:block text-align="left" keep-together="always" font-size = "12pt">&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;${orderMessage?if_exists}</fo:block>     
+				       			</fo:table-cell>
+							</fo:table-row>
+							</#if>
 	                        <fo:table-row>
 								<fo:table-cell>
 				            		<fo:block linefeed-treatment="preserve">&#xA;</fo:block>
