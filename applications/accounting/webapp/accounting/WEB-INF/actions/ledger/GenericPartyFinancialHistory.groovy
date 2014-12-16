@@ -71,6 +71,19 @@ if (!actualCurrencyUomId) {
 }
 findOpts = new EntityFindOptions(true, EntityFindOptions.TYPE_SCROLL_INSENSITIVE, EntityFindOptions.CONCUR_READ_ONLY, true);
 //get total/unapplied/applied invoices separated by sales/purch amount:
+/*
+for Company
+
+AR---->invoice   D...and...Payment C
+AP----->invoice  C....and...Payment D
+
+OB = arOB()- apOB()  //for 
+
+if OB > 0  then Ar is big( put in Debit)
+else       then is Ap  big(put in Credit)
+
+clsoing Bal=Ob+total D -  total C
+*/
 totalInvSaApplied         = BigDecimal.ZERO;
 totalInvSaNotApplied     = BigDecimal.ZERO;
 totalInvPuApplied         = BigDecimal.ZERO;
@@ -98,29 +111,7 @@ conditionList.add( EntityCondition.makeCondition([
 
 newInvCondition=EntityCondition.makeCondition(conditionList,EntityOperator.AND);
 
-/*invExprs =
-    EntityCondition.makeCondition([
-        EntityCondition.makeCondition("statusId", EntityOperator.NOT_EQUAL, "INVOICE_IN_PROCESS"),
-        EntityCondition.makeCondition("statusId", EntityOperator.NOT_EQUAL, "INVOICE_WRITEOFF"),
-        EntityCondition.makeCondition("statusId", EntityOperator.NOT_EQUAL, "INVOICE_CANCELLED"),
-		if(UtilValidate.isNotEmpty(fromDate)&& UtilValidate.isNotEmpty(thruDate)){
-			EntityCondition.makeCondition("invoiceDate", EntityOperator.GREATER_THAN_EQUAL_TO,UtilDateTime.getDayStart(fromDateTime)),
-			EntityCondition.makeCondition("invoiceDate",EntityOperator.LESS_THAN_EQUAL_TO, UtilDateTime.getDayEnd(thruDateTime)),
-		}
-        EntityCondition.makeCondition([
-            EntityCondition.makeCondition([
-                EntityCondition.makeCondition("partyId", EntityOperator.EQUALS, parameters.partyId),
-                EntityCondition.makeCondition("partyIdFrom", EntityOperator.EQUALS, "Company")
-                ],EntityOperator.AND),
-            EntityCondition.makeCondition([
-                EntityCondition.makeCondition("partyId", EntityOperator.EQUALS,"Company"),
-                EntityCondition.makeCondition("partyIdFrom", EntityOperator.EQUALS, parameters.partyId)
-                ],EntityOperator.AND)
-            ],EntityOperator.OR)
-        ],EntityOperator.AND);
-        
-        invIterator = delegator.find("InvoiceAndType", invExprs, null, null, payOrderBy, findOpts);
-        */
+
 
 	List<String> payOrderBy = UtilMisc.toList("invoiceDate");
 tempInvIterator=null;
@@ -158,17 +149,31 @@ while (invoice = invIterator.next()) {
 	innerMap["partyId"]="";
 	innerMap["date"]=curntDay;
 	innerMap["purposeTypeId"]=invoice.purposeTypeId;
+	innerMap["description"]=invoice.invoiceMessage;
 	innerMap["invoiceDate"]=invoice.invoiceDate;
 	innerMap["invoiceId"]=invoice.invoiceId;
 	innerMap["tinNumber"]="";
 	innerMap["vchrType"]="";
-	innerMap["crOrDbId"]="D";
+	innerMap["vchrCode"]="";
+	innerMap["crOrDbId"]="";
 	invTotalVal=org.ofbiz.accounting.invoice.InvoiceWorker.getInvoiceTotal(delegator,invoice.invoiceId);
 	//invTotalVal=invTotalVal-vatRevenue;
 	innerMap["invTotal"]=invTotalVal;
+	innerMap["debitValue"]=0;
+	innerMap["creditValue"]=0;
     if ("PURCHASE_INVOICE".equals(invoice.parentTypeId)) {
 		innerMap["partyId"]=invoice.partyIdFrom;
 		innerMap["vchrType"]="PURCHASE";
+		innerMap["vchrCode"]="Purchase";
+		if(UtilValidate.isEmpty(invoice.invoiceMessage)){
+			if(UtilValidate.isEmpty(invoice.description)){
+				innerMap["description"]="Purchase Invoice";
+			}else{
+			innerMap["description"]=invoice.description;
+			}
+		}
+		innerMap["crOrDbId"]="C";
+		innerMap["creditValue"]=invTotalVal;
 		//preparing Map here
 		dayInvoiceList=[];
 		dayInvoiceList=apInvoiceDetailsMap[curntDay];
@@ -186,7 +191,13 @@ while (invoice = invIterator.next()) {
     }
     else if ("SALES_INVOICE".equals(invoice.parentTypeId)) {
 		innerMap["vchrType"]="SALES";
+		innerMap["vchrCode"]="Sales";
 		innerMap["partyId"]=invoice.partyId;
+		innerMap["crOrDbId"]="D";
+		innerMap["debitValue"]=invTotalVal;
+		if(UtilValidate.isEmpty(invoice.invoiceMessage)){
+			innerMap["description"]="Sales Invoice";
+		}
 		//preparing Map here
 		dayInvoiceList=[];
 		dayInvoiceList=arInvoiceDetailsMap[curntDay];
@@ -244,28 +255,7 @@ conditionList.add(EntityCondition.makeCondition([
 
 newPayCondition=EntityCondition.makeCondition(conditionList,EntityOperator.AND);
 
-/*payExprs =
-    EntityCondition.makeCondition([
-        EntityCondition.makeCondition("statusId", EntityOperator.NOT_EQUAL, "PMNT_NOTPAID"),
-        EntityCondition.makeCondition("statusId", EntityOperator.NOT_EQUAL, "PMNT_CANCELLED"),
-        EntityCondition.makeCondition("statusId", EntityOperator.NOT_EQUAL, "PMNT_VOID"),  
-		if(UtilValidate.isNotEmpty(fromDate)&& UtilValidate.isNotEmpty(thruDate)){
-			EntityCondition.makeCondition("paymentDate", EntityOperator.GREATER_THAN_EQUAL_TO,UtilDateTime.getDayStart(fromDateTime)),
-			EntityCondition.makeCondition("paymentDate",EntityOperator.LESS_THAN_EQUAL_TO, UtilDateTime.getDayEnd(thruDateTime);),
-		}
-        EntityCondition.makeCondition([
-               EntityCondition.makeCondition([
-                EntityCondition.makeCondition("partyIdTo", EntityOperator.EQUALS, parameters.partyId),
-                EntityCondition.makeCondition("partyIdFrom", EntityOperator.EQUALS, "Company")
-                ], EntityOperator.AND),
-            EntityCondition.makeCondition([
-                EntityCondition.makeCondition("partyIdTo", EntityOperator.EQUALS, "Company"),
-                EntityCondition.makeCondition("partyIdFrom", EntityOperator.EQUALS, parameters.partyId)
-                ], EntityOperator.AND)
-            ], EntityOperator.OR)
-        ], EntityOperator.AND);
-	payIterator = delegator.find("PaymentAndType", payExprs, null, null, orderBy, findOpts);*/
-	
+
 	List<String> orderBy = UtilMisc.toList("paymentDate");
 payIterator = delegator.find("PaymentAndType", newPayCondition, null, null, orderBy, findOpts);
 
@@ -284,13 +274,23 @@ while (payment = payIterator.next()) {
 	innerMap["paymentDate"]=payment.paymentDate;
 	innerMap["paymentId"]=payment.paymentId;
 	innerMap["vchrType"]="";
+	innerMap["vchrCode"]="";
 	innerMap["paymentMethodTypeId"]=payment.paymentMethodTypeId;
-	innerMap["crOrDbId"]="D";
+	innerMap["description"]=payment.comments;
 	innerMap["amount"]=payment.amount;
+	innerMap["crOrDbId"]="";
+	innerMap["debitValue"]=0;
+	innerMap["creditValue"]=0;
 	
     if ("DISBURSEMENT".equals(payment.parentTypeId) || "TAX_PAYMENT".equals(payment.parentTypeId)) {
 		innerMap["partyId"]=payment.partyIdTo;
 		innerMap["vchrType"]="DISBURSEMENT";
+		innerMap["crOrDbId"]="D";
+		innerMap["vchrCode"]="Payment";
+		innerMap["debitValue"]=payment.amount;
+		if(UtilValidate.isEmpty(payment.comments)){
+			innerMap["description"]="Payment Amount";
+		}
 		//preparing Map here
 		dayPaymentList=[];
 		dayPaymentList=apPaymentDetailsMap[curntDay];
@@ -309,6 +309,12 @@ while (payment = payIterator.next()) {
     else if ("RECEIPT".equals(payment.parentTypeId)) {
 		innerMap["partyId"]=payment.partyIdFrom;
 		innerMap["vchrType"]="RECEIPT";
+		innerMap["vchrCode"]="Receipt";
+		innerMap["crOrDbId"]="C";
+		innerMap["creditValue"]=payment.amount;
+		if(UtilValidate.isEmpty(payment.comments)){
+			innerMap["description"]="Receipt Amount";
+		}
 		//preparing Map here
 		dayPaymentList=[];
 		dayPaymentList=arPaymentDetailsMap[curntDay];
@@ -348,19 +354,31 @@ context.thruDate=dayEnd;
 totalDays= UtilDateTime.getIntervalInDays(dayBegin,dayEnd)+1;
 dayWiseArDetailMap=[:];
 dayWiseApDetailMap=[:];
+partyDayWiseDetailMap=[:];
 for(int j=0 ; j < (totalDays); j++){
 	Timestamp saleDate = UtilDateTime.addDaysToTimestamp(dayBegin, j);
 	reciepts = BigDecimal.ZERO;
 	totalValue = BigDecimal.ZERO;
 	curntDay=UtilDateTime.toDateString(saleDate ,"dd-MM-yyyy");
+	
+	dayDetailMap=[:]
+	dayInvoiceList=[];
+	dayPaymentList=[];
 	//ar map preparation
 	newTempMap=[:];
-	invList=arInvoiceDetailsMap.get(curntDay);
-	payList=arPaymentDetailsMap.get(curntDay);
-	if(UtilValidate.isNotEmpty(invList) || UtilValidate.isNotEmpty(payList)){
-		newTempMap.put("invoiceList", invList);
-		newTempMap.put("paymentList", payList);
+	arInvList=arInvoiceDetailsMap.get(curntDay);
+	arPayList=arPaymentDetailsMap.get(curntDay);
+	if(UtilValidate.isNotEmpty(arInvList) || UtilValidate.isNotEmpty(arPayList)){
+		newTempMap.put("invoiceList", arInvList);
+		newTempMap.put("paymentList", arPayList);
 		dayWiseArDetailMap[curntDay]=newTempMap;
+		//preparing Anothor List 
+		if(UtilValidate.isNotEmpty(arInvList)){
+			dayInvoiceList.addAll(arInvList);
+		}
+		if(UtilValidate.isNotEmpty(arPayList)){
+			dayPaymentList.addAll(arPayList);
+		}
 	}
 	//AP map preparation
 	newApTempMap=[:];
@@ -370,6 +388,19 @@ for(int j=0 ; j < (totalDays); j++){
 		newApTempMap.put("invoiceList", invList);
 		newApTempMap.put("paymentList", payList);
 		dayWiseApDetailMap[curntDay]=newApTempMap;
+		//preparing Anothor List
+		if(UtilValidate.isNotEmpty(invList)){
+			dayInvoiceList.addAll(invList);
+		}
+		if(UtilValidate.isNotEmpty(payList)){
+			dayPaymentList.addAll(payList);
+		}
+	}
+	//dayWise PartyMap prepartion
+	if(UtilValidate.isNotEmpty(dayInvoiceList) || UtilValidate.isNotEmpty(dayPaymentList)){
+		dayDetailMap.put("invoiceList", dayInvoiceList);
+		dayDetailMap.put("paymentList", dayPaymentList);
+		partyDayWiseDetailMap[curntDay]=dayDetailMap;
 	}
 }
 /*dayWiseArDetailMap["totInvoiceValue"]=arInvoiceDetailsMap.get("invTotal");
@@ -402,11 +433,59 @@ if(UtilValidate.isNotEmpty(parameters.partyId)){
 	apOpeningBalance = (org.ofbiz.accounting.ledger.GeneralLedgerServices.getGenericOpeningBalanceForParty( dctx , [userLogin: userLogin, tillDate: dayBegin, partyId:parameters.partyId,isOBCallForAP:Boolean.TRUE])).get("openingBalance");
 	}
 	
+partyTrTotalMap=[:];
+partyTrTotalMap["debitValue"]=BigDecimal.ZERO;
+partyTrTotalMap["creditValue"]=BigDecimal.ZERO;
+//so PartyTotal Debit means Ar_Invoice+Ap_Payment+(Ar OB with Minus)+ ap OB with Plus
+//             Credit means Ap_Invoice+Ar_Payment+(Ar OB with Plus)+ ap  OB with Plus
+partyTrTotalMap["debitValue"]+=(arInvoiceDetailsMap.get("invTotal")+apPaymentDetailsMap.get("amount"));
+
+partyTrTotalMap["creditValue"]+=(apInvoiceDetailsMap.get("invTotal")+arPaymentDetailsMap.get("amount"));
+
+partyTotalMap=[:];
+partyTotalMap["debitValue"]=BigDecimal.ZERO;
+partyTotalMap["creditValue"]=BigDecimal.ZERO;
+
+//Debug.log("====partyTrTotalMap==First====>"+partyTrTotalMap);
+
+//compute OB logic for Credit or Debit
+partyOBMap=[:];
+partyOBMap["debitValue"]=BigDecimal.ZERO;
+partyOBMap["creditValue"]=BigDecimal.ZERO;
+
+oB=arOpeningBalance-apOpeningBalance;
+if(oB>0){
+	partyOBMap["debitValue"]=oB;
+	partyTotalMap["debitValue"]+=(oB);
+}else{
+  partyOBMap["creditValue"]=(-1*oB);
+  partyTotalMap["creditValue"]+=(-1*oB) ;
+}
+partyTotalMap["debitValue"]+=(partyTrTotalMap["debitValue"]) ;
+partyTotalMap["creditValue"]+=(partyTrTotalMap["creditValue"]) ;
+//compute CB logic for Credit or Debit
+partyCBMap=[:];
+partyCBMap["debitValue"]=BigDecimal.ZERO;
+partyCBMap["creditValue"]=BigDecimal.ZERO;
+cB=partyTotalMap["debitValue"]-partyTotalMap["creditValue"];
+if(cB>0){
+	partyCBMap["debitValue"]=cB;
+}else{
+  partyCBMap["creditValue"]= (-1*cB);
+}
+
+context.partyOBMap=partyOBMap;
+context.partyTrTotalMap=partyTrTotalMap;
+context.partyCBMap=partyCBMap;
+
 	arClosingBalance=(arOpeningBalance+arInvoiceDetailsMap.get("invTotal"))-(arPaymentDetailsMap.get("amount"));
 	
 	apClosingBalance=(apOpeningBalance+apInvoiceDetailsMap.get("invTotal"))-(apPaymentDetailsMap.get("amount"));
-	Debug.log("====FINALLL==ARRRR=arClosingBalance==>"+arClosingBalance+"=arOpeningBalance==="+arOpeningBalance);
-	Debug.log("====FINALLL=APPPP==apClosingBalance==>"+apClosingBalance+"=apOpeningBalance==="+apOpeningBalance);
+	
+	//Debug.log("====FINALLL==ARRRR=arClosingBalance==>"+arClosingBalance+"=arOpeningBalance==="+arOpeningBalance);
+	//Debug.log("====FINALLL=APPPP==apClosingBalance==>"+apClosingBalance+"=apOpeningBalance==="+apOpeningBalance);
+	
+	context.partyDayWiseDetailMap=partyDayWiseDetailMap;
 	
 	context.arOpeningBalance=arOpeningBalance;
 	context.arClosingBalance=arClosingBalance;

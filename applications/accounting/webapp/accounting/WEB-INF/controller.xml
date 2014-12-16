@@ -3529,6 +3529,12 @@ under the License.
         <response name="success" type="view" value="GenericPartyFinancialHistoryPDF"/>
         <response name="error" type="view" value="GenericPartyFinancialHistoryPDF"/>
     </request-map>
+     <request-map uri="PartyFinancialHistoryWithDrCr.pdf">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="PartyFinancialHistoryWithDrCrPDF"/>
+        <response name="error" type="view" value="PartyFinancialHistoryWithDrCrPDF"/>
+    </request-map>
+    
     <request-map uri="AccountReports">
         <security https="true" auth="true"/>
         <response name="success" type="view" value="AccountReports"/>
@@ -4015,6 +4021,8 @@ under the License.
    <view-map name="NewOutgoingDepositsRefund" type="screen" page="component://accounting/widget/TreasurerPortalScreens.xml#NewOutgoingDepositsRefund"/>
    
    <view-map name="GenericPartyFinancialHistoryPDF" type="screenfop" page="component://accounting/widget/ReportFinancialSummaryScreens.xml#GenericPartyFinancialHistoryPDF" content-type="application/pdf" encoding="none"/>
+   <view-map name="PartyFinancialHistoryWithDrCrPDF" type="screenfop" page="component://accounting/widget/ReportFinancialSummaryScreens.xml#PartyFinancialHistoryWithDrCrPDF" content-type="application/pdf" encoding="none"/>
+   
    <view-map name="AccountReports" type="screen" page="component://accounting/widget/TreasurerPortalScreens.xml#AccountReports" />
    
    <view-map name="AdvancesReport" type="screenfop" page="component://accounting/widget/TreasurerPortalScreens.xml#AdvancesReport" content-type="application/pdf" encoding="none"/>
