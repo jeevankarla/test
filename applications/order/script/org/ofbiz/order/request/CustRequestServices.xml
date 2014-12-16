@@ -64,7 +64,10 @@ under the License.
         </if-empty>
 
         <!-- always start with draft -->
-        <set value="CRQ_DRAFT" field="newEntity.statusId"/>
+        
+        <if-empty field="parameters.statusId">
+            <set value="CRQ_DRAFT" field="newEntity.statusId"/>
+        </if-empty>
         
         <if-not-empty field="parameters.custRequestId">
             <set field="newEntity.custRequestId" from-field="parameters.custRequestId"/>
@@ -239,7 +242,7 @@ under the License.
         </if-empty>
         
         <if-empty field="parameters.statusId">
-            <set value="CRQ_SUBMITTED" field="newEntity.statusId"/>
+            <set value="CRQ_DRAFT" field="newEntity.statusId"/>
         </if-empty>
         <create-value value-field="newEntity"/>
         <field-to-result field="newEntity.custRequestId" result-name="custRequestId"/>
@@ -490,11 +493,11 @@ under the License.
                     <fail-property property="OrderCustRequestShouldHaveFromPartyIdIfNotDraft" resource="OrderUiLabels"/>
                 </add-error>
             </if-empty>
-            <if-empty field="custRequest.custRequestName">
+            <!-- <if-empty field="custRequest.custRequestName">
                 <add-error>
                     <fail-property property="OrderCustRequestShouldHaveCustRequestNameIfNotDraft" resource="OrderUiLabels"/>
                 </add-error>
-            </if-empty>
+            </if-empty> -->
         </if-compare>
         <check-errors/>
 
