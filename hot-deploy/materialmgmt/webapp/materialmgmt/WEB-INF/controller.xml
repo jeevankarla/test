@@ -422,6 +422,20 @@
         <response name="error" type="view" value="RequestsReceiptAcknowledgement"/>
     </request-map>
     
+    <request-map uri="updateEnquiryStatus">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="setRequestStatus"/>
+        <response name="success" type="view" value="ViewMaterialEnquiry"/>
+        <response name="error" type="view" value="ViewMaterialEnquiry"/>
+    </request-map>
+    
+    <request-map uri="updateIndentStatus">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="setRequestStatus"/>
+        <response name="success" type="view" value="ViewMaterialRequest"/>
+        <response name="error" type="view" value="ViewMaterialRequest"/>
+    </request-map>
+    
     <request-map uri="QuoteForEvalution">
         <security https="true" auth="true"/>
         <response name="success" type="view" value="QuoteForEvalution"/>
