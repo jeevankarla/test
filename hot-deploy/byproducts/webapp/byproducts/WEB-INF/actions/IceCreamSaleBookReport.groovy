@@ -56,37 +56,45 @@ if(maxIntervalDays > 32){
 }
 
 partyIds=[];
-if((categoryType.equals("ICE_CREAM_NANDINI")&& UtilValidate.isEmpty(partyId))||categoryType.equals("All")){
+if(categoryType.equals("ICE_CREAM_NANDINI")||categoryType.equals("All")){
    nandiniPartyIds = ByProductNetworkServices.getPartyByRoleType(dctx, [userLogin: userLogin, roleTypeId: "IC_WHOLESALE"]).get("partyIds");
-   partyIds.addAll(nandiniPartyIds);
-   Debug.log("partyId==="+partyIds);
-}else if(categoryType.equals("ICE_CREAM_NANDINI")&& UtilValidate.isNotEmpty(partyId)){
-     partyIds.addAll(partyId);
-	 Debug.log("partyId==="+partyIds);
+   if(UtilValidate.isEmpty(partyId)){
+     partyIds.addAll(nandiniPartyIds);
+   }else if(UtilValidate.isNotEmpty(partyId)&& nandiniPartyIds.contains(partyId)){
+	 partyIds.addAll(partyId);
+   }
 }
-if((categoryType.equals("ICE_CREAM_AMUL")&& UtilValidate.isEmpty(partyId))||categoryType.equals("All")){
+if(categoryType.equals("ICE_CREAM_AMUL")||categoryType.equals("All")){
    amulPartyIds = ByProductNetworkServices.getPartyByRoleType(dctx, [userLogin: userLogin, roleTypeId: "EXCLUSIVE_CUSTOMER"]).get("partyIds");
-   partyIds.addAll(amulPartyIds);
-}else if(categoryType.equals("ICE_CREAM_AMUL")&& UtilValidate.isNotEmpty(partyId)){
-   partyIds.addAll(partyId);
+   if(UtilValidate.isEmpty(partyId)){
+      partyIds.addAll(amulPartyIds);
+   }else if(UtilValidate.isNotEmpty(partyId)&& amulPartyIds.contains(partyId)){
+	  partyIds.addAll(partyId);
+   }
 }
-if((categoryType.equals("UNITS")&& UtilValidate.isEmpty(partyId))||categoryType.equals("All")){
+if(categoryType.equals("UNITS")||categoryType.equals("All")){
 	unitPartyIds = ByProductNetworkServices.getPartyByRoleType(dctx, [userLogin: userLogin, roleTypeId: "UNITS"]).get("partyIds");
-	partyIds.addAll(unitPartyIds);
-}else if(categoryType.equals("UNITS")&& UtilValidate.isNotEmpty(partyId)){
-   partyIds.addAll(partyId);
+   if(UtilValidate.isEmpty(partyId)){
+      partyIds.addAll(unitPartyIds);
+   }else if(UtilValidate.isNotEmpty(partyId)&& unitPartyIds.contains(partyId)){
+	  partyIds.addAll(partyId);
+   }
 }
-if((categoryType.equals("UNION")&& UtilValidate.isEmpty(partyId))||categoryType.equals("All")){
+if(categoryType.equals("UNION")||categoryType.equals("All")){
 	unionPartyIds = ByProductNetworkServices.getPartyByRoleType(dctx, [userLogin: userLogin, roleTypeId: "UNION"]).get("partyIds");
-	partyIds.addAll(unionPartyIds);
-}else if(categoryType.equals("UNION")&& UtilValidate.isNotEmpty(partyId)){
-	partyIds.addAll(partyId);
+   if(UtilValidate.isEmpty(partyId)){
+      partyIds.addAll(unionPartyIds);
+   }else if(UtilValidate.isNotEmpty(partyId)&& unionPartyIds.contains(partyId)){
+	  partyIds.addAll(partyId);
+   }
 }
-if((categoryType.equals("DEPOT_CUSTOMER")&& UtilValidate.isEmpty(partyId))||categoryType.equals("All")){
+if(categoryType.equals("DEPOT_CUSTOMER")||categoryType.equals("All")){
 	depotPartyIds = ByProductNetworkServices.getPartyByRoleType(dctx, [userLogin: userLogin, roleTypeId: "DEPOT_CUSTOMER"]).get("partyIds");
-	partyIds.addAll(depotPartyIds);
-}else if(categoryType.equals("DEPOT_CUSTOMER")&& UtilValidate.isNotEmpty(partyId)){
-	partyIds.addAll(partyId);
+	if(UtilValidate.isEmpty(partyId)){
+      partyIds.addAll(depotPartyIds);
+   }else if(UtilValidate.isNotEmpty(partyId)&& depotPartyIds.contains(partyId)){
+	  partyIds.addAll(partyId);
+   }
 }
 
 partWiseSaleMap=[:];
