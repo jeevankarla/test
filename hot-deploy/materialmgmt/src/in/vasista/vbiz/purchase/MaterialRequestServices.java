@@ -875,6 +875,7 @@ public class MaterialRequestServices {
 			custRequestInMap.put("currencyUomId","INR");
 			custRequestInMap.put("maximumAmountUomId","INR");
 			custRequestInMap.put("fromPartyId","Company");
+			custRequestInMap.put("statusId","ENQ_CREATED");
 			custRequestInMap.put("custRequestDate",UtilDateTime.nowTimestamp());
 	        Map resultMap = dispatcher.runSync("createCustRequest",custRequestInMap);
 	        
@@ -891,7 +892,7 @@ public class MaterialRequestServices {
 				String requirementId = requirement.getString("requirementId");
 				Map<String,Object> itemInMap = FastMap.newInstance();
 		        itemInMap.put("custRequestId",custRequestId);
-		        itemInMap.put("statusId","CRQ_DRAFT");
+		        itemInMap.put("statusId","ENQ_CREATED");
 		        itemInMap.put("userLogin",userLogin);
 		        itemInMap.put("productId",productId);
 		        itemInMap.put("quantity",quantity);
@@ -925,7 +926,6 @@ public class MaterialRequestServices {
 			Debug.logError(e, module);
 			return ServiceUtil.returnError(e.getMessage());
 		}
-		
 		return result;
 	}
 	

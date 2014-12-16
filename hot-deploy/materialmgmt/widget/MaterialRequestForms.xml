@@ -172,7 +172,7 @@
         <field name="createdByUserLogin" sort-field="true"><display/></field>
         
         <field use-when="&quot;${statusId}&quot;== &quot;CRQ_DRAFT&quot;" name="cancel" widget-style="buttontext">
-            <hyperlink target="setRequestStatus" description="Cancel">
+            <hyperlink target="updateIndentStatus" description="Cancel">
                 <parameter param-name="custRequestId"/>
                 <parameter param-name="statusId" value="CRQ_CANCELLED"/>
             </hyperlink>
@@ -180,27 +180,21 @@
         
     </form>
 	
-	<form name="EnquiryItemDetails" type="single" target="" title="" default-map-name="enquiryDetailsMap"
+	<form name="EnquiryDetails" type="single" target="updateEnquiryStatus" title="" default-map-name="custRequest"
         header-row-style="header-row" default-table-style="basic-table">
-     <!--    <actions>
-        
-                <entity-one entity-name="CustRequestItem" value-field="custRequestItem">
-                   <field-map field-name="custRequestId" />
-                   <field-map field-name="custRequestItemSeqId"/>
-                </entity-one> 
-                <entity-one entity-name="CustRequest" value-field="custRequest">
-                	<field-map field-name="custRequestId" from-field="custRequestItem.custRequestId"/>
-                	<select-field field-name="openDateTime"/>
-                	<select-field field-name="closedDateTime"/>
-                </entity-one>
-               
-        </actions> -->
+        <actions>
+        	<set field="currStatusId" value="${custRequest.statusId}"/>
+        </actions>
+     	<field name="custRequestId" title="Enquiry No."><display/></field>
         <field name="custRequestName" title="Enquiry Ref"><display/></field>
-        <field name="openDateTime" title="openDateTime"><display/> </field>
-        <field name="closedDateTime" title="closedDateTime"><display/> </field>
-        <field name="productId" title="Product"><hidden/> </field>
+        <field name="openDateTime" title="openDateTime"><display description="${groovy:org.ofbiz.base.util.UtilDateTime.toDateString(openDateTime, &quot;dd/MM/yyyy HH:mm:ss&quot;)}"/> </field>
+        <field name="closedDateTime" title="closedDateTime"><display description="${groovy:org.ofbiz.base.util.UtilDateTime.toDateString(openDateTime, &quot;dd/MM/yyyy HH:mm:ss&quot;)}"/> </field>
         <field name="statusId" title="Status"><display-entity entity-name="StatusItem" description="${description}" key-field-name="statusId"/> </field>
-        <field name="quantity" title="Quantity"><hidden/> </field>
+        <field name="closeStatusId" parameter-name="statusId"><hidden value="ENQ_COMPLETED"/></field>
+        <field use-when="&quot;statusId&quot;==&quot;ENQ_CREATED&quot;"  name="setStatusLink" title="Close Enquiry" widget-style="buttontext h3" tooltip="Close if all item in enquiry are shortlisted for PO">
+        	<submit/>
+        </field>
+        
     </form>
     
     <form name="ListCustRequestContent" type="list" list-name="custRequestContents"

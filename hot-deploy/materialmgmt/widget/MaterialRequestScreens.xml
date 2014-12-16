@@ -323,7 +323,8 @@
                 <entity-and entity-name="CustRequestAndContent" list="custRequestContents" filter-by-date="true">
                     <field-map field-name="custRequestId" from-field="custRequestId"/>
                 </entity-and>
-                <script location="component://materialmgmt/webapp/materialmgmt/WEB-INF/actions/purchases/EnquiryDetails.groovy" />	
+                <!-- <script location="component://materialmgmt/webapp/materialmgmt/WEB-INF/actions/purchases/EnquiryDetails.groovy" /> -->
+                <set field="checkStatusId" value="${custRequest.statusId}"/>	
             </actions>
             <widgets>
                <decorator-screen name="materialmgmtNgCommonDecorator" location="${parameters.mainDecoratorLocation}">
@@ -331,27 +332,21 @@
                     	<include-menu name="EnquiryTabBar" location="component://materialmgmt/widget/materialmgmtMenus.xml"/>
                     	<container style="button-bar">
 		                    <section>
-			                  	 <!-- <condition> 
+			                  	 <condition> 
 			                  	   <and>
-				                  	   	<if-compare operator="equals" value="N" field="poCreateFlag"/>
+				                  	   	<if-compare operator="equals" value="ENQ_CREATED" field="checkStatusId"/>
 			                  	   </and>
-			                  	 </condition> -->
+			                  	 </condition>
 		                  	 	<widgets>
-		                  	 		<link target="enquiryItemsForQuote" text="Add Quotation" style="buttontext create h3" >
+		                  	 		<link target="enquiryItemsForQuote" text="Add Quotation" style="buttontext create h2" >
                   	 					<parameter param-name="custRequestId"/>
                   	 				</link>
 		                  	 	</widgets>
-		                  	 	<!-- <fail-widgets>
-		                  	 		<link target="createPOForQuote" text="Create PO" style="buttontext h2" >
-           								<parameter param-name="quoteId" from-field="quoteId"/>
-           							</link>
-		                  	 	</fail-widgets> -->
 		                  </section>
-	                  </container>                                              
-                      
+                      </container>
                       <container style="lefthalf">
 		                  <screenlet title="Overview">
-		                  	 <include-form location="component://materialmgmt/widget/MaterialRequestForms.xml" name="EnquiryItemDetails"/>
+		                  	 <include-form location="component://materialmgmt/widget/MaterialRequestForms.xml" name="EnquiryDetails"/>
 		                  </screenlet>
 		                  <screenlet title="Enquiry Contents">
                    			<include-form location="component://materialmgmt/widget/MaterialRequestForms.xml" name="ListEnquiryContent"/>
