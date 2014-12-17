@@ -614,13 +614,23 @@ public class MaterialRequestServices {
 			GenericValue custRequestItem = delegator.findOne("CustRequestItem", UtilMisc.toMap("custRequestId", custRequestId, "custRequestItemSeqId", custRequestItemSeqId), false);
 			
 			GenericValue custRequest = delegator.findOne("CustRequest", UtilMisc.toMap("custRequestId", custRequestId), false);
-			
+			String facilityId = "";
+			String productId = custRequestItem.getString("productId");
 			List conditionList = FastList.newInstance();
 			conditionList.add(EntityCondition.makeCondition("statusId", EntityOperator.EQUALS, "REQ_CREATED"));
 			conditionList.add(EntityCondition.makeCondition("requirementTypeId", EntityOperator.EQUALS, "PRODUCT_REQUIREMENT"));
-			conditionList.add(EntityCondition.makeCondition("productId", EntityOperator.EQUALS, custRequestItem.getString("productId")));
+			conditionList.add(EntityCondition.makeCondition("productId", EntityOperator.EQUALS, productId));
 			EntityCondition condition = EntityCondition.makeCondition(conditionList, EntityOperator.AND);
 			List<GenericValue> requirements = delegator.findList("Requirement", condition, null, null, null, false);
+			
+			List<GenericValue> prodFacility = delegator.findList("ProductFacility", EntityCondition.makeCondition("productId", EntityOperator.EQUALS, productId), null, null, null, false);
+			
+			if(UtilValidate.isEmpty(prodFacility)){
+				Debug.logError("Product is not mapped to any Store", module);
+				return ServiceUtil.returnError("Product is not mapped to any Store");
+			}
+			
+			facilityId = (EntityUtil.getFirst(prodFacility)).getString("facilityId");
 			
 			Map resultCtx = FastMap.newInstance();
 			String requirementId = "";
@@ -651,6 +661,7 @@ public class MaterialRequestServices {
 				itemIssueCtx.put("custRequestId", custRequestId);
 				itemIssueCtx.put("custRequestItemSeqId", custRequestItemSeqId);
 				itemIssueCtx.put("userLogin", userLogin);
+				itemIssueCtx.put("facilityId", facilityId);
 				itemIssueCtx.put("productId", custRequestItem.getString("productId"));
 				itemIssueCtx.put("requirementStartDate", UtilDateTime.nowTimestamp());
 				itemIssueCtx.put("requirementTypeId", custRequest.getString("custRequestTypeId"));

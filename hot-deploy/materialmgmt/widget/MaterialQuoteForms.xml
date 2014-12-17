@@ -304,6 +304,7 @@
         <field name="validFromDate" title="Quote Valid From"><display description="${groovy:org.ofbiz.base.util.UtilDateTime.toDateString(validFromDate,&quot;dd/MM/yyyy&quot;)}" /></field>
         <field name="validThruDate" title="Quote Valid Thru"><display description="${groovy:org.ofbiz.base.util.UtilDateTime.toDateString(validThruDate,&quot;dd/MM/yyyy&quot;)}" /></field>
         <field name="productId" title="Material Name - [Code]"><display-entity entity-name="Product" key-field-name="productId" description="${productName}"/></field>
+        <field name="quantity" title="Qty"><display /></field>
         <field name="qiStatusId" title="Status"><display /></field>
         <field name="quoteUnitPrice" title="Unit Price"><display /></field>
         <field use-when="&quot;${qiStatusId}&quot; == &quot;QTITM_NEGOTIATION&quot;" name="approveLink" widget-style="buttontext h3" title="Approve">

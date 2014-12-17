@@ -67,7 +67,7 @@
 			      <set field="tabButtonItem2" value="FindMaterialPO"/>
                <set field="viewSize" from-field="parameters.VIEW_SIZE"/>
                <set field="targetRequest" value="FindMaterialPO"/>
-                <!-- <set field="ChannalType" value="PROD_PRCHSE_CHANNEL"/>  -->
+               <set field="ChannalType" value="MATERIAL_PUR_CHANNEL"/>
             </actions>
             <widgets>
                  <decorator-screen name="materialmgmtNgCommonDecorator" location="${parameters.mainDecoratorLocation}">

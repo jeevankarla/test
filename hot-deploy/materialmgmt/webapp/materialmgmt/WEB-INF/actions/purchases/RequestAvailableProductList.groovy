@@ -35,7 +35,7 @@ dctx = dispatcher.getDispatchContext();
 
 conditionList = [];
 conditionList.add(EntityCondition.makeCondition("statusId", EntityOperator.EQUALS, "CRQ_SUBMITTED"));
-conditionList.add(EntityCondition.makeCondition("itemStatusId", EntityOperator.NOT_IN, UtilMisc.toList("CRQ_CANCELLED","CRQ_REJECTED","CRQ_COMPLETED")));
+conditionList.add(EntityCondition.makeCondition("itemStatusId", EntityOperator.IN, UtilMisc.toList("CRQ_INPROCESS","CRQ_SUBMITTED")));
 conditionList.add(EntityCondition.makeCondition("custRequestTypeId", EntityOperator.EQUALS, "PRODUCT_REQUIREMENT"));
 condition = EntityCondition.makeCondition(conditionList, EntityOperator.AND);
 
