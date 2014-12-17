@@ -487,13 +487,13 @@
         <field name="firstName"><hidden/></field>
         <field name="lastName"><hidden/></field>
         <field name="noteDateTime" title="Date Time"><display/></field>  
-        <field name="delete">
+        <!-- <field name="delete">
         <hyperlink target="deleteTenderNote" description="Delete">
         	<parameter param-name="noteId"/>
         	<parameter param-name="noteType"/>
         	<parameter param-name="custRequestId"/>
         </hyperlink>
-        </field>
+        </field> -->
     </form>
     
     <form name="ListEnquiryContent" type="list" list-name="custRequestContents"
