@@ -58,11 +58,11 @@ under the License.
 		        		<fo:block>
                  	<fo:table>
                     <fo:table-column column-width="100pt"/> 
-                    <fo:table-column column-width="100pt"/>
-            		<fo:table-column column-width="100pt"/> 	
+                    <fo:table-column column-width="125pt"/>
+            		<fo:table-column column-width="110pt"/> 	
             		<fo:table-column column-width="20pt"/>	
             		<fo:table-column column-width="100pt"/>
-            		<fo:table-column column-width="70pt"/>
+            		<fo:table-column column-width="80pt"/>
             		<fo:table-column column-width="100pt"/>
             		<fo:table-column column-width="100pt"/>
             		<fo:table-column column-width="100pt"/>
@@ -100,12 +100,12 @@ under the License.
 		        	<fo:flow flow-name="xsl-region-body"   font-family="Courier,monospace">		
             	<fo:block>
                  	<fo:table>
-                <fo:table-column column-width="100pt"/> 
-                    <fo:table-column column-width="100pt"/>
-            		<fo:table-column column-width="100pt"/> 	
+                     <fo:table-column column-width="100pt"/> 
+                    <fo:table-column column-width="125pt"/>
+            		<fo:table-column column-width="110pt"/> 	
             		<fo:table-column column-width="20pt"/>	
             		<fo:table-column column-width="100pt"/>
-            		<fo:table-column column-width="70pt"/>
+            		<fo:table-column column-width="80pt"/>
             		<fo:table-column column-width="100pt"/>
             		<fo:table-column column-width="100pt"/>
             		<fo:table-column column-width="100pt"/>
@@ -134,7 +134,7 @@ under the License.
 				            	<fo:block  keep-together="always" text-align="left" font-size="12pt" white-space-collapse="false">${eachDateDetail.get("date")?if_exists}</fo:block>  
 				            </fo:table-cell>
 				             <fo:table-cell>
-				            	<fo:block  keep-together="always" text-align="left" font-size="12pt" white-space-collapse="false">${eachDateDetail.get("invoiceId")?if_exists}</fo:block>  
+				            	<fo:block  keep-together="always" text-align="left" font-size="12pt" white-space-collapse="false">${eachDateDetail.get("invoiceSequenceId")?if_exists}</fo:block>  
 				            </fo:table-cell>
 				            <fo:table-cell>
 		                    	<fo:block  keep-together="always" text-align="right" font-size="12pt" white-space-collapse="false">${eachDateDetail.get("invTotal")?if_exists?string("#0.00")}</fo:block>  
