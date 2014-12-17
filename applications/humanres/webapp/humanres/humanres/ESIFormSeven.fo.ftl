@@ -141,7 +141,15 @@
 											                    			<fo:table-row border-bottom-style="solid" >
 											                    				<fo:table-cell >	
 													                            	<fo:block border-right-style="solid" linefeed-treatment="preserve">&#xA;</fo:block>
-													                            	<fo:block text-align="center" keep-together="always" border-right-style="solid" font-size="9pt">${PeriodId?replace("_", ",")}</fo:block>
+													                            	<#if periodNameMap?has_content>
+													                            		<#assign periodNames = periodNameMap.entrySet()>
+													                            		<#list periodNames as perioddId>
+													                            			<#if perioddId.getKey() == PeriodId>
+													                            				<#assign periodName = perioddId.getValue()>
+													                            			</#if>
+													                            		</#list>
+													                            	</#if>
+													                            	<fo:block text-align="center" keep-together="always" border-right-style="solid" font-size="9pt">${periodName?if_exists}</fo:block>
 													                            </fo:table-cell>
 											                    				<fo:table-cell >	
 													                            	<fo:block border-right-style="solid" linefeed-treatment="preserve">&#xA;</fo:block>

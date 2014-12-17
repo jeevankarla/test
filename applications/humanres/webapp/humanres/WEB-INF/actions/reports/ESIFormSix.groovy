@@ -51,12 +51,14 @@ List conList = [];
 conList.add(EntityCondition.makeCondition("fromDate",EntityOperator.GREATER_THAN_EQUAL_TO, UtilDateTime.toSqlDate(fromDate)));
 conList.add(EntityCondition.makeCondition("thruDate",EntityOperator.LESS_THAN_EQUAL_TO, UtilDateTime.toSqlDate(thruDate)));
 conList.add(EntityCondition.makeCondition("periodTypeId",EntityOperator.EQUALS, "HR_MONTH"));
-List customTimePeriodList = delegator.findList("CustomTimePeriod",EntityCondition.makeCondition(conList,EntityOperator.AND),null,null,null,false);
+List<String> OrderBy = UtilMisc.toList("fromDate");
+List customTimePeriodList = delegator.findList("CustomTimePeriod",EntityCondition.makeCondition(conList,EntityOperator.AND),null,OrderBy,null,false);
 
 if(UtilValidate.isNotEmpty(customTimePeriodList)){
 	PeriodIdsList = EntityUtil.getFieldListFromEntityList(customTimePeriodList, "customTimePeriodId", true);
 }
 context.put("PeriodIdsList",PeriodIdsList);
+Debug.log("PeriodIdsList================"+PeriodIdsList);
 
 periodBillingIdMap=[:];
 PeriodIdsList.each{ Period ->
@@ -275,6 +277,7 @@ context.put("periodList",periodList);
 periodList = (new HashSet(periodList)).toList();
 context.put("periodList",periodList);
 
+Debug.log("periodList============="+periodList);
 periodMap=[:];
 periodList.each{ Period ->
 	customTimePeriod = delegator.findOne("CustomTimePeriod", UtilMisc.toMap("customTimePeriodId", Period), false);
@@ -297,75 +300,87 @@ periodList.each{ Period ->
 	periodMap.put(Period,dateStr);
 }
 
+TimePeriodIds = [];
+List condList = [];
+condList.add(EntityCondition.makeCondition("customTimePeriodId",EntityOperator.IN, periodList));
+condList.add(EntityCondition.makeCondition("periodTypeId",EntityOperator.EQUALS, "HR_MONTH"));
+List<String> OrderBycondtn = UtilMisc.toList("fromDate");
+List customTimePeriodIdsList = delegator.findList("CustomTimePeriod",EntityCondition.makeCondition(condList,EntityOperator.AND),null,OrderBycondtn,null,false);
+if(UtilValidate.isNotEmpty(customTimePeriodIdsList)){
+	TimePeriodIds = EntityUtil.getFieldListFromEntityList(customTimePeriodIdsList, "customTimePeriodId", true);
+}
+
 totemployeeContribtn=0;
 totemployerContribtn=0;
 totalContribution=0;
 periodTotMap=[:];
 contributionMap=[:];
-periodList.each{ Period ->
-	totWages=0;
-	employeeContribtn=0;
-	employerContribtn=0;
-	TotContribtn=0;
-	totValueMap=[:];
-	if(UtilValidate.isNotEmpty(employmentsList)){
-		employmentsList.each{ employeeId ->
-			if(UtilValidate.isNotEmpty(EmplWiseDetailsMap)){
-				Iterator EmplIter = EmplWiseDetailsMap.entrySet().iterator();
-				while(EmplIter.hasNext()){
-					Map.Entry EmplEntry = EmplIter.next();
-					if((EmplEntry.getKey()).equals(employeeId)){
-						emplValues=EmplEntry.getValue();
-						if(UtilValidate.isNotEmpty(emplValues)){
-							Iterator EmplPeriodIter = emplValues.entrySet().iterator();
-							while(EmplPeriodIter.hasNext()){
-								Map.Entry EmplPeriodEntry = EmplPeriodIter.next();
-								if((EmplPeriodEntry.getKey()).equals(Period)){
-									if(!(EmplPeriodEntry.getValue().get("Wages")).equals(null)){
-										totWages=totWages+EmplPeriodEntry.getValue().get("Wages");
-									}
-									if(UtilValidate.isNotEmpty(periodBillingIdMap)){
-										Iterator periodBillingIdMapIter = periodBillingIdMap.entrySet().iterator();
-										while(periodBillingIdMapIter.hasNext()){
-											Map.Entry periodBillingIdMapEntry = periodBillingIdMapIter.next();
-											if((periodBillingIdMapEntry.getKey()).equals(Period)){
-												BillingId=periodBillingIdMapEntry.getValue();
+if(UtilValidate.isNotEmpty(TimePeriodIds)){
+	TimePeriodIds.each{ Period ->
+		totWages=0;
+		employeeContribtn=0;
+		employerContribtn=0;
+		TotContribtn=0;
+		totValueMap=[:];
+		if(UtilValidate.isNotEmpty(employmentsList)){
+			employmentsList.each{ employeeId ->
+				if(UtilValidate.isNotEmpty(EmplWiseDetailsMap)){
+					Iterator EmplIter = EmplWiseDetailsMap.entrySet().iterator();
+					while(EmplIter.hasNext()){
+						Map.Entry EmplEntry = EmplIter.next();
+						if((EmplEntry.getKey()).equals(employeeId)){
+							emplValues=EmplEntry.getValue();
+							if(UtilValidate.isNotEmpty(emplValues)){
+								Iterator EmplPeriodIter = emplValues.entrySet().iterator();
+								while(EmplPeriodIter.hasNext()){
+									Map.Entry EmplPeriodEntry = EmplPeriodIter.next();
+									if((EmplPeriodEntry.getKey()).equals(Period)){
+										if(!(EmplPeriodEntry.getValue().get("Wages")).equals(null)){
+											totWages=totWages+EmplPeriodEntry.getValue().get("Wages");
+										}
+										if(UtilValidate.isNotEmpty(periodBillingIdMap)){
+											Iterator periodBillingIdMapIter = periodBillingIdMap.entrySet().iterator();
+											while(periodBillingIdMapIter.hasNext()){
+												Map.Entry periodBillingIdMapEntry = periodBillingIdMapIter.next();
+												if((periodBillingIdMapEntry.getKey()).equals(Period)){
+													BillingId=periodBillingIdMapEntry.getValue();
+												}
 											}
 										}
-									}
-									emplyeContrbtn=0;
-									emplyrContrbtn=0;
-									List PayrollHeaderConditionList=[];
-									PayrollHeaderConditionList.add(EntityCondition.makeCondition("periodBillingId", EntityOperator.EQUALS, BillingId));
-									PayrollHeaderConditionList.add(EntityCondition.makeCondition("partyIdFrom", EntityOperator.EQUALS, employeeId));
-									PayrollHeaderCondition = EntityCondition.makeCondition(PayrollHeaderConditionList,EntityOperator.AND);
-									headerIdList = delegator.findList("PayrollHeader", PayrollHeaderCondition, null, null, null, false);
-									if(UtilValidate.isNotEmpty(headerIdList)){
-										headerIdList = EntityUtil.getFirst(headerIdList);
-										PayrollHeaderId = headerIdList.payrollHeaderId;
-										List emplyeConditionList=[];
-										emplyeConditionList.add(EntityCondition.makeCondition("payrollHeaderId", EntityOperator.EQUALS, PayrollHeaderId));
-										emplyeConditionList.add(EntityCondition.makeCondition("payrollHeaderItemTypeId", EntityOperator.EQUALS, "PAYROL_DD_ESI_DED"));
-										emplyeCondition = EntityCondition.makeCondition(emplyeConditionList,EntityOperator.AND);
-										emplyeList = delegator.findList("PayrollHeaderItem", emplyeCondition, null, null, null, false);
-										if(UtilValidate.isNotEmpty(emplyeList)){
-											emplyeList = EntityUtil.getFirst(emplyeList);
-											emplyeCont = emplyeList.amount;
-											employeeContribtn=employeeContribtn+emplyeCont;
-											if(employeeContribtn < 0){
-												totalContribution=totalContribution-emplyeCont;
+										emplyeContrbtn=0;
+										emplyrContrbtn=0;
+										List PayrollHeaderConditionList=[];
+										PayrollHeaderConditionList.add(EntityCondition.makeCondition("periodBillingId", EntityOperator.EQUALS, BillingId));
+										PayrollHeaderConditionList.add(EntityCondition.makeCondition("partyIdFrom", EntityOperator.EQUALS, employeeId));
+										PayrollHeaderCondition = EntityCondition.makeCondition(PayrollHeaderConditionList,EntityOperator.AND);
+										headerIdList = delegator.findList("PayrollHeader", PayrollHeaderCondition, null, null, null, false);
+										if(UtilValidate.isNotEmpty(headerIdList)){
+											headerIdList = EntityUtil.getFirst(headerIdList);
+											PayrollHeaderId = headerIdList.payrollHeaderId;
+											List emplyeConditionList=[];
+											emplyeConditionList.add(EntityCondition.makeCondition("payrollHeaderId", EntityOperator.EQUALS, PayrollHeaderId));
+											emplyeConditionList.add(EntityCondition.makeCondition("payrollHeaderItemTypeId", EntityOperator.EQUALS, "PAYROL_DD_ESI_DED"));
+											emplyeCondition = EntityCondition.makeCondition(emplyeConditionList,EntityOperator.AND);
+											emplyeList = delegator.findList("PayrollHeaderItem", emplyeCondition, null, null, null, false);
+											if(UtilValidate.isNotEmpty(emplyeList)){
+												emplyeList = EntityUtil.getFirst(emplyeList);
+												emplyeCont = emplyeList.amount;
+												employeeContribtn=employeeContribtn+emplyeCont;
+												if(employeeContribtn < 0){
+													totalContribution=totalContribution-emplyeCont;
+												}
 											}
-										}
-										List emplyrConditionList=[];
-										emplyrConditionList.add(EntityCondition.makeCondition("payrollHeaderId", EntityOperator.EQUALS, PayrollHeaderId));
-										emplyrConditionList.add(EntityCondition.makeCondition("payrollHeaderItemTypeId", EntityOperator.EQUALS, "PAYROL_BEN_ESIEMPLYR"));
-										emplyrCondition = EntityCondition.makeCondition(emplyrConditionList,EntityOperator.AND);
-										emplyrList = delegator.findList("PayrollHeaderItemEc", emplyrCondition, null, null, null, false);
-										if(UtilValidate.isNotEmpty(emplyrList)){
-											emplyrList = EntityUtil.getFirst(emplyrList);
-											employerCont = emplyrList.amount;
-											employerContribtn=employerContribtn+employerCont;
-											totalContribution=totalContribution+employerCont;
+											List emplyrConditionList=[];
+											emplyrConditionList.add(EntityCondition.makeCondition("payrollHeaderId", EntityOperator.EQUALS, PayrollHeaderId));
+											emplyrConditionList.add(EntityCondition.makeCondition("payrollHeaderItemTypeId", EntityOperator.EQUALS, "PAYROL_BEN_ESIEMPLYR"));
+											emplyrCondition = EntityCondition.makeCondition(emplyrConditionList,EntityOperator.AND);
+											emplyrList = delegator.findList("PayrollHeaderItemEc", emplyrCondition, null, null, null, false);
+											if(UtilValidate.isNotEmpty(emplyrList)){
+												emplyrList = EntityUtil.getFirst(emplyrList);
+												employerCont = emplyrList.amount;
+												employerContribtn=employerContribtn+employerCont;
+												totalContribution=totalContribution+employerCont;
+											}
 										}
 									}
 								}
@@ -375,21 +390,21 @@ periodList.each{ Period ->
 				}
 			}
 		}
-	}
-	if(UtilValidate.isNotEmpty(periodMap)){
-		Iterator periodMapIter = periodMap.entrySet().iterator();
-		while(periodMapIter.hasNext()){
-			Map.Entry periodMapEntry = periodMapIter.next();
-			if((periodMapEntry.getKey()).equals(Period)){
-				periodId=periodMapEntry.getValue();
+		if(UtilValidate.isNotEmpty(periodMap)){
+			Iterator periodMapIter = periodMap.entrySet().iterator();
+			while(periodMapIter.hasNext()){
+				Map.Entry periodMapEntry = periodMapIter.next();
+				if((periodMapEntry.getKey()).equals(Period)){
+					periodId=periodMapEntry.getValue();
+				}
 			}
 		}
-	}
-	TotContribtn=employeeContribtn+employerContribtn;
-	totemployeeContribtn=totemployeeContribtn+employeeContribtn;
-	totemployerContribtn=totemployerContribtn+employerContribtn;
-	if(UtilValidate.isNotEmpty(TotContribtn)){
-		periodTotMap.put(periodId,TotContribtn);
+		TotContribtn=employeeContribtn+employerContribtn;
+		totemployeeContribtn=totemployeeContribtn+employeeContribtn;
+		totemployerContribtn=totemployerContribtn+employerContribtn;
+		if(UtilValidate.isNotEmpty(TotContribtn)){
+			periodTotMap.put(periodId,TotContribtn);
+		}
 	}
 }
 contributionMap.put("totemployeeContribtn",totemployeeContribtn);

@@ -83,6 +83,25 @@ PeriodIdsList.each{ Period ->
 		periodBillingIdMap.put(Period,BillingId);
 	}
 }
+
+periodNameMap = [:];
+if(UtilValidate.isNotEmpty(PeriodIdsList)){
+	PeriodIdsList.each{ Periodd ->
+		List condList = [];
+		condList.add(EntityCondition.makeCondition("customTimePeriodId",EntityOperator.EQUALS, Periodd));
+		condList.add(EntityCondition.makeCondition("periodTypeId",EntityOperator.EQUALS, "HR_MONTH"));
+		periodCondition = EntityCondition.makeCondition(condList,EntityOperator.AND);
+		periodDetailsList = delegator.findList("CustomTimePeriod", periodCondition, null, null, null, false);
+		if(UtilValidate.isNotEmpty(periodDetailsList)){
+			periodDetailsList = EntityUtil.getFirst(periodDetailsList);
+			periodFromDate = periodDetailsList.get("fromDate");
+			fromDateTime = UtilDateTime.toTimestamp(periodFromDate);
+			monthName = (UtilDateTime.toDateString(fromDateTime, "MMM")).toUpperCase();
+			periodNameMap.put(Periodd,monthName);
+		}
+	}
+}
+
 EmplWiseDetailsMap=[:];
 EmplNameMap=[:];
 if(UtilValidate.isNotEmpty(employmentsList)){
@@ -261,5 +280,6 @@ if(UtilValidate.isNotEmpty(employmentsList)){
 periodList = (new HashSet(periodList)).toList();
 context.put("periodList",periodList);
 context.put("EmplNameMap",EmplNameMap);
+context.put("periodNameMap",periodNameMap);
 context.put("EmplWiseDetailsMap",EmplWiseDetailsMap);
 
