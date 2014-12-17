@@ -287,7 +287,7 @@
     <form name="ListRequestsToIssue" type="list" use-row-submit="true"  title="" list-name="custRequestItemsList"
         odd-row-style="alternate-row" default-table-style="basic-table hover-bar" paginate-target="StoreProductIssue">
         <row-actions>
-        	<set field="flag" value="${groovy: return (QOH > quantity)? 'Y' : 'N';}"/>
+        	<set field="flag" value="${groovy: return (QOH >= quantity)? 'Y' : 'N';}"/>
         </row-actions>
         <field name="custRequestId" title="${uiLabelMap.MaterialMangement_CustRequestId}"><display/></field>
         <field name="custRequestItemSeqId" title="${uiLabelMap.MaterialMangement_CustRequestItemSeqId}"><display/></field>
@@ -551,6 +551,18 @@
             <submit/>
         </field>
     </form>
+   <!--  <form name="UpdateRequirement" type="single" target="" >
+    <actions>
+    	<entity-and entity-name="Requirement" list="RequirementList">
+    		<field-map field-name="requirementId" from-field="parameters.requirementId" />
+    	</entity-and>
+    </actions>
+    <field name="requirementId"><display description="${RequirementList[0].requirementId}" /></field>
+    <field name="productId" title="Product" ><display/>
+            <lookup target-form-name="LookupProduct"/>
+        </field>
+    </form> -->
+    
    <form name="FindMaterialInvoice" type="single" target="findMaterialInvoices">
    	<actions>
    		<entity-condition entity-name="ProductFacility" distinct="true" list="prodFacility" />
