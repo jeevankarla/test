@@ -138,7 +138,9 @@ under the License.emplpunch
     	<permission-service service-name="humanResManagerPermission" main-action="EMPLOYEE_EDIT"/>
 		<auto-attributes mode="IN" include="pk" optional="false"/>
 		<attribute name="timePeriodId" mode="IN" type="String" optional="false"></attribute>
-        <auto-attributes mode="IN" include="nonpk" optional="true"/>  
+        <auto-attributes mode="IN" include="nonpk" optional="true"/> 
+        <attribute name="lateHoursCheckFlag" mode="IN" type="String" optional="true"></attribute>
+        <attribute name="smsFlag" type="Boolean" mode="OUT" optional="true"/>  
     </service>
 	<service name="updatEncashmentStatus" engine="java" default-entity-name="EmplDailyAttendanceDetail"
     		location="in.vasista.vbiz.humanres.PayrollService" invoke="UpdateLateMins" auth="true">
@@ -1637,9 +1639,7 @@ under the License.emplpunch
        <attribute name="leaveTypeId" mode="IN" type="String" optional="false"/>
        <attribute name="partyId" mode="IN" type="String" optional="false"/>
        <attribute name="allotedDays" mode="IN" type="BigDecimal" optional="false"/>
-       
    </service>
-   
    <service name="getGeneralHoliDayOrSSWorkedDays" engine="java" auth="true" invoke="getGeneralHoliDayOrSSWorkedDays" 
         location="in.vasista.vbiz.humanres.HumanresService">
         <description>populateEmplPunch from </description>

@@ -5542,6 +5542,7 @@ public class PayrollService {
 	      String encashmentStatus=(String) context.get("encashmentStatus");
 	      String seqId = (String) context.get("seqId");
 	      String checkBox = (String) context.get("checkBox");
+	      String lateHoursCheckFlag = (String) context.get("lateHoursCheckFlag");
 	      BigDecimal overrideLateMin=(BigDecimal)context.get("overrideLateMin");
 	      Map result = ServiceUtil.returnSuccess();
 	      Boolean smsFlag = Boolean.FALSE;
@@ -5572,7 +5573,9 @@ public class PayrollService {
   					}else if(UtilValidate.isNotEmpty(checkBox) && (UtilValidate.isEmpty(encashmentStatus))){
   	  					DailyAttendanceDetail.set("encashmentStatus","");
   					}else{
-  				  		return ServiceUtil.returnError("Please select Check Box");
+  						if(UtilValidate.isEmpty(lateHoursCheckFlag)){
+  							return ServiceUtil.returnError("Please select Check Box");
+  						}
   					}
   					if(UtilValidate.isNotEmpty(overrideLateMin)){
 	  					DailyAttendanceDetail.set("overrideLateMin",overrideLateMin);
@@ -5592,7 +5595,9 @@ public class PayrollService {
   				return ServiceUtil.returnError(e.toString());
   			}
   		result = ServiceUtil.returnSuccess("Successfully Updated!!");
-  		result.put("smsFlag", smsFlag);
+  		if(UtilValidate.isNotEmpty(smsFlag)){
+  			result.put("smsFlag", smsFlag);
+  		}
   		return result;
   	}
 	

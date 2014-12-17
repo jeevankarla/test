@@ -902,6 +902,7 @@
 	    <field name="seqId"><hidden/></field>
 	    <field name="lateMin" title="Late Minutes"><display/></field>
 	    <field name="timePeriodId"><hidden/></field>
+	    <field name="lateHoursCheckFlag"><hidden value="Y"/></field>
 	    <field name="overrideLateMin" title="Edit Late Minutes"><text size="10"/></field>
 	    <field name="overrideReason" title="Remarks" required-field="true" widget-style="required">
 	    	<drop-down allow-empty="true">
