@@ -316,6 +316,7 @@
                 <entity-one entity-name="CustRequest" value-field="custRequest"/>
                 <entity-condition list="quoteQualifiedList" entity-name="QuoteAndItemAndCustRequest">
                 	<condition-list combine="and">
+                		<condition-expr field-name="custRequestId" operator="equals" value="${parameters.custRequestId}"/>
                 		<condition-expr field-name="qiStatusId" operator="equals" value="QTITM_QUALIFIED"/>
                 	</condition-list>
                 	<order-by field-name="productId"/>

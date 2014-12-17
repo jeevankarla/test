@@ -306,7 +306,7 @@
         <field name="productId" title="Material Name - [Code]"><display-entity entity-name="Product" key-field-name="productId" description="${productName}"/></field>
         <field name="qiStatusId" title="Status"><display /></field>
         <field name="quoteUnitPrice" title="Unit Price"><display /></field>
-        <field name="approveLink" widget-style="buttontext h3" title="Approve">
+        <field use-when="&quot;${statusId}&quot; == &quot;QTITM_NEGOTIATION&quot;" name="approveLink" widget-style="buttontext h3" title="Approve">
         	<hyperlink also-hidden="false" description="HOD Approval" target="changeQuoteItemStatus">
                 <parameter param-name="quoteId"/>
                 <parameter param-name="quoteItemSeqId"/>
@@ -314,7 +314,7 @@
                 <parameter param-name="statusId" value="QTITM_APPROVED"/>
         	</hyperlink>
         </field>
-        <field name="rejectLink" widget-style="buttontext h3" title="Reject">
+        <field use-when="&quot;${statusId}&quot; == &quot;QTITM_NEGOTIATION&quot;" name="rejectLink" widget-style="buttontext h3" title="Reject">
         	<hyperlink also-hidden="false" description="Reject" target="changeQuoteItemStatus">
                 <parameter param-name="quoteId"/>
                 <parameter param-name="quoteItemSeqId"/>
@@ -345,6 +345,16 @@
         <field name="quoteUnitPrice" title="Quote Unit Price"><display /></field>
     </form>
     
+    <form name="ViewQuoteStatus" type="list" list-name="quoteStatus"
+        odd-row-style="alternate-row" default-table-style="basic-table hover-bar">
+        
+        <!-- <auto-fields-entity entity-name="CustRequestStatus" default-field-type="display"/> -->
+        <!-- <field name="quoteId" title="Quote No"><display/></field> -->
+        <field name="quoteId" title="Quote No"><display/></field>
+        <field name="quoteItemSeqId" title="Item No"><display/></field>
+        <field name="statusId" title="Status"><display-entity entity-name="StatusItem" description="${description}"/></field>
+        <field name="statusDatetime" title="Date"><display description="${groovy:org.ofbiz.base.util.UtilDateTime.toDateString(statusDatetime,&quot;dd/MM/yyyy HH:mm:ss&quot;)}"/></field>
+    </form>
     
     
 </forms>

@@ -49,6 +49,11 @@
                 <entity-and entity-name="QuoteItemAndContent" list="quoteItemAndContents">
                     <field-map field-name="quoteId" from-field="quoteId"/>
                 </entity-and>
+                <entity-condition list="quoteStatus" entity-name="QuoteStatus">
+                	<condition-expr field-name="quoteId" value="${parameters.quoteId}" operator="equals"/>
+                	<order-by field-name="quoteItemSeqId"/>
+                	<order-by field-name="quoteStatusId"/>
+                </entity-condition>
                 <!-- <script location="component://procurement/webapp/procurement/WEB-INF/actions/CheckCreatePO.groovy" /> -->
             </actions>
             <widgets>
@@ -72,11 +77,16 @@
                      
                    	 		<screenlet title="Overview">
                        			<include-form location="component://materialmgmt/widget/MaterialQuoteForms.xml" name="viewQuotation"/>
-                     		</screenlet>                      
-                  		</container>
-                 		<container style="righthalf">
-                 			<screenlet title="Quote Documents">
+                     		</screenlet>
+                     		
+                     		<screenlet title="Quote Documents">
                    				<include-form location="component://materialmgmt/widget/MaterialQuoteForms.xml" name="ListQuoteContent"/>
+                 	 		</screenlet>                      
+                  		</container>
+                  		
+                 		<container style="righthalf">
+                 			<screenlet title="Quote Status">
+                   				<include-form location="component://materialmgmt/widget/MaterialQuoteForms.xml" name="ViewQuoteStatus"/>
                  	 		</screenlet>
                  		</container>
                  		<container style="clear" />
@@ -145,9 +155,12 @@
                 <entity-one entity-name="CustRequest" value-field="custRequest" auto-field-map="true"/>
                 
                 <entity-condition list="quotesList" entity-name="QuoteAndItemAndCustRequest">
-                	<condition-list combine="or">
-                		<condition-expr field-name="qiStatusId" operator="equals" value="QTITM_NEGOTIATION"/>
-                		<condition-expr field-name="qiStatusId" operator="equals" value="QTITM_APPROVED"/>
+                	<condition-list combine="and">
+                		<condition-list combine="or">
+                			<condition-expr field-name="qiStatusId" operator="equals" value="QTITM_NEGOTIATION"/>
+                			<condition-expr field-name="qiStatusId" operator="equals" value="QTITM_APPROVED"/>
+                		</condition-list>
+                		<condition-expr field-name="custRequestId" operator="equals" value="${parameters.custRequestId}"/>
                 	</condition-list>
                 	<order-by field-name="productId"/>
                 	<order-by field-name="quoteUnitPrice"/>
@@ -155,6 +168,7 @@
                 
                 <entity-condition list="quoteQualifiedList" entity-name="QuoteAndItemAndCustRequest">
                 	<condition-list combine="and">
+                		<condition-expr field-name="custRequestId" operator="equals" value="${parameters.custRequestId}"/>
                 		<condition-expr field-name="qiStatusId" operator="equals" value="QTITM_QUALIFIED"/>
                 	</condition-list>
                 	<order-by field-name="productId"/>
@@ -197,6 +211,7 @@
                 
                 <entity-condition list="quotesList" entity-name="QuoteAndItemAndCustRequest">
                 	<condition-list combine="and">
+                		<condition-expr field-name="custRequestId" operator="equals" value="${parameters.custRequestId}"/>
                 		<condition-expr field-name="qiStatusId" operator="not-equals" value="QTITM_REJECTED"/>
                 	</condition-list>
                 </entity-condition>
