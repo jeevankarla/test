@@ -41,7 +41,7 @@ BigDecimal daysCheck = new BigDecimal("10");
 
 conditionList = [];
 if(!allChanges){
-	//conditionList.add(EntityCondition.makeCondition("lastModifiedByUserLogin", EntityOperator.EQUALS , userLogin.userLoginId));
+	conditionList.add(EntityCondition.makeCondition("lastModifiedByUserLogin", EntityOperator.EQUALS , userLogin.userLoginId));
 }
 EntityCondition.makeCondition("noOfPayableDays", EntityOperator.LESS_THAN_EQUAL_TO, daysCheck);
 conditionList.add(EntityCondition.makeCondition([
@@ -50,21 +50,6 @@ conditionList.add(EntityCondition.makeCondition([
    ], EntityOperator.AND));
 condition = EntityCondition.makeCondition(conditionList, EntityOperator.AND);
 payableDaysList = delegator.findList("PayrollAttendance", condition, null, ["lastUpdatedStamp"], null, false);
-
-context.put("payableDaysList",payableDaysList);
-
-conditionList = [];
-if(!allChanges){
-	conditionList.add(EntityCondition.makeCondition("lastModifiedByUserLogin", EntityOperator.EQUALS , userLogin.userLoginId));
-}
-conditionList.add(EntityCondition.makeCondition("noOfPayableDays", EntityOperator.LESS_THAN_EQUAL_TO, daysCheck));
-conditionList.add(EntityCondition.makeCondition([
-	EntityCondition.makeCondition("lastUpdatedStamp", EntityOperator.GREATER_THAN_EQUAL_TO, dayBegin),
-	EntityCondition.makeCondition("lastUpdatedStamp", EntityOperator.LESS_THAN_EQUAL_TO, dayEnd)
-   ], EntityOperator.AND));
-condition = EntityCondition.makeCondition(conditionList, EntityOperator.AND);
-payableDaysList = delegator.findList("PayrollAttendance", condition, null, ["lastUpdatedStamp"], null, false);
-
 
 conditionList1 = [];
 if(!allChanges){
