@@ -159,7 +159,7 @@
 													                            </fo:table-cell>
 													                            <fo:table-cell >	
 													                            	<fo:block border-right-style="solid" linefeed-treatment="preserve">&#xA;</fo:block>
-													                            	<fo:block text-align="right" keep-together="always" border-right-style="solid" font-size="9pt"><#if EmplWages.getValue().get("Contribution")?has_content>${EmplWages.getValue().get("Contribution")?if_exists?string("#0.00")}<#else>0.00</#if>&#160;</fo:block>
+													                            	<fo:block text-align="right" keep-together="always" border-right-style="solid" font-size="9pt"><#if EmplWages.getValue().get("Contribution")?has_content><#if (EmplWages.getValue().get("Contribution") < 0)>${((-1)*EmplWages.getValue().get("Contribution"))?if_exists?string("#0.00")}<#else> ${EmplWages.getValue().get("Contribution")?if_exists?string("#0.00")}</#if><#else>0.00</#if>&#160;</fo:block>
 													                            	<#if EmplWages.getValue().get("Contribution")?has_content>
 													                            		<#assign totContribution=totContribution+EmplWages.getValue().get("Contribution")>
 													                            	</#if>
@@ -192,7 +192,7 @@
 									                            </fo:table-cell>
 									                            <fo:table-cell >	
 									                            	<fo:block border-right-style="solid" linefeed-treatment="preserve">&#xA;</fo:block> 
-									                            	<fo:block text-align="right" keep-together="always" font-weight="bold" border-right-style="solid" font-size="9pt"><#if totContribution?has_content>${totContribution?if_exists?string("#0.00")}<#else>0.00</#if>&#160;</fo:block>
+									                            	<fo:block text-align="right" keep-together="always" font-weight="bold" border-right-style="solid" font-size="9pt"><#if totContribution?has_content><#if (totContribution < 0)>${((-1)*totContribution)?if_exists?string("#0.00")}<#else>${(totContribution)?if_exists?string("#0.00")}</#if><#else>0.00</#if>&#160;</fo:block>
 									                            	<#if totContribution?has_content>
 										                            	<#assign pagetotContribution=pagetotContribution+totContribution>
 										                            	<#assign grandtotContribution=grandtotContribution+totContribution>
@@ -242,7 +242,7 @@
 			                    				</fo:table-cell>
 			                    				<fo:table-cell >
 			                    					<fo:block border-top-style="solid" linefeed-treatment="preserve" border-right-style="solid" >&#xA;</fo:block>
-			                    					<fo:block text-align="right" keep-together="always" font-weight="bold" border-right-style="solid" font-size="9pt" border-bottom-style="solid" >${pagetotContribution?if_exists?string("#0.00")}&#160;</fo:block>
+			                    					<fo:block text-align="right" keep-together="always" font-weight="bold" border-right-style="solid" font-size="9pt" border-bottom-style="solid" ><#if (pagetotContribution < 0)>${((-1)*pagetotContribution)?if_exists?string("#0.00")}<#else>${(pagetotContribution)?if_exists?string("#0.00")}</#if> &#160;</fo:block>
 			                    				</fo:table-cell>
 			                    				<fo:table-cell >
 			                    					<fo:block border-top-style="solid" linefeed-treatment="preserve" border-right-style="solid" >&#xA;</fo:block>
@@ -290,7 +290,7 @@
 	                    				</fo:table-cell>
 	                    				<fo:table-cell >
 	                    					<fo:block border-top-style="solid" linefeed-treatment="preserve" border-right-style="solid" >&#xA;</fo:block>
-	                    					<fo:block text-align="right" keep-together="always" font-weight="bold" border-right-style="solid" font-size="9pt" border-bottom-style="solid" >${grandtotContribution?if_exists?string("#0.00")}&#160;</fo:block>
+	                    					<fo:block text-align="right" keep-together="always" font-weight="bold" border-right-style="solid" font-size="9pt" border-bottom-style="solid" ><#if (grandtotContribution < 0)>${((-1)*grandtotContribution)?if_exists?string("#0.00")}<#else>${(grandtotContribution)?if_exists?string("#0.00")}</#if> &#160;</fo:block> 
 	                    				</fo:table-cell>
 	                    				<fo:table-cell >
 	                    					<fo:block border-top-style="solid" linefeed-treatment="preserve" border-right-style="solid" >&#xA;</fo:block>

@@ -171,7 +171,7 @@
 							                            	<#assign totWages=totWages+EmplWages.getValue().get("Wages")>
 							                            </#if>
 							                            <fo:table-cell >	
-							                            	<fo:block text-align="right" border-style="solid" keep-together="always" font-size="11pt"><#if EmplWages.getValue().get("Contribution")?has_content>${EmplWages.getValue().get("Contribution")?if_exists?string("#0.00")}<#else>0.00</#if>&#160;</fo:block>
+							                            	<fo:block text-align="right" border-style="solid" keep-together="always" font-size="11pt"><#if EmplWages.getValue().get("Contribution")?has_content><#if (EmplWages.getValue().get("Contribution")<0)>${((-1)*EmplWages.getValue().get("Contribution"))?if_exists?string("#0.00")}<#else>${EmplWages.getValue().get("Contribution")?if_exists?string("#0.00")}</#if><#else>0.00</#if>&#160;</fo:block>
 							                            </fo:table-cell>
 							                            <#if EmplWages.getValue().get("Contribution")?has_content>
 							                            	<#assign pagetotContribution=pagetotContribution+EmplWages.getValue().get("Contribution")>
@@ -207,7 +207,7 @@
 					                            	<fo:block text-align="right" border-style="solid" keep-together="always" font-size="11pt" font-weight="bold" >${pagetotWages?if_exists?string("#0.00")}&#160;</fo:block>
 					                            </fo:table-cell>
 					                            <fo:table-cell >	
-					                            	<fo:block text-align="right" border-style="solid" keep-together="always" font-size="11pt" font-weight="bold" >${pagetotContribution?if_exists?string("#0.00")}&#160;</fo:block>
+					                            	<fo:block text-align="right" border-style="solid" keep-together="always" font-size="11pt" font-weight="bold" ><#if (pagetotContribution<0)>${((-1)*pagetotContribution)?if_exists?string("#0.00")}<#else>${pagetotContribution?if_exists?string("#0.00")}</#if>&#160;</fo:block>
 					                            </fo:table-cell>
 					                            <fo:table-cell >	
 					                            	<fo:block text-align="right" border-style="solid" keep-together="always" font-size="11pt" font-weight="bold" ><#if pagetotPayableDays!=0>${(pagetotWages/pagetotPayableDays)?if_exists?string("#0.00")}<#else>0.00</#if>&#160;</fo:block>
@@ -243,7 +243,7 @@
 			                            	<fo:block text-align="right" border-style="solid" keep-together="always" font-size="11pt" font-weight="bold" >${totWages?if_exists?string("#0.00")}&#160;</fo:block>
 			                            </fo:table-cell>
 			                            <fo:table-cell >	
-			                            	<fo:block text-align="right" border-style="solid" keep-together="always" font-size="11pt" font-weight="bold" >${totContribution?if_exists?string("#0.00")}&#160;</fo:block>
+			                            	<fo:block text-align="right" border-style="solid" keep-together="always" font-size="11pt" font-weight="bold" ><#if (totContribution<0)>${((-1)*totContribution)?if_exists?string("#0.00")}<#else>${totContribution?if_exists?string("#0.00")}</#if>&#160;</fo:block>   
 			                            </fo:table-cell>
 			                            <fo:table-cell >	
 			                            	<fo:block text-align="right" border-style="solid" keep-together="always" font-size="11pt" font-weight="bold" ><#if totPayableDays!=0>${(totWages/totPayableDays)?if_exists?string("#0.00")}<#else>0.00</#if>&#160;</fo:block>

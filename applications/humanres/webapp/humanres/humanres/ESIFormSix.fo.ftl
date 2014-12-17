@@ -66,14 +66,14 @@
 			                            			<#assign totalContribution=periodTotDetails.getValue().get("totalContribution")>
 			                            		</#if>
 			                            	</#list>
-			                            	<fo:block text-align="left" keep-together="always" font-family="Courier,monospace"  font-size="10pt"> &#160;&#160;&#160;&#160;Total contribution amounting to Rs : ${totalContribution?if_exists}, comprising of Rs: ${totemployerContribtn?if_exists} as employer's share and </fo:block>
-			                            	<fo:block text-align="left" keep-together="always" font-family="Courier,monospace"  font-size="10pt">Rs:${totemployeeContribtn?if_exists} As employee' s share ( Total of col.6 of the return ) paid as under: </fo:block>
+			                            	<fo:block text-align="left" keep-together="always" font-family="Courier,monospace"  font-size="10pt"> &#160;&#160;&#160;&#160;Total contribution amounting to Rs : <#if (totalContribution < 0)>${((-1)*(totalContribution))?if_exists}<#else>${totalContribution?if_exists}</#if>, comprising of Rs: ${totemployerContribtn?if_exists} as employer's share and </fo:block>
+			                            	<fo:block text-align="left" keep-together="always" font-family="Courier,monospace"  font-size="10pt">Rs:${((-1)*totemployeeContribtn)?if_exists} As employee' s share ( Total of col.6 of the return ) paid as under: </fo:block>
 			                            	<#if periodTotMap?has_content>
 				                            	<#assign periodTotMapValues=periodTotMap.entrySet()>
 				                            	<#list periodTotMapValues as periodValueslDetails>
 				                            		<#if periodValueslDetails.getKey()!="Contribution">
 						                            	<fo:block text-align="left" keep-together="always" font-family="Courier,monospace"  font-weight="bold" font-size="10pt"> &#160;</fo:block>
-						                            	<fo:block text-align="left" keep-together="always" font-family="Courier,monospace"  font-size="10pt"> (1)  Challan dated <fo:inline font-weight="bold"> ${periodValueslDetails.getKey()}</fo:inline> for      Rs : <fo:inline font-weight="bold"> ${periodValueslDetails.getValue()}</fo:inline>.</fo:block>
+						                            	<fo:block text-align="left" keep-together="always" font-family="Courier,monospace"  font-size="10pt"> (1)  Challan dated <fo:inline font-weight="bold"> ${periodValueslDetails.getKey()}</fo:inline> for      Rs : <fo:inline font-weight="bold"> <#if (periodValueslDetails.getValue() < 0)> ${((-1)*periodValueslDetails.getValue())}<#else>${periodValueslDetails.getValue()?if_exists}</#if></fo:inline>.</fo:block>
 				                            		</#if>
 				                            	</#list>
 				                            </#if>
@@ -204,7 +204,7 @@
 							                       	<#assign totWages=totWages+emplDetails.getValue().get("totWages")>
 					                            </fo:table-cell>
 					                            <fo:table-cell >	
-					                            	<fo:block keep-together="always" text-align="right" font-family="Courier,monospace" white-space-collapse="false" border-style="solid" font-size="10pt">${emplDetails.getValue().get("employeeContributn")?if_exists?string("#0.00")}</fo:block>
+					                            	<fo:block keep-together="always" text-align="right" font-family="Courier,monospace" white-space-collapse="false" border-style="solid" font-size="10pt">${((-1)*emplDetails.getValue().get("employeeContributn"))?if_exists?string("#0.00")}</fo:block>
 					                            	<#assign pagetotContribn=pagetotContribn+emplDetails.getValue().get("employeeContributn")>
 							                       	<#assign totContribn=totContribn+emplDetails.getValue().get("employeeContributn")>
 					                            </fo:table-cell>
@@ -235,7 +235,7 @@
 						                            	<fo:block text-align="right" border-style="solid" keep-together="always" font-size="10pt" font-weight="bold" >${pagetotWages?if_exists?string("#0.00")}</fo:block>
 						                            </fo:table-cell>
 						                            <fo:table-cell >	
-						                            	<fo:block text-align="right" border-style="solid" keep-together="always" font-size="10pt" font-weight="bold" >${pagetotContribn?if_exists?string("#0.00")}</fo:block>
+						                            	<fo:block text-align="right" border-style="solid" keep-together="always" font-size="10pt" font-weight="bold" >${((-1)*pagetotContribn)?if_exists?string("#0.00")}</fo:block>
 						                            </fo:table-cell>
 						                            <fo:table-cell >	
 						                            	<fo:block text-align="right" border-style="solid" keep-together="always" font-size="10pt" font-weight="bold" ><#if pagetotPayableDays!=0>${(pagetotWages/pagetotPayableDays)?if_exists?string("#0.00")}<#else>0.00</#if></fo:block>
@@ -287,7 +287,7 @@
 			                            	<fo:block text-align="right" border-style="solid" keep-together="always" font-size="10pt" font-weight="bold" >${totWages?if_exists?string("#0.00")}</fo:block>
 			                            </fo:table-cell>
 			                            <fo:table-cell >	
-			                            	<fo:block text-align="right" border-style="solid" keep-together="always" font-size="10pt" font-weight="bold" >${totContribn?if_exists?string("#0.00")}</fo:block>
+			                            	<fo:block text-align="right" border-style="solid" keep-together="always" font-size="10pt" font-weight="bold" >${((-1)*totContribn)?if_exists?string("#0.00")}</fo:block>
 			                            </fo:table-cell>
 			                            <fo:table-cell >	
 			                            	<fo:block text-align="right" border-style="solid" keep-together="always" font-size="10pt" font-weight="bold" ><#if totPayableDays!=0>${(totWages/totPayableDays)?if_exists?string("#0.00")}<#else>0.00</#if></fo:block>
