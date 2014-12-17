@@ -35,7 +35,7 @@ under the License.
 
 <div class="screenlet">
   <div class="screenlet-title-bar">
-      <ul><li class="h3">&nbsp;${uiLabelMap.AccountingPaymentInformation}</li></ul>
+      <ul><li class="h3">&nbsp;Accounting Payment Information</li></ul>
       <br class="clear"/>
   </div>
   <div class="screenlet-body">
@@ -43,7 +43,7 @@ under the License.
      <#assign orderTypeId = orderReadHelper.getOrderTypeId()> 
      <#if orderTypeId == "PURCHASE_ORDER">
        <tr>
-         <th>${uiLabelMap.AccountingPaymentID}</th>
+         <th>PaymentID</th>
          <th>${uiLabelMap.CommonTo}</th>
          <th>${uiLabelMap.CommonAmount}</th>
          <th>${uiLabelMap.CommonStatus}</th>

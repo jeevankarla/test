@@ -274,14 +274,15 @@ if (orderHeader) {
    context.mktgPkgQOHMap = inventorySummary.mktgPkgQOHMap;
 
    // get inventory summary with respect to facility
-   productStore = orderHeader.getRelatedOne("ProductStore");
-   if (productStore) {
+  productStore = orderHeader.getRelatedOne("ProductStore");
+  /*  if (productStore) {
 	   facility = productStore.getRelatedOne("Facility");
 	   inventorySummaryByFacility = dispatcher.runSync("getProductInventorySummaryForItems", [orderItems : orderItems, facilityId : facility.facilityId]);
+	   Debug.log("inventorySummaryByFacility================================"+inventorySummaryByFacility);
 	   context.availableToPromiseByFacilityMap = inventorySummaryByFacility.availableToPromiseMap;
 	   context.quantityOnHandByFacilityMap = inventorySummaryByFacility.quantityOnHandMap;
 	   context.facility = facility;
-   }
+   }*/
 
    // Get a list of facilities for purchase orders to receive against.
    // These facilities must be owned by the bill-to party of the purchase order.
@@ -498,3 +499,6 @@ if (orderItems) {
 	   }
    }
    context.orderAdjustmentId = orderAdjustmentId;
+
+   
+   
