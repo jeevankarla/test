@@ -89,7 +89,7 @@ import in.vasista.vbiz.purchase.MaterialHelperServices;
  }
  productId = parameters.productId;
  context.productId = productId;
- int i=0;
+ int i=1;
  if (productId) {
 	 JSONArray productDataListJSON = new JSONArray();
 	 JSONArray labelsJSON = new JSONArray();
@@ -357,6 +357,7 @@ import in.vasista.vbiz.purchase.MaterialHelperServices;
 	context.labelsJSON = labelsJSON;
 }
  
+ Debug.logError("productDataListJSON: " + context.productDataListJSON, "");
  
  
 /* String productId = (String) context.get("productId");

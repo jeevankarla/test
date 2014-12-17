@@ -49,10 +49,7 @@ $(document).ready(function(){
                   	yaxes: [
                       { position: 'left',
                       	min: 0,
- 						axisLabel : 'Qty' },
-                      { position: 'right', 
-                      	min: 0,
- 						axisLabel : 'Quality'}
+ 						axisLabel : 'Qty' }
                   	],                	 
      				xaxis: {
          				min: 0,
@@ -80,9 +77,10 @@ $(document).ready(function(){
     }
 
     var previousPoint = null;
-    $("#graph").bind("plothover", function (event, pos, item) {
+    $("#chart").bind("plothover", function (event, pos, item) {
         $("#x").text(pos.x.toFixed(2));
         $("#y").text(pos.y.toFixed(2));
+        alert("item=" + item);
         if (item) {
             if (previousPoint != item.dataIndex) {
                 previousPoint = item.dataIndex;
@@ -90,9 +88,9 @@ $(document).ready(function(){
                 $("#tooltip").remove();
                 var x = item.datapoint[0].toFixed(2),
                     y = item.datapoint[1].toFixed(2);
-                
+                var content ="<br> " + y;
                 showTooltip(item.pageX, item.pageY,
-                            y);
+                            content);
             }
         }
         else {
