@@ -306,7 +306,7 @@
         <field name="productId" title="Material Name - [Code]"><display-entity entity-name="Product" key-field-name="productId" description="${productName}"/></field>
         <field name="qiStatusId" title="Status"><display /></field>
         <field name="quoteUnitPrice" title="Unit Price"><display /></field>
-        <field use-when="&quot;${statusId}&quot; == &quot;QTITM_NEGOTIATION&quot;" name="approveLink" widget-style="buttontext h3" title="Approve">
+        <field use-when="&quot;${qiStatusId}&quot; == &quot;QTITM_NEGOTIATION&quot;" name="approveLink" widget-style="buttontext h3" title="Approve">
         	<hyperlink also-hidden="false" description="HOD Approval" target="changeQuoteItemStatus">
                 <parameter param-name="quoteId"/>
                 <parameter param-name="quoteItemSeqId"/>
@@ -314,7 +314,7 @@
                 <parameter param-name="statusId" value="QTITM_APPROVED"/>
         	</hyperlink>
         </field>
-        <field use-when="&quot;${statusId}&quot; == &quot;QTITM_NEGOTIATION&quot;" name="rejectLink" widget-style="buttontext h3" title="Reject">
+        <field use-when="&quot;${qiStatusId}&quot; == &quot;QTITM_NEGOTIATION&quot;" name="rejectLink" widget-style="buttontext h3" title="Reject">
         	<hyperlink also-hidden="false" description="Reject" target="changeQuoteItemStatus">
                 <parameter param-name="quoteId"/>
                 <parameter param-name="quoteItemSeqId"/>
