@@ -180,8 +180,11 @@ under the License.
             <clear-field field="serviceInMap"/>
             <set-service-fields service-name="createShipmentReceipt" map="parameters" to-map="serviceInMap"/>
             <set field="serviceInMap.inventoryItemId" from-field="currentInventoryItemId"/>
-            <call-service service-name="createShipmentReceipt" in-map-name="serviceInMap"/>
-
+            <call-service service-name="createShipmentReceipt" in-map-name="serviceInMap">
+            	<result-to-field result-name="receiptId"/>
+            </call-service>
+			<field-to-result field="receiptId" result-name="receiptId"/>
+			
             <!-- update serialized items to AVAILABLE (only if this is not a return), which then triggers other SECA chains -->
             <if>
                 <condition>
