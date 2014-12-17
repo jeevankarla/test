@@ -58,6 +58,14 @@ Timestamp invoiceLastDate=null;
 Timestamp paymentFirstDate=null;
 Timestamp paymentLastDate=null;
 
+//Check for Party is Valid or Not
+result = [:];
+GenericValue partyDetail = delegator.findOne("Party",UtilMisc.toMap("partyId", parameters.partyId), false);
+if (UtilValidate.isEmpty(partyDetail)) {
+	Debug.logError(parameters.partyId+ "'is not a valid Party!!", "");
+	context.errorMessage = parameters.partyId+"'is not a valid Party!!";
+	return result;
+}
 
 partyFinHistoryMap=[:];
 
@@ -152,6 +160,7 @@ while (invoice = invIterator.next()) {
 	innerMap["description"]=invoice.invoiceMessage;
 	innerMap["invoiceDate"]=invoice.invoiceDate;
 	innerMap["invoiceId"]=invoice.invoiceId;
+	innerMap["invoiceSequenceId"]="";
 	innerMap["tinNumber"]="";
 	innerMap["vchrType"]="";
 	innerMap["vchrCode"]="";
@@ -161,6 +170,20 @@ while (invoice = invIterator.next()) {
 	innerMap["invTotal"]=invTotalVal;
 	innerMap["debitValue"]=0;
 	innerMap["creditValue"]=0;
+	//get Sequence for invoiceId
+	//invoiceSequenceId = null;
+	if(UtilValidate.isNotEmpty(invoice.invoiceId)){
+		invoiceSequenceList = delegator.findList("BillOfSaleInvoiceSequence",EntityCondition.makeCondition("invoiceId", EntityOperator.EQUALS, invoice.invoiceId) , null, null, null, false);
+		if(UtilValidate.isNotEmpty(invoiceSequenceList)){
+			invoiceSequence = EntityUtil.getFirst(invoiceSequenceList);
+			if(UtilValidate.isNotEmpty(invoiceSequence)){
+				invoiceSequenceId = invoiceSequence.sequenceId;
+				innerMap["invoiceSequenceId"]=invoiceSequence.sequenceId+" ["+invoice.invoiceId+"]";
+			}
+		}else{
+			innerMap["invoiceSequenceId"]=" ["+invoice.invoiceId+"]";
+		}
+	}
     if ("PURCHASE_INVOICE".equals(invoice.parentTypeId)) {
 		innerMap["partyId"]=invoice.partyIdFrom;
 		innerMap["vchrType"]="PURCHASE";
@@ -427,10 +450,17 @@ apOpeningBalance  =BigDecimal.ZERO;
 apClosingBalance  =BigDecimal.ZERO;
 
 if(UtilValidate.isNotEmpty(parameters.partyId)){
-	arOpeningBalance = (org.ofbiz.accounting.ledger.GeneralLedgerServices.getGenericOpeningBalanceForParty( dctx , [userLogin: userLogin, tillDate: dayBegin, partyId:parameters.partyId])).get("openingBalance");
+	arOpeningBalanceRes = (org.ofbiz.accounting.ledger.GeneralLedgerServices.getGenericOpeningBalanceForParty( dctx , [userLogin: userLogin, tillDate: dayBegin, partyId:parameters.partyId]));
 	//openingBalance2 = (in.vasista.vbiz.byproducts.ByProductNetworkServices.getOpeningBalanceForParty( dctx , [userLogin: userLogin, saleDate: dayBegin, partyId:parameters.partyId])).get("openingBalance");
 	//Debug.log("=======openingBalance====openingBalance2===>"+openingBalance2);
-	apOpeningBalance = (org.ofbiz.accounting.ledger.GeneralLedgerServices.getGenericOpeningBalanceForParty( dctx , [userLogin: userLogin, tillDate: dayBegin, partyId:parameters.partyId,isOBCallForAP:Boolean.TRUE])).get("openingBalance");
+	if(UtilValidate.isNotEmpty(arOpeningBalanceRes)){
+		arOpeningBalance=arOpeningBalanceRes.get("openingBalance");
+	}
+	apOpeningBalanceRes = (org.ofbiz.accounting.ledger.GeneralLedgerServices.getGenericOpeningBalanceForParty( dctx , [userLogin: userLogin, tillDate: dayBegin, partyId:parameters.partyId,isOBCallForAP:Boolean.TRUE]));
+	//Debug.log("=======arOpeningBalance======>"+arOpeningBalanceRes+"=apOpeningBalance==="+apOpeningBalanceRes);
+	if(UtilValidate.isNotEmpty(apOpeningBalanceRes)){
+		apOpeningBalance=apOpeningBalanceRes.get("openingBalance");
+    }
 	}
 	
 partyTrTotalMap=[:];
