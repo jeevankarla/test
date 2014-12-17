@@ -1182,7 +1182,7 @@
     <screen name="OutgoingAdvancesPaid">
         <section>
             <actions>
-                <set field="titleProperty" value="Incoming Advance Receipts"/>
+                <set field="titleProperty" value="Outgoing Advance Receipts"/>
                 <set field="tabButtonItem" value="OutgoingAdvances"/>
                 <set field="tabButtonItem4" value="OutgoingAdvancesPaid"/>
                 <set field="viewSize" from-field="parameters.VIEW_SIZE" type="Integer" default-value="1000"/>
