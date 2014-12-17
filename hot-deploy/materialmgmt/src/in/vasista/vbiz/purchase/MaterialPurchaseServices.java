@@ -129,7 +129,7 @@ public class MaterialPurchaseServices {
 	       
 	        List productList = FastList.newInstance();
 			
-			List<Map> prodQtyList = FastList.newInstance();
+			/*List<Map> prodQtyList = FastList.newInstance();*/
 			
 			List<GenericValue> orderItems = delegator.findList("OrderItem", EntityCondition.makeCondition("orderId", EntityOperator.EQUALS, orderId), null, null, null, false);
 			
@@ -151,12 +151,12 @@ public class MaterialPurchaseServices {
 			
 			List<GenericValue> productsFacility = delegator.findList("ProductFacility", EntityCondition.makeCondition("productId", EntityOperator.IN, productList), null, null, null, false);
 
-			String productId = "";
-	        String quantityStr = "";
-			BigDecimal quantity = BigDecimal.ZERO;
 			
 			for (int i = 0; i < rowCount; i++) {
 				
+				String productId = "";
+		        String quantityStr = "";
+				BigDecimal quantity = BigDecimal.ZERO;
 				Map productQtyMap = FastMap.newInstance();
 				String thisSuffix = UtilHttp.MULTI_ROW_DELIMITER + i;
 				if (paramMap.containsKey("productId" + thisSuffix)) {
@@ -177,12 +177,11 @@ public class MaterialPurchaseServices {
 				if(UtilValidate.isNotEmpty(quantityStr)){
 					quantity = new BigDecimal(quantityStr);
 				}
-				
-				productList.add(productId);
+				/*productList.add(productId);
 				productQtyMap.put("productId", productId);
 				productQtyMap.put("quantity", quantity);
 				prodQtyList.add(productQtyMap);
-				
+				*/
 				Map<String,Object> itemInMap = FastMap.newInstance();
 		        itemInMap.put("shipmentId",shipmentId);
 		        itemInMap.put("userLogin",userLogin);
@@ -217,13 +216,13 @@ public class MaterialPurchaseServices {
 				inventoryReceiptCtx.put("quantityRejected", BigDecimal.ZERO);
 				inventoryReceiptCtx.put("inventoryItemTypeId", "NON_SERIAL_INV_ITEM");
 				inventoryReceiptCtx.put("ownerPartyId", "Company");
-				inventoryReceiptCtx.put("consolidateInventoryReceive", "Y");
+				/*inventoryReceiptCtx.put("consolidateInventoryReceive", "Y");*/
 				inventoryReceiptCtx.put("facilityId", facilityProd.getString("facilityId"));
 				inventoryReceiptCtx.put("unitCost", ordItm.getBigDecimal("unitPrice"));
 				inventoryReceiptCtx.put("orderId", ordItm.getString("orderId"));
 				inventoryReceiptCtx.put("orderItemSeqId", ordItm.getString("orderItemSeqId"));
-				inventoryReceiptCtx.put("shipmentId", shipmentId);
-				inventoryReceiptCtx.put("shipmentItemSeqId", shipmentItemSeqId);
+				/*inventoryReceiptCtx.put("shipmentId", shipmentId);
+				inventoryReceiptCtx.put("shipmentItemSeqId", shipmentItemSeqId);*/
 				Map<String, Object> receiveInventoryResult;
 				receiveInventoryResult = dispatcher.runSync("receiveInventoryProduct", inventoryReceiptCtx);
 				
@@ -233,6 +232,14 @@ public class MaterialPurchaseServices {
 					TransactionUtil.rollback();
 			  		return "error";
 	            }
+				
+				String receiptId = (String)receiveInventoryResult.get("receiptId");
+				GenericValue shipmentReceipt = delegator.findOne("ShipmentReceipt", UtilMisc.toMap("receiptId", receiptId), false);
+				if(UtilValidate.isNotEmpty(shipmentReceipt)){
+					shipmentReceipt.set("shipmentId", shipmentId);
+					shipmentReceipt.set("shipmentItemSeqId", shipmentItemSeqId);
+					shipmentReceipt.store();
+				}
 
 			}
 			
@@ -496,7 +503,6 @@ public static Map<String, Object> acceptReceiptQtyByQC(DispatchContext ctx,Map<S
 	if(quantityAccepted.compareTo(BigDecimal.ZERO) ==0){
 		statusId = "SR_REJECTED";
 	}
-	
 	try{
 		
 		GenericValue shipmentReceipt = delegator.findOne("ShipmentReceipt", UtilMisc.toMap("receiptId", receiptId), false);
@@ -512,8 +518,8 @@ public static Map<String, Object> acceptReceiptQtyByQC(DispatchContext ctx,Map<S
 		shipmentReceipt.store();
 		
 		List conditionList = FastList.newInstance();
-		conditionList.add(EntityCondition.makeCondition("shipmentId", EntityOperator.EQUALS, shipmentId));
-		conditionList.add(EntityCondition.makeCondition("shipmentItemSeqId", EntityOperator.EQUALS, shipmentItemSeqId));
+		/*conditionList.add(EntityCondition.makeCondition("shipmentId", EntityOperator.EQUALS, shipmentId));
+		conditionList.add(EntityCondition.makeCondition("shipmentItemSeqId", EntityOperator.EQUALS, shipmentItemSeqId));*/
 		conditionList.add(EntityCondition.makeCondition("receiptId", EntityOperator.EQUALS, receiptId));
 		EntityCondition condition = EntityCondition.makeCondition(conditionList, EntityOperator.AND);
 		List<GenericValue> inventoryItemDetails = delegator.findList("InventoryItemDetail", condition, null, null, null, false);
