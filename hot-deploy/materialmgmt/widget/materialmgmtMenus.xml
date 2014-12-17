@@ -96,14 +96,14 @@
                 <parameter param-name="custRequestId" from-field="custRequest.custRequestId"/>
             </link>
         </menu-item>
-        <menu-item name="addIndentContent" title="Add Indent Documents">
+        <!-- <menu-item name="addIndentContent" title="Add Indent Documents">
         	<condition>
         		<if-compare operator="not-equals" value="" field="custRequestId"/>
         	</condition>
             <link target="AddIndentContent">
                 <parameter param-name="custRequestId" from-field="custRequest.custRequestId"/>
             </link>
-        </menu-item>
+        </menu-item> -->
          <menu-item name="CustRequestEntry" title="${uiLabelMap.MaterialMangement_CustRequest} Entry">
         	<link target="CustRequestEntry"/>
         </menu-item>
@@ -166,7 +166,7 @@
         	<link target="POMaterialReceipts"/>
         </menu-item>
         
-        <menu-item name="InvoiceForShippedGoods" title="Invoice For GRN">
+        <menu-item name="InvoiceForShippedGoods" title="Invoice For GRN">	
         	<link target="InvoiceForShippedGoods"/>
         </menu-item>
         
@@ -182,16 +182,14 @@
                 <parameter param-name="custRequestId" from-field="custRequest.custRequestId"/>
             </link>
         </menu-item>
-   		
-   		<menu-item name="AddEnquiryContent" title="Enquiry Documents">
+   		<!-- <menu-item name="AddEnquiryContent" title="Enquiry Documents">
         	<condition>
         		<if-compare operator="not-equals" value="" field="custRequestId"/>
         	</condition>
             <link target="AddEnquiryContent">
                 <parameter param-name="custRequestId" from-field="custRequest.custRequestId"/>
             </link>
-        </menu-item>
-   		
+        </menu-item> -->
    		<menu-item name="quoteForAcceptance" title="Quotes for Acceptance">
             <link target="quoteForAcceptance">
                 <parameter param-name="custRequestId" from-field="custRequest.custRequestId"/>

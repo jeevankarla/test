@@ -163,29 +163,29 @@
      <request-map uri="createCustRequestContent">
        <security https="true" auth="true"/>
        <event path="component://materialmgmt/script/MaterialMgmtServices.xml" invoke="createRequestContentDocument" type="simple"/>
-       <response name="success" type="view" value="AddEnquiryContent"/>
-       <response name="error" type="view" value="AddEnquiryContent"/>
+       <response name="success" type="view" value="ViewMaterialEnquiry"/>
+       <response name="error" type="view" value="ViewMaterialEnquiry"/>
      </request-map>
      
      <request-map uri="createIndentContent">
        <security https="true" auth="true"/>
        <event path="component://materialmgmt/script/MaterialMgmtServices.xml" invoke="createRequestContentDocument" type="simple"/>
-       <response name="success" type="view" value="AddIndentContent"/>
-       <response name="error" type="view" value="AddIndentContent"/>
+       <response name="success" type="view" value="ViewMaterialRequest"/>
+       <response name="error" type="view" value="ViewMaterialRequest"/>
      </request-map>
      
      <request-map uri="deleteEnquiryContent">
        <security https="true" auth="true"/>
        <event type="service" invoke="deleteCustRequestContent" />
-       <response name="success" type="view" value="AddEnquiryContent"/>
-       <response name="error" type="view" value="AddEnquiryContent"/>
+       <response name="success" type="view" value="ViewMaterialEnquiry"/>
+       <response name="error" type="view" value="ViewMaterialEnquiry"/>
      </request-map>
      
      <request-map uri="deleteIndentContent">
        <security https="true" auth="true"/>
        <event type="service" invoke="deleteCustRequestContent" />
-       <response name="success" type="view" value="AddIndentContent"/>
-       <response name="error" type="view" value="AddIndentContent"/>
+       <response name="success" type="view" value="ViewMaterialRequest"/>
+       <response name="error" type="view" value="ViewMaterialRequest"/>
      </request-map>
      
      <request-map uri="createPOForQuote">
@@ -679,7 +679,18 @@
         <security https="true" auth="true"/>
     	<response name="success" type="view" value="PurchaseOrderPDF"/>
     </request-map>
-    
+    <request-map uri="createCustRequestNote">
+        <security https="true" auth="true"/>
+     	<event type="service"   invoke="createCustRequestNote"/>
+        <response name="success" type="view" value="ViewMaterialRequest"/>
+        <response name="error" type="view" value="ViewMaterialRequest"/>
+    </request-map>
+    <request-map uri="createCustEnquiryNote">
+        <security https="true" auth="true"/>
+     	<event type="service"   invoke="createCustRequestNote"/>
+        <response name="success" type="view" value="ViewMaterialEnquiry"/>
+        <response name="error" type="view" value="ViewMaterialEnquiry"/>
+    </request-map>
     
     <view-map name="main" type="screen" page="component://materialmgmt/widget/materialmgmtScreens.xml#main"/>
     <view-map name="mainNg" type="screen" page="component://materialmgmt/widget/materialmgmtScreens.xml#mainNG"/>

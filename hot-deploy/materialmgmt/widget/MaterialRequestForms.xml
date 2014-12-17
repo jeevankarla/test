@@ -187,8 +187,8 @@
         </actions>
      	<field name="custRequestId" title="Enquiry No."><display/></field>
         <field name="custRequestName" title="Enquiry Ref"><display/></field>
-        <field name="openDateTime" title="openDateTime"><display description="${groovy:org.ofbiz.base.util.UtilDateTime.toDateString(openDateTime, &quot;dd/MM/yyyy HH:mm:ss&quot;)}"/> </field>
-        <field name="closedDateTime" title="closedDateTime"><display description="${groovy:org.ofbiz.base.util.UtilDateTime.toDateString(openDateTime, &quot;dd/MM/yyyy HH:mm:ss&quot;)}"/> </field>
+        <field name="openDateTime" title="openDateTime"><display description="${groovy:org.ofbiz.base.util.UtilDateTime.toDateString(custRequest.openDateTime, &quot;dd/MM/yyyy &quot;)}"/> </field>
+        <field name="closedDateTime" title="closedDateTime"><display description="${groovy:org.ofbiz.base.util.UtilDateTime.toDateString(custRequest.closedDateTime, &quot;dd/MM/yyyy &quot;)}"/> </field>
         <field name="statusId" title="Status"><display-entity entity-name="StatusItem" description="${description}" key-field-name="statusId"/> </field>
         <field name="closeStatusId" parameter-name="statusId"><hidden value="ENQ_COMPLETED"/></field>
         <field use-when="&quot;statusId&quot;==&quot;ENQ_CREATED&quot;"  name="setStatusLink" title="Close Enquiry" widget-style="buttontext h3" tooltip="Close if all item in enquiry are shortlisted for PO">
@@ -238,28 +238,7 @@
         <!-- <field name="statusId"><display-entity entity-name="StatusItem" description="${description}"></display-entity></field> -->    
     </form>
     
-    <form name="ListEnquiryNotes" type="list" use-row-submit="true"  title="" list-name="enquiryNotes"
-        odd-row-style="alternate-row" default-table-style="basic-table hover-bar" paginate-target="PreBidNotes">
-        <auto-fields-entity entity-name="CustRequestNoteView" default-field-type="display"/>
-        <field name="noteParty"><hidden/></field>
-        <field name="noteType"><display/></field>
-        <field name="noteId"><hidden/></field>
-        <field name="noteName"><hidden/></field>
-        <field name="noteInfo" title="note"><display/></field>
-        <field name="custRequestId"><hidden/></field>
-        <field name="partyId"><hidden/></field>  
-        <field name="name" title="Added by"><display description="${firstName} ${lastName}"/></field>
-        <field name="firstName"><hidden/></field>
-        <field name="lastName"><hidden/></field>
-        <field name="noteDateTime" title="Date Time"><display/></field>  
-        <field name="delete">
-        <hyperlink target="deleteTenderNote" description="Delete">
-        	<parameter param-name="noteId"/>
-        	<parameter param-name="noteType"/>
-        	<parameter param-name="custRequestId"/>
-        </hyperlink>
-        </field>
-    </form>
+    
 	
 	<form name="QualifiedQuoteItemStatus" type="list" title="" odd-row-style="alternate-row" header-row-style="header-row" 
     	list-name="qualifiedQuoteList" default-table-style="basic-table hover-bar" separate-columns="true">
@@ -443,9 +422,9 @@
         <field name="internalComment" title="${uiLabelMap.CommonInternalComment}"><display/></field>
         <field name="reason" title="${uiLabelMap.CommonReason}"><display/></field>
          -->
-        <field name="custRequestDate" title="${uiLabelMap.MaterialMangement_CustRequestDate}"><display/></field>
-        <field name="createdDate" title="Created Date"><display/></field>
-        <field name="lastModifiedDate" title="Last Modified Date"><display/></field>
+        <field name="custRequestDate" title="${uiLabelMap.MaterialMangement_CustRequestDate}"><display description="${groovy:org.ofbiz.base.util.UtilDateTime.toDateString(custRequest.custRequestDate, &quot;dd/MM/yyyy&quot;);}"/></field>
+        <field name="createdDate" title="Created Date"><display description="${groovy:org.ofbiz.base.util.UtilDateTime.toDateString(custRequest.createdDate, &quot;dd/MM/yyyy&quot;);}"/></field>
+        <field name="lastModifiedDate" title="Last Modified Date"><display description="${groovy:org.ofbiz.base.util.UtilDateTime.toDateString(custRequest.lastModifiedDate, &quot;dd/MM/yyyy&quot;);}"/></field>
     </form>
     <form name="AddCustRequestContent" type="upload" default-map-name="content" 
         focus-field-name="contentId" header-row-style="header-row" default-table-style="basic-table" target="createCustRequestContent">
@@ -467,6 +446,56 @@
         <field name="dataResourceName" title="${uiLabelMap.CommonUpload}*"><file/></field>
          <field name="createButton"><submit button-type="button"/></field>
     </form>
+    <form name="AddCustRequestNote" type="single" target="createCustRequestNote"
+        focus-field-name="noteId" header-row-style="header-row" default-table-style="basic-table">
+        <field name="custRequestId"><hidden/></field>
+        <field name="noteName"><text></text></field>
+        <field name="noteDate"><date-time type="timestamp"></date-time></field>
+        <field name="noteInfo"><text></text></field>
+        <field name="submitButton" title="${uiLabelMap.CommonSave}" widget-style="smallSubmit"><submit button-type="text-link"/></field>
+        <field name="cancelLink" title="${uiLabelMap.CommonEmptyHeader}" widget-style="smallSubmit">
+            <hyperlink target="ViewMaterialRequest" also-hidden="false" description="${uiLabelMap.CommonCancelDone}">
+                <parameter param-name="custRequestId"/>
+            </hyperlink>
+        </field>
+    </form>
+    <form name="AddCustEnquiryNote" type="single" target="createCustEnquiryNote"
+        focus-field-name="noteId" header-row-style="header-row" default-table-style="basic-table">
+        <field name="custRequestId"><hidden/></field>
+        <field name="noteName"><text></text></field>
+        <field name="noteDate"><date-time type="timestamp"></date-time></field>
+        <field name="noteInfo"><text></text></field>
+        <field name="submitButton" title="${uiLabelMap.CommonSave}" widget-style="smallSubmit"><submit button-type="text-link"/></field>
+        <field name="cancelLink" title="${uiLabelMap.CommonEmptyHeader}" widget-style="smallSubmit">
+            <hyperlink target="ViewMaterialRequest" also-hidden="false" description="${uiLabelMap.CommonCancelDone}">
+                <parameter param-name="custRequestId"/>
+            </hyperlink>
+        </field>
+    </form>
+    <form name="ListEnquiryNotes" type="list" use-row-submit="true"  title="" list-name="enquiryNotes"
+        odd-row-style="alternate-row" default-table-style="basic-table hover-bar" paginate-target="PreBidNotes">
+        <auto-fields-entity entity-name="CustRequestNoteView" default-field-type="display"/>
+        <field name="noteParty"><hidden/></field>
+        <!-- <field name="noteType"><display/></field> -->
+        <field name="noteId"><hidden/></field>
+        <field name="noteName"><display></display></field>
+        <field name="noteInfo" title="Note"><display/></field>
+        <field name="noteDateTime" title="Note Date Time"><display/></field>
+        <field name="custRequestId"><hidden/></field>
+        <field name="partyId"><hidden/></field>  
+        <field name="name" title="Added by"><display description="${firstName} ${lastName}"/></field>
+        <field name="firstName"><hidden/></field>
+        <field name="lastName"><hidden/></field>
+        <field name="noteDateTime" title="Date Time"><display/></field>  
+        <field name="delete">
+        <hyperlink target="deleteTenderNote" description="Delete">
+        	<parameter param-name="noteId"/>
+        	<parameter param-name="noteType"/>
+        	<parameter param-name="custRequestId"/>
+        </hyperlink>
+        </field>
+    </form>
+    
     <form name="ListEnquiryContent" type="list" list-name="custRequestContents"
         odd-row-style="alternate-row" default-table-style="basic-table hover-bar" paginate-target="AddEnquiryContent">
         <field name="custRequestId"><hidden/></field>
@@ -633,4 +662,5 @@
             </hyperlink>
         </field>
    </form>
+   
 </forms>

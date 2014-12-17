@@ -257,6 +257,9 @@
                     <field-map field-name="custRequestId" from-field="parameters.custRequestId"/>
                 </entity-and>
                  -->
+                 <entity-and entity-name="CustRequestNoteView" list="enquiryNotes">
+                    <field-map field-name="custRequestId" from-field="custRequestId"/>
+                </entity-and>
                  <entity-and entity-name="CustRequestAndContent" list="custRequestContents" filter-by-date="true">
                     <field-map field-name="custRequestId" from-field="custRequestId"/>
                 </entity-and>
@@ -268,15 +271,24 @@
                 <container style="lefthalf">
                     <screenlet title="${uiLabelMap.MaterialMangement_CustRequest}  ${custRequest.custRequestId}  ${uiLabelMap.CommonInformation}">
                         <include-form name="requestInfo" location="component://materialmgmt/widget/MaterialRequestForms.xml"/>
+                  	<screenlet title="Indent Document : ${custRequestId}">
+                   		<include-form location="component://materialmgmt/widget/MaterialRequestForms.xml" name="AddIndentContent"/>
+                  	</screenlet>
+                  	<screenlet title="Indent Contents">
+                   		<include-form location="component://materialmgmt/widget/MaterialRequestForms.xml" name="ListIndentContent"/>
+                  	</screenlet>
                     </screenlet>
                 </container>
                 <container style="righthalf">
                     <screenlet title="${uiLabelMap.MaterialMangement_CustRequest} Status" navigation-form-name="ViewRequest">
                         <include-form name="ViewRequestStatus" location="component://materialmgmt/widget/MaterialRequestForms.xml"/>
                     </screenlet>
-                    <screenlet title="Indent Contents">
-                   		<include-form location="component://materialmgmt/widget/MaterialRequestForms.xml" name="ListIndentContent"/>
+                    <screenlet title="Add Notes">
+                       	<include-form name="AddCustRequestNote" location="component://materialmgmt/widget/MaterialRequestForms.xml"/>
                   	</screenlet>
+                  	<screenlet title="Indent Notes">
+	                   		<include-form location="component://materialmgmt/widget/MaterialRequestForms.xml" name="ListEnquiryNotes"/>
+	                 </screenlet>
                 </container>
                 <container style="clear"/>
                 <screenlet title="${uiLabelMap.MaterialMangement_CustRequest} Items">
@@ -285,7 +297,6 @@
             </widgets>
         </section>
     </screen>
-    
     <screen name="ViewMaterialRequest">
         <section>
             <actions>
@@ -324,6 +335,9 @@
                 <entity-and entity-name="CustRequestAndContent" list="custRequestContents" filter-by-date="true">
                     <field-map field-name="custRequestId" from-field="custRequestId"/>
                 </entity-and>
+                <entity-and entity-name="CustRequestNoteView" list="enquiryNotes">
+                    <field-map field-name="custRequestId" from-field="custRequestId"/>
+                </entity-and>
                 <!-- <script location="component://materialmgmt/webapp/materialmgmt/WEB-INF/actions/purchases/EnquiryDetails.groovy" /> -->
                 <set field="checkStatusId" value="${custRequest.statusId}"/>	
             </actions>
@@ -349,9 +363,16 @@
 		                  <screenlet title="Overview">
 		                  	 <include-form location="component://materialmgmt/widget/MaterialRequestForms.xml" name="EnquiryDetails"/>
 		                  </screenlet>
-		                  <screenlet title="Enquiry Contents">
+		                  <!-- <include-screen name="MaterialNotes" location="component://materialmgmt/widget/MaterialRequestScreens.xml"/> -->
+		                  <!-- <screenlet title="Enquiry Contents">
                    			<include-form location="component://materialmgmt/widget/MaterialRequestForms.xml" name="ListEnquiryContent"/>
-                  	  	  </screenlet>
+                  	  	  </screenlet> -->
+                  	  	   <screenlet title="Enquiry Document : ${custRequestId}">
+                            <include-form name="AddCustRequestContent" location="component://materialmgmt/widget/MaterialRequestForms.xml"/>
+                        </screenlet>
+	                  	<screenlet title="Enquiry Contents">
+	                   		<include-form name="ListEnquiryContent" location="component://materialmgmt/widget/MaterialRequestForms.xml"/>
+	                  	</screenlet>
                  	  </container>
                  
                  	  <container style="righthalf"> 
@@ -359,8 +380,17 @@
 		                  <screenlet title="Items In Enquiry"> 
 		                   	<include-form location="component://materialmgmt/widget/MaterialRequestForms.xml" name="ItemsInEnquiry"/>
 		                  </screenlet>
+	                  	<screenlet title="Add Notes">
+                       			<include-form name="AddCustEnquiryNote" location="component://materialmgmt/widget/MaterialRequestForms.xml"/>
+                  		 </screenlet>
+                  	  	  <screenlet title="Enquiry Notes">
+	                   		<include-form location="component://materialmgmt/widget/MaterialRequestForms.xml" name="ListEnquiryNotes"/>
+	                  	 </screenlet>
+	                  	<!-- <screenlet title="Enquiry Notes">
+	                   		<include-form location="component://materialmgmt/widget/MaterialRequestForms.xml" name="ListEnquiryNotes"/>
+	                  	 </screenlet> -->
 		              </container>
-                 	
+                 		
                  	  <container style="righthalf">
                   
                   		<!-- <section>
@@ -386,11 +416,7 @@
 		                  	   </screenlet>
 		                  	 </fail-widgets>
                   		</section> -->
-	                  	 <screenlet title="Enquiry Notes">
-	                   		<include-form location="component://materialmgmt/widget/MaterialRequestForms.xml" name="ListEnquiryNotes"/>
-	                  	 </screenlet>
 	               </container>
-                 
                   <container style="clear"></container>
                   <container style="full">
                   	<screenlet title="Qualified Enquiry Item">
