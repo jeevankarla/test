@@ -104,7 +104,7 @@
       	<field name="productId" title="productId">
       		<display-entity entity-name="Product" description="${description}"/>
       	</field>
-        <field name="datetimeReceived" title="Received Date"><display description="${groovy:org.ofbiz.base.util.UtilDateTime.toDateString(datetimeReceived, &quot;dd/MM/yyyy HH:mm:ss&quot;);}"/></field>
+        <field name="datetimeReceived" title="Received Date"><display description="${groovy:org.ofbiz.base.util.UtilDateTime.toDateString(datetimeReceived, &quot;dd-MMM-yyyy&quot;);}"/></field>
         <field name="shipmentId" title="ShipmentId"><display/></field>
         <field name="orderId" title="PO No"><display/></field>
         <field name="statusId" title="Status">
@@ -119,7 +119,7 @@
              	<parameter param-name="shipmentId" value="${shipmentId}"/>
              	<parameter param-name="orderId" value="${orderId}"/>
               	<parameter param-name="receiptId" value="${receiptId}"/>
-               	<parameter param-name="datetimeReceived" value="${groovy:org.ofbiz.base.util.UtilDateTime.toDateString(datetimeReceived, &quot;dd/MM/yyyy HH:mm:ss&quot;);}"/>
+               	<parameter param-name="datetimeReceived" value="${groovy:org.ofbiz.base.util.UtilDateTime.toDateString(datetimeReceived, &quot;dd-MMM-yyyy&quot;);}"/>
             </hyperlink>
         </field>
       	

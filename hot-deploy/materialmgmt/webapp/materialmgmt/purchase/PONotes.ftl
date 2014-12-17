@@ -41,7 +41,7 @@ under the License.
                     <#if note.noteParty?has_content>
                       <div>&nbsp;<span class="label">${uiLabelMap.CommonBy}</span>&nbsp;${Static["org.ofbiz.party.party.PartyHelper"].getPartyName(delegator, note.noteParty, true)}</div>
                     </#if>
-                    <div>&nbsp;<span class="label">${uiLabelMap.CommonAt}</span>&nbsp;${note.noteDateTime?string?if_exists}</div>
+                    <div>&nbsp;<span class="label">${uiLabelMap.CommonAt}</span>&nbsp;${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(note.noteDateTime, "dd-MMM-yyyy")}</div>
                   </td>
                   <td valign="top" width="50%">
                     ${note.noteInfo?replace("\n", "<br/>")}

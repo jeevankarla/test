@@ -117,8 +117,7 @@ under the License.
                     <#assign loopStatusItem = orderHeaderStatus.getRelatedOne("StatusItem")>
                     <#assign userlogin = orderHeaderStatus.getRelatedOne("UserLogin")>
                     <div>
-                      ${loopStatusItem.get("description",locale)} - ${orderHeaderStatus.statusDatetime?default("0000-00-00 00:00:00")?string}
-                      &nbsp;
+                      ${loopStatusItem.get("description",locale)} - ${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(orderHeaderStatus.statusDatetime, "dd-MMM-yyyy")}  &nbsp;
                       ${uiLabelMap.CommonBy} - <#--${Static["org.ofbiz.party.party.PartyHelper"].getPartyName(delegator, userlogin.getString("partyId"), true)}--> [${orderHeaderStatus.statusUserLogin}]
                     </div>
                   </#list>
@@ -129,23 +128,23 @@ under the License.
             <tr>
               <td align="right" valign="top" width="15%" class="label">&nbsp;${uiLabelMap.OrderDateOrdered}</td>
               <td width="5%">&nbsp;</td>
-              <td valign="top" width="80%">${orderHeader.orderDate.toString()}</td>
+              <td valign="top" width="80%">${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(orderHeader.orderDate, "dd-MMM-yyyy")}</td>
             </tr>
-            <tr><td colspan="3"><hr /></td></tr>
+        <#--    <tr><td colspan="3"><hr /></td></tr>
             <tr>
               <td align="right" valign="top" width="15%" class="label">&nbsp;${uiLabelMap.CommonCurrency}</td>
               <td width="5%">&nbsp;</td>
               <td valign="top" width="80%">${orderHeader.currencyUom?default("???")}</td>
-            </tr>
+            </tr> -->
             <#if orderHeader.internalCode?has_content>
-            <tr><td colspan="3"><hr /></td></tr>
+            <tr><td colspan="3"><hr /></td></tr> 
             <tr>
               <td align="right" valign="top" width="15%" class="label">&nbsp;${uiLabelMap.OrderInternalCode}</td>
               <td width="5%">&nbsp;</td>
               <td valign="top" width="80%">${orderHeader.internalCode}</td>
             </tr>
             </#if>
-            <tr><td colspan="3"><hr /></td></tr>
+      <#--      <tr><td colspan="3"><hr /></td></tr>
             <tr>
               <td align="right" valign="top" width="15%" class="label">&nbsp;${uiLabelMap.OrderSalesChannel}</td>
               <td width="5%">&nbsp;</td>
@@ -157,7 +156,7 @@ under the License.
                     ${uiLabelMap.CommonNA}
                   </#if>
               </td>
-            </tr>
+            </tr> -->
             <tr><td colspan="3"><hr /></td></tr>
             <tr>
               <td align="right" valign="top" width="15%" class="label">&nbsp;${uiLabelMap.OrderProductStore}</td>
@@ -171,7 +170,7 @@ under the License.
               </td>
             </tr>
             <tr><td colspan="3"><hr /></td></tr>
-            <tr>
+       <#--     <tr>
               <td align="right" valign="top" width="15%" class="label">&nbsp;${uiLabelMap.OrderOriginFacility}</td>
               <td width="5%">&nbsp;</td>
               <td valign="top" width="80%">
@@ -181,8 +180,7 @@ under the License.
                     ${uiLabelMap.CommonNA}
                   </#if>
               </td>
-            </tr>
-            <tr><td colspan="3"><hr /></td></tr>
+            </tr> -->
             <tr>
               <td align="right" valign="top" width="15%" class="label">&nbsp;${uiLabelMap.CommonCreatedBy}</td>
               <td width="5%">&nbsp;</td>

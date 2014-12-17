@@ -386,16 +386,16 @@
 	                    				<html><html-template location="component://materialmgmt/webapp/materialmgmt/purchase/PurchageOrderInfo.ftl"/></html>
 	                				</platform-specific>
 	                				<platform-specific>
-                    					<html><html-template location="component://materialmgmt/webapp/materialmgmt/purchase/POpaymentInfo.ftl"/></html>
-                					</platform-specific>
-	                				<platform-specific>
 	                            			<html><html-template location="component://materialmgmt/webapp/materialmgmt/purchase/POItems.ftl"/></html>
 	                        		</platform-specific>
-                				</container>
-                				<container style="righthalf" >
+	                        		<platform-specific>
+                    					<html><html-template location="component://materialmgmt/webapp/materialmgmt/purchase/POpaymentInfo.ftl"/></html>
+                					</platform-specific>
                 					<platform-specific>
                     					<html><html-template location="component://materialmgmt/webapp/materialmgmt/purchase/POContactInfo.ftl"/></html>
                 					</platform-specific>
+                				</container>
+                				<container style="righthalf" >
                 					<platform-specific>
                             			<html><html-template location="component://materialmgmt/webapp/materialmgmt/purchase/PONotes.ftl"/></html>
                         			</platform-specific>
