@@ -219,7 +219,11 @@ while (invoice = invIterator.next()) {
 		innerMap["crOrDbId"]="D";
 		innerMap["debitValue"]=invTotalVal;
 		if(UtilValidate.isEmpty(invoice.invoiceMessage)){
-			innerMap["description"]="Sales Invoice";
+			if(UtilValidate.isEmpty(invoice.description)){
+				innerMap["description"]="Sales Invoice";
+			}else{
+			innerMap["description"]=invoice.description;
+			}
 		}
 		//preparing Map here
 		dayInvoiceList=[];
