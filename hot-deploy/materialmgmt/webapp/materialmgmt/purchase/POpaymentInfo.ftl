@@ -16,7 +16,7 @@ KIND, either express or implied.  See the License for the
 specific language governing permissions and limitations
 under the License.
 -->
-<#macro maskSensitiveNumber cardNumber>
+<#-- <#macro maskSensitiveNumber cardNumber>
   <#assign cardNumberDisplay = "">
   <#if cardNumber?has_content>
     <#assign size = cardNumber?length - 4>
@@ -27,11 +27,11 @@ under the License.
       <#assign cardNumberDisplay = cardNumberDisplay + cardNumber[size .. size + 3]>
     <#else>
       <#-- but if the card number has less than four digits (ie, it was entered incorrectly), display it in full -->
-      <#assign cardNumberDisplay = cardNumber>
+   <#--   <#assign cardNumberDisplay = cardNumber>
     </#if>
   </#if>
   ${cardNumberDisplay?if_exists}
-</#macro>
+</#macro> -->
 
 <div class="screenlet">
   <div class="screenlet-title-bar">
@@ -44,11 +44,22 @@ under the License.
      <#if orderTypeId == "PURCHASE_ORDER">
        <tr>
          <th>PaymentID</th>
-         <th>${uiLabelMap.CommonTo}</th>
          <th>${uiLabelMap.CommonAmount}</th>
-         <th>${uiLabelMap.CommonStatus}</th>
+         <th>Payment Date</th> 
+         <th>${uiLabelMap.CommonStatus}</th> 
        </tr>
-       <#list orderPaymentPreferences as orderPaymentPreference>
+       <tr><td colspan="4"><hr /></td></tr>
+       <#if paymentMap?has_content>
+       <#list paymentIds as paymentId>
+       <tr>
+       	<td><a target="_BLANK" href="/accounting/control/paymentOverview?paymentId=${paymentId}" class="buttontext">${paymentId}</a></td>
+       	<td>${paymentMap.get(paymentId)?if_exists?string("##0.00")}</td>
+       	<td>${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(paymentMap.get("date")?if_exists, "dd-MMM-yyyy")}</td>
+       	<td>${paymentMap.get("statusId")?if_exists}</td>
+       </tr>
+       </#list>
+       </#if>
+      <#-- <#list orderPaymentPreferences as orderPaymentPreference>
          <#assign payments = orderPaymentPreference.getRelated("Payment")>
          <#list payments as payment>
            <#assign statusItem = payment.getRelatedOne("StatusItem")>
@@ -74,7 +85,7 @@ under the License.
      <#else>
      
      <#-- order payment status -->
-     <tr>
+   <#--  <tr>
        <td align="center" valign="top" width="29%" class="label">&nbsp;${uiLabelMap.OrderStatusHistory}</td>
        <td width="1%">&nbsp;</td>
        <td width="60%">
@@ -105,7 +116,7 @@ under the License.
           </#if>
           <#assign outputted = "true">
           <#-- try the paymentMethod first; if paymentMethodId is specified it overrides paymentMethodTypeId -->
-          <#assign paymentMethod = orderPaymentPreference.getRelatedOne("PaymentMethod")?if_exists>
+        <#--  <#assign paymentMethod = orderPaymentPreference.getRelatedOne("PaymentMethod")?if_exists>
           <#if !paymentMethod?has_content>
             <#assign paymentMethodType = orderPaymentPreference.getRelatedOne("PaymentMethodType")>
             <#if paymentMethodType.paymentMethodTypeId == "EXT_BILLACT">
@@ -136,7 +147,7 @@ under the License.
                       <br />
 
                       <#-- Authorize and Capture transactions -->
-                      <div>
+                <#--      <div>
                         <#if orderPaymentPreference.statusId != "PAYMENT_SETTLED">
                           <a href="/accounting/control/AuthorizeTransaction?orderId=${orderId?if_exists}&amp;orderPaymentPreferenceId=${orderPaymentPreference.orderPaymentPreferenceId}&amp;externalLoginKey=${externalLoginKey}" class="buttontext">${uiLabelMap.AccountingAuthorize}</a>
                         </#if>
@@ -216,7 +227,7 @@ under the License.
                     <div><@ofbizCurrency amount=orderPaymentPreference.maxAmount?default(0.00) isoCode=currencyUomId/>&nbsp;-&nbsp;${(orderPaymentPreference.authDate.toString())?if_exists}</div>
                     <div>&nbsp;<#if orderPaymentPreference.authRefNum?exists>(${uiLabelMap.OrderReference}: ${orderPaymentPreference.authRefNum})</#if></div>
                     -->
-                  </td>
+           <#--       </td>
                 <#else>
                   <td align="right" width="60%">
                     <a href="<@ofbizUrl>receivepayment?${paramString}</@ofbizUrl>" class="buttontext">${uiLabelMap.AccountingReceivePayment}</a>
@@ -293,7 +304,7 @@ under the License.
                       <br />
 
                       <#-- Authorize and Capture transactions -->
-                      <div>
+               <#--       <div>
                         <#if orderPaymentPreference.statusId != "PAYMENT_SETTLED">
                           <a href="/accounting/control/AuthorizeTransaction?orderId=${orderId?if_exists}&amp;orderPaymentPreferenceId=${orderPaymentPreference.orderPaymentPreferenceId}&amp;externalLoginKey=${externalLoginKey}" class="buttontext">${uiLabelMap.AccountingAuthorize}</a>
                         </#if>
@@ -489,14 +500,14 @@ under the License.
         </#list>
 
         <#-- billing account -->
-        <#if billingAccount?exists>
+   <#--     <#if billingAccount?exists>
           <#if outputted?default("false") == "true">
             <tr><td colspan="4"><hr /></td></tr>
           </#if>
           <tr>
             <td align="right" valign="top" width="29%">
               <#-- billing accounts require a special OrderPaymentPreference because it is skipped from above section of OPPs -->
-              <div>&nbsp;<span class="label">${uiLabelMap.AccountingBillingAccount}</span>&nbsp;
+      <#--        <div>&nbsp;<span class="label">${uiLabelMap.AccountingBillingAccount}</span>&nbsp;
                   <#if billingAccountMaxAmount?has_content>
                   <br />${uiLabelMap.OrderPaymentMaximumAmount}: <@ofbizCurrency amount=billingAccountMaxAmount?default(0.00) isoCode=currencyUomId/>
                   </#if>
@@ -519,9 +530,9 @@ under the License.
           </tr>
         </#if>
 
-        <#-- invoices -->
-        <#if invoices?has_content>
-          <tr><td colspan="4"><hr /></td></tr>
+        <#-- invoices 
+      <#if invoices?has_content> 
+       <#--  <tr><td colspan="4"><hr /></td></tr>
           <tr>
             <td align="right" valign="top" width="29%">&nbsp;<span class="label">${uiLabelMap.OrderInvoices}</span></td>
             <td width="1%">&nbsp;</td>
@@ -572,8 +583,8 @@ under the License.
          </select>
       </td>
       <td width="10%">&nbsp;</td>
-   </tr>
-   <#assign openAmount = orderReadHelper.getOrderOpenAmount()>
+   </tr> -->
+  <#-- <#assign openAmount = orderReadHelper.getOrderOpenAmount()>
    <tr>
       <td width="29%" align="right"><span class="label">${uiLabelMap.AccountingAmount}</span></td>
       <td width="1%">&nbsp;</td>
@@ -592,9 +603,8 @@ under the License.
    </tr>
    </table>
    </form>
-   </td></tr>
-</#if>
+   </td></tr> -->
 </#if>
 </table>
 </div>
-</div>
+</div> 

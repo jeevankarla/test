@@ -69,6 +69,16 @@
         <field name="requirementStartDate" title="Requirement Date"><display/></field>
         <!-- <field name="requiredByDate"><display/></field> -->
         <field name="quantity" title="${uiLabelMap.CommonQuantity}"><display/></field>
+        <field name="editRequirement" widget-style="buttontext" title="Edit" use-when="statusId.equals(&quot;REQ_CREATED&quot;)">
+        	<hyperlink description="Edit" target="editRequirement">
+                <parameter param-name="requirementId"/>
+            </hyperlink>
+        </field>
+       <!--  <field name="rejectRequirement" widget-style="buttontext" title="Cancel" use-when="statusId.equals(&quot;REQ_CREATED&quot;)">
+        	<hyperlink description="Cancel" target="">
+                <parameter param-name="requirementId"/>
+            </hyperlink>
+        </field> -->
         <!-- <field name="facilityQuantityOnHandTotal"><display/></field>
         <field name="quantityOnHandTotal"><display/></field> -->
         <!-- <field name="requestsLink" widget-style="buttontext">

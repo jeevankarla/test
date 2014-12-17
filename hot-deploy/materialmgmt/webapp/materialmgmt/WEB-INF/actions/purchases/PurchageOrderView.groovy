@@ -499,6 +499,46 @@ if (orderItems) {
 	   }
    }
    context.orderAdjustmentId = orderAdjustmentId;
-
+   //getting invoice Detais for Order
+   invoiceDetailList=[];
+   paymentDetailsList=[];
+   paymentIds=[];
+   paymentMap=[:];
+   orderCondition = EntityCondition.makeCondition([EntityCondition.makeCondition("orderId", EntityOperator.EQUALS, orderId)],EntityOperator.AND);
+   OrderItemBillingList = delegator.findList("OrderItemBilling", orderCondition, null, null, null, false);
+   invoicesList = EntityUtil.getFieldListFromEntityList(OrderItemBillingList, "invoiceId", true);
+   invoicesList.each{ invoice ->
+	   tempMap=[:];
+	   invoiceDetails=delegator.findByPrimaryKey("Invoice", [invoiceId : invoice]);
+	   if(invoiceDetails){
+		   tempMap.put("invoiceId", invoiceDetails.invoiceId);
+		   tempMap.put("statusId", invoiceDetails.statusId);
+		   tempMap.put("invoiceDate", invoiceDetails.invoiceDate);
+	   }
+	   if(UtilValidate.isNotEmpty(tempMap)){
+		   invoiceDetailList.add(tempMap);
+	   }
+	   paymentCondition = EntityCondition.makeCondition([EntityCondition.makeCondition("invoiceId", EntityOperator.EQUALS, invoice)],EntityOperator.AND);
+	   PaymentDetailsList=delegator.findList("PaymentAndApplication",paymentCondition,null,null,null,false);
+	   paymentIds = EntityUtil.getFieldListFromEntityList(PaymentDetailsList, "paymentId", true);
+	   if(PaymentDetailsList){
+		   PaymentDetailsList.each{ payment ->
+				   amount=payment.amountApplied;
+				   if(UtilValidate.isEmpty(paymentMap.get(payment.paymentId))){
+					   paymentMap[payment.paymentId]=amount;
+				   }else{
+						   paymentMap[payment.paymentId]+=amount;
+				   }
+				   Status=delegator.findByPrimaryKey("StatusItem",[statusId:payment.statusId]);
+				   paymentMap.put("statusId", Status.description);
+				   paymentMap.put("date", payment.paymentDate);
+		   }
+	   }
+   }
+   context.invoiceDetailList=invoiceDetailList;
+   context.paymentMap=paymentMap;
+   context.paymentIds=paymentIds;
+   
+   
    
    

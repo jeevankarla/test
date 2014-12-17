@@ -98,6 +98,19 @@
         <response name="error" type="view" value="FindMaterialRequirement"/>
     </request-map>
     
+     <request-map uri="editRequirement">
+        <security auth="true" https="true"/>
+        <response name="success" type="view" value="editRequirement"/>
+        <response name="error" type="view" value="editRequirement"/>
+    </request-map>
+    
+    <request-map uri="UpdateRequirement">
+        <security auth="true" https="true"/>
+        <event type="service" invoke="updateRequirement" ></event>
+        <response name="success" type="view" value="FindMaterialRequirement"/>
+        <response name="error" type="view" value="FindMaterialRequirement"/>
+    </request-map>
+    
     <request-map uri="FindMaterialInvoices">
         <security auth="true" https="true"/>
         <response name="success" type="view" value="FindMaterialInvoices"/>
@@ -736,6 +749,7 @@
     <view-map name="AddEnquiryContent" type="screen" page="component://materialmgmt/widget/MaterialRequestScreens.xml#AddEnquiryContent"/>
     <view-map name="AddIndentContent" type="screen" page="component://materialmgmt/widget/MaterialRequestScreens.xml#AddIndentContent"/>
     <view-map name="NewRequirement" type="screen" page="component://materialmgmt/widget/MaterialRequestScreens.xml#NewRequirement"/>
+    <view-map name="editRequirement" type="screen" page="component://materialmgmt/widget/MaterialRequestScreens.xml#editRequirement"/>
     <view-map name="RequestsReceiptAcknowledgement" type="screen" page="component://materialmgmt/widget/MaterialRequestScreens.xml#RequestsReceiptAcknowledgement"/>
     
     <!-- Requirement views -->

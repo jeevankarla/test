@@ -405,6 +405,9 @@
 	                        		<screenlet title="Receipts For Order">
 					                 	<include-form location="component://materialmgmt/widget/MaterialPurchaseForms.xml" name="listMaterialShipmentReceipt"/>
 					                </screenlet>
+					                <screenlet title="Invoices For Order">
+					                 	<include-form location="component://materialmgmt/widget/MaterialPurchaseForms.xml" name="invoiceDetailList"/>
+					                </screenlet>
 					                <screenlet title="Content">
 					                <include-screen name="POcontent"/>
 					                </screenlet>

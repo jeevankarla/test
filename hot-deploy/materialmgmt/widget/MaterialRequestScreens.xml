@@ -471,6 +471,24 @@
     		</widgets>
     	</section>
     </screen>
+    
+    <screen name="editRequirement">
+    	<section>
+    		<actions>
+    		</actions>
+    		<widgets>
+    			<decorator-screen name="materialmgmtNgCommonDecorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="body">
+                    	<include-menu name="StoreIssueTabBar" location="component://materialmgmt/widget/materialmgmtMenus.xml"/>
+                    	<screenlet title="Edit Requirement" >
+                    		<include-form location="component://materialmgmt/widget/MaterialRequestForms.xml" name="UpdateRequirement"/>
+                    	</screenlet>
+                    </decorator-section>
+                </decorator-screen>    
+    		</widgets>
+    	</section>
+    </screen>
+    
     <screen name="FindMaterialInvoices">
     	<section>
     		<actions>

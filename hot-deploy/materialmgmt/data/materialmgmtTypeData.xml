@@ -92,5 +92,8 @@
      <StatusValidChange statusId="ENQ_CREATED" statusIdTo="ENQ_COMPLETED" transitionName="Reject"/>
 	     
      <StatusItem description="In Enquiry" statusCode="INENQUIRY" statusId="REQ_IN_ENQUIRY" statusTypeId="REQUIREMENT_STATUS"/>
+     <DataCategory categoryName="PO Document"  dataCategoryId="PO_DOCUMENT"  parentCategoryId="ROOT"/>
+	 <ContentType contentTypeId="PO_DOCUMENT"  description="Purchase Order Document" />
+	 <OrderContentType  description="Internal Content"  orderContentTypeId="INTERNAL"/>
      
 </entity-engine-xml>

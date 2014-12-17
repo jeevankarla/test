@@ -480,10 +480,14 @@ public static Map<String, Object> setStatusId(DispatchContext ctx,Map<String, ? 
 			GenericValue requirements= delegator.findOne("Requirement",UtilMisc.toMap("requirementId",requirementId),false);
 			if(UtilValidate.isNotEmpty(requirements)){
 				oldStatusId = requirements.getString("statusId");
+				if((oldStatusId).equals(statusId)){
+					return ServiceUtil.returnSuccess();
+				}
 				Map checkStatusChange = MaterialHelperServices.checkValidChangeOrNot(ctx,UtilMisc.toMap("statusId",oldStatusId,"statusIdTo",statusId));
 				if(ServiceUtil.isError(checkStatusChange)){
 					return checkStatusChange;
 				}
+				
 				GenericValue newEntity = delegator.makeValue("RequirementStatus");
 				newEntity.set("requirementId", requirementId);
 				newEntity.set("statusId", statusId);

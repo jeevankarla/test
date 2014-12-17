@@ -280,5 +280,12 @@
             </hyperlink>
         </field>        
     </form>
+    <form name="invoiceDetailList" type="list" list-name="invoiceDetailList"  odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
+    	<field name="invoiceId" widget-style="buttontext"><hyperlink  target="/accounting/control/invoiceOverview" target-type="inter-app" target-window="_blank" description="${invoiceId}"> <parameter param-name="invoiceId"/></hyperlink></field>
+    	<field name="statusId" title="Status">
+    		<display-entity entity-name="StatusItem" description="${description}" ></display-entity>
+    	</field>
+    	<field name="invoiceDate" title="Date" ><display description="${groovy:org.ofbiz.base.util.UtilDateTime.toDateString(invoiceDate, &quot;dd-MMM-yyyy&quot;);}"/></field>
+    </form>
     
 </forms>
