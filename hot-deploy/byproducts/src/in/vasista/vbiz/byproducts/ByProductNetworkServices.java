@@ -9481,6 +9481,9 @@ public class ByProductNetworkServices {
 				if (UtilValidate.isNotEmpty(partyAndFacilityList.get(facilityParty.getString("partyId")))) {
 					List facilityList = partyAndFacilityList.get(facilityParty.getString("partyId"));
 					facilityList.add(routeId);
+					//to restrict duplicate Routes
+					Set facilityIdsSet = new HashSet(facilityList);
+					    facilityList = new ArrayList(facilityIdsSet);
 					partyAndFacilityList.put(facilityParty.getString("partyId"), facilityList);
 				} else {
 					partyAndFacilityList.put(facilityParty.getString("partyId"),UtilMisc.toList(routeId));
