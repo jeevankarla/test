@@ -41,7 +41,7 @@
       		<entity-condition entity-name="SupplierProduct" list="SupplierProductList" >
       			<condition-expr field-name="productId" operator="equals" value="${orderItemList[0].productId}"/>
       		</entity-condition>
-      		<set field="partyId" value="${SupplierProductList[0].partyId}" />
+      		<set field="partyId" value="${orderRoles[0].partyId}" />
       	</row-actions>
       	<field name="orderId" widget-style="buttontext">
       		<hyperlink target="POoverview" description="${orderId}" target-window="_blank">
@@ -50,7 +50,13 @@
       	</field>
         <field name="entryDate" title="Entry Date"><display description="${groovy:org.ofbiz.base.util.UtilDateTime.toDateString(entryDate, &quot;dd/MM/yyyy&quot;);}"/></field>
         <field name="createdBy" title="Created By"><display/></field>
-        <field name="salesChannelEnumId"><display/></field>
+        <!-- <field name="salesChannelEnumId"><display/></field> -->
+        <field name="partyId" title="Supplier"><display description="${groovy:org.ofbiz.party.party.PartyHelper.getPartyName(delegator, partyId, false);} - [${partyId}]"/></field>
+        <field name="poReport" widget-style="buttontext">
+            <hyperlink target="PurchaseOrder.pdf" description="Report" target-window="_blank">
+                <parameter param-name="orderId"/>
+            </hyperlink>
+        </field>
       	<field name="ApproveOrder" widget-style="buttontext" use-when="statusId.equals(&quot;ORDER_CREATED&quot;)" >
             <hyperlink target="ApproveOrder" description="Approve">
                 <parameter param-name="orderId"/>
