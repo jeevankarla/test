@@ -564,6 +564,7 @@ under the License.
         </field>
         <field name="organizationPartyId"><lookup target-form-name="LookupPartyName"/></field>
         <field name="glAccountId"><lookup target-form-name="LookupGlAccount"/></field>
+        <field name="reconciledDate"  title="${uiLabelMap.ReconciledDate}"><date-time type="date" default-value=""/></field>
         <field name="searchButton" widget-style="smallSubmit"><submit button-type="button"/></field>
     </form>
 </forms>

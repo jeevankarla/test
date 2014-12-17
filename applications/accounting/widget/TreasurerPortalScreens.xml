@@ -661,8 +661,11 @@
             <actions>
                 <set field="titleProperty" value="FindBankAccountReconciliationsTitle"/>
                  <script location="component://accounting/webapp/accounting/WEB-INF/actions/EditFinaccount.groovy"/>
+                 <script location="component://accounting/webapp/accounting/WEB-INF/actions/dateFindConvert.groovy"/>
                  <set field="tabButtonItem"  value="${parameters.tabButtonItem}" default-value="${context.tabButtonItem}"/>
                 <set field="tabButtonItem2" value="FindFinAccountReconciliations"/>
+                <set field="reconciledDateStart" value="${parameters.reconciledDateStart}"/>
+                <set field="reconciledDateEnd" value="${parameters.reconciledDateEnd}"/>
                 <set field="finAccountId" from-field="parameters.finAccountId"/>
                 <set field="glReconciliationId" from-field="parameters.glReconciliationId" default-value=""/>
                 <service service-name="acctgFinAcctPermissionCheck" result-map="permResult">
@@ -687,11 +690,13 @@
                         <condition-expr field-name="description" operator="equals" from-field="parameters.description" ignore-if-empty="true"/>
                         <condition-expr field-name="statusId" operator="equals" from-field="parameters.statusId" ignore-if-empty="true"/>
                         <condition-expr field-name="organizationPartyId" operator="equals" from-field="parameters.organizationPartyId" ignore-if-empty="true"/>
+                        <condition-expr  field-name="reconciledDate" operator="greater-equals"  from-field="reconciledDateStart"  ignore-if-empty="true" />
+                        <condition-expr field-name="reconciledDate" operator="less-equals" from-field="reconciledDateEnd"  ignore-if-empty="true"/>
                     </condition-list>
                 </entity-condition>
             </actions>
             <widgets>
-                 <decorator-screen name="CommonTreasurerPortalDecorator" location="component://accounting/widget/CommonScreens.xml">
+                  <decorator-screen name="CommonTreasurerPortalDecorator" location="component://accounting/widget/CommonScreens.xml">
                     <decorator-section name="body">
                      <include-menu name="CompanyFinAccountTabBar" location="component://accounting/widget/AccountingMenus.xml"/>
                       <!--   <include-menu name="FinAccountReconciliationsTabBar" location="component://accounting/widget/AccountingMenus.xml"/> -->

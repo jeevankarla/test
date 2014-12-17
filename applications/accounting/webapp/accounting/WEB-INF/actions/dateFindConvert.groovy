@@ -49,4 +49,15 @@ if(UtilValidate.isNotEmpty(parameters.thruDate)){
 		}
    parameters.thruDateReport=UtilDateTime.getDayEnd(dayend);
 }
-
+reconciledDate=parameters.reconciledDate;
+if(UtilValidate.isNotEmpty(reconciledDate)){
+Timestamp fromDateTs = null;
+if(reconciledDate){
+		SimpleDateFormat sdfo = new SimpleDateFormat("yyyy-MM-dd");
+	try {
+		fromDateTs = new java.sql.Timestamp(sdfo.parse(reconciledDate).getTime());	} catch (ParseException e) {
+	}
+}
+parameters.reconciledDateStart = UtilDateTime.getDayStart(fromDateTs);
+parameters.reconciledDateEnd = UtilDateTime.getDayEnd(fromDateTs);
+}

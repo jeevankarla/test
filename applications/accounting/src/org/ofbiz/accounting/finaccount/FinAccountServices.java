@@ -980,6 +980,7 @@ public class FinAccountServices {
         GenericValue userLogin = (GenericValue) context.get("userLogin");
         String  statusId=(String)context.get("statusId");
         String  finAccountId=(String)context.get("finAccountId");
+        String glBatchId="";
         
       String dateGlReconciliStr= UtilDateTime.toDateString(UtilDateTime.nowTimestamp(), "-dd/MM/yyyy HH:mm:ss");
          try {
@@ -1006,7 +1007,7 @@ public class FinAccountServices {
 		  	    return ServiceUtil.returnError("Creation of Reoncilation Having Some Problem For BankAccount:" + finAccountId);    
 		  }
         glReconciliationId=(String)createGlReconcilMapResult.get("glReconciliationId");
-        
+        glBatchId=glReconciliationId;
         Map finAccountTransMap = UtilMisc.toMap("statusId",statusId);
             finAccountTransMap.put("userLogin", userLogin);
             //assigning ReconcilationId to FinAccountTrans batch
@@ -1051,7 +1052,7 @@ public class FinAccountServices {
 		        Debug.logError(e, "Reconcilation Having Problem ", module);
 		        return ServiceUtil.returnError(e.getMessage());
 		    }
-        return ServiceUtil.returnSuccess("Reconcilation Created Successfully for Selected FinAccountTransactions");
+        return ServiceUtil.returnSuccess("Reconcilation Created Successfully for Selected FinAccountTransactions To BatchId "+glBatchId);
     }
     public static Map<String, Object> getFinAccountIdsListForPayment(DispatchContext dctx, Map<String, ? extends Object> context) {
 
