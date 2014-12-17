@@ -1937,7 +1937,7 @@ under the License.
         <security https="true" auth="true"/>                        
         <response name="success" type="view" value="DeductionsReport"/>        
     </request-map>
-    <request-map uri="BenefitReport.pdf">
+    <request-map uri="BenefitReport.txt">
         <security https="true" auth="true"/>                        
         <response name="success" type="view" value="BenefitReport"/>        
     </request-map>
@@ -2432,7 +2432,7 @@ under the License.
     <view-map name="EmployeesLOPdays" type="screenfop" page="component://humanres/widget/ReportHumanresSummaryScreens.xml#EmployeesLOPdays" content-type="application/pdf" encoding="none"/>
     <view-map name="CanteenReport" type="screenfop" page="component://humanres/widget/ReportHumanresSummaryScreens.xml#CanteenReport" content-type="application/pdf" encoding="none"/>
     <view-map name="DeductionsReport" type="screenfop" page="component://humanres/widget/ReportHumanresSummaryScreens.xml#DeductionsReport" content-type="text/plain" encoding="none"/>
-    <view-map name="BenefitReport" type="screenfop" page="component://humanres/widget/ReportHumanresSummaryScreens.xml#BenefitReport" content-type="application/pdf" encoding="none"/>
+    <view-map name="BenefitReport" type="screenfop" page="component://humanres/widget/ReportHumanresSummaryScreens.xml#BenefitReport" content-type="text/plain" encoding="none"/>
     <view-map name="EmployeePunchData" type="screenfop" page="component://humanres/widget/ReportHumanresSummaryScreens.xml#EmployeePunchData" content-type="application/pdf" encoding="none"/>
 	<view-map name="DayWiseEditedLateHoursReport" type="screenfop" page="component://humanres/widget/EmployeeScreens.xml#DayWiseEditedLateHoursReport" content-type="application/pdf" encoding="none"/>
 	<view-map name="ConsolidatedEditedLateHoursReport" type="screenfop" page="component://humanres/widget/EmployeeScreens.xml#ConsolidatedEditedLateHoursReport" content-type="application/pdf" encoding="none"/>
@@ -2453,7 +2453,7 @@ under the License.
     <view-map name="emplMonthlyPunchReport" type="screencsv" page="component://humanres/widget/ReportHumanresSummaryScreens.xml#emplMonthlyPunchReport" content-type="text/csv" encoding="none"/>
     <view-map name="ITAXStatement" type="screenfop" page="component://humanres/widget/ReportHumanresSummaryScreens.xml#ITEarningsReport" content-type="application/pdf" encoding="none"/>
     <view-map name="EDLISReport" type="screenfop" page="component://humanres/widget/ReportHumanresSummaryScreens.xml#EDLISReport" content-type="application/pdf" encoding="none"/>
-     <view-map name="LoanTypeReport" type="screenfop" page="component://humanres/widget/ReportHumanresSummaryScreens.xml#LoanTypeReport" content-type="application/pdf" encoding="none" />   
+     <view-map name="LoanTypeReport" type="screenfop" page="component://humanres/widget/ReportHumanresSummaryScreens.xml#LoanTypeReport" content-type="application/pdf" encoding="none" />    
     <!-- ==================Recruitment View Map===================== -->
     <view-map name="FindJobRequisitions" type="screen" page="component://humanres/widget/RecruitmentScreens.xml#FindJobRequisitions"/>
     <view-map name="EditJobRequisition" type="screen" page="component://humanres/widget/RecruitmentScreens.xml#EditJobRequisition"/>

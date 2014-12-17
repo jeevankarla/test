@@ -834,7 +834,7 @@ function setOrgPartyId() {
 						</form>
 					</tr>
 					<tr class="alternate-row">
-						<form id="BenefitReport" name="DeductionsReport" mothed="post" action="<@ofbizUrl>BenefitReport.pdf</@ofbizUrl>" target="_blank">
+						<form id="BenefitReport" name="BenefitReport" mothed="post" action="<@ofbizUrl>BenefitReport.txt</@ofbizUrl>" target="_blank">
 							<table class="basic-table" cellspacing="0">
 								<tr>
 									<td width="20%"><span class='h3'>Benefit Report</span></td>
