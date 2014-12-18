@@ -30,10 +30,6 @@ function makeDatePicker(fromDateId ,thruDateId){
 	
 	
     $(document).ready(function(){
-            $("#supplierId").focus(function () {
-	      alert("ooo");
-	         });
-	         
             $("#wizard-2").steps({
                 headerTag: "h3",
                 bodyTag: "section",
@@ -133,19 +129,19 @@ function makeDatePicker(fromDateId ,thruDateId){
 						<tr>
 						    <td class="label"><b>PO No:*</b></td>
 						    <td>
-						      <input type="text" name="poNumber" id="poNumber" size="18" maxlength="60" autocomplete="off"/>
+						      <input type="text" name="externalId" id="externalId" size="18" maxlength="60" autocomplete="off"/>
 	        				 </td>
 						</tr>
 						<tr>
 						    <td class="label"><b>PO Date:* </b></td>
 						    <td>
-						      <input type="text" name="poDate" id="poDate" size="18" maxlength="60" autocomplete="off"/>
+						      <input type="text" name="orderDate" id="orderDate" size="18" maxlength="60" autocomplete="off"/>
 	        				 </td>
 						</tr>
 						<tr>
-						    <td class="label"><b>Expected Delivery Date:* </b></td>
+						    <td class="label"><b>Estimated Delivery Date:* </b></td>
 						    <td>
-						      <input type="text" name="expectedDeliveryDate" id="expectedDeliveryDate" size="18" maxlength="60" autocomplete="off"/>
+						      <input type="text" name="estimatedDeliveryDate" id="estimatedDeliveryDate" size="18" maxlength="60" autocomplete="off"/>
 	        				 </td>
 						</tr>
 						<tr>
@@ -157,7 +153,7 @@ function makeDatePicker(fromDateId ,thruDateId){
 				        <tr>
 				            <td class="label"><b> Description :</b></td>
 				            <td>
-	        				   <input class="h3" type="textarea" size="40" maxlength="500" name="description" id="description"/>
+	        				   <input class="h3" type="textarea" size="40" maxlength="500" name="orderName" id="orderName"/>
 	          				</td>
 				        </tr>
 	                  </table>
@@ -168,7 +164,7 @@ function makeDatePicker(fromDateId ,thruDateId){
             	<fieldset>
 				    <table cellpadding="2" cellspacing="1" class='h2'>
 					          <tr>
-		          				<td align='left' valign='middle' nowrap="nowrap"><div class='h2'>we need to add product slick grid here</div></td>
+		          				<td align='left' valign='middle' nowrap="nowrap"></td>
 					            <td>
 					               <table border="0" cellspacing="2" id="productTable" style="width:200px;" align="center">
 					               <input type="button" id="addProduct" value="Add" />    <input type="button" id="delProduct" value="Del" />
@@ -199,57 +195,88 @@ function makeDatePicker(fromDateId ,thruDateId){
 				          <fieldset>
 				            <table cellpadding="2" cellspacing="1" class='h2'>
 							         <tr>
-				          				 <td class="label"><b>Payment</b></td>
-									     <td>
-									        
-									    </td>
+				          				<td align='left' valign='middle' nowrap="nowrap"></td>
+					                 <td>
+					               <table border="0" cellspacing="2" id="paymentTermsTable" style="width:200px;" align="center">
+					                <tr>
+								       <td><table><tr>
+								           <td><input type="button" id="addPaymentTerm" value="Add" />  </td>
+								        	<td> <input type="button" id="delPaymentTerm" value="Del" /></td>
+								        </tr> </table>
+								          </td>
+								         <td> </td>
+								          <td></td>
+								    </tr>
+								    <tr>
+								        <td>Term Type</td>
+								         <td>Term Days</td>
+								          <td>Term Value</td>
+								    </tr>
+								    <tr>
+								        <td>
+								          <input type="text"  name="paymentTermTypeId_o_0" value=""/>
+								        <!-- <select  name="paymentTermTypeId_o_0">
+								            <list>
+								               <option > </option>
+								            </list>
+								         </select>-->
+								        </td>
+							            <td>
+							                <input type="text" name="paymentTermDays_o_0" value="" />
+							            </td>
+							            <td>
+							                <input type="text" name="paymentTermValues_o_0" value="" />
+							            </td>
+								    </tr> 
+								</table>
+	          				     </td>
 							        </tr>
 						  </table>
 						  </fieldset>
                         </section>
                      <h3>Delivery Terms</h3>
-			          <section>
-					        <fieldset>
-					            <table cellpadding="2" cellspacing="1" class='h2'>
-								         <tr>
-					          				 <td class="label"><b>FDR NO</b></td>
-										     <td>
-										      	<input type="text" name="fdrNumber" id="fdrNumber" size="30" maxlength="60" autocomplete="off" />
-										    </td>
-								        </tr>
-								         <tr>
-					          				 <td class="label"><b>bank Name</b></td>
-										     <td>
-										      	<input type="text" name="bankName" id="bankName" size="30" maxlength="60" autocomplete="off"/>
-										    </td>
-								        </tr>
-								        <tr>
-					          				 <td class="label"><b>Branch Name</b></td>
-										     <td>
-										      	<input type="text" name="branchName" id="branchName" size="30" maxlength="60" autocomplete="off"/>
-										    </td>
-								        </tr>
-								        <tr>
-					          				 <td class="label"><b>Acrrued balance in the deposit</b></td>
-										     <td>
-										      	<input type="text" name="amount" id="amount" size="30" maxlength="60" autocomplete="off"/>
-										    </td>
-								        </tr>
-								        <tr>
-					          				 <td class="label"><b>Date of opening of the deposit</b></td>
-										     <td>
-										      	<input type="text" name="fDateStr" id="fDateStr" size="30" maxlength="60" autocomplete="off"/>
-										    </td>
-								        </tr>
-								         <tr>
-					          				 <td class="label"><b>Date of closure of the deposit</b></td>
-										     <td>
-										      	<input type="text" name="tDateStr" id="tDateStr" size="30" maxlength="60" autocomplete="off"/>
-										    </td>
-								        </tr>
-							     </table>
-							 
-							</fieldset>
+			         <section>
+				          <fieldset>
+				            <table cellpadding="2" cellspacing="1" class='h2'>
+							         <tr>
+				          				<td align='left' valign='middle' nowrap="nowrap"></td>
+					                 <td>
+					               <table border="0" cellspacing="2" id="paymentTermsTable" style="width:200px;" align="center">
+					                <tr>
+								       <td><table><tr>
+								           <td><input type="button" id="addPaymentTerm" value="Add" />  </td>
+								        	<td> <input type="button" id="delPaymentTerm" value="Del" /></td>
+								        </tr> </table>
+								          </td>
+								         <td> </td>
+								          <td></td>
+								    </tr>
+								    <tr>
+								        <td>Term Type</td>
+								         <td>Term Days</td>
+								          <td>Term Value</td>
+								    </tr>
+								    <tr>
+								        <td>
+								         <input type="text"  name="paymentTermTypeId_o_0" value=""/>
+								        <!-- <select  name="paymentTermTypeId_o_0">
+								            <list>
+								               <option > </option>
+								            </list>
+								         </select>-->
+								        </td>
+							            <td>
+							                <input type="text" name="paymentTermDays_o_0" value="" />
+							            </td>
+							            <td>
+							                <input type="text" name="paymentTermValues_o_0" value="" />
+							            </td>
+								    </tr> 
+								</table>
+	          				     </td>
+							        </tr>
+						  </table>
+						  </fieldset>
                         </section>
                 </form>
                 
@@ -260,7 +287,8 @@ function makeDatePicker(fromDateId ,thruDateId){
     var table = $("#productTable");
     if (table.find('input:text').length < 16) {
         var productLength = table.find('input:text').length;
-        table.append('<tr><td> <input type="text" name="productId_o_'+(productLength/2)+'" value="" /></td><td> <input type="text" name="quantity_o_'+(productLength/2)+'" value="" /> </td><td> <input type="text" name="unitPrice_o_'+(productLength/2)+'" value="" /> </td></tr>');
+        var rowProdCount = productLength/3;
+        table.append('<tr><td> <input type="text" name="productId_o_'+rowProdCount+'" value="" /></td><td> <input type="text" name="quantity_o_'+rowProdCount+'" value="" /> </td><td> <input type="text" name="unitPrice_o_'+rowProdCount+'" value="" /> </td></tr>');
     }
 });
 $('#delProduct').click(function () {
@@ -269,8 +297,25 @@ $('#delProduct').click(function () {
         table.find('input:text').last().closest('tr').remove();
     }
 });
-	   });       
-	         
+
+
+    $('#addPaymentTerm').click(function () {
+    var table = $("#paymentTermsTable");
+    if (table.find('input:text').length < 16) {
+        var rowLength = table.find('input:text').length;
+        var rowCount = rowLength/3;
+        table.append('<tr><td> <input type="text" name="paymentTermTypeId_o_'+rowCount+'" value="" /></td><td> <input type="text" name="paymentTermDays_o_'+rowCount+'" value="" /> </td><td> <input type="text" name="paymentTermValue_o_'+rowCount+'" value="" /> </td></tr>');
+    }
+});
+	$('#delPaymentTerm').click(function () {
+	     var table = $("#paymentTermsTable");
+	    if (table.find('input:text').length > 1) {
+	        table.find('input:text').last().closest('tr').remove();
+	    }
+	});
+
+
+   });  
 	         
  </script>               
 			
