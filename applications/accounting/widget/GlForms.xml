@@ -1122,6 +1122,12 @@ under the License.
         <field name="roleTypeId" position="2">
             <display-entity entity-name="RoleType"/>
         </field>
+        <field name="createdByUserLogin" title="Created By UserLogin" position="1">
+           <display/>
+        </field>
+        <field name="lastModifiedByUserLogin" title="Last Modified By UserLogin" position="2">
+				<display/>
+        </field>
         <field name="transactionDate" position="1"/>
         <field name="scheduledPostingDate" position="2"/>
         <field name="isPosted" position="1"/>
@@ -1138,8 +1144,8 @@ under the License.
         <field name="voucherRef" position="1"/>
         <field name="voucherDate" position="2"/>
         <field name="description" position="1"/>
-        <field name="createdByUserLogin"><hidden/></field>
-        <field name="lastModifiedByUserLogin"><hidden/></field>
+        <!-- <field name="createdByUserLogin"><hidden/></field>
+        <field name="lastModifiedByUserLogin"><hidden/></field> -->
         <sort-order>
             <sort-field name="acctgTransId"/>
             <sort-field name="acctgTransTypeId"/>
