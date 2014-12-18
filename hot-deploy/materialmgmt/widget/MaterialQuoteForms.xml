@@ -307,8 +307,8 @@
         <field name="quantity" title="Qty"><display /></field>
         <field name="qiStatusId" title="Status"><display /></field>
         <field name="quoteUnitPrice" title="Unit Price"><display /></field>
-        <field use-when="&quot;${qiStatusId}&quot; == &quot;QTITM_NEGOTIATION&quot;" name="approveLink" widget-style="buttontext h3" title="Approve">
-        	<hyperlink also-hidden="false" description="HOD Approval" target="changeQuoteItemStatus">
+        <field use-when="&quot;${qiStatusId}&quot; == &quot;QTITM_NEGOTIATION&quot;" name="approveLink" widget-style="buttontext h3" title="Sec. Head Approval">
+        	<hyperlink also-hidden="false" description="Approve" target="changeQuoteItemStatus">
                 <parameter param-name="quoteId"/>
                 <parameter param-name="quoteItemSeqId"/>
                 <parameter param-name="custRequestId" value="${custRequestId}"/>
@@ -324,8 +324,8 @@
         	</hyperlink>
         </field>
         
-        <field use-when="&quot;${qiStatusId}&quot; == &quot;QTITM_APPROVED&quot;" name="qualifiedLink" widget-style="buttontext h3" title="Qualify">
-        	<hyperlink also-hidden="false" description="Qualify" target="changeQuoteItemStatus">
+        <field use-when="&quot;${qiStatusId}&quot; == &quot;QTITM_APPROVED&quot;" name="qualifiedLink" widget-style="buttontext h3" title="MD Approval">
+        	<hyperlink also-hidden="false" description="Approve" target="changeQuoteItemStatus">
                 <parameter param-name="quoteId"/>
                 <parameter param-name="quoteItemSeqId"/>
                 <parameter param-name="custRequestId" value="${custRequestId}"/>
