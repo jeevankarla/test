@@ -366,7 +366,7 @@
     <screen name="PurchageOrderOverView">
     	<section>
     		<actions>
-    			<set field="titleProperty" value="Purchage Order OverView - OrderId - ${parameters.orderId}"/> 
+    			<set field="titleProperty" value="Purchase Order OverView - OrderId - ${parameters.orderId}"/> 
     			<set field="tabButtonItem" value="FindMaterialPO" />	
 			      <set field="tabButtonItem2" value="POoverView"/> 
                 <set field="layoutSettings.javaScripts[]" value="/ordermgr/images/js/order.js" global="true"/>
@@ -391,26 +391,27 @@
 	                        		<platform-specific>
                     					<html><html-template location="component://materialmgmt/webapp/materialmgmt/purchase/POpaymentInfo.ftl"/></html>
                 					</platform-specific>
+                					 <screenlet title="Invoices For Order">
+					                 	<include-form location="component://materialmgmt/widget/MaterialPurchaseForms.xml" name="invoiceDetailList"/>
+					                </screenlet>
                 					<platform-specific>
                     					<html><html-template location="component://materialmgmt/webapp/materialmgmt/purchase/POContactInfo.ftl"/></html>
                 					</platform-specific>
                 				</container>
                 				<container style="righthalf" >
-                					<platform-specific>
-                            			<html><html-template location="component://materialmgmt/webapp/materialmgmt/purchase/PONotes.ftl"/></html>
-                        			</platform-specific>
+                					
                         			<platform-specific>
 	                            		<html><html-template location="component://materialmgmt/webapp/materialmgmt/purchase/POterms.ftl"/></html>
 	                        		</platform-specific>
 	                        		<screenlet title="Receipts For Order">
 					                 	<include-form location="component://materialmgmt/widget/MaterialPurchaseForms.xml" name="listMaterialShipmentReceipt"/>
 					                </screenlet>
-					                <screenlet title="Invoices For Order">
-					                 	<include-form location="component://materialmgmt/widget/MaterialPurchaseForms.xml" name="invoiceDetailList"/>
-					                </screenlet>
 					                <screenlet title="Content">
 					                <include-screen name="POcontent"/>
 					                </screenlet>
+					                <platform-specific>
+                            			<html><html-template location="component://materialmgmt/webapp/materialmgmt/purchase/PONotes.ftl"/></html>
+                        			</platform-specific>
                 				</container>
 	            			</widgets>
 	            		</section>

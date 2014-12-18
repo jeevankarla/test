@@ -35,7 +35,7 @@ under the License.
 
 <div class="screenlet">
   <div class="screenlet-title-bar">
-      <ul><li class="h3">&nbsp;Accounting Payment Information</li></ul>
+      <ul><li class="h3">&nbsp;Payment Information</li></ul>
       <br class="clear"/>
   </div>
   <div class="screenlet-body">
@@ -49,13 +49,14 @@ under the License.
          <th>${uiLabelMap.CommonStatus}</th> 
        </tr>
        <tr><td colspan="4"><hr /></td></tr>
-       <#if paymentMap?has_content>
-       <#list paymentIds as paymentId>
+       <#if finalMap?has_content>
+       <#assign payments=finalMap.entrySet()>
+       <#list payments as payment>
        <tr>
-       	<td><a target="_BLANK" href="/accounting/control/paymentOverview?paymentId=${paymentId}" class="buttontext">${paymentId}</a></td>
-       	<td>${paymentMap.get(paymentId)?if_exists?string("##0.00")}</td>
-       	<td>${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(paymentMap.get("date")?if_exists, "dd-MMM-yyyy")}</td>
-       	<td>${paymentMap.get("statusId")?if_exists}</td>
+       	<td><a href="/accounting/control/paymentOverview?paymentId=${payment.getKey()?if_exists}" target="_BLANK" class="buttontext" >${payment.getKey()?if_exists}</a></td>
+       	<td>${payment.getValue().get("amount")?if_exists?string("##0.00")}</td>
+       	<td>${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(payment.getValue().get("date"), "dd-MMM-yyyy")}</td> 
+       	<td>${payment.getValue().get("statusId")?if_exists}</td>
        </tr>
        </#list>
        </#if>

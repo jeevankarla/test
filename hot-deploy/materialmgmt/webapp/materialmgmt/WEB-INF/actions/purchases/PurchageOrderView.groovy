@@ -503,7 +503,7 @@ if (orderItems) {
    invoiceDetailList=[];
    paymentDetailsList=[];
    paymentIds=[];
-   paymentMap=[:];
+   finalMap=[:];
    orderCondition = EntityCondition.makeCondition([EntityCondition.makeCondition("orderId", EntityOperator.EQUALS, orderId)],EntityOperator.AND);
    OrderItemBillingList = delegator.findList("OrderItemBilling", orderCondition, null, null, null, false);
    invoicesList = EntityUtil.getFieldListFromEntityList(OrderItemBillingList, "invoiceId", true);
@@ -518,27 +518,32 @@ if (orderItems) {
 	   if(UtilValidate.isNotEmpty(tempMap)){
 		   invoiceDetailList.add(tempMap);
 	   }
-	   paymentCondition = EntityCondition.makeCondition([EntityCondition.makeCondition("invoiceId", EntityOperator.EQUALS, invoice)],EntityOperator.AND);
+	   paymentCondition = EntityCondition.makeCondition([EntityCondition.makeCondition("invoiceId", EntityOperator.EQUALS, "124441")],EntityOperator.AND);
 	   PaymentDetailsList=delegator.findList("PaymentAndApplication",paymentCondition,null,null,null,false);
 	   paymentIds = EntityUtil.getFieldListFromEntityList(PaymentDetailsList, "paymentId", true);
 	   if(PaymentDetailsList){
 		   PaymentDetailsList.each{ payment ->
 				   amount=payment.amountApplied;
-				   if(UtilValidate.isEmpty(paymentMap.get(payment.paymentId))){
-					   paymentMap[payment.paymentId]=amount;
-				   }else{
-						   paymentMap[payment.paymentId]+=amount;
+				   if(UtilValidate.isEmpty(finalMap.get(payment.paymentId))){
+					   paymentMap = [:];
+					   Status=delegator.findByPrimaryKey("StatusItem",[statusId:payment.statusId]);
+					    paymentMap.put("amount", amount);     
+					    paymentMap.put("statusId", Status.description);
+						paymentMap.put("date", payment.paymentDate);
+					   	finalMap[payment.paymentId] = paymentMap;
+				   }else{	
+				   paymentMap = [:];
+				   paymentMap.putAll(finalMap[payment.paymentId]);
+				   		   paymentMap["amount"] += amount;
+						   finalMap[payment.paymentId]=paymentMap;
 				   }
-				   Status=delegator.findByPrimaryKey("StatusItem",[statusId:payment.statusId]);
-				   paymentMap.put("statusId", Status.description);
-				   paymentMap.put("date", payment.paymentDate);
+				   
 		   }
 	   }
    }
    context.invoiceDetailList=invoiceDetailList;
-   context.paymentMap=paymentMap;
+   context.finalMap=finalMap;
    context.paymentIds=paymentIds;
-   
    
    
    
