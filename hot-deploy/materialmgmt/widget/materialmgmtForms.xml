@@ -165,7 +165,7 @@
             <service service-name="getProductInventoryAvailable" result-map="resultQohTotal">
                 <field-map field-name="productId" from-field="lookupProductId"/>
             </service>
-            <set field="facilityQuantityOnHandTotal" from-field="resultQoh.quantityOnHandTotal"/>
+           <!--  <set field="facilityQuantityOnHandTotal" from-field="resultQoh.quantityOnHandTotal"/> -->
             <set field="quantityOnHandTotal" from-field="resultQohTotal.quantityOnHandTotal"/>
         </row-actions>
         <field name="requirementId" widget-style="buttontext">
@@ -184,7 +184,7 @@
         <field name="requirementStartDate"><display/></field>
         <field name="requiredByDate"><display/></field>
         <field name="quantity" title="${uiLabelMap.CommonQuantity}"><display/></field>
-        <field name="facilityQuantityOnHandTotal"><display/></field>
+        <!-- <field name="facilityQuantityOnHandTotal"><display/></field> -->
         <field name="quantityOnHandTotal"><display/></field>
         <field name="requestsLink" widget-style="buttontext">
             <hyperlink description="${uiLabelMap.OrderRequests}" target="ListRequirementCustRequests">
@@ -271,6 +271,7 @@
                 </sub-hyperlink>
             </display-entity>
         </field>
+        <field name="quantity" title="Quantity"><display/></field>
         <field name="custRequestName" title="Indent Title"><display/></field>
         <field name="statusId" sort-field="true" title="Status">
             <display-entity also-hidden="false" entity-name="StatusItem"/>
