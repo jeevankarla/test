@@ -129,6 +129,8 @@ under the License.
             location="component://order/script/org/ofbiz/order/request/CustRequestServices.xml" invoke="createCustRequestNote" auth="true">
         <description>Create a note for a CustRequest</description>
         <attribute name="custRequestId" type="String" mode="IN" optional="false"/>
+        <attribute name="noteName" type="String" mode="IN" optional="true"/>
+        <attribute name="noteDate" type="Timestamp" mode="IN" optional="true"/>
         <attribute name="noteInfo" type="String" mode="IN" optional="false" allow-html="safe"/>
         <attribute name="noteId" type="String" mode="OUT" optional="false"/>
         <attribute name="fromPartyId" type="String" mode="OUT" optional="true"/><!-- party to be notified -->
