@@ -684,6 +684,22 @@ public class PayrollService {
 				GenericValue periodBilling = null;
 				String billingTypeId =null;
 		    	try {
+	    			EntityFindOptions opts = new EntityFindOptions();
+	    	        opts.setMaxRows(1);
+	    	        opts.setFetchSize(1);
+	    			List billingConList = FastList.newInstance();
+		            billingConList.add(EntityCondition.makeCondition("billingTypeId" ,EntityOperator.EQUALS ,"PAYROLL_BILL"));
+		            billingConList.add(EntityCondition.makeCondition("statusId" ,EntityOperator.EQUALS , "GENERATED"));
+		            EntityCondition billingCond = EntityCondition.makeCondition(billingConList,EntityOperator.AND);
+		            List<GenericValue> custBillingIdsList = delegator.findList("PeriodBillingAndCustomTimePeriod", billingCond, null, UtilMisc.toList("-fromDate"), opts, false);   
+		            GenericValue periodBillingLatest = EntityUtil.getFirst(custBillingIdsList);
+		            if(UtilValidate.isNotEmpty(periodBillingLatest)){
+		                 String billingIdLatest = periodBillingLatest.getString("periodBillingId");
+		                 if(UtilValidate.isNotEmpty(billingIdLatest) && !periodBillingId.equals(billingIdLatest)){
+		                	 Debug.logError("You cannot cancel payroll billing for past months",module);
+		                	 return ServiceUtil.returnError("You cannot cancel payroll billing for past months");
+		                 }
+		        	} 
 		    		try {
 						periodBilling = delegator.findOne("PeriodBilling", UtilMisc.toMap("periodBillingId", periodBillingId), false);
 						billingTypeId =(String) periodBilling.get("billingTypeId");
@@ -774,6 +790,24 @@ public class PayrollService {
 				String statusId =(String) context.get("statusId");
 				GenericValue periodBilling = null;
 		    	try {
+		    		if(UtilValidate.isNotEmpty(statusId) && statusId.equals("GENERATED")){
+		    			EntityFindOptions opts = new EntityFindOptions();
+		    	        opts.setMaxRows(1);
+		    	        opts.setFetchSize(1);
+		    			List billingConList = FastList.newInstance();
+			            billingConList.add(EntityCondition.makeCondition("billingTypeId" ,EntityOperator.EQUALS ,"PAYROLL_BILL"));
+			            billingConList.add(EntityCondition.makeCondition("statusId" ,EntityOperator.EQUALS , "GENERATED"));
+			            EntityCondition billingCond = EntityCondition.makeCondition(billingConList,EntityOperator.AND);
+			            List<GenericValue> custBillingIdsList = delegator.findList("PeriodBillingAndCustomTimePeriod", billingCond, null, UtilMisc.toList("-fromDate"), opts, false);   
+			            GenericValue periodBillingLatest = EntityUtil.getFirst(custBillingIdsList);
+			            if(UtilValidate.isNotEmpty(periodBillingLatest)){
+			                 String billingIdLatest = periodBillingLatest.getString("periodBillingId");
+			                 if(UtilValidate.isNotEmpty(billingIdLatest) && !periodBillingId.equals(billingIdLatest)){
+			                	 Debug.logError("You cannot reject payroll billing for past months",module);
+			                	 return ServiceUtil.returnError("You cannot reject payroll billing for past months");
+			                 }
+			        	} 
+		    		}
 					periodBilling = delegator.findOne("PeriodBilling", UtilMisc.toMap("periodBillingId", periodBillingId), false);
 					periodBilling.set("lastModifiedDate", UtilDateTime.nowTimestamp());
 	    			periodBilling.set("lastModifiedByUserLogin", userLogin.get("userLoginId"));
