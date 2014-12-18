@@ -31,8 +31,8 @@ under the License.
                     <td width="30%">${uiLabelMap.ProductProduct}</td>
                     <td width="33%">${uiLabelMap.CommonStatus}</td>
                     <td width="5%">${uiLabelMap.OrderQuantity}</td>
-                    <td width="10%" align="right">${uiLabelMap.OrderUnitList}</td>
-                    <td width="10%" align="right">${uiLabelMap.OrderAdjustments}</td>
+                    <td width="10%" align="center">${uiLabelMap.OrderUnitList}</td>
+                    <td width="10%" align="left">${uiLabelMap.OrderAdjustments}</td>
                     <td width="10%" align="right">${uiLabelMap.OrderSubTotal}</td>
                     <td width="2%">&nbsp;</td>
                 </tr>

@@ -518,7 +518,7 @@ if (orderItems) {
 	   if(UtilValidate.isNotEmpty(tempMap)){
 		   invoiceDetailList.add(tempMap);
 	   }
-	   paymentCondition = EntityCondition.makeCondition([EntityCondition.makeCondition("invoiceId", EntityOperator.EQUALS, "124441")],EntityOperator.AND);
+	   paymentCondition = EntityCondition.makeCondition([EntityCondition.makeCondition("invoiceId", EntityOperator.EQUALS, invoice)],EntityOperator.AND);
 	   PaymentDetailsList=delegator.findList("PaymentAndApplication",paymentCondition,null,null,null,false);
 	   paymentIds = EntityUtil.getFieldListFromEntityList(PaymentDetailsList, "paymentId", true);
 	   if(PaymentDetailsList){

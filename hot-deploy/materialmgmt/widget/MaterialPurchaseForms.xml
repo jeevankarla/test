@@ -5,7 +5,7 @@
         <field title="Delivery Date" name="estimatedDeliveryDate"><date-find/></field>
         <field name="orderId"><text-find/></field>
         <field name="orderTypeId"><hidden value="PURCHASE_ORDER"/></field>
-        <field name="salesChannelEnumId" ><hidden value="${ChannalType}"  > </hidden></field>
+        <field name="salesChannelEnumId" ><hidden value="${ChannalType}"  > </hidden></field> 
         <field name="statusId">
         	<drop-down allow-empty="true">
         		<option key="ORDER_CREATED" description="Created"/>
@@ -94,7 +94,7 @@
     </form>
     
      <form name="listMaterialShipmentReceipt" type="list" list-name="listIt" paginate-target="${targetRequest}"
-        odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
+        odd-row-style="alternate-row" header-row-style="header-row" default-table-style="basic-table hover-bar">
         <actions>
             <service service-name="performFind" result-map="result" result-map-list="listIt">
                 <field-map field-name="inputFields" from-field="parameters"/>
@@ -280,7 +280,7 @@
             </hyperlink>
         </field>        
     </form>
-    <form name="invoiceDetailList" type="list" list-name="invoiceDetailList"  odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
+    <form name="invoiceDetailList" type="list" list-name="invoiceDetailList"  odd-row-style="alternate-row" header-row-style="header-row" default-table-style="basic-table hover-bar">
     	<field name="invoiceId" widget-style="buttontext"><hyperlink  target="/accounting/control/invoiceOverview" target-type="inter-app" target-window="_blank" description="${invoiceId}"> <parameter param-name="invoiceId"/></hyperlink></field>
     	<field name="statusId" title="Status">
     		<display-entity entity-name="StatusItem" description="${description}" ></display-entity>

@@ -48,7 +48,7 @@ under the License.
          <th>Payment Date</th> 
          <th>${uiLabelMap.CommonStatus}</th> 
        </tr>
-       <tr><td colspan="4"><hr /></td></tr>
+       <tr><td class="h3" colspan="4"><hr size="30%"  /></td></tr>
        <#if finalMap?has_content>
        <#assign payments=finalMap.entrySet()>
        <#list payments as payment>
