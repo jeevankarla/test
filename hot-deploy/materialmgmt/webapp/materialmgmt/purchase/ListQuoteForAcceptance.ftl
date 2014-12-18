@@ -54,7 +54,8 @@ under the License.
     		appStr += "<input type=hidden name=quoteItemStatusId value=QTITM_REJECTED />";
         	$("#updateQuoteStatusForm").append(appStr);
         }
-    	
+    	var strApp = "<input type=hidden name=custRequestId value='${custRequestId}' />";
+    	$("#updateQuoteStatusForm").append(strApp);
         jQuery('#updateQuoteStatusForm').submit();
     }
        

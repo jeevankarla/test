@@ -396,6 +396,7 @@ public class MaterialQuoteServices {
 		DispatchContext dctx =  dispatcher.getDispatchContext();
 		Locale locale = UtilHttp.getLocale(request);
 		Map<String, Object> result = ServiceUtil.returnSuccess();
+		String custRequestId = (String) request.getParameter("custRequestId");
 	    String quoteStatusId = (String) request.getParameter("quoteStatusId");
 	    String quoteItemStatusId = (String) request.getParameter("quoteItemStatusId");
 	    HttpSession session = request.getSession();
@@ -493,6 +494,7 @@ public class MaterialQuoteServices {
 	  		}
 	  	}
 		request.setAttribute("_EVENT_MESSAGE_", "Quote status changed successfully");
+		request.setAttribute("custRequestId", custRequestId);
 		return "success";
 	}
 	

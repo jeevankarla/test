@@ -223,6 +223,7 @@
                 <parameter param-name="quoteId"/>
         	</hyperlink>
         </field>
+        <field name="custRequestId"><hidden value="${custRequestId}"/></field>
         <field name="quoteId"><hidden/></field>
         <field name="quoteItemSeqId" title="Item No"><display/></field>
         <field name="partyId" title="Supplier"><display-entity entity-name="PartyNameView" key-field-name="partyId" description="${firstName} ${middleName} ${lastName} ${groupName}"/></field>
