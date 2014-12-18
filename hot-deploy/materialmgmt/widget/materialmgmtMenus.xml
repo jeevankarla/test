@@ -230,11 +230,11 @@
         <menu-item name="ApproveMaterialRequirement" title="Approve Requirement">
         	<link target="ApproveMaterialRequirement"/>
         </menu-item>
-        <!-- <menu-item name="ApprovedMatRequirementBySupplier" title=" Approved Requirement By Supplier">
-        	<link target="ApprovedMatRequirementBySupplier"/>
-        </menu-item> -->
         <menu-item name="EnquiryForRequirements" title=" Enquiry For Requirements">
         	<link target="EnquiryForApprovedMatRequirements"/>
+        </menu-item>
+        <menu-item name="ApprovedMatRequirementBySupplier" title="Requirement To PO">
+        	<link target="ApprovedMatRequirementBySupplier"/>
         </menu-item>
       </menu>
       
