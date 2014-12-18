@@ -11,14 +11,15 @@
   <#if payRollSummaryMap?has_content>
      <fo:page-sequence master-reference="main"> 	 <#-- the footer -->
      		<fo:static-content flow-name="xsl-region-before">
-     			<#assign organizationDetails = delegator.findOne("PartyGroup", {"partyId" : parameters.deptId}, true)>
-	           	<#assign oragnizationId = organizationDetails.get("comments")>
+     			<#--<#assign organizationDetails = delegator.findOne("PartyGroup", {"partyId" : parameters.deptId}, true)>
+	           	<#assign oragnizationId = organizationDetails.get("comments")>-->
 	     		<#if deptId?exists>
 	     			<#assign department=deptId/>
 	     		<#else>
 	     			<#assign department= parameters.partyId/>
 	     		</#if> 
      			<#assign partyGroup = delegator.findOne("PartyGroup", {"partyId" :department}, true)>
+     			<#assign oragnizationId = partyGroup.get("comments")>
      			<#assign partyAddressResult = dispatcher.runSync("getPartyPostalAddress", Static["org.ofbiz.base.util.UtilMisc"].toMap("partyId", department, "userLogin", userLogin))/>
      			<fo:block white-space-collapse="false" font-weight="bold" text-align="center" keep-together="always" font-size = "10pt">ANDHRA PRADESH DAIRY DEVELOPMENT CO-OP. FEDERATION LIMITED</fo:block>
      			<fo:block text-align="left" white-space-collapse="false" font-weight="bold" font-size = "10pt">UNIT : ${oragnizationId?if_exists}           ${partyGroup.groupName?if_exists?upper_case}  <#if partyAddressResult.address1?has_content>${partyAddressResult.address1?if_exists}</#if><#if (partyAddressResult.address2?has_content)>${partyAddressResult.address2?if_exists}  </#if>           JOURNAL VOUCHER NO :             </fo:block>
@@ -176,10 +177,10 @@
 	                    		</fo:table-cell >
 	                    	</fo:table-row>               
 	                    	<fo:table-row>   
-                    			<fo:table-cell > 
+                    			<fo:table-cell> 
 	                    			<fo:block></fo:block>
-	                    		</fo:table-cell > 
-	                    		<fo:table-cell > 
+	                    		</fo:table-cell> 
+	                    		<fo:table-cell> 
 	                    			<fo:block></fo:block>
 	                    		</fo:table-cell > 
 	                    		<fo:table-cell > 
