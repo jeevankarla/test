@@ -829,6 +829,8 @@
 				<set field="tabButtonItem" value="loan" />
 				<set field="tabButtonItem2" value="loanRecovery" />
 				<set field="titleProperty" value="Loan Recovery" />
+				<set field="flag" value="Y"/>
+				<script	location="component://accounting/webapp/accounting/WEB-INF/actions/reports/GetApplicableFinancialAccntIds.groovy" />
 			</actions>
 			<widgets>
 				<decorator-screen name="HumanresCommonDecorator"

@@ -27,25 +27,38 @@
 	import com.ibm.icu.util.Calendar;
 	import org.ofbiz.base.util.*;
 	
-	if (organizationPartyId) {
+	
+	if(UtilValidate.isNotEmpty(context.flag) && context.flag == "Y"){
+		finalFinAccntList = [];
+		conditionList = [];
+		conditionList.add(EntityCondition.makeCondition("finAccountTypeId", EntityOperator.EQUALS,"BANK_ACCOUNT"));
+		conditionList.add(EntityCondition.makeCondition("organizationPartyId", EntityOperator.EQUALS, "Company"));
+		conditionList.add(EntityCondition.makeCondition("ownerPartyId", EntityOperator.EQUALS, "Company"));
+		financialAccntList = delegator.findList("FinAccount",EntityCondition.makeCondition(conditionList, EntityOperator.AND), null, UtilMisc.toList("finAccountId"), null, false);
+		finalFinAccntList.addAll(financialAccntList);
 		
-		glAccnt = delegator.findList("GlAccountOrganizationAndClass", EntityCondition.makeCondition(["organizationPartyId" : organizationPartyId]), null, null, null, true);
-		glAccntIds = EntityUtil.getFieldListFromEntityList(glAccnt, "glAccountId", true);
-			conditionList = [];
-			if(UtilValidate.isNotEmpty(parameters.screenFlag)){
-			conditionList.add(EntityCondition.makeCondition("finAccountTypeId", EntityOperator.EQUALS, "BANK_ACCOUNT"));
-			}
-			//conditionList.add(EntityCondition.makeCondition("statusId", EntityOperator.EQUALS, "FNACT_ACTIVE"));
-			conditionList.add( EntityCondition.makeCondition("postToGlAccountId", EntityOperator.IN, glAccntIds));
-			
-		financialAccnt = delegator.findList("FinAccount",EntityCondition.makeCondition(conditionList, EntityOperator.AND), null, null, null, false);
-		//glAccntIds = EntityUtil.getFieldListFromEntityList(glAccnt, "glAccountId", true);
+		condList = [];
+		condList.add(EntityCondition.makeCondition("finAccountTypeId", EntityOperator.EQUALS,"INTERUNIT_ACCOUNT"));
+		condList.add(EntityCondition.makeCondition("organizationPartyId", EntityOperator.EQUALS, "Company"));
+		interFinancialAccntList = delegator.findList("FinAccount",EntityCondition.makeCondition(condList, EntityOperator.AND), null, UtilMisc.toList("finAccountId"), null, false);
+		finalFinAccntList.addAll(interFinancialAccntList);
 		
-	    context.financialAccnt = financialAccnt;
-	   
+		context.finalFinAccntList = finalFinAccntList;
+	}else{
+		if (organizationPartyId) {
+			glAccnt = delegator.findList("GlAccountOrganizationAndClass", EntityCondition.makeCondition(["organizationPartyId" : organizationPartyId]), null, null, null, true);
+			glAccntIds = EntityUtil.getFieldListFromEntityList(glAccnt, "glAccountId", true);
+				conditionList = [];
+				if(UtilValidate.isNotEmpty(parameters.screenFlag)){
+				conditionList.add(EntityCondition.makeCondition("finAccountTypeId", EntityOperator.EQUALS, "BANK_ACCOUNT"));
+				}
+				//conditionList.add(EntityCondition.makeCondition("statusId", EntityOperator.EQUALS, "FNACT_ACTIVE"));
+				conditionList.add( EntityCondition.makeCondition("postToGlAccountId", EntityOperator.IN, glAccntIds));
+			financialAccnt = delegator.findList("FinAccount",EntityCondition.makeCondition(conditionList, EntityOperator.AND), null, null, null, false);
+			//glAccntIds = EntityUtil.getFieldListFromEntityList(glAccnt, "glAccountId", true);
+			context.financialAccnt = financialAccnt;
+		}
 	}
-	
-	
 	
 	
 	

@@ -1212,14 +1212,15 @@
     	<field name="deducteePartyId" required-field="true"><lookup target-form-name="LookupPartyName" target-parameter="roleTypeId" /></field>
     	<field name="amount" title="Recovery Amount" required-field="true"><text size="20"/></field>
     	<field name="description" title="Description" required-field="false"><text size="20"/></field>
-    	<field name="finAccountId"  title="Financial Account"  >
-            <drop-down>
-                <entity-options entity-name="FinAccount" description="${finAccountId} - ${finAccountName}" key-field-name="finAccountId">
+    	<field name="finAccountId"  title="Financial Account" required-field="true">
+            <drop-down allow-empty="true">
+                <!-- <entity-options entity-name="FinAccount" description="${finAccountId} - ${finAccountName}" key-field-name="finAccountId">
                    <entity-constraint name="organizationPartyId" value="Company"/> 
                     <entity-constraint name="ownerPartyId" value="Company"/>
                      <entity-constraint name="finAccountTypeId" value="BANK_ACCOUNT"/>
                     <entity-order-by field-name="finAccountName"/>
-                </entity-options>
+                </entity-options> -->
+                <list-options key-name="finAccountId" list-name="finalFinAccntList"  description="${finAccountId}-${finAccountName}"/>
             </drop-down>
         </field>
         <field name="contraRefNum" title="Instrument Number"><text></text></field>
