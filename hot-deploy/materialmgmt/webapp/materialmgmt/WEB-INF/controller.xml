@@ -264,9 +264,9 @@
      
      <request-map uri="createInvoicesForMaterialShipment">
        <security https="true" auth="true"/>
-       <event type="service" path="" invoke="createInvoicesFromShipment"></event>
-       <response name="success" type="view" value="CustRequestEntry"/>
-       <response name="error" type="view" value="CustRequestEntry"/>
+       <event type="service" path="" invoke="createInvoicesForMaterialShipment"></event>
+       <response name="success" type="view" value="InvoiceForShippedGoods"/>
+       <response name="error" type="view" value="InvoiceForShippedGoods"/>
      </request-map>
      
      <request-map uri="StoreProductIssue">
@@ -274,7 +274,6 @@
        <response name="success" type="view" value="StoreProductIssue"/>
        <response name="error" type="view" value="StoreProductIssue"/>
      </request-map>
-     
      
      <request-map uri="RequestsReceiptAcknowledgement">
        <security https="true" auth="true"/>
@@ -402,7 +401,6 @@
        <response name="success" type="view" value="ViewMaterialEnquiry"/>
        <response name="error" type="view" value="ViewMaterialEnquiry"/>
      </request-map>
-     
      
      <request-map uri="FindMaterialIssuance">
        <security https="true" auth="true"/>

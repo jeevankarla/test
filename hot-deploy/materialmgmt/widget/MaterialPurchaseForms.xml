@@ -153,11 +153,25 @@
                 <field-map field-name="viewSize" from-field="viewSize"/>
             </service>
         </actions>
+        <row-actions>
+        	<entity-condition entity-name="Invoice" list="invoices">
+        		<condition-list combine="and">
+        			<condition-expr field-name="shipmentId" from-field="shipmentId"/>
+        			<condition-expr field-name="statusId" operator="not-equals" value="INVOICE_CANCELLED"/>
+        		</condition-list>
+        	</entity-condition>
+        	<set field="invSize" value="${groovy: invoices.size();}"/>
+        </row-actions>
       	<field name="shipmentId"><display/></field>
         <field name="estimatedShipDate" title="Ship Date"><display description="${groovy:org.ofbiz.base.util.UtilDateTime.toDateString(estimatedShipDate, &quot;dd/MM/yyyy HH:mm:ss&quot;);}"/></field>
         <field name="shipmentId" title="ShipmentId"><display/></field>
         <field name="primaryOrderId" title="PO No"><display/></field>
         <field name="vehicleId" title="Vehicle No"><display/></field>
+        <field name="raiseInvoice" widget-style="buttontext" title="Raise Invoice" use-when="&quot;${invSize}&quot; == &quot;0&quot;">
+            <hyperlink target="InvoiceForShippedGoods" description="Invoice">
+                <parameter param-name="shipmentId"/>
+            </hyperlink>
+        </field> 
         
     </form>
     

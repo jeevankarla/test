@@ -167,7 +167,11 @@
         </menu-item>
         
         <menu-item name="InvoiceForShippedGoods" title="Invoice For GRN">	
-        	<link target="InvoiceForShippedGoods"/>
+        	<condition>
+        		<if-compare operator="not-equals" value="" field="shipmentId"/>
+        	</condition>
+            <link target="InvoiceForShippedGoods">
+            </link>
         </menu-item>
         
       </menu>

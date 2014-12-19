@@ -201,9 +201,9 @@
                  <decorator-screen name="materialmgmtNgCommonDecorator" location="${parameters.mainDecoratorLocation}">
                       <decorator-section name="body">  
 	                      <include-menu name="ReceiptTabBar" location="component://materialmgmt/widget/materialmgmtMenus.xml"/>
-	                      <screenlet title="Create Invoice For Shipment ${showView} ${parameters.showView}">
+	                      <!-- <screenlet title="Create Invoice For Shipment ${showView} ${parameters.showView}">
 	                      		<include-form location="component://materialmgmt/widget/MaterialPurchaseForms.xml" name="generateInvoiceForm"/>
-	                      </screenlet>
+	                      </screenlet> -->
                       		<section>
                       			<condition>
                       				<if-compare operator="equals" value="Y" field="showView"/>
@@ -223,6 +223,16 @@
     
     <screen name="ShipmentOverviewforInvoice">
         <section>
+        	<actions>
+        		<entity-condition list="shipmentReceipt" entity-name="ShipmentReceipt">
+        			<condition-list combine="and">
+        				<condition-expr field-name="shipmentId" from-field="shipmentId"/>
+        				<condition-expr field-name="statusId" operator="equals" value="SR_REJECTED"/>
+        			</condition-list>
+        			
+        		</entity-condition>
+        		<set field="receiptSize" value="${groovy: shipmentReceipt.size();}"/>
+        	</actions>
             <widgets>
                 <container style="lefthalf">
                     <screenlet title="${uiLabelMap.CommonInformation} of ShipmentId : ${shipmentId}">
@@ -235,13 +245,23 @@
                     </screenlet>
                 </container>
                 <container style="clear"/>
-               <screenlet title="GRN Items">
-               		<link target="createInvoicesForMaterialShipment" text="Create Invoice" style="buttontext create">
-						<parameter param-name="shipmentId"/>
-	  	        	</link>
-	  	        	 <horizontal-separator/>
-                    <include-form name="shipmentReceiptsForInvoice" location="component://materialmgmt/widget/MaterialPurchaseForms.xml"/>
-                </screenlet>
+                <container>
+                	<section>
+                		<condition>
+                			<if-compare operator="greater" value="0" field="receiptSize"/>
+                		</condition>
+                		<widgets>
+               				<screenlet title="GRN Items">
+			               		<link target="createInvoicesForMaterialShipment" text="Create Invoice" style="buttontext create">
+									<parameter param-name="shipmentId"/>
+	  	        				</link>
+	  	        	 			<horizontal-separator/>
+                    			<include-form name="shipmentReceiptsForInvoice" location="component://materialmgmt/widget/MaterialPurchaseForms.xml"/>
+                			</screenlet> 	
+                		</widgets>
+                	</section>
+                </container>
+               
             </widgets>
         </section>
     </screen>

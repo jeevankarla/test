@@ -26,6 +26,12 @@
         <attribute name="custRequestItemSeqId" type="String" mode="IN" optional="true"/>
     </service>
     
+    <service name="createInvoicesForMaterialShipment" engine="java" location="in.vasista.vbiz.purchase.MaterialPurchaseServices" invoke="createInvoicesForMaterialShipment">
+        <description>Create Invoice For Material Shipment Service</description>
+        <attribute name="shipmentId" type="String" mode="IN" optional="false"/>
+        <attribute name="invoiceId" type="String" mode="OUT" optional="true"/>
+    </service>
+    
     <service name="createQuoteContent" engine="simple"
         location="component://materialmgmt/script/MaterialMgmtServices.xml"
         invoke="createQuoteContent"
