@@ -1501,7 +1501,7 @@ import java.text.SimpleDateFormat;
 		        		periodBillingList = delegator.findList("PeriodBilling", condition, null,null, null, false);	 
 		        		if(UtilValidate.isNotEmpty(periodBillingList)){
 		        			 Debug.logError("Billing Is Already Generated For This Period", module);
-		        			 return ServiceUtil.returnError("Billing Is Already Generated For This Period  and You Can Not Crete Recovery!");   
+		        			 return ServiceUtil.returnError("Billing Is Already Generated For This Period  and You Can Not Create Recovery!");   
 		        		}
 					GenericValue facilityRecovery = delegator.makeValue("FineRecovery");
 	    			facilityRecovery.put("facilityId", facilityId );
