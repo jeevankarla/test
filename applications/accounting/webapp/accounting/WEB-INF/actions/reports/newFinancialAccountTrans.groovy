@@ -225,15 +225,20 @@ if (organizationPartyId) {
 		
 		
 		dayTotalFinalMap = [:];
-		
+		newAcctgTransAndEntries = [];
 		glAcctgTrialBalanceList = UtilMisc.sortMaps(glAcctgTrialBalanceList, UtilMisc.toList("transactionDate"));
 		if(UtilValidate.isNotEmpty(glAcctgTrialBalanceList)){
 			for(i=0; i<glAcctgTrialBalanceList.size(); i++){
 				acctgTransIt = glAcctgTrialBalanceList[i];
-				acctgTransAndEntries = glAcctgTrialBalanceList[i].acctgTransAndEntries;
+				acctgTransAndEntries = acctgTransIt.acctgTransAndEntries;
+				newAcctgTransAndEntries.addAll(acctgTransAndEntries);
 				tempList = [];
-				for(j=0; j<acctgTransAndEntries.size(); j++){
-					acctgTransEntry = acctgTransAndEntries[j];
+				for(j=0; j<newAcctgTransAndEntries.size(); j++){
+					
+					debitAmount = BigDecimal.ZERO;
+					creditAmount = BigDecimal.ZERO;
+					
+					acctgTransEntry = newAcctgTransAndEntries[j];
 					openingBalance = closingBalance;
 					paymentId = acctgTransEntry.paymentId;
 					paymentGroupId = null;
@@ -247,27 +252,46 @@ if (organizationPartyId) {
 							   paymentGroupMemberList.each { paymentGroupMember->
 								   paymentGroupId = paymentGroupMember.paymentGroupId;
 								   if(UtilValidate.isNotEmpty(paymentGroupId)){
-									   if(UtilValidate.isNotEmpty(paymentGroupId)){
-										   paymentGroup = delegator.findOne("PaymentGroup", [paymentGroupId : paymentGroupId], false);
-										   if(UtilValidate.isNotEmpty(paymentGroup)){
-											   paymentGroupTypeId = paymentGroup.paymentGroupTypeId;
-											   if(UtilValidate.isNotEmpty(paymentMethodTypeId)){
-												   paymentGroupType = delegator.findOne("PaymentGroupType", [paymentGroupTypeId : paymentGroupTypeId], false);
-												   if(UtilValidate.isNotEmpty(paymentGroupType)){
-													   paymentGroupTypeDes = paymentGroupType.description;
-												   }
-											   }
-											   paymentMethodTypeId = paymentGroup.paymentMethodTypeId;
-											   if(UtilValidate.isNotEmpty(paymentMethodTypeId)){
-												   paymentMethodType = delegator.findOne("PaymentMethodType", [paymentMethodTypeId : paymentMethodTypeId], false);
-												   if(UtilValidate.isNotEmpty(paymentMethodType)){
-													   paymentGroupMethodTypeDes = paymentMethodType.description;
-												   }
-											   }
-											   paymentGroupRefNum = paymentGroup.paymentRefNum;
-											   paymentGroupAmount = paymentGroup.amount;
-											   paymentGroupComments = paymentGroup.inFavor;
+									   totalDebitAmount = 0;
+									   totalCreditAmount = 0;
+									   
+									   newPaymentGroupMemberList = delegator.findList("PaymentGroupMember", EntityCondition.makeCondition("paymentGroupId", EntityOperator.EQUALS, paymentGroupId), null, null, null, false);
+									   paymentGroupIds = EntityUtil.getFieldListFromEntityList(newPaymentGroupMemberList, "paymentId", true);
+									   groupPaymentList = EntityUtil.filterByAnd(acctgTransAndEntries, [EntityCondition.makeCondition("paymentId", EntityOperator.IN, paymentGroupIds)]);
+									   groupPaymentList.each { groupPayment ->
+										   if(groupPayment.debitCreditFlag == "D"){
+											   groupDebitAmount = groupPayment.amount;
+											   totalDebitAmount = totalDebitAmount+groupDebitAmount;
+											   debitAmount = totalDebitAmount; 
 										   }
+										   if(groupPayment.debitCreditFlag == "C"){
+											   groupCreditAmount = groupPayment.amount;
+											   totalCreditAmount = totalCreditAmount+groupCreditAmount;
+											   creditAmount = totalCreditAmount;
+										   }
+									   }
+									   newAcctgTransAndEntries.removeAll(groupPaymentList);
+									   
+									   paymentGroup = delegator.findOne("PaymentGroup", [paymentGroupId : paymentGroupId], false);
+									   if(UtilValidate.isNotEmpty(paymentGroup)){
+										   paymentGroupTypeId = paymentGroup.paymentGroupTypeId;
+										   paymentGroupStatus = paymentGroup.statusId;
+										   if(UtilValidate.isNotEmpty(paymentMethodTypeId)){
+											   paymentGroupType = delegator.findOne("PaymentGroupType", [paymentGroupTypeId : paymentGroupTypeId], false);
+											   if(UtilValidate.isNotEmpty(paymentGroupType)){
+												   paymentGroupTypeDes = paymentGroupType.description;
+											   }
+										   }
+										   paymentMethodTypeId = paymentGroup.paymentMethodTypeId;
+										   if(UtilValidate.isNotEmpty(paymentMethodTypeId)){
+											   paymentMethodType = delegator.findOne("PaymentMethodType", [paymentMethodTypeId : paymentMethodTypeId], false);
+											   if(UtilValidate.isNotEmpty(paymentMethodType)){
+												   paymentGroupMethodTypeDes = paymentMethodType.description;
+											   }
+										   }
+										   paymentGroupRefNum = paymentGroup.paymentRefNum;
+										  // paymentGroupAmount = paymentGroup.amount;
+										   paymentGroupComments = paymentGroup.inFavor;
 									   }
 								   }
 							   }
@@ -382,28 +406,23 @@ if (organizationPartyId) {
 						}
 					}
 					// Prepare List for CSV
-					debitAmount = BigDecimal.ZERO;
-					creditAmount = BigDecimal.ZERO;
-					
-					if(tempList.contains(paymentGroupId)){
-						continue;
-					}
-					else{
-						if(paymentGroupId!=null){
-							tempList.add(paymentGroupId);
+					//if(UtilValidate.isNotEmpty(paymentGroupStatus) && paymentGroupStatus != "PAYGRP_CANCELLED"){
+						/*if(tempList.contains(paymentGroupId)){
+							continue;
 						}
-					}
+						else{
+							if(paymentGroupId!=null){
+								tempList.add(paymentGroupId);
+							}
+						}*/
+					//}
 					if(acctgTransEntry.debitCreditFlag == "D"){
-						if(UtilValidate.isNotEmpty(paymentGroupId)){
-							debitAmount = paymentGroupAmount;
-						}else{
+						if(UtilValidate.isEmpty(paymentGroupId)){
 							debitAmount = acctgTransEntry.amount;
 						}
 					}
 					if(acctgTransEntry.debitCreditFlag == "C"){
-						if(UtilValidate.isNotEmpty(paymentGroupId)){
-							creditAmount = paymentGroupAmount;
-						}else{
+						if(UtilValidate.isEmpty(paymentGroupId)){
 							creditAmount = acctgTransEntry.amount;
 						}
 					}
@@ -436,7 +455,6 @@ if (organizationPartyId) {
 							tempDayTotalMap.putAll(dayWiseTotMap);
 							dayTotalFinalMap.put(prevDateStamp,tempDayTotalMap);
 							//financialAcctgTransList.add(tempDayTotalMap);
-							
 						}
 						dayTotalOB = openingBalance;
 						dayTotalDebit = debitAmount;
@@ -505,7 +523,7 @@ if (organizationPartyId) {
 					financialAcctgTransList.add(tempAcctgTransMap);
 					
 					
-					if((j == ((acctgTransAndEntries.size())-1)) && (isMonthEnd == "N")){
+					if((i == ((glAcctgTrialBalanceList.size())-1)) && (isMonthEnd == "N")){
 						dayWiseTotMap = [:];
 						dayWiseTotMap["paymentId"] = "DAY TOTAL";
 						dayWiseTotMap["openingBalance"] = dayTotalOB;
