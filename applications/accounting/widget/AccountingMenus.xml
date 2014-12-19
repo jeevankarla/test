@@ -1295,9 +1295,9 @@
 		</menu-item>
 		<menu-item name="GlAccountTrialBalance"
 			title="${uiLabelMap.AccountingGlAccountTrialBalance}">
-			 <condition>
+			<!--  <condition>
 			  <if-has-permission permission="ACCOUNTINGR"  action="_BLS_VIEW"/>				
-			</condition>
+			</condition> -->
 			<link target="GlAccountTrialBalance">
 				<parameter param-name="organizationPartyId" />
 			</link>
