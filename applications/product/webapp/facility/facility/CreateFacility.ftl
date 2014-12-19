@@ -79,6 +79,7 @@ function makeDatePicker(fromDateId ,thruDateId){
                 		var amRoute=$( "#amRoute option:selected" ).val()
                 		var pmRoute=$( "#pmRoute option:selected" ).val()
                 		var categoryTypeEnum =$( "#categoryTypeEnum option:selected" ).val();
+                		var rateAmount = $("#rateAmount").val();
                 	    if( (facilityId).length < 1 ) {
 					    	$('#facilityId').css('background', 'yellow'); 
 					       	setTimeout(function () {
@@ -111,7 +112,13 @@ function makeDatePicker(fromDateId ,thruDateId){
 					       	}, 800);
 					    	return false;
 				    	}
-				    	
+				    	 if( categoryTypeEnum == "SHP_RTLR" && (rateAmount).length < 1 ) {
+					    	$('#rateAmount').css('background', 'yellow'); 
+					       	setTimeout(function () {
+					           	$('#rateAmount').css('background', 'white').focus(); 
+					       	}, 800);
+					    	return false;
+				    	}
                 		return true;
                 	}
                 	if(currentIndex == 1 && newIndex == 2){
