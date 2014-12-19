@@ -256,7 +256,12 @@ if(UtilValidate.isNotEmpty(periodBillingList)){
 			netAmount=totEarnings+totDeductions;
 			bankAdviceDetailsMap.put("totEarnings",totEarnings);
 			bankAdviceDetailsMap.put("totDeductions",totDeductions);
-			accountDetails = delegator.findList("FinAccount", EntityCondition.makeCondition("ownerPartyId", EntityOperator.EQUALS , partyId), null, null, null, false);
+			List finAccConList=FastList.newInstance();
+			finAccConList.add(EntityCondition.makeCondition("ownerPartyId", EntityOperator.EQUALS ,partyId));
+			finAccConList.add(EntityCondition.makeCondition("statusId", EntityOperator.EQUALS ,"FNACT_ACTIVE"));
+			finAccConList.add(EntityCondition.makeCondition("finAccountTypeId", EntityOperator.EQUALS ,"BANK_ACCOUNT"));
+			EntityCondition finAccCond = EntityCondition.makeCondition(finAccConList, EntityOperator.AND);
+			accountDetails = delegator.findList("FinAccount", finAccCond, null, null, null, false);
 			if(UtilValidate.isNotEmpty(accountDetails)){
 				accDetails = EntityUtil.getFirst(accountDetails);
 				accNo=0;
