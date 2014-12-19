@@ -1659,10 +1659,11 @@ public class LmsServices {
 					 "categoryTypeEnum", categoryTypeEnum,"sequenceNum", facilityId,"facilityName", (String)context.get("facilityName"),"useEcs", (String)context.get("useEcs"),
 					 "description", (String)context.get("description"),"securityDeposit", (BigDecimal)context.get("securityDeposit"));
 		 }
-		 	 resultMap =  dispatcher.runSync("updateFacility", input);
-		 if(ServiceUtil.isError(outMap)){
-        	 	Debug.logError("failed service update facility party:"+ServiceUtil.getErrorMessage(outMap), module);
-        	 	return ServiceUtil.returnError(ServiceUtil.getErrorMessage(outMap));
+		     
+		 resultMap =  dispatcher.runSync("updateFacility", input);
+		 if(ServiceUtil.isError(resultMap)){
+        	 	Debug.logError("failed service update facility party:"+ServiceUtil.getErrorMessage(resultMap), module);
+        	 	return ServiceUtil.returnError(ServiceUtil.getErrorMessage(resultMap));
          }
 		 if (UtilValidate.isNotEmpty(categoryTypeEnum)&& categoryTypeEnum.equals("CR_INST")){
 			    boolean isNewCrInst = true;
@@ -1748,11 +1749,11 @@ public class LmsServices {
 						facilityRent = EntityUtil.getFirst(facilityRateList);
 						rentAmt = facilityRent.getBigDecimal("rateAmount");
 					}
-					if(rateAmount.compareTo(rentAmt) != 0 && UtilValidate.isEmpty(facilityRent)){
+					if(UtilValidate.isEmpty(facilityRent) && rateAmount.compareTo(rentAmt) != 0){
 						createNewRentEntry = true;
 					}
 					
-					if(rateAmount.compareTo(rentAmt) != 0 && UtilValidate.isNotEmpty(facilityRent)){
+					if(UtilValidate.isNotEmpty(facilityRent) && rateAmount.compareTo(rentAmt) != 0 ){
 						
 						Timestamp tempDate = facilityRent.getTimestamp("fromDate"); 
 						
