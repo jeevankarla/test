@@ -22,7 +22,7 @@ under the License.
 
 <#-- do not display columns associated with values specified in the request, ie constraint values -->
 <fo:layout-master-set>
-	<fo:simple-page-master master-name="main" page-height="10in" page-width="12in"
+	<fo:simple-page-master master-name="main" page-height="12in" page-width="10in"
             margin-top="0.1in" margin-bottom=".7in" margin-left=".5in" margin-right=".5in">
         <fo:region-body margin-top="1.0in"/>
         <fo:region-before extent="1.in"/>
@@ -46,39 +46,39 @@ ${setRequestAttribute("OUTPUT_FILENAME", "LoanAvailedReport.pdf")}
               	 
             </fo:static-content>		
            <fo:flow flow-name="xsl-region-body"   font-family="Courier,monospace">	
-           <#assign OrderHeaderDetails = delegator.findOne("OrderHeader", {"orderId" :parameters.orderId }, true)>
-		   		          <#if OrderHeaderDetails?has_content>
 			        	<#--   <fo:block white-space-collapse="false" font-size="10pt"  font-family="Helvetica" keep-together="always" >&#160;  STORE CODE:${parameters.stockId}&#160;    &#160;     &#160;  DESCRIPTION:${stockDetails.get("description")?if_exists}</fo:block> -->
 			              
               		  
-                 <fo:block  keep-together="always" text-align="left" font-family="Courier,monospace" white-space-collapse="false" font-size="12pt" >&#160;&#160;        phon no:22179004 /41        FAX :   080-20462652                    TIN:    29710050983 </fo:block>
-                 <fo:block  keep-together="always" text-align="center" font-family="Courier,monospace" white-space-collapse="false" font-size="12pt" >       &#160; 22179074 /55        Email: purchase@motherdairykmf.in       KST NO: 90700065  </fo:block>
-                 <fo:block  keep-together="always" text-align="right" font-family="Courier,monospace" white-space-collapse="false" font-size="12pt" >                CST NO: 90750060              &#160;&#160; </fo:block>
-                <fo:block  keep-together="always" text-align="center" font-family="Courier,monospace" white-space-collapse="false" font-size="12pt" >----------------------------------------------------------------------------------------------------- </fo:block>
+                 <fo:block  keep-together="always" text-align="left" font-family="Courier,monospace" white-space-collapse="false" font-size="12pt" >phon no:22179004 /41   FAX :   080-20462652                TIN:    ${allDetailsMap.get("tinNumber")?if_exists} </fo:block>
+                 <fo:block  keep-together="always" text-align="left" font-family="Courier,monospace" white-space-collapse="false" font-size="12pt" >&#160;       22179074 /55   Email: purchase@motherdairykmf.in   KST NO: ${allDetailsMap.get("kstNumber")?if_exists} </fo:block>
+                 <fo:block  keep-together="always" text-align="left" font-family="Courier,monospace" white-space-collapse="false" font-size="12pt" >&#160;&#160;                                                         CST NO: ${allDetailsMap.get("cstNumber")?if_exists} </fo:block>
+                <fo:block  keep-together="always" text-align="center" font-family="Courier,monospace" white-space-collapse="false" font-size="12pt" >--------------------------------------------------------------------------------------------------- </fo:block>
 	            <fo:block  keep-together="always" text-align="center" font-family="Courier,monospace" white-space-collapse="false" font-size="12pt" font-weight="bold">PURCHASE ORDER </fo:block>
 	            <fo:block  keep-together="always" text-align="center" font-family="Courier,monospace" white-space-collapse="false" font-size="12pt" > &#160;&#160;</fo:block>
-	             <fo:block  keep-together="always" text-align="center" font-family="Courier,monospace" white-space-collapse="false" font-size="12pt" >&#160;&#160; </fo:block>
-              	<fo:block  keep-together="always" text-align="left" font-family="Courier,monospace" white-space-collapse="false" font-size="12pt" > &#160;&#160; &#160;&#160;       PO NO: ${allDetailsMap.get("orderId")?if_exists}                                                 PO DATED: ${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(OrderHeaderDetails.get("orderDate")?if_exists, "dd-MMM-yy")}</fo:block>
-                <fo:block  keep-together="always" text-align="center" font-family="Courier,monospace" white-space-collapse="false" font-size="12pt" >&#160;&#160; </fo:block>
+              	<fo:block  keep-together="always" text-align="left" font-family="Courier,monospace" white-space-collapse="false" font-size="12pt" > &#160;&#160; &#160;PO NO:   ${allDetailsMap.get("orderId")?if_exists}                                                 PO DATED: ${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(allDetailsMap.get("orderDate")?if_exists, "dd-MMM-yy")}</fo:block>
+                <fo:block  keep-together="always" text-align="center" font-family="Courier,monospace" white-space-collapse="false" font-size="12pt" > &#160;&#160; </fo:block>
+                <fo:block  keep-together="always" text-align="center" font-family="Courier,monospace" white-space-collapse="false" font-size="12pt" > &#160;&#160; </fo:block>
+                <fo:block  keep-together="always" text-align="left" font-family="Courier,monospace" white-space-collapse="false" font-size="12pt" >&#160;&#160;                                                                   FAX:   </fo:block>
               	<fo:block  keep-together="always" text-align="center" font-family="Courier,monospace" white-space-collapse="false" font-size="12pt" > </fo:block>
-              	<fo:block  keep-together="always" text-align="left" font-family="Courier,monospace" white-space-collapse="false" font-size="12pt" >&#160;&#160;&#160;&#160;      Address: ${allDetailsMap.get("address1")?if_exists}                                                            FAX: </fo:block>
-                <fo:block  keep-together="always" text-align="center" font-family="Courier,monospace" white-space-collapse="false" font-size="12pt" >&#160;&#160; </fo:block>
-              	 <fo:block  keep-together="always" text-align="left" font-family="Courier,monospace" white-space-collapse="false" font-size="12pt" >&#160;&#160;&#160;&#160;     phone no: ${allDetailsMap.get("phoneNumber")?if_exists}         </fo:block>
+              	<fo:block  keep-together="always" text-align="left" font-family="Courier,monospace" white-space-collapse="false" font-size="12pt" >&#160;&#160;&#160; Address:<#if allDetailsMap.get("address1")?has_content> ${allDetailsMap.get("address1")},         <#else> </#if>                              </fo:block>
+                <fo:block  keep-together="always" text-align="left" font-family="Courier,monospace" white-space-collapse="false" font-size="12pt" >&#160;&#160;&#160;        <#if allDetailsMap.get("address1")?has_content>  ${allDetailsMap.get("address2")?if_exists}, <#else> </#if>     </fo:block>
+                <fo:block  keep-together="always" text-align="left" font-family="Courier,monospace" white-space-collapse="false" font-size="12pt" >&#160;&#160;&#160;         <#if allDetailsMap.get("address1")?has_content> ${allDetailsMap.get("city")?if_exists}-${allDetailsMap.get("postalCode")?if_exists}. <#else> </#if>                          </fo:block>
+                
+              	 <fo:block  keep-together="always" text-align="left" font-family="Courier,monospace" white-space-collapse="false" font-size="12pt" >&#160;&#160;&#160; phone no:${allDetailsMap.get("phoneNumber")?if_exists}         </fo:block>
                <fo:block  keep-together="always" text-align="center" font-family="Courier,monospace" white-space-collapse="false" font-size="12pt" >&#160;&#160; </fo:block>
-             	<fo:block  keep-together="always" text-align="left" font-family="Courier,monospace" white-space-collapse="false" font-size="12pt" >&#160;&#160;    DAIRY ENQUIRY NO: ${allDetailsMap.get("custRequestId")?if_exists}                                         DATE:  ${allDetailsMap.get("custRequestDate")?if_exists}</fo:block> 
-              	<fo:block  keep-together="always" text-align="left" font-family="Courier,monospace" white-space-collapse="false" font-size="12pt" >&#160;&#160;&#160;&#160;      QUOTATION NO: ${allDetailsMap.get("quoteId")?if_exists}                                         DATE:  ${allDetailsMap.get("qutationDate")?if_exists} </fo:block>
+             	<fo:block  keep-together="always" text-align="left" font-family="Courier,monospace" white-space-collapse="false" font-size="12pt" >&#160;&#160;  DAIRY ENQUIRY NO: ${allDetailsMap.get("custRequestId")?if_exists}                                         DATE:<#if allDetailsMap.get("custRequestDate")?has_content> ${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(allDetailsMap.get("custRequestDate")?if_exists, "dd-MMM-yy")} <#else> </#if>  </fo:block>
+              	<fo:block  keep-together="always" text-align="left" font-family="Courier,monospace" white-space-collapse="false" font-size="12pt" >&#160;&#160;&#160;&#160;QUOTATION NO:    ${allDetailsMap.get("quoteId")?if_exists}                                          DATE:<#if allDetailsMap.get("qutationDate")?has_content> ${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(allDetailsMap.get("qutationDate")?if_exists, "dd-MMM-yy")}         <#else> </#if> </fo:block>
               	<fo:block  keep-together="always" text-align="center" font-family="Courier,monospace" white-space-collapse="false" font-size="12pt" >----------------------------------------------------------------------------------------------------- </fo:block>
-              	<fo:block  keep-together="always" text-align="left" font-family="Courier,monospace" white-space-collapse="false" font-size="12pt" >&#160;&#160;&#160;&#160;  SNO   ITEM CODE       DESCRIPTION                UNIT        QTY          UNIT RATE      AMOUNT</fo:block>
+              	<fo:block  keep-together="always" text-align="left" font-family="Courier,monospace" white-space-collapse="false" font-size="12pt" >&#160;&#160;SNO  ITEM CODE    DESCRIPTION                    UNIT        QTY    UNIT RATE    AMOUNT</fo:block>
               	<fo:block  keep-together="always" text-align="center" font-family="Courier,monospace" white-space-collapse="false" font-size="12pt" >----------------------------------------------------------------------------------------------------- </fo:block>
-            </#if>	
             	<fo:block>
                  <fo:table text-align="center" >
-                    <fo:table-column column-width="70pt"/>
+                    <fo:table-column column-width="50pt"/>
                     <fo:table-column column-width="90pt"/>
-                    <fo:table-column column-width="200pt"/>  
-               	    <fo:table-column column-width="90pt"/>
-               	    <fo:table-column column-width="90pt"/>
-            		 <fo:table-column column-width="90pt"/>
+                    <fo:table-column column-width="220pt"/>  
+               	    <fo:table-column column-width="60pt"/>
+               	    <fo:table-column column-width="60pt"/>
+            		 <fo:table-column column-width="70pt"/>
             		<fo:table-column column-width="90pt"/>
             		
                     <fo:table-body text-align="center">
@@ -91,11 +91,11 @@ ${setRequestAttribute("OUTPUT_FILENAME", "LoanAvailedReport.pdf")}
 		          <#assign productNameDetails = delegator.findOne("Product", {"productId" : productId}, true)>
 		           <#if productNameDetails?has_content> 
                   	 <fo:table-row >
-                	   <fo:table-cell  ><fo:block text-align="right"  font-size="10pt" >${sNo} </fo:block></fo:table-cell>     
-  				  	   <fo:table-cell  ><fo:block text-align="center" font-size="10pt">${productNameDetails.get("internalName")?if_exists}</fo:block></fo:table-cell>     
+                	   <fo:table-cell  ><fo:block text-align="center"  font-size="10pt" >${sNo} </fo:block></fo:table-cell>     
+  				  	   <fo:table-cell  ><fo:block text-align="left" font-size="10pt">${productNameDetails.get("internalName")?if_exists}</fo:block></fo:table-cell>     
   				       <fo:table-cell  ><fo:block text-align="left"   font-size="10pt" >${productNameDetails.get("productName")?if_exists} </fo:block></fo:table-cell>     
-  				       <fo:table-cell  ><fo:block text-align="center" font-size="10pt">${productNameDetails.get("quantityUomId")?if_exists}</fo:block></fo:table-cell>     
-  				       <fo:table-cell ><fo:block text-align="center"  font-size="10pt">${orderListItem.get("quantity")?if_exists}</fo:block></fo:table-cell>     
+  				       <fo:table-cell  ><fo:block text-align="left" font-size="10pt">${productNameDetails.get("quantityUomId")?if_exists}</fo:block></fo:table-cell>     
+  				       <fo:table-cell ><fo:block text-align="right"  font-size="10pt">${orderListItem.get("quantity")?if_exists}</fo:block></fo:table-cell>     
   			          <fo:table-cell  ><fo:block text-align="right"   font-size="10pt" >${orderListItem.get("unitPrice")?if_exists?string("##0.00")}</fo:block></fo:table-cell>     
   				       <fo:table-cell  ><fo:block text-align="right"  font-size="10pt" >${orderListItem.get("amount")?if_exists?string("##0.00")}</fo:block></fo:table-cell>     
   				         
@@ -132,12 +132,13 @@ ${setRequestAttribute("OUTPUT_FILENAME", "LoanAvailedReport.pdf")}
                <fo:block   text-align="center" font-family="Courier,monospace" white-space-collapse="false" font-size="12pt" >...stock the duplicate copy of the P.O. duty signed and scaled as a token of acceptance. You are requested to submit the bills in ....towards the supply of said materials. Alsoplease Quote the Purchase Order No and Date in all your Letters Delivery....etc. </fo:block>
                 <fo:block  keep-together="always" text-align="center" font-family="Courier,monospace" white-space-collapse="false" font-size="12pt" >&#160;&#160; </fo:block>
                   <fo:block  keep-together="always" text-align="center" font-family="Courier,monospace" white-space-collapse="false" font-size="12pt" >&#160;&#160; </fo:block>
-                               <fo:block  keep-together="always" text-align="center" font-family="Courier,monospace" white-space-collapse="false" font-size="12pt" >&#160;&#160;                                                                    Your faithfully                      </fo:block>
-                               <fo:block  keep-together="always" text-align="center" font-family="Courier,monospace" white-space-collapse="false" font-size="12pt" >&#160;&#160;                                                                    for MOTHER DAIRY                     </fo:block>
-                               <fo:block  keep-together="always" text-align="center" font-family="Courier,monospace" white-space-collapse="false" font-size="12pt" >&#160;&#160;                                                                                                                                 </fo:block>
-                               <fo:block  keep-together="always" text-align="left" font-family="Courier,monospace" white-space-collapse="false" font-size="12pt" >&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160; ...(FIN)FOR INFORMATION                                                   MANAGER (PURCHASE)                      </fo:block>
-                               <fo:block  keep-together="always" text-align="left" font-family="Courier,monospace" white-space-collapse="false" font-size="12pt" >&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160; ...(DAIRY) FOR INFORMATION (PRP,PRODN,GHEE,PPL)                                                                                                        </fo:block>
-                               <fo:block  keep-together="always" text-align="left" font-family="Courier,monospace" white-space-collapse="false" font-size="12pt" >&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160; ...OFFICER FOR INFORMATION AND NEEDFUL ACTIONS.                                                                                                                               </fo:block>
+                               <fo:block  keep-together="always" text-align="right" font-family="Courier,monospace" white-space-collapse="false" font-size="12pt" >  Your faithfully &#160;&#160;&#160;&#160;&#160; </fo:block>
+                               <fo:block  keep-together="always" text-align="right" font-family="Courier,monospace" white-space-collapse="false" font-size="12pt" >  for MOTHER DAIRY   &#160;&#160;</fo:block>
+                               <fo:block  keep-together="always" text-align="left" font-family="Courier,monospace" white-space-collapse="false" font-size="12pt" >&#160;&#160;  </fo:block>
+                               <fo:block  keep-together="always" text-align="left" font-family="Courier,monospace" white-space-collapse="false" font-size="12pt" >&#160;&#160;                                                                                                                                 </fo:block>
+                               <fo:block  keep-together="always" text-align="left" font-family="Courier,monospace" white-space-collapse="false" font-size="12pt" >&#160;&#160;...(FIN)FOR INFORMATION <fo:inline text-align="left" font-family="Courier,monospace"  font-size="12pt" font-weight="bold">&#160;&#160;                                                                   MANAGER (PURCHASE)</fo:inline></fo:block>
+                               <fo:block  keep-together="always" text-align="left" font-family="Courier,monospace" white-space-collapse="false" font-size="12pt" >&#160;&#160;...(DAIRY) FOR INFORMATION (PRP,PRODN,GHEE,PPL)                                                                                                        </fo:block>
+                               <fo:block  keep-together="always" text-align="left" font-family="Courier,monospace" white-space-collapse="false" font-size="12pt" >&#160;&#160;...OFFICER FOR INFORMATION AND NEEDFUL ACTIONS.                                                                                                                               </fo:block>
                                <fo:block  keep-together="always" text-align="center" font-family="Courier,monospace" white-space-collapse="false" font-size="12pt" >&#160;&#160;                                                                                                                                 </fo:block>
                                <fo:block  keep-together="always" text-align="center" font-family="Courier,monospace" white-space-collapse="false" font-size="12pt" >&#160;&#160;                                                                                                                                 </fo:block>
               
