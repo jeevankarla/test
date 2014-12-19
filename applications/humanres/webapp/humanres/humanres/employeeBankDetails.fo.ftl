@@ -92,8 +92,13 @@ under the License.
 		                   <fo:table-cell  border="solid">
 		                        <fo:block text-align="left" keep-together="always" white-space-collapse="false">&#160;  ${BankAdvicePayRollMap.get(partyId).get("empName")?if_exists}</fo:block>
 		                   </fo:table-cell>
-		                   <#assign designation = delegator.findOne("EmplPositionType", {"emplPositionTypeId" : emplPosition[0].emplPositionId}, true)>
-                     		<#assign designationName=designation.description?if_exists>
+		                   <#assign designationName="">
+		                   <#if emplPosition[0].name?has_content>
+		                   		<#assign designationName=emplPosition[0].name>
+		                   <#else>
+		                   		<#assign designation = delegator.findOne("EmplPositionType", {"emplPositionTypeId" : emplPosition[0].emplPositionId}, true)>
+                     			<#assign designationName=designation.description?if_exists>
+                     		</#if>	
 		                   <fo:table-cell  border="solid">
 		                        <fo:block text-align="left" keep-together="always" white-space-collapse="false">&#160; ${designationName?if_exists} </fo:block>
 		                   </fo:table-cell>
