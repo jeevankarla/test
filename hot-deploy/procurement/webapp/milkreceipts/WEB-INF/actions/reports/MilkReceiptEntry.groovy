@@ -131,8 +131,56 @@ context.putAt("productItemsJSON", productItemsJSON);
 context.put("productJson",productJson);
 
 
+// vehicles auto complete from vehicle master
+List<GenericValue> vehiclesList = delegator.findList("Vehicle",null, null, null, null, true);
 
+JSONObject vehicleCodeJson = new JSONObject();
+JSONArray vehItemsJSON = new JSONArray();
+for(vehicle in vehiclesList){
+		JSONObject vehObjectJson = new JSONObject();
+		vehObjectJson.put("value",vehicle.get("vehicleId"));
+		String label = vehicle.get("vehicleId");
+		if(UtilValidate.isNotEmpty(vehicle.get("vehicleName"))){
+				label = label.concat("-").concat(vehicle.get("vehicleName"));
+			}
+		
+		vehObjectJson.put("label",label);
+		vehItemsJSON.add(vehObjectJson);
+		
+		JSONObject vehDetJson = new JSONObject();
+		vehDetJson.put("vehicleId",vehicle.get("vehicleId"));
+		vehDetJson.put("vehicleName",vehicle.get("vehicleName"));
+		
+		vehicleCodeJson.put(vehicle.get("vehicleId"),vehDetJson);
+		
+}
+context.put("vehItemsJSON",vehItemsJSON);
+context.put("vehicleCodeJson",vehicleCodeJson);
 
+List<GenericValue> unionsList = delegator.findList("PartyRoleAndPartyDetail",EntityCondition.makeCondition("roleTypeId",EntityOperator.EQUALS,"UNION"), null, null, null, true);
+
+JSONObject unionCodeJson = new JSONObject();
+JSONArray unionItemsJSON = new JSONArray();
+for(union in unionsList){
+		JSONObject unionObjectJson = new JSONObject();
+		unionObjectJson.put("value",union.get("partyId"));
+		String label = union.get("partyId");
+		if(UtilValidate.isNotEmpty(union.get("groupName"))){
+				label = label.concat("-").concat(union.get("groupName"));
+			}
+		
+		unionObjectJson.put("label",label);
+		unionItemsJSON.add(unionObjectJson);
+		
+		JSONObject unionDetJson = new JSONObject();
+		unionDetJson.put("partyId",union.get("partyId"));
+		unionDetJson.put("partyName",union.get("groupName"));
+		
+		unionCodeJson.put(union.get("partyId"),unionDetJson);
+		
+}
+context.put("partyCodeJson",unionCodeJson);
+context.put("partyItemsJSON",unionItemsJSON);
 
 
 
