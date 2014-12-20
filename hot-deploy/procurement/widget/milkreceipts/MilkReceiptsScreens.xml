@@ -530,6 +530,129 @@
 			</widgets>
 		</section>
 	</screen>
+	<!-- Screens for KMF -->
+	
+	<screen name="MilkReceiptsTankerEntry">
+        <section>
+        	<actions>
+        		 <set field="titleProperty" value="MILK RECEIPTS"/>	
+        		 <set field="displayScreen" from-field="parameters.displayScreen" default-value="VEHICLE_IN"/>
+        		 <set field="tabButtonItem" value="MilkReceiptEntry"/>
+        		 <set field="tabButtonItem3" from-field="parameters.tabButtonItem3" default-value="MilkReceiptsVehicleInEntry"/> 
+        		 <set field="layoutSettings.javaScripts[]" value="/milkreceipts/images/milkReciptEntryTab.js" global="true"/>
+        		 <script location="component://procurement/webapp/procurement/WEB-INF/actions/facility/getUserRelatedFacilies.groovy"/>
+        		 <script location="component://procurement/webapp/procurement/WEB-INF/actions/facility/FacilityCustomTimePeriods.groovy"/>
+        		 <set field="milkReceiptProductList" type="List" value="${groovy: import org.ofbiz.base.util.*; return (in.vasista.vbiz.procurement.ProcurementNetworkServices.getMilkReceiptProducts(dispatcher.getDispatchContext(),context)); }"/>
+        		 <script location="component://procurement/webapp/milkreceipts/WEB-INF/actions/reports/MilkReceiptEntry.groovy"/>
+        	</actions>
+            <widgets>
+                 <decorator-screen name="MilkReceiptsCommonDecorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="body">
+                    	<include-menu name="MilkTransferReceiptTabBar" location="component://procurement/widget/milkreceipts/MilkReceiptsMenus.xml"/>
+                    	<platform-specific><html><html-template location="component://procurement/webapp/milkreceipts/facility/milkReceiptTankerEntry.ftl"></html-template></html></platform-specific> 
+                    	<!-- <include-form location="component://procurement/widget/milkreceipts/MilkReceiptsForms.xml" name="MilkReceiptEntry"/> -->
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    <screen name="MilkReceiptsTankerOutEntry">
+        <section>
+        	<actions>
+        		 <set field="titleProperty" value="MILK RECEIPTS"/>	
+        		 <set field="displayScreen" value="VEHICLE_OUT"/>
+        		 <set field="tabButtonItem" value="MilkReceiptEntry"/>
+        		 <set field="tabButtonItem3"  value="MilkReceiptsVehicleOutEntry"/> 
+        		 <set field="layoutSettings.javaScripts[]" value="/milkreceipts/images/milkReciptEntryTab.js" global="true"/>
+        		 <script location="component://procurement/webapp/procurement/WEB-INF/actions/facility/getUserRelatedFacilies.groovy"/>
+        		 <script location="component://procurement/webapp/procurement/WEB-INF/actions/facility/FacilityCustomTimePeriods.groovy"/>
+        		 <set field="milkReceiptProductList" type="List" value="${groovy: import org.ofbiz.base.util.*; return (in.vasista.vbiz.procurement.ProcurementNetworkServices.getMilkReceiptProducts(dispatcher.getDispatchContext(),context)); }"/>
+        		 <script location="component://procurement/webapp/milkreceipts/WEB-INF/actions/reports/MilkReceiptEntry.groovy"/>
+        	</actions>
+            <widgets>
+                 <decorator-screen name="MilkReceiptsCommonDecorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="body">
+                    	<include-menu name="MilkTransferReceiptTabBar" location="component://procurement/widget/milkreceipts/MilkReceiptsMenus.xml"/>
+                    	<platform-specific><html><html-template location="component://procurement/webapp/milkreceipts/facility/milkReceiptTankerEntry.ftl"></html-template></html></platform-specific> 
+                    	<!-- <include-form location="component://procurement/widget/milkreceipts/MilkReceiptsForms.xml" name="MilkReceiptEntry"/> -->
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    <screen name="MilkReceiptsTankerWeightEntry">
+        <section>
+        	<actions>
+        		 <set field="titleProperty" value="MILK RECEIPTS"/>	
+        		 <set field="displayScreen" from-field="parameters.displayScreen" default-value="VEHICLE_GRSWEIGHT"/>
+        		 <set field="tabButtonItem" value="MilkReceiptEntry"/>
+        		 <set field="tabButtonItem3"  from-field="parameters.tabButtonItem3" default-value="MilkReceiptsGrossWeightEntry"/> 
+        		 <set field="layoutSettings.javaScripts[]" value="/milkreceipts/images/milkReciptEntryTab.js" global="true"/>
+        		 <script location="component://procurement/webapp/procurement/WEB-INF/actions/facility/getUserRelatedFacilies.groovy"/>
+        		 <script location="component://procurement/webapp/procurement/WEB-INF/actions/facility/FacilityCustomTimePeriods.groovy"/>
+        		 <set field="milkReceiptProductList" type="List" value="${groovy: import org.ofbiz.base.util.*; return (in.vasista.vbiz.procurement.ProcurementNetworkServices.getMilkReceiptProducts(dispatcher.getDispatchContext(),context)); }"/>
+        		 <script location="component://procurement/webapp/milkreceipts/WEB-INF/actions/reports/MilkReceiptEntry.groovy"/>
+        	</actions>
+            <widgets>
+                 <decorator-screen name="MilkReceiptsCommonDecorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="body">
+                    	<include-menu name="MilkTransferReceiptTabBar" location="component://procurement/widget/milkreceipts/MilkReceiptsMenus.xml"/>
+                    	<platform-specific><html><html-template location="component://procurement/webapp/milkreceipts/facility/milkReceiptTankerEntry.ftl"></html-template></html></platform-specific> 
+                    	<!-- <include-form location="component://procurement/widget/milkreceipts/MilkReceiptsForms.xml" name="MilkReceiptEntry"/> -->
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    <screen name="MilkReceiptsTankerTareWeightEntry">
+        <section>
+        	<actions>
+        		 <set field="titleProperty" value="MILK RECEIPTS"/>	
+        		 <set field="displayScreen" value="VEHICLE_TAREWEIGHT"/>
+        		 <set field="tabButtonItem" value="MilkReceiptEntry"/>
+        		 <set field="tabButtonItem3"  value="MilkReceiptsTareWeightEntry"/> 
+        		 <set field="layoutSettings.javaScripts[]" value="/milkreceipts/images/milkReciptEntryTab.js" global="true"/>
+        		 <script location="component://procurement/webapp/procurement/WEB-INF/actions/facility/getUserRelatedFacilies.groovy"/>
+        		 <script location="component://procurement/webapp/procurement/WEB-INF/actions/facility/FacilityCustomTimePeriods.groovy"/>
+        		 <set field="milkReceiptProductList" type="List" value="${groovy: import org.ofbiz.base.util.*; return (in.vasista.vbiz.procurement.ProcurementNetworkServices.getMilkReceiptProducts(dispatcher.getDispatchContext(),context)); }"/>
+        		 <script location="component://procurement/webapp/milkreceipts/WEB-INF/actions/reports/MilkReceiptEntry.groovy"/>
+        	</actions>
+            <widgets>
+                 <decorator-screen name="MilkReceiptsCommonDecorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="body">
+                    	<include-menu name="MilkTransferReceiptTabBar" location="component://procurement/widget/milkreceipts/MilkReceiptsMenus.xml"/>
+                    	<platform-specific><html><html-template location="component://procurement/webapp/milkreceipts/facility/milkReceiptTankerEntry.ftl"></html-template></html></platform-specific> 
+                    	<!-- <include-form location="component://procurement/widget/milkreceipts/MilkReceiptsForms.xml" name="MilkReceiptEntry"/> -->
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    <screen name="MilkReceiptsQCEntry">
+        <section>
+        	<actions>
+        		 <set field="titleProperty" value="MILK RECEIPTS"/>	
+        		 <set field="displayScreen" from-field="displayScreen" default-value="VEHICLE_QC"/>
+        		 <set field="tabButtonItem" value="MilkReceiptEntry"/>
+        		 <set field="tabButtonItem3"  from-field="tabButtonItem3" default-value="MilkReceiptsQCEntry"/> 
+        		 <set field="layoutSettings.javaScripts[]" value="/milkreceipts/images/milkReciptEntryTab.js" global="true"/>
+        		 <script location="component://procurement/webapp/procurement/WEB-INF/actions/facility/getUserRelatedFacilies.groovy"/>
+        		 <script location="component://procurement/webapp/procurement/WEB-INF/actions/facility/FacilityCustomTimePeriods.groovy"/>
+        		 <set field="milkReceiptProductList" type="List" value="${groovy: import org.ofbiz.base.util.*; return (in.vasista.vbiz.procurement.ProcurementNetworkServices.getMilkReceiptProducts(dispatcher.getDispatchContext(),context)); }"/>
+        		 <script location="component://procurement/webapp/milkreceipts/WEB-INF/actions/reports/MilkReceiptEntry.groovy"/>
+        	</actions>
+            <widgets>
+                 <decorator-screen name="MilkReceiptsCommonDecorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="body">
+                    	<include-menu name="MilkTransferReceiptTabBar" location="component://procurement/widget/milkreceipts/MilkReceiptsMenus.xml"/>
+                    	<platform-specific><html><html-template location="component://procurement/webapp/milkreceipts/facility/milkReceiptTankerEntry.ftl"></html-template></html></platform-specific> 
+                    	<!-- <include-form location="component://procurement/widget/milkreceipts/MilkReceiptsForms.xml" name="MilkReceiptEntry"/> -->
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    
   </screens>
   
   
