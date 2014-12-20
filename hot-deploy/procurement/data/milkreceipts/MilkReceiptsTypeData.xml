@@ -40,4 +40,18 @@
    	
    	<ProcBillingValidationRule shedId="_NA_" productId="_NA_" validationTypeId="QTY_VALIDATION" fromDate="2013-01-01 00:00:00.0" minFat="24" maxFat="36" quantity="100"/>
     
+    
+    <StatusType statusTypeId="VEHICLE_STATUS"/>
+    <StatusType parentTypeId="VEHICLE_STATUS" statusTypeId="MR_VEHICLE_STATUS" description="MILK RECEIPT VEHICLE STATUS"/>
+    <StatusItem description="Vehicle Entered" sequenceId="1" statusCode="VEHICLE ENTERED" statusId="MR_VEHICLE_IN" statusTypeId="MR_VEHICLE_STATUS"/>
+    <StatusItem description="Vehicle at Grossweight" sequenceId="2" statusCode="VEHICLE AT GROSS WEIGHT" statusId="MR_VEHICLE_GRSWEIGHT" statusTypeId="MR_VEHICLE_STATUS"/>
+    <StatusItem description="Vehicle at Quality Control" sequenceId="3" statusCode="VEHICLE AT QUALITY CONTROL" statusId="MR_VEHICLE_QC" statusTypeId="MR_VEHICLE_STATUS"/>
+    <StatusItem description="Vehicle at TareWeight" sequenceId="4" statusCode="VEHICLE AT TARE WEIGHT" statusId="MR_VEHICLE_TARWEIGHT" statusTypeId="MR_VEHICLE_STATUS"/>
+    <StatusItem description="Vehicle out" sequenceId="5" statusCode="VEHICLE OUT" statusId="MR_VEHICLE_OUT" statusTypeId="MR_VEHICLE_STATUS"/>
+   
+    <StatusValidChange condition="" statusId="MR_VEHICLE_IN" statusIdTo="MR_VEHICLE_GRSWEIGHT" transitionName="VEHICLE IN TO GRSWEIGHT"/>
+    <StatusValidChange condition="" statusId="MR_VEHICLE_GRSWEIGHT" statusIdTo="MR_VEHICLE_QC" transitionName="GRSWEIGHT TO QC"/>
+    <StatusValidChange condition="" statusId="MR_VEHICLE_QC" statusIdTo="MR_VEHICLE_TARWEIGHT" transitionName="QC to TAREWEIGHT"/>
+    <StatusValidChange condition="" statusId="MR_VEHICLE_TARWEIGHT" statusIdTo="MR_VEHICLE_OUT" transitionName="TAREWEIGHT TO OUT"/>
+   
 </entity-engine-xml>
