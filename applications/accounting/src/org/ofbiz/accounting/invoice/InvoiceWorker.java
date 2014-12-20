@@ -27,6 +27,7 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
 import java.util.TimeZone;
+import java.util.TreeMap;
 
 import javolution.util.FastList;
 import javolution.util.FastMap;
@@ -45,6 +46,7 @@ import org.ofbiz.entity.condition.EntityCondition;
 import org.ofbiz.entity.condition.EntityConditionList;
 import org.ofbiz.entity.condition.EntityExpr;
 import org.ofbiz.entity.condition.EntityOperator;
+import org.ofbiz.entity.util.EntityListIterator;
 import org.ofbiz.entity.util.EntityUtil;
 import org.ofbiz.minilang.method.entityops.NowDateToEnv.NowDateFactory;
 import org.ofbiz.service.DispatchContext;
@@ -352,6 +354,156 @@ public class InvoiceWorker {
             }
         }
         return contactMech;
+    }
+    
+    public static GenericValue getInvoiceShippingAddress(GenericValue invoice) {
+        Delegator delegator = invoice.getDelegator();
+        List<GenericValue> locations = null;
+        List<GenericValue> invoiceRoles = null;
+        GenericValue invoiceType = null;
+        if (UtilValidate.isEmpty(locations))    {
+            // if no locations found get it from the PartyAndContactMech using the from and to party on the invoice
+            String destinationPartyId = null;   
+            
+            try {
+            	invoiceType=delegator.findOne("InvoiceType",UtilMisc.toMap("invoiceTypeId",invoice.getString("invoiceTypeId")) , false);
+            }
+            catch (Exception e) {
+            	Debug.logError("Touble getting parentInvoiceId", module);
+			}
+            if ((invoice.getString("invoiceTypeId").equals("SALES_INVOICE") )|| (invoiceType.getString("parentTypeId").equals("SALES_INVOICE") )){
+                try {
+                    EntityConditionList<EntityExpr> condition = EntityCondition.makeCondition(UtilMisc.toList(
+                            EntityCondition.makeCondition("invoiceId", invoice.getString("invoiceId")),
+                            EntityCondition.makeCondition("roleTypeId", EntityOperator.EQUALS, "SHIP_TO_CUSTOMER")),
+                            EntityOperator.AND);
+                    invoiceRoles = delegator.findList("InvoiceRole", condition, null, null, null, false);
+                } catch (GenericEntityException e) {
+                    Debug.logError(e, "Trouble getting InvoiceItem list", module);
+                    return null;
+                }
+                if(UtilValidate.isEmpty(invoiceRoles)){
+               	 destinationPartyId = invoice.getString("partyId");
+               }else{
+            		GenericValue invoiceShipRole = EntityUtil.getFirst(invoiceRoles);
+            		destinationPartyId=invoiceShipRole.getString("partyId");
+               }
+            }
+            
+        //for Purchase Invoice ROle
+            if ((invoice.getString("invoiceTypeId").equals("PURCHASE_INVOICE"))|| (invoiceType.getString("parentTypeId").equals("PURCHASE_INVOICE") )){
+            try {
+                EntityConditionList<EntityExpr> condition = EntityCondition.makeCondition(UtilMisc.toList(
+                        EntityCondition.makeCondition("invoiceId", invoice.getString("invoiceId")),
+                        EntityCondition.makeCondition("roleTypeId", EntityOperator.EQUALS, "SUPPLIER_AGENT")),
+                        EntityOperator.AND);
+                invoiceRoles = delegator.findList("InvoiceRole", condition, null, null, null, false);
+            } catch (GenericEntityException e) {
+                Debug.logError(e, "Trouble getting InvoiceItem list", module);
+                return null;
+            }
+            if(UtilValidate.isEmpty(invoiceRoles)){
+             destinationPartyId = invoice.getString("partyIdFrom");
+           }else{
+        	   GenericValue invoiceShipRole = EntityUtil.getFirst(invoiceRoles);
+       		destinationPartyId=invoiceShipRole.getString("partyId");
+           }
+           }
+            //if still not found get it from the general location
+            if (UtilValidate.isEmpty(locations))    {
+                try {
+                    locations = EntityUtil.filterByDate(delegator.findByAnd("PartyContactMechPurpose",
+                            UtilMisc.toMap("partyId", destinationPartyId, "contactMechPurposeTypeId", "BILLING_LOCATION")));
+                } catch (GenericEntityException e) {
+                    Debug.logError("Trouble getting contact party purpose list", module);
+                }
+            }
+        }
+
+        // now return the first PostalAddress from the locations
+        GenericValue postalAddress = null;
+        GenericValue contactMech = null;
+        if (UtilValidate.isNotEmpty(locations)) {
+            try {
+                contactMech = locations.get(0).getRelatedOne("ContactMech");
+            } catch (GenericEntityException e) {
+                Debug.logError(e, "Trouble getting Contact for contactMechId: " + locations.get(0).getString("contactMechId"), module);
+            }
+
+            if (contactMech != null && contactMech.getString("contactMechTypeId").equals("POSTAL_ADDRESS"))    {
+                try {
+                    postalAddress = contactMech.getRelatedOne("PostalAddress");
+                    return postalAddress;
+                } catch (GenericEntityException e) {
+                    Debug.logError(e, "Trouble getting PostalAddress for contactMechId: " + contactMech.getString("contactMechId"), module);
+                }
+            }
+        }
+        return contactMech;
+    }
+    public static Map  getInvoiceShippingParty(GenericValue invoice) {
+        Delegator delegator = invoice.getDelegator();
+        List<GenericValue> locations = null;
+        List<GenericValue> invoiceRoles = null;
+        GenericValue invoiceType = null;
+        Map<String, Object> partyContext = FastMap.newInstance();
+        String destinationPartyId = null; 
+        if (UtilValidate.isEmpty(locations))    {
+            // if no locations found get it from the PartyAndContactMech using the from and to party on the invoice
+            try {
+            	invoiceType=delegator.findOne("InvoiceType",UtilMisc.toMap("invoiceTypeId",invoice.getString("invoiceTypeId")) , false);
+            }
+            catch (Exception e) {
+            	Debug.logError("Touble getting parentInvoiceId", module);
+			}
+            if ((invoice.getString("invoiceTypeId").equals("SALES_INVOICE") )|| (invoiceType.getString("parentTypeId").equals("SALES_INVOICE") )){
+                try {
+                    EntityConditionList<EntityExpr> condition = EntityCondition.makeCondition(UtilMisc.toList(
+                            EntityCondition.makeCondition("invoiceId", invoice.getString("invoiceId")),
+                            EntityCondition.makeCondition("roleTypeId", EntityOperator.EQUALS, "SHIP_TO_CUSTOMER")),
+                            EntityOperator.AND);
+                    invoiceRoles = delegator.findList("InvoiceRole", condition, null, null, null, false);
+                } catch (GenericEntityException e) {
+                    Debug.logError(e, "Trouble getting InvoiceItem list", module);
+                    return null;
+                }
+                if(UtilValidate.isEmpty(invoiceRoles)){
+               	 destinationPartyId = invoice.getString("partyId");
+               }else{
+            		GenericValue invoiceShipRole = EntityUtil.getFirst(invoiceRoles);
+            		destinationPartyId=invoiceShipRole.getString("partyId");
+               }
+            }
+            
+        //for Purchase Invoice ROle
+            if ((invoice.getString("invoiceTypeId").equals("PURCHASE_INVOICE"))|| (invoiceType.getString("parentTypeId").equals("PURCHASE_INVOICE") )){
+            try {
+                EntityConditionList<EntityExpr> condition = EntityCondition.makeCondition(UtilMisc.toList(
+                        EntityCondition.makeCondition("invoiceId", invoice.getString("invoiceId")),
+                        EntityCondition.makeCondition("roleTypeId", EntityOperator.EQUALS, "SUPPLIER_AGENT")),
+                        EntityOperator.AND);
+                invoiceRoles = delegator.findList("InvoiceRole", condition, null, null, null, false);
+            } catch (GenericEntityException e) {
+                Debug.logError(e, "Trouble getting InvoiceItem list", module);
+                return null;
+            }
+            if(UtilValidate.isEmpty(invoiceRoles)){
+             destinationPartyId = invoice.getString("partyIdFrom");
+           }else{
+        	   GenericValue invoiceShipRole = EntityUtil.getFirst(invoiceRoles);
+       		destinationPartyId=invoiceShipRole.getString("partyId");
+           }
+           }
+        }
+            partyContext.put("partyId", destinationPartyId);
+            if(destinationPartyId!=null){
+            partyContext.put("partyName", org.ofbiz.party.party.PartyHelper.getPartyName(delegator,destinationPartyId, false));
+            }else{
+            	 partyContext.put("partyName", "");
+            }
+        // now return the first PostalAddress from the locations
+       
+        return partyContext;
     }
 
     /**
@@ -1057,4 +1209,6 @@ Debug.logInfo("==========>ensureInvoiceAlreadyNotExists=" + infoMsg, module);
 		}
         return itemTotalVal;
     }
+    
+    
 }
