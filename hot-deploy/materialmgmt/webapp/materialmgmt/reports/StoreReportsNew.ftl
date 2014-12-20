@@ -95,6 +95,7 @@ function makeDatePicker1(fromDateId ,thruDateId){
 		makeDatePicker("fromDate","thruDate");
 		makeDatePicker("fromDateMr","thruDateMr");
 		makeDatePicker("fromDateStock","thruDateStock");
+		makeDatePicker("fromDateArc","thruDateArc");
 		
 	
 		
@@ -223,12 +224,36 @@ function makeDatePicker1(fromDateId ,thruDateId){
 				 </table>
 			 </form>
 		  </tr>
-		  
+		  		  
 		  <tr class="alternate-row"> 
 				<form id="PurchaseOrder" name="PurchaseOrder" mothed="post" action="<@ofbizUrl>PurchaseOrder.pdf</@ofbizUrl>" target="_blank">
 				   <table class="basic-table" cellspacing="5">
 					  <tr class="alternate-row">
 					     <td width="20%"><span class='h3'>Purchase Order</span></td>
+				    <td width="25%"><span class='h3'>PO No<input type="textfield" id="orderId"name="orderId"></span></td>
+						 <td width="25%"><span class='h3'><input type="submit" value="Download" class="buttontext"></span></td>
+		 		    </tr>
+				 </table>
+			 </form>
+		  </tr>
+		  
+		  <tr class="alternate-row"> 
+				<form id="ArcOrder" name="ArcOrder" mothed="post" action="<@ofbizUrl>arcOrder.pdf</@ofbizUrl>" target="_blank">
+				   <table class="basic-table" cellspacing="5">
+					  <tr class="alternate-row">
+					     <td width="20%"><span class='h3'>ARC Order</span></td>
+				    <td width="25%"><span class='h3'>PO No<input type="textfield" id="orderId"name="orderId"></span></td>
+						 <td width="25%"><span class='h3'><input type="submit" value="Download" class="buttontext"></span></td>
+		 		    </tr>
+				 </table>
+			 </form>
+		  </tr>
+		  
+		  <tr class="alternate-row"> 
+				<form id="letterOfAcceptance" name="letterOfAcceptance" mothed="post" action="<@ofbizUrl>letterOfAcceptance.pdf</@ofbizUrl>" target="_blank">
+				   <table class="basic-table" cellspacing="5">
+					  <tr class="alternate-row">
+					     <td width="20%"><span class='h3'>Letter Of Acceptance</span></td>
 				    <td width="25%"><span class='h3'>PO No<input type="textfield" id="orderId"name="orderId"></span></td>
 						 <td width="25%"><span class='h3'><input type="submit" value="Download" class="buttontext"></span></td>
 		 		    </tr>
