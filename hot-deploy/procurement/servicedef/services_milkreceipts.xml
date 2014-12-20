@@ -341,5 +341,136 @@
         <attribute name="facilityId" mode="IN" type="String" optional="false"/>
         <attribute name="customTimePeriodId" mode="IN" type="String" optional="false"/>
         <attribute name="amountTypeId" mode="IN" type="String" optional="false"/>
-    </service>    
+    </service>
+    
+    <!-- Service Definitions for Tanker Receipts -->
+    <service name="createMilkTankerReceiptEntry" engine="java"
+                location="in.vasista.vbiz.milkReceipts.MilkReceiptServices" invoke="createMilkTankerReceiptEntry" auth="true">
+        <attribute name="partyId" mode="IN" type="String" optional="false"/>
+        <attribute name="partyIdTo" mode="IN" type="String" optional="false"/>
+        <attribute name="sendDate" mode="IN" type="String" optional="false"/>
+		<attribute name="tankerNo" mode="IN" type="String" optional="false"/>
+		<attribute name="dcNo" mode="IN" type="String" optional="false"/>
+		<attribute name="sealCheck" mode="IN" type="String" optional="false"/>
+        <attribute name="sendTime" mode="IN" type="String" optional="false"/>
+        <attribute name="entryDate" mode="IN" type="String" optional="false"/>
+        <attribute name="entryTime" mode="IN" type="String" optional="false"/>
+	 	<attribute name="milkTransferId" mode="INOUT" type="String" optional="true"/>
+	 	<attribute name="sequenceNum" mode="OUT" type="String" optional="true"/>
+    </service>
+    <service name="getTankerRecordNumber" engine="java"
+                location="in.vasista.vbiz.milkReceipts.MilkReceiptServices" invoke="getTankerRecordNumber" auth="true">
+		<attribute name="tankerNo" mode="IN" type="String" optional="false"/>
+		<attribute name="vehicleId" mode="OUT" type="String" optional="true"></attribute>
+	 	<attribute name="milkTransferId" mode="OUT" type="String" optional="true"/>
+	 	<attribute name="sequenceNum" mode="OUT" type="String" optional="true"/>
+	 	<attribute name="partyId" mode="OUT" type="String" optional="true"/>
+	 	<attribute name="partyName" mode="OUT" type="String" optional="true"/>
+    </service>
+    
+    <service name="updateMilkTankerReceiptEntryGrsWeight" engine="java"
+                location="in.vasista.vbiz.milkReceipts.MilkReceiptServices" invoke="updateMilkTankerReceiptEntry" auth="true">
+		<attribute name="tankerNo" mode="IN" type="String" optional="false"/>
+		<attribute name="milkTransferId" mode="IN" type="String" optional="false"/>
+		<attribute name="statusId" mode="IN" type="String" optional="false"/>
+		<!-- GrossWeightEnty -->
+		<attribute name="grossDate" mode="IN" type="String" optional="false"/>
+		<attribute name="grossTime" mode="IN" type="String" optional="false"/>
+		<attribute name="numberOfCells" mode="IN" type="Long" optional="false"/>
+		<attribute name="grossWeight" mode="IN" type="BigDecimal" optional="false"/>
+		<attribute name="dispatchWeight" mode="IN" type="BigDecimal" optional="false"/>
+    </service>
+    <service name="createTankerReceiptItem" engine="java"
+                location="in.vasista.vbiz.milkReceipts.MilkReceiptServices" invoke="createTankerReceiptItem" auth="true">
+		<attribute name="tankerNo" mode="IN" type="String" optional="false"/>
+		<attribute name="milkTransferId" mode="IN" type="String" optional="false"/>
+		<attribute name="statusId" mode="IN" type="String" optional="false"/>
+		<!-- Quality Control -->
+		<attribute name="testDate" mode="IN" type="String" optional="false"/>
+		<attribute name="testTime" mode="IN" type="String" optional="false"/>
+		<!-- Dispatch Quality -->
+		<attribute name="sendCob" mode="IN" type="String" optional="false"/>
+		<attribute name="sendNutriliser" mode="IN" type="String" optional="false"/>
+		
+		<attribute name="sendTemp" mode="IN" type="BigDecimal" optional="false"/>
+		<attribute name="sendAcid" mode="IN" type="Long" optional="false"/>
+		<attribute name="sendCLR" mode="IN" type="BigDecimal" optional="false"/>
+		<attribute name="sendFat" mode="IN" type="BigDecimal" optional="false"/>
+		<attribute name="sendSnf" mode="IN" type="BigDecimal" optional="false"/>
+		
+		<!-- Received Quality -->
+		
+		<attribute name="recdCob" mode="IN" type="String" optional="false"/>
+		<attribute name="recdSedimentTest" mode="IN" type="String" optional="false"/>
+		<!--  recdFlavour  need to handle later-->
+		<attribute name="recdTemp" mode="IN" type="BigDecimal" optional="false"/>
+		<attribute name="recdAcid" mode="IN" type="Long" optional="false"/>
+		<attribute name="recdCLR" mode="IN" type="BigDecimal" optional="false"/>
+		<attribute name="recdFat" mode="IN" type="BigDecimal" optional="false"/>
+		<attribute name="recdSnf" mode="IN" type="BigDecimal" optional="false"/>
+		<attribute name="recdPH" mode="IN" type="BigDecimal" optional="false"/>
+		<attribute name="recdMBRT" mode="IN" type="BigDecimal" optional="false"/>
+		
+		
+    </service>
+    <service name="updateMilkTankerReceiptEntryTareWeight" engine="java"
+                location="in.vasista.vbiz.milkReceipts.MilkReceiptServices" invoke="updateMilkTankerReceiptEntry" auth="true">
+		<attribute name="tankerNo" mode="IN" type="String" optional="false"/>
+		<attribute name="milkTransferId" mode="IN" type="String" optional="false"/>
+		<attribute name="statusId" mode="IN" type="String" optional="false"/>
+		<!-- GrossWeightEnty -->
+		<attribute name="tareDate" mode="IN" type="String" optional="false"/>
+		<attribute name="tareTime" mode="IN" type="String" optional="false"/>
+		<attribute name="tareWeight" mode="IN" type="BigDecimal" optional="false"/>
+    </service>
+    <service name="updateMilkTankerReceiptEntryQC" engine="java"
+                location="in.vasista.vbiz.milkReceipts.MilkReceiptServices" invoke="updateMilkTankerReceiptEntry" auth="true">
+		<attribute name="tankerNo" mode="IN" type="String" optional="false"/>
+		<attribute name="milkTransferId" mode="IN" type="String" optional="false"/>
+		<attribute name="statusId" mode="IN" type="String" optional="false"/>
+		<!-- Quality Control -->
+		<attribute name="testDate" mode="IN" type="String" optional="false"/>
+		<attribute name="testTime" mode="IN" type="String" optional="false"/>
+		<!-- Dispatch Quality -->
+		<attribute name="sendCob" mode="IN" type="String" optional="false"/>
+		<attribute name="sendNutriliser" mode="IN" type="String" optional="false"/>
+		
+		<attribute name="sendTemp" mode="IN" type="BigDecimal" optional="false"/>
+		<attribute name="sendAcid" mode="IN" type="Long" optional="false"/>
+		<attribute name="sendCLR" mode="IN" type="BigDecimal" optional="false"/>
+		<attribute name="sendFat" mode="IN" type="BigDecimal" optional="false"/>
+		<attribute name="sendSnf" mode="IN" type="BigDecimal" optional="false"/>
+		
+		<!-- Received Quality -->
+		
+		<attribute name="recdCob" mode="IN" type="String" optional="false"/>
+		<attribute name="recdSedimentTest" mode="IN" type="String" optional="false"/>
+		<!--  recdFlavour  need to handle later-->
+		<attribute name="recdTemp" mode="IN" type="BigDecimal" optional="false"/>
+		<attribute name="recdAcid" mode="IN" type="Long" optional="false"/>
+		<attribute name="recdCLR" mode="IN" type="BigDecimal" optional="false"/>
+		<attribute name="recdFat" mode="IN" type="BigDecimal" optional="false"/>
+		<attribute name="recdSnf" mode="IN" type="BigDecimal" optional="false"/>
+		<attribute name="recdPH" mode="IN" type="BigDecimal" optional="false"/>
+		<attribute name="recdMBRT" mode="IN" type="BigDecimal" optional="false"/>
+		
+		
+    </service>
+    <service name="updateMilkTankerReceiptEntryOut" engine="java"
+                location="in.vasista.vbiz.milkReceipts.MilkReceiptServices" invoke="updateMilkTankerReceiptEntry" auth="true">
+		<attribute name="tankerNo" mode="IN" type="String" optional="false"/>
+		<attribute name="milkTransferId" mode="IN" type="String" optional="false"/>
+		<attribute name="statusId" mode="IN" type="String" optional="false"/>
+		<attribute name="exitDate" mode="IN" type="String" optional="false"/>
+		<attribute name="exitTime" mode="IN" type="String" optional="false"/>
+    </service>
+    <service name="updateReceiptVehicleTripStatus" engine="java"
+                location="in.vasista.vbiz.milkReceipts.MilkReceiptServices" invoke="updateReceiptVehicleTripStatus" auth="true">
+		<attribute name="vehicleId" mode="IN" type="String" optional="false"/>
+		<attribute name="sequenceNum" mode="IN" type="String" optional="false"/>
+		<attribute name="statusId" mode="IN" type="String" optional="false"/>
+		<attribute name="estimatedStartDate" mode="IN" type="java.sql.Timestamp" optional="false"/>
+		<attribute name="estimatedEndDate" mode="IN" type="java.sql.Timestamp" optional="true"/>
+    </service>
+        
 </services>
