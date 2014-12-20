@@ -160,7 +160,8 @@ public class InvoicePayrolWorkerNew {
 	        		
 	        		serviceResults = dispatcher.runSync("createInvoice", input);
 	        		if (ServiceUtil.isError(serviceResults)) {
-	        			return ServiceUtil.returnError(errorMsg, null, null, serviceResults);
+	        			Debug.logError(errorMsg+"***invoiceDetails==="+input, null, null, serviceResults);
+	        			return ServiceUtil.returnError(errorMsg+"***invoiceDetails==="+input, null, null, serviceResults);
 	        		}	 
 	        		String invoiceId = (String)serviceResults.get("invoiceId");
 	        		GenericValue invoice = delegator.findOne("Invoice", UtilMisc.toMap(
@@ -171,7 +172,7 @@ public class InvoicePayrolWorkerNew {
 	        		inputItemCtx.put("payrollHeaderId", payrollHeader.getString("payrollHeaderId"));
 	        		serviceResults = createPayrolInvoiceItems(dctx,inputItemCtx);
 	        		if (ServiceUtil.isError(serviceResults)) {
-	        			Debug.logError(ServiceUtil.getErrorMessage(serviceResults), module);
+	        			Debug.logError(ServiceUtil.getErrorMessage(serviceResults)+"***invoiceDetails==="+input, module);
 	        			return ServiceUtil.returnError(ServiceUtil.getErrorMessage(serviceResults), null, null, serviceResults);
 	        		}
 	        		Map<String, Object> invoiceCtx = UtilMisc.<String, Object>toMap("invoiceId", invoiceId);
@@ -179,7 +180,7 @@ public class InvoicePayrolWorkerNew {
 	                invoiceCtx.put("statusId","INVOICE_APPROVED");
                 	Map<String, Object> invoiceResult = dispatcher.runSync("setInvoiceStatus",invoiceCtx);
                 	if (ServiceUtil.isError(invoiceResult)) {
-                		Debug.logError(invoiceResult.toString(), module);
+                		Debug.logError(invoiceResult.toString()+"***invoiceDetails==="+input, module);
                         return ServiceUtil.returnError(null, null, null, invoiceResult);
                     }
                 	invoiceCtx.put("userLogin", userLogin);
@@ -195,8 +196,9 @@ public class InvoicePayrolWorkerNew {
                 	Map<String, Object> paymentResult = dispatcher.runSync("createPayrolPaymentAndAppclications",paymentCtx);
                 	if (ServiceUtil.isError(paymentResult)) {
                 		Debug.logError(paymentResult.toString(), module);
-                        return ServiceUtil.returnError(ServiceUtil.getErrorMessage(paymentResult), null, null, paymentResult);
+                        return ServiceUtil.returnError(ServiceUtil.getErrorMessage(paymentResult)+"***invoiceDetails==="+input, null, null, paymentResult);
                     }
+                	
 	        		invoiceList.add(invoice);
 	        		emplCounter++;
                		if ((emplCounter % 20) == 0) {
@@ -317,9 +319,12 @@ public class InvoicePayrolWorkerNew {
 					amount  = amount.add(loanAndRecoveryAndType.getBigDecimal("interestAmount"));
 				}*/
 				amount = payrollLoanHeaderItem.getBigDecimal("amount");
+				amount = amount.negate();
 				loanRecoveryAmount = loanRecoveryAmount.add(amount);
-				
-				Map newp = UtilMisc.toMap("userLogin",userLogin);
+				/*if(UtilValidate.isEmpty(loanAndRecoveryAndType)){
+					continue;
+				}*/
+				 Map newp = UtilMisc.toMap("userLogin",userLogin);
 				 newp.put("partyIdFrom", invoice.getString("partyId"));
 				 newp.put("partyIdTo", invoice.getString("partyIdFrom"));
 				 newp.put("paymentMethodId", "DEBITNOTE");
