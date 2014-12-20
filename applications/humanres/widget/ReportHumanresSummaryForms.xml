@@ -596,8 +596,9 @@
 		    			<condition-expr field-name="billingTypeId" operator="equals" value="SP_MED_REIMB"/>
 		    			<condition-expr field-name="billingTypeId" operator="equals" value="SP_LEAVE_ENCASH"/>
 		    			<condition-expr field-name="billingTypeId" operator="equals" value="SP_INDIVIDUAL_EMPL"/>
+		    			<condition-expr field-name="billingTypeId" operator="equals" value="SP_DA_ARREARS"/>
 		    		</condition-list>
-		    		<condition-expr field-name="statusId" operator="not-equals" value="COM_CANCELLED"/>
+		    		<condition-expr field-name="statusId" operator="not-equals" value="COM_CANCELLED"/>		    		
 		    	</condition-list>
 		    	<order-by field-name="-thruDate"/>
 		    </entity-condition>

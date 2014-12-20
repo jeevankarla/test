@@ -169,7 +169,8 @@
     
     <TenantConfiguration propertyName="PUNCHINOUT_CHECK" propertyValue="N" propertyTypeEnumId="HUMANRES" description="Humanres punch in out check"/>   
     
-	<TenantConfiguration propertyName="PAYBILL_DEPTWISE_GEN" propertyValue="N" propertyTypeEnumId="HUMANRES" description="Humanres Pay Bill Department wise generation"/>   
+	<TenantConfiguration propertyName="PAYBILL_DEPTWISE_GEN" propertyValue="N" propertyTypeEnumId="HUMANRES" description="Humanres Pay Bill Department wise generation"/>
+	<TenantConfiguration propertyName="LEAVE_ENCASH_FLATAMT" propertyValue="N" propertyTypeEnumId="HUMANRES" description="Humanres Leave Encashment Suply Payroll generation"/>   
        
     <!-- punch in and punch out data -->   
     <EnumerationType description="Punch Type" enumTypeId="PUNCH_TYPE" hasTable="N" parentTypeId=""/>
@@ -209,8 +210,7 @@
     <Enumeration description="Payroll Attendance Finalizaton Billing" enumCode="PB_HR_ATTN_FINAL" enumId="PB_HR_ATTN_FINAL" enumTypeId="PERIOD_BILLING"/> 
    
    <Enumeration description="Suppl Payroll Medical Reimbursement" enumCode="SP_MED_REIMB" enumId="SP_MED_REIMB" enumTypeId="PERIOD_BILLING"/> 
-   <Enumeration description="Suppl Payroll Leave Encashment" enumCode="SP_LEAVE_ENCASH" enumId="SP_LEAVE_ENCASH" enumTypeId="PERIOD_BILLING"/> 
-   
+   <Enumeration description="Suppl Payroll Leave Encashment" enumCode="SP_LEAVE_ENCASH" enumId="SP_LEAVE_ENCASH" enumTypeId="PERIOD_BILLING"/>
    
    <PayrollType payrollTypeId="SP_MED_REIMB" parentTypeId="PAYROLL_BILL" periodTypeId="RATE_QUARTER" serviceName="generatePayrollMedicalReimbursement" />
    <PayrollTypePayheadTypeMap payrollTypeId="SP_MED_REIMB" payHeadTypeId="PAYROL_BEN_MED_REB"/>
@@ -219,7 +219,8 @@
    <PayrollType payrollTypeId="SP_LEAVE_ENCASH" parentTypeId="PAYROLL_BILL" periodTypeId="HR_LEAVEENCASH" serviceName="generateLeaveEncashment" />
    <PayrollTypePayheadTypeMap payrollTypeId="SP_LEAVE_ENCASH" payHeadTypeId="PAYROL_BEN_DA"/>
    <PayrollTypePayheadTypeMap payrollTypeId="SP_LEAVE_ENCASH" payHeadTypeId="PAYROL_BEN_HRA"/>
-   <PayrollTypePayheadTypeMap payrollTypeId="SP_LEAVE_ENCASH" payHeadTypeId="PAYROL_BEN_CCA"/>
+   <PayrollTypePayheadTypeMap payrollTypeId="SP_LEAVE_ENCASH" payHeadTypeId="PAYROL_BEN_CITYCOMP"/>
+
    
    <PayrollType payrollTypeId="PAYROLL_BILL" periodTypeId="RATE_MONTH" serviceName="generatePayrollBillingInternal"/>
    
@@ -239,6 +240,14 @@
     <RateType rateTypeId="DIESEL_RATE" description="Diesel Rate to calculate Conveyance payroll head type" parentTypeId="PAYROLL_RATE"></RateType>
     
     <RateAmount rateTypeId="DIESEL_RATE" rateAmount="58.89" emplPositionTypeId="_NA_" fromDate="2014-03-01 00:00:00.0" partyId="_NA_" periodTypeId="RATE_HOUR" productId="_NA_" rateCurrencyUomId="INR" workEffortId="_NA_"/>
+     
+   <!-- DA Arrears --> 
+   <PeriodType description="HR DA Arrears" periodTypeId="HR_DAARREARS" uomId="TF_mon"/>
+   <Enumeration description="Suppl Payroll DA ARREARS" enumCode="SP_DA_ARREARS" enumId="SP_DA_ARREARS" enumTypeId="PERIOD_BILLING"/>
+   <PayrollType payrollTypeId="SP_DA_ARREARS" parentTypeId="PAYROLL_BILL" periodTypeId="HR_DAARREARS" serviceName="processDAArrearsService" />
+   <PayrollTypePayheadTypeMap payrollTypeId="SP_DA_ARREARS" payHeadTypeId="PAYROL_BEN_DA_ARERS"/>
+    
+    
     
     
     
