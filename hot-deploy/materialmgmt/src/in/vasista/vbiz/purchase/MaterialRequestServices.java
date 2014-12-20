@@ -74,6 +74,7 @@ public class MaterialRequestServices {
 		Locale locale = UtilHttp.getLocale(request);
 		Map<String, Object> result = ServiceUtil.returnSuccess();
 	    String requestDateStr = (String) request.getParameter("requestDate");
+	    String responseDateStr = (String) request.getParameter("responseDate");
 	    String requestName = (String) request.getParameter("custRequestName");
 	    HttpSession session = request.getSession();
 	    GenericValue userLogin = (GenericValue) session.getAttribute("userLogin");
@@ -88,6 +89,7 @@ public class MaterialRequestServices {
 			requestName = "_NA_";
 		}
 		Timestamp requestDate = null;
+		Timestamp responseDate = null;
 		Map<String, Object> paramMap = UtilHttp.getParameterMap(request);
 		int rowCount = UtilHttp.getMultiFormRowCount(paramMap);
 		if (rowCount < 1) {
@@ -106,6 +108,17 @@ public class MaterialRequestServices {
 	  	}
 	  	else{
 	  		requestDate = UtilDateTime.nowTimestamp();
+	  	}
+	  	if(UtilValidate.isNotEmpty(responseDateStr)){
+	  		try {
+	  			responseDate = new java.sql.Timestamp(sdf.parse(responseDateStr).getTime());
+		  	} catch (ParseException e) {
+		  		Debug.logError(e, "Cannot parse date string: " + responseDateStr, module);
+		  	} catch (NullPointerException e) {
+	  			Debug.logError(e, "Cannot parse date string: " + responseDateStr, module);
+		  	}
+	  	}else{
+	  		responseDate = UtilDateTime.nowTimestamp();
 	  	}
 		boolean beganTransaction = false;
 		try{
@@ -127,6 +140,7 @@ public class MaterialRequestServices {
 			custRequestInMap.put("fromPartyId",partyId);
 			custRequestInMap.put("custRequestName",requestName);
 			custRequestInMap.put("custRequestDate",requestDate);
+			custRequestInMap.put("responseRequiredDate",responseDate);
 	        Map resultMap = dispatcher.runSync("createCustRequest",custRequestInMap);
 	        
 	        if (ServiceUtil.isError(resultMap)) {
@@ -291,6 +305,7 @@ public class MaterialRequestServices {
 			Debug.logError(e, module);
 			return ServiceUtil.returnError(e.getMessage());
 		}
+		result = ServiceUtil.returnSuccess("Indent Successfully Accepted!!");
 		return result;
 	}
 	
@@ -301,7 +316,6 @@ public class MaterialRequestServices {
 		String custRequestId = (String) context.get("custRequestId");
 		String custRequestItemSeqId = (String) context.get("custRequestItemSeqId");
 		GenericValue userLogin = (GenericValue) context.get("userLogin");
-		
 		Map result = ServiceUtil.returnSuccess();
 		try{
 			GenericValue custRequestItem = delegator.findOne("CustRequestItem", UtilMisc.toMap("custRequestId", custRequestId, "custRequestItemSeqId", custRequestItemSeqId),  false);
@@ -339,6 +353,9 @@ public class MaterialRequestServices {
 		}
 		result.put("custRequestId", custRequestId);
 		result.put("custRequestItemSeqId", custRequestItemSeqId);
+		if((statusId).equals("CRQ_REJECTED")){
+			result = ServiceUtil.returnSuccess("Indent Successfully Rejected!!");
+		}
 		return result;
 	}
 	

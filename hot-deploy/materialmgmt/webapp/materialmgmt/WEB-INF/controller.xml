@@ -111,6 +111,19 @@
         <response name="error" type="view" value="FindMaterialRequirement"/>
     </request-map>
     
+     <request-map uri="rejectRequirement">
+        <security auth="true" https="true"/>
+        <event type="service" invoke="updateRequirement" ></event>
+        <response name="success" type="view" value="FindMaterialRequirement"/>
+        <response name="error" type="view" value="FindMaterialRequirement"/>
+    </request-map>
+    
+    <request-map uri="getProductInventory">
+        <security auth="true" https="true"/>
+        <event type="service" invoke="getProductInventoryAvailable" ></event>
+        <response name="success" type="request" value="json"/>
+    </request-map>
+    
     <request-map uri="FindMaterialInvoices">
         <security auth="true" https="true"/>
         <response name="success" type="view" value="FindMaterialInvoices"/>

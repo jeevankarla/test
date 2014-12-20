@@ -82,7 +82,7 @@
 		else
 			return {valid:true, msg:null};
 	}
-	
+	var quantityAvailability =0;
 	function processIndentEntryInternal(formName, action) {
 		if (Slick.GlobalEditorLock.isActive() && !Slick.GlobalEditorLock.commitCurrentEdit()) {
 			return false;		
@@ -131,6 +131,28 @@
 		jQuery("#changeSave").attr( "disabled", "disabled");
 		processIndentEntryInternal(formName, action);
 		
+	}
+	
+	
+	function getProductInventory(prod){
+		var data="productId="+prod;
+		
+		$.ajax({
+        type: "POST",
+        url: "getProductInventory",
+        async: false,
+        data: data,
+        dataType: 'json',
+        success: function(result) {
+        quantityAvailability=result["availableToPromiseTotal"];
+        
+        
+       	 },
+       error: function() {
+       	 	alert(result["_ERROR_MESSAGE_"]);
+       	 }
+	});
+	
 	}
 	
     function productFormatter(row, cell, value, columnDef, dataContext) {   
@@ -198,6 +220,7 @@
 		var columns = [
 				{id:"cProductName", name:"Item", field:"cProductName", width:220, minWidth:220, cssClass:"cell-title", availableTags: availableTags, regexMatcher:"contains" ,editor: AutoCompleteEditor, validator: productValidator, sortable:false ,toolTip:""},
 				{id:"quantity", name:"Quantity", field:"quantity", width:100, minWidth:100, cssClass:"cell-title",editor:FloatCellEditor, sortable:false , formatter: quantityFormatter,  validator: quantityValidator},
+				{id:"inventoryQty", name:"Inventory Available", field:"inventoryQty", width:150, minWidth:100, cssClass:"readOnlyColumnClass", sortable:false , formatter: quantityFormatter,  validator: quantityValidator},
 		];
 		
 			var options = {
@@ -294,6 +317,7 @@
       		grid.updateRowCount();
       		grid.render();
     	});
+    	
         grid.onCellChange.subscribe(function(e,args) {
 			if (args.cell == 0 || args.cell == 1) {
 				var prod = data[args.row]["cProductId"];
@@ -304,7 +328,15 @@
 		
 		grid.onActiveCellChanged.subscribe(function(e,args) {
         	if (args.cell == 1 && data[args.row] != null) {
+        		var item = data[args.row];   
 				var prod = data[args.row]["cProductId"];
+				getProductInventory(prod);
+				item['inventoryQty'] = quantityAvailability;     		 		
+	      		grid.invalidateRow(data.length);
+	      		grid.updateRow(args.row);
+	      		grid.updateRowCount();
+	      		grid.render();
+	      		$(grid.getCellNode(args.row, 1)).click();
 			}
 			
 		});
@@ -391,5 +423,7 @@
 		jQuery("#contactNumber").val(contactInfo["contactNumber"]); 
 		jQuery("#pinNumber").val(contactInfo["postalCode"]);
 	}
+	
+	
 
 </script>			

@@ -29,6 +29,14 @@
 				$( "#effectiveDate" ).datepicker("option", selectedDate);
 			}
 		});
+		$( "#requiredDate" ).datepicker({
+			dateFormat:'d MM, yy',
+			changeMonth: true,
+			numberOfMonths: 1,
+			onSelect: function( selectedDate ) {
+				$( "#requiredDate" ).datepicker("option", selectedDate);
+			}
+		});
 		
 		$('#ui-datepicker-div').css('clip', 'auto');
 		
@@ -82,7 +90,23 @@
 					       	  </#if>
 					  	</tr>
 	    				<tr><td><br/></td></tr>
-    					
+    					 <tr>
+    					 	<td>&nbsp;</td>
+					        <td align='left' valign='middle' nowrap="nowrap"><div class='h2'>Required Date:</div></td>
+					        <td>&nbsp;</td>
+					        <#if requiredDate?exists && requiredDate?has_content>  
+						  		<input type="hidden" name="requiredDate" id="requiredDate" value="${requiredDate}"/>
+					          	<td valign='middle'>
+					            	<div class='tabletext h3'>${requiredDate}         
+					            	</div>
+					          	</td> 
+					         <#else> 
+					        	<td valign='middle'>          
+					            	<input class='h2' type="text" name="requiredDate" id="requiredDate" value="${defaultEffectiveDate}"/>           		
+					            </td> 	      
+					       	  </#if>
+					  	</tr>
+    					<tr><td><br/></td></tr>
     					<tr>
 				      		<td>&nbsp;</td>
 				      		<td align='left' valign='middle' nowrap="nowrap"><div class='h2'>Material Category:</div></td>
@@ -142,6 +166,7 @@
 				
 				<form method="post" id="indententry" action="<@ofbizUrl>IndentEntryInit</@ofbizUrl>">  
 					<input type="hidden" name="requestDate" id="requestDate" value="${parameters.effectiveDate?if_exists}"/>
+					<input type="hidden" name="responseDate" id="responseDate" value="${parameters.requiredDate?if_exists}"/>
 					<input type="hidden" name="custRequestTypeId" id="custRequestTypeId" value="PRODUCT_REQUIREMENT"/>
 					<input type="hidden" name="custRequestName" id="custRequestName" value="${parameters.custRequestName?if_exists}"/>
 				</form>

@@ -5,7 +5,7 @@
         <field title="Delivery Date" name="estimatedDeliveryDate"><date-find/></field>
         <field name="orderId"><text-find/></field>
         <field name="orderTypeId"><hidden value="PURCHASE_ORDER"/></field>
-        <field name="salesChannelEnumId" ><hidden value="${ChannalType}"  > </hidden></field> 
+        <field name="salesChannelEnumId" ><hidden value="${ChannalType}"  > </hidden></field>  
         <field name="statusId">
         	<drop-down allow-empty="true">
         		<option key="ORDER_CREATED" description="Created"/>

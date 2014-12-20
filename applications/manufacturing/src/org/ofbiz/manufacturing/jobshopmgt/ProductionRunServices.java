@@ -2248,7 +2248,7 @@ public class ProductionRunServices {
         } catch (GenericServiceException e) {
             return ServiceUtil.returnError(UtilProperties.getMessage(resource, "ManufacturingRequirementNotUpdated", locale));
         }
-        return ServiceUtil.returnSuccess();
+        return ServiceUtil.returnSuccess("Successfully Approved Requirement No : "+requirementId);
     }
 
     public static Map<String, Object> createProductionRunFromRequirement(DispatchContext ctx, Map<String, ? extends Object> context) {

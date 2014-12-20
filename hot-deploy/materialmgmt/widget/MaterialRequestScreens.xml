@@ -193,6 +193,7 @@
                <set field="showBoothAutoSuggest" value="${showBoothAutoSuggestConf.propertyValue}"/>
                <set field="supplyDate" from-field="parameters.supplyDate"/>
                <set field="effectiveDate" value="${parameters.effectiveDate}"/>
+               <set field="requiredDate" value="${parameters.requiredDate}"/>
                <!-- <set field="checkListType" value="indentEntry"/> -->
                <!-- <set field="shipmentTypeId" value="${parameters.shipmentTypeId}"/> -->
                 <entity-condition entity-name="Product" list="productList" use-cache="true">
@@ -219,6 +220,7 @@
             	<set field="changeFlag" from-field="changeFlag"/>  
                 <set field="checkListType" value="indentEntry"/>
                 <set field="effectiveDate" value="${parameters.effectiveDate}"/>
+                <set field="requiredDate" value="${parameters.requiredDate}"/>
                 <set field="productCategoryId" from-field="parameters.productCategoryId"/>
                 <set field="custRequestName" from-field="parameters.custRequestName"/>
                 <script location="component://byproducts/webapp/byproducts/WEB-INF/actions/facility/AdhocIndentForm.groovy"/>

@@ -74,11 +74,12 @@
                 <parameter param-name="requirementId"/>
             </hyperlink>
         </field>
-       <!--  <field name="rejectRequirement" widget-style="buttontext" title="Cancel" use-when="statusId.equals(&quot;REQ_CREATED&quot;)">
-        	<hyperlink description="Cancel" target="">
+        <field name="rejectRequirement" widget-style="buttontext" title="Cancel" use-when="statusId.equals(&quot;REQ_CREATED&quot;) || statusId.equals(&quot;REQ_APPROVED&quot;) ">
+        	<hyperlink description="Cancel" target="rejectRequirement">
                 <parameter param-name="requirementId"/>
+                <parameter param-name="statusId" value="REQ_REJECTED"/>
             </hyperlink>
-        </field> -->
+        </field>
         <!-- <field name="facilityQuantityOnHandTotal"><display/></field>
         <field name="quantityOnHandTotal"><display/></field> -->
         <!-- <field name="requestsLink" widget-style="buttontext">
