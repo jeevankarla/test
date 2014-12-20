@@ -234,7 +234,28 @@
 				if ($(autoId(ii)).val() !== ''){
 					autoCheck(iv, ii, io);
 				}		
-			}).bind('paste', function(){setTimeout(function(){autoCheck(iv, ii, io);}, 0); });/* thanks to Josh of Digitalbush.com Opera does not fire paste event*/
+			}).bind('paste', function(){ /* thanks to Josh of Digitalbush.com Opera does not fire paste event*/
+				setTimeout(function(){autoCheck(iv, ii, io);}, 0);
+			}).bind('keyup', function(e) {
+				var val = $(this).val();
+				val= autoCheckDecimal(iv, ii, io);
+				var upLength = val.length;	
+				charLeftKeyUp = (val.lastIndexOf(io.aDec) == -1) ? upLength : upLength - (upLength - val.lastIndexOf(io.aDec)); //characters to the left of the decimal point 
+				numLeft = autoCount(val, 0, charLeftKeyUp); //the number of intergers to the left of the decimal point 
+				numRightKeyup = autoCount(val, charLeftKeyUp, upLength);
+				if (val.lastIndexOf(io.aDec) != -1){
+					
+					numRightKeyup = autoCount(val, charLeftKeyUp, upLength); //the number of intergers to the right of the decimal point 
+					
+				}
+				if (val.indexOf(io.aDec) != -1 && caretPos >= charLeftKeyUp && numRightKeyup >= io.mDec){ //checks for max numeric characters to the left and right of the decimal point 
+					if(io.autoTab){	
+						autoTabFocus(this , io.autoTabTarget);
+					}
+					e.preventDefault();
+				}
+			});
+			
 		});
 	};
 	function autoId(myid) {/* thanks to Anthony & Evan C */
@@ -243,7 +264,7 @@
 	}
 	function autoCount(str, start, end){/* private function that counts the numeric characters to the left and right of the decimal point */
 		var chr = '';
-		var numCount = 0; 
+		var numCount = 0;
 		for (j = start; j < end; j++){
 			chr = str.charAt(j);
 			if (chr >= '0' && chr <= '9'){
@@ -440,7 +461,40 @@
 		}
 		$(autoId(ii)).val(rePaste);
 		return false;
+	}	
+	
+	function autoCheckDecimal(iv, ii, io){/*  private function that change event and pasted values  */
+		iv = iv.val();
+		if (io.mDecNum !== '' && iv.indexOf('.') != -1){/* allow only valid decimal points */
+			var ds=iv.split('.');
+			if(ds[1] !== ''){
+				var reg1 = new RegExp('[^'+io.mDecNum+']','gi');
+				//alert(reg1);
+				if(reg1.test(ds[1])){
+					iv = ds[0]+'.'
+				}
+			}
+			
+		}
+		$(autoId(ii)).val(iv);
+		return iv;
+	}	
+	
+	
+	
+	
+	function autoTabFocus(cur_element , autoTabTarget){ /*  private function that do a auto tab  */
+		var focusables = $(":focusable");
+		var current = focusables.index(cur_element);
+		if(autoTabTarget != undefined && autoTabTarget != ''){
+			$('#'+autoTabTarget).focus();
+			 return false;	
+		}
+		next = focusables.eq(current+1).length ? focusables.eq(current+1) : focusables.eq(0);
+	    next.focus();					 		
+	    return false;	
 	}
+		
 	$.fn.autoNumeric.Strip = function(ii, options){/* public function that stripes the format and converts decimal seperator to a period */
 		var opts = $.extend({}, $.fn.autoNumeric.defaults, options);
 		var io = $.metadata ? $.extend({}, opts, $(autoId(ii)).metadata()) : opts;
@@ -497,8 +551,10 @@
 		pSign: 'p',/* placement of currency sign prefix or suffix */
 		mNum: 9,/* max number of numerical characters to the left of the decimal */
 		mDec: 2,/* max number of decimal places */
+		mDecNum: '0123456789',/*  allowed  numeric values after decimal places*/
 		dGroup: 3,/* digital grouping for the thousand separator used in Format */
 		mRound: 'S',/* method used for rounding */
-		aPad: true/* true= always Pad decimals with zeros, false=does not pad with zeros. If the value is 1000, mDec=2 and aPad=true, the output will be 1000.00, if aPad=false the output will be 1000 (no decimals added) Special Thanks to Jonas Johansson */
+		aPad: true,/* true= always Pad decimals with zeros, false=does not pad with zeros. If the value is 1000, mDec=2 and aPad=true, the output will be 1000.00, if aPad=false the output will be 1000 (no decimals added) Special Thanks to Jonas Johansson */
+		autoTab : false,/* method used for auto Tab */
 	};
 })(jQuery);
