@@ -11,8 +11,6 @@
   <#if payRollSummaryMap?has_content>
      <fo:page-sequence master-reference="main"> 	 <#-- the footer -->
      		<fo:static-content flow-name="xsl-region-before">
-     			<#--<#assign organizationDetails = delegator.findOne("PartyGroup", {"partyId" : parameters.deptId}, true)>
-	           	<#assign oragnizationId = organizationDetails.get("comments")>-->
 	     		<#if deptId?exists>
 	     			<#assign department=deptId/>
 	     		<#else>
