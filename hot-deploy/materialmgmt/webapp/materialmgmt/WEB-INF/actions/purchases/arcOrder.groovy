@@ -74,7 +74,7 @@ if(UtilValidate.isNotEmpty(vendorDetail)){
 	
 fromPartyId=vendorDetail.partyId;
 }
-fromPartyId="S1775";
+fromPartyId="";
    if(UtilValidate.isNotEmpty(fromPartyId)){
 	 partyPostalAddress= dispatcher.runSync("getPartyPostalAddress", [partyId:fromPartyId, userLogin: userLogin]);
 	   address1="";address2="";city="";postalCode="";
