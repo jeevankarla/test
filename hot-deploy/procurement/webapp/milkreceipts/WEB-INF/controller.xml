@@ -21,7 +21,7 @@
     -->
 
     <!-- Request Mappings -->
-    <request-map uri="main"><security https="true" auth="true"/><response name="success" type="view" value="main"/></request-map>
+    <request-map uri="main"><security https="true" auth="true"/><response name="success" type="view" value="MilkReceiptsTankerEntry"/></request-map>
     <request-map uri="createMilkReceiptEntryAjax">
         <security https="true" auth="true"/>
         <event type="service"  invoke="createMilkReceiptEntryAjax"/>        
@@ -369,6 +369,80 @@
         <response name="success" type="view" value="milkReceiptEntriesCsv"/>
     </request-map>
     
+    <!-- tanker receipt Requests -->
+	<request-map uri="MilkReceiptsTankerEntry">
+    	<security https="true" auth="true"/>
+    	<response name="success" type="view" value="MilkReceiptsTankerEntry">
+    	</response>
+    </request-map>
+    <request-map uri="MilkReceiptsTankerOut">
+    	<security https="true" auth="true"/>
+    	<response name="success" type="view" value="MilkReceiptsTankerOutEntry">
+    	</response>
+    </request-map>
+    <request-map uri="MilkReceiptsTankerGrossWeightEntry">
+    	<security https="true" auth="true"/>
+    	<response name="success" type="view" value="MilkReceiptsTankerWeightEntry">
+    	</response>
+    </request-map>
+    
+    <request-map uri="MilkReceiptsTankerTareWeightEntry">
+    	<security https="true" auth="true"/>
+    	<response name="success" type="view" value="MilkReceiptsTankerTareWeightEntry">
+    	</response>
+    </request-map>
+    <request-map uri="MilkReceiptsQCEntry">
+    	<security https="true" auth="true"/>
+    	<response name="success" type="view" value="MilkReceiptsQCEntry"/>
+    </request-map>
+    
+    <request-map uri="createMilkTankerReceiptEntry">
+        <security https="true" auth="true"/>
+        <event type="service"  invoke="createMilkTankerReceiptEntry"/>        
+       <response name="success" type="request" value="json"/>
+       <response name="failed" type="request" value="json"/>
+       <response name="error" type="request" value="json"/>       
+    </request-map>
+    <request-map uri="updateMilkTankerReceiptEntryGrsWeight">
+        <security https="true" auth="true"/>
+        <event type="service"  invoke="updateMilkTankerReceiptEntryGrsWeight"/>        
+       <response name="success" type="request" value="json"/>
+       <response name="failed" type="request" value="json"/>
+       <response name="error" type="request" value="json"/>        
+    </request-map>
+     <request-map uri="updateMilkTankerReceiptEntryTAREWeight">
+        <security https="true" auth="true"/>
+        <event type="service"  invoke="updateMilkTankerReceiptEntryTareWeight"/>        
+       <response name="success" type="request" value="json"/>
+       <response name="failed" type="request" value="json"/>
+       <response name="error" type="request" value="json"/>        
+    </request-map>
+    <request-map uri="updateMilkTankerReceiptEntryQC">
+        <security https="true" auth="true"/>
+        <event type="service"  invoke="updateMilkTankerReceiptEntryQC"/>        
+       <response name="success" type="request" value="json"/>
+       <response name="failed" type="request" value="json"/>
+       <response name="error" type="request" value="json"/>        
+    </request-map>
+   
+    <request-map uri="updateMilkTankerReceiptEntryOut">
+        <security https="true" auth="true"/>
+        <event type="service"  invoke="updateMilkTankerReceiptEntryOut"/>        
+       <response name="success" type="request" value="json"/>
+       <response name="failed" type="request" value="json"/>
+       <response name="error" type="request" value="json"/>        
+    </request-map>
+    
+    
+    <request-map uri="getTankerRecordNumber">
+        <security https="true" auth="true"/>
+        <event type="service"  invoke="getTankerRecordNumber"/>        
+       <response name="success" type="request" value="json"/>
+       <response name="failed" type="request" value="json"/>
+       <response name="error" type="request" value="json"/>       
+    </request-map>
+    
+    
     <!-- View Mappings -->
     
     <view-map name="milkReceiptEntriesCsv" type="screencsv" page="component://procurement/widget/milkreceipts/MilkReceiptReportScreens.xml#milkReceiptEntriesCsv" content-type="text/csv"/>
@@ -423,4 +497,14 @@
     <view-map name="MonthWiseShedWiseKgFatAccount" type="screenfop" page="component:/procurement/widget/milkreceipts/MilkReceiptReportScreens.xml#MonthWiseShedWiseKgFatAccount" content-type="text/plain"/>
     <view-map name="MonthShedWiseComparingStatment" type="screenfop" page="component:/procurement/widget/milkreceipts/MilkReceiptReportScreens.xml#MonthShedWiseComparingStatment" content-type="text/plain"/>
     <view-map name="MilkReceiptSummerySms" type="screenfop" page="component://procurement/widget/milkreceipts/MilkReceiptReportScreens.xml#MilkReceiptSummerySms" content-type="application/pdf"/>
+    
+
+    <!--  View maps of kmf  -->
+    
+    <view-map name="MilkReceiptsTankerEntry" type="screen" page="component://procurement/widget/milkreceipts/MilkReceiptsScreens.xml#MilkReceiptsTankerEntry"/>
+    <view-map name="MilkReceiptsTankerOutEntry" type="screen" page="component://procurement/widget/milkreceipts/MilkReceiptsScreens.xml#MilkReceiptsTankerOutEntry"/>
+    <view-map name="MilkReceiptsQCEntry" type="screen" page="component://procurement/widget/milkreceipts/MilkReceiptsScreens.xml#MilkReceiptsQCEntry"/>
+    <view-map name="MilkReceiptsTankerWeightEntry" type="screen" page="component://procurement/widget/milkreceipts/MilkReceiptsScreens.xml#MilkReceiptsTankerWeightEntry"/>
+    <view-map name="MilkReceiptsTankerTareWeightEntry" type="screen" page="component://procurement/widget/milkreceipts/MilkReceiptsScreens.xml#MilkReceiptsTankerTareWeightEntry"/>
+    
 </site-conf>
