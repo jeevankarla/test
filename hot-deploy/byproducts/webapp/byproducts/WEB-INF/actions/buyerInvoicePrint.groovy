@@ -106,7 +106,23 @@ invoiceIds.each { invoiceId ->
 	partyIdFrom = invoice.partyIdFrom;
 	partyIdTo = invoice.partyId;
 	fromPartyDetail = (Map)(PartyWorker.getPartyIdentificationDetails(delegator, partyIdFrom)).get("partyDetails");
+	//give prefrence to ShipToCustomer
+	conditionList.clear();
+	conditionList.add(EntityCondition.makeCondition("orderId", EntityOperator.EQUALS, orderId));
+	conditionList.add(EntityCondition.makeCondition("roleTypeId", EntityOperator.EQUALS, "SHIP_TO_CUSTOMER"));
+	shipCond = EntityCondition.makeCondition(conditionList, EntityOperator.AND);
+	orderShipRole = delegator.findList("OrderRole", shipCond, null, null, null, false);
+	shipTopartyId = "";
+	if(UtilValidate.isNotEmpty(orderShipRole)){
+		shipTopartyId = (EntityUtil.getFirst(orderShipRole)).getString("partyId");
+	 }
+	//if shipToCustomer NotEmpty
+	if(UtilValidate.isNotEmpty(shipTopartyId)){
+		shipTopartyId = (EntityUtil.getFirst(orderShipRole)).getString("partyId");
+		toPartyDetail = (Map)(PartyWorker.getPartyIdentificationDetails(delegator, shipTopartyId)).get("partyDetails");
+	 }else{
 	toPartyDetail = (Map)(PartyWorker.getPartyIdentificationDetails(delegator, partyIdTo)).get("partyDetails");
+	}
 	invoiceDetailMap.put("fromPartyDetail", fromPartyDetail);
 	invoiceDetailMap.put("toPartyDetail", toPartyDetail);
 	
@@ -120,7 +136,31 @@ invoiceIds.each { invoiceId ->
 	if ("PURCHASE_INVOICE".equals(invoice.invoiceTypeId)) {
 		billingAddress = InvoiceWorker.getSendFromAddress(invoice);
 	} else {
-		billingAddress = InvoiceWorker.getBillToAddress(invoice);
+	//if shipRole not empty then assign to OrderRole
+	if(UtilValidate.isNotEmpty(orderShipRole)){
+		if(UtilValidate.isNotEmpty(shipTopartyId)){
+			partyAddress = dispatcher.runSync("getPartyPostalAddress", [partyId: shipTopartyId, userLogin: userLogin]);
+			billingTempMap=[:];
+			billingTempMap["toName"]=""
+			billingTempMap["address1"]="";
+			billingTempMap["address2"]="";
+			billingTempMap["city"]="";
+			billingTempMap["postalCode"]="";
+		 if(UtilValidate.isNotEmpty(partyAddress)){
+			if(UtilValidate.isNotEmpty(partyAddress)){
+			billingTempMap["toName"]=org.ofbiz.party.party.PartyHelper.getPartyName(delegator,shipTopartyId, false);
+			billingTempMap["address1"]=partyAddress.get("address1");
+			billingTempMap["address2"]=partyAddress.get("address2");
+			billingTempMap["city"]=partyAddress.get("city");
+			billingTempMap["postalCode"]=partyAddress.get("postalCode");
+			}
+			}
+		 billingAddress.putAll(billingTempMap);
+		}
+	}else{
+	billingAddress = InvoiceWorker.getBillToAddress(invoice);
+	}
+	
 	}
 	invoiceDetailMap.put("invoice", invoice);
 	invoiceDetailMap.put("shipment", shipment);

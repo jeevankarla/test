@@ -73,6 +73,17 @@ orderIds.each{ eachOrderId ->
 	conditionList.add(EntityCondition.makeCondition("roleTypeId", EntityOperator.EQUALS, "BILL_TO_CUSTOMER"));
 	cond = EntityCondition.makeCondition(conditionList, EntityOperator.AND);
 	orderRole = delegator.findList("OrderRole", cond, null, null, null, false);
+	ordersMap = [:];
+	//get shipping Customer
+	conditionList.clear();
+	conditionList.add(EntityCondition.makeCondition("orderId", EntityOperator.EQUALS, eachOrderId));
+	conditionList.add(EntityCondition.makeCondition("roleTypeId", EntityOperator.EQUALS, "SHIP_TO_CUSTOMER"));
+	shipCond = EntityCondition.makeCondition(conditionList, EntityOperator.AND);
+	orderShipRole = delegator.findList("OrderRole", shipCond, null, null, null, false);
+	//if shipRole not empty then assign to OrderRole
+	if(UtilValidate.isNotEmpty(orderShipRole)){
+		orderRole=orderShipRole;
+	}
 	orderDetail = null;
 	orderHeaders = EntityUtil.filterByCondition(orderHeaders, EntityCondition.makeCondition("orderId", EntityOperator.EQUALS, eachOrderId));
 	if(orderHeaders){
