@@ -292,8 +292,8 @@ public class HumanresPunchService {
 					//if last punch is earlier than 10 min ignore
 					//Debug.log("interval====="+UtilDateTime.getInterval(lastEmplPunchTime,punchDateTime));
 					if( UtilDateTime.getInterval(lastEmplPunchTime ,punchDateTime) < 600000){
-						Debug.logWarning("Empl Punch entry ignored last punch record less than min", module);
-						Debug.log("Empl Punch entry ignored last punch record less than min", module);
+						Debug.logWarning("Empl Punch entry ignored last punch record less than 10 min", module);
+						Debug.log("******* Empl Punch entry ignored last punch record less than  10 min", module);
 						return result;
 					}
 				}
@@ -781,7 +781,7 @@ public class HumanresPunchService {
 			condList.add(EntityCondition.makeCondition("punchDateTime", EntityOperator.LESS_THAN_EQUAL_TO,UtilDateTime.getDayEnd(thruDate)));
 			EntityCondition cond = EntityCondition.makeCondition(condList,EntityOperator.AND);
 			
-			List<GenericValue> emplPunchRawList = delegator.findList("EmplPunchRaw", cond, UtilMisc.toSet("partyId","punchDateTime"), UtilMisc.toList("punchDateTime"),null, false);
+			List<GenericValue> emplPunchRawList = delegator.findList("EmplPunchRaw", cond, UtilMisc.toSet("partyId","punchDateTime","deviceId"), UtilMisc.toList("punchDateTime"),null, false);
 			//Debug.log("emplPunchRaw===="+emplPunchRaw);
 			//here first delete shiftdetails and emplPunch
 			condList.clear();
@@ -792,11 +792,16 @@ public class HumanresPunchService {
 			condList.add(EntityCondition.makeCondition("punchdate", EntityOperator.GREATER_THAN_EQUAL_TO,UtilDateTime.toSqlDate(fromDate)));
 			condList.add(EntityCondition.makeCondition("punchdate", EntityOperator.LESS_THAN_EQUAL_TO,UtilDateTime.toSqlDate(thruDate)));
 			condList.add(EntityCondition.makeCondition("PunchType", EntityOperator.EQUALS,"Normal"));
-			
+			condList.add(EntityCondition.makeCondition("sourceId", EntityOperator.NOT_EQUAL,null));
 			cond = EntityCondition.makeCondition(condList,EntityOperator.AND);
 			
 			List<GenericValue> emplPunch = delegator.findList("EmplPunch", cond, null, null,null, false);
+			List<GenericValue> emplPunchNocond = delegator.findList("EmplPunch", null, null, null,null, false);
+			emplPunchNocond.removeAll(emplPunch);
 			delegator.removeAll(emplPunch);
+			//
+			
+			delegator.removeAll(emplPunchNocond);
 			
 			condList.clear();
             if(UtilValidate.isNotEmpty(employementList)){
@@ -821,6 +826,7 @@ public class HumanresPunchService {
 					return result;
 				}
 			}
+			delegator.storeAll(emplPunchNocond);
      } catch (Exception e) {
 	   Debug.logError(e, module);
 	   return ServiceUtil.returnError(e.getMessage());
