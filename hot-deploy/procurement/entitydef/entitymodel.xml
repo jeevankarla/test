@@ -357,6 +357,11 @@
       <field name="statusId" type="id-ne"></field>
       <field name="facilityId" type="id"></field>
       <field name="facilityIdTo" type="id"></field>
+      <field name="dcNo" type="id"></field>
+      <field name="partyId" type="id"></field>
+      <field name="partyIdTo" type="id"></field> 
+      <field name="numberOfCells" type="numeric"/>
+      <field name="isSealChecked" type="indicator"/>
       <field name="productId" type="id-ne"></field>
       <field name="quantity" type="fixed-point"></field>
       <field name="quantityLtrs" type="fixed-point"></field>
@@ -376,13 +381,21 @@
       <field name="receivedQuantityLtrs" type="fixed-point"></field>
       <field name="milkType" type="indicator"></field>
       <field name="supplyTypeEnumId" type="id"/>
+      
+      <field name="grossWeight" type="fixed-point"></field>
+      <field name="tareWeight" type="fixed-point"></field>
+      <field name="dispatchWeight" type="fixed-point"></field> <!-- Dispatch weight = tankerweight+milkweight -->
+      
       <field name="receivedSnf" type="fixed-point"></field>
       <field name="receivedFat" type="fixed-point"></field>
       <field name="receivedKgFat" type="fixed-point"></field>
       <field name="receivedKgSnf" type="fixed-point"></field>
       <field name="receivedLR" type="fixed-point"></field>
       <field name="gheeYield" type="fixed-point"></field>
+      
       <field name="containerId" type="id-ne"></field>
+      <field name="sequenceNum" type="id-ne"></field>
+      
       <field name="sendDate" type="date-time"></field>
       <field name="receiveDate" type="date-time"></field>
       <field name="comments" type="comment"></field>
@@ -392,6 +405,10 @@
       <prim-key field="milkTransferId"/>
       <relation type="one" fk-name="MILK_XFER_PROD" rel-entity-name="Product">
         <key-map field-name="productId"/>
+      </relation>
+      <relation type="one" fk-name="MILK_XFER_VEHICLE" rel-entity-name="VehicleTrip">
+        <key-map field-name="containerId" rel-field-name="vehicleId"/>
+        <key-map field-name="sequenceNum"/>
       </relation>
       <relation type="one" fk-name="MILK_XFER_STTS" rel-entity-name="StatusItem">
         <key-map field-name="statusId"/>
@@ -410,6 +427,12 @@
       </relation>
       <relation type="one" fk-name="MILK_RECEIVEDFROM_FAC" rel-entity-name="Facility">
         <key-map field-name="facilityIdTo" rel-field-name="facilityId"/>
+      </relation>
+      <relation type="one" fk-name="MILK_RECEIVEDFROM_PAR" rel-entity-name="Party">
+        <key-map field-name="partyIdTo" rel-field-name="partyId"/>
+      </relation>
+      <relation type="one" fk-name="MILK_XFER_PARTY" rel-entity-name="Party">
+        <key-map field-name="partyId" rel-field-name="partyId"/>
       </relation>
     </entity>
     
@@ -440,6 +463,7 @@
       <field name="supplyTypeEnumId" type="id"/>
       <field name="sendTime" type="id"/>
       <field name="sendSoda" type="indicator"/>
+      
       <field name="receivedSoda" type="indicator"/>
       <field name="ackTime" type="id"/>
       <field name="receivedSnf" type="fixed-point"></field>
@@ -451,6 +475,13 @@
       <field name="vehicleId" type="id"></field><!-- vehicle/tanker number -->
       <field name="sendDate" type="date-time"></field>
       <field name="receiveDate" type="date-time"></field>
+     
+     <!--  tanker Receipt Fields -->
+     <field name="sendNutrilisers" type="indicator"></field><!-- P/N positive/Negative -->
+     <field name="receivedSedimentTest" type="indicator"></field><!-- P/N positive/Negative -->
+     <field name="receivedPH" type="fixed-point"></field>
+     <field name="receivedMBRT" type="fixed-point"></field>
+     <field name="receivedFlavour" type="id"></field>
      
      <!--  <field name="sendHour" type="numeric"></field>
       <field name="receivedHour" type="numeric"></field> -->
