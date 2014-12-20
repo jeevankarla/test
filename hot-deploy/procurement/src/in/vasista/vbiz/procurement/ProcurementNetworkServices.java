@@ -779,7 +779,7 @@ public class ProcurementNetworkServices {
 	     return convertKGToLitreSetScale(quantity,true) ;	    		 
 	  } 	
 	  public static BigDecimal convertKGToLitreSetScale(BigDecimal quantity,boolean setScale) {	        	
-		 BigDecimal quantityLtrs = quantity.divide(new BigDecimal("1.03"), 1,BigDecimal.ROUND_HALF_UP);
+		 BigDecimal quantityLtrs = quantity.divide(new BigDecimal("1.0295"), 2,BigDecimal.ROUND_HALF_UP);
 	    	 if(setScale == true){
 	    		 //this decimal calculation is customised as per apDairy
 	    		 BigDecimal decimalValue = BigDecimal.ZERO;
@@ -804,7 +804,7 @@ public class ProcurementNetworkServices {
 	  public static BigDecimal calculateKgFatOrKgSnf(BigDecimal qtyKgs,BigDecimal fatOrSnf ){
 	    	BigDecimal result = BigDecimal.ZERO;
 	    	if(!((UtilValidate.isEmpty(fatOrSnf))||(UtilValidate.isEmpty(qtyKgs)))){
-	    		result = (qtyKgs.multiply(fatOrSnf.divide(new BigDecimal(100)))).setScale(4, BigDecimal.ROUND_HALF_UP);
+	    		result = (qtyKgs.multiply(fatOrSnf.divide(new BigDecimal(100)))).setScale(2, BigDecimal.ROUND_HALF_UP);
 	    	}
 	    	return result;
 	    }
@@ -951,7 +951,7 @@ public class ProcurementNetworkServices {
 	    }
 	  public static BigDecimal convertLitresToKG(BigDecimal qtyLtrs ){
 		  BigDecimal qtyKgs = BigDecimal.ZERO;
-		  qtyKgs = qtyLtrs.multiply(new BigDecimal("1.03")).setScale(1,BigDecimal.ROUND_HALF_EVEN);
+		  qtyKgs = qtyLtrs.multiply(new BigDecimal("1.0295")).setScale(2,BigDecimal.ROUND_HALF_EVEN);
 		  return qtyKgs;
 		  
 	  }
@@ -961,7 +961,7 @@ public class ProcurementNetworkServices {
 	    	//this decimal calculation is customised as per apDairy ,  this will round the qtyKgs to  0 or 0.5
 	    	  //  x= (ltr*1.03*100)/50
 	    	  // qtyKgs = = (x*50)/100
-	    	  qtyKgs = (qtyLtrs.multiply(new BigDecimal("1.03"))).multiply(new BigDecimal("100")).divide(new BigDecimal("50")).setScale(0,rounding);
+	    	  qtyKgs = (qtyLtrs.multiply(new BigDecimal("1.0295"))).multiply(new BigDecimal("100")).divide(new BigDecimal("50")).setScale(0,rounding);
 	    	  qtyKgs = qtyKgs.multiply(new BigDecimal("50")).divide(new BigDecimal("100")).setScale(1, rounding);
 	    	  
 	    	}else{
