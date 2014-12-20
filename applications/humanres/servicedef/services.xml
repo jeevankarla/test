@@ -1475,7 +1475,7 @@ under the License.emplpunch
     </service>
     
     <service name="cancelPayrollBilling"  engine="java"
-                location="in.vasista.vbiz.humanres.PayrollService" invoke="cancelPayrollBilling" auth="true">
+                location="in.vasista.vbiz.humanres.PayrollService" invoke="cancelPayrollBilling" auth="true" transaction-timeout="3000">
         <description>Cancel Payroll Billing</description>
         <attribute name="periodBillingId" mode="IN" type="String" optional="false"/>
     </service>
