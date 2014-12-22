@@ -427,6 +427,7 @@ public class PayrollService {
 					            	 recoveryCtx.put("employeeId", payHeader.get("partyIdFrom"));
 					            	 recoveryCtx.put("timePeriodStart", monthBegin);
 					            	 recoveryCtx.put("timePeriodEnd", monthEnd);
+					            	 recoveryCtx.put("timePeriodId", customTimePeriodId);
 					            	 recoveryCtx.put("payHeadTypeId", payHeaderItem.get("payrollHeaderItemTypeId"));
 					            	 recoveryCtx.put("amount", ((BigDecimal)payHeaderItem.get("amount")).negate());
 					            	 recoveryCtx.put("payrollHeaderId", payHeaderItem.getString("payrollHeaderId"));
