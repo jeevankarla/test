@@ -93,6 +93,8 @@ function makeDatePicker1(fromDateId ,thruDateId){
 
 	    
 		makeDatePicker("fromDate","thruDate");
+		makeDatePicker("storeAbstFromDate","storeAbstThruDate");
+		makeDatePicker("storeFromDate","storeThruDate");
 		makeDatePicker("fromDateMr","thruDateMr");
 		makeDatePicker("fromDateStock","thruDateStock");
 		makeDatePicker("fromDateArc","thruDateArc");
@@ -167,8 +169,8 @@ function makeDatePicker1(fromDateId ,thruDateId){
 							<td width="20%"><span class='h3'>Store Issue Abstract Report</span></td>
 							<td width="50%">
 							     <span class='h3'>
-									From <input  type="text" size="18pt" id="fromDate"   name="fromDate"/>
-									To   <input  type="text" size="18pt" id="thruDate"   name="thruDate"/>
+									From <input  type="text" size="18pt" id="storeAbstFromDate"   name="storeAbstFromDate"/>
+									To   <input  type="text" size="18pt" id="storeAbstThruDate"   name="storeAbstThruDate"/>
 								 </span>
 							</td>
 						    <td width="25%"><span class='h3'><input type="submit" value="Download" class="buttontext"></span></td>
@@ -183,8 +185,8 @@ function makeDatePicker1(fromDateId ,thruDateId){
 					     <td width="20%"><span class='h3'>Store Report</span></td>
 						 <td width="50%">
 						 <span class='h3'>
-						    From <input  type="text" size="18pt" id="fromDate"   name="fromDate"/>
-							To   <input  type="text" size="18pt" id="thruDate"   name="thruDate"/>
+						    From <input  type="text" size="18pt" id="storeFromDate"   name="storeFromDate"/>
+							To   <input  type="text" size="18pt" id="storeThruDate"   name="storeThruDate"/>
 						 </span>
 						 </td>
 						 <td width="25%"><span class='h3'><input type="submit" value="Download" class="buttontext"></span></td>
@@ -268,6 +270,32 @@ function makeDatePicker1(fromDateId ,thruDateId){
 					     <td width="20%"><span class='h3'>Material Enquiry Report</span></td>
 						 <td width="25%">
 							 <span class='h3'>Enquiry NO.<input type="textfield"  id="issueToCustReqId"  name="issueToCustReqId"/></span>   								
+						  </td>
+						 <td width="25%"><span class='h3'><input type="submit" value="Download" class="buttontext"></span></td>
+		 		    </tr>
+				 </table>
+			 </form>
+		  </tr>
+		  <tr class="alternate-row"> 
+				<form id="EnquiryReport" name="EnquiryReport" mothed="post" action="<@ofbizUrl>EnquiryReport.pdf</@ofbizUrl>" target="_blank">
+				   <table class="basic-table" cellspacing="5">
+					  <tr class="alternate-row">
+					     <td width="20%"><span class='h3'>Enquiry Report</span></td>
+						 <td width="25%">
+							 <span class='h3'>Enquiry NO.<input type="textfield"  id="issueToCustReqId"  name="issueToCustReqId"/></span>   								
+						  </td>
+						 <td width="25%"><span class='h3'><input type="submit" value="Download" class="buttontext"></span></td>
+		 		    </tr>
+				 </table>
+			 </form>
+		  </tr>
+		  <tr class="alternate-row"> 
+				<form id="EnquiryNoReport" name="EnquiryNoReport" mothed="post" action="<@ofbizUrl>EnquiryNoReport.pdf</@ofbizUrl>" target="_blank">
+				   <table class="basic-table" cellspacing="5">
+					  <tr class="alternate-row">
+					     <td width="20%"><span class='h3'>Enquiry No Report</span></td>
+						 <td width="25%">
+							 <span class='h3'>Enquiry NO.<input type="textfield"  id="issueToEnquiryNo"  name="issueToEnquiryNo"/></span>   								
 						  </td>
 						 <td width="25%"><span class='h3'><input type="submit" value="Download" class="buttontext"></span></td>
 		 		    </tr>

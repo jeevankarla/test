@@ -362,6 +362,40 @@
 			
 		</section>
 	</screen>
+	<screen name="EnquiryReport">
+		<section>
+			<actions>
+				<property-map resource="OrderUiLabels" map-name="uiLabelMap" global="true"/>
+				<property-map resource="ProductUiLabels" map-name="uiLabelMap" global="true"/>
+				<property-map resource="PartyUiLabels" map-name="uiLabelMap" global="true"/>
+				<property-map resource="CommonUiLabels" map-name="uiLabelMap" global="true"/>
+				<script location="component://materialmgmt/webapp/materialmgmt/WEB-INF/actions/reports/EnquiryReport.groovy"/>
+			</actions>
+			<widgets>
+				<platform-specific> 
+				  <xsl-fo><html-template location="component://materialmgmt/webapp/materialmgmt/reports/EnquiryReport.fo.ftl" /></xsl-fo> 
+                </platform-specific>
+			</widgets>
+			
+		</section>
+	</screen>
+	<screen name="EnquiryNoReport">
+		<section>
+			<actions>
+				<property-map resource="OrderUiLabels" map-name="uiLabelMap" global="true"/>
+				<property-map resource="ProductUiLabels" map-name="uiLabelMap" global="true"/>
+				<property-map resource="PartyUiLabels" map-name="uiLabelMap" global="true"/>
+				<property-map resource="CommonUiLabels" map-name="uiLabelMap" global="true"/>
+				<script location="component://materialmgmt/webapp/materialmgmt/WEB-INF/actions/reports/EnquiryNoReport.groovy"/>
+			</actions>
+			<widgets>
+				<platform-specific> 
+<!-- 				  <xsl-fo><html-template location="component://materialmgmt/webapp/materialmgmt/reports/EnquiryNoReport.fo.ftl" /></xsl-fo>  -->
+                </platform-specific>
+			</widgets>
+			
+		</section>
+	</screen>
 	<screen name="MRRreportPDF">
 		<section>
 			<actions>
