@@ -132,7 +132,7 @@ if(UtilValidate.isNotEmpty(changeFlag) &&( (changeFlag == "InterUnitPurchase")||
 	Debug.log("===WSD==prodList==Size==="+tempProdList.size()+"prodList==Size==="+prodList.size());
 	prodList.addAll(tempProdList);
 }
-Debug.log("=====prodList=Size==="+prodList.size());
+Debug.log("=====prodList=Size==="+prodList.size()+"==changeFlag=="+changeFlag);
 productStoreId =PurchaseStoreServices.getPurchaseFactoryStore(delegator).get("factoryStoreId");
 Map inputProductRate = FastMap.newInstance();
 inputProductRate.put("productStoreId", "9000");

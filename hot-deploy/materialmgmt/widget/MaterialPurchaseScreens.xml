@@ -43,6 +43,12 @@
 			    <set field="tabButtonItem" value="FindMaterialPO" />	
                <set field="targetRequest" value="FindMaterialPO"/>
                 <!-- <set field="ChannalType" value="PROD_PRCHSE_CHANNEL"/>  -->
+                 <set field="parameters.roleTypeId" value="MAINSTORE_VENDOR"/>
+                 <set field="changeFlag" value="PurchaseOrder"/> 
+                  <set field="parameters.changeFlag" value="PurchaseOrder"/> 
+                <script location="component://byproducts/webapp/byproducts/WEB-INF/actions/facility/enablePartyAutoComplete.groovy"/>
+                <script location="component://materialmgmt/webapp/materialmgmt/WEB-INF/actions/orgnigationDept.groovy"/>
+                 <script location="component://materialmgmt/webapp/materialmgmt/WEB-INF/actions/purchases/PurchaseEntryForm.groovy"/>
             </actions>
             <widgets>
                  <decorator-screen name="materialmgmtNgCommonDecorator" location="${parameters.mainDecoratorLocation}">

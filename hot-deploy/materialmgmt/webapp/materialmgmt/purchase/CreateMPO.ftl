@@ -1,13 +1,34 @@
-
+<#include "CreateMPOInc.ftl"/>
+<#--
 <link href="<@ofbizContentUrl>/images/jquery/plugins/steps/jquery.steps.css</@ofbizContentUrl>" rel="stylesheet">
 <script type="text/javascript" src="<@ofbizContentUrl>/images/jquery/plugins/steps/jquery.steps.js</@ofbizContentUrl>"></script>
-
+-->
 
 <script type="application/javascript">
 
+		
+		
 function makeDatePicker(fromDateId ,thruDateId){
 	$( "#"+fromDateId ).datepicker({
 			dateFormat:'MM d, yy',
+			changeMonth: true,
+			numberOfMonths: 1,
+			onSelect: function( selectedDate ) {
+				$( "#"+thruDateId ).datepicker( "option", "minDate", selectedDate );
+			}
+		});
+	$( "#"+thruDateId ).datepicker({
+			dateFormat:'MM d, yy',
+			changeMonth: true,
+			numberOfMonths: 1,
+			onSelect: function( selectedDate ) {
+				//$( "#"+fromDateId ).datepicker( "option", "maxDate", selectedDate );
+			}
+		});
+	}
+	function makeDayDatePicker(fromDateId ,thruDateId){
+	$( "#"+fromDateId ).datepicker({
+			dateFormat:'d MM, yy',
 			changeMonth: true,
 			numberOfMonths: 1,
 			onSelect: function( selectedDate ) {
@@ -46,7 +67,37 @@ function makeDatePicker(fromDateId ,thruDateId){
 					       	}, 800);
 					    	return false;
 				    	}
-				    	
+					      //alert("==supplierId="+supplierId);
+					    //populate SlickGrid starts here
+						 if(supplierId){
+						    gridShowCall();
+						 	setupGrid1();
+					     }else{ 
+					        gridHideCall();
+					     }
+				        jQuery(".grid-header .ui-icon")
+				            .addClass("ui-state-default ui-corner-all")
+				            .mouseover(function(e) {
+				                jQuery(e.target).addClass("ui-state-hover")
+				            })
+				            .mouseout(function(e) {
+				                jQuery(e.target).removeClass("ui-state-hover")
+				            });		
+						jQuery("#gridContainer").resizable();	   			
+				    	var tabindex = 1;
+				    	jQuery('input,select').each(function() {
+				        	if (this.type != "hidden") {
+				            	var $input = $(this);
+				            	$input.attr("tabindex", tabindex);
+				            	tabindex++;
+				        	}
+				    	});
+				
+				    	var rowCount = jQuery('#myGrid1 .slick-row').length;
+						if (rowCount > 0) {			
+							$(mainGrid.getCellNode(rowCount-1, 0)).click();		   
+				    	}
+    	 		      //populate SlickGrid ends here
                 		return true;
                 	}
                 	if(currentIndex == 1 && newIndex == 2){
@@ -89,6 +140,7 @@ function makeDatePicker(fromDateId ,thruDateId){
 					var form = ($(this)).parent();
 					var OrderDetails = jQuery("<input>").attr("type", "hidden").attr("name", "OrderDetails").val(employee);	
 				    jQuery(form).append(jQuery(OrderDetails));
+				    processIndentEntryInternal("CreateMPO", "CreateMaterialPO");
 					//form.append();
                 	form.submit();
                 }
@@ -99,9 +151,25 @@ function makeDatePicker(fromDateId ,thruDateId){
 		makeDatePicker("expectedDeliveryDate","fromDateId");
 		makeDatePicker("poDate","fromDateId");
 		makeDatePicker("refDate","fromDateId");
-		$('#ui-datepicker-div').css('clip', 'auto');		
+		
+		makeDayDatePicker("effectiveDate","fromDateId");
+		makeDayDatePicker("SInvoiceDate","fromDateId");
+	
+		
+		$('#ui-datepicker-div').css('clip', 'auto');	
+		$("#supplierId").autocomplete({ source: partyAutoJson }).keydown(function(e){
+			/*
+			if (e.keyCode === 13){
+		      	 $('#supplierId').autocomplete('close');
+	    			$('#supplierId').submit();
+	    			return false;   
+			}*/
+		});	
+		
 	});
 </script>
+
+
 	<form id="CreateMPO"  action="<@ofbizUrl>CreateMaterialPO</@ofbizUrl>" name="CreateMPO" method="post">
 	    <div id="wizard-2">
         <h3>PO Information</h3>
@@ -110,14 +178,34 @@ function makeDatePicker(fromDateId ,thruDateId){
 	            <table cellpadding="2" cellspacing="1" class='h2'>
     					<tr>
 						    <td class="label"><b>Vendor Id :*</b></td>
+						     <input type="hidden" name="productStoreId"  value="${productStoreId?if_exists}" />
+						    <#if changeFlag?exists && changeFlag=='InterUnitPurchase'>
+						       <input type="hidden" name="salesChannel" id="salesChannel" value="INTER_PRCHSE_CHANNEL"/> 
+						    <#else>
+						       <input type="hidden" name="salesChannel" id="salesChannel" value="MATERIAL_PUR_CHANNEL"/>  
+						    </#if>
 						    <td>
-						      	<input type="text" name="supplierId" id="supplierId" size="18" maxlength="60" autocomplete="off"/>
+						      	<input type="text" name="supplierId" id="supplierId" size="18" maxlength="60" />
 						    </td>
 						</tr>
+          		        <tr>
+						    <td class="label"><b>Bill To Party/Employee Id:*</b></td>
+						    <td>
+						      	<@htmlTemplate.lookupField  formName="CreateMPO" size="18" maxlength="60" name="billToPartyId" id="billToPartyId" fieldFormName="LookupPartyName"/>
+          		                <span class="tooltip">If input given then invoice will raise against this Party </span>
+          		
+						    </td>
+						 </tr>
  						 <tr>
 						    <td class="label"><b>Ref No:*</b></td>
 						    <td>
 						      <input type="text" name="refNo" id="refNo" size="18" maxlength="60" autocomplete="off"/>
+	        				 </td>
+						</tr>
+						<tr>
+						    <td class="label"><b>Estimated Delivery Date:* </b></td>
+						    <td>
+						      <input type="text" name="effectiveDate" id="effectiveDate" size="18" maxlength="60" autocomplete="off"/>
 	        				 </td>
 						</tr>
 						<tr>
@@ -139,12 +227,6 @@ function makeDatePicker(fromDateId ,thruDateId){
 	        				 </td>
 						</tr>
 						<tr>
-						    <td class="label"><b>Estimated Delivery Date:* </b></td>
-						    <td>
-						      <input type="text" name="estimatedDeliveryDate" id="estimatedDeliveryDate" size="18" maxlength="60" autocomplete="off"/>
-	        				 </td>
-						</tr>
-						<tr>
 						    <td class="label"><b>File No:* </b></td>
 						    <td>
 						      <input type="text" name="fileNo" id="fileNo" size="18" maxlength="60" autocomplete="off"/>
@@ -161,7 +243,92 @@ function makeDatePicker(fromDateId ,thruDateId){
                  </section>
             <h3>Add Material </h3>
             <section>
+             <div class="full">
+				     <div class="screenlet">
+					    	<div class="screenlet-body">
+					    	 <div class="screenlet-body" id="FieldsDIV" >
+								<table width="50%" border="0" cellspacing="0" cellpadding="0">
+										<tr><td><br/></td></tr>
+								        <tr>
+						       				<td align='left' valign='middle' nowrap="nowrap"><div class='h3'>MRN No.: </div></td>
+								         	<td valign='middle' align='left'> 
+						             			<input class='h3' type="text" size="20" maxlength="30" name="mrnNumber" id="mrnNumber"/>          
+						          			</td>
+						          			<td>&nbsp;&nbsp;&nbsp;</td>
+						          			<td align='left' valign='middle' nowrap="nowrap"><div class='h3'>PO No.: </div></td>
+								         	<td valign='middle' align='left'> 
+						             			<input class='h3' type="text" size="20" maxlength="30" name="PONumber" id="PONumber"/>          
+						          			</td>
+						          			<td>&nbsp;&nbsp;&nbsp;</td>
+						          			<td align='left' valign='middle' nowrap="nowrap"><div class='h3'>SUP Invoice No.: </div></td>
+								         	<td valign='middle' align='left'> 
+						             			<input class='h3' type="text" size="20" maxlength="30" name="SInvNumber" id="SInvNumber"/>          
+						          			</td>
+						          			<td>&nbsp;&nbsp;&nbsp;</td>
+						          			<td align='left' valign='middle' nowrap="nowrap"><div class='h3'>SUP Invoice Date: </div></td>
+								         	<td valign='middle' align='left'> 
+						             			<input class='h3' type="text" size="20" maxlength="30" name="SInvoiceDate" id="SInvoiceDate"/>          
+						          			</td>
+						 		       </tr>
+						 		       <tr><td><br/></td></tr>
+						 		        <tr>
+								        	<td align='left' valign='middle' nowrap="nowrap"><div class='h3'>Freight Charges: </div></td>
+						       				<td valign='middle' align='left'> 
+						           				<input class='h3' type="text" size="20" maxlength="30" name="freightCharges" id="freightCharges" onblur="javascript:addToInvoiceAmount();"/>          
+						       				</td>
+						       				<td>&nbsp;&nbsp;&nbsp;</td>
+						       				<td align='left' valign='middle' nowrap="nowrap"><div class='h3'>Discount: </div></td>
+								         	<td valign='middle' align='left'> 
+						             			<input class='h3' type="text" size="20" maxlength="30" name="discount" id="discount" onblur="javascript:addToInvoiceAmount();"  />          
+						          			</td>
+						          			<td>&nbsp;&nbsp;&nbsp;</td>
+						       				<td align='left' valign='middle' nowrap="nowrap"><div class='h3'>Insurance: </div></td>
+								         	<td valign='middle' align='left'> 
+						             			<input class='h3' type="text" size="20" maxlength="30" name="insurence" id="insurence" onblur="javascript:addToInvoiceAmount();"/>          
+						          			</td>
+						          			<td>&nbsp;&nbsp;&nbsp;</td>
+						          			<td align='left' valign='middle' nowrap="nowrap"><div class='h3'>Pack.&Fowdg: </div></td>
+								         	<td valign='middle' align='left'> 
+								         	 <input class='h3' type="text" size="20" maxlength="30" name="packAndFowdg" id="packAndFowdg" onblur="javascript:addToInvoiceAmount();"/>
+						          			</td>
+						 		         </tr>
+						 		        <tr><td><br/></td></tr>
+						 		        <tr>
+								        	<td align='left' valign='middle' nowrap="nowrap"><div class='h3'>Other Charges: </div></td>
+						       				<td valign='middle' align='left'> 
+						           				<input class='h3' type="text" size="20" maxlength="30" name="otherCharges" id="otherCharges" onblur="javascript:addToInvoiceAmount();"/>          
+						       				</td>
+						          			<td>&nbsp;&nbsp;&nbsp;</td>
+						          			<td align='left' valign='middle' nowrap="nowrap"><div class='h3'>Add BED: </div></td>
+								         	<td valign='middle' align='left'> 
+								         	<input class='h3' type="checkbox" size="20" id="addBED" name="addBED" value="" onclick="javascript:addBedColumns();"/>
+						          			</td>
+						 		         </tr>
+						 		          <tr><td><br/></td></tr>
+						 		          <tr><td colspan="6"> <span class="tooltip"> Note:once BED columns added and input given to BED columns You cant remove them</span></tr>
+						        	</table>
+								</div>
+								<div class="grid-header" style="width:100%">
+									<label>Purchase Entry </label><span id="totalAmount"></span>
+								</div>
+								<div id="myGrid1" style="width:100%;height:250px;"></div>
+								<#-->
+						    	<div align="center">
+						    	<table width="60%" border="0" cellspacing="0" cellpadding="0">  
+						    	<tr><td></td><td></td></tr>
+						    	<tr><td> &nbsp;<input type="button" style="padding:.3em" name="changeSave" id="changeSave" value="Save" /></td>
+						    	<td> &nbsp;<input type="button" style="padding:.3em" id="changeCancel" value="Cancel"/> </td></tr>
+						    	 
+						    	</table>
+						    	</div>    -->
+				             </div>  
+			          </div>
+			</div>        
+           
+            <#-->
             	<fieldset>
+            	
+            	
 				    <table cellpadding="2" cellspacing="1" class='h2'>
 					          <tr>
 		          				<td align='left' valign='middle' nowrap="nowrap"></td>
@@ -187,8 +354,8 @@ function makeDatePicker(fromDateId ,thruDateId){
 								</table>
 	          				     </td>
 					        </tr>
-		                 </table>
-                    </fieldset>  
+		                 </table> 
+                    </fieldset>  -->
                </section>
                       <h3>Payment Terms</h3>
 			          <section>
