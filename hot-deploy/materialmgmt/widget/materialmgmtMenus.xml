@@ -24,39 +24,66 @@
         <menu name="MaterailtMgmtNGTabBar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml">
         	
         	<menu-item name="stockPosition" title="Stock Position">
+        	<condition>
+        		<if-has-permission permission="MM" action="_STOCK_VIEW" />
+        	</condition>
             <link target="stockPosition">
             </link>
         	</menu-item>
         	
 	        <menu-item name="FindMaterialRequest" title="${uiLabelMap.MaterialMangement_CustRequest}">
+	        	<condition>
+	        		<if-has-permission permission="MM" action="_INDENT_VIEW" />
+	        	</condition>
 	        	<link target="FindMaterialRequest"/>
 	        </menu-item>
 	
 			<menu-item name="FindMaterialIssuance" title="Store Issuance">
+			<condition>
+	        		<if-has-permission permission="MM"  action="_STORE_ISSUE_VIEW"/>
+	        </condition>
 	        	<link target="FindMaterialIssuance"/>
 	        </menu-item>
 	        
 	        <menu-item name="FindMaterialRequirement" title="Requirements">
+	        <condition>
+	        	<if-has-permission permission="MM" action="_REQUIREMENTS_VIEW"/>
+	        </condition>
 	        	<link target="FindMaterialRequirement"/>
 	        </menu-item>
 	        
 	        <menu-item name="FindMaterialEnquiry" title="Enquiry">
+	        <condition>
+	        	<if-has-permission permission="MM" action="_ENQUIRY_VIEW"/>
+	        </condition>
 	        	<link target="FindMaterialEnquiry"/>
 	        </menu-item>
 	        
 	        <menu-item name="FindMaterialQuotes" title="Quotation">
+	        <condition>
+	        	<if-has-permission permission="MM" action="_QUOTATION_VIEW"/>
+	        </condition>
 	        	<link target="FindMaterialQuotes"/>
 	        </menu-item>
 	        
 	        <menu-item name="FindMaterialPO" title="Purchase Order">
+	        <condition>
+	        	<if-has-permission permission="MM" action="_PORDER_VIEW"/>
+	        </condition>
 	        	<link target="FindMaterialPO"/>
 	        </menu-item>
 	        
 	        <menu-item name="FindGRNReceipts" title="Material Receipts">
+	        <condition>
+	        	<if-has-permission permission="MM" action="_MRECEIPTS_VIEW"/>
+	        </condition>
 	        	<link target="FindGRNReceipts"/>
 	        </menu-item>
 	        
 	        <menu-item name="MaterialForQCApproval" title="QC Approval">
+	        <condition>
+	        	<if-has-permission permission="MM" action="_QC_VIEW"/>
+	        </condition>
 	        	<link target="MaterialForQCApproval"/>
 	        </menu-item>
 	        
@@ -66,9 +93,15 @@
 	            </link>
 	        </menu-item>  -->
 	        <menu-item name="FindMaterialInvoices" title="Find Material Invoice">
+	        <condition>
+	        	<if-has-permission permission="MM" action="_MINVOICE_VIEW"/>
+	        </condition>
             <link target="FindMaterialInvoices"/>
 	        </menu-item>
-	        <menu-item name="newReports" title="New Reports">
+	        <menu-item name="newReports" title="Reports">
+	        <condition>
+	        	<if-has-permission permission="MM" action="_REPORTS_VIEW"/>
+	        </condition>
 	            <link target="newReports">
 	            </link>
 	        </menu-item>
