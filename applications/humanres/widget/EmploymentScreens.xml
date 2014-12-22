@@ -497,6 +497,7 @@
                 <set field="headerItem" value="benefitOrDeduction"/>
 				<set field="tabButtonItem" value="benefitOrDeduction" />
 				<set field="tabButtonItem2" value="benefitOrDeduction" />
+				<set field="layoutSettings.javaScripts[]" value="/partymgr/static/date.js" global="true"/>
 				<entity-condition list="allBenefitsTypeList" entity-name="BenefitType">
 					<condition-expr field-name="benefitTypeId" operator="not-equals" value="PAYROL_BEN_SALARY"/>
 					<order-by field-name="sequenceNum"/>

@@ -39,9 +39,19 @@ context.timePeriodStart= timePeriodStart;
 
 context.timePeriodEnd= timePeriodEnd;
 
+orgId=parameters.partyId;
+if(parameters.partyId){
+	orgId=parameters.partyId;
+}
+
+
 Map emplInputMap = FastMap.newInstance();
 emplInputMap.put("userLogin", userLogin);
-emplInputMap.put("orgPartyId", "Company");
+if(UtilValidate.isNotEmpty(orgId)){
+	emplInputMap.put("orgPartyId", orgId);
+}else{
+	emplInputMap.put("orgPartyId", "Company");
+}
 emplInputMap.put("fromDate", timePeriodStart);
 emplInputMap.put("thruDate", timePeriodEnd);
 Map resultMap = HumanresService.getActiveEmployements(dctx,emplInputMap);

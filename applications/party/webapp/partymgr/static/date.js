@@ -17,8 +17,9 @@ function change(){
 	
 }
 
-function selectDept(){
+function selectDept(){	
 	var partyIdTo=jQuery("#editPayrollAttendance_partyIdTo").val();
+	alert(partyIdTo);
 	var data = "partyIdTo="+partyIdTo;
 	$.ajax({
         type: "POST",
@@ -28,6 +29,25 @@ function selectDept(){
         success: function(result) {
        	   partyId=result["partyId"];
        	$("#editPayrollAttendance_partyId").val(partyId);
+       	 },
+       error: function() {
+       	 	alert(result["_ERROR_MESSAGE_"]);
+       	 }
+});
+}
+
+
+function selectDeptForBenfitDed(){	
+	var partyIdTo=jQuery("#FindBenefitsOrDeductions_partyIdTo").val();
+	var data = "partyIdTo="+partyIdTo;
+	$.ajax({
+        type: "POST",
+        url: "getEmployeeOrgId",
+        data: data,
+        dataType: 'json',
+        success: function(result) {
+       	   partyId=result["partyId"];
+       	$("#FindBenefitsOrDeductions_partyId").val(partyId);
        	 },
        error: function() {
        	 	alert(result["_ERROR_MESSAGE_"]);
