@@ -140,8 +140,7 @@ function makeDatePicker(fromDateId ,thruDateId){
 					var form = ($(this)).parent();
 					var OrderDetails = jQuery("<input>").attr("type", "hidden").attr("name", "OrderDetails").val(employee);	
 				    jQuery(form).append(jQuery(OrderDetails));
-				    processIndentEntryInternal("CreateMPO", "CreateMaterialPO");
-					//form.append();
+				    processPOEntryInternal("CreateMPO", "CreateMaterialPO");
                 	form.submit();
                 }
             });
@@ -158,14 +157,10 @@ function makeDatePicker(fromDateId ,thruDateId){
 		
 		$('#ui-datepicker-div').css('clip', 'auto');	
 		$("#supplierId").autocomplete({ source: partyAutoJson }).keydown(function(e){
-			/*
-			if (e.keyCode === 13){
-		      	 $('#supplierId').autocomplete('close');
-	    			$('#supplierId').submit();
-	    			return false;   
-			}*/
+			
 		});	
-		
+		$( "input[name*='paymentTermTypeId']" ).autocomplete({ source: paymentTermsJSON });
+		$( "input[name*='deliveryTermTypeId']" ).autocomplete({ source: deliveryTermsJSON });
 	});
 </script>
 
@@ -392,7 +387,7 @@ function makeDatePicker(fromDateId ,thruDateId){
 							                <input type="text" name="paymentTermDays_o_0" value="" />
 							            </td>
 							            <td>
-							                <input type="text" name="paymentTermValues_o_0" value="" />
+							                <input type="text" name="paymentTermValue_o_0" value="" />
 							            </td>
 								    </tr> 
 								</table>
@@ -408,11 +403,11 @@ function makeDatePicker(fromDateId ,thruDateId){
 							         <tr>
 				          				<td align='left' valign='middle' nowrap="nowrap"></td>
 					                 <td>
-					               <table border="0" cellspacing="2" id="paymentTermsTable" style="width:200px;" align="center">
+					               <table border="0" cellspacing="2" id="deliveryTermsTable" style="width:200px;" align="center">
 					                <tr>
 								       <td><table><tr>
-								           <td><input type="button" id="addPaymentTerm" value="Add" />  </td>
-								        	<td> <input type="button" id="delPaymentTerm" value="Del" /></td>
+								           <td><input type="button" id="addDeliveryTerm" value="Add" />  </td>
+								        	<td> <input type="button" id="delDeliveryTerm" value="Del" /></td>
 								        </tr> </table>
 								          </td>
 								         <td> </td>
@@ -425,7 +420,7 @@ function makeDatePicker(fromDateId ,thruDateId){
 								    </tr>
 								    <tr>
 								        <td>
-								         <input type="text"  name="paymentTermTypeId_o_0" value=""/>
+								         <input type="text"  name="deliveryTermTypeId_o_0" value=""/>
 								        <!-- <select  name="paymentTermTypeId_o_0">
 								            <list>
 								               <option > </option>
@@ -433,10 +428,10 @@ function makeDatePicker(fromDateId ,thruDateId){
 								         </select>-->
 								        </td>
 							            <td>
-							                <input type="text" name="paymentTermDays_o_0" value="" />
+							                <input type="text" name="deliveryTermDays_o_0" value="" />
 							            </td>
 							            <td>
-							                <input type="text" name="paymentTermValues_o_0" value="" />
+							                <input type="text" name="deliveryTermValue_o_0" value="" />
 							            </td>
 								    </tr> 
 								</table>
@@ -450,7 +445,7 @@ function makeDatePicker(fromDateId ,thruDateId){
  <script type="application/javascript">
  		 $(document).ready(function(){
             
-            $('#addProduct').click(function () {
+  /*          $('#addProduct').click(function () {
     var table = $("#productTable");
     if (table.find('input:text').length < 16) {
         var productLength = table.find('input:text').length;
@@ -464,7 +459,7 @@ $('#delProduct').click(function () {
         table.find('input:text').last().closest('tr').remove();
     }
 });
-
+*/
 
     $('#addPaymentTerm').click(function () {
     var table = $("#paymentTermsTable");
@@ -473,6 +468,7 @@ $('#delProduct').click(function () {
         var rowCount = rowLength/3;
         table.append('<tr><td> <input type="text" name="paymentTermTypeId_o_'+rowCount+'" value="" /></td><td> <input type="text" name="paymentTermDays_o_'+rowCount+'" value="" /> </td><td> <input type="text" name="paymentTermValue_o_'+rowCount+'" value="" /> </td></tr>');
     }
+    $( "input[name*='paymentTermTypeId']" ).autocomplete({ source: paymentTermsJSON });
 });
 	$('#delPaymentTerm').click(function () {
 	     var table = $("#paymentTermsTable");
@@ -481,7 +477,24 @@ $('#delProduct').click(function () {
 	    }
 	});
 
-
+	
+	 $('#addDeliveryTerm').click(function () {
+    var table = $("#deliveryTermsTable");
+    if (table.find('input:text').length < 16) {
+        var rowLength = table.find('input:text').length;
+        var rowCount = rowLength/3;
+        table.append('<tr><td> <input type="text" name="deliveryTermTypeId_o_'+rowCount+'" value="" /></td><td> <input type="text" name="deliveryTermDays_o_'+rowCount+'" value="" /> </td><td> <input type="text" name="deliveryTermValue_o_'+rowCount+'" value="" /> </td></tr>');
+    }
+    
+    $( "input[name*='deliveryTermTypeId']" ).autocomplete({ source: deliveryTermsJSON });
+});
+	$('#delDeliveryTerm').click(function () {
+	     var table = $("#deliveryTermsTable");
+	    if (table.find('input:text').length > 1) {
+	        table.find('input:text').last().closest('tr').remove();
+	    }
+	});
+	
    });  
 	         
  </script>               

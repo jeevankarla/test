@@ -71,7 +71,9 @@
 	
 	var data = ${StringUtil.wrapString(dataJSON)!'[]'};
 	
-	var partyAutoJson = ${StringUtil.wrapString(partyJSON)!'[]'};	
+	var partyAutoJson = ${StringUtil.wrapString(partyJSON)!'[]'};
+	var paymentTermsJSON = ${StringUtil.wrapString(paymentTermsJSON)!'[]'};
+	var deliveryTermsJSON = ${StringUtil.wrapString(deliveryTermsJSON)!'[]'};	
 
 	function requiredFieldValidator(value) {
 		if (value == null || value == undefined || !value.length)
@@ -80,7 +82,7 @@
 			return {valid:true, msg:null};
 	}
 
-	function processIndentEntryInternal(formName, action) {
+	function processPOEntryInternal(formName, action) {
 		if (Slick.GlobalEditorLock.isActive() && !Slick.GlobalEditorLock.commitCurrentEdit()) {
 			return false;		
 		}
@@ -215,7 +217,7 @@
 	
 	function processIndentEntry(formName, action) {
 		jQuery("#changeSave").attr( "disabled", "disabled");
-		processIndentEntryInternal(formName, action);
+		processPOEntryInternal(formName, action);
 		
 	}
 	

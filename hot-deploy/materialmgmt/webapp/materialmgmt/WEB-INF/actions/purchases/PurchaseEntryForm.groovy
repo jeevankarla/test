@@ -176,3 +176,25 @@ if(displayGrid){
 	context.partyCode = facility;
 }
 
+paymentTerms = delegator.findByAnd("TermType",UtilMisc.toMap("parentTypeId","FEE_PAYMENT_TERM"));
+deliveryTerms = delegator.findByAnd("TermType",UtilMisc.toMap("parentTypeId","DELIVERY_TERM"));
+
+JSONArray paymentTermsJSON = new JSONArray();
+JSONArray deliveryTermsJSON = new JSONArray();
+
+paymentTerms.each{ eachTerm ->
+	JSONObject newObj = new JSONObject();
+	newObj.put("value",eachTerm.termTypeId);
+	newObj.put("label",eachTerm.description);
+	paymentTermsJSON.add(newObj);
+}
+deliveryTerms.each{ eachTerm ->
+	JSONObject newObj = new JSONObject();
+	newObj.put("value",eachTerm.termTypeId);
+	newObj.put("label",eachTerm.description);
+	deliveryTermsJSON.add(newObj);
+}
+context.paymentTermsJSON =paymentTermsJSON;
+context.deliveryTermsJSON =deliveryTermsJSON;
+Debug.log("paymentTermsJSON================="+paymentTermsJSON)
+

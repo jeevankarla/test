@@ -505,7 +505,8 @@ public class MaterialPurchaseServices {
 			return "error";
 		}
 		
-		List indentProductList = FastList.newInstance();
+		List productQtyList = FastList.newInstance();
+		//Debug.log("rowCount============="+rowCount);
 		for (int i = 0; i < rowCount; i++) {
 			
 			String vatStr=null;
@@ -526,8 +527,9 @@ public class MaterialPurchaseServices {
 				productId = (String) paramMap.get("productId" + thisSuffix);
 			}
 			else {
-				request.setAttribute("_ERROR_MESSAGE_", "Missing product id");
-				return "error";			  
+				/*request.setAttribute("_ERROR_MESSAGE_", "Missing product id");
+				return "error";	*/	
+				continue;
 			}
 		  
 			if (paramMap.containsKey("quantity" + thisSuffix)) {
@@ -726,18 +728,97 @@ public class MaterialPurchaseServices {
 			productQtyMap.put("bedSecCessPercent", bedSecCessPercent);
 			productQtyMap.put("cstPercent", cstPercent);
 		
-			indentProductList.add(productQtyMap);
+			productQtyList.add(productQtyMap);
 		}//end row count for loop
-		if( UtilValidate.isEmpty(indentProductList)){
+		if( UtilValidate.isEmpty(productQtyList)){
 			Debug.logWarning("No rows to process, as rowCount = " + rowCount, module);
 			request.setAttribute("_ERROR_MESSAGE_", "No rows to process, as rowCount =  :" + rowCount);
 			return "success";
 		}
+		List termsList = FastList.newInstance();
+		for (int i = 0; i < rowCount; i++) {
+			String termTypeId =null;
+			String  termDaysStr = null;
+			String termValueStr = null;
+			Long termDays = Long.valueOf(0);
+			BigDecimal termValue = BigDecimal.ZERO;
+			Map<String, Object> termTypeMap = FastMap.newInstance();
+			String thisSuffix = UtilHttp.MULTI_ROW_DELIMITER + i;
+			
+			if (paramMap.containsKey("paymentTermTypeId" + thisSuffix)) {
+				termTypeId = (String) paramMap.get("paymentTermTypeId" + thisSuffix);
+			}else{
+				continue;
+			}
+			
+			if (paramMap.containsKey("paymentTermDays" + thisSuffix)) {
+				termDaysStr = (String) paramMap.get("paymentTermDays" + thisSuffix);
+			}
+			if (UtilValidate.isNotEmpty(termDaysStr)) {
+				termDays = new Long(termDaysStr);
+			}  
+						
+			if (paramMap.containsKey("paymentTermValue" + thisSuffix)) {
+				termValueStr = (String) paramMap.get("paymentTermValue" + thisSuffix);
+			}
+			if (UtilValidate.isNotEmpty(termValueStr)) {
+				termValue = new BigDecimal(termValueStr);
+			}  
+			
+			termTypeMap.put("termTypeId", termTypeId);
+			termTypeMap.put("termDays", termDays);
+			termTypeMap.put("termValue", termValue);
+			if(UtilValidate.isNotEmpty(termTypeId)){
+				termsList.add(termTypeMap);
+			}
+			
+		}
+		
+		for (int i = 0; i < rowCount; i++) {
+			String termTypeId =null;
+			String  termDaysStr = null;
+			String termValueStr = null;
+			Long termDays = Long.valueOf(0);
+			BigDecimal termValue = BigDecimal.ZERO;
+			Map termTypeMap = FastMap.newInstance();
+			String thisSuffix = UtilHttp.MULTI_ROW_DELIMITER + i;
+			
+			if (paramMap.containsKey("deliveryTermTypeId" + thisSuffix)) {
+				termTypeId = (String) paramMap.get("deliveryTermTypeId" + thisSuffix);
+			}else{
+				continue;
+			}
+			
+			if (paramMap.containsKey("deliveryTermDays" + thisSuffix)) {
+				termDaysStr = (String) paramMap.get("deliveryTermDays" + thisSuffix);
+			}
+			if (UtilValidate.isNotEmpty(termDaysStr)) {
+				termDays = new Long(termDaysStr);
+			}    
+						
+			if (paramMap.containsKey("deliveryTermValue" + thisSuffix)) {
+				termValueStr = (String) paramMap.get("deliveryTermValue" + thisSuffix);
+			}
+			if (UtilValidate.isNotEmpty(termValueStr)) {
+				termValue = new BigDecimal(termValueStr);
+			}  
+		  
+			
+			termTypeMap.put("termTypeId", termTypeId);
+			termTypeMap.put("termDays", termDays);
+			termTypeMap.put("termValue", termValue);
+			if(UtilValidate.isNotEmpty(termTypeId)){
+				termsList.add(termTypeMap);
+			}
+		}
+		
+		//Debug.log("termsList==========================="+termsList);
 		//getting productStoreId 
 		String productStoreId = (String) (in.vasista.vbiz.purchase.PurchaseStoreServices.getPurchaseFactoryStore(delegator)).get("factoryStoreId");//to get Factory storeId
 	 
 		processOrderContext.put("userLogin", userLogin);
-		processOrderContext.put("productQtyList", indentProductList);
+		processOrderContext.put("productQtyList", productQtyList);
+		processOrderContext.put("termsList", termsList);
 		processOrderContext.put("partyId", partyId);
 		processOrderContext.put("billFromPartyId", billFromPartyId);
 		processOrderContext.put("issueToDeptId", issueToDeptId);
@@ -906,7 +987,7 @@ public class MaterialPurchaseServices {
 	  	String partyId = (String) context.get("partyId");
 	  	String billFromPartyId = (String) context.get("billFromPartyId");
 		String issueToDeptId = (String) context.get("issueToDeptId");
-	  	
+	  	List termsList = (List)context.get("termsList");
 	  	boolean beganTransaction = false;
 	  	//fright Charges
 	  	BigDecimal freightCharges = (BigDecimal) context.get("freightCharges");
@@ -983,6 +1064,19 @@ public class MaterialPurchaseServices {
 			cart.setEstimatedDeliveryDate(effectiveDate);
 			cart.setOrderDate(effectiveDate);
 			cart.setUserLogin(userLogin, dispatcher);
+			
+			//set orderterms
+			for(int i=0;i<termsList.size();i++){
+				Map<String,Object> termMap = FastMap.newInstance();
+				termMap = (Map)termsList.get(i);
+				cart.addOrderTerm((String)termMap.get("termTypeId"), (BigDecimal)termMap.get("termValue"),(Long)termMap.get("termDays"));
+			}
+			//set attributes here
+			cart.setAttribute("MRN_NUMBER",mrnNumber);
+			cart.setAttribute("SUP_INV_NUMBER",SInvNumber);
+			cart.setAttribute("SUP_INV_DATE",UtilDateTime.toDateString((Timestamp)context.get("SInvoiceDate"),null));
+			cart.setAttribute("PO_NUMBER",PONumber);
+			
 		} catch (Exception e) {
 			
 			Debug.logError(e, "Error in setting cart parameters", module);
@@ -1210,7 +1304,7 @@ public class MaterialPurchaseServices {
 		}
 		
 		Map<String, Object> orderCreateResult=checkout.createOrder(userLogin);
-		Debug.log("===orderCreateResult=====>"+orderCreateResult);
+		//Debug.log("===orderCreateResult=====>"+orderCreateResult);
 		if (ServiceUtil.isError(orderCreateResult)) {
 			String errMsg =  ServiceUtil.getErrorMessage(orderCreateResult);
 			Debug.logError(errMsg, "While Creating Order",module);
@@ -1336,7 +1430,7 @@ public class MaterialPurchaseServices {
 			  	 	}
 			}
 			
-			try{
+			/*try{
 			GenericValue orderAttribute = delegator.makeValue("OrderAttribute");
 			orderAttribute.set("orderId", orderId);
 			orderAttribute.set("attrName", "MRN_NUMBER");
@@ -1377,7 +1471,7 @@ public class MaterialPurchaseServices {
 				}catch (Exception e) {
 					  Debug.logError(e, "Error While Creating Attribute(PO_NUMBER)  for Purchase Order ", module);
 					  return ServiceUtil.returnError("Error While Creating Attribute(PO_NUMBER)  for Purchase Order : "+orderId);
-		  	 	}
+		  	 	}*/
 				//update PurposeType
 				try{
 				GenericValue orderHeaderPurpose = delegator.findOne("OrderHeader", UtilMisc.toMap("orderId", orderId), false);
