@@ -11,7 +11,7 @@ jQuery(document).ready(function() {
     	var prevEl = focusables.eq(current-1).length ? focusables.eq(current-1) : focusables.eq(0);
 		var prevElName = prevEl.attr("name");
 		
-		if(prevElName == "exitTime" || prevElName == "testTime" || prevElName == "sendTime" || prevElName == "grossTime" || prevElName == "tareTime"){
+		if(prevElName == "exitTime" ||prevElName == "entryTime" || prevElName == "testTime" || prevElName == "sendTime" || prevElName == "grossTime" || prevElName == "tareTime"){
     		var tempTime = prevEl.val();
     		if(tempTime.length==0){
 				alert('invalid Time formate. length should be 4');
@@ -40,7 +40,7 @@ jQuery(document).ready(function() {
     		}
 		}
 		// auto tab  for time tabs and those which need only number input
-    	if(curentElName == "recdMBRT" || curentElName == "exitTime" ||curentElName == "tareTime" || curentElName == "testTime" || curentElName == "sendTime" || curentElName == "grossTime" || curentElName == "numberOfCells"){
+    	if(curentElName == "recdMBRT" || curentElName == "exitTime" ||curentElName == "entryTime" ||curentElName == "tareTime" || curentElName == "testTime" || curentElName == "sendTime" || curentElName == "grossTime" || curentElName == "numberOfCells"){
     		if(e.which == 110 || e.which == 190){
     			$(this).val( $(this).val().replace('.',''));
     		}
@@ -93,13 +93,36 @@ $(function() {
     	var displayScreen = $('[name=displayScreen]').val();
     	var action = "createMilkTankerReceiptEntry";
     	if(displayScreen == "VEHICLE_OUT"){
+    		if(!$("#milkReceiptEntry").validate({messages:{
+     		   exitDate:"" , exitTime:"" , tankerName:"" 
+     	   }}).form()) return;
+    		
     		action = "updateMilkTankerReceiptEntryOut";
     	}else if(displayScreen == "VEHICLE_GRSWEIGHT"){
+    		if(!$("#milkReceiptEntry").validate({messages:{
+      		   grossDate:"" ,grossTime:"" , milkTransferId:"" , tankerName:"",numberOfCells:"",dispatchWeight:"",grossWeight:""
+      	   }}).form()) return;
     		action = "updateMilkTankerReceiptEntryGrsWeight";
     	}else if(displayScreen == "VEHICLE_TAREWEIGHT"){
+    		if(!$("#milkReceiptEntry").validate({messages:{
+       		   tareDate:"" ,tareTime:"" , milkTransferId:"" , tankerName:"",tareWeight:""
+       	   }}).form()) return;
     		action = "updateMilkTankerReceiptEntryTAREWeight";
     	}else if(displayScreen == "VEHICLE_QC"){
+    		if(!$("#milkReceiptEntry").validate({messages:{
+       		   testDate:"" ,testTime:"" , milkTransferId:"" , tankerName:"",sendTemp:"",
+       		   sendTemp:"",recdTemp:"",sendAcid:"",recdAcid:"",sendCLR:"",recdCLR:"",
+       		   sendFat:"",recdFat:"",sendSnf:"",recdSnf:"",sendCob:"",recdCob:"",
+       		   sendNutriliser:"",recdFlavour:"",recdSedimentTest:"",recdPH:"",recdMBRT:""
+       		   
+       		   
+       	   }}).form()) return;
     		action = "updateMilkTankerReceiptEntryQC";
+    	}else{
+    		if(!$("#milkReceiptEntry").validate({messages:{
+        		   entryDate:"" ,entryTime:"" , tankerName:"",sendDate:"" ,sendTime:"" ,
+        		   dcNo:"",partyId:"",sealCheck:""
+        	   }}).form()) return;
     	}
     	var dataString = $("#milkReceiptEntry").serialize();
     	$('input[name=submitButton]').attr("disabled","disabled");
@@ -109,13 +132,9 @@ $(function() {
             data: dataString,
             dataType: 'json',
             success: function(result) { 
+            	
             	if(result["_ERROR_MESSAGE_"] || result["_ERROR_MESSAGE_LIST_"]){               	   
-             	   $('div#milkReceiptEntry_spinner').html();
-             	   $('div#milkReceiptEntry_spinner').removeClass("messageStr");            	 
-             	   $('div#milkReceiptEntry_spinner').addClass("errorMessage");
-             	   $('div#milkReceiptEntry_spinner').html('<label>'+ result["_ERROR_MESSAGE_"]+'</label>');
-             	   $('div#milkReceiptEntry_spinner').delay(5000).fadeOut('slow');
-             	  $('input[name=submitButton]').removeAttr("disabled");
+            		populateError(result["_ERROR_MESSAGE_"]);
                 }else{
                 	$("div#milkReceiptEntry_spinner").fadeIn();               	         	   
              	   $('div#milkReceiptEntry_spinner').html(); 
@@ -125,12 +144,12 @@ $(function() {
              	   $('div#milkReceiptEntry_spinner').delay(5000).fadeOut('slow');
              	   $('input[name=submitButton]').removeAttr("disabled");
                 }
-                
               },
               error: function(result) {
-          	 	populateError(result["_ERROR_MESSAGE_"]+","+result["_ERROR_MESSAGE_LIST_"]);
+            	  populateError(result["_ERROR_MESSAGE_"]+","+result["_ERROR_MESSAGE_LIST_"]);
           	 }
     	});
+    	
     	return false;
 	});
 });
@@ -139,8 +158,8 @@ function populateError(msg){
 	$('div#milkReceiptEntry_spinner').removeClass("messageStr");
 	$('div#milkReceiptEntry_spinner').addClass("errorMessage");
 	$('div#milkReceiptEntry_spinner').html('<label>'+msg +'</label>');
-	 $('div#milkReceiptEntry_spinner').delay(5000).fadeOut('slow');
-	 $('input[name=submitButton]').removeAttr("disabled");
+	$('div#milkReceiptEntry_spinner').delay(5000).fadeOut('slow');
+	$('input[name=submitButton]').removeAttr("disabled");
 	
 }
 	

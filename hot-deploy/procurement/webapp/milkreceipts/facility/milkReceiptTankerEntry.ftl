@@ -408,17 +408,17 @@ $( "#"+fromDateId ).datepicker({
 					        </#if>
 					        <#if displayScreen == "VEHICLE_IN">
 		                        <tr>
-	        						<td align='left' ><span class='h3'>Entry Date</span></td><td><input  type="text" size="15pt" id="entryDate" name="entryDate" autocomplete="off" /></td>
+	        						<td align='left' ><span class='h3'>Entry Date</span></td><td><input  type="text" size="15pt" id="entryDate" name="entryDate" autocomplete="off" required/></td>
 	        					</tr>
 	        					<tr>
-	        						<td align='left' >Entry Time </td><td><input  name="entryTime" size="10" class="onlyNumber" maxlength="4" type="text" id="exitTime" value="${setTime}" autocomplete="off" required/></td>
+	        						<td align='left' >Entry Time(HHMM)[24 hour format] </td><td><input  name="entryTime" size="10" class="onlyNumber" maxlength="4" type="text" id="exitTime" value="${setTime}" autocomplete="off" required/></td>
 					        	</tr>
 		                         	<tr>
 			        					<td align='left' ><span class='h3'>Dispatch Date</span></td><td><input  type="text" size="15pt" id="sendDate" name="sendDate" autocomplete="off" required/></td>
 			        					
 			        				</tr>
 			        				<tr>
-			        					<td align='left' >Dispatch Time </td><td><input  name="sendTime"  size="10" class="onlyNumber" maxlength="4" type="text" id="sendTime" autocomplete="off" required/>
+			        					<td align='left' >Dispatch Time(HHMM)[24 hour format] </td><td><input  name="sendTime"  size="10" class="onlyNumber" maxlength="4" type="text" id="sendTime" autocomplete="off" required/>
 			        					</td>
 							        </tr>
 							        <tr>
@@ -440,10 +440,10 @@ $( "#"+fromDateId ).datepicker({
 							    
 							    <tr>
 	        						<input  name="statusId" size="10pt" type="hidden" id="statusId" value="MR_VEHICLE_OUT" />
-	        						<td align='left' ><span class='h3'>Exit Date</span></td><td><input  type="text" size="15pt" id="exitDate" name="exitDate" autocomplete="off" /></td>
+	        						<td align='left' ><span class='h3'>Exit Date</span></td><td><input  type="text" size="15pt" id="exitDate" name="exitDate" autocomplete="off" required/></td>
 	        					</tr>
 	        					<tr>
-	        						<td align='left' >Exit Time </td><td><input  name="exitTime" size="10" class="onlyNumber" maxlength="4" type="text" id="exitTime" value="${setTime}" autocomplete="off" required/></td>
+	        						<td align='left' >Exit Time(HHMM)[24 hour format] </td><td><input  name="exitTime" size="10" class="onlyNumber" maxlength="4" type="text" id="exitTime" value="${setTime}" autocomplete="off" required/></td>
 					        	</tr>
 					        </#if>
 					        <#if displayScreen == "VEHICLE_GRSWEIGHT">	
@@ -453,7 +453,7 @@ $( "#"+fromDateId ).datepicker({
 	        						<td align='left' >Gross Weight Date</td><td><input  type="text" size="15pt" id="grossDate" name="grossDate" autocomplete="off" /></td>
 	        					</tr>
 	        					<tr>
-	        						<td align='left' >Gross Weight Time </td><td><input  name="grossTime" value="${setTime}" size="10" class="onlyNumber" maxlength="4" type="text" id="grossTime" autocomplete="off" required/></td>
+	        						<td align='left' >Gross Weight Time(HHMM)[24 hour format] </td><td><input  name="grossTime" value="${setTime}" size="10" class="onlyNumber" maxlength="4" type="text" id="grossTime" autocomplete="off" required/></td>
 					        	</tr>
 							    <tr>
 	        						<td align='left' >Number of Compartments </td><td><input  name="numberOfCells"  size="10" class="onlyNumber" maxlength="1" type="text" id="compartments" autocomplete="off" required/></td>
@@ -468,10 +468,10 @@ $( "#"+fromDateId ).datepicker({
 	        				<#if displayScreen == "VEHICLE_TAREWEIGHT">
 	        					<tr>
 	        						<input  name="statusId" size="10pt" type="hidden" id="statusId" value="MR_VEHICLE_TARWEIGHT" />
-	        						<td align='left' ><span class='h3'>Tare Weight Date</span></td><td><input  type="text" size="15pt" id="tareDate" name="tareDate" autocomplete="off" /></td>
+	        						<td align='left' ><span class='h3'>Tare Weight Date</span></td><td><input  type="text" size="15pt" id="tareDate" name="tareDate" autocomplete="off" required/></td>
 	        					</tr>
 	        					<tr>
-	        						<td align='left' >Tare Time </td><td><input  name="tareTime" class="onlyNumber" value="${setTime}" size="10" maxlength="4" type="text" id="tareTime" autocomplete="off" required/></td>
+	        						<td align='left' >Tare Time(HHMM)[24 hour format] </td><td><input  name="tareTime" class="onlyNumber" value="${setTime}" size="10" maxlength="4" type="text" id="tareTime" autocomplete="off" required/></td>
 					        	</tr>
 							    <tr>
 	        						<td align='left' ><span class='h3'>Tare Weight(Kgs)</span></td><td><input  type="text" class="onlyNumber" size="15pt" id="tareWeight" name="tareWeight" autocomplete="off" required/></td>
@@ -483,7 +483,7 @@ $( "#"+fromDateId ).datepicker({
 	        						<td align='left' ><span class='h3'>Testing Date</span></td><td><input  type="text" size="15pt" id="testDate" name="testDate" autocomplete="off" /></td>
 	        					</tr>
 	        					<tr>
-	        						<td align='left' >Testing Time </td><td><input  name="testTime" value="${setTime}" size="10" class="onlyNumber" maxlength="4" type="text" id="testTime" autocomplete="off" required/>
+	        						<td align='left' >Testing Time(HHMM)[24 hour format] </td><td><input  name="testTime" value="${setTime}" size="10" class="onlyNumber" maxlength="4" type="text" id="testTime" autocomplete="off" required/>
 			        					</td>
 					        	</tr>
 	        					
