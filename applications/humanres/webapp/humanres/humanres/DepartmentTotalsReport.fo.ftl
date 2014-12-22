@@ -32,19 +32,20 @@ under the License.
        <fo:page-sequence master-reference="main">
             <fo:static-content flow-name="xsl-region-before" font-family="Courier,monospace" font-weight="bold">
             	<fo:block text-align="left" white-space-collapse="false" font-size="7pt">&#160;                                                  ANDHRA PRADESH DAIRY DEVELOPMENT CO-OP, FEDERATION LIMITED</fo:block>
-                <fo:block text-align="left" white-space-collapse="false" font-size="7pt">&#160;                                                  DEPARTMENT TOTALS FOR ${(Static["org.ofbiz.base.util.UtilDateTime"].toDateString(timePeriodStart?if_exists, "MMMMM, yyyy"))?upper_case} SHED CODE: ${ShedId?upper_case}</fo:block>
-                <fo:block font-size="7pt">-------------------------------------------------------------------------------------------------------------------------------------------------------------------</fo:block>
+                <#assign shedCode = delegator.findOne("PartyGroup", {"partyId" : ShedId}, true)>
+                <fo:block text-align="left" white-space-collapse="false" font-size="7pt">&#160;                                                  DEPARTMENT TOTALS FOR ${(Static["org.ofbiz.base.util.UtilDateTime"].toDateString(timePeriodStart?if_exists, "MMMMM, yyyy"))?upper_case} SHED CODE: <#if shedCode?has_content>${shedCode.comments?upper_case?if_exists}</#if></fo:block>
+                <fo:block font-size="7pt">--------------------------------------------------------------------------------------------------------------------------------------</fo:block>
                  <fo:block font-size="7pt">
                     <fo:table>
                     	<fo:table-column column-width="30pt"/>
-                        <fo:table-column column-width="93pt"/>
-                        <fo:table-column column-width="93pt"/>
-                        <fo:table-column column-width="93pt"/>
-                        <fo:table-column column-width="93pt"/>
-                        <fo:table-column column-width="93pt"/>
-                        <fo:table-column column-width="93pt"/>
-                        <fo:table-column column-width="93pt"/>
-                        <fo:table-column column-width="93pt"/>
+                        <fo:table-column column-width="72pt"/>
+                        <fo:table-column column-width="72pt"/>
+                        <fo:table-column column-width="72pt"/>
+                        <fo:table-column column-width="72pt"/>
+                        <fo:table-column column-width="72pt"/>
+                        <fo:table-column column-width="72pt"/>
+                        <fo:table-column column-width="72pt"/>
+                        <fo:table-column column-width="72pt"/>
 	                        <fo:table-body>
 		                        <fo:table-row><fo:table-cell><fo:block keep-together="always" text-align="right">DEPT</fo:block></fo:table-cell> <fo:table-cell><fo:block keep-together="always" text-align="right">PAY</fo:block></fo:table-cell> <fo:table-cell><fo:block keep-together="always" text-align="right">RISK ALW</fo:block></fo:table-cell> <fo:table-cell><fo:block keep-together="always" text-align="right">SUPP.ARRS</fo:block></fo:table-cell> <fo:table-cell><fo:block keep-together="always" text-align="right">EPF</fo:block></fo:table-cell> <fo:table-cell><fo:block keep-together="always" text-align="right">WATER</fo:block></fo:table-cell> <fo:table-cell><fo:block keep-together="always" text-align="right">CONV.ADV</fo:block></fo:table-cell> <fo:table-cell><fo:block keep-together="always" text-align="right">TOT.DEDNS</fo:block></fo:table-cell> </fo:table-row>
 		                        <fo:table-row><fo:table-cell><fo:block keep-together="always" text-align="right"></fo:block></fo:table-cell> <fo:table-cell><fo:block keep-together="always" text-align="right">SPL.PAY</fo:block></fo:table-cell> <fo:table-cell><fo:block keep-together="always" text-align="right">OT ALW</fo:block></fo:table-cell> <fo:table-cell><fo:block keep-together="always" text-align="right">MISC.I</fo:block></fo:table-cell> <fo:table-cell><fo:block keep-together="always" text-align="right">GPF</fo:block></fo:table-cell> <fo:table-cell><fo:block keep-together="always" text-align="right">IT</fo:block></fo:table-cell> <fo:table-cell><fo:block keep-together="always" text-align="right">MRG.LN</fo:block></fo:table-cell> <fo:table-cell><fo:block keep-together="always" text-align="right">NET PAY</fo:block></fo:table-cell> </fo:table-row>
@@ -59,7 +60,7 @@ under the License.
 	                        </fo:table-body>
                     </fo:table>
                  </fo:block>
-                 <fo:block font-size="7pt">-------------------------------------------------------------------------------------------------------------------------------------------------------------------</fo:block>
+                 <fo:block font-size="7pt">--------------------------------------------------------------------------------------------------------------------------------------</fo:block>
              </fo:static-content> 
             <fo:flow flow-name="xsl-region-body" font-family="Courier,monospace">
                  <fo:block font-size="7pt">
@@ -134,33 +135,33 @@ under the License.
                  <#list DeptTotals as deptTotals>
                     <fo:table >
                         <fo:table-column column-width="30pt"/>
-                        <fo:table-column column-width="93pt"/>
-                        <fo:table-column column-width="93pt"/>
-                        <fo:table-column column-width="93pt"/>
-                        <fo:table-column column-width="93pt"/>
-                        <fo:table-column column-width="93pt"/>
-                        <fo:table-column column-width="93pt"/>
-                        <fo:table-column column-width="93pt"/>
-                        <fo:table-column column-width="93pt"/>
+                        <fo:table-column column-width="72pt"/>
+                        <fo:table-column column-width="72pt"/>
+                        <fo:table-column column-width="72pt"/>
+                        <fo:table-column column-width="72pt"/>
+                        <fo:table-column column-width="72pt"/>
+                        <fo:table-column column-width="72pt"/>
+                        <fo:table-column column-width="72pt"/>
+                        <fo:table-column column-width="72pt"/>
                         <fo:table-body>
 	                        <#assign count=count+1>
 	                        <#if count==5>
 	                        <fo:table-row>
 	                        	<fo:table-cell>
-	                        		 <fo:block page-break-before="always" font-size="7pt">-------------------------------------------------------------------------------------------------------------------------------------------------------------------</fo:block>
+	                        		 <fo:block page-break-before="always" font-size="7pt">--------------------------------------------------------------------------------------------------------------------------------------</fo:block>
 	                        	</fo:table-cell>
 	                        </fo:table-row>
 	                        <#assign count=0>
 	                        <#else>
 	                        <fo:table-row>
 	                        	<fo:table-cell>
-	                        		 <fo:block font-size="7pt">-------------------------------------------------------------------------------------------------------------------------------------------------------------------</fo:block>
+	                        		 <fo:block font-size="7pt">--------------------------------------------------------------------------------------------------------------------------------------</fo:block>
 	                        	</fo:table-cell>
 	                        </fo:table-row>
 	                        </#if>
 	                            <fo:table-row>
 	                                <fo:table-cell>
-	                                <fo:block keep-together="always" text-align="right">${deptTotals.getKey()}</fo:block>
+	                                <fo:block keep-together="always" text-align="right">${unitIdMap.get(deptTotals.getKey())}</fo:block>
 	                                </fo:table-cell>
 	                                <fo:table-cell>
 	                                <#assign PAYROL_BEN_SALARY=0>
@@ -220,7 +221,7 @@ under the License.
 	                            </fo:table-row>
 	                            <fo:table-row>
 	                                <fo:table-cell>
-	                                <fo:block keep-together="always" text-align="right"></fo:block>
+	                                <fo:block keep-together="always" text-align="right">${deptTotals.getKey()}</fo:block>
 	                                </fo:table-cell>
 	                                <fo:table-cell>
 	                                <#assign PAYROL_BEN_SPLPAY=0>
@@ -704,7 +705,7 @@ under the License.
 	                            </fo:table-row>
 	                            <fo:table-row>
 	                        	<fo:table-cell>
-	                        		 <fo:block font-size="7pt">-------------------------------------------------------------------------------------------------------------------------------------------------------------------</fo:block>
+	                        		 <fo:block font-size="7pt">--------------------------------------------------------------------------------------------------------------------------------------</fo:block>
 	                        	</fo:table-cell>
 	                        </fo:table-row>
                         </fo:table-body>                        
@@ -714,18 +715,18 @@ under the License.
                 <fo:block font-size="7pt">
                     <fo:table >
                         <fo:table-column column-width="30pt"/>
-                        <fo:table-column column-width="93pt"/>
-                        <fo:table-column column-width="93pt"/>
-                        <fo:table-column column-width="93pt"/>
-                        <fo:table-column column-width="93pt"/>
-                        <fo:table-column column-width="93pt"/>
-                        <fo:table-column column-width="93pt"/>
-                        <fo:table-column column-width="93pt"/>
-                        <fo:table-column column-width="93pt"/>
+                        <fo:table-column column-width="72pt"/>
+                        <fo:table-column column-width="72pt"/>
+                        <fo:table-column column-width="72pt"/>
+                        <fo:table-column column-width="72pt"/>
+                        <fo:table-column column-width="72pt"/>
+                        <fo:table-column column-width="72pt"/>
+                        <fo:table-column column-width="72pt"/>
+                        <fo:table-column column-width="72pt"/>
                         <fo:table-body>
 	                        <fo:table-row>
 	                        	<fo:table-cell>
-	                        		 <fo:block font-size="7pt">-------------------------------------------------------------------------------------------------------------------------------------------------------------------</fo:block>
+	                        		 <fo:block font-size="7pt">--------------------------------------------------------------------------------------------------------------------------------------</fo:block>
 	                        	</fo:table-cell>
 	                        </fo:table-row>
 	                        <fo:table-row>
@@ -995,7 +996,7 @@ under the License.
        </fo:page-sequence>
        <#else>
        <fo:page-sequence master-reference="main">
-                    <fo:flow flow-name="xsl-region-body" font-family="Helvetica">
+                    <fo:flow flow-name="xsl-region-body" font-family="Courier,monospace">
                         <fo:block font-size="14pt">
                             ${uiLabelMap.NoOrdersFound}.
                         </fo:block>

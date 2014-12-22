@@ -105,6 +105,7 @@ Map emplInputMap = FastMap.newInstance();
 	employementList = EntityUtil.orderBy(employementList, UtilMisc.toList("partyIdTo"));
 	employementIds = EntityUtil.getFieldListFromEntityList(employementList, "partyIdTo", true);
 	
+Map costIdMap=FastMap.newInstance();
 Map unitIdMap=FastMap.newInstance();
 	partyRelationconditionList=[];
 	partyRelationconditionList.add(EntityCondition.makeCondition("roleTypeIdFrom", EntityOperator.EQUALS , "DEPARTMENT"));
@@ -117,10 +118,21 @@ Map unitIdMap=FastMap.newInstance();
 			costCode=partyRelation.get("comments");
 			partyIdsList = [];
 			employementId = 0;
+			unitEmplys = [];
+			employmentConditionList=[];
+			employmentConditionList.add(EntityCondition.makeCondition("roleTypeIdTo", EntityOperator.EQUALS , "EMPLOYEE"));
+			employmentConditionList.add(EntityCondition.makeCondition("partyIdFrom", EntityOperator.EQUALS , parameters.partyIdFrom));
+			employmentConditionList.add(EntityCondition.makeCondition("thruDate", EntityOperator.EQUALS ,null));
+			employCondition = EntityCondition.makeCondition(employmentConditionList,EntityOperator.AND);
+			def unitOrderBy = UtilMisc.toList("locationGeoId");
+			employeeUnitList = delegator.findList("Employment", employCondition, null, unitOrderBy, null, false);
+			shedEmployeesList = EntityUtil.getFieldListFromEntityList(employeeUnitList, "partyIdTo", true);
 			conditionList=[];
 			conditionList.add(EntityCondition.makeCondition("comments", EntityOperator.EQUALS , costCode));
 			condition = EntityCondition.makeCondition(conditionList,EntityOperator.AND);
 			partyLists = delegator.findList("PartyRelationship", condition, null, null, null, false);
+			empList = EntityUtil.filterByCondition(employeeUnitList, EntityCondition.makeCondition("partyIdTo", EntityOperator.IN, EntityUtil.getFieldListFromEntityList(partyLists, "partyIdTo", true)));
+			unitCode=empList.get(0).get("locationGeoId");
 			if(UtilValidate.isNotEmpty(partyLists)){
 				partyLists.each{ partyList->
 					employementId = partyList.get("partyIdTo");
@@ -128,10 +140,14 @@ Map unitIdMap=FastMap.newInstance();
 				}
 			}
 			if(UtilValidate.isNotEmpty(partyIdsList)){
-				unitIdMap.put(costCode,partyIdsList);
+				unitIdMap.put(costCode,unitCode);
+			}
+			if(UtilValidate.isNotEmpty(partyIdsList)){
+				costIdMap.put(costCode,partyIdsList);
 			}
 		}
 	}
+	context.unitIdMap=unitIdMap;
 Map payRollSummaryMap=FastMap.newInstance();
 Map finalMap=FastMap.newInstance();
 if(UtilValidate.isNotEmpty(periodBillingList)){
@@ -146,8 +162,8 @@ if(UtilValidate.isNotEmpty(periodBillingList)){
 	payRollHeaderList = delegator.findList("PayrollHeader", payCond, null, null, null, false);
 	
 	if(UtilValidate.isNotEmpty(payRollHeaderList)){
-		if(UtilValidate.isNotEmpty(unitIdMap)){
-			Iterator unitIter = unitIdMap.entrySet().iterator();
+		if(UtilValidate.isNotEmpty(costIdMap)){
+			Iterator unitIter = costIdMap.entrySet().iterator();
 			while(unitIter.hasNext()){
 				Map.Entry mccEntry = unitIter.next();
 				Map costCodeMap=FastMap.newInstance();
@@ -199,10 +215,6 @@ if(UtilValidate.isNotEmpty(periodBillingList)){
 									}
 								}
 							}
-							
-							
-							
-							
 						}
 					}
 					netAmount=totEarnings+totDeductions;
