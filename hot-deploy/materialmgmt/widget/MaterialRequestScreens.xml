@@ -273,6 +273,9 @@
                 <container style="lefthalf">
                     <screenlet title="${uiLabelMap.MaterialMangement_CustRequest}  ${custRequest.custRequestId}  ${uiLabelMap.CommonInformation}">
                         <include-form name="requestInfo" location="component://materialmgmt/widget/MaterialRequestForms.xml"/>
+                     <screenlet title="Indent Issuance">
+	                   		<include-form location="component://materialmgmt/widget/MaterialRequestForms.xml" name="ListIndentIssues"/>
+	                 </screenlet>
                   	<screenlet title="Indent Document : ${custRequestId}">
                    		<include-form location="component://materialmgmt/widget/MaterialRequestForms.xml" name="AddIndentContent"/>
                   	</screenlet>

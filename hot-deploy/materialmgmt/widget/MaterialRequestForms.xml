@@ -496,6 +496,21 @@
         </field> -->
     </form>
     
+    <form name="ListIndentIssues" type="list"      
+       odd-row-style="alternate-row" default-table-style="basic-table hover-bar">
+       
+       <actions>
+            <entity-and entity-name="ItemIssuance">
+                <field-map field-name="custRequestId" from-field="parameters.custRequestId"/>
+                <order-by field-name="custRequestItemSeqId"/>
+            </entity-and>
+        </actions>
+         <field name="productId" title="productId"><display/></field>
+         <field name="quantity" title="Quantity"><display/></field>
+        <field name="issuedDateTime"><display description="${groovy:org.ofbiz.base.util.UtilDateTime.toDateString(issuedDateTime, &quot;dd-MM-yyyy HH:mm:ss&quot;)}"></display></field>
+       <field name="issuedByUserLoginId" title="IssuedByUserLoginId"><display/></field>
+    </form>
+    
     <form name="ListEnquiryContent" type="list" list-name="custRequestContents"
         odd-row-style="alternate-row" default-table-style="basic-table hover-bar" paginate-target="AddEnquiryContent">
         <field name="custRequestId"><hidden/></field>
