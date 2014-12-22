@@ -19,7 +19,6 @@ function change(){
 
 function selectDept(){	
 	var partyIdTo=jQuery("#editPayrollAttendance_partyIdTo").val();
-	alert(partyIdTo);
 	var data = "partyIdTo="+partyIdTo;
 	$.ajax({
         type: "POST",
