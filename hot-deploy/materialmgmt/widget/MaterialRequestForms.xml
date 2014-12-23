@@ -278,6 +278,7 @@
         <field name="productId" title="${uiLabelMap.MaterialMangement_ProductId} - ${uiLabelMap.MaterialMangement_ProductName}">
             <display-entity entity-name="Product" key-field-name="productId" description="${productId} - ${productName}"/>
         </field>
+        <field name="statusId" title="Status" ><display-entity entity-name="StatusItem" description="${description}"></display-entity> </field>
         <field name="quantity" title="Required Qty"><display/></field>
         <field name="QOH" title="Inventory Available"><display/></field>
         <field use-when="flag == &quot;Y&quot;" name="issueProduct" widget-style="buttontext" title="Issue ${uiLabelMap.MaterialMangement_Product}">
