@@ -272,9 +272,9 @@
         <menu-item name="EnquiryForRequirements" title=" Enquiry For Requirements">
         	<link target="EnquiryForApprovedMatRequirements"/>
         </menu-item>
-        <menu-item name="ApprovedMatRequirementBySupplier" title="Requirement To PO">
+       <!--  <menu-item name="ApprovedMatRequirementBySupplier" title="Requirement To PO">
         	<link target="ApprovedMatRequirementBySupplier"/>
-        </menu-item>
+        </menu-item> -->
       </menu>
       
       <menu name="RequestSubTabBar" menu-container-style="button-bar button-style-2" default-selected-style="selected">
