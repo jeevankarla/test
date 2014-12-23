@@ -233,7 +233,7 @@
         		<entity-condition list="shipmentReceipt" entity-name="ShipmentReceipt">
         			<condition-list combine="and">
         				<condition-expr field-name="shipmentId" from-field="shipmentId"/>
-        				<condition-expr field-name="statusId" operator="equals" value="SR_REJECTED"/>
+        				<condition-expr field-name="statusId" operator="equals" value="SR_QUALITYCHECK"/>
         			</condition-list>
         			
         		</entity-condition>
