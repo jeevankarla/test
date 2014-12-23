@@ -1300,6 +1300,7 @@
                     <field-map field-name="mainAction" value="PAYMENTSTATUS_CANCEL"/>
                 </service>
                <set field="hasPaymentStatusCancelPermission" from-field="permResult.hasPermission"/>
+               <script location="component://accounting/webapp/accounting/WEB-INF/actions/PaymentAttributeInfo.groovy"/>
             </actions>
             <widgets>
                 <decorator-screen name="CommonTreasurerPaymentPortalDecorator" location="component://accounting/widget/CommonScreens.xml">

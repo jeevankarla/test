@@ -630,6 +630,7 @@ under the License.
         <attribute name="finAccountTransTypeId" type="String" mode="IN" optional="false"/>
         <attribute name="paymentGroupTypeId" type="String" mode="IN" optional="true"/>
         <attribute name="paymentMethodId" type="String" mode="IN" optional="true"/>
+        <attribute name="chequeInFavour" type="String" mode="IN" optional="true"/>
         <attribute name="paymentId" type="String" mode="OUT" optional="true"/>
     </service>
 

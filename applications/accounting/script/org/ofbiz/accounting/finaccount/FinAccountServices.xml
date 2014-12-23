@@ -1304,6 +1304,15 @@ under the License.
         <call-service service-name="createPayment" in-map-name="createPaymentMap">
             <result-to-field result-name="paymentId"/>
         </call-service>
+        <!--  saving paymentId and check in-favour in PaymentAttribute -->
+         <if-not-empty field="parameters.chequeInFavour">
+             <make-value entity-name="PaymentAttribute" value-field="PaymentAttribute"/>
+                   <set field="PaymentAttribute.paymentId" from-field="paymentId"/>
+                   <set field="PaymentAttribute.attrName" value="INFAVOUR_OF"/>
+                   <set field="PaymentAttribute.attrValue" from-field="parameters.chequeInFavour"/>
+                   <set from-field="nowTimestamp" field="PaymentAttribute.lastUpdatedStamp"/>
+              <create-value value-field="PaymentAttribute"/>
+         </if-not-empty>
         <entity-one value-field="payment" entity-name="Payment">
         	<field-map field-name="paymentId" from-field="paymentId"/>
         </entity-one>        
