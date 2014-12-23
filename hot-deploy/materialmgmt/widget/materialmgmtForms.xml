@@ -295,4 +295,51 @@
         <field name="productId" title="product Id"><display/></field>
         <field name="totalRevenue" title="Amount"><display/></field>
     </form>  
+    <form name="findMaterial" type="single">
+    	<field name="productId" title="Product">
+             <lookup target-form-name="LookupProduct" size="15" />
+        </field>
+        <field name="internalName" title="Internal Name"><text-find/> </field>
+        <field name="brandName" title="Brand Name"><text-find/></field>
+        <field name="primaryProductCategoryId" title="Material Category">
+        	<drop-down allow-empty="true" >
+        		<entity-options description="${description}" entity-name="ProductCategory" key-field-name="productCategoryId">
+        			<entity-constraint name="productCategoryTypeId" value="RAW_MATERIAL"/>
+        		</entity-options>
+        	</drop-down>
+        </field>
+        <field name="noConditionFind"><hidden value="Y"/><!-- if this isn't there then with all fields empty no query will be done --></field>
+        <field name="submitButton" title="${uiLabelMap.CommonFind}" widget-style="smallSubmit"><submit button-type="button"/></field>
+    </form>
+   <form name="listMaterial" type="list" extends="MaterialsList" list-name="listIt">
+        <actions>
+          <service service-name="performFind" result-map="result" result-map-list="listIt">
+            <field-map field-name="inputFields" from-field="parameters"/>
+            <field-map field-name="entityName" from-field="entityName"/>
+            <field-map field-name="inputFields.productTypeId" value="RAW_MATERIAL"/>
+            <field-map field-name="viewIndex" from-field="viewIndex"/>
+            <field-map field-name="viewSize" from-field="viewSize"/>
+          </service>
+        </actions>
+    </form>
+    <form name="MaterialsList" type="list" use-row-submit="true" 
+        odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
+        <row-actions>
+        	<entity-condition entity-name="SupplierProduct" list="list" >
+        		<condition-expr field-name="productId" operator="equals" value="${productId}"/>
+        	</entity-condition>
+        	<set  field="partyId" value="${list[0].partyId}"/>
+        </row-actions>
+     <field name="productId" title="Product" ><display-entity entity-name="Product" description="${description}"/></field> 
+     <field name="internalName" title="Internal Name"><display/></field>
+     <field name="brandName" title="Brand Name"><display/></field>  
+     <field name="primaryProductCategoryId" title="Material Category">
+     	<display-entity entity-name="ProductCategory" key-field-name="productCategoryId" description="${description}" ></display-entity>
+     </field>
+     <field name="partyId" title="Supplier" >
+     	<hyperlink target="/partymgr/control/viewprofile" target-type="inter-app" description="${groovy:org.ofbiz.party.party.PartyHelper.getPartyName(delegator, partyId, false);}  [${partyId}]">
+                <parameter param-name="partyId" from-field="partyId"/>
+            </hyperlink>
+     </field>
+    </form>    
 </forms>

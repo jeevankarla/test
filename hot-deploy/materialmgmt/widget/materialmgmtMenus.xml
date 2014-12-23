@@ -22,7 +22,6 @@
    		</menu>
         
         <menu name="MaterailtMgmtNGTabBar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml">
-        	
         	<menu-item name="stockPosition" title="Stock Position">
         	<condition>
         		<if-has-permission permission="MM" action="_STOCK_VIEW" />
@@ -30,7 +29,10 @@
             <link target="stockPosition">
             </link>
         	</menu-item>
-        	
+        	<menu-item name="searchMaterial" title="Search Material">
+            <link target="searchMaterial">
+            </link>
+        	</menu-item>
 	        <menu-item name="FindMaterialRequest" title="${uiLabelMap.MaterialMangement_CustRequest}">
 	        	<condition>
 	        		<if-has-permission permission="MM" action="_INDENT_VIEW" />

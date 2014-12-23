@@ -461,4 +461,26 @@
     </section>
     </screen>
     
+    <screen name="searchMaterial">
+    <section>
+    	<actions>
+    		<set field="titleProperty" value="Material Search"/>              
+			<set field="tabButtonItem" value="searchMaterial" />	
+			<set field="entityName" value="Product"/>
+    	</actions>
+    	<widgets>
+    		<decorator-screen name="materialmgmtNgCommonDecorator" location="${parameters.mainDecoratorLocation}">
+            	<decorator-section name="body">
+            	<screenlet title="Search-Options">
+            		<include-form location="component://materialmgmt/widget/materialmgmtForms.xml" name="findMaterial"/>
+            	</screenlet>
+            	<screenlet title="Search-Results">
+            		<include-form location="component://materialmgmt/widget/materialmgmtForms.xml" name="listMaterial"/>
+            	</screenlet>
+            	</decorator-section>
+            </decorator-screen>
+    	</widgets>
+    </section>
+    </screen>
+    
 </screens>

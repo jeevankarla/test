@@ -124,6 +124,13 @@
         <response name="success" type="request" value="json"/>
     </request-map>
     
+    <request-map uri="searchMaterial">
+        <security auth="true" https="true"/>
+         <response name="success" type="view" value="searchMaterial"/>
+        <response name="error" type="view" value="searchMaterial"/>
+    </request-map>
+    
+    
     <request-map uri="FindMaterialInvoices">
         <security auth="true" https="true"/>
         <response name="success" type="view" value="FindMaterialInvoices"/>
@@ -745,7 +752,7 @@
     <view-map name="PurchageOrderOverView" type="screen" page="component://materialmgmt/widget/materialmgmtScreens.xml#PurchageOrderOverView"/>
     <view-map name="creatNewnote" type="screen" page="component://materialmgmt/widget/materialmgmtScreens.xml#OrderNewNote"/>
     <view-map name="FindReceipts" type="screen" page="component://materialmgmt/widget/materialmgmtScreens.xml#FindReceipts"/>
-    
+    <view-map name="searchMaterial" type="screen" page="component://materialmgmt/widget/materialmgmtScreens.xml#searchMaterial"/>
     
     <view-map name="StoreReports" type="screen" page="component://materialmgmt/widget/materialmgmtReportScreens.xml#StoreReports" />
     <view-map name="purchaseTaxReportPDF" type="screenfop" page="component://materialmgmt/widget/materialmgmtReportScreens.xml#PurchaseTaxReportPDF" content-type="application/pdf"/>
