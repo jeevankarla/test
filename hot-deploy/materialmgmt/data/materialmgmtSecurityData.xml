@@ -46,62 +46,74 @@
     <SecurityPermission description="View Stock Position." permissionId="MM_STOCK_VIEW"/>
     <SecurityGroupPermission groupId="MM_STOCK_VIEW"  permissionId="MM_STOCK_VIEW"/>
     <SecurityGroupPermission groupId="FULLADMIN" permissionId="MM_STOCK_VIEW"/>
+    <SecurityGroupPermission groupId="MM_STOCK_VIEW"  permissionId="materialmgmt_VIEW"/>
      
     <SecurityPermission description="View Indent." permissionId="MM_INDENT_VIEW"/>
     <SecurityGroup description="Viewing the INDENT TAB!" groupId="MM_INDENT_VIEW"/>
     <SecurityGroupPermission groupId="MM_INDENT_VIEW"  permissionId="MM_INDENT_VIEW"/>
     <SecurityGroupPermission groupId="FULLADMIN" permissionId="MM_INDENT_VIEW"/>
+    <SecurityGroupPermission groupId="MM_INDENT_VIEW"  permissionId="materialmgmt_VIEW"/>
     
     <SecurityPermission description="View Store Issuance." permissionId="MM_STORE_ISSUE_VIEW"/>
     <SecurityGroup description="Viewing the Store Issuance TAB!" groupId="MM_STOREISSUE_VIEW"/>
     <SecurityGroupPermission groupId="MM_STOREISSUE_VIEW"  permissionId="MM_STORE_ISSUE_VIEW"/>
     <SecurityGroupPermission groupId="FULLADMIN" permissionId="MM_STORE_ISSUE_VIEW"/>
+    <SecurityGroupPermission groupId="MM_STOREISSUE_VIEW"  permissionId="materialmgmt_VIEW"/>
     
     <SecurityPermission description="View Requirements." permissionId="MM_REQUIREMENTS_VIEW"/>
     <SecurityGroup description="Viewing the Requirements TAB!" groupId="MM_REQUIREMENTS_VIEW"/>
     <SecurityGroupPermission groupId="MM_REQUIREMENTS_VIEW"  permissionId="MM_REQUIREMENTS_VIEW"/>
     <SecurityGroupPermission groupId="FULLADMIN" permissionId="MM_REQUIREMENTS_VIEW"/>
+    <SecurityGroupPermission groupId="MM_REQUIREMENTS_VIEW"  permissionId="materialmgmt_VIEW"/>
     
     <SecurityPermission description="View Enquiry." permissionId="MM_ENQUIRY_VIEW"/>
     <SecurityGroup description="Viewing the Enquiry TAB!" groupId="MM_ENQUIRY_VIEW"/>
     <SecurityGroupPermission groupId="MM_ENQUIRY_VIEW"  permissionId="MM_ENQUIRY_VIEW"/>
     <SecurityGroupPermission groupId="FULLADMIN" permissionId="MM_ENQUIRY_VIEW"/>
+    <SecurityGroupPermission groupId="MM_ENQUIRY_VIEW"  permissionId="materialmgmt_VIEW"/>
     
     <SecurityPermission description="View Quotation" permissionId="MM_QUOTATION_VIEW"/>
     <SecurityGroup description="Viewing the Quotaion TAB!" groupId="MM_QUOTATION_VIEW"/>
     <SecurityGroupPermission groupId="MM_QUOTATION_VIEW"  permissionId="MM_QUOTATION_VIEW"/>
     <SecurityGroupPermission groupId="FULLADMIN" permissionId="MM_QUOTATION_VIEW"/>
+    <SecurityGroupPermission groupId="MM_QUOTATION_VIEW"  permissionId="materialmgmt_VIEW"/>
     
     <SecurityPermission description="View Purchase Order" permissionId="MM_PORDER_VIEW"/>
     <SecurityGroup description="Viewing the Quotaion TAB!" groupId="MM_PO_VIEW"/>
     <SecurityGroupPermission groupId="MM_PO_VIEW"  permissionId="MM_PORDER_VIEW"/>
     <SecurityGroupPermission groupId="FULLADMIN" permissionId="MM_PORDER_VIEW"/>
+    <SecurityGroupPermission groupId="MM_PO_VIEW"  permissionId="materialmgmt_VIEW"/>
     
     <SecurityPermission description="View Material Receipts" permissionId="MM_MRECEIPTS_VIEW"/>
     <SecurityGroup description="Viewing the Material Receipts TAB!" groupId="MM_MR_VIEW"/>
     <SecurityGroupPermission groupId="MM_MR_VIEW"  permissionId="MM_MRECEIPTS_VIEW"/>
     <SecurityGroupPermission groupId="FULLADMIN" permissionId="MM_MRECEIPTS_VIEW"/>
+    <SecurityGroupPermission groupId="MM_MR_VIEW"  permissionId="materialmgmt_VIEW"/>
     
     <SecurityPermission description="View QC Approval" permissionId="MM_QC_VIEW"/>
     <SecurityGroup description="Viewing the QC Approval TAB!" groupId="MM_QC_VIEW"/>
     <SecurityGroupPermission groupId="MM_QC_VIEW"  permissionId="MM_QC_VIEW"/>
     <SecurityGroupPermission groupId="FULLADMIN" permissionId="MM_QC_VIEW"/>
+    <SecurityGroupPermission groupId="MM_QC_VIEW"  permissionId="materialmgmt_VIEW"/>
     
     <SecurityPermission description="View Material Invoice" permissionId="MM_MINVOICE_VIEW"/>
     <SecurityGroup description="Viewing the Find Material Invoice TAB!" groupId="MM_MINVOICE_VIEW"/>
     <SecurityGroupPermission groupId="MM_MINVOICE_VIEW"  permissionId="MM_MINVOICE_VIEW"/>
     <SecurityGroupPermission groupId="FULLADMIN" permissionId="MM_MINVOICE_VIEW"/>
+    <SecurityGroupPermission groupId="MM_MINVOICE_VIEW"  permissionId="materialmgmt_VIEW"/>
     
     <SecurityPermission description="View Reports" permissionId="MM_REPORTS_VIEW"/>
     <SecurityGroup description="Viewing the Reports TAB!" groupId="MM_REPORTS_VIEW"/>
     <SecurityGroupPermission groupId="MM_REPORTS_VIEW"  permissionId="MM_REPORTS_VIEW"/>
     <SecurityGroupPermission groupId="FULLADMIN" permissionId="MM_REPORTS_VIEW"/>
+    <SecurityGroupPermission groupId="MM_REPORTS_VIEW"  permissionId="materialmgmt_VIEW"/>
     
     <SecurityGroup description="Material Management Store Manager !" groupId="MM_STORE_MANAGER"/>
     <SecurityGroupPermission groupId="MM_STORE_MANAGER"  permissionId="MM_STORE_ISSUE_VIEW"/>
     <SecurityGroupPermission groupId="MM_STORE_MANAGER"  permissionId="MM_MRECEIPTS_VIEW"/>
     <SecurityGroupPermission groupId="MM_STORE_MANAGER"  permissionId="MM_REPORTS_VIEW"/>
     <SecurityGroupPermission groupId="MM_STORE_MANAGER"  permissionId="MM_STOCK_VIEW"/>
+    <SecurityGroupPermission groupId="MM_STORE_MANAGER"  permissionId="materialmgmt_VIEW"/>
     
     <SecurityGroup description="Material Management Purchase Manager !" groupId="MM_PURCHASE_MANAGER"/>
     <SecurityGroupPermission groupId="MM_PURCHASE_MANAGER"  permissionId="MM_REQUIREMENTS_VIEW"/>
@@ -111,19 +123,23 @@
     <SecurityGroupPermission groupId="MM_PURCHASE_MANAGER"  permissionId="MM_STOCK_VIEW"/>
     <SecurityGroupPermission groupId="MM_PURCHASE_MANAGER"  permissionId="MM_QUOTATION_VIEW"/>
     <SecurityGroupPermission groupId="MM_PURCHASE_MANAGER"  permissionId="MM_ENQUIRY_VIEW"/>
+    <SecurityGroupPermission groupId="MM_PURCHASE_MANAGER"  permissionId="materialmgmt_VIEW"/>
     
      <SecurityGroup description="Material Management Accounting Manager !" groupId="MM_ACCOUNT_MANAGER"/>
     <SecurityGroupPermission groupId="MM_ACCOUNT_MANAGER"  permissionId="MM_MRECEIPTS_VIEW"/>
     <SecurityGroupPermission groupId="MM_ACCOUNT_MANAGER"  permissionId="MM_REPORTS_VIEW"/>
     <SecurityGroupPermission groupId="MM_ACCOUNT_MANAGER"  permissionId="MM_STOCK_VIEW"/>
+    <SecurityGroupPermission groupId="MM_ACCOUNT_MANAGER"  permissionId="materialmgmt_VIEW"/>
      
      <SecurityGroup description="Material Management Quality Control Manager !" groupId="MM_QC_MANAGER"/>
     <SecurityGroupPermission groupId="MM_QC_MANAGER"  permissionId="MM_QC_VIEW"/>
     <SecurityGroupPermission groupId="MM_QC_MANAGER"  permissionId="MM_REPORTS_VIEW"/>
     <SecurityGroupPermission groupId="MM_QC_MANAGER"  permissionId="MM_STOCK_VIEW"/>
+    <SecurityGroupPermission groupId="MM_QC_MANAGER"  permissionId="materialmgmt_VIEW"/>
     
     <SecurityGroup description="Material Management User Department !" groupId="MM_USEER_DEPT"/>
     <SecurityGroupPermission groupId="MM_USEER_DEPT"  permissionId="MM_INDENT_VIEW"/>
     <SecurityGroupPermission groupId="MM_USEER_DEPT"  permissionId="MM_STOCK_VIEW"/>
+    <SecurityGroupPermission groupId="MM_USEER_DEPT"  permissionId="materialmgmt_VIEW"/>
      
 </entity-engine-xml>
