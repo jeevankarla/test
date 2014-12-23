@@ -55,6 +55,8 @@
     <SecurityGroupPermission groupId="FULLADMIN" permissionId="MM_INDENT_VIEW"/>
     <SecurityGroupPermission groupId="MM_INDENT_VIEW"  permissionId="materialmgmt_VIEW"/>
     <SecurityGroupPermission groupId="MM_INDENT_VIEW"  permissionId="OFBTOOLS_VIEW"/>
+     <SecurityGroupPermission groupId="MM_INDENT_VIEW"  permissionId="ORDERMGR_CRQ_ADMIN"/>
+    <SecurityGroupPermission groupId="MM_INDENT_VIEW"  permissionId="ORDERMGR_CRQ_CREATE"/>
     
     <SecurityPermission description="View Store Issuance." permissionId="MM_STORE_ISSUE_VIEW"/>
     <SecurityGroup description="Viewing the Store Issuance TAB!" groupId="MM_STOREISSUE_VIEW"/>
@@ -127,6 +129,14 @@
     <SecurityGroupPermission groupId="MM_STORE_MANAGER"  permissionId="materialmgmt_VIEW"/>
     <SecurityGroupPermission groupId="MM_STORE_MANAGER"  permissionId="OFBTOOLS_VIEW"/>
     <SecurityGroupPermission groupId="MM_STORE_MANAGER"  permissionId="MM_INDENT_VIEW"/>
+    <SecurityGroupPermission groupId="MM_STORE_MANAGER"  permissionId="ORDERMGR_CRQ_ADMIN"/>
+    <SecurityGroupPermission groupId="MM_STORE_MANAGER"  permissionId="ORDERMGR_CRQ_CREATE"/>
+    <SecurityGroupPermission groupId="MM_STORE_MANAGER"  permissionId="CATALOG_VIEW"/>
+    <SecurityGroupPermission groupId="MM_STORE_MANAGER"  permissionId="CATALOG_CREATE"/>
+    <SecurityGroupPermission groupId="MM_STORE_MANAGER"  permissionId="CATALOG_UPDATE"/>
+    <SecurityGroupPermission groupId="MM_STORE_MANAGER"  permissionId="ACCTG_PREF_VIEW"/>
+    <SecurityGroupPermission groupId="MM_STORE_MANAGER"  permissionId="ACCOUNTING_APINVOICE_EDIT"/>
+    <SecurityGroupPermission groupId="MM_STORE_MANAGER"  permissionId="ACCOUNTING_UPDATE"/>
     
     <SecurityGroup description="Material Management Purchase Manager !" groupId="MM_PURCHASE_MANAGER"/>
     <SecurityGroupPermission groupId="MM_PURCHASE_MANAGER"  permissionId="MM_REQUIREMENTS_VIEW"/>
@@ -139,6 +149,19 @@
     <SecurityGroupPermission groupId="MM_PURCHASE_MANAGER"  permissionId="materialmgmt_VIEW"/>
     <SecurityGroupPermission groupId="MM_PURCHASE_MANAGER"  permissionId="OFBTOOLS_VIEW"/>
     <SecurityGroupPermission groupId="MM_PURCHASE_MANAGER"  permissionId="MM_INDENT_VIEW"/>
+    <SecurityGroupPermission groupId="MM_PURCHASE_MANAGER"  permissionId="ORDERMGR_CRQ_ADMIN"/>
+    <SecurityGroupPermission groupId="MM_PURCHASE_MANAGER"  permissionId="ORDERMGR_CRQ_CREATE"/>
+    <SecurityGroupPermission groupId="MM_PURCHASE_MANAGER"  permissionId="ORDERMGR_VIEW"/>
+    <SecurityGroupPermission groupId="MM_PURCHASE_MANAGER"  permissionId="ORDERMGR_CREATE"/>
+    <SecurityGroupPermission groupId="MM_PURCHASE_MANAGER"  permissionId="ORDERMGR_UPDATE"/>
+    <SecurityGroupPermission groupId="MM_PURCHASE_MANAGER"  permissionId="ORDERMGR_DELETE"/>
+    <SecurityGroupPermission groupId="MM_PURCHASE_MANAGER"  permissionId="ORDERMGR_ADMIN"/>
+    <SecurityGroupPermission groupId="MM_PURCHASE_MANAGER"  permissionId="CATALOG_VIEW"/>
+    <SecurityGroupPermission groupId="MM_PURCHASE_MANAGER"  permissionId="CATALOG_CREATE"/>
+    <SecurityGroupPermission groupId="MM_PURCHASE_MANAGER"  permissionId="CATALOG_UPDATE"/>
+    <SecurityGroupPermission groupId="MM_PURCHASE_MANAGER"  permissionId="ACCTG_PREF_VIEW"/>
+    <SecurityGroupPermission groupId="MM_PURCHASE_MANAGER"  permissionId="ACCOUNTING_APINVOICE_EDIT"/>
+    <SecurityGroupPermission groupId="MM_PURCHASE_MANAGER"  permissionId="ACCOUNTING_UPDATE"/>
     
      <SecurityGroup description="Material Management Accounting Manager !" groupId="MM_ACCOUNT_MANAGER"/>
     <SecurityGroupPermission groupId="MM_ACCOUNT_MANAGER"  permissionId="MM_MRECEIPTS_VIEW"/>
@@ -147,6 +170,14 @@
     <SecurityGroupPermission groupId="MM_ACCOUNT_MANAGER"  permissionId="materialmgmt_VIEW"/>
     <SecurityGroupPermission groupId="MM_ACCOUNT_MANAGER"  permissionId="OFBTOOLS_VIEW"/>
     <SecurityGroupPermission groupId="MM_ACCOUNT_MANAGER"  permissionId="MM_INDENT_VIEW"/>
+    <SecurityGroupPermission groupId="MM_ACCOUNT_MANAGER"  permissionId="ORDERMGR_CRQ_ADMIN"/>
+    <SecurityGroupPermission groupId="MM_ACCOUNT_MANAGER"  permissionId="ORDERMGR_CRQ_CREATE"/>
+    <SecurityGroupPermission groupId="MM_ACCOUNT_MANAGER"  permissionId="CATALOG_VIEW"/>
+    <SecurityGroupPermission groupId="MM_ACCOUNT_MANAGER"  permissionId="CATALOG_CREATE"/>
+    <SecurityGroupPermission groupId="MM_ACCOUNT_MANAGER"  permissionId="CATALOG_UPDATE"/>
+    <SecurityGroupPermission groupId="MM_ACCOUNT_MANAGER"  permissionId="ACCTG_PREF_VIEW"/>
+    <SecurityGroupPermission groupId="MM_ACCOUNT_MANAGER"  permissionId="ACCOUNTING_APINVOICE_EDIT"/>
+    <SecurityGroupPermission groupId="MM_ACCOUNT_MANAGER"  permissionId="ACCOUNTING_UPDATE"/>
      
      <SecurityGroup description="Material Management Quality Control Manager !" groupId="MM_QC_MANAGER"/>
     <SecurityGroupPermission groupId="MM_QC_MANAGER"  permissionId="MM_QC_VIEW"/>
@@ -155,11 +186,15 @@
     <SecurityGroupPermission groupId="MM_QC_MANAGER"  permissionId="materialmgmt_VIEW"/>
     <SecurityGroupPermission groupId="MM_QC_MANAGER"  permissionId="OFBTOOLS_VIEW"/>
     <SecurityGroupPermission groupId="MM_QC_MANAGER"  permissionId="MM_INDENT_VIEW"/>
+     <SecurityGroupPermission groupId="MM_QC_MANAGER"  permissionId="ORDERMGR_CRQ_ADMIN"/>
+    <SecurityGroupPermission groupId="MM_QC_MANAGER"  permissionId="ORDERMGR_CRQ_CREATE"/>
     
     <SecurityGroup description="Material Management User Department !" groupId="MM_USEER_DEPT"/>
     <SecurityGroupPermission groupId="MM_USEER_DEPT"  permissionId="MM_INDENT_VIEW"/>
     <SecurityGroupPermission groupId="MM_USEER_DEPT"  permissionId="MM_STOCK_VIEW"/>
     <SecurityGroupPermission groupId="MM_USEER_DEPT"  permissionId="materialmgmt_VIEW"/>
     <SecurityGroupPermission groupId="MM_USEER_DEPT"  permissionId="OFBTOOLS_VIEW"/>
+     <SecurityGroupPermission groupId="MM_USEER_DEPT"  permissionId="ORDERMGR_CRQ_ADMIN"/>
+    <SecurityGroupPermission groupId="MM_USEER_DEPT"  permissionId="ORDERMGR_CRQ_CREATE"/>
      
 </entity-engine-xml>

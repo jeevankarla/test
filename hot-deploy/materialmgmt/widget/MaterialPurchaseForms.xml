@@ -42,6 +42,19 @@
       			<condition-expr field-name="productId" operator="equals" value="${orderItemList[0].productId}"/>
       		</entity-condition>
       		<set field="partyId" value="${orderRoles[0].partyId}" />
+      		<entity-condition entity-name="ShipmentReceipt" list="ShipmentReceiptList" >
+      			<condition-list combine="and" >
+	      			<condition-expr field-name="orderId" operator="equals" value="${orderId}" />
+	      			<condition-expr field-name="statusId" operator="not-equals" value="SR_REJECTED" />
+      			</condition-list>
+      		</entity-condition>
+      		<set field="flag" value="${groovy: return (ShipmentReceiptList.size() > 0)? 'Y' : 'N';}"/>
+      		<entity-condition entity-name="Shipment" list="ShipmentList" >
+      			<condition-list combine="and" >
+	      			<condition-expr field-name="primaryOrderId" operator="equals" value="${orderId}" />
+      			</condition-list>
+      		</entity-condition>
+      		<set field="vehicleId" value="${ShipmentList[0].vehicleId}"/>
       	</row-actions>
       	<field name="orderId" widget-style="buttontext">
       		<hyperlink target="POoverview" description="${orderId}" target-window="_blank">
@@ -67,13 +80,19 @@
         <field name="ApproveOrder" widget-style="buttontext" use-when="statusId.equals(&quot;ORDER_APPROVED&quot;)" ><display description="Order Approved" /></field>
         <field name="ApproveOrder" widget-style="buttontext" use-when="statusId.equals(&quot;ORDER_COMPLETED&quot;)" ><display description="Order Completed" /></field>
         <field name="ApproveOrder" widget-style="buttontext" use-when="statusId.equals(&quot;ORDER_CANCELLED&quot;)" ><display description="Order Cancelled" /></field>
-        <field name="cancelOrder" widget-style="buttontext" use-when="statusId.equals(&quot;ORDER_APPROVED&quot;) || statusId.equals(&quot;ORDER_CREATED&quot;)" >
+        <field name="cancelOrder" widget-style="buttontext" use-when="statusId.equals(&quot;ORDER_CREATED&quot;)" >
             <hyperlink target="CancelOrder" description="Cancel Order">
                  <parameter param-name="orderId"/>
                 <parameter param-name="statusId" value="ORDER_CANCELLED" />
                 <parameter param-name="setItemStatus" value="Y" />
             </hyperlink>
         </field> 
+        <field use-when="flag == &quot;N&quot;"  name="riseGRN" title="Rise GRN" widget-style="buttontext" >
+        	 <hyperlink target="riseGRN" description="Rise GRN">
+        	 	<parameter param-name="orderId"/>
+        	 	<parameter param-name="vehicleId"/>
+            </hyperlink>
+         </field>
     </form>
     
     <form name="FindShipmentReceipt" title="" type="single" target="${targetRequest}" header-row-style="header-row" default-table-style="basic-table">
