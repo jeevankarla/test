@@ -219,16 +219,20 @@ under the License.
 							            	<fo:block  keep-together="always" text-align="left" font-size="12pt" white-space-collapse="false" font-weight="bold">${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(invTaxMap.get("invoiceDate"),"dd-MMM-yy")}</fo:block>  
 							            </fo:table-cell>
 							            <#assign  partyName="">
+							           <#if InvoicePartyMap.get(invTaxMap.get("invoiceId"))?exists>
+							                <#assign partyId=InvoicePartyMap.get(invTaxMap.get("invoiceId"))>
+					            			<#assign partyName = Static["org.ofbiz.party.party.PartyHelper"].getPartyName(delegator, partyId, false)>
+					            		<#else>
 					            			<#if invTaxMap.get("partyId")?exists>
 					            			<#assign partyId=invTaxMap.get("partyId")>
-					            			
 					            			<#assign partyName = Static["org.ofbiz.party.party.PartyHelper"].getPartyName(delegator, partyId, false)>
 					            			</#if>
+					            		</#if>
 					                    <fo:table-cell>
-					                    <fo:block text-align="left" font-size="12pt">${Static["org.ofbiz.order.order.OrderServices"].nameTrim((StringUtil.wrapString(partyName?if_exists)),28)}</fo:block>
+					                    <fo:block text-align="left" font-size="12pt">${partyName?if_exists}</fo:block>
 							            </fo:table-cell>
 							             <fo:table-cell>
-							            	<fo:block  keep-together="always" text-align="left" font-size="11pt" white-space-collapse="false" >${invTaxMap.get("tinNumber")}</fo:block>  
+							            	<fo:block  keep-together="always" text-align="left" font-size="11pt" white-space-collapse="false" >${invTaxMap.get("tinNumber")?if_exists}</fo:block>  
 							            </fo:table-cell>
 							            <fo:table-cell>
 							            	<fo:block  keep-together="always" text-align="left" font-size="12pt" white-space-collapse="false" >${invTaxMap.get("vchrType")}</fo:block>  
@@ -470,16 +474,20 @@ under the License.
 							            	<fo:block  keep-together="always" text-align="left" font-size="12pt" white-space-collapse="false" font-weight="bold">${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(invTaxMap.get("invoiceDate"),"dd-MMM-yy")}</fo:block>  
 							            </fo:table-cell>
 							            <#assign  partyName="">
+							            <#if InvoicePartyMap.get(invTaxMap.get("invoiceId"))?exists>
+							                <#assign partyId=InvoicePartyMap.get(invTaxMap.get("invoiceId"))>
+					            			<#assign partyName = Static["org.ofbiz.party.party.PartyHelper"].getPartyName(delegator, partyId, false)>
+					            		<#else>
 					            			<#if invTaxMap.get("partyId")?exists>
 					            			<#assign partyId=invTaxMap.get("partyId")>
-					            			
 					            			<#assign partyName = Static["org.ofbiz.party.party.PartyHelper"].getPartyName(delegator, partyId, false)>
 					            			</#if>
+					            		</#if>
 					                    <fo:table-cell>
-					                    <fo:block text-align="left" font-size="12pt">${Static["org.ofbiz.order.order.OrderServices"].nameTrim((StringUtil.wrapString(partyName?if_exists)),28)}</fo:block>
+					                    <fo:block text-align="left" font-size="12pt">${partyName?if_exists}</fo:block>
 							            </fo:table-cell>
 							             <fo:table-cell>
-							            	<fo:block  keep-together="always" text-align="left" font-size="11pt" white-space-collapse="false" >${invTaxMap.get("tinNumber")}</fo:block>  
+							            	<fo:block  keep-together="always" text-align="left" font-size="11pt" white-space-collapse="false" >${invTaxMap.get("tinNumber")?if_exists}</fo:block>  
 							            </fo:table-cell>
 							            <fo:table-cell>
 							            	<fo:block  keep-together="always" text-align="left" font-size="12pt" white-space-collapse="false" >${invTaxMap.get("vchrType")}</fo:block>  
@@ -721,17 +729,22 @@ under the License.
        							       <fo:table-cell>
 							            	<fo:block  keep-together="always" text-align="left" font-size="12pt" white-space-collapse="false" font-weight="bold">${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(invTaxMap.get("invoiceDate"),"dd-MMM-yy")}</fo:block>  
 							            </fo:table-cell>
-							            <#assign  partyName="">
+							             <#assign  partyName="">
+							           <#if InvoicePartyMap.get(invTaxMap.get("invoiceId"))?exists>
+							                <#assign partyId=InvoicePartyMap.get(invTaxMap.get("invoiceId"))>
+							                <#if partyId?exists>
+					            			<#assign partyName = Static["org.ofbiz.party.party.PartyHelper"].getPartyName(delegator, partyId, false)></#if>
+					            		<#else>
 					            			<#if invTaxMap.get("partyId")?exists>
 					            			<#assign partyId=invTaxMap.get("partyId")>
-					            			
 					            			<#assign partyName = Static["org.ofbiz.party.party.PartyHelper"].getPartyName(delegator, partyId, false)>
 					            			</#if>
+					            		</#if>
 					                    <fo:table-cell>
-					                    <fo:block text-align="left" font-size="12pt">${Static["org.ofbiz.order.order.OrderServices"].nameTrim((StringUtil.wrapString(partyName?if_exists)),28)}</fo:block>
+					                    <fo:block text-align="left" font-size="12pt">${partyName?if_exists}</fo:block>
 							            </fo:table-cell>
 							             <fo:table-cell>
-							            	<fo:block  keep-together="always" text-align="left" font-size="11pt" white-space-collapse="false" >${invTaxMap.get("tinNumber")}</fo:block>
+							            	<fo:block  keep-together="always" text-align="left" font-size="11pt" white-space-collapse="false" >${invTaxMap.get("tinNumber")?if_exists}</fo:block>
 							            </fo:table-cell>
 							            <fo:table-cell>
 							            	<fo:block  keep-together="always" text-align="left" font-size="12pt" white-space-collapse="false" >${invTaxMap.get("vchrType")}</fo:block>  

@@ -112,11 +112,19 @@ under the License.
 							             <fo:table-cell>
 							            	<fo:block  keep-together="always" font-weight = "bold" text-align="left" font-size="11pt" white-space-collapse="false" >${invoiceDet.getKey()?if_exists}</fo:block>  
 							            </fo:table-cell>
+							             <#assign  partyName="">
+					            			<#if InvoicePartyMapReg.get(invoiceDet.getKey())?exists>
+							                 <#assign partyId=InvoicePartyMapReg.get(invoiceDet.getKey())>
+					            			<#assign partyName = Static["org.ofbiz.party.party.PartyHelper"].getPartyName(delegator, partyId, false)>
+					            			<#else> 
+					            			<#assign partyName =invoiceDet.getValue().get("partyName")>
+					            			</#if>
+					            			
 							             <fo:table-cell>
-							            	<fo:block   text-align="left" font-size="11pt" white-space-collapse="false" >${invoiceDet.getValue().get("partyName")?if_exists}</fo:block>  
+							            	<fo:block   text-align="left" font-size="11pt" white-space-collapse="false" >${partyName?if_exists}</fo:block>  
 							            </fo:table-cell>
 							             <fo:table-cell>
-							            	<fo:block  keep-together="always" text-align="right" font-size="11pt" white-space-collapse="false" >${invoiceDet.getValue().get("basicRevenue")?if_exists?string("#0.00")}</fo:block>  
+							            	<fo:block  keep-together="always" text-align="right" font-size="11pt" white-space-collapse="false" >${invoiceDet.getValue().get("basicRevenue")?if_exists?string("#0.00")}</fo:block> 
 							            </fo:table-cell>
 							            <fo:table-cell>
 							            	<fo:block  keep-together="always" text-align="right" font-size="11pt" white-space-collapse="false" >${invoiceDet.getValue().get("bedRevenue")?if_exists?string("#0.00")}</fo:block>  

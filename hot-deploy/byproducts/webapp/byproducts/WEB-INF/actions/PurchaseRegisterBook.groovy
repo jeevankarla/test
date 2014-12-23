@@ -245,7 +245,22 @@ if(UtilValidate.isNotEmpty(salesInvoiceTotals)){
 	context.putAt("purchaseRegisterList", purchaseRegisterList);
 }
 
-/*// for vat totals
+
+InvoicePartyMapReg=[:];
+invoiceMap.each { invoiceMap ->
+	invoiceId = invoiceMap.getKey();
+	//Debug.log("invoiceId==========================="+invoiceId);
+	invoiceRolelist = delegator.findList("InvoiceRole",EntityCondition.makeCondition(EntityCondition.makeCondition("invoiceId", EntityOperator.EQUALS, invoiceId),EntityOperator.AND,EntityCondition.makeCondition("roleTypeId", EntityOperator.EQUALS, "SUPPLIER_AGENT"))  , null, null, null, false );
+	//Debug.log("invoiceRolelist===================="+invoiceRolelist);
+	invoiceRolelist.each { invoicelist ->
+		partyId = invoicelist.get("partyId");
+		//Debug.log("partyId===================="+partyId);
+		InvoicePartyMapReg.put(invoiceId,partyId);
+	}
+}
+context.put("InvoicePartyMapReg",InvoicePartyMapReg);
+//Debug.log("InvoicePartyMapReg================================"+InvoicePartyMapReg);
+ /*// for vat totals
 invoiceIdList = [];
 if(UtilValidate.isNotEmpty(salesInvoiceTotals)){
 	invoiceTotals = salesInvoiceTotals.get("invoiceIdTotals");

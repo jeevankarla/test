@@ -59,7 +59,6 @@ if(totalDays > 32){
 	context.errorMessage = "You Cannot Choose More Than 31 Days";
 	return;
 }
-
 // Purchase abstract Sales report
 exprList=[];
 
@@ -91,6 +90,15 @@ orgList=[];
 	   conditionInvRole = EntityCondition.makeCondition(exprList, EntityOperator.AND);
 	   allInvoiceRoleList = delegator.findList("InvoiceAndRole", conditionInvRole , null, null, null, false );
 	   allInvoiceIdsRoleList=EntityUtil.getFieldListFromEntityList(allInvoiceRoleList, "invoiceId", true);
+	   allSupplyagentList = EntityUtil.filterByAnd(allInvoiceRoleList, [invoiceRoleTypeId : "SUPPLIER_AGENT"]);
+	   InvoicePartyMap=[:];
+	   allSupplyagentList.each { allSupplyagent ->
+		   invoiceId = allSupplyagent.invoiceId;
+			   partyId = allSupplyagent.invoiceRolePartyId;
+			   InvoicePartyMap.put(invoiceId,partyId);
+		   }	  
+	   context.put("InvoicePartyMap",InvoicePartyMap);
+	  // Debug.log("InvoicePartyMap=======from else========================="+InvoicePartyMap);
 	   deptInvoiceIdRoleList=[];
 	       orgList.each{orgDept->
 			partyId=orgDept.partyId;
@@ -107,6 +115,7 @@ orgList=[];
 		   exprList.add(EntityCondition.makeCondition("statusId",EntityOperator.NOT_EQUAL, "INVOICE_CANCELLED"));
 		   exprList.add(EntityCondition.makeCondition("invoiceDate", EntityOperator.GREATER_THAN_EQUAL_TO,dayBegin));
 		   exprList.add(EntityCondition.makeCondition("invoiceDate",EntityOperator.LESS_THAN_EQUAL_TO, dayEnd));
+		   //Debug.log("allInvoiceIdsRoleList==========================================="+allInvoiceIdsRoleList);
 		   if(UtilValidate.isNotEmpty(allInvoiceIdsRoleList)){
 		   exprList.add(EntityCondition.makeCondition("invoiceId", EntityOperator.IN, allInvoiceIdsRoleList));
 		   }
@@ -126,9 +135,28 @@ orgList=[];
     }else{
 	dummyList=[];
         populateDeptInvoiceDetail("",dummyList);
+		exprList.clear();
+		exprList.add(EntityCondition.makeCondition("invoiceTypeId", EntityOperator.EQUALS,"PURCHASE_INVOICE"));
+		exprList.add(EntityCondition.makeCondition("statusId",EntityOperator.NOT_EQUAL, "INVOICE_CANCELLED"));
+		exprList.add(EntityCondition.makeCondition("invoiceDate", EntityOperator.GREATER_THAN_EQUAL_TO,dayBegin));
+		exprList.add(EntityCondition.makeCondition("invoiceDate",EntityOperator.LESS_THAN_EQUAL_TO, dayEnd));
+		exprList.add(EntityCondition.makeCondition("invoiceRoleTypeId", EntityOperator.EQUALS, "SUPPLIER_AGENT"));
+		conditionInvRole = EntityCondition.makeCondition(exprList, EntityOperator.AND);
+		allSupplyagentList = delegator.findList("InvoiceAndRole", conditionInvRole , null, null, null, false );
+		//Debug.log("allSupplyagentList==========================================="+allSupplyagentList);
+		//allSupplyagentList = EntityUtil.filterByAnd(allInvoiceRoleList, [invoiceRoleTypeId : "SUPPLIER_AGENT"]);
+		//Debug.log("allSupplyagentList==========================================="+allSupplyagentList);
+		//allSupplyagentIdsList=EntityUtil.getFieldListFromEntityList(allSupplyagentList, "invoiceId", true);
+		//Debug.log("allSupplyagentIdsList==============from else============================="+allSupplyagentIdsList);
+		InvoicePartyMap=[:];
+		allSupplyagentList.each { allSupplyagent ->
+			invoiceId = allSupplyagent.invoiceId;
+			partyId = allSupplyagent.invoiceRolePartyId;
+				InvoicePartyMap.put(invoiceId,partyId);
+		}
+		context.put("InvoicePartyMap",InvoicePartyMap);
+		//Debug.log("InvoicePartyMap=======from else========================="+InvoicePartyMap);
     }
-	
-	
 //function  for Each Dept	
 def populateDeptInvoiceDetail(departmentId, invoiceIdsList){
 	EntityListIterator invoiceItemsIter = null;

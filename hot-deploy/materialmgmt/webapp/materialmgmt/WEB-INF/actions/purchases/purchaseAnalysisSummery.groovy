@@ -818,14 +818,30 @@ purchaseSumInvDetaildMap=[:];
 		context.prchaseCategoryDetaildMap = prchaseCategoryDetaildMap;
 		context.purchaseSumCatDetaildMap = purchaseSumCatDetaildMap;
 		context.purchaseSumInvDetaildMap = purchaseSumInvDetaildMap;
-		
-		
+		// for all supplers partyId's
 		taxParty = delegator.findOne("Party", UtilMisc.toMap("partyId", "TAX4"), false);
 		taxAuthority = delegator.findOne("TaxAuthority", UtilMisc.toMap("taxAuthGeoId","IND", "taxAuthPartyId","TAX4"), false);
 		context.taxParty = taxParty;
 		context.taxAuthority = taxAuthority;
 		invItemTypeGl = delegator.findOne("InvoiceItemType", UtilMisc.toMap("invoiceItemTypeId", "VAT_PUR"), false);
 		context.invItemTypeGl = invItemTypeGl;
+		exprList.clear();
+		exprList.add(EntityCondition.makeCondition("invoiceTypeId", EntityOperator.EQUALS,"PURCHASE_INVOICE"));
+		exprList.add(EntityCondition.makeCondition("statusId",EntityOperator.NOT_EQUAL, "INVOICE_CANCELLED"));
+		exprList.add(EntityCondition.makeCondition("invoiceDate", EntityOperator.GREATER_THAN_EQUAL_TO,dayBegin));
+		exprList.add(EntityCondition.makeCondition("invoiceDate",EntityOperator.LESS_THAN_EQUAL_TO, dayEnd));
+		exprList.add(EntityCondition.makeCondition("invoiceRoleTypeId",EntityOperator.EQUALS, "SUPPLIER_AGENT"));
+		conditionInvRole = EntityCondition.makeCondition(exprList, EntityOperator.AND);
+		allInvoiceRoleList = delegator.findList("InvoiceAndRole", conditionInvRole , null, null, null, false );
+		//Debug.log("allInvoiceRoleList==========================="+allInvoiceRoleList);
+			InvoicePartyAnalysisMap=[:];
+		allInvoiceRoleList.each { allSupplyagent ->
+			invoiceId = allSupplyagent.invoiceId;
+			partyId = allSupplyagent.invoiceRolePartyId;
+				InvoicePartyAnalysisMap.put(invoiceId,partyId);
+			}
+		context.put("InvoicePartyAnalysisMap",InvoicePartyAnalysisMap);
+		//Debug.log("InvoicePartyAnalysisMap==========================="+InvoicePartyAnalysisMap);
 // Purchase Abstract report
 
 

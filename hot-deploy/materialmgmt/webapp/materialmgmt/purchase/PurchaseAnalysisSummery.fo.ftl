@@ -369,12 +369,17 @@ language governing permissions and limitations under the License. -->
        							       <fo:table-cell>
 							            	<fo:block  keep-together="always" text-align="left" font-size="10pt" white-space-collapse="false" font-weight="bold">${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(invTaxMap.get("invoiceDate"),"dd-MMM-yy")}</fo:block>  
 							            </fo:table-cell>
-							            <#assign  partyName="">
-					            			<#if invTaxMap.get("partyId")?exists>
+							              <#assign  partyName="">
+							           <#if InvoicePartyAnalysisMap.get(invTaxMap.get("invoiceId"))?exists>
+							                <#assign partyId=InvoicePartyAnalysisMap.get(invTaxMap.get("invoiceId"))>
+							                <#if partyId?exists>
+					            			<#assign partyName = Static["org.ofbiz.party.party.PartyHelper"].getPartyName(delegator, partyId, false)></#if>
+					            		<#else>
+							            	<#if invTaxMap.get("partyId")?exists>
 					            			<#assign partyId=invTaxMap.get("partyId")>
-					            			
 					            			<#assign partyName = Static["org.ofbiz.party.party.PartyHelper"].getPartyName(delegator, partyId, false)>
 					            			</#if>
+					            		</#if>
 					                    <fo:table-cell>
 					                    <fo:block text-align="left" font-size="10pt">${Static["org.ofbiz.order.order.OrderServices"].nameTrim((StringUtil.wrapString(partyName?if_exists)),28)}</fo:block>
 							            </fo:table-cell>
