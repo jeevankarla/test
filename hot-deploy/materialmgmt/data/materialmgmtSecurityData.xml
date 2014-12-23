@@ -126,6 +126,7 @@
     <SecurityGroupPermission groupId="MM_STORE_MANAGER"  permissionId="MM_STOCK_VIEW"/>
     <SecurityGroupPermission groupId="MM_STORE_MANAGER"  permissionId="materialmgmt_VIEW"/>
     <SecurityGroupPermission groupId="MM_STORE_MANAGER"  permissionId="OFBTOOLS_VIEW"/>
+    <SecurityGroupPermission groupId="MM_STORE_MANAGER"  permissionId="MM_INDENT_VIEW"/>
     
     <SecurityGroup description="Material Management Purchase Manager !" groupId="MM_PURCHASE_MANAGER"/>
     <SecurityGroupPermission groupId="MM_PURCHASE_MANAGER"  permissionId="MM_REQUIREMENTS_VIEW"/>
@@ -137,6 +138,7 @@
     <SecurityGroupPermission groupId="MM_PURCHASE_MANAGER"  permissionId="MM_ENQUIRY_VIEW"/>
     <SecurityGroupPermission groupId="MM_PURCHASE_MANAGER"  permissionId="materialmgmt_VIEW"/>
     <SecurityGroupPermission groupId="MM_PURCHASE_MANAGER"  permissionId="OFBTOOLS_VIEW"/>
+    <SecurityGroupPermission groupId="MM_PURCHASE_MANAGER"  permissionId="MM_INDENT_VIEW"/>
     
      <SecurityGroup description="Material Management Accounting Manager !" groupId="MM_ACCOUNT_MANAGER"/>
     <SecurityGroupPermission groupId="MM_ACCOUNT_MANAGER"  permissionId="MM_MRECEIPTS_VIEW"/>
@@ -144,6 +146,7 @@
     <SecurityGroupPermission groupId="MM_ACCOUNT_MANAGER"  permissionId="MM_STOCK_VIEW"/>
     <SecurityGroupPermission groupId="MM_ACCOUNT_MANAGER"  permissionId="materialmgmt_VIEW"/>
     <SecurityGroupPermission groupId="MM_ACCOUNT_MANAGER"  permissionId="OFBTOOLS_VIEW"/>
+    <SecurityGroupPermission groupId="MM_ACCOUNT_MANAGER"  permissionId="MM_INDENT_VIEW"/>
      
      <SecurityGroup description="Material Management Quality Control Manager !" groupId="MM_QC_MANAGER"/>
     <SecurityGroupPermission groupId="MM_QC_MANAGER"  permissionId="MM_QC_VIEW"/>
@@ -151,6 +154,7 @@
     <SecurityGroupPermission groupId="MM_QC_MANAGER"  permissionId="MM_STOCK_VIEW"/>
     <SecurityGroupPermission groupId="MM_QC_MANAGER"  permissionId="materialmgmt_VIEW"/>
     <SecurityGroupPermission groupId="MM_QC_MANAGER"  permissionId="OFBTOOLS_VIEW"/>
+    <SecurityGroupPermission groupId="MM_QC_MANAGER"  permissionId="MM_INDENT_VIEW"/>
     
     <SecurityGroup description="Material Management User Department !" groupId="MM_USEER_DEPT"/>
     <SecurityGroupPermission groupId="MM_USEER_DEPT"  permissionId="MM_INDENT_VIEW"/>
