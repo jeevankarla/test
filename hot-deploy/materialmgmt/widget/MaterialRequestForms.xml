@@ -285,7 +285,7 @@
                 <parameter param-name="custRequestItemSeqId"/>
             </hyperlink>
         </field>
-        <field use-when="flag == &quot;N&quot;" name="raiseRequirement" widget-style="buttontext">
+        <field use-when="flag == &quot;N&quot; &amp;&amp; &quot;${statusId}&quot; == &quot;CRQ_SUBMITTED&quot;" name="raiseRequirement" widget-style="buttontext">
             <hyperlink target="createRequirementForCustRequestItem" description="Raise Requirement">
                 <parameter param-name="custRequestId"/>
                 <parameter param-name="custRequestItemSeqId"/>
