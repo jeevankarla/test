@@ -71,7 +71,7 @@ public class PayrollService {
 				GenericValue userLogin = (GenericValue) context.get("userLogin");
 				String partyIdFrom= (String) context.get("orgPartyId");
 				String customTimePeriodId= (String) context.get("customTimePeriodId");
-				String basicSalDate= (String) context.get("basicSalDate");
+				String basicSalDate= (String) context.get("basicSalDate");				
 				String periodBillingId = null;
 				List<GenericValue> billingParty = FastList.newInstance();
 				String billingTypeId = "PAYROLL_BILL";
@@ -1684,7 +1684,7 @@ public class PayrollService {
 			public static Map<String, Object> preparePayrolHeaders(DispatchContext dctx, Map<String, Object> context) {
 			    Delegator delegator = dctx.getDelegator();
 			    LocalDispatcher dispatcher = dctx.getDispatcher();  
-				String partyId = (String) context.get("partyId");	
+				String partyId = (String) context.get("partyId");				
 				String partyIdFrom = (String) context.get("partyIdFrom");	
 		        String timePeriodId = (String)context.get("timePeriodId");		
 			    String errorMsg = "createPayroll Header failed [" + partyIdFrom + "-->" + partyId + "]"; 		
@@ -1755,36 +1755,37 @@ public class PayrollService {
 							itemsList.add(tempInputMap);
 			        	}
 			        }*/
-					Map emplInputMap = FastMap.newInstance();
-					emplInputMap.put("userLogin", userLogin);
-					emplInputMap.put("orgPartyId", partyIdFrom);
-					emplInputMap.put("fromDate", timePeriodStart);
-					emplInputMap.put("thruDate", timePeriodEnd);
-		        	Map resultMap = HumanresService.getActiveEmployements(dctx,emplInputMap);
-		        	List<GenericValue> employementList = (List<GenericValue>)resultMap.get("employementList");
-		        	for (int i = 0; i < employementList.size(); ++i) {		
-		        		GenericValue employment = employementList.get(i);
-		        		String employeeId = employment.getString("partyIdTo");
-		        		context.put("employeeId", employeeId);
-		        		Map employeePayrollAttedance = getEmployeePayrollAttedance(dctx,context);
-		        		if(UtilValidate.isNotEmpty(employeePayrollAttedance.get("noOfPayableDays")) &&
-		        				(new BigDecimal((Double)employeePayrollAttedance.get("noOfPayableDays"))).compareTo(BigDecimal.ZERO)==0){
-		        			  continue;
-		        		}
-		        		GenericValue payrollType = delegator.findOne("PayrollType", UtilMisc.toMap("payrollTypeId", "PAYROLL_BILL"), false);
-		        		if(UtilValidate.isNotEmpty(payrollType)){
-		        			BigDecimal minDays = (BigDecimal) payrollType.get("minDays");
-		        			if(UtilValidate.isNotEmpty(minDays) &&
-			        				(new BigDecimal((Double)employeePayrollAttedance.get("noOfPayableDays"))).compareTo(minDays) < 0){
-			        			  continue;
-			        		}
-		        		}
-		        		input.put("partyIdFrom", employment.getString("partyIdTo"));
-						Map tempInputMap = FastMap.newInstance();
-						tempInputMap.putAll(input);
-						itemsList.add(tempInputMap);
-		        	}
-				}
+							Map emplInputMap = FastMap.newInstance();
+							emplInputMap.put("userLogin", userLogin);
+							emplInputMap.put("orgPartyId", partyIdFrom);
+							
+							emplInputMap.put("fromDate", timePeriodStart);
+							emplInputMap.put("thruDate", timePeriodEnd);
+				        	Map resultMap = HumanresService.getActiveEmployements(dctx,emplInputMap);
+				        	List<GenericValue> employementList = (List<GenericValue>)resultMap.get("employementList");
+				        	for (int i = 0; i < employementList.size(); ++i) {		
+				        		GenericValue employment = employementList.get(i);
+				        		String employeeId = employment.getString("partyIdTo");
+				        		context.put("employeeId", employeeId);
+				        		Map employeePayrollAttedance = getEmployeePayrollAttedance(dctx,context);
+				        		if(UtilValidate.isNotEmpty(employeePayrollAttedance.get("noOfPayableDays")) &&
+				        				(new BigDecimal((Double)employeePayrollAttedance.get("noOfPayableDays"))).compareTo(BigDecimal.ZERO)==0){
+				        			  continue;
+				        		}
+				        		GenericValue payrollType = delegator.findOne("PayrollType", UtilMisc.toMap("payrollTypeId", "PAYROLL_BILL"), false);
+				        		if(UtilValidate.isNotEmpty(payrollType)){
+				        			BigDecimal minDays = (BigDecimal) payrollType.get("minDays");
+				        			if(UtilValidate.isNotEmpty(minDays) &&
+					        				(new BigDecimal((Double)employeePayrollAttedance.get("noOfPayableDays"))).compareTo(minDays) < 0){
+					        			  continue;
+					        		}
+				        		}
+				        		input.put("partyIdFrom", employment.getString("partyIdTo"));
+								Map tempInputMap = FastMap.newInstance();
+								tempInputMap.putAll(input);
+								itemsList.add(tempInputMap);
+				        	}
+						}
 				catch(GenericEntityException e) {
 					Debug.logError(e, module);
 			        return ServiceUtil.returnError("Unable to create payroll Invoice record");			
@@ -1902,9 +1903,6 @@ public class PayrollService {
                     if(UtilValidate.isNotEmpty(context.get("proportionalFlag"))){
                     	payheadAmtCtx.put("proportionalFlag", context.get("proportionalFlag"));
 		            }
-                    if(UtilValidate.isNotEmpty(basicSalDate)){
-                    	payheadAmtCtx.put("proportionalFlag", "Y");
-                    }
                     if("Y".equals(isFlatAmount)){
 	                    if(UtilValidate.isNotEmpty(paheadType) && UtilValidate.isNotEmpty(paheadType.getBigDecimal("cost"))){
 				        	 result.put("amount", paheadType.getBigDecimal("cost").setScale(0, rounding));
@@ -2156,6 +2154,7 @@ public class PayrollService {
 								payHeaderList.add(tempInputMap);
 			        		}
 			        	}
+			        	Debug.log("payHeaderList============"+payHeaderList);
 	       				if(UtilValidate.isEmpty(payHeaderList)){
 	       					periodBilling.set("statusId", "GENERATION_FAIL");
 							Debug.logError("No Employees Found", module);
@@ -2175,6 +2174,7 @@ public class PayrollService {
 							GenericValue hrCustomTimePeriod = EntityUtil.getFirst(hrCustomTimePeriodList);
 							hrCustomTimePeriodId = hrCustomTimePeriod.getString("customTimePeriodId");
 						}
+						Debug.log("hrCustomTimePeriodId==========="+hrCustomTimePeriodId);
 	       				for(int i=0;i<payHeaderList.size();i++){
 	       					Map payHeaderValue = (Map)payHeaderList.get(i);
 	       					GenericValue payHeader = delegator.makeValue("PayrollHeader");
@@ -2194,7 +2194,6 @@ public class PayrollService {
 							inputItem.put("benDedTypeList", payrollTypeBenDedTypeIds);
 							inputItem.put("attendanceTimePeriodId", customTimePeriodId);
 							inputItem.put("isFlatAmount", "N");
-							inputItem.put("proportionalFlag", "Y");
 							Map payHeadItemResult = prepareSelectivePayrolItems(dctx,inputItem);
 							if(ServiceUtil.isError(payHeadItemResult)){
 		       					Debug.logError("Problems in service Parol Header Item", module);
@@ -2234,6 +2233,7 @@ public class PayrollService {
 							leaveBalanceCtx.put("customTimePeriodId", hrCustomTimePeriodId);
 							try {
 								Map serviceLeaveBalanceResults = UpdateCreditLeaves(dctx, leaveBalanceCtx);
+								Debug.log("updateCreditLeaves==========="+"partyId==="+payHeaderValue.get("partyIdFrom")+"===="+serviceLeaveBalanceResults);
 						        if (ServiceUtil.isError(serviceLeaveBalanceResults)) {
 						        	Debug.logError("Problems in service UpdateCreditLeaves", module);
 						  			return ServiceUtil.returnError("Problems in service UpdateCreditLeaves ");
