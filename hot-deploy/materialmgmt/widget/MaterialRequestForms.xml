@@ -267,6 +267,7 @@
         odd-row-style="alternate-row" default-table-style="basic-table hover-bar" paginate-target="StoreProductIssue">
         <row-actions>
         	<set field="flag" value="${groovy: return (QOH >= quantity)? 'Y' : 'N';}"/>
+        	<set field="custmQuantity" value="${quantity-QOH}"/>
         </row-actions>
         <field name="custRequestId" title="${uiLabelMap.MaterialMangement_CustRequestId}"><display/></field>
         <field name="custRequestItemSeqId" title="${uiLabelMap.MaterialMangement_CustRequestItemSeqId}"><display/></field>
@@ -285,10 +286,13 @@
                 <parameter param-name="custRequestItemSeqId"/>
             </hyperlink>
         </field>
+        <field use-when="flag == &quot;N&quot; &amp;&amp; &quot;${statusId}&quot; == &quot;CRQ_SUBMITTED&quot;" name="custmQuantity" title="Quantity" ><text size="5"></text>
+        </field>
         <field use-when="flag == &quot;N&quot; &amp;&amp; &quot;${statusId}&quot; == &quot;CRQ_SUBMITTED&quot;" name="raiseRequirement" widget-style="buttontext">
             <hyperlink target="createRequirementForCustRequestItem" description="Raise Requirement">
                 <parameter param-name="custRequestId"/>
                 <parameter param-name="custRequestItemSeqId"/>
+                <parameter param-name="custmQuantity"/>
             </hyperlink>
         </field>
         

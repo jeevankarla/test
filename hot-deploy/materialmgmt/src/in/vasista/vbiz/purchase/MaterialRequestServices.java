@@ -624,6 +624,7 @@ public class MaterialRequestServices {
 		LocalDispatcher dispatcher = ctx.getDispatcher();
 		String custRequestId = (String) context.get("custRequestId");
 		String custRequestItemSeqId = (String) context.get("custRequestItemSeqId");
+		BigDecimal custmQuantity = (BigDecimal) context.get("custmQuantity");
 		GenericValue userLogin = (GenericValue) context.get("userLogin");
 		Map result = ServiceUtil.returnSuccess();
 		try{
@@ -655,7 +656,7 @@ public class MaterialRequestServices {
 				GenericValue requirement = EntityUtil.getFirst(requirements);
 				requirementId = requirement.getString("requirementId");
 				BigDecimal qty = requirement.getBigDecimal("quantity");
-				requirement.set("quantity", qty.add(custRequestItem.getBigDecimal("quantity")));
+				requirement.set("quantity", qty.add(custmQuantity));
 				requirement.set("lastModifiedDate", UtilDateTime.nowTimestamp());
 				requirement.set("lastModifiedByUserLogin", userLogin.getString("userLoginId"));
 				requirement.store();
@@ -682,7 +683,7 @@ public class MaterialRequestServices {
 				itemIssueCtx.put("productId", custRequestItem.getString("productId"));
 				itemIssueCtx.put("requirementStartDate", UtilDateTime.nowTimestamp());
 				itemIssueCtx.put("requirementTypeId", custRequest.getString("custRequestTypeId"));
-				itemIssueCtx.put("quantity", custRequestItem.getBigDecimal("quantity"));
+				itemIssueCtx.put("quantity", custmQuantity);
 				resultCtx = dispatcher.runSync("createRequirement", itemIssueCtx);
 				if (ServiceUtil.isError(resultCtx)) {
 					Debug.logError("Problem creating requirement for requested item : "+custRequestId+" : "+custRequestItemSeqId, module);

@@ -63,6 +63,7 @@ custRequestItems.each{ eachItem ->
 	tempMap.putAt("fromPartyId", eachItem.fromPartyId);
 	tempMap.putAt("productId", eachItem.productId);
 	tempMap.putAt("quantity", eachItem.quantity);
+	tempMap.putAt("statusId", eachItem.itemStatusId);
 	invAvail = 0;
 	if(prodInvMap.get(eachItem.productId)){
 		invAvail = prodInvMap.get(eachItem.productId);

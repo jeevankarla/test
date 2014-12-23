@@ -92,6 +92,7 @@
         <description>Issue Products to Customer Request Items</description>
         <attribute name="custRequestId" type="String" mode="IN" optional="false"/>
         <attribute name="custRequestItemSeqId" type="String" mode="IN" optional="false"/>
+        <attribute name="custmQuantity" type="BigDecimal" mode="IN" optional="false"/>
     </service>
     
     <service name="createIssuanceForCustRequestItem" engine="java" location="in.vasista.vbiz.purchase.MaterialRequestServices" invoke="createIssuanceForCustRequestItem">
