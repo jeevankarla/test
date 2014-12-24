@@ -277,94 +277,7 @@ public class MaterialPurchaseServices {
 		DispatchContext dctx =  dispatcher.getDispatchContext();
 		Locale locale = UtilHttp.getLocale(request);
 		Map<String, Object> result = ServiceUtil.returnSuccess();
-	    /*
-		String poNumber = (String) request.getParameter("poNumber");
-	    String supplierId = (String) request.getParameter("supplierId");
-	    String orderTypeId = (String) request.getParameter("orderTypeId");
-	    HttpSession session = request.getSession();
-	    GenericValue userLogin = (GenericValue) session.getAttribute("userLogin");
-		
-	    
-	    List productQtyList = FastList.newInstance();
-	    
-	    Map<String, Object> paramMap = UtilHttp.getParameterMap(request);
-		int rowCount = UtilHttp.getMultiFormRowCount(paramMap);
-		if (rowCount < 1) {
-			Debug.logError("No rows to process, as rowCount = " + rowCount, module);
-			return "error";
-		}
-		
-		
-		for (int i = 0; i < rowCount; i++) {
-			String productId =null;
-			String  quantityStr = null;
-			String unitPriceStr = null;
-			BigDecimal quantity = BigDecimal.ZERO;
-			BigDecimal unitPrice = BigDecimal.ZERO;
-			Map productQtyMap = FastMap.newInstance();
-			String thisSuffix = UtilHttp.MULTI_ROW_DELIMITER + i;
-			
-			if (paramMap.containsKey("productId" + thisSuffix)) {
-				productId = (String) paramMap.get("productId" + thisSuffix);
-			}
-			else {
-				request.setAttribute("_ERROR_MESSAGE_", "Missing product id");
-				return "error";			  
-			}
-		  
-			if (paramMap.containsKey("quantity" + thisSuffix)) {
-				quantityStr = (String) paramMap.get("quantity" + thisSuffix);
-			}
-			else {
-				request.setAttribute("_ERROR_MESSAGE_", "Missing product quantity");
-				return "error";			  
-			}		  
-			if(UtilValidate.isNotEmpty(quantityStr)){
-				quantity = new BigDecimal(quantityStr);
-			}
-			
-			
-			if (paramMap.containsKey("unitPrice" + thisSuffix)) {
-				unitPriceStr = (String) paramMap.get("unitPrice" + thisSuffix);
-			}
-			else {
-				request.setAttribute("_ERROR_MESSAGE_", "Missing product unitPrice");
-				return "error";			  
-			}		  
-			if(UtilValidate.isNotEmpty(unitPriceStr)){
-				unitPrice = new BigDecimal(unitPriceStr);
-			}
-			
-			productQtyMap.put("productId", productId);
-			productQtyMap.put("quantity", quantity);
-			productQtyMap.put("unitPrice", unitPrice);
-			
-			productQtyList.add(productQtyMap);
-		}
-		try{
-			Map<String,Object> inputMap = FastMap.newInstance();
-			inputMap.put("orderTypeId",orderTypeId);
-			inputMap.put("userLogin",userLogin);
-			inputMap.put("poNumber",poNumber);
-			inputMap.put("supplierId",supplierId);
-			inputMap.put("productQtyList",productQtyList);
-			Debug.log("inputMap=========="+inputMap);
-			
-	        Map resultMap = dispatcher.runSync("CreateMaterialPO",inputMap);
-	        
-	        if (ServiceUtil.isError(resultMap)) {
-	        	Debug.logError("Problem creating shipment Item for orderId :", module);
-				request.setAttribute("_ERROR_MESSAGE_", "Problem creating shipment Item for orderId :");	
-		  		return "error";
-	        }
-	        request.setAttribute("_EVENT_MESSAGE_", "Successfully made PO :"+resultMap.get("orderId"));
-			
-		}catch(Exception e){
-			Debug.logError(e.toString(), module);
-			request.setAttribute("_ERROR_MESSAGE_", e.toString());
-			return "error";
-		}
-		*/
+	   
 		//old PO flow starts from here
 		String partyId = (String) request.getParameter("supplierId");
 		String billFromPartyId = (String) request.getParameter("billToPartyId");
@@ -386,7 +299,13 @@ public class MaterialPurchaseServices {
 		
 		String packAndFowdgStr=(String) request.getParameter("packAndFowdg");
 		String otherChargesStr=(String) request.getParameter("otherCharges");
-			
+		String orderName = (String) request.getParameter("orderName");
+		String fileNo = (String) request.getParameter("fileNo");
+		String refNo = (String) request.getParameter("refNo");
+		String orderDateStr = (String) request.getParameter("orderDate");
+		//String effectiveDate = (String) request.getParameter("effectiveDate");
+		String estimatedDeliveryDateStr = (String) request.getParameter("estimatedDeliveryDate");
+		
 		String subscriptionTypeId = "AM";
 		String partyIdFrom = "";
 		String shipmentId = "";
@@ -401,11 +320,12 @@ public class MaterialPurchaseServices {
 		Timestamp effectiveDate=null;
 		BigDecimal quantity = BigDecimal.ZERO;
 		BigDecimal uPrice = BigDecimal.ZERO;
-		
+		Timestamp estimatedDeliveryDate = UtilDateTime.nowTimestamp();
+		Timestamp orderDate = UtilDateTime.nowTimestamp();
 		HttpSession session = request.getSession();
 		GenericValue userLogin = (GenericValue) session.getAttribute("userLogin");
-		if (UtilValidate.isNotEmpty(effectiveDateStr)) { //2011-12-25 18:09:45
-			SimpleDateFormat sdf = new SimpleDateFormat("dd MMMMM, yyyy");             
+		SimpleDateFormat sdf = new SimpleDateFormat("dd MMMMM, yyyy"); 
+		if (UtilValidate.isNotEmpty(effectiveDateStr)) { 
 			try {
 				effectiveDate = new java.sql.Timestamp(sdf.parse(effectiveDateStr).getTime());
 			} catch (ParseException e) {
@@ -413,13 +333,33 @@ public class MaterialPurchaseServices {
 			} catch (NullPointerException e) {
 				Debug.logError(e, "Cannot parse date string: " + effectiveDateStr, module);
 			}
-		}
-		else{
+		}else{
 			effectiveDate = UtilDateTime.getDayStart(UtilDateTime.nowTimestamp());
 		}
+		Debug.log("estimatedDeliveryDateStr======"+estimatedDeliveryDateStr);
+		Debug.log("orderDateStr======"+orderDateStr);
+		if (UtilValidate.isNotEmpty(estimatedDeliveryDateStr)) { 
+			try {
+				estimatedDeliveryDate = new java.sql.Timestamp(sdf.parse(estimatedDeliveryDateStr).getTime());
+			} catch (ParseException e) {
+				Debug.logError(e, "Cannot parse date string: " + effectiveDateStr, module);
+			} catch (NullPointerException e) {
+				Debug.logError(e, "Cannot parse date string: " + effectiveDateStr, module);
+			}
+		}
+		
+		if (UtilValidate.isNotEmpty(orderDateStr)) { 
+			try {
+				orderDate = new java.sql.Timestamp(sdf.parse(orderDateStr).getTime());
+			} catch (ParseException e) {
+				Debug.logError(e, "Cannot parse date string: " + effectiveDateStr, module);
+			} catch (NullPointerException e) {
+				Debug.logError(e, "Cannot parse date string: " + effectiveDateStr, module);
+			}
+		}
+		
 		Timestamp SInvoiceDate=null;
 		if (UtilValidate.isNotEmpty(SInvoiceDateStr)) { //2011-12-25 18:09:45
-			SimpleDateFormat sdf = new SimpleDateFormat("dd MMMMM, yyyy");             
 			try {
 				SInvoiceDate = new java.sql.Timestamp(sdf.parse(SInvoiceDateStr).getTime());
 			} catch (ParseException e) {
@@ -837,8 +777,13 @@ public class MaterialPurchaseServices {
 		processOrderContext.put("PONumber", PONumber);
 		processOrderContext.put("SInvNumber", SInvNumber);
 		processOrderContext.put("SInvoiceDate", SInvoiceDate);
+		processOrderContext.put("orderName", orderName);
+		processOrderContext.put("fileNo", fileNo);
+		processOrderContext.put("refNo", refNo);
+		processOrderContext.put("orderDate", orderDate);
+		processOrderContext.put("estimatedDeliveryDate", estimatedDeliveryDate);
 		
-
+		
 		result = CreateMaterialPO(dctx, processOrderContext);
 		if(ServiceUtil.isError(result)){
 			Debug.logError("Unable to generate order: " + ServiceUtil.getErrorMessage(result), module);
@@ -852,125 +797,6 @@ public class MaterialPurchaseServices {
 	}
 		
    public static Map<String, Object> CreateMaterialPO(DispatchContext ctx,Map<String, ? extends Object> context) {
-		
-/*		Delegator delegator = ctx.getDelegator();
-		LocalDispatcher dispatcher = ctx.getDispatcher();
-		GenericValue userLogin = (GenericValue) context.get("userLogin");
-		Map result = ServiceUtil.returnSuccess();
-		Locale locale = (Locale) context.get("locale");
-		String PONumber = (String) context.get("poNumber");
-		String partyId = (String) context.get("supplierId");
-		String orderTypeId = (String)context.get("orderTypeId");
-		List<Map<String, Object>> productQtyList = (List)context.get("productQtyList");
-		if(UtilValidate.isNotEmpty("orderTypeId")){
-			orderTypeId = "PURCHASE_ORDER";
-		}
-		
-        String currencyUomId = (String) context.get("defaultOrganizationPartyCurrencyUomId");
-        if(UtilValidate.isEmpty(currencyUomId)){
-        	currencyUomId ="INR";
-        }
-        
-        String channelTypeId = null;
-        Timestamp estimatedDeliveryDate = (Timestamp) context.get("estimatedDeliveryDate");
-		result = ServiceUtil.returnSuccess("Successfully created PO");
-		
-		try{
-			
-			ShoppingCart cart = new ShoppingCart(delegator, null, locale, currencyUomId);
-			cart.setOrderType(orderTypeId);
-	        //cart.setIsEnableAcctg("N");
-			
-	        cart.setChannelType(channelTypeId);
-	        cart.setBillToCustomerPartyId(partyId);
-	        cart.setPlacingCustomerPartyId(partyId);
-	        cart.setShipToCustomerPartyId(partyId);
-	        cart.setEndUserCustomerPartyId(partyId);
-	        cart.setExternalId(PONumber);
-	        cart.setProductStoreId("_NA_");
-	        cart.setEstimatedDeliveryDate(estimatedDeliveryDate);
-	        try {
-	            cart.setUserLogin(userLogin, dispatcher);
-	        } catch (Exception exc) {
-	            Debug.logError("Error setting userLogin in the cart: " + exc.getMessage(), module);
-	           
-	    		return ServiceUtil.returnError("Error setting userLogin in the cart: " + exc.getMessage());          	            
-	        }
-
-	    	String productId = null;
-	    	BigDecimal quantity = null;
-	    	BigDecimal unitPrice = null;
-	    	String orderId = null;
-	    	if(UtilValidate.isNotEmpty(productQtyList)){
-	    		//Debug.logError("empty product List", module);
-	    		//return ServiceUtil.returnError("empty product List");
-	    	
-	    	
-	    	for (Map<String, Object> prodQtyMap : productQtyList) {
-	    		List taxList=FastList.newInstance();
-	    		BigDecimal totalTaxAmt =  BigDecimal.ZERO;
-	    		
-	    		if(UtilValidate.isNotEmpty(prodQtyMap.get("productId"))){
-	    			productId = (String)prodQtyMap.get("productId");
-	    		}
-	    		if(UtilValidate.isNotEmpty(prodQtyMap.get("quantity"))){
-	    			quantity = (BigDecimal)prodQtyMap.get("quantity");
-	    		}
-	    		if(UtilValidate.isNotEmpty(prodQtyMap.get("unitPrice"))){
-	    			unitPrice = (BigDecimal)prodQtyMap.get("unitPrice");
-	    		}
-	    		BigDecimal tempPrice = BigDecimal.ZERO;
-	    		tempPrice = tempPrice.add(unitPrice);
-	    		    	
-	    		
-	    		BigDecimal totalPrice = unitPrice;//as of now For PurchaseOrder listPrice is same like unitPrice
-	    		
-	    		ShoppingCartItem item = null;
-	    		try{
-	    			int itemIndx = cart.addItem(0, ShoppingCartItem.makeItem(Integer.valueOf(0), productId, null,	quantity, unitPrice,
-	    			            null, null, null, null, null, null, null, null, null, null, null, null, null, dispatcher,
-	    			            cart, Boolean.FALSE, Boolean.FALSE, null, Boolean.TRUE, Boolean.TRUE));
-	    			
-	    			item = cart.findCartItem(itemIndx);
-	    			item.setListPrice(totalPrice);
-	        		item.setTaxDetails(taxList);
-	    		}
-	    		catch (Exception exc) {
-	    			Debug.logError("Error adding product with id " + productId + " to the cart: " + exc.getMessage(), module);
-	    			return ServiceUtil.returnError("Error adding product with id " + productId + " to the cart: ");
-	            }
-	    		
-	    	}
-	   }	
-	    	cart.setDefaultCheckoutOptions(dispatcher);
-	        ProductPromoWorker.doPromotions(cart, dispatcher);
-	        CheckOutHelper checkout = new CheckOutHelper(dispatcher, delegator, cart);
-
-	    	//Debug.log("==freightCharges=="+freightCharges+"===");
-	    	
-	    	Map<String, Object> orderCreateResult=checkout.createOrder(userLogin);
-	    	if (ServiceUtil.isError(orderCreateResult)) {
-	    		String errMsg =  ServiceUtil.getErrorMessage(orderCreateResult);
-	    		Debug.logError(errMsg, "While Creating Order",module);
-	    		return ServiceUtil.returnError(" Error While Creating Order !"+errMsg);
-	    	}
-	    		
-	    	orderId = (String) orderCreateResult.get("orderId");
-	    	result.put("orderId", orderId);
-	    		
-	        // approve the order
-	        if (UtilValidate.isNotEmpty(orderId)) {
-	            boolean approved = OrderChangeHelper.approveOrder(dispatcher, userLogin, orderId);
-	        }
-	        
-	    } catch (Exception e) {
-			// TODO: handle exception
-			Debug.logError(e, module);
-			return ServiceUtil.returnError(e.getMessage());
-		}
-		
-		return result;*/
-		
 		
 		//Old PO flow starts
 
@@ -1000,7 +826,13 @@ public class MaterialPurchaseServices {
 	  	String PONumber=(String) context.get("PONumber");
 	  	String SInvNumber = (String) context.get("SInvNumber");
 		BigDecimal insurence = (BigDecimal) context.get("insurence");
-
+        Timestamp orderDate = (Timestamp)context.get("orderDate");
+        Timestamp estimatedDeliveryDate = (Timestamp)context.get("estimatedDeliveryDate");
+		String orderName = (String)context.get("orderName");
+		String fileNo = (String)context.get("fileNo");
+		String refNo = (String)context.get("refNo");
+		
+		
 	  	String currencyUomId = "INR";
 	  	String shipmentId = (String) context.get("shipmentId");
 	  	String shipmentTypeId = (String) context.get("shipmentTypeId");
@@ -1008,37 +840,14 @@ public class MaterialPurchaseServices {
 		Timestamp effectiveDate = UtilDateTime.getDayStart(supplyDate);
 		String orderId = "";
 		String billToPartyId="Company";
-		if(UtilValidate.isEmpty(shipmentId)){
-			GenericValue newDirShip = delegator.makeValue("Shipment");        	 
-			newDirShip.set("estimatedShipDate", effectiveDate);
-			newDirShip.set("shipmentTypeId", shipmentTypeId);
-			newDirShip.set("statusId", "GENERATED");
-			newDirShip.set("vehicleId", vehicleId);
-			newDirShip.set("createdDate", nowTimeStamp);
-			newDirShip.set("createdByUserLogin", userLogin.get("userLoginId"));
-			newDirShip.set("lastModifiedByUserLogin", userLogin.get("userLoginId"));
-			/*try {
-				delegator.createSetNextSeqId(newDirShip);            
-				shipmentId = (String) newDirShip.get("shipmentId");
-			} catch (GenericEntityException e) {
-				Debug.logError("Error in creating shipmentId for DirectOrder", module);
-				return ServiceUtil.returnError("Error in creating shipmentId for DirectOrder");
-			}  */
-		}
+		
 		if (UtilValidate.isEmpty(partyId)) {
 			Debug.logError("Cannot create order without partyId: "+ partyId, module);
 			return ServiceUtil.returnError("partyId is empty");
 		}
 		GenericValue product =null;
 		String productPriceTypeId = null;
-		GenericValue shipment = null;
-		try{
-			shipment=delegator.findOne("Shipment",UtilMisc.toMap("shipmentId", shipmentId), false);
-			
-		}catch(GenericEntityException e){
-			Debug.logError("Error in fetching shipment : "+ shipmentId, module);
-			return ServiceUtil.returnError("Error in fetching shipment : "+shipmentId);
-		}
+		
 		ShoppingCart cart = new ShoppingCart(delegator, productStoreId, locale,currencyUomId);
 		
 		try {
@@ -1061,8 +870,9 @@ public class MaterialPurchaseServices {
 		    cart.setShipFromVendorPartyId(partyId);
 		    cart.setSupplierAgentPartyId(partyId);
 			
-			cart.setEstimatedDeliveryDate(effectiveDate);
-			cart.setOrderDate(effectiveDate);
+			cart.setEstimatedDeliveryDate(estimatedDeliveryDate);
+			//cart.setOrderDate(effectiveDate);
+			cart.setOrderDate(orderDate);
 			cart.setUserLogin(userLogin, dispatcher);
 			
 			//set orderterms
@@ -1072,10 +882,18 @@ public class MaterialPurchaseServices {
 				cart.addOrderTerm((String)termMap.get("termTypeId"), (BigDecimal)termMap.get("termValue"),(Long)termMap.get("termDays"));
 			}
 			//set attributes here
-			cart.setAttribute("MRN_NUMBER",mrnNumber);
-			cart.setAttribute("SUP_INV_NUMBER",SInvNumber);
-			cart.setAttribute("SUP_INV_DATE",UtilDateTime.toDateString((Timestamp)context.get("SInvoiceDate"),null));
-			cart.setAttribute("PO_NUMBER",PONumber);
+			if(UtilValidate.isNotEmpty(mrnNumber))
+				cart.setOrderAttribute("MRN_NUMBER",mrnNumber);
+			if(UtilValidate.isNotEmpty(SInvNumber))
+				cart.setOrderAttribute("SUP_INV_NUMBER",SInvNumber);
+			if(UtilValidate.isNotEmpty(context.get("SInvoiceDate")))
+				cart.setOrderAttribute("SUP_INV_DATE",UtilDateTime.toDateString((Timestamp)context.get("SInvoiceDate"),null));
+			if(UtilValidate.isNotEmpty(PONumber))
+				cart.setOrderAttribute("PO_NUMBER",PONumber);
+			if(UtilValidate.isNotEmpty(fileNo))
+				cart.setOrderAttribute("FILE_NUMBER",fileNo);
+			if(UtilValidate.isNotEmpty(refNo))
+				cart.setOrderAttribute("REF_NUMBER",refNo);
 			
 		} catch (Exception e) {
 			
