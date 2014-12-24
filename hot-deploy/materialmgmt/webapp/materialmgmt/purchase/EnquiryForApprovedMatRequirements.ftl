@@ -4,6 +4,17 @@
 $(document).ready(function(){
 
 });
+	 function datepick()
+	{		
+		$( "#requestDate" ).datepicker({
+			dateFormat:'dd MM, yy',
+			changeMonth: true,
+			maxDate:0,
+			numberOfMonths: 1});
+		$('#ui-datepicker-div').css('clip', 'auto');
+		
+	}
+
 
 	function toggleRequirementId(master) {
         var Ids = jQuery("#EnquiryForApprovedMatRequirements :checkbox[name='requirementIds']");
@@ -57,6 +68,10 @@ $(document).ready(function(){
 				$('#sendRequirementIds').append('<input type="hidden" name="requirementIds" value="'+reqId+'" />');
 			}		
 		});
+			var name=jQuery("#enquiryName").val();
+			var date=jQuery("#requestDate").val();
+			$('#sendRequirementIds').append('<input type="hidden" name="enquiryName" value="'+name+'" />');
+			$('#sendRequirementIds').append('<input type="hidden" name="requestDate" value="'+date+'" />');
 		 jQuery("#sendRequirementIds").submit();
        
  	}	
@@ -66,6 +81,9 @@ $(document).ready(function(){
 </form>
 <div align="left">
 	  <font size="15" color="blue"><b>Total Selected :<b/></font><font size="15" color="red"><b><span id="totalCount"></span></b></font>&nbsp;&nbsp;&nbsp;<font size="15" color="blue"><b>No Of Products :<b/></font><font size="15" color="red"><b><span id="productCount"></span></b></font>
+	</div>
+	<div align="center">
+		<font size="15" color="blue"><b>Enquiry Reference :<b/></font><input id="enquiryName" name="enquiryName" required type="text" size="20"/>&nbsp;&nbsp;&nbsp;<font size="15" color="blue"><b> Enquiry Date :<b/></font><input class='h3' type='text' id='requestDate' name='requestDate' onmouseover='datepick()'/>
 	</div>
 <form id="EnquiryForApprovedMatRequirements" name="EnquiryForApprovedMatRequirements" action="" method="post">
 	<div align="right">

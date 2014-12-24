@@ -877,9 +877,25 @@ public class MaterialRequestServices {
 		LocalDispatcher dispatcher = ctx.getDispatcher();
 		List requirementList = (List) context.get("requirementIds");
 		GenericValue userLogin = (GenericValue) context.get("userLogin");
+		String custRequestName = (String) context.get("enquiryName");
+		String requestDateStr = (String) context.get("requestDate");
 		Map result = ServiceUtil.returnSuccess();
 		String custRequestTypeId = "RF_PUR_QUOTE";
 		result = ServiceUtil.returnSuccess("Successfully create Enquiry for the requirements");
+		Timestamp custRequestDate = null;
+		SimpleDateFormat sdf = new SimpleDateFormat("dd MMMM, yyyy");
+	  	if(UtilValidate.isNotEmpty(requestDateStr)){
+	  		try {
+	  			custRequestDate = new java.sql.Timestamp(sdf.parse(requestDateStr).getTime());
+		  	} catch (ParseException e) {
+		  		Debug.logError(e, "Cannot parse date string: " + requestDateStr, module);
+		  	} catch (NullPointerException e) {
+	  			Debug.logError(e, "Cannot parse date string: " + requestDateStr, module);
+		  	}
+	  	}
+	  	else{
+	  		custRequestDate = UtilDateTime.nowTimestamp();
+	  	}
 		try{
 			
 			/*GenericValue custRequestItem = delegator.findOne("CustRequestItem", UtilMisc.toMap("custRequestId", custRequestId, "custRequestItemSeqId", custRequestItemSeqId), false);
@@ -901,11 +917,12 @@ public class MaterialRequestServices {
 			Map<String,Object> custRequestInMap = FastMap.newInstance();
 			custRequestInMap.put("custRequestTypeId",custRequestTypeId);
 			custRequestInMap.put("userLogin",userLogin);
+			custRequestInMap.put("custRequestName",custRequestName);
 			custRequestInMap.put("currencyUomId","INR");
 			custRequestInMap.put("maximumAmountUomId","INR");
 			custRequestInMap.put("fromPartyId","Company");
 			custRequestInMap.put("statusId","ENQ_CREATED");
-			custRequestInMap.put("custRequestDate",UtilDateTime.nowTimestamp());
+			custRequestInMap.put("custRequestDate",custRequestDate);
 	        Map resultMap = dispatcher.runSync("createCustRequest",custRequestInMap);
 	        
 	        if (ServiceUtil.isError(resultMap)) {

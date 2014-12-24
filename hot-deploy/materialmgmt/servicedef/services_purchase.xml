@@ -108,6 +108,8 @@
         <description> Cancel Purchase Order</description>        
         <attribute name="requirementIds" mode="IN" type="List" optional="false"/>
          <attribute name="custRequestId" type="String" mode="OUT" optional="false"/>
+         <attribute name="enquiryName" type="String" mode="IN" optional="true"/>
+         <attribute name="requestDate" type="String" mode="IN" optional="true"/>
    </service>
    
     <service name="CreateMaterialPO" engine="java"
