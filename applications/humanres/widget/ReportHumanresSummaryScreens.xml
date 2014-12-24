@@ -1976,6 +1976,10 @@
     <screen name="LoanTypeReport">
 		<section>
 			<actions>
+				<property-map resource="OrderUiLabels" map-name="uiLabelMap" global="true"/>
+				<property-map resource="ProductUiLabels" map-name="uiLabelMap" global="true"/>
+				<property-map resource="PartyUiLabels" map-name="uiLabelMap" global="true"/>
+				<property-map resource="CommonUiLabels" map-name="uiLabelMap" global="true"/>
 	    		<script location="component://humanres/webapp/humanres/WEB-INF/actions/humanres/LoanTypeReport.groovy"/>
 			</actions>
 			<widgets>
@@ -1985,6 +1989,23 @@
 			</widgets>
 		</section>
 	</screen>
+	<screen name="NewLoanTypeReport">
+		<section>
+			<actions>
+			    <property-map resource="OrderUiLabels" map-name="uiLabelMap" global="true"/>
+				<property-map resource="ProductUiLabels" map-name="uiLabelMap" global="true"/>
+				<property-map resource="PartyUiLabels" map-name="uiLabelMap" global="true"/>
+				<property-map resource="CommonUiLabels" map-name="uiLabelMap" global="true"/>
+	    		<script location="component://humanres/webapp/humanres/WEB-INF/actions/reports/newLoanTypeReport.groovy"/>
+			</actions>
+			<widgets>
+				<platform-specific> 
+				  <xsl-fo><html-template location="component://humanres/webapp/humanres/humanres/newLoanTypeReport.fo.ftl"/></xsl-fo> 
+                </platform-specific>
+			</widgets>
+		</section>
+	</screen>
+	
     <screen name="CostCodeReport">
             <section>
                <actions>

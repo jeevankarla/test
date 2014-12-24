@@ -85,7 +85,8 @@ function makeDatePicker1(fromDateId ,thruDateId){
 		makeDatePicker("ESIForm7fromDate","ESIForm7fromDate");
 		makeDatePicker("ESIForm7thruDate","ESIForm7thruDate");
 		makeDatePicker("GdrFromDate","GdrFromDate");
-		
+		makeDatePicker("loanFromDate","loanFromDate");
+		makeDatePicker("loanThruDate","loanThruDate");
 		$('#ui-datepicker-div').css('clip', 'auto');		
 	});
 //for Month Picker
@@ -1247,8 +1248,27 @@ function setOrgPartyId() {
 			<div class="screenlet-body">
 				<table class="basic-table hover-bar h3" style="border-spacing: 0 10px;">
 					<tr class="alternate-row">
+						<form id="newLoanTypeReport" name="newLoanTypeReport" mothed="post" action="<@ofbizUrl>newLoanTypeReport.pdf</@ofbizUrl>" target="_blank">
+							<td width="10%" class='h3'>Loan Report</td>
+							<td><input type="hidden" name="partyId" class="commonPartyId"></td>
+							<td width="15%">Loan Type
+								<select name="loanTypeId" id="loanTypeId" class='h5' >
+										<#list loanTypeList as loan>
+									<option value='${loan.loanTypeId}'>${loan.description?if_exists}</option>
+									</#list>
+								</select>
+							</td>
+							<td width="20%"><span class='h3'>From Date<input  type="text"  id="loanFromDate"   name="fromDate"/></span></td>
+						    <td width="15%"><span class='h3'>Thru Date<input  type="text"  id="loanThruDate"   name="thruDate"/></span></td>
+							<td width="10%"></td>
+							<td width="10%"><input type="submit" value="Download" class="buttontext"></td> 
+							</td>
+						</form>
+					</tr>
+					<tr class="alternate-row">
 						<form id="loanTypeReport" name="loanTypeReport" mothed="post" action="<@ofbizUrl>loanTypeReport.pdf</@ofbizUrl>" target="_blank">
-							<td width="10%" class='h3'>Loan and Advances Report</td>
+							<td width="15%" class='h3'>Loan and Advances Report</td>
+							<td><input type="hidden" name="partyId" class="commonPartyId"></td>
 							<td width="10%">Loan Type
 								<select name="loanTypeId" id="loanTypeId" class='h5' >
 										<#list loanTypeList as loan>
@@ -1256,7 +1276,8 @@ function setOrgPartyId() {
 									</#list>
 								</select>
 							</td>
-							<td width="15%">Period Id
+							<td width="10%"></td>
+							<td width="20%" class = 'h3'>Period Id
 								<select name="customTimePeriodId" id="customTimePeriodId" class='h4'>
 									<#list customTimePeriodList as customTimePeriod>
 									 <#if defaultTimePeriodId?exists && (defaultTimePeriodId == customTimePeriod.customTimePeriodId)>
@@ -1268,6 +1289,7 @@ function setOrgPartyId() {
 									</#list>
 								</select>
 							</td>
+							<td width="10%"></td>
 							<td width="10%"><input type="submit" value="Download" class="buttontext"></td> 
 							</td>
 						</form>

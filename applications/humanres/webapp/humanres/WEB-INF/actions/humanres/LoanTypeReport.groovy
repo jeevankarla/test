@@ -10,6 +10,7 @@ import net.sf.json.JSONObject;
 import net.sf.json.JSONArray;
 import in.vasista.vbiz.humanres.PayrollService;
 import in.vasista.vbiz.humanres.HumanresService;
+import in.vasista.vbiz.humanres.HumanresHelperServices;
 import in.vasista.vbiz.byproducts.ByProductServices;
 import org.ofbiz.party.party.PartyHelper;
 
@@ -19,6 +20,8 @@ fromDateStart=null;
 thruDateEnd=null;
 context.putAt("loanTypeId", loanTypeId);
 customTimePeriodId=parameters.customTimePeriodId;
+partyIdFrom = parameters.partyId;
+
 List condList =[];
 condList.add(EntityCondition.makeCondition("periodTypeId", EntityOperator.EQUALS ,"HR_MONTH"));
 condList.add(EntityCondition.makeCondition("customTimePeriodId", EntityOperator.EQUALS, customTimePeriodId));
@@ -38,7 +41,11 @@ if(UtilValidate.isNotEmpty(customTimePeriodList)){
 employmentsList = [];
 emplInputMap = [:];
 emplInputMap.put("userLogin", userLogin);
-emplInputMap.put("orgPartyId", "Company");
+if(UtilValidate.isNotEmpty(partyIdFrom)){
+	emplInputMap.put("orgPartyId", partyIdFrom);
+}else{
+	emplInputMap.put("orgPartyId", "Company");
+}
 emplInputMap.put("fromDate", fromDateStart);
 emplInputMap.put("thruDate", thruDateEnd);
 context.putAt("fromDate", fromDate);
