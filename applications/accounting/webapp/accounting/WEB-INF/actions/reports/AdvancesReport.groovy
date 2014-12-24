@@ -66,7 +66,7 @@
 	context.GlAccount = GlAccount;
 	
 	conditionList = [];
-	conditionList.add(EntityCondition.makeCondition("statusId", EntityOperator.EQUALS, "PMNT_SENT"));
+	conditionList.add(EntityCondition.makeCondition("statusId", EntityOperator.IN, UtilMisc.toList("PMNT_SENT", "PMNT_CONFIRMED")));
 	if(UtilValidate.isNotEmpty(partyId)){
 		conditionList.add(EntityCondition.makeCondition("partyIdTo", EntityOperator.EQUALS, partyId));
 	}
