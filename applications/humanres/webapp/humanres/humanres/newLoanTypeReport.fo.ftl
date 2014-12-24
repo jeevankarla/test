@@ -183,8 +183,36 @@ ${setRequestAttribute("OUTPUT_FILENAME", "LoanAvailedReport.pdf")}
 	                                              <#if totalMaxAmount?has_content>${(totalMaxAmount?if_exists?string("##0.00"))}<#else>0.00</#if>
 	                                    </fo:block>
 	                                </fo:table-cell>
-	                                
                               </fo:table-row>
+                              <fo:table-row>
+							<fo:table-cell>
+			            		<fo:block linefeed-treatment="preserve">&#xA;</fo:block>  
+			       			</fo:table-cell>
+						</fo:table-row>
+						<fo:table-row>
+							<fo:table-cell>
+			            		<fo:block linefeed-treatment="preserve">&#xA;</fo:block>  
+			       			</fo:table-cell>
+						</fo:table-row>
+						<fo:table-row>
+							<fo:table-cell>
+			            		<fo:block linefeed-treatment="preserve">&#xA;</fo:block>  
+			       			</fo:table-cell>
+						</fo:table-row>
+                              <fo:table-row font-weight = "bold">
+			       			<fo:table-cell>
+			            		<fo:block  keep-together="always">&#160;&#160;PROCESSOR</fo:block>  
+			       			</fo:table-cell>
+			       			<fo:table-cell>
+			            		<fo:block  keep-together="always">&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;Asst/Dpty Manager(Finance)</fo:block>  
+			       			</fo:table-cell>
+			       			<fo:table-cell>
+			            		<fo:block  keep-together="always">&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;Pre.Audit</fo:block>  
+			       			</fo:table-cell>
+			       			<fo:table-cell>
+			            		<fo:block  keep-together="always">&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;MF/GMF</fo:block>  
+			       			</fo:table-cell>
+						</fo:table-row>
                     </fo:table-body>
                 </fo:table>
                </fo:block> 		

@@ -108,6 +108,6 @@ if(UtilValidate.isNotEmpty(employmentsList)){
 		}
 	}
 }
-loanTypeList = UtilMisc.sortMaps(loanTypeList, UtilMisc.toList("disbDate"));
+loanTypeList = UtilMisc.sortMaps(loanTypeList, UtilMisc.toList("employeeId"));
 context.putAt("loanTypeList", loanTypeList);
 
