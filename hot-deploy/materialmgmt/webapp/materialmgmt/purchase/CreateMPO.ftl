@@ -10,7 +10,7 @@
 		
 function makeDatePicker(fromDateId ,thruDateId){
 	$( "#"+fromDateId ).datepicker({
-			dateFormat:'MM d, yy',
+			dateFormat:'dd MM, yy',
 			changeMonth: true,
 			numberOfMonths: 1,
 			onSelect: function( selectedDate ) {
@@ -147,8 +147,8 @@ function makeDatePicker(fromDateId ,thruDateId){
 	}); 
 	
 	$(document).ready(function(){
-		makeDatePicker("expectedDeliveryDate","fromDateId");
-		makeDatePicker("poDate","fromDateId");
+		makeDatePicker("estimatedDeliveryDate","fromDateId");
+		makeDatePicker("orderDate","fromDateId");
 		makeDatePicker("refDate","fromDateId");
 		
 		makeDayDatePicker("effectiveDate","fromDateId");
@@ -200,19 +200,19 @@ function makeDatePicker(fromDateId ,thruDateId){
 						<tr>
 						    <td class="label"><b>Estimated Delivery Date:* </b></td>
 						    <td>
-						      <input type="text" name="effectiveDate" id="effectiveDate" size="18" maxlength="60" autocomplete="off"/>
+						      <input type="text" name="estimatedDeliveryDate" id="estimatedDeliveryDate" size="18" maxlength="60" autocomplete="off"/>
 	        				 </td>
 						</tr>
-						<tr>
+						<!--<tr>
 						    <td class="label"><b>Ref Date:* </b></td>
 						    <td>
 						      <input type="text" name="refDate" id="refDate" size="18" maxlength="60" autocomplete="off"/>
 	        				 </td>
-						</tr>
+						</tr>-->
 						<tr>
 						    <td class="label"><b>PO No:*</b></td>
 						    <td>
-						      <input type="text" name="externalId" id="externalId" size="18" maxlength="60" autocomplete="off"/>
+						      <input type="text" name="PONumber" id="PONumber" size="18" maxlength="60" autocomplete="off"/>
 	        				 </td>
 						</tr>
 						<tr>
@@ -243,13 +243,13 @@ function makeDatePicker(fromDateId ,thruDateId){
 					    	<div class="screenlet-body">
 					    	 <div class="screenlet-body" id="FieldsDIV" >
 								<table width="50%" border="0" cellspacing="0" cellpadding="0">
-										<tr><td><br/></td></tr>
+										<!-- <tr><td><br/></td></tr>
 								        <tr>
-						       				<td align='left' valign='middle' nowrap="nowrap"><div class='h3'>MRN No.: </div></td>
+						       				 <td align='left' valign='middle' nowrap="nowrap"><div class='h3'>MRN No.: </div></td>
 								         	<td valign='middle' align='left'> 
 						             			<input class='h3' type="text" size="20" maxlength="30" name="mrnNumber" id="mrnNumber"/>          
 						          			</td>
-						          			<td>&nbsp;&nbsp;&nbsp;</td>
+						          			<td>&nbsp;&nbsp;&nbsp;</td> 
 						          			<td align='left' valign='middle' nowrap="nowrap"><div class='h3'>PO No.: </div></td>
 								         	<td valign='middle' align='left'> 
 						             			<input class='h3' type="text" size="20" maxlength="30" name="PONumber" id="PONumber"/>          
@@ -263,8 +263,8 @@ function makeDatePicker(fromDateId ,thruDateId){
 						          			<td align='left' valign='middle' nowrap="nowrap"><div class='h3'>SUP Invoice Date: </div></td>
 								         	<td valign='middle' align='left'> 
 						             			<input class='h3' type="text" size="20" maxlength="30" name="SInvoiceDate" id="SInvoiceDate"/>          
-						          			</td>
-						 		       </tr>
+						          			</td> 
+						 		       </tr>-->
 						 		       <tr><td><br/></td></tr>
 						 		        <tr>
 								        	<td align='left' valign='middle' nowrap="nowrap"><div class='h3'>Freight Charges: </div></td>
