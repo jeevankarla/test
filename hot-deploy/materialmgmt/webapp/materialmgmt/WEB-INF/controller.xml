@@ -489,8 +489,8 @@
     <request-map uri="changeQuoteItemStatus">
         <security https="true" auth="true"/>
      	<event type="service"  path="in.vasista.vbiz.purchase.MaterialQuoteServices"  invoke="changeQuoteItemStatus" global-transaction="true"/>
-        <response name="success" type="view" value="QuoteForEvalution"/>
-        <response name="error" type="view" value="QuoteForEvalution"/>
+        <response name="success" type="view" value="QuoteForShortlist"/>
+        <response name="error" type="view" value="QuoteForShortlist"/>
     </request-map>
     
     <request-map uri="processPurchaseOrder">
