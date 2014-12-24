@@ -269,6 +269,9 @@
             </condition>
            	<link target="waterElectricityCharges"/>
         </menu-item>
+        <menu-item name="TelephoneCUGCharges" title="Telephone CUG Charges">
+           	<link target="TelephoneCUGCharges"/>
+        </menu-item>
     </menu>
     
     <menu name="SuplyPayRollTabBar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml" 

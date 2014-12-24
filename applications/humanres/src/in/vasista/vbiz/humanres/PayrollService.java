@@ -6142,6 +6142,108 @@ public static Map<String, Object> generateEmployerContributionPayrollBilling(Dis
 	    result = ServiceUtil.returnSuccess("Successfully Updated!!");
 	    return result;
 	}
+	
+	public static String updateTelephoneCUGCharges(HttpServletRequest request, HttpServletResponse response) {
+		Delegator delegator = (Delegator) request.getAttribute("delegator");
+	    LocalDispatcher dispatcher = (LocalDispatcher) request.getAttribute("dispatcher");
+	    Locale locale = UtilHttp.getLocale(request);
+	    Map result = ServiceUtil.returnSuccess();
+	    HttpSession session = request.getSession();
+	    GenericValue userLogin = (GenericValue) session.getAttribute("userLogin");		
+	    String partyId = (String) request.getParameter("employeeId");	
+	    String periodId = (String) request.getParameter("periodId");
+	    String actualAmount=(String)request.getParameter("actualAmount");
+	    String eligibilityAmount=(String)request.getParameter("eligibilityAmount");
+	    String excessAmount=(String)request.getParameter("excessAmount");
+	    BigDecimal elibilityValue=BigDecimal.ZERO;
+	    BigDecimal excessValue=BigDecimal.ZERO;
+	    elibilityValue = new BigDecimal(eligibilityAmount);
+	    BigDecimal amount = BigDecimal.ZERO;
+	    Map paramMap = UtilHttp.getParameterMap(request);
+	    String payheadTypeId=" ";
+	    String rateCurrencyUomId="INR";
+	    String periodTypeId="RATE_HOUR";
+	    String workEffortId="_NA_";
+	    String productId="_NA_";
+	    String emplPositionTypeId="_NA_";
+	    Timestamp fromDateTime  = null;
+	    Timestamp thruDateTime  = null;
+	    Timestamp fromDateStart  = null;
+	    Timestamp thruDateEnd  = null;
+	    
+	    try {
+	    	if(UtilValidate.isEmpty(actualAmount)){
+				request.setAttribute("_ERROR_MESSAGE_", "Please enter Actual Bill amount ");
+				return "error";
+            }
+	    	GenericValue customTimePeriod = delegator.findOne("CustomTimePeriod", UtilMisc.toMap("customTimePeriodId", periodId),false);
+	    	if (UtilValidate.isNotEmpty(customTimePeriod)) {
+	    		fromDateTime = UtilDateTime.toTimestamp(customTimePeriod.getDate("fromDate"));
+	    		thruDateTime = UtilDateTime.toTimestamp(customTimePeriod.getDate("thruDate"));
+	    		fromDateStart = UtilDateTime.getDayStart(fromDateTime);
+	    		thruDateEnd = UtilDateTime.getDayEnd(thruDateTime);
+	    	}
+	    	List conditionList = FastList.newInstance();
+	    	conditionList.add(EntityCondition.makeCondition("rateTypeId",EntityOperator.EQUALS,"TELEPHONE_CUG_RATE"));
+	    	conditionList.add(EntityCondition.makeCondition("partyId",EntityOperator.EQUALS,partyId));
+	    	//conditionList.add(EntityCondition.makeCondition("rateAmount",EntityOperator.EQUALS,eligibilityAmount));
+	    	//conditionList.add(EntityCondition.makeCondition(EntityCondition.makeCondition("fromDate", EntityOperator.GREATER_THAN_EQUAL_TO, fromDateStart), EntityOperator.AND,
+	    			//EntityCondition.makeCondition("fromDate", EntityOperator.LESS_THAN_EQUAL_TO, thruDateEnd)));
+	    	conditionList.add(EntityCondition.makeCondition("fromDate", EntityOperator.LESS_THAN_EQUAL_TO, fromDateStart));
+	    	conditionList.add(EntityCondition.makeCondition(EntityCondition.makeCondition("thruDate", EntityOperator.EQUALS, null), EntityOperator.OR, 
+		        		EntityCondition.makeCondition("thruDate", EntityOperator.LESS_THAN_EQUAL_TO, thruDateEnd)));
+	    	EntityCondition condition = EntityCondition.makeCondition(conditionList,EntityOperator.AND);
+	    	List<GenericValue> rateAmountList = delegator.findList("RateAmount", condition, null, null, null, false);
+	    	if(UtilValidate.isNotEmpty(rateAmountList)){
+	    		GenericValue rateAmountValuesList = EntityUtil.getFirst(rateAmountList);
+	    		rateAmountValuesList.set("rateAmount",((BigDecimal)elibilityValue).setScale(0, BigDecimal.ROUND_HALF_UP));
+	    		rateAmountValuesList.store();
+	    	}else{
+    		  	GenericValue newEntity = delegator.makeValue("RateAmount");
+    		  	newEntity.set("rateTypeId","TELEPHONE_CUG_RATE");
+    		  	newEntity.set("rateCurrencyUomId",rateCurrencyUomId);
+    		  	newEntity.set("periodTypeId",periodTypeId);
+    		  	newEntity.set("fromDate",fromDateStart);
+    		  	newEntity.set("workEffortId",workEffortId);
+    		  	newEntity.set("partyId",partyId);
+    		  	newEntity.set("productId",productId);
+    		  	newEntity.set("emplPositionTypeId",emplPositionTypeId);
+    		  	newEntity.set("rateAmount",((BigDecimal)elibilityValue).setScale(0, BigDecimal.ROUND_HALF_UP));
+    		  	/*if(UtilValidate.isNotEmpty(thruDateEnd)){
+    		  		newEntity.set("thruDate",thruDateEnd);
+    		  	}*/	
+    		  	newEntity.create();
+	    	}
+	    	Map<String, Object> payItemMap=FastMap.newInstance();
+	    	excessValue = new BigDecimal(excessAmount);
+    		amount = ((BigDecimal)excessValue).setScale(0, BigDecimal.ROUND_HALF_UP);
+    		payheadTypeId = "PAYROL_DD_TEL_CHG";
+			payItemMap.put("userLogin",userLogin);
+			payItemMap.put("customTimePeriodId",periodId);
+			payItemMap.put("amount",amount);
+			payItemMap.put("partyId",partyId);
+			payItemMap.put("payHeadTypeId",payheadTypeId);	  
+    		try {
+				if(amount.compareTo(BigDecimal.ZERO) >=0){
+					Map resultValue = dispatcher.runSync("createOrUpdatePartyBenefitOrDeduction", payItemMap);
+					if( ServiceUtil.isError(resultValue)) {
+						String errMsg =  ServiceUtil.getErrorMessage(resultValue);
+						Debug.logWarning(errMsg , module);
+						request.setAttribute("_ERROR_MESSAGE_",errMsg);
+						return "error";
+					}
+				}
+				
+			} catch (GenericServiceException s) {
+				s.printStackTrace();
+			} 
+	    }catch (Exception e) {
+	    	Debug.logError(e, module);
+			return "Error";
+		}
+	    return "success";
+	}
+	
 	public static Map<String, Object> CreateRateAmountVariables(DispatchContext dctx, Map<String, ? extends Object> context){
 	    Delegator delegator = dctx.getDelegator();
       LocalDispatcher dispatcher = dctx.getDispatcher();

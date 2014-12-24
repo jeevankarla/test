@@ -872,6 +872,12 @@ under the License.
        <response name="success" type="request" value="json"/>
        <response name="error" type="request" value="json"/>
    </request-map>
+   <request-map uri="updateTelephoneCUGCharges">
+     	<security https="true" auth="true"/>
+    	<event type="java" path="in.vasista.vbiz.humanres.PayrollService" invoke="updateTelephoneCUGCharges"/>
+    	<response name="success" type="request" value="json"/>
+       <response name="error" type="request" value="json"/>
+    </request-map>
    <request-map uri="EditPayrollAttendance">
        <security https="true" auth="true"/>
        <event type="java" path="in.vasista.vbiz.humanres.PayrollService" invoke="editPayrollAttendance"/>
@@ -1757,6 +1763,10 @@ under the License.
     	<security https="true" auth="true"/>
     	<response name="success" type="view" value="WaterElectricityCharges"></response>
     </request-map>
+    <request-map uri="TelephoneCUGCharges">
+    	<security https="true" auth="true"/>
+    	<response name="success" type="view" value="TelephoneCUGCharges"></response>
+    </request-map>
     <request-map uri="findMasters">
     	<security https="true" auth="true"/>
     	<response name="success" type="view" value="findMasters"></response>
@@ -1976,7 +1986,7 @@ under the License.
     <request-map uri="newLoanTypeReport.pdf"><security https="true" auth="true"/>
 		<response name="success" type="view" value="NewLoanTypeReport"></response>    
     </request-map>
-    
+	
 	
      <!--====================Trainings Requests===================================-->
  <!--====================Cal Requests===================================-->
@@ -2334,6 +2344,7 @@ under the License.
     <view-map name="EditEmplLateHours" type="screen" page="component://humanres/widget/HumanresScreens.xml#EditEmplLateHours"></view-map>
     <view-map name="DailyBusTimings" type="screen" page="component://humanres/widget/HumanresScreens.xml#DailyBusTimings"></view-map>
     <view-map name="WaterElectricityCharges" type="screen" page="component://humanres/widget/HumanresScreens.xml#WaterElectricityCharges"></view-map>
+    <view-map name="TelephoneCUGCharges" type="screen" page="component://humanres/widget/HumanresScreens.xml#TelephoneCUGCharges"></view-map>
     <view-map name="EmployeeAttendanceInternal" type="screen" page="component://humanres/widget/HumanresScreens.xml#EmployeeAttendanceInternal"/>
    
     <view-map name="findMasters" type="screen" page="component://humanres/widget/HumanresScreens.xml#findMasters"></view-map>
@@ -2456,8 +2467,8 @@ under the License.
     <view-map name="emplMonthlyPunchReport" type="screencsv" page="component://humanres/widget/ReportHumanresSummaryScreens.xml#emplMonthlyPunchReport" content-type="text/csv" encoding="none"/>
     <view-map name="ITAXStatement" type="screenfop" page="component://humanres/widget/ReportHumanresSummaryScreens.xml#ITEarningsReport" content-type="application/pdf" encoding="none"/>
     <view-map name="EDLISReport" type="screenfop" page="component://humanres/widget/ReportHumanresSummaryScreens.xml#EDLISReport" content-type="application/pdf" encoding="none"/>
-     <view-map name="LoanTypeReport" type="screenfop" page="component://humanres/widget/ReportHumanresSummaryScreens.xml#LoanTypeReport" content-type="application/pdf" encoding="none" />    
-    <view-map name="NewLoanTypeReport" type="screenfop" page="component://humanres/widget/ReportHumanresSummaryScreens.xml#NewLoanTypeReport" content-type="application/pdf" encoding="none" />
+     <view-map name="LoanTypeReport" type="screenfop" page="component://humanres/widget/ReportHumanresSummaryScreens.xml#LoanTypeReport" content-type="application/pdf" encoding="none" />
+    <view-map name="NewLoanTypeReport" type="screenfop" page="component://humanres/widget/ReportHumanresSummaryScreens.xml#NewLoanTypeReport" content-type="application/pdf" encoding="none" />    
     <!-- ==================Recruitment View Map===================== -->
     <view-map name="FindJobRequisitions" type="screen" page="component://humanres/widget/RecruitmentScreens.xml#FindJobRequisitions"/>
     <view-map name="EditJobRequisition" type="screen" page="component://humanres/widget/RecruitmentScreens.xml#EditJobRequisition"/>

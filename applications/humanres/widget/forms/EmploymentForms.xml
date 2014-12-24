@@ -726,6 +726,20 @@
         <field name="totalAmt" title="Tot Amount" position="2" required-field="true" tooltip="Required"><text size="20" maxlength="30"/></field>   
         <field name="searchButton" title="${uiLabelMap.CommonFind}" widget-style="smallSubmit"><submit button-type="button"/></field>
     </form>
+    <form name="editTelephoneCUGCharges" odd-row-style="alternate-row" header-row-style="header-row" type="single"
+    	default-table-style="basic-table hover-bar" separate-columns="true">  
+        <field name="partyIdTo" title="${uiLabelMap.HumanResEmployeePartyIdTo}"><lookup target-form-name="LookupEmployeeName" size="15"/></field>
+        <field name="customTimePeriodId" title="Period Id">
+             <drop-down allow-empty="true">
+                <entity-options entity-name="CustomTimePeriod" key-field-name="customTimePeriodId" description="${periodName}: ${fromDate} - ${thruDate}" filter-by-date="false">
+                    <entity-constraint name="periodTypeId" operator="equals" value="HR_MONTH"/>
+                    <entity-order-by field-name="-thruDate"/>
+                    <entity-order-by field-name="periodNum"/>
+                </entity-options>
+            </drop-down>
+        </field>  
+        <field name="searchButton" title="${uiLabelMap.CommonFind}" widget-style="smallSubmit"><submit button-type="button"/></field>
+    </form>
 	<form name="editPayrollAttendance" odd-row-style="alternate-row" header-row-style="header-row" type="single"
 	    	default-table-style="basic-table hover-bar" separate-columns="true"> 
 	    	<actions>
