@@ -128,7 +128,7 @@ if(UtilValidate.isNotEmpty(changeFlag) &&( (changeFlag == "InterUnitPurchase")||
 		
 }*/
 if(UtilValidate.isNotEmpty(changeFlag) &&( (changeFlag == "InterUnitPurchase")||(changeFlag == "PurchaseOrder"))){
-	tempProdList=ProductWorker.getProductsByCategory(delegator,"PUR_WSD",null);
+	tempProdList=ProductWorker.getProductsByCategory(delegator,"GEL_STATIONERY",null);
 	Debug.log("===WSD==prodList==Size==="+tempProdList.size()+"prodList==Size==="+prodList.size());
 	prodList.addAll(tempProdList);
 }
