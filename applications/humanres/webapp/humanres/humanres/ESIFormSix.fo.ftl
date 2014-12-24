@@ -177,45 +177,47 @@
 	          						<#assign emplValues=EmplWiseDetailsMap.entrySet()>
 	                            	<#list emplValues as emplDetails>
 	                            		<#if emplDetails.getKey()!="totalWages">
-	                     					<fo:table-row >
-	                     						<fo:table-cell >	
-					                        		<fo:block keep-together="always" text-align="center" font-family="Courier,monospace" white-space-collapse="false" border-style="solid" font-size="10pt">${sNo}</fo:block>
-					                        		<#assign sNo=sNo+1>
-					                        	</fo:table-cell>
-		                     					<fo:table-cell >	
-					                        		<fo:block keep-together="always" text-align="center" font-family="Courier,monospace" white-space-collapse="false" border-style="solid" font-size="10pt">&#160;</fo:block>
-					                        	</fo:table-cell>
-					                        	<#assign EmplNameList = EmplNameMap.entrySet()>
-					                            <#list EmplNameList as EmplName>
-					                            	<#if EmplName.getKey()==emplDetails.getKey()>
-							                            <fo:table-cell >	
-							                            	<fo:block keep-together="always" text-align="left" font-family="Courier,monospace" white-space-collapse="false" border-style="solid" font-size="10pt">&#160;${EmplName.getValue()}</fo:block>
-							                            </fo:table-cell>
-							                       	</#if>
-						                     	</#list>
-						                     	<fo:table-cell >	
-					                            	<fo:block keep-together="always" text-align="right" font-family="Courier,monospace" white-space-collapse="false" border-style="solid" font-size="10pt">${emplDetails.getValue().get("totpayableDays")?if_exists?string("#0.00")}</fo:block>
-					                            	<#assign pagetotPayableDays=pagetotPayableDays+emplDetails.getValue().get("totpayableDays")>
-					                            	<#assign totPayableDays=totPayableDays+emplDetails.getValue().get("totpayableDays")>
-					                            </fo:table-cell>
-					                            <fo:table-cell >	
-					                            	<fo:block keep-together="always" text-align="right" font-family="Courier,monospace" white-space-collapse="false" border-style="solid" font-size="10pt">${emplDetails.getValue().get("totWages")?if_exists?string("#0.00")}</fo:block>
-					                            	<#assign pagetotWages=pagetotWages+emplDetails.getValue().get("totWages")>
-							                       	<#assign totWages=totWages+emplDetails.getValue().get("totWages")>
-					                            </fo:table-cell>
-					                            <fo:table-cell >	
-					                            	<fo:block keep-together="always" text-align="right" font-family="Courier,monospace" white-space-collapse="false" border-style="solid" font-size="10pt">${((-1)*emplDetails.getValue().get("employeeContributn"))?if_exists?string("#0.00")}</fo:block>
-					                            	<#assign pagetotContribn=pagetotContribn+emplDetails.getValue().get("employeeContributn")>
-							                       	<#assign totContribn=totContribn+emplDetails.getValue().get("employeeContributn")>
-					                            </fo:table-cell>
-					                            <fo:table-cell >	
-					                            	<fo:block keep-together="always" text-align="right" font-family="Courier,monospace" white-space-collapse="false" border-style="solid" font-size="10pt"><#if emplDetails.getValue().get("totpayableDays")!=0>${((emplDetails.getValue().get("totWages"))/emplDetails.getValue().get("totpayableDays"))?if_exists?string("#0.00")}<#else>0.00</#if></fo:block>
-					                            </fo:table-cell>
-					                            <fo:table-cell >	
-					                        		<fo:block keep-together="always" text-align="center" font-family="Courier,monospace" white-space-collapse="false" border-style="solid" font-size="10pt">&#160;</fo:block>
-					                        	</fo:table-cell>
-					                        	<#assign noOfLines=noOfLines+1>
-			                     			</fo:table-row>
+	                            			<#if emplDetails.getValue().get("employeeContributn") != 0>
+		                     					<fo:table-row >
+		                     						<fo:table-cell >	
+						                        		<fo:block keep-together="always" text-align="center" font-family="Courier,monospace" white-space-collapse="false" border-style="solid" font-size="10pt">${sNo}</fo:block>
+						                        		<#assign sNo=sNo+1>
+						                        	</fo:table-cell>
+			                     					<fo:table-cell >	
+						                        		<fo:block keep-together="always" text-align="center" font-family="Courier,monospace" white-space-collapse="false" border-style="solid" font-size="10pt">&#160;</fo:block>
+						                        	</fo:table-cell>
+						                        	<#assign EmplNameList = EmplNameMap.entrySet()>
+						                            <#list EmplNameList as EmplName>
+						                            	<#if EmplName.getKey()==emplDetails.getKey()>
+								                            <fo:table-cell >	
+								                            	<fo:block keep-together="always" text-align="left" font-family="Courier,monospace" white-space-collapse="false" border-style="solid" font-size="10pt">&#160;${EmplName.getValue()}</fo:block>
+								                            </fo:table-cell>
+								                       	</#if>
+							                     	</#list>
+							                     	<fo:table-cell >	
+						                            	<fo:block keep-together="always" text-align="right" font-family="Courier,monospace" white-space-collapse="false" border-style="solid" font-size="10pt">${emplDetails.getValue().get("totpayableDays")?if_exists?string("#0.00")}</fo:block>
+						                            	<#assign pagetotPayableDays=pagetotPayableDays+emplDetails.getValue().get("totpayableDays")>
+						                            	<#assign totPayableDays=totPayableDays+emplDetails.getValue().get("totpayableDays")>
+						                            </fo:table-cell>
+						                            <fo:table-cell >	
+						                            	<fo:block keep-together="always" text-align="right" font-family="Courier,monospace" white-space-collapse="false" border-style="solid" font-size="10pt">${emplDetails.getValue().get("totWages")?if_exists?string("#0.00")}</fo:block>
+						                            	<#assign pagetotWages=pagetotWages+emplDetails.getValue().get("totWages")>
+								                       	<#assign totWages=totWages+emplDetails.getValue().get("totWages")>
+						                            </fo:table-cell>
+						                            <fo:table-cell >	
+						                            	<fo:block keep-together="always" text-align="right" font-family="Courier,monospace" white-space-collapse="false" border-style="solid" font-size="10pt">${((-1)*emplDetails.getValue().get("employeeContributn"))?if_exists?string("#0.00")}</fo:block>
+						                            	<#assign pagetotContribn=pagetotContribn+emplDetails.getValue().get("employeeContributn")>
+								                       	<#assign totContribn=totContribn+emplDetails.getValue().get("employeeContributn")>
+						                            </fo:table-cell>
+						                            <fo:table-cell >	
+						                            	<fo:block keep-together="always" text-align="right" font-family="Courier,monospace" white-space-collapse="false" border-style="solid" font-size="10pt"><#if emplDetails.getValue().get("totpayableDays")!=0>${((emplDetails.getValue().get("totWages"))/emplDetails.getValue().get("totpayableDays"))?if_exists?string("#0.00")}<#else>0.00</#if></fo:block>
+						                            </fo:table-cell>
+						                            <fo:table-cell >	
+						                        		<fo:block keep-together="always" text-align="center" font-family="Courier,monospace" white-space-collapse="false" border-style="solid" font-size="10pt">&#160;</fo:block>
+						                        	</fo:table-cell>
+						                        	<#assign noOfLines=noOfLines+1>
+				                     			</fo:table-row>
+				                     		</#if>
 			                     			<#if (noOfLines>45) >
 			                    				<#assign noOfLines=1>
 			                    				<fo:table-row >

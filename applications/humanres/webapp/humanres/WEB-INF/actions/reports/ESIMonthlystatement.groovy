@@ -62,11 +62,43 @@ if(UtilValidate.isNotEmpty(employmentsList)){
 		customTimePeriodTotals = PayrollService.getEmployeeSalaryTotalsForPeriod(dctx,UtilMisc.toMap("partyId",employeeId,"fromDate",timePeriodStart,"thruDate",timePeriodEnd,"userLogin",userLogin)).get("periodTotalsForParty");
 		periodDetailsMap=[:];
 		if(UtilValidate.isNotEmpty(customTimePeriodTotals)){
+			emplyrCont = 0;
 			Iterator customTimePeriodIter = customTimePeriodTotals.entrySet().iterator();
 			while(customTimePeriodIter.hasNext()){
 				Map.Entry customTimePeriodEntry = customTimePeriodIter.next();
-				
 				if(customTimePeriodEntry.getKey() != "customTimePeriodTotals"){
+					if((parameters.customTimePeriodId).equals(customTimePeriodEntry.getKey())){
+						Periodid=parameters.customTimePeriodId;
+						List periodConditionList=[];
+						periodConditionList.add(EntityCondition.makeCondition("customTimePeriodId", EntityOperator.EQUALS, Periodid));
+						periodConditionList.add(EntityCondition.makeCondition("statusId", EntityOperator.IN , UtilMisc.toList("GENERATED","APPROVED")));
+						periodConditionList.add(EntityCondition.makeCondition("billingTypeId", EntityOperator.EQUALS, "PAYROLL_BILL"));
+						periodCondition = EntityCondition.makeCondition(periodConditionList,EntityOperator.AND);
+						BillingIdsList = delegator.findList("PeriodBillingAndCustomTimePeriod", periodCondition, null, null, null, false);
+						if(UtilValidate.isNotEmpty(BillingIdsList)){
+							BillingIdList = EntityUtil.getFirst(BillingIdsList);
+							periodBillingId = BillingIdList.periodBillingId;
+							List headerConditionList=[];
+							headerConditionList.add(EntityCondition.makeCondition("periodBillingId", EntityOperator.EQUALS, periodBillingId));
+							headerConditionList.add(EntityCondition.makeCondition("partyIdFrom", EntityOperator.EQUALS, employeeId));
+							headerCondition = EntityCondition.makeCondition(headerConditionList,EntityOperator.AND);
+							headerIdsList = delegator.findList("PayrollHeader", headerCondition, null, null, null, false);
+							if(UtilValidate.isNotEmpty(headerIdsList)){
+								headerIdList = EntityUtil.getFirst(headerIdsList);
+								headerId = headerIdList.payrollHeaderId;
+								List emplyrConditionList=[];
+								emplyrConditionList.add(EntityCondition.makeCondition("payrollHeaderId", EntityOperator.EQUALS, headerId));
+								emplyrConditionList.add(EntityCondition.makeCondition("payrollHeaderItemTypeId", EntityOperator.EQUALS, "PAYROL_BEN_ESIEMPLYR"));
+								emplyrCondition = EntityCondition.makeCondition(emplyrConditionList,EntityOperator.AND);
+								employerList = delegator.findList("PayrollHeaderItemEc", emplyrCondition, null, null, null, false);
+								if(UtilValidate.isNotEmpty(employerList)){
+									employerList.each{ emplyrList ->
+										emplyrCont = emplyrList.amount;
+									}
+								}
+							}
+						}
+					}
 					Map periodTotalsMap = [:];
 					periodTotals = customTimePeriodEntry.getValue().get("periodTotals");
 					basic = 0;
@@ -92,7 +124,7 @@ if(UtilValidate.isNotEmpty(employmentsList)){
 					others = 0;
 					totalBenefits = 0;
 					EmployeeStateInsurance = periodTotals.get("PAYROL_DD_ESI_DED");
-					if(UtilValidate.isNotEmpty(EmployeeStateInsurance)){
+					if((UtilValidate.isNotEmpty(EmployeeStateInsurance)) || (emplyrCont != 0)){
 						basic = periodTotals.get("PAYROL_BEN_SALARY");
 						if(UtilValidate.isEmpty(basic)){
 							basic = 0;
@@ -182,11 +214,19 @@ if(UtilValidate.isNotEmpty(employmentsList)){
 								Contribution = empl.amount;
 							}
 						}
+						customMap=PayrollService.getPayrollAttedancePeriod(dctx,[userLogin:userLogin,timePeriodStart:timePeriodStart,timePeriodEnd:timePeriodEnd,timePeriodId:customTimePeriodId,locale:locale]);
+						lastClosePeriod=customMap.get("lastCloseAttedancePeriod");
+						attendancePeriodId=lastClosePeriod.get("customTimePeriodId");
+						if(UtilValidate.isNotEmpty(attendancePeriodId)){
+							attendancePeriodId = attendancePeriodId;
+						}else{
+							attendancePeriodId = null;
+						}
 						Contribution=Contribution;
 						List conditionList=[];
 						conditionList.add(EntityCondition.makeCondition("partyId", EntityOperator.EQUALS, employeeId));
 						conditionList.add(EntityCondition.makeCondition(EntityCondition.makeCondition("noOfPayableDays", EntityOperator.NOT_EQUAL, BigDecimal.ZERO)));
-						conditionList.add(EntityCondition.makeCondition("customTimePeriodId", EntityOperator.EQUALS, customTimePeriodId));
+						conditionList.add(EntityCondition.makeCondition("customTimePeriodId", EntityOperator.EQUALS, attendancePeriodId));
 						condition=EntityCondition.makeCondition(conditionList,EntityOperator.AND);
 						attendanceDetails = delegator.findList("PayrollAttendance", condition , null, null, null, false);
 						if(UtilValidate.isNotEmpty(attendanceDetails)){
@@ -195,11 +235,13 @@ if(UtilValidate.isNotEmpty(employmentsList)){
 								detailsMap.put("payableDays",payableDays);
 							}
 						}
-						detailsMap.put("Wages",Wages);
-						detailsMap.put("Contribution",Contribution);
-						detailsMap.put("employeeId",employeeId);
-						if(UtilValidate.isNotEmpty(detailsMap)){
-							periodDetailsMap.put(customTimePeriodId,detailsMap);
+						if(Contribution != 0){
+							detailsMap.put("Wages",Wages);
+							detailsMap.put("Contribution",Contribution);
+							detailsMap.put("employeeId",employeeId);
+							if(UtilValidate.isNotEmpty(detailsMap)){
+								periodDetailsMap.put(customTimePeriodId,detailsMap);
+							}
 						}
 						if(UtilValidate.isNotEmpty(periodDetailsMap)){
 							periodList.addAll(customTimePeriodId);

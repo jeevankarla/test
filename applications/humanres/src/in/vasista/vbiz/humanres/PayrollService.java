@@ -1877,7 +1877,7 @@ public class PayrollService {
 			        	 return result;
 			        }
 			        GenericValue paheadType = EntityUtil.getFirst(payHeadTypesList);
-			        
+			      
 					Map payheadAmtCtx = FastMap.newInstance();
                     payheadAmtCtx.put("userLogin", userLogin);
                     payheadAmtCtx.put("employeeId", employeeId);
@@ -1974,7 +1974,7 @@ public class PayrollService {
 		     * </ul>
 		     */
 		    public static Map<String, Object> calculatePayHeadAmount(DispatchContext dctx, Map<String, ? extends Object> context) {
-
+		    	
 		        Delegator delegator = dctx.getDelegator();
 		        LocalDispatcher dispatcher = dctx.getDispatcher();
 		        Map<String, Object> result = FastMap.newInstance();
@@ -4607,7 +4607,7 @@ public class PayrollService {
 	    }
 	 
 	 public static Map<String, Object> createOrUpdatePartyBenefitOrDeduction(DispatchContext dctx, Map<String, ? extends Object> context){
-		    Delegator delegator = dctx.getDelegator();
+		 	Delegator delegator = dctx.getDelegator();
 	        LocalDispatcher dispatcher = dctx.getDispatcher();
 	        GenericValue userLogin = (GenericValue) context.get("userLogin");
 	        String partyId = (String) context.get("partyId");
@@ -6062,7 +6062,7 @@ public static Map<String, Object> generateEmployerContributionPayrollBilling(Dis
 	 }	    
 	  	 return "success";
 	}
-
+	
 	public static Map<String, Object> createOrUpdateWaterOrElectricityCharges(DispatchContext dctx, Map<String, ? extends Object> context){
 	    Delegator delegator = dctx.getDelegator();
 	    LocalDispatcher dispatcher = dctx.getDispatcher();
@@ -6451,198 +6451,194 @@ public static Map<String, Object> generateEmployerContributionPayrollBilling(Dis
 							BigDecimal SpecialPay = BigDecimal.ZERO;
 							BigDecimal GeneralHolidayWages = BigDecimal.ZERO;
 							BigDecimal SecondSaturdayWages = BigDecimal.ZERO;
-							BigDecimal EmployeeStateInsurance = BigDecimal.ZERO;
 
-							EmployeeStateInsurance = (BigDecimal) periodTotals.get("PAYROL_DD_ESI_DED");
-							if ((UtilValidate.isNotEmpty(EmployeeStateInsurance))) {
-								Map fetchBasicSalaryAndGradeMap = fetchBasicSalaryAndGrade(dctx, UtilMisc.toMap("employeeId", employeeId, "timePeriodStart", monthStartDate,
-										"timePeriodEnd", monthEndDate, "userLogin", userLogin, "proportionalFlag", "Y"));
-								if (UtilValidate.isNotEmpty(fetchBasicSalaryAndGradeMap)) {
-									basic = new BigDecimal((Double) fetchBasicSalaryAndGradeMap.get("amount"));
-								}
-								if (UtilValidate.isEmpty(basic)) {
-									basic = BigDecimal.ZERO;
-								}
-								dearnessAllowance = (BigDecimal) periodTotals.get("PAYROL_BEN_DA");
-								if (UtilValidate.isEmpty(dearnessAllowance)) {
-									dearnessAllowance = BigDecimal.ZERO;
-								}
-								houseRentAllowance = (BigDecimal) periodTotals.get("PAYROL_BEN_HRA");
-								if (UtilValidate.isEmpty(houseRentAllowance)) {
-									houseRentAllowance = BigDecimal.ZERO;
-								}
-								cityComp = (BigDecimal) periodTotals.get("PAYROL_BEN_CITYCOMP");
-								if (UtilValidate.isEmpty(cityComp)) {
-									cityComp = BigDecimal.ZERO;
-								}
-								HeatAllowance = (BigDecimal) periodTotals.get("PAYROL_BEN_HEATALLOW");
-								if (UtilValidate.isEmpty(HeatAllowance)) {
-									HeatAllowance = BigDecimal.ZERO;
-								}
-								CashAllowance = (BigDecimal) periodTotals.get("PAYROL_BEN_CASH");
-								if (UtilValidate.isEmpty(CashAllowance)) {
-									CashAllowance = BigDecimal.ZERO;
-								}
-								coldAllowance = (BigDecimal) periodTotals.get("PAYROL_BEN_COLDALLOW");
-								if (UtilValidate.isEmpty(coldAllowance)) {
-									coldAllowance = BigDecimal.ZERO;
-								}
-								convey = (BigDecimal) periodTotals.get("PAYROL_BEN_CONVEY");
-								if (UtilValidate.isEmpty(convey)) {
-									convey = BigDecimal.ZERO;
-								}
-								ShiftAllowance = (BigDecimal) periodTotals.get("PAYROL_BEN_SHIFT");
-								if (UtilValidate.isEmpty(ShiftAllowance)) {
-									ShiftAllowance = BigDecimal.ZERO;
-								}
-								CanteenAllowance = (BigDecimal) periodTotals.get("PAYROL_BEN_CANTN");
-								if (UtilValidate.isEmpty(CanteenAllowance)) {
-									CanteenAllowance = BigDecimal.ZERO;
-								}
-								AttendanceBonus = (BigDecimal) periodTotals.get("PAYROL_BEN_ATNDBON");
-								if (UtilValidate.isEmpty(AttendanceBonus)) {
-									AttendanceBonus = BigDecimal.ZERO;
-								}
-								FieldAllowance = (BigDecimal) periodTotals.get("PAYROL_BEN_FIELD");
-								if (UtilValidate.isEmpty(FieldAllowance)) {
-									FieldAllowance = BigDecimal.ZERO;
-								}
-								SpecialPay = (BigDecimal) periodTotals.get("PAYROL_BEN_SPELPAY");
-								if (UtilValidate.isEmpty(SpecialPay)) {
-									SpecialPay = BigDecimal.ZERO;
-								}
-								GeneralHolidayWages = (BigDecimal) periodTotals.get("PAYROL_BEN_GEN_HOL_W");
-								if (UtilValidate.isEmpty(GeneralHolidayWages)) {
-									GeneralHolidayWages = BigDecimal.ZERO;
-								}
-								SecondSaturdayWages = (BigDecimal) periodTotals.get("PAYROL_BEN_SECSATDAY");
-								if (UtilValidate.isEmpty(SecondSaturdayWages)) {
-									SecondSaturdayWages = BigDecimal.ZERO;
-								}
-								BigDecimal value = new BigDecimal("15000");
-								int res;
-								BigDecimal wages = basic.add(dearnessAllowance);
-								wages = wages.add(houseRentAllowance);
-								wages = wages.add(cityComp);
-								wages = wages.add(HeatAllowance);
-								wages = wages.add(CashAllowance);
-								wages = wages.add(coldAllowance);
-								wages = wages.add(convey);
-								wages = wages.add(ShiftAllowance);
-								wages = wages.add(CanteenAllowance);
-								wages = wages.add(AttendanceBonus);
-								wages = wages.add(FieldAllowance);
-								wages = wages.add(SpecialPay);
-								wages = wages.add(GeneralHolidayWages);
-								wages = wages.add(SecondSaturdayWages);
-								res = wages.compareTo(value);
-								if (res == -1) {
-									Map currentCustomTimePeriodTotals = (Map) getEmployeeSalaryTotalsForPeriod(dctx,
-											UtilMisc.toMap("partyId", employeeId, "fromDate", monthBegin, "thruDate", monthEnd, "userLogin", userLogin))
-											.get("periodTotalsForParty");
-									if (UtilValidate.isNotEmpty(currentCustomTimePeriodTotals)) {
-										Iterator tempNewIter = currentCustomTimePeriodTotals.entrySet().iterator();
-										while (tempNewIter.hasNext()) {
-											Map.Entry tempNewEntry = (Entry) tempNewIter.next();
-											String keyName = (String) tempNewEntry.getKey();
-											if (keyName != "customTimePeriodTotals") {
-												Map currentPeriodTotals = (Map) (((Map) tempNewEntry.getValue()).get("periodTotals"));
-												if (UtilValidate.isNotEmpty(currentPeriodTotals)) {
-													BigDecimal currBasic = BigDecimal.ZERO;
-													BigDecimal dearnessAllow = BigDecimal.ZERO;
-													BigDecimal houseRentAllow = BigDecimal.ZERO;
-													BigDecimal cityCom = BigDecimal.ZERO;
-													BigDecimal HeatAllow = BigDecimal.ZERO;
-													BigDecimal CashAllow = BigDecimal.ZERO;
-													BigDecimal coldAllow = BigDecimal.ZERO;
-													BigDecimal conveyAllow = BigDecimal.ZERO;
-													BigDecimal ShiftAllow = BigDecimal.ZERO;
-													BigDecimal CanteenAllow = BigDecimal.ZERO;
-													BigDecimal attendBonus = BigDecimal.ZERO;
-													BigDecimal FieldAllow = BigDecimal.ZERO;
-													BigDecimal SplPay = BigDecimal.ZERO;
-													BigDecimal GeneralHldyWages = BigDecimal.ZERO;
-													BigDecimal SSaturdayWages = BigDecimal.ZERO;
+							Map fetchBasicSalaryAndGradeMap = fetchBasicSalaryAndGrade(dctx, UtilMisc.toMap("employeeId", employeeId, "timePeriodStart", monthStartDate,
+									"timePeriodEnd", monthEndDate, "userLogin", userLogin, "proportionalFlag", "Y"));
+							if (UtilValidate.isNotEmpty(fetchBasicSalaryAndGradeMap)) {
+								basic = new BigDecimal((Double) fetchBasicSalaryAndGradeMap.get("amount"));
+							}
+							if (UtilValidate.isEmpty(basic)) {
+								basic = BigDecimal.ZERO;
+							}
+							dearnessAllowance = (BigDecimal) periodTotals.get("PAYROL_BEN_DA");
+							if (UtilValidate.isEmpty(dearnessAllowance)) {
+								dearnessAllowance = BigDecimal.ZERO;
+							}
+							houseRentAllowance = (BigDecimal) periodTotals.get("PAYROL_BEN_HRA");
+							if (UtilValidate.isEmpty(houseRentAllowance)) {
+								houseRentAllowance = BigDecimal.ZERO;
+							}
+							cityComp = (BigDecimal) periodTotals.get("PAYROL_BEN_CITYCOMP");
+							if (UtilValidate.isEmpty(cityComp)) {
+								cityComp = BigDecimal.ZERO;
+							}
+							HeatAllowance = (BigDecimal) periodTotals.get("PAYROL_BEN_HEATALLOW");
+							if (UtilValidate.isEmpty(HeatAllowance)) {
+								HeatAllowance = BigDecimal.ZERO;
+							}
+							CashAllowance = (BigDecimal) periodTotals.get("PAYROL_BEN_CASH");
+							if (UtilValidate.isEmpty(CashAllowance)) {
+								CashAllowance = BigDecimal.ZERO;
+							}
+							coldAllowance = (BigDecimal) periodTotals.get("PAYROL_BEN_COLDALLOW");
+							if (UtilValidate.isEmpty(coldAllowance)) {
+								coldAllowance = BigDecimal.ZERO;
+							}
+							convey = (BigDecimal) periodTotals.get("PAYROL_BEN_CONVEY");
+							if (UtilValidate.isEmpty(convey)) {
+								convey = BigDecimal.ZERO;
+							}
+							ShiftAllowance = (BigDecimal) periodTotals.get("PAYROL_BEN_SHIFT");
+							if (UtilValidate.isEmpty(ShiftAllowance)) {
+								ShiftAllowance = BigDecimal.ZERO;
+							}
+							CanteenAllowance = (BigDecimal) periodTotals.get("PAYROL_BEN_CANTN");
+							if (UtilValidate.isEmpty(CanteenAllowance)) {
+								CanteenAllowance = BigDecimal.ZERO;
+							}
+							AttendanceBonus = (BigDecimal) periodTotals.get("PAYROL_BEN_ATNDBON");
+							if (UtilValidate.isEmpty(AttendanceBonus)) {
+								AttendanceBonus = BigDecimal.ZERO;
+							}
+							FieldAllowance = (BigDecimal) periodTotals.get("PAYROL_BEN_FIELD");
+							if (UtilValidate.isEmpty(FieldAllowance)) {
+								FieldAllowance = BigDecimal.ZERO;
+							}
+							SpecialPay = (BigDecimal) periodTotals.get("PAYROL_BEN_SPELPAY");
+							if (UtilValidate.isEmpty(SpecialPay)) {
+								SpecialPay = BigDecimal.ZERO;
+							}
+							GeneralHolidayWages = (BigDecimal) periodTotals.get("PAYROL_BEN_GEN_HOL_W");
+							if (UtilValidate.isEmpty(GeneralHolidayWages)) {
+								GeneralHolidayWages = BigDecimal.ZERO;
+							}
+							SecondSaturdayWages = (BigDecimal) periodTotals.get("PAYROL_BEN_SECSATDAY");
+							if (UtilValidate.isEmpty(SecondSaturdayWages)) {
+								SecondSaturdayWages = BigDecimal.ZERO;
+							}
+							BigDecimal value = new BigDecimal("15000");
+							int res;
+							BigDecimal wages = basic.add(dearnessAllowance);
+							wages = wages.add(houseRentAllowance);
+							wages = wages.add(cityComp);
+							wages = wages.add(HeatAllowance);
+							wages = wages.add(CashAllowance);
+							wages = wages.add(coldAllowance);
+							wages = wages.add(convey);
+							wages = wages.add(ShiftAllowance);
+							wages = wages.add(CanteenAllowance);
+							wages = wages.add(AttendanceBonus);
+							wages = wages.add(FieldAllowance);
+							wages = wages.add(SpecialPay);
+							wages = wages.add(GeneralHolidayWages);
+							wages = wages.add(SecondSaturdayWages);
+							res = wages.compareTo(value);
+							if (res == -1) {
+								Map currentCustomTimePeriodTotals = (Map) getEmployeeSalaryTotalsForPeriod(dctx,
+										UtilMisc.toMap("partyId", employeeId, "fromDate", monthBegin, "thruDate", monthEnd, "userLogin", userLogin))
+										.get("periodTotalsForParty");
+								if (UtilValidate.isNotEmpty(currentCustomTimePeriodTotals)) {
+									Iterator tempNewIter = currentCustomTimePeriodTotals.entrySet().iterator();
+									while (tempNewIter.hasNext()) {
+										Map.Entry tempNewEntry = (Entry) tempNewIter.next();
+										String keyName = (String) tempNewEntry.getKey();
+										if (keyName != "customTimePeriodTotals") {
+											Map currentPeriodTotals = (Map) (((Map) tempNewEntry.getValue()).get("periodTotals"));
+											if (UtilValidate.isNotEmpty(currentPeriodTotals)) {
+												BigDecimal currBasic = BigDecimal.ZERO;
+												BigDecimal dearnessAllow = BigDecimal.ZERO;
+												BigDecimal houseRentAllow = BigDecimal.ZERO;
+												BigDecimal cityCom = BigDecimal.ZERO;
+												BigDecimal HeatAllow = BigDecimal.ZERO;
+												BigDecimal CashAllow = BigDecimal.ZERO;
+												BigDecimal coldAllow = BigDecimal.ZERO;
+												BigDecimal conveyAllow = BigDecimal.ZERO;
+												BigDecimal ShiftAllow = BigDecimal.ZERO;
+												BigDecimal CanteenAllow = BigDecimal.ZERO;
+												BigDecimal attendBonus = BigDecimal.ZERO;
+												BigDecimal FieldAllow = BigDecimal.ZERO;
+												BigDecimal SplPay = BigDecimal.ZERO;
+												BigDecimal GeneralHldyWages = BigDecimal.ZERO;
+												BigDecimal SSaturdayWages = BigDecimal.ZERO;
 
-													currBasic = (BigDecimal) currentPeriodTotals.get("PAYROL_BEN_SALARY");
-													if (UtilValidate.isEmpty(currBasic)) {
-														currBasic = BigDecimal.ZERO;
-													}
-													dearnessAllow = (BigDecimal) currentPeriodTotals.get("PAYROL_BEN_DA");
-													if (UtilValidate.isEmpty(dearnessAllow)) {
-														dearnessAllow = BigDecimal.ZERO;
-													}
-													houseRentAllow = (BigDecimal) currentPeriodTotals.get("PAYROL_BEN_HRA");
-													if (UtilValidate.isEmpty(houseRentAllow)) {
-														houseRentAllow = BigDecimal.ZERO;
-													}
-													cityCom = (BigDecimal) currentPeriodTotals.get("PAYROL_BEN_CITYCOMP");
-													if (UtilValidate.isEmpty(cityCom)) {
-														cityCom = BigDecimal.ZERO;
-													}
-													HeatAllow = (BigDecimal) currentPeriodTotals.get("PAYROL_BEN_HEATALLOW");
-													if (UtilValidate.isEmpty(HeatAllow)) {
-														HeatAllow = BigDecimal.ZERO;
-													}
-													CashAllow = (BigDecimal) currentPeriodTotals.get("PAYROL_BEN_CASH");
-													if (UtilValidate.isEmpty(CashAllow)) {
-														CashAllow = BigDecimal.ZERO;
-													}
-													coldAllow = (BigDecimal) currentPeriodTotals.get("PAYROL_BEN_COLDALLOW");
-													if (UtilValidate.isEmpty(coldAllow)) {
-														coldAllow = BigDecimal.ZERO;
-													}
-													conveyAllow = (BigDecimal) currentPeriodTotals.get("PAYROL_BEN_CONVEY");
-													if (UtilValidate.isEmpty(conveyAllow)) {
-														conveyAllow = BigDecimal.ZERO;
-													}
-													ShiftAllow = (BigDecimal) currentPeriodTotals.get("PAYROL_BEN_SHIFT");
-													if (UtilValidate.isEmpty(ShiftAllow)) {
-														ShiftAllow = BigDecimal.ZERO;
-													}
-													CanteenAllow = (BigDecimal) currentPeriodTotals.get("PAYROL_BEN_CANTN");
-													if (UtilValidate.isEmpty(CanteenAllow)) {
-														CanteenAllow = BigDecimal.ZERO;
-													}
-													attendBonus = (BigDecimal) currentPeriodTotals.get("PAYROL_BEN_ATNDBON");
-													if (UtilValidate.isEmpty(attendBonus)) {
-														attendBonus = BigDecimal.ZERO;
-													}
-													FieldAllow = (BigDecimal) currentPeriodTotals.get("PAYROL_BEN_FIELD");
-													if (UtilValidate.isEmpty(FieldAllow)) {
-														FieldAllow = BigDecimal.ZERO;
-													}
-													SplPay = (BigDecimal) currentPeriodTotals.get("PAYROL_BEN_SPELPAY");
-													if (UtilValidate.isEmpty(SplPay)) {
-														SplPay = BigDecimal.ZERO;
-													}
-													GeneralHldyWages = (BigDecimal) currentPeriodTotals.get("PAYROL_BEN_GEN_HOL_W");
-													if (UtilValidate.isEmpty(GeneralHldyWages)) {
-														GeneralHldyWages = BigDecimal.ZERO;
-													}
-													SSaturdayWages = (BigDecimal) currentPeriodTotals.get("PAYROL_BEN_SECSATDAY");
-													if (UtilValidate.isEmpty(SSaturdayWages)) {
-														SSaturdayWages = BigDecimal.ZERO;
-													}
-													BigDecimal currWages = currBasic.add(dearnessAllow);
-													currWages = currWages.add(houseRentAllow);
-													currWages = currWages.add(cityCom);
-													currWages = currWages.add(HeatAllow);
-													currWages = currWages.add(CashAllow);
-													currWages = currWages.add(coldAllow);
-													currWages = currWages.add(conveyAllow);
-													currWages = currWages.add(ShiftAllow);
-													currWages = currWages.add(CanteenAllow);
-													currWages = currWages.add(attendBonus);
-													currWages = currWages.add(FieldAllow);
-													currWages = currWages.add(SplPay);
-													currWages = currWages.add(GeneralHldyWages);
-													currWages = currWages.add(SSaturdayWages);
-													BigDecimal employerContribution;
-													BigDecimal multipliedValue = new BigDecimal("0.0475");
-													employerContribution = multipliedValue.multiply(currWages);
-													amount = employerContribution.setScale(2, BigDecimal.ROUND_HALF_UP);
+												currBasic = (BigDecimal) currentPeriodTotals.get("PAYROL_BEN_SALARY");
+												if (UtilValidate.isEmpty(currBasic)) {
+													currBasic = BigDecimal.ZERO;
 												}
+												dearnessAllow = (BigDecimal) currentPeriodTotals.get("PAYROL_BEN_DA");
+												if (UtilValidate.isEmpty(dearnessAllow)) {
+													dearnessAllow = BigDecimal.ZERO;
+												}
+												houseRentAllow = (BigDecimal) currentPeriodTotals.get("PAYROL_BEN_HRA");
+												if (UtilValidate.isEmpty(houseRentAllow)) {
+													houseRentAllow = BigDecimal.ZERO;
+												}
+												cityCom = (BigDecimal) currentPeriodTotals.get("PAYROL_BEN_CITYCOMP");
+												if (UtilValidate.isEmpty(cityCom)) {
+													cityCom = BigDecimal.ZERO;
+												}
+												HeatAllow = (BigDecimal) currentPeriodTotals.get("PAYROL_BEN_HEATALLOW");
+												if (UtilValidate.isEmpty(HeatAllow)) {
+													HeatAllow = BigDecimal.ZERO;
+												}
+												CashAllow = (BigDecimal) currentPeriodTotals.get("PAYROL_BEN_CASH");
+												if (UtilValidate.isEmpty(CashAllow)) {
+													CashAllow = BigDecimal.ZERO;
+												}
+												coldAllow = (BigDecimal) currentPeriodTotals.get("PAYROL_BEN_COLDALLOW");
+												if (UtilValidate.isEmpty(coldAllow)) {
+													coldAllow = BigDecimal.ZERO;
+												}
+												conveyAllow = (BigDecimal) currentPeriodTotals.get("PAYROL_BEN_CONVEY");
+												if (UtilValidate.isEmpty(conveyAllow)) {
+													conveyAllow = BigDecimal.ZERO;
+												}
+												ShiftAllow = (BigDecimal) currentPeriodTotals.get("PAYROL_BEN_SHIFT");
+												if (UtilValidate.isEmpty(ShiftAllow)) {
+													ShiftAllow = BigDecimal.ZERO;
+												}
+												CanteenAllow = (BigDecimal) currentPeriodTotals.get("PAYROL_BEN_CANTN");
+												if (UtilValidate.isEmpty(CanteenAllow)) {
+													CanteenAllow = BigDecimal.ZERO;
+												}
+												attendBonus = (BigDecimal) currentPeriodTotals.get("PAYROL_BEN_ATNDBON");
+												if (UtilValidate.isEmpty(attendBonus)) {
+													attendBonus = BigDecimal.ZERO;
+												}
+												FieldAllow = (BigDecimal) currentPeriodTotals.get("PAYROL_BEN_FIELD");
+												if (UtilValidate.isEmpty(FieldAllow)) {
+													FieldAllow = BigDecimal.ZERO;
+												}
+												SplPay = (BigDecimal) currentPeriodTotals.get("PAYROL_BEN_SPELPAY");
+												if (UtilValidate.isEmpty(SplPay)) {
+													SplPay = BigDecimal.ZERO;
+												}
+												GeneralHldyWages = (BigDecimal) currentPeriodTotals.get("PAYROL_BEN_GEN_HOL_W");
+												if (UtilValidate.isEmpty(GeneralHldyWages)) {
+													GeneralHldyWages = BigDecimal.ZERO;
+												}
+												SSaturdayWages = (BigDecimal) currentPeriodTotals.get("PAYROL_BEN_SECSATDAY");
+												if (UtilValidate.isEmpty(SSaturdayWages)) {
+													SSaturdayWages = BigDecimal.ZERO;
+												}
+												BigDecimal currWages = currBasic.add(dearnessAllow);
+												currWages = currWages.add(houseRentAllow);
+												currWages = currWages.add(cityCom);
+												currWages = currWages.add(HeatAllow);
+												currWages = currWages.add(CashAllow);
+												currWages = currWages.add(coldAllow);
+												currWages = currWages.add(conveyAllow);
+												currWages = currWages.add(ShiftAllow);
+												currWages = currWages.add(CanteenAllow);
+												currWages = currWages.add(attendBonus);
+												currWages = currWages.add(FieldAllow);
+												currWages = currWages.add(SplPay);
+												currWages = currWages.add(GeneralHldyWages);
+												currWages = currWages.add(SSaturdayWages);
+												BigDecimal employerContribution;
+												BigDecimal multipliedValue = new BigDecimal("0.0475");
+												employerContribution = multipliedValue.multiply(currWages);
+												amount = employerContribution.setScale(2, BigDecimal.ROUND_HALF_UP);
 											}
 										}
 									}
