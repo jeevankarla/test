@@ -444,6 +444,7 @@
                 <set field="headerItem" value="request"/>
                 <set field="custRequestId" from-field="parameters.custRequestId" from-scope="screen" to-scope="screen"/>
                 <script location="component://materialmgmt/webapp/materialmgmt/WEB-INF/actions/purchases/SelectItemsToQuote.groovy" />
+                <script location="component://byproducts/webapp/byproducts/WEB-INF/actions/facility/enablePartyAutoComplete.groovy"/>
             </actions>
             <widgets>
                 <decorator-screen name="materialmgmtNgCommonDecorator" location="${parameters.mainDecoratorLocation}">

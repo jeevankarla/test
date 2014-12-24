@@ -14,6 +14,7 @@ import org.ofbiz.entity.condition.EntityCondition;
 import org.ofbiz.entity.condition.EntityOperator;
 import java.sql.*;
 import in.vasista.vbiz.byproducts.ByProductNetworkServices;
+import org.ofbiz.party.party.PartyHelper;
 
 JSONArray partyJSON = new JSONArray();
 dctx = dispatcher.getDispatchContext();
@@ -40,3 +41,21 @@ if(UtilValidate.isNotEmpty(parameters.roleTypeId)){//to handle IceCream Parties
 	}
 }
 context.partyJSON = partyJSON;
+
+
+//supplier json for supplier lookup.
+
+JSONArray supplierJSON = new JSONArray();
+
+Condition = EntityCondition.makeCondition([EntityCondition.makeCondition("roleTypeId", "SUPPLIER")],EntityOperator.AND);
+supplierList=delegator.findList("PartyRole",Condition,null,null,null,false);
+if(supplierList){
+	supplierList.each{ supplier ->
+		JSONObject newObj = new JSONObject();
+		newObj.put("value",supplier.partyId);
+		partyName=PartyHelper.getPartyName(delegator, supplier.partyId, false);
+		newObj.put("label",partyName+"["+supplier.partyId+"]");
+		supplierJSON.add(newObj);
+	}
+}
+context.supplierJSON=supplierJSON;

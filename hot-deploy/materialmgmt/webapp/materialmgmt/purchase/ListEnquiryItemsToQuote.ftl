@@ -18,7 +18,7 @@ under the License.
 -->
 <script type="text/javascript">
 //<![CDATA[
-
+	var supplierJson = ${StringUtil.wrapString(supplierJSON)!'[]'};
     function toggleSelectId(master) {
         var enquiryItems = jQuery("#listEnquiryItems :checkbox[name='check']");
 		jQuery.each(enquiryItems, function() {
@@ -32,6 +32,19 @@ under the License.
     	//jQuery('#listTenderItems').submit();
     }
     
+    $(document).ready(function(){
+    	var partyId = $("#partyId").val();
+        $("#partyId").autocomplete({ source: supplierJson }).keydown(function(e){});        		
+	    if( (partyId).length < 1 ) {
+	    	$('#partyId').css('background', 'yellow'); 
+	       	setTimeout(function () {
+	           	$('#partyId').css('background', 'white').focus(); 
+	       	}, 800);
+	    	return false;
+    	}
+    });
+    
+    
    function itemsSubmit(current){
    		
         var ischecked=false;
@@ -44,6 +57,7 @@ under the License.
         var quoteName = $("#quoteName").val();
         var quoteType = "MATERIAL_PUR_QUOTE";
         var enquires = jQuery("#listEnquiryItems :checkbox[name='check']");
+        
         
         jQuery.each(enquires, function() {
             if (jQuery(this).is(':checked')) {
@@ -128,7 +142,7 @@ under the License.
   	<form name="listEnquiryItems" id="listEnquiryItems"  method="post" action="<@ofbizUrl>createQuoteForEnquiry</@ofbizUrl>">
   		<table width="50%">
     		<tr>
-  				<td><span class="label h3"> Supplier Party (<font color='red'>*</font>):</span></td><td><@htmlTemplate.lookupField formName="listEnquiryItems" name="partyId" id="partyId" fieldFormName="LookupPerson"/></td>
+  				<td><span class="label h3"> Supplier Party (<font color='red'>*</font>):</span></td><td><input class="h3" type="text" name="partyId" id="partyId"  maxlength="60" /></td>
     		</tr>
     		<tr>
     			<td><span class="label h3">Quote Received Date :</span></td><td><input class='h3' type='text' id='issueDate' name='issueDate' onmouseover='datepick()'/></td>
