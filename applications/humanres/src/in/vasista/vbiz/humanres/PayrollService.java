@@ -6272,9 +6272,11 @@ public static Map<String, Object> generateEmployerContributionPayrollBilling(Dis
         		if((leaveTypeIds.get(i)).equals("CL") || (leaveTypeIds.get(i)).equals("EL") || (leaveTypeIds.get(i)).equals("HPL")){
         			GenericValue customTimePeriod = delegator.findOne("CustomTimePeriod",UtilMisc.toMap("customTimePeriodId", customTimePeriodId), false);
         			Timestamp fromDateTime=UtilDateTime.toTimestamp(customTimePeriod.getDate("fromDate"));
-        			Map customTimePeriodIdMap = PayrollService.checkPayrollGeneratedOrNotForDate(dctx,UtilMisc.toMap("userLogin",userLogin,"punchdate",fromDateTime));
-        			if (ServiceUtil.isError(customTimePeriodIdMap)) {
-        				return customTimePeriodIdMap;
+        			if(UtilValidate.isEmpty(enCashedDays)){
+	        			Map customTimePeriodIdMap = PayrollService.checkPayrollGeneratedOrNotForDate(dctx,UtilMisc.toMap("userLogin",userLogin,"punchdate",fromDateTime));
+	        			if (ServiceUtil.isError(customTimePeriodIdMap)) {
+	        				return customTimePeriodIdMap;
+	        			}
         			}
         			Map input = FastMap.newInstance();
 		        	input.put("timePeriodId", customTimePeriodId);
