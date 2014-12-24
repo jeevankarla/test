@@ -199,6 +199,16 @@ ${setRequestAttribute("OUTPUT_FILENAME", "LoanAvailedReport.pdf")}
 			            		<fo:block linefeed-treatment="preserve">&#xA;</fo:block>  
 			       			</fo:table-cell>
 						</fo:table-row>
+						<fo:table-row>
+							<fo:table-cell>
+			            		<fo:block linefeed-treatment="preserve">&#xA;</fo:block>  
+			       			</fo:table-cell>
+						</fo:table-row>
+						<fo:table-row>
+							<fo:table-cell>
+			            		<fo:block linefeed-treatment="preserve">&#xA;</fo:block>  
+			       			</fo:table-cell>
+						</fo:table-row>
                               <fo:table-row font-weight = "bold">
 			       			<fo:table-cell>
 			            		<fo:block  keep-together="always">&#160;&#160;PROCESSOR</fo:block>  
