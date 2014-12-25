@@ -269,6 +269,12 @@
         <attribute name="subscriptionTypeId" type="String" mode="IN" optional="false"/>
                                                      
     </service>
+    <service name="AutoSendSMSNotification" engine="java"
+        location="in.vasista.vbiz.byproducts.ByProductReportServices" invoke="AutoSendSMSNotification">
+        <description>Auto send sales summary sms</description>
+        <attribute name="subscriptionTypeId" type="String" mode="IN" optional="false"/>
+    </service>
+    
      <service name="sendIndentSmsBulk" engine="java"
         location="in.vasista.vbiz.byproducts.ByProductChangeIndentServices" invoke="sendIndentSmsBulk">
         <description>Send indent sms</description>

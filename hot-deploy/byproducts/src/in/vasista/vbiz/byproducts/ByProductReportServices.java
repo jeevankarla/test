@@ -1208,6 +1208,27 @@ public class ByProductReportServices {
  	    	return result;
 	    }
 	 
+	 public static Map<String, Object>  AutoSendSMSNotification(DispatchContext dctx, Map<String, Object> context)  {
+	        LocalDispatcher dispatcher = dctx.getDispatcher();	
+	        Delegator delegator = dctx.getDelegator();
+	        GenericValue userLogin = (GenericValue) context.get("userLogin");
+	        String subscriptionTypeId = (String) context.get("subscriptionTypeId");
+	        Timestamp supplyDateTime = UtilDateTime.nowTimestamp();
+	        Map inMap = FastMap.newInstance();
+	        inMap.put("userLogin", userLogin);
+	        inMap.put("subscriptionTypeId", subscriptionTypeId);
+	        if(subscriptionTypeId.equals("AM")){
+	        	inMap.put("supplyDate", UtilDateTime.toDateString(UtilDateTime.toSqlDate(UtilDateTime.addDaysToTimestamp(supplyDateTime, 1)),"MMMM dd, yyyy"));
+	        }
+           if(subscriptionTypeId.equals("PM")){
+        	   inMap.put("supplyDate", UtilDateTime.toDateString(UtilDateTime.toSqlDate(supplyDateTime),"MMMM dd, yyyy"));
+	        }
+           Debug.log("inMap=============="+inMap);
+           sendSMSNotification(dctx, inMap);
+	       return ServiceUtil.returnSuccess();
+	        
+	 }       
+	 
 	  	public static Map<String, Object>  sendSMSNotification(DispatchContext dctx, Map<String, Object> context)  {
 	        LocalDispatcher dispatcher = dctx.getDispatcher();	
 	        Delegator delegator = dctx.getDelegator();

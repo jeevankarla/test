@@ -1,0 +1,54 @@
+<entity-engine-xml>	
+   <!-- <RecurrenceRule recurrenceRuleId="100" untilDateTime="" frequency="DAILY" intervalNumber="6" countNumber="-1"/>
+    <RecurrenceInfo recurrenceInfoId="100" startDateTime="2014-12-25 00:00:00.000" recurrenceRuleId="100" recurrenceCount="0"/>
+    <JobSandbox jobId="100" jobName="Auto populate LMSSalesHistory summary " runTime="2000-01-01 00:00:00.000" serviceName="populateLMSSalesHistorySummary" poolId="pool" runAsUser="system" recurrenceInfoId="100"/>
+    -->
+   
+   <RecurrenceRule recurrenceRuleId="AMSAL_SMS" untilDateTime="" frequency="DAILY" intervalNumber="1" countNumber="-1"/>
+    <RecurrenceInfo recurrenceInfoId="AMSAL_SMS" startDateTime="2014-12-26 21:00:00.000" recurrenceRuleId="AMSAL_SMS" recurrenceCount="0"/>
+    
+    <RuntimeData runtimeDataId="AMSAL_SMS">
+        <runtimeInfo><![CDATA[<?xml version="1.0" encoding="UTF-8"?>
+            <ofbiz-ser>
+                <map-HashMap>
+                    <map-Entry>
+                        <map-Key>
+                            <std-String value="subscriptionTypeId"/>
+                        </map-Key>
+                        <map-Value>
+                            <std-String value="AM"/>
+                        </map-Value>
+                    </map-Entry>
+                </map-HashMap>
+            </ofbiz-ser>
+        ]]></runtimeInfo>
+    </RuntimeData>
+    
+    <JobSandbox jobId="AMSALES_SMS" jobName="Auto AM Sales SMS" runTime="2014-12-26 21:00:00.000" serviceName="AutoSendSMSNotification" runtimeDataId="AMSAL_SMS" poolId="pool" runAsUser="system" recurrenceInfoId="AMSAL_SMS"/>
+    
+    <RecurrenceRule recurrenceRuleId="PMSAL_SMS" untilDateTime="" frequency="DAILY" intervalNumber="1" countNumber="-1"/>
+    <RecurrenceInfo recurrenceInfoId="PMSAL_SMS" startDateTime="2014-12-26 16:30:00.000" recurrenceRuleId="PMSAL_SMS" recurrenceCount="0"/>
+    
+    <RuntimeData runtimeDataId="PMSAL_SMS">
+        <runtimeInfo><![CDATA[<?xml version="1.0" encoding="UTF-8"?>
+            <ofbiz-ser>
+                <map-HashMap>
+                    <map-Entry>
+                        <map-Key>
+                            <std-String value="subscriptionTypeId"/>
+                        </map-Key>
+                        <map-Value>
+                            <std-String value="PM"/>
+                        </map-Value>
+                    </map-Entry>
+                </map-HashMap>
+            </ofbiz-ser>
+        ]]></runtimeInfo>
+    </RuntimeData>
+    
+    <JobSandbox jobId="PMSAL_SMS" jobName="Auto AM Sales SMS" runTime="2014-12-25 16:30:00.000" serviceName="AutoSendSMSNotification" runtimeDataId="PMSAL_SMS" poolId="pool" runAsUser="system" recurrenceInfoId="PMSAL_SMS"/>
+    
+   
+</entity-engine-xml>	
+   
+   
