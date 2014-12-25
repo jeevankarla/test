@@ -2922,7 +2922,7 @@ public class PayrollService {
 	            result.put("age", "0");
 	            if(UtilValidate.isNotEmpty(person) && UtilValidate.isNotEmpty(person.getDate("birthDate"))){
 	            	long ageTime = (UtilDateTime.toSqlDate(timePeriodEnd)).getTime()- (person.getDate("birthDate")).getTime();
-	            	long age = (TimeUnit.MILLISECONDS.toDays(ageTime))/365;
+	            	Long age = new Long((new BigDecimal((TimeUnit.MILLISECONDS.toDays(ageTime))).divide(new BigDecimal(365),0,BigDecimal.ROUND_UP)).toString());
 	            	result.put("age",(new Long(age)).toString());
 	            }
 	            // get pay grade here
