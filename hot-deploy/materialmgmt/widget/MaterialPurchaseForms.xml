@@ -2,10 +2,17 @@
 <forms xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"  xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/widget-form.xsd">
 
 	<form name="FindMaterialPurchaseOrder" title="" type="single" target="${targetRequest}" header-row-style="header-row" default-table-style="basic-table">
+        <field name="salesChannelEnumId" ><hidden value="${ChannalType}"/></field>  
+        <field name="orderTypeId">
+           <drop-down no-current-selected-key="PURCHASE_ORDER">
+              <entity-options description="${description}" entity-name="OrderType" key-field-name="orderTypeId">
+                  <entity-constraint name="parentTypeId" operator="equals" value="PURCHASE_ORDER"/>
+              </entity-options>
+           </drop-down>
+        </field>
         <field title="Delivery Date" name="estimatedDeliveryDate"><date-find/></field>
         <field name="orderId"><text-find/></field>
-        <field name="orderTypeId"><hidden value="PURCHASE_ORDER"/></field>
-        <field name="salesChannelEnumId" ><hidden value="${ChannalType}"  > </hidden></field>  
+        <!-- <field name="orderTypeId"><hidden value="PURCHASE_ORDER"/></field> -->
         <field name="statusId">
         	<drop-down allow-empty="true">
         		<option key="ORDER_CREATED" description="Created"/>

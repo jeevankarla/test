@@ -303,6 +303,7 @@ public class MaterialPurchaseServices {
 		String fileNo = (String) request.getParameter("fileNo");
 		String refNo = (String) request.getParameter("refNo");
 		String orderDateStr = (String) request.getParameter("orderDate");
+		String orderTypeId = (String) request.getParameter("orderTypeId");
 		//String effectiveDate = (String) request.getParameter("effectiveDate");
 		String estimatedDeliveryDateStr = (String) request.getParameter("estimatedDeliveryDate");
 		
@@ -758,6 +759,8 @@ public class MaterialPurchaseServices {
 	 
 		processOrderContext.put("userLogin", userLogin);
 		processOrderContext.put("productQtyList", productQtyList);
+		processOrderContext.put("orderTypeId", orderTypeId);
+		
 		processOrderContext.put("termsList", termsList);
 		processOrderContext.put("partyId", partyId);
 		processOrderContext.put("billFromPartyId", billFromPartyId);
@@ -840,7 +843,10 @@ public class MaterialPurchaseServices {
 		Timestamp effectiveDate = UtilDateTime.getDayStart(supplyDate);
 		String orderId = "";
 		String billToPartyId="Company";
-		
+		String orderTypeId = (String)context.get("orderTypeId");
+		if(UtilValidate.isEmpty(orderTypeId)){
+			orderTypeId = "PURCHASE_ORDER";
+		}
 		if (UtilValidate.isEmpty(partyId)) {
 			Debug.logError("Cannot create order without partyId: "+ partyId, module);
 			return ServiceUtil.returnError("partyId is empty");
@@ -851,7 +857,7 @@ public class MaterialPurchaseServices {
 		ShoppingCart cart = new ShoppingCart(delegator, productStoreId, locale,currencyUomId);
 		
 		try {
-			cart.setOrderType("PURCHASE_ORDER");
+			cart.setOrderType(orderTypeId);
 	       // cart.setIsEnableAcctg("N");
 			cart.setExternalId(PONumber);
 	        cart.setProductStoreId(productStoreId);
@@ -1318,7 +1324,7 @@ public class MaterialPurchaseServices {
 	  	}
 	    // approve the order
 	    if (UtilValidate.isNotEmpty(orderId)) {
-	        boolean approved = OrderChangeHelper.approveOrder(dispatcher, userLogin, orderId);
+	        //boolean approved = OrderChangeHelper.approveOrder(dispatcher, userLogin, orderId);
 	        
 	       	/*try{
 	       		result = dispatcher.runSync("createInvoiceForOrderAllItems", UtilMisc.<String, Object>toMap("orderId", orderId,"eventDate", effectiveDate,"userLogin", userLogin));

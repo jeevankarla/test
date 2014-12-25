@@ -171,8 +171,18 @@ function makeDatePicker(fromDateId ,thruDateId){
         <section>
           <fieldset>
 	            <table cellpadding="2" cellspacing="1" class='h2'>
+	                   <tr>
+						    <td class="label"><b>OrderType :*</b></td>
+						    <td>
+						      	<select name="orderTypeId">
+						      	   <#list orderTypes as orderType>    
+  	    									<option value='${orderType.orderTypeId}'>${orderType.description}</option>
+								    </#list> 
+						      	</select>
+						    </td>
+						</tr>
     					<tr>
-						    <td class="label"><b>Vendor Id :*</b></td>
+						    <td class="label"><b>Vendor :*</b></td>
 						     <input type="hidden" name="productStoreId"  value="${productStoreId?if_exists}" />
 						    <#if changeFlag?exists && changeFlag=='InterUnitPurchase'>
 						       <input type="hidden" name="salesChannel" id="salesChannel" value="INTER_PRCHSE_CHANNEL"/> 
