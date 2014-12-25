@@ -398,7 +398,7 @@ public class ByProductChangeIndentServices {
   	      List<GenericValue> custTimePeriodList =FastList.newInstance();
   	      Timestamp nowTimeStamp = UtilDateTime.nowTimestamp();
   	      Boolean enableContinuousIndent = Boolean.FALSE;
-  	    Boolean smsFlag = Boolean.FALSE;
+  	      Boolean smsFlag = Boolean.FALSE;
   	   
   	      try{
   	    	  GenericValue tenantEnableContinuousIndent = delegator.findOne("TenantConfiguration", UtilMisc.toMap("propertyTypeEnumId","LMS", "propertyName","enableContinuousIndent"), false);
@@ -496,6 +496,9 @@ public class ByProductChangeIndentServices {
 	  			//List<GenericValue> products = delegator.findList("Product", null, UtilMisc.toSet("productId", "quantityIncluded"), null, null, true);
 	  			subscriptionProdList = delegator.findList("SubscriptionProduct", condition, null, null, null, false);
 	  			subscriptionProdList = EntityUtil.filterByDate(subscriptionProdList, effectiveDate);
+	  			List genRouteIds = FastList.newInstance();
+	  			genRouteIds = ByProductNetworkServices.getShipedRouteIdsByAMPM(delegator , UtilDateTime.toDateString(effectiveDate, "yyyy-MM-dd HH:mm:ss"),subscriptionTypeId,null);
+
 	  			List productsList = EntityUtil.getFieldListFromEntityList(subscriptionProdList, "productId", true);
 	  			List activeProdList = FastList.newInstance();
 	  			List<GenericValue> subscriptionProductsList = FastList.newInstance();
@@ -508,6 +511,12 @@ public class ByProductChangeIndentServices {
 	  				String sequenceNum = (String)productQtyMap.get("sequenceNum");
 	  				BigDecimal quantity = (BigDecimal)productQtyMap.get("quantity");
 	  				BigDecimal crateQuantity = BigDecimal.ZERO;
+	  				if(genRouteIds.contains(sequenceNum)){
+		    			  String errMsg="Trucksheet already generated for the route :"+ sequenceNum;
+		    			  Debug.logError(errMsg , module);
+						return ServiceUtil.returnError(errMsg);
+			    	}
+
 	  				if(!sequenceNum.equalsIgnoreCase(defaultRouteId) && !routeChange && enableContinuousIndent){
 	  					routeChange = true;
 	  				}
