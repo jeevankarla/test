@@ -192,20 +192,24 @@
         <menu-item name="FindGRNReceipts" title="Find GRN">
         	<link target="FindGRNReceipts"/>
         </menu-item>
-        
-        <menu-item name="FindGRNShipments" title="Find GRN Shipments">
-        	<link target="FindGRNShipments"/>
-        </menu-item>
-        
         <menu-item name="POMaterialReceipts" title="GRN Entry">
         	<link target="POMaterialReceipts"/>
         </menu-item>
-        
-        <menu-item name="InvoiceForShippedGoods" title="Invoice For GRN">	
+        <menu-item name="FindGRNShipments" title="Find GRN Shipments">
+        	<link target="FindGRNShipments"/>
+        </menu-item>
+        <menu-item name="MaterialShipmentOverview" title="Material Shipment Overview">	
         	<condition>
         		<if-compare operator="not-equals" value="" field="shipmentId"/>
         	</condition>
-            <link target="InvoiceForShippedGoods">
+            <link target="MaterialShipmentOverview">
+            </link>
+        </menu-item>
+        <menu-item name="MaterialInvoiceInit" title="Invoice For Shipment">	
+        	<condition>
+        		<if-compare operator="not-equals" value="" field="shipmentId"/>
+        	</condition>
+            <link target="MaterialInvoiceInit">
             </link>
         </menu-item>
         
