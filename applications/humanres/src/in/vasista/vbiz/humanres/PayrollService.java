@@ -732,7 +732,7 @@ public class PayrollService {
 								leaveBalanceCtx.put("userLogin", userLogin);
 								leaveBalanceCtx.put("partyId", payHeaderItemValue.get("partyIdFrom"));
 								//leaveBalanceCtx.put("EL", new BigDecimal(15));
-								leaveBalanceCtx.put("enCashedDays", new BigDecimal(-15));								
+								leaveBalanceCtx.put("enCashedDays", BigDecimal.ZERO);								
 								leaveBalanceCtx.put("customTimePeriodId", hrCustomTimePeriodId);
 								try {
 									Map serviceLeaveBalanceResults = UpdateCreditLeaves(dctx, leaveBalanceCtx);
@@ -6441,8 +6441,8 @@ public static Map<String, Object> generateEmployerContributionPayrollBilling(Dis
 		      	  		   emplLeaves.set("openingBalance", openingBal.subtract(encashDays));*/
 			      		  if((!enCashedDays.equals(encashDays))){
 			      		   		emplLeaves.set("encashedDays", enCashedDays);
+			      		   		emplLeaves.store();
 			      		  }
-			      		   emplLeaves.store();
 						}else{
 							if(UtilValidate.isNotEmpty(leadaysMap.get(leaveTypeIds.get(i)))){
 								adjustedDays=(BigDecimal)leadaysMap.get(leaveTypeIds.get(i));
