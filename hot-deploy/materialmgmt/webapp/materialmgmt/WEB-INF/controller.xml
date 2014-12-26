@@ -733,6 +733,10 @@
         <security https="true" auth="true"/>
     	<response name="success" type="view" value="PurchaseOrderPDF"/>
     </request-map>
+    <request-map uri="extensionPurchaseOrder.pdf">
+        <security https="true" auth="true"/>
+    	<response name="success" type="view" value="extensionPurchaseOrderPDF"/>
+    </request-map>
     <request-map uri="createCustRequestNote">
         <security https="true" auth="true"/>
      	<event type="service"   invoke="createCustRequestNote"/>
@@ -781,7 +785,7 @@
     <view-map name="ArcOrderPDF" type="screenfop" page="component://materialmgmt/widget/materialmgmtReportScreens.xml#ArcOrderPDF" content-type="application/pdf"/>
     <view-map name="letterOfAcceptancePDF" type="screenfop" page="component://materialmgmt/widget/materialmgmtReportScreens.xml#letterOfAcceptancePDF" content-type="application/pdf"/>
     <view-map name="PurchaseOrderPDF" type="screenfop" page="component://materialmgmt/widget/materialmgmtReportScreens.xml#PurchaseOrderPDF" content-type="application/pdf"/>
-
+    <view-map name="extensionPurchaseOrderPDF" type="screenfop" page="component://materialmgmt/widget/materialmgmtReportScreens.xml#extensionPurchaseOrderPDF" content-type="application/pdf"/>
     <!-- custRequest views -->
     <view-map name="FindMaterialRequest" type="screen" page="component://materialmgmt/widget/MaterialRequestScreens.xml#FindMaterialRequest"/>
     <view-map name="ViewMaterialRequest" type="screen" page="component://materialmgmt/widget/MaterialRequestScreens.xml#ViewMaterialRequest"/>
