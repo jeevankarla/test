@@ -113,22 +113,19 @@ under the License.
 	{		
 		$( "#issueDate" ).datepicker({
 			dateFormat:'dd MM, yy',
-			changeMonth: true,
-			maxDate:0,
+			changeMonth: true,			
 			numberOfMonths: 1});
 		$('#ui-datepicker-div').css('clip', 'auto');
 		
 		$( "#validFromDate" ).datepicker({
 			dateFormat:'dd MM, yy',
-			changeMonth: true,
-			maxDate:0,
+			changeMonth: true,			
 			numberOfMonths: 1});
 		$('#ui-datepicker-div').css('clip', 'auto');
 		
 		$( "#validThruDate" ).datepicker({
 			dateFormat:'dd MM, yy',
-			changeMonth: true,
-			maxDate:0,
+			changeMonth: true,			
 			numberOfMonths: 1});
 		$('#ui-datepicker-div').css('clip', 'auto');
 		
