@@ -87,6 +87,14 @@ function makeDatePicker1(fromDateId ,thruDateId){
 		makeDatePicker("GdrFromDate","GdrFromDate");
 		makeDatePicker("loanFromDate","loanFromDate");
 		makeDatePicker("loanThruDate","loanThruDate");
+		makeDatePicker("AttMyfromDate","AttMyfromDate");
+		makeDatePicker("AttMythruDate","AttMythruDate");
+		makeDatePicker("AttAllfromDate","AttAllfromDate");
+		makeDatePicker("AttAllthruDate","AttAllthruDate");
+		makeDatePicker("BenDedMyfromDate","BenDedMyfromDate");
+		makeDatePicker("BenDedMythruDate","BenDedMythruDate");
+		makeDatePicker("BenDedAllfromDate","BenDedAllfromDate");
+		makeDatePicker("BenDedAllthruDate","BenDedAllthruDate");
 		$('#ui-datepicker-div').css('clip', 'auto');		
 	});
 //for Month Picker
@@ -1294,6 +1302,117 @@ function setOrgPartyId() {
 							</td>
 						</form>
 					</tr>		
+				</table>
+			</div>
+		</div>
+	</div>
+</#if>
+<#if reportFrequencyFlag =="CheckListReports">
+	<div>
+		<div class="screenlet">
+			<div class="screenlet-title-bar">
+				<h3>Reports</h3>
+			</div>
+			<div class="screenlet-body">
+				<table class="basic-table hover-bar h3" style="border-spacing: 0 10px;">
+					<tr class="alternate-row">
+						<form id="AttendanceChcekList" name="AttendanceChcekList" mothed="post" action="<@ofbizUrl>attendanceCheckList</@ofbizUrl>" target="_blank">
+							<table class="basic-table" cellspacing="5">
+								<tr class="alternate-row">
+									<td width="20%"><span class='h3'>Attendance My Chcek List<input  type="hidden"  value="attendanceMyCheckList"   name="reportTypeFlag"/></span></td>
+									<td><input type="hidden" name="partyId" class="commonPartyId"></td>
+									<td width="20%"><span class='h3'>From Date</span><input  type="text" size="18pt" id="AttMyfromDate"   name="AttMyfromDate"/></td>
+									<td width="20%"><span class='h3'>Thru Date</span><input  type="text" size="18pt" id="AttMythruDate"   name="AttMythruDate"/></td>
+									<td width="20%"><span class='h3'><input type="submit" value="Download" class="buttontext"></span></td> 
+								</tr>
+							</table>
+						</form>
+					 </tr>
+					 <tr class="alternate-row">
+						<form id="AttendanceAllChcekList" name="AttendanceAllChcekList" mothed="post" action="<@ofbizUrl>attendanceCheckList</@ofbizUrl>" target="_blank">
+							<table class="basic-table" cellspacing="5">
+								<tr class="alternate-row">
+									<td width="20%"><span class='h3'>Attendance All Chcek List<input  type="hidden"  value="attendanceAllCheckList"   name="reportTypeFlag"/></span></td>
+									<td><input type="hidden" name="partyId" class="commonPartyId"></td>
+									<td width="20%"><span class='h3'>From Date</span><input  type="text" size="18pt" id="AttAllfromDate"   name="AttAllfromDate"/></td>
+									<td width="20%"><span class='h3'>Thru Date</span><input  type="text" size="18pt" id="AttAllthruDate"   name="AttAllthruDate"/></td>
+									<td width="20%"><span class='h3'><input type="submit" value="Download" class="buttontext"></span></td> 
+								</tr>
+							</table>
+						</form>
+					 </tr>
+					 <tr class="alternate-row">
+						<form id="BenDedMyChcekList" name="BenDedMyChcekList" mothed="post" action="<@ofbizUrl>benDedCheckList</@ofbizUrl>" target="_blank">
+							<table class="basic-table" cellspacing="5">
+								<tr class="alternate-row">
+									<td width="20%"><span class='h3'>Benefits/Deductions My Chcek List<input  type="hidden"  value="BenDedMyChcekList"   name="reportTypeFlag"/></span></td>
+									<td><input type="hidden" name="partyId" class="commonPartyId"></td>
+									<td width="20%"><span class='h3'>From Date</span><input  type="text" size="18pt" id="BenDedMyfromDate"   name="BenDedMyfromDate"/></td>
+									<td width="20%"><span class='h3'>Thru Date</span><input  type="text" size="18pt" id="BenDedMythruDate"   name="BenDedMythruDate"/></td>
+									<td width="20%"><span class='h3'><input type="submit" value="Download" class="buttontext"></span></td> 
+								</tr>
+							</table>
+						</form>
+					 </tr>
+					 <tr class="alternate-row">
+						<form id="BenDedAllChcekList" name="BenDedAllChcekList" mothed="post" action="<@ofbizUrl>benDedCheckList</@ofbizUrl>" target="_blank">
+							<table class="basic-table" cellspacing="5">
+								<tr class="alternate-row">
+									<td width="20%"><span class='h3'>Benefits/Deductions All Chcek List<input  type="hidden"  value="BenDedAllChcekList"   name="reportTypeFlag"/></span></td>
+									<td><input type="hidden" name="partyId" class="commonPartyId"></td>
+									<td width="20%"><span class='h3'>From Date</span><input  type="text" size="18pt" id="BenDedAllfromDate"   name="BenDedAllfromDate"/></td>
+									<td width="20%"><span class='h3'>Thru Date</span><input  type="text" size="18pt" id="BenDedAllthruDate"   name="BenDedAllthruDate"/></td>
+									<td width="20%"><span class='h3'><input type="submit" value="Download" class="buttontext"></span></td> 
+								</tr>
+							</table>
+						</form>
+					 </tr>
+					 <tr class="alternate-row">
+						<form id="AttendanceExceptionReport" name="AttendanceExceptionReport" mothed="post" action="<@ofbizUrl>AttendanceExceptionReportTxt</@ofbizUrl>" target="_blank">
+							<table class="basic-table" cellspacing="5">
+								<tr class="alternate-row">
+									<td width="20%"><span class='h3'>Attendance Exception Report</span></td>
+									<td><input type="hidden" name="partyId" class="commonPartyId"></td>
+									<td width="50%"><span class='h3'>Period Id</span>
+										<select name="customTimePeriodId" id="customTimePeriodId" class='h4'>
+											<#list customTimePeriodList as customTimePeriod>
+												 <#if defaultTimePeriodId?exists && (defaultTimePeriodId == customTimePeriod.customTimePeriodId)>
+							      					<option value='${customTimePeriod.customTimePeriodId?if_exists}' selected="selected">${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(customTimePeriod.fromDate, "dd MMMMM, yyyy")} -${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(customTimePeriod.thruDate, "dd MMMMM, yyyy")}</option>
+							      					<#else>
+							      						<option value='${customTimePeriod.customTimePeriodId?if_exists}' >${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(customTimePeriod.fromDate, "dd MMMMM, yyyy")} -${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(customTimePeriod.thruDate, "dd MMMMM, yyyy")}</option>
+							                  		</option>
+							      				</#if>
+											</#list>
+										</select>
+									</td>
+									<td width="20%"><span class='h3'><input type="submit" value="Download" class="buttontext"></span></td> 
+								</tr>
+							</table>
+						</form>
+					 </tr>
+					 <tr class="alternate-row">
+						<form id="SalaryExceptionReport" name="SalaryExceptionReport" mothed="post" action="<@ofbizUrl>SalaryExceptionReportTxt</@ofbizUrl>" target="_blank">
+							<table class="basic-table" cellspacing="5">
+								<tr class="alternate-row">
+									<td width="20%"><span class='h3'>Salary Exception Report</span></td>
+									<td><input type="hidden" name="partyId" class="commonPartyId"></td>
+									<td width="50%"><span class='h3'>Period Id</span>
+										<select name="customTimePeriodId" id="customTimePeriodId" class='h4'>
+											<#list customTimePeriodList as customTimePeriod>
+												 <#if defaultTimePeriodId?exists && (defaultTimePeriodId == customTimePeriod.customTimePeriodId)>
+							      					<option value='${customTimePeriod.customTimePeriodId?if_exists}' selected="selected">${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(customTimePeriod.fromDate, "dd MMMMM, yyyy")} -${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(customTimePeriod.thruDate, "dd MMMMM, yyyy")}</option>
+							      					<#else>
+							      						<option value='${customTimePeriod.customTimePeriodId?if_exists}' >${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(customTimePeriod.fromDate, "dd MMMMM, yyyy")} -${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(customTimePeriod.thruDate, "dd MMMMM, yyyy")}</option>
+							                  		</option>
+							      				</#if>
+											</#list>
+										</select>
+									</td>
+									<td width="20%"><span class='h3'><input type="submit" value="Download" class="buttontext"></span></td> 
+								</tr>
+							</table>
+						</form>
+					 </tr>
 				</table>
 			</div>
 		</div>

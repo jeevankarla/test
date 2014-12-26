@@ -520,8 +520,6 @@
 		                        <decorator-screen name="FindScreenDecorator" location="component://common/widget/CommonScreens.xml">
 		                            <decorator-section name="search-options">
 		                                <include-form name="FindBenefitsOrDeductions" location="component://humanres/widget/forms/EmploymentForms.xml"/>
-		                                <link text="My Check List" style="button" target="benDedCheckList"><parameter param-name="all" value="N"></parameter></link>									
-									  	<link text="All Check List" style="button" target="benDedCheckList"><parameter param-name="all" value="Y"></parameter></link>
 		                            </decorator-section>	
 		                            <decorator-section name="search-results">
 		                               <section>
@@ -643,6 +641,38 @@
             </widgets>
         </section>
     </screen>
+    <screen name="AttendanceExceptionReportTxt">
+        <section>
+            <actions>
+            	<script location="component://humanres/webapp/humanres/WEB-INF/actions/humanres/AttendanceExceptionReportTxt.groovy"/>  
+            </actions>
+            <widgets>
+                <section>
+                <widgets>
+                    <platform-specific>
+                        <html><html-template location="component:///humanres/webapp/humanres/humanres/AttendanceExceptionReportTxt.fo.ftl"/></html>
+                    </platform-specific>
+                </widgets>
+                </section>
+            </widgets>
+        </section>
+    </screen>
+    <screen name="SalaryExceptionReportTxt">
+        <section>
+            <actions>
+            	<script location="component://humanres/webapp/humanres/WEB-INF/actions/humanres/SalaryExceptionReportTxt.groovy"/>  
+            </actions>
+            <widgets>
+                <section>
+                <widgets>
+                    <platform-specific>
+                        <html><html-template location="component:///humanres/webapp/humanres/humanres/SalaryExceptionReportTxt.fo.ftl"/></html>
+                    </platform-specific>
+                </widgets>
+                </section>
+            </widgets>
+        </section>
+    </screen>
      <screen name="EditPayrollAttendance">
         <section>
             <actions>
@@ -659,8 +689,6 @@
                     	<include-menu location="component://humanres/widget/HumanresMenus.xml" name="AttendanceTabBar"/> 
 		                    		<screenlet name="search-options" title="search-options">      
 		                                <include-form name="editPayrollAttendance" location="component://humanres/widget/forms/EmploymentForms.xml"/>
-		                                <link text="My Check List" style="button" target="attendanceCheckList"><parameter param-name="all" value="N"></parameter></link>									
-									  	<link text="All Check List" style="button" target="attendanceCheckList"><parameter param-name="all" value="Y"></parameter></link>
 		                            </screenlet>		                           	 
 		                            
 				                   <include-screen name="EditPayroll" location="component://humanres/widget/EmploymentScreens.xml"/>
@@ -1009,6 +1037,51 @@
     		</widgets>
     	</section>
     </screen>
+    
+    <screen name="CheckListReports">
+    	<section>
+    		<actions>  
+	    		<entity-condition list="leaveTypeList" entity-name="EmplLeaveType">
+				</entity-condition>
+				 <entity-and list="PartyGroupList" entity-name="PartyGroup">
+					<field-map field-name="partyId" value="Company" />
+					<select-field field-name="groupName"/>
+				</entity-and>
+	    		<set field="titleProperty" value="CheckList Reports"/>
+	            <set field="tabButtonItem" value="newReports"/>
+				<set field="tabButtonItem2" value="CheckListReports" />   	
+	    		<set field="screenFlag" value="newReports"/>
+	    		<entity-condition list="timePeriodList" entity-name="CustomTimePeriod" use-cache="true" filter-by-date="false" >
+                	<condition-expr field-name="periodTypeId" operator="equals" value="ATTENDANCE_MONTH"/>
+                	<order-by field-name="-thruDate"/>
+                </entity-condition>	
+	    		<entity-condition list="allBenefitsTypeList" entity-name="BenefitType">
+					<condition-expr field-name="benefitTypeId" operator="not-equals" value="PAYROL_BEN_SALARY"/>
+					<order-by field-name="sequenceNum"/>
+				</entity-condition>
+				<entity-condition list="allDeductionTypeList" entity-name="DeductionType">
+					<order-by field-name="sequenceNum"/>					
+				</entity-condition>
+    		 	<entity-condition entity-name="InsuranceType" list="finalInsuranceTypeList" use-cache="true">
+                </entity-condition>  	
+	    		<script location="component://humanres/webapp/humanres/WEB-INF/actions/humanres/reports.groovy"/>
+    			<set field="reportFrequencyFlag" value="CheckListReports"/>
+    		</actions>
+    		<widgets>
+    		<decorator-screen name="HumanresCommonDecorator" location="component://humanres/widget/CommonScreens.xml">
+    			<decorator-section name="body">
+    				<section>
+    					<widgets>
+    					<include-menu name="NewReportsTabBar" location="component://humanres/widget/HumanresMenus.xml"/> 
+    					<platform-specific><html><html-template location="component://humanres/webapp/humanres/humanres/Reports.ftl"></html-template></html></platform-specific>
+    					</widgets>
+    				</section>
+    			</decorator-section>    		
+    		</decorator-screen>
+    		</widgets>
+    	</section>
+    </screen>
+    
     <screen name="LoanReports">
     	<section>
     		<actions>  

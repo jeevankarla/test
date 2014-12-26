@@ -895,8 +895,13 @@
         		<if-has-permission permission="HR" action="_SUPPAYROLL_REPORTS_VIEW"/>
         	</condition>
         <link target="SupplyPayrollReports"></link>
+       	</menu-item>
+        <menu-item name="CheckListReports" title="CheckList Reports">
+        	<condition>
+        		<if-has-permission permission="HR" action="_CHECK_LISTS_VIEW"/>
+        	</condition>
+        	<link target="CheckListReports"></link>
         </menu-item>        
-        
     </menu>	
     <menu name="InternalJobPostingTabBar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml"
         default-menu-item-name="InternalJobPosting" type="simple" menu-container-style="button-bar tab-bar" 
