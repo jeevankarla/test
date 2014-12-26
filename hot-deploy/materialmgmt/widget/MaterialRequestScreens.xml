@@ -440,8 +440,9 @@
             <actions>
                 <set field="titleProperty" value="Add Items to Quote"/>
                 <set field="tabButtonItem" value="FindMaterialQuotes"/>
-                <set field="subTabButtonItem" value="QuoteContent"/>
+                  <set field="tabButtonItem2" value="createQuotation"/>
                 <set field="headerItem" value="request"/>
+                <set field="flag" value="N"/>
                 <set field="custRequestId" from-field="parameters.custRequestId" from-scope="screen" to-scope="screen"/>
                 <script location="component://materialmgmt/webapp/materialmgmt/WEB-INF/actions/purchases/SelectItemsToQuote.groovy" />
                 <script location="component://byproducts/webapp/byproducts/WEB-INF/actions/facility/enablePartyAutoComplete.groovy"/>
@@ -449,7 +450,35 @@
             <widgets>
                 <decorator-screen name="materialmgmtNgCommonDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
+                    <include-menu name="FindMaterialQuotesTabBar" location="component://materialmgmt/widget/materialmgmtMenus.xml"/>
                      <screenlet title="Select Items to Quote">
+                          <platform-specific>
+                            <html>
+                                <html-template location="component://materialmgmt/webapp/materialmgmt/purchase/ListEnquiryItemsToQuote.ftl"/>
+                            </html>
+                          </platform-specific>
+                        </screenlet>  
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    <screen name="EditQuotItems">
+        <section>
+            <actions>
+                <set field="titleProperty" value="Edit Quote Items"/>
+                <set field="tabButtonItem" value="FindMaterialQuotes"/>
+                <set field="tabButtonItem2" value="updateQuotation"/>
+                <set field="headerItem" value="request"/>
+                <set field="flag" from-field="parameters.flag"/>
+               <script location="component://materialmgmt/webapp/materialmgmt/WEB-INF/actions/purchases/EditQuoteItems.groovy" />
+               <script location="component://byproducts/webapp/byproducts/WEB-INF/actions/facility/enablePartyAutoComplete.groovy"/>
+            </actions>
+            <widgets>
+                <decorator-screen name="materialmgmtNgCommonDecorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="body">
+                    <include-menu name="FindMaterialQuotesTabBar" location="component://materialmgmt/widget/materialmgmtMenus.xml"/>
+                     <screenlet title="Edit Quote Items">
                           <platform-specific>
                             <html>
                                 <html-template location="component://materialmgmt/webapp/materialmgmt/purchase/ListEnquiryItemsToQuote.ftl"/>

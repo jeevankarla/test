@@ -355,4 +355,26 @@
         </menu-item>
       </menu>
       
+      <menu name="FindMaterialQuotesTabBar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml" selected-menuitem-context-field-name="tabButtonItem2">
+        <menu-item name="FindMaterialQuotes" title="Find Quotations">
+        	<link target="FindMaterialQuotes"/>
+        </menu-item>
+         <menu-item name="createQuotation" title="Create Quotation">
+         	<condition>
+        		<not>
+					<if-empty  field="parameters.custRequestId"/>
+				</not>
+        	</condition>
+        	<link target="enquiryItemsForQuote"/>
+        </menu-item>
+        <menu-item name="updateQuotation" title="Update Quotation">
+         	<condition>
+        		<not>
+					<if-empty  field="parameters.quoteId"/>
+				</not>
+        	</condition>
+        	<link target="editQuot"/>
+        </menu-item>
+      </menu>
+      
 </menus>

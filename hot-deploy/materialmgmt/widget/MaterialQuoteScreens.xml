@@ -7,12 +7,13 @@
                 <set field="titleProperty" value="Quotes"/>
                 <set field="headerItem" value="quote"/>
                 <set field="tabButtonItem" value="FindMaterialQuotes" />	
+                <set field="tabButtonItem2" value="FindMaterialQuotes"/>
                 <set field="entityName" value="QuoteAndItemAndCustRequest"/>
             </actions>
             <widgets>
                 <decorator-screen name="materialmgmtNgCommonDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
-                    	<!-- <include-menu name="QuoteTabBar" location="component://materialmgmt/widget/materialmgmtMenus.xml"/> -->
+                    	<include-menu name="FindMaterialQuotesTabBar" location="component://materialmgmt/widget/materialmgmtMenus.xml"/>
                         <decorator-screen name="FindScreenDecorator" location="component://common/widget/CommonScreens.xml">
                             <decorator-section name="search-options">
                                 <include-form name="FindMaterialQuote" location="component://materialmgmt/widget/MaterialQuoteForms.xml"/>

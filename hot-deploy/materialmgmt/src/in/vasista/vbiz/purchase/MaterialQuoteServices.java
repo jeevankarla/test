@@ -676,4 +676,177 @@ public class MaterialQuoteServices {
          return result;
     }
 	
+	public static String updateQuoteForEnquiry(HttpServletRequest request, HttpServletResponse response) {
+		
+		Delegator delegator = (Delegator) request.getAttribute("delegator");
+		LocalDispatcher dispatcher = (LocalDispatcher) request.getAttribute("dispatcher");
+		DispatchContext dctx =  dispatcher.getDispatchContext();
+		Locale locale = UtilHttp.getLocale(request);
+		Map<String, Object> result = ServiceUtil.returnSuccess();
+	    String issueDateStr = (String) request.getParameter("issueDate");
+	    String quoteName = (String) request.getParameter("quoteName");
+	    HttpSession session = request.getSession();
+	    GenericValue userLogin = (GenericValue) session.getAttribute("userLogin");
+	    String partyId = (String) request.getParameter("partyId");
+	  	String quoteId = (String) request.getParameter("quoteId");
+	    String validFromDateStr = (String) request.getParameter("validFromDate");
+	    String validThruDateStr = (String) request.getParameter("validThruDate");
+		Timestamp nowTimeStamp = UtilDateTime.nowTimestamp();
+		Map<String, Object> paramMap = UtilHttp.getParameterMap(request);
+		
+		int rowCount = UtilHttp.getMultiFormRowCount(paramMap);
+		if (rowCount < 1) {
+			Debug.logError("No rows to process, as rowCount = " + rowCount, module);
+			return "error";
+		}
+		Timestamp issueDate=null;
+		Timestamp validFromDate=null;
+		Timestamp validThruDate=null;
+		
+		SimpleDateFormat sdf = new SimpleDateFormat("dd MMMM, yyyy");
+	  	if(UtilValidate.isNotEmpty(issueDateStr)){
+	  		try {
+	  			issueDate = new java.sql.Timestamp(sdf.parse(issueDateStr).getTime());
+		  	} catch (ParseException e) {
+		  		Debug.logError(e, "Cannot parse date string: " + issueDateStr, module);
+		  	} catch (NullPointerException e) {
+	  			Debug.logError(e, "Cannot parse date string: " + issueDateStr, module);
+		  	}
+	  	}
+	  	else{
+	  		issueDate = UtilDateTime.nowTimestamp();
+	  	}
+	  	if(UtilValidate.isNotEmpty(validFromDateStr)){
+	  		try {
+	  			validFromDate = new java.sql.Timestamp(sdf.parse(validFromDateStr).getTime());
+		  	} catch (ParseException e) {
+		  		Debug.logError(e, "Cannot parse date string: " + validFromDateStr, module);
+		  	} catch (NullPointerException e) {
+	  			Debug.logError(e, "Cannot parse date string: " + validFromDateStr, module);
+		  	}
+	  	}
+	  	else{
+	  		validFromDate = UtilDateTime.nowTimestamp();
+	  	}
+	  	if(UtilValidate.isNotEmpty(validThruDateStr)){
+	  		try {
+	  			validThruDate = new java.sql.Timestamp(sdf.parse(validThruDateStr).getTime());
+		  	} catch (ParseException e) {
+		  		Debug.logError(e, "Cannot parse date string: " + validThruDateStr, module);
+		  	} catch (NullPointerException e) {
+	  			Debug.logError(e, "Cannot parse date string: " + validThruDateStr, module);
+		  	}
+	  	}
+	  	else{
+	  		validThruDate = UtilDateTime.nowTimestamp();
+	  	}
+	  	String quoteItemSeqId="";
+        String quantityStr = "";
+        String priceStr = "";
+		BigDecimal quantity = BigDecimal.ZERO;
+		BigDecimal quoteUnitPrice = BigDecimal.ZERO;
+		List<Map> quoteItemList = FastList.newInstance();
+	  	
+	  	for (int i = 0; i < rowCount; i++) {
+	  		Map quoteItemMap = FastMap.newInstance(); 
+			String thisSuffix = UtilHttp.MULTI_ROW_DELIMITER + i;
+			
+			if (paramMap.containsKey("quoteItemSeqId" + thisSuffix)) {
+				quoteItemSeqId = (String) paramMap.get("quoteItemSeqId" + thisSuffix);
+			}
+			else {
+				request.setAttribute("_ERROR_MESSAGE_", "Missing quoteItemSeqId");
+				return "error";			  
+			}
+			if (paramMap.containsKey("quantity" + thisSuffix)) {
+				quantityStr = (String) paramMap.get("quantity" + thisSuffix);
+			}
+			else {
+				request.setAttribute("_ERROR_MESSAGE_", "Missing product quantity");
+				return "error";			  
+			}		  
+			if(UtilValidate.isNotEmpty(quantityStr)){
+				quantity = new BigDecimal(quantityStr);
+			}
+			if (paramMap.containsKey("price" + thisSuffix)) {
+				priceStr = (String) paramMap.get("price" + thisSuffix);
+			}
+			else {
+				request.setAttribute("_ERROR_MESSAGE_", "Missing product price");
+				return "error";			  
+			}		  
+			if(UtilValidate.isNotEmpty(priceStr)){
+				quoteUnitPrice = new BigDecimal(priceStr);
+			}
+			quoteItemMap.put("quoteItemSeqId", quoteItemSeqId);
+			quoteItemMap.put("quantity",quantity);
+	        quoteItemMap.put("quoteUnitPrice", quoteUnitPrice);
+	        
+	        quoteItemList.add(quoteItemMap);
+		
+	  	}
+	  	try{
+	  		GenericValue quotes=delegator.findOne("Quote",UtilMisc.toMap("quoteId",quoteId),false);
+	  		if(UtilValidate.isNotEmpty(quotes)){
+	  			try{
+	  				Timestamp issDate=(Timestamp) quotes.get("issueDate");
+	  				Timestamp fromDate=(Timestamp) quotes.get("validFromDate");
+	  				Timestamp thruDate=(Timestamp) quotes.get("validThruDate");
+	  				String quName = (String) quotes.get("quoteName");
+	  				String id = (String) quotes.get("partyId");
+	  				if(!partyId.equals(id)){
+	  					quotes.set("partyId",partyId);
+	  				}
+	  				if(!quoteName.equals(quName)){
+	  					quotes.set("quoteName",quoteName);
+	  				}
+	  				if((issueDate.compareTo(issDate)>0) || (issueDate.compareTo(issDate)<0)){
+	  					quotes.set("issueDate",issueDate);
+	  				}
+	  				if((validFromDate.compareTo(fromDate)>0) || (validFromDate.compareTo(fromDate)<0)){
+	  					quotes.set("validFromDate",validFromDate);
+	  				}
+	  				if((validThruDate.compareTo(thruDate)>0) || (validThruDate.compareTo(thruDate)<0)){
+	  					quotes.set("validThruDate",validThruDate);
+	  				}
+	  				quotes.store();
+	  			}catch(Exception e){
+	  				request.setAttribute("_ERROR_MESSAGE_", "Error While Updating The Quote");
+	  	  	  		Debug.logError("Error While Updating The Quote", module);
+	  	  	  		return "Error While Updating The Quote";
+	  			}
+	  		}
+	  		
+		  	if(UtilValidate.isNotEmpty(quoteItemList)){
+		  		for(Map tempMap : quoteItemList){
+		  			quantity=(BigDecimal)tempMap.get("quantity");
+		  			quoteUnitPrice=(BigDecimal)tempMap.get("quoteUnitPrice");
+		  			try{
+				  		GenericValue quoteItems=delegator.findOne("QuoteItem",UtilMisc.toMap("quoteId",quoteId,"quoteItemSeqId",tempMap.get("quoteItemSeqId")),false);
+				  		BigDecimal qty=BigDecimal.ZERO;
+				  		BigDecimal unitPrice=BigDecimal.ZERO;
+				  		qty=(BigDecimal) quoteItems.get("quantity");
+				  		unitPrice=(BigDecimal) quoteItems.get("quoteUnitPrice");
+				  		if(!quantity.equals(qty)){
+				  			quoteItems.set("quantity",quantity);
+				  		}
+				  		if(!quoteUnitPrice.equals(unitPrice)){
+				  			quoteItems.set("quoteUnitPrice",quoteUnitPrice);
+				  		}
+				  		quoteItems.store();
+		  			}catch(Exception e){
+		  				request.setAttribute("_ERROR_MESSAGE_", "Error While Updating The QuoteItem");
+		  	  	  		Debug.logError("Error While Updating The QuoteItem", module);
+		  	  	  		return "Error While Updating The QuoteItem";
+		  			}
+			  	}
+		  	}
+	  	} catch(Exception e) {
+  	  		request.setAttribute("_ERROR_MESSAGE_", "Error While Updating The QuoteItem");
+  	  		Debug.logError("Error While Updating The QuoteItem", module);
+  	  		return "Error While Updating The QuoteItem";
+  	  	}
+	  	request.setAttribute("_EVENT_MESSAGE_","Successfully Quotation Updated..!");
+		return "Success";
+	}
 }

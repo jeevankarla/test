@@ -59,7 +59,12 @@
         <field name="productId" title="Material Code - Name" sort-field="true"><display-entity entity-name="Product" description="${productName}" key-field-name="productId"/></field>
         <field name="quantity" title="Quote Qty"><display/></field>
         <field name="quoteUnitPrice" title="Quote Unit Price"><display/></field>
-        
+        <field use-when="statusId.equals(&quot;QUO_CREATED&quot;)" name="editQuote" title="Edit" widget-style="buttontext" >
+        	<hyperlink target="editQuot" description="Edit">
+                 <parameter param-name="quoteId"/>
+                <parameter param-name="flag" value="Y" />
+            </hyperlink>
+        </field>
     </form>
     
     <form name="viewQuotation" type="single"  title="" default-map-name="quote" 

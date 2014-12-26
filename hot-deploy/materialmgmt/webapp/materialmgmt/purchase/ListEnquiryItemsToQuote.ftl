@@ -57,7 +57,7 @@ under the License.
         var quoteName = $("#quoteName").val();
         var quoteType = "MATERIAL_PUR_QUOTE";
         var enquires = jQuery("#listEnquiryItems :checkbox[name='check']");
-        
+        var quoteId = $("#quoteId").val();
         
         jQuery.each(enquires, function() {
             if (jQuery(this).is(':checked')) {
@@ -88,6 +88,11 @@ under the License.
 	            	var qty = $(qtyObj).val();
 	            	var appendQtyStr = "<input type=hidden name=quantity_o_"+index+" value="+qty+" />";
 	                $("#processEnquiryItems").append(appendQtyStr);
+	                
+	                var quoteItemSeqIdObj = $(domObj).find("[name='quoteItemSeqId']");
+	            	var quoteItemSeqId = $(quoteItemSeqIdObj).val();
+	            	var appendquoteItemSeqIdObjStr = "<input type=hidden name=quoteItemSeqId_o_"+index+" value="+quoteItemSeqId+" />";
+	                $("#processEnquiryItems").append(appendquoteItemSeqIdObjStr);
 	               	
 	               	ischecked = true; 
 	                index = index+1;
@@ -102,6 +107,10 @@ under the License.
     	appStr += "<input type=hidden name=quoteName value='"+ quoteName +"' />";
     	appStr += "<input type=hidden name=quoteType value='"+ quoteType +"' />";
     	appStr += "<input type=hidden name=issueDate value='"+ issueDate +"' />";
+    	
+    	if(quoteId && !isNaN(quoteId)){
+    		appStr += "<input type=hidden name=quoteId value='"+ quoteId +"' />";
+    	}
     	$("#processEnquiryItems").append(appStr);
            
         if(ischecked==true){
@@ -114,17 +123,21 @@ under the License.
 		$( "#issueDate" ).datepicker({
 			dateFormat:'dd MM, yy',
 			changeMonth: true,			
+			
 			numberOfMonths: 1});
 		$('#ui-datepicker-div').css('clip', 'auto');
 		
 		$( "#validFromDate" ).datepicker({
 			dateFormat:'dd MM, yy',
 			changeMonth: true,			
+			
+						
 			numberOfMonths: 1});
 		$('#ui-datepicker-div').css('clip', 'auto');
 		
 		$( "#validThruDate" ).datepicker({
 			dateFormat:'dd MM, yy',
+			
 			changeMonth: true,			
 			numberOfMonths: 1});
 		$('#ui-datepicker-div').css('clip', 'auto');
@@ -132,32 +145,66 @@ under the License.
 	}
 //]]>
 </script>
-<form name="processEnquiryItems" id="processEnquiryItems"  method="post" action="<@ofbizUrl>createQuoteForEnquiry</@ofbizUrl>">
+<#if flag?exists && flag=="Y">
+	<form name="processEnquiryItems" id="processEnquiryItems"  method="post" action="<@ofbizUrl>updateQuoteForEnquiry</@ofbizUrl>">
+<#else>
+	<form name="processEnquiryItems" id="processEnquiryItems"  method="post" action="<@ofbizUrl>createQuoteForEnquiry</@ofbizUrl>">
+</#if>
 </form>
 <#if itemList?has_content>
 	
   	<form name="listEnquiryItems" id="listEnquiryItems"  method="post" action="<@ofbizUrl>createQuoteForEnquiry</@ofbizUrl>">
   		<table width="50%">
+  			<#if quoteId?exists && quoteId?has_content>
+  			<tr><td><span class="label h3"> Quote Id :</span></td><td><input class="h3" type="text" name="quoteId" id="quoteId" value="${quoteId}" readonly /></td></tr>
+  			</#if>
     		<tr>
+    		<#if partyId?exists && partyId?has_content>
+    			<td><span class="label h3"> Supplier Party (<font color='red'>*</font>):</span></td><td><input class="h3" type="text" name="partyId" id="partyId" value="${partyId}"  maxlength="60" /></td>
+    		<#else>	
   				<td><span class="label h3"> Supplier Party (<font color='red'>*</font>):</span></td><td><input class="h3" type="text" name="partyId" id="partyId"  maxlength="60" /></td>
+  			</#if>	
     		</tr>
     		<tr>
+    		<#if issueDate?exists && issueDate?has_content>
+    			<td><span class="label h3">Quote Received Date :</span></td><td><input class='h3' type='text' id='issueDate' name='issueDate' value="${issueDate}" onmouseover='datepick()'/></td>
+    		<#else>	
     			<td><span class="label h3">Quote Received Date :</span></td><td><input class='h3' type='text' id='issueDate' name='issueDate' onmouseover='datepick()'/></td>
+    		</#if>	
     		</tr>
     		<tr>
+    		<#if quoteName?exists && quoteName?has_content>
+    			<td><span class="label h3">Quote Ref No :</span></td><td><input class='h3' type='text' id='quoteName' name='quoteName' value="${quoteName}" /></td>
+    		<#else>
     			<td><span class="label h3">Quote Ref No :</span></td><td><input class='h3' type='text' id='quoteName' name='quoteName'/></td>
+    		</#if>
+    			
     		</tr>
     		<tr>
+    		<#if validFromDate?exists && validFromDate?has_content>
+    			<td><span class="label h3">Valid From Date :</span></td><td><input class='h3' type='text' id='validFromDate' name='validFromDate' value="${validFromDate}" onmouseover='datepick()'/></td>
+    		<#else>
     			<td><span class="label h3">Valid From Date :</span></td><td><input class='h3' type='text' id='validFromDate' name='validFromDate' onmouseover='datepick()'/></td>
+    		</#if>	
     		</tr>
     		<tr>
+    		<#if validThruDate?exists && validThruDate?has_content>
+    			<td><span class="label h3">Valid Thru Date :</span></td><td><input class='h3' type='text' id='validThruDate' name='validThruDate' value="${validThruDate}" onmouseover='datepick()'/></td>
+    		<#else>
     			<td><span class="label h3">Valid Thru Date :</span></td><td><input class='h3' type='text' id='validThruDate' name='validThruDate' onmouseover='datepick()'/></td>
+    		</#if>	
     		</tr>
     		
     	</table>
-    	<div align="center">     
-    		<h3><input id="submitButton" type="button" onclick="javascript:itemsSubmit(this);" value="Create Quote" /></h3>
-    	</div>
+    	<#if flag?exists && flag=="Y">
+	    	<div align="center">     
+	    		<h3><input id="submitButton" type="button" onclick="javascript:itemsSubmit(this);" value="Update Quote" /></h3>
+	    	</div>
+    	<#else>
+	    	<div align="center">     
+	    		<h3><input id="submitButton" type="button" onclick="javascript:itemsSubmit(this);" value="Create Quote" /></h3>
+	    	</div>
+    	</#if>
 		<br />
 		
     	<table class="basic-table hover-bar" cellspacing="0">
@@ -174,14 +221,24 @@ under the License.
         <#assign alt_row = false>
         <#list itemList as items>          
             <tr valign="middle"<#if alt_row> class="alternate-row"</#if>>
+            <#if items.custRequestId?exists && items.custRequestId?has_content>
               <input type="hidden" name="custRequestId" id="custRequestId" value="${items.custRequestId}">
+              </#if>
+              <#if items.custRequestItemSeqId?exists && items.custRequestItemSeqId?has_content>
               <input type="hidden" name="custRequestItemSeqId" id="custRequestItemSeqId" value="${items.custRequestItemSeqId}">
+              </#if>
+              <#if items.productId?exists && items.productId?has_content>
               <input type="hidden" name="productId" id="productId" value="${items.productId}">
-              
+              </#if>
+              <#if items.quoteItemSeqId?exists && items.quoteItemSeqId?has_content>
+              <input type="hidden" name="quoteItemSeqId" id="quoteItemSeqId" value="${items.quoteItemSeqId}">
+              </#if>
               <td><input type="button" name="productName" id="productName" value="${items.productName}(${items.productId})" style="border:0;background-color:transparent;color:#3B5998;"/></td>
               <td><input type="button" id="enqQty" name="enqQty" style="background-color:transparent;border:0;color:#3B5998;" value="${items.quantity}"/ ></td>
               <td><input type="text" id="quantity" name="quantity" value="${items.quantity}"/></td>
-              <td><input type="text" id="price" name="price"/></td>
+              <#if items.unitPrice?exists && items.unitPrice?has_content><td><input type="text" id="price" name="price" value=${items.unitPrice}></td>
+              <#else><td><input type="text" id="price" name="price"/></td>
+              </#if>
               <td><input type="checkbox" id="check_${items_index}" name="check" value="${items.custRequestId}::${items.custRequestItemSeqId}"/></td>
             </tr>
             <#assign alt_row = !alt_row>

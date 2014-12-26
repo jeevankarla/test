@@ -147,6 +147,12 @@
      	<response name="error" type="view" value="ViewMaterialEnquiry"/>
     </request-map>
     
+    <request-map uri="editQuot">
+     	<security auth="true" https="true"/>
+     	<response name="success" type="view" value="EditQuotItems"/>
+     	<response name="error" type="view" value="FindMaterialQuotes"/>
+    </request-map>
+    
     <request-map uri="AddEnquiryContent">
      	<security auth="true" https="true"/>
      	<response name="success" type="view" value="AddEnquiryContent"/>
@@ -456,6 +462,13 @@
     <request-map uri="createQuoteForEnquiry">
         <security https="true" auth="true"/>
         <event type="java" path="in.vasista.vbiz.purchase.MaterialQuoteServices" invoke="createQuoteForEnquiry"/>        
+        <response name="success" type="view" value="ViewMaterialQuote"/>
+        <response name="error" type="view" value="ViewMaterialQuote"/>
+    </request-map>
+    
+    <request-map uri="updateQuoteForEnquiry">
+        <security https="true" auth="true"/>
+        <event type="java" path="in.vasista.vbiz.purchase.MaterialQuoteServices" invoke="updateQuoteForEnquiry"/>        
         <response name="success" type="view" value="ViewMaterialQuote"/>
         <response name="error" type="view" value="ViewMaterialQuote"/>
     </request-map>
@@ -814,7 +827,7 @@
     <view-map name="NewRequirement" type="screen" page="component://materialmgmt/widget/MaterialRequestScreens.xml#NewRequirement"/>
     <view-map name="editRequirement" type="screen" page="component://materialmgmt/widget/MaterialRequestScreens.xml#editRequirement"/>
     <view-map name="RequestsReceiptAcknowledgement" type="screen" page="component://materialmgmt/widget/MaterialRequestScreens.xml#RequestsReceiptAcknowledgement"/>
-    
+    <view-map name="EditQuotItems" type="screen" page="component://materialmgmt/widget/MaterialRequestScreens.xml#EditQuotItems"/>
     <!-- Requirement views -->
     <view-map name="FindMaterialRequirement" type="screen" page="component://materialmgmt/widget/MaterialRequirementScreens.xml#FindMaterialRequirement"/>
     <view-map name="ApproveMaterialRequirement" type="screen" page="component://materialmgmt/widget/MaterialRequirementScreens.xml#ApproveMaterialRequirement"/>
