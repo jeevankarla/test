@@ -33,7 +33,7 @@ under the License.
             <fo:static-content flow-name="xsl-region-before" font-family="Courier,monospace" font-weight="bold">
             	<fo:block text-align="left" white-space-collapse="false" font-size="7pt">&#160;                                                  ANDHRA PRADESH DAIRY DEVELOPMENT CO-OP, FEDERATION LIMITED</fo:block>
                 <#assign shedCode = delegator.findOne("PartyGroup", {"partyId" : ShedId}, true)>
-                <fo:block text-align="left" white-space-collapse="false" font-size="7pt">&#160;                                                  DEPARTMENT TOTALS FOR ${(Static["org.ofbiz.base.util.UtilDateTime"].toDateString(timePeriodStart?if_exists, "MMMMM, yyyy"))?upper_case} SHED CODE: <#if shedCode?has_content>${shedCode.comments?upper_case?if_exists}</#if></fo:block>
+                <fo:block text-align="left" white-space-collapse="false" font-size="7pt">&#160;                           DEPARTMENT TOTALS FOR ${(Static["org.ofbiz.base.util.UtilDateTime"].toDateString(timePeriodEnd?if_exists, "MMMMM, yyyy"))?upper_case}             SHED CODE AND NAME : <#if shedCode?has_content>${shedCode.groupName?upper_case?if_exists}</#if></fo:block>
                 <fo:block font-size="7pt">--------------------------------------------------------------------------------------------------------------------------------------</fo:block>
                  <fo:block font-size="7pt">
                     <fo:table>
@@ -124,7 +124,7 @@ under the License.
                  <#assign TOTAL_BEN_WASHALW= 0>
                  <#assign TOTAL_DD_SSS = 0>
                  <#assign TOTAL_DD_MEDADV = 0>
-                 <#assign TOTAL_DD_APGLIFLN  = 0>
+                 <#assign TOTAL_DD_APGLIF  = 0>
                             
                  <#assign TOTAL_BEN_CBALW = 0>
      			 <#assign TOTAL_BEN_EXTALW  = 0>
@@ -646,12 +646,12 @@ under the License.
 	                                    <fo:block keep-together="always" text-align="right">${((-1)*PAYROL_DD_MEDADV)?if_exists?string("##0.00")}</fo:block>
 	                                </fo:table-cell>
 	                                <fo:table-cell>
-	                                <#assign PAYROL_DD_APGLIFLN=0>
-	                                <#if deptTotals.getValue().get("PAYROL_DD_APGLIFLN")?has_content>
-	                                <#assign PAYROL_DD_APGLIFLN=deptTotals.getValue().get("PAYROL_DD_APGLIFLN")>
+	                                <#assign PAYROL_DD_APGLIF=0>
+	                                <#if deptTotals.getValue().get("PAYROL_DD_APGLIF")?has_content>
+	                                <#assign PAYROL_DD_APGLIF=deptTotals.getValue().get("PAYROL_DD_APGLIF")>
 	                                </#if>
-	                                 <#assign TOTAL_DD_APGLIFLN  = TOTAL_DD_APGLIFLN + PAYROL_DD_APGLIFLN>
-	                                    <fo:block keep-together="always" text-align="right">${((-1)*PAYROL_DD_APGLIFLN)?if_exists?string("##0.00")}</fo:block>
+	                                 <#assign TOTAL_DD_APGLIF  = TOTAL_DD_APGLIF + PAYROL_DD_APGLIF>
+	                                    <fo:block keep-together="always" text-align="right">${((-1)*PAYROL_DD_APGLIF)?if_exists?string("##0.00")}</fo:block>
 	                                </fo:table-cell>
 	                                <fo:table-cell>
 	                                    <fo:block keep-together="always" text-align="right"></fo:block>
@@ -957,7 +957,7 @@ under the License.
 		                            <fo:block keep-together="always" text-align="right">${((-1)*TOTAL_DD_MEDADV)?if_exists?string("##0.00")}</fo:block>
 		                        </fo:table-cell>
 		                        <fo:table-cell>
-		                            <fo:block keep-together="always" text-align="right">${((-1)*TOTAL_DD_APGLIFLN)?if_exists?string("##0.00")}</fo:block>
+		                            <fo:block keep-together="always" text-align="right">${((-1)*TOTAL_DD_APGLIF)?if_exists?string("##0.00")}</fo:block>
 		                        </fo:table-cell>
 		                        <fo:table-cell>
 		                            <fo:block keep-together="always" text-align="right"></fo:block>

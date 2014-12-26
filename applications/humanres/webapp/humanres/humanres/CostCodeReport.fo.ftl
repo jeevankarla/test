@@ -91,38 +91,41 @@
 								<#list costCodeDetailList as costCodeDetList>
 								<#assign deptId = costCodeDetList.getValue().get("deptId")>
 								<#assign department = delegator.findOne("PartyGroup", {"partyId" : deptId}, true)>
-									<fo:table-row>	
-										<fo:table-cell>
-											<fo:block font-size="5pt"  keep-together="always" text-align="left">${costCodeDetList.getValue().get("unitCode")?if_exists}</fo:block>
-										</fo:table-cell>
-										<fo:table-cell>
-											<fo:block font-size="5pt"  keep-together="always" text-align="left">${costCodeDetList.getKey()?if_exists}</fo:block>
-										</fo:table-cell>
-										<fo:table-cell>
-											<fo:block font-size="5pt"  keep-together="always" text-align="left"><#if department?has_content>${Static["org.ofbiz.order.order.OrderServices"].nameTrim((StringUtil.wrapString(department.groupName)),14)}</#if> </fo:block>
-										</fo:table-cell>
-										<fo:table-cell>
-											<fo:block font-size="5pt"  keep-together="always" text-align="right" >${costCodeDetList.getValue().get("totEarnings")?if_exists?string('0.00')}</fo:block>
-										</fo:table-cell>
-										<#assign totalEarnings =totalEarnings + costCodeDetList.getValue().get("totEarnings")>
-										<fo:table-cell>
-											<fo:block font-size="5pt"  keep-together="always" text-align="right" >${((-1)*costCodeDetList.getValue().get("totDeductions"))?if_exists?string('0.00')}</fo:block>
-										</fo:table-cell>
-										<#assign totalDeductions =totalDeductions + costCodeDetList.getValue().get("totDeductions")>
-										<fo:table-cell>
-											<fo:block font-size="5pt"  keep-together="always" text-align="right" >${costCodeDetList.getValue().get("netAmount")?if_exists?string('0.00')}</fo:block>
-										</fo:table-cell>
-										<#assign totalNetAmount =totalNetAmount + costCodeDetList.getValue().get("netAmount")>
-										<fo:table-cell>
-											<fo:block font-size="5pt"  keep-together="always" text-align="right" >${costCodeDetList.getValue().get("rndNetAmt")?if_exists?string('0.00')}</fo:block>
-										</fo:table-cell>
-										<#assign totalRndNetAmt =totalRndNetAmt + costCodeDetList.getValue().get("rndNetAmt")>
-									</fo:table-row>
-									<fo:table-row>
-		                            	<fo:table-cell>
-		                                	<fo:block font-size="5pt">&#160;</fo:block>
-		                                </fo:table-cell>
-		                           </fo:table-row>
+								<#assign netAmount = costCodeDetList.getValue().get("netAmount")>
+									<#if netAmount != 0>
+										<fo:table-row>	
+											<fo:table-cell>
+												<fo:block font-size="5pt"  keep-together="always" text-align="left">${costCodeDetList.getValue().get("unitCode")?if_exists}</fo:block>
+											</fo:table-cell>
+											<fo:table-cell>
+												<fo:block font-size="5pt"  keep-together="always" text-align="left">${costCodeDetList.getKey()?if_exists}</fo:block>
+											</fo:table-cell>
+											<fo:table-cell>
+												<fo:block font-size="5pt"  keep-together="always" text-align="left"><#if department?has_content>${Static["org.ofbiz.order.order.OrderServices"].nameTrim((StringUtil.wrapString(department.groupName)),14)}</#if> </fo:block>
+											</fo:table-cell>
+											<fo:table-cell>
+												<fo:block font-size="5pt"  keep-together="always" text-align="right" >${costCodeDetList.getValue().get("totEarnings")?if_exists?string('0.00')}</fo:block>
+											</fo:table-cell>
+											<#assign totalEarnings =totalEarnings + costCodeDetList.getValue().get("totEarnings")>
+											<fo:table-cell>
+												<fo:block font-size="5pt"  keep-together="always" text-align="right" >${((-1)*costCodeDetList.getValue().get("totDeductions"))?if_exists?string('0.00')}</fo:block>
+											</fo:table-cell>
+											<#assign totalDeductions =totalDeductions + costCodeDetList.getValue().get("totDeductions")>
+											<fo:table-cell>
+												<fo:block font-size="5pt"  keep-together="always" text-align="right" >${costCodeDetList.getValue().get("netAmount")?if_exists?string('0.00')}</fo:block>
+											</fo:table-cell>
+											<#assign totalNetAmount =totalNetAmount + costCodeDetList.getValue().get("netAmount")>
+											<fo:table-cell>
+												<fo:block font-size="5pt"  keep-together="always" text-align="right" >${costCodeDetList.getValue().get("rndNetAmt")?if_exists?string('0.00')}</fo:block>
+											</fo:table-cell>
+											<#assign totalRndNetAmt =totalRndNetAmt + costCodeDetList.getValue().get("rndNetAmt")>
+										</fo:table-row>
+										<fo:table-row>
+		                            		<fo:table-cell>
+		                                		<fo:block font-size="5pt">&#160;</fo:block>
+		                                	</fo:table-cell>
+		                           		</fo:table-row>
+		                        	</#if>
 								</#list>
 								 <fo:table-row>
 						   			<fo:table-cell>

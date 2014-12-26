@@ -57,6 +57,7 @@ emplInputMap.put("userLogin", userLogin);
 emplInputMap.put("orgPartyId", "Company");
 emplInputMap.put("fromDate", timePeriodStart);
 emplInputMap.put("thruDate", timePeriodEnd);
+employmentsList = [];
 Map EmploymentsMap = HumanresService.getActiveEmployements(dctx,emplInputMap);
 employments=EmploymentsMap.get("employementList");
 if(UtilValidate.isNotEmpty(employments)){
@@ -124,11 +125,13 @@ if(UtilValidate.isNotEmpty(BillingList)){
 										detailsMap.put("Wages",Wages);
 										employeeContribtn=0;
 										employerContribtn=0;
+										employerVolPf=0;
 										pensionAmount = 0;
 										headerIdsList.each{ headerId ->
 											headerId = headerId.payrollHeaderId;
 											employeCont=0;
 											employerCont=0;
+											empVolPf=0;
 											pension=0;
 											List employeeConditionList=[];
 											employeeConditionList.add(EntityCondition.makeCondition("payrollHeaderId", EntityOperator.EQUALS, headerId));
@@ -142,6 +145,19 @@ if(UtilValidate.isNotEmpty(BillingList)){
 													employeeContribtn = employeeContribtn+employeCont;
 												}
 												detailsMap.put("employeeContribtn",employeeContribtn);
+											}
+											List volPfConditionList=[];
+											volPfConditionList.add(EntityCondition.makeCondition("payrollHeaderId", EntityOperator.EQUALS, headerId));
+											volPfConditionList.add(EntityCondition.makeCondition("payrollHeaderItemTypeId", EntityOperator.EQUALS, "PAYROL_DD_VOLPF"));
+											volPfCondition = EntityCondition.makeCondition(volPfConditionList,EntityOperator.AND);
+											employerVolPfList = delegator.findList("PayrollHeaderItem", volPfCondition, null, null, null, false);
+											if(UtilValidate.isNotEmpty(employerVolPfList)){
+												employerVolPfList.each{ empVolPf ->
+													empVolPf = empVolPf.amount;
+													empVolPf = empVolPf.abs();
+													employerVolPf = employerVolPf+empVolPf;
+												}
+												detailsMap.put("employerVolPf",employerVolPf);
 											}
 											List emplyrConditionList=[];
 											emplyrConditionList.add(EntityCondition.makeCondition("payrollHeaderId", EntityOperator.EQUALS, headerId));
