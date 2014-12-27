@@ -237,7 +237,8 @@ if(UtilValidate.isNotEmpty(periodBillingList)){
 					payRateList.add(EntityCondition.makeCondition("partyIdTo", EntityOperator.EQUALS ,partyId));
 					payRateList.add(EntityCondition.makeCondition("partyIdFrom", EntityOperator.EQUALS ,parameters.OrganizationId));
 					payRateList.add(EntityCondition.makeCondition("roleTypeIdFrom", EntityOperator.EQUALS ,"INTERNAL_ORGANIZATIO"));
-					payRateList.add(EntityCondition.makeCondition("fromDate", EntityOperator.BETWEEN, UtilMisc.toList(timePeriodStart,timePeriodEnd)));
+					payRateList.add(EntityCondition.makeCondition(EntityCondition.makeCondition("fromDate", EntityOperator.LESS_THAN_EQUAL_TO, timePeriodStart)));
+					//payRateList.add(EntityCondition.makeCondition("fromDate", EntityOperator.BETWEEN, UtilMisc.toList(timePeriodStart,timePeriodEnd)));
 					payRateCond = EntityCondition.makeCondition(payRateList,EntityOperator.AND);
 					payRateList = delegator.findList("PayHistory", payRateCond, null, null, null, false);
 					if(UtilValidate.isNotEmpty(payRateList)){
@@ -374,5 +375,4 @@ if (partyGroup?.logoImageUrl) {
    logoImageUrl = partyGroup.logoImageUrl;
 }
 context.logoImageUrl = logoImageUrl;
-
 
