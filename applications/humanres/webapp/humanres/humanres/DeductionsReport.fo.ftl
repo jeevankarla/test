@@ -57,8 +57,8 @@ under the License.
 	     					<fo:table>
 	           					<fo:table-column column-width="10pt"/>
 		     					<fo:table-column column-width="16pt"/>
-		     					<fo:table-column column-width="45pt"/>
-		       					<fo:table-column column-width="33pt"/>
+		     					<fo:table-column column-width="55pt"/>
+		       					<fo:table-column column-width="30pt"/>
 		     					<fo:table-column column-width="28pt"/>
 		       					<fo:table-column column-width="26pt"/>
 		       					<fo:table-column column-width="20pt"/>
@@ -236,8 +236,8 @@ under the License.
            					<#if  headerDetails.getKey() == "PAYROL_DD_EPF">
 	           					<fo:table-column column-width="10pt"/>
 		     					<fo:table-column column-width="16pt"/>
-		     					<fo:table-column column-width="45pt"/>
-		       					<fo:table-column column-width="33pt"/>
+		     					<fo:table-column column-width="55pt"/>
+		       					<fo:table-column column-width="30pt"/>
 		     					<fo:table-column column-width="28pt"/>
 		       					<fo:table-column column-width="26pt"/>
 		       					<fo:table-column column-width="20pt"/>

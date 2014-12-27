@@ -368,7 +368,7 @@ if(UtilValidate.isNotEmpty(BillingList)){
 											loansAndRecoveryList = delegator.findList("LoanAndRecoveryAndType", loanRecoveryCondition, null, null, null, false);
 											loansAndRecoveryList.each{ loanAndRecovery ->
 												if(UtilValidate.isNotEmpty(loanAndRecovery)){
-													accountNumber = loanAndRecovery.loanId;
+													accountNumber = loanAndRecovery.loanFinAccountId;
 													closingBalance = loanAndRecovery.closingBalance;
 													balance = balance+closingBalance;
 												}
