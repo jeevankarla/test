@@ -124,11 +124,11 @@
 																		                     				<fo:block linefeed-treatment="preserve" >&#xA;</fo:block>
 																		                     			</fo:table-cell>
 																		                     			<fo:table-cell >
-																		                     				<fo:block text-align="center" font-size="12pt" font-weight="bold">${Static["org.ofbiz.party.party.PartyHelper"].getPartyName(delegator, partyId, false)}</fo:block>
+																		                     				<fo:block text-align="center" font-size="12pt" font-weight="bold">${Static["org.ofbiz.order.order.OrderServices"].nameTrim((Static["org.ofbiz.party.party.PartyHelper"].getPartyName(delegator, partyId, false)),15)}</fo:block>
 																		                     				<fo:block linefeed-treatment="preserve" >&#xA;</fo:block>
 																		                     			</fo:table-cell>
 																		                     			<fo:table-cell >
-																		                     				<fo:block text-align="center" font-size="12pt" font-weight="bold"><#if designationName?has_content>${designationName?if_exists}<#else><#if designation?has_content>${designation.description?if_exists}</#if></#if></fo:block>
+																		                     				<fo:block text-align="center" font-size="12pt" font-weight="bold" keep-together="always"><#if designationName?has_content>${Static["org.ofbiz.order.order.OrderServices"].nameTrim((designationName?if_exists),13)}<#else><#if designation?has_content>${Static["org.ofbiz.order.order.OrderServices"].nameTrim((designation.description?if_exists),13)}</#if></#if></fo:block>
 																		                     				<fo:block linefeed-treatment="preserve" >&#xA;</fo:block>
 																		                     			</fo:table-cell>
 																	                     			</fo:table-row>
@@ -875,11 +875,11 @@
 																		                     			</fo:table-cell>
 																		                     			<fo:table-cell >
 																		                     				<fo:block linefeed-treatment="preserve" >&#xA;</fo:block>
-																		                     				<fo:block text-align="center" font-size="12pt" font-weight="bold">${Static["org.ofbiz.party.party.PartyHelper"].getPartyName(delegator, partyId, false)}</fo:block>
+																		                     				<fo:block text-align="center" font-size="12pt" font-weight="bold">${Static["org.ofbiz.order.order.OrderServices"].nameTrim((Static["org.ofbiz.party.party.PartyHelper"].getPartyName(delegator, partyId, false)),15)}</fo:block>
 																		                     			</fo:table-cell>
 																		                     			<fo:table-cell >
 																		                     				<fo:block linefeed-treatment="preserve" >&#xA;</fo:block>
-																		                     				<fo:block text-align="center" font-size="12pt" font-weight="bold"><#if designationName?has_content>${designationName?if_exists}<#else><#if designation?has_content>${designation.description?if_exists}</#if></#if></fo:block>
+																		                     				<fo:block text-align="center" font-size="12pt" font-weight="bold"><#if designationName?has_content>${Static["org.ofbiz.order.order.OrderServices"].nameTrim((designationName?if_exists),13)}<#else><#if designation?has_content>${Static["org.ofbiz.order.order.OrderServices"].nameTrim((designation.description?if_exists),13)}</#if></#if></fo:block>
 																		                     			</fo:table-cell>
 																	                     			</fo:table-row>
 																	                           </fo:table-body>
@@ -1639,11 +1639,11 @@
 																		                     			</fo:table-cell>
 																		                     			<fo:table-cell >
 																		                     				<fo:block linefeed-treatment="preserve" >&#xA;</fo:block>
-																		                     				<fo:block text-align="center" font-size="12pt" font-weight="bold">${Static["org.ofbiz.party.party.PartyHelper"].getPartyName(delegator, partyId, false)}</fo:block>
+																		                     				<fo:block text-align="center" font-size="12pt" font-weight="bold">${Static["org.ofbiz.order.order.OrderServices"].nameTrim((Static["org.ofbiz.party.party.PartyHelper"].getPartyName(delegator, partyId, false)),15)}</fo:block>
 																		                     			</fo:table-cell>
 																		                     			<fo:table-cell >
 																		                     				<fo:block linefeed-treatment="preserve" >&#xA;</fo:block>
-																		                     				<fo:block text-align="center" font-size="12pt" font-weight="bold"><#if designationName?has_content>${designationName?if_exists}<#else><#if designation?has_content>${designation.description?if_exists}</#if></#if></fo:block>
+																		                     				<fo:block text-align="center" font-size="12pt" font-weight="bold"><#if designationName?has_content>${Static["org.ofbiz.order.order.OrderServices"].nameTrim((designationName?if_exists),13)}<#else><#if designation?has_content>${Static["org.ofbiz.order.order.OrderServices"].nameTrim((designation.description?if_exists),13)}</#if></#if></fo:block>
 																		                     			</fo:table-cell>
 																	                     			</fo:table-row>
 																	                           </fo:table-body>
