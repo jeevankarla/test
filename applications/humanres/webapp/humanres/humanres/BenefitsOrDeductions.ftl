@@ -129,7 +129,10 @@ function comparer(a, b) {
 			</#if>
 			var columns = [		
 					{id:"id", name:"Employee Id", field:"id", width:150, minWidth:100, cssClass:"cell-title", sortable:true},
-					{id:"deptName", name:"Department", field:"deptName", width:150, minWidth:100, cssClass:"cell-title", sortable:true},		
+					{id:"deptName", name:"Department", field:"deptName", width:150, minWidth:100, cssClass:"cell-title", sortable:true},
+					<#if (showClosingBalanceMap.get("showCB") == "Y")> 
+					{id:"closingBalance", name:"Loan Closing Bal", field:"closingBalance", width:150, minWidth:100, cssClass:"cell-title", sortable:true},		
+					</#if>
 					<#if type?exists>
 						<#if type=="benefits">						
 							<#if benefitTypeIds?has_content> 

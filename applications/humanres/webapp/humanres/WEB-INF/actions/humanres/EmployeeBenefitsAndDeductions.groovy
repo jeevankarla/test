@@ -24,6 +24,7 @@ import org.ofbiz.base.util.UtilNumber;
 import in.vasista.vbiz.humanres.PayrollService;
 import org.ofbiz.party.party.PartyHelper;
 import in.vasista.vbiz.humanres.HumanresService;
+import in.vasista.vbiz.humanres.HumanresHelperServices;
 if (parameters.customTimePeriodId == null) {
 	return;
 }
@@ -325,6 +326,30 @@ if(UtilValidate.isNotEmpty(parameters.dedTypeId)){
 }else{
 	dedItemIdsList=dedItemIdsList;
 }
+
+List conditionList=[];
+conditionList.add(EntityCondition.makeCondition("propertyName", EntityOperator.EQUALS, "showClosingBalance"));
+conditionList.add(EntityCondition.makeCondition("propertyTypeEnumId", EntityOperator.EQUALS , "CLOSING_BALANCE"));
+TenantCondition = EntityCondition.makeCondition(conditionList,EntityOperator.AND);
+TenantConfigList = delegator.findList("TenantConfiguration", TenantCondition, null, null, null, false);
+showClosingBalanceMap=[:];
+if(UtilValidate.isNotEmpty(TenantConfigList)){
+	TenantConfigList.each{ TenantConfig ->
+		if(UtilValidate.isNotEmpty(TenantConfig)){
+			description = TenantConfig.description;
+			propertyValue = TenantConfig.propertyValue;
+			if(UtilValidate.isEmpty(propertyValue)){
+				propertyValue = "N";
+			}
+			showClosingBalanceMap.put("showCB",propertyValue);
+		}
+	}
+}
+else{
+	showClosingBalanceMap.put("showCB","N");
+}
+context.put("showClosingBalanceMap",showClosingBalanceMap);
+
 List quarterDedList = UtilMisc.toList("PAYROL_DD_ELECT","PAYROL_DD_WATR");
 JSONArray headItemsJSON = new JSONArray();
 if(UtilValidate.isNotEmpty(deductionTypeValueMap)){
@@ -351,6 +376,18 @@ if(UtilValidate.isNotEmpty(deductionTypeValueMap)){
 		}
 		newObj.put("periodId",parameters.customTimePeriodId);
 		newObj.put("partyId",emplyId);
+		PartyClosingBalList = [];
+		employeeInpuMap = [:];
+		employeeInpuMap.put("loanTypeId",parameters.dedTypeId);
+		employeeInpuMap.put("customTimePeriodId",parameters.customTimePeriodId);
+		employeeInpuMap.put("partyId",parameters.partyIdTo);
+		emplInputMap.put("userLogin", userLogin);
+		PartyClosingBalList = (HumanresHelperServices.getLoanClosingBalanceByLoanType(dctx,employeeInpuMap));
+		if(UtilValidate.isNotEmpty(PartyClosingBalList)){
+			partyClosingDetails = PartyClosingBalList.get("loanClosingBalMap");
+		}
+		closingBalance = partyClosingDetails.get(parameters.partyIdTo);
+		newObj.put("closingBalance",closingBalance);
 		if(UtilValidate.isNotEmpty(entry.getValue())){
 			Iterator headerItemIter = (entry.getValue()).entrySet().iterator();
 			while(headerItemIter.hasNext()){
