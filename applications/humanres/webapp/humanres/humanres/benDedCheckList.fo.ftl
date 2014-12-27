@@ -19,7 +19,7 @@
 		<#else>         
  			<fo:page-sequence master-reference="main">
 				<fo:static-content flow-name="xsl-region-before" font-family="Courier,monospace" font-size="8pt">
-			        <fo:block text-align="left" white-space-collapse="false" keep-together="always" font-size="5pt">.                               CHECK LIST FOR BENEFITS AND DEDUCTIONS ON ${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(fromDate, "MMM-yyyy")}</fo:block>        
+			        <fo:block text-align="left" white-space-collapse="false" keep-together="always" font-size="5pt">.                               CHECK LIST FOR BENEFITS AND DEDUCTIONS ON ${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(thruDate, "MMMM,yyyy").toUpperCase()}</fo:block>        
 			  		<fo:block text-align="left" white-space-collapse="false" keep-together="always" font-size="8pt">--------------------------------------------------------------------------------------------------------------------------------------------------------------</fo:block>	 	 	  
 			  		<fo:block text-align="left" white-space-collapse="false" keep-together="always" font-size="8pt">TYPE    MMYY        TypeId                EMPNO         Emp.Name                Desgn.                WEF         Sanction      O.B.        INST.</fo:block>
 			  		<fo:block text-align="left" white-space-collapse="false" keep-together="always" font-size="8pt">--------------------------------------------------------------------------------------------------------------------------------------------------------------</fo:block>
@@ -70,7 +70,7 @@
 										   				<fo:block font-size="4pt" text-align="left">RGL</fo:block>
 										   			</fo:table-cell>
 										   			<fo:table-cell>
-										   				<fo:block font-size="4pt" text-align="left">${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(fromDate, "MM/yyyy")?if_exists}</fo:block>
+										   				<fo:block font-size="4pt" text-align="left">${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(thruDate, "MM/yyyy")?if_exists}</fo:block>
 										   			</fo:table-cell>
 										   			<fo:table-cell>
 										   				<fo:block font-size="4pt" text-align="left">${benefitType.get("benefitName")?if_exists}</fo:block>
@@ -83,7 +83,7 @@
 										   			</fo:table-cell>
 										   			<#assign emplPosition=delegator.findByAnd("EmplPosition", {"partyId" : benefitsList.get("partyIdTo")})/>
 										   			<fo:table-cell>
-										   				<fo:block font-size="4pt" text-align="left">${(emplPosition[0].emplPositionId)?if_exists}</fo:block>
+										   				<fo:block font-size="4pt" text-align="left">${(emplPosition[0].emplPositionTypeId)?if_exists}</fo:block>
 										   			</fo:table-cell>
 										   			<fo:table-cell>
 										   				<fo:block font-size="4pt" text-align="right">${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(fromDate ,"dd/MM/yyyy")?if_exists}</fo:block>
@@ -144,7 +144,7 @@
 										   				<fo:block font-size="4pt" text-align="left">RGL</fo:block>
 										   			</fo:table-cell>
 										   			<fo:table-cell>
-										   				<fo:block font-size="4pt" text-align="left">${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(fromDate, "MM/yyyy")?if_exists}</fo:block>
+										   				<fo:block font-size="4pt" text-align="left">${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(thruDate, "MM/yyyy")?if_exists}</fo:block>
 										   			</fo:table-cell>
 										   			<fo:table-cell>
 										   				<fo:block font-size="4pt" text-align="left">${deductionType.get("deductionName")?if_exists}</fo:block>
@@ -157,7 +157,7 @@
 										   			</fo:table-cell>
 										   			<#assign emplPosition=delegator.findByAnd("EmplPosition", {"partyId" : deductionList.get("partyIdTo")})/>
 										   			<fo:table-cell>
-										   				<fo:block font-size="4pt" text-align="left">${(emplPosition[0].emplPositionId)?if_exists}</fo:block>
+										   				<fo:block font-size="4pt" text-align="left">${(emplPosition[0].emplPositionTypeId)?if_exists}</fo:block>
 										   			</fo:table-cell>
 										   			<fo:table-cell>
 										   				<fo:block font-size="4pt" text-align="right">${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(fromDate ,"dd/MM/yyyy")?if_exists}</fo:block>

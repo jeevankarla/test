@@ -106,10 +106,13 @@ if(!allChanges){
 	conditionList.add(EntityCondition.makeCondition("lastModifiedByUserLogin", EntityOperator.EQUALS , userLogin.userLoginId));
 }
 conditionList.add(EntityCondition.makeCondition("partyIdTo", EntityOperator.IN , employementIds));
+conditionList.add(EntityCondition.makeCondition("fromDate", EntityOperator.LESS_THAN_EQUAL_TO, dayBegin));
 conditionList.add(EntityCondition.makeCondition([
-	EntityCondition.makeCondition("lastUpdatedStamp", EntityOperator.GREATER_THAN_EQUAL_TO, dayBegin),
-	EntityCondition.makeCondition("lastUpdatedStamp", EntityOperator.LESS_THAN_EQUAL_TO, dayEnd)
-   ], EntityOperator.AND));
+	EntityCondition.makeCondition("thruDate", EntityOperator.EQUALS, null),
+	EntityCondition.makeCondition("thruDate", EntityOperator.GREATER_THAN_EQUAL_TO, dayBegin)
+	/*EntityCondition.makeCondition("lastUpdatedStamp", EntityOperator.GREATER_THAN_EQUAL_TO, dayBegin),
+	EntityCondition.makeCondition("lastUpdatedStamp", EntityOperator.LESS_THAN_EQUAL_TO, dayEnd)*/
+   ], EntityOperator.OR));
 condition = EntityCondition.makeCondition(conditionList, EntityOperator.AND);
 benefitsItemsList = delegator.findList("PartyBenefit", condition, null, ["lastUpdatedStamp"], null, false);
 benefitList = [];
@@ -134,10 +137,13 @@ if(!allChanges){
 	conditionList1.add(EntityCondition.makeCondition("lastModifiedByUserLogin", EntityOperator.EQUALS , userLogin.userLoginId));
 }
 conditionList1.add(EntityCondition.makeCondition("partyIdTo", EntityOperator.IN , employementIds));
+conditionList1.add(EntityCondition.makeCondition("fromDate", EntityOperator.LESS_THAN_EQUAL_TO, dayBegin));
 conditionList1.add(EntityCondition.makeCondition([
-	EntityCondition.makeCondition("lastUpdatedStamp", EntityOperator.GREATER_THAN_EQUAL_TO, dayBegin),
-	EntityCondition.makeCondition("lastUpdatedStamp", EntityOperator.LESS_THAN_EQUAL_TO, dayEnd)
-   ], EntityOperator.AND));
+	EntityCondition.makeCondition("thruDate", EntityOperator.EQUALS, null),
+	EntityCondition.makeCondition("thruDate", EntityOperator.GREATER_THAN_EQUAL_TO, dayBegin),
+	/*EntityCondition.makeCondition("lastUpdatedStamp", EntityOperator.GREATER_THAN_EQUAL_TO, dayBegin),
+	EntityCondition.makeCondition("lastUpdatedStamp", EntityOperator.LESS_THAN_EQUAL_TO, dayEnd)*/
+   ], EntityOperator.OR));
 condition1 = EntityCondition.makeCondition(conditionList1, EntityOperator.AND);
 deductionItemsList = delegator.findList("PartyDeduction", condition1, null, ["lastUpdatedStamp"], null, false);
 deductionList = [];
