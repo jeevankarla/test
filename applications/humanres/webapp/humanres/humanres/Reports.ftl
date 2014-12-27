@@ -95,6 +95,10 @@ function makeDatePicker1(fromDateId ,thruDateId){
 		makeDatePicker("BenDedMythruDate","BenDedMythruDate");
 		makeDatePicker("BenDedAllfromDate","BenDedAllfromDate");
 		makeDatePicker("BenDedAllthruDate","BenDedAllthruDate");
+		makeDatePicker("payMasterDataMyfromDate","payMasterDataMyfromDate");
+		makeDatePicker("payMasterDataMythruDate","payMasterDataMythruDate");
+		makeDatePicker("payMasterDataAllfromDate","payMasterDataAllfromDate");
+		makeDatePicker("payMasterDataAllthruDate","payMasterDataAllthruDate");
 		$('#ui-datepicker-div').css('clip', 'auto');		
 	});
 //for Month Picker
@@ -1362,6 +1366,32 @@ function setOrgPartyId() {
 									<td><input type="hidden" name="partyId" class="commonPartyId"></td>
 									<td width="20%"><span class='h3'>From Date</span><input  type="text" size="18pt" id="BenDedAllfromDate"   name="BenDedAllfromDate"/></td>
 									<td width="20%"><span class='h3'>Thru Date</span><input  type="text" size="18pt" id="BenDedAllthruDate"   name="BenDedAllthruDate"/></td>
+									<td width="20%"><span class='h3'><input type="submit" value="Download" class="buttontext"></span></td> 
+								</tr>
+							</table>
+						</form>
+					 </tr>
+					 <tr class="alternate-row">
+						<form id="payMasterDataMyCheckList" name="payMasterDataMyCheckList" mothed="post" action="<@ofbizUrl>payMasterDataCheckList</@ofbizUrl>" target="_blank">
+							<table class="basic-table" cellspacing="5">
+								<tr class="alternate-row">
+									<td width="20%"><span class='h3'>pay Master Data My Chcek List<input  type="hidden"  value="payMasterDataMyCheckList"   name="reportTypeFlag"/></span></td>
+									<td><input type="hidden" name="partyId" class="commonPartyId"></td>
+									<td width="20%"><span class='h3'>From Date</span><input  type="text" size="18pt" id="payMasterDataMyfromDate"   name="payMasterDataMyfromDate"/></td>
+									<td width="20%"><span class='h3'>Thru Date</span><input  type="text" size="18pt" id="payMasterDataMythruDate"  name="payMasterDataMythruDate"/></td>
+									<td width="20%"><span class='h3'><input type="submit" value="Download" class="buttontext"></span></td> 
+								</tr>
+							</table>
+						</form>
+					 </tr>
+					 <tr class="alternate-row">
+						<form id="payMasterDataAllCheckList" name="payMasterDataAllCheckList" mothed="post" action="<@ofbizUrl>payMasterDataCheckList</@ofbizUrl>" target="_blank">
+							<table class="basic-table" cellspacing="5">
+								<tr class="alternate-row">
+									<td width="20%"><span class='h3'>pay Master Data All Chcek List<input  type="hidden"  value="payMasterDataAllCheckList"   name="reportTypeFlag"/></span></td>
+									<td><input type="hidden" name="partyId" class="commonPartyId"></td>
+									<td width="20%"><span class='h3'>From Date</span><input  type="text" size="18pt" id="payMasterDataAllfromDate"   name="payMasterDataAllfromDate"/></td>
+									<td width="20%"><span class='h3'>Thru Date</span><input  type="text" size="18pt" id="payMasterDataAllthruDate"  name="payMasterDataAllthruDate"/></td>
 									<td width="20%"><span class='h3'><input type="submit" value="Download" class="buttontext"></span></td> 
 								</tr>
 							</table>

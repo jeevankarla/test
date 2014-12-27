@@ -641,6 +641,22 @@
             </widgets>
         </section>
     </screen>
+    <screen name="payMasterDataCheckList">
+            <section>
+                <actions>
+                	<script location="component://humanres/webapp/humanres/WEB-INF/actions/humanres/PayMasterDataCheckList.groovy"/>  
+                </actions>
+                <widgets>
+                    <section>
+                    <widgets>
+                        <platform-specific>
+                            <html><html-template location="component:///humanres/webapp/humanres/humanres/PayMasterDataCheckList.fo.ftl"/></html>
+                        </platform-specific>
+                    </widgets>
+                    </section>
+                </widgets>
+            </section>
+    </screen>
     <screen name="AttendanceExceptionReportTxt">
         <section>
             <actions>
