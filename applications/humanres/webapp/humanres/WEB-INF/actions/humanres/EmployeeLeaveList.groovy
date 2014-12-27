@@ -73,6 +73,8 @@ if(UtilValidate.isNotEmpty(parameters.emplLeaveReasonTypeId)){
 }
 if(UtilValidate.isNotEmpty(approverPartyId)){
 	conditionList.add(EntityCondition.makeCondition("approverPartyId", EntityOperator.EQUALS, approverPartyId));
+}else{
+	conditionList.add(EntityCondition.makeCondition("approverPartyId", EntityOperator.EQUALS, userLogin.partyId));
 }
 if(UtilValidate.isEmpty(parameters.leaveStatus)){
 	parameters.leaveStatus = "LEAVE_CREATED";

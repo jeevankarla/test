@@ -157,6 +157,7 @@ under the License.
         <make-value value-field="newEntity" entity-name="QuoteStatus"/>
         <sequenced-id sequence-name="QuoteStatus" field="newEntity.quoteStatusId"/>
         <set-nonpk-fields map="parameters" value-field="newEntity"/>
+        <set from-field="userLogin.userLoginId" field="newEntity.changedByUserLogin"/>
         <if-empty field="newEntity.statusDatetime">
             <now-timestamp field="nowTimestamp"/>
             <set from-field="nowTimestamp" field="newEntity.statusDatetime"/>

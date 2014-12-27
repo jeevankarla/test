@@ -1497,6 +1497,7 @@ under the License.
       <field name="quoteId" type="id"></field>
       <field name="quoteItemSeqId" type="id"></field>
       <field name="statusDatetime" type="date-time"></field>
+      <field name="changedByUserLogin" type="id-vlong"></field>
       <prim-key field="quoteStatusId"/>
       <relation type="one" fk-name="QUOTE_STTS" rel-entity-name="StatusItem">
         <key-map field-name="statusId"/>
