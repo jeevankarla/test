@@ -94,7 +94,6 @@ if(UtilValidate.isNotEmpty(BillingList)){
 									Map.Entry customTimePeriodEntry = customTimePeriodIter.next();
 									if(customTimePeriodEntry.getKey() != "customTimePeriodTotals"){
 										periodTotals = customTimePeriodEntry.getValue().get("periodTotals");
-										if(dedTypeId.equals("PAYROL_DD_EPF")){
 										Wages =0;
 										basic = 0;
 										dearnessAllowance =0;
@@ -123,6 +122,7 @@ if(UtilValidate.isNotEmpty(BillingList)){
 										}
 										Wages = basic+dearnessAllowance+irAllowance+personalPay+specialPay;
 										detailsMap.put("Wages",Wages);
+										if(dedTypeId.equals("PAYROL_DD_EPF")){
 										employeeContribtn=0;
 										employerContribtn=0;
 										employerVolPf=0;
@@ -215,8 +215,8 @@ if(UtilValidate.isNotEmpty(BillingList)){
 							deductionsList.add(EntityCondition.makeCondition("partyIdFrom", EntityOperator.EQUALS, employeeId));
 							deductionsList.add(EntityCondition.makeCondition("payrollHeaderItemTypeId", EntityOperator.EQUALS, dedTypeId));
 							deductionsCondition = EntityCondition.makeCondition(deductionsList,EntityOperator.AND);
-							def orderBy = UtilMisc.toList("amount","partyIdFrom");
-							payrollHeaderList = delegator.findList("PayrollHeaderAndHeaderItem", deductionsCondition, null, null, null, false);
+							def orderAmtBy = UtilMisc.toList("amount");
+							payrollHeaderList = delegator.findList("PayrollHeaderAndHeaderItem", deductionsCondition, null, orderAmtBy, null, false);
 							if(UtilValidate.isNotEmpty(payrollHeaderList)){
 								payrollHeaderList.each{ payrollList ->
 									deductionAmount = payrollList.amount;
@@ -234,7 +234,7 @@ if(UtilValidate.isNotEmpty(BillingList)){
 						if(UtilValidate.isNotEmpty(loansAndRecoveryList)){
 							loansAndRecoveryList.each{ loanAndRecovery ->
 								if(UtilValidate.isNotEmpty(loanAndRecovery)){
-									accountNumber = loanAndRecovery.loanId;
+									accountNumber = loanAndRecovery.loanFinAccountId;
 									closingBalance = loanAndRecovery.closingBalance;
 									balance = balance+closingBalance;
 								}

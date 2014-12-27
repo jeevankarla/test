@@ -452,11 +452,11 @@ under the License.
 												<#assign designation = delegator.findOne("EmplPositionType", {"emplPositionTypeId" : designationId?if_exists}, true)>
 												<#assign designationName=emplPositionAndFulfilment[0].name?if_exists>
 					       						<fo:table-cell><fo:block keep-together="always" font-size="4pt" text-align="left"><#if designationName?has_content>${Static["org.ofbiz.order.order.OrderServices"].nameTrim((StringUtil.wrapString(designationName)),15)?if_exists}<#else><#if designation?has_content>${Static["org.ofbiz.order.order.OrderServices"].nameTrim((StringUtil.wrapString(designation.description)),15)?if_exists}</#if></#if></fo:block></fo:table-cell>		       							
-						       					<fo:table-cell><fo:block keep-together="always" font-size="4pt" text-align="right">${deductionType.getValue().get("gross")?string('0.00')}</fo:block></fo:table-cell>
+						       					<fo:table-cell><fo:block keep-together="always" font-size="4pt" text-align="right">${deductionType.getValue().get("Wages")?string('0.00')}</fo:block></fo:table-cell>
 						       					<fo:table-cell><fo:block keep-together="always" font-size="4pt" text-align="right">${deductionType.getValue().get("deductionAmt")?if_exists}</fo:block></fo:table-cell>
 				       							<fo:table-cell><fo:block keep-together="always" font-size="4pt" text-align="right">0</fo:block></fo:table-cell>
 				       							<fo:table-cell><fo:block keep-together="always" font-size="4pt" text-align="right">0</fo:block></fo:table-cell>
-				       							<#assign totalGrossAmt =totalGrossAmt + deductionType.getValue().get("gross")>
+				       							<#assign totalWages =totalWages + deductionType.getValue().get("Wages")>
 				       							<#assign totalPfAmt =totalPfAmt + deductionType.getValue().get("deductionAmt")>
 		       								</fo:table-row>
 		       						</#if>
@@ -483,10 +483,27 @@ under the License.
 					       										<#assign totalPremium=totalPremium + policyPreDet.getValue()>
 					       									</fo:table-row>
 					       								</#list>
+					       									<fo:table-row>
+					       										<fo:table-cell>
+								                            		<fo:block font-size="4pt">&#160;</fo:block>
+								                            	</fo:table-cell>
+								                            	<fo:table-cell>
+			       													<fo:block keep-together="always" font-size="4pt" text-align="right">${deductionType.getValue().get("deductionAmt")?if_exists?string('0.00')}</fo:block>
+								                            	</fo:table-cell>
+								                       		</fo:table-row>
+								                       		<fo:table-row>
+								                        		<fo:table-cell>
+								                            		<fo:block font-size="4pt">&#160;</fo:block>
+								                            	</fo:table-cell>
+								                       		</fo:table-row>
 					       							</fo:table-body>
 					       						</fo:table>
 					       						</fo:table-cell>
-			       							<fo:table-cell><fo:block keep-together="always" font-size="4pt" text-align="right">${deductionType.getValue().get("deductionAmt")?if_exists?string('0.00')}</fo:block></fo:table-cell>
+			       							<fo:table-cell>
+			       							<#list policyPremiumDet as policyPreDet>
+			       							<fo:block font-size="4pt">&#160;</fo:block>
+				       						</#list>
+			       							<fo:block keep-together="always" font-size="4pt" text-align="right">${deductionType.getValue().get("deductionAmt")?if_exists?string('0.00')}</fo:block></fo:table-cell>
 			       							<#assign totalDeduction =totalDeduction + deductionType.getValue().get("deductionAmt")>
 			       						 </fo:table-row>
 			       					</#if>
@@ -578,7 +595,7 @@ under the License.
 											<fo:table-cell><fo:block keep-together="always" font-size="4pt" text-align="left"></fo:block></fo:table-cell>
 											<fo:table-cell><fo:block keep-together="always" font-size="4pt" text-align="left"></fo:block></fo:table-cell>
 				       						<fo:table-cell><fo:block keep-together="always" font-size="4pt" text-align="left"></fo:block></fo:table-cell>		       							
-					       					<fo:table-cell><fo:block keep-together="always" font-size="4pt" text-align="right">${totalGrossAmt?if_exists?string('0.00')}</fo:block></fo:table-cell>
+					       					<fo:table-cell><fo:block keep-together="always" font-size="4pt" text-align="right">${totalWages?if_exists?string('0.00')}</fo:block></fo:table-cell>
 		       								<fo:table-cell><fo:block keep-together="always" font-size="4pt" text-align="right">${totalPfAmt?if_exists}</fo:block></fo:table-cell>
 			       							<fo:table-cell><fo:block keep-together="always" font-size="4pt" text-align="right">0</fo:block></fo:table-cell>
 			       							<fo:table-cell><fo:block keep-together="always" font-size="4pt" text-align="right">0</fo:block></fo:table-cell>
