@@ -17,7 +17,7 @@ import in.vasista.vbiz.byproducts.ByProductServices;
 import org.ofbiz.product.product.ProductWorker;
 import in.vasista.vbiz.facility.util.FacilityUtil;
 import in.vasista.vbiz.byproducts.icp.ICPServices;
-
+import in.vasista.vbiz.purchase.MaterialHelperServices;
 
 orderId = parameters.orderId;
 dctx = dispatcher.getDispatchContext();
@@ -50,18 +50,24 @@ condition = EntityCondition.makeCondition(conditionList, EntityOperator.AND);
 orderItemsAndRole = delegator.findList("OrderHeaderItemAndRoles", condition, null, null, null, false);
 
 productIds = EntityUtil.getFieldListFromEntityList(orderItemsAndRole, "productId", true);
-
-
+result = MaterialHelperServices.getProductUOM(delegator, productIds);
+uomLabelMap = result.get("uomLabel");
+productUomMap = result.get("productUom");
 prodQtyMap = [:];
 supplierId = "";
 JSONArray orderItemsJSON = new JSONArray();
 orderItemsAndRole.each{ eachItem ->
 	
 	JSONObject newObj = new JSONObject();
-	
+	uomId = productUomMap.get(eachItem.productId);
+	uomLabel = "";
+	if(uomId){
+		uomLabel = uomLabelMap.get(uomId);
+	}
 	newObj.put("cProductId",eachItem.productId);
 	newObj.put("cProductName",eachItem.itemDescription +" [ "+eachItem.productId+"]");
 	newObj.put("orderedQty",eachItem.quantity);
+	newObj.put("uomDescription",uomLabel);
 	orderItemsJSON.add(newObj);
 
 	supplierId = eachItem.partyId;

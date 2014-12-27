@@ -84,6 +84,8 @@ public class MaterialPurchaseServices {
 	    String receiptDateStr = (String) request.getParameter("receiptDate");
 	    String orderId = (String) request.getParameter("orderId");
 	    String vehicleId = (String) request.getParameter("vehicleId");
+	    String supplierInvoiceId = (String) request.getParameter("supplierInvoiceId");
+	    String supplierInvoiceDateStr = (String) request.getParameter("supplierInvoiceDate");
 	    HttpSession session = request.getSession();
 	    GenericValue userLogin = (GenericValue) session.getAttribute("userLogin");
 		Timestamp nowTimeStamp = UtilDateTime.nowTimestamp();
@@ -93,6 +95,7 @@ public class MaterialPurchaseServices {
 		}
 		
 		Timestamp receiptDate = null;
+		Timestamp supplierInvoiceDate = null;
 		Map<String, Object> paramMap = UtilHttp.getParameterMap(request);
 		int rowCount = UtilHttp.getMultiFormRowCount(paramMap);
 		if (rowCount < 1) {
@@ -112,7 +115,17 @@ public class MaterialPurchaseServices {
 	  	else{
 	  		receiptDate = UtilDateTime.nowTimestamp();
 	  	}
-		boolean beganTransaction = false;
+	  	if(UtilValidate.isNotEmpty(supplierInvoiceDateStr)){
+	  		try {
+	  			supplierInvoiceDate = new java.sql.Timestamp(sdf.parse(supplierInvoiceDateStr).getTime());
+		  	} catch (ParseException e) {
+		  		Debug.logError(e, "Cannot parse date string: " + supplierInvoiceDateStr, module);
+		  	} catch (NullPointerException e) {
+	  			Debug.logError(e, "Cannot parse date string: " + supplierInvoiceDateStr, module);
+		  	}
+	  	}
+	  	
+	  	boolean beganTransaction = false;
 		try{
 			beganTransaction = TransactionUtil.begin(7200);
 			
@@ -121,6 +134,8 @@ public class MaterialPurchaseServices {
 	        newEntity.set("shipmentTypeId", "MATERIAL_SHIPMENT");
 	        newEntity.set("statusId", "GENERATED");
 	        newEntity.put("vehicleId",vehicleId);
+	        newEntity.put("supplierInvoiceId",supplierInvoiceId);
+	        newEntity.put("supplierInvoiceDate",supplierInvoiceDate);
 	        newEntity.put("primaryOrderId",orderId);
 	        newEntity.set("createdDate", nowTimeStamp);
 	        newEntity.set("createdByUserLogin", userLogin.get("userLoginId"));
@@ -216,7 +231,7 @@ public class MaterialPurchaseServices {
 				inventoryReceiptCtx.put("quantityAccepted", quantity);
 				inventoryReceiptCtx.put("quantityRejected", BigDecimal.ZERO);
 				inventoryReceiptCtx.put("inventoryItemTypeId", "NON_SERIAL_INV_ITEM");
-				inventoryReceiptCtx.put("ownerPartyId", "Company");
+				inventoryReceiptCtx.put("ownerPartyId", supplierId);
 				/*inventoryReceiptCtx.put("consolidateInventoryReceive", "Y");*/
 				inventoryReceiptCtx.put("facilityId", facilityProd.getString("facilityId"));
 				inventoryReceiptCtx.put("unitCost", ordItm.getBigDecimal("unitPrice"));

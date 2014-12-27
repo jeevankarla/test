@@ -245,6 +245,8 @@
         <field name="supplierId" title="Supplier">
         	<display default-value="${supplierId}"/>
         </field>
+        <field name="supplierInvoiceId" title="Supplier Invoice No"><display/></field>
+        <field name="supplierInvoiceDate" title="Supplier Invoice Date"><display /></field>
         <field name="vehicleId" title="Vehicle No"><display/></field>
         <field name="createdDate" title="Created Date"><display/></field>
         <field name="createdByUserLogin" title="Created User Login"><display/></field>

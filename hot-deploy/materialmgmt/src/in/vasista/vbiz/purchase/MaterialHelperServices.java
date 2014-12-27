@@ -501,24 +501,76 @@ public static Map<String, Object> setStatusId(DispatchContext ctx,Map<String, ? 
 		}
 		return result;
 	}	
-public static Map<String, Object> checkValidChangeOrNot(DispatchContext ctx,Map<String, ? extends Object> context) {
-	
-	Delegator delegator = ctx.getDelegator();
-	String statusId = (String) context.get("statusId");
-	String statusIdTo = (String) context.get("statusIdTo");
-	Map result = ServiceUtil.returnSuccess();
-	try{
-		GenericValue StatusValidChange= delegator.findOne("StatusValidChange",UtilMisc.toMap("statusId",statusId,"statusIdTo",statusIdTo),false);
-		if(UtilValidate.isEmpty(StatusValidChange)){
-			return ServiceUtil.returnError("This is not a Valid Change.");
+	public static Map<String, Object> checkValidChangeOrNot(DispatchContext ctx,Map<String, ? extends Object> context) {
+		
+		Delegator delegator = ctx.getDelegator();
+		String statusId = (String) context.get("statusId");
+		String statusIdTo = (String) context.get("statusIdTo");
+		Map result = ServiceUtil.returnSuccess();
+		try{
+			GenericValue StatusValidChange= delegator.findOne("StatusValidChange",UtilMisc.toMap("statusId",statusId,"statusIdTo",statusIdTo),false);
+			if(UtilValidate.isEmpty(StatusValidChange)){
+				return ServiceUtil.returnError("This is not a Valid Change.");
+			}
+		}catch(Exception e){
+			Debug.logError(e.toString(), module);
+			return ServiceUtil.returnError(e.toString());
 		}
-	}catch(Exception e){
-		Debug.logError(e.toString(), module);
-		return ServiceUtil.returnError(e.toString());
+		return result;
 	}
-	return result;
-}	
-
+	
+	public static Map getProductUOM(Delegator delegator, List productIds) {
+		
+		Map uomLabelMap = FastMap.newInstance();
+		Map productUomMap = FastMap.newInstance();
+		List<Map> productUOMList = FastList.newInstance();
+		List conditionList = FastList.newInstance();
+		Map outCtx = FastMap.newInstance();
+        try {
+        	
+        	List<GenericValue> uomDetails = delegator.findList("Uom", null, null, null, null, false);
+        	
+        	conditionList.add(EntityCondition.makeCondition("isVirtual", EntityOperator.EQUALS, "N"));
+        	if(UtilValidate.isNotEmpty(productIds)){
+        		conditionList.add(EntityCondition.makeCondition("productId", EntityOperator.IN, productIds));
+        	}
+        	EntityCondition condition = EntityCondition.makeCondition(conditionList, EntityOperator.AND);
+            EntityListIterator eli = delegator.find("Product", condition, null, null, null, null);
+            GenericValue product = null;
+            List uniqueUOMs = FastList.newInstance();
+            String productId = "";
+            String uomId = "";
+            List<GenericValue> uomDetail = FastList.newInstance();
+            while ((product = eli.next()) != null) {
+            	uomId = product.getString("quantityUomId");
+            	
+            	uomDetail = EntityUtil.filterByCondition(uomDetails, EntityCondition.makeCondition("uomId", EntityOperator.EQUALS, uomId));
+            	GenericValue uom = EntityUtil.getFirst(uomDetail);
+            	String description = "";
+            	String uomTypeId = "";
+            	if(UtilValidate.isNotEmpty(uom) && UtilValidate.isNotEmpty(uom.get("description"))){
+            		description = uom.getString("description");
+            		uomTypeId = uom.getString("uomTypeId");
+            	}
+            	productUomMap.put(product.getString("productId"), uomId);
+            	uomLabelMap.put(uomId, description);
+            	
+            	Map tempMap = FastMap.newInstance();
+            	tempMap.put("productId", product.getString("productId"));
+            	tempMap.put("quantityUomId", uomId);
+            	tempMap.put("uomTypeId", uomTypeId);
+            	tempMap.put("uomDescription", description);
+            	productUOMList.add(tempMap);
+            }
+            eli.close();
+        } catch (GenericEntityException e) {
+            Debug.logError(e, module);
+        }
+        outCtx.put("uomLabel", uomLabelMap);
+        outCtx.put("productUom", productUomMap);
+        outCtx.put("productUomDetail", productUOMList);
+		return outCtx;
+	}
 
 }
 

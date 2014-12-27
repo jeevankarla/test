@@ -14,7 +14,14 @@
 				$( "#effectiveDate" ).datepicker("option", selectedDate);
 			}
 		});
-		
+		$( "#suppInvoiceDate" ).datepicker({
+			dateFormat:'d MM, yy',
+			changeMonth: true,
+			onSelect: function( selectedDate ) {
+				$( "#effectiveDate" ).datepicker("option", selectedDate);
+			}
+		});
+		suppInvoiceDate
 		$('#ui-datepicker-div').css('clip', 'auto');
 		
 			$("#orderId").keydown(function(e){ 
@@ -47,7 +54,7 @@
 				        	<td>
 						      	<input type="hidden" name="isFormSubmitted"  value="YES" />
 				           	</td>
-					        <td align='left' valign='middle' nowrap="nowrap"><div class='h2'>Receipt Date:</div></td>
+					        <td align='left' valign='middle' nowrap="nowrap"><div class='h3'>Receipt Date:</div></td>
 					        <td>&nbsp;</td>
 					        <#if effectiveDate?exists && effectiveDate?has_content>  
 						  		<input type="hidden" name="effectiveDate" id="effectiveDate" value="${effectiveDate}"/>  
@@ -57,33 +64,14 @@
 					          	</td>       
 					       	<#else> 
 					        	<td valign='middle'>          
-					            	<input class='h2' type="text" name="effectiveDate" id="effectiveDate" value="${defaultEffectiveDate}"/>           		
+					            	<input class='h3' type="text" name="effectiveDate" id="effectiveDate" value="${defaultEffectiveDate}"/>           		
 					            </td>
 					       	  </#if>
 					  	</tr>
 	    				<tr><td><br/></td></tr>
-						
-						<tr>
-							<td>&nbsp;</td>
-					        <td align='left' valign='middle' nowrap="nowrap"><div class='h2'>Vehicle No:</div></td>
-					        <td>&nbsp;</td>
-					        <#if vehicleId?exists && vehicleId?has_content>  
-						  		<input type="hidden" name="vehicleId" id="vehicleId" value="${vehicleId}"/>  
-					          	<td valign='middle'>
-					            	<div class='tabletext h3'>${vehicleId}         
-					            	</div>
-					          	</td>       
-					       	<#else> 
-					        	<td valign='middle'>          
-					            	<input class='h2' type="text" name="vehicleId" id="vehicleId"/>           		
-					            </td>
-					       	  </#if>
-					  	</tr>
-	    				<tr><td><br/></td></tr>
-						
-        				<tr>
+		 				<tr>
 				          <td>&nbsp;</td>
-				          <td align='left' valign='middle' nowrap="nowrap"><div class='h2'>Purchase Order Id:</div></td>
+				          <td align='left' valign='middle' nowrap="nowrap"><div class='h3'>Purchase Order Id:</div></td>
 				          <td>&nbsp;</td>
 				          <#if orderId?exists && orderId?has_content>  
 					  	  		<input type="hidden" name="orderId" id="orderId" value="${orderId}"/>  
@@ -99,12 +87,13 @@
 				          		</td>
 				          	</#if>
 				        </tr>
-				      		
+						<tr><td><br/></td></tr>
+       		      		
 				      	<#if supplierId?has_content>
 				      		<tr><td><br/></td></tr>
 				      		<tr>
 				      			<td>&nbsp;</td>
-				      			<td align='left' valign='middle' nowrap="nowrap"><div class='h2'>Supplier:</div></td>
+				      			<td align='left' valign='middle' nowrap="nowrap"><div class='h3'>Supplier:</div></td>
 				      			<td>&nbsp;<input type="hidden" name="supplierId" id="supplierId" value="${supplierId}"></td>
 				      			<td>
 				      				<div class='tabletext h3'>${supplierName?if_exists} [${supplierId}]</div>
@@ -113,7 +102,45 @@
 				      		
 				      		<tr><td><br/></td></tr>
 				      	</#if>
-      				</table>
+						
+						<tr>
+							<td>&nbsp;</td>
+					        <td align='left' valign='middle' nowrap="nowrap"><div class='h3'>Vehicle No:</div></td>
+					        <td>&nbsp;</td>
+					        <#if vehicleId?exists && vehicleId?has_content>  
+						  		<input type="hidden" name="vehicleId" id="vehicleId" value="${vehicleId}"/>  
+					          	<td valign='middle'>
+					            	<div class='tabletext h3'>${vehicleId}         
+					            	</div>
+					          	</td>       
+					       	<#else> 
+					        	<td valign='middle'>          
+					            	<input class='h3' type="text" name="vehicleId" id="vehicleId"/>           		
+					            </td>
+				       	  </#if>
+					  	</tr>
+					  	<tr><td><br/></td></tr>
+		 				<tr>
+				          <td>&nbsp;</td>
+				          <td align='left' valign='middle' nowrap="nowrap"><div class='h3'>Supplier Invoice No:</div></td>
+				          <td>&nbsp;</td>
+		          			<td valign='middle'>
+		          				<input type="text" name="suppInvoiceId" id="suppInvoiceId" />
+		          			</td>
+				        </tr>
+						<tr><td><br/></td></tr>
+						
+						<tr>
+				          <td>&nbsp;</td>
+				          <td align='left' valign='middle' nowrap="nowrap"><div class='h3'>Supplier Invoice Date:</div></td>
+				          <td>&nbsp;</td>
+		          			<td valign='middle'>
+		          				<input type="text" name="suppInvoiceDate" id="suppInvoiceDate" />
+		          			</td>
+				        </tr>
+						<tr><td><br/></td></tr>
+	
+	    			</table>
 				</form>
 				<br/>
 				

@@ -112,6 +112,12 @@
 		var vehicleId = $("#vehicleId").val();
 		var order = jQuery("<input>").attr("type", "hidden").attr("name", "orderId").val(orderId);
 		var vehicle = jQuery("<input>").attr("type", "hidden").attr("name", "vehicleId").val(vehicleId);
+		var suppInvoiceId = $("#suppInvoiceId").val();
+		var suppInvoice = jQuery("<input>").attr("type", "hidden").attr("name", "supplierInvoiceId").val(suppInvoiceId);
+		var suppInvoiceDate = $("#suppInvoiceDate").val();
+		var suppInvDate = jQuery("<input>").attr("type", "hidden").attr("name", "supplierInvoiceDate").val(suppInvoiceDate);
+		jQuery(formId).append(jQuery(suppInvoice));
+		jQuery(formId).append(jQuery(suppInvDate));
 		jQuery(formId).append(jQuery(order));
 		jQuery(formId).append(jQuery(vehicle));
 		jQuery(formId).attr("action", action);
@@ -190,8 +196,9 @@
 		
 		var columns = [
 				{id:"cProductName", name:"Item", field:"cProductName", width:220, minWidth:220, cssClass:"readOnlyColumnClass", sortable:false, focusable :false, validator: productValidator, toolTip:""},
-				{id:"quantity", name:"Ordered Qty", field:"orderedQty", width:100, minWidth:100, cssClass:"readOnlyColumnClass", sortable:false, focusable :false,},
-				{id:"quantity", name:"Received Qty", field:"quantity", width:100, minWidth:100, cssClass:"cell-title",editor:FloatCellEditor, sortable:false , formatter: quantityFormatter,  validator: quantityValidator}
+				{id:"ordQuantity", name:"Order Qty", field:"orderedQty", width:60, minWidth:60, cssClass:"readOnlyColumnClass", sortable:false, focusable :false,},
+				{id:"quantity", name:"Received Qty", field:"quantity", width:80, minWidth:80, cssClass:"cell-title",editor:FloatCellEditor, sortable:false , formatter: quantityFormatter,  validator: quantityValidator},
+				{id:"UOM", name:"UOM", field:"uomDescription", width:80, minWidth:80, cssClass:"readOnlyColumnClass", focusable :false,editor:FloatCellEditor, sortable:false}
 		];
 		
 			var options = {

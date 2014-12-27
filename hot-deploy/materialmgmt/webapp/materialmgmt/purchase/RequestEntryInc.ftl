@@ -69,6 +69,10 @@
 	var grid;
 	var productLabelIdMap = ${StringUtil.wrapString(productLabelIdJSON)!'{}'};
 	var productIdLabelMap = ${StringUtil.wrapString(productIdLabelJSON)!'{}'};
+	
+	var productUOMMap = ${StringUtil.wrapString(productUOMJSON)!'{}'};
+	var uomLabelMap = ${StringUtil.wrapString(uomLabelJSON)!'{}'};
+	
 	var availableTags = ${StringUtil.wrapString(productItemsJSON)!'[]'};
 	var priceTags = ${StringUtil.wrapString(productCostJSON)!'[]'};
 	var conversionData = ${StringUtil.wrapString(conversionJSON)!'{}'};
@@ -219,8 +223,9 @@
 		
 		var columns = [
 				{id:"cProductName", name:"Item", field:"cProductName", width:220, minWidth:220, cssClass:"cell-title", availableTags: availableTags, regexMatcher:"contains" ,editor: AutoCompleteEditor, validator: productValidator, sortable:false ,toolTip:""},
-				{id:"quantity", name:"Quantity", field:"quantity", width:100, minWidth:100, cssClass:"cell-title",editor:FloatCellEditor, sortable:false , formatter: quantityFormatter,  validator: quantityValidator},
-				{id:"inventoryQty", name:"Inventory Available", field:"inventoryQty", width:150, minWidth:100, cssClass:"readOnlyColumnClass", sortable:false , formatter: quantityFormatter,  validator: quantityValidator},
+				{id:"quantity", name:"Quantity", field:"quantity", width:80, minWidth:80, cssClass:"cell-title",editor:FloatCellEditor, sortable:false , formatter: quantityFormatter,  validator: quantityValidator},
+				{id:"UOM", name:"UOM", field:"uomDescription", width:100, minWidth:100, cssClass:"readOnlyColumnClass", sortable:false, focusable :false},
+				{id:"inventoryQty", name:"Inventory Available", field:"inventoryQty", width:80, minWidth:80, cssClass:"readOnlyColumnClass", sortable:false , formatter: quantityFormatter,  validator: quantityValidator},
 		];
 		
 			var options = {
@@ -321,6 +326,10 @@
         grid.onCellChange.subscribe(function(e,args) {
 			if (args.cell == 0 || args.cell == 1) {
 				var prod = data[args.row]["cProductId"];
+				var uomId = productUOMMap[prod];
+				var uomLabel = uomLabelMap[uomId];
+				data[args.row]['uomDescription'] = uomLabel;     		 		
+	      		
 				grid.updateRow(args.row);
 			}
 			
@@ -330,8 +339,11 @@
         	if (args.cell == 1 && data[args.row] != null) {
         		var item = data[args.row];   
 				var prod = data[args.row]["cProductId"];
+				var uomId = productUOMMap[prod];
+				var uomLabel = uomLabelMap[uomId];
 				getProductInventory(prod);
-				item['inventoryQty'] = quantityAvailability;     		 		
+				item['inventoryQty'] = quantityAvailability;
+				item['uomDescription'] = uomLabel;     		 		
 	      		grid.invalidateRow(data.length);
 	      		grid.updateRow(args.row);
 	      		grid.updateRowCount();
