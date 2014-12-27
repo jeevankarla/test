@@ -209,7 +209,7 @@
             </condition>  
         	<link target="EditLateHours"></link>
         </menu-item>
-        <menu-item name="EditHolidays" title="Holiday Encashment">
+        <menu-item name="EditHolidays" title="GH/SS Encashment">
             <condition>
                  <and>
                     <if-has-permission permission="HR"  action="_APPHOLIDAY_VIEW"/>
