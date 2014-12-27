@@ -1063,7 +1063,7 @@ function reportTypeChangeFunc() {
 	      				</form>
 					</tr>
 					
-					
+					</#if>
 					
 					<tr class="alternate-row">
 						<form id="PCMRetailerReport" name="PCMRetailerReport" method="post" action="<@ofbizUrl>RetailerSalesComparison.txt</@ofbizUrl>" target="_blank">	
@@ -1081,8 +1081,7 @@ function reportTypeChangeFunc() {
 	      					<td width="10%"><input type="submit" value="Download" class="buttontext"/></td> 
 	      				</form>
 					</tr>
-					</#if>
-					
+										
 					<tr class="alternate-row">
 	  					<form id="PCMReport" name="PCMReport" method="post" action="<@ofbizUrl>PCMReport.pdf</@ofbizUrl>" target="_blank">	
 	  						<td width="30%">PCM Report<input  type="hidden"  value="PCMReport"  name="reportTypeFlag"/></td>
