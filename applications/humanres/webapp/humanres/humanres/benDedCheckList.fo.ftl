@@ -70,7 +70,7 @@
 										   				<fo:block font-size="4pt" text-align="left">RGL</fo:block>
 										   			</fo:table-cell>
 										   			<fo:table-cell>
-										   				<fo:block font-size="4pt" text-align="left">${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(benefitsList.get("fromDate"), "MM/yyyy")?if_exists}</fo:block>
+										   				<fo:block font-size="4pt" text-align="left">${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(fromDate, "MM/yyyy")?if_exists}</fo:block>
 										   			</fo:table-cell>
 										   			<fo:table-cell>
 										   				<fo:block font-size="4pt" text-align="left">${benefitType.get("benefitName")?if_exists}</fo:block>
@@ -144,7 +144,7 @@
 										   				<fo:block font-size="4pt" text-align="left">RGL</fo:block>
 										   			</fo:table-cell>
 										   			<fo:table-cell>
-										   				<fo:block font-size="4pt" text-align="left">${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(deductionList.get("fromDate"), "MM/yyyy")?if_exists}</fo:block>
+										   				<fo:block font-size="4pt" text-align="left">${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(fromDate, "MM/yyyy")?if_exists}</fo:block>
 										   			</fo:table-cell>
 										   			<fo:table-cell>
 										   				<fo:block font-size="4pt" text-align="left">${deductionType.get("deductionName")?if_exists}</fo:block>

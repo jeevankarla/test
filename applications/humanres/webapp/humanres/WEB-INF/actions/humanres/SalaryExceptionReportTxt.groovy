@@ -60,9 +60,9 @@ if(UtilValidate.isNotEmpty(timePeriodId)){
 	conditionList=[];
 	conditionList.add(EntityCondition.makeCondition("partyId", EntityOperator.IN , employementIds));
 	conditionList.add(EntityCondition.makeCondition("customTimePeriodId", EntityOperator.EQUALS ,timePeriodId));
-	conditionList.add(EntityCondition.makeCondition("noOfPayableDays", EntityOperator.EQUALS ,null));
-	conditionList.add(EntityCondition.makeCondition(EntityCondition.makeCondition("noOfPayableDays", EntityOperator.EQUALS, null), EntityOperator.OR,
-		EntityCondition.makeCondition("noOfPayableDays", EntityOperator.EQUALS, BigDecimal.ZERO)));
+	//conditionList.add(EntityCondition.makeCondition("noOfPayableDays", EntityOperator.EQUALS ,null));
+	//conditionList.add(EntityCondition.makeCondition(EntityCondition.makeCondition("noOfPayableDays", EntityOperator.EQUALS, null), EntityOperator.OR,
+		//EntityCondition.makeCondition("noOfPayableDays", EntityOperator.EQUALS, BigDecimal.ZERO)));
 	/*conditionList.add(EntityCondition.makeCondition([
 		EntityCondition.makeCondition("lastUpdatedStamp", EntityOperator.LESS_THAN_EQUAL_TO, dayBegin),
 		EntityCondition.makeCondition("lastUpdatedStamp", EntityOperator.GREATER_THAN_EQUAL_TO, dayEnd)
@@ -71,40 +71,43 @@ if(UtilValidate.isNotEmpty(timePeriodId)){
 	attendanceDetailsList = delegator.findList("PayrollAttendance", condition, null, null, null, false);
 	if(UtilValidate.isNotEmpty(attendanceDetailsList)){
 		attendanceDetailsList.each { attendanceDetails ->
-			detailsMap = [:];
-			GISNo = null;
-			partyId=attendanceDetails.get("partyId");
-			String partyName = PartyHelper.getPartyName(delegator, partyId, false);
-			employeeDetails = delegator.findOne("EmployeeDetail", [partyId : partyId], false);
-			if(UtilValidate.isNotEmpty(employeeDetails)){
-				GISNo = employeeDetails.get("presentEpf");
-				detailsMap.put("GISNo",GISNo);
-			}
-			unitDetails = delegator.findList("Employment", EntityCondition.makeCondition("partyIdTo", EntityOperator.EQUALS , partyId), null, null, null, false);
-			if(UtilValidate.isNotEmpty(unitDetails)){
-				unitDetails = EntityUtil.getFirst(unitDetails);
-				if(UtilValidate.isNotEmpty(unitDetails))	{
-					locationGeoId=unitDetails.get("locationGeoId");
-					detailsMap.put("unit",locationGeoId);
+			noOfPayableDays=attendanceDetails.get("noOfPayableDays");
+			if(noOfPayableDays==0){
+				detailsMap = [:];
+				GISNo = null;
+				partyId=attendanceDetails.get("partyId");
+				String partyName = PartyHelper.getPartyName(delegator, partyId, false);
+				employeeDetails = delegator.findOne("EmployeeDetail", [partyId : partyId], false);
+				if(UtilValidate.isNotEmpty(employeeDetails)){
+					GISNo = employeeDetails.get("presentEpf");
+					detailsMap.put("GISNo",GISNo);
 				}
-			}
-			partyRelationconditionList=[];
-			partyRelationconditionList.add(EntityCondition.makeCondition("roleTypeIdFrom", EntityOperator.EQUALS , "DEPARTMENT"));
-			partyRelationconditionList.add(EntityCondition.makeCondition("roleTypeIdTo", EntityOperator.EQUALS , "EMPLOYEE"));
-			partyRelationconditionList.add(EntityCondition.makeCondition("partyIdTo", EntityOperator.EQUALS ,partyId));
-			partyCondition = EntityCondition.makeCondition(partyRelationconditionList,EntityOperator.AND);
-			def orderBy = UtilMisc.toList("comments");
-			partyRelationList = delegator.findList("PartyRelationship", partyCondition, null, orderBy, null, false);
-			if(UtilValidate.isNotEmpty(partyRelationList)){
-				costDetails = EntityUtil.getFirst(partyRelationList);
-				if(UtilValidate.isNotEmpty(costDetails))	{
-					costCode=costDetails.get("comments");
-					detailsMap.put("costCode",costCode);
+				unitDetails = delegator.findList("Employment", EntityCondition.makeCondition("partyIdTo", EntityOperator.EQUALS , partyId), null, null, null, false);
+				if(UtilValidate.isNotEmpty(unitDetails)){
+					unitDetails = EntityUtil.getFirst(unitDetails);
+					if(UtilValidate.isNotEmpty(unitDetails))	{
+						locationGeoId=unitDetails.get("locationGeoId");
+						detailsMap.put("unit",locationGeoId);
+					}
 				}
+				partyRelationconditionList=[];
+				partyRelationconditionList.add(EntityCondition.makeCondition("roleTypeIdFrom", EntityOperator.EQUALS , "DEPARTMENT"));
+				partyRelationconditionList.add(EntityCondition.makeCondition("roleTypeIdTo", EntityOperator.EQUALS , "EMPLOYEE"));
+				partyRelationconditionList.add(EntityCondition.makeCondition("partyIdTo", EntityOperator.EQUALS ,partyId));
+				partyCondition = EntityCondition.makeCondition(partyRelationconditionList,EntityOperator.AND);
+				def orderBy = UtilMisc.toList("comments");
+				partyRelationList = delegator.findList("PartyRelationship", partyCondition, null, orderBy, null, false);
+				if(UtilValidate.isNotEmpty(partyRelationList)){
+					costDetails = EntityUtil.getFirst(partyRelationList);
+					if(UtilValidate.isNotEmpty(costDetails))	{
+						costCode=costDetails.get("comments");
+						detailsMap.put("costCode",costCode);
+					}
+				}
+				detailsMap.put("partyId",partyId);
+				detailsMap.put("partyName",partyName);
+				attendanceExceptionMap.put(partyId,detailsMap);
 			}
-			detailsMap.put("partyId",partyId);
-			detailsMap.put("partyName",partyName);
-			attendanceExceptionMap.put(partyId,detailsMap);
 		}
 	}
 }
