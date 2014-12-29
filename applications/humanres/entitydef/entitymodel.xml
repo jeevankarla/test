@@ -901,6 +901,8 @@ under the License.
       <field name="periodTypeId" type="id"></field>
       <field name="amount" type="currency-amount"></field>
       <field name="comments" type="comment"></field>
+      <field name="createdByUserLogin" type="id-vlong"></field>
+	  <field name="lastModifiedByUserLogin" type="id-vlong"></field>
       <prim-key field="roleTypeIdFrom"/>
       <prim-key field="roleTypeIdTo"/>
       <prim-key field="partyIdFrom"/>
@@ -1955,4 +1957,31 @@ under the License.
         <key-map field-name="loanId"/>
       </view-link>
     </view-entity>
+    
+    <entity entity-name="EmployeeRecovery"
+            package-name="org.ofbiz.humanres"
+            title="Employee Recovery">
+      	<field name="partyId" type="id-ne"></field>
+      	<field name="customTimePeriodId" type="id-ne"/>
+      	<field name="recoveryType" type="id-ne"></field>
+      	<field name="eligibilityAmount" type="fixed-point" />
+      	<field name="actualAmount" type="fixed-point" />
+      	<field name="recoveryAmount" type="fixed-point" />
+      	<field name="createdDate" type="date-time"></field>
+		<field name="createdByUserLogin" type="id-vlong"></field>
+        <field name="lastModifiedDate" type="date-time"></field>
+        <field name="lastModifiedByUserLogin" type="id-vlong"></field>
+        <prim-key field="partyId"/>
+      	<prim-key field="customTimePeriodId"/>
+      	<prim-key field="recoveryType"/>
+		<relation type="one" fk-name="ER_PRTY" rel-entity-name="Party">
+            <key-map field-name="partyId"/>
+        </relation>
+      	<relation type="one" fk-name="ER_CUST_TP" rel-entity-name="CustomTimePeriod">
+            <key-map field-name="customTimePeriodId"/>
+      	</relation>
+      	<relation type="one" fk-name="ER_DNTP" rel-entity-name="DeductionType">
+	        <key-map field-name="recoveryType" rel-field-name="deductionTypeId"/>
+	  	</relation>
+ 	</entity>
 </entitymodel>
