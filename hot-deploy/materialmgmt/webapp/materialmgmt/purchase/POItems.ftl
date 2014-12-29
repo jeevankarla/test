@@ -28,12 +28,12 @@ under the License.
         <div class="screenlet-body">
             <table class="order-items basic-table" cellspacing='0'>
                 <tr valign="bottom" class="header-row">
-                    <td width="30%">${uiLabelMap.ProductProduct}</td>
-                    <td width="33%">${uiLabelMap.CommonStatus}</td>
+                    <td width="35%">${uiLabelMap.Material}</td>
+                    <td width="15%">${uiLabelMap.CommonStatus}</td>
                     <td width="5%">${uiLabelMap.OrderQuantity}</td>
                     <td width="10%" align="center">${uiLabelMap.OrderUnitList}</td>
                     <td width="10%" align="left">${uiLabelMap.OrderAdjustments}</td>
-                    <td width="10%" align="right">${uiLabelMap.OrderSubTotal}</td>
+                    <td width="15%" align="right">${uiLabelMap.OrderSubTotal}</td>
                     <td width="2%">&nbsp;</td>
                 </tr>
                 <#if !orderItemList?has_content>
@@ -51,19 +51,18 @@ under the License.
                         <tr<#if itemClass == "1"> class="alternate-row"</#if>>
                             <#assign orderItemType = orderItem.getRelatedOne("OrderItemType")?if_exists>
                             <#assign productId = orderItem.productId?if_exists>
+                             <#assign productDetails = delegator.findOne("Product", {"productId" : productId}, true)>
                             <#if productId?exists && productId == "shoppingcart.CommentLine">
                                 <td colspan="7" valign="top" class="label"> &gt;&gt; ${orderItem.itemDescription}</td>
                             <#else>
                                 <td>
                                     <div class="order-item-description">
-                                        <#if orderItem.supplierProductId?has_content>
-                                            ${orderItem.supplierProductId} - ${orderItem.itemDescription?if_exists}
-                                        <#elseif productId?exists>
-                                            ${orderItem.productId?default("N/A")} - ${orderItem.itemDescription?if_exists}
-                                            <#if (product.salesDiscontinuationDate)?exists && Static["org.ofbiz.base.util.UtilDateTime"].nowTimestamp().after(product.salesDiscontinuationDate)>
+                                        <#if productDetails?has_content?exists>
+                                            ${productDetails.get("productId")?if_exists} - ${productDetails.get("productName")?if_exists} 
+                                           <#if (product.salesDiscontinuationDate)?exists && Static["org.ofbiz.base.util.UtilDateTime"].nowTimestamp().after(product.salesDiscontinuationDate)>
                                                 <br />
                                                 <span style="color: red;">${uiLabelMap.OrderItemDiscontinued}: ${product.salesDiscontinuationDate}</span>
-                                            </#if>
+                                            </#if> 
                                         <#elseif orderItemType?exists>
                                             ${orderItemType.description} - ${orderItem.itemDescription?if_exists}
                                         <#else>
