@@ -273,7 +273,7 @@ public class MaterialRequestServices {
 		List condList=FastList.newInstance();
 		List<GenericValue> custReqItemDetails = FastList.newInstance();
 		List<GenericValue> supplierDetails = FastList.newInstance();
-		List productFacilities=FastList.newInstance();
+		List productIds=FastList.newInstance();
 
 		condList.add(EntityCondition.makeCondition("custRequestId", EntityOperator.EQUALS, custRequestId));
 		EntityCondition cond = EntityCondition.makeCondition(condList,EntityOperator.AND);
