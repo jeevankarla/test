@@ -126,7 +126,7 @@ function setUpItemList() {
 			</#if>
 			var columns = [		
 					{id:"partyId", name:"Employee Id", field:"employeeId", width:150, minWidth:100, cssClass:"cell-title", sortable:true},
-					{id:"EligibilityAmount", name:"Eligibility Amount", field:"eligibilityAmount", width:150, minWidth:100, cssClass:"cell-title", sortable:true,editor:FloatCellEditor},
+					{id:"EligibilityAmount", name:"Eligibility Amount", field:"eligibilityAmount", width:150, minWidth:100, cssClass:"cell-title", sortable:true},
 					{id:"ActualAmount", name:"Actual Bill Amount", field:"actualAmount", width:150, minWidth:100, cssClass:"cell-title", sortable:true,editor:FloatCellEditor},		
 					{id:"ExcessAmount", name:"Excess", field:"excessAmount", width:150, minWidth:100, cssClass:"cell-title", sortable:true}				
 			];
@@ -215,19 +215,6 @@ function setUpItemList() {
 			});          
 	         
 	         grid.onCellChange.subscribe(function(e,args) {
-	         if (args.cell == 1) {
-				var eligibilityAmountValue = parseInt(data[args.row]["eligibilityAmount"]);
-				if(isNaN(eligibilityAmountValue)){
-					eligibilityAmountValue=0;
-				}
-				if (args.cell == 2) {
-					var actualAmountValue = parseInt(data[args.row]["actualAmount"]);
-					if(isNaN(actualAmountValue)){
-						actualAmountValue=0;
-					}
-				}
-		  		//jQuery("#excessAmount").html(amount);
-		  	}else{
 			  	if (args.cell == 2) {
 			  		var actualAmountValue = parseInt(data[args.row]["actualAmount"]);
 					if(isNaN(actualAmountValue)){
@@ -247,7 +234,6 @@ function setUpItemList() {
 			  		}
 			  		//jQuery("#excessAmount").html(amount);
 			  	}
-			}
 		  	});
 	         
 	         

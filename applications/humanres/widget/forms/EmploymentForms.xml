@@ -729,7 +729,7 @@
     <form name="editTelephoneCUGCharges" odd-row-style="alternate-row" header-row-style="header-row" type="single"
     	default-table-style="basic-table hover-bar" separate-columns="true">  
         <field name="partyIdTo" title="${uiLabelMap.HumanResEmployeePartyIdTo}"><lookup target-form-name="LookupEmployeeName" size="15"/></field>
-        <field name="customTimePeriodId" title="Period Id">
+        <field name="customTimePeriodId" title="Period Id" required-field="true" tooltip="Required">
              <drop-down allow-empty="true">
                 <entity-options entity-name="CustomTimePeriod" key-field-name="customTimePeriodId" description="${periodName}: ${fromDate} - ${thruDate}" filter-by-date="false">
                     <entity-constraint name="periodTypeId" operator="equals" value="HR_MONTH"/>

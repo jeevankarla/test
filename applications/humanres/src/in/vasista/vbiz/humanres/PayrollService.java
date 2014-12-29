@@ -6157,8 +6157,9 @@ public static Map<String, Object> generateEmployerContributionPayrollBilling(Dis
 	    String excessAmount=(String)request.getParameter("excessAmount");
 	    BigDecimal elibilityValue=BigDecimal.ZERO;
 	    BigDecimal excessValue=BigDecimal.ZERO;
-	    elibilityValue = new BigDecimal(eligibilityAmount);
+	    BigDecimal actualValue = BigDecimal.ZERO;
 	    BigDecimal amount = BigDecimal.ZERO;
+	    elibilityValue = new BigDecimal(eligibilityAmount);
 	    Map paramMap = UtilHttp.getParameterMap(request);
 	    String payheadTypeId=" ";
 	    String rateCurrencyUomId="INR";
@@ -6172,6 +6173,8 @@ public static Map<String, Object> generateEmployerContributionPayrollBilling(Dis
 	    Timestamp thruDateEnd  = null;
 	    
 	    try {
+	    	excessValue = new BigDecimal(excessAmount);
+	    	actualValue = new BigDecimal(actualAmount);
 	    	if(UtilValidate.isEmpty(actualAmount)){
 				request.setAttribute("_ERROR_MESSAGE_", "Please enter Actual Bill amount ");
 				return "error";
@@ -6184,38 +6187,36 @@ public static Map<String, Object> generateEmployerContributionPayrollBilling(Dis
 	    		thruDateEnd = UtilDateTime.getDayEnd(thruDateTime);
 	    	}
 	    	List conditionList = FastList.newInstance();
-	    	conditionList.add(EntityCondition.makeCondition("rateTypeId",EntityOperator.EQUALS,"TELEPHONE_CUG_RATE"));
+	    	conditionList.add(EntityCondition.makeCondition("recoveryType",EntityOperator.EQUALS,"PAYROL_DD_TEL_CHG"));
 	    	conditionList.add(EntityCondition.makeCondition("partyId",EntityOperator.EQUALS,partyId));
+	    	conditionList.add(EntityCondition.makeCondition("customTimePeriodId",EntityOperator.EQUALS,periodId));
 	    	//conditionList.add(EntityCondition.makeCondition("rateAmount",EntityOperator.EQUALS,eligibilityAmount));
 	    	//conditionList.add(EntityCondition.makeCondition(EntityCondition.makeCondition("fromDate", EntityOperator.GREATER_THAN_EQUAL_TO, fromDateStart), EntityOperator.AND,
 	    			//EntityCondition.makeCondition("fromDate", EntityOperator.LESS_THAN_EQUAL_TO, thruDateEnd)));
-	    	conditionList.add(EntityCondition.makeCondition("fromDate", EntityOperator.LESS_THAN_EQUAL_TO, fromDateStart));
-	    	conditionList.add(EntityCondition.makeCondition(EntityCondition.makeCondition("thruDate", EntityOperator.EQUALS, null), EntityOperator.OR, 
-		        		EntityCondition.makeCondition("thruDate", EntityOperator.LESS_THAN_EQUAL_TO, thruDateEnd)));
 	    	EntityCondition condition = EntityCondition.makeCondition(conditionList,EntityOperator.AND);
-	    	List<GenericValue> rateAmountList = delegator.findList("RateAmount", condition, null, null, null, false);
-	    	if(UtilValidate.isNotEmpty(rateAmountList)){
-	    		GenericValue rateAmountValuesList = EntityUtil.getFirst(rateAmountList);
-	    		rateAmountValuesList.set("rateAmount",((BigDecimal)elibilityValue).setScale(0, BigDecimal.ROUND_HALF_UP));
-	    		rateAmountValuesList.store();
+	    	List<GenericValue> employeeRecoveryList = delegator.findList("EmployeeRecovery", condition, null, null, null, false);
+	    	if(UtilValidate.isNotEmpty(employeeRecoveryList)){
+	    		GenericValue employeeRecoveryValuesList = EntityUtil.getFirst(employeeRecoveryList);
+	    		employeeRecoveryValuesList.set("eligibilityAmount",((BigDecimal)elibilityValue).setScale(0, BigDecimal.ROUND_HALF_UP));
+	    		employeeRecoveryValuesList.set("actualAmount",((BigDecimal)actualValue).setScale(0, BigDecimal.ROUND_HALF_UP));
+	    		employeeRecoveryValuesList.set("recoveryAmount",((BigDecimal)excessValue).setScale(0, BigDecimal.ROUND_HALF_UP));
+	    		employeeRecoveryValuesList.store();
 	    	}else{
-    		  	GenericValue newEntity = delegator.makeValue("RateAmount");
-    		  	newEntity.set("rateTypeId","TELEPHONE_CUG_RATE");
-    		  	newEntity.set("rateCurrencyUomId",rateCurrencyUomId);
-    		  	newEntity.set("periodTypeId",periodTypeId);
-    		  	newEntity.set("fromDate",fromDateStart);
-    		  	newEntity.set("workEffortId",workEffortId);
+    		  	GenericValue newEntity = delegator.makeValue("EmployeeRecovery");
     		  	newEntity.set("partyId",partyId);
-    		  	newEntity.set("productId",productId);
-    		  	newEntity.set("emplPositionTypeId",emplPositionTypeId);
-    		  	newEntity.set("rateAmount",((BigDecimal)elibilityValue).setScale(0, BigDecimal.ROUND_HALF_UP));
+    		  	newEntity.set("customTimePeriodId",periodId);
+    		  	newEntity.set("recoveryType","PAYROL_DD_TEL_CHG");
+    		  	newEntity.set("eligibilityAmount",((BigDecimal)elibilityValue).setScale(0, BigDecimal.ROUND_HALF_UP));
+    		  	newEntity.set("actualAmount",((BigDecimal)actualValue).setScale(0, BigDecimal.ROUND_HALF_UP));
+    		  	newEntity.set("recoveryAmount",((BigDecimal)excessValue).setScale(0, BigDecimal.ROUND_HALF_UP));
+    		  	newEntity.set("createdByUserLogin",userLogin.get("userLoginId"));
+    		  	newEntity.set("lastModifiedByUserLogin",userLogin.get("userLoginId"));
     		  	/*if(UtilValidate.isNotEmpty(thruDateEnd)){
     		  		newEntity.set("thruDate",thruDateEnd);
     		  	}*/	
     		  	newEntity.create();
 	    	}
 	    	Map<String, Object> payItemMap=FastMap.newInstance();
-	    	excessValue = new BigDecimal(excessAmount);
     		amount = ((BigDecimal)excessValue).setScale(0, BigDecimal.ROUND_HALF_UP);
     		payheadTypeId = "PAYROL_DD_TEL_CHG";
 			payItemMap.put("userLogin",userLogin);
