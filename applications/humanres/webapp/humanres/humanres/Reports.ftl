@@ -91,6 +91,8 @@ function makeDatePicker1(fromDateId ,thruDateId){
 		makeDatePicker("AttMythruDate","AttMythruDate");
 		makeDatePicker("AttAllfromDate","AttAllfromDate");
 		makeDatePicker("AttAllthruDate","AttAllthruDate");
+		makeDatePicker("AttfromDate","AttfromDate");
+		makeDatePicker("AttthruDate","AttthruDate");
 		makeDatePicker("BenDedMyfromDate","BenDedMyfromDate");
 		makeDatePicker("BenDedMythruDate","BenDedMythruDate");
 		makeDatePicker("BenDedAllfromDate","BenDedAllfromDate");
@@ -1340,6 +1342,19 @@ function setOrgPartyId() {
 									<td><input type="hidden" name="partyId" class="commonPartyId"></td>
 									<td width="20%"><span class='h3'>From Date</span><input  type="text" size="18pt" id="AttAllfromDate"   name="AttAllfromDate"/></td>
 									<td width="20%"><span class='h3'>Thru Date</span><input  type="text" size="18pt" id="AttAllthruDate"   name="AttAllthruDate"/></td>
+									<td width="20%"><span class='h3'><input type="submit" value="Download" class="buttontext"></span></td> 
+								</tr>
+							</table>
+						</form>
+					 </tr>
+					 <tr class="alternate-row">
+						<form id="AttendanceNotGivenReport" name="AttendanceNotGivenReport" mothed="post" action="<@ofbizUrl>AttendanceNotGiven</@ofbizUrl>" target="_blank">
+							<table class="basic-table" cellspacing="5">
+								<tr class="alternate-row">
+									<td width="20%"><span class='h3'>Attendance Not Given Report</span></td>
+									<td><input type="hidden" name="partyId" class="commonPartyId"></td>
+									<td width="20%"><span class='h3'>From Date</span><input  type="text" size="18pt" id="AttfromDate"   name="AttfromDate"/></td>
+									<td width="20%"><span class='h3'>Thru Date</span><input  type="text" size="18pt" id="AttthruDate"   name="AttthruDate"/></td>
 									<td width="20%"><span class='h3'><input type="submit" value="Download" class="buttontext"></span></td> 
 								</tr>
 							</table>
