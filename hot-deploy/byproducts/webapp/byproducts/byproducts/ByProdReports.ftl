@@ -791,6 +791,7 @@ function reportTypeChangeFunc() {
 			             <td width="10%"><input type="submit" value="Download" class="buttontext"/></td>
 			           </form>
 			        </tr>
+			        <#if (security.hasEntityPermission("PartyFinHistory", "_ARAP", session) )>
 			        <tr class="alternate-row">
 			      	   <form id="GenericPartyFinancialHistory" name="GenericPartyFinancialHistory" method="post" action="<@ofbizUrl>GenericPartyFinancialHistory.pdf</@ofbizUrl>" target="_blank">        
 			             <td width="30%">Generic Party Financial History</td>
@@ -802,12 +803,13 @@ function reportTypeChangeFunc() {
 			             <td width="10%"><input type="submit" value="Download" class="buttontext"/></td>
 			           </form>
 			        </tr>
+			        </#if>
 			        <tr class="alternate-row">
 			      	   <form id="PartyFinancialHistoryWithDrCr" name="PartyFinancialHistoryWithDrCr" method="post" action="<@ofbizUrl>PartyFinancialHistoryWithDrCr.pdf</@ofbizUrl>" target="_blank">        
 			             <td width="30%">Party Financial History With Dr/Cr</td>
 			             <td width="15%">From<input  type="text" size="10pt" id="PFHFromDateCrDr" readonly  name="fromDate"/></td>
 			      		 <td width="15%">Thru<input  type="text" size="10pt" id="PFHThruDateCrDr" readonly  name="thruDate"/></td>
-			             <td width="15%">Party Code<@htmlTemplate.lookupField size="10" maxlength="22" formName="GenericPartyFinancialHistory" name="partyId" id="partyId" fieldFormName="LookupPartyName"/>
+			             <td width="15%">Party Code<@htmlTemplate.lookupField size="10" maxlength="22" formName="PartyFinancialHistoryWithDrCr" name="partyId" id="partyId" fieldFormName="LookupPartyName"/>
 			            <#--> <input type="text" name="partyId" id="partyId" size="10" maxlength="22"> --></td>
 			             <td width="15%"></td>
 			             <td width="10%"><input type="submit" value="Download" class="buttontext"/></td>
@@ -1154,7 +1156,7 @@ function reportTypeChangeFunc() {
 				      			<option value="UNION">Sale to Union</option>
 				      			<option value="DEPOT_CUSTOMER">Depot Sale</option>
 			      			</select></td>
-	      					<td width="15%">Party Code<@htmlTemplate.lookupField size="10" maxlength="22" formName="GenericPartyFinancialHistory" name="partyId" id="partyId" fieldFormName="LookupPartyName"/>	<td width="10%"><input type="submit" value="Download" class="buttontext"/></td> 
+	      					<td width="15%">Party Code<@htmlTemplate.lookupField size="10" maxlength="22" formName="iceCreamSaleReport" name="partyId" id="partyId" fieldFormName="LookupPartyName"/>	<td width="10%"><input type="submit" value="Download" class="buttontext"/></td> 
 						</form>
 	                  </tr>
 	                  <tr class="alternate-row">
