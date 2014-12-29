@@ -10,6 +10,11 @@
         <attribute name="custRequestId" type="String" mode="IN" optional="false"/>
         <attribute name="statusId" type="String" mode="IN" optional="false"/>
     </service>
+    <service name="processCustRequestParty" engine="java" location="in.vasista.vbiz.purchase.MaterialRequestServices" invoke="processCustRequestParty">
+        <description>Set cust Request Id</description>
+        <attribute name="custRequestId" type="String" mode="IN" optional="false"/>
+    </service>
+    
     
     <service name="setCustRequestItemStatus" engine="java" location="in.vasista.vbiz.purchase.MaterialRequestServices" invoke="setCustRequestItemStatus">
         <description>Set cust Request Item status service</description>

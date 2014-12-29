@@ -261,6 +261,49 @@ public class MaterialRequestServices {
 		return result;
 	}
 	
+	public static Map<String, Object> processCustRequestParty(DispatchContext ctx,Map<String, ? extends Object> context) {
+		Delegator delegator = ctx.getDelegator();
+		LocalDispatcher dispatcher = ctx.getDispatcher();
+		String custRequestId = (String) context.get("custRequestId");
+		String roleTypeId="SUPPLIER";
+		//String fromDate= UtilDateTime.toDateString(UtilDateTime.nowTimestamp(), "-dd/MM/yyyy HH:mm:ss");
+		GenericValue userLogin = (GenericValue) context.get("userLogin");
+
+		Map result = ServiceUtil.returnSuccess();
+		List condList=FastList.newInstance();
+		List<GenericValue> custReqItemDetails = FastList.newInstance();
+		List<GenericValue> supplierDetails = FastList.newInstance();
+		List productFacilities=FastList.newInstance();
+
+		condList.add(EntityCondition.makeCondition("custRequestId", EntityOperator.EQUALS, custRequestId));
+		EntityCondition cond = EntityCondition.makeCondition(condList,EntityOperator.AND);
+		try{
+
+			custReqItemDetails = delegator.findList("CustRequestItem", cond, null,null, null, false);
+		   productIds=EntityUtil.getFieldListFromEntityList(custReqItemDetails, "productId", true);			
+			 supplierDetails = delegator.findList("SupplierProduct", EntityCondition.makeCondition("productId", EntityOperator.IN, productIds), null,null, null, false);		
+				for(GenericValue custReq : supplierDetails){
+					Map inputCtx = FastMap.newInstance();
+					inputCtx.put("partyId", custReq.getString("partyId"));
+					inputCtx.put("custRequestId", custRequestId);
+					inputCtx.put("roleTypeId",roleTypeId);
+		//			inputCtx.put("fromDate", fromDate);
+					inputCtx.put("userLogin", userLogin);
+					Map resultCtx = dispatcher.runSync("createCustRequestParty", inputCtx);
+					if (ServiceUtil.isError(resultCtx)) {
+						Debug.logError("RequestItem set status failed for Request: " + custRequestId+" : "+custReq.getString("partyId"), module);
+						return ServiceUtil.returnError("Error occuring while calling createCustRequestParty service:");
+					}
+				}
+		} catch (Exception e) {
+			// TODO: handle exception
+			Debug.logError(e, module);
+			return ServiceUtil.returnError(e.getMessage());
+		}
+		return result;	
+	}
+	
+	
 	public static Map<String, Object> approveRequestByHOD(DispatchContext ctx,Map<String, ? extends Object> context) {
 		Delegator delegator = ctx.getDelegator();
 		LocalDispatcher dispatcher = ctx.getDispatcher();

@@ -438,6 +438,7 @@
      
      <request-map uri="ViewMaterialEnquiry">
        <security https="true" auth="true"/>
+       <event type="service" invoke="processCustRequestParty"/>
        <response name="success" type="view" value="ViewMaterialEnquiry"/>
        <response name="error" type="view" value="ViewMaterialEnquiry"/>
      </request-map>
