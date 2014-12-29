@@ -560,7 +560,7 @@
         <response name="error" type="view" value="FindMaterialPO"/>
     </request-map>
     
-    <request-map uri="riseGRN">
+    <request-map uri="raiseGRN">
        <security https="true" auth="true"/>
        <response name="success" type="view" value="POMaterialReceipts"/>
        <response name="error" type="view" value="POMaterialReceipts"/>

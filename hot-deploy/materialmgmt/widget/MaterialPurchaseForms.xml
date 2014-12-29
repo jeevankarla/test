@@ -94,8 +94,8 @@
                 <parameter param-name="setItemStatus" value="Y" />
             </hyperlink>
         </field> 
-        <field use-when="flag == &quot;N&quot;"  name="riseGRN" title="Rise GRN" widget-style="buttontext" >
-        	 <hyperlink target="riseGRN" description="Rise GRN">
+        <field use-when="flag == &quot;N&quot;"  name="raiseGRN" title="Raise GRN" widget-style="buttontext" >
+        	 <hyperlink target="raiseGRN" description="Raise GRN">
         	 	<parameter param-name="orderId"/>
         	 	<parameter param-name="vehicleId"/>
             </hyperlink>
