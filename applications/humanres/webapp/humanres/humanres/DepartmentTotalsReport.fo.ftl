@@ -599,7 +599,7 @@ under the License.
 	                                <#if deptTotals.getValue().get("PAYROL_DD_MILKDUES")?has_content>
 	                                <#assign PAYROL_DD_MILKDUES=deptTotals.getValue().get("PAYROL_DD_MILKDUES")>
 	                                </#if>
-	                                <#assign TOTAL_DD_MILKDUES  = TOTAL_DD_MILKCARDS + PAYROL_DD_MILKDUES>
+	                                <#assign TOTAL_DD_MILKDUES  = PAYROL_DD_MILKDUES + PAYROL_DD_MILKDUES>
 	                                    <fo:block keep-together="always" text-align="right">${((-1)*PAYROL_DD_MILKDUES)?if_exists?string("##0.00")}</fo:block>
 	                                </fo:table-cell>
 	                                <fo:table-cell>
