@@ -160,6 +160,7 @@
                 		<condition-list combine="or">
                 			<condition-expr field-name="qiStatusId" operator="equals" value="QTITM_NEGOTIATION"/>
                 			<condition-expr field-name="qiStatusId" operator="equals" value="QTITM_APPROVED"/>
+                			<condition-expr field-name="qiStatusId" operator="equals" value="QTITM_ADUIT_APP"/>
                 		</condition-list>
                 		<condition-expr field-name="custRequestId" operator="equals" value="${parameters.custRequestId}"/>
                 	</condition-list>

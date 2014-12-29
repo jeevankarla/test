@@ -311,7 +311,7 @@
         <field name="validThruDate" title="Quote Valid Thru"><display description="${groovy:org.ofbiz.base.util.UtilDateTime.toDateString(validThruDate,&quot;dd/MM/yyyy&quot;)}" /></field>
         <field name="productId" title="Material Name - [Code]"><display-entity entity-name="Product" key-field-name="productId" description="${productName}"/></field>
         <field name="quantity" title="Qty"><display /></field>
-        <field name="qiStatusId" title="Status"><display /></field>
+        <field name="qiStatusId" title="Status"><display-entity entity-name="StatusItem" key-field-name="statusId" description="${description}" /></field>
         <field name="quoteUnitPrice" title="Unit Price"><display /></field>
         <field use-when="&quot;${qiStatusId}&quot; == &quot;QTITM_NEGOTIATION&quot;" name="approveLink" widget-style="buttontext h3" title="Sec. Head Approval">
         	<hyperlink also-hidden="false" description="Approve" target="changeQuoteItemStatus">
@@ -321,7 +321,15 @@
                 <parameter param-name="statusId" value="QTITM_APPROVED"/>
         	</hyperlink>
         </field>
-        <field use-when="&quot;${qiStatusId}&quot; == &quot;QTITM_NEGOTIATION&quot;" name="rejectLink" widget-style="buttontext h3" title="Reject">
+        <field use-when="&quot;${qiStatusId}&quot; == &quot;QTITM_APPROVED&quot;" name="auditApprove" title="Audit Approval" widget-style="buttontext h3">
+        <hyperlink also-hidden="false" description="Approve" target="changeQuoteItemStatus">
+                <parameter param-name="quoteId"/>
+                <parameter param-name="quoteItemSeqId"/>
+                <parameter param-name="custRequestId" value="${custRequestId}"/>
+                <parameter param-name="statusId" value="QTITM_ADUIT_APP"/>
+        	</hyperlink>
+        </field>
+        <field use-when="&quot;${qiStatusId}&quot; == &quot;QTITM_NEGOTIATION&quot; || &quot;${qiStatusId}&quot; == &quot;QTITM_APPROVED&quot; || &quot;${qiStatusId}&quot; == &quot;QTITM_ADUIT_APP&quot;" name="rejectLink" widget-style="buttontext h3" title="Reject">
         	<hyperlink also-hidden="false" description="Reject" target="changeQuoteItemStatus">
                 <parameter param-name="quoteId"/>
                 <parameter param-name="quoteItemSeqId"/>
@@ -330,7 +338,7 @@
         	</hyperlink>
         </field>
         
-        <field use-when="&quot;${qiStatusId}&quot; == &quot;QTITM_APPROVED&quot;" name="qualifiedLink" widget-style="buttontext h3" title="MD Approval">
+        <field use-when="&quot;${qiStatusId}&quot; == &quot;QTITM_ADUIT_APP&quot;" name="qualifiedLink" widget-style="buttontext h3" title="MD Approval">
         	<hyperlink also-hidden="false" description="Approve" target="changeQuoteItemStatus">
                 <parameter param-name="quoteId"/>
                 <parameter param-name="quoteItemSeqId"/>

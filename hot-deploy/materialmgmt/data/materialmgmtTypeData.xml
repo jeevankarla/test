@@ -95,5 +95,10 @@
      <DataCategory categoryName="PO Document"  dataCategoryId="PO_DOCUMENT"  parentCategoryId="ROOT"/>
 	 <ContentType contentTypeId="PO_DOCUMENT"  description="Purchase Order Document" />
 	 <OrderContentType  description="Internal Content"  orderContentTypeId="INTERNAL"/>
+	 
+	 <StatusItem  description="Audit Approved"  statusCode="AUDITAPPROVED" statusId="QTITM_ADUIT_APP" statusTypeId="QTITEM_STATUS"/>
+	 <StatusValidChange  statusId="QTITM_APPROVED" statusIdTo="QTITM_ADUIT_APP" transitionName="Audit Approved."/>
+	 <StatusValidChange statusId="QTITM_ADUIT_APP" statusIdTo="QTITM_QUALIFIED" transitionName="Qualified"/>
+	 <StatusValidChange statusId="QTITM_ADUIT_APP" statusIdTo="QTITM_REJECTED" transitionName="Reject"/>
      
 </entity-engine-xml>
