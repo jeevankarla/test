@@ -90,7 +90,7 @@ conditionList = [];
 if(!allChanges){
 	conditionList.add(EntityCondition.makeCondition("lastModifiedByUserLogin", EntityOperator.EQUALS , userLogin.userLoginId));
 }
-conditionList.add(EntityCondition.makeCondition("noOfPayableDays", EntityOperator.LESS_THAN_EQUAL_TO, daysCheck));
+//conditionList.add(EntityCondition.makeCondition("noOfPayableDays", EntityOperator.LESS_THAN_EQUAL_TO, daysCheck));
 conditionList.add(EntityCondition.makeCondition("partyId", EntityOperator.IN, employementIds));
 conditionList.add(EntityCondition.makeCondition([
 	EntityCondition.makeCondition("lastUpdatedStamp", EntityOperator.GREATER_THAN_EQUAL_TO, dayBegin),
@@ -99,22 +99,5 @@ conditionList.add(EntityCondition.makeCondition([
 condition = EntityCondition.makeCondition(conditionList, EntityOperator.AND);
 payableDaysList = delegator.findList("PayrollAttendance", condition, null, ["lastUpdatedStamp"], null, false);
 
-conditionList1 = [];
-if(!allChanges){
-	conditionList1.add(EntityCondition.makeCondition("lastModifiedByUserLogin", EntityOperator.EQUALS , userLogin.userLoginId));
-}
-conditionList1.add(EntityCondition.makeCondition([
-	EntityCondition.makeCondition("noOfHalfPayDays", EntityOperator.NOT_EQUAL, null),
-	EntityCondition.makeCondition("noOfHalfPayDays", EntityOperator.NOT_EQUAL, BigDecimal.ZERO)
-   ], EntityOperator.AND));
-conditionList1.add(EntityCondition.makeCondition("partyId", EntityOperator.IN, employementIds));
-conditionList1.add(EntityCondition.makeCondition([
-	EntityCondition.makeCondition("lastUpdatedStamp", EntityOperator.GREATER_THAN_EQUAL_TO, dayBegin),
-	EntityCondition.makeCondition("lastUpdatedStamp", EntityOperator.LESS_THAN_EQUAL_TO, dayEnd)
-   ], EntityOperator.AND));
-condition1 = EntityCondition.makeCondition(conditionList1, EntityOperator.AND);
-halfPayDaysList = delegator.findList("PayrollAttendance", condition1, null, ["lastUpdatedStamp"], null, false);
-
 context.put("payableDaysList",payableDaysList);
-context.put("halfPayDaysList",halfPayDaysList);
 

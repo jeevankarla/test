@@ -19,7 +19,7 @@
 		<#else>         
  			<fo:page-sequence master-reference="main">
 				<fo:static-content flow-name="xsl-region-before" font-family="Courier,monospace" font-size="8pt">
-			        <fo:block text-align="left" white-space-collapse="false" keep-together="always" font-size="5pt">.                               CHECK LIST FOR BENEFITS AND DEDUCTIONS ON ${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(fromDate, "MMM-yyyy")}</fo:block>        
+			        <fo:block text-align="left" white-space-collapse="false" keep-together="always" font-size="5pt">.                               CHECK LIST FOR ATTENDANCE ON ${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(thruDate, "MMMM,yyyy").toUpperCase()}</fo:block>        
 			  		<fo:block text-align="left" white-space-collapse="false" keep-together="always" font-size="8pt">-------------------------------------------------------------------------------------------------------------------------------------</fo:block>	 	 	  
 			  		<fo:block text-align="left" white-space-collapse="false" keep-together="always" font-size="8pt">TYPE    MMYY        TypeId          EMPNO     Emp.Name               Desgn.                 WEF         O.B.    INST.</fo:block>
 			  		<fo:block text-align="left" white-space-collapse="false" keep-together="always" font-size="8pt">-------------------------------------------------------------------------------------------------------------------------------------</fo:block>
@@ -40,87 +40,48 @@
 				            <fo:table-body>
 				            	<#if payableDaysList?has_content> 
 				                  	<#list payableDaysList as payableDays>
-								     	<fo:table-row>
-								   			<fo:table-cell>
-								   				<fo:block font-size="4pt" text-align="left">RGL</fo:block>
-								   			</fo:table-cell>
-								   			<fo:table-cell>
-								   				<fo:block font-size="4pt" text-align="left">${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(fromDate, "MM/yyyy")?if_exists}</fo:block>
-								   			</fo:table-cell>
-								   			<fo:table-cell>
-								   				<fo:block font-size="4pt" text-align="left">Payable Days</fo:block>
-								   			</fo:table-cell>
-								   			<fo:table-cell>
-								   				<fo:block font-size="4pt" text-align="left">${payableDays.get("partyId")?if_exists}</fo:block>
-								   			</fo:table-cell>
-								   			<fo:table-cell>
-								   				<fo:block font-size="4pt" text-align="left">${Static["org.ofbiz.party.party.PartyHelper"].getPartyName(delegator, payableDays.get("partyId"), false)}</fo:block>
-								   			</fo:table-cell>
-								   			<#assign emplPosition=delegator.findByAnd("EmplPosition", {"partyId" : payableDays.get("partyId")})/>
-								   			<fo:table-cell>
-								   				<fo:block font-size="4pt" text-align="left">${(emplPosition[0].emplPositionId)?if_exists}</fo:block>
-								   			</fo:table-cell>
-								   			<fo:table-cell>
-								   				<fo:block font-size="4pt" text-align="right">${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(fromDate ,"dd/MM/yyyy")?if_exists}</fo:block>
-								   			</fo:table-cell>
-								   			<fo:table-cell>
-								   				<fo:block font-size="4pt" text-align="right" text-indent = "10pt">0.00</fo:block>
-								   			</fo:table-cell>
-								   			<fo:table-cell>
-								   				<fo:block font-size="4pt" text-align="right" text-indent = "10pt">${payableDays.get("noOfPayableDays")?if_exists?string("##0.00")}</fo:block>
-								   			</fo:table-cell>
-								   			<fo:table-cell>
-								   				<fo:block font-size="4pt" text-align="right"></fo:block>
-								   			</fo:table-cell>
-								   		</fo:table-row>
+				                  		<#if payableDays.get("noOfPayableDays")?has_content>
+									     	<fo:table-row>
+									   			<fo:table-cell>
+									   				<fo:block font-size="4pt" text-align="left">RGL</fo:block>
+									   			</fo:table-cell>
+									   			<fo:table-cell>
+									   				<fo:block font-size="4pt" text-align="left">${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(fromDate, "MM/yyyy")?if_exists}</fo:block>
+									   			</fo:table-cell>
+									   			<fo:table-cell>
+									   				<fo:block font-size="4pt" text-align="left">Payable Days</fo:block>
+									   			</fo:table-cell>
+									   			<fo:table-cell>
+									   				<fo:block font-size="4pt" text-align="left">${payableDays.get("partyId")?if_exists}</fo:block>
+									   			</fo:table-cell>
+									   			<fo:table-cell>
+									   				<fo:block font-size="4pt" text-align="left">${Static["org.ofbiz.party.party.PartyHelper"].getPartyName(delegator, payableDays.get("partyId"), false)}</fo:block>
+									   			</fo:table-cell>
+									   			<#assign emplPosition=delegator.findByAnd("EmplPosition", {"partyId" : payableDays.get("partyId")})/>
+									   			<fo:table-cell>
+									   				<fo:block font-size="4pt" text-align="left">${(emplPosition[0].emplPositionId)?if_exists}</fo:block>
+									   			</fo:table-cell>
+									   			<fo:table-cell>
+									   				<fo:block font-size="4pt" text-align="right">${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(fromDate ,"dd/MM/yyyy")?if_exists}</fo:block>
+									   			</fo:table-cell>
+									   			<fo:table-cell>
+									   				<fo:block font-size="4pt" text-align="right" text-indent = "10pt">0.00</fo:block>
+									   			</fo:table-cell>
+									   			<fo:table-cell>
+									   				<fo:block font-size="4pt" text-align="right" text-indent = "10pt">${payableDays.get("noOfPayableDays")?if_exists?string("##0.00")}</fo:block>
+									   			</fo:table-cell>
+									   			<fo:table-cell>
+									   				<fo:block font-size="4pt" text-align="right"></fo:block>
+									   			</fo:table-cell>
+									   		</fo:table-row>
+									   	</#if>
 								   	</#list>
 								<#else>
-									<#if halfPayDaysList?has_content>
-										
-									<#else>
-										<fo:table-row>
-											<fo:table-cell>
-								   				<fo:block font-size="4pt" text-align="left">No Orders Found</fo:block>
-								   			</fo:table-cell>
-										</fo:table-row>
-									</#if> 
-							   	</#if>
-							   	<#if halfPayDaysList?has_content> 
-				                  	<#list halfPayDaysList as halfPayDays>
-								     	<fo:table-row>
-								   			<fo:table-cell>
-								   				<fo:block font-size="4pt" text-align="left">RGL</fo:block>
-								   			</fo:table-cell>
-								   			<fo:table-cell>
-								   				<fo:block font-size="4pt" text-align="left">${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(fromDate, "MM/yyyy")?if_exists}</fo:block>
-								   			</fo:table-cell>
-								   			<fo:table-cell>
-								   				<fo:block font-size="4pt" text-align="left">halfPay Days</fo:block>
-								   			</fo:table-cell>
-								   			<fo:table-cell>
-								   				<fo:block font-size="4pt" text-align="left">${halfPayDays.get("partyId")?if_exists}</fo:block>
-								   			</fo:table-cell>
-								   			<fo:table-cell>
-								   				<fo:block font-size="4pt" text-align="left">${Static["org.ofbiz.party.party.PartyHelper"].getPartyName(delegator, halfPayDays.get("partyId"), false)}</fo:block>
-								   			</fo:table-cell>
-								   			<#assign emplPosition=delegator.findByAnd("EmplPosition", {"partyId" : halfPayDays.get("partyId")})/>
-								   			<fo:table-cell>
-								   				<fo:block font-size="4pt" text-align="left">${(emplPosition[0].emplPositionId)?if_exists}</fo:block>
-								   			</fo:table-cell>
-								   			<fo:table-cell>
-								   				<fo:block font-size="4pt" text-align="right">${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(fromDate ,"dd/MM/yyyy")?if_exists}</fo:block>
-								   			</fo:table-cell>
-								   			<fo:table-cell>
-								   				<fo:block font-size="4pt" text-align="right" text-indent = "10pt">0.00</fo:block>
-								   			</fo:table-cell>
-								   			<fo:table-cell>
-								   				<fo:block font-size="4pt" text-align="right" text-indent = "10pt">${halfPayDays.get("noOfHalfPayDays")?if_exists?string("##0.00")}</fo:block>
-								   			</fo:table-cell>
-								   			<fo:table-cell>
-								   				<fo:block font-size="4pt" text-align="right">Check Once</fo:block>
-								   			</fo:table-cell>
-								   		</fo:table-row>
-								   	</#list>
+									<fo:table-row>
+										<fo:table-cell>
+							   				<fo:block font-size="4pt" text-align="left">No Orders Found</fo:block>
+							   			</fo:table-cell>
+									</fo:table-row>
 							   	</#if>
 							</fo:table-body>
 						</fo:table> 
