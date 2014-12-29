@@ -170,19 +170,19 @@ function makeDatePicker(fromDateId ,thruDateId){
         <h3>PO Information</h3>
         <section>
           <fieldset>
-	            <table cellpadding="2" cellspacing="1" class='h2'>
+	            <table cellpadding="15" cellspacing="15" class='h3' width="50%">
 	                   <tr>
-						    <td class="label"><b>OrderType :*</b></td>
+							<td class="label">Order Type(<font color="red">*</font>) :</td>
 						    <td>
 						      	<select name="orderTypeId">
 						      	   <#list orderTypes as orderType>    
-  	    									<option value='${orderType.orderTypeId}'>${orderType.description}</option>
+  	    								<option value='${orderType.orderTypeId}'>${orderType.description}</option>
 								    </#list> 
 						      	</select>
 						    </td>
 						</tr>
     					<tr>
-						    <td class="label"><b>Vendor :*</b></td>
+						    <td class="label">Vendor(<font color="red">*</font>) :</td>
 						     <input type="hidden" name="productStoreId"  value="${productStoreId?if_exists}" />
 						    <#if changeFlag?exists && changeFlag=='InterUnitPurchase'>
 						       <input type="hidden" name="salesChannel" id="salesChannel" value="INTER_PRCHSE_CHANNEL"/> 
@@ -194,21 +194,20 @@ function makeDatePicker(fromDateId ,thruDateId){
 						    </td>
 						</tr>
           		        <tr>
-						    <td class="label"><b>Bill To Party/Employee Id:*</b></td>
+						    <td class="label">Bill To Party :</td>
 						    <td>
 						      	<@htmlTemplate.lookupField  formName="CreateMPO" size="18" maxlength="60" name="billToPartyId" id="billToPartyId" fieldFormName="LookupPartyName"/>
-          		                <span class="tooltip">If input given then invoice will raise against this Party </span>
-          		
+          		                <span class="tooltip">If billing and vendor party are different, invoice will be raise against this Party </span>
 						    </td>
 						 </tr>
  						 <tr>
-						    <td class="label"><b>Ref No:*</b></td>
+						    <td class="label"><b>Ref No. :</b></td>
 						    <td>
 						      <input type="text" name="refNo" id="refNo" size="18" maxlength="60" autocomplete="off"/>
 	        				 </td>
 						</tr>
 						<tr>
-						    <td class="label"><b>Estimated Delivery Date:* </b></td>
+						    <td class="label"><b>Estimated Delivery Date :</b></td>
 						    <td>
 						      <input type="text" name="estimatedDeliveryDate" id="estimatedDeliveryDate" size="18" maxlength="60" autocomplete="off"/>
 	        				 </td>
@@ -220,19 +219,19 @@ function makeDatePicker(fromDateId ,thruDateId){
 	        				 </td>
 						</tr>-->
 						<tr>
-						    <td class="label"><b>PO No:*</b></td>
+						    <td class="label"><b>PO No :</b></td>
 						    <td>
 						      <input type="text" name="PONumber" id="PONumber" size="18" maxlength="60" autocomplete="off"/>
 	        				 </td>
 						</tr>
 						<tr>
-						    <td class="label"><b>PO Date:* </b></td>
+						    <td class="label"><b>PO Date : </b></td>
 						    <td>
 						      <input type="text" name="orderDate" id="orderDate" size="18" maxlength="60" autocomplete="off"/>
 	        				 </td>
 						</tr>
 						<tr>
-						    <td class="label"><b>File No:* </b></td>
+						    <td class="label"><b>File No : </b></td>
 						    <td>
 						      <input type="text" name="fileNo" id="fileNo" size="18" maxlength="60" autocomplete="off"/>
 	        				 </td>
@@ -240,7 +239,7 @@ function makeDatePicker(fromDateId ,thruDateId){
 				        <tr>
 				            <td class="label"><b> Description :</b></td>
 				            <td>
-	        				   <input class="h3" type="textarea" size="40" maxlength="500" name="orderName" id="orderName"/>
+	        				   <input class="h3" type="textarea" size="30" maxlength="100" name="orderName" id="orderName" style="width: 200px; height: 50px" />
 	          				</td>
 				        </tr>
 	                  </table>
@@ -253,71 +252,50 @@ function makeDatePicker(fromDateId ,thruDateId){
 					    	<div class="screenlet-body">
 					    	 <div class="screenlet-body" id="FieldsDIV" >
 								<table width="50%" border="0" cellspacing="0" cellpadding="0">
-										<!-- <tr><td><br/></td></tr>
-								        <tr>
-						       				 <td align='left' valign='middle' nowrap="nowrap"><div class='h3'>MRN No.: </div></td>
-								         	<td valign='middle' align='left'> 
-						             			<input class='h3' type="text" size="20" maxlength="30" name="mrnNumber" id="mrnNumber"/>          
-						          			</td>
-						          			<td>&nbsp;&nbsp;&nbsp;</td> 
-						          			<td align='left' valign='middle' nowrap="nowrap"><div class='h3'>PO No.: </div></td>
-								         	<td valign='middle' align='left'> 
-						             			<input class='h3' type="text" size="20" maxlength="30" name="PONumber" id="PONumber"/>          
-						          			</td>
-						          			<td>&nbsp;&nbsp;&nbsp;</td>
-						          			<td align='left' valign='middle' nowrap="nowrap"><div class='h3'>SUP Invoice No.: </div></td>
-								         	<td valign='middle' align='left'> 
-						             			<input class='h3' type="text" size="20" maxlength="30" name="SInvNumber" id="SInvNumber"/>          
-						          			</td>
-						          			<td>&nbsp;&nbsp;&nbsp;</td>
-						          			<td align='left' valign='middle' nowrap="nowrap"><div class='h3'>SUP Invoice Date: </div></td>
-								         	<td valign='middle' align='left'> 
-						             			<input class='h3' type="text" size="20" maxlength="30" name="SInvoiceDate" id="SInvoiceDate"/>          
-						          			</td> 
-						 		       </tr>-->
-						 		       <tr><td><br/></td></tr>
-						 		        <tr>
-								        	<td align='left' valign='middle' nowrap="nowrap"><div class='h3'>Freight Charges: </div></td>
-						       				<td valign='middle' align='left'> 
-						           				<input class='h3' type="text" size="20" maxlength="30" name="freightCharges" id="freightCharges" onblur="javascript:addToInvoiceAmount();"/>          
-						       				</td>
-						       				<td>&nbsp;&nbsp;&nbsp;</td>
-						       				<td align='left' valign='middle' nowrap="nowrap"><div class='h3'>Discount: </div></td>
-								         	<td valign='middle' align='left'> 
-						             			<input class='h3' type="text" size="20" maxlength="30" name="discount" id="discount" onblur="javascript:addToInvoiceAmount();"  />          
-						          			</td>
-						          			<td>&nbsp;&nbsp;&nbsp;</td>
-						       				<td align='left' valign='middle' nowrap="nowrap"><div class='h3'>Insurance: </div></td>
-								         	<td valign='middle' align='left'> 
-						             			<input class='h3' type="text" size="20" maxlength="30" name="insurence" id="insurence" onblur="javascript:addToInvoiceAmount();"/>          
-						          			</td>
-						          			<td>&nbsp;&nbsp;&nbsp;</td>
-						          			<td align='left' valign='middle' nowrap="nowrap"><div class='h3'>Pack.&Fowdg: </div></td>
-								         	<td valign='middle' align='left'> 
-								         	 <input class='h3' type="text" size="20" maxlength="30" name="packAndFowdg" id="packAndFowdg" onblur="javascript:addToInvoiceAmount();"/>
-						          			</td>
-						 		         </tr>
-						 		        <tr><td><br/></td></tr>
-						 		        <tr>
-								        	<td align='left' valign='middle' nowrap="nowrap"><div class='h3'>Other Charges: </div></td>
-						       				<td valign='middle' align='left'> 
-						           				<input class='h3' type="text" size="20" maxlength="30" name="otherCharges" id="otherCharges" onblur="javascript:addToInvoiceAmount();"/>          
-						       				</td>
-						          			<td>&nbsp;&nbsp;&nbsp;</td>
-						          			<td align='left' valign='middle' nowrap="nowrap"><div class='h3'>Add BED: </div></td>
-								         	<td valign='middle' align='left'> 
-								         	<input class='h3' type="checkbox" size="20" id="addBED" name="addBED" value="" onclick="javascript:addBedColumns();"/>
-						          			</td>
-						 		         </tr>
-						 		          <tr><td><br/></td></tr>
-						 		          <tr><td colspan="6"> <span class="tooltip"> Note:once BED columns added and input given to BED columns You cant remove them</span></tr>
-						        	</table>
-								</div>
-								<div class="grid-header" style="width:100%">
-									<label>Purchase Entry </label><span id="totalAmount"></span>
-								</div>
-								<div id="myGrid1" style="width:100%;height:250px;"></div>
-								<#-->
+										
+					 		       <tr><td><br/></td></tr>
+					 		        <tr>
+							        	<td align='left' valign='middle' nowrap="nowrap"><div class='h3'>Freight Charges: </div></td>
+					       				<td valign='middle' align='left'> 
+					           				<input class='h3' type="text" size="20" maxlength="30" name="freightCharges" id="freightCharges" onblur="javascript:addToInvoiceAmount();"/>          
+					       				</td>
+					       				<td>&nbsp;&nbsp;&nbsp;</td>
+					       				<td align='left' valign='middle' nowrap="nowrap"><div class='h3'>Discount: </div></td>
+							         	<td valign='middle' align='left'> 
+					             			<input class='h3' type="text" size="20" maxlength="30" name="discount" id="discount" onblur="javascript:addToInvoiceAmount();"  />          
+					          			</td>
+					          			<td>&nbsp;&nbsp;&nbsp;</td>
+					       				<td align='left' valign='middle' nowrap="nowrap"><div class='h3'>Insurance: </div></td>
+							         	<td valign='middle' align='left'> 
+					             			<input class='h3' type="text" size="20" maxlength="30" name="insurence" id="insurence" onblur="javascript:addToInvoiceAmount();"/>          
+					          			</td>
+					          			<td>&nbsp;&nbsp;&nbsp;</td>
+					          			<td align='left' valign='middle' nowrap="nowrap"><div class='h3'>Pack.&Fowdg: </div></td>
+							         	<td valign='middle' align='left'> 
+							         	 <input class='h3' type="text" size="20" maxlength="30" name="packAndFowdg" id="packAndFowdg" onblur="javascript:addToInvoiceAmount();"/>
+					          			</td>
+					 		         </tr>
+					 		        <tr><td><br/></td></tr>
+					 		        <tr>
+							        	<td align='left' valign='middle' nowrap="nowrap"><div class='h3'>Other Charges: </div></td>
+					       				<td valign='middle' align='left'> 
+					           				<input class='h3' type="text" size="20" maxlength="30" name="otherCharges" id="otherCharges" onblur="javascript:addToInvoiceAmount();"/>          
+					       				</td>
+					          			<td>&nbsp;&nbsp;&nbsp;</td>
+					          			<td align='left' valign='middle' nowrap="nowrap"><div class='h3'>Add BED: </div></td>
+							         	<td valign='middle' align='left'> 
+							         	<input class='h3' type="checkbox" size="20" id="addBED" name="addBED" value="" onclick="javascript:addBedColumns();"/>
+					          			</td>
+					 		         </tr>
+					 		          <tr><td><br/></td></tr>
+					 		          <tr><td colspan="6"> <span class="tooltip"> Note:once BED columns added and input given to BED columns You cant remove them</span></tr>
+					        	</table>
+							</div>
+							<div class="grid-header" style="width:100%">
+								<label>Purchase Entry </label><span id="totalAmount"></span>
+							</div>
+							<div id="myGrid1" style="width:100%;height:250px;"></div>
+							<#-->
 						    	<div align="center">
 						    	<table width="60%" border="0" cellspacing="0" cellpadding="0">  
 						    	<tr><td></td><td></td></tr>
@@ -365,68 +343,81 @@ function makeDatePicker(fromDateId ,thruDateId){
                       <h3>Payment Terms</h3>
 			          <section>
 				          <fieldset>
-				            <table cellpadding="2" cellspacing="1" class='h2'>
-							         <tr>
-				          				<td align='left' valign='middle' nowrap="nowrap"></td>
-					                 <td>
-					               <table border="0" cellspacing="2" id="paymentTermsTable" style="width:200px;" align="center">
-					                <tr>
-								       <td><table><tr>
-								           <td><input type="button" id="addPaymentTerm" value="Add" />  </td>
-								        	<td> <input type="button" id="delPaymentTerm" value="Del" /></td>
-								        </tr> </table>
-								          </td>
-								         <td> </td>
-								          <td></td>
-								    </tr>
-								    <tr>
-								        <td>Term Type</td>
-								         <td>Term Days</td>
-								          <td>Term Value</td>
-								    </tr>
-								    <tr>
-								        <td>
-								          <input type="text"  name="paymentTermTypeId_o_0" value=""/>
-								        <!-- <select  name="paymentTermTypeId_o_0">
-								            <list>
-								               <option > </option>
-								            </list>
-								         </select>-->
-								        </td>
-							            <td>
-							                <input type="text" name="paymentTermDays_o_0" value="" />
-							            </td>
-							            <td>
-							                <input type="text" name="paymentTermValue_o_0" value="" />
-							            </td>
-								    </tr> 
-								</table>
+				            <table cellpadding="15" cellspacing="15" class='h3'>
+								<tr>
+				          			<td align='left' valign='middle' nowrap="nowrap"></td>
+					                <td>
+					               	
+					               	<table border="0" cellspacing="10" cellpadding="10" id="paymentTermsTable" style="width:200px;" align="center">
+						                <tr>
+									       <td>
+									       		<table class='h3'>
+									       			<tr>
+									           			<td><input type="button" id="addPaymentTerm" value="Add" style="padding: 6px;"/></td>
+									        			<td> <input type="button" id="delPaymentTerm" value="Delete" style="padding: 6px;"/></td>
+									        		</tr> 
+									        	</table>
+									        </td>
+									        <td></td>
+									        <td></td>
+									    </tr>
+									    <tr></tr>
+									    <tr>
+								        	<td align="center">Term Type</td>
+								         	<td align="center">Term Days</td>
+								          	<td align="center">Term Value</td>
+								          	<td align="center">UOM</td>
+								          	<td align="center">Description</td>
+								    	</tr>
+								    	<tr>
+								        	<td>
+								          		<input type="text"  name="paymentTermTypeId_o_0" value=""/>
+								        	</td>
+							            	<td>
+							                	<input type="text" name="paymentTermDays_o_0" value="" />
+							            	</td>
+							            	<td>
+							                	<input type="text" name="paymentTermValue_o_0" value="" />
+							            	</td>
+							            	<td>
+							            		<select name="paymentTermUom_o_0">
+							            			<option value="INR">Rupees</option>
+							            			<option value="PERCENT">Percent</option>
+							            		</select>
+							            	</td>
+							            	<td>
+							                	<input type="textarea" name="paymentTermDescription_o_0" value="" maxlength="255"/>
+							            	</td>
+								    	</tr> 
+									</table>
 	          				     </td>
-							        </tr>
+							  </tr>
 						  </table>
-						  </fieldset>
-                        </section>
+						</fieldset>
+                     </section>
                      <h3>Delivery Terms</h3>
 			         <section>
 				          <fieldset>
-				            <table cellpadding="2" cellspacing="1" class='h2'>
+				            <table cellpadding="15" cellspacing="15" class='h3'>
 							         <tr>
 				          				<td align='left' valign='middle' nowrap="nowrap"></td>
 					                 <td>
-					               <table border="0" cellspacing="2" id="deliveryTermsTable" style="width:200px;" align="center">
+					               <table border="2" cellspacing="10" cellpadding="10" id="deliveryTermsTable" style="width:200px;" align="center">
 					                <tr>
 								       <td><table><tr>
-								           <td><input type="button" id="addDeliveryTerm" value="Add" />  </td>
-								        	<td> <input type="button" id="delDeliveryTerm" value="Del" /></td>
+								           <td><input type="button" id="addDeliveryTerm" value="Add" style="padding: 6px;"/>  </td>
+								        	<td> <input type="button" id="delDeliveryTerm" value="Delete" style="padding: 6px;"/></td>
 								        </tr> </table>
 								          </td>
 								         <td> </td>
 								          <td></td>
 								    </tr>
 								    <tr>
-								        <td>Term Type</td>
-								         <td>Term Days</td>
-								          <td>Term Value</td>
+							        	<td align="center">Term Type</td>
+							         	<td align="center">Term Days</td>
+							          	<td align="center">Term Value</td>
+							          	<td align="center">UOM</td>
+							          	<td align="center">Description</td>
 								    </tr>
 								    <tr>
 								        <td>
@@ -443,6 +434,15 @@ function makeDatePicker(fromDateId ,thruDateId){
 							            <td>
 							                <input type="text" name="deliveryTermValue_o_0" value="" />
 							            </td>
+						            	<td>
+						            		<select name="deliveryTermUom_o_0">
+						            			<option value="INR">Rupees</option>
+						            			<option value="PERCENT">Percent</option>
+						            		</select>
+						            	</td>
+						            	<td>
+						                	<input type="textarea" name="deliveryTermDescription_o_0" value="" maxlength="255"/>
+						            	</td>
 								    </tr> 
 								</table>
 	          				     </td>
@@ -476,7 +476,7 @@ $('#delProduct').click(function () {
     if (table.find('input:text').length < 16) {
         var rowLength = table.find('input:text').length;
         var rowCount = rowLength/3;
-        table.append('<tr><td> <input type="text" name="paymentTermTypeId_o_'+rowCount+'" value="" /></td><td> <input type="text" name="paymentTermDays_o_'+rowCount+'" value="" /> </td><td> <input type="text" name="paymentTermValue_o_'+rowCount+'" value="" /> </td></tr>');
+        table.append('<tr><td> <input type="text" name="paymentTermTypeId_o_'+rowCount+'" value="" /></td><td> <input type="text" name="paymentTermDays_o_'+rowCount+'" value="" /> </td><td> <input type="text" name="paymentTermValue_o_'+rowCount+'" value="" /> </td><td><select name="paymentTermUom_o_'+rowCount+'"><option value="INR">Rupees</option><option value="PERCENT">Percent</option></select></td><td><input type="textarea" name="paymentTermDescription_o_'+rowCount+'" value="" maxlength="255"/>	</td></tr>');
     }
     $( "input[name*='paymentTermTypeId']" ).autocomplete({ source: paymentTermsJSON });
 });
@@ -493,7 +493,7 @@ $('#delProduct').click(function () {
     if (table.find('input:text').length < 16) {
         var rowLength = table.find('input:text').length;
         var rowCount = rowLength/3;
-        table.append('<tr><td> <input type="text" name="deliveryTermTypeId_o_'+rowCount+'" value="" /></td><td> <input type="text" name="deliveryTermDays_o_'+rowCount+'" value="" /> </td><td> <input type="text" name="deliveryTermValue_o_'+rowCount+'" value="" /> </td></tr>');
+        table.append('<tr><td> <input type="text" name="deliveryTermTypeId_o_'+rowCount+'" value="" /></td><td> <input type="text" name="deliveryTermDays_o_'+rowCount+'" value="" /> </td><td> <input type="text" name="deliveryTermValue_o_'+rowCount+'" value="" /> </td><td><select name="deliveryTermUom_o_'+rowCount+'"><option value="INR">Rupees</option><option value="PERCENT">Percent</option></select></td><td><input type="textarea" name="deliveryTermDescription_o_'+rowCount+'" value="" maxlength="255"/></td></tr>');
     }
     
     $( "input[name*='deliveryTermTypeId']" ).autocomplete({ source: deliveryTermsJSON });

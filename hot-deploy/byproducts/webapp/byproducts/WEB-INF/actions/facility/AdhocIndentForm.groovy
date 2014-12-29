@@ -17,7 +17,7 @@ import in.vasista.vbiz.byproducts.ByProductServices;
 import org.ofbiz.product.product.ProductWorker;
 import in.vasista.vbiz.facility.util.FacilityUtil;
 import in.vasista.vbiz.byproducts.icp.ICPServices;
-
+import in.vasista.vbiz.purchase.MaterialHelperServices;
 
 if(parameters.boothId){
 	parameters.boothId = parameters.boothId.toUpperCase();
@@ -178,6 +178,11 @@ if(facility){
 	}
 	priceResultMap = ByProductNetworkServices.getStoreProductPricesByDate(delegator, dctx.getDispatcher(), inputProductRate);
 }
+
+productIds = EntityUtil.getFieldListFromEntityList(prodList, "productId", true);
+Map result = (Map)MaterialHelperServices.getProductUOM(delegator, productIds);
+uomLabelMap = result.get("uomLabel");
+productUomMap = result.get("productUom");
 prodPriceMap=[:];
 prodPriceMap = (Map)priceResultMap.get("priceMap");
 conversionResult = ByProductNetworkServices.getProductQtyConversions(dctx, UtilMisc.toMap("productList", prodList, "userLogin", userLogin));
@@ -202,7 +207,8 @@ if(conversionMap){
 	}
 	context.conversionJSON = conversionJSON;
 }
-
+JSONObject productUOMJSON = new JSONObject();
+JSONObject uomLabelJSON=new JSONObject();
 
 JSONArray productItemsJSON = new JSONArray();
 JSONObject productIdLabelJSON = new JSONObject();
@@ -215,7 +221,20 @@ prodList.each{eachItem ->
 	productItemsJSON.add(newObj);
 	productIdLabelJSON.put(eachItem.productId, eachItem.description);
 	productLabelIdJSON.put(eachItem.description+" [ "+eachItem.brandName+"]", eachItem.productId);
+	
+	if(productUomMap){
+		uomId = productUomMap.get(eachItem.productId);
+		if(uomId){
+			productUOMJSON.put(eachItem.productId, uomId);
+			uomLabelJSON.put(uomId, uomLabelMap.get(uomId));
+		}
+	}
+	
+	
 }
+context.productUOMJSON = productUOMJSON;
+context.uomLabelJSON = uomLabelJSON; 
+
 productPrices = [];
 
 JSONObject productCostJSON = new JSONObject();

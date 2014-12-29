@@ -1325,7 +1325,9 @@ public class MaterialPurchaseServices {
 			String termTypeId =null;
 			String  termDaysStr = null;
 			String termValueStr = null;
+			String termUom = null;
 			Long termDays = Long.valueOf(0);
+			String termDescription = null;
 			BigDecimal termValue = BigDecimal.ZERO;
 			Map<String, Object> termTypeMap = FastMap.newInstance();
 			String thisSuffix = UtilHttp.MULTI_ROW_DELIMITER + i;
@@ -1349,14 +1351,24 @@ public class MaterialPurchaseServices {
 			if (UtilValidate.isNotEmpty(termValueStr)) {
 				termValue = new BigDecimal(termValueStr);
 			}  
+			if (paramMap.containsKey("paymentTermUom" + thisSuffix)) {
+				termUom = (String) paramMap.get("paymentTermUom" + thisSuffix);
+			}
+			if (paramMap.containsKey("paymentTermDescription" + thisSuffix)) {
+				termDescription = (String) paramMap.get("paymentTermDescription" + thisSuffix);
+			}
 			
 			termTypeMap.put("termTypeId", termTypeId);
 			termTypeMap.put("termDays", termDays);
 			termTypeMap.put("termValue", termValue);
+			termTypeMap.put("uomId", termUom);
+			termTypeMap.put("description", termDescription);
 			if(UtilValidate.isNotEmpty(termTypeId)){
 				termsList.add(termTypeMap);
 			}
-			
+			if (paramMap.containsKey("paymentTermDays" + thisSuffix)) {
+				termDaysStr = (String) paramMap.get("paymentTermDays" + thisSuffix);
+			}
 		}
 		
 		for (int i = 0; i < rowCount; i++) {
@@ -1365,6 +1377,9 @@ public class MaterialPurchaseServices {
 			String termValueStr = null;
 			Long termDays = Long.valueOf(0);
 			BigDecimal termValue = BigDecimal.ZERO;
+			String termUom = null;
+			String termDescription = null;
+			
 			Map termTypeMap = FastMap.newInstance();
 			String thisSuffix = UtilHttp.MULTI_ROW_DELIMITER + i;
 			
@@ -1387,11 +1402,19 @@ public class MaterialPurchaseServices {
 			if (UtilValidate.isNotEmpty(termValueStr)) {
 				termValue = new BigDecimal(termValueStr);
 			}  
-		  
+			
+			if (paramMap.containsKey("deliveryTermUom" + thisSuffix)) {
+				termUom = (String) paramMap.get("deliveryTermUom" + thisSuffix);
+			}
+			if (paramMap.containsKey("deliveryTermDescription" + thisSuffix)) {
+				termDescription = (String) paramMap.get("deliveryTermDescription" + thisSuffix);
+			}
 			
 			termTypeMap.put("termTypeId", termTypeId);
 			termTypeMap.put("termDays", termDays);
 			termTypeMap.put("termValue", termValue);
+			termTypeMap.put("uomId", termUom);
+			termTypeMap.put("description", termDescription);
 			if(UtilValidate.isNotEmpty(termTypeId)){
 				termsList.add(termTypeMap);
 			}
@@ -1528,7 +1551,7 @@ public class MaterialPurchaseServices {
 			for(int i=0;i<termsList.size();i++){
 				Map<String,Object> termMap = FastMap.newInstance();
 				termMap = (Map)termsList.get(i);
-				cart.addOrderTerm((String)termMap.get("termTypeId"), (BigDecimal)termMap.get("termValue"),(Long)termMap.get("termDays"));
+				cart.addOrderTerm((String)termMap.get("termTypeId"), null, (BigDecimal)termMap.get("termValue"),(Long)termMap.get("termDays"), null, (String)termMap.get("uomId"), (String)termMap.get("description"));
 			}
 			//set attributes here
 			if(UtilValidate.isNotEmpty(mrnNumber))

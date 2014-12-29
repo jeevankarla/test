@@ -3,4 +3,6 @@
 <OrderType description="Anual Rate Contract" hasTable="N" orderTypeId="ARC_ORDER" parentTypeId="PURCHASE_ORDER"/>
 <OrderType description="Central Purchase Contract" hasTable="N" orderTypeId="CPC_ORDER" parentTypeId="PURCHASE_ORDER"/>
 
+<UomType description="Numeric Measure" uomTypeId="NUMERIC_MEASURE"/>
+<Uom description="PERCENTAGE" uomId="PERCENT" uomTypeId="NUMERIC_MEASURE"/>
 </entity-engine-xml>

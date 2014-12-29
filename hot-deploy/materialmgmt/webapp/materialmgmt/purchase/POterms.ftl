@@ -30,16 +30,18 @@ under the License.
       <table class="basic-table" cellspacing='0'>
       <tr class="header-row">
         <td width="35%">${uiLabelMap.OrderOrderTermType}</td>
-        <td width="15%" align="center">${uiLabelMap.OrderOrderTermValue}</td>
         <td width="15%" align="center">${uiLabelMap.OrderOrderTermDays}</td>
+        <td width="15%" align="center">${uiLabelMap.OrderOrderTermValue}</td>
+        <td width="15%" align="center">INR/Percent</td>
         <td width="35%" align="center">${uiLabelMap.CommonDescription}</td>
       </tr>
     <#list orderTerms as orderTerm>
       <tr>
         <td width="35%">${orderTerm.getRelatedOne("TermType").get("description", locale)}</td>
-        <td width="15%" align="center">${orderTerm.termValue?default("")}</td>
         <td width="15%" align="center">${orderTerm.termDays?default("")}</td>
-        <td width="35%" align="center">${orderTerm.textValue?default("")}</td>
+        <td width="15%" align="center">${orderTerm.termValue?default("")}</td>
+        <td width="15%" align="center">${orderTerm.uomId?default("")?if_exists}</td>
+        <td width="35%" align="center">${orderTerm.description?default("")?if_exists}</td>
       </tr>
     </#list>
       </table>
