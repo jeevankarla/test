@@ -349,5 +349,9 @@
     <SecurityGroupPermission groupId="FULLADMIN" permissionId="ICPSALE_VIEW"/>
     <SecurityGroupPermission groupId="FULLADMIN" permissionId="FGSSALE_VIEW"/>
    
+    <!-- PARTY FinHistory(AR,AP separately)-->
+    <SecurityGroup description="Permissions To Get 'PARTY FinHistory(AR,AP separately)'from Reports tab " groupId="PartyFinHistory_ARAP"/>    
+    <SecurityGroupPermission groupId="PartyFinHistory_ARAP" permissionId="PartyFinHistory_ARAP"/>
+    <SecurityGroupPermission groupId="FULLADMIN" permissionId="PartyFinHistory_ARAP"/>
 	
 </entity-engine-xml>
