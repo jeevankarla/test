@@ -467,7 +467,7 @@ public static Map<String, Object> getMaterialStores(DispatchContext ctx,Map<Stri
 		}
 		return result;
 	}	
-public static Map<String, Object> setStatusId(DispatchContext ctx,Map<String, ? extends Object> context) {
+public static Map<String, Object> setReauirementStatusId(DispatchContext ctx,Map<String, ? extends Object> context) {
 	
 		Delegator delegator = ctx.getDelegator();
 		GenericValue userLogin = (GenericValue) context.get("userLogin");

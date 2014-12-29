@@ -370,8 +370,8 @@ under the License.
         <auto-attributes include="pk" mode="IN" optional="false"/>
     </service>
     
-    <service name="setStatusId" engine="java"
-            location="in.vasista.vbiz.purchase.MaterialHelperServices" invoke="setStatusId">
+    <service name="setReauirementStatusId" engine="java"
+            location="in.vasista.vbiz.purchase.MaterialHelperServices" invoke="setReauirementStatusId">
         <description>Change the status of an existing order</description>
         <attribute name="statusId" type="String" mode="IN"/>
         <attribute name="requirementId" type="String" mode="IN"/>

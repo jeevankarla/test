@@ -431,6 +431,6 @@ under the License.
      <eca service="updateRequirement" event="invoke" run-on-error="false" >
         <condition field-name="statusId" operator="is-not-empty"/>
         <condition field-name="requirementId" operator="is-not-empty"/>
-        <action service="setStatusId" mode="sync" />
+        <action service="setReauirementStatusId" mode="sync" />
     </eca>
 </service-eca>
