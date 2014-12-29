@@ -118,8 +118,8 @@ public class HumanresHelperServices {
 	        		List conditionList = FastList.newInstance();
 					conditionList.add(EntityCondition.makeCondition("partyId", EntityOperator.EQUALS, partyId));
 					conditionList.add(EntityCondition.makeCondition("loanTypeId", EntityOperator.EQUALS, loanTypeId));
-					conditionList.add(EntityCondition.makeCondition("disbDate", EntityOperator.GREATER_THAN_EQUAL_TO ,fromDateStart));
-					conditionList.add(EntityCondition.makeCondition("disbDate", EntityOperator.LESS_THAN_EQUAL_TO ,thruDateEnd));
+					//conditionList.add(EntityCondition.makeCondition("disbDate", EntityOperator.GREATER_THAN_EQUAL_TO ,fromDateStart));
+					//conditionList.add(EntityCondition.makeCondition("disbDate", EntityOperator.LESS_THAN_EQUAL_TO ,thruDateEnd));
 					conditionList.add(EntityCondition.makeCondition("setlDate", EntityOperator.EQUALS ,null));
 		        	EntityCondition condition = EntityCondition.makeCondition(conditionList,EntityOperator.AND);
 		        	List<GenericValue> loanList = delegator.findList("Loan",condition, null, null, null, false);
