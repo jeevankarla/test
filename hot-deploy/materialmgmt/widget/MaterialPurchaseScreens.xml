@@ -48,7 +48,7 @@
                   <set field="parameters.changeFlag" value="PurchaseOrder"/> 
                 <script location="component://byproducts/webapp/byproducts/WEB-INF/actions/facility/enablePartyAutoComplete.groovy"/>
                 <script location="component://materialmgmt/webapp/materialmgmt/WEB-INF/actions/orgnigationDept.groovy"/>
-                 <script location="component://materialmgmt/webapp/materialmgmt/WEB-INF/actions/purchases/PurchaseEntryForm.groovy"/>
+                 <script location="component://materialmgmt/webapp/materialmgmt/WEB-INF/actions/purchases/PurchaseEntryFormNew.groovy"/>
             </actions>
             <widgets>
                  <decorator-screen name="materialmgmtNgCommonDecorator" location="${parameters.mainDecoratorLocation}">
@@ -389,7 +389,7 @@
                   <set field="priceTypeId" from-field="parameters.priceTypeId"/>
                    <set field="productCatageoryId" from-field="parameters.productCatageoryId"/>
                    <set field="vehicleId" from-field="parameters.vehicleId"/>
-                <script location="component://materialmgmt/webapp/materialmgmt/WEB-INF/actions/purchases/PurchaseEntryForm.groovy"/>
+                <script location="component://materialmgmt/webapp/materialmgmt/WEB-INF/actions/purchases/PurchaseEntryFormNew.groovy"/>
             </actions>
             <widgets>
                    <section>
