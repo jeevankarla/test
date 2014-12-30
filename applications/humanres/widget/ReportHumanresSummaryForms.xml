@@ -629,6 +629,22 @@
         		<parameter param-name="billingTypeId" value="${billingTypeId}"/>
             </hyperlink>
         </field>        
+        <field use-when="statusId.equals(&quot;GENERATED&quot;)|| statusId.equals(&quot;APPROVED&quot;)" name="PaySlip Report" widget-style="buttontext" >
+            <hyperlink target="PrintPaySlipsPdf.pdf" description="PaySlip Report"  target-window="_BLANK">
+             	<parameter param-name="periodBillingId" from-field="periodBillingId"/>
+        		<parameter param-name="customTimePeriodId" from-field="customTimePeriodId"/>
+        		<parameter param-name="partyIdFrom" value="Company"/>
+        		<parameter param-name="billingTypeId" value="${billingTypeId}"/>
+            </hyperlink>
+        </field> 
+         <field use-when="statusId.equals(&quot;GENERATED&quot;) || statusId.equals(&quot;APPROVED&quot;)" name="PaySlip Summary" widget-style="buttontext" >
+            <hyperlink target="PrintPayrollSummary.pdf" description="Payroll Summary"  target-window="_BLANK">
+             	<parameter param-name="periodBillingId" from-field="periodBillingId"/>
+        		<parameter param-name="customTimePeriodId" from-field="customTimePeriodId"/>
+        		<parameter param-name="partyIdFrom" value="Company"/>
+        		<parameter param-name="billingTypeId" value="${billingTypeId}"/>
+            </hyperlink>
+        </field>
         <field use-when="statusId.equals(&quot;GENERATED&quot;)" name="approve" widget-style="buttontext cancel">
 			<hyperlink target="setPayrollPeriodBillingStatus" description="approve">
 	        	<parameter param-name="periodBillingId" from-field="periodBillingId"/>

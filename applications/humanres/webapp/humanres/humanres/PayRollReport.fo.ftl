@@ -156,7 +156,7 @@ under the License.
                      		 				</fo:table-row>
                      		 				<fo:table-row>
                      		 					<fo:table-cell>
-                     		 						<fo:block text-align="left" keep-together="always" white-space-collapse="false">&#160;PayScale                   : ${payGrade.get(0).payScale?if_exists}</fo:block>
+                     		 						<fo:block text-align="left" keep-together="always" white-space-collapse="false">&#160;PayScale                   : <#if payGrade?has_content>${payGrade.get(0).payScale?if_exists}</#if></fo:block>
                      		 					</fo:table-cell>                     		 					
                      		 				</fo:table-row>
                      		 			</fo:table-body>
@@ -227,10 +227,10 @@ under the License.
                     		<#assign netPaidDays=(noOfPayableDays-arrearDays)>                		
                      		<fo:table-cell border-style="solid">
                      			<fo:block linefeed-treatment="preserve">&#xA;</fo:block>
-                        		<fo:block text-align="center" white-space-collapse="false">${totalDays?if_exists}  days</fo:block>
+                        		<fo:block text-align="center" white-space-collapse="false"><#if parameters.billingTypeId=="SP_LEAVE_ENCASH">${noOfPayableDays?if_exists} days<#else>${totalDays?if_exists}  days</#if></fo:block>
                         		<fo:block text-align="center" white-space-collapse="false">${(lossOfpay-latemin)?if_exists}  days</fo:block>
                         		<fo:block text-align="center" white-space-collapse="false">${arrearDays?if_exists}  days</fo:block>
-                        		<fo:block text-align="center" white-space-collapse="false">${(netPaidDays?if_exists?string("#0.00"))}  days</fo:block>                        		
+                        		<fo:block text-align="center" white-space-collapse="false"><#if parameters.billingTypeId=="SP_LEAVE_ENCASH">${noOfPayableDays?if_exists} days<#else>${(netPaidDays?if_exists?string("#0.00"))}  days</#if></fo:block>                        		
                      		</fo:table-cell> 
                     		<fo:table-cell border-style="solid">
                     				<fo:block linefeed-treatment="preserve">&#xA;</fo:block>

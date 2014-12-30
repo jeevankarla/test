@@ -44,6 +44,9 @@ resultMap = PayrollService.getPayrollAttedancePeriod(dctx, [timePeriodStart:time
 if(UtilValidate.isNotEmpty(resultMap.get("lastCloseAttedancePeriod"))){	
 	lastCloseAttedancePeriod=resultMap.get("lastCloseAttedancePeriod");
 	timePeriod=lastCloseAttedancePeriod.get("customTimePeriodId");
+	if(UtilValidate.isNotEmpty(parameters.billingTypeId) && ("SP_LEAVE_ENCASH".equals(parameters.billingTypeId))){
+		timePeriod=parameters.customTimePeriodId;
+	}
 	context.timePeriod=timePeriod;
 }
 List stautsList = UtilMisc.toList("GENERATED","APPROVED");
