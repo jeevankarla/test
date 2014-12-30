@@ -116,11 +116,15 @@
 		var suppInvoice = jQuery("<input>").attr("type", "hidden").attr("name", "supplierInvoiceId").val(suppInvoiceId);
 		var suppInvoiceDate = $("#suppInvoiceDate").val();
 		var suppInvDate = jQuery("<input>").attr("type", "hidden").attr("name", "supplierInvoiceDate").val(suppInvoiceDate);
+		var withoutPO =  jQuery("<input>").attr("type", "hidden").attr("name", "withoutPO").val($("#withoutPO").val());
 		jQuery(formId).append(jQuery(suppInvoice));
 		jQuery(formId).append(jQuery(suppInvDate));
 		jQuery(formId).append(jQuery(order));
 		jQuery(formId).append(jQuery(vehicle));
+		jQuery(formId).append(jQuery(withoutPO));
+		
 		jQuery(formId).attr("action", action);
+		
 		jQuery(formId).submit();
 	}
 	var enableSubmit = true;
@@ -193,13 +197,21 @@
     }
 	var mainGrid;		
 	function setupGrid1() {
-		
-		var columns = [
-				{id:"cProductName", name:"Item", field:"cProductName", width:220, minWidth:220, cssClass:"readOnlyColumnClass", sortable:false, focusable :false, validator: productValidator, toolTip:""},
-				{id:"ordQuantity", name:"Order Qty", field:"orderedQty", width:60, minWidth:60, cssClass:"readOnlyColumnClass", sortable:false, focusable :false,},
-				{id:"quantity", name:"Received Qty", field:"quantity", width:80, minWidth:80, cssClass:"cell-title",editor:FloatCellEditor, sortable:false , formatter: quantityFormatter,  validator: quantityValidator},
-				{id:"UOM", name:"UOM", field:"uomDescription", width:80, minWidth:80, cssClass:"readOnlyColumnClass", focusable :false,editor:FloatCellEditor, sortable:false}
-		];
+		<#if (withoutPO?exists && withoutPO?has_content)> 
+		    var columns = [
+					{id:"cProductName", name:"Item", field:"cProductName", width:220, minWidth:220, cssClass:"cell-title", editor: AutoCompleteEditor,availableTags:availableTags,regexMatcher:"contains", validator: productValidator, sortable:false, toolTip:""},
+					{id:"ordQuantity", name:"Order Qty", field:"orderedQty", width:60, minWidth:60, cssClass:"readOnlyColumnClass", sortable:false, focusable :false,},
+					{id:"quantity", name:"Received Qty", field:"quantity", width:80, minWidth:80, cssClass:"cell-title",editor:FloatCellEditor, sortable:false , formatter: quantityFormatter,  validator: quantityValidator},
+					{id:"UOM", name:"UOM", field:"uomDescription", width:80, minWidth:80, cssClass:"readOnlyColumnClass", focusable :false,editor:FloatCellEditor, sortable:false}
+			];
+			<#else>
+				var columns = [
+					{id:"cProductName", name:"Item", field:"cProductName", width:220, minWidth:220, cssClass:"readOnlyColumnClass", sortable:false, focusable :false, validator: productValidator, toolTip:""},
+					{id:"ordQuantity", name:"Order Qty", field:"orderedQty", width:60, minWidth:60, cssClass:"readOnlyColumnClass", sortable:false, focusable :false,},
+					{id:"quantity", name:"Received Qty", field:"quantity", width:80, minWidth:80, cssClass:"cell-title",editor:FloatCellEditor, sortable:false , formatter: quantityFormatter,  validator: quantityValidator},
+					{id:"UOM", name:"UOM", field:"uomDescription", width:80, minWidth:80, cssClass:"readOnlyColumnClass", focusable :false,editor:FloatCellEditor, sortable:false}
+				];
+		</#if>
 		
 			var options = {
 			editable: true,		
@@ -330,7 +342,9 @@
 	
 	jQuery(function(){
 	     var orderId=$('[name=orderId]').val();
-		 if(orderId){
+	     var withoutPO = "${withoutPO?if_exists}";
+	    
+		 if(orderId || withoutPO){
 		 	setupGrid1();
 	     }
 				
@@ -365,7 +379,8 @@
 // to show special related fields in form			
 	
 	$(document).ready(function(){
-		$('#orderId').keypress(function (e) {
+	 
+		$('#suppInvoiceId').keypress(function (e) {
 	  			if (e.which == $.ui.keyCode.ENTER) {
 	    			$('#indententryinit').submit();
 	    			return false;   
@@ -374,14 +389,8 @@
 		     $(function() {
 				$( "#indententryinit" ).validate();
 			});	
-			$("#orderId").autocomplete({ disabled: false });	
-		
-   			 $('#orderId').keypress(function (e) {
-	  			if (e.which == $.ui.keyCode.ENTER) {
-	    			$('#indententryinit').submit();
-	    			return false;   
-	  			}
-		});
+			$("#orderId").autocomplete({ disabled: false });
+			$("#suppInvoiceId").autocomplete({ disabled: false });	
 		
 	});	
 	 

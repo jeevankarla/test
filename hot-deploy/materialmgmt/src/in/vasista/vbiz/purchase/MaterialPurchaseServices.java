@@ -86,10 +86,13 @@ public class MaterialPurchaseServices {
 	    String vehicleId = (String) request.getParameter("vehicleId");
 	    String supplierInvoiceId = (String) request.getParameter("supplierInvoiceId");
 	    String supplierInvoiceDateStr = (String) request.getParameter("supplierInvoiceDate");
+	    String withoutPO = (String) request.getParameter("withoutPO");
+	    //GRN on PO then override this supplier with PO supplier
+	    String supplierId = (String) request.getParameter("supplierId");
 	    HttpSession session = request.getSession();
 	    GenericValue userLogin = (GenericValue) session.getAttribute("userLogin");
 		Timestamp nowTimeStamp = UtilDateTime.nowTimestamp();
-		if (UtilValidate.isEmpty(orderId)) {
+		if (UtilValidate.isEmpty(orderId) && UtilValidate.isEmpty(withoutPO)) {
 			Debug.logError("Cannot process receipts without orderId: "+ orderId, module);
 			return "error";
 		}
@@ -103,6 +106,7 @@ public class MaterialPurchaseServices {
 			return "error";
 		}
 		SimpleDateFormat sdf = new SimpleDateFormat("dd MMMM, yyyy");
+		receiptDate = UtilDateTime.nowTimestamp();
 	  	if(UtilValidate.isNotEmpty(receiptDateStr)){
 	  		try {
 	  			receiptDate = new java.sql.Timestamp(sdf.parse(receiptDateStr).getTime());
@@ -112,9 +116,7 @@ public class MaterialPurchaseServices {
 	  			Debug.logError(e, "Cannot parse date string: " + receiptDateStr, module);
 		  	}
 	  	}
-	  	else{
-	  		receiptDate = UtilDateTime.nowTimestamp();
-	  	}
+	  	
 	  	if(UtilValidate.isNotEmpty(supplierInvoiceDateStr)){
 	  		try {
 	  			supplierInvoiceDate = new java.sql.Timestamp(sdf.parse(supplierInvoiceDateStr).getTime());
@@ -146,27 +148,29 @@ public class MaterialPurchaseServices {
 	        List productList = FastList.newInstance();
 			
 			/*List<Map> prodQtyList = FastList.newInstance();*/
-			
-			List<GenericValue> orderItems = delegator.findList("OrderItem", EntityCondition.makeCondition("orderId", EntityOperator.EQUALS, orderId), null, null, null, false);
-			
-			productList = EntityUtil.getFieldListFromEntityList(orderItems, "productId", true);
-			List conditionList = FastList.newInstance();
-			conditionList.add(EntityCondition.makeCondition("orderId", EntityOperator.EQUALS, orderId));
-			conditionList.add(EntityCondition.makeCondition("roleTypeId", EntityOperator.EQUALS, "BILL_FROM_VENDOR"));
-			EntityCondition condition = EntityCondition.makeCondition(conditionList, EntityOperator.AND);
-			List<GenericValue> orderRole = delegator.findList("OrderRole", condition, null, null, null, false);
-			
-			if(UtilValidate.isEmpty(orderRole)){
-				Debug.logError("No Vendor for the order : "+orderId, module);
-				request.setAttribute("_ERROR_MESSAGE_", "No Vendor for the order : "+orderId);	
-				TransactionUtil.rollback();
-		  		return "error";
+	        List<GenericValue> orderItems = FastList.newInstance();
+			if(UtilValidate.isNotEmpty(orderId)){
+				orderItems = delegator.findList("OrderItem", EntityCondition.makeCondition("orderId", EntityOperator.EQUALS, orderId), null, null, null, false);
+				
+				productList = EntityUtil.getFieldListFromEntityList(orderItems, "productId", true);
+				List conditionList = FastList.newInstance();
+				conditionList.add(EntityCondition.makeCondition("orderId", EntityOperator.EQUALS, orderId));
+				conditionList.add(EntityCondition.makeCondition("roleTypeId", EntityOperator.EQUALS, "BILL_FROM_VENDOR"));
+				EntityCondition condition = EntityCondition.makeCondition(conditionList, EntityOperator.AND);
+				List<GenericValue> orderRole = delegator.findList("OrderRole", condition, null, null, null, false);
+				
+				if(UtilValidate.isEmpty(orderRole)){
+					Debug.logError("No Vendor for the order : "+orderId, module);
+					request.setAttribute("_ERROR_MESSAGE_", "No Vendor for the order : "+orderId);	
+					TransactionUtil.rollback();
+			  		return "error";
+				}
+				
+			  supplierId = (EntityUtil.getFirst(orderRole)).getString("partyId");
 			}
 			
-			String supplierId = (EntityUtil.getFirst(orderRole)).getString("partyId");
 			
-			List<GenericValue> productsFacility = delegator.findList("ProductFacility", EntityCondition.makeCondition("productId", EntityOperator.IN, productList), null, null, null, false);
-
+			
 			
 			for (int i = 0; i < rowCount; i++) {
 				
@@ -198,6 +202,8 @@ public class MaterialPurchaseServices {
 				productQtyMap.put("quantity", quantity);
 				prodQtyList.add(productQtyMap);
 				*/
+				
+
 				Map<String,Object> itemInMap = FastMap.newInstance();
 		        itemInMap.put("shipmentId",shipmentId);
 		        itemInMap.put("userLogin",userLogin);
@@ -213,7 +219,7 @@ public class MaterialPurchaseServices {
 		        }
 		        
 		        String shipmentItemSeqId = (String)resultMap.get("shipmentItemSeqId");
-		        
+		        List<GenericValue> productsFacility = delegator.findList("ProductFacility", EntityCondition.makeCondition("productId", EntityOperator.EQUALS, productId), null, null, null, false);
 				List<GenericValue> filteredOrderItem = EntityUtil.filterByCondition(orderItems, EntityCondition.makeCondition("productId", EntityOperator.EQUALS, productId));
 				GenericValue ordItm = null;
 				if(UtilValidate.isNotEmpty(filteredOrderItem)){
@@ -234,9 +240,13 @@ public class MaterialPurchaseServices {
 				inventoryReceiptCtx.put("ownerPartyId", supplierId);
 				/*inventoryReceiptCtx.put("consolidateInventoryReceive", "Y");*/
 				inventoryReceiptCtx.put("facilityId", facilityProd.getString("facilityId"));
-				inventoryReceiptCtx.put("unitCost", ordItm.getBigDecimal("unitPrice"));
-				inventoryReceiptCtx.put("orderId", ordItm.getString("orderId"));
-				inventoryReceiptCtx.put("orderItemSeqId", ordItm.getString("orderItemSeqId"));
+				inventoryReceiptCtx.put("unitCost", BigDecimal.ZERO);
+				if(UtilValidate.isNotEmpty(ordItm)){
+					inventoryReceiptCtx.put("unitCost", ordItm.getBigDecimal("unitPrice"));
+					inventoryReceiptCtx.put("orderId", ordItm.getString("orderId"));
+					inventoryReceiptCtx.put("orderItemSeqId", ordItm.getString("orderItemSeqId"));
+				}
+				
 				/*inventoryReceiptCtx.put("shipmentId", shipmentId);
 				inventoryReceiptCtx.put("shipmentItemSeqId", shipmentItemSeqId);*/
 				Map<String, Object> receiveInventoryResult;

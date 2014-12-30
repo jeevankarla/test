@@ -67,9 +67,7 @@ if(UtilValidate.isNotEmpty(billToPartyId)){
 
 prodList=[];
 
-//if(UtilValidate.isNotEmpty(changeFlag) && changeFlag == "PurchaseOrder"){
-
-	exprList.clear();
+	/*exprList.clear();
 	exprList.add(EntityCondition.makeCondition("productId", EntityOperator.NOT_EQUAL, "_NA_"));
 	exprList.add(EntityCondition.makeCondition("productTypeId", EntityOperator.EQUALS, "RAW_MATERIAL"));
 	exprList.add(EntityCondition.makeCondition(EntityCondition.makeCondition("salesDiscontinuationDate", EntityOperator.EQUALS, null),EntityOperator.OR,
@@ -82,9 +80,11 @@ if(UtilValidate.isNotEmpty(changeFlag) &&( (changeFlag == "InterUnitPurchase")||
 	tempProdList=ProductWorker.getProductsByCategory(delegator,"GEL_STATIONERY",null);
 	
 	prodList.addAll(tempProdList);
-}
+}*/
+dctx = dispatcher.getDispatchContext();
 
-
+resultMap = MaterialHelperServices.getMaterialProducts(dctx, context);
+prodList.addAll(resultMap.get("productList"));
 JSONArray productItemsJSON = new JSONArray();
 JSONObject productIdLabelJSON = new JSONObject();
 JSONObject productLabelIdJSON=new JSONObject();

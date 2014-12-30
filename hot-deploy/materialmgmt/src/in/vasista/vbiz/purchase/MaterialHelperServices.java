@@ -571,6 +571,25 @@ public static Map<String, Object> setReauirementStatusId(DispatchContext ctx,Map
         outCtx.put("productUomDetail", productUOMList);
 		return outCtx;
 	}
+  public static Map<String, Object> getMaterialProducts(DispatchContext ctx,Map<String, ? extends Object> context) {
+		
+		Delegator delegator = ctx.getDelegator();
+		
+		Map result = ServiceUtil.returnSuccess();
+		List<GenericValue> productList = FastList.newInstance();
+		result.put("productList", productList);
+		try{
+			List<GenericValue> productCategoryList = delegator.findByAnd("ProductCategory", UtilMisc.toMap("productCategoryTypeId","RAW_MATERIAL"));
+			List productCategoryIdsList = EntityUtil.getFieldListFromEntityList(productCategoryList, "productCategoryId", true);
+			productList = ProductWorker.getProductsByCategoryList(delegator, productCategoryIdsList, null);
+			result.put("productList", productList);
+		}catch(Exception e){
+			Debug.logError(e.toString(), module);
+			return ServiceUtil.returnError(e.toString());
+		}
+		return result;
+	}
+	
 
 }
 

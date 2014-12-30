@@ -24,7 +24,7 @@
 		suppInvoiceDate
 		$('#ui-datepicker-div').css('clip', 'auto');
 		
-			$("#orderId").keydown(function(e){ 
+			$("#suppInvoiceId").keydown(function(e){ 
 			if (e.keyCode === 13){
     			$('#indententryinit').submit();
     			return false;   
@@ -80,20 +80,39 @@
 				               			${orderId}             
 				            		</div>
 				          		</td>       
-				       		<#else>               
-				          		<td valign='middle'>
-				          			<input type="text" name="orderId" id="orderId" />
-				          			 <span class="tooltip">Input orderId and press Enter</span>
+				       		<#else>
+				          		<td valign='middle' class='tabletext h3'>
+				          		   <#if !(withoutPO?exists && withoutPO?has_content)>
+				          				<input type="text" name="orderId" id="orderId" />
+				          				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+				          			   Without PO:<input type="checkbox" name="withoutPO" id="withoutPO" value="Y" onclick="toggleSupplier(this)"/>
+				          			 <#else>
+				          			   NO PO
+				          			   <input type="hidden" name="withoutPO" id="withoutPO" value="${withoutPO}"/>
+				          			</#if>
+				          			
 				          		</td>
 				          	</#if>
 				        </tr>
-						<tr><td><br/></td></tr>
-       		      		
+				        
+				          
+				      		<tr><td><br/></td></tr>
+				      		<tr class='h3' id="supplierDiv" style="display:none">
+				      			<td>&nbsp;</td>
+				      			<td align='left' valign='middle' nowrap="nowrap"><div class='h3'>Supplier:</div></td>
+				      			<td>
+				      				&nbsp;
+				      			</td>
+				      			<td>&nbsp;<input type="text" name="supplierId" id="supplierId" ></td>
+				      		</tr>
+				       	
+				      	<tr><td><br/></td></tr>
 				      	<#if supplierId?has_content>
 				      		<tr><td><br/></td></tr>
 				      		<tr>
 				      			<td>&nbsp;</td>
 				      			<td align='left' valign='middle' nowrap="nowrap"><div class='h3'>Supplier:</div></td>
+				      			
 				      			<td>&nbsp;<input type="hidden" name="supplierId" id="supplierId" value="${supplierId}"></td>
 				      			<td>
 				      				<div class='tabletext h3'>${supplierName?if_exists} [${supplierId}]</div>
@@ -120,23 +139,41 @@
 				       	  </#if>
 					  	</tr>
 					  	<tr><td><br/></td></tr>
+					  	<tr>
+				          <td>&nbsp;</td>
+				          <td align='left' valign='middle' nowrap="nowrap"><div class='h3'>Supplier Invoice Date:</div></td>
+				          <td>&nbsp;</td>
+				          <#if (parameters.suppInvoiceDate)?exists && (parameters.suppInvoiceDate)?has_content> 
+				                 <input type="hidden" name="suppInvoiceDate" id="suppInvoiceDate" value="${parameters.suppInvoiceDate}"/>  
+					          	<td valign='middle'>
+					            	<div class='tabletext h3'>${parameters.suppInvoiceDate}         
+					            	</div>
+					          	</td>
+				             <#else> 
+				              <td valign='middle'>
+		          				<input type="text" name="suppInvoiceDate" id="suppInvoiceDate" />
+		          			</td>
+				          </#if>
+		          			
+				        </tr>
+						<tr><td><br/></td></tr>
 		 				<tr>
 				          <td>&nbsp;</td>
 				          <td align='left' valign='middle' nowrap="nowrap"><div class='h3'>Supplier Invoice No:</div></td>
 				          <td>&nbsp;</td>
-		          			<td valign='middle'>
+				          <#if (parameters.suppInvoiceDate)?exists && (parameters.suppInvoiceDate)?has_content> 
+				          		<input type="hidden" name="suppInvoiceId" id="suppInvoiceId" value="${parameters.suppInvoiceId}"/>  
+					          	<td valign='middle'>
+					            	<div class='tabletext h3'>${parameters.suppInvoiceId}         
+					            	</div>
+					          	</td>
+				         	 <#else> 
+				         	 <td valign='middle'>
 		          				<input type="text" name="suppInvoiceId" id="suppInvoiceId" />
+		          				 <span class="tooltip">Input InvoiceId and press Enter</span>
 		          			</td>
-				        </tr>
-						<tr><td><br/></td></tr>
-						
-						<tr>
-				          <td>&nbsp;</td>
-				          <td align='left' valign='middle' nowrap="nowrap"><div class='h3'>Supplier Invoice Date:</div></td>
-				          <td>&nbsp;</td>
-		          			<td valign='middle'>
-		          				<input type="text" name="suppInvoiceDate" id="suppInvoiceDate" />
-		          			</td>
+				          </#if>
+		          			
 				        </tr>
 						<tr><td><br/></td></tr>
 	
@@ -171,3 +208,13 @@
 		</div>     
 	</div>
 </div>
+<script type="application/javascript">
+	  function toggleSupplier(el){
+		  if($(el).is(':checked')){
+		     $("#supplierDiv").show();
+		  }else{
+		  	 $("#supplierDiv").hide();
+		  }
+		
+		}
+</script>

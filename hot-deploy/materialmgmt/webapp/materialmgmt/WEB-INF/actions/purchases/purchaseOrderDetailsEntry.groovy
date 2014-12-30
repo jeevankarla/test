@@ -41,44 +41,71 @@ if(orderId){
 		return "error";
 		
 	}
-}
 
-conditionList = [];
-conditionList.add(EntityCondition.makeCondition("orderId", EntityOperator.EQUALS, orderId));
-conditionList.add(EntityCondition.makeCondition("roleTypeId", EntityOperator.EQUALS, "BILL_FROM_VENDOR"));
-condition = EntityCondition.makeCondition(conditionList, EntityOperator.AND);
-orderItemsAndRole = delegator.findList("OrderHeaderItemAndRoles", condition, null, null, null, false);
-
-productIds = EntityUtil.getFieldListFromEntityList(orderItemsAndRole, "productId", true);
-result = MaterialHelperServices.getProductUOM(delegator, productIds);
-uomLabelMap = result.get("uomLabel");
-productUomMap = result.get("productUom");
-prodQtyMap = [:];
-supplierId = "";
-JSONArray orderItemsJSON = new JSONArray();
-orderItemsAndRole.each{ eachItem ->
+	conditionList = [];
+	conditionList.add(EntityCondition.makeCondition("orderId", EntityOperator.EQUALS, orderId));
+	conditionList.add(EntityCondition.makeCondition("roleTypeId", EntityOperator.EQUALS, "BILL_FROM_VENDOR"));
+	condition = EntityCondition.makeCondition(conditionList, EntityOperator.AND);
+	orderItemsAndRole = delegator.findList("OrderHeaderItemAndRoles", condition, null, null, null, false);
 	
-	JSONObject newObj = new JSONObject();
-	uomId = productUomMap.get(eachItem.productId);
-	uomLabel = "";
-	if(uomId){
-		uomLabel = uomLabelMap.get(uomId);
+	productIds = EntityUtil.getFieldListFromEntityList(orderItemsAndRole, "productId", true);
+	result = MaterialHelperServices.getProductUOM(delegator, productIds);
+	uomLabelMap = result.get("uomLabel");
+	productUomMap = result.get("productUom");
+	prodQtyMap = [:];
+	supplierId = "";
+	JSONArray orderItemsJSON = new JSONArray();
+	orderItemsAndRole.each{ eachItem ->
+		
+		JSONObject newObj = new JSONObject();
+		uomId = productUomMap.get(eachItem.productId);
+		uomLabel = "";
+		if(uomId){
+			uomLabel = uomLabelMap.get(uomId);
+		}
+		newObj.put("cProductId",eachItem.productId);
+		newObj.put("cProductName",eachItem.itemDescription +" [ "+eachItem.productId+"]");
+		newObj.put("orderedQty",eachItem.quantity);
+		newObj.put("uomDescription",uomLabel);
+		orderItemsJSON.add(newObj);
+	
+		supplierId = eachItem.partyId;
 	}
-	newObj.put("cProductId",eachItem.productId);
-	newObj.put("cProductName",eachItem.itemDescription +" [ "+eachItem.productId+"]");
-	newObj.put("orderedQty",eachItem.quantity);
-	newObj.put("uomDescription",uomLabel);
-	orderItemsJSON.add(newObj);
+	
+	supplierName = org.ofbiz.party.party.PartyHelper.getPartyName(delegator, supplierId, false);
+	context.dataJSON = orderItemsJSON;
+	context.supplierId = supplierId;
+	context.supplierName = supplierName;
+}else{
 
-	supplierId = eachItem.partyId;
+	resultMap = MaterialHelperServices.getMaterialProducts(dctx, context);
+	prodList = resultMap.get("productList");
+	JSONArray productItemsJSON = new JSONArray();
+	JSONObject productIdLabelJSON = new JSONObject();
+	JSONObject productLabelIdJSON=new JSONObject();
+	//context.productList = prodList;
+	
+	prodList.each{eachItem ->
+		JSONObject newObj = new JSONObject();
+		newObj.put("value",eachItem.productId);
+		newObj.put("label",eachItem.brandName +" [ " +eachItem.description+"]");
+		productItemsJSON.add(newObj);
+		productIdLabelJSON.put(eachItem.productId, eachItem.brandName+" [ "+eachItem.description +"]");
+		productLabelIdJSON.put(eachItem.brandName+" [ "+eachItem.description+"]", eachItem.productId);
+	}
+	
+	
+	context.productItemsJSON = productItemsJSON;
+	context.productIdLabelJSON = productIdLabelJSON;
+	context.productLabelIdJSON = productLabelIdJSON;
+
 }
-
-supplierName = org.ofbiz.party.party.PartyHelper.getPartyName(delegator, supplierId, false);
-context.dataJSON = orderItemsJSON;
+//context.dataJSON = orderItemsJSON;
 context.orderId = orderId;
-context.supplierId = supplierId;
-context.supplierName = supplierName;
+
 context.vehicleId = parameters.vehicleId;
+context.withoutPO = parameters.withoutPO;
+
 return "success";
 
 
