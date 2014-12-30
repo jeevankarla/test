@@ -272,6 +272,67 @@
 			</widgets>
 		</section>
 	 </screen>
+	 
+	 <screen name="FindHoliday">
+		<section>
+			<actions>
+				<set field="headerItem" value="FindHoliday" /><!-- this highlights the selected menu-item with name "main" -->
+				<set field="tabButtonItem" value="Attendance" />
+				<set field="tabButtonItem2" value="FindHoliday" />
+				<set field="titleProperty" value="Holiday Entry Screen" />
+			</actions>
+			<widgets>
+				<decorator-screen name="HumanresCommonDecorator" location="component://humanres/widget/CommonScreens.xml">
+					 <decorator-section name="body">
+					 <include-menu location="component://humanres/widget/HumanresMenus.xml" name="AttendanceTabBar"/>
+                    <container style="button-bar">
+                            <link target="NewHoliday" style="buttontext create" text="${uiLabelMap.CommonCreateNew} HoliDay"/>
+                        </container>                           
+                    	<section>
+		                    <widgets>                       
+		                        <decorator-screen name="FindScreenDecorator" location="component://humanres/widget/CommonScreens.xml">
+		                            <decorator-section name="search-options">
+		                            <screenlet title="Search Options">
+		                            	<include-form name="HolidayOptions" location="component://humanres/widget/CalendarForms.xml"/>
+		                            	</screenlet>
+				                    </decorator-section>
+				                    <decorator-section name="search-results">
+				                        <include-form name="HolidayResults" location="component://humanres/widget/CalendarForms.xml"/>				            
+				                    </decorator-section>
+		                        </decorator-screen>
+		                    </widgets>		
+		            	
+		            	</section>				                        
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen> 
+    
+    <screen name="NewHoliday">
+        <section>
+            <actions>
+                <set field="headerItem" value="main"/><!-- this highlights the selected menu-item with name "main" -->
+                <set field="titleProperty" value="Holiday"/>
+                <set field="headerItem" value="NewHoliday"/>
+                <set field="tabButtonItem" value="FindHoliday"/>
+            </actions>
+            <widgets>
+                <decorator-screen name="HumanresCommonDecorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="body">
+                    	<screenlet title="Create New holiday">
+                            	<section>
+                                	<widgets>
+                                    	<include-form name="NewHoliday" location="component://humanres/widget/CalendarForms.xml"/>
+                                	</widgets>
+                            	</section>
+                        	</screenlet>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+   	</screen>
+   	
 	 <screen name="WaterElectricityCharges">
         <section>
             <actions>

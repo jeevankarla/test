@@ -1116,4 +1116,53 @@ public class HumanresService {
 			  result.put("partyId", ownerPartyId);
 		      return result;
 	    }
+	    
+	    public static Map<String, Object> createHoliday(DispatchContext ctx, Map<String, ? extends Object> context) {
+	    	 
+	    	Map result = ServiceUtil.returnSuccess();
+	    	Delegator delegator = ctx.getDelegator();
+	    	Locale locale = (Locale) context.get("locale");
+	    	LocalDispatcher dispatcher = ctx.getDispatcher();
+	        GenericValue userLogin = (GenericValue) context.get("userLogin");
+	        
+	        Map<String, Object> inMap = FastMap.newInstance();
+
+	        String customTimePeriodId = (String)context.get("customTimePeriodId");
+	        String organizationPartyId = (String)context.get("orgPartyId");
+	        String holiDayDateStr = (String)context.get("holiDayDate");
+	        Timestamp holiDayDate = null;
+	        String description = (String)context.get("description");
+	        
+	        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+			try {
+				holiDayDate = new java.sql.Timestamp(formatter.parse(holiDayDateStr).getTime());
+			} catch (ParseException e) {
+			}
+			
+			GenericValue newEntity = delegator.makeValue("HolidayCalendar");
+	        if(UtilValidate.isNotEmpty(customTimePeriodId)){
+	        	newEntity.set("customTimePeriodId", customTimePeriodId);
+	        }
+	        if(UtilValidate.isNotEmpty(organizationPartyId)){
+	        	newEntity.set("organizationPartyId", organizationPartyId);
+	        }
+	        if(UtilValidate.isNotEmpty(holiDayDate)){
+	        	newEntity.put("holiDayDate", UtilDateTime.toTimestamp(holiDayDate));
+	        } 
+	        if(UtilValidate.isNotEmpty(description)){
+	        	newEntity.set("description", description);
+	        }
+	        try {
+	        	if(UtilValidate.isNotEmpty(holiDayDate)){
+	        		delegator.create(newEntity); 
+	        	}
+	        } catch (GenericEntityException e) {
+	            Debug.logError(e, module);
+	            return ServiceUtil.returnError(e.getMessage());
+	        }
+	       // result.put("batchId", newEntity.get("batchId"));
+	        result = ServiceUtil.returnSuccess("New Holiday has been successfully created");
+	        return result;
+	        
+	    }
 }

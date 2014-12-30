@@ -115,5 +115,57 @@ under the License.
         </field>
         <field name="add" title="${uiLabelMap.CommonAdd}"><submit/></field>
     </form>
-    
+    <form name="HolidayOptions" type="single" target="FindHoliday" 
+        odd-row-style="header-row" default-table-style="basic-table">
+        <field name="customTimePeriodId" title="TimePeriod Id"><text-find/></field>
+        <field name="organizationPartyId" title="Organization Id"><text-find/></field>
+        <field name="holiDayDate" title="HoliDay Date"><date-find/></field>
+		<field name="description" title="Description"><text-find/></field>
+
+        <field name="noConditionFind"><hidden value="Y"/><!-- if this isn't there then with all fields empty no query will be done --></field>
+    	<field name="hideSearch"><hidden value="Y"/></field>
+        <field name="submitButton" title="${uiLabelMap.CommonFind}" widget-style="smallSubmit"><submit button-type="button"/></field>
+    </form>
+    <form name="HolidayResults" type="list" list-name="listIt"
+        odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
+         <actions>
+            <service service-name="performFind" result-map="result" result-map-list="listIt">
+                <field-map field-name="inputFields" from-field="parameters"/>
+                <field-map field-name="entityName" value="HolidayCalendar"/>
+               <!--  <field-map field-name="entityName" value="CourseDepartment"/> -->
+                <field-map field-name="viewIndex" from-field="viewIndex"/>
+                <field-map field-name="viewSize" from-field="viewSize"/>
+            </service>
+        </actions>
+        <field name="customTimePeriodId"><display></display></field>
+        <field name="organizationPartyId"><display></display></field>
+        <field name="holiDayDate"><display></display></field>
+        <field name="description"><display></display></field>
+    </form>
+    <form name="NewHoliday" type="single" target="CreateHoliday"
+        odd-row-style="header-row" default-table-style="basic-table">
+
+         <field name="customTimePeriodId" title="Period Id">
+             <drop-down allow-empty="true" no-current-selected-key="${timecustom}" >
+                <entity-options entity-name="CustomTimePeriod" key-field-name="customTimePeriodId" description="${periodName}: ${fromDate} - ${thruDate}" filter-by-date="false">
+                    <entity-constraint name="periodTypeId" operator="equals" value="FISCAL_YEAR"/>
+                    <entity-order-by field-name="-thruDate"/>
+                    <entity-order-by field-name="periodNum"/>
+                </entity-options>
+            </drop-down>
+        </field>
+        <field name="partyId" title="Organization Party Id" parameter-name="orgPartyId">
+			<drop-down allow-empty="false">
+				<entity-options entity-name="PartyRoleAndPartyDetail" description="${groupName}">
+					<entity-constraint name="roleTypeId" operator="equals"
+						value="INTERNAL_ORGANIZATIO" />
+					<entity-order-by field-name="partyId" />
+				</entity-options>
+			</drop-down>
+		</field>
+        <field name="holiDayDate"  title="HoliDay Date" required-field="true"><date-time type="date"/></field>
+       	<field name="description"  title="Description" required-field="true"><text/></field>
+       	
+		 <field name="searchButton" title="${uiLabelMap.CommonSubmit}" widget-style="smallSubmit"><submit button-type="button"/></field>
+    </form>
 </forms>

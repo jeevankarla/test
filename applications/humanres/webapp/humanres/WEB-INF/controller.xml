@@ -1779,6 +1779,19 @@ under the License.
     	<security https="true" auth="true"/>
     	<response name="success" type="view" value="DailyBusTimings"></response>
     </request-map>
+    <request-map uri="FindHoliday">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="FindHoliday"/>
+    </request-map>
+    <request-map uri="NewHoliday">
+		<security https="true" auth="true" />
+		<response name="success" type="view" value="NewHoliday" />
+   	</request-map>
+   	<request-map uri="CreateHoliday">
+		<security https="true" auth="true" />
+		<event type="service" invoke="createHoliday"/>
+		<response name="success" type="view" value="FindHoliday" />
+   	</request-map>
      <request-map uri="waterElectricityCharges">
     	<security https="true" auth="true"/>
     	<response name="success" type="view" value="WaterElectricityCharges"></response>
@@ -2371,6 +2384,8 @@ under the License.
     <view-map name="WaterElectricityCharges" type="screen" page="component://humanres/widget/HumanresScreens.xml#WaterElectricityCharges"></view-map>
     <view-map name="TelephoneCUGCharges" type="screen" page="component://humanres/widget/HumanresScreens.xml#TelephoneCUGCharges"></view-map>
     <view-map name="EmployeeAttendanceInternal" type="screen" page="component://humanres/widget/HumanresScreens.xml#EmployeeAttendanceInternal"/>
+    <view-map name="FindHoliday" type="screen" page="component://humanres/widget/HumanresScreens.xml#FindHoliday"/>
+   	<view-map name="NewHoliday" type="screen" page="component://humanres/widget/HumanresScreens.xml#NewHoliday"/>
     
     <view-map name="findMasters" type="screen" page="component://humanres/widget/HumanresScreens.xml#findMasters"></view-map>
     <view-map name="CreateNewEmployee" type="screen" page="component://humanres/widget/HumanresScreens.xml#CreateNewEmployee"></view-map>
