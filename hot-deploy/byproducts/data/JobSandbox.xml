@@ -5,7 +5,7 @@
     -->
    
    <RecurrenceRule recurrenceRuleId="AMSAL_SMS" untilDateTime="" frequency="DAILY" intervalNumber="1" countNumber="-1"/>
-    <RecurrenceInfo recurrenceInfoId="AMSAL_SMS" startDateTime="2014-12-26 21:00:00.000" recurrenceRuleId="AMSAL_SMS" recurrenceCount="0"/>
+    <RecurrenceInfo recurrenceInfoId="AMSAL_SMS" startDateTime="2014-12-27 20:30:00.000" recurrenceRuleId="AMSAL_SMS" recurrenceCount="0"/>
     
     <RuntimeData runtimeDataId="AMSAL_SMS">
         <runtimeInfo><![CDATA[<?xml version="1.0" encoding="UTF-8"?>
@@ -24,10 +24,10 @@
         ]]></runtimeInfo>
     </RuntimeData>
     
-    <JobSandbox jobId="AMSALES_SMS" jobName="Auto AM Sales SMS" runTime="2014-12-26 21:00:00.000" serviceName="AutoSendSMSNotification" runtimeDataId="AMSAL_SMS" poolId="pool" runAsUser="system" recurrenceInfoId="AMSAL_SMS"/>
+    <JobSandbox jobId="AMSALES_SMS" jobName="Auto AM Sales SMS" runTime="2014-12-27 20:30:00.000" serviceName="AutoSendSMSNotification" runtimeDataId="AMSAL_SMS" poolId="pool" runAsUser="system" recurrenceInfoId="AMSAL_SMS"/>
     
     <RecurrenceRule recurrenceRuleId="PMSAL_SMS" untilDateTime="" frequency="DAILY" intervalNumber="1" countNumber="-1"/>
-    <RecurrenceInfo recurrenceInfoId="PMSAL_SMS" startDateTime="2014-12-26 16:30:00.000" recurrenceRuleId="PMSAL_SMS" recurrenceCount="0"/>
+    <RecurrenceInfo recurrenceInfoId="PMSAL_SMS" startDateTime="2014-12-27 16:30:00.000" recurrenceRuleId="PMSAL_SMS" recurrenceCount="0"/>
     
     <RuntimeData runtimeDataId="PMSAL_SMS">
         <runtimeInfo><![CDATA[<?xml version="1.0" encoding="UTF-8"?>
@@ -46,7 +46,7 @@
         ]]></runtimeInfo>
     </RuntimeData>
     
-    <JobSandbox jobId="PMSAL_SMS" jobName="Auto AM Sales SMS" runTime="2014-12-25 16:30:00.000" serviceName="AutoSendSMSNotification" runtimeDataId="PMSAL_SMS" poolId="pool" runAsUser="system" recurrenceInfoId="PMSAL_SMS"/>
+    <JobSandbox jobId="PMSAL_SMS" jobName="Auto PM Sales SMS" runTime="2014-12-27 16:30:00.000" serviceName="AutoSendSMSNotification" runtimeDataId="PMSAL_SMS" poolId="pool" runAsUser="system" recurrenceInfoId="PMSAL_SMS"/>
     
    
 </entity-engine-xml>	
