@@ -121,6 +121,7 @@ invoiceIds.each { invoiceId ->
 		shipTopartyId = (EntityUtil.getFirst(orderShipRole)).getString("partyId");
 		toPartyDetail = (Map)(PartyWorker.getPartyIdentificationDetails(delegator, shipTopartyId)).get("partyDetails");
 	 }else{
+	 shipTopartyId=partyIdTo;
 	toPartyDetail = (Map)(PartyWorker.getPartyIdentificationDetails(delegator, partyIdTo)).get("partyDetails");
 	}
 	invoiceDetailMap.put("fromPartyDetail", fromPartyDetail);
@@ -258,7 +259,9 @@ invoiceIds.each { invoiceId ->
 	invoiceDetailMap.put("chapterMap", chapterMap);
 	invoiceDetailMap.put("invoiceItems", invoiceItemDetail);
 	invoiceDetailMap.put("invoiceTaxItems", taxList);
-	invoiceSlipsMap.put(partyIdTo, invoiceDetailMap);
+	//invoiceSlipsMap.put(partyIdTo, invoiceDetailMap);
+	invoiceSlipsMap.put(shipTopartyId, invoiceDetailMap);
+	
 }
 taxParty = delegator.findOne("Party", UtilMisc.toMap("partyId", "TAX10"), false);
 taxAuthority = delegator.findOne("TaxAuthority", UtilMisc.toMap("taxAuthGeoId","IND", "taxAuthPartyId","TAX10"), false);
