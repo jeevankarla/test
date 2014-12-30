@@ -18,7 +18,7 @@ import org.ofbiz.product.product.ProductWorker;
 import in.vasista.vbiz.facility.util.FacilityUtil;
 
 import in.vasista.vbiz.purchase.PurchaseStoreServices;
-
+import in.vasista.vbiz.purchase.MaterialHelperServices;
 
 changeFlag=parameters.changeFlag;
 
