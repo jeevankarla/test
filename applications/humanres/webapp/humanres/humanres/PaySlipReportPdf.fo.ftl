@@ -29,6 +29,8 @@
                      	<#assign designationName=emplPositionAndFulfilment[0].name?if_exists>
 	            		<#assign emplLeavesDetails = delegator.findOne("PayrollAttendance", {"partyId" : partyId, "customTimePeriodId": timePeriod?if_exists}, true)/>
 	            		<#assign EmployeeDetails = delegator.findOne("EmployeeDetail", {"partyId" : partyId}, true)>
+	            		<#assign costCodeDetails=delegator.findByAnd("PartyRelationship", {"partyIdTo" : partyId})/>
+	            		<#assign costCode=costCodeDetails[0].comments?if_exists>
 	            		<#assign totalEarnings=0>
 	            		<#assign totalDeductions=0>
 	            		<#if EmployeeDetails?has_content>
@@ -116,7 +118,7 @@
 																		                     				<fo:block linefeed-treatment="preserve" >&#xA;</fo:block>
 																		                     			</fo:table-cell>
 																		                     			<fo:table-cell >
-																		                     				<fo:block text-align="center" font-size="12pt" font-weight="bold">&#160;</fo:block>
+																		                     				<fo:block text-align="center" font-size="12pt" font-weight="bold">${costCode?if_exists}</fo:block>
 																		                     				<fo:block linefeed-treatment="preserve" >&#xA;</fo:block>
 																		                     			</fo:table-cell>
 																		                     			<#assign partyDetails = delegator.findOne("Party", {"partyId" : partyId}, true)>
@@ -868,7 +870,7 @@
 																		                     			</fo:table-cell>
 																		                     			<fo:table-cell >
 																		                     				<fo:block linefeed-treatment="preserve" >&#xA;</fo:block>
-																		                     				<fo:block text-align="center" font-size="12pt" font-weight="bold">&#160;</fo:block>
+																		                     				<fo:block text-align="center" font-size="12pt" font-weight="bold">${costCode?if_exists}</fo:block>
 																		                     			</fo:table-cell>
 																		                     			<#assign partyDetails = delegator.findOne("Party", {"partyId" : partyId}, true)>
 																		                     			<fo:table-cell >
@@ -1633,7 +1635,7 @@
 																		                     			</fo:table-cell>
 																		                     			<fo:table-cell >
 																		                     				<fo:block linefeed-treatment="preserve" >&#xA;</fo:block>
-																		                     				<fo:block text-align="center" font-size="12pt" font-weight="bold">&#160;</fo:block>
+																		                     				<fo:block text-align="center" font-size="12pt" font-weight="bold">${costCode?if_exists}</fo:block>
 																		                     			</fo:table-cell>
 																		                     			<#assign partyDetails = delegator.findOne("Party", {"partyId" : partyId}, true)>
 																		                     			<fo:table-cell >
