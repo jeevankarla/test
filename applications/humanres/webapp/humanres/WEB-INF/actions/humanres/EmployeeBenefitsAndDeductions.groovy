@@ -39,13 +39,10 @@ timePeriodEnd=UtilDateTime.getDayEnd(UtilDateTime.toTimestamp(customTimePeriod.g
 context.timePeriodStart= timePeriodStart;
 
 context.timePeriodEnd= timePeriodEnd;
-
 orgId=parameters.partyId;
 if(parameters.partyId){
 	orgId=parameters.partyId;
 }
-
-
 Map emplInputMap = FastMap.newInstance();
 emplInputMap.put("userLogin", userLogin);
 if(UtilValidate.isNotEmpty(orgId)){
@@ -60,6 +57,7 @@ List<GenericValue> employementList = (List<GenericValue>)resultMap.get("employem
 employementList = EntityUtil.orderBy(employementList, UtilMisc.toList("partyIdTo"));
 employementIds = EntityUtil.getFieldListFromEntityList(employementList, "partyIdTo", true);
 if(parameters.partyIdTo){
+	parameters.partyIdTo=(parameters.partyIdTo).toUpperCase();
 	employementIds=UtilMisc.toList(parameters.partyIdTo);
 }else{
 	employementIds=employementIds;

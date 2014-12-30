@@ -119,8 +119,9 @@
 																		                     				<fo:block text-align="center" font-size="12pt" font-weight="bold">&#160;</fo:block>
 																		                     				<fo:block linefeed-treatment="preserve" >&#xA;</fo:block>
 																		                     			</fo:table-cell>
+																		                     			<#assign partyDetails = delegator.findOne("Party", {"partyId" : partyId}, true)>
 																		                     			<fo:table-cell >
-																		                     				<fo:block text-align="left" font-size="12pt" font-weight="bold">${partyId?if_exists}</fo:block>
+																		                     				<fo:block text-align="left" font-size="12pt" font-weight="bold"><#if partyDetails?has_content>${partyDetails.externalId?if_exists}<#else>${partyId?if_exists}</#if></fo:block>
 																		                     				<fo:block linefeed-treatment="preserve" >&#xA;</fo:block>
 																		                     			</fo:table-cell>
 																		                     			<fo:table-cell >
@@ -869,10 +870,11 @@
 																		                     				<fo:block linefeed-treatment="preserve" >&#xA;</fo:block>
 																		                     				<fo:block text-align="center" font-size="12pt" font-weight="bold">&#160;</fo:block>
 																		                     			</fo:table-cell>
+																		                     			<#assign partyDetails = delegator.findOne("Party", {"partyId" : partyId}, true)>
 																		                     			<fo:table-cell >
 																		                     				<fo:block linefeed-treatment="preserve" >&#xA;</fo:block>
-																		                     				<fo:block text-align="left" font-size="12pt" font-weight="bold">${partyId?if_exists}</fo:block>
-																		                     			</fo:table-cell>
+																		                     				<fo:block text-align="left" font-size="12pt" font-weight="bold"><#if partyDetails?has_content>${partyDetails.externalId?if_exists}<#else>${partyId?if_exists}</#if></fo:block>
+																		                     			</fo:table-cell>											                     			
 																		                     			<fo:table-cell >
 																		                     				<fo:block linefeed-treatment="preserve" >&#xA;</fo:block>
 																		                     				<fo:block text-align="center" font-size="12pt" font-weight="bold">${Static["org.ofbiz.order.order.OrderServices"].nameTrim((Static["org.ofbiz.party.party.PartyHelper"].getPartyName(delegator, partyId, false)),15)}</fo:block>
@@ -1633,9 +1635,10 @@
 																		                     				<fo:block linefeed-treatment="preserve" >&#xA;</fo:block>
 																		                     				<fo:block text-align="center" font-size="12pt" font-weight="bold">&#160;</fo:block>
 																		                     			</fo:table-cell>
+																		                     			<#assign partyDetails = delegator.findOne("Party", {"partyId" : partyId}, true)>
 																		                     			<fo:table-cell >
 																		                     				<fo:block linefeed-treatment="preserve" >&#xA;</fo:block>
-																		                     				<fo:block text-align="left" font-size="12pt" font-weight="bold">${partyId?if_exists}</fo:block>
+																		                     				<fo:block text-align="left" font-size="12pt" font-weight="bold"><#if partyDetails?has_content>${partyDetails.externalId?if_exists}<#else>${partyId?if_exists}</#if></fo:block>
 																		                     			</fo:table-cell>
 																		                     			<fo:table-cell >
 																		                     				<fo:block linefeed-treatment="preserve" >&#xA;</fo:block>

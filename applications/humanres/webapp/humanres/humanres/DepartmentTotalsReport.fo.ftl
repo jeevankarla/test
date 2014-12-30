@@ -161,7 +161,7 @@ under the License.
 	                        </#if>
 	                            <fo:table-row>
 	                                <fo:table-cell>
-	                                <fo:block keep-together="always" text-align="right">${unitIdMap.get(deptTotals.getKey())}</fo:block>
+	                                <fo:block keep-together="always" text-align="right">${unitIdMap.get(deptTotals.getKey())?if_exists}</fo:block>
 	                                </fo:table-cell>
 	                                <fo:table-cell>
 	                                <#assign PAYROL_BEN_SALARY=0>
@@ -221,7 +221,7 @@ under the License.
 	                            </fo:table-row>
 	                            <fo:table-row>
 	                                <fo:table-cell>
-	                                <fo:block keep-together="always" text-align="right">${deptTotals.getKey()}</fo:block>
+	                                <fo:block keep-together="always" text-align="right">${deptTotals.getKey()?if_exists}</fo:block>
 	                                </fo:table-cell>
 	                                <fo:table-cell>
 	                                <#assign PAYROL_BEN_SPLPAY=0>
