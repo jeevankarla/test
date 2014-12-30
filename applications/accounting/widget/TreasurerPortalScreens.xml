@@ -141,6 +141,7 @@
             			<condition-expr field-name="ownerPartyId" operator="equals" value="Company"/>
             		</condition-list>
             	</entity-condition>
+            	  <script location="component://accounting/webapp/accounting/WEB-INF/actions/payment/findDepositAccounts.groovy"/>
             </actions>
             <widgets>
             	<decorator-screen name="CommonTreasurerPortalDecorator" location="component://accounting/widget/CommonScreens.xml"> 
@@ -365,7 +366,7 @@
                                 <platform-specific>
                                     <html><html-template location="component://accounting/webapp/accounting/finaccounttrans/SetDepositAccntTypeDropDown.ftl"/></html>
                                 </platform-specific>
-                                <screenlet title="Edit Deposit Account">
+                                <screenlet title="Create Deposit Account">
                                     <include-form name="EditDepositAccount" location="component://accounting/widget/TreasurerPortalForms.xml"/>
                                 </screenlet>
                             </widgets>

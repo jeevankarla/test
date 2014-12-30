@@ -268,6 +268,7 @@ public class FinAccountServices {
         String inFavor = (String) context.get("inFavor");
         amount = amount.abs();
         String parentTypeId = (String) context.get("acctParentTypeId");
+        String finAccountId="";
         Map<String, Object> result = ServiceUtil.returnSuccess();
         Timestamp fromDate = null;
         if(UtilValidate.isEmpty(transactionDate)){
@@ -287,7 +288,7 @@ public class FinAccountServices {
             	 finAccountTransTypeId = "WITHDRAWAL";
              }
              
-             String finAccountId = (String)createResult.get("finAccountId");
+             finAccountId = (String)createResult.get("finAccountId");
              Map<String, Object> transCtxMap = FastMap.newInstance();
              transCtxMap.put("statusId", "FINACT_TRNS_CREATED");
              transCtxMap.put("entryType", entryType);
@@ -319,6 +320,7 @@ public class FinAccountServices {
             return ServiceUtil.returnError(ex.getMessage());
         }
         result = ServiceUtil.returnSuccess("Successfully created account and deposit for party : "+depositPartyId);
+        result.put("finAccountId", finAccountId);
         return result;
     }
 

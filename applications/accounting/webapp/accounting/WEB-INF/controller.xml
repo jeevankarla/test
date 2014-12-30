@@ -2087,8 +2087,15 @@ under the License.
     <request-map uri="createDepositFinAccountAndDeposit">
         <security https="true" auth="true"/>
         <event type="service" path="" invoke="createDepositFinAccountAndDeposit"/>
-        <response name="success" type="request-redirect-noparam" value="FindDepositAccount"/>
-        <response name="error" type="request-redirect-noparam" value="FindDepositAccount"/>
+        <!-- <response name="success" type="request" value="FindDepositAccount"/>
+        <response name="error" type="view" value="FindDepositAccount"/> -->
+        <response name="success" type="request-redirect" value="FindDepositAccount">
+        <redirect-parameter name="finAccountTypeId"/>
+        <redirect-parameter name="finAccountName"/>
+        <redirect-parameter name="ownerPartyId"/>
+        <redirect-parameter name="noConditionFind"/>
+        </response>
+        <response name="error" type="request-redirect" value="FindDepositAccount"/>
     </request-map>
     <request-map uri="refundDepositContraFinAccTrans">
         <security https="true" auth="true"/>

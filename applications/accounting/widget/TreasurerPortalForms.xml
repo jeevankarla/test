@@ -130,35 +130,28 @@ under the License.
         </field> -->
     </form>    
     <form name="FindDepositAccount" type="single" target="FindDepositAccount" header-row-style="header-row" default-table-style="basic-table">        
+        <field name="hideSearch"><hidden value="Y" /></field>
         <field name="noConditionFind"><hidden value="Y"/><!-- if this isn't there then with all fields empty no query will be done --></field>
         <field name="finAccountId" position="1"><text-find/></field>
+          <field name="AccDate" position="2"><date-time type="date"/></field>
         <field name="finAccountName" position="1"><text-find/></field>
         <field name="amount" position="2"><text/></field>
         <field name="finAccountTypeId" position="1">
-        	<drop-down allow-empty="false">
+        	<drop-down allow-empty="true">
         		<list-options key-name="finAccountTypeId" list-name="finAccountTypes" description="${description}"/>
         	</drop-down>
         </field>
         <field name="ownerPartyId" position="2"><lookup target-form-name="LookupPartyName"/></field>        
-        <field name="searchButton" widget-style="smallSubmit"><submit button-type="button"/></field>
+        <field name="searchButton" widget-style="smallSubmit"><submit/></field>
     </form>
-    <form name="ListDepositAccounts" type="list" separate-columns="true" default-entity-name="FinAccountAndRole" list-name="listIt" paginate-target="FindDepositAccount" paginate="true"
+    <form name="ListDepositAccounts" type="list" separate-columns="true" default-entity-name="FinAccountAndRole" list-name="depositAccounts" paginate-target="FindDepositAccount" paginate="true"
         odd-row-style="alternate-row" default-table-style="basic-table hover-bar">
-        <actions>
-            <service service-name="performFind" result-map="result" result-map-list="listIt">
-                <field-map field-name="inputFields" from-field="parameters"/>
-                <field-map field-name="entityName" value="FinAccount"/>
-                <field-map field-name="orderBy" value="fromDate DESC"/>
-                <field-map field-name="viewIndex" from-field="viewIndex"/>
-                <field-map field-name="viewSize" from-field="viewSize"/>
-            </service>
-        </actions>
         <field name="finAccountId" title="AccountId"><display/></field>
         <field name="finAccountTypeId" title="Deposit Acc Type"><display-entity entity-name="FinAccountType" key-field-name="finAccountTypeId" description="${description}"/></field>
         <field name="finAccountName" title="Acc Name"><display/></field>
-        <field name="ownerPartyId" title="Owner Party"><display/></field>
+        <field name="ownerPartyId" title="Owner Party"><display description="${groovy:org.ofbiz.party.party.PartyHelper.getPartyName(delegator, ownerPartyId, false);}[${ownerPartyId}]"/></field>
         <field name="fromDate" title="Acc Date"><display/></field>
-        <field name="finAccountType"><display></display></field>
+<!--         <field name="finAccountType"><display></display></field> -->
         <field name="actualBalance" title="Acc Balance"><display/></field>
         <field name="refund" widget-style="buttontext" event="onclick" action="" >
             <hyperlink target-type="plain" target="javascript:showDepositRefundEntry('${finAccountId}');" description="Refund">
@@ -514,6 +507,7 @@ under the License.
             	</condition-list>
             </entity-condition>
         </actions>
+        <field name="noConditionFind"><hidden value="Y"/><!-- if this isn't there then with all fields empty no query will be done after creating the Deposit Account --></field>
         
 		<field name="acctParentTypeId" id-name="parentTypeId" use-when="finAccount==null&amp;&amp;finAccountId==null" title="Account Type" event="onchange" action="javascript:parentTypeOnchange();">
         	<drop-down>

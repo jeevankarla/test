@@ -52,6 +52,7 @@ under the License.
 		<attribute name="contraRefNum" mode="IN" optional="true" type="String"/>
 		<attribute name="inFavor" mode="IN" optional="true" type="String"/>
 		<attribute name="comments" mode="IN" optional="true" type="String"/>
+		<attribute name="finAccountId" mode="OUT" optional="true" type="String"/>
     </service>
     <service name="refundDepositContraFinAccTrans" engine="java" location="org.ofbiz.accounting.finaccount.FinAccountServices" invoke="refundDepositContraFinAccTrans">
         <description>Refund Deposit Contra Entry for FinAccount Trans</description>
