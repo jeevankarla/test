@@ -263,7 +263,7 @@
         <field name="revisedUnitPrice" title="Negotiation Price"><display/></field>
     </form>
         
-    <form name="ListRequestsToIssue" type="list" use-row-submit="true"  title="" list-name="custRequestItemsList"
+    <form name="ListRequestsToIssue" type="list" use-row-submit="true"  title="" list-name="custRequestItemsList" separate-columns="true"
         odd-row-style="alternate-row" default-table-style="basic-table hover-bar" paginate-target="StoreProductIssue">
         <row-actions>
         	<set field="flag" value="${groovy: return (QOH >= quantity)? 'Y' : 'N';}"/>
@@ -287,7 +287,7 @@
                 <parameter param-name="custRequestItemSeqId"/>
             </hyperlink>
         </field>
-        <field use-when="flag == &quot;N&quot; &amp;&amp; &quot;${statusId}&quot; == &quot;CRQ_SUBMITTED&quot;" name="custmQuantity" title="Quantity" ><text size="5"></text>
+        <field use-when="flag == &quot;N&quot; &amp;&amp; &quot;${statusId}&quot; == &quot;CRQ_SUBMITTED&quot;" name="custmQuantity" title="Diffr.Qty" ><text size="5" disabled="true" ></text>
         </field>
         <field use-when="flag == &quot;N&quot; &amp;&amp; &quot;${statusId}&quot; == &quot;CRQ_SUBMITTED&quot;" name="raiseRequirement" widget-style="buttontext">
             <hyperlink target="createRequirementForCustRequestItem" description="Raise Requirement">
