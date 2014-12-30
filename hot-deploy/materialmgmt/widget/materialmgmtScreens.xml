@@ -391,6 +391,9 @@
 	                        		<platform-specific>
 	                            		<html><html-template location="component://materialmgmt/webapp/materialmgmt/purchase/POterms.ftl"/></html>
 	                        		</platform-specific>
+	                        		<screenlet title="Order Attributes">
+	                        			<include-screen name="orderAttributes"/>
+	                        		</screenlet>
                 					<platform-specific>
                     					<html><html-template location="component://materialmgmt/webapp/materialmgmt/purchase/POContactInfo.ftl"/></html>
                 					</platform-specific>
@@ -481,6 +484,21 @@
             </decorator-screen>
     	</widgets>
     </section>
+    </screen>
+    <screen name="orderAttributes">
+    	<section>
+    	<actions>
+    	<entity-and entity-name="OrderAttribute" list="OrderAttributeList">
+    		<field-map field-name="orderId" from-field="parameters.orderId"/>
+    	</entity-and>
+    	</actions>
+			<widgets>
+				<include-form location="component://materialmgmt/widget/materialmgmtForms.xml" name="addAttribute"/>
+				<screenlet >
+				<include-form location="component://materialmgmt/widget/materialmgmtForms.xml" name="listAttribute"/>
+				</screenlet>
+			</widgets>    	
+    	</section>
     </screen>
     
 </screens>

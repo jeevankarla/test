@@ -341,5 +341,30 @@
                 <parameter param-name="partyId" from-field="partyId"/>
             </hyperlink>
      </field>
+    </form>
+    <form name="addAttribute" type="single" target="createOrderAttribute">
+    	<field name="orderId"><hidden/></field>	
+    	<field name="attrName" title="Select Attribute" required-field="true" widget-area-style="required" tooltip="Required">
+    		<drop-down allow-empty="false" >
+    			<entity-options description="${description}" entity-name="Enumeration" key-field-name="enumId" >
+    				<entity-constraint name="enumTypeId" value="ORDER_ATTRIBUTE"/>
+    			</entity-options>
+    		</drop-down>
+    	</field>
+    	<field name="attrValue" title="Value / Date" required-field="true" widget-area-style="required" tooltip="if Date:(dd / mm / yyyy)" ><text/></field>
+    	 <field  name="submitButton" title="${uiLabelMap.CommonAdd}"><submit button-type="button"/></field>
+    </form>
+    <form name="listAttribute" type="list" list-name="OrderAttributeList" default-table-style="basic-table hover-bar" odd-row-style="alternate-row" header-row-style="header-row">
+    <actions>
+    </actions>
+    <field name="orderId"><hidden/></field>
+    <field name="attrName" title="Attribute Name"><display-entity entity-name="Enumeration" key-field-name="enumId" description="${description}" /></field>
+    <field name="attrValue" title="Value / Date"><display/></field>
+    <field name="deleteAttr" title="Delete" widget-style="buttontext">
+    	<hyperlink target="deleteOrderAttribute" description="Delete">
+                <parameter param-name="attrName"/>
+                <parameter param-name="orderId"/>
+            </hyperlink>
+    </field>
     </form>    
 </forms>

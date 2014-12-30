@@ -100,5 +100,9 @@
 	 <StatusValidChange  statusId="QTITM_APPROVED" statusIdTo="QTITM_ADUIT_APP" transitionName="Audit Approved."/>
 	 <StatusValidChange statusId="QTITM_ADUIT_APP" statusIdTo="QTITM_QUALIFIED" transitionName="Qualified"/>
 	 <StatusValidChange statusId="QTITM_ADUIT_APP" statusIdTo="QTITM_REJECTED" transitionName="Reject"/>
+	 
+	 <EnumerationType  description="Order Attribute" enumTypeId="ORDER_ATTRIBUTE"/>
+	 <Enumeration description="Tender Date" enumId="TENDER_DATE" enumTypeId="ORDER_ATTRIBUTE"/>
+	 <Enumeration description="Tender Value" enumId="TENDER_VALUE" enumTypeId="ORDER_ATTRIBUTE"/>
      
 </entity-engine-xml>

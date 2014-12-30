@@ -66,6 +66,18 @@
         <response name="error" type="view" value="PurchageOrderOverView"/>
     </request-map>
     
+    <request-map uri="createOrderAttribute">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="createOrderAttribute"/>
+        <response name="success" type="view" value="PurchageOrderOverView"/>
+        <response name="error" type="view" value="PurchageOrderOverView"/>
+    </request-map>
+    <request-map uri="deleteOrderAttribute">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="deleteOrderAttribute"/>
+        <response name="success" type="view" value="PurchageOrderOverView"/>
+        <response name="error" type="view" value="PurchageOrderOverView"/>
+    </request-map>
      <request-map uri="FindReceipts">
         <security https="true" auth="true"/>
         <response name="success" type="view" value="FindReceipts"/>

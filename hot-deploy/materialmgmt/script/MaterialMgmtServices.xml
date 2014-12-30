@@ -249,5 +249,34 @@
         </call-service>
         
     </simple-method>
+ 	<simple-method method-name="createOrderAttribute" short-description="Create Order Attribute">
+        <make-value entity-name="OrderAttribute" value-field="newEntity"/>
+        <set-pk-fields map="parameters" value-field="newEntity"/>
+        <set-nonpk-fields map="parameters" value-field="newEntity"/>
+        <entity-one entity-name="OrderAttribute" value-field="orderAttribute" auto-field-map="true"/>
+        <if>
+            <condition>
+                <and>
+                   <if-compare-field field="orderAttribute.orderId" to-field="parameters.orderId" operator="equals"/>
+                   <if-compare-field field="orderAttribute.attrName" to-field="parameters.attrName" operator="equals"/>
+                </and>
+            </condition>
+            <then>
+                 <add-error>
+                    <fail-message message="Record with the selected combination already exists.Please try with Other combination."/>
+                 </add-error>
+                 <check-errors/>
+            </then>
+            <else>
+                <create-value value-field="newEntity"/>
+                <set field="responseMessage" value="Order Attribute Added successfully."/>
+        		<field-to-result field="responseMessage" result-name="successMessage"/>
+            </else>
+        </if>
+    </simple-method>  
+    <simple-method method-name="DeleteOrderAttribute" short-description="Delete Order Attribute">
+    	<entity-one entity-name="OrderAttribute" value-field="orderAttribute"/>
+        <remove-value value-field="orderAttribute"/>
+    </simple-method> 
     
 </simple-methods>   

@@ -190,4 +190,16 @@
         <description>Remove a OrderContent record</description>
         <auto-attributes mode="IN" include="pk" optional="false"/>
     </service>
+    
+    <service name="createOrderAttribute" engine="simple" default-entity-name="OrderAttribute"
+             location="component://materialmgmt/script/MaterialMgmtServices.xml" invoke="createOrderAttribute" auth="true">
+        <description>Create Order Attribute</description>
+        <auto-attributes mode="IN" include="pk" optional="false"/>
+        <auto-attributes mode="IN" include="nonpk" optional="true"/>
+    </service>
+    <service name="deleteOrderAttribute" engine="simple" default-entity-name="OrderAttribute"
+             location="component://materialmgmt/script/MaterialMgmtServices.xml" invoke="DeleteOrderAttribute" auth="true">
+        <description>Delete Order Attribute</description>
+        <auto-attributes mode="IN" include="pk" optional="false"/>
+    </service>
 </services>
