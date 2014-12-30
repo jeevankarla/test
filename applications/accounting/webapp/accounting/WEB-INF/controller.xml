@@ -601,6 +601,22 @@ under the License.
         <event type="service" invoke="manualForcedCcTransaction"/>
         <response name="success" type="view" value="ManualTransaction"/>
     </request-map>
+   
+    <request-map uri="TDSReport.pdf">
+    	<security https="true" auth="true"/>
+    	<response name="success" type="view" value="TDSReportPDF"></response>
+    </request-map>
+    <request-map uri="FORM27A.pdf">
+    	<security https="true" auth="true"/>
+    	<response name="success" type="view" value="FORM27APDF"></response>
+    </request-map>
+    <request-map uri="TDSReportCsv.csv"><security https="true" auth="true"/>
+    <response name="success" type="view" value="TDSReportCsv"></response></request-map>
+    
+    <request-map uri="TDSReportTax.csv"><security https="true" auth="true"/>
+    <response name="success" type="view" value="TDSReportTax"></response></request-map>
+    
+    
 
     <!-- Payment Gateway Config -->
     <request-map uri="FindPaymentGatewayConfig">
@@ -3610,6 +3626,10 @@ under the License.
     <view-map name="EditInvoiceItemType" type="screen" page="component://accounting/widget/InvoiceItemTypeScreens.xml#EditInvoiceItemType"/>
 
     <!-- Payment -->
+    <view-map name="FORM27APDF" type="screenfop" page="component://accounting/widget/TreasurerPortalScreens.xml#FORM27APDF" content-type="application/pdf" encoding="none"/>
+    <view-map name="TDSReportPDF" type="screenfop" page="component://accounting/widget/TreasurerPortalScreens.xml#TDSRelatedReportScreenPDF" content-type="application/pdf" encoding="none"/>
+   	<view-map name="TDSReportCsv" type="screencsv" page="component://accounting/widget/TreasurerPortalScreens.xml#TDSReportCsv" content-type="text/csv" encoding="none"/>
+   	<view-map name="TDSReportTax" type="screencsv" page="component://accounting/widget/TreasurerPortalScreens.xml#TDSReportTax" content-type="text/csv" encoding="none"/>
     <view-map name="findPayments" type="screen" page="component://accounting/widget/PaymentScreens.xml#FindPayments"/>
     <view-map name="paymentOverview" type="screen" page="component://accounting/widget/PaymentScreens.xml#PaymentOverview"/>
     <view-map name="newPayment" type="screen" page="component://accounting/widget/PaymentScreens.xml#NewPayment"/>

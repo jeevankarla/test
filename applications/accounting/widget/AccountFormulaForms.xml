@@ -108,5 +108,30 @@
         <field name="slabAmount" title="${uiLabelMap.acctgFormulaSlabAmt}"><text size="25" default-value="${parameters.slabAmount}"/></field>                
         <field name="submitButton" title="${uiLabelMap.Test}" widget-style="buttontext"><submit button-type="text-link"/></field>
     </form>    
+    
+    <form name="TDSReportCsvAnnexure" type="list" list-name="listAnnexure" odd-row-style="alternate-row" default-table-style="basic-table hover-bar">
+	    <field name="serialNo" title="Sl No"><display /></field>
+		<field name="partyId" title="Deductee Reference Number"><display/></field>
+		<field name="panNo" title="PAN of The deductee"><display/></field>
+		<field name="partyName" title="Name of the deductee"><display/></field>
+		<field name="section" title="Section code" ><display/></field>
+		<field name="paidDate" title="Date of payment or credit"><display/></field>
+		<field name="invoiceAmount" title="Amount paid or credited"><display/></field>
+		<field name="amount" title="Total tax deducted"><display/></field>
+		<field name="amount" title="Total tax deposited"><display/></field>
+		<field name="invoiceDate" title="Date of deduction"><display/></field>
+	</form>	
+	<form name="TDSReportCsvTax" type="list" list-name="listTaxPaid" odd-row-style="alternate-row" default-table-style="basic-table hover-bar">
+	    <field name="serialNo" title="Sl No"><display /></field>
+		<field name="invoiceId" title="Internal Reference Number"><display/></field>
+		<field name="tax" title="Tax"><display/></field>
+		<field name="interest" title="Interest"><display/></field>
+		<field name="fee" title="Fee" ><display/></field>
+		<field name="penalty" title="Penalty /Others"><display/></field>
+		<field name="total" title="Total amount deposited"><display/></field>
+		<field name="paidDate" title="Date on which amount deposited"><display/></field>
+		
+	</form>	
+	
 
 </forms>

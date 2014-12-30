@@ -3021,4 +3021,92 @@
 			</widgets>
 		</section>
 	</screen>
+	
+	<!-- <screen name="TDSRelatedReportScreen">
+    	<section>
+    		<actions>  	    		
+	    		 <set field="titleProperty" value="TDS Related Reports"/>
+	    		 
+	            <set field="tabButtonItem" value="newReports"/>
+				<set field="tabButtonItem2" value="StatutoryReports" />   	
+	    		<set field="screenFlag" value="newReports"/>
+	    		
+	    		<set field="reportFrequencyFlag" value="TDSReport"/>
+    		</actions>
+    		<widgets>
+    		<decorator-screen name="CommonPaymentDecorator" location="${parameters.mainDecoratorLocation}">
+    			<decorator-section name="body">
+    				<section>
+    					<widgets>
+    					<platform-specific><html><html-template location="component://accounting/webapp/accounting/payment/TDSReports.ftl"></html-template></html></platform-specific>
+    					</widgets>
+    				</section>    	
+    			</decorator-section>    		
+    		</decorator-screen>
+    		</widgets>    		
+    	</section>
+    </screen>     -->
+    <screen name="TDSRelatedReportScreenPDF">
+        <section>
+            <actions>
+                <!-- pass in paymentId to print one check, otherwise use multi form input -->
+               <script location="component://accounting/webapp/accounting/WEB-INF/actions/TaxDeductedAtSource.groovy"/>
+            </actions>
+            <widgets>
+                <platform-specific>
+                   <xsl-fo><html-template location="component://accounting/webapp/accounting/payment/TDSReport.fo.ftl"/></xsl-fo>
+                </platform-specific>
+            </widgets>
+        </section>
+    </screen>
+    
+    
+    
+    <screen name="TDSReportCsv">
+		<section>
+			<actions>
+			<set field="viewSize" value="99999"/>
+               
+              <script location="component://accounting/webapp/accounting/WEB-INF/actions/TaxDeductedAtSource.groovy"/>
+			</actions>
+                 	<widgets>
+						<container>
+							<include-form name="TDSReportCsvAnnexure" location="component://accounting/widget/AccountFormulaForms.xml" />
+						</container>
+							</widgets>	
+					<!-- <fail-widgets>
+                    			<label style="h3">${uiLabelMap.HumanResViewPermissionError}</label>                        			                    					
+					</fail-widgets> -->
+		</section>
+	</screen>
+	
+	<screen name="TDSReportTax">
+		<section>
+			<actions>
+			<set field="viewSize" value="99999"/>
+               
+              <script location="component://accounting/webapp/accounting/WEB-INF/actions/TaxDeductedAtSource.groovy"/>
+			</actions>
+                 	<widgets>
+						<container>
+							<include-form name="TDSReportCsvTax" location="component://accounting/widget/AccountFormulaForms.xml" />
+						</container>
+							</widgets>	
+					<!-- <fail-widgets>
+                    			<label style="h3">${uiLabelMap.HumanResViewPermissionError}</label>                        			                    					
+					</fail-widgets> -->
+		</section>
+	</screen>
+    
+    
+<screen name="FORM27APDF">
+        <section>
+            
+            <widgets>
+                <platform-specific>
+                   <xsl-fo><html-template location="component://accounting/webapp/accounting/payment/Form27A.fo.ftl"/></xsl-fo>
+                </platform-specific>
+            </widgets>
+        </section>
+    </screen>
 </screens>

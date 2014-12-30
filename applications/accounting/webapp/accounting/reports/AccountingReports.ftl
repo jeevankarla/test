@@ -190,6 +190,53 @@ function reportTypeChangeFunc() {
 	        });    
 	     });
 	});
+	
+	$(document).ready(function verifyFields(){
+		$('input[name=submitButton]').click (function verifyFields(){
+		var fromMonth = $('#fromMonth').val();
+		var thruMonth = $('#thruMonth').val();
+	 	if((fromMonth == "")|| (thruMonth == "")){
+			alert("Please select dates");
+			return false;
+			}
+		});
+ 	
+	});
+	
+	$(document).ready(function(){
+    	$(".monthPickerTDS").datepicker( {
+	        changeMonth: true,
+	        changeYear: true,
+	        showButtonPanel: true,
+	        dateFormat: 'mm-yy',
+	        onClose: function(dateText, inst) { 
+	            var month = $("#ui-datepicker-div .ui-datepicker-month :selected").val();
+	            var year = $("#ui-datepicker-div .ui-datepicker-year :selected").val();
+	            $(this).datepicker('setDate', new Date(year, month, 1));
+	        }
+		});
+		$(".monthPickerTDS").focus(function () {
+	        $(".ui-datepicker-calendar").hide();
+	        $("#ui-datepicker-div").position({
+	            my: "center top",
+	            at: "center bottom",
+	            of: $(this)
+	        });    
+	     });
+	});
+
+
+	$(document).ready(function verifyFields(){
+		$('input[name=submitButton]').click (function verifyFields(){
+		var fromMonth = $('#fromMonth').val();
+		var thruMonth = $('#thruMonth').val();
+	 	if((fromMonth == "")|| (thruMonth == "")){
+			alert("Please select dates");
+			return false;
+			}
+		});
+ 	
+	});
 </script>
 <div class="screenlet">
     <div class="screenlet-title-bar">
@@ -209,12 +256,48 @@ function reportTypeChangeFunc() {
               		   </#list>
 							</select>
 						</td>
-  					<td width="15%"></td>
+  					<td width="5%"></td>
 					<td width="10%"><input type="submit" value="PDF" onClick="javascript:appendParams('BankReconciliationReports', '<@ofbizUrl>recStatemetn.pdf</@ofbizUrl>');" class="buttontext"/>
 					<input type="submit" value="CSV" onClick="javascript:appendParams('BankReconciliationReports', '<@ofbizUrl>FinAccountTransForReconsile.csv</@ofbizUrl>');" class="buttontext"/></td>         			
 				</form>
               </tr>
               	
+              
+              <tr class="alternate-row">
+				   	<form id="MonthlyTDSAnnexure" name="MonthlyTDSAnnexure" method="post" action="<@ofbizUrl>TDSReport.pdf</@ofbizUrl>" target="_blank">
+									<td width="30%">Monthly TDS Annexure<input  type="hidden"  value="MonthlyTDSAnnexure"   name="reportTypeFlag"/></td>
+									<td width="15%">From <input type='text' size="18pt" id='fromMonth' name='fromMonth' onmouseover='monthPickerTDS()' class="monthPickerTDS"</td>
+			      		 			<td width="15%">To <input type='text' size="18pt" id='thruMonth' name='thruMonth' onmouseover='monthPickerTDS()' class="monthPickerTDS"</td>
+			      		 			<td width="15%">Section Code:<select name="sectionCode" id="sectionCode">
+			      		 			<option value="TDS_194C">TDS_194C</option>
+			      		 			<option value="TDS_194H">TDS_194H</option>
+			      		 			<option value="TDS_194J">TDS_194J</option>
+			      		 			<option value="TCS_206C">TCS_206C</option>
+			      		 			<option value="PAYROL_DD_INC_TAX">PAYROLL</option>
+			      		 			
+			      		 			</select></td>  
+	 			  					<td width="5%"></td>
+<!--									<td width="15%"><input type="submit" name= "submitButton" value="Download PDF" onClick="javascript:verifyFields()" class="buttontext"></td> -->
+									<td width="20%">
+										<table>
+										<tr><td><input type="submit" value="PDF" onClick="javascript:appendParams('MonthlyTDSAnnexure', '<@ofbizUrl>TDSReport.pdf</@ofbizUrl>');" class="buttontext"/></td></tr>
+										<tr><td><input type="submit" value="DeducteeAnnex(CSV)" onClick="javascript:appendParams('MonthlyTDSAnnexure', '<@ofbizUrl>TDSReportCsv.csv</@ofbizUrl>');" class="buttontext"/></td></tr> 
+										<tr><td><input type="submit" value="TaxAnnex(CSV)" onClick="javascript:appendParams('MonthlyTDSAnnexure', '<@ofbizUrl>TDSReportTax.csv</@ofbizUrl>');" class="buttontext"/></td></tr>
+										</table>   
+          						 	</td>
+								</form>
+				</tr>
+								
+				<tr class="alternate-row">
+				   	<form id="FORM27A" name="FORM 27A" method="post" action="<@ofbizUrl>FORM27A.pdf</@ofbizUrl>" target="_blank">
+									<td width="19%">FORM 27 A<input  type="hidden"  value="FORM27APDF"   name="reportTypeFlag"/></td>
+									<td width="15%"></td>
+									<td width="15%"></td>
+			      		 			<td width="15%"></td> 
+	 			  					<td width="5%"></td>
+									<td width="15%"><input type="submit" value="FORM 27A.PDF" class="buttontext"></td>
+						</form>
+					</tr>	
 		</table>     			     
 	</div> 	
 </div>
