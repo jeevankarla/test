@@ -31,10 +31,18 @@ orderHeader = delegator.findList("OrderHeader", cond, null, null, null ,false);
 
 orderIds = EntityUtil.getFieldListFromEntityList(orderHeader, "orderId", true);
 custCondList = [];
+//give prefrence to ShipToCustomer
+custCondList.add(EntityCondition.makeCondition("orderId", EntityOperator.IN, orderIds));
+custCondList.add(EntityCondition.makeCondition("roleTypeId", EntityOperator.EQUALS, "SHIP_TO_CUSTOMER"));
+shipCond = EntityCondition.makeCondition(custCondList, EntityOperator.AND);
+orderRoles = delegator.findList("OrderRole", shipCond, null, null, null, false);
+if(UtilValidate.isEmpty(orderRoles)){
+custCondList.clear();
 custCondList.add(EntityCondition.makeCondition("orderId", EntityOperator.IN, orderIds));
 custCondList.add(EntityCondition.makeCondition("roleTypeId", EntityOperator.EQUALS, "BILL_TO_CUSTOMER"));
 custCond = EntityCondition.makeCondition(custCondList, EntityOperator.AND);
 orderRoles = delegator.findList("OrderRole", custCond, null, null, null, false);
+}
 
 orderHeader.each{ eachHeader ->
 	orderId = eachHeader.orderId;
