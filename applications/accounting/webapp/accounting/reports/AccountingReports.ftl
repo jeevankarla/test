@@ -281,8 +281,8 @@ function reportTypeChangeFunc() {
 									<td width="20%">
 										<table>
 										<tr><td><input type="submit" value="PDF" onClick="javascript:appendParams('MonthlyTDSAnnexure', '<@ofbizUrl>TDSReport.pdf</@ofbizUrl>');" class="buttontext"/></td></tr>
-										<tr><td><input type="submit" value="DeducteeAnnex(CSV)" onClick="javascript:appendParams('MonthlyTDSAnnexure', '<@ofbizUrl>TDSReportCsv.csv</@ofbizUrl>');" class="buttontext"/></td></tr> 
 										<tr><td><input type="submit" value="TaxAnnex(CSV)" onClick="javascript:appendParams('MonthlyTDSAnnexure', '<@ofbizUrl>TDSReportTax.csv</@ofbizUrl>');" class="buttontext"/></td></tr>
+										<tr><td><input type="submit" value="DeducteeAnnex(CSV)" onClick="javascript:appendParams('MonthlyTDSAnnexure', '<@ofbizUrl>TDSReportCsv.csv</@ofbizUrl>');" class="buttontext"/></td></tr> 
 										</table>   
           						 	</td>
 								</form>
