@@ -371,9 +371,12 @@ under the License.
 			       								<fo:table-cell><fo:block keep-together="always" font-size="4pt" text-align="right">${accnumber?if_exists}</fo:block></fo:table-cell>
 			       								<fo:table-cell><fo:block keep-together="always" font-size="4pt" text-align="right">${deductionType.getValue().get("deductionAmt")?if_exists?string('0.00')}</fo:block></fo:table-cell>
 							       				<#assign balance = deductionType.getValue().get("balance")>
+							       				<#if (headerDetails.getKey()=="PAYROL_DD_DEDID18") || (headerDetails.getKey()=="PAYROL_DD_1150_BL315") || (headerDetails.getKey()=="PAYROL_DD_DEDRS04")>
+							       					<#assign balance = balance-deductionType.getValue().get("deductionAmt")>
+							       				</#if>
 							       				<fo:table-cell><fo:block keep-together="always" font-size="4pt" text-align="right"><#if balance == 0>-<#else>${balance?if_exists?string('0.00')}</#if></fo:block></fo:table-cell>
 							       				<#assign totalRecovery =totalRecovery + deductionType.getValue().get("deductionAmt")>
-							       				<#assign totalBalance =totalBalance + deductionType.getValue().get("balance")>
+							       				<#assign totalBalance =totalBalance + balance>
 		       								</fo:table-row>
 	       								</#if>
 			       					</#if>
