@@ -68,8 +68,7 @@
 	var productLabelIdMap = ${StringUtil.wrapString(productLabelIdJSON)!'{}'};
 	var productIdLabelMap = ${StringUtil.wrapString(productIdLabelJSON)!'{}'};
 	var availableTags = ${StringUtil.wrapString(productItemsJSON)!'[]'};
-	
-	var data = ${StringUtil.wrapString(dataJSON)!'[]'};
+	var data = ${StringUtil.wrapString(orderItemsJSON)!'[]'};
 	
 	var partyAutoJson = ${StringUtil.wrapString(partyJSON)!'[]'};
 	var paymentTermsJSON = ${StringUtil.wrapString(paymentTermsJSON)!'[]'};
@@ -161,18 +160,20 @@
 			var insurence = $("#insurence").val();
 			var SInvoiceDate = $("#SInvoiceDate").val();
 			
-			 var packAndFowdg = $("#packAndFowdg").val();
-			  var otherCharges = $("#otherCharges").val();
-			
-			
+			var packAndFowdg = $("#packAndFowdg").val();
+			var otherCharges = $("#otherCharges").val();
+			var orderName = $("#orderName").val();
 			var mrnNumber=$("#mrnNumber").val();
 			var freightCharges=$("#freightCharges").val();
 			var discount=$("#discount").val();
 			 var packAndFowdg = $("#packAndFowdg").val();
 			 var otherCharges = $("#otherCharges").val();
 			//alert("=mrnNumber="+mrnNumber+"=freightCharges="+freightCharges+"=discount="+discount+"=sInvNumber="+sInvNumber+"=poNumber="+poNumber+"=insurence="+insurence);
+			var orderId = $("#orderId").val();
 			var productStoreId = $("#productStoreId").val();
 			var party = jQuery("<input>").attr("type", "hidden").attr("name", "supplierId").val(supplierId);
+			var order = jQuery("<input>").attr("type", "hidden").attr("name", "orderId").val(orderId);
+			var orderDesc = jQuery("<input>").attr("type", "hidden").attr("name", "orderName").val(orderName);
 		    var POField = jQuery("<input>").attr("type", "hidden").attr("name", "PONumber").val(poNumber);
 			var tax = jQuery("<input>").attr("type", "hidden").attr("name", "orderTaxType").val(orderTaxType);
 			var pack = jQuery("<input>").attr("type", "hidden").attr("name", "packingType").val(packingType);
@@ -191,6 +192,8 @@
 				var extOrder = jQuery("<input>").attr("type", "hidden").attr("name", "orderId").val(order);		
 				jQuery(formId).append(jQuery(extOrder));
 			</#if>
+			jQuery(formId).append(jQuery(orderDesc));
+			jQuery(formId).append(jQuery(order));
 			jQuery(formId).append(jQuery(party));
 			jQuery(formId).append(jQuery(POField));
 			jQuery(formId).append(jQuery(pack));
@@ -198,10 +201,7 @@
 			jQuery(formId).append(jQuery(productStore));
 			jQuery(formId).append(jQuery(frightField));
 			jQuery(formId).append(jQuery(dicountField));
-			jQuery(formId).append(jQuery(mrnNumberField));
-			jQuery(formId).append(jQuery(sInvNumberField));
 			jQuery(formId).append(jQuery(insurenceField));
-			jQuery(formId).append(jQuery(SInvoiceDateField));
 			
 			jQuery(formId).append(jQuery(packAndFowdgField));
 			jQuery(formId).append(jQuery(otherChargesField));
@@ -285,7 +285,7 @@
 	function setupGrid1() {
     
              withOutBedcolumns = [
-			{id:"cProductName", name:"Product", field:"cProductName", width:180, minWidth:180, cssClass:"cell-title", availableTags: availableTags, regexMatcher:"contains", editor: AutoCompleteEditor, validator: productValidator, sortable:false ,toolTip:""},
+			{id:"cProductName", name:"Product", field:"cProductName", width:180, minWidth:180, <#if orderId?exists>cssClass:"readOnlyColumnClass", focusable :false,<#else>cssClass:"cell-title", availableTags: availableTags, regexMatcher:"contains", editor: AutoCompleteEditor, validator: productValidator,</#if> sortable:false ,toolTip:""},
 			{id:"quantity", name:"Qty(Pkt)", field:"quantity", width:70, minWidth:70, cssClass:"cell-title",editor:FloatCellEditor, sortable:false , formatter: quantityFormatter,  validator: quantityValidator},
 			{id:"UPrice", name:"Price", field:"UPrice", width:130, minWidth:130, editor:FloatCellEditor, sortable:false, formatter: rateFormatter, align:"right", toolTip:"UD Price"},
 			
@@ -299,7 +299,7 @@
 		];
             
 		 withBedcolumns = [
-			{id:"cProductName", name:"Product", field:"cProductName", width:180, minWidth:180, cssClass:"cell-title", availableTags: availableTags, editor: AutoCompleteEditor, validator: productValidator, sortable:false ,toolTip:""},
+			{id:"cProductName", name:"Product", field:"cProductName", width:180, minWidth:180, <#if orderId?exists>cssClass:"readOnlyColumnClass", focusable :false,<#else>cssClass:"cell-title", availableTags: availableTags, regexMatcher:"contains", editor: AutoCompleteEditor, validator: productValidator,</#if> sortable:false ,toolTip:""},
 			{id:"quantity", name:"Qty(Pkt)", field:"quantity", width:70, minWidth:70, cssClass:"cell-title",editor:FloatCellEditor, sortable:false , formatter: quantityFormatter,  validator: quantityValidator},
 			{id:"UPrice", name:"Price", field:"UPrice", width:90, minWidth:90, editor:FloatCellEditor, sortable:false, formatter: rateFormatter, align:"right", toolTip:"UD Price"},
 			
@@ -794,7 +794,7 @@
     }
     
  
-		updateProductTotalAmount();
+		//updateProductTotalAmount();
 		function updateProductTotalAmount() {
 			for(var i=0;i<data.length;i++){
 				var qty = parseFloat(data[i]["quantity"]);
@@ -921,7 +921,7 @@
 	     var partyId=$('[name=supplierId]').val();
 		 if(boothId || partyId){
 		    gridShowCall();
-		 	setupGrid1();
+		 	//setupGrid1();
 	     }else{ 
 	        gridHideCall();
 	     }

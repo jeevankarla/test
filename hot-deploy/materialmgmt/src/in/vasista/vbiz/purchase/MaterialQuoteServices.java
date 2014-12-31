@@ -623,25 +623,6 @@ public class MaterialQuoteServices {
     	        		//item.setTaxDetails(taxList);
     	        		item.setQuoteId(quoteItem.getString("quoteId"));
     	        		item.setQuoteItemSeqId(quoteItem.getString("quoteItemSeqId"));
-             		/*List<ShoppingCartItem> tempCartItems =cart.findAllCartItems(quoteItem.getString("productId"));
-             		if(tempCartItems.size() >0){
-             			 ShoppingCartItem item = tempCartItems.get(0);
-                         item.setQuantity(item.getQuantity().add(new BigDecimal(quoteItem.getString("quantity"))), dispatcher, cart);
-                         item.setBasePrice(BigDecimal.ONE);
-             			
-             		}else{
-             			cart.addItem(0, ShoppingCartItem.makeItem(Integer.valueOf(0), quoteItem.getString("productId"), BigDecimal.ONE, 
-                 		      new BigDecimal(quoteItem.getString("quantity")), quoteItem.getBigDecimal("quoteUnitPrice"),
-                              null, null, null, null, null, null, null,
-                              null, null, null, null, null, null, dispatcher,
-                              cart, Boolean.FALSE, Boolean.FALSE, null, Boolean.TRUE, Boolean.TRUE)); 
-             		}*/
-             		
- 					/*GenericValue productDetail = delegator.findOne("Product", UtilMisc.toMap("productId", quoteItem.getString("productId")), false);
- 					if (productDetail != null) {
- 						BigDecimal tempQuantity  = quoteItem.getBigDecimal("quantity");
- 						quantity = quantity.add(tempQuantity);
- 					}*/
              		
                  } catch (Exception exc) {
                      Debug.logWarning("Error adding product with id " + quoteItem.getString("productId") + " to the cart: " + exc.getMessage(), module);
@@ -654,25 +635,8 @@ public class MaterialQuoteServices {
          CheckOutHelper checkout = new CheckOutHelper(dispatcher, delegator, cart);
          Map<String, Object> orderCreateResult = checkout.createOrder(userLogin);
          String orderId = (String) orderCreateResult.get("orderId");
-         // approve the order
-/*         if (UtilValidate.isNotEmpty(orderId)) {
-             boolean approved = OrderChangeHelper.approveOrder(dispatcher, userLogin, orderId); 
-             
-             try{            	
-         		//result = dispatcher.runSync("createInvoiceForOrderAllItems", UtilMisc.<String, Object>toMap("orderId", orderId,"userLogin", userLogin));
-         		if (ServiceUtil.isError(result)) {
-                     Debug.logWarning("There was an error while creating  the invoice: " + ServiceUtil.getErrorMessage(result), module);
-             		 return ServiceUtil.returnError("There was an error while creating the invoice: " + ServiceUtil.getErrorMessage(result));          	            
-                 } 
-             	         	 
-              //OrderChangeHelper.orderStatusChanges(dispatcher, userLogin, orderId, "ORDER_COMPLETED", "ITEM_APPROVED", "ITEM_COMPLETED", null);           	 
-             }catch (Exception e) {
-                 Debug.logError(e, module);
-             } 
-             result.put("orderId", orderId);
-         }        
-*/      
          result = ServiceUtil.returnSuccess("Create Purchase Order for Quote : "+quoteId);
+         result.put("orderId", orderId);
          return result;
     }
 	

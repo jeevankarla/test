@@ -935,6 +935,7 @@ public class MaterialPurchaseServices {
 	   
 		//old PO flow starts from here
 		String partyId = (String) request.getParameter("supplierId");
+		String orderId = (String) request.getParameter("orderId");
 		String billFromPartyId = (String) request.getParameter("billToPartyId");
 		String issueToDeptId = (String) request.getParameter("issueToDeptId");
 		Map resultMap = FastMap.newInstance();
@@ -1347,7 +1348,6 @@ public class MaterialPurchaseServices {
 			}else{
 				continue;
 			}
-			
 			if (paramMap.containsKey("paymentTermDays" + thisSuffix)) {
 				termDaysStr = (String) paramMap.get("paymentTermDays" + thisSuffix);
 			}
@@ -1430,14 +1430,13 @@ public class MaterialPurchaseServices {
 			}
 		}
 		
-		//Debug.log("termsList==========================="+termsList);
 		//getting productStoreId 
 		String productStoreId = (String) (in.vasista.vbiz.purchase.PurchaseStoreServices.getPurchaseFactoryStore(delegator)).get("factoryStoreId");//to get Factory storeId
 	 
 		processOrderContext.put("userLogin", userLogin);
 		processOrderContext.put("productQtyList", productQtyList);
 		processOrderContext.put("orderTypeId", orderTypeId);
-		
+		processOrderContext.put("orderId", orderId);
 		processOrderContext.put("termsList", termsList);
 		processOrderContext.put("partyId", partyId);
 		processOrderContext.put("billFromPartyId", billFromPartyId);
@@ -1453,23 +1452,29 @@ public class MaterialPurchaseServices {
 		processOrderContext.put("insurence", insurence);
 		processOrderContext.put("packAndFowdg", packAndFowdg);
 		processOrderContext.put("otherCharges", otherCharges);
-		processOrderContext.put("mrnNumber", mrnNumber);
 		processOrderContext.put("PONumber", PONumber);
-		processOrderContext.put("SInvNumber", SInvNumber);
-		processOrderContext.put("SInvoiceDate", SInvoiceDate);
 		processOrderContext.put("orderName", orderName);
 		processOrderContext.put("fileNo", fileNo);
 		processOrderContext.put("refNo", refNo);
 		processOrderContext.put("orderDate", orderDate);
 		processOrderContext.put("estimatedDeliveryDate", estimatedDeliveryDate);
-		
-		
-		result = CreateMaterialPO(dctx, processOrderContext);
-		if(ServiceUtil.isError(result)){
-			Debug.logError("Unable to generate order: " + ServiceUtil.getErrorMessage(result), module);
-			request.setAttribute("_ERROR_MESSAGE_", "Unable to generate order  For party :" + partyId+"....! "+ServiceUtil.getErrorMessage(result));
-			return "error";
+		if(UtilValidate.isNotEmpty(orderId)){
+			result = updateMaterialPO(dctx, processOrderContext);
+			if(ServiceUtil.isError(result)){
+				Debug.logError("Unable to update order: " + ServiceUtil.getErrorMessage(result), module);
+				request.setAttribute("_ERROR_MESSAGE_", "Unable to update order  :" + orderId+"....! "+ServiceUtil.getErrorMessage(result));
+				return "error";
+			}
 		}
+		else{
+			result = CreateMaterialPO(dctx, processOrderContext);
+			if(ServiceUtil.isError(result)){
+				Debug.logError("Unable to generate order: " + ServiceUtil.getErrorMessage(result), module);
+				request.setAttribute("_ERROR_MESSAGE_", "Unable to generate order  For party :" + partyId+"....! "+ServiceUtil.getErrorMessage(result));
+				return "error";
+			}
+		}
+		
 		
 		request.setAttribute("_EVENT_MESSAGE_", "Entry successful for party: "+partyId+" and  PO :"+result.get("orderId"));	  	 
 		
@@ -1511,13 +1516,12 @@ public class MaterialPurchaseServices {
 		String orderName = (String)context.get("orderName");
 		String fileNo = (String)context.get("fileNo");
 		String refNo = (String)context.get("refNo");
-				
+		String orderId = "";		
 	  	String currencyUomId = "INR";
 	  	String shipmentId = (String) context.get("shipmentId");
 	  	String shipmentTypeId = (String) context.get("shipmentTypeId");
 		Timestamp nowTimeStamp = UtilDateTime.nowTimestamp();
 		Timestamp effectiveDate = UtilDateTime.getDayStart(supplyDate);
-		String orderId = "";
 		String billToPartyId="Company";
 		String orderTypeId = (String)context.get("orderTypeId");
 		if(UtilValidate.isEmpty(orderTypeId)){
@@ -1564,12 +1568,12 @@ public class MaterialPurchaseServices {
 				cart.addOrderTerm((String)termMap.get("termTypeId"), null, (BigDecimal)termMap.get("termValue"),(Long)termMap.get("termDays"), null, (String)termMap.get("uomId"), (String)termMap.get("description"));
 			}
 			//set attributes here
-			if(UtilValidate.isNotEmpty(mrnNumber))
+			/*if(UtilValidate.isNotEmpty(mrnNumber))
 				cart.setOrderAttribute("MRN_NUMBER",mrnNumber);
 			if(UtilValidate.isNotEmpty(SInvNumber))
 				cart.setOrderAttribute("SUP_INV_NUMBER",SInvNumber);
 			if(UtilValidate.isNotEmpty(context.get("SInvoiceDate")))
-				cart.setOrderAttribute("SUP_INV_DATE",UtilDateTime.toDateString((Timestamp)context.get("SInvoiceDate"),null));
+				cart.setOrderAttribute("SUP_INV_DATE",UtilDateTime.toDateString((Timestamp)context.get("SInvoiceDate"),null));*/
 			if(UtilValidate.isNotEmpty(PONumber))
 				cart.setOrderAttribute("PO_NUMBER",PONumber);
 			if(UtilValidate.isNotEmpty(fileNo))
@@ -1599,7 +1603,6 @@ public class MaterialPurchaseServices {
 		for (Map<String, Object> prodQtyMap : productQtyList) {
 			List taxList=FastList.newInstance();
 			BigDecimal totalTaxAmt =  BigDecimal.ZERO;
-			
 			if(UtilValidate.isNotEmpty(prodQtyMap.get("productId"))){
 				productId = (String)prodQtyMap.get("productId");
 			}
@@ -1765,15 +1768,11 @@ public class MaterialPurchaseServices {
 				}
 			}
 		
-			//BigDecimal totalPrice = unitPrice.add(totalTaxAmt);
+			BigDecimal totalPrice = unitPrice.add(totalTaxAmt);
 			
-			BigDecimal totalPrice = unitPrice;//as of now For PurchaseOrder listPrice is same like unitPrice
+			//BigDecimal totalPrice = unitPrice;//as of now For PurchaseOrder listPrice is same like unitPrice
 			
-			//BigDecimal totalTaxAmt = BigDecimal.ZERO;
-			Debug.log("==totalPrice==="+totalPrice+"==totalTaxAmt="+totalTaxAmt+"=unitPrice="+unitPrice);
-			//List taxList = (List)priceResult.get("taxList");
-			//Debug.log("=========taxList====="+taxList);
-			//Debug.log("==prodPriceTypeList=====>"+prodPriceTypeList);
+		
 			ShoppingCartItem item = null;
 			try{
 				int itemIndx = cart.addItem(0, ShoppingCartItem.makeItem(Integer.valueOf(0), productId, null,	quantity, unitPrice,
@@ -1813,98 +1812,97 @@ public class MaterialPurchaseServices {
 			
 		orderId = (String) orderCreateResult.get("orderId");
 		//let's create Fright Adhustment here
-		// handle employee subsidies here 
-	    //if(productSubscriptionTypeId.equals("EMP_SUBSIDY")){
-			if(freightCharges.compareTo(BigDecimal.ZERO)>0){
-		    	Map adjustCtx = UtilMisc.toMap("userLogin",userLogin);	  	
-		    	adjustCtx.put("orderId", orderId);
-		    	adjustCtx.put("adjustmentTypeId", "FREIGHT_CHARGES");
-		    	adjustCtx.put("adjustmentAmount", freightCharges);
-		    	Map adjResultMap=FastMap.newInstance();
-			  	 	try{
-			  	 		 adjResultMap = dispatcher.runSync("createAdjustmentForPurchaseOrder",adjustCtx);  		  		 
-			  	 		if (ServiceUtil.isError(adjResultMap)) {
-			  	 			String errMsg =  ServiceUtil.getErrorMessage(adjResultMap);
-			  	 			Debug.logError(errMsg , module);
-			  	 		 return ServiceUtil.returnError(" Error While Creating Adjustment for Purchase Order !");
-			  	 		}
-			  	 	}catch (Exception e) {
-			  			  Debug.logError(e, "Error While Creating Adjustment for Purchase Order ", module);
-			  			  return adjResultMap;			  
-			  	 	}
-		    }
-			if(discount.compareTo(BigDecimal.ZERO)>0){
-		    	Map adjustCtx = UtilMisc.toMap("userLogin",userLogin);	  	
-		    	adjustCtx.put("orderId", orderId);
-		    	adjustCtx.put("adjustmentTypeId", "DISCOUNT");
-		    	adjustCtx.put("adjustmentAmount", discount);
-		    	Map adjResultMap=FastMap.newInstance();
-			  	 	try{
-			  	 		 adjResultMap = dispatcher.runSync("createAdjustmentForPurchaseOrder",adjustCtx);  		  		 
-			  	 		if (ServiceUtil.isError(adjResultMap)) {
-			  	 			String errMsg =  ServiceUtil.getErrorMessage(adjResultMap);
-			  	 			Debug.logError(errMsg , module);
-			  	 		 return ServiceUtil.returnError(" Error While discount Adjustment for Purchase Order !");
-			  	 		}
-			  	 	}catch (Exception e) {
-			  			  Debug.logError(e, "Error While Creating discount Adjustment for Purchase Order ", module);
-			  			  return adjResultMap;			  
-			  	 	}
-		    }
-			if(insurence.compareTo(BigDecimal.ZERO)>0){
-		    	Map adjustCtx = UtilMisc.toMap("userLogin",userLogin);	  	
-		    	adjustCtx.put("orderId", orderId);
-		    	adjustCtx.put("adjustmentTypeId", "INSURENCE");
-		    	adjustCtx.put("adjustmentAmount", insurence);
-		    	Map adjResultMap=FastMap.newInstance();
-			  	 	try{
-			  	 		 adjResultMap = dispatcher.runSync("createAdjustmentForPurchaseOrder",adjustCtx);  		  		 
-			  	 		if (ServiceUtil.isError(adjResultMap)) {
-			  	 			String errMsg =  ServiceUtil.getErrorMessage(adjResultMap);
-			  	 			Debug.logError(errMsg , module);
-			  	 		 return ServiceUtil.returnError(" Error While discount Adjustment for Purchase Order !");
-			  	 		}
-			  	 	}catch (Exception e) {
-			  			  Debug.logError(e, "Error While Creating discount Adjustment for Purchase Order ", module);
-			  			  return adjResultMap;			  
-			  	 	}
-		    }
-			if(packAndFowdg.compareTo(BigDecimal.ZERO)>0){
-		    	Map adjustCtx = UtilMisc.toMap("userLogin",userLogin);	  	
-		    	adjustCtx.put("orderId", orderId);
-		    	adjustCtx.put("adjustmentTypeId", "PACKAndFOWDG");
-		    	adjustCtx.put("adjustmentAmount", packAndFowdg);
-		    	Map adjResultMap=FastMap.newInstance();
-			  	 	try{
-			  	 		 adjResultMap = dispatcher.runSync("createAdjustmentForPurchaseOrder",adjustCtx);  		  		 
-			  	 		if (ServiceUtil.isError(adjResultMap)) {
-			  	 			String errMsg =  ServiceUtil.getErrorMessage(adjResultMap);
-			  	 			Debug.logError(errMsg , module);
-			  	 		 return ServiceUtil.returnError(" Error While packAndFowdg Adjustment for Purchase Order !");
-			  	 		}
-			  	 	}catch (Exception e) {
-			  			  Debug.logError(e, "Error While Creating packAndFowdg Adjustment for Purchase Order ", module);
-			  			  return adjResultMap;			  
-			  	 	}
-		    }
-			if(otherCharges.compareTo(BigDecimal.ZERO)>0){
-		    	Map adjustCtx = UtilMisc.toMap("userLogin",userLogin);	  	
-		    	adjustCtx.put("orderId", orderId);
-		    	adjustCtx.put("adjustmentTypeId", "OTHERCHARGES"); 
-		    	adjustCtx.put("adjustmentAmount", otherCharges);
-		    	Map adjResultMap=FastMap.newInstance();
-			  	 	try{
-			  	 		 adjResultMap = dispatcher.runSync("createAdjustmentForPurchaseOrder",adjustCtx);  		  		 
-			  	 		if (ServiceUtil.isError(adjResultMap)) {
-			  	 			String errMsg =  ServiceUtil.getErrorMessage(adjResultMap);
-			  	 			Debug.logError(errMsg , module);
-			  	 		 return ServiceUtil.returnError(" Error While otherCharges Adjustment for Purchase Order !");
-			  	 		}
-			  	 	}catch (Exception e) {
-			  			  Debug.logError(e, "Error While Creating otherCharges Adjustment for Purchase Order ", module);
-			  			  return adjResultMap;			  
-			  	 	}
-		    }
+    	 
+		if(freightCharges.compareTo(BigDecimal.ZERO)>0){
+	    	Map adjustCtx = UtilMisc.toMap("userLogin",userLogin);	  	
+	    	adjustCtx.put("orderId", orderId);
+	    	adjustCtx.put("orderAdjustmentTypeId", "COGS_FREIGHT");
+	    	adjustCtx.put("amount", freightCharges);
+	    	Map adjResultMap=FastMap.newInstance();
+		  	 	try{
+		  	 		adjResultMap = dispatcher.runSync("createOrderAdjustment",adjustCtx);  		  		 
+		  	 		if (ServiceUtil.isError(adjResultMap)) {
+		  	 			String errMsg =  ServiceUtil.getErrorMessage(adjResultMap);
+		  	 			Debug.logError(errMsg , module);
+		  	 			return ServiceUtil.returnError(" Error While Creating Adjustment for Purchase Order !");
+		  	 		}
+		  	 	}catch (Exception e) {
+		  			  Debug.logError(e, "Error While Creating Adjustment for Purchase Order ", module);
+		  			  return adjResultMap;			  
+		  	 	}
+	    }
+		if(discount.compareTo(BigDecimal.ZERO)>0){
+	    	Map adjustCtx = UtilMisc.toMap("userLogin",userLogin);	  	
+	    	adjustCtx.put("orderId", orderId);
+	    	adjustCtx.put("orderAdjustmentTypeId", "COGS_DISC");
+	    	adjustCtx.put("amount", discount);
+	    	Map adjResultMap=FastMap.newInstance();
+	  	 	try{
+	  	 		adjResultMap = dispatcher.runSync("createOrderAdjustment",adjustCtx);  		  		 
+	  	 		if (ServiceUtil.isError(adjResultMap)) {
+	  	 			String errMsg =  ServiceUtil.getErrorMessage(adjResultMap);
+	  	 			Debug.logError(errMsg , module);
+	  	 			return ServiceUtil.returnError(" Error While discount Adjustment for Purchase Order !");
+	  	 		}
+	  	 	}catch (Exception e) {
+	  			  Debug.logError(e, "Error While Creating discount Adjustment for Purchase Order ", module);
+	  			  return adjResultMap;			  
+	  	 	}
+	    }
+		if(insurence.compareTo(BigDecimal.ZERO)>0){
+	    	Map adjustCtx = UtilMisc.toMap("userLogin",userLogin);	  	
+	    	adjustCtx.put("orderId", orderId);
+	    	adjustCtx.put("orderAdjustmentTypeId", "COGS_INSURANCE");
+	    	adjustCtx.put("amount", insurence);
+	    	Map adjResultMap=FastMap.newInstance();
+		  	 	try{
+		  	 		 adjResultMap = dispatcher.runSync("createOrderAdjustment",adjustCtx);  		  		 
+		  	 		if (ServiceUtil.isError(adjResultMap)) {
+		  	 			String errMsg =  ServiceUtil.getErrorMessage(adjResultMap);
+		  	 			Debug.logError(errMsg , module);
+		  	 		 return ServiceUtil.returnError(" Error While discount Adjustment for Purchase Order !");
+		  	 		}
+		  	 	}catch (Exception e) {
+		  			  Debug.logError(e, "Error While Creating discount Adjustment for Purchase Order ", module);
+		  			  return adjResultMap;			  
+		  	 	}
+	    }
+		if(packAndFowdg.compareTo(BigDecimal.ZERO)>0){
+	    	Map adjustCtx = UtilMisc.toMap("userLogin",userLogin);	  	
+	    	adjustCtx.put("orderId", orderId);
+	    	adjustCtx.put("orderAdjustmentTypeId", "COGS_PCK_FWD");
+	    	adjustCtx.put("amount", packAndFowdg);
+	    	Map adjResultMap=FastMap.newInstance();
+		  	 	try{
+		  	 		 adjResultMap = dispatcher.runSync("createOrderAdjustment",adjustCtx);  		  		 
+		  	 		if (ServiceUtil.isError(adjResultMap)) {
+		  	 			String errMsg =  ServiceUtil.getErrorMessage(adjResultMap);
+		  	 			Debug.logError(errMsg , module);
+		  	 		 return ServiceUtil.returnError(" Error While packAndFowdg Adjustment for Purchase Order !");
+		  	 		}
+		  	 	}catch (Exception e) {
+		  			  Debug.logError(e, "Error While Creating packAndFowdg Adjustment for Purchase Order ", module);
+		  			  return adjResultMap;			  
+		  	 	}
+	    }
+		if(otherCharges.compareTo(BigDecimal.ZERO)>0){
+	    	Map adjustCtx = UtilMisc.toMap("userLogin",userLogin);	  	
+	    	adjustCtx.put("orderId", orderId);
+	    	adjustCtx.put("orderAdjustmentTypeId", "COGS_OTH_CHARGES"); 
+	    	adjustCtx.put("amount", otherCharges);
+	    	Map adjResultMap=FastMap.newInstance();
+		  	 	try{
+		  	 		 adjResultMap = dispatcher.runSync("createOrderAdjustment",adjustCtx);  		  		 
+		  	 		if (ServiceUtil.isError(adjResultMap)) {
+		  	 			String errMsg =  ServiceUtil.getErrorMessage(adjResultMap);
+		  	 			Debug.logError(errMsg , module);
+		  	 		 return ServiceUtil.returnError(" Error While otherCharges Adjustment for Purchase Order !");
+		  	 		}
+		  	 	}catch (Exception e) {
+		  			  Debug.logError(e, "Error While Creating otherCharges Adjustment for Purchase Order ", module);
+		  			  return adjResultMap;			  
+		  	 	}
+	    }
 			
 			/*String mrnNumber = (String) context.get("mrnNumber");
 		  	String PONumber=(String) context.get("PONumber");
@@ -1930,48 +1928,6 @@ public class MaterialPurchaseServices {
 			  	 	}
 			}
 			
-			/*try{
-			GenericValue orderAttribute = delegator.makeValue("OrderAttribute");
-			orderAttribute.set("orderId", orderId);
-			orderAttribute.set("attrName", "MRN_NUMBER");
-			orderAttribute.set("attrValue", mrnNumber);
-			delegator.createOrStore(orderAttribute);
-			}catch (Exception e) {
-				  Debug.logError(e, "Error While Creating Attribute(MRN_NUMBER)  for Purchase Order ", module);
-				  return ServiceUtil.returnError("Error While Creating Attribute(MRN_NUMBER)  for Purchase Order : "+orderId);
-	  	 	}
-			try{
-				GenericValue orderAttribute = delegator.makeValue("OrderAttribute");
-				orderAttribute.set("orderId", orderId);
-				orderAttribute.set("attrName", "SUP_INV_NUMBER");
-				orderAttribute.set("attrValue", SInvNumber);
-				delegator.createOrStore(orderAttribute);
-				}catch (Exception e) {
-					  Debug.logError(e, "Error While Creating Attribute(SUP_INV_NUMBER)  for Purchase Order ", module);
-					  return ServiceUtil.returnError("Error While Creating Attribute(SUP_INV_NUMBER)  for Purchase Order : "+orderId);
-		  	 	}
-				//supplier invoice date
-				try{
-					GenericValue orderAttribute = delegator.makeValue("OrderAttribute");
-					orderAttribute.set("orderId", orderId);
-					orderAttribute.set("attrName", "SUP_INV_DATE");
-					orderAttribute.set("attrValue", UtilDateTime.toDateString((Timestamp)context.get("SInvoiceDate"),null));
-					delegator.createOrStore(orderAttribute);
-					}catch (Exception e) {
-						  Debug.logError(e, "Error While Creating Attribute(SUP_INV_DATE)  for Purchase Order ", module);
-						  return ServiceUtil.returnError("Error While Creating Attribute(SUP_INV_DATE)  for Purchase Order : "+orderId);
-			  	 	}
-				
-			try{
-				GenericValue orderAttribute = delegator.makeValue("OrderAttribute");
-				orderAttribute.set("orderId", orderId);
-				orderAttribute.set("attrName", "PO_NUMBER");
-				orderAttribute.set("attrValue", PONumber);
-				delegator.createOrStore(orderAttribute);
-				}catch (Exception e) {
-					  Debug.logError(e, "Error While Creating Attribute(PO_NUMBER)  for Purchase Order ", module);
-					  return ServiceUtil.returnError("Error While Creating Attribute(PO_NUMBER)  for Purchase Order : "+orderId);
-		  	 	}*/
 				//update PurposeType
 				try{
 				GenericValue orderHeaderPurpose = delegator.findOne("OrderHeader", UtilMisc.toMap("orderId", orderId), false);
@@ -1984,7 +1940,7 @@ public class MaterialPurchaseServices {
 				
 			
 		// let's handle order rounding here
-	    try{   
+	    /*try{   
 	    	Map roundAdjCtx = UtilMisc.toMap("userLogin",userLogin);	  	
 	    	roundAdjCtx.put("orderId", orderId);
 	  	 	result = dispatcher.runSync("adjustRoundingDiffForOrder",roundAdjCtx);  		  		 
@@ -1997,91 +1953,305 @@ public class MaterialPurchaseServices {
 		 		Debug.logError(e, "Error while Creating Order", module);
 	        return ServiceUtil.returnError(e+"==Error While  Rounding Order !");
 	  		//return resultMap;			  
+	  	}*/
+	    
+		}catch(Exception e){
+			try {
+				// only rollback the transaction if we started one...
+	  			TransactionUtil.rollback(beganTransaction, "Error while calling services", e);
+			} catch (GenericEntityException e2) {
+	  			Debug.logError(e2, "Could not rollback transaction: " + e2.toString(), module);
+	  		}
+			return ServiceUtil.returnError(e.toString()); 
+		}
+		finally {
+	  		  // only commit the transaction if we started one... this will throw an exception if it fails
+	  		  try {
+	  			  TransactionUtil.commit(beganTransaction);
+	  		  } catch (GenericEntityException e) {
+	  			  Debug.logError(e, "Could not commit transaction for entity engine error occurred while fetching data", module);
+	  		  }
 	  	}
-	    // approve the order
-	    if (UtilValidate.isNotEmpty(orderId)) {
-	        //boolean approved = OrderChangeHelper.approveOrder(dispatcher, userLogin, orderId);
-	        
-	       	/*try{
-	       		result = dispatcher.runSync("createInvoiceForOrderAllItems", UtilMisc.<String, Object>toMap("orderId", orderId,"eventDate", effectiveDate,"userLogin", userLogin));
-	        	if (ServiceUtil.isError(result)) {
-	        		Debug.logError("There was an error while creating  the invoice: " + ServiceUtil.getErrorMessage(result), module);
-	            	return ServiceUtil.returnError("There was an error while creating the invoice: " + ServiceUtil.getErrorMessage(result));          	            
-	            }
-	        	Debug.log("result invoiceId  #################################"+result);
-	        	Boolean enableAdvancePaymentApp  = Boolean.FALSE;
-	        	try{        	 	
-	        		GenericValue tenantConfigEnableAdvancePaymentApp = delegator.findOne("TenantConfiguration", UtilMisc.toMap("propertyTypeEnumId","LMS", "propertyName","enableAdvancePaymentApp"), true);
-	           		if (UtilValidate.isNotEmpty(tenantConfigEnableAdvancePaymentApp) && (tenantConfigEnableAdvancePaymentApp.getString("propertyValue")).equals("Y")) {
-	           			enableAdvancePaymentApp = Boolean.TRUE;
-	           		} 
-	   	        }catch (GenericEntityException e) {
-	   	        	Debug.logError(e, module);
-	   			}
-	      		if(context.get("enableAdvancePaymentApp") != null){
-	      			enableAdvancePaymentApp = (Boolean)context.get("enableAdvancePaymentApp");
-	       		}
-	   	      	if(enableAdvancePaymentApp){
-	   	      		Map<String, Object> invoiceCtx = UtilMisc.<String, Object>toMap("invoiceId", result.get("invoiceId"));
-		            invoiceCtx.put("userLogin", userLogin);
-		            //use Tenant configuration
-		            Boolean enablePurchseInvoiceReady  = Boolean.FALSE;
-		        	try{        	 	
-		        		GenericValue tenantConfigEnableAdvancePaymentApp = delegator.findOne("TenantConfiguration", UtilMisc.toMap("propertyTypeEnumId","PURCHASE_OR_STORES", "propertyName","Enable-PurchseInv-ReadyStatus"), true);
-		           		if (UtilValidate.isNotEmpty(tenantConfigEnableAdvancePaymentApp) && (tenantConfigEnableAdvancePaymentApp.getString("propertyValue")).equals("Y")) {
-		           			enableAdvancePaymentApp = Boolean.TRUE;
-		           		} 
-		   	        }catch (GenericEntityException e) {
-		   	        	Debug.logError(e, module);
-		   			}
-			   	 	if(enablePurchseInvoiceReady){
-			   	 	 invoiceCtx.put("statusId","INVOICE_READY");
-			   	 	}else{
-			   	 	 invoiceCtx.put("statusId","INVOICE_IN_PROCESS");
-			   	 	}
-		           
-		            try{
-		            	Map<String, Object> invoiceResult = dispatcher.runSync("setInvoiceStatus",invoiceCtx);
-		             	if (ServiceUtil.isError(invoiceResult)) {
-		             		Debug.logError(invoiceResult.toString(), module);
-		                    return ServiceUtil.returnError(null, null, null, invoiceResult);
-		                }	             	
-		            }catch(GenericServiceException e){
-		             	 Debug.logError(e, e.toString(), module);
-		                 return ServiceUtil.returnError(e.toString());
-		            }  
-		            // apply invoice if any adavance payments from this  party
-		            //raising DebitNote Here for UNITS PURCHASES  
-		            
-		            if("INTER_PRCHSE_CHANNEL".equals(salesChannel)){
-			    		  Map paymentInputMap = FastMap.newInstance();
-				  		  paymentInputMap.put("userLogin", userLogin);
-				  		  paymentInputMap.put("paymentTypeId", "EXPENSE_PAYOUT");
-				  		 // paymentInputMap.put("paymentType", "SALES_PAYIN");
-				  		  paymentInputMap.put("paymentMethodTypeId", "DEBITNOTE_TRNSF");
-				  		  paymentInputMap.put("paymentPurposeType","INTER_PRCHSE_CHANNEL");
-				  		  paymentInputMap.put("statusId", "PMNT_NOT_PAID");
-				  		  paymentInputMap.put("invoiceIds",UtilMisc.toList((String)result.get("invoiceId")));
-				  		  Map paymentResult = dispatcher.runSync("createCreditNoteOrDebitNoteForInvoice", paymentInputMap);
-				  		  if(ServiceUtil.isError(paymentResult)){
-			    			     Debug.logError(paymentResult.toString(), module);
-			    			     return ServiceUtil.returnError("There was an error in service createCreditNoteOrDebitNoteForInvoice" + ServiceUtil.getErrorMessage(paymentResult));  
-				  		  }
-				  		  List paymentIds = (List)paymentResult.get("paymentsList");
-	  	                  Debug.log("+++++++===paymentIds===AfterDEbitNote=="+paymentIds);
-			        }else{
-		     			Map<String, Object> resultPaymentApp = dispatcher.runSync("settleInvoiceAndPayments", UtilMisc.<String, Object>toMap("invoiceId", (String)result.get("invoiceId"),"userLogin", userLogin));
-		     			if (ServiceUtil.isError(resultPaymentApp)) {						  
-		     				Debug.logError("There was an error while  adjusting advance payment" + ServiceUtil.getErrorMessage(resultPaymentApp), module);			             
-		     	            return ServiceUtil.returnError("There was an error while  adjusting advance payment" + ServiceUtil.getErrorMessage(resultPaymentApp));  
-		     		    }
-			        }
-	    		}//end of advance payment appl   
-	        }catch (Exception e) {
-	        	Debug.logError(e, module);
-	            return ServiceUtil.returnError(e.toString()); 
-	        }*/
-	    }
+		result.put("orderId", orderId);
+		return result;
+
+	}
+   	
+   	
+   	public static Map<String, Object> updateMaterialPO(DispatchContext ctx,Map<String, ? extends Object> context) {
+		
+	    Delegator delegator = ctx.getDelegator();
+		LocalDispatcher dispatcher = ctx.getDispatcher();
+	    GenericValue userLogin = (GenericValue) context.get("userLogin");
+	    Map<String, Object> result = ServiceUtil.returnSuccess();
+	    List<Map> productQtyList = (List) context.get("productQtyList");
+	    Timestamp supplyDate = (Timestamp) context.get("supplyDate");
+	    Locale locale = (Locale) context.get("locale");
+	    String productStoreId = (String) context.get("productStoreId");
+	  	String salesChannel = (String) context.get("salesChannel");
+	  	String partyId = (String) context.get("partyId");
+	  	String billFromPartyId = (String) context.get("billFromPartyId");
+		String issueToDeptId = (String) context.get("issueToDeptId");
+	  	List termsList = (List)context.get("termsList");
+	  	boolean beganTransaction = false;
+	  	BigDecimal freightCharges = (BigDecimal) context.get("freightCharges");
+	  	BigDecimal discount = (BigDecimal) context.get("discount");
+	  	BigDecimal packAndFowdg = (BigDecimal) context.get("packAndFowdg");
+		BigDecimal otherCharges = (BigDecimal) context.get("otherCharges");
+		BigDecimal insurence = (BigDecimal) context.get("insurence");
+	  	String PONumber=(String) context.get("PONumber");
+	  	String orderId = (String) context.get("orderId");
+        Timestamp orderDate = (Timestamp)context.get("orderDate");
+        Timestamp estimatedDeliveryDate = (Timestamp)context.get("estimatedDeliveryDate");
+		String orderName = (String)context.get("orderName");
+		String fileNo = (String)context.get("fileNo");
+		String refNo = (String)context.get("refNo");
+	  	String currencyUomId = "INR";
+		Timestamp nowTimeStamp = UtilDateTime.nowTimestamp();
+		Timestamp effectiveDate = UtilDateTime.getDayStart(supplyDate);
+		String billToPartyId="Company";
+		String orderTypeId = (String)context.get("orderTypeId");
+		if(UtilValidate.isEmpty(orderTypeId)){
+			orderTypeId = "PURCHASE_ORDER";
+		}
+		if (UtilValidate.isEmpty(partyId)) {
+			Debug.logError("Cannot create order without partyId: "+ partyId, module);
+			return ServiceUtil.returnError("partyId is empty");
+		}
+		GenericValue product =null;
+		String productPriceTypeId = null;
+		
+		try {
+				
+			GenericValue orderHeader = delegator.findOne("OrderHeader", UtilMisc.toMap("orderId", orderId), false);
+			
+			orderHeader.set("orderTypeId", orderTypeId);
+			orderHeader.set("orderName", orderName);
+			orderHeader.set("externalId", PONumber);
+			orderHeader.set("salesChannelEnumId", salesChannel);
+			orderHeader.set("orderDate", orderDate);
+			orderHeader.set("estimatedDeliveryDate", estimatedDeliveryDate);
+			orderHeader.set("productStoreId", productStoreId);
+			orderHeader.store();
+			
+			//set orderAttributes and terms
+			
+			
+			if(UtilValidate.isNotEmpty(fileNo)){
+				GenericValue orderAttr = delegator.makeValue("OrderAttribute");        	 
+				orderAttr.set("orderId", orderId);
+				orderAttr.set("attrName", "FILE_NUMBER");
+				orderAttr.set("attrValue", fileNo);
+				delegator.createOrStore(orderAttr);
+			}
+			
+			if(UtilValidate.isNotEmpty(refNo)){
+				GenericValue orderAttr = delegator.makeValue("OrderAttribute");        	 
+				orderAttr.set("orderId", orderId);
+				orderAttr.set("attrName", "REF_NUMBER");
+				orderAttr.set("attrValue", refNo);
+				delegator.createOrStore(orderAttr);
+			}
+			
+			List<GenericValue> orderTerms = delegator.findList("OrderTerm", EntityCondition.makeCondition("orderId", EntityOperator.EQUALS, orderId), null, null, null, false);
+			delegator.removeAll(orderTerms);
+			for(int i=0;i<termsList.size();i++){
+				Map<String,Object> termMap = FastMap.newInstance();
+				termMap = (Map)termsList.get(i);
+				GenericValue orderTerm = delegator.makeValue("OrderTerm");        	 
+				orderTerm.set("orderId", orderId);
+				orderTerm.set("orderItemSeqId", "_NA_");
+				orderTerm.set("termTypeId", (String)termMap.get("termTypeId"));
+				orderTerm.set("termDays", (Long)termMap.get("termDays"));
+				orderTerm.set("termValue", (BigDecimal)termMap.get("termValue"));
+				orderTerm.set("description", (String)termMap.get("description"));
+				orderTerm.set("uomId", (String)termMap.get("uomId"));
+				delegator.createOrStore(orderTerm);
+			}
+			
+		} catch (Exception e) {
+			
+			Debug.logError(e, "Error in updating order", module);
+			return ServiceUtil.returnError("Error in updating order");
+		}
+		String productId = "";
+		
+		List<GenericValue> prodPriceTypeList = FastList.newInstance();
+		try{
+			beganTransaction = TransactionUtil.begin(7200);
+		
+			List<GenericValue> orderItems = delegator.findList("OrderItem", EntityCondition.makeCondition("orderId", EntityOperator.EQUALS, orderId), null, null, null, false);
+			BigDecimal totalBedAmount = BigDecimal.ZERO;
+			BigDecimal totalBedCessAmount = BigDecimal.ZERO;
+			BigDecimal totalBedSecCessAmount = BigDecimal.ZERO;
+			BigDecimal totalVatAmount = BigDecimal.ZERO;
+			BigDecimal totalCstAmount = BigDecimal.ZERO;
+			for (Map<String, Object> prodQtyMap : productQtyList) {
+				
+				List taxList=FastList.newInstance();
+				BigDecimal totalTaxAmt =  BigDecimal.ZERO;
+				
+				if(UtilValidate.isNotEmpty(prodQtyMap.get("productId"))){
+					productId = (String)prodQtyMap.get("productId");
+				}
+				List<GenericValue> orderItem = EntityUtil.filterByCondition(orderItems, EntityCondition.makeCondition("productId", EntityOperator.EQUALS, productId));
+				
+				GenericValue orderItemDetail = EntityUtil.getFirst(orderItem);
+				if(UtilValidate.isNotEmpty(orderItemDetail)){
+					BigDecimal quantity = BigDecimal.ZERO;
+					BigDecimal unitPrice = BigDecimal.ZERO;
+					BigDecimal vatAmount = BigDecimal.ZERO;
+					BigDecimal cstAmount = BigDecimal.ZERO;
+					BigDecimal bedAmount = BigDecimal.ZERO;
+					BigDecimal bedcessAmount = BigDecimal.ZERO;
+					BigDecimal bedseccessAmount = BigDecimal.ZERO;
+					BigDecimal unitListPrice = BigDecimal.ZERO;
+					if(UtilValidate.isNotEmpty(prodQtyMap.get("quantity"))){
+						quantity = (BigDecimal)prodQtyMap.get("quantity");
+						orderItemDetail.set("quantity", quantity);
+					}
+					if(UtilValidate.isNotEmpty(prodQtyMap.get("unitPrice"))){
+						unitPrice = (BigDecimal)prodQtyMap.get("unitPrice");
+						orderItemDetail.set("unitPrice", unitPrice);
+						unitListPrice = unitListPrice.add(unitPrice);
+					}
+					if(UtilValidate.isNotEmpty(prodQtyMap.get("vatAmount"))){
+						vatAmount = (BigDecimal)prodQtyMap.get("vatAmount");
+						if(vatAmount.compareTo(BigDecimal.ZERO)>0){
+							if(UtilValidate.isNotEmpty(prodQtyMap.get("vatPercent"))){
+								BigDecimal vatPercent = (BigDecimal)prodQtyMap.get("vatPercent");
+								orderItemDetail.set("vatPercent", vatPercent);
+								orderItemDetail.set("vatAmount", vatAmount);
+							}
+							unitListPrice = unitListPrice.add(vatAmount.divide(quantity, 3, salestaxRounding));
+							totalVatAmount = totalVatAmount.add(vatAmount);
+						}
+						
+					}
+					if(UtilValidate.isNotEmpty(prodQtyMap.get("cstAmount"))){
+						cstAmount = (BigDecimal)prodQtyMap.get("cstAmount");
+						if(cstAmount.compareTo(BigDecimal.ZERO)>0){
+							if(UtilValidate.isNotEmpty(prodQtyMap.get("cstPercent"))){
+								BigDecimal cstPercent = (BigDecimal)prodQtyMap.get("cstPercent");
+								orderItemDetail.set("cstPercent", cstPercent);
+								orderItemDetail.set("cstAmount", cstAmount);
+							}
+							unitListPrice = unitListPrice.add(cstAmount.divide(quantity, 3, salestaxRounding));
+							totalCstAmount = totalCstAmount.add(cstAmount);
+						}
+					}
+					if(UtilValidate.isNotEmpty(prodQtyMap.get("bedAmount"))){
+						bedAmount = (BigDecimal)prodQtyMap.get("bedAmount");
+						if(bedAmount.compareTo(BigDecimal.ZERO)>0){
+							if(UtilValidate.isNotEmpty(prodQtyMap.get("excisePercent"))){
+								BigDecimal excisePercent = (BigDecimal)prodQtyMap.get("excisePercent");
+								orderItemDetail.set("bedPercent", excisePercent);
+								orderItemDetail.set("bedAmount", bedAmount);
+							}
+							unitListPrice = unitListPrice.add(bedAmount.divide(quantity, 3, salestaxRounding));
+							totalBedAmount = totalBedAmount.add(bedAmount);
+						}
+					}
+					if(UtilValidate.isNotEmpty(prodQtyMap.get("bedCessAmount"))){
+						bedcessAmount = (BigDecimal)prodQtyMap.get("bedCessAmount");
+						if(bedcessAmount.compareTo(BigDecimal.ZERO)>0){
+							if(UtilValidate.isNotEmpty(prodQtyMap.get("bedCessPercent"))){
+								BigDecimal bedcessPercent = (BigDecimal)prodQtyMap.get("bedCessPercent");
+								orderItemDetail.set("bedcessPercent", bedcessPercent);
+								orderItemDetail.set("bedcessAmount", bedcessAmount);
+							}
+							unitListPrice = unitListPrice.add(bedcessAmount.divide(quantity, 3, salestaxRounding));
+							totalBedCessAmount = totalBedCessAmount.add(bedcessAmount);
+						}
+					}
+					if(UtilValidate.isNotEmpty(prodQtyMap.get("bedCessAmount"))){
+						bedseccessAmount = (BigDecimal)prodQtyMap.get("bedSecCessAmount");
+						if(bedseccessAmount.compareTo(BigDecimal.ZERO)>0){
+							if(UtilValidate.isNotEmpty(prodQtyMap.get("bedSecCessPercent"))){
+								BigDecimal bedseccessPercent = (BigDecimal)prodQtyMap.get("bedSecCessPercent");
+								orderItemDetail.set("bedseccessPercent", bedseccessPercent);
+								orderItemDetail.set("bedseccessAmount", bedseccessAmount);
+							}
+							unitListPrice = unitListPrice.add(bedseccessAmount.divide(quantity, 3, salestaxRounding));
+							totalBedSecCessAmount = totalBedSecCessAmount.add(bedseccessAmount);
+						}
+					}
+					orderItemDetail.set("unitListPrice", unitListPrice);
+					orderItemDetail.set("changeByUserLoginId", userLogin.getString("userLoginId"));
+					orderItemDetail.set("changeDatetime", UtilDateTime.nowTimestamp());
+					orderItemDetail.store();
+				}
+			}
+			
+			List<GenericValue> orderAdjustments = delegator.findList("OrderAdjustment", EntityCondition.makeCondition("orderId", EntityOperator.EQUALS, orderId), null, null, null, false);
+			List<Map> adjTypeItems = FastList.newInstance();
+			adjTypeItems.add(UtilMisc.toMap("orderAdjustmentTypeId", "COGS_FREIGHT", "amount", freightCharges));
+			adjTypeItems.add(UtilMisc.toMap("orderAdjustmentTypeId", "COGS_DISC", "amount", discount));
+			adjTypeItems.add(UtilMisc.toMap("orderAdjustmentTypeId", "COGS_INSURANCE", "amount", packAndFowdg));
+			adjTypeItems.add(UtilMisc.toMap("orderAdjustmentTypeId", "COGS_PCK_FWD", "amount", insurence));
+			adjTypeItems.add(UtilMisc.toMap("orderAdjustmentTypeId", "COGS_OTH_CHARGES", "amount", otherCharges));
+			adjTypeItems.add(UtilMisc.toMap("orderAdjustmentTypeId", "BED_PUR", "amount", totalBedAmount));
+			adjTypeItems.add(UtilMisc.toMap("orderAdjustmentTypeId", "BEDCESS_PUR", "amount", totalBedCessAmount));
+			adjTypeItems.add(UtilMisc.toMap("orderAdjustmentTypeId", "BEDSECCESS_PUR", "amount", totalBedSecCessAmount));
+			adjTypeItems.add(UtilMisc.toMap("orderAdjustmentTypeId", "VAT_PUR", "amount", totalVatAmount));
+			adjTypeItems.add(UtilMisc.toMap("orderAdjustmentTypeId", "CST_PUR", "amount", totalCstAmount));
+			
+			for(Map entryMap : adjTypeItems){
+				String orderAdjustmentTypeId = (String)entryMap.get("orderAdjustmentTypeId");
+				BigDecimal amount = (BigDecimal) entryMap.get("amount");
+				List<GenericValue> adjItems = EntityUtil.filterByCondition(orderAdjustments, EntityCondition.makeCondition("orderAdjustmentTypeId", EntityOperator.EQUALS, orderAdjustmentTypeId));
+				if(UtilValidate.isNotEmpty(adjItems) && amount.compareTo(BigDecimal.ZERO)==0){
+					delegator.removeAll(adjItems);
+				}
+				else{
+					
+					if(amount.compareTo(BigDecimal.ZERO)>0){
+
+						if(UtilValidate.isNotEmpty(adjItems)){
+							GenericValue eachAdjItem = EntityUtil.getFirst(adjItems);
+							eachAdjItem.set("amount", amount);
+							eachAdjItem.store();
+						}
+						else{
+							Map adjustCtx = FastMap.newInstance();	  	
+							adjustCtx.put("userLogin", userLogin);
+							adjustCtx.put("orderId", orderId);
+							adjustCtx.put("orderAdjustmentTypeId", orderAdjustmentTypeId);
+							adjustCtx.put("amount", amount);
+							Map adjResultMap=FastMap.newInstance();
+				  	 		try{
+				  	 			adjResultMap = dispatcher.runSync("createOrderAdjustment",adjustCtx);
+					  	 		if (ServiceUtil.isError(adjResultMap)) {
+					  	 			String errMsg =  ServiceUtil.getErrorMessage(adjResultMap);
+					  	 			Debug.logError(errMsg , module);
+					  	 			return ServiceUtil.returnError(" Error While Creating Adjustment for Purchase Order !");
+					  	 		}
+				  	 		}catch (Exception e) {
+				  			  Debug.logError(e, "Error While Creating Adjustment for Purchase Order ", module);
+				  			  return adjResultMap;			  
+				  	 		}
+				  	 		
+						}
+					}
+				}
+			}
+			
+			Map resetTotalCtx = UtilMisc.toMap("userLogin",userLogin);	  	
+			resetTotalCtx.put("orderId", orderId);
+			resetTotalCtx.put("userLogin", userLogin);
+			Map resetMap=FastMap.newInstance();
+  	 		try{
+  	 			resetMap = dispatcher.runSync("resetGrandTotal",resetTotalCtx);  		  		 
+	  	 		if (ServiceUtil.isError(resetMap)) {
+	  	 			String errMsg =  ServiceUtil.getErrorMessage(resetMap);
+	  	 			Debug.logError(errMsg , module);
+	  	 			return ServiceUtil.returnError(" Error While reseting order totals for Purchase Order !"+orderId);
+	  	 		}
+  	 		}catch (Exception e) {
+  	 			Debug.logError(e, " Error While reseting order totals for Purchase Order !"+orderId, module);
+  	 			return resetMap;			  
+  	 		}
+			
 		}catch(Exception e){
 			try {
 				// only rollback the transaction if we started one...

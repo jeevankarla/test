@@ -138,20 +138,9 @@ if(shipments){
 			newObj.put("ExcisePercent",bedPercent);
 			newObj.put("bedCessPercent",0);
 			newObj.put("bedSecCessPercent",0);
-			/*UPrice
-			amount
-			VatPercent
-			VAT
-			CSTPercent
-			CST
-			ExcisePercent
-			bedCessPercent
-			bedSecCessPercent*/
-			
 			invoiceItemsJSON.add(newObj);
 		
 		}
 	}
 }
 context.invoiceItemsJSON = invoiceItemsJSON;
-Debug.log("invoiceItemsJSON #############"+invoiceItemsJSON);

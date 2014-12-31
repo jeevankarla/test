@@ -242,7 +242,7 @@
      <request-map uri="createPOForQuote">
        <security https="true" auth="true"/>
        <event type="service" path="" invoke="createPOForQuote"></event>
-       <response name="success" type="view" value="ViewMaterialQuote"/>
+       <response name="success" type="request" value="editMaterialPO"/>
        <response name="error" type="view" value="ViewMaterialQuote"/>
      </request-map>
      <request-map uri="MRRreport.pdf">
@@ -450,7 +450,6 @@
      
      <request-map uri="ViewMaterialEnquiry">
        <security https="true" auth="true"/>
-       <event type="service" invoke="processCustRequestParty"/>
        <response name="success" type="view" value="ViewMaterialEnquiry"/>
        <response name="error" type="view" value="ViewMaterialEnquiry"/>
      </request-map>
@@ -686,6 +685,10 @@
         <response name="error" type="view" value="CreateMPO"/>
     </request-map>
    
+   <request-map uri="editMaterialPO">
+   		<security https="true" auth="true"/>
+    	<response name="success" type="view" value="EditMaterialPO"/>
+    </request-map>
    
    
    <request-map uri="StoreReports">
@@ -795,6 +798,7 @@
      <!-- purchaseOrder views -->  
      <view-map name="FindPurchaseOrder" type="screen" page="component://materialmgmt/widget/materialmgmtScreens.xml#FindPurchaseOrder"/>
      <view-map name="CreateMPO" type="screen" page="component://materialmgmt/widget/MaterialPurchaseScreens.xml#CreateMPO"/>
+     <view-map name="EditMaterialPO" type="screen" page="component://materialmgmt/widget/MaterialPurchaseScreens.xml#EditMaterialPO"/>
      
      <view-map name="PurchaseOrderInit" type="screen" page="component://materialmgmt/widget/materialmgmtScreens.xml#PurchaseOrderInit"/>
     <view-map name="FindInterUnitPurchase" type="screen" page="component://materialmgmt/widget/materialmgmtScreens.xml#FindInterUnitPurchase"/>

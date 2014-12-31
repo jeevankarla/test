@@ -154,17 +154,33 @@ function makeDatePicker(fromDateId ,thruDateId){
 		makeDayDatePicker("effectiveDate","fromDateId");
 		makeDayDatePicker("SInvoiceDate","fromDateId");
 	
+		//$(this.target).find('input').autocomplete();
 		
-		$('#ui-datepicker-div').css('clip', 'auto');	
 		$("#supplierId").autocomplete({ source: partyAutoJson }).keydown(function(e){
 			
 		});	
 		$( "input[name*='paymentTermTypeId']" ).autocomplete({ source: paymentTermsJSON });
 		$( "input[name*='deliveryTermTypeId']" ).autocomplete({ source: deliveryTermsJSON });
+		$('#ui-datepicker-div').css('clip', 'auto');	
+		
 	});
 </script>
-
-
+	
+	<#assign orderInfo = {}>
+	<#assign orderAdjInfo = {}>
+	<#assign orderTermInfo = {}>
+	<#assign orderPayTermInfo = []>
+	<#assign orderShipTermInfo = []>
+	<#if orderEditParam?has_content>
+		<#assign orderInfo = orderEditParam.get("orderHeader")?if_exists>
+		<#assign orderAdjInfo = orderEditParam.get("orderAdjustment")?if_exists>
+		<#assign orderTermInfo = orderEditParam.get("orderTerms")?if_exists>
+		<#if orderTermInfo?has_content>
+			<#assign orderPayTermInfo = orderTermInfo.get("paymentTerms")>
+			<#assign orderShipTermInfo = orderTermInfo.get("deliveryTerms")>
+		</#if>
+	</#if>
+	
 	<form id="CreateMPO"  action="<@ofbizUrl>CreateMaterialPO</@ofbizUrl>" name="CreateMPO" method="post">
 	    <div id="wizard-2">
         <h3>PO Information</h3>
@@ -175,14 +191,20 @@ function makeDatePicker(fromDateId ,thruDateId){
 							<td class="label">Order Type(<font color="red">*</font>) :</td>
 						    <td>
 						      	<select name="orderTypeId">
-						      	   <#list orderTypes as orderType>    
-  	    								<option value='${orderType.orderTypeId}'>${orderType.description}</option>
+						      	   <#list orderTypes as orderType>
+						      	   		<#if orderId?exists && (orderInfo.get("orderTypeId") == orderType.orderTypeId)>
+						      	   			<option value='${orderType.orderTypeId}' selected>${orderType.description}</option> 
+						      	   		<#else>
+						      	   			<option value='${orderType.orderTypeId}'>${orderType.description}</option>
+						      	   		</#if>   
+  	    								
 								    </#list> 
 						      	</select>
 						    </td>
 						</tr>
     					<tr>
-						    <td class="label">Vendor(<font color="red">*</font>) :</td>
+						    <td class="label">Vendor(<font color="red">*</font>) : </td>
+						    <input type="hidden" name="orderId" id="orderId"  value="${orderId?if_exists}" />
 						     <input type="hidden" name="productStoreId"  value="${productStoreId?if_exists}" />
 						    <#if changeFlag?exists && changeFlag=='InterUnitPurchase'>
 						       <input type="hidden" name="salesChannel" id="salesChannel" value="INTER_PRCHSE_CHANNEL"/> 
@@ -190,8 +212,24 @@ function makeDatePicker(fromDateId ,thruDateId){
 						       <input type="hidden" name="salesChannel" id="salesChannel" value="MATERIAL_PUR_CHANNEL"/>  
 						    </#if>
 						    <td>
-						      	<input type="text" name="supplierId" id="supplierId" size="18" maxlength="60" />
+						    	<#if orderId?exists && orderInfo.get("supplierId")?exists>
+						    		<input type="text" name="supplierId" id="supplierId" size="18" maxlength="60" value="${orderInfo.get("supplierId")}" readonly/>
+						    		<span class="tooltip"> ${orderInfo.get("supplierName")?if_exists}</span>
+						    	<#else>
+						    		<input type="text" name="supplierId" id="supplierId" size="18" maxlength="60" />
+						    	</#if>
+						      	
 						    </td>
+						</tr>
+						<tr>
+						    <td class="label"><b>PO Date : </b></td>
+						    <td>
+						    	<#if orderId?exists && orderInfo.get("orderDate")?exists>
+						    		<input type="text" name="orderDate" id="orderDate" size="18" maxlength="60" autocomplete="off" value="${orderInfo.get("orderDate")?if_exists}"/>
+						    	<#else>
+							      	<input type="text" name="orderDate" id="orderDate" size="18" maxlength="60" autocomplete="off"/>
+						      	</#if>
+	        				 </td>
 						</tr>
           		        <tr>
 						    <td class="label">Bill To Party :</td>
@@ -203,13 +241,22 @@ function makeDatePicker(fromDateId ,thruDateId){
  						 <tr>
 						    <td class="label"><b>Ref No. :</b></td>
 						    <td>
-						      <input type="text" name="refNo" id="refNo" size="18" maxlength="60" autocomplete="off"/>
+						    	<#if orderId?exists && orderInfo.get("refNo")?exists>
+						    		<input type="text" name="refNo" id="refNo" size="18" maxlength="60" autocomplete="off" value="${orderInfo.get("refNo")?if_exists}"/>
+						    	<#else>
+							      	<input type="text" name="refNo" id="refNo" size="18" maxlength="60" autocomplete="off"/>
+						      	</#if>
+						      
 	        				 </td>
 						</tr>
 						<tr>
 						    <td class="label"><b>Estimated Delivery Date :</b></td>
 						    <td>
-						      <input type="text" name="estimatedDeliveryDate" id="estimatedDeliveryDate" size="18" maxlength="60" autocomplete="off"/>
+						    	<#if orderId?exists && orderInfo.get("estimatedDeliveryDate")?exists>
+						    		<input type="text" name="estimatedDeliveryDate" id="estimatedDeliveryDate" size="18" maxlength="60" autocomplete="off" value="${orderInfo.get("estimatedDeliveryDate")?if_exists}"/>
+						    	<#else>
+						    		<input type="text" name="estimatedDeliveryDate" id="estimatedDeliveryDate" size="18" maxlength="60" autocomplete="off"/>
+							   	</#if> 
 	        				 </td>
 						</tr>
 						<!--<tr>
@@ -219,27 +266,35 @@ function makeDatePicker(fromDateId ,thruDateId){
 	        				 </td>
 						</tr>-->
 						<tr>
-						    <td class="label"><b>PO No :</b></td>
+						    <td class="label"><b>Ext. PO No :</b></td>
 						    <td>
-						      <input type="text" name="PONumber" id="PONumber" size="18" maxlength="60" autocomplete="off"/>
-	        				 </td>
-						</tr>
-						<tr>
-						    <td class="label"><b>PO Date : </b></td>
-						    <td>
-						      <input type="text" name="orderDate" id="orderDate" size="18" maxlength="60" autocomplete="off"/>
+						    	<#if orderId?exists && orderInfo.get("PONumber")?exists>
+						    		<input type="text" name="PONumber" id="PONumber" size="18" maxlength="60" autocomplete="off" value="${orderInfo.get("PONumber")?if_exists}"/>
+						    	<#else>
+						    		<input type="text" name="PONumber" id="PONumber" size="18" maxlength="60" autocomplete="off"/>
+						    	</#if>
 	        				 </td>
 						</tr>
 						<tr>
 						    <td class="label"><b>File No : </b></td>
 						    <td>
-						      <input type="text" name="fileNo" id="fileNo" size="18" maxlength="60" autocomplete="off"/>
+						    	<#if orderId?exists && orderInfo.get("fileNo")?exists>
+						    		<input type="text" name="fileNo" id="fileNo" size="18" maxlength="60" autocomplete="off" value="${orderInfo.get("fileNo")?if_exists}"/>
+						    	<#else>
+						    		<input type="text" name="fileNo" id="fileNo" size="18" maxlength="60" autocomplete="off"/>
+						    	</#if>
+						      
 	        				 </td>
 						</tr>
 				        <tr>
 				            <td class="label"><b> Description :</b></td>
 				            <td>
-	        				   <input class="h3" type="textarea" size="30" maxlength="100" name="orderName" id="orderName" style="width: 200px; height: 50px" />
+				            	<#if orderId?exists && orderInfo.get("orderName")?exists>
+						    		<input type="text" name="orderName" id="orderName" size="18" maxlength="60" autocomplete="off" value="${orderInfo.get("orderName")?if_exists}"/>
+						    	<#else>
+						    		<input class="h3" type="textarea" size="30" maxlength="100" name="orderName" id="orderName" style="width: 200px; height: 50px" />
+						    	</#if>
+	        				   
 	          				</td>
 				        </tr>
 	                  </table>
@@ -257,34 +312,56 @@ function makeDatePicker(fromDateId ,thruDateId){
 					 		        <tr>
 							        	<td align='left' valign='middle' nowrap="nowrap"><div class='h3'>Freight Charges: </div></td>
 					       				<td valign='middle' align='left'> 
-					           				<input class='h3' type="text" size="20" maxlength="30" name="freightCharges" id="freightCharges" onblur="javascript:addToInvoiceAmount();"/>          
+					       					<#if orderId?exists && orderAdjInfo.get("freightCharges")?exists>
+						    					<input class='h3' type="text" size="20" maxlength="30" name="freightCharges" id="freightCharges" value="${orderAdjInfo.get("freightCharges")?if_exists}" onblur="javascript:addToInvoiceAmount();" />
+						    				<#else>
+						    					<input class='h3' type="text" size="20" maxlength="30" name="freightCharges" id="freightCharges" onblur="javascript:addToInvoiceAmount();"/>
+						    				</#if>
+					           				          
 					       				</td>
 					       				<td>&nbsp;&nbsp;&nbsp;</td>
 					       				<td align='left' valign='middle' nowrap="nowrap"><div class='h3'>Discount: </div></td>
-							         	<td valign='middle' align='left'> 
-					             			<input class='h3' type="text" size="20" maxlength="30" name="discount" id="discount" onblur="javascript:addToInvoiceAmount();"  />          
+							         	<td valign='middle' align='left'>
+							         		<#if orderId?exists && orderAdjInfo.get("discount")?exists>
+						    					<input class='h3' type="text" size="20" maxlength="30" name="discount" id="discount" value="${orderAdjInfo.get("discount")?if_exists}" onblur="javascript:addToInvoiceAmount();" />
+						    				<#else>
+						             			<input class='h3' type="text" size="20" maxlength="30" name="discount" id="discount" onblur="javascript:addToInvoiceAmount();"  />
+						             		</#if>          
 					          			</td>
 					          			<td>&nbsp;&nbsp;&nbsp;</td>
 					       				<td align='left' valign='middle' nowrap="nowrap"><div class='h3'>Insurance: </div></td>
-							         	<td valign='middle' align='left'> 
-					             			<input class='h3' type="text" size="20" maxlength="30" name="insurence" id="insurence" onblur="javascript:addToInvoiceAmount();"/>          
+							         	<td valign='middle' align='left'>
+							         		<#if orderId?exists && orderAdjInfo.get("insurence")?exists>
+						    					<input class='h3' type="text" size="20" maxlength="30" name="insurence" id="insurence" value="${orderAdjInfo.get("insurence")?if_exists}" onblur="javascript:addToInvoiceAmount();" />
+						    				<#else> 
+					             				<input class='h3' type="text" size="20" maxlength="30" name="insurence" id="insurence" onblur="javascript:addToInvoiceAmount();"/>
+					             			</#if>          
 					          			</td>
 					          			<td>&nbsp;&nbsp;&nbsp;</td>
 					          			<td align='left' valign='middle' nowrap="nowrap"><div class='h3'>Pack.&Fowdg: </div></td>
-							         	<td valign='middle' align='left'> 
-							         	 <input class='h3' type="text" size="20" maxlength="30" name="packAndFowdg" id="packAndFowdg" onblur="javascript:addToInvoiceAmount();"/>
+							         	<td valign='middle' align='left'>
+							         		<#if orderId?exists && orderAdjInfo.get("packAndFowdg")?exists>
+						    					<input class='h3' type="text" size="20" maxlength="30" name="packAndFowdg" id="packAndFowdg" value="${orderAdjInfo.get("packAndFowdg")?if_exists}" onblur="javascript:addToInvoiceAmount();" />
+						    				<#else>
+						    					<input class='h3' type="text" size="20" maxlength="30" name="packAndFowdg" id="packAndFowdg" onblur="javascript:addToInvoiceAmount();"/> 
+						    				</#if> 
+							         	 
 					          			</td>
 					 		         </tr>
 					 		        <tr><td><br/></td></tr>
 					 		        <tr>
 							        	<td align='left' valign='middle' nowrap="nowrap"><div class='h3'>Other Charges: </div></td>
-					       				<td valign='middle' align='left'> 
-					           				<input class='h3' type="text" size="20" maxlength="30" name="otherCharges" id="otherCharges" onblur="javascript:addToInvoiceAmount();"/>          
+					       				<td valign='middle' align='left'>
+					       					<#if orderId?exists && orderAdjInfo.get("otherCharges")?exists>
+						    					<input class='h3' type="text" size="20" maxlength="30" name="otherCharges" id="otherCharges" onblur="javascript:addToInvoiceAmount();" value="${orderAdjInfo.get("otherCharges")?if_exists}"/>
+						    				<#else> 
+					           					<input class='h3' type="text" size="20" maxlength="30" name="otherCharges" id="otherCharges" onblur="javascript:addToInvoiceAmount();"/>
+					           				</#if>          
 					       				</td>
 					          			<td>&nbsp;&nbsp;&nbsp;</td>
 					          			<td align='left' valign='middle' nowrap="nowrap"><div class='h3'>Add BED: </div></td>
 							         	<td valign='middle' align='left'> 
-							         	<input class='h3' type="checkbox" size="20" id="addBED" name="addBED" value="" onclick="javascript:addBedColumns();"/>
+							         			<input class='h3' type="checkbox" size="20" id="addBED" name="addBED" value="" onclick="javascript:addBedColumns();"/>	
 					          			</td>
 					 		         </tr>
 					 		          <tr><td><br/></td></tr>
@@ -343,7 +420,7 @@ function makeDatePicker(fromDateId ,thruDateId){
                       <h3>Payment Terms</h3>
 			          <section>
 				          <fieldset>
-				            <table cellpadding="15" cellspacing="15" class='h3'>
+				            <table cellpadding="15" cellspacing="15" class='h2'>
 								<tr>
 				          			<td align='left' valign='middle' nowrap="nowrap"></td>
 					                <td>
@@ -369,15 +446,48 @@ function makeDatePicker(fromDateId ,thruDateId){
 								          	<td align="center">UOM</td>
 								          	<td align="center">Description</td>
 								    	</tr>
-								    	<tr>
+								    	<#if orderId?exists && orderPayTermInfo?has_content>
+								    		<#assign rowCount = 0>
+								    		<#list orderPayTermInfo as eachPayTerm>
+										    	<tr>
+										    		<input type="hidden"  name="paymentTermTypeId_o_${rowCount}" value="${eachPayTerm.get("termTypeId")?if_exists}"/>
+										        	<td>
+										          		<input type="text"  name="paymentTermDesc" value="${eachPayTerm.get("termTypeDescription")?if_exists}" size="40"/>
+										        	</td>
+									            	<td>
+									                	<input type="text" name="paymentTermDays_o_${rowCount}" value="${eachPayTerm.get("termDays")?if_exists}" size="10"/>
+									            	</td>
+									            	<td>
+									                	<input type="text" name="paymentTermValue_o_${rowCount}" value="${eachPayTerm.get("termValue")?if_exists}" size="10"/>
+									            	</td>
+									            	<td>
+									            		<select name="paymentTermUom_o_${rowCount}">
+									            			<#if eachPayTerm.get("uomId") == "INR">
+									            				<option value="INR" selected>Rupees</option>
+									            				<option value="PERCENT">Percent</option>
+									            			<#else>
+									            				<option value="INR">Rupees</option>
+									            				<option value="PERCENT" selected>Percent</option>
+									            			</#if>
+									            			
+									            		</select>
+									            	</td>
+									            	<td>
+									                	<input type="textarea" cols="40" rows="5" maxlength="255" name="paymentTermDescription_o_${rowCount}" value="${eachPayTerm.get("description")?if_exists}" />
+									            	</td>
+										    	</tr>
+										    	<#assign rowCount = rowCount+1>
+									    	</#list> 
+								    	<#else>
+								    		<tr>
 								        	<td>
-								          		<input type="text"  name="paymentTermTypeId_o_0" value=""/>
+								          		<input type="text"  name="paymentTermTypeId_o_0" value="" size="40"/>
 								        	</td>
 							            	<td>
-							                	<input type="text" name="paymentTermDays_o_0" value="" />
+							                	<input type="text" name="paymentTermDays_o_0" value=""  size="10"/>
 							            	</td>
 							            	<td>
-							                	<input type="text" name="paymentTermValue_o_0" value="" />
+							                	<input type="text" name="paymentTermValue_o_0" value="" size="10"/>
 							            	</td>
 							            	<td>
 							            		<select name="paymentTermUom_o_0">
@@ -388,7 +498,8 @@ function makeDatePicker(fromDateId ,thruDateId){
 							            	<td>
 							                	<input type="textarea" name="paymentTermDescription_o_0" value="" maxlength="255"/>
 							            	</td>
-								    	</tr> 
+								    	</tr>
+								    	</#if>
 									</table>
 	          				     </td>
 							  </tr>
@@ -398,7 +509,7 @@ function makeDatePicker(fromDateId ,thruDateId){
                      <h3>Delivery Terms</h3>
 			         <section>
 				          <fieldset>
-				            <table cellpadding="15" cellspacing="15" class='h3'>
+				            <table cellpadding="15" cellspacing="15" class='h2'>
 							         <tr>
 				          				<td align='left' valign='middle' nowrap="nowrap"></td>
 					                 <td>
@@ -419,31 +530,60 @@ function makeDatePicker(fromDateId ,thruDateId){
 							          	<td align="center">UOM</td>
 							          	<td align="center">Description</td>
 								    </tr>
-								    <tr>
-								        <td>
-								         <input type="text"  name="deliveryTermTypeId_o_0" value=""/>
-								        <!-- <select  name="paymentTermTypeId_o_0">
-								            <list>
-								               <option > </option>
-								            </list>
-								         </select>-->
-								        </td>
-							            <td>
-							                <input type="text" name="deliveryTermDays_o_0" value="" />
-							            </td>
-							            <td>
-							                <input type="text" name="deliveryTermValue_o_0" value="" />
-							            </td>
-						            	<td>
-						            		<select name="deliveryTermUom_o_0">
-						            			<option value="INR">Rupees</option>
-						            			<option value="PERCENT">Percent</option>
-						            		</select>
-						            	</td>
-						            	<td>
-						                	<input type="textarea" name="deliveryTermDescription_o_0" value="" maxlength="255"/>
-						            	</td>
-								    </tr> 
+								    <#if orderId?exists && orderShipTermInfo?has_content>
+							    		<#assign rowCount = 0>
+							    		<#list orderShipTermInfo as eachShipTerm>
+									    	<tr>
+									    		<input type="hidden"  name="deliveryTermTypeId_o_${rowCount}" value="${eachShipTerm.get("termTypeId")?if_exists}"/>
+									        	<td>
+									          		<input type="text"  name="deliveryTermDesc" value="${eachShipTerm.get("termTypeDescription")?if_exists}" size="40"/>
+									        	</td>
+								            	<td>
+								                	<input type="text" name="deliveryTermDays_o_${rowCount}" value="${eachShipTerm.get("termDays")?if_exists}" size="10"/>
+								            	</td>
+								            	<td>
+								                	<input type="text" name="deliveryTermValue_o_${rowCount}" value="${eachShipTerm.get("termValue")?if_exists}" size="10"/>
+								            	</td>
+								            	<td>
+								            		<select name="deliveryTermUom_o_${rowCount}">
+								            			<#if eachShipTerm.get("uomId") == "INR">
+								            				<option value="INR" selected>Rupees</option>
+								            				<option value="PERCENT">Percent</option>
+								            			<#else>
+								            				<option value="INR">Rupees</option>
+								            				<option value="PERCENT" selected>Percent</option>
+								            			</#if>
+								            			
+								            		</select>
+								            	</td>
+								            	<td>
+								                	<input type="textarea" name="deliveryTermDescription_o_${rowCount}" value="${eachShipTerm.get("description")?if_exists}" maxlength="255"/>
+								            	</td>
+									    	</tr>
+									    	<#assign rowCount = rowCount+1>
+								    	</#list>
+								    <#else>
+									    <tr>
+									        <td>
+									         <input type="text"  name="deliveryTermTypeId_o_0" value="" size="40"/>
+									        </td>
+								            <td>
+								                <input type="text" name="deliveryTermDays_o_0" value="" size="10"/>
+								            </td>
+								            <td>
+								                <input type="text" name="deliveryTermValue_o_0" value="" size="10"/>
+								            </td>
+							            	<td>
+							            		<select name="deliveryTermUom_o_0">
+							            			<option value="INR">Rupees</option>
+							            			<option value="PERCENT">Percent</option>
+							            		</select>
+							            	</td>
+							            	<td>
+							                	<input type="textarea" name="deliveryTermDescription_o_0" value="" maxlength="255"/>
+							            	</td>
+									    </tr>
+									 </#if> 
 								</table>
 	          				     </td>
 							        </tr>
@@ -455,28 +595,13 @@ function makeDatePicker(fromDateId ,thruDateId){
  <script type="application/javascript">
  		 $(document).ready(function(){
             
-  /*          $('#addProduct').click(function () {
-    var table = $("#productTable");
-    if (table.find('input:text').length < 16) {
-        var productLength = table.find('input:text').length;
-        var rowProdCount = productLength/3;
-        table.append('<tr><td> <input type="text" name="productId_o_'+rowProdCount+'" value="" /></td><td> <input type="text" name="quantity_o_'+rowProdCount+'" value="" /> </td><td> <input type="text" name="unitPrice_o_'+rowProdCount+'" value="" /> </td></tr>');
-    }
-});
-$('#delProduct').click(function () {
-    var table = $(this).closest('table');
-    if (table.find('input:text').length > 1) {
-        table.find('input:text').last().closest('tr').remove();
-    }
-});
-*/
 
     $('#addPaymentTerm').click(function () {
     var table = $("#paymentTermsTable");
-    if (table.find('input:text').length < 16) {
+    if (table.find('input:text').length < 24) {
         var rowLength = table.find('input:text').length;
         var rowCount = rowLength/3;
-        table.append('<tr><td> <input type="text" name="paymentTermTypeId_o_'+rowCount+'" value="" /></td><td> <input type="text" name="paymentTermDays_o_'+rowCount+'" value="" /> </td><td> <input type="text" name="paymentTermValue_o_'+rowCount+'" value="" /> </td><td><select name="paymentTermUom_o_'+rowCount+'"><option value="INR">Rupees</option><option value="PERCENT">Percent</option></select></td><td><input type="textarea" name="paymentTermDescription_o_'+rowCount+'" value="" maxlength="255"/>	</td></tr>');
+        table.append('<tr><td> <input type="text" size="40" name="paymentTermTypeId_o_'+rowCount+'" value="" /></td><td> <input type="text" size="10" name="paymentTermDays_o_'+rowCount+'" value="" /> </td><td> <input type="text" size="10" name="paymentTermValue_o_'+rowCount+'" value="" /> </td><td><select name="paymentTermUom_o_'+rowCount+'"><option value="INR">Rupees</option><option value="PERCENT">Percent</option></select></td><td><input type="textarea" name="paymentTermDescription_o_'+rowCount+'" value="" maxlength="255"/>	</td></tr>');
     }
     $( "input[name*='paymentTermTypeId']" ).autocomplete({ source: paymentTermsJSON });
 });
@@ -490,10 +615,10 @@ $('#delProduct').click(function () {
 	
 	 $('#addDeliveryTerm').click(function () {
     var table = $("#deliveryTermsTable");
-    if (table.find('input:text').length < 16) {
+    if (table.find('input:text').length < 24) {
         var rowLength = table.find('input:text').length;
         var rowCount = rowLength/3;
-        table.append('<tr><td> <input type="text" name="deliveryTermTypeId_o_'+rowCount+'" value="" /></td><td> <input type="text" name="deliveryTermDays_o_'+rowCount+'" value="" /> </td><td> <input type="text" name="deliveryTermValue_o_'+rowCount+'" value="" /> </td><td><select name="deliveryTermUom_o_'+rowCount+'"><option value="INR">Rupees</option><option value="PERCENT">Percent</option></select></td><td><input type="textarea" name="deliveryTermDescription_o_'+rowCount+'" value="" maxlength="255"/></td></tr>');
+        table.append('<tr><td> <input type="text" size="40" name="deliveryTermTypeId_o_'+rowCount+'" value="" /></td><td> <input type="text" size="10" name="deliveryTermDays_o_'+rowCount+'" value="" /> </td><td> <input type="text" size="10" name="deliveryTermValue_o_'+rowCount+'" value="" /> </td><td><select name="deliveryTermUom_o_'+rowCount+'"><option value="INR">Rupees</option><option value="PERCENT">Percent</option></select></td><td><input type="textarea" name="deliveryTermDescription_o_'+rowCount+'" value="" maxlength="255"/></td></tr>');
     }
     
     $( "input[name*='deliveryTermTypeId']" ).autocomplete({ source: deliveryTermsJSON });

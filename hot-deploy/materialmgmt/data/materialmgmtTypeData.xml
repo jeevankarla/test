@@ -105,4 +105,19 @@
 	 <Enumeration description="Tender Date" enumId="TENDER_DATE" enumTypeId="ORDER_ATTRIBUTE"/>
 	 <Enumeration description="Tender Value" enumId="TENDER_VALUE" enumTypeId="ORDER_ATTRIBUTE"/>
      
+     <OrderAdjustmentType description="Purchase Charges" hasTable="N" orderAdjustmentTypeId="PURCHASE_CHRGS"/>
+	<OrderAdjustmentType description="Freight Charges on Purchase" hasTable="N" orderAdjustmentTypeId="COGS_FREIGHT" parentTypeId="PURCHASE_CHRGS"/>
+	<OrderAdjustmentType description="Discount on Purchase" hasTable="N" orderAdjustmentTypeId="COGS_DISC" parentTypeId="PURCHASE_CHRGS"/>
+	<OrderAdjustmentType description="Packing And Forwarding Charges on Purchase" hasTable="N" orderAdjustmentTypeId="COGS_PCK_FWD" parentTypeId="PURCHASE_CHRGS"/>
+	<OrderAdjustmentType description="Insurance on Purchase" hasTable="N" orderAdjustmentTypeId="COGS_INSURANCE" parentTypeId="PURCHASE_CHRGS"/>
+	<OrderAdjustmentType description="Other Charges on Purchase" hasTable="N" orderAdjustmentTypeId="COGS_OTH_CHARGES" parentTypeId="PURCHASE_CHRGS"/>
+	<InvoiceItemType defaultGlAccountId="510000" description="FREIGHT CHARGES" hasTable="N" invoiceItemTypeId="COGS_FREIGHT"/>
+	<InvoiceItemType defaultGlAccountId="511100" description="DISCOUNTS" hasTable="N" invoiceItemTypeId="COGS_DISC"/>
+	<InvoiceItemType defaultGlAccountId="510000" description="PACK AND FORWARDING CHARGES" hasTable="N" invoiceItemTypeId="COGS_PCK_FWD"/>
+	<InvoiceItemType defaultGlAccountId="510000" description="INSURANCE" hasTable="N" invoiceItemTypeId="COGS_INSURANCE"/>
+	<InvoiceItemType defaultGlAccountId="510000" description="OTHER CHARGES" hasTable="N" invoiceItemTypeId="COGS_OTH_CHARGES"/>
+	<GlAccount accountCode="511300" accountName="INSURENCE" description="Insurance" glAccountClassId="COGS_EXPENSE" glAccountId="511300" glAccountTypeId="PURCHASE_ACCOUNT" glResourceTypeId="MONEY" parentGlAccountId="510000" postedBalance="0.00"/>
+     
+     
+     
 </entity-engine-xml>

@@ -77,6 +77,11 @@
                 <parameter param-name="orderId"/>
             </hyperlink>
         </field>
+        <field name="editOrder" widget-style="buttontext" use-when="statusId.equals(&quot;ORDER_CREATED&quot;)" >
+            <hyperlink target="editMaterialPO" description="Edit Order">
+                 <parameter param-name="orderId"/>
+            </hyperlink>
+        </field> 
       	<field name="ApproveOrder" widget-style="buttontext" use-when="statusId.equals(&quot;ORDER_CREATED&quot;)" >
             <hyperlink target="ApproveOrder" description="Approve">
                 <parameter param-name="orderId"/>

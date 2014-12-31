@@ -103,7 +103,6 @@ prodList.each{eachItem ->
 context.productItemsJSON = productItemsJSON;
 context.productIdLabelJSON = productIdLabelJSON;
 context.productLabelIdJSON = productLabelIdJSON;
-Debug.log("productItemsJSON======="+productItemsJSON);
 if(displayGrid){
 	context.partyCode = facility;
 }
