@@ -164,12 +164,15 @@ vatMap=[:];
 													 }
 													  if(categoryType.equals("UNITS")){
 														    if(UtilValidate.isEmpty(prodTempMap[product.brandName])){
-															  qtyLtrs = productValue.getValue().get("total");
-															  prodTempMap.put(product.brandName, qtyLtrs);
+															  temp =[:]
+															  temp.put("qtyLtrs", productValue.getValue().get("total"));
+															  temp.put("amount" , productValue.getValue().get("totalRevenue"));
+															  prodTempMap.put(product.brandName, temp);
 															}else{
 																totProd =0;
 																totProd=prodTempMap.get(product.brandName);
-																totProd += productValue.getValue().get("total");
+																totProd["qtyLtrs"]+= productValue.getValue().get("total");
+																totProd["amount"]+= productValue.getValue().get("totalRevenue");
 																prodTempMap.put(product.brandName,totProd);
 															}
 														    virtualProductId = product.brandName;

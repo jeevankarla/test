@@ -156,9 +156,21 @@ prodTempMap=[:];
 															}else{
 															 tempProdMap["totalRevenue"] = 0;
 															}
-															temp=FastMap.newInstance();
-															temp.putAll(tempProdMap);
-															tempVariantMap[productId] = temp;
+															  temp=FastMap.newInstance();
+															  temp.putAll(tempProdMap);
+															  tempVariantMap[productId] = temp;
+															  if(UtilValidate.isEmpty(prodTempMap[productId])){
+															     productTemp =[:]
+															     productTemp.put("qtyLtrs", productValue.getValue().get("total"));
+															     productTemp.put("amount" , productValue.getValue().get("totalRevenue"));
+															     prodTempMap.put(productId, productTemp);
+															  }else{
+																  prodTotMap=[:];
+																  prodTotMap.putAll(prodTempMap.get(productId));
+																  prodTotMap["qtyLtrs"]+= productValue.getValue().get("total");
+																  prodTotMap["amount"]+= productValue.getValue().get("totalRevenue");
+																  prodTempMap[productId] = prodTotMap;
+															  }
 														}else{
 															tempMap = [:];
 															productMap = [:];
@@ -207,7 +219,34 @@ prodTempMap=[:];
 			dayWiseInvoice.put(dayBegin,tempMap);
 		}
 	}
+	/*dayWiseInvoice.each{invoice->
+	    invoiceMap=invoice.getValue();
+		invoiceMap.each{invoiceDtls->
+			productMap=invoiceDtls.getValue();
+			productMap.each{prodDtls->
+				productTotals=prodDtls.get("productTotals");
+				productTotals.each{prod->
+					Debug.log("prodTempMap====="+prodDtls);
+					productId=prod.getKey();
+					if(UtilValidate.isEmpty(prodTempMap[productId])){
+						productTemp =[:]
+						productTemp.put("qtyLtrs", prod.getValue().get("quantity"));
+						productTemp.put("amount" , prod.getValue().get("totalRevenue"));
+						prodTempMap.put(productId, productTemp);
+					}else{
+					   prodTotMap=[:];
+					   prodTotMap.putAll(prodTempMap.get(productId));
+					   prodTotMap["qtyLtrs"]+= prod.getValue().get("quantity");
+					   prodTotMap["amount"]+= prod.getValue().get("totalRevenue");
+					   prodTempMap[productId] = prodTotMap;
+					}
+				}
+			}
+	    }
+	}*/
+ //Debug.log("prodTempMap====="+prodTempMap);
 context.dayWiseInvoice=dayWiseInvoice;
+context.prodTempMap=prodTempMap;
 
 
 

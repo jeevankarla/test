@@ -307,12 +307,12 @@ under the License.
 					                                 <fo:table-cell>
 							                           		<fo:block  keep-together="always" font-size="12pt" text-align="left" white-space-collapse="false">Grand Total</fo:block>  
 							                       		</fo:table-cell>
+							                       		<fo:table-cell>
+	                            		                 <fo:block  keep-together="always" text-align="left"   font-size="12pt" white-space-collapse="false"></fo:block>  
+	                       			                    </fo:table-cell>
 					                                   <fo:table-cell>
 							                           		<fo:block  keep-together="always" font-size="12pt" text-align="right" white-space-collapse="false">${totalQty?string("#0.00")}</fo:block>  
 							                       		</fo:table-cell>
-							                       		<fo:table-cell>
-	                            		                 <fo:block  keep-together="always" text-align="left"   font-size="12pt" white-space-collapse="false">${prodTotals.getKey()}</fo:block>  
-	                       			                    </fo:table-cell>
 														<fo:table-cell>
 							                           		<fo:block  keep-together="always" font-size="12pt" text-align="right" white-space-collapse="false">${totalBasicRev?string("#0.00")}</fo:block>  
 							                       		</fo:table-cell>
@@ -335,22 +335,62 @@ under the License.
 							            </fo:table-cell>
 							     </fo:table-row>
 	                     <#if prodTempMap?has_content>  	
+                               <fo:table-row> 
+							      <fo:table-cell>   						
+									<fo:block>--------------------------------------------------------------------------------------------------------------------------------------------</fo:block>
+          						  </fo:table-cell>
+          						  </fo:table-row> 	
                                <fo:table-row>
 	                            <fo:table-cell>
                             		<fo:block  keep-together="always" text-align="left"  white-space-collapse="false" font-weight="bold">Total Products</fo:block>  
                        			</fo:table-cell>
-                       			</fo:table-row>		
+                       			</fo:table-row>	
+                       			<fo:table-row>
+                    				<fo:table-cell>
+	                            		<fo:block   text-align="left"  keep-together="always" number-columns-spanned="4" font-size="12pt" white-space-collapse="false" font-weight="bold">ProductName</fo:block>  
+	                       			</fo:table-cell>
+	                       			<fo:table-cell>
+	                            		<fo:block   text-align="right"   font-size="12pt" white-space-collapse="false" font-weight="bold">&#160;</fo:block>  
+	                       			</fo:table-cell>
+	                       			<fo:table-cell>
+	                            		<fo:block   text-align="right"   font-size="12pt" white-space-collapse="false" font-weight="bold">&#160;</fo:block>  
+	                       			</fo:table-cell>
+	                       			<fo:table-cell>
+	                            		<fo:block  keep-together="always" text-align="right"  number-columns-spanned="2" font-size="12pt" white-space-collapse="false" font-weight="bold">Quantity(In Ltrs)</fo:block>  
+	                       			</fo:table-cell>
+	                       			<fo:table-cell>
+	                            		<fo:block   text-align="right"   font-size="12pt" white-space-collapse="false" font-weight="bold">&#160;</fo:block>  
+	                       			</fo:table-cell>
+	                       			<fo:table-cell>
+	                            		<fo:block  keep-together="always" text-align="right"   font-size="12pt" white-space-collapse="false" font-weight="bold">Amount</fo:block>  
+	                       			</fo:table-cell>
+	                       		</fo:table-row>	
+	                       		 <fo:table-row> 
+							      <fo:table-cell>   						
+									<fo:block>--------------------------------------------------------------------------------------------------------------------------------------------</fo:block>
+          						  </fo:table-cell>
+          						  </fo:table-row> 
 							 <#assign productDetails = prodTempMap.entrySet()>
 	                	      <#list productDetails as prodTotals>
+	                	       <#assign product = delegator.findOne("Product", {"productId" : prodTotals.getKey()}, true)?if_exists/>
 		                       <fo:table-row>
                     				<fo:table-cell>
-	                            		<fo:block  keep-together="always" text-align="left"   font-size="12pt" white-space-collapse="false">${prodTotals.getKey()}</fo:block>  
+	                            		<fo:block  keep-together="always" text-align="left"  number-columns-spanned="4" font-size="12pt" white-space-collapse="false">${product.description}</fo:block>  
 	                       			</fo:table-cell>
 	                       			<fo:table-cell>
-	                            		<fo:block  keep-together="always" text-align="left"   font-size="12pt" white-space-collapse="false"></fo:block>  
+	                            		<fo:block   text-align="right"   font-size="12pt" white-space-collapse="false" font-weight="bold">&#160;</fo:block>  
 	                       			</fo:table-cell>
 	                       			<fo:table-cell>
-	                            		<fo:block  keep-together="always" text-align="right"   font-size="12pt" white-space-collapse="false">${prodTotals.getValue()?string("#0.00")}</fo:block>  
+	                            		<fo:block   text-align="right"   font-size="12pt" white-space-collapse="false" font-weight="bold">&#160;</fo:block>  
+	                       			</fo:table-cell>
+	                       			<fo:table-cell>
+	                            		<fo:block  keep-together="always" text-align="right"   font-size="12pt" white-space-collapse="false">${prodTotals.getValue().get("qtyLtrs")?string("#0.00")}</fo:block>  
+	                       			</fo:table-cell>
+	                       			<fo:table-cell>
+	                            		<fo:block   text-align="right"   font-size="12pt" white-space-collapse="false" font-weight="bold">&#160;</fo:block>  
+	                       			</fo:table-cell>
+	                       			<fo:table-cell>
+	                            		<fo:block  keep-together="always" text-align="right"   font-size="12pt" white-space-collapse="false">${prodTotals.getValue().get("amount")?string("#0.00")}</fo:block>  
 	                       			</fo:table-cell>
 	                       		</fo:table-row>
 		                    </#list>

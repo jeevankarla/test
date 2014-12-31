@@ -414,12 +414,36 @@ under the License.
 							            	</fo:block>  
 							            </fo:table-cell>
 							     </fo:table-row>
-	                     <#if prodTempMap?has_content>  	
+	                     <#if prodTempMap?has_content>  
+	                          <fo:table-row> 
+							      <fo:table-cell>   						
+									<fo:block>--------------------------------------------------------------------------------------------------------------------------------------------</fo:block>
+          						  </fo:table-cell>
+          						  </fo:table-row> 	
                                <fo:table-row>
 	                            <fo:table-cell>
                             		<fo:block  keep-together="always" text-align="left"  white-space-collapse="false" font-weight="bold">Total Products</fo:block>  
                        			</fo:table-cell>
-                       			</fo:table-row>		
+                       			</fo:table-row>	
+                       			<fo:table-row>
+                    				<fo:table-cell>
+	                            		<fo:block  keep-together="always" text-align="left"   font-size="12pt" white-space-collapse="false" font-weight="bold">ProductName</fo:block>  
+	                       			</fo:table-cell>
+	                       			<fo:table-cell>
+	                            		<fo:block  keep-together="always" text-align="left"   font-size="12pt" white-space-collapse="false">&#160;</fo:block>  
+	                       			</fo:table-cell>
+	                       			<fo:table-cell>
+	                            		<fo:block  keep-together="always" text-align="right"   font-size="12pt" white-space-collapse="false" font-weight="bold">Quantity(In Ltrs)</fo:block>  
+	                       			</fo:table-cell>
+	                       			<fo:table-cell>
+	                            		<fo:block  keep-together="always" text-align="right"   font-size="12pt" white-space-collapse="false" font-weight="bold">Amount</fo:block>  
+	                       			</fo:table-cell>
+	                       		</fo:table-row>	
+	                       		 <fo:table-row> 
+							      <fo:table-cell>   						
+									<fo:block>--------------------------------------------------------------------------------------------------------------------------------------------</fo:block>
+          						  </fo:table-cell>
+          						  </fo:table-row> 
 							 <#assign productDetails = prodTempMap.entrySet()>
 	                	      <#list productDetails as prodTotals>
 		                       <fo:table-row>
@@ -427,7 +451,13 @@ under the License.
 	                            		<fo:block  keep-together="always" text-align="left"   font-size="12pt" white-space-collapse="false">${prodTotals.getKey()}</fo:block>  
 	                       			</fo:table-cell>
 	                       			<fo:table-cell>
-	                            		<fo:block  keep-together="always" text-align="right"   font-size="12pt" white-space-collapse="false">${prodTotals.getValue()?string("#0.00")}</fo:block>  
+	                            		<fo:block  keep-together="always" text-align="left"   font-size="12pt" white-space-collapse="false">&#160;</fo:block>  
+	                       			</fo:table-cell>
+	                       			<fo:table-cell>
+	                            		<fo:block  keep-together="always" text-align="right"   font-size="12pt" white-space-collapse="false">${prodTotals.getValue().get("qtyLtrs")?string("#0.00")}</fo:block>  
+	                       			</fo:table-cell>
+	                       			<fo:table-cell>
+	                            		<fo:block  keep-together="always" text-align="right"   font-size="12pt" white-space-collapse="false">${prodTotals.getValue().get("amount")?string("#0.00")}</fo:block>  
 	                       			</fo:table-cell>
 	                       		</fo:table-row>
 		                    </#list>
