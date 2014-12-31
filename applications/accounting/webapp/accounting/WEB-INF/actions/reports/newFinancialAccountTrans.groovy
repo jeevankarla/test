@@ -231,14 +231,17 @@ if (organizationPartyId) {
 			for(i=0; i<glAcctgTrialBalanceList.size(); i++){
 				acctgTransIt = glAcctgTrialBalanceList[i];
 				acctgTransAndEntries = acctgTransIt.acctgTransAndEntries;
-				newAcctgTransAndEntries.addAll(acctgTransAndEntries);
+				//newAcctgTransAndEntries.addAll(acctgTransAndEntries);
 				tempList = [];
-				for(j=0; j<newAcctgTransAndEntries.size(); j++){
+				for(j=0; j<acctgTransAndEntries.size(); j++){
 					
 					debitAmount = BigDecimal.ZERO;
 					creditAmount = BigDecimal.ZERO;
 					
-					acctgTransEntry = newAcctgTransAndEntries[j];
+					acctgTransEntry = acctgTransAndEntries[j];
+					if(newAcctgTransAndEntries.contains(acctgTransEntry)){
+						continue;
+					}
 					openingBalance = closingBalance;
 					paymentId = acctgTransEntry.paymentId;
 					paymentGroupId = null;
@@ -270,7 +273,7 @@ if (organizationPartyId) {
 											   creditAmount = totalCreditAmount;
 										   }
 									   }
-									   newAcctgTransAndEntries.removeAll(groupPaymentList);
+									   newAcctgTransAndEntries.addAll(groupPaymentList);
 									   
 									   paymentGroup = delegator.findOne("PaymentGroup", [paymentGroupId : paymentGroupId], false);
 									   if(UtilValidate.isNotEmpty(paymentGroup)){
