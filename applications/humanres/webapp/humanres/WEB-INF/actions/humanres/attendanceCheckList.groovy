@@ -86,6 +86,7 @@ List<GenericValue> employementList = (List<GenericValue>)EmploymentsMap.get("emp
 employementList = EntityUtil.orderBy(employementList, UtilMisc.toList("partyIdTo"));
 employementIds = EntityUtil.getFieldListFromEntityList(employementList, "partyIdTo", true);
 
+employeeAttendanceMap = [:];
 conditionList = [];
 if(!allChanges){
 	conditionList.add(EntityCondition.makeCondition("lastModifiedByUserLogin", EntityOperator.EQUALS , userLogin.userLoginId));
@@ -99,5 +100,80 @@ conditionList.add(EntityCondition.makeCondition([
 condition = EntityCondition.makeCondition(conditionList, EntityOperator.AND);
 payableDaysList = delegator.findList("PayrollAttendance", condition, null, ["lastUpdatedStamp"], null, false);
 
-context.put("payableDaysList",payableDaysList);
+if(UtilValidate.isNotEmpty(payableDaysList)){
+	payableDaysList.each { payrollAttendanceDetails ->
+		totalDays = 0;
+		partyId = payrollAttendanceDetails.get("partyId");
+		detailsMap = [:];
+		unitDetails = delegator.findList("Employment", EntityCondition.makeCondition("partyIdTo", EntityOperator.EQUALS , partyId), null, null, null, false);
+		if(UtilValidate.isNotEmpty(unitDetails)){
+			unitDetails = EntityUtil.getFirst(unitDetails);
+			if(UtilValidate.isNotEmpty(unitDetails))	{
+				locationGeoId=unitDetails.get("locationGeoId");
+				detailsMap.put("unit",locationGeoId);
+			}
+		}
+		partyRelationconditionList=[];
+		partyRelationconditionList.add(EntityCondition.makeCondition("roleTypeIdFrom", EntityOperator.EQUALS , "DEPARTMENT"));
+		partyRelationconditionList.add(EntityCondition.makeCondition("roleTypeIdTo", EntityOperator.EQUALS , "EMPLOYEE"));
+		partyRelationconditionList.add(EntityCondition.makeCondition("partyIdTo", EntityOperator.EQUALS ,partyId));
+		partyCondition = EntityCondition.makeCondition(partyRelationconditionList,EntityOperator.AND);
+		def orderBy = UtilMisc.toList("comments");
+		partyRelationList = delegator.findList("PartyRelationship", partyCondition, null, orderBy, null, false);
+		if(UtilValidate.isNotEmpty(partyRelationList)){
+			costDetails = EntityUtil.getFirst(partyRelationList);
+			if(UtilValidate.isNotEmpty(costDetails))	{
+				costCode=costDetails.get("comments");
+				detailsMap.put("costCode",costCode);
+			}
+		}
+		noOfAttendedDays = payrollAttendanceDetails.get("noOfAttendedDays");
+		noOfAttendedHoliDays = payrollAttendanceDetails.get("noOfAttendedHoliDays");
+		casualLeaveDays = payrollAttendanceDetails.get("casualLeaveDays");
+		earnedLeaveDays = payrollAttendanceDetails.get("earnedLeaveDays");
+		commutedLeaveDays = payrollAttendanceDetails.get("commutedLeaveDays");
+		noOfHalfPayDays = payrollAttendanceDetails.get("noOfHalfPayDays");
+		disabilityLeaveDays = payrollAttendanceDetails.get("disabilityLeaveDays");
+		extraOrdinaryLeaveDays = payrollAttendanceDetails.get("extraOrdinaryLeaveDays");
+		if(UtilValidate.isNotEmpty(noOfAttendedDays)){
+			totalDays = totalDays + noOfAttendedDays;
+		}
+		if(UtilValidate.isNotEmpty(noOfAttendedHoliDays)){
+			totalDays = totalDays + noOfAttendedHoliDays;
+		}
+		if(UtilValidate.isNotEmpty(casualLeaveDays)){
+			totalDays = totalDays + casualLeaveDays;
+		}
+		if(UtilValidate.isNotEmpty(noOfAttendedDays)){
+			detailsMap.put("WKD",noOfAttendedDays);
+		}
+		if(UtilValidate.isNotEmpty(noOfAttendedHoliDays)){
+			detailsMap.put("CO",noOfAttendedHoliDays);
+		}
+		if(UtilValidate.isNotEmpty(casualLeaveDays)){
+			detailsMap.put("CL",casualLeaveDays);
+		}
+		if(UtilValidate.isNotEmpty(earnedLeaveDays)){
+			detailsMap.put("EL",earnedLeaveDays);
+		}
+		if(UtilValidate.isNotEmpty(commutedLeaveDays)){
+			detailsMap.put("CHPL",commutedLeaveDays);
+		}
+		if(UtilValidate.isNotEmpty(noOfHalfPayDays)){
+			detailsMap.put("HPL",noOfHalfPayDays);
+		}
+		if(UtilValidate.isNotEmpty(disabilityLeaveDays)){
+			detailsMap.put("DBL",disabilityLeaveDays);
+		}
+		if(UtilValidate.isNotEmpty(extraOrdinaryLeaveDays)){
+			detailsMap.put("EOL",extraOrdinaryLeaveDays);
+		}
+		detailsMap.put("totalDays",totalDays);
+		if(UtilValidate.isNotEmpty(detailsMap)){
+			employeeAttendanceMap.put(partyId,detailsMap);
+		}
+	}
+}
+
+context.put("employeeAttendanceMap",employeeAttendanceMap);
 

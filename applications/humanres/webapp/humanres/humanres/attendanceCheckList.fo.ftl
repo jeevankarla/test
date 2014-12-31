@@ -20,59 +20,86 @@
  			<fo:page-sequence master-reference="main">
 				<fo:static-content flow-name="xsl-region-before" font-family="Courier,monospace" font-size="8pt">
 			        <fo:block text-align="left" white-space-collapse="false" keep-together="always" font-size="5pt">.                               CHECK LIST FOR ATTENDANCE ON ${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(thruDate, "MMMM,yyyy").toUpperCase()}</fo:block>        
-			  		<fo:block text-align="left" white-space-collapse="false" keep-together="always" font-size="8pt">-------------------------------------------------------------------------------------------------------------------------------------</fo:block>	 	 	  
-			  		<fo:block text-align="left" white-space-collapse="false" keep-together="always" font-size="8pt">TYPE    MMYY        TypeId          EMPNO     Emp.Name               Desgn.                 WEF         O.B.    INST.</fo:block>
-			  		<fo:block text-align="left" white-space-collapse="false" keep-together="always" font-size="8pt">-------------------------------------------------------------------------------------------------------------------------------------</fo:block>
+			  		<fo:block text-align="left" white-space-collapse="false" keep-together="always" font-size="8pt">--------------------------------------------------------------------------------------------------------------------------------------------</fo:block>	 	 	  
+			  		<fo:block text-align="left" white-space-collapse="false" keep-together="always" font-size="8pt">SLNO    UNIT   COST   TYPE   EMPNO      EMP NAME               DESIGNATION             WKD    CO    CL   EL   CHPL   HPL   DBL   EOL   TDAYS</fo:block>
+			  		<fo:block text-align="left" white-space-collapse="false" keep-together="always" font-size="8pt">---------------------------------------------------------------------------------------------------------------------------------------------</fo:block>
 			  	</fo:static-content> 
 			  	<fo:flow flow-name="xsl-region-body" font-family="Courier,monospace">  
 				  	<fo:block font-family="Courier,monospace" font-size="9pt">
 						<fo:table>
-							<fo:table-column column-width="30pt"/>
-			  				<fo:table-column column-width="40pt"/>
-	                       	<fo:table-column column-width="50pt"/>
+							<#assign sNo = 1>
+							<fo:table-column column-width="10pt"/>
+			  				<fo:table-column column-width="30pt"/>
+	                       	<fo:table-column column-width="40pt"/>
+	                       	<fo:table-column column-width="40pt"/>
 	                       	<fo:table-column column-width="30pt"/>
-	                       	<fo:table-column column-width="55pt"/>
 	                       	<fo:table-column column-width="70pt"/>
-	                       	<fo:table-column column-width="100pt"/>
-	                       	<fo:table-column column-width="100pt"/>
-	                       	<fo:table-column column-width="50pt"/>
-	                       	<fo:table-column column-width="50pt"/>
+	                       	<fo:table-column column-width="120pt"/>
+	                       	<fo:table-column column-width="30pt"/>
+	                       	<fo:table-column column-width="30pt"/>
+	                       	<fo:table-column column-width="30pt"/>
+	                       	<fo:table-column column-width="30pt"/>
+	                       	<fo:table-column column-width="30pt"/>
+	                       	<fo:table-column column-width="30pt"/>
+	                       	<fo:table-column column-width="30pt"/>
+	                       	<fo:table-column column-width="30pt"/>
+	                       	<fo:table-column column-width="30pt"/>
 				            <fo:table-body>
-				            	<#if payableDaysList?has_content> 
-				                  	<#list payableDaysList as payableDays>
-				                  		<#if payableDays.get("noOfPayableDays")?has_content>
+				            	<#if employeeAttendanceMap?has_content> 
+				            	<#assign employeeDetails = employeeAttendanceMap.entrySet()>
+				                  	<#list employeeDetails as employeeAttendanceDetails>
+				                  		<#if employeeAttendanceDetails.getValue()?has_content>
 									     	<fo:table-row>
 									   			<fo:table-cell>
-									   				<fo:block font-size="4pt" text-align="left">RGL</fo:block>
+									   				<fo:block font-size="4pt" text-align="center">${sNo?if_exists}</fo:block>
 									   			</fo:table-cell>
 									   			<fo:table-cell>
-									   				<fo:block font-size="4pt" text-align="left">${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(fromDate, "MM/yyyy")?if_exists}</fo:block>
+									   				<fo:block font-size="4pt" text-align="center">${employeeAttendanceDetails.getValue().get("unit")?if_exists}</fo:block>
 									   			</fo:table-cell>
 									   			<fo:table-cell>
-									   				<fo:block font-size="4pt" text-align="left">Payable Days</fo:block>
+									   				<fo:block font-size="4pt" text-align="center"><#if employeeAttendanceDetails.getValue().get("costCode")?has_content>${employeeAttendanceDetails.getValue().get("costCode")?if_exists}<#else>0.0</#if></fo:block>
 									   			</fo:table-cell>
 									   			<fo:table-cell>
-									   				<fo:block font-size="4pt" text-align="left">${payableDays.get("partyId")?if_exists}</fo:block>
+									   				<fo:block font-size="4pt" text-align="center">EPF</fo:block>
 									   			</fo:table-cell>
 									   			<fo:table-cell>
-									   				<fo:block font-size="4pt" text-align="left">${Static["org.ofbiz.party.party.PartyHelper"].getPartyName(delegator, payableDays.get("partyId"), false)}</fo:block>
+									   				<fo:block font-size="4pt" text-align="left">${employeeAttendanceDetails.getKey()}</fo:block>
 									   			</fo:table-cell>
-									   			<#assign emplPosition=delegator.findByAnd("EmplPosition", {"partyId" : payableDays.get("partyId")})/>
+									   			<fo:table-cell>
+									   				<fo:block font-size="4pt" text-align="left">${Static["org.ofbiz.party.party.PartyHelper"].getPartyName(delegator, employeeAttendanceDetails.getKey(), false)}</fo:block>
+									   			</fo:table-cell>
+									   			<#assign emplPosition=delegator.findByAnd("EmplPosition", {"partyId" : employeeAttendanceDetails.getKey()})/>
 									   			<fo:table-cell>
 									   				<fo:block font-size="4pt" text-align="left">${(emplPosition[0].emplPositionId)?if_exists}</fo:block>
 									   			</fo:table-cell>
 									   			<fo:table-cell>
-									   				<fo:block font-size="4pt" text-align="right">${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(fromDate ,"dd/MM/yyyy")?if_exists}</fo:block>
+									   				<fo:block font-size="4pt" text-align="right"><#if employeeAttendanceDetails.getValue().get("WKD")?has_content>${employeeAttendanceDetails.getValue().get("WKD")?if_exists?string("##0.0")}<#else>0.0</#if></fo:block>
 									   			</fo:table-cell>
 									   			<fo:table-cell>
-									   				<fo:block font-size="4pt" text-align="right" text-indent = "10pt">0.00</fo:block>
+									   				<fo:block font-size="4pt" text-align="right"><#if employeeAttendanceDetails.getValue().get("CO")?has_content>${employeeAttendanceDetails.getValue().get("CO")?if_exists?string("##0.0")}<#else>0.0</#if></fo:block>
 									   			</fo:table-cell>
 									   			<fo:table-cell>
-									   				<fo:block font-size="4pt" text-align="right" text-indent = "10pt">${payableDays.get("noOfPayableDays")?if_exists?string("##0.00")}</fo:block>
+									   				<fo:block font-size="4pt" text-align="right"><#if employeeAttendanceDetails.getValue().get("CL")?has_content>${employeeAttendanceDetails.getValue().get("CL")?if_exists?string("##0.0")}<#else>0.0</#if></fo:block>
 									   			</fo:table-cell>
 									   			<fo:table-cell>
-									   				<fo:block font-size="4pt" text-align="right"></fo:block>
+									   				<fo:block font-size="4pt" text-align="right"><#if employeeAttendanceDetails.getValue().get("EL")?has_content>${employeeAttendanceDetails.getValue().get("EL")?if_exists?string("##0.0")}<#else>0.0</#if></fo:block>
 									   			</fo:table-cell>
+									   			<fo:table-cell>
+									   				<fo:block font-size="4pt" text-align="right"><#if employeeAttendanceDetails.getValue().get("CHPL")?has_content>${employeeAttendanceDetails.getValue().get("CHPL")?if_exists?string("##0.0")}<#else>0.0</#if></fo:block>
+									   			</fo:table-cell>
+									   			<fo:table-cell>
+									   				<fo:block font-size="4pt" text-align="right"><#if employeeAttendanceDetails.getValue().get("HPL")?has_content>${employeeAttendanceDetails.getValue().get("HPL")?if_exists?string("##0.0")}<#else>0.0</#if></fo:block>
+									   			</fo:table-cell>
+									   			<fo:table-cell>
+									   				<fo:block font-size="4pt" text-align="right"><#if employeeAttendanceDetails.getValue().get("DBL")?has_content>${employeeAttendanceDetails.getValue().get("DBL")?if_exists?string("##0.0")}<#else>0.0</#if></fo:block>
+									   			</fo:table-cell>
+									   			<fo:table-cell>
+									   				<fo:block font-size="4pt" text-align="right"><#if employeeAttendanceDetails.getValue().get("EOL")?has_content>${employeeAttendanceDetails.getValue().get("EOL")?if_exists?string("##0.0")}<#else>0.0</#if></fo:block>
+									   			</fo:table-cell>
+									   			<fo:table-cell>
+									   				<fo:block font-size="4pt" text-align="right"><#if employeeAttendanceDetails.getValue().get("totalDays")?has_content>${employeeAttendanceDetails.getValue().get("totalDays")?if_exists?string("##0.0")}<#else>0.0</#if></fo:block>
+									   			</fo:table-cell>
+									   			<#assign sNo = sNo + 1>
 									   		</fo:table-row>
 									   	</#if>
 								   	</#list>
