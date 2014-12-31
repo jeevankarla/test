@@ -111,6 +111,31 @@ language governing permissions and limitations under the License. -->
                    <#assign prchaseCategorySummeryList = prchaseCategorySummeryMap.entrySet()>
                    <#assign totalRevenue=0>
 					<#list prchaseCategorySummeryList as prchaseCategorySummery>
+					<fo:table-row>
+				<fo:table-cell number-columns-spanned="3">
+					<fo:block text-align="left" font-weight="bold">${prchaseCategorySummery.getKey()}-Total</fo:block>
+				</fo:table-cell>
+				<fo:table-cell>
+					<fo:block keep-together="always" text-align="left"
+						font-size="12pt" white-space-collapse="false"></fo:block>
+				</fo:table-cell>
+				<fo:table-cell>
+					<fo:block keep-together="always" text-align="left"
+						font-size="12pt" white-space-collapse="false"></fo:block>
+				</fo:table-cell>
+				<fo:table-cell>
+					<fo:block keep-together="always" text-align="center"
+						font-size="12pt" white-space-collapse="false"></fo:block>
+				</fo:table-cell>
+			     <fo:table-cell>
+					<fo:block keep-together="always" text-align="right"
+						font-size="11pt" white-space-collapse="false">${prchaseCategorySummery.getValue().get("total")?string("#0.00")}</fo:block>
+				</fo:table-cell>
+				<fo:table-cell>
+					<fo:block keep-together="always" text-align="right"
+						font-size="11pt" white-space-collapse="false"></fo:block>
+				</fo:table-cell>
+	          </fo:table-row>
 					<#-- product Category starts here-->
 					  <#assign purchaseProdCatMap=purchaseSumCatDetaildMap.get(prchaseCategorySummery.getKey())?if_exists>
 					 <#if purchaseProdCatMap?has_content>
@@ -230,7 +255,7 @@ language governing permissions and limitations under the License. -->
 			  </#if>
 	        </#if>
 	        <#-- product Category ends here-->
-	         <fo:table-row>
+	         <!--<fo:table-row>
 				<fo:table-cell number-columns-spanned="3">
 					<fo:block text-align="left" font-weight="bold">${prchaseCategorySummery.getKey()}-Total</fo:block>
 				</fo:table-cell>
@@ -254,7 +279,7 @@ language governing permissions and limitations under the License. -->
 					<fo:block keep-together="always" text-align="right"
 						font-size="11pt" white-space-collapse="false"></fo:block>
 				</fo:table-cell>
-	          </fo:table-row>
+	          </fo:table-row>-->
 			<fo:table-row>
 	          <fo:table-cell number-columns-spanned="3">
 					<fo:block keep-together="always" text-align="left" font-size="12pt" white-space-collapse="false">*************</fo:block>
