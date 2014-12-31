@@ -333,7 +333,21 @@ function makeDatePicker1(fromDateId ,thruDateId){
 				 </table>
 			 </form>
 		  </tr>
-		 
+		  <tr class="alternate-row"> 
+				<form id="EnquiryNoReport" name="EnquiryNoReport" mothed="post" action="<@ofbizUrl>EnquiryNoReport.pdf</@ofbizUrl>" target="_blank">
+				   <table class="basic-table" cellspacing="5">
+					  <tr class="alternate-row">
+					     <td width="20%"><span class='h3'>Enquiry No Report</span></td>
+						 <td width="25%">
+							 <span class='h3'>Enquiry NO.<input type="textfield"  id="issueToEnquiryNo"  name="issueToEnquiryNo"/></span>   								
+						  </td>
+						  <td width="15%"><span class='h3'>							</span></td>
+						      <td width="15%"><span class='h3'>   				       </span></td>	
+						 <td width="10%"><span class='h3'><input type="submit" value="Download" class="buttontext"></span></td>
+		 		    </tr>
+				 </table>
+			 </form>
+		  </tr>
 	  </table>
     </div>
   </div>
