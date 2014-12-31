@@ -188,7 +188,7 @@
 
     <!-- fop rendering logging -->
     <category name="org.apache.fop">
-        <priority value="info"/>
+        <priority value="error"/>
         <appender-ref ref="fop-log"/>
     </category>
 
