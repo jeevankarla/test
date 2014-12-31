@@ -52,6 +52,7 @@ $(function() {
 										if(leaveTypeId =="CH" || leaveTypeId =="CHGH" || leaveTypeId =="CHSS"){
 	     									return viewGHandSS();
      								 	}
+     								 	displayLeaveBalance();
 									}
 									$( "#thruDate" ).datepicker( "option", {minDate: selectedDate});
 								     }
@@ -62,6 +63,7 @@ $(function() {
 	     displayLeaveBalance();
 	  
 	  });
+	  
 	  
 	  $('#ghssDropDown').hide();
 	  
@@ -77,6 +79,14 @@ $(function() {
       		
    		});
    	jQuery("#approverPartyId").focusout(function(){
+   		var partyId=$('input[name=partyId]').val();
+   		var apPartyId=$('input[name=approverPartyId]').val();
+   		if(partyId==apPartyId){
+   		alert("Employee Id And Approver Id Must Be Different");
+   		location.reload(true);
+   		}
+   	});
+   	jQuery("#partyId").focusout(function(){
    		var partyId=$('input[name=partyId]').val();
    		var apPartyId=$('input[name=approverPartyId]').val();
    		if(partyId==apPartyId){
@@ -184,13 +194,19 @@ function viewGHandSS(){
  function displayLeaveBalance(){
     var leaveTypeId = $('select[name=leaveTypeId]').val();
     var employeeId = $('input[name=partyId]').val();
+    
+    $('[name="fromDate"]').datepicker( "option", "dateFormat", "yy-mm-dd");
+    var fromDate = jQuery("#fromDate").val();
+    $('[name="fromDate"]').datepicker( "option", "dateFormat", "dd-mm-yy");
+    
     var flag="createLeave";
     var data = "employeeId="+employeeId+"&leaveTypeId="+leaveTypeId+"&flag="+flag;
+    data = data+"&balanceDate="+fromDate;
+    
     $('#leaveBalance').html('');
     jQuery('#ghssDropDown').hide();
     jQuery('#chDate').html('')
-    if(employeeId =="" || leaveTypeId==""){
-       
+    if(employeeId =="" || leaveTypeId=="" || fromDate==""){
           return false;
      }
      if(leaveTypeId =="CH" || leaveTypeId =="CHGH" || leaveTypeId =="CHSS"){

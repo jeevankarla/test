@@ -1646,14 +1646,12 @@ under the License.emplpunch
        <attribute name="maxFullDayHours" mode="IN" type="Integer" optional="false"/>
        <attribute name="maxHalfDayHours" mode="IN" type="Integer" optional="false"/>
    </service>
-    <service name="populateELBalanceCredit" engine="java" auth="true" invoke="populateELBalanceCredit" 
+    <service name="populateELCLAndHPLBalanceCredit" engine="java" auth="true" invoke="populateELCLAndHPLBalanceCredit" 
         location="in.vasista.vbiz.humanres.EmplLeaveService">
         <description>Rules Validation Check</description>
        <attribute name="customTimePeriodId" mode="IN" type="String" optional="false"/>
+       <attribute name="partyIdFrom" mode="IN" type="String" optional="false"/>
        <attribute name="leaveTypeId" mode="IN" type="String" optional="false"/>
-       <attribute name="partyId" mode="IN" type="String" optional="false"/>
-       <attribute name="allotedDays" mode="IN" type="BigDecimal" optional="false"/>
-       
    </service>
    
    <service name="getGeneralHoliDayOrSSWorkedDays" engine="java" auth="true" invoke="getGeneralHoliDayOrSSWorkedDays" 

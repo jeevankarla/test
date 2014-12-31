@@ -58,6 +58,7 @@ public class EmplLeaveService {
         Map<String, Object> result = FastMap.newInstance();
         String employeeId = (String) context.get("employeeId");
         Date balanceDate = (Date)context.get("balanceDate");
+        
         String flag = (String) context.get("flag");
         if(UtilValidate.isEmpty(balanceDate)){
         	balanceDate = UtilDateTime.toSqlDate(UtilDateTime.nowDate()); 
@@ -138,7 +139,6 @@ public class EmplLeaveService {
 								closingBalance = closingBalance.subtract((BigDecimal)leaveDetailmap.get(leaveTypeId));
 							}
 						}
-						
 					}
 				  if(UtilValidate.isNotEmpty(leaveTypeIdCtx) && (leaveTypeIdCtx.equals("CML") || leaveTypeIdCtx.equals("HPL"))){
 					  
@@ -764,70 +764,171 @@ public class EmplLeaveService {
 		}
 		return result;
     }
-  //Earned Leave Half Yearly Credit
-    public static Map<String, Object> populateELBalanceCredit(DispatchContext dctx, Map context) {
+  //Earned Leave,Half Pay Leave and Casual Leave Half Yearly Credit
+    public static Map<String, Object> populateELCLAndHPLBalanceCredit(DispatchContext dctx, Map context) {
     	Map<String, Object> result = ServiceUtil.returnSuccess();
     	GenericDelegator delegator = (GenericDelegator) dctx.getDelegator();
 		LocalDispatcher dispatcher = dctx.getDispatcher();
 		GenericValue userLogin = (GenericValue) context.get("userLogin");
 	    String customTimePeriodId = (String) context.get("customTimePeriodId");
-	    String partyId = (String) context.get("partyId");
+	    String partyIdFrom = (String) context.get("partyIdFrom");
 	    String leaveTypeId = (String) context.get("leaveTypeId");
-	    BigDecimal allotedDays = (BigDecimal) context.get("allotedDays");
+	    
+	    BigDecimal allotedDays = BigDecimal.ZERO;
+	    if(UtilValidate.isNotEmpty(leaveTypeId) && leaveTypeId.equals("EL")){
+	    	allotedDays = new BigDecimal(15);
+	    }
+	    if(UtilValidate.isNotEmpty(leaveTypeId) && leaveTypeId.equals("HPL")){
+	    	allotedDays = new BigDecimal(10);
+	    }
+	    if(UtilValidate.isNotEmpty(leaveTypeId) && leaveTypeId.equals("CL")){
+	    	allotedDays = new BigDecimal(15);
+	    }
+	    
+	    
 	    Locale locale = new Locale("en","IN");
 		TimeZone timeZone = TimeZone.getDefault();
-	    Map<String, Object> serviceResult = ServiceUtil.returnSuccess();
+	    Map<String, Object> serviceResult = ServiceUtil.returnSuccess();	
 	    Timestamp previousDayEnd = null;
+	    Timestamp timePeriodStart = null;
+	    Timestamp timePeriodEnd = null;
+	    
+	    String monthName = null;
+	    
 	    try {
 	        GenericValue customTimePeriod = delegator.findOne("CustomTimePeriod", UtilMisc.toMap("customTimePeriodId", customTimePeriodId),false);
-        	if (UtilValidate.isNotEmpty(customTimePeriod)) {
+	        if (UtilValidate.isEmpty(customTimePeriod)) {
+	        	Debug.logError("CustomTimePeriodId is Empty", module);
+	        	return ServiceUtil.returnError("CustomTimePeriodId is Empty");
+	        }
+	        if (UtilValidate.isNotEmpty(customTimePeriod)) {
         		Timestamp fromDateTime = UtilDateTime.toTimestamp(customTimePeriod.getDate("fromDate"));
         		Timestamp thruDateTime = UtilDateTime.toTimestamp(customTimePeriod.getDate("thruDate"));
+        		Timestamp monthStartDate = UtilDateTime.getMonthStart(fromDateTime, timeZone, locale);
+        		monthName = UtilDateTime.toDateString(monthStartDate, "MMMM");
+        		timePeriodStart = UtilDateTime.getDayStart(fromDateTime);
+        		timePeriodEnd = UtilDateTime.getDayEnd(thruDateTime);
         		previousDayEnd = UtilDateTime.getDayEnd(UtilDateTime.addDaysToTimestamp(fromDateTime, -1));
         	}
         }catch (GenericEntityException e) {
         	Debug.logError(e, module);
         	return ServiceUtil.returnError(e.getMessage());
 		}
-	    if(UtilValidate.isNotEmpty(leaveTypeId)){
-			Map getEmplLeaveBalMap = FastMap.newInstance();
-			getEmplLeaveBalMap.put("userLogin",userLogin);
-			getEmplLeaveBalMap.put("leaveTypeId",leaveTypeId);
-			getEmplLeaveBalMap.put("employeeId",partyId);
-			getEmplLeaveBalMap.put("balanceDate",new java.sql.Date(previousDayEnd.getTime()));
-			if(UtilValidate.isNotEmpty(getEmplLeaveBalMap)){
-				try{
-					serviceResult = dispatcher.runSync("getEmployeeLeaveBalance", getEmplLeaveBalMap);
-		            if (ServiceUtil.isError(serviceResult)){
-		            	Debug.logError(ServiceUtil.getErrorMessage(serviceResult), module);
-		            	return ServiceUtil.returnSuccess();
-		            } 
-	    			Map leaveBalances = (Map)serviceResult.get("leaveBalances");
-	    			BigDecimal leaveClosingBalance = (BigDecimal) leaveBalances.get(leaveTypeId);
-	    		    if(UtilValidate.isNotEmpty(customTimePeriodId) && customTimePeriodId.equals("HR_JUL_14") || customTimePeriodId.equals("HR_JAN_15")){
-	    		    	GenericValue emplLeaveBalanceStatus = delegator.findOne("EmplLeaveBalanceStatus",UtilMisc.toMap("partyId",partyId, "leaveTypeId", leaveTypeId, "customTimePeriodId",customTimePeriodId), false);
-	    		    	if(UtilValidate.isEmpty(emplLeaveBalanceStatus)){
-	    		    		if (UtilValidate.isNotEmpty(leaveClosingBalance) && UtilValidate.isNotEmpty(allotedDays)) {
-	    						leaveClosingBalance = leaveClosingBalance.add(allotedDays);
-	    						emplLeaveBalanceStatus = delegator.makeValue("EmplLeaveBalanceStatus");
-	    						emplLeaveBalanceStatus.set("customTimePeriodId",customTimePeriodId);
-	    						emplLeaveBalanceStatus.set("leaveTypeId",leaveTypeId);
-	    						emplLeaveBalanceStatus.set("partyId",partyId);
-	    						emplLeaveBalanceStatus.set("openingBalance",leaveClosingBalance);
-		    					emplLeaveBalanceStatus.create();
-	    					}
-	    				}else{
-	    					if(UtilValidate.isNotEmpty(allotedDays)){
-	    		    			emplLeaveBalanceStatus.set("allotedDays",allotedDays);
-		    					emplLeaveBalanceStatus.store();
-	    		    		}
-	    				}
-	    		    }
-				}catch(Exception e){
-					Debug.logError("Error while getting Employee Leave Balance"+e.getMessage(), module);
-				}
+	    Map emplInputMap = FastMap.newInstance();
+		emplInputMap.put("userLogin", userLogin);
+		emplInputMap.put("orgPartyId", partyIdFrom);
+		emplInputMap.put("fromDate", timePeriodStart);
+		emplInputMap.put("thruDate", timePeriodEnd);
+    	Map resultMap = HumanresService.getActiveEmployements(dctx,emplInputMap);
+    	List<GenericValue> activeEmployementList = (List<GenericValue>)resultMap.get("employementList");
+    	List<String> partyIdList = EntityUtil.getFieldListFromEntityList(activeEmployementList, "partyIdTo", true);
+    	// filtering probationary staff
+    	try{
+    		if(UtilValidate.isNotEmpty(activeEmployementList)){
+        		List probStaffPartyList = FastList.newInstance();
+        		List conditionList = FastList.newInstance();
+        		conditionList.add(EntityCondition.makeCondition("partyIdTo", EntityOperator.IN, partyIdList));
+            	EntityCondition cond = EntityCondition.makeCondition(conditionList,EntityOperator.AND);
+            	List<GenericValue> employmentList = delegator.findList("Employment",cond, null, UtilMisc.toList("-thruDate"), null, false);
+            	if(UtilValidate.isNotEmpty(employmentList)){
+            		for (int i = 0; i < employmentList.size(); ++i) {	
+            			GenericValue employmentDetails = employmentList.get(i);
+            			Timestamp appointmentDate = employmentDetails.getTimestamp("appointmentDate");
+            			String partyIdTo = (String) employmentDetails.get("partyIdTo");
+            			if(UtilValidate.isNotEmpty(appointmentDate)){
+                			Timestamp appointmentDateStart = UtilDateTime.getDayStart(appointmentDate);
+                			int intervalDays = (UtilDateTime.getIntervalInDays(appointmentDateStart, timePeriodStart)+1);
+                			if(intervalDays < 730){
+                				probStaffPartyList.add(partyIdTo);
+                			}
+            			}
+            		}
+            		partyIdList.removeAll(probStaffPartyList);
+            		List partyClassList = FastList.newInstance();
+            		partyClassList.add(EntityCondition.makeCondition("partyId", EntityOperator.IN, partyIdList));
+            		partyClassList.add(EntityCondition.makeCondition("partyClassificationGroupId", EntityOperator.EQUALS, "PROB_STAFF"));
+                    EntityCondition partyClassCond = EntityCondition.makeCondition(partyClassList,EntityOperator.AND);
+                    List<GenericValue> partyClassificationList = delegator.findList("PartyClassification",partyClassCond, null, UtilMisc.toList("-thruDate"), null, false);
+                    List partyClassIdList = EntityUtil.getFieldListFromEntityList(partyClassificationList, "partyId", true);
+                    partyIdList.removeAll(partyClassIdList);
+            	}
+        	}
+    	}catch(Exception e){
+			Debug.logError("Error while getting Employement"+e.getMessage(), module);
+		}
+        for (int j = 0; j < partyIdList.size(); ++j) {	
+    		String partyId = (String) partyIdList.get(j);
+    		try{
+        		if(UtilValidate.isNotEmpty(partyId)){
+        			Map getEmplLeaveBalMap = FastMap.newInstance();
+        			getEmplLeaveBalMap.put("userLogin",userLogin);
+        			getEmplLeaveBalMap.put("leaveTypeId",leaveTypeId);
+        			getEmplLeaveBalMap.put("employeeId",partyId);
+        			getEmplLeaveBalMap.put("balanceDate",new java.sql.Date(previousDayEnd.getTime()));
+        			if(UtilValidate.isNotEmpty(getEmplLeaveBalMap)){
+        				try{
+        					serviceResult = dispatcher.runSync("getEmployeeLeaveBalance", getEmplLeaveBalMap);
+        		            if (ServiceUtil.isError(serviceResult)){
+        		            	Debug.logError(ServiceUtil.getErrorMessage(serviceResult), module);
+        		            	return ServiceUtil.returnSuccess();
+        		            } 
+        	    			Map leaveBalances = (Map)serviceResult.get("leaveBalances");
+        	    			BigDecimal leaveClosingBalance = (BigDecimal) leaveBalances.get(leaveTypeId);
+        	    			if((leaveTypeId.equals("EL") && leaveClosingBalance.compareTo(new BigDecimal(300)) >0)){
+        	    				leaveClosingBalance = new BigDecimal(300);
+        	    			}
+        	    			if(UtilValidate.isNotEmpty(leaveTypeId) && leaveTypeId.equals("EL") || leaveTypeId.equals("HPL")){
+        	    				if(UtilValidate.isNotEmpty(customTimePeriodId) && monthName.equals("July") || monthName.equals("January")){
+            	    		    	GenericValue emplLeaveBalanceStatus = delegator.findOne("EmplLeaveBalanceStatus",UtilMisc.toMap("partyId",partyId, "leaveTypeId", leaveTypeId, "customTimePeriodId",customTimePeriodId), false);
+            	    		    	if(UtilValidate.isEmpty(emplLeaveBalanceStatus)){
+            	    		    		if (UtilValidate.isNotEmpty(leaveClosingBalance) && UtilValidate.isNotEmpty(allotedDays)) {
+            	    						emplLeaveBalanceStatus = delegator.makeValue("EmplLeaveBalanceStatus");
+            	    						emplLeaveBalanceStatus.set("customTimePeriodId",customTimePeriodId);
+            	    						emplLeaveBalanceStatus.set("leaveTypeId",leaveTypeId);
+            	    						emplLeaveBalanceStatus.set("partyId",partyId);
+            	    						emplLeaveBalanceStatus.set("openingBalance",leaveClosingBalance);
+                    	    		        emplLeaveBalanceStatus.set("allotedDays",allotedDays);
+            		    					emplLeaveBalanceStatus.create();
+            	    					}
+            	    				}else{
+            	    					if(UtilValidate.isNotEmpty(allotedDays)){
+            	    		    			emplLeaveBalanceStatus.set("allotedDays",allotedDays);
+            		    					emplLeaveBalanceStatus.store();
+            	    		    		}
+            	    				}
+            	    		    }
+        	    			}
+        	    			if(UtilValidate.isNotEmpty(leaveTypeId) && leaveTypeId.equals("CL")){
+        	    				if(UtilValidate.isNotEmpty(customTimePeriodId) && monthName.equals("January")){
+            	    		    	GenericValue emplLeaveBalanceStatus = delegator.findOne("EmplLeaveBalanceStatus",UtilMisc.toMap("partyId",partyId, "leaveTypeId", leaveTypeId, "customTimePeriodId",customTimePeriodId), false);
+            	    		    	if(UtilValidate.isEmpty(emplLeaveBalanceStatus)){
+            	    		    		if(UtilValidate.isNotEmpty(allotedDays)) {
+            	    						emplLeaveBalanceStatus = delegator.makeValue("EmplLeaveBalanceStatus");
+            	    						emplLeaveBalanceStatus.set("customTimePeriodId",customTimePeriodId);
+            	    						emplLeaveBalanceStatus.set("leaveTypeId",leaveTypeId);
+            	    						emplLeaveBalanceStatus.set("partyId",partyId);
+            	    						emplLeaveBalanceStatus.set("openingBalance",BigDecimal.ZERO);
+            	    						emplLeaveBalanceStatus.set("allotedDays",allotedDays);
+            		    					emplLeaveBalanceStatus.create();
+            	    					}
+            	    				}else{
+            	    					if(UtilValidate.isNotEmpty(allotedDays)){
+            	    						emplLeaveBalanceStatus.set("openingBalance",BigDecimal.ZERO);
+            	    		    			emplLeaveBalanceStatus.set("allotedDays",allotedDays);
+            		    					emplLeaveBalanceStatus.store();
+            	    		    		}
+            	    				}
+            	    		    }
+        	    			}
+        				}catch(Exception e){
+        					Debug.logError("Error while getting Employee Leave Balance"+e.getMessage(), module);
+        				}
+        			}
+        	    }
+    		}catch(Exception e){
+				Debug.logError("Error while getting Employement"+e.getMessage(), module);
 			}
-	    }
+    	}
 	    return result;
     }
 }
