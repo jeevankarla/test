@@ -251,6 +251,7 @@ under the License.
         <set field="statusInput.statusId" from-field="newEntity.statusId"/>
         <set field="statusInput.custRequestId" from-field="newEntity.custRequestId"/>
         <set field="statusInput.custRequestItemSeqId" from-field="newEntity.custRequestItemSeqId"/>
+        <set field="statusInput.description" from-field="newEntity.description"/>
         <call-service service-name="setCustRequestItemStatus" in-map-name="statusInput"/>
     </simple-method>
     <simple-method method-name="updateCustRequestItem" short-description="Update Customer Request Item">

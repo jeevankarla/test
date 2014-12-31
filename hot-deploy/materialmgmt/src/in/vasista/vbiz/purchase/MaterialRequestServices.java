@@ -310,6 +310,7 @@ public class MaterialRequestServices {
 		String statusId = (String) context.get("statusId");
 		String custRequestId = (String) context.get("custRequestId");
 		String custRequestItemSeqId = (String) context.get("custRequestItemSeqId");
+		String description = (String) context.get("description");
 		BigDecimal acceptedQty = (BigDecimal) context.get("quantity");
 		GenericValue userLogin = (GenericValue) context.get("userLogin");
 		Map result = ServiceUtil.returnSuccess();
@@ -325,6 +326,7 @@ public class MaterialRequestServices {
 			Map statusItemCtx = FastMap.newInstance();
 			statusItemCtx.put("statusId", statusId);
 			statusItemCtx.put("custRequestId", custRequestId);
+			statusItemCtx.put("description", description);
 			statusItemCtx.put("custRequestItemSeqId", custRequestItemSeqId);
 			statusItemCtx.put("userLogin", userLogin);
 			Map resultCtx = dispatcher.runSync("setCustRequestItemStatus", statusItemCtx);
@@ -359,6 +361,7 @@ public class MaterialRequestServices {
 		String custRequestId = (String) context.get("custRequestId");
 		String custRequestItemSeqId = (String) context.get("custRequestItemSeqId");
 		GenericValue userLogin = (GenericValue) context.get("userLogin");
+		String description = (String) context.get("description");
 		Map result = ServiceUtil.returnSuccess();
 		try{
 			GenericValue custRequestItem = delegator.findOne("CustRequestItem", UtilMisc.toMap("custRequestId", custRequestId, "custRequestItemSeqId", custRequestItemSeqId),  false);
@@ -376,6 +379,9 @@ public class MaterialRequestServices {
 				}
 			}
 			custRequestItem.set("statusId", statusId);
+			if(!description.equals("null")){
+				custRequestItem.set("description", description);
+			}
 			custRequestItem.store();
 			
 			Map inputCtx = FastMap.newInstance();

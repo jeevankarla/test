@@ -300,7 +300,7 @@
     </form>
     
     <form name="ListRequestsToApprove" type="list" use-row-submit="true"  title="" list-name="custRequestItemsList"
-        odd-row-style="alternate-row" target="approveRequestByHOD" default-table-style="basic-table hover-bar" paginate-target="StoreProductIssue" separate-columns="true">
+        odd-row-style="alternate-row" target="rejectMaterialRequest" default-table-style="basic-table hover-bar" paginate-target="StoreProductIssue" separate-columns="true">
         
         <field name="custRequestId" title="${uiLabelMap.MaterialMangement_CustRequestId}"><display/></field>
         <field name="custRequestItemSeqId" title="${uiLabelMap.MaterialMangement_CustRequestItemSeqId}"><display/></field>
@@ -311,24 +311,27 @@
         <field name="productId" title="${uiLabelMap.MaterialMangement_ProductId} - ${uiLabelMap.MaterialMangement_ProductName}">
             <display-entity entity-name="Product" key-field-name="productId" description="${productId} - ${productName}"/>
         </field>
-        <field name="statusId"> <hidden value="CRQ_SUBMITTED"/></field>
+        <field name="statusId"> <hidden value="CRQ_REJECTED"/></field>
         <field name="requireQty" title="Required Qty"><display description="${quantity}"/></field>
         <field name="quantity" title="Accepted Qty"><text/></field>
+        <field name="description" title="Description"  widget-style="required" required-field="true"><text size="25" /></field>
         <field name="acceptButton" widget-style="buttontext">
-        	<submit/>
-            <!-- <hyperlink target="approveRequestByHOD" description="Accept">
+            <hyperlink target="approveRequestByHOD" description="Accept">
                 <parameter param-name="custRequestId"/>
                 <parameter param-name="custRequestItemSeqId"/>
                 <parameter param-name="quantity" />
+                <parameter param-name="description"/>
                 <parameter param-name="statusId" value="CRQ_SUBMITTED"/>
-            </hyperlink> -->
+            </hyperlink>
         </field>
         <field name="rejectButton" widget-style="buttontext">
-            <hyperlink target="rejectMaterialRequest" description="Reject">
+        <submit/>
+            <!-- <hyperlink target="rejectMaterialRequest" description="Reject">
                 <parameter param-name="custRequestId"/>
                 <parameter param-name="custRequestItemSeqId"/>
+                <parameter param-name="description"/>
                 <parameter param-name="statusId" value="CRQ_REJECTED"/>
-            </hyperlink>
+            </hyperlink> -->
         </field>
         
     </form>
