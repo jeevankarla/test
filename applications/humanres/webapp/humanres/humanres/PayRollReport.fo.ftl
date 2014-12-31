@@ -57,7 +57,10 @@ under the License.
       	 <#assign payHeader = delegator.findOne("PayrollHeader", {"payrollHeaderId" : payRollHeader.getKey()}, true)>
       	 <#assign partyId = payHeader.partyIdFrom>
       	 <#assign emplDetails = delegator.findOne("PartyPersonAndEmployeeDetail", {"partyId" : partyId}, true)/>
-      	 <#assign emplLeavesDetails = delegator.findOne("PayrollAttendance", {"partyId" : partyId, "customTimePeriodId": timePeriod?if_exists}, true)/>
+      	 <#if timePeriod?exists>
+      	 		<#assign emplLeavesDetails = delegator.findOne("PayrollAttendance", {"partyId" : partyId, "customTimePeriodId": timePeriod?if_exists}, true)/>
+      	 </#if>
+      	 
       	 <#assign doj=delegator.findByAnd("Employment", {"partyIdTo" : partyId})/>
       	 <#assign emplPosition=delegator.findByAnd("EmplPosition", {"partyId" : partyId})/>
       	 <#assign payGrade=delegator.findByAnd("PayGradePayHistory", {"partyIdTo" : partyId})/>
@@ -134,8 +137,10 @@ under the License.
                      		 						<fo:block text-align="left" keep-together="always" white-space-collapse="false">Actual HRA    :  <#if EmplSalaryDetailsMap?has_content>${EmplSalaryDetailsMap.get(partyId).get("hraAmt")?if_exists}</#if></fo:block>
                      		 					</fo:table-cell>-->
                      		 				</fo:table-row>
-                     		 				<#assign designation = delegator.findOne("EmplPositionType", {"emplPositionTypeId" : emplPositionAndFulfilment[0].emplPositionTypeId?if_exists}, true)>
-                     		 				<#assign designationName=emplPositionAndFulfilment[0].name?if_exists>
+                     		 				<#if emplPositionAndFulfilment?has_content>
+	                     		 				<#assign designation = delegator.findOne("EmplPositionType", {"emplPositionTypeId" : emplPositionAndFulfilment[0].emplPositionTypeId?if_exists}, true)>
+	                     		 				<#assign designationName=emplPositionAndFulfilment[0].name?if_exists>
+                     		 				</#if>
                      		 				<fo:table-row>
                      		 					<fo:table-cell>
                      		 						<fo:block text-align="left" keep-together="always" white-space-collapse="false">&#160;Designation               : <#if designationName?has_content>${designationName?if_exists}<#else><#if designation?has_content>${designation.description?if_exists}</#if></#if></fo:block>
@@ -360,7 +365,7 @@ under the License.
 		                    		<fo:table-cell border-style="solid">                    		
 		                      			<#assign totalDeductions=(totalDeductions+(dedValue))> 
 		                      			<#assign instmtNo=0>
-		                      			<#if InstallmentFinalMap[payRollHeader.getKey()].get(deductionType)?has_content>
+		                      			<#if (InstallmentFinalMap?has_content) && (InstallmentFinalMap[payRollHeader.getKey()]?has_content) && (InstallmentFinalMap[payRollHeader.getKey()].get(deductionType)?has_content)>
 		                      				<#assign instmtNo=InstallmentFinalMap[payRollHeader.getKey()].get(deductionType)?if_exists>  
 		                      			</#if>               			
 		                    			<fo:block keep-together="always">&#160;${dedDescMap[deductionType]?if_exists}<#if instmtNo !=0>[${instmtNo?if_exists}]</#if></fo:block>                			
