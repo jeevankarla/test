@@ -838,6 +838,10 @@ public class HumanresService {
 						newEntity.set("finAccountId", partyId);
 						newEntity.set("finAccountCode", finAccountCode);
 						newEntity.set("finAccountName", finAccountName);
+						newEntity.set("organizationPartyId", "Company");
+						newEntity.set("ownerPartyId", partyId);
+						newEntity.set("finAccountTypeId", "BANK_ACCOUNT");
+						newEntity.set("statusId", "FNACT_ACTIVE");
 						if(UtilValidate.isNotEmpty(finAccountBranch)){
 							newEntity.set("finAccountBranch", finAccountBranch);
 						}
