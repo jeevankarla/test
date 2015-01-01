@@ -581,6 +581,24 @@
             </widgets>
         </section>
     </screen>
+    <screen name="creditLeavesELHPLCL">
+        <section>
+            <actions>
+                <set field="titleProperty" value="Credit Leaves ELHPLCL"/>
+				<set field="headerItem" value="Leave"/>
+                <set field="tabButtonItem" value="EmployeeLeave"/>
+                 <set field="tabButtonItem2" value="creditLeavesELHPLCL" />
+            </actions>
+            <widgets>
+				<decorator-screen name="HumanresCommonDecorator" location="component://humanres/widget/CommonScreens.xml">
+                    <decorator-section name="body">
+                    	<include-menu location="component://humanres/widget/HumanresMenus.xml" name="EmplLeaveTabBar"/> 
+                           <include-form name="creditLeavesELHPLCL" location="component://humanres/widget/forms/EmploymentForms.xml"/>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
     <screen name="listLeaves">
       <section>
 			<actions>

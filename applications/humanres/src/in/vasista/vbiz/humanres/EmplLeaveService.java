@@ -766,13 +766,14 @@ public class EmplLeaveService {
     }
   //Earned Leave,Half Pay Leave and Casual Leave Half Yearly Credit
     public static Map<String, Object> populateELCLAndHPLBalanceCredit(DispatchContext dctx, Map context) {
-    	Map<String, Object> result = ServiceUtil.returnSuccess();
     	GenericDelegator delegator = (GenericDelegator) dctx.getDelegator();
 		LocalDispatcher dispatcher = dctx.getDispatcher();
 		GenericValue userLogin = (GenericValue) context.get("userLogin");
 	    String customTimePeriodId = (String) context.get("customTimePeriodId");
 	    String partyIdFrom = (String) context.get("partyIdFrom");
 	    String leaveTypeId = (String) context.get("leaveTypeId");
+	    
+	    Map<String, Object> result = ServiceUtil.returnSuccess(" "+ leaveTypeId + " leaves credited sucessfully..!");
 	    
 	    BigDecimal allotedDays = BigDecimal.ZERO;
 	    if(UtilValidate.isNotEmpty(leaveTypeId) && leaveTypeId.equals("EL")){
@@ -874,8 +875,8 @@ public class EmplLeaveService {
         		            } 
         	    			Map leaveBalances = (Map)serviceResult.get("leaveBalances");
         	    			BigDecimal leaveClosingBalance = (BigDecimal) leaveBalances.get(leaveTypeId);
-        	    			if((leaveTypeId.equals("EL") && leaveClosingBalance.compareTo(new BigDecimal(300)) >0)){
-        	    				leaveClosingBalance = new BigDecimal(300);
+        	    			if((leaveTypeId.equals("EL") && leaveClosingBalance.compareTo(new BigDecimal(285)) >0)){
+        	    				leaveClosingBalance = new BigDecimal(285);
         	    			}
         	    			if(UtilValidate.isNotEmpty(leaveTypeId) && leaveTypeId.equals("EL") || leaveTypeId.equals("HPL")){
         	    				if(UtilValidate.isNotEmpty(customTimePeriodId) && monthName.equals("July") || monthName.equals("January")){

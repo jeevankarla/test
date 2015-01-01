@@ -857,6 +857,11 @@
     	
     	<field name="HPL" title="HalfPay Leaves"><text size="10"/></field>
     	<field name="submitButton" title="${uiLabelMap.CommonUpdate}"><submit button-type="button"/></field> 
-    	 
+    </form>
+    <form name="creditLeavesELHPLCL" type="single" target="populateELCLAndHPLBalanceCredit" >
+    	<field name="partyIdFrom" title="Organization Id" required-field="true" ><text></text></field>
+        <field name="customTimePeriodId" required-field="true"><text></text></field>
+        <field name="leaveTypeId" required-field="true"><text></text></field>
+        <field name="searchButton" title="${uiLabelMap.CommonRun}" widget-style="smallSubmit"><submit button-type="button"/></field>
     </form>
 </forms>

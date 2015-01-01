@@ -973,7 +973,17 @@
           </and> 
         </condition> 
 			<link target="CreditLeaves"></link>        
+        </menu-item>
+        
+        <menu-item name="creditLeavesELHPLCL" title="Credit Leaves EL/HPL/CL">
+        <condition>
+             <and>
+                <if-has-permission permission="CREDIT_ELHPLCL_TAB"  action="_VIEW"/>
+          </and> 
+        </condition> 
+			<link target="creditLeavesELHPLCL"></link>        
         </menu-item> 
+        
     </menu>
     
     <menu name="EmplPayrollTabBar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml"
