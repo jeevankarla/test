@@ -118,7 +118,7 @@
 	
 	<form name="FindMaterialEnquiry" target="FindMaterialEnquiry" title="" type="single" default-map-name="parameters"
         header-row-style="header-row" default-table-style="basic-table">
-        <field name="custRequestId" title="Request Id"><text-find/></field>
+        <field name="custRequestId" title="Enquiry No"><text-find/></field>
         <field name="custRequestTypeId"><hidden value="parameters.custRequestTypeId"/></field>
         <field name="statusId" title="Status">
             <drop-down allow-empty="true">
@@ -128,9 +128,9 @@
                 </entity-options>
             </drop-down>
         </field>
-        <field name="custRequestName" title="Request Title"><text-find/></field>
+        <field name="custRequestName" title="Enquiry Reference"><text-find/></field>
         <field name="fromPartyId" title="From Party"><lookup target-form-name="LookupPartyName"/></field>
- 		<field name="custRequestDate" title="Request Date"><date-find/></field>   
+ 		<field name="custRequestDate" title="Enquiry Date"><date-find/></field>   
         <field name="submitButton" title="${uiLabelMap.CommonFind}" widget-style="smallSubmit">
             <submit button-type="button"/>
         </field>
