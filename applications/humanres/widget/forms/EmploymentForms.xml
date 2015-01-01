@@ -72,6 +72,7 @@
         <field name="thruDate"><display description="${groovy:org.ofbiz.base.util.UtilDateTime.toDateString(thruDate, &quot;dd/MM/yyyy&quot;);}" /></field>
         <field name="terminationReasonId" title="${uiLabelMap.HumanResTerminationReasonId}"><display/></field>
         <field name="terminationTypeId"><display/></field>
+        <field name="locationGeoId"><display/></field>
         <field name="editLink" title="${uiLabelMap.CommonEmptyHeader}" widget-style="buttontext">
             <hyperlink target="EditEmployment" description="${uiLabelMap.CommonDetails}">
                 <parameter param-name="partyIdFrom"/>

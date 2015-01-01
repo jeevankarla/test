@@ -1330,11 +1330,8 @@
     </field>
     </form>
     <form name="createEmployee" type="single" header-row-style="header-row" default-table-style="basic-table"  target="createEmployeeMaster">
-    	<field name="firstName" tooltip="${uiLabelMap.CommonRequired}" widget-style="required" required-field="true"><text/></field>
-       	<field name="middleName" title="${uiLabelMap.PartyMiddleName}"><text></text></field>
-        <field name="lastName"  tooltip="${uiLabelMap.CommonRequired}" widget-style="required" required-field="true"><text/></field>
-        <field name="postalAddContactMechPurpTypeId"><hidden value="PRIMARY_LOCATION"/></field>
-        <field name="partyId" parameter-name="partyIdFrom" title="Organisation" tooltip="${uiLabelMap.CommonRequired}" widget-style="required" required-field="true">
+    	<field name="employeeId" parameter-name="partyId" required-field="true"><text></text></field>
+    	<field name="partyId" parameter-name="partyIdFrom" title="Organisation" tooltip="${uiLabelMap.CommonRequired}" widget-style="required" required-field="true">
             <drop-down allow-empty="false">
                 <entity-options entity-name="PartyRoleAndPartyDetail" description="${groupName}">
                     <entity-constraint name="roleTypeId" operator="equals" value="INTERNAL_ORGANIZATIO" />
@@ -1342,6 +1339,10 @@
                 </entity-options>
             </drop-down>
         </field>
+    	<field name="firstName" tooltip="${uiLabelMap.CommonRequired}" widget-style="required" required-field="true"><text/></field>
+       	<field name="middleName" title="${uiLabelMap.PartyMiddleName}"><text></text></field>
+        <field name="lastName"  tooltip="${uiLabelMap.CommonRequired}" widget-style="required" required-field="true"><text/></field>
+        <field name="postalAddContactMechPurpTypeId"><hidden value="PRIMARY_LOCATION"/></field>
     	<field name="birthDate" title="${uiLabelMap.DateOfBirth}" tooltip="${uiLabelMap.CommonRequired}" widget-style="required" required-field="true"><date-time></date-time></field>
     	<field name="birthPlace" title="Place Of Birth" required-field="false"><text size="20"/></field>
     	<field name="bloodGroup" title="${uiLabelMap.BloodGroup}">
@@ -1374,6 +1375,14 @@
 		<field name="address1" title="${uiLabelMap.CommonAddress1}" tooltip="${uiLabelMap.CommonRequired}" widget-style="required"><text size="30" maxlength="60"/></field>
         <field name="address2" title="${uiLabelMap.CommonAddress2}"><text size="30" maxlength="60"/></field>
         <field name="city" title="${uiLabelMap.CommonCity}" tooltip="${uiLabelMap.CommonRequired}" widget-style="required"><text size="30" maxlength="60"/></field>
+        <field name="locationGeoId" title="Loaction Geo">
+            <drop-down allow-empty="false" no-current-selected-key="BGLR">
+                <entity-options entity-name="Geo" key-field-name="geoId" description="${geoName}">
+                    <entity-constraint name="geoTypeId" value="CITY"/>
+                    <entity-order-by field-name="geoName"/>
+                </entity-options>
+            </drop-down>
+        </field>
         <field name="state" title="${uiLabelMap.CommonState}" tooltip="${uiLabelMap.CommonRequired}" widget-style="required">
             <drop-down allow-empty="false" no-current-selected-key="IND">
                 <entity-options entity-name="Geo" key-field-name="geoId" description="${geoName}">
@@ -1516,6 +1525,12 @@
 				<option key="Y" />
 			</drop-down>
 		</field>  --> 
+		<field name="emplPositionTypeId" title="Employee Position" required-field="true">
+			<drop-down allow-empty="true">
+				<entity-options entity-name="EmplPositionType" key-field-name="emplPositionTypeId" description="${description}">
+				</entity-options>
+			</drop-down>
+		</field>
     	<field name="submitButton" title="${uiLabelMap.CommonCreate}"><submit/></field>
     </form>
 </forms>

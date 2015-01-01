@@ -943,7 +943,7 @@ public class HumanresService {
 			String address1 = null;
 			String address2 = null;
 			String contactMechId = null;
-			String partyId = null;
+			String partyId = (String) context.get("partyId");
 			
 			String firstName = (String) context.get("firstName");
 			String lastName = (String) context.get("lastName");
@@ -988,6 +988,8 @@ public class HumanresService {
 			Date dateOfJoining =  (Date)context.get("dateOfJoining");
 			Date passportExpireDate =  (Date)context.get("passportExpireDate");
 			String backgroundVerification =(String)context.get("backgroundVerification");
+			String emplPositionTypeId = (String) context.get("emplPositionTypeId");
+			String locationGeoId = (String) context.get("locationGeoId");
 			
 			Map<String, Object> resultMap = FastMap.newInstance();
 			Map<String, Object> input = FastMap.newInstance();
@@ -998,7 +1000,7 @@ public class HumanresService {
 			try{
 				// create Person / Party
 				Object tempInput = "PARTY_ENABLED";
-				input = UtilMisc.toMap("firstName", firstName, "lastName", lastName, "middleName",middleName, "birthDate",birthDate, "placeOfBirth",birthPlace, "bloodGroup",bloodGroup,"gender",gender, "maritalStatus",maritalStatus, "motherTongue",motherTongue, "religion",religion,  "nationality",nationality, "passportNumber",passportNumber, "passportExpireDate",passportExpireDate, "statusId", tempInput);
+				input = UtilMisc.toMap("firstName", firstName, "lastName", lastName, "middleName",middleName, "birthDate",birthDate, "placeOfBirth",birthPlace, "bloodGroup",bloodGroup,"gender",gender, "maritalStatus",maritalStatus, "motherTongue",motherTongue, "religion",religion,  "nationality",nationality, "passportNumber",passportNumber, "passportExpireDate",passportExpireDate, "statusId", tempInput,"partyId",partyId);
 				resultMap = dispatcher.runSync("createPerson", input);
 				if (ServiceUtil.isError(resultMap)) {
 					Debug.logError(ServiceUtil.getErrorMessage(resultMap), module);
@@ -1081,6 +1083,7 @@ public class HumanresService {
 		            input.put("fromDate", UtilDateTime.nowTimestamp());
 		            input.put("partyIdFrom", partyIdFrom);
 		            input.put("appointmentDate", dateOfJoining);
+		            input.put("locationGeoId", locationGeoId);
 		            outMap = dispatcher.runSync("createEmployment", input);
 		            if(ServiceUtil.isError(outMap)){
 		           	 	Debug.logError("faild service create Employee:"+ServiceUtil.getErrorMessage(outMap), module);
@@ -1088,6 +1091,33 @@ public class HumanresService {
 		            }
 				}
 				
+
+				// Create Employee Position
+				if (UtilValidate.isNotEmpty(emplPositionTypeId)){
+		            input.clear();
+		            input.put("userLogin", userLogin);
+		            input.put("partyId", ownerPartyId);
+		            input.put("emplPositionTypeId", emplPositionTypeId);
+		            outMap = dispatcher.runSync("createEmplPosition", input);
+		            if(ServiceUtil.isError(outMap)){
+		           	 	Debug.logError("faild service create Employee Position:"+ServiceUtil.getErrorMessage(outMap), module);
+		           	 	return ServiceUtil.returnError(ServiceUtil.getErrorMessage(outMap));
+		            }
+		            String emplPositionId = (String) outMap.get("emplPositionId");
+		            // Create Employee Position Fulfillment
+					if (UtilValidate.isNotEmpty(emplPositionTypeId)){
+			            input.clear();
+			            input.put("userLogin", userLogin);
+			            input.put("partyId", ownerPartyId);
+			            input.put("fromDate", UtilDateTime.nowTimestamp());
+			            input.put("emplPositionId", emplPositionId);
+			            outMap = dispatcher.runSync("createEmplPositionFulfillment", input);
+			            if(ServiceUtil.isError(outMap)){
+			           	 	Debug.logError("faild service create Employee Position Fulfillment:"+ServiceUtil.getErrorMessage(outMap), module);
+			           	 	return ServiceUtil.returnError(ServiceUtil.getErrorMessage(outMap));
+			            }
+					}
+				}
 				// Create Employee Detail
 				try{
 					GenericValue newEntity = delegator.makeValue("EmployeeDetail");
@@ -1117,7 +1147,7 @@ public class HumanresService {
 					Debug.logError(e, module);
 					return ServiceUtil.returnError("Error while creating Employee" + e);	
 				}
-			  result.put("partyId", ownerPartyId);
+			  //result.put("partyId", ownerPartyId);
 		      return result;
 	    }
 	    
