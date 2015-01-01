@@ -859,7 +859,14 @@
     	<field name="submitButton" title="${uiLabelMap.CommonUpdate}"><submit button-type="button"/></field> 
     </form>
     <form name="creditLeavesELHPLCL" type="single" target="populateELCLAndHPLBalanceCredit" >
-    	<field name="partyIdFrom" title="Organization Id" required-field="true" ><text></text></field>
+    	<field name="partyId" parameter-name="partyIdFrom" title="Organisation" tooltip="${uiLabelMap.CommonRequired}" widget-style="required" required-field="true">
+            <drop-down allow-empty="false">
+                <entity-options entity-name="PartyRoleAndPartyDetail" description="${groupName}">
+                    <entity-constraint name="roleTypeId" operator="equals" value="INTERNAL_ORGANIZATIO" />
+                    <entity-order-by field-name="partyId" />
+                </entity-options>
+            </drop-down>
+        </field>
         <field name="customTimePeriodId" required-field="true"><text></text></field>
         <field name="leaveTypeId" required-field="true"><text></text></field>
         <field name="searchButton" title="${uiLabelMap.CommonRun}" widget-style="smallSubmit"><submit button-type="button"/></field>
