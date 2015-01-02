@@ -1178,35 +1178,46 @@ public class HumanresService {
 	        Timestamp holiDayDate = null;
 	        String description = (String)context.get("description");
 	        
-	        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+	        
+	        SimpleDateFormat formatter = new SimpleDateFormat("dd-MM-yyyy");
 			try {
-				holiDayDate = new java.sql.Timestamp(formatter.parse(holiDayDateStr).getTime());
+				holiDayDate = UtilDateTime.toTimestamp(formatter.parse(holiDayDateStr));
 			} catch (ParseException e) {
 			}
-			
-			GenericValue newEntity = delegator.makeValue("HolidayCalendar");
-	        if(UtilValidate.isNotEmpty(customTimePeriodId)){
-	        	newEntity.set("customTimePeriodId", customTimePeriodId);
-	        }
-	        if(UtilValidate.isNotEmpty(organizationPartyId)){
-	        	newEntity.set("organizationPartyId", organizationPartyId);
-	        }
-	        if(UtilValidate.isNotEmpty(holiDayDate)){
-	        	newEntity.put("holiDayDate", UtilDateTime.toTimestamp(holiDayDate));
-	        } 
-	        if(UtilValidate.isNotEmpty(description)){
-	        	newEntity.set("description", description);
-	        }
-	        try {
-	        	if(UtilValidate.isNotEmpty(holiDayDate)){
-	        		delegator.create(newEntity); 
-	        	}
-	        } catch (GenericEntityException e) {
-	            Debug.logError(e, module);
-	            return ServiceUtil.returnError(e.getMessage());
-	        }
+			try{
+				GenericValue holList = delegator.findOne("HolidayCalendar", UtilMisc.toMap("customTimePeriodId", customTimePeriodId, "organizationPartyId",organizationPartyId, "holiDayDate", UtilDateTime.toTimestamp(holiDayDate)), true);
+				if(UtilValidate.isEmpty(holList)){
+					GenericValue newEntity = delegator.makeValue("HolidayCalendar");
+			        if(UtilValidate.isNotEmpty(customTimePeriodId)){
+			        	newEntity.set("customTimePeriodId", customTimePeriodId);
+			        }
+			        if(UtilValidate.isNotEmpty(organizationPartyId)){
+			        	newEntity.set("organizationPartyId", organizationPartyId);
+			        }
+			        if(UtilValidate.isNotEmpty(holiDayDate)){
+			        	newEntity.put("holiDayDate", UtilDateTime.toTimestamp(holiDayDate));
+			        } 
+			        if(UtilValidate.isNotEmpty(description)){
+			        	newEntity.set("description", description);
+			        }
+			        try {
+			        	if(UtilValidate.isNotEmpty(holiDayDate)){
+			        		delegator.create(newEntity); 
+			        	}
+			        } catch (GenericEntityException e) {
+			            Debug.logError(e, module);
+			            return ServiceUtil.returnError(e.getMessage());
+			        }
+			        result = ServiceUtil.returnSuccess("New Holiday has been successfully created");
+				}else{
+					result = ServiceUtil.returnSuccess("This date already selected as Holiday please select other date");
+				}
+			}catch (Exception e) {
+				/*Debug.logError(e, module);
+				return ServiceUtil.returnError("Error while creating  EmployeeDetail" + e);	*/
+			}
 	       // result.put("batchId", newEntity.get("batchId"));
-	        result = ServiceUtil.returnSuccess("New Holiday has been successfully created");
+	        
 	        return result;
 	        
 	    }

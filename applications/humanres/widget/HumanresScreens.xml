@@ -280,6 +280,8 @@
 				<set field="tabButtonItem" value="Attendance" />
 				<set field="tabButtonItem2" value="FindHoliday" />
 				<set field="titleProperty" value="Holiday Entry Screen" />
+				<set field="layoutSettings.javaScripts[]" value="/partymgr/static/holidayDate.js" global="true"/>
+				<script location="component://humanres/webapp/humanres/WEB-INF/actions/humanres/holidayList.groovy"/>
 			</actions>
 			<widgets>
 				<decorator-screen name="HumanresCommonDecorator" location="component://humanres/widget/CommonScreens.xml">
@@ -316,10 +318,12 @@
                 <set field="titleProperty" value="Holiday"/>
                 <set field="headerItem" value="NewHoliday"/>
                 <set field="tabButtonItem" value="FindHoliday"/>
+                <set field="layoutSettings.javaScripts[]" value="/partymgr/js/emplLeaveDate.js" global="true"/>
             </actions>
             <widgets>
                 <decorator-screen name="HumanresCommonDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
+                    	<include-menu location="component://humanres/widget/HumanresMenus.xml" name="AttendanceTabBar"/>
                     	<screenlet title="Create New holiday">
                             	<section>
                                 	<widgets>

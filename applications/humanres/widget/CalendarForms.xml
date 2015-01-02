@@ -126,20 +126,21 @@ under the License.
     	<field name="hideSearch"><hidden value="Y"/></field>
         <field name="submitButton" title="${uiLabelMap.CommonFind}" widget-style="smallSubmit"><submit button-type="button"/></field>
     </form>
-    <form name="HolidayResults" type="list" list-name="listIt"
+    <form name="HolidayResults" list-name="holidayList" type="list"
         odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
          <actions>
-            <service service-name="performFind" result-map="result" result-map-list="listIt">
+            <!-- <service service-name="performFind" result-map="result" result-map-list="listIt">
                 <field-map field-name="inputFields" from-field="parameters"/>
                 <field-map field-name="entityName" value="HolidayCalendar"/>
-               <!--  <field-map field-name="entityName" value="CourseDepartment"/> -->
+                <field-map field-name="entityName" value="CourseDepartment"/>
                 <field-map field-name="viewIndex" from-field="viewIndex"/>
                 <field-map field-name="viewSize" from-field="viewSize"/>
-            </service>
+            </service> -->
         </actions>
+        
         <field name="customTimePeriodId"><display></display></field>
         <field name="organizationPartyId"><display></display></field>
-        <field name="holiDayDate"><display></display></field>
+        <field name="holiDayDate"><display description="${groovy:org.ofbiz.base.util.UtilDateTime.toDateString(holiDayDate, &quot;dd-MM-yyyy&quot;);}"/> </field>
         <field name="description"><display></display></field>
     </form>
     <form name="NewHoliday" type="single" target="CreateHoliday"
@@ -163,7 +164,7 @@ under the License.
 				</entity-options>
 			</drop-down>
 		</field>
-        <field name="holiDayDate"  title="HoliDay Date" required-field="true"><date-time type="date"/></field>
+		<field name="holiDayDate" id-name="holiDayDate" tooltip="${uiLabelMap.CommonRequired}" event="onclick" action="javascript:picker()"><text  size="12"/></field>
        	<field name="description"  title="Description" required-field="true"><text/></field>
        	
 		 <field name="searchButton" title="${uiLabelMap.CommonSubmit}" widget-style="smallSubmit"><submit button-type="button"/></field>
