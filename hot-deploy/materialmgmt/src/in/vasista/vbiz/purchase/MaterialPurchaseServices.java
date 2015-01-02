@@ -1474,7 +1474,7 @@ public class MaterialPurchaseServices {
 				return "error";
 			}
 		}
-		if(UtilValidate.isNotEmpty(result.get("orderId"))){
+		if(UtilValidate.isNotEmpty(PONumber)){
 		Map<String, Object> orderAssocMap = FastMap.newInstance();
 		orderAssocMap.put("orderId", result.get("orderId"));
 		orderAssocMap.put("toOrderId", PONumber);
