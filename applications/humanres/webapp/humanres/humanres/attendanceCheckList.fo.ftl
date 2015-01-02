@@ -21,7 +21,7 @@
 				<fo:static-content flow-name="xsl-region-before" font-family="Courier,monospace" font-size="8pt">
 			        <fo:block text-align="left" white-space-collapse="false" keep-together="always" font-size="5pt">.                               CHECK LIST FOR ATTENDANCE ON ${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(thruDate, "MMMM,yyyy").toUpperCase()}</fo:block>        
 			  		<fo:block text-align="left" white-space-collapse="false" keep-together="always" font-size="8pt">--------------------------------------------------------------------------------------------------------------------------------------------</fo:block>	 	 	  
-			  		<fo:block text-align="left" white-space-collapse="false" keep-together="always" font-size="8pt">SLNO    UNIT   COST   TYPE   EMPNO      EMP NAME               DESIGNATION             WKD    CO    CL   EL   CHPL   HPL   DBL   EOL   TDAYS</fo:block>
+			  		<fo:block text-align="left" white-space-collapse="false" keep-together="always" font-size="8pt">SLNO   UNIT   COST   TYPE   EMPNO      EMP NAME               DESIGNATION          WKD    CO    CL   EL   CHPL   HPL   DBL   EOL   TDAYS</fo:block>
 			  		<fo:block text-align="left" white-space-collapse="false" keep-together="always" font-size="8pt">---------------------------------------------------------------------------------------------------------------------------------------------</fo:block>
 			  	</fo:static-content> 
 			  	<fo:flow flow-name="xsl-region-body" font-family="Courier,monospace">  
@@ -68,9 +68,12 @@
 									   			<fo:table-cell>
 									   				<fo:block font-size="4pt" text-align="left">${Static["org.ofbiz.party.party.PartyHelper"].getPartyName(delegator, employeeAttendanceDetails.getKey(), false)}</fo:block>
 									   			</fo:table-cell>
-									   			<#assign emplPosition=delegator.findByAnd("EmplPosition", {"partyId" : employeeAttendanceDetails.getKey()})/>
+									   			<#assign emplPositionAndFulfilment=delegator.findByAnd("EmplPositionAndFulfillment", {"employeePartyId" : employeeAttendanceDetails.getKey()})/>
+									   			<#assign designationId = emplPositionAndFulfilment[0].emplPositionTypeId>
+												<#assign designation = delegator.findOne("EmplPositionType", {"emplPositionTypeId" : designationId?if_exists}, true)>
+												<#assign designationName=emplPositionAndFulfilment[0].name?if_exists>
 									   			<fo:table-cell>
-									   				<fo:block font-size="4pt" text-align="left">${(emplPosition[0].emplPositionId)?if_exists}</fo:block>
+									   				<fo:block font-size="4pt" text-align="left"><#if designationName?has_content>${Static["org.ofbiz.order.order.OrderServices"].nameTrim((StringUtil.wrapString(designationName)),12)?if_exists}<#else><#if designation?has_content>${Static["org.ofbiz.order.order.OrderServices"].nameTrim((StringUtil.wrapString(designation.description)),18)?if_exists}</#if></#if></fo:block>
 									   			</fo:table-cell>
 									   			<fo:table-cell>
 									   				<fo:block font-size="4pt" text-align="right"><#if employeeAttendanceDetails.getValue().get("WKD")?has_content>${employeeAttendanceDetails.getValue().get("WKD")?if_exists?string("##0.0")}<#else>0.0</#if></fo:block>
