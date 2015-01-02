@@ -937,6 +937,7 @@ public class HumanresService {
 			GenericDelegator delegator = (GenericDelegator) dctx.getDelegator();
 			LocalDispatcher dispatcher = dctx.getDispatcher();
 			Map<String, Object> result = ServiceUtil.returnSuccess();
+			Locale locale = (Locale) context.get("locale");
 		
 			GenericValue userLogin = (GenericValue) context.get("userLogin");
 			String ownerPartyId = null;
@@ -997,8 +998,17 @@ public class HumanresService {
 			Timestamp openedDate = null;
 			GenericValue parentFacility=null;
 			GenericValue facility;
+			GenericValue person = null;
 			try{
 				// create Person / Party
+				try {
+			        person = delegator.findByPrimaryKey("Person", UtilMisc.toMap("partyId", partyId));
+		        } catch (GenericEntityException e) {
+		            Debug.logWarning(e.getMessage(), module);
+		        }
+		        if(UtilValidate.isNotEmpty(person)){
+		        	return ServiceUtil.returnError("Error while creating  Party, PartyId already exists" +partyId); 
+		        }
 				Object tempInput = "PARTY_ENABLED";
 				input = UtilMisc.toMap("firstName", firstName, "lastName", lastName, "middleName",middleName, "birthDate",birthDate, "placeOfBirth",birthPlace, "bloodGroup",bloodGroup,"gender",gender, "maritalStatus",maritalStatus, "motherTongue",motherTongue, "religion",religion,  "nationality",nationality, "passportNumber",passportNumber, "passportExpireDate",passportExpireDate, "statusId", tempInput,"partyId",partyId);
 				resultMap = dispatcher.runSync("createPerson", input);
@@ -1122,6 +1132,7 @@ public class HumanresService {
 				try{
 					GenericValue newEntity = delegator.makeValue("EmployeeDetail");
 					newEntity.set("partyId", ownerPartyId);
+					newEntity.set("employeeId", ownerPartyId);
 					newEntity.set("emergencyContactName", emergencyContactName);
 					newEntity.set("emergencyContactNumber", emergencyContactNumber);
 					newEntity.set("weeklyOff", weeklyOff);
@@ -1137,7 +1148,7 @@ public class HumanresService {
 					newEntity.set("punchType", punchType);
 					newEntity.set("shiftType", shiftType);
 					newEntity.set("backgroundVerification", backgroundVerification);
-					delegator.setNextSubSeqId(newEntity,"employeeId", 5, 1);
+					//delegator.setNextSubSeqId(newEntity,"employeeId", 5, 1);
 					delegator.create(newEntity);
 				}catch (Exception e) {
 					Debug.logError(e, module);
