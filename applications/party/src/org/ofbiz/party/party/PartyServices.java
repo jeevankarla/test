@@ -116,10 +116,10 @@ public class PartyServices {
         String description = (String) context.get("description");
 
         // if specified partyId starts with a number, return an error
-        if (UtilValidate.isNotEmpty(partyId) && partyId.matches("\\d+")) {
+        /*if (UtilValidate.isNotEmpty(partyId) && partyId.matches("\\d+")) {
             return ServiceUtil.returnError(UtilProperties.getMessage(resourceError, 
                     "party.id_is_digit", locale));
-        }
+        }*/
 
         // partyId might be empty, so check it and get next seq party id if empty
         if (UtilValidate.isEmpty(partyId)) {
