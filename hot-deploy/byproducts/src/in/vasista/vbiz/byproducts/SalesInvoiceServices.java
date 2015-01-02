@@ -541,7 +541,7 @@ public class SalesInvoiceServices {
 				}
 			}
 			
-			Debug.log("====>productId ===!"+productId+"====partyId=="+partyId);
+			//Debug.log("====>productId ===!"+productId+"====partyId=="+partyId);
 			// Handle product totals
 			if (productTotals.get(productId) == null) {
 				Map<String, Object> newMap = FastMap.newInstance();
@@ -849,7 +849,7 @@ public class SalesInvoiceServices {
 			BigDecimal bedCessRevenue = bedcessAmount.multiply(quantity);
 			BigDecimal bedSecCessRevenue = bedseccessAmount.multiply(quantity);
 			BigDecimal cstRevenue = cstAmount.multiply(quantity);
-			Debug.log("==BEFORE=CHECK===>Invoice-ID="+invoiceItem.getString("invoiceId")+"revenue ===!"+revenue+"====vatRevenue=="+vatRevenue+"==bedCessRevenue=="+bedCessRevenue+"=bedSecCessRevenue="+bedSecCessRevenue+"=cstRevenue="+cstRevenue);
+			//Debug.log("==BEFORE=CHECK===>Invoice-ID="+invoiceItem.getString("invoiceId")+"revenue ===!"+revenue+"====vatRevenue=="+vatRevenue+"==bedCessRevenue=="+bedCessRevenue+"=bedSecCessRevenue="+bedSecCessRevenue+"=cstRevenue="+cstRevenue);
 			//for purchase invoice consider flat amounts and revenue needs to compute bcz unitprice and listPrice are same
 			 if(isPurchaseInvoice){
 				 vatRevenue = vatAmount;
@@ -860,7 +860,7 @@ public class SalesInvoiceServices {
 				 revenue=revenue.add(vatRevenue); revenue=revenue.add(bedRevenue); revenue=revenue.add(bedCessRevenue);
 				 revenue=revenue.add(bedSecCessRevenue); revenue=revenue.add(cstRevenue);
 				}
-			 Debug.log("==AFTTER=CHECK==>revenue ===!"+revenue+"====vatRevenue=="+vatRevenue+"==bedCessRevenue=="+bedCessRevenue+"=bedSecCessRevenue="+bedSecCessRevenue+"=cstRevenue="+cstRevenue);
+			 //Debug.log("==AFTTER=CHECK==>revenue ===!"+revenue+"====vatRevenue=="+vatRevenue+"==bedCessRevenue=="+bedCessRevenue+"=bedSecCessRevenue="+bedSecCessRevenue+"=cstRevenue="+cstRevenue);
 			totalRevenue = totalRevenue.add(revenue);
 		    totalPacket = totalPacket.add(packetQuantity);
 				
