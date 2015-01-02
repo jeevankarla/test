@@ -379,7 +379,7 @@ public class MaterialRequestServices {
 				}
 			}
 			custRequestItem.set("statusId", statusId);
-			if(!description.equals("null")){
+			if(UtilValidate.isNotEmpty(description)){
 				custRequestItem.set("description", description);
 			}
 			custRequestItem.store();
