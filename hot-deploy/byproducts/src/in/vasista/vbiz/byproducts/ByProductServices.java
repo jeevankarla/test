@@ -5993,11 +5993,11 @@ public class ByProductServices {
 		    	  	   //facilityList= (List)ByProductNetworkServices.getAllBooths(delegator, "SHP_RTLR").get("boothsDetailsList");
 		    	  	  facilityList= (List)((Map)ByProductNetworkServices.getAllActiveOrInactiveBooths(delegator, "SHP_RTLR" ,fromDate)).get("boothActiveList");
 		    	  	  for(GenericValue eachFacility: facilityList){
-			    		  String invoiceId ="";
+		    	  		  String invoiceId ="";
 			    		  BigDecimal rateAmount=BigDecimal.ZERO;
 			    		  partyId = eachFacility.getString("ownerPartyId");
 				    	  facilityId = eachFacility.getString("facilityId");
-			    	     Map inputRateAmt = UtilMisc.toMap("userLogin", userLogin);
+				    	  Map inputRateAmt = UtilMisc.toMap("userLogin", userLogin);
 							inputRateAmt.put("rateCurrencyUomId", "INR");
 							inputRateAmt.put("facilityId", facilityId);
 							inputRateAmt.put("fromDate",fromDate);
@@ -6039,23 +6039,27 @@ public class ByProductServices {
 				            Map<String, Object> resMap = FastMap.newInstance();
 				            //to do tax calculation based on the configuration
 				            BigDecimal serviceTaxAmount=BigDecimal.ZERO;
+				            BigDecimal basicAmount = BigDecimal.ZERO;
 				            if(rateAmount.intValue()>0){
-				               serviceTaxAmount=rateAmount.divide(new BigDecimal(12.36), rounding);
-				            }
-				            rateAmount=rateAmount.subtract(serviceTaxAmount);
-				            resMap = dispatcher.runSync("createInvoiceItem", UtilMisc.toMap("invoiceId", invoiceId, "invoiceItemTypeId", "SHOPEE_RENT",
-				                           "amount", rateAmount, "userLogin", userLogin));
-				            resMap = dispatcher.runSync("createInvoiceItem", UtilMisc.toMap("invoiceId", invoiceId, "invoiceItemTypeId", "SERTAX_SALE",
+				            	basicAmount = rateAmount.divide(new BigDecimal(1.1236), rounding);
+				            	serviceTaxAmount = rateAmount.subtract(basicAmount); 
+				            	
+				            	resMap = dispatcher.runSync("createInvoiceItem", UtilMisc.toMap("invoiceId", invoiceId, "invoiceItemTypeId", "SHOPEE_RENT",
+				                           "amount", basicAmount, "userLogin", userLogin));
+				            	if (ServiceUtil.isError(resMap)) {
+				                	Debug.logError("Error creating Invoice item for Shopee Rent", module);	
+				                    return ServiceUtil.returnError("Error creating Invoice item for Shopee Rent "+facilityId);
+				                }
+				            	resMap = dispatcher.runSync("createInvoiceItem", UtilMisc.toMap("invoiceId", invoiceId, "invoiceItemTypeId", "SERTAX_SALE",
 			                           "amount", serviceTaxAmount, "userLogin", userLogin));
-			                if (ServiceUtil.isError(resMap)) {
-			                	Debug.logError("Error creating Invoice item for Shopee Rent", module);	
-			                    return ServiceUtil.returnError("Error creating Invoice item for Shopee Rent "+facilityId);
-			                }
+				            	if (ServiceUtil.isError(resMap)) {
+				                	Debug.logError("Error creating service tax Invoice item for Shopee Rent", module);	
+				                    return ServiceUtil.returnError("Error creating Invoice item for Shopee Rent "+facilityId);
+				                }
+				            }
+				            
 						}
-		       
-			              }
-		    	  	   
-		       
+			        }
 			  }catch (Exception e) {
 				  Debug.logError(e, "Error creating Invoice for Shopee Rent", module);		  
 				  return ServiceUtil.returnError("Error creating Invoice for Shopee Rent");			  
