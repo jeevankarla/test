@@ -79,7 +79,7 @@
        		<display-entity entity-name="StatusItem" key-field-name="statusId" description="${description}"></display-entity>
        </field>
        <field name="validFromDate" title="Valid from"><display/></field>
-       <field name="validThruDate" title="Valid till"><display/></field>
+       <field name="validThruDate" title="Valid till"><display description="${groovy: org.ofbiz.base.util.UtilDateTime.getDayEnd(quote.validThruDate)}" type="Timestamp"/></field>
        <field name="createdStamp" title="Quote created"><display/></field>
     </form>
     
