@@ -35,7 +35,7 @@
                 <set field="headerItem" value="Quotes"/>
                 <set field="tabButtonItem" value="FindMaterialQuotes"/>
                 <set field="tabButtonItem2" value="overviewQuote"/>
-                <set field="quoteId" from-field="parameters.quoteId"/>
+                <set field="quoteId" from-field="parameters.quoteId"/>                
                 <entity-condition list="quoteItemList" entity-name="QuoteItem"  >
                  	<condition-expr field-name="quoteId" value="${quoteId}" operator="equals"/>
                 </entity-condition>
@@ -62,16 +62,25 @@
                 <decorator-section name="body">
                 <include-menu name="QuoteTabBar" location="component://materialmgmt/widget/materialmgmtMenus.xml" />
                    <section>
-                   		<!-- <condition>
+                   <!--   <condition>
                    			<and>
                    				<if-compare operator="equals" value="createPO" field="checkFlag"/>
                    			</and>
-                   		</condition> -->
+                   		</condition>  -->
+                   		      <condition>
+								<and>
+									<if-compare field="quote.quoteId" operator="equals" value="${parameters.quoteId}" />
+									<if-compare field="quote.statusId" operator="not-equals" value="QUO_ORDERED" />
+								</and>
+							</condition> 
                    		<widgets>
                    		<link target="createPOForQuote" text="Create PO" style="buttontext h2" >
            					<parameter param-name="quoteId" from-field="quoteId"/>
            				</link>
                    		</widgets>
+                   		<fail-widgets>
+                             <label style="h1">PO generated for this Quote no  ${parameters.quoteItemSeqId}</label>
+                         </fail-widgets>
                      </section>
                      <container style="full">
                     	<container style="lefthalf">
