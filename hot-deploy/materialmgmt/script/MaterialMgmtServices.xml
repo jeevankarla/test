@@ -279,4 +279,9 @@
         <remove-value value-field="orderAttribute"/>
     </simple-method> 
     
+    <simple-method method-name="deleteOrderAssoc" short-description="Delete Order Association">
+    	<entity-one entity-name="OrderAssoc" value-field="orderAssoc"/>
+        <remove-value value-field="orderAssoc"/>
+    </simple-method> 
+    
 </simple-methods>   

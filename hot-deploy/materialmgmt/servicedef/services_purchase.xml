@@ -204,4 +204,9 @@
         <description>Delete Order Attribute</description>
         <auto-attributes mode="IN" include="pk" optional="false"/>
     </service>
+    <service name="deleteOrderAssoc" engine="simple" default-entity-name="OrderAssoc"
+             location="component://materialmgmt/script/MaterialMgmtServices.xml" invoke="deleteOrderAssoc" auth="true">
+        <description>Delete Order Association</description>
+        <auto-attributes mode="IN" include="pk" optional="false"/>
+    </service>
 </services>

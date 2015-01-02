@@ -78,6 +78,12 @@
         <response name="success" type="view" value="PurchageOrderOverView"/>
         <response name="error" type="view" value="PurchageOrderOverView"/>
     </request-map>
+    <request-map uri="deleteOrderAssoc">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="deleteOrderAssoc"/>
+        <response name="success" type="view" value="PurchageOrderOverView"/>
+        <response name="error" type="view" value="PurchageOrderOverView"/>
+    </request-map>
      <request-map uri="FindReceipts">
         <security https="true" auth="true"/>
         <response name="success" type="view" value="FindReceipts"/>

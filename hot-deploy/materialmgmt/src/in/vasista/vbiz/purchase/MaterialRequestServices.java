@@ -181,6 +181,7 @@ public class MaterialRequestServices {
 		        itemInMap.put("statusId","CRQ_DRAFT");
 		        itemInMap.put("userLogin",userLogin);
 		        itemInMap.put("productId",productId);
+		        itemInMap.put("description","");
 		        itemInMap.put("quantity",quantity);
 		        itemInMap.put("origQuantity",quantity);
 		        resultMap = dispatcher.runSync("createCustRequestItem",itemInMap);
@@ -379,6 +380,7 @@ public class MaterialRequestServices {
 				}
 			}
 			custRequestItem.set("statusId", statusId);
+			
 			if(UtilValidate.isNotEmpty(description)){
 				custRequestItem.set("description", description);
 			}

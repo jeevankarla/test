@@ -366,5 +366,21 @@
                 <parameter param-name="orderId"/>
             </hyperlink>
     </field>
-    </form>    
+    </form>   
+     <form name="listOrderAssoc" type="list" list-name="OrderAssocList" default-table-style="basic-table hover-bar" odd-row-style="alternate-row" header-row-style="header-row">
+     <field name="orderId"><hidden/></field>
+     <field name="toOrderId" title="Associated Orders" widget-style="buttontext">
+     	<hyperlink target="POoverview" description="${toOrderId}" target-window="_blank">
+      			<parameter param-name="orderId" value="${toOrderId}"/>
+      		</hyperlink>
+     </field>
+     <field name="orderAssocTypeId" title="Order Type"><display-entity description="${description}" entity-name="OrderAssocType"/></field>
+     <!-- <field name="deleteOrderAssoc" title="Delete" widget-style="buttontext">
+    	<hyperlink target="deleteOrderAssoc" description="Delete">
+                <parameter param-name="orderId"/>
+                <parameter param-name="toOrderId"/>
+                <parameter param-name="orderAssocTypeId"/>
+            </hyperlink>
+    </field> -->
+     </form> 
 </forms>

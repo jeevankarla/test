@@ -394,6 +394,7 @@
 	                        		<screenlet title="Order Attributes">
 	                        			<include-screen name="orderAttributes"/>
 	                        		</screenlet>
+	                        		<include-screen name="orderAssoc"/>
                 					<platform-specific>
                     					<html><html-template location="component://materialmgmt/webapp/materialmgmt/purchase/POContactInfo.ftl"/></html>
                 					</platform-specific>
@@ -496,6 +497,20 @@
 				<include-form location="component://materialmgmt/widget/materialmgmtForms.xml" name="addAttribute"/>
 				<screenlet >
 				<include-form location="component://materialmgmt/widget/materialmgmtForms.xml" name="listAttribute"/>
+				</screenlet>
+			</widgets>    	
+    	</section>
+    </screen>
+    <screen name="orderAssoc">
+    	<section>
+    	<actions>
+    	<entity-and entity-name="OrderAssoc" list="OrderAssocList">
+    		<field-map field-name="orderId" from-field="parameters.orderId"/>
+    	</entity-and>
+    	</actions>
+			<widgets>
+				<screenlet title="Order Associations" >
+				<include-form location="component://materialmgmt/widget/materialmgmtForms.xml" name="listOrderAssoc"/>
 				</screenlet>
 			</widgets>    	
     	</section>

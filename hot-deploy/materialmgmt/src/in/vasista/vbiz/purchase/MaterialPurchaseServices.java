@@ -1474,10 +1474,20 @@ public class MaterialPurchaseServices {
 				return "error";
 			}
 		}
-		
-		
+		if(UtilValidate.isNotEmpty(result.get("orderId"))){
+		Map<String, Object> orderAssocMap = FastMap.newInstance();
+		orderAssocMap.put("orderId", result.get("orderId"));
+		orderAssocMap.put("toOrderId", PONumber);
+		orderAssocMap.put("orderAssocTypeId", orderTypeId);
+		orderAssocMap.put("userLogin", userLogin);
+		result = createOrderAssoc(dctx,orderAssocMap);
+			if(ServiceUtil.isError(result)){
+				Debug.logError("Unable do Order Assoc: " + ServiceUtil.getErrorMessage(result), module);
+				request.setAttribute("_ERROR_MESSAGE_", "Unable do Order Assoc...! "+ServiceUtil.getErrorMessage(result));
+				return "error";
+			}
+		}
 		request.setAttribute("_EVENT_MESSAGE_", "Entry successful for party: "+partyId+" and  PO :"+result.get("orderId"));	  	 
-		
 		return "success";
 	}
 		
@@ -2368,5 +2378,27 @@ public class MaterialPurchaseServices {
 		}
 		result = ServiceUtil.returnSuccess("Quality check passed for GRN no: "+receiptId);
 		return result;
-	}	
+	}
+   	public static Map<String, Object> createOrderAssoc(DispatchContext ctx,Map<String, ? extends Object> context) {
+		Delegator delegator = ctx.getDelegator();
+		LocalDispatcher dispatcher = ctx.getDispatcher();
+		String orderId = (String) context.get("orderId");
+		String toOrderId = (String) context.get("toOrderId");
+		String orderAssocTypeId = (String) context.get("orderAssocTypeId");
+		GenericValue userLogin = (GenericValue) context.get("userLogin");
+		Map<String, Object> result = ServiceUtil.returnSuccess();
+		try{
+			GenericValue newEntity = delegator.makeValue("OrderAssoc");
+			newEntity.set("orderId", toOrderId);
+			newEntity.set("toOrderId", orderId);
+			newEntity.set("orderAssocTypeId", orderAssocTypeId);
+			newEntity.create();
+		} catch(Exception e){
+			Debug.logError(e, module);
+			return ServiceUtil.returnError(e.getMessage());
+		}
+		result.put("orderId", orderId);
+		return result;
+	}
+   	
 }
