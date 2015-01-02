@@ -319,6 +319,7 @@ under the License.
    							<#assign totalDeduction =0>
    							<#assign totalPremium = 0>
    							<#assign totalEmployerVolPf =0>
+   							<#assign totalGpfVolPf =0>
 							<fo:table-body>
 								<#list deductionTypes as deductionType>
 									<#assign sno=sno+1>
@@ -455,12 +456,13 @@ under the License.
 												<#assign designation = delegator.findOne("EmplPositionType", {"emplPositionTypeId" : designationId?if_exists}, true)>
 												<#assign designationName=emplPositionAndFulfilment[0].name?if_exists>
 					       						<fo:table-cell><fo:block keep-together="always" font-size="4pt" text-align="left"><#if designationName?has_content>${Static["org.ofbiz.order.order.OrderServices"].nameTrim((StringUtil.wrapString(designationName)),15)?if_exists}<#else><#if designation?has_content>${Static["org.ofbiz.order.order.OrderServices"].nameTrim((StringUtil.wrapString(designation.description)),15)?if_exists}</#if></#if></fo:block></fo:table-cell>		       							
-						       					<fo:table-cell><fo:block keep-together="always" font-size="4pt" text-align="right">${deductionType.getValue().get("Wages")?string('0.00')}</fo:block></fo:table-cell>
+							       				<fo:table-cell><fo:block keep-together="always" font-size="4pt" text-align="right"><#if deductionType.getValue().get("Wages")?has_content>${deductionType.getValue().get("Wages")?if_exists?string('0.00')}<#else>0.0</#if></fo:block></fo:table-cell>
 						       					<fo:table-cell><fo:block keep-together="always" font-size="4pt" text-align="right">${deductionType.getValue().get("deductionAmt")?if_exists}</fo:block></fo:table-cell>
-				       							<fo:table-cell><fo:block keep-together="always" font-size="4pt" text-align="right">0</fo:block></fo:table-cell>
+				       							<fo:table-cell><fo:block keep-together="always" font-size="4pt" text-align="right"><#if deductionType.getValue().get("employerVolPf")?has_content>${deductionType.getValue().get("employerVolPf")?if_exists}<#else>0.0</#if></fo:block></fo:table-cell>
 				       							<fo:table-cell><fo:block keep-together="always" font-size="4pt" text-align="right">0</fo:block></fo:table-cell>
 				       							<#assign totalWages =totalWages + deductionType.getValue().get("Wages")>
 				       							<#assign totalPfAmt =totalPfAmt + deductionType.getValue().get("deductionAmt")>
+				       							<#assign totalGpfVolPf =totalGpfVolPf + deductionType.getValue().get("employerVolPf")>
 		       								</fo:table-row>
 		       						</#if>
 			       						<#if  headerDetails.getKey() == "PAYROL_DD_SSS">
@@ -600,7 +602,7 @@ under the License.
 				       						<fo:table-cell><fo:block keep-together="always" font-size="4pt" text-align="left"></fo:block></fo:table-cell>		       							
 					       					<fo:table-cell><fo:block keep-together="always" font-size="4pt" text-align="right">${totalWages?if_exists?string('0.00')}</fo:block></fo:table-cell>
 		       								<fo:table-cell><fo:block keep-together="always" font-size="4pt" text-align="right">${totalPfAmt?if_exists}</fo:block></fo:table-cell>
-			       							<fo:table-cell><fo:block keep-together="always" font-size="4pt" text-align="right">0</fo:block></fo:table-cell>
+			       							<fo:table-cell><fo:block keep-together="always" font-size="4pt" text-align="right">${totalGpfVolPf?if_exists?string('0.0')}</fo:block></fo:table-cell>
 			       							<fo:table-cell><fo:block keep-together="always" font-size="4pt" text-align="right">0</fo:block></fo:table-cell>
 	       								</fo:table-row>
 	       						</#if>

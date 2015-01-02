@@ -149,9 +149,10 @@ under the License.
 	                        <fo:table-row>
 	                        	<fo:table-cell>
 	                        		 <fo:block page-break-before="always" font-size="7pt">--------------------------------------------------------------------------------------------------------------------------------------</fo:block>
+	                        	<fo:block page-break-before="always" font-size="7pt">${count}</fo:block>
 	                        	</fo:table-cell>
 	                        </fo:table-row>
-	                        <#assign count=0>
+	                        <#assign count=1>
 	                        <#else>
 	                        <fo:table-row>
 	                        	<fo:table-cell>
@@ -724,6 +725,13 @@ under the License.
                         <fo:table-column column-width="72pt"/>
                         <fo:table-column column-width="72pt"/>
                         <fo:table-body>
+                        	<#if count==4>
+		                        <fo:table-row>
+		                        	<fo:table-cell>
+		                        		 <fo:block page-break-after="always"></fo:block>
+		                        	</fo:table-cell>
+		                        </fo:table-row>
+	                        </#if>
 	                        <fo:table-row>
 	                        	<fo:table-cell>
 	                        		 <fo:block font-size="7pt">--------------------------------------------------------------------------------------------------------------------------------------</fo:block>

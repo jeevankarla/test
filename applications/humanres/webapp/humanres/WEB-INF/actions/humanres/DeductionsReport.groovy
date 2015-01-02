@@ -63,7 +63,7 @@ employments=EmploymentsMap.get("employementList");
 if(UtilValidate.isNotEmpty(employments)){
 	employmentsList = EntityUtil.getFieldListFromEntityList(employments, "partyIdTo", true);
 }
-
+deductionList = [];
 Map allDeductionMap=FastMap.newInstance();
 periodBillingIdMap=[:];
 List periodbillingConditionList=[];
@@ -78,6 +78,7 @@ if(UtilValidate.isNotEmpty(BillingList)){
 		if(UtilValidate.isNotEmpty(employmentsList)){
 			periodTotalsMap=[:];
 			employmentsList.each{ employeeId ->
+				payrollHeaderList = [];
 			detailsMap=[:];
 			Map polacyDetailsMap = FastMap.newInstance();
 				if(UtilValidate.isNotEmpty(BillingId)){
@@ -122,7 +123,6 @@ if(UtilValidate.isNotEmpty(BillingList)){
 										}
 										Wages = basic+dearnessAllowance+irAllowance+personalPay+specialPay;
 										detailsMap.put("Wages",Wages);
-										if(dedTypeId.equals("PAYROL_DD_EPF")){
 										employeeContribtn=0;
 										employerContribtn=0;
 										employerVolPf=0;
@@ -184,7 +184,6 @@ if(UtilValidate.isNotEmpty(BillingList)){
 											}
 											detailsMap.put("pensionAmount",pensionAmount);
 										}
-									}
 									conveyanceAmt= periodTotals.get("PAYROL_BEN_CCA");
 									if(UtilValidate.isEmpty(conveyanceAmt)){
 										conveyanceAmt = 0;
@@ -204,6 +203,7 @@ if(UtilValidate.isNotEmpty(BillingList)){
 						deductionAmt=0;
 						balance = 0;
 						gisNo = 0;
+						requiredAmount = 0;
 						headerIdsList.each{ headerId ->
 							headerId = headerId.payrollHeaderId;
 							deductionAmount = 0;
@@ -215,14 +215,14 @@ if(UtilValidate.isNotEmpty(BillingList)){
 							deductionsList.add(EntityCondition.makeCondition("partyIdFrom", EntityOperator.EQUALS, employeeId));
 							deductionsList.add(EntityCondition.makeCondition("payrollHeaderItemTypeId", EntityOperator.EQUALS, dedTypeId));
 							deductionsCondition = EntityCondition.makeCondition(deductionsList,EntityOperator.AND);
-							def orderAmtBy = UtilMisc.toList("amount");
-							payrollHeaderList = delegator.findList("PayrollHeaderAndHeaderItem", deductionsCondition, null, orderAmtBy, null, false);
+							payrollHeaderList = delegator.findList("PayrollHeaderAndHeaderItem", deductionsCondition, null, null, null, false);
 							if(UtilValidate.isNotEmpty(payrollHeaderList)){
 								payrollHeaderList.each{ payrollList ->
 									deductionAmount = payrollList.amount;
 									deductionAmount = deductionAmount.abs();
 									deductionAmt = deductionAmt+deductionAmount;
 								}
+								deductionList.add(deductionAmt);
 								detailsMap.put("deductionAmt",deductionAmt);
 							}
 						}
@@ -260,20 +260,12 @@ if(UtilValidate.isNotEmpty(BillingList)){
 								detailsMap.put("polDetails",polacyDetailsMap);
 							}
 						}
-						gisNoDetails = [];
-						gisNoDetails = delegator.findOne("EmployeeDetail",[partyId : employeeId ], false);
-						if(UtilValidate.isNotEmpty(gisNoDetails)){
-							gisNum = gisNoDetails.presentEpf;
-						}
-						if(UtilValidate.isNotEmpty(gisNum)){
-							gisNo = gisNum.trim()
-						}
-						detailsMap.put("gisNo",gisNo);
 					}
 				}
 				if(UtilValidate.isNotEmpty(detailsMap) && UtilValidate.isNotEmpty(detailsMap.get("deductionAmt")) && detailsMap.get("deductionAmt") !=0){
 					periodTotalsMap.put(employeeId,detailsMap);
 				}
+				deductionList = (new HashSet(deductionList)).toList();
 			}
 		}
 		if(UtilValidate.isNotEmpty(periodTotalsMap)){
@@ -308,7 +300,6 @@ if(UtilValidate.isNotEmpty(BillingList)){
 								deductionAmt=0;
 								gross = 0;
 								balance = 0;
-								gisNo = 0;
 								closingBalance = 0;
 								polNo = 0;
 								premium = 0;
@@ -319,36 +310,34 @@ if(UtilValidate.isNotEmpty(BillingList)){
 										Map.Entry customTimePeriodEntry = customTimePeriodIter.next();
 										if(customTimePeriodEntry.getKey() != "customTimePeriodTotals"){
 											periodTotals = customTimePeriodEntry.getValue().get("periodTotals");
-											if(dedTypeId.equals("PAYROL_DD_EPF")){
-												Wages =0;
+											Wages =0;
+											basic = 0;
+											dearnessAllowance =0;
+											irAllowance =0;
+											personalPay = 0;
+											specialPay = 0;
+											basic = periodTotals.get("PAYROL_BEN_SALARY");
+											if(UtilValidate.isEmpty(basic)){
 												basic = 0;
-												dearnessAllowance =0;
-												irAllowance =0;
-												personalPay = 0;
-												specialPay = 0;
-												basic = periodTotals.get("PAYROL_BEN_SALARY");
-												if(UtilValidate.isEmpty(basic)){
-													basic = 0;
-												}
-												dearnessAllowance = periodTotals.get("PAYROL_BEN_DA");
-												if(UtilValidate.isEmpty(dearnessAllowance)){
-													dearnessAllowance = 0;
-												}
-												irAllowance = periodTotals.get("PAYROL_BEN_IR");
-												if(UtilValidate.isEmpty(irAllowance)){
-													irAllowance = 0;
-												}
-												personalPay = periodTotals.get("PAYROL_BEN_PNLPAY");
-												if(UtilValidate.isEmpty(personalPay)){
-													personalPay = 0;
-												}
-												specialPay = periodTotals.get("PAYROL_BEN_SPLPAY");
-												if(UtilValidate.isEmpty(specialPay)){
-													specialPay = 0;
-												}
-												Wages = basic+dearnessAllowance+irAllowance+personalPay+specialPay;
-												detailsMap.put("Wages",Wages);
 											}
+											dearnessAllowance = periodTotals.get("PAYROL_BEN_DA");
+											if(UtilValidate.isEmpty(dearnessAllowance)){
+												dearnessAllowance = 0;
+											}
+											irAllowance = periodTotals.get("PAYROL_BEN_IR");
+											if(UtilValidate.isEmpty(irAllowance)){
+												irAllowance = 0;
+											}
+											personalPay = periodTotals.get("PAYROL_BEN_PNLPAY");
+											if(UtilValidate.isEmpty(personalPay)){
+												personalPay = 0;
+											}
+											specialPay = periodTotals.get("PAYROL_BEN_SPLPAY");
+											if(UtilValidate.isEmpty(specialPay)){
+												specialPay = 0;
+											}
+											Wages = basic+dearnessAllowance+irAllowance+personalPay+specialPay;
+											detailsMap.put("Wages",Wages);
 											deductionAmt= partyDed.cost;
 											if(UtilValidate.isEmpty(deductionAmt)){
 												deductionAmt = 0;
@@ -421,3 +410,29 @@ if(UtilValidate.isNotEmpty(BillingList)){
 	}
 }
 context.put("allDeductionMap",allDeductionMap);
+Comparator mycomparator = Collections.sort(deductionList);
+GisdetailsMap = [:];
+gisDetailsList = allDeductionMap.get("PAYROL_DD_GIS");
+employeeDetailsMap = [:];
+deductionList.each{ dedList ->
+	sum = 0;
+	employeeList = [];
+	gisDetailsList.each{ gisDetList ->
+		tempMap = [:];
+		employeeId = gisDetList.getKey();
+		gisAmount = gisDetList.getValue().get("deductionAmt");
+		emplMap = [:];
+		if(dedList==gisAmount){
+			sum = sum + gisAmount;
+			temMap = [:];
+			temMap.put("employeeId", employeeId);
+			temMap.put("gisAmount", gisAmount);
+			emplMap.putAll(temMap);
+			employeeList.add(emplMap);
+		}
+	}
+	employeeDetailsMap.put(dedList,employeeList);	
+}
+GisdetailsMap.put("PAYROL_DD_GIS",employeeDetailsMap);
+
+context.put("GisdetailsMap",GisdetailsMap);
