@@ -2388,6 +2388,11 @@ public class MaterialPurchaseServices {
 		GenericValue userLogin = (GenericValue) context.get("userLogin");
 		Map<String, Object> result = ServiceUtil.returnSuccess();
 		try{
+			GenericValue orderHeader = delegator.findOne("OrderHeader", UtilMisc.toMap("orderId", toOrderId), false);
+			if(UtilValidate.isEmpty(orderHeader)){
+				Debug.logError("Please Enter Valid PO Number", module);
+				return ServiceUtil.returnError("Please Enter Valid PO Number");
+			}
 			GenericValue newEntity = delegator.makeValue("OrderAssoc");
 			newEntity.set("orderId", toOrderId);
 			newEntity.set("toOrderId", orderId);
