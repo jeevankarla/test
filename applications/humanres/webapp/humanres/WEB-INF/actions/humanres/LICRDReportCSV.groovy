@@ -35,7 +35,6 @@ import org.ofbiz.base.util.UtilNumber;
 
 dctx = dispatcher.getDispatchContext();
 def sdf = new SimpleDateFormat("MMMM dd, yyyy");
-Debug.log("============11111============");
 GenericValue customTimePeriod = delegator.findOne("CustomTimePeriod", [customTimePeriodId : parameters.customTimePeriodId], false);
 fromDateStart=UtilDateTime.toTimestamp(customTimePeriod.getDate("fromDate"));
 thruDateEnd=UtilDateTime.toTimestamp(customTimePeriod.getDate("thruDate"));
@@ -151,5 +150,4 @@ if(UtilValidate.isNotEmpty(orderInsuranceDetails)){
 	}
 }
 
-Debug.log("finalList=======22======"+finalList);
 context.put("finalList",finalList);
