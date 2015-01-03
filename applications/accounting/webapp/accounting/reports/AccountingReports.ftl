@@ -365,7 +365,7 @@ function reportTypeChangeFunc() {
       <table class="basic-table hover-bar h3" style="border-spacing: 0 10px;" >  
        	<tr> 
       	   <form id="GlLedgerReport" name="GlLedgerReport" method="post" action="<@ofbizUrl>AcctgTransEntriesSearchResultsNewPdf.pdf</@ofbizUrl>" target="_blank">	
-      		  	<td width="30%">Transaction History Report</td>
+      		  	<td width="30%">Transaction History Report<input type="hidden" name="reportType" value="byAccount"/></td>
 				<#-- <td width="25%">From<input  type="text" size="18pt" id="glLedgerFromDate" readonly  name="fromDate"/></td>
 				<td width="25%">To<input  type="text" size="18pt" id="glLedgerThruDate" readonly  name="thruDate"/></td>-->
       		  	  <td width="50%">CustomTimePeriod
@@ -386,8 +386,12 @@ function reportTypeChangeFunc() {
 					 	
 				 	</select>
 			  	 </td>
-			  	 <td width="25%"><input type="hidden" name="reportType" value="byAccount"/>&#160;</td>
-			 	 <td width="25%"> &#160;</td>
+			 	 <td width="15%">Report Type 
+					<select name='reportTypeFlag'>
+						<option value='condensed'>Condensed</option>
+						<option value='detailed'>Detailed</option>
+					</select>
+				</td>
           		 <td width="25%"><input type="submit" value="PDF" class="buttontext"/></td>
           	</tr>
       		</form>

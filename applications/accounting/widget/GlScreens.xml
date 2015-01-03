@@ -1100,6 +1100,7 @@ reportType:byAccount -->
 					global="true" />
 			    <set field="thruDate" type="Date" from-field="parameters.thruDate"
 					global="true" />
+				<script	location="component://accounting/webapp/accounting/WEB-INF/actions/reports/AcctgTransEntriesSearchResult.groovy" />
 				<entity-condition entity-name="AcctgTransAndEntries"
 					list="acctgTransEntryList">
 					<condition-list>
@@ -1274,6 +1275,7 @@ reportType:byAccount -->
 					global="true" />
 			    <set field="thruDate" type="Date" value="${parameters.thruDate}"
 					global="true" />
+				<set field="reportTypeFlag" from-field="parameters.reportTypeFlag"/>
 				<!-- <entity-condition entity-name="AcctgTransAndEntries"
 					list="acctgTransEntryList">
 					<condition-list>
@@ -1315,12 +1317,32 @@ reportType:byAccount -->
 				</entity-condition>-->
 			</actions>
 			<widgets>
-				<platform-specific>
-					<xsl-fo>
-						<html-template
-							location="component://accounting/webapp/accounting/reports/AcctgTransEntries.fo.ftl" />
-					</xsl-fo>
-				</platform-specific>
+				<section>
+					<condition>
+						<if-compare operator="equals" value="detailed" field="reportTypeFlag" />
+					</condition>
+					<widgets>
+						<platform-specific>
+							<xsl-fo>
+								<html-template
+									location="component://accounting/webapp/accounting/reports/AcctgTransEntries.fo.ftl" />
+							</xsl-fo>
+						</platform-specific>
+					</widgets>
+				</section>
+				<section>
+					<condition>
+						<if-compare operator="equals" value="condensed" field="reportTypeFlag" />
+					</condition>
+					<widgets>
+						<platform-specific>
+							<xsl-fo>
+								<html-template
+									location="component://accounting/webapp/accounting/reports/AcctgTransEntriesCondensed.fo.ftl" />
+							</xsl-fo>
+						</platform-specific>
+					</widgets>
+				</section>
 			</widgets>
 		</section>
 	</screen>

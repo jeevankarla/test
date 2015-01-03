@@ -40,38 +40,30 @@ under the License.
             <fo:flow flow-name="xsl-region-body" font-family="Helvetica">
                     <fo:block  keep-together="always" text-align="center" font-family="Courier,monospace" white-space-collapse="false" font-weight="bold">${uiLabelMap.KMFDairyHeader}</fo:block>
 					<fo:block  keep-together="always" text-align="center" font-family="Courier,monospace" white-space-collapse="false" font-weight="bold">${uiLabelMap.KMFDairySubHeader}</fo:block>
-					<fo:block  keep-together="always" text-align="center" font-family="Courier,monospace" white-space-collapse="false" font-weight="bold">DETAILED REPORT</fo:block>
+					<fo:block  keep-together="always" text-align="center" font-family="Courier,monospace" white-space-collapse="false" font-weight="bold">CONDENSED REPORT</fo:block>
           			<fo:block  keep-together="always" text-align="center" font-family="Courier,monospace" font-weight="bold"    white-space-collapse="false"> LEDGER EXTRACT FOR THE PERIOD FROM ${fromDate!} - ${thruDate!} </fo:block>
           			<fo:block text-align="left"  keep-together="always"  font-family="Courier,monospace" font-weight="bold" white-space-collapse="false"> UserLogin:<#if userLogin?exists>${userLogin.userLoginId?if_exists}</#if>               &#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;Print Date :${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(nowTimestamp, "dd/MM/yy HH:mm:ss")}</fo:block>
-          			<fo:block>---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------</fo:block>
+          			<fo:block>---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------</fo:block>
           			<#if acctgTransEntryList?has_content>	
                     	 <fo:block text-align="center">${uiLabelMap.FormFieldTitle_glAccountId}: ${accountCodeId} </fo:block>
                     	  <#assign glAccount = delegator.findOne("GlAccount", {"glAccountId" : accountCodeId}, true)>
                     	<fo:block text-align="center">Gl Account Name:${glAccount.accountName?if_exists}</fo:block>
-                   <fo:block>---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------</fo:block>
+                        <fo:block>---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------</fo:block>
                   
                    <fo:block>
                         <fo:table>
-                            <fo:table-column column-width="7%"/>
                             <fo:table-column column-width="6%"/>
+                            <fo:table-column column-width="6%"/>
+                            <fo:table-column column-width="15%"/>
+                            <fo:table-column column-width="20%"/>
                             <fo:table-column column-width="5%"/>
-                            <fo:table-column column-width="6%"/>
-                            <fo:table-column column-width="12%"/>
-                            <fo:table-column column-width="4%"/>
                             <fo:table-column column-width="10%"/>
-                            <fo:table-column column-width="7%"/>
+                            <fo:table-column column-width="10%"/>
+                            <fo:table-column column-width="10%"/>
                             <fo:table-column column-width="8%"/>
-                            <fo:table-column column-width="4%"/>
-                            <fo:table-column column-width="5%"/>
-                            <fo:table-column column-width="7%"/>
                             <fo:table-column column-width="8%"/>
-                            <fo:table-column column-width="6%"/>
-                            <fo:table-column column-width="4%"/>
                             <fo:table-body>
                                <fo:table-row>
-                                <fo:table-cell >
-                                    <fo:block text-align="left" font-size="11pt">${uiLabelMap.AccountingAcctgTrans}</fo:block>
-                                </fo:table-cell>
                                 <fo:table-cell >
                                     <fo:block text-align="left" font-size="11pt">${uiLabelMap.FormFieldTitle_transactionDate}</fo:block>
                                 </fo:table-cell>
@@ -91,22 +83,10 @@ under the License.
 		                           <fo:block text-align="left" font-size="11pt">${uiLabelMap.CommonPartyName}</fo:block>
 		                        </fo:table-cell>
                                 <fo:table-cell >
-                                    <fo:block text-align="left" font-size="11pt">${uiLabelMap.AccountingProductId}</fo:block>
-                                </fo:table-cell>
-                                 <fo:table-cell >
-                                    <fo:block text-align="left" font-size="11pt">ProductName</fo:block>
+                                    <fo:block text-align="left" font-size="11pt">&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;${uiLabelMap.Debit}(RS)</fo:block>
                                 </fo:table-cell>
                                 <fo:table-cell >
-                                    <fo:block text-align="left" font-size="11pt">${uiLabelMap.FormFieldTitle_isPosted}</fo:block>
-                                </fo:table-cell>
-                                <fo:table-cell >
-                                    <fo:block text-align="left" font-size="11pt">${uiLabelMap.FormFieldTitle_postedDate}</fo:block>
-                                </fo:table-cell>
-                                <fo:table-cell >
-                                    <fo:block text-align="left" font-size="11pt">&#160;&#160;&#160;&#160;&#160;${uiLabelMap.Debit}(RS)</fo:block>
-                                </fo:table-cell>
-                                <fo:table-cell >
-                                    <fo:block text-align="left" font-size="11pt" >&#160;&#160;&#160;&#160;&#160;${uiLabelMap.Credit}(RS)</fo:block>
+                                    <fo:block text-align="left" font-size="11pt" >&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;${uiLabelMap.Credit}(RS)</fo:block>
                                 </fo:table-cell>
                                 <fo:table-cell >
                                     <fo:block text-align="left" font-size="11pt">${uiLabelMap.FormFieldTitle_acctgTransTypeId}</fo:block>
@@ -117,28 +97,28 @@ under the License.
                               </fo:table-row>
                               <fo:table-row>
                                 <fo:table-cell >
-                                   <fo:block>----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------</fo:block>
+                                   <fo:block>---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------</fo:block>
                                 </fo:table-cell>
                               </fo:table-row>
                               <#assign creditTotal=0>
                               <#assign debitTotal=0>
                               <#assign closingBal=0>
                               <#assign gTotal=0>
-                                <fo:table-row>
-	                                <fo:table-cell>
-		                                  <fo:block   text-align="left" keep-together="always" font-size="11pt" white-space-collapse="false"> Opening Balance</fo:block>
-									</fo:table-cell>
-	                                 <#if openingBal &gt; 0 >
-		                                 <fo:table-cell number-columns-spanned="11">
-		                                  <fo:block   text-align="right" keep-together="always" font-size="11pt" white-space-collapse="false"> ${openingBal?string("#0.00")}</fo:block>
-										 </fo:table-cell>
-									 </#if>
-									 <#if openingBal &lt; 0>
-										 <fo:table-cell number-columns-spanned="12">
-		                                  <fo:block  text-align="right" keep-together="always" font-size="11pt" white-space-collapse="false"> ${(openingBal*-1)?string("#0.00")}</fo:block>
-										 </fo:table-cell>	
-									 </#if>
-								</fo:table-row>	  
+                              <fo:table-row>
+                                <fo:table-cell>
+	                                  <fo:block   text-align="left" keep-together="always" font-size="11pt" white-space-collapse="false"> Opening Balance</fo:block>
+								</fo:table-cell>
+                                 <#if openingBal &gt; 0 >
+	                                 <fo:table-cell number-columns-spanned="4">
+	                                  <fo:block   text-align="right" keep-together="always" font-size="11pt" white-space-collapse="false"> ${openingBal?string("#0.00")}</fo:block>
+									 </fo:table-cell>
+								 </#if>
+								 <#if openingBal &lt; 0>
+									 <fo:table-cell number-columns-spanned="5">
+	                                  <fo:block  text-align="right" keep-together="always" font-size="11pt" white-space-collapse="false"> ${(openingBal*-1)?string("#0.00")}</fo:block>
+									 </fo:table-cell>	
+								 </#if>
+									</fo:table-row>	  
 								<fo:table-row>
 	                                <fo:table-cell>
 		                                  <fo:block   text-align="left" keep-together="always" font-size="11pt" white-space-collapse="false"> &#160;</fo:block>
@@ -146,9 +126,6 @@ under the License.
 								</fo:table-row>	 
                                 <#list acctgTransEntryList as acctgTransEntry>
                                 <fo:table-row>
-                                        <fo:table-cell >
-                                            <fo:block text-align="left" font-size="11pt">${(acctgTransEntry.acctgTransId)!} - ${(acctgTransEntry.acctgTransEntrySeqId)!}</fo:block>        
-                                        </fo:table-cell>
                                         <fo:table-cell >
                                             <fo:block text-align="left" font-size="11pt">
                                             <#if acctgTransEntry.transactionDate?has_content>
@@ -191,7 +168,7 @@ under the License.
                                             </#if>
                                             </fo:block>  
                                         </fo:table-cell>
-		                                   <fo:table-cell>
+                                         <fo:table-cell>
 		                                      <fo:block text-align="left" font-size="11pt"><#if acctgTransEntry.partyId?has_content && organizationPartyId!=acctgTransEntry.partyId>${acctgTransEntry.partyId}</#if></fo:block>
 		                                   </fo:table-cell>
 					                        <#assign  partyName="">
@@ -201,40 +178,21 @@ under the License.
 		                                 <fo:table-cell>
 		                                    <fo:block text-align="left" font-size="11pt"><#if partyName?exists>${partyName}</#if></fo:block>
 		                                </fo:table-cell>
-                                         <fo:table-cell>
-                                            <fo:block text-align="left" font-size="11pt">${acctgTransEntry.productId!}</fo:block>        
-                                        </fo:table-cell>
-                                        <#if acctgTransEntry.productId?has_content>
-                                            <#assign product = delegator.findOne("Product", {"productId" : acctgTransEntry.productId!}, true)>
+                                         <#if acctgTransEntry.debitCreditFlag?exists && acctgTransEntry.debitCreditFlag=="C">
+                                            <#assign creditTotal = creditTotal+acctgTransEntry.amount>
                                          </#if>
-                                        <fo:table-cell>
-                                            <fo:block text-align="left" font-size="11pt"><#if product?exists>${product.productName}</#if></fo:block>        
-                                        </fo:table-cell>
-                                        <fo:table-cell>
-                                            <fo:block text-align="left" font-size="11pt">${(acctgTransEntry.isPosted)!}</fo:block>        
-                                        </fo:table-cell>
-                                        <fo:table-cell >
-                                            <fo:block text-align="left" font-size="11pt">
-                                                <#if acctgTransEntry.postedDate?has_content>
-                                                    ${(acctgTransEntry.postedDate!)?string("dd/MM/yyyy")}
-                                                </#if>
-                                            </fo:block>        
-                                        </fo:table-cell>
-                                        <#if acctgTransEntry.debitCreditFlag?exists && acctgTransEntry.debitCreditFlag=="C">
-                                         <#assign creditTotal = creditTotal+acctgTransEntry.amount>
-                                        </#if>
-                                        <#if acctgTransEntry.debitCreditFlag?exists && acctgTransEntry.debitCreditFlag=="D">
-                                         <#assign debitTotal = debitTotal+acctgTransEntry.amount>
-                                        </#if>
-                                         <#if openingBal!=0>
-                                           <#assign closingBal=openingBal+debitTotal-creditTotal>
+                                         <#if acctgTransEntry.debitCreditFlag?exists && acctgTransEntry.debitCreditFlag=="D">
+                                           <#assign debitTotal = debitTotal+acctgTransEntry.amount>
+                                         </#if>
+                                         <#if (openingBal!= 0)>
+                                            <#assign closingBal=openingBal+debitTotal-creditTotal>
                                          <#else>
-                                           <#assign closingBal=debitTotal-creditTotal>
-                                         </#if>
-                                        <fo:table-cell>
+                                          <#assign closingBal=debitTotal-creditTotal>
+                                          </#if>
+                                        <fo:table-cell >
                                             <fo:block text-align="right" font-size="11pt"><#if acctgTransEntry.debitCreditFlag?exists && acctgTransEntry.debitCreditFlag=="D">${acctgTransEntry.amount?string("#0.00")}</#if></fo:block>        
                                         </fo:table-cell>
-                                         <fo:table-cell>
+                                         <fo:table-cell >
                                             <fo:block text-align="right" font-size="11pt"><#if acctgTransEntry.debitCreditFlag?exists && acctgTransEntry.debitCreditFlag=="C">${acctgTransEntry.amount?string("#0.00")}</#if></fo:block>        
                                         </fo:table-cell>
                                         <fo:table-cell>
@@ -245,7 +203,7 @@ under the License.
                                                 </#if>
                                             </fo:block>        
                                         </fo:table-cell>
-                                         <#if payment?has_content && payment.paymentTypeId?has_content>
+                                        <#if payment?has_content && payment.paymentTypeId?has_content>
 								            <#assign paymentMethodType = delegator.findOne("PaymentMethodType", {"paymentMethodTypeId" : payment.paymentMethodTypeId}, true)>
 								        </#if>
                                         <fo:table-cell >
@@ -259,16 +217,16 @@ under the License.
                                   </fo:table-cell>
                                  </fo:table-row>
                                 <fo:table-row>
-                                        <fo:table-cell   number-columns-spanned="10">
+                                        <fo:table-cell number-columns-spanned="5">
                                             <fo:block text-align="left" font-size="11pt"></fo:block>        
                                         </fo:table-cell>
-                                         <fo:table-cell>
+                                         <fo:table-cell >
                                             <fo:block text-align="left" font-size="11pt">total</fo:block>        
                                         </fo:table-cell>
-                                         <fo:table-cell>
+                                         <fo:table-cell >
                                             <fo:block text-align="right" font-size="11pt">${debitTotal?string("#0.00")}</fo:block>        
                                         </fo:table-cell>
-                                         <fo:table-cell >
+                                        <fo:table-cell >
                                             <fo:block text-align="right" font-size="11pt">${creditTotal?string("#0.00")}</fo:block>        
                                         </fo:table-cell>
                                 </fo:table-row>
@@ -280,10 +238,10 @@ under the License.
 							 <fo:table-column column-width="90%"/>	
 							 <fo:table-body>
 							 <fo:table-row>
-								 <fo:table-cell>
+								 <fo:table-cell >
 								   <fo:block text-align="left" font-size="11pt" white-space-collapse="false" keep-together="always">Closing Balance:</fo:block>
 						  		  </fo:table-cell>
-						  		  <fo:table-cell>
+						  		  <fo:table-cell >
 						  		  <fo:block text-align="left" font-size="11pt">${closingBal?string("#0.00")}</fo:block>
 						  		  </fo:table-cell>
 							 </fo:table-row>

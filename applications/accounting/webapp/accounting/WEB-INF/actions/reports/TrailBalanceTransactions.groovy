@@ -38,18 +38,22 @@ if(UtilValidate.isEmpty(glAccountId)){
 }else{
 glAccountIdList.add(glAccountId);
 }
+reportTypeFlag=parameters.reportTypeFlag;
 //Debug.log("ACCOUNT CODE=======From==NEw==GROOVY=============="+glAccountId);
  GenericValue customTimePeriod = delegator.findOne("CustomTimePeriod", [customTimePeriodId : parameters.customTimePeriodId], false);
  //Debug.log("tempDetails===================="+tempDetails);
  fromDate=customTimePeriod.fromDate;
  thruDate=customTimePeriod.thruDate;
- //Debug.log("fromdate======"+fromDate);
- //Debug.log("thrudate======"+thruDate);
+result=dispatcher.runSync("getGlAccountOpeningBalance", [glAccountId:glAccountId,fromDate:UtilDateTime.getDayStart(UtilDateTime.toTimestamp(fromDate)),thruDate:UtilDateTime.getDayEnd(UtilDateTime.toTimestamp(thruDate)),userLogin:userLogin]);
+context.put("openingBal",result.get("openingBal"));
  findOpts = new EntityFindOptions(true, EntityFindOptions.TYPE_SCROLL_INSENSITIVE, EntityFindOptions.CONCUR_READ_ONLY, true);
   conditionList = [];
  glAccountIdList.each{glAccountId->
  conditionList.clear();
  conditionList.add(EntityCondition.makeCondition("organizationPartyId" , EntityOperator.EQUALS,parameters.organizationPartyId));
+ if(reportTypeFlag.equals("condensed")){
+  conditionList.add(EntityCondition.makeCondition("isPosted" , EntityOperator.EQUALS,"Y"));
+ }
  conditionList.add(EntityCondition.makeCondition("glAccountId" , EntityOperator.EQUALS,glAccountId));
  conditionList.add(EntityCondition.makeCondition("transactionDate", EntityOperator.GREATER_THAN_EQUAL_TO,UtilDateTime.getDayStart(UtilDateTime.toTimestamp(fromDate))));
  conditionList.add(EntityCondition.makeCondition("transactionDate", EntityOperator.LESS_THAN_EQUAL_TO,UtilDateTime.getDayEnd(UtilDateTime.toTimestamp(thruDate))));
@@ -74,6 +78,6 @@ glAccountIdList.add(glAccountId);
 
  
  //Debug.log("allAcctgCodeTransEntryMap===================="+allAcctgCodeTransEntryMap);
- context.allAcctgCodeTransEntryMap=allAcctgCodeTransEntryMap;
+  context.allAcctgCodeTransEntryMap=allAcctgCodeTransEntryMap;
   context.fromDate=fromDate;
   context.thruDate=thruDate;
