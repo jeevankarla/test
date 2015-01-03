@@ -166,12 +166,12 @@ under the License.
                    			
                    			<fo:table-row>
                      			<fo:table-cell><fo:block linefeed-treatment="preserve">&#xA;</fo:block></fo:table-cell>
-                     			<fo:table-cell><fo:block text-align="left" keep-together="always" white-space-collapse="false" >&#160;To Manager Finance                                    Director MotherDairy</fo:block></fo:table-cell>
+                   				<fo:table-cell><fo:block text-align="left" keep-together="always" white-space-collapse="false" >&#160;Manager Admin             To Manager Finance                Director MotherDairy</fo:block></fo:table-cell>
                    			</fo:table-row>
                    			
                    			<fo:table-row>
                      			<fo:table-cell><fo:block linefeed-treatment="preserve">&#xA;</fo:block></fo:table-cell>
-                     			<fo:table-cell><fo:block text-align="left" keep-together="always" white-space-collapse="false" >&#160;Notice Board     </fo:block></fo:table-cell>
+                     			<fo:table-cell><fo:block text-align="left" keep-together="always" white-space-collapse="false" >&#160;                          Notice Board     </fo:block></fo:table-cell>
                    			</fo:table-row>
                    			
                      	</fo:table-body>
