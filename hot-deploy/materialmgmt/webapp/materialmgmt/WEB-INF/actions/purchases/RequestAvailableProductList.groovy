@@ -43,8 +43,13 @@ custRequestItems = delegator.findList("CustRequestAndItemAndAttribute", conditio
 
 productIds = EntityUtil.getFieldListFromEntityList(custRequestItems, "productId", true);
 
-inventoryItems = delegator.findList("InventoryItem", EntityCondition.makeCondition("productId", EntityOperator.IN, productIds),UtilMisc.toSet("productId", "quantityOnHandTotal"), null, null, false);
+conList = [];
+conList.add(EntityCondition.makeCondition("statusId", EntityOperator.EQUALS, "SR_QUALITYCHECK"));
+conList.add(EntityCondition.makeCondition("productId", EntityOperator.IN, productIds));
+cond = EntityCondition.makeCondition(conList, EntityOperator.AND);
 
+inventoryItems = delegator.findList("ShipmentReceiptAndItem",cond,UtilMisc.toSet("productId", "quantityOnHandTotal"), null, null, false);
+//inventoryItems = delegator.findList("InventoryItem", EntityCondition.makeCondition("productId", EntityOperator.IN, productIds),UtilMisc.toSet("productId", "quantityOnHandTotal"), null, null, false);
 prodInvMap = [:];
 productIds.each{eachProd ->
 	prodInvItems = EntityUtil.filterByCondition(inventoryItems, EntityCondition.makeCondition("productId", EntityOperator.EQUALS, eachProd));
