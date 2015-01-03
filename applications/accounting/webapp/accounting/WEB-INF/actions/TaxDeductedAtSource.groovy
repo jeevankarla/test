@@ -21,6 +21,8 @@ if(UtilValidate.isEmpty(fromMonth)){
 	context.errorMessage = "Month Cannot Be Empty";
 	return;
 }
+Debug.log("fromMonth ^^^^^^^^ "+fromMonth);
+
 thruMonth=parameters.thruMonth;
 if(UtilValidate.isEmpty(thruMonth)){
 	Debug.logError("Month Cannot Be Empty","");
@@ -182,33 +184,33 @@ invoiceStatusList.each{ invoices ->
 	tempMap["interest"] = 0;
 	tempMap["fee"] = 0;
 	tempMap["penalty"] = 0;
-	tempMap["total"]=0;
+	tempMap["total"] = 0;
 	tempMap["paidDate"] = "";
 	temp = "";
 	if(invoiceItemList)
 	{
-		invoiceItemList.each{ list ->
+		invoiceItemList.each{ invoiceItem ->
 			amountTotal = 0;
-			invoiceItemTypeId = list.get("invoiceItemTypeId");
+			invoiceItemTypeId = invoiceItem.get("invoiceItemTypeId");
 			temp = invoiceItemTypeId;
 		if(invoiceItemTypeId.equals("TDS_INT") || invoiceItemTypeId.equals("TDS_234E") || invoiceItemTypeId.equals("TDS_PENAL") || invoiceItemTypeId.equals(sectionCode))
 			{
 			if(invoiceItemTypeId.equals("TDS_INT"))
 			{
-				tempMap["interest"] = (Integer)list.get("amount");
+				tempMap["interest"] = (Integer)invoiceItem.get("amount");
 			}
 			else if(invoiceItemTypeId.equals("TDS_234E"))
 			{
-				tempMap["fee"] = (Integer)list.get("amount");
+				tempMap["fee"] = (Integer)invoiceItem.get("amount");
 				
 			}
 			else if(invoiceItemTypeId.equals("TDS_PENAL"))
 			{
-				tempMap["penalty"] = (Integer)list.get("amount");
+				tempMap["penalty"] = (Integer)invoiceItem.get("amount");
 			}
 			else if(invoiceItemTypeId.equals(sectionCode))
 			{
-				tempMap["tax"] = (Integer)list.get("amount");
+				tempMap["tax"] = (Integer)invoiceItem.get("amount");
 			}
 tempMap["paidDate"] = UtilDateTime.toDateString(invoices.paidDate, "dd/MM/yyyy");
 
@@ -234,49 +236,52 @@ for(int i=0;i<listTaxPaidNew.size();i++){
 	tempFinalListNew.add(tempMap);
 }
 //--------------------------------- ANNEXURE ------------------------------------------------------------------------------
+Timestamp monthBeginNew = UtilDateTime.getMonthStart(fromMonthTime);
+Timestamp monthEndNew = UtilDateTime.getMonthEnd(fromMonthTime, timeZone, locale);
+
+conditionListForDeductor = [];
+conditionListForDeductor.add(EntityCondition.makeCondition("partyIdentificationTypeId", EntityOperator.EQUALS, "TAN_NUMBER"));
+conditionListForDeductor.add(EntityCondition.makeCondition("partyId", EntityOperator.EQUALS, "Company"));
+conditionDeductor=EntityCondition.makeCondition(conditionListForDeductor,EntityOperator.AND);
+deductorList = delegator.findList("PartyIdentification", conditionDeductor, null, null, null, false);
+if(deductorList)
+{
+partyId = deductorList[0].get("partyId");
+deductorName = PartyHelper.getPartyName(delegator, partyId, false);
+TAN = deductorList[0].get("idValue");
+}
+else
+{
+	deductorName = "--";
+	TAN = "--";
+}
+
+monthCheck = UtilDateTime.toDateString(monthEndNew, "MMM");
+boolean flag = true;
+listAnnexureNew = [];
+
+while(flag)
+{
+	Debug.log("monthBeginNew== "+monthBeginNew);
+	Debug.log("monthEndNew== "+monthEndNew);
+
 conditionList = [];
 conditionList.add(EntityCondition.makeCondition("taxAuthPartyId", EntityOperator.EQUALS, "TAX1"));
 conditionList.add(EntityCondition.makeCondition("invoiceItemTypeId", EntityOperator.EQUALS, sectionCode));
+conditionList.add(EntityCondition.makeCondition("invoiceDate", EntityOperator.BETWEEN,UtilMisc.toList(monthBeginNew,monthEndNew)));
+conditionList.add(EntityCondition.makeCondition("statusId", EntityOperator.NOT_EQUAL, "INVOICE_CANCELLED"));
+conditionList.add(EntityCondition.makeCondition("partyIdFrom", EntityOperator.NOT_EQUAL, "Company"));
+conditionList.add(EntityCondition.makeCondition("partyIdFrom", EntityOperator.NOT_EQUAL, "TAX1"));
 condition = EntityCondition.makeCondition(conditionList,EntityOperator.AND);
-invoiceListFromInvoiceItem = delegator.findList("InvoiceItem", condition, null, null, null, false);
+invoiceList = delegator.findList("InvoiceAndItem", condition, null, null, null, false);
 
-	conditionListForDate = [];
-	conditionListForDate.add(EntityCondition.makeCondition("paidDate", EntityOperator.BETWEEN,UtilMisc.toList(monthBegin,monthEnd)));
-	conditionListForDate.add(EntityCondition.makeCondition("invoiceId",EntityOperator.IN,EntityUtil.getFieldListFromEntityList(invoiceListFromInvoiceItem, "invoiceId", true)));
-	conditionListForDate.add(EntityCondition.makeCondition("partyIdFrom", EntityOperator.NOT_EQUAL, "Company")); 
-	conditionListForDate.add(EntityCondition.makeCondition("partyIdFrom", EntityOperator.NOT_EQUAL, "TAX1"));
-	
-	cond=EntityCondition.makeCondition(conditionListForDate,EntityOperator.AND);
-	invoiceList = delegator.findList("Invoice", cond, null, null, null, false);
 
-	conditionListForDeductor = [];
-	conditionListForDeductor.add(EntityCondition.makeCondition("partyIdentificationTypeId", EntityOperator.EQUALS, "TAN_NUMBER"));
-	conditionListForDeductor.add(EntityCondition.makeCondition("partyId", EntityOperator.EQUALS, "Company"));
-	conditionDeductor=EntityCondition.makeCondition(conditionListForDeductor,EntityOperator.AND);
-	deductorList = delegator.findList("PartyIdentification", conditionDeductor, null, null, null, false);
+	GenericValue partyIdentification;
+
 	
-	if(deductorList)
-	{
-	partyId = deductorList[0].get("partyId");
-	deductorName = PartyHelper.getPartyName(delegator, partyId, false);
-	TAN = deductorList[0].get("idValue");
-	}
-	else
-	{
-		deductorName = "--";
-		TAN = "--";
-	}
-	listAnnexureNew = [];
-	GenericValue panId;
-	GenericValue invoiceAmount;
-	total = 0;
-	invoiceTotal = 0;
-		
-		invoiceList.each{ invoiceList ->
-			
-			quantityNo = 0;
+		invoiceList.each{ invoiceEntry ->
+			Debug.log("invoiceAmounts == AAA "+invoiceEntry.amount);
 			amount = 0;
-			
 			tempMap = [:];
 			tempMap["serialNo"]= "";
 			tempMap["invoiceId"] = "";
@@ -289,53 +294,58 @@ invoiceListFromInvoiceItem = delegator.findList("InvoiceItem", condition, null, 
 			tempMap["section"] = "";
 			tempMap["invoiceDate"] = "";
 			tempMap["invoiceAmount"] = "";
-					tempMap["invoiceId"]=invoiceList.invoiceId;
-					tempMap["paidDate"] = UtilDateTime.toDateString(invoiceList.paidDate, "dd/MM/yyyy");
-					tempMap["invoiceDate"] = UtilDateTime.toDateString(invoiceList.invoiceDate, "dd/MM/yyyy");
-					tempMap["partyId"] = invoiceList.partyIdFrom;
+			tempMap["month"] = "";
+			
+					tempMap["invoiceId"]=invoiceEntry.invoiceId;
+					tempMap["paidDate"] = UtilDateTime.toDateString(invoiceEntry.paidDate, "dd/MM/yyyy");
+					tempMap["invoiceDate"] = UtilDateTime.toDateString(invoiceEntry.invoiceDate, "dd/MM/yyyy");
+					tempMap["partyId"] = invoiceEntry.partyIdFrom;
 					condListGroup = [];
 					condListGroup.add(EntityCondition.makeCondition("partyId", EntityOperator.EQUALS, tempMap["partyId"]));
 					condGroup=EntityCondition.makeCondition(condListGroup,EntityOperator.AND);
 					groupCodeList = delegator.findList("PartyClassification", condGroup, null, null, null, false);
 					if(groupCodeList){ tempMap["code"] = groupCodeList[0].get("partyClassificationGroupId"); }
 					else{ tempMap["code"] = "";}
-					
 					tempMap["partyName"] = PartyHelper.getPartyName(delegator, tempMap["partyId"], false);
-					
-					panId = delegator.findOne("PartyIdentification",UtilMisc.toMap("partyId", tempMap["partyId"], "partyIdentificationTypeId", "PAN_NUMBER"), false);
-					if(panId){
-						tempMap["panNo"] = panId.get("idValue");
+					partyIdentification = delegator.findOne("PartyIdentification",UtilMisc.toMap("partyId", tempMap["partyId"], "partyIdentificationTypeId", "PAN_NUMBER"), false);
+					if(partyIdentification){
+						tempMap["panNo"] = partyIdentification.get("idValue");
 					}else{
 						tempMap["panNo"] = "";
 					}
-					conditionList = [];
-					conditionList.add(EntityCondition.makeCondition("taxAuthPartyId", EntityOperator.EQUALS, "TAX1"));
-					conditionList.add(EntityCondition.makeCondition("invoiceId", EntityOperator.EQUALS, tempMap["invoiceId"]));
-					condition=EntityCondition.makeCondition(conditionList,EntityOperator.AND);
-					invoiceAmountList = delegator.findList("InvoiceItem", condition, null, null, null, false);
-					quantityNo = invoiceAmountList[0].get("quantity");
-					if(quantityNo)
-					{
-					amount = -(invoiceAmountList[0].get("amount"));
-					tempMap["amount"] = quantityNo * amount;
-					}
-					else
-					{
-						tempMap["amount"] = -(invoiceAmountList[0].get("amount"));
-					}
+					tempMap["amount"] = invoiceEntry.amount;
 					if(tempMap["amount"]<0)
 					{
 						tempMap["amount"] = -(tempMap["amount"]);
 					}
-					sectionCode = invoiceAmountList[0].get("invoiceItemTypeId");
+					sectionCode = invoiceEntry.invoiceItemTypeId;
 					tempMap["section"] = sectionCode.substring(sectionCode.lastIndexOf("_") + 1);
 
-					tempMap["invoiceAmount"] = org.ofbiz.accounting.invoice.InvoiceWorker.getInvoiceTotal(delegator,invoiceList.invoiceId);
+					tempMap["invoiceAmount"] = org.ofbiz.accounting.invoice.InvoiceWorker.getInvoiceTotal(delegator,invoiceEntry.invoiceId);
+					if(tempMap["invoiceAmount"] < 0)
+					{
+						tempMap["invoiceAmount"] = -(tempMap["invoiceAmount"]);
+					}
+					tempMap["month"] = UtilDateTime.toDateString(monthEndNew, "MMM");
+				//	Debug.log("monthName MMM "+tempMap["month"]);
 					
-					total = total + tempMap["amount"];
-					invoiceTotal = invoiceTotal + tempMap["invoiceAmount"];
 		listAnnexureNew.add(tempMap);
-			}
+		
+		}
+		
+		
+		if(monthEndNew == monthEnd)
+		{
+			flag = false;
+		}
+		else
+		{
+			monthBeginNew = UtilDateTime.addDaysToTimestamp(monthEndNew, 1);
+			monthBeginNew = UtilDateTime.getMonthStart(monthBeginNew);
+			monthEndNew = UtilDateTime.getMonthEnd(monthBeginNew, timeZone, locale);
+		}
+}
+
 		sectionCode = sectionCode.substring(sectionCode.lastIndexOf("_") + 1);
 		
 		tempFinalList =[];
@@ -344,23 +354,21 @@ invoiceListFromInvoiceItem = delegator.findList("InvoiceItem", condition, null, 
 			tempMap.put("serialNo",i+1);
 			tempFinalList.add(tempMap);
 		}
-
-context.listAnnexure = listAnnexureNew;
-context.deductorName = deductorName;
-context.TAN = TAN;
-context.total = total;
-context.invoiceTotal = invoiceTotal;
-context.listTaxPaid = tempFinalListNew;
-context.panNumber = panNumber;
-context.tanNumber = tanNumber;
-context.partyGroup = partyGroup;
-context.sectionCode = sectionCode;
-
-context.address1 = address1;
-context.address2 = address2;	
-context.city = city;
-context.postalCode = postalCode;
-context.state = state;
-context.email = email;
-context.telephone = telephone;
-
+		context.listAnnexure = listAnnexureNew;
+		context.deductorName = deductorName;
+		context.TAN = TAN;
+		context.listTaxPaid = tempFinalListNew;
+		context.panNumber = panNumber;
+		context.tanNumber = tanNumber;
+		context.partyGroup = partyGroup;
+		context.sectionCode = sectionCode;
+		context.monthCheck = monthCheck;
+		
+		context.address1 = address1;
+		context.address2 = address2;
+		context.city = city;
+		context.postalCode = postalCode;
+		context.state = state;
+		context.email = email;
+		context.telephone = telephone;
+		

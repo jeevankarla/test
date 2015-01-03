@@ -263,7 +263,7 @@ function reportTypeChangeFunc() {
               </tr>
               	
               
-         <!--     <tr class="alternate-row">
+              <tr class="alternate-row">
 				   	<form id="MonthlyTDSAnnexure" name="MonthlyTDSAnnexure" method="post" action="<@ofbizUrl>TDSReport.pdf</@ofbizUrl>" target="_blank">
 									<td width="30%">Monthly TDS Annexure<input  type="hidden"  value="MonthlyTDSAnnexure"   name="reportTypeFlag"/></td>
 									<td width="15%">From <input type='text' size="18pt" id='fromMonth' name='fromMonth' onmouseover='monthPickerTDS()' class="monthPickerTDS"</td>
@@ -273,7 +273,6 @@ function reportTypeChangeFunc() {
 			      		 			<option value="TDS_194H">TDS_194H</option>
 			      		 			<option value="TDS_194J">TDS_194J</option>
 			      		 			<option value="TCS_206C">TCS_206C</option>
-			      		 			<option value="PAYROL_DD_INC_TAX">PAYROLL</option>
 			      		 			
 			      		 			</select></td>  
 	 			  					<td width="5%"></td>
@@ -296,7 +295,7 @@ function reportTypeChangeFunc() {
 	 			  					<td width="5%"></td>
 									<td width="15%"><input type="submit" value="FORM 27A.PDF" class="buttontext"></td>
 						</form>
-					</tr>	-->
+					</tr>	
 		</table>     			     
 	</div> 	
 </div>

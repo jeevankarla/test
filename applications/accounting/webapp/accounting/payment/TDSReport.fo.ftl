@@ -180,7 +180,7 @@ ${setRequestAttribute("OUTPUT_FILENAME", "TDSReport.pdf")}
                     <fo:table-row>
 			       			<fo:table-cell><fo:block text-align="left" font-size="10" font-weight="bold">(a) Name</fo:block></fo:table-cell>
 			       			<fo:table-cell border-style="solid">
-                            	<fo:block  keep-together="always" text-align="center" font-size="12" white-space-collapse="false" >${partyGroup}</fo:block>  
+                            	<fo:block  keep-together="always" text-align="center" font-size="12" white-space-collapse="false" >${partyGroup?if_exists}</fo:block>  
                        		</fo:table-cell>
                     </fo:table-row>
                     </fo:table-body>
@@ -217,7 +217,7 @@ ${setRequestAttribute("OUTPUT_FILENAME", "TDSReport.pdf")}
                     <fo:table-row>
 			       			<fo:table-cell><fo:block  font-weight="bold" text-align="left">(c) TAN Registration No.</fo:block></fo:table-cell>
 			       			<fo:table-cell border-style="solid">
-                            	<fo:block  keep-together="always" text-align="center" font-size="12" white-space-collapse="false" >${tanNumber}</fo:block>  
+                            	<fo:block  keep-together="always" text-align="center" font-size="12" white-space-collapse="false" >${tanNumber?if_exists}</fo:block>  
                        		</fo:table-cell>
                     </fo:table-row>
                     </fo:table-body>
@@ -233,13 +233,13 @@ ${setRequestAttribute("OUTPUT_FILENAME", "TDSReport.pdf")}
                     <fo:table-row>
 			       			<fo:table-cell><fo:block text-align="left">&#160;&#160;&#160;&#160;&#160;Flat No.</fo:block></fo:table-cell>
 			       			<fo:table-cell border-style="solid">
-                            	<fo:block  keep-together="always" text-align="center" font-size="12" white-space-collapse="false" >${address1}</fo:block>  
+                            	<fo:block  keep-together="always" text-align="center" font-size="12" white-space-collapse="false" >${address1?if_exists}</fo:block>  
                        		</fo:table-cell>
                     </fo:table-row>
                     <fo:table-row>
 			       			<fo:table-cell><fo:block text-align="left">&#160;&#160;&#160;&#160;&#160;Name of the premises/building</fo:block></fo:table-cell>
 			       			<fo:table-cell border-style="solid">
-                            	<fo:block  keep-together="always" text-align="center" font-size="12" white-space-collapse="false" >${address2}</fo:block>  
+                            	<fo:block  keep-together="always" text-align="center" font-size="12" white-space-collapse="false" >${address2?if_exists}</fo:block>  
                        		</fo:table-cell>
                     </fo:table-row>
                     <fo:table-row>
@@ -257,25 +257,25 @@ ${setRequestAttribute("OUTPUT_FILENAME", "TDSReport.pdf")}
                     <fo:table-row>
 			       			<fo:table-cell><fo:block text-align="left">&#160;&#160;&#160;&#160;&#160;Town/City/District</fo:block></fo:table-cell>
 			       			<fo:table-cell border-style="solid">
-                            	<fo:block  keep-together="always" text-align="center" font-size="12" white-space-collapse="false" >${city}</fo:block>  
+                            	<fo:block  keep-together="always" text-align="center" font-size="12" white-space-collapse="false" >${city?if_exists}</fo:block>  
                        		</fo:table-cell>
                     </fo:table-row>
                     <fo:table-row>
 			       			<fo:table-cell><fo:block text-align="left">&#160;&#160;&#160;&#160;&#160;State</fo:block></fo:table-cell>
 			       			<fo:table-cell border-style="solid">
-                            	<fo:block  keep-together="always" text-align="center" font-size="12" white-space-collapse="false" >${state}</fo:block>  
+                            	<fo:block  keep-together="always" text-align="center" font-size="12" white-space-collapse="false" >${state?if_exists}</fo:block>  
                        		</fo:table-cell>
                     </fo:table-row>
                     <fo:table-row>
 			       			<fo:table-cell><fo:block text-align="left">&#160;&#160;&#160;&#160;&#160;PIN Code</fo:block></fo:table-cell>
 			       			<fo:table-cell border-style="solid">
-                            	<fo:block  keep-together="always" text-align="center" font-size="12" white-space-collapse="false" >${postalCode}</fo:block>  
+                            	<fo:block  keep-together="always" text-align="center" font-size="12" white-space-collapse="false" >${postalCode?if_exists}</fo:block>  
                        		</fo:table-cell>
                     </fo:table-row>
                     <fo:table-row>
 			       			<fo:table-cell><fo:block text-align="left">&#160;&#160;&#160;&#160;&#160;Telephone No.</fo:block></fo:table-cell>
 			       			<fo:table-cell border-style="solid">
-                            	<fo:block  keep-together="always" text-align="center" font-size="12" white-space-collapse="false" >${telephone}</fo:block>  
+                            	<fo:block  keep-together="always" text-align="center" font-size="12" white-space-collapse="false" >${telephone?if_exists}</fo:block>  
                        		</fo:table-cell>
                     </fo:table-row>
                     <fo:table-row>
@@ -287,7 +287,7 @@ ${setRequestAttribute("OUTPUT_FILENAME", "TDSReport.pdf")}
                     <fo:table-row>
 			       			<fo:table-cell><fo:block text-align="left">&#160;&#160;&#160;&#160;&#160;Email</fo:block></fo:table-cell>
 			       			<fo:table-cell border-style="solid">
-                            	<fo:block  keep-together="always" text-align="center" font-size="12" white-space-collapse="false" >${email}</fo:block>  
+                            	<fo:block  keep-together="always" text-align="center" font-size="12" white-space-collapse="false" >${email?if_exists}</fo:block>  
                        		</fo:table-cell>
                     </fo:table-row>
                     <fo:table-row>
@@ -441,16 +441,16 @@ ${setRequestAttribute("OUTPUT_FILENAME", "TDSReport.pdf")}
 			       		<#assign rcount = rcount+1>
 			       		<fo:table-row>
 			       		<fo:table-cell border-style="solid"><fo:block   text-align="center" font-size="10" >${rcount}</fo:block> </fo:table-cell>
-			       		<fo:table-cell border-style="solid"><fo:block   text-align="center" font-size="10" >${taxPaid.get("invoiceId")}</fo:block> </fo:table-cell>
-			       		<fo:table-cell border-style="solid"><fo:block   text-align="right" font-size="10"><#if taxPaid.get("tax")?has_content>${taxPaid.get("tax")?string("#.00")}</#if></fo:block> </fo:table-cell>
-			       		<fo:table-cell border-style="solid"><fo:block   text-align="right" font-size="10"><#if taxPaid.get("interest")?has_content>${taxPaid.get("interest")?string("#.00")}</#if></fo:block> </fo:table-cell>
-			       		<fo:table-cell border-style="solid"><fo:block   text-align="right" font-size="10"><#if taxPaid.get("fee")?has_content>${taxPaid.get("fee")?string("#.00")}</#if></fo:block> </fo:table-cell>
-			       		<fo:table-cell border-style="solid"><fo:block   text-align="right" font-size="10"><#if taxPaid.get("penalty")?has_content>${taxPaid.get("penalty")?string("#.00")}</#if></fo:block> </fo:table-cell>
-			       		<fo:table-cell border-style="solid"><fo:block   text-align="right" font-size="10">${taxPaid.get("total")?string("#.00")}</fo:block> </fo:table-cell>
+			       		<fo:table-cell border-style="solid"><fo:block   text-align="center" font-size="10" >${taxPaid.get("invoiceId")?if_exists}</fo:block> </fo:table-cell>
+			       		<fo:table-cell border-style="solid"><fo:block   text-align="right" font-size="10"><#if taxPaid.get("tax")  != 0><#if taxPaid.get("tax")?has_content>${taxPaid.get("tax")?string("#.00")}</#if></#if></fo:block> </fo:table-cell>
+			       		<fo:table-cell border-style="solid"><fo:block   text-align="right" font-size="10"><#if taxPaid.get("tax")  != 0><#if taxPaid.get("interest")?has_content>${taxPaid.get("interest")?string("#.00")}</#if></#if></fo:block> </fo:table-cell>
+			       		<fo:table-cell border-style="solid"><fo:block   text-align="right" font-size="10"><#if taxPaid.get("tax")  != 0><#if taxPaid.get("fee")?has_content>${taxPaid.get("fee")?string("#.00")}</#if></#if></fo:block> </fo:table-cell>
+			       		<fo:table-cell border-style="solid"><fo:block   text-align="right" font-size="10"><#if taxPaid.get("tax")  != 0><#if taxPaid.get("penalty")?has_content>${taxPaid.get("penalty")?string("#.00")}</#if></#if></fo:block> </fo:table-cell>
+			       		<fo:table-cell border-style="solid"><fo:block   text-align="right" font-size="10">${taxPaid.get("total")?string("#.00")?if_exists}</fo:block> </fo:table-cell>
 			       		<fo:table-cell border-style="solid"><fo:block   text-align="center" font-size="10"></fo:block> </fo:table-cell>
 			       		<fo:table-cell border-style="solid"><fo:block   text-align="center" font-size="10"></fo:block> </fo:table-cell>
 			       		<fo:table-cell border-style="solid"><fo:block   text-align="center" font-size="10"></fo:block> </fo:table-cell>
-			       		<fo:table-cell border-style="solid"><fo:block   text-align="center" font-size="10">${taxPaid.get("paidDate")}</fo:block> </fo:table-cell>
+			       		<fo:table-cell border-style="solid"><fo:block   text-align="center" font-size="10">${taxPaid.get("paidDate")?if_exists}</fo:block> </fo:table-cell>
 			       		<fo:table-cell border-style="solid"><fo:block   text-align="center" font-size="10"></fo:block> </fo:table-cell>
 			       		</fo:table-row>
 			       		</#list>
@@ -603,25 +603,55 @@ ${setRequestAttribute("OUTPUT_FILENAME", "TDSReport.pdf")}
 							<fo:table-cell border-style="solid"><fo:block  text-align="center" font-size="10" font-weight="bold">Number of thecertificate under section 197 issued by the Assessing Officer for non deduction/lower Deduction(see note 3)</fo:block></fo:table-cell>
 			       		</fo:table-row>   
 			       			<#assign rcount = 0>
+		       			<#assign month = monthCheck>
+   						<#assign amtTotal = 0>
+   						<#assign invoiceTotalEach = 0>
+   						<#assign grandTotalAmt = 0>
+   						<#assign grandTotalInvoice = 0>
 			       		<#list listAnnexure as mList>
+			       		<#if month.equals(mList.get("month"))>
+   						<#assign amtTotal = amtTotal + mList.get("amount")>
+   						<#assign invoiceTotalEach = invoiceTotalEach + mList.get("invoiceAmount")>
+   						<#assign grandTotalAmt = grandTotalAmt + mList.get("amount")>
+   						<#assign grandTotalInvoice = grandTotalInvoice + mList.get("invoiceAmount")>
 			       		<#assign rcount = rcount+1>
 			       		<fo:table-row>
 			       		<fo:table-cell border-style="solid"><fo:block   text-align="center" font-size="10" >${rcount}</fo:block></fo:table-cell>
-			       		<fo:table-cell border-style="solid"><fo:block   text-align="center" font-size="10">${mList.get("partyId")}</fo:block></fo:table-cell>
-			       		<fo:table-cell border-style="solid"><fo:block   text-align="center" font-size="10">${mList.get("code")}</fo:block></fo:table-cell>
-			       		<fo:table-cell border-style="solid"><fo:block   text-align="center" font-size="10">${mList.get("panNo")}</fo:block></fo:table-cell>
-			       		<fo:table-cell border-style="solid"><fo:block   text-align="center" font-size="10">${mList.get("partyName")}</fo:block></fo:table-cell>
-			       		<fo:table-cell border-style="solid"><fo:block   text-align="center" font-size="10">${mList.get("section")}</fo:block></fo:table-cell>
-			       		<fo:table-cell border-style="solid"><fo:block   text-align="center" font-size="10">${mList.get("paidDate")}</fo:block></fo:table-cell>
-			       		<fo:table-cell border-style="solid"><fo:block   text-align="right" font-size="10">${mList.get("invoiceAmount")?string("#.00")}</fo:block></fo:table-cell>
+			       		<fo:table-cell border-style="solid"><fo:block   text-align="center" font-size="10">${mList.get("partyId")?if_exists}</fo:block></fo:table-cell>
+			       		<fo:table-cell border-style="solid"><fo:block   text-align="center" font-size="10">${mList.get("code")?if_exists}</fo:block></fo:table-cell>
+			       		<fo:table-cell border-style="solid"><fo:block   text-align="center" font-size="10">${mList.get("panNo")?if_exists}</fo:block></fo:table-cell>
+			       		<fo:table-cell border-style="solid"><fo:block   text-align="center" font-size="10">${mList.get("partyName")?if_exists}</fo:block></fo:table-cell>
+			       		<fo:table-cell border-style="solid"><fo:block   text-align="center" font-size="10">${mList.get("section")?if_exists}</fo:block></fo:table-cell>
+			       		<fo:table-cell border-style="solid"><fo:block   text-align="center" font-size="10">${mList.get("paidDate")?if_exists}</fo:block></fo:table-cell>
+			       		<fo:table-cell border-style="solid"><fo:block   text-align="right" font-size="10"><#if mList.get("invoiceAmount")?has_content>${mList.get("invoiceAmount")?string("#.00")}</#if></fo:block></fo:table-cell>
 			       		<fo:table-cell border-style="solid"><fo:block   text-align="right" font-size="10"><#if mList.get("amount")?has_content>${mList.get("amount")?string("#.00")}</#if></fo:block></fo:table-cell>
 			       		<fo:table-cell border-style="solid"><fo:block   text-align="right" font-size="10"><#if mList.get("amount")?has_content>${mList.get("amount")?string("#.00")}</#if></fo:block></fo:table-cell>
 			       		<fo:table-cell border-style="solid"><fo:block   text-align="center" font-size="10">${mList.get("invoiceDate")}</fo:block></fo:table-cell>
 			       		<fo:table-cell border-style="solid"><fo:block   text-align="center" font-size="10" ></fo:block></fo:table-cell>
 			       		<fo:table-cell border-style="solid"><fo:block   text-align="center" font-size="10" ></fo:block></fo:table-cell>
 			       		<fo:table-cell border-style="solid"><fo:block   text-align="center" font-size="10" ></fo:block></fo:table-cell>
-			       		
 			       		</fo:table-row >
+			       		<#else>
+		       			<#assign month = mList.get("month")>
+			       		<fo:table-row border-style="solid">
+			       		<fo:table-cell><fo:block   text-align="center" font-size="10" ></fo:block></fo:table-cell>
+			       		<fo:table-cell><fo:block   text-align="center" font-size="10" ></fo:block></fo:table-cell>
+			       		<fo:table-cell><fo:block   text-align="center" font-size="10" ></fo:block></fo:table-cell>
+			       		<fo:table-cell><fo:block   text-align="center" font-size="10" ></fo:block></fo:table-cell>
+			       		<fo:table-cell><fo:block   text-align="center" font-size="10" ></fo:block></fo:table-cell>
+			       		<fo:table-cell><fo:block   text-align="center" font-size="10" ></fo:block>${month?if_exists}</fo:table-cell>
+			       		<fo:table-cell><fo:block   text-align="center" font-weight="bold" font-size="10" >TOTAL: </fo:block></fo:table-cell>
+			       		<fo:table-cell><fo:block  font-weight="bold" text-align="right" font-size="10">${invoiceTotalEach?if_exists}</fo:block></fo:table-cell>
+			       		<fo:table-cell><fo:block  font-weight="bold" text-align="right" font-size="10">${amtTotal?if_exists}</fo:block></fo:table-cell>
+			       		<fo:table-cell><fo:block  font-weight="bold" text-align="right" font-size="10">${amtTotal?if_exists}</fo:block></fo:table-cell>
+			       		<fo:table-cell><fo:block   text-align="center" font-size="10"></fo:block></fo:table-cell>
+			       		<fo:table-cell><fo:block   text-align="center" font-size="10" ></fo:block></fo:table-cell>
+			       		<fo:table-cell><fo:block   text-align="center" font-size="10" ></fo:block></fo:table-cell>
+			       		<fo:table-cell><fo:block   text-align="center" font-size="10" ></fo:block></fo:table-cell>
+			       		</fo:table-row >
+			       		<#assign amtTotal = 0>
+		       			<#assign invoiceTotalEach = 0>
+			       		</#if>
 			       		</#list>
 			       		<fo:table-row border-style="solid">
 			       		<fo:table-cell><fo:block   text-align="center" font-size="10" ></fo:block></fo:table-cell>
@@ -631,9 +661,25 @@ ${setRequestAttribute("OUTPUT_FILENAME", "TDSReport.pdf")}
 			       		<fo:table-cell><fo:block   text-align="center" font-size="10" ></fo:block></fo:table-cell>
 			       		<fo:table-cell><fo:block   text-align="center" font-size="10" ></fo:block></fo:table-cell>
 			       		<fo:table-cell><fo:block   text-align="center" font-weight="bold" font-size="10" >TOTAL: </fo:block></fo:table-cell>
-			       		<fo:table-cell><fo:block  font-weight="bold" text-align="right" font-size="10">${invoiceTotal?string("#.00")}</fo:block></fo:table-cell>
-			       		<fo:table-cell><fo:block  font-weight="bold" text-align="right" font-size="10">${total?string("#.00")}</fo:block></fo:table-cell>
-			       		<fo:table-cell><fo:block  font-weight="bold" text-align="right" font-size="10">${total?string("#.00")}</fo:block></fo:table-cell>
+			       		<fo:table-cell><fo:block  font-weight="bold" text-align="right" font-size="10">${invoiceTotalEach?if_exists}</fo:block></fo:table-cell>
+			       		<fo:table-cell><fo:block  font-weight="bold" text-align="right" font-size="10">${amtTotal?if_exists}</fo:block></fo:table-cell>
+			       		<fo:table-cell><fo:block  font-weight="bold" text-align="right" font-size="10">${amtTotal?if_exists}</fo:block></fo:table-cell>
+			       		<fo:table-cell><fo:block   text-align="center" font-size="10"></fo:block></fo:table-cell>
+			       		<fo:table-cell><fo:block   text-align="center" font-size="10" ></fo:block></fo:table-cell>
+			       		<fo:table-cell><fo:block   text-align="center" font-size="10" ></fo:block></fo:table-cell>
+			       		<fo:table-cell><fo:block   text-align="center" font-size="10" ></fo:block></fo:table-cell>
+			       		</fo:table-row >
+			       		<fo:table-row border-style="solid">
+			       		<fo:table-cell><fo:block   text-align="center" font-size="10" ></fo:block></fo:table-cell>
+			       		<fo:table-cell><fo:block   text-align="center" font-size="10" ></fo:block></fo:table-cell>
+			       		<fo:table-cell><fo:block   text-align="center" font-size="10" ></fo:block></fo:table-cell>
+			       		<fo:table-cell><fo:block   text-align="center" font-size="10" ></fo:block></fo:table-cell>
+			       		<fo:table-cell><fo:block   text-align="center" font-size="10" ></fo:block></fo:table-cell>
+			       		<fo:table-cell><fo:block   text-align="center" font-size="10" ></fo:block></fo:table-cell>
+			       		<fo:table-cell><fo:block   text-align="center" font-weight="bold" font-size="10" > GRAND TOTAL: </fo:block></fo:table-cell>
+			       		<fo:table-cell><fo:block  font-weight="bold" text-align="right" font-size="10">${grandTotalInvoice?string("#.00")}</fo:block></fo:table-cell>
+			       		<fo:table-cell><fo:block  font-weight="bold" text-align="right" font-size="10">${grandTotalAmt?string("#.00")}</fo:block></fo:table-cell>
+			       		<fo:table-cell><fo:block  font-weight="bold" text-align="right" font-size="10">${grandTotalAmt?string("#.00")}</fo:block></fo:table-cell>
 			       		<fo:table-cell><fo:block   text-align="center" font-size="10"></fo:block></fo:table-cell>
 			       		<fo:table-cell><fo:block   text-align="center" font-size="10" ></fo:block></fo:table-cell>
 			       		<fo:table-cell><fo:block   text-align="center" font-size="10" ></fo:block></fo:table-cell>
