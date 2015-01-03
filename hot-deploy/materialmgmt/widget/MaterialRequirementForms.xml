@@ -124,10 +124,17 @@
     </form>
     <form name="ApproveMaterialRequirements" type="multi" use-row-submit="true" target="approveMaterialRequirementEnrties" title="" list-name="requirements"
         paginate-target="ApproveRequirements" odd-row-style="alternate-row" default-table-style="basic-table hover-bar">
-        <field name="requirementId" widget-style="buttontext">
-            <hyperlink also-hidden="true" description="${requirementId}" target="EditRequirement">
+        <row-actions>
+          	<service service-name="getLastSupplyMaterialDetails" result-map="resultMap">
+          		<field-map field-name="productId" from-field="productId"/>
+          	</service>
+          	<set field="supplyDetails" value="${resultMap.productSupplyDetails}" type="Object"/>
+          	<set field="partyId" value="${supplyDetails.supplierPartyId}"/>
+        </row-actions>
+        <field name="requirementId" widget-style="buttontext"><display/>
+            <!-- <hyperlink also-hidden="true" description="${requirementId}" target="EditRequirement">
                 <parameter param-name="requirementId"/>
-            </hyperlink>
+            </hyperlink> -->
         </field>
         <!-- <field name="requirementTypeId">
             <display-entity entity-name="RequirementType" also-hidden="true"/>
@@ -140,6 +147,10 @@
         <field name="requirementStartDate" title="Requirement Date"><display/></field>
         <!-- <field name="requiredByDate"><display/></field> -->
         <field name="quantity" title="${uiLabelMap.CommonQuantity}"><display/></field>
+        <field name="supplyDate" title="Last Supply Date"><display description="${supplyDetails.supplyDate}"/></field>
+        <field name="partyId" title="Last Supplier"><display-entity entity-name="PartyNameView" description="${LastName} ${firstName} ${middleName} ${groupName} - [${partyId}]"  key-field-name="partyId" /></field>
+        <field name="supplyQty" title="Last Supply Qty"><display description="${supplyDetails.supplyQty}"/></field>
+        <field name="unitPrice" title="Last Rate"><display description="${supplyDetails.supplyRate}"/></field>
         <field name="_rowSubmit" title="${uiLabelMap.CommonSelect}"><check/></field>
         <field name="submitButton" title="${uiLabelMap.CommonSubmit}" widget-style="smallSubmit">
           <submit/>

@@ -45,6 +45,7 @@ import org.ofbiz.entity.condition.EntityConditionList;
 import org.ofbiz.entity.condition.EntityExpr;
 import org.ofbiz.entity.condition.EntityOperator;
 import org.ofbiz.entity.transaction.TransactionUtil;
+import org.ofbiz.entity.util.EntityFindOptions;
 import org.ofbiz.entity.util.EntityListIterator;
 import org.ofbiz.entity.util.EntityUtil;
 import org.ofbiz.service.DispatchContext;
@@ -320,7 +321,82 @@ public class MaterialHelperServices{
 		}
 		
 		return result;
-	}	
+	}
+	
+	public static Map<String, Object> getLastSupplyMaterialDetails(DispatchContext ctx,Map<String, ? extends Object> context) {
+		Delegator delegator = ctx.getDelegator();
+		LocalDispatcher dispatcher = ctx.getDispatcher();
+		String productId = (String) context.get("productId");
+		GenericValue userLogin = (GenericValue) context.get("userLogin");
+		Map result = ServiceUtil.returnSuccess();
+		List condList=FastList.newInstance();
+		Map supplyDetailMap = FastMap.newInstance();
+		try{
+			condList.add(EntityCondition.makeCondition("productId", EntityOperator.EQUALS, productId));
+			condList.add(EntityCondition.makeCondition("statusId", EntityOperator.NOT_EQUAL, "SR_REJECTED"));
+			EntityFindOptions opts = new EntityFindOptions();
+	        opts.setMaxRows(1);
+	        opts.setFetchSize(1);
+	        
+	        List<String> orderBy = UtilMisc.toList("-datetimeReceived");
+
+	        List<GenericValue> receipts = null;
+	        try {
+	        	receipts = delegator.findList("ShipmentReceipt", EntityCondition.makeCondition(condList, EntityOperator.AND), null, orderBy, opts, false);
+	        } catch (GenericEntityException e) {
+	            Debug.logError(e, module);
+	        }
+	        
+	        if(UtilValidate.isNotEmpty(receipts)){
+	        	GenericValue receipt = EntityUtil.getFirst(receipts);
+	        	
+	        	String orderId = receipt.getString("orderId");
+	        	String supplierPartyId = "";
+	        	BigDecimal supplyRate = BigDecimal.ZERO;
+	        	if(UtilValidate.isNotEmpty(orderId)){
+	        		condList.clear();
+	        		condList.add(EntityCondition.makeCondition("orderId", EntityOperator.EQUALS, orderId));
+	        		condList.add(EntityCondition.makeCondition("roleTypeId", EntityOperator.EQUALS, "BILL_FROM_VENDOR"));
+	        		EntityCondition cond = EntityCondition.makeCondition(condList, EntityOperator.AND);
+	        		List<GenericValue> orderRoles = delegator.findList("OrderRole", cond, null, null, null, false);
+	        		
+	        		GenericValue orderRole = EntityUtil.getFirst(orderRoles);
+	        		if(UtilValidate.isNotEmpty(orderRole)){
+	        			supplierPartyId = orderRole.getString("partyId");
+	        		}
+	        		condList.clear();
+	        		condList.add(EntityCondition.makeCondition("orderId", EntityOperator.EQUALS, orderId));
+	        		condList.add(EntityCondition.makeCondition("productId", EntityOperator.EQUALS, productId));
+	        		EntityCondition condExpr = EntityCondition.makeCondition(condList, EntityOperator.AND);
+	        		List<GenericValue> orderItems = delegator.findList("OrderItem", condExpr, null, null, null, false);
+	        		
+	        		GenericValue orderItem  = EntityUtil.getFirst(orderItems);
+	        		
+	        		if(UtilValidate.isNotEmpty(orderItem)){
+	        			supplyRate = orderItem.getBigDecimal("unitListPrice");
+	        		}
+	        		
+	        	}
+	        	
+	        	condList.clear();
+        		condList.add(EntityCondition.makeCondition("orderId", EntityOperator.EQUALS, orderId));
+        		condList.add(EntityCondition.makeCondition("roleTypeId", EntityOperator.EQUALS, "BILL_FROM_VENDOR"));
+        		EntityCondition cond = EntityCondition.makeCondition(condList, EntityOperator.AND);
+	        	supplyDetailMap.put("supplyProduct", receipt.getString("productId"));
+	        	supplyDetailMap.put("supplyQty", receipt.getBigDecimal("quantityAccepted"));
+	        	supplyDetailMap.put("supplyDate", receipt.getTimestamp("datetimeReceived"));
+	        	supplyDetailMap.put("supplierPartyId", supplierPartyId);
+	        	supplyDetailMap.put("supplyRate", supplyRate);
+	        	
+	        }
+			  
+		}catch(Exception e){
+			Debug.logError(e.toString(), module);
+			return ServiceUtil.returnError(e.toString());
+		}
+		result.put("productSupplyDetails", supplyDetailMap);
+		return result;
+	}
 	
 	public static Map<String, Object> getCustRequestIndentsForPeriod(DispatchContext ctx,Map<String, ? extends Object> context) {
 		Delegator delegator = ctx.getDelegator();
