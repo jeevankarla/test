@@ -144,7 +144,12 @@ under the License.
     <eca service="createShipmentReceipt" event="commit">
         <condition field-name="orderId" operator="is-not-empty"/>
         <action service="updateOrderStatusFromReceipt" mode="sync" run-as-user="system"/>
-    </eca><!--
+    </eca>
+    <eca service="createShipmentReceipt" event="commit">
+    	<condition field-name="receiptId" operator="is-not-empty"/>
+        <action service="createShipmentReceiptSequence" mode="sync"/>
+    </eca>
+    <!--
     <eca service="createShipmentReceipt" event="commit">
         <condition field-name="shipmentId" operator="is-not-empty"/>
         <action service="checkDecomposeInventoryItem" mode="sync"/>

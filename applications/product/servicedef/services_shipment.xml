@@ -768,6 +768,14 @@ under the License.
         <override name="productId" optional="false"/>
         <override name="facilityId" optional="false"/>
     </service>
+    <service name="createShipmentReceiptSequence" engine="java"
+        location="org.ofbiz.accounting.util.CustomSequenceServices" invoke="createShipmentReceiptSequence">
+        <description>Get the Next Sequence for the given ReceiptId(GRN Id) in ShipmentReceiptSequence Entity</description>
+        <attribute name="receiptSequenceTypeId" type="String" mode="IN" optional="true"/>
+        <attribute name="receiptId" type="String" mode="IN" optional="false"/>
+        <attribute name="receiptDueDate" type="Timestamp" mode="IN" optional="true"/>
+        <attribute name="sequenceId" type="String" mode="OUT" optional="true"/>
+    </service>
 
     <service name="issueOrderItemToShipmentAndReceiveAgainstPO" engine="simple" transaction-timeout="600"
             location="component://product/script/org/ofbiz/shipment/receipt/ShipmentReceiptServices.xml" invoke="issueOrderItemToShipmentAndReceiveAgainstPO" auth="true">

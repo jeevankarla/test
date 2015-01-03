@@ -395,6 +395,27 @@ under the License.
         <key-map field-name="returnItemSeqId"/>
       </relation>
     </entity>
+    <entity entity-name="ShipmentReceiptSequence" package-name="org.ofbiz.shipment.receipt"
+		title="ShipmentReceipt Sequence Entity">
+		<field name="finYearId" type="id-ne"></field>
+		<field name="receiptSequenceTypeId" type="id"></field>
+		<field name="sequenceId" type="id-ne"></field>
+		<field name="receiptId" type="id-ne"></field>
+		<field name="receiptDueDate" type="date-time"></field>
+		<prim-key field="finYearId" />
+		<prim-key field="receiptSequenceTypeId" />
+		<prim-key field="sequenceId" />
+		<relation type="one" fk-name="SRSEQ_FY"
+			rel-entity-name="CustomTimePeriod">
+			<key-map field-name="finYearId"  rel-field-name="customTimePeriodId"/>
+		</relation>
+		<relation type="one" fk-name="SRSEQ_SR" rel-entity-name="ShipmentReceipt">
+			<key-map field-name="receiptId" />
+		</relation>
+		<relation type="one" fk-name="SRSEQ_ENUMT" title="ReceiptSequenceTypeId" rel-entity-name="Enumeration">
+            <key-map field-name="receiptSequenceTypeId" rel-field-name="enumId"/>
+        </relation>
+	</entity>
     <entity entity-name="ShipmentReceiptRole"
             package-name="org.ofbiz.shipment.receipt"
             title="Shipment Receipt Role Entity">
