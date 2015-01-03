@@ -504,9 +504,13 @@
     <screen name="orderAssoc">
     	<section>
     	<actions>
-    	<entity-and entity-name="OrderAssoc" list="OrderAssocList">
-    		<field-map field-name="orderId" from-field="parameters.orderId"/>
-    	</entity-and>
+    	<entity-condition list="OrderAssocList" entity-name="OrderAssoc">
+    		<condition-list combine="or"> 
+	    		<condition-expr field-name="orderId" from-field="parameters.orderId"/>
+	    		<condition-expr field-name="toOrderId" from-field="parameters.orderId"/>
+    		</condition-list>
+    	</entity-condition>
+    	<set field="assocId" value="${parameters.orderId}"/>
     	</actions>
 			<widgets>
 				<screenlet title="Order Associations" >

@@ -368,8 +368,16 @@
     </field>
     </form>   
      <form name="listOrderAssoc" type="list" list-name="OrderAssocList" default-table-style="basic-table hover-bar" odd-row-style="alternate-row" header-row-style="header-row">
-     <field name="orderId"><hidden/></field>
-     <field name="toOrderId" title="Associated Orders" widget-style="buttontext">
+     <actions>
+     </actions>
+     <field name="orderId" use-when="orderId.equals(assocId);" ><display/></field>
+     <field name="orderId" title="OrderId" widget-style="buttontext" use-when="!orderId.equals(assocId);" >
+     	<hyperlink target="POoverview" description="${orderId}" target-window="_blank">
+      			<parameter param-name="orderId" value="${orderId}"/>
+      		</hyperlink>
+     </field>
+     <field name="toOrderId" use-when="toOrderId.equals(assocId);" title="Associated Orders"><display/></field>
+     <field name="toOrderId" title="Associated Orders" widget-style="buttontext" use-when="!toOrderId.equals(assocId);">
      	<hyperlink target="POoverview" description="${toOrderId}" target-window="_blank">
       			<parameter param-name="orderId" value="${toOrderId}"/>
       		</hyperlink>
