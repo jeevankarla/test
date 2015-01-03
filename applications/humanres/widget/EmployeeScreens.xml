@@ -141,23 +141,6 @@ under the License.
             </widgets>
         </section>
     </screen>
-    
-    <screen name="LICRDReport">
-        <section>
-           <actions>
-                <property-map resource="OrderUiLabels" map-name="uiLabelMap" global="true"/>
-				<property-map resource="ProductUiLabels" map-name="uiLabelMap" global="true"/>
-				<property-map resource="PartyUiLabels" map-name="uiLabelMap" global="true"/>
-				<property-map resource="CommonUiLabels" map-name="uiLabelMap" global="true"/>
-                <script location="component://humanres/webapp/humanres/WEB-INF/actions/humanres/LICRDReport.groovy"/> 
-            </actions> 
-            <widgets>
-                <platform-specific>
-                    <xsl-fo><html-template location="component://humanres/webapp/humanres/humanres/LICRDReport.fo.ftl"/></xsl-fo>
-                </platform-specific>
-            </widgets>
-        </section>
-    </screen>
      <screen name="PayrollExceptionReport">
         <section>
            <actions>

@@ -208,7 +208,7 @@ function setOrgPartyId() {
 					
 					
 					<tr class="alternate-row"> 
-						<form id="LIC/RDReport" name="LIC/RDReport" mothed="post" action="<@ofbizUrl>LICRDReport.pdf</@ofbizUrl>" target="_blank">
+						<form id="LICRDReport" name="LICRDReport" mothed="post" action="<@ofbizUrl>LICRDReportPdf.pdf</@ofbizUrl>" target="_blank">
 							<table class="basic-table" cellspacing="5">
 								<tr class="alternate-row">
 									<td width="25%"><span class='h3'>LIC/RD Report</span></td>
@@ -220,13 +220,14 @@ function setOrgPartyId() {
 											</select>
 										</span>
 									</td>
-									<td width="50%"><span class='h3'>Period Id
+									<td width="35%"><span class='h3'>Period Id
 											<select name="customTimePeriodId" id="customTimePeriodId" class='h4'>
 												<#list customTimePeriodList as customTimePeriod><option value='${customTimePeriod.customTimePeriodId?if_exists}' >${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(customTimePeriod.fromDate, "dd MMMMM, yyyy")} -${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(customTimePeriod.thruDate, "dd MMMMM, yyyy")}</option></#list>
 											</select>
 										</span>
 									</td>	
-									<td width="25%"><span class='h3'><input type="submit" value="Download" class="buttontext"></span></td>
+									<td width="25%"><input type="submit" value="PDF" onClick="javascript:appendParams('LICRDReport', '<@ofbizUrl>LICRDReportPdf.pdf</@ofbizUrl>');" class="buttontext"/>
+									<span class='h3'><input type="submit" value="CSV" onClick="javascript:appendParams('LICRDReport', '<@ofbizUrl>LICRDReportCsv.csv</@ofbizUrl>');" class="buttontext"/></span></td>
 								</tr>
 							</table>
 						</form>

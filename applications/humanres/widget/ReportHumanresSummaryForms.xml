@@ -176,6 +176,15 @@
 		<field name="address" title="Residential Address"><display description="${address}"/></field>
 		<field name="retirementDate" title="Retirement Date" title-area-style="tableheadwide"><display description="${retirementDate}"/></field>		
 	</form>	
+	<form name="LICRDReportCsv" type="list" list-name="finalList" 
+		odd-row-style="alternate-row" default-table-style="basic-table hover-bar" view-size="99999" paginate="false">
+		<actions></actions>
+		<field name="sNo" title="SLNo"><display/></field>
+		<field name="employeeFirstName" title="Name"><display/></field>
+		<field name="employeeNo" title="Emp No"><display/></field>
+		<field name="referenceNo" title="Ref No"><display/></field>
+		<field name="amount" title="Amount(Rs)"><display/></field>
+	</form>	
 	<form name="EmployeeBankDetailsCsv" type="list" list-name="finalList" 
 		odd-row-style="alternate-row" default-table-style="basic-table hover-bar">
 		<actions></actions>
