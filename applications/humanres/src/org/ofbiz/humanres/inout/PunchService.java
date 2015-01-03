@@ -83,6 +83,7 @@ public class PunchService {
 		String note = (String) context.get("Note");
 		String isManual = (String) context.get("isManual");
 		String shiftTypeId = (String) context.get("shiftType");
+		String consolidatedFlag = (String) context.get("consolidatedFlag");
 		String flag = "out";
 		GenericValue emplPunch = null;
 		
@@ -124,11 +125,13 @@ public class PunchService {
 		int min = 0, min0 = 0, min1 = 0;
 		int hr = 0, hr0 = 0, hr1 = 0;
         Timestamp nowTimestamp = UtilDateTime.nowTimestamp();
-        if (!(security.hasEntityPermission("EMP_PUNCH_OOD", "_UPDATE", userLogin)) && (UtilDateTime.getIntervalInDays(UtilDateTime.toTimestamp(punchdate),nowTimestamp) >0) && PunchType.equals("Ood")) {
-        	String errMsg = "you don't have permissoin to edit previous day punch";
-        	Debug.logError(errMsg, module);
-            return ServiceUtil.returnError(errMsg);
-        } 
+        if(UtilValidate.isEmpty(consolidatedFlag)){
+        	if (!(security.hasEntityPermission("EMP_PUNCH_OOD", "_UPDATE", userLogin)) && (UtilDateTime.getIntervalInDays(UtilDateTime.toTimestamp(punchdate),nowTimestamp) >0) && PunchType.equals("Ood")) {
+            	String errMsg = "you don't have permissoin to edit previous day punch";
+            	Debug.logError(errMsg, module);
+                return ServiceUtil.returnError(errMsg);
+            } 
+        }
 		String punchout = punchtime.toString();
 		String punchintime = null;
 		String punchouttime = null;
@@ -580,12 +583,12 @@ public class PunchService {
 					
 				}
 			}*/
-			emplPunch.set("createdByUserLogin", userLogin.getString("userLoginId"));
-			emplPunch.set("lastModifiedByUserLogin", userLogin.getString("userLoginId"));
-			emplPunch.set("createdDate", UtilDateTime.nowTimestamp());
-			emplPunch.set("lastModifiedDate", UtilDateTime.nowTimestamp());
-			
-			
+			if(UtilValidate.isEmpty(consolidatedFlag)){
+				emplPunch.set("createdDate", UtilDateTime.nowTimestamp());
+				emplPunch.set("createdByUserLogin", userLogin.getString("userLoginId"));
+				emplPunch.set("lastModifiedByUserLogin", userLogin.getString("userLoginId"));
+				emplPunch.set("lastModifiedDate", UtilDateTime.nowTimestamp());
+			}
 			Debug.logInfo("emplPunch-==========="+emplPunch,module);
 			
 			delegator.createOrStore(emplPunch);
@@ -665,7 +668,6 @@ public static Map emplDailyPunchReport(DispatchContext dctx, Map context) {
 			GenericValue finalPunchINValue = EntityUtil.getFirst(finalPunchIN);
            if(UtilValidate.isNotEmpty(finalPunchINValue) && UtilValidate.isNotEmpty(finalPunchINValue.getString("shiftType")) && (finalPunchINValue.getString("shiftType").equals("SHIFT_NIGHT"))){
         	   selectedDate = UtilDateTime.toSqlDate(UtilDateTime.addDaysToTimestamp(UtilDateTime.toTimestamp(selectedDate), 1));
-        	   
            }
 			List conditionList2 = UtilMisc.toList(EntityCondition
 					.makeCondition("punchdate", EntityOperator.EQUALS,

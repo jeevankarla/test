@@ -407,6 +407,15 @@ public class HumanresService {
 				if(UtilValidate.isNotEmpty(LoanTypeDetails)){
 					finAccountTypeId=LoanTypeDetails.getString("finAccountTypeId");
 				}	
+				String glAccountId = null;
+				if(UtilValidate.isNotEmpty(finAccountTypeId)){
+					GenericValue finAccountTypeGlAccount =delegator.findOne("FinAccountTypeGlAccount", UtilMisc.toMap("finAccountTypeId", finAccountTypeId, "organizationPartyId", "Company"), false);
+					glAccountId = finAccountTypeGlAccount.getString("glAccountId");
+					if(UtilValidate.isEmpty(glAccountId)){
+						Debug.logError("Accounting GL is missing", module);
+						return ServiceUtil.returnError("Accounting GL is missing...!");
+					}
+				}
 				String finAccountId=null;
 				List finCondList=FastList.newInstance();
 				finCondList.add(EntityCondition.makeCondition("ownerPartyId", EntityOperator.EQUALS, partyId));
@@ -422,6 +431,7 @@ public class HumanresService {
 					finAccount.set("finAccountTypeId", finAccountTypeId);
 					finAccount.set("statusId", "FNACT_ACTIVE");
 					finAccount.set("organizationPartyId", "Company");
+					finAccount.set("postToGlAccountId", glAccountId);
 		 			delegator.createSetNextSeqId(finAccount);
 		 			if(UtilValidate.isNotEmpty(finAccount)){
 		 				finAccountId=finAccount.getString("finAccountId");

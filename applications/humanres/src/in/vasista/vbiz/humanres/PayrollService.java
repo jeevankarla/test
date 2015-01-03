@@ -700,7 +700,7 @@ public class PayrollService {
 		                	 Debug.logError("You cannot cancel payroll billing for past months",module);
 		                	 return ServiceUtil.returnError("You cannot cancel payroll billing for past months");
 		                 }
-		        	} 
+		        	}
 		    		try {
 						periodBilling = delegator.findOne("PeriodBilling", UtilMisc.toMap("periodBillingId", periodBillingId), false);
 						billingTypeId =(String) periodBilling.get("billingTypeId");
@@ -5156,6 +5156,7 @@ public class PayrollService {
 			    			if(UtilValidate.isNotEmpty(dayPunchList) && UtilValidate.isNotEmpty(periodBillingId)){
 			    				for(GenericValue punchEntry : dayPunchList){
 			    					Map punchCtx = UtilMisc.toMap("userLogin",userLogin);
+			    					punchCtx.put("consolidatedFlag","consolidatedFlag");
 			    					punchCtx.putAll(punchEntry);
 			    					Map result = dispatcher.runSync("emplPunch", punchCtx);
 			    					if(ServiceUtil.isError(result)){
