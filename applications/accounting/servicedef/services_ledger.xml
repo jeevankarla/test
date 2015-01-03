@@ -848,5 +848,13 @@ under the License.
         <attribute name="invoiceId" mode="IN" type="String" optional="true"/>                    
         <attribute name="paymentId" mode="IN" type="String" optional="true"/> 
         <attribute name="conditionReply" mode="OUT" type="Boolean" optional="false"/>
-    </service>       
+    </service>     
+     <service name="getGlAccountOpeningBalance" engine="java" auth="true" 
+        location="org.ofbiz.accounting.ledger.GeneralLedgerServices" invoke="getGlAccountOpeningBalance">
+        <description>Get Custom time period</description>
+        <attribute name="fromDate" mode="IN" type="Timestamp" optional="true"/>
+        <attribute name="thruDate" mode="IN" type="Timestamp" optional="true"/>
+        <attribute name="glAccountId" mode="IN" type="String" optional="false"/>
+        <attribute name="openingBal" mode="OUT" type="BigDecimal" optional="false"/>
+    </service>  
 </services>

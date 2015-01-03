@@ -19,12 +19,15 @@
 package org.ofbiz.accounting.ledger;
 
 import java.math.BigDecimal;
+import java.sql.Date;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
+import java.util.TimeZone;
 
 import javolution.util.FastList;
 import javolution.util.FastMap;
@@ -45,6 +48,8 @@ import org.ofbiz.service.DispatchContext;
 import org.ofbiz.service.GenericServiceException;
 import org.ofbiz.service.LocalDispatcher;
 import org.ofbiz.service.ServiceUtil;
+
+import com.ibm.icu.util.Calendar;
 
 public class GeneralLedgerServices {
 
@@ -286,4 +291,77 @@ public class GeneralLedgerServices {
 		openingBalanceMap.put("openingBalance", openingBalance);
 		return openingBalanceMap;
 	}
+    public static Map<String, Object> getGlAccountOpeningBalance(DispatchContext ctx, Map<String, Object> context) throws GenericEntityException {
+    	Delegator delegator = ctx.getDelegator();
+        LocalDispatcher dispatcher = ctx.getDispatcher();
+        GenericValue userLogin = (GenericValue) context.get("userLogin");
+        Timestamp fromDate = (Timestamp) context.get("fromDate");
+        Timestamp thruDate = (Timestamp) context.get("thruDate");
+        String glAccountId = (String) context.get("glAccountId");
+        Map<String, Object> result = ServiceUtil.returnSuccess();
+        try {
+    	      if(UtilValidate.isNotEmpty(fromDate)){
+	    		 fromDate = UtilDateTime.getDayStart(fromDate);
+	          }
+    	      if(UtilValidate.isNotEmpty(thruDate)){
+    	    	 thruDate = UtilDateTime.getDayEnd(thruDate);
+	          }
+ 			    Map finYearContext = FastMap.newInstance();
+ 				finYearContext.put("onlyIncludePeriodTypeIdList", UtilMisc.toList("FISCAL_YEAR"));
+ 				finYearContext.put("organizationPartyId", "Company");
+ 				finYearContext.put("userLogin", userLogin);
+ 				finYearContext.put("findDate", fromDate);
+ 				finYearContext.put("excludeNoOrganizationPeriods", "Y");
+ 				List customTimePeriodList = FastList.newInstance();
+ 				Map resultCtx = FastMap.newInstance();
+ 				try{
+ 					resultCtx = dispatcher.runSync("findCustomTimePeriods", finYearContext);
+ 					if(ServiceUtil.isError(resultCtx)){
+ 						Debug.logError("Problem in fetching financial year ", module);
+ 						return ServiceUtil.returnError("Problem in fetching financial year ");
+ 					}
+ 				}catch(GenericServiceException e){
+ 					Debug.logError(e, module);
+ 					return ServiceUtil.returnError(e.getMessage());
+ 				}
+ 				customTimePeriodList = (List)resultCtx.get("customTimePeriodList");
+ 				String finYearId = "";
+ 				Timestamp finYearFromDate=null;
+ 				if(UtilValidate.isNotEmpty(customTimePeriodList)){
+ 					GenericValue customTimePeriod = EntityUtil.getFirst(customTimePeriodList);
+ 					finYearId = (String)customTimePeriod.get("customTimePeriodId");
+ 					finYearFromDate=new java.sql.Timestamp(((Date) customTimePeriod.get("fromDate")).getTime());
+ 				}
+    			List customTimePeriodIds =FastList.newInstance();
+    			try {      
+    			List conditionList = UtilMisc.toList(EntityCondition.makeCondition("isClosed", EntityOperator.EQUALS, "N"));
+    			       conditionList.add(EntityCondition.makeCondition("periodTypeId", EntityOperator.EQUALS, "FISCAL_MONTH"));
+    			       conditionList.add(EntityCondition.makeCondition("fromDate", EntityOperator.GREATER_THAN_EQUAL_TO, UtilDateTime.toSqlDate(finYearFromDate)));
+    			       conditionList.add(EntityCondition.makeCondition("thruDate", EntityOperator.LESS_THAN ,UtilDateTime.toSqlDate(fromDate)));
+    			EntityCondition condition = EntityCondition.makeCondition(conditionList, EntityOperator.AND);
+    			customTimePeriodList = delegator.findList("CustomTimePeriod", condition, UtilMisc.toSet("customTimePeriodId"), null, null, true);
+    			customTimePeriodIds = EntityUtil.getFieldListFromEntityList(customTimePeriodList, "customTimePeriodId", true);
+    			}catch(Exception e){
+ 					Debug.logError(e, module);
+ 					return ServiceUtil.returnError(e.getMessage());
+ 				}
+    			BigDecimal openingBalance = BigDecimal.ZERO;
+    			for(int i=0;i<customTimePeriodIds.size();i++){
+				    BigDecimal debits = BigDecimal.ZERO;
+				    BigDecimal credits = BigDecimal.ZERO;
+	 					GenericValue glAccountHistory = delegator.findOne("GlAccountHistory", UtilMisc.toMap("glAccountId", glAccountId,"organizationPartyId","Company","customTimePeriodId",customTimePeriodIds.get(i)),false);
+	 					if(UtilValidate.isNotEmpty(glAccountHistory)){
+	 						debits=(BigDecimal) glAccountHistory.get("postedDebits");
+	 						credits=(BigDecimal)glAccountHistory.get("postedCredits");
+		 					openingBalance =openingBalance.add(debits.subtract(credits));
+		 		        } 
+		 		}
+        		result.put("openingBal", openingBalance);
+        } catch (Exception e) {
+            Debug.logError(e, "Problem getting openingBal for glAccountId" + glAccountId, module);
+            return ServiceUtil.returnError("Problem getting openingBal for glAccountId" + glAccountId);
+        }
+        return result;
+    }
+
 }
