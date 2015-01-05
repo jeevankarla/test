@@ -9,7 +9,6 @@ import net.sf.json.JSONObject;
 import net.sf.json.JSONArray;
 import in.vasista.vbiz.humanres.PayrollService;
 import in.vasista.vbiz.humanres.HumanresService;
-import in.vasista.vbiz.byproducts.ByProductServices;
 
 
 fromDate = parameters.fDate;
@@ -93,20 +92,22 @@ leaveDetails = delegator.findList("EmplLeave", condition , null, UtilMisc.toList
 context.put("employeeLeaveList",leaveDetails);
 
 compDateMap = [:];
-leaveDetails.each{ leave->
-	emplLeaveApplId = leave.emplLeaveApplId;
-	compDateList = [];
-	if(UtilValidate.isNotEmpty(emplLeaveApplId)){
-		emplDailyAttendanceDetailList = delegator.findList("EmplDailyAttendanceDetail",EntityCondition.makeCondition("emplLeaveApplId", EntityOperator.EQUALS, emplLeaveApplId) , null, null, null, false);
-		if(UtilValidate.isNotEmpty(emplDailyAttendanceDetailList)){
-			compDateList = EntityUtil.getFieldListFromEntityList(emplDailyAttendanceDetailList,"date",true);
+if(UtilValidate.isNotEmpty(leaveDetails)){
+	leaveDetails.each{ leave->
+		emplLeaveApplId = leave.emplLeaveApplId;
+		compDateList = [];
+		if(UtilValidate.isNotEmpty(emplLeaveApplId)){
+			emplDailyAttendanceDetailList = delegator.findList("EmplDailyAttendanceDetail",EntityCondition.makeCondition("emplLeaveApplId", EntityOperator.EQUALS, emplLeaveApplId) , null, null, null, false);
+			if(UtilValidate.isNotEmpty(emplDailyAttendanceDetailList)){
+				compDateList = EntityUtil.getFieldListFromEntityList(emplDailyAttendanceDetailList,"date",true);
+			}
 		}
-	}
-	if(UtilValidate.isNotEmpty(compDateList)){
-		tempMap = [:];
-		tempMap.put(emplLeaveApplId,compDateList);
-		if(UtilValidate.isNotEmpty(tempMap)){
-			compDateMap.putAll(tempMap);
+		if(UtilValidate.isNotEmpty(compDateList)){
+			tempMap = [:];
+			tempMap.put(emplLeaveApplId,compDateList);
+			if(UtilValidate.isNotEmpty(tempMap)){
+				compDateMap.putAll(tempMap);
+			}
 		}
 	}
 }
