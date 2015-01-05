@@ -119,7 +119,7 @@ under the License.
 							            </fo:table-cell>
 							           
 							             <fo:table-cell>
-							            	<fo:block   text-align="left" font-size="12pt" white-space-collapse="false" font-weight="bold">${partyName}<#if categoryType=="ICE_CREAM_AMUL">[${invoice.get("partyId")?if_exists}]</#if></fo:block>  
+							            	<fo:block   text-align="left" font-size="12pt" white-space-collapse="false" font-weight="bold">${shippingDetails.get(invoiceDetails.getKey()).get("partyName")?if_exists}<#if categoryType=="ICE_CREAM_AMUL">[${shippingDetails.get(invoiceDetails.getKey()).get("partyId")?if_exists}]</#if></fo:block>  
 							            </fo:table-cell>
 							             <fo:table-cell>
 							            	<fo:block  keep-together="always" text-align="right" font-size="12pt" white-space-collapse="false" font-weight="bold">

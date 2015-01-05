@@ -112,7 +112,12 @@ if(UtilValidate.isNotEmpty(partyIds)){
 		totalMap["invoice"]=eachInvoice.getKey();
 		totalMap["invoiceSequenceId"]=invoiceSequenceId;
 		totalMap["invoiceDate"]=invoiceDateStr;
-		totalMap["partyName"]=partyName;
+		//for shipping to party details
+		invoice = delegator.findOne("Invoice", [invoiceId : eachInvoice.getKey()], false);
+		shippingtemp=InvoiceWorker.getInvoiceShippingParty(invoice);
+		totalMap["partyName"]=shippingtemp.partyName;
+		totalMap["partyId"]=shippingtemp.partyId;
+		//Debug.log("shippingtemp.partyName========================"+shippingtemp.partyId);
 		totalMap["state"]=state;
 		totalMap["idValue"]=idValue;
 		totalMap["quantity"]=quantity;
@@ -138,7 +143,11 @@ if(UtilValidate.isNotEmpty(partyIds)){
 		 totalMap["invoice"]=eachInvoice.getKey();
 		 totalMap["invoiceSequenceId"]=invoiceSequenceId;
 		 totalMap["invoiceDate"]=invoiceDateStr;
-		 totalMap["partyName"]=partyName;
+		 //for shipping to party details
+		 invoice = delegator.findOne("Invoice", [invoiceId : eachInvoice.getKey()], false);
+		 shippingtemp=InvoiceWorker.getInvoiceShippingParty(invoice);
+		 totalMap["partyName"]=shippingtemp.partyName;
+		 totalMap["partyId"]=shippingtemp.partyId;
 		 totalMap["state"]=state;
 		 totalMap["idValue"]=idValue;
 		 totalMap["quantity"]=quantity;

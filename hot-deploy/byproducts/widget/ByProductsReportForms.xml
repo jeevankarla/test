@@ -166,8 +166,8 @@
         <field name="invoice" title="InVoice Number"><display/></field>
         <field name="invoiceSequenceId" title="Central Excise Invoice Number"><display/></field>
         <field name="invoiceDate" title="InVoice Date"><display/></field>
-        <field name="partyName" title="PartyName"><display/></field>
-        <field name="state" title="State"><display/></field>
+        <field name="partyName" title="PartyName"><display description="${partyName}[${partyId}]"/></field>
+        <field name="state" title="State"><display /></field>
         <field name="idValue" title="TIN"><display/></field>
         <field name="quantity" title="Quantity"><display/></field>
         <field name="basicValue" title="Basic Value"><display/></field>

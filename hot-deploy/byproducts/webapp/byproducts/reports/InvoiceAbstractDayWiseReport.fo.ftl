@@ -94,6 +94,7 @@ under the License.
 							             	<#assign invoiceTotList = invoiceDetails.getValue().entrySet()>
 							 			    <#list invoiceTotList as invoiceTot>
 							             	<fo:block>
+							             	<#assign invoicePartyTotals = invoiceTot.getValue()>
 						        				<fo:table>
 								                    <fo:table-column column-width="135pt"/>
 								                    <fo:table-column column-width="145pt"/>
@@ -106,10 +107,18 @@ under the License.
 								            		<fo:table-column column-width="95pt"/>
 								            		<fo:table-column column-width="95pt"/>
 								                    <fo:table-body>
+								                    <#assign totalBasicRev=0>
+													                    <#assign totalBedRev=0>
+													                    <#assign totalVatRev=0>
+													                    <#assign totalCstRev=0>
+													                    <#assign totalRevenue=0>
+													                    <#assign totalPpd=0>
+													                    <#assign totalMrpValue = 0>
+								                    <#list invoicePartyTotals as invoicePartyTot>
 							             				<fo:table-row>
 						            						<#assign partyName = Static["org.ofbiz.party.party.PartyHelper"].getPartyName(delegator, invoiceTot.getKey()?if_exists, false)>
 							             					<fo:table-cell>
-						            							<fo:block   text-align="left" font-size="12pt" white-space-collapse="false" >${partyName}[${invoiceTot.getKey()?if_exists}]</fo:block>  
+						            							<fo:block   text-align="left" font-size="12pt" white-space-collapse="false" >${shippingDetails.get(invoicePartyTot.get("invoiceId")).get("partyName")?if_exists}[${shippingDetails.get(invoicePartyTot.get("invoiceId")).get("partyId")?if_exists}]</fo:block>  
 						            						</fo:table-cell>
 						            						<fo:table-cell>
 												             	<fo:block>
@@ -124,15 +133,6 @@ under the License.
 													            		<fo:table-column column-width="115pt"/>
 													            		<fo:table-column column-width="100pt"/>
 													                    <fo:table-body>
-													                    <#assign totalBasicRev=0>
-													                    <#assign totalBedRev=0>
-													                    <#assign totalVatRev=0>
-													                    <#assign totalCstRev=0>
-													                    <#assign totalRevenue=0>
-													                    <#assign totalPpd=0>
-													                    <#assign totalMrpValue = 0>
-													                    <#assign invoicePartyTotals = invoiceTot.getValue()>
-								 										<#list invoicePartyTotals as invoicePartyTot>
 									 										<#assign totalBasicRev=totalBasicRev+invoicePartyTot.get("basicRevenue")?if_exists>
 											       							<#assign totalBedRev=totalBedRev+invoicePartyTot.get("bedRevenue")?if_exists>
 											       							<#assign totalVatRev=totalVatRev+invoicePartyTot.get("vatRevenue")?if_exists>
@@ -174,7 +174,6 @@ under the License.
 																	            	<fo:block  keep-together="always" text-align="left" font-size="12pt" font-weight="bold" white-space-collapse="false" >TIN : ${invoicePartyTot.get("idValue")?if_exists}</fo:block>  
 																	            </fo:table-cell>
 																	        </fo:table-row>
-												            				</#list> 
 												            				<fo:table-row> 
 																			      <fo:table-cell>   						
 																					 <fo:block>--------------------------------------------------------------------------------------------------------------------------</fo:block>
@@ -226,6 +225,7 @@ under the License.
 					        									</fo:block>
 												             </fo:table-cell>
 							            				</fo:table-row>
+							            				</#list> 
 							            			</fo:table-body>
                 								</fo:table>
         									</fo:block>

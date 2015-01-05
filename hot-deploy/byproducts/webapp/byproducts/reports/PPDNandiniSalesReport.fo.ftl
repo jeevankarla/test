@@ -95,7 +95,7 @@ under the License.
 							            	<fo:block  keep-together="always" text-align="left" font-size="12pt" white-space-collapse="false" >${invoiceDet.getValue().get("invoiceSequenceId")?if_exists}</fo:block>  
 							            </fo:table-cell>
 							             <fo:table-cell>
-							            	<fo:block  text-align="left" font-size="12pt" white-space-collapse="false" >${invoiceDet.getValue().get("partyName")?if_exists}[${invoiceDet.getValue().get("invoicePartyId")?if_exists}]</fo:block>  
+							            	<fo:block  text-align="left" font-size="12pt" white-space-collapse="false" >${shippingDetails.get(invoiceDet.getKey()).get("partyName")?if_exists}[${shippingDetails.get(invoiceDet.getKey()).get("partyId")?if_exists}]</fo:block>  
 							            </fo:table-cell>
 							             <fo:table-cell>
 							            	<fo:block  keep-together="always" text-align="right" font-size="12pt" white-space-collapse="false" >${invoiceDet.getValue().get("basicRevenue")?if_exists?string("#0.00")}</fo:block>  

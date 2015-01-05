@@ -100,7 +100,7 @@ if(categoryType.equals("DEPOT_CUSTOMER")||categoryType.equals("All")){
 partWiseSaleMap=[:];
 if(UtilValidate.isNotEmpty(partyIds)){
 	partyTaxMap = SalesInvoiceServices.getInvoiceSalesTaxItems(dctx, [partyIds:partyIds,fromDate:dayBegin, thruDate:dayEnd]).get("partyTaxMap");
-	partyTotals = SalesInvoiceServices.getPeriodSalesInvoiceTotals(dctx, [partyIds:partyIds, isQuantityLtrs:true,fromDate:dayBegin, thruDate:dayEnd]).get("partyTotals");
+	partyTotals = SalesInvoiceServices.getPeriodSalesInvoiceTotals(dctx, [partyIds:partyIds,isShipToParty:true,isQuantityLtrs:true,fromDate:dayBegin, thruDate:dayEnd]).get("partyTotals");
 	partyTotals.each{ eachParty ->
 		ppd=0;
 		vatAdj=0;

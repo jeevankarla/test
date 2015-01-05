@@ -660,11 +660,18 @@ public class SalesInvoiceServices {
 		Delegator delegator = ctx.getDelegator();
 	    List<String> partyIds = (List<String>) context.get("partyIds");
 	    String categoryType = (String) context.get("categoryType");
+		Map<String, String>  shipInvoicePartyMap = FastMap.newInstance();
+
 		//List<String> shipmentIds = (List<String>) context.get("shipmentIds");
 	    boolean isQuantityLtrs = Boolean.FALSE;
 		if(UtilValidate.isNotEmpty(context.get("isQuantityLtrs"))){
 			isQuantityLtrs = (Boolean)context.get("isQuantityLtrs");
 		}
+		 boolean isShipToParty = false;
+			if(UtilValidate.isNotEmpty(context.get("isShipToParty"))){
+				isShipToParty = (Boolean)context.get("isShipToParty");
+				//Debug.log("isShipToParty=================="+isShipToParty);
+			}
 		boolean isPurchaseInvoice = Boolean.FALSE;
 		if(UtilValidate.isNotEmpty(context.get("isPurchaseInvoice"))){
 			isPurchaseInvoice = (Boolean)context.get("isPurchaseInvoice");
@@ -685,6 +692,49 @@ public class SalesInvoiceServices {
 		}
 		Timestamp dayBegin = UtilDateTime.getDayStart(fromDate);
 		Timestamp dayEnd = UtilDateTime.getDayEnd(thruDate);
+		if(isShipToParty){
+			List invoiceShipIdsList = FastList.newInstance();
+			List ShippartyIdsList = FastList.newInstance();
+			
+
+			try{
+			List conditnList = FastList.newInstance();
+			conditnList.add(EntityCondition.makeCondition("statusId",EntityOperator.NOT_EQUAL, "INVOICE_CANCELLED"));
+			//conditnList.add(EntityCondition.makeCondition("productId",EntityOperator.NOT_EQUAL, null));//want to skip other than product items
+			if(isPurchaseInvoice){
+				conditnList.add(EntityCondition.makeCondition("invoiceTypeId", EntityOperator.EQUALS,"PURCHASE_INVOICE"));
+				conditnList.add(EntityCondition.makeCondition("partyId", EntityOperator.EQUALS,"Company"));
+				conditnList.add(EntityCondition.makeCondition("invoiceRoleTypeId", EntityOperator.EQUALS, "SUPPLIER_AGENT"));
+
+				if (UtilValidate.isNotEmpty(partyIds)) {
+					conditnList.add(EntityCondition.makeCondition("partyIdFrom", EntityOperator.IN, partyIds));
+				}
+			}else{//no need to send Purchase Invoice
+				conditnList.add(EntityCondition.makeCondition("invoiceTypeId", EntityOperator.EQUALS,"SALES_INVOICE"));
+				conditnList.add(EntityCondition.makeCondition("partyIdFrom",EntityOperator.EQUALS,"Company"));
+				conditnList.add(EntityCondition.makeCondition("invoiceRoleTypeId", EntityOperator.EQUALS, "SHIP_TO_CUSTOMER"));
+
+				if (UtilValidate.isNotEmpty(partyIds)) {
+					conditnList.add(EntityCondition.makeCondition("partyId", EntityOperator.IN, partyIds));
+				}
+			}
+			conditnList.add(EntityCondition.makeCondition("invoiceDate", EntityOperator.GREATER_THAN_EQUAL_TO,dayBegin));
+			conditnList.add(EntityCondition.makeCondition("invoiceDate",EntityOperator.LESS_THAN_EQUAL_TO, dayEnd));
+			EntityCondition cond = EntityCondition.makeCondition(conditnList, EntityOperator.AND);
+
+			List<GenericValue> invoiceRoles = delegator.findList("InvoiceAndRole",cond , null, null,null, false);
+	        for(GenericValue invoiceRolesvalue : invoiceRoles){
+	        	
+		    	String shipInvoiceId = invoiceRolesvalue.getString("invoiceId");
+		    	String shipPartyId = invoiceRolesvalue.getString("invoiceRolePartyId");
+	           	shipInvoicePartyMap.put(shipInvoiceId,shipPartyId);
+		    		 }
+	        //Debug.log("shipInvoicePartyMap=========================="+shipInvoicePartyMap);
+		 }
+			catch (GenericEntityException e) {
+				Debug.logError(e, module);
+			}
+	}
 		
 		//List<GenericValue> orderItems = FastList.newInstance();
 		EntityListIterator invoiceItemsIter = null;
@@ -803,11 +853,11 @@ public class SalesInvoiceServices {
 			BigDecimal quantity = invoiceItem.getBigDecimal("quantity");
 			BigDecimal packetQuantity = invoiceItem.getBigDecimal("quantity");
 			BigDecimal price = invoiceItem.getBigDecimal("unitListPrice");
-			
+			String invoicesupplyId = invoiceItem.getString("invoiceId");
 			BigDecimal basicPrice = invoiceItem.getBigDecimal("unitPrice");
 			BigDecimal basicRevenue = basicPrice.multiply(quantity);
 			totalBasicRevenue=totalBasicRevenue.add(basicRevenue);
-			
+
 			BigDecimal revenue = price.multiply(quantity);
 			
 		/*	if (!(adjustmentOrderList.contains(invoiceItem.getString("orderId")))	&& (prodSubscriptionTypeId.equals("EMP_SUBSIDY"))) {
@@ -885,10 +935,18 @@ public class SalesInvoiceServices {
 			totalQuantity = totalQuantity.add(quantity);
 			BigDecimal fat = ZERO;
 			BigDecimal snf = ZERO;
-		
 			String partyId = "";
-			partyId = invoiceItem.getString("partyId");
+			String shipToPartyId = "";
 			
+			if (UtilValidate.isNotEmpty(shipInvoicePartyMap.get(invoicesupplyId))){
+			shipToPartyId=shipInvoicePartyMap.get(invoicesupplyId);
+			}
+		    if (UtilValidate.isNotEmpty(shipToPartyId))
+			{
+		    	partyId=shipToPartyId;	
+			}else{
+				partyId = invoiceItem.getString("partyId");
+			}
 			if (partyTotals.get(partyId) == null) {
 				Map<String, Object> newMap = FastMap.newInstance();
 

@@ -76,6 +76,7 @@ if(categoryType.equals("DEPOT_CUSTOMER")||categoryType.equals("All")){
 }
 //dayWiseTotals = SalesInvoiceServices.getPeriodSalesInvoiceTotals(dctx, [partyIds:partyIds, isQuantityLtrs:true,fromDate:dayBegin, thruDate:dayEnd]).get("invoiceIdTotals");
 dayWiseInvoice=FastMap.newInstance();
+shippingDetails=[:];
 prodTempMap=[:];
 ppdMap=[:];
 vatAdjMap=[:];
@@ -266,18 +267,20 @@ vatMap=[:];
 		if(UtilValidate.isNotEmpty(invoiceMap)){
 			tempMap = [:];
 			tempMap.putAll(invoiceMap);
+			for(Map.Entry entry : tempMap.entrySet()){
+				invoice = delegator.findOne("Invoice", [invoiceId : entry.getKey()], false);
+				shippingtemp=InvoiceWorker.getInvoiceShippingParty(invoice);
+				shippingDetails.put(entry.getKey(),shippingtemp);
+			}
 			dayWiseInvoice.put(dayBegin,tempMap);
 			//dayWisePpdMap.put(dayBegin, ppdMap);
 		}
 	}
-	//Debug.log("ppd------------------------------------------------"+dayWisePpdMap);
-	
+	//Debug.log("ppd------------------------------------------------"+dayWiseInvoice);
+context.shippingDetails=shippingDetails;	
 context.categoryType=categoryType;
 context.ppdMap=ppdMap;
 context.vatAdjMap=vatAdjMap;
 context.invAdjMap=invAdjMap;
 context.vatMap=vatMap;
 context.dayWiseInvoice=dayWiseInvoice;
-
-
-

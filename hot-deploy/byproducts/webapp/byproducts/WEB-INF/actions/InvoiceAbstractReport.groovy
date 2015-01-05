@@ -89,6 +89,7 @@ if(categoryType.equals("ICP_TRANS_CUSTOMER")||categoryType.equals("All")){
 reportTypeFlag = parameters.reportTypeFlag;
 if(UtilValidate.isNotEmpty(reportTypeFlag) && reportTypeFlag == "InvoiceSales"){
 	invoiceMap = [:];
+	shippingDetails=[:];
 	if(UtilValidate.isNotEmpty(partyIds)){
 		invoiceTaxMap = SalesInvoiceServices.getInvoiceSalesTaxItems(dctx, [partyIds:partyIds,fromDate:dayBegin, thruDate:dayEnd]).get("invoiceTaxMap");
 		salesInvoiceTotals = SalesInvoiceServices.getPeriodSalesInvoiceTotals(dctx, [categoryType:categoryType,partyIds:partyIds, isQuantityLtrs:true,fromDate:dayBegin, thruDate:dayEnd]);
@@ -167,12 +168,18 @@ if(UtilValidate.isNotEmpty(reportTypeFlag) && reportTypeFlag == "InvoiceSales"){
 								tempMap.putAll(totalMap);
 								if(UtilValidate.isNotEmpty(tempMap)){
 									invoiceMap.put(invoiceId,tempMap);
-								}
+									invoice = delegator.findOne("Invoice", [invoiceId : invoiceId], false);
+									//Debug.log("invoice------------------------------------------------"+invoice);
+									shippingtemp=InvoiceWorker.getInvoiceShippingParty(invoice);
+									shippingDetails.put(invoiceId,shippingtemp);
+									}
 							//}
 						//}
 					}
 				}
+				
 			}
+			context.shippingDetails=shippingDetails;
 			context.put("invoiceMap",invoiceMap);
 		}
 	}
@@ -180,6 +187,7 @@ if(UtilValidate.isNotEmpty(reportTypeFlag) && reportTypeFlag == "InvoiceSales"){
 // Invoice Sales Abstract
 if(UtilValidate.isNotEmpty(reportTypeFlag) && reportTypeFlag == "InvoiceSalesAbstract"){
 	finalInvoiceDateMap = [:];
+	shippingDetails=[:];
 	for( i=0 ; i <= (totalDays); i++){
 		currentDay =UtilDateTime.addDaysToTimestamp(fromDateTime, i);
 		dayBegin=UtilDateTime.getDayStart(currentDay);
@@ -288,12 +296,17 @@ if(UtilValidate.isNotEmpty(reportTypeFlag) && reportTypeFlag == "InvoiceSalesAbs
 								invoicePartyMap[invoicePartyId] = invoicePartyList;
 							//}
 						//}
-					    
+								invoice = delegator.findOne("Invoice", [invoiceId : invoiceId], false);
+								Debug.log("invoice------------------------------------------------"+invoice);
+								shippingtemp=InvoiceWorker.getInvoiceShippingParty(invoice);
+								
+								shippingDetails.put(invoiceId,shippingtemp);
 					   }
 					}
 				}
 			}
 		}
+		
 		tempMap = [:];
 		if(UtilValidate.isNotEmpty(invoicePartyMap))
 		tempMap.putAll(invoicePartyMap);
@@ -301,11 +314,10 @@ if(UtilValidate.isNotEmpty(reportTypeFlag) && reportTypeFlag == "InvoiceSalesAbs
 			finalInvoiceDateMap.put(dayBegin,tempMap);
 		}
 	}
+	//Debug.log("shippingDetails====2================2============"+shippingDetails);
+	context.shippingDetails=shippingDetails;
 	context.put("finalInvoiceDateMap",finalInvoiceDateMap);
 }
-
-
-
 
 
 

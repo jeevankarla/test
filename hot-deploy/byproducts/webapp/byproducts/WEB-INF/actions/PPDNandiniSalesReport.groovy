@@ -65,6 +65,7 @@ partyIds.addAll(nandiniPartyIds);
 reportTypeFlag = parameters.reportTypeFlag;
 if(UtilValidate.isNotEmpty(reportTypeFlag) && reportTypeFlag == "PPDNandiniSales"){
 	invoiceMap = [:];
+	shippingDetails=[:];
 	if(UtilValidate.isNotEmpty(partyIds)){
 		invoiceTaxMap = SalesInvoiceServices.getInvoiceSalesTaxItems(dctx, [partyIds:partyIds,fromDate:dayBegin, thruDate:dayEnd]).get("invoiceTaxMap");
 		salesInvoiceTotals = SalesInvoiceServices.getPeriodSalesInvoiceTotals(dctx, [categoryType:categoryType,partyIds:partyIds, isQuantityLtrs:true,fromDate:dayBegin, thruDate:dayEnd]);
@@ -144,6 +145,11 @@ if(UtilValidate.isNotEmpty(reportTypeFlag) && reportTypeFlag == "PPDNandiniSales
 							totalMap["idValue"]=idValue;
 							totalMap["invoiceSequenceId"]=invoiceSequenceId;
 							tempMap = [:];
+							invoice = delegator.findOne("Invoice", [invoiceId : invoiceId], false);
+							//Debug.log("invoice------------------------------------------------"+invoice);
+							shippingtemp=InvoiceWorker.getInvoiceShippingParty(invoice);
+							
+							shippingDetails.put(invoiceId,shippingtemp);
 							tempMap.putAll(totalMap);
 							if(UtilValidate.isNotEmpty(tempMap)){
 								invoiceMap.put(invoiceId,tempMap);
@@ -155,12 +161,15 @@ if(UtilValidate.isNotEmpty(reportTypeFlag) && reportTypeFlag == "PPDNandiniSales
 			}
 		}
 	}
+	//Debug.log("shippingDetails--------------------4543534----------------------------"+shippingDetails);
+	context.shippingDetails=shippingDetails;
 	context.put("invoiceMap",invoiceMap);
 }
 
 // Invoice Sales Abstract
 if(UtilValidate.isNotEmpty(reportTypeFlag) && reportTypeFlag == "PPDNandiniSalesAbstract"){
 	finalInvoiceDateMap = [:];
+	shippingDetails=[:];
 	for( i=0 ; i <= (totalDays); i++){
 		currentDay =UtilDateTime.addDaysToTimestamp(fromDateTime, i);
 		dayBegin=UtilDateTime.getDayStart(currentDay);
@@ -269,6 +278,11 @@ if(UtilValidate.isNotEmpty(reportTypeFlag) && reportTypeFlag == "PPDNandiniSales
 								invoicePartyList.add(totalMap);
 								invoicePartyList = UtilMisc.sortMaps(invoicePartyList, UtilMisc.toList("invoiceSequenceId"));
 								invoicePartyMap[invoicePartyId] = invoicePartyList;
+								invoice = delegator.findOne("Invoice", [invoiceId : invoiceId], false);
+								//Debug.log("invoice------------------------------------------------"+invoice);
+								shippingtemp=InvoiceWorker.getInvoiceShippingParty(invoice);
+								
+								shippingDetails.put(invoiceId,shippingtemp);
 							}
 						}
 						
@@ -284,6 +298,8 @@ if(UtilValidate.isNotEmpty(reportTypeFlag) && reportTypeFlag == "PPDNandiniSales
 			finalInvoiceDateMap.put(dayBegin,tempMap);
 		}
 	}
+	//Debug.log("shippingDetails------------------------------------------------"+shippingDetails);
+	context.shippingDetails=shippingDetails;
 	context.put("finalInvoiceDateMap",finalInvoiceDateMap);
 }
 
