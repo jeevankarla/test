@@ -1507,4 +1507,40 @@ under the License.
             <call-service service-name="reconcileFinAccountTrans" in-map-name="reconcileFinAccountTransMap"/>
         </iterate>
     </simple-method>
+    <!-- Fin account Trans group here -->
+    
+    <simple-method method-name="createFinAccountTransGroupAndMember" short-description="creates FinAccountTrans Group and FinAccountTransGroupMembers">
+        <if-empty field="parameters.fromDate">
+            <now-timestamp field="parameters.fromDate"/>
+        </if-empty>
+        <set-service-fields service-name="createFinAccountTransGroup" map="parameters" to-map="createFinAccountTransGroupMap"/>
+        <if-empty field="parameters.finAccntTransGrpName">
+            <set field="createFinAccountTransGroupMap.finAccntTransGrpName" value="Fin Account Trans Group Name"/>
+        </if-empty>
+        <call-service service-name="createFinAccountTransGroup" in-map-name="createFinAccountTransGroupMap">
+            <result-to-field result-name="finAccntTransGroupId"/>
+            <result-to-result result-name="finAccntTransGroupId"/>
+        </call-service>
+        <set field="createFinAccountTransGroupMemberMap.finAccntTransGroupId" from-field="finAccntTransGroupId"/>
+        <set field="createFinAccountTransGroupMemberMap.fromDate" from-field="parameters.fromDate"/>
+        <iterate list="parameters.finAccountTransIds" entry="finAccountTransId">
+            <set field="createFinAccountTransGroupMemberMap.finAccountTransId" from-field="finAccountTransId"/>
+            <call-service service-name="createFinAccountTransGroupMember" in-map-name="createFinAccountTransGroupMemberMap"/>
+        </iterate>
+    </simple-method>
+    
+    <simple-method method-name="createFinAccountTransGroupMember" short-description="Check For Outgoing/Incoming Finaccount Trans And Create Fin Account Trans Group Member">
+        <make-value entity-name="FinAccountTransGroupMember" value-field="newFinAccountTransGroupMember"/>
+        <set-pk-fields map="parameters" value-field="newFinAccountTransGroupMember"/>
+        <set-nonpk-fields map="parameters" value-field="newFinAccountTransGroupMember"/>
+        <if-empty field="parameters.fromDate">
+            <now-timestamp field="newFinAccountTransGroupMember.fromDate"/>
+        </if-empty>
+        <entity-one entity-name="FinAccountTransGroup" value-field="finAccountTransGroup"/>
+        <entity-one entity-name="FinAccountTrans" value-field="finAccountTrans"/>
+        <entity-one value-field="finAccountTransGroupType" entity-name="FinAccountTransGroupType">
+        	<field-map field-name="finAcntTrnsGrpTypeId" from-field="finAccountTransGroupType.finAcntTrnsGrpTypeId"/>
+        </entity-one>
+        <create-value value-field="newFinAccountTransGroupMember"/>
+    </simple-method>
 </simple-methods>

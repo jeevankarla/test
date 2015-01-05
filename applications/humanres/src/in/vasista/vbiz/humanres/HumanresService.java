@@ -18,6 +18,11 @@ import java.util.HashSet;
 import java.util.ArrayList;
 import java.util.Set;
 
+import javax.servlet.ServletContext;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
+
 import org.apache.fop.fo.properties.CondLengthProperty;
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.UtilDateTime;
@@ -353,7 +358,8 @@ public class HumanresService {
 	    	Map<String, Object> result = ServiceUtil.returnSuccess();
 	    	String partyId = (String) context.get("partyId");
 	    	String loanTypeId = (String) context.get("loanTypeId");
-	    	String statusId = (String)context.get("statusId");
+	    	/*String statusId = (String)context.get("statusId");*/
+	    	String statusId = "LOAN_APPROVED";
 	    	String description=(String)context.get("description");
 	    	String extLoanRefNum=(String)context.get("extLoanRefNum");
 	    	Date disbDate =  (Date)context.get("disbDate");
@@ -436,8 +442,12 @@ public class HumanresService {
 		 			if(UtilValidate.isNotEmpty(finAccount)){
 		 				finAccountId=finAccount.getString("finAccountId");
 		 			}	
+				}else{
+					GenericValue finAccount = EntityUtil.getFirst(finAccountList);
+					if(UtilValidate.isNotEmpty(finAccount)){
+		 				finAccountId=finAccount.getString("finAccountId");
+		 			}	
 				}
-				
 				List conditionList=FastList.newInstance();
 				conditionList.add(EntityCondition.makeCondition("partyId", EntityOperator.EQUALS, partyId));
 				conditionList.add(EntityCondition.makeCondition("loanTypeId", EntityOperator.EQUALS, loanTypeId));
@@ -499,7 +509,7 @@ public class HumanresService {
 			GenericValue loanDetails = null;
 	    	GenericDelegator delegator = (GenericDelegator) dctx.getDelegator();
 			LocalDispatcher dispatcher = dctx.getDispatcher();
-			if(UtilValidate.isEmpty(setlDateEnd)){
+			/*if(UtilValidate.isEmpty(setlDateEnd)){
 				if(UtilValidate.isNotEmpty(statusId)){
 					Timestamp fromDate = UtilDateTime.nowTimestamp();
 					Timestamp fromDateStart = UtilDateTime.getDayStart(fromDate);
@@ -517,6 +527,14 @@ public class HumanresService {
 						return customTimePeriodIdMap;
 					}
 				}
+			}*/
+			if(UtilValidate.isNotEmpty(setlDateEnd)){
+				Timestamp fromDate = UtilDateTime.nowTimestamp();
+				Timestamp fromDateStart = UtilDateTime.getDayStart(fromDate);
+				Map customTimePeriodIdMap = PayrollService.checkPayrollGeneratedOrNotForDate(dctx,UtilMisc.toMap("userLogin",userLogin,"date",UtilDateTime.toSqlDate(fromDateStart)));
+				if (ServiceUtil.isError(customTimePeriodIdMap)) {
+					return customTimePeriodIdMap;
+				}
 			}
 			try {
 				loanDetails = delegator.findOne("Loan",UtilMisc.toMap("loanId", loanId), false);
@@ -524,9 +542,9 @@ public class HumanresService {
 					if(UtilValidate.isNotEmpty(setlDateEnd)){
 						loanDetails.set("setlDate", setlDateEnd);
 					}
-					if(UtilValidate.isNotEmpty(statusId)){
+					/*if(UtilValidate.isNotEmpty(statusId)){
 						loanDetails.set("statusId", statusId);
-					}
+					}*/
 					loanDetails.set("lastModifiedDate", UtilDateTime.nowTimestamp());
 					loanDetails.set("lastModifiedByUserLogin", userLogin.get("userLoginId"));
 					loanDetails.store();
@@ -535,6 +553,30 @@ public class HumanresService {
 				Debug.logError("Error while updating Loan"+e.getMessage(), module);
 			}
 	        result = ServiceUtil.returnSuccess("Loan Updated Sucessfully...!");
+	        return result;
+	    }
+	 public static Map<String, Object> cancelEmployeeLoan(DispatchContext dctx, Map context) {
+	    	Map<String, Object> result = ServiceUtil.returnSuccess();
+	    	String loanId = (String) context.get("loanId");
+	    	String statusId = "LOAN_CANCELLED";
+	    	GenericValue userLogin = (GenericValue) context.get("userLogin");
+			GenericValue loanDetails = null;
+	    	GenericDelegator delegator = (GenericDelegator) dctx.getDelegator();
+			LocalDispatcher dispatcher = dctx.getDispatcher();
+			try {
+				loanDetails = delegator.findOne("Loan",UtilMisc.toMap("loanId", loanId), false);
+				if(UtilValidate.isNotEmpty(loanDetails)){
+					if(UtilValidate.isNotEmpty(statusId)){
+						loanDetails.set("statusId", statusId);
+					}
+					loanDetails.set("lastModifiedDate", UtilDateTime.nowTimestamp());
+					loanDetails.set("lastModifiedByUserLogin", userLogin.get("userLoginId"));
+					loanDetails.store();
+				}
+	        }catch(GenericEntityException e){
+				Debug.logError("Error while cancelling Loan"+e.getMessage(), module);
+			}
+	        result = ServiceUtil.returnSuccess("Loan cancelled sucessfully...!");
 	        return result;
 	    }
 	 
@@ -768,7 +810,176 @@ public class HumanresService {
 	        result = ServiceUtil.returnSuccess("Loan Recovery Created Sucessfully for Employee "  +employeeId);
 	        return result;
 	    }
-	 
+	 public static String createLoanDisbursement(HttpServletRequest request, HttpServletResponse response) {
+			Delegator delegator = (Delegator) request.getAttribute("delegator");
+		  	  LocalDispatcher dispatcher = (LocalDispatcher) request.getAttribute("dispatcher");
+		  	  Locale locale = UtilHttp.getLocale(request);
+		  	  Map<String, Object> result = ServiceUtil.returnSuccess();
+		  	  HttpSession session = request.getSession();
+		  	  GenericValue userLogin = (GenericValue) session.getAttribute("userLogin");
+		      Timestamp nowTimeStamp = UtilDateTime.nowTimestamp();	 
+		      Timestamp todayDayStart = UtilDateTime.getDayStart(nowTimeStamp);
+		  	  Map<String, Object> paramMap = UtilHttp.getParameterMap(request);
+		  	  BigDecimal totalAmount = BigDecimal.ZERO;
+		  	  int rowCount = UtilHttp.getMultiFormRowCount(paramMap);
+		  	  if (rowCount < 1) {
+		  		  Debug.logError("No rows to process, as rowCount = " + rowCount, module);
+				  request.setAttribute("_ERROR_MESSAGE_", "No rows to process");	  		  
+		  		  return "error";
+		  	  }
+		  	  String finAccountId = "";
+		  	  String instrumentDateStr = "";
+		  	  String contraRefNum = "";
+		  	  String loanId = "";
+		  	  String description = "";
+		  	  String partyId = "";
+		  	  
+		  	boolean beganTransaction = false;
+		  	List finAccountTransIds = FastList.newInstance();
+		  	Timestamp instrumentDate=UtilDateTime.nowTimestamp();
+				
+		  	try{
+		  		for (int i = 0; i < rowCount; i++){
+			  		  
+			  		  String thisSuffix = UtilHttp.MULTI_ROW_DELIMITER + i;
+			  		  
+			  		  BigDecimal amount = BigDecimal.ZERO;
+			  		  String amountStr = "";
+			  		  
+			  		  if (paramMap.containsKey("loanId" + thisSuffix)) {
+			  			loanId = (String) paramMap.get("loanId"+thisSuffix);
+			  		  }
+			  		  if (paramMap.containsKey("partyId" + thisSuffix)) {
+			  			partyId = (String) paramMap.get("partyId"+thisSuffix);
+			  		  }
+			  		  if (paramMap.containsKey("amount" + thisSuffix)) {
+			  			amountStr = (String) paramMap.get("amount"+thisSuffix);
+			  		  }
+			  		  if(UtilValidate.isNotEmpty(amountStr)){
+						  try {
+				  			  amount = new BigDecimal(amountStr);
+				  		  } catch (Exception e) {
+				  			  Debug.logError(e, "Problems parsing amount string: " + amountStr, module);
+				  			  request.setAttribute("_ERROR_MESSAGE_", "Problems parsing amount string: " + amountStr);
+				  			  return "error";
+				  		  }
+			  		  }
+				  	finAccountId = (String) paramMap.get("finAccountId");
+				  	instrumentDateStr = (String) paramMap.get("instrumentDate");
+				  	contraRefNum = (String) paramMap.get("contraRefNum");
+				  	description = (String) paramMap.get("description");
+			  	
+			        if (UtilValidate.isNotEmpty(instrumentDateStr)) {
+						SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy");
+						try {
+							instrumentDate = new java.sql.Timestamp(sdf.parse(instrumentDateStr).getTime());
+							instrumentDate = UtilDateTime.getDayStart(instrumentDate);
+						} catch (ParseException e) {
+							Debug.logError(e, "Cannot parse date string: "+ instrumentDateStr, module);
+						} catch (NullPointerException e) {
+							Debug.logError(e, "Cannot parse date string: "	+ instrumentDateStr, module);
+						}
+					}
+		  			if (UtilValidate.isNotEmpty(loanId)) {
+						    GenericValue loanDetails = delegator.findOne("Loan",UtilMisc.toMap("loanId", loanId), false);
+							if(UtilValidate.isEmpty(loanDetails)){
+								Debug.logError("Loan  Id does not exists for Employee ", module);
+								request.setAttribute("_ERROR_MESSAGE_", "Loan  Id does not exists for Employee: "+loanId);	  		  
+						  		return "error";
+							}
+							String loanFinAccountId = (String) loanDetails.get("loanFinAccountId");
+							if(UtilValidate.isEmpty(loanFinAccountId)){
+								Debug.logError("Loan Fin Account Id does not exists for Employee ", module);
+								request.setAttribute("_ERROR_MESSAGE_", "Loan Fin Account Id does not exists for Employee: "+partyId);	  		  
+						  		return "error";
+							}
+							if(UtilValidate.isNotEmpty(loanDetails)){
+								loanDetails.set("statusId","LOAN_DISBURSED");
+								loanDetails.store();
+							}
+							//creating  fin account transactions here
+				             Map<String, Object> transCtxMap = FastMap.newInstance();
+				             transCtxMap.put("statusId", "FINACT_TRNS_CREATED");
+				             transCtxMap.put("entryType", "Contra");
+				             transCtxMap.put("transactionDate", instrumentDate);
+				             transCtxMap.put("amount", amount);
+				             transCtxMap.put("comments", description);
+				             transCtxMap.put("contraRefNum", contraRefNum);
+				           	 transCtxMap.put("contraFinAccountId", loanFinAccountId);
+				             transCtxMap.put("finAccountId", finAccountId); 
+				           	 transCtxMap.put("finAccountTransTypeId", "WITHDRAWAL");
+				           	 transCtxMap.put("partyId", partyId);
+				             transCtxMap.put("userLogin", userLogin);
+				             Map<String, Object> createResult = dispatcher.runSync("preCreateFinAccountTrans", transCtxMap);
+				             if (ServiceUtil.isError(createResult)) {
+				            	 return "error";
+				             }
+				             String finAccountTransId = (String)createResult.get("finAccountTransId");
+				             finAccountTransIds.add(finAccountTransId);
+						}
+					  totalAmount = totalAmount.add(amount);
+					}//end of for loop
+		  			
+		  		//creating batch fin account transactions here
+			  	if(UtilValidate.isNotEmpty(finAccountTransIds) && finAccountTransIds.size() > 0 ){
+			  		  Map serviceCtx = FastMap.newInstance();
+			  		  serviceCtx.put("finAccountTransIds", finAccountTransIds);
+			  		  serviceCtx.put("instrumentDate", instrumentDate);
+			  		  serviceCtx.put("finAccntTransDate", instrumentDate);
+			  		  serviceCtx.put("fromDate", instrumentDate);
+			  		  serviceCtx.put("contraRefNum", contraRefNum);
+			  		  serviceCtx.put("issuingAuthority", finAccountId);
+			  		  serviceCtx.put("amount", totalAmount);
+			  		  serviceCtx.put("statusId", "FNACTTRNSGRP_CREATED");
+			  		  serviceCtx.put("finAccountId", finAccountId);
+			  		  serviceCtx.put("finAcntTrnsGrpTypeId", "FIN_ACNT_TRNS_BATCH");
+			  		  serviceCtx.put("createdDate", UtilDateTime.nowTimestamp());
+			  		  serviceCtx.put("lastModifiedDate", UtilDateTime.nowTimestamp());
+			  		  serviceCtx.put("lastModifiedByUserLogin", userLogin.getString("userLoginId"));
+			  		  serviceCtx.put("createdByUserLogin", userLogin.getString("userLoginId"));
+			  		  serviceCtx.put("userLogin", userLogin);
+		  			  Map resultCtx = dispatcher.runSync("createFinAccountTransGroupAndMember", serviceCtx);
+			  		  if(ServiceUtil.isError(resultCtx)){
+			    			Debug.logError("Error while creating fin account trans group: " + ServiceUtil.getErrorMessage(resultCtx), module);
+			    			request.setAttribute("_ERROR_MESSAGE_", "Error while creating fin account trans group");
+				  			TransactionUtil.rollback();
+				  			return "error";
+			  		  }
+				  	  String finAccntTransGroupId = (String)resultCtx.get("finAccntTransGroupId");
+			  	  }
+		  	}catch (GenericEntityException e) {
+		  		  try {
+		  			  // only rollback the transaction if we started one...
+		  			  TransactionUtil.rollback(beganTransaction, "Error Fetching data", e);
+		  		  } catch (GenericEntityException e2) {
+		  			  Debug.logError(e2, "Could not rollback transaction: " + e2.toString(), module);
+		  		  }
+		  		  Debug.logError("An entity engine error occurred while fetching data", module);
+		  	  }
+		  	  catch (GenericServiceException e) {
+		  		  try {
+		  			  // only rollback the transaction if we started one...
+		  			  TransactionUtil.rollback(beganTransaction, "Error while calling services", e);
+		  		  } catch (GenericEntityException e2) {
+		  			  Debug.logError(e2, "Could not rollback transaction: " + e2.toString(), module);
+		  		  }
+		  		  Debug.logError("An entity engine error occurred while calling services", module);
+		  	  }
+		  	  finally {
+		  		  // only commit the transaction if we started one... this will throw an exception if it fails
+		  		  try {
+		  			  TransactionUtil.commit(beganTransaction);
+		  		  } catch (GenericEntityException e) {
+		  			  Debug.logError(e, "Could not commit transaction for entity engine error occurred while fetching data", module);
+		  		  }
+		  	  }
+		  	request.setAttribute("_EVENT_MESSAGE_", "Successfully made processed group fin account trans entries ");
+	        request.setAttribute("_EVENT_MESSAGE_", "Loan Disbursement successfully done for Loan "+loanId);
+	        result = ServiceUtil.returnSuccess("Loan Disbursement successfully done "+loanId+" ..!");
+	        request.setAttribute("loanId",loanId);
+	        result.put("finAccountTransIds", finAccountTransIds);
+	        return "success"; 
+		}
 	 	
 	 public static Map<String, Object> createNewEmployment(DispatchContext dctx, Map context) {
 	    	Map<String, Object> result = ServiceUtil.returnSuccess();

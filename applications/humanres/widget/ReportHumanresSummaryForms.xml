@@ -1121,14 +1121,14 @@
     			</entity-options>
     		</drop-down>
     	</field>
-    	<field name="statusId" title="Status">
+    	<!-- <field name="statusId" title="Status">
             <drop-down allow-empty="false" >
                 <entity-options description="${description}" key-field-name="statusId" entity-name="StatusItem">
                     <entity-constraint name="statusTypeId" operator="equals" value="EMPL_LOAN_STATUS"/>
                     <entity-order-by field-name="description"/>
                 </entity-options>
             </drop-down>
-        </field>
+        </field> -->
     	<field name="description" title="Description" required-field="false"><text size="20"/></field>
     	<field name="principalAmount" id-name="principalAmount" title="Principal Amount" required-field="true"><text size="20"/></field>
     	<field name="interestAmount" id-name="interestAmount" title="Interest Amount" required-field="true"><text size="20"/></field>
@@ -1139,6 +1139,7 @@
     	<field name="retirementDate" id-name="retirementDate" title="Retirement Date" position="2"><text size="20"/></field>
     	<field name="extLoanRefNum" title="External Loan Reference Number" required-field="false"><text size="20"/></field>
     	<field name="disbDate" title="Loan Date" required-field="true" tooltip="Select date from calendar"><date-time type="date" ></date-time></field>
+    	<field name="statusId" title="Status"><display description="Approved"></display></field>
     	<field name="submitButton" title="${uiLabelMap.CommonCreate}"><submit/></field>
     </form>
     <form name="FindLoan" type="single" header-row-style="header-row" default-table-style="basic-table" target = "loan">
@@ -1177,17 +1178,17 @@
     	<field name="loanTypeId" title = "Loan Type">
           <display-entity entity-name="LoanType" key-field-name="loanTypeId" description="${description}"/>
         </field>
-    	<!-- <field name="statusId" title = "Status">
+    	<field name="statusId" title = "Status">
           <display-entity entity-name="StatusItem" key-field-name="statusId" description="${statusCode}"/>
-        </field> -->
-        <field name="statusId" title="Status">
+        </field>
+        <!-- <field name="statusId" title="Status">
             <drop-down allow-empty="true" >
                 <entity-options description="${description}" key-field-name="statusId" entity-name="StatusItem">
                     <entity-constraint name="statusTypeId" operator="equals" value="EMPL_LOAN_STATUS"/>
                     <entity-order-by field-name="description"/>
                 </entity-options>
             </drop-down>
-        </field>
+        </field> -->
     	<field name="description" title="Description"><display></display></field>
     	<field name="extLoanRefNum" title="ExtLoanRefNum"><display></display></field>
     	<field name="principalAmount" title="Prncpl.Amt" ><display></display></field>
@@ -1198,8 +1199,13 @@
     	<field name="setlDate" title="Settled Date"><date-time type="date" ></date-time></field>
     	<field name="createdDate" title="Created Date" ><display size="50"></display></field>
     	<field name="createdByUserLogin" title="Created By"><display></display></field>
-    	<field use-when="${groovy:((security.hasEntityPermission(&quot;HR&quot;, &quot;_LOAN_DELETE&quot;, session)))}" name="deleteLink" title="Delete" widget-style="buttontext">
+    	<!-- <field use-when="${groovy:((security.hasEntityPermission(&quot;HR&quot;, &quot;_LOAN_DELETE&quot;, session)))}" name="deleteLink" title="Delete" widget-style="buttontext">
            <hyperlink also-hidden="false" description="${uiLabelMap.CommonDelete}" target="deleteEmployeeLoan">
+                <parameter param-name="loanId" from-field="loanId"/>
+           </hyperlink>
+       </field> -->
+       <field use-when="statusId.equals(&quot;LOAN_APPROVED&quot;) &amp;&amp;${groovy:((security.hasEntityPermission(&quot;HR&quot;, &quot;_LOAN_CANCEL&quot;, session)))} " name="deleteLink" title="Cancel" widget-style="buttontext">
+           <hyperlink also-hidden="false" description="${uiLabelMap.CommonCancel}" target="cancelEmployeeLoan">
                 <parameter param-name="loanId" from-field="loanId"/>
            </hyperlink>
        </field>
@@ -1295,7 +1301,24 @@
             </hyperlink>
         </field>
     </form>
-    
+    <form name="findLoanDisbursement" type="single" header-row-style="header-row" default-table-style="basic-table" target = "loanDisbursement">
+    	<field name="hideSearch"><hidden value="Y" /></field>
+		<field name="noConditionFind"><hidden value="Y"/><!-- if this isn't there then with all fields empty no query will be done --></field>
+    	<field name="loanId" title="loanId"><text size="10"/></field>
+    	<field name="partyId">
+			<lookup target-form-name="LookupEmployeeName"/>
+		</field>
+    	<field name="loanTypeId" title="loanTypeId">
+    		<drop-down allow-empty="true">
+    			<entity-options entity-name="LoanType" key-field-name="loanTypeId" description="${description}" filter-by-date="false">
+    			</entity-options>
+    		</drop-down>
+    	</field>
+    	<field name="description" title="Description"><text></text></field>
+    	<field name="extLoanRefNum" title="External Loan Ref Number"><text></text></field>
+    	<field name="loanDisbFlag"><hidden value="loanDisbFlag"/></field>
+    	<field name="searchButton" title="${uiLabelMap.CommonFind}" widget-style="smallSubmit"><submit button-type="button"/></field>
+    </form>
      <form name="EditVariables" type="single" header-row-style="header-row" default-table-style="basic-table" target="CreateRateAmountVariables" >
     	<field name="rateTypeId" title="Rate Type" required-field="true" tooltip="Required" widget-style="required" >
     		<drop-down allow-empty="false">

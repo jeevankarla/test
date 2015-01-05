@@ -172,4 +172,16 @@ under the License.
 	<RoleType description="Tenant" roleTypeId="TENANT"/> 
 	
 	 <TenantConfiguration createdStamp="2014-12-12 16:01:39.0" createdTxStamp="2014-12-12 16:01:39.0" description="Enable Cash Encashment Sms functionality" lastUpdatedStamp="2014-12-12 16:01:39.0" lastUpdatedTxStamp="2014-12-12 16:01:39.0" propertyName="enableCashEncashSms" propertyTypeEnumId="SMS" propertyValue="Y"/>
+	 
+	 <!-- for loan cancellation -->
+	 
+ 	<StatusItem createdStamp="2015-01-05 16:50:02.0" createdTxStamp="2015-01-05 16:50:02.0" description="Cancelled" lastUpdatedStamp="2015-01-05 16:50:02.0" lastUpdatedTxStamp="2015-01-05 16:50:02.0" sequenceId="5" statusCode="CANCELLED" statusId="LOAN_CANCELLED" statusTypeId="EMPL_LOAN_STATUS"/>
+
+ 	<!-- for Batch Loan Fin Account Transactions -->
+
+	<StatusType createdStamp="2015-01-05 13:03:43.0" createdTxStamp="2015-01-05 13:03:43.0" lastUpdatedStamp="2015-01-05 13:03:43.0" lastUpdatedTxStamp="2015-01-05 13:03:43.0" statusTypeId="FINACNTTRNS_STATUS"/>
+	<StatusItem createdStamp="2015-01-05 13:06:18.0" createdTxStamp="2015-01-05 13:06:18.0" description="Created" lastUpdatedStamp="2015-01-05 13:06:18.0" lastUpdatedTxStamp="2015-01-05 13:06:18.0" sequenceId="01" statusCode="CREATED" statusId="FNACTTRNSGRP_CREATED" statusTypeId="FINACNTTRNS_STATUS"/>
+	<FinAccountTransGroupType createdStamp="2015-01-05 12:51:15.0" createdTxStamp="2015-01-05 12:51:15.0" description="Fin account trans batch" finAcntTrnsGrpTypeId="BATCH_FINACCNTTRANS" hasTable="N" lastUpdatedStamp="2015-01-05 12:52:12.0" lastUpdatedTxStamp="2015-01-05 12:52:12.0"/>
+	<FinAccountTransGroupType createdStamp="2015-01-05 12:52:01.0" createdTxStamp="2015-01-05 12:52:01.0" description="Fin account trans batch" finAcntTrnsGrpTypeId="FIN_ACNT_TRNS_BATCH" lastUpdatedStamp="2015-01-05 12:52:01.0" lastUpdatedTxStamp="2015-01-05 12:52:01.0" parentTypeId="BATCH_FINACCNTTRANS"/>
+	 
 </entity-engine-xml>

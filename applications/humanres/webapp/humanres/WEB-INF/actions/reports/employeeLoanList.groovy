@@ -35,7 +35,12 @@ setlDate = null;
 
 partyName = null;
 
-List conditionList=[];
+loanDisbFlag = parameters.loanDisbFlag;
+loanDisbFlag = context.loanDisbFlag;
+if(UtilValidate.isNotEmpty(loanDisbFlag)){
+	parameters.statusId = "LOAN_APPROVED";
+}
+conditionList=[];
 
 if(UtilValidate.isNotEmpty(parameters.loanId)){
 	conditionList.add(EntityCondition.makeCondition("loanId", EntityOperator.EQUALS, parameters.loanId));
@@ -104,3 +109,11 @@ if(UtilValidate.isNotEmpty(emplyLoanList)){
 }
 context.putAt("employeeLoanList", employeeLoanList);
 
+
+condList=[];
+condList.add(EntityCondition.makeCondition("finAccountTypeId", EntityOperator.EQUALS, "BANK_ACCOUNT"));
+condList.add(EntityCondition.makeCondition("statusId", EntityOperator.EQUALS, "FNACT_ACTIVE"));
+condList.add(EntityCondition.makeCondition("ownerPartyId", EntityOperator.EQUALS, "Company"));
+cond = EntityCondition.makeCondition(condList, EntityOperator.AND);
+finAccountList = delegator.findList("FinAccount", cond, null, ["finAccountName"], null, false);
+context.finAccountList = finAccountList;

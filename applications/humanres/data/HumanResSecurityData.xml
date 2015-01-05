@@ -33,6 +33,11 @@ under the License.
     <SecurityGroupPermission groupId="FULLADMIN" permissionId="LOAN_TAB_VIEW"/>
     <SecurityGroupPermission groupId="LOAN_TAB" permissionId="LOAN_TAB_VIEW"/>
     
+    <SecurityPermission description="View Permission for Loan  Disbursement Tab." permissionId="LOAN_DISBURSMNT_TAB_VIEW"/>
+    <SecurityGroup description="View Loan Disbursement Tab" groupId="LOAN_DISBURSMNT_TAB"/>
+    <SecurityGroupPermission groupId="FULLADMIN" permissionId="LOAN_DISBURSMNT_TAB_VIEW"/>
+    <SecurityGroupPermission groupId="LOAN_DISBURSMNT_TAB" permissionId="LOAN_DISBURSMNT_TAB_VIEW"/>
+    
     <SecurityPermission description="View Permission for Credit Leave Days." permissionId="CREDIT_LEAVES_TAB_VIEW"/>
     <SecurityGroup description="View Credit Leave Days" groupId="CREDIT_LEAVES_TAB"/>
     <SecurityGroupPermission groupId="FULLADMIN" permissionId="CREDIT_LEAVES_TAB_VIEW"/>
@@ -241,6 +246,10 @@ under the License.
     <SecurityGroup description="Loan Updating" groupId="HR_LOAN_UPDATE"/>
     <SecurityGroupPermission groupId="FULLADMIN" permissionId="HR_LOAN_UPDATE"/>
     <SecurityGroupPermission groupId="HR_LOAN_UPDATE" permissionId="HR_LOAN_UPDATE"/>
+    
+    <SecurityGroup description="Loan cancelling" groupId="HR_LOAN_CANCEL"/>
+    <SecurityGroupPermission groupId="FULLADMIN" permissionId="HR_LOAN_CANCEL"/>
+    <SecurityGroupPermission groupId="HR_LOAN_CANCEL" permissionId="HR_LOAN_CANCEL"/>
     
     <SecurityPermission description="Allow to Access Lookup , Attendance and Leave screens in HumanRes Manager." permissionId="HR_EMPL_PROFILE_VIEW"/>  
     <SecurityGroup description="Allow to Access Lookup , Attendance and Leave screens in HumanRes Manager." groupId="HR_EMPL_PROFILE_VIEW"/>

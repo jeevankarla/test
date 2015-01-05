@@ -957,5 +957,45 @@
 				</decorator-screen>
 			</widgets>
 		</section>
+	 </screen>
+	 <screen name="loanDisbursement">
+	 	<section>
+			<actions>
+				<set field="headerItem" value="loanDisbursement" />
+				<set field="tabButtonItem" value="loan" />
+				<set field="tabButtonItem2" value="loanDisbursement" />
+				<set field="titleProperty" value="Loan Disbursement" />
+				<set field="loanDisbFlag" value="loanDisbFlag"/>
+				<set field="parameters.noConditionFind" value="Y"/>
+				<script location="component://humanres/webapp/humanres/WEB-INF/actions/reports/employeeLoanList.groovy"/>
+			</actions>
+			<widgets>
+				<decorator-screen name="HumanresCommonDecorator"
+					location="component://humanres/widget/CommonScreens.xml">
+					<decorator-section name="body">
+					<include-menu location="component://humanres/widget/HumanresMenus.xml" name="LoanTabBar"/>
+						<container>
+							<screenlet title="Find Loan Disbursement">
+								<include-form location="component://humanres/widget/ReportHumanresSummaryForms.xml" name="findLoanDisbursement"/>
+							</screenlet>
+							<screenlet title="Loan Disbursement Results">
+								<platform-specific>
+									<html>
+										<html-template
+											location="component://humanres/webapp/humanres/humanres/listEmployeeLoansDisbursed.ftl"></html-template>
+									</html>
+								</platform-specific>
+								<platform-specific>
+									<html>
+										<html-template
+											location="component://humanres/webapp/humanres/humanres/loanDisbursement.ftl"></html-template>
+									</html>
+								</platform-specific>
+							</screenlet>
+						</container>
+					</decorator-section>
+				</decorator-screen>
+			</widgets>
+		</section>
 	 </screen>         
 </screens>

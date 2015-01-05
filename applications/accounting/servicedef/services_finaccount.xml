@@ -695,4 +695,32 @@ under the License.
         <attribute name="finAcountIdList" type="List" mode="OUT" optional = "true"/>
         <attribute name="flag" type="Boolean" mode="OUT" optional = "true"/>
     </service>
+    
+    <!-- Fin Account Trans Group Services Here -->
+    
+    <service name="createFinAccountTransGroupAndMember" engine="simple"
+            location="component://accounting/script/org/ofbiz/accounting/finaccount/FinAccountServices.xml" invoke="createFinAccountTransGroupAndMember" auth="true">
+        <attribute name="finAccountTransIds" type="List" mode="IN" optional="false"/>
+        <auto-attributes entity-name="FinAccountTransGroup" include="nonpk" mode="IN" optional="true"/>
+        <attribute name="finAcntTrnsGrpTypeId" type="String" mode="IN" optional="false"/>
+        <attribute name="fromDate" type="Timestamp" mode="IN" optional="true"/>
+        <attribute name="finAccntTransGrpName" type="String" mode="IN" optional="true"/>
+        <attribute name="finAccntTransGroupId" type="String" mode="OUT" optional="false"/>
+    </service>
+    
+    <service name="createFinAccountTransGroup" default-entity-name="FinAccountTransGroup" engine="entity-auto" invoke="create" auth="true">
+        <description>Create a FinAccount Trans Group</description>
+        <auto-attributes include="pk" mode="OUT" optional="false"/>
+        <auto-attributes include="nonpk" mode="IN" optional="true"/>
+        <override name="finAccntTransGroupId" optional="false"/>
+        <override name="finAccntTransGrpName" optional="false"/>
+    </service>
+    
+    <service name="createFinAccountTransGroupMember" default-entity-name="FinAccountTransGroupMember" engine="simple"
+            location="component://accounting/script/org/ofbiz/accounting/finaccount/FinAccountServices.xml" invoke="createFinAccountTransGroupMember" auth="true">
+        <description>Check For Outgoing/Incoming Fin Account Trans And Create Fin Account Trans Group Member</description>
+        <auto-attributes include="pk" mode="IN" optional="false"/>
+        <auto-attributes include="nonpk" mode="IN" optional="true"/>
+        <override name="fromDate" optional="true"/>
+    </service>
 </services>

@@ -308,6 +308,14 @@
         </condition> 
         	<link target="loan"/>
         </menu-item>
+         <menu-item name="loanDisbursement" title="Loan Disbursement">
+         <condition>
+             <and>
+                <if-has-permission permission="LOAN_DISBURSMNT_TAB"  action="_VIEW"/>
+          </and> 
+        </condition> 
+        	<link target="loanDisbursement"/>
+        </menu-item>
         <menu-item name="loanRecovery" title="Loan Recovery">
         <condition>
              <and>

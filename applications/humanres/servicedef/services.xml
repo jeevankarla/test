@@ -1741,6 +1741,11 @@ under the License.emplpunch
         <description>Delete Loan</description>
        <attribute name="loanId" mode="IN" type="String" optional="false"/>
    </service>
+    <service name="cancelEmployeeLoan" engine="java" invoke="cancelEmployeeLoan" auth="true" 
+   		location="in.vasista.vbiz.humanres.HumanresService">
+        <description>Delete Loan</description>
+       <attribute name="loanId" mode="IN" type="String" optional="false"/>
+   </service>
    <service name="getLoanAmountsByLoanType" engine="java" invoke="getLoanAmountsByLoanType" auth="true" 
    		location="in.vasista.vbiz.humanres.HumanresService">
         <description>Get Loan Amounts By Loan Type</description>
@@ -1767,6 +1772,7 @@ under the License.emplpunch
        <attribute name="deducteePartyId" mode="IN" type="String" optional="false"/>
        <attribute name="contraRefNum" mode="IN" type="String" optional="true"/>
    </service>
+   
     <service name="createNewEmployeeMasters"  engine="java"  auth="true"
         location="in.vasista.vbiz.humanres.HumanresService" invoke="createNewEmployeeMasters">
         <description>Create A New Employee</description>

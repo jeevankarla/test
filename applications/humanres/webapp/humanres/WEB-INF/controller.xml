@@ -2192,6 +2192,12 @@ under the License.
     	<response name="success" type="view" value="loan"/>
     	<response name="error" type="view" value="loan"/>
     </request-map>
+    <request-map uri="cancelEmployeeLoan">
+    	<security https="true" auth="true"/>
+    	<event type="service" invoke="cancelEmployeeLoan"/>
+    	<response name="success" type="view" value="loan"/>
+    	<response name="error" type="view" value="loan"/>
+    </request-map>
     <request-map uri="getLoanAmountsByLoanType">
         <security https="true" auth="true"/>
         <event type="service" invoke="getLoanAmountsByLoanType"/>
@@ -2218,6 +2224,19 @@ under the License.
      <request-map uri="paySlip">
         <security https="true" auth="true"/>
         <response name="success" type="view" value="paySlip"/>
+    </request-map>
+    <request-map uri="loanDisbursement">
+       	<security https="true" auth="true"/>
+       	<response name="success" type="view" value="loanDisbursement"></response>
+    </request-map>
+    <request-map uri="createLoanDisbursement">
+     	<security https="true" auth="true"/>
+     	<event type="java"  path="in.vasista.vbiz.humanres.HumanresService"  invoke="createLoanDisbursement" global-transaction="true"/>
+     	<response name="success" type="request-redirect" value="loan">
+        	<redirect-parameter name="loanId"/>
+        </response>     	
+        <response name="error" type="request-redirect" value="loan">
+        </response>
     </request-map>
     
     <!-- ===================Lookup Request===================== -->
@@ -2556,6 +2575,9 @@ under the License.
     
     <view-map name="loanRecovery" type="screen" page="component://humanres/widget/HumanresScreens.xml#loanRecovery"></view-map>
     <view-map name="CreateNewLoanRecovery" type="screen" page="component://humanres/widget/HumanresScreens.xml#CreateNewLoanRecovery"></view-map>
+    
+    <view-map name="loanDisbursement" type="screen" page="component://humanres/widget/HumanresScreens.xml#loanDisbursement"></view-map>
+    
     
     <view-map name="PrintDepositReceipt" type="screenfop" page="component://accounting/widget/PaymentScreens.xml#PrintDepositReceipt" content-type="application/pdf" encoding="none"/>  
 	<!-- Employee Content -->
