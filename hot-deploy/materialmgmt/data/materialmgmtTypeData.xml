@@ -118,6 +118,8 @@
 	<InvoiceItemType defaultGlAccountId="510000" description="OTHER CHARGES" hasTable="N" invoiceItemTypeId="COGS_OTH_CHARGES"/>
 	<GlAccount accountCode="511300" accountName="INSURENCE" description="Insurance" glAccountClassId="COGS_EXPENSE" glAccountId="511300" glAccountTypeId="PURCHASE_ACCOUNT" glResourceTypeId="MONEY" parentGlAccountId="510000" postedBalance="0.00"/>
      
-     
+     <OrderAssocType  description="ARC Order"  orderAssocTypeId="ARC_ORDER"/>
+     <OrderAssocType  description="CPC Order"  orderAssocTypeId="CPC_ORDER"/>
+     <OrderAssocType  description="Purchase Order"  orderAssocTypeId="PURCHASE_ORDER"/>
      
 </entity-engine-xml>

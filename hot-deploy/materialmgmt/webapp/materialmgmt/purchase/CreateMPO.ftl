@@ -234,7 +234,12 @@ function makeDatePicker(fromDateId ,thruDateId){
           		        <tr>
 						    <td class="label">Bill To Party :</td>
 						    <td>
+						    	<#if orderId?exists && orderInfo.get("billToPartyId")?exists>
+						    	<#assign billToPartyId=orderInfo.get("billToPartyId")>
+						    	<@htmlTemplate.lookupField value="${billToPartyId?if_exists}" formName="CreateMPO" size="18" maxlength="60" name="billToPartyId"  id="billToPartyId" fieldFormName="LookupPartyName"/>
+						    	<#else>
 						      	<@htmlTemplate.lookupField  formName="CreateMPO" size="18" maxlength="60" name="billToPartyId" id="billToPartyId" fieldFormName="LookupPartyName"/>
+          		                </#if>
           		                <span class="tooltip">If billing and vendor party are different, invoice will be raise against this Party </span>
 						    </td>
 						 </tr>

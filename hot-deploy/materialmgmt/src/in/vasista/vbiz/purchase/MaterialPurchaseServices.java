@@ -1478,7 +1478,6 @@ public class MaterialPurchaseServices {
 		Map<String, Object> orderAssocMap = FastMap.newInstance();
 		orderAssocMap.put("orderId", result.get("orderId"));
 		orderAssocMap.put("toOrderId", PONumber);
-		orderAssocMap.put("orderAssocTypeId", orderTypeId);
 		orderAssocMap.put("userLogin", userLogin);
 		result = createOrderAssoc(dctx,orderAssocMap);
 			if(ServiceUtil.isError(result)){
@@ -2033,6 +2032,30 @@ public class MaterialPurchaseServices {
 		
 		try {
 				
+			/*List conList= FastList.newInstance();
+     		conList.add(EntityCondition.makeCondition("orderId", EntityOperator.EQUALS ,orderId));
+     		conList.add(EntityCondition.makeCondition("roleTypeId", EntityOperator.EQUALS , "BILL_FROM_VENDOR"));
+     		EntityCondition cond=EntityCondition.makeCondition(conList,EntityOperator.AND);
+			List<GenericValue> orderRoles = delegator.findList("OrderRole", cond, null, null, null, false);
+			if(UtilValidate.isNotEmpty(orderRoles)){
+				GenericValue orderRole = EntityUtil.getFirst(orderRoles); 
+				String oldPartyId = orderRole.getString("partyId");
+				Debug.log("oldpartyId==========="+oldPartyId);
+				Debug.log("billFromPartyId==========="+billFromPartyId);
+				Debug.log("partyId======================="+partyId);
+				if(UtilValidate.isEmpty(billFromPartyId)){
+					billFromPartyId=partyId;
+					Debug.log("billFromPartyId=======2===="+billFromPartyId);
+				}
+				if(!billFromPartyId.equals(oldPartyId)){
+					delegator.removeAll(orderRoles);
+					GenericValue roleOrder = delegator.makeValue("OrderRole");   
+					roleOrder.set("orderId", orderId);
+					roleOrder.set("partyId", billFromPartyId);
+					roleOrder.set("roleTypeId", "BILL_FROM_VENDOR");
+					delegator.createOrStore(roleOrder);
+				}
+			}*/
 			GenericValue orderHeader = delegator.findOne("OrderHeader", UtilMisc.toMap("orderId", orderId), false);
 			
 			orderHeader.set("orderTypeId", orderTypeId);
@@ -2384,7 +2407,7 @@ public class MaterialPurchaseServices {
 		LocalDispatcher dispatcher = ctx.getDispatcher();
 		String orderId = (String) context.get("orderId");
 		String toOrderId = (String) context.get("toOrderId");
-		String orderAssocTypeId = (String) context.get("orderAssocTypeId");
+		String orderAssocTypeId = "";
 		GenericValue userLogin = (GenericValue) context.get("userLogin");
 		Map<String, Object> result = ServiceUtil.returnSuccess();
 		try{
@@ -2393,11 +2416,29 @@ public class MaterialPurchaseServices {
 				Debug.logError("Please Enter Valid PO Number", module);
 				return ServiceUtil.returnError("Please Enter Valid PO Number");
 			}
-			GenericValue newEntity = delegator.makeValue("OrderAssoc");
-			newEntity.set("orderId", toOrderId);
-			newEntity.set("toOrderId", orderId);
-			newEntity.set("orderAssocTypeId", orderAssocTypeId);
-			newEntity.create();
+			orderAssocTypeId = orderHeader.getString("orderTypeId");
+			GenericValue orderAssoc = delegator.findOne("OrderAssoc", UtilMisc.toMap("orderId", orderId, "toOrderId", toOrderId, "orderAssocTypeId", orderAssocTypeId), false);
+			if(UtilValidate.isEmpty(orderAssoc)){
+				GenericValue newEntity = delegator.makeValue("OrderAssoc");
+				newEntity.set("orderId", orderId);
+				newEntity.set("toOrderId", toOrderId);
+				newEntity.set("orderAssocTypeId", orderAssocTypeId);
+				newEntity.create();
+			}else{
+				String oldOrderId = orderAssoc.getString("orderId");
+				String oldtoOrderId = orderAssoc.getString("toOrderId");
+				String oldorderAssocTypeId = orderAssoc.getString("orderAssocTypeId");
+				if(!oldOrderId.equals(orderId)){
+					orderAssoc.set("orderId",orderId);
+				}
+				if(!oldtoOrderId.equals(toOrderId)){
+					orderAssoc.set("toOrderId",toOrderId);
+				}
+				if(!oldorderAssocTypeId.equals(orderAssocTypeId)){
+					orderAssoc.set("orderAssocTypeId",orderAssocTypeId);
+				}
+				orderAssoc.store();
+			}
 		} catch(Exception e){
 			Debug.logError(e, module);
 			return ServiceUtil.returnError(e.getMessage());

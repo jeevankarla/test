@@ -134,6 +134,7 @@
                 <field-map field-name="viewIndex" from-field="viewIndex"/>
                 <field-map field-name="viewSize" from-field="viewSize"/>
             </service>
+            <script location="component://materialmgmt/webapp/materialmgmt/WEB-INF/actions/purchases/SupplyTillDate.groovy"/>
         </actions>
       	<field name="receiptId" title="GRN No">
       		<display/>
@@ -149,6 +150,7 @@
         </field>
       	<field name="quantityAccepted" title="Quantity"><display/></field>
       	<field name="quantityRejected" title="Qty Rejected"><display/></field>
+      	<field name="supplyTillDate"><display/></field>
       	<field name="receivedByUserLoginId" title="Entry by"><display/></field>	
       	
       	 <field name="report" widget-style="buttontext" >

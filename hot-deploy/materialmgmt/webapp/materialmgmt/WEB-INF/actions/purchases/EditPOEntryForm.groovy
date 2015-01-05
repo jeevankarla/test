@@ -66,11 +66,13 @@ if(orderHeader && orderHeader.statusId == "ORDER_CREATED"){
 	orderRoles = delegator.findList("OrderRole", condition, null, null, null, false);
 	
 	orderRole = EntityUtil.getFirst(orderRoles);
+	//Debug.log("orderRole==================="+orderRole);
 	
 	if(orderRole){
 		partyName = PartyHelper.getPartyName(delegator, orderRole.partyId, false);
 		orderInfoDetail.putAt("supplierId", orderRole.partyId);
 		orderInfoDetail.putAt("supplierName", partyName);
+		orderInfoDetail.putAt("billToPartyId", orderRole.partyId);
 	}
 	orderEditParamMap.putAt("orderHeader", orderInfoDetail);
 	orderAdjustments = delegator.findList("OrderAdjustment", EntityCondition.makeCondition("orderId", EntityOperator.EQUALS, orderId), null, null, null, false);
