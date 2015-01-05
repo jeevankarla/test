@@ -2082,6 +2082,7 @@ under the License.
       <field name="statusId" type="id"></field>
       <field name="custRequestId" type="id"></field>
       <field name="custRequestItemSeqId" type="id"></field>
+      <field name="comments" type="description"></field>
       <field name="statusDatetime" type="date-time"></field>
       <field name="changedByUserLogin" type="id-vlong"></field>
       <prim-key field="custRequestStatusId"/>

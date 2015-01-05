@@ -247,6 +247,7 @@ public class MaterialRequestServices {
 				statusCtx.put("custRequestId", custRequestId);
 				statusCtx.put("custRequestItemSeqId", custReq.getString("custRequestItemSeqId"));
 				statusCtx.put("userLogin", userLogin);
+				statusCtx.put("description", "");
 				resultCtx = dispatcher.runSync("setCustRequestItemStatus", statusCtx);
 				if (ServiceUtil.isError(resultCtx)) {
 					Debug.logError("RequestItem set status failed for Request: " + custRequestId+" : "+custReq.getString("custRequestItemSeqId"), module);
@@ -330,6 +331,7 @@ public class MaterialRequestServices {
 			statusItemCtx.put("description", description);
 			statusItemCtx.put("custRequestItemSeqId", custRequestItemSeqId);
 			statusItemCtx.put("userLogin", userLogin);
+			statusItemCtx.put("description", "");
 			Map resultCtx = dispatcher.runSync("setCustRequestItemStatus", statusItemCtx);
 			if (ServiceUtil.isError(resultCtx)) {
 				Debug.logError("RequestItem set status failed for Request: " + custRequestId+":"+custRequestItemSeqId, module);
@@ -380,15 +382,12 @@ public class MaterialRequestServices {
 				}
 			}
 			custRequestItem.set("statusId", statusId);
-			
-			if(UtilValidate.isNotEmpty(description)){
-				custRequestItem.set("description", description);
-			}
 			custRequestItem.store();
 			
 			Map inputCtx = FastMap.newInstance();
 			inputCtx.put("custRequestId", custRequestId);
 			inputCtx.put("custRequestItemSeqId", custRequestItemSeqId);
+			inputCtx.put("comments", description);
 			inputCtx.put("statusId", statusId);
 			inputCtx.put("userLogin", userLogin);
 			Map<String, Object> resultMap = createCustRequestStatus(ctx, inputCtx);
@@ -474,6 +473,7 @@ public class MaterialRequestServices {
 		String custRequestId = (String) context.get("custRequestId");
 		String custRequestItemSeqId = (String) context.get("custRequestItemSeqId");
 		GenericValue userLogin = (GenericValue) context.get("userLogin");
+		String comments = (String) context.get("comments");
 		Map result = ServiceUtil.returnSuccess();
 		try{
 			
@@ -481,6 +481,7 @@ public class MaterialRequestServices {
 	        newEntity.set("custRequestId", custRequestId);
 	        newEntity.set("custRequestItemSeqId", custRequestItemSeqId);
 	        newEntity.set("statusId", statusId);
+	        newEntity.set("comments", comments);
 	        newEntity.set("statusDatetime", UtilDateTime.nowTimestamp());
 	        newEntity.set("changedByUserLogin", userLogin.getString("userLoginId"));
             delegator.createSetNextSeqId(newEntity);            
@@ -648,6 +649,7 @@ public class MaterialRequestServices {
 			itemStatusCtx.put("custRequestId", custRequestId);
 			itemStatusCtx.put("custRequestItemSeqId", custRequestItemSeqId);
 			itemStatusCtx.put("userLogin", userLogin);
+			itemStatusCtx.put("description", "");
 			itemStatusCtx.put("statusId", "CRQ_ISSUED");
 			resultCtx = dispatcher.runSync("setCustRequestItemStatus", itemStatusCtx);
 			if (ServiceUtil.isError(resultCtx)) {
@@ -751,6 +753,7 @@ public class MaterialRequestServices {
 			itemStatusCtx.put("custRequestId", custRequestId);
 			itemStatusCtx.put("custRequestItemSeqId", custRequestItemSeqId);
 			itemStatusCtx.put("userLogin", userLogin);
+			itemStatusCtx.put("description", "");
 			itemStatusCtx.put("statusId", "CRQ_INPROCESS");
 			resultCtx = dispatcher.runSync("setCustRequestItemStatus", itemStatusCtx);
 			if (ServiceUtil.isError(resultCtx)) {
@@ -891,6 +894,7 @@ public class MaterialRequestServices {
 				statusCtx.put("custRequestId", custRequestId);
 				statusCtx.put("custRequestItemSeqId", custRequestItemSeqId);
 				statusCtx.put("userLogin", userLogin);
+				statusCtx.put("description", "");
 				Map resultCtx = dispatcher.runSync("setCustRequestItemStatus", statusCtx);
 				if (ServiceUtil.isError(resultCtx)) {
 					Debug.logError("RequestItem set status failed for Request: " + custRequestId+" : "+custRequestItemSeqId, module);
