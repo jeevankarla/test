@@ -813,6 +813,7 @@ under the License.
       <field name="orderId" type="id-ne"></field>
       <field name="orderItemSeqId" type="id-ne"></field>
       <field name="changeTypeEnumId" type="id"></field>
+       <field name="effectiveDatetime" type="date-time"></field>
       <field name="changeDatetime" type="date-time"></field>
       <field name="changeUserLogin" type="id-vlong"></field>
       <field name="quantity" type="fixed-point"></field>
