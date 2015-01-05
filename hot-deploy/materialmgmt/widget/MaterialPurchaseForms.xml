@@ -99,7 +99,7 @@
                 <parameter param-name="setItemStatus" value="Y" />
             </hyperlink>
         </field> 
-        <field use-when="flag == &quot;N&quot;"  name="raiseGRN" title="Raise GRN" widget-style="buttontext" >
+        <field use-when="(flag == &quot;N&quot;)&amp;&amp;(statusId.equals(&quot;ORDER_APPROVED&quot;))"  name="raiseGRN" title="Raise GRN" widget-style="buttontext" >
         	 <hyperlink target="raiseGRN" description="Raise GRN">
         	 	<parameter param-name="orderId"/>
         	 	<!-- <parameter param-name="vehicleId"/> -->
