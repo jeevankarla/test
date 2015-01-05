@@ -131,6 +131,49 @@ public class MaterialPurchaseServices {
 		try{
 			beganTransaction = TransactionUtil.begin(7200);
 			
+			GenericValue orderHeader = delegator.findOne("OrderHeader", UtilMisc.toMap("orderId", orderId), false);
+			
+			if(UtilValidate.isEmpty(orderHeader)){
+				Debug.logError("Not a valid order : "+orderId, module);
+				request.setAttribute("_ERROR_MESSAGE_", "Not a valid order : "+orderId);	
+				TransactionUtil.rollback();
+		  		return "error";
+			}
+			String statusId = orderHeader.getString("statusId");
+			String orderTypeId = orderHeader.getString("orderTypeId");
+			if(statusId.equals("ORDER_CANCELLED")){
+				Debug.logError("Cannot create GRN for cancelled orders : "+orderId, module);
+				request.setAttribute("_ERROR_MESSAGE_", "Cannot create GRN for cancelled orders : "+orderId);	
+				TransactionUtil.rollback();
+		  		return "error";
+			}
+			
+			List conditionList = FastList.newInstance();
+			conditionList.add(EntityCondition.makeCondition("orderId", EntityOperator.EQUALS, orderId));
+			conditionList.add(EntityCondition.makeCondition("orderAssocTypeId", EntityOperator.EQUALS, orderTypeId));
+			List<GenericValue> orderAssoc = delegator.findList("OrderAssoc", EntityCondition.makeCondition(conditionList, EntityOperator.AND), null, null, null, false);
+			
+			boolean directPO = Boolean.TRUE;
+			String extPOId = "";
+			if(UtilValidate.isNotEmpty(orderAssoc)){
+				extPOId = (EntityUtil.getFirst(orderAssoc)).getString("toOrderId");
+				directPO = Boolean.FALSE;
+			}
+			List<GenericValue> extPOItems = FastList.newInstance();
+			List<GenericValue> extReciptItems = FastList.newInstance();
+			if(UtilValidate.isNotEmpty(extPOId)){
+				List<GenericValue> annualContractPOAsso = delegator.findList("OrderAssoc", EntityCondition.makeCondition("toOrderId", EntityOperator.EQUALS, extPOId), UtilMisc.toSet("orderId"), null, null, false);
+				List orderIds = EntityUtil.getFieldListFromEntityList(annualContractPOAsso, "orderId", true);
+				conditionList.clear();
+				conditionList.add(EntityCondition.makeCondition("statusId", EntityOperator.NOT_EQUAL, "ITEM_CANCELLED"));
+				conditionList.add(EntityCondition.makeCondition("orderId", EntityOperator.EQUALS, extPOId));
+				extPOItems = delegator.findList("OrderItem", EntityCondition.makeCondition(conditionList, EntityOperator.AND), null, null, null, false);
+				
+				conditionList.clear();
+				conditionList.add(EntityCondition.makeCondition("statusId", EntityOperator.NOT_EQUAL, "SR_REJECTED"));
+				conditionList.add(EntityCondition.makeCondition("orderId", EntityOperator.IN, orderIds));
+				extReciptItems = delegator.findList("ShipmentReceipt", EntityCondition.makeCondition(conditionList, EntityOperator.AND), null, null, null, false);
+			}
 			GenericValue newEntity = delegator.makeValue("Shipment");
 	        newEntity.set("estimatedShipDate", receiptDate);
 	        newEntity.set("shipmentTypeId", "MATERIAL_SHIPMENT");
@@ -148,27 +191,23 @@ public class MaterialPurchaseServices {
 	        List productList = FastList.newInstance();
 			
 			/*List<Map> prodQtyList = FastList.newInstance();*/
-	        List<GenericValue> orderItems = FastList.newInstance();
-			if(UtilValidate.isNotEmpty(orderId)){
-				orderItems = delegator.findList("OrderItem", EntityCondition.makeCondition("orderId", EntityOperator.EQUALS, orderId), null, null, null, false);
+	        List<GenericValue> orderItems = delegator.findList("OrderItem", EntityCondition.makeCondition("orderId", EntityOperator.EQUALS, orderId), null, null, null, false);
 				
-				productList = EntityUtil.getFieldListFromEntityList(orderItems, "productId", true);
-				List conditionList = FastList.newInstance();
-				conditionList.add(EntityCondition.makeCondition("orderId", EntityOperator.EQUALS, orderId));
-				conditionList.add(EntityCondition.makeCondition("roleTypeId", EntityOperator.EQUALS, "BILL_FROM_VENDOR"));
-				EntityCondition condition = EntityCondition.makeCondition(conditionList, EntityOperator.AND);
-				List<GenericValue> orderRole = delegator.findList("OrderRole", condition, null, null, null, false);
-				
-				if(UtilValidate.isEmpty(orderRole)){
-					Debug.logError("No Vendor for the order : "+orderId, module);
-					request.setAttribute("_ERROR_MESSAGE_", "No Vendor for the order : "+orderId);	
-					TransactionUtil.rollback();
-			  		return "error";
-				}
-				
-			  supplierId = (EntityUtil.getFirst(orderRole)).getString("partyId");
-			}
+			productList = EntityUtil.getFieldListFromEntityList(orderItems, "productId", true);
+			conditionList.clear();
+			conditionList.add(EntityCondition.makeCondition("orderId", EntityOperator.EQUALS, orderId));
+			conditionList.add(EntityCondition.makeCondition("roleTypeId", EntityOperator.EQUALS, "BILL_FROM_VENDOR"));
+			EntityCondition condition = EntityCondition.makeCondition(conditionList, EntityOperator.AND);
+			List<GenericValue> orderRole = delegator.findList("OrderRole", condition, null, null, null, false);
 			
+			if(UtilValidate.isEmpty(orderRole)){
+				Debug.logError("No Vendor for the order : "+orderId, module);
+				request.setAttribute("_ERROR_MESSAGE_", "No Vendor for the order : "+orderId);	
+				TransactionUtil.rollback();
+		  		return "error";
+			}
+				
+			supplierId = (EntityUtil.getFirst(orderRole)).getString("partyId");
 			
 			
 			
@@ -197,12 +236,47 @@ public class MaterialPurchaseServices {
 				if(UtilValidate.isNotEmpty(quantityStr)){
 					quantity = new BigDecimal(quantityStr);
 				}
-				/*productList.add(productId);
-				productQtyMap.put("productId", productId);
-				productQtyMap.put("quantity", quantity);
-				prodQtyList.add(productQtyMap);
-				*/
 				
+				if(directPO){
+					GenericValue checkOrderItem = null;
+					List<GenericValue> ordItems = EntityUtil.filterByCondition(orderItems, EntityCondition.makeCondition("productId", EntityOperator.EQUALS, productId));
+					if(UtilValidate.isNotEmpty(ordItems)){
+						checkOrderItem = EntityUtil.getFirst(ordItems);
+					}
+					
+					if(UtilValidate.isNotEmpty(checkOrderItem)){
+						BigDecimal orderQty = checkOrderItem.getBigDecimal("quantity");
+						BigDecimal checkQty = (orderQty.multiply(new BigDecimal(1.1))).setScale(0, BigDecimal.ROUND_CEILING);
+						if(quantity.compareTo(checkQty)>0){
+							Debug.logError("Quantity cannot be more than 10%("+checkQty+") for PO : "+orderId, module);
+							request.setAttribute("_ERROR_MESSAGE_", "Quantity cannot be more than 10%("+checkQty+") for PO : "+orderId);	
+							TransactionUtil.rollback();
+					  		return "error";
+						}
+					}
+				}
+				else{
+					List<GenericValue> poItems = EntityUtil.filterByCondition(extPOItems, EntityCondition.makeCondition("productId", EntityOperator.EQUALS, productId));
+					List<GenericValue> receiptItems = EntityUtil.filterByCondition(extReciptItems, EntityCondition.makeCondition("productId", EntityOperator.EQUALS, productId));
+					BigDecimal poQty = BigDecimal.ZERO;
+					if(UtilValidate.isNotEmpty(poItems)){
+						GenericValue poItem = EntityUtil.getFirst(poItems);
+						poQty = poItem.getBigDecimal("quantity");
+						
+					}
+					BigDecimal receiptQty = BigDecimal.ZERO;
+					for(GenericValue item : receiptItems){
+						receiptQty = receiptQty.add(item.getBigDecimal("quantityAccepted"));
+					}
+					BigDecimal checkQty = poQty.subtract(receiptQty);
+					
+					if(quantity.compareTo(checkQty)>0){
+						Debug.logError("Quantity cannot be more than ARC/CPC for PO : "+orderId, module);
+						request.setAttribute("_ERROR_MESSAGE_", "Quantity cannot be more than ARC/CPC for PO : "+orderId);	
+						TransactionUtil.rollback();
+				  		return "error";
+					}
+				}
 
 				Map<String,Object> itemInMap = FastMap.newInstance();
 		        itemInMap.put("shipmentId",shipmentId);
@@ -674,6 +748,12 @@ public class MaterialPurchaseServices {
 					return ServiceUtil.returnError("ShipmentId required to create invoice ");
 				}
 				
+				GenericValue shipment = delegator.findOne("Shipment", UtilMisc.toMap("shipmentId", shipmentId), false);
+				
+				if(UtilValidate.isNotEmpty(shipment) && shipment.equals("SHIPMENT_CANCELLED")){
+					Debug.logError("Cannot create invoice for cancelled shipment", module);
+					return ServiceUtil.returnError("Cannot create invoice for cancelled shipment");
+				}
 				List conditionList = FastList.newInstance();
 				conditionList.add(EntityCondition.makeCondition("shipmentId", EntityOperator.EQUALS, shipmentId));
 				conditionList.add(EntityCondition.makeCondition("statusId", EntityOperator.NOT_EQUAL, "SR_REJECTED"));
@@ -1652,9 +1732,10 @@ public class MaterialPurchaseServices {
 			    		newProdPriceType.set("taxAmount", taxAmount);
 			    		newProdPriceType.set("currencyUomId", "INR");
 			    		prodPriceTypeList.add(newProdPriceType);
+			    		totalTaxAmt=totalTaxAmt.add(taxAmount.divide(quantity, 3, BigDecimal.ROUND_HALF_UP));
 		        	}
 		        	tempPrice=tempPrice.add(taxAmount);
-		        	totalTaxAmt=totalTaxAmt.add(taxAmount);
+		        	
 				}
 				/*productQtyMap.put("vatPercent", vatPercent);
 				productQtyMap.put("excisePercent", excisePercent);
@@ -1686,8 +1767,9 @@ public class MaterialPurchaseServices {
 			    		newProdPriceType.set("taxAmount", taxAmount);
 			    		newProdPriceType.set("currencyUomId", "INR");
 			    		prodPriceTypeList.add(newProdPriceType);
+			    		totalTaxAmt=totalTaxAmt.add(taxAmount.divide(quantity, 3, BigDecimal.ROUND_HALF_UP));
 		        	}
-		        	totalTaxAmt=totalTaxAmt.add(taxAmount);
+		        	
 				}
 				
 			    if(UtilValidate.isNotEmpty(prodQtyMap.get("bedSecCessAmount"))){
@@ -1714,8 +1796,8 @@ public class MaterialPurchaseServices {
 			    		newProdPriceType.set("taxAmount", taxAmount);
 			    		newProdPriceType.set("currencyUomId", "INR");
 			    		prodPriceTypeList.add(newProdPriceType);
+			    		totalTaxAmt=totalTaxAmt.add(taxAmount.divide(quantity, 3, BigDecimal.ROUND_HALF_UP));
 		        	}
-		        	totalTaxAmt=totalTaxAmt.add(taxAmount);
 				}
 			    if(UtilValidate.isNotEmpty(prodQtyMap.get("vatAmount"))){
 				    BigDecimal taxRate = (BigDecimal)prodQtyMap.get("vatAmount");
@@ -1744,8 +1826,8 @@ public class MaterialPurchaseServices {
 			    		newProdPriceType.set("taxAmount", taxAmount);
 			    		newProdPriceType.set("currencyUomId", "INR");
 			    		prodPriceTypeList.add(newProdPriceType);
+			    		totalTaxAmt=totalTaxAmt.add(taxAmount.divide(quantity, 3, BigDecimal.ROUND_HALF_UP));
 		        	}
-		        	totalTaxAmt=totalTaxAmt.add(taxAmount);
 				}
 				if(UtilValidate.isNotEmpty(prodQtyMap.get("cstAmount"))){
 					cst = (BigDecimal)prodQtyMap.get("cstAmount");
@@ -1772,8 +1854,8 @@ public class MaterialPurchaseServices {
 			    		newProdPriceType.set("taxAmount", taxAmount);
 			    		newProdPriceType.set("currencyUomId", "INR");
 			    		prodPriceTypeList.add(newProdPriceType);
+			    		totalTaxAmt=totalTaxAmt.add(taxAmount.divide(quantity, 3, BigDecimal.ROUND_HALF_UP));
 		        	}
-		        	totalTaxAmt=totalTaxAmt.add(taxAmount);
 				}
 			}
 		
@@ -2032,30 +2114,6 @@ public class MaterialPurchaseServices {
 		
 		try {
 				
-			/*List conList= FastList.newInstance();
-     		conList.add(EntityCondition.makeCondition("orderId", EntityOperator.EQUALS ,orderId));
-     		conList.add(EntityCondition.makeCondition("roleTypeId", EntityOperator.EQUALS , "BILL_FROM_VENDOR"));
-     		EntityCondition cond=EntityCondition.makeCondition(conList,EntityOperator.AND);
-			List<GenericValue> orderRoles = delegator.findList("OrderRole", cond, null, null, null, false);
-			if(UtilValidate.isNotEmpty(orderRoles)){
-				GenericValue orderRole = EntityUtil.getFirst(orderRoles); 
-				String oldPartyId = orderRole.getString("partyId");
-				Debug.log("oldpartyId==========="+oldPartyId);
-				Debug.log("billFromPartyId==========="+billFromPartyId);
-				Debug.log("partyId======================="+partyId);
-				if(UtilValidate.isEmpty(billFromPartyId)){
-					billFromPartyId=partyId;
-					Debug.log("billFromPartyId=======2===="+billFromPartyId);
-				}
-				if(!billFromPartyId.equals(oldPartyId)){
-					delegator.removeAll(orderRoles);
-					GenericValue roleOrder = delegator.makeValue("OrderRole");   
-					roleOrder.set("orderId", orderId);
-					roleOrder.set("partyId", billFromPartyId);
-					roleOrder.set("roleTypeId", "BILL_FROM_VENDOR");
-					delegator.createOrStore(roleOrder);
-				}
-			}*/
 			GenericValue orderHeader = delegator.findOne("OrderHeader", UtilMisc.toMap("orderId", orderId), false);
 			
 			orderHeader.set("orderTypeId", orderTypeId);
