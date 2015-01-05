@@ -1764,6 +1764,17 @@ under the License.
         <key-map field-name="partyIdentificationTypeId"/>
       </view-link>
     </view-entity>
+    <view-entity entity-name="PartyIdentificationAndPartyRelationship"
+            package-name="org.ofbiz.party.party"
+            title="Party Identification, PartyRelationship Entity">
+      <member-entity entity-alias="PI" entity-name="PartyRelationship"/>
+      <member-entity entity-alias="PR" entity-name="PartyRelationship"/>
+	  <alias-all entity-alias="PI"/>
+      <alias-all entity-alias="PR"/>
+      <view-link entity-alias="PI" rel-entity-alias="PR">
+            <key-map field-name="partyId" rel-field-name="partyIdFrom"/>
+        </view-link>
+    </view-entity>
     <entity entity-name="PartyIdentificationType"
             package-name="org.ofbiz.party.party"
             default-resource-name="PartyEntityLabels"
