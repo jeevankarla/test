@@ -1767,7 +1767,7 @@ under the License.
     <view-entity entity-name="PartyIdentificationAndPartyRelationship"
             package-name="org.ofbiz.party.party"
             title="Party Identification, PartyRelationship Entity">
-      <member-entity entity-alias="PI" entity-name="PartyRelationship"/>
+      <member-entity entity-alias="PI" entity-name="PartyIdentification"/>
       <member-entity entity-alias="PR" entity-name="PartyRelationship"/>
 	  <alias-all entity-alias="PI"/>
       <alias-all entity-alias="PR"/>
