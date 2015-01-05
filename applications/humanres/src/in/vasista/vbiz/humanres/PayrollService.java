@@ -5156,7 +5156,7 @@ public class PayrollService {
 			    			if(UtilValidate.isNotEmpty(dayPunchList) && UtilValidate.isNotEmpty(periodBillingId)){
 			    				for(GenericValue punchEntry : dayPunchList){
 			    					Map punchCtx = UtilMisc.toMap("userLogin",userLogin);
-			    					punchCtx.put("consolidatedFlag","consolidatedFlag");
+			    					punchCtx.put("consolidatedFlag","Y");
 			    					punchCtx.putAll(punchEntry);
 			    					Map result = dispatcher.runSync("emplPunch", punchCtx);
 			    					if(ServiceUtil.isError(result)){
