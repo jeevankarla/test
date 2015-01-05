@@ -9,7 +9,7 @@
                 <set field="tabButtonItem" value="FindMaterialRequirement"/>
                 <set field="tabButtonItem2" value="FindMaterialRequirement"/>
                 <set field="viewIndex" from-field="parameters.VIEW_INDEX" type="Integer"/>
-                <set field="viewSize" from-field="parameters.VIEW_SIZE" type="Integer" default-value="50"/>
+                <set field="viewSize" from-field="parameters.VIEW_SIZE" type="Integer" default-value="30"/>
             </actions>
             <widgets>
                 <decorator-screen name="materialmgmtNgCommonDecorator" location="${parameters.mainDecoratorLocation}">
@@ -21,7 +21,9 @@
                                 <include-form name="FindMaterialRequirements" location="component://materialmgmt/widget/MaterialRequirementForms.xml"/>
                             </decorator-section>
                             <decorator-section name="search-results">
-                                <include-form name="ListMaterialRequirements" location="component://materialmgmt/widget/MaterialRequirementForms.xml"/>
+                            	<screenlet>
+                                	<include-form name="ListMaterialRequirements" location="component://materialmgmt/widget/MaterialRequirementForms.xml"/>
+                                </screenlet>
                             </decorator-section>
                         </decorator-screen>
                     </decorator-section>
@@ -50,7 +52,9 @@
                                 <include-form name="FindNotApprovedRequirements" location="component://materialmgmt/widget/MaterialRequirementForms.xml"/>
                             </decorator-section>
                             <decorator-section name="search-results">
-                                <include-form name="ApproveMaterialRequirements" location="component://materialmgmt/widget/MaterialRequirementForms.xml"/>
+                            	<screenlet>
+                                	<include-form name="ApproveMaterialRequirements" location="component://materialmgmt/widget/MaterialRequirementForms.xml"/>
+                                </screenlet>
                             </decorator-section>
                         </decorator-screen>
                     </decorator-section>

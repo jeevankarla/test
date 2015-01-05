@@ -30,7 +30,7 @@
         </field>
     </form>
     <form name="ListMaterialRequirements" type="list" target="" title="" list-name="listIt" paginate-target="FindMaterialRequirement"
-        odd-row-style="alternate-row" default-table-style="basic-table hover-bar">
+       use-row-submit="true" paginate-style="nav-pager" odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
         <actions>
             <service service-name="performFind" result-map="result" result-map-list="listIt">
                 <field-map field-name="inputFields" from-field="requestParameters"/>
@@ -123,7 +123,7 @@
         </field>
     </form>
     <form name="ApproveMaterialRequirements" type="multi" use-row-submit="true" target="approveMaterialRequirementEnrties" title="" list-name="requirements"
-        paginate-target="ApproveRequirements" odd-row-style="alternate-row" default-table-style="basic-table hover-bar">
+        paginate-target="ApproveRequirements" odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
         <row-actions>
           	<service service-name="getLastSupplyMaterialDetails" result-map="resultMap">
           		<field-map field-name="productId" from-field="productId"/>

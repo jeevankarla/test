@@ -19,7 +19,9 @@
                                 <include-form name="FindMaterialQuote" location="component://materialmgmt/widget/MaterialQuoteForms.xml"/>
                             </decorator-section>
                             <decorator-section name="search-results">
-                                <include-form name="ListQuotes" location="component://materialmgmt/widget/MaterialQuoteForms.xml"/>
+                            	<screenlet>
+                                	<include-form name="ListQuotes" location="component://materialmgmt/widget/MaterialQuoteForms.xml"/>
+                                </screenlet>
                             </decorator-section>
                         </decorator-screen>
                     </decorator-section>

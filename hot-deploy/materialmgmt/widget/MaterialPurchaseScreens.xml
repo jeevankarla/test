@@ -215,7 +215,9 @@
                       <decorator-section name="body">  
                         <section>
                             <widgets>
+                            <screenlet>
                                 <include-form location="component://materialmgmt/widget/MaterialPurchaseForms.xml" name="ListMaterialForQCApproval"/>
+                            </screenlet>    
                             </widgets>
                         </section>
                     </decorator-section>

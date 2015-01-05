@@ -20,7 +20,9 @@
                                 <include-form name="FindMaterialRequest" location="component://materialmgmt/widget/MaterialRequestForms.xml"/>
                             </decorator-section>
                             <decorator-section name="search-results">
-                                <include-form name="ListRequests" location="component://materialmgmt/widget/MaterialRequestForms.xml"/>
+                            	<screenlet>
+                                	<include-form name="ListRequests" location="component://materialmgmt/widget/MaterialRequestForms.xml"/>
+                                </screenlet>
                             </decorator-section>
                         </decorator-screen>
                     </decorator-section>
@@ -48,7 +50,9 @@
                                 <include-form name="FindMaterialEnquiry" location="component://materialmgmt/widget/MaterialRequestForms.xml"/>
                             </decorator-section>
                             <decorator-section name="search-results">
-                                <include-form name="ListEnquiry" location="component://materialmgmt/widget/MaterialRequestForms.xml"/>
+                            	<screenlet>
+                                	<include-form name="ListEnquiry" location="component://materialmgmt/widget/MaterialRequestForms.xml"/>
+                                </screenlet>
                             </decorator-section>
                         </decorator-screen>
                     </decorator-section>
@@ -96,7 +100,9 @@
                                 <include-form name="FindMaterialIssuance" location="component://materialmgmt/widget/MaterialRequestForms.xml"/>
                             </decorator-section>
                             <decorator-section name="search-results">
-                                <include-form name="ListMaterialIssuance" location="component://materialmgmt/widget/MaterialRequestForms.xml"/>
+                            	<screenlet>
+                            	    <include-form name="ListMaterialIssuance" location="component://materialmgmt/widget/MaterialRequestForms.xml"/>
+                            	</screenlet>
                             </decorator-section>
                         </decorator-screen>
                     </decorator-section>
@@ -492,11 +498,12 @@
     <screen name="NewRequirement">
     	<section>
     		<actions>
+    			<set field="titleProperty" value="Create New Requirement"/>
+                <set field="tabButtonItem" value="FindMaterialRequirement"/>
     		</actions>
     		<widgets>
     			<decorator-screen name="materialmgmtNgCommonDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
-                    	<include-menu name="StoreIssueTabBar" location="component://materialmgmt/widget/materialmgmtMenus.xml"/>
                     	<screenlet title="Create New Requirement" >
                     		<include-form location="component://materialmgmt/widget/MaterialRequestForms.xml" name="AddRequirement"/>
                     	</screenlet>
