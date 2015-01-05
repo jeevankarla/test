@@ -280,7 +280,7 @@
 				<set field="tabButtonItem" value="Attendance" />
 				<set field="tabButtonItem2" value="FindHoliday" />
 				<set field="titleProperty" value="Holiday Entry Screen" />
-				<set field="layoutSettings.javaScripts[]" value="/partymgr/static/holidayDate.js" global="true"/>
+				<set field="layoutSettings.javaScripts[]" value="/partymgr/js/emplLeaveDate.js" global="true"/>
 				<script location="component://humanres/webapp/humanres/WEB-INF/actions/humanres/holidayList.groovy"/>
 			</actions>
 			<widgets>
@@ -288,7 +288,7 @@
 					 <decorator-section name="body">
 					 <include-menu location="component://humanres/widget/HumanresMenus.xml" name="AttendanceTabBar"/>
                     <container style="button-bar">
-                            <link target="NewHoliday" style="buttontext create" text="${uiLabelMap.CommonCreateNew} HoliDay"/>
+                            <link target="NewHoliday" style="buttontext create" text="${uiLabelMap.CommonCreateNew} Holiday"/>
                         </container>                           
                     	<section>
 		                    <widgets>                       
@@ -315,9 +315,9 @@
         <section>
             <actions>
                 <set field="headerItem" value="main"/><!-- this highlights the selected menu-item with name "main" -->
-                <set field="titleProperty" value="Holiday"/>
-                <set field="headerItem" value="NewHoliday"/>
-                <set field="tabButtonItem" value="FindHoliday"/>
+                <set field="tabButtonItem" value="Attendance" />
+                <set field="tabButtonItem2" value="FindHoliday" />
+                <set field="titleProperty" value="Holiday Entry Screen" />
                 <set field="layoutSettings.javaScripts[]" value="/partymgr/js/emplLeaveDate.js" global="true"/>
             </actions>
             <widgets>

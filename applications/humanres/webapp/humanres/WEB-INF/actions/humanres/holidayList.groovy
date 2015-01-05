@@ -11,7 +11,7 @@ import in.vasista.vbiz.humanres.PayrollService;
 import in.vasista.vbiz.humanres.HumanresService;
 import in.vasista.vbiz.byproducts.ByProductServices;
 
-holidyDate = parameters.holiDayDate;
+holidyDate = parameters.holidayDate;
 organizaionId = parameters.orgPartyId;
 customTimePeriodId = parameters.customTimePeriodId;
 
@@ -52,5 +52,4 @@ if(UtilValidate.isNotEmpty(customTimePeriodId)){
 	//holidayList = [];
 	holidayDetails = delegator.findList("HolidayCalendar", condition , null, null, null, false );
 }
-
 context.put("holidayList",holidayDetails);

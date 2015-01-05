@@ -149,7 +149,7 @@ under the License.
          <field name="customTimePeriodId" title="Period Id">
              <drop-down allow-empty="true" no-current-selected-key="${timecustom}" >
                 <entity-options entity-name="CustomTimePeriod" key-field-name="customTimePeriodId" description="${periodName}: ${fromDate} - ${thruDate}" filter-by-date="false">
-                    <entity-constraint name="periodTypeId" operator="equals" value="FISCAL_YEAR"/>
+                    <entity-constraint name="periodTypeId" operator="equals" value="HR_YEAR"/>
                     <entity-order-by field-name="-thruDate"/>
                     <entity-order-by field-name="periodNum"/>
                 </entity-options>
@@ -164,7 +164,7 @@ under the License.
 				</entity-options>
 			</drop-down>
 		</field>
-		<field name="holiDayDate" id-name="holiDayDate" tooltip="${uiLabelMap.CommonRequired}" event="onclick" action="javascript:picker()"><text  size="12"/></field>
+		<field name="holidayDate" id-name="holidayDate" tooltip="${uiLabelMap.CommonRequired}" event="onclick" action="javascript:picker()"><text  size="12"/></field>
        	<field name="description"  title="Description" required-field="true"><text/></field>
        	
 		 <field name="searchButton" title="${uiLabelMap.CommonSubmit}" widget-style="smallSubmit"><submit button-type="button"/></field>

@@ -241,7 +241,7 @@
             </condition> 
         	<link target="busTimings"/>
         </menu-item>
-        <menu-item name="FindHoliday" title="HoliDay Entry Screen">
+        <menu-item name="FindHoliday" title="Holiday Entry Screen">
         	<condition>
             	<if-has-permission permission="HR"  action="_HOLIDAYENTRY_VIEW"/>
             </condition>

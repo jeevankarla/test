@@ -1,4 +1,8 @@
 
+jQuery(document).ready(function() {
+	picker();
+});
+
 function picker(){
 	jQuery("#fromDate").datepicker({
 			dateFormat:'dd/mm/yy',
@@ -16,12 +20,12 @@ function picker(){
 			jQuery("#thruDate").datepicker('setDate', selectedDate);
 		}
 	});
-	jQuery("#holiDayDate").datepicker({
+	jQuery("#holidayDate").datepicker({
 		dateFormat:'dd-mm-yy',
 		changeMonth: true,
 		numberOfMonths: 1,
 		onSelect: function(selectedDate) {
-			jQuery("#holiDayDate").datepicker('setDate', selectedDate);
+			jQuery("#holidayDate").datepicker('setDate', selectedDate);
 		}
 	});
-	}
+}

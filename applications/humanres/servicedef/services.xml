@@ -136,7 +136,7 @@ under the License.emplpunch
         <description>creates a new Holiday</description>
         <attribute name="customTimePeriodId" type="String" mode="IN" optional="true"/>
         <attribute name="orgPartyId" mode="IN" type="String"></attribute>
-        <attribute name="holiDayDate" mode="IN" type="String" optional="false"></attribute>
+        <attribute name="holidayDate" mode="IN" type="String" optional="false"></attribute>
         <attribute name="description" type="String" mode="IN" optional="false"></attribute>
     </service>
     <service name="updateLateMins" engine="java" default-entity-name="EmplDailyAttendanceDetail"

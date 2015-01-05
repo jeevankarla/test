@@ -1184,7 +1184,7 @@ public class HumanresService {
 
 	        String customTimePeriodId = (String)context.get("customTimePeriodId");
 	        String organizationPartyId = (String)context.get("orgPartyId");
-	        String holiDayDateStr = (String)context.get("holiDayDate");
+	        String holiDayDateStr = (String)context.get("holidayDate");
 	        Timestamp holiDayDate = null;
 	        String description = (String)context.get("description");
 	        
