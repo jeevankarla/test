@@ -2525,4 +2525,124 @@ public class MaterialPurchaseServices {
 		return result;
 	}
    	
+   	public static String amendPOItemEvent(HttpServletRequest request, HttpServletResponse response) {
+		Delegator delegator = (Delegator) request.getAttribute("delegator");
+		LocalDispatcher dispatcher = (LocalDispatcher) request.getAttribute("dispatcher");
+		DispatchContext dctx =  dispatcher.getDispatchContext();
+		Locale locale = UtilHttp.getLocale(request);
+		String effectiveDateStr = (String) request.getParameter("amendedDate");
+		Map<String, Object> result = ServiceUtil.returnSuccess();
+		HttpSession session = request.getSession();
+	    GenericValue userLogin = (GenericValue) session.getAttribute("userLogin");
+	    String reasonEnumId = (String) request.getParameter("reasonEnumId");
+	    String changeComments = (String) request.getParameter("changeComments");
+	    
+		Timestamp effectiveDate = null;
+		Map<String, Object> paramMap = UtilHttp.getParameterMap(request);
+		int rowCount = UtilHttp.getMultiFormRowCount(paramMap);
+		if (rowCount < 1) {
+			Debug.logError("No rows to process, as rowCount = " + rowCount, module);
+			return "error";
+		}
+		SimpleDateFormat sdf = new SimpleDateFormat("dd MMMM, yyyy");
+		effectiveDate = UtilDateTime.nowTimestamp();
+	  	if(UtilValidate.isNotEmpty(effectiveDateStr)){
+	  		try {
+	  			effectiveDate = new java.sql.Timestamp(sdf.parse(effectiveDateStr).getTime());
+		  	} catch (ParseException e) {
+		  		Debug.logError(e, "Cannot parse date string: " + effectiveDateStr, module);
+		  	} catch (NullPointerException e) {
+	  			Debug.logError(e, "Cannot parse date string: " + effectiveDateStr, module);
+		  	}
+	  	}
+	  	
+	  	try{
+	  		//
+		  	for (int i = 1; i < rowCount; i++) {
+				
+		  		String orderId = "";
+		        String orderItemSeqId = "";
+				String productId = "";
+		        String amendedPriceStr = "";
+		        String amendedQuantityStr= "";
+				BigDecimal amendedQuantity = BigDecimal.ZERO;
+				BigDecimal amendedPrice = BigDecimal.ZERO;
+				Map productQtyMap = FastMap.newInstance();
+				String thisSuffix = UtilHttp.MULTI_ROW_DELIMITER + i;
+				
+				if (paramMap.containsKey("orderId" + thisSuffix)) {
+					orderId = (String) paramMap.get("orderId" + thisSuffix);
+				}else {
+					request.setAttribute("_ERROR_MESSAGE_", "Missing order id");
+					return "error";			  
+				}
+				request.setAttribute("orderId",orderId);
+				if (paramMap.containsKey("orderItemSeqId" + thisSuffix)) {
+					orderItemSeqId = (String) paramMap.get("orderItemSeqId" + thisSuffix);
+				}else {
+					request.setAttribute("_ERROR_MESSAGE_", "Missing orderItemSeq Id");
+					return "error";			  
+				}
+				if (paramMap.containsKey("productId" + thisSuffix)) {
+					productId = (String) paramMap.get("productId" + thisSuffix);
+				}else {
+					request.setAttribute("_ERROR_MESSAGE_", "Missing product id");
+					return "error";			  
+				}
+			  
+				if (paramMap.containsKey("amendedQuantity" + thisSuffix)) {
+					amendedQuantityStr = (String) paramMap.get("amendedQuantity" + thisSuffix);
+				}
+						  
+				if(UtilValidate.isNotEmpty(amendedQuantityStr)){
+					amendedQuantity = new BigDecimal(amendedQuantityStr);
+				}
+				if (paramMap.containsKey("amendedPrice" + thisSuffix)) {
+					amendedPriceStr = (String) paramMap.get("amendedPrice" + thisSuffix);
+				}
+						  
+				if(UtilValidate.isNotEmpty(amendedPriceStr)){
+					amendedPrice = new BigDecimal(amendedPriceStr);
+				}
+				GenericValue orderItem = delegator.findOne("OrderItem", UtilMisc.toMap("orderId",orderId,"orderItemSeqId",orderItemSeqId), false);
+				//GenericValue orderItemChange = delegator.makeValue("OrderItemChange");
+				Map<String, Object> orderItemChange = FastMap.newInstance();
+				orderItemChange.put("userLogin", userLogin);
+                //
+				orderItemChange.put("quantity", orderItem.getBigDecimal("quantity"));
+				orderItemChange.put("unitPrice", orderItem.getBigDecimal("unitPrice"));
+				
+				orderItemChange.put("changeTypeEnumId", "ODR_ITM_AMEND");
+				orderItemChange.put("orderId", orderId);
+				orderItemChange.put("orderItemSeqId", orderItemSeqId);
+				
+				if(amendedQuantity.compareTo(BigDecimal.ZERO) !=0){
+					orderItemChange.put("quantity", amendedQuantity);
+				}
+				if(amendedPrice.compareTo(BigDecimal.ZERO) !=0){
+					orderItemChange.put("unitPrice", amendedPrice);
+				}
+				
+				orderItemChange.put("effectiveDatetime",effectiveDate);
+				orderItemChange.put("changeDatetime", UtilDateTime.nowTimestamp());
+				orderItemChange.put("changeUserLogin",userLogin.getString("userLoginId"));
+				orderItemChange.put("reasonEnumId", reasonEnumId);
+				orderItemChange.put("changeComments", changeComments);
+			    
+				Map resultMap = dispatcher.runSync("createOrderItemChange",orderItemChange);
+		        
+		        if (ServiceUtil.isError(resultMap)) {
+		        	Debug.logError("Problem creating order Item  change for orderId :"+orderId, module);
+					request.setAttribute("_ERROR_MESSAGE_", "Problem creating order Item  change for orderId :"+orderId);	
+					TransactionUtil.rollback();
+			  		return "error";
+		        }
+		        request.setAttribute("orderId",orderId);
+		  	}
+	  	}catch(Exception e){
+	  		
+	  	}
+	  	request.setAttribute("_EVENT_MESSAGE_", "Successfully Done");	
+		return "sucess";
+   	}
 }
