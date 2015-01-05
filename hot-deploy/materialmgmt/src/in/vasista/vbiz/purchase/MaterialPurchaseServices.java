@@ -2450,15 +2450,8 @@ public class MaterialPurchaseServices {
 			shipmentReceipt.put("statusId", statusId);
 			shipmentReceipt.store();
 			
-			List conditionList = FastList.newInstance();
-			/*conditionList.add(EntityCondition.makeCondition("shipmentId", EntityOperator.EQUALS, shipmentId));
-			conditionList.add(EntityCondition.makeCondition("shipmentItemSeqId", EntityOperator.EQUALS, shipmentItemSeqId));*/
-			conditionList.add(EntityCondition.makeCondition("receiptId", EntityOperator.EQUALS, receiptId));
-			EntityCondition condition = EntityCondition.makeCondition(conditionList, EntityOperator.AND);
-			List<GenericValue> inventoryItemDetails = delegator.findList("InventoryItemDetail", condition, null, null, null, false);
+			String inventoryItemId = shipmentReceipt.getString("inventoryItemId");
 			
-			
-			String inventoryItemId = (EntityUtil.getFirst(inventoryItemDetails)).getString("inventoryItemId");
 			Map createInvDetail = FastMap.newInstance();
 			createInvDetail.put("shipmentId", shipmentId);
 			createInvDetail.put("shipmentItemSeqId", shipmentItemSeqId);
@@ -2471,6 +2464,12 @@ public class MaterialPurchaseServices {
 			if (ServiceUtil.isError(result)) {
 				Debug.logError("Problem decrementing inventory for rejected quantity ", module);
 				return ServiceUtil.returnError("Problem decrementing inventory for rejected quantity");
+			}
+			
+			if(UtilValidate.isNotEmpty(statusId) && !statusId.equals("SR_REJECTED")){
+				GenericValue inventoryItem = delegator.findOne("InventoryItem", UtilMisc.toMap("inventoryItemId", inventoryItemId), false);
+				inventoryItem.set("ownerPartyId", "Company");
+				inventoryItem.store();
 			}
 			
 		} catch (Exception e) {
