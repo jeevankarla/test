@@ -522,14 +522,14 @@
 		</section>
 	</screen>
 	
-	<screen name="PurchaseOrderPDF">
+	<screen name="PurchaseOrderViewPDF">
 		<section>
 			<actions>
 				<property-map resource="OrderUiLabels" map-name="uiLabelMap" global="true"/>
 				<property-map resource="ProductUiLabels" map-name="uiLabelMap" global="true"/>
 				<property-map resource="PartyUiLabels" map-name="uiLabelMap" global="true"/>
 				<property-map resource="CommonUiLabels" map-name="uiLabelMap" global="true"/>
-				<script location="component://materialmgmt/webapp/materialmgmt/WEB-INF/actions/purchases/purchaseOrder.groovy"/> 
+				<script location="component://materialmgmt/webapp/materialmgmt/WEB-INF/actions/purchases/purchaseOrderView.groovy"/> 
 			</actions>
 			<widgets>
 				<section>
@@ -537,7 +537,7 @@
 						<platform-specific>
 						 	<xsl-fo>
 								<html-template
-								location="component://materialmgmt/webapp/materialmgmt/purchase/purchaseOrder.fo.ftl" />
+								location="component://materialmgmt/webapp/materialmgmt/purchase/purchaseOrderReport.fo.ftl" />
 							</xsl-fo>
 						</platform-specific>
 					</widgets>
@@ -553,7 +553,7 @@
 				<property-map resource="ProductUiLabels" map-name="uiLabelMap" global="true"/>
 				<property-map resource="PartyUiLabels" map-name="uiLabelMap" global="true"/>
 				<property-map resource="CommonUiLabels" map-name="uiLabelMap" global="true"/>
-				<script location="component://materialmgmt/webapp/materialmgmt/WEB-INF/actions/purchases/purchaseOrder.groovy"/> 
+				<script location="component://materialmgmt/webapp/materialmgmt/WEB-INF/actions/purchases/purchaseOrderView.groovy"/> 
 			</actions>
 		<widgets>
 			<section>

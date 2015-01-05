@@ -237,7 +237,7 @@ function makeDatePicker1(fromDateId ,thruDateId){
 		  </tr>
 		  		  
 		  <tr class="alternate-row"> 
-				<form id="PurchaseOrder" name="PurchaseOrder" mothed="post" action="<@ofbizUrl>PurchaseOrder.pdf</@ofbizUrl>" target="_blank">
+				<form id="PurchaseOrder" name="PurchaseOrder" mothed="post" action="<@ofbizUrl>PurchaseOrderView.pdf</@ofbizUrl>" target="_blank">
 				   <table class="basic-table" cellspacing="5">
 					  <tr class="alternate-row">
 					     <td width="20%"><span class='h3'>Purchase Order</span></td>

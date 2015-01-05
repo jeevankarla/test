@@ -73,7 +73,7 @@
         <!-- <field name="salesChannelEnumId"><display/></field> -->
         <field name="partyId" title="Supplier"><display description="${groovy:org.ofbiz.party.party.PartyHelper.getPartyName(delegator, partyId, false);} - [${partyId}]"/></field>
         <field name="poReport" widget-style="buttontext">
-            <hyperlink target="PurchaseOrder.pdf" description="Report" target-window="_blank">
+            <hyperlink target="PurchaseOrderView.pdf" description="Report" target-window="_blank">
                 <parameter param-name="orderId"/>
             </hyperlink>
         </field>
