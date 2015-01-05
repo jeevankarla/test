@@ -151,6 +151,10 @@ under the License.
       <SecurityGroup description="Allow to Access and enter daily bus timings in HumanRes Manager." groupId="HR_DAILYBUS_VIEW"/>
       <SecurityGroupPermission groupId="HR_DAILYBUS_VIEW" permissionId="HR_DAILYBUS_VIEW"/>
       
+      <SecurityPermission description="Allow to create New Holiday in HumanRes Manager." permissionId="HR_HOLIDAYENTRY_VIEW"/>  
+      <SecurityGroup description="Allow to create New Holiday in HumanRes Manager." groupId="HR_HOLIDAYENTRY_VIEW"/>
+      <SecurityGroupPermission groupId="HR_HOLIDAYENTRY_VIEW" permissionId="HR_HOLIDAYENTRY_VIEW"/>
+      
       <SecurityGroupPermission groupId="HUMANRES_ADMIN" permissionId="HR_EMPLLOOKUP_VIEW"/>
       <SecurityGroupPermission groupId="HUMANRES_ADMIN" permissionId="HR_EMPLPOSITION_VIEW"/>
       <SecurityGroupPermission groupId="HUMANRES_ADMIN" permissionId="HR_REPORTS_VIEW"/>
@@ -161,6 +165,7 @@ under the License.
       <SecurityGroupPermission groupId="HUMANRES_ADMIN" permissionId="HR_ATTENDANCE_VIEW"/>
       <SecurityGroupPermission groupId="HUMANRES_ADMIN" permissionId="HR_LEAVE_APPROVAL"/>
       <SecurityGroupPermission groupId="HUMANRES_ADMIN" permissionId="HR_DAILYBUS_VIEW"/>
+      <SecurityGroupPermission groupId="HUMANRES_ADMIN" permissionId="HR_HOLIDAYENTRY_VIEW"/>
       
       <SecurityGroupPermission groupId="FULLADMIN" permissionId="HR_EMPLLOOKUP_VIEW"/>
       <SecurityGroupPermission groupId="FULLADMIN" permissionId="HR_EMPLPOSITION_VIEW"/>
@@ -172,6 +177,7 @@ under the License.
       <SecurityGroupPermission groupId="FULLADMIN" permissionId="HR_ATTENDANCE_VIEW"/>
       <SecurityGroupPermission groupId="FULLADMIN" permissionId="HR_LEAVE_APPROVAL"/>
       <SecurityGroupPermission groupId="FULLADMIN" permissionId="HR_DAILYBUS_VIEW"/>
+      <SecurityGroupPermission groupId="FULLADMIN" permissionId="HR_HOLIDAYENTRY_VIEW"/>
       
       <SecurityGroupPermission groupId="BIZADMIN" permissionId="HR_EMPLLOOKUP_VIEW"/>
       <SecurityGroupPermission groupId="BIZADMIN" permissionId="HR_EMPLPOSITION_VIEW"/>
@@ -183,6 +189,7 @@ under the License.
       <SecurityGroupPermission groupId="BIZADMIN" permissionId="HR_ATTENDANCE_VIEW"/>
       <SecurityGroupPermission groupId="BIZADMIN" permissionId="HR_LEAVE_APPROVAL"/>
       <SecurityGroupPermission groupId="BIZADMIN" permissionId="HR_DAILYBUS_VIEW"/>
+      <SecurityGroupPermission groupId="BIZADMIN" permissionId="HR_HOLIDAYENTRY_VIEW"/>
       
       <!-- permission for water and electricity charges tab -->
       <SecurityPermission description="Allow to Access and enter water and electricity charges in HumanRes Manager." permissionId="WATER_ELECTR_VIEW"/>  
