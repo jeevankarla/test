@@ -625,7 +625,7 @@
    <request-map uri="updateQuotesStatusOfEnquiry">
        <security https="true" auth="true"/>
        <event type="java" path="in.vasista.vbiz.purchase.MaterialQuoteServices" invoke="updateQuotesStatusOfEnquiry" global-transaction="true"/>
-       <response name="success" type="view" value="QuoteForAcceptance"/>
+       <response name="success" type="view" value="QuoteForEvalution"/>
        <response name="error" type="view" value="QuoteForAcceptance"/>
    </request-map>
    
