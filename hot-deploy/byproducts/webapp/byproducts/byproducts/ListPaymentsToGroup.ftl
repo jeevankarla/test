@@ -32,8 +32,9 @@ under the License.
     function datepick()
 	{		
 	
-		$( "#paymentDate" ).datepicker({
+		$( "#paymentDate" ).datetimepicker({
 			dateFormat:'dd MM, yy',
+			timeFormat: 'hh:mm:ss',
 			changeMonth: true,
 			maxDate:0,
 			numberOfMonths: 1});

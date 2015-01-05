@@ -700,7 +700,7 @@
         		<list-options key-name="finAccountId" list-name="finAccountList" description="${finAccountName}"/>
         	</drop-down>
         </field>
-        <!-- <field name="paymentDate"><date-time/></field> -->
+        <field name="paymentDate"><date-time/></field>
         <field name="hideSearch"><hidden value="Y"/></field>
         <field name="submitButton" title="${uiLabelMap.CommonFind}" widget-style="smallSubmit"><submit button-type="button"/></field>
     </form>

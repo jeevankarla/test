@@ -28,9 +28,12 @@ if(hideSearch == "Y"){
 	dayStart = null;
 	dayEnd = null;
 	if(paymentDate){
-		dayStart = UtilDateTime.getDayStart(paymentDate);
-		dayEnd = UtilDateTime.getDayEnd(paymentDate);
-		
+		SimpleDateFormat sdfo = new SimpleDateFormat("yyyy-MM-dd");
+		try {
+		fromDateTs = new java.sql.Timestamp(sdfo.parse(paymentDate).getTime());	} catch (ParseException e) {
+		}
+		dayStart = UtilDateTime.getDayStart(fromDateTs);
+		dayEnd = UtilDateTime.getDayEnd(fromDateTs);
 	}else{
 		dayStart = UtilDateTime.getDayStart(UtilDateTime.nowTimestamp());
 		dayEnd = UtilDateTime.getDayEnd(UtilDateTime.nowTimestamp());
@@ -85,6 +88,6 @@ if(hideSearch == "Y"){
 	}
 	context.paymentDetailsList = paymentDetailsList;
 	
-	
+	paymentDate = null;
 }
 
