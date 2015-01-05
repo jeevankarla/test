@@ -2114,6 +2114,27 @@ public class MaterialPurchaseServices {
 		
 		try {
 				
+			List conList= FastList.newInstance();
+     		conList.add(EntityCondition.makeCondition("orderId", EntityOperator.EQUALS ,orderId));
+     		conList.add(EntityCondition.makeCondition("roleTypeId", EntityOperator.EQUALS , "BILL_FROM_VENDOR"));
+     		EntityCondition cond=EntityCondition.makeCondition(conList,EntityOperator.AND);
+			List<GenericValue> orderRoles = delegator.findList("OrderRole", cond, null, null, null, false);
+			if(UtilValidate.isNotEmpty(orderRoles)){
+				GenericValue orderRole = EntityUtil.getFirst(orderRoles); 
+				String oldPartyId = orderRole.getString("partyId");
+				if(UtilValidate.isEmpty(billFromPartyId)){
+					billFromPartyId=partyId;
+				}
+				if(!billFromPartyId.equals(oldPartyId)){
+					delegator.removeAll(orderRoles);
+					GenericValue roleOrder = delegator.makeValue("OrderRole");   
+					roleOrder.set("orderId", orderId);
+					roleOrder.set("partyId", billFromPartyId);
+					roleOrder.set("roleTypeId", "BILL_FROM_VENDOR");
+					delegator.createOrStore(roleOrder);
+				}
+			}
+			
 			GenericValue orderHeader = delegator.findOne("OrderHeader", UtilMisc.toMap("orderId", orderId), false);
 			
 			orderHeader.set("orderTypeId", orderTypeId);

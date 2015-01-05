@@ -61,18 +61,24 @@ if(orderHeader && orderHeader.statusId == "ORDER_CREATED"){
 	orderInfoDetail.putAt("refNo", refNo);
 	
 	conditionList.add(EntityCondition.makeCondition("orderId", EntityOperator.EQUALS, orderId));
-	conditionList.add(EntityCondition.makeCondition("roleTypeId", EntityOperator.EQUALS, "BILL_FROM_VENDOR"));
+	conditionList.add(EntityCondition.makeCondition("roleTypeId", EntityOperator.EQUALS, "SUPPLIER_AGENT"));
 	condition = EntityCondition.makeCondition(conditionList, EntityOperator.AND);
 	orderRoles = delegator.findList("OrderRole", condition, null, null, null, false);
-	
 	orderRole = EntityUtil.getFirst(orderRoles);
-	//Debug.log("orderRole==================="+orderRole);
-	
 	if(orderRole){
 		partyName = PartyHelper.getPartyName(delegator, orderRole.partyId, false);
 		orderInfoDetail.putAt("supplierId", orderRole.partyId);
 		orderInfoDetail.putAt("supplierName", partyName);
-		orderInfoDetail.putAt("billToPartyId", orderRole.partyId);
+	}
+	condList=[];
+	condList.add(EntityCondition.makeCondition("orderId", EntityOperator.EQUALS, orderId));
+	condList.add(EntityCondition.makeCondition("roleTypeId", EntityOperator.EQUALS, "BILL_FROM_VENDOR"));
+	cond = EntityCondition.makeCondition(condList, EntityOperator.AND);
+	orderPartys = delegator.findList("OrderRole", cond, null, null, null, false);
+	orderParty = EntityUtil.getFirst(orderPartys);
+	if(orderParty){
+		orderInfoDetail.putAt("billToPartyId", orderParty.partyId);
+		
 	}
 	orderEditParamMap.putAt("orderHeader", orderInfoDetail);
 	orderAdjustments = delegator.findList("OrderAdjustment", EntityCondition.makeCondition("orderId", EntityOperator.EQUALS, orderId), null, null, null, false);
@@ -181,3 +187,4 @@ if(orderHeader && orderHeader.statusId == "ORDER_CREATED"){
 }
 Debug.log("orderEditParamMap ############################"+orderEditParamMap);
 context.orderEditParam = orderEditParamMap;
+
