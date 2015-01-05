@@ -184,6 +184,7 @@ under the License.
     <SecurityPermission description="For Viewing The PayrollReports Screen." permissionId="HR_PAYROLL_REPORTS_VIEW"/>
     <SecurityPermission description="For Viewing The StatutoryReports Screen." permissionId="HR_STATT_REPORTS_VIEW"/>
     <SecurityPermission description="For Viewing The SupplyPayrollReports Screen." permissionId="HR_SUPPAYROLL_REPORTS_VIEW"/>
+    <SecurityPermission description="For Viewing The CheckListReports Screen." permissionId="HR_CHECK_LISTS_VIEW"/>
     
     <SecurityGroup description="For Viewing The LeaveReports Screen." groupId="HR_LEAVEREPORTSVIEW"/>
     <SecurityGroupPermission groupId="HR_LEAVEREPORTSVIEW" permissionId="HR_LEAVE_REPORTS_VIEW"/>
@@ -226,6 +227,12 @@ under the License.
     <SecurityGroupPermission groupId="FULLADMIN" permissionId="HR_LOAN_REPORTS_VIEW"/>
     <SecurityGroupPermission groupId="HR_REPORTSVIEW" permissionId="HR_LOAN_REPORTS_VIEW"/>
     <SecurityGroupPermission groupId="HUMANRES_ADMIN" permissionId="HR_LOAN_REPORTS_VIEW"/>
+    
+    <SecurityGroup description="For Viewing The CheckListReports Screen." groupId="HR_CHECKLISTSVIEW"/>
+    <SecurityGroupPermission groupId="HR_CHECKLISTSVIEW" permissionId="HR_CHECK_LISTS_VIEW"/>
+    <SecurityGroupPermission groupId="FULLADMIN" permissionId="HR_CHECK_LISTS_VIEW"/>
+    <SecurityGroupPermission groupId="HR_REPORTSVIEW" permissionId="HR_CHECK_LISTS_VIEW"/>
+    <SecurityGroupPermission groupId="HUMANRES_ADMIN" permissionId="HR_CHECK_LISTS_VIEW"/>
     
     <SecurityGroup description="Loan deleting" groupId="HR_LOAN_DELETE"/>
     <SecurityGroupPermission groupId="FULLADMIN" permissionId="HR_LOAN_DELETE"/>
