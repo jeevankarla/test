@@ -222,6 +222,7 @@ if(UtilValidate.isNotEmpty(reportTypeFlag) && reportTypeFlag == "InvoiceSalesAbs
 									invoiceDate = invoice.getValue().invoiceDateStr;
 								}
 								invoiceDetails = delegator.findOne("Invoice",[invoiceId : invoiceId] , false);
+								invoiceDate = invoiceDetails.invoiceDate;
 								invoicePartyId = invoiceDetails.partyId;
 								partyIdentificationDetails = delegator.findOne("PartyIdentification", [partyId : invoicePartyId, partyIdentificationTypeId : "TIN_NUMBER"], false);
 								if(UtilValidate.isNotEmpty(partyIdentificationDetails)){
@@ -263,7 +264,7 @@ if(UtilValidate.isNotEmpty(reportTypeFlag) && reportTypeFlag == "InvoiceSalesAbs
 										cxt.put("userLogin", userLogin);
 										cxt.put("productId", invoiceItem.productId);
 										cxt.put("partyId", invoicePartyId);
-										cxt.put("priceDate", UtilDateTime.nowTimestamp());
+										cxt.put("priceDate", invoiceDate);
 										cxt.put("productStoreId", "_NA_");
 										cxt.put("productPriceTypeId", "MRP_IS");
 										cxt.put("geoTax", "VAT");
