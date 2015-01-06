@@ -670,7 +670,7 @@
                
                 <entity-condition list="customTimePeriodList" entity-name="CustomTimePeriod">
                 	<condition-list combine="or">
-                		<condition-expr field-name="periodTypeId" operator="equals" value="HR_QUARTER"/>
+                		<condition-expr field-name="periodTypeId" operator="equals" value="RATE_QUARTER"/>
                 		<condition-expr field-name="periodTypeId" operator="equals" value="HR_LEAVEENCASH"/>         
                 		<condition-expr field-name="periodTypeId" operator="equals" value="HR_DAARREARS"/>               	
                 	</condition-list>
