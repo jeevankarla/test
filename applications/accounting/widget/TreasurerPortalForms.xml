@@ -1688,5 +1688,83 @@ under the License.
             </hyperlink>
         </field>
     </form>
-    
+     <form name="FindPaymentGroups" title="" type="single" target="findGroupPayment" header-row-style="header-row" default-table-style="basic-table">
+        
+        <field name="paymentGroupTypeId" title="Bill Type">
+        	<drop-down allow-empty="false" >
+        		<list-options key-name="roleTypeId" list-name="roleTypes" description="${description}"/>
+        	</drop-down>
+        </field>
+        <field name="finAccountId" title="Issuing Authority">
+        	<drop-down allow-empty="true">
+        		<list-options key-name="finAccountId" list-name="finAccountList" description="${finAccountName}"/>
+        	</drop-down>
+        </field>
+       <field name="statusId" ><hidden value="PAYGRP_CREATED"/></field>
+        <field name="paymentRefNum"><text-find/></field>
+       <field name="paymentMethodTypeId"><text-find/></field>
+       <field name="amount"><text-find/></field>
+        <field name="paymentDate"><date-find/></field>
+        <field name="hideSearch"><hidden value="Y"/></field>
+        <field name="submitButton" title="${uiLabelMap.CommonFind}" widget-style="smallSubmit"><submit button-type="button"/></field>
+    </form>
+    <form name="ListPaymentGroups" type="list" list-name="listIt" paginate-target="findGroupPayment"
+        odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
+        <actions>
+            <service service-name="performFind" result-map="result" result-map-list="listIt">
+                <field-map field-name="inputFields" from-field="parameters"/>
+                <field-map field-name="entityName" value="PaymentGroup"/>
+                <field-map field-name="orderBy" from-field="parameters.sortField" value="-paymentDate"/>
+                <field-map field-name="viewIndex" from-field="viewIndex"/>
+                <field-map field-name="viewSize" from-field="viewSize"/>
+            </service>
+        </actions>
+        <field name="paymentGroupId" ><display/></field>
+        <field name="paymentGroupTypeId"><display-entity entity-name="PaymentGroupType" key-field-name="paymentGroupTypeId" description="${description}"/></field>
+        <field name="paymentMethodTypeId" ><display-entity entity-name="PaymentMethodType" key-field-name="paymentMethodTypeId" description="${description}"/></field>
+        <field name="paymentDate" ><display description="${groovy:org.ofbiz.base.util.UtilDateTime.toDateString(paymentDate, &quot;dd/MM/yyyy&quot;);}"/></field>
+        <field name="paymentRefNum" title="Cheque No."><display/></field>
+        <field name="issuingAuthority"><display/></field>
+        <field name="amount" ><display/></field>
+        <field name="viewDetails" widget-style="buttontext" >
+            <hyperlink target="javascript: paymentDetails('${paymentGroupId}');" description="View Detail" target-type="plain">
+            </hyperlink>
+        </field>
+        <field use-when="paymentMethodTypeId.equals(&quot;CHEQUE_PAYIN&quot;)" name="Print Cheque" widget-style="buttontext" >
+            <hyperlink target="printPayGroupCheque.pdf" description="Print" target-window="_blank">
+               	  <parameter param-name="paymentGroupId" />
+            </hyperlink>
+        </field>
+        <field name="Print Voucher" widget-style="buttontext" >
+            <hyperlink target="printPayGroupVoucher.pdf" description="Voucher" target-window="_blank">
+               	  <parameter param-name="paymentGroupId" />
+            </hyperlink>
+        </field>
+        <field name="AbstractVoucher" widget-style="buttontext" >
+            <hyperlink target="printPayGroupVoucherAbstract.pdf" description="Abstract Voucher" target-window="_blank">
+               	  <parameter param-name="paymentGroupId" />
+            </hyperlink>
+        </field> 
+        <field use-when="${groovy:((security.hasEntityPermission(&quot;BATCHPAY&quot;, &quot;_CREATE&quot;, session)))}" name="cancelBatch" widget-style="buttontext">
+            <hyperlink target="cancelPaymentGrouping" description="Cancel">
+	            <parameter param-name="paymentGroupId"/>
+            </hyperlink>
+        </field> 
+    </form>
+    <form name="FindPaymentsForGrouping" title="" type="single" target="${targetRequest}" header-row-style="header-row" default-table-style="basic-table">
+        
+        <field name="roleTypeId" title="Bill Type">
+        	<drop-down allow-empty="false" >
+        		<list-options key-name="roleTypeId" list-name="roleTypes" description="${description}"/>
+        	</drop-down>
+        </field>
+        <field name="finAccountId" title="FinAccount">
+        	<drop-down allow-empty="false">
+        		<list-options key-name="finAccountId" list-name="finAccountList" description="${finAccountName}"/>
+        	</drop-down>
+        </field>
+        <field name="paymentDate"><date-time/></field>
+        <field name="hideSearch"><hidden value="Y"/></field>
+        <field name="submitButton" title="${uiLabelMap.CommonFind}" widget-style="smallSubmit"><submit button-type="button"/></field>
+    </form> 
 </forms>

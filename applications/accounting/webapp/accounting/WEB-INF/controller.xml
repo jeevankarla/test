@@ -2588,6 +2588,41 @@ under the License.
         <security https="true" auth="true"/>
         <response name="success" type="view" value="PartyFinHistory"/>
     </request-map>
+     <request-map uri="GroupPaymentNew">
+     	<security https="true" auth="true"/>     	
+        <response name="success" type="view" value="GroupPaymentNew"/>
+        <response name="error" type="view" value="GroupPaymentNew"/>
+    </request-map>
+     <request-map uri="findGroupPayment">
+     	<security https="true" auth="true"/>     	
+        <response name="success" type="view" value="FindGroupPayment"/>
+        <response name="error" type="view" value="FindGroupPayment"/>
+    </request-map>
+     <request-map uri="cancelPaymentGrouping">
+    	<security https="true" auth="true"/>
+    	<event type="service" path="" invoke="cancelPaymentGrouping" />    	
+    	<response name="success" type="request-redirect-noparam" value="findGroupPayment"/>
+    	<response name="error" type="request-redirect-noparam" value="findGroupPayment"/>    	
+    </request-map>
+     <request-map uri="printPayGroupVoucherAbstract.pdf">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="PrintPayGroupVoucherAbstract"/>
+     </request-map>
+    <request-map uri="printPayGroupVoucher.pdf">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="PrintPayGroupVoucher"/>
+    </request-map>
+  <request-map uri="printPayGroupCheque.pdf">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="PrintPayGroupCheque"/>
+    </request-map>
+    <request-map uri="processGroupPaymentDeposit">
+     	<security https="true" auth="true"/>
+     	<event type="java"  path="in.vasista.vbiz.byproducts.ByProductServices" invoke="processGroupPaymentDeposit" global-transaction="true"/>     	
+        <response name="success" type="request-redirect-noparam" value="GroupPaymentNew"/>
+        <response name="error" type="request-redirect-noparam" value="GroupPaymentNew"/>
+    </request-map>
+    
     <!--=================Cost calculation request===============-->
     <!--<request-map uri="EditCostCalcs">
         <security https="true" auth="true"/>
@@ -4054,6 +4089,11 @@ under the License.
    
    <view-map name="AdvancesReport" type="screenfop" page="component://accounting/widget/TreasurerPortalScreens.xml#AdvancesReport" content-type="application/pdf" encoding="none"/>
    <view-map name="SubLedgerReport" type="screenfop" page="component://accounting/widget/TreasurerPortalScreens.xml#SubLedgerReport" content-type="application/pdf" encoding="none"/>
-    
+   <view-map name="GroupPaymentNew" type="screen" page="component://accounting/widget/TreasurerPortalScreens.xml#GroupPaymentNew"/>
+   <view-map name="FindGroupPayment" type="screen" page="component://accounting/widget/TreasurerPortalScreens.xml#FindGroupPayment"/>
+   <view-map name="PrintPayGroupVoucherAbstract" type="screenfop" page="component://accounting/widget/TreasurerPortalScreens.xml#PrintPayGroupVoucherAbstract" content-type="application/pdf" encoding="none"/>  
+   <view-map name="PrintPayGroupVoucher" type="screenfop" page="component://accounting/widget/TreasurerPortalScreens.xml#PrintPayGroupVoucher" content-type="application/pdf" encoding="none"/>
+   <view-map name="PrintPayGroupCheque" type="screenfop" page="component://accounting/widget/TreasurerPortalScreens.xml#PrintPayGroupCheque" content-type="application/pdf" encoding="none"/> 
+   
    <!-- end of view mappings -->
 </site-conf>

@@ -164,6 +164,7 @@ function reportTypeChangeFunc() {
 	    makeDatePicker("subLedgerFromDate","subLedgerThruDate");
 	    makeDatePicker("TrlLedgerFromDate","TrlLedgerThruDate");
 	    makeDatePicker("glLedgerFromDate","glLedgerThruDate");
+	    makeDatePicker("PFHFromDateCrDr","PFHThruDateCrDr");
 	    
 		
 		$('#ui-datepicker-div').css('clip', 'auto');		
@@ -261,6 +262,17 @@ function reportTypeChangeFunc() {
 					<input type="submit" value="CSV" onClick="javascript:appendParams('BankReconciliationReports', '<@ofbizUrl>FinAccountTransForReconsile.csv</@ofbizUrl>');" class="buttontext"/></td>         			
 				</form>
               </tr>
+               <tr class="alternate-row">
+			      	   <form id="PartyFinancialHistoryWithDrCr" name="PartyFinancialHistoryWithDrCr" method="post" action="<@ofbizUrl>PartyFinancialHistoryWithDrCr.pdf</@ofbizUrl>" target="_blank">        
+			             <td width="30%">Party Financial History With Dr/Cr</td>
+			             <td width="15%">From<input  type="text" size="15pt" id="PFHFromDateCrDr" readonly  name="fromDate"/></td>
+			      		 <td width="15%">Thru<input  type="text" size="15pt" id="PFHThruDateCrDr" readonly  name="thruDate"/></td>
+			             <td width="20%">Party Code<@htmlTemplate.lookupField size="10" maxlength="22" formName="PartyFinancialHistoryWithDrCr" name="partyId" id="partyId" fieldFormName="LookupPartyName"/>
+			            <#--> <input type="text" name="partyId" id="partyId" size="10" maxlength="22"> --></td>
+			             <td width="15%"></td>
+			             <td width="10%"><input type="submit" value="Download" class="buttontext"/></td>
+			           </form>
+			        </tr>
               	
               
               <tr class="alternate-row">
@@ -358,13 +370,13 @@ function reportTypeChangeFunc() {
 </div>
 <div class="screenlet">
     <div class="screenlet-title-bar">
-      <h3>Accounting Transactions History Report</h3>
+      <h3>General ledger History Report</h3>
     </div>
     <div class="screenlet-body">
       <table class="basic-table hover-bar h3" style="border-spacing: 0 10px;" >  
        	<tr> 
       	   <form id="GlLedgerReport" name="GlLedgerReport" method="post" action="<@ofbizUrl>AcctgTransEntriesSearchResultsNewPdf.pdf</@ofbizUrl>" target="_blank">	
-      		  	<td width="30%">Transaction History Report<input type="hidden" name="reportType" value="byAccount"/></td>
+      		  	<td width="30%">GL History Report<input type="hidden" name="reportType" value="byAccount"/></td>
 				<#-- <td width="25%">From<input  type="text" size="18pt" id="glLedgerFromDate" readonly  name="fromDate"/></td>
 				<td width="25%">To<input  type="text" size="18pt" id="glLedgerThruDate" readonly  name="thruDate"/></td>-->
       		  	  <td width="50%">CustomTimePeriod

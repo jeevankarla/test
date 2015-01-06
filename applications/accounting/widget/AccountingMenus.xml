@@ -2145,6 +2145,16 @@
 			<link target="FindTreasurerPayments">
 			</link>
 		</menu-item>
+		<menu-item name="GroupPaymentNew" title="Batch Payments">
+        	<condition>
+				<or>
+            		<if-has-permission permission="BATCHPAY"  action="_CREATE"/>
+            		<if-has-permission permission="BATCHPAY"  action="_CHECK"/>
+            	</or>
+            </condition>
+            <link target="GroupPaymentNew">
+            </link>
+        </menu-item> 
 		<menu-item name="Reports" title="Reports">
 		     <condition>
 				<or>
