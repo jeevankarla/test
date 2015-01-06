@@ -208,6 +208,10 @@
       		</hyperlink>
         </field>
         <field name="vehicleId" title="Vehicle No"><display/></field>
+        <field name="linkGrnWithPO" widget-style="buttontext" title="Link GRN With PO" use-when="&quot;${primaryOrderId}&quot;==&quot;&quot;" >
+            <hyperlink target-type="plain" target="javascript:showLinkGrnWithPOForm('${shipmentId}');" description="Link GRN With PO">
+            </hyperlink>
+        </field> 
         <field name="raiseInvoice" widget-style="buttontext" title="Raise Invoice" use-when="(&quot;${invSize}&quot; == &quot;0&quot;)&amp;&amp;(!statusId.equals(&quot;SHIPMENT_CANCELLED&quot;))">
             <hyperlink target="MaterialInvoiceInit" description="Invoice">
                 <parameter param-name="shipmentId"/>

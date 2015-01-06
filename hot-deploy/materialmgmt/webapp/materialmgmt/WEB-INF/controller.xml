@@ -293,7 +293,7 @@
        <response name="success" type="view" value="FindGRNShipments"/>
        <response name="error" type="view" value="FindGRNShipments"/>
      </request-map>
-     
+        
      <request-map uri="processCustRequestItems">
        <security https="true" auth="true"/>
        <event type="java" path="in.vasista.vbiz.purchase.MaterialRequestServices" invoke="processCustRequestItems" global-transaction="true"/>
@@ -307,6 +307,19 @@
        <response name="success" type="request-redirect-noparam" value="FindMaterialInvoices"/>
        <response name="error" type="view" value="FindMaterialInvoices"/>
      </request-map>
+     
+     <request-map uri="LinkGRNWithPO">
+       <security https="true" auth="true"/>
+       <response name="success" type="view" value="LinkGRNWithPO"/>
+       <response name="error" type="view" value="LinkGRNWithPO"/>
+     </request-map>
+     <request-map uri="processUpdateGRNWithPO">
+       <security https="true" auth="true"/>
+       <event type="java" path="in.vasista.vbiz.purchase.MaterialPurchaseServices" invoke="processUpdateGRNWithPO" global-transaction="true"/>
+       <response name="success" type="request-redirect-noparam" value="FindGRNShipments"/>
+       <response name="error" type="view" value="FindGRNShipments"/>
+     </request-map>
+     
      
      <request-map uri="CustRequestEntry">
        <security https="true" auth="true"/>

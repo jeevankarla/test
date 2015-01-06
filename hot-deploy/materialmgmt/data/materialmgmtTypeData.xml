@@ -123,4 +123,15 @@
      <OrderAssocType  description="CPC Order"  orderAssocTypeId="CPC_ORDER"/>
      <OrderAssocType  description="Purchase Order"  orderAssocTypeId="PURCHASE_ORDER"/>
      
+     <!-- data for sequence -->
+    <Enumeration enumId="PURCHASE_OR_STORES" enumTypeId="TENANTCONF_TYPE" sequenceId="1" description="Stores Or Purchase Tenant Configurations"/>
+	<TenantConfiguration  description="Enable GRN Sequence Functionality"  propertyName="enableGRNSequence" propertyTypeEnumId="PURCHASE_OR_STORES" propertyValue="Y"/>
+	
+	<EnumerationType description="CUSTOM SEQUENCE NUMBER" enumTypeId="CUSTOM_SEQ_NUM"/> 
+    <Enumeration description="GRN SEQUENCE" enumCode="GRN SEQUENCE" enumId="GRN_SEQUENCE" enumTypeId="CUSTOM_SEQ_NUM"/>
+    <!--  
+    <Enumeration description="PURCHASE ORDER SEQUENCE" enumCode="PO SEQUENCE" enumId="PO_SEQUENCE" enumTypeId="CUSTOM_SEQ_NUM"/> 
+    <Enumeration description="PURCHASE INVOICE SEQUENCE" enumCode="PUR INV SEQUENCE" enumId="PURINV_SEQUENCE" enumTypeId="CUSTOM_SEQ_NUM"/>  -->
+    
+     
 </entity-engine-xml>

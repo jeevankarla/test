@@ -210,7 +210,6 @@ public class MaterialPurchaseServices {
 			supplierId = (EntityUtil.getFirst(orderRole)).getString("partyId");
 			
 			
-			
 			for (int i = 0; i < rowCount; i++) {
 				
 				String productId = "";
@@ -302,7 +301,14 @@ public class MaterialPurchaseServices {
 				
 				List<GenericValue> filterProdFacility = EntityUtil.filterByCondition(productsFacility, EntityCondition.makeCondition("productId", EntityOperator.EQUALS, productId));
 				GenericValue facilityProd = EntityUtil.getFirst(filterProdFacility);
-				
+				//Product should mapped to any one of facility
+				 if (UtilValidate.isEmpty(facilityProd)) {
+			        	Debug.logError("Problem creating shipment Item for ProductId :"+productId+" Not Mapped To Store Facility !", module);
+						request.setAttribute("_ERROR_MESSAGE_", "Problem creating shipment Item for ProductId :"+productId+" Not Mapped To Store Facility!");	
+						TransactionUtil.rollback();
+				  		return "error";
+			        }
+				 
 				Map inventoryReceiptCtx = FastMap.newInstance();
 				
 				inventoryReceiptCtx.put("userLogin", userLogin);
@@ -340,7 +346,7 @@ public class MaterialPurchaseServices {
 					shipmentReceipt.set("shipmentItemSeqId", shipmentItemSeqId);
 					shipmentReceipt.store();
 				}
-
+             
 			}
 			
 		}
@@ -2524,8 +2530,7 @@ public class MaterialPurchaseServices {
 		result.put("orderId", orderId);
 		return result;
 	}
-   	
-   	public static String amendPOItemEvent(HttpServletRequest request, HttpServletResponse response) {
+ 	public static String amendPOItemEvent(HttpServletRequest request, HttpServletResponse response) {
 		Delegator delegator = (Delegator) request.getAttribute("delegator");
 		LocalDispatcher dispatcher = (LocalDispatcher) request.getAttribute("dispatcher");
 		DispatchContext dctx =  dispatcher.getDispatchContext();
@@ -2645,4 +2650,119 @@ public class MaterialPurchaseServices {
 	  	request.setAttribute("_EVENT_MESSAGE_", "Successfully Done");	
 		return "sucess";
    	}
+   public static String processUpdateGRNWithPO(HttpServletRequest request, HttpServletResponse response) {
+		
+		Delegator delegator = (Delegator) request.getAttribute("delegator");
+		LocalDispatcher dispatcher = (LocalDispatcher) request.getAttribute("dispatcher");
+		DispatchContext dctx =  dispatcher.getDispatchContext();
+		Locale locale = UtilHttp.getLocale(request);
+		Map<String, Object> result = ServiceUtil.returnSuccess();
+	    String grnId = (String) request.getParameter("grnId");
+	    String orderId = (String) request.getParameter("orderId");
+	    String shipmentId = (String) request.getParameter("shipmentId");
+	    List productList = FastList.newInstance();
+	    List<String> shipmentProductList = FastList.newInstance();
+	    String supplierId="";
+		/*List<Map> prodQtyList = FastList.newInstance();*/
+	    //update Shipment
+	    boolean beganTransaction = false;
+		try{
+			beganTransaction = TransactionUtil.begin(7200);
+		GenericValue shipment = delegator.findOne("Shipment", UtilMisc.toMap("shipmentId", shipmentId), false);
+		if(UtilValidate.isNotEmpty(shipment)){
+			shipment.set("primaryOrderId", orderId);
+			shipment.store();
+		}
+		Debug.log("orderId=="+orderId+"==shipmentId=="+shipmentId);
+		if(UtilValidate.isEmpty(shipmentId) && UtilValidate.isEmpty(orderId)){
+			Debug.logError("PurchaseOrderId or shipmentId can not be empty !", module);
+			request.setAttribute("_ERROR_MESSAGE_", "PurchaseOrderId  or shipmentId can not be empty !"+shipmentId);	
+			TransactionUtil.rollback();
+	  		return "error";
+		}
+	    //get OrderItem to update ShipmentReceipt
+        List<GenericValue> orderItems = FastList.newInstance();
+		if(UtilValidate.isNotEmpty(orderId)){
+			orderItems = delegator.findList("OrderItem", EntityCondition.makeCondition("orderId", EntityOperator.EQUALS, orderId), null, null, null, false);
+			productList = EntityUtil.getFieldListFromEntityList(orderItems, "productId", true);
+			if(UtilValidate.isEmpty(orderItems)){
+				Debug.logError("No Items for the selected PO number : "+orderId, module);
+				request.setAttribute("_ERROR_MESSAGE_", "No Items for the selected PO number : "+orderId);	
+				TransactionUtil.rollback();
+		  		return "error";
+			}
+		}
+		List<GenericValue> shipmentReceipts = FastList.newInstance();
+		if(UtilValidate.isNotEmpty(shipmentId)){
+			shipmentReceipts = delegator.findList("ShipmentReceipt", EntityCondition.makeCondition("shipmentId", EntityOperator.EQUALS, shipmentId), null, null, null, false);
+			shipmentProductList = EntityUtil.getFieldListFromEntityList(shipmentReceipts, "productId", true);
+			if(UtilValidate.isEmpty(shipmentReceipts)){
+				Debug.logError("No Receipts for the Shipment : "+shipmentId, module);
+				request.setAttribute("_ERROR_MESSAGE_", "No Receipts for the Shipment  : "+shipmentId);	
+				TransactionUtil.rollback();
+		  		return "error";
+			}
+		}
+		//comparing PO items against shipment items if any mismatch throw an error
+		if(shipmentProductList.size()==productList.size()){
+			for(String shipmentProductId:shipmentProductList){
+				if(!productList.contains(shipmentProductId)){
+					Debug.logError("GRN shipment product Id : "+shipmentProductId+" not exists in seleced PO number:"+orderId, module);
+					request.setAttribute("_ERROR_MESSAGE_", "GRN shipment product Id : "+shipmentProductId+" not exists in seleced PO number:"+orderId);	
+					TransactionUtil.rollback();
+			  		return "error";
+				}
+			}
+		}else{
+			Debug.logError("GRN shipment Items :"+shipmentProductList.size()+" not matched with the seleced PO Items:"+productList.size(), module);
+			request.setAttribute("_ERROR_MESSAGE_", "GRN shipment Items :"+shipmentProductList.size()+" not matched with the seleced PO Items:"+productList.size());	
+			TransactionUtil.rollback();
+	  		return "error";
+		}
+		
+		for (GenericValue orderItem : orderItems) {
+			//if(UtilValidate.isNotEmpty(orderItem)){
+				String productId=orderItem.getString("productId");
+				BigDecimal unitCost=orderItem.getBigDecimal("unitPrice");
+				String orderItemSeqId=orderItem.getString("orderItemSeqId");
+				//update shipmentReceiptItem
+				List<GenericValue> filterShipmentReceiptList = EntityUtil.filterByCondition(shipmentReceipts, EntityCondition.makeCondition("productId", EntityOperator.EQUALS, productId));
+				GenericValue shipmentReceipt = EntityUtil.getFirst(filterShipmentReceiptList);
+				
+				if(UtilValidate.isEmpty(filterShipmentReceiptList)){
+					Debug.logError("PO ProductId "+ productId +" not found in given MRN  ! ", module);
+					request.setAttribute("_ERROR_MESSAGE_", "PO ProductId "+ productId +" not found in given MRN  !" );	
+					TransactionUtil.rollback();
+			  		return "error";
+				}
+				
+				if(UtilValidate.isNotEmpty(shipmentReceipt)){
+				shipmentReceipt.set("orderId", orderId);
+				shipmentReceipt.set("orderItemSeqId", orderItemSeqId);
+				shipmentReceipt.store();
+				//update inventory
+				GenericValue inventoryItem = delegator.findOne("InventoryItem", UtilMisc.toMap("inventoryItemId", shipmentReceipt.getString("inventoryItemId")), false);
+				if(UtilValidate.isNotEmpty(inventoryItem)){
+					inventoryItem.set("unitCost", unitCost);
+					inventoryItem.store();
+				} 
+				}
+		     }
+		}catch (GenericEntityException e) {
+			try {
+				TransactionUtil.rollback(beganTransaction, "Error Fetching data", e);
+	  		} catch (GenericEntityException e2) {
+	  			Debug.logError(e2, "Could not rollback transaction: " + e2.toString(), module);
+	  		}
+	  		Debug.logError("An entity engine error occurred while fetching data", module);
+	  	}finally {
+	  		try {
+	  			TransactionUtil.commit(beganTransaction);
+	  		} catch (GenericEntityException e) {
+	  			Debug.logError(e, "Could not commit transaction for entity engine error occurred while fetching data", module);
+	  		}
+	  	}
+	  	request.setAttribute("_EVENT_MESSAGE_", "PO Number :"+orderId +" Linked With GRN Shipment Number"+shipmentId+" Successfully !");
+	  	return "success";
+}
 }

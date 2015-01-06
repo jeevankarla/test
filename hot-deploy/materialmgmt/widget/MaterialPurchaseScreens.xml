@@ -172,6 +172,7 @@
 			    <set field="tabButtonItem2" value="FindGRNShipments" />	
                <set field="viewSize" from-field="parameters.VIEW_SIZE"/>
                <set field="targetRequest" value="FindGRNShipments"/>
+               <script location="component://materialmgmt/webapp/materialmgmt/WEB-INF/actions/purchases/findOrderWithOutShipment.groovy"/>
             </actions>
             <widgets>
                  <decorator-screen name="materialmgmtNgCommonDecorator" location="${parameters.mainDecoratorLocation}">
@@ -179,6 +180,7 @@
                       	<include-menu name="ReceiptTabBar" location="component://materialmgmt/widget/materialmgmtMenus.xml"/>  
                         <section>
                             <widgets>
+                                <platform-specific><html><html-template location="component://materialmgmt/webapp/materialmgmt/purchase/LinkGRNWithPO.ftl"/></html></platform-specific>					  	        					
                                 <decorator-screen name="FindScreenDecorator" location="component://common/widget/CommonScreens.xml">
                                     <decorator-section name="search-options">
                             			<include-form name="FindMaterialShipment" location="component://materialmgmt/widget/MaterialPurchaseForms.xml"/>
