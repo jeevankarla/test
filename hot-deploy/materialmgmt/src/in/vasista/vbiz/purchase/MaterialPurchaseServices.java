@@ -131,49 +131,68 @@ public class MaterialPurchaseServices {
 		try{
 			beganTransaction = TransactionUtil.begin(7200);
 			
-			GenericValue orderHeader = delegator.findOne("OrderHeader", UtilMisc.toMap("orderId", orderId), false);
-			
-			if(UtilValidate.isEmpty(orderHeader)){
-				Debug.logError("Not a valid order : "+orderId, module);
-				request.setAttribute("_ERROR_MESSAGE_", "Not a valid order : "+orderId);	
-				TransactionUtil.rollback();
-		  		return "error";
-			}
-			String statusId = orderHeader.getString("statusId");
-			String orderTypeId = orderHeader.getString("orderTypeId");
-			if(statusId.equals("ORDER_CANCELLED")){
-				Debug.logError("Cannot create GRN for cancelled orders : "+orderId, module);
-				request.setAttribute("_ERROR_MESSAGE_", "Cannot create GRN for cancelled orders : "+orderId);	
-				TransactionUtil.rollback();
-		  		return "error";
-			}
-			
 			List conditionList = FastList.newInstance();
-			conditionList.add(EntityCondition.makeCondition("orderId", EntityOperator.EQUALS, orderId));
-			conditionList.add(EntityCondition.makeCondition("orderAssocTypeId", EntityOperator.EQUALS, orderTypeId));
-			List<GenericValue> orderAssoc = delegator.findList("OrderAssoc", EntityCondition.makeCondition(conditionList, EntityOperator.AND), null, null, null, false);
+			List<GenericValue> extPOItems = FastList.newInstance();
+			List<GenericValue> extReciptItems = FastList.newInstance();
 			
 			boolean directPO = Boolean.TRUE;
 			String extPOId = "";
-			if(UtilValidate.isNotEmpty(orderAssoc)){
-				extPOId = (EntityUtil.getFirst(orderAssoc)).getString("toOrderId");
-				directPO = Boolean.FALSE;
-			}
-			List<GenericValue> extPOItems = FastList.newInstance();
-			List<GenericValue> extReciptItems = FastList.newInstance();
-			if(UtilValidate.isNotEmpty(extPOId)){
-				List<GenericValue> annualContractPOAsso = delegator.findList("OrderAssoc", EntityCondition.makeCondition("toOrderId", EntityOperator.EQUALS, extPOId), UtilMisc.toSet("orderId"), null, null, false);
-				List orderIds = EntityUtil.getFieldListFromEntityList(annualContractPOAsso, "orderId", true);
-				conditionList.clear();
-				conditionList.add(EntityCondition.makeCondition("statusId", EntityOperator.NOT_EQUAL, "ITEM_CANCELLED"));
-				conditionList.add(EntityCondition.makeCondition("orderId", EntityOperator.EQUALS, extPOId));
-				extPOItems = delegator.findList("OrderItem", EntityCondition.makeCondition(conditionList, EntityOperator.AND), null, null, null, false);
+			List productList = FastList.newInstance();
+			
+			if(UtilValidate.isNotEmpty(orderId)){
+				GenericValue orderHeader = delegator.findOne("OrderHeader", UtilMisc.toMap("orderId", orderId), false);
+				
+				String statusId = orderHeader.getString("statusId");
+				String orderTypeId = orderHeader.getString("orderTypeId");
+				if(statusId.equals("ORDER_CANCELLED")){
+					Debug.logError("Cannot create GRN for cancelled orders : "+orderId, module);
+					request.setAttribute("_ERROR_MESSAGE_", "Cannot create GRN for cancelled orders : "+orderId);	
+					TransactionUtil.rollback();
+			  		return "error";
+				}
+				
+				conditionList.add(EntityCondition.makeCondition("orderId", EntityOperator.EQUALS, orderId));
+				conditionList.add(EntityCondition.makeCondition("orderAssocTypeId", EntityOperator.EQUALS, orderTypeId));
+				List<GenericValue> orderAssoc = delegator.findList("OrderAssoc", EntityCondition.makeCondition(conditionList, EntityOperator.AND), null, null, null, false);
+				
+				if(UtilValidate.isNotEmpty(orderAssoc)){
+					extPOId = (EntityUtil.getFirst(orderAssoc)).getString("toOrderId");
+					directPO = Boolean.FALSE;
+				}
+				if(UtilValidate.isNotEmpty(extPOId)){
+					List<GenericValue> annualContractPOAsso = delegator.findList("OrderAssoc", EntityCondition.makeCondition("toOrderId", EntityOperator.EQUALS, extPOId), UtilMisc.toSet("orderId"), null, null, false);
+					List orderIds = EntityUtil.getFieldListFromEntityList(annualContractPOAsso, "orderId", true);
+					conditionList.clear();
+					conditionList.add(EntityCondition.makeCondition("statusId", EntityOperator.NOT_EQUAL, "ITEM_CANCELLED"));
+					conditionList.add(EntityCondition.makeCondition("orderId", EntityOperator.EQUALS, extPOId));
+					extPOItems = delegator.findList("OrderItem", EntityCondition.makeCondition(conditionList, EntityOperator.AND), null, null, null, false);
+					
+					conditionList.clear();
+					conditionList.add(EntityCondition.makeCondition("statusId", EntityOperator.NOT_EQUAL, "SR_REJECTED"));
+					conditionList.add(EntityCondition.makeCondition("orderId", EntityOperator.IN, orderIds));
+					extReciptItems = delegator.findList("ShipmentReceipt", EntityCondition.makeCondition(conditionList, EntityOperator.AND), null, null, null, false);
+				}
+				
 				
 				conditionList.clear();
-				conditionList.add(EntityCondition.makeCondition("statusId", EntityOperator.NOT_EQUAL, "SR_REJECTED"));
-				conditionList.add(EntityCondition.makeCondition("orderId", EntityOperator.IN, orderIds));
-				extReciptItems = delegator.findList("ShipmentReceipt", EntityCondition.makeCondition(conditionList, EntityOperator.AND), null, null, null, false);
+				conditionList.add(EntityCondition.makeCondition("orderId", EntityOperator.EQUALS, orderId));
+				conditionList.add(EntityCondition.makeCondition("roleTypeId", EntityOperator.EQUALS, "BILL_FROM_VENDOR"));
+				EntityCondition condition = EntityCondition.makeCondition(conditionList, EntityOperator.AND);
+				List<GenericValue> orderRole = delegator.findList("OrderRole", condition, null, null, null, false);
+				
+				if(UtilValidate.isEmpty(orderRole)){
+					Debug.logError("No Vendor for the order : "+orderId, module);
+					request.setAttribute("_ERROR_MESSAGE_", "No Vendor for the order : "+orderId);	
+					TransactionUtil.rollback();
+			  		return "error";
+				}
+					
+				supplierId = (EntityUtil.getFirst(orderRole)).getString("partyId");
+				
 			}
+			List<GenericValue> orderItems = delegator.findList("OrderItem", EntityCondition.makeCondition("orderId", EntityOperator.EQUALS, orderId), null, null, null, false);
+			
+			productList = EntityUtil.getFieldListFromEntityList(orderItems, "productId", true);
 			GenericValue newEntity = delegator.makeValue("Shipment");
 	        newEntity.set("estimatedShipDate", receiptDate);
 	        newEntity.set("shipmentTypeId", "MATERIAL_SHIPMENT");
@@ -188,27 +207,7 @@ public class MaterialPurchaseServices {
             delegator.createSetNextSeqId(newEntity);            
             String shipmentId = (String) newEntity.get("shipmentId");
 	       
-	        List productList = FastList.newInstance();
-			
 			/*List<Map> prodQtyList = FastList.newInstance();*/
-	        List<GenericValue> orderItems = delegator.findList("OrderItem", EntityCondition.makeCondition("orderId", EntityOperator.EQUALS, orderId), null, null, null, false);
-				
-			productList = EntityUtil.getFieldListFromEntityList(orderItems, "productId", true);
-			conditionList.clear();
-			conditionList.add(EntityCondition.makeCondition("orderId", EntityOperator.EQUALS, orderId));
-			conditionList.add(EntityCondition.makeCondition("roleTypeId", EntityOperator.EQUALS, "BILL_FROM_VENDOR"));
-			EntityCondition condition = EntityCondition.makeCondition(conditionList, EntityOperator.AND);
-			List<GenericValue> orderRole = delegator.findList("OrderRole", condition, null, null, null, false);
-			
-			if(UtilValidate.isEmpty(orderRole)){
-				Debug.logError("No Vendor for the order : "+orderId, module);
-				request.setAttribute("_ERROR_MESSAGE_", "No Vendor for the order : "+orderId);	
-				TransactionUtil.rollback();
-		  		return "error";
-			}
-				
-			supplierId = (EntityUtil.getFirst(orderRole)).getString("partyId");
-			
 			
 			for (int i = 0; i < rowCount; i++) {
 				
@@ -236,47 +235,50 @@ public class MaterialPurchaseServices {
 					quantity = new BigDecimal(quantityStr);
 				}
 				
-				if(directPO){
-					GenericValue checkOrderItem = null;
-					List<GenericValue> ordItems = EntityUtil.filterByCondition(orderItems, EntityCondition.makeCondition("productId", EntityOperator.EQUALS, productId));
-					if(UtilValidate.isNotEmpty(ordItems)){
-						checkOrderItem = EntityUtil.getFirst(ordItems);
+				if(UtilValidate.isEmpty(withoutPO)){
+					if(directPO){
+						GenericValue checkOrderItem = null;
+						List<GenericValue> ordItems = EntityUtil.filterByCondition(orderItems, EntityCondition.makeCondition("productId", EntityOperator.EQUALS, productId));
+						if(UtilValidate.isNotEmpty(ordItems)){
+							checkOrderItem = EntityUtil.getFirst(ordItems);
+						}
+						
+						if(UtilValidate.isNotEmpty(checkOrderItem)){
+							BigDecimal orderQty = checkOrderItem.getBigDecimal("quantity");
+							BigDecimal checkQty = (orderQty.multiply(new BigDecimal(1.1))).setScale(0, BigDecimal.ROUND_CEILING);
+							if(quantity.compareTo(checkQty)>0){
+								Debug.logError("Quantity cannot be more than 10%("+checkQty+") for PO : "+orderId, module);
+								request.setAttribute("_ERROR_MESSAGE_", "Quantity cannot be more than 10%("+checkQty+") for PO : "+orderId);	
+								TransactionUtil.rollback();
+						  		return "error";
+							}
+						}
 					}
-					
-					if(UtilValidate.isNotEmpty(checkOrderItem)){
-						BigDecimal orderQty = checkOrderItem.getBigDecimal("quantity");
-						BigDecimal checkQty = (orderQty.multiply(new BigDecimal(1.1))).setScale(0, BigDecimal.ROUND_CEILING);
+					else{
+						List<GenericValue> poItems = EntityUtil.filterByCondition(extPOItems, EntityCondition.makeCondition("productId", EntityOperator.EQUALS, productId));
+						List<GenericValue> receiptItems = EntityUtil.filterByCondition(extReciptItems, EntityCondition.makeCondition("productId", EntityOperator.EQUALS, productId));
+						BigDecimal poQty = BigDecimal.ZERO;
+						if(UtilValidate.isNotEmpty(poItems)){
+							GenericValue poItem = EntityUtil.getFirst(poItems);
+							poQty = poItem.getBigDecimal("quantity");
+							
+						}
+						BigDecimal receiptQty = BigDecimal.ZERO;
+						for(GenericValue item : receiptItems){
+							receiptQty = receiptQty.add(item.getBigDecimal("quantityAccepted"));
+						}
+						BigDecimal checkQty = poQty.subtract(receiptQty);
+						
 						if(quantity.compareTo(checkQty)>0){
-							Debug.logError("Quantity cannot be more than 10%("+checkQty+") for PO : "+orderId, module);
-							request.setAttribute("_ERROR_MESSAGE_", "Quantity cannot be more than 10%("+checkQty+") for PO : "+orderId);	
+							Debug.logError("Quantity cannot be more than ARC/CPC for PO : "+orderId, module);
+							request.setAttribute("_ERROR_MESSAGE_", "Quantity cannot be more than ARC/CPC for PO : "+orderId);	
 							TransactionUtil.rollback();
 					  		return "error";
 						}
 					}
-				}
-				else{
-					List<GenericValue> poItems = EntityUtil.filterByCondition(extPOItems, EntityCondition.makeCondition("productId", EntityOperator.EQUALS, productId));
-					List<GenericValue> receiptItems = EntityUtil.filterByCondition(extReciptItems, EntityCondition.makeCondition("productId", EntityOperator.EQUALS, productId));
-					BigDecimal poQty = BigDecimal.ZERO;
-					if(UtilValidate.isNotEmpty(poItems)){
-						GenericValue poItem = EntityUtil.getFirst(poItems);
-						poQty = poItem.getBigDecimal("quantity");
-						
-					}
-					BigDecimal receiptQty = BigDecimal.ZERO;
-					for(GenericValue item : receiptItems){
-						receiptQty = receiptQty.add(item.getBigDecimal("quantityAccepted"));
-					}
-					BigDecimal checkQty = poQty.subtract(receiptQty);
-					
-					if(quantity.compareTo(checkQty)>0){
-						Debug.logError("Quantity cannot be more than ARC/CPC for PO : "+orderId, module);
-						request.setAttribute("_ERROR_MESSAGE_", "Quantity cannot be more than ARC/CPC for PO : "+orderId);	
-						TransactionUtil.rollback();
-				  		return "error";
-					}
-				}
 
+				}
+				
 				Map<String,Object> itemInMap = FastMap.newInstance();
 		        itemInMap.put("shipmentId",shipmentId);
 		        itemInMap.put("userLogin",userLogin);
@@ -308,7 +310,7 @@ public class MaterialPurchaseServices {
 						TransactionUtil.rollback();
 				  		return "error";
 			        }
-				 
+				
 				Map inventoryReceiptCtx = FastMap.newInstance();
 				
 				inventoryReceiptCtx.put("userLogin", userLogin);
@@ -346,7 +348,7 @@ public class MaterialPurchaseServices {
 					shipmentReceipt.set("shipmentItemSeqId", shipmentItemSeqId);
 					shipmentReceipt.store();
 				}
-             
+
 			}
 			
 		}
@@ -2530,7 +2532,8 @@ public class MaterialPurchaseServices {
 		result.put("orderId", orderId);
 		return result;
 	}
- 	public static String amendPOItemEvent(HttpServletRequest request, HttpServletResponse response) {
+   	
+   	public static String amendPOItemEvent(HttpServletRequest request, HttpServletResponse response) {
 		Delegator delegator = (Delegator) request.getAttribute("delegator");
 		LocalDispatcher dispatcher = (LocalDispatcher) request.getAttribute("dispatcher");
 		DispatchContext dctx =  dispatcher.getDispatchContext();
