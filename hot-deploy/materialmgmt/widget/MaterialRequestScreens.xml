@@ -336,10 +336,13 @@
                 <set field="custRequestId" from-field="parameters.custRequestId"/>
                 <entity-one entity-name="CustRequest" value-field="custRequest"/>
                 <entity-condition list="quoteQualifiedList" entity-name="QuoteAndItemAndCustRequest">
-                	<condition-list combine="and">
+                	<!-- <condition-list combine="and"> -->
                 		<condition-expr field-name="custRequestId" operator="equals" value="${parameters.custRequestId}"/>
+                		<!-- <condition-list combine="or">
                 		<condition-expr field-name="qiStatusId" operator="equals" value="QTITM_QUALIFIED"/>
-                	</condition-list>
+                		<condition-expr field-name="qiStatusId" operator="equals" value="QTITM_REJECTED"/>
+                		</condition-list>
+                	</condition-list> -->
                 	<order-by field-name="productId"/>
                 </entity-condition>
                 <entity-and entity-name="CustRequestAndContent" list="custRequestContents" filter-by-date="true">
@@ -386,6 +389,9 @@
                  	  </container>
                  
                  	  <container style="righthalf"> 
+                 	  	<screenlet title="Add Supplier">
+                 	  		<include-screen name="AddSupplier"/>
+                 	  	</screenlet>
                   		<decorator-section-include name="Enquiry items"/>
 		                  <screenlet title="Items In Enquiry"> 
 		                   	<include-form location="component://materialmgmt/widget/MaterialRequestForms.xml" name="ItemsInEnquiry"/>
@@ -633,5 +639,19 @@
             </widgets>
         </section>
     </screen>
-    
+    <screen name="AddSupplier">
+    <section>
+    	<actions>
+    		<entity-condition list="supplierList" entity-name="CustRequestParty">
+    			<condition-expr field-name="custRequestId" from-field="parameters.custRequestId"/>
+    		</entity-condition>
+    	</actions>
+    	<widgets>
+    		<include-form location="component://materialmgmt/widget/MaterialRequestForms.xml" name="AddSupplier"/>
+    		<screenlet>
+    			<include-form location="component://materialmgmt/widget/MaterialRequestForms.xml" name="listSuppliers"/>
+    		</screenlet>
+    	</widgets>
+    </section>
+    </screen>
 </screens>

@@ -703,5 +703,41 @@
             </hyperlink>
         </field>
    </form>
-   
+   <form name="AddSupplier" type="single" target="addCustRequestParty">
+   	<actions>
+   			<entity-one value-field="custRequest" entity-name="CustRequest">
+    			<field-map field-name="custRequestId" from-field="custRequestId"/>
+    		</entity-one>
+   		<set field="fromDate" value="${custRequest.custRequestDate}"/>
+   	</actions>
+   	<field name="custRequestId"><hidden/></field>
+   	<field name="partyId" title="Party"><lookup target-form-name="LookupPartyName"/></field>
+   	<field name="roleTypeId" title="Role Type">
+   		<drop-down> <entity-options  description="${description}" entity-name="RoleType"><entity-constraint name="roleTypeId" value="SUPPLIER"/> </entity-options></drop-down>
+   	</field>
+   	<field name="fromDate"><hidden/></field>
+   	<field name="submitButton" title="${uiLabelMap.Add}" widget-style="smallSubmit">
+            <submit/>
+        </field>
+   </form>
+   <form name="listSuppliers" type="list" list-name="supplierList" separate-columns="true" use-row-submit="true" 
+        odd-row-style="alternate-row" header-row-style="header-row" default-table-style="basic-table hover-bar">
+      <field name="partyId" title="Party" >
+      		<display-entity entity-name="PartyNameView" key-field-name="partyId" description="${firstName} ${middleName} ${lastName} ${groupName}">
+                <sub-hyperlink description="[${partyId}]" target="/partymgr/control/viewprofile" target-type="inter-app">
+                    <parameter param-name="partyId" from-field="partyId"/>
+                </sub-hyperlink>
+            </display-entity>
+      </field>
+      <field name="fromDate"><display description="${groovy:org.ofbiz.base.util.UtilDateTime.toDateString(fromDate,&quot;dd MMM,yyyy&quot;)}"/></field>
+      <field name="roleTypeId" title="Role Type"><display-entity  entity-name="RoleType" description="${description}" /></field>
+      <field name="delete" widget-style="buttontext">
+        <hyperlink target="deleteCustRequestParty" description="Delete">
+        	<parameter param-name="fromDate"/>
+        	<parameter param-name="partyId"/>
+        	<parameter param-name="custRequestId"/>
+        	<parameter param-name="roleTypeId"/>
+        </hyperlink>
+        </field>  
+   </form>
 </forms>

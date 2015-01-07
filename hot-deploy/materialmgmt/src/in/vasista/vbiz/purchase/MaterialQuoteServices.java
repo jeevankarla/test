@@ -272,6 +272,7 @@ public class MaterialQuoteServices {
         String quoteItemSeqId = (String)context.get("quoteItemSeqId");
         String statusId = (String)context.get("statusId");
         String custRequestId = (String)context.get("custRequestId");
+        String comments = (String)context.get("comments");
         
         try{
         	Map inputMap = FastMap.newInstance();
@@ -279,6 +280,7 @@ public class MaterialQuoteServices {
         	inputMap.put("quoteId", quoteId);
         	inputMap.put("quoteItemSeqId", quoteItemSeqId);
         	inputMap.put("statusId", statusId);
+        	inputMap.put("comments", comments);
         	
         	result = dispatcher.runSync("setQuoteAndItemStatus", inputMap);
         	if(ServiceUtil.isError(result)){
@@ -305,7 +307,6 @@ public class MaterialQuoteServices {
         String quoteItemSeqId = (String)context.get("quoteItemSeqId");
         BigDecimal quoteUnitPrice = (BigDecimal)context.get("quoteUnitPrice");
         String custRequestId = (String)context.get("custRequestId");
-        
         try{
         	
         	GenericValue quoteItem = delegator.findOne("QuoteItem", UtilMisc.toMap("quoteId", quoteId, "quoteItemSeqId", quoteItemSeqId), false);
@@ -346,6 +347,7 @@ public class MaterialQuoteServices {
         String quoteId = (String)context.get("quoteId");
         String quoteItemSeqId = (String)context.get("quoteItemSeqId");
         String statusId = (String)context.get("statusId");
+        String comments = (String)context.get("comments");
         try{
         	if(UtilValidate.isEmpty(quoteId)){
         		Debug.logError("Error in  setting Quote status for empty quoteId", module);
@@ -376,7 +378,7 @@ public class MaterialQuoteServices {
         	quote.set("statusId", statusId);
         	quote.store();
         	
-        	result = dispatcher.runSync("createQuoteStatus", UtilMisc.toMap("userLogin", userLogin, "quoteId", quoteId, "quoteItemSeqId", quoteItemSeqId, "statusId", statusId));
+        	result = dispatcher.runSync("createQuoteStatus", UtilMisc.toMap("userLogin", userLogin, "quoteId", quoteId, "quoteItemSeqId", quoteItemSeqId, "statusId", statusId,"comments",comments));
         	if(ServiceUtil.isError(result)){
         		Debug.logError("Error updating QuoteStatus", module);
   	  			return ServiceUtil.returnError("Error updating QuoteStatus");

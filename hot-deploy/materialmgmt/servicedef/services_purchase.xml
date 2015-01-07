@@ -155,6 +155,7 @@
         <attribute name="quoteId" type="String" mode="IN" optional="false"/>
         <attribute name="quoteItemSeqId" type="String" mode="IN" optional="true"/>
         <attribute name="statusId" type="String" mode="IN" optional="false"/>
+        <attribute name="comments" mode="IN" type="String" optional="true"/>
     </service>
     
     <service name="changeQuoteItemStatus" engine="java"
@@ -164,7 +165,7 @@
         <attribute name="quoteItemSeqId" type="String" mode="IN" optional="false"/>
         <attribute name="statusId" type="String" mode="IN" optional="false"/>
         <attribute name="custRequestId" type="String" mode="INOUT" optional="true"/>
-        
+        <attribute name="comments" mode="IN" type="String" optional="true"/>
     </service>
     
     <service name="quoteNegotiateAndStatusChange" engine="java"

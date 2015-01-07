@@ -122,6 +122,8 @@
      <OrderAssocType  description="ARC Order"  orderAssocTypeId="ARC_ORDER"/>
      <OrderAssocType  description="CPC Order"  orderAssocTypeId="CPC_ORDER"/>
      <OrderAssocType  description="Purchase Order"  orderAssocTypeId="PURCHASE_ORDER"/>
+     <OrderType description="Letter Of Intent" hasTable="N"  orderTypeId="LETTER_OF_INTENT" parentTypeId="PURCHASE_ORDER"/>
+     
      
      <!-- data for sequence -->
     <Enumeration enumId="PURCHASE_OR_STORES" enumTypeId="TENANTCONF_TYPE" sequenceId="1" description="Stores Or Purchase Tenant Configurations"/>

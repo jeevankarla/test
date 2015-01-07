@@ -59,6 +59,7 @@ under the License.
         <attribute name="quoteId" mode="IN" type="String" optional="false"/>
         <attribute name="quoteItemSeqId" mode="IN" type="String" optional="true"/>
         <attribute name="statusId" mode="IN" type="String" optional="false"/>
+        <attribute name="comments" mode="IN" type="String" optional="true"/>
     </service>
     
     <service name="copyQuote" default-entity-name="Quote" engine="simple"

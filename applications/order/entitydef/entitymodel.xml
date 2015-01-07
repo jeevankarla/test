@@ -1530,6 +1530,7 @@ under the License.
       <field name="statusId" type="id"></field>
       <field name="quoteId" type="id"></field>
       <field name="quoteItemSeqId" type="id"></field>
+      <field name="comments" type="description"></field>
       <field name="statusDatetime" type="date-time"></field>
       <field name="changedByUserLogin" type="id-vlong"></field>
       <prim-key field="quoteStatusId"/>

@@ -827,6 +827,18 @@
         <response name="success" type="view" value="ViewMaterialEnquiry"/>
         <response name="error" type="view" value="ViewMaterialEnquiry"/>
     </request-map>
+    <request-map uri="addCustRequestParty">
+        <security https="true" auth="true"/>
+     	<event type="service"   invoke="createCustRequestParty"/>
+        <response name="success" type="view" value="ViewMaterialEnquiry"/>
+        <response name="error" type="view" value="ViewMaterialEnquiry"/>
+    </request-map>
+    <request-map uri="deleteCustRequestParty">
+        <security https="true" auth="true"/>
+     	<event type="service"   invoke="deleteCustRequestParty"/>
+        <response name="success" type="view" value="ViewMaterialEnquiry"/>
+        <response name="error" type="view" value="ViewMaterialEnquiry"/>
+    </request-map>
     
     <view-map name="main" type="screen" page="component://materialmgmt/widget/materialmgmtScreens.xml#main"/>
     <view-map name="mainNg" type="screen" page="component://materialmgmt/widget/materialmgmtScreens.xml#mainNG"/>

@@ -221,14 +221,15 @@
            </hyperlink>
         </field>
     </form>
-    <form name="ListQuotesForEvaluation" type="list" list-name="quotesList"
-        odd-row-style="alternate-row" default-table-style="basic-table hover-bar" paginate-target="QuoteForEvalution" target="quoteNegotiateAndStatusChange">
+    <form name="ListQuotesForEvaluation" type="list" list-name="quotesList"  separate-columns="true"
+        odd-row-style="alternate-row" default-table-style="basic-table hover-bar" paginate-target="QuoteForEvalution" target="changeQuoteItemStatus">
         <field name="quoteNo" widget-style="buttontext h2" title="Quote No">
         	<hyperlink also-hidden="false" description="${quoteId}" target="ViewMaterialQuote" target-window="_blank">
                 <parameter param-name="quoteId"/>
         	</hyperlink>
         </field>
         <field name="custRequestId"><hidden value="${custRequestId}"/></field>
+        <field name="custRequestItemSeqId"><hidden value="${custRequestItemSeqId}"/></field>
         <field name="quoteId"><hidden/></field>
         <field name="quoteItemSeqId" title="Item No"><display/></field>
         <field name="partyId" title="Supplier"><display-entity entity-name="PartyNameView" key-field-name="partyId" description="${firstName} ${middleName} ${lastName} ${groupName}"/></field>
@@ -245,13 +246,15 @@
                 <parameter param-name="statusId" value="QTITM_TECH_EVAL"/>
         	</hyperlink>
         </field>
-        <field use-when="&quot;${qiStatusId}&quot; == &quot;QTITM_ACCEPTED&quot;" name="techEvalReject" widget-style="buttontext h3" title="Tech. Eval">
-        	<hyperlink also-hidden="false" description="Disqualify" target="changeQuoteItemStatus">
+        <field name="comments" required-field="true" widget-style="required"><text size="30"/></field>
+        <field use-when="&quot;${qiStatusId}&quot; == &quot;QTITM_ACCEPTED&quot;" name="techEvalReject" widget-style="buttontext" title="Tech. Eval Disqualify">
+        	<!-- <hyperlink also-hidden="false" description="Disqualify" target="changeQuoteItemStatus">
                 <parameter param-name="quoteId"/>
                 <parameter param-name="quoteItemSeqId"/>
                 <parameter param-name="custRequestId" value="${custRequestId}"/>
                 <parameter param-name="statusId" value="QTITM_REJECTED"/>
-        	</hyperlink>
+        	</hyperlink> -->
+        	<submit/>
         </field>
         <field use-when="&quot;${qiStatusId}&quot; == &quot;QTITM_TECH_EVAL&quot;" name="finEvalAccept" widget-style="buttontext h3" title="Fin. Eval">
         	<hyperlink also-hidden="false" description="Qualify" target="changeQuoteItemStatus">
@@ -261,19 +264,41 @@
                 <parameter param-name="statusId" value="QTITM_FIN_EVAL"/>
         	</hyperlink>
         </field>
-        <field use-when="&quot;${qiStatusId}&quot; == &quot;QTITM_TECH_EVAL&quot;" name="finEvalReject" widget-style="buttontext h3" title="Fin. Eval">
-        	<hyperlink also-hidden="false" description="Disqualify" target="changeQuoteItemStatus">
+        <field name="statusId"><hidden value="QTITM_REJECTED"/></field>
+        <field use-when="&quot;${qiStatusId}&quot; == &quot;QTITM_TECH_EVAL&quot;" name="finEvalReject" widget-style="buttontext h3" title="Fin. Eval Disqualify">
+        	<!-- <hyperlink also-hidden="false" description="Disqualify" target="changeQuoteItemStatus">
                 <parameter param-name="quoteId"/>
                 <parameter param-name="quoteItemSeqId"/>
                 <parameter param-name="custRequestId" value="${custRequestId}"/>
                 <parameter param-name="statusId" value="QTITM_REJECTED"/>
-        	</hyperlink>
+        	</hyperlink> -->
+        	<submit/>
         </field>
         <field use-when="&quot;${qiStatusId}&quot; == &quot;QTITM_FIN_EVAL&quot;" name="quoteUnitPrice" title="Neg. UnitPrice"><text size="6"/></field>
         <field use-when="&quot;${qiStatusId}&quot; == &quot;QTITM_FIN_EVAL&quot;" name="negoEvalAccept" widget-style="buttontext h3" title="Negotiation">
-        	<submit/>
+        	<hyperlink also-hidden="false" description="Negotiation" target="quoteNegotiateAndStatusChange">
+                <parameter param-name="quoteId" />
+                <parameter param-name="quoteItemSeqId"/>
+                <parameter param-name="custRequestId" />
+                <parameter param-name="quoteUnitPrice"/>
+        	</hyperlink>
         </field>
-        
+        <sort-order >
+        	<sort-field name="quoteNo"/>
+        	<sort-field name="quoteItemSeqId"/>
+        	<sort-field name="partyId"/>
+        	<sort-field name="productId"/>
+        	<sort-field name="quantity"/>
+        	<sort-field name="quotePrice"/>
+        	<sort-field name="qiStatusId"/>
+        	<sort-field name="techEvalAccept"/>
+        	<sort-field name="comments"/>
+        	<sort-field name="techEvalReject"/>
+        	<sort-field name="finEvalReject"/>
+        	<sort-field name="finEvalAccept"/>
+        	<sort-field name="negoEvalAccept"/>
+        	<sort-field name="quoteUnitPrice"/>
+        </sort-order>
     </form>
     <form name="ListQuotesForAcceptance" id="ListQuotesForAcceptance" type="list"  list-name="quotesList"
         odd-row-style="alternate-row" default-table-style="basic-table hover-bar" paginate-target="quoteForAcceptance">
@@ -349,6 +374,17 @@
     </form>
     <form name="ListQualifiedQuotesForPO" id="ListApprovedQuotesForPO" type="list"  list-name="quoteQualifiedList"
         odd-row-style="alternate-row" default-table-style="basic-table hover-bar" paginate-target="quoteForAcceptance">
+        <row-actions>
+        	<entity-condition entity-name="QuoteStatus" list="QuoteStatusList">
+        		<condition-list combine="and">
+        			<condition-expr field-name="quoteId" from-field="quoteId"/>
+        			<condition-expr field-name="quoteItemSeqId" from-field="quoteItemSeqId"/>
+        		</condition-list>
+        	</entity-condition>
+        	<set field="size" value="${groovy: return (QuoteStatusList.size());}"/>
+        	<set field="comments" value="${QuoteStatusList[(${size}-1)].comments}"/>
+        </row-actions>
+        <field name="quoteItemSeqId"><hidden/></field>
         <field name="quoteId" widget-style="buttontext h2" title="Quote No">
         	<hyperlink also-hidden="false" description="${quoteId}" target="ViewMaterialQuote" target-window="_blank">
                 <parameter param-name="quoteId"/>
@@ -358,6 +394,7 @@
         <field name="productId" title="Material Name - [Code]"><display-entity entity-name="Product" key-field-name="productId" description="${productName}"/></field>
         <field name="qiStatusId" title="Status"><display-entity entity-name="StatusItem" key-field-name="statusId" description="${description}"/></field>
         <field name="quoteUnitPrice" title="Quote Unit Price"><display /></field>
+        <field name="comments"><display/></field>
     </form>
     
     <form name="ViewQuoteStatus" type="list" list-name="quoteStatus"
