@@ -55,6 +55,8 @@ try {
 	context.errorMessage = "Cannot parse date string: " + e;
 	return;
 }
+
+
 employmentsList = [];
 if(UtilValidate.isEmpty(employeeId)){
 	emplInputMap = [:];
@@ -98,6 +100,7 @@ employmentsList.each{ employeeId->
 					secndSatDay =0;
 					shift =0;
 					washing =0;
+					bonus = 0;
 					others = 0;
 					totalBenefits = 0;
 					
@@ -149,6 +152,31 @@ employmentsList.each{ employeeId->
 					if(UtilValidate.isEmpty(washing)){
 						washing = 0;
 					}
+					//for bonus
+					customTimePeriod = delegator.findOne("CustomTimePeriod",[customTimePeriodId : customTimePeriodEntry.getKey()] , false);
+					if(UtilValidate.isNotEmpty(customTimePeriod)){
+						Date monthDate = (Date)customTimePeriod.get("fromDate");
+						monthStartDate = UtilDateTime.toTimestamp(monthDate);
+						monthName = UtilDateTime.toDateString(monthStartDate, "MMMM");
+						if(UtilValidate.isNotEmpty(monthName) && monthName.equals("April")){
+							List conditionList=[];
+							conditionList.add(EntityCondition.makeCondition("partyIdFrom", EntityOperator.EQUALS, employeeId));
+							conditionList.add(EntityCondition.makeCondition("periodBillingId", EntityOperator.EQUALS, "SB12000"));
+							conditionList.add(EntityCondition.makeCondition("payrollHeaderItemTypeId", EntityOperator.EQUALS, "PAYROL_BEN_BONUS_EX"));
+							condition=EntityCondition.makeCondition(conditionList,EntityOperator.AND);
+							payHeaderList = delegator.findList("PayrollHeaderAndHeaderItem", condition , null, null, null, false );
+							if(UtilValidate.isNotEmpty(payHeaderList)){
+								payHeader = EntityUtil.getFirst(payHeaderList);
+								if(UtilValidate.isNotEmpty(payHeader)){
+									bonus = payHeader.amount;
+								}
+							}
+						}
+					}
+					
+					if(UtilValidate.isEmpty(bonus)){
+						bonus = 0;
+					}
 					others = attendanceBonus+coldAllowance+holidayAllowance+personalPay+secndSatDay+shift;
 					totalBenefits = others+basic+cityComp+convey+dearnessAllowance+houseRentAllowance;
 					
@@ -159,8 +187,8 @@ employmentsList.each{ employeeId->
 					tempMap["convey"] = convey;
 					tempMap["cityComp"] = cityComp;
 					tempMap["others"] = others;
+					tempMap["bonus"] = bonus;
 					tempMap["totalBenefits"] = totalBenefits;
-					
 					benefitsMap = [:];
 					if(UtilValidate.isNotEmpty(tempMap)){
 						benefitsMap.putAll(tempMap);

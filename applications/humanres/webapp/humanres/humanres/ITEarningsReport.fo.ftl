@@ -79,6 +79,7 @@ under the License.
 	                    	<#assign totalHRA = 0>
 	                    	<#assign totalConvey = 0>
 	                    	<#assign totalCityComp = 0>
+	                    	<#assign totalBonus = 0>
 	                    	<#assign totalOthers = 0>
 	                    	<#assign totalBenefits = 0>
 	                    	
@@ -96,6 +97,7 @@ under the License.
 			                        <#assign secndSatDay =0>
 			                        <#assign shift =0>
 			                        <#assign washing =0>
+			                        <#assign bonus =0>
 			                        <#assign others = 0>
 			                        <#assign benefits = 0>
 			                    
@@ -119,6 +121,7 @@ under the License.
 				                    <#assign secndSatDay = partyBenefits.getValue().get("secndSatDay")?if_exists>
 				                    <#assign shift = partyBenefits.getValue().get("shift")?if_exists>
 				                    <#assign washing = partyBenefits.getValue().get("washing")?if_exists>
+				                    <#assign bonus = partyBenefits.getValue().get("bonus")?if_exists>
 				                    <#assign others = partyBenefits.getValue().get("others")?if_exists>
 			                    	<#assign benefits = partyBenefits.getValue().get("totalBenefits")?if_exists>
 			                    	
@@ -128,6 +131,7 @@ under the License.
 			                    	<#assign totalHRA = totalHRA + houseRentAllowance>
 			                    	<#assign totalConvey = totalConvey + convey>
 			                    	<#assign totalCityComp = totalCityComp + cityComp>
+			                    	<#assign totalBonus = totalBonus + bonus>
 			                    	<#assign totalOthers = totalOthers + others>
 			                    	<#assign totalBenefits = totalBenefits + benefits>
 			                    	
@@ -163,7 +167,7 @@ under the License.
 							            <fo:block  keep-together="always" text-align="right" font-size="12pt" white-space-collapse="false" >0.00</fo:block>  
 							         </fo:table-cell>
 							         <fo:table-cell>
-							            <fo:block  keep-together="always" text-align="right" font-size="12pt" white-space-collapse="false" >0.00</fo:block>  
+							            <fo:block  keep-together="always" text-align="right" font-size="12pt" white-space-collapse="false" >${bonus?if_exists?string("#0.00")}</fo:block>  
 							         </fo:table-cell>
 							         <fo:table-cell>
 							            <fo:block  keep-together="always" text-align="right" font-size="12pt" white-space-collapse="false" >${benefits?if_exists?string("#0.00")}</fo:block>  
@@ -207,7 +211,7 @@ under the License.
 							            <fo:block  keep-together="always" text-align="right" font-size="12pt" white-space-collapse="false" >0.00</fo:block>  
 							         </fo:table-cell>
 							         <fo:table-cell>
-							            <fo:block  keep-together="always" text-align="right" font-size="12pt" white-space-collapse="false" >0.00</fo:block>  
+							            <fo:block  keep-together="always" text-align="right" font-size="12pt" white-space-collapse="false" >${totalBonus?if_exists?string("#0.00")}</fo:block>  
 							         </fo:table-cell>
 							         <fo:table-cell>
 							            <fo:block  keep-together="always" text-align="right" font-size="12pt" white-space-collapse="false" >${totalBenefits?if_exists?string("#0.00")}</fo:block>  
