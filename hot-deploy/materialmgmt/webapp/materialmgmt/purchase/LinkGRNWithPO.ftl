@@ -7,9 +7,6 @@
 <script type="application/javascript">
 <#-->
 	var routeData = ${StringUtil.wrapString(facilityItemsJSON)} -->
-	var routeValuesList ;
-	var routeList ='';
-    var shipmentRouteList;
 	/*
 	 * Common dialogue() function that creates our dialogue qTip.
 	 * We'll use this method to create both our prompt and confirm dialogues
@@ -80,58 +77,10 @@
 		return false;
 	}
 	
-	function setRoutesListAvailble(routeValuesList){
-		 var optionList = '';
-		//optionList += "<option value = " + "AllRoutes" + " >" +"AllRoutes"+ "</option>";
-		 optionList += "<option value = " + "TOWN_ROUTES" + " >" +"Town-Rts"+ "</option>";
-		 optionList += "<option value = " + "OTHR_TOWN_ROUTES" + " >" +"OtherTown-Rts"+ "</option>";
-		 
-	 	 if(routeValuesList != undefined && routeValuesList != ""){
-	 	 var routesListStr=routeValuesList.replace("{","");
-		 var routesListStr=routesListStr.replace("}","");
-		  var routesList=routesListStr.split(",");
-	 	 	for(var i=0 ; i<routesList.length ; i++){
-				var routeId=routesList[i];	 
-                optionList += "<option value = " + routeId + " >" + routeId + "</option>";          			
-      		}
-      	 	routeList = optionList;
-      	 	jQuery("[name='"+"routeId"+"']").html(routeList);
-	 	 }
-	 	  	 
-	}
 	
-	function setRoutesList(selection){
-		 var optionList = '';
-		 optionList += "<option value = " + "AllRoutes" + " >" +"AllRoutes"+ "</option>";
-	 	 routeValuesList = routeData[selection.value];
-	 	 for(var i=0 ; i<routeValuesList.length ; i++){
-				var innerList=routeValuesList[i];	
-				alert("====innerList=="+innerList);              			             
-                optionList += "<option value = " + innerList['facilityId'] + " >" + innerList['facilityId'] + "</option>";          			
-      		}
-      	 routeList = optionList;
-      	 jQuery("[name='"+"routeId"+"']").html(routeList); 	 
-	}
-	<#-->
-	function showTruckSheetGenerateForm() {	
-		var message = "";
-		message += "<form action='createByProdShipment' method='post' onsubmit='return disableGenerateButton();'><table cellspacing=10 cellpadding=10>" ; 		
-		
-			//message += "<br/><br/>";
-			message +="<tr class='h3'><td align='left' class='h3' width='50%'>Shipment Type :</td><td align='left' width='80%'><select name='shipmentTypeId' allow-empty='true' id='generateShipmentTypeId' onchange='javascript:setRoutesList(this);' class='h3'>"+
-	              		"<#list lmsShipTypeList as lmsShipType><option value='${lmsShipType.shipmentTypeId}' >${lmsShipType.description}</option></#list>"+            
-						"</select></td></tr>";
-			message += "<tr class='h3'><td align='left' class='h3' width='40%'>Supply Date:</td><td align='right' width='60%'><input class='h3' type='text' id='estimatedDeliveryDate' name='estimatedDeliveryDate' onmouseover='datepick()' size='13'/></td></tr>"+
-						"<tr class='h3'><td align='left' class='h3' width='40%'>Route:</td><td align='left' width='60%'><select name='routeId' id='routeId'>"+
-						"<option value='TOWN_ROUTES'>Town-Rts</option>"+
-						"<option value='OTHR_TOWN_ROUTES'>OtherTown-Rts</option>"+
-						"<#list routeList as eachRoute><option value='${eachRoute.facilityId?if_exists}' >${eachRoute.facilityId?if_exists}</option></#list></select></td></tr>"+            
-						"<tr class='h3'><td align='right'><span align='right'><input type='submit' value='${uiLabelMap.CommonSubmit}' id='generateTruckSheet' class='smallSubmit'/></span></td><td class='h3' width='100%' align='center'><span align='right'><button value='${uiLabelMap.CommonCancel}' onclick='return cancelForm();' class='smallSubmit'>${uiLabelMap.CommonCancel}</button></span></td></tr>";
-		message += "</table></form>";				
-		var title = "<h2><center>Generate Delivery Schedule</center></h2>";
-		Alert(message, title);
-	}; -->
-		var globalShipmentId ="";
+	
+	var globalShipmentId ="";
+	
 	function showLinkGrnWithPOForm(shipmentId) {	
 	globalShipmentId=shipmentId;
 	//alert("==shipmentId=="+shipmentId);
