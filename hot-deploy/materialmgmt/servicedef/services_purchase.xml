@@ -123,6 +123,8 @@
          <attribute name="custRequestId" type="String" mode="OUT" optional="false"/>
          <attribute name="enquiryName" type="String" mode="IN" optional="true"/>
          <attribute name="requestDate" type="String" mode="IN" optional="true"/>
+         <attribute name="openDate" type="String" mode="IN" optional="true"/>
+         <attribute name="closedDate" type="String" mode="IN" optional="true"/>
    </service>
    
     <service name="CreateMaterialPO" engine="java"

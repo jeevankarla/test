@@ -2,14 +2,32 @@
 <script type="text/javascript">
 
 $(document).ready(function(){
-
+    $('#requestDate').val($.datepicker.formatDate('dd MM, yy', new Date()));
+    $('#openDate').val($.datepicker.formatDate('dd MM, yy', new Date()));
+    var today = new Date();
+    var day = today.getDate();
+    var	month = today.getMonth();
+    var year = today.getFullYear();
+       day+= 7; 
+     var dateStr = day+ " "+ month + "," + year;  
+     var newDate = new Date(year, month, day);
+     $('#closedDate').val($.datepicker.formatDate('dd MM, yy', newDate));
 });
-	 function datepick()
+	function datepick()
 	{		
 		$( "#requestDate" ).datepicker({
 			dateFormat:'dd MM, yy',
 			changeMonth: true,
 			maxDate:0,
+			numberOfMonths: 1});
+			$( "#openDate" ).datepicker({
+			dateFormat:'dd MM, yy',
+			changeMonth: true,
+			maxDate:0,
+			numberOfMonths: 1});
+			$( "#closedDate" ).datepicker({
+			dateFormat:'dd MM, yy',
+			changeMonth: true,
 			numberOfMonths: 1});
 		$('#ui-datepicker-div').css('clip', 'auto');
 		
@@ -70,8 +88,12 @@ $(document).ready(function(){
 		});
 			var name=jQuery("#enquiryName").val();
 			var date=jQuery("#requestDate").val();
+			var openDate=jQuery("#openDate").val();
+			var closedDate=jQuery("#closedDate").val();
 			$('#sendRequirementIds').append('<input type="hidden" name="enquiryName" value="'+name+'" />');
 			$('#sendRequirementIds').append('<input type="hidden" name="requestDate" value="'+date+'" />');
+			$('#sendRequirementIds').append('<input type="hidden" name="openDate" value="'+openDate+'" />');
+			$('#sendRequirementIds').append('<input type="hidden" name="closedDate" value="'+closedDate+'" />');
 		 jQuery("#sendRequirementIds").submit();
        
  	}	
@@ -83,7 +105,7 @@ $(document).ready(function(){
 	  <font size="15" color="blue"><b>Total Selected :<b/></font><font size="15" color="red"><b><span id="totalCount"></span></b></font>&nbsp;&nbsp;&nbsp;<font size="15" color="blue"><b>No Of Products :<b/></font><font size="15" color="red"><b><span id="productCount"></span></b></font>
 	</div>
 	<div align="center">
-		<font size="15" color="blue"><b>Enquiry Reference :<b/></font><input id="enquiryName" name="enquiryName" required type="text" size="20"/>&nbsp;&nbsp;&nbsp;<font size="15" color="blue"><b> Enquiry Date :<b/></font><input class='h3' type='text' id='requestDate' name='requestDate' onmouseover='datepick()'/>
+		<font size="15" color="blue"><b>Enquiry Reference :<b/></font><input id="enquiryName" name="enquiryName" required type="text" size="20"/>&nbsp;&nbsp;&nbsp;<font size="15" color="blue"><b> Enquiry Date :<b/></font><input class='h3'  type='text' id='requestDate' name='requestDate'  onmouseover='datepick()'/>&nbsp;&nbsp;&nbsp;<font size="15" color="blue"><b> Open Date :<b/></font><input class='h3'  type='text' id='openDate' name='openDate'  onmouseover='datepick()'/>&nbsp;&nbsp;&nbsp;<font size="15" color="blue"><b> Closed Date :<b/></font><input class='h3'  type='text' id='closedDate' name='closedDate'  onmouseover='datepick()'/>
 	</div>
 <form id="EnquiryForApprovedMatRequirements" name="EnquiryForApprovedMatRequirements" action="" method="post">
 	<div align="right">

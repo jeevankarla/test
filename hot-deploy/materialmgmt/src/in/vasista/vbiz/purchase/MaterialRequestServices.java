@@ -934,10 +934,14 @@ public class MaterialRequestServices {
 		GenericValue userLogin = (GenericValue) context.get("userLogin");
 		String custRequestName = (String) context.get("enquiryName");
 		String requestDateStr = (String) context.get("requestDate");
+		String openDateStr = (String) context.get("openDate");
+		String closedDateStr = (String) context.get("closedDate");
 		Map result = ServiceUtil.returnSuccess();
 		String custRequestTypeId = "RF_PUR_QUOTE";
 		result = ServiceUtil.returnSuccess("Successfully create Enquiry for the requirements");
 		Timestamp custRequestDate = null;
+		Timestamp openDateTime = null;
+		Timestamp closedDateTime = null;
 		SimpleDateFormat sdf = new SimpleDateFormat("dd MMMM, yyyy");
 	  	if(UtilValidate.isNotEmpty(requestDateStr)){
 	  		try {
@@ -950,6 +954,32 @@ public class MaterialRequestServices {
 	  	}
 	  	else{
 	  		custRequestDate = UtilDateTime.nowTimestamp();
+	  	}
+	  	if(UtilValidate.isNotEmpty(openDateStr)){
+	  		try {
+	  			openDateTime = new java.sql.Timestamp(sdf.parse(openDateStr).getTime());
+		  	} catch (ParseException e) {
+		  		Debug.logError(e, "Cannot parse date string: " + openDateStr, module);
+		  	} catch (NullPointerException e) {
+	  			Debug.logError(e, "Cannot parse date string: " + openDateStr, module);
+		  	}
+	  	}
+	  	else{
+	  		openDateTime = UtilDateTime.nowTimestamp();
+	  	}
+	  	if(UtilValidate.isNotEmpty(closedDateStr)){
+	  		try {
+	  			closedDateTime = new java.sql.Timestamp(sdf.parse(closedDateStr).getTime());
+		  	} catch (ParseException e) {
+		  		Debug.logError(e, "Cannot parse date string: " + closedDateStr, module);
+		  	} catch (NullPointerException e) {
+	  			Debug.logError(e, "Cannot parse date string: " + closedDateStr, module);
+		  	}
+	  	}
+	  	else{
+	  		closedDateTime = UtilDateTime.nowTimestamp();
+	  		closedDateTime = UtilDateTime.getDayEnd(closedDateTime);
+	  		closedDateTime = UtilDateTime.getDayEnd(UtilDateTime.addDaysToTimestamp(closedDateTime, 7));
 	  	}
 		try{
 			
@@ -978,6 +1008,8 @@ public class MaterialRequestServices {
 			custRequestInMap.put("fromPartyId","Company");
 			custRequestInMap.put("statusId","ENQ_CREATED");
 			custRequestInMap.put("custRequestDate",custRequestDate);
+			custRequestInMap.put("openDateTime",openDateTime);
+			custRequestInMap.put("closedDateTime",closedDateTime);
 	        Map resultMap = dispatcher.runSync("createCustRequest",custRequestInMap);
 	        
 	        if (ServiceUtil.isError(resultMap)) {
