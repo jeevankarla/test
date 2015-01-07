@@ -572,10 +572,13 @@ public class MaterialQuoteServices {
     	String quoteId = (String)context.get("quoteId");
     	GenericValue quote =null;
     	String partyId ="";
+    	String billFromPartyId ="Company";
+    	String billToPartyId="";
     	BigDecimal quantity = BigDecimal.ZERO;
     	String salesChannel = (String) context.get("salesChannelEnumId");
     	List<GenericValue> quoteItemList = FastList.newInstance();
-    	String productStoreId = null;
+    	//getting productStoreId 
+		String productStoreId = (String) (in.vasista.vbiz.purchase.PurchaseStoreServices.getPurchaseFactoryStore(delegator)).get("factoryStoreId");//to get Factory storeId
          if (UtilValidate.isEmpty(salesChannel)) {
              salesChannel = "MATERIAL_PUR_CHANNEL";
          }     
@@ -587,6 +590,7 @@ public class MaterialQuoteServices {
 	        EntityCondition condition = EntityCondition.makeCondition(conditionList, EntityOperator.AND);
     		quoteItemList = delegator.findList("QuoteItem", condition, null, UtilMisc.toList("quoteItemSeqId"), null, false);
     		partyId = quote.getString("partyId");
+    		
          	/*GenericValue product=delegator.findOne("Product",UtilMisc.toMap("productId", (String)quoteItemList.get(0).getString("productId")), false);*/
          	
          } catch (GenericEntityException e) {
@@ -598,11 +602,20 @@ public class MaterialQuoteServices {
          cart.setOrderType("PURCHASE_ORDER");
          cart.setChannelType(salesChannel);
          cart.setProductStoreId(productStoreId);
-         cart.setBillToCustomerPartyId(partyId);
-         cart.setPlacingCustomerPartyId(partyId);
-         cart.setShipToCustomerPartyId(partyId);
-         cart.setEndUserCustomerPartyId(partyId);
-         cart.setQuoteId(quoteId); 
+         cart.setBillToCustomerPartyId(billFromPartyId);
+         cart.setPlacingCustomerPartyId(billFromPartyId);
+         cart.setShipToCustomerPartyId(billFromPartyId);
+         cart.setEndUserCustomerPartyId(billFromPartyId);
+		//cart.setShipmentId(shipmentId);
+		//for PurchaseOrder we have to use for SupplierId
+		if(UtilValidate.isNotEmpty(billToPartyId)){
+			 cart.setBillFromVendorPartyId(billToPartyId);
+		}else{
+	    cart.setBillFromVendorPartyId(partyId);
+		}
+	    cart.setShipFromVendorPartyId(partyId);
+	    cart.setSupplierAgentPartyId(partyId);
+        cart.setQuoteId(quoteId); 
          try {
              cart.setUserLogin(userLogin, dispatcher);
          } catch (Exception exc) {
@@ -610,9 +623,11 @@ public class MaterialQuoteServices {
      		return ServiceUtil.returnError("Error setting userLogin in the cart: " + exc.getMessage());          	            
          }   
          Iterator<GenericValue> i = quoteItemList.iterator();
+         String custRequestId="";
          while (i.hasNext()) {
              GenericValue quoteItem = i.next();
              if (quoteItem != null) {
+            	 custRequestId=quoteItem.getString("custRequestId");
              	try { 
                     
              		ShoppingCartItem item = null;
@@ -633,6 +648,9 @@ public class MaterialQuoteServices {
                 
              }  
          }      
+         if(UtilValidate.isNotEmpty(custRequestId)){
+				cart.setOrderAttribute("REF_NUMBER",custRequestId);
+         }
          cart.setDefaultCheckoutOptions(dispatcher);
          CheckOutHelper checkout = new CheckOutHelper(dispatcher, delegator, cart);
          Map<String, Object> orderCreateResult = checkout.createOrder(userLogin);
