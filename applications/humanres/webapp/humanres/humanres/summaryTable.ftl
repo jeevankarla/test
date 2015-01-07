@@ -87,9 +87,14 @@ $(document).ready(function() {
 
 
 	</script>
-		
+		<#if security.hasEntityPermission("HUMANRES", "_ADMIN", session)>
 		<div id="demo">
-		
+		<div align = "right">
+        <ul><li class="h3">Fetch All<input type="checkbox" name="allEmployees" onclick="javascript:getAllEmployees();"></li></li>
+         </ul>
+        <br class="clear"/>
+    	</div>
+    	</#if>
 		<table id="example" class="display" cellspacing="0" width="100%">
         <thead>
             <tr>

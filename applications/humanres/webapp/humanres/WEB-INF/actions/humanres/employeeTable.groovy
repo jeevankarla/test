@@ -6,14 +6,18 @@ import net.sf.json.JSONObject;
 import net.sf.json.JSONArray;
 import in.vasista.vbiz.humanres.PayrollService;
 
+flag = parameters.allEmployees;
 dctx = dispatcher.getDispatchContext();
 def populateChildren(org, employeeList) {
 	internalOrgs = EntityUtil.filterByDate(delegator.findByAnd("PartyRelationshipAndDetail", [partyIdFrom : org.partyId, partyRelationshipTypeId : "GROUP_ROLLUP"],["groupName"]));
 	internalOrgs.each { internalOrg ->
 		populateChildren(internalOrg, employeeList);
 	}
-	
-	employments = EntityUtil.filterByDate(delegator.findByAnd("EmploymentAndPerson", [partyIdFrom : org.partyId, roleTypeIdTo : "EMPLOYEE"],["firstName"]));
+	if(UtilValidate.isNotEmpty(flag) && flag.equals("true")){
+		employments = delegator.findByAnd("EmploymentAndPerson", [partyIdFrom : org.partyId, roleTypeIdTo : "EMPLOYEE"],["firstName"]);
+	}else{
+		employments = EntityUtil.filterByDate(delegator.findByAnd("EmploymentAndPerson", [partyIdFrom : org.partyId, roleTypeIdTo : "EMPLOYEE"],["firstName"]));
+	}
 	
 	employments.each { employment ->
 		employee = [:];
