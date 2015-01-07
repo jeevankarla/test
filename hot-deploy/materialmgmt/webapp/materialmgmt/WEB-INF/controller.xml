@@ -787,7 +787,10 @@
         <security https="true" auth="true"/>                        
         <response name="success" type="view" value="EnquiryNoReport"/>        
     </request-map>
-    
+    <request-map uri="AmendedPOReport.pdf">
+        <security https="true" auth="true"/>                        
+        <response name="success" type="view" value="AmendedPOReport"/>        
+    </request-map>
     <request-map uri="storeStockDetails.pdf">
         <security https="true" auth="true"/>
     	<response name="success" type="view" value="storeStockDetailsPDF"/>
@@ -855,6 +858,7 @@
     <view-map name="MaterialEnquiryReport" type="screenfop" page="component://materialmgmt/widget/materialmgmtReportScreens.xml#MaterialEnquiryReport" content-type="application/pdf" encoding="none"/>
     <view-map name="EnquiryReport" type="screenfop" page="component://materialmgmt/widget/materialmgmtReportScreens.xml#EnquiryReport" content-type="application/pdf" encoding="none"/>
     <view-map name="EnquiryNoReport" type="screenfop" page="component://materialmgmt/widget/materialmgmtReportScreens.xml#EnquiryNoReport" content-type="application/pdf" encoding="none"/>
+    <view-map name="AmendedPOReport" type="screenfop" page="component://materialmgmt/widget/materialmgmtReportScreens.xml#AmendedPOReport" content-type="application/pdf" encoding="none"/>    
     <view-map name="MRRreportPDF" type="screenfop" page="component://materialmgmt/widget/materialmgmtReportScreens.xml#MRRreportPDF" content-type="application/pdf"/>
     <view-map name="storeStockDetailsPDF" type="screenfop" page="component://materialmgmt/widget/materialmgmtReportScreens.xml#storeStockDetailsPDF" content-type="application/pdf"/>
     <view-map name="MRRregisterPDF" type="screenfop" page="component://materialmgmt/widget/materialmgmtReportScreens.xml#MRRregisterPDF" content-type="application/pdf"/>

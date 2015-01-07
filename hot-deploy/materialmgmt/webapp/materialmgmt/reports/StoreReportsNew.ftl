@@ -299,7 +299,21 @@ function makeDatePicker1(fromDateId ,thruDateId){
 				 </table>
 			 </form>
 		  </tr>
-		  
+		  <tr class="alternate-row"> 
+				<form id="AmendedPOReport" name="AmendedPOReport" mothed="post" action="<@ofbizUrl>AmendedPOReport.pdf</@ofbizUrl>" target="_blank">
+				   <table class="basic-table" cellspacing="5">
+					  <tr class="alternate-row">
+					     <td width="20%"><span class='h3'>Amended PO Report</span></td>
+						 <td width="25%">
+							 <span class='h3'>PO No.<input type="textfield"  id="issueToPONo"  name="issueToPONo"/></span>   								
+						  </td>
+						  <td width="15%"><span class='h3'>							</span></td>
+						      <td width="15%"><span class='h3'>   				       </span></td>	
+						 <td width="10%"><span class='h3'><input type="submit" value="Download" class="buttontext"></span></td>
+		 		    </tr>
+				 </table>
+			 </form>
+		  </tr>
 		  <tr class="alternate-row"> 
 				<form id="MaterialEnquiryReport" name="PurchaseEnquiryReport" mothed="post" action="<@ofbizUrl>MaterialEnquiryReport.pdf</@ofbizUrl>" target="_blank">
 				   <table class="basic-table" cellspacing="5">
@@ -307,7 +321,7 @@ function makeDatePicker1(fromDateId ,thruDateId){
 					     <td width="20%"><span class='h3'>Material Enquiry Report</span></td>
 					     
 						 <td width="25%">
-							 <span class='h3'>Enquiry NO.<input type="textfield"  id="issueToCustReqId"  name="issueToCustReqId"/></span>   	
+							 <span class='h3'>Enquiry No.<input type="textfield"  id="issueToCustReqId"  name="issueToCustReqId"/></span>   	
 							 							
 						  </td>
 						   <td width="15%"><span class='h3'>							</span></td>
@@ -324,7 +338,7 @@ function makeDatePicker1(fromDateId ,thruDateId){
 					  <tr class="alternate-row">
 					     <td width="20%"><span class='h3'>Enquiry Report</span></td>
 						 <td width="25%">
-							 <span class='h3'>Enquiry NO.<input type="textfield"  id="issueToCustReqId"  name="issueToCustReqId"/></span>   								
+							 <span class='h3'>Enquiry No.<input type="textfield"  id="issueToCustReqId"  name="issueToCustReqId"/></span>   								
 						  </td>
 						   <td width="15%"><span class='h3'>							</span></td>
 						      <td width="15%"><span class='h3'>   				       </span></td>	
@@ -339,7 +353,7 @@ function makeDatePicker1(fromDateId ,thruDateId){
 					  <tr class="alternate-row">
 					     <td width="20%"><span class='h3'>Enquiry No Report</span></td>
 						 <td width="25%">
-							 <span class='h3'>Enquiry NO.<input type="textfield"  id="issueToEnquiryNo"  name="issueToEnquiryNo"/></span>   								
+							 <span class='h3'>Enquiry No.<input type="textfield"  id="issueToEnquiryNo"  name="issueToEnquiryNo"/></span>   								
 						  </td>
 						  <td width="15%"><span class='h3'>							</span></td>
 						      <td width="15%"><span class='h3'>   				       </span></td>	
