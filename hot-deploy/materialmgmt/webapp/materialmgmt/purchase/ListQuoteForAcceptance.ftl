@@ -30,14 +30,19 @@ under the License.
     function processQuotes(current){
     	jQuery(current).attr( "disabled", "disabled");
     	var actionFlag = $(current).val();
+    	var comments =$(description).val();
+    	
     	var quotes = jQuery("#listQuote :checkbox[name='quoteCheckBoxId']");
         var index = 0;
+        
         jQuery.each(quotes, function() {
             if (jQuery(this).is(':checked')) {
             	var domObj = $(this).parent().parent();
             	var quoteObj = $(domObj).find("[name='quoteCheckBoxId']");
             	var quoteId = $(quoteObj).val();
             	var appendStr = "<input type=hidden name=quoteId_o_"+index+" value="+quoteId+" />";
+                   appendStr += "<input type=hidden name=comments value="+comments+" />";
+            	
             	$("#updateQuoteStatusForm").append(appendStr);
             	index = index+1;
             }
@@ -52,6 +57,8 @@ under the License.
         else{
         	appStr += "<input type=hidden name=quoteStatusId value=QUO_REJECTED />";
     		appStr += "<input type=hidden name=quoteItemStatusId value=QTITM_REJECTED />";
+    	
+    		
         	$("#updateQuoteStatusForm").append(appStr);
         }
     	var strApp = "<input type=hidden name=custRequestId value='${custRequestId}' />";
@@ -85,6 +92,7 @@ under the License.
           <td>Quote Issue Date</td>
           <td>Quote Valid From</td>
           <td>Valid Thru</td>
+          <td>Comments</td>
 		  <td align="right" cell-padding>${uiLabelMap.CommonSelect} <input type="checkbox" id="checkAllQuotes" name="checkAllQuotes" onchange="javascript:toggleQuoteId(this);"/></td>
         </tr>
       </thead>
@@ -103,8 +111,9 @@ under the License.
               	<#else>
               		<td></td>
               	</#if>
-              	
+              	 <td> <input type="text"  id="description"  name="description"/> </td>
            		<td><input type="checkbox" id="quoteCheckBoxId_${eachQuote_index}" name="quoteCheckBoxId" value="${eachQuote.quoteId?if_exists}"/></td>
+           <td><input type="hidden" name="description" value="${description?if_exists}"/></td>
             </tr>
             <#assign index = index+1>
             <#-- toggle the row color -->

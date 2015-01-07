@@ -400,6 +400,7 @@ public class MaterialQuoteServices {
 		Map<String, Object> result = ServiceUtil.returnSuccess();
 		String custRequestId = (String) request.getParameter("custRequestId");
 	    String quoteStatusId = (String) request.getParameter("quoteStatusId");
+	    String comments = (String) request.getParameter("comments");
 	    String quoteItemStatusId = (String) request.getParameter("quoteItemStatusId");
 	    HttpSession session = request.getSession();
 	    GenericValue userLogin = (GenericValue) session.getAttribute("userLogin");
@@ -444,6 +445,7 @@ public class MaterialQuoteServices {
 				quoteInputCtx.clear();
 				quoteInputCtx.put("quoteId", quoteId);
 				quoteInputCtx.put("statusId", quoteStatusId);
+				quoteInputCtx.put("comments", comments);
 				quoteInputCtx.put("userLogin", userLogin);
 				result = dispatcher.runSync("setQuoteAndItemStatus", quoteInputCtx);
 				if(ServiceUtil.isError(result)){
@@ -457,6 +459,7 @@ public class MaterialQuoteServices {
 					quoteInputCtx.put("quoteId", quoteId);
 					quoteInputCtx.put("quoteItemSeqId", quoteItem.getString("quoteItemSeqId"));
 					quoteInputCtx.put("statusId", quoteItemStatusId);
+					quoteInputCtx.put("comments", comments);
 					quoteInputCtx.put("userLogin", userLogin);
 					result = dispatcher.runSync("setQuoteAndItemStatus", quoteInputCtx);
 					if(ServiceUtil.isError(result)){

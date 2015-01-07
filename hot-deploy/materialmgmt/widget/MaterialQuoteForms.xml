@@ -324,12 +324,16 @@
         </field> -->
     </form>
     <form name="ListQuotesForShortlisting" id="ListQuotesForShortlisting" type="list"  list-name="quotesList"
-        odd-row-style="alternate-row" default-table-style="basic-table hover-bar" paginate-target="quoteForAcceptance">
+        odd-row-style="alternate-row" default-table-style="basic-table hover-bar" paginate-target="quoteForAcceptance" target="changeQuoteItemStatusNew">
+        
+        <field name="quoteItemSeqId"><hidden/></field>
         <field name="quoteId" widget-style="buttontext h2" title="Quote No">
         	<hyperlink also-hidden="false" description="${quoteId}" target="ViewMaterialQuote" target-window="_blank">
                 <parameter param-name="quoteId"/>
         	</hyperlink>
         </field>
+        <field name="quoteId"><hidden value="${quoteId}"/></field>
+        <field name="statusId"> <hidden value="QTITM_REJECTED"/></field>
         <field name="partyId" title="Supplier"><display-entity entity-name="PartyNameView" key-field-name="partyId" description="${firstName} ${middleName} ${lastName} ${groupName} [${partyId}] "/></field>
         <field name="issueDate" title="Quote Issue Date"><display description="${groovy:org.ofbiz.base.util.UtilDateTime.toDateString(issueDate,&quot;dd/MM/yyyy&quot;)}" /></field>
         <field name="validFromDate" title="Quote Valid From"><display description="${groovy:org.ofbiz.base.util.UtilDateTime.toDateString(validFromDate,&quot;dd/MM/yyyy&quot;)}" /></field>
@@ -338,6 +342,8 @@
         <field name="quantity" title="Qty"><display /></field>
         <field name="qiStatusId" title="Status"><display-entity entity-name="StatusItem" key-field-name="statusId" description="${description}" /></field>
         <field name="quoteUnitPrice" title="Unit Price"><display /></field>
+        <field name="comments" title="Comments" widget-style="required" required-field="true"><text size="20" /></field>
+        
         <field use-when="&quot;${qiStatusId}&quot; == &quot;QTITM_NEGOTIATION&quot;" name="approveLink" widget-style="buttontext h3" title="Sec. Head Approval">
         	<hyperlink also-hidden="false" description="Approve" target="changeQuoteItemStatusNew">
                 <parameter param-name="quoteId"/>
@@ -354,6 +360,11 @@
                 <parameter param-name="statusId" value="QTITM_ADUIT_APP"/>
         	</hyperlink>
         </field>
+        
+        <field use-when="&quot;${qiStatusId}&quot; == &quot;QTITM_NEGOTIATION&quot; || &quot;${qiStatusId}&quot; == &quot;QTITM_APPROVED&quot; || &quot;${qiStatusId}&quot; == &quot;QTITM_ADUIT_APP&quot;" name="rejectLink" widget-style="buttontext h3" title="Reject">
+        	<submit/>
+        </field>
+        
         <field use-when="&quot;${qiStatusId}&quot; == &quot;QTITM_ADUIT_APP&quot;" name="qualifiedLink" widget-style="buttontext h3" title="MD Approval">
         	<hyperlink also-hidden="false" description="Approve" target="changeQuoteItemStatusNew">
                 <parameter param-name="quoteId"/>
@@ -362,15 +373,6 @@
                 <parameter param-name="statusId" value="QTITM_QUALIFIED"/>
         	</hyperlink>
         </field> 
-        <field use-when="&quot;${qiStatusId}&quot; == &quot;QTITM_NEGOTIATION&quot; || &quot;${qiStatusId}&quot; == &quot;QTITM_APPROVED&quot; || &quot;${qiStatusId}&quot; == &quot;QTITM_ADUIT_APP&quot;" name="rejectLink" widget-style="buttontext h3" title="Reject">
-        	<hyperlink also-hidden="false" description="Reject" target="changeQuoteItemStatusNew">
-                <parameter param-name="quoteId"/>
-                <parameter param-name="quoteItemSeqId"/>
-                <parameter param-name="custRequestId" value="${custRequestId}"/>
-                <parameter param-name="statusId" value="QTITM_REJECTED"/>
-        	</hyperlink>
-        </field>
-        
     </form>
     <form name="ListQualifiedQuotesForPO" id="ListApprovedQuotesForPO" type="list"  list-name="quoteQualifiedList"
         odd-row-style="alternate-row" default-table-style="basic-table hover-bar" paginate-target="quoteForAcceptance">
