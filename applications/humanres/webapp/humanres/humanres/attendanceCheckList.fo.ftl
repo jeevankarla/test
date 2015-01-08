@@ -2,7 +2,7 @@
     <fo:root xmlns:fo="http://www.w3.org/1999/XSL/Format">
         <fo:layout-master-set>
             <fo:simple-page-master master-name="main" page-height="12in" page-width="15in" margin-top="0.1in" >
-                <fo:region-body margin-top="0.6in"/>
+                <fo:region-body margin-top="0.7in"/>
                 <fo:region-before extent="1in"/>
                 <fo:region-after extent="1in"/>
             </fo:simple-page-master>
@@ -19,7 +19,10 @@
 		<#else>         
  			<fo:page-sequence master-reference="main">
 				<fo:static-content flow-name="xsl-region-before" font-family="Courier,monospace" font-size="8pt">
-			        <fo:block text-align="left" white-space-collapse="false" keep-together="always" font-size="5pt">.                               CHECK LIST FOR ATTENDANCE ON ${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(thruDate, "MMMM,yyyy").toUpperCase()}</fo:block>        
+			        <fo:block text-align="left" white-space-collapse="false" keep-together="always" font-size="5pt">.                               THE ANDHRA PRADESH DAIRY DEVELOPMENT CO-OP.FEDERATION LTD </fo:block> 
+			        <fo:block text-align="left" white-space-collapse="false" keep-together="always" font-size="5pt">.                                        MILK PRODUCT FACTORY : ${(parameters.partyId).toUpperCase()}</fo:block>  
+			        <#assign organizationDetails = delegator.findOne("PartyGroup", {"partyId" : parameters.partyId}, true)>
+			        <fo:block text-align="left" white-space-collapse="false" keep-together="always" font-size="5pt">.       SHED : ${organizationDetails.get("comments")?if_exists}             ATTENDANCE REPORT FOR THE MONTH OF : ${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(thruDate, "MM/yyyy").toUpperCase()}</fo:block>               
 			  		<fo:block text-align="left" white-space-collapse="false" keep-together="always" font-size="8pt">--------------------------------------------------------------------------------------------------------------------------------------------</fo:block>	 	 	  
 			  		<fo:block text-align="left" white-space-collapse="false" keep-together="always" font-size="8pt">SLNO   UNIT   COST   TYPE   EMPNO      EMP NAME               DESIGNATION          WKD    CO    CL   EL   CHPL   HPL   DBL   EOL   TDAYS</fo:block>
 			  		<fo:block text-align="left" white-space-collapse="false" keep-together="always" font-size="8pt">---------------------------------------------------------------------------------------------------------------------------------------------</fo:block>
@@ -63,10 +66,11 @@
 									   				<fo:block font-size="4pt" text-align="center">EPF</fo:block>
 									   			</fo:table-cell>
 									   			<fo:table-cell>
-									   				<fo:block font-size="4pt" text-align="left">${employeeAttendanceDetails.getKey()}</fo:block>
+									   				<fo:block font-size="4pt" text-align="left">${Static["org.ofbiz.party.party.PartyServices"].getPartyInternal(delegator, employeeAttendanceDetails.getKey())}</fo:block>
 									   			</fo:table-cell>
+									   			<#assign personDetails = delegator.findOne("Person", {"partyId" : employeeAttendanceDetails.getKey()}, true)>	
 									   			<fo:table-cell>
-									   				<fo:block font-size="4pt" text-align="left">${Static["org.ofbiz.party.party.PartyHelper"].getPartyName(delegator, employeeAttendanceDetails.getKey(), false)}</fo:block>
+									   				<fo:block font-size="4pt" text-align="left"><#if personDetails?has_content>${(personDetails.nickname).toUpperCase()?if_exists}</#if></fo:block>
 									   			</fo:table-cell>
 									   			<#assign emplPositionAndFulfilment=delegator.findByAnd("EmplPositionAndFulfillment", {"employeePartyId" : employeeAttendanceDetails.getKey()})/>
 									   			<#assign designationId = emplPositionAndFulfilment[0].emplPositionTypeId>

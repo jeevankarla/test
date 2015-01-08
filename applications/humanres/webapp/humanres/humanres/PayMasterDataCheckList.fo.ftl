@@ -177,7 +177,7 @@
 					            			<fo:block font-size="4pt" text-align="left">${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(fromDate, "MM/yyyy")}</fo:block>
 					            		</fo:table-cell >
 					            		<fo:table-cell >
-					            			<fo:block font-size="4pt" text-align="left">${partyBen.getKey()?if_exists}</fo:block>
+					            			<fo:block font-size="4pt" text-align="left">${Static["org.ofbiz.party.party.PartyServices"].getPartyInternal(delegator, partyBen.getKey())}</fo:block>
 					            		</fo:table-cell >
 					            		<fo:table-cell >
 					            			<fo:block font-size="4pt" text-align="left"><#if oragnizationId?has_content>${oragnizationId?if_exists}<#else>&#160;</#if></fo:block>

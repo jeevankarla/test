@@ -76,10 +76,11 @@
 										   				<fo:block font-size="4pt" text-align="left">${benefitType.get("benefitName")?if_exists}</fo:block>
 										   			</fo:table-cell>
 										   			<fo:table-cell>
-										   				<fo:block font-size="4pt" text-align="left">${benefitsList.get("partyIdTo")?if_exists}</fo:block>
+										   				<fo:block font-size="4pt" text-align="left">${Static["org.ofbiz.party.party.PartyServices"].getPartyInternal(delegator, benefitsList.get("partyIdTo"))}</fo:block>
 										   			</fo:table-cell>
+										   			<#assign personDetails = delegator.findOne("Person", {"partyId" : benefitsList.get("partyIdTo")}, true)>	
 										   			<fo:table-cell>
-										   				<fo:block font-size="4pt" text-align="left">${Static["org.ofbiz.party.party.PartyHelper"].getPartyName(delegator, benefitsList.get("partyIdTo"), false)}</fo:block>
+										   				<fo:block font-size="4pt" text-align="left"><#if personDetails?has_content>${(personDetails.nickname).toUpperCase()?if_exists}<#else>${Static["org.ofbiz.party.party.PartyHelper"].getPartyName(delegator, benefitsList.get("partyIdTo"), false)}</#if></fo:block>
 										   			</fo:table-cell>
 										   			<#assign emplPosition=delegator.findByAnd("EmplPosition", {"partyId" : benefitsList.get("partyIdTo")})/>
 										   			<fo:table-cell>
@@ -150,10 +151,11 @@
 										   				<fo:block font-size="4pt" text-align="left">${deductionType.get("deductionName")?if_exists}</fo:block>
 										   			</fo:table-cell>
 										   			<fo:table-cell>
-										   				<fo:block font-size="4pt" text-align="left">${deductionList.get("partyIdTo")?if_exists}</fo:block>
+										   				<fo:block font-size="4pt" text-align="left">${Static["org.ofbiz.party.party.PartyServices"].getPartyInternal(delegator, deductionList.get("partyIdTo"))}</fo:block>
 										   			</fo:table-cell>
+										   			<#assign personDetails = delegator.findOne("Person", {"partyId" : deductionList.get("partyIdTo")}, true)>	
 										   			<fo:table-cell>
-										   				<fo:block font-size="4pt" text-align="left">${Static["org.ofbiz.party.party.PartyHelper"].getPartyName(delegator, deductionList.get("partyIdTo"), false)}</fo:block>
+										   				<fo:block font-size="4pt" text-align="left"><#if personDetails?has_content>${(personDetails.nickname).toUpperCase()?if_exists}<#else>${(Static["org.ofbiz.party.party.PartyHelper"].getPartyName(delegator, deductionList.get("partyIdTo"), false)).toUpperCase()}</#if></fo:block>
 										   			</fo:table-cell>
 										   			<#assign emplPosition=delegator.findByAnd("EmplPosition", {"partyId" : deductionList.get("partyIdTo")})/>
 										   			<fo:table-cell>

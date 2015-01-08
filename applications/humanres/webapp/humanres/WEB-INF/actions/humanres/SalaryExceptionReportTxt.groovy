@@ -77,7 +77,8 @@ if(UtilValidate.isNotEmpty(timePeriodId)){
 				detailsMap = [:];
 				GISNo = null;
 				partyId=attendanceDetails.get("partyId");
-				String partyName = PartyHelper.getPartyName(delegator, partyId, false);
+				partyDetails = delegator.findOne("Person",[ partyId : partyId ], false);
+				partyName = partyDetails.get("nickname");
 				employeeDetails = delegator.findOne("EmployeeDetail", [partyId : partyId], false);
 				if(UtilValidate.isNotEmpty(employeeDetails)){
 					GISNo = employeeDetails.get("presentEpf");

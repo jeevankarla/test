@@ -77,10 +77,10 @@
 			                            	<fo:block text-align="left" keep-together="always" font-size="5pt">${attendanceDetails.getValue().get("GISNo")?if_exists}</fo:block>
 			                            </fo:table-cell>
 			                            <fo:table-cell >	
-			                            	<fo:block text-align="left" keep-together="always" font-size="5pt">${attendanceDetails.getKey()?if_exists}</fo:block>
+			                            	<fo:block text-align="left" keep-together="always" font-size="5pt">${Static["org.ofbiz.party.party.PartyServices"].getPartyInternal(delegator, attendanceDetails.getKey())}</fo:block>
 			                            </fo:table-cell>
 			                            <fo:table-cell >	
-			                            	<fo:block text-align="left" keep-together="always" font-size="5pt">${attendanceDetails.getValue().get("partyName")?if_exists}</fo:block>
+			                            	<fo:block text-align="left" keep-together="always" font-size="5pt">${(attendanceDetails.getValue().get("partyName")).toUpperCase()?if_exists}</fo:block>
 			                            </fo:table-cell>
 			                            <fo:table-cell >	
 			                            	<fo:block text-align="left" keep-together="always" font-size="5pt"><#if designationName?has_content>${designationName?if_exists}<#else><#if designation?has_content>${designation.description?if_exists}</#if></#if></fo:block>

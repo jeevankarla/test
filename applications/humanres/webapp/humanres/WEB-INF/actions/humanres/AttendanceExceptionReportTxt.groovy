@@ -60,7 +60,7 @@ if(UtilValidate.isNotEmpty(timePeriodId)){
 	conditionList=[];
 	conditionList.add(EntityCondition.makeCondition("partyId", EntityOperator.IN , employementIds));
 	conditionList.add(EntityCondition.makeCondition("customTimePeriodId", EntityOperator.EQUALS ,timePeriodId));
-	conditionList.add(EntityCondition.makeCondition("noOfPayableDays", EntityOperator.EQUALS ,null));
+	conditionList.add(EntityCondition.makeCondition(EntityCondition.makeCondition("noOfPayableDays", EntityOperator.EQUALS, null) ,EntityOperator.OR ,EntityCondition.makeCondition("noOfPayableDays", EntityOperator.EQUALS, BigDecimal.ZERO)));
 	/*conditionList.add(EntityCondition.makeCondition([
 		EntityCondition.makeCondition("lastUpdatedStamp", EntityOperator.LESS_THAN_EQUAL_TO, dayBegin),
 		EntityCondition.makeCondition("lastUpdatedStamp", EntityOperator.GREATER_THAN_EQUAL_TO, dayEnd)
@@ -72,7 +72,8 @@ if(UtilValidate.isNotEmpty(timePeriodId)){
 			detailsMap = [:];
 			GISNo = null;
 			partyId=attendanceDetails.get("partyId");
-			String partyName = PartyHelper.getPartyName(delegator, partyId, false);
+			partyDetails = delegator.findOne("Person",[ partyId : partyId ], false);
+			partyName = partyDetails.get("nickname");
 			employeeDetails = delegator.findOne("EmployeeDetail", [partyId : partyId], false);
 			if(UtilValidate.isNotEmpty(employeeDetails)){
 				GISNo = employeeDetails.get("presentEpf");

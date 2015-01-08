@@ -19,7 +19,8 @@
 		<#else>         
  			<fo:page-sequence master-reference="main">
 				<fo:static-content flow-name="xsl-region-before" font-family="Courier,monospace" font-size="8pt">
-			        <fo:block text-align="left" white-space-collapse="false" keep-together="always" font-size="5pt">.                               ATTENDANCE NOT GIVEN ON ${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(thruDate, "MMMM,yyyy").toUpperCase()}</fo:block>        
+					<#assign organizationDetails = delegator.findOne("PartyGroup", {"partyId" : parameters.partyId}, true)>
+			        <fo:block text-align="left" white-space-collapse="false" keep-together="always" font-size="5pt">.       SHED : ${organizationDetails.get("comments")?if_exists}           ATTENDANCE NOT GIVEN ON ${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(thruDate, "MMMM,yyyy").toUpperCase()}</fo:block>        
 			  		<fo:block text-align="left" white-space-collapse="false" keep-together="always" font-size="8pt">-------------------------------------------------------------------------------------------------------------------------------------</fo:block>	 	 	  
 			  		<fo:block text-align="left" white-space-collapse="false" keep-together="always" font-size="8pt">TYPE    MMYY        TypeId          EMPNO     Emp.Name               Desgn.                 WEF         O.B.    INST.</fo:block>
 			  		<fo:block text-align="left" white-space-collapse="false" keep-together="always" font-size="8pt">-------------------------------------------------------------------------------------------------------------------------------------</fo:block>
@@ -52,10 +53,11 @@
 									   				<fo:block font-size="4pt" text-align="left">Payable Days</fo:block>
 									   			</fo:table-cell>
 									   			<fo:table-cell>
-									   				<fo:block font-size="4pt" text-align="left">${payableDays.get("partyId")?if_exists}</fo:block>
+									   				<fo:block font-size="4pt" text-align="left">${Static["org.ofbiz.party.party.PartyServices"].getPartyInternal(delegator, payableDays.get("partyId"))}</fo:block>
 									   			</fo:table-cell>
+									   			<#assign personDetails = delegator.findOne("Person", {"partyId" : payableDays.get("partyId")}, true)>
 									   			<fo:table-cell>
-									   				<fo:block font-size="4pt" text-align="left">${Static["org.ofbiz.party.party.PartyHelper"].getPartyName(delegator, payableDays.get("partyId"), false)}</fo:block>
+									   				<fo:block font-size="4pt" text-align="left"><#if personDetails?has_content>${(personDetails.nickname).toUpperCase()?if_exists}<#else>${(Static["org.ofbiz.party.party.PartyHelper"].getPartyName(delegator, payableDays.get("partyId"), false)).toUpperCase()}</#if></fo:block>
 									   			</fo:table-cell>
 									   			<#assign emplPosition=delegator.findByAnd("EmplPosition", {"partyId" : payableDays.get("partyId")})/>
 									   			<fo:table-cell>
@@ -101,10 +103,11 @@
 									   				<fo:block font-size="4pt" text-align="left">halfPay Days</fo:block>
 									   			</fo:table-cell>
 									   			<fo:table-cell>
-									   				<fo:block font-size="4pt" text-align="left">${halfPayDays.get("partyId")?if_exists}</fo:block>
+									   				<fo:block font-size="4pt" text-align="left">${Static["org.ofbiz.party.party.PartyServices"].getPartyInternal(delegator, halfPayDays.get("partyId"))}</fo:block>
 									   			</fo:table-cell>
+									   			<#assign personDetails = delegator.findOne("Person", {"partyId" : halfPayDays.get("partyId")}, true)>
 									   			<fo:table-cell>
-									   				<fo:block font-size="4pt" text-align="left">${Static["org.ofbiz.party.party.PartyHelper"].getPartyName(delegator, halfPayDays.get("partyId"), false)}</fo:block>
+									   				<fo:block font-size="4pt" text-align="left"><#if personDetails?has_content>${(personDetails.nickname).toUpperCase()?if_exists}<#else>${(Static["org.ofbiz.party.party.PartyHelper"].getPartyName(delegator, halfPayDays.get("partyId"), false)).toUpperCase()}</#if></fo:block>
 									   			</fo:table-cell>
 									   			<#assign emplPosition=delegator.findByAnd("EmplPosition", {"partyId" : halfPayDays.get("partyId")})/>
 									   			<fo:table-cell>
