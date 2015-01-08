@@ -162,8 +162,11 @@
 			</actions>
 			<widgets>
                 <section>
-					<condition>
-						<if-compare operator="equals" value="PAYROL_DD_GIS" field="dedTypeId" />
+                	<condition>
+					<or>
+					  <if-compare operator="equals" value="PAYROL_DD_GIS" field="dedTypeId" />
+					  <if-compare operator="equals" value="PAYROL_DD_PTAX" field="dedTypeId" />
+					</or>
 					</condition>
 					<widgets>
 						<platform-specific> 
