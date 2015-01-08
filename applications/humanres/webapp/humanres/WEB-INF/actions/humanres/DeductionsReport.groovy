@@ -59,10 +59,13 @@ emplInputMap.put("fromDate", timePeriodStart);
 emplInputMap.put("thruDate", timePeriodEnd);
 employmentsList = [];
 Map EmploymentsMap = HumanresService.getActiveEmployements(dctx,emplInputMap);
-employments=EmploymentsMap.get("employementList");
-if(UtilValidate.isNotEmpty(employments)){
-	employmentsList = EntityUtil.getFieldListFromEntityList(employments, "partyIdTo", true);
+employDetailsList=EmploymentsMap.get("employementList");
+List employmentsList = FastList.newInstance();
+for(employe in employDetailsList){
+	partyId = Integer.parseInt(employe.get("partyId"));
+	employmentsList.add(partyId);
 }
+Collections.sort(employmentsList);
 deductionList = [];
 Map allDeductionMap=FastMap.newInstance();
 periodBillingIdMap=[:];
@@ -77,10 +80,11 @@ if(UtilValidate.isNotEmpty(BillingList)){
 	dedTypeIds.each{ dedTypeId->
 		if(UtilValidate.isNotEmpty(employmentsList)){
 			periodTotalsMap=[:];
-			employmentsList.each{ employeeId ->
+			employmentsList.each{ empId ->
+				String employeeId = empId;
 				payrollHeaderList = [];
-			detailsMap=[:];
-			Map polacyDetailsMap = FastMap.newInstance();
+				detailsMap=[:];
+				Map polacyDetailsMap = FastMap.newInstance();
 				if(UtilValidate.isNotEmpty(BillingId)){
 					List headerConditionList=[];
 					headerConditionList.add(EntityCondition.makeCondition("periodBillingId", EntityOperator.EQUALS, BillingId));
@@ -291,7 +295,8 @@ if(UtilValidate.isNotEmpty(BillingList)){
 			dedTypeIds.each{ dedTypeId->
 				if(dedTypeId==headerItemTypeId){
 					if(UtilValidate.isNotEmpty(employmentsList)){
-						employmentsList.each{ employeeId ->
+						employmentsList.each{ empId ->
+							String employeeId = empId;
 							detailsMap=[:];
 							Map polacyDetailsMap = FastMap.newInstance();
 							if(deductionEmployeeId==employeeId){
@@ -382,15 +387,6 @@ if(UtilValidate.isNotEmpty(BillingList)){
 													detailsMap.put("polDetails",polacyDetailsMap);
 												}
 											}
-											gisNoDetails = [];
-											gisNoDetails = delegator.findOne("EmployeeDetail",[partyId : employeeId ], false);
-											if(UtilValidate.isNotEmpty(gisNoDetails)){
-												gisNum = gisNoDetails.presentEpf;
-											}
-											if(UtilValidate.isNotEmpty(gisNum)){
-												gisNo = gisNum.trim()
-											}
-											detailsMap.put("gisNo",gisNo);
 										}
 									}
 								}
@@ -411,28 +407,60 @@ if(UtilValidate.isNotEmpty(BillingList)){
 }
 context.put("allDeductionMap",allDeductionMap);
 Comparator mycomparator = Collections.sort(deductionList);
-GisdetailsMap = [:];
-gisDetailsList = allDeductionMap.get("PAYROL_DD_GIS");
-employeeDetailsMap = [:];
-deductionList.each{ dedList ->
-	sum = 0;
-	employeeList = [];
-	gisDetailsList.each{ gisDetList ->
-		tempMap = [:];
-		employeeId = gisDetList.getKey();
-		gisAmount = gisDetList.getValue().get("deductionAmt");
-		emplMap = [:];
-		if(dedList==gisAmount){
-			sum = sum + gisAmount;
-			temMap = [:];
-			temMap.put("employeeId", employeeId);
-			temMap.put("gisAmount", gisAmount);
-			emplMap.putAll(temMap);
-			employeeList.add(emplMap);
-		}
-	}
-	employeeDetailsMap.put(dedList,employeeList);	
-}
-GisdetailsMap.put("PAYROL_DD_GIS",employeeDetailsMap);
 
-context.put("GisdetailsMap",GisdetailsMap);
+subTotalsDetailsMap = [:];
+
+if(parameters.dedTypeId == "PAYROL_DD_GIS"){
+	gisDetailsList = allDeductionMap.get("PAYROL_DD_GIS");
+	employeeDetailsMap = [:];
+	deductionList.each{ dedList ->
+		sum = 0;
+		employeeList = [];
+		gisDetailsList.each{ gisDetList ->
+			tempMap = [:];
+			employeeId = gisDetList.getKey();
+			gisAmount = gisDetList.getValue().get("deductionAmt");
+			emplMap = [:];
+			if(dedList==gisAmount){
+				sum = sum + gisAmount;
+				temMap = [:];
+				temMap.put("employeeId", employeeId);
+				temMap.put("gisAmount", gisAmount);
+				emplMap.putAll(temMap);
+				employeeList.add(emplMap);
+			}
+		}
+		employeeDetailsMap.put(dedList,employeeList);	
+	}
+	subTotalsDetailsMap.put("PAYROL_DD_GIS",employeeDetailsMap);
+}
+
+if(parameters.dedTypeId == "PAYROL_DD_PTAX"){
+	profTaxDetailsList = allDeductionMap.get("PAYROL_DD_PTAX");
+	employeeDetailsMap = [:];
+	deductionList.each{ dedList ->
+		sum = 0;
+		employeeList = [];
+		profTaxDetailsList.each{ profTaxList ->
+			tempMap = [:];
+			employeeId = profTaxList.getKey();
+			requiredDetails = profTaxDetailsList.get(employeeId);
+			gross = requiredDetails.get("gross");
+			pfAmount = profTaxList.getValue().get("deductionAmt");
+			emplMap = [:];
+			if(dedList==pfAmount){
+				sum = sum + pfAmount;
+				temMap = [:];
+				temMap.put("employeeId", employeeId);
+				temMap.put("pfAmount", pfAmount);
+				temMap.put("gross", gross);
+				emplMap.putAll(temMap);
+				employeeList.add(emplMap);
+			}
+		}
+		employeeDetailsMap.put(dedList,employeeList);
+	}
+	subTotalsDetailsMap.put("PAYROL_DD_PTAX",employeeDetailsMap);
+}
+
+context.put("subTotalsDetailsMap",subTotalsDetailsMap);

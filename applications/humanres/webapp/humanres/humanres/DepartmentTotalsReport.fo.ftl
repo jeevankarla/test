@@ -148,8 +148,7 @@ under the License.
 	                        <#if count==5>
 	                        <fo:table-row>
 	                        	<fo:table-cell>
-	                        		 <fo:block page-break-before="always" font-size="7pt">--------------------------------------------------------------------------------------------------------------------------------------</fo:block>
-	                        	<fo:block page-break-before="always" font-size="7pt">${count}</fo:block>
+		                        		 <fo:block page-break-after="always"></fo:block>
 	                        	</fo:table-cell>
 	                        </fo:table-row>
 	                        <#assign count=1>

@@ -89,9 +89,10 @@ under the License.
 									<#if benefitType.getValue().get("benefitAmt")!=0>
 										<fo:table-row>
 											<fo:table-cell><fo:block keep-together="always" font-size="4pt" text-align="left">${sno}</fo:block></fo:table-cell>
-											<fo:table-cell><fo:block keep-together="always" font-size="4pt" text-align="left">${benefitType.getKey()?if_exists}</fo:block></fo:table-cell>
-											<fo:table-cell><fo:block keep-together="always" font-size="4pt" text-align="left">${Static["org.ofbiz.order.order.OrderServices"].nameTrim((StringUtil.wrapString(Static["org.ofbiz.party.party.PartyHelper"].getPartyName(delegator, benefitType.getKey(), false))),15)}</fo:block></fo:table-cell>
-						       				<#assign designationId = emplPositionAndFulfilment[0].emplPositionTypeId>
+											<fo:table-cell><fo:block keep-together="always" font-size="4pt" text-align="left">${Static["org.ofbiz.party.party.PartyServices"].getPartyInternal(delegator, deductionType.getKey())}</fo:block></fo:table-cell>
+											<#assign personDetails = delegator.findOne("Person", {"partyId" : deductionType.getKey()}, true)>
+											<fo:table-cell><fo:block keep-together="always" font-size="4pt" text-align="left"><#if personDetails?has_content>${(personDetails.nickname).toUpperCase()?if_exists}<#else></#if></fo:block></fo:table-cell>																	       				
+											<#assign designationId = emplPositionAndFulfilment[0].emplPositionTypeId>
 											<#assign designation = delegator.findOne("EmplPositionType", {"emplPositionTypeId" : designationId?if_exists}, true)>
 											<#assign designationName=emplPositionAndFulfilment[0].name?if_exists>
 						       				<fo:table-cell><fo:block keep-together="always" font-size="4pt" text-align="left"><#if designationName?has_content>${designationName?if_exists}<#else><#if designation?has_content>${designation.description?if_exists}</#if></#if></fo:block></fo:table-cell>		       							
