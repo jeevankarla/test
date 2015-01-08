@@ -30,6 +30,7 @@ import org.ofbiz.accounting.period.PeriodServices;
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.UtilDateTime;
 import org.ofbiz.base.util.UtilMisc;
+import org.ofbiz.base.util.UtilNumber;
 import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.entity.Delegator;
 import org.ofbiz.entity.GenericEntityException;
@@ -48,6 +49,8 @@ import javolution.util.FastMap;
 public class UtilAccounting {
 
     public static String module = UtilAccounting.class.getName();
+    private static final int TAX_DECIMALS = UtilNumber.getBigDecimalScale("salestax.calc.decimals");
+    private static final int TAX_ROUNDING = UtilNumber.getBigDecimalRoundingMode("salestax.rounding");
 
     /**
      * Get the GL Account for a product or the default account type based on input. This replaces the simple-method service
@@ -538,4 +541,38 @@ public class UtilAccounting {
         return result;
     }
 
+  public static Map getExclusiveTaxRate(BigDecimal rate, BigDecimal taxPercent) {
+	   Map<String ,Object> rateMap = FastMap.newInstance();
+	   BigDecimal exRate = BigDecimal.ZERO;
+	   BigDecimal taxAmount = BigDecimal.ZERO;
+        try {
+        	//(rate*100/(100+taxPercent)
+        	exRate = (rate.multiply(new BigDecimal(100))).divide((new BigDecimal(100)).add(taxPercent), TAX_DECIMALS,TAX_ROUNDING);
+        	taxAmount = rate.subtract(exRate);
+        } catch (Exception ex) {
+            Debug.logError(ex.getMessage(), module);
+            return null;
+        }
+        rateMap.put("rate", exRate);
+        rateMap.put("taxAmount", taxAmount);
+        return rateMap;
+    }
+  
+  public static Map getInclusiveTaxRate(BigDecimal rate, BigDecimal taxPercent) {
+	  Map<String ,Object> rateMap = FastMap.newInstance();
+	   BigDecimal incRate = BigDecimal.ZERO;
+	   BigDecimal taxAmount = BigDecimal.ZERO;
+      try {
+      	//(((rate*taxPercent)/100)+rate)
+    	  incRate = ((rate.multiply(taxPercent)).divide((new BigDecimal(100)), TAX_DECIMALS,TAX_ROUNDING)).add(rate);
+      	taxAmount = incRate.subtract(rate);
+      } catch (Exception ex) {
+          Debug.logError(ex.getMessage(), module);
+          return null;
+      }
+      rateMap.put("rate", incRate);
+      rateMap.put("taxAmount", taxAmount);
+     return rateMap;
+  }  
+  
 }
