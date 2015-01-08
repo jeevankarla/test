@@ -1929,6 +1929,26 @@ public class PartyServices {
 		result = ServiceUtil.returnSuccess("Insurace Removed Successfully");
 		return result;
 	}
-    
+	
+	public static String  getPartyInternal(Delegator delegator, String partyId)  {
+		Map<String, Object> result = FastMap.newInstance();	
+		GenericValue partyRecord =null;	
+		String employeeInternalId = " ";
+		try{		 
+			partyRecord = delegator.findOne("Party", false, UtilMisc.toMap("partyId",partyId));
+			if(UtilValidate.isNotEmpty(partyRecord)){
+			 	String employeeId = partyRecord.getString("externalId");
+			 	if(UtilValidate.isNotEmpty(employeeId)){
+			 		employeeInternalId = employeeId;
+			 	}else{
+			 		employeeInternalId = partyId; 
+			 	}
+			 }
+		}catch(GenericEntityException e){
+			Debug.logError("error while getting partyId"+e.getMessage(), module);
+			result = ServiceUtil.returnError("error while getting partyId"); 
+		}
+		return employeeInternalId;
+	}
     
 }
