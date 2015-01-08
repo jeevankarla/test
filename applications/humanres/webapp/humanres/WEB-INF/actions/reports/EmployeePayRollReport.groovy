@@ -124,6 +124,7 @@ List<GenericValue> employementList = (List<GenericValue>)EmploymentsMap.get("emp
 employementList = EntityUtil.orderBy(employementList, UtilMisc.toList("partyIdTo"));
 employementIds = EntityUtil.getFieldListFromEntityList(employementList, "partyIdTo", true);
 
+Map loanBalancesMap=FastMap.newInstance();
 Map payRateMap=FastMap.newInstance();
 Map unitIdMap=FastMap.newInstance();
 Map payRollMap=FastMap.newInstance();
@@ -228,6 +229,24 @@ if(UtilValidate.isNotEmpty(periodBillingList)){
 					payRollMap.put(payrollHeaderId,payRollItemsMap);
 					payRollEmployeeMap.put(partyId,payRollItemsMap);
 					
+					loanDetails = delegator.findList("Loan", EntityCondition.makeCondition("partyId", EntityOperator.EQUALS , partyId), null, null, null, false);
+					if(UtilValidate.isNotEmpty(loanDetails)){
+						loanDetails.each{ loan->
+							loanTypeMap = [:];
+							loanBalance = 0;
+							loanId = loan.get("loanId");
+							loanTypeId = loan.get("loanTypeId");
+							loanRecoveryList = delegator.findList("LoanRecovery",EntityCondition.makeCondition("loanId", EntityOperator.EQUALS , loanId)  , null, null, null, false );
+							if(UtilValidate.isNotEmpty(loanRecoveryList)){
+								loanRecoveryDetails = EntityUtil.getFirst(loanRecoveryList);
+								loanBalance = loanRecoveryDetails.get("closingBalance");
+							}
+							loanTypeMap.put(loanTypeId,loanBalance);
+							loanBalancesMap.put(partyId,loanTypeMap);
+						}
+					}
+					
+					
 					unitDetails = delegator.findList("Employment", EntityCondition.makeCondition("partyIdTo", EntityOperator.EQUALS , partyId), null, null, null, false);
 					if(UtilValidate.isNotEmpty(unitDetails)){
 						unitDetails = EntityUtil.getFirst(unitDetails);
@@ -254,6 +273,9 @@ if(UtilValidate.isNotEmpty(periodBillingList)){
 								payRateMap.put(partyId, salary);
 							}
 						}
+					}else{
+						salary = null;
+						payRateMap.put(partyId, salary);
 					}
 				}
 			}
@@ -360,6 +382,7 @@ if(UtilValidate.isNotEmpty(BankAdvicePayRollMap) && UtilValidate.isNotEmpty(para
 parameters.partyId=orgPartyId;
 context.put("unitIdMap",unitIdMap);
 context.put("payRateMap",payRateMap);
+context.put("loanBalancesMap",loanBalancesMap);
 context.put("InstallmentFinalMap",InstallmentFinalMap);
 context.put("payRollSummaryMap",payRollSummaryMap);
 context.put("payRollMap",payRollMap);
@@ -377,5 +400,6 @@ partyGroup = delegator.findByPrimaryKey("PartyGroup", [partyId : orgPartyId]);
 if (partyGroup?.logoImageUrl) {
    logoImageUrl = partyGroup.logoImageUrl;
 }
-context.logoImageUrl = logoImageUrl;
 
+//Debug.log("payRollEmployeeMap==========="+payRollEmployeeMap);
+context.logoImageUrl = logoImageUrl;
