@@ -23,13 +23,7 @@
      			<fo:block text-align="left" white-space-collapse="false" font-weight="bold" font-size = "10pt">UNIT : ${oragnizationId?if_exists}           ${partyGroup.groupName?if_exists?upper_case}  <#if partyAddressResult.address1?has_content>${partyAddressResult.address1?if_exists}</#if><#if (partyAddressResult.address2?has_content)>${partyAddressResult.address2?if_exists}  </#if>           JOURNAL VOUCHER NO :             </fo:block>
         	 	<fo:block text-align="left" white-space-collapse="false" font-weight="bold" font-size = "10pt">MONTH : ${(Static["org.ofbiz.base.util.UtilDateTime"].toDateString(timePeriodEnd, "MM/yyyy")).toUpperCase()}                                                                               BILL NO :</fo:block>
         		<fo:block text-align="left" keep-together="always" white-space-collapse="false">-------------------------------------------------------------------------------------------------------------------------------------------------------------------</fo:block>
-        		<#if (parameters.netPayglCode?exists && parameters.netPayglCode == "Yes")>	 	 	  
-        			<fo:block text-align="left" white-space-collapse="false" keep-together="always" font-weight="bold">SL.     UAS         NOMENCLATURE                                                                            DEBIT                           CREDIT</fo:block>
-        		<#elseif (parameters.netPayglCode?exists && parameters.netPayglCode == "No")>
-        			<fo:block text-align="left" white-space-collapse="false" keep-together="always" font-weight="bold">SL.                      NOMENCLATURE                                                                            DEBIT                           CREDIT</fo:block>
-        		<#else>
-        			<fo:block text-align="left" white-space-collapse="false" keep-together="always" font-weight="bold">SL.                 NOMENCLATURE                                                            DEBIT                                       CREDIT</fo:block>	
-        		</#if>
+        		<fo:block text-align="left" white-space-collapse="false" keep-together="always" font-weight="bold">SL.     UAS         NOMENCLATURE                                                                            DEBIT                           CREDIT</fo:block>
         		<fo:block text-align="left" keep-together="always" white-space-collapse="false">-------------------------------------------------------------------------------------------------------------------------------------------------------------------</fo:block>
         	</fo:static-content>       
         	<fo:flow flow-name="xsl-region-body" font-family="Helvetica">
@@ -57,17 +51,13 @@
 			                    			<#assign sNo = sNo+1>
 			                    		</fo:table-cell >                   
 			                    		<fo:table-cell >  
-				                    		<#if (parameters.netPayglCode?exists && parameters.netPayglCode == "Yes")>                  		
-				                      			<#assign extrnalGlCodeGroup = delegator.findOne("BenefitType", {"benefitTypeId" :benefitType}, true)> 
-				                      			<#if extrnalGlCodeGroup.externalGlCode?exists >               			
-				                    				<fo:block text-align="left" keep-together="always">${extrnalGlCodeGroup.externalGlCode?if_exists}</fo:block>
-				                    			<#else>
-				                    				<#assign extrnalGlCodeGroup = delegator.findOne("InvoiceItemType", {"invoiceItemTypeId" :benefitType}, true)>
-				                    				<fo:block text-align="left" keep-together="always">${extrnalGlCodeGroup.defaultGlAccountId?if_exists}</fo:block>
-				                    			</#if> 
-				                    		<#else>	 
-				                    			<fo:block linefeed-treatment="preserve">&#xA;</fo:block>
-				                    		</#if>	  
+			                      			<#assign extrnalGlCodeGroup = delegator.findOne("BenefitType", {"benefitTypeId" :benefitType}, true)> 
+			                      			<#if extrnalGlCodeGroup.externalGlCode?exists >               			
+			                    				<fo:block text-align="left" keep-together="always">${extrnalGlCodeGroup.externalGlCode?if_exists}</fo:block>
+			                    			<#else>
+			                    				<#assign extrnalGlCodeGroup = delegator.findOne("InvoiceItemType", {"invoiceItemTypeId" :benefitType}, true)>
+			                    				<fo:block text-align="left" keep-together="always">${extrnalGlCodeGroup.defaultGlAccountId?if_exists}</fo:block>
+			                    			</#if> 
 			                    		</fo:table-cell>
 			                    		<fo:table-cell>
 				                    		 <#assign totalEarnings=(totalEarnings+(value))> 
@@ -91,17 +81,13 @@
 			                    			<#assign sNo = sNo+1>
 			                    		</fo:table-cell >                    
 			                    		<fo:table-cell> 
-				                    		<#if (parameters.netPayglCode?exists && parameters.netPayglCode == "Yes")>  
-				                    			<#assign extrnalGlCodeGroup = delegator.findOne("DeductionType", {"deductionTypeId" :deductionType}, true)>                 		
-				                      			<#if extrnalGlCodeGroup.externalGlCode?exists >  							                      			               			
-				                    				<fo:block keep-together="always">${extrnalGlCodeGroup.externalGlCode?if_exists}</fo:block>  
-				                    			<#else>        
-					                    			<#assign extrnalGlCodeGroup = delegator.findOne("InvoiceItemType", {"invoiceItemTypeId" :deductionType}, true)>
-					                    			<fo:block keep-together="always">${extrnalGlCodeGroup.defaultGlAccountId?if_exists}</fo:block>
-				                    			</#if> 
-				                    		<#else>
-				                    			<fo:block linefeed-treatment="preserve">&#xA;</fo:block>
-				                    		</#if>	     			
+			                    			<#assign extrnalGlCodeGroup = delegator.findOne("DeductionType", {"deductionTypeId" :deductionType}, true)>                 		
+			                      			<#if extrnalGlCodeGroup.externalGlCode?exists >  							                      			               			
+			                    				<fo:block keep-together="always">${extrnalGlCodeGroup.externalGlCode?if_exists}</fo:block>  
+			                    			<#else>        
+				                    			<#assign extrnalGlCodeGroup = delegator.findOne("InvoiceItemType", {"invoiceItemTypeId" :deductionType}, true)>
+				                    			<fo:block keep-together="always">${extrnalGlCodeGroup.defaultGlAccountId?if_exists}</fo:block>
+			                    			</#if> 
 			                    		</fo:table-cell>  
 			                    		<fo:table-cell>
 			                    		 	<#assign totalDeductions=(totalDeductions+(dedValue))>
@@ -120,15 +106,9 @@
                     			<fo:table-cell > 
 	                    			<fo:block>${sNo}</fo:block>
 	                    		</fo:table-cell > 
-	                    		<#if (parameters.netPayglCode?exists && parameters.netPayglCode == "Yes")> 
-		                    		<fo:table-cell > 
-		                    			<fo:block>09101</fo:block>
-		                    		</fo:table-cell > 
-		                    	<#else>
-		                    		<fo:table-cell > 
-		                    			<fo:block></fo:block>
-		                    		</fo:table-cell > 
-		                    	</#if>
+	                    		<fo:table-cell > 
+	                    			<fo:block>09101</fo:block>
+	                    		</fo:table-cell > 
 	                    		<fo:table-cell > 
 	                    			<fo:block>SALARY PAYABLE(NET)</fo:block>
 	                    		</fo:table-cell >
