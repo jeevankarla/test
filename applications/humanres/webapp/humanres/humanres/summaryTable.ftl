@@ -87,10 +87,14 @@ $(document).ready(function() {
 
 
 	</script>
+		<#assign allEmployees = "false">
+		<#if parameters.allEmployees?has_content >
+			<#assign allEmployees = parameters.allEmployees>
+		</#if>
 		<#if security.hasEntityPermission("HUMANRES", "_ADMIN", session)>
 		<div id="demo">
 		<div align = "right">
-        <ul><li class="h3">Fetch All<input type="checkbox" name="allEmployees" onclick="javascript:getAllEmployees();"></li></li>
+        <ul><li class="h3">Fetch All<input type="checkbox" name="allEmployees"  <#if allEmployees == 'true'> checked="checked" <#elseif allEmployees == 'false'> onclick="javascript:getAllEmployees();"</#if></li></li>
          </ul>
         <br class="clear"/>
     	</div>

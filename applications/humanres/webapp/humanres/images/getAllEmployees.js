@@ -1,6 +1,3 @@
-jQuery(document).ready(function() {
-	getAllEmployees();
-});
 function getAllEmployees(){
 	var isChecked = $("input[name='allEmployees']").is(':checked');
 	if(isChecked == true){
