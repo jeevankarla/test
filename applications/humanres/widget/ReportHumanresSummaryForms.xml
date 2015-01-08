@@ -196,15 +196,11 @@
 	</form>	
 	<form name="EcsBankDetailsCsv" type="list" list-name="finalList" 
 		odd-row-style="alternate-row" default-table-style="basic-table hover-bar">
-		<field name="date" title-area-style="date">
-			<display description="${finalDate} " />
-		</field>
-		<field name="txnType" title="Txn Type"><display/></field>
 		<field name="txnType" title="Txn Type"><display/></field>
 		<field name="acNo" title="Account Number"><display/></field>
 		<field name="branchCode" title="Branch Code"><display/></field>
 		<field name="txnCode" title="Txn Code"><display/></field>
-		<field name="dateStr" title="Txn Date"><display/> </field>
+		<field name="dateStr" title="Txn Date"><display type="date"/> </field>
 		<field name="credit" title="Dr / Cr"><display/></field>
 		<field name="dateStr2" title="Value Dt"><display type="date"/></field>
 		<field name="txnCcy" title="Txn CCY"><display/></field>
