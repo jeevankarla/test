@@ -32,16 +32,6 @@ timePeriodEnd=UtilDateTime.toTimestamp(customTimePeriod.getDate("thruDate"));
 dayStart = UtilDateTime.getDayStart(UtilDateTime.nowTimestamp());
 dayEnd = UtilDateTime.getDayEnd(UtilDateTime.nowTimestamp());
 
-Map emplInputMap = FastMap.newInstance();
-emplInputMap.put("orgPartyId", "Company");
-emplInputMap.put("userLogin", userLogin);
-emplInputMap.put("fromDate", dayStart);
-emplInputMap.put("thruDate", dayEnd);
-Map EmploymentsMap = HumanresService.getActiveEmployements(dctx,emplInputMap);
-List<GenericValue> employementList = (List<GenericValue>)EmploymentsMap.get("employementList");
-employementList = EntityUtil.orderBy(employementList, UtilMisc.toList("partyIdTo"));
-employementIds = EntityUtil.getFieldListFromEntityList(employementList, "partyIdTo", true);
-
 sortBy = UtilMisc.toList("sequenceNum");
 if(UtilValidate.isNotEmpty(context.reportFlag) && (context.reportFlag).equals("summary")){
 	sortBy = UtilMisc.toList("description");
@@ -114,6 +104,16 @@ if(UtilValidate.isNotEmpty(parameters.customTimePeriodId)){
 Map unPayRollEmployeeMap=FastMap.newInstance();
 Map payRollEmployeeMap=FastMap.newInstance();
 
+Map emplInputMap = FastMap.newInstance();
+emplInputMap.put("orgPartyId", "Company");
+emplInputMap.put("userLogin", userLogin);
+emplInputMap.put("fromDate", dayStart);
+emplInputMap.put("thruDate", dayEnd);
+Map EmploymentsMap = HumanresService.getActiveEmployements(dctx,emplInputMap);
+List<GenericValue> employementList = (List<GenericValue>)EmploymentsMap.get("employementList");
+employementList = EntityUtil.orderBy(employementList, UtilMisc.toList("partyIdTo"));
+employementIds = EntityUtil.getFieldListFromEntityList(employementList, "partyIdTo", true);
+
 if(UtilValidate.isNotEmpty(parameters.customTimePeriodId)){
 	if(UtilValidate.isNotEmpty(employementList)){
 		employementList.each { employee ->
@@ -155,7 +155,6 @@ if(UtilValidate.isNotEmpty(parameters.customTimePeriodId)){
 								if(UtilValidate.isNotEmpty(payRollHeaderItemsList)){
 									tempAmount =0;
 									payRollHeaderItemsList.each{ payRollHeaderItem->
-										payrollItemSeqId=payRollHeaderItem.get("payrollItemSeqId");
 										payrollHeaderItemTypeId=payRollHeaderItem.get("payrollHeaderItemTypeId");
 										amount=payRollHeaderItem.get("amount");
 										if(amount >0){
@@ -175,9 +174,6 @@ if(UtilValidate.isNotEmpty(parameters.customTimePeriodId)){
 										
 										periodDetails = delegator.findOne("CustomTimePeriod", [customTimePeriodId :periodHeaderEntry.getKey()], false);
 										periodName = periodDetails.get("periodName");
-										if(UtilValidate.isNotEmpty(payRollItemsMap) || tempAmount !=0){
-											periodWiseMap.put(periodName,payRollItemsMap);
-										}
 										if(UtilValidate.isNotEmpty(payRollItemsMap)){
 											periodWiseEmployeeMap.put(periodName,payRollItemsMap);
 										}

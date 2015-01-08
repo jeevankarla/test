@@ -42,7 +42,7 @@
 			                	<fo:table-body> 
 			                     	<fo:table-row >
 			                     		<fo:table-cell >
-			                     			<fo:block text-align="left" font-size="9pt" >EMPNO : ${payRollEmployee.getKey()?if_exists}</fo:block>
+			                     			<fo:block text-align="left" font-size="9pt" >EMPNO : ${Static["org.ofbiz.party.party.PartyServices"].getPartyInternal(delegator, payRollEmployee.getKey())}</fo:block>
 			                     		</fo:table-cell >
 			                     		<#assign payRollEmployeDetails = payRollEmployee.getValue().entrySet()>
 			                     		<#list payRollEmployeDetails as employeeDetail>
@@ -51,7 +51,7 @@
 			                     			</#if>
 			                     		</#list>
 			                     		<fo:table-cell >
-			                     			<fo:block text-align="left" font-size="9pt" >EMPNAME : ${empName?if_exists}</fo:block>
+			                     			<fo:block text-align="left" font-size="9pt" >EMPNAME : ${(empName).toUpperCase()?if_exists}</fo:block>
 			                     		</fo:table-cell >
 			                     		<fo:table-cell >
 		                     				<fo:block text-align="left" font-size="9pt">DESIGNATION : <#if designationName?has_content>${designationName?if_exists}<#else><#if designation?has_content>${designation.description?if_exists}</#if></#if></fo:block>

@@ -36,10 +36,10 @@
                      		<#list employeeName as empName>
                      			<fo:table-row>
 	                           		<fo:table-cell>	
-	                            		<fo:block text-align="center" keep-together="always" font-size="15pt">${payroll.getKey()}</fo:block>
+	                            		<fo:block text-align="center" keep-together="always" font-size="15pt">${Static["org.ofbiz.party.party.PartyServices"].getPartyInternal(delegator, payroll.getKey())}</fo:block>
 	                           		</fo:table-cell>
 	                           		<fo:table-cell>	
-	                            		<fo:block text-align="left" keep-together="always" font-size="15pt">${empName.getKey()}</fo:block>
+	                            		<fo:block text-align="left" keep-together="always" font-size="15pt">${(empName.getKey()).toUpperCase()?if_exists}</fo:block>
 	                            	</fo:table-cell>
 	                            	<fo:table-cell>	
 	                            		<fo:block text-align="left" keep-together="always" font-size="15pt">${empName.getValue()}</fo:block>

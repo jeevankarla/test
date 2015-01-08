@@ -63,12 +63,17 @@ if(UtilValidate.isNotEmpty(timePeriodId)){
 	payrollDetailsList = delegator.findList("PayrollAttendance", condition, null, null, null, false);
 	if(UtilValidate.isNotEmpty(payrollDetailsList)){
 		payrollDetailsList.each { payrollDetails ->
-		noOfPayableDays=payrollDetails.get("noOfPayableDays");
-		if(noOfPayableDays==0){
-			payrollDaysMap= [:];
-			partyId=payrollDetails.get("partyId");
+			noOfPayableDays=payrollDetails.get("noOfPayableDays");
+			if(noOfPayableDays==0){
+				payrollDaysMap= [:];
+				partyId=payrollDetails.get("partyId");
 				payableDays = 0;
-				String partyName = PartyHelper.getPartyName(delegator, partyId, false);
+				partyDetails = delegator.findOne("Person",[ partyId : partyId ], false);
+				String partyName = partyDetails.get("nickname");
+				if(UtilValidate.isEmpty(partyName)){
+					partyName = PartyHelper.getPartyName(delegator, partyId, false);
+				}
+				//String partyName = PartyHelper.getPartyName(delegator, partyId, false);
 				payrollDaysMap.put(partyName,payableDays);
 				payrollDetailsMap.put(partyId,payrollDaysMap);
 			}
@@ -76,3 +81,4 @@ if(UtilValidate.isNotEmpty(timePeriodId)){
 	}
 }
 context.put("payrollDetailsMap",payrollDetailsMap);
+

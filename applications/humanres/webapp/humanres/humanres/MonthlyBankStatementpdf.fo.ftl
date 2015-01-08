@@ -102,10 +102,10 @@
 						                   		<fo:block font-size="5pt" text-align="left">${sno?if_exists}</fo:block>
 						                   	</fo:table-cell>
 						                   	<fo:table-cell>
-						                   		<fo:block font-size="5pt" text-align="left">${employeeDetails.getValue().get("emplNo")?if_exists}</fo:block>
+						                   		<fo:block font-size="5pt" text-align="left">${Static["org.ofbiz.party.party.PartyServices"].getPartyInternal(delegator, employeeDetails.getValue().get("emplNo"))}</fo:block>
 						                   	</fo:table-cell>
 						                   	<fo:table-cell>
-						                   		<fo:block font-size="5pt" text-align="left">${Static["org.ofbiz.order.order.OrderServices"].nameTrim((StringUtil.wrapString(employeeDetails.getValue().get("empName"))),20)}</fo:block>
+						                   		<fo:block font-size="5pt" text-align="left">${(Static["org.ofbiz.order.order.OrderServices"].nameTrim((StringUtil.wrapString(employeeDetails.getValue().get("empName"))),20)).toUpperCase()}</fo:block>
 						                   	</fo:table-cell>
 						                   	<fo:table-cell>
 						                   		<fo:block font-size="5pt" text-align="left"><#if designationName?has_content>${designationName?if_exists}<#else><#if designation?has_content>${designation.description?if_exists}</#if></#if></fo:block>

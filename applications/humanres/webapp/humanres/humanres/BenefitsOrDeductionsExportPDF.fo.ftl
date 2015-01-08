@@ -93,8 +93,13 @@ under the License.
 	       							<#if header.getValue().get(headerItem)!=0>
 	       								<fo:table-row>
 				       						<fo:table-cell><fo:block keep-together="always" border-style="solid">${(SNo)?if_exists}</fo:block><#assign SNo=SNo+1></fo:table-cell>
-	       									<fo:table-cell><fo:block keep-together="always" border-style="solid">${header.getKey()}</fo:block></fo:table-cell>
-				       						<fo:table-cell><fo:block keep-together="always"  text-align="left" border-style="solid" text-indent="5pt">${Static["org.ofbiz.order.order.OrderServices"].nameTrim((StringUtil.wrapString(Static["org.ofbiz.party.party.PartyHelper"].getPartyName(delegator, header.getKey(), false))),15)}</fo:block></fo:table-cell>
+	       									<fo:table-cell><fo:block keep-together="always" border-style="solid">${Static["org.ofbiz.party.party.PartyServices"].getPartyInternal(delegator, header.getKey())}</fo:block></fo:table-cell>
+				       						<#assign emplName = "">
+				       						<#assign personDetails = delegator.findOne("Person", {"partyId" : header.getKey()}, true)>	
+				       						<#if personDetails?has_content>
+				       							<#assign emplName = personDetails.get("nickname")>
+				       						</#if>
+				       						<fo:table-cell><fo:block keep-together="always"  text-align="left" border-style="solid" text-indent="5pt"><#if emplName?has_content>${(personDetails.nickname).toUpperCase()}<#else>${(Static["org.ofbiz.order.order.OrderServices"].nameTrim((StringUtil.wrapString(Static["org.ofbiz.party.party.PartyHelper"].getPartyName(delegator, header.getKey(), false))),15)).toUpperCase()}</#if></fo:block></fo:table-cell>
 			       							<#if parameters.type=="benefits">
 				       								<fo:table-cell border-style="solid"><fo:block text-align="right" keep-together="always" font-weight="bold">${header.getValue().get(headerItem)?if_exists}</fo:block></fo:table-cell>
 				       						</#if>

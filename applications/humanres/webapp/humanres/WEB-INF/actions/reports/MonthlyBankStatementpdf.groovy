@@ -186,16 +186,28 @@ if(UtilValidate.isNotEmpty(companyBankAccountList)){
 									bankAdviceDetailsMap.put("acNo",accNo);
 									if(UtilValidate.isNotEmpty(partyDetails.employeeId)){
 										bankAdviceDetailsMap.put("emplNo",partyDetails.get("employeeId"));
+										partyDetails = delegator.findOne("Person",[ partyId : partyDetails.get("employeeId") ], false);
+										String partyName = partyDetails.get("nickname");
+										if(UtilValidate.isEmpty(partyName)){
+											partyName = PartyHelper.getPartyName(delegator, partyDetails.get("employeeId"), false);
+										}
+										bankAdviceDetailsMap["empName"]= partyName;
 									}else{
 										bankAdviceDetailsMap.put("emplNo",partyId);
+										partyDetails = delegator.findOne("Person",[ partyId : partyId], false);
+										String partyName = partyDetails.get("nickname");
+										if(UtilValidate.isEmpty(partyName)){
+											partyName = PartyHelper.getPartyName(delegator, partyId, false);
+										}
+										bankAdviceDetailsMap["empName"]= partyName;
 									}
-									if(UtilValidate.isNotEmpty(partyDetails.firstName)){
+									/*if(UtilValidate.isNotEmpty(partyDetails.firstName)){
 										if(UtilValidate.isNotEmpty(partyDetails.lastName)){
 											bankAdviceDetailsMap["empName"]=partyDetails.firstName+" "+partyDetails.lastName;
 										}else{
 											bankAdviceDetailsMap["empName"]=partyDetails.firstName;
 										}
-									}
+									}*/
 									bankAdviceDetailsMap.put("netAmt",netAmount);
 									if(UtilValidate.isNotEmpty(bankAdviceDetailsMap) && (netAmount !=0)){
 										BankAdvicePayRollMap.put(partyId,bankAdviceDetailsMap);
