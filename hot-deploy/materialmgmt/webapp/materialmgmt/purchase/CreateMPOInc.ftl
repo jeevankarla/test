@@ -156,7 +156,7 @@
 			var poNumber = $("#PONumber").val();
 			var sInvNumber = $("#SInvNumber").val();
 			var packingType = $("#packingType").val();
-			var taxInc = $("#UDP :checked");
+			 var isIncTax = $('#incTax').is(':checked');
 			var insurence = $("#insurence").val();
 			var SInvoiceDate = $("#SInvoiceDate").val();
 			
@@ -184,6 +184,11 @@
 			var sInvNumberField=jQuery("<input>").attr("type", "hidden").attr("name", "SInvNumber").val(sInvNumber);
 			var insurenceField=jQuery("<input>").attr("type", "hidden").attr("name", "insurence").val(insurence);
 			var SInvoiceDateField=jQuery("<input>").attr("type", "hidden").attr("name", "SInvoiceDate").val(SInvoiceDate);
+			if(isIncTax){
+			    var incTaxEl = jQuery("<input>").attr("type", "hidden").attr("name", "incTax").val(isIncTax);
+			    jQuery(formId).append(jQuery(incTaxEl));
+			}
+			
 			
 			var packAndFowdgField=jQuery("<input>").attr("type", "hidden").attr("name", "packAndFowdg").val(packAndFowdg);
 			var otherChargesField=jQuery("<input>").attr("type", "hidden").attr("name", "otherCharges").val(otherCharges);
@@ -202,6 +207,7 @@
 			jQuery(formId).append(jQuery(frightField));
 			jQuery(formId).append(jQuery(dicountField));
 			jQuery(formId).append(jQuery(insurenceField));
+			
 			
 			jQuery(formId).append(jQuery(packAndFowdgField));
 			jQuery(formId).append(jQuery(otherChargesField));
@@ -451,6 +457,8 @@
 				updateInvoiceTotalAmount();
 			}
 			var isChecked = $('#addBED').is(':checked');
+			 var isIncTax = $('#incTax').is(':checked');
+			 
             if(isChecked) { 
                //alert("=IN=CHECKEDD===="+isChecked);
 	               if(args.cell == 4) {
@@ -471,7 +479,9 @@
 						if(isNaN(exciseAmount)){
 							exciseAmount = 0;
 						}
-						data[args.row]["Excise"] = exciseAmount;
+						if(!isIncTax){
+							data[args.row]["Excise"] = exciseAmount;
+						}
 						updateInvoiceTotalAmount();
 					 }
 					  if(args.cell == 5) {
@@ -510,7 +520,9 @@
 						if(isNaN(bedCessAmount)){
 							bedCessAmount = 0;
 						}
-						data[args.row]["bedCessAmount"] = bedCessAmount;
+						if(!isIncTax){
+							data[args.row]["bedCessAmount"] = bedCessAmount;
+						}
 						updateInvoiceTotalAmount();
 				    }
 				    if(args.cell == 7) {
@@ -540,7 +552,9 @@
 						if(isNaN(bedSecCessAmount)){
 							bedSecCessAmount = 0;
 						}
-						data[args.row]["bedSecCessAmount"] = bedSecCessAmount;
+						if(!isIncTax){
+							data[args.row]["bedSecCessAmount"] = bedSecCessAmount;
+						}	
 						updateInvoiceTotalAmount();
 					}
 					if(args.cell == 9) {
@@ -583,7 +597,9 @@
 						if(isNaN(vatAmount)){
 							vatAmount = 0;
 						}
-						data[args.row]["VAT"] = vatAmount;
+						if(!isIncTax){
+							data[args.row]["VAT"] = vatAmount;
+						}	
 						updateInvoiceTotalAmount();
 					  }
 					  if(args.cell == 11) {
@@ -600,6 +616,7 @@
 							 data[args.row]["VAT"] = 0;
 							 grid.updateRow(args.row);
 							}
+							
 						   updateInvoiceTotalAmount();
 					   }
 					  if(args.cell==12) {
@@ -612,7 +629,9 @@
 						if(isNaN(cstAmount)){
 							cstAmount = 0;
 						}
-						data[args.row]["CST"] = cstAmount;
+						if(!isIncTax){
+							data[args.row]["CST"] = cstAmount;
+						}
 						updateInvoiceTotalAmount();
 					  }
 					  if(args.cell == 13) {
@@ -631,7 +650,8 @@
 							}
 						updateInvoiceTotalAmount();
 					  } 
-		            }else{  
+		            }else{ 
+		             // if Bed not checked here we go 
 			            if(args.cell == 4) {
 			              var amountAftereExcise = 0;
 			              if(!isNaN(data[args.row]['amount'])){
@@ -642,13 +662,18 @@
 								vat_percent = 0;
 							}
 							var vatUnit = vat_percent/100;
+							
 							var vatAmount=amountAftereExcise*vatUnit;
 							if(isNaN(vatAmount)){
 								vatAmount = 0;
 							}
-							data[args.row]["VAT"] = vatAmount;
+							
+							if(!isIncTax){
+								data[args.row]["VAT"] = vatAmount;
+							}
 							updateInvoiceTotalAmount();
 						  }
+						  //if cell 5
 						  if(args.cell == 5) {
 						  var vat_percent= data[args.row]['VatPercent'];
 							if(isNaN(vat_percent)){
@@ -680,7 +705,9 @@
 						if(isNaN(cstAmount)){
 							cstAmount = 0;
 						}
-						data[args.row]["CST"] = cstAmount;
+						if(!isIncTax){
+							data[args.row]["CST"] = cstAmount;
+						}	
 						updateInvoiceTotalAmount();
 					  }
 					  if(args.cell == 7) {
@@ -726,12 +753,20 @@
     
     function updateInvoiceTotalAmount(){
             var totalAmount = 0;
-            //alert("==data.length===>"+data.length);
+            var isIncTax = $('#incTax').is(':checked');
+            if(isIncTax){
+               $("#incTax").attr('disabled', 'disabled');
+		    	$("#incTax").attr('readonly', 'readonly');
+            }
+           
+		    
+           // alert("==isIncTax===>"+isIncTax);
 				for (i = 0; i < data.length; i++) {
 				   if(!isNaN(data[i]["amount"])){
 					totalAmount += data[i]["amount"];
 				   }
-				   if(!isNaN(data[i]["Excise"])){
+				  if(!isIncTax){
+				  		if(!isNaN(data[i]["Excise"])){
 					totalAmount += data[i]["Excise"];
 				   }
 				   if(!isNaN(data[i]["bedCessAmount"])){
@@ -747,6 +782,9 @@
 				   if(!isNaN(data[i]["CST"])){
 					totalAmount += data[i]["CST"];
 				   }
+				   
+				 } 
+				   
 				   
 				}
 				

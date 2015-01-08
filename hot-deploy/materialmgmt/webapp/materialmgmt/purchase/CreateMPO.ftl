@@ -364,6 +364,11 @@ function makeDatePicker(fromDateId ,thruDateId){
 					           				</#if>          
 					       				</td>
 					          			<td>&nbsp;&nbsp;&nbsp;</td>
+					          			<td align='left' valign='middle' nowrap="nowrap"><div class='h3'>Inc Tax: </div></td>
+							         	<td valign='middle' align='left'> 
+							         			<input class='h3' type="checkbox" id="incTax" name="incTax" value="true"/>	
+					          			</td>
+					          			<td>&nbsp;&nbsp;&nbsp;</td>
 					          			<td align='left' valign='middle' nowrap="nowrap"><div class='h3'>Add BED: </div></td>
 							         	<td valign='middle' align='left'> 
 							         			<input class='h3' type="checkbox" size="20" id="addBED" name="addBED" value="" onclick="javascript:addBedColumns();"/>	
