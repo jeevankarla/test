@@ -107,14 +107,14 @@ under the License.
 								            		<fo:table-column column-width="95pt"/>
 								            		<fo:table-column column-width="95pt"/>
 								                    <fo:table-body>
-								                    <#assign totalBasicRev=0>
-													                    <#assign totalBedRev=0>
-													                    <#assign totalVatRev=0>
-													                    <#assign totalCstRev=0>
-													                    <#assign totalRevenue=0>
-													                    <#assign totalPpd=0>
-													                    <#assign totalMrpValue = 0>
 								                    <#list invoicePartyTotals as invoicePartyTot>
+								                        <#assign totalBasicRev=0>
+									                    <#assign totalBedRev=0>
+									                    <#assign totalVatRev=0>
+									                    <#assign totalCstRev=0>
+									                    <#assign totalRevenue=0>
+									                    <#assign totalPpd=0>
+									                    <#assign totalMrpValue = 0>
 							             				<fo:table-row>
 						            						<#assign partyName = Static["org.ofbiz.party.party.PartyHelper"].getPartyName(delegator, invoiceTot.getKey()?if_exists, false)>
 							             					<fo:table-cell>
