@@ -29,7 +29,7 @@ import in.vasista.vbiz.byproducts.SalesInvoiceServices;
 import org.ofbiz.party.party.PartyHelper;
 
 dctx = dispatcher.getDispatchContext();
-orderId = parameters.issueToPONo;
+orderId = parameters.orderId;
 orderDetailsList=[];
 allDetailsMap=[:];
 allDetailsMap["totVal"]=BigDecimal.ZERO;
@@ -51,7 +51,7 @@ orderHeaderDetails=EntityUtil.getFirst(orderHeaderDetails);
 if(UtilValidate.isNotEmpty(orderHeaderDetails)){
    orderDate=orderHeaderDetails.orderDate;
    allDetailsMap.put("orderDate",orderDate);
-   custRequestId=orderHeaderDetails.custRequestId;
+   custRequestId=orderHeaderDetails.custRequestId;   
    if(UtilValidate.isNotEmpty(custRequestId)){
 	 allDetailsMap.put("custRequestId",custRequestId);
    }
@@ -155,12 +155,41 @@ if(UtilValidate.isNotEmpty(discountDetail)){
 	discount=discountDetail.amount;
 	allDetailsMap.put("discount",discount);	
 }
-	
+
+taxDetails = EntityUtil.filterByCondition(orderAdjustmentDetails, EntityCondition.makeCondition("orderAdjustmentTypeId", EntityOperator.IN , UtilMisc.toList("VAT_PUR","CST_PUR")));
+if(UtilValidate.isNotEmpty(taxDetails)){
+   tax =taxDetails.amount;
+   allDetailsMap.put("tax",tax);
+}
+
+orderTermDetails = delegator.findList("OrderTerm",EntityCondition.makeCondition("orderId", EntityOperator.EQUALS , orderId)  , null, null, null, false );
+
+deliveryDetails = EntityUtil.filterByCondition(orderTermDetails, EntityCondition.makeCondition("termTypeId", EntityOperator.EQUALS, "IMMEDIATELY"));
+deliveryDetails = EntityUtil.getFirst(deliveryDetails);
+if(UtilValidate.isNotEmpty(deliveryDetails)){
+   delivery =deliveryDetails.description;
+   allDetailsMap.put("delivery",delivery);
+}
+
+podDetails = EntityUtil.filterByCondition(orderTermDetails, EntityCondition.makeCondition("termTypeId", EntityOperator.EQUALS, "FOR_MD"));
+podDetails = EntityUtil.getFirst(podDetails);
+if(UtilValidate.isNotEmpty(podDetails)){
+   placeOfDispatch =podDetails.description;
+   allDetailsMap.put("placeOfDispatch",placeOfDispatch);
+}
+
+paymentDetails = EntityUtil.filterByCondition(orderTermDetails, EntityCondition.makeCondition("termTypeId", EntityOperator.EQUALS, "SATFACTRY_SUPLY"));
+paymentDetails = EntityUtil.getFirst(paymentDetails);
+if(UtilValidate.isNotEmpty(paymentDetails)){
+   payment =paymentDetails.description;
+   allDetailsMap.put("payment",payment);
+}
 context.allDetailsMap=allDetailsMap;
+Debug.log("allDetailsMap============="+allDetailsMap);
+
 produtMap=[:];
 productId ="";
 conditionList.clear();
-conditionList.add(EntityCondition.makeCondition("statusId", EntityOperator.EQUALS, "ITEM_APPROVED"));
 conditionList.add(EntityCondition.makeCondition("orderId", EntityOperator.EQUALS, orderId));
 cond=EntityCondition.makeCondition(conditionList,EntityOperator.AND);
 productdet = delegator.findList("OrderItem", cond, null, null, null, false );
@@ -193,4 +222,4 @@ if(UtilValidate.isNotEmpty(productAmt)){
    produtMap.put("unitPrice",unitPrice);      
 }
 context.produtMap=produtMap;
-
+Debug.log("produtMap================="+produtMap);

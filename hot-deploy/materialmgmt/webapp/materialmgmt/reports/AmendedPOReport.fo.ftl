@@ -45,7 +45,7 @@ under the License.
            <fo:block  keep-together="always" text-align="center" font-family="Courier,monospace" white-space-collapse="false" font-size="12pt" >---------------------------------------------------------------------------------------------- </fo:block>
 	       <fo:block  keep-together="always" text-align="center" font-family="Courier,monospace" white-space-collapse="false" font-size="12pt" font-weight="bold">AMENDED PURCHASE ORDER </fo:block>  
 	       <fo:block  keep-together="always" text-align="left" font-family="Courier,monospace" white-space-collapse="false" font-size="12pt" >PO NO:${allDetailsMap.get("orderId")?if_exists}                                                       PO DATED:${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(allDetailsMap.get("orderDate")?if_exists, "dd-MMM-yy")}</fo:block>
-	       <fo:block  keep-together="always" text-align="left" font-family="Courier,monospace" white-space-collapse="false" font-size="12pt" >To                                                                 FAX NO:</fo:block>
+	       <fo:block  keep-together="always" text-align="left" font-family="Courier,monospace" white-space-collapse="false" font-size="12pt" >To                                                                 FAX NO: ${allDetailsMap.get("faxNumber")?if_exists}</fo:block>
 	       <fo:block text-align="left" white-space-collapse="false">${partyAddressMap.get("address1")?if_exists}</fo:block>
 		   <fo:block text-align="left" white-space-collapse="false">${partyAddressMap.get("address2")?if_exists}</fo:block>
 		   <fo:block text-align="left" white-space-collapse="false">${partyAddressMap.get("city")?if_exists}</fo:block>				 
@@ -63,8 +63,8 @@ under the License.
 				  <fo:table-column column-width="120pt"/>
 				  <fo:table-column column-width="150pt"/>
 				  <fo:table-column column-width="80pt"/>
-				  <fo:table-column column-width="80pt"/>
-				   <fo:table-column column-width="100pt"/>
+				  <fo:table-column column-width="60pt"/>
+				   <fo:table-column column-width="120pt"/>
 					  <fo:table-body>
 					      <fo:table-row >
 							  <fo:table-cell >
@@ -105,8 +105,8 @@ under the License.
 				          <fo:table-column column-width="120pt"/>
 				          <fo:table-column column-width="150pt"/>
 				          <fo:table-column column-width="80pt"/>
-				          <fo:table-column column-width="80pt"/>
-				          <fo:table-column column-width="100pt"/>		
+				          <fo:table-column column-width="60pt"/>
+				          <fo:table-column column-width="120pt"/>		
 					         <fo:table-body>
 					            <#assign sno=1>
 				               <fo:table-row >
@@ -117,7 +117,7 @@ under the License.
 								      <fo:block text-align="left" keep-together="always" >${produtMap.get("productId")?if_exists}</fo:block>
 							       </fo:table-cell>
 							       <fo:table-cell>
-								       <fo:block text-align="left" keep-together="always" >${produtMap.get("description")?if_exists}</fo:block>
+								       <fo:block text-align="left" white-space-collapse="false" >${produtMap.get("description")?if_exists}</fo:block>
 							       </fo:table-cell>
 							       <fo:table-cell>
 								       <fo:block text-align="center" keep-together="always" >${produtMap.get("quantityUomId")?if_exists}</fo:block>
@@ -142,15 +142,15 @@ under the License.
 	       <fo:block linefeed-treatment="preserve">&#xA;</fo:block>				   	      
 	       <fo:block  keep-together="always" text-align="left" font-family="Courier,monospace" white-space-collapse="false" font-size="12pt" >EXCISE DUTY             : ${allDetailsMap.get("exciseAmt")?if_exists} </fo:block>
 	       <fo:block linefeed-treatment="preserve">&#xA;</fo:block>
-	       <fo:block  keep-together="always" text-align="left" font-family="Courier,monospace" white-space-collapse="false" font-size="12pt" >TAX                     :</fo:block>
+	       <fo:block  keep-together="always" text-align="left" font-family="Courier,monospace" white-space-collapse="false" font-size="12pt" >TAX                     : ${allDetailsMap.get("tax")?if_exists} </fo:block>
 	       <fo:block linefeed-treatment="preserve">&#xA;</fo:block>				   
-	       <fo:block  keep-together="always" text-align="left" font-family="Courier,monospace" white-space-collapse="false" font-size="12pt" >DELIVERY                :</fo:block>	       
+	       <fo:block  keep-together="always" text-align="left" font-family="Courier,monospace" white-space-collapse="false" font-size="12pt" >DELIVERY                : ${allDetailsMap.get("delivery")?if_exists}</fo:block>	       
 	       <fo:block linefeed-treatment="preserve">&#xA;</fo:block>				   
-	       <fo:block  keep-together="always" text-align="left" font-family="Courier,monospace" white-space-collapse="false" font-size="12pt" >MODE OF DISPATCH        :</fo:block>
+	       <fo:block  keep-together="always" text-align="left" font-family="Courier,monospace" white-space-collapse="false" font-size="12pt" >MODE OF DISPATCH        : ${allDetailsMap.get("placeOfDispatch")?if_exists}</fo:block>
 	       <fo:block linefeed-treatment="preserve">&#xA;</fo:block>	
-	       <fo:block  keep-together="always" text-align="left" font-family="Courier,monospace" white-space-collapse="false" font-size="12pt" >WARANTY/GUARANTY        :   </fo:block>
+	       <fo:block  keep-together="always" text-align="left" font-family="Courier,monospace" white-space-collapse="false" font-size="12pt" >WARANTY/GUARANTY        : </fo:block>
 	       <fo:block linefeed-treatment="preserve">&#xA;</fo:block>		       
-	       <fo:block  keep-together="always" text-align="left" font-family="Courier,monospace" white-space-collapse="false" font-size="12pt" >PAYMENT                 :</fo:block>	
+	       <fo:block  keep-together="always" text-align="left" font-family="Courier,monospace" white-space-collapse="false" font-size="12pt" >PAYMENT                 : ${allDetailsMap.get("payment")?if_exists}</fo:block>	
 	       <fo:block linefeed-treatment="preserve">&#xA;</fo:block>		              			   	       			   	       
 	       <fo:block  font-size="12pt" keep-together="always"  white-space-collapse="false">Please send back the duplicate copy of the P.O.duly signed and sealed as token of acceptance.</fo:block>     
 	       <fo:block  font-size="12pt" keep-together="always"  white-space-collapse="false">Your requested to submit the bills inequaduplicate towards the supply of said materials.Also</fo:block>     
