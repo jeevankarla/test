@@ -1608,8 +1608,8 @@ public class ByProductChangeIndentServices {
 			  	  conditionList.add(EntityCondition.makeCondition("subscriptionId", EntityOperator.EQUALS, subscriptionId));
 			      conditionList.add(EntityCondition.makeCondition("fromDate", EntityOperator.GREATER_THAN, UtilDateTime.getDayStart(effectiveDate)));
 			   	  EntityCondition cond1 = EntityCondition.makeCondition(conditionList, EntityOperator.AND);
-			
-			  List<GenericValue> removeSubscriptionProdList = EntityUtil.filterByCondition(subscriptionProdList, cond1);
+	  			
+			    List<GenericValue> removeSubscriptionProdList = delegator.findList("SubscriptionProduct", cond1, null, null, null, false);
 			    Debug.log("removeSubscriptionProdList====="+removeSubscriptionProdList);
 				conditionList.clear();
 				conditionList = UtilMisc.toList(EntityCondition.makeCondition("productSubscriptionTypeId", EntityOperator.EQUALS, productSubscriptionTypeId));
@@ -1642,7 +1642,7 @@ public class ByProductChangeIndentServices {
 	  						for(GenericValue tommorowSubProd : removeSubscriptionProdList){
 			  					BigDecimal qty = tommorowSubProd.getBigDecimal("quantity");
 			  					Map updateSubscriptionProduct = FastMap.newInstance();
-			  					if(qty.compareTo(BigDecimal.ZERO)>0 && (qty.subtract(BigDecimal.ONE)).compareTo(BigDecimal.ZERO)>0 ){
+			  					if(qty.compareTo(BigDecimal.ZERO)>0 && (qty.subtract(BigDecimal.ONE)).compareTo(BigDecimal.ZERO)>=0 ){
 			  						updateSubscriptionProduct.put("quantity", qty.subtract(BigDecimal.ONE));
 				  					updateSubscriptionProduct.put("userLogin",userLogin);
 						  			updateSubscriptionProduct.put("facilityId", boothId);
