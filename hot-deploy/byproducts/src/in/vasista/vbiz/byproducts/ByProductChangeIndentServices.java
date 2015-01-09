@@ -1603,12 +1603,21 @@ public class ByProductChangeIndentServices {
 	      Boolean enableContinuousIndent = Boolean.FALSE;
 	      Boolean smsFlag = Boolean.FALSE;
 		  List<GenericValue> subscriptionProdList =FastList.newInstance();
-		  List conditionList = UtilMisc.toList(EntityCondition.makeCondition("productSubscriptionTypeId", EntityOperator.EQUALS, productSubscriptionTypeId));
-	  	  conditionList.add(EntityCondition.makeCondition("subscriptionId", EntityOperator.EQUALS, subscriptionId));
-	  	  conditionList.add(EntityCondition.makeCondition(EntityCondition.makeCondition("thruDate", EntityOperator.GREATER_THAN,UtilDateTime.getDayStart(effectiveDate)) , EntityOperator.OR ,EntityCondition.makeCondition("thruDate", EntityOperator.EQUALS, null) ));
-    	  EntityCondition condition = EntityCondition.makeCondition(conditionList, EntityOperator.AND);
-		try {
-	  			subscriptionProdList = delegator.findList("SubscriptionProduct", condition, null, null, null, false);
+		  try{
+		  	  List conditionList = UtilMisc.toList(EntityCondition.makeCondition("productSubscriptionTypeId", EntityOperator.EQUALS, productSubscriptionTypeId));
+			  	  conditionList.add(EntityCondition.makeCondition("subscriptionId", EntityOperator.EQUALS, subscriptionId));
+			      conditionList.add(EntityCondition.makeCondition("fromDate", EntityOperator.GREATER_THAN, UtilDateTime.getDayStart(effectiveDate)));
+			   	  EntityCondition cond1 = EntityCondition.makeCondition(conditionList, EntityOperator.AND);
+			
+			  List<GenericValue> removeSubscriptionProdList = EntityUtil.filterByCondition(subscriptionProdList, cond1);
+			    Debug.log("removeSubscriptionProdList====="+removeSubscriptionProdList);
+				conditionList.clear();
+				conditionList = UtilMisc.toList(EntityCondition.makeCondition("productSubscriptionTypeId", EntityOperator.EQUALS, productSubscriptionTypeId));
+			  	conditionList.add(EntityCondition.makeCondition("subscriptionId", EntityOperator.EQUALS, subscriptionId));
+			  	conditionList.add(EntityCondition.makeCondition(EntityCondition.makeCondition("thruDate", EntityOperator.GREATER_THAN,UtilDateTime.getDayStart(effectiveDate)) , EntityOperator.OR ,EntityCondition.makeCondition("thruDate", EntityOperator.EQUALS, null) ));
+			  	EntityCondition condition = EntityCondition.makeCondition(conditionList, EntityOperator.AND);
+		  	    
+			 	subscriptionProdList = delegator.findList("SubscriptionProduct", condition, null, null, null, false);
 	  			subscriptionProdList = EntityUtil.filterByDate(subscriptionProdList, effectiveDate);
 	  			List<GenericValue> subscriptionProductsList = FastList.newInstance();
 	  			for(int i=0; i< productQtyList.size() ; i++){
@@ -1629,7 +1638,26 @@ public class ByProductChangeIndentServices {
 				  				 subscriptionProd.set("thruDate", UtilDateTime.getDayEnd(effectiveDate));
 				  				 subscriptionProd.store();
 				    	 }	
-	  					if(preQty.compareTo(BigDecimal.ZERO)!=0 || (preQty.subtract(BigDecimal.ONE)).compareTo(BigDecimal.ZERO)>0){
+	  					if(UtilValidate.isNotEmpty(removeSubscriptionProdList)){
+	  						for(GenericValue tommorowSubProd : removeSubscriptionProdList){
+			  					BigDecimal qty = tommorowSubProd.getBigDecimal("quantity");
+			  					Map updateSubscriptionProduct = FastMap.newInstance();
+			  					if(qty.compareTo(BigDecimal.ZERO)>0 && (qty.subtract(BigDecimal.ONE)).compareTo(BigDecimal.ZERO)>0 ){
+			  						updateSubscriptionProduct.put("quantity", qty.subtract(BigDecimal.ONE));
+				  					updateSubscriptionProduct.put("userLogin",userLogin);
+						  			updateSubscriptionProduct.put("facilityId", boothId);
+						  			updateSubscriptionProduct.put("subscriptionId",tommorowSubProd.getString("subscriptionId"));
+						  			updateSubscriptionProduct.put("productId",tommorowSubProd.getString("productId"));
+						  			updateSubscriptionProduct.put("productSubscriptionTypeId",tommorowSubProd.getString("productSubscriptionTypeId"));
+						  			updateSubscriptionProduct.put("sequenceNum",tommorowSubProd.getString("sequenceNum"));
+						  			updateSubscriptionProduct.put("fromDate",tommorowSubProd.getTimestamp("fromDate"));
+				  					updateSubscriptionProduct.put("lastModifiedByUserLogin",userLogin.get("userLoginId"));
+						  			updateSubscriptionProduct.put("lastModifiedDate",nowTimeStamp);
+						  			result = dispatcher.runSync("updateSubscriptionProduct",updateSubscriptionProduct);
+					    
+			  					}
+			  				}
+	  				    }else if(preQty.compareTo(BigDecimal.ZERO)>0 && (preQty.subtract(BigDecimal.ONE)).compareTo(BigDecimal.ZERO)>0){
 						  Map createNewSubscProduct = FastMap.newInstance();
 						  createNewSubscProduct.put("facilityId", boothId);
 						  createNewSubscProduct.put("shipmentTypeId", shipmentTypeId);
