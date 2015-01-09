@@ -70,11 +70,10 @@ conlist.add(EntityCondition.makeCondition("roleTypeId", EntityOperator.EQUALS,"S
 cond=EntityCondition.makeCondition(conlist,EntityOperator.AND);
 vendorDetails = delegator.findList("OrderRole", cond , null, null, null, false );
 vendorDetail=EntityUtil.getFirst(vendorDetails);
+fromPartyId="";
 if(UtilValidate.isNotEmpty(vendorDetail)){
-	
 fromPartyId=vendorDetail.partyId;
 }
-fromPartyId="";
    if(UtilValidate.isNotEmpty(fromPartyId)){
 	 partyPostalAddress= dispatcher.runSync("getPartyPostalAddress", [partyId:fromPartyId, userLogin: userLogin]);
 	   address1="";address2="";city="";postalCode="";
@@ -111,24 +110,77 @@ fromPartyId="";
 		}
 		allDetailsMap.put("emailAddress", emailAddress);
 }
-   
-   
-   
-// custRequestDate
-orderHeaderDetails = delegator.findList("OrderHeader",EntityCondition.makeCondition("orderId", EntityOperator.EQUALS , orderId)  , null, null, null, false );
-orderHeaderDetails=EntityUtil.getFirst(orderHeaderDetails);
-if(UtilValidate.isNotEmpty(orderHeaderDetails)){
-custRequestId=orderHeaderDetails.custRequestId;
-   if(UtilValidate.isNotEmpty(custRequestId) && (custRequestId != null)){
-	custRequestDetails = delegator.findList("CustRequest",EntityCondition.makeCondition("custRequestId", EntityOperator.EQUALS , custRequestId)  , null, null, null, false );
-	custRequestDetails=EntityUtil.getFirst(custRequestDetails);
-	custRequestDate=custRequestDetails.custRequestDate;
-	allDetailsMap.put("custRequestDate",custRequestDate);
-   }
+      
+
+// orderAttributeDetails
+orderAttributeDetails = delegator.findList("OrderAttribute",EntityCondition.makeCondition("orderId", EntityOperator.EQUALS , orderId)  , null, null, null, false );
+
+tendorNotifiNo = EntityUtil.filterByCondition(orderAttributeDetails, EntityCondition.makeCondition("attrName", EntityOperator.EQUALS, "TENDER_NO"));
+tendorNotifiNo = EntityUtil.getFirst(tendorNotifiNo);
+if(UtilValidate.isNotEmpty(tendorNotifiNo)){
+	tendorNo=tendorNotifiNo.attrValue;
+	allDetailsMap.put("tendorNo",tendorNo);
+}
+tendorNotifiDate = EntityUtil.filterByCondition(orderAttributeDetails, EntityCondition.makeCondition("attrName", EntityOperator.EQUALS, "TENDER_DATE"));
+tendorNotifiDate = EntityUtil.getFirst(tendorNotifiDate);
+if(UtilValidate.isNotEmpty(tendorNotifiDate)){
+	tendorDate=tendorNotifiDate.attrValue;
+	allDetailsMap.put("tendorDate",tendorDate);
+}
+tendorTechDate = EntityUtil.filterByCondition(orderAttributeDetails, EntityCondition.makeCondition("attrName", EntityOperator.EQUALS, "TECHNICAL_DATE"));
+tendorTechDate = EntityUtil.getFirst(tendorTechDate);
+if(UtilValidate.isNotEmpty(tendorTechDate)){
+	techDate=tendorTechDate.attrValue;
+	allDetailsMap.put("techDate",techDate);
+}
+tendorCommercialDate = EntityUtil.filterByCondition(orderAttributeDetails, EntityCondition.makeCondition("attrName", EntityOperator.EQUALS, "COMMERCIAL_DATE"));
+tendorCommercialDate = EntityUtil.getFirst(tendorCommercialDate);
+if(UtilValidate.isNotEmpty(tendorCommercialDate)){
+	commercialDate=tendorCommercialDate.attrValue;
+	allDetailsMap.put("commercialDate",commercialDate);
+}
+tendorNegotiateDate = EntityUtil.filterByCondition(orderAttributeDetails, EntityCondition.makeCondition("attrName", EntityOperator.EQUALS, "NEGOTIATION_DATE"));
+tendorNegotiateDate = EntityUtil.getFirst(tendorNegotiateDate);
+if(UtilValidate.isNotEmpty(tendorNegotiateDate)){
+	negotiationDate=tendorNegotiateDate.attrValue;
+	allDetailsMap.put("negotiationDate",negotiationDate);
+}
+tendorLOADate = EntityUtil.filterByCondition(orderAttributeDetails, EntityCondition.makeCondition("attrName", EntityOperator.EQUALS, "LETTER_DATE"));
+tendorLOADate = EntityUtil.getFirst(tendorLOADate);
+if(UtilValidate.isNotEmpty(tendorLOADate)){
+	loaDate=tendorLOADate.attrValue;
+	allDetailsMap.put("loaDate",loaDate);
+}
+// ED,VAT
+orderDetails = delegator.findList("OrderItem",EntityCondition.makeCondition("orderId", EntityOperator.EQUALS , orderId)  , null, null, null, false );
+exciseAmt = 0;
+if(UtilValidate.isNotEmpty(orderDetails)){
+	orderDetails.each{orderDet->
+		if(orderDet.bedAmount){
+			exciseAmt += orderDet.bedAmount;
+		}
+		if(orderDet.bedcessAmount){
+			exciseAmt += orderDet.bedcessAmount;
+		}
+		if(orderDet.bedseccessAmount){
+			exciseAmt += orderDet.bedseccessAmount;
+		}
+		}
+	allDetailsMap.put("exciseAmt",exciseAmt);
+	
+	}
+List condlist=[];
+condlist.add(EntityCondition.makeCondition("orderId", EntityOperator.EQUALS, orderId));
+condlist.add(EntityCondition.makeCondition("orderAdjustmentTypeId", EntityOperator.EQUALS,"VAT_PUR"));
+condition=EntityCondition.makeCondition(condlist,EntityOperator.AND);
+vatDetails = delegator.findList("OrderAdjustment", condition , null, null, null, false );
+vatDetails = EntityUtil.getFirst(vatDetails);
+if(UtilValidate.isNotEmpty(vatDetails)){
+   vat =vatDetails.sourcePercentage;
+   allDetailsMap.put("vat",vat);
 }
 
 context.allDetailsMap=allDetailsMap;
-
 context.orderDetailsList=orderDetailsList;
 
 //Debug.log("orderDetailsList=================================="+orderDetailsList);

@@ -36,42 +36,8 @@ allDetailsMap=[:];
 allDetailsMap.put("orderId",orderId);
 allDetailsMap["total"]=BigDecimal.ZERO;
 
-//company Details-tin,cst,kst
-//List condlist=[];
-//condlist.add(EntityCondition.makeCondition("partyId", EntityOperator.EQUALS, "Company"));
-//condlist.add(EntityCondition.makeCondition("partyIdentificationTypeId", EntityOperator.EQUALS,"TIN_NUMBER"));
-//cond=EntityCondition.makeCondition(condlist,EntityOperator.AND);
-//tinDetails = delegator.findList("PartyIdentification", cond , null, null, null, false );
-//tinDetails=EntityUtil.getFirst(tinDetails);
-//tinNumber="";
-//if(UtilValidate.isNotEmpty(tinDetails)){
-//tinNumber=tinDetails.idValue;
-//allDetailsMap.put("tinNumber",tinNumber);
-//}
-//List clist=[];
-//clist.add(EntityCondition.makeCondition("partyId", EntityOperator.EQUALS, "Company"));
-//clist.add(EntityCondition.makeCondition("partyIdentificationTypeId", EntityOperator.EQUALS,"CST_NUMBER"));
-//cond=EntityCondition.makeCondition(clist,EntityOperator.AND);
-//cstDetails = delegator.findList("PartyIdentification", cond , null, null, null, false );
-//cstDetails=EntityUtil.getFirst(cstDetails);
-//cstNumber="";
-//if(UtilValidate.isNotEmpty(cstDetails)){
-//cstNumber=cstDetails.idValue;
-//allDetailsMap.put("cstNumber",cstNumber);
-//}
 
-//List condtionlist=[];
-//condtionlist.add(EntityCondition.makeCondition("partyId", EntityOperator.EQUALS, "Company"));
-//condtionlist.add(EntityCondition.makeCondition("partyIdentificationTypeId", EntityOperator.EQUALS,"KST_NUMBER"));
-//cond=EntityCondition.makeCondition(condtionlist,EntityOperator.AND);
-//kstDetails = delegator.findList("PartyIdentification", cond , null, null, null, false );
-//kstDetails=EntityUtil.getFirst(kstDetails);
-//kstNumber="";
-//if(UtilValidate.isNotEmpty(kstDetails)){
-//kstNumber=kstDetails.idValue;
-//allDetailsMap.put("kstNumber",kstNumber);
-//}
-
+//to get company details
 tinCstDetails = delegator.findList("PartyGroup",EntityCondition.makeCondition("partyId", EntityOperator.EQUALS , "Company")  , null, null, null, false );
 tinDetails=EntityUtil.getFirst(tinCstDetails);
 tinNumber="";cstNumber="";kstNumber="";
@@ -95,6 +61,16 @@ if(UtilValidate.isNotEmpty(orderDetails)){
 	orderDetails.each{orderitems->
 		orderDetailsMap=[:];
 		orderDetailsMap["productId"]=orderitems.productId;
+		
+		uomDetails = delegator.findList("Product",EntityCondition.makeCondition("productId", EntityOperator.EQUALS , orderitems.productId)  , null, null, null, false );		
+		uomDetails=EntityUtil.getFirst(uomDetails);
+		uomId=uomDetails.quantityUomId;
+		
+		if(UtilValidate.isNotEmpty(uomId)){
+			uomDesc = delegator.findList("Uom",EntityCondition.makeCondition("uomId", EntityOperator.EQUALS , uomId)  , null, null, null, false );
+			uomDesc=EntityUtil.getFirst(uomDesc);
+			orderDetailsMap["uomAbbr"]=uomDesc.abbreviation;			
+		}		
 		orderDetailsMap["quantity"]=orderitems.quantity;
 		orderDetailsMap["unitPrice"]=orderitems.unitPrice;
 		orderDetailsMap["createdDate"]=orderitems.createdDate;
@@ -105,7 +81,7 @@ if(UtilValidate.isNotEmpty(orderDetails)){
 		orderDetailsList.addAll(orderDetailsMap);
 	}
 }
-// to get quoteid,date and enquiryid
+// to get quoteid,date and (custRequestId)enquiryid ,(custRequestDate)enquiryDate
 if(UtilValidate.isNotEmpty(orderDetails)){
 	orderDetails=EntityUtil.getFirst(orderDetails);
 	quoteId=orderDetails.quoteId;
@@ -113,29 +89,23 @@ if(UtilValidate.isNotEmpty(orderDetails)){
 		QuoteDetails = delegator.findList("Quote",EntityCondition.makeCondition("quoteId", EntityOperator.EQUALS , quoteId)  , null, null, null, false );
 		QuoteDetails=EntityUtil.getFirst(QuoteDetails);
 		qutationDate=QuoteDetails.issueDate;
-		allDetailsMap.put("qutationDate",qutationDate);
 		allDetailsMap.put("quoteId",quoteId);
-		
+		allDetailsMap.put("qutationDate",qutationDate);
+				
 		enquiryDetails = delegator.findList("QuoteAndItemAndCustRequest",EntityCondition.makeCondition("quoteId", EntityOperator.EQUALS , quoteId)  , null, null, null, false );
-		enquiryDetails=EntityUtil.getFirst(enquiryDetails);
+		enquiryDetails=EntityUtil.getFirst(enquiryDetails);		
 		enquiryId=enquiryDetails.custRequestId;
+		enquiryDate=enquiryDetails.custRequestDate;
 		allDetailsMap.put("enquiryId",enquiryId);
+		allDetailsMap.put("enquiryDate",enquiryDate);
 	   }
 	}
-// custRequestDate
+// orderDate
 orderHeaderDetails = delegator.findList("OrderHeader",EntityCondition.makeCondition("orderId", EntityOperator.EQUALS , orderId)  , null, null, null, false );
 orderHeaderDetails=EntityUtil.getFirst(orderHeaderDetails);
 if(UtilValidate.isNotEmpty(orderHeaderDetails)){
- orderDate=orderHeaderDetails.orderDate;
-  allDetailsMap.put("orderDate",orderDate);
-  
-  custRequestId=orderHeaderDetails.custRequestId;
-   if(UtilValidate.isNotEmpty(custRequestId) && (custRequestId != null)){
-	custRequestDetails = delegator.findList("CustRequest",EntityCondition.makeCondition("custRequestId", EntityOperator.EQUALS , custRequestId)  , null, null, null, false );
-	custRequestDetails=EntityUtil.getFirst(custRequestDetails);
-	custRequestDate=custRequestDetails.custRequestDate;
-	allDetailsMap.put("custRequestDate",custRequestDate);
-   }
+   orderDate=orderHeaderDetails.orderDate;
+   allDetailsMap.put("orderDate",orderDate);
 	 }
 
 // party Address
@@ -177,38 +147,83 @@ if(UtilValidate.isNotEmpty(orderHeaderDetails)){
 				phoneNumber = partyTelephone.contactNumber;
 			}
 			allDetailsMap.put("phoneNumber", phoneNumber);
+			
+			faxId="FAX_BILLING";
+			partyFaxNumber= dispatcher.runSync("getPartyTelephone", [partyId: fromPartyId, contactMechPurposeTypeId: faxId, userLogin: userLogin]);
+			faxNumber = "";
+			if (partyFaxNumber != null && partyFaxNumber.contactNumber != null) {
+				faxNumber = partyFaxNumber.contactNumber;
+			}
+			allDetailsMap.put("faxNumber", faxNumber);
  }
 	   
-// FaxNumber
-	   conditionListAddress = [];
-	   conditionListAddress.add(EntityCondition.makeCondition("contactMechPurposeTypeId", EntityOperator.EQUALS, "FAX_BILLING"));
-	   conditionListAddress.add(EntityCondition.makeCondition("partyId", EntityOperator.EQUALS, fromPartyId));
-	   cond=EntityCondition.makeCondition(conditionListAddress,EntityOperator.AND);
-	   faxNumber="";
-	   listAddress = delegator.findList("PartyContactDetailByPurpose", cond , null, null, null, false );
-	   if(UtilValidate.isNotEmpty(listAddress.contactNumber)){
-	   faxNumber = listAddress.contactNumber;
-		allDetailsMap.put("faxNuber", faxNumber);
-	   }
-	
-		  
-// waranty
-orderTermDetails = delegator.findList("OrderTerm",EntityCondition.makeCondition("orderId", EntityOperator.EQUALS , orderId)  , null, null, null, false );
-orderTermDetails=EntityUtil.getFirst(orderTermDetails);
-if(UtilValidate.isNotEmpty(orderTermDetails)){
-waranty=orderTermDetails.termTypeId;
-allDetailsMap.put("waranty",waranty);
-}
-// frieghtCharges,exciseDuty
+// discount,pakfwdDetails,tax
 orderAdjustmentDetails = delegator.findList("OrderAdjustment",EntityCondition.makeCondition("orderId", EntityOperator.EQUALS , orderId)  , null, null, null, false );
-orderAdjustmentDetails=EntityUtil.getFirst(orderAdjustmentDetails);
-if(UtilValidate.isNotEmpty(orderAdjustmentDetails)){
- frieghtCharges =orderAdjustmentDetails.orderAdjustmentTypeId;
- exciseDuty=orderAdjustmentDetails.orderAdjustmentTypeId;
-allDetailsMap.put("frieghtCharges",frieghtCharges);
-allDetailsMap.put("exciseDuty",exciseDuty);
+
+discountDetails = EntityUtil.filterByCondition(orderAdjustmentDetails, EntityCondition.makeCondition("orderAdjustmentTypeId", EntityOperator.EQUALS, "COGS_DISC"));
+discountDetail = EntityUtil.getFirst(discountDetails);
+if(UtilValidate.isNotEmpty(discountDetail)){
+	discount=discountDetail.amount;
+	allDetailsMap.put("discount",discount);
 }
 
+pakfwdDetails = EntityUtil.filterByCondition(orderAdjustmentDetails, EntityCondition.makeCondition("orderAdjustmentTypeId", EntityOperator.EQUALS, "COGS_PCK_FWD"));
+pakfwdDetails = EntityUtil.getFirst(pakfwdDetails);
+if(UtilValidate.isNotEmpty(pakfwdDetails)){
+   pakfwdCharges =pakfwdDetails.amount;
+   allDetailsMap.put("pakfwdCharges",pakfwdCharges);
+}
+taxDetails = EntityUtil.filterByCondition(orderAdjustmentDetails, EntityCondition.makeCondition("orderAdjustmentTypeId", EntityOperator.IN , UtilMisc.toList("VAT_PUR","CST_PUR")));
+if(UtilValidate.isNotEmpty(taxDetails)){
+   tax =taxDetails.amount;
+   allDetailsMap.put("tax",tax);
+}
+
+// exciseDuty
+orderDetails = delegator.findList("OrderItem",EntityCondition.makeCondition("orderId", EntityOperator.EQUALS , orderId)  , null, null, null, false );
+exciseAmt = 0;
+if(UtilValidate.isNotEmpty(orderDetails)){
+	orderDetails.each{orderDet->
+		if(orderDet.bedAmount){
+			exciseAmt += orderDet.bedAmount;
+		}
+		if(orderDet.bedcessAmount){
+			exciseAmt += orderDet.bedcessAmount;
+		}
+		if(orderDet.bedseccessAmount){
+			exciseAmt += orderDet.bedseccessAmount;
+		}
+		}
+	allDetailsMap.put("exciseAmt",exciseAmt);
+	
+	}
+
+// waranty ,delivery,pod,payment
+orderTermDetails = delegator.findList("OrderTerm",EntityCondition.makeCondition("orderId", EntityOperator.EQUALS , orderId)  , null, null, null, false );
+
+deliveryDetails = EntityUtil.filterByCondition(orderTermDetails, EntityCondition.makeCondition("termTypeId", EntityOperator.EQUALS, "IMMEDIATELY"));
+deliveryDetails = EntityUtil.getFirst(deliveryDetails);
+if(UtilValidate.isNotEmpty(deliveryDetails)){
+   delivery =deliveryDetails.description;
+   allDetailsMap.put("delivery",delivery);
+}
+podDetails = EntityUtil.filterByCondition(orderTermDetails, EntityCondition.makeCondition("termTypeId", EntityOperator.EQUALS, "FOR_MD"));
+podDetails = EntityUtil.getFirst(podDetails);
+if(UtilValidate.isNotEmpty(podDetails)){
+   placeOfDispatch =podDetails.description;
+   allDetailsMap.put("placeOfDispatch",placeOfDispatch);
+}
+paymentDetails = EntityUtil.filterByCondition(orderTermDetails, EntityCondition.makeCondition("termTypeId", EntityOperator.EQUALS, "SATFACTRY_SUPLY"));
+paymentDetails = EntityUtil.getFirst(paymentDetails);
+if(UtilValidate.isNotEmpty(paymentDetails)){
+   payment =paymentDetails.description;
+   allDetailsMap.put("payment",payment);
+}
+//warantyDetails = EntityUtil.filterByCondition(orderTermDetails, EntityCondition.makeCondition("termTypeId", EntityOperator.EQUALS, "WARRANTY"));
+//if(UtilValidate.isNotEmpty(warantyDetails)){
+//waranty=warantyDetails.termTypeId;
+//allDetailsMap.put("waranty",waranty);
+//}
 
 context.allDetailsMap=allDetailsMap;
 context.orderDetailsList=orderDetailsList;
@@ -219,6 +234,17 @@ context.orderDetailsList=orderDetailsList;
 
 
 
-
+//company Details-tin,cst,kst
+//List condlist=[];
+//condlist.add(EntityCondition.makeCondition("partyId", EntityOperator.EQUALS, "Company"));
+//condlist.add(EntityCondition.makeCondition("partyIdentificationTypeId", EntityOperator.EQUALS,"TIN_NUMBER"));
+//cond=EntityCondition.makeCondition(condlist,EntityOperator.AND);
+//tinDetails = delegator.findList("PartyIdentification", cond , null, null, null, false );
+//tinDetails=EntityUtil.getFirst(tinDetails);
+//tinNumber="";
+//if(UtilValidate.isNotEmpty(tinDetails)){
+//tinNumber=tinDetails.idValue;
+//allDetailsMap.put("tinNumber",tinNumber);
+//}
 
 
