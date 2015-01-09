@@ -69,6 +69,7 @@ function makeDatePicker1(fromDateId ,thruDateId){
 		makeDatePicker("ITDeductionsthruDate","ITDeductionsthruDate");
 		makeDatePicker("MPfromDate","MPfromDate");
 		makeDatePicker("MPthruDate","MPthruDate");
+		makeDatePicker("lbDate","lbDate");
 		makeDatePicker("LOPfromDate","LOPfromDate");
 		makeDatePicker("LOPthruDate","LOPthruDate");
 		makeDatePicker("EditedLateHoursfromDate","EditedLateHoursfromDate");
@@ -511,6 +512,21 @@ function setOrgPartyId() {
 							</table>
 						</form>
 				 	</tr>
+				 	
+				 	 <tr class="alternate-row">
+						<form id="leaveBalanceChecklist" name="leaveBalanceChecklist" mothed="post" action="<@ofbizUrl>LeaveBalanceCheckList.pdf</@ofbizUrl>" target="_blank">
+							<table class="basic-table" cellspacing="5">
+								<tr class="alternate-row">
+									<td width="20%"><span class='h3'>Leave Balance Checklist Report</span></td>
+									<td width="20%"><span class='h3'>Employee Id<@htmlTemplate.lookupField formName="leaveBalanceChecklist" name="partyIdTo" id="prtyId" fieldFormName="LookupEmployeeName"/></span></td>
+									<td width="20%"><span class='h3'>Date </span><input  type="text" size="18pt" id="lbDate"   name="lbDate"/></td>
+									<td width="20%"></td>
+									<td width="20%"><span class='h3'><input type="submit" value="Download" class="buttontext"></span></td> 
+								</tr>
+							</table>
+						</form>
+					 </tr>
+					 
 				</table>
 			</div>
 		</div>

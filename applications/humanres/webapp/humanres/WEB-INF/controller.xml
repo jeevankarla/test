@@ -1978,6 +1978,10 @@ under the License.
         <security https="true" auth="true"/>                        
         <response name="success" type="view" value="PayableDaysReport"/>        
     </request-map>
+    <request-map uri="LeaveBalanceCheckList.pdf">
+        <security https="true" auth="true"/>                        
+        <response name="success" type="view" value="LeaveBalances"/>        
+    </request-map>
     <request-map uri="PayrollExceptionReport.pdf">
         <security https="true" auth="true"/>                        
         <response name="success" type="view" value="PayrollExceptionReport"/>        
@@ -2527,6 +2531,7 @@ under the License.
     <view-map name="BusArrivalReport" type="screenfop" page="component://humanres/widget/ReportHumanresSummaryScreens.xml#BusArrivalReport" content-type="application/pdf" encoding="none"/>
     <view-map name="OODReport" type="screenfop" page="component://humanres/widget/ReportHumanresSummaryScreens.xml#OODReport" content-type="application/pdf" encoding="none"/>
     <view-map name="PayableDaysReport" type="screenfop" page="component://humanres/widget/ReportHumanresSummaryScreens.xml#PayableDaysReport" content-type="application/pdf" encoding="none"/>
+    <view-map name="LeaveBalances" type="screenfop" page="component://humanres/widget/ReportHumanresSummaryScreens.xml#LeaveBalances" content-type="application/pdf" encoding="none"/>
     <view-map name="CompanyPunchReport" type="screen" page="component://humanres/widget/ReportHumanresSummaryScreens.xml#CompanyPunchReport"/>
     <view-map name="EmployeePunchReport" type="screen" page="component://humanres/widget/ReportHumanresSummaryScreens.xml#EmployeePunchReport"/>
     <!-- <view-map name="EmployeePunchReport" type="screencsv" page="component://humanres/widget/ReportHumanresSummaryScreens.xml#EmployeePunchReport" content-type="text/csv" encoding="none"/> -->
