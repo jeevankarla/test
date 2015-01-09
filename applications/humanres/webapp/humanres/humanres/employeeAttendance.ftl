@@ -140,7 +140,7 @@ $("#fromDate").glDatePicker(
         	<tr>
         		<td align="right" width="10%"><span class='h2'>Employee: </span></td>
         		<#if security.hasEntityPermission("MYPORTAL", "_HREMPLVIEW", session) || security.hasEntityPermission("MYPORTAL", "_EMPLEAVE_AP", session)>
-        			<#if security.hasEntityPermission("HUMANRES", "_ADMIN", session)>
+        			<#if security.hasEntityPermission("HUMANRES", "_ADMIN", session) || security.hasEntityPermission("HR_ATTENDANCE", "_VIEW", session)>
         				<td width="20%"><select id="employeeId" name="employeeId" class="flexselect"></select></td>
         			<#else>
         				<#assign partyName= Static["org.ofbiz.party.party.PartyHelper"].getPartyName(delegator, userLogin.partyId, false)?if_exists/>
