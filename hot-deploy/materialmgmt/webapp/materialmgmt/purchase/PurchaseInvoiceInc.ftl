@@ -68,9 +68,7 @@
 	var conversionData = ${StringUtil.wrapString(conversionJSON)!'{}'};
 	//var data = ${StringUtil.wrapString(dataJSON)!'[]'};
 	var data = ${StringUtil.wrapString(invoiceItemsJSON)!'[]'};
-	var boothAutoJson = ${StringUtil.wrapString(boothsJSON)!'[]'};
 	var partyAutoJson = ${StringUtil.wrapString(partyJSON)!'[]'};	
-	var routeAutoJson = ${StringUtil.wrapString(routesJSON)!'[]'};
 	var prodIndentQtyCat=${StringUtil.wrapString(prodIndentQtyCat)!'[]'};
 	var qtyInPieces=${StringUtil.wrapString(qtyInPieces)!'[]'};
 	function requiredFieldValidator(value) {
@@ -733,10 +731,13 @@
         }
 
     });
-	
-	    
     
-    function updateInvoiceTotalAmount(){
+	mainGrid = grid;
+	}
+	
+	//update invoice total amount
+	
+	function updateInvoiceTotalAmount(){
         var totalAmount = 0;
 		for (i = 0; i < data.length; i++) {
 		   if(!isNaN(data[i]["amount"])){
@@ -760,37 +761,13 @@
 		   }
 		   
 		}
-				
-		 	var freightCharges=$("#freightCharges").val();
-	         var discount=$("#discount").val();
-	         var insurence = $("#insurence").val();
-	         var packAndFowdg = $("#packAndFowdg").val();
-	          var otherCharges = $("#otherCharges").val();
-	         
-	         //alert("<==totalAmount===>"+totalAmount+"=packAndFowdg="+packAndFowdg+"=otherCharges="+otherCharges+"=insurence="+insurence);
-	         if(freightCharges !=="" && (!isNaN(freightCharges))){
-	          freightCharges = parseFloat(freightCharges);
-	          //alert("<==totalAmount===>"+totalAmount+"==freightCharges=="+freightCharges);
-	         totalAmount +=freightCharges;
-	         }
-	         if(insurence !=="" && (!isNaN(insurence))){
-	         insurence = parseFloat(insurence);
-	         // alert("<==totalAmount===>"+totalAmount+"==insurence=="+insurence);
-	         totalAmount +=insurence;
-	         }
-	         if(discount !=="" && (!isNaN(discount))){
-	        discount = parseFloat(discount);
-	         totalAmount -=discount;
-	         }
-	         if(packAndFowdg !=="" && (!isNaN(packAndFowdg))){
-	           packAndFowdg = parseFloat(packAndFowdg);
-	         totalAmount +=packAndFowdg;
-	         }
-	         if(otherCharges !=="" && (!isNaN(otherCharges))){
-	        otherCharges = parseFloat(otherCharges);
-	         totalAmount +=otherCharges;
-	         }
-	        
+		
+		// update AdustmentValues
+		for (i = 0; i < data2.length; i++) {
+		   if(!isNaN(data2[i]["adjAmount"])){
+			totalAmount += data2[i]["adjAmount"];
+		   }
+		}
 	    //var amt = parseFloat(Math.round((totalAmount))); for total rounding
 		var amt = parseFloat(Math.round((totalAmount) * 100) / 100);
 	
@@ -803,103 +780,7 @@
 		//alert("==amt="+amt);
 		jQuery("#totalAmount").html(dispText);
     }
-    
- 
-		updateProductTotalAmount();
-		function updateProductTotalAmount() {
-			for(var i=0;i<data.length;i++){
-				var qty = parseFloat(data[i]["quantity"]);
-				var prod = data[i]["cProductId"];
-				var prodConversionData = conversionData[prod];
-				var convValue = 0;
-				var price = parseFloat(priceTags[prod]);
-				var crVal = 0;
-				grid.updateRow(i);
-			}
-			var totalAmount = 0;
-			for (i = 0; i < data.length; i++) {
-				totalAmount += data[i]["amount"];
-			}
-			var amt = parseFloat(Math.round((totalAmount) * 100) / 100);
-			if(amt > 0 ){
-				var dispText = "<b> [Total: Rs" +  amt + "]</b>";
-			}
-			else{
-				var dispText = "<b> [Total: Rs 0 ]</b>";
-			}
-			
-			jQuery("#totalAmount").html(dispText);
-		}
-		mainGrid = grid;
-	}
 	
-	// update when  discunt/fright/insurence changes
-	function addToInvoiceAmount(){
-            var totalAmount = 0;
-            //alert("==data.length===>"+data.length);
-				for (i = 0; i < data.length; i++) {
-				   if(!isNaN(data[i]["amount"])){
-					totalAmount += data[i]["amount"];
-				   }
-				   if(!isNaN(data[i]["Excise"])){
-					totalAmount += data[i]["Excise"];
-				   }
-				   if(!isNaN(data[i]["bedCessAmount"])){
-					totalAmount += data[i]["bedCessAmount"];
-				   }
-				   if(!isNaN(data[i]["bedSecCessAmount"])){
-					totalAmount += data[i]["bedSecCessAmount"];
-				   }
-				  
-				   if(!isNaN(data[i]["VAT"])){
-					totalAmount += data[i]["VAT"];
-				   }
-				   if(!isNaN(data[i]["CST"])){
-					totalAmount += data[i]["CST"];
-				   }
-				   
-				}
-				
-				 	var freightCharges=$("#freightCharges").val();
-			         var discount=$("#discount").val();
-			         var insurence = $("#insurence").val();
-			          var packAndFowdg = $("#packAndFowdg").val();
-			          var otherCharges = $("#otherCharges").val();
-			         //alert("<==totalAmount===>"+totalAmount+"=freightCharges="+freightCharges+"=discount="+discount+"=insurence="+insurence);
-			         if(freightCharges !=="" && (!isNaN(freightCharges))){
-			          freightCharges = parseFloat(freightCharges);
-			          //alert("<==totalAmount===>"+totalAmount+"==freightCharges=="+freightCharges);
-			         totalAmount +=freightCharges;
-			         }
-			         if(insurence !=="" && (!isNaN(insurence))){
-			         insurence = parseFloat(insurence);
-			         // alert("<==totalAmount===>"+totalAmount+"==insurence=="+insurence);
-			         totalAmount +=insurence;
-			         }
-			         if(discount !=="" && (!isNaN(discount))){
-			        discount = parseFloat(discount);
-			         totalAmount -=discount;
-			         }
-			         if(packAndFowdg !=="" && (!isNaN(packAndFowdg))){
-			           packAndFowdg = parseFloat(packAndFowdg);
-			         totalAmount +=packAndFowdg;
-			         }
-			         if(otherCharges !=="" && (!isNaN(otherCharges))){
-			        otherCharges = parseFloat(otherCharges);
-			         totalAmount +=otherCharges;
-			         }
-			         
-			    //var amt = parseFloat(Math.round((totalAmount))); for total rounding
-				var amt = parseFloat(Math.round((totalAmount) * 100) / 100);
-			
-				if(amt > 0 ){
-					var dispText = "<b>  [Invoice Amt: Rs " +  amt + "]</b>";
-				}
-				else{
-					var dispText = "<b>  [Invoice Amt: Rs 0 ]</b>";
-				}
-				jQuery("#totalAmount").html(dispText);
-    }
 	
 	function setupGrid2() {
     
@@ -1004,7 +885,9 @@
     	});
         
         grid2.onCellChange.subscribe(function(e,args) {
-        	
+        		if (args.cell == 1) {
+        		updateInvoiceTotalAmount();
+        		}
 		}); 
 		
 		grid2.onActiveCellChanged.subscribe(function(e,args) {
