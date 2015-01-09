@@ -72,7 +72,12 @@
         <field name="createdBy" title="Created By"><display/></field>
         <!-- <field name="salesChannelEnumId"><display/></field> -->
         <field name="partyId" title="Supplier"><display description="${groovy:org.ofbiz.party.party.PartyHelper.getPartyName(delegator, partyId, false);} - [${partyId}]"/></field>
-        <field name="poReport" widget-style="buttontext">
+         <field use-when="&quot;${orderTypeId}&quot; == &quot;LETTER_OF_INTENT&quot;" name="poReport" widget-style="buttontext">
+            <hyperlink target="LetterOfIndentReport.pdf" description="Report" target-window="_blank">
+                <parameter param-name="orderId"/>
+            </hyperlink>
+        </field>
+        <field use-when="&quot;${orderTypeId}&quot; != &quot;LETTER_OF_INTENT&quot;" name="poReport" widget-style="buttontext">
             <hyperlink target="PurchaseOrderView.pdf" description="Report" target-window="_blank">
                 <parameter param-name="orderId"/>
             </hyperlink>

@@ -305,7 +305,22 @@ function makeDatePicker1(fromDateId ,thruDateId){
 					  <tr class="alternate-row">
 					     <td width="20%"><span class='h3'>Amended PO Report</span></td>
 						 <td width="25%">
-							 <span class='h3'>PO No.<input type="textfield"  id="issueToPONo"  name="issueToPONo"/></span>   								
+							 <span class='h3'>PO No.<input type="textfield"  id="orderId"  name="orderId"/></span>   								
+						  </td>
+						  <td width="15%"><span class='h3'>							</span></td>
+						      <td width="15%"><span class='h3'>   				       </span></td>	
+						 <td width="10%"><span class='h3'><input type="submit" value="Download" class="buttontext"></span></td>
+		 		    </tr>
+				 </table>
+			 </form>
+		  </tr>
+		  <tr class="alternate-row"> 
+				<form id="LetterOfIndentReport" name="LetterOfIndentReport" mothed="post" action="<@ofbizUrl>LetterOfIndentReport.pdf</@ofbizUrl>" target="_blank">
+				   <table class="basic-table" cellspacing="5">
+					  <tr class="alternate-row">
+					     <td width="20%"><span class='h3'>Letter Of Indent Report</span></td>
+						 <td width="25%">
+							 <span class='h3'>PO No.<input type="textfield"  id="orderId"  name="orderId"/></span>   								
 						  </td>
 						  <td width="15%"><span class='h3'>							</span></td>
 						      <td width="15%"><span class='h3'>   				       </span></td>	
