@@ -161,9 +161,23 @@ function makeDatePicker(fromDateId ,thruDateId){
 		});	
 		$( "input[name*='paymentTermTypeId']" ).autocomplete({ source: paymentTermsJSON });
 		$( "input[name*='deliveryTermTypeId']" ).autocomplete({ source: deliveryTermsJSON });
-		$('#ui-datepicker-div').css('clip', 'auto');	
+		$('#ui-datepicker-div').css('clip', 'auto');
+		hideExtPO();	
 		
 	});
+	function hideExtPO(){
+		var orderTypeId = $("#orderTypeId").val();
+		var formObj = jQuery("#CreateMPO");
+		var poNumberObj  = $(formObj).find("#PONumber");
+		if(orderTypeId && orderTypeId == "PURCHASE_ORDER"){
+			$(poNumberObj).parent().parent().show();
+		}
+		else{
+			$(poNumberObj).parent().parent().hide();
+		}
+	}    
+	    
+	    
 </script>
 	
 	<#assign orderInfo = {}>
@@ -190,7 +204,7 @@ function makeDatePicker(fromDateId ,thruDateId){
 	                   <tr>
 							<td class="label">Order Type(<font color="red">*</font>) :</td>
 						    <td>
-						      	<select name="orderTypeId">
+							<select name="orderTypeId" id="orderTypeId" onchange="javascript: hideExtPO();">
 						      	   <#list orderTypes as orderType>
 						      	   		<#if orderId?exists && (orderInfo.get("orderTypeId") == orderType.orderTypeId)>
 						      	   			<option value='${orderType.orderTypeId}' selected>${orderType.description}</option> 
