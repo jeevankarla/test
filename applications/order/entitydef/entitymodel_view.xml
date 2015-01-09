@@ -2028,8 +2028,28 @@ under the License.
 	    <relation type="one-nofk" rel-entity-name="Invoice">
 	        <key-map field-name="invoiceId"/>
 	    </relation>   	    
-  </view-entity>
-  <view-entity entity-name="ReturnHeaderItemAndShipmentAndFacility"
+  	</view-entity>
+  	<view-entity entity-name="ReturnHeaderAndItem" package-name="org.ofbiz.order.return" never-cache="true" title="Return Header and Return Items View Entity">
+ 		<member-entity entity-alias="RH" entity-name="ReturnHeader"/>
+      	<member-entity entity-alias="RI" entity-name="ReturnItem"/>
+       	
+       	<alias-all entity-alias="RH"/>
+      	<alias entity-alias="RI" name="returnItemSeqId"/>
+      	<alias entity-alias="RI" name="productId"/>
+      	<alias entity-alias="RI" name="returnQuantity"/>
+      	<alias entity-alias="RI" name="receivedQuantity"/>
+      	<alias entity-alias="RI" name="returnPrice"/>
+      	<alias entity-alias="RI" name="returnBasicPrice"/>
+      	<alias entity-alias="RI" name="itemStatusId" field="statusId"/>
+      	<alias entity-alias="RI" name="returnItemTypeId"/>
+      	<alias entity-alias="RI" name="returnReasonId"/>
+      	<alias entity-alias="RI" name="returnTypeId"/>
+      	
+      	<view-link entity-alias="RH" rel-entity-alias="RI">
+        	<key-map field-name="returnId"/>
+      	</view-link>
+	</view-entity>
+  	<view-entity entity-name="ReturnHeaderItemAndShipmentAndFacility"
             package-name="org.ofbiz.order.order"
             never-cache="true"
             title="Return Header and Return Items and Shipment View Entity">

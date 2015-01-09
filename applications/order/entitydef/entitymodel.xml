@@ -2560,6 +2560,7 @@ under the License.
         <field name="createdBy" type="id-vlong"></field>
         <field name="fromPartyId" type="id"></field>
         <field name="toPartyId" type="id"></field>
+        <field name="returnDate" type="date-time"></field>
         <field name="paymentMethodId" type="id"></field>
         <field name="originFacilityId" type="id"></field><!-- Returns for kmf  -->
         <field name="shipmentId" type="id"></field><!-- Returns for kmf  -->
