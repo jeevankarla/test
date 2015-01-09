@@ -2715,7 +2715,253 @@ public class MaterialPurchaseServices {
 	  	request.setAttribute("_EVENT_MESSAGE_", "Successfully Done");	
 		return "sucess";
    	}
-   public static String processUpdateGRNWithPO(HttpServletRequest request, HttpServletResponse response) {
+   	public static String processReturnItems(HttpServletRequest request, HttpServletResponse response) {
+		
+		Delegator delegator = (Delegator) request.getAttribute("delegator");
+		LocalDispatcher dispatcher = (LocalDispatcher) request.getAttribute("dispatcher");
+		DispatchContext dctx =  dispatcher.getDispatchContext();
+		Locale locale = UtilHttp.getLocale(request);
+		Map<String, Object> result = ServiceUtil.returnSuccess();
+	    String requestDateStr = (String) request.getParameter("requestDate");
+	    HttpSession session = request.getSession();
+	    GenericValue userLogin = (GenericValue) session.getAttribute("userLogin");
+	    String partyId = (String) request.getParameter("partyId");
+	    String returnReasonId = (String) request.getParameter("returnReasonId");
+		Timestamp nowTimeStamp = UtilDateTime.nowTimestamp();
+		if (UtilValidate.isEmpty(partyId)) {
+			Debug.logError("Cannot create request without partyId: "+ partyId, module);
+			return "error";
+		}
+		Timestamp requestDate = null;
+		Map<String, Object> paramMap = UtilHttp.getParameterMap(request);
+		int rowCount = UtilHttp.getMultiFormRowCount(paramMap);
+		if (rowCount < 1) {
+			Debug.logError("No rows to process, as rowCount = " + rowCount, module);
+			return "error";
+		}
+		SimpleDateFormat sdf = new SimpleDateFormat("dd MMMM, yyyy");
+	  	if(UtilValidate.isNotEmpty(requestDateStr)){
+	  		try {
+	  			requestDate = new java.sql.Timestamp(sdf.parse(requestDateStr).getTime());
+		  	} catch (ParseException e) {
+		  		Debug.logError(e, "Cannot parse date string: " + requestDateStr, module);
+		  	} catch (NullPointerException e) {
+	  			Debug.logError(e, "Cannot parse date string: " + requestDateStr, module);
+		  	}
+	  	}
+	  	else{
+	  		requestDate = UtilDateTime.nowTimestamp();
+	  	}
+
+	  	boolean beganTransaction = false;
+		try{
+			beganTransaction = TransactionUtil.begin(7200);
+			
+			GenericValue party = delegator.findOne("PartyRole", UtilMisc.toMap("partyId", partyId, "roleTypeId", "INTERNAL_ORGANIZATIO"), false);
+			if(UtilValidate.isEmpty(party)){
+				Debug.logError("Request can only made by departments", module);
+				request.setAttribute("_ERROR_MESSAGE_", "Request can only made by departments");
+				TransactionUtil.rollback();
+		  		return "error";
+			}
+			
+			Map returnHeaderCtx = FastMap.newInstance();
+			returnHeaderCtx.put("returnHeaderTypeId", "DEPARTMENT_RETURN");
+			returnHeaderCtx.put("fromPartyId", partyId);
+			returnHeaderCtx.put("toPartyId", "INT16");
+			returnHeaderCtx.put("entryDate", nowTimeStamp);
+			returnHeaderCtx.put("returnDate", requestDate);
+			returnHeaderCtx.put("statusId", "RETURN_ACCEPTED");
+			returnHeaderCtx.put("userLogin", userLogin);
+			result = dispatcher.runSync("createReturnHeader", returnHeaderCtx);
+			if (ServiceUtil.isError(result)) {
+    		  	Debug.logError("Problem creating return from party :"+partyId, module);
+				request.setAttribute("_ERROR_MESSAGE_", "Problem creating return from party :"+partyId);	
+				TransactionUtil.rollback();
+		  		return "error";          	            
+			} 
+			String returnId = (String)result.get("returnId");
+    	  
+	        String productId = "";
+	        String quantityStr = "";
+			BigDecimal quantity = BigDecimal.ZERO;
+			for (int i = 0; i < rowCount; i++) {
+				  
+				String thisSuffix = UtilHttp.MULTI_ROW_DELIMITER + i;
+				if (paramMap.containsKey("productId" + thisSuffix)) {
+					productId = (String) paramMap.get("productId" + thisSuffix);
+				}
+				else {
+					request.setAttribute("_ERROR_MESSAGE_", "Missing product id");
+					return "error";			  
+				}
+			  
+				if (paramMap.containsKey("quantity" + thisSuffix)) {
+					quantityStr = (String) paramMap.get("quantity" + thisSuffix);
+				}
+				else {
+					request.setAttribute("_ERROR_MESSAGE_", "Missing product quantity");
+					return "error";			  
+				}		  
+				if(UtilValidate.isNotEmpty(quantityStr)){
+					quantity = new BigDecimal(quantityStr);
+				}
+			
+				GenericValue returnItem = delegator.makeValue("ReturnItem");
+	    		returnItem.put("returnReasonId", "RTN_DEFECTIVE_ITEM");
+	    		if(UtilValidate.isNotEmpty(returnReasonId)){
+	    			returnItem.put("returnReasonId", returnReasonId);
+	    		}
+	    		returnItem.put("statusId", "RETURN_REQUESTED");
+	    		returnItem.put("returnId", returnId);
+	    		returnItem.put("productId", productId);
+	    		returnItem.put("returnQuantity", quantity);
+	    		returnItem.put("returnTypeId", "RTN_CREDIT");
+	    		returnItem.put("returnItemTypeId", "RET_FPROD_ITEM");
+    		    delegator.setNextSubSeqId(returnItem, "returnItemSeqId", 5, 1);
+	    		delegator.create(returnItem);
+			}
+			
+		}
+		catch (GenericEntityException e) {
+			try {
+				TransactionUtil.rollback(beganTransaction, "Error Fetching data", e);
+	  		} catch (GenericEntityException e2) {
+	  			Debug.logError(e2, "Could not rollback transaction: " + e2.toString(), module);
+	  		}
+	  		Debug.logError("An entity engine error occurred while fetching data", module);
+	  	}
+  	  	catch (GenericServiceException e) {
+  	  		try {
+  			  TransactionUtil.rollback(beganTransaction, "Error while calling services", e);
+  	  		} catch (GenericEntityException e2) {
+  			  Debug.logError(e2, "Could not rollback transaction: " + e2.toString(), module);
+  	  		}
+  	  		Debug.logError("An entity engine error occurred while calling services", module);
+  	  	}
+	  	finally {
+	  		try {
+	  			TransactionUtil.commit(beganTransaction);
+	  		} catch (GenericEntityException e) {
+	  			Debug.logError(e, "Could not commit transaction for entity engine error occurred while fetching data", module);
+	  		}
+	  	}
+		request.setAttribute("_EVENT_MESSAGE_", "Successfully made return goods entries ");
+		return "success";
+	}
+   	
+   	public static Map<String, Object> acceptReturnItemForReceipt(DispatchContext ctx,Map<String, ? extends Object> context) {
+		Delegator delegator = ctx.getDelegator();
+		LocalDispatcher dispatcher = ctx.getDispatcher();
+		String returnId = (String) context.get("returnId");
+		String returnItemSeqId = (String) context.get("returnItemSeqId");
+		GenericValue userLogin = (GenericValue) context.get("userLogin");
+		Map result = ServiceUtil.returnSuccess();
+		try{
+			
+			GenericValue returnHeader = delegator.findOne("ReturnHeader", UtilMisc.toMap("returnId", returnId), false);
+			
+			GenericValue returnItem = delegator.findOne("ReturnItem", UtilMisc.toMap("returnId", returnId, "returnItemSeqId", returnItemSeqId), false);
+			
+			if(UtilValidate.isEmpty(returnItem)){
+				Debug.logError("No Items found with Id: [" + returnId+" : "+returnItemSeqId+"]", module);
+				return ServiceUtil.returnError("No Items found with Id: [" + returnId+" : "+returnItemSeqId+"]");
+			}
+			
+			String productId = returnItem.getString("productId");
+			List<GenericValue> productsFacility = delegator.findList("ProductFacility", EntityCondition.makeCondition("productId", EntityOperator.EQUALS, productId), null, null, null, false);
+			
+			GenericValue facilityProd = EntityUtil.getFirst(productsFacility);
+			//Product should mapped to any one of facility
+			if (UtilValidate.isEmpty(facilityProd)) {
+				Debug.logError("Problem creating receipt for productId :"+productId+" Not Mapped To Store Facility !", module);
+		        return ServiceUtil.returnError("Problem creating receipt for ProductId :"+productId+" Not Mapped To Store Facility!");	
+		    }
+			 
+			Map inventoryReceiptCtx = FastMap.newInstance();
+			
+			inventoryReceiptCtx.put("userLogin", userLogin);
+			inventoryReceiptCtx.put("productId", returnItem.getString("productId"));
+			inventoryReceiptCtx.put("datetimeReceived", returnHeader.getTimestamp("returnDate"));
+			inventoryReceiptCtx.put("quantityAccepted", returnItem.getBigDecimal("returnQuantity"));
+			inventoryReceiptCtx.put("quantityRejected", BigDecimal.ZERO);
+			inventoryReceiptCtx.put("inventoryItemTypeId", "NON_SERIAL_INV_ITEM");
+			inventoryReceiptCtx.put("ownerPartyId", "Company");
+			inventoryReceiptCtx.put("partyId", returnHeader.getString("fromPartyId"));
+			/*inventoryReceiptCtx.put("consolidateInventoryReceive", "Y");*/
+			inventoryReceiptCtx.put("facilityId", facilityProd.getString("facilityId"));
+			inventoryReceiptCtx.put("unitCost", BigDecimal.ZERO);
+			if(UtilValidate.isNotEmpty(returnItem.getBigDecimal("returnPrice"))){
+				inventoryReceiptCtx.put("unitCost", returnItem.getBigDecimal("returnPrice"));
+			}
+			Map<String, Object> receiveInventoryResult;
+			receiveInventoryResult = dispatcher.runSync("receiveInventoryProduct", inventoryReceiptCtx);
+			
+			if (ServiceUtil.isError(receiveInventoryResult)) {
+				Debug.logWarning("There was an error adding inventory: " + ServiceUtil.getErrorMessage(receiveInventoryResult), module);
+				return ServiceUtil.returnError("There was an error adding inventory: " + ServiceUtil.getErrorMessage(receiveInventoryResult));	
+            }
+			
+			String receiptId = (String)receiveInventoryResult.get("receiptId");
+			GenericValue shipmentReceipt = delegator.findOne("ShipmentReceipt", UtilMisc.toMap("receiptId", receiptId), false);
+			if(UtilValidate.isNotEmpty(shipmentReceipt)){
+				shipmentReceipt.set("returnId", returnId);
+				shipmentReceipt.set("returnItemSeqId", returnItemSeqId);
+				shipmentReceipt.store();
+			}
+			
+			returnItem.set("statusId", "SR_ACCEPTED");
+			returnItem.store();
+			
+		} catch (Exception e) {
+			// TODO: handle exception
+			Debug.logError(e, module);
+			return ServiceUtil.returnError(e.getMessage());
+		}
+		return result;
+	}
+   	
+	public static Map<String, Object> setRequestStatus(DispatchContext ctx,Map<String, ? extends Object> context) {
+		Delegator delegator = ctx.getDelegator();
+		LocalDispatcher dispatcher = ctx.getDispatcher();
+		String statusId = (String) context.get("statusId");
+		String custRequestId = (String) context.get("custRequestId");
+		GenericValue userLogin = (GenericValue) context.get("userLogin");
+		Map result = ServiceUtil.returnSuccess();
+		try{
+			Map statusCtx = FastMap.newInstance();
+			statusCtx.put("statusId", statusId);
+			statusCtx.put("custRequestId", custRequestId);
+			statusCtx.put("userLogin", userLogin);
+			Map resultCtx = dispatcher.runSync("setCustRequestStatus", statusCtx);
+			if (ServiceUtil.isError(resultCtx)) {
+				Debug.logError("Request set status failed for RequestId: " + custRequestId, module);
+				return resultCtx;
+			}
+			
+			List<GenericValue> custRequestItems = delegator.findList("CustRequestItem", EntityCondition.makeCondition("custRequestId", EntityOperator.EQUALS, custRequestId), null, null, null, false);
+			for(GenericValue custReq : custRequestItems){
+				statusCtx.clear();
+				statusCtx.put("statusId", statusId);
+				statusCtx.put("custRequestId", custRequestId);
+				statusCtx.put("custRequestItemSeqId", custReq.getString("custRequestItemSeqId"));
+				statusCtx.put("userLogin", userLogin);
+				statusCtx.put("description", "");
+				resultCtx = dispatcher.runSync("setCustRequestItemStatus", statusCtx);
+				if (ServiceUtil.isError(resultCtx)) {
+					Debug.logError("RequestItem set status failed for Request: " + custRequestId+" : "+custReq.getString("custRequestItemSeqId"), module);
+					return resultCtx;
+				}
+			}
+			
+		} catch (Exception e) {
+			// TODO: handle exception
+			Debug.logError(e, module);
+			return ServiceUtil.returnError(e.getMessage());
+		}
+		return result;
+	}
+	public static String processUpdateGRNWithPO(HttpServletRequest request, HttpServletResponse response) {
 		
 		Delegator delegator = (Delegator) request.getAttribute("delegator");
 		LocalDispatcher dispatcher = (LocalDispatcher) request.getAttribute("dispatcher");
@@ -2829,5 +3075,5 @@ public class MaterialPurchaseServices {
 	  	}
 	  	request.setAttribute("_EVENT_MESSAGE_", "PO Number :"+orderId +" Linked With GRN Shipment Number"+shipmentId+" Successfully !");
 	  	return "success";
-}
+	}
 }

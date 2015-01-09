@@ -39,6 +39,13 @@
 	        	</condition>
 	        	<link target="FindMaterialRequest"/>
 	        </menu-item>
+			
+			<menu-item name="FindMaterialReturns" title="Material Returns">
+	        	<condition>
+	        		<if-has-permission permission="MM" action="_INDENT_VIEW" />
+	        	</condition>
+	        	<link target="FindMaterialReturns"/>
+	        </menu-item>
 	
 			<menu-item name="FindMaterialIssuance" title="Store Issuance">
 			<condition>
@@ -150,12 +157,33 @@
         </menu-item>
       </menu>
       
+      <menu name="ReturnsTabBar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml" selected-menuitem-context-field-name="tabButtonItem2">
+        <menu-item name="FindMaterialReturns" title="Find Returns">
+        	<link target="FindMaterialReturns"/>
+        </menu-item>
+        <menu-item name="viewReturn" title="Return Overview">
+        	<condition>
+        		<if-compare operator="not-equals" value="" field="returnId"/>
+        	</condition>
+            <link target="ViewMaterialReturn">
+                <parameter param-name="returnId" from-field="return.returnId"/>
+            </link>
+        </menu-item>
+        <menu-item name="ReturnEntry" title="Return Entry">
+        	<link target="ReturnEntry"/>
+        </menu-item>
+        
+      </menu>
+      
       <menu name="StoreIssueTabBar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml" selected-menuitem-context-field-name="tabButtonItem2">
         <menu-item name="FindMaterialIssuance" title="${uiLabelMap.MaterialMangement_FindMaterialIssuance}">
         	<link target="FindMaterialIssuance"/>
         </menu-item>
-         <menu-item name="StoreProductIssue" title="Issuance Request">
+        <menu-item name="StoreProductIssue" title="Issuance Request">
         	<link target="StoreProductIssue"/>
+        </menu-item>
+        <menu-item name="ReturnRequests" title="Return Request">
+        	<link target="StoreReturnRequests"/>
         </menu-item>
       </menu>
       

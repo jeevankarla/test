@@ -21,8 +21,8 @@
         </field>
         <field name="noConditionFind"><hidden value="Y"/><!-- if this isn't there then with all fields empty no query will be done --></field>
     </form>
-
-    <form name="ListRequests" type="list" extends="ListRequestList" list-name="listIt">
+    
+    	<form name="ListRequests" type="list" extends="ListRequestList" list-name="listIt">
         <actions>
           <service service-name="performFind" result-map="result" result-map-list="listIt">
             <field-map field-name="inputFields" from-field="parameters"/>
@@ -64,6 +64,50 @@
         </field>
         
     </form>
+    
+    <form name="FindMaterialReturn" target="FindMaterialReturns" title="" type="single" default-map-name="parameters"
+        header-row-style="header-row" default-table-style="basic-table">
+        <field name="returnId" title="Return Id"><text-find/></field>
+        <field name="fromPartyId" title="${uiLabelMap.MaterialMangement_CustRequestFromPartyId}"><lookup target-form-name="LookupPartyName"/></field>
+ 		<field name="returnDate" title="Returned Date"><date-find/></field>   
+        <field name="submitButton" title="${uiLabelMap.CommonFind}" widget-style="smallSubmit">
+            <submit button-type="button"/>
+        </field>
+        <field name="noConditionFind"><hidden value="Y"/><!-- if this isn't there then with all fields empty no query will be done --></field>
+    </form>
+
+    <form name="ListReturns" type="list" extends="ListReturnList" list-name="listIt">
+        <actions>
+          <service service-name="performFind" result-map="result" result-map-list="listIt">
+            <field-map field-name="inputFields" from-field="parameters"/>
+            <field-map field-name="entityName" from-field="entityName"/>
+            <field-map field-name="orderBy" value="-entryDate"/>
+            <field-map field-name="viewIndex" from-field="viewIndex"/>
+            <field-map field-name="viewSize" from-field="viewSize"/>
+          </service>
+        </actions>
+    </form>
+
+    <form name="ListReturnList" type="list" use-row-submit="true" list-name="returns" title="List of Returns"
+        odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
+        <field name="returnId"  title="Return Id" widget-style="buttontext">
+            <display/>
+        </field>
+        <field name="returnDate"  title="Return Date"><display description="${bsh:org.ofbiz.base.util.UtilDateTime.toDateString(returnDate,&quot;dd/MM/yyyy&quot;)}"/></field>
+        <field name="fromPartyId"  title="${uiLabelMap.MaterialMangement_CustRequestFromPartyId}">
+            <display-entity entity-name="PartyNameView" key-field-name="partyId" description="${firstName} ${middleName} ${lastName} ${groupName}">
+                <sub-hyperlink description="[${fromPartyId}]" target="/partymgr/control/viewprofile" target-type="inter-app">
+                    <parameter param-name="partyId" from-field="fromPartyId"/>
+                </sub-hyperlink>
+            </display-entity>
+        </field>
+        <field name="entryDate"  title="Entry Date"><display description="${groovy:org.ofbiz.base.util.UtilDateTime.toDateString(entryDate,&quot;dd/MM/yyyy HH:mm:ss&quot;)}"/></field>
+        <field name="statusId"  title="Status">
+            <display-entity also-hidden="false" entity-name="StatusItem" description="${description}"/>
+        </field>
+        <field name="createdBy" ><display/></field>
+        
+    </form>
 	
 	
 	<form name="FindMaterialIssuance" target="FindMaterialIssuance" title="" type="single" default-map-name="parameters"
@@ -79,7 +123,7 @@
         </field>
         <field name="noConditionFind"><hidden value="Y"/><!-- if this isn't there then with all fields empty no query will be done --></field>
     </form>
-
+	
     <form name="ListMaterialIssuance" type="list" extends="ListIssuanceList" list-name="listIt">
         <actions>
           <service service-name="performFind" result-map="result" result-map-list="listIt">
@@ -294,6 +338,29 @@
                 <parameter param-name="custRequestId"/>
                 <parameter param-name="custRequestItemSeqId"/>
                 <parameter param-name="custmQuantity"/>
+            </hyperlink>
+        </field>
+        
+    </form>
+    
+    <form name="ListReturnRequests" type="list" use-row-submit="true"  title="" list-name="returnItemsList" separate-columns="true"
+        odd-row-style="alternate-row" default-table-style="basic-table hover-bar" paginate-target="StoreReturnRequests">
+        
+        <field name="returnId" title="Return Id"><display/></field>
+        <field name="returnItemSeqId" title="Item No"><display/></field>
+        <field name="returnDate" title="Return Date"><display description="${groovy:org.ofbiz.base.util.UtilDateTime.toDateString(returnDate, &quot;dd/MM/yyyy&quot;)}"/></field>
+        <field name="fromPartyId" title="${uiLabelMap.MaterialMangement_CustRequestFromPartyId}">
+            <display-entity entity-name="PartyNameView" key-field-name="partyId" description="${firstName} ${middleName} ${lastName} ${groupName}"/>
+        </field>
+        <field name="productId" title="${uiLabelMap.MaterialMangement_ProductId} - ${uiLabelMap.MaterialMangement_ProductName}">
+            <display-entity entity-name="Product" key-field-name="productId" description="${productId} - ${productName}"/>
+        </field>
+        <field name="returnQuantity" title="Return Qty"><display/></field>
+        <field name="statusId" title="Status" ><display-entity entity-name="StatusItem" description="${description}"></display-entity> </field>
+        <field name="acceptButton" widget-style="buttontext">
+            <hyperlink target="acceptReturnItemForReceipt" description="Accept">
+                <parameter param-name="returnId"/>
+                <parameter param-name="returnItemSeqId"/>
             </hyperlink>
         </field>
         

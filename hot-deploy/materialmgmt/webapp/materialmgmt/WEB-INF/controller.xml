@@ -41,6 +41,12 @@
        <response name="success" type="view" value="FindMaterialRequest"/>
        <response name="error" type="view" value="FindMaterialRequest"/>
      </request-map>
+     <request-map uri="FindMaterialReturns">
+       <security https="true" auth="true"/>
+       <response name="success" type="view" value="FindMaterialReturns"/>
+       <response name="error" type="view" value="FindMaterialReturns"/>
+     </request-map>
+     
      <request-map uri="POoverview">
        <security https="true" auth="true"/>
        <response name="success" type="view" value="PurchageOrderOverView"/>
@@ -301,6 +307,14 @@
        <response name="error" type="view" value="CustRequestEntry"/>
      </request-map>
      
+     <request-map uri="processReturnItems">
+       <security https="true" auth="true"/>
+       <event type="java" path="in.vasista.vbiz.purchase.MaterialPurchaseServices" invoke="processReturnItems" global-transaction="true"/>
+       <response name="success" type="view" value="ReturnEntry"/>
+       <response name="error" type="view" value="ReturnEntry"/>
+     </request-map>
+     
+     
      <request-map uri="processPurchaseInvoice">
        <security https="true" auth="true"/>
        <event type="java" path="in.vasista.vbiz.purchase.MaterialPurchaseServices" invoke="processPurchaseInvoice" global-transaction="true"/>
@@ -325,6 +339,12 @@
        <security https="true" auth="true"/>
        <response name="success" type="view" value="CustRequestEntry"/>
        <response name="error" type="view" value="CustRequestEntry"/>
+     </request-map>
+     
+     <request-map uri="ReturnEntry">
+       <security https="true" auth="true"/>
+       <response name="success" type="view" value="ReturnEntry"/>
+       <response name="error" type="view" value="ReturnEntry"/>
      </request-map>
      
      <request-map uri="MaterialInvoiceInit">
@@ -666,6 +686,13 @@
        <response name="error" type="view" value="ViewMaterialQuote"/>
    </request-map>
    
+   <request-map uri="StoreReturnRequests">
+       <security https="true" auth="true"/>
+       <response name="success" type="view" value="StoreReturnRequests"/>
+       <response name="error" type="view" value="StoreReturnRequests"/>
+   </request-map>
+   
+   
    <request-map uri="ApprovedMatRequirementBySupplier">
        <security https="true" auth="true"/>
        <response name="success" type="view" value="ApprovedMatRequirementBySupplier"/>
@@ -686,6 +713,13 @@
         <response name="error" type="request-redirect" value="EnquiryForApprovedMatRequirements">
         </response>
     </request-map>
+   
+   <request-map uri="acceptReturnItemForReceipt">
+     	<security https="true" auth="true"/>
+     	<event type="service"  path=""  invoke="acceptReturnItemForReceipt" />
+     	<response name="success" type="view" value="StoreReturnRequests"/>
+        <response name="error" type="view" value="StoreReturnRequests"/>
+    </request-map> 
     
     <request-map uri="getRequrimentsRunningTotal">
         <security https="true" auth="true"/>
@@ -899,6 +933,9 @@
     <view-map name="ApprovedMatRequirementBySupplier" type="screen" page="component://materialmgmt/widget/MaterialRequirementScreens.xml#ApprovedMatRequirementBySupplier"/>
     <view-map name="EnquiryForApprovedMatRequirements" type="screen" page="component://materialmgmt/widget/MaterialRequirementScreens.xml#EnquiryForApprovedMatRequirements"/>
     
+    <!-- Return views -->
+    <view-map name="FindMaterialReturns" type="screen" page="component://materialmgmt/widget/MaterialRequestScreens.xml#FindMaterialReturns"/>
+    <view-map name="ReturnEntry" type="screen" page="component://materialmgmt/widget/MaterialRequestScreens.xml#ReturnEntry"/>
     <!-- PO views -->
     <view-map name="confirmPurchaseOrder" type="screen" page="component://materialmgmt/widget/MaterialPurchaseScreens.xml#ConfirmPurchaseOrder"/>
     <view-map name="POMaterialReceipts" type="screen" page="component://materialmgmt/widget/MaterialPurchaseScreens.xml#POMaterialReceipts"/>
@@ -912,6 +949,7 @@
 	<view-map name="FindGRNReceipts" type="screen" page="component://materialmgmt/widget/MaterialPurchaseScreens.xml#FindGRNReceipts"/>
 	<view-map name="FindGRNShipments" type="screen" page="component://materialmgmt/widget/MaterialPurchaseScreens.xml#FindGRNShipments"/>
 	<view-map name="FindMaterialInvoices" type="screen" page="component://materialmgmt/widget/MaterialRequestScreens.xml#FindMaterialInvoices"/>
+	<view-map name="StoreReturnRequests" type="screen" page="component://materialmgmt/widget/MaterialRequestScreens.xml#StoreReturnRequests"/>
 	
 	<!-- Quote views  -->
 	<view-map name="FindMaterialQuotes" type="screen" page="component://materialmgmt/widget/MaterialQuoteScreens.xml#FindMaterialQuotes"/>

@@ -62,20 +62,20 @@
 		<div class="screenlet">
 			<div class="screenlet-title-bar">
          		<div class="grid-header" style="width:100%">
-					<label>Indent Header </label>
+					<label><#if screenFlag?exists && screenFlag == "RETURN"> Return<#else>Indent</#if> Header </label>
 				</div>
 		     </div>
       
     		<div class="screenlet-body">
-     
-      			<form method="post" name="indententryinit" action="<@ofbizUrl>CustRequestEntry</@ofbizUrl>" id="indententryinit">  
+     			
+      			<form method="post" name="indententryinit" action="<@ofbizUrl><#if screenFlag?exists && screenFlag == "RETURN">ReturnEntry<#else>CustRequestEntry</#if></@ofbizUrl>" id="indententryinit">  
 			    	<table width="100%" border="0" cellspacing="0" cellpadding="0">
       
 				        <tr>
 				        	<td>
 						      	<input type="hidden" name="isFormSubmitted"  value="YES" />
 				           	</td>
-					        <td align='left' valign='middle' nowrap="nowrap"><div class='h2'>${uiLabelMap.MaterialMangement_CustRequestDate}:</div></td>
+					        <td align='left' valign='middle' nowrap="nowrap"><div class='h2'><#if screenFlag?exists && screenFlag == "RETURN"> Return Date<#else>${uiLabelMap.MaterialMangement_CustRequestDate}</#if>:</div></td>
 					        <td>&nbsp;</td>
 					        <#if effectiveDate?exists && effectiveDate?has_content>  
 						  		<input type="hidden" name="effectiveDate" id="effectiveDate" value="${effectiveDate}"/>  
@@ -90,23 +90,26 @@
 					       	  </#if>
 					  	</tr>
 	    				<tr><td><br/></td></tr>
-    					 <tr>
-    					 	<td>&nbsp;</td>
-					        <td align='left' valign='middle' nowrap="nowrap"><div class='h2'>Required Date:</div></td>
-					        <td>&nbsp;</td>
-					        <#if requiredDate?exists && requiredDate?has_content>  
-						  		<input type="hidden" name="requiredDate" id="requiredDate" value="${requiredDate}"/>
-					          	<td valign='middle'>
-					            	<div class='tabletext h3'>${requiredDate}         
-					            	</div>
-					          	</td> 
-					         <#else> 
-					        	<td valign='middle'>          
-					            	<input class='h2' type="text" name="requiredDate" id="requiredDate" value="${defaultEffectiveDate}"/>           		
-					            </td> 	      
-					       	  </#if>
-					  	</tr>
-    					<tr><td><br/></td></tr>
+	    				<#if screenFlag?exists && screenFlag != "RETURN">
+	    					<tr>
+	    					 	<td>&nbsp;</td>
+						        <td align='left' valign='middle' nowrap="nowrap"><div class='h2'>Required Date:</div></td>
+						        <td>&nbsp;</td>
+						        <#if requiredDate?exists && requiredDate?has_content>  
+							  		<input type="hidden" name="requiredDate" id="requiredDate" value="${requiredDate}"/>
+						          	<td valign='middle'>
+						            	<div class='tabletext h3'>${requiredDate}         
+						            	</div>
+						          	</td> 
+						         <#else> 
+						        	<td valign='middle'>          
+						            	<input class='h2' type="text" name="requiredDate" id="requiredDate" value="${defaultEffectiveDate}"/>           		
+						            </td> 	      
+						       	  </#if>
+						  	</tr>
+	    					<tr><td><br/></td></tr>
+	    				</#if>
+    					 
     					<tr>
 				      		<td>&nbsp;</td>
 				      		<td align='left' valign='middle' nowrap="nowrap"><div class='h2'>Material Category:</div></td>
@@ -123,20 +126,21 @@
 						</tr>
           				
         				<tr><td><br/></td></tr>
-        				<tr>
-				      		<td>&nbsp;</td>
-				      		<td align='left' valign='middle' nowrap="nowrap"><div class='h2'>${uiLabelMap.MaterialMangement_CustRequestName}</div></td>
-				      		<td>&nbsp;</td>
-				      		<td>
-				      		<#if custRequestName?has_content>
-				      			<div class='tabletext h3'>${custRequestName?if_exists}</div>
-				      		<#else>
-				      			<input type="text" name="custRequestName" id="custRequestName" />
-				      		</#if>
-							</td>
-						</tr>
-						
-						<tr><td><br/></td></tr>
+        				<#if screenFlag?exists && screenFlag != "RETURN">
+	        				<tr>
+					      		<td>&nbsp;</td>
+					      		<td align='left' valign='middle' nowrap="nowrap"><div class='h2'>${uiLabelMap.MaterialMangement_CustRequestName}</div></td>
+					      		<td>&nbsp;</td>
+					      		<td>
+					      		<#if custRequestName?has_content>
+					      			<div class='tabletext h3'>${custRequestName?if_exists}</div>
+					      		<#else>
+					      			<input type="text" name="custRequestName" id="custRequestName" />
+					      		</#if>
+								</td>
+							</tr>
+							<tr><td><br/></td></tr>
+						</#if>
 						
 				        <tr>
 				          <td>&nbsp;</td>
@@ -178,11 +182,16 @@
 		<div class="screenlet">
     		<div class="screenlet-body">
 		 		<div class="grid-header" style="width:100%">
-		 			<label>Indent Items</label>
+		 			<label><#if screenFlag?exists && screenFlag == "RETURN">Return <#else>Indent</#if> Items</label>
 				</div>
 				<div id="myGrid1" style="width:100%;height:350px;"></div>
-			  
-				<#assign formAction ='processCustRequestItems'>			
+			  	
+			  	<#if screenFlag?exists && screenFlag == "RETURN">
+			  		<#assign formAction ='processReturnItems'>
+			  	<#else>
+			  		<#assign formAction ='processCustRequestItems'>
+			  	</#if>
+							
 				<#if booth?exists || party?exists>
 			    	<div align="center">
 			    		<input type="submit" style="padding:.3em" id="changeSave" value="Submit" onclick="javascript:processIndentEntry('indententry','<@ofbizUrl>${formAction}</@ofbizUrl>');"/>

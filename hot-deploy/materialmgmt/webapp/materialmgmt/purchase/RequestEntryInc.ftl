@@ -225,7 +225,7 @@
 				{id:"cProductName", name:"Item", field:"cProductName", width:220, minWidth:220, cssClass:"cell-title", availableTags: availableTags, regexMatcher:"contains" ,editor: AutoCompleteEditor, validator: productValidator, sortable:false ,toolTip:""},
 				{id:"quantity", name:"Quantity", field:"quantity", width:80, minWidth:80, cssClass:"cell-title",editor:FloatCellEditor, sortable:false , formatter: quantityFormatter,  validator: quantityValidator},
 				{id:"UOM", name:"UOM", field:"uomDescription", width:100, minWidth:100, cssClass:"readOnlyColumnClass", sortable:false, focusable :false},
-				{id:"inventoryQty", name:"Inventory Available", field:"inventoryQty", width:80, minWidth:80, cssClass:"readOnlyColumnClass", sortable:false , formatter: quantityFormatter,  validator: quantityValidator},
+				<#if screenFlag?exists && screenFlag != "RETURN">{id:"inventoryQty", name:"Inventory Available", field:"inventoryQty", width:80, minWidth:80, cssClass:"readOnlyColumnClass", sortable:false , formatter: quantityFormatter,  validator: quantityValidator},</#if>
 		];
 		
 			var options = {

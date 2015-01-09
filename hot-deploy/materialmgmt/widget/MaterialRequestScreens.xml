@@ -31,6 +31,64 @@
          </section>
     </screen>
     
+    <screen name="StoreReturnRequests">
+        <section>
+            <actions>
+                <set field="titleProperty" value="Return Requests"/>
+                <set field="headerItem" value="return"/>
+                <set field="tabButtonItem" value="FindMaterialIssuance" />	
+			    <set field="tabButtonItem2" value="ReturnRequests"/> 
+                <set field="parameters.returnHeaderTypeId" value="DEPARTMENT_RETURN"/>
+                <entity-condition list="returnItemsList" entity-name="ReturnHeaderAndItem">
+                	<condition-list combine="and">
+                		<condition-expr field-name="returnHeaderTypeId" operator="equals" value="DEPARTMENT_RETURN"/>
+	                	<condition-expr field-name="itemStatusId" operator="equals" value="RETURN_REQUESTED"/>
+                	</condition-list>
+                </entity-condition>
+            </actions>
+            <widgets>
+                <decorator-screen name="materialmgmtNgCommonDecorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="body">
+                    	<include-menu name="StoreIssueTabBar" location="component://materialmgmt/widget/materialmgmtMenus.xml"/>
+                        <screenlet title="Department Returns Request">
+                   			<include-form name="ListReturnRequests" location="component://materialmgmt/widget/MaterialRequestForms.xml"/>
+                   		</screenlet>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+         </section>
+    </screen>
+    
+    <screen name="FindMaterialReturns">
+        <section>
+            <actions>
+                <set field="titleProperty" value="Returns"/>
+                <set field="headerItem" value="return"/>
+                <set field="tabButtonItem" value="FindMaterialReturns" />	
+			    <set field="tabButtonItem2" value="FindMaterialReturns"/> 
+                <set field="entityName" value="ReturnHeader"/>
+                <set field="parameters.returnHeaderTypeId" value="DEPARTMENT_RETURN"/>
+            </actions>
+            <widgets>
+                <decorator-screen name="materialmgmtNgCommonDecorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="body">
+                    	<include-menu name="ReturnsTabBar" location="component://materialmgmt/widget/materialmgmtMenus.xml"/>
+                        <decorator-screen name="FindScreenDecorator" location="component://common/widget/CommonScreens.xml">
+                            <decorator-section name="search-options">
+                                <include-form name="FindMaterialReturn" location="component://materialmgmt/widget/MaterialRequestForms.xml"/>
+                            </decorator-section>
+                            <decorator-section name="search-results">
+                            	<screenlet>
+                                	<include-form name="ListReturns" location="component://materialmgmt/widget/MaterialRequestForms.xml"/>
+                                </screenlet>
+                            </decorator-section>
+                        </decorator-screen>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+         </section>
+    </screen>
+    
     <screen name="FindMaterialEnquiry">
         <section>
             <actions>
@@ -143,6 +201,49 @@
             </widgets>
          </section>
     </screen>
+    <screen name="ReturnEntry">
+        <section>
+            <actions>
+               <set field="titleProperty" value="Return Entry"/>              
+			   <set field="tabButtonItem" value="FindMaterialReturns" />	
+			   <set field="tabButtonItem2" value="ReturnEntry"/>  
+               <set field="supplyDate" from-field="parameters.supplyDate"/>
+               <set field="screenFlag" value="RETURN"/>
+               <set field="isFormSubmitted" from-field="parameters.isFormSubmitted"/>
+               <set field="defaultEffectiveDateTime" value="${supplyDate}" default-value="${bsh:org.ofbiz.base.util.UtilDateTime.nowTimestamp()}"/>
+			   <set field="defaultEffectiveDate" 
+					value="${groovy:org.ofbiz.base.util.UtilDateTime.toDateString(defaultEffectiveDateTime, &quot;dd MMMMM, yyyy&quot;);}" />
+			   <set field="parameters.roleTypeId" value="INTERNAL_ORGANIZATIO"/>
+				<set field="productCategoryResult" value="${groovy:org.ofbiz.product.product.ProductWorker.getProductsByCategoryAssoc(delegator, 'INDENT_PROD_CAT', 'PUR_INDENT', null)}" />
+				<set field="categoryList" value="${productCategoryResult.productCategory}"/>		
+			   					  					  
+            </actions>
+            <widgets>
+            <decorator-screen name="materialmgmtNgCommonDecorator" location="${parameters.mainDecoratorLocation}">
+            	<decorator-section name="body">   
+                	<include-menu name="ReturnsTabBar" location="component://materialmgmt/widget/materialmgmtMenus.xml"/>
+                      	<section>
+	                      	  <condition>
+	                             <if-compare operator="equals" field="isFormSubmitted" value=""/>
+	                         </condition>
+	                      		<widgets>
+	           						<include-screen name="RequestInitEntry"/>
+	                      		</widgets>
+                      	</section>
+                      <section>
+                      <condition>
+                      <if-compare operator="equals" field="isFormSubmitted" value="YES"/>
+                      </condition>
+                         <widgets>
+     						 <include-screen name="RequestInnerScreen"/>
+                		</widgets>
+                      </section>
+                      
+                    </decorator-section>                                       
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
     
     <screen name="CustRequestEntry">
         <section>
@@ -151,6 +252,7 @@
 			   <set field="tabButtonItem" value="FindMaterialRequest" />	
 			   <set field="tabButtonItem2" value="CustRequestEntry"/>  
                <set field="supplyDate" from-field="parameters.supplyDate"/>
+               <set field="screenFlag" value="INDENT"/>
                <set field="isFormSubmitted" from-field="parameters.isFormSubmitted"/>
                <set field="defaultEffectiveDateTime" value="${supplyDate}" default-value="${bsh:org.ofbiz.base.util.UtilDateTime.nowTimestamp()}"/>
 			   <set field="defaultEffectiveDate" 

@@ -75,6 +75,12 @@
          <attribute name="productSupplyDetails" mode="OUT" type="Map" optional="true"/>
     </service>
     
+    <service name="acceptReturnItemForReceipt" engine="java" auth="true"
+         location="in.vasista.vbiz.purchase.MaterialPurchaseServices" invoke="acceptReturnItemForReceipt">
+         <attribute name="returnId" mode="IN" type="String" optional="false"/>
+         <attribute name="returnItemSeqId" mode="IN" type="String" optional="false"/>
+    </service>
+    
     <service name="acceptReceiptQtyByQC" engine="java" location="in.vasista.vbiz.purchase.MaterialPurchaseServices" invoke="acceptReceiptQtyByQC">
         <description>Accept Receipts By Quality Control Check</description>
         <attribute name="receiptId" type="String" mode="IN" optional="false"/>
