@@ -175,6 +175,7 @@
         <field name="estimatedShipDate" title="Ship Date"><date-find/></field>
         <field name="primaryOrderId" title="PO no"><text-find/></field>
         <field name="shipmentId"><text-find/></field>
+        <field name="partyId" title="Party"><lookup target-form-name="LookupPartyName"/></field>
         <field name="vehicleId" title="Vehicle No"><text-find/></field>
         <field name="noConditionFind"><hidden value="Y"/><!-- if this isn't there then with all fields empty no query will be done --></field>
         <field name="submitButton" title="${uiLabelMap.CommonFind}" widget-style="smallSubmit"><submit button-type="button"/></field>
@@ -183,13 +184,13 @@
      <form name="listMaterialShipments" type="list" list-name="listIt" paginate-target="${targetRequest}"
         odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
         <actions>
-            <service service-name="performFind" result-map="result" result-map-list="listIt">
+            <!-- <service service-name="performFind" result-map="result" result-map-list="listIt">
                 <field-map field-name="inputFields" from-field="parameters"/>
                 <field-map field-name="entityName" value="Shipment"/>
                 <field-map field-name="orderBy"  value="-lastUpdatedStamp"/>
                 <field-map field-name="viewIndex" from-field="viewIndex"/>
                 <field-map field-name="viewSize" from-field="viewSize"/>
-            </service>
+            </service> -->
         </actions>
         <row-actions>
         	<entity-condition entity-name="Invoice" list="invoices">
@@ -199,6 +200,13 @@
         		</condition-list>
         	</entity-condition>
         	<set field="invSize" value="${groovy: invoices.size();}"/>
+        	<!-- <entity-condition entity-name="OrderRole" list="orderRoleList">
+        		<condition-list combine="and" >
+        			<condition-expr field-name="orderId"  operator="equals" from-field="primaryOrderId"/>
+        			<condition-expr field-name="roleTypeId" operator="equals" value="SHIP_FROM_VENDOR"/>
+        		</condition-list>
+        	</entity-condition>
+        	<set field="partyId" value="${orderRoleList[0].partyId}"/> -->
         </row-actions>
       	<field name="shipmentId" widget-style="buttontext h3">
       		<hyperlink target="MaterialShipmentOverview" description="${shipmentId}" >
@@ -211,6 +219,13 @@
         	<hyperlink target="POoverview" description="${primaryOrderId}" target-window="_blank">
       			<parameter param-name="orderId" value="${primaryOrderId}"/>
       		</hyperlink>
+        </field>
+        <field name="partyId">
+        <display-entity entity-name="PartyNameView" key-field-name="partyId" description="${firstName} ${middleName} ${lastName} ${groupName}">
+                <sub-hyperlink description="[${partyId}]" target="/partymgr/control/viewprofile" target-type="inter-app">
+                    <parameter param-name="partyId" from-field="partyId"/>
+                </sub-hyperlink>
+            </display-entity>
         </field>
         <field name="vehicleId" title="Vehicle No"><display/></field>
         <field name="linkGrnWithPO" widget-style="buttontext" title="Link GRN With PO" use-when="&quot;${primaryOrderId}&quot;==&quot;&quot;" >

@@ -172,7 +172,9 @@
 			    <set field="tabButtonItem2" value="FindGRNShipments" />	
                <set field="viewSize" from-field="parameters.VIEW_SIZE"/>
                <set field="targetRequest" value="FindGRNShipments"/>
+               <set field="noConditionFind" value="Y"/>
                <script location="component://materialmgmt/webapp/materialmgmt/WEB-INF/actions/purchases/findOrderWithOutShipment.groovy"/>
+               <script location="component://materialmgmt/webapp/materialmgmt/WEB-INF/actions/purchases/ShipmentPartyView.groovy"/>
             </actions>
             <widgets>
                  <decorator-screen name="materialmgmtNgCommonDecorator" location="${parameters.mainDecoratorLocation}">
