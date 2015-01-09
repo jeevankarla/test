@@ -77,7 +77,7 @@
 									<#assign eduBalance = loanBalancesDetails.getValue().get("PAYROL_DD_EDNADV")>
 									<#assign medicalBalance = loanBalancesDetails.getValue().get("PAYROL_DD_MEDADV")>
 									<#assign payAdvBalance = loanBalancesDetails.getValue().get("PAYROL_DD_PAYADV")>
-									<#assign courtBalance = loanBalancesDetails.getValue().get("PAYROL_DD_DEDRS02")>
+									<#assign courtBalance = loanBalancesDetails.getValue().get("PAYROL_DD_DEDRS19")>
 									<#if parameters.OrganizationId == "MPF_HYD">
 										<#assign SBHBalance = loanBalancesDetails.getValue().get("PAYROL_DD_1150_BL315")>
 										<#assign canaraBalance = loanBalancesDetails.getValue().get("PAYROL_DD_DEDID18")>
@@ -716,9 +716,9 @@
 																		                     			<fo:table-cell >
 																		                     				<fo:block linefeed-treatment="preserve" >&#xA;</fo:block>
 																		                     				<fo:block linefeed-treatment="preserve" >&#xA;</fo:block>
-																		                     				<fo:block text-align="center" font-size="12pt" font-weight="bold"><#if payRollHeader.getValue().get("PAYROL_DD_DEDRS02")?has_content>${(payRollHeader.getValue().get("PAYROL_DD_DEDRS02")*(-1))?if_exists}<#else>&#160;</#if></fo:block>
-																		                     				<#if payRollHeader.getValue().get("PAYROL_DD_DEDRS02")?has_content>
-																		                     					<#assign totalDeductions=totalDeductions+(payRollHeader.getValue().get("PAYROL_DD_DEDRS02")*(-1))>
+																		                     				<fo:block text-align="center" font-size="12pt" font-weight="bold"><#if payRollHeader.getValue().get("PAYROL_DD_DEDRS19")?has_content>${(payRollHeader.getValue().get("PAYROL_DD_DEDRS19")*(-1))?if_exists}<#else>&#160;</#if></fo:block>
+																		                     				<#if payRollHeader.getValue().get("PAYROL_DD_DEDRS19")?has_content>
+																		                     					<#assign totalDeductions=totalDeductions+(payRollHeader.getValue().get("PAYROL_DD_DEDRS19")*(-1))>
 																		                     				</#if>
 																		                     			</fo:table-cell>
 																		                     			<fo:table-cell >
@@ -1543,10 +1543,10 @@
 																		                     			</fo:table-cell>
 																		                     			<fo:table-cell >
 																		                     				<fo:block linefeed-treatment="preserve" >&#xA;</fo:block>
-																		                     				<fo:block text-align="center" font-size="12pt" font-weight="bold"><#if payRollHeader.getValue().get("PAYROL_DD_DEDRS02")?has_content>${(payRollHeader.getValue().get("PAYROL_DD_DEDRS02")*(-1))?if_exists}<#else>&#160;</#if></fo:block>
+																		                     				<fo:block text-align="center" font-size="12pt" font-weight="bold"><#if payRollHeader.getValue().get("PAYROL_DD_DEDRS19")?has_content>${(payRollHeader.getValue().get("PAYROL_DD_DEDRS19")*(-1))?if_exists}<#else>&#160;</#if></fo:block>
 																		                     				<fo:block linefeed-treatment="preserve" >&#xA;</fo:block>
-																		                     				<#if payRollHeader.getValue().get("PAYROL_DD_DEDRS02")?has_content>
-																		                     					<#assign totalDeductions=totalDeductions+(payRollHeader.getValue().get("PAYROL_DD_DEDRS02")*(-1))>
+																		                     				<#if payRollHeader.getValue().get("PAYROL_DD_DEDRS19")?has_content>
+																		                     					<#assign totalDeductions=totalDeductions+(payRollHeader.getValue().get("PAYROL_DD_DEDRS19")*(-1))>
 																		                     				</#if>
 																		                     			</fo:table-cell>
 																		                     			<fo:table-cell >
@@ -2347,9 +2347,9 @@
 																		                     			<fo:table-cell >
 																		                     				<fo:block linefeed-treatment="preserve" >&#xA;</fo:block>
 																		                     				<fo:block linefeed-treatment="preserve" >&#xA;</fo:block>
-																		                     				<fo:block text-align="center" font-size="12pt" font-weight="bold"><#if payRollHeader.getValue().get("PAYROL_DD_DEDRS02")?has_content>${(payRollHeader.getValue().get("PAYROL_DD_DEDRS02")*(-1))?if_exists}<#else>&#160;</#if></fo:block>
-																		                     				<#if payRollHeader.getValue().get("PAYROL_DD_DEDRS02")?has_content>
-																		                     					<#assign totalDeductions=totalDeductions+(payRollHeader.getValue().get("PAYROL_DD_DEDRS02")*(-1))>
+																		                     				<fo:block text-align="center" font-size="12pt" font-weight="bold"><#if payRollHeader.getValue().get("PAYROL_DD_DEDRS19")?has_content>${(payRollHeader.getValue().get("PAYROL_DD_DEDRS19")*(-1))?if_exists}<#else>&#160;</#if></fo:block>
+																		                     				<#if payRollHeader.getValue().get("PAYROL_DD_DEDRS19")?has_content>
+																		                     					<#assign totalDeductions=totalDeductions+(payRollHeader.getValue().get("PAYROL_DD_DEDRS19")*(-1))>
 																		                     				</#if>
 																		                     			</fo:table-cell>
 																		                     			<fo:table-cell >
