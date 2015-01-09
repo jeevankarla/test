@@ -57,32 +57,25 @@
                 	<order-by field-name="quoteItemSeqId"/>
                 	<order-by field-name="quoteStatusId"/>
                 </entity-condition>
+                
                 <!-- <script location="component://procurement/webapp/procurement/WEB-INF/actions/CheckCreatePO.groovy" /> -->
+                <script location="component://materialmgmt/webapp/materialmgmt/WEB-INF/actions/purchases/createPOButtonCheck.groovy" />
             </actions>
             <widgets>
            	  <decorator-screen name="materialmgmtNgCommonDecorator" location="${parameters.mainDecoratorLocation}">
                 <decorator-section name="body">
                 <include-menu name="QuoteTabBar" location="component://materialmgmt/widget/materialmgmtMenus.xml" />
                    <section>
-                   <!--   <condition>
-                   			<and>
-                   				<if-compare operator="equals" value="createPO" field="checkFlag"/>
-                   			</and>
-                   		</condition>  -->
-                   		      <condition>
-								<and>
-									<if-compare field="quote.quoteId" operator="equals" value="${parameters.quoteId}" />
-									<if-compare field="quote.statusId" operator="not-equals" value="QUO_ORDERED" />
-								</and>
-							</condition> 
+                
+ 				 <condition>
+                <if-compare operator="equals" value="Y" field="statusFlag"/>
+                    </condition>
                    		<widgets>
                    		<link target="createPOForQuote" text="Create PO" style="buttontext h2" >
            					<parameter param-name="quoteId" from-field="quoteId"/>
            				</link>
                    		</widgets>
-                   		<fail-widgets>
-                             <label style="h1">PO generated for this Quote no  ${parameters.quoteItemSeqId}</label>
-                         </fail-widgets>
+
                      </section>
                      <container style="full">
                     	<container style="lefthalf">
