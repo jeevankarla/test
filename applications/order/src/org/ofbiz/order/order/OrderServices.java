@@ -1042,9 +1042,11 @@ public class OrderServices {
 
         // see the attributeRoleMap definition near the top of this file for attribute-role mappings
         Map<String, String> attributeRoleMap = salesAttributeRoleMap;
-        if ("PURCHASE_ORDER".equals(orderTypeId)) {
+        attributeRoleMap = purchaseAttributeRoleMap;
+        /*if ("PURCHASE_ORDER".equals(orderTypeId)) {
             attributeRoleMap = purchaseAttributeRoleMap;
-        }
+            Debug.log("ordertypes================="+attributeRoleMap);
+        }*/
         for (Map.Entry<String, String> attributeRoleEntry : attributeRoleMap.entrySet()) {
             if (UtilValidate.isNotEmpty(context.get(attributeRoleEntry.getKey()))) {
                 // make sure the party is in the role before adding

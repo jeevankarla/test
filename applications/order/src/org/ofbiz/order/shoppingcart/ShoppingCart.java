@@ -4186,11 +4186,10 @@ public class ShoppingCart implements Iterable<ShoppingCartItem>, Serializable {
             result.put("shipToCustomerPartyId", this.getShipToCustomerPartyId());
             result.put("endUserCustomerPartyId", this.getEndUserCustomerPartyId());
         }
-
-        if (this.isPurchaseOrder()) {
-            result.put("shipFromVendorPartyId", this.getShipFromVendorPartyId());
-            result.put("supplierAgentPartyId", this.getSupplierAgentPartyId());
-        }
+     // if (this.isPurchaseOrder()) {
+        result.put("shipFromVendorPartyId", this.getShipFromVendorPartyId());
+        result.put("supplierAgentPartyId", this.getSupplierAgentPartyId());
+     // }
 
         return result;
     }
@@ -4252,10 +4251,10 @@ public class ShoppingCart implements Iterable<ShoppingCartItem>, Serializable {
             result.put("endUserCustomerPartyId", this.getEndUserCustomerPartyId());
         }
 
-        if (this.isPurchaseOrder()) {
+       // if (this.isPurchaseOrder()) {
             result.put("shipFromVendorPartyId", this.getShipFromVendorPartyId());
             result.put("supplierAgentPartyId", this.getSupplierAgentPartyId());
-        }
+       // }
 
         return result;
     }

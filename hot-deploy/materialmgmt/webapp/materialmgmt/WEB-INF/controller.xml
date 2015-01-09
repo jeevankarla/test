@@ -681,7 +681,7 @@
      	<security https="true" auth="true"/>
      	<event type="service"  path=""  invoke="draftEnquiryForApprovedRequirements" >
      	</event>
-     	<response name="success" type="request-redirect" value="EnquiryForApprovedMatRequirements">
+     	<response name="success" type="request-redirect" value="ViewMaterialEnquiry">
         </response>     	
         <response name="error" type="request-redirect" value="EnquiryForApprovedMatRequirements">
         </response>
