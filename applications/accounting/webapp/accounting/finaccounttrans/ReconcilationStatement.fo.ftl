@@ -208,7 +208,7 @@ under the License.
 		        	<fo:block text-align="left"  keep-together="always"  white-space-collapse="false">_________________________________________________________________________________________________________________________________________</fo:block> 
             </fo:block>	
             <fo:block>
-		        		<fo:block text-align="right"  keep-together="always"  white-space-collapse="false">&#160;   Balance As Per Bank : ${((finAccount.actualBalance-depositFinal_Amount)+withdrawFinal_Amount)?if_exists?string("##0.00")}                &#160;&#160;&#160;&#160;</fo:block>
+		        		<fo:block text-align="right"  keep-together="always"  white-space-collapse="false">&#160;   Available Balance As Per Bank : ${finAccount.availableBalance?if_exists?string("#0.00")}               &#160;&#160;&#160;&#160;</fo:block>
 		        		<fo:block text-align="left"  keep-together="always"  white-space-collapse="false">_________________________________________________________________________________________________________________________________________</fo:block> 
             </fo:block>
 		</fo:flow>

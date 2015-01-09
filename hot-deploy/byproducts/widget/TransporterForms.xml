@@ -28,35 +28,35 @@ under the License.
           <display-entity entity-name="CustomTimePeriod" key-field-name="customTimePeriodId"  description="${groovy:org.ofbiz.base.util.UtilDateTime.toDateString(fromDate, &quot;dd MMM,yyyy&quot;);}-${groovy:org.ofbiz.base.util.UtilDateTime.toDateString(thruDate, &quot;dd MMM,yyyy&quot;);}" />
         </field>
         <field name="statusId" title="Status"><display-entity entity-name="StatusItem" description="${description}"/></field>
-        <field name="RouteWiseDTCAbstract" widget-style="buttontext" use-when="(&quot;${statusId}&quot;!=&quot;COM_CANCELLED&quot;)&amp;&amp;(&quot;${statusId}&quot;!=&quot;IN_PROCESS&quot;)">
+        <field name="RouteWiseDTCAbstract" widget-style="buttontext" use-when="(&quot;${statusId}&quot;!=&quot;COM_CANCELLED&quot;)&amp;&amp;(&quot;${statusId}&quot;!=&quot;GENERATION_FAIL&quot;)&amp;&amp;(&quot;${statusId}&quot;!=&quot;IN_PROCESS&quot;)">
             <hyperlink target="GenerateTrnsptMarginReport.pdf" description="RouteWise DTC Abstract" target-window="_blank">
               	  <parameter param-name="periodBillingId" from-field="periodBillingId"/>
               	  <parameter param-name="customTimePeriodId" from-field="customTimePeriodId"/> 
                   <parameter param-name="reportTypeFlag"  value="transporterMarginAbstract"/>                                  
             </hyperlink>
         </field> 
-       	<field name="RouteWiseDTCDayWise" widget-style="buttontext" use-when="(&quot;${statusId}&quot;!=&quot;COM_CANCELLED&quot;)&amp;&amp;(&quot;${statusId}&quot;!=&quot;IN_PROCESS&quot;)">
+       	<field name="RouteWiseDTCDayWise" widget-style="buttontext" use-when="(&quot;${statusId}&quot;!=&quot;COM_CANCELLED&quot;)&amp;&amp;(&quot;${statusId}&quot;!=&quot;GENERATION_FAIL&quot;)&amp;&amp;(&quot;${statusId}&quot;!=&quot;IN_PROCESS&quot;)">
             <hyperlink target="GenerateTrnsptMarginReport.pdf" description="Route Wise DTC DayWise" target-window="_blank">
               	  <parameter param-name="periodBillingId" from-field="periodBillingId"/>
               	  <parameter param-name="customTimePeriodId" from-field="customTimePeriodId"/> 
                   <parameter param-name="reportTypeFlag"  value="trnsptMarginReport"/>                                  
             </hyperlink>
         </field>  
-         <field name="ContractorWiseDTCAbstract" widget-style="buttontext" use-when="(&quot;${statusId}&quot;!=&quot;COM_CANCELLED&quot;)&amp;&amp;(&quot;${statusId}&quot;!=&quot;IN_PROCESS&quot;)">
+         <field name="ContractorWiseDTCAbstract" widget-style="buttontext" use-when="(&quot;${statusId}&quot;!=&quot;COM_CANCELLED&quot;)&amp;&amp;(&quot;${statusId}&quot;!=&quot;GENERATION_FAIL&quot;)&amp;&amp;(&quot;${statusId}&quot;!=&quot;IN_PROCESS&quot;)">
             <hyperlink target="GenerateTrnsptMarginReport.pdf" description="Contractor Wise DTC Abstract" target-window="_blank">
               	  <parameter param-name="periodBillingId" from-field="periodBillingId"/>
               	  <parameter param-name="customTimePeriodId" from-field="customTimePeriodId"/> 
                   <parameter param-name="reportTypeFlag"  value="ContractorWiseDTCAbstract"/>                                  
             </hyperlink>
         </field>   
-        <field name="DTCReport" widget-style="buttontext" use-when="(&quot;${statusId}&quot;!=&quot;COM_CANCELLED&quot;)&amp;&amp;(&quot;${statusId}&quot;!=&quot;IN_PROCESS&quot;)">
+        <field name="DTCReport" widget-style="buttontext" use-when="(&quot;${statusId}&quot;!=&quot;COM_CANCELLED&quot;)&amp;&amp;(&quot;${statusId}&quot;!=&quot;GENERATION_FAIL&quot;)&amp;&amp;(&quot;${statusId}&quot;!=&quot;IN_PROCESS&quot;)">
             <hyperlink target="GenerateTrnsptMarginReport.pdf" description="DTC Report" target-window="_blank">
               	  <parameter param-name="periodBillingId" from-field="periodBillingId"/>
               	  <parameter param-name="customTimePeriodId" from-field="customTimePeriodId"/> 
                   <parameter param-name="reportTypeFlag"  value="DTCReport"/>                                  
             </hyperlink>
         </field>
-         <field name="transporterMarginSMS" widget-style="buttontext" use-when="(&quot;${statusId}&quot;==&quot;GENERATED&quot;)&amp;&amp; ${groovy:((security.hasEntityPermission(&quot;SENDLVDSMS&quot;, &quot;_VIEW&quot;, session)))}" title="Send Sms">
+         <field name="transporterMarginSMS" widget-style="buttontext" use-when="(&quot;${statusId}&quot;==&quot;GENERATED&quot;)&amp;&amp;(&quot;${statusId}&quot;!=&quot;GENERATION_FAIL&quot;)&amp;&amp; ${groovy:((security.hasEntityPermission(&quot;SENDLVDSMS&quot;, &quot;_VIEW&quot;, session)))}" title="Send Sms">
             <hyperlink target="sendTransporterMarginSMS" description="Send Sms" target-window="_blank">
              	<parameter param-name="periodBillingId" from-field="periodBillingId"/>
               	<parameter param-name="customTimePeriodId" from-field="customTimePeriodId"/> 
@@ -81,11 +81,11 @@ under the License.
              	<parameter param-name="statusId" value="APPROVED_PAYMENT"/>
             </hyperlink>
         </field> -->
-          <field name="updateDTCStatus" widget-style="buttontext" event="onclick" action="javascript:setCancelDomObj(this);" use-when="(&quot;${statusId}&quot;!=&quot;COM_CANCELLED&quot;)&amp;&amp;(&quot;${statusId}&quot;!=&quot;IN_PROCESS&quot;)">
+          <field name="updateDTCStatus" widget-style="buttontext" event="onclick" action="javascript:setCancelDomObj(this);" use-when="(&quot;${statusId}&quot;!=&quot;COM_CANCELLED&quot;)&amp;&amp;(&quot;${statusId}&quot;!=&quot;GENERATION_FAIL&quot;)&amp;&amp;(&quot;${statusId}&quot;!=&quot;IN_PROCESS&quot;)">
             <hyperlink target-type="plain" target="javascript:showUpdateStatus('${periodBillingId}','${statusId}');" description="Update Status">
             </hyperlink>
         </field>
-         <field name="cancelTransporterMarginReport" widget-style="buttontext" use-when="${groovy:((security.hasEntityPermission(&quot;TRNSMRGN&quot;, &quot;_CANCELADMIN&quot;, session)))}" title="${uiLabelMap.CommonCancel}">
+         <field name="cancelTransporterMarginReport" widget-style="buttontext" use-when="(&quot;${statusId}&quot;!=&quot;GENERATION_FAIL&quot;)&amp;&amp;${groovy:((security.hasEntityPermission(&quot;TRNSMRGN&quot;, &quot;_CANCELADMIN&quot;, session)))}" title="${uiLabelMap.CommonCancel}">
             <hyperlink target="cancelTransporterMarginReport" description="${uiLabelMap.CommonCancel}" target-window="_blank">
                 <parameter param-name="periodBillingId"  from-field="periodBillingId" />                                                               
             </hyperlink>

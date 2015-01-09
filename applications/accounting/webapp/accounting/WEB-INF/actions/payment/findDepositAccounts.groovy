@@ -59,7 +59,9 @@ if ("Y".equals(parameters.noConditionFind)) {
 	   }
    if (finAccountTypeId) {
 	   exprListForParameters.add(EntityCondition.makeCondition("finAccountTypeId", EntityOperator.EQUALS, finAccountTypeId));
-	   }
+	   }else{
+	   exprListForParameters.add(EntityCondition.makeCondition("finAccountTypeId", EntityOperator.LIKE,"%_DEPOSIT%"));
+     }
     if (parameters.AccDate) {
 		   exprListForParameters.add(EntityCondition.makeCondition("fromDate", EntityOperator.GREATER_THAN_EQUAL_TO, AccDateStart));
 		   exprListForParameters.add(EntityCondition.makeCondition("fromDate", EntityOperator.LESS_THAN_EQUAL_TO, AccDateEnd));
