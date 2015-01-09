@@ -1749,11 +1749,11 @@ public class LmsServices {
 						facilityRent = EntityUtil.getFirst(facilityRateList);
 						rentAmt = facilityRent.getBigDecimal("rateAmount");
 					}
-					if(UtilValidate.isEmpty(facilityRent) && rateAmount.compareTo(rentAmt) != 0){
+					if(UtilValidate.isEmpty(facilityRent) && (UtilValidate.isNotEmpty(rateAmount) && rateAmount.compareTo(rentAmt) != 0)){
 						createNewRentEntry = true;
 					}
 					
-					if(UtilValidate.isNotEmpty(facilityRent) && rateAmount.compareTo(rentAmt) != 0 ){
+					if(UtilValidate.isNotEmpty(facilityRent) && (UtilValidate.isNotEmpty(rateAmount) && rateAmount.compareTo(rentAmt) != 0 )){
 						
 						Timestamp tempDate = facilityRent.getTimestamp("fromDate"); 
 						
