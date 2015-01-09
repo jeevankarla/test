@@ -391,7 +391,7 @@ public class ShoppingCart implements Iterable<ShoppingCartItem>, Serializable {
     }
 
     public String getOrderName() {
-        return orderName;
+        return this.orderName;
     }
 
     public void setWorkEffortId(String workEffortId) {

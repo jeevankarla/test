@@ -1659,6 +1659,7 @@ public class MaterialPurchaseServices {
 		    cart.setSupplierAgentPartyId(partyId);
 			
 			cart.setEstimatedDeliveryDate(estimatedDeliveryDate);
+			cart.setOrderName(orderName);
 			//cart.setOrderDate(effectiveDate);
 			cart.setOrderDate(orderDate);
 			cart.setUserLogin(userLogin, dispatcher);
