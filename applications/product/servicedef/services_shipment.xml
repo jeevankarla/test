@@ -892,6 +892,18 @@ under the License.
         <attribute name="receiptId" type="String" mode="IN" optional="false"/>
         <attribute name="facilityId" type="String" mode="IN" optional="true"/>
     </service>
+    <!-- new service same like above with small modfications -->
+    <service name="cancelGRNItem" engine="simple"
+            location="component://product/script/org/ofbiz/shipment/receipt/ShipmentReceiptServices.xml" invoke="cancelReceivedItemsNew" auth="true">
+        <description>Cancel Received Items against a purchase order if received something incorrectly</description>
+        <attribute name="receiptId" type="String" mode="IN" optional="false"/>
+        <attribute name="facilityId" type="String" mode="IN" optional="true"/>
+    </service>
+     <service name="processCancelGrnShipment" engine="java"
+            location="org.ofbiz.shipment.shipment.ShipmentServices" invoke="processCancelGrnShipment" auth="true" use-transaction="false">
+        <description>Update Shipment,ShipmentItem and InventeryItem for given shipmentId</description>
+        <attribute name="shipmentId" type="String" mode="IN" optional="false"/>
+    </service>
 
     <!-- QuantityBreak services -->
     <service name="createQuantityBreak" engine="simple"
@@ -975,4 +987,5 @@ under the License.
         <attribute name="unitCost" type="String" mode="IN" optional="true"/>
         <attribute name="orderCurrencyUnitPrice" type="String" mode="IN" optional="true"/>
     </service>
+    
 </services>

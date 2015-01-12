@@ -43,6 +43,7 @@ import org.ofbiz.entity.GenericValue;
 import org.ofbiz.entity.condition.EntityCondition;
 import org.ofbiz.entity.condition.EntityConditionList;
 import org.ofbiz.entity.condition.EntityOperator;
+import org.ofbiz.entity.transaction.TransactionUtil;
 import org.ofbiz.entity.util.EntityListIterator;
 import org.ofbiz.entity.util.EntityUtil;
 import org.ofbiz.party.party.PartyWorker;
@@ -1269,5 +1270,52 @@ public class ShipmentServices {
                     UtilMisc.toMap("errorString", e.getMessage()), locale));
         }
         return shipmentGatewayConfig;
+    }
+    
+    public static Map<String, Object> processCancelGrnShipment(DispatchContext dctx, Map<String, ? extends Object> context) {
+        LocalDispatcher dispatcher = dctx.getDispatcher();
+        Delegator delegator = dctx.getDelegator();
+        GenericValue userLogin = (GenericValue) context.get("userLogin");
+        String shipmentId = (String) context.get("shipmentId");
+        Map<String, Object> cancelGrnShipmentResult = ServiceUtil.returnSuccess("GRN Shipment Number:"+shipmentId+" Canceled Successfully !");
+        // prepare the shipment information
+        GenericValue shipment = null ;
+        try {
+            shipment = delegator.findByPrimaryKey("Shipment", UtilMisc.toMap("shipmentId", shipmentId));
+            if(UtilValidate.isEmpty(shipment)){
+            	Debug.logError("No Shipment found with Id :"+shipmentId, module);
+ 			   return ServiceUtil.returnError("No Shipment found with Id :"+shipmentId);
+			}
+        } catch (GenericEntityException e) {
+            Debug.logError(e, "Problem getting info from database", module);
+        }
+        List<GenericValue> shipmentReceipts = FastList.newInstance();
+        List<String> shipmentReceiptIds = FastList.newInstance();
+        try{
+		if(UtilValidate.isNotEmpty(shipmentId)){
+			shipmentReceipts = delegator.findList("ShipmentReceipt", EntityCondition.makeCondition("shipmentId", EntityOperator.EQUALS, shipmentId), null, null, null, false);
+			shipmentReceiptIds = EntityUtil.getFieldListFromEntityList(shipmentReceipts, "receiptId", true);
+			if(UtilValidate.isEmpty(shipmentReceipts)){
+				Debug.logError("No Receipts for the Shipment : "+shipmentId, module);
+			   return ServiceUtil.returnError("No Receipts for the Shipment  : "+shipmentId);	
+			}
+		}
+		//updating ReceiptItems for shipment 
+			for(String receiptId:shipmentReceiptIds){
+				Map<String, Object>  canceGrnResult = dispatcher.runSync("cancelGRNItem", UtilMisc.toMap("receiptId", receiptId,"userLogin",userLogin));
+				Debug.log("==receiptId=="+receiptId+"==========>");
+				if (ServiceUtil.isError(canceGrnResult)) {
+					Debug.logError("There was an error while canceling GRN Id :"+receiptId, module);
+					return ServiceUtil.returnError("There was an error while canceling GRN Id :"+receiptId);
+				}
+			}
+			shipment.set("statusId","SHIPMENT_CANCELLED");
+			shipment.store();
+        }catch (GenericEntityException e) {
+  	  		Debug.logError("An error occurred while getting  GRN shipments "+e.toString(), module);
+  	  	}catch (GenericServiceException e) {
+  	  		Debug.logError("An error occurred while calling services for cancel GRN Shipment "+e.toString(), module);
+  	  	}
+       return cancelGrnShipmentResult;
     }
 }

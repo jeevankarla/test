@@ -333,6 +333,13 @@
        <response name="success" type="request-redirect-noparam" value="FindGRNShipments"/>
        <response name="error" type="view" value="FindGRNShipments"/>
      </request-map>
+     <request-map uri="CancelGrnShipment">
+       <security https="true" auth="true"/>
+        <event type="service" path="" invoke="processCancelGrnShipment"></event>
+       <response name="success" type="request-redirect-noparam" value="FindGRNShipments"/>
+       <response name="error" type="view" value="FindGRNShipments"/>
+     </request-map>
+     
      
      
      <request-map uri="CustRequestEntry">
