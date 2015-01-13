@@ -521,7 +521,7 @@ employmentsList.each{ employeeId->
 					}
 					
 					
-					othersDed = SBEWFTrust+SBEGrSav+SBEMisDed;
+					othersDed = SBEWFTrust+SBEMisDed;
 					
 					totalFRFNSC = frf+nsc;
 					totalPPFGSAS = ppf+gsas;
@@ -546,6 +546,7 @@ employmentsList.each{ employeeId->
 					tempMap["SBEEmpProFund"] = SBEEmpProFund;
 					tempMap["SBEIncTax"] = SBEIncTax;
 					tempMap["SBEPrTax"] = SBEPrTax;
+					tempMap["SBEGrSav"] = SBEGrSav;
 					tempMap["SBEInsurance"] = SBEInsurance;
 					tempMap["othersDed"] = othersDed;
 					

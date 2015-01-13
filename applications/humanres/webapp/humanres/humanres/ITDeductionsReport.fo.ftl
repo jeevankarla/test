@@ -144,6 +144,7 @@ under the License.
 			                    	<#assign SBEEmpProFund = partyDeductions.getValue().get("SBEEmpProFund")?if_exists>
 			                    	<#assign SBEIncTax = partyDeductions.getValue().get("SBEIncTax")?if_exists>
 			                    	<#assign SBEPrTax = partyDeductions.getValue().get("SBEPrTax")?if_exists>
+			                    	<#assign SBEGrSav = partyDeductions.getValue().get("SBEGrSav")?if_exists>
 			                    	<#assign SBEInsurance = partyDeductions.getValue().get("SBEInsurance")?if_exists>
 			                    	<#assign othersDed = partyDeductions.getValue().get("othersDed")?if_exists>
 			                    	
@@ -151,7 +152,7 @@ under the License.
 			                    	
 			                    	<#assign totalEpf = totalEpf + epf + TEEmpProFund + SBEEmpProFund>
 			                    	<#assign totalVpf = totalVpf + vpf>
-			                    	<#assign totalGsls = totalGsls + gsls>
+			                    	<#assign totalGsls = totalGsls + gsls+SBEGrSav>
 			                    	<#assign totalLicp = totalLicp + licp+SBEInsurance>
 			                    	<#assign totalIncomeTax = totalIncomeTax + incomeTax+TEIncTax+SBEIncTax>
 			                    	<#assign totalPrfTax = totalPrfTax + prfTax+SBEPrTax>
@@ -242,7 +243,7 @@ under the License.
 							         </fo:table-cell>
 							    </fo:table-row>
 							    </#if>
-							    <#if (SBEEmpProFund?has_content && SBEEmpProFund!=0) || (SBEIncTax?has_content && SBEIncTax!=0) || (SBEPrTax?has_content && SBEPrTax!=0) || (SBEInsurance?has_content && SBEInsurance!=0) || (othersDed?has_content && othersDed!=0)>
+							    <#if (SBEEmpProFund?has_content && SBEEmpProFund!=0) || (SBEIncTax?has_content && SBEIncTax!=0) || (SBEPrTax?has_content && SBEPrTax!=0) || (SBEInsurance?has_content && SBEInsurance!=0) || (SBEGrSav?has_content && SBEGrSav!=0)||c(othersDed?has_content && othersDed!=0)>
 							    <fo:table-row>
        								<fo:table-cell>
 							            <fo:block  keep-together="always" font-weight = "bold" text-align="left" font-size="12pt" white-space-collapse="false" >Supplementary Bill:</fo:block>  
@@ -254,7 +255,7 @@ under the License.
 							            <fo:block  keep-together="always" text-align="right" font-size="12pt" white-space-collapse="false" >0.00</fo:block>  
 							         </fo:table-cell>
 							         <fo:table-cell>
-							            <fo:block  keep-together="always" text-align="right" font-size="12pt" white-space-collapse="false" >0.00</fo:block>  
+							            <fo:block  keep-together="always" text-align="right" font-size="12pt" white-space-collapse="false" >${SBEGrSav?if_exists?string("#0.00")}</fo:block>  
 							         </fo:table-cell>
 							         <fo:table-cell>
 							            <fo:block  keep-together="always" text-align="right" font-size="12pt" white-space-collapse="false" >0.00</fo:block>  
