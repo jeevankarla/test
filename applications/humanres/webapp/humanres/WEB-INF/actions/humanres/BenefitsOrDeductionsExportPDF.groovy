@@ -130,6 +130,9 @@ if(UtilValidate.isNotEmpty(payrollDetailsList)){
 			partyList.each{ employee->
 				employeeId= employee.partyIdFrom;
 				amount= employee.amount;
+				if(UtilValidate.isNotEmpty(amount)){
+					amount=amount.setScale(0,BigDecimal.ROUND_HALF_UP);
+				}
 				headerItemTypeId=employee.payrollHeaderItemTypeId;
 				if("benefits".equals(parameters.type)){
 					if(UtilValidate.isNotEmpty(amount)){
@@ -346,6 +349,9 @@ else{
 		partyBenefitList.each{ partyBenefit->
 			employeeId= partyBenefit.partyIdTo;
 			amount= partyBenefit.cost;
+			if(UtilValidate.isNotEmpty(amount)){
+				amount=amount.setScale(0,BigDecimal.ROUND_HALF_UP);
+			}
 			headerItemTypeId=partyBenefit.benefitTypeId;
 			if(UtilValidate.isNotEmpty(amount)){
 				//this is for Benefits/Deductions Report
@@ -440,6 +446,9 @@ else{
 		partyDeductionList.each{ partyDed->
 			employeeId= partyDed.partyIdTo;
 			amount= partyDed.cost;
+			if(UtilValidate.isNotEmpty(amount)){
+				amount=amount.setScale(0,BigDecimal.ROUND_HALF_UP);
+			}
 			headerItemTypeId=partyDed.deductionTypeId;
 			if(UtilValidate.isNotEmpty(amount)){
 				//this is for Benefits/Deductions Report
