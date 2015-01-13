@@ -243,7 +243,7 @@ under the License.
 							         </fo:table-cell>
 							    </fo:table-row>
 							    </#if>
-							    <#if (SBEEmpProFund?has_content && SBEEmpProFund!=0) || (SBEIncTax?has_content && SBEIncTax!=0) || (SBEPrTax?has_content && SBEPrTax!=0) || (SBEInsurance?has_content && SBEInsurance!=0) || (SBEGrSav?has_content && SBEGrSav!=0)||c(othersDed?has_content && othersDed!=0)>
+							    <#if (SBEEmpProFund?has_content && SBEEmpProFund!=0) || (SBEIncTax?has_content && SBEIncTax!=0) || (SBEPrTax?has_content && SBEPrTax!=0) || (SBEInsurance?has_content && SBEInsurance!=0) || (SBEGrSav?has_content && SBEGrSav!=0) || (othersDed?has_content && othersDed!=0)>
 							    <fo:table-row>
        								<fo:table-cell>
 							            <fo:block  keep-together="always" font-weight = "bold" text-align="left" font-size="12pt" white-space-collapse="false" >Supplementary Bill:</fo:block>  
