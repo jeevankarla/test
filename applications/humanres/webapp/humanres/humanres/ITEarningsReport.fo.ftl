@@ -209,14 +209,14 @@ under the License.
 			                    	<#assign TE = TESalary+TEDAAmount+TEHRAAmount+TECCAmount+TESpecPay>
 			                    	<#assign SBE = SBESalary+SBEDAAmount+SBEHRAAmount+SBECCAmount+SBESpecPay>
 			                    	
-			                    	<#assign totalBasic = totalBasic+totalLESalary+totalTESalary+totalSBESalary+basic>
-			                    	<#assign totalDA = totalDA + totalLEDAAmount+totalTEDAAmount+totalSBEDAAmount+ dearnessAllowance>
-			                    	<#assign totalHRA = totalHRA + totalLEHRAAmount+totalTEHRAAmount+totalSBEHRAAmount+ houseRentAllowance>
+			                    	<#assign totalBasic = totalBasic+LESalary+TESalary+SBESalary+basic>
+			                    	<#assign totalDA = totalDA + LEDAAmount+TEDAAmount+SBEDAAmount+ dearnessAllowance>
+			                    	<#assign totalHRA = totalHRA + LEHRAAmount+TEHRAAmount+SBEHRAAmount+ houseRentAllowance>
 			                    	<#assign totalConvey = totalConvey + convey>
-			                    	<#assign totalCityComp = totalCityComp + totalLECCAmount+totalTECCAmount+totalSBECCAmount+cityComp>
+			                    	<#assign totalCityComp = totalCityComp + LECCAmount+TECCAmount+SBECCAmount+cityComp>
 			                    	<#assign totalBonus = totalBonus + bonus>
 			                    	<#assign totalDADAAmount = totalDADAAmount + DADAAmount>
-			                    	<#assign totalOthers = totalOthers + others+totalLESpecPay+totalTESpecPay+totalSBESpecPay>
+			                    	<#assign totalOthers = totalOthers + others+LESpecPay+TESpecPay+SBESpecPay>
 			                    	<#assign totalBenefits = totalBenefits + leaveEncash+ benefits+TE+SBE>
 			                    	
 			                    	
@@ -398,7 +398,7 @@ under the License.
 							            <fo:block  keep-together="always" text-align="right" font-size="12pt" white-space-collapse="false" >${totalOthers?if_exists?string("#0.00")}</fo:block>  
 							         </fo:table-cell>
 							         <fo:table-cell>
-							            <fo:block  keep-together="always" text-align="right" font-size="12pt" white-space-collapse="false" >0.00</fo:block>  
+							            <fo:block  keep-together="always" text-align="right" font-size="12pt" white-space-collapse="false" >${totalDADAAmount?if_exists?string("#0.00")}</fo:block>  
 							         </fo:table-cell>
 							         <fo:table-cell>
 							            <fo:block  keep-together="always" text-align="right" font-size="12pt" white-space-collapse="false" >${totalBonus?if_exists?string("#0.00")}</fo:block>  
