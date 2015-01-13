@@ -101,8 +101,27 @@ employmentsList.each{ employeeId->
 					shift =0;
 					washing =0;
 					bonus = 0;
+					DADAAmount = 0;
 					others = 0;
 					totalBenefits = 0;
+					
+					LESalary = 0;
+					LEDAAmount = 0;
+					LEHRAAmount = 0;
+					LECCAmount = 0;
+					LESpecPay = 0;
+					
+					TESalary = 0;
+					TEDAAmount = 0;
+					TEHRAAmount = 0;
+					TECCAmount = 0;
+					TESpecPay = 0;
+					
+					SBESalary = 0;
+					SBEDAAmount = 0;
+					SBEHRAAmount = 0;
+					SBECCAmount = 0;
+					SBESpecPay = 0;
 					
 					basic = periodTotals.get("PAYROL_BEN_SALARY");
 					if(UtilValidate.isEmpty(basic)){
@@ -125,7 +144,7 @@ employmentsList.each{ employeeId->
 						coldAllowance = 0;
 					}
 					dearnessAllowance = periodTotals.get("PAYROL_BEN_DA");
-					if(UtilValidate.isEmpty(dearnessAllowance)){
+					if(UtilValidate.isEmpty(dearnessAllowance)){	
 						dearnessAllowance = 0;
 					}
 					holidayAllowance = periodTotals.get("PAYROL_BEN_GEN_HOL_W");
@@ -152,33 +171,139 @@ employmentsList.each{ employeeId->
 					if(UtilValidate.isEmpty(washing)){
 						washing = 0;
 					}
-					//for bonus
+					
 					customTimePeriod = delegator.findOne("CustomTimePeriod",[customTimePeriodId : customTimePeriodEntry.getKey()] , false);
 					if(UtilValidate.isNotEmpty(customTimePeriod)){
 						Date monthDate = (Date)customTimePeriod.get("fromDate");
-						monthStartDate = UtilDateTime.toTimestamp(monthDate);
-						monthName = UtilDateTime.toDateString(monthStartDate, "MMMM");
-						if(UtilValidate.isNotEmpty(monthName) && monthName.equals("April")){
-							List conditionList=[];
-							conditionList.add(EntityCondition.makeCondition("partyIdFrom", EntityOperator.EQUALS, employeeId));
-							conditionList.add(EntityCondition.makeCondition("periodBillingId", EntityOperator.EQUALS, "SB12000"));
-							conditionList.add(EntityCondition.makeCondition("payrollHeaderItemTypeId", EntityOperator.EQUALS, "PAYROL_BEN_BONUS_EX"));
-							condition=EntityCondition.makeCondition(conditionList,EntityOperator.AND);
-							payHeaderList = delegator.findList("PayrollHeaderAndHeaderItem", condition , null, null, null, false );
-							if(UtilValidate.isNotEmpty(payHeaderList)){
-								payHeader = EntityUtil.getFirst(payHeaderList);
-								if(UtilValidate.isNotEmpty(payHeader)){
-									bonus = payHeader.amount;
+						monthDateStart = UtilDateTime.getMonthStart(UtilDateTime.toTimestamp(monthDate), timeZone, locale);
+						monthDateEnd = UtilDateTime.getMonthEnd(UtilDateTime.toTimestamp(monthDate), timeZone, locale);
+						//for bonus
+						bonusPeriodTotals = PayrollService.getSupplementaryPayrollTotalsForPeriod(dctx,UtilMisc.toMap("partyId",employeeId,"fromDate",monthDateStart,"thruDate",monthDateEnd,"periodTypeId","HR_BONUS","billingTypeId","SP_BONUS","userLogin",userLogin)).get("supplyPeriodTotalsForParty");
+						if(UtilValidate.isNotEmpty(bonusPeriodTotals)){
+							Iterator bonusPeriodTotalsIter = bonusPeriodTotals.entrySet().iterator();
+							while(bonusPeriodTotalsIter.hasNext()){
+								Map.Entry bonusPeriodEntry = bonusPeriodTotalsIter.next();
+								if(bonusPeriodEntry.getKey() != "customTimePeriodTotals"){
+									bonusTotals = bonusPeriodEntry.getValue().get("periodTotals");
+									bonus = bonusTotals.get("PAYROL_BEN_BONUS_EX");
+									if(UtilValidate.isEmpty(bonus)){
+										bonus = 0;
+									}
+								}
+							}
+						}
+						//DA Arrears
+						DAArrearsPeriodTotals = PayrollService.getSupplementaryPayrollTotalsForPeriod(dctx,UtilMisc.toMap("partyId",employeeId,"fromDate",monthDateStart,"thruDate",monthDateEnd,"periodTypeId","HR_SDA","billingTypeId","SP_DA_ARREARS","userLogin",userLogin)).get("supplyPeriodTotalsForParty");
+						if(UtilValidate.isNotEmpty(DAArrearsPeriodTotals)){
+							Iterator DAArrearsPeriodTotalsIter = DAArrearsPeriodTotals.entrySet().iterator();
+							while(DAArrearsPeriodTotalsIter.hasNext()){
+								Map.Entry DAArrearsEntry = DAArrearsPeriodTotalsIter.next();
+								if(DAArrearsEntry.getKey() != "customTimePeriodTotals"){
+									DAArrearsTotals = DAArrearsEntry.getValue().get("periodTotals");
+									DADAAmount = DAArrearsTotals.get("PAYROL_BEN_DA");
+									if(UtilValidate.isEmpty(DADAAmount)){
+										DADAAmount = 0;
+									}
+								}
+							}
+						}
+						// Leave Encashment Here
+						leaveEncashPeriodTotals = PayrollService.getSupplementaryPayrollTotalsForPeriod(dctx,UtilMisc.toMap("partyId",employeeId,"fromDate",monthDateStart,"thruDate",monthDateEnd,"periodTypeId","HR_LEAVEENCASH","billingTypeId","SP_LEAVE_ENCASH","userLogin",userLogin)).get("supplyPeriodTotalsForParty");
+						if(UtilValidate.isNotEmpty(leaveEncashPeriodTotals)){
+							Iterator leaveEncashTotalsIter = leaveEncashPeriodTotals.entrySet().iterator();
+							while(leaveEncashTotalsIter.hasNext()){
+								Map.Entry leaveEncashEntry = leaveEncashTotalsIter.next();
+								if(leaveEncashEntry.getKey() != "customTimePeriodTotals"){
+									leaveEncashTotals = leaveEncashEntry.getValue().get("periodTotals");
+									LESalary = leaveEncashTotals.get("PAYROL_BEN_SALARY");
+									if(UtilValidate.isEmpty(LESalary)){
+										LESalary = 0;
+									}
+									LEHRAAmount = leaveEncashTotals.get("PAYROL_BEN_HRA");
+									if(UtilValidate.isEmpty(LEHRAAmount)){
+										LEHRAAmount = 0;
+									}
+									LEDAAmount = leaveEncashTotals.get("PAYROL_BEN_DA");
+									if(UtilValidate.isEmpty(LEDAAmount)){
+										LEDAAmount = 0;
+									}
+									LECCAmount = leaveEncashTotals.get("PAYROL_BEN_CITYCOMP");
+									if(UtilValidate.isEmpty(LECCAmount)){
+										LECCAmount = 0;
+									}
+									LESpecPay = leaveEncashTotals.get("PAYROL_BEN_SPELPAY");
+									if(UtilValidate.isEmpty(LESpecPay)){
+										LESpecPay = 0;
+									}
+								}
+							}
+						}
+					
+						transferEntryPeriodTotals = PayrollService.getSupplementaryPayrollTotalsForPeriod(dctx,UtilMisc.toMap("partyId",employeeId,"fromDate",monthDateStart,"thruDate",monthDateEnd,"periodTypeId","HR_TBE","billingTypeId","SP_TE","userLogin",userLogin)).get("supplyPeriodTotalsForParty");
+						if(UtilValidate.isNotEmpty(transferEntryPeriodTotals)){
+							Iterator transferEntryTotalsIter = transferEntryPeriodTotals.entrySet().iterator();
+							while(transferEntryTotalsIter.hasNext()){
+								Map.Entry transferEntry = transferEntryTotalsIter.next();
+								if(transferEntry.getKey() != "customTimePeriodTotals"){
+									transferEntryTotals = transferEntry.getValue().get("periodTotals");
+									TESalary = transferEntryTotals.get("PAYROL_BEN_SALARY");
+									if(UtilValidate.isEmpty(TESalary)){
+										TESalary = 0;
+									}
+									TEHRAAmount = transferEntryTotals.get("PAYROL_BEN_HRA");
+									if(UtilValidate.isEmpty(TEHRAAmount)){
+										TEHRAAmount = 0;
+									}
+									TEDAAmount = transferEntryTotals.get("PAYROL_BEN_DA");
+									if(UtilValidate.isEmpty(TEDAAmount)){
+										TEDAAmount = 0;
+									}
+									TECCAmount = transferEntryTotals.get("PAYROL_BEN_CITYCOMP");
+									if(UtilValidate.isEmpty(TECCAmount)){
+										TECCAmount = 0;
+									}
+									TESpecPay = transferEntryTotals.get("PAYROL_BEN_SPELPAY");
+									if(UtilValidate.isEmpty(TESpecPay)){
+										TESpecPay = 0;
+									}
+								}
+							}
+						}
+						
+						SBEPeriodTotals = PayrollService.getSupplementaryPayrollTotalsForPeriod(dctx,UtilMisc.toMap("partyId",employeeId,"fromDate",monthDateStart,"thruDate",monthDateEnd,"periodTypeId","HR_SBE","billingTypeId","SP_BE","userLogin",userLogin)).get("supplyPeriodTotalsForParty");
+						if(UtilValidate.isNotEmpty(SBEPeriodTotals)){
+							Iterator SBEPeriodTotalsIter = SBEPeriodTotals.entrySet().iterator();
+							while(SBEPeriodTotalsIter.hasNext()){
+								Map.Entry SBEEntry = SBEPeriodTotalsIter.next();
+								if(SBEEntry.getKey() != "customTimePeriodTotals"){
+									SBETotals = SBEEntry.getValue().get("periodTotals");
+									SBESalary = SBETotals.get("PAYROL_BEN_SALARY");
+									if(UtilValidate.isEmpty(SBESalary)){
+										SBESalary = 0;
+									}
+									SBEHRAAmount = SBETotals.get("PAYROL_BEN_HRA");
+									if(UtilValidate.isEmpty(SBEHRAAmount)){
+										SBEHRAAmount = 0;
+									}
+									SBEDAAmount = SBETotals.get("PAYROL_BEN_DA");
+									if(UtilValidate.isEmpty(SBEDAAmount)){
+										SBEDAAmount = 0;
+									}
+									SBECCAmount = SBETotals.get("PAYROL_BEN_CITYCOMP");
+									if(UtilValidate.isEmpty(SBECCAmount)){
+										SBECCAmount = 0;
+									}
+									SBESpecPay = SBETotals.get("PAYROL_BEN_SPELPAY");
+									if(UtilValidate.isEmpty(SBESpecPay)){
+										SBESpecPay = 0;
+									}
 								}
 							}
 						}
 					}
-					
-					if(UtilValidate.isEmpty(bonus)){
-						bonus = 0;
-					}
+				
 					others = attendanceBonus+coldAllowance+holidayAllowance+personalPay+secndSatDay+shift;
-					totalBenefits = others+basic+cityComp+convey+dearnessAllowance+houseRentAllowance;
+					totalBenefits = others+basic+cityComp+convey+dearnessAllowance+houseRentAllowance+bonus+DADAAmount;
 					
 					tempMap = [:];
 					tempMap["basic"] = basic;
@@ -188,7 +313,28 @@ employmentsList.each{ employeeId->
 					tempMap["cityComp"] = cityComp;
 					tempMap["others"] = others;
 					tempMap["bonus"] = bonus;
+					tempMap["DADAAmount"] = DADAAmount;
 					tempMap["totalBenefits"] = totalBenefits;
+					
+					tempMap["LESalary"] = LESalary;
+					tempMap["LEDAAmount"] = LEDAAmount;
+					tempMap["LEHRAAmount"] = LEHRAAmount;
+					tempMap["LECCAmount"] = LECCAmount;
+					tempMap["LESpecPay"] = LESpecPay;
+					
+					tempMap["TESalary"] = TESalary;
+					tempMap["TEDAAmount"] = TEDAAmount;
+					tempMap["TEHRAAmount"] = TEHRAAmount;
+					tempMap["TECCAmount"] = TECCAmount;
+					tempMap["TESpecPay"] = TESpecPay;
+					
+					
+					tempMap["SBESalary"] = SBESalary;
+					tempMap["SBEDAAmount"] = SBEDAAmount;
+					tempMap["SBEHRAAmount"] = SBEHRAAmount;
+					tempMap["SBECCAmount"] = SBECCAmount;
+					tempMap["SBESpecPay"] = SBESpecPay;
+					
 					benefitsMap = [:];
 					if(UtilValidate.isNotEmpty(tempMap)){
 						benefitsMap.putAll(tempMap);
@@ -333,7 +479,7 @@ employmentsList.each{ employeeId->
 }
 context.put("partyBenefitFinalMap",partyBenefitFinalMap);
 context.put("partyDeductionFinalMap",partyDeductionFinalMap);
-				
+
 //IncomeTax Statement
 if(UtilValidate.isNotEmpty(reportTypeFlag) && reportTypeFlag=="ITAXStatement"){
 context.fromDate=fromDateStart;

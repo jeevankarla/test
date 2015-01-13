@@ -5761,7 +5761,6 @@ public class PayrollService {
 	        }        
 	        return result;
 	}
-	
 	 public static Map<String, Object> getEmployeeSalaryTotalsForPeriod(DispatchContext dctx, Map<String, ? extends Object> context){
 		    Delegator delegator = dctx.getDelegator();
 	      LocalDispatcher dispatcher = dctx.getDispatcher();
@@ -5797,7 +5796,7 @@ public class PayrollService {
 	    	  condList.add(EntityCondition.makeCondition("fromDate", EntityOperator.GREATER_THAN_EQUAL_TO,new java.sql.Date(fromDateStart.getTime())));
 	    	  condList.add(EntityCondition.makeCondition("thruDate", EntityOperator.LESS_THAN_EQUAL_TO, new java.sql.Date(thruDateEnd.getTime())));
 	    	  EntityCondition cond = EntityCondition.makeCondition(condList,EntityOperator.AND); 	
-	    	  List<GenericValue> PeriodBillingAndCustomTimePeriodList = delegator.findList("PeriodBillingAndCustomTimePeriod", cond, null, null, null, false);
+	    	  List<GenericValue> PeriodBillingAndCustomTimePeriodList = delegator.findList("PeriodBillingAndCustomTimePeriod", cond, null, UtilMisc.toList("fromDate"), null, false);
 	    	  if(UtilValidate.isNotEmpty(PeriodBillingAndCustomTimePeriodList)){
 	    		  List<GenericValue> customTimePeriodIdList = null;
 	    		  List<String> customTimePeriodIds = EntityUtil.getFieldListFromEntityList(PeriodBillingAndCustomTimePeriodList, "customTimePeriodId", false);
@@ -5891,9 +5890,142 @@ public class PayrollService {
 			}
 	    result.put("periodTotalsForParty",customTimePeriodMap);
 		return result;
+	} 
+	
+	 public static Map<String, Object> getSupplementaryPayrollTotalsForPeriod(DispatchContext dctx, Map<String, ? extends Object> context){
+		    Delegator delegator = dctx.getDelegator();
+	      LocalDispatcher dispatcher = dctx.getDispatcher();
+	      GenericValue userLogin = (GenericValue) context.get("userLogin");
+	      String partyId = (String) context.get("partyId");
+	      Timestamp fromDate = (Timestamp) context.get("fromDate");
+	      if (UtilValidate.isEmpty(fromDate)) {
+	    	  Debug.logError("fromDate cannot be empty", module);
+	    	  return ServiceUtil.returnError("fromDate cannot be empty");
+	      }
+	      Timestamp thruDate = (Timestamp) context.get("thruDate");
+	      if (UtilValidate.isEmpty(thruDate)) {
+	    	  Debug.logError("thruDate cannot be empty", module);
+	    	  return ServiceUtil.returnError("thruDate cannot be empty");
+	      }
+	      String billingTypeId = (String) context.get("billingTypeId");
+	      String periodTypeId = (String) context.get("periodTypeId");
+	      
+	      Map result = ServiceUtil.returnSuccess();
+	      
+	      Timestamp fromDateStart = UtilDateTime.getDayStart(fromDate);
+	      Timestamp thruDateEnd = UtilDateTime.getDayEnd(thruDate);
+	      List<GenericValue> benefitTypesList = FastList.newInstance();
+	      Map customTimePeriodMap = FastMap.newInstance();
+	      List<String> benefitTypes = FastList.newInstance();
+	      try{
+	    	  List benCondList = UtilMisc.toList(EntityCondition.makeCondition("benefitTypeId",EntityOperator.NOT_EQUAL,"PAYROL_BEN_WASHG"));
+	    	  EntityCondition benCondition = EntityCondition.makeCondition(benCondList,EntityOperator.AND);
+	    	  benefitTypesList = delegator.findList("BenefitType",benCondition,null,null,null,false);
+	    	  benefitTypes = EntityUtil.getFieldListFromEntityList(benefitTypesList, "benefitTypeId", false);
+	    	  List condList = FastList.newInstance();
+	    	  condList.add(EntityCondition.makeCondition("periodTypeId", EntityOperator.EQUALS ,periodTypeId));
+	    	  condList.add(EntityCondition.makeCondition("billingTypeId", EntityOperator.EQUALS ,billingTypeId));
+	    	  condList.add(EntityCondition.makeCondition("statusId", EntityOperator.IN , UtilMisc.toList("GENERATED","APPROVED")));
+	    	  condList.add(EntityCondition.makeCondition("basicSalDate", EntityOperator.GREATER_THAN_EQUAL_TO,fromDateStart));
+	    	  condList.add(EntityCondition.makeCondition("basicSalDate", EntityOperator.LESS_THAN_EQUAL_TO, thruDateEnd));
+	    	  EntityCondition cond = EntityCondition.makeCondition(condList,EntityOperator.AND); 	
+	    	  List<GenericValue> PeriodBillingAndCustomTimePeriodList = delegator.findList("PeriodBillingAndCustomTimePeriod", cond, null, UtilMisc.toList("fromDate"), null, false);
+	    	  if(UtilValidate.isNotEmpty(PeriodBillingAndCustomTimePeriodList)){
+	    		  List<GenericValue> customTimePeriodIdList = null;
+	    		  List<String> customTimePeriodIds = EntityUtil.getFieldListFromEntityList(PeriodBillingAndCustomTimePeriodList, "customTimePeriodId", false);
+	    		  Map customTimePeriodTotalsMap = FastMap.newInstance();
+	    		  for(String customTimePeriodId : customTimePeriodIds){
+	    			  customTimePeriodIdList = EntityUtil.filterByCondition(PeriodBillingAndCustomTimePeriodList,EntityCondition.makeCondition("customTimePeriodId", EntityOperator.EQUALS ,customTimePeriodId));
+	    			  Map periodBillingMap = FastMap.newInstance();
+	    			  Map periodBillingTotalsMap = FastMap.newInstance();
+		    		  for(GenericValue periodBilling : customTimePeriodIdList){
+		    			    EntityListIterator payrollHeaderAndHeaderItemIter = null;
+		    			    String periodBillingId = periodBilling.getString("periodBillingId");
+		    			    
+		  					List payHeadCondList = FastList.newInstance();
+		  					payHeadCondList.add(EntityCondition.makeCondition("periodBillingId", EntityOperator.EQUALS, periodBillingId));
+		  					payHeadCondList.add(EntityCondition.makeCondition("partyIdFrom", EntityOperator.EQUALS, partyId));
+		  					EntityCondition payHeadCond = EntityCondition.makeCondition(payHeadCondList,EntityOperator.AND);
+		  					payrollHeaderAndHeaderItemIter = delegator.find("PayrollHeaderAndHeaderItem", payHeadCond, null, null, null, null);
+		  					Map payHeadTotalsMap = FastMap.newInstance();
+		  					if(UtilValidate.isNotEmpty(payrollHeaderAndHeaderItemIter)){
+		  						GenericValue payrollHeaderAndHeaderItem;
+		  						while( payrollHeaderAndHeaderItemIter != null && (payrollHeaderAndHeaderItem = payrollHeaderAndHeaderItemIter.next()) != null){
+		  							String payrollHeaderItemTypeId = payrollHeaderAndHeaderItem.getString("payrollHeaderItemTypeId");
+		  							BigDecimal amount = payrollHeaderAndHeaderItem.getBigDecimal("amount");
+		  							if(payHeadTotalsMap.containsKey(payrollHeaderItemTypeId)){
+		  								BigDecimal existAmount = (BigDecimal) payHeadTotalsMap.get(payrollHeaderItemTypeId);
+		  								BigDecimal totalAmount = existAmount.add(amount);
+		  								payHeadTotalsMap.put(payrollHeaderItemTypeId,totalAmount);
+		  							}else{
+		  								payHeadTotalsMap.put(payrollHeaderItemTypeId,amount);
+		  							}
+		  							if(periodBillingTotalsMap.containsKey(payrollHeaderItemTypeId)){
+		  								BigDecimal existAmount = (BigDecimal) periodBillingTotalsMap.get(payrollHeaderItemTypeId);
+		  								BigDecimal totalAmount = existAmount.add(amount);
+		  								periodBillingTotalsMap.put(payrollHeaderItemTypeId,totalAmount);
+		  							}else{
+		  								periodBillingTotalsMap.put(payrollHeaderItemTypeId,amount);
+		  							}
+		  							if(customTimePeriodTotalsMap.containsKey(payrollHeaderItemTypeId)){
+		  								BigDecimal existAmount = (BigDecimal) customTimePeriodTotalsMap.get(payrollHeaderItemTypeId);
+		  								BigDecimal totalAmount = existAmount.add(amount);
+		  								customTimePeriodTotalsMap.put(payrollHeaderItemTypeId,totalAmount);
+		  							}else{
+		  								customTimePeriodTotalsMap.put(payrollHeaderItemTypeId,amount);
+		  							}
+		  						}
+		  					}
+		  					
+		  					// calculating grossAmount 
+		  					BigDecimal grossBenefitAmt = BigDecimal.ZERO;
+		  					if(UtilValidate.isNotEmpty(payHeadTotalsMap)){
+		  						
+		  						Set<String> payHeadersKeySet = payHeadTotalsMap.keySet();
+		  						for(String payHeadersKey : payHeadersKeySet){
+		  							if(benefitTypes.contains(payHeadersKey)){
+		  								BigDecimal payHeaderAmount = (BigDecimal)payHeadTotalsMap.get(payHeadersKey);
+		  								grossBenefitAmt = grossBenefitAmt.add(payHeaderAmount);
+		  							}
+		  						}
+		  						payHeadTotalsMap.put("grossBenefitAmt",grossBenefitAmt);
+		  						if(UtilValidate.isNotEmpty(periodBillingTotalsMap) && UtilValidate.isEmpty(periodBillingTotalsMap.get("grossBenefitAmt"))){
+		  							periodBillingTotalsMap.put("grossBenefitAmt",grossBenefitAmt);
+		  						}else{
+		  							BigDecimal peridGrossBenAmt = grossBenefitAmt.add((BigDecimal)periodBillingTotalsMap.get("grossBenefitAmt"));
+		  							periodBillingTotalsMap.put("grossBenefitAmt",peridGrossBenAmt);
+		  						}
+		  						if(UtilValidate.isNotEmpty(customTimePeriodTotalsMap) && UtilValidate.isEmpty(customTimePeriodTotalsMap.get("grossBenefitAmt"))){
+		  							customTimePeriodTotalsMap.put("grossBenefitAmt",grossBenefitAmt);
+		  						}else{
+		  							BigDecimal customGrossBenAmt = grossBenefitAmt.add((BigDecimal)customTimePeriodTotalsMap.get("grossBenefitAmt"));
+		  							customTimePeriodTotalsMap.put("grossBenefitAmt",customGrossBenAmt);
+		  						}
+		  						
+		  					}
+		  					
+		  					periodBillingMap.put(periodBillingId, payHeadTotalsMap);
+		  					periodBillingMap.put("periodTotals",periodBillingTotalsMap);
+		  					payrollHeaderAndHeaderItemIter.close();
+		    		  }
+		    		  customTimePeriodMap.put(customTimePeriodId,periodBillingMap);
+		    		  customTimePeriodMap.put("customTimePeriodTotals",customTimePeriodTotalsMap);
+	    		  }
+	    	  }	
+	      }catch (GenericEntityException e) {
+				Debug.logError(e, module);
+				return ServiceUtil.returnError(e.toString());
+			}catch (Exception e) {
+				// TODO: handle exception
+				Debug.logError(e, module);
+				return ServiceUtil.returnError(e.toString());
+				
+			}
+	    result.put("supplyPeriodTotalsForParty",customTimePeriodMap);
+		return result;
 	}
-	 
-public static Map<String, Object> generateEmployerContributionPayrollBilling(DispatchContext dctx, Map<String, Object> context) throws Exception{
+
+	 public static Map<String, Object> generateEmployerContributionPayrollBilling(DispatchContext dctx, Map<String, Object> context) throws Exception{
 			GenericDelegator delegator = (GenericDelegator) dctx.getDelegator();
 			LocalDispatcher dispatcher = dctx.getDispatcher();
 			Map<String, Object> result = ServiceUtil.returnSuccess();	
