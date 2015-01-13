@@ -54,7 +54,7 @@ under the License.
           			<fo:block linefeed-treatment="preserve">&#xA;</fo:block>
           			<fo:block  keep-together="always" text-align="left" font-family="Courier,monospace" white-space-collapse="false" font-weight="bold">(B)DEDUCTIONS FROM SALARY RECOVERY</fo:block>
           			<fo:block>------------------------------------------------------------------------------------------------------------------------------------------------</fo:block>
-            	    <fo:block text-align="left" font-weight="bold" font-size="12pt" keep-together="always" font-family="Courier,monospace" white-space-collapse="false">MONTH																		EPF 							VPF  				   GSLS 					LICP 						FRF/NSC 					PPF/GSAS      HBA/CANF/HDFC/HBAC/H					TOTAL   		ITAX   	PTAX</fo:block>
+            	    <fo:block text-align="left" font-weight="bold" font-size="12pt" keep-together="always" font-family="Courier,monospace" white-space-collapse="false">MONTH																		EPF 							VPF  					GSLS 					LICP 				FRF/NSC 			PPF/GSAS    HBA/CANF/HDFC/HBAC/H			OTHERS 		TOTAL   		ITAX   			PTAX</fo:block>
 	        		<fo:block>------------------------------------------------------------------------------------------------------------------------------------------------</fo:block>	
             	</fo:static-content>	        	
 	        	<fo:flow flow-name="xsl-region-body"   font-family="Courier,monospace">		
@@ -63,15 +63,16 @@ under the License.
 		                    <fo:table-column column-width="50pt"/>
 		                    <fo:table-column column-width="160pt"/>
 		                    <fo:table-column column-width="60pt"/> 
-		               	    <fo:table-column column-width="95pt"/>
+		               	    <fo:table-column column-width="85pt"/>
 		            		<fo:table-column column-width="70pt"/> 		
+		            		<fo:table-column column-width="70pt"/>
 		            		<fo:table-column column-width="80pt"/>
-		            		<fo:table-column column-width="90pt"/>
-		            		<fo:table-column column-width="160pt"/>
-		            		<fo:table-column column-width="135pt"/>
-		            		<fo:table-column column-width="60pt"/>
-		            		<fo:table-column column-width="65pt"/>
-		            		<fo:table-column column-width="130pt"/>
+		            		<fo:table-column column-width="120pt"/>
+		            		<fo:table-column column-width="125pt"/>
+		            		<fo:table-column column-width="80pt"/>
+		            		<fo:table-column column-width="70pt"/>
+		            		<fo:table-column column-width="70pt"/>
+		            		<fo:table-column column-width="80pt"/>
 		                    <fo:table-body>
 		                    
 	                    	<#assign totalEpf = 0>
@@ -85,6 +86,15 @@ under the License.
 	                    	<#assign totalIncomeTax = 0>
 	                    	<#assign totalPrfTax = 0>
 	                    	
+	                    	<#assign totalTEEmpProFund = 0>
+	                    	<#assign totalTEIncTax = 0>
+	                    	
+	                    	<#assign totalSBEEmpProFund = 0>
+	                    	<#assign totalSBEIncTax = 0>
+	                    	<#assign totalSBEPrTax = 0>
+	                    	<#assign totalSBEInsurance = 0>
+	                    	<#assign totalOthersDed = 0>
+	                    	
 			                <#assign partyDeductionList = partyDeductionsMap.getValue().entrySet()>
 			                    <#list partyDeductionList as partyDeductions>
 			                    	<#assign epf = 0>
@@ -97,6 +107,16 @@ under the License.
 				                    <#assign pPFGSAS = 0>
 				                    <#assign exterLoan = 0>
 			                    	<#assign deductions = 0>
+			                    	
+			                    	<#assign TEEmpProFund = 0>
+			                    	<#assign TEIncTax = 0>
+			                    	
+			                    	<#assign SBEEmpProFund = 0>
+			                    	<#assign SBEIncTax = 0>
+			                    	<#assign SBEPrTax = 0>
+			                    	<#assign SBEInsurance = 0>
+			                    	<#assign othersDed = 0>
+			                    	<#assign SBEDeductions = 0>
 			                    
 				                    <#assign monthKey = partyDeductions.getKey()>
 				                    
@@ -118,16 +138,31 @@ under the License.
 			                    	<#assign deductions = partyDeductions.getValue().get("totalDeductions")?if_exists>
 			                    	
 			                    	
-			                    	<#assign totalEpf = totalEpf + epf>
+			                    	<#assign TEEmpProFund = partyDeductions.getValue().get("TEEmpProFund")?if_exists>
+			                    	<#assign TEIncTax = partyDeductions.getValue().get("TEIncTax")?if_exists>
+			                    	
+			                    	<#assign SBEEmpProFund = partyDeductions.getValue().get("SBEEmpProFund")?if_exists>
+			                    	<#assign SBEIncTax = partyDeductions.getValue().get("SBEIncTax")?if_exists>
+			                    	<#assign SBEPrTax = partyDeductions.getValue().get("SBEPrTax")?if_exists>
+			                    	<#assign SBEInsurance = partyDeductions.getValue().get("SBEInsurance")?if_exists>
+			                    	<#assign othersDed = partyDeductions.getValue().get("othersDed")?if_exists>
+			                    	
+			                    	<#assign SBEDeductions = SBEEmpProFund+SBEInsurance+othersDed>
+			                    	
+			                    	<#assign totalEpf = totalEpf + epf + TEEmpProFund + SBEEmpProFund>
 			                    	<#assign totalVpf = totalVpf + vpf>
 			                    	<#assign totalGsls = totalGsls + gsls>
-			                    	<#assign totalLicp = totalLicp + licp>
-			                    	<#assign totalIncomeTax = totalIncomeTax + incomeTax>
-			                    	<#assign totalPrfTax = totalPrfTax + prfTax>
+			                    	<#assign totalLicp = totalLicp + licp+SBEInsurance>
+			                    	<#assign totalIncomeTax = totalIncomeTax + incomeTax+TEIncTax+SBEIncTax>
+			                    	<#assign totalPrfTax = totalPrfTax + prfTax+SBEPrTax>
 			                    	<#assign totalFRFNSC = totalFRFNSC + fRFNSC>
 			                    	<#assign totalPPFGSAS = totalPPFGSAS + pPFGSAS>
 			                    	<#assign totalExterLoan = totalExterLoan + exterLoan>
 			                    	<#assign totalDeductions = totalDeductions + deductions>
+			                    	
+			                    	<#assign totalOthersDed = totalOthersDed + othersDed>
+			                    	
+			                    	
 			                    	
        							<fo:table-row>
        								<fo:table-cell>
@@ -155,6 +190,9 @@ under the License.
 							            <fo:block  keep-together="always" text-align="right" font-size="12pt" white-space-collapse="false" >${exterLoan?if_exists?string("#0.00")}</fo:block>  
 							         </fo:table-cell>
 							         <fo:table-cell>
+							            <fo:block  keep-together="always" text-align="right" font-size="12pt" white-space-collapse="false" >0.00</fo:block>  
+							         </fo:table-cell>
+							         <fo:table-cell>
 							            <fo:block  keep-together="always" text-align="right" font-size="12pt" white-space-collapse="false" >${deductions?if_exists?string("#0.00")}</fo:block>  
 							         </fo:table-cell>
 							         <fo:table-cell>
@@ -164,6 +202,86 @@ under the License.
 							            <fo:block  keep-together="always" text-align="right" font-size="12pt" white-space-collapse="false" >${prfTax?if_exists?string("#0.00")}</fo:block>  
 							         </fo:table-cell>
 							    </fo:table-row>
+							    <#if (TEEmpProFund?has_content && TEEmpProFund!=0) || (TEIncTax?has_content && TEIncTax!=0)>
+							    <fo:table-row>
+       								<fo:table-cell>
+							            <fo:block  keep-together="always" font-weight = "bold" text-align="left" font-size="12pt" white-space-collapse="false" >Transfer:</fo:block>  
+							         </fo:table-cell>
+							         <fo:table-cell>
+							            <fo:block  keep-together="always" text-align="right" font-size="12pt" white-space-collapse="false" >${TEEmpProFund?if_exists?string("#0.00")}</fo:block>  
+							         </fo:table-cell>
+							         <fo:table-cell>
+							            <fo:block  keep-together="always" text-align="right" font-size="12pt" white-space-collapse="false" >0.00</fo:block>  
+							         </fo:table-cell>
+							         <fo:table-cell>
+							            <fo:block  keep-together="always" text-align="right" font-size="12pt" white-space-collapse="false" >0.00</fo:block>  
+							         </fo:table-cell>
+							         <fo:table-cell>
+							            <fo:block  keep-together="always" text-align="right" font-size="12pt" white-space-collapse="false" >0.00</fo:block>  
+							         </fo:table-cell>
+							         <fo:table-cell>
+							            <fo:block  keep-together="always" text-align="right" font-size="12pt" white-space-collapse="false" >0.00</fo:block>  
+							         </fo:table-cell>
+							         <fo:table-cell>
+							            <fo:block  keep-together="always" text-align="right" font-size="12pt" white-space-collapse="false" >0.00</fo:block>  
+							         </fo:table-cell>
+							         <fo:table-cell>
+							            <fo:block  keep-together="always" text-align="right" font-size="12pt" white-space-collapse="false" >0.00</fo:block>  
+							         </fo:table-cell>
+							         <fo:table-cell>
+							            <fo:block  keep-together="always" text-align="right" font-size="12pt" white-space-collapse="false" >0.00</fo:block>  
+							         </fo:table-cell>
+							         <fo:table-cell>
+							            <fo:block  keep-together="always" text-align="right" font-size="12pt" white-space-collapse="false" >${TEEmpProFund?if_exists?string("#0.00")}</fo:block>  
+							         </fo:table-cell>
+							         <fo:table-cell>
+							            <fo:block  keep-together="always" text-align="right" font-size="12pt" white-space-collapse="false" >${TEIncTax?if_exists?string("#0.00")}</fo:block>  
+							         </fo:table-cell>
+							         <fo:table-cell>
+							            <fo:block  keep-together="always" text-align="right" font-size="12pt" white-space-collapse="false" >0.00</fo:block>  
+							         </fo:table-cell>
+							    </fo:table-row>
+							    </#if>
+							    <#if (SBEEmpProFund?has_content && SBEEmpProFund!=0) || (SBEIncTax?has_content && SBEIncTax!=0) || (SBEPrTax?has_content && SBEPrTax!=0) || (SBEInsurance?has_content && SBEInsurance!=0) || (othersDed?has_content && othersDed!=0)>
+							    <fo:table-row>
+       								<fo:table-cell>
+							            <fo:block  keep-together="always" font-weight = "bold" text-align="left" font-size="12pt" white-space-collapse="false" >Supplementary Bill:</fo:block>  
+							         </fo:table-cell>
+							         <fo:table-cell>
+							            <fo:block  keep-together="always" text-align="right" font-size="12pt" white-space-collapse="false" >${SBEEmpProFund?if_exists?string("#0.00")}</fo:block>  
+							         </fo:table-cell>
+							         <fo:table-cell>
+							            <fo:block  keep-together="always" text-align="right" font-size="12pt" white-space-collapse="false" >0.00</fo:block>  
+							         </fo:table-cell>
+							         <fo:table-cell>
+							            <fo:block  keep-together="always" text-align="right" font-size="12pt" white-space-collapse="false" >0.00</fo:block>  
+							         </fo:table-cell>
+							         <fo:table-cell>
+							            <fo:block  keep-together="always" text-align="right" font-size="12pt" white-space-collapse="false" >0.00</fo:block>  
+							         </fo:table-cell>
+							         <fo:table-cell>
+							            <fo:block  keep-together="always" text-align="right" font-size="12pt" white-space-collapse="false" >0.00</fo:block>  
+							         </fo:table-cell>
+							         <fo:table-cell>
+							            <fo:block  keep-together="always" text-align="right" font-size="12pt" white-space-collapse="false" >0.00</fo:block>  
+							         </fo:table-cell>
+							         <fo:table-cell>
+							            <fo:block  keep-together="always" text-align="right" font-size="12pt" white-space-collapse="false" >0.00</fo:block>  
+							         </fo:table-cell>
+							         <fo:table-cell>
+							            <fo:block  keep-together="always" text-align="right" font-size="12pt" white-space-collapse="false" >${othersDed?if_exists?string("#0.00")}</fo:block>  
+							         </fo:table-cell>
+							         <fo:table-cell>
+							            <fo:block  keep-together="always" text-align="right" font-size="12pt" white-space-collapse="false" >${SBEDeductions?if_exists?string("#0.00")}</fo:block>  
+							         </fo:table-cell>
+							         <fo:table-cell>
+							            <fo:block  keep-together="always" text-align="right" font-size="12pt" white-space-collapse="false" >${SBEIncTax?if_exists?string("#0.00")}</fo:block>  
+							         </fo:table-cell>
+							         <fo:table-cell>
+							            <fo:block  keep-together="always" text-align="right" font-size="12pt" white-space-collapse="false" >${SBEPrTax?if_exists?string("#0.00")}</fo:block>  
+							         </fo:table-cell>
+							    </fo:table-row>
+							    </#if>
 							    </#list>
 							    <fo:table-row> 
 							      <fo:table-cell>   						
@@ -194,6 +312,9 @@ under the License.
 							         </fo:table-cell>
 							         <fo:table-cell>
 							            <fo:block  keep-together="always" text-align="right" font-size="12pt" white-space-collapse="false" >${totalExterLoan?if_exists?string("#0.00")}</fo:block>  
+							         </fo:table-cell>
+							          <fo:table-cell>
+							            <fo:block  keep-together="always" text-align="right" font-size="12pt" white-space-collapse="false" >${totalOthersDed?if_exists?string("#0.00")}</fo:block>  
 							         </fo:table-cell>
 							         <fo:table-cell>
 							            <fo:block  keep-together="always" text-align="right" font-size="12pt" white-space-collapse="false" >${totalDeductions?if_exists?string("#0.00")}</fo:block>  

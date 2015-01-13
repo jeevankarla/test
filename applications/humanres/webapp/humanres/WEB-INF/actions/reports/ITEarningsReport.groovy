@@ -367,6 +367,19 @@ employmentsList.each{ employeeId->
 					
 					totalDeductions = 0;
 					
+					TEEmpProFund = 0;
+					TEIncTax = 0;
+					
+					SBEEmpProFund = 0;
+					SBEIncTax = 0;
+					SBEPrTax = 0;
+					SBEWFTrust = 0;
+					SBEInsurance = 0;
+					SBEGrSav = 0;
+					SBEMisDed = 0;
+					
+					othersDed = 0;
+					
 					epf = periodTotals.get("PAYROL_DD_EMP_PR");
 					if(UtilValidate.isEmpty(epf)){
 						epf = 0;
@@ -442,10 +455,78 @@ employmentsList.each{ employeeId->
 						prfTax = 0;
 					}
 					
+					customTimePeriod = delegator.findOne("CustomTimePeriod",[customTimePeriodId : customTimePeriodEntry.getKey()] , false);
+					if(UtilValidate.isNotEmpty(customTimePeriod)){
+						Date monthDate = (Date)customTimePeriod.get("fromDate");
+						monthDateStart = UtilDateTime.getMonthStart(UtilDateTime.toTimestamp(monthDate), timeZone, locale);
+						monthDateEnd = UtilDateTime.getMonthEnd(UtilDateTime.toTimestamp(monthDate), timeZone, locale);
+						//for SBE and TE Deductions
+						transferEntryPeriodTotals = PayrollService.getSupplementaryPayrollTotalsForPeriod(dctx,UtilMisc.toMap("partyId",employeeId,"fromDate",monthDateStart,"thruDate",monthDateEnd,"periodTypeId","HR_TBE","billingTypeId","SP_TE","userLogin",userLogin)).get("supplyPeriodTotalsForParty");
+						if(UtilValidate.isNotEmpty(transferEntryPeriodTotals)){
+							Iterator transferEntryTotalsIter = transferEntryPeriodTotals.entrySet().iterator();
+							while(transferEntryTotalsIter.hasNext()){
+								Map.Entry transferEntry = transferEntryTotalsIter.next();
+								if(transferEntry.getKey() != "customTimePeriodTotals"){
+									transferEntryTotals = transferEntry.getValue().get("periodTotals");
+									TEEmpProFund = transferEntryTotals.get("PAYROL_DD_EMP_PR");
+									if(UtilValidate.isEmpty(TEEmpProFund)){
+										TEEmpProFund = 0;
+									}
+									TEIncTax = transferEntryTotals.get("PAYROL_DD_INC_TAX");
+									if(UtilValidate.isEmpty(TEIncTax)){
+										TEIncTax = 0;
+									}
+								}
+							}
+						}
+						
+						SBEPeriodTotals = PayrollService.getSupplementaryPayrollTotalsForPeriod(dctx,UtilMisc.toMap("partyId",employeeId,"fromDate",monthDateStart,"thruDate",monthDateEnd,"periodTypeId","HR_SBE","billingTypeId","SP_BE","userLogin",userLogin)).get("supplyPeriodTotalsForParty");
+						if(UtilValidate.isNotEmpty(SBEPeriodTotals)){
+							Iterator SBEPeriodTotalsIter = SBEPeriodTotals.entrySet().iterator();
+							while(SBEPeriodTotalsIter.hasNext()){
+								Map.Entry SBEEntry = SBEPeriodTotalsIter.next();
+								if(SBEEntry.getKey() != "customTimePeriodTotals"){
+									SBETotals = SBEEntry.getValue().get("periodTotals");
+									SBEEmpProFund = transferEntryTotals.get("PAYROL_DD_EMP_PR");
+									if(UtilValidate.isEmpty(SBEEmpProFund)){
+										SBEEmpProFund = 0;
+									}
+									SBEIncTax = transferEntryTotals.get("PAYROL_DD_INC_TAX");
+									if(UtilValidate.isEmpty(SBEIncTax)){
+										SBEIncTax = 0;
+									}
+									SBEPrTax = transferEntryTotals.get("PAYROL_DD_PR_TAX");
+									if(UtilValidate.isEmpty(SBEPrTax)){
+										SBEPrTax = 0;
+									}
+									SBEWFTrust = transferEntryTotals.get("PAYROL_DD_WF_TRST");
+									if(UtilValidate.isEmpty(SBEWFTrust)){
+										SBEWFTrust = 0;
+									}
+									SBEInsurance = transferEntryTotals.get("PAYROL_DD_LIFE_IN");
+									if(UtilValidate.isEmpty(SBEInsurance)){
+										SBEInsurance = 0;
+									}
+									SBEGrSav = transferEntryTotals.get("PAYROL_DD_GR_SAVG");
+									if(UtilValidate.isEmpty(SBEGrSav)){
+										SBEGrSav = 0;
+									}
+									SBEMisDed = transferEntryTotals.get("PAYROL_DD_MISC_DED");
+									if(UtilValidate.isEmpty(SBEMisDed)){
+										SBEMisDed = 0;
+									}
+								}
+							}
+						}
+					}
+					
+					
+					othersDed = SBEWFTrust+SBEGrSav+SBEMisDed;
+					
 					totalFRFNSC = frf+nsc;
 					totalPPFGSAS = ppf+gsas;
 					totalExterLoan = hba+canf+hbac;
-					totalDeductions = totalFRFNSC+totalPPFGSAS+totalExterLoan+epf+vpf+gsls+licp;
+					totalDeductions = totalFRFNSC+totalPPFGSAS+totalExterLoan+epf+vpf+gsls+licp+othersDed;
 					
 					tempMap = [:];
 					tempMap["epf"] = -(epf);
@@ -458,6 +539,16 @@ employmentsList.each{ employeeId->
 					tempMap["totalPPFGSAS"] = -(totalPPFGSAS);
 					tempMap["totalExterLoan"] = -(totalExterLoan);
 					tempMap["totalDeductions"] = -(totalDeductions);
+					
+					tempMap["TEEmpProFund"] = TEEmpProFund;
+					tempMap["TEIncTax"] = TEIncTax;
+					
+					tempMap["SBEEmpProFund"] = SBEEmpProFund;
+					tempMap["SBEIncTax"] = SBEIncTax;
+					tempMap["SBEPrTax"] = SBEPrTax;
+					tempMap["SBEInsurance"] = SBEInsurance;
+					tempMap["othersDed"] = othersDed;
+					
 					
 					deductionsMap = [:];
 					if(UtilValidate.isNotEmpty(tempMap)){
