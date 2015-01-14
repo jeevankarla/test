@@ -115,6 +115,7 @@ under the License.
 			                    	<#assign SBEIncTax = 0>
 			                    	<#assign SBEPrTax = 0>
 			                    	<#assign SBEInsurance = 0>
+			                    	<#assign SBEFest=0>
 			                    	<#assign othersDed = 0>
 			                    	<#assign SBEDeductions = 0>
 			                    
@@ -146,6 +147,7 @@ under the License.
 			                    	<#assign SBEPrTax = partyDeductions.getValue().get("SBEPrTax")?if_exists>
 			                    	<#assign SBEGrSav = partyDeductions.getValue().get("SBEGrSav")?if_exists>
 			                    	<#assign SBEInsurance = partyDeductions.getValue().get("SBEInsurance")?if_exists>
+			                    	<#assign SBEFest = partyDeductions.getValue().get("SBEFest")?if_exists>
 			                    	<#assign othersDed = partyDeductions.getValue().get("othersDed")?if_exists>
 			                    	
 			                    	<#assign SBEDeductions = SBEEmpProFund+SBEInsurance+othersDed>
@@ -243,7 +245,7 @@ under the License.
 							         </fo:table-cell>
 							    </fo:table-row>
 							    </#if>
-							    <#if (SBEEmpProFund?has_content && SBEEmpProFund!=0) || (SBEIncTax?has_content && SBEIncTax!=0) || (SBEPrTax?has_content && SBEPrTax!=0) || (SBEInsurance?has_content && SBEInsurance!=0) || (SBEGrSav?has_content && SBEGrSav!=0) || (othersDed?has_content && othersDed!=0)>
+							    <#if (SBEEmpProFund?has_content && SBEEmpProFund!=0) || (SBEIncTax?has_content && SBEIncTax!=0) || (SBEPrTax?has_content && SBEPrTax!=0) || (SBEInsurance?has_content && SBEInsurance!=0) || (SBEGrSav?has_content && SBEGrSav!=0) || (SBEFest?has_content && SBEFest!=0) || (othersDed?has_content && othersDed!=0)>
 							    <fo:table-row>
        								<fo:table-cell>
 							            <fo:block  keep-together="always" font-weight = "bold" text-align="left" font-size="12pt" white-space-collapse="false" >Supplementary Bill:</fo:block>  
@@ -267,7 +269,7 @@ under the License.
 							            <fo:block  keep-together="always" text-align="right" font-size="12pt" white-space-collapse="false" >0.00</fo:block>  
 							         </fo:table-cell>
 							         <fo:table-cell>
-							            <fo:block  keep-together="always" text-align="right" font-size="12pt" white-space-collapse="false" >0.00</fo:block>  
+							            <fo:block  keep-together="always" text-align="right" font-size="12pt" white-space-collapse="false" >${SBEFest?if_exists?string("#0.00")}</fo:block>  
 							         </fo:table-cell>
 							         <fo:table-cell>
 							            <fo:block  keep-together="always" text-align="right" font-size="12pt" white-space-collapse="false" >${othersDed?if_exists?string("#0.00")}</fo:block>  

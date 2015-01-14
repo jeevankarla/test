@@ -377,6 +377,7 @@ employmentsList.each{ employeeId->
 					SBEInsurance = 0;
 					SBEGrSav = 0;
 					SBEMisDed = 0;
+					SBEFest = 0;
 					
 					othersDed = 0;
 					
@@ -487,45 +488,47 @@ employmentsList.each{ employeeId->
 								Map.Entry SBEEntry = SBEPeriodTotalsIter.next();
 								if(SBEEntry.getKey() != "customTimePeriodTotals"){
 									SBETotals = SBEEntry.getValue().get("periodTotals");
-									SBEEmpProFund = transferEntryTotals.get("PAYROL_DD_EMP_PR");
+									SBEEmpProFund = SBETotals.get("PAYROL_DD_EMP_PR");
 									if(UtilValidate.isEmpty(SBEEmpProFund)){
 										SBEEmpProFund = 0;
 									}
-									SBEIncTax = transferEntryTotals.get("PAYROL_DD_INC_TAX");
+									SBEIncTax = SBETotals.get("PAYROL_DD_INC_TAX");
 									if(UtilValidate.isEmpty(SBEIncTax)){
 										SBEIncTax = 0;
 									}
-									SBEPrTax = transferEntryTotals.get("PAYROL_DD_PR_TAX");
+									SBEPrTax = SBETotals.get("PAYROL_DD_PR_TAX");
 									if(UtilValidate.isEmpty(SBEPrTax)){
 										SBEPrTax = 0;
 									}
-									SBEWFTrust = transferEntryTotals.get("PAYROL_DD_WF_TRST");
+									SBEWFTrust = SBETotals.get("PAYROL_DD_WF_TRST");
 									if(UtilValidate.isEmpty(SBEWFTrust)){
 										SBEWFTrust = 0;
 									}
-									SBEInsurance = transferEntryTotals.get("PAYROL_DD_LIFE_IN");
+									SBEInsurance = SBETotals.get("PAYROL_DD_LIFE_IN");
 									if(UtilValidate.isEmpty(SBEInsurance)){
 										SBEInsurance = 0;
 									}
-									SBEGrSav = transferEntryTotals.get("PAYROL_DD_GR_SAVG");
+									SBEGrSav = SBETotals.get("PAYROL_DD_GR_SAVG");
 									if(UtilValidate.isEmpty(SBEGrSav)){
 										SBEGrSav = 0;
 									}
-									SBEMisDed = transferEntryTotals.get("PAYROL_DD_MISC_DED");
+									SBEMisDed = SBETotals.get("PAYROL_DD_MISC_DED");
 									if(UtilValidate.isEmpty(SBEMisDed)){
 										SBEMisDed = 0;
 									}
+									SBEFest= SBETotals.get("PAYROL_DD_FEST");
+									if(UtilValidate.isEmpty(SBEFest)){
+										SBEFest = 0;
+									}	
 								}
 							}
 						}
 					}
-					
-					
 					othersDed = SBEWFTrust+SBEMisDed;
 					
 					totalFRFNSC = frf+nsc;
 					totalPPFGSAS = ppf+gsas;
-					totalExterLoan = hba+canf+hbac;
+					totalExterLoan = hba+canf+hbac+SBEFest;
 					totalDeductions = totalFRFNSC+totalPPFGSAS+totalExterLoan+epf+vpf+gsls+licp+othersDed;
 					
 					tempMap = [:];
@@ -548,6 +551,7 @@ employmentsList.each{ employeeId->
 					tempMap["SBEPrTax"] = SBEPrTax;
 					tempMap["SBEGrSav"] = SBEGrSav;
 					tempMap["SBEInsurance"] = SBEInsurance;
+					tempMap["SBEFest"] = SBEFest;
 					tempMap["othersDed"] = othersDed;
 					
 					
