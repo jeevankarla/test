@@ -528,7 +528,7 @@ employmentsList.each{ employeeId->
 					
 					totalFRFNSC = frf+nsc;
 					totalPPFGSAS = ppf+gsas;
-					totalExterLoan = hba+canf+hbac+SBEFest;
+					totalExterLoan = hba+canf+hbac;
 					totalDeductions = totalFRFNSC+totalPPFGSAS+totalExterLoan+epf+vpf+gsls+licp+othersDed;
 					
 					tempMap = [:];
