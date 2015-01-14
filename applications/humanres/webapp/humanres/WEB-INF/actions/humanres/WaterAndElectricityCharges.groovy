@@ -52,7 +52,7 @@ if((UtilValidate.isNotEmpty(totMeterReading))&& (UtilValidate.isNotEmpty(totAmou
 	BigDecimal totAmount=new BigDecimal(totAmount);
 	BigDecimal totMeterReading= new BigDecimal(totMeterReading);
 	unitRate= (totAmount/(totMeterReading));
-	unitRate=unitRate.setScale(2, BigDecimal.ROUND_HALF_UP);
+	unitRate=unitRate.setScale(4, BigDecimal.ROUND_HALF_UP);
 }
 if((unitRate.compareTo(BigDecimal.ZERO)==0)){
 	Debug.logError("Plz enter total Meter Reading and Total Amount..","");
