@@ -1,0 +1,9 @@
+.DS_Store
+applications/**/build/*
+framework/**/build/*
+hot-deploy/**/build/*
+runtime/**/*
+runtime/logs/*
+specialpurpose/**/build/*
+tools/build/**/*
+vasistautils/datapop/build/*
