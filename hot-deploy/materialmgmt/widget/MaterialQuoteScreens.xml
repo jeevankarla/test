@@ -49,9 +49,9 @@
                 	<condition-expr field-name="quoteId" from-field="quoteId"/>
                 </entity-condition>
                 <entity-one entity-name="QuoteTerm" value-field="quoteTerm"/>
-                <entity-and entity-name="QuoteItemAndContent" list="quoteItemAndContents">
+              	<entity-and entity-name="QuoteItemAndContent" list="quoteItemContents" >
                     <field-map field-name="quoteId" from-field="quoteId"/>
-                </entity-and>
+                </entity-and> 
                 <entity-condition list="quoteStatus" entity-name="QuoteStatus">
                 	<condition-expr field-name="quoteId" value="${parameters.quoteId}" operator="equals"/>
                 	<order-by field-name="quoteItemSeqId"/>

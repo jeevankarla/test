@@ -211,14 +211,14 @@
                 </sub-hyperlink>
             </display-entity>
         </field>
-        <field name="fromDate" title="Uploaded Date"><display/></field>
+       <field name="fromDate" title="Uploaded Date"><display description="${groovy:org.ofbiz.base.util.UtilDateTime.toDateString(fromDate, &quot;dd-MMM-yyyy&quot;);}"/></field>
         <field name="deleteLink" title="Delete" widget-style="buttontext" >
            <hyperlink also-hidden="false" description="${uiLabelMap.CommonDelete}" target="deleteQuoteContent">
                 <parameter param-name="quoteId"/>
                 <parameter param-name="quoteItemSeqId"/>
                 <parameter param-name="contentId"/>
                 <parameter param-name="fromDate"/>
-           </hyperlink>
+          </hyperlink>
         </field>
     </form>
     <form name="ListQuotesForEvaluation" type="list" list-name="quotesList"  separate-columns="true"
