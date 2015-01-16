@@ -1,0 +1,2 @@
+All project-related config files that we push to the live server needs to be maintained here.
+Let's have module-wise sub-folders to better organize the configuration files.
