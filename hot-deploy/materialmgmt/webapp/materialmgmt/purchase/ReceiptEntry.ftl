@@ -70,8 +70,9 @@
 					  	</tr>
 	    				<tr><td><br/></td></tr>
 		 				<tr>
+										<#assign flag = false>                
 				          <td>&nbsp;</td>
-				          <td align='left' valign='middle' nowrap="nowrap"><div class='h3'>Purchase Order Id:</div></td>
+				          <td align='left' valign='middle' nowrap="nowrap"><div class='h3' id='purchaseId'>Purchase Order Id:</div></td>
 				          <td>&nbsp;</td>
 				          <#if orderId?exists && orderId?has_content>  
 					  	  		<input type="hidden" name="orderId" id="orderId" value="${orderId}"/>  
@@ -84,14 +85,18 @@
 				          		<td valign='middle' class='tabletext h3'>
 				          		   <#if !(withoutPO?exists && withoutPO?has_content)>
 				          				<input type="text" name="orderId" id="orderId" />
-				          				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-				          			   Without PO:<input type="checkbox" name="withoutPO" id="withoutPO" value="Y" onclick="toggleSupplier(this)"/>
-				          			 <#else>
-				          			   NO PO
-				          			   <input type="hidden" name="withoutPO" id="withoutPO" value="${withoutPO}"/>
+										<#assign flag = true>                
 				          			</#if>
-				          			
-				          		</td>
+				          			</td>
+				          			<#if flag == true>
+				          			<td class='tabletext h3'>
+				          			 Without PO:<input type="checkbox" name="withoutPO" id="withoutPO" value="Y" onclick="toggleSupplier(this)"/>
+				          			</td>
+				          			<#else>
+				          			<td>	NO PO
+				          			   <input type="hidden" name="withoutPO" id="withoutPO" value="${withoutPO}"/>
+				          			</td>
+				          			</#if>
 				          	</#if>
 				        </tr>
 				        
@@ -212,8 +217,13 @@
 	  function toggleSupplier(el){
 		  if($(el).is(':checked')){
 		     $("#supplierDiv").show();
+		     $("#purchaseId").hide();
+		     $("#orderId").hide();
+		     
 		  }else{
 		  	 $("#supplierDiv").hide();
+		     $("#purchaseId").show();
+		     $("#orderId").show();
 		  }
 		
 		}
