@@ -26,20 +26,21 @@ dctx = dispatcher.getDispatchContext();
 if(orderId){
 	orderHeader = delegator.findOne("OrderHeader", UtilMisc.toMap("orderId", orderId), false);
 	if(!orderHeader){
-		request.setAttribute("_ERROR_MESSAGE_", "No Order Found with Id : " + orderId + "for receipts");
-		return "error";
+
+		context.errorMessage = "No Order Found with Order Id: "+orderId+" !";
+		return;
 		
 	}
 	if(orderHeader.statusId != "ORDER_APPROVED"){
-		Debug.log("")
-		request.setAttribute("_ERROR_MESSAGE_", "Order with Id : "+ orderId+ "is not approved");
-		return "error";
+
+		context.errorMessage = "Order with Order Id: "+orderId+" is not approved!";
+		return;
 		
 	}
 	if(orderHeader.orderTypeId != "PURCHASE_ORDER"){
-		request.setAttribute("_ERROR_MESSAGE_", "Order with Id : "+ orderId+ "is not a purchase order");
-		return "error";
-		
+
+		context.errorMessage = "Order with Order Id: "+orderId+" is not a purchase order!";
+		return;
 	}
 
 	conditionList = [];
