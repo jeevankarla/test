@@ -375,7 +375,7 @@ under the License.
     	<fo:page-sequence master-reference="main">
 		<fo:flow flow-name="xsl-region-body" font-family="Helvetica">
 			<fo:block font-size="14pt">
-	            	${uiLabelMap.NoOrdersFound}.
+	            	No records found.
 	       		 </fo:block>
 		</fo:flow>
 	</fo:page-sequence>
