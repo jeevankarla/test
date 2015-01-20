@@ -40,7 +40,6 @@ if(UtilValidate.isNotEmpty(employments)){
 	employmentIds = EntityUtil.getFieldListFromEntityList(employments, "partyId", true);
 	conditionList.add(EntityCondition.makeCondition("partyId", EntityOperator.IN, employmentIds));
 	conditionList.add(EntityCondition.makeCondition(EntityCondition.makeCondition("noOfPayableDays", EntityOperator.NOT_EQUAL, BigDecimal.ZERO)));
-	condition=EntityCondition.makeCondition(conditionList,EntityOperator.AND);
 	conditionList.add(EntityCondition.makeCondition("customTimePeriodId", EntityOperator.EQUALS, (parameters.customTimePeriodId)));
 	condition=EntityCondition.makeCondition(conditionList,EntityOperator.AND);
 	attendanceDetails = delegator.findList("PayrollAttendance", condition , null, null, null, false);
