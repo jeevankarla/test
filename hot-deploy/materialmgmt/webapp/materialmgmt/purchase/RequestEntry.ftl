@@ -3,7 +3,7 @@
 
 
 <script type="text/javascript">
-
+var screenFlag;
 	$(document).ready(function(){
 	
 		$("#prodCatId").multiselect({
@@ -20,15 +20,17 @@
 		//var productCategorySelectIds = ${StringUtil.wrapString(productCategoryJSON)!'[]'};
 		//$("#prodCatId").val(productCategorySelectIds);
 		//$("#prodCatId").multiselect("refresh");
-		
-		$( "#effectiveDate" ).datepicker({
-			dateFormat:'d MM, yy',
-			changeMonth: true,
-			numberOfMonths: 1,
-			onSelect: function( selectedDate ) {
-				$( "#effectiveDate" ).datepicker("option", selectedDate);
-			}
-		});
+		screenFlag ='${screenFlag}';
+		if(screenFlag ==  "RETURN"){
+			$( "#effectiveDate" ).datepicker({
+				dateFormat:'d MM, yy',
+				changeMonth: true,
+				numberOfMonths: 1,
+				onSelect: function( selectedDate ) {
+					$( "#effectiveDate" ).datepicker("option", selectedDate);
+				}
+			});
+		}
 		$( "#requiredDate" ).datepicker({
 			dateFormat:'d MM, yy',
 			changeMonth: true,
@@ -85,7 +87,7 @@
 					          	</td>       
 					       	<#else> 
 					        	<td valign='middle'>          
-					            	<input class='h2' type="text" name="effectiveDate" id="effectiveDate" value="${defaultEffectiveDate}"/>           		
+					            	<input class='h2' type="text" name="effectiveDate" id="effectiveDate" value="${defaultEffectiveDate}" <#if screenFlag?exists && screenFlag != "RETURN">readOnly</#if>/>           		
 					            </td>
 					       	  </#if>
 					  	</tr>
@@ -144,7 +146,7 @@
 						
 				        <tr>
 				          <td>&nbsp;</td>
-				          <td align='left' valign='middle' nowrap="nowrap"><div class='h2'>Department Name:</div></td>
+				          <td align='left' valign='middle' nowrap="nowrap"><div class='h2'>${uiLabelMap.MaterialMangement_CustRequestFromPartyId}</div></td>
 				          <td>&nbsp;</td>
 				          <#if party?exists && party?has_content>  
 					  	  		<input type="hidden" name="partyId" id="partyId" value="${party.partyId.toUpperCase()}"/>  
