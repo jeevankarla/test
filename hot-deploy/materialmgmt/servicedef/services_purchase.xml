@@ -113,6 +113,7 @@
         <attribute name="custRequestId" type="String" mode="IN" optional="false"/>
         <attribute name="custRequestItemSeqId" type="String" mode="IN" optional="false"/>
         <attribute name="custmQuantity" type="BigDecimal" mode="IN" optional="false"/>
+        <attribute name="requirementId" type="String" mode="OUT" optional="true"/>
     </service>
     
     <service name="createIssuanceForCustRequestItem" engine="java" location="in.vasista.vbiz.purchase.MaterialRequestServices" invoke="createIssuanceForCustRequestItem">

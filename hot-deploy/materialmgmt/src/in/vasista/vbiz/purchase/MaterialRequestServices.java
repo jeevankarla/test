@@ -47,6 +47,7 @@ import org.ofbiz.entity.util.EntityUtil;
 import org.ofbiz.service.DispatchContext;
 import org.ofbiz.service.GenericServiceException;
 import org.ofbiz.service.LocalDispatcher;
+import org.ofbiz.service.ModelService;
 import org.ofbiz.service.ServiceUtil;
 import org.ofbiz.security.Security;
 
@@ -774,7 +775,16 @@ public class MaterialRequestServices {
 				requirementId = (String)resultCtx.get("requirementId");
 				
 			}
-			
+			if(UtilValidate.isNotEmpty(requirementId)){
+				Map emailRequirementCtx = FastMap.newInstance();
+				emailRequirementCtx.put("userLogin", userLogin);
+				emailRequirementCtx.put("requirementId", requirementId);
+				resultCtx = dispatcher.runSync("emailRequirement", emailRequirementCtx);
+				if (ServiceUtil.isError(resultCtx)) {
+					Debug.logError("Problem creating requirement for requested item : "+custRequestId+" : "+custRequestItemSeqId, module);
+					return resultCtx;
+				}
+			}
 			
 			/* change cust request item status*/
 			Map itemStatusCtx = FastMap.newInstance();
@@ -1097,5 +1107,53 @@ public class MaterialRequestServices {
 		}
 		return result;
 	}
-	
+	 public static Map<String, Object> emailRequirement(DispatchContext ctx, Map<String, ? extends Object> context) {
+		 Delegator delegator = ctx.getDelegator();
+		 LocalDispatcher dispatcher = ctx.getDispatcher();
+		 String defaultScreenLocation = "component://materialmgmt/widget/MaterialPurchaseScreens.xml#RequirementEmail";
+		 Locale locale = (Locale) context.get("locale");
+		 GenericValue userLogin = (GenericValue)context.get("userLogin");
+		 String requirementId = (String)context.get("requirementId");
+		 String errMsg ="";
+        boolean emailSent = true;
+        String bodyScreenLocation = defaultScreenLocation;
+        Map<String, Object> result = ServiceUtil.returnSuccess();
+        // set the needed variables in new context
+        Map<String, Object> bodyParameters = FastMap.newInstance();
+        bodyParameters.put("requirementId", requirementId);
+        bodyParameters.put("locale", locale);
+        bodyParameters.put("userLogin", userLogin);
+
+        try {
+        	GenericValue requirement = delegator.findOne("Requirement", UtilMisc.toMap("requirementId", requirementId), false);
+        	bodyParameters.put("quantity", requirement.getBigDecimal("quantity"));
+        	Map<String, Object> serviceContext = FastMap.newInstance();
+            serviceContext.put("bodyScreenUri", bodyScreenLocation);
+            serviceContext.put("bodyParameters", bodyParameters);
+            serviceContext.put("subject", "Requirement Raised for Product :"+requirement.getString("productId"));
+            serviceContext.put("sendFrom", UtilProperties.getPropertyValue("general.properties", "defaultFromEmailAddress"));
+            serviceContext.put("sendCc", UtilProperties.getPropertyValue("general.properties", "defaultFromEmailAddress"));
+            serviceContext.put("contentType", "text/html");
+            serviceContext.put("sendTo", "nagababu@vasista.in");
+           // serviceContext.put("partyId", party.getString("partyId"));
+            serviceContext.put("partyId", userLogin.getString("partyId"));
+        	result = dispatcher.runSync("sendMailFromScreen", serviceContext);
+
+            if (ModelService.RESPOND_ERROR.equals((String) result.get(ModelService.RESPONSE_MESSAGE))) {
+                Map<String, Object> messageMap = UtilMisc.toMap("errorMessage", result.get(ModelService.ERROR_MESSAGE));
+                errMsg = ServiceUtil.getErrorMessage(result);
+                Debug.logError(errMsg, module);
+                emailSent = false;
+                return result;
+            }
+        } catch (Exception e) {
+            Debug.logWarning(e, "", module);
+            errMsg = e.toString();
+            Debug.logError(errMsg, module);
+            emailSent = false;
+            return result;
+        }
+           
+        return ServiceUtil.returnSuccess();
+    }
 }
