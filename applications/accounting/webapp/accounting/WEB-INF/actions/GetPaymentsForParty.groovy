@@ -34,7 +34,8 @@
 	partyIdFrom = parameters.partyIdFrom;
 	paymentTypeId = parameters.paymentTypeId;
 	paymentMethodId = parameters.paymentMethodId;
-	statusId = parameters.statusId;
+	//statusId = parameters.statusId;
+	statusId = "PMNT_VOID";
 	searchParentTypeId = context.searchParentType;
 	
 	conditionList = [];
@@ -63,7 +64,7 @@
 	conditionList.clear();
 	conditionList.add(EntityCondition.makeCondition("partyIdFrom", EntityOperator.EQUALS, partyIdFrom));
 	conditionList.add(EntityCondition.makeCondition("partyIdTo", EntityOperator.EQUALS, partyIdTo));
-	conditionList.add(EntityCondition.makeCondition("statusId", EntityOperator.EQUALS, statusId));
+	conditionList.add(EntityCondition.makeCondition("statusId", EntityOperator.NOT_EQUAL, statusId));
 	if(UtilValidate.isNotEmpty(paymentTypeId)){
 		conditionList.add(EntityCondition.makeCondition("paymentTypeId", EntityOperator.EQUALS, paymentTypeId));
 	}
@@ -73,7 +74,7 @@
 	if(UtilValidate.isNotEmpty(paymentMethodId)){
 		conditionList.add(EntityCondition.makeCondition("paymentMethodId", EntityOperator.EQUALS, paymentMethodId));
 	}
-	conditionList.add(EntityCondition.makeCondition("statusId", EntityOperator.EQUALS, statusId));
+	//conditionList.add(EntityCondition.makeCondition("statusId", EntityOperator.EQUALS, statusId));
 	List paymentList = delegator.findList("Payment", EntityCondition.makeCondition(conditionList, EntityOperator.AND), null, null, null, false);
 	paymentIdsList = EntityUtil.getFieldListFromEntityList(paymentList, "paymentId", true);
 	
