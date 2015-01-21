@@ -499,6 +499,7 @@ public class MaterialRequestServices {
         String custRequestId = (String)context.get("custRequestId");
         String custRequestItemSeqId = (String)context.get("custRequestItemSeqId");
         String facilityId = (String)context.get("facilityId");
+        BigDecimal toBeIssuedQty =(BigDecimal)context.get("toBeIssuedQty");
         Map<String, Object> result = ServiceUtil.returnSuccess();
         try {
         	
@@ -512,6 +513,11 @@ public class MaterialRequestServices {
         	
         	BigDecimal requestedQty = quantity;
         	
+        	
+        	if (UtilValidate.isNotEmpty(toBeIssuedQty)) {
+        		requestedQty=toBeIssuedQty;
+        		
+            }
             GenericValue product = ProductWorker.findProduct(delegator, productId);
             if (product == null) {
                 return ServiceUtil.returnError("Product Not Found with Id : "+productId);
@@ -596,14 +602,20 @@ public class MaterialRequestServices {
 		String custRequestItemSeqId = (String) context.get("custRequestItemSeqId");
 		String inventoryItemId = (String) context.get("inventoryItemId");
 		BigDecimal quantity = (BigDecimal) context.get("quantity");
+		
+		BigDecimal requestedQuantity = BigDecimal.ZERO;
+		
 		GenericValue userLogin = (GenericValue) context.get("userLogin");
+		GenericValue custRequestItem=null;
 		Map result = ServiceUtil.returnSuccess();
 		try{
 			
 			if(UtilValidate.isEmpty(quantity) || (UtilValidate.isNotEmpty(quantity) && quantity.compareTo(BigDecimal.ZERO)<= 0)){
 				return ServiceUtil.returnError("Not issuing InventoryItem to Request "+custRequestId+" : "+custRequestItemSeqId+", because the quantity to issue "+quantity+" is less than or equal to 0");
 			}
-			GenericValue custRequestItem = delegator.findOne("CustRequestItem", UtilMisc.toMap("custRequestId", custRequestId, "custRequestItemSeqId", custRequestItemSeqId), false);
+			 custRequestItem = delegator.findOne("CustRequestItem", UtilMisc.toMap("custRequestId", custRequestId, "custRequestItemSeqId", custRequestItemSeqId), false);
+			
+			requestedQuantity = custRequestItem.getBigDecimal("quantity");
 			
 			GenericValue inventoryItem = delegator.findOne("InventoryItem", UtilMisc.toMap("inventoryItemId", inventoryItemId), false);
 			
@@ -612,6 +624,21 @@ public class MaterialRequestServices {
 			if(quantity.compareTo(inventoryATP)>0){
 				return ServiceUtil.returnError("Not issuing InventoryItem to Request "+custRequestId+" : "+custRequestItemSeqId+", because the quantity to issue "+quantity+" is greater than the quantity left to issue (i.e "+inventoryATP+") for inventoryItemId : "+inventoryItemId);
 			}
+			//caliculating issuence Qty
+			BigDecimal issuedQty=BigDecimal.ZERO;
+			List filterIssuenceReq = FastList.newInstance();
+			filterIssuenceReq.add(EntityCondition.makeCondition("custRequestId", EntityOperator.EQUALS, custRequestId));
+			filterIssuenceReq.add(EntityCondition.makeCondition("custRequestItemSeqId", EntityOperator.EQUALS, custRequestItemSeqId));
+			EntityCondition filterIssuenceCond = EntityCondition.makeCondition(filterIssuenceReq, EntityOperator.AND);
+			List<GenericValue> itemIssuanceList = delegator.findList("ItemIssuance", filterIssuenceCond, UtilMisc.toSet("quantity"), UtilMisc.toList("-issuedDateTime"), null, false);
+			
+			Iterator<GenericValue> itrIssList = itemIssuanceList.iterator();
+            while (itrIssList.hasNext()) {
+                GenericValue itrIssItem = itrIssList.next();
+                issuedQty =issuedQty.add(itrIssItem.getBigDecimal("quantity"));
+            }
+            issuedQty=issuedQty.add(quantity);
+            
 			/*Create Item Issuance*/
 			Map itemIssueCtx = FastMap.newInstance();
 			itemIssueCtx.put("custRequestId", custRequestId);
@@ -644,19 +671,20 @@ public class MaterialRequestServices {
 				Debug.logError("Problem decrementing inventory for requested item ", module);
 				return resultCtx;
 			}
-			
-			Map itemStatusCtx = FastMap.newInstance();
-			itemStatusCtx.put("custRequestId", custRequestId);
-			itemStatusCtx.put("custRequestItemSeqId", custRequestItemSeqId);
-			itemStatusCtx.put("userLogin", userLogin);
-			itemStatusCtx.put("description", "");
-			itemStatusCtx.put("statusId", "CRQ_ISSUED");
-			resultCtx = dispatcher.runSync("setCustRequestItemStatus", itemStatusCtx);
-			if (ServiceUtil.isError(resultCtx)) {
-				Debug.logError("Problem changing status for requested item ", module);
-				return resultCtx;
+			//comparing issuedQty and requestedQty
+			if(issuedQty.compareTo(requestedQuantity)==0){
+				Map itemStatusCtx = FastMap.newInstance();
+				itemStatusCtx.put("custRequestId", custRequestId);
+				itemStatusCtx.put("custRequestItemSeqId", custRequestItemSeqId);
+				itemStatusCtx.put("userLogin", userLogin);
+				itemStatusCtx.put("description", "");
+				itemStatusCtx.put("statusId", "CRQ_ISSUED");
+				resultCtx = dispatcher.runSync("setCustRequestItemStatus", itemStatusCtx);
+				if (ServiceUtil.isError(resultCtx)) {
+					Debug.logError("Problem changing status for requested item ", module);
+					return resultCtx;
+				}
 			}
-			
 			
 		} catch (GenericEntityException e) {
 			// TODO: handle exception
