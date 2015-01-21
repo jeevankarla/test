@@ -543,15 +543,9 @@
     </form>
     <form name="AddCustEnquiryNote" type="single" target="createCustEnquiryNote"
         focus-field-name="noteId" header-row-style="header-row" default-table-style="basic-table">
-        <field name="custRequestId"><text></text></field>
- 	<field name="enumId" title="Note Type">
-            <drop-down allow-empty="true">
-                <entity-options entity-name="Enumeration" description="${description}">
-                    <entity-constraint name="enumTypeId" operator="equals" value="CUSTOM_NOTE_TYPE"/>
-                    <entity-order-by field-name="sequenceId"/>
-                </entity-options>
-            </drop-down>
-        </field>
+        <field name="custRequestId"><hidden/></field>
+        <field name="noteName"><text></text></field>
+        <field name="noteDate"><date-time type="timestamp"></date-time></field>
         <field name="noteInfo"><text></text></field>
         <field name="submitButton" title="${uiLabelMap.CommonSave}" widget-style="smallSubmit"><submit button-type="text-link"/></field>
         <field name="cancelLink" title="${uiLabelMap.CommonEmptyHeader}" widget-style="smallSubmit">
@@ -790,7 +784,7 @@
    		<set field="fromDate" value="${custRequest.custRequestDate}"/>
    	</actions>
    	<field name="custRequestId"><hidden/></field>
-   	<field name="partyId" title="Party"><lookup target-form-name="LookupPartyName" target-parameter="roleTypeId"/></field>
+   	<field name="partyId" title="Party"><lookup target-form-name="LookupPartyName"/></field>
    	<field name="roleTypeId" title="Role Type">
    		<drop-down> <entity-options  description="${description}" entity-name="RoleType"><entity-constraint name="roleTypeId" value="SUPPLIER"/> </entity-options></drop-down>
    	</field>
