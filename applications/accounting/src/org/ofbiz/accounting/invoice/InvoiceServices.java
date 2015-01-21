@@ -3158,10 +3158,25 @@ public class InvoiceServices {
             if (payment.getString("statusId").equals("PMNT_CANCELLED")) {
                 errorMessageList.add(UtilProperties.getMessage(resource, "AccountingPaymentCancelled", UtilMisc.toMap("paymentId",paymentId), locale));
             }
-            if (payment.getString("statusId").equals("PMNT_CONFIRMED")) {
-                errorMessageList.add(UtilProperties.getMessage(resource, "AccountingPaymentConfirmed", UtilMisc.toMap("paymentId",paymentId), locale));
+            //If PaymentType is advance and payment status is confirmed  it will allow application
+            try {
+            	GenericValue paymentType = delegator.findByPrimaryKey("PaymentType", UtilMisc.toMap("paymentTypeId", payment.getString("paymentTypeId")));
+                if(UtilValidate.isNotEmpty(paymentType)){
+                	String parentTypeId = (String) paymentType.get("parentTypeId");
+                	if(UtilValidate.isNotEmpty(parentTypeId) && !parentTypeId.equals("ADVANCES_PAYOUT")){
+                		if (payment.getString("statusId").equals("PMNT_CONFIRMED")) {
+                            errorMessageList.add(UtilProperties.getMessage(resource, "AccountingPaymentConfirmed", UtilMisc.toMap("paymentId",paymentId), locale));
+                        }
+                	}
+                }else{
+                	if (payment.getString("statusId").equals("PMNT_CONFIRMED")) {
+                        errorMessageList.add(UtilProperties.getMessage(resource, "AccountingPaymentConfirmed", UtilMisc.toMap("paymentId",paymentId), locale));
+                    }
+                }
+            }catch (GenericEntityException e) {
+                ServiceUtil.returnError(e.getMessage());
             }
-
+            
             currencyUomId = payment.getString("currencyUomId");
 
             // if the amount to apply is 0 give it amount the payment still need
@@ -3189,10 +3204,24 @@ public class InvoiceServices {
             if (toPayment.getString("statusId").equals("PMNT_CANCELLED")) {
                 errorMessageList.add(UtilProperties.getMessage(resource, "AccountingPaymentCancelled", UtilMisc.toMap("paymentId",paymentId), locale));
             }
-            if (toPayment.getString("statusId").equals("PMNT_CONFIRMED")) {
-                errorMessageList.add(UtilProperties.getMessage(resource, "AccountingPaymentConfirmed", UtilMisc.toMap("paymentId",paymentId), locale));
+            //If PaymentType is advance and payment status is confirmed  it will allow application
+            try {
+                GenericValue toPaymentType = delegator.findByPrimaryKey("PaymentType", UtilMisc.toMap("paymentTypeId", toPayment.getString("paymentTypeId")));
+	            if(UtilValidate.isNotEmpty(toPaymentType)){
+	            	String toParentTypeId = (String) toPaymentType.get("parentTypeId");
+	            	if(UtilValidate.isNotEmpty(toParentTypeId) && !toParentTypeId.equals("REFUND_PAYIN")){
+	            		 if (toPayment.getString("statusId").equals("PMNT_CONFIRMED")) {
+	                         errorMessageList.add(UtilProperties.getMessage(resource, "AccountingPaymentConfirmed", UtilMisc.toMap("paymentId",paymentId), locale));
+	                     }
+	            	}
+	            }else{
+	            	if (toPayment.getString("statusId").equals("PMNT_CONFIRMED")) {
+                        errorMessageList.add(UtilProperties.getMessage(resource, "AccountingPaymentConfirmed", UtilMisc.toMap("paymentId",paymentId), locale));
+                    }
+	            }
+            } catch (GenericEntityException e) {
+                ServiceUtil.returnError(e.getMessage());
             }
-
             // if the amount to apply is less then required by the payment reduce it
             if (amountAppliedMax.compareTo(toPaymentApplyAvailable) > 0) {
                 amountAppliedMax = toPaymentApplyAvailable;
