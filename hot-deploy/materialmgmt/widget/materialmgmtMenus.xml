@@ -201,11 +201,11 @@
                 <parameter param-name="quoteId" from-field="quote.quoteId"/>
             </link>
         </menu-item> -->
-        <menu-item name="AddQuoteTerms" title="Quote Terms">
+        <!--<menu-item name="AddQuoteTerms" title="Quote Terms">
             <link target="EditMaterialQuoteTerms">
                 <parameter param-name="quoteId" from-field="quote.quoteId"/>
             </link>
-        </menu-item>
+        </menu-item>-->
         <menu-item name="QuoteContent" title="Quote Content">
             <condition>
         		<if-compare operator="not-equals" value="" field="quoteId"/>

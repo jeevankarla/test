@@ -27,7 +27,7 @@
           <service service-name="performFind" result-map="result" result-map-list="listIt">
             <field-map field-name="inputFields" from-field="parameters"/>
             <field-map field-name="entityName" from-field="entityName"/>
-            <field-map field-name="orderBy" from-field="parameters.sortField"/>
+            <field-map field-name="orderBy" from-field="parameters.sortField" value="-quoteId"/>
             <field-map field-name="viewIndex" from-field="viewIndex"/>
             <field-map field-name="viewSize" from-field="viewSize"/>
           </service>
@@ -150,7 +150,7 @@
         <!-- <field name="uomId" title="${uiLabelMap.OrderOrderQuoteUomId}">
             <display-entity entity-name="Uom" description="${description}" key-field-name="uomId"/>
         </field> -->
-        <field name="editLink" title="${uiLabelMap.CommonEmptyHeader}" widget-style="buttontext">
+       <!-- <field name="editLink" title="${uiLabelMap.CommonEmptyHeader}" widget-style="buttontext">
             <hyperlink target="EditMaterialQuoteTerms" description="${uiLabelMap.CommonEdit}" also-hidden="false">
                 <parameter param-name="termTypeId"/>
                 <parameter param-name="quoteItemSeqId"/>
@@ -158,7 +158,7 @@
                 <parameter param-name="target" value="updateMaterialQuoteTerm"/>
                 <parameter param-name="tabButtonItems" value="FindMaterialQuotes"/>
             </hyperlink>
-        </field>
+        </field>-->
         <field name="deleteLink" title="${uiLabelMap.CommonEmptyHeader}" widget-style="buttontext">
             <hyperlink target="deleteMaterialQuoteTerm" description="${uiLabelMap.CommonRemove}" also-hidden="false">
                 <parameter param-name="termTypeId"/>
@@ -410,6 +410,28 @@
         <field name="statusId" title="Status"><display-entity entity-name="StatusItem" description="${description}"/></field>
         <field name="statusDatetime" title="Date"><display description="${groovy:org.ofbiz.base.util.UtilDateTime.toDateString(statusDatetime,&quot;dd/MM/yyyy HH:mm:ss&quot;)}"/></field>
     </form>
+    <form name="AddQuoteTerm" type="single" target="createMaterialQuoteTerm">
+        <field name="termTypeId" tooltip="${uiLabelMap.CommonRequired}">
+            <drop-down current-description="">
+                <entity-options description="${description}" entity-name="TermType" key-field-name="termTypeId"/>
+            </drop-down>
+        </field>
+        <field name="quoteItemSeqId" tooltip="${uiLabelMap.OrderQuoteEmpty}">
+            <drop-down allow-empty="true">
+                <entity-options description="${quoteItemSeqId}" entity-name="QuoteItem">
+                    <entity-constraint name="quoteId" operator="equals" value="${quoteId}"/>
+                    <entity-order-by field-name="quoteItemSeqId"/>
+                </entity-options>
+            </drop-down>
+        </field>
+        <field name="quoteId"><hidden/></field>
+        <field name="uomId"><hidden value="INR"/></field>
+        <field name="termValue" title="term Value"><text/></field>
+        <field name="termDays" title="term Days"><text/></field>
+        <field name="textValue" title="text Value"><text/></field>
+        <field name="description" title="description"><text/></field>
+        <field name="createButton"><submit button-type="button"/></field>
+   </form>
     
     
 </forms>
