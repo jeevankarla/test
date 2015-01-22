@@ -231,8 +231,8 @@
         </actions>
      	<field name="custRequestId" title="Enquiry No."><display/></field>
         <field name="custRequestName" title="Enquiry Ref"><display/></field>
-        <field name="openDateTime" title="openDateTime"><display description="${groovy:org.ofbiz.base.util.UtilDateTime.toDateString(custRequest.openDateTime, &quot;dd-MM-yyyy &quot;)}"/> </field>
-        <field name="closedDateTime" title="closedDateTime"><display description="${groovy:org.ofbiz.base.util.UtilDateTime.toDateString(custRequest.closedDateTime, &quot;dd-MM-yyyy &quot;)}"/> </field>
+        <field name="openDateTime" title="Open Date"><display description="${groovy:org.ofbiz.base.util.UtilDateTime.toDateString(custRequest.openDateTime, &quot;dd-MM-yyyy &quot;)}"/> </field>
+        <field name="closedDateTime" title="Closed Date"><display description="${groovy:org.ofbiz.base.util.UtilDateTime.toDateString(custRequest.closedDateTime, &quot;dd-MM-yyyy &quot;)}"/> </field>
         <field name="statusId" title="Status"><display-entity entity-name="StatusItem" description="${description}" key-field-name="statusId"/> </field>
         <field name="closeStatusId" parameter-name="statusId"><hidden value="ENQ_COMPLETED"/></field>
         <field use-when="&quot;statusId&quot;==&quot;ENQ_CREATED&quot;"  name="setStatusLink" title="Close Enquiry" widget-style="buttontext h3" tooltip="Close if all item in enquiry are shortlisted for PO">
@@ -323,9 +323,10 @@
             <display-entity entity-name="Product" key-field-name="productId" description="${productId} - ${productName}"/>
         </field>
         <field name="statusId" title="Status" ><display-entity entity-name="StatusItem" description="${description}"></display-entity> </field>
-         <field name="quantity" title="Req. Qty"><display/></field> 
+         <field name="quantity" title="Req. Qty"><display/></field>
+          <field name="issuedQty" title="IssuedQty"><display/></field>  
          <field name="QOH" title="Inv. Available"><display/></field>
-        <field name="toBeIssuedQty" title="QtyToIssue"><text size="5"  disabled="false" default-value="${quantity}"> </text></field>
+        <field name="toBeIssuedQty" title="QtyToIssue"><text size="5"  disabled="false" default-value="${quantity-issuedQty}"> </text></field>
         
         <field name="UpdateCrates" title="Issue ${uiLabelMap.MaterialMangement_Product}"  use-when="flag == &quot;Y&quot;"    widget-style="buttontext"> 
            <submit button-type="button" />
@@ -338,14 +339,13 @@
         </field> -->
         <field use-when="flag == &quot;N&quot; &amp;&amp; &quot;${statusId}&quot; == &quot;CRQ_SUBMITTED&quot;" name="custmQuantity" title="Diffr.Qty" ><text size="5" disabled="true" ></text>
         </field>
-        <field use-when="flag == &quot;N&quot; &amp;&amp; &quot;${statusId}&quot; == &quot;CRQ_SUBMITTED&quot;" name="raiseRequirement" widget-style="buttontext">
-            <hyperlink target="createRequirementForCustRequestItem" description="Raise Requirement">
+        <field use-when="flag == &quot;N&quot; &amp;&amp; &quot;${statusId}&quot; == &quot;CRQ_SUBMITTED&quot;" name="raiseRequirement" event="onclick" action="javascript:raiseRequirement(this);" widget-style="buttontext" >
+        	<hyperlink target="createRequirementForCustRequestItem" description="Raise Requirement">
                 <parameter param-name="custRequestId"/>
                 <parameter param-name="custRequestItemSeqId"/>
                 <parameter param-name="custmQuantity"/>
             </hyperlink>
         </field>
-        
     </form>
     
     <form name="ListReturnRequests" type="list" use-row-submit="true"  title="" list-name="returnItemsList" separate-columns="true"
@@ -387,14 +387,14 @@
         <field name="requireQty" title="Required Qty"><display description="${quantity}"/></field>
         <field name="quantity" title="Accepted Qty"><text/></field>
         <field name="description" title="Description"  widget-style="required" required-field="true"><text size="25" /></field>
-        <field name="acceptButton" widget-style="buttontext">
-            <hyperlink target="approveRequestByHOD" description="Accept">
+        <field  name="acceptButton" event="onclick" action="javascript:approveRequestByHOD(this);" widget-style="buttontext" >
+         <hyperlink target="approveRequestByHOD" description="Accept">
                 <parameter param-name="custRequestId"/>
                 <parameter param-name="custRequestItemSeqId"/>
                 <parameter param-name="quantity" />
                 <parameter param-name="description"/>
                 <parameter param-name="statusId" value="CRQ_SUBMITTED"/>
-            </hyperlink>
+         </hyperlink>
         </field>
         <field name="rejectButton" widget-style="buttontext">
         <submit/>
