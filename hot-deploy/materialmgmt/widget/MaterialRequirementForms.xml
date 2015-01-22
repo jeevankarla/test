@@ -53,10 +53,10 @@
             <!-- <set field="facilityQuantityOnHandTotal" from-field="resultQoh.quantityOnHandTotal"/>
             <set field="quantityOnHandTotal" from-field="resultQohTotal.quantityOnHandTotal"/> -->
         </row-actions>
-        <field name="requirementId" title="Requirement Id"> <display/>
-            <!-- <hyperlink target-type="inter-app" description="${requirementId}" target="/ordermgr/control/EditRequirement">
+        <field name="requirementId" title="Requirement Id" widget-style="buttontext"> 
+            <hyperlink  description="${requirementId}" target="requirementOverView" target-window="_blank">
                 <parameter param-name="requirementId"/>
-            </hyperlink> -->
+            </hyperlink>
         </field>
         <field name="statusId"><display-entity entity-name="StatusItem" description="${description}"/></field>
         <!-- <field name="requirementTypeId">
@@ -350,5 +350,60 @@
             <submit button-type="button"/>
         </field>
     </form>
+    <form name="indentInformation" type="list" list-name="requirementList" separate-columns="true" odd-row-style="alternate-row" default-table-style="basic-table hover-bar">
+    	<actions>
+    		<entity-condition entity-name="RequirementCustRequestView" list="requirementList">
+    			<condition-expr field-name="requirementId" operator="equals" from-field="parameters.requirementId"/>
+    		</entity-condition>
+    	</actions>
+    	<row-actions>
+    		<entity-one value-field="custItem" entity-name="CustRequestItem">
+    			<field-map field-name="custRequestId" from-field="custRequestId"/>
+    			<field-map field-name="custRequestItemSeqId" from-field="custRequestItemSeqId"/>
+    		</entity-one>
+    		<set field="quantity" value="${custItem.quantity}"/>
+    		<entity-one value-field="custRequest" entity-name="CustRequest">
+    			<field-map field-name="custRequestId" from-field="custRequestId"/>
+    		</entity-one>
+    		<set field="fromPartyId" value="${custRequest.fromPartyId}"/>
+    	</row-actions>
+    	<field name="requirementId"><hidden/></field>
+    	<field name="productId" title="${uiLabelMap.MaterialMangement_ProductId} - ${uiLabelMap.MaterialMangement_ProductName}">
+            <display-entity entity-name="Product" key-field-name="productId" description="${productId} - ${productName}"/>
+        </field>
+        <field name="fromPartyId" title="${uiLabelMap.MaterialMangement_CustRequestFromPartyId}">
+            <display-entity entity-name="PartyNameView" key-field-name="partyId" description="${firstName} ${middleName} ${lastName} ${groupName}"/>
+        </field>
+    	<field name="custRequestId" title="Indent No"><display></display></field>
+    	<field name="custRequestItemSeqId" title="Item No"><display></display></field>
+    	<field name="quantity"><display></display></field>
+    	 <field name="statusId"><display-entity entity-name="StatusItem" description="${description}"/></field>
+    </form>
+	<form name="requirementStatus" type="list" list-name="requirementStatus" separate-columns="true" odd-row-style="alternate-row" default-table-style="basic-table hover-bar">
+	<actions>
+		<entity-condition list="requirementStatus" entity-name="RequirementStatus">
+        	<condition-expr field-name="requirementId"  from-field="parameters.requirementId" operator="equals"/>
+                	<order-by field-name="-statusDate"/>
+        </entity-condition>
+	</actions>
+	<field name="statusDate"><display></display></field>
+	 <field name="statusId"><display-entity entity-name="StatusItem" description="${description}"/></field>
+	</form>
 	
+	<form name="requirementOverView" type="single" default-map-name="requirement"  odd-row-style="alternate-row" default-table-style="basic-table hover-bar">
+	<actions>
+		<entity-one value-field="requirement" entity-name="Requirement">
+			<field-map field-name="requirementId" from-field="parameters.requirementId"/>
+		</entity-one>
+	</actions>
+	<field name="requirementId"><display></display></field>
+	 <field name="facilityId" title="Facility"><display/></field>
+	 <field name="productId"><display></display></field>
+	  <field name="statusId"><display-entity entity-name="StatusItem" description="${description}"/></field>
+	  <field name="requirementStartDate"><display></display></field>
+	  <field name="quantity"><display></display></field>
+	  <field name="createdDate"><display></display></field>
+	  <field name="createdByUserLogin"><display></display></field>
+	  <field name="description"><display></display></field>
+	</form>
 </forms>
