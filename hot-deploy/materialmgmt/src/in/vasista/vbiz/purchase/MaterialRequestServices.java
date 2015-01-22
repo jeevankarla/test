@@ -47,6 +47,7 @@ import org.ofbiz.entity.util.EntityUtil;
 import org.ofbiz.service.DispatchContext;
 import org.ofbiz.service.GenericServiceException;
 import org.ofbiz.service.LocalDispatcher;
+import org.ofbiz.service.ModelService;
 import org.ofbiz.service.ServiceUtil;
 import org.ofbiz.security.Security;
 
@@ -499,6 +500,7 @@ public class MaterialRequestServices {
         String custRequestId = (String)context.get("custRequestId");
         String custRequestItemSeqId = (String)context.get("custRequestItemSeqId");
         String facilityId = (String)context.get("facilityId");
+        BigDecimal toBeIssuedQty =(BigDecimal)context.get("toBeIssuedQty");
         Map<String, Object> result = ServiceUtil.returnSuccess();
         try {
         	
@@ -512,6 +514,11 @@ public class MaterialRequestServices {
         	
         	BigDecimal requestedQty = quantity;
         	
+        	
+        	if (UtilValidate.isNotEmpty(toBeIssuedQty)) {
+        		requestedQty=toBeIssuedQty;
+        		
+            }
             GenericValue product = ProductWorker.findProduct(delegator, productId);
             if (product == null) {
                 return ServiceUtil.returnError("Product Not Found with Id : "+productId);
@@ -596,14 +603,20 @@ public class MaterialRequestServices {
 		String custRequestItemSeqId = (String) context.get("custRequestItemSeqId");
 		String inventoryItemId = (String) context.get("inventoryItemId");
 		BigDecimal quantity = (BigDecimal) context.get("quantity");
+		
+		BigDecimal requestedQuantity = BigDecimal.ZERO;
+		
 		GenericValue userLogin = (GenericValue) context.get("userLogin");
+		GenericValue custRequestItem=null;
 		Map result = ServiceUtil.returnSuccess();
 		try{
 			
 			if(UtilValidate.isEmpty(quantity) || (UtilValidate.isNotEmpty(quantity) && quantity.compareTo(BigDecimal.ZERO)<= 0)){
 				return ServiceUtil.returnError("Not issuing InventoryItem to Request "+custRequestId+" : "+custRequestItemSeqId+", because the quantity to issue "+quantity+" is less than or equal to 0");
 			}
-			GenericValue custRequestItem = delegator.findOne("CustRequestItem", UtilMisc.toMap("custRequestId", custRequestId, "custRequestItemSeqId", custRequestItemSeqId), false);
+			 custRequestItem = delegator.findOne("CustRequestItem", UtilMisc.toMap("custRequestId", custRequestId, "custRequestItemSeqId", custRequestItemSeqId), false);
+			
+			requestedQuantity = custRequestItem.getBigDecimal("quantity");
 			
 			GenericValue inventoryItem = delegator.findOne("InventoryItem", UtilMisc.toMap("inventoryItemId", inventoryItemId), false);
 			
@@ -612,6 +625,21 @@ public class MaterialRequestServices {
 			if(quantity.compareTo(inventoryATP)>0){
 				return ServiceUtil.returnError("Not issuing InventoryItem to Request "+custRequestId+" : "+custRequestItemSeqId+", because the quantity to issue "+quantity+" is greater than the quantity left to issue (i.e "+inventoryATP+") for inventoryItemId : "+inventoryItemId);
 			}
+			//caliculating issuence Qty
+			BigDecimal issuedQty=BigDecimal.ZERO;
+			List filterIssuenceReq = FastList.newInstance();
+			filterIssuenceReq.add(EntityCondition.makeCondition("custRequestId", EntityOperator.EQUALS, custRequestId));
+			filterIssuenceReq.add(EntityCondition.makeCondition("custRequestItemSeqId", EntityOperator.EQUALS, custRequestItemSeqId));
+			EntityCondition filterIssuenceCond = EntityCondition.makeCondition(filterIssuenceReq, EntityOperator.AND);
+			List<GenericValue> itemIssuanceList = delegator.findList("ItemIssuance", filterIssuenceCond, UtilMisc.toSet("quantity"), UtilMisc.toList("-issuedDateTime"), null, false);
+			
+			Iterator<GenericValue> itrIssList = itemIssuanceList.iterator();
+            while (itrIssList.hasNext()) {
+                GenericValue itrIssItem = itrIssList.next();
+                issuedQty =issuedQty.add(itrIssItem.getBigDecimal("quantity"));
+            }
+            issuedQty=issuedQty.add(quantity);
+            
 			/*Create Item Issuance*/
 			Map itemIssueCtx = FastMap.newInstance();
 			itemIssueCtx.put("custRequestId", custRequestId);
@@ -644,19 +672,20 @@ public class MaterialRequestServices {
 				Debug.logError("Problem decrementing inventory for requested item ", module);
 				return resultCtx;
 			}
-			
-			Map itemStatusCtx = FastMap.newInstance();
-			itemStatusCtx.put("custRequestId", custRequestId);
-			itemStatusCtx.put("custRequestItemSeqId", custRequestItemSeqId);
-			itemStatusCtx.put("userLogin", userLogin);
-			itemStatusCtx.put("description", "");
-			itemStatusCtx.put("statusId", "CRQ_ISSUED");
-			resultCtx = dispatcher.runSync("setCustRequestItemStatus", itemStatusCtx);
-			if (ServiceUtil.isError(resultCtx)) {
-				Debug.logError("Problem changing status for requested item ", module);
-				return resultCtx;
+			//comparing issuedQty and requestedQty
+			if(issuedQty.compareTo(requestedQuantity)==0){
+				Map itemStatusCtx = FastMap.newInstance();
+				itemStatusCtx.put("custRequestId", custRequestId);
+				itemStatusCtx.put("custRequestItemSeqId", custRequestItemSeqId);
+				itemStatusCtx.put("userLogin", userLogin);
+				itemStatusCtx.put("description", "");
+				itemStatusCtx.put("statusId", "CRQ_ISSUED");
+				resultCtx = dispatcher.runSync("setCustRequestItemStatus", itemStatusCtx);
+				if (ServiceUtil.isError(resultCtx)) {
+					Debug.logError("Problem changing status for requested item ", module);
+					return resultCtx;
+				}
 			}
-			
 			
 		} catch (GenericEntityException e) {
 			// TODO: handle exception
@@ -746,7 +775,16 @@ public class MaterialRequestServices {
 				requirementId = (String)resultCtx.get("requirementId");
 				
 			}
-			
+			if(UtilValidate.isNotEmpty(requirementId)){
+				Map emailRequirementCtx = FastMap.newInstance();
+				emailRequirementCtx.put("userLogin", userLogin);
+				emailRequirementCtx.put("requirementId", requirementId);
+				resultCtx = dispatcher.runSync("emailRequirement", emailRequirementCtx);
+				if (ServiceUtil.isError(resultCtx)) {
+					Debug.logError("Problem creating requirement for requested item : "+custRequestId+" : "+custRequestItemSeqId, module);
+					return resultCtx;
+				}
+			}
 			
 			/* change cust request item status*/
 			Map itemStatusCtx = FastMap.newInstance();
@@ -934,11 +972,10 @@ public class MaterialRequestServices {
 		GenericValue userLogin = (GenericValue) context.get("userLogin");
 		String custRequestName = (String) context.get("enquiryName");
 		String requestDateStr = (String) context.get("requestDate");
-		String openDateStr = (String) context.get("openDate");
+		String openDateStr = (String) context.get("requestDate");
 		String closedDateStr = (String) context.get("closedDate");
 		Map result = ServiceUtil.returnSuccess();
 		String custRequestTypeId = "RF_PUR_QUOTE";
-		result = ServiceUtil.returnSuccess("Successfully create Enquiry for the requirements");
 		Timestamp custRequestDate = null;
 		Timestamp openDateTime = null;
 		Timestamp closedDateTime = null;
@@ -1017,7 +1054,6 @@ public class MaterialRequestServices {
 		  		return ServiceUtil.returnError("Problem Filing Enquiry.");
 	        }
 	        String custRequestId = (String)resultMap.get("custRequestId");
-	        result.put("custRequestId", custRequestId);
 	        
 			for(GenericValue requirement: requirements){
 				String productId = requirement.getString("productId");
@@ -1056,7 +1092,8 @@ public class MaterialRequestServices {
 					return resultCtx;
 				}
 			}
-		
+		result = ServiceUtil.returnSuccess("Enquiry created Successfully for the requirements...!Enquiry No:"+custRequestId);
+		result.put("custRequestId", custRequestId);
 		} catch (GenericEntityException e) {
 			// TODO: handle exception
 			Debug.logError(e, module);
@@ -1069,5 +1106,53 @@ public class MaterialRequestServices {
 		}
 		return result;
 	}
-	
+	 public static Map<String, Object> emailRequirement(DispatchContext ctx, Map<String, ? extends Object> context) {
+		 Delegator delegator = ctx.getDelegator();
+		 LocalDispatcher dispatcher = ctx.getDispatcher();
+		 String defaultScreenLocation = "component://materialmgmt/widget/MaterialPurchaseScreens.xml#RequirementEmail";
+		 Locale locale = (Locale) context.get("locale");
+		 GenericValue userLogin = (GenericValue)context.get("userLogin");
+		 String requirementId = (String)context.get("requirementId");
+		 String errMsg ="";
+        boolean emailSent = true;
+        String bodyScreenLocation = defaultScreenLocation;
+        Map<String, Object> result = ServiceUtil.returnSuccess();
+        // set the needed variables in new context
+        Map<String, Object> bodyParameters = FastMap.newInstance();
+        bodyParameters.put("requirementId", requirementId);
+        bodyParameters.put("locale", locale);
+        bodyParameters.put("userLogin", userLogin);
+
+        try {
+        	GenericValue requirement = delegator.findOne("Requirement", UtilMisc.toMap("requirementId", requirementId), false);
+        	bodyParameters.put("quantity", requirement.getBigDecimal("quantity"));
+        	Map<String, Object> serviceContext = FastMap.newInstance();
+            serviceContext.put("bodyScreenUri", bodyScreenLocation);
+            serviceContext.put("bodyParameters", bodyParameters);
+            serviceContext.put("subject", "Requirement Raised for Product :"+requirement.getString("productId"));
+            serviceContext.put("sendFrom", UtilProperties.getPropertyValue("general.properties", "defaultFromEmailAddress"));
+            serviceContext.put("sendCc", UtilProperties.getPropertyValue("general.properties", "defaultFromEmailAddress"));
+            serviceContext.put("contentType", "text/html");
+            serviceContext.put("sendTo", "nagababu@vasista.in");
+           // serviceContext.put("partyId", party.getString("partyId"));
+            serviceContext.put("partyId", userLogin.getString("partyId"));
+        	result = dispatcher.runSync("sendMailFromScreen", serviceContext);
+
+            if (ModelService.RESPOND_ERROR.equals((String) result.get(ModelService.RESPONSE_MESSAGE))) {
+                Map<String, Object> messageMap = UtilMisc.toMap("errorMessage", result.get(ModelService.ERROR_MESSAGE));
+                errMsg = ServiceUtil.getErrorMessage(result);
+                Debug.logError(errMsg, module);
+                emailSent = false;
+                return result;
+            }
+        } catch (Exception e) {
+            Debug.logWarning(e, "", module);
+            errMsg = e.toString();
+            Debug.logError(errMsg, module);
+            emailSent = false;
+            return result;
+        }
+           
+        return ServiceUtil.returnSuccess();
+    }
 }
