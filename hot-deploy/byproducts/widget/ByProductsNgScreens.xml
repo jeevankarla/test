@@ -1962,7 +1962,7 @@
 	<screen name="FindChequeReturns">
 		<section>
 			<actions>
-				<set field="titleProperty" value="pageTitleFindPayments" />
+				<set field="titleProperty" value="Route Receipts Search" />
 				<set field="tabButtonItem" value="CustomPayments" />
 				<set field="subTabButtonItem" value="ChequeReturn"/>
 				<set field="paymentDate" value="${bsh:org.ofbiz.base.util.UtilDateTime.nowDateString(&quot;yyyy-MM-dd&quot;)}" type="String"/>
@@ -2035,7 +2035,7 @@
 	<screen name="FindPaymentByMethod">
 		<section>
 			<actions>
-				<set field="titleProperty" value="pageTitleFindPayments" />
+				<set field="titleProperty" value="Route Receipts Search" />
 				<set field="tabButtonItem" value="CustomPayments" />
 				<set field="subTabButtonItem" value="${parameters.subTabItem}" default-value="${context.subTabItem}"/>
 				<set field="paymentDate" value="${bsh:org.ofbiz.base.util.UtilDateTime.nowDateString(&quot;yyyy-MM-dd&quot;)}" type="String"/>
@@ -2172,7 +2172,7 @@
 	 <screen name="FindInstitutionPayment">
 		<section>
 			<actions>
-				<set field="titleProperty" value="pageTitleFindPayments" />
+				<set field="titleProperty" value="Route Receipts Search" />
 				<set field="tabButtonItem" value="CustomPayments" />
 				<set field="subTabButtonItem" value="institutionPayment"/>
 				<set field="paymentDate" value="${bsh:org.ofbiz.base.util.UtilDateTime.nowDateString(&quot;yyyy-MM-dd&quot;)}" type="String"/>
@@ -2923,7 +2923,7 @@
 	<screen name="FindPaymentNonRoute">
         <section>
             <actions>
-               <set field="titleProperty" value="Non Route Recipts Search"/>
+               <set field="titleProperty" value="Non Route Receipts Search"/>
                 <set field="tabButtonItem" value="NonRouteCustomPayments"/>
                 <set field="subTabButtonItem" value="${parameters.subTabItem}" default-value="${context.subTabItem}"/>
                 <set field="paymentMethodTypeId" value="${parameters.paymentMethodTypeId}" default-value="${context.paymentMethodTypeId}"/>
@@ -2969,6 +2969,7 @@
                 </service>
                 <set field="hasPaymentCancelPermission" value="true" type="Boolean"/><!--from-field="permResult.hasPermission"	-->
                 <set field="parameters.noConditionFind" from-field="parameters.noConditionFind" default-value="N"/>
+               <set field="defaultMethodTypeId" value="${parameters.defaultMethodTypeId}"/>
                 <service service-name="performFind" result-map="result">
 	                <field-map field-name="inputFields" from-field="parameters"/>
 	                <field-map field-name="entityName" value="PaymentAndType"/>
@@ -2985,7 +2986,7 @@
                                     <decorator-section name="menu-bar">
                                         <container style="button-bar" >
                                             <link target="NewNonRouteReceipt"  text="Create New Receipt" style="buttontext create" > 
-                                            <parameter param-name="paymentMethodTypeId" value="${parameters.defaultMethodTypeId}" />
+                                            <parameter param-name="paymentMethodTypeId" from-field="defaultMethodTypeId" />
                                              <parameter param-name="subTabItem" value="${parameters.subTabItem}" />
                                             </link>
                                         </container>
@@ -3007,7 +3008,7 @@
     	<screen name="NewNonRouteReceipt">
         <section>
             <actions>
-               <set field="titleProperty" value="Cash Recipts Search"/>
+               <set field="titleProperty" value="Non Route Receipts Search"/>
                 <set field="tabButtonItem" value="NonRouteCustomPayments"/>
                 <set field="subTabButtonItem" value="${parameters.subTabItem}" default-value="${context.subTabItem}"/>
                 <set field="paymentMethodTypeId" value="${parameters.paymentMethodTypeId}" default-value="${context.subTabItem}"/>
@@ -4029,7 +4030,7 @@
 	<screen name="NonRouteFindChequeReturns">
 		<section>
 			<actions>
-				<set field="titleProperty" value="Non Route Recipts Search"/>
+				<set field="titleProperty" value="Non Route Receipts Search"/>
                 <set field="tabButtonItem" value="NonRouteCustomPayments"/>
                 <set field="subTabButtonItem" value="${parameters.subTabItem}" default-value="${context.subTabItem}"/>
                 <set field="paymentMethodTypeId" value="${parameters.paymentMethodTypeId}" default-value="${context.paymentMethodTypeId}"/>

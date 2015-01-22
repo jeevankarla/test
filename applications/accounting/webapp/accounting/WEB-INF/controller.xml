@@ -3349,7 +3349,7 @@ under the License.
     <request-map uri="createNonRouteReceipt">
         <security https="true" auth="true"/>
         <event type="service" invoke="createPayment"/>
-        <response name="success" type="request-redirect-noparam"  value="FindPaymentNonRoute">
+        <response name="success" type="request-redirect"  value="FindPaymentNonRoute">
            <redirect-parameter name="paymentMethodTypeId"/>
         	<redirect-parameter name="subTabItem"  />
         	<redirect-parameter name="noConditionFind" value="Y" />
