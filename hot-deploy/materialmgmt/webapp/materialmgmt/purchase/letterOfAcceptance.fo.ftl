@@ -53,7 +53,7 @@ ${setRequestAttribute("OUTPUT_FILENAME", "arcOrder.pdf")}
               		  
                 
 	             <fo:block  keep-together="always" text-align="center" font-family="Courier,monospace" white-space-collapse="false" font-size="12pt" >&#160;&#160; </fo:block>
-              	<fo:block  keep-together="always" text-align="left" font-family="Courier,monospace" white-space-collapse="false" font-size="12pt" >    Ref  No:  ${allDetailsMap.get("orderId")?if_exists}                                                   DATE: ${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(nowTimestamp, "dd-MMM-yy")}  </fo:block>
+              	<fo:block  keep-together="always" text-align="left" font-family="Courier,monospace" white-space-collapse="false" font-size="12pt" >    PO No:  ${allDetailsMap.get("orderId")?if_exists}                                                   DATE: ${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(nowTimestamp, "dd-MMM-yy")}  </fo:block>
                 <fo:block  keep-together="always" text-align="center" font-family="Courier,monospace" white-space-collapse="false" font-size="3pt" >&#160; </fo:block>
               	<fo:block  keep-together="always" text-align="left" font-family="Courier,monospace" white-space-collapse="false" font-size="12pt" >&#160;   <#if allDetailsMap.get("address1")?has_content> ${allDetailsMap.get("address1")?if_exists} <#else> </#if>       </fo:block>
                 <fo:block  keep-together="always" text-align="left" font-family="Courier,monospace" white-space-collapse="false" font-size="12pt" >&#160;  <#if allDetailsMap.get("address1")?has_content>  ${allDetailsMap.get("address2")?if_exists}, <#else> </#if>     </fo:block>
@@ -69,14 +69,14 @@ ${setRequestAttribute("OUTPUT_FILENAME", "arcOrder.pdf")}
                 
                 <fo:block  text-align="left" font-family="Courier,monospace" white-space-collapse="false" font-size="12pt" ><fo:inline text-align="left" font-family="Courier,monospace"  font-size="12pt" font-weight="bold"> &#160;&#160;&#160;     Sub :</fo:inline> Supply of Corrugated boxes for <#list productWiseTotalList as productWiseEntries>${productWiseEntries}, </#list>on ARC Basis -reg.</fo:block>
                
-                <fo:block   text-align="left" font-family="Courier,monospace" white-space-collapse="false" font-size="12pt" ><fo:inline text-align="left" font-family="Courier,monospace"  font-size="12pt" font-weight="bold">&#160;&#160;&#160;     Ref :</fo:inline> 1)Tender Notification No.${allDetailsMap.get("orderId")?if_exists}, Dtd:${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(OrderHeaderDetails.get("orderDate")?if_exists, "dd-MM-yyyy")}.       </fo:block>
-                  <fo:block  keep-together="always" text-align="left" font-family="Courier,monospace" white-space-collapse="false" font-size="12pt" >&#160;&#160;&#160;           2)Technical Tender opened on--  </fo:block>
-                 <fo:block  keep-together="always" text-align="left" font-family="Courier,monospace" white-space-collapse="false" font-size="12pt" >&#160;&#160;&#160;           3)Commercial Tender opened on--       </fo:block>
-                 <fo:block  keep-together="always" text-align="left" font-family="Courier,monospace" white-space-collapse="false" font-size="12pt" >&#160;&#160;&#160;           4)Price Negotiation held on--       </fo:block>
+                <fo:block   text-align="left" font-family="Courier,monospace" white-space-collapse="false" font-size="12pt" ><fo:inline text-align="left" font-family="Courier,monospace"  font-size="12pt" font-weight="bold">&#160;&#160;&#160;     Ref :</fo:inline> 1)Tender Notification No.${allDetailsMap.get("tendorNo")?if_exists}, Dtd:${allDetailsMap.get("tendorDate")?if_exists}.       </fo:block>
+                  <fo:block  keep-together="always" text-align="left" font-family="Courier,monospace" white-space-collapse="false" font-size="12pt" >&#160;&#160;&#160;           2)Technical Tender opened on ${allDetailsMap.get("techDate")?if_exists}  </fo:block>
+                 <fo:block  keep-together="always" text-align="left" font-family="Courier,monospace" white-space-collapse="false" font-size="12pt" >&#160;&#160;&#160;           3)Commercial Tender opened on ${allDetailsMap.get("commercialDate")?if_exists}       </fo:block>
+                 <fo:block  keep-together="always" text-align="left" font-family="Courier,monospace" white-space-collapse="false" font-size="12pt" >&#160;&#160;&#160;           4)Price Negotiation held on ${allDetailsMap.get("negotiationDate")?if_exists}       </fo:block>
                  
                   <fo:block  keep-together="always" text-align="left" font-family="Verdana" white-space-collapse="false" font-size="15pt" >&#160;&#160;&#160;&#160;   &#160;&#160;&#160;&#160; &#160;&#160;&#160;&#160; &#160;&#160;&#160;&#160;                                                            *****</fo:block>
             
-             <fo:block  text-align="left" font-family="Courier,monospace" white-space-collapse="false" font-size="12pt" >&#160;&#160;&#160;     Advertising to the above, this Letter Of Acceptance is hereby issued for the Supply of following items on ARC basis at the tender accepted price as follows: </fo:block>
+             <fo:block  text-align="left" font-family="Courier,monospace" white-space-collapse="false" font-size="12pt" >&#160;&#160;&#160;     Advertising to the above, this Letter Of Acceptance is here by issued for the Supply of following items on ARC basis at the tender accepted price as follows: </fo:block>
              <fo:block   text-align="left" font-family="Courier,monospace" white-space-collapse="false" font-size="5pt" > &#160;</fo:block>
             <fo:block >
 			        			 <fo:table width="100%" align="right" table-layout="fixed"  font-size="13pt">
@@ -133,10 +133,10 @@ ${setRequestAttribute("OUTPUT_FILENAME", "arcOrder.pdf")}
                     </fo:table-body>
                 </fo:table>
                </fo:block>
-               <fo:block   text-align="left" font-family="Courier,monospace" white-space-collapse="false" font-size="12pt" >The above Price is: Inclusive of all taxes and F.O.R ---.</fo:block>
+               <fo:block   text-align="left" font-family="Courier,monospace" white-space-collapse="false" font-size="12pt" >The above Price is: Inclusive of all taxes and F.O.R Mother Dairy.</fo:block>
                 <fo:block   text-align="left" font-family="Courier,monospace" white-space-collapse="false" font-size="5pt" >&#160;&#160;</fo:block>
               <fo:block   text-align="left" font-family="Courier,monospace" white-space-collapse="false" font-size="7pt" >&#160;&#160;</fo:block>
-               <fo:block   text-align="left" font-family="Courier,monospace" white-space-collapse="false" font-size="12pt" >&#160;&#160;     You are requested to finish the agreement and performance security deposit for Rs.--- in thr form of Bank Guaranty/Demand Draft down in favour of The Director, Mother Dairy within 15 days from the date of receipt of this letter as per clause No.3.0 and 3.1 under section-II of our tender Terms and Conditions.</fo:block>
+               <fo:block   text-align="left" font-family="Courier,monospace" white-space-collapse="false" font-size="12pt" >&#160;&#160;     You are requested to finish the agreement and performance security deposit for Rs.--- in thr form of Bank Guarantee/Demand Draft drawn in favour of The Director, Mother Dairy within 15 days from the date of receipt of this letter as per clause No.3.0 and 3.1 under section-II of our tender Terms and Conditions.</fo:block>
                          <fo:block  keep-together="always" text-align="left" font-family="Courier,monospace" white-space-collapse="false" font-size="12pt" font-weight="bold">&#160;&#160;  </fo:block>
                           
                           
@@ -150,7 +150,7 @@ ${setRequestAttribute("OUTPUT_FILENAME", "arcOrder.pdf")}
 										<fo:table-cell border-style = "solid">
 											<fo:block text-align="left" font-size="12pt" white-space-collapse="false" keep-together="always" > &#160; </fo:block>
 											<fo:block text-align="center" font-size="12pt" white-space-collapse="false" keep-together="always" >"Draft Approved by</fo:block>
-											<fo:block text-align="center" font-size="12pt" white-space-collapse="false" keep-together="always" >the Director"</fo:block>
+											<fo:block text-align="center" font-size="12pt" white-space-collapse="false" keep-together="always" >The Director"</fo:block>
 																					<fo:block text-align="left" font-size="12pt" white-space-collapse="false" keep-together="always" > &#160;</fo:block>
 										</fo:table-cell>
 										<fo:table-cell>
