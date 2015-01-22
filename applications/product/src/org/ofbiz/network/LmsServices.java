@@ -630,12 +630,12 @@ public class LmsServices {
 			          return resultMap;
 			       }
 			 }
-			 input = UtilMisc.toMap("userLogin", userLogin, "partyId", ownerPartyId, "facilityId", facilityId, "parentFacilityId", parentFacilityId);
+			 /*input = UtilMisc.toMap("userLogin", userLogin, "partyId", ownerPartyId, "facilityId", facilityId, "parentFacilityId", parentFacilityId);
 			 resultMap = dispatcher.runSync("updateFacilityParty", input);
 			 if (ServiceUtil.isError(resultMap)) {
 				 Debug.logError(ServiceUtil.getErrorMessage(resultMap), module);
                  return resultMap;
-             }
+             }*/
 			    input.clear();
 			    input = UtilMisc.toMap("userLogin", userLogin,"facilityId", facilityId,"finAccountId",(String)context.get("finAccountId"),"paymentMethodTypeId",(String)context.get("paymentMethodTypeId"));
 				resultMap = dispatcher.runSync("createFacilityPaymentDefault", input);
