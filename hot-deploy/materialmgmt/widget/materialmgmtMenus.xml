@@ -307,6 +307,14 @@
        <!--  <menu-item name="ApprovedMatRequirementBySupplier" title="Requirement To PO">
         	<link target="ApprovedMatRequirementBySupplier"/>
         </menu-item> -->
+        <menu-item name="requirementOverView" title="Requirement OverView">
+        	<condition>
+        		<not>
+					<if-empty  field="parameters.requirementId"/>
+				</not>
+        	</condition>
+        	<link target="requirementOverView"> <parameter param-name="requirementId" from-field="parameters.requirementId" /> </link>
+        </menu-item>
       </menu>
       
       <menu name="RequestSubTabBar" menu-container-style="button-bar button-style-2" default-selected-style="selected">

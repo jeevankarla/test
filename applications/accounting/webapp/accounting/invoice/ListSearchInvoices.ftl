@@ -89,6 +89,16 @@ function cancelForm(){
 		   $("input[type=submit]").attr("disabled", "disabled");
 		  	
 	}
+	function disableGenerateButtonAr(purposeTypeId1){	
+		  	var value="NON_ROUTE_MKTG";
+		  	if(voucherType=="CASH"){
+		  	if (purposeTypeId1 == null || purposeTypeId1 == undefined || !purposeTypeId1.length){
+		  	      var purposeTypeId ="<input type=hidden name=paymentPurposeType value="+value+" />";
+		          jQuery("#arPaymentForm").append(jQuery(purposeTypeId));
+		  		 }
+		   }
+		$("input[type=submit]").attr("disabled", "disabled");
+	}
 
 function datepick()
 	{		
@@ -202,19 +212,24 @@ function datepick()
 	var partyIdTo;
 	var invoiceId;
 	var voucherType;
+	var purposeTypeId;
+	var parentTypeId;
 	var amount;
 	var partyName;
 	var comments;
-function showPaymentEntryQTip(partyIdFrom1,partyIdTo1,invoiceId1,voucherType1,amount1,partyNameTemp) {
+function showPaymentEntryQTip(partyIdFrom1,partyIdTo1,invoiceId1,voucherType1,amount1,partyNameTemp,purposeTypeId1,parentTypeId1) {
 		var message = "";
 		 partyIdFrom=partyIdFrom1;
 	     partyIdTo=partyIdTo1;
 		 invoiceId=invoiceId1;
 		 voucherType=voucherType1;
+		 purposeTypeId=purposeTypeId1;
+		 parentTypeId=parentTypeId1
 		 amount=amount1;
 		 partyName=partyNameTemp;
 		 var methodOptionList =[];
 		 var payMethodList="";
+		 		// alert("purposeTypeId--------------"+purposeTypeId);
 		 
 		 if(voucherType != undefined && voucherType != "" && voucherPaymentMethodTypeMap != undefined){
 		  payMethodList=voucherPaymentMethodTypeMap[voucherType];
@@ -233,7 +248,11 @@ function showPaymentEntryQTip(partyIdFrom1,partyIdTo1,invoiceId1,voucherType1,am
 	 	   }
 		  paymentMethodList = methodOptionList;
 		  
-			message += "<html><head></head><body><form action='${actionName?if_exists}' method='post' onsubmit='return disableGenerateButton();'><table cellspacing=10 cellpadding=10 width=400>";
+			  if(parentTypeId == "SALES_INVOICE"){
+			message += "<html><head></head><body><form id='arPaymentForm' action='${actionName?if_exists}' method='post' onsubmit='return disableGenerateButtonAr(purposeTypeId);'><table cellspacing=10 cellpadding=10 width=400>";
+			}else{
+				message += "<html><head></head><body><form id='apPaymentForm' action='${actionName?if_exists}' method='post'  onsubmit='return disableGenerateButton();'  ><table cellspacing=10 cellpadding=10 width=400>";
+			}
 			//message += "<br/><br/>";
 			message += "<tr class='h3'><td align='left' class='h3' width='60%'>Payment Type :</td><td align='left' width='60%'><select name='paymentTypeId' id='paymentTypeId'  class='h4'>"+
 						"<#if paymentTypes?has_content><#list paymentTypes as eachMethodType><option value='${eachMethodType.paymentTypeId?if_exists}' >${eachMethodType.description?if_exists}</option></#list></#if>"+            
@@ -242,9 +261,21 @@ function showPaymentEntryQTip(partyIdFrom1,partyIdTo1,invoiceId1,voucherType1,am
 						"</select></td></tr>"+
 						"<tr class='h3'><td align='left' class='h3' width='60%'></td><td align='left' width='60%'><input class='h4' type='hidden' name='useFifo' value='TRUE'/></td><input class='h4' type='hidden' id='parentTypeId' name='parentTypeId' value='${parentTypeId?if_exists}'/></td></tr>"+
 						"<tr class='h3'><td align='left' class='h3' width='60%'>Payment Date:</td><td align='left' width='60%'><input class='h4' type='text' readonly id='paymentDate' name='paymentDate' onmouseover='datepick()'/></td></tr>" +
-				 		"<tr class='h3'><td align='left' class='h3' width='60%'>Amount :</td><td align='left' width='60%'><input class='h4' type='text' id='amount' name='amount'/><input class='h4' type='hidden' id='partyIdFrom' name='partyIdFrom' /><input class='h4' type='hidden' id='partyIdTo' name='partyIdTo'/><input class='h4' type='hidden' id='invoiceId' name='invoiceId' /><input class='h4' type='hidden' id='voucherType' name='voucherType' /></td></tr>"+
-				 		"<tr class='h3'><td align='left' class='h3' width='60%'>Chq.in favour:</td><td align='left' width='60%'><input class='h4' type='text' id='inFavourOf' name='inFavourOf' /></td></tr>"+
+				 		"<tr class='h3'><td align='left' class='h3' width='60%'>Amount :</td><td align='left' width='60%'><input class='h4' type='text' id='amount' name='amount'/><input class='h4' type='hidden' id='partyIdFrom' name='partyIdFrom' /><input class='h4' type='hidden' id='partyIdTo' name='partyIdTo'/><input class='h4' type='hidden' id='invoiceId' name='invoiceId' /><input class='h4' type='hidden' id='voucherType' name='voucherType' /></td></tr>";
+			if(parentTypeId == "SALES_INVOICE"){
+		 	 if(voucherType != 'CASH'){
+		 		message +=  "<tr class='h3'><td align='left' class='h3' width='60%'>Chq.in favour:</td><td align='left' width='60%'><input class='h4' type='text' id='inFavourOf' name='inFavourOf' /></td></tr>"+
 						"<tr class='h3'><td align='left' class='h3' width='60%'>Comments:</td><td align='left' width='60%'><input class='h4' type='text' id='comments' name='comments' /></td></tr>";
+		  		}
+		 	 	else
+		 	 	{
+		  	 		message += "<tr class='h3'><td align='left' class='h3' width='60%'>Comments:</td><td align='left' width='60%'><input class='h4' type='text' id='comments' name='comments' /></td></tr>";
+		  	    }
+		    }
+		 	 else{
+		 		 message +=  "<tr class='h3'><td align='left' class='h3' width='60%'>Chq.in favour:</td><td align='left' width='60%'><input class='h4' type='text' id='inFavourOf' name='inFavourOf' /></td></tr>"+
+						"<tr class='h3'><td align='left' class='h3' width='60%'>Comments:</td><td align='left' width='60%'><input class='h4' type='text' id='comments' name='comments' /></td></tr>";
+		 	 }
 			<#--if(voucherType != 'CASH'){
 				message += 	"<tr class='h3'><td align='left'class='h3' width='60%'>Financial Account:</td><td align='left' width='60%'><select name='finAccountId' id='finAccountId'  class='h4'>"+
 							"<#if finAccountList?has_content><#list finAccountList as finAccount><option value='${finAccount.finAccountId?if_exists}' >${finAccount.finAccountName?if_exists}</option></#list></#if>"+            
@@ -414,9 +445,14 @@ function showPaymentEntryQTip(partyIdFrom1,partyIdTo1,invoiceId1,voucherType1,am
               <td><@ofbizCurrency amount=invoicePaymentInfo.amount isoCode=defaultOrganizationPartyCurrencyUomId/></td>
               <td><@ofbizCurrency amount=invoicePaymentInfo.paidAmount isoCode=defaultOrganizationPartyCurrencyUomId/></td>
               <td><@ofbizCurrency amount=invoicePaymentInfo.outstandingAmount isoCode=defaultOrganizationPartyCurrencyUomId/></td>        
-              <#if ((invoice.statusId != "INVOICE_APPROVED") && (invoice.statusId != "INVOICE_IN_PROCESS") && (invoice.statusId != "INVOICE_CANCELLED")) >
-	              <#if (invoice.parentTypeId == "PURCHASE_INVOICE" && (invoicePaymentInfo.outstandingAmount >0))||(invoice.prefPaymentMethodTypeId?exists) >
-	              		<td align="center"><input type="button"  name="paymentBuuton" value="Payment" onclick="javascript:showPaymentEntryQTip('${invoice.partyId}','${invoice.partyIdFrom}','${invoice.invoiceId}','${invoice.prefPaymentMethodTypeId?if_exists}','${invoicePaymentInfo.outstandingAmount}','${partyName}');"/></td>
+                <#if ((invoice.statusId != "INVOICE_IN_PROCESS") && (invoice.statusId != "INVOICE_CANCELLED")&& (invoicePaymentInfo.outstandingAmount >0)) >
+	              <#if (invoice.parentTypeId == "PURCHASE_INVOICE")||(invoice.prefPaymentMethodTypeId?exists) >
+	              		<#assign purposeTypeId="">
+              		  <#assign invoicepaymentpurpose = delegator.findOne("Invoice", {"invoiceId" : invoice.invoiceId}, true)>
+              		  <#if invoicepaymentpurpose.purposeTypeId?has_content>
+              		  <#assign purposeTypeId=invoicepaymentpurpose.purposeTypeId>
+              		  </#if>
+	              		<td align="center"><input type="button"  name="paymentBuuton" value="Payment" onclick="javascript:showPaymentEntryQTip('${invoice.partyId}','${invoice.partyIdFrom}','${invoice.invoiceId}','${invoice.prefPaymentMethodTypeId?if_exists}','${invoicePaymentInfo.outstandingAmount}','${partyName}','${purposeTypeId}','${invoice.parentTypeId}');"/></td>
 	               <#else>
 	                	<td align="center"></td>
 	               </#if>

@@ -14,11 +14,11 @@
         <field name="orderId"><text-find/></field>
         <!-- <field name="orderTypeId"><hidden value="PURCHASE_ORDER"/></field> -->
         <field name="statusId">
-        	<drop-down allow-empty="true">
-        		<option key="ORDER_CREATED" description="Created"/>
-        		<option key="ORDER_APPROVED" description="Approved"/>
-        		<option key="ORDER_CANCELLED" description="Cancelled"/>
-        	</drop-down>
+	        	<drop-down allow-empty="true">
+	        		<option key="ORDER_CREATED" description="Created"/>
+	        		<option key="ORDER_APPROVED" description="Approved"/>
+	        		<option key="ORDER_CANCELLED" description="Cancelled"/>
+	        	</drop-down>
         </field>
         <field name="noConditionFind"><hidden value="Y"/><!-- if this isn't there then with all fields empty no query will be done --></field>
         <field name="submitButton" title="${uiLabelMap.CommonFind}" widget-style="smallSubmit"><submit button-type="button"/></field>
@@ -111,7 +111,32 @@
             </hyperlink>
          </field>
     </form>
-    
+    <form name="orderAmendments" type="list" list-name="orderAmendmentsList" separate-columns="true"
+        odd-row-style="alternate-row" header-row-style="header-row" default-table-style="basic-table hover-bar">
+      <actions>
+      	<entity-condition entity-name="OrderItemChange" list="orderAmendmentsList">
+      		<condition-expr field-name="orderId" operator="equals" from-field="parameters.orderId"/>
+      	</entity-condition>
+      </actions>  
+      <row-actions>
+      	<entity-one value-field="OrderItem" entity-name="OrderItem">
+      		<field-map field-name="orderId" from-field="orderId"/>
+      		<field-map field-name="orderItemSeqId" from-field="orderItemSeqId"/>
+      	</entity-one>
+      	<set field="productId"  from-field="OrderItem.productId"/>
+      </row-actions>
+      <field name="orderId"><hidden/></field>
+      <field name="orderItemSeqId" title="Item No"><hidden/></field>
+      <field name="productId" title="Product">
+      		<display-entity entity-name="Product" description="${description}"/>
+      	</field>
+      <field name="quantity"><display></display></field>
+      <field name="unitPrice"><display></display></field>
+      <field name="effectiveDatetime" title="Effective Date"><display description="${groovy:org.ofbiz.base.util.UtilDateTime.toDateString(effectiveDatetime, &quot;dd-MMM-yyyy&quot;);}"></display></field>
+      <field name="changeDatetime" title="Changed Date"><display description="${groovy:org.ofbiz.base.util.UtilDateTime.toDateString(changeDatetime, &quot;dd-MMM-yyyy&quot;);}"></display></field>
+      <field name="changeUserLogin" title="Changed By"><display></display></field>
+      <field name="changeComments" title="Comments"><display></display></field>
+     </form>   
     <form name="FindShipmentReceipt" title="" type="single" target="${targetRequest}" header-row-style="header-row" default-table-style="basic-table">
         <field name="datetimeReceived"><date-find/></field>
         <field name="productId"><text-find/></field>

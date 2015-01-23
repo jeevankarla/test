@@ -220,7 +220,7 @@ prodList.each{eachItem ->
 	newObj.put("label","[" +eachItem.productId+"] " +eachItem.description);
 	productItemsJSON.add(newObj);
 	productIdLabelJSON.put(eachItem.productId, eachItem.description);
-	productLabelIdJSON.put(eachItem.description+" [ "+eachItem.productId+"]", eachItem.productId);
+	productLabelIdJSON.put("[" +eachItem.productId+"] " +eachItem.description, eachItem.productId);
 	
 	if(productUomMap){
 		uomId = productUomMap.get(eachItem.productId);

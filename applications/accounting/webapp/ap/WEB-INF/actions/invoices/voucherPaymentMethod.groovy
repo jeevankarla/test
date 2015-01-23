@@ -118,11 +118,24 @@ if(UtilValidate.isNotEmpty(parameters.paymentMethodSearchFlag)){
 	bankPaymentMethodList = delegator.findList("PaymentMethodType",cond, null, null, null, false);
 }else{
 condList.add(EntityCondition.makeCondition("paymentMethodTypeId", EntityOperator.LIKE, paymentMethodLike));
-condList.add(EntityCondition.makeCondition("parentTypeId", EntityOperator.EQUALS,"BANK"));
+condList.add(EntityCondition.makeCondition("parentTypeId", EntityOperator.EQUALS,"MONEY"));
 cond = EntityCondition.makeCondition(condList, EntityOperator.AND);
 bankPaymentMethodList = delegator.findList("PaymentMethodType",cond, null, null, null, false);
 condList.clear();
+//CASH_PAYIN
+if("SALES_INVOICE"==parentTypeId){
+//          if(parameters.prefPaymentMethodTypeId=="CASH"){
+	condList.add(EntityCondition.makeCondition("paymentMethodTypeId", EntityOperator.LIKE, "%CASH_PAYIN%"));
+		/* }else
+	  {
+		  condList.add(EntityCondition.makeCondition("paymentMethodTypeId", EntityOperator.LIKE, paymentMethodLike));
+	  }*/
+}
+else
+{
+
 condList.add(EntityCondition.makeCondition("paymentMethodTypeId", EntityOperator.LIKE, paymentMethodLike));
+}
 //condList.add(EntityCondition.makeCondition("parentTypeId", EntityOperator.EQUALS,"CASH"));
 condList.add(EntityCondition.makeCondition("parentTypeId", EntityOperator.EQUALS,"MONEY"));
 cond = EntityCondition.makeCondition(condList, EntityOperator.AND);

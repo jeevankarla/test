@@ -381,7 +381,7 @@ purchaseSumInvDetaildMap=[:];
 					invoiceList.addAll(innerItemMap);
 					innerTaxCatMap["invoiceList"]=invoiceList;
 					purchasDiselExProdCatMap[prodCategoryId]=innerTaxCatMap;
-				}else if(UtilValidate.isNotEmpty(purchasExemptProdCatMap[prodCategoryId])){
+				}else if(UtilValidate.isNotEmpty(purchasDiselExProdCatMap[prodCategoryId])){
 					Map innerTaxCatMap=purchasDiselExProdCatMap[prodCategoryId];
 					innerTaxCatMap["totalValue"]+=invTotalVal;
 					innerTaxCatMap["taxAmount"]+=0;

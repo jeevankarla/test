@@ -45,7 +45,7 @@ under the License.
         <set field="populateFacilityPartyMap.facilityId" from-field="parameters.facilityId"/>
         <set field="populateFacilityPartyMap.parentFacilityId" from-field="parameters.parentFacilityId"/>
         <set field="populateFacilityPartyMap.partyId" from-field="parameters.ownerPartyId"/>
-        <if>
+       <!--<if>
             <condition>
                  <or>
 			         <if-compare-field to-field="populateFacilityPartyMap.oldParentFacilityId" field="populateFacilityPartyMap.parentFacilityId" operator="not-equals"></if-compare-field>
@@ -56,7 +56,7 @@ under the License.
                      	   <call-service service-name="updateFacilityParty" in-map-name="populateFacilityPartyMap">
 					       </call-service>
 			    </then>   
-		 </if>	      
+		 </if>-->	      
         <!--  Update/add mobile number -->
         <make-value entity-name="TelecomNumber" value-field="newValue"/>        
         <if-not-empty field="parameters.contactNumber"> 

@@ -150,5 +150,37 @@
             </widgets>
         </section>
     </screen>
-   
+   <screen name="requirementOverView">
+   	<section>
+   		<actions>
+   		<set field="titleProperty" value="Requirement OverView ${parameters.requirementId}"/>
+        <set field="headerItem" value="Requirement"/>
+        <set field="tabButtonItem" value="FindMaterialRequirement"/>
+        <set field="tabButtonItem2" value="requirementOverView"/>
+   		</actions>
+   		<widgets>
+   			 <decorator-screen name="materialmgmtNgCommonDecorator" location="${parameters.mainDecoratorLocation}">
+             	<decorator-section name="body">
+                	<include-menu name="RequirementTabBar" location="component://materialmgmt/widget/materialmgmtMenus.xml"/>
+                			<container style="lefthalf">
+                				<screenlet title="Requirement OverView">
+                					<include-form location="component://materialmgmt/widget/MaterialRequirementForms.xml" name="requirementOverView"/>
+                				</screenlet>
+                			</container>
+                			<container style="righthalf">
+                				<screenlet title="Requirement Status">
+                					<include-form location="component://materialmgmt/widget/MaterialRequirementForms.xml" name="requirementStatus"/>
+                				</screenlet>	
+                			</container>
+                			<container style="clear" />
+                		<container style="full">
+   						<screenlet title="Indent Information">
+   							<include-form location="component://materialmgmt/widget/MaterialRequirementForms.xml" name="indentInformation"/>
+			   			</screenlet>
+			   			</container>
+			   	</decorator-section>
+			</decorator-screen>
+   		</widgets>
+   	</section>
+   </screen>
 </screens>
