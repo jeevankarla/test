@@ -391,6 +391,9 @@
 	                        		<platform-specific>
 	                            		<html><html-template location="component://materialmgmt/webapp/materialmgmt/purchase/POterms.ftl"/></html>
 	                        		</platform-specific>
+	                        		<screenlet title="Order Amendments">
+	                        			<include-form location="component://materialmgmt/widget/MaterialPurchaseForms.xml" name="orderAmendments"/>
+	                        		</screenlet>
 	                        		<screenlet title="Order Attributes">
 	                        			<include-screen name="orderAttributes"/>
 	                        		</screenlet>

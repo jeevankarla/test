@@ -972,11 +972,10 @@ public class MaterialRequestServices {
 		GenericValue userLogin = (GenericValue) context.get("userLogin");
 		String custRequestName = (String) context.get("enquiryName");
 		String requestDateStr = (String) context.get("requestDate");
-		String openDateStr = (String) context.get("openDate");
+		String openDateStr = (String) context.get("requestDate");
 		String closedDateStr = (String) context.get("closedDate");
 		Map result = ServiceUtil.returnSuccess();
 		String custRequestTypeId = "RF_PUR_QUOTE";
-		result = ServiceUtil.returnSuccess("Successfully create Enquiry for the requirements");
 		Timestamp custRequestDate = null;
 		Timestamp openDateTime = null;
 		Timestamp closedDateTime = null;
@@ -1055,7 +1054,6 @@ public class MaterialRequestServices {
 		  		return ServiceUtil.returnError("Problem Filing Enquiry.");
 	        }
 	        String custRequestId = (String)resultMap.get("custRequestId");
-	        result.put("custRequestId", custRequestId);
 	        
 			for(GenericValue requirement: requirements){
 				String productId = requirement.getString("productId");
@@ -1094,7 +1092,8 @@ public class MaterialRequestServices {
 					return resultCtx;
 				}
 			}
-		
+		result = ServiceUtil.returnSuccess("Enquiry created Successfully for the requirements...!Enquiry No:"+custRequestId);
+		result.put("custRequestId", custRequestId);
 		} catch (GenericEntityException e) {
 			// TODO: handle exception
 			Debug.logError(e, module);
