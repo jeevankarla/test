@@ -52,6 +52,11 @@
        <response name="success" type="view" value="PurchageOrderOverView"/>
        <response name="error" type="view" value="PurchageOrderOverView"/>
      </request-map>
+     <request-map uri="requirementOverView">
+       <security https="true" auth="true"/>
+       <response name="success" type="view" value="requirementOverView"/>
+       <response name="error" type="view" value="requirementOverView"/>
+     </request-map>
      <request-map uri="amendPOItemEvent">
        <security https="true" auth="true"/>
         <event type="java" path="in.vasista.vbiz.purchase.MaterialPurchaseServices" invoke="amendPOItemEvent" global-transaction="true"/>
@@ -944,7 +949,7 @@
     <view-map name="ApproveMaterialRequirement" type="screen" page="component://materialmgmt/widget/MaterialRequirementScreens.xml#ApproveMaterialRequirement"/>
     <view-map name="ApprovedMatRequirementBySupplier" type="screen" page="component://materialmgmt/widget/MaterialRequirementScreens.xml#ApprovedMatRequirementBySupplier"/>
     <view-map name="EnquiryForApprovedMatRequirements" type="screen" page="component://materialmgmt/widget/MaterialRequirementScreens.xml#EnquiryForApprovedMatRequirements"/>
-    
+    <view-map name="requirementOverView" type="screen" page="component://materialmgmt/widget/MaterialRequirementScreens.xml#requirementOverView"/>
     <!-- Return views -->
     <view-map name="FindMaterialReturns" type="screen" page="component://materialmgmt/widget/MaterialRequestScreens.xml#FindMaterialReturns"/>
     <view-map name="ReturnEntry" type="screen" page="component://materialmgmt/widget/MaterialRequestScreens.xml#ReturnEntry"/>

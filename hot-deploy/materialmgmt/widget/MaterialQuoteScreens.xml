@@ -99,14 +99,12 @@
                				<screenlet title="Items In Quote" >
                     				<include-form location="component://materialmgmt/widget/MaterialQuoteForms.xml" name="viewQuoteItemDetails"/>
                				</screenlet>
+               				<screenlet title="Quote Terms" >
+                    				<include-form location="component://materialmgmt/widget/MaterialQuoteForms.xml" name="ListQuoteTerms"/>
+               				</screenlet>
                			</container> 	
                     </container>
-                    <container style="clear" />
-               	     <container style="full">
-               	     	<screenlet title="Add Quote Term">
-                 	  		<include-screen name="AddQuoteTerm"/>
-                 	  	</screenlet>
-           			</container> 	
+                   	
                 </decorator-section>
               </decorator-screen>
             </widgets>
@@ -299,19 +297,5 @@
             </widgets>
         </section>
     </screen>
-    <screen name="AddQuoteTerm">
-    <section>
-    	<actions>
-    		<entity-condition list="supplierList" entity-name="CustRequestParty">
-    			<condition-expr field-name="custRequestId" from-field="parameters.custRequestId"/>
-    		</entity-condition>
-    	</actions>
-    	<widgets>
-    		<include-form location="component://materialmgmt/widget/MaterialQuoteForms.xml" name="AddQuoteTerm"/>
-    		<screenlet>
-    			<include-form location="component://materialmgmt/widget/MaterialQuoteForms.xml" name="ListQuoteTerms"/>
-    		</screenlet>
-    	</widgets>
-    </section>
-    </screen>
+    
 </screens>
