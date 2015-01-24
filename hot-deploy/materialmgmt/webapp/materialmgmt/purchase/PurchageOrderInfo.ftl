@@ -24,8 +24,9 @@ under the License.
                <#assign externalOrder = "(" + orderHeader.externalId + ")"/>
             </#if>
             <#assign orderType = orderHeader.getRelatedOne("OrderType")/>
+
             <li class="h3">&nbsp;${orderType?if_exists.get("description", locale)?default(uiLabelMap.OrderOrder)}&nbsp;Number&nbsp;-&nbsp;${orderId}&nbsp;[&nbsp;<a href="<@ofbizUrl>order.pdf?orderId=${orderId}</@ofbizUrl>" target="_blank">PDF</a>&nbsp;]</li>
-         	<#if security.hasEntityPermission("ORDERMGR", "_NOTE", session)>
+         	<#if ((currentStatus.statusCode != "CANCELLED" && currentStatus.statusCode != "COMPLETED") && security.hasEntityPermission("ORDERMGR", "_NOTE", session))>
           		<li><a href="#" onclick="javascript:prepareAmendPoFrom()">Amend PO</a></li>
         	</#if>
          </ul>

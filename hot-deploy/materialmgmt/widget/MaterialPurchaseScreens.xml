@@ -491,5 +491,11 @@
             </widgets>
         </section>
     </screen>
-    
+     <screen name="RequirementEmail">
+        <section>
+            <widgets>
+                <platform-specific><html><html-template location="component://materialmgmt/webapp/materialmgmt/reports/Requirementemail.ftl"/></html></platform-specific>
+            </widgets>
+        </section>
+    </screen>
 </screens>

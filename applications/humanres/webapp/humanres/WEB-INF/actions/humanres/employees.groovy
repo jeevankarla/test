@@ -13,11 +13,15 @@ JSONArray employeesJSON = new JSONArray();
 Map emplInputMap = FastMap.newInstance();
 emplInputMap.put("userLogin", userLogin);
 emplInputMap.put("orgPartyId", "Company");
-emplInputMap.put("fromDate", UtilDateTime.getDayStart(UtilDateTime.nowTimestamp()));
+emplInputMap.put("fromDate", UtilDateTime.getDayStart(UtilDateTime.addDaysToTimestamp(UtilDateTime.nowTimestamp(),-60)));
 emplInputMap.put("thruDate", UtilDateTime.getDayEnd(UtilDateTime.nowTimestamp()));
 Map resultMap = HumanresService.getActiveEmployements(dctx,emplInputMap);
 List<GenericValue> employementList = (List<GenericValue>)resultMap.get("employementList");
 employementList = EntityUtil.orderBy(employementList, UtilMisc.toList("firstName"));
+JSONObject employee = new JSONObject();
+employee.put("employeeId","");
+employee.put("name","");
+employeesJSON.add(employee);
 for (int i = 0; i < employementList.size(); ++i) {
 	GenericValue employment = employementList.get(i);
 	employeeId = employment.getString("partyIdTo");
@@ -26,7 +30,6 @@ for (int i = 0; i < employementList.size(); ++i) {
 		lastName = employment.getString("lastName");
 	}
 	name = employment.getString("firstName") + " " + lastName;
-	JSONObject employee = new JSONObject();
 	employee.put("employeeId", employeeId);
 	employee.put("name", name);
 	employeesJSON.add(employee);

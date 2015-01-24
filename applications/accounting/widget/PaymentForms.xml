@@ -200,6 +200,7 @@ under the License.
         <field name="amount" position="1" required-field="true"><text/></field>
         <field name="comments" position="2"><text size="70"/></field>
         <field name="isDepositWithDrawPayment"><hidden value="Y"/></field>
+        <field name="paymentPurposeType"><hidden value="NON_ROUTE_MKTG"></hidden></field> 
         <field name="finAccountTransTypeId"><hidden value="WITHDRAWAL"/></field>
         <field position="1" name="createButton" widget-style="smallSubmit">
             <submit button-type="button"/>
@@ -237,6 +238,7 @@ under the License.
         <field name="amount" position="1" required-field="true"><text/></field>
         <field name="comments" position="2"><text size="70"/></field>
         <field name="isDepositWithDrawPayment"><hidden value="Y"/></field>
+        <field name="paymentPurposeType"><hidden value="NON_ROUTE_MKTG"></hidden></field> 
         <field name="finAccountTransTypeId"><hidden value="DEPOSIT"/></field>
         <field position="1" name="createButton" widget-style="smallSubmit">
             <submit button-type="button"/>

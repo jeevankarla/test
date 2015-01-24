@@ -203,7 +203,7 @@ function makeDatePicker1(fromDateId ,thruDateId){
 				<form id="storeStockDetails" name="storeStockDetails" mothed="post" action="<@ofbizUrl>storeStockDetails.pdf</@ofbizUrl>" target="_blank">
 					<table class="basic-table" cellspacing="5">
 						<tr class="alternate-row">
-							<td width="20%"><span class='h3'>storeStockDetails</span></td>
+							<td width="20%"><span class='h3'>StoreStockStatus</span></td>
 							<td width="25%">
 							     <span class='h3'>
 									From <input  type="text" size="18pt" id="fromDateStock"   name="fromDateStock"/>
@@ -211,8 +211,14 @@ function makeDatePicker1(fromDateId ,thruDateId){
 								 </span>
 							</td>
 							<td width="15%"><span class='h3'>							</span></td>
-						   <td width="15%"><span class='h3'>   				       </span></td>	
-						    <td width="10%"><span class='h3'><input type="submit" value="Download" class="buttontext"></span></td>
+                            <td width="15%"><span class='h3'>Store
+							    <select name="issueToFacilityId" id="issueToFacilityId">
+							        <option value=""></option>
+							        <#list  storeList as store>
+							          <option value='${store.facilityId?if_exists}'>${store.facilityId?if_exists}</option>
+							        </#list> 
+							    </select>    								
+						   </span></td>						    <td width="10%"><span class='h3'><input type="submit" value="Download" class="buttontext"></span></td>
 						</tr>
 					 </table>
 				</form>
@@ -228,7 +234,7 @@ function makeDatePicker1(fromDateId ,thruDateId){
 							To   <input  type="text" size="18pt" id="thruDateMr"   name="thruDateMr"/>
 						 </span>
 						 </td>
-						 <td width="15%"><span class='h3'>							</span></td>
+						    <td width="15%"><span class='h3'>Material Code<@htmlTemplate.lookupField size="10" maxlength="22" formName="MRRregister" name="productId" id="productId" fieldFormName="LookupProduct"/>
 						  <td width="15%"><span class='h3'>   				       </span></td>	
 						 <td width="10%"><span class='h3'><input type="submit" value="Download" class="buttontext"></span></td>
 		 		    </tr>

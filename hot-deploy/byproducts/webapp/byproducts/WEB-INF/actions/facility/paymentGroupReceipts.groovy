@@ -162,6 +162,38 @@ if(UtilValidate.isNotEmpty(nonGroupPaymentIdsList)){
 	
 }
 }
+//for DepositAccounts--------------------
+finAccountDepositTransIdsMap=[:];
+condList=[];
+FinAccountTransList = [];
+condList.add(EntityCondition.makeCondition(EntityCondition.makeCondition("fromDate", EntityOperator.GREATER_THAN_EQUAL_TO, dayStart), EntityOperator.AND, EntityCondition.makeCondition("fromDate", EntityOperator.LESS_THAN_EQUAL_TO, dayEnd)))
+condList.add(EntityCondition.makeCondition("parentTypeId", EntityOperator.EQUALS, "DEPOSIT_RECEIPT"));
+EntityCondition cond = EntityCondition.makeCondition(condList, EntityOperator.AND);
+ List finAccountDepositIdsList = delegator.findList("FinAccountAndType",cond,null,null, null, false);
+ finAccountIdsList = EntityUtil.getFieldListFromEntityList(finAccountDepositIdsList, "finAccountId", true);
+ finAccountDepositTransIdsList=[];
+ if (finAccountIdsList) {
+	finAccountIdsList.each { eachfinAccount ->
+	finAccountId = eachfinAccount;
+	conditionList=[];
+	conditionList.add(EntityCondition.makeCondition("finAccountId", EntityOperator.EQUALS, finAccountId));
+	conditionList.add(EntityCondition.makeCondition("finAccountTransTypeId", EntityOperator.EQUALS, "WITHDRAWAL"));
+	EntityCondition condlist = EntityCondition.makeCondition(conditionList, EntityOperator.AND);
+	List<GenericValue> finAccountDepositTransIdsList = delegator.findList("FinAccountTrans", condlist, null,null, null, false);
+	 finAccountTransIdsList = EntityUtil.getFieldListFromEntityList(finAccountDepositTransIdsList, "finAccountTransId", true);
+	 finAccountTransIdsList.each { eachfinAccountTrans ->
+			  finAccountTransId = eachfinAccountTrans;
+			 contraFinTransEntry = delegator.findOne("FinAccountTransAttribute", ["finAccountTransId" :finAccountTransId,"attrName" : "FATR_CONTRA"], true);
+			 contraFinTransEntryList = delegator.findOne("FinAccountTrans", ["finAccountTransId" :contraFinTransEntry.attrValue], true);
+			 contraCashTransEntryList = delegator.findOne("FinAccount", ["finAccountId" :contraFinTransEntryList.finAccountId], true);
+						 if ("CASH".equals(contraCashTransEntryList.finAccountTypeId))
+						 {
+							 FinAccountTransList.add(finAccountDepositTransIdsList);
+						 }
+			 }
+	 }
+ }
+context.FinAccountTransList=FinAccountTransList;
 context.put("nonGroupPaymentsList",nonGroupPaymentsList);
 context.put("paymentGrpMap",paymentGrpMap);
 context.put("nonRouteCheckListReportList",nonRouteCheckListReportList);

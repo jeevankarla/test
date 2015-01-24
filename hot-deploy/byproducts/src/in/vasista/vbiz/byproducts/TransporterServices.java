@@ -460,13 +460,18 @@ import java.text.SimpleDateFormat;
 				BigDecimal quantity = BigDecimal.ONE;
 				BigDecimal totalFine = BigDecimal.ZERO;
 				BigDecimal totalHikeAmount = BigDecimal.ZERO;
+				BigDecimal cratesFine = BigDecimal.ZERO;
+				
 				if(UtilValidate.isNotEmpty(partyWiseRecvoryMap) && UtilValidate.isNotEmpty(partyWiseRecvoryMap.get(partyIdTo))){
 					Map partyFinesMap=(Map)partyWiseRecvoryMap.get(partyIdTo);
 					totalFine=(BigDecimal)partyFinesMap.get("totalFine");
+					//get CratesFine separately
+					cratesFine=(BigDecimal)partyFinesMap.get("cratesFine");
+					totalFine=totalFine.subtract(cratesFine);
 					
 					totalHikeAmount=(BigDecimal)partyFinesMap.get("totalHikeAmount");
 				}
-				Debug.log("===partyIdTo==="+partyIdTo+"=====Fine="+totalFine+"===Commission="+totalMargin+"==totalHikeAmount="+totalHikeAmount);
+				Debug.log("===partyIdTo==="+partyIdTo+"=====Fine="+totalFine+"===Commission="+totalMargin+"==totalHikeAmount="+totalHikeAmount+"==cratesFine="+cratesFine);
 				/*GenericValue facilityDetail = delegator.findOne("Facility",UtilMisc.toMap("facilityId", facilityId) ,false);
 				String partyIdTo = facilityDetail.getString("ownerPartyId");*/
 				// heree Invoice Raised by Transporter
@@ -512,6 +517,14 @@ import java.text.SimpleDateFormat;
 				                    if (ServiceUtil.isError(result)) {
 				                    	//generationFailed = true;
 				    	                Debug.logWarning("There was an error while creating  the InvoiceItem For Recovery: " + ServiceUtil.getErrorMessage(result), module);
+				                    }
+						   }
+		                  //separate Item for CrateFines ItemType "INCOME_ITEM62"
+		                    if(cratesFine.compareTo(BigDecimal.ZERO) !=0){//if fine is zero dont add
+		                    	 resMap = dispatcher.runSync("createInvoiceItem", UtilMisc.toMap("invoiceId", invoiceId,"invoiceItemTypeId", "INCOME_ITEM62","quantity",quantity,"amount", cratesFine.negate(),"userLogin", userLogin));
+				                    if (ServiceUtil.isError(result)) {
+				                    	//generationFailed = true;
+				    	                Debug.logWarning("There was an error while creating  the InvoiceItem For CrateRecovery: " + ServiceUtil.getErrorMessage(result), module);
 				                    }
 						   }
 		                   //for Hikes inserting New item for Same invoice

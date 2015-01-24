@@ -104,7 +104,6 @@
         <description>Issue Products to Customer Request Items</description>
         <attribute name="custRequestId" type="String" mode="IN" optional="false"/>
         <attribute name="custRequestItemSeqId" type="String" mode="IN" optional="false"/>
-        <attribute name="toBeIssuedQty" type="BigDecimal" mode="IN" optional="false"/>
         <attribute name="facilityId" type="String" mode="IN" optional="true"/>
     </service>
     
@@ -130,7 +129,6 @@
          <attribute name="custRequestId" type="String" mode="OUT" optional="false"/>
          <attribute name="enquiryName" type="String" mode="IN" optional="true"/>
          <attribute name="requestDate" type="String" mode="IN" optional="true"/>
-         <attribute name="openDate" type="String" mode="IN" optional="true"/>
          <attribute name="closedDate" type="String" mode="IN" optional="true"/>
    </service>
    

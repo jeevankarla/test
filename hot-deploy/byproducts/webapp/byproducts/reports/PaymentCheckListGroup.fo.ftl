@@ -285,6 +285,69 @@ under the License.
 	                            	<fo:block text-align="left" keep-together="always">&#160;</fo:block>                               
 	                            </fo:table-cell>
 	                        </fo:table-row>
+	                        	                        <#-- deposit Account starts here -->
+	                         <#if FinAccountTransList?has_content>
+	                        <fo:table-row >
+         						<fo:table-cell>	
+			                            <fo:block text-align="left" keep-together="always">*********************DepositAccount**********************</fo:block>                               
+			                    </fo:table-cell>
+         					</fo:table-row >
+                    		<#assign sno= 1>
+			                <#assign depositAccountTotal=0>
+         					<#list FinAccountTransList as finTransList>
+         					<#list finTransList as finTransEntry>
+         					<#assign ownerpartyDetails = delegator.findOne("FinAccountAndType", {"finAccountId" : finTransEntry.finAccountId}, true)?if_exists/>
+		 					<#assign ownerPartyName = Static["org.ofbiz.party.party.PartyHelper"].getPartyName(delegator, ownerpartyDetails.ownerPartyId, false)>
+		 					<fo:table-row >
+		 						<fo:table-cell>	
+			                          <fo:block text-align="left" keep-together="always">${sno }</fo:block>                               
+			                    </fo:table-cell>
+			                    <fo:table-cell>	
+			                          <fo:block text-align="left" keep-together="always">${finTransEntry.finAccountTransId?if_exists}</fo:block>                               
+			                    </fo:table-cell>
+			                    <fo:table-cell>	
+			                          <fo:block text-align="left" keep-together="always">&#160;</fo:block>                               
+			                    </fo:table-cell>
+			                    <#if ownerpartyDetails?has_content>
+			                    <fo:table-cell>	
+			                         <fo:block text-align="left" keep-together="always">${ownerpartyDetails.ownerPartyId?if_exists}</fo:block>                               
+			                    </fo:table-cell>
+			                    <fo:table-cell>	
+			                          <fo:block text-align="left" keep-together="always">${ownerPartyName?if_exists}</fo:block>                               
+			                     </fo:table-cell>
+			                    </#if>
+			                    <#assign depositAccountTotal=depositAccountTotal+finTransEntry.amount>
+			                    <fo:table-cell>	
+			                    	<#assign totalPaymentAmont =(totalPaymentAmont+finTransEntry.amount) >
+			                           <fo:block text-align="right" keep-together="always">${finTransEntry.amount?if_exists?string("#0.00")}</fo:block>                               
+			                    </fo:table-cell>
+			               </fo:table-row>
+			               <#assign sno= sno+1>
+			               </#list>
+	                       </#list>
+	                       <fo:table-row >
+	                            <fo:table-cell >	
+	                            	<fo:block text-align="left" keep-together="always">&#160;</fo:block>                               
+	                            </fo:table-cell>
+	                       </fo:table-row>
+	                        <fo:table-row >
+	                            <fo:table-cell >	
+	                            	<fo:block text-align="left" keep-together="always"></fo:block>                               
+	                            </fo:table-cell>
+	                             <fo:table-cell >	
+	                            	<fo:block text-align="left" keep-together="always"></fo:block>                               
+	                            </fo:table-cell>
+	                              <fo:table-cell >	
+	                            	<fo:block text-align="left" keep-together="always"></fo:block>                               
+	                            </fo:table-cell>
+	                        	<fo:table-cell  number-columns-spanned="2">	
+	                            	<fo:block text-align="left" >depositAccountTotal:</fo:block>                             
+	                            </fo:table-cell>	
+	                            <fo:table-cell >
+	                            	<fo:block text-align="right" padding="1pt"><@ofbizCurrency amount=depositAccountTotal isoCode=defaultOrganizationPartyCurrencyUomId/></fo:block>	                               
+	                            </fo:table-cell> 
+	                        </fo:table-row>
+	                      	</#if> 
 	                        
 	                       <fo:table-row >
 	                            <fo:table-cell >	
