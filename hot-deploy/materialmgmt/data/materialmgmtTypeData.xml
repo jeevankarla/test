@@ -146,5 +146,9 @@
      <Enumeration enumId="EXTERNAL_NOTE_ID" enumCode="EXTERNAL NOTE ID" enumTypeId="CUSTOM_NOTE_TYPE" sequenceId="1" description="External Note Id"/>
      <Enumeration enumId="INTERNAL_NOTE_ID"  enumCode="INTERNAL NOTE ID" enumTypeId="CUSTOM_NOTE_TYPE" sequenceId="1" description="Internal Note Id"/>
     
+     <EnumerationType  description="Note Type Configuration" enumTypeId="CUSTOM_NOTE_TYPE" />
+     <Enumeration enumId="EXTERNAL_NOTE_ID" enumCode="EXTERNAL NOTE ID" enumTypeId="CUSTOM_NOTE_TYPE" sequenceId="1" description="External Note Id"/>
+     <Enumeration enumId="INTERNAL_NOTE_ID"  enumCode="INTERNAL NOTE ID" enumTypeId="CUSTOM_NOTE_TYPE" sequenceId="1" description="Internal Note Id"/>
+    
      <!-- test comment -->
 </entity-engine-xml>
