@@ -102,6 +102,9 @@
                				<screenlet title="Quote Terms" >
                     				<include-form location="component://materialmgmt/widget/MaterialQuoteForms.xml" name="ListQuoteTerms"/>
                				</screenlet>
+               				<screenlet title="Add Quote Term">
+                 	  		      <include-screen name="AddQuoteTerm"/>
+                 	  	   </screenlet>
                			</container> 	
                     </container>
                    	
@@ -297,5 +300,17 @@
             </widgets>
         </section>
     </screen>
-    
+    <screen name="AddQuoteTerm">
+    <section>
+    	<actions>
+    	    <set field="quoteId" from-field="parameters.quoteId" />
+    		 <entity-and entity-name="QuoteItemAndContent" list="quoteItemContents" filter-by-date="true">
+                    <field-map field-name="quoteId" from-field="quoteId"/>
+             </entity-and>
+    	</actions>
+    	<widgets>
+    		<include-form location="component://materialmgmt/widget/MaterialQuoteForms.xml" name="AddQuoteTerm"/>
+    	</widgets>
+    </section>
+    </screen>
 </screens>
