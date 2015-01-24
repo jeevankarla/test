@@ -37,7 +37,7 @@ under the License.
         		<fo:block text-align="center" keep-together="always" white-space-collapse="false"  font-weight="bold">UNIT :  MOTHER DAIRY BANGALORE - 560065</fo:block>	 	 	  
         		 <fo:block text-align="center" keep-together="always"  font-weight="bold">LEAVE BALANCE REPORT as on:  ${Date?if_exists}    </fo:block>
 				<fo:block  font-size="12pt">Page:<fo:page-number/>&#160;&#160; &#160;&#160;&#160;&#160;&#160; &#160;&#160;&#160;&#160;&#160; &#160;&#160;&#160;&#160;&#160;&#160;  &#160;&#160;&#160;&#160;&#160;&#160;  &#160;&#160;&#160;&#160;&#160;&#160;  &#160;&#160;&#160;&#160;&#160;&#160;  &#160;&#160;&#160;&#160;&#160;&#160;  &#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;--------Balance Days--------   &#160;&#160; &#160;&#160;&#160;&#160;&#160; &#160;&#160;&#160;&#160;  &#160;&#160;&#160;&#160;&#160; </fo:block>
-            	<fo:block  font-weight="bold" font-size="12pt">S.No &#160;Department &#160;&#160;EmpNo	&#160;&#160;&#160;&#160;&#160;Employee Name &#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;Designation&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;			CL &#160;&#160;&#160;&#160;&#160;EL&#160;&#160;&#160;&#160;HPL</fo:block>
+            	<fo:block  font-weight="bold" font-size="12pt">S.No &#160;&#160;EmpNo	&#160;&#160;&#160;&#160;&#160;Employee Name &#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;Designation&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;			CL &#160;&#160;&#160;&#160;&#160;&#160;&#160;EL&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;HPL</fo:block>
             	<fo:block>-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------</fo:block>	                   		 </fo:static-content>
      	<fo:flow flow-name="xsl-region-body" font-family="Courier,monospace">
 		       <fo:block>
@@ -46,13 +46,12 @@ under the License.
             	 <#list employeeList as employee>
 	         		<fo:table >
                     <fo:table-column column-width="50pt"/>
-                    <fo:table-column column-width="90pt"/>
-                    <fo:table-column column-width="70pt"/>                
-                    <fo:table-column column-width="175pt"/>
-                    <fo:table-column column-width="150pt"/>
-                    <fo:table-column column-width="55pt"/>
-                    <fo:table-column column-width="55pt"/>
-                    <fo:table-column column-width="55pt"/>
+                    <fo:table-column column-width="80pt"/>
+                    <fo:table-column column-width="170pt"/>
+                    <fo:table-column column-width="165pt"/>
+                    <fo:table-column column-width="75pt"/>
+                    <fo:table-column column-width="70pt"/>
+                    <fo:table-column column-width="75pt"/>
                     
                     
                     <fo:table-body> 
@@ -61,12 +60,6 @@ under the License.
    			    	    <#assign EmpDepartment=delegator.findByAnd("Employment", {"partyIdTo" : employeeId})/>
 	                  <fo:table-row>
 	                    <fo:table-cell><fo:block text-align="left" keep-together="always" font-size="12">${sno}</fo:block></fo:table-cell>
-			    	    <#if EmpDepartment?has_content>
-						 <#assign department=EmpDepartment[0].partyIdFrom?if_exists>
-	                    <fo:table-cell><fo:block text-align="left" keep-together="always" font-size="12">${department?if_exists}</fo:block></fo:table-cell>
-	                    <#else>
-	                    <fo:table-cell><fo:block text-align="left" keep-together="always">------ </fo:block></fo:table-cell>
-	                    </#if>
                	 	    <fo:table-cell><fo:block text-align="left" keep-together="always" font-size="12">${employee.employeeId}</fo:block></fo:table-cell>
 	                    <fo:table-cell><fo:block text-align="left" keep-together="always" font-size="12">${(employee.name)?upper_case}</fo:block></fo:table-cell>
 	                    <#if emplPositionAndFulfilment?has_content>
@@ -79,7 +72,7 @@ under the License.
                    	 	 </#if>	 
                    	 	 
                    	 	 <#if (employee.CL)?has_content>
-                   	 	<fo:table-cell><fo:block text-align="right" keep-together="always" font-size="12">${(employee.CL)?if_exists} </fo:block></fo:table-cell>
+                   	 	<fo:table-cell><fo:block text-align="right" keep-together="always" font-size="12">${(employee.CL)?if_exists?string("#0.0")} </fo:block></fo:table-cell>
                          <#else>
 	                    <fo:table-cell><fo:block text-align="right" keep-together="always"> </fo:block></fo:table-cell>
                    	 	 </#if> 
