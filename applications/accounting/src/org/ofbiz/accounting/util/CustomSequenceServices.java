@@ -20,6 +20,7 @@ import org.ofbiz.service.DispatchContext;
 import org.ofbiz.service.GenericServiceException;
 import org.ofbiz.service.LocalDispatcher;
 import org.ofbiz.service.ServiceUtil;
+import org.ofbiz.base.util.UtilDateTime;
 
 /**
 * Custom Sequences are for custom sequence number generation for entities.*/
@@ -100,4 +101,152 @@ public class CustomSequenceServices {
         }
         return result;
 	}
+	//new Service for Billing Sequence for CustRequest
+		public static Map<String, Object> createCustRequestSequence(DispatchContext dctx, Map<String, Object> context) {
+			Delegator delegator = dctx.getDelegator();
+	        LocalDispatcher dispatcher = dctx.getDispatcher();              
+	        String custReqSequenceTypeId = (String) context.get("custReqSequenceTypeId");
+	        String custRequestId = (String) context.get("custRequestId");
+	        Timestamp custRequestDate=(Timestamp) context.get("custRequestDate");
+	        Locale locale = (Locale) context.get("locale");        
+	        GenericValue userLogin = (GenericValue) context.get("userLogin");
+	        Map<String, Object> result = ServiceUtil.returnSuccess();
+	        try {
+	        	Boolean enableCustReqSequence  = Boolean.FALSE;
+	    		GenericValue tenantConfigEnableSeq = delegator.findOne("TenantConfiguration", UtilMisc.toMap("propertyTypeEnumId","PURCHASE_OR_STORES", "propertyName","enableCustReqSequence"), false);
+	       		if (UtilValidate.isNotEmpty(tenantConfigEnableSeq) && (tenantConfigEnableSeq.getString("propertyValue")).equals("Y")) {
+	       			enableCustReqSequence = Boolean.TRUE;
+	       		}
+	       		if(enableCustReqSequence && UtilValidate.isNotEmpty(custRequestId)){
+	       			GenericValue custRequest = delegator.findOne("CustRequest", UtilMisc.toMap("custRequestId", custRequestId), false);
+	       			//at present sequence is generated only for Enquiry
+	       			if( UtilValidate.isNotEmpty(custRequest) && ("RF_PUR_QUOTE".equals(custRequest.getString("custRequestTypeId"))) ){
+	       				custRequestDate = custRequest.getTimestamp("custRequestDate");
+		       			
+		       			if(UtilValidate.isEmpty(custRequestDate)){
+								Debug.logError("CustRequestDate can not be empty in CustRequestSequence generation !", module);
+								return ServiceUtil.returnError("CustRequestDate can not be empty in CustRequestSequence generation ! ");
+						}
+		       			
+	       			Map finYearContext = FastMap.newInstance();
+	   				finYearContext.put("onlyIncludePeriodTypeIdList", UtilMisc.toList("FISCAL_YEAR"));
+	   				finYearContext.put("organizationPartyId", "Company");
+	   				finYearContext.put("userLogin", userLogin);
+	   				finYearContext.put("findDate", custRequestDate);
+	   				finYearContext.put("excludeNoOrganizationPeriods", "Y");
+	   				List customTimePeriodList = FastList.newInstance();
+	   				Map resultCtx = FastMap.newInstance();
+	   				try{
+	   					resultCtx = dispatcher.runSync("findCustomTimePeriods", finYearContext);
+	   					if(ServiceUtil.isError(resultCtx)){
+	   						Debug.logError("Problem in fetching financial year ", module);
+	   						return ServiceUtil.returnError("Problem in fetching financial year ");
+	   					}
+	   				}catch(GenericServiceException e){
+	   					Debug.logError(e, module);
+	   					return ServiceUtil.returnError(e.getMessage());
+	   				}
+	   				customTimePeriodList = (List)resultCtx.get("customTimePeriodList");
+	   				String finYearId = "";
+	   				if(UtilValidate.isNotEmpty(customTimePeriodList)){
+	   					GenericValue customTimePeriod = EntityUtil.getFirst(customTimePeriodList);
+	   					finYearId = (String)customTimePeriod.get("customTimePeriodId");
+	   				}
+	   				GenericValue customTimePeriod = delegator.findOne("CustomTimePeriod", UtilMisc.toMap("customTimePeriodId",finYearId), false);
+	   				Timestamp timePeriodStart=UtilDateTime.toTimestamp(customTimePeriod.getDate("fromDate"));
+	   				Timestamp timePeriodEnd=UtilDateTime.toTimestamp(customTimePeriod.getDate("thruDate"));
+	       			if(UtilValidate.isEmpty(custReqSequenceTypeId)){
+	       				custReqSequenceTypeId="ENQUIRY_SEQUENCE";
+	       			}
+	   				GenericValue custRequestSequence = delegator.makeValue("CustRequestSequence");
+	   				custRequestSequence.put("custReqSequenceTypeId",custReqSequenceTypeId );
+	   				custRequestSequence.put("custRequestId", custRequestId);
+	   				custRequestSequence.put("finYearId", finYearId);
+	   				custRequestSequence.put("custRequestNo", custRequestId+"/"+UtilDateTime.toDateString(customTimePeriod.getDate("fromDate"),"yyyy")+"-"+UtilDateTime.toDateString(customTimePeriod.getDate("thruDate"),"yy"));
+					delegator.setNextSubSeqId(custRequestSequence, "sequenceId", 10, 1);
+		            delegator.create(custRequestSequence);
+		            String sequenceId = (String) custRequestSequence.get("sequenceId");
+		            result.put("sequenceId", sequenceId) ;
+	       			}
+	       		}
+	        }catch(Exception e){
+	        	Debug.logError(e, e.toString(), module);
+	        	return ServiceUtil.returnError(e.toString()+" Error While Creating CustRequest Sequence for custReqSequenceTypeId:"+custReqSequenceTypeId+" custRequestId:"+custRequestId);
+	        }
+	        return result;
+		}
+		//new Service for Billing Sequence for PO
+				public static Map<String, Object> createOrderHeaderSequence(DispatchContext dctx, Map<String, Object> context) {
+					Delegator delegator = dctx.getDelegator();
+			        LocalDispatcher dispatcher = dctx.getDispatcher();              
+			        String orderHeaderSequenceTypeId = (String) context.get("orderHeaderSequenceTypeId");
+			        String orderId = (String) context.get("orderId");
+			        Locale locale = (Locale) context.get("locale");     
+			        Timestamp estimatedDeliveryDate=(Timestamp) context.get("estimatedDeliveryDate");
+			        
+			        GenericValue userLogin = (GenericValue) context.get("userLogin");
+			        Map<String, Object> result = ServiceUtil.returnSuccess();
+			        try {
+			        	Boolean enablePOSequence  = Boolean.FALSE;
+			    		GenericValue tenantConfigEnableSeq = delegator.findOne("TenantConfiguration", UtilMisc.toMap("propertyTypeEnumId","PURCHASE_OR_STORES", "propertyName","enablePOSequence"), false);
+			       		if (UtilValidate.isNotEmpty(tenantConfigEnableSeq) && (tenantConfigEnableSeq.getString("propertyValue")).equals("Y")) {
+			       			enablePOSequence = Boolean.TRUE;
+			       		}
+			       		if(enablePOSequence && UtilValidate.isNotEmpty(orderId)){
+			       			GenericValue orderHeader = delegator.findOne("OrderHeader", UtilMisc.toMap("orderId", orderId), false);
+			       			//at present sequence is generated only for OrderHeader
+			       			//if( UtilValidate.isNotEmpty(custRequest) && ("RF_PUR_QUOTE".equals(custRequest.getString("custRequestTypeId"))) ){
+			       			estimatedDeliveryDate = orderHeader.getTimestamp("estimatedDeliveryDate");
+				       			if(UtilValidate.isEmpty(estimatedDeliveryDate)){
+										Debug.logError("EstimatedDeliveryDate can not be empty in OrderHeaderSequence generation !", module);
+										return ServiceUtil.returnError("EstimatedDeliveryDate can not be empty in OrderHeaderSequence generation ! ");
+								}
+				       			
+			       			Map finYearContext = FastMap.newInstance();
+			   				finYearContext.put("onlyIncludePeriodTypeIdList", UtilMisc.toList("FISCAL_YEAR"));
+			   				finYearContext.put("organizationPartyId", "Company");
+			   				finYearContext.put("userLogin", userLogin);
+			   				finYearContext.put("findDate", estimatedDeliveryDate);
+			   				finYearContext.put("excludeNoOrganizationPeriods", "Y");
+			   				List customTimePeriodList = FastList.newInstance();
+			   				Map resultCtx = FastMap.newInstance();
+			   				try{
+			   					resultCtx = dispatcher.runSync("findCustomTimePeriods", finYearContext);
+			   					if(ServiceUtil.isError(resultCtx)){
+			   						Debug.logError("Problem in fetching financial year ", module);
+			   						return ServiceUtil.returnError("Problem in fetching financial year ");
+			   					}
+			   				}catch(GenericServiceException e){
+			   					Debug.logError(e, module);
+			   					return ServiceUtil.returnError(e.getMessage());
+			   				}
+			   				customTimePeriodList = (List)resultCtx.get("customTimePeriodList");
+			   				String finYearId = "";
+			   				if(UtilValidate.isNotEmpty(customTimePeriodList)){
+			   					GenericValue customTimePeriod = EntityUtil.getFirst(customTimePeriodList);
+			   					finYearId = (String)customTimePeriod.get("customTimePeriodId");
+			   				}
+			   				GenericValue customTimePeriod = delegator.findOne("CustomTimePeriod", UtilMisc.toMap("customTimePeriodId",finYearId), false);
+			   				Timestamp timePeriodStart=UtilDateTime.toTimestamp(customTimePeriod.getDate("fromDate"));
+			   				Timestamp timePeriodEnd=UtilDateTime.toTimestamp(customTimePeriod.getDate("thruDate"));
+			       			if(UtilValidate.isEmpty(orderHeaderSequenceTypeId)){
+			       				orderHeaderSequenceTypeId="PO_SEQUENCE";
+			       			}
+			   				GenericValue orderHeaderSequence = delegator.makeValue("OrderHeaderSequence");
+			   				orderHeaderSequence.put("orderHeaderSequenceTypeId",orderHeaderSequenceTypeId );
+			   				orderHeaderSequence.put("orderId", orderId);
+			   				orderHeaderSequence.put("finYearId", finYearId);
+			   				orderHeaderSequence.put("orderNo", orderId+"/"+UtilDateTime.toDateString(customTimePeriod.getDate("fromDate"),"yyyy")+"-"+UtilDateTime.toDateString(customTimePeriod.getDate("thruDate"),"yy"));
+							delegator.setNextSubSeqId(orderHeaderSequence, "sequenceId", 10, 1);
+				            delegator.create(orderHeaderSequence);
+				            String sequenceId = (String) orderHeaderSequence.get("sequenceId");
+				            result.put("sequenceId", sequenceId) ;
+			       			//}
+			       		}
+			        }catch(Exception e){
+			        	Debug.logError(e, e.toString(), module);
+			        	return ServiceUtil.returnError(e.toString()+" Error While Creating OrderHeader Sequence for orderHeaderSequenceTypeId:"+orderHeaderSequenceTypeId+" orderId:"+orderId);
+			        }
+			        return result;
+				}
 }

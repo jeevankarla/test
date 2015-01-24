@@ -36,7 +36,10 @@ under the License.
     --><eca service="storeOrder" event="return">
         <condition field-name="orderTypeId" operator="equals" value="PURCHASE_ORDER"/>
         <action service="setUnitPriceAsLastPrice" mode="sync"/>
-    </eca><!--
+        <action service="createOrderHeaderSequence" mode="sync"/>
+    </eca>
+    
+    <!--
 
     <eca service="storeOrder" event="return">
         <action service="setOrderReservationPriority" mode="sync"/>
@@ -306,6 +309,12 @@ under the License.
         <condition field-name="custRequestId" operator="is-not-empty"/>
         <action service="updateCommunicationEvent" mode="sync"/>
     </eca>
+    
+    <eca service="createCustRequest" event="commit">
+        <condition field-name="custRequestId" operator="is-not-empty"/>
+        <action service="createCustRequestSequence" mode="sync"/>
+    </eca>
+    
     
     <eca service="updateCustRequest" event="commit">
         <condition field-name="communicationEventId" operator="is-not-empty"/>

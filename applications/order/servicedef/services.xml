@@ -1048,6 +1048,8 @@ under the License.
         <attribute name="overridePriceMap" type="Map" mode="IN" string-map-prefix="opm_" optional="true"/>
         <attribute name="orderCurrencyUnitPrice" type="String" mode="IN" optional="true"/>
    </service>
+   
+   
 
     <service name="cancelAllBackOrders" engine="simple"
             location="component://order/script/org/ofbiz/order/order/OrderServices.xml" invoke="cancelAllBackOrders" auth="true">
@@ -1166,6 +1168,12 @@ under the License.
     <service name="adjustRoundingDiffForOrder" engine="java"
                 location="org.ofbiz.order.order.OrderServices" invoke="adjustRoundingDiffForOrder" auth="true">
         <attribute name="orderId" mode="INOUT" type="String" optional="false"/>
+    </service>
+     <service name="createOrderHeaderSequence" engine="java"
+        location="org.ofbiz.accounting.util.CustomSequenceServices" invoke="createOrderHeaderSequence">
+        <description>Get the Next Sequence for the given orderId in OrderHeader Entity</description>
+        <attribute name="orderId" type="String" mode="IN" optional="false"/>
+        <attribute name="sequenceId" type="String" mode="OUT" optional="true"/>
     </service>
     
 </services>
