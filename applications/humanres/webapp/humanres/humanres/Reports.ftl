@@ -266,8 +266,8 @@ function setOrgPartyId() {
 					</tr>
 					<tr class="alternate-row">
 						<form id="CashEncashmentReport" name="CashEncashmentReport" mothed="post" action="<@ofbizUrl>CashEncashmentReport.pdf</@ofbizUrl>" target="_blank">
-							<td width="30%" class='h3'>Cash Encashment Report</td>
-							<td width="20%"><span class='h3'>Employee Id<@htmlTemplate.lookupField formName="LeaveAvailedReport" name="employeeId" id="employeeId" size="10pt" fieldFormName="LookupEmployeeName"/></span></td>
+							<td width="40%" class='h3'>Cash Encashment Report</td>
+							<td width="30%"><span class='h3'>Employee Id<@htmlTemplate.lookupField formName="LeaveAvailedReport" name="employeeId" id="employeeId" size="10pt" fieldFormName="LookupEmployeeName"/></span></td>
 							<td><input type="hidden" name="deptId" class="commonPartyId"></td>
 							<td width="30%">Period Id
 								<select name="customTimePeriodId" id="customTimePeriodId" class='h4'>
@@ -282,14 +282,16 @@ function setOrgPartyId() {
 									</#list>
 								</select>
 							</td>	
+							<td width="30%"></td>
+							<td width="30%"></td>
 							<td width="10%"><input type="submit" value="Download" class="buttontext"></td>
 						</form>											
 					</tr>
 				<tr class="alternate-row">
 						<form id="GHSSDepatmentCountReport" name="GHSSDepatmentCountReport" mothed="post" action="<@ofbizUrl>GHSSDepatmentCountReport.pdf</@ofbizUrl>" target="_blank">
 							<td width="40%"class='h3' >GH and SS Worked Employee's Count </td>
-							<td width="10%"></td>
-							<td width="10%"></td>
+							<td width="30%"></td>
+							<td width="30%"></td>
 							<td width="30%">Period Id
 								<select name="deptCount_TimePeriodId" id="deptCount_TimePeriodId" class='h4'>
 									<#assign customTimePeriodList=customTimePeriodList?sort>
@@ -304,9 +306,22 @@ function setOrgPartyId() {
 								      </#list>
 								</select>
 							</td>	
+							<td width="50%"></td>
+							<td width="30%"></td>
 							<td width="10%"><input type="submit" value="Download" class="buttontext"></td>
 						</form>										
 					</tr>
+					<tr class="alternate-row">
+						<form id="leaveBalanceChecklist" name="leaveBalanceChecklist" mothed="post" action="<@ofbizUrl>LeaveBalanceCheckList.pdf</@ofbizUrl>" target="_blank">
+						<td width="40%"><span class='h3'>Leave Balance Report</span></td>
+						<td width="30%"><span class='h3'>Employee Id<@htmlTemplate.lookupField formName="leaveBalanceChecklist" name="partyIdTo" id="prtyId" fieldFormName="LookupEmployeeName"/></span></td>
+						<td width="30%"></td>
+						<td width="30%"><span class='h3'>Date </span><input  type="text" size="18pt" id="lbDate"   name="lbDate"/></td>
+						<td width="30%"></td>
+						<td width="30%"></td>
+						<td width="30%"><span class='h3'><input type="submit" value="Download" class="buttontext"></span></td> 
+						</form>
+					 </tr>
 				</table>
 			</div>
 		</div>
@@ -512,21 +527,6 @@ function setOrgPartyId() {
 							</table>
 						</form>
 				 	</tr>
-				 	
-				 	 <tr class="alternate-row">
-						<form id="leaveBalanceChecklist" name="leaveBalanceChecklist" mothed="post" action="<@ofbizUrl>LeaveBalanceCheckList.pdf</@ofbizUrl>" target="_blank">
-							<table class="basic-table" cellspacing="5">
-								<tr class="alternate-row">
-									<td width="20%"><span class='h3'>Leave Balance Checklist Report</span></td>
-									<td width="20%"><span class='h3'>Employee Id<@htmlTemplate.lookupField formName="leaveBalanceChecklist" name="partyIdTo" id="prtyId" fieldFormName="LookupEmployeeName"/></span></td>
-									<td width="20%"><span class='h3'>Date </span><input  type="text" size="18pt" id="lbDate"   name="lbDate"/></td>
-									<td width="20%"></td>
-									<td width="20%"><span class='h3'><input type="submit" value="Download" class="buttontext"></span></td> 
-								</tr>
-							</table>
-						</form>
-					 </tr>
-					 
 				</table>
 			</div>
 		</div>
