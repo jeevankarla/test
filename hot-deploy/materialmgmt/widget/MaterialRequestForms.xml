@@ -545,7 +545,7 @@
         <field name="custRequestId"><hidden/></field>
         <field name="noteName"><text></text></field>
         <field name="noteDate"><date-time type="timestamp"></date-time></field>
-        <field name="noteInfo"><text></text></field>
+        <!--  <field name="noteInfo"><text></text></field>-->
         <field name="submitButton" title="${uiLabelMap.CommonSave}" widget-style="smallSubmit"><submit button-type="text-link"/></field>
         <field name="cancelLink" title="${uiLabelMap.CommonEmptyHeader}" widget-style="smallSubmit">
             <hyperlink target="ViewMaterialEnquiry" also-hidden="false" description="${uiLabelMap.CommonCancelDone}">
