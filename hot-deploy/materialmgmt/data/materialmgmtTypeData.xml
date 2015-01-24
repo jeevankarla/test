@@ -131,9 +131,20 @@
 	
 	<EnumerationType description="CUSTOM SEQUENCE NUMBER" enumTypeId="CUSTOM_SEQ_NUM"/> 
     <Enumeration description="GRN SEQUENCE " enumCode="GRN SEQUENCE" enumId="GRN_SEQUENCE" enumTypeId="CUSTOM_SEQ_NUM"/>
+    
+	<TenantConfiguration  description="Enable ENQUIRY Sequence Functionality"  propertyName="enableCustReqSequence" propertyTypeEnumId="PURCHASE_OR_STORES" propertyValue="Y"/>
+    <Enumeration description="ENQUIRY SEQUENCE " enumCode="ENQUIRY SEQUENCE" enumId="ENQUIRY_SEQUENCE" enumTypeId="CUSTOM_SEQ_NUM"/>
+    
+    <TenantConfiguration  description="Enable PO Sequence Functionality"  propertyName="enablePOSequence" propertyTypeEnumId="PURCHASE_OR_STORES" propertyValue="Y"/>
+    <Enumeration description="PURCHASE ORDER SEQUENCE" enumCode="PO SEQUENCE" enumId="PO_SEQUENCE" enumTypeId="CUSTOM_SEQ_NUM"/>
+    
     <!--  To be work on this
-    <Enumeration description="PURCHASE ORDER SEQUENCE" enumCode="PO SEQUENCE" enumId="PO_SEQUENCE" enumTypeId="CUSTOM_SEQ_NUM"/>   
+     
     <Enumeration description="PURCHASE INVOICE SEQUENCE" enumCode="PUR INV SEQUENCE" enumId="PURINV_SEQUENCE" enumTypeId="CUSTOM_SEQ_NUM"/>  -->
     
-     
+     <EnumerationType  description="Note Type Configuration" enumTypeId="CUSTOM_NOTE_TYPE" />
+     <Enumeration enumId="EXTERNAL_NOTE_ID" enumCode="EXTERNAL NOTE ID" enumTypeId="CUSTOM_NOTE_TYPE" sequenceId="1" description="External Note Id"/>
+     <Enumeration enumId="INTERNAL_NOTE_ID"  enumCode="INTERNAL NOTE ID" enumTypeId="CUSTOM_NOTE_TYPE" sequenceId="1" description="Internal Note Id"/>
+    
+     <!-- test comment -->
 </entity-engine-xml>
