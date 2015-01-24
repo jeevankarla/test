@@ -5578,13 +5578,30 @@ public class PayrollService {
 	      LocalDispatcher dispatcher = dctx.getDispatcher();
 	      GenericValue userLogin = (GenericValue) context.get("userLogin");
 	      String partyId = (String) context.get("partyId");
-	      Date date=(Date)context.get("date");
+	      String lateHoursCheckFlag = (String) context.get("lateHoursCheckFlag");
+	      Date lateDate = null;
+	      Date encashDate = null;
+	      if(UtilValidate.isNotEmpty(lateHoursCheckFlag) && lateHoursCheckFlag.equals("Y")){
+	    	  lateDate = (Date)context.get("date");
+	      }else{
+	    	  String date = (String) context.get("date");
+		      Timestamp encashDateStamp = null;
+		      SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy");	
+		      if(UtilValidate.isNotEmpty(date)){
+	        	try {
+	        		encashDateStamp = new java.sql.Timestamp(sdf.parse(date).getTime());
+	    		} catch (ParseException e) {
+	    			Debug.logError(e, "Cannot parse date string: " + date, module);
+	    			 return ServiceUtil.returnError(e.toString());
+	    		}
+		      }
+		      encashDate = new java.sql.Date(encashDateStamp.getTime());
+	      }
 	      String timePeriodId = (String)context.get("timePeriodId");
 	      String overrideReason= (String)context.get("overrideReason");
 	      String encashmentStatus=(String) context.get("encashmentStatus");
 	      String seqId = (String) context.get("seqId");
 	      String checkBox = (String) context.get("checkBox");
-	      String lateHoursCheckFlag = (String) context.get("lateHoursCheckFlag");
 	      BigDecimal overrideLateMin=(BigDecimal)context.get("overrideLateMin");
 	      Map result = ServiceUtil.returnSuccess();
 	      Boolean smsFlag = Boolean.FALSE;
@@ -5604,7 +5621,11 @@ public class PayrollService {
 		  	if(UtilValidate.isEmpty(statusList)){
 		  		List conditionList = FastList.newInstance();
   				conditionList.add(EntityCondition.makeCondition("partyId", EntityOperator.EQUALS ,partyId));
-  				conditionList.add(EntityCondition.makeCondition("date", EntityOperator.EQUALS , date));
+  				if(UtilValidate.isNotEmpty(lateHoursCheckFlag) && lateHoursCheckFlag.equals("Y")){
+  					conditionList.add(EntityCondition.makeCondition("date", EntityOperator.EQUALS , lateDate));
+  				}else{
+  					conditionList.add(EntityCondition.makeCondition("date", EntityOperator.EQUALS , encashDate));
+  				}
   				conditionList.add(EntityCondition.makeCondition("seqId", EntityOperator.EQUALS ,seqId));
   				EntityCondition condition=EntityCondition.makeCondition(conditionList,EntityOperator.AND); 		
   				List<GenericValue> EmplDailyAttendanceDetail = delegator.findList("EmplDailyAttendanceDetail", condition, null, null, null, false);

@@ -160,7 +160,8 @@ under the License.emplpunch
 		<attribute name="timePeriodId" mode="IN" type="String" optional="false"></attribute>
         <auto-attributes mode="IN" include="nonpk" optional="true"/>   
         <attribute name="checkBox" mode="IN" type="String" optional="true"/> 
-        <attribute name="smsFlag" type="Boolean" mode="OUT" optional="true"/> 
+        <attribute name="smsFlag" type="Boolean" mode="OUT" optional="true"/>
+        <attribute name="date" type="String" mode="IN" optional="false"/> 
     </service>
     <service name="sendCashEncashSms" engine="java"
              location="in.vasista.vbiz.humanres.PayrollService" invoke="sendCashEncashSms" auth="true">
