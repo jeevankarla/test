@@ -1495,6 +1495,36 @@ under the License.
              <key-map field-name="custRequestId"/>
       </relation>
     </view-entity>
+     <view-entity entity-name="CustRequestAndIssuance"
+            package-name="org.ofbiz.order.request"
+            title="Customer Request And Store Issuance View Entity">
+      <description>See CustRequest for descriptions of date fields</description>
+      <member-entity entity-alias="CR" entity-name="CustRequest"/>
+       <member-entity entity-alias="II" entity-name="ItemIssuance"/>
+      <alias entity-alias="CR" name="custRequestId"/>
+      <alias entity-alias="CR" name="custRequestTypeId"/>
+      <alias entity-alias="CR" name="statusId"/>
+      <alias entity-alias="CR" name="fromPartyId"/>
+      <alias entity-alias="CR" name="priority"/>
+      <alias entity-alias="CR" name="custRequestDate"/>
+      <alias entity-alias="CR" name="responseRequiredDate"/>
+      <alias entity-alias="CR" name="custRequestName"/>
+      <alias entity-alias="CR" name="description"/>
+      <alias entity-alias="CR" name="createdDate"/>
+      <alias entity-alias="CR" name="salesChannelEnumId"/>
+      <alias entity-alias="CR" name="lastModifiedDate"/>
+      <alias entity-alias="CR" name="lastModifiedByUserLogin"/>
+      <alias entity-alias="II" name="itemIssuanceId"/>
+      <alias entity-alias="II" name="shipmentId"/>
+      <alias entity-alias="II" name="issuedDateTime"/>
+      <alias entity-alias="II" name="issuedByUserLoginId"/>
+      <alias entity-alias="II" name="productId"/>
+      <alias entity-alias="II" name="quantity"/>
+      <alias entity-alias="II" name="cancelQuantity"/>
+      <view-link entity-alias="CR" rel-entity-alias="II" >
+        <key-map field-name="custRequestId" />
+      </view-link>
+    </view-entity>
     <view-entity entity-name="CustReqAndTypeAndPartyRel"
             package-name="org.ofbiz.order.request"
             title="Customer Request And Role View Entity">
