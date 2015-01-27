@@ -303,7 +303,6 @@
 				                    </decorator-section>
 		                        </decorator-screen>
 		                    </widgets>		
-		            	
 		            	</section>				                        
                     </decorator-section>
                 </decorator-screen>
@@ -497,6 +496,13 @@
 				<set field="tabButtonItem" value="Attendance" />
  				<set field="tabButtonItem2" value="EditHolidays" />                                           				
 				<set field="titleProperty" value="EditHolidays" />
+				<entity-condition list="encashmentList" entity-name="Enumeration">
+				<condition-list>
+					<condition-expr field-name="enumTypeId" operator="equals" value="ENCASHMENT_STATUS"/>
+					<condition-expr field-name="enumId" operator="not-equals" value="LEAVE_ENCASHMENT"/>
+				</condition-list>
+				</entity-condition>
+				<script location="component://humanres/webapp/humanres/WEB-INF/actions/humanres/editLateHours.groovy"/>
 			</actions>
 			<widgets>
 				<decorator-screen name="HumanresCommonDecorator"
@@ -504,9 +510,16 @@
 					<decorator-section name="body"> 
                         <include-menu location="component://humanres/widget/HumanresMenus.xml" name="AttendanceTabBar"/>                                                        					   					
                         <screenlet title="Find Holidays">
-                        <include-form location="component://humanres/widget/ReportHumanresSummaryForms.xml" name="EditHolidays"/>
+                        	<include-form location="component://humanres/widget/ReportHumanresSummaryForms.xml" name="EditHolidays"/>
                         </screenlet> 
-                         <include-screen name="holidays" location="component://humanres/widget/HumanresScreens.xml"/>
+                        <screenlet title="Holiday Details">
+                         <!-- <include-screen name="holidays" location="component://humanres/widget/HumanresScreens.xml"/> -->
+                         <platform-specific>
+							<html>
+								<html-template	location="component://humanres/webapp/humanres/humanres/holidaysList.ftl"></html-template>
+							</html>
+					    </platform-specific>
+					    </screenlet>
                     </decorator-section>
                 </decorator-screen>
 			</widgets>

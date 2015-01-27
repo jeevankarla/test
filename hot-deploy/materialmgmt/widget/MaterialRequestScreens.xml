@@ -499,15 +499,9 @@
 		                  <screenlet title="Items In Enquiry"> 
 		                   	<include-form location="component://materialmgmt/widget/MaterialRequestForms.xml" name="ItemsInEnquiry"/>
 		                  </screenlet>
-	                  	<screenlet title="Add Notes">
-                       			<include-form name="AddCustEnquiryNote" location="component://materialmgmt/widget/MaterialRequestForms.xml"/>
-                  		 </screenlet>
-                  	  	  <screenlet title="Enquiry Notes">
-	                   		<include-form location="component://materialmgmt/widget/MaterialRequestForms.xml" name="ListEnquiryNotes"/>
-	                  	 </screenlet>
-	                  	<!-- <screenlet title="Enquiry Notes">
-	                   		<include-form location="component://materialmgmt/widget/MaterialRequestForms.xml" name="ListEnquiryNotes"/>
-	                  	 </screenlet> -->
+		                  <screenlet title="Add Notes"> 
+		                    <include-screen name="AddCustEnquiryNote"/>
+		                  </screenlet>
 		              </container>
                  		
                  	  <container style="righthalf">
@@ -753,6 +747,16 @@
     		<include-form location="component://materialmgmt/widget/MaterialRequestForms.xml" name="AddSupplier"/>
     		<screenlet>
     			<include-form location="component://materialmgmt/widget/MaterialRequestForms.xml" name="listSuppliers"/>
+    		</screenlet>
+    	</widgets>
+    </section>
+    </screen>
+    <screen name="AddCustEnquiryNote">
+    <section>
+    	<widgets>
+    			<include-form name="AddCustEnquiryNote" location="component://materialmgmt/widget/MaterialRequestForms.xml"/>
+    		<screenlet>
+    			<include-form location="component://materialmgmt/widget/MaterialRequestForms.xml" name="ListEnquiryNotes"/>
     		</screenlet>
     	</widgets>
     </section>

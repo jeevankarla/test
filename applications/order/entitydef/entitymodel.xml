@@ -1453,7 +1453,27 @@ under the License.
         <key-map field-name="shipGroupSeqId"/>
       </relation>
     </entity>
-
+    <entity entity-name="OrderHeaderSequence" package-name="org.ofbiz.order.order"
+		title="OrderHeader Sequence Entity">
+		<field name="finYearId" type="id-ne"></field>
+		<field name="orderHeaderSequenceTypeId" type="id"></field>
+		<field name="sequenceId" type="id-ne"></field>
+		<field name="orderId" type="id-ne"></field>
+		<field name="orderNo" type="id-long-ne"></field>
+		<prim-key field="finYearId" />
+		<prim-key field="orderHeaderSequenceTypeId" />
+		<prim-key field="sequenceId" />
+		<relation type="one" fk-name="OHSEQ_FY"
+			rel-entity-name="CustomTimePeriod">
+			<key-map field-name="finYearId"  rel-field-name="customTimePeriodId"/>
+		</relation>
+		<relation type="one" fk-name="OHSEQ_CR" rel-entity-name="OrderHeader">
+			<key-map field-name="orderId" />
+		</relation>
+		<relation type="one" fk-name="OHSEQ_ENUMT" title="OrderHeaderSequenceTypeId" rel-entity-name="Enumeration">
+            <key-map field-name="orderHeaderSequenceTypeId" rel-field-name="enumId"/>
+        </relation>
+	 </entity>
   <!-- ========================================================= -->
   <!-- org.ofbiz.order.quote -->
   <!-- ========================================================= -->
@@ -1896,6 +1916,29 @@ under the License.
         <key-map field-name="currencyUomId" rel-field-name="uomId"/>
       </relation>
     </entity>
+    
+   <entity entity-name="CustRequestSequence" package-name="org.ofbiz.order.request"
+		title="CustRequest Sequence Entity">
+		<field name="finYearId" type="id-ne"></field>
+		<field name="custReqSequenceTypeId" type="id"></field>
+		<field name="sequenceId" type="id-ne"></field>
+		<field name="custRequestId" type="id-ne"></field>
+		<field name="custRequestNo" type="id-long-ne"></field>
+		<prim-key field="finYearId" />
+		<prim-key field="custReqSequenceTypeId" />
+		<prim-key field="sequenceId" />
+		<relation type="one" fk-name="CRSEQ_FY"
+			rel-entity-name="CustomTimePeriod">
+			<key-map field-name="finYearId"  rel-field-name="customTimePeriodId"/>
+		</relation>
+		<relation type="one" fk-name="CRSEQ_CR" rel-entity-name="CustRequest">
+			<key-map field-name="custRequestId" />
+		</relation>
+		<relation type="one" fk-name="CRSEQ_ENUMT" title="CustReqSequenceTypeId" rel-entity-name="Enumeration">
+            <key-map field-name="custReqSequenceTypeId" rel-field-name="enumId"/>
+        </relation>
+	</entity>
+	
     <entity entity-name="CustRequestAttribute"
             package-name="org.ofbiz.order.request"
             title="Customer Request Attribute Entity">
