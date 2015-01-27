@@ -34,6 +34,7 @@ var screenFlag;
 		$( "#requiredDate" ).datepicker({
 			dateFormat:'d MM, yy',
 			changeMonth: true,
+			minDate:"#effectiveDate",
 			numberOfMonths: 1,
 			onSelect: function( selectedDate ) {
 				$( "#requiredDate" ).datepicker("option", selectedDate);
