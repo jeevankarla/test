@@ -775,7 +775,7 @@ public class MaterialRequestServices {
 				requirementId = (String)resultCtx.get("requirementId");
 				
 			}
-			if(UtilValidate.isNotEmpty(requirementId)){
+			/*if(UtilValidate.isNotEmpty(requirementId)){
 				Map emailRequirementCtx = FastMap.newInstance();
 				emailRequirementCtx.put("userLogin", userLogin);
 				emailRequirementCtx.put("requirementId", requirementId);
@@ -784,7 +784,7 @@ public class MaterialRequestServices {
 					Debug.logError("Problem creating requirement for requested item : "+custRequestId+" : "+custRequestItemSeqId, module);
 					return resultCtx;
 				}
-			}
+			}*/
 			
 			/* change cust request item status*/
 			Map itemStatusCtx = FastMap.newInstance();

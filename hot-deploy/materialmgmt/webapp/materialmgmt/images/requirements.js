@@ -2,11 +2,19 @@ jQuery(document).ready(function() {
 	//alert("welcome");
 });
 
-function raiseRequirement(element){
+function createRequirementForCustRequestItem(element){
 	var curreElem = $(element);
-    var form = curreElem.parent().parent();
-    var custmQuantity = $(form).find( "[name='"+"custmQuantity"+"']");
+	var varform = curreElem.parent().parent();
+    var form = curreElem.parent().parent().find("form");
+    var formId = form.attr('id');
+    var str = "#"+formId;
+    //alert("fid"+str);
+    var custmQuantity = $(varform).find( "[name='"+"custmQuantity"+"']");
     var custmQuantity = $(custmQuantity).val();
+    //alert("qty"+custmQuantity);
+    var createRequirementForCustRequestItem = $(str).attr("action", "createRequirementForCustRequestItem");
+    createRequirementForCustRequestItem.append("<input type='hidden' name='custmQuantity' value='"+custmQuantity+"'/>");
+    createRequirementForCustRequestItem.submit();
 }
 function approveRequestByHOD(element){
 	//alert("In Approve");
@@ -40,4 +48,13 @@ function rejectMaterialRequest(element){
 	    rejectMaterialRequest.append("<input type='hidden' name='statusId' value='"+statusId+"'/>");
 	    rejectMaterialRequest.submit();
     }
+}
+function issueProductForRequest(element){
+	var curreElem = $(element);
+	var varform = curreElem.parent().parent();
+	var form = curreElem.parent().parent().find("form");
+    var formId = form.attr('id');
+    var str = "#"+formId;
+    var issueProductForRequest = $(str).attr("action", "issueProductForRequest");
+    issueProductForRequest.submit();
 }
