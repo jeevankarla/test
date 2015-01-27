@@ -105,6 +105,20 @@ if(orderHeader && orderHeader.statusId == "ORDER_CREATED"){
 	orderEditParamMap.put("orderAdjustment", orderAdjDetail);
 	
 	orderItems = delegator.findList("OrderItem", EntityCondition.makeCondition("orderId", EntityOperator.EQUALS, orderId), null, null, null, false);
+
+	quoteNo = EntityUtil.getFirst(orderItems);
+	quoteDetailMap = [:];
+	quoteDate = delegator.findOne("Quote", UtilMisc.toMap("quoteId", quoteNo.quoteId), false);
+		if(quoteNo)
+		 {
+		quoteDetailMap.putAt("quoteId", quoteNo.quoteId);
+		 }
+		if(quoteDate)
+		 {
+		quoteDetailMap.putAt("quoteIssueDate", UtilDateTime.toDateString(quoteDate.issueDate, "dd MMMMM, yyyy"));
+		 }
+	orderEditParamMap.put("quoteDetails", quoteDetailMap);
+	
 	productIds = EntityUtil.getFieldListFromEntityList(orderItems, "productId", true);
 	
 	products = delegator.findList("Product", EntityCondition.makeCondition("productId", EntityOperator.IN, productIds), null, null, null, false);
