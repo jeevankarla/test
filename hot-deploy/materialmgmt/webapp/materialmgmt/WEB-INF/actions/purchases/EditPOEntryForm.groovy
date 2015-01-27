@@ -70,7 +70,7 @@ if(orderHeader && orderHeader.statusId == "ORDER_CREATED"){
 		orderInfoDetail.putAt("supplierId", orderRole.partyId);
 		orderInfoDetail.putAt("supplierName", partyName);
 	}
-	condList=[];
+	/*condList=[];
 	condList.add(EntityCondition.makeCondition("orderId", EntityOperator.EQUALS, orderId));
 	condList.add(EntityCondition.makeCondition("roleTypeId", EntityOperator.EQUALS, "BILL_FROM_VENDOR"));
 	cond = EntityCondition.makeCondition(condList, EntityOperator.AND);
@@ -79,7 +79,7 @@ if(orderHeader && orderHeader.statusId == "ORDER_CREATED"){
 	if(orderParty){
 		orderInfoDetail.putAt("billToPartyId", orderParty.partyId);
 		
-	}
+	}*/
 	orderEditParamMap.putAt("orderHeader", orderInfoDetail);
 	orderAdjustments = delegator.findList("OrderAdjustment", EntityCondition.makeCondition("orderId", EntityOperator.EQUALS, orderId), null, null, null, false);
 	

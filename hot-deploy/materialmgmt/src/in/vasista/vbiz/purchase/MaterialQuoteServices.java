@@ -605,7 +605,7 @@ public class MaterialQuoteServices {
          cart.setOrderType("PURCHASE_ORDER");
          cart.setChannelType(salesChannel);
          cart.setProductStoreId(productStoreId);
-         cart.setBillToCustomerPartyId(billFromPartyId);
+         cart.setBillToCustomerPartyId("Company");
          cart.setPlacingCustomerPartyId(billFromPartyId);
          cart.setShipToCustomerPartyId(billFromPartyId);
          cart.setEndUserCustomerPartyId(billFromPartyId);
