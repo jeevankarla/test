@@ -77,28 +77,43 @@ if(UtilValidate.isNotEmpty(partyId)){
 	shipmentMap.put("partyName",partyName);
 }
 
-
-
 grnDetails=[];
 if(UtilValidate.isNotEmpty(shipmentId)){
 	grnDetailsList = delegator.findList("ShipmentReceipt",EntityCondition.makeCondition("shipmentId", EntityOperator.EQUALS , shipmentId)  , null, null, null, false );
-}
+ }
 
  grnList=[];
  grnDetailsList.each{grnData->
 	grnDetailsMap=[:];
+	
+	List colist=[];
+	colist.add(EntityCondition.makeCondition("shipmentId", EntityOperator.EQUALS, grnData.shipmentId));
+	colist.add(EntityCondition.makeCondition("shipmentItemSeqId", EntityOperator.EQUALS,grnData.shipmentItemSeqId));
+	cod=EntityCondition.makeCondition(colist,EntityOperator.AND);
+	shipmtItemList = delegator.findList("ShipmentItem", cod , null, null, null, false );
+	shipmtItemList=EntityUtil.getFirst(shipmtItemList);
+	grnDetailsMap["receivedQty"]=shipmtItemList.quantity;
+	
 	grnDetailsMap["productId"]=grnData.productId;
 	grnDetailsMap["orderId"]=grnData.orderId;
-	grnDetailsMap["quantityAccepted"]=grnData.quantityAccepted;
-	grnDetailsMap["quantityRejected"]=grnData.quantityRejected;
-	grnDetailsMap["datetimeReceived"]=grnData.datetimeReceived;
-	grnDetailsMap["selectedAmount"]= 0;
-	//grnDetailsMap["createdDate"]= null;
 	grnDetailsMap["unitPrice"]=0;
 	grnDetailsMap["quantity"]=0;
     grnDetailsMap["amount"]=0;
 	grnDetailsMap["vehicleId"]=vehicleDetail.vehicleId;
 	
+	// productDetails
+	productUomDetails = delegator.findList("Product",EntityCondition.makeCondition("productId", EntityOperator.EQUALS , grnData.productId)  , null, null, null, false );
+	productUomDetails=EntityUtil.getFirst(productUomDetails);
+	grnDetailsMap["internalName"]=productUomDetails.internalName;
+	grnDetailsMap["description"]=productUomDetails.description;
+	uomId=productUomDetails.quantityUomId;
+	if(UtilValidate.isNotEmpty(uomId)){
+	uomDesc = delegator.findList("Uom",EntityCondition.makeCondition("uomId", EntityOperator.EQUALS , uomId)  , null, null, null, false );
+	uomDesc=EntityUtil.getFirst(uomDesc);
+	grnDetailsMap["unit"]=uomDesc.abbreviation;
+	  }
+	
+	// OrderItems Details
 	List condlist=[];
 	condlist.add(EntityCondition.makeCondition("orderId", EntityOperator.EQUALS, grnData.orderId));
 	condlist.add(EntityCondition.makeCondition("orderItemSeqId", EntityOperator.EQUALS, grnData.orderItemSeqId));
@@ -108,34 +123,35 @@ if(UtilValidate.isNotEmpty(shipmentId)){
 	orderDetails=EntityUtil.getFirst(ordDetails);
 	quantity=orderDetails.quantity;
 	unitPrice=orderDetails.unitPrice;
-	selectedAmount=orderDetails.selectedAmount;
-
-	grnDetailsMap["selectedAmount"]= selectedAmount;
 	grnDetailsMap["unitPrice"]=unitPrice;
 	grnDetailsMap["quantity"]=quantity;
-
-	amount=((grnData.quantityAccepted)*(unitPrice));
+	
+	// Received and Accepted Quantity
+	List cList=[];
+	cList.add(EntityCondition.makeCondition("shipmentId", EntityOperator.EQUALS, grnData.shipmentId));
+	cList.add(EntityCondition.makeCondition("shipmentItemSeqId", EntityOperator.EQUALS,grnData.shipmentItemSeqId));
+	cList.add(EntityCondition.makeCondition("statusId", EntityOperator.EQUALS,"SR_QUALITYCHECK"));
+	condit=EntityCondition.makeCondition(cList,EntityOperator.AND);
+	shipmtReciptList = delegator.findList("ShipmentReceipt", condit , null, null, null, false );
+	shipmtReciptList=EntityUtil.getFirst(shipmtReciptList);
+	if(UtilValidate.isNotEmpty(shipmtReciptList)){
+    grnDetailsMap["quantityAccepted"]=shipmtReciptList.quantityAccepted;
+    grnDetailsMap["quantityRejected"]=shipmtReciptList.quantityRejected;
+	amount=((shipmtReciptList.quantityAccepted)*(unitPrice));
 	grnDetailsMap["amount"]=amount;
 	shipmentMap["total"]+=amount;
+	}
+	if(UtilValidate.isEmpty(shipmtReciptList)){
+	grnDetailsMap["quantityAccepted"]=0;
+	grnDetailsMap["quantityRejected"]=0;
+	amount=((shipmtItemList.quantity)*(unitPrice));
+	grnDetailsMap["amount"]=amount;
+	shipmentMap["total"]+=amount;
+	}
 	
 	grnList.addAll(grnDetailsMap);
-	
-	//grnDetailsMap["Total"]+= amount;
-	
-	
-		
 }
-/*total=0;
-grnList.each{grnlist->
-	
-	totalAmt=grnlist.amount;
-	total=total+totalAmt;
-}
-shipmentMap["total"]=total;
-*/
-
 context.shipmentMap=shipmentMap;
-
 context.grnList=grnList;
 
 //Debug.log("grnList=============="+grnList);

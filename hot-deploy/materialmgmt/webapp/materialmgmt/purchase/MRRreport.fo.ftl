@@ -137,61 +137,57 @@ ${setRequestAttribute("OUTPUT_FILENAME", "LoanAvailedReport.pdf")}
 	            		<fo:table-column column-width="70pt"/>
 	                    <fo:table-body>
 	                    <#assign sNo=1>
-	                    
 	                    <#list grnList as grnListItem>
-	                    
-	                  
-					<#assign productId= grnListItem.get("productId")?if_exists >
-		          <#assign productName = delegator.findOne("Product", {"productId" : productId}, true)>
-		           <#if productName?has_content> 
-		          
-              		  
+
 	                    <fo:table-row >
-								
 									<fo:table-cell border-style="solid">
-	                            	 <fo:block  text-align="center"  font-size="10pt" >${sNo} </fo:block>                 			  
+	                            	 <fo:block  text-align="center"  font-size="10pt" >
+                                   ${sNo} </fo:block>                 			  
 	                       			</fo:table-cell>
                                 	<fo:table-cell border-style="solid" >
-                                  	<fo:block text-align="center"  font-size="10pt" >${productName.get("internalName")} </fo:block>                 			  
+                                  	<fo:block text-align="center"  font-size="10pt" >
+                                   ${grnListItem.get("internalName")?if_exists} </fo:block>                 			  
 	                                </fo:table-cell>
                                  	<fo:table-cell border-style="solid">
-                                  	<fo:block text-align="center"  font-size="10pt" >${productName.get("productName")} </fo:block>                 			  
+                                  	<fo:block text-align="center"  font-size="10pt" >
+                                   ${grnListItem.get("description")?if_exists} </fo:block>                 			  
 	                                </fo:table-cell>
 	                       			<fo:table-cell border-style="solid">
-                                    <fo:block text-align="center" font-size="10pt" >
-
+                                     <fo:block text-align="center" font-size="10pt" >
+                                   ${grnListItem.get("unit")?if_exists} 
                                     </fo:block>
 	                                </fo:table-cell>
 	                                <fo:table-cell border-style="solid">
                                     <fo:block text-align="center" font-size="10pt" >
-                                 ${grnListItem.get("quantity")}
-                                 
+                                   ${grnListItem.get("quantity")?if_exists}
                                     </fo:block>
 	                                </fo:table-cell>
 	                                <fo:table-cell border-style="solid">
 	                                    <fo:block text-align="center" font-size="10pt">
-
+	                                    
 	                                    </fo:block>
 	                                </fo:table-cell>
 	                                <fo:table-cell border-style="solid">
 	                                    <fo:block text-align="center" font-size="10pt">
-                                 ${grnListItem.get("quantityAccepted")}
+                                   ${grnListItem.get("receivedQty")?if_exists}
 	                                    </fo:block>
 	                                </fo:table-cell>
 	                                <fo:table-cell border-style="solid">
 	                                   <fo:block text-align="center" font-size="10pt">
-                                ${grnListItem.get("quantityRejected")}
+	                               <#if (grnListItem.get("quantityRejected")?has_content)>
+                                   ${grnListItem.get("quantityRejected")?if_exists}<#else>-</#if>
 	                                    </fo:block>
 	                                </fo:table-cell>
 	                                <fo:table-cell border-style="solid">
 	                                    <fo:block text-align="center" font-size="10pt">
-	                           ${grnListItem.get("quantityAccepted")}
+	                               <#if (grnListItem.get("quantityAccepted")?has_content)>
+	                               ${grnListItem.get("quantityAccepted")?if_exists}<#else>-</#if>
 	                                    </fo:block>
 	                                </fo:table-cell>
 	                               <fo:table-cell border-style="solid">
 	                                    <fo:block text-align="center" font-size="10pt">
-	                               <#if (grnListItem.get("unitPrice")?has_content)>${(grnListItem.get("unitPrice"))?if_exists?string("##0.00")}<#else>0.00</#if>
-	                                    
+	                               <#if (grnListItem.get("unitPrice")?has_content)>
+                                    ${(grnListItem.get("unitPrice"))?if_exists?string("##0.00")}<#else>0.00</#if>
 	                                    </fo:block>
 	                                </fo:table-cell>
 	                               <fo:table-cell border-style="solid">
@@ -216,7 +212,6 @@ ${setRequestAttribute("OUTPUT_FILENAME", "LoanAvailedReport.pdf")}
 	                                </fo:table-cell>
 	                              	<#assign sNo=sNo+1>
 	                               </fo:table-row>
-	                                </#if>
                                 </#list>
                     </fo:table-body>
                 </fo:table>
@@ -319,6 +314,14 @@ ${setRequestAttribute("OUTPUT_FILENAME", "LoanAvailedReport.pdf")}
                </fo:block> 			
 			 </fo:flow>
 			 </fo:page-sequence>
-		</#if>
+		 <#else>
+				<fo:page-sequence master-reference="main">
+    			<fo:flow flow-name="xsl-region-body" font-family="Helvetica">
+       		 		<fo:block font-size="14pt">
+            			NO RECORDS FOUND
+       		 		</fo:block>
+    			</fo:flow>
+			</fo:page-sequence>
+			</#if>
 </fo:root>
 </#escape>
