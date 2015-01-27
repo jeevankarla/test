@@ -5449,6 +5449,34 @@ under the License.
             <index-field name="vocherNumber"/>
           </index>  		 
     </entity> 
+     <entity entity-name="FacilityWiseReportConfig"
+            package-name="org.ofbiz.product.facility"
+            title="Report Header Messages" default-resource-name="ProductEntityLabels">
+           <field name="facilityId" type="id-ne"></field> 
+          <field name="moduleId" type="id-ne"></field>
+          <field name="tenantId" type="id-ne"></field>
+          <field name="ReportId" type="short-varchar"></field> 
+          <field name="showInScreen" type="indicator"></field>
+          <field name="createdDate" type="date-time"></field>
+	      <field name="createdByUserLogin" type="id-vlong"></field>
+	      <field name="lastModifiedDate" type="date-time"></field>
+	      <field name="lastModifiedByUserLogin" type="id-vlong"></field>
+	      <prim-key field="facilityId"/>  
+	      <prim-key field="ReportId"/> 
+	      <relation type="one" fk-name="FA_REC_FACILITY" rel-entity-name="Facility">
+              <key-map field-name="facilityId"/>
+          </relation>
+         <relation type="one" fk-name="FA_REC_ENUM_FK" title="moduleId" rel-entity-name="Enumeration">
+            <key-map field-name="moduleId" rel-field-name="enumId"/>
+        </relation>   
+         <relation type="one" fk-name="FA_REC_CBUL" title="CreatedBy" rel-entity-name="UserLogin">
+      		<key-map field-name="createdByUserLogin" rel-field-name="userLoginId"/>
+   		 </relation>
+	    <relation type="one" fk-name="FA_REC_LMBUL" title="LastModifiedBy" rel-entity-name="UserLogin">
+	       <key-map field-name="lastModifiedByUserLogin" rel-field-name="userLoginId"/>
+	    </relation>  		 
+    </entity>
+    
     <view-entity entity-name="FacilityAndProductStoreFacility"
           package-name="org.ofbiz.product.store" 
           title="Facility and ProductStoreFacility View Entity">
@@ -5463,5 +5491,5 @@ under the License.
       	<view-link entity-alias="PS" rel-entity-alias="FA">
         	<key-map field-name="facilityId"/>
       	</view-link> 	        
-  </view-entity>     
+  </view-entity>       
 </entitymodel>

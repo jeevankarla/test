@@ -27,27 +27,25 @@ import in.vasista.vbiz.humanres.HumanresService;
 dctx = dispatcher.getDispatchContext();
 
 tenantId = delegator.getDelegatorTenantId();
-reportDetailsMap=[:];
 
-if(UtilValidate.isNotEmpty(tenantId)){
-	
 	List conditionList=[];
 	conditionList.add(EntityCondition.makeCondition("facilityId", EntityOperator.EQUALS, "_NA_"));
 	conditionList.add(EntityCondition.makeCondition("moduleId", EntityOperator.EQUALS, "HUMANRES"));
 	conditionList.add(EntityCondition.makeCondition("tenantId", EntityOperator.EQUALS , tenantId));
 	facilityReportCondition = EntityCondition.makeCondition(conditionList,EntityOperator.AND);
 	facilityReportList = delegator.findList("FacilityWiseReportConfig", facilityReportCondition, null, null, null, false);
-	reportDetMap=[:];
+	reportDetailsMap=[:];
 	if(UtilValidate.isNotEmpty(facilityReportList)){
 		
 		facilityReportList.each{ facilityReport ->
 			if(UtilValidate.isNotEmpty(facilityReport)){
 				ReportId = facilityReport.ReportId;
 				showInScreen = facilityReport.showInScreen;
-				reportDetMap.put(ReportId,showInScreen);
+				if(UtilValidate.isEmpty(showInScreen)){
+					showInScreen = "Y";
+				}
+				reportDetailsMap.put(ReportId,showInScreen);
 			}
 		}
 	}
-	reportDetailsMap.put(tenantId,reportDetMap);
-}
 context.put("reportDetailsMap",reportDetailsMap);
