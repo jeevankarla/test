@@ -160,9 +160,9 @@ under the License.
   			</#if>
     		<tr>
     		<#if partyId?exists && partyId?has_content>
-    			<td><span class="label h3"> Supplier Party (<font color='red'>*</font>):</span></td><td><input class="h3" type="text" name="partyId" id="partyId" value="${partyId}"  maxlength="60" /></td>
+    			<td><span class="label h3"> Supplier (<font color='red'>*</font>):</span></td><td><input class="h3" type="text" name="partyId" id="partyId" value="${partyId}"  maxlength="60" /></td>
     		<#else>	
-  				<td><span class="label h3"> Supplier Party (<font color='red'>*</font>):</span></td><td><input class="h3" type="text" name="partyId" id="partyId"  maxlength="60" /></td>
+  				<td><span class="label h3"> Supplier (<font color='red'>*</font>):</span></td><td><input class="h3" type="text" name="partyId" id="partyId"  maxlength="60" /></td>
   			</#if>	
     		</tr>
     		<tr>

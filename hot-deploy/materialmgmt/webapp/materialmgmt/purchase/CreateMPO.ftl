@@ -150,6 +150,7 @@ function makeDatePicker(fromDateId ,thruDateId){
 		makeDatePicker("estimatedDeliveryDate","fromDateId");
 		makeDatePicker("orderDate","fromDateId");
 		makeDatePicker("refDate","fromDateId");
+		makeDatePicker("quoteDate","fromDateId");
 		
 		makeDayDatePicker("effectiveDate","fromDateId");
 		makeDayDatePicker("SInvoiceDate","fromDateId");
