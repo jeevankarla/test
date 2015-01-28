@@ -182,7 +182,7 @@ public class CustomSequenceServices {
 			        String orderHeaderSequenceTypeId = (String) context.get("orderHeaderSequenceTypeId");
 			        String orderId = (String) context.get("orderId");
 			        Locale locale = (Locale) context.get("locale");     
-			        Timestamp estimatedDeliveryDate=(Timestamp) context.get("estimatedDeliveryDate");
+			        Timestamp orderDate=(Timestamp) context.get("orderDate");
 			        
 			        GenericValue userLogin = (GenericValue) context.get("userLogin");
 			        Map<String, Object> result = ServiceUtil.returnSuccess();
@@ -196,17 +196,17 @@ public class CustomSequenceServices {
 			       			GenericValue orderHeader = delegator.findOne("OrderHeader", UtilMisc.toMap("orderId", orderId), false);
 			       			//at present sequence is generated only for OrderHeader
 			       			//if( UtilValidate.isNotEmpty(custRequest) && ("RF_PUR_QUOTE".equals(custRequest.getString("custRequestTypeId"))) ){
-			       			estimatedDeliveryDate = orderHeader.getTimestamp("estimatedDeliveryDate");
-				       			if(UtilValidate.isEmpty(estimatedDeliveryDate)){
-										Debug.logError("EstimatedDeliveryDate can not be empty in OrderHeaderSequence generation !", module);
-										return ServiceUtil.returnError("EstimatedDeliveryDate can not be empty in OrderHeaderSequence generation ! ");
+			       			orderDate = orderHeader.getTimestamp("orderDate");
+				       			if(UtilValidate.isEmpty(orderDate)){
+										Debug.logError("orderDate can not be empty in OrderHeaderSequence generation !", module);
+										return ServiceUtil.returnError("orderDate can not be empty in OrderHeaderSequence generation ! ");
 								}
 				       			
 			       			Map finYearContext = FastMap.newInstance();
 			   				finYearContext.put("onlyIncludePeriodTypeIdList", UtilMisc.toList("FISCAL_YEAR"));
 			   				finYearContext.put("organizationPartyId", "Company");
 			   				finYearContext.put("userLogin", userLogin);
-			   				finYearContext.put("findDate", estimatedDeliveryDate);
+			   				finYearContext.put("findDate", orderDate);
 			   				finYearContext.put("excludeNoOrganizationPeriods", "Y");
 			   				List customTimePeriodList = FastList.newInstance();
 			   				Map resultCtx = FastMap.newInstance();
