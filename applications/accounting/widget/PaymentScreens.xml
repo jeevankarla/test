@@ -1187,6 +1187,25 @@ under the License.
             </widgets>
         </section>
     </screen>
+    <screen name="paymentVoucher">
+        <section>
+            <actions>
+                <property-map resource="OrderUiLabels" map-name="uiLabelMap" global="true"/>
+				<property-map resource="ProductUiLabels" map-name="uiLabelMap" global="true"/>
+				<property-map resource="PartyUiLabels" map-name="uiLabelMap" global="true"/>
+				<property-map resource="CommonUiLabels" map-name="uiLabelMap" global="true"/>
+				<set field="titleProperty" value="AccountingInvoice"/>
+                <script location="component://order/webapp/ordermgr/WEB-INF/actions/order/CompanyHeader.groovy"/>
+                <script location="component://accounting/webapp/accounting/WEB-INF/actions/payment/paymentVoucherDetails.groovy"/>
+                <script location="component://party/webapp/partymgr/WEB-INF/actions/party/GetMyCompany.groovy"/>
+            </actions>
+            <widgets>
+                <platform-specific>
+                <html><html-template location="component://accounting/webapp/accounting/payment/paymentVoucher.fo.ftl"/></html>
+	            </platform-specific>	
+            </widgets>
+        </section>
+    </screen>
     
     <screen name="TDSRelatedReportScreen">
     	<section>

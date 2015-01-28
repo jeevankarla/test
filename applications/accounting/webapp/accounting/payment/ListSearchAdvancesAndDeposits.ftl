@@ -162,7 +162,8 @@ function setVoidPaymentParameters(currentPayment){
           <td>Cancel</td> 
            </#if>
           <td>PrintReceipt</td>
-          <td align="right">${uiLabelMap.CommonSelectAll} <input type="checkbox" id="checkAllPayments" name="checkAllPayments" onchange="javascript:togglePaymentId(this);"/></td>
+          <td>Voucher</td>
+          <#-- <td align="right">${uiLabelMap.CommonSelectAll} <input type="checkbox" id="checkAllPayments" name="checkAllPayments" onchange="javascript:togglePaymentId(this);"/></td>-->
         </tr>
       </thead>
       <tbody>
@@ -208,7 +209,11 @@ function setVoidPaymentParameters(currentPayment){
               		PrintReceipt
               	</a>
               </td>
-              
+              <td>
+              	<a target="_blank" class="buttontext" href="<@ofbizUrl>paymentVoucher?paymentId=${payment.paymentId}</@ofbizUrl>" >
+              		Voucher
+              	</a>
+              </td>
              <#--  <td align="right"><input type="checkbox" id="paymentId_${payment_index}" name="paymentIds" value="${payment.paymentId}" onclick="javascript:getInvoiceRunningTotal();"/></td> -->
             </tr>
             <#-- toggle the row color -->

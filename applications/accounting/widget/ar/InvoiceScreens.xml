@@ -188,7 +188,10 @@ under the License.
 														<parameter param-name="dueDate_fld1_op" from-field="parameters.dueDate_fld1_op"/>
 													</link>	  
 												</widgets>
-											</section>               
+											</section> 
+											<platform-specific>
+                                        	<html><html-template location="component://accounting/webapp/accounting/invoice/massPayments.ftl"/></html>
+											</platform-specific>
                                         	<platform-specific>
                                             	<html><html-template location="component://accounting/webapp/accounting/invoice/ListSearchInvoices.ftl"/></html>
                                         	</platform-specific>

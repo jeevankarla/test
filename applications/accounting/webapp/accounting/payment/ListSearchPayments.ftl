@@ -163,7 +163,8 @@ function setVoidPaymentParameters(currentPayment){
           <td>Cancel</td> 
            </#if>
           <td>PrintReceipt</td>
-          <td align="right">${uiLabelMap.CommonSelectAll} <input type="checkbox" id="checkAllPayments" name="checkAllPayments" onchange="javascript:togglePaymentId(this);"/></td> 
+          <td>Voucher</td>
+          <#--<td align="right">${uiLabelMap.CommonSelectAll} <input type="checkbox" id="checkAllPayments" name="checkAllPayments" onchange="javascript:togglePaymentId(this);"/></td>--> 
         </tr>
       </thead>
       <tbody>
@@ -181,9 +182,12 @@ function setVoidPaymentParameters(currentPayment){
                 ${paymentType.description?default(payment.paymentTypeId)}
               </td>
               <td>
+              <#if payment.paymentMethodTypeId?has_content>
               	<input type="hidden" name="paymentMethodTypeId" id="paymentMethodTypeId" value="${payment.paymentMethodTypeId?if_exists}"> 
-                <#assign paymentMethodType = delegator.findOne("PaymentMethodType", {"paymentMethodTypeId" : payment.paymentMethodTypeId}, true) />
-                ${paymentMethodType.description?default(payment.paymentMethodTypeId)}
+              	
+                <#assign paymentMethodType = delegator.findOne("PaymentMethodType", {"paymentMethodTypeId" : payment.paymentMethodTypeId?if_exists}, true) />
+                ${paymentMethodType.description?default(payment.paymentMethodTypeId?if_exists)}
+			</#if>
               </td>   
                <td>
               ${payment.comments?if_exists}
@@ -206,14 +210,18 @@ function setVoidPaymentParameters(currentPayment){
               </#if>
               </td>
                </#if>
-             
+          
               <td>
               	<a target="_blank" class="buttontext" href="<@ofbizUrl>printReceipt.pdf?paymentIds=${payment.paymentId}</@ofbizUrl>" >
               		PrintReceipt
               	</a>
               </td>
-              <td>
+               <td>
+              	<a target="_blank" class="buttontext" href="<@ofbizUrl>paymentVoucher?paymentId=${payment.paymentId}</@ofbizUrl>" >
+              		Voucher
+              	</a>
               </td>
+
              
              <#--  <td align="right"><input type="checkbox" id="paymentId_${payment_index}" name="paymentIds" value="${payment.paymentId}" onclick="javascript:getInvoiceRunningTotal();"/></td> -->
             </tr>
