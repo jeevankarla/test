@@ -237,16 +237,16 @@ under the License.
        
        <!-- view employee portal permissions -->
        
-       <SecurityGroup description="Customer user of MYPORTAL, Limited access to Employee to view profile, attendance and leaves" groupId="HR_EMPLVIEW_ADMIN"/>
-        <SecurityGroupPermission groupId="HR_EMPLVIEW_ADMIN" permissionId="HUMANRES_VIEW"/>
-    	<SecurityGroupPermission groupId="HR_EMPLVIEW_ADMIN" permissionId="HUMANRES_EMPLOYEE"/>
-    	<SecurityGroupPermission groupId="HR_EMPLVIEW_ADMIN" permissionId="HR_EMPLLEAVE_VIEW"/>
-    	<SecurityGroupPermission groupId="HR_EMPLVIEW_ADMIN" permissionId="HR_ATTENDANCE_VIEW"/>
-    	<SecurityGroupPermission groupId="HR_EMPLVIEW_ADMIN" permissionId="HUMANRES_LEAVE_EDIT"/>
-    	<SecurityGroupPermission groupId="HR_EMPLVIEW_ADMIN" permissionId="MYPORTAL_EMPLOYEE"/>
-    	<SecurityGroupPermission groupId="HR_EMPLVIEW_ADMIN" permissionId="MYPORTALBASE_ADMIN"/>
-    	<SecurityGroupPermission groupId="HR_EMPLVIEW_ADMIN" permissionId="HR_EMPL_PROFILE_VIEW"/>
-    	<SecurityGroupPermission groupId="HR_EMPLVIEW_ADMIN" permissionId="HUMANRES_EMPLOYEE_VIEW"/>
-    	<SecurityGroupPermission groupId="HR_EMPLVIEW_ADMIN" permissionId="OFBTOOLS_VIEW"/>
+        <SecurityGroup description="Customer user of MYPORTAL, Limited access to Employee to view profile, attendance and leaves" groupId="HR_EMPL_DASHBOARD"/>
+        <SecurityGroupPermission groupId="HR_EMPL_DASHBOARD" permissionId="HUMANRES_VIEW"/>
+    	<SecurityGroupPermission groupId="HR_EMPL_DASHBOARD" permissionId="HUMANRES_EMPLOYEE"/>
+    	<SecurityGroupPermission groupId="HR_EMPL_DASHBOARD" permissionId="HR_EMPLLEAVE_VIEW"/>
+    	<SecurityGroupPermission groupId="HR_EMPL_DASHBOARD" permissionId="HR_ATTENDANCE_VIEW"/>
+    	<SecurityGroupPermission groupId="HR_EMPL_DASHBOARD" permissionId="HUMANRES_LEAVE_EDIT"/>
+    	<SecurityGroupPermission groupId="HR_EMPL_DASHBOARD" permissionId="MYPORTAL_EMPLOYEE"/>
+    	<SecurityGroupPermission groupId="HR_EMPL_DASHBOARD" permissionId="MYPORTALBASE_ADMIN"/>
+    	<SecurityGroupPermission groupId="HR_EMPL_DASHBOARD" permissionId="HR_EMPL_PROFILE_VIEW"/>
+    	<SecurityGroupPermission groupId="HR_EMPL_DASHBOARD" permissionId="HUMANRES_EMPLOYEE_VIEW"/>
+    	<SecurityGroupPermission groupId="HR_EMPL_DASHBOARD" permissionId="OFBTOOLS_VIEW"/>
       
 </entity-engine-xml>
