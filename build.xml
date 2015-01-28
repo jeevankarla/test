@@ -981,7 +981,8 @@ under the License.
     <target name="kmf-tar"
             description="Creates a tar package of the whole application for deployment.">
     	<exec executable="tar">
-        	<arg value="--exclude=.svn"/>    		
+        	<arg value="--exclude=.svn"/>    
+        	<arg value="--exclude=.git"/>          	
         	<arg value="--exclude=applications/*/src"/>
         	<arg value="--exclude=hot-deploy/*/src"/>  
         	<arg value="--exclude=specialpurpose/*/src"/>      		
