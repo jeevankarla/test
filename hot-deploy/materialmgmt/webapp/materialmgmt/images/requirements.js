@@ -58,3 +58,36 @@ function issueProductForRequest(element){
     var issueProductForRequest = $(str).attr("action", "issueProductForRequest");
     issueProductForRequest.submit();
 }
+function changeQuoteItemStatus(element){
+	var curreElem = $(element);
+	var varform = curreElem.parent().parent();
+	var form = curreElem.parent().parent().find("form");
+    var formId = form.attr('id');
+    var name= form.attr('name');
+    var str = "#"+formId;
+    var description = $(varform).find("[name='"+"comments"+"']");
+    var description = $(description).val();
+    
+    if(description.length==0){
+    	alert("Please Write The Comments For Disqualify.");
+    }else{
+    	$('#comments').val(description);
+    	var changeQuoteItemStatus = $(str).attr("action", "changeQuoteItemStatus");
+        changeQuoteItemStatus.submit();
+    }
+}
+
+function quoteNegotiateAndStatusChange(element){
+	var curreElem = $(element);
+	var varform = curreElem.parent().parent();
+    var form = curreElem.parent().parent().find("form");
+    var formId = form.attr('id');
+    var str = "#"+formId;
+    var quoteUnitPrice=$(varform).find("[name='"+"quoteUnitPrice"+"']");
+    var quoteUnitPrice=$(quoteUnitPrice).val();
+    $('#quoteUnitPrice').val(quoteUnitPrice);
+    var quoteNegotiateAndStatusChange = $(str).attr("action", "quoteNegotiateAndStatusChange");
+    //quoteNegotiateAndStatusChange.append("<input type='hidden' name='quoteUnitPrice' value='"+quoteUnitPrice+"'/>");
+    quoteNegotiateAndStatusChange.submit();
+	
+}
