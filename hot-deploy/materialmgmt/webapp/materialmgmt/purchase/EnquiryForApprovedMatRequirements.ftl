@@ -12,19 +12,11 @@ $(document).ready(function(){
      var dateStr = day+ " "+ month + "," + year;  
      var newDate = new Date(year, month, day);
      $('#closedDate').val($.datepicker.formatDate('dd MM, yy', newDate));
+     document.getElementById("requestDate").readOnly = true;
 });
 	function datepick()
 	{		
-		$( "#requestDate" ).datepicker({
-			dateFormat:'dd MM, yy',
-			changeMonth: true,
-			maxDate:0,
-			numberOfMonths: 1});
-			$( "#openDate" ).datepicker({
-			dateFormat:'dd MM, yy',
-			changeMonth: true,
-			maxDate:0,
-			numberOfMonths: 1});
+		
 			$( "#closedDate" ).datepicker({
 			dateFormat:'dd MM, yy',
 			changeMonth: true,
@@ -105,7 +97,7 @@ $(document).ready(function(){
 	  <font size="15" color="blue"><b>Total Selected :<b/></font><font size="15" color="red"><b><span id="totalCount"></span></b></font>&nbsp;&nbsp;&nbsp;<font size="15" color="blue"><b>No Of Products :<b/></font><font size="15" color="red"><b><span id="productCount"></span></b></font>
 	</div>
 	<div align="center">
-		<font size="15" color="blue"><b>Enquiry Reference :<b/></font><input id="enquiryName" name="enquiryName" required type="text" size="20"/>&nbsp;&nbsp;&nbsp;<font size="15" color="blue"><b> Enquiry Date :<b/></font><input class='h3'  type='text' id='requestDate' name='requestDate'  onmouseover='datepick()'/>&nbsp;&nbsp;&nbsp;<!-- <font size="15" color="blue"><b> Open Date :<b/></font><input class='h3'  type='text' id='openDate' name='openDate'  onmouseover='datepick()'/>&nbsp;&nbsp;&nbsp; --><font size="15" color="blue"><b> Closed Date :<b/></font><input class='h3'  type='text' id='closedDate' name='closedDate'  onmouseover='datepick()'/>
+		<font size="15" color="blue"><b>Enquiry Reference :<b/></font><input id="enquiryName" name="enquiryName" required type="text" size="20"/>&nbsp;&nbsp;&nbsp;<font size="15" color="blue"><b> Enquiry Date :<b/></font><input class='h3'  type='text' id='requestDate' name='requestDate'  />&nbsp;&nbsp;&nbsp;<!-- <font size="15" color="blue"><b> Open Date :<b/></font><input class='h3'  type='text' id='openDate' name='openDate'  onmouseover='datepick()'/>&nbsp;&nbsp;&nbsp; --><font size="15" color="blue"><b> Closed Date :<b/></font><input class='h3'  type='text' id='closedDate' name='closedDate'  onmouseover='datepick()'/>
 	</div>
 <form id="EnquiryForApprovedMatRequirements" name="EnquiryForApprovedMatRequirements" action="" method="post">
 	<div align="right">

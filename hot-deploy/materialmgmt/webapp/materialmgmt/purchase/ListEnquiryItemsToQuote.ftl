@@ -143,6 +143,25 @@ under the License.
 		$('#ui-datepicker-div').css('clip', 'auto');
 		
 	}
+	
+	function getName(){
+		var partyId=$("#partyId").val();
+	    var custRequestId = $("#custRequestId").val();
+	    var data= "partyId="+partyId+"&custRequestId="+custRequestId;
+		$.ajax({
+	        type: "POST",
+	        url: "getSupplierName",
+	        data: data,
+	        dataType: 'json',
+	        success: function(result) {
+	        partyName=result["partyName"];
+	        jQuery("#partyName").html(partyName);
+	       	 },
+	       error: function() {
+	       	 	alert(result["_ERROR_MESSAGE_"]);
+	       	 }
+		});
+	}
 //]]>
 </script>
 <#if flag?exists && flag=="Y">
@@ -162,14 +181,14 @@ under the License.
     		<#if partyId?exists && partyId?has_content>
     			<td><span class="label h3"> Supplier (<font color='red'>*</font>):</span></td><td><input class="h3" type="text" name="partyId" id="partyId" value="${partyId}"  maxlength="60" /></td>
     		<#else>	
-  				<td><span class="label h3"> Supplier (<font color='red'>*</font>):</span></td><td><input class="h3" type="text" name="partyId" id="partyId"  maxlength="60" /></td>
+  				<td><span class="label h3"> Supplier (<font color='red'>*</font>):</span></td><td><input class="h3" type="text" name="partyId" id="partyId"  maxlength="60"  /><span style="border: 1px solid #888;background-color:yellow;" id="partyName"></span></td>
   			</#if>	
     		</tr>
     		<tr>
     		<#if issueDate?exists && issueDate?has_content>
     			<td><span class="label h3">Quote Received Date :</span></td><td><input class='h3' type='text' id='issueDate' name='issueDate' value="${issueDate}" onmouseover='datepick()'/></td>
     		<#else>	
-    			<td><span class="label h3">Quote Received Date :</span></td><td><input class='h3' type='text' id='issueDate' name='issueDate' onmouseover='datepick()'/></td>
+    			<td><span class="label h3">Quote Received Date :</span></td><td><input class='h3' type='text' id='issueDate' name='issueDate' onmouseover='datepick()' onclick="getName()" ></td>
     		</#if>	
     		</tr>
     		<tr>
