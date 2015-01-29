@@ -57,9 +57,10 @@
                 	<order-by field-name="quoteItemSeqId"/>
                 	<order-by field-name="quoteStatusId"/>
                 </entity-condition>
-                
+                <set field="layoutSettings.javaScripts[]" value="/materialmgmt/images/getTermTypeByParentType.js" global="true"/>
                 <!-- <script location="component://procurement/webapp/procurement/WEB-INF/actions/CheckCreatePO.groovy" /> -->
                 <script location="component://materialmgmt/webapp/materialmgmt/WEB-INF/actions/purchases/createPOButtonCheck.groovy" />
+                <script location="component://materialmgmt/webapp/materialmgmt/WEB-INF/actions/purchases/termTypesAndParentTypes.groovy" />
             </actions>
             <widgets>
            	  <decorator-screen name="materialmgmtNgCommonDecorator" location="${parameters.mainDecoratorLocation}">
