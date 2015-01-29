@@ -339,14 +339,22 @@ public class MaterialRequestServices {
 				return resultCtx;
 			}
 			
-			Map statusCtx = FastMap.newInstance();
-			statusCtx.put("statusId", statusId);
-			statusCtx.put("custRequestId", custRequestId);
-			statusCtx.put("userLogin", userLogin);
-			resultCtx = dispatcher.runSync("setCustRequestStatus", statusCtx);
-			if (ServiceUtil.isError(resultCtx)) {
-				Debug.logError("RequestItem set status failed for Request: " + custRequestId, module);
-				return resultCtx;
+			List condList=FastList.newInstance();
+			List<GenericValue> custRequestItems = FastList.newInstance();
+			condList.add(EntityCondition.makeCondition("custRequestId", EntityOperator.EQUALS, custRequestId));
+			condList.add(EntityCondition.makeCondition("statusId", EntityOperator.EQUALS, "CRQ_DRAFT"));
+			EntityCondition cond = EntityCondition.makeCondition(condList,EntityOperator.AND);
+			custRequestItems = delegator.findList("CustRequestItem", cond,null,null,null,false);
+			if(custRequestItems.size()==0){
+				Map statusCtx = FastMap.newInstance();
+				statusCtx.put("statusId", statusId);
+				statusCtx.put("custRequestId", custRequestId);
+				statusCtx.put("userLogin", userLogin);
+				resultCtx = dispatcher.runSync("setCustRequestStatus", statusCtx);
+				if (ServiceUtil.isError(resultCtx)) {
+					Debug.logError("RequestItem set status failed for Request: " + custRequestId, module);
+					return resultCtx;
+				}
 			}
 			
 		} catch (Exception e) {
@@ -384,6 +392,23 @@ public class MaterialRequestServices {
 			}
 			custRequestItem.set("statusId", statusId);
 			custRequestItem.store();
+			
+			List condList=FastList.newInstance();
+			List<GenericValue> custRequestItems = FastList.newInstance();
+			condList.add(EntityCondition.makeCondition("custRequestId", EntityOperator.EQUALS, custRequestId));
+			condList.add(EntityCondition.makeCondition(EntityCondition.makeCondition("statusId", EntityOperator.EQUALS, "CRQ_SUBMITTED"), EntityOperator.OR, EntityCondition.makeCondition("statusId",EntityOperator.EQUALS,"CRQ_DRAFT")));
+			EntityCondition cond = EntityCondition.makeCondition(condList,EntityOperator.AND);
+			custRequestItems = delegator.findList("CustRequestItem", cond,null,null,null,false);
+			if((custRequestItems.size()==0) && (statusId.equals("CRQ_REJECTED"))){
+				GenericValue custRequest = delegator.findOne("CustRequest", UtilMisc.toMap("custRequestId", custRequestId),  false);
+				custRequest.set("statusId", statusId);
+				custRequest.store();
+			}
+			if((custRequestItems.size()>0) && (statusId.equals("CRQ_REJECTED"))){
+				GenericValue custRequest = delegator.findOne("CustRequest", UtilMisc.toMap("custRequestId", custRequestId),  false);
+				custRequest.set("statusId", "CRQ_SUBMITTED");
+				custRequest.store();
+			}
 			
 			Map inputCtx = FastMap.newInstance();
 			inputCtx.put("custRequestId", custRequestId);
