@@ -488,7 +488,6 @@ function makeDatePicker(fromDateId ,thruDateId){
 									    <tr></tr>
 									    <tr>
 								        	<td align="center">Term Type</td>
-								        	<td align="center">Parent Type</td>
 								         	<td align="center">Term Days</td>
 								          	<td align="center">Term Value</td>
 								          	<td align="center">UOM</td>
@@ -500,11 +499,7 @@ function makeDatePicker(fromDateId ,thruDateId){
 										    	<tr>
 										    		<input type="hidden"  name="paymentTermTypeId_o_${rowCount}" value="${eachPayTerm.get("termTypeId")?if_exists}"/>
 										        	<td>
-										          		<input type="text"  name="paymentTermDesc" value="${eachPayTerm.get("termTypeDescription")?if_exists}" size="30"/>
-										        	</td>
-										        	<#assign termType = delegator.findOne("TermType", {"termTypeId" : eachPayTerm.get("termTypeId")?if_exists}, true)>
-										        	<td>
-										          		<input type="text"  name="parentTypeId" value="${termType.get("parentTypeId")?if_exists}" size="30"/>
+										          		<input type="text"  name="paymentTermDesc" value="${eachPayTerm.get("termTypeDescription")?if_exists}" size="40"/>
 										        	</td>
 									            	<td>
 									                	<input type="text" name="paymentTermDays_o_${rowCount}" value="${eachPayTerm.get("termDays")?if_exists}" size="10"/>
@@ -577,7 +572,6 @@ function makeDatePicker(fromDateId ,thruDateId){
 								    </tr>
 								    <tr>
 							        	<td align="center">Term Type</td>
-							        	<td align="center">Parent Type</td>
 							         	<td align="center">Term Days</td>
 							          	<td align="center">Term Value</td>
 							          	<td align="center">UOM</td>
@@ -589,12 +583,8 @@ function makeDatePicker(fromDateId ,thruDateId){
 									    	<tr>
 									    		<input type="hidden"  name="deliveryTermTypeId_o_${rowCount}" value="${eachShipTerm.get("termTypeId")?if_exists}"/>
 									        	<td>
-									          		<input type="text"  name="deliveryTermDesc" value="${eachShipTerm.get("termTypeDescription")?if_exists}" size="30"/>
+									          		<input type="text"  name="deliveryTermDesc" value="${eachShipTerm.get("termTypeDescription")?if_exists}" size="40"/>
 									        	</td>
-									        	<#assign termType = delegator.findOne("TermType", {"termTypeId" : eachPayTerm.get("termTypeId")?if_exists}, true)>
-										        	<td>
-										          		<input type="text"  name="parentTypeId" value="${termType.get("parentTypeId")?if_exists}" size="30"/>
-										        	</td>
 								            	<td>
 								                	<input type="text" name="deliveryTermDays_o_${rowCount}" value="${eachShipTerm.get("termDays")?if_exists}" size="10"/>
 								            	</td>
