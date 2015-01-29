@@ -619,24 +619,26 @@ public static Map<String, Object> setReauirementStatusId(DispatchContext ctx,Map
             List<GenericValue> uomDetail = FastList.newInstance();
             while ((product = eli.next()) != null) {
             	uomId = product.getString("quantityUomId");
-            	
-            	uomDetail = EntityUtil.filterByCondition(uomDetails, EntityCondition.makeCondition("uomId", EntityOperator.EQUALS, uomId));
-            	GenericValue uom = EntityUtil.getFirst(uomDetail);
-            	String description = "";
-            	String uomTypeId = "";
-            	if(UtilValidate.isNotEmpty(uom) && UtilValidate.isNotEmpty(uom.get("description"))){
-            		description = uom.getString("description");
-            		uomTypeId = uom.getString("uomTypeId");
+            	if(UtilValidate.isNotEmpty(uomId)){
+            		uomDetail = EntityUtil.filterByCondition(uomDetails, EntityCondition.makeCondition("uomId", EntityOperator.EQUALS, uomId));
+                	GenericValue uom = EntityUtil.getFirst(uomDetail);
+                	String description = "";
+                	String uomTypeId = "";
+                	if(UtilValidate.isNotEmpty(uom) && UtilValidate.isNotEmpty(uom.get("description"))){
+                		description = uom.getString("description");
+                		uomTypeId = uom.getString("uomTypeId");
+                	}
+                	productUomMap.put(product.getString("productId"), uomId);
+                	uomLabelMap.put(uomId, description);
+                	
+                	Map tempMap = FastMap.newInstance();
+                	tempMap.put("productId", product.getString("productId"));
+                	tempMap.put("quantityUomId", uomId);
+                	tempMap.put("uomTypeId", uomTypeId);
+                	tempMap.put("uomDescription", description);
+                	productUOMList.add(tempMap);
             	}
-            	productUomMap.put(product.getString("productId"), uomId);
-            	uomLabelMap.put(uomId, description);
             	
-            	Map tempMap = FastMap.newInstance();
-            	tempMap.put("productId", product.getString("productId"));
-            	tempMap.put("quantityUomId", uomId);
-            	tempMap.put("uomTypeId", uomTypeId);
-            	tempMap.put("uomDescription", description);
-            	productUOMList.add(tempMap);
             }
             eli.close();
         } catch (GenericEntityException e) {
