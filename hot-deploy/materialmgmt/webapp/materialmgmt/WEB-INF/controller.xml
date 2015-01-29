@@ -273,6 +273,12 @@
     	<response name="success" type="view" value="MRRreportPDF"/>
     </request-map>
      
+     <request-map uri="getSupplierName">
+        <security https="true" auth="true"/>
+        <event type="groovy" path="component://materialmgmt/webapp/materialmgmt/WEB-INF/actions/purchases/" invoke="materialSupplierAutoComplete.groovy"/>
+        <response name="success" type="request" value="json"/>
+    </request-map>
+     
      <request-map uri="rejectMaterialRequest">
        <security https="true" auth="true"/>
        <event type="service" path="" invoke="setCustRequestItemStatus"></event>

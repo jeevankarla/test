@@ -18,8 +18,7 @@ import org.ofbiz.party.party.PartyHelper;
 
 custReqId =parameters.custRequestId;
 Debug.log("Enquiry id= SSS "+custReqId);
-
-
+nameMap=[:];
 JSONArray supplierJSON = new JSONArray();
 
 Condition = EntityCondition.makeCondition([EntityCondition.makeCondition("custRequestId", custReqId)],EntityOperator.AND);
@@ -31,6 +30,14 @@ if(supplierList){
 		partyName=PartyHelper.getPartyName(delegator, supplier.partyId, false);
 		newObj.put("label",partyName+"["+supplier.partyId+"]");
 		supplierJSON.add(newObj);
+		if(UtilValidate.isEmpty(nameMap[supplier.partyId])){
+			nameMap[supplier.partyId]=partyName;
+		}
 	}
 }
 context.supplierJSON=supplierJSON;
+partyId=parameters.partyId;
+if(UtilValidate.isNotEmpty(partyId)){
+	partyName=nameMap.get(partyId);
+	request.setAttribute("partyName",partyName);
+}
