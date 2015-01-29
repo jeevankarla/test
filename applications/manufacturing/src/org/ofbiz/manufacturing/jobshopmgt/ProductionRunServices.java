@@ -2231,6 +2231,7 @@ public class ProductionRunServices {
         GenericValue userLogin = (GenericValue) context.get("userLogin");
         // Mandatory input fields
         String requirementId = (String)context.get("requirementId");
+        BigDecimal quantity = (BigDecimal)context.get("quantity");
         GenericValue requirement = null;
         try {
             requirement = delegator.findByPrimaryKey("Requirement", UtilMisc.toMap("requirementId", requirementId));
@@ -2244,7 +2245,7 @@ public class ProductionRunServices {
             dispatcher.runSync("updateRequirement", 
                     UtilMisc.<String, Object>toMap("requirementId", requirementId, 
                             "statusId", "REQ_APPROVED", "requirementTypeId", requirement.getString("requirementTypeId"), 
-                            "userLogin", userLogin));
+                            "quantity", quantity, "userLogin", userLogin));
         } catch (GenericServiceException e) {
             return ServiceUtil.returnError(UtilProperties.getMessage(resource, "ManufacturingRequirementNotUpdated", locale));
         }

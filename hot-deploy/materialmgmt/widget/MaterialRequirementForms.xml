@@ -123,7 +123,7 @@
         </field>
     </form>
     <form name="ApproveMaterialRequirements" type="multi" use-row-submit="true" target="approveMaterialRequirementEnrties" title="" list-name="requirements"
-        paginate-target="ApproveRequirements" odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
+       separate-columns="true" paginate-target="ApproveRequirements" odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
         <row-actions>
           	<service service-name="getLastSupplyMaterialDetails" result-map="resultMap">
           		<field-map field-name="productId" from-field="productId"/>
@@ -144,17 +144,28 @@
             <display-entity entity-name="Product" key-field-name="productId" description="${productId} - ${productName}"/>
         </field>
         <field name="statusId"><hidden/></field>
-        <field name="requirementStartDate" title="Requirement Date"><display/></field>
-        <!-- <field name="requiredByDate"><display/></field> -->
-        <field name="quantity" title="${uiLabelMap.CommonQuantity}"><display/></field>
         <field name="supplyDate" title="Last Supply Date"><display description="${supplyDetails.supplyDate}"/></field>
+        <field name="requirementStartDate" title="Requirement Date"><display/></field>
         <field name="partyId" title="Last Supplier"><display-entity entity-name="PartyNameView" description="${LastName} ${firstName} ${middleName} ${groupName} - [${partyId}]"  key-field-name="partyId" /></field>
         <field name="supplyQty" title="Last Supply Qty"><display description="${supplyDetails.supplyQty}"/></field>
+        <field name="quantity" title="${uiLabelMap.CommonQuantity}"><text size="10"/></field>
+        <!-- <field name="requiredByDate"><display/></field> -->
         <field name="unitPrice" title="Last Rate"><display description="${supplyDetails.supplyRate}"/></field>
-        <field name="_rowSubmit" title="${uiLabelMap.CommonSelect}"><check/></field>
+        <field name="_rowSubmit" title="${uiLabelMap.CommonSelect}" ><check/></field>
         <field name="submitButton" title="${uiLabelMap.CommonSubmit}" widget-style="smallSubmit">
           <submit/>
         </field>
+    <sort-order>
+    	<sort-field name="requirementId"/>
+    	<sort-field name="productId"/>
+    	<sort-field name="requirementStartDate"/>
+    	<sort-field name="quantity"/>
+    	<sort-field name="supplyDate"/>
+    	<sort-field name="partyId"/>
+    	<sort-field name="supplyQty"/>
+    	<sort-field name="unitPrice"/>
+    	<sort-field name="_rowSubmit"/>
+    </sort-order>    
     </form>
     <form name="FindApprovedProductRequirements" type="single" target="ApprovedMatRequirementBySupplier" title=""
         header-row-style="header-row" default-table-style="basic-table">
