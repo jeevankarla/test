@@ -332,7 +332,9 @@
                 <set field="requiredDate" value="${parameters.requiredDate}"/>
                 <set field="productCategoryId" from-field="parameters.productCategoryId"/>
                 <set field="custRequestName" from-field="parameters.custRequestName"/>
-                <script location="component://byproducts/webapp/byproducts/WEB-INF/actions/facility/CustRequestIndentForm.groovy"/>
+                <!-- <script location="component://byproducts/webapp/byproducts/WEB-INF/actions/facility/CustRequestIndentForm.groovy"/> -->
+                <script location="component://materialmgmt/webapp/materialmgmt/WEB-INF/actions/purchases/CustRequestIndentForm.groovy"/>
+                
             </actions>
             <widgets>
                    <section>
