@@ -182,9 +182,10 @@
 		<field name="submitButton" use-when="leaveApp==null" title="${uiLabelMap.CommonCreate}" widget-style="smallSubmit"><submit button-type="button"/></field>
         <field name="submitButton" use-when="leaveApp!=null" title="${uiLabelMap.CommonUpdate}" widget-style="smallSubmit"><submit button-type="button"/></field>
     </form>
-   <form name="FindLeaveApprovals" target="FindLeaveApprovals" type="single">
+   <form name="FindLeaveApprovals" id="FindLeaveApprovals" target="FindLeaveApprovals" type="single">
         <field name="partyId" title="Employee Id" ><lookup target-form-name="LookupEmployeeName"/></field>
         <!-- <field name="partyId" title="${uiLabelMap.PartyPartyId}" use-when="!hasEmplLeaveApprovePermission"><hidden/></field> -->
+        <field name="noConditionFind"><hidden value="Y"/><!-- if this isn't there then with all fields empty no query will be done --></field>
         <field name="leaveTypeId">
             <drop-down allow-empty="true">
                 <entity-options description="${description}" key-field-name="leaveTypeId" entity-name="EmplLeaveType"/>
@@ -270,7 +271,7 @@
         <field name="leaveStatus"><display-entity entity-name="StatusItem" key-field-name="statusId" description="${description}"></display-entity></field>
 		<field name="documentsProduced" title="Docs"><display></display></field>    
 		<field name="comment" title="Comment" ><display size="20"/></field> 
-        <field name="UpdateStatus" use-when="&quot;${leaveStatus}&quot;!=&quot;LEAVE_REJECTED&quot;" title="${uiLabelMap.CommonUpdate}" widget-style="buttontext">
+        <!-- <field name="UpdateStatus" use-when="&quot;${leaveStatus}&quot;!=&quot;LEAVE_REJECTED&quot;" title="${uiLabelMap.CommonUpdate}" widget-style="buttontext">
             <hyperlink target="EditEmplLeaveStatus" description="${uiLabelMap.CommonUpdate}" >
                 <parameter param-name="partyId"/>
                 <parameter param-name="fromDate"/>
@@ -278,9 +279,12 @@
                 <parameter param-name="emplLeaveApplId"/>
                 <parameter param-name="leaveStatus"/>
             </hyperlink>
-        </field>
+        </field> -->
+        <field name="UpdateStatus" use-when="&quot;${leaveStatus}&quot;!=&quot;LEAVE_REJECTED&quot;" title="Update" widget-style="buttontext">
+             <hyperlink  target-type="plain" description="${uiLabelMap.CommonUpdate}"  target="javascript:showLeaveApprovalQTip('${emplLeaveApplId}');"></hyperlink>
+        </field> 
     </form>
-    <form name="EditEmplLeaveStatus" type="single" target="updateEmplLeaveStatus">
+    <!-- <form name="EditEmplLeaveStatus" type="single" target="updateEmplLeaveStatus">
         <actions>
           <set field="emplLeaveStatus" from-field="leaveStatus"/>
           <set field="leaveStatus" value=" "/>
@@ -328,5 +332,5 @@
         </field>
         <field name="leaveStatus"  use-when="emplLeaveStatus==&quot;LEAVE_REJECTED&quot;"><display></display></field>
         <field name="submitButton" title="${uiLabelMap.CommonUpdate}" widget-style="smallSubmit"><submit button-type="button"/></field>
-    </form>
+    </form> -->
 </forms>

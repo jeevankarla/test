@@ -41,6 +41,7 @@
                 </service>
                 <set field="hasEmplLeaveEditPermission" from-field="permResult.hasPermission"/>
                 <set field="layoutSettings.javaScripts[]" value="/partymgr/js/emplLeaveDate.js" global="true"/>
+                <set field="layoutSettings.javaScripts[]" value="/humanres/images/approverPartyId.js" global="true"/>
             </actions>
             <widgets>
 				<decorator-screen name="HumanresCommonDecorator"
@@ -147,6 +148,7 @@
                 <set field="hasAdminPermission" from-field="permResult.hasPermission"/>
                 <set field="approverPartyId" from-field="parameters.approverPartyId" default-value="${userLogin.partyId}"/>
                 <script location="component://humanres/webapp/humanres/WEB-INF/actions/humanres/EmployeeLeaveList.groovy"/>
+                <script location="component://humanres/webapp/humanres/WEB-INF/actions/humanres/employees.groovy"/>
             </actions>
             <widgets>
 				<decorator-screen name="HumanresCommonDecorator"
@@ -158,6 +160,11 @@
                                 <decorator-screen name="FindScreenDecorator" location="component://common/widget/CommonScreens.xml">
                                     <decorator-section name="search-options">
                                         <include-form name="FindLeaveApprovals" location="component://humanres/widget/forms/EmplLeaveForms.xml"/>
+                                        <platform-specific>
+                                           <html>
+											  <html-template location="component://humanres/webapp/humanres/humanres/emplLeaveApproval.ftl"/>
+										   </html>
+									   </platform-specific>
                                     </decorator-section>
                                     <decorator-section name="search-results">
                                         <include-form name="ListLeaveApprovals" location="component://humanres/widget/forms/EmplLeaveForms.xml"/>
