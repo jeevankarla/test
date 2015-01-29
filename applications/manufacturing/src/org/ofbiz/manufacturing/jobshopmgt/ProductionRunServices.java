@@ -2234,12 +2234,6 @@ public class ProductionRunServices {
         BigDecimal quantity = (BigDecimal)context.get("quantity");
         
         Map inputMap = FastMap.newInstance();
-        inputMap.put("userLogin", userLogin);
-        if(UtilValidate.isNotEmpty(quantity)){
-        	inputMap.put("quantity",quantity);
-        }
-        inputMap.put("requirementId",requirementId);
-        inputMap.put("statusId","REQ_APPROVED");
         
         GenericValue requirement = null;
         try {
@@ -2251,7 +2245,13 @@ public class ProductionRunServices {
             return ServiceUtil.returnError(UtilProperties.getMessage(resource, "ManufacturingRequirementNotExists", locale));
         }
         try {
+	        	inputMap.put("userLogin", userLogin);
+	            inputMap.put("requirementId",requirementId);
+	            inputMap.put("statusId","REQ_APPROVED");
         		inputMap.put("requirementTypeId",requirement.getString("requirementTypeId"));
+        		if(UtilValidate.isNotEmpty(quantity)){
+	            	inputMap.put("quantity",quantity);
+	            }
         		dispatcher.runSync("updateRequirement", inputMap);
         	
         } catch (GenericServiceException e) {
