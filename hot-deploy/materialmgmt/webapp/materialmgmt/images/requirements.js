@@ -86,6 +86,7 @@ function quoteNegotiateAndStatusChange(element){
     var quoteUnitPrice=$(varform).find("[name='"+"quoteUnitPrice"+"']");
     var quoteUnitPrice=$(quoteUnitPrice).val();
     $('#quoteUnitPrice').val(quoteUnitPrice);
+    $('#statusId').val("QTITM_NEGOTIATION");
     var quoteNegotiateAndStatusChange = $(str).attr("action", "quoteNegotiateAndStatusChange");
     //quoteNegotiateAndStatusChange.append("<input type='hidden' name='quoteUnitPrice' value='"+quoteUnitPrice+"'/>");
     quoteNegotiateAndStatusChange.submit();

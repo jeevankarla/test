@@ -143,10 +143,17 @@
     </form>
     <form name="ListQuoteTerms" type="list" list-name="quoteTerms"
         odd-row-style="alternate-row" default-table-style="basic-table hover-bar" paginate-target="ListQuoteTerms">
+        <row-actions>
+        <entity-one value-field="termType" entity-name="TermType">
+        	<field-map field-name="termTypeId" from-field="termTypeId"/>
+        </entity-one>
+        <set field="parentTypeId" from-field="termType.parentTypeId"/>
+        </row-actions>
         <auto-fields-entity entity-name="QuoteTerm" default-field-type="display"/>
         <field name="termTypeId" >
             <display-entity entity-name="TermType" description="${description}" key-field-name="termTypeId"/>
         </field>
+        <field name="parentTypeId"><display></display></field>
         <!-- <field name="uomId" title="${uiLabelMap.OrderOrderQuoteUomId}">
             <display-entity entity-name="Uom" description="${description}" key-field-name="uomId"/>
         </field> -->
@@ -166,6 +173,10 @@
                 <parameter param-name="quoteId"/>
             </hyperlink>
         </field>
+        <sort-order>
+        <sort-field name="termTypeId"/>
+        <sort-field name="parentTypeId"/>
+        </sort-order>
     </form>
     
     <form name="AddQuoteContent" type="upload" default-map-name="content" 
@@ -413,10 +424,15 @@
         <field name="statusDatetime" title="Date"><display description="${groovy:org.ofbiz.base.util.UtilDateTime.toDateString(statusDatetime,&quot;dd/MM/yyyy HH:mm:ss&quot;)}"/></field>
     </form>
     <form name="AddQuoteTerm" type="single" target="createMaterialQuoteTerm">
-        <field name="termTypeId" tooltip="${uiLabelMap.CommonRequired}">
-            <drop-down current-description="">
-                <entity-options description="${description}" entity-name="TermType" key-field-name="termTypeId"/>
+    	<field name="parentTypeId" id-name="parentTypeId" tooltip="${uiLabelMap.CommonRequired}" title="Parent" event="onchange" action="javascript:termTypesByParent();">
+            <drop-down allow-empty="true" current-description="">
+            	<list-options  list-name="filterTermTypeList" key-name="termTypeId" description="${description}"/>
             </drop-down>
+        </field>
+        <field name="termTypeId" tooltip="${uiLabelMap.CommonRequired}" id-name="termTypeId">
+        	<drop-down allow-empty="true" current-description="">
+       			 <list-options  list-name="termTypeIdList" key-name="termTypeId" description="${description}"/>
+        	</drop-down>
         </field>
         <field name="quoteItemSeqId" tooltip="${uiLabelMap.OrderQuoteEmpty}">
             <drop-down allow-empty="true">
@@ -426,15 +442,19 @@
                 </entity-options>
             </drop-down>
         </field>
+        <field name="uomId" title="Uom">
+        	<drop-down allow-empty="true">
+        		<option key="INR" description="Rupees"/>
+        		<option key="PERCENT" description="Percentage"/>
+        	</drop-down>
+        </field>
         <field name="quoteId"><hidden/></field>
-        <field name="quoteItemSeqId"><hidden/></field>
-        <field name="uomId"><hidden value="INR"/></field>
+        <!-- <field name="quoteItemSeqId"><hidden/></field> -->
+        <!-- <field name="uomId"><hidden value="INR"/></field> -->
         <field name="termValue" title="term Value"><text/></field>
         <field name="termDays" title="term Days"><text/></field>
         <field name="textValue" title="text Value"><text/></field>
         <field name="description" title="description"><text/></field>
         <field name="createButton"><submit button-type="button"/></field>
       </form>
-    
-    
 </forms>
