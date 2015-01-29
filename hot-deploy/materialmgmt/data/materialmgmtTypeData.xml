@@ -127,15 +127,15 @@
      
      <!-- data for sequence -->
     <Enumeration enumId="PURCHASE_OR_STORES" enumTypeId="TENANTCONF_TYPE" sequenceId="1" description="Stores Or Purchase Tenant Configurations"/>
-	<TenantConfiguration  description="Enable GRN Sequence Functionality"  propertyName="enableGRNSequence" propertyTypeEnumId="PURCHASE_OR_STORES" propertyValue="Y"/>
+	<TenantConfiguration  description="Enable GRN Sequence Functionality"  propertyName="enableGRNSequence" propertyTypeEnumId="PURCHASE_OR_STORES" propertyValue="N"/>
 	
 	<EnumerationType description="CUSTOM SEQUENCE NUMBER" enumTypeId="CUSTOM_SEQ_NUM"/> 
     <Enumeration description="GRN SEQUENCE " enumCode="GRN SEQUENCE" enumId="GRN_SEQUENCE" enumTypeId="CUSTOM_SEQ_NUM"/>
     
-	<TenantConfiguration  description="Enable ENQUIRY Sequence Functionality"  propertyName="enableCustReqSequence" propertyTypeEnumId="PURCHASE_OR_STORES" propertyValue="Y"/>
+	<TenantConfiguration  description="Enable ENQUIRY Sequence Functionality"  propertyName="enableCustReqSequence" propertyTypeEnumId="PURCHASE_OR_STORES" propertyValue="N"/>
     <Enumeration description="ENQUIRY SEQUENCE " enumCode="ENQUIRY SEQUENCE" enumId="ENQUIRY_SEQUENCE" enumTypeId="CUSTOM_SEQ_NUM"/>
     
-    <TenantConfiguration  description="Enable PO Sequence Functionality"  propertyName="enablePOSequence" propertyTypeEnumId="PURCHASE_OR_STORES" propertyValue="Y"/>
+    <TenantConfiguration  description="Enable PO Sequence Functionality"  propertyName="enablePOSequence" propertyTypeEnumId="PURCHASE_OR_STORES" propertyValue="N"/>
     <Enumeration description="PURCHASE ORDER SEQUENCE" enumCode="PO SEQUENCE" enumId="PO_SEQUENCE" enumTypeId="CUSTOM_SEQ_NUM"/>
     
     <!--  To be work on this
