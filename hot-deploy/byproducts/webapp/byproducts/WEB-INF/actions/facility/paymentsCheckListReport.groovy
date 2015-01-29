@@ -251,8 +251,8 @@ if(UtilValidate.isNotEmpty(reportTypeFlag) && "CashPaymentCheckList".equals(repo
 			 		}
 			 }
 		 }
+		 context.FinAccountTransList=FinAccountTransList;
  }
-context.FinAccountTransList=FinAccountTransList;
 context.routeCheckListReportList=routeCheckListReportList;
 context.nonRouteCheckListReportList=nonRouteCheckListReportList;
 context.bankPaidMap=bankPaidMap;
