@@ -1678,17 +1678,27 @@ under the License.
        <security https="true" auth="true"/>
         <response name="success" type="view" value="EditEmplLeaveStatus"/>
     </request-map>
+    <request-map uri="updateEmplLeaveStatus">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="updateEmplLeaveStatus"/>	
+        <response name="success" type="view" value="FindLeaveApprovals">
+        </response> 
+        <response name="error" type="view" value="FindLeaveApprovals"/>
+    </request-map> 
+    <request-map uri="updateEmplLeaveStatusAjax">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="updateEmplLeaveStatus"/>	
+        <response name="success" type="request" value="json">
+        </response> 
+    </request-map>
+     <request-map uri="getEmplLeaveApprovalDetails">
+        <security https="true" auth="true"/>
+        <event type="groovy" path="component://humanres/webapp/humanres/WEB-INF/actions/humanres/" invoke="EmplMultiLevelLeaveApproval.groovy"/>
+        <response name="success" type="request" value="json"/>
+    </request-map>
     <request-map uri="AttendanceFinalization">
        <security https="true" auth="true"/>
         <response name="success" type="view" value="AttendanceFinalization"/>
-    </request-map>
-    <request-map uri="updateEmplLeaveStatus">
-        <security https="true" auth="true"/>
-        <event type="service" invoke="updateEmplLeaveStatus"/>
-        <response name="success" type="request-redirect-noparam" value="FindLeaveApprovals">
-        	<redirect-parameter name="emplLeaveApplId"/>
-        </response> 
-        <response name="error" type="view" value="FindLeaveApprovals"/>
     </request-map>
     <request-map uri="getEmploymentDetails">
         <security https="true" auth="true"/>
