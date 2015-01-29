@@ -1859,6 +1859,17 @@ under the License.
         <key-map field-name="contentId"/>
       </view-link>
     </view-entity>
+    <view-entity entity-name="CustRequestAndCustRequestItem"
+      package-name="org.ofbiz.order.request"
+      title="CustRequest And CustRequestItem View Entity">
+      <member-entity entity-alias="CR" entity-name="CustRequest"/>
+      <member-entity entity-alias="CRI" entity-name="CustRequestItem"/>
+      <alias-all entity-alias="CR"/>
+      <alias-all entity-alias="CRI"/>
+      <view-link entity-alias="CRI" rel-entity-alias="CR">
+      <key-map field-name="custRequestId"/>
+      </view-link>
+     </view-entity>
 
   <!-- ========================================================= -->
   <!-- org.ofbiz.order.opportunity -->
