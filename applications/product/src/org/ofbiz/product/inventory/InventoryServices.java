@@ -21,7 +21,9 @@ package org.ofbiz.product.inventory;
 import java.math.BigDecimal;
 import java.math.MathContext;
 import java.sql.Timestamp;
+
 import com.ibm.icu.util.Calendar;
+
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -1186,6 +1188,74 @@ public class InventoryServices {
             result.put("usageQuantity", salesUsageQuantity.add(productionUsageQuantity));
 
         }
+        return result;
+    }
+    
+    public static Map<String, Object> getProductInventoryOpeningBalance(DispatchContext dctx, Map<String, ? extends Object> context) {
+        Delegator delegator = dctx.getDelegator();
+        LocalDispatcher dispatcher = dctx.getDispatcher();
+        Timestamp effectiveDate = (Timestamp)context.get("effectiveDate");
+        String facilityId = (String)context.get("facilityId");
+        String productId = (String)context.get("productId");
+
+        Map<String, Object> result = FastMap.newInstance();
+
+        GenericValue product = null;
+        GenericValue facility = null;
+        try {
+            product = delegator.findByPrimaryKey("Product", UtilMisc.toMap("productId", productId));
+            facility = delegator.findByPrimaryKey("Facility", UtilMisc.toMap("facilityId", facilityId));
+        } catch (GenericEntityException e) {
+        	Debug.logError(e, module);
+            return ServiceUtil.returnError("Error fetching data " + e);
+        }
+        
+        if(UtilValidate.isEmpty(effectiveDate)){
+        	effectiveDate = UtilDateTime.getDayStart(UtilDateTime.nowTimestamp());
+        }
+        
+        if(UtilValidate.isEmpty(product)){
+        	Debug.logError("Product with code "+productId+" doesn't exists", module);
+        	return ServiceUtil.returnError("Product with code "+productId+" doesn't exists");
+        }
+        
+        if(UtilValidate.isEmpty(facilityId)){
+        	Debug.logError("Store with code "+facilityId+" doesn't exists", module);
+        	return ServiceUtil.returnError("Store with code "+facilityId+" doesn't exists");
+        }
+        List conditionList = FastList.newInstance();
+        conditionList.add(EntityCondition.makeCondition("effectiveDate", EntityOperator.LESS_THAN, effectiveDate));
+        conditionList.add(EntityCondition.makeCondition("facilityId", EntityOperator.EQUALS, facilityId));
+        conditionList.add(EntityCondition.makeCondition("productId", EntityOperator.EQUALS, productId));
+        EntityCondition condition = EntityCondition.makeCondition(conditionList, EntityOperator.AND);
+        
+
+        BigDecimal inventoryCost = BigDecimal.ZERO;
+        BigDecimal inventoryCount = BigDecimal.ZERO;
+        EntityListIterator eli = null;
+        try {
+            eli = delegator.find("InventoryItemAndDetail", condition, null, null, UtilMisc.toList("effectiveDate"), null);
+
+            GenericValue inventoryTrans;
+            while ((inventoryTrans = eli.next()) != null) {
+                BigDecimal quantityOnHandDiff = inventoryTrans.getBigDecimal("quantityOnHandDiff");
+                BigDecimal unitCost = BigDecimal.ZERO;
+                if(UtilValidate.isNotEmpty(inventoryTrans.get("unitCost"))){
+                	unitCost = inventoryTrans.getBigDecimal("unitCost");
+                }
+                inventoryCount = inventoryCount.add(quantityOnHandDiff);
+                BigDecimal lotCost = quantityOnHandDiff.multiply(unitCost);
+                inventoryCost = inventoryCost.add(lotCost);
+            }
+            eli.close();
+            
+        }
+        catch(GenericEntityException e){
+        	Debug.logError(e, module);
+        	return ServiceUtil.returnError(e.toString());
+        }
+        result.put("inventoryCount", inventoryCount);
+        result.put("inventoryCost", inventoryCost);
         return result;
     }
 

@@ -2140,10 +2140,28 @@ under the License.
     <view-entity entity-name="InventoryItemAndDetail" package-name="org.ofbiz.product.inventory">
         <member-entity entity-alias="II" entity-name="InventoryItem"/>
         <member-entity entity-alias="IID" entity-name="InventoryItemDetail"/>
-        <alias-all entity-alias="II"/>
-        <alias-all entity-alias="IID">
-            <exclude field="unitCost"/>
+        <alias-all entity-alias="II">
+        	<exclude field="datetimeManufactured"/>
+        	<exclude field="expireDate"/>
+        	<exclude field="containerId"/>
+        	<exclude field="lotId"/>
+        	<exclude field="uomId"/>
+        	<exclude field="binNumber"/>
+        	<exclude field="locationSeqId"/>
+        	<exclude field="comments"/>
+        	<exclude field="oldQuantityOnHand"/>
+        	<exclude field="oldAvailableToPromise"/>
+        	<exclude field="serialNumber"/>
+        	<exclude field="softIdentifier"/>
+        	<exclude field="activationNumber"/>
+        	<exclude field="activationValidThru"/>
+        	<exclude field="currencyUomId"/>
         </alias-all>
+        <alias name="inventoryItemDetailSeqId" entity-alias="IID"></alias>
+        <alias name="effectiveDate" entity-alias="IID"></alias>
+        <alias name="quantityOnHandDiff" entity-alias="IID"></alias>
+        <alias name="availableToPromiseDiff" entity-alias="IID"></alias>
+        <alias name="accountingQuantityDiff" entity-alias="IID"></alias>
         <view-link entity-alias="II" rel-entity-alias="IID">
             <key-map field-name="inventoryItemId"/>
         </view-link>
