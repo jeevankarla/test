@@ -44,7 +44,7 @@ poDateMap = [:];
 
 if(UtilValidate.isNotEmpty(productIds)){	
 	productIds.each{eachproductId->		
-		List exprList = [];
+		/*List exprList = [];
 		exprList.add(EntityCondition.makeCondition("orderTypeId", EntityOperator.EQUALS  ,"PURCHASE_ORDER"));
 		exprList.add(EntityCondition.makeCondition("orderStatusId", EntityOperator.NOT_EQUAL , "ORDER_CANCELLED"));
 		exprList.add(EntityCondition.makeCondition("orderStatusId", EntityOperator.NOT_EQUAL ,"ORDER_REJECTED"));
@@ -54,7 +54,7 @@ if(UtilValidate.isNotEmpty(productIds)){
 		if(UtilValidate.isNotEmpty(OrderHeaderAndItemsList)){
 			OrderHeaderAndItemsList = EntityUtil.getFirst(OrderHeaderAndItemsList);
 			poDateMap[eachproductId]=UtilDateTime.toDateString(OrderHeaderAndItemsList.orderDate, "dd/MM/yyyy");
-		}
+		}*/
 		if(UtilValidate.isNotEmpty(partyIds)){		
 			partyPriceMap = [:];
 		    partyIds.each{eachPartyId->	
