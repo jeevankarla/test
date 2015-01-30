@@ -101,16 +101,7 @@
 				        </tr>
 				        
 				          
-				      		<tr><td><br/></td></tr>
-				      		<tr class='h3' id="supplierDiv" style="display:none">
-				      			<td>&nbsp;</td>
-				      			<td align='left' valign='middle' nowrap="nowrap"><div class='h3'>Supplier:</div></td>
-				      			<td>
-				      				&nbsp;
-				      			</td>
-				      			<td>&nbsp;<input type="text" name="supplierId" id="supplierId" ></td>
-				      		</tr>
-				       	
+				      						       	
 				      	<tr><td><br/></td></tr>
 				      	<#if supplierId?has_content>
 				      		<tr><td><br/></td></tr>
@@ -125,6 +116,17 @@
 				      		</tr>
 				      		
 				      		<tr><td><br/></td></tr>
+				      		<#else>
+				      		 
+				      		<tr class='h3' id="supplierDiv" style="display:none">
+				      			<td>&nbsp;</td>
+				      			<td align='left' valign='middle' nowrap="nowrap"><div class='h3'>Supplier:</div></td>
+				      			<td>
+				      				&nbsp;
+				      			</td>
+				      			<td>&nbsp;<input type="text" name="supplierId" id="supplierId" ></td>
+				      		</tr>
+				      		 <tr><td><br/></td></tr>
 				      	</#if>
 						
 						<tr>
@@ -214,7 +216,10 @@
 	</div>
 </div>
 <script type="application/javascript">
+    var partyAutoJson = ${StringUtil.wrapString(supplierJSON)!'[]'};
+   
 	  function toggleSupplier(el){
+	      $("#supplierId").autocomplete({ source: partyAutoJson }).keydown(function(e){});
 		  if($(el).is(':checked')){
 		     $("#supplierDiv").show();
 		     $("#purchaseId").hide();

@@ -5,8 +5,7 @@
 
 
 <script type="application/javascript">
-<#-->
-	var routeData = ${StringUtil.wrapString(facilityItemsJSON)} -->
+
 	/*
 	 * Common dialogue() function that creates our dialogue qTip.
 	 * We'll use this method to create both our prompt and confirm dialogues
@@ -94,11 +93,10 @@
            message +="<thead class='h3'><th align='center' class='h3' width='50%' >Supplier Name</th><th  align='center' class='h3' width='20%' >OrderId</th><th align='center' width='20%' class='h3' >Order Date</th><th align='right' class='h3' >Link</th></thead>";
           	message += "</td></<thead></table>";
           <#list ordersListForGRNLink as eachOrderLink>
-          message += "<tr ><td align='left'  width='100%'  ><form action='processUpdateGRNWithPO' method='post' onsubmit='return disableGenerateButton();'>";
-          message += "<input type=hidden name=shipmentId  value='"+shipmentId+"'><input type=hidden name=orderId  value='${eachOrderLink.orderId?if_exists}'> <table cellspacing=10 cellpadding=10 border=2 width='100%' >" ;
-          
-           message +="<tr class='h4'><td align='left' width='50%'  class='h5' >${eachOrderLink.supplierName?if_exists}</td><td width='20%' align='left' class='h3' >${eachOrderLink.orderId?if_exists}</td><td width='20%' align='left' class='h4' >${eachOrderLink.entryDate?if_exists}</td><td width='20%' align='right' class='h3' ><input type='submit' value='Link PO' id='generateTruckSheet' class='smallSubmit'/></td></tr>";
-          	message += "</form></td></tr></table>";
+	          message += "<tr ><td align='left'  width='100%'  ><form action='processUpdateGRNWithPO' method='post' onsubmit='return disableGenerateButton();'>";
+	          message += "<input type=hidden name=shipmentId  value='"+shipmentId+"'><input type=hidden name=orderId  value='${eachOrderLink.orderId?if_exists}'> <table cellspacing=10 cellpadding=10 border=2 width='100%' >" ;
+	          message +="<tr class='h4'><td align='left' width='50%'  class='h5' >${eachOrderLink.supplierName?if_exists}</td><td width='20%' align='left' class='h3' >${eachOrderLink.orderId?if_exists}</td><td width='20%' align='left' class='h4' >${eachOrderLink.entryDate?if_exists}</td><td width='20%' align='right' class='h3' ><input type='submit' value='Link PO' id='generateTruckSheet' class='smallSubmit'/></td></tr>";
+	          message += "</form></td></tr></table>";
           </#list>
 			
 		message += "</table></div>";				

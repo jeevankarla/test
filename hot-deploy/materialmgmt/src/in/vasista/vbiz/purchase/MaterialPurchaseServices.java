@@ -93,6 +93,7 @@ public class MaterialPurchaseServices {
 	    HttpSession session = request.getSession();
 	    GenericValue userLogin = (GenericValue) session.getAttribute("userLogin");
 		Timestamp nowTimeStamp = UtilDateTime.nowTimestamp();
+		String shipmentId ="";
 		if (UtilValidate.isEmpty(orderId) && UtilValidate.isEmpty(withoutPO)) {
 			Debug.logError("Cannot process receipts without orderId: "+ orderId, module);
 			return "error";
@@ -199,6 +200,7 @@ public class MaterialPurchaseServices {
 	        newEntity.set("shipmentTypeId", "MATERIAL_SHIPMENT");
 	        newEntity.set("statusId", "GENERATED");
 	        newEntity.put("vehicleId",vehicleId);
+	        newEntity.put("partyIdFrom",supplierId);
 	        newEntity.put("supplierInvoiceId",supplierInvoiceId);
 	        newEntity.put("supplierInvoiceDate",supplierInvoiceDate);
 	        newEntity.put("primaryOrderId",orderId);
@@ -206,7 +208,7 @@ public class MaterialPurchaseServices {
 	        newEntity.set("createdByUserLogin", userLogin.get("userLoginId"));
 	        newEntity.set("lastModifiedByUserLogin", userLogin.get("userLoginId"));
             delegator.createSetNextSeqId(newEntity);            
-            String shipmentId = (String) newEntity.get("shipmentId");
+            shipmentId = (String) newEntity.get("shipmentId");
 	       
 			/*List<Map> prodQtyList = FastList.newInstance();*/
 			
@@ -376,7 +378,7 @@ public class MaterialPurchaseServices {
 	  			Debug.logError(e, "Could not commit transaction for entity engine error occurred while fetching data", module);
 	  		}
 	  	}
-		request.setAttribute("_EVENT_MESSAGE_", "Successfully made request entries ");
+		request.setAttribute("_EVENT_MESSAGE_", "Successfully made shipment with ID:"+shipmentId);
 		return "success";
 	}
 	

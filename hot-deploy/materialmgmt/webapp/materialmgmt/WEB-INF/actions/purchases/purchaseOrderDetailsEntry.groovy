@@ -22,6 +22,7 @@ import in.vasista.vbiz.purchase.MaterialHelperServices;
 orderId = parameters.orderId;
 dctx = dispatcher.getDispatchContext();
 
+supplierId = "";
 
 if(orderId){
 	orderHeader = delegator.findOne("OrderHeader", UtilMisc.toMap("orderId", orderId), false);
@@ -54,7 +55,7 @@ if(orderId){
 	uomLabelMap = result.get("uomLabel");
 	productUomMap = result.get("productUom");
 	prodQtyMap = [:];
-	supplierId = "";
+	
 	JSONArray orderItemsJSON = new JSONArray();
 	orderItemsAndRole.each{ eachItem ->
 		
@@ -72,7 +73,6 @@ if(orderId){
 	
 		supplierId = eachItem.partyId;
 	}
-	
 	supplierName = org.ofbiz.party.party.PartyHelper.getPartyName(delegator, supplierId, false);
 	context.dataJSON = orderItemsJSON;
 	context.supplierId = supplierId;
@@ -106,6 +106,16 @@ context.orderId = orderId;
 
 context.vehicleId = parameters.vehicleId;
 context.withoutPO = parameters.withoutPO;
+
+if(parameters.supplierId){
+	supplierId = parameters.supplierId;
+}
+
+if(supplierId){
+	supplierName = org.ofbiz.party.party.PartyHelper.getPartyName(delegator, supplierId, false);
+	context.supplierId = supplierId;
+	context.supplierName = supplierName;
+}
 
 return "success";
 
