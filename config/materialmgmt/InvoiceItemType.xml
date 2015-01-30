@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<entity-engine-xml>
+<InvoiceItemType defaultGlAccountId="510000" description="FREIGHT CHARGES" hasTable="N" invoiceItemTypeId="COGS_FREIGHT"/>
+<InvoiceItemType defaultGlAccountId="511100" description="DISCOUNTS" hasTable="N" invoiceItemTypeId="COGS_DISC"/>
+<InvoiceItemType defaultGlAccountId="510001" description="PACK AND FORWARDING CHARGES" hasTable="N" invoiceItemTypeId="COGS_PCK_FWD"/>
+<InvoiceItemType defaultGlAccountId="511300" description="INSURANCE" hasTable="N" invoiceItemTypeId="COGS_INSURANCE"/>
+<InvoiceItemType defaultGlAccountId="510002" description="OTHER CHARGES" hasTable="N" invoiceItemTypeId="COGS_OTH_CHARGES"/>	 	 	 
+</entity-engine-xml>
