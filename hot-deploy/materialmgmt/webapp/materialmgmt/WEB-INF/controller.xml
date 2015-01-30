@@ -864,6 +864,10 @@
         <security https="true" auth="true"/>
     	<response name="success" type="view" value="ArcOrderPDF"/>
     </request-map>
+     <request-map uri="pendingQuantityARC.pdf">
+        <security https="true" auth="true"/>
+    	<response name="success" type="view" value="pendingQuantityARCPDF"/>
+    </request-map>
     <request-map uri="letterOfAcceptance.pdf">
         <security https="true" auth="true"/>
     	<response name="success" type="view" value="letterOfAcceptancePDF"/>
@@ -937,6 +941,8 @@
     <view-map name="storeStockDetailsPDF" type="screenfop" page="component://materialmgmt/widget/materialmgmtReportScreens.xml#storeStockDetailsPDF" content-type="application/pdf"/>
     <view-map name="MRRregisterPDF" type="screenfop" page="component://materialmgmt/widget/materialmgmtReportScreens.xml#MRRregisterPDF" content-type="application/pdf"/>
     <view-map name="ArcOrderPDF" type="screenfop" page="component://materialmgmt/widget/materialmgmtReportScreens.xml#ArcOrderPDF" content-type="application/pdf"/>
+   <view-map name="pendingQuantityARCPDF" type="screenfop" page="component://materialmgmt/widget/materialmgmtReportScreens.xml#pendingQuantityARCPDF" content-type="application/pdf"/>
+    
     <view-map name="letterOfAcceptancePDF" type="screenfop" page="component://materialmgmt/widget/materialmgmtReportScreens.xml#letterOfAcceptancePDF" content-type="application/pdf"/>
     <view-map name="PurchaseOrderViewPDF" type="screenfop" page="component://materialmgmt/widget/materialmgmtReportScreens.xml#PurchaseOrderViewPDF" content-type="application/pdf"/>
     <view-map name="extensionPurchaseOrderPDF" type="screenfop" page="component://materialmgmt/widget/materialmgmtReportScreens.xml#extensionPurchaseOrderPDF" content-type="application/pdf"/>

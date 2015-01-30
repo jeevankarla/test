@@ -272,6 +272,22 @@ function makeDatePicker1(fromDateId ,thruDateId){
 			 </form>
 		  </tr>
 		  
+		   <tr class="alternate-row"> 
+				<form id="pendingQuantityARC" name="pendingQuantityARC" mothed="post" action="<@ofbizUrl>pendingQuantityARC.pdf</@ofbizUrl>" target="_blank">
+				   <table class="basic-table" cellspacing="5">
+					  <tr class="alternate-row">
+					     <td width="20%"><span class='h3'>PO against ARC/CPC</span></td>
+		     	     
+				    <td width="25%"><span class='h3'>PO No<input type="textfield" id="orderId"name="orderId"></span></td>
+				    <td width="15%"><span class='h3'>							</span></td>
+				     <td width="15%"><span class='h3'>   				       </span></td>	
+				    
+						 <td width="10%"><span class='h3'><input type="submit" value="Download" class="buttontext"></span></td>
+		 		    </tr>
+				 </table>
+			 </form>
+		  </tr>
+		  
 		  <tr class="alternate-row"> 
 				<form id="letterOfAcceptance" name="letterOfAcceptance" mothed="post" action="<@ofbizUrl>letterOfAcceptance.pdf</@ofbizUrl>" target="_blank">
 				   <table class="basic-table" cellspacing="5">
