@@ -98,6 +98,7 @@ function makeDatePicker1(fromDateId ,thruDateId){
 		makeDatePicker("fromDateMr","thruDateMr");
 		makeDatePicker("fromDateStock","thruDateStock");
 		makeDatePicker("fromDateArc","thruDateArc");
+	    makeDatePicker("fromDatependingPOs","thruDatependingPOs");
 		
 	
 		
@@ -241,6 +242,25 @@ function makeDatePicker1(fromDateId ,thruDateId){
 				 </table>
 			 </form>
 		  </tr>
+		  
+		 <tr class="alternate-row"> 
+				<form id=" ListofpendingPOs" name="ListofpendingPOs" mothed="post" action="<@ofbizUrl>listofpendingPOs.pdf</@ofbizUrl>" target="_blank">
+				   <table class="basic-table" cellspacing="5">
+					  <tr class="alternate-row">
+					     <td width="20%"><span class='h3'> List of pending PO's</span></td>
+                          <td width="25%">
+						 <span class='h3'>
+						    From <input  type="text" size="18pt" id="fromDatependingPOs"   name="fromDatependingPOs"/>
+							To   <input  type="text" size="18pt" id="thruDatependingPOs"   name="thruDatependingPOs"/>
+						 </span>
+						 </td>				   
+					 <td width="15%"><span class='h3'>	</span></td>
+				     <td width="15%"><span class='h3'>  </span></td>	
+						 <td width="10%"><span class='h3'><input type="submit" value="Download" class="buttontext"></span></td>
+		 		    </tr>
+				 </table>
+			 </form>
+		  </tr>  	
 		  		  
 		  <tr class="alternate-row"> 
 				<form id="PurchaseOrder" name="PurchaseOrder" mothed="post" action="<@ofbizUrl>PurchaseOrderView.pdf</@ofbizUrl>" target="_blank">
