@@ -794,6 +794,10 @@
         <security https="true" auth="true"/>
     	<response name="success" type="view" value="PurchaseTaxProductReportPDF"/>
     </request-map>
+     <request-map uri="purchaseTaxProductReport.csv">
+        <security https="true" auth="true"/>
+    	<response name="success" type="view" value="PurchaseTaxProductReportCSV"/>
+    </request-map>
     
      <request-map uri="purchaseAccountSummery.pdf">
         <security https="true" auth="true"/>
@@ -815,6 +819,10 @@
      <request-map uri="purchaseReport.csv">
      <security https="true" auth="true"/>
     	<response name="success" type="view" value="PurchaseReportCSV"/>
+    </request-map>
+     <request-map uri="purchaseTaxReport.csv">
+     <security https="true" auth="true"/>
+    	<response name="success" type="view" value="PurchaseTaxReportCSV"/>
     </request-map>
     <request-map uri="newReports">
      <security https="true" auth="true"/>
@@ -924,10 +932,13 @@
     <view-map name="purchaseTaxReportPDF" type="screenfop" page="component://materialmgmt/widget/materialmgmtReportScreens.xml#PurchaseTaxReportPDF" content-type="application/pdf"/>
     <view-map name="purchaseAccountSummeryPDF" type="screenfop" page="component://materialmgmt/widget/materialmgmtReportScreens.xml#purchaseAccountSummeryPDF" content-type="application/pdf"/>
     <view-map name="PurchaseTaxProductReportPDF" type="screenfop" page="component://materialmgmt/widget/materialmgmtReportScreens.xml#PurchaseTaxProductReportPDF" content-type="application/pdf"/>
+       <view-map name="PurchaseTaxProductReportCSV" type="screencsv" page="component://materialmgmt/widget/materialmgmtReportScreens.xml#PurchaseTaxProductReportCSV"  content-type="text/csv" encoding="none"/>
     <view-map name="StockPosition" type="screen" page="component://materialmgmt/widget/materialmgmtScreens.xml#StockPosition"/>   
     <view-map name="StockPositionInternal" type="screen" page="component://materialmgmt/widget/materialmgmtScreens.xml#StockPositionInternal"/>
     <view-map name="PurchaseReportPDF" type="screenfop" page="component://materialmgmt/widget/materialmgmtReportScreens.xml#PurchaseReportPDF" content-type="application/pdf"/>
     <view-map name="PurchaseReportCSV" type="screencsv" page="component://materialmgmt/widget/materialmgmtReportScreens.xml#PurchaseReportCSV" content-type="text/csv" encoding="none"/>
+        <view-map name="PurchaseTaxReportCSV" type="screencsv" page="component://materialmgmt/widget/materialmgmtReportScreens.xml#PurchaseTaxReportCSV" content-type="text/csv" encoding="none"/>
+    
     <view-map name="newReports" type="screen" page="component://materialmgmt/widget/materialmgmtReportScreens.xml#newReports"/>
     <view-map name="StoreIssueReport" type="screenfop" page="component://materialmgmt/widget/materialmgmtReportScreens.xml#StoreIssueReport" content-type="application/pdf" encoding="none"/>
     <view-map name="StoreIssueAbstractReport" type="screenfop" page="component://materialmgmt/widget/materialmgmtReportScreens.xml#StoreIssueAbstractReport" content-type="application/pdf" encoding="none"/>

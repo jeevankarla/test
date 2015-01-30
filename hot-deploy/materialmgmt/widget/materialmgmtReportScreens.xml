@@ -90,6 +90,25 @@
 			</widgets>
 		</section>
 	</screen>
+	<screen name="PurchaseTaxReportCSV">
+		<section>
+			<actions>
+				<property-map resource="OrderUiLabels" map-name="uiLabelMap" global="true"/>
+				<property-map resource="ProductUiLabels" map-name="uiLabelMap" global="true"/>
+				<property-map resource="PartyUiLabels" map-name="uiLabelMap" global="true"/>
+				<property-map resource="CommonUiLabels" map-name="uiLabelMap" global="true"/>
+				 <script location="component://materialmgmt/webapp/materialmgmt/WEB-INF/actions/purchases/PurchaseTaxReport.groovy"/>
+				 <script location="component://materialmgmt/webapp/materialmgmt/WEB-INF/actions/purchases/PurchaseTaxCsvReport.groovy"/>
+			</actions>
+			<widgets>
+				<section>
+					<widgets>
+							<include-form name="PurchaseTaxReportForms" location="component://materialmgmt/widget/materialmgmtForms.xml" />
+					</widgets>
+				</section>
+			</widgets>
+		</section>
+	</screen>
 	<screen name="PurchaseTaxProductReportPDF">
 		<section>
 			<actions>
@@ -109,6 +128,27 @@
 								location="component://materialmgmt/webapp/materialmgmt/purchase/PurchaseTaxProductReport.fo.ftl" />
 							</xsl-fo>
 						</platform-specific>
+					</widgets>
+				</section>
+			</widgets>
+		</section>
+	</screen>
+	<screen name="PurchaseTaxProductReportCSV">
+		<section>
+			<actions>
+				<property-map resource="OrderUiLabels" map-name="uiLabelMap" global="true"/>
+				<property-map resource="ProductUiLabels" map-name="uiLabelMap" global="true"/>
+				<property-map resource="PartyUiLabels" map-name="uiLabelMap" global="true"/>
+				<property-map resource="CommonUiLabels" map-name="uiLabelMap" global="true"/>
+				 <script location="component://materialmgmt/webapp/materialmgmt/WEB-INF/actions/orgnigationDept.groovy"/>
+				 <script location="component://materialmgmt/webapp/materialmgmt/WEB-INF/actions/purchases/PurchaseTaxReport.groovy"/>
+				 <script location="component://materialmgmt/webapp/materialmgmt/WEB-INF/actions/purchases/PurchaseTaxCsvReport.groovy"/>
+				 
+			</actions>
+			<widgets>
+				<section>
+					<widgets>
+							<include-form name="PurchaseTaxPrdWiseReportForms" location="component://materialmgmt/widget/materialmgmtForms.xml" />
 					</widgets>
 				</section>
 			</widgets>

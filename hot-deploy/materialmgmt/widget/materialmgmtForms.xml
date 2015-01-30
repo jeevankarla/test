@@ -285,6 +285,27 @@
         <field name="voucherCode" title="Voucher Code"><display/></field>
         <field name="analysisCode" title="Narration"><display/></field>
         <field name="totalRevenue" title="Amount"><display/></field>
+    </form> 
+        <form name="PurchaseTaxReportForms" type="list" list-name="finalpurchasetaxDetails" view-size="99999">
+        <field name="invoiceDate" title="Voucher Date"><display type="date-time"/></field>
+        <field name="partyName" title="Party Name"><display/></field>
+        <field name="tinNumber" title="Tin Number"><display/></field>
+        <field name="vchrType" title="Voucher Type"><display/></field>
+        <field name="invoiceId" title="PDB RefNo"><display/></field>
+        <field name="crOrDbId" title="crOrDbId"><display/></field>
+        <field name="invTotalVal" title="ASSESSABLE VALUE"><display/></field>
+        <field name="vatAmount" title="VAT Amount"><display/></field>
+        
+    </form>  
+    <form name="PurchaseTaxPrdWiseReportForms" type="list" list-name="finalList" view-size="99999">
+        <field name="deptName" title="deptName"><display/></field>
+        <field name="invoiceDate" title="Voucher Date"><display type="date-time"/></field>
+        <field name="productName" title="ProductName"><display/></field>
+        <field name="vchrType" title="Voucher Type"><display/></field>
+        <field name="invoiceId" title="PDB RefNo"><display/></field>
+        <field name="crOrDbId" title="crOrDbId"><display/></field>
+        <field name="invTotalVal" title="ASSESSABLE VALUE"><display/></field>
+        
     </form>  
      <form name="PurchaseAbstractReportForms" type="list" list-name="prodCatAnalysisList" view-size="99999">
         <field name="voucherCode" title="Voucher Code"><display/></field>
