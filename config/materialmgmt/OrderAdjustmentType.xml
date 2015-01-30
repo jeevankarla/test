@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<entity-engine-xml>
+<OrderAdjustmentType description="Purchase Charges" hasTable="N" orderAdjustmentTypeId="PURCHASE_CHRGS"/>
+<OrderAdjustmentType description="Freight Charges on Purchase" hasTable="N" orderAdjustmentTypeId="COGS_FREIGHT" parentTypeId="PURCHASE_CHRGS"/>
+<OrderAdjustmentType description="Discount on Purchase" hasTable="N" orderAdjustmentTypeId="COGS_DISC" parentTypeId="PURCHASE_CHRGS"/>
+<OrderAdjustmentType description="Packing And Forwarding Charges on Purchase" hasTable="N" orderAdjustmentTypeId="COGS_PCK_FWD" parentTypeId="PURCHASE_CHRGS"/>
+<OrderAdjustmentType description="Insurance on Purchase" hasTable="N" orderAdjustmentTypeId="COGS_INSURANCE" parentTypeId="PURCHASE_CHRGS"/>
+<OrderAdjustmentType description="Other Charges on Purchase" hasTable="N" orderAdjustmentTypeId="COGS_OTH_CHARGES" parentTypeId="PURCHASE_CHRGS"/>
+</entity-engine-xml>
