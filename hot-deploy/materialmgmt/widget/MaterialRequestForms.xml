@@ -757,8 +757,7 @@
                 <field-map field-name="partyId" from-field="partyId"/>
                 <field-map field-name="compareDate" from-field="invoiceDate"/>
                 <field-map field-name="lastNameFirst" value="Y"/>
-            </service>
-        
+            </service>        
        </row-actions>
    	 <field name="invoiceId" title="Invoice Id" widget-style="buttontext"><hyperlink  target="/accounting/control/invoiceOverview" target-type="inter-app" target-window="_blank" description="${invoiceId}"> <parameter param-name="invoiceId"/></hyperlink></field>
    	 <field name="invoiceTypeId"><display-entity entity-name="InvoiceType"/></field>

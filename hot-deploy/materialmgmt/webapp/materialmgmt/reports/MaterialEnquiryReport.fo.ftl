@@ -28,14 +28,13 @@ under the License.
         <fo:region-after extent="1.5in"/>        
     </fo:simple-page-master>   
 </fo:layout-master-set>
-		<#if partyAddressMap?has_content>
-         
+		<#if partyAddressMap?has_content>         
         <#assign partyList = partyAddressMap.entrySet()> 
            <#if enquiryMap?has_content>
          <#list partyList as partyEntry>   
           <#assign partyId=partyEntry.getKey()> 
           <#assign addressDetails=partyEntry.getValue()>
-          
+         
           <fo:page-sequence master-reference="main">
 			    <fo:static-content font-size="13pt" font-family="Courier,monospace"  flow-name="xsl-region-before" font-weight="bold">
 				    <fo:block  keep-together="always" text-align="center" font-weight = "bold" font-family="Courier,monospace" white-space-collapse="false">${uiLabelMap.KMFDairyHeader}</fo:block>
@@ -108,8 +107,7 @@ under the License.
 					     <fo:table-column column-width="220pt"/>
 					     <fo:table-column column-width="180pt"/>
 					     <fo:table-column column-width="120pt"/>
-					          <fo:table-body>
-					          
+					          <fo:table-body>					          
 					          <#assign sno=1>
 				                  <fo:table-row >
 					                 <fo:table-cell>
@@ -128,8 +126,7 @@ under the License.
 									  <fo:block text-align="center" keep-together="always" >${enquiryMap.get("requrdqty")?if_exists}</fo:block>
 								   </fo:table-cell>
 					           </fo:table-row>
-					      <#assign sno=sno+1>
-                              
+					      <#assign sno=sno+1>                              
 					     </fo:table-body>  
 					  </fo:table>
 					 <fo:block text-align="left" keep-together="always"  >&#160;&#160;--------------------------------------------------------------------------------------------------------------------------</fo:block>
@@ -152,8 +149,7 @@ under the License.
 	               <fo:block linefeed-treatment="preserve">&#xA;</fo:block>
 	              <fo:block  font-size="12pt" keep-together="always"  white-space-collapse="false"  text-align="left">&#160;                                                                                 MANAGER(PURCHASE)</fo:block>
 	           </fo:flow>   
-	      </fo:page-sequence>
-          
+	      </fo:page-sequence>          
          </#list>
           </#if> 
          <#else>
@@ -166,5 +162,4 @@ under the License.
 		  </fo:page-sequence>				
 	    </#if>  
      </fo:root>
-</#escape>	    
-    
+</#escape>	        

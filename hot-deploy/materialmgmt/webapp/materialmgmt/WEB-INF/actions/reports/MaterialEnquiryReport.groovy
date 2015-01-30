@@ -121,8 +121,7 @@ if(UtilValidate.isNotEmpty(custReqDetails)){
 				               enquiryMap.put("quantityUomId",quantityUomId);
 			             }
 			             context.enquiryMap=enquiryMap;
-			      }  
-			   
+			      }  			   
 		   }
            else{	   	   
               partyPostalAddress= dispatcher.runSync("getPartyPostalAddress", [partyId:eachPartyId, userLogin: userLogin]);
@@ -196,9 +195,7 @@ if(UtilValidate.isNotEmpty(custReqDetails)){
 			   }
 			   context.enquiryMap=enquiryMap;
 			  
-            }
-	   
-	  
+            }	   	  
         }    
     }
     context.partyAddressMap=partyAddressMap;
