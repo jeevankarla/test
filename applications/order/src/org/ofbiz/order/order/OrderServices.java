@@ -1051,7 +1051,7 @@ public class OrderServices {
         }
         if (("PURCHASE_ORDER".equals(orderTypeId)) || (UtilValidate.isNotEmpty(orderHeaderType) && ("PURCHASE_ORDER".equals(orderHeaderType.getString("parentTypeId"))))) {
             attributeRoleMap = purchaseAttributeRoleMap;
-            Debug.log("===orderTypeId==beforeRole="+orderTypeId);
+            //Debug.log("===orderTypeId==beforeRole="+orderTypeId);
         }
         for (Map.Entry<String, String> attributeRoleEntry : attributeRoleMap.entrySet()) {
             if (UtilValidate.isNotEmpty(context.get(attributeRoleEntry.getKey()))) {
