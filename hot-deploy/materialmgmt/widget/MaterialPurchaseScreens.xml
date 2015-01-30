@@ -43,7 +43,7 @@
 			    <set field="tabButtonItem" value="FindMaterialPO" />	
                <set field="targetRequest" value="FindMaterialPO"/>
                 <!-- <set field="ChannalType" value="PROD_PRCHSE_CHANNEL"/>  -->
-                 <set field="parameters.roleTypeId" value="MAINSTORE_VENDOR"/>
+                 <set field="parameters.roleTypeId" value="SUPPLIER"/>
                  <set field="changeFlag" value="PurchaseOrder"/> 
                   <set field="parameters.changeFlag" value="PurchaseOrder"/> 
                 <script location="component://byproducts/webapp/byproducts/WEB-INF/actions/facility/enablePartyAutoComplete.groovy"/>
@@ -308,6 +308,7 @@
                <set field="defaultEffectiveDateTime" value="${supplyDate}" default-value="${bsh:org.ofbiz.base.util.UtilDateTime.nowTimestamp()}"/>
 			   <set field="defaultEffectiveDate" 
 					value="${groovy:org.ofbiz.base.util.UtilDateTime.toDateString(defaultEffectiveDateTime, &quot;dd MMMMM, yyyy&quot;);}" />
+			   <script location="component://byproducts/webapp/byproducts/WEB-INF/actions/facility/enablePartyAutoComplete.groovy"/>
 			   <script location="component://materialmgmt/webapp/materialmgmt/WEB-INF/actions/purchases/purchaseOrderDetailsEntry.groovy"/>
             </actions>
             <widgets>

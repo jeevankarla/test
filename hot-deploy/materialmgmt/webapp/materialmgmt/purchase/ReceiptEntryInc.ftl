@@ -64,6 +64,8 @@
 <script language="javascript" type="text/javascript" src="<@ofbizContentUrl>/images/jquery/plugins/validate/jquery.validate.js</@ofbizContentUrl>"></script>
 <script language="javascript" type="text/javascript" src="<@ofbizContentUrl>/images/jquery/plugins/multiSelect/jquery.multiselect.js</@ofbizContentUrl>"></script>
 <script type="application/javascript">
+    
+    	
 	var dataView;
 	var dataView2;
 	var grid;
@@ -112,6 +114,10 @@
 		var vehicleId = $("#vehicleId").val();
 		var order = jQuery("<input>").attr("type", "hidden").attr("name", "orderId").val(orderId);
 		var vehicle = jQuery("<input>").attr("type", "hidden").attr("name", "vehicleId").val(vehicleId);
+		
+		var supplierId = $("#supplierId").val();
+		alert(supplierId);
+		var supplier = jQuery("<input>").attr("type", "hidden").attr("name", "supplierId").val(supplierId);
 		var suppInvoiceId = $("#suppInvoiceId").val();
 		var suppInvoice = jQuery("<input>").attr("type", "hidden").attr("name", "supplierInvoiceId").val(suppInvoiceId);
 		var suppInvoiceDate = $("#suppInvoiceDate").val();
@@ -122,6 +128,7 @@
 		jQuery(formId).append(jQuery(order));
 		jQuery(formId).append(jQuery(vehicle));
 		jQuery(formId).append(jQuery(withoutPO));
+		jQuery(formId).append(jQuery(supplier));
 		
 		jQuery(formId).attr("action", action);
 		
