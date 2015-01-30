@@ -25,13 +25,17 @@ Condition = EntityCondition.makeCondition([EntityCondition.makeCondition("custRe
 supplierList=delegator.findList("CustRequestParty",Condition,null,null,null,false);
 if(supplierList){
 	supplierList.each{ supplier ->
-		JSONObject newObj = new JSONObject();
-		newObj.put("value",supplier.partyId);
-		partyName=PartyHelper.getPartyName(delegator, supplier.partyId, false);
-		newObj.put("label",partyName+"["+supplier.partyId+"]");
-		supplierJSON.add(newObj);
-		if(UtilValidate.isEmpty(nameMap[supplier.partyId])){
-			nameMap[supplier.partyId]=partyName;
+		Cond = EntityCondition.makeCondition([EntityCondition.makeCondition("custRequestId", custReqId),EntityCondition.makeCondition("partyId",supplier.partyId)],EntityOperator.AND);
+		existedSuppliers=delegator.findList("QuoteAndItemAndCustRequest",Cond,null,null,null,false);
+		if(UtilValidate.isEmpty(existedSuppliers)){
+			JSONObject newObj = new JSONObject();
+			newObj.put("value",supplier.partyId);
+			partyName=PartyHelper.getPartyName(delegator, supplier.partyId, false);
+			newObj.put("label",partyName+"["+supplier.partyId+"]");
+			supplierJSON.add(newObj);
+			if(UtilValidate.isEmpty(nameMap[supplier.partyId])){
+				nameMap[supplier.partyId]=partyName;
+			}
 		}
 	}
 }
