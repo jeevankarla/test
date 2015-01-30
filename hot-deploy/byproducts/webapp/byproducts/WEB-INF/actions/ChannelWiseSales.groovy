@@ -359,7 +359,14 @@ if(dailySalesRevenueTrend){
 				tempQuant = productQuantIncluded.get(productId).multiply(quantity)
 				/*itemDescription = eachItem.getAt("itemDescription");*/
 				itemDescription = productId;
-				productCategoryId = productCatMap.get(productId).getAt("primaryProductCategoryId");
+				
+				if(UtilValidate.isNotEmpty(productCatMap.get(productId))){
+					productCategoryId = productCatMap.get(productId).getAt("primaryProductCategoryId");
+				}else{
+					productCategoryId ="Other Products";
+					Debug.log("productId=========="+productId);
+				}
+				
 				if(DataMap.containsKey(categoryTypeEnum)){
 					totAmount = DataMap.get(categoryTypeEnum);
 					resultAmount = totAmount+totalAmount;
