@@ -372,7 +372,7 @@ function makeDatePicker1(fromDateId ,thruDateId){
 				<form id="EnquiryNoReport" name="EnquiryNoReport" mothed="post" action="<@ofbizUrl>EnquiryNoReport.pdf</@ofbizUrl>" target="_blank">
 				   <table class="basic-table" cellspacing="5">
 					  <tr class="alternate-row">
-					     <td width="20%"><span class='h3'>Enquiry No Report</span></td>
+					     <td width="20%"><span class='h3'>Comparison Report</span></td>
 						 <td width="25%">
 							 <span class='h3'>Enquiry No.<input type="textfield"  id="issueToEnquiryNo"  name="issueToEnquiryNo"/></span>   								
 						  </td>
