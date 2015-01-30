@@ -14,7 +14,7 @@
                 </entity-options>
             </drop-down>
         </field>
-        <field name="productId" title="${uiLabelMap.MaterialMangement_ProductId}"><text-find/></field>
+        <field name="materialId" title="${uiLabelMap.MaterialMangement_ProductId}"><text-find/></field>
         <field name="partyId" title="Supplier Code"><lookup target-form-name="LookupPartyName"/></field>
         <field name="submitButton" title="${uiLabelMap.CommonFind}" widget-style="smallSubmit">
             <submit button-type="button"/>
@@ -24,6 +24,7 @@
 
     <form name="ListQuotes" type="list" extends="ListQuoteList" list-name="listIt">
         <actions>
+		<script location="component://materialmgmt/webapp/materialmgmt/WEB-INF/actions/purchases/FindQuoteMaterials.groovy"/>
           <service service-name="performFind" result-map="result" result-map-list="listIt">
             <field-map field-name="inputFields" from-field="parameters"/>
             <field-map field-name="entityName" from-field="entityName"/>
