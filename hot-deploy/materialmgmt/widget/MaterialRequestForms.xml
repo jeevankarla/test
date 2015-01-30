@@ -262,6 +262,13 @@
          <condition-expr field-name="custRequestId" from-field="custRequestId"/>
         </entity-condition>
        </actions>
+       <row-actions>
+          <entity-one entity-name="Product">
+       		<field-map field-name="productId" from-field="productId"/>
+       		<select-field field-name="longDescription"/>
+       	  </entity-one>
+        	<set field="longDescription" from-field="longDescription"/>
+       </row-actions>
        <field name="custRequestId"  sort-field="true"  sort-field-style="true" title="Tender Reference No">
           <display-entity entity-name="CustRequest"  key-field-name="custRequestId" description="${custRequestName}" also-hidden="true">
             <sub-hyperlink target="ViewIndent" description="[${custRequestId}]">
@@ -277,6 +284,9 @@
                     <parameter param-name="productId"/>
                 </sub-hyperlink>
             </display-entity>
+        </field>
+        <field name="longDescription" title="Product Specification"> 
+            <display description="${longDescription}"/>
         </field>
         <field name="quantity"><display/></field>
         <!-- <field name="statusId"><display-entity entity-name="StatusItem" description="${description}"></display-entity></field> -->    
