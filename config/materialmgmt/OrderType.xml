@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<entity-engine-xml>
+<OrderType description="Letter Of Intent" hasTable="N"  orderTypeId="LETTER_OF_INTENT" parentTypeId="PURCHASE_ORDER"/>
+<OrderType description="Anual Rate Contract" hasTable="N" orderTypeId="ARC_ORDER" parentTypeId="PURCHASE_ORDER"/>
+<OrderType description="Central Purchase Contract" hasTable="N" orderTypeId="CPC_ORDER" parentTypeId="PURCHASE_ORDER"/>     
+<OrderType description="Purchase Order" hasTable="N" orderTypeId="PURCHASE_ORDER" parentTypeId="PURCHASE_ORDER"/>      
+<OrderType description="Sales" hasTable="N" orderTypeId="SALES_ORDER"/>
+</entity-engine-xml>
