@@ -67,7 +67,7 @@ function changeQuoteItemStatus(element){
     var str = "#"+formId;
     var description = $(varform).find("[name='"+"comments"+"']");
     var description = $(description).val();
-    
+    var statusId="QTITM_REJECTED";
     if(description.length==0){
     	alert("Please Write The Comments For Disqualify.");
     }else{
@@ -86,9 +86,10 @@ function quoteNegotiateAndStatusChange(element){
     var quoteUnitPrice=$(varform).find("[name='"+"quoteUnitPrice"+"']");
     var quoteUnitPrice=$(quoteUnitPrice).val();
     $('#quoteUnitPrice').val(quoteUnitPrice);
-    $('#statusId').val("QTITM_NEGOTIATION");
+    var statusId="QTITM_NEGOTIATION";
+    $('#statusId').val(statusId);
     var quoteNegotiateAndStatusChange = $(str).attr("action", "quoteNegotiateAndStatusChange");
-    //quoteNegotiateAndStatusChange.append("<input type='hidden' name='quoteUnitPrice' value='"+quoteUnitPrice+"'/>");
+   // quoteNegotiateAndStatusChange.append("<input type='hidden' name='statusId' value='"+statusId+"'/>");
     quoteNegotiateAndStatusChange.submit();
 	
 }

@@ -223,7 +223,7 @@
                 <set field="tabButtonItem2" value="quoteForEvaluation" />
                 <set field="custRequestId" from-field="parameters.custRequestId"/>
                 <entity-one entity-name="CustRequest" value-field="custRequest" auto-field-map="true"/>
-                
+                <set field="layoutSettings.javaScripts[]" value="/materialmgmt/images/requirements.js" global="true"/>
                 <entity-condition list="quotesList" entity-name="QuoteAndItemAndCustRequest">
                 	<condition-list combine="and">
                 		<condition-expr field-name="custRequestId" operator="equals" value="${parameters.custRequestId}"/>
