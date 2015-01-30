@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<entity-engine-xml>
+<Enumeration description="Material Purchase Channel" enumCode="Material Purchase Channel" enumId="MATERIAL_PUR_CHANNEL" enumTypeId="ORDER_PRCHSE_CHANNEL"/>
+<Enumeration description="Tender Date" enumId="TENDER_DATE" enumTypeId="ORDER_ATTRIBUTE"/>
+<Enumeration description="Tender Value" enumId="TENDER_VALUE" enumTypeId="ORDER_ATTRIBUTE"/>
+<Enumeration enumId="EXTERNAL_NOTE_ID" enumCode="EXTERNAL NOTE ID" enumTypeId="CUSTOM_NOTE_TYPE" sequenceId="1" description="External Note Id"/>
+<Enumeration enumId="INTERNAL_NOTE_ID"  enumCode="INTERNAL NOTE ID" enumTypeId="CUSTOM_NOTE_TYPE" sequenceId="1" description="Internal Note Id"/>
+<Enumeration description="PURCHASE INVOICE SEQUENCE" enumCode="PUR INV SEQUENCE" enumId="PURINV_SEQUENCE" enumTypeId="CUSTOM_SEQ_NUM"/>  -->
+<Enumeration enumId="PURCHASE_OR_STORES" enumTypeId="TENANTCONF_TYPE" sequenceId="1" description="Stores Or Purchase Tenant Configurations"/>
+<Enumeration description="GRN SEQUENCE " enumCode="GRN SEQUENCE" enumId="GRN_SEQUENCE" enumTypeId="CUSTOM_SEQ_NUM"/>
+<Enumeration description="ENQUIRY SEQUENCE " enumCode="ENQUIRY SEQUENCE" enumId="ENQUIRY_SEQUENCE" enumTypeId="CUSTOM_SEQ_NUM"/>
+<Enumeration description="PURCHASE ORDER SEQUENCE" enumCode="PO SEQUENCE" enumId="PO_SEQUENCE" enumTypeId="CUSTOM_SEQ_NUM"/>
+<Enumeration description="Order Item Amendment" enumCode="ITM_AMEND" enumId="ODR_ITM_AMEND" sequenceId="04" enumTypeId="ODR_ITM_CHANGE_TYPE"/>
+</entity-engine-xml>
