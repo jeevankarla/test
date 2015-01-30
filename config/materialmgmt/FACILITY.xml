@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<entity-engine-xml>
+<Facility defaultDaysToShip="25" defaultInventoryItemTypeId="NON_SERIAL_INV_ITEM" description="ICP STORE" facilityId="ICP_STORE" facilityName="Ice Cream Store" geoPointId="9000" ownerPartyId="Company"/>
+</entity-engine-xml>
