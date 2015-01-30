@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<entity-engine-xml>
+<StatusValidChange statusId="SR_RECEIVED" statusIdTo="SR_REJECTED" transitionName="Rejected"/>
+<StatusValidChange statusId="SR_RECEIVED" statusIdTo="SR_QUALITYCHECK" transitionName="Quality Control"/>
+<StatusValidChange statusId="SR_QUALITYCHECK" statusIdTo="SR_ACCEPTED" transitionName="QC Approved"/>
+<StatusValidChange statusId="SR_QUALITYCHECK" statusIdTo="SR_REJECTED" transitionName="QC Rejected"/>
+<StatusValidChange statusId="QUO_CREATED" statusIdTo="QUO_ACCEPTED" transitionName="Accept Quote"/>
+<StatusValidChange statusId="QUO_ACCEPTED" statusIdTo="QUO_REJECTED" transitionName="Reject Quote"/>
+<StatusValidChange statusId="QTITM_CREATED" statusIdTo="QTITM_ACCEPTED" transitionName="Accept"/>
+<StatusValidChange statusId="QTITM_CREATED" statusIdTo="QTITM_REJECTED" transitionName="Reject"/>
+<StatusValidChange statusId="QTITM_ACCEPTED" statusIdTo="QTITM_REJECTED" transitionName="Reject"/>
+<StatusValidChange statusId="QTITM_ACCEPTED" statusIdTo="QTITM_TECH_EVAL" transitionName="Tech Evaluation Passed"/>
+<StatusValidChange statusId="QTITM_TECH_EVAL" statusIdTo="QTITM_REJECTED" transitionName="Reject"/>
+<StatusValidChange statusId="QTITM_TECH_EVAL" statusIdTo="QTITM_FIN_EVAL" transitionName="Fin Evaluation Passed"/>
+<StatusValidChange statusId="QTITM_FIN_EVAL" statusIdTo="QTITM_NEGOTIATION" transitionName="Negotiation"/>
+<StatusValidChange statusId="QTITM_FIN_EVAL" statusIdTo="QTITM_REJECTED" transitionName="Reject"/>
+<StatusValidChange statusId="QTITM_NEGOTIATION" statusIdTo="QTITM_APPROVED" transitionName="Approved"/>
+<StatusValidChange statusId="QTITM_NEGOTIATION" statusIdTo="QTITM_REJECTED" transitionName="Reject"/>
+<StatusValidChange statusId="QTITM_APPROVED" statusIdTo="QTITM_QUALIFIED" transitionName="Qualified"/>
+<StatusValidChange statusId="QTITM_QUALIFIED" statusIdTo="QTITM_REJECTED" transitionName="Reject"/>
+<StatusValidChange statusId="QTITM_APPROVED" statusIdTo="QTITM_ORDERED" transitionName="Ordered"/>
+<StatusValidChange statusId="QTITM_APPROVED" statusIdTo="QTITM_REJECTED" transitionName="Reject"/>
+<StatusValidChange statusId="QTITM_ORDERED" statusIdTo="QTITM_REJECTED" transitionName="Reject"/>          
+<StatusValidChange statusId="REQ_APPROVED" statusIdTo="REQ_IN_ENQUIRY" transitionName="Requirement In Enquiry"/>
+<StatusValidChange statusId="CRQ_DRAFT" statusIdTo="CRQ_CANCELLED" transitionName="Cancel"/>
+<StatusValidChange statusId="CRQ_DRAFT" statusIdTo="CRQ_REJECTED" transitionName="Reject"/>
+<StatusValidChange statusId="CRQ_DRAFT" statusIdTo="CRQ_SUBMITTED" transitionName="Approved"/>        
+<StatusValidChange statusId="CRQ_SUBMITTED" statusIdTo="CRQ_ISSUED" transitionName="Issuance"/>
+<StatusValidChange statusId="CRQ_SUBMITTED" statusIdTo="CRQ_INPROCESS" transitionName="Procure"/>
+<StatusValidChange statusId="CRQ_SUBMITTED" statusIdTo="CRQ_REJECTED" transitionName="Reject"/>         
+<StatusValidChange statusId="CRQ_ISSUED" statusIdTo="CRQ_COMPLETED" transitionName="Fulfill"/>
+<StatusValidChange statusId="CRQ_ISSUED" statusIdTo="CRQ_REJECTED" transitionName="Reject"/>          
+<StatusValidChange statusId="CRQ_INPROCESS" statusIdTo="CRQ_ISSUED" transitionName="Receipts"/>
+<StatusValidChange statusId="CRQ_INPROCESS" statusIdTo="CRQ_REJECTED" transitionName="Reject"/>
+<StatusValidChange statusId="ENQ_CREATED" statusIdTo="ENQ_CANCELLED" transitionName="Accept"/>
+<StatusValidChange statusId="ENQ_CREATED" statusIdTo="ENQ_COMPLETED" transitionName="Reject"/>
+<StatusValidChange  statusId="QTITM_APPROVED" statusIdTo="QTITM_ADUIT_APP" transitionName="Audit Approved."/>
+<StatusValidChange statusId="QTITM_ADUIT_APP" statusIdTo="QTITM_QUALIFIED" transitionName="Qualified"/>
+<StatusValidChange statusId="QTITM_ADUIT_APP" statusIdTo="QTITM_REJECTED" transitionName="Reject"/>
+</entity-engine-xml>
