@@ -34,13 +34,17 @@ under the License.
     
     $(document).ready(function(){
     	var partyId = $("#partyId").val();
+		if(Object.keys(supplierJson).length === 0){
+			document.getElementById("partyId").readOnly = true;
+		}else{
         $("#partyId").autocomplete({ source: supplierJson }).keydown(function(e){});        		
-	    if( (partyId).length < 1 ) {
-	    	$('#partyId').css('background', 'yellow'); 
-	       	setTimeout(function () {
-	           	$('#partyId').css('background', 'white').focus(); 
-	       	}, 800);
-	    	return false;
+		    if( (partyId).length < 1 ) {
+		    	$('#partyId').css('background', 'yellow'); 
+		       	setTimeout(function () {
+		           	$('#partyId').css('background', 'white').focus(); 
+		       	}, 800);
+		    	return false;
+	    	}
     	}
     });
     
