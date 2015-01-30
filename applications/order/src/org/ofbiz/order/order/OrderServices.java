@@ -1043,11 +1043,16 @@ public class OrderServices {
 
         // see the attributeRoleMap definition near the top of this file for attribute-role mappings
         Map<String, String> attributeRoleMap = salesAttributeRoleMap;
-        attributeRoleMap = purchaseAttributeRoleMap;
-        /*if ("PURCHASE_ORDER".equals(orderTypeId)) {
+        GenericValue orderHeaderType=null;
+        try {
+        	 orderHeaderType = delegator.findOne("OrderType", UtilMisc.toMap("orderTypeId", orderTypeId), false);           
+        } catch (GenericEntityException e) {
+            Debug.logError(e, "Problems to get orderType", module);
+        }
+        if (("PURCHASE_ORDER".equals(orderTypeId)) || (UtilValidate.isNotEmpty(orderHeaderType) && ("PURCHASE_ORDER".equals(orderHeaderType.getString("parentTypeId"))))) {
             attributeRoleMap = purchaseAttributeRoleMap;
-            Debug.log("ordertypes================="+attributeRoleMap);
-        }*/
+            Debug.log("===orderTypeId==beforeRole="+orderTypeId);
+        }
         for (Map.Entry<String, String> attributeRoleEntry : attributeRoleMap.entrySet()) {
             if (UtilValidate.isNotEmpty(context.get(attributeRoleEntry.getKey()))) {
                 // make sure the party is in the role before adding
