@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<entity-engine-xml>
+<EnumerationType  description="Order Attribute" enumTypeId="ORDER_ATTRIBUTE"/>
+<EnumerationType description="CUSTOM SEQUENCE NUMBER" enumTypeId="CUSTOM_SEQ_NUM"/> 
+<EnumerationType  description="Note Type Configuration" enumTypeId="CUSTOM_NOTE_TYPE" />
+</entity-engine-xml>
