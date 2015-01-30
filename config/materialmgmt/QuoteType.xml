@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<entity-engine-xml>
+<QuoteType description="Material purchase Quote" hasTable="N" quoteTypeId="MATERIAL_PUR_QUOTE"/>
+</entity-engine-xml>
