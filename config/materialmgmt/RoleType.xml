@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<entity-engine-xml>
+<RoleType description="Request Taker for Quote" hasTable="N" roleTypeId="REQ_TAKER"/>
+</entity-engine-xml>
