@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<entity-engine-xml>
+<StatusType description="Shipment Receipt Status" hasTable="N" statusTypeId="RECEIPT_STATUS"/>
+<StatusType description="Quote Item Status" hasTable="N" statusTypeId="QTITEM_STATUS"/>
+<StatusType description="Indent Status" hasTable="N" statusTypeId="CUSTREQ_STTS"/>
+<StatusType description="Enquiry Status" hasTable="N" statusTypeId="ENQ_STTS"/>
+</entity-engine-xml>
