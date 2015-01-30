@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<entity-engine-xml>
+    <TermType termTypeId="FEE_PAYMENT_TERM" parentTypeId="" hasTable="N" description="Payment Term"/>
+    <TermType termTypeId="50_ADVANCE" parentTypeId="FEE_PAYMENT_TERM" hasTable="N" description="50% Advance"/>
+    <TermType termTypeId="90_ADVANCE" parentTypeId="FEE_PAYMENT_TERM" hasTable="N" description="90% Advance"/>
+    <TermType termTypeId="100_COD_BASIS" parentTypeId="FEE_PAYMENT_TERM" hasTable="N" description="100% on COD Basis"/>
+    <TermType termTypeId="AGNT_PFORM" parentTypeId="FEE_PAYMENT_TERM" hasTable="N" description="Against Proforma Invoice"/>
+    <TermType termTypeId="AGNT_DELVER" parentTypeId="FEE_PAYMENT_TERM" hasTable="N" description="Against Delivery"/>
+    <TermType termTypeId="SATFACTRY_SUPLY" parentTypeId="FEE_PAYMENT_TERM" hasTable="N" description="After satisfactory supply"/>
+    <TermType termTypeId="TO_BE_MADE" parentTypeId="FEE_PAYMENT_TERM" hasTable="N" description="To be made"/>
+    <TermType termTypeId="PMT_15_DAYS" parentTypeId="FEE_PAYMENT_TERM" hasTable="N" description="Payment within 15 days"/>
+    <TermType termTypeId="PMT_30_DAYS" parentTypeId="FEE_PAYMENT_TERM" hasTable="N" description="Payment within 30 days"/>
+    <TermType termTypeId="ALD_MADE" parentTypeId="FEE_PAYMENT_TERM" hasTable="N" description="Already made"/>
+    <TermType termTypeId="DOCMNT_NEGO" parentTypeId="FEE_PAYMENT_TERM" hasTable="N" description="Documents Nego"/>
+    <TermType termTypeId="DELIVERY_TERM" parentTypeId="" hasTable="N" description="Delivery Term"/>
+    <TermType termTypeId="FOR_MD" parentTypeId="DELIVERY_TERM" hasTable="N" description="FOR Mother Dairy"/>
+    <TermType termTypeId="EX_OUR_GODN" parentTypeId="DELIVERY_TERM" hasTable="N" description="EX-our Godown"/>
+    <TermType termTypeId="EX_GODN" parentTypeId="DELIVERY_TERM" hasTable="N" description="EX-Godown"/>
+    <TermType termTypeId="EX_STOCK" parentTypeId="DELIVERY_TERM" hasTable="N" description="EX-Stock"/>
+    <TermType termTypeId="OWN_CON_DEST_PONT" parentTypeId="DELIVERY_TERM" hasTable="N" description="In your own convenience to destination point?"/>
+    <TermType termTypeId="IMMEDIATELY" parentTypeId="DELIVERY_TERM" hasTable="N" description="Immediately"/>
+    <TermType termTypeId="WTHN_PO" parentTypeId="DELIVERY_TERM" hasTable="N" description="Immediately Within _________ days"/>
+    <TermType termTypeId="MTL_REDY_OBTND" parentTypeId="DELIVERY_TERM" hasTable="N" description="Material Already Obtained"/>
+    <TermType termTypeId="EX_STORE" parentTypeId="DELIVERY_TERM" hasTable="N" description="Ex- our stores"/>
+    <TermType termTypeId="EX_SHOP" parentTypeId="DELIVERY_TERM" hasTable="N" description="Ex- Shop"/>
+    <TermType termTypeId="RDY_STOCK" parentTypeId="DELIVERY_TERM" hasTable="N" description="Ready Stock"/>
+    <TermType termTypeId="WRNT_GRNT" parentTypeId="DELIVERY_TERM" hasTable="N" description="Warranty - Guaranty"/>
+    <TermType termTypeId="TAX" parentTypeId="" hasTable="N" description="Tax"/>
+    <TermType termTypeId="BEDCESS_PUR" parentTypeId="TAX" hasTable="N" description="Educational Cess Bed On Purchase"/>
+    <TermType termTypeId="BEDSECCESS_PUR" parentTypeId="TAX" hasTable="N" description="Sec. Educational Cess Bed On Purchase"/>
+    <TermType termTypeId="BED_PUR" parentTypeId="TAX" hasTable="N" description="Basic Excise Duty On Purchase"/>
+    <TermType termTypeId="CSTCESS_PUR" parentTypeId="TAX" hasTable="N" description="CST - Education Cess On Purchase"/>
+    <TermType termTypeId="CSTSECCESS_PUR" parentTypeId="TAX" hasTable="N" description="CST - SEC. Education Cess On Purchase"/>
+    <TermType termTypeId="CST_PUR" parentTypeId="TAX" hasTable="N" description="Central Sales Tax On Purchase"/>
+    <TermType termTypeId="SERVICE_TAX_PUR" parentTypeId="TAX" hasTable="N" description="Service Tax Purchase"/>
+    <TermType termTypeId="VATCESS_PUR" parentTypeId="TAX" hasTable="N" description="Educational Cess VAT On Purchase"/>
+    <TermType termTypeId="VATSECCESS_PUR" parentTypeId="TAX" hasTable="N" description="Sec. Educational Cess VAT On Purchase"/>
+    <TermType termTypeId="VAT_PUR" parentTypeId="TAX" hasTable="N" description="Value Added Tax On Purchase"/>
+    <TermType termTypeId="OTHERS" parentTypeId="" hasTable="N" description="Others"/>
+    <TermType termTypeId="COGS_FREIGHT" parentTypeId="OTHERS" hasTable="N" description="Freight Charges"/>
+    <TermType termTypeId="COGS_DISC" parentTypeId="OTHERS" hasTable="N" description="Discount"/>
+    <TermType termTypeId="COGS_INSURANCE" parentTypeId="OTHERS" hasTable="N" description="Insurance"/>
+    <TermType termTypeId="COGS_OTH_CHARGES" parentTypeId="OTHERS" hasTable="N" description="Other Charges"/>
+    <TermType termTypeId="COGS_PCK_FWD" parentTypeId="OTHERS" hasTable="N" description="Packing And Forwarding Charges"/>
+</entity-engine-xml>
