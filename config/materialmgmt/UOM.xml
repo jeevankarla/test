@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<entity-engine-xml>
+    <Uom uomId="VLIQ_BR" uomTypeId="VOLUME_LIQ_MEASURE" abbreviation="BRL" description="BARREL"/>
+    <Uom uomId="VLIQ_BT" uomTypeId="NUMERIC_MEASURE" abbreviation="BOTTLES" description="BOTTLES"/>
+    <Uom uomId="VLIQ_CAN" uomTypeId="NUMERIC_MEASURE" abbreviation="CANS" description="CANS"/>
+    <Uom uomId="LEN_LN" uomTypeId="LENGTH_MEASURE" abbreviation="LENGTH" description="LENGTH"/>
+    <Uom uomId="VLIQ_MT" uomTypeId="WEIGHT_MEASURE" abbreviation="MT" description="Million Tonnes"/>
+    <Uom uomId="VLIQ_QT" uomTypeId="WEIGHT_MEASURE" abbreviation="QNT" description="QUINTAL"/>
+    <Uom uomId="VLIQ_RMS" uomTypeId="WEIGHT_MEASURE" abbreviation="RMS" description="REAMS"/>
+    <Uom uomId="VDRY_RLS" uomTypeId="NUMERIC_MEASURE" abbreviation="RLS" description="ROLLS"/>
+    <Uom uomId="VLIQ_THLT" uomTypeId="VOLUME_LIQ_MEASURE" abbreviation="THLT" description="TH LT"/>
+    <Uom uomId="VLIQ_THND" uomTypeId="NUMERIC_MEASURE" abbreviation="THND" description="THOUSANDS"/>    
+    <Uom uomId="NUM_SET" uomTypeId="NUMERIC_MEASURE" abbreviation="SET" description="SET"/>
+    <Uom uomId="NUM_BND" uomTypeId="NUMERIC_MEASURE" abbreviation="BUNDLES" description="BUNDLES"/>
+    <Uom uomId="NUM_BNC" uomTypeId="NUMERIC_MEASURE" abbreviation="BUNCHES" description="BUNCHES"/>
+    <Uom uomId="NUM_KIT" uomTypeId="NUMERIC_MEASURE" abbreviation="KIT" description="KIT"/>
+    <Uom uomId="NUM_LOT" uomTypeId="NUMERIC_MEASURE" abbreviation="LOT" description="LOT"/>
+    <Uom uomId="NUM_PAIR" uomTypeId="NUMERIC_MEASURE" abbreviation="PAIR" description="PAIR"/>
+    <Uom uomId="NUM_SHT" uomTypeId="NUMERIC_MEASURE" abbreviation="SHEETS" description="SHEETS"/>
+    <Uom uomId="NUM_TIN" uomTypeId="NUMERIC_MEASURE" abbreviation="TIN" description="TIN"/>
+</entity-engine-xml>
+    
+    
+    
+    
+    
+
