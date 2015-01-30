@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<entity-engine-xml>
+    <ProductCategoryAssoc productCategoryIdTo="TRANS_SPARES" productCategoryAssocTypeId="PUR_INDENT" fromDate="2014-04-01 00:00:00" productCategoryId="INDENT_PROD_CAT"/>
+    <ProductCategoryAssoc productCategoryIdTo="MULT_MEC_SPARES" productCategoryAssocTypeId="PUR_INDENT" fromDate="2014-04-01 00:00:00" productCategoryId="INDENT_PROD_CAT"/>
+    <ProductCategoryAssoc productCategoryIdTo="ELCT_SPARES" productCategoryAssocTypeId="PUR_INDENT" fromDate="2014-04-01 00:00:00" productCategoryId="INDENT_PROD_CAT"/>
+    <ProductCategoryAssoc productCategoryIdTo="BOILER_SPARES" productCategoryAssocTypeId="PUR_INDENT" fromDate="2014-04-01 00:00:00" productCategoryId="INDENT_PROD_CAT"/>
+    <ProductCategoryAssoc productCategoryIdTo="REF_SPARES" productCategoryAssocTypeId="PUR_INDENT" fromDate="2014-04-01 00:00:00" productCategoryId="INDENT_PROD_CAT"/>
+    <ProductCategoryAssoc productCategoryIdTo="POWDER_SPARES" productCategoryAssocTypeId="PUR_INDENT" fromDate="2014-04-01 00:00:00" productCategoryId="INDENT_PROD_CAT"/>
+    <ProductCategoryAssoc productCategoryIdTo="ICP_SPARES" productCategoryAssocTypeId="PUR_INDENT" fromDate="2014-04-01 00:00:00" productCategoryId="INDENT_PROD_CAT"/>
+    <ProductCategoryAssoc productCategoryIdTo="CIVIL_ITEMS" productCategoryAssocTypeId="PUR_INDENT" fromDate="2014-04-01 00:00:00" productCategoryId="INDENT_PROD_CAT"/>
+    <ProductCategoryAssoc productCategoryIdTo="FUEL" productCategoryAssocTypeId="PUR_INDENT" fromDate="2014-04-01 00:00:00" productCategoryId="INDENT_PROD_CAT"/>
+    <ProductCategoryAssoc productCategoryIdTo="OIL_LUB" productCategoryAssocTypeId="PUR_INDENT" fromDate="2014-04-01 00:00:00" productCategoryId="INDENT_PROD_CAT"/>
+    <ProductCategoryAssoc productCategoryIdTo="PACK_MTRL_DAIRY" productCategoryAssocTypeId="PUR_INDENT" fromDate="2014-04-01 00:00:00" productCategoryId="INDENT_PROD_CAT"/>
+    <ProductCategoryAssoc productCategoryIdTo="PACK_MTRL_AMUL" productCategoryAssocTypeId="PUR_INDENT" fromDate="2014-04-01 00:00:00" productCategoryId="INDENT_PROD_CAT"/>
+    <ProductCategoryAssoc productCategoryIdTo="PACK_MTRL_NANDINI" productCategoryAssocTypeId="PUR_INDENT" fromDate="2014-04-01 00:00:00" productCategoryId="INDENT_PROD_CAT"/>
+    <ProductCategoryAssoc productCategoryIdTo="PACK_MTRL_POWDER" productCategoryAssocTypeId="PUR_INDENT" fromDate="2014-04-01 00:00:00" productCategoryId="INDENT_PROD_CAT"/>
+    <ProductCategoryAssoc productCategoryIdTo="PACK_MTRL_PRDT_PLAN" productCategoryAssocTypeId="PUR_INDENT" fromDate="2014-04-01 00:00:00" productCategoryId="INDENT_PROD_CAT"/>
+    <ProductCategoryAssoc productCategoryIdTo="UNIFORMS" productCategoryAssocTypeId="PUR_INDENT" fromDate="2014-04-01 00:00:00" productCategoryId="INDENT_PROD_CAT"/>
+    <ProductCategoryAssoc productCategoryIdTo="CONSUMABLES" productCategoryAssocTypeId="PUR_INDENT" fromDate="2014-04-01 00:00:00" productCategoryId="INDENT_PROD_CAT"/>
+    <ProductCategoryAssoc productCategoryIdTo="COMP_PARTS" productCategoryAssocTypeId="PUR_INDENT" fromDate="2014-04-01 00:00:00" productCategoryId="INDENT_PROD_CAT"/>
+    <ProductCategoryAssoc productCategoryIdTo="COMP_SOFT" productCategoryAssocTypeId="PUR_INDENT" fromDate="2014-04-01 00:00:00" productCategoryId="INDENT_PROD_CAT"/>
+    <ProductCategoryAssoc productCategoryIdTo="CLNG_MTRL" productCategoryAssocTypeId="PUR_INDENT" fromDate="2014-04-01 00:00:00" productCategoryId="INDENT_PROD_CAT"/>
+    <ProductCategoryAssoc productCategoryIdTo="LAB_SPARES" productCategoryAssocTypeId="PUR_INDENT" fromDate="2014-04-01 00:00:00" productCategoryId="INDENT_PROD_CAT"/>
+    <ProductCategoryAssoc productCategoryIdTo="FURN_FIX_WOFF" productCategoryAssocTypeId="PUR_INDENT" fromDate="2014-04-01 00:00:00" productCategoryId="INDENT_PROD_CAT"/>
+    <ProductCategoryAssoc productCategoryIdTo="GEL_STATIONERY" productCategoryAssocTypeId="PUR_INDENT" fromDate="2014-04-01 00:00:00" productCategoryId="INDENT_PROD_CAT"/>
+    <ProductCategoryAssoc productCategoryIdTo="FXD_ASST" productCategoryAssocTypeId="PUR_INDENT" fromDate="2014-04-01 00:00:00" productCategoryId="INDENT_PROD_CAT"/>
+    <ProductCategoryAssoc productCategoryIdTo="ICP_RAW" productCategoryAssocTypeId="PUR_INDENT" fromDate="2014-04-01 00:00:00" productCategoryId="INDENT_PROD_CAT"/>
+    <ProductCategoryAssoc productCategoryIdTo="OTHER_PUR" productCategoryAssocTypeId="PUR_INDENT" fromDate="2014-04-01 00:00:00" productCategoryId="INDENT_PROD_CAT"/>
+    <ProductCategoryAssoc productCategoryIdTo="DAIRY_RAW" productCategoryAssocTypeId="PUR_INDENT" fromDate="2014-04-01 00:00:00" productCategoryId="INDENT_PROD_CAT"/>
+    <ProductCategoryAssoc productCategoryIdTo="POWDER_RAW" productCategoryAssocTypeId="PUR_INDENT" fromDate="2014-04-01 00:00:00" productCategoryId="INDENT_PROD_CAT"/>
+    <ProductCategoryAssoc productCategoryIdTo="NEW_PRODUCT_RAW" productCategoryAssocTypeId="PUR_INDENT" fromDate="2014-04-01 00:00:00" productCategoryId="INDENT_PROD_CAT"/>
+    <ProductCategoryAssoc productCategoryIdTo="FXD_ASST_DAIRY" productCategoryAssocTypeId="PUR_INDENT" fromDate="2014-04-01 00:00:00" productCategoryId="INDENT_PROD_CAT"/>
+    <ProductCategoryAssoc productCategoryIdTo="FXD_ASST_ICP" productCategoryAssocTypeId="PUR_INDENT" fromDate="2014-04-01 00:00:00" productCategoryId="INDENT_PROD_CAT"/>
+    <ProductCategoryAssoc productCategoryIdTo="FXD_ASST_POWDER" productCategoryAssocTypeId="PUR_INDENT" fromDate="2014-04-01 00:00:00" productCategoryId="INDENT_PROD_CAT"/>
+</entity-engine-xml>
