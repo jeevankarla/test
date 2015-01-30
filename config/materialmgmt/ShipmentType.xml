@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<entity-engine-xml>
+<ShipmentType description="Purchase Shipment" hasTable="N" shipmentTypeId="PURCHASE_SHIPMENT"/>
+<ShipmentType description="Material Purchase Shipment" hasTable="N"  parentTypeId="PURCHASE_SHIPMENT" shipmentTypeId="MATERIAL_SHIPMENT"/>
+</entity-engine-xml>
