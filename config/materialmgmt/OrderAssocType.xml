@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<entity-engine-xml>
+<OrderAssocType description="ARC Order" orderAssocTypeId="ARC_ORDER"/>
+<OrderAssocType description="CPC Order" orderAssocTypeId="CPC_ORDER"/>
+<OrderAssocType description="Purchase Order" orderAssocTypeId="PURCHASE_ORDER"/>
+</entity-engine-xml>
