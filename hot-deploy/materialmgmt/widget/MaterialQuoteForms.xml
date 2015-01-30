@@ -397,6 +397,13 @@
         			<condition-expr field-name="quoteItemSeqId" from-field="quoteItemSeqId"/>
         		</condition-list>
         	</entity-condition>
+        	<entity-one entity-name="Product">
+        		<field-map field-name="productId" from-field="productId"/>
+        		<select-field field-name="productName"/>
+        		<select-field field-name="longDescription"/>
+        	</entity-one>
+        	<set field="productName" from-field="productName"/>
+        	<set field="longDescription" from-field="longDescription"/>
         	<set field="size" value="${groovy: return (QuoteStatusList.size());}"/>
         	<set field="comments" value="${QuoteStatusList[(${size}-1)].comments}"/>
         </row-actions>
@@ -407,7 +414,8 @@
         	</hyperlink>
         </field>
         <field name="partyId" title="Supplier"><display-entity entity-name="PartyNameView" key-field-name="partyId" description="${firstName} ${middleName} ${lastName} ${groupName} [${partyId}] "/></field>
-        <field name="productId" title="Material Name - [Code]"><display-entity entity-name="Product" key-field-name="productId" description="${productName}"/></field>
+        <field name="productName" title="Material Name - [Code]"><display /></field>
+        <field name="longDescription" title="Material Specification"><display /></field>
         <field name="qiStatusId" title="Status"><display-entity entity-name="StatusItem" key-field-name="statusId" description="${description}"/></field>
         <field name="quoteUnitPrice" title="Quote Unit Price"><display /></field>
         <field name="comments"><display/></field>
