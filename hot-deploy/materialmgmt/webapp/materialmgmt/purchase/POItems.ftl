@@ -38,6 +38,7 @@ under the License.
                     <td width="15%" align="right">${uiLabelMap.OrderSubTotal}</td>
                     <td width="2%">&nbsp;</td>
                 </tr>
+                 <#assign orderExTaxTotal = (Static["java.math.BigDecimal"].ZERO)>
                 <#if !orderItemList?has_content>
                     <tr>
                         <td colspan="7">
@@ -95,7 +96,9 @@ under the License.
                                 </td>
                                 <td align="right" valign="top" nowrap="nowrap">
                                     <#if orderItem.statusId != "ITEM_CANCELLED">
-                                        <@ofbizCurrency amount=Static["org.ofbiz.order.order.OrderReadHelper"].getPurchaseOrderItemTotal(orderItem,false) isoCode=currencyUomId/>
+                                         <#assign  itemSubTotal=Static["org.ofbiz.order.order.OrderReadHelper"].getPurchaseOrderItemTotal(orderItem,false)>
+                                         <#assign  orderExTaxTotal=orderExTaxTotal.add(itemSubTotal)>
+                                        <@ofbizCurrency amount=itemSubTotal isoCode=currencyUomId/>
                                     <#else>
                                         <@ofbizCurrency amount=0.00 isoCode=currencyUomId/>
                                     </#if>
@@ -377,7 +380,7 @@ under the License.
                             <td align="right" colspan="5">
                                 <#if orderHeaderAdjustment.comments?has_content>${orderHeaderAdjustment.comments} - </#if>
                                 <#if orderHeaderAdjustment.description?has_content>${orderHeaderAdjustment.description} - </#if>
-                                <span class="label">${adjustmentType.get("description", locale)}</span>
+                                <span class="label"> ${adjustmentType.get("description", locale)}</span>
                             </td>
                             <td align="right" nowrap="nowrap">
                                 <@ofbizCurrency amount=adjustmentAmount isoCode=currencyUomId/>
@@ -396,7 +399,9 @@ under the License.
                         <span class="label">${uiLabelMap.OrderItemsSubTotal}</span>
                     </td>
                     <td align="right" nowrap="nowrap">
-                        <@ofbizCurrency amount=orderSubTotal isoCode=currencyUomId/>
+                    <@ofbizCurrency amount=orderExTaxTotal isoCode=currencyUomId/>
+                    <#-->
+                        <@ofbizCurrency amount=orderSubTotal isoCode=currencyUomId/> -->
                     </td>
                     <td>&nbsp;</td>
                 </tr>

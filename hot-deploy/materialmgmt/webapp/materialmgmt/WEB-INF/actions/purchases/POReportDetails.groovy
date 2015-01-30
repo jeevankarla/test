@@ -28,6 +28,7 @@ import in.vasista.vbiz.purchase.MaterialHelperServices;
 import org.ofbiz.accounting.invoice.InvoiceWorker;
 import in.vasista.vbiz.byproducts.SalesInvoiceServices;
 import org.ofbiz.party.party.PartyHelper;
+import org.ofbiz.order.order.*;
 
 dctx = dispatcher.getDispatchContext();
 orderId = parameters.orderId;
@@ -35,7 +36,25 @@ orderDetailsList=[];
 allDetailsMap=[:];
 allDetailsMap.put("orderId",orderId);
 allDetailsMap["total"]=BigDecimal.ZERO;
-
+allDetailsMap["grandTotal"]=BigDecimal.ZERO;
+orderHeader=null;
+if (orderId) {
+	orderHeader = delegator.findByPrimaryKey("OrderHeader", [orderId : orderId]);
+	context.hasPermission = true;
+	context.canViewInternalDetails = true;
+	orderReadHelper = new OrderReadHelper(orderHeader);
+	orderItems = orderReadHelper.getOrderItems();
+	orderAdjustments = orderReadHelper.getAdjustments();
+	grandTotal = OrderReadHelper.getOrderGrandTotal(orderItems, orderAdjustments);
+	allDetailsMap["grandTotal"] = grandTotal;
+ }
+// orderDate
+orderHeaderDetails=orderHeader;
+if(UtilValidate.isNotEmpty(orderHeader)){
+   orderDate=orderHeader.orderDate;
+   allDetailsMap.put("orderDate",orderDate);
+ }
+ 
 
 //to get company details
 tinCstDetails = delegator.findList("PartyGroup",EntityCondition.makeCondition("partyId", EntityOperator.EQUALS , "Company")  , null, null, null, false );
@@ -62,15 +81,15 @@ if(UtilValidate.isNotEmpty(orderDetails)){
 		orderDetailsMap=[:];
 		orderDetailsMap["productId"]=orderitems.productId;
 		
-		uomDetails = delegator.findList("Product",EntityCondition.makeCondition("productId", EntityOperator.EQUALS , orderitems.productId)  , null, null, null, false );		
+		uomDetails = delegator.findList("Product",EntityCondition.makeCondition("productId", EntityOperator.EQUALS , orderitems.productId)  , null, null, null, false );
 		uomDetails=EntityUtil.getFirst(uomDetails);
 		uomId=uomDetails.quantityUomId;
 		
 		if(UtilValidate.isNotEmpty(uomId)){
 			uomDesc = delegator.findList("Uom",EntityCondition.makeCondition("uomId", EntityOperator.EQUALS , uomId)  , null, null, null, false );
 			uomDesc=EntityUtil.getFirst(uomDesc);
-			orderDetailsMap["uomAbbr"]=uomDesc.abbreviation;			
-		}		
+			orderDetailsMap["uomAbbr"]=uomDesc.abbreviation;
+		}
 		orderDetailsMap["quantity"]=orderitems.quantity;
 		orderDetailsMap["unitPrice"]=orderitems.unitPrice;
 		orderDetailsMap["createdDate"]=orderitems.createdDate;
@@ -93,20 +112,13 @@ if(UtilValidate.isNotEmpty(orderDetails)){
 		allDetailsMap.put("qutationDate",qutationDate);
 				
 		enquiryDetails = delegator.findList("QuoteAndItemAndCustRequest",EntityCondition.makeCondition("quoteId", EntityOperator.EQUALS , quoteId)  , null, null, null, false );
-		enquiryDetails=EntityUtil.getFirst(enquiryDetails);		
+		enquiryDetails=EntityUtil.getFirst(enquiryDetails);
 		enquiryId=enquiryDetails.custRequestId;
 		enquiryDate=enquiryDetails.custRequestDate;
 		allDetailsMap.put("enquiryId",enquiryId);
 		allDetailsMap.put("enquiryDate",enquiryDate);
 	   }
 	}
-// orderDate
-orderHeaderDetails = delegator.findList("OrderHeader",EntityCondition.makeCondition("orderId", EntityOperator.EQUALS , orderId)  , null, null, null, false );
-orderHeaderDetails=EntityUtil.getFirst(orderHeaderDetails);
-if(UtilValidate.isNotEmpty(orderHeaderDetails)){
-   orderDate=orderHeaderDetails.orderDate;
-   allDetailsMap.put("orderDate",orderDate);
-	 }
 
 // party Address
 	List conlist=[];
@@ -174,6 +186,8 @@ if(UtilValidate.isNotEmpty(pakfwdDetails)){
    allDetailsMap.put("pakfwdCharges",pakfwdCharges);
 }
 taxDetails = EntityUtil.filterByCondition(orderAdjustmentDetails, EntityCondition.makeCondition("orderAdjustmentTypeId", EntityOperator.IN , UtilMisc.toList("VAT_PUR","CST_PUR")));
+allDetailsMap.put("taxDetailsList",taxDetails);
+
 if(UtilValidate.isNotEmpty(taxDetails)){
    tax =taxDetails.amount;
    allDetailsMap.put("tax",tax);
