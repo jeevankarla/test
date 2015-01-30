@@ -39,7 +39,11 @@
             <exclude field-name="lastModifiedByUserLogin"/>
         </auto-attributes>
     </service>
-   
+   <service name="emailRequirement" engine="java" location="in.vasista.vbiz.purchase.MaterialRequestServices" invoke="emailRequirement">
+        <description>Requirement Interface</description>
+        <attribute name="requirementId" mode="IN" type="String"/>
+    </service>
+    
    <service name="ChangeOrderStatus" engine="java" auth="true"
             location="org.ofbiz.order.order.OrderServices" invoke="setOrderStatus">
         <description>Change the status of an existing order</description>
