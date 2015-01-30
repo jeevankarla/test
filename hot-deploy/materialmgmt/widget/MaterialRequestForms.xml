@@ -802,6 +802,12 @@
                 </sub-hyperlink>
             </display-entity>
       </field>
+      <field use-when="&quot;${roleTypeId}&quot; == &quot;SUPPLIER&quot;" name="materialEnquiryReport" widget-style="buttontext">
+            <hyperlink target="MaterialEnquiryReport.pdf" description="Report" target-window="_blank">
+                <parameter param-name="partyId"/>
+                <parameter param-name="custRequestId"/>
+            </hyperlink>
+      </field>
       <field name="fromDate"><display description="${groovy:org.ofbiz.base.util.UtilDateTime.toDateString(fromDate,&quot;dd MMM,yyyy&quot;)}"/></field>
       <field name="roleTypeId" title="Role Type"><display-entity  entity-name="RoleType" description="${description}" /></field>
       <field name="delete" widget-style="buttontext">
