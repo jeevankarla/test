@@ -182,7 +182,7 @@ function reportTypeChangeFunc() {
 							</form>
 		                </tr>
 				         <tr class="alternate-row">
-							<form id="purchaseReport" name="purchaseReport" method="post" action="<@ofbizUrl>purchaseTaxReport.pdf</@ofbizUrl>" target="_blank">	
+							<form id="purchaseTaxReport" name="purchaseReport" method="post" action="<@ofbizUrl>purchaseTaxReport.pdf</@ofbizUrl>" target="_blank">	
 								<td width="30%">Purchase Tax Classification Report</td>
 								<td width="15%">From<input  type="text" size="18pt" id="purchaseTaxFDate" readonly  name="fromDate"/></td>
 							    <td width="15%">To<input  type="text" size="18pt" id="purchaseTaxTDate" readonly  name="thruDate"/></td>
@@ -195,9 +195,10 @@ function reportTypeChangeFunc() {
 										
 									</select>
 								</td>
-								<td width="15%"></td>
-								<td width="10%"><input type="submit" value="Download" class="buttontext"/></td> 
-							</form>
+								<td width="15%"></td><td width="10%"><input type="submit" value="PDF" onClick="javascript:appendParams('purchaseTaxReport', '<@ofbizUrl>purchaseTaxReport.pdf</@ofbizUrl>');" class="buttontext"/>
+							    <input type="submit" value="CSV" onClick="javascript:appendParams('purchaseTaxReport', '<@ofbizUrl>purchaseTaxReport.csv</@ofbizUrl>');" class="buttontext"/></td> 
+								
+								</form>
 		                </tr>  
 		                 <tr class="alternate-row">
 							<form id="purchaseReportProductWise" name="purchaseReportProductWise" method="post" action="<@ofbizUrl>purchaseTaxProductReport.pdf</@ofbizUrl>" target="_blank">	
@@ -221,7 +222,9 @@ function reportTypeChangeFunc() {
 		                               </#list>             
 		                           </select>
 								</td>
-								<td width="10%"><input type="submit" value="Download" class="buttontext"/></td> 
+								<td width="10%"><input type="submit" value="PDF" onClick="javascript:appendParams('purchaseReportProductWise', '<@ofbizUrl>purchaseTaxProductReport.pdf</@ofbizUrl>');" class="buttontext"/>
+							    <input type="submit" value="CSV" onClick="javascript:appendParams('purchaseReportProductWise', '<@ofbizUrl>purchaseTaxProductReport.csv</@ofbizUrl>');" class="buttontext"/></td>         			
+								 
 							</form>
 		                </tr>  
 		                <tr class="alternate-row">
