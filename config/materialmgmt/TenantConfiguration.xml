@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<entity-engine-xml>
+<TenantConfiguration  description="Enable GRN Sequence Functionality"  propertyName="enableGRNSequence" propertyTypeEnumId="PURCHASE_OR_STORES" propertyValue="Y"/>
+<TenantConfiguration  description="Enable ENQUIRY Sequence Functionality"  propertyName="enableCustReqSequence" propertyTypeEnumId="PURCHASE_OR_STORES" propertyValue="Y"/>
+<TenantConfiguration  description="Enable PO Sequence Functionality"  propertyName="enablePOSequence" propertyTypeEnumId="PURCHASE_OR_STORES" propertyValue="Y"/>
+</entity-engine-xml>
