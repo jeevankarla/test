@@ -31,8 +31,10 @@ under the License.
                     <td width="35%">${uiLabelMap.Material}</td>
                     <td width="15%">${uiLabelMap.CommonStatus}</td>
                     <td width="5%">${uiLabelMap.OrderQuantity}</td>
-                    <td width="10%" align="center">${uiLabelMap.OrderUnitList}</td>
-                    <td width="10%" align="left">${uiLabelMap.OrderAdjustments}</td>
+                     <td width="10%" align="right">Unit Price</td>
+                    <#-->
+                    <td width="10%" align="center">${uiLabelMap.OrderUnitList}</td>-->
+                    <td width="10%" align="right">${uiLabelMap.OrderAdjustments}</td>
                     <td width="15%" align="right">${uiLabelMap.OrderSubTotal}</td>
                     <td width="2%">&nbsp;</td>
                 </tr>
@@ -82,14 +84,18 @@ under the License.
                                 </td>
                                 <td align="right"  nowrap="nowrap">
                                     <@ofbizCurrency amount=orderItem.unitPrice isoCode=currencyUomId/>
-                                    / <@ofbizCurrency amount=orderItem.unitListPrice isoCode=currencyUomId/>
                                 </td>
+                                <#-->
+                                <td align="right"  nowrap="nowrap">
+                                    <@ofbizCurrency amount=orderItem.unitPrice isoCode=currencyUomId/>
+                                    / <@ofbizCurrency amount=orderItem.unitListPrice isoCode=currencyUomId/>
+                                </td>-->
                                 <td align="right" valign="top" nowrap="nowrap">
-                                    <@ofbizCurrency amount=Static["org.ofbiz.order.order.OrderReadHelper"].getOrderItemAdjustmentsTotal(orderItem, orderAdjustments, true, false, false) isoCode=currencyUomId/>
+                                   <@ofbizCurrency amount=Static["org.ofbiz.order.order.OrderReadHelper"].getPurchaseOrderItemTaxTotal(orderItem) isoCode=currencyUomId/>
                                 </td>
                                 <td align="right" valign="top" nowrap="nowrap">
                                     <#if orderItem.statusId != "ITEM_CANCELLED">
-                                        <@ofbizCurrency amount=Static["org.ofbiz.order.order.OrderReadHelper"].getOrderItemSubTotal(orderItem, orderAdjustments) isoCode=currencyUomId/>
+                                        <@ofbizCurrency amount=Static["org.ofbiz.order.order.OrderReadHelper"].getPurchaseOrderItemTotal(orderItem,false) isoCode=currencyUomId/>
                                     <#else>
                                         <@ofbizCurrency amount=0.00 isoCode=currencyUomId/>
                                     </#if>
