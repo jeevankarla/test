@@ -144,11 +144,18 @@
     </form>
     <form name="ListQuoteTerms" type="list" list-name="quoteTerms"
         odd-row-style="alternate-row" default-table-style="basic-table hover-bar" paginate-target="ListQuoteTerms">
+        <entity-one value-field="quoteTerm" entity-name="QuoteTerm">
+        	<field-map field-name="quoteId" from-field="quoteId"/>
+        </entity-one>
+	   	<entity-one value-field="quote" entity-name="Quote">
+        	<field-map field-name="quoteId" from-field="quoteTerm.quoteId"/>
+        </entity-one>
         <row-actions>
         <entity-one value-field="termType" entity-name="TermType">
         	<field-map field-name="termTypeId" from-field="termTypeId"/>
         </entity-one>
         <set field="parentTypeId" from-field="termType.parentTypeId"/>
+        <set field="statusId" from-field="quote.statusId"/>
         </row-actions>
         <auto-fields-entity entity-name="QuoteTerm" default-field-type="display"/>
         <field name="termTypeId" >
@@ -167,7 +174,7 @@
                 <parameter param-name="tabButtonItems" value="FindMaterialQuotes"/>
             </hyperlink>
         </field>-->
-        <field name="deleteLink" title="${uiLabelMap.CommonEmptyHeader}" widget-style="buttontext">
+        <field name="deleteLink" title="${uiLabelMap.CommonEmptyHeader}" widget-style="buttontext" use-when="statusId.equals(&quot;QUO_CREATED&quot;)">
             <hyperlink target="deleteMaterialQuoteTerm" description="${uiLabelMap.CommonRemove}" also-hidden="false">
                 <parameter param-name="termTypeId"/>
                 <parameter param-name="quoteItemSeqId"/>
