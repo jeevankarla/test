@@ -22,7 +22,8 @@ under the License.
         <table style="width:100%; font-size:1.5em">
             <tr class="header-row">
                 <td style="width:50%"><b>${uiLabelMap.ProductFacility}</b></td>
-                <td style="width:50%; text-align: right"><b>Quantity</b></td>
+                <td style="width:30%; text-align: right"><b>Quantity</b></td>
+                 <td style="width:200%; text-align: right"><b>In-QC</b></td>
             </tr>
             <#assign rowClass = "2">
             <#list quantitySummaryByFacility.values() as quantitySummary>
@@ -35,10 +36,12 @@ under the License.
                     <#assign mktgPkgATP = quantitySummary.mktgPkgATP?if_exists>
                     <#assign mktgPkgQOH = quantitySummary.mktgPkgQOH?if_exists>
                     <#assign incomingShipmentAndItemList = quantitySummary.incomingShipmentAndItemList?if_exists>
+                   <#assign totalQuantityInQcHand = quantitySummary.totalQuantityInQcHand?if_exists>
                    
                     <tr valign="middle"<#if rowClass == "1"> class="alternate-row"</#if> >
                         <td style="padding-top: 1em; color: green; font-weight: bold; font-size:1.2em" width="50%">${(facility.facilityName)?if_exists}</td>
-                        <td style="padding-top: 1em; color: green; font-weight: bold; font-size:1.2em; text-align: right"><#if totalQuantityOnHand?exists>${totalQuantityOnHand}<#else>&nbsp;</#if></td>
+                        <td style="padding-top: 1em; color: green; font-weight: bold; font-size:1.2em; text-align: center"><#if totalQuantityOnHand?exists>${totalQuantityOnHand}<#else>&nbsp;</#if></td>
+                    	<td style="padding-top: 1em; color: green; font-weight: bold; font-size:1.2em; text-align: right"><#if totalQuantityInQcHand?exists>${totalQuantityInQcHand}<#else>&nbsp;</#if></td>
                     </tr>
 
                 </#if>
