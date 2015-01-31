@@ -192,7 +192,7 @@ under the License.
     		<#if issueDate?exists && issueDate?has_content>
     			<td><span class="label h3">Quote Received Date :</span></td><td><input class='h3' type='text' id='issueDate' name='issueDate' value="${issueDate}" onmouseover='datepick()'/></td>
     		<#else>	
-    			<td><span class="label h3">Quote Received Date :</span></td><td><input class='h3' type='text' id='issueDate' name='issueDate' onmouseover='datepick()' onclick="getName()" ></td>
+    			<td><span class="label h3">Quote Received Date :</span></td><td><input class='h3' type='text' id='issueDate' name='issueDate' onmouseover='datepick()' onfocus="getName()" ></td>
     		</#if>	
     		</tr>
     		<tr>
