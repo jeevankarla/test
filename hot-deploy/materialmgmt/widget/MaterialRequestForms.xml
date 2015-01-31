@@ -439,6 +439,8 @@
         <field name="statusId">
             <display-entity also-hidden="false" entity-name="StatusItem"/>
         </field>
+        <field name="quantity" title="Sec. Head Approved Qty"><display/></field>
+        <field name="origQuantity" title="Indented Qty"><display/></field>
         <!-- <field name="addNote" use-when="!custRequest.get(&quot;statusId&quot;).equals(&quot;CRQ_CANCELLED&quot;)&amp;&amp;!custRequest.get(&quot;statusId&quot;).equals(&quot;CRQ_COMPLETED&quot;)">
             <hyperlink description="${uiLabelMap.FormFieldTitle_addNote}" target="requestitemnotes">
                 <parameter param-name="custRequestId"/>
