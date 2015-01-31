@@ -109,9 +109,13 @@
 				var inputQty = jQuery("<input>").attr("type", "hidden").attr("name", "quantity_o_" + rowCount).val(qty);
 				jQuery(formId).append(jQuery(inputProd));				
 				jQuery(formId).append(jQuery(inputQty));
-				
    			}
-   			
+   			else
+   			{
+   			 alert("Please Fill Quantity.. Indent Failed..!"); 
+   			 window.location.reload(true);
+   			 return false;
+   			}
 		}
 		
 		var dataString = $("#indententryinit").serializeArray();
