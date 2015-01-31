@@ -41,12 +41,12 @@ under the License.
 				    <fo:block linefeed-treatment="preserve">&#xA;</fo:block>		        
 	                <fo:block linefeed-treatment="preserve">&#xA;</fo:block>
 	                <fo:block  font-size="12pt" text-align="left">Dear Sir,                                                                                                     </fo:block> 	             
-	                <fo:block  font-size="12pt"  text-align="left">&#160;&#160;    &#160;&#160; &#160;&#160; &#160; We Intend to purchase the following items from the regular manufacturer/dealer and requested to quote your lowest competitive rate subjected to the terms and conditions stipulated below.The sealed quotation duly superscribed mentioning the enquiry no,date and due date should reach this office on or before ${responseRequiredDate?if_exists} </fo:block>   
+	                <fo:block  font-size="12pt"  text-align="left">&#160;&#160;    &#160;&#160; &#160;&#160; &#160; We Intend to purchase the following items from the regular manufacturer/dealer and requested to quote your lowest competitive rate subjected to the terms and conditions stipulated below.The sealed quotation duly superscribed mentioning the enquiry no,date and due date should reach this office on or before  <#if dueDate?has_content>${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(dueDate, "dd-MMM-yyyy")?if_exists}<#else>.</#if> </fo:block> 
 	                <fo:block  font-size="12pt"  white-space-collapse="false">&#160; </fo:block>        
 	                <fo:block  font-size="12pt"   white-space-collapse="false"  text-align="left"> Terms and Conditions :</fo:block>     
 	                <fo:block  font-size="12pt"   white-space-collapse="false"  text-align="left">1.Mother Dairy is not responsible for the premature opening of the quatations.When they  </fo:block> 
 	                <fo:block  font-size="12pt"  white-space-collapse="false">are not properly sealed subscribed.</fo:block>        
-	                <fo:block  font-size="12pt"   white-space-collapse="false"  text-align="left">2.All statutary taxes,duties,levies and other expenditure, should be clearly indicated with breakup.</fo:block>
+	                <fo:block  font-size="12pt"   white-space-collapse="false"  text-align="left">2.All statutory taxes,duties,levies and other expenditure, should be clearly indicated with breakup.</fo:block>
 	                <fo:block  font-size="12pt"   white-space-collapse="false"  text-align="left">3.The price should be quoted on F.O.R Mother Dairy basis.  </fo:block>
 	                <fo:block  font-size="12pt"   white-space-collapse="false"  text-align="left">4.Please mention your TIN and CST No.</fo:block>
 	                <fo:block  font-size="12pt"   white-space-collapse="false"  text-align="left">5.The validity of your offers should be 60 days from date of due date.</fo:block>
@@ -118,13 +118,13 @@ under the License.
 									    <fo:block text-align="left"  >${enquiryMap.get("description")?if_exists}</fo:block>
 								     </fo:table-cell>
 								     <fo:table-cell >
-									    <fo:block text-align="center" keep-together="always" >${responseRequiredDate?if_exists}</fo:block>
+									    <fo:block text-align="center" keep-together="always" > <#if dueDate?has_content>${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(dueDate, "dd-MMM-yyyy")?if_exists}<#else></#if> </fo:block>
 								     </fo:table-cell>
 								     <fo:table-cell >
 									    <fo:block text-align="right" keep-together="always" >${enquiryMap.get("requrdqty")?if_exists?string("##0.000")}</fo:block>
 								    </fo:table-cell>
 								    <fo:table-cell >
-									   <fo:block text-align="center" keep-together="always" >${enquiryMap.get("quantityUomId")?if_exists}</fo:block>
+									   <fo:block text-align="center" keep-together="always" >${enquiryMap.get("unit")?if_exists}</fo:block>
 								    </fo:table-cell>				  
 					            </fo:table-row>
 					         <#assign sno=sno+1>
@@ -176,16 +176,16 @@ under the License.
 	                                    <fo:block linefeed-treatment="preserve">&#xA;</fo:block>
 					                </fo:table-cell>
 					                <fo:table-cell border-style="solid">
-					                     <fo:block text-align="left"  keep-together="always" font-size="10pt">${vendorDetails.get("partyId"?if_exists)}</fo:block>
+					                     <fo:block text-align="left"  keep-together="always" font-size="10pt">${vendorDetails.get("partyId")?if_exists}</fo:block>
 					                 </fo:table-cell> 
 					                 <fo:table-cell border-style="solid">
-					                     <fo:block text-align="left"  keep-together="always" font-size="10pt">${vendorDetails.get("partyName"?if_exists)}</fo:block>
+					                     <fo:block text-align="left" font-size="10pt">${vendorDetails.get("partyName")?if_exists}</fo:block>
 					                 </fo:table-cell> 
 					                 <fo:table-cell border-style="solid">
-					                     <fo:block text-align="center"  keep-together="always" font-size="10pt">${vendorDetails.get("contactNumber"?if_exists)}</fo:block>
+					                     <fo:block text-align="center"  keep-together="always" font-size="10pt">${vendorDetails.get("contactNumber")?if_exists}</fo:block>
 					                 </fo:table-cell>
 					                 <fo:table-cell border-style="solid">
-					                     <fo:block text-align="center"  keep-together="always" font-size="10pt"></fo:block>
+					                     <fo:block text-align="center"  keep-together="always" font-size="10pt">${vendorDetails.get("faxNumber")?if_exists}</fo:block>
 					                 </fo:table-cell>
  					             </fo:table-row> 
 					        </fo:table-body>      
