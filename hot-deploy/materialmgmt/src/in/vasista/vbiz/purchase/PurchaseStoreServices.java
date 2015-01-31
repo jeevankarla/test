@@ -1158,8 +1158,7 @@ public static Map<String, Object> createAdjustmentForPurchaseOrder(DispatchConte
 		}*/
 		
 		if("FREIGHT_CHARGES".equalsIgnoreCase(adjustmentTypeId)){
-			//String orderAdjustmentTypeId = "COGS_ITEM16";
-			String orderAdjustmentTypeId = "COGS_FREIGHT";
+			String orderAdjustmentTypeId = "COGS_ITEM16";
 			 Map createOrderAdjustmentCtx = UtilMisc.toMap("userLogin",userLogin);
 	    	 createOrderAdjustmentCtx.put("orderId", orderId);
 	    	 createOrderAdjustmentCtx.put("orderAdjustmentTypeId", orderAdjustmentTypeId);    	
@@ -1172,8 +1171,7 @@ public static Map<String, Object> createAdjustmentForPurchaseOrder(DispatchConte
 	         } 
 		}
 		if("DISCOUNT".equalsIgnoreCase(adjustmentTypeId)){
-			//String orderAdjustmentTypeId = "COGS_ITEM17";
-			String orderAdjustmentTypeId = "COGS_DISC";
+			String orderAdjustmentTypeId = "COGS_ITEM17";
 			 Map createOrderAdjustmentCtx = UtilMisc.toMap("userLogin",userLogin);
 	    	 createOrderAdjustmentCtx.put("orderId", orderId);
 	    	 createOrderAdjustmentCtx.put("orderAdjustmentTypeId", orderAdjustmentTypeId);    	
@@ -1186,8 +1184,7 @@ public static Map<String, Object> createAdjustmentForPurchaseOrder(DispatchConte
 	         } 
 		}
 		if("INSURENCE".equalsIgnoreCase(adjustmentTypeId)){
-			//String orderAdjustmentTypeId = "COGS_ITEM18";
-			String orderAdjustmentTypeId = "COGS_INSURANCE";
+			String orderAdjustmentTypeId = "COGS_ITEM18";
 			 Map createOrderAdjustmentCtx = UtilMisc.toMap("userLogin",userLogin);
 	    	 createOrderAdjustmentCtx.put("orderId", orderId);
 	    	 createOrderAdjustmentCtx.put("orderAdjustmentTypeId", orderAdjustmentTypeId);    	
@@ -1200,8 +1197,7 @@ public static Map<String, Object> createAdjustmentForPurchaseOrder(DispatchConte
 	         } 
 		}
 		if("PACKAndFOWDG".equalsIgnoreCase(adjustmentTypeId)){
-			//String orderAdjustmentTypeId = "COGS_ITEM19";
-			String orderAdjustmentTypeId = "COGS_PCK_FWD";
+			String orderAdjustmentTypeId = "COGS_ITEM19";
 			 Map createOrderAdjustmentCtx = UtilMisc.toMap("userLogin",userLogin);
 	    	 createOrderAdjustmentCtx.put("orderId", orderId);
 	    	 createOrderAdjustmentCtx.put("orderAdjustmentTypeId", orderAdjustmentTypeId);    	
@@ -1214,8 +1210,7 @@ public static Map<String, Object> createAdjustmentForPurchaseOrder(DispatchConte
 	         } 
 		}
 		if("OTHERCHARGES".equalsIgnoreCase(adjustmentTypeId)){
-			//String orderAdjustmentTypeId = "COGS_ITEM20";
-			String orderAdjustmentTypeId = "COGS_OTH_CHARGES";
+			String orderAdjustmentTypeId = "COGS_ITEM20";
 			 Map createOrderAdjustmentCtx = UtilMisc.toMap("userLogin",userLogin);
 	    	 createOrderAdjustmentCtx.put("orderId", orderId);
 	    	 createOrderAdjustmentCtx.put("orderAdjustmentTypeId", orderAdjustmentTypeId);    	
