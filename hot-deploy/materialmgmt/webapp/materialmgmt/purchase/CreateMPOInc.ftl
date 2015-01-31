@@ -822,10 +822,10 @@
 				var amt = parseFloat(Math.round((totalAmount) * 100) / 100);
 			
 				if(amt > 0 ){
-					var dispText = "<b>  [Invoice Amt: Rs " +  amt + "]</b>";
+					var dispText = "<b>  [Total PO Amt: Rs " +  amt + "]</b>";
 				}
 				else{
-					var dispText = "<b>  [Invoice Amt: Rs 0 ]</b>";
+					var dispText = "<b>  [Total PO Amt: Rs 0 ]</b>";
 				}
 				//alert("==amt="+amt);
 				jQuery("#totalAmount").html(dispText);
@@ -863,7 +863,7 @@
 	// update when  discunt/fright/insurence changes
 	function addToInvoiceAmount(){
             var totalAmount = 0;
-            //alert("==data.length===>"+data.length);
+           // alert("==data.length==inUpdate=>"+data.length);
 				for (i = 0; i < data.length; i++) {
 				   if(!isNaN(data[i]["amount"])){
 					totalAmount += data[i]["amount"];
@@ -920,10 +920,10 @@
 				var amt = parseFloat(Math.round((totalAmount) * 100) / 100);
 			
 				if(amt > 0 ){
-					var dispText = "<b>  [Invoice Amt: Rs " +  amt + "]</b>";
+					var dispText = "<b>  [Total PO Amt: Rs " +  amt + "]</b>";
 				}
 				else{
-					var dispText = "<b>  [Invoice Amt: Rs 0 ]</b>";
+					var dispText = "<b>  [Total PO Amt: Rs 0 ]</b>";
 				}
 				//alert("==amt="+amt);
 				jQuery("#totalAmount").html(dispText);
