@@ -650,6 +650,7 @@ public class MaterialQuoteServices {
     					quoteUnitPrice = quoteItem.getBigDecimal("quoteUnitPrice");
     					String quoteItemSeqId = quoteItem.getString("quoteItemSeqId");
     					if(UtilValidate.isNotEmpty(quoteId) && UtilValidate.isNotEmpty(quoteItemSeqId)){
+    						//Vat Here
     						List qouteTermVatCondList = UtilMisc.toList(EntityCondition.makeCondition("quoteId", EntityOperator.EQUALS, quoteId));
     						qouteTermVatCondList.add(EntityCondition.makeCondition("quoteItemSeqId", EntityOperator.EQUALS, quoteItemSeqId));
     						qouteTermVatCondList.add(EntityCondition.makeCondition("uomId", EntityOperator.EQUALS, "PERCENT"));
@@ -678,6 +679,7 @@ public class MaterialQuoteServices {
             						}
     				        	}
     				        }
+    				        //Bed Here
     				        List qouteTermBedCondList = UtilMisc.toList(EntityCondition.makeCondition("quoteId", EntityOperator.EQUALS, quoteId));
     				        qouteTermBedCondList.add(EntityCondition.makeCondition("quoteItemSeqId", EntityOperator.EQUALS, quoteItemSeqId));
     				        qouteTermBedCondList.add(EntityCondition.makeCondition("uomId", EntityOperator.EQUALS, "PERCENT"));
@@ -732,6 +734,7 @@ public class MaterialQuoteServices {
             						}
     				        	}
     				        }
+    				        //Cst Here
     				        List qouteTermCstCondList = UtilMisc.toList(EntityCondition.makeCondition("quoteId", EntityOperator.EQUALS, quoteId));
     				        qouteTermCstCondList.add(EntityCondition.makeCondition("quoteItemSeqId", EntityOperator.EQUALS, quoteItemSeqId));
     				        qouteTermCstCondList.add(EntityCondition.makeCondition("uomId", EntityOperator.EQUALS, "PERCENT"));
@@ -780,6 +783,156 @@ public class MaterialQuoteServices {
          CheckOutHelper checkout = new CheckOutHelper(dispatcher, delegator, cart);
          Map<String, Object> orderCreateResult = checkout.createOrder(userLogin);
          String orderId = (String) orderCreateResult.get("orderId");
+         try { 
+        	//Freight Here
+             List qouteTermFreightCondList = UtilMisc.toList(EntityCondition.makeCondition("quoteId", EntityOperator.EQUALS, quoteId));
+             qouteTermFreightCondList.add(EntityCondition.makeCondition("termTypeId", EntityOperator.EQUALS, "COGS_FREIGHT"));
+             EntityCondition quotFreightCond = EntityCondition.makeCondition(qouteTermFreightCondList, EntityOperator.AND);
+             List quoteTermFreightList = delegator.findList("QuoteTerm", quotFreightCond, null, null, null, false);
+             if(UtilValidate.isNotEmpty(quoteTermFreightList)){
+            	GenericValue quoteTermFreight = EntityUtil.getFirst(quoteTermFreightList); 
+            	if(UtilValidate.isNotEmpty(quoteTermFreight)){
+            		BigDecimal freightCharges = quoteTermFreight.getBigDecimal("termValue");
+            		if(freightCharges.compareTo(BigDecimal.ZERO)>0){
+             	    	Map adjustCtx = UtilMisc.toMap("userLogin",userLogin);	  	
+             	    	adjustCtx.put("orderId", orderId);
+             	    	adjustCtx.put("orderAdjustmentTypeId", "COGS_FREIGHT");
+             	    	adjustCtx.put("amount", freightCharges);
+             	    	Map adjResultMap=FastMap.newInstance();
+         		  	 	try{
+         		  	 		adjResultMap = dispatcher.runSync("createOrderAdjustment",adjustCtx);  		  		 
+         		  	 		if (ServiceUtil.isError(adjResultMap)) {
+         		  	 			String errMsg =  ServiceUtil.getErrorMessage(adjResultMap);
+         		  	 			Debug.logError(errMsg , module);
+         		  	 			return ServiceUtil.returnError(" Error While Creating Adjustment for Purchase Order !");
+         		  	 		}
+         		  	 	}catch (Exception e) {
+         		  			  Debug.logError(e, "Error While Creating Adjustment for Purchase Order ", module);
+         		  			  return adjResultMap;			  
+         		  	 	}
+             	    }
+            	}
+             }
+             //Discount Here
+             List qouteTermDiscCondList = UtilMisc.toList(EntityCondition.makeCondition("quoteId", EntityOperator.EQUALS, quoteId));
+             qouteTermDiscCondList.add(EntityCondition.makeCondition("termTypeId", EntityOperator.EQUALS, "COGS_DISC"));
+             EntityCondition quotDiscCond = EntityCondition.makeCondition(qouteTermDiscCondList, EntityOperator.AND);
+             List quoteTermDiscList = delegator.findList("QuoteTerm", quotDiscCond, null, null, null, false);
+             if(UtilValidate.isNotEmpty(quoteTermDiscList)){
+            	GenericValue quoteTermDisc = EntityUtil.getFirst(quoteTermDiscList); 
+            	if(UtilValidate.isNotEmpty(quoteTermDisc)){
+            		BigDecimal discount = quoteTermDisc.getBigDecimal("termValue");
+            		if(discount.compareTo(BigDecimal.ZERO)>0){
+             	    	Map adjustCtx = UtilMisc.toMap("userLogin",userLogin);	  	
+             	    	adjustCtx.put("orderId", orderId);
+             	    	adjustCtx.put("orderAdjustmentTypeId", "COGS_DISC");
+             	    	adjustCtx.put("amount", discount);
+             	    	Map adjResultMap=FastMap.newInstance();
+             	  	 	try{
+             	  	 		adjResultMap = dispatcher.runSync("createOrderAdjustment",adjustCtx);  		  		 
+             	  	 		if (ServiceUtil.isError(adjResultMap)) {
+             	  	 			String errMsg =  ServiceUtil.getErrorMessage(adjResultMap);
+             	  	 			Debug.logError(errMsg , module);
+             	  	 			return ServiceUtil.returnError(" Error While discount Adjustment for Purchase Order !");
+             	  	 		}
+             	  	 	}catch (Exception e) {
+             	  			  Debug.logError(e, "Error While Creating discount Adjustment for Purchase Order ", module);
+             	  			  return adjResultMap;			  
+             	  	 	}
+             	    }
+            	}
+             }
+             //Insurance Here
+             List qouteTermInsCondList = UtilMisc.toList(EntityCondition.makeCondition("quoteId", EntityOperator.EQUALS, quoteId));
+             qouteTermInsCondList.add(EntityCondition.makeCondition("termTypeId", EntityOperator.EQUALS, "COGS_INSURANCE"));
+             EntityCondition quotInsCond = EntityCondition.makeCondition(qouteTermInsCondList, EntityOperator.AND);
+             List quoteTermInsList = delegator.findList("QuoteTerm", quotInsCond, null, null, null, false);
+             if(UtilValidate.isNotEmpty(quoteTermInsList)){
+            	GenericValue quoteTermIns = EntityUtil.getFirst(quoteTermInsList); 
+            	if(UtilValidate.isNotEmpty(quoteTermIns)){
+            		BigDecimal insurance = quoteTermIns.getBigDecimal("termValue");
+            		if(insurance.compareTo(BigDecimal.ZERO)>0){
+             	    	Map adjustCtx = UtilMisc.toMap("userLogin",userLogin);	  	
+             	    	adjustCtx.put("orderId", orderId);
+             	    	adjustCtx.put("orderAdjustmentTypeId", "COGS_INSURANCE");
+             	    	adjustCtx.put("amount", insurance);
+             	    	Map adjResultMap=FastMap.newInstance();
+         		  	 	try{
+         		  	 		 adjResultMap = dispatcher.runSync("createOrderAdjustment",adjustCtx);  		  		 
+         		  	 		if (ServiceUtil.isError(adjResultMap)) {
+         		  	 			String errMsg =  ServiceUtil.getErrorMessage(adjResultMap);
+         		  	 			Debug.logError(errMsg , module);
+         		  	 		 return ServiceUtil.returnError(" Error While Creating insurance Adjustment for Purchase Order !");
+         		  	 		}
+         		  	 	}catch (Exception e) {
+         		  			  Debug.logError(e, "Error While Creating insurance Adjustment for Purchase Order ", module);
+         		  			  return adjResultMap;			  
+         		  	 	}
+             	    }
+            	}
+             }
+             //package and forward Here
+             List qouteTermPckFwdCondList = UtilMisc.toList(EntityCondition.makeCondition("quoteId", EntityOperator.EQUALS, quoteId));
+             qouteTermPckFwdCondList.add(EntityCondition.makeCondition("termTypeId", EntityOperator.EQUALS, "COGS_PCK_FWD"));
+             EntityCondition quotPckFwdCond = EntityCondition.makeCondition(qouteTermPckFwdCondList, EntityOperator.AND);
+             List quoteTermPckFwdList = delegator.findList("QuoteTerm", quotPckFwdCond, null, null, null, false);
+             if(UtilValidate.isNotEmpty(quoteTermPckFwdList)){
+            	GenericValue quoteTermPckFwd = EntityUtil.getFirst(quoteTermPckFwdList); 
+            	if(UtilValidate.isNotEmpty(quoteTermPckFwd)){
+            		BigDecimal packAndFowdg = quoteTermPckFwd.getBigDecimal("termValue");
+            		if(packAndFowdg.compareTo(BigDecimal.ZERO)>0){
+             	    	Map adjustCtx = UtilMisc.toMap("userLogin",userLogin);	  	
+             	    	adjustCtx.put("orderId", orderId);
+             	    	adjustCtx.put("orderAdjustmentTypeId", "COGS_PCK_FWD");
+             	    	adjustCtx.put("amount", packAndFowdg);
+             	    	Map adjResultMap=FastMap.newInstance();
+         		  	 	try{
+         		  	 		adjResultMap = dispatcher.runSync("createOrderAdjustment",adjustCtx);  		  		 
+         		  	 		if (ServiceUtil.isError(adjResultMap)) {
+         		  	 			String errMsg =  ServiceUtil.getErrorMessage(adjResultMap);
+         		  	 			Debug.logError(errMsg , module);
+         		  	 		 return ServiceUtil.returnError(" Error While packAndFowdg Adjustment for Purchase Order !");
+         		  	 		}
+         		  	 	}catch (Exception e) {
+         		  			  Debug.logError(e, "Error While Creating packAndFowdg Adjustment for Purchase Order ", module);
+         		  			  return adjResultMap;			  
+         		  	 	}
+             	    }
+            	}
+             }
+             //othercharges Here
+             List qouteTermOthCgsCondList = UtilMisc.toList(EntityCondition.makeCondition("quoteId", EntityOperator.EQUALS, quoteId));
+             qouteTermOthCgsCondList.add(EntityCondition.makeCondition("termTypeId", EntityOperator.EQUALS, "COGS_OTH_CHARGES"));
+             EntityCondition quotOthCgsCond = EntityCondition.makeCondition(qouteTermOthCgsCondList, EntityOperator.AND);
+             List quoteTermOthCgsList = delegator.findList("QuoteTerm", quotOthCgsCond, null, null, null, false);
+             if(UtilValidate.isNotEmpty(quoteTermOthCgsList)){
+            	GenericValue quoteTermOthCgs = EntityUtil.getFirst(quoteTermOthCgsList); 
+            	if(UtilValidate.isNotEmpty(quoteTermOthCgs)){
+            		BigDecimal otherCharges = quoteTermOthCgs.getBigDecimal("termValue");
+            		if(otherCharges.compareTo(BigDecimal.ZERO)>0){
+             	    	Map adjustCtx = UtilMisc.toMap("userLogin",userLogin);	  	
+             	    	adjustCtx.put("orderId", orderId);
+             	    	adjustCtx.put("orderAdjustmentTypeId", "COGS_OTH_CHARGES"); 
+             	    	adjustCtx.put("amount", otherCharges);
+             	    	Map adjResultMap=FastMap.newInstance();
+         		  	 	try{
+         		  	 		 adjResultMap = dispatcher.runSync("createOrderAdjustment",adjustCtx);  		  		 
+         		  	 		if (ServiceUtil.isError(adjResultMap)) {
+         		  	 			String errMsg =  ServiceUtil.getErrorMessage(adjResultMap);
+         		  	 			Debug.logError(errMsg , module);
+         		  	 		 return ServiceUtil.returnError(" Error While otherCharges Adjustment for Purchase Order !");
+         		  	 		}
+         		  	 	}catch (Exception e) {
+         		  			  Debug.logError(e, "Error While Creating otherCharges Adjustment for Purchase Order ", module);
+         		  			  return adjResultMap;			  
+         		  	 	}
+             	    }
+            	}
+             }
+         }catch(Exception e) {
+   	  		Debug.logError("Error While creating The QuoteItem", module);
+   	  		return ServiceUtil.returnError("Error While creating The QuoteItem");
+   	  	 }
          result = ServiceUtil.returnSuccess("Create Purchase Order for Quote : "+quoteId);
          result.put("orderId", orderId);
          return result;
