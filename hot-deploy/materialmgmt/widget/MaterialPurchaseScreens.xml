@@ -213,6 +213,7 @@
 					</condition-list>		
 					<order-by field-name="-datetimeReceived"/>        
                </entity-condition>
+      			<set field="layoutSettings.javaScripts[]" value="/materialmgmt/images/requirements.js" global="true"/>
             </actions>
             <widgets>
                  <decorator-screen name="materialmgmtNgCommonDecorator" location="${parameters.mainDecoratorLocation}">

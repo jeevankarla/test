@@ -271,7 +271,7 @@
     </form>
     
     <form name="ListMaterialForQCApproval" type="list" list-name="receiptItems" paginate-target="${targetRequest}"
-        odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar" target="acceptReceiptQtyByQC" separate-columns="true">
+        odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar"  separate-columns="true">
         
       	<field name="receiptId" title ="GRN No">
       		<display/>
@@ -282,9 +282,10 @@
         <field name="statusIdTo"><hidden value="SR_QUALITYCHECK"/></field>
         <field name="shipmentItemSeqId"><display/></field>
  		<field name="receivedByUserLoginId" title="Received By"><display/></field>
+ 		<field name="currentQty"><hidden value="${quantityAccepted}"/></field>
         <field name="quantity"><display description="${quantityAccepted}"/></field>
         <field name="quantityAccepted"><text size="15"/></field>
-        <field name="Accept" widget-style="buttontext">
+        <field name="Accept" event="onclick" action="javascript:qcApprovalForQuantiy(this);" widget-style="buttontext">
         	<submit/>
         </field> 
     </form>
