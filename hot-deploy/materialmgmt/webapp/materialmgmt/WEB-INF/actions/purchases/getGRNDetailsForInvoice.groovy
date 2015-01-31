@@ -47,7 +47,7 @@ if(shipmentId){
 	conditionList.add(EntityCondition.makeCondition("quantityAccepted", EntityOperator.GREATER_THAN, BigDecimal.ZERO));
 	conditionList.add(EntityCondition.makeCondition("statusId", EntityOperator.IN, UtilMisc.toList("SR_ACCEPTED", "SR_QUALITYCHECK")));
 	cond1 = EntityCondition.makeCondition(conditionList, EntityOperator.AND);
-	shipmentReceipts = delegator.findList("ShipmentReceipt", cond, null, null, null, false);
+	shipmentReceipts = delegator.findList("ShipmentReceipt", cond1, null, null, null, false);
 	
 	context.shipmentItems = shipmentItems;
 	context.shipmentHeader = shipmentHeader;
