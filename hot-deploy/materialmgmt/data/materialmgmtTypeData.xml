@@ -111,7 +111,6 @@
 	<OrderAdjustmentType description="Packing And Forwarding Charges on Purchase" hasTable="N" orderAdjustmentTypeId="COGS_PCK_FWD" parentTypeId="PURCHASE_CHRGS"/>
 	<OrderAdjustmentType description="Insurance on Purchase" hasTable="N" orderAdjustmentTypeId="COGS_INSURANCE" parentTypeId="PURCHASE_CHRGS"/>
 	<OrderAdjustmentType description="Other Charges on Purchase" hasTable="N" orderAdjustmentTypeId="COGS_OTH_CHARGES" parentTypeId="PURCHASE_CHRGS"/>
-	
 	<InvoiceItemType defaultGlAccountId="510000" description="FREIGHT CHARGES" hasTable="N" invoiceItemTypeId="COGS_FREIGHT"/>
 	<InvoiceItemType defaultGlAccountId="511100" description="DISCOUNTS" hasTable="N" invoiceItemTypeId="COGS_DISC"/>
 	<InvoiceItemType defaultGlAccountId="510000" description="PACK AND FORWARDING CHARGES" hasTable="N" invoiceItemTypeId="COGS_PCK_FWD"/>
@@ -147,19 +146,6 @@
      <Enumeration enumId="EXTERNAL_NOTE_ID" enumCode="EXTERNAL NOTE ID" enumTypeId="CUSTOM_NOTE_TYPE" sequenceId="1" description="External Note Id"/>
      <Enumeration enumId="INTERNAL_NOTE_ID"  enumCode="INTERNAL NOTE ID" enumTypeId="CUSTOM_NOTE_TYPE" sequenceId="1" description="Internal Note Id"/>
     
-    <!--Old To New adjustmentTypes
-    COGS_FREIGHT=COGS_ITEM16
-	COGS_DISC=COGS_ITEM17
-	COGS_INSURANCE=COGS_ITEM18
-	COGS_PCK_FWD=COGS_ITEM19
-	COGS_OTH_CHARGES=COGS_ITEM20
-     -->
-    <InvoiceItemTypeMap  invoiceItemMapKey="COGS_FREIGHT" invoiceItemTypeId="COGS_FREIGHT" invoiceTypeId="PURCHASE_INVOICE"  organizationPartyId="Company"/>
-    <InvoiceItemTypeMap  invoiceItemMapKey="COGS_DISC" invoiceItemTypeId="COGS_DISC" invoiceTypeId="PURCHASE_INVOICE"  organizationPartyId="Company"/> 
-    <InvoiceItemTypeMap  invoiceItemMapKey="COGS_INSURANCE" invoiceItemTypeId="COGS_INSURANCE" invoiceTypeId="PURCHASE_INVOICE"  organizationPartyId="Company"/> 
-    <InvoiceItemTypeMap  invoiceItemMapKey="COGS_PCK_FWD" invoiceItemTypeId="COGS_PCK_FWD" invoiceTypeId="PURCHASE_INVOICE"  organizationPartyId="Company"/> 
-    <InvoiceItemTypeMap  invoiceItemMapKey="COGS_OTH_CHARGES" invoiceItemTypeId="COGS_OTH_CHARGES" invoiceTypeId="PURCHASE_INVOICE"  organizationPartyId="Company"/> 
-   
      <!-- test comment -->
 
 </entity-engine-xml>

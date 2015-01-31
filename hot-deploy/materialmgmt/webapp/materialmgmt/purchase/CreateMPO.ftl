@@ -67,13 +67,11 @@ function makeDatePicker(fromDateId ,thruDateId){
 					       	}, 800);
 					    	return false;
 				    	}
-					     // alert("==supplierId="+supplierId);
+					      //alert("==supplierId="+supplierId);
 					    //populate SlickGrid starts here
 						 if(supplierId){
 						    gridShowCall();
 						 	setupGrid1();
-						 	// alert("==BeforeUpdateTotal==thenSupplierId"+supplierId);
-						 	addToInvoiceAmount();
 					     }else{ 
 					        gridHideCall();
 					     }

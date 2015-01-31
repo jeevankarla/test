@@ -1998,7 +1998,7 @@ public class MaterialPurchaseServices {
 	    	Map adjustCtx = UtilMisc.toMap("userLogin",userLogin);	  	
 	    	adjustCtx.put("orderId", orderId);
 	    	adjustCtx.put("orderAdjustmentTypeId", "COGS_DISC");
-	    	adjustCtx.put("amount", discount.negate());
+	    	adjustCtx.put("amount", discount);
 	    	Map adjResultMap=FastMap.newInstance();
 	  	 	try{
 	  	 		adjResultMap = dispatcher.runSync("createOrderAdjustment",adjustCtx);  		  		 
