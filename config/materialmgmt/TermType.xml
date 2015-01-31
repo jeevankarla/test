@@ -39,8 +39,14 @@
     <TermType termTypeId="VAT_PUR" parentTypeId="TAX" hasTable="N" description="Value Added Tax On Purchase"/>
     <TermType termTypeId="OTHERS" parentTypeId="" hasTable="N" description="Others"/>
     <TermType termTypeId="COGS_FREIGHT" parentTypeId="OTHERS" hasTable="N" description="Freight Charges"/>
-    <TermType termTypeId="COGS_DISC" parentTypeId="OTHERS" hasTable="N" description="Discount"/>
+    <TermType termTypeId="COGS_DISC" parentTypeId="OTHERS" hasTable="N" description="Discount Before"/>
     <TermType termTypeId="COGS_INSURANCE" parentTypeId="OTHERS" hasTable="N" description="Insurance"/>
     <TermType termTypeId="COGS_OTH_CHARGES" parentTypeId="OTHERS" hasTable="N" description="Other Charges"/>
-    <TermType termTypeId="COGS_PCK_FWD" parentTypeId="OTHERS" hasTable="N" description="Packing And Forwarding Charges"/>
+    <TermType termTypeId="COGS_PCK_FWD" parentTypeId="OTHERS" hasTable="N" description="Packing And Forwarding Charges Before Tax"/>
+    <TermType termTypeId="COGS_UND_CHG" parentTypeId="OTHERS" hasTable="N" description="Unloading Charges"/>
+    <TermType termTypeId="COGS_LBR_CHG" parentTypeId="OTHERS" hasTable="N" description="Labour Charges"/>
+    <TermType termTypeId="COGS_SHP_CHG" parentTypeId="OTHERS" hasTable="N" description="Shipping Charges"/>
+    <TermType termTypeId="COGS_TNS_CHG" parentTypeId="OTHERS" hasTable="N" description="Transportation Charges"/>
+    <TermType termTypeId="COGS_PCK_FWD_ATR" parentTypeId="OTHERS" hasTable="N" description="Packing And Forwarding Charges After Tax"/>
+    <TermType termTypeId="COGS_DISC_ATR" parentTypeId="OTHERS" hasTable="N" description="Discount After"/>
 </entity-engine-xml>
