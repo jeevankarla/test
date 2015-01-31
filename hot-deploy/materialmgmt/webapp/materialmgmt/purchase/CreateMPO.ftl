@@ -308,7 +308,7 @@ function makeDatePicker(fromDateId ,thruDateId){
 	        				 </td>
 						</tr>-->
 						<tr>
-						    <td class="label"><b>Ext. PO No :</b></td>
+						    <td class="label"><b>ARC No / CPC No / Ext. PO :</b></td>
 						    <td>
 						    	<#if orderId?exists && orderInfo.get("PONumber")?exists>
 						    		<input type="text" name="PONumber" id="PONumber" size="18" maxlength="60" autocomplete="off" value="${orderInfo.get("PONumber")?if_exists}"/>
