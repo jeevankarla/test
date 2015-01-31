@@ -863,7 +863,7 @@
 	// update when  discunt/fright/insurence changes
 	function addToInvoiceAmount(){
             var totalAmount = 0;
-            //alert("==data.length===>"+data.length);
+           // alert("==data.length==in==Total=>"+data.length);
 				for (i = 0; i < data.length; i++) {
 				   if(!isNaN(data[i]["amount"])){
 					totalAmount += data[i]["amount"];
