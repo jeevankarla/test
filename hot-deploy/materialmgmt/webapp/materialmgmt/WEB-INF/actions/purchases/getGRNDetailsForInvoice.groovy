@@ -21,14 +21,23 @@ if(shipmentId){
 	shipmentHeader = delegator.findList("Shipment", condExpr, null, null, null, false);
 	
 	shipmentHeader = EntityUtil.getFirst(shipmentHeader);
-	
+	supplierId ="";
 	purchaseOrderId = shipmentHeader.primaryOrderId;
-	conditionList.clear();
-	conditionList.add(EntityCondition.makeCondition("orderId", EntityOperator.EQUALS, purchaseOrderId));
-	conditionList.add(EntityCondition.makeCondition("roleTypeId", EntityOperator.EQUALS, "BILL_FROM_VENDOR"));
-	cond = EntityCondition.makeCondition(conditionList, EntityOperator.AND);
-	orderRole = delegator.findList("OrderRole", cond, null, null, null, false);
-	supplierId = (EntityUtil.getFirst(orderRole)).get("partyId");
+	if(shipmentHeader && shipmentHeader.partyIdFrom){
+		supplierId = shipmentHeader.partyIdFrom;
+		
+	}else{
+		conditionList.clear();
+		conditionList.add(EntityCondition.makeCondition("orderId", EntityOperator.EQUALS, purchaseOrderId));
+		conditionList.add(EntityCondition.makeCondition("roleTypeId", EntityOperator.EQUALS, "BILL_FROM_VENDOR"));
+		cond = EntityCondition.makeCondition(conditionList, EntityOperator.AND);
+		orderRole = delegator.findList("OrderRole", cond, null, null, null, false);
+		if(orderRole){
+			supplierId = (EntityUtil.getFirst(orderRole)).get("partyId");
+		}
+
+	}
+		
 	
 	shipmentItems = delegator.findList("ShipmentItem", EntityCondition.makeCondition("shipmentId", EntityOperator.EQUALS, shipmentId), null, null, null,false);
 	
