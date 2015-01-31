@@ -795,10 +795,11 @@
    		<set field="fromDate" value="${custRequest.custRequestDate}"/>
    	</actions>
    	<field name="custRequestId"><hidden/></field>
-   	<field name="partyId" title="Party"><lookup target-form-name="LookupPartyName"/></field>
-   	<field name="roleTypeId" title="Role Type">
+   	<field name="roleTypeId"><hidden value="SUPPLIER"/></field>
+   	<field name="partyId" title="Supplier"><lookup target-form-name="LookupPartyName" target-parameter="roleTypeId"/></field>
+   	<!-- <field name="roleTypeId" title="Role Type">
    		<drop-down> <entity-options  description="${description}" entity-name="RoleType"><entity-constraint name="roleTypeId" value="SUPPLIER"/> </entity-options></drop-down>
-   	</field>
+   	</field> -->
    	<field name="fromDate"><hidden/></field>
    	<field name="submitButton" title="${uiLabelMap.Add}" widget-style="smallSubmit">
             <submit/>
@@ -806,7 +807,7 @@
    </form>
    <form name="listSuppliers" type="list" list-name="supplierList" separate-columns="true" use-row-submit="true" 
         odd-row-style="alternate-row" header-row-style="header-row" default-table-style="basic-table hover-bar">
-      <field name="partyId" title="Party" >
+      <field name="partyId" title="Supplier" >
       		<display-entity entity-name="PartyNameView" key-field-name="partyId" description="${firstName} ${middleName} ${lastName} ${groupName}">
                 <sub-hyperlink description="[${partyId}]" target="/partymgr/control/viewprofile" target-type="inter-app">
                     <parameter param-name="partyId" from-field="partyId"/>
