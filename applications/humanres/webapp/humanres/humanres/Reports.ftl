@@ -1244,7 +1244,7 @@ function setOrgPartyId() {
 				</#if>
 				<#if (reportDetailsMap.get("GratuitySupportReport.pdf") == "Y")> 
 					<tr class="alternate-row">
-						<form id="GratuitySupportReport" name="GratuitySupportReport" method="post" action="<@ofbizUrl>GratuitySupportReport.pdf</@ofbizUrl>" target="_blank">	
+						<form id="GratuitySupportReport" name="GratuitySupportReport" method="post" action="<@ofbizUrl>GratuitySupportReportPdf.pdf</@ofbizUrl>" target="_blank">	
 							<table class="basic-table" cellspacing="5">
 								<tr class="alternate-row">
 									<td width="20%"><span class='h3'>Gratuity Support Report</span></td>
@@ -1260,8 +1260,8 @@ function setOrgPartyId() {
 											</#list>
 										</select></span>
 									</td>	
-									<td width="32%"><span class='h3'></span></td>	
-									<td width="15%"><span class='h3'><input type="submit" value="Download" class="buttontext"></span></td> 
+									<td width="25%"><input type="submit" value="PDF" onClick="javascript:appendParams('GratuitySupportReport', '<@ofbizUrl>GratuitySupportReportPdf.pdf</@ofbizUrl>');" class="buttontext"/>
+									<span class='h3'><input type="submit" value="CSV" onClick="javascript:appendParams('GratuitySupportReport', '<@ofbizUrl>GratuitySupportReportCsv.csv</@ofbizUrl>');" class="buttontext"/></span></td> 
 								</tr>
 							</table>	
 						</form>

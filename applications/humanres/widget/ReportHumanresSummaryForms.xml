@@ -185,6 +185,20 @@
 		<field name="referenceNo" title="Ref No"><display/></field>
 		<field name="amount" title="Amount(Rs)"><display/></field>
 	</form>	
+	<form name="GratuitySupportReportCsv" type="list" list-name="employeeList" 
+		odd-row-style="alternate-row" default-table-style="basic-table hover-bar" view-size="99999" paginate="false">
+		<actions></actions>
+		<field name="sNo" title="SLNo"><display/></field>
+		<field name="employeeId" title="Employee No"><display/></field>
+		<field name="name" title="Employee Name"><display/></field>
+		<field name="position" title="Designation"><display/></field>
+		<field name="birthDate" title="Date Of Birth"><display/></field>
+		<field name="joinDate" title="Appointment Date"><display type = "date"/></field>
+		<field name="amount" title="Basic"><display/></field>
+		<field name="daAmount" title="DA"><display/></field>
+		<field name="total" title="Total"><display/></field>
+		<field name="balance" title="EL"><display/></field> 
+	</form>
 	<form name="EmployeeBankDetailsCsv" type="list" list-name="finalList" 
 		odd-row-style="alternate-row" default-table-style="basic-table hover-bar">
 		<actions></actions>

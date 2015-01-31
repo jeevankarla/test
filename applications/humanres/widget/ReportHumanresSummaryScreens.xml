@@ -460,19 +460,6 @@
 			</widgets>
 		</section>
 	</screen>
-	<screen name="GratuitySupportReport">
-		<section>
-			<actions>
-				<script location="component://humanres/webapp/humanres/WEB-INF/actions/humanres/GratuitySupportReport.groovy"/>	
-			</actions>
-			<widgets>
-				<platform-specific> 
-				  <xsl-fo><html-template location="component://humanres/webapp/humanres/humanres/GratuitySupportReportPDF.fo.ftl"/></xsl-fo> 
-                </platform-specific>
-			</widgets>
-		</section>
-	</screen>
-	
 	<screen name="GHSSDepatmentCountReportPDF">
 		<section>
 			<actions>
@@ -1303,6 +1290,38 @@
                 </platform-specific>
             </widgets>
         </section>
+    </screen>
+    <screen name="GratuitySupportReportPdf">
+    		<section>
+    			<actions>
+    				<set field="reportFlag" value="pdf"/>
+    				<script location="component://humanres/webapp/humanres/WEB-INF/actions/humanres/GratuitySupportReport.groovy"/>	
+    			</actions>
+    			<widgets>
+    				<platform-specific> 
+    				  <xsl-fo><html-template location="component://humanres/webapp/humanres/humanres/GratuitySupportReportPDF.fo.ftl"/></xsl-fo> 
+                    </platform-specific>
+    			</widgets>
+    		</section>
+    	</screen>
+    	<screen name="GratuitySupportReportCsv">
+            <section>
+               <actions>
+                    <property-map resource="OrderUiLabels" map-name="uiLabelMap" global="true"/>
+    				<property-map resource="ProductUiLabels" map-name="uiLabelMap" global="true"/>
+    				<property-map resource="PartyUiLabels" map-name="uiLabelMap" global="true"/>
+    				<property-map resource="CommonUiLabels" map-name="uiLabelMap" global="true"/>
+    				<set field="reportFlag" value="csv"/>
+                    <script location="component://humanres/webapp/humanres/WEB-INF/actions/humanres/GratuitySupportReport.groovy"/> 
+                </actions> 
+                <widgets>
+    				<section>                                                      
+    					<widgets>
+    						<include-form location="component://humanres/widget/ReportHumanresSummaryForms.xml" name="GratuitySupportReportCsv"/>
+    					</widgets>
+    				</section>
+    			</widgets>
+            </section>
     </screen>
 	<screen name="PaySlipEmployeeWise">
 		<section>
