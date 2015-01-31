@@ -5,5 +5,11 @@
 <InvoiceItemType defaultGlAccountId="510002" description="DISCOUNTS" hasTable="N" invoiceItemTypeId="COGS_DISC"/>
 <InvoiceItemType defaultGlAccountId="510002" description="PACK AND FORWARDING CHARGES" hasTable="N" invoiceItemTypeId="COGS_PCK_FWD"/>
 <InvoiceItemType defaultGlAccountId="510002" description="INSURANCE" hasTable="N" invoiceItemTypeId="COGS_INSURANCE"/>
-<InvoiceItemType defaultGlAccountId="510002" description="OTHER CHARGES" hasTable="N" invoiceItemTypeId="COGS_OTH_CHARGES"/>	 	 	 
+<InvoiceItemType defaultGlAccountId="510002" description="OTHER CHARGES" hasTable="N" invoiceItemTypeId="COGS_OTH_CHARGES"/>
+<InvoiceItemType defaultGlAccountId="510002" description="Unloading Charges" hasTable="N" invoiceItemTypeId="COGS_UND_CHG"/>
+<InvoiceItemType defaultGlAccountId="510002" description="Labour Charges" hasTable="N" invoiceItemTypeId="COGS_LBR_CHG"/>
+<InvoiceItemType defaultGlAccountId="510002" description="Shipping Charges" hasTable="N" invoiceItemTypeId="COGS_SHP_CHG"/>
+<InvoiceItemType defaultGlAccountId="510002" description="Transportation Charges" hasTable="N" invoiceItemTypeId="COGS_TNS_CHG"/>
+<InvoiceItemType defaultGlAccountId="510002" description="Packing And Forwarding Charges After Tax" hasTable="N" invoiceItemTypeId="COGS_PCK_FWD_ATR"/>
+<InvoiceItemType defaultGlAccountId="510002" description="Discount After" hasTable="N" invoiceItemTypeId="COGS_DISC_ATR"/>
 </entity-engine-xml>
