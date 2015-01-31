@@ -24,9 +24,9 @@ custRequestId=parameters.issueToCustReqId;
 custReqDetails = delegator.findOne("CustRequest", [custRequestId : custRequestId], false);
 if(UtilValidate.isNotEmpty(custReqDetails)){
    custReqDate = custReqDetails.custRequestDate;
-   responseRequiredDate=custReqDetails.responseRequiredDate;   
+   dueDate= custReqDetails.closedDateTime;
+   context.put("dueDate",dueDate);
    context.put("custReqDate",custReqDate);
-   context.put("responseRequiredDate",responseRequiredDate);
 }
 enquiryMap=[:];
 productId ="";
@@ -43,10 +43,15 @@ if(UtilValidate.isNotEmpty(productDetails)){
   productDetails=EntityUtil.getFirst(productDetails);
   itemCode=productDetails.internalName;
   description=productDetails.description;
-  quantityUomId=productDetails.quantityUomId;
+  uomId=productDetails.quantityUomId;
   enquiryMap.put("itemCode",itemCode);
   enquiryMap.put("description",description);
-  enquiryMap.put("quantityUomId",quantityUomId);
+  if(UtilValidate.isNotEmpty(uomId)){
+	  uomDesc = delegator.findList("Uom",EntityCondition.makeCondition("uomId", EntityOperator.EQUALS , uomId)  , null, null, null, false );
+	  uomDesc=EntityUtil.getFirst(uomDesc);
+	  enquiryMap.put("unit",uomDesc.abbreviation);
+	  
+  }
 }
 context.enquiryMap=enquiryMap;
 vendorList=[];
@@ -54,7 +59,8 @@ partyIdsList=delegator.findList("QuoteAndItemAndCustRequest",EntityCondition.mak
 partyIds = EntityUtil.getFieldListFromEntityList(partyIdsList, "partyId", true);
 if(UtilValidate.isNotEmpty(partyIds)){
 	partyIds.each{eachPartyId->
-		partyIdsDetailsMap=[:];		
+		partyIdsDetailsMap=[:];	
+		partyIdsDetailsMap["partyName"] = org.ofbiz.party.party.PartyHelper.getPartyName(delegator, eachPartyId, false);
 		partyIdsDetailsMap["contactNumber"]="";	
 		partyIdsDetailsMap.put("partyId",eachPartyId);
 		partyContactDetails=dispatcher.runSync("getPartyTelephone", [partyId: eachPartyId, userLogin: userLogin]);
@@ -64,8 +70,15 @@ if(UtilValidate.isNotEmpty(partyIds)){
 				partyIdsDetailsMap.put("contactNumber",contactNumber);
 			}
 		 }
-        partyIdsDetailsMap["partyName"] = org.ofbiz.party.party.PartyHelper.getPartyName(delegator, eachPartyId, false);
-		vendorList.addAll(partyIdsDetailsMap);		
+		faxId="FAX_BILLING";
+			partyFaxNumber= dispatcher.runSync("getPartyTelephone", [partyId: eachPartyId, contactMechPurposeTypeId: faxId, userLogin: userLogin]);
+			faxNumber = "";
+			if (partyFaxNumber != null && partyFaxNumber.contactNumber != null) {
+				faxNumber = partyFaxNumber.contactNumber;
+				partyIdsDetailsMap.put("faxNumber", faxNumber);				
+			}        
+		vendorList.addAll(partyIdsDetailsMap);
 	}	
 }
 context.vendorList=vendorList;
+

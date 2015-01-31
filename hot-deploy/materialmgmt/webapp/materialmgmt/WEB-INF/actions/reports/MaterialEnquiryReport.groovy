@@ -49,7 +49,8 @@ if(UtilValidate.isNotEmpty(custReqDetails)){
 		   
 	       if((parameters.partyId))
 		   {			   
-			    if(eachPartyId.equals(parameters.partyId)){	   	   
+			    if(eachPartyId.equals(parameters.partyId)){	
+					  partyMap["partyName"] = org.ofbiz.party.party.PartyHelper.getPartyName(delegator, eachPartyId, false);
                       partyPostalAddress= dispatcher.runSync("getPartyPostalAddress", [partyId:eachPartyId, userLogin: userLogin]);
                       if(UtilValidate.isNotEmpty(partyPostalAddress)){
                             if(UtilValidate.isNotEmpty(partyPostalAddress.address1)){
@@ -75,22 +76,19 @@ if(UtilValidate.isNotEmpty(custReqDetails)){
 		                          contactNumber=partyContactDetails.contactNumber;
 		                          partyMap.put("contactNumber",contactNumber);
 	                          }
-                        }  
-					   conditionList.clear();
-					   conditionList.add(EntityCondition.makeCondition("contactMechPurposeTypeId", EntityOperator.EQUALS, "FAX_BILLING"));
-					   conditionList.add(EntityCondition.makeCondition("partyId", EntityOperator.EQUALS, eachPartyId));
-					   cond=EntityCondition.makeCondition(conditionList,EntityOperator.AND);
-					   faxNumber="";
-					   listAddress = delegator.findList("PartyContactDetailByPurpose", cond , null, null, null, false );
-					   if(UtilValidate.isNotEmpty(listAddress.contactNumber)){
-						  faxNumber = listAddress.contactNumber;
-						  partyMap.put("faxNuber", faxNumber);
-						}
-            
-				      context.partyMap=partyMap;
+                        } 
+					   faxId="FAX_BILLING";
+					   partyFaxNumber= dispatcher.runSync("getPartyTelephone", [partyId: eachPartyId, contactMechPurposeTypeId: faxId, userLogin: userLogin]);
+					   faxNumber = "";
+					   if (partyFaxNumber != null && partyFaxNumber.contactNumber != null) {
+						   faxNumber = partyFaxNumber.contactNumber;
+						   partyMap.put("faxNumber", faxNumber);
+					   }					   
+                      context.partyMap=partyMap;
 				      context.put("custReqDate",custReqDate);
 			          context.put("dueDate",dueDate);
 			          partyAddressMap.put(eachPartyId,partyMap);
+					  //productDetails
 			          enquiryMap=[:];
 			          productId ="";
 			          custReqItemDetails = delegator.findList("CustRequestItem",EntityCondition.makeCondition("custRequestId", EntityOperator.EQUALS , custRequestId)  , null, null, null, false );
@@ -123,7 +121,8 @@ if(UtilValidate.isNotEmpty(custReqDetails)){
 			             context.enquiryMap=enquiryMap;
 			      }  			   
 		   }
-           else{	   	   
+           else{	
+			  partyMap["partyName"] = org.ofbiz.party.party.PartyHelper.getPartyName(delegator, eachPartyId, false);			   
               partyPostalAddress= dispatcher.runSync("getPartyPostalAddress", [partyId:eachPartyId, userLogin: userLogin]);
               if(UtilValidate.isNotEmpty(partyPostalAddress)){
                    if(UtilValidate.isNotEmpty(partyPostalAddress.address1)){
@@ -150,20 +149,18 @@ if(UtilValidate.isNotEmpty(custReqDetails)){
 		                  partyMap.put("contactNumber",contactNumber);
 	                  }
                } 
-			   conditionList.clear();
-			   conditionList.add(EntityCondition.makeCondition("contactMechPurposeTypeId", EntityOperator.EQUALS, "FAX_BILLING"));
-			   conditionList.add(EntityCondition.makeCondition("partyId", EntityOperator.EQUALS, eachPartyId));
-			   cond=EntityCondition.makeCondition(conditionList,EntityOperator.AND);
-			   faxNumber="";
-			   listAddress = delegator.findList("PartyContactDetailByPurpose", cond , null, null, null, false );
-			   if(UtilValidate.isNotEmpty(listAddress.contactNumber)){
-				  faxNumber = listAddress.contactNumber;
-				  partyMap.put("faxNuber", faxNumber);
-				}
+			   faxId="FAX_BILLING";
+					   partyFaxNumber= dispatcher.runSync("getPartyTelephone", [partyId: eachPartyId, contactMechPurposeTypeId: faxId, userLogin: userLogin]);
+					   faxNumber = "";
+					   if (partyFaxNumber != null && partyFaxNumber.contactNumber != null) {
+						   faxNumber = partyFaxNumber.contactNumber;
+						   partyMap.put("faxNumber", faxNumber);
+					   }		
 			   context.partyMap=partyMap;
 			   context.put("custReqDate",custReqDate);
 			   context.put("dueDate",dueDate);
 			   partyAddressMap.put(eachPartyId,partyMap);
+			   //productDetails
 			   enquiryMap=[:];
 			   productId ="";
 			   custReqItemDetails = delegator.findList("CustRequestItem",EntityCondition.makeCondition("custRequestId", EntityOperator.EQUALS , custRequestId)  , null, null, null, false );

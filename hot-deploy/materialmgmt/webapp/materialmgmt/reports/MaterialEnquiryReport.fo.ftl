@@ -49,7 +49,8 @@ under the License.
 			        <fo:flow flow-name="xsl-region-body"   font-family="Courier,monospace">	 			       
 			        <fo:block linefeed-treatment="preserve">&#xA;</fo:block>				   
 				    <fo:block text-align="left" keep-together="always" white-space-collapse="false">&#160;&#160; ENQUIRY NO.: ${custRequestId?if_exists}                                                          ENQUIRY DATE: ${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(custReqDate, "dd-MMM-yyyy")?if_exists}</fo:block>
-			        <fo:block  keep-together="always" text-align="left" font-family="Courier,monospace" white-space-collapse="false" font-size="12pt" >&#160;&#160; To:                                                                         FAX NO: ${partyEntry.getValue().get("contactNumber")?if_exists}</fo:block>
+			        <fo:block  keep-together="always" text-align="left" font-family="Courier,monospace" white-space-collapse="false" font-size="12pt" >&#160;&#160;&#160;VENDOR NO. :${partyId?if_exists}                                                          FAX NO: ${partyEntry.getValue().get("faxNumber")?if_exists}</fo:block>
+                    <fo:block  keep-together="always" text-align="left" font-family="Courier,monospace" white-space-collapse="false" font-size="12pt" >&#160;&#160;&#160;To: ${partyEntry.getValue().get("partyName")?if_exists}                                           </fo:block>                    
 				    <fo:block text-align="left" white-space-collapse="false">&#160;&#160; ${partyEntry.getValue().get("address1")?if_exists}</fo:block>
 				    <fo:block text-align="left" white-space-collapse="false">&#160;&#160; ${partyEntry.getValue().get("address2")?if_exists}</fo:block>
 				    <fo:block text-align="left" white-space-collapse="false">&#160;&#160; ${partyEntry.getValue().get("city")?if_exists}</fo:block>				 
@@ -61,7 +62,6 @@ under the License.
 	                <fo:block  font-size="12pt" keep-together="always"  white-space-collapse="false">&#160;&#160; quote your lowest competitive rate subjected to the terms and conditions stipulated below.The sealed</fo:block>     
 	                <fo:block  font-size="12pt" keep-together="always" white-space-collapse="false">&#160;&#160; quotation duly superscribed mentioning the enquiry no,date and due date should reach this office on or </fo:block>      	                
                     <fo:block  font-size="12pt" keep-together="always" white-space-collapse="false">&#160;&#160; before <#if dueDate?has_content>${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(dueDate, "dd-MMM-yyyy")?if_exists}<#else>.</#if> </fo:block>
-	                <fo:block linefeed-treatment="preserve">&#xA;</fo:block>
 	                <fo:block font-family="Courier,monospace">
 	                <fo:table>
 					<fo:table-column column-width="80pt"/>
