@@ -187,10 +187,14 @@ function makeDatePicker(fromDateId ,thruDateId){
 	<#assign orderTermInfo = {}>
 	<#assign orderPayTermInfo = []>
 	<#assign orderShipTermInfo = []>
+	<#assign bedCheck = "">
 	<#if orderEditParam?has_content>
 		<#assign orderInfo = orderEditParam.get("orderHeader")?if_exists>
 		<#assign quoteInfo = orderEditParam.get("quoteDetails")?if_exists>
 		<#assign quoteTerm = delegator.findByAnd("QuoteTerm", {"quoteId" : quoteInfo.quoteId, "termTypeId" : "BED_PUR" })>
+		<#if quoteTerm?has_content>
+			<#assign bedCheck = quoteTerm[0].termTypeId?if_exists>
+		</#if>
 		<#assign orderAdjInfo = orderEditParam.get("orderAdjustment")?if_exists>
 		<#assign orderTermInfo = orderEditParam.get("orderTerms")?if_exists>
 		<#if orderTermInfo?has_content>
@@ -404,12 +408,12 @@ function makeDatePicker(fromDateId ,thruDateId){
 					          			<td>&nbsp;&nbsp;&nbsp;</td>
 					          			<td align='left' valign='middle' nowrap="nowrap"><div class='h3'>Inc Tax: </div></td>
 							         	<td valign='middle' align='left'> 
-							         			<input class='h3' type="checkbox" <#if quoteTerm[0].termTypeId?exists>checked = "checked"</#if>id="incTax" name="incTax" value="true"/>	
+							         			<input class='h3' type="checkbox" <#if bedCheck?has_content>checked = "checked"</#if>id="incTax" name="incTax" value="true"/>	
 					          			</td>
 					          			<td>&nbsp;&nbsp;&nbsp;</td>
 					          			<td align='left' valign='middle' nowrap="nowrap"><div class='h3'>Add BED: </div></td>
 							         	<td valign='middle' align='left'> 
-							         			<input class='h3' type="checkbox" <#if quoteTerm[0].termTypeId?exists>checked = "checked"</#if> size="20" id="addBED" name="addBED" value="" onclick="javascript:addBedColumns();"/>	
+							         			<input class='h3' type="checkbox" <#if bedCheck?has_content>checked = "checked"</#if> size="20" id="addBED" name="addBED" value="" onclick="javascript:addBedColumns();"/>	
 					          			</td>
 					 		         </tr>
 					 		          <tr><td><br/></td></tr>
