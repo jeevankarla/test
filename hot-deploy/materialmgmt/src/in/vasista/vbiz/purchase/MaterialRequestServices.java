@@ -554,6 +554,10 @@ public class MaterialRequestServices {
         		requestedQty=toBeIssuedQty;
         		
             }
+        	if(quantity.compareTo(toBeIssuedQty) < 0){
+        		Debug.logError("You can't issue more than requested Quantity", module);
+        		return ServiceUtil.returnError("You can't issue more than requested Quantity");
+        	}
             GenericValue product = ProductWorker.findProduct(delegator, productId);
             if (product == null) {
                 return ServiceUtil.returnError("Product Not Found with Id : "+productId);
@@ -575,6 +579,7 @@ public class MaterialRequestServices {
             
             Map<String, Object> resultCtx = dispatcher.runSync("getInventoryAvailableByFacility", findCurrInventoryParams);
             if (ServiceUtil.isError(resultCtx)) {
+            	Debug.logError("Problem getting inventory level of the request for product Id :"+productId, module);
                 return ServiceUtil.returnError("Problem getting inventory level of the request for product Id :"+productId);
             }
             Object atpObj = resultCtx.get("availableToPromiseTotal");
@@ -582,7 +587,9 @@ public class MaterialRequestServices {
             if (atpObj != null) {
                 atp = new BigDecimal(atpObj.toString());
             }
-            if (requestedQty.compareTo(atp) > 0) {
+            Debug.log("toBeIssuedQty=========="+toBeIssuedQty);
+            if (toBeIssuedQty.compareTo(atp) > 0) {
+            	Debug.logError("Available Inventory level for productId : "+productId + " is "+atp, module);
                 return ServiceUtil.returnError("Available Inventory level for productId : "+productId + " is "+atp);
             }
             

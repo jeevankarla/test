@@ -156,17 +156,18 @@ import in.vasista.vbiz.purchase.MaterialHelperServices;
 		 dispatcher = request.getAttribute("dispatcher");
 		 Map contextInput = null;
 		 Map resultOutput = null;
-	 
+	     Map qcInventoryTotal = [:];
 		 // inventory quantity summary by facility: For every warehouse the product's atp and qoh
 		 // are obtained (calling the "getInventoryAvailableByFacility" service)
 		 while (facilityIterator) {
 			 facility = facilityIterator.next();
-			 resultOutput = dispatcher.runSync("getInventoryAvailableByFacility", [productId : productId, facilityId : facility.facilityId]);
-	 
+			 resultOutput = dispatcher.runSync("getInventoryAvailableByFacility", [productId : productId, facilityId : facility.facilityId ,ownerPartyId :"Company"]);
+			 totalInventory = dispatcher.runSync("getInventoryAvailableByFacility", [productId : productId, facilityId : facility.facilityId]);
 			 quantitySummary = [:];
 			 quantitySummary.facilityId = facility.facilityId;
 			 quantitySummary.totalQuantityOnHand = resultOutput.quantityOnHandTotal;
 			 quantitySummary.totalAvailableToPromise = resultOutput.availableToPromiseTotal;
+			 quantitySummary.totalQuantityInQcHand = totalInventory.quantityOnHandTotal-resultOutput.quantityOnHandTotal;
 			 JSONArray jsonArray= new JSONArray();
 			 jsonArray.add(i++);
 			 jsonArray.add(resultOutput.quantityOnHandTotal);
@@ -175,7 +176,6 @@ import in.vasista.vbiz.purchase.MaterialHelperServices;
 			 labelArray.add(jsonArray.get(0));
 			 labelArray.add("Inventory");
 			 labelsJSON.add(labelArray);
-			 
 			 // if the product is a MARKETING_PKG_AUTO/PICK, then also get the quantity which can be produced from components
 			 if (isMarketingPackage) {
 				 resultOutput = dispatcher.runSync("getMktgPackagesAvailable", [productId : productId, facilityId : facility.facilityId]);
@@ -260,6 +260,7 @@ import in.vasista.vbiz.purchase.MaterialHelperServices;
 	 
 		 context.productInventoryItems = productInventoryItems;
 		 context.quantitySummaryByFacility = quantitySummaryByFacility;
+		 context.qcInventoryTotal = qcInventoryTotal;
 		/* context.manufacturingInQuantitySummaryByFacility = manufacturingInQuantitySummaryByFacility;
 		 context.manufacturingOutQuantitySummaryByFacility = manufacturingOutQuantitySummaryByFacility;*/
 		 context.showEmpty = showEmpty;
@@ -317,7 +318,7 @@ import in.vasista.vbiz.purchase.MaterialHelperServices;
 	 condList.add(EntityCondition.makeCondition("custRequestDate", EntityOperator.GREATER_THAN_EQUAL_TO, fromDate));
 	 condList.add(EntityCondition.makeCondition("custRequestDate", EntityOperator.LESS_THAN_EQUAL_TO, thruDate));
 	 cond = EntityCondition.makeCondition(condList,EntityOperator.AND);
-	 custRequestsList = delegator.findList("CustRequestAndItemAndAttribute", cond, UtilMisc.toSet("custRequestId","fromPartyId","custRequestDate","itemStatusId","responseRequiredDate" ,"quantity"), ['-custRequestDate'], null, false);
+	 custRequestsList = delegator.findList("CustRequestAndItemAndAttribute", cond, null, ['-custRequestDate'], null, false);
 	 context.custRequestsList = custRequestsList;
 	 custRequestsByStatusMap =[:];
 	 indentQty = 0;
