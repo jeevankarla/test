@@ -316,14 +316,14 @@
 	        </drop-down>
         </field>
         <field name="levelApproverPartyId"  required-field="true" title="Level Approver Party"><lookup target-form-name="LookupEmployeeName"></lookup></field>
-        <!-- <field name="leaveStatus" title="${uiLabelMap.HumanResLeaveStatus}">
+        <field name="leaveStatus" title="${uiLabelMap.HumanResLeaveStatus}">
             <drop-down allow-empty="false"  current="APPROVED">
                 <entity-options description="${description}" key-field-name="statusId" entity-name="StatusItem">
                     <entity-constraint name="statusTypeId" operator="equals" value="LEAVE_STATUS"/>
                     <entity-order-by field-name="description"/>
                 </entity-options>
             </drop-down>
-        </field> -->
+        </field>
         <field name="documentsProduced">
        		<drop-down allow-empty="false" current="selected">
        			<option key="N"></option>

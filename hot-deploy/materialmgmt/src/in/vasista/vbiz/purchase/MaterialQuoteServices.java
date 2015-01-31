@@ -29,6 +29,7 @@ import org.ofbiz.order.shoppingcart.ShoppingCartEvents;
 import org.ofbiz.order.shoppingcart.ShoppingCartItem;
 import org.ofbiz.product.product.ProductWorker;
 import org.ofbiz.base.util.Debug;
+import org.ofbiz.accounting.util.UtilAccounting;
 import org.ofbiz.base.util.UtilDateTime;
 import org.ofbiz.base.util.UtilHttp;
 import org.ofbiz.base.util.UtilMisc;
@@ -578,6 +579,7 @@ public class MaterialQuoteServices {
     	String billFromPartyId ="Company";
     	String billToPartyId="";
     	BigDecimal quantity = BigDecimal.ZERO;
+    	BigDecimal quoteUnitPrice = BigDecimal.ZERO;
     	String salesChannel = (String) context.get("salesChannelEnumId");
     	List<GenericValue> quoteItemList = FastList.newInstance();
     	//getting productStoreId 
@@ -627,6 +629,10 @@ public class MaterialQuoteServices {
          }   
          Iterator<GenericValue> i = quoteItemList.iterator();
          String custRequestId="";
+         List taxList=FastList.newInstance();
+         List quoteTermVatList=FastList.newInstance();
+         List quoteTermBedList=FastList.newInstance();
+         List quoteTermCstList=FastList.newInstance();
          while (i.hasNext()) {
              GenericValue quoteItem = i.next();
              if (quoteItem != null) {
@@ -639,8 +645,124 @@ public class MaterialQuoteServices {
     					            cart, Boolean.FALSE, Boolean.FALSE, null, Boolean.TRUE, Boolean.TRUE));
     					
     					item = cart.findCartItem(itemIndx);
+    					
+    					quantity = quoteItem.getBigDecimal("quantity");
+    					quoteUnitPrice = quoteItem.getBigDecimal("quoteUnitPrice");
+    					String quoteItemSeqId = quoteItem.getString("quoteItemSeqId");
+    					if(UtilValidate.isNotEmpty(quoteId) && UtilValidate.isNotEmpty(quoteItemSeqId)){
+    						List qouteTermVatCondList = UtilMisc.toList(EntityCondition.makeCondition("quoteId", EntityOperator.EQUALS, quoteId));
+    						qouteTermVatCondList.add(EntityCondition.makeCondition("quoteItemSeqId", EntityOperator.EQUALS, quoteItemSeqId));
+    						qouteTermVatCondList.add(EntityCondition.makeCondition("uomId", EntityOperator.EQUALS, "PERCENT"));
+    						qouteTermVatCondList.add(EntityCondition.makeCondition("termTypeId", EntityOperator.EQUALS, "VAT_PUR"));
+    				        EntityCondition quotVatCond = EntityCondition.makeCondition(qouteTermVatCondList, EntityOperator.AND);
+    				        quoteTermVatList = delegator.findList("QuoteTerm", quotVatCond, null, null, null, false);
+    				        if(UtilValidate.isNotEmpty(quoteTermVatList)){
+    				        	GenericValue quoteTermVat = EntityUtil.getFirst(quoteTermVatList); 
+    				        	if(UtilValidate.isNotEmpty(quoteTermVat)){
+    				        		BigDecimal vatPercent = quoteTermVat.getBigDecimal("termValue");
+            					    if(UtilValidate.isNotEmpty(vatPercent)){
+            							Map<String,Object> inVatRateMap = UtilAccounting.getInclusiveTaxRate(quoteUnitPrice,vatPercent);
+            							BigDecimal vatUnitRate = (BigDecimal)inVatRateMap.get("taxAmount");
+            							if(UtilValidate.isNotEmpty(vatUnitRate)){
+            								BigDecimal vatAmount = vatUnitRate.multiply(quantity);
+            								if(vatAmount.compareTo(BigDecimal.ZERO)>0){
+            									vatAmount=vatAmount.setScale(salestaxCalcDecimals, salestaxRounding);
+                    			        		Map taxDetailMap = FastMap.newInstance();
+                    				    		taxDetailMap.put("taxType", "VAT_PUR");
+                    				    		taxDetailMap.put("amount", vatAmount);
+                    				    		taxDetailMap.put("percentage", vatPercent);
+                    				    		taxList.add(taxDetailMap);
+                    				    		item.setTaxDetails(taxList);
+                    					    }
+            							}
+            						}
+    				        	}
+    				        }
+    				        List qouteTermBedCondList = UtilMisc.toList(EntityCondition.makeCondition("quoteId", EntityOperator.EQUALS, quoteId));
+    				        qouteTermBedCondList.add(EntityCondition.makeCondition("quoteItemSeqId", EntityOperator.EQUALS, quoteItemSeqId));
+    				        qouteTermBedCondList.add(EntityCondition.makeCondition("uomId", EntityOperator.EQUALS, "PERCENT"));
+    				        qouteTermBedCondList.add(EntityCondition.makeCondition("termTypeId", EntityOperator.EQUALS, "BED_PUR"));
+    				        EntityCondition quotBedCond = EntityCondition.makeCondition(qouteTermBedCondList, EntityOperator.AND);
+    				        quoteTermBedList = delegator.findList("QuoteTerm", quotBedCond, null, null, null, false);
+    				        if(UtilValidate.isNotEmpty(quoteTermBedList)){
+    				        	GenericValue quoteTermBed = EntityUtil.getFirst(quoteTermBedList); 
+    				        	if(UtilValidate.isNotEmpty(quoteTermBed)){
+    				        		BigDecimal bedPercent = quoteTermBed.getBigDecimal("termValue");
+            					    if(UtilValidate.isNotEmpty(bedPercent)){
+            							Map<String,Object> inBedRateMap = UtilAccounting.getInclusiveTaxRate(quoteUnitPrice,bedPercent);
+            							BigDecimal bedUnitRate = (BigDecimal)inBedRateMap.get("taxAmount");
+            							if(UtilValidate.isNotEmpty(bedUnitRate)){
+            								BigDecimal bedAmount = bedUnitRate.multiply(quantity);
+            								if(bedAmount.compareTo(BigDecimal.ZERO)>0){
+            									bedAmount=bedAmount.setScale(salestaxCalcDecimals, salestaxRounding);
+                    			        		Map taxDetailMap = FastMap.newInstance();
+                    				    		taxDetailMap.put("taxType", "BED_PUR");
+                    				    		taxDetailMap.put("amount", bedAmount);
+                    				    		taxDetailMap.put("percentage", bedPercent);
+                    				    		taxList.add(taxDetailMap);
+                    				    		item.setTaxDetails(taxList);
+                    					    }
+            								
+        									Map<String,Object> inBedCessRateMap = UtilAccounting.getInclusiveTaxRate(bedUnitRate,new BigDecimal(2));
+        									BigDecimal bedCessUnitRate = (BigDecimal)inBedCessRateMap.get("taxAmount");
+        									BigDecimal bedCessAmount = bedCessUnitRate.multiply(quantity);
+        									if(bedCessAmount.compareTo(BigDecimal.ZERO)>0){
+        										bedCessAmount=bedCessAmount.setScale(salestaxCalcDecimals, salestaxRounding);
+                    			        		Map taxDetailMap = FastMap.newInstance();
+                    				    		taxDetailMap.put("taxType", "BEDCESS_PUR");
+                    				    		taxDetailMap.put("amount", bedCessAmount);
+                    				    		taxDetailMap.put("percentage", new BigDecimal(2));
+                    				    		taxList.add(taxDetailMap);
+                    				    		item.setTaxDetails(taxList);
+                    					    }
+        									
+        									Map<String,Object> inBedSecCessRateMap = UtilAccounting.getInclusiveTaxRate(bedUnitRate,new BigDecimal(1));
+        									BigDecimal bedSecCessUnitRate = (BigDecimal)inBedSecCessRateMap.get("taxAmount");
+        									BigDecimal bedSecCessAmount = bedSecCessUnitRate.multiply(quantity);
+        									if(bedSecCessAmount.compareTo(BigDecimal.ZERO)>0){
+        										bedSecCessAmount=bedSecCessAmount.setScale(salestaxCalcDecimals, salestaxRounding);
+                    			        		Map taxDetailMap = FastMap.newInstance();
+                    				    		taxDetailMap.put("taxType", "BEDSECCESS_PUR");
+                    				    		taxDetailMap.put("amount", bedSecCessAmount);
+                    				    		taxDetailMap.put("percentage", new BigDecimal(1));
+                    				    		taxList.add(taxDetailMap);
+                    				    		item.setTaxDetails(taxList);
+                    					    }
+            							}
+            						}
+    				        	}
+    				        }
+    				        List qouteTermCstCondList = UtilMisc.toList(EntityCondition.makeCondition("quoteId", EntityOperator.EQUALS, quoteId));
+    				        qouteTermCstCondList.add(EntityCondition.makeCondition("quoteItemSeqId", EntityOperator.EQUALS, quoteItemSeqId));
+    				        qouteTermCstCondList.add(EntityCondition.makeCondition("uomId", EntityOperator.EQUALS, "PERCENT"));
+    				        qouteTermCstCondList.add(EntityCondition.makeCondition("termTypeId", EntityOperator.EQUALS, "CST_PUR"));
+    				        EntityCondition quotCstCond = EntityCondition.makeCondition(qouteTermCstCondList, EntityOperator.AND);
+    				        quoteTermCstList = delegator.findList("QuoteTerm", quotCstCond, null, null, null, false);
+    				        if(UtilValidate.isNotEmpty(quoteTermCstList)){
+    				        	GenericValue quoteTermCst = EntityUtil.getFirst(quoteTermCstList); 
+    				        	if(UtilValidate.isNotEmpty(quoteTermCst)){
+    				        		BigDecimal cstPercent = quoteTermCst.getBigDecimal("termValue");
+            					    if(UtilValidate.isNotEmpty(cstPercent)){
+            							Map<String,Object> inCstRateMap = UtilAccounting.getInclusiveTaxRate(quoteUnitPrice,cstPercent);
+            							BigDecimal cstUnitRate = (BigDecimal)inCstRateMap.get("taxAmount");
+            							if(UtilValidate.isNotEmpty(cstUnitRate)){
+            								BigDecimal cstAmount = cstUnitRate.multiply(quantity);
+            								if(cstAmount.compareTo(BigDecimal.ZERO)>0){
+            									cstAmount=cstAmount.setScale(salestaxCalcDecimals, salestaxRounding);
+                    			        		Map taxDetailMap = FastMap.newInstance();
+                    				    		taxDetailMap.put("taxType", "CST_PUR");
+                    				    		taxDetailMap.put("amount", cstAmount);
+                    				    		taxDetailMap.put("percentage", cstPercent);
+                    				    		taxList.add(taxDetailMap);
+                    				    		item.setTaxDetails(taxList);
+                    					    }
+            							}
+            						}
+    				        	}
+    				        }
+    					}
     					//item.setListPrice(totalPrice);
-    	        		//item.setTaxDetails(taxList);
+    					//item.setTaxDetails(taxList);
     	        		item.setQuoteId(quoteItem.getString("quoteId"));
     	        		item.setQuoteItemSeqId(quoteItem.getString("quoteItemSeqId"));
              		

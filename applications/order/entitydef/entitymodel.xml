@@ -1652,7 +1652,7 @@ under the License.
       <field name="termTypeId" type="id-ne"></field>
       <field name="quoteId" type="id-ne"></field>
       <field name="quoteItemSeqId" type="id-ne"></field>
-      <field name="termValue" type="numeric"></field>
+      <field name="termValue" type="fixed-point"></field>
       <field name="uomId" type="id"></field>
       <field name="termDays" type="numeric"></field>
       <field name="textValue" type="description"></field>

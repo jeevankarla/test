@@ -24,7 +24,6 @@
 
     <form name="ListQuotes" type="list" extends="ListQuoteList" list-name="listIt">
         <actions>
-		<script location="component://materialmgmt/webapp/materialmgmt/WEB-INF/actions/purchases/FindQuoteMaterials.groovy"/>
           <service service-name="performFind" result-map="result" result-map-list="listIt">
             <field-map field-name="inputFields" from-field="parameters"/>
             <field-map field-name="entityName" from-field="entityName"/>
@@ -33,6 +32,9 @@
             <field-map field-name="viewSize" from-field="viewSize"/>
           </service>
         </actions>
+        <row-actions>
+           <script location="component://materialmgmt/webapp/materialmgmt/WEB-INF/actions/purchases/FindQuoteMaterials.groovy"/>
+        </row-actions>
     </form>
 
     <form name="ListQuoteList" type="list" use-row-submit="true" list-name="custRequests" title="List of Quote Items"
@@ -459,7 +461,7 @@
             </drop-down>
         </field>
         <field name="uomId" title="Uom">
-        	<drop-down allow-empty="true">
+        	<drop-down allow-empty="false">
         		<option key="INR" description="Rupees"/>
         		<option key="PERCENT" description="Percentage"/>
         	</drop-down>
