@@ -117,6 +117,7 @@
         <field name="custRequestName" title="${uiLabelMap.MaterialMangement_CustRequestName}"><text-find/></field>
         <field name="fromPartyId" title="${uiLabelMap.MaterialMangement_CustRequestFromPartyId}"><lookup target-form-name="LookupPartyName"/></field>
  		<field name="custRequestDate" title="${uiLabelMap.MaterialMangement_CustRequestDate}"><date-find/></field>
+ 		<field name="issuedDateTime" title="${uiLabelMap.MaterialMangement_IssuedDate}"><date-find/></field>
  		<field name="shipmentId"><hidden value=""/></field>
         <field name="submitButton" title="${uiLabelMap.CommonFind}" widget-style="smallSubmit">
             <submit button-type="button"/>
