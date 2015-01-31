@@ -29,6 +29,7 @@ if(UtilValidate.isNotEmpty(parameters.customTimePeriodId)){
 	}
 }
 context.fromDate=UtilDateTime.toDateString(fromDate,"dd-MMM-yyyy");
+sNo = 1;
 emplInputMap = [:];
 emplInputMap.put("userLogin", userLogin);
 emplInputMap.put("orgPartyId", "Company");
@@ -36,7 +37,7 @@ emplInputMap.put("fromDate", fromDate);
 emplInputMap.put("thruDate", thruDate);
 Map EmploymentsMap = HumanresService.getActiveEmployements(dctx,emplInputMap);
 List<GenericValue> employementList = (List<GenericValue>)EmploymentsMap.get("employementList");
-employementList = EntityUtil.orderBy(employementList, UtilMisc.toList("partyIdTo"));
+employementList = EntityUtil.orderBy(employementList, UtilMisc.toList("appointmentDate"));
 	employementList.each { employment ->
 		employee = [:];
 		group=delegator.findByAnd("PartyRelationshipAndDetail", [partyId: employment.partyIdFrom, partyTypeId : "PARTY_GROUP"],["groupName"]);
@@ -67,12 +68,17 @@ employementList = EntityUtil.orderBy(employementList, UtilMisc.toList("partyIdTo
 		}
 		employee.put("name", employment.firstName + " " + lastName);
 		employee.put("employeeId", employment.partyId);
-		joinDate = UtilDateTime.toDateString(employment.appointmentDate, "dd-MMM-yyyy");
-		employee.put("joinDate", joinDate)
-		dob="";
-		dob=UtilDateTime.toDateString(employment.birthDate, "dd-MMM-yyyy");
-		employee.put("birthDate",dob);
 		
+		if(reportFlag.equals("csv")){
+			employee.put("joinDate", employment.appointmentDate);
+			employee.put("birthDate",employment.birthDate);
+		}else{
+			joinDate = UtilDateTime.toDateString(employment.appointmentDate, "dd-MMM-yyyy");
+			employee.put("joinDate", joinDate);
+			dob="";
+			dob=UtilDateTime.toDateString(employment.birthDate, "dd-MMM-yyyy");
+			employee.put("birthDate",dob);
+		}
 		basicSalAndGradeMap=PayrollService.fetchBasicSalaryAndGrade(dctx,[employeeId:employment.partyIdTo,timePeriodStart:fromDate, timePeriodEnd: thruDate, userLogin : userLogin, proportionalFlag:"N"]);
 		employee.put("amount",basicSalAndGradeMap.get("amount"));
 			String leaveTypeId="EL";
@@ -85,11 +91,15 @@ employementList = EntityUtil.orderBy(employementList, UtilMisc.toList("partyIdTo
 			inputMap.put("employeeId", employment.partyIdTo);
 			inputMap.put("leaveTypeId", leaveTypeId);
 			Map EmplLeaveBalanceMap = EmplLeaveService.getEmployeeLeaveBalance(dctx,inputMap);
-			if(UtilValidate.isNotEmpty(EmplLeaveBalanceMap.get("leaveBalances").get(leaveTypeId))){
-				balance=EmplLeaveBalanceMap.get("leaveBalances").get(leaveTypeId);
+			if(UtilValidate.isNotEmpty(EmplLeaveBalanceMap)){
+				if(UtilValidate.isNotEmpty(EmplLeaveBalanceMap.get("leaveBalances").get(leaveTypeId))){
+					balance=EmplLeaveBalanceMap.get("leaveBalances").get(leaveTypeId);
+				}
 			}
 			employee.put("balance", balance);
 			employee.put("total", total);
+			employee.put("sNo", sNo);
+			sNo = sNo + 1;
 		employeeList.add(employee);
 	}
 	if(UtilValidate.isEmpty(employeeList)){

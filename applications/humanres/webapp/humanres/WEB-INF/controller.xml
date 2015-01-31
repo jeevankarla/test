@@ -1839,8 +1839,6 @@ under the License.
     </request-map>
      <request-map uri="LeaveTypeListCsv.csv"><security https="true" auth="true"/><response name="success" type="view" value="LeaveTypeListCsv"></response></request-map>
     <request-map uri="LeaveTypeListPdf.pdf"><security https="true" auth="true"/><response name="success" type="view" value="LeaveTypeListPdf"></response></request-map>
-    <request-map uri="GratuitySupportReport.pdf"><security https="true" auth="true"/><response name="success" type="view" value="GratuitySupportReport"></response></request-map>
-    
    
     <request-map uri="Employees">
        <security https="true" auth="true"/>
@@ -1865,6 +1863,9 @@ under the License.
     
     <request-map uri="LICRDReportCsv.csv"><security https="true" auth="true"/><response name="success" type="view" value="LICRDReportCsv"></response></request-map>
     <request-map uri="LICRDReportPdf.pdf"><security https="true" auth="true"/><response name="success" type="view" value="LICRDReportPdf"></response></request-map>    
+    
+    <request-map uri="GratuitySupportReportCsv.csv"><security https="true" auth="true"/><response name="success" type="view" value="GratuitySupportReportCsv"></response></request-map>
+    <request-map uri="GratuitySupportReportPdf.pdf"><security https="true" auth="true"/><response name="success" type="view" value="GratuitySupportReportPdf"></response></request-map> 
     
     <request-map uri="PaySlipEmployeeWise">
        <security https="true" auth="true"/>
@@ -2450,13 +2451,14 @@ under the License.
  	<view-map name="PayHeadTypes" type="screen" page="component://humanres/widget/ReportHumanresSummaryScreens.xml#PayHeadTypes"/>
 	<view-map name="PayHeadTypesCsv" type="screencsv" page="component://humanres/widget/ReportHumanresSummaryScreens.xml#PayHeadTypesCsv" content-type="text/csv" encoding="none"/>
 	<view-map name="PayHeadTypesPdf" type="screenfop" page="component://humanres/widget/ReportHumanresSummaryScreens.xml#PayHeadTypesPdf" content-type="application/pdf" encoding="none"/>
-	<view-map name="GratuitySupportReport" type="screenfop" page="component://humanres/widget/ReportHumanresSummaryScreens.xml#GratuitySupportReport" content-type="application/pdf" encoding="none"/>
  
  	<view-map name="EmployeeProfileReport" type="screen" page="component://humanres/widget/ReportHumanresSummaryScreens.xml#EmployeeProfileReport"/>
  	<view-map name="EmployeeProfileCsv" type="screencsv" page="component://humanres/widget/ReportHumanresSummaryScreens.xml#EmployeeProfileCsv" content-type="text/csv" encoding="none"/>
 	<view-map name="EmployeeProfilePdf" type="screenfop" page="component://humanres/widget/ReportHumanresSummaryScreens.xml#EmployeeProfilePdf" content-type="application/pdf" encoding="none"/>
  	<view-map name="LICRDReportCsv" type="screencsv" page="component://humanres/widget/ReportHumanresSummaryScreens.xml#LICRDReportCsv" content-type="text/csv" encoding="none"/>
 	<view-map name="LICRDReportPdf" type="screenfop" page="component://humanres/widget/ReportHumanresSummaryScreens.xml#LICRDReportPdf" content-type="application/pdf" encoding="none"/>
+	<view-map name="GratuitySupportReportCsv" type="screencsv" page="component://humanres/widget/ReportHumanresSummaryScreens.xml#GratuitySupportReportCsv" content-type="text/csv" encoding="none"/>
+	<view-map name="GratuitySupportReportPdf" type="screenfop" page="component://humanres/widget/ReportHumanresSummaryScreens.xml#GratuitySupportReportPdf" content-type="application/pdf" encoding="none"/>
  
  	<view-map name="PartyProfile" type="screen" page="component://humanres/widget/ReportHumanresSummaryScreens.xml#PartyProfile"/>
  	<view-map name="PartyProfileCsv" type="screencsv" page="component://humanres/widget/ReportHumanresSummaryScreens.xml#PartyProfileCsv" content-type="application/pdf" encoding="none"/>
