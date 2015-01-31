@@ -3059,4 +3059,72 @@ public class OrderReadHelper {
        result.put("taxGrandTotal", taxGrandTotal);
        return result;
    }
+	/**
+    * Method to return the total amount including tax of an invoice item i.e. quantity * amount * tax components
+    * @param invoice GenericValue object of the Invoice
+    * @return the invoice total as BigDecimal
+    */
+   public static BigDecimal getPurchaseOrderItemTotal(GenericValue orderItem,Boolean includeTax) {
+   	BigDecimal itemTotalVal = BigDecimal.ZERO;
+       BigDecimal quantity = orderItem.getBigDecimal("quantity");
+       if (quantity == null) {
+           quantity = BigDecimal.ONE;
+       }
+       BigDecimal amount = orderItem.getBigDecimal("unitPrice");
+       if (amount == null) {
+           amount = ZERO;
+       }
+       BigDecimal totalBed = BigDecimal.ZERO;
+       
+		if(UtilValidate.isNotEmpty(orderItem.getBigDecimal("bedPercent")) && UtilValidate.isNotEmpty(orderItem.getBigDecimal("bedAmount"))){
+			totalBed=totalBed.add(orderItem.getBigDecimal("bedAmount"));
+		}
+		if(UtilValidate.isNotEmpty(orderItem.getBigDecimal("bedcessPercent")) && UtilValidate.isNotEmpty(orderItem.getBigDecimal("bedcessAmount"))){
+			totalBed=totalBed.add(orderItem.getBigDecimal("bedcessAmount"));
+		}
+		if(UtilValidate.isNotEmpty(orderItem.getBigDecimal("bedseccessPercent")) && UtilValidate.isNotEmpty(orderItem.getBigDecimal("bedseccessAmount"))){
+			totalBed=totalBed.add(orderItem.getBigDecimal("bedseccessAmount"));
+		}
+		itemTotalVal=quantity.multiply(amount);
+		itemTotalVal=itemTotalVal.add(totalBed);
+		if(includeTax){
+			 BigDecimal totalTax = BigDecimal.ZERO;
+			if(UtilValidate.isNotEmpty(orderItem.getBigDecimal("vatPercent")) && UtilValidate.isNotEmpty(orderItem.getBigDecimal("vatAmount"))){
+				totalTax=totalTax.add(orderItem.getBigDecimal("vatAmount"));
+			}
+			if(UtilValidate.isNotEmpty(orderItem.getBigDecimal("cstPercent")) && UtilValidate.isNotEmpty(orderItem.getBigDecimal("cstAmount"))){
+				totalTax=totalTax.add(orderItem.getBigDecimal("cstAmount"));
+			}
+			itemTotalVal=itemTotalVal.add(totalTax);
+		}
+       return itemTotalVal;
+   }
+   //POItem tax total without 
+   public static BigDecimal getPurchaseOrderItemTaxTotal(GenericValue orderItem) {
+	   	BigDecimal itemTotalVal = BigDecimal.ZERO;
+	       BigDecimal quantity =BigDecimal.ONE;
+	       BigDecimal amount   =ZERO;
+	       BigDecimal totalBed = BigDecimal.ZERO;
+	       
+			if(UtilValidate.isNotEmpty(orderItem.getBigDecimal("bedPercent")) && UtilValidate.isNotEmpty(orderItem.getBigDecimal("bedAmount"))){
+				totalBed=totalBed.add(orderItem.getBigDecimal("bedAmount"));
+			}
+			if(UtilValidate.isNotEmpty(orderItem.getBigDecimal("bedcessPercent")) && UtilValidate.isNotEmpty(orderItem.getBigDecimal("bedcessAmount"))){
+				totalBed=totalBed.add(orderItem.getBigDecimal("bedcessAmount"));
+			}
+			if(UtilValidate.isNotEmpty(orderItem.getBigDecimal("bedseccessPercent")) && UtilValidate.isNotEmpty(orderItem.getBigDecimal("bedseccessAmount"))){
+				totalBed=totalBed.add(orderItem.getBigDecimal("bedseccessAmount"));
+			}
+			itemTotalVal=quantity.multiply(amount);
+			itemTotalVal=itemTotalVal.add(totalBed);
+				 BigDecimal totalTax = BigDecimal.ZERO;
+				if(UtilValidate.isNotEmpty(orderItem.getBigDecimal("vatPercent")) && UtilValidate.isNotEmpty(orderItem.getBigDecimal("vatAmount"))){
+					totalTax=totalTax.add(orderItem.getBigDecimal("vatAmount"));
+				}
+				if(UtilValidate.isNotEmpty(orderItem.getBigDecimal("cstPercent")) && UtilValidate.isNotEmpty(orderItem.getBigDecimal("cstAmount"))){
+					totalTax=totalTax.add(orderItem.getBigDecimal("cstAmount"));
+				}
+				itemTotalVal=itemTotalVal.add(totalTax);
+	       return itemTotalVal;
+	   }
 }
