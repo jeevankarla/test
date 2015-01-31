@@ -321,7 +321,7 @@
     <form name="ListRequestsToIssue" type="list" use-row-submit="true"  title="" list-name="custRequestItemsList" separate-columns="true"
         odd-row-style="alternate-row" default-table-style="basic-table hover-bar"  paginate-target="StoreProductIssue">
         <row-actions>
-        	<set field="flag" value="${groovy: return (QOH >= quantity)? 'Y' : 'N';}"/>
+        	<set field="flag" value="${groovy: return (QOH > 0)? 'Y' : 'N';}"/>
         	<set field="custmQuantity" value="${quantity-QOH}"/>
         </row-actions>
         <field name="custRequestId" title="${uiLabelMap.MaterialMangement_CustRequestId}"><display/></field>
