@@ -93,3 +93,19 @@ function quoteNegotiateAndStatusChange(element){
     quoteNegotiateAndStatusChange.submit();
 	
 }
+function qcApprovalForQuantiy(element){
+		var curreElem = $(element);
+		var varform = curreElem.parent().parent();
+		var form = curreElem.parent().parent().find("form");
+	    var formId = form.attr('id');
+	    var str = "#"+formId;
+	    var quantity = $(varform).find("[name='"+"currentQty"+"']").val();
+	    var quantityAccepted =  $(varform).find("[name='"+"quantityAccepted"+"']").val();
+	    if(quantityAccepted>quantity){
+	    	alert("not accept more than the received quantity");
+	    }else{
+	    	var acceptReceiptQtyByQC = $(str).attr("action", "acceptReceiptQtyByQC");
+	    	acceptReceiptQtyByQC.submit();
+	    }
+    
+}
