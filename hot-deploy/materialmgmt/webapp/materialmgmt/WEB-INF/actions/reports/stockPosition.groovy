@@ -317,7 +317,7 @@ import in.vasista.vbiz.purchase.MaterialHelperServices;
 	 condList.add(EntityCondition.makeCondition("custRequestDate", EntityOperator.GREATER_THAN_EQUAL_TO, fromDate));
 	 condList.add(EntityCondition.makeCondition("custRequestDate", EntityOperator.LESS_THAN_EQUAL_TO, thruDate));
 	 cond = EntityCondition.makeCondition(condList,EntityOperator.AND);
-	 custRequestsList = delegator.findList("CustRequestAndItemAndAttribute", cond, UtilMisc.toSet("custRequestId","fromPartyId","custRequestDate","itemStatusId","responseRequiredDate" ,"quantity"), ['-custRequestDate'], null, false);
+	 custRequestsList = delegator.findList("CustRequestAndItemAndAttribute", cond, null, ['-custRequestDate'], null, false);
 	 context.custRequestsList = custRequestsList;
 	 custRequestsByStatusMap =[:];
 	 indentQty = 0;
