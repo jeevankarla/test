@@ -32,41 +32,42 @@ import org.ofbiz.product.inventory.InventoryWorker;
 import in.vasista.vbiz.purchase.MaterialHelperServices;
 
 dctx = dispatcher.getDispatchContext();
-
 facilityId=parameters.issueToFacilityId;
-
  productDetails = delegator.findList("ProductFacility",EntityCondition.makeCondition("facilityId", EntityOperator.EQUALS , facilityId)  ,  UtilMisc.toSet("productId"), null, null, false );
  productIds = EntityUtil.getFieldListFromEntityList(productDetails, "productId", true);
-
+ 
 productCatDetails = delegator.findList("ProductCategoryMember",EntityCondition.makeCondition("productId", EntityOperator.IN , productIds)  , null, null, null, false );
 productCatIds = EntityUtil.getFieldListFromEntityList(productCatDetails,"productCategoryId", true);
-
-
 if(UtilValidate.isNotEmpty(productCatIds)){
 	prodMap=[:];
 	productCatIds.each{productCatId->
     prodList=[];
-  prodCatData = delegator.findList("ProductCategoryMember",EntityCondition.makeCondition("productCategoryId", EntityOperator.EQUALS , productCatId)  , null, null, null, false );
-  prodIdData = EntityUtil.getFieldListFromEntityList(prodCatData,"productId", true);
-  prodIdData.each{prodId->
+	List conlist=[];
+	conlist.add(EntityCondition.makeCondition("productCategoryId", EntityOperator.EQUALS, productCatId));
+	conlist.add(EntityCondition.makeCondition("productId", EntityOperator.IN, productIds));
+	cond=EntityCondition.makeCondition(conlist,EntityOperator.AND);
+	prodIdData = delegator.findList("ProductAndCategoryMember", cond , null, null, null, false );
+  
+	if(UtilValidate.isNotEmpty(prodIdData)){
+	  prodIdData.each{productDetails->
 	  productDetailMap=[:];
-	  productUomDetails = delegator.findList("Product",EntityCondition.makeCondition("productId", EntityOperator.EQUALS , prodId)  , null, null, null, false );
-	  productUomDetails=EntityUtil.getFirst(productUomDetails);
+	  productDetailMap["productId"]=productDetails.productId;
+	  productDetailMap["description"]=productDetails.description;
+	  uomId=productDetails.quantityUomId;
 	  
-	  productDetailMap["productId"]=productUomDetails.productId;
-	  productDetailMap["description"]=productUomDetails.description;
-	  uomId=productUomDetails.quantityUomId;
 	  if(UtilValidate.isNotEmpty(uomId)){
 		  uomDesc = delegator.findList("Uom",EntityCondition.makeCondition("uomId", EntityOperator.EQUALS , uomId)  , null, null, null, false );
 		  uomDesc=EntityUtil.getFirst(uomDesc);
 		  productDetailMap["unit"]=uomDesc.abbreviation;
-	  }
+	      }
+	  
 	  prodList.addAll(productDetailMap);
-  }
+	  
+       }
+	 }
   prodMap.put(productCatId,prodList);
-       		}
-	}
-//Debug.log("prodMap======================="+prodMap);
+   }
+}
 
 context.prodMap=prodMap;
 

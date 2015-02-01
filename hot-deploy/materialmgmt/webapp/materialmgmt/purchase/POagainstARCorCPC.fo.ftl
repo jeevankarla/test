@@ -46,13 +46,11 @@ ${setRequestAttribute("OUTPUT_FILENAME", "arcOrder.pdf")}
             <fo:flow flow-name="xsl-region-body"   font-family="Courier,monospace">	
             	 <fo:block  keep-together="always" text-align="center" font-family="Courier,monospace" white-space-collapse="false" font-size="12pt" > &#160;&#160;  </fo:block>
             	  <fo:block  keep-together="always" text-align="center" font-family="Courier,monospace" white-space-collapse="false" font-size="12pt" > &#160;&#160;  </fo:block>
-              	<fo:block  keep-together="always" text-align="left" font-family="Courier,monospace" white-space-collapse="false" font-size="16pt" font-weight="bold" >&#160;&#160;&#160;&#160;                        <fo:inline font-weight="bold" >PO against ARC/CPC</fo:inline>         </fo:block>
+              	<fo:block  keep-together="always" text-align="left" font-family="Courier,monospace" white-space-collapse="false" font-size="16pt" font-weight="bold"  >&#160;&#160;&#160;&#160;                        <fo:inline font-weight="bold" >PO against ARC/CPC</fo:inline>         </fo:block>
                 <fo:block text-align="left" font-size="12pt" white-space-collapse="false" keep-together="always" > &#160;</fo:block>
 	           <fo:block  keep-together="always" text-align="left" font-family="Courier,monospace" white-space-collapse="false" font-size="12pt" >  ARC PO NO: ${allDetailsMap.get("orderId")?if_exists}                                                 ARC PO DATED: ${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(allDetailsMap.get("orderDate")?if_exists, "dd-MMM-yy")}</fo:block>
            
-                                            <fo:block text-align="left" font-size="12pt" white-space-collapse="false" keep-together="always" > &#160;</fo:block>
-											<fo:block text-align="left" font-size="12pt" white-space-collapse="false" keep-together="always" > &#160; </fo:block>
-											<fo:block text-align="left" font-size="12pt" white-space-collapse="false" keep-together="always" > &#160; </fo:block>
+                                           
 											<fo:block text-align="left" font-size="12pt" white-space-collapse="false" keep-together="always" > &#160;</fo:block>
 											<fo:block text-align="left" font-size="12pt" white-space-collapse="false" keep-together="always" > &#160; </fo:block>
 											<fo:block text-align="left" font-size="12pt" white-space-collapse="false" keep-together="always" > &#160; </fo:block>
@@ -119,8 +117,67 @@ ${setRequestAttribute("OUTPUT_FILENAME", "arcOrder.pdf")}
                     </fo:table-body> </fo:table>
                </fo:block>
             	
-                     <fo:block  keep-together="always" text-align="center" font-family="Courier,monospace" white-space-collapse="false" font-size="12pt" >&#160;&#160; </fo:block>
+            	   <fo:block  keep-together="always" text-align="center" font-family="Courier,monospace" white-space-collapse="false" font-size="12pt" >&#160;&#160; </fo:block>
                   <fo:block  keep-together="always" text-align="center" font-family="Courier,monospace" white-space-collapse="false" font-size="12pt" >&#160;&#160; </fo:block>
+                             <fo:block  keep-together="always" text-align="left" font-family="Courier,monospace" white-space-collapse="false" font-weight="bold" font-size="14pt" >Individual PO Details</fo:block>
+                  <fo:block  keep-together="always" text-align="center" font-family="Courier,monospace" white-space-collapse="false" font-size="12pt" >&#160;&#160; </fo:block>
+                          
+            	
+            	         <fo:block >
+			        			 <fo:table width="100%" align="right" table-layout="fixed"  font-size="13pt">
+					               
+						            <fo:table-column column-width="110pt"/>
+						            <fo:table-column column-width="110pt"/>
+			      			        <fo:table-column column-width="110pt"/> 
+                                    <fo:table-column column-width="110pt"/>               
+					               <fo:table-column column-width="110pt"/>               
+						           	<fo:table-body>
+				                     <fo:table-row border-style="solid">
+				                      <fo:table-cell border-style="solid"><fo:block text-align="center" font-weight="bold">PO NO </fo:block></fo:table-cell> 				                    
+                                     <fo:table-cell border-style="solid"><fo:block text-align="center"  font-weight="bold"  >Product Id</fo:block></fo:table-cell>
+				                      <fo:table-cell border-style="solid"><fo:block text-align="center" font-weight="bold">PO Quntity</fo:block></fo:table-cell>  
+				                      <fo:table-cell border-style="solid"><fo:block text-align="center"  font-weight="bold"  >Supplied Quantity</fo:block></fo:table-cell>       		
+				                      <fo:table-cell border-style="solid"><fo:block text-align="center"  font-weight="bold"  >PO Bal Quantity</fo:block></fo:table-cell>       		
+				                        </fo:table-row>
+				                     
+			                	</fo:table-body>
+			                		</fo:table>
+			        	  </fo:block>	
+            	<fo:block>
+                 <fo:table text-align="center" >
+                 		           <fo:table-column column-width="110pt"/>
+						            <fo:table-column column-width="110pt"/>
+			      			        <fo:table-column column-width="110pt"/> 
+                                    <fo:table-column column-width="110pt"/>               
+					                <fo:table-column column-width="110pt"/>               
+					                 
+                    <fo:table-body text-align="center">
+	                    
+		           <#if pOrderList?has_content> 
+                    	                    <#list pOrderList as individualPO>
+	                    rderListItem>
+	                    
+
+	             
+                  	 <fo:table-row >
+                  	    
+                	   <fo:table-cell   border-style="solid"><fo:block text-align="center"  font-size="12pt" >${individualPO.get("orderId")?if_exists}</fo:block></fo:table-cell>     
+  				       <fo:table-cell  border-style="solid" ><fo:block text-align="center"   font-size="12pt" >${individualPO.get("productId")?if_exists} </fo:block></fo:table-cell>   
+  				       <fo:table-cell  border-style="solid" ><fo:block text-align="center"   font-size="12pt" >${individualPO.get("poQty")?if_exists} </fo:block></fo:table-cell>     
+                       <fo:table-cell   border-style="solid"><fo:block text-align="center"  font-size="12pt" >${individualPO.get("quantityAccepted")?if_exists}</fo:block></fo:table-cell>     
+  				       <fo:table-cell   border-style="solid"><fo:block text-align="center"  font-size="12pt" >${individualPO.get("pobalQty")?if_exists}</fo:block></fo:table-cell>     
+                    </fo:table-row>
+  				    
+	     </#list></#if>
+                    </fo:table-body> </fo:table>
+               </fo:block>
+            	
+            	
+            	
+            	
+                     <fo:block  keep-together="always" text-align="center" font-family="Courier,monospace" white-space-collapse="false" font-size="12pt" >&#160;&#160; </fo:block>
+                                      <fo:block  keep-together="always" text-align="center" font-family="Courier,monospace" white-space-collapse="false" font-size="12pt" >&#160;&#160; </fo:block>
+ <fo:block  keep-together="always" text-align="center" font-family="Courier,monospace" white-space-collapse="false" font-size="12pt" >&#160;&#160; </fo:block>
                                <fo:block  keep-together="always" text-align="right" font-family="Courier,monospace" white-space-collapse="false" font-size="12pt" >  for MOTHER DAIRY   &#160;&#160;</fo:block>
                                <fo:block  keep-together="always" text-align="center" font-family="Courier,monospace" white-space-collapse="false" font-size="12pt" >&#160;&#160; </fo:block>
                                <fo:block  keep-together="always" text-align="center" font-family="Courier,monospace" white-space-collapse="false" font-size="12pt" >&#160;&#160; </fo:block>   <fo:block  keep-together="always" text-align="right" font-family="Courier,monospace" white-space-collapse="false" font-size="12pt" >  Manager        &#160;&#160;</fo:block>

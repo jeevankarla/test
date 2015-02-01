@@ -33,6 +33,7 @@ dctx = dispatcher.getDispatchContext();
 orderId = parameters.orderId;
 orderDetailsList=[];
 allDetailsMap=[:];
+List pOrderList=[];
 
 allDetailsMap.put("orderId",orderId);
 orderDetails = delegator.findList("OrderItem",EntityCondition.makeCondition("orderId", EntityOperator.EQUALS , orderId)  , null, null, null, false );
@@ -70,10 +71,37 @@ if(UtilValidate.isNotEmpty(orderDetails)){
     con=EntityCondition.makeCondition(clist,EntityOperator.AND);
     orderIdDetails = delegator.findList("OrderItem", con , null, null, null, false );
     orderIdDetails = EntityUtil.getFirst(orderIdDetails);
+	
+	
+	if(UtilValidate.isNotEmpty(orderIdDetails)){
+		pOrderMap=[:];
+		pOrderMap["orderId"]=orderId;
+		pOrderMap["productId"]=orderIdDetails.productId;
+		pOrderMap["poQty"]=orderIdDetails.quantity;
+		qtyAccepted=0;
+	    colist=[];
+		colist.add(EntityCondition.makeCondition("statusId", EntityOperator.IN, ["SR_RECEIVED","SR_QUALITYCHECK"]));
+		colist.add(EntityCondition.makeCondition("orderId", EntityOperator.EQUALS, orderId));
+		colist.add(EntityCondition.makeCondition("productId", EntityOperator.EQUALS,orderitems.productId));
+		co=EntityCondition.makeCondition(colist,EntityOperator.AND);
+		shipmentDet = delegator.findList("ShipmentReceipt", co , null, null, null, false );
+		shipmentDet = EntityUtil.getFirst(shipmentDet);
+		if(UtilValidate.isNotEmpty(shipmentDet)){
+			qtyAccepted=shipmentDet.quantityAccepted;
+	pOrderMap["quantityAccepted"]=qtyAccepted;
+			 }
+		pOrderMap["pobalQty"]=orderIdDetails.quantity-qtyAccepted;
+		
+		pOrderList.addAll(pOrderMap);
+		
+		 }
+	
+	
     if(UtilValidate.isNotEmpty(orderIdDetails)){
 	   poQty=poQty+orderIdDetails.quantity;
-	  }
-   List conlist=[];
+	  }	
+   List conlist=[];	
+   conlist.add(EntityCondition.makeCondition("statusId", EntityOperator.IN, ["SR_RECEIVED","SR_QUALITYCHECK"]));
    conlist.add(EntityCondition.makeCondition("orderId", EntityOperator.EQUALS, orderId));
    conlist.add(EntityCondition.makeCondition("productId", EntityOperator.EQUALS,orderitems.productId));
    cond=EntityCondition.makeCondition(conlist,EntityOperator.AND);
@@ -82,18 +110,26 @@ if(UtilValidate.isNotEmpty(orderDetails)){
    if(UtilValidate.isNotEmpty(shipmentDetails)){
 	  totAccepQty=totAccepQty+shipmentDetails.quantityAccepted;
        }
-     }  
-   }
-   if(UtilValidate.isNotEmpty(shipmentDetails)){
+   
+   if(UtilValidate.isNotEmpty(shipmentDetails)){	   
    orderDetailsMap["poQty"]=poQty;
    orderDetailsMap["totAccepQty"]=totAccepQty;
    orderDetailsMap["poBalanceQty"]=poQty-totAccepQty;
    orderDetailsMap["ARCBalanceQty"]=orderitems.quantity-totAccepQty;
+   }
+   if(UtilValidate.isEmpty(shipmentDetails)){	   
+   orderDetailsMap["poQty"]=poQty;
+   orderDetailsMap["totAccepQty"]=totAccepQty;
+   orderDetailsMap["poBalanceQty"]=poQty-totAccepQty;
+   orderDetailsMap["ARCBalanceQty"]=orderitems.quantity-totAccepQty;
+   }
+	  }
    }
 	orderDetailsList.addAll(orderDetailsMap);
 	}
 }
 context.allDetailsMap=allDetailsMap;
 context.orderDetailsList=orderDetailsList;
-//Debug.log("orderDetailsList=================================="+orderDetailsList);
+context.pOrderList=pOrderList;
+
 
