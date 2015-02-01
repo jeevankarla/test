@@ -34,8 +34,13 @@ quoteDetails = delegator.findList("QuoteItem",EntityCondition.makeCondition("quo
 if(UtilValidate.isNotEmpty(quoteDetails)){
 	quoteDetails.each{quoteitems->
 if("QTITM_QUALIFIED".equals(quoteitems.statusId)){
-
+	poOrder = delegator.findList("OrderItem",EntityCondition.makeCondition("quoteId", EntityOperator.EQUALS , quoteId)  , null, null, null, false );
+if(UtilValidate.isNotEmpty(poOrder)){
+	statusFlag="N";
+}
+if(UtilValidate.isEmpty(poOrder)){
 	statusFlag="Y";
+}
 }		
 	}
 }

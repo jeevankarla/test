@@ -55,14 +55,15 @@ if(UtilValidate.isNotEmpty(orderDetails)){
 		
   	List condlist=[];
    condlist.add(EntityCondition.makeCondition("toOrderId", EntityOperator.EQUALS, orderId));
-   condlist.add(EntityCondition.makeCondition("orderAssocTypeId", EntityOperator.EQUALS,"ARC_ORDER"));
+   condlist.add(EntityCondition.makeCondition("orderAssocTypeId", EntityOperator.IN, ["ARC_ORDER","CPC_ORDER"]));
    condition=EntityCondition.makeCondition(condlist,EntityOperator.AND);
    orderIds = delegator.findList("OrderAssoc", condition , null, null, null, false );
    orderIds = EntityUtil.getFieldListFromEntityList(orderIds, "orderId", true);
    
    //to get poQty, totAccepQty, poBalanceQty, ARCBalanceQty
-   poQty=0;
-   totAccepQty=0;
+   poQty=0; poIndQty=0;
+   totAccepQty=0;   totPOAcceptQty=0;
+
    if(UtilValidate.isNotEmpty(orderIds)){
 	  orderIds.each{orderId->
     List clist=[];
@@ -79,6 +80,7 @@ if(UtilValidate.isNotEmpty(orderDetails)){
 		pOrderMap["productId"]=orderIdDetails.productId;
 		pOrderMap["poQty"]=orderIdDetails.quantity;
 		qtyAccepted=0;
+		poIndQty=orderIdDetails.quantity;
 	    colist=[];
 		colist.add(EntityCondition.makeCondition("statusId", EntityOperator.IN, ["SR_RECEIVED","SR_QUALITYCHECK"]));
 		colist.add(EntityCondition.makeCondition("orderId", EntityOperator.EQUALS, orderId));
@@ -87,10 +89,10 @@ if(UtilValidate.isNotEmpty(orderDetails)){
 		shipmentDet = delegator.findList("ShipmentReceipt", co , null, null, null, false );
 		shipmentDet = EntityUtil.getFirst(shipmentDet);
 		if(UtilValidate.isNotEmpty(shipmentDet)){
-			qtyAccepted=shipmentDet.quantityAccepted;
-	pOrderMap["quantityAccepted"]=qtyAccepted;
+			totPOAcceptQty=shipmentDet.quantityAccepted;
 			 }
-		pOrderMap["pobalQty"]=orderIdDetails.quantity-qtyAccepted;
+		pOrderMap["quantityAccepted"]=totPOAcceptQty;
+		pOrderMap["pobalQty"]=poIndQty-totPOAcceptQty;
 		
 		pOrderList.addAll(pOrderMap);
 		
@@ -115,13 +117,13 @@ if(UtilValidate.isNotEmpty(orderDetails)){
    orderDetailsMap["poQty"]=poQty;
    orderDetailsMap["totAccepQty"]=totAccepQty;
    orderDetailsMap["poBalanceQty"]=poQty-totAccepQty;
-   orderDetailsMap["ARCBalanceQty"]=orderitems.quantity-totAccepQty;
+   orderDetailsMap["ARCBalanceQty"]=orderitems.quantity-poQty;
    }
    if(UtilValidate.isEmpty(shipmentDetails)){	   
    orderDetailsMap["poQty"]=poQty;
    orderDetailsMap["totAccepQty"]=totAccepQty;
    orderDetailsMap["poBalanceQty"]=poQty-totAccepQty;
-   orderDetailsMap["ARCBalanceQty"]=orderitems.quantity-totAccepQty;
+   orderDetailsMap["ARCBalanceQty"]=orderitems.quantity-poQty;
    }
 	  }
    }
