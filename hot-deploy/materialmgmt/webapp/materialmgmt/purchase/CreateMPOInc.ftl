@@ -73,7 +73,8 @@
 	var partyAutoJson = ${StringUtil.wrapString(partyJSON)!'[]'};
 	var paymentTermsJSON = ${StringUtil.wrapString(paymentTermsJSON)!'[]'};
 	var deliveryTermsJSON = ${StringUtil.wrapString(deliveryTermsJSON)!'[]'};	
-
+	var otherTermsJSON = ${StringUtil.wrapString(otherTermsJSON)!'[]'};	
+	
 	function requiredFieldValidator(value) {
 		if (value == null || value == undefined || !value.length)
 			return {valid:false, msg:"This is a required field"};

@@ -1036,18 +1036,13 @@ public class MaterialPurchaseServices {
 		String productSubscriptionTypeId = (String) request.getParameter("productSubscriptionTypeId");
 		String shipmentTypeId = (String) request.getParameter("shipmentTypeId");
 
-		String freightChargesStr=(String) request.getParameter("freightCharges");
-		String discountStr=(String) request.getParameter("discount");
 		String PONumber=(String) request.getParameter("PONumber");
 		String mrnNumber=(String) request.getParameter("mrnNumber");
 		String SInvNumber=(String) request.getParameter("SInvNumber");
 		String SInvoiceDateStr=(String) request.getParameter("SInvoiceDate");
-		String insurenceStr=(String) request.getParameter("insurence");
 		// Inclusive tax and Exclusive tax
 		String incTax=(String) request.getParameter("incTax");
 		
-		String packAndFowdgStr=(String) request.getParameter("packAndFowdg");
-		String otherChargesStr=(String) request.getParameter("otherCharges");
 		String orderName = (String) request.getParameter("orderName");
 		String fileNo = (String) request.getParameter("fileNo");
 		String refNo = (String) request.getParameter("refNo");
@@ -1142,57 +1137,6 @@ public class MaterialPurchaseServices {
 		if (rowCount < 1) {
 			Debug.logError("No rows to process, as rowCount = " + rowCount, module);
 			return "success";
-		}
-		BigDecimal freightCharges = BigDecimal.ZERO;
-		BigDecimal discount = BigDecimal.ZERO;
-		BigDecimal insurence = BigDecimal.ZERO;
-		BigDecimal packAndFowdg = BigDecimal.ZERO;
-		BigDecimal otherCharges = BigDecimal.ZERO;
-		
-		try {
-			if (!freightChargesStr.equals("")) {
-				freightCharges = new BigDecimal(freightChargesStr);
-				}
-		} catch (Exception e) {
-			Debug.logError(e, "Problems parsing freightCharges string: " + freightChargesStr, module);
-			request.setAttribute("_ERROR_MESSAGE_", "Problems parsing freightCharges string: " + freightChargesStr);
-			return "error";
-		}
-		try {
-			if (!discountStr.equals("")) {
-			discount = new BigDecimal(discountStr);
-			}
-		} catch (Exception e) {
-			Debug.logError(e, "Problems parsing discount string: " + discountStr, module);
-			request.setAttribute("_ERROR_MESSAGE_", "Problems parsing discount string: " + discountStr);
-			return "error";
-		}
-		try {
-			if (!insurenceStr.equals("")) {
-				insurence = new BigDecimal(insurenceStr);
-			}
-		} catch (Exception e) {
-			Debug.logError(e, "Problems parsing insurence string: " + insurenceStr, module);
-			request.setAttribute("_ERROR_MESSAGE_", "Problems parsing insurence string: " + insurenceStr);
-			return "error";
-		}
-		try {
-			if (!packAndFowdgStr.equals("")) {
-				packAndFowdg = new BigDecimal(packAndFowdgStr);
-			}
-		} catch (Exception e) {
-			Debug.logError(e, "Problems parsing packAndFowdg string: " + packAndFowdgStr, module);
-			request.setAttribute("_ERROR_MESSAGE_", "Problems parsing packAndFowdg string: " + packAndFowdgStr);
-			return "error";
-		}
-		try {
-			if (!otherChargesStr.equals("")) {
-				otherCharges = new BigDecimal(otherChargesStr);
-			}
-		} catch (Exception e) {
-			Debug.logError(e, "Problems parsing otherCharges string: " + otherChargesStr, module);
-			request.setAttribute("_ERROR_MESSAGE_", "Problems parsing otherCharges string: " + otherChargesStr);
-			return "error";
 		}
 		
 		List productQtyList = FastList.newInstance();
@@ -1471,9 +1415,7 @@ public class MaterialPurchaseServices {
 			if(UtilValidate.isNotEmpty(termTypeId)){
 				termsList.add(termTypeMap);
 			}
-			if (paramMap.containsKey("paymentTermDays" + thisSuffix)) {
-				termDaysStr = (String) paramMap.get("paymentTermDays" + thisSuffix);
-			}
+			
 		}
 		
 		for (int i = 0; i < rowCount; i++) {
@@ -1525,6 +1467,61 @@ public class MaterialPurchaseServices {
 			}
 		}
 		
+		List<Map> otherAdjList = FastList.newInstance();
+		
+		for (int i = 0; i < rowCount; i++) {
+			Map tempMap = FastMap.newInstance();
+			String termTypeId =null;
+			String  termDaysStr = null;
+			String termValueStr = null;
+			Long termDays = Long.valueOf(0);
+			BigDecimal termValue = BigDecimal.ZERO;
+			String termUom = null;
+			String termDescription = null;
+			
+			Map termTypeMap = FastMap.newInstance();
+			String thisSuffix = UtilHttp.MULTI_ROW_DELIMITER + i;
+			
+			if (paramMap.containsKey("otherTermTypeId" + thisSuffix)) {
+				termTypeId = (String) paramMap.get("otherTermTypeId" + thisSuffix);
+			}else{
+				continue;
+			}
+			
+			if (paramMap.containsKey("otherTermDays" + thisSuffix)) {
+				termDaysStr = (String) paramMap.get("otherTermDays" + thisSuffix);
+			}
+			if (UtilValidate.isNotEmpty(termDaysStr)) {
+				termDays = new Long(termDaysStr);
+			}    
+						
+			if (paramMap.containsKey("otherTermValue" + thisSuffix)) {
+				termValueStr = (String) paramMap.get("otherTermValue" + thisSuffix);
+			}
+			if (UtilValidate.isNotEmpty(termValueStr)) {
+				termValue = new BigDecimal(termValueStr);
+			}  
+			
+			if (paramMap.containsKey("otherTermUom" + thisSuffix)) {
+				termUom = (String) paramMap.get("otherTermUom" + thisSuffix);
+			}
+			if (paramMap.containsKey("otherTermDescription" + thisSuffix)) {
+				termDescription = (String) paramMap.get("otherTermDescription" + thisSuffix);
+			}
+			
+			termTypeMap.put("termTypeId", termTypeId);
+			termTypeMap.put("termDays", termDays);
+			termTypeMap.put("termValue", termValue);
+			termTypeMap.put("uomId", termUom);
+			termTypeMap.put("description", termDescription);
+			if(UtilValidate.isNotEmpty(termTypeId) && (termValue.compareTo(BigDecimal.ZERO)>0 || termValue.compareTo(BigDecimal.ZERO)==0)){
+				termsList.add(termTypeMap);
+				tempMap.put("adjustmentTypeId", termTypeId);
+				tempMap.put("amount", termValue);
+				otherAdjList.add(tempMap);
+			}
+		}
+		
 		//getting productStoreId 
 		String productStoreId = (String) (in.vasista.vbiz.purchase.PurchaseStoreServices.getPurchaseFactoryStore(delegator)).get("factoryStoreId");//to get Factory storeId
 	 
@@ -1534,6 +1531,7 @@ public class MaterialPurchaseServices {
 		processOrderContext.put("orderId", orderId);
 		processOrderContext.put("termsList", termsList);
 		processOrderContext.put("partyId", partyId);
+		processOrderContext.put("otherChargesAdjustment", otherAdjList);
 		processOrderContext.put("billFromPartyId", billFromPartyId);
 		processOrderContext.put("issueToDeptId", issueToDeptId);
 		processOrderContext.put("supplyDate", effectiveDate);
@@ -1542,11 +1540,6 @@ public class MaterialPurchaseServices {
 		processOrderContext.put("enableAdvancePaymentApp", Boolean.TRUE);
 		processOrderContext.put("shipmentTypeId", shipmentTypeId);
 		processOrderContext.put("productStoreId", productStoreId);
-		processOrderContext.put("freightCharges", freightCharges);
-		processOrderContext.put("discount", discount);
-		processOrderContext.put("insurence", insurence);
-		processOrderContext.put("packAndFowdg", packAndFowdg);
-		processOrderContext.put("otherCharges", otherCharges);
 		processOrderContext.put("PONumber", PONumber);
 		processOrderContext.put("orderName", orderName);
 		processOrderContext.put("fileNo", fileNo);
@@ -1606,19 +1599,15 @@ public class MaterialPurchaseServices {
 	  	String billFromPartyId = (String) context.get("billFromPartyId");
 		String issueToDeptId = (String) context.get("issueToDeptId");
 	  	List termsList = (List)context.get("termsList");
+	  	List<Map> otherChargesAdjustment = (List)context.get("otherChargesAdjustment");
 	  	String incTax = (String)context.get("incTax");
 	  	boolean beganTransaction = false;
 	  	//fright Charges
-	  	BigDecimal freightCharges = (BigDecimal) context.get("freightCharges");
-	  	BigDecimal discount = (BigDecimal) context.get("discount");
-	  	BigDecimal packAndFowdg = (BigDecimal) context.get("packAndFowdg");
-		BigDecimal otherCharges = (BigDecimal) context.get("otherCharges");
 		/*BigDecimal freightCharges = BigDecimal.ZERO;
 		BigDecimal discount = BigDecimal.ZERO;*/
 	  	String mrnNumber = (String) context.get("mrnNumber");
 	  	String PONumber=(String) context.get("PONumber");
 	  	String SInvNumber = (String) context.get("SInvNumber");
-		BigDecimal insurence = (BigDecimal) context.get("insurence");
         Timestamp orderDate = (Timestamp)context.get("orderDate");
         Timestamp estimatedDeliveryDate = (Timestamp)context.get("estimatedDeliveryDate");
 		String orderName = (String)context.get("orderName");
@@ -1989,96 +1978,24 @@ public class MaterialPurchaseServices {
 		orderId = (String) orderCreateResult.get("orderId");
 		//let's create Fright Adjustment here
     	 
-		if(freightCharges.compareTo(BigDecimal.ZERO)>0){
-	    	Map adjustCtx = UtilMisc.toMap("userLogin",userLogin);	  	
+		for(Map eachAdj : otherChargesAdjustment){
+			Map adjustCtx = UtilMisc.toMap("userLogin",userLogin);	  	
 	    	adjustCtx.put("orderId", orderId);
-	    	adjustCtx.put("orderAdjustmentTypeId", "COGS_FREIGHT");
-	    	adjustCtx.put("amount", freightCharges);
-	    	Map adjResultMap=FastMap.newInstance();
-		  	 	try{
-		  	 		adjResultMap = dispatcher.runSync("createOrderAdjustment",adjustCtx);  		  		 
-		  	 		if (ServiceUtil.isError(adjResultMap)) {
-		  	 			String errMsg =  ServiceUtil.getErrorMessage(adjResultMap);
-		  	 			Debug.logError(errMsg , module);
-		  	 			return ServiceUtil.returnError(" Error While Creating Adjustment for Purchase Order !");
-		  	 		}
-		  	 	}catch (Exception e) {
-		  			  Debug.logError(e, "Error While Creating Adjustment for Purchase Order ", module);
-		  			  return adjResultMap;			  
-		  	 	}
-	    }
-		if(discount.compareTo(BigDecimal.ZERO)>0){
-	    	Map adjustCtx = UtilMisc.toMap("userLogin",userLogin);	  	
-	    	adjustCtx.put("orderId", orderId);
-	    	adjustCtx.put("orderAdjustmentTypeId", "COGS_DISC");
-	    	adjustCtx.put("amount", discount);
+	    	adjustCtx.put("orderAdjustmentTypeId", (String)eachAdj.get("adjustmentTypeId"));
+	    	adjustCtx.put("amount", (BigDecimal)eachAdj.get("amount"));
 	    	Map adjResultMap=FastMap.newInstance();
 	  	 	try{
 	  	 		adjResultMap = dispatcher.runSync("createOrderAdjustment",adjustCtx);  		  		 
 	  	 		if (ServiceUtil.isError(adjResultMap)) {
 	  	 			String errMsg =  ServiceUtil.getErrorMessage(adjResultMap);
 	  	 			Debug.logError(errMsg , module);
-	  	 			return ServiceUtil.returnError(" Error While discount Adjustment for Purchase Order !");
+	  	 			return ServiceUtil.returnError(" Error While Creating Adjustment for Purchase Order !");
 	  	 		}
 	  	 	}catch (Exception e) {
-	  			  Debug.logError(e, "Error While Creating discount Adjustment for Purchase Order ", module);
+	  			  Debug.logError(e, "Error While Creating Adjustment for Purchase Order ", module);
 	  			  return adjResultMap;			  
 	  	 	}
-	    }
-		if(insurence.compareTo(BigDecimal.ZERO)>0){
-	    	Map adjustCtx = UtilMisc.toMap("userLogin",userLogin);	  	
-	    	adjustCtx.put("orderId", orderId);
-	    	adjustCtx.put("orderAdjustmentTypeId", "COGS_INSURANCE");
-	    	adjustCtx.put("amount", insurence);
-	    	Map adjResultMap=FastMap.newInstance();
-		  	 	try{
-		  	 		 adjResultMap = dispatcher.runSync("createOrderAdjustment",adjustCtx);  		  		 
-		  	 		if (ServiceUtil.isError(adjResultMap)) {
-		  	 			String errMsg =  ServiceUtil.getErrorMessage(adjResultMap);
-		  	 			Debug.logError(errMsg , module);
-		  	 		 return ServiceUtil.returnError(" Error While discount Adjustment for Purchase Order !");
-		  	 		}
-		  	 	}catch (Exception e) {
-		  			  Debug.logError(e, "Error While Creating discount Adjustment for Purchase Order ", module);
-		  			  return adjResultMap;			  
-		  	 	}
-	    }
-		if(packAndFowdg.compareTo(BigDecimal.ZERO)>0){
-	    	Map adjustCtx = UtilMisc.toMap("userLogin",userLogin);	  	
-	    	adjustCtx.put("orderId", orderId);
-	    	adjustCtx.put("orderAdjustmentTypeId", "COGS_PCK_FWD");
-	    	adjustCtx.put("amount", packAndFowdg);
-	    	Map adjResultMap=FastMap.newInstance();
-		  	 	try{
-		  	 		 adjResultMap = dispatcher.runSync("createOrderAdjustment",adjustCtx);  		  		 
-		  	 		if (ServiceUtil.isError(adjResultMap)) {
-		  	 			String errMsg =  ServiceUtil.getErrorMessage(adjResultMap);
-		  	 			Debug.logError(errMsg , module);
-		  	 		 return ServiceUtil.returnError(" Error While packAndFowdg Adjustment for Purchase Order !");
-		  	 		}
-		  	 	}catch (Exception e) {
-		  			  Debug.logError(e, "Error While Creating packAndFowdg Adjustment for Purchase Order ", module);
-		  			  return adjResultMap;			  
-		  	 	}
-	    }
-		if(otherCharges.compareTo(BigDecimal.ZERO)>0){
-	    	Map adjustCtx = UtilMisc.toMap("userLogin",userLogin);	  	
-	    	adjustCtx.put("orderId", orderId);
-	    	adjustCtx.put("orderAdjustmentTypeId", "COGS_OTH_CHARGES"); 
-	    	adjustCtx.put("amount", otherCharges);
-	    	Map adjResultMap=FastMap.newInstance();
-		  	 	try{
-		  	 		 adjResultMap = dispatcher.runSync("createOrderAdjustment",adjustCtx);  		  		 
-		  	 		if (ServiceUtil.isError(adjResultMap)) {
-		  	 			String errMsg =  ServiceUtil.getErrorMessage(adjResultMap);
-		  	 			Debug.logError(errMsg , module);
-		  	 		 return ServiceUtil.returnError(" Error While otherCharges Adjustment for Purchase Order !");
-		  	 		}
-		  	 	}catch (Exception e) {
-		  			  Debug.logError(e, "Error While Creating otherCharges Adjustment for Purchase Order ", module);
-		  			  return adjResultMap;			  
-		  	 	}
-	    }
+		}
 			
 			/*String mrnNumber = (String) context.get("mrnNumber");
 		  	String PONumber=(String) context.get("PONumber");
@@ -2171,11 +2088,7 @@ public class MaterialPurchaseServices {
 		String issueToDeptId = (String) context.get("issueToDeptId");
 	  	List termsList = (List)context.get("termsList");
 	  	boolean beganTransaction = false;
-	  	BigDecimal freightCharges = (BigDecimal) context.get("freightCharges");
-	  	BigDecimal discount = (BigDecimal) context.get("discount");
-	  	BigDecimal packAndFowdg = (BigDecimal) context.get("packAndFowdg");
-		BigDecimal otherCharges = (BigDecimal) context.get("otherCharges");
-		BigDecimal insurence = (BigDecimal) context.get("insurence");
+	  	List<Map> otherChargesAdjustment = (List) context.get("otherChargesAdjustment");
 	  	String PONumber=(String) context.get("PONumber");
 	  	String orderId = (String) context.get("orderId");
         Timestamp orderDate = (Timestamp)context.get("orderDate");
@@ -2399,22 +2312,12 @@ public class MaterialPurchaseServices {
 			}
 			
 			List<GenericValue> orderAdjustments = delegator.findList("OrderAdjustment", EntityCondition.makeCondition("orderId", EntityOperator.EQUALS, orderId), null, null, null, false);
-			List<Map> adjTypeItems = FastList.newInstance();
-			adjTypeItems.add(UtilMisc.toMap("orderAdjustmentTypeId", "COGS_FREIGHT", "amount", freightCharges));
-			adjTypeItems.add(UtilMisc.toMap("orderAdjustmentTypeId", "COGS_DISC", "amount", discount));
-			adjTypeItems.add(UtilMisc.toMap("orderAdjustmentTypeId", "COGS_INSURANCE", "amount", packAndFowdg));
-			adjTypeItems.add(UtilMisc.toMap("orderAdjustmentTypeId", "COGS_PCK_FWD", "amount", insurence));
-			adjTypeItems.add(UtilMisc.toMap("orderAdjustmentTypeId", "COGS_OTH_CHARGES", "amount", otherCharges));
-			adjTypeItems.add(UtilMisc.toMap("orderAdjustmentTypeId", "BED_PUR", "amount", totalBedAmount));
-			adjTypeItems.add(UtilMisc.toMap("orderAdjustmentTypeId", "BEDCESS_PUR", "amount", totalBedCessAmount));
-			adjTypeItems.add(UtilMisc.toMap("orderAdjustmentTypeId", "BEDSECCESS_PUR", "amount", totalBedSecCessAmount));
-			adjTypeItems.add(UtilMisc.toMap("orderAdjustmentTypeId", "VAT_PUR", "amount", totalVatAmount));
-			adjTypeItems.add(UtilMisc.toMap("orderAdjustmentTypeId", "CST_PUR", "amount", totalCstAmount));
 			
-			for(Map entryMap : adjTypeItems){
-				String orderAdjustmentTypeId = (String)entryMap.get("orderAdjustmentTypeId");
-				BigDecimal amount = (BigDecimal) entryMap.get("amount");
-				List<GenericValue> adjItems = EntityUtil.filterByCondition(orderAdjustments, EntityCondition.makeCondition("orderAdjustmentTypeId", EntityOperator.EQUALS, orderAdjustmentTypeId));
+			for(Map orderAdj : otherChargesAdjustment){
+				String adjustmentTypeId = (String)orderAdj.get("adjustmentTypeId");
+				BigDecimal amount = (BigDecimal)orderAdj.get("amount");
+				
+				List<GenericValue> adjItems = EntityUtil.filterByCondition(orderAdjustments, EntityCondition.makeCondition("orderAdjustmentTypeId", EntityOperator.EQUALS, adjustmentTypeId));
 				if(UtilValidate.isNotEmpty(adjItems) && amount.compareTo(BigDecimal.ZERO)==0){
 					delegator.removeAll(adjItems);
 				}
@@ -2431,7 +2334,7 @@ public class MaterialPurchaseServices {
 							Map adjustCtx = FastMap.newInstance();	  	
 							adjustCtx.put("userLogin", userLogin);
 							adjustCtx.put("orderId", orderId);
-							adjustCtx.put("orderAdjustmentTypeId", orderAdjustmentTypeId);
+							adjustCtx.put("orderAdjustmentTypeId", adjustmentTypeId);
 							adjustCtx.put("amount", amount);
 							Map adjResultMap=FastMap.newInstance();
 				  	 		try{
