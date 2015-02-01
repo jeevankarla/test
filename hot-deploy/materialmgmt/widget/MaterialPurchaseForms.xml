@@ -6,7 +6,7 @@
         <field name="orderTypeId">
            <drop-down no-current-selected-key="PURCHASE_ORDER">
               <entity-options description="${description}" entity-name="OrderType" key-field-name="orderTypeId">
-                  <entity-constraint name="parentTypeId" operator="equals" value="PURCHASE_ORDER"/>
+                 <entity-constraint name="parentTypeId" operator="like" value="%PURCHASE%"/>
               </entity-options>
            </drop-down>
         </field>

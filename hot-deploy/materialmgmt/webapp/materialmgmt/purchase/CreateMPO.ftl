@@ -181,7 +181,13 @@ function makeDatePicker(fromDateId ,thruDateId){
 			$(poNumberObj).parent().parent().hide();
 		}
 	}    
-	    
+	
+	var supplierName;
+	function dispSuppName(selection){
+	   value = $("#supplierId").val();
+	   supplierName = partyNameObj[value];
+	   $("#supplierName").html("<h4>"+supplierName+"</h4>");
+	}    
 	    
 </script>
 	
@@ -241,10 +247,11 @@ function makeDatePicker(fromDateId ,thruDateId){
 						    </#if>
 						    <td>
 						    	<#if orderId?exists && orderInfo.get("supplierId")?exists>
-						    		<input type="text" name="supplierId" id="supplierId" size="18" maxlength="60" value="${orderInfo.get("supplierId")}" readonly/>
+						    		<input type="text" name="supplierId" id="supplierId" size="18" maxlength="60" value="${orderInfo.get("supplierId")}" readonly onblur= 'javascript:dispSuppName(this);'/>
 						    		<span class="tooltip"> ${orderInfo.get("supplierName")?if_exists}</span>
 						    	<#else>
-						    		<input type="text" name="supplierId" id="supplierId" size="18" maxlength="60" />
+						    		<input type="text" name="supplierId" id="supplierId" size="18" maxlength="60"  onblur= 'javascript:dispSuppName(this);'/>
+						    		<span class="tooltip" id="supplierName"></span>
 						    	</#if>
 						      	
 						    </td>

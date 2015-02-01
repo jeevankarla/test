@@ -982,6 +982,8 @@ under the License.
         <set-pk-fields map="parameters" value-field="newEntity"/>
         <set-nonpk-fields map="parameters" value-field="newEntity"/>
         <create-value value-field="newEntity"/>
+        <set field="responseMessage" value="QuoteTerm added successfully."/>
+        <field-to-result field="responseMessage" result-name="successMessage"/>
     </simple-method>
     <simple-method method-name="updateQuoteTerm" short-description="Update a QuoteTerm">
         <make-value value-field="newEntity" entity-name="QuoteTerm"/>

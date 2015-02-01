@@ -93,10 +93,10 @@ context.productList = prodList;
 prodList.each{eachItem ->
 	JSONObject newObj = new JSONObject();
 	newObj.put("value",eachItem.productId);
-	newObj.put("label",eachItem.brandName +" [ " +eachItem.description+"]");
+	newObj.put("label",eachItem.brandName +" [ " +eachItem.description+"](" +eachItem.internalName+")");
 	productItemsJSON.add(newObj);
-	productIdLabelJSON.put(eachItem.productId, eachItem.brandName+" [ "+eachItem.description +"]");
-	productLabelIdJSON.put(eachItem.brandName+" [ "+eachItem.description+"]", eachItem.productId);
+	productIdLabelJSON.put(eachItem.productId, eachItem.brandName+" [ "+eachItem.description +"]("+eachItem.internalName+")");
+	productLabelIdJSON.put(eachItem.brandName+" [ "+eachItem.description+"]("+eachItem.internalName+")", eachItem.productId);
 }
 
 
@@ -144,6 +144,7 @@ if(UtilValidate.isNotEmpty(purchaseTypeFlag) && purchaseTypeFlag == "contractPur
 	context.orderTypes =orderTypes;
 }else{
 	orderTypes = delegator.findByAnd("OrderType",UtilMisc.toMap("parentTypeId","PURCHASE_ORDER"));
+	orderTypes = EntityUtil.orderBy(orderTypes,UtilMisc.toList("-description"));
 	context.orderTypes =orderTypes;
 }
 

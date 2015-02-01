@@ -71,6 +71,7 @@
 	var data = ${StringUtil.wrapString(orderItemsJSON)!'[]'};
 	
 	var partyAutoJson = ${StringUtil.wrapString(partyJSON)!'[]'};
+	var partyNameObj = ${StringUtil.wrapString(partyNameObj)!'[]'};
 	var paymentTermsJSON = ${StringUtil.wrapString(paymentTermsJSON)!'[]'};
 	var deliveryTermsJSON = ${StringUtil.wrapString(deliveryTermsJSON)!'[]'};	
 	var otherTermsJSON = ${StringUtil.wrapString(otherTermsJSON)!'[]'};	
