@@ -593,6 +593,8 @@ under the License.
       <field name="partyIdFrom" type="id"></field>
       <field name="supplierInvoiceId" type="id"></field>
       <field name="supplierInvoiceDate" type="date-time"></field>
+      <field name="deliveryChallanNumber" type="id-long-ne"></field>
+      <field name="deliveryChallanDate" type="date-time"></field>
       <field name="tripNum" type="id"></field><!--KMF multiple trips  -->
       <field name="vehicleId" type="id"></field><!--KMF route vehicle assocaiation  -->
       <field name="carrierName" type="name"></field>

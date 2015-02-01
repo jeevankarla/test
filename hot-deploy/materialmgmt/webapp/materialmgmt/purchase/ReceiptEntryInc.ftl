@@ -143,12 +143,19 @@
    		}
 		var suppInvDate = jQuery("<input>").attr("type", "hidden").attr("name", "supplierInvoiceDate").val(suppInvoiceDate);
 		var withoutPO =  jQuery("<input>").attr("type", "hidden").attr("name", "withoutPO").val($("#withoutPO").val());
+	
+		var deliveryChallanNo = $("#deliveryChallanNo").val();
+		var dcNo = jQuery("<input>").attr("type", "hidden").attr("name", "deliveryChallanNo").val(deliveryChallanNo);
+		var deliveryChallanDate = $("#deliveryChallanDate").val();
+		var dcDate = jQuery("<input>").attr("type", "hidden").attr("name", "deliveryChallanDate").val(deliveryChallanDate);
 		jQuery(formId).append(jQuery(suppInvoice));
 		jQuery(formId).append(jQuery(suppInvDate));
 		jQuery(formId).append(jQuery(order));
 		jQuery(formId).append(jQuery(vehicle));
 		jQuery(formId).append(jQuery(withoutPO));
 		jQuery(formId).append(jQuery(supplier));
+		jQuery(formId).append(jQuery(dcNo));
+		jQuery(formId).append(jQuery(dcDate));
 		
 		jQuery(formId).attr("action", action);
 		

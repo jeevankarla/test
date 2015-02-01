@@ -21,7 +21,13 @@
 				$( "#effectiveDate" ).datepicker("option", selectedDate);
 			}
 		});
-		suppInvoiceDate
+		$( "#deliveryChallanDate" ).datepicker({
+			dateFormat:'d MM, yy',
+			changeMonth: true,
+			onSelect: function( selectedDate ) {
+				$( "#deliveryChallanDate" ).datepicker("option", selectedDate);
+			}
+		});
 		$('#ui-datepicker-div').css('clip', 'auto');
 		
 			$("#suppInvoiceId").keydown(function(e){ 
@@ -114,8 +120,6 @@
 				      				<div class='tabletext h3'>${supplierName?if_exists} [${supplierId}]</div>
 				      			</td>
 				      		</tr>
-				      		
-				      		<tr><td><br/></td></tr>
 				      		<#else>
 				      		 
 				      		<tr class='h3' id="supplierDiv" style="display:none">
@@ -126,9 +130,44 @@
 				      			</td>
 				      			<td>&nbsp;<input type="text" name="supplierId" id="supplierId" ></td>
 				      		</tr>
-				      		 <tr><td><br/></td></tr>
 				      	</#if>
-						
+						<tr><td><br/></td></tr>
+					  	<tr>
+				          <td>&nbsp;</td>
+				          <td align='left' valign='middle' nowrap="nowrap"><div class='h3'>Delivery Challan Date: </div></td>
+				          <td>&nbsp;</td>
+				          <#if (parameters.deliveryChallanDate)?exists && (parameters.deliveryChallanDate)?has_content> 
+				                 <input type="hidden" name="deliveryChallanDate" id="deliveryChallanDate" value="${parameters.deliveryChallanDate}"/>  
+					          	<td valign='middle'>
+					            	<div class='tabletext h3'>${parameters.deliveryChallanDate}         
+					            	</div>
+					          	</td>
+				             <#else> 
+				              <td valign='middle'>
+		          				<input type="text" name="deliveryChallanDate" id="deliveryChallanDate" value="${defaultEffectiveDate}" />
+		          			</td>
+				          </#if>
+		          			
+				        </tr>
+						<tr><td><br/></td></tr>
+		 				<tr>
+				          <td>&nbsp;</td>
+				          <td align='left' valign='middle' nowrap="nowrap"><div class='h3'>Delivery Challan No: </div></td>
+				          <td>&nbsp;</td>
+				          <#if (parameters.deliveryChallanNo)?exists && (parameters.deliveryChallanNo)?has_content> 
+				          		<input type="hidden" name="deliveryChallanNo" id="deliveryChallanNo" value="${parameters.deliveryChallanNo}"/>  
+					          	<td valign='middle'>
+					            	<div class='tabletext h3'>${parameters.deliveryChallanNo}         
+					            	</div>
+					          	</td>
+				         	 <#else> 
+				         	 <td valign='middle'>
+		          				<input type="text" name="deliveryChallanNo" id="deliveryChallanNo" />
+		          			</td>
+				          </#if>
+		          			
+				        </tr>
+				        <tr><td><br/></td></tr>
 						<tr>
 							<td>&nbsp;</td>
 					        <td align='left' valign='middle' nowrap="nowrap"><div class='h3'>Vehicle No: <font color='red'>*</font></div></td>
