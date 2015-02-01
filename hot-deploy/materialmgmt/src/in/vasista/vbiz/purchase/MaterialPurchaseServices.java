@@ -1052,6 +1052,8 @@ public class MaterialPurchaseServices {
 		String fileNo = (String) request.getParameter("fileNo");
 		String refNo = (String) request.getParameter("refNo");
 		String orderDateStr = (String) request.getParameter("orderDate");
+		String fromDate = (String) request.getParameter("fromDate");
+		String thruDate = (String) request.getParameter("thruDate");
 		String orderTypeId = (String) request.getParameter("orderTypeId");
 		//String effectiveDate = (String) request.getParameter("effectiveDate");
 		String estimatedDeliveryDateStr = (String) request.getParameter("estimatedDeliveryDate");
@@ -1100,9 +1102,9 @@ public class MaterialPurchaseServices {
 			try {
 				orderDate = new java.sql.Timestamp(sdf.parse(orderDateStr).getTime());
 			} catch (ParseException e) {
-				Debug.logError(e, "Cannot parse date string: " + effectiveDateStr, module);
+				Debug.logError(e, "Cannot parse date string: " + orderDateStr, module);
 			} catch (NullPointerException e) {
-				Debug.logError(e, "Cannot parse date string: " + effectiveDateStr, module);
+				Debug.logError(e, "Cannot parse date string: " + orderDateStr, module);
 			}
 		}
 		
@@ -1550,6 +1552,8 @@ public class MaterialPurchaseServices {
 		processOrderContext.put("fileNo", fileNo);
 		processOrderContext.put("refNo", refNo);
 		processOrderContext.put("orderDate", orderDate);
+		processOrderContext.put("fromDate", fromDate);
+		processOrderContext.put("thruDate", thruDate);
 		processOrderContext.put("estimatedDeliveryDate", estimatedDeliveryDate);
 		processOrderContext.put("incTax", incTax);
 		if(UtilValidate.isNotEmpty(orderId)){
@@ -1626,6 +1630,8 @@ public class MaterialPurchaseServices {
 	  	String shipmentTypeId = (String) context.get("shipmentTypeId");
 		Timestamp nowTimeStamp = UtilDateTime.nowTimestamp();
 		Timestamp effectiveDate = UtilDateTime.getDayStart(supplyDate);
+		String fromDate = (String)context.get("fromDate");
+		String thruDate = (String)context.get("thruDate");
 		String billToPartyId="Company";
 		String orderTypeId = (String)context.get("orderTypeId");
 		if(UtilValidate.isEmpty(orderTypeId)){
@@ -1685,6 +1691,13 @@ public class MaterialPurchaseServices {
 				cart.setOrderAttribute("FILE_NUMBER",fileNo);
 			if(UtilValidate.isNotEmpty(refNo))
 				cart.setOrderAttribute("REF_NUMBER",refNo);
+			
+			if(UtilValidate.isNotEmpty(fromDate)){
+				cart.setOrderAttribute("VALID_FROM",fromDate);
+			}
+			if(UtilValidate.isNotEmpty(thruDate)){
+				cart.setOrderAttribute("VALID_THRU",thruDate);
+			}
 			
 		} catch (Exception e) {
 			
@@ -2173,6 +2186,8 @@ public class MaterialPurchaseServices {
 	  	String currencyUomId = "INR";
 		Timestamp nowTimeStamp = UtilDateTime.nowTimestamp();
 		Timestamp effectiveDate = UtilDateTime.getDayStart(supplyDate);
+		String fromDate = (String)context.get("fromDate");
+		String thruDate = (String)context.get("thruDate");
 		String billToPartyId="Company";
 		String orderTypeId = (String)context.get("orderTypeId");
 		if(UtilValidate.isEmpty(orderTypeId)){
@@ -2235,6 +2250,21 @@ public class MaterialPurchaseServices {
 				orderAttr.set("orderId", orderId);
 				orderAttr.set("attrName", "REF_NUMBER");
 				orderAttr.set("attrValue", refNo);
+				delegator.createOrStore(orderAttr);
+			}
+			
+			if(UtilValidate.isNotEmpty(fromDate)){
+				GenericValue orderAttr = delegator.makeValue("OrderAttribute");
+				orderAttr.set("orderId", orderId);
+				orderAttr.set("attrName", "VALID_FROM");
+				orderAttr.set("attrValue", fromDate);
+				delegator.createOrStore(orderAttr);
+			}
+			if(UtilValidate.isNotEmpty(thruDate)){
+				GenericValue orderAttr = delegator.makeValue("OrderAttribute");
+				orderAttr.set("orderId", orderId);
+				orderAttr.set("attrName", "VALID_THRU");
+				orderAttr.set("attrValue", thruDate);
 				delegator.createOrStore(orderAttr);
 			}
 			

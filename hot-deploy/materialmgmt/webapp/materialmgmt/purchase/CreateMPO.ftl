@@ -154,6 +154,9 @@ function makeDatePicker(fromDateId ,thruDateId){
 		
 		makeDayDatePicker("effectiveDate","fromDateId");
 		makeDayDatePicker("SInvoiceDate","fromDateId");
+		
+		makeDatePicker("fromDate","fromDateId");
+        makeDatePicker("thruDate","fromDateId");
 	
 		//$(this.target).find('input').autocomplete();
 		
@@ -253,6 +256,21 @@ function makeDatePicker(fromDateId ,thruDateId){
 						      	</#if>
 	        				 </td>
 						</tr>
+						<#assign purchaseTypeFlag = parameters.purchaseTypeFlag?if_exists>
+						<#if purchaseTypeFlag?has_content && purchaseTypeFlag == "contractPurchase">
+						<tr>
+							<td class="label"><b>From Date : </b></td>
+							<td>
+								<input type="text" name="fromDate" id="fromDate" size="18" maxlength="60" autocomplete="off"/>
+							</td>
+						</tr>
+						<tr>
+							<td class="label"><b>Thru Date : </b></td>
+							<td>
+								<input type="text" name="thruDate" id="thruDate" size="18" maxlength="60" autocomplete="off"/>
+							</td>
+						</tr>
+						</#if>
 						<tr>
 						    <td class="label"><b>Quote No: </b></td>
 						    <td>
@@ -408,7 +426,7 @@ function makeDatePicker(fromDateId ,thruDateId){
 					          			<td>&nbsp;&nbsp;&nbsp;</td>
 					          			<td align='left' valign='middle' nowrap="nowrap"><div class='h3'>Inc Tax: </div></td>
 							         	<td valign='middle' align='left'> 
-							         			<input class='h3' type="checkbox" <#if bedCheck?has_content>checked = "checked"</#if>id="incTax" name="incTax" value="true"/>	
+							         			<input class='h3' type="checkbox" id="incTax" name="incTax" value="true"/>	
 					          			</td>
 					          			<td>&nbsp;&nbsp;&nbsp;</td>
 					          			<td align='left' valign='middle' nowrap="nowrap"><div class='h3'>Add BED: </div></td>
