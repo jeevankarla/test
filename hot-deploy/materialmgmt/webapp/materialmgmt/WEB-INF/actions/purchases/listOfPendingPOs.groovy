@@ -72,14 +72,15 @@ orderItemList.each{orderItem->
 	product = delegator.findOne("Product",["productId":productId],false);
 	if(product){
 	productName=product.get("productName");
-	uomId=product.get("quantityUomId");
+//	uomId=product.get("quantityUomId");
 	internalName=product.get("internalName");
 	}
-	if(UtilValidate.isNotEmpty(uomId)){
-		uomDesc = delegator.findOne("Uom",["uomId":productId],uomId);
-		uomDesc=EntityUtil.getFirst(uomDesc);
-		unit=uomDesc.abbreviation;		
-	}
+//	if(UtilValidate.isNotEmpty(uomId)){
+//		uomDesc = delegator.findOne("Uom",["uomId":uomId],false);
+//		uomDesc=EntityUtil.getFirst(uomDesc);
+//		unit=uomDesc.abbreviation;	
+//		pendingPOsMap["unit"]=unit;
+//	}
 	
 	pendingPOsMap=[:];
 	partyIdDetails = EntityUtil.filterByCondition(vendorDetails, EntityCondition.makeCondition("orderId", EntityOperator.EQUALS, orderId));
