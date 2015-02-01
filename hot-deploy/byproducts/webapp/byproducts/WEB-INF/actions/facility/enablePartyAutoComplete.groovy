@@ -17,6 +17,7 @@ import in.vasista.vbiz.byproducts.ByProductNetworkServices;
 import org.ofbiz.party.party.PartyHelper;
 
 JSONArray partyJSON = new JSONArray();
+JSONObject partyNameObj = new JSONObject();
 dctx = dispatcher.getDispatchContext();
 
 if(UtilValidate.isNotEmpty(parameters.roleTypeId)){//to handle IceCream Parties
@@ -35,11 +36,14 @@ if(UtilValidate.isNotEmpty(parameters.roleTypeId)){//to handle IceCream Parties
 		}
 	partyDetailsList.each{eachParty ->
 		JSONObject newPartyObj = new JSONObject();
+		partyName=PartyHelper.getPartyName(delegator, eachParty.partyId, false);
 		newPartyObj.put("value",eachParty.partyId);
-		newPartyObj.put("label",eachParty.groupName+" ["+eachParty.partyId+"]");
+		newPartyObj.put("label",partyName+" ["+eachParty.partyId+"]");
+		partyNameObj.put(eachParty.partyId,partyName);
 		partyJSON.add(newPartyObj);
 	}
 }
+context.partyNameObj = partyNameObj;
 context.partyJSON = partyJSON;
 
 

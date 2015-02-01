@@ -216,7 +216,9 @@
      <request-map uri="createMaterialQuoteTerm">
        <security https="true" auth="true"/>
        <event type="service" path="" invoke="createQuoteTerm"></event>
-       <response name="success" type="view" value="ViewMaterialQuote"/>
+       <response name="success" type="request-redirect" value="ViewMaterialQuote">
+      	 <redirect-parameter name="quoteId"/>
+       </response>
        <response name="error" type="view" value="ViewMaterialQuote"/>
      </request-map>
      <request-map uri="getTermTypesByParentType">
