@@ -133,6 +133,9 @@
                 <decorator-screen name="materialmgmtNgCommonDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                     	<include-menu name="StoreIssueTabBar" location="component://materialmgmt/widget/materialmgmtMenus.xml"/>
+                    	<screenlet title="Search-Options">
+                                <include-form name="FindIssueRequests" location="component://materialmgmt/widget/MaterialRequestForms.xml"/>
+                        </screenlet>
                      	<screenlet title="List Requests to Issue">
                      		<include-form name="ListRequestsToIssue" location="component://materialmgmt/widget/MaterialRequestForms.xml"/>
                      	</screenlet>

@@ -108,8 +108,7 @@
         <field name="createdBy" ><display/></field>
         
     </form>
-	
-	
+		
 	<form name="FindMaterialIssuance" target="FindMaterialIssuance" title="" type="single" default-map-name="parameters"
         header-row-style="header-row" default-table-style="basic-table">
         <field name="itemIssuanceId" title="Issuance Id"><text-find/></field>
@@ -831,5 +830,23 @@
         	<parameter param-name="roleTypeId"/>
         </hyperlink>
         </field>  
+   </form>
+   <form name="FindIssueRequests" type="single" target="searchStoreIssuance">
+   		<field name="productId" title="Product">
+             <lookup target-form-name="LookupProduct" size="15" />
+        </field>
+   		 <field name="custRequestId" title="${uiLabelMap.MaterialMangement_CustRequestId}"><text-find/></field>
+   		  <field name="partyId" title="From Department">
+			<drop-down allow-empty="true" >
+				<entity-options entity-name="PartyRoleAndPartyDetail" description="${groupName}">
+					<entity-constraint name="roleTypeId" operator="equals" value="INTERNAL_ORGANIZATIO" />
+					<entity-order-by field-name="partyId" />
+				</entity-options>
+			</drop-down>
+		</field>
+		<field name="custRequestDate" title="${uiLabelMap.MaterialMangement_CustRequestDate}"><date-time type="date"/></field>   
+   		 <field name="submitButton" title="${uiLabelMap.CommonFind}" widget-style="smallSubmit">
+            <submit button-type="button"/>
+        </field>
    </form>
 </forms>

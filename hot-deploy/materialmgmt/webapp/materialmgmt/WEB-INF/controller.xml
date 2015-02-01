@@ -917,6 +917,12 @@
         <response name="error" type="view" value="ViewMaterialEnquiry"/>
     </request-map>
     
+    <request-map uri="searchStoreIssuance">
+       <security https="true" auth="true"/>
+       <response name="success" type="view" value="StoreProductIssue"/>
+       <response name="error" type="view" value="StoreProductIssue"/>
+     </request-map>
+    
     <view-map name="main" type="screen" page="component://materialmgmt/widget/materialmgmtScreens.xml#main"/>
     <view-map name="mainNg" type="screen" page="component://materialmgmt/widget/materialmgmtScreens.xml#mainNG"/>
      <!-- purchaseOrder views -->  
