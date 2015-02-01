@@ -269,7 +269,30 @@
         </field> 
         
     </form>
-    
+    <form name="FindMaterialQCApproval" type="single" target="FindMaterialQCApproval">
+    	<field name="receiptId" title ="GRN No"><text-find></text-find>	</field>
+    	<field name="productId" title="Product">
+             <lookup target-form-name="LookupProduct" size="15" />
+        </field>
+    	<field name="shipmentId"><text-find></text-find></field>
+    	<field name="datetimeReceived"><date-find/></field>
+    	<field name="submitButton" title="${uiLabelMap.CommonFind}" widget-style="smallSubmit">
+            <submit button-type="button"/>
+        </field>
+    <field name="noConditionFind"><hidden value="Y"/><!-- if this isn't there then with all fields empty no query will be done --></field>
+    </form>
+    <form name="ListMaterialQCApproval" type="list" extends="ListMaterialForQCApproval" list-name="listIt">
+        <actions>
+          <service service-name="performFind" result-map="result" result-map-list="listIt">
+            <field-map field-name="inputFields" from-field="parameters"/>
+            <field-map field-name="entityName" from-field="entityName"/>
+            <field-map field-name="inputFields.statusId" value="SR_RECEIVED"/>
+            <field-map field-name="orderBy" value="datetimeReceived"/>  
+            <field-map field-name="viewIndex" from-field="viewIndex"/>
+            <field-map field-name="viewSize" from-field="viewSize"/>
+          </service>
+        </actions>
+    </form>
     <form name="ListMaterialForQCApproval" type="list" list-name="receiptItems" paginate-target="${targetRequest}"
         odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar"  separate-columns="true">
         

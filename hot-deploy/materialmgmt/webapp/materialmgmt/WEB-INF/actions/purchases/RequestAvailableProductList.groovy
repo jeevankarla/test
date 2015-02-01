@@ -58,7 +58,7 @@ if(UtilValidate.isNotEmpty(parameters.partyId)){
 if(UtilValidate.isNotEmpty(parameters.custRequestDate)){
 	conditionList.add(EntityCondition.makeCondition("custRequestDate", EntityOperator.EQUALS, fromDate));
 }
-conditionList.add(EntityCondition.makeCondition("statusId", EntityOperator.EQUALS, "CRQ_SUBMITTED"));
+conditionList.add(EntityCondition.makeCondition("statusId", EntityOperator.IN, UtilMisc.toList("CRQ_SUBMITTED","CRQ_DRAFT")));
 conditionList.add(EntityCondition.makeCondition("itemStatusId", EntityOperator.IN, UtilMisc.toList("CRQ_INPROCESS","CRQ_SUBMITTED")));
 conditionList.add(EntityCondition.makeCondition("custRequestTypeId", EntityOperator.EQUALS, "PRODUCT_REQUIREMENT"));
 condition = EntityCondition.makeCondition(conditionList, EntityOperator.AND);
