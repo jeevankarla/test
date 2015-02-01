@@ -247,7 +247,8 @@ under the License.
                 location="org.ofbiz.product.inventory.InventoryServices" invoke="getProductInventoryOpeningBalance" auth="true" use-transaction="false">
         <description>Count Inventory On Hand and Cost for a Product constrained by a facilityId at a given date.</description>
         <attribute name="productId" type="String" mode="IN" optional="false"/>
-        <attribute name="facilityId" type="String" mode="IN" optional="false"/>
+        <attribute name="facilityId" type="String" mode="IN" optional="true"/>
+        <attribute name="ownerPartyId" type="String" mode="IN" optional="true"/>
         <attribute name="effectiveDate" type="Timestamp" mode="IN" optional="true"/>
         <attribute name="inventoryCount" type="BigDecimal" mode="OUT" optional="false"/>
         <attribute name="inventoryCost" type="BigDecimal" mode="OUT" optional="false"/>

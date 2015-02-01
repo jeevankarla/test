@@ -54,7 +54,7 @@ import org.ofbiz.service.DispatchContext;
 import org.ofbiz.service.GenericServiceException;
 import org.ofbiz.service.LocalDispatcher;
 import org.ofbiz.service.ServiceUtil;
-
+import org.ofbiz.entity.util.EntityUtil;
 /**
  * Inventory Services
  */
@@ -1197,21 +1197,28 @@ public class InventoryServices {
         Timestamp effectiveDate = (Timestamp)context.get("effectiveDate");
         String facilityId = (String)context.get("facilityId");
         String productId = (String)context.get("productId");
-
+        String ownerPartyId = (String) context.get("ownerPartyId");
         Map<String, Object> result = FastMap.newInstance();
 
         GenericValue product = null;
-        GenericValue facility = null;
         try {
             product = delegator.findByPrimaryKey("Product", UtilMisc.toMap("productId", productId));
-            facility = delegator.findByPrimaryKey("Facility", UtilMisc.toMap("facilityId", facilityId));
+            
+            if(UtilValidate.isEmpty(facilityId)){
+            	List<GenericValue> productFacility = delegator.findList("ProductFacility", EntityCondition.makeCondition("productId", EntityOperator.EQUALS, productId), null, null, null, false);
+            	if(UtilValidate.isNotEmpty(productFacility)){
+            		facilityId = (EntityUtil.getFirst(productFacility)).getString("facilityId");
+            	}
+            	
+            }
+            
         } catch (GenericEntityException e) {
         	Debug.logError(e, module);
             return ServiceUtil.returnError("Error fetching data " + e);
         }
         
         if(UtilValidate.isEmpty(effectiveDate)){
-        	effectiveDate = UtilDateTime.getDayStart(UtilDateTime.nowTimestamp());
+        	effectiveDate = UtilDateTime.nowTimestamp();
         }
         
         if(UtilValidate.isEmpty(product)){
@@ -1219,13 +1226,13 @@ public class InventoryServices {
         	return ServiceUtil.returnError("Product with code "+productId+" doesn't exists");
         }
         
-        if(UtilValidate.isEmpty(facilityId)){
-        	Debug.logError("Store with code "+facilityId+" doesn't exists", module);
-        	return ServiceUtil.returnError("Store with code "+facilityId+" doesn't exists");
-        }
+        
         List conditionList = FastList.newInstance();
         conditionList.add(EntityCondition.makeCondition("effectiveDate", EntityOperator.LESS_THAN, effectiveDate));
         conditionList.add(EntityCondition.makeCondition("facilityId", EntityOperator.EQUALS, facilityId));
+        if(UtilValidate.isNotEmpty(ownerPartyId)){
+        	conditionList.add(EntityCondition.makeCondition("ownerPartyId", EntityOperator.EQUALS, ownerPartyId));
+        }
         conditionList.add(EntityCondition.makeCondition("productId", EntityOperator.EQUALS, productId));
         EntityCondition condition = EntityCondition.makeCondition(conditionList, EntityOperator.AND);
         
