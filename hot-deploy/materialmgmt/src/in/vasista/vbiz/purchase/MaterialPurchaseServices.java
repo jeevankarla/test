@@ -90,6 +90,8 @@ public class MaterialPurchaseServices {
 	    String withoutPO = (String) request.getParameter("withoutPO");
 	    //GRN on PO then override this supplier with PO supplier
 	    String supplierId = (String) request.getParameter("supplierId");
+	    String deliveryChallanDateStr = (String) request.getParameter("deliveryChallanDate");
+	    String deliveryChallanNo = (String) request.getParameter("deliveryChallanNo");
 	    HttpSession session = request.getSession();
 	    GenericValue userLogin = (GenericValue) session.getAttribute("userLogin");
 		Timestamp nowTimeStamp = UtilDateTime.nowTimestamp();
@@ -126,6 +128,16 @@ public class MaterialPurchaseServices {
 		  		Debug.logError(e, "Cannot parse date string: " + supplierInvoiceDateStr, module);
 		  	} catch (NullPointerException e) {
 	  			Debug.logError(e, "Cannot parse date string: " + supplierInvoiceDateStr, module);
+		  	}
+	  	}
+	  	Timestamp deliveryChallanDate=UtilDateTime.nowTimestamp();
+	  	if(UtilValidate.isNotEmpty(deliveryChallanDateStr)){
+	  		try {
+	  			deliveryChallanDate = new java.sql.Timestamp(sdf.parse(deliveryChallanDateStr).getTime());
+		  	} catch (ParseException e) {
+		  		Debug.logError(e, "Cannot parse date string: " + deliveryChallanDateStr, module);
+		  	} catch (NullPointerException e) {
+	  			Debug.logError(e, "Cannot parse date string: " + deliveryChallanDateStr, module);
 		  	}
 	  	}
 	  	
@@ -203,6 +215,8 @@ public class MaterialPurchaseServices {
 	        newEntity.put("partyIdFrom",supplierId);
 	        newEntity.put("supplierInvoiceId",supplierInvoiceId);
 	        newEntity.put("supplierInvoiceDate",supplierInvoiceDate);
+	        newEntity.put("deliveryChallanNumber",deliveryChallanNo);
+	        newEntity.put("deliveryChallanDate",deliveryChallanDate);
 	        newEntity.put("primaryOrderId",orderId);
 	        newEntity.set("createdDate", nowTimeStamp);
 	        newEntity.set("createdByUserLogin", userLogin.get("userLoginId"));
