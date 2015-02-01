@@ -48,7 +48,9 @@
 </style>			
 			
 <script language="javascript" type="text/javascript" src="<@ofbizContentUrl>/images/jquery/plugins/slickgrid/lib/firebugx.js</@ofbizContentUrl>"></script>
+<#--
 <script language="javascript" type="text/javascript" src="<@ofbizContentUrl>/images/jquery/plugins/slickgrid/lib/jquery-1.4.3.min.js</@ofbizContentUrl>"></script>
+-->
 <script language="javascript" type="text/javascript" src="<@ofbizContentUrl>/images/jquery/plugins/slickgrid/lib/jquery-ui-1.8.5.custom.min.js</@ofbizContentUrl>"></script>
 <script language="javascript" type="text/javascript" src="<@ofbizContentUrl>/images/jquery/plugins/slickgrid/lib/jquery.event.drag-2.0.min.js</@ofbizContentUrl>"></script>
 <script language="javascript" type="text/javascript" src="<@ofbizContentUrl>/images/jquery/plugins/slickgrid/slick.core.js</@ofbizContentUrl>"></script>
@@ -115,12 +117,30 @@
 		var order = jQuery("<input>").attr("type", "hidden").attr("name", "orderId").val(orderId);
 		var vehicle = jQuery("<input>").attr("type", "hidden").attr("name", "vehicleId").val(vehicleId);
 		
+		if(vehicleId == '')
+		{
+		alert("Vehilce Id Missing..!");
+		window.location.reload(true);
+   		return false;	 
+   		}
 		var supplierId = $("#supplierId").val();
-		alert(supplierId);
 		var supplier = jQuery("<input>").attr("type", "hidden").attr("name", "supplierId").val(supplierId);
 		var suppInvoiceId = $("#suppInvoiceId").val();
+		
+		if(suppInvoiceId == '')
+		{
+		alert("Supplier Invoice Id missing..!");
+		window.location.reload(true);
+   		return false;	 
+   		}
 		var suppInvoice = jQuery("<input>").attr("type", "hidden").attr("name", "supplierInvoiceId").val(suppInvoiceId);
 		var suppInvoiceDate = $("#suppInvoiceDate").val();
+		if(suppInvoiceDate == '')
+		{
+		alert("Supplier Invoice Date is missing..!");
+		window.location.reload(true);
+   		return false;	 
+   		}
 		var suppInvDate = jQuery("<input>").attr("type", "hidden").attr("name", "supplierInvoiceDate").val(suppInvoiceDate);
 		var withoutPO =  jQuery("<input>").attr("type", "hidden").attr("name", "withoutPO").val($("#withoutPO").val());
 		jQuery(formId).append(jQuery(suppInvoice));

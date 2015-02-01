@@ -72,7 +72,7 @@
 		 				<tr>
 										<#assign flag = false>                
 				          <td>&nbsp;</td>
-				          <td align='left' valign='middle' nowrap="nowrap"><div class='h3' id='purchaseId'>Purchase Order Id:</div></td>
+				          <td align='left' valign='middle' nowrap="nowrap"><div class='h3' id='purchaseId'>Purchase Order Id: <font color='red'>*</font></div></td>
 				          <td>&nbsp;</td>
 				          <#if orderId?exists && orderId?has_content>  
 					  	  		<input type="hidden" name="orderId" id="orderId" value="${orderId}"/>  
@@ -131,7 +131,7 @@
 						
 						<tr>
 							<td>&nbsp;</td>
-					        <td align='left' valign='middle' nowrap="nowrap"><div class='h3'>Vehicle No:</div></td>
+					        <td align='left' valign='middle' nowrap="nowrap"><div class='h3'>Vehicle No: <font color='red'>*</font></div></td>
 					        <td>&nbsp;</td>
 					        <#if vehicleId?exists && vehicleId?has_content>  
 						  		<input type="hidden" name="vehicleId" id="vehicleId" value="${vehicleId}"/>  
@@ -148,7 +148,7 @@
 					  	<tr><td><br/></td></tr>
 					  	<tr>
 				          <td>&nbsp;</td>
-				          <td align='left' valign='middle' nowrap="nowrap"><div class='h3'>Supplier Invoice Date:</div></td>
+				          <td align='left' valign='middle' nowrap="nowrap"><div class='h3'>Supplier Invoice Date: <font color='red'>*</font></div></td>
 				          <td>&nbsp;</td>
 				          <#if (parameters.suppInvoiceDate)?exists && (parameters.suppInvoiceDate)?has_content> 
 				                 <input type="hidden" name="suppInvoiceDate" id="suppInvoiceDate" value="${parameters.suppInvoiceDate}"/>  
@@ -166,7 +166,7 @@
 						<tr><td><br/></td></tr>
 		 				<tr>
 				          <td>&nbsp;</td>
-				          <td align='left' valign='middle' nowrap="nowrap"><div class='h3'>Supplier Invoice No:</div></td>
+				          <td align='left' valign='middle' nowrap="nowrap"><div class='h3'>Supplier Invoice No: <font color='red'>*</font></div></td>
 				          <td>&nbsp;</td>
 				          <#if (parameters.suppInvoiceDate)?exists && (parameters.suppInvoiceDate)?has_content> 
 				          		<input type="hidden" name="suppInvoiceId" id="suppInvoiceId" value="${parameters.suppInvoiceId}"/>  
