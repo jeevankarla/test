@@ -294,7 +294,7 @@
      <request-map uri="acceptReceiptQtyByQC">
        <security https="true" auth="true"/>
        <event type="service" path="" invoke="acceptReceiptQtyByQC"></event>
-       <response name="success" type="view" value="MaterialForQCApproval"/>
+       <response name="success" type="request-redirect-noparam" value="MaterialForQCApproval"/>
        <response name="error" type="view" value="MaterialForQCApproval"/>
      </request-map>
      
@@ -475,7 +475,7 @@
      <request-map uri="createRequirementForCustRequestItem">
        <security https="true" auth="true"/>
        <event type="service" path="" invoke="createRequirementForCustRequestItem" global-transaction="true"/>
-       <response name="success" type="view" value="StoreProductIssue"/>
+       <response name="success" type="request-redirect-noparam" value="StoreProductIssue"/>
        <response name="error" type="view" value="StoreProductIssue"/>
      </request-map>
      
