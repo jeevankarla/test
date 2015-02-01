@@ -76,30 +76,11 @@ conditionItemIssue = EntityCondition.makeCondition(conditionList, EntityOperator
 itemIssuanceList = delegator.findList("ItemIssuance", conditionItemIssue, null, UtilMisc.toList("-issuedDateTime"), null, false);
 
 
-conList = [];
-conList.add(EntityCondition.makeCondition("statusId", EntityOperator.EQUALS, "SR_QUALITYCHECK"));
-conList.add(EntityCondition.makeCondition("productId", EntityOperator.IN, productIds));
-cond = EntityCondition.makeCondition(conList, EntityOperator.AND);
-
-inventoryItems = delegator.findList("ShipmentReceiptAndItem",cond,UtilMisc.toSet("productId", "quantityOnHandTotal"), null, null, false);
-//inventoryItems = delegator.findList("InventoryItem", EntityCondition.makeCondition("productId", EntityOperator.IN, productIds),UtilMisc.toSet("productId", "quantityOnHandTotal"), null, null, false);
 prodInvMap = [:];
 productIds.each{eachProd ->
-	prodInvItems = EntityUtil.filterByCondition(inventoryItems, EntityCondition.makeCondition("productId", EntityOperator.EQUALS, eachProd));
-	totalQty = 0;
-	prodInvItems.each{ eachInvItem ->
-		totalQty += eachInvItem.quantityOnHandTotal;
-	}
-	prodInvMap.putAt(eachProd, totalQty);
-}
-prodInvMap = [:];
-productIds.each{eachProd ->
-	prodInvItems = EntityUtil.filterByCondition(inventoryItems, EntityCondition.makeCondition("productId", EntityOperator.EQUALS, eachProd));
-	totalQty = 0;
-	prodInvItems.each{ eachInvItem ->
-		totalQty += eachInvItem.quantityOnHandTotal;
-	}
-	prodInvMap.putAt(eachProd, totalQty);
+	invCountMap = dispatcher.runSync("getProductInventoryOpeningBalance", [productId: eachProd, ownerPartyId:"Company", userLogin: userLogin]);
+	invQty = invCountMap.get("inventoryCount");
+	prodInvMap.putAt(eachProd, invQty);
 }
 custRequestItemsList = [];
 custRequestItems.each{ eachItem ->
