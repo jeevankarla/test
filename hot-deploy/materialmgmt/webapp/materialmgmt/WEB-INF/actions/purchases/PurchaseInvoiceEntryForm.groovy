@@ -112,6 +112,8 @@ if(shipments){
 			vatPercent = 0;
 			cstPercent = 0;
 			bedPercent = 0;
+			bedcessPercent = 0;
+			bedseccessPercent = 0;
 			if(orderItem.unitPrice){
 				unitPrice = orderItem.unitPrice;
 			}
@@ -121,10 +123,22 @@ if(shipments){
 			if(orderItem.bedPercent){
 				bedPercent = orderItem.bedPercent;
 			}
+			if(orderItem.bedcessPercent){
+				bedcessPercent = orderItem.bedcessPercent;
+			}
+			if(orderItem.bedseccessPercent){
+				bedseccessPercent = orderItem.bedseccessPercent;
+			}
 			if(orderItem.cstPercent){
 				cstPercent = orderItem.cstPercent;
 			}
 			amount = unitPrice*qty;
+			bedAmt = (amount*bedPercent)/100;
+			bedcessAmt = (amount*bedcessPercent)/100;
+			bedseccessAmt = (amount*bedseccessPercent)/100;
+			
+			entryAmt = amount+bedAmt+bedcessAmt+bedseccessAmt;
+			
 			JSONObject newObj = new JSONObject();
 			newObj.put("cProductId",productId);
 			newObj.put("cProductName",prodValue.productName +" [ "+productId+"]");
@@ -132,12 +146,15 @@ if(shipments){
 			newObj.put("UPrice",unitPrice);
 			newObj.put("amount", amount);
 			newObj.put("VatPercent",vatPercent);
-//			newObj.put("VAT",(amount*vatPercent)/100);
+			newObj.put("VAT",(entryAmt*vatPercent)/100);
 			newObj.put("CSTPercent",cstPercent);
-	//		newObj.put("CST",(amount*cstPercent)/100);
+			newObj.put("CST",(entryAmt*cstPercent)/100);
 			newObj.put("ExcisePercent",bedPercent);
-			newObj.put("bedCessPercent",0);
-			newObj.put("bedSecCessPercent",0);
+			newObj.put("Excise",bedAmt);
+			newObj.put("bedCessPercent",bedcessPercent);
+			newObj.put("bedCessAmount",bedcessAmt);
+			newObj.put("bedSecCessPercent",bedseccessPercent);
+			newObj.put("bedSecCessAmount",bedseccessAmt);
 			invoiceItemsJSON.add(newObj);
 		
 		}

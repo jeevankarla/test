@@ -587,7 +587,6 @@ public class MaterialQuoteServices {
          if (UtilValidate.isEmpty(salesChannel)) {
              salesChannel = "MATERIAL_PUR_CHANNEL";
          }     
-    	
     	 try {  
     		quote=delegator.findOne("Quote",UtilMisc.toMap("quoteId", quoteId), false);
     		List conditionList = UtilMisc.toList(EntityCondition.makeCondition("quoteId", EntityOperator.EQUALS, quoteId));
@@ -616,12 +615,12 @@ public class MaterialQuoteServices {
 		if(UtilValidate.isNotEmpty(billToPartyId)){
 			 cart.setBillFromVendorPartyId(billToPartyId);
 		}else{
-	    cart.setBillFromVendorPartyId(partyId);
+			cart.setBillFromVendorPartyId(partyId);
 		}
 	    cart.setShipFromVendorPartyId(partyId);
 	    cart.setSupplierAgentPartyId(partyId);
         cart.setQuoteId(quoteId); 
-         try {
+        try {
              cart.setUserLogin(userLogin, dispatcher);
          } catch (Exception exc) {
              Debug.logWarning("Error setting userLogin in the cart: " + exc.getMessage(), module);
@@ -775,7 +774,8 @@ public class MaterialQuoteServices {
                  }
                 
              }  
-         }      
+         }
+         
          if(UtilValidate.isNotEmpty(custRequestId)){
 				cart.setOrderAttribute("REF_NUMBER",custRequestId);
          }
@@ -784,20 +784,26 @@ public class MaterialQuoteServices {
          Map<String, Object> orderCreateResult = checkout.createOrder(userLogin);
          String orderId = (String) orderCreateResult.get("orderId");
          try { 
-        	//Freight Here
-             List qouteTermFreightCondList = UtilMisc.toList(EntityCondition.makeCondition("quoteId", EntityOperator.EQUALS, quoteId));
-             qouteTermFreightCondList.add(EntityCondition.makeCondition("termTypeId", EntityOperator.EQUALS, "COGS_FREIGHT"));
-             EntityCondition quotFreightCond = EntityCondition.makeCondition(qouteTermFreightCondList, EntityOperator.AND);
-             List quoteTermFreightList = delegator.findList("QuoteTerm", quotFreightCond, null, null, null, false);
-             if(UtilValidate.isNotEmpty(quoteTermFreightList)){
-            	GenericValue quoteTermFreight = EntityUtil.getFirst(quoteTermFreightList); 
-            	if(UtilValidate.isNotEmpty(quoteTermFreight)){
-            		BigDecimal freightCharges = quoteTermFreight.getBigDecimal("termValue");
-            		if(freightCharges.compareTo(BigDecimal.ZERO)>0){
-             	    	Map adjustCtx = UtilMisc.toMap("userLogin",userLogin);	  	
+        	 
+        	 List<GenericValue> otherChargesTerms = delegator.findList("TermType", EntityCondition.makeCondition("parentTypeId", EntityOperator.EQUALS, "OTHERS"), UtilMisc.toSet("termTypeId"), null, null, false);
+        	 List<String> otherChargesIds = EntityUtil.getFieldListFromEntityList(otherChargesTerms, "termTypeId", true);
+        	 
+             List qouteTermCondList = UtilMisc.toList(EntityCondition.makeCondition("quoteId", EntityOperator.EQUALS, quoteId));
+             qouteTermCondList.add(EntityCondition.makeCondition("termTypeId", EntityOperator.IN, otherChargesIds));
+             EntityCondition quoteCond = EntityCondition.makeCondition(qouteTermCondList, EntityOperator.AND);
+             List<GenericValue> quoteTermList = delegator.findList("QuoteTerm", quoteCond, null, null, null, false);
+             if(UtilValidate.isNotEmpty(quoteTermList)){
+            	 
+            	for(GenericValue eachTerm : quoteTermList){
+            		BigDecimal otherAmt = eachTerm.getBigDecimal("termValue");
+            		String termTypeId = eachTerm.getString("termTypeId");
+            		String uomId = eachTerm.getString("uomId");
+            		if(UtilValidate.isNotEmpty(otherAmt) && otherAmt.compareTo(BigDecimal.ZERO)>0){
+            			// handle percentage 
+            			Map adjustCtx = UtilMisc.toMap("userLogin",userLogin);	  	
              	    	adjustCtx.put("orderId", orderId);
-             	    	adjustCtx.put("orderAdjustmentTypeId", "COGS_FREIGHT");
-             	    	adjustCtx.put("amount", freightCharges);
+             	    	adjustCtx.put("orderAdjustmentTypeId", termTypeId);
+             	    	adjustCtx.put("amount", otherAmt);
              	    	Map adjResultMap=FastMap.newInstance();
          		  	 	try{
          		  	 		adjResultMap = dispatcher.runSync("createOrderAdjustment",adjustCtx);  		  		 
@@ -810,123 +816,7 @@ public class MaterialQuoteServices {
          		  			  Debug.logError(e, "Error While Creating Adjustment for Purchase Order ", module);
          		  			  return adjResultMap;			  
          		  	 	}
-             	    }
-            	}
-             }
-             //Discount Here
-             List qouteTermDiscCondList = UtilMisc.toList(EntityCondition.makeCondition("quoteId", EntityOperator.EQUALS, quoteId));
-             qouteTermDiscCondList.add(EntityCondition.makeCondition("termTypeId", EntityOperator.EQUALS, "COGS_DISC"));
-             EntityCondition quotDiscCond = EntityCondition.makeCondition(qouteTermDiscCondList, EntityOperator.AND);
-             List quoteTermDiscList = delegator.findList("QuoteTerm", quotDiscCond, null, null, null, false);
-             if(UtilValidate.isNotEmpty(quoteTermDiscList)){
-            	GenericValue quoteTermDisc = EntityUtil.getFirst(quoteTermDiscList); 
-            	if(UtilValidate.isNotEmpty(quoteTermDisc)){
-            		BigDecimal discount = quoteTermDisc.getBigDecimal("termValue");
-            		if(discount.compareTo(BigDecimal.ZERO)>0){
-             	    	Map adjustCtx = UtilMisc.toMap("userLogin",userLogin);	  	
-             	    	adjustCtx.put("orderId", orderId);
-             	    	adjustCtx.put("orderAdjustmentTypeId", "COGS_DISC");
-             	    	adjustCtx.put("amount", discount);
-             	    	Map adjResultMap=FastMap.newInstance();
-             	  	 	try{
-             	  	 		adjResultMap = dispatcher.runSync("createOrderAdjustment",adjustCtx);  		  		 
-             	  	 		if (ServiceUtil.isError(adjResultMap)) {
-             	  	 			String errMsg =  ServiceUtil.getErrorMessage(adjResultMap);
-             	  	 			Debug.logError(errMsg , module);
-             	  	 			return ServiceUtil.returnError(" Error While discount Adjustment for Purchase Order !");
-             	  	 		}
-             	  	 	}catch (Exception e) {
-             	  			  Debug.logError(e, "Error While Creating discount Adjustment for Purchase Order ", module);
-             	  			  return adjResultMap;			  
-             	  	 	}
-             	    }
-            	}
-             }
-             //Insurance Here
-             List qouteTermInsCondList = UtilMisc.toList(EntityCondition.makeCondition("quoteId", EntityOperator.EQUALS, quoteId));
-             qouteTermInsCondList.add(EntityCondition.makeCondition("termTypeId", EntityOperator.EQUALS, "COGS_INSURANCE"));
-             EntityCondition quotInsCond = EntityCondition.makeCondition(qouteTermInsCondList, EntityOperator.AND);
-             List quoteTermInsList = delegator.findList("QuoteTerm", quotInsCond, null, null, null, false);
-             if(UtilValidate.isNotEmpty(quoteTermInsList)){
-            	GenericValue quoteTermIns = EntityUtil.getFirst(quoteTermInsList); 
-            	if(UtilValidate.isNotEmpty(quoteTermIns)){
-            		BigDecimal insurance = quoteTermIns.getBigDecimal("termValue");
-            		if(insurance.compareTo(BigDecimal.ZERO)>0){
-             	    	Map adjustCtx = UtilMisc.toMap("userLogin",userLogin);	  	
-             	    	adjustCtx.put("orderId", orderId);
-             	    	adjustCtx.put("orderAdjustmentTypeId", "COGS_INSURANCE");
-             	    	adjustCtx.put("amount", insurance);
-             	    	Map adjResultMap=FastMap.newInstance();
-         		  	 	try{
-         		  	 		 adjResultMap = dispatcher.runSync("createOrderAdjustment",adjustCtx);  		  		 
-         		  	 		if (ServiceUtil.isError(adjResultMap)) {
-         		  	 			String errMsg =  ServiceUtil.getErrorMessage(adjResultMap);
-         		  	 			Debug.logError(errMsg , module);
-         		  	 		 return ServiceUtil.returnError(" Error While Creating insurance Adjustment for Purchase Order !");
-         		  	 		}
-         		  	 	}catch (Exception e) {
-         		  			  Debug.logError(e, "Error While Creating insurance Adjustment for Purchase Order ", module);
-         		  			  return adjResultMap;			  
-         		  	 	}
-             	    }
-            	}
-             }
-             //package and forward Here
-             List qouteTermPckFwdCondList = UtilMisc.toList(EntityCondition.makeCondition("quoteId", EntityOperator.EQUALS, quoteId));
-             qouteTermPckFwdCondList.add(EntityCondition.makeCondition("termTypeId", EntityOperator.EQUALS, "COGS_PCK_FWD"));
-             EntityCondition quotPckFwdCond = EntityCondition.makeCondition(qouteTermPckFwdCondList, EntityOperator.AND);
-             List quoteTermPckFwdList = delegator.findList("QuoteTerm", quotPckFwdCond, null, null, null, false);
-             if(UtilValidate.isNotEmpty(quoteTermPckFwdList)){
-            	GenericValue quoteTermPckFwd = EntityUtil.getFirst(quoteTermPckFwdList); 
-            	if(UtilValidate.isNotEmpty(quoteTermPckFwd)){
-            		BigDecimal packAndFowdg = quoteTermPckFwd.getBigDecimal("termValue");
-            		if(packAndFowdg.compareTo(BigDecimal.ZERO)>0){
-             	    	Map adjustCtx = UtilMisc.toMap("userLogin",userLogin);	  	
-             	    	adjustCtx.put("orderId", orderId);
-             	    	adjustCtx.put("orderAdjustmentTypeId", "COGS_PCK_FWD");
-             	    	adjustCtx.put("amount", packAndFowdg);
-             	    	Map adjResultMap=FastMap.newInstance();
-         		  	 	try{
-         		  	 		adjResultMap = dispatcher.runSync("createOrderAdjustment",adjustCtx);  		  		 
-         		  	 		if (ServiceUtil.isError(adjResultMap)) {
-         		  	 			String errMsg =  ServiceUtil.getErrorMessage(adjResultMap);
-         		  	 			Debug.logError(errMsg , module);
-         		  	 		 return ServiceUtil.returnError(" Error While packAndFowdg Adjustment for Purchase Order !");
-         		  	 		}
-         		  	 	}catch (Exception e) {
-         		  			  Debug.logError(e, "Error While Creating packAndFowdg Adjustment for Purchase Order ", module);
-         		  			  return adjResultMap;			  
-         		  	 	}
-             	    }
-            	}
-             }
-             //othercharges Here
-             List qouteTermOthCgsCondList = UtilMisc.toList(EntityCondition.makeCondition("quoteId", EntityOperator.EQUALS, quoteId));
-             qouteTermOthCgsCondList.add(EntityCondition.makeCondition("termTypeId", EntityOperator.EQUALS, "COGS_OTH_CHARGES"));
-             EntityCondition quotOthCgsCond = EntityCondition.makeCondition(qouteTermOthCgsCondList, EntityOperator.AND);
-             List quoteTermOthCgsList = delegator.findList("QuoteTerm", quotOthCgsCond, null, null, null, false);
-             if(UtilValidate.isNotEmpty(quoteTermOthCgsList)){
-            	GenericValue quoteTermOthCgs = EntityUtil.getFirst(quoteTermOthCgsList); 
-            	if(UtilValidate.isNotEmpty(quoteTermOthCgs)){
-            		BigDecimal otherCharges = quoteTermOthCgs.getBigDecimal("termValue");
-            		if(otherCharges.compareTo(BigDecimal.ZERO)>0){
-             	    	Map adjustCtx = UtilMisc.toMap("userLogin",userLogin);	  	
-             	    	adjustCtx.put("orderId", orderId);
-             	    	adjustCtx.put("orderAdjustmentTypeId", "COGS_OTH_CHARGES"); 
-             	    	adjustCtx.put("amount", otherCharges);
-             	    	Map adjResultMap=FastMap.newInstance();
-         		  	 	try{
-         		  	 		 adjResultMap = dispatcher.runSync("createOrderAdjustment",adjustCtx);  		  		 
-         		  	 		if (ServiceUtil.isError(adjResultMap)) {
-         		  	 			String errMsg =  ServiceUtil.getErrorMessage(adjResultMap);
-         		  	 			Debug.logError(errMsg , module);
-         		  	 		 return ServiceUtil.returnError(" Error While otherCharges Adjustment for Purchase Order !");
-         		  	 		}
-         		  	 	}catch (Exception e) {
-         		  			  Debug.logError(e, "Error While Creating otherCharges Adjustment for Purchase Order ", module);
-         		  			  return adjResultMap;			  
-         		  	 	}
-             	    }
+            		}
             	}
              }
          }catch(Exception e) {
