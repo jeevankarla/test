@@ -38,20 +38,17 @@ if(UtilValidate.isNotEmpty(custReqItemDetails)){
    enquiryMap.put("productId",productId);
    enquiryMap.put("requrdqty",requrdqty);
 }
-productDetails = delegator.findList("Product",EntityCondition.makeCondition("productId", EntityOperator.EQUALS , productId)  , null, null, null, false );
+productDetails = delegator.findOne("Product",["productId":productId],false);
 if(UtilValidate.isNotEmpty(productDetails)){
-  productDetails=EntityUtil.getFirst(productDetails);
-  itemCode=productDetails.internalName;
-  description=productDetails.description;
-  uomId=productDetails.quantityUomId;
-  enquiryMap.put("itemCode",itemCode);
-  enquiryMap.put("description",description);
-  if(UtilValidate.isNotEmpty(uomId)){
-	  uomDesc = delegator.findList("Uom",EntityCondition.makeCondition("uomId", EntityOperator.EQUALS , uomId)  , null, null, null, false );
-	  uomDesc=EntityUtil.getFirst(uomDesc);
-	  enquiryMap.put("unit",uomDesc.abbreviation);
-	  
-  }
+	itemCode=productDetails.internalName;
+	description=productDetails.description;
+    enquiryMap.put("itemCode",itemCode);
+    enquiryMap.put("description",description);
+    uomId=productDetails.quantityUomId;
+}
+if(UtilValidate.isNotEmpty(uomId)){
+	unitDesciption = delegator.findOne("Uom",["uomId":uomId],false);
+	enquiryMap.put("unit",unitDesciption.description);
 }
 context.enquiryMap=enquiryMap;
 vendorList=[];
@@ -60,9 +57,9 @@ partyIds = EntityUtil.getFieldListFromEntityList(partyIdsList, "partyId", true);
 if(UtilValidate.isNotEmpty(partyIds)){
 	partyIds.each{eachPartyId->
 		partyIdsDetailsMap=[:];	
-		partyIdsDetailsMap["partyName"] = org.ofbiz.party.party.PartyHelper.getPartyName(delegator, eachPartyId, false);
-		partyIdsDetailsMap["contactNumber"]="";	
 		partyIdsDetailsMap.put("partyId",eachPartyId);
+		partyIdsDetailsMap["partyName"] = org.ofbiz.party.party.PartyHelper.getPartyName(delegator, eachPartyId, false);
+		partyIdsDetailsMap["contactNumber"]="";			
 		partyContactDetails=dispatcher.runSync("getPartyTelephone", [partyId: eachPartyId, userLogin: userLogin]);
 		if(UtilValidate.isNotEmpty(partyContactDetails)){
 			if(UtilValidate.isNotEmpty(partyContactDetails.contactNumber)){
