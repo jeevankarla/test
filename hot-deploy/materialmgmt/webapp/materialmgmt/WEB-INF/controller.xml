@@ -405,7 +405,7 @@
      <request-map uri="issueProductForRequest">
        <security https="true" auth="true"/>
        <event type="service" path="" invoke="issueProductForRequest" global-transaction="true"/>
-       <response name="success" type="view" value="StoreProductIssue"/>
+       <response name="success" type="request-redirect-noparam" value="StoreProductIssue"/>
        <response name="error" type="view" value="StoreProductIssue"/>
      </request-map>
      
@@ -922,6 +922,12 @@
        <response name="success" type="view" value="StoreProductIssue"/>
        <response name="error" type="view" value="StoreProductIssue"/>
      </request-map>
+     <request-map uri="FindMaterialQCApproval">
+       <security https="true" auth="true"/>
+       <response name="success" type="view" value="MaterialForQCApproval"/>
+       <response name="error" type="view" value="MaterialForQCApproval"/>
+     </request-map>
+     
     
     <view-map name="main" type="screen" page="component://materialmgmt/widget/materialmgmtScreens.xml#main"/>
     <view-map name="mainNg" type="screen" page="component://materialmgmt/widget/materialmgmtScreens.xml#mainNG"/>

@@ -210,13 +210,15 @@
             <actions>
                 <set field="titleProperty" value="Receipts For QC"/>              
 			    <set field="tabButtonItem" value="MaterialForQCApproval" />	
-               <set field="viewSize" from-field="parameters.VIEW_SIZE"/>
-               <entity-condition list="receiptItems" entity-name="ShipmentReceipt">
+               <set field="entityName" value="ShipmentReceipt"/>
+               <!-- <entity-condition list="receiptItems" entity-name="ShipmentReceipt">
+               
 					<condition-list combine="and">
+						
 						<condition-expr field-name="statusId" value="SR_RECEIVED"/>
 					</condition-list>		
 					<order-by field-name="-datetimeReceived"/>        
-               </entity-condition>
+               </entity-condition> -->
       			<set field="layoutSettings.javaScripts[]" value="/materialmgmt/images/requirements.js" global="true"/>
             </actions>
             <widgets>
@@ -224,8 +226,11 @@
                       <decorator-section name="body">  
                         <section>
                             <widgets>
-                            <screenlet>
-                                <include-form location="component://materialmgmt/widget/MaterialPurchaseForms.xml" name="ListMaterialForQCApproval"/>
+                            <screenlet title="Search-Options">
+                                <include-form location="component://materialmgmt/widget/MaterialPurchaseForms.xml" name="FindMaterialQCApproval"/>
+                            </screenlet> 
+                            <screenlet title="Search-Results">
+                                <include-form location="component://materialmgmt/widget/MaterialPurchaseForms.xml" name="ListMaterialQCApproval"/>
                             </screenlet>    
                             </widgets>
                         </section>
