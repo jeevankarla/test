@@ -751,6 +751,8 @@ public class MaterialRequestServices {
 		BigDecimal custmQuantity = (BigDecimal) context.get("custmQuantity");
 		GenericValue userLogin = (GenericValue) context.get("userLogin");
 		Map result = ServiceUtil.returnSuccess();
+		String requirementId = "";
+
 		try{
 			
 			GenericValue custRequestItem = delegator.findOne("CustRequestItem", UtilMisc.toMap("custRequestId", custRequestId, "custRequestItemSeqId", custRequestItemSeqId), false);
@@ -775,7 +777,6 @@ public class MaterialRequestServices {
 			facilityId = (EntityUtil.getFirst(prodFacility)).getString("facilityId");
 			
 			Map resultCtx = FastMap.newInstance();
-			String requirementId = "";
 			if(UtilValidate.isNotEmpty(requirements)){
 				GenericValue requirement = EntityUtil.getFirst(requirements);
 				requirementId = requirement.getString("requirementId");
@@ -852,7 +853,7 @@ public class MaterialRequestServices {
 			Debug.logError(e, module);
 			return ServiceUtil.returnError(e.getMessage());
 		}
-		result = ServiceUtil.returnSuccess("Successfully create requirement for the request "+custRequestId+" : "+custRequestItemSeqId);
+		result = ServiceUtil.returnSuccess("Successfully created requirement: "+requirementId+" for the request "+custRequestId+" : "+custRequestItemSeqId);
 		return result;
 	}
 	
