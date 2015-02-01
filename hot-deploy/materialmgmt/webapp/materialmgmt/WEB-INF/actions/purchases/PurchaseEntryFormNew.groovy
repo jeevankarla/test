@@ -109,9 +109,11 @@ if(displayGrid){
 
 paymentTerms = delegator.findByAnd("TermType",UtilMisc.toMap("parentTypeId","FEE_PAYMENT_TERM"));
 deliveryTerms = delegator.findByAnd("TermType",UtilMisc.toMap("parentTypeId","DELIVERY_TERM"));
+otherTerms = delegator.findByAnd("TermType",UtilMisc.toMap("parentTypeId","OTHERS"));
 
 JSONArray paymentTermsJSON = new JSONArray();
 JSONArray deliveryTermsJSON = new JSONArray();
+JSONArray otherTermsJSON = new JSONArray();
 
 paymentTerms.each{ eachTerm ->
 	JSONObject newObj = new JSONObject();
@@ -125,9 +127,16 @@ deliveryTerms.each{ eachTerm ->
 	newObj.put("label",eachTerm.description);
 	deliveryTermsJSON.add(newObj);
 }
+otherTerms.each{ eachTerm ->
+	JSONObject newObj = new JSONObject();
+	newObj.put("value",eachTerm.termTypeId);
+	newObj.put("label",eachTerm.description);
+	otherTermsJSON.add(newObj);
+}
 
 context.paymentTermsJSON =paymentTermsJSON;
 context.deliveryTermsJSON =deliveryTermsJSON;
+context.otherTermsJSON =otherTermsJSON;
 // orderTypes here
 purchaseTypeFlag = parameters.purchaseTypeFlag;
 if(UtilValidate.isNotEmpty(purchaseTypeFlag) && purchaseTypeFlag == "contractPurchase"){
@@ -140,4 +149,3 @@ if(UtilValidate.isNotEmpty(purchaseTypeFlag) && purchaseTypeFlag == "contractPur
 
 productStoreId =PurchaseStoreServices.getPurchaseFactoryStore(delegator).get("factoryStoreId");
 context.productStoreId = productStoreId;
-

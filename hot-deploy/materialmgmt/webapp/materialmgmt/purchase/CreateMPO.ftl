@@ -165,6 +165,7 @@ function makeDatePicker(fromDateId ,thruDateId){
 		});	
 		$( "input[name*='paymentTermTypeId']" ).autocomplete({ source: paymentTermsJSON });
 		$( "input[name*='deliveryTermTypeId']" ).autocomplete({ source: deliveryTermsJSON });
+		$( "input[name*='otherTermTypeId']" ).autocomplete({ source: otherTermsJSON });
 		$('#ui-datepicker-div').css('clip', 'auto');
 		hideExtPO();	
 		
@@ -191,6 +192,7 @@ function makeDatePicker(fromDateId ,thruDateId){
 	<#assign orderPayTermInfo = []>
 	<#assign orderShipTermInfo = []>
 	<#assign bedCheck = "">
+	<#assign orderOtherTermInfo = []>
 	<#if orderEditParam?has_content>
 		<#assign orderInfo = orderEditParam.get("orderHeader")?if_exists>
 		<#assign quoteInfo = orderEditParam.get("quoteDetails")?if_exists>
@@ -203,6 +205,7 @@ function makeDatePicker(fromDateId ,thruDateId){
 		<#if orderTermInfo?has_content>
 			<#assign orderPayTermInfo = orderTermInfo.get("paymentTerms")>
 			<#assign orderShipTermInfo = orderTermInfo.get("deliveryTerms")>
+			<#assign orderOtherTermInfo = orderTermInfo.get("otherTerms")>
 		</#if>
 	</#if>
 	
@@ -271,8 +274,8 @@ function makeDatePicker(fromDateId ,thruDateId){
 							</td>
 						</tr>
 						</#if>
-						<tr>
-						    <td class="label"><b>Quote No: </b></td>
+          		        <tr>
+          		        	<td class="label"><b>Quote No: </b></td>
 						    <td>
 						    	<#if orderId?exists && quoteInfo.get("quoteId")?exists>
 						    		<input type="text" name="quoteNum" id="quoteNum" size="18" maxlength="60" autocomplete="off" value="${quoteInfo.get("quoteId")?if_exists}"/>
@@ -374,7 +377,7 @@ function makeDatePicker(fromDateId ,thruDateId){
 								<table width="50%" border="0" cellspacing="0" cellpadding="0">
 										
 					 		       <tr><td><br/></td></tr>
-					 		        <tr>
+					 		        <#--<tr>
 							        	<td align='left' valign='middle' nowrap="nowrap"><div class='h3'>Freight Charges: </div></td>
 					       				<td valign='middle' align='left'> 
 					       					<#if orderId?exists && orderAdjInfo.get("freightCharges")?exists>
@@ -413,26 +416,19 @@ function makeDatePicker(fromDateId ,thruDateId){
 							         	 
 					          			</td>
 					 		         </tr>
-					 		        <tr><td><br/></td></tr>
+					 		        <tr><td><br/></td></tr>-->
 					 		        <tr>
-							        	<td align='left' valign='middle' nowrap="nowrap"><div class='h3'>Other Charges: </div></td>
+							        	<#--<td align='left' valign='middle' nowrap="nowrap"><div class='h3'>Other Charges: </div></td>
 					       				<td valign='middle' align='left'>
 					       					<#if orderId?exists && orderAdjInfo.get("otherCharges")?exists>
 						    					<input class='h3' type="text" size="20" maxlength="30" name="otherCharges" id="otherCharges" onblur="javascript:addToInvoiceAmount();" value="${orderAdjInfo.get("otherCharges")?if_exists}"/>
 						    				<#else> 
 					           					<input class='h3' type="text" size="20" maxlength="30" name="otherCharges" id="otherCharges" onblur="javascript:addToInvoiceAmount();"/>
 					           				</#if>          
-					       				</td>
-					          			<td>&nbsp;&nbsp;&nbsp;</td>
-					          			<td align='left' valign='middle' nowrap="nowrap"><div class='h3'>Inc Tax: </div></td>
-							         	<td valign='middle' align='left'> 
-							         			<input class='h3' type="checkbox" id="incTax" name="incTax" value="true"/>	
-					          			</td>
-					          			<td>&nbsp;&nbsp;&nbsp;</td>
-					          			<td align='left' valign='middle' nowrap="nowrap"><div class='h3'>Add BED: </div></td>
-							         	<td valign='middle' align='left'> 
-							         			<input class='h3' type="checkbox" <#if bedCheck?has_content>checked = "checked"</#if> size="20" id="addBED" name="addBED" value="" onclick="javascript:addBedColumns();"/>	
-					          			</td>
+					       				</td>-->
+					          			<td align='left' valign='middle' nowrap="nowrap"><div class='h3'>Inc Tax: <input class='h3' type="checkbox" id="incTax" name="incTax" value="true"/></div></td>
+							         	<td>&nbsp;&nbsp;&nbsp;</td>
+					          			<td align='left' valign='middle' nowrap="nowrap"><div class='h3'>Add BED: <input class='h3' type="checkbox" size="20" id="addBED" name="addBED" value="" onclick="javascript:addBedColumns();"/></div></td>
 					 		         </tr>
 					 		          <tr><td><br/></td></tr>
 					 		          <tr><td colspan="6"> <span class="tooltip"> Note:once BED columns added and input given to BED columns You cant remove them</span></tr>
@@ -660,21 +656,102 @@ function makeDatePicker(fromDateId ,thruDateId){
 						  </table>
 						  </fieldset>
                         </section>
+	                    <h3>Other Terms</h3>
+	                     <section>
+				          <fieldset>
+				            <table cellpadding="15" cellspacing="15" class='h2'>
+							         <tr>
+				          				<td align='left' valign='middle' nowrap="nowrap"></td>
+					                 <td>
+					               <table border="2" cellspacing="10" cellpadding="10" id="otherTermsTable" style="width:200px;" align="center">
+					                <tr>
+								       <td><table><tr>
+								           <td><input type="button" id="addOtherTerm" value="Add" style="padding: 6px;"/>  </td>
+								        	<td> <input type="button" id="delOtherTerm" value="Delete" style="padding: 6px;"/></td>
+								        </tr> </table>
+								          </td>
+								         <td> </td>
+								          <td></td>
+								    </tr>
+								    <tr>
+							        	<td align="center">Term Type</td>
+							         	<td align="center">Term Days</td>
+							          	<td align="center">Term Value</td>
+							          	<td align="center">UOM</td>
+							          	<td align="center">Description</td>
+								    </tr>
+								    <#if orderId?exists && orderOtherTermInfo?has_content>
+							    		<#assign rowCount = 0>
+							    		<#list orderOtherTermInfo as eachShipTerm>
+									    	<tr>
+									    		<input type="hidden"  name="otherTermTypeId_o_${rowCount}" value="${eachShipTerm.get("termTypeId")?if_exists}"/>
+									        	<td>
+									          		<input type="text"  name="otherTermDesc" value="${eachShipTerm.get("termTypeDescription")?if_exists}" size="40"/>
+									        	</td>
+								            	<td>
+								                	<input type="text" name="otherTermDays_o_${rowCount}" value="${eachShipTerm.get("termDays")?if_exists}" size="10"/>
+								            	</td>
+								            	<td>
+								                	<input type="text" name="otherTermValue_o_${rowCount}" value="${eachShipTerm.get("termValue")?if_exists}" size="10"/>
+								            	</td>
+								            	<td>
+								            		<select name="otherTermUom_o_${rowCount}">
+								            			<#if eachShipTerm.get("uomId") == "INR">
+								            				<option value="INR" selected>Rupees</option>
+								            			<#else>
+								            				<option value="INR">Rupees</option>
+								            			</#if>
+								            			
+								            		</select>
+								            	</td>
+								            	<td>
+								                	<input type="textarea" name="otherTermDescription_o_${rowCount}" value="${eachShipTerm.get("description")?if_exists}" maxlength="255"/>
+								            	</td>
+									    	</tr>
+									    	<#assign rowCount = rowCount+1>
+								    	</#list>
+								    <#else>
+									    <tr>
+									        <td>
+									         <input type="text"  name="otherTermTypeId_o_0" value="" size="40"/>
+									        </td>
+								            <td>
+								                <input type="text" name="otherTermDays_o_0" value="" size="10"/>
+								            </td>
+								            <td>
+								                <input type="text" name="otherTermValue_o_0" value="" size="10"/>
+								            </td>
+							            	<td>
+							            		<select name="otherTermUom_o_0">
+							            			<option value="INR">Rupees</option>
+							            		</select>
+							            	</td>
+							            	<td>
+							                	<input type="textarea" name="otherTermDescription_o_0" value="" maxlength="255"/>
+							            	</td>
+									    </tr>
+									 </#if> 
+								</table>
+	          				     </td>
+							        </tr>
+						  </table>
+						  </fieldset>
+                        </section>
                 </form>
                 
  <script type="application/javascript">
- 		 $(document).ready(function(){
+ 
+ $(document).ready(function(){
             
-
     $('#addPaymentTerm').click(function () {
-    var table = $("#paymentTermsTable");
-    if (table.find('input:text').length < 24) {
-        var rowLength = table.find('input:text').length;
-        var rowCount = rowLength/3;
-        table.append('<tr><td> <input type="text" size="40" name="paymentTermTypeId_o_'+rowCount+'" value="" /></td><td> <input type="text" size="10" name="paymentTermDays_o_'+rowCount+'" value="" /> </td><td> <input type="text" size="10" name="paymentTermValue_o_'+rowCount+'" value="" /> </td><td><select name="paymentTermUom_o_'+rowCount+'"><option value="INR">Rupees</option><option value="PERCENT">Percent</option></select></td><td><input type="textarea" name="paymentTermDescription_o_'+rowCount+'" value="" maxlength="255"/>	</td></tr>');
-    }
-    $( "input[name*='paymentTermTypeId']" ).autocomplete({ source: paymentTermsJSON });
-});
+	    var table = $("#paymentTermsTable");
+	    if (table.find('input:text').length < 24) {
+	        var rowLength = table.find('input:text').length;
+	        var rowCount = rowLength/3;
+	        table.append('<tr><td> <input type="text" size="40" name="paymentTermTypeId_o_'+rowCount+'" value="" /></td><td> <input type="text" size="10" name="paymentTermDays_o_'+rowCount+'" value="" /> </td><td> <input type="text" size="10" name="paymentTermValue_o_'+rowCount+'" value="" /> </td><td><select name="paymentTermUom_o_'+rowCount+'"><option value="INR">Rupees</option><option value="PERCENT">Percent</option></select></td><td><input type="textarea" name="paymentTermDescription_o_'+rowCount+'" value="" maxlength="255"/>	</td></tr>');
+	    }
+	    $( "input[name*='paymentTermTypeId']" ).autocomplete({ source: paymentTermsJSON });
+	});
 	$('#delPaymentTerm').click(function () {
 	     var table = $("#paymentTermsTable");
 	    if (table.find('input:text').length > 1) {
@@ -683,16 +760,16 @@ function makeDatePicker(fromDateId ,thruDateId){
 	});
 
 	
-	 $('#addDeliveryTerm').click(function () {
-    var table = $("#deliveryTermsTable");
-    if (table.find('input:text').length < 24) {
-        var rowLength = table.find('input:text').length;
-        var rowCount = rowLength/3;
-        table.append('<tr><td> <input type="text" size="40" name="deliveryTermTypeId_o_'+rowCount+'" value="" /></td><td> <input type="text" size="10" name="deliveryTermDays_o_'+rowCount+'" value="" /> </td><td> <input type="text" size="10" name="deliveryTermValue_o_'+rowCount+'" value="" /> </td><td><select name="deliveryTermUom_o_'+rowCount+'"><option value="INR">Rupees</option><option value="PERCENT">Percent</option></select></td><td><input type="textarea" name="deliveryTermDescription_o_'+rowCount+'" value="" maxlength="255"/></td></tr>');
-    }
-    
-    $( "input[name*='deliveryTermTypeId']" ).autocomplete({ source: deliveryTermsJSON });
-});
+	$('#addDeliveryTerm').click(function () {
+	    var table = $("#deliveryTermsTable");
+	    if (table.find('input:text').length < 24) {
+	        var rowLength = table.find('input:text').length;
+	        var rowCount = rowLength/3;
+	        table.append('<tr><td> <input type="text" size="40" name="deliveryTermTypeId_o_'+rowCount+'" value="" /></td><td> <input type="text" size="10" name="deliveryTermDays_o_'+rowCount+'" value="" /> </td><td> <input type="text" size="10" name="deliveryTermValue_o_'+rowCount+'" value="" /> </td><td><select name="deliveryTermUom_o_'+rowCount+'"><option value="INR">Rupees</option><option value="PERCENT">Percent</option></select></td><td><input type="textarea" name="deliveryTermDescription_o_'+rowCount+'" value="" maxlength="255"/></td></tr>');
+	    }
+	    $( "input[name*='deliveryTermTypeId']" ).autocomplete({ source: deliveryTermsJSON });
+	});
+	
 	$('#delDeliveryTerm').click(function () {
 	     var table = $("#deliveryTermsTable");
 	    if (table.find('input:text').length > 1) {
@@ -700,7 +777,24 @@ function makeDatePicker(fromDateId ,thruDateId){
 	    }
 	});
 	
-   });  
+	$('#addOtherTerm').click(function () {
+	    var table = $("#otherTermsTable");
+	    if (table.find('input:text').length < 24) {
+	        var rowLength = table.find('input:text').length;
+	        var rowCount = rowLength/3;
+	        table.append('<tr><td> <input type="text" size="40" name="otherTermTypeId_o_'+rowCount+'" value="" /></td><td> <input type="text" size="10" name="otherTermDays_o_'+rowCount+'" value="" /> </td><td> <input type="text" size="10" name="otherTermValue_o_'+rowCount+'" value="" /> </td><td><select name="otherTermUom_o_'+rowCount+'"><option value="INR">Rupees</option><option value="PERCENT">Percent</option></select></td><td><input type="textarea" name="otherTermDescription_o_'+rowCount+'" value="" maxlength="255"/></td></tr>');
+	    }
+	    $( "input[name*='otherTermTypeId']" ).autocomplete({ source: otherTermsJSON });
+	});
+	
+	$('#delOtherTerm').click(function () {
+	     var table = $("#otherTermsTable");
+	    if (table.find('input:text').length > 1) {
+	        table.find('input:text').last().closest('tr').remove();
+	    }
+	});
+	
+});  
 	         
  </script>               
 			
