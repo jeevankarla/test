@@ -32,8 +32,32 @@ import org.ofbiz.party.party.PartyHelper;
 
 
 dctx = dispatcher.getDispatchContext();
+	fromDate = UtilDateTime.getDayStart(UtilDateTime.nowTimestamp());
+	def sdf = new SimpleDateFormat("yyyy-mm-dd");
+	try {
+		if (parameters.custRequestDate) {
+			fromDate = UtilDateTime.getDayStart(new java.sql.Timestamp(sdf.parse(parameters.custRequestDate).getTime()));
+		}
+	} catch (ParseException e) {
+		Debug.logError(e, "Cannot parse date string: " + e, "");
+		context.errorMessage = "Cannot parse date string: " + e;
+		return;
+	}
+
 
 conditionList = [];
+if(UtilValidate.isNotEmpty(parameters.custRequestId)){
+	conditionList.add(EntityCondition.makeCondition("custRequestId", EntityOperator.EQUALS, parameters.custRequestId));
+}
+if(UtilValidate.isNotEmpty(parameters.productId)){
+	conditionList.add(EntityCondition.makeCondition("productId", EntityOperator.EQUALS, parameters.productId));
+}
+if(UtilValidate.isNotEmpty(parameters.partyId)){
+	conditionList.add(EntityCondition.makeCondition("fromPartyId", EntityOperator.EQUALS, parameters.partyId));
+}
+if(UtilValidate.isNotEmpty(parameters.custRequestDate)){
+	conditionList.add(EntityCondition.makeCondition("custRequestDate", EntityOperator.EQUALS, fromDate));
+}
 conditionList.add(EntityCondition.makeCondition("statusId", EntityOperator.EQUALS, "CRQ_SUBMITTED"));
 conditionList.add(EntityCondition.makeCondition("itemStatusId", EntityOperator.IN, UtilMisc.toList("CRQ_INPROCESS","CRQ_SUBMITTED")));
 conditionList.add(EntityCondition.makeCondition("custRequestTypeId", EntityOperator.EQUALS, "PRODUCT_REQUIREMENT"));
@@ -80,6 +104,7 @@ productIds.each{eachProd ->
 custRequestItemsList = [];
 custRequestItems.each{ eachItem ->
 	tempMap = [:];
+	
 	tempMap.putAt("custRequestId", eachItem.custRequestId);
 	tempMap.putAt("custRequestItemSeqId", eachItem.custRequestItemSeqId);
 	tempMap.putAt("custRequestDate", eachItem.custRequestDate);
@@ -106,6 +131,11 @@ custRequestItems.each{ eachItem ->
 	}
 	tempMap.putAt("QOH", invAvail);
 	tempMap.putAt("issuedQty", issuedQty);
+	
 	custRequestItemsList.add(tempMap);
 }
 context.custRequestItemsList = custRequestItemsList;
+
+
+
+
