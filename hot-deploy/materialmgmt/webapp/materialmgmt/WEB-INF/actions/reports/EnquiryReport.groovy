@@ -49,7 +49,7 @@ if(UtilValidate.isNotEmpty(productDetails)){
   if(UtilValidate.isNotEmpty(uomId)){
 	  uomDesc = delegator.findList("Uom",EntityCondition.makeCondition("uomId", EntityOperator.EQUALS , uomId)  , null, null, null, false );
 	  uomDesc=EntityUtil.getFirst(uomDesc);
-	  enquiryMap.put("unit",uomDesc.abbreviation);
+	  enquiryMap.put("unit",uomDesc.description);
 	  
   }
 }
@@ -60,9 +60,9 @@ partyIds = EntityUtil.getFieldListFromEntityList(partyIdsList, "partyId", true);
 if(UtilValidate.isNotEmpty(partyIds)){
 	partyIds.each{eachPartyId->
 		partyIdsDetailsMap=[:];	
-		partyIdsDetailsMap["partyName"] = org.ofbiz.party.party.PartyHelper.getPartyName(delegator, eachPartyId, false);
-		partyIdsDetailsMap["contactNumber"]="";	
 		partyIdsDetailsMap.put("partyId",eachPartyId);
+		partyIdsDetailsMap["partyName"] = org.ofbiz.party.party.PartyHelper.getPartyName(delegator, eachPartyId, false);
+		partyIdsDetailsMap["contactNumber"]="";			
 		partyContactDetails=dispatcher.runSync("getPartyTelephone", [partyId: eachPartyId, userLogin: userLogin]);
 		if(UtilValidate.isNotEmpty(partyContactDetails)){
 			if(UtilValidate.isNotEmpty(partyContactDetails.contactNumber)){

@@ -103,11 +103,13 @@ if(UtilValidate.isNotEmpty(custReqDetails)){
 			           productUomDetails=EntityUtil.getFirst(productDetails);
 			           if(UtilValidate.isNotEmpty(productUomDetails)){
 				            uomId=productUomDetails.quantityUomId;
-				            if(UtilValidate.isNotEmpty(uomId)){
-				                    uomDesc = delegator.findList("Uom",EntityCondition.makeCondition("uomId", EntityOperator.EQUALS , uomId)  , null, null, null, false );
-				                    uomDesc=EntityUtil.getFirst(uomDesc);
-				                    enquiryMap.put("unit",uomDesc.abbreviation);
-				             }
+				           if(UtilValidate.isNotEmpty(uomId)){
+	                             uomDesc = delegator.findList("Uom",EntityCondition.makeCondition("uomId", EntityOperator.EQUALS , uomId)  , null, null, null, false );
+	                             uomDesc=EntityUtil.getFirst(uomDesc);
+	                             unit=uomDesc.description;
+	                             enquiryMap.put("unit",unit);
+	  
+                             }
 			            }
 			            if(UtilValidate.isNotEmpty(productDetails)){
 				               productDetails=EntityUtil.getFirst(productDetails);
@@ -176,10 +178,12 @@ if(UtilValidate.isNotEmpty(custReqDetails)){
 			   if(UtilValidate.isNotEmpty(productUomDetails)){
 				     uomId=productUomDetails.quantityUomId;
 				     if(UtilValidate.isNotEmpty(uomId)){
-				        uomDesc = delegator.findList("Uom",EntityCondition.makeCondition("uomId", EntityOperator.EQUALS , uomId)  , null, null, null, false );
-				        uomDesc=EntityUtil.getFirst(uomDesc);
-				        enquiryMap.put("unit",uomDesc.abbreviation);
-				      }
+	                             uomDesc = delegator.findList("Uom",EntityCondition.makeCondition("uomId", EntityOperator.EQUALS , uomId)  , null, null, null, false );
+	                             uomDesc=EntityUtil.getFirst(uomDesc);
+								 unit=uomDesc.description;
+	                             enquiryMap.put("unit",unit);
+	  
+                       }
 			   }
 			  if(UtilValidate.isNotEmpty(productDetails)){
 				   productDetails=EntityUtil.getFirst(productDetails);

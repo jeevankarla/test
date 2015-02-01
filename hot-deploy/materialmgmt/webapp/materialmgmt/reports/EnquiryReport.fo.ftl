@@ -32,9 +32,9 @@ under the License.
 			<fo:page-sequence master-reference="main">
 			    <fo:static-content font-size="13pt" font-family="Courier,monospace"  flow-name="xsl-region-before" font-weight="bold">
 				    <fo:block  keep-together="always" text-align="center" font-weight = "bold" font-family="Courier,monospace" white-space-collapse="false">${uiLabelMap.KMFDairyHeader}</fo:block>
-				    <fo:block  keep-together="always" text-align="center" font-family="Courier,monospace" white-space-collapse="false" font-weight="bold">${uiLabelMap.KMFDairySubHeader}</fo:block>
-				    <fo:block text-align="center" keep-together="always">                                  ENQUIRY REPORT                                                 </fo:block>				    
+				    <fo:block  keep-together="always" text-align="center" font-family="Courier,monospace" white-space-collapse="false" font-weight="bold">${uiLabelMap.KMFDairySubHeader}</fo:block>				   
 				    <fo:block text-align="center" keep-together="always"  >&#160;---------------------------------------------------------------------------</fo:block>
+			        <fo:block text-align="center" keep-together="always">                                  ENQUIRY REPORT                                                 </fo:block>				    
 			        </fo:static-content>			        	
 			        <fo:flow flow-name="xsl-region-body"   font-family="Courier,monospace">				        
 				    <fo:block text-align="left" keep-together="always" white-space-collapse="false">ENQUIRY NO.: ${parameters.issueToCustReqId}                                             ENQUIRY DATE: ${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(custReqDate, "dd-MMM-yyyy")}</fo:block>				   
@@ -45,7 +45,7 @@ under the License.
 	                <fo:block  font-size="12pt"  white-space-collapse="false">&#160; </fo:block>        
 	                <fo:block  font-size="12pt"   white-space-collapse="false"  text-align="left"> Terms and Conditions :</fo:block>     
 	                <fo:block  font-size="12pt"   white-space-collapse="false"  text-align="left">1.Mother Dairy is not responsible for the premature opening of the quatations.When they  </fo:block> 
-	                <fo:block  font-size="12pt"  white-space-collapse="false">are not properly sealed subscribed.</fo:block>        
+	                <fo:block  font-size="12pt"  white-space-collapse="false">are not properly sealed and superscribed.</fo:block>        
 	                <fo:block  font-size="12pt"   white-space-collapse="false"  text-align="left">2.All statutory taxes,duties,levies and other expenditure, should be clearly indicated with breakup.</fo:block>
 	                <fo:block  font-size="12pt"   white-space-collapse="false"  text-align="left">3.The price should be quoted on F.O.R Mother Dairy basis.  </fo:block>
 	                <fo:block  font-size="12pt"   white-space-collapse="false"  text-align="left">4.Please mention your TIN and CST No.</fo:block>

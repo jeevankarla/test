@@ -120,7 +120,7 @@ under the License.
 									   <fo:block text-align="left"  >${enquiryMap.get("description")?if_exists}</fo:block>
 								   </fo:table-cell>
 								   <fo:table-cell >
-									  <fo:block text-align="center" keep-together="always" >${enquiryMap.get("quantityUomId")?if_exists}</fo:block>
+									  <fo:block text-align="center" keep-together="always" >${enquiryMap.get("unit")?if_exists}</fo:block>
 								   </fo:table-cell>
 								   <fo:table-cell >
 									  <fo:block text-align="center" keep-together="always" >${enquiryMap.get("requrdqty")?if_exists}</fo:block>
@@ -134,7 +134,7 @@ under the License.
 	               <fo:block linefeed-treatment="preserve">&#xA;</fo:block>
 	               <fo:block  font-size="12pt" keep-together="always"  white-space-collapse="false"  text-align="left">&#160;Terms and Conditions :</fo:block>     
 	               <fo:block  font-size="12pt" keep-together="always"  white-space-collapse="false"  text-align="left">&#160;1.Mother Dairy is not responsible for the premature opening of the quatations.When they are not properly </fo:block> 
-	               <fo:block  font-size="12pt" keep-together="always"  white-space-collapse="false"  text-align="left">&#160;sealed subscribed.</fo:block>
+	               <fo:block  font-size="12pt" keep-together="always"  white-space-collapse="false"  text-align="left">&#160;sealed and superscribed.</fo:block>
 	               <fo:block  font-size="12pt" keep-together="always"  white-space-collapse="false"  text-align="left">&#160;2.All statutory taxes,duties,levies and other expenditure, should be clearly indicated with breakup.</fo:block>
 	               <fo:block  font-size="12pt" keep-together="always"  white-space-collapse="false"  text-align="left">&#160;3.The price should be quoted on F.O.R Mother Dairy basis.  </fo:block>
 	               <fo:block  font-size="12pt" keep-together="always"  white-space-collapse="false"  text-align="left">&#160;4.Please mention your TIN and CST No.</fo:block>
