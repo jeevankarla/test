@@ -129,8 +129,14 @@ deliveryTerms.each{ eachTerm ->
 context.paymentTermsJSON =paymentTermsJSON;
 context.deliveryTermsJSON =deliveryTermsJSON;
 // orderTypes here
-orderTypes = delegator.findByAnd("OrderType",UtilMisc.toMap("parentTypeId","PURCHASE_ORDER"));
-context.orderTypes =orderTypes;
+purchaseTypeFlag = parameters.purchaseTypeFlag;
+if(UtilValidate.isNotEmpty(purchaseTypeFlag) && purchaseTypeFlag == "contractPurchase"){
+	orderTypes = delegator.findByAnd("OrderType",UtilMisc.toMap("parentTypeId","PURCHASE_CONTRACT"));
+	context.orderTypes =orderTypes;
+}else{
+	orderTypes = delegator.findByAnd("OrderType",UtilMisc.toMap("parentTypeId","PURCHASE_ORDER"));
+	context.orderTypes =orderTypes;
+}
 
 productStoreId =PurchaseStoreServices.getPurchaseFactoryStore(delegator).get("factoryStoreId");
 context.productStoreId = productStoreId;

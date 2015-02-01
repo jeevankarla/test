@@ -46,6 +46,7 @@
                  <set field="parameters.roleTypeId" value="SUPPLIER"/>
                  <set field="changeFlag" value="PurchaseOrder"/> 
                   <set field="parameters.changeFlag" value="PurchaseOrder"/> 
+				 <set field="purchaseTypeFlag" from-field="parameters.purchaseTypeFlag"/>
                 <script location="component://byproducts/webapp/byproducts/WEB-INF/actions/facility/enablePartyAutoComplete.groovy"/>
                 <script location="component://materialmgmt/webapp/materialmgmt/WEB-INF/actions/orgnigationDept.groovy"/>
                  <script location="component://materialmgmt/webapp/materialmgmt/WEB-INF/actions/purchases/PurchaseEntryFormNew.groovy"/>
@@ -113,6 +114,9 @@
                         <section>
                             <widgets>
                                <link target="CreateMPO" text="Create PO" style="buttontext"/>
+                               <link target="CreateMPO" text="Create Rate Contract PO" style="buttontext">
+									<parameter param-name="purchaseTypeFlag" value="contractPurchase"/>
+							   </link>
                                 <decorator-screen name="FindScreenDecorator" location="component://common/widget/CommonScreens.xml">
                                     <decorator-section name="search-options">
                             			<include-form name="FindMaterialPurchaseOrder" location="component://materialmgmt/widget/MaterialPurchaseForms.xml"/>
