@@ -3,7 +3,10 @@
 <link href="<@ofbizContentUrl>/images/jquery/plugins/steps/jquery.steps.css</@ofbizContentUrl>" rel="stylesheet">
 <script type="text/javascript" src="<@ofbizContentUrl>/images/jquery/plugins/steps/jquery.steps.js</@ofbizContentUrl>"></script>
 -->
-
+<link rel="stylesheet" type="text/css" href="<@ofbizContentUrl>/images/jquery/plugins/jquery.flexselect-0.5.3/flexselect.css</@ofbizContentUrl>">
+<script language="javascript" type="text/javascript" src="<@ofbizContentUrl>/images/jquery/plugins/qtip/jquery.qtip.js</@ofbizContentUrl>"></script>
+<script type="text/javascript" language="javascript" src="<@ofbizContentUrl>/images/jquery/plugins/jquery.flexselect-0.5.3/liquidmetal.js</@ofbizContentUrl>"></script>
+<script type="text/javascript" language="javascript" src="<@ofbizContentUrl>/images/jquery/plugins/jquery.flexselect-0.5.3/jquery.flexselect.js</@ofbizContentUrl>"></script>
 <script type="application/javascript">
 
 		
@@ -168,7 +171,9 @@ function makeDatePicker(fromDateId ,thruDateId){
 		$( "input[name*='otherTermTypeId']" ).autocomplete({ source: otherTermsJSON });
 		$('#ui-datepicker-div').css('clip', 'auto');
 		hideExtPO();	
-		
+		getPayTermDes();
+		getDelTermDes();
+		getOtherTermDes();
 	});
 	function hideExtPO(){
 		var orderTypeId = $("#orderTypeId").val();
@@ -188,6 +193,53 @@ function makeDatePicker(fromDateId ,thruDateId){
 	   supplierName = partyNameObj[value];
 	   $("#supplierName").html("<h4>"+supplierName+"</h4>");
 	}    
+	    
+	 var payTermDes;
+	 var delTermDes;
+	 var otherTermDes;
+	 var paymentTerms = ${StringUtil.wrapString(paymentTermsJSON!'[]')};
+	 var deliveryTerms = ${StringUtil.wrapString(deliveryTermsJSON!'[]')};
+	 var otherTerms = ${StringUtil.wrapString(otherTermsJSON!'[]')};
+	 function getPayTermDes(){
+		  $.each(paymentTerms, function(key, val){
+		    $("#payTermDes").append('<option value="' + val.value + '">' + val.label + " [" + val.value + "]" + '</option>');
+		  });
+		  $("#payTermDes").flexselect({
+		  								preSelection: false,
+		  								allowClear: false,
+		  								allowMismatch:false,
+	  								    allowEmpty:true,
+	  								    allowNewElements:false,
+	  								    placeholder: "select",
+	  								    hideDropdownOnEmptyInput: false});	
+	
+	}	 
+	function getDelTermDes(){
+		  $.each(deliveryTerms, function(key, val){
+		    $("#delTermDes").append('<option value="' + val.value + '">' + val.label + " [" + val.value + "]" + '</option>');
+		  });
+		  $("#delTermDes").flexselect({
+		  								preSelection: false,
+		  								allowClear: false,
+		  								allowMismatch:false,
+	  								allowEmpty:true,
+	  								allowNewElements:false,
+	  								placeholder: "select",
+	  								hideDropdownOnEmptyInput: false});	
+	}  
+	function getOtherTermDes(){
+		  $.each(otherTerms, function(key, val){
+		    $("#otherTermDes").append('<option value="' + val.value + '">' + val.label + " [" + val.value + "]" + '</option>');
+		  });
+		  $("#otherTermDes").flexselect({
+		  								preSelection: false,
+		  								allowClear: false,
+		  								allowMismatch:false,
+	  								allowEmpty:true,
+	  								allowNewElements:false,
+	  								placeholder: "select",
+	  								hideDropdownOnEmptyInput: false});	
+	}  
 	    
 </script>
 	
@@ -554,7 +606,7 @@ function makeDatePicker(fromDateId ,thruDateId){
 								    	<#else>
 								    		<tr>
 								        	<td>
-								          		<input type="text"  name="paymentTermTypeId_o_0" value="" size="40"/>
+								        		<select id='payTermDes' name="paymentTermTypeId_o_0" class='flexselect' ></select>
 								        	</td>
 							            	<td>
 							                	<input type="text" name="paymentTermDays_o_0" value=""  size="10"/>
@@ -638,7 +690,7 @@ function makeDatePicker(fromDateId ,thruDateId){
 								    <#else>
 									    <tr>
 									        <td>
-									         <input type="text"  name="deliveryTermTypeId_o_0" value="" size="40"/>
+								        		<select id='delTermDes' name="deliveryTermTypeId_o_0" class='flexselect' ></select>
 									        </td>
 								            <td>
 								                <input type="text" name="deliveryTermDays_o_0" value="" size="10"/>
@@ -720,7 +772,7 @@ function makeDatePicker(fromDateId ,thruDateId){
 								    <#else>
 									    <tr>
 									        <td>
-									         <input type="text"  name="otherTermTypeId_o_0" value="" size="40"/>
+								        		<select id='otherTermDes' name="otherTermTypeId_o_0" class='flexselect' ></select>
 									        </td>
 								            <td>
 								                <input type="text" name="otherTermDays_o_0" value="" size="10"/>
@@ -749,16 +801,29 @@ function makeDatePicker(fromDateId ,thruDateId){
  <script type="application/javascript">
  
  $(document).ready(function(){
-            
+    getPayTermDes();
+    getDelTermDes();
+    getOtherTermDes();
     $('#addPaymentTerm').click(function () {
+        getPayTermDes();
 	    var table = $("#paymentTermsTable");
 	    if (table.find('input:text').length < 24) {
-	        var rowLength = table.find('input:text').length;
-	        var rowCount = rowLength/3;
-	        table.append('<tr><td> <input type="text" size="40" name="paymentTermTypeId_o_'+rowCount+'" value="" /></td><td> <input type="text" size="10" name="paymentTermDays_o_'+rowCount+'" value="" /> </td><td> <input type="text" size="10" name="paymentTermValue_o_'+rowCount+'" value="" /> </td><td><select name="paymentTermUom_o_'+rowCount+'"><option value="INR">Rupees</option><option value="PERCENT">Percent</option></select></td><td><input type="textarea" name="paymentTermDescription_o_'+rowCount+'" value="" maxlength="255"/>	</td></tr>');
-	    }
-	    $( "input[name*='paymentTermTypeId']" ).autocomplete({ source: paymentTermsJSON });
-	});
+        var rowLength = table.find('input:text').length;
+        var rowCount = rowLength/3;
+        table.append('<tr><td> <select id ="payTermDes" name="paymentTermTypeId_o_'+rowCount+'" class = "flexselect" /></td><td> <input type="text" size="10" name="paymentTermDays_o_'+rowCount+'" value="" /> </td><td> <input type="text" size="10" name="paymentTermValue_o_'+rowCount+'" value="" /> </td><td><select name="paymentTermUom_o_'+rowCount+'"><option value="INR">Rupees</option><option value="PERCENT">Percent</option></select></td><td><input type="textarea" name="paymentTermDescription_o_'+rowCount+'" value="" maxlength="255"/>	</td></tr>');
+    }
+  	$.each(paymentTerms, function(key, val){
+    	$("select[name*='paymentTermTypeId']").append('<option value="' + val.value + '">' + val.label + " [" + val.value + "]" + '</option>');
+  	});
+    $("select[name*='paymentTermTypeId']").flexselect({
+		  								preSelection: false,
+		  								allowClear: false,
+		  								allowMismatch:false,
+	  								    allowEmpty:true,
+	  								    allowNewElements:false,
+	  								    placeholder: "select",
+	  								    hideDropdownOnEmptyInput: false});	
+});
 	$('#delPaymentTerm').click(function () {
 	     var table = $("#paymentTermsTable");
 	    if (table.find('input:text').length > 1) {
@@ -767,14 +832,25 @@ function makeDatePicker(fromDateId ,thruDateId){
 	});
 
 	
-	$('#addDeliveryTerm').click(function () {
-	    var table = $("#deliveryTermsTable");
-	    if (table.find('input:text').length < 24) {
-	        var rowLength = table.find('input:text').length;
-	        var rowCount = rowLength/3;
-	        table.append('<tr><td> <input type="text" size="40" name="deliveryTermTypeId_o_'+rowCount+'" value="" /></td><td> <input type="text" size="10" name="deliveryTermDays_o_'+rowCount+'" value="" /> </td><td> <input type="text" size="10" name="deliveryTermValue_o_'+rowCount+'" value="" /> </td><td><select name="deliveryTermUom_o_'+rowCount+'"><option value="INR">Rupees</option><option value="PERCENT">Percent</option></select></td><td><input type="textarea" name="deliveryTermDescription_o_'+rowCount+'" value="" maxlength="255"/></td></tr>');
-	    }
-	    $( "input[name*='deliveryTermTypeId']" ).autocomplete({ source: deliveryTermsJSON });
+	 $('#addDeliveryTerm').click(function () {
+	 getDelTermDes();
+    var table = $("#deliveryTermsTable");
+    if (table.find('input:text').length < 24) {
+        var rowLength = table.find('input:text').length;
+        var rowCount = rowLength/3;
+        table.append('<tr><td> <select id ="delTermDes" name="deliveryTermTypeId_o_'+rowCount+'" class = "flexselect" /></td><td> <input type="text" size="10" name="deliveryTermDays_o_'+rowCount+'" value="" /> </td><td> <input type="text" size="10" name="deliveryTermValue_o_'+rowCount+'" value="" /> </td><td><select name="deliveryTermUom_o_'+rowCount+'"><option value="INR">Rupees</option><option value="PERCENT">Percent</option></select></td><td><input type="textarea" name="deliveryTermDescription_o_'+rowCount+'" value="" maxlength="255"/></td></tr>');
+    }
+    $.each(deliveryTerms, function(key, val){
+    	$("select[name*='deliveryTermTypeId']").append('<option value="' + val.value + '">' + val.label + " [" + val.value + "]" + '</option>');
+  	});
+    $("select[name*='deliveryTermTypeId']").flexselect({
+		  								preSelection: false,
+		  								allowClear: false,
+		  								allowMismatch:false,
+	  								    allowEmpty:true,
+	  								    allowNewElements:false,
+	  								    placeholder: "select",
+	  								    hideDropdownOnEmptyInput: false});
 	});
 	
 	$('#delDeliveryTerm').click(function () {
@@ -785,13 +861,24 @@ function makeDatePicker(fromDateId ,thruDateId){
 	});
 	
 	$('#addOtherTerm').click(function () {
+		getOtherTermDes();
 	    var table = $("#otherTermsTable");
 	    if (table.find('input:text').length < 24) {
 	        var rowLength = table.find('input:text').length;
 	        var rowCount = rowLength/3;
-	        table.append('<tr><td> <input type="text" size="40" name="otherTermTypeId_o_'+rowCount+'" value="" /></td><td> <input type="text" size="10" name="otherTermDays_o_'+rowCount+'" value="" /> </td><td> <input type="text" size="10" name="otherTermValue_o_'+rowCount+'" value="" /> </td><td><select name="otherTermUom_o_'+rowCount+'"><option value="INR">Rupees</option><option value="PERCENT">Percent</option></select></td><td><input type="textarea" name="otherTermDescription_o_'+rowCount+'" value="" maxlength="255"/></td></tr>');
+	        table.append('<tr><td> <select id ="otherTermDes" name="otherTermTypeId_o_'+rowCount+'" class = "flexselect" /></td><td> <input type="text" size="10" name="otherTermDays_o_'+rowCount+'" value="" /> </td><td> <input type="text" size="10" name="otherTermValue_o_'+rowCount+'" value="" /> </td><td><select name="otherTermUom_o_'+rowCount+'"><option value="INR">Rupees</option><option value="PERCENT">Percent</option></select></td><td><input type="textarea" name="otherTermDescription_o_'+rowCount+'" value="" maxlength="255"/></td></tr>');
 	    }
-	    $( "input[name*='otherTermTypeId']" ).autocomplete({ source: otherTermsJSON });
+	    $.each(otherTerms, function(key, val){
+    		$("select[name*='otherTermTypeId']").append('<option value="' + val.value + '">' + val.label + " [" + val.value + "]" + '</option>');
+  		});
+   		 $("select[name*='otherTermTypeId']").flexselect({
+		  								preSelection: false,
+		  								allowClear: false,
+		  								allowMismatch:false,
+	  								    allowEmpty:true,
+	  								    allowNewElements:false,
+	  								    placeholder: "select",
+	  								    hideDropdownOnEmptyInput: false});
 	});
 	
 	$('#delOtherTerm').click(function () {
