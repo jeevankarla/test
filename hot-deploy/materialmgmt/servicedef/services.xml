@@ -39,6 +39,21 @@
             <exclude field-name="lastModifiedByUserLogin"/>
         </auto-attributes>
     </service>
+   <service name="cancelPOStatus" engine="java" auth="true"
+            location="in.vasista.vbiz.purchase.MaterialPurchaseServices" invoke="cancelPOStatus">
+            <!-- setOrderStatus -->
+        <description>Cancel PO and change Quote and Enquiry status if exists</description>
+        
+        <attribute name="orderId" type="String" mode="IN"/>
+        <attribute name="statusId" type="String" mode="IN"/>
+        <attribute name="setItemStatus" type="String" mode="IN" optional="true"/>
+        <attribute name="oldStatusId" type="String" mode="OUT" optional="false"/>
+        <attribute name="orderStatusId" type="String" mode="OUT" optional="true"/>
+        <attribute name="orderTypeId" type="String" mode="OUT" optional="true"/>
+        <attribute name="needsInventoryIssuance" type="String" mode="OUT" optional="true"/>
+        <attribute name="grandTotal" type="BigDecimal" mode="OUT" optional="true"/>
+        <attribute name="changeReason" type="String" mode="IN" optional="true"/>
+    </service> 
    <service name="emailRequirement" engine="java" location="in.vasista.vbiz.purchase.MaterialRequestServices" invoke="emailRequirement">
         <description>Requirement Interface</description>
         <attribute name="requirementId" mode="IN" type="String"/>

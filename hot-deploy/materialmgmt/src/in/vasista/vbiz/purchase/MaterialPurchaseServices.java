@@ -56,7 +56,7 @@ import org.ofbiz.service.GenericServiceException;
 import org.ofbiz.service.LocalDispatcher;
 import org.ofbiz.service.ServiceUtil;
 import org.ofbiz.security.Security;
-
+import org.ofbiz.order.order.OrderServices;
 import in.vasista.vbiz.byproducts.ByProductNetworkServices;
 import in.vasista.vbiz.byproducts.ByProductServices;
 
@@ -3025,5 +3025,87 @@ public class MaterialPurchaseServices {
 	  	}
 	  	request.setAttribute("_EVENT_MESSAGE_", "PO Number :"+orderId +" Linked With GRN Shipment Number"+shipmentId+" Successfully !");
 	  	return "success";
+	}
+	
+	public static Map<String, Object> cancelPOStatus(DispatchContext ctx,Map<String, ? extends Object> context) {
+		Delegator delegator = ctx.getDelegator();
+		LocalDispatcher dispatcher = ctx.getDispatcher();
+        
+		String statusId = (String) context.get("statusId");
+		String orderId = (String) context.get("orderId");
+		String changeReason = (String) context.get("changeReason");
+		GenericValue userLogin = (GenericValue) context.get("userLogin");
+		Map result = ServiceUtil.returnSuccess();
+		try{
+			
+			GenericValue orderHeader = delegator.findOne("OrderHeader", UtilMisc.toMap("orderId", orderId), false);
+			
+			if(UtilValidate.isEmpty(orderHeader)){
+				Debug.logError("Order doesn't exists with Id : "+orderId , module);
+  	 			return ServiceUtil.returnError("Order doesn't exists with Id : "+orderId);
+			}
+			
+			Map statusCtx = FastMap.newInstance();
+			statusCtx.put("statusId", statusId);
+			statusCtx.put("orderId", orderId);
+			statusCtx.put("userLogin", userLogin);
+			Map resultCtx = OrderServices.setOrderStatus(ctx, statusCtx);
+			if (ServiceUtil.isError(resultCtx)) {
+				Debug.logError("Order set status failed for orderId: " + orderId, module);
+				return resultCtx;
+			}
+			String oldStatusId = (String)resultCtx.get("oldStatusId");
+			result.put("oldStatusId", oldStatusId);
+			List<GenericValue> orderItems = delegator.findList("OrderItem", EntityCondition.makeCondition("orderId", EntityOperator.EQUALS, orderId), UtilMisc.toSet("quoteId"), null, null, false);
+			
+			List<String> quoteIds = EntityUtil.getFieldListFromEntityList(orderItems, "quoteId", true);
+			
+			if(UtilValidate.isNotEmpty(quoteIds)){
+
+				String quoteId = (String)quoteIds.get(0);
+				GenericValue quote = delegator.findOne("Quote", UtilMisc.toMap("quoteId", quoteId), false);
+				List<GenericValue> quoteItems = delegator.findList("QuoteItem", EntityCondition.makeCondition("quoteId", EntityOperator.EQUALS, quoteId), null, null, null, false);
+				
+				boolean quoteStatusChange = Boolean.FALSE; 
+				for(GenericValue quoteItem : quoteItems){
+					String itemStatusId = quoteItem.getString("statusId");
+					
+					if(itemStatusId.equals("QTITM_ORDERED")){
+						Map inputMap = FastMap.newInstance();
+			        	inputMap.put("userLogin", userLogin);
+			        	inputMap.put("quoteId", quoteItem.getString("quoteId"));
+			        	inputMap.put("quoteItemSeqId", quoteItem.getString("quoteItemSeqId"));
+			        	inputMap.put("statusId", "QTITM_QUALIFIED");
+			        	
+			        	Map statusResult = dispatcher.runSync("setQuoteAndItemStatus", inputMap);
+			        	if(ServiceUtil.isError(statusResult)){
+			        		Debug.logError("Error updating QuoteStatus", module);
+			  	  			return ServiceUtil.returnError("Error updating QuoteStatus");
+			        	}
+			        	quoteStatusChange = Boolean.TRUE;
+					}
+					
+				}
+				if(quoteStatusChange){
+					Map inputMap = FastMap.newInstance();
+		        	inputMap.put("userLogin", userLogin);
+		        	inputMap.put("quoteId", quoteId);
+		        	inputMap.put("statusId", "QUO_ACCEPTED");
+		        	
+		        	Map statusResult = dispatcher.runSync("setQuoteAndItemStatus", inputMap);
+		        	if(ServiceUtil.isError(statusResult)){
+		        		Debug.logError("Error updating QuoteStatus", module);
+		  	  			return ServiceUtil.returnError("Error updating QuoteStatus");
+		        	}
+				}
+				
+			}
+			
+		} catch (Exception e) {
+			// TODO: handle exception
+			Debug.logError(e, module);
+			return ServiceUtil.returnError(e.getMessage());
+		}
+		return result;
 	}
 }

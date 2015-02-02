@@ -529,6 +529,11 @@
        <response name="success" type="view" value="FindMaterialIssuance"/>
        <response name="error" type="view" value="FindMaterialIssuance"/>
      </request-map>
+     <request-map uri="FindMaterialIssuanceNew">
+       <security https="true" auth="true"/>
+       <response name="success" type="view" value="FindMaterialIssuanceNew"/>
+       <response name="error" type="view" value="FindMaterialIssuanceNew"/>
+     </request-map>
      
       <request-map uri="FindInterUnitPurchase">
         <security https="true" auth="true"/>
@@ -643,7 +648,7 @@
     </request-map>
     <request-map uri="CancelOrder">
         <security https="true" auth="true"/>
-        <event type="service" invoke="ChangeOrderStatus"/>
+        <event type="service" invoke="cancelPOStatus"/>
         <response name="success" type="view" value="FindMaterialPO"/>
         <response name="error" type="view" value="FindMaterialPO"/>
     </request-map>
@@ -1020,6 +1025,7 @@
     
 	<!-- Issuance and Receipts  -->
 	<view-map name="FindMaterialIssuance" type="screen" page="component://materialmgmt/widget/MaterialRequestScreens.xml#FindMaterialIssuance"/>
+	<view-map name="FindMaterialIssuanceNew" type="screen" page="component://materialmgmt/widget/MaterialRequestScreens.xml#FindMaterialIssuanceNew"/>
 	<view-map name="MaterialForQCApproval" type="screen" page="component://materialmgmt/widget/MaterialPurchaseScreens.xml#MaterialForQCApproval"/>
 	<view-map name="FindGRNReceipts" type="screen" page="component://materialmgmt/widget/MaterialPurchaseScreens.xml#FindGRNReceipts"/>
 	<view-map name="FindGRNShipments" type="screen" page="component://materialmgmt/widget/MaterialPurchaseScreens.xml#FindGRNShipments"/>

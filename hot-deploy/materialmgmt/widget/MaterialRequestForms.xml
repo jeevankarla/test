@@ -159,6 +159,56 @@
         <field name="issuedByUserLoginId" title="Issued By"><display/></field>
         
     </form>
+    
+    <form name="FindMaterialIssuanceNew" target="FindMaterialIssuanceNew" title="" type="single" default-map-name="parameters"
+        header-row-style="header-row" default-table-style="basic-table">
+        <field name="shipmentId" title="Issuance Id"><text-find/></field>
+        <field name="custRequestId" title="${uiLabelMap.MaterialMangement_CustRequestId}"><text-find/></field>
+        <field name="custRequestName" title="${uiLabelMap.MaterialMangement_CustRequestName}"><text-find/></field>
+        <field name="fromPartyId" title="${uiLabelMap.MaterialMangement_CustRequestFromPartyId}"><lookup target-form-name="LookupPartyName"/></field>
+ 		<field name="custRequestDate" title="${uiLabelMap.MaterialMangement_CustRequestDate}"><date-find/></field>
+ 		<field name="issueDate" title="${uiLabelMap.MaterialMangement_IssuedDate}"><date-find/></field>
+        <field name="submitButton" title="${uiLabelMap.CommonFind}" widget-style="smallSubmit">
+            <submit button-type="button"/>
+        </field>
+        <field name="noConditionFind"><hidden value="Y"/><!-- if this isn't there then with all fields empty no query will be done --></field>
+    </form>
+	
+    <form name="ListMaterialIssuanceNew" type="list" extends="ListIssuanceListNew" list-name="listIt">
+        <actions>
+          <service service-name="performFind" result-map="result" result-map-list="listIt">
+            <field-map field-name="inputFields" from-field="parameters"/>
+            <field-map field-name="entityName" value="IssuanceAndShipmentAndCustRequest"/>
+            <field-map field-name="orderBy" value="-issueDate"/>
+            <field-map field-name="viewIndex" from-field="viewIndex"/>
+            <field-map field-name="viewSize" from-field="viewSize"/>
+          </service>
+        </actions>
+    </form>
+
+    <form name="ListIssuanceListNew" type="list" use-row-submit="true" list-name="listIt" title="List of customer requests"
+        odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
+        <field name="itemIssuanceId" title="Issuance Id"><display/></field>
+        <field name="custRequestId" title="${uiLabelMap.MaterialMangement_CustRequestId}">
+			<display/>
+        </field>
+        <field name="custRequestItemSeqId" title="Indent Item No">
+			<display/>
+        </field>
+        <field name="custRequestDate" title="${uiLabelMap.MaterialMangement_CustRequestDate}"><display description="${groovy:org.ofbiz.base.util.UtilDateTime.toDateString(custRequestDate,&quot;dd/MM/yyyy&quot;)}"/></field>
+        <field name="fromPartyId" title="${uiLabelMap.MaterialMangement_CustRequestFromPartyId}">
+        	<display-entity entity-name="PartyNameView" key-field-name="partyId" description="${firstName} ${middleName} ${lastName} ${groupName}"/>
+        </field>
+        <field name="custRequestName" title="${uiLabelMap.MaterialMangement_CustRequestName}"><display/></field>
+        <field name="productId" title="${uiLabelMap.MaterialMangement_ProductId} - ${uiLabelMap.MaterialMangement_ProductName}">
+        	<display-entity entity-name="Product" description="${productId} - ${description}"/>
+        </field>
+        <field name="quantity" title="Issued Quantity"><display/></field>
+        <field name="issueDate" title="Issue Date"><display description="${groovy:org.ofbiz.base.util.UtilDateTime.toDateString(issueDate,&quot;dd/MM/yyyy HH:mm:ss&quot;)}"/></field>
+        <field name="issuedByUserLoginId" title="Issued By"><display/></field>
+        
+    </form>
+    
 	
 	<form name="FindMaterialEnquiry" target="FindMaterialEnquiry" title="" type="single" default-map-name="parameters"
         header-row-style="header-row" default-table-style="basic-table">

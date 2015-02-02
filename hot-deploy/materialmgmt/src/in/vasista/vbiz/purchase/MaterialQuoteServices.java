@@ -783,6 +783,7 @@ public class MaterialQuoteServices {
          CheckOutHelper checkout = new CheckOutHelper(dispatcher, delegator, cart);
          Map<String, Object> orderCreateResult = checkout.createOrder(userLogin);
          String orderId = (String) orderCreateResult.get("orderId");
+         
          try { 
         	 
         	 List<GenericValue> otherChargesTerms = delegator.findList("TermType", EntityCondition.makeCondition("parentTypeId", EntityOperator.EQUALS, "OTHERS"), UtilMisc.toSet("termTypeId"), null, null, false);
@@ -819,11 +820,32 @@ public class MaterialQuoteServices {
             		}
             	}
              }
+             
          }catch(Exception e) {
    	  		Debug.logError("Error While creating The QuoteItem", module);
    	  		return ServiceUtil.returnError("Error While creating The QuoteItem");
    	  	 }
-         result = ServiceUtil.returnSuccess("Create Purchase Order for Quote : "+quoteId);
+         
+         try{
+        	 for(GenericValue eachQuoteItem : quoteItemList){
+            	 Map inputMap = FastMap.newInstance();
+            	 inputMap.put("userLogin", userLogin);
+            	 inputMap.put("quoteId", eachQuoteItem.getString("quoteId"));
+            	 inputMap.put("quoteItemSeqId", eachQuoteItem.getString("quoteItemSeqId"));
+            	 inputMap.put("statusId", "QTITM_ORDERED");
+    	        	
+    	         Map resultStatus = dispatcher.runSync("setQuoteAndItemStatus", inputMap);
+    	         if(ServiceUtil.isError(resultStatus)){
+            		Debug.logError("Error updating QuoteStatus", module);
+      	  			return ServiceUtil.returnError("Error updating QuoteStatus");
+    	         }
+             }
+         }catch(GenericServiceException e){
+        	 Debug.logError("Error While updating quote item status to ORDERED", module);
+    	  	 return ServiceUtil.returnError("Error While updating quote item status to ORDERED");
+         }
+         
+         result = ServiceUtil.returnSuccess("Created Purchase Order for Quote : "+quoteId);
          result.put("orderId", orderId);
          return result;
     }

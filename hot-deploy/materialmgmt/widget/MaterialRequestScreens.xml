@@ -173,6 +173,33 @@
          </section>
     </screen>
     
+    <screen name="FindMaterialIssuanceNew">
+        <section>
+            <actions>
+                <set field="titleProperty" value="Issue"/>
+                <set field="headerItem" value="Issue"/>
+                <set field="tabButtonItem" value="FindMaterialIssuance" />	
+                <set field="tabButtonItem2" value="FindMaterialIssuanceNew" />	
+            </actions>
+            <widgets>
+                <decorator-screen name="materialmgmtNgCommonDecorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="body">
+                    	<include-menu name="StoreIssueTabBar" location="component://materialmgmt/widget/materialmgmtMenus.xml"/>
+                     	<decorator-screen name="FindScreenDecorator" location="component://common/widget/CommonScreens.xml">
+                            <decorator-section name="search-options">
+                                <include-form name="FindMaterialIssuanceNew" location="component://materialmgmt/widget/MaterialRequestForms.xml"/>
+                            </decorator-section>
+                            <decorator-section name="search-results">
+                            	<screenlet>
+                            	    <include-form name="ListMaterialIssuanceNew" location="component://materialmgmt/widget/MaterialRequestForms.xml"/>
+                            	</screenlet>
+                            </decorator-section>
+                        </decorator-screen>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+         </section>
+    </screen>
     <screen name="ApproveRequestsByDeptHead">
         <section>
             <actions>
