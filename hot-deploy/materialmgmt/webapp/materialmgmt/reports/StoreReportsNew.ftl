@@ -192,9 +192,9 @@ function makeDatePicker1(fromDateId ,thruDateId){
 						    From <input  type="text" size="18pt" id="storeFromDate"   name="storeFromDate"/>
 							To   <input  type="text" size="18pt" id="storeThruDate"   name="storeThruDate"/>
 						 </span>
-						 </td>
-						 <td width="15%"><span class='h3'>							</span></td>
-						<td width="15%"><span class='h3'>   				       </span></td>	
+						</td>
+							<td width="15%"><span class='h3'>							</span></td>
+							<td width="15%"><span class='h3'>   				       </span></td>	
 						 <td width="10%"><span class='h3'><input type="submit" value="Download" class="buttontext"></span></td>
 		 		    </tr>
 				 </table>
