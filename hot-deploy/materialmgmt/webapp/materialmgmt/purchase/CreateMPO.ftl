@@ -75,6 +75,7 @@ function makeDatePicker(fromDateId ,thruDateId){
 						 if(supplierId){
 						    gridShowCall();
 						 	setupGrid1();
+						 	addToInvoiceAmount();
 					     }else{ 
 					        gridHideCall();
 					     }

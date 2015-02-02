@@ -739,7 +739,7 @@ purchaseSumInvDetaildMap=[:];
 			conditionList.add(EntityCondition.makeCondition("partyId", EntityOperator.EQUALS,"Company"));
 			conditionList.add(EntityCondition.makeCondition("invoiceDate", EntityOperator.GREATER_THAN_EQUAL_TO,dayBegin));
 			conditionList.add(EntityCondition.makeCondition("invoiceDate",EntityOperator.LESS_THAN_EQUAL_TO, dayEnd));
-			conditionList.add(EntityCondition.makeCondition("invoiceItemTypeId",EntityOperator.EQUALS, "COGS_ITEM16"));
+			conditionList.add(EntityCondition.makeCondition("invoiceItemTypeId",EntityOperator.EQUALS, "COGS_FREIGHT"));
 			
 			EntityCondition condition = EntityCondition.makeCondition(conditionList, EntityOperator.AND);
 			List<String> orderBy = UtilMisc.toList("invoiceDate","invoiceId","partyId");

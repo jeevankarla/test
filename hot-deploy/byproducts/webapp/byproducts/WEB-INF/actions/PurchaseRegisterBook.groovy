@@ -137,31 +137,31 @@ if(UtilValidate.isNotEmpty(salesInvoiceTotals)){
 					invoiceItemsList.each{ invoiceItem ->
 						if(UtilValidate.isNotEmpty(invoiceItem)){
 							invoiceItemTypeId = invoiceItem.invoiceItemTypeId;
-							if(UtilValidate.isNotEmpty(invoiceItemTypeId) && invoiceItemTypeId.equals("COGS_ITEM16")){
+							if(UtilValidate.isNotEmpty(invoiceItemTypeId) && invoiceItemTypeId.equals("COGS_FREIGHT")){
 								freightAmount = invoiceItem.amount;
 							}
 						}
 						if(UtilValidate.isNotEmpty(invoiceItem)){
 							invoiceItemTypeId = invoiceItem.invoiceItemTypeId;
-							if(UtilValidate.isNotEmpty(invoiceItemTypeId) && invoiceItemTypeId.equals("COGS_ITEM17")){
+							if(UtilValidate.isNotEmpty(invoiceItemTypeId) && invoiceItemTypeId.equals("COGS_DISC")){
 								discountAmount = invoiceItem.amount;
 							}
 						}
 						if(UtilValidate.isNotEmpty(invoiceItem)){
 							invoiceItemTypeId = invoiceItem.invoiceItemTypeId;
-							if(UtilValidate.isNotEmpty(invoiceItemTypeId) && invoiceItemTypeId.equals("COGS_ITEM18")){
+							if(UtilValidate.isNotEmpty(invoiceItemTypeId) && invoiceItemTypeId.equals("COGS_INSURANCE")){
 								insuranceAmount = invoiceItem.amount;
 							}
 						}
 						if(UtilValidate.isNotEmpty(invoiceItem)){
 							invoiceItemTypeId = invoiceItem.invoiceItemTypeId;
-							if(UtilValidate.isNotEmpty(invoiceItemTypeId) && invoiceItemTypeId.equals("COGS_ITEM19")){
+							if(UtilValidate.isNotEmpty(invoiceItemTypeId) && invoiceItemTypeId.equals("COGS_PCK_FWD")){
 								packForwAmount = invoiceItem.amount;
 							}
 						}
 						if(UtilValidate.isNotEmpty(invoiceItem)){
 							invoiceItemTypeId = invoiceItem.invoiceItemTypeId;
-							if(UtilValidate.isNotEmpty(invoiceItemTypeId) && invoiceItemTypeId.equals("COGS_ITEM20")){
+							if(UtilValidate.isNotEmpty(invoiceItemTypeId) && invoiceItemTypeId.equals("COGS_OTH_CHARGES")){
 								otherAmount = invoiceItem.amount;
 							}
 						}
