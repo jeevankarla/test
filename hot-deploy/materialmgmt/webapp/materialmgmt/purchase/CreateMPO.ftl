@@ -75,6 +75,7 @@ function makeDatePicker(fromDateId ,thruDateId){
 						 if(supplierId){
 						    gridShowCall();
 						 	setupGrid1();
+						 	addToInvoiceAmount();
 					     }else{ 
 					        gridHideCall();
 					     }
@@ -783,6 +784,7 @@ function makeDatePicker(fromDateId ,thruDateId){
 							            	<td>
 							            		<select name="otherTermUom_o_0">
 							            			<option value="INR">Rupees</option>
+							            			<option value="PERCENT">Percent</option>
 							            		</select>
 							            	</td>
 							            	<td>
@@ -809,7 +811,7 @@ function makeDatePicker(fromDateId ,thruDateId){
 	    var table = $("#paymentTermsTable");
 	    if (table.find('input:text').length < 24) {
         var rowLength = table.find('input:text').length;
-        var rowCount = rowLength/3;
+        var rowCount = rowLength/5;
         table.append('<tr><td> <select id ="payTermDes" name="paymentTermTypeId_o_'+rowCount+'" class = "flexselect" /></td><td> <input type="text" size="10" name="paymentTermDays_o_'+rowCount+'" value="" /> </td><td> <input type="text" size="10" name="paymentTermValue_o_'+rowCount+'" value="" /> </td><td><select name="paymentTermUom_o_'+rowCount+'"><option value="INR">Rupees</option><option value="PERCENT">Percent</option></select></td><td><input type="textarea" name="paymentTermDescription_o_'+rowCount+'" value="" maxlength="255"/>	</td></tr>');
     }
   	$.each(paymentTerms, function(key, val){
@@ -837,7 +839,7 @@ function makeDatePicker(fromDateId ,thruDateId){
     var table = $("#deliveryTermsTable");
     if (table.find('input:text').length < 24) {
         var rowLength = table.find('input:text').length;
-        var rowCount = rowLength/3;
+        var rowCount = rowLength/5;
         table.append('<tr><td> <select id ="delTermDes" name="deliveryTermTypeId_o_'+rowCount+'" class = "flexselect" /></td><td> <input type="text" size="10" name="deliveryTermDays_o_'+rowCount+'" value="" /> </td><td> <input type="text" size="10" name="deliveryTermValue_o_'+rowCount+'" value="" /> </td><td><select name="deliveryTermUom_o_'+rowCount+'"><option value="INR">Rupees</option><option value="PERCENT">Percent</option></select></td><td><input type="textarea" name="deliveryTermDescription_o_'+rowCount+'" value="" maxlength="255"/></td></tr>');
     }
     $.each(deliveryTerms, function(key, val){
@@ -865,7 +867,7 @@ function makeDatePicker(fromDateId ,thruDateId){
 	    var table = $("#otherTermsTable");
 	    if (table.find('input:text').length < 24) {
 	        var rowLength = table.find('input:text').length;
-	        var rowCount = rowLength/3;
+	        var rowCount = rowLength/5;
 	        table.append('<tr><td> <select id ="otherTermDes" name="otherTermTypeId_o_'+rowCount+'" class = "flexselect" /></td><td> <input type="text" size="10" name="otherTermDays_o_'+rowCount+'" value="" /> </td><td> <input type="text" size="10" name="otherTermValue_o_'+rowCount+'" value="" /> </td><td><select name="otherTermUom_o_'+rowCount+'"><option value="INR">Rupees</option><option value="PERCENT">Percent</option></select></td><td><input type="textarea" name="otherTermDescription_o_'+rowCount+'" value="" maxlength="255"/></td></tr>');
 	    }
 	    $.each(otherTerms, function(key, val){

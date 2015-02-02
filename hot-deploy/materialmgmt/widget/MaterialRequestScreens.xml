@@ -181,7 +181,8 @@
                 <set field="tabButtonItem" value="FindMaterialRequest" />
                 <set field="tabButtonItem2" value="ApproveRequestsByDeptHead" />
                 <set field="layoutSettings.javaScripts[]" value="/materialmgmt/images/requirements.js" global="true"/>
-                <entity-condition list="custRequestItemsList" entity-name="CustRequestAndItemAndAttribute">
+                <set field="entityName" value="CustRequestAndItemAndAttribute"/>
+                <!-- <entity-condition list="custRequestItemsList" entity-name="CustRequestAndItemAndAttribute">
                 	<condition-list combine="and">
                 		<condition-list combine="or">
                 			<condition-expr field-name="statusId" operator="equals" value="CRQ_DRAFT"/>
@@ -191,12 +192,15 @@
 						<condition-expr field-name="custRequestTypeId" operator="equals" value="PRODUCT_REQUIREMENT"/> 
                 	</condition-list>
                 	<order-by field-name="-custRequestDate"/>
-                </entity-condition>	
+                </entity-condition>	 -->
             </actions>
             <widgets>
                 <decorator-screen name="materialmgmtNgCommonDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                      	<include-menu name="RequestTabBar" location="component://materialmgmt/widget/materialmgmtMenus.xml"/>
+                     	<screenlet title="Search-Options">
+                     			<include-form location="component://materialmgmt/widget/MaterialRequestForms.xml" name="SearchRequestsToApprove"/>
+                     	</screenlet>
                      	<screenlet title="List Requests to Approve">
                      		<include-form name="ListRequestsToApprove" location="component://materialmgmt/widget/MaterialRequestForms.xml"/>
                      	</screenlet>
@@ -620,24 +624,6 @@
     		</widgets>
     	</section>
     </screen>
-    
-    <screen name="editRequirement">
-    	<section>
-    		<actions>
-    		</actions>
-    		<widgets>
-    			<decorator-screen name="materialmgmtNgCommonDecorator" location="${parameters.mainDecoratorLocation}">
-                    <decorator-section name="body">
-                    	<include-menu name="StoreIssueTabBar" location="component://materialmgmt/widget/materialmgmtMenus.xml"/>
-                    	<screenlet title="Edit Requirement" >
-                    		<include-form location="component://materialmgmt/widget/MaterialRequestForms.xml" name="UpdateRequirement"/>
-                    	</screenlet>
-                    </decorator-section>
-                </decorator-screen>    
-    		</widgets>
-    	</section>
-    </screen>
-    
     <screen name="FindMaterialInvoices">
     	<section>
     		<actions>

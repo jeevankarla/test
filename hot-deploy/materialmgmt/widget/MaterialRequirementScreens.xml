@@ -31,7 +31,27 @@
             </widgets>
         </section>
     </screen>
-    
+    <screen name="EditRequirement">
+    	<section>
+    		<actions>
+                <set field="titleProperty" value="Edit Requirement"/>
+                <set field="headerItem" value="Requirement"/>
+                <set field="tabButtonItem" value="FindMaterialRequirement"/>
+                <set field="tabButtonItem2" value="FindMaterialRequirement"/>
+                <set field="viewIndex" from-field="parameters.VIEW_INDEX" type="Integer"/>
+                <set field="viewSize" from-field="parameters.VIEW_SIZE" type="Integer" default-value="30"/>
+            </actions>
+    		<widgets>
+    			<decorator-screen name="materialmgmtNgCommonDecorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="body">
+                    	<screenlet title="Edit Requirement" >
+                    		<include-form location="component://materialmgmt/widget/MaterialRequirementForms.xml" name="UpdateRequirement"/>
+                    	</screenlet>
+                    </decorator-section>
+                </decorator-screen>    
+    		</widgets>
+    	</section>
+    </screen>
     <screen name="ApproveMaterialRequirement">
         <section>
             <actions>
