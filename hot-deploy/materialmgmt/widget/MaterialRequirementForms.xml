@@ -117,6 +117,7 @@
 	    <field name="productId" title="Product" required-field="true">
 	            <lookup target-form-name="LookupProduct" size="10" />
 	    </field>
+	    <field name="updateFlag"><hidden value="updateFlag"/></field>
 	    <field name="facilityId" required-field="true" >
             <drop-down allow-empty="false" >
             	<list-options key-name="facilityId" list-name="facilityList" description="${facilityName}"/>

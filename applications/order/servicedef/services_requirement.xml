@@ -49,6 +49,7 @@ under the License.
         <implements service="requirementInterface"/>
         <attribute name="requirementId" type="String" mode="IN" optional="false"/>
         <attribute name="oldStatusId" type="String" mode="OUT" optional="false"/>
+        <attribute name="updateFlag" type="String" mode="IN" optional="true"/>
     </service>
 
     <service name="deleteRequirement" engine="simple"
