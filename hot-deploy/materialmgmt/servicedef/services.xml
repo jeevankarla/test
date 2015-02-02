@@ -39,38 +39,7 @@
             <exclude field-name="lastModifiedByUserLogin"/>
         </auto-attributes>
     </service>
-   <service name="emailRequirement" engine="java" location="in.vasista.vbiz.purchase.MaterialRequestServices" invoke="emailRequirement">
-        <description>Requirement Interface</description>
-        <attribute name="requirementId" mode="IN" type="String"/>
-    </service>
-    
-   <service name="ChangeOrderStatus" engine="java" auth="true"
-            location="org.ofbiz.order.order.OrderServices" invoke="setOrderStatus">
-        <description>Change the status of an existing order</description>
-        
-        <attribute name="orderId" type="String" mode="IN"/>
-        <attribute name="statusId" type="String" mode="IN"/>
-        <attribute name="setItemStatus" type="String" mode="IN" optional="true"/>
-        <attribute name="oldStatusId" type="String" mode="OUT" optional="false"/>
-        <attribute name="orderStatusId" type="String" mode="OUT" optional="true"/>
-        <attribute name="orderTypeId" type="String" mode="OUT" optional="true"/>
-        <attribute name="needsInventoryIssuance" type="String" mode="OUT" optional="true"/>
-        <attribute name="grandTotal" type="BigDecimal" mode="OUT" optional="true"/>
-        <attribute name="changeReason" type="String" mode="IN" optional="true"/>
-    </service>
-    <service name="getShipmentLinkOrdersAjax" engine="groovy" location="component://materialmgmt/webapp/materialmgmt/WEB-INF/actions/purchases/findOrderWithOutShipment.groovy" invoke="" transaction-timeout="12000">
-        <description>Get POs For GRN Shipment </description>
-        <attribute name="shipmentId" type="String" mode="IN" optional="false"/>  
-        <attribute name="partyId" type="String" mode="IN" optional="true"/> 
-        <attribute name="ordersListForGRNLink" type="List" mode="OUT" optional="true"/> 
-    </service>
-    <service name="getShipmentLinkOrdersAjax" engine="groovy" location="component://materialmgmt/webapp/materialmgmt/WEB-INF/actions/purchases/findOrderWithOutShipment.groovy" invoke="" transaction-timeout="12000">
-        <description>Get POs For GRN Shipment </description>
-        <attribute name="shipmentId" type="String" mode="IN" optional="false"/>  
-        <attribute name="partyId" type="String" mode="IN" optional="true"/> 
-        <attribute name="ordersListForGRNLink" type="List" mode="OUT" optional="true"/> 
-    </service>
-   	<service name="cancelPOStatus" engine="java" auth="true"
+   <service name="cancelPOStatus" engine="java" auth="true"
             location="in.vasista.vbiz.purchase.MaterialPurchaseServices" invoke="cancelPOStatus">
             <!-- setOrderStatus -->
         <description>Cancel PO and change Quote and Enquiry status if exists</description>
@@ -84,5 +53,30 @@
         <attribute name="needsInventoryIssuance" type="String" mode="OUT" optional="true"/>
         <attribute name="grandTotal" type="BigDecimal" mode="OUT" optional="true"/>
         <attribute name="changeReason" type="String" mode="IN" optional="true"/>
+    </service> 
+   <service name="emailRequirement" engine="java" location="in.vasista.vbiz.purchase.MaterialRequestServices" invoke="emailRequirement">
+        <description>Requirement Interface</description>
+        <attribute name="requirementId" mode="IN" type="String"/>
     </service>
+    
+   <service name="ChangeOrderStatus" engine="java" auth="true"
+            location="org.ofbiz.order.order.OrderServices" invoke="setOrderStatus">
+        <description>Change the status of an existing order</description>
+        <attribute name="orderId" type="String" mode="IN"/>
+        <attribute name="statusId" type="String" mode="IN"/>
+        <attribute name="setItemStatus" type="String" mode="IN" optional="true"/>
+        <attribute name="oldStatusId" type="String" mode="OUT" optional="false"/>
+        <attribute name="orderStatusId" type="String" mode="OUT" optional="true"/>
+        <attribute name="orderTypeId" type="String" mode="OUT" optional="true"/>
+        <attribute name="needsInventoryIssuance" type="String" mode="OUT" optional="true"/>
+        <attribute name="grandTotal" type="BigDecimal" mode="OUT" optional="true"/>
+        <attribute name="changeReason" type="String" mode="IN" optional="true"/>
+    </service>
+    <service name="getShipmentLinkOrdersAjax" engine="groovy" location="component://materialmgmt/webapp/materialmgmt/WEB-INF/actions/purchases/findOrderWithOutShipment.groovy" invoke="" transaction-timeout="12000">
+        <description>Get POs For GRN Shipment </description>
+        <attribute name="shipmentId" type="String" mode="IN" optional="false"/>  
+        <attribute name="partyId" type="String" mode="IN" optional="true"/> 
+        <attribute name="ordersListForGRNLink" type="List" mode="OUT" optional="true"/> 
+    </service>
+   
 </services>
