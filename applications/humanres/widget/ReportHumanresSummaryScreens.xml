@@ -276,23 +276,6 @@
 			
 		</section>
 	</screen>
-	<screen name="EDLISReport">
-		<section>
-			<actions>
-				<property-map resource="OrderUiLabels" map-name="uiLabelMap" global="true"/>
-				<property-map resource="ProductUiLabels" map-name="uiLabelMap" global="true"/>
-				<property-map resource="PartyUiLabels" map-name="uiLabelMap" global="true"/>
-				<property-map resource="CommonUiLabels" map-name="uiLabelMap" global="true"/>
-				<script location="component://humanres/webapp/humanres/WEB-INF/actions/reports/EDLISReport.groovy"/>
-			</actions>
-			<widgets>
-				<platform-specific> 
-				  <xsl-fo><html-template location="component://humanres/webapp/humanres/humanres/EDLISReport.fo.ftl"/></xsl-fo> 
-                </platform-specific>
-			</widgets>
-			
-		</section>
-	</screen>
 	<screen name="ESIFormSix">
     		<section>
     			<actions>
@@ -1322,6 +1305,41 @@
     				</section>
     			</widgets>
             </section>
+    </screen>
+    <screen name="EDLISReportPdf">
+		<section>
+			<actions>
+				<property-map resource="OrderUiLabels" map-name="uiLabelMap" global="true"/>
+				<property-map resource="ProductUiLabels" map-name="uiLabelMap" global="true"/>
+				<property-map resource="PartyUiLabels" map-name="uiLabelMap" global="true"/>
+				<property-map resource="CommonUiLabels" map-name="uiLabelMap" global="true"/>
+				<script location="component://humanres/webapp/humanres/WEB-INF/actions/reports/EDLISReport.groovy"/>
+			</actions>
+			<widgets>
+				<platform-specific> 
+				  <xsl-fo><html-template location="component://humanres/webapp/humanres/humanres/EDLISReport.fo.ftl"/></xsl-fo> 
+                </platform-specific>
+			</widgets>
+			
+		</section>
+	</screen>
+	<screen name="EDLISReportCsv">
+        <section>
+           <actions>
+                <property-map resource="OrderUiLabels" map-name="uiLabelMap" global="true"/>
+				<property-map resource="ProductUiLabels" map-name="uiLabelMap" global="true"/>
+				<property-map resource="PartyUiLabels" map-name="uiLabelMap" global="true"/>
+				<property-map resource="CommonUiLabels" map-name="uiLabelMap" global="true"/>
+                <script location="component://humanres/webapp/humanres/WEB-INF/actions/reports/EDLISReport.groovy"/> 
+            </actions> 
+            <widgets>
+				<section>                                                      
+					<widgets>
+						<include-form location="component://humanres/widget/ReportHumanresSummaryForms.xml" name="EDLISReportCsv"/>
+					</widgets>
+				</section>
+			</widgets>
+        </section>
     </screen>
 	<screen name="PaySlipEmployeeWise">
 		<section>
