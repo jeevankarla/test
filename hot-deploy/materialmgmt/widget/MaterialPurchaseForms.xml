@@ -104,8 +104,8 @@
                 <parameter param-name="setItemStatus" value="Y" />
             </hyperlink>
         </field> 
-        <field use-when="(flag == &quot;N&quot;)&amp;&amp;(statusId.equals(&quot;ORDER_APPROVED&quot;))"  name="raiseGRN" title="Raise GRN" widget-style="buttontext" >
-        	 <hyperlink target="raiseGRN" description="Raise GRN">
+        <!-- <field use-when="(flag == &quot;N&quot;)&amp;&amp;((&quot;${statusId}&quot;!=&quot;ORDER_CANCELLED&quot;)&amp;&amp;(&quot;${statusId}&quot;!=&quot;ORDER_COMPLETED&quot;)&amp;&amp;(&quot;${statusId}&quot;!=&quot;ORDER_CREATED&quot;))"  name="raiseGRN" title="Raise GRN" widget-style="buttontext" > -->
+        <field use-when="((&quot;${statusId}&quot;!=&quot;ORDER_CANCELLED&quot;)&amp;&amp;(&quot;${statusId}&quot;!=&quot;ORDER_COMPLETED&quot;)&amp;&amp;(&quot;${statusId}&quot;!=&quot;ORDER_CREATED&quot;))"  name="raiseGRN" title="Raise GRN" widget-style="buttontext" >	 <hyperlink target="raiseGRN" description="Raise GRN">
         	 	<parameter param-name="orderId"/>
         	 	<!-- <parameter param-name="vehicleId"/> -->
             </hyperlink>
