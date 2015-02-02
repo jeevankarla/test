@@ -39,19 +39,26 @@ ordersListForGRNLink=[];
 //get PartyId from Role for Dept
 List conditionlist=[];
 //if(UtilValidate.isNotEmpty(parameters.noConditionFind) && parameters.noConditionFind=="Y"){
-conditionlist.add(EntityCondition.makeCondition("statusId", EntityOperator.EQUALS, "GENERATED"));
-
+/*conditionlist.add(EntityCondition.makeCondition("statusId", EntityOperator.EQUALS, "GENERATED"));
 conditionlist.add(EntityCondition.makeCondition("shipmentTypeId", EntityOperator.EQUALS,"MATERIAL_SHIPMENT"));
-conditionlist.add(EntityCondition.makeCondition("shipmentId", EntityOperator.EQUALS, parameters.shipmentId));
+conditionlist.add(EntityCondition.makeCondition("shipmentId", EntityOperator.NOT_EQUAL, parameters.shipmentId));
 condition=EntityCondition.makeCondition(conditionlist,EntityOperator.AND);
 shipmentDeatilsList = delegator.findList("Shipment", condition , null, null, null, false );
 
-shippedOrderIds = EntityUtil.getFieldListFromEntityList(shipmentDeatilsList, "primaryOrderId", true);
+shippedOrderIds = EntityUtil.getFieldListFromEntityList(shipmentDeatilsList, "primaryOrderId", true);*/
 
-Debug.log("shippedOrderIds=============="+shippedOrderIds+"===parameters.ShipmentIdd="+parameters.shipmentId+"===="+parameters.partyId);
+
+conditionlist.clear();
+conditionlist.add(EntityCondition.makeCondition("shipmentId", EntityOperator.EQUALS, parameters.shipmentId));
+condition=EntityCondition.makeCondition(conditionlist,EntityOperator.AND);
+shipmentItemList = delegator.findList("ShipmentItem", condition , null, null, null, false );
+
+shipmentProductIds = EntityUtil.getFieldListFromEntityList(shipmentItemList, "productId", true);
+
+Debug.log("===parameters.ShipmeID="+parameters.shipmentId+"===="+parameters.partyId+"==shipmentProductIds="+shipmentProductIds);
 //get Orders WithOut LINK to Shipment
 conditionlist.clear();
-conditionlist.add(EntityCondition.makeCondition("orderId", EntityOperator.NOT_IN, shippedOrderIds));
+/*conditionlist.add(EntityCondition.makeCondition("orderId", EntityOperator.NOT_IN, shippedOrderIds));*/
 conditionlist.add(EntityCondition.makeCondition("orderTypeId", EntityOperator.EQUALS,"PURCHASE_ORDER"));
 conditionlist.add(EntityCondition.makeCondition("roleTypeId", EntityOperator.EQUALS,"BILL_FROM_VENDOR"));
 conditionlist.add(EntityCondition.makeCondition("partyId", EntityOperator.EQUALS, parameters.partyId));
@@ -74,26 +81,23 @@ ordersListWithOutShipment.each{ eachOrderHeader->
 		partyId=eachOrderHeader.partyId;
 		supplierName =  PartyHelper.getPartyName(delegator, partyId, false);
 	}
-	
-	/*conditionlist.clear();
-	conditionlist.add(EntityCondition.makeCondition("orderId", EntityOperator.EQUALS, eachOrderHeader.orderId));
-	conditionlist.add(EntityCondition.makeCondition("roleTypeId", EntityOperator.EQUALS,"BILL_FROM_VENDOR"));
-	orderRoleCondition=EntityCondition.makeCondition(conditionlist,EntityOperator.AND);
-	orderSupplierRoleList = delegator.findList("OrderRole", orderRoleCondition , null, null, null, false );
-	if(UtilValidate.isNotEmpty(orderSupplierRoleList)){
-		orderSupplierRole = EntityUtil.getFirst(orderSupplierRoleList);
-		partyId=orderSupplierRole.partyId;
-		supplierName =  PartyHelper.getPartyName(delegator, partyId, false);
-	}*/
 	innerOrderHeaderMap["partyId"]=partyId ;
 	innerOrderHeaderMap["supplierName"]=supplierName+"["+partyId+"]";
-
-	ordersListForGRNLink.addAll(innerOrderHeaderMap);
+	
+	conditionlist.clear();
+	conditionlist.add(EntityCondition.makeCondition("orderId", EntityOperator.EQUALS, eachOrderHeader.orderId));
+	conditionlist.add(EntityCondition.makeCondition("productId", EntityOperator.IN, shipmentProductIds));
+	orderItemCondition=EntityCondition.makeCondition(conditionlist,EntityOperator.AND);
+	orderItemList = delegator.findList("OrderItem", orderItemCondition , null, null, null, false );
+	if(UtilValidate.isNotEmpty(orderItemList)){
+		ordersListForGRNLink.addAll(innerOrderHeaderMap);
+	}
+	
 }
 //}
 context.ordersListForGRNLink=ordersListForGRNLink;
 
-Debug.log("ordersListForGRNLink=========frommmAJAX====="+ordersListForGRNLink);
+//Debug.log("ordersListForGRNLink=========frommmAJAX====="+ordersListForGRNLink);
 
 resultReturn.put("ordersListForGRNLink", ordersListForGRNLink);
 return resultReturn;
