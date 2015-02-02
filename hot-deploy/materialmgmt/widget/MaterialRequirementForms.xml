@@ -98,6 +98,34 @@
             </hyperlink>
         </field> -->
     </form>
+     <form name="UpdateRequirement" type="single" target="UpdateRequirement" >
+	    <actions>
+	    	<entity-condition entity-name="ProductFacility" distinct="true" list="prodFacility" />
+			<set field="prodFacilityId" type="List" value="${groovy: org.ofbiz.entity.util.EntityUtil.getFieldListFromEntityList(prodFacility, 'facilityId', true);}"/>        	
+        	<entity-condition entity-name="Facility" distinct="true" list="facilityList">
+        		<condition-expr field-name="facilityId" operator="in" from-field="prodFacilityId"/>
+        	</entity-condition>
+	    	<entity-and entity-name="Requirement" list="RequirementList">
+	    		<field-map field-name="requirementId" from-field="parameters.requirementId" />
+	    	</entity-and>
+	    	<set field="productId" value="${RequirementList[0].productId}"/>
+	    	<set field="quantity" value="${RequirementList[0].quantity}"/>
+	    	<set field="requirementStartDate" value="${RequirementList[0].requirementStartDate}"/>
+	    	<set field="facilityId" value="${RequirementList[0].facilityId}" />
+	    </actions>
+	    <field name="requirementId"><display description="${RequirementList[0].requirementId}" /></field>
+	    <field name="productId" title="Product" required-field="true">
+	            <lookup target-form-name="LookupProduct" size="10" />
+	    </field>
+	    <field name="facilityId" required-field="true" >
+            <drop-down allow-empty="false" >
+            	<list-options key-name="facilityId" list-name="facilityList" description="${facilityName}"/>
+            </drop-down>
+        </field>
+	    <field name="quantity" title="Quantity" required-field="true" ><text size="10"/></field>
+        <field name="requirementStartDate" title="Requirement Date" ><date-time type="date" /></field>
+        <field name="submitButton" title="${uiLabelMap.CommonUpdate}"><submit button-type="button"/></field>
+    </form>
    
     <form name="FindNotApprovedRequirements" type="single" target="ApproveMaterialRequirement" title="" header-row-style="header-row" default-table-style="basic-table">
         <field name="requirementId"><text-find/></field>

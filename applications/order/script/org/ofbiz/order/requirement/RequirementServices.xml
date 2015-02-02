@@ -43,15 +43,32 @@ under the License.
     </simple-method>
 
     <simple-method method-name="updateRequirement" short-description="Update a requirement">
-        <make-value value-field="lookupPKMap" entity-name="Requirement"/>
-        <set-pk-fields map="parameters" value-field="lookupPKMap"/>
-        <find-by-primary-key entity-name="Requirement" map="lookupPKMap" value-field="lookedUpValue"/>
-        <field-to-result field="lookedUpValue.statusId" result-name="oldStatusId"/>
-        <set-nonpk-fields map="parameters" value-field="lookedUpValue"/>
-        <now-timestamp field="nowTimestamp"/>
-        <set field="newEntity.lastModifiedDate" from-field="nowTimestamp"/>
-        <set field="newEntity.lastModifiedByUserLogin" from-field="userLogin.userLoginId"/>
-        <store-value value-field="lookedUpValue"/>
+    	<if-not-empty field="parameters.quantity" >
+    		<if-compare operator="greater" value="0" field="parameters.quantity">
+		    	<make-value value-field="lookupPKMap" entity-name="Requirement"/>
+		        <set-pk-fields map="parameters" value-field="lookupPKMap"/>
+		        <find-by-primary-key entity-name="Requirement" map="lookupPKMap" value-field="lookedUpValue"/>
+		        <field-to-result field="lookedUpValue.statusId" result-name="oldStatusId"/>
+		        <set-nonpk-fields map="parameters" value-field="lookedUpValue"/>
+		        <now-timestamp field="nowTimestamp"/>
+		        <set field="newEntity.lastModifiedDate" from-field="nowTimestamp"/>
+		        <set field="newEntity.lastModifiedByUserLogin" from-field="userLogin.userLoginId"/>
+		        <store-value value-field="lookedUpValue"/>
+		        <set field="responseMessage" value="Requirement updated successfully."/>
+        		<field-to-result field="responseMessage" result-name="successMessage"/>
+        	<else>
+    			<add-error>
+    				<fail-message message="Invalid Quantity"/>
+    			</add-error>
+    		</else>
+    		</if-compare>
+    	<else>
+   			<add-error>
+   				<fail-message message="Invalid Quantity"/>
+   			</add-error>
+    		</else>
+    	</if-not-empty>
+    	<check-errors></check-errors>
     </simple-method>
 
     <simple-method method-name="deleteRequirement" short-description="Delete a requirement">

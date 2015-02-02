@@ -135,8 +135,8 @@
     
      <request-map uri="editRequirement">
         <security auth="true" https="true"/>
-        <response name="success" type="view" value="editRequirement"/>
-        <response name="error" type="view" value="editRequirement"/>
+        <response name="success" type="view" value="EditRequirement"/>
+        <response name="error" type="view" value="EditRequirement"/>
     </request-map>
     
     <request-map uri="UpdateRequirement">
@@ -999,7 +999,7 @@
     <view-map name="AddEnquiryContent" type="screen" page="component://materialmgmt/widget/MaterialRequestScreens.xml#AddEnquiryContent"/>
     <view-map name="AddIndentContent" type="screen" page="component://materialmgmt/widget/MaterialRequestScreens.xml#AddIndentContent"/>
     <view-map name="NewRequirement" type="screen" page="component://materialmgmt/widget/MaterialRequestScreens.xml#NewRequirement"/>
-    <view-map name="editRequirement" type="screen" page="component://materialmgmt/widget/MaterialRequestScreens.xml#editRequirement"/>
+    <view-map name="EditRequirement" type="screen" page="component://materialmgmt/widget/MaterialRequirementScreens.xml#EditRequirement"/>
     <view-map name="RequestsReceiptAcknowledgement" type="screen" page="component://materialmgmt/widget/MaterialRequestScreens.xml#RequestsReceiptAcknowledgement"/>
     <view-map name="EditQuotItems" type="screen" page="component://materialmgmt/widget/MaterialRequestScreens.xml#EditQuotItems"/>
     <!-- Requirement views -->
