@@ -15,6 +15,7 @@ import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
+import java.text.ParseException;
 import java.util.Date;
 import java.util.Map.Entry;
 
@@ -356,6 +357,9 @@ public class EmplLeaveService {
     	return result;
     }
 	
+	
+	
+	
 	public static Map<String, Object> getEmployLeaveValidStatusChange(DispatchContext ctx, Map<String, ? extends Object> context) {
     	Delegator delegator = ctx.getDelegator();
     	GenericValue userLogin = (GenericValue) context.get("userLogin");
@@ -392,6 +396,64 @@ public class EmplLeaveService {
         return result;
     }
 	
+	
+	public static Map<String, Object> updateEmplLeave(DispatchContext dctx, Map<String, ? extends Object> context) {
+    	Delegator delegator = dctx.getDelegator();
+		LocalDispatcher dispatcher = dctx.getDispatcher();    	
+        GenericValue userLogin = (GenericValue) context.get("userLogin");
+        String userLoginId = (String)userLogin.get("userLoginId");
+        String emplLeaveApplId =  (String)context.get("emplLeaveApplId");
+        String leaveStatus =  (String)context.get("leaveStatus");
+        String approverPartyId = (String)context.get("approverPartyId");
+        String emplLeaveReasonTypeId = (String)context.get("emplLeaveReasonTypeId");
+        String dayFractionId = (String)context.get("dayFractionId");
+        String leaveTypeId = (String)context.get("leaveTypeId");
+        String fromDateStr = (String) context.get("fromDate");
+        Timestamp thruDate = (Timestamp) context.get("thruDate");
+        String comment = (String) context.get("comment");
+        Timestamp fromDate = null;
+        Map<String, Object> result = ServiceUtil.returnSuccess("Leave Updated Sucessfully..!");
+		GenericValue emplLeaveDetails = null;
+		try {
+			 
+			SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy");	
+	        if(UtilValidate.isNotEmpty(fromDateStr)){
+        	  try {
+        		  fromDate = new java.sql.Timestamp(sdf.parse(fromDateStr).getTime());
+    		   } catch (ParseException e) {
+    			   Debug.logError(e, "Cannot parse date string: " + fromDateStr, module);
+    			return ServiceUtil.returnError(e.toString());
+    		   }
+	        }
+		    fromDate = UtilDateTime.getDayStart(fromDate);
+		    thruDate = UtilDateTime.getDayEnd(thruDate);
+			emplLeaveDetails = delegator.findOne("EmplLeave",UtilMisc.toMap("emplLeaveApplId", emplLeaveApplId), false);
+			if(UtilValidate.isNotEmpty(emplLeaveDetails)){
+				if(UtilValidate.isNotEmpty(thruDate)){
+					emplLeaveDetails.set("thruDate", thruDate);
+				}
+				if(UtilValidate.isNotEmpty(approverPartyId)){
+					emplLeaveDetails.set("approverPartyId", approverPartyId);
+				}
+				if(UtilValidate.isNotEmpty(dayFractionId)){
+					emplLeaveDetails.set("dayFractionId", dayFractionId);
+				}
+				if(UtilValidate.isNotEmpty(comment)){
+					emplLeaveDetails.set("comment", comment);
+				}
+				if(UtilValidate.isNotEmpty(emplLeaveReasonTypeId)){
+					emplLeaveDetails.set("emplLeaveReasonTypeId", emplLeaveReasonTypeId);
+				}
+				emplLeaveDetails.store();
+			}
+		}catch(Exception e){
+  			Debug.logError("Error while updating emplLeave" + e.getMessage(), module);
+  			return ServiceUtil.returnError("Error while updating EmplLeave");
+  		}
+		result.put("emplLeaveApplId",emplLeaveDetails.getString("emplLeaveApplId"));
+		result.put("leaveStatus",emplLeaveDetails.getString("leaveStatus"));
+    	return result;
+    }
 	
 	public static Map<String, Object> updateEmplLeaveStatus(DispatchContext dctx, Map<String, ? extends Object> context) {
     	Delegator delegator = dctx.getDelegator();
