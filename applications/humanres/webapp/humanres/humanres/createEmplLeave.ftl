@@ -253,15 +253,15 @@ function viewGHandSS(){
  }
  
  function setFormParams(){
-   $('[name="fromDateStamp"]').datepicker( "option", "dateFormat", "yy-mm-dd 00:00:00");
-   $('[name="thruDate"]').datepicker( "option", "dateFormat", "yy-mm-dd 00:00:00");
+   		$('[name="fromDate"]').datepicker( "option", "dateFormat", "yy-mm-dd 00:00:00");
+   		$('[name="thruDate"]').datepicker( "option", "dateFormat", "yy-mm-dd 00:00:00");
  }
 
   
 </script>
 <div class="screenlet">
     <div class="screenlet-title-bar">
-      <h3><left>Update Employee Leave</left></h3>
+      <h3><left>Create Employee Leave</left></h3>
     </div>
     <div class="screenlet-body">
 
@@ -292,10 +292,10 @@ function viewGHandSS(){
                 <td class="label">From Date :</td>
                 <td>
                   <#if !editFlag>
-                   	 <input type="text" name="fromDate" id="fromDateStamp" value="${fromDate?if_exists}" readonly/>
+                   	 <input type="text" name="fromDate" id="fromDate" value="${fromDate?if_exists}" readonly/>
                     <#else>
                       <input type="hidden" name="fromDate" id="fromDateStamp" value="${fromDate?if_exists}"/>
-                     ${fromDate?if_exists}
+                      ${fromDate?if_exists}
                   </#if> 
                 </td>	
               </tr>

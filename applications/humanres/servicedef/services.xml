@@ -940,8 +940,8 @@ under the License.emplpunch
         <override name="partyId" optional="false"/>
     </service>
     
-    <service name="updateEmplLeave" engine="simple" default-entity-name="EmplLeave"
-             location="component://humanres/script/org/ofbiz/humanres/HumanResServices.xml" invoke="updateEmplLeave" auth="true">
+    <service name="updateEmplLeave" engine="java" default-entity-name="EmplLeave"
+             location="in.vasista.vbiz.humanres.EmplLeaveService" invoke="updateEmplLeave" auth="true">
         <description>Update Valid Employee Leave</description>
         <permission-service service-name="humanResManagerPermission" main-action="LEAVE_EDIT"/>
         <auto-attributes mode="IN" include="pk" optional="false"/>
@@ -953,7 +953,7 @@ under the License.emplpunch
         <attribute name="levelApproverPartyId" mode="IN" type="String" optional="true"/>
         <override name="partyId" optional="false"/>
         <override name="leaveTypeId" optional="false"/>
-        <override name="fromDate" optional="false"/>
+        <override name="fromDate" optional="false" type="String"/>
         <override name="approverPartyId" optional="true"/>
         <override name="thruDate" optional="false"/>
     </service>
