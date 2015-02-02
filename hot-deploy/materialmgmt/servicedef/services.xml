@@ -64,6 +64,12 @@
         <attribute name="partyId" type="String" mode="IN" optional="true"/> 
         <attribute name="ordersListForGRNLink" type="List" mode="OUT" optional="true"/> 
     </service>
+    <service name="getShipmentLinkOrdersAjax" engine="groovy" location="component://materialmgmt/webapp/materialmgmt/WEB-INF/actions/purchases/findOrderWithOutShipment.groovy" invoke="" transaction-timeout="12000">
+        <description>Get POs For GRN Shipment </description>
+        <attribute name="shipmentId" type="String" mode="IN" optional="false"/>  
+        <attribute name="partyId" type="String" mode="IN" optional="true"/> 
+        <attribute name="ordersListForGRNLink" type="List" mode="OUT" optional="true"/> 
+    </service>
    	<service name="cancelPOStatus" engine="java" auth="true"
             location="in.vasista.vbiz.purchase.MaterialPurchaseServices" invoke="cancelPOStatus">
             <!-- setOrderStatus -->
