@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<services xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/services.xsd">
+    <description>Rest Services</description>
+    <vendor></vendor>
+    <version>1.0</version>
+    
+    <service name="fetchProcPrices" engine="java" export="true" require-new-transaction="true"
+        location="in.vasista.vbiz.rest.FetchProcurementPriceData" invoke="fetchPriceChartJson" auth="true">
+      </service>
+      
+     <service name="ping" engine="java" export="true" require-new-transaction="true"
+        location="org.ofbiz.common.CommonServices" invoke="ping" auth="true">
+      </service>   
+
+</services>
