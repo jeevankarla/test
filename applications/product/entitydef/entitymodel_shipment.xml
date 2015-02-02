@@ -106,6 +106,31 @@ under the License.
         <key-map field-name="inventoryItemId"/>
         </view-link>
     </view-entity>
+    <view-entity entity-name="IssuanceAndShipmentAndCustRequest" package-name="org.ofbiz.shipment.issuance">
+        <member-entity entity-alias="IIS" entity-name="ItemIssuance"/>
+        <member-entity entity-alias="SH" entity-name="Shipment"/>
+        <member-entity entity-alias="CR" entity-name="CustRequest"/>
+        <alias entity-alias="IIS" name="itemIssuanceId" />
+        <alias entity-alias="IIS" name="custRequestId" group-by="true"/>
+        <alias entity-alias="IIS" name="custRequestItemSeqId" group-by="true"/>
+        <alias entity-alias="IIS" name="shipmentId" group-by="true"/>
+        <alias entity-alias="IIS" name="shipmentItemSeqId" />
+        <alias entity-alias="IIS" name="issuedByUserLoginId" group-by="true"/>
+        <alias entity-alias="IIS" name="productId" group-by="true"/>
+        <alias entity-alias="IIS" name="quantity" function="sum"/>
+        <alias entity-alias="SH" name="shipmentTypeId" group-by="true" />
+        <alias entity-alias="SH" name="statusId" group-by="true"/>
+        <alias entity-alias="SH" name="issueDate" field="estimatedShipDate" group-by="true"/>
+        <alias entity-alias="CR" name="fromPartyId" group-by="true"/>
+        <alias entity-alias="CR" name="custRequestDate" group-by="true"/>
+        <alias entity-alias="CR" name="custRequestName" group-by="true"/>
+        <view-link entity-alias="IIS" rel-entity-alias="SH">
+        	<key-map field-name="shipmentId" />
+        </view-link>
+        <view-link entity-alias="IIS" rel-entity-alias="CR">
+        	<key-map field-name="custRequestId" />
+        </view-link>
+    </view-entity>
     <entity entity-name="ItemIssuanceRole"
             package-name="org.ofbiz.shipment.issuance"
             title="Item Issuance Role Entity">

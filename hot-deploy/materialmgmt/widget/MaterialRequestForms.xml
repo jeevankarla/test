@@ -159,6 +159,56 @@
         <field name="issuedByUserLoginId" title="Issued By"><display/></field>
         
     </form>
+    
+    <form name="FindMaterialIssuanceNew" target="FindMaterialIssuanceNew" title="" type="single" default-map-name="parameters"
+        header-row-style="header-row" default-table-style="basic-table">
+        <field name="shipmentId" title="Issuance Id"><text-find/></field>
+        <field name="custRequestId" title="${uiLabelMap.MaterialMangement_CustRequestId}"><text-find/></field>
+        <field name="custRequestName" title="${uiLabelMap.MaterialMangement_CustRequestName}"><text-find/></field>
+        <field name="fromPartyId" title="${uiLabelMap.MaterialMangement_CustRequestFromPartyId}"><lookup target-form-name="LookupPartyName"/></field>
+ 		<field name="custRequestDate" title="${uiLabelMap.MaterialMangement_CustRequestDate}"><date-find/></field>
+ 		<field name="issueDate" title="${uiLabelMap.MaterialMangement_IssuedDate}"><date-find/></field>
+        <field name="submitButton" title="${uiLabelMap.CommonFind}" widget-style="smallSubmit">
+            <submit button-type="button"/>
+        </field>
+        <field name="noConditionFind"><hidden value="Y"/><!-- if this isn't there then with all fields empty no query will be done --></field>
+    </form>
+	
+    <form name="ListMaterialIssuanceNew" type="list" extends="ListIssuanceListNew" list-name="listIt">
+        <actions>
+          <service service-name="performFind" result-map="result" result-map-list="listIt">
+            <field-map field-name="inputFields" from-field="parameters"/>
+            <field-map field-name="entityName" value="IssuanceAndShipmentAndCustRequest"/>
+            <field-map field-name="orderBy" value="-issueDate"/>
+            <field-map field-name="viewIndex" from-field="viewIndex"/>
+            <field-map field-name="viewSize" from-field="viewSize"/>
+          </service>
+        </actions>
+    </form>
+
+    <form name="ListIssuanceListNew" type="list" use-row-submit="true" list-name="listIt" title="List of customer requests"
+        odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
+        <field name="itemIssuanceId" title="Issuance Id"><display/></field>
+        <field name="custRequestId" title="${uiLabelMap.MaterialMangement_CustRequestId}">
+			<display/>
+        </field>
+        <field name="custRequestItemSeqId" title="Indent Item No">
+			<display/>
+        </field>
+        <field name="custRequestDate" title="${uiLabelMap.MaterialMangement_CustRequestDate}"><display description="${groovy:org.ofbiz.base.util.UtilDateTime.toDateString(custRequestDate,&quot;dd/MM/yyyy&quot;)}"/></field>
+        <field name="fromPartyId" title="${uiLabelMap.MaterialMangement_CustRequestFromPartyId}">
+        	<display-entity entity-name="PartyNameView" key-field-name="partyId" description="${firstName} ${middleName} ${lastName} ${groupName}"/>
+        </field>
+        <field name="custRequestName" title="${uiLabelMap.MaterialMangement_CustRequestName}"><display/></field>
+        <field name="productId" title="${uiLabelMap.MaterialMangement_ProductId} - ${uiLabelMap.MaterialMangement_ProductName}">
+        	<display-entity entity-name="Product" description="${productId} - ${description}"/>
+        </field>
+        <field name="quantity" title="Issued Quantity"><display/></field>
+        <field name="issueDate" title="Issue Date"><display description="${groovy:org.ofbiz.base.util.UtilDateTime.toDateString(issueDate,&quot;dd/MM/yyyy HH:mm:ss&quot;)}"/></field>
+        <field name="issuedByUserLoginId" title="Issued By"><display/></field>
+        
+    </form>
+    
 	
 	<form name="FindMaterialEnquiry" target="FindMaterialEnquiry" title="" type="single" default-map-name="parameters"
         header-row-style="header-row" default-table-style="basic-table">
@@ -321,7 +371,7 @@
         odd-row-style="alternate-row" default-table-style="basic-table hover-bar"  paginate-target="StoreProductIssue">
         <row-actions>
         	<set field="flag" value="${groovy: return (QOH > 0)? 'Y' : 'N';}"/>
-        	<set field="custmQuantity" value="${quantity-QOH}"/>
+        	<set field="custmQuantity" value="${quantity-(QOH+issuedQty)}"/>
         	<set field="toBeIssuedQty" value="${groovy: return (quantity-issuedQty > QOH)?  QOH: (quantity-issuedQty);}"/>
         </row-actions>
         <field name="custRequestId" title="${uiLabelMap.MaterialMangement_CustRequestId}"><display/></field>
@@ -382,8 +432,40 @@
         </field>
         
     </form>
-    
-    <form name="ListRequestsToApprove" type="list" use-row-submit="true"  title="" list-name="custRequestItemsList"
+    <form name="SearchRequestsToApprove" type="single" target="SearchRequestsToApprove">
+    	<field name="productId" title="Product">
+             <lookup target-form-name="LookupProduct" size="15" />
+        </field>
+   		 <field name="custRequestId" title="${uiLabelMap.MaterialMangement_CustRequestId}"><text-find/></field>
+   		  <field name="partyId" title="From Department">
+			<drop-down allow-empty="true" >
+				<entity-options entity-name="PartyRoleAndPartyDetail" description="${groupName}">
+					<entity-constraint name="roleTypeId" operator="equals" value="INTERNAL_ORGANIZATIO" />
+					<entity-order-by field-name="partyId" />
+				</entity-options>
+			</drop-down>
+		</field>
+		<field name="custRequestDate" title="${uiLabelMap.MaterialMangement_CustRequestDate}"><date-time type="date"/></field>   
+   		 <field name="submitButton" title="${uiLabelMap.CommonFind}" widget-style="smallSubmit">
+            <submit button-type="button"/>
+        </field>
+    </form>
+     <form name="ListRequestsToApprove" type="list" extends="RequestsToApproveList" list-name="listIt">
+        <actions>
+        <script location="component://materialmgmt/webapp/materialmgmt/WEB-INF/actions/reports/ListRequestsToApprovePerformFind.groovy"/>
+          <service service-name="performFind" result-map="result" result-map-list="listIt">
+            <field-map field-name="inputFields" from-field="parameters"/>
+            <field-map field-name="entityName" from-field="entityName"/>
+            <field-map field-name="inputFields.custRequestTypeId" value="PRODUCT_REQUIREMENT"/>
+            <field-map field-name="inputFields.itemStatusId" value="CRQ_DRAFT"/>
+            <field-map field-name="inputFields.fromPartyId" from-field="parameters.partyId" />
+            <field-map field-name="orderBy" value="-custRequestDate"/>  
+            <field-map field-name="viewIndex" from-field="viewIndex"/>
+            <field-map field-name="viewSize" from-field="viewSize"/>
+          </service>
+        </actions>
+    </form>
+    <form name="RequestsToApproveList" type="list" use-row-submit="true"  title="" list-name="custRequestItemsList"
         odd-row-style="alternate-row"  default-table-style="basic-table hover-bar" paginate-target="StoreProductIssue" separate-columns="true">
         
         <field name="custRequestId" title="${uiLabelMap.MaterialMangement_CustRequestId}"><display/></field>
@@ -422,7 +504,7 @@
     
     <form name="ListRequestItems" type="list" use-row-submit="true"  title="" list-name="custRequestItems"
         odd-row-style="alternate-row" default-table-style="basic-table hover-bar" paginate-target="RequestItems">
-        <auto-fields-entity entity-name="CustRequestItem" default-field-type="display"/>
+        <!-- <auto-fields-entity entity-name="CustRequestItem" default-field-type="display"/> -->
         <field name="sequenceNum"></field>
         <field name="custRequestId"><hidden/></field>
         <field name="custRequestItemSeqId" widget-style="buttontext" title="${uiLabelMap.MaterialMangement_CustRequestItemSeqId}">
@@ -441,7 +523,7 @@
             <display-entity also-hidden="false" entity-name="StatusItem"/>
         </field>
         <field name="origQuantity" title="Indented Qty"><display/></field>
-        <field name="quantity" title="Sec. Head Approved Qty"><display/></field>
+        <field  use-when="&quot;${statusId}&quot;== &quot;CRQ_SUBMITTED&quot;" name="quantity" title="Sec. Head Approved Qty"><display/></field>
         <!-- <field name="addNote" use-when="!custRequest.get(&quot;statusId&quot;).equals(&quot;CRQ_CANCELLED&quot;)&amp;&amp;!custRequest.get(&quot;statusId&quot;).equals(&quot;CRQ_COMPLETED&quot;)">
             <hyperlink description="${uiLabelMap.FormFieldTitle_addNote}" target="requestitemnotes">
                 <parameter param-name="custRequestId"/>
@@ -689,36 +771,6 @@
             <submit/>
         </field>
     </form>
-    <form name="UpdateRequirement" type="single" target="UpdateRequirement" >
-	    <actions>
-	    	<entity-condition entity-name="ProductFacility" distinct="true" list="prodFacility" />
-        	
-			<set field="prodFacilityId" type="List" value="${groovy: org.ofbiz.entity.util.EntityUtil.getFieldListFromEntityList(prodFacility, 'facilityId', true);}"/>        	
-        	<entity-condition entity-name="Facility" distinct="true" list="facilityList">
-        		<condition-expr field-name="facilityId" operator="in" from-field="prodFacilityId"/>
-        	</entity-condition>
-	    	<entity-and entity-name="Requirement" list="RequirementList">
-	    		<field-map field-name="requirementId" from-field="parameters.requirementId" />
-	    	</entity-and>
-	    	<set field="productId" value="${RequirementList[0].productId}"/>
-	    	<set field="quantity" value="${RequirementList[0].quantity}"/>
-	    	<set field="requirementStartDate" value="${RequirementList[0].requirementStartDate}"/>
-	    	<set field="facilityId" value="${RequirementList[0].facilityId}" />
-	    </actions>
-	    <field name="requirementId"><display description="${RequirementList[0].requirementId}" /></field>
-	    <field name="productId" title="Product" required-field="true">
-	            <lookup target-form-name="LookupProduct" size="10" />
-	    </field>
-	    <field name="facilityId" required-field="true" >
-            <drop-down allow-empty="false" >
-            	<list-options key-name="facilityId" list-name="facilityList" description="${facilityName}"/>
-            </drop-down>
-        </field>
-	    <field name="quantity" title="Quantity" required-field="true" ><text size="10"/></field>
-        <field name="requirementStartDate" title="Requirement Date" ><date-time type="date" /></field>
-        <field name="submitButton" title="${uiLabelMap.CommonUpdate}"><submit button-type="button"/></field>
-    </form>
-    
    <form name="FindMaterialInvoice" type="single" target="findMaterialInvoices">
    	<actions>
    		<entity-condition entity-name="ProductFacility" distinct="true" list="prodFacility" />
@@ -850,4 +902,6 @@
             <submit button-type="button"/>
         </field>
    </form>
+   
+   
 </forms>

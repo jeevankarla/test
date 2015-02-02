@@ -534,6 +534,7 @@ public class MaterialRequestServices {
         String custRequestItemSeqId = (String)context.get("custRequestItemSeqId");
         String facilityId = (String)context.get("facilityId");
         BigDecimal toBeIssuedQty =(BigDecimal)context.get("toBeIssuedQty");
+        GenericValue userLogin = (GenericValue) context.get("userLogin");
         Map<String, Object> result = ServiceUtil.returnSuccess();
         try {
         	
@@ -561,6 +562,25 @@ public class MaterialRequestServices {
                 return ServiceUtil.returnError("Product Not Found with Id : "+productId);
             }
             
+            String shipmentId = "";
+            try{
+    			
+    			GenericValue newEntity = delegator.makeValue("Shipment");
+    	        newEntity.set("shipmentTypeId", "ISSUANCE_SHIPMENT");
+    	        newEntity.set("statusId", "GENERATED");
+    	        newEntity.set("estimatedShipDate", UtilDateTime.nowTimestamp());
+    	        newEntity.set("createdByUserLogin", userLogin.getString("userLoginId"));
+    	        newEntity.set("createdDate", UtilDateTime.nowTimestamp());
+    	        newEntity.set("lastModifiedByUserLogin", userLogin.getString("userLoginId"));
+    	        newEntity.set("lastModifiedDate", UtilDateTime.nowTimestamp());
+                delegator.createSetNextSeqId(newEntity);
+                
+                shipmentId = newEntity.getString("shipmentId");
+            } catch (GenericEntityException e) {
+                Debug.logError(e, module);
+                return ServiceUtil.returnError("Failed to create a new shipment " + e);            
+            }
+            Debug.log("shipmentId #######################"+shipmentId);
             /* We need to get facilityId from ProductFacility */
             if(UtilValidate.isEmpty(facilityId)){
             	List<GenericValue> productFacility = delegator.findList("ProductFacility", EntityCondition.makeCondition("productId", EntityOperator.EQUALS, productId), null, null, null, false);
@@ -572,7 +592,6 @@ public class MaterialRequestServices {
             }
             
             Map<String, ? extends Object> findCurrInventoryParams =  UtilMisc.toMap("productId", productId, "facilityId", facilityId);
-            GenericValue userLogin = (GenericValue) context.get("userLogin");
             // Call issuance service
             
             Map<String, Object> resultCtx = dispatcher.runSync("getInventoryAvailableByFacility", findCurrInventoryParams);
@@ -580,20 +599,20 @@ public class MaterialRequestServices {
             	Debug.logError("Problem getting inventory level of the request for product Id :"+productId, module);
                 return ServiceUtil.returnError("Problem getting inventory level of the request for product Id :"+productId);
             }
-            Object atpObj = resultCtx.get("availableToPromiseTotal");
-            BigDecimal atp = BigDecimal.ZERO;
-            if (atpObj != null) {
-                atp = new BigDecimal(atpObj.toString());
+            Object qohObj = resultCtx.get("quantityOnHandTotal");
+            BigDecimal qoh = BigDecimal.ZERO;
+            if (qohObj != null) {
+            	qoh = new BigDecimal(qohObj.toString());
             }
             Debug.log("toBeIssuedQty=========="+toBeIssuedQty);
-            if (toBeIssuedQty.compareTo(atp) > 0) {
-            	Debug.logError("Available Inventory level for productId : "+productId + " is "+atp, module);
-                return ServiceUtil.returnError("Available Inventory level for productId : "+productId + " is "+atp);
+            if (toBeIssuedQty.compareTo(qoh) > 0) {
+            	Debug.logError("Available Inventory level for productId : "+productId + " is "+qoh, module);
+                return ServiceUtil.returnError("Available Inventory level for productId : "+productId + " is "+qoh);
             }
             
             List conditionList = FastList.newInstance();
             conditionList.add(EntityCondition.makeCondition("productId", EntityOperator.EQUALS, productId));
-            conditionList.add(EntityCondition.makeCondition("availableToPromiseTotal", EntityOperator.GREATER_THAN, BigDecimal.ZERO));
+            conditionList.add(EntityCondition.makeCondition("quantityOnHandTotal", EntityOperator.GREATER_THAN, BigDecimal.ZERO));
             if(UtilValidate.isNotEmpty(facilityId)){
             	conditionList.add(EntityCondition.makeCondition("facilityId", EntityOperator.EQUALS, facilityId));
             }
@@ -603,17 +622,18 @@ public class MaterialRequestServices {
             while ((requestedQty.compareTo(BigDecimal.ZERO) > 0) && itr.hasNext()) {
                 GenericValue inventoryItem = itr.next();
                 String inventoryItemId = inventoryItem.getString("inventoryItemId");
-                atp = inventoryItem.getBigDecimal("availableToPromiseTotal");
+                qoh = inventoryItem.getBigDecimal("quantityOnHandTotal");
                 findCurrInventoryParams = UtilMisc.toMap("inventoryItemId", inventoryItemId);
                 BigDecimal issueQuantity = null;
-                if (requestedQty.compareTo(atp) > 0) {	
-                    issueQuantity = atp;
+                if (requestedQty.compareTo(qoh) >= 0) {	
+                    issueQuantity = qoh;
                 } else {
                     issueQuantity = requestedQty;
                 }
                 Map<String, Object> itemIssuanceCtx = FastMap.newInstance();
                 itemIssuanceCtx.put("userLogin", userLogin);
                 itemIssuanceCtx.put("inventoryItemId", inventoryItemId);
+                itemIssuanceCtx.put("shipmentId", shipmentId);
                 itemIssuanceCtx.put("custRequestId", custRequestId);
                 itemIssuanceCtx.put("custRequestItemSeqId", custRequestItemSeqId);
                 itemIssuanceCtx.put("quantity", issueQuantity);
@@ -643,7 +663,7 @@ public class MaterialRequestServices {
 		String custRequestItemSeqId = (String) context.get("custRequestItemSeqId");
 		String inventoryItemId = (String) context.get("inventoryItemId");
 		BigDecimal quantity = (BigDecimal) context.get("quantity");
-		
+		String shipmentId = (String) context.get("shipmentId");
 		BigDecimal requestedQuantity = BigDecimal.ZERO;
 		
 		GenericValue userLogin = (GenericValue) context.get("userLogin");
@@ -660,16 +680,19 @@ public class MaterialRequestServices {
 			
 			GenericValue inventoryItem = delegator.findOne("InventoryItem", UtilMisc.toMap("inventoryItemId", inventoryItemId), false);
 			
-			BigDecimal inventoryATP = inventoryItem.getBigDecimal("availableToPromiseTotal");
+			BigDecimal inventoryQOH = inventoryItem.getBigDecimal("quantityOnHandTotal");
 			
-			if(quantity.compareTo(inventoryATP)>0){
-				return ServiceUtil.returnError("Not issuing InventoryItem to Request "+custRequestId+" : "+custRequestItemSeqId+", because the quantity to issue "+quantity+" is greater than the quantity left to issue (i.e "+inventoryATP+") for inventoryItemId : "+inventoryItemId);
+			if(quantity.compareTo(inventoryQOH)>0){
+				return ServiceUtil.returnError("Not issuing InventoryItem to Request "+custRequestId+" : "+custRequestItemSeqId+", because the quantity to issue "+quantity+" is greater than the quantity left to issue (i.e "+inventoryQOH+") for inventoryItemId : "+inventoryItemId);
 			}
 			//caliculating issuence Qty
 			BigDecimal issuedQty=BigDecimal.ZERO;
 			List filterIssuenceReq = FastList.newInstance();
 			filterIssuenceReq.add(EntityCondition.makeCondition("custRequestId", EntityOperator.EQUALS, custRequestId));
 			filterIssuenceReq.add(EntityCondition.makeCondition("custRequestItemSeqId", EntityOperator.EQUALS, custRequestItemSeqId));
+			if(UtilValidate.isNotEmpty(shipmentId)){
+				filterIssuenceReq.add(EntityCondition.makeCondition("shipmentId", EntityOperator.EQUALS, shipmentId));
+			}
 			EntityCondition filterIssuenceCond = EntityCondition.makeCondition(filterIssuenceReq, EntityOperator.AND);
 			List<GenericValue> itemIssuanceList = delegator.findList("ItemIssuance", filterIssuenceCond, UtilMisc.toSet("quantity"), UtilMisc.toList("-issuedDateTime"), null, false);
 			
@@ -698,6 +721,11 @@ public class MaterialRequestServices {
 			}
 			
 			String itemIssuanceId = (String)resultCtx.get("itemIssuanceId");
+			
+			GenericValue itemIssuance = delegator.findOne("ItemIssuance", UtilMisc.toMap("itemIssuanceId", itemIssuanceId), false);
+			itemIssuance.set("shipmentId", shipmentId);
+			itemIssuance.store();
+			
 			/*Decrement inventory*/
 			Map createInvDetail = FastMap.newInstance();
 			createInvDetail.put("custRequestId", custRequestId);

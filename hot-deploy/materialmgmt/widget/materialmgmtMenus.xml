@@ -51,7 +51,7 @@
 			<condition>
 	        		<if-has-permission permission="MM"  action="_STORE_ISSUE_VIEW"/>
 	        </condition>
-	        	<link target="FindMaterialIssuance"/>
+	        	<link target="FindMaterialIssuance" />
 	        </menu-item>
 	        
 	        <menu-item name="FindMaterialRequirement" title="Requirements">
@@ -177,7 +177,10 @@
       
       <menu name="StoreIssueTabBar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml" selected-menuitem-context-field-name="tabButtonItem2">
         <menu-item name="FindMaterialIssuance" title="${uiLabelMap.MaterialMangement_FindMaterialIssuance}">
-        	<link target="FindMaterialIssuance"/>
+        	<link target="FindMaterialIssuance" />
+        </menu-item>
+        <menu-item name="FindMaterialIssuanceNew" title="${uiLabelMap.MaterialMangement_FindMaterialIssuance} New">
+        	<link target="FindMaterialIssuanceNew" />
         </menu-item>
         <menu-item name="StoreProductIssue" title="Issuance Request">
         	<link target="StoreProductIssue"/>

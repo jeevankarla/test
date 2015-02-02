@@ -7,6 +7,7 @@
 	 <ProductCategoryAssocType description="PURCHASE INDENT" parentTypeId="INDENT" productCategoryAssocTypeId="PUR_INDENT"/>
 	
 	 <ShipmentType description="Purchase Shipment" hasTable="N" shipmentTypeId="PURCHASE_SHIPMENT"/>
+	 <ShipmentType description="Issuance Shipment" hasTable="N" shipmentTypeId="ISSUANCE_SHIPMENT"/>
 	 <ShipmentType description="Material Purchase Shipment" hasTable="N"  parentTypeId="PURCHASE_SHIPMENT" shipmentTypeId="MATERIAL_SHIPMENT"/>
     
      <StatusItem description="In Enquiry"  sequenceId="01" statusCode="IN Enquiry" statusId="REQ_IN_ENQUIRY" statusTypeId="REQUIREMENT_STATUS"/>
@@ -28,7 +29,8 @@
      <StatusItem description="Quote Accepted" statusCode="ACCEPTED" statusId="QUO_ACCEPTED" statusTypeId="QUOTE_STATUS"/>
      <StatusValidChange statusId="QUO_CREATED" statusIdTo="QUO_ACCEPTED" transitionName="Accept Quote"/>
      <StatusValidChange statusId="QUO_ACCEPTED" statusIdTo="QUO_REJECTED" transitionName="Reject Quote"/>
-     
+     <StatusValidChange statusId="QUO_ACCEPTED" statusIdTo="QUO_ORDERED" transitionName="Quote Ordered"/>
+     <StatusValidChange statusId="QUO_ORDERED" statusIdTo="QUO_ACCEPTED" transitionName="Quote Order Cancelled"/>
      <StatusType description="Quote Item Status" hasTable="N" statusTypeId="QTITEM_STATUS"/>
      <StatusItem description="Created" statusCode="CREATED" statusId="QTITM_CREATED" statusTypeId="QTITEM_STATUS"/>
      <StatusItem description="Accepted" statusCode="ACCEPTED" statusId="QTITM_ACCEPTED" statusTypeId="QTITEM_STATUS"/>
@@ -52,11 +54,11 @@
      <StatusValidChange statusId="QTITM_NEGOTIATION" statusIdTo="QTITM_REJECTED" transitionName="Reject"/>
      <StatusValidChange statusId="QTITM_APPROVED" statusIdTo="QTITM_QUALIFIED" transitionName="Qualified"/>
      <StatusValidChange statusId="QTITM_QUALIFIED" statusIdTo="QTITM_REJECTED" transitionName="Reject"/>
-     <StatusValidChange statusId="QTITM_APPROVED" statusIdTo="QTITM_ORDERED" transitionName="Ordered"/>
+     <StatusValidChange statusId="QTITM_QUALIFIED" statusIdTo="QTITM_ORDERED" transitionName="Ordered"/>
      <StatusValidChange statusId="QTITM_APPROVED" statusIdTo="QTITM_REJECTED" transitionName="Reject"/>
-     <StatusValidChange statusId="QTITM_ORDERED" statusIdTo="QTITM_REJECTED" transitionName="Reject"/>
-     
-      <StatusValidChange statusId="REQ_APPROVED" statusIdTo="REQ_IN_ENQUIRY" transitionName="Requirement In Enquiry"/>
+     <!-- <StatusValidChange statusId="QTITM_ORDERED" statusIdTo="QTITM_REJECTED" transitionName="Reject"/> -->
+     <StatusValidChange statusId="QTITM_ORDERED" statusIdTo="QTITM_QUALIFIED" transitionName="Ordered"/>
+     <StatusValidChange statusId="REQ_APPROVED" statusIdTo="REQ_IN_ENQUIRY" transitionName="Requirement In Enquiry"/>
      
      <Enumeration description="Material Purchase Channel" enumCode="Material Purchase Channel" enumId="MATERIAL_PUR_CHANNEL" enumTypeId="ORDER_PRCHSE_CHANNEL"/>
      
@@ -111,6 +113,7 @@
 	<OrderAdjustmentType description="Packing And Forwarding Charges on Purchase" hasTable="N" orderAdjustmentTypeId="COGS_PCK_FWD" parentTypeId="PURCHASE_CHRGS"/>
 	<OrderAdjustmentType description="Insurance on Purchase" hasTable="N" orderAdjustmentTypeId="COGS_INSURANCE" parentTypeId="PURCHASE_CHRGS"/>
 	<OrderAdjustmentType description="Other Charges on Purchase" hasTable="N" orderAdjustmentTypeId="COGS_OTH_CHARGES" parentTypeId="PURCHASE_CHRGS"/>
+	
 	<InvoiceItemType defaultGlAccountId="510000" description="FREIGHT CHARGES" hasTable="N" invoiceItemTypeId="COGS_FREIGHT"/>
 	<InvoiceItemType defaultGlAccountId="511100" description="DISCOUNTS" hasTable="N" invoiceItemTypeId="COGS_DISC"/>
 	<InvoiceItemType defaultGlAccountId="510000" description="PACK AND FORWARDING CHARGES" hasTable="N" invoiceItemTypeId="COGS_PCK_FWD"/>
@@ -146,6 +149,19 @@
      <Enumeration enumId="EXTERNAL_NOTE_ID" enumCode="EXTERNAL NOTE ID" enumTypeId="CUSTOM_NOTE_TYPE" sequenceId="1" description="External Note Id"/>
      <Enumeration enumId="INTERNAL_NOTE_ID"  enumCode="INTERNAL NOTE ID" enumTypeId="CUSTOM_NOTE_TYPE" sequenceId="1" description="Internal Note Id"/>
     
+    <!--Old To New adjustmentTypes
+    COGS_FREIGHT=COGS_ITEM16
+	COGS_DISC=COGS_ITEM17
+	COGS_INSURANCE=COGS_ITEM18
+	COGS_PCK_FWD=COGS_ITEM19
+	COGS_OTH_CHARGES=COGS_ITEM20
+     -->
+    <InvoiceItemTypeMap  invoiceItemMapKey="COGS_FREIGHT" invoiceItemTypeId="COGS_FREIGHT" invoiceTypeId="PURCHASE_INVOICE"  organizationPartyId="Company"/>
+    <InvoiceItemTypeMap  invoiceItemMapKey="COGS_DISC" invoiceItemTypeId="COGS_DISC" invoiceTypeId="PURCHASE_INVOICE"  organizationPartyId="Company"/> 
+    <InvoiceItemTypeMap  invoiceItemMapKey="COGS_INSURANCE" invoiceItemTypeId="COGS_INSURANCE" invoiceTypeId="PURCHASE_INVOICE"  organizationPartyId="Company"/> 
+    <InvoiceItemTypeMap  invoiceItemMapKey="COGS_PCK_FWD" invoiceItemTypeId="COGS_PCK_FWD" invoiceTypeId="PURCHASE_INVOICE"  organizationPartyId="Company"/> 
+    <InvoiceItemTypeMap  invoiceItemMapKey="COGS_OTH_CHARGES" invoiceItemTypeId="COGS_OTH_CHARGES" invoiceTypeId="PURCHASE_INVOICE"  organizationPartyId="Company"/> 
+   
      <!-- test comment -->
 
 </entity-engine-xml>

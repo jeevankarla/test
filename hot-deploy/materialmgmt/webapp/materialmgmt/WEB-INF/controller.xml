@@ -135,8 +135,8 @@
     
      <request-map uri="editRequirement">
         <security auth="true" https="true"/>
-        <response name="success" type="view" value="editRequirement"/>
-        <response name="error" type="view" value="editRequirement"/>
+        <response name="success" type="view" value="EditRequirement"/>
+        <response name="error" type="view" value="EditRequirement"/>
     </request-map>
     
     <request-map uri="UpdateRequirement">
@@ -203,7 +203,7 @@
      <request-map uri="approveRequestByHOD">
        <security https="true" auth="true"/>
        <event type="service" path="" invoke="approveRequestByHOD"></event>
-       <response name="success" type="view" value="ApproveRequestsByDeptHead"/>
+       <response name="success" type="request-redirect-noparam" value="ApproveRequestsByDeptHead"/>
        <response name="error" type="view" value="ApproveRequestsByDeptHead"/>
      </request-map>
      <request-map uri="updateMaterialQuoteTerm">
@@ -216,7 +216,9 @@
      <request-map uri="createMaterialQuoteTerm">
        <security https="true" auth="true"/>
        <event type="service" path="" invoke="createQuoteTerm"></event>
-       <response name="success" type="view" value="ViewMaterialQuote"/>
+       <response name="success" type="request-redirect" value="ViewMaterialQuote">
+      	 <redirect-parameter name="quoteId"/>
+       </response>
        <response name="error" type="view" value="ViewMaterialQuote"/>
      </request-map>
      <request-map uri="getTermTypesByParentType">
@@ -287,14 +289,14 @@
      <request-map uri="rejectMaterialRequest">
        <security https="true" auth="true"/>
        <event type="service" path="" invoke="setCustRequestItemStatus"></event>
-       <response name="success" type="view" value="ApproveRequestsByDeptHead"/>
+       <response name="success" type="request-redirect-noparam" value="ApproveRequestsByDeptHead"/>
        <response name="error" type="view" value="ApproveRequestsByDeptHead"/>
      </request-map>
      
      <request-map uri="acceptReceiptQtyByQC">
        <security https="true" auth="true"/>
        <event type="service" path="" invoke="acceptReceiptQtyByQC"></event>
-       <response name="success" type="view" value="MaterialForQCApproval"/>
+       <response name="success" type="request-redirect-noparam" value="MaterialForQCApproval"/>
        <response name="error" type="view" value="MaterialForQCApproval"/>
      </request-map>
      
@@ -475,7 +477,7 @@
      <request-map uri="createRequirementForCustRequestItem">
        <security https="true" auth="true"/>
        <event type="service" path="" invoke="createRequirementForCustRequestItem" global-transaction="true"/>
-       <response name="success" type="view" value="StoreProductIssue"/>
+       <response name="success" type="request-redirect-noparam" value="StoreProductIssue"/>
        <response name="error" type="view" value="StoreProductIssue"/>
      </request-map>
      
@@ -526,6 +528,11 @@
        <security https="true" auth="true"/>
        <response name="success" type="view" value="FindMaterialIssuance"/>
        <response name="error" type="view" value="FindMaterialIssuance"/>
+     </request-map>
+     <request-map uri="FindMaterialIssuanceNew">
+       <security https="true" auth="true"/>
+       <response name="success" type="view" value="FindMaterialIssuanceNew"/>
+       <response name="error" type="view" value="FindMaterialIssuanceNew"/>
      </request-map>
      
       <request-map uri="FindInterUnitPurchase">
@@ -641,7 +648,7 @@
     </request-map>
     <request-map uri="CancelOrder">
         <security https="true" auth="true"/>
-        <event type="service" invoke="ChangeOrderStatus"/>
+        <event type="service" invoke="cancelPOStatus"/>
         <response name="success" type="view" value="FindMaterialPO"/>
         <response name="error" type="view" value="FindMaterialPO"/>
     </request-map>
@@ -927,6 +934,17 @@
        <response name="success" type="view" value="MaterialForQCApproval"/>
        <response name="error" type="view" value="MaterialForQCApproval"/>
      </request-map>
+      <request-map uri="getShipmentLinkOrdersAjax">
+        <security https="true" auth="true"/>
+        <event type="service"  invoke="getShipmentLinkOrdersAjax"/>
+        <response name="success" type="request" value="json"/>
+    </request-map>
+     
+     <request-map uri="SearchRequestsToApprove">
+       <security https="true" auth="true"/>
+       <response name="success" type="view" value="ApproveRequestsByDeptHead"/>
+       <response name="error" type="view" value="ApproveRequestsByDeptHead"/>
+     </request-map>
      
     
     <view-map name="main" type="screen" page="component://materialmgmt/widget/materialmgmtScreens.xml#main"/>
@@ -986,7 +1004,7 @@
     <view-map name="AddEnquiryContent" type="screen" page="component://materialmgmt/widget/MaterialRequestScreens.xml#AddEnquiryContent"/>
     <view-map name="AddIndentContent" type="screen" page="component://materialmgmt/widget/MaterialRequestScreens.xml#AddIndentContent"/>
     <view-map name="NewRequirement" type="screen" page="component://materialmgmt/widget/MaterialRequestScreens.xml#NewRequirement"/>
-    <view-map name="editRequirement" type="screen" page="component://materialmgmt/widget/MaterialRequestScreens.xml#editRequirement"/>
+    <view-map name="EditRequirement" type="screen" page="component://materialmgmt/widget/MaterialRequirementScreens.xml#EditRequirement"/>
     <view-map name="RequestsReceiptAcknowledgement" type="screen" page="component://materialmgmt/widget/MaterialRequestScreens.xml#RequestsReceiptAcknowledgement"/>
     <view-map name="EditQuotItems" type="screen" page="component://materialmgmt/widget/MaterialRequestScreens.xml#EditQuotItems"/>
     <!-- Requirement views -->
@@ -1007,6 +1025,7 @@
     
 	<!-- Issuance and Receipts  -->
 	<view-map name="FindMaterialIssuance" type="screen" page="component://materialmgmt/widget/MaterialRequestScreens.xml#FindMaterialIssuance"/>
+	<view-map name="FindMaterialIssuanceNew" type="screen" page="component://materialmgmt/widget/MaterialRequestScreens.xml#FindMaterialIssuanceNew"/>
 	<view-map name="MaterialForQCApproval" type="screen" page="component://materialmgmt/widget/MaterialPurchaseScreens.xml#MaterialForQCApproval"/>
 	<view-map name="FindGRNReceipts" type="screen" page="component://materialmgmt/widget/MaterialPurchaseScreens.xml#FindGRNReceipts"/>
 	<view-map name="FindGRNShipments" type="screen" page="component://materialmgmt/widget/MaterialPurchaseScreens.xml#FindGRNShipments"/>
