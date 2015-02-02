@@ -43,6 +43,7 @@ under the License.
     </simple-method>
 
     <simple-method method-name="updateRequirement" short-description="Update a requirement">
+    <if-not-empty field="parameters.updateFlag">
     	<if-not-empty field="parameters.quantity" >
     		<if-compare operator="greater" value="0" field="parameters.quantity">
 		    	<make-value value-field="lookupPKMap" entity-name="Requirement"/>
@@ -69,6 +70,18 @@ under the License.
     		</else>
     	</if-not-empty>
     	<check-errors></check-errors>
+    	<else>
+    		<make-value value-field="lookupPKMap" entity-name="Requirement"/>
+	        <set-pk-fields map="parameters" value-field="lookupPKMap"/>
+	        <find-by-primary-key entity-name="Requirement" map="lookupPKMap" value-field="lookedUpValue"/>
+	        <field-to-result field="lookedUpValue.statusId" result-name="oldStatusId"/>
+	        <set-nonpk-fields map="parameters" value-field="lookedUpValue"/>
+	        <now-timestamp field="nowTimestamp"/>
+	        <set field="newEntity.lastModifiedDate" from-field="nowTimestamp"/>
+	        <set field="newEntity.lastModifiedByUserLogin" from-field="userLogin.userLoginId"/>
+	        <store-value value-field="lookedUpValue"/>
+    	</else>
+    </if-not-empty>	
     </simple-method>
 
     <simple-method method-name="deleteRequirement" short-description="Delete a requirement">

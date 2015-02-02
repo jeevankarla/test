@@ -252,12 +252,15 @@ function makeDatePicker(fromDateId ,thruDateId){
 	<#assign orderShipTermInfo = []>
 	<#assign bedCheck = "">
 	<#assign orderOtherTermInfo = []>
+	<#assign quoteTerm = "">
 	<#if orderEditParam?has_content>
 		<#assign orderInfo = orderEditParam.get("orderHeader")?if_exists>
 		<#assign quoteInfo = orderEditParam.get("quoteDetails")?if_exists>
+		<#if quoteInfo.quoteId?has_content>
 		<#assign quoteTerm = delegator.findByAnd("QuoteTerm", {"quoteId" : quoteInfo.quoteId, "termTypeId" : "BED_PUR" })>
-		<#if quoteTerm?has_content>
+		<#if quoteTerm!= "undefined" && quoteTerm?has_content>
 			<#assign bedCheck = quoteTerm[0].termTypeId?if_exists>
+		</#if>
 		</#if>
 		<#assign orderAdjInfo = orderEditParam.get("orderAdjustment")?if_exists>
 		<#assign orderTermInfo = orderEditParam.get("orderTerms")?if_exists>
