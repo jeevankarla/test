@@ -48,7 +48,7 @@ ${setRequestAttribute("OUTPUT_FILENAME", "arcOrder.pdf")}
             	  <fo:block  keep-together="always" text-align="center" font-family="Courier,monospace" white-space-collapse="false" font-size="12pt" > &#160;&#160;  </fo:block>
               	<fo:block  keep-together="always" text-align="left" font-family="Courier,monospace" white-space-collapse="false" font-size="16pt" font-weight="bold"  >&#160;&#160;&#160;&#160;                        <fo:inline font-weight="bold" >PO against ARC/CPC</fo:inline>         </fo:block>
                 <fo:block text-align="left" font-size="12pt" white-space-collapse="false" keep-together="always" > &#160;</fo:block>
-	           <fo:block  keep-together="always" text-align="left" font-family="Courier,monospace" white-space-collapse="false" font-size="12pt" >  ARC PO NO: ${allDetailsMap.get("orderId")?if_exists}                                                 ARC PO DATED: ${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(allDetailsMap.get("orderDate")?if_exists, "dd-MMM-yy")}</fo:block>
+	           <fo:block  keep-together="always" text-align="left" font-family="Courier,monospace" white-space-collapse="false" font-size="12pt" >  ARC/CPC PO NO: ${allDetailsMap.get("orderId")?if_exists}                                                  PO DATED: ${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(allDetailsMap.get("orderDate")?if_exists, "dd-MMM-yy")}</fo:block>
            
                                            
 											<fo:block text-align="left" font-size="12pt" white-space-collapse="false" keep-together="always" > &#160;</fo:block>
@@ -72,11 +72,11 @@ ${setRequestAttribute("OUTPUT_FILENAME", "arcOrder.pdf")}
 				                     <fo:table-cell border-style="solid"><fo:block text-align="center"  font-weight="bold" >SNO </fo:block></fo:table-cell>                    
 				                     <fo:table-cell border-style="solid"><fo:block text-align="center"  font-weight="bold" >MaterialName</fo:block></fo:table-cell>
 				                      <fo:table-cell border-style="solid"><fo:block text-align="center"  font-weight="bold"  >Material Code</fo:block></fo:table-cell>       		
-				                      <fo:table-cell border-style="solid"><fo:block text-align="center"  font-weight="bold" >ARCQuantity</fo:block></fo:table-cell>       		
+				                      <fo:table-cell border-style="solid"><fo:block text-align="center"  font-weight="bold" >ARC/CPC Quantity</fo:block></fo:table-cell>       		
 				                      <fo:table-cell border-style="solid"><fo:block text-align="center" font-weight="bold">POQuntity</fo:block></fo:table-cell> 				                    
                                      <fo:table-cell border-style="solid"><fo:block text-align="center"  font-weight="bold"  >Supplied Qty</fo:block></fo:table-cell>
 				                      <fo:table-cell border-style="solid"><fo:block text-align="center" font-weight="bold">POBalance Quntity</fo:block></fo:table-cell>  
-				                      <fo:table-cell border-style="solid"><fo:block text-align="center"  font-weight="bold"  >ARCBal Quantity</fo:block></fo:table-cell>       		
+				                      <fo:table-cell border-style="solid"><fo:block text-align="center"  font-weight="bold"  >ARC/CPC Bal Qty</fo:block></fo:table-cell>       		
 				                        </fo:table-row>
 				                     
 			                	</fo:table-body>

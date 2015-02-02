@@ -32,21 +32,34 @@ import org.ofbiz.party.party.PartyHelper;
 dctx = dispatcher.getDispatchContext();
 shipmentId = parameters.shipmentId;
 receiptId = parameters.receiptId;
-ordId = parameters.orderId;
+orderId = parameters.orderId;
 dateReceived = parameters.datetimeReceived;
-
 
 shipmentMap=[:];
 shipmentList=[];
 
-//get vehicleId
-vehicleDetails = delegator.findList("Shipment",EntityCondition.makeCondition("shipmentId", EntityOperator.EQUALS , shipmentId)  , null, null, null, false );
-vehicleDetail=EntityUtil.getFirst(vehicleDetails);
-
 shipmentMap.put("receiptId",receiptId);
-shipmentMap.put("ordId",ordId);
+shipmentMap.put("ordId",orderId);
 shipmentMap.put("dateReceived",dateReceived);
 shipmentMap["total"]=BigDecimal.ZERO;
+
+//get vehicleId
+//vehicleDetails = delegator.findList("Shipment",EntityCondition.makeCondition("shipmentId", EntityOperator.EQUALS , shipmentId)  , null, null, null, false );
+//vehicleDetail=EntityUtil.getFirst(vehicleDetails);
+
+invoiceDetails = delegator.findOne("Shipment",["shipmentId":shipmentId],false);
+invoiceNo=invoiceDetails.get("supplierInvoiceId");
+invoiceDate=invoiceDetails.get("supplierInvoiceDate");
+dcNo=invoiceDetails.get("deliveryChallanNumber");
+dcDate=invoiceDetails.get("deliveryChallanDate");
+shipmentMap.put("invoiceNo",invoiceNo);
+shipmentMap.put("invoiceDate",invoiceDate);
+shipmentMap.put("dcNo",dcNo);
+shipmentMap.put("dcDate",dcDate);
+Debug.log("invoiceNo=============="+invoiceNo);
+Debug.log("invoiceDate=============="+invoiceDate);
+Debug.log("dcNo=============="+dcNo);
+Debug.log("dcDate=============="+dcDate);
 
 //get PartyId from Role for Dept
 List conditionlist=[];
@@ -55,8 +68,6 @@ conditionlist.add(EntityCondition.makeCondition("roleTypeId", EntityOperator.EQU
 condition=EntityCondition.makeCondition(conditionlist,EntityOperator.AND);
 deptDetails = delegator.findList("OrderRole", condition , null, null, null, false );
 partyId=deptDetails.partyId;
-
-//get deptName
 if(UtilValidate.isNotEmpty(partyId)){
 	deptName =  PartyHelper.getPartyName(delegator, partyId, false);
 	shipmentMap.put("deptName",deptName);	
@@ -71,7 +82,6 @@ vendorDetails = delegator.findList("OrderRole", cond , null, null, null, false )
 vendorDetail=EntityUtil.getFirst(vendorDetails);
 partyId=vendorDetail.partyId;
 shipmentMap.put("partyId",partyId);
-//get PartyName 
 if(UtilValidate.isNotEmpty(partyId)){
 	partyName =  PartyHelper.getPartyName(delegator, partyId, false);
 	shipmentMap.put("partyName",partyName);
@@ -80,7 +90,14 @@ if(UtilValidate.isNotEmpty(partyId)){
 grnDetails=[];
 if(UtilValidate.isNotEmpty(shipmentId)){
 	grnDetailsList = delegator.findList("ShipmentReceipt",EntityCondition.makeCondition("shipmentId", EntityOperator.EQUALS , shipmentId)  , null, null, null, false );
- }
+	productIds = EntityUtil.getFieldListFromEntityList(grnDetailsList, "productId", true);
+	Debug.log("productIds=============="+productIds);
+	productStore = delegator.findList("ProductFacility",EntityCondition.makeCondition("productId", EntityOperator.EQUALS , productIds)  , null, null, null, false );
+	productStore=EntityUtil.getFirst(productStore);
+	Store=productStore.facilityId;
+	shipmentMap.put("store",Store);
+	
+	}
 
  grnList=[];
  grnDetailsList.each{grnData->
@@ -99,20 +116,20 @@ if(UtilValidate.isNotEmpty(shipmentId)){
 	grnDetailsMap["unitPrice"]=0;
 	grnDetailsMap["quantity"]=0;
     grnDetailsMap["amount"]=0;
-	grnDetailsMap["vehicleId"]=vehicleDetail.vehicleId;
+	grnDetailsMap["vehicleId"]=invoiceDetails.get("vehicleId");
 	
 	// productDetails
-	productUomDetails = delegator.findList("Product",EntityCondition.makeCondition("productId", EntityOperator.EQUALS , grnData.productId)  , null, null, null, false );
-	productUomDetails=EntityUtil.getFirst(productUomDetails);
-	grnDetailsMap["internalName"]=productUomDetails.internalName;
-	grnDetailsMap["description"]=productUomDetails.description;
-	uomId=productUomDetails.quantityUomId;
+	product = delegator.findOne("Product",["productId":grnData.productId],false);
+	if(product){
+	grnDetailsMap["internalName"]=product.get("internalName");
+	grnDetailsMap["description"]=product.get("description");
+	uomId=product.get("quantityUomId");
+	}
 	if(UtilValidate.isNotEmpty(uomId)){
-	uomDesc = delegator.findList("Uom",EntityCondition.makeCondition("uomId", EntityOperator.EQUALS , uomId)  , null, null, null, false );
-	uomDesc=EntityUtil.getFirst(uomDesc);
-	grnDetailsMap["unit"]=uomDesc.abbreviation;
-	  }
-	
+		unitDesciption = delegator.findOne("Uom",["uomId":uomId],false);
+	 grnDetailsMap["unit"]=unitDesciption.description;
+	}
+		
 	// OrderItems Details
 	List condlist=[];
 	condlist.add(EntityCondition.makeCondition("orderId", EntityOperator.EQUALS, grnData.orderId));
@@ -156,5 +173,4 @@ context.grnList=grnList;
 
 //Debug.log("grnList=============="+grnList);
 //Debug.log("shipmentList=================shipmentMap=================="+shipmentMap);
-
 

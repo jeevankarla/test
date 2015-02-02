@@ -43,11 +43,11 @@ ${setRequestAttribute("OUTPUT_FILENAME", "LoanAvailedReport.pdf")}
 				    <fo:block  keep-together="always" text-align="left" font-family="Courier,monospace" white-space-collapse="false" font-size="10pt" font-weight="bold">&#160;&#160;&#160;&#160;&#160;                                                    MATERIAL RECEIPT REPORT 	    </fo:block> 
 				    <fo:block  keep-together="always" text-align="left" font-family="Courier,monospace" white-space-collapse="false" font-size="10pt" >&#160;&#160;&#160;&#160;&#160;    SECTION:${shipmentMap.get("deptName")?if_exists}                   M R R NO:${shipmentMap.get("receiptId")}                               DATE:  ${shipmentMap.get("dateReceived")?if_exists}     PRINT DATE:Date:  ${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(nowTimestamp, "dd-MMM-yy")} 	    </fo:block> 
 			        <fo:block  keep-together="always" text-align="left" font-family="Courier,monospace" white-space-collapse="false" font-size="10pt" > &#160;&#160;&#160;&#160;&#160;______________________________________________________________________________________________________________________________________________________________ </fo:block> 
-				    <fo:block  keep-together="always" text-align="left" font-family="Courier,monospace" white-space-collapse="false" font-size="10pt" > P O NO : ${shipmentMap.get("ordId")}                    P O DATE: ${shipmentMap.get("dateReceived")}            VENDOR CODE: ${shipmentMap.get("partyId")}                                   STORE: 	    </fo:block> 
+				    <fo:block  keep-together="always" text-align="left" font-family="Courier,monospace" white-space-collapse="false" font-size="10pt" > P O NO : ${shipmentMap.get("ordId")?if_exists}                    P O DATE: ${shipmentMap.get("dateReceived")?if_exists}                VENDOR CODE: ${shipmentMap.get("partyId")}                                   STORE: ${shipmentMap.get("store")?if_exists?if_exists}   	    </fo:block> 
 					<fo:block  keep-together="always" text-align="center" font-family="Courier,monospace" white-space-collapse="false" font-size="10pt"> &#160;  </fo:block> 
-			        <fo:block  keep-together="always" text-align="left" font-family="Courier,monospace" white-space-collapse="false" font-size="10pt" > D C NO:                            D C DATE:                                VENDOR NAME: ${shipmentMap.get("partyName")}            USER DEPT:${shipmentMap.get("deptName")?if_exists}  	    </fo:block> 
+			        <fo:block  keep-together="always" text-align="left" font-family="Courier,monospace" white-space-collapse="false" font-size="10pt" > D C NO: ${shipmentMap.get("dcNo")?if_exists}                           D C DATE: ${shipmentMap.get("dcDate")?if_exists}                        VENDOR NAME: ${shipmentMap.get("partyName")?if_exists}            USER DEPT:${shipmentMap.get("deptName")?if_exists}  	    </fo:block> 
              		<fo:block  keep-together="always" text-align="center" font-family="Courier,monospace" white-space-collapse="false" font-size="10pt" > &#160;&#160;  </fo:block> 
-			        <fo:block  keep-together="always" text-align="left" font-family="Courier,monospace" white-space-collapse="false" font-size="10pt" > INVOICE NO:                    INVOICE DATE:                                                   </fo:block> 
+			        <fo:block  keep-together="always" text-align="left" font-family="Courier,monospace" white-space-collapse="false" font-size="10pt" > INVOICE NO: ${shipmentMap.get("invoiceNo")?if_exists}                   INVOICE DATE: ${shipmentMap.get("invoiceDate")?if_exists}                                                  </fo:block> 
 			              		
 			         <fo:block  keep-together="always" text-align="center" font-family="Courier,monospace" white-space-collapse="false" font-size="10pt" font-weight="bold"> &#160;&#160;  </fo:block> 
 			         <fo:block  keep-together="always" text-align="center" font-family="Courier,monospace" white-space-collapse="false" font-size="10pt" font-weight="bold"> &#160;&#160;  </fo:block> 
@@ -164,7 +164,7 @@ ${setRequestAttribute("OUTPUT_FILENAME", "LoanAvailedReport.pdf")}
 	                                </fo:table-cell>
 	                                <fo:table-cell border-style="solid">
 	                                    <fo:block text-align="center" font-size="10pt">
-	                                    
+	                               ${grnListItem.get("receivedQty")?if_exists}
 	                                    </fo:block>
 	                                </fo:table-cell>
 	                                <fo:table-cell border-style="solid">
@@ -202,7 +202,7 @@ ${setRequestAttribute("OUTPUT_FILENAME", "LoanAvailedReport.pdf")}
 	                                </fo:table-cell>
 	                               <fo:table-cell border-style="solid">
 	                                    <fo:block text-align="center" font-size="10pt">
-	                                    ${grnListItem.get("vehicleId")}
+	                                    ${grnListItem.get("vehicleId")?if_exists}
  	                                    </fo:block>
 	                                </fo:table-cell>
 	                               <fo:table-cell border-style="solid">
