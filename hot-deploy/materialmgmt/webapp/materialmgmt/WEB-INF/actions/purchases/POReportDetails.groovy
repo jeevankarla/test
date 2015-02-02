@@ -42,12 +42,13 @@ if (orderId) {
 	orderHeader = delegator.findByPrimaryKey("OrderHeader", [orderId : orderId]);
 	context.hasPermission = true;
 	context.canViewInternalDetails = true;
+	if(UtilValidate.isNotEmpty(orderHeader)){
 	orderReadHelper = new OrderReadHelper(orderHeader);
 	orderItems = orderReadHelper.getOrderItems();
 	orderAdjustments = orderReadHelper.getAdjustments();
 	grandTotal = OrderReadHelper.getOrderGrandTotal(orderItems, orderAdjustments);
 	allDetailsMap["grandTotal"] = grandTotal;
- }
+ }}
 // orderDate
 orderHeaderDetails=orderHeader;
 if(UtilValidate.isNotEmpty(orderHeader)){
