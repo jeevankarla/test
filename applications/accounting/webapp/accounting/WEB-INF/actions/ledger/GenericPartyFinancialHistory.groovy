@@ -44,8 +44,8 @@ partyCode = parameters.partyId;
 dctx = dispatcher.getDispatchContext();
 fromDateTime = null;
 thruDateTime = null;
-if(UtilValidate.isNotEmpty(fromDate)&& UtilValidate.isNotEmpty(thruDate)){
-def sdf = new SimpleDateFormat("MMMM dd, yyyy");
+if((UtilValidate.isNotEmpty(fromDate))&& (UtilValidate.isNotEmpty(thruDate))){
+def sdf = new SimpleDateFormat("yyyy, MMM dd");
 try {
 	fromDateTime = new java.sql.Timestamp(sdf.parse(fromDate).getTime());
 	thruDateTime = new java.sql.Timestamp(sdf.parse(thruDate).getTime());
