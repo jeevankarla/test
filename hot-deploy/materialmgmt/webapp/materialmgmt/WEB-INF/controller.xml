@@ -203,7 +203,7 @@
      <request-map uri="approveRequestByHOD">
        <security https="true" auth="true"/>
        <event type="service" path="" invoke="approveRequestByHOD"></event>
-       <response name="success" type="view" value="ApproveRequestsByDeptHead"/>
+       <response name="success" type="request-redirect-noparam" value="ApproveRequestsByDeptHead"/>
        <response name="error" type="view" value="ApproveRequestsByDeptHead"/>
      </request-map>
      <request-map uri="updateMaterialQuoteTerm">
@@ -289,7 +289,7 @@
      <request-map uri="rejectMaterialRequest">
        <security https="true" auth="true"/>
        <event type="service" path="" invoke="setCustRequestItemStatus"></event>
-       <response name="success" type="view" value="ApproveRequestsByDeptHead"/>
+       <response name="success" type="request-redirect-noparam" value="ApproveRequestsByDeptHead"/>
        <response name="error" type="view" value="ApproveRequestsByDeptHead"/>
      </request-map>
      
@@ -928,6 +928,12 @@
        <security https="true" auth="true"/>
        <response name="success" type="view" value="MaterialForQCApproval"/>
        <response name="error" type="view" value="MaterialForQCApproval"/>
+     </request-map>
+     
+     <request-map uri="SearchRequestsToApprove">
+       <security https="true" auth="true"/>
+       <response name="success" type="view" value="ApproveRequestsByDeptHead"/>
+       <response name="error" type="view" value="ApproveRequestsByDeptHead"/>
      </request-map>
      
     
