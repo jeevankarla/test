@@ -30,6 +30,7 @@ import in.vasista.vbiz.byproducts.SalesInvoiceServices;
 import org.ofbiz.party.party.PartyHelper;
 
 dctx = dispatcher.getDispatchContext();
+resultReturn = ServiceUtil.returnSuccess();
 
 shipmentMap=[:];
 shipmentList=[];
@@ -37,23 +38,27 @@ ordersListForGRNLink=[];
 
 //get PartyId from Role for Dept
 List conditionlist=[];
-if(UtilValidate.isNotEmpty(parameters.noConditionFind) && parameters.noConditionFind=="Y"){
+//if(UtilValidate.isNotEmpty(parameters.noConditionFind) && parameters.noConditionFind=="Y"){
 conditionlist.add(EntityCondition.makeCondition("statusId", EntityOperator.EQUALS, "GENERATED"));
+
 conditionlist.add(EntityCondition.makeCondition("shipmentTypeId", EntityOperator.EQUALS,"MATERIAL_SHIPMENT"));
+conditionlist.add(EntityCondition.makeCondition("shipmentId", EntityOperator.EQUALS, parameters.shipmentId));
 condition=EntityCondition.makeCondition(conditionlist,EntityOperator.AND);
 shipmentDeatilsList = delegator.findList("Shipment", condition , null, null, null, false );
 
 shippedOrderIds = EntityUtil.getFieldListFromEntityList(shipmentDeatilsList, "primaryOrderId", true);
 
-Debug.log("shippedOrderIds=============="+shippedOrderIds);
+Debug.log("shippedOrderIds=============="+shippedOrderIds+"===parameters.ShipmentIdd="+parameters.shipmentId+"===="+parameters.partyId);
 //get Orders WithOut LINK to Shipment
 conditionlist.clear();
 conditionlist.add(EntityCondition.makeCondition("orderId", EntityOperator.NOT_IN, shippedOrderIds));
 conditionlist.add(EntityCondition.makeCondition("orderTypeId", EntityOperator.EQUALS,"PURCHASE_ORDER"));
+conditionlist.add(EntityCondition.makeCondition("roleTypeId", EntityOperator.EQUALS,"BILL_FROM_VENDOR"));
+conditionlist.add(EntityCondition.makeCondition("partyId", EntityOperator.EQUALS, parameters.partyId));
 conditionlist.add(EntityCondition.makeCondition("salesChannelEnumId", EntityOperator.EQUALS,"MATERIAL_PUR_CHANNEL"));
 
 condition=EntityCondition.makeCondition(conditionlist,EntityOperator.AND);
-ordersListWithOutShipment = delegator.findList("OrderHeader", condition , null, null, null, false );
+ordersListWithOutShipment = delegator.findList("OrderHeaderAndRoles", condition , null, null, null, false );
 
 orderIdsWithOutShipment = EntityUtil.getFieldListFromEntityList(ordersListWithOutShipment, "orderId", true);
 
@@ -63,10 +68,14 @@ ordersListWithOutShipment.each{ eachOrderHeader->
 	innerOrderHeaderMap=[:];
 	innerOrderHeaderMap["orderId"]=eachOrderHeader.orderId ;
 	innerOrderHeaderMap["entryDate"]=UtilDateTime.toDateString(eachOrderHeader.entryDate,"dd/MM/yyyy") ;
-	
 	partyId="";
 	supplierName="";
-	conditionlist.clear();
+	if(UtilValidate.isNotEmpty(eachOrderHeader.partyId)){
+		partyId=eachOrderHeader.partyId;
+		supplierName =  PartyHelper.getPartyName(delegator, partyId, false);
+	}
+	
+	/*conditionlist.clear();
 	conditionlist.add(EntityCondition.makeCondition("orderId", EntityOperator.EQUALS, eachOrderHeader.orderId));
 	conditionlist.add(EntityCondition.makeCondition("roleTypeId", EntityOperator.EQUALS,"BILL_FROM_VENDOR"));
 	orderRoleCondition=EntityCondition.makeCondition(conditionlist,EntityOperator.AND);
@@ -75,15 +84,16 @@ ordersListWithOutShipment.each{ eachOrderHeader->
 		orderSupplierRole = EntityUtil.getFirst(orderSupplierRoleList);
 		partyId=orderSupplierRole.partyId;
 		supplierName =  PartyHelper.getPartyName(delegator, partyId, false);
-	}
+	}*/
 	innerOrderHeaderMap["partyId"]=partyId ;
 	innerOrderHeaderMap["supplierName"]=supplierName+"["+partyId+"]";
 
 	ordersListForGRNLink.addAll(innerOrderHeaderMap);
 }
-}
+//}
 context.ordersListForGRNLink=ordersListForGRNLink;
 
-Debug.log("ordersListForGRNLink=============="+ordersListForGRNLink+"==ConditionFind=="+parameters.noConditionFind);
+Debug.log("ordersListForGRNLink=========frommmAJAX====="+ordersListForGRNLink);
 
-
+resultReturn.put("ordersListForGRNLink", ordersListForGRNLink);
+return resultReturn;

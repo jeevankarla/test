@@ -11,7 +11,7 @@ import in.vasista.vbiz.humanres.PayrollService;
 import in.vasista.vbiz.humanres.HumanresService;
 List finalList=[];
 List conditionList=[];
-
+if(UtilValidate.isNotEmpty(parameters.noConditionFind) && parameters.noConditionFind=="Y"){
 	if(UtilValidate.isNotEmpty(parameters.shipmentId)){
 		conditionList.add(EntityCondition.makeCondition("shipmentId",EntityOperator.EQUALS,parameters.shipmentId));
 	}
@@ -52,6 +52,7 @@ List conditionList=[];
 		}
 		
 		finalList.add(tempMap);
+	}
 	}
 	newFinalList=[];
 	if(UtilValidate.isNotEmpty(parameters.partyId)){
