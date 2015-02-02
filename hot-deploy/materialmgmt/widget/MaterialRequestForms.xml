@@ -321,7 +321,7 @@
         odd-row-style="alternate-row" default-table-style="basic-table hover-bar"  paginate-target="StoreProductIssue">
         <row-actions>
         	<set field="flag" value="${groovy: return (QOH > 0)? 'Y' : 'N';}"/>
-        	<set field="custmQuantity" value="${quantity-QOH}"/>
+        	<set field="custmQuantity" value="${quantity-(QOH+issuedQty)}"/>
         	<set field="toBeIssuedQty" value="${groovy: return (quantity-issuedQty > QOH)?  QOH: (quantity-issuedQty);}"/>
         </row-actions>
         <field name="custRequestId" title="${uiLabelMap.MaterialMangement_CustRequestId}"><display/></field>

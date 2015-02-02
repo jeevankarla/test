@@ -112,8 +112,8 @@
    			}
    			else
    			{
-   			 alert("Please Fill Quantity.. Indent Failed..!"); 
-   			 window.location.reload(true);
+   			 alert("Please Fill Quantity..!"); 
+   			 //window.location.reload(true);
    			 return false;
    			}
 		}
@@ -197,39 +197,30 @@
       	return {valid: true, msg: null};
     }
     
-    //quantity validator
-	function quantityFormatter(row, cell, value, columnDef, dataContext) { 
-		if(value == null){
-			return "";
-		}
-        return  value;
-    }
+    
 	
 	function rateFormatter(row, cell, value, columnDef, dataContext) { 
 		var formatValue = parseFloat(value).toFixed(2);
         return formatValue;
     }
 	
-	
-	
-	function quantityValidator(value ,item) {
-		var quarterVal = value*4;
-		var floorValue = Math.floor(quarterVal);
-		var remainder = quarterVal - floorValue;
-		var remainderVal =  Math.floor(value) - value;
-	     if(remainder !=0 ){
-			return {valid: false, msg: "packets should not be in decimals " + value};
-		}
+	function requiredFieldValidator(value) {
+    if (value == null || value == undefined || value<=0) {
+      return {valid: false, msg: "This is a required field"};
+    } else {
       return {valid: true, msg: null};
     }
+  }
+	
+	
 	var mainGrid;		
 	function setupGrid1() {
 		
 		var columns = [
 				{id:"cProductName", name:"Item", field:"cProductName", width:220, minWidth:220, cssClass:"cell-title", availableTags: availableTags, regexMatcher:"contains" ,editor: AutoCompleteEditor, validator: productValidator, sortable:false ,toolTip:""},
-				{id:"quantity", name:"Quantity", field:"quantity", width:80, minWidth:80, cssClass:"cell-title",editor:FloatCellEditor, sortable:false , formatter: quantityFormatter,  validator: quantityValidator},
+				{id:"quantity", name:"Quantity", field:"quantity", width:80, minWidth:80, cssClass:"cell-title",editor:FloatCellEditor, sortable:false, validator: requiredFieldValidator},
 				{id:"UOM", name:"UOM", field:"uomDescription", width:100, minWidth:100, cssClass:"readOnlyColumnClass", sortable:false, focusable :false},
-				<#if screenFlag?exists && screenFlag != "RETURN">{id:"inventoryQty", name:"Inventory Available", field:"inventoryQty", width:80, minWidth:80, cssClass:"readOnlyColumnClass", sortable:false , formatter: quantityFormatter,  validator: quantityValidator},</#if>
+				<#if screenFlag?exists && screenFlag != "RETURN">{id:"inventoryQty", name:"Inventory Available", field:"inventoryQty", width:80, minWidth:80, cssClass:"readOnlyColumnClass", sortable:false,focusable :false },</#if>
 		];
 		
 			var options = {
