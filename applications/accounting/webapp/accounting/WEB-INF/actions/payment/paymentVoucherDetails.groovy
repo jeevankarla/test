@@ -42,6 +42,7 @@ invoiceList = [:];
 invoiceitemMap=[:];
 paymentApplicationMap=[:];
 payment=[];
+refundpaymentlist=[];
 //Debug.log("payment Id======================"+parameters.paymentId);
 paymentId=parameters.paymentId;
 payment = delegator.findOne("Payment", [paymentId : paymentId], true);
@@ -51,8 +52,18 @@ paymentApplication = delegator.findList("PaymentAndApplication", EntityCondition
 paymentApplication.each{ eachpaymentApplication ->
 	//Debug.log("=========eachpaymentApplication=============="+eachpaymentApplication);
 	paymentApplicationMap.put(eachpaymentApplication.invoiceId,eachpaymentApplication);
+	if(eachpaymentApplication.toPaymentId)
+	{
+		//Debug.log("=========eachpaymentApplication.toPaymentId=============="+eachpaymentApplication.toPaymentId);
+		refundlist=delegator.findOne("Payment", [paymentId : eachpaymentApplication.toPaymentId], true);
+		//Debug.log("=========refundlist=============="+refundlist);
+		refundpaymentlist.addAll(refundlist);
+	
+		//payment.refundpaymentlist;
+		}
 }
-
+//Debug.log("=========refundpaymentlist=============="+refundpaymentlist.paymentId);
+context.refundpaymentlist=refundpaymentlist;
 invoiceIds = EntityUtil.getFieldListFromEntityList(paymentApplication, "invoiceId", true);
 glAccntIdslist=[:];
 invoiceIds.each{ eachinvoiceId ->

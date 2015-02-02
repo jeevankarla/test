@@ -136,9 +136,10 @@
         <field name="revenue" title="Net Sale"><display/></field>
         <field name="quantity" title="Quantity(Kgs/Ltrs)"><display/></field>
     </form>
-    <form name="PurchaseRegisterBookCSV" type="list" list-name="purchaseRegisterList" view-size="99999">
+    <form name="PurchaseRegisterBookCSV" type="list" list-name="purchaseRegisterCsvList" view-size="99999">
         <field name="invoiceDate" title="Invoice Date"><display/></field>
         <field name="invoiceId" title="Invoice Id"><display/></field>
+        <field name="partyName" title="Party"><display/></field>
         <field name="mrrNumber" title="MRR Number"><display/></field>
         <field name="poNumber" title="PO Number"><display/></field>
         <field name="supInvNumber" title="Supp Invoice Number"><display/></field>
