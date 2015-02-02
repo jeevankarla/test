@@ -66,7 +66,15 @@ if(orderId){
 			uomLabel = uomLabelMap.get(uomId);
 		}
 		newObj.put("cProductId",eachItem.productId);
+		productDetails = delegator.findOne("Product", UtilMisc.toMap("productId", eachItem.productId), false);
+		if(UtilValidate.isNotEmpty(productDetails)){
+			newObj.put("cProductName",productDetails.brandName +" [ " +productDetails.description+"]");
+		}else{
 		newObj.put("cProductName",eachItem.itemDescription +" [ "+eachItem.productId+"]");
+		}
+		//newObj.put("cProductName",eachItem.itemDescription +" [ "+eachItem.productId+"]");
+		
+		
 		newObj.put("orderedQty",eachItem.quantity);
 		newObj.put("uomDescription",uomLabel);
 		orderItemsJSON.add(newObj);

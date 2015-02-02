@@ -76,12 +76,39 @@
 		return false;
 	}
 	
-	
-	
+	var ordersListGlobal={};
+	      
 	var globalShipmentId ="";
 	
-	function showLinkGrnWithPOForm(shipmentId) {	
-	globalShipmentId=shipmentId;
+	function showLinkGrnWithPOForm(shipmentId,partyId) {	
+	  globalShipmentId=shipmentId;
+	 var dataString  = 'shipmentId='+ shipmentId;
+         if(shipmentId!=="undefined"){
+           var dataJson = "shipmentId=" + shipmentId + "&partyId=" + partyId;
+           dataString=dataJson;
+       	 }
+            //get Orders for GRN link
+     $.ajax({
+             type: "POST",
+             url: "getShipmentLinkOrdersAjax",
+             data: dataString,
+             dataType: 'json',
+             async: false,
+             success: function(result) {
+               if(result["_ERROR_MESSAGE_"] || result["_ERROR_MESSAGE_LIST_"]){            	  
+            	   alert(result["_ERROR_MESSAGE_"]+result["_ERROR_MESSAGE_LIST_"]);
+               }else{
+            	   ordersListGlobal =   result["ordersListForGRNLink"];
+               }
+               
+             } ,
+             error: function() {
+            	 	alert(result["_ERROR_MESSAGE_"]);
+            	 }
+            }); 
+            
+      var list= ordersListGlobal;
+	
 	//alert("==shipmentId=="+shipmentId);
 		var message = "";
 		message += "<div style='width:100%;height:380px;overflow-x:auto;overflow-y:auto;' ><table cellspacing=10 cellpadding=10  width='100%' > " ; 
@@ -92,13 +119,16 @@
            message += "<tr class='h3'><td align='left' class='h3' width='100%' ><table cellspacing=10 cellpadding=10 border=2 width='100%' >" ;
            message +="<thead class='h3'><th align='center' class='h3' width='50%' >Supplier Name</th><th  align='center' class='h3' width='20%' >OrderId</th><th align='center' width='20%' class='h3' >Order Date</th><th align='right' class='h3' >Link</th></thead>";
           	message += "</td></<thead></table>";
-          <#list ordersListForGRNLink as eachOrderLink>
-	          message += "<tr ><td align='left'  width='100%'  ><form action='processUpdateGRNWithPO' method='post' onsubmit='return disableGenerateButton();'>";
-	          message += "<input type=hidden name=shipmentId  value='"+shipmentId+"'><input type=hidden name=orderId  value='${eachOrderLink.orderId?if_exists}'> <table cellspacing=10 cellpadding=10 border=2 width='100%' >" ;
-	          message +="<tr class='h4'><td align='left' width='50%'  class='h5' >${eachOrderLink.supplierName?if_exists}</td><td width='20%' align='left' class='h3' >${eachOrderLink.orderId?if_exists}</td><td width='20%' align='left' class='h4' >${eachOrderLink.entryDate?if_exists}</td><td width='20%' align='right' class='h3' ><input type='submit' value='Link PO' id='generateTruckSheet' class='smallSubmit'/></td></tr>";
-	          message += "</form></td></tr></table>";
-          </#list>
-			
+          	if (list) {	
+	        	for(var i=0 ; i<list.length ; i++){
+					var innerMap=list[i];	       
+					 message += "<tr ><td align='left'  width='100%'  ><form action='processUpdateGRNWithPO' method='post' onsubmit='return disableGenerateButton();'>";
+			          message += "<input type=hidden name=shipmentId  value='"+shipmentId+"'><input type=hidden name=orderId  value='"+innerMap['orderId']+"'> <table cellspacing=10 cellpadding=10 border=2 width='100%' >" ;
+			          message +="<tr class='h4'><td align='left' width='50%'  class='h5' >"+innerMap['supplierName']+"</td><td width='20%' align='left' class='h3' >"+innerMap['orderId']+"</td><td width='20%' align='left' class='h4' >"+innerMap['entryDate']+"</td><td width='20%' align='right' class='h3' ><input type='submit' value='Link PO' id='generateTruckSheet' class='smallSubmit'/></td></tr>";
+			          message += "</form></td></tr></table>";
+	      		}//end of main list for loop
+	      	}
+	      		
 		message += "</table></div>";				
 		var title = "<center>GRN Shipment Id : " + shipmentId + "<center><br /><br /> And Possibilities PO's Are  Below ";
 		Alert(message, title);

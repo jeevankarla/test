@@ -929,6 +929,11 @@
        <response name="success" type="view" value="MaterialForQCApproval"/>
        <response name="error" type="view" value="MaterialForQCApproval"/>
      </request-map>
+      <request-map uri="getShipmentLinkOrdersAjax">
+        <security https="true" auth="true"/>
+        <event type="service"  invoke="getShipmentLinkOrdersAjax"/>
+        <response name="success" type="request" value="json"/>
+    </request-map>
      
     
     <view-map name="main" type="screen" page="component://materialmgmt/widget/materialmgmtScreens.xml#main"/>
