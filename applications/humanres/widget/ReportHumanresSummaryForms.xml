@@ -199,6 +199,17 @@
 		<field name="total" title="Total"><display/></field>
 		<field name="balance" title="EL"><display/></field> 
 	</form>
+	<form name="EDLISReportCsv" type="list" list-name="finalList" 
+		odd-row-style="alternate-row" default-table-style="basic-table hover-bar" view-size="99999" paginate="false">
+		<actions></actions>
+		<field name="sNo" title="SLNo"><display/></field>
+		<field name="employeeCode" title="Employee Code"><display/></field>
+		<field name="employeeName" title="Emp Name"><display/></field>
+		<field name="pfNumber" title="PF Number"><display/></field>
+		<field name="DateOfBirth" title="Date Of Birth"><display/></field>
+		<field name="DateOfJoining" title="Appointment Date"><display type="date"/></field>
+		<field name="Salary" title="Salary"><display/></field> 
+	</form>
 	<form name="EmployeeBankDetailsCsv" type="list" list-name="finalList" 
 		odd-row-style="alternate-row" default-table-style="basic-table hover-bar">
 		<actions></actions>

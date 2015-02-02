@@ -40,6 +40,7 @@ Map EmploymentsMap = HumanresService.getActiveEmployements(dctx,emplInputMap);
 List<GenericValue> employementList = (List<GenericValue>)EmploymentsMap.get("employementList");
 employementList = EntityUtil.orderBy(employementList, UtilMisc.toList("partyIdTo"));
 finalList=[];
+sNo = 1;
 if(UtilValidate.isNotEmpty(employementList)){
 	employementList.each{employment->
 			employee=[:];
@@ -74,6 +75,8 @@ if(UtilValidate.isNotEmpty(employementList)){
 				pfNumber = pfNumberList.presentEpf;
 			}
 			employee.put("pfNumber",pfNumber);
+			employee.put("sNo",sNo);
+			sNo = sNo + 1;
 			finalList.add(employee);
 		}
 }

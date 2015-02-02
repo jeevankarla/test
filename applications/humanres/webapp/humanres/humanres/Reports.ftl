@@ -1269,7 +1269,7 @@ function setOrgPartyId() {
 				</#if>
 				<#if (reportDetailsMap.get("EDLISReport.pdf") == "Y")> 
 					<tr class="alternate-row">
-						<form id="EDLISReport" name="EDLISReport" method="post" action="<@ofbizUrl>EDLISReport.pdf</@ofbizUrl>" target="_blank">	
+						<form id="EDLISReport" name="EDLISReport" method="post" action="<@ofbizUrl>EDLISReportPdf.pdf</@ofbizUrl>" target="_blank">	
 							<table class="basic-table" cellspacing="5">
 								<tr class="alternate-row">
 									<td width="20%"><span class='h3'>EDLIS Report</span></td>
@@ -1285,7 +1285,8 @@ function setOrgPartyId() {
 											</#list>
 										</select></span>
 									</td>	
-									<td width="15%"><span class='h3'><input type="submit" value="Download" class="buttontext"></span></td> 
+									<td width="25%"><input type="submit" value="PDF" onClick="javascript:appendParams('EDLISReport', '<@ofbizUrl>EDLISReportPdf.pdf</@ofbizUrl>');" class="buttontext"/>
+									<span class='h3'><input type="submit" value="CSV" onClick="javascript:appendParams('EDLISReport', '<@ofbizUrl>EDLISReportCsv.csv</@ofbizUrl>');" class="buttontext"/></span></td> 
 								</tr>
 							</table>	
 						</form>
