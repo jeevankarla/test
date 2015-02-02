@@ -56,43 +56,49 @@ shipmentMap.put("invoiceNo",invoiceNo);
 shipmentMap.put("invoiceDate",invoiceDate);
 shipmentMap.put("dcNo",dcNo);
 shipmentMap.put("dcDate",dcDate);
-Debug.log("invoiceNo=============="+invoiceNo);
-Debug.log("invoiceDate=============="+invoiceDate);
-Debug.log("dcNo=============="+dcNo);
-Debug.log("dcDate=============="+dcDate);
-
-//get PartyId from Role for Dept
-List conditionlist=[];
-conditionlist.add(EntityCondition.makeCondition("orderId", EntityOperator.EQUALS, orderId));
-conditionlist.add(EntityCondition.makeCondition("roleTypeId", EntityOperator.EQUALS,"ISSUE_TO_DEPT"));
-condition=EntityCondition.makeCondition(conditionlist,EntityOperator.AND);
-deptDetails = delegator.findList("OrderRole", condition , null, null, null, false );
-partyId=deptDetails.partyId;
-if(UtilValidate.isNotEmpty(partyId)){
-	deptName =  PartyHelper.getPartyName(delegator, partyId, false);
-	shipmentMap.put("deptName",deptName);	
-}
+////get PartyId from Role for Dept
+//List conditionlist=[];
+//conditionlist.add(EntityCondition.makeCondition("orderId", EntityOperator.EQUALS, orderId));
+//conditionlist.add(EntityCondition.makeCondition("roleTypeId", EntityOperator.EQUALS,"ISSUE_TO_DEPT"));
+//condition=EntityCondition.makeCondition(conditionlist,EntityOperator.AND);
+//deptDetails = delegator.findList("OrderRole", condition , null, null, null, false );
+//partyId=deptDetails.partyId;
+//if(UtilValidate.isNotEmpty(partyId)){
+//	deptName =  PartyHelper.getPartyName(delegator, partyId, false);
+//	shipmentMap.put("deptName",deptName);	
+//}
 
 //get PartyId from Role for Vendor
+if(UtilValidate.isNotEmpty(orderId)){
 List conlist=[];
 conlist.add(EntityCondition.makeCondition("orderId", EntityOperator.EQUALS, orderId));
 conlist.add(EntityCondition.makeCondition("roleTypeId", EntityOperator.EQUALS,"SUPPLIER_AGENT"));
 cond=EntityCondition.makeCondition(conlist,EntityOperator.AND);
 vendorDetails = delegator.findList("OrderRole", cond , null, null, null, false );
 vendorDetail=EntityUtil.getFirst(vendorDetails);
+if(UtilValidate.isNotEmpty(vendorDetail.partyId)){
 partyId=vendorDetail.partyId;
 shipmentMap.put("partyId",partyId);
-if(UtilValidate.isNotEmpty(partyId)){
 	partyName =  PartyHelper.getPartyName(delegator, partyId, false);
 	shipmentMap.put("partyName",partyName);
+  }
 }
-
+if(UtilValidate.isEmpty(orderId)){
+fromPartyIdData = delegator.findOne("Shipment",["shipmentId":shipmentId],false);
+if(UtilValidate.isNotEmpty(fromPartyIdData)){
+partyId=fromPartyIdData.get("partyIdFrom");
+shipmentMap.put("partyId",partyId);
+partyName =  PartyHelper.getPartyName(delegator, partyId, false);
+shipmentMap.put("partyName",partyName);
+}
+}
 grnDetails=[];
 if(UtilValidate.isNotEmpty(shipmentId)){
 	grnDetailsList = delegator.findList("ShipmentReceipt",EntityCondition.makeCondition("shipmentId", EntityOperator.EQUALS , shipmentId)  , null, null, null, false );
+	//grnDetailsList = delegator.findOne("ShipmentReceipt",["shipmentId":shipmentId],false);
+	
 	productIds = EntityUtil.getFieldListFromEntityList(grnDetailsList, "productId", true);
-	Debug.log("productIds=============="+productIds);
-	productStore = delegator.findList("ProductFacility",EntityCondition.makeCondition("productId", EntityOperator.EQUALS , productIds)  , null, null, null, false );
+	productStore = delegator.findList("ProductFacility",EntityCondition.makeCondition("productId", EntityOperator.IN , productIds)  , null, null, null, false );
 	productStore=EntityUtil.getFirst(productStore);
 	Store=productStore.facilityId;
 	shipmentMap.put("store",Store);
@@ -110,7 +116,6 @@ if(UtilValidate.isNotEmpty(shipmentId)){
 	shipmtItemList = delegator.findList("ShipmentItem", cod , null, null, null, false );
 	shipmtItemList=EntityUtil.getFirst(shipmtItemList);
 	grnDetailsMap["receivedQty"]=shipmtItemList.quantity;
-	
 	grnDetailsMap["productId"]=grnData.productId;
 	grnDetailsMap["orderId"]=grnData.orderId;
 	grnDetailsMap["unitPrice"]=0;
@@ -131,6 +136,7 @@ if(UtilValidate.isNotEmpty(shipmentId)){
 	}
 		
 	// OrderItems Details
+	if(UtilValidate.isNotEmpty(orderId)){
 	List condlist=[];
 	condlist.add(EntityCondition.makeCondition("orderId", EntityOperator.EQUALS, grnData.orderId));
 	condlist.add(EntityCondition.makeCondition("orderItemSeqId", EntityOperator.EQUALS, grnData.orderItemSeqId));
@@ -142,7 +148,7 @@ if(UtilValidate.isNotEmpty(shipmentId)){
 	unitPrice=orderDetails.unitPrice;
 	grnDetailsMap["unitPrice"]=unitPrice;
 	grnDetailsMap["quantity"]=quantity;
-	
+	}
 	// Received and Accepted Quantity
 	List cList=[];
 	cList.add(EntityCondition.makeCondition("shipmentId", EntityOperator.EQUALS, grnData.shipmentId));
@@ -154,18 +160,20 @@ if(UtilValidate.isNotEmpty(shipmentId)){
 	if(UtilValidate.isNotEmpty(shipmtReciptList)){
     grnDetailsMap["quantityAccepted"]=shipmtReciptList.quantityAccepted;
     grnDetailsMap["quantityRejected"]=shipmtReciptList.quantityRejected;
+	if(UtilValidate.isNotEmpty(orderId)){
 	amount=((shipmtReciptList.quantityAccepted)*(unitPrice));
 	grnDetailsMap["amount"]=amount;
 	shipmentMap["total"]+=amount;
-	}
+	}}
+	if(UtilValidate.isNotEmpty(orderId)){
 	if(UtilValidate.isEmpty(shipmtReciptList)){
 	grnDetailsMap["quantityAccepted"]=0;
 	grnDetailsMap["quantityRejected"]=0;
 	amount=((shipmtItemList.quantity)*(unitPrice));
 	grnDetailsMap["amount"]=amount;
 	shipmentMap["total"]+=amount;
+	  }
 	}
-	
 	grnList.addAll(grnDetailsMap);
 }
 context.shipmentMap=shipmentMap;
