@@ -216,6 +216,7 @@ if(UtilValidate.isNotEmpty(salesInvoiceTotals)){
 				totalMap["invoiceId"]=invoiceId;
 				totalMap["invoiceDate"]=invoiceDate;
 				totalMap["basicRevenue"]=basicRevenue;
+				totalMap["partyId"]=invoicePartyId;
 				totalMap["partyName"]=partyName;
 				totalMap["bedRevenue"]=totalBedRevenue;
 				totalMap["vatRevenue"]=vatRevenue;
@@ -297,6 +298,7 @@ purchaseRegisterList.each { purchaseRegisterList ->
 	}else{
 	
 	partyMap["partyName"]=eachlist.partyName;
+	partyMap["partyId"]=eachlist.partyId;
 	
 	}
 	//Debug.log("partyMap=============================="+partyMap);
