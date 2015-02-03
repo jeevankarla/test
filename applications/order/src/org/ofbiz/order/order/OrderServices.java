@@ -6980,6 +6980,66 @@ public class OrderServices {
         return result;
     }
 	
+ //calculate purchase order term values
+   public static BigDecimal calculatePurchaseOrderTermValue(DispatchContext ctx, Map<String, ? extends Object> context) {
+	   	   BigDecimal termAmount = BigDecimal.ZERO;
+	       BigDecimal basicAmount   = (BigDecimal)context.get("basicAmount");
+	       BigDecimal poValue   = (BigDecimal)context.get("poValue");
+	       BigDecimal exciseDuty   = (BigDecimal)context.get("exciseDuty");
+	       String termTypeId = (String)context.get("termTypeId");
+	       String uomId = (String)context.get("uomId");
+	       BigDecimal termValue   = (BigDecimal)context.get("termValue");
+	       
+	       
+	       if(UtilValidate.isEmpty(termTypeId)){
+	    	   return termAmount;
+	       }
+	     //this to handle non derived terms
+	       termAmount = termValue;
+	       
+	       //Discount Before ED
+	       if(termTypeId.equals("COGS_DISC")){
+	    	   if(UtilValidate.isNotEmpty(uomId) && uomId.equals("PERCENT")){
+	    		   termAmount = ((basicAmount.add(exciseDuty)).multiply(termValue)).divide(new BigDecimal("100"),taxRounding);
+	    		   termAmount = termAmount.negate();
+	    	   }else{
+	    		   termAmount = termValue.negate();
+	    	   }
+	       }
+
+	       //Discount  After Tax
+	       if(termTypeId.equals("COGS_DISC_ATR")){
+	    	   if(UtilValidate.isNotEmpty(uomId) && uomId.equals("PERCENT")){
+	    		   Debug.log("poValue========"+poValue);
+	    		   termAmount = (poValue.multiply(termValue)).divide(new BigDecimal("100"),taxRounding);
+	    		   termAmount = termAmount.negate();
+	    	   }else{
+	    		   termAmount = termValue.negate();
+	    	   }
+	       }
+	       //Packing And Forwarding Charges Before Tax
+	       if(termTypeId.equals("COGS_PCK_FWD")){
+	    	   if(UtilValidate.isNotEmpty(uomId) && uomId.equals("PERCENT")){
+	    		   termAmount = ((basicAmount.add(exciseDuty)).multiply(termValue)).divide(new BigDecimal("100"),taxRounding);
+	    		   termAmount = termAmount.negate();
+	    	   }else{
+	    		   termAmount = termValue.negate();
+	    	   }
+	       }
+
+	       //Packing And Forwarding Charges After Tax
+	       if(termTypeId.equals("COGS_PCK_FWD_ATR")){
+	    	   if(UtilValidate.isNotEmpty(uomId) && uomId.equals("PERCENT")){
+	    		   Debug.log("poValue========"+poValue);
+	    		   termAmount = (poValue.multiply(termValue)).divide(new BigDecimal("100"),taxRounding);
+	    		   termAmount = termAmount.negate();
+	    	   }else{
+	    		   termAmount = termValue.negate();
+	    	   }
+	       }
+	       
+	       return termAmount;
+	   }
 	
 }
 

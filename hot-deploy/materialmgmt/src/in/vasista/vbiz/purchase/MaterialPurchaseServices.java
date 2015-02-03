@@ -19,6 +19,8 @@ import java.util.Map.Entry;
 import net.sf.json.JSONObject;
 
 import org.ofbiz.order.order.OrderChangeHelper;
+import org.ofbiz.order.order.OrderReadHelper;
+import org.ofbiz.order.order.OrderServices;
 import org.ofbiz.order.shoppingcart.CheckOutHelper;
 import org.ofbiz.order.shoppingcart.product.ProductPromoWorker;
 
@@ -56,7 +58,7 @@ import org.ofbiz.service.GenericServiceException;
 import org.ofbiz.service.LocalDispatcher;
 import org.ofbiz.service.ServiceUtil;
 import org.ofbiz.security.Security;
-
+import org.ofbiz.order.order.OrderServices;
 import in.vasista.vbiz.byproducts.ByProductNetworkServices;
 import in.vasista.vbiz.byproducts.ByProductServices;
 
@@ -90,6 +92,8 @@ public class MaterialPurchaseServices {
 	    String withoutPO = (String) request.getParameter("withoutPO");
 	    //GRN on PO then override this supplier with PO supplier
 	    String supplierId = (String) request.getParameter("supplierId");
+	    String deliveryChallanDateStr = (String) request.getParameter("deliveryChallanDate");
+	    String deliveryChallanNo = (String) request.getParameter("deliveryChallanNo");
 	    HttpSession session = request.getSession();
 	    GenericValue userLogin = (GenericValue) session.getAttribute("userLogin");
 		Timestamp nowTimeStamp = UtilDateTime.nowTimestamp();
@@ -126,6 +130,16 @@ public class MaterialPurchaseServices {
 		  		Debug.logError(e, "Cannot parse date string: " + supplierInvoiceDateStr, module);
 		  	} catch (NullPointerException e) {
 	  			Debug.logError(e, "Cannot parse date string: " + supplierInvoiceDateStr, module);
+		  	}
+	  	}
+	  	Timestamp deliveryChallanDate=UtilDateTime.nowTimestamp();
+	  	if(UtilValidate.isNotEmpty(deliveryChallanDateStr)){
+	  		try {
+	  			deliveryChallanDate = new java.sql.Timestamp(sdf.parse(deliveryChallanDateStr).getTime());
+		  	} catch (ParseException e) {
+		  		Debug.logError(e, "Cannot parse date string: " + deliveryChallanDateStr, module);
+		  	} catch (NullPointerException e) {
+	  			Debug.logError(e, "Cannot parse date string: " + deliveryChallanDateStr, module);
 		  	}
 	  	}
 	  	
@@ -203,6 +217,8 @@ public class MaterialPurchaseServices {
 	        newEntity.put("partyIdFrom",supplierId);
 	        newEntity.put("supplierInvoiceId",supplierInvoiceId);
 	        newEntity.put("supplierInvoiceDate",supplierInvoiceDate);
+	        newEntity.put("deliveryChallanNumber",deliveryChallanNo);
+	        newEntity.put("deliveryChallanDate",deliveryChallanDate);
 	        newEntity.put("primaryOrderId",orderId);
 	        newEntity.set("createdDate", nowTimeStamp);
 	        newEntity.set("createdByUserLogin", userLogin.get("userLoginId"));
@@ -1518,6 +1534,7 @@ public class MaterialPurchaseServices {
 				termsList.add(termTypeMap);
 				tempMap.put("adjustmentTypeId", termTypeId);
 				tempMap.put("amount", termValue);
+				tempMap.put("uomId", termUom);
 				otherAdjList.add(tempMap);
 			}
 		}
@@ -1632,6 +1649,10 @@ public class MaterialPurchaseServices {
 		}
 		GenericValue product =null;
 		String productPriceTypeId = null;
+		//these are input param to calcultae teramount based on order terms 
+		BigDecimal basicAmount = BigDecimal.ZERO;
+		//exciseDuty includes BED,CESS,SECESS
+		BigDecimal exciseDuty = BigDecimal.ZERO;
 		
 		ShoppingCart cart = new ShoppingCart(delegator, productStoreId, locale,currencyUomId);
 		
@@ -1719,8 +1740,6 @@ public class MaterialPurchaseServices {
 			if(UtilValidate.isNotEmpty(prodQtyMap.get("unitPrice"))){
 				unitPrice = (BigDecimal)prodQtyMap.get("unitPrice");
 			}
-			BigDecimal tempPrice = BigDecimal.ZERO;
-			tempPrice = tempPrice.add(unitPrice);
 			// this is to calculate inclusive tax
 			BigDecimal vatUnitRate = BigDecimal.ZERO;
 			BigDecimal cstUnitRate = BigDecimal.ZERO;
@@ -1781,7 +1800,7 @@ public class MaterialPurchaseServices {
 			    		taxDetailMap.put("amount", taxAmount);
 			    		taxDetailMap.put("percentage", excisePercent);
 			    		taxList.add(taxDetailMap);
-
+             
 			    		GenericValue newProdPriceType = delegator.makeValue("ProductPriceAndType");        	 
 			    		newProdPriceType.set("fromDate", effectiveDate);
 			    		newProdPriceType.set("parentTypeId", "TAX");
@@ -1795,7 +1814,7 @@ public class MaterialPurchaseServices {
 			    		prodPriceTypeList.add(newProdPriceType);
 			    		totalTaxAmt=totalTaxAmt.add(taxAmount.divide(quantity, 3, BigDecimal.ROUND_HALF_UP));
 		        	}
-		        	tempPrice=tempPrice.add(taxAmount);
+		        	exciseDuty = exciseDuty.add(taxAmount);
 		        	
 				}
 				/*productQtyMap.put("vatPercent", vatPercent);
@@ -1832,7 +1851,7 @@ public class MaterialPurchaseServices {
 			    		prodPriceTypeList.add(newProdPriceType);
 			    		totalTaxAmt=totalTaxAmt.add(taxAmount.divide(quantity, 3, BigDecimal.ROUND_HALF_UP));
 		        	}
-		        	
+		        	exciseDuty = exciseDuty.add(taxAmount);
 				}
 			    if(UtilValidate.isNotEmpty(prodQtyMap.get("bedSecCessAmount")) || !bedSecCessUnitRate.equals(BigDecimal.ZERO)){
 				    BigDecimal taxAmount = (BigDecimal)prodQtyMap.get("bedSecCessAmount");
@@ -1863,6 +1882,7 @@ public class MaterialPurchaseServices {
 			    		prodPriceTypeList.add(newProdPriceType);
 			    		totalTaxAmt=totalTaxAmt.add(taxAmount.divide(quantity, 3, BigDecimal.ROUND_HALF_UP));
 		        	}
+		        	exciseDuty = exciseDuty.add(taxAmount);
 				}
 			    if(UtilValidate.isNotEmpty(prodQtyMap.get("vatAmount")) || !vatUnitRate.equals(BigDecimal.ZERO)){
 				    BigDecimal taxAmount = (BigDecimal)prodQtyMap.get("vatAmount");
@@ -1936,7 +1956,7 @@ public class MaterialPurchaseServices {
 				 totalPrice = unitPrice.add(totalTaxAmt);
 			}
 			//BigDecimal totalPrice = unitPrice;//as of now For PurchaseOrder listPrice is same like unitPrice
-			
+			basicAmount = basicAmount.add(unitPrice.multiply(quantity));
 		
 			ShoppingCartItem item = null;
 			try{
@@ -1977,12 +1997,33 @@ public class MaterialPurchaseServices {
 			
 		orderId = (String) orderCreateResult.get("orderId");
 		//let's create Fright Adjustment here
-    	 
+    	 Boolean COGS_DISC_ATR = Boolean.FALSE;
+    	 Map COGS_DISC_ATR_Map = FastMap.newInstance();
 		for(Map eachAdj : otherChargesAdjustment){
-			Map adjustCtx = UtilMisc.toMap("userLogin",userLogin);	  	
+			Map adjustCtx = UtilMisc.toMap("userLogin",userLogin);	
+			String adjustmentTypeId=(String)eachAdj.get("adjustmentTypeId");
+			BigDecimal termValue =(BigDecimal)eachAdj.get("amount");
 	    	adjustCtx.put("orderId", orderId);
-	    	adjustCtx.put("orderAdjustmentTypeId", (String)eachAdj.get("adjustmentTypeId"));
-	    	adjustCtx.put("amount", (BigDecimal)eachAdj.get("amount"));
+	    	adjustCtx.put("orderAdjustmentTypeId", adjustmentTypeId);
+	    	//adjustCtx.put("amount", termValue);
+	    	//Debug.log("eachAdj==========="+eachAdj);
+	    	String uomId = (String)eachAdj.get("uomId");
+	    	if(adjustmentTypeId.equals("COGS_DISC_ATR")){
+	    		COGS_DISC_ATR = Boolean.TRUE;
+	    		COGS_DISC_ATR_Map.putAll(eachAdj);
+	    	}
+	    	if(!adjustmentTypeId.equals("COGS_DISC_ATR")){
+	    		Map inputMap = UtilMisc.toMap("userLogin",userLogin);
+	    		inputMap.put("termTypeId", adjustmentTypeId);
+	    		inputMap.put("basicAmount", basicAmount);
+	    		inputMap.put("exciseDuty", exciseDuty);
+	    		inputMap.put("uomId", uomId);
+	    		inputMap.put("termValue", termValue);
+	    		//Debug.log("inputMap==========="+inputMap);
+	    		BigDecimal termAmount = OrderServices.calculatePurchaseOrderTermValue(ctx,inputMap);
+	    		adjustCtx.put("amount", termAmount);
+	    	}
+	    	
 	    	Map adjResultMap=FastMap.newInstance();
 	  	 	try{
 	  	 		adjResultMap = dispatcher.runSync("createOrderAdjustment",adjustCtx);  		  		 
@@ -1996,7 +2037,48 @@ public class MaterialPurchaseServices {
 	  			  return adjResultMap;			  
 	  	 	}
 		}
+		//check discount after tax
+		if(COGS_DISC_ATR){
 			
+			//GenericValue eachAdj = delegator.findOne("OrderTerm", UtilMisc.toMap("orderId",orderId,"orderItemSeqId","_NA_","termTypeId","COGS_DISC_ATR"), false);
+			//Debug.log("COGS_DISC_ATR_Map attr==========="+COGS_DISC_ATR_Map);
+			Map adjustCtx = UtilMisc.toMap("userLogin",userLogin);	
+			String adjustmentTypeId=(String)COGS_DISC_ATR_Map.get("adjustmentTypeId");
+			BigDecimal termValue =(BigDecimal)COGS_DISC_ATR_Map.get("amount");
+	    	adjustCtx.put("orderId", orderId);
+	    	adjustCtx.put("orderAdjustmentTypeId", adjustmentTypeId);
+			String uomId = (String)COGS_DISC_ATR_Map.get("uomId");
+			Map inputMap = UtilMisc.toMap("userLogin",userLogin);
+    		inputMap.put("termTypeId", adjustmentTypeId);
+    		inputMap.put("basicAmount", basicAmount);
+    		inputMap.put("exciseDuty", exciseDuty);
+    		inputMap.put("uomId", uomId);
+    		inputMap.put("termValue", termValue);
+    		OrderReadHelper orh = null;
+    		try {
+    			  orh = new OrderReadHelper(delegator, orderId);
+            } catch (IllegalArgumentException e) {
+                return ServiceUtil.returnError(e.getMessage());
+            }
+    		BigDecimal poValue = orh.getOrderGrandTotal();
+    		inputMap.put("poValue", poValue);
+    		Debug.log("inputMap==========="+inputMap);
+    		BigDecimal termAmount = OrderServices.calculatePurchaseOrderTermValue(ctx,inputMap);
+    		adjustCtx.put("amount", termAmount);
+    		Map adjResultMap=FastMap.newInstance();
+	  	 	try{
+	  	 		adjResultMap = dispatcher.runSync("createOrderAdjustment",adjustCtx);  		  		 
+	  	 		if (ServiceUtil.isError(adjResultMap)) {
+	  	 			String errMsg =  ServiceUtil.getErrorMessage(adjResultMap);
+	  	 			Debug.logError(errMsg , module);
+	  	 			return ServiceUtil.returnError(" Error While Creating Adjustment for Purchase Order !");
+	  	 		}
+	  	 	}catch (Exception e) {
+	  			  Debug.logError(e, "Error While Creating Adjustment for Purchase Order ", module);
+	  			  return adjResultMap;			  
+	  	 	}
+    		
+		}
 			/*String mrnNumber = (String) context.get("mrnNumber");
 		  	String PONumber=(String) context.get("PONumber");
 		  	String SInvNumber = (String) context.get("SInvNumber");
@@ -2030,23 +2112,6 @@ public class MaterialPurchaseServices {
 					  Debug.logError(e, "Error While Updating purposeTypeId for Order ", module);
 					  return ServiceUtil.returnError("Error While Updating purposeTypeId for Order : "+orderId);
 		  	 	}
-				
-			
-		// let's handle order rounding here
-	    /*try{   
-	    	Map roundAdjCtx = UtilMisc.toMap("userLogin",userLogin);	  	
-	    	roundAdjCtx.put("orderId", orderId);
-	  	 	result = dispatcher.runSync("adjustRoundingDiffForOrder",roundAdjCtx);  		  		 
-	  	 	if (ServiceUtil.isError(result)) {
-	  	 		String errMsg =  ServiceUtil.getErrorMessage(result);
-	  	 		Debug.logError(errMsg , module);
-		      	  	return ServiceUtil.returnError(errMsg+"==Error While  Rounding Order !");
-		 		}
-		 	}catch (Exception e) {
-		 		Debug.logError(e, "Error while Creating Order", module);
-	        return ServiceUtil.returnError(e+"==Error While  Rounding Order !");
-	  		//return resultMap;			  
-	  	}*/
 	    
 		}catch(Exception e){
 			try {
@@ -2442,15 +2507,21 @@ public class MaterialPurchaseServices {
 		if(quantityAccepted.compareTo(BigDecimal.ZERO) ==0){
 			statusId = "SR_REJECTED";
 		}
+		if(quantityAccepted.compareTo(BigDecimal.ZERO) ==-1){
+			return ServiceUtil.returnError("negative value not allowed");
+		}
 		try{
 			
 			GenericValue shipmentReceipt = delegator.findOne("ShipmentReceipt", UtilMisc.toMap("receiptId", receiptId), false);
 			
 			GenericValue shipmentItem = delegator.findOne("ShipmentItem", UtilMisc.toMap("shipmentId", shipmentId, "shipmentItemSeqId", shipmentItemSeqId), false);
-			
-			BigDecimal origReceiptQty = shipmentItem.getBigDecimal("quantity");
+			BigDecimal origReceiptQty=BigDecimal.ZERO;
+			origReceiptQty = shipmentItem.getBigDecimal("quantity");
 			BigDecimal rejectedQty = origReceiptQty.subtract(quantityAccepted);
 			
+			if(quantityAccepted.compareTo(origReceiptQty) >0){
+				return ServiceUtil.returnError("not accept more than the received quantity");
+			}
 			shipmentReceipt.put("quantityAccepted", quantityAccepted);
 			shipmentReceipt.put("quantityRejected", rejectedQty);
 			shipmentReceipt.put("statusId", statusId);
@@ -3011,5 +3082,87 @@ public class MaterialPurchaseServices {
 	  	}
 	  	request.setAttribute("_EVENT_MESSAGE_", "PO Number :"+orderId +" Linked With GRN Shipment Number"+shipmentId+" Successfully !");
 	  	return "success";
+	}
+	
+	public static Map<String, Object> cancelPOStatus(DispatchContext ctx,Map<String, ? extends Object> context) {
+		Delegator delegator = ctx.getDelegator();
+		LocalDispatcher dispatcher = ctx.getDispatcher();
+        
+		String statusId = (String) context.get("statusId");
+		String orderId = (String) context.get("orderId");
+		String changeReason = (String) context.get("changeReason");
+		GenericValue userLogin = (GenericValue) context.get("userLogin");
+		Map result = ServiceUtil.returnSuccess();
+		try{
+			
+			GenericValue orderHeader = delegator.findOne("OrderHeader", UtilMisc.toMap("orderId", orderId), false);
+			
+			if(UtilValidate.isEmpty(orderHeader)){
+				Debug.logError("Order doesn't exists with Id : "+orderId , module);
+  	 			return ServiceUtil.returnError("Order doesn't exists with Id : "+orderId);
+			}
+			
+			Map statusCtx = FastMap.newInstance();
+			statusCtx.put("statusId", statusId);
+			statusCtx.put("orderId", orderId);
+			statusCtx.put("userLogin", userLogin);
+			Map resultCtx = OrderServices.setOrderStatus(ctx, statusCtx);
+			if (ServiceUtil.isError(resultCtx)) {
+				Debug.logError("Order set status failed for orderId: " + orderId, module);
+				return resultCtx;
+			}
+			String oldStatusId = (String)resultCtx.get("oldStatusId");
+			result.put("oldStatusId", oldStatusId);
+			List<GenericValue> orderItems = delegator.findList("OrderItem", EntityCondition.makeCondition("orderId", EntityOperator.EQUALS, orderId), UtilMisc.toSet("quoteId"), null, null, false);
+			
+			List<String> quoteIds = EntityUtil.getFieldListFromEntityList(orderItems, "quoteId", true);
+			
+			if(UtilValidate.isNotEmpty(quoteIds)){
+
+				String quoteId = (String)quoteIds.get(0);
+				GenericValue quote = delegator.findOne("Quote", UtilMisc.toMap("quoteId", quoteId), false);
+				List<GenericValue> quoteItems = delegator.findList("QuoteItem", EntityCondition.makeCondition("quoteId", EntityOperator.EQUALS, quoteId), null, null, null, false);
+				
+				boolean quoteStatusChange = Boolean.FALSE; 
+				for(GenericValue quoteItem : quoteItems){
+					String itemStatusId = quoteItem.getString("statusId");
+					
+					if(itemStatusId.equals("QTITM_ORDERED")){
+						Map inputMap = FastMap.newInstance();
+			        	inputMap.put("userLogin", userLogin);
+			        	inputMap.put("quoteId", quoteItem.getString("quoteId"));
+			        	inputMap.put("quoteItemSeqId", quoteItem.getString("quoteItemSeqId"));
+			        	inputMap.put("statusId", "QTITM_QUALIFIED");
+			        	
+			        	Map statusResult = dispatcher.runSync("setQuoteAndItemStatus", inputMap);
+			        	if(ServiceUtil.isError(statusResult)){
+			        		Debug.logError("Error updating QuoteStatus", module);
+			  	  			return ServiceUtil.returnError("Error updating QuoteStatus");
+			        	}
+			        	quoteStatusChange = Boolean.TRUE;
+					}
+					
+				}
+				if(quoteStatusChange){
+					Map inputMap = FastMap.newInstance();
+		        	inputMap.put("userLogin", userLogin);
+		        	inputMap.put("quoteId", quoteId);
+		        	inputMap.put("statusId", "QUO_ACCEPTED");
+		        	
+		        	Map statusResult = dispatcher.runSync("setQuoteAndItemStatus", inputMap);
+		        	if(ServiceUtil.isError(statusResult)){
+		        		Debug.logError("Error updating QuoteStatus", module);
+		  	  			return ServiceUtil.returnError("Error updating QuoteStatus");
+		        	}
+				}
+				
+			}
+			
+		} catch (Exception e) {
+			// TODO: handle exception
+			Debug.logError(e, module);
+			return ServiceUtil.returnError(e.getMessage());
+		}
+		return result;
 	}
 }
