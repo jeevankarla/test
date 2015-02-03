@@ -29,6 +29,7 @@ under the License.
             <table class="order-items basic-table" cellspacing='0'>
                 <tr valign="bottom" class="header-row">
                     <td width="35%">${uiLabelMap.Material}</td>
+                    <td width="35%">Material Specification</td>
                     <td width="15%" align="left">${uiLabelMap.CommonStatus}</td>
                     <td width="5%" align="left">${uiLabelMap.OrderQuantity}</td>
                      <td width="10%" align="right">Unit Price</td>
@@ -80,6 +81,11 @@ under the License.
                                                target="_orderImage" class="buttontext">${uiLabelMap.OrderViewImage}</a>
                                         </#if>
                                     </div>
+                                </td>
+                                 <td align="left">
+                                 <#if productDetails?has_content?exists>
+                                  ${productDetails.longDescription?if_exists}
+                                 </#if>
                                 </td>
                                 <td align="left"><#assign statusDesc = delegator.findOne("StatusItem", {"statusId" : orderItem.statusId}, true) />${statusDesc.description?if_exists}
                                 </td>
@@ -380,13 +386,13 @@ under the License.
                         </#if> -->
                     </#list>
                 </#if>
-                <tr><td colspan="7"><hr /></td></tr>
+                <tr><td colspan="8"><hr /></td></tr>
                 <#list orderHeaderAdjustments as orderHeaderAdjustment>
                     <#assign adjustmentType = orderHeaderAdjustment.getRelatedOne("OrderAdjustmentType")>
                     <#assign adjustmentAmount = Static["org.ofbiz.order.order.OrderReadHelper"].calcOrderAdjustment(orderHeaderAdjustment, orderSubTotal)>
                     <#if adjustmentAmount != 0>	
                         <tr>
-                            <td align="right" colspan="5">
+                            <td align="right" colspan="6">
                                 <#if orderHeaderAdjustment.comments?has_content>${orderHeaderAdjustment.comments} - </#if>
                                 <#if orderHeaderAdjustment.description?has_content>${orderHeaderAdjustment.description} - </#if>
                                 <span class="label"> ${adjustmentType.get("description", locale)}</span>
@@ -401,10 +407,10 @@ under the License.
                 <#-- subtotal -->
                <tr>
                     <td colspan="1"></td>
-                    <td colspan="6"><hr /></td>
+                    <td colspan="7"><hr /></td>
                 </tr>
                 <tr>
-                    <td align="right" colspan="5">
+                    <td align="right" colspan="6">
                         <span class="label">${uiLabelMap.OrderItemsSubTotal}</span>
                     </td>
                     <td align="right" nowrap="nowrap">
@@ -416,7 +422,7 @@ under the License.
                 </tr>
                 <#-- other adjustments -->
                <tr>
-                    <td align="right" colspan="5">
+                    <td align="right" colspan="6">
                         <span class="label">${uiLabelMap.OrderTotalOtherOrderAdjustments}</span>
                     </td>
                     <td align="right" nowrap="nowrap">
@@ -426,7 +432,7 @@ under the License.
                 </tr>
                 <#-- shipping adjustments -->
                 <tr>
-                    <td align="right" colspan="5">
+                    <td align="right" colspan="6">
                         <span class="label">${uiLabelMap.OrderTotalShippingAndHandling}</span>
                     </td>
                     <td align="right" nowrap="nowrap">
@@ -442,7 +448,7 @@ under the License.
                 <#list taxAdjustments as taxAdjustment>
                 	<tr>
                     	<#assign adjustmentType = taxAdjustment.getRelatedOneCache("OrderAdjustmentType")>
-                    	<td align="right" colspan="5">
+                    	<td align="right" colspan="6">
                         	<span class="label">${adjustmentType.get("description",locale)} <#if taxAdjustment.sourcePercentage?has_content>(${taxAdjustment.sourcePercentage}%)</#if></span>
                     	</td>            			
             			<td align="right" nowrap="nowrap">
@@ -454,7 +460,7 @@ under the License.
           		</#if>   
                 <#-- grand total -->
                <tr>
-                    <td align="right" colspan="5">
+                    <td align="right" colspan="6">
                         <span class="label">${uiLabelMap.OrderTotalDue}</span>
                     </td>
                     <td align="right" nowrap="nowrap">
