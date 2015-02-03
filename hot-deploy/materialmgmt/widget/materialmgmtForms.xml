@@ -323,7 +323,6 @@
              <lookup target-form-name="LookupProduct" size="15" />
         </field>
         <field name="internalName" title="Internal Name"><text-find/> </field>
-        <field name="brandName" title="Brand Name"><text-find/></field>
         <field name="primaryProductCategoryId" title="Material Category">
         	<drop-down allow-empty="true" >
         		<entity-options description="${description}" entity-name="ProductCategory" key-field-name="productCategoryId">
@@ -353,9 +352,16 @@
         	</entity-condition>
         	<set  field="partyId" value="${list[0].partyId}"/>
         </row-actions>
-     <field name="productId" title="Product" ><display-entity entity-name="Product" description="${description}"/></field> 
      <field name="internalName" title="Internal Name"><display/></field>
-     <field name="brandName" title="Brand Name"><display/></field>  
+     <field name="productId" title="Product" >
+     <display-entity entity-name="Product" description="${description}">
+     <sub-hyperlink description="[${productId}]" target="/catalog/control/EditProduct" target-type="inter-app">
+               	 <parameter param-name="productId" from-field="productId"/>
+     </sub-hyperlink>
+     </display-entity>
+      </field> 
+     <field name="longDescription" title="Specification"><display/></field>
+     <field name="uomId" title="UOM" ><display-entity entity-name="Uom" description="${description}"/></field> 
      <field name="primaryProductCategoryId" title="Material Category">
      	<display-entity entity-name="ProductCategory" key-field-name="productCategoryId" description="${description}" ></display-entity>
      </field>
