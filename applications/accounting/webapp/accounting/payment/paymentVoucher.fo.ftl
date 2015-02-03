@@ -508,7 +508,7 @@
 				       									</fo:table-row>
 				       									<fo:table-row> 
 						        						 	<fo:table-cell>
-						        						 		<fo:block text-align="left" font-size="12pt" white-space-collapse="false" keep-together="always" font-weight="bold">&#160;</fo:block>
+						        						 		<fo:block text-align="left" font-size="12pt" white-space-collapse="false" keep-together="always" font-weight="bold">&#160; SEQUENCE ID:${transSequenceIdMap.get(refundpaymentlist.paymentId)}</fo:block>
 						        						 	</fo:table-cell>
 						        						 	<fo:table-cell>
 						        						 		<fo:block text-align="left" font-size="12pt" white-space-collapse="false" keep-together="always" font-weight="bold"></fo:block>
