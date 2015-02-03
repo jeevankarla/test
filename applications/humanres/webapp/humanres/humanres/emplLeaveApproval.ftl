@@ -214,7 +214,7 @@ function leaveApprovalAjax() {
             	    $('div#updateEntryMsg').addClass("messageStr");
             	    $('div#updateEntryMsg').html('<label>'+leaveStatus+' Successfully.....!</label>'); 
             	    $('div#updateEntryMsg').delay(5000).fadeOut('slow');
-            	    alert("Next Level Leave Status Updated Successfully...!");
+            	    alert("Leave Status Updated Successfully...!");
             	    $(updateEmplLeaveStatus).qtip('hide');
             	    $("#FindLeaveApprovals").submit();
                }
@@ -259,7 +259,7 @@ function cancelForm(){
 		message +=	"<tr class='h3'><td align='left' class='h3' width='50%'>Next Leave Status :</td><td align='left' width='50%'><select name='leaveStatus' onchange = 'javascript:approverPartyIdChange();' id='leaveStatus'  value='"+leaveStatus+"' class='h4'>"+optionList+   
 					"</select></td></tr>";
 					
-		message +=  "<tr class='h3'><td align='left' class='h3' width='50%'>Level Approver Party:</td><td align='left' width='50%'><select id='levelApproverPartyId' name='levelApproverPartyId' class='flexselect'</select></tr>";			
+		message +=  "<tr class='h3'><td align='left' class='h3' width='50%'>Level Approver Party:</td><td align='left' width='50%'><select id='levelApproverPartyId' name='levelApproverPartyId' class='flexselect'></select></tr>";			
 					
 		message +=	"<tr class='h3'><td align='left' class='h3' width='50%'>Documents Produced :</td><td align='left' width='50%'><select name='documentsProduced' id='documentsProduced' class='h4'><option value='N'>N</option><option value='Y'>Y</option></select></td></tr>";	
 		
