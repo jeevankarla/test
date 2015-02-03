@@ -236,10 +236,12 @@ public class CustomSequenceServices {
 			   				orderHeaderSequence.put("orderHeaderSequenceTypeId",orderHeaderSequenceTypeId );
 			   				orderHeaderSequence.put("orderId", orderId);
 			   				orderHeaderSequence.put("finYearId", finYearId);
-			   				orderHeaderSequence.put("orderNo", orderId+"/"+UtilDateTime.toDateString(customTimePeriod.getDate("fromDate"),"yyyy")+"-"+UtilDateTime.toDateString(customTimePeriod.getDate("thruDate"),"yy"));
-							delegator.setNextSubSeqId(orderHeaderSequence, "sequenceId", 10, 1);
+			   				//orderHeaderSequence.put("orderNo", orderId+"/"+UtilDateTime.toDateString(customTimePeriod.getDate("fromDate"),"yyyy")+"-"+UtilDateTime.toDateString(customTimePeriod.getDate("thruDate"),"yy"));
+							delegator.setNextSubSeqId(orderHeaderSequence, "sequenceId", 6, 1);
 				            delegator.create(orderHeaderSequence);
 				            String sequenceId = (String) orderHeaderSequence.get("sequenceId");
+				            orderHeaderSequence.put("orderNo", sequenceId+"/"+UtilDateTime.toDateString(customTimePeriod.getDate("fromDate"),"yyyy")+"-"+UtilDateTime.toDateString(customTimePeriod.getDate("thruDate"),"yy"));
+				            delegator.createOrStore(orderHeaderSequence);
 				            result.put("sequenceId", sequenceId) ;
 			       			//}
 			       		}
