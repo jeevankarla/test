@@ -504,7 +504,11 @@
     
     <form name="ListRequestItems" type="list" use-row-submit="true"  title="" list-name="custRequestItems"
         odd-row-style="alternate-row" default-table-style="basic-table hover-bar" paginate-target="RequestItems">
-        <!-- <auto-fields-entity entity-name="CustRequestItem" default-field-type="display"/> -->
+        <actions>
+        	<entity-condition entity-name="CustRequestItem">
+        		<condition-expr field-name="custRequestId" operator="equals" from-field="parameters.custRequestId"/>
+        	</entity-condition>
+        </actions>
         <field name="sequenceNum"></field>
         <field name="custRequestId"><hidden/></field>
         <field name="custRequestItemSeqId" widget-style="buttontext" title="${uiLabelMap.MaterialMangement_CustRequestItemSeqId}">
@@ -523,7 +527,8 @@
             <display-entity also-hidden="false" entity-name="StatusItem"/>
         </field>
         <field name="origQuantity" title="Indented Qty"><display/></field>
-        <field  use-when="&quot;${statusId}&quot;== &quot;CRQ_SUBMITTED&quot;" name="quantity" title="Sec. Head Approved Qty"><display/></field>
+        <field  use-when="statusId.equals(&quot;CRQ_SUBMITTED&quot;) || statusId.equals(&quot;CRQ_INPROCESS&quot;) || statusId.equals(&quot;CRQ_ISSUED&quot;) || statusId.equals(&quot;CRQ_COMPLETED&quot;) || statusId.equals(&quot;CRQ_PENDING&quot;)"  name="quantity" title="Sec. Head Approved Qty"><display/></field>
+        
         <!-- <field name="addNote" use-when="!custRequest.get(&quot;statusId&quot;).equals(&quot;CRQ_CANCELLED&quot;)&amp;&amp;!custRequest.get(&quot;statusId&quot;).equals(&quot;CRQ_COMPLETED&quot;)">
             <hyperlink description="${uiLabelMap.FormFieldTitle_addNote}" target="requestitemnotes">
                 <parameter param-name="custRequestId"/>
@@ -531,6 +536,7 @@
             </hyperlink>
         </field> -->
     </form>
+
     <form name="OverviewRequestItems" extends="ListRequestItems">
         <field name="priority"><ignored/></field>
         <field name="sequenceNum"><ignored/></field>

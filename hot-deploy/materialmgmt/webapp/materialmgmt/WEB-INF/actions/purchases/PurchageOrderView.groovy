@@ -504,40 +504,38 @@ if (orderItems) {
    paymentDetailsList=[];
    paymentIds=[];
    finalMap=[:];
-   orderCondition = EntityCondition.makeCondition([EntityCondition.makeCondition("orderId", EntityOperator.EQUALS, orderId)],EntityOperator.AND);
-   OrderItemBillingList = delegator.findList("OrderItemBilling", orderCondition, null, null, null, false);
-   invoicesList = EntityUtil.getFieldListFromEntityList(OrderItemBillingList, "invoiceId", true);
-   invoicesList.each{ invoice ->
-	   tempMap=[:];
-	   invoiceDetails=delegator.findByPrimaryKey("Invoice", [invoiceId : invoice]);
-	   if(invoiceDetails){
-		   tempMap.put("invoiceId", invoiceDetails.invoiceId);
-		   tempMap.put("statusId", invoiceDetails.statusId);
-		   tempMap.put("invoiceDate", invoiceDetails.invoiceDate);
-	   }
-	   if(UtilValidate.isNotEmpty(tempMap)){
-		   invoiceDetailList.add(tempMap);
-	   }
-	   paymentCondition = EntityCondition.makeCondition([EntityCondition.makeCondition("invoiceId", EntityOperator.EQUALS, invoice)],EntityOperator.AND);
-	   PaymentDetailsList=delegator.findList("PaymentAndApplication",paymentCondition,null,null,null,false);
-	   paymentIds = EntityUtil.getFieldListFromEntityList(PaymentDetailsList, "paymentId", true);
-	   if(PaymentDetailsList){
-		   PaymentDetailsList.each{ payment ->
-				   amount=payment.amountApplied;
-				   if(UtilValidate.isEmpty(finalMap.get(payment.paymentId))){
+   orderCondition = EntityCondition.makeCondition([EntityCondition.makeCondition("primaryOrderId", EntityOperator.EQUALS, orderId)],EntityOperator.AND);
+   ShipmentList = delegator.findList("Shipment", orderCondition, UtilMisc.toSet("shipmentId"), null, null, false);
+   if(UtilValidate.isNotEmpty(ShipmentList)){
+	   ShipmentList.each{shipment->
+		   invoiceCondition = EntityCondition.makeCondition([EntityCondition.makeCondition("shipmentId", EntityOperator.EQUALS, shipment.shipmentId),EntityCondition.makeCondition("invoiceTypeId", EntityOperator.EQUALS, "PURCHASE_INVOICE")],EntityOperator.AND);
+		   invoicesList = delegator.findList("Invoice",invoiceCondition,UtilMisc.toSet("invoiceId"),null,null,false);
+		   invoiceIds = EntityUtil.getFieldListFromEntityList(invoicesList, "invoiceId", true);
+		   if(UtilValidate.isNotEmpty(invoiceIds)){
+			   ivoCond=EntityCondition.makeCondition([EntityCondition.makeCondition("invoiceId", EntityOperator.IN, invoiceIds)],EntityOperator.AND);
+			   invoiceDetailList = delegator.findList("Invoice",ivoCond,UtilMisc.toSet("invoiceId","statusId","invoiceDate"),null,null,false);
+			   paymentCondition = EntityCondition.makeCondition([EntityCondition.makeCondition("invoiceId", EntityOperator.IN, invoiceIds)],EntityOperator.AND);
+			   PaymentDetailsList=delegator.findList("PaymentAndApplication",paymentCondition,null,null,null,false);
+			   paymentIds = EntityUtil.getFieldListFromEntityList(PaymentDetailsList, "paymentId", true);
+			   if(PaymentDetailsList){
+				   PaymentDetailsList.each{ payment ->
+					   amount=payment.amountApplied;
+					   if(UtilValidate.isEmpty(finalMap.get(payment.paymentId))){
+						   paymentMap = [:];
+						   Status=delegator.findByPrimaryKey("StatusItem",[statusId:payment.statusId]);
+							paymentMap.put("amount", amount);
+							paymentMap.put("statusId", Status.description);
+							paymentMap.put("date", payment.paymentDate);
+							   finalMap[payment.paymentId] = paymentMap;
+					   }else{
 					   paymentMap = [:];
-					   Status=delegator.findByPrimaryKey("StatusItem",[statusId:payment.statusId]);
-					    paymentMap.put("amount", amount);     
-					    paymentMap.put("statusId", Status.description);
-						paymentMap.put("date", payment.paymentDate);
-					   	finalMap[payment.paymentId] = paymentMap;
-				   }else{	
-				   paymentMap = [:];
-				   paymentMap.putAll(finalMap[payment.paymentId]);
-				   		   paymentMap["amount"] += amount;
-						   finalMap[payment.paymentId]=paymentMap;
+					   paymentMap.putAll(finalMap[payment.paymentId]);
+								  paymentMap["amount"] += amount;
+							   finalMap[payment.paymentId]=paymentMap;
+					   }
 				   }
-				   
+			   }
+			   
 		   }
 	   }
    }
