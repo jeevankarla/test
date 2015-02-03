@@ -6,6 +6,7 @@ import java.lang.*;
 import org.ofbiz.base.util.*;
 import javolution.util.FastMap;
 import org.ofbiz.entity.util.EntityFindOptions;
+import org.ofbiz.entity.util.EntityUtil;
 import net.sf.json.JSONArray;
 import java.text.SimpleDateFormat;
 import java.text.ParseException;
@@ -90,10 +91,15 @@ validStatusChangeList = EmplLeaveService.getEmployLeaveValidStatusChange(dctx,Ut
 request.setAttribute("validStatusChangeList", validStatusChangeList);
 if(UtilValidate.isNotEmpty(emplLeaveApplId)){
 	dateList = [];
+	dateListStamp = [];
 	if(UtilValidate.isNotEmpty(emplLeaveApplId)){
 		emplDailyAttendanceDetailList = delegator.findList("EmplDailyAttendanceDetail",EntityCondition.makeCondition("emplLeaveApplId", EntityOperator.EQUALS, emplLeaveApplId) , null, null, null, false);
 		if(UtilValidate.isNotEmpty(emplDailyAttendanceDetailList)){
-			dateList = EntityUtil.getFieldListFromEntityList(emplDailyAttendanceDetailList,"date",true);
+			dateListStamp = EntityUtil.getFieldListFromEntityList(emplDailyAttendanceDetailList,"date",true);
+			dateListStamp.each{ date ->
+				dateStr = UtilDateTime.toDateString(date,"dd-MM-yyyy");
+				dateList.add(dateStr);
+			}
 			if(UtilValidate.isNotEmpty(dateList)){
 				request.setAttribute("dateList", dateList);
 			}
