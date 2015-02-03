@@ -78,5 +78,16 @@
         <attribute name="partyId" type="String" mode="IN" optional="true"/> 
         <attribute name="ordersListForGRNLink" type="List" mode="OUT" optional="true"/> 
     </service>
+    
+   <service name="sendEquiryPerEmail" engine="simple" location="component://materialmgmt/script/MaterialMgmtServices.xml" invoke="sendEquiryPerEmail">
+        <description>Get POs For GRN Shipment </description>
+        <attribute name="custRequestId" type="String" mode="IN" optional="false"/>
+        <attribute name="sendFrom" type="String" mode="IN" optional="true"/>
+        <attribute name="sendTo" type="String" mode="IN" optional="false"/>
+        <attribute name="sendCc" type="String" mode="IN" optional="true"/>
+        <attribute name="subject" type="String" mode="IN" optional="true"/>
+        <attribute name="bodyText" type="String" mode="IN" optional="true" allow-html="safe"/>  
+        <attribute name="partyId" type="String" mode="IN" optional="true"/> 
+    </service>
    
 </services>
