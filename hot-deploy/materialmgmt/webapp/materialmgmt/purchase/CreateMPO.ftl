@@ -761,8 +761,10 @@ function makeDatePicker(fromDateId ,thruDateId){
 								            		<select name="otherTermUom_o_${rowCount}">
 								            			<#if eachShipTerm.get("uomId") == "INR">
 								            				<option value="INR" selected>Rupees</option>
+								            				<option value="PERCENT">Percent</option>
 								            			<#else>
 								            				<option value="INR">Rupees</option>
+								            				<option value="PERCENT">Percent</option>
 								            			</#if>
 								            			
 								            		</select>

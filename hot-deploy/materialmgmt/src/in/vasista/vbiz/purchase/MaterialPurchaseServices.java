@@ -19,6 +19,8 @@ import java.util.Map.Entry;
 import net.sf.json.JSONObject;
 
 import org.ofbiz.order.order.OrderChangeHelper;
+import org.ofbiz.order.order.OrderReadHelper;
+import org.ofbiz.order.order.OrderServices;
 import org.ofbiz.order.shoppingcart.CheckOutHelper;
 import org.ofbiz.order.shoppingcart.product.ProductPromoWorker;
 
@@ -1532,6 +1534,7 @@ public class MaterialPurchaseServices {
 				termsList.add(termTypeMap);
 				tempMap.put("adjustmentTypeId", termTypeId);
 				tempMap.put("amount", termValue);
+				tempMap.put("uomId", termUom);
 				otherAdjList.add(tempMap);
 			}
 		}
@@ -1646,6 +1649,10 @@ public class MaterialPurchaseServices {
 		}
 		GenericValue product =null;
 		String productPriceTypeId = null;
+		//these are input param to calcultae teramount based on order terms 
+		BigDecimal basicAmount = BigDecimal.ZERO;
+		//exciseDuty includes BED,CESS,SECESS
+		BigDecimal exciseDuty = BigDecimal.ZERO;
 		
 		ShoppingCart cart = new ShoppingCart(delegator, productStoreId, locale,currencyUomId);
 		
@@ -1733,8 +1740,6 @@ public class MaterialPurchaseServices {
 			if(UtilValidate.isNotEmpty(prodQtyMap.get("unitPrice"))){
 				unitPrice = (BigDecimal)prodQtyMap.get("unitPrice");
 			}
-			BigDecimal tempPrice = BigDecimal.ZERO;
-			tempPrice = tempPrice.add(unitPrice);
 			// this is to calculate inclusive tax
 			BigDecimal vatUnitRate = BigDecimal.ZERO;
 			BigDecimal cstUnitRate = BigDecimal.ZERO;
@@ -1795,7 +1800,7 @@ public class MaterialPurchaseServices {
 			    		taxDetailMap.put("amount", taxAmount);
 			    		taxDetailMap.put("percentage", excisePercent);
 			    		taxList.add(taxDetailMap);
-
+             
 			    		GenericValue newProdPriceType = delegator.makeValue("ProductPriceAndType");        	 
 			    		newProdPriceType.set("fromDate", effectiveDate);
 			    		newProdPriceType.set("parentTypeId", "TAX");
@@ -1809,7 +1814,7 @@ public class MaterialPurchaseServices {
 			    		prodPriceTypeList.add(newProdPriceType);
 			    		totalTaxAmt=totalTaxAmt.add(taxAmount.divide(quantity, 3, BigDecimal.ROUND_HALF_UP));
 		        	}
-		        	tempPrice=tempPrice.add(taxAmount);
+		        	exciseDuty = exciseDuty.add(taxAmount);
 		        	
 				}
 				/*productQtyMap.put("vatPercent", vatPercent);
@@ -1846,7 +1851,7 @@ public class MaterialPurchaseServices {
 			    		prodPriceTypeList.add(newProdPriceType);
 			    		totalTaxAmt=totalTaxAmt.add(taxAmount.divide(quantity, 3, BigDecimal.ROUND_HALF_UP));
 		        	}
-		        	
+		        	exciseDuty = exciseDuty.add(taxAmount);
 				}
 			    if(UtilValidate.isNotEmpty(prodQtyMap.get("bedSecCessAmount")) || !bedSecCessUnitRate.equals(BigDecimal.ZERO)){
 				    BigDecimal taxAmount = (BigDecimal)prodQtyMap.get("bedSecCessAmount");
@@ -1877,6 +1882,7 @@ public class MaterialPurchaseServices {
 			    		prodPriceTypeList.add(newProdPriceType);
 			    		totalTaxAmt=totalTaxAmt.add(taxAmount.divide(quantity, 3, BigDecimal.ROUND_HALF_UP));
 		        	}
+		        	exciseDuty = exciseDuty.add(taxAmount);
 				}
 			    if(UtilValidate.isNotEmpty(prodQtyMap.get("vatAmount")) || !vatUnitRate.equals(BigDecimal.ZERO)){
 				    BigDecimal taxAmount = (BigDecimal)prodQtyMap.get("vatAmount");
@@ -1950,7 +1956,7 @@ public class MaterialPurchaseServices {
 				 totalPrice = unitPrice.add(totalTaxAmt);
 			}
 			//BigDecimal totalPrice = unitPrice;//as of now For PurchaseOrder listPrice is same like unitPrice
-			
+			basicAmount = basicAmount.add(unitPrice.multiply(quantity));
 		
 			ShoppingCartItem item = null;
 			try{
@@ -1991,12 +1997,33 @@ public class MaterialPurchaseServices {
 			
 		orderId = (String) orderCreateResult.get("orderId");
 		//let's create Fright Adjustment here
-    	 
+    	 Boolean COGS_DISC_ATR = Boolean.FALSE;
+    	 Map COGS_DISC_ATR_Map = FastMap.newInstance();
 		for(Map eachAdj : otherChargesAdjustment){
-			Map adjustCtx = UtilMisc.toMap("userLogin",userLogin);	  	
+			Map adjustCtx = UtilMisc.toMap("userLogin",userLogin);	
+			String adjustmentTypeId=(String)eachAdj.get("adjustmentTypeId");
+			BigDecimal termValue =(BigDecimal)eachAdj.get("amount");
 	    	adjustCtx.put("orderId", orderId);
-	    	adjustCtx.put("orderAdjustmentTypeId", (String)eachAdj.get("adjustmentTypeId"));
-	    	adjustCtx.put("amount", (BigDecimal)eachAdj.get("amount"));
+	    	adjustCtx.put("orderAdjustmentTypeId", adjustmentTypeId);
+	    	//adjustCtx.put("amount", termValue);
+	    	//Debug.log("eachAdj==========="+eachAdj);
+	    	String uomId = (String)eachAdj.get("uomId");
+	    	if(adjustmentTypeId.equals("COGS_DISC_ATR")){
+	    		COGS_DISC_ATR = Boolean.TRUE;
+	    		COGS_DISC_ATR_Map.putAll(eachAdj);
+	    	}
+	    	if(!adjustmentTypeId.equals("COGS_DISC_ATR")){
+	    		Map inputMap = UtilMisc.toMap("userLogin",userLogin);
+	    		inputMap.put("termTypeId", adjustmentTypeId);
+	    		inputMap.put("basicAmount", basicAmount);
+	    		inputMap.put("exciseDuty", exciseDuty);
+	    		inputMap.put("uomId", uomId);
+	    		inputMap.put("termValue", termValue);
+	    		//Debug.log("inputMap==========="+inputMap);
+	    		BigDecimal termAmount = OrderServices.calculatePurchaseOrderTermValue(ctx,inputMap);
+	    		adjustCtx.put("amount", termAmount);
+	    	}
+	    	
 	    	Map adjResultMap=FastMap.newInstance();
 	  	 	try{
 	  	 		adjResultMap = dispatcher.runSync("createOrderAdjustment",adjustCtx);  		  		 
@@ -2010,7 +2037,48 @@ public class MaterialPurchaseServices {
 	  			  return adjResultMap;			  
 	  	 	}
 		}
+		//check discount after tax
+		if(COGS_DISC_ATR){
 			
+			//GenericValue eachAdj = delegator.findOne("OrderTerm", UtilMisc.toMap("orderId",orderId,"orderItemSeqId","_NA_","termTypeId","COGS_DISC_ATR"), false);
+			//Debug.log("COGS_DISC_ATR_Map attr==========="+COGS_DISC_ATR_Map);
+			Map adjustCtx = UtilMisc.toMap("userLogin",userLogin);	
+			String adjustmentTypeId=(String)COGS_DISC_ATR_Map.get("adjustmentTypeId");
+			BigDecimal termValue =(BigDecimal)COGS_DISC_ATR_Map.get("amount");
+	    	adjustCtx.put("orderId", orderId);
+	    	adjustCtx.put("orderAdjustmentTypeId", adjustmentTypeId);
+			String uomId = (String)COGS_DISC_ATR_Map.get("uomId");
+			Map inputMap = UtilMisc.toMap("userLogin",userLogin);
+    		inputMap.put("termTypeId", adjustmentTypeId);
+    		inputMap.put("basicAmount", basicAmount);
+    		inputMap.put("exciseDuty", exciseDuty);
+    		inputMap.put("uomId", uomId);
+    		inputMap.put("termValue", termValue);
+    		OrderReadHelper orh = null;
+    		try {
+    			  orh = new OrderReadHelper(delegator, orderId);
+            } catch (IllegalArgumentException e) {
+                return ServiceUtil.returnError(e.getMessage());
+            }
+    		BigDecimal poValue = orh.getOrderGrandTotal();
+    		inputMap.put("poValue", poValue);
+    		Debug.log("inputMap==========="+inputMap);
+    		BigDecimal termAmount = OrderServices.calculatePurchaseOrderTermValue(ctx,inputMap);
+    		adjustCtx.put("amount", termAmount);
+    		Map adjResultMap=FastMap.newInstance();
+	  	 	try{
+	  	 		adjResultMap = dispatcher.runSync("createOrderAdjustment",adjustCtx);  		  		 
+	  	 		if (ServiceUtil.isError(adjResultMap)) {
+	  	 			String errMsg =  ServiceUtil.getErrorMessage(adjResultMap);
+	  	 			Debug.logError(errMsg , module);
+	  	 			return ServiceUtil.returnError(" Error While Creating Adjustment for Purchase Order !");
+	  	 		}
+	  	 	}catch (Exception e) {
+	  			  Debug.logError(e, "Error While Creating Adjustment for Purchase Order ", module);
+	  			  return adjResultMap;			  
+	  	 	}
+    		
+		}
 			/*String mrnNumber = (String) context.get("mrnNumber");
 		  	String PONumber=(String) context.get("PONumber");
 		  	String SInvNumber = (String) context.get("SInvNumber");
@@ -2044,23 +2112,6 @@ public class MaterialPurchaseServices {
 					  Debug.logError(e, "Error While Updating purposeTypeId for Order ", module);
 					  return ServiceUtil.returnError("Error While Updating purposeTypeId for Order : "+orderId);
 		  	 	}
-				
-			
-		// let's handle order rounding here
-	    /*try{   
-	    	Map roundAdjCtx = UtilMisc.toMap("userLogin",userLogin);	  	
-	    	roundAdjCtx.put("orderId", orderId);
-	  	 	result = dispatcher.runSync("adjustRoundingDiffForOrder",roundAdjCtx);  		  		 
-	  	 	if (ServiceUtil.isError(result)) {
-	  	 		String errMsg =  ServiceUtil.getErrorMessage(result);
-	  	 		Debug.logError(errMsg , module);
-		      	  	return ServiceUtil.returnError(errMsg+"==Error While  Rounding Order !");
-		 		}
-		 	}catch (Exception e) {
-		 		Debug.logError(e, "Error while Creating Order", module);
-	        return ServiceUtil.returnError(e+"==Error While  Rounding Order !");
-	  		//return resultMap;			  
-	  	}*/
 	    
 		}catch(Exception e){
 			try {
