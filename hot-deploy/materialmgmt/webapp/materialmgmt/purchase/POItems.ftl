@@ -29,12 +29,14 @@ under the License.
             <table class="order-items basic-table" cellspacing='0'>
                 <tr valign="bottom" class="header-row">
                     <td width="35%">${uiLabelMap.Material}</td>
-                    <td width="15%">${uiLabelMap.CommonStatus}</td>
-                    <td width="5%">${uiLabelMap.OrderQuantity}</td>
+                    <td width="15%" align="left">${uiLabelMap.CommonStatus}</td>
+                    <td width="5%" align="left">${uiLabelMap.OrderQuantity}</td>
                      <td width="10%" align="right">Unit Price</td>
                     <#-->
                     <td width="10%" align="center">${uiLabelMap.OrderUnitList}</td>-->
-                    <td width="10%" align="right">${uiLabelMap.OrderAdjustments}</td>
+                  <#--  <td width="10%" align="right">${uiLabelMap.OrderAdjustments}</td> -->
+                    <td width="5%" align="right">VAT</td>
+                    <td width="5%" align="right">CST</td>
                     <td width="15%" align="right">${uiLabelMap.OrderSubTotal}</td>
                     <td width="2%">&nbsp;</td>
                 </tr>
@@ -79,9 +81,9 @@ under the License.
                                         </#if>
                                     </div>
                                 </td>
-                                <td ><#assign statusDesc = delegator.findOne("StatusItem", {"statusId" : orderItem.statusId}, true) />${statusDesc.description?if_exists}
+                                <td align="left"><#assign statusDesc = delegator.findOne("StatusItem", {"statusId" : orderItem.statusId}, true) />${statusDesc.description?if_exists}
                                 </td>
-                                <td>${orderItem.quantity}
+                                <td align="left">${orderItem.quantity}
                                 </td>
                                 <td align="right"  nowrap="nowrap">
                                     <@ofbizCurrency amount=orderItem.unitPrice isoCode=currencyUomId/>
@@ -91,8 +93,15 @@ under the License.
                                     <@ofbizCurrency amount=orderItem.unitPrice isoCode=currencyUomId/>
                                     / <@ofbizCurrency amount=orderItem.unitListPrice isoCode=currencyUomId/>
                                 </td>-->
-                                <td align="right" valign="top" nowrap="nowrap">
+                               <#-- <td align="right" valign="top" nowrap="nowrap">
                                    <@ofbizCurrency amount=Static["org.ofbiz.order.order.OrderReadHelper"].getPurchaseOrderItemTaxTotal(orderItem) isoCode=currencyUomId/>
+                                </td> -->
+                                <#assign orderItemAdjs = delegator.findOne("OrderItem", {"orderId" : orderItem.orderId,"orderItemSeqId": orderItem.orderItemSeqId}, true) />
+								<td align="right" valign="top" nowrap="nowrap">
+                                   <@ofbizCurrency amount=orderItemAdjs.vatAmount isoCode=currencyUomId/>
+                                </td>
+								<td align="right" valign="top" nowrap="nowrap">
+                                   <@ofbizCurrency amount=orderItemAdjs.cstAmount isoCode=currencyUomId/>
                                 </td>
                                 <td align="right" valign="top" nowrap="nowrap">
                                     <#if orderItem.statusId != "ITEM_CANCELLED">
@@ -457,4 +466,3 @@ under the License.
         </div>
     </div>
 </#if>
-
