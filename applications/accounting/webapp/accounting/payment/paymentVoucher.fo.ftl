@@ -108,7 +108,6 @@
 						        					</fo:table-row>	
 						        				 
 						        						<#-- payment details here -->
-						        						 
 						        						  <#assign  partyName="">
 						        						  <#assign  partyId="">
 						        						  <#if payment.partyIdFrom?exists && payment.partyIdFrom == "Company">

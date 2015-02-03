@@ -77,13 +77,11 @@ if(UtilValidate.isNotEmpty(paymentId)){
 			 finAccntTransSequenceList = delegator.findList("FinAccntTransSequence",EntityCondition.makeCondition("finAccountTransId", EntityOperator.EQUALS ,finAccountTransId)  , null, null, null, false );
 			 finAccntTransSequenceList.each { finAccntTransSequence ->
 				 transSequenceId = finAccntTransSequence.transSequenceId;
-				 Debug.log("transSequenceId==============="+transSequenceId);
 				 context.transSequenceId=transSequenceId;
 			 }
 		}
 	}
 }
-//Debug.log("=========refundpaymentlist=============="+refundpaymentlist.paymentId);
 context.refundpaymentlist=refundpaymentlist;
 invoiceIds = EntityUtil.getFieldListFromEntityList(paymentApplication, "invoiceId", true);
 glAccntIdslist=[:];
