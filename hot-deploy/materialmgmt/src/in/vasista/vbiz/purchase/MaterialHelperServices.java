@@ -668,6 +668,91 @@ public static Map<String, Object> setReauirementStatusId(DispatchContext ctx,Map
 		return result;
 	}
 	
+  //Get RecevidQty and RemainingQty for selected PO
+  
+  public static Map<String, Object> getBalanceAndReceiptQtyForPO(DispatchContext ctx,Map<String, ? extends Object> context) {
+		Delegator delegator = ctx.getDelegator();
+		LocalDispatcher dispatcher = ctx.getDispatcher();
+		//String productId = (String) context.get("productId");
+		String orderId = (String) context.get("orderId");
+		Timestamp fromDate = (Timestamp) context.get("fromDate");
+		Timestamp thruDate = (Timestamp) context.get("thruDate");
+		GenericValue userLogin = (GenericValue) context.get("userLogin");
+		Map result = ServiceUtil.returnSuccess();
+		List condList=FastList.newInstance();
+		 Map<String, Object> receiptItemTotals = new TreeMap<String, Object>();
+		 Map<String, Object> productTotals = new TreeMap<String, Object>();
+		try{
+			 EntityListIterator shipmentReceiptItr = null;
+			 if(orderId!=null){
+				 
+			 if(UtilValidate.isNotEmpty(fromDate) &&UtilValidate.isNotEmpty(thruDate))
+					condList.add(EntityCondition.makeCondition("datetimeReceived", EntityOperator.BETWEEN, UtilMisc.toList(fromDate,thruDate)));
+		     condList.add(EntityCondition.makeCondition("orderId", EntityOperator.EQUALS, orderId));
+			 EntityCondition cond = EntityCondition.makeCondition(condList,EntityOperator.AND);
+			 Set fieldsToSelect = UtilMisc.toSet("receiptId","facilityId","datetimeReceived" ,"quantityAccepted","unitCost");
+			 fieldsToSelect.add("orderId");
+			 fieldsToSelect.add("orderItemSeqId");
+			 fieldsToSelect.add("productId");
+			 shipmentReceiptItr = delegator.find("ShipmentReceiptAndItem", cond, null,fieldsToSelect, null,null);
+			 
+			 GenericValue receiptItem;
+			 while( shipmentReceiptItr != null && (receiptItem = shipmentReceiptItr.next()) != null) {
+				    Map tempMap = FastMap.newInstance();
+		            String receiptId = receiptItem.getString("receiptId");
+		            String tmpProductId = receiptItem.getString("productId");
+		            BigDecimal quantity  = receiptItem.getBigDecimal("quantityAccepted");
+		            BigDecimal price  = receiptItem.getBigDecimal("unitCost");
+		            BigDecimal amount = price.multiply(quantity);
+		         // Handle product totals   			
+	    			if (receiptItemTotals.get(tmpProductId) == null) {
+	    				Map<String, Object> newMap = FastMap.newInstance();
+	    				newMap.put("receivedQty", quantity);
+	    				newMap.put("receivedQtyValue", amount);
+	    				receiptItemTotals.put(tmpProductId, newMap);
+	    			}else {
+	    				Map productMap = (Map)receiptItemTotals.get(tmpProductId);
+	    				BigDecimal runningQuantity = (BigDecimal)productMap.get("receivedQty");
+	    				runningQuantity = runningQuantity.add(quantity);
+	    				productMap.put("receivedQty", runningQuantity);
+	    				BigDecimal runningTotalAmount = (BigDecimal)productMap.get("receivedQtyValue");
+	    				runningTotalAmount = runningTotalAmount.add(amount);
+	    				productMap.put("receivedQtyValue", runningTotalAmount);
+	    				receiptItemTotals.put(tmpProductId, productMap);
+	    				}
+				 }       
+			   shipmentReceiptItr.close();
+			   List<GenericValue> orderItemsList = delegator.findByAnd("OrderItem", UtilMisc.toMap("orderId",orderId));
+			  for(GenericValue orderItem:orderItemsList) {
+				  String productId=orderItem.getString("productId");
+				 
+					  BigDecimal orderdQty = (BigDecimal)orderItem.getBigDecimal("quantity");
+					  BigDecimal checkQty = (orderdQty.multiply(new BigDecimal(1.1))).setScale(0, BigDecimal.ROUND_CEILING);
+					  BigDecimal receivedQty=BigDecimal.ZERO;
+					  BigDecimal receivedQtyValue=BigDecimal.ZERO;
+					  Map productMap=(Map)receiptItemTotals.get(productId);
+					  if(productMap!=null){
+						  receivedQty=(BigDecimal)productMap.get("receivedQty");
+						  receivedQtyValue=(BigDecimal)productMap.get("receivedQtyValue");
+					  }
+					  BigDecimal toBeReceived=orderdQty.subtract(receivedQty);
+					  productMap.put("receivedQty",receivedQty);
+					  productMap.put("receivedQtyValue",receivedQtyValue);
+					  productMap.put("orderedQty",orderdQty);
+					  productMap.put("toBeReceivedQty",toBeReceived);
+					  productMap.put("maxReceivedQty",checkQty);
+					  productTotals.put(productId,productMap);
+				  }
+			  }
+			  
+		}catch(Exception e){
+			Debug.logError(e.toString(), module);
+			return ServiceUtil.returnError(e.toString());
+		}
+		 result.put("productTotals",productTotals);
+		 result.put("receiptItemTotals", receiptItemTotals);  
+		return result;
+	}
 
 }
 

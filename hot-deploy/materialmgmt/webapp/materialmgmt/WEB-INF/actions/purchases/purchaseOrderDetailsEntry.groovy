@@ -24,6 +24,12 @@ dctx = dispatcher.getDispatchContext();
 
 supplierId = "";
 
+// usage of po balance if needed
+/*resultMap=MaterialHelperServices.getBalanceAndReceiptQtyForPO(dctx,UtilMisc.toMap("orderId", orderId));
+Debug.log("===resultMap=="+resultMap+"===orderId=="+orderId);
+productTotals=resultMap.get("productTotals");
+productTotals.each{prodMap->
+}*/
 if(orderId){
 	orderHeader = delegator.findOne("OrderHeader", UtilMisc.toMap("orderId", orderId), false);
 	if(!orderHeader){
