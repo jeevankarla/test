@@ -2456,15 +2456,21 @@ public class MaterialPurchaseServices {
 		if(quantityAccepted.compareTo(BigDecimal.ZERO) ==0){
 			statusId = "SR_REJECTED";
 		}
+		if(quantityAccepted.compareTo(BigDecimal.ZERO) ==-1){
+			return ServiceUtil.returnError("negative value not allowed");
+		}
 		try{
 			
 			GenericValue shipmentReceipt = delegator.findOne("ShipmentReceipt", UtilMisc.toMap("receiptId", receiptId), false);
 			
 			GenericValue shipmentItem = delegator.findOne("ShipmentItem", UtilMisc.toMap("shipmentId", shipmentId, "shipmentItemSeqId", shipmentItemSeqId), false);
-			
-			BigDecimal origReceiptQty = shipmentItem.getBigDecimal("quantity");
+			BigDecimal origReceiptQty=BigDecimal.ZERO;
+			origReceiptQty = shipmentItem.getBigDecimal("quantity");
 			BigDecimal rejectedQty = origReceiptQty.subtract(quantityAccepted);
 			
+			if(quantityAccepted.compareTo(origReceiptQty) >0){
+				return ServiceUtil.returnError("not accept more than the received quantity");
+			}
 			shipmentReceipt.put("quantityAccepted", quantityAccepted);
 			shipmentReceipt.put("quantityRejected", rejectedQty);
 			shipmentReceipt.put("statusId", statusId);
