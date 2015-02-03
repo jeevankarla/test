@@ -237,6 +237,32 @@ function setOrgPartyId() {
 							</form>
 						</tr>
 					</#if>
+					<#if (reportDetailsMap.get("MonthlyLICReport.pdf") == "Y")> 
+						<tr class="alternate-row"> 
+							<form id="MonthlyLICReport" name="MonthlyLICReport" mothed="post" action="<@ofbizUrl>MonthlyLICReport.pdf</@ofbizUrl>" target="_blank">
+								<table class="basic-table" cellspacing="5">
+									<tr class="alternate-row">
+										<td width="25%"><span class='h3'>Monthly LIC Report</span></td>
+										<td width="30%"><span class='h3'>Insurance Type 
+												<select name="insuranceTypeId" sclass='h4'>
+													<#list InsuranceTypeList as org>    
+														<option value='${org.insuranceTypeId}'>${org.description?if_exists}</option>
+													</#list> 
+												</select>
+											</span>
+										</td>
+										<td width="35%"><span class='h3'>Period Id
+												<select name="customTimePeriodId" id="customTimePeriodId" class='h4'>
+													<#list customTimePeriodList as customTimePeriod><option value='${customTimePeriod.customTimePeriodId?if_exists}' >${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(customTimePeriod.fromDate, "dd MMMMM, yyyy")} -${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(customTimePeriod.thruDate, "dd MMMMM, yyyy")}</option></#list>
+												</select>
+											</span>
+										</td>	
+										<td width="25%"><span class='h3'><input type="submit" value="Download" class="buttontext"></span></td>
+									</tr>
+								</table>
+							</form>
+						</tr>
+					</#if>
 				</table>
 			</div>
 		</div>

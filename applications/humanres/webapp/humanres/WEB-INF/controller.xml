@@ -1870,8 +1870,13 @@ under the License.
     <request-map uri="EDLISReportCsv.csv"><security https="true" auth="true"/><response name="success" type="view" value="EDLISReportCsv"></response></request-map>
     <request-map uri="EDLISReportPdf.pdf"><security https="true" auth="true"/><response name="success" type="view" value="EDLISReportPdf"></response></request-map> 
     
+    <request-map uri="MonthlyLICReport.pdf">
+       	<security https="true" auth="true"/>
+        <response name="success" type="view" value="MonthlyLICReport"/>
+    </request-map>
+    
     <request-map uri="PaySlipEmployeeWise">
-       <security https="true" auth="true"/>
+       	<security https="true" auth="true"/>
         <response name="success" type="view" value="PaySlipEmployeeWise"/>
     </request-map>
     <request-map uri="PrintPaySlipsPdf.pdf">
@@ -2460,6 +2465,7 @@ under the License.
 	<view-map name="GratuitySupportReportPdf" type="screenfop" page="component://humanres/widget/ReportHumanresSummaryScreens.xml#GratuitySupportReportPdf" content-type="application/pdf" encoding="none"/>
  	<view-map name="EDLISReportCsv" type="screencsv" page="component://humanres/widget/ReportHumanresSummaryScreens.xml#EDLISReportCsv" content-type="text/csv" encoding="none"/>
 	<view-map name="EDLISReportPdf" type="screenfop" page="component://humanres/widget/ReportHumanresSummaryScreens.xml#EDLISReportPdf" content-type="application/pdf" encoding="none"/>
+ 	<view-map name="MonthlyLICReport" type="screenfop" page="component://humanres/widget/ReportHumanresSummaryScreens.xml#MonthlyLICReport" content-type="application/pdf" encoding="none"/>
  
  	<view-map name="PartyProfile" type="screen" page="component://humanres/widget/ReportHumanresSummaryScreens.xml#PartyProfile"/>
  	<view-map name="PartyProfileCsv" type="screencsv" page="component://humanres/widget/ReportHumanresSummaryScreens.xml#PartyProfileCsv" content-type="application/pdf" encoding="none"/>
