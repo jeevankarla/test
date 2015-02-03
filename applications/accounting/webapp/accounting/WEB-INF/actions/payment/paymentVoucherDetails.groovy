@@ -31,7 +31,6 @@ import java.math.BigDecimal;
 import java.math.MathContext;
 import org.ofbiz.base.util.UtilNumber;
 import org.ofbiz.accounting.invoice.*;
-
 import javolution.util.FastList;
 import javolution.util.FastMap;
 import org.ofbiz.entity.condition.EntityCondition;
@@ -118,4 +117,3 @@ context.glAccntIdslist=glAccntIdslist;
 context.payment=payment;
 context.paymentApplicationMap=paymentApplicationMap;
 context.invoiceList=invoiceList;
-

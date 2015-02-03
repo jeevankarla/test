@@ -252,7 +252,6 @@
 						        						</fo:table-cell>
 						        						</fo:table-row>	
 						        						
-						        						
 						        						<fo:table-row>
 							        						<fo:table-cell bottom="">
 						        		                    <fo:table  table-layout="fixed" width="100%" space-before="0.2in">

@@ -390,7 +390,7 @@ under the License.
     <screen name="PaymentOverview">
         <section>
             <actions>
-                <set field="titleProperty" value="AP Payment Overview "/>
+                <set field="titleProperty" value="AP Payment Overview"/>
                 <set field="tabButtonItem" value="paymentOverview"/>
                 <set field="labelTitleProperty" value="Payment"/>
                 <property-map resource="PartyUiLabels" map-name="uiLabelMap" global="true"/>
