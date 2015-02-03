@@ -31,7 +31,6 @@ import java.math.BigDecimal;
 import java.math.MathContext;
 import org.ofbiz.base.util.UtilNumber;
 import org.ofbiz.accounting.invoice.*;
-
 import javolution.util.FastList;
 import javolution.util.FastMap;
 import org.ofbiz.entity.condition.EntityCondition;
@@ -42,17 +41,47 @@ invoiceList = [:];
 invoiceitemMap=[:];
 paymentApplicationMap=[:];
 payment=[];
-//Debug.log("payment Id======================"+parameters.paymentId);
+refundpaymentlist=[];
+transSequenceIdMap=[:];
 paymentId=parameters.paymentId;
 payment = delegator.findOne("Payment", [paymentId : paymentId], true);
-//Debug.log("payment-========================="+payment);
 paymentApplication = delegator.findList("PaymentAndApplication", EntityCondition.makeCondition(["paymentId" : paymentId]), null, null, null, true);
-//Debug.log("paymentApplication-========================="+paymentApplication);
 paymentApplication.each{ eachpaymentApplication ->
-	//Debug.log("=========eachpaymentApplication=============="+eachpaymentApplication);
 	paymentApplicationMap.put(eachpaymentApplication.invoiceId,eachpaymentApplication);
+	if(eachpaymentApplication.toPaymentId)
+	{
+		refundlist=delegator.findOne("Payment", [paymentId : eachpaymentApplication.toPaymentId], true);
+		refundpaymentlist.addAll(refundlist);
+		if(UtilValidate.isNotEmpty(eachpaymentApplication.toPaymentId)){
+			finAccountTransList = delegator.findList("FinAccountTrans",EntityCondition.makeCondition("paymentId", EntityOperator.EQUALS ,paymentId)  , null, null, null, false );
+			finAccountTransList.each { finAccountTrans ->
+				 finAccountTransId = finAccountTrans.finAccountTransId;
+				 if(UtilValidate.isNotEmpty(finAccountTransId)){
+					 finAccntTransSequenceList = delegator.findList("FinAccntTransSequence",EntityCondition.makeCondition("finAccountTransId", EntityOperator.EQUALS ,finAccountTransId)  , null, null, null, false );
+					 finAccntTransSequenceList.each { finAccntTransSequence ->
+						 transSeqId = finAccntTransSequence.transSequenceId;
+						 transSequenceIdMap.put(eachpaymentApplication.toPaymentId,transSeqId);
+					 }
+				}
+			}
+		}
+		context.transSequenceIdMap=transSequenceIdMap;
+		}
 }
-
+if(UtilValidate.isNotEmpty(paymentId)){
+	finAccountTransList = delegator.findList("FinAccountTrans",EntityCondition.makeCondition("paymentId", EntityOperator.EQUALS ,paymentId)  , null, null, null, false );
+	finAccountTransList.each { finAccountTrans ->
+		 finAccountTransId = finAccountTrans.finAccountTransId;
+		 if(UtilValidate.isNotEmpty(finAccountTransId)){
+			 finAccntTransSequenceList = delegator.findList("FinAccntTransSequence",EntityCondition.makeCondition("finAccountTransId", EntityOperator.EQUALS ,finAccountTransId)  , null, null, null, false );
+			 finAccntTransSequenceList.each { finAccntTransSequence ->
+				 transSequenceId = finAccntTransSequence.transSequenceId;
+				 context.transSequenceId=transSequenceId;
+			 }
+		}
+	}
+}
+context.refundpaymentlist=refundpaymentlist;
 invoiceIds = EntityUtil.getFieldListFromEntityList(paymentApplication, "invoiceId", true);
 glAccntIdslist=[:];
 invoiceIds.each{ eachinvoiceId ->
@@ -83,13 +112,8 @@ invoiceIds.each{ eachinvoiceId ->
 	}
 	}
 }
-//Debug.log("glAccntIdslist-========================="+glAccntIdslist);
-//Debug.log("invoiceitemMap-========================="+invoiceitemMap);
-//Debug.log("paymentApplicationMap-========================="+paymentApplicationMap);
 context.invoiceitemMap=invoiceitemMap;
 context.glAccntIdslist=glAccntIdslist;
 context.payment=payment;
-//context.paymentApplication=paymentApplication;
 context.paymentApplicationMap=paymentApplicationMap;
 context.invoiceList=invoiceList;
-

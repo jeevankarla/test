@@ -54,17 +54,17 @@
 	        						   			<fo:table-cell border-style="solid"></fo:table-cell>
 	        						   	</fo:table-row>	
 	        						   	<fo:table-row>
-			    								<fo:table-cell border-style="solid">
-			    									 <fo:block text-align="right" font-family="Courier,monospace"  font-size="12pt">&#160;</fo:block>
-				                                <fo:block text-align="center" white-space-collapse="false" font-weight="bold" font-size="12pt" keep-together="always">&#160;</fo:block>
-				                             </fo:table-cell>
-		    								<fo:table-cell border-style="solid">
-		    									 <fo:block text-align="right" font-family="Courier,monospace"  font-size="12pt">&#160;</fo:block>
-				                                <fo:block text-align="center" white-space-collapse="false" font-weight="bold" font-size="12pt" keep-together="always">&#160;</fo:block>
-				                               </fo:table-cell>
-		    								<fo:table-cell border-style="solid">
-				                               <fo:block text-align="center" font-family="Courier,monospace"  font-size="12pt">&#160;</fo:block>
-		    									<fo:block text-align="left" font-size="12pt" white-space-collapse="false" keep-together="always" font-weight="bold">&#160;&#160;VOUCHER DATE:${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(nowTimestamp?if_exists, "dd-MM-yyyy")} </fo:block>
+	        						   	<fo:table-cell>
+				                               <fo:block text-align="left" font-family="Courier,monospace"  font-size="12pt">&#160;</fo:block>
+		    									<fo:block text-align="left" font-size="12pt" white-space-collapse="false" keep-together="always" font-weight="bold"> </fo:block>
+		    									</fo:table-cell>
+		    									<fo:table-cell>
+				                               <fo:block text-align="left" font-family="Courier,monospace"  font-size="12pt">&#160;</fo:block>
+		    									<fo:block text-align="left" font-size="12pt" white-space-collapse="false" keep-together="always" font-weight="bold"> </fo:block>
+		    									</fo:table-cell>
+		    								<fo:table-cell>
+				                               <fo:block text-align="left" font-family="Courier,monospace"  font-size="12pt">&#160;</fo:block>
+		    									<fo:block text-align="right" font-size="12pt" white-space-collapse="false" keep-together="always" font-weight="bold">VOUCHER DATE:${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(nowTimestamp?if_exists, "dd-MM-yyyy")} </fo:block>
 		    									</fo:table-cell>
 		    						</fo:table-row>	
         						   	</fo:table-body>
@@ -108,7 +108,6 @@
 						        					</fo:table-row>	
 						        				 
 						        						<#-- payment details here -->
-						        						 
 						        						  <#assign  partyName="">
 						        						  <#assign  partyId="">
 						        						  <#if payment.partyIdFrom?exists && payment.partyIdFrom == "Company">
@@ -135,7 +134,7 @@
 				       									</fo:table-row>
 				       									<fo:table-row> 
 						        						 	<fo:table-cell>
-						        						 		<fo:block text-align="left" font-size="12pt" white-space-collapse="false" keep-together="always" font-weight="bold">&#160;</fo:block>
+						        						 		<fo:block text-align="left" font-size="12pt" white-space-collapse="false" keep-together="always" font-weight="bold">&#160;SEQUENCE ID:${transSequenceId?if_exists}</fo:block>
 						        						 	</fo:table-cell>
 						        						 	<fo:table-cell>
 						        						 		<fo:block text-align="left" font-size="12pt" white-space-collapse="false" keep-together="always" font-weight="bold"></fo:block>
@@ -253,7 +252,6 @@
 						        						</fo:table-cell>
 						        						</fo:table-row>	
 						        						
-						        						
 						        						<fo:table-row>
 							        						<fo:table-cell bottom="">
 						        		                    <fo:table  table-layout="fixed" width="100%" space-before="0.2in">
@@ -312,6 +310,12 @@
 							        						</fo:table-row>
 							        						</#if>
 						        						</#if>
+														<fo:table-row>
+															<fo:table-cell>
+											            		<fo:block>------------------------------------------------------------------------------------------------</fo:block>
+											       			</fo:table-cell>
+														 </fo:table-row>
+
 															<fo:table-row> 
 						        						 	<fo:table-cell>
 						        						 		<fo:block text-align="left" font-size="12pt" white-space-collapse="false" keep-together="always" font-weight="bold"></fo:block>
@@ -324,11 +328,7 @@
 						        						 	</fo:table-cell>
 						        						 </fo:table-row>
 
-						        						<fo:table-row>
-															<fo:table-cell>
-											            		<fo:block>------------------------------------------------------------------------------------------------</fo:block>
-											       			</fo:table-cell>
-														 </fo:table-row>
+						        						
 						        								<#list invoiceDetailsList as eachinvoiceinfo>
 															 <#assign invoiceId=eachinvoiceinfo.getKey()>
 													<fo:table-row> 
@@ -444,7 +444,7 @@
  																			<#else>
 					      						        						<#assign Totalamount= amount>
 																			</#if>
-						        											<fo:block text-align="right" font-size="12pt" white-space-collapse="false" keep-together="always">&#160; ${Totalamount?if_exists?string("#0.00")} </fo:block>
+						        											<fo:block text-align="center" font-size="12pt" white-space-collapse="false" keep-together="always">&#160; ${Totalamount?if_exists?string("#0.00")} </fo:block>
 						        							  		  </fo:table-cell>
         						   									 </fo:table-row>
         						   									 </fo:table-body>
@@ -466,11 +466,227 @@
 				        											<fo:block text-align="left" font-size="12pt" white-space-collapse="false" keep-together="always" font-weight="bold"></fo:block>
 				        							  		 </fo:table-cell>
 			        							  		 	<fo:table-cell >
-			        											<fo:block text-align="right" font-size="12pt" white-space-collapse="false" keep-together="always" font-weight="bold">Total: ${paymentApplicationMap.get(invoiceId).amountApplied} </fo:block>
+			        											<fo:block text-align="right" font-size="12pt" white-space-collapse="false" keep-together="always" font-weight="bold">TOTAL Rs.: ${paymentApplicationMap.get(invoiceId).amountApplied?if_exists?string("#0.00")} </fo:block>
 			        							  		 	</fo:table-cell>
 						        						</fo:table-row>
 						        						</#list>
-														
+														<#if refundpaymentlist?has_content>
+														<fo:table-row>
+															<fo:table-cell>
+											            		<fo:block>------------------------------------------------------------------------------------------------</fo:block>
+											       			</fo:table-cell>
+														 </fo:table-row>
+														<fo:table-row> 
+						        						 	<fo:table-cell>
+						        						 		<fo:block text-align="left" font-size="12pt" white-space-collapse="false" keep-together="always" font-weight="bold"></fo:block>
+						        						 	</fo:table-cell>
+						        						 	<fo:table-cell>
+						        						 		<fo:block text-align="left" font-size="12pt" white-space-collapse="false" keep-together="always" font-weight="bold">REFUND DETAILS</fo:block>
+						        						 	</fo:table-cell>
+						        						 	<fo:table-cell>
+						        						 		<fo:block text-align="left" font-size="12pt" white-space-collapse="false" keep-together="always" font-weight="bold">&#160;</fo:block>
+						        						 	</fo:table-cell>
+						        						 </fo:table-row>
+						        						 
+						        						 
+
+															<#list refundpaymentlist as refundpaymentlist>
+														  <#assign  partyName="">
+						        						  <#assign  partyId="">
+						        						  <#if refundpaymentlist.partyIdFrom?exists && refundpaymentlist.partyIdFrom == "Company">
+									            			  <#assign partyId = refundpaymentlist.partyIdTo>
+									            		  <#else>
+									            			  <#assign partyId = refundpaymentlist.partyIdFrom>
+									            		  </#if>
+						        						 <#assign partyName = Static["org.ofbiz.party.party.PartyHelper"].getPartyName(delegator, partyId, false)>
+						        						 <fo:table-row>
+															<fo:table-cell>
+											            		<fo:block linefeed-treatment="preserve">&#xA;</fo:block>
+											       			</fo:table-cell>
+				       									</fo:table-row>
+				       									<fo:table-row> 
+						        						 	<fo:table-cell>
+						        						 		<fo:block text-align="left" font-size="12pt" white-space-collapse="false" keep-together="always" font-weight="bold">&#160; SEQUENCE ID:${transSequenceIdMap.get(refundpaymentlist.paymentId)}</fo:block>
+						        						 	</fo:table-cell>
+						        						 	<fo:table-cell>
+						        						 		<fo:block text-align="left" font-size="12pt" white-space-collapse="false" keep-together="always" font-weight="bold"></fo:block>
+						        						 	</fo:table-cell>
+						        						 	<fo:table-cell>
+						        						 		<fo:block text-align="left" font-size="12pt" white-space-collapse="false" keep-together="always" font-weight="bold"></fo:block>
+						        						 	</fo:table-cell>
+						        						 </fo:table-row>
+						        						 <fo:table-row> 
+						        						 	<fo:table-cell>
+						        						 		<fo:block text-align="left" font-size="12pt" white-space-collapse="false" keep-together="always" font-weight="bold">&#160;PAYMENT ID:${refundpaymentlist.paymentId?if_exists}</fo:block>
+						        						 	</fo:table-cell>
+						        						 	<fo:table-cell>
+						        						 		<fo:block text-align="left" font-size="12pt" white-space-collapse="false" keep-together="always" font-weight="bold"><#if refundpaymentlist.paymentMethodTypeId?has_content && (refundpaymentlist.paymentMethodTypeId == "CHEQUE_PAYIN" || refundpaymentlist.paymentMethodTypeId == "CHEQUE_PAYOUT")>CHEQUE</#if><#if refundpaymentlist.paymentMethodTypeId?has_content && (refundpaymentlist.paymentMethodTypeId == "CASH_PAYIN" || refundpaymentlist.paymentMethodTypeId == "CASH_PAYOUT")>CASH</#if></fo:block>
+						        						 	</fo:table-cell>
+						        						 	<fo:table-cell>
+						        						 		<fo:block text-align="left" font-size="12pt" white-space-collapse="false" keep-together="always" font-weight="bold">PAYMENT DATE:${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(refundpaymentlist.paymentDate?if_exists, "dd-MM-yyyy")}</fo:block>
+						        						 	</fo:table-cell>
+						        						 </fo:table-row>
+						        						 <#if refundpaymentlist.paymentMethodTypeId?has_content && (refundpaymentlist.paymentMethodTypeId == "CHEQUE_PAYIN" || refundpaymentlist.paymentMethodTypeId == "CHEQUE_PAYOUT")> 
+						        							 <#if refundpaymentlist.paymentMethodId?has_content>
+														    	<#assign paymentMethodDetails = delegator.findOne("PaymentMethod", {"paymentMethodId" : refundpaymentlist.paymentMethodId}, true)?if_exists/>
+														    </#if>
+														 <#if (refundpaymentlist.paymentMethodTypeId == "CHEQUE_PAYIN" || refundpaymentlist.paymentMethodTypeId == "CHEQUE_PAYOUT")>   
+						        						 <fo:table-row> 
+						        						 	<fo:table-cell>
+						        						 		<fo:block text-align="left" font-size="12pt" white-space-collapse="false" keep-together="always" font-weight="bold">&#160;CHEQUE NO:${refundpaymentlist.paymentRefNum?if_exists}</fo:block>
+						        						 	</fo:table-cell>
+						        						 	<fo:table-cell>
+						        						 		<fo:block text-align="left" font-size="12pt" white-space-collapse="false" keep-together="always" font-weight="bold"></fo:block>
+						        						 	</fo:table-cell>
+						        						 	<fo:table-cell>
+						        						 		<fo:block text-align="left" font-size="12pt" white-space-collapse="false" keep-together="always" font-weight="bold">CHEQUE DATE:<#if refundpaymentlist.instrumentDate?has_content>${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(refundpaymentlist.instrumentDate?if_exists, "dd-MM-yyyy")}</#if></fo:block>
+						        						 	</fo:table-cell>
+						        						 </fo:table-row>
+						        						 <#if (refundpaymentlist.paymentMethodTypeId == "CHEQUE_PAYIN" || refundpaymentlist.paymentMethodTypeId == "CHEQUE_PAYOUT")>
+						        						 <fo:table-row> 
+						        						 	<fo:table-cell>
+						        						 		<fo:block text-align="left" font-size="12pt" white-space-collapse="false" keep-together="always" font-weight="bold"><#if paymentMethodDetails?has_content>&#160;CHEQUE BANK DETAILS:${paymentMethodDetails.description?if_exists}</#if></fo:block>
+						        						 	</fo:table-cell>
+						        						 	<fo:table-cell>
+						        						 		<fo:block text-align="left" font-size="12pt" white-space-collapse="false" keep-together="always" font-weight="bold"></fo:block>
+						        						 	</fo:table-cell>
+						        						 	<fo:table-cell>
+						        						 		<fo:block text-align="left" font-size="12pt" white-space-collapse="false" keep-together="always" font-weight="bold"></fo:block>
+						        						 	</fo:table-cell>
+						        						 </fo:table-row>
+						        						 </#if>
+						        						 </#if>
+						        						 <#else>
+						        						 <#if refundpaymentlist.paymentMethodTypeId?has_content && (refundpaymentlist.paymentMethodTypeId == "NOTE" && (refundpaymentlist.paymentMethodId == "DEBITNOTE" || refundpaymentlist.paymentMethodId =="CREDITNOTE"))>
+														    	  <#if refundpaymentlist.paymentMethodId?has_content>
+														    	     <#assign payment = delegator.findOne("PaymentMethod", {"paymentMethodId" : refundpaymentlist.paymentMethodId}, true)?if_exists/>
+														    	  </#if>
+														       <#if refundpaymentlist.paymentMethodTypeId?has_content && (refundpaymentlist.paymentMethodTypeId == "NOTE" && (refundpaymentlist.paymentMethodId == "DEBITNOTE" || refundpaymentlist.paymentMethodId =="CREDITNOTE"))>
+						        						        <fo:table-row> 
+						        						 	       <fo:table-cell>
+						        						 		      <fo:block text-align="left" font-size="12pt" white-space-collapse="false" keep-together="always" font-weight="bold">&#160;PAYMENT METHODTYPE:${refundpaymentlist.paymentMethodTypeId?if_exists}</fo:block>
+						        						 	       </fo:table-cell>
+						        						 	       <fo:table-cell>
+						        						 		       <fo:block text-align="left" font-size="12pt" white-space-collapse="false" keep-together="always" font-weight="bold"></fo:block>
+						        						 	       </fo:table-cell>
+						        						 	       <fo:table-cell>
+						        						 		       <fo:block text-align="left" font-size="12pt" white-space-collapse="false" keep-together="always" font-weight="bold">PAYMENT METHOD ID:${refundpaymentlist.paymentMethodId?if_exists}</fo:block>
+						        						 		       </fo:table-cell>
+						        						        </fo:table-row>
+						        						      </#if>
+						        						   </#if>
+						        						  </#if>
+						        						 <#if refundpaymentlist.comments?has_content>
+						        						 <fo:table-row> 
+						        						 	<fo:table-cell>
+						        						 		<fo:block text-align="left" font-size="12pt" white-space-collapse="false" keep-together="always" font-weight="bold">&#160;COMMENTS: ${refundpaymentlist.comments?if_exists}</fo:block>
+						        						 	</fo:table-cell>
+						        						 	<fo:table-cell>
+						        						 		<fo:block text-align="left" font-size="12pt" white-space-collapse="false" keep-together="always" font-weight="bold"></fo:block>
+						        						 	</fo:table-cell>
+						        						 	<fo:table-cell>
+						        						 		<fo:block text-align="left" font-size="12pt" white-space-collapse="false" keep-together="always" font-weight="bold"></fo:block>
+						        						 	</fo:table-cell>
+						        						 </fo:table-row>
+						        						 </#if>
+						        						
+						        						<fo:table-row>
+						        						<fo:table-cell bottom="">
+						        		                    <fo:table  table-layout="fixed" width="100%" space-before="0.2in">
+		        				    								 <fo:table-column column-width="10%"/>
+        						   									 <fo:table-column column-width="60%"/>
+        						   									 <fo:table-column column-width="55%"/>
+        						   									 <fo:table-column column-width="27%"/>	
+        						   									 <fo:table-body>
+        						   									 <fo:table-row>
+        						   									 <fo:table-cell border-style="solid">
+						        											<fo:block text-align="left" font-size="12pt" white-space-collapse="false" keep-together="always" font-weight="bold">&#160;</fo:block>
+						        											<fo:block text-align="left" font-size="12pt" white-space-collapse="false" keep-together="always" font-weight="bold">&#160;S.No</fo:block>
+						        							  		  </fo:table-cell>
+						        							  		  <fo:table-cell border-style="solid">
+						        											<fo:block text-align="left" font-size="12pt" white-space-collapse="false" keep-together="always" font-weight="bold">&#160;</fo:block>
+						        											<fo:block text-align="center" font-size="12pt" white-space-collapse="false" keep-together="always" font-weight="bold">&#160; DESCRIPTION </fo:block>
+						        											<fo:block text-align="left" font-size="12pt" white-space-collapse="false" keep-together="always" font-weight="bold">&#160;</fo:block>
+						        							  		  </fo:table-cell>
+						        							  		  <fo:table-cell border-style="solid">
+						        											<fo:block text-align="left" font-size="12pt" white-space-collapse="false" keep-together="always" font-weight="bold">&#160;</fo:block>
+						        											<fo:block text-align="center" font-size="12pt" white-space-collapse="false" keep-together="always" font-weight="bold">&#160; PARTY CODE </fo:block>
+						        											<fo:block text-align="left" font-size="12pt" white-space-collapse="false" keep-together="always" font-weight="bold">&#160;</fo:block>
+						        							  		  </fo:table-cell>
+						        							  		  <fo:table-cell border-style="solid">
+						        											<fo:block text-align="left" font-size="12pt" white-space-collapse="false" keep-together="always" font-weight="bold">&#160;</fo:block>
+						        											<fo:block text-align="center" font-size="12pt" white-space-collapse="false" keep-together="always" font-weight="bold">&#160; AMOUNT Rs. </fo:block>
+						        											<fo:block text-align="left" font-size="12pt" white-space-collapse="false" keep-together="always" font-weight="bold">&#160;</fo:block>
+						        							  		  </fo:table-cell>
+        						   									 </fo:table-row>
+        						   									 </fo:table-body>
+        						   		                    </fo:table>
+						        						</fo:table-cell>
+						        						</fo:table-row>	
+						        						
+						        						
+						        						<fo:table-row>
+							        						<fo:table-cell bottom="">
+						        		                    <fo:table  table-layout="fixed" width="100%" space-before="0.2in">
+		        				    								 <fo:table-column column-width="10%"/>
+        						   									 <fo:table-column column-width="60%"/>
+        						   									 <fo:table-column column-width="55%"/>
+        						   									 <fo:table-column column-width="27%"/>	
+        						   									 <fo:table-body>
+        						   									 <fo:table-row>
+        						   									 <fo:table-cell border-style="solid">
+						        											<fo:block text-align="left" font-size="12pt" white-space-collapse="false" keep-together="always">&#160;1</fo:block>
+						        							  		  </fo:table-cell>
+						        							  		  <fo:table-cell border-style="solid">
+						        											<fo:block text-align="center" font-size="12pt" white-space-collapse="false">&#160; ${partyName?if_exists} </fo:block>
+						        							  		  </fo:table-cell>
+						        							  		  <fo:table-cell border-style="solid">
+						        											<fo:block text-align="center" font-size="12pt" white-space-collapse="false">&#160; ${partyId?if_exists}</fo:block>
+						        							  		  </fo:table-cell>
+						        							  		  <#assign paymentAmount = refundpaymentlist.amount?if_exists>
+						        							  		  <fo:table-cell border-style="solid">
+						        											<fo:block text-align="center" font-size="12pt" white-space-collapse="false" keep-together="always">&#160; <@ofbizCurrency amount=paymentAmount isoCode=currencyUomId/> </fo:block>
+						        							  		  </fo:table-cell>
+        						   									 </fo:table-row>
+        						   									 </fo:table-body>
+        						   		                    </fo:table>
+						        						</fo:table-cell> 
+						        						</fo:table-row>
+						        						
+						        						<fo:table-row>
+															<fo:table-cell>
+											            		<fo:block linefeed-treatment="preserve">&#xA;</fo:block>
+											       			</fo:table-cell>
+				       									</fo:table-row>
+						        						
+						        						<fo:table-row>
+															<fo:table-cell>
+											            		<fo:block linefeed-treatment="preserve">&#xA;</fo:block>
+											       			</fo:table-cell>
+														</fo:table-row>
+														 <#assign cheqFav = "">
+														 <#if (refundpaymentlist.paymentMethodTypeId == "CHEQUE_PAYIN" || refundpaymentlist.paymentMethodTypeId == "CHEQUE_PAYOUT")>
+															 <#if refundpaymentlist.paymentId?has_content>
+															 <#assign paymentAttrDetails = delegator.findOne("PaymentAttribute", {"paymentId" : refundpaymentlist.paymentId, "attrName" : "INFAVOUR_OF"}, true)?if_exists/>
+															 
+															  <#if paymentAttrDetails.attrValue?has_content>
+															  	<#assign cheqFav = paymentAttrDetails.attrValue?if_exists>
+															  <#else>
+															  	<#assign cheqFav = partyName?if_exists>
+															 </#if>
+															 
+															 <fo:table-row>
+								        						<fo:table-cell>
+								        								<fo:block text-align="left" font-size="12pt" white-space-collapse="false" keep-together="always" font-weight="bold"> &#160; </fo:block>
+								        								<fo:block text-align="left" font-size="12pt" white-space-collapse="false" keep-together="always" font-weight="bold">Cheque in favour of:${cheqFav?if_exists}</fo:block>
+								        						</fo:table-cell>
+							        						</fo:table-row>
+							        						</#if>
+						        						</#if>
+															
+
+						        						</#list>
+														</#if>
 						        						<fo:table-row>
 															<fo:table-cell>
 											            		<fo:block>------------------------------------------------------------------------------------------------</fo:block>
@@ -507,7 +723,7 @@
         	</fo:table>
 		        		<#-- Table End -->
 		 </fo:block>
-		<fo:block >
+		<#-- <fo:block >
 				<fo:table  table-layout="fixed" width="50%" space-before="0.2in">
 			    <fo:table-column column-width="50%"/>
 			    <fo:table-column column-width="50%"/>
@@ -535,7 +751,7 @@
 					</fo:table-row>
 				</fo:table-body>
 			</fo:table>
-		</fo:block>
+		</fo:block>-->
 	</fo:flow>
 </fo:page-sequence>
 		      
