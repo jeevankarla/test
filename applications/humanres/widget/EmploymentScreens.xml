@@ -829,7 +829,10 @@
 					<order-by field-name="sequenceNum"/>					
 				</entity-condition>
     		 	<entity-condition entity-name="InsuranceType" list="finalInsuranceTypeList" use-cache="true">
-                </entity-condition>  	
+                </entity-condition>  
+                <entity-condition entity-name="InsuranceType" list="InsuranceTypeList" use-cache="true">
+                	<condition-expr field-name="insuranceTypeId" operator="not-equals" value="RECCR_DEPOSIT"/>
+                </entity-condition>	
                 <script location="component://humanres/webapp/humanres/WEB-INF/actions/humanres/getUserRelatedReports.groovy"/>
 	    		<script location="component://humanres/webapp/humanres/WEB-INF/actions/humanres/reports.groovy"/>
 	    		<set field="reportFrequencyFlag" value="MastersReports"/>
