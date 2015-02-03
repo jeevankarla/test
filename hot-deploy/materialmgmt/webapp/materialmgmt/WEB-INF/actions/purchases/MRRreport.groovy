@@ -132,7 +132,7 @@ if(UtilValidate.isNotEmpty(shipmentId)){
 	}
 	if(UtilValidate.isNotEmpty(uomId)){
 		unitDesciption = delegator.findOne("Uom",["uomId":uomId],false);
-	 grnDetailsMap["unit"]=unitDesciption.description;
+	 grnDetailsMap["unit"]=unitDesciption.get("description");
 	}
 		
 	// OrderItems Details

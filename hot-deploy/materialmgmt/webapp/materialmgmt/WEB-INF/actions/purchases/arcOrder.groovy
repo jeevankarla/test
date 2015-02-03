@@ -45,6 +45,12 @@ productDescription = EntityUtil.getFieldListFromEntityList(productCategories, "d
 
 allDetailsMap.put("productDescription",productDescription);
 
+//referNumber
+referNumber = delegator.findOne("OrderHeader",["orderId":orderId],false);
+if(referNumber){
+	refNo=referNumber.get("externalId");
+	allDetailsMap.put("refNo",refNo);
+}
 //to get product details
 if(UtilValidate.isNotEmpty(orderDetails)){
 	orderDetails.each{orderitems->
