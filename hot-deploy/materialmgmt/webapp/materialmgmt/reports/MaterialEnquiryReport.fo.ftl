@@ -40,15 +40,15 @@ under the License.
 				    <fo:block  keep-together="always" text-align="center" font-weight = "bold" font-family="Courier,monospace" white-space-collapse="false">${uiLabelMap.KMFDairyHeader}</fo:block>
 				    <fo:block  keep-together="always" text-align="center" font-family="Courier,monospace" white-space-collapse="false" font-weight="bold">${uiLabelMap.KMFDairySubHeader}</fo:block>
 				    <fo:block text-align="center" keep-together="always"  >&#160;--------------------------------------------------------------</fo:block>
-				    <fo:block  keep-together="always" text-align="left" font-family="Courier,monospace" white-space-collapse="false" font-size="12pt" >&#160;&#160;        TEL NOS:22179004 /41        FAX :   080-20462652                    TIN:  ${companyTinNumber?if_exists} </fo:block>
-                    <fo:block  keep-together="always" text-align="center" font-family="Courier,monospace" white-space-collapse="false" font-size="12pt" >       &#160; 22179074 /55        Email: purchase@motherdairykmf.in       KST NO: 90700065  </fo:block>
-                    <fo:block  keep-together="always" text-align="center" font-family="Courier,monospace" white-space-collapse="false" font-size="12pt" >       &#160;                               enggpur@motherdairykmf.in     CST NO: 90750060 </fo:block>
+				    <fo:block  keep-together="always" text-align="left" font-family="Courier,monospace" white-space-collapse="false" font-size="12pt">&#160;&#160;        TEL NOS:22179004 /41          FAX  : 080-20462652                       TIN NO : ${companyTinNumber?if_exists} </fo:block>
+                    <fo:block  keep-together="always" text-align="left" font-family="Courier,monospace" white-space-collapse="false" font-size="12pt">&#160;&#160;                22179074 /55          Email: purchase@motherdairykmf.in         KST NO : 90700065  </fo:block>
+                    <fo:block  keep-together="always" text-align="left" font-family="Courier,monospace" white-space-collapse="false" font-size="12pt">      &#160;                                              enggpur@motherdairykmf.in          CST NO : ${cstNumber? if_exists}</fo:block>
                     <fo:block  keep-together="always" text-align="center" font-family="Courier,monospace" white-space-collapse="false" font-size="12pt" >------------------------------------------------------------------------------------------------------- </fo:block>
 				    <fo:block text-align="center" keep-together="always">                                               ENQUIRY                                                  </fo:block>				    
 			        </fo:static-content>	
 			        <fo:flow flow-name="xsl-region-body"   font-family="Courier,monospace">	 			       
 			        <fo:block linefeed-treatment="preserve">&#xA;</fo:block>				   
-				    <fo:block text-align="left" keep-together="always" white-space-collapse="false">&#160;&#160; ENQUIRY NO.: ${custRequestId?if_exists}                                                          ENQUIRY DATE: ${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(custReqDate, "dd-MMM-yyyy")?if_exists}</fo:block>
+				    <fo:block text-align="left" keep-together="always" white-space-collapse="false">&#160;&#160; ENQUIRY NO.: ${custRequestId?if_exists}                                                         ENQUIRY DATE: ${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(custReqDate, "dd-MMM-yyyy")?if_exists}</fo:block>
 			        <fo:block  keep-together="always" text-align="left" font-family="Courier,monospace" white-space-collapse="false" font-size="12pt" >&#160;&#160;&#160;VENDOR NO. :${partyId?if_exists}                                                          FAX NO: ${partyEntry.getValue().get("faxNumber")?if_exists}</fo:block>
                     <fo:block  keep-together="always" text-align="left" font-family="Courier,monospace" white-space-collapse="false" font-size="12pt" >&#160;&#160;&#160;To: ${partyEntry.getValue().get("partyName")?if_exists}                                           </fo:block>                    
 				    <fo:block text-align="left" white-space-collapse="false">&#160;&#160; ${partyEntry.getValue().get("address1")?if_exists}</fo:block>
@@ -107,26 +107,32 @@ under the License.
 					     <fo:table-column column-width="220pt"/>
 					     <fo:table-column column-width="180pt"/>
 					     <fo:table-column column-width="120pt"/>
-					          <fo:table-body>					          
-					          <#assign sno=1>
+					          <fo:table-body>
+					           <#assign sno=1>	
+				              <#assign productList = enquiryMap.entrySet()>                                                                 					          
+                               <#list productList as productEntry>
+                               <#assign productd=productEntry.getKey()> 
+                                <#assign productDetails=productEntry.getValue()> 
+                                 
 				                  <fo:table-row >
 					                 <fo:table-cell>
 									    <fo:block text-align="center" keep-together="always" >${sno?if_exists}</fo:block>
 								     </fo:table-cell>
 								     <fo:table-cell >
-									    <fo:block text-align="left"  >${enquiryMap.get("itemCode")?if_exists}</fo:block>
+									    <fo:block text-align="left"  >${productDetails.get("itemCode")?if_exists}</fo:block>
 								    </fo:table-cell>
 								    <fo:table-cell >
-									   <fo:block text-align="left"  >${enquiryMap.get("description")?if_exists}</fo:block>
+									   <fo:block text-align="left"  >${productDetails.get("description")?if_exists}</fo:block>
 								   </fo:table-cell>
 								   <fo:table-cell >
-									  <fo:block text-align="center" keep-together="always" >${enquiryMap.get("unit")?if_exists}</fo:block>
+									  <fo:block text-align="center" keep-together="always" >${productDetails.get("unit")?if_exists}</fo:block>
 								   </fo:table-cell>
 								   <fo:table-cell >
-									  <fo:block text-align="center" keep-together="always" >${enquiryMap.get("requrdqty")?if_exists}</fo:block>
+									  <fo:block text-align="center" keep-together="always" >${productDetails.get("requrdqty")?if_exists}</fo:block>
 								   </fo:table-cell>
 					           </fo:table-row>
-					      <#assign sno=sno+1>                              
+					           <#assign sno=sno+1> 
+                              </#list>  					                                                            
 					     </fo:table-body>  
 					  </fo:table>
 					 <fo:block text-align="left" keep-together="always"  >&#160;&#160;--------------------------------------------------------------------------------------------------------------------------</fo:block>

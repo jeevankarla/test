@@ -22,11 +22,18 @@ import org.ofbiz.party.contact.ContactHelper;
 
 conditionList =[];
 dctx = dispatcher.getDispatchContext();
-companyDetail = (Map)(org.ofbiz.party.party.PartyWorker.getPartyIdentificationDetails(delegator, "Company")).get("partyDetails");
-	if(UtilValidate.isNotEmpty(companyDetail)){
-	  companyTinNumber=companyDetail.get('TIN_NUMBER');
-	}
-context.put("companyTinNumber",companyTinNumber);
+tinDetails = delegator.findList("PartyGroup",EntityCondition.makeCondition("partyId", EntityOperator.EQUALS , "Company")  , null, null, null, false );
+tinDetails=EntityUtil.getFirst(tinDetails);
+companyTinNumber="";
+if(UtilValidate.isNotEmpty(tinDetails.tinNumber)){
+	companyTinNumber=tinDetails.tinNumber;
+	context.put("companyTinNumber",companyTinNumber);
+}
+cstNumber="";
+if(UtilValidate.isNotEmpty(tinDetails.cstNumber)){
+	cstNumber=tinDetails.cstNumber;
+	context.put("cstNumber",cstNumber);
+}
 if(parameters.issueToCustReqId){
       custRequestId=parameters.issueToCustReqId;
       context.custRequestId=custRequestId;
@@ -88,30 +95,37 @@ if(UtilValidate.isNotEmpty(custReqDetails)){
 				      context.put("custReqDate",custReqDate);
 			          context.put("dueDate",dueDate);
 			          partyAddressMap.put(eachPartyId,partyMap);
+					  
 					  //productDetails
 			          enquiryMap=[:];
 			          productId ="";
+					  key = 0;
 			          custReqItemDetails = delegator.findList("CustRequestItem",EntityCondition.makeCondition("custRequestId", EntityOperator.EQUALS , custRequestId)  , null, null, null, false );
-			          if(UtilValidate.isNotEmpty(custReqItemDetails)){
-				           custReqItemDetails=EntityUtil.getFirst(custReqItemDetails);
-				           productId=custReqItemDetails.productId;
-				           requrdqty=custReqItemDetails.quantity;
-				           enquiryMap.put("productId",productId);
-				           enquiryMap.put("requrdqty",requrdqty);
-			           }
-					 productDetails = delegator.findOne("Product",["productId":productId],false);
-                     if(UtilValidate.isNotEmpty(productDetails)){
-	                        itemCode=productDetails.internalName;
-	                        description=productDetails.description;
-                            enquiryMap.put("itemCode",itemCode);
-                            enquiryMap.put("description",description);
-                            uomId=productDetails.quantityUomId;
-                      }
-                     if(UtilValidate.isNotEmpty(uomId)){
-	                        unitDesciption = delegator.findOne("Uom",["uomId":uomId],false);
-	                        enquiryMap.put("unit",unitDesciption.description);
-                      }					  
-			             context.enquiryMap=enquiryMap;
+					  if(UtilValidate.isNotEmpty(custReqItemDetails)){
+						   custReqItemDetails.each{custReqItem->
+							   productMap=[:];
+							   
+							   requrdqty=custReqItem.quantity;
+							   productId=custReqItem.productId;							   
+							   productMap.put("productId",productId);
+							   productDetails = delegator.findOne("Product",["productId":productId],false);
+							   if(UtilValidate.isNotEmpty(productDetails)){
+								   itemCode=productDetails.internalName;
+								   description=productDetails.description;
+								   productMap.put("itemCode",itemCode);
+								   productMap.put("description",description);
+								   uomId=productDetails.quantityUomId;
+							   }
+							   if(UtilValidate.isNotEmpty(uomId)){
+								   unitDesciption = delegator.findOne("Uom",["uomId":uomId],false);
+								   productMap.put("unit",unitDesciption.description);
+							   }
+							   productMap.put("requrdqty",requrdqty);
+							   key=key+1;
+							   enquiryMap.put(key,productMap);
+						   }						   
+					  }					 
+					  context.enquiryMap=enquiryMap;
 			      }  			   
 		   }
            else{	
@@ -154,33 +168,37 @@ if(UtilValidate.isNotEmpty(custReqDetails)){
 			   context.put("dueDate",dueDate);
 			   partyAddressMap.put(eachPartyId,partyMap);
 			   //productDetails
-			   enquiryMap=[:];
-			   productId ="";
-			   custReqItemDetails = delegator.findList("CustRequestItem",EntityCondition.makeCondition("custRequestId", EntityOperator.EQUALS , custRequestId)  , null, null, null, false );
-			   if(UtilValidate.isNotEmpty(custReqItemDetails)){
-				  custReqItemDetails=EntityUtil.getFirst(custReqItemDetails);
-				  productId=custReqItemDetails.productId;
-				  requrdqty=custReqItemDetails.quantity;
-				  enquiryMap.put("productId",productId);
-				  enquiryMap.put("requrdqty",requrdqty);
-			   }
-			    productDetails = delegator.findOne("Product",["productId":productId],false);
-                     if(UtilValidate.isNotEmpty(productDetails)){
-	                        itemCode=productDetails.internalName;
-	                        description=productDetails.description;
-                            enquiryMap.put("itemCode",itemCode);
-                            enquiryMap.put("description",description);
-                            uomId=productDetails.quantityUomId;
-                      }
-                     if(UtilValidate.isNotEmpty(uomId)){
-	                        unitDesciption = delegator.findOne("Uom",["uomId":uomId],false);
-	                        enquiryMap.put("unit",unitDesciption.description);
-                      }
-			   context.enquiryMap=enquiryMap;
-			  
+			    enquiryMap=[:];
+			    productId ="";
+				key = 0;
+			    custReqItemDetails = delegator.findList("CustRequestItem",EntityCondition.makeCondition("custRequestId", EntityOperator.EQUALS , custRequestId)  , null, null, null, false );
+				if(UtilValidate.isNotEmpty(custReqItemDetails)){
+					 custReqItemDetails.each{custReqItem->
+							   productMap=[:];
+							   requrdqty=custReqItem.quantity;
+							   productId=custReqItem.productId;
+							   
+							   productMap.put("productId",productId);
+							   productDetails = delegator.findOne("Product",["productId":productId],false);
+							   if(UtilValidate.isNotEmpty(productDetails)){
+								   itemCode=productDetails.internalName;
+								   description=productDetails.description;
+								   productMap.put("itemCode",itemCode);
+								   productMap.put("description",description);
+								   uomId=productDetails.quantityUomId;
+							   }
+							   if(UtilValidate.isNotEmpty(uomId)){
+								   unitDesciption = delegator.findOne("Uom",["uomId":uomId],false);
+								   productMap.put("unit",unitDesciption.description);
+							   }
+							   productMap.put("requrdqty",requrdqty);
+							   key=key+1;
+							   enquiryMap.put(key,productMap);
+						   }						   
+				   }					 
+				  context.enquiryMap=enquiryMap;			  
             }	   	  
         }    
     }
     context.partyAddressMap=partyAddressMap;
 }
-
