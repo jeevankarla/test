@@ -297,7 +297,7 @@
        <security https="true" auth="true"/>
        <event type="service" path="" invoke="acceptReceiptQtyByQC"></event>
        <response name="success" type="request-redirect-noparam" value="MaterialForQCApproval"/>
-       <response name="error" type="view" value="MaterialForQCApproval"/>
+       <response name="error" type="request-redirect-noparam" value="MaterialForQCApproval"/>
      </request-map>
      
      <request-map uri="FindMaterialQuotes">
