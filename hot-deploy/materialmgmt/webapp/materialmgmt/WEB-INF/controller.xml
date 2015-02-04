@@ -914,13 +914,17 @@
     <request-map uri="addCustRequestParty">
         <security https="true" auth="true"/>
      	<event type="service"   invoke="createCustRequestParty"/>
-        <response name="success" type="view" value="ViewMaterialEnquiry"/>
+        <response name="success" type="request-redirect" value="ViewMaterialEnquiry">
+        <redirect-parameter name="custRequestId"/>
+        </response>
         <response name="error" type="view" value="ViewMaterialEnquiry"/>
     </request-map>
     <request-map uri="deleteCustRequestParty">
         <security https="true" auth="true"/>
      	<event type="service"   invoke="deleteCustRequestParty"/>
-        <response name="success" type="view" value="ViewMaterialEnquiry"/>
+        <response name="success" type="request-redirect" value="ViewMaterialEnquiry">
+        <redirect-parameter name="custRequestId"/>
+        </response>
         <response name="error" type="view" value="ViewMaterialEnquiry"/>
     </request-map>
     
