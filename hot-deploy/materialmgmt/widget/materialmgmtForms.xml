@@ -363,8 +363,8 @@
      </sub-hyperlink>
      </display-entity>
       </field>  -->
-     <field name="longDescription" title="Specification"><display/></field>
-     <field name="uomId" title="UOM" ><display-entity entity-name="Uom" description="${description}"/></field> 
+     <field name="longDescription" title="Specification"><display size="50"/></field>
+     <field name="quantityUomId" title="UOM" ><display-entity entity-name="Uom" key-field-name="uomId" description="${description}"/></field> 
      <field name="primaryProductCategoryId" title="Material Category">
      	<display-entity entity-name="ProductCategory" key-field-name="productCategoryId" description="${description}" ></display-entity>
      </field>
