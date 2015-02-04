@@ -90,6 +90,13 @@ JSONObject productIdLabelJSON = new JSONObject();
 JSONObject productLabelIdJSON=new JSONObject();
 context.productList = prodList;
 
+productIds = EntityUtil.getFieldListFromEntityList(prodList, "productId", true);
+Map result = (Map)MaterialHelperServices.getProductUOM(delegator, productIds);
+uomLabelMap = result.get("uomLabel");
+productUomMap = result.get("productUom");
+JSONObject productUOMJSON = new JSONObject();
+JSONObject uomLabelJSON=new JSONObject();
+
 prodList.each{eachItem ->
 	JSONObject newObj = new JSONObject();
 	newObj.put("value",eachItem.productId);
@@ -97,9 +104,18 @@ prodList.each{eachItem ->
 	productItemsJSON.add(newObj);
 	productIdLabelJSON.put(eachItem.productId, eachItem.brandName+" [ "+eachItem.description +"]("+eachItem.internalName+")");
 	productLabelIdJSON.put(eachItem.brandName+" [ "+eachItem.description+"]("+eachItem.internalName+")", eachItem.productId);
+	
+	if(productUomMap){
+		uomId = productUomMap.get(eachItem.productId);
+		if(uomId){
+			productUOMJSON.put(eachItem.productId, uomId);
+			uomLabelJSON.put(uomId, uomLabelMap.get(uomId));
+		}
+	}
 }
 
-
+context.productUOMJSON = productUOMJSON;
+context.uomLabelJSON = uomLabelJSON;
 context.productItemsJSON = productItemsJSON;
 context.productIdLabelJSON = productIdLabelJSON;
 context.productLabelIdJSON = productLabelIdJSON;

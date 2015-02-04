@@ -9,7 +9,7 @@
 	 <ShipmentType description="Purchase Shipment" hasTable="N" shipmentTypeId="PURCHASE_SHIPMENT"/>
 	 <ShipmentType description="Issuance Shipment" hasTable="N" shipmentTypeId="ISSUANCE_SHIPMENT"/>
 	 <ShipmentType description="Material Purchase Shipment" hasTable="N"  parentTypeId="PURCHASE_SHIPMENT" shipmentTypeId="MATERIAL_SHIPMENT"/>
-    
+     <TermType description="Including Tax" hasTable="N" parentTypeId="TAX" termTypeId="INC_TAX"/>
      <StatusItem description="In Enquiry"  sequenceId="01" statusCode="IN Enquiry" statusId="REQ_IN_ENQUIRY" statusTypeId="REQUIREMENT_STATUS"/>
      
      <RoleType description="Request Taker for Quote" hasTable="N" roleTypeId="REQ_TAKER"/>

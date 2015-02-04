@@ -4696,6 +4696,40 @@
 		<field name="description" type="description"></field>
 		<prim-key field="taxAuthorityRateTypeId" />
 	</entity>
+	
+	<entity entity-name="OrderTaxType" package-name="org.ofbiz.accounting.tax"
+		default-resource-name="AccountingEntityLabels" title="Order Tax Type">
+		<field name="orderTaxTypeId" type="id-ne"></field>
+		<field name="taxType" type="id-ne"></field>
+		<field name="taxRate" type="fixed-point"></field>
+		<field name="fromDate" type="date-time"></field>
+      	<field name="thruDate" type="date-time"></field>
+		<prim-key field="orderTaxTypeId" />
+	</entity>
+	
+	<entity entity-name="OrderTaxTypeComponentMap" package-name="org.ofbiz.accounting.tax"
+		default-resource-name="AccountingEntityLabels" title="Order Tax Type Component Map">
+		<field name="orderTaxTypeId" type="id-ne"></field>
+		<field name="componentType" type="id-ne"></field>
+		<field name="componentRate" type="fixed-point"></field>
+		<prim-key field="orderTaxTypeId" />
+		<prim-key field="componentType" />
+		<relation type="one" fk-name="ORDTAX_COM" rel-entity-name="OrderTaxType">
+			<key-map field-name="orderTaxTypeId" />
+		</relation>
+	</entity>
+	<view-entity entity-name="OrderTaxTypeAndComponentMap" package-name="org.ofbiz.accounting.tax"
+		title="Order Tax Type And Component Map">
+		<member-entity entity-alias="OTT" entity-name="OrderTaxType" />
+		<member-entity entity-alias="TCM" entity-name="OrderTaxTypeComponentMap" />
+		<alias-all entity-alias="OTT"/>
+		<alias-all entity-alias="TCM"/>
+		<view-link entity-alias="OTT" rel-entity-alias="TCM">
+			<key-map field-name="orderTaxTypeId" />
+		</view-link>
+	</view-entity>
+	
+	
 	<entity entity-name="ZipSalesRuleLookup" package-name="org.ofbiz.accounting.tax"
 		title="Zip Sales Tax Lookup Entity">
 		<field name="stateCode" type="short-varchar"></field>

@@ -1045,18 +1045,10 @@ public class MaterialPurchaseServices {
 		String issueToDeptId = (String) request.getParameter("issueToDeptId");
 		Map resultMap = FastMap.newInstance();
 		List invoices = FastList.newInstance(); 
-		String vehicleId = (String) request.getParameter("vehicleId");
 		String effectiveDateStr = (String) request.getParameter("effectiveDate");
-		String productSubscriptionTypeId = (String) request.getParameter("productSubscriptionTypeId");
-		String shipmentTypeId = (String) request.getParameter("shipmentTypeId");
-
 		String PONumber=(String) request.getParameter("PONumber");
-		String mrnNumber=(String) request.getParameter("mrnNumber");
-		String SInvNumber=(String) request.getParameter("SInvNumber");
-		String SInvoiceDateStr=(String) request.getParameter("SInvoiceDate");
 		// Inclusive tax and Exclusive tax
 		String incTax=(String) request.getParameter("incTax");
-		
 		String orderName = (String) request.getParameter("orderName");
 		String fileNo = (String) request.getParameter("fileNo");
 		String refNo = (String) request.getParameter("refNo");
@@ -1067,20 +1059,17 @@ public class MaterialPurchaseServices {
 		//String effectiveDate = (String) request.getParameter("effectiveDate");
 		String estimatedDeliveryDateStr = (String) request.getParameter("estimatedDeliveryDate");
 		
-		String subscriptionTypeId = "AM";
 		String partyIdFrom = "";
-		String shipmentId = "";
 		Map processOrderContext = FastMap.newInstance();
 		String salesChannel = (String)request.getParameter("salesChannel");
 	  
 		String productId = null;
-		String batchNo = null;
 		String quantityStr = null;
 		String unitPriceStr=null;
 		
 		Timestamp effectiveDate=null;
 		BigDecimal quantity = BigDecimal.ZERO;
-		BigDecimal uPrice = BigDecimal.ZERO;
+		BigDecimal unitPrice = BigDecimal.ZERO;
 		Timestamp estimatedDeliveryDate = UtilDateTime.nowTimestamp();
 		Timestamp orderDate = UtilDateTime.nowTimestamp();
 		HttpSession session = request.getSession();
@@ -1117,16 +1106,6 @@ public class MaterialPurchaseServices {
 			}
 		}
 		
-		Timestamp SInvoiceDate=null;
-		if (UtilValidate.isNotEmpty(SInvoiceDateStr)) { //2011-12-25 18:09:45
-			try {
-				SInvoiceDate = new java.sql.Timestamp(sdf.parse(SInvoiceDateStr).getTime());
-			} catch (ParseException e) {
-				Debug.logError(e, "Cannot parse SupplierInvoice Date String: " + SInvoiceDateStr, module);
-			} catch (NullPointerException e) {
-				Debug.logError(e, "Cannot parse SupplierInvoice Date String: " + SInvoiceDateStr, module);
-			}
-		}
 		if (partyId == "") {
 			request.setAttribute("_ERROR_MESSAGE_","Party Id is empty");
 			return "error";
@@ -1153,24 +1132,17 @@ public class MaterialPurchaseServices {
 			return "success";
 		}
 		
+		List termsList = FastList.newInstance();
+		Map taxTermsMap = FastMap.newInstance();
 		List productQtyList = FastList.newInstance();
+		
 		//Debug.log("rowCount============="+rowCount);
 		for (int i = 0; i < rowCount; i++) {
 			
-			String vatStr=null;
-			String exciseStr=null;
-			String bedCessStr=null;
-			String bedSecCessStr=null;
-			String cstStr=null;
-			
-			BigDecimal vat = BigDecimal.ZERO;
-			BigDecimal cst = BigDecimal.ZERO;
-			BigDecimal excise = BigDecimal.ZERO;
-			BigDecimal bedCessAmount = BigDecimal.ZERO;
-			BigDecimal bedSecCessAmount = BigDecimal.ZERO;
-			
+			List<Map> taxTermsPerOrderItem = FastList.newInstance();
 			Map<String  ,Object> productQtyMap = FastMap.newInstance();	  		  
 			String thisSuffix = UtilHttp.MULTI_ROW_DELIMITER + i;
+			
 			if (paramMap.containsKey("productId" + thisSuffix)) {
 				productId = (String) paramMap.get("productId" + thisSuffix);
 			}
@@ -1191,61 +1163,27 @@ public class MaterialPurchaseServices {
 				request.setAttribute("_ERROR_MESSAGE_", "Empty product quantity");
 				return "error";	
 			}
-			
-			/*if (paramMap.containsKey("batchNo" + thisSuffix)) {
-				batchNo = (String) paramMap.get("batchNo" + thisSuffix);
-			}
-			else {
-				request.setAttribute("_ERROR_MESSAGE_", "Missing Batch Number");
-				return "error";			  
-			}*/
-			if (paramMap.containsKey("UPrice" + thisSuffix)) {
-			   unitPriceStr = (String) paramMap.get("UPrice" + thisSuffix);
-			}
-			if (paramMap.containsKey("VAT" + thisSuffix)) {
-				vatStr = (String) paramMap.get("VAT" + thisSuffix);
-			}
-			if (paramMap.containsKey("excise" + thisSuffix)) {
-				exciseStr = (String) paramMap.get("excise" + thisSuffix);
-			}
-			if (paramMap.containsKey("bedCess" + thisSuffix)) {
-				bedCessStr = (String) paramMap.get("bedCess" + thisSuffix);
-			}
-			if (paramMap.containsKey("bedSecCess" + thisSuffix)) {
-				bedSecCessStr = (String) paramMap.get("bedSecCess" + thisSuffix);
-			}
-			
-			if (paramMap.containsKey("CST" + thisSuffix)) {
-				cstStr = (String) paramMap.get("CST" + thisSuffix);
+			if (paramMap.containsKey("unitPrice" + thisSuffix)) {
+			   unitPriceStr = (String) paramMap.get("unitPrice" + thisSuffix);
 			}
 			//percenatge of TAXes
 			
-			String VatPercentStr=null;
-			String ExcisePercentStr=null;
-			String bedCessPercentStr=null;
-			String bedSecCessPercentStr=null;
-			String CSTPercentStr=null;
+			String vatPercentStr=null;
+			String bedPercentStr=null;
+			String cstPercentStr=null;
 			
 			BigDecimal vatPercent=BigDecimal.ZERO;
-			BigDecimal excisePercent=BigDecimal.ZERO;
-			BigDecimal bedCessPercent=BigDecimal.ZERO;
-			BigDecimal bedSecCessPercent=BigDecimal.ZERO;
+			BigDecimal bedPercent=BigDecimal.ZERO;
 			BigDecimal cstPercent=BigDecimal.ZERO; 
 			
-			if (paramMap.containsKey("VatPercent" + thisSuffix)) {
-				VatPercentStr = (String) paramMap.get("VatPercent" + thisSuffix);
+			if (paramMap.containsKey("vatPercent" + thisSuffix)) {
+				vatPercentStr = (String) paramMap.get("vatPercent" + thisSuffix);
 			}
-			if (paramMap.containsKey("ExcisePercent" + thisSuffix)) {
-				ExcisePercentStr = (String) paramMap.get("ExcisePercent" + thisSuffix);
+			if (paramMap.containsKey("bedPercent" + thisSuffix)) {
+				bedPercentStr = (String) paramMap.get("bedPercent" + thisSuffix);
 			}
-			if (paramMap.containsKey("bedCessPercent" + thisSuffix)) {
-				bedCessPercentStr = (String) paramMap.get("bedCessPercent" + thisSuffix);
-			}
-			if (paramMap.containsKey("bedSecCessPercent" + thisSuffix)) {
-				bedSecCessPercentStr = (String) paramMap.get("bedSecCessPercent" + thisSuffix);
-			}
-			if (paramMap.containsKey("CSTPercent" + thisSuffix)) {
-				CSTPercentStr = (String) paramMap.get("CSTPercent" + thisSuffix);
+			if (paramMap.containsKey("cstPercent" + thisSuffix)) {
+				cstPercentStr = (String) paramMap.get("cstPercent" + thisSuffix);
 			}
 			
 			try {
@@ -1257,7 +1195,7 @@ public class MaterialPurchaseServices {
 			}
 			try {
 				if (!unitPriceStr.equals("")) {
-				uPrice = new BigDecimal(unitPriceStr);
+					unitPrice = new BigDecimal(unitPriceStr);
 				}
 			} catch (Exception e) {
 				Debug.logError(e, "Problems parsing UnitPrice string: " + unitPriceStr, module);
@@ -1265,126 +1203,80 @@ public class MaterialPurchaseServices {
 				return "error";
 			} 
 			try {
-				if (!vatStr.equals("")) {
-				vat = new BigDecimal(vatStr);
+				if (!vatPercentStr.equals("")) {
+					vatPercent = new BigDecimal(vatPercentStr);
+				}
+				if(vatPercent.compareTo(BigDecimal.ZERO)>0){
+					Map tempTermMap = FastMap.newInstance();
+					tempTermMap.put("termTypeId", "VAT_PUR");
+					tempTermMap.put("termValue", vatPercent);
+					tempTermMap.put("uomId", "PERCENT");
+					taxTermsPerOrderItem.add(tempTermMap);
 				}
 			} catch (Exception e) {
-				Debug.logError(e, "Problems parsing VAT string: " + vatStr, module);
-				request.setAttribute("_ERROR_MESSAGE_", "Problems parsing VAT string: " + vatStr);
+				Debug.logError(e, "Problems parsing VatPercent string: " + vatPercentStr, module);
+				request.setAttribute("_ERROR_MESSAGE_", "Problems parsing VatPercent string: " + vatPercentStr);
 				return "error";
 			}
 			try {
-				if (!exciseStr.equals("")) {
-				excise = new BigDecimal(exciseStr);
+				if (!bedPercentStr.equals("")) {
+					bedPercent = new BigDecimal(bedPercentStr);
 				}
-			} catch (Exception e) {
-				Debug.logError(e, "Problems parsing excise string: " + exciseStr, module);
-				request.setAttribute("_ERROR_MESSAGE_", "Problems parsing excise string: " + exciseStr);
-				return "error";
-			}
-			try {
-				if (!bedCessStr.equals("")) {
-					bedCessAmount = new BigDecimal(bedCessStr);
+				if(bedPercent.compareTo(BigDecimal.ZERO)>0){
+					Map tempTermMap = FastMap.newInstance();
+					tempTermMap.put("termTypeId", "BED_PUR");
+					tempTermMap.put("termValue", bedPercent);
+					tempTermMap.put("uomId", "PERCENT");
+					taxTermsPerOrderItem.add(tempTermMap);
 				}
+
 			} catch (Exception e) {
-				Debug.logError(e, "Problems parsing bedCess string: " + bedCessStr, module);
-				request.setAttribute("_ERROR_MESSAGE_", "Problems parsing bedCess string: " + bedCessStr);
-				return "error";
-			}
-			try {
-				if (!bedSecCessStr.equals("")) {
-					bedSecCessAmount = new BigDecimal(bedSecCessStr);
-				}
-			} catch (Exception e) {
-				Debug.logError(e, "Problems parsing bedSecCess string: " + bedSecCessStr, module);
-				request.setAttribute("_ERROR_MESSAGE_", "Problems parsing bedSecCess string: " + bedSecCessStr);
+				Debug.logError(e, "Problems parsing excisePercent string: " + bedPercentStr, module);
+				request.setAttribute("_ERROR_MESSAGE_", "Problems parsing excisePercent string: " + bedPercentStr);
 				return "error";
 			}
 			
 			try {
-				if (!cstStr.equals("")) {
-				cst = new BigDecimal(cstStr);
+				if (!cstPercentStr.equals("")) {
+					cstPercent = new BigDecimal(cstPercentStr);
+				}
+				if(cstPercent.compareTo(BigDecimal.ZERO)>0){
+					Map tempTermMap = FastMap.newInstance();
+					tempTermMap.put("termTypeId", "CST_PUR");
+					tempTermMap.put("termValue", cstPercent);
+					tempTermMap.put("uomId", "PERCENT");
+					taxTermsPerOrderItem.add(tempTermMap);
 				}
 			} catch (Exception e) {
-				Debug.logError(e, "Problems parsing CST string: " + cstStr, module);
-				request.setAttribute("_ERROR_MESSAGE_", "Problems parsing CST string: " + cstStr);
-				return "error";
-			}
-			
-			//percenatges population
-			try {
-				if (!VatPercentStr.equals("")) {
-					vatPercent = new BigDecimal(VatPercentStr);
-				}
-			} catch (Exception e) {
-				Debug.logError(e, "Problems parsing VatPercent string: " + VatPercentStr, module);
-				request.setAttribute("_ERROR_MESSAGE_", "Problems parsing VatPercent string: " + VatPercentStr);
-				return "error";
-			}
-			try {
-				if (!ExcisePercentStr.equals("")) {
-					excisePercent = new BigDecimal(ExcisePercentStr);
-				}
-			} catch (Exception e) {
-				Debug.logError(e, "Problems parsing excisePercent string: " + ExcisePercentStr, module);
-				request.setAttribute("_ERROR_MESSAGE_", "Problems parsing excisePercent string: " + ExcisePercentStr);
-				return "error";
-			}
-			try {
-				if (!bedCessPercentStr.equals("")) {
-					bedCessPercent = new BigDecimal(bedCessPercentStr);
-				}
-			} catch (Exception e) {
-				Debug.logError(e, "Problems parsing bedCessPercent string: " + bedCessPercentStr, module);
-				request.setAttribute("_ERROR_MESSAGE_", "Problems parsing bedCessPercent string: " + bedCessPercentStr);
-				return "error";
-			}
-			try {
-				if (!bedSecCessPercentStr.equals("")) {
-					bedSecCessPercent = new BigDecimal(bedSecCessPercentStr);
-				}
-			} catch (Exception e) {
-				Debug.logError(e, "Problems parsing bedSecCessPercent string: " + bedSecCessPercentStr, module);
-				request.setAttribute("_ERROR_MESSAGE_", "Problems parsing bedSecCessPercent string: " + bedSecCessPercentStr);
-				return "error";
-			}
-			try {
-				if (!CSTPercentStr.equals("")) {
-					cstPercent = new BigDecimal(CSTPercentStr);
-				}
-			} catch (Exception e) {
-				Debug.logError(e, "Problems parsing CSTPercent string: " + CSTPercentStr, module);
-				request.setAttribute("_ERROR_MESSAGE_", "Problems parsing CSTPercent string: " + CSTPercentStr);
+				Debug.logError(e, "Problems parsing CSTPercent string: " + cstPercentStr, module);
+				request.setAttribute("_ERROR_MESSAGE_", "Problems parsing CSTPercent string: " + cstPercentStr);
 				return "error";
 			}
 			
 			productQtyMap.put("productId", productId);
 			productQtyMap.put("quantity", quantity);
-			productQtyMap.put("unitPrice", uPrice);
-			/*productQtyMap.put("vatPercentage", vat);
-			productQtyMap.put("cstPercentage", cst);
-			productQtyMap.put("excisePercentage", excise);*/
-			productQtyMap.put("vatAmount", vat);
-			productQtyMap.put("bedAmount", excise);
-			productQtyMap.put("bedCessAmount",bedCessAmount );
-			productQtyMap.put("bedSecCessAmount", bedSecCessAmount);
-			productQtyMap.put("cstAmount", cst);
-			//productQtyMap.put("batchNo", batchNo);
+			productQtyMap.put("unitPrice", unitPrice);
 			productQtyMap.put("vatPercent", vatPercent);
-			productQtyMap.put("excisePercent", excisePercent);
-			productQtyMap.put("bedCessPercent",bedCessPercent );
-			productQtyMap.put("bedSecCessPercent", bedSecCessPercent);
+			productQtyMap.put("bedPercent", bedPercent);
 			productQtyMap.put("cstPercent", cstPercent);
-			
-			
 			productQtyList.add(productQtyMap);
+			
+			if(UtilValidate.isNotEmpty(taxTermsPerOrderItem)){
+				taxTermsMap.put(productId, taxTermsPerOrderItem);
+			}
 		}//end row count for loop
 		if( UtilValidate.isEmpty(productQtyList)){
 			Debug.logWarning("No rows to process, as rowCount = " + rowCount, module);
 			request.setAttribute("_ERROR_MESSAGE_", "No rows to process, as rowCount =  :" + rowCount);
 			return "success";
 		}
-		List termsList = FastList.newInstance();
+		
+		if(UtilValidate.isNotEmpty(incTax)){
+			Map tempTermMap = FastMap.newInstance();
+			tempTermMap.put("termTypeId", "INC_TAX");
+			termsList.add(tempTermMap);
+		}
+		
 		for (int i = 0; i < rowCount; i++) {
 			String termTypeId =null;
 			String  termDaysStr = null;
@@ -1547,13 +1439,12 @@ public class MaterialPurchaseServices {
 		processOrderContext.put("termsList", termsList);
 		processOrderContext.put("partyId", partyId);
 		processOrderContext.put("otherChargesAdjustment", otherAdjList);
+		processOrderContext.put("taxTermsMap", taxTermsMap);
 		processOrderContext.put("billFromPartyId", billFromPartyId);
 		processOrderContext.put("issueToDeptId", issueToDeptId);
 		processOrderContext.put("supplyDate", effectiveDate);
 		processOrderContext.put("salesChannel", salesChannel);
-		processOrderContext.put("vehicleId", vehicleId);
 		processOrderContext.put("enableAdvancePaymentApp", Boolean.TRUE);
-		processOrderContext.put("shipmentTypeId", shipmentTypeId);
 		processOrderContext.put("productStoreId", productStoreId);
 		processOrderContext.put("PONumber", PONumber);
 		processOrderContext.put("orderName", orderName);
@@ -1609,7 +1500,7 @@ public class MaterialPurchaseServices {
 	    Locale locale = (Locale) context.get("locale");
 	    String productStoreId = (String) context.get("productStoreId");
 	  	String salesChannel = (String) context.get("salesChannel");
-	  	String vehicleId = (String) context.get("vehicleId");
+	  	Map taxTermsMap = (Map) context.get("taxTermsMap");
 	  	String partyId = (String) context.get("partyId");
 	  	String billFromPartyId = (String) context.get("billFromPartyId");
 		String issueToDeptId = (String) context.get("issueToDeptId");
@@ -1617,12 +1508,7 @@ public class MaterialPurchaseServices {
 	  	List<Map> otherChargesAdjustment = (List)context.get("otherChargesAdjustment");
 	  	String incTax = (String)context.get("incTax");
 	  	boolean beganTransaction = false;
-	  	//fright Charges
-		/*BigDecimal freightCharges = BigDecimal.ZERO;
-		BigDecimal discount = BigDecimal.ZERO;*/
-	  	String mrnNumber = (String) context.get("mrnNumber");
 	  	String PONumber=(String) context.get("PONumber");
-	  	String SInvNumber = (String) context.get("SInvNumber");
         Timestamp orderDate = (Timestamp)context.get("orderDate");
         Timestamp estimatedDeliveryDate = (Timestamp)context.get("estimatedDeliveryDate");
 		String orderName = (String)context.get("orderName");
@@ -1630,8 +1516,6 @@ public class MaterialPurchaseServices {
 		String refNo = (String)context.get("refNo");
 		String orderId = "";		
 	  	String currencyUomId = "INR";
-	  	String shipmentId = (String) context.get("shipmentId");
-	  	String shipmentTypeId = (String) context.get("shipmentTypeId");
 		Timestamp nowTimeStamp = UtilDateTime.nowTimestamp();
 		Timestamp effectiveDate = UtilDateTime.getDayStart(supplyDate);
 		String fromDate = (String)context.get("fromDate");
@@ -1686,13 +1570,8 @@ public class MaterialPurchaseServices {
 				termMap = (Map)termsList.get(i);
 				cart.addOrderTerm((String)termMap.get("termTypeId"), null, (BigDecimal)termMap.get("termValue"),(Long)termMap.get("termDays"), null, (String)termMap.get("uomId"), (String)termMap.get("description"));
 			}
+			
 			//set attributes here
-			/*if(UtilValidate.isNotEmpty(mrnNumber))
-				cart.setOrderAttribute("MRN_NUMBER",mrnNumber);
-			if(UtilValidate.isNotEmpty(SInvNumber))
-				cart.setOrderAttribute("SUP_INV_NUMBER",SInvNumber);
-			if(UtilValidate.isNotEmpty(context.get("SInvoiceDate")))
-				cart.setOrderAttribute("SUP_INV_DATE",UtilDateTime.toDateString((Timestamp)context.get("SInvoiceDate"),null));*/
 			if(UtilValidate.isNotEmpty(PONumber))
 				cart.setOrderAttribute("PO_NUMBER",PONumber);
 			if(UtilValidate.isNotEmpty(fileNo))
@@ -1714,245 +1593,327 @@ public class MaterialPurchaseServices {
 		}
 		String productId = "";
 		BigDecimal quantity = BigDecimal.ZERO;
-		String batchNo = "";
 		BigDecimal unitPrice = BigDecimal.ZERO;
-		BigDecimal vat = BigDecimal.ZERO;
-		BigDecimal cst = BigDecimal.ZERO;
-		BigDecimal excise = BigDecimal.ZERO;
+		BigDecimal vatAmount = BigDecimal.ZERO;
+		BigDecimal cstAmount = BigDecimal.ZERO;
+		BigDecimal bedAmount = BigDecimal.ZERO;
 		BigDecimal bedCessAmount = BigDecimal.ZERO;
 		BigDecimal bedSecCessAmount = BigDecimal.ZERO;
 
 		List<GenericValue> prodPriceTypeList = FastList.newInstance();
 		try{
-		beganTransaction = TransactionUtil.begin(7200);
-		
-		for (Map<String, Object> prodQtyMap : productQtyList) {
-			List taxList=FastList.newInstance();
-			BigDecimal totalTaxAmt =  BigDecimal.ZERO;
-			if(UtilValidate.isNotEmpty(prodQtyMap.get("productId"))){
-				productId = (String)prodQtyMap.get("productId");
-			}
-			if(UtilValidate.isNotEmpty(prodQtyMap.get("quantity"))){
-				quantity = (BigDecimal)prodQtyMap.get("quantity");
-			}
-			if(UtilValidate.isNotEmpty(prodQtyMap.get("unitPrice"))){
-				unitPrice = (BigDecimal)prodQtyMap.get("unitPrice");
-			}
-			// this is to calculate inclusive tax
-			BigDecimal vatUnitRate = BigDecimal.ZERO;
-			BigDecimal cstUnitRate = BigDecimal.ZERO;
-			BigDecimal bedUnitRate = BigDecimal.ZERO;
-			BigDecimal bedCessUnitRate  = BigDecimal.ZERO;
-			BigDecimal bedSecCessUnitRate  = BigDecimal.ZERO;
-			if(UtilValidate.isNotEmpty(incTax)){
+			beganTransaction = TransactionUtil.begin(7200);
+			
+			List condExpr = FastList.newInstance();
+			for (Map<String, Object> prodQtyMap : productQtyList) {
+				List taxList=FastList.newInstance();
+				BigDecimal totalTaxAmt =  BigDecimal.ZERO;
+				if(UtilValidate.isNotEmpty(prodQtyMap.get("productId"))){
+					productId = (String)prodQtyMap.get("productId");
+				}
+				if(UtilValidate.isNotEmpty(prodQtyMap.get("quantity"))){
+					quantity = (BigDecimal)prodQtyMap.get("quantity");
+				}
+				if(UtilValidate.isNotEmpty(prodQtyMap.get("unitPrice"))){
+					unitPrice = (BigDecimal)prodQtyMap.get("unitPrice");
+				}
+				// this is to calculate inclusive tax
+				BigDecimal vatUnitRate = BigDecimal.ZERO;
+				BigDecimal cstUnitRate = BigDecimal.ZERO;
+				BigDecimal bedUnitRate = BigDecimal.ZERO;
+				BigDecimal bedCessUnitRate  = BigDecimal.ZERO;
+				BigDecimal bedSecCessUnitRate  = BigDecimal.ZERO;
+				
 				BigDecimal vatPercent =(BigDecimal)prodQtyMap.get("vatPercent");
 				BigDecimal cstPercent =(BigDecimal)prodQtyMap.get("cstPercent");
-				BigDecimal excisePercent =(BigDecimal)prodQtyMap.get("excisePercent");
-				BigDecimal bedCessPercent=(BigDecimal)prodQtyMap.get("bedCessPercent");
-				BigDecimal bedSecCessPercent=(BigDecimal)prodQtyMap.get("bedSecCessPercent");
+				BigDecimal bedPercent =(BigDecimal)prodQtyMap.get("bedPercent");
 				
-				if(UtilValidate.isNotEmpty(vatPercent)){
-					Map<String,Object> exVatRateMap = UtilAccounting.getExclusiveTaxRate(unitPrice,vatPercent);
-					vatUnitRate = (BigDecimal)exVatRateMap.get("taxAmount");
-				}
+				BigDecimal bedTaxPercent = BigDecimal.ZERO;
+				BigDecimal bedcessTaxPercent = BigDecimal.ZERO;
+				BigDecimal bedseccessTaxPercent = BigDecimal.ZERO;
+				BigDecimal vatTaxPercent = BigDecimal.ZERO;
+				BigDecimal cstTaxPercent = BigDecimal.ZERO;
 				
-				if(UtilValidate.isNotEmpty(cstPercent)){
-					Map<String,Object> exCstRateMap = UtilAccounting.getExclusiveTaxRate(unitPrice,cstPercent);
-					cstUnitRate = (BigDecimal)exCstRateMap.get("taxAmount");
-				}
-				
-				if(UtilValidate.isNotEmpty(excisePercent)){
-					Map<String,Object> exBedRateMap = UtilAccounting.getExclusiveTaxRate(unitPrice.subtract(vatUnitRate.add(cstUnitRate)),excisePercent);
-					bedUnitRate = (BigDecimal)exBedRateMap.get("taxAmount");
-				}
-				
-				if(UtilValidate.isNotEmpty(bedCessPercent)){
-					Map<String,Object> exBedCessRateMap = UtilAccounting.getExclusiveTaxRate(bedUnitRate,bedCessPercent);
-					bedCessUnitRate = (BigDecimal)exBedCessRateMap.get("taxAmount");
-				}
-				
-				if(UtilValidate.isNotEmpty(bedSecCessPercent)){
-					Map<String,Object> exBedSecCessRateMap = UtilAccounting.getExclusiveTaxRate(bedUnitRate,bedSecCessPercent);
-					bedSecCessUnitRate = (BigDecimal)exBedSecCessRateMap.get("taxAmount");
-				}
-				
-				
-			}
-			
-			if(unitPrice.compareTo(BigDecimal.ZERO)>0){
-				if(UtilValidate.isNotEmpty(prodQtyMap.get("bedAmount")) || !bedUnitRate.equals(BigDecimal.ZERO)){
-					BigDecimal taxAmount = (BigDecimal)prodQtyMap.get("bedAmount");
-			        BigDecimal excisePercent=(BigDecimal)prodQtyMap.get("excisePercent");
+				if(UtilValidate.isNotEmpty(bedPercent) && bedPercent.compareTo(BigDecimal.ZERO)>0){
+					BigDecimal compareBedPercent = bedPercent.setScale(6);
 					
-					//BigDecimal taxRate = excise;
-					//BigDecimal taxAmount = BigDecimal.ZERO;
-					if(UtilValidate.isNotEmpty(incTax)){
-						taxAmount = bedUnitRate.multiply(quantity);
+					condExpr.clear();
+					condExpr.add(EntityCondition.makeCondition("taxType", EntityOperator.EQUALS, "EXCISE_DUTY_PUR"));
+					condExpr.add(EntityCondition.makeCondition("taxRate", EntityOperator.EQUALS, compareBedPercent));
+					EntityCondition cond = EntityCondition.makeCondition(condExpr, EntityOperator.AND);
+					
+					List<GenericValue> taxComponentMap = delegator.findList("OrderTaxTypeAndComponentMap", cond, null, null, null, false);
+					taxComponentMap = EntityUtil.filterByDate(taxComponentMap, UtilDateTime.nowTimestamp());
+					
+					if(UtilValidate.isEmpty(taxComponentMap)){
+						Debug.logError("Tax component configuration for Excise duty missing ", module);
+						return ServiceUtil.returnError("Tax component configuration for Excise duty missing ");
 					}
-		        	if(taxAmount.compareTo(BigDecimal.ZERO)>0){
-		        		//taxAmount = (unitPrice.multiply(taxRate)).divide(PERCENT_SCALE, salestaxCalcDecimals, salestaxRounding);
-		        		taxAmount = (taxAmount).setScale(salestaxCalcDecimals, salestaxRounding);
-		        		Map taxDetailMap = FastMap.newInstance();
-			    		taxDetailMap.put("taxType", "BED_PUR");
-			    		//taxDetailMap.put("taxType", "BED_SALE");
-			    		taxDetailMap.put("amount", taxAmount);
-			    		taxDetailMap.put("percentage", excisePercent);
-			    		taxList.add(taxDetailMap);
-             
-			    		GenericValue newProdPriceType = delegator.makeValue("ProductPriceAndType");        	 
-			    		newProdPriceType.set("fromDate", effectiveDate);
-			    		newProdPriceType.set("parentTypeId", "TAX");
-			    		newProdPriceType.set("productId", productId);
-			    		newProdPriceType.set("productStoreGroupId", "_NA_");
-			    		newProdPriceType.set("productPricePurposeId", "PURCHASE");
-			    		newProdPriceType.set("productPriceTypeId", "BED_PUR");
-			    		newProdPriceType.set("taxPercentage", excisePercent);
-			    		newProdPriceType.set("taxAmount", taxAmount);
-			    		newProdPriceType.set("currencyUomId", "INR");
-			    		prodPriceTypeList.add(newProdPriceType);
-			    		totalTaxAmt=totalTaxAmt.add(taxAmount.divide(quantity, 3, BigDecimal.ROUND_HALF_UP));
-		        	}
-		        	exciseDuty = exciseDuty.add(taxAmount);
-		        	
-				}
-				/*productQtyMap.put("vatPercent", vatPercent);
-				productQtyMap.put("excisePercent", excisePercent);
-				productQtyMap.put("bedCessPercent",bedCessPercent );
-				productQtyMap.put("bedSecCessPercent", bedSecCessPercent);
-				productQtyMap.put("cstPercent", cstPercent);*/
-				if(UtilValidate.isNotEmpty(prodQtyMap.get("bedCessAmount")) || !bedCessUnitRate.equals(BigDecimal.ZERO)){
-				    BigDecimal taxAmount = (BigDecimal)prodQtyMap.get("bedCessAmount");
-				    BigDecimal bedCessPercent=(BigDecimal)prodQtyMap.get("bedCessPercent");
-					//BigDecimal taxAmount = BigDecimal.ZERO;
-					if(UtilValidate.isNotEmpty(incTax)){
-						taxAmount = bedCessUnitRate.multiply(quantity);
+					
+					List<GenericValue> bedTaxComponent = EntityUtil.filterByCondition(taxComponentMap, EntityCondition.makeCondition("componentType", EntityOperator.EQUALS, "BED_PUR"));
+					if(UtilValidate.isNotEmpty(bedTaxComponent)){
+						bedTaxPercent = (EntityUtil.getFirst(bedTaxComponent)).getBigDecimal("componentRate");
 					}
-		        	if(taxAmount.compareTo(BigDecimal.ZERO)>0){
-		        		//taxAmount = (tempPrice.multiply(taxRate)).divide(PERCENT_SCALE, salestaxCalcDecimals, salestaxRounding);
-		        		taxAmount=taxAmount.setScale(salestaxCalcDecimals, salestaxRounding);
-		        		Map taxDetailMap = FastMap.newInstance();
-			    		taxDetailMap.put("taxType", "BEDCESS_PUR");
-			    		taxDetailMap.put("amount", taxAmount);
-			    		taxDetailMap.put("percentage", bedCessPercent);
-			    		taxList.add(taxDetailMap);
-			    		
-			    		GenericValue newProdPriceType = delegator.makeValue("ProductPriceAndType");        	 
-			    		newProdPriceType.set("fromDate", effectiveDate);
-			    		newProdPriceType.set("parentTypeId", "TAX");
-			    		newProdPriceType.set("productId", productId);
-			    		newProdPriceType.set("productStoreGroupId", "_NA_");
-			    		newProdPriceType.set("productPricePurposeId", "PURCHASE");
-			    		newProdPriceType.set("productPriceTypeId", "BEDCESS_PUR");
-			    		newProdPriceType.set("taxPercentage", bedCessPercent);
-			    		newProdPriceType.set("taxAmount", taxAmount);
-			    		newProdPriceType.set("currencyUomId", "INR");
-			    		prodPriceTypeList.add(newProdPriceType);
-			    		totalTaxAmt=totalTaxAmt.add(taxAmount.divide(quantity, 3, BigDecimal.ROUND_HALF_UP));
-		        	}
-		        	exciseDuty = exciseDuty.add(taxAmount);
-				}
-			    if(UtilValidate.isNotEmpty(prodQtyMap.get("bedSecCessAmount")) || !bedSecCessUnitRate.equals(BigDecimal.ZERO)){
-				    BigDecimal taxAmount = (BigDecimal)prodQtyMap.get("bedSecCessAmount");
-				    BigDecimal bedSecCessPercent=(BigDecimal)prodQtyMap.get("bedSecCessPercent");
-					//BigDecimal taxAmount = BigDecimal.ZERO;
-					if(UtilValidate.isNotEmpty(incTax)){
-						taxAmount = bedSecCessUnitRate.multiply(quantity);
+					
+					List<GenericValue> bedcessTaxComponents = EntityUtil.filterByCondition(taxComponentMap, EntityCondition.makeCondition("componentType", EntityOperator.EQUALS, "BEDCESS_PUR"));
+					if(UtilValidate.isNotEmpty(bedcessTaxComponents)){
+						bedcessTaxPercent = (EntityUtil.getFirst(bedcessTaxComponents)).getBigDecimal("componentRate");
 					}
-		        	if(taxAmount.compareTo(BigDecimal.ZERO)>0){
-		        		//taxAmount = (tempPrice.multiply(taxRate)).divide(PERCENT_SCALE, salestaxCalcDecimals, salestaxRounding);
-		        		taxAmount=taxAmount.setScale(salestaxCalcDecimals, salestaxRounding);
-		        		Map taxDetailMap = FastMap.newInstance();
-			    		taxDetailMap.put("taxType", "BEDSECCESS_PUR");
-			    		taxDetailMap.put("amount", taxAmount);
-			    		taxDetailMap.put("percentage", bedSecCessPercent);
-			    		taxList.add(taxDetailMap);
-			        	
-			    		GenericValue newProdPriceType = delegator.makeValue("ProductPriceAndType");        	 
-			    		newProdPriceType.set("fromDate", effectiveDate);
-			    		newProdPriceType.set("parentTypeId", "TAX");
-			    		newProdPriceType.set("productId", productId);
-			    		newProdPriceType.set("productStoreGroupId", "_NA_");
-			    		newProdPriceType.set("productPricePurposeId", "PURCHASE");
-			    		newProdPriceType.set("productPriceTypeId", "BEDSECCESS_PUR");
-			    		newProdPriceType.set("taxPercentage", bedSecCessPercent);
-			    		newProdPriceType.set("taxAmount", taxAmount);
-			    		newProdPriceType.set("currencyUomId", "INR");
-			    		prodPriceTypeList.add(newProdPriceType);
-			    		totalTaxAmt=totalTaxAmt.add(taxAmount.divide(quantity, 3, BigDecimal.ROUND_HALF_UP));
-		        	}
-		        	exciseDuty = exciseDuty.add(taxAmount);
-				}
-			    if(UtilValidate.isNotEmpty(prodQtyMap.get("vatAmount")) || !vatUnitRate.equals(BigDecimal.ZERO)){
-				    BigDecimal taxAmount = (BigDecimal)prodQtyMap.get("vatAmount");
-				    BigDecimal vatPercent=(BigDecimal)prodQtyMap.get("vatPercent");
-					//BigDecimal taxAmount = BigDecimal.ZERO;
-					if(UtilValidate.isNotEmpty(incTax)){
-						taxAmount = vatUnitRate.multiply(quantity);
+					
+					List<GenericValue> bedseccessTaxComponents = EntityUtil.filterByCondition(taxComponentMap, EntityCondition.makeCondition("componentType", EntityOperator.EQUALS, "BEDSECCESS_PUR"));
+					if(UtilValidate.isNotEmpty(bedseccessTaxComponents)){
+						bedseccessTaxPercent = (EntityUtil.getFirst(bedseccessTaxComponents)).getBigDecimal("componentRate");
 					}
-		        	if(taxAmount.compareTo(BigDecimal.ZERO)>0){
-		        		taxAmount=taxAmount.setScale(salestaxCalcDecimals, salestaxRounding);
-		        		Map taxDetailMap = FastMap.newInstance();
-			    		//taxDetailMap.put("taxType", "VAT_SALE");
-			    		taxDetailMap.put("taxType", "VAT_PUR");
-			    		taxDetailMap.put("amount", taxAmount);
-			    		taxDetailMap.put("percentage", vatPercent);
-			    		taxList.add(taxDetailMap);
-			        	/*if(taxPrice.compareTo(BigDecimal.ZERO)>0){
-			        		taxAmount = itemQuantity.multiply(taxPrice).setScale(salestaxCalcDecimals, salestaxRounding);
-			        	}*/
-			    		GenericValue newProdPriceType = delegator.makeValue("ProductPriceAndType");        	 
-			    		newProdPriceType.set("fromDate", effectiveDate);
-			    		newProdPriceType.set("parentTypeId", "TAX");
-			    		newProdPriceType.set("productId", productId);
-			    		newProdPriceType.set("productStoreGroupId", "_NA_");
-			    		newProdPriceType.set("productPricePurposeId", "PURCHASE");
-			    		newProdPriceType.set("productPriceTypeId", "VAT_PUR");
-			    		newProdPriceType.set("taxPercentage", vatPercent);
-			    		newProdPriceType.set("taxAmount", taxAmount);
-			    		newProdPriceType.set("currencyUomId", "INR");
-			    		prodPriceTypeList.add(newProdPriceType);
-			    		totalTaxAmt=totalTaxAmt.add(taxAmount.divide(quantity, 3, BigDecimal.ROUND_HALF_UP));
-		        	}
+					
 				}
-				if(UtilValidate.isNotEmpty(prodQtyMap.get("cstAmount")) || !cstUnitRate.equals(BigDecimal.ZERO)){
-					BigDecimal cstPercent=(BigDecimal)prodQtyMap.get("cstPercent");
-					BigDecimal taxAmount = (BigDecimal)prodQtyMap.get("cstAmount");
-					//BigDecimal taxAmount = BigDecimal.ZERO;
-					if(UtilValidate.isNotEmpty(incTax)){
-						taxAmount = cstUnitRate.multiply(quantity);
-					}
-		        	if(taxAmount.compareTo(BigDecimal.ZERO)>0){
-		        		//taxAmount = (tempPrice.multiply(taxRate)).divide(PERCENT_SCALE, salestaxCalcDecimals, salestaxRounding);
-		        		taxAmount=taxAmount.setScale(salestaxCalcDecimals, salestaxRounding);
-		        		Map taxDetailMap = FastMap.newInstance();
-			    		//taxDetailMap.put("taxType", "CST_SALE");
-			    		taxDetailMap.put("taxType", "CST_PUR");
-			    		taxDetailMap.put("amount", taxAmount);
-			    		taxDetailMap.put("percentage", cstPercent);
-			    		taxList.add(taxDetailMap);
-			    		GenericValue newProdPriceType = delegator.makeValue("ProductPriceAndType");        	 
-			    		newProdPriceType.set("fromDate", effectiveDate);
-			    		newProdPriceType.set("parentTypeId", "TAX");
-			    		newProdPriceType.set("productId", productId);
-			    		newProdPriceType.set("productStoreGroupId", "_NA_");
-			    		newProdPriceType.set("productPricePurposeId", "PURCHASE");
-			    		newProdPriceType.set("productPriceTypeId", "CST_PUR");
-			    		newProdPriceType.set("taxPercentage", cstPercent);
-			    		newProdPriceType.set("taxAmount", taxAmount);
-			    		newProdPriceType.set("currencyUomId", "INR");
-			    		prodPriceTypeList.add(newProdPriceType);
-			    		totalTaxAmt=totalTaxAmt.add(taxAmount.divide(quantity, 3, BigDecimal.ROUND_HALF_UP));
-		        	}
-				}
-			}
-			BigDecimal totalPrice = BigDecimal.ZERO;
-			if(UtilValidate.isNotEmpty(incTax)){
-				totalPrice = unitPrice;
-				unitPrice = unitPrice.subtract(totalTaxAmt);
 				
-			}else{
-				 totalPrice = unitPrice.add(totalTaxAmt);
-			}
+				if(UtilValidate.isNotEmpty(vatPercent) && vatPercent.compareTo(BigDecimal.ZERO)>0){
+					BigDecimal compareVatPercent = vatPercent.setScale(6);
+					
+					condExpr.clear();
+					condExpr.add(EntityCondition.makeCondition("taxType", EntityOperator.EQUALS, "VAT_PUR"));
+					condExpr.add(EntityCondition.makeCondition("taxRate", EntityOperator.EQUALS, compareVatPercent));
+					EntityCondition cond = EntityCondition.makeCondition(condExpr, EntityOperator.AND);
+					
+					List<GenericValue> taxComponentMap = delegator.findList("OrderTaxTypeAndComponentMap", cond, null, null, null, false);
+					taxComponentMap = EntityUtil.filterByDate(taxComponentMap, UtilDateTime.nowTimestamp());
+					
+					if(UtilValidate.isEmpty(taxComponentMap)){
+						Debug.logError("Tax component configuration for VAT missing ", module);
+						return ServiceUtil.returnError("Tax component configuration for VAT missing ");
+					}
+					
+					List<GenericValue> vatTaxComponent = EntityUtil.filterByCondition(taxComponentMap, EntityCondition.makeCondition("componentType", EntityOperator.EQUALS, "VAT_PUR"));
+					if(UtilValidate.isNotEmpty(vatTaxComponent)){
+						vatTaxPercent = (EntityUtil.getFirst(vatTaxComponent)).getBigDecimal("componentRate");
+					}
+					
+				}
+				
+				if(UtilValidate.isNotEmpty(cstPercent) && cstPercent.compareTo(BigDecimal.ZERO)>0){
+					BigDecimal compareCstPercent = cstPercent.setScale(6);
+					
+					condExpr.clear();
+					condExpr.add(EntityCondition.makeCondition("taxType", EntityOperator.EQUALS, "CST_PUR"));
+					condExpr.add(EntityCondition.makeCondition("taxRate", EntityOperator.EQUALS, compareCstPercent));
+					EntityCondition cond = EntityCondition.makeCondition(condExpr, EntityOperator.AND);
+					
+					List<GenericValue> taxComponentMap = delegator.findList("OrderTaxTypeAndComponentMap", cond, null, null, null, false);
+					taxComponentMap = EntityUtil.filterByDate(taxComponentMap, UtilDateTime.nowTimestamp());
+					
+					if(UtilValidate.isEmpty(taxComponentMap)){
+						Debug.logError("Tax component configuration for CST missing ", module);
+						return ServiceUtil.returnError("Tax component configuration for CST missing ");
+					}
+					
+					List<GenericValue> cstTaxComponent = EntityUtil.filterByCondition(taxComponentMap, EntityCondition.makeCondition("componentType", EntityOperator.EQUALS, "CST_PUR"));
+					if(UtilValidate.isNotEmpty(cstTaxComponent)){
+						cstTaxPercent = (EntityUtil.getFirst(cstTaxComponent)).getBigDecimal("componentRate");
+					}
+					
+				}
+				
+				if(UtilValidate.isNotEmpty(incTax)){
+					
+					if(UtilValidate.isNotEmpty(vatTaxPercent) && vatTaxPercent.compareTo(BigDecimal.ZERO)>0){
+						Map<String,Object> exVatRateMap = UtilAccounting.getExclusiveTaxRate(unitPrice,vatTaxPercent);
+						vatUnitRate = (BigDecimal)exVatRateMap.get("taxAmount");
+					}
+					
+					if(UtilValidate.isNotEmpty(cstTaxPercent) && cstTaxPercent.compareTo(BigDecimal.ZERO)>0){
+						Map<String,Object> exCstRateMap = UtilAccounting.getExclusiveTaxRate(unitPrice,cstTaxPercent);
+						cstUnitRate = (BigDecimal)exCstRateMap.get("taxAmount");
+					}
+					
+					if(UtilValidate.isNotEmpty(bedTaxPercent) && bedTaxPercent.compareTo(BigDecimal.ZERO)>0){
+						
+						Map<String,Object> exBedRateMap = UtilAccounting.getExclusiveTaxRate(unitPrice.subtract(vatUnitRate.add(cstUnitRate)),bedTaxPercent);
+						bedUnitRate = (BigDecimal)exBedRateMap.get("taxAmount");
+						
+						
+						Map<String,Object> exBedCessRateMap = UtilAccounting.getExclusiveTaxRate(bedUnitRate,bedcessTaxPercent);
+						bedCessUnitRate = (BigDecimal)exBedCessRateMap.get("taxAmount");
+						
+						
+						Map<String,Object> exBedSecCessRateMap = UtilAccounting.getExclusiveTaxRate(bedUnitRate,bedseccessTaxPercent);
+						bedSecCessUnitRate = (BigDecimal)exBedSecCessRateMap.get("taxAmount");
+						
+					}
+					
+				}
+				else{
+					if(UtilValidate.isNotEmpty(bedTaxPercent) && bedTaxPercent.compareTo(BigDecimal.ZERO)>0){
+						
+						Map<String,Object> exBedRateMap = UtilAccounting.getInclusiveTaxRate(unitPrice, bedTaxPercent);
+						bedUnitRate = (BigDecimal)exBedRateMap.get("taxAmount");
+	
+						Map<String,Object> exBedCessRateMap = UtilAccounting.getInclusiveTaxRate(bedUnitRate, bedcessTaxPercent);
+						bedCessUnitRate = (BigDecimal)exBedCessRateMap.get("taxAmount");
+						
+						Map<String,Object> exBedSecCessRateMap = UtilAccounting.getInclusiveTaxRate(bedUnitRate,bedseccessTaxPercent);
+						bedSecCessUnitRate = (BigDecimal)exBedSecCessRateMap.get("taxAmount");
+						
+					}
+					BigDecimal baseValue = unitPrice.add((bedUnitRate.add(bedCessUnitRate)).add(bedSecCessUnitRate));
+					
+					if(UtilValidate.isNotEmpty(vatTaxPercent) && vatTaxPercent.compareTo(BigDecimal.ZERO)>0){
+						Map<String,Object> exVatRateMap = UtilAccounting.getInclusiveTaxRate(baseValue,vatTaxPercent);
+						vatUnitRate = (BigDecimal)exVatRateMap.get("taxAmount");
+					}
+					
+					if(UtilValidate.isNotEmpty(cstTaxPercent) && cstTaxPercent.compareTo(BigDecimal.ZERO)>0){
+						Map<String,Object> exCstRateMap = UtilAccounting.getExclusiveTaxRate(baseValue,cstTaxPercent);
+						cstUnitRate = (BigDecimal)exCstRateMap.get("taxAmount");
+					}
+				}
+				if(unitPrice.compareTo(BigDecimal.ZERO)>0){
+					if(!bedUnitRate.equals(BigDecimal.ZERO)){
+						
+						BigDecimal taxAmount = bedUnitRate.multiply(quantity);
+						
+						if(taxAmount.compareTo(BigDecimal.ZERO)>0){
+			        		taxAmount = (taxAmount).setScale(salestaxCalcDecimals, salestaxRounding);
+			        		Map taxDetailMap = FastMap.newInstance();
+				    		taxDetailMap.put("taxType", "BED_PUR");
+				    		taxDetailMap.put("amount", taxAmount);
+				    		taxDetailMap.put("percentage", bedTaxPercent);
+				    		taxList.add(taxDetailMap);
+	             
+				    		GenericValue newProdPriceType = delegator.makeValue("ProductPriceAndType");        	 
+				    		newProdPriceType.set("fromDate", effectiveDate);
+				    		newProdPriceType.set("parentTypeId", "TAX");
+				    		newProdPriceType.set("productId", productId);
+				    		newProdPriceType.set("productStoreGroupId", "_NA_");
+				    		newProdPriceType.set("productPricePurposeId", "PURCHASE");
+				    		newProdPriceType.set("productPriceTypeId", "BED_PUR");
+				    		newProdPriceType.set("taxPercentage", bedTaxPercent);
+				    		newProdPriceType.set("taxAmount", taxAmount);
+				    		newProdPriceType.set("currencyUomId", "INR");
+				    		prodPriceTypeList.add(newProdPriceType);
+				    		totalTaxAmt=totalTaxAmt.add(taxAmount.divide(quantity, 3, BigDecimal.ROUND_HALF_UP));
+			        	}
+			        	exciseDuty = exciseDuty.add(taxAmount);
+			        	
+					}
+
+					if(!bedCessUnitRate.equals(BigDecimal.ZERO)){
+					    
+						BigDecimal taxAmount = bedCessUnitRate.multiply(quantity);
+
+						if(taxAmount.compareTo(BigDecimal.ZERO)>0){
+			        		//taxAmount = (tempPrice.multiply(taxRate)).divide(PERCENT_SCALE, salestaxCalcDecimals, salestaxRounding);
+			        		taxAmount=taxAmount.setScale(salestaxCalcDecimals, salestaxRounding);
+			        		Map taxDetailMap = FastMap.newInstance();
+				    		taxDetailMap.put("taxType", "BEDCESS_PUR");
+				    		taxDetailMap.put("amount", taxAmount);
+				    		taxDetailMap.put("percentage", bedcessTaxPercent);
+				    		taxList.add(taxDetailMap);
+				    		
+				    		GenericValue newProdPriceType = delegator.makeValue("ProductPriceAndType");        	 
+				    		newProdPriceType.set("fromDate", effectiveDate);
+				    		newProdPriceType.set("parentTypeId", "TAX");
+				    		newProdPriceType.set("productId", productId);
+				    		newProdPriceType.set("productStoreGroupId", "_NA_");
+				    		newProdPriceType.set("productPricePurposeId", "PURCHASE");
+				    		newProdPriceType.set("productPriceTypeId", "BEDCESS_PUR");
+				    		newProdPriceType.set("taxPercentage", bedcessTaxPercent);
+				    		newProdPriceType.set("taxAmount", taxAmount);
+				    		newProdPriceType.set("currencyUomId", "INR");
+				    		prodPriceTypeList.add(newProdPriceType);
+				    		totalTaxAmt=totalTaxAmt.add(taxAmount.divide(quantity, 3, BigDecimal.ROUND_HALF_UP));
+			        	}
+			        	exciseDuty = exciseDuty.add(taxAmount);
+					}
+
+				    if(!bedSecCessUnitRate.equals(BigDecimal.ZERO)){
+					    
+				    	BigDecimal taxAmount = bedSecCessUnitRate.multiply(quantity);
+						
+						if(taxAmount.compareTo(BigDecimal.ZERO)>0){
+			        		taxAmount=taxAmount.setScale(salestaxCalcDecimals, salestaxRounding);
+			        		Map taxDetailMap = FastMap.newInstance();
+				    		taxDetailMap.put("taxType", "BEDSECCESS_PUR");
+				    		taxDetailMap.put("amount", taxAmount);
+				    		taxDetailMap.put("percentage", bedseccessTaxPercent);
+				    		taxList.add(taxDetailMap);
+				        	
+				    		GenericValue newProdPriceType = delegator.makeValue("ProductPriceAndType");        	 
+				    		newProdPriceType.set("fromDate", effectiveDate);
+				    		newProdPriceType.set("parentTypeId", "TAX");
+				    		newProdPriceType.set("productId", productId);
+				    		newProdPriceType.set("productStoreGroupId", "_NA_");
+				    		newProdPriceType.set("productPricePurposeId", "PURCHASE");
+				    		newProdPriceType.set("productPriceTypeId", "BEDSECCESS_PUR");
+				    		newProdPriceType.set("taxPercentage", bedseccessTaxPercent);
+				    		newProdPriceType.set("taxAmount", taxAmount);
+				    		newProdPriceType.set("currencyUomId", "INR");
+				    		prodPriceTypeList.add(newProdPriceType);
+				    		totalTaxAmt=totalTaxAmt.add(taxAmount.divide(quantity, 3, BigDecimal.ROUND_HALF_UP));
+			        	}
+			        	exciseDuty = exciseDuty.add(taxAmount);
+					}
+				    
+				    if( !vatUnitRate.equals(BigDecimal.ZERO)){
+					    
+				    	BigDecimal taxAmount = vatUnitRate.multiply(quantity);
+						
+				    	if(taxAmount.compareTo(BigDecimal.ZERO)>0){
+			        		taxAmount=taxAmount.setScale(salestaxCalcDecimals, salestaxRounding);
+			        		Map taxDetailMap = FastMap.newInstance();
+				    		taxDetailMap.put("taxType", "VAT_PUR");
+				    		taxDetailMap.put("amount", taxAmount);
+				    		taxDetailMap.put("percentage", vatPercent);
+				    		taxList.add(taxDetailMap);
+
+				    		GenericValue newProdPriceType = delegator.makeValue("ProductPriceAndType");        	 
+				    		newProdPriceType.set("fromDate", effectiveDate);
+				    		newProdPriceType.set("parentTypeId", "TAX");
+				    		newProdPriceType.set("productId", productId);
+				    		newProdPriceType.set("productStoreGroupId", "_NA_");
+				    		newProdPriceType.set("productPricePurposeId", "PURCHASE");
+				    		newProdPriceType.set("productPriceTypeId", "VAT_PUR");
+				    		newProdPriceType.set("taxPercentage", vatPercent);
+				    		newProdPriceType.set("taxAmount", taxAmount);
+				    		newProdPriceType.set("currencyUomId", "INR");
+				    		prodPriceTypeList.add(newProdPriceType);
+				    		totalTaxAmt=totalTaxAmt.add(taxAmount.divide(quantity, 3, BigDecimal.ROUND_HALF_UP));
+			        	}
+					}
+					if( !cstUnitRate.equals(BigDecimal.ZERO)){
+						
+						BigDecimal taxAmount = cstUnitRate.multiply(quantity);
+
+						if(taxAmount.compareTo(BigDecimal.ZERO)>0){
+			        		taxAmount=taxAmount.setScale(salestaxCalcDecimals, salestaxRounding);
+			        		Map taxDetailMap = FastMap.newInstance();
+				    		taxDetailMap.put("taxType", "CST_PUR");
+				    		taxDetailMap.put("amount", taxAmount);
+				    		taxDetailMap.put("percentage", cstPercent);
+				    		taxList.add(taxDetailMap);
+
+				    		GenericValue newProdPriceType = delegator.makeValue("ProductPriceAndType");        	 
+				    		newProdPriceType.set("fromDate", effectiveDate);
+				    		newProdPriceType.set("parentTypeId", "TAX");
+				    		newProdPriceType.set("productId", productId);
+				    		newProdPriceType.set("productStoreGroupId", "_NA_");
+				    		newProdPriceType.set("productPricePurposeId", "PURCHASE");
+				    		newProdPriceType.set("productPriceTypeId", "CST_PUR");
+				    		newProdPriceType.set("taxPercentage", cstPercent);
+				    		newProdPriceType.set("taxAmount", taxAmount);
+				    		newProdPriceType.set("currencyUomId", "INR");
+				    		prodPriceTypeList.add(newProdPriceType);
+				    		totalTaxAmt=totalTaxAmt.add(taxAmount.divide(quantity, 3, BigDecimal.ROUND_HALF_UP));
+			        	}
+					}
+				}
+				BigDecimal totalPrice = BigDecimal.ZERO;
+				if(UtilValidate.isNotEmpty(incTax)){
+					totalPrice = unitPrice;
+					unitPrice = unitPrice.subtract(totalTaxAmt);
+					
+				}else{
+					 totalPrice = unitPrice.add(totalTaxAmt);
+				}
 			//BigDecimal totalPrice = unitPrice;//as of now For PurchaseOrder listPrice is same like unitPrice
 			basicAmount = basicAmount.add(unitPrice.multiply(quantity));
 		
@@ -1965,6 +1926,7 @@ public class MaterialPurchaseServices {
 				item = cart.findCartItem(itemIndx);
 				item.setListPrice(totalPrice);
 	    		item.setTaxDetails(taxList);
+	    		
 			}
 			catch (Exception exc) {
 				Debug.logError("Error adding product with id " + productId + " to the cart: " + exc.getMessage(), module);
@@ -1992,8 +1954,35 @@ public class MaterialPurchaseServices {
 			Debug.logError(errMsg, "While Creating Order",module);
 			return ServiceUtil.returnError(" Error While Creating Order !"+errMsg);
 		}
-			
+		
 		orderId = (String) orderCreateResult.get("orderId");
+		
+		//set order Tax terms
+		List<GenericValue> orderItems = delegator.findList("OrderItem", EntityCondition.makeCondition("orderId", EntityOperator.EQUALS, orderId), UtilMisc.toSet("orderItemSeqId", "productId"), null, null, false);
+		for(GenericValue orderItem : orderItems){
+			String prodId = orderItem.getString("productId");
+			String orderItemSeqId = orderItem.getString("orderItemSeqId");
+			
+			List<Map> taxTerm = (List)taxTermsMap.get(prodId);
+			Map orderTermResult = FastMap.newInstance();
+			for(Map eachTaxTerm : taxTerm){
+				Map termCreateCtx = FastMap.newInstance();
+				termCreateCtx.put("userLogin", userLogin);
+				termCreateCtx.put("orderId", orderId);
+				termCreateCtx.put("orderItemSeqId", orderItemSeqId);
+				termCreateCtx.put("termTypeId", (String)eachTaxTerm.get("termTypeId"));
+				termCreateCtx.put("termValue", (BigDecimal)eachTaxTerm.get("termValue"));
+				termCreateCtx.put("uomId", (String)eachTaxTerm.get("uomId"));
+				orderTermResult = dispatcher.runSync("createOrderTerm",termCreateCtx);
+				if (ServiceUtil.isError(orderTermResult)) {
+					String errMsg =  ServiceUtil.getErrorMessage(orderTermResult);
+					Debug.logError(errMsg, "While Creating Order Tax Term",module);
+					return ServiceUtil.returnError(" Error While Creating Order Tax Term !"+errMsg);
+				}
+			}
+		}
+		
+		
 		//let's create Fright Adjustment here
     	 Boolean COGS_DISC_ATR = Boolean.FALSE;
     	 Map COGS_DISC_ATR_Map = FastMap.newInstance();
