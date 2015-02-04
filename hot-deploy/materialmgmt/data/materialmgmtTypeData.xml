@@ -80,6 +80,7 @@
      <StatusValidChange statusId="CRQ_SUBMITTED" statusIdTo="CRQ_REJECTED" transitionName="Reject"/>
      
      <StatusValidChange statusId="CRQ_ISSUED" statusIdTo="CRQ_COMPLETED" transitionName="Fulfill"/>
+      <StatusValidChange statusId="CRQ_ISSUED" statusIdTo="CRQ_SUBMITTED" transitionName="cancel Issue"/>
      <StatusValidChange statusId="CRQ_ISSUED" statusIdTo="CRQ_REJECTED" transitionName="Reject"/>
      
      <StatusValidChange statusId="CRQ_INPROCESS" statusIdTo="CRQ_ISSUED" transitionName="Receipts"/>
