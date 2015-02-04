@@ -187,12 +187,12 @@ public class CommonServices {
         String partyId = (String) context.get("partyId");
         String noteName = (String) context.get("noteName");
         String note = (String) context.get("note");
+        String noteType = (String) context.get("noteType");
         String noteId = delegator.getNextSeqId("NoteData");
         Locale locale = (Locale) context.get("locale");
         if (noteDate == null) {
             noteDate = UtilDateTime.nowTimestamp();
         }
-
 
         // check for a party id
         if (partyId == null) {
@@ -200,7 +200,7 @@ public class CommonServices {
                 partyId = userLogin.getString("partyId");
         }
 
-        Map<String, String> fields = UtilMisc.toMap("noteId", noteId, "noteName", noteName, "noteInfo", note,
+        Map<String, String> fields = UtilMisc.toMap("noteId", noteId, "noteName", noteName, "noteInfo", note, "noteType",noteType,
                 "noteParty", partyId, "noteDateTime", noteDate);
 
         try {
