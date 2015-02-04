@@ -137,6 +137,17 @@ under the License.
 					  </fo:table>
 					 <fo:block text-align="left" keep-together="always"  >&#160;&#160;--------------------------------------------------------------------------------------------------------------------------</fo:block>
 	               </fo:block>
+	               <#if noteList?has_content>
+	               <fo:block  font-size="12pt" keep-together="always"  white-space-collapse="false"  text-align="left">&#160;Notes :</fo:block>     
+						<fo:block>
+						   <#assign sno=1> 
+                              <#list noteList as noteEntry>
+								<fo:block text-align="left" keep-together="always" >&#160;&#160; &#160;&#160; &#160;&#160; &#160;&#160; ${sno?if_exists}&#160;&#160; ${noteEntry?if_exists}</fo:block>
+					          <#assign sno=sno+1> 
+                              </#list>  
+                        </fo:block>  	
+					<fo:block page-break-after="always"></fo:block>
+                   </#if>
 	               <fo:block linefeed-treatment="preserve">&#xA;</fo:block>
 	               <fo:block  font-size="12pt" keep-together="always"  white-space-collapse="false"  text-align="left">&#160;Terms and Conditions :</fo:block>     
 	               <fo:block  font-size="12pt" keep-together="always"  white-space-collapse="false"  text-align="left">&#160;1.Mother Dairy is not responsible for the premature opening of the quatations.When they are not properly </fo:block> 
@@ -151,7 +162,6 @@ under the License.
 	               <fo:block linefeed-treatment="preserve">&#xA;</fo:block>
 	               <fo:block  font-size="12pt" keep-together="always"  white-space-collapse="false"  text-align="left">&#160;  Thanking you,                                                                  Yours faithfully</fo:block>
 	               <fo:block  font-size="12pt" keep-together="always"  white-space-collapse="false"  text-align="left">&#160;                                                                                 for MOTHER DAIRY</fo:block>
-	               <fo:block linefeed-treatment="preserve">&#xA;</fo:block>
 	               <fo:block linefeed-treatment="preserve">&#xA;</fo:block>
 	              <fo:block  font-size="12pt" keep-together="always"  white-space-collapse="false"  text-align="left">&#160;                                                                                 MANAGER(PURCHASE)</fo:block>
 	           </fo:flow>   

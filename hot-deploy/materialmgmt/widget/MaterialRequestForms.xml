@@ -288,7 +288,12 @@
         <field use-when="&quot;statusId&quot;==&quot;ENQ_CREATED&quot;"  name="setStatusLink" title="Close Enquiry" widget-style="buttontext h3" tooltip="Close if all item in enquiry are shortlisted for PO">
         	<submit/>
         </field>
-        
+        <field name="Report" widget-style="buttontext">
+            <hyperlink target="MaterialEnquiryReport.pdf" description="Report" target-window="_blank">
+                <parameter param-name="partyId"/>
+                <parameter param-name="custRequestId"/>
+            </hyperlink>
+      </field>
     </form>
     
     <form name="ListCustRequestContent" type="list" list-name="custRequestContents"
@@ -645,9 +650,19 @@
     <form name="AddCustEnquiryNote" type="single" target="createCustEnquiryNote"
         focus-field-name="noteId" header-row-style="header-row" default-table-style="basic-table">
         <field name="custRequestId"><hidden/></field>
-        <field name="noteName"><text></text></field>
-        <field name="noteDate"><date-time type="timestamp"></date-time></field>
-        <!--  <field name="noteInfo"><text></text></field>-->
+<!--         <field name="noteName"><text></text></field> -->
+<!--         <field name="noteDate"><date-time type="timestamp"></date-time></field> -->
+		<field name="noteType" title="Note Type">
+           <drop-down allow-empty="false" >
+				<entity-options description="${description}" entity-name="Enumeration" key-field-name="enumId" >
+    				<entity-constraint name="enumId" value="INTERNAL_NOTE_ID"/>
+    			</entity-options>
+    			<entity-options description="${description}" entity-name="Enumeration" key-field-name="enumId" >
+    				<entity-constraint name="enumId" value="EXTERNAL_NOTE_ID"/>
+    			</entity-options>
+			</drop-down>
+        </field>
+         <field name="noteInfo"><textarea  default-value=""/></field>
         <field name="submitButton" title="${uiLabelMap.CommonSave}" widget-style="smallSubmit"><submit button-type="text-link"/></field>
         <field name="cancelLink" title="${uiLabelMap.CommonEmptyHeader}" widget-style="smallSubmit">
             <hyperlink target="ViewMaterialEnquiry" also-hidden="false" description="${uiLabelMap.CommonCancelDone}">
@@ -657,11 +672,11 @@
     </form>
     <form name="ListEnquiryNotes" type="list" use-row-submit="true"  title="" list-name="enquiryNotes"
         odd-row-style="alternate-row" default-table-style="basic-table hover-bar" paginate-target="PreBidNotes">
-        <auto-fields-entity entity-name="CustRequestNoteView" default-field-type="display"/>
+<!--         <auto-fields-entity entity-name="CustRequestNoteView" default-field-type="display"/> -->
         <field name="noteParty"><hidden/></field>
         <!-- <field name="noteType"><display/></field> -->
         <field name="noteId"><hidden/></field>
-        <field name="noteName"><display></display></field>
+<!--         <field name="noteName"><display></display></field> -->
         <field name="noteInfo" title="Note"><display/></field>
         <field name="noteDateTime" title="Note Date Time"><display description="${groovy:org.ofbiz.base.util.UtilDateTime.toDateString(noteDateTime, &quot;dd-MM-yyyy HH:mm:ss&quot;)}"/></field>
         <field name="custRequestId"><hidden/></field>

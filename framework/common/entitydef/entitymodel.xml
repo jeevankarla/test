@@ -343,10 +343,14 @@ under the License.
             package-name="org.ofbiz.common.note"
             title="Note Data Entity">
       <field name="noteId" type="id-ne"></field>
+      <field name="noteType" type="id-ne"></field>
       <field name="noteName" type="name"></field>
       <field name="noteInfo" type="very-long"></field>
       <field name="noteDateTime" type="date-time"></field>
       <prim-key field="noteId"/>
+      <relation type="one" fk-name="NOTE_TYPE" rel-entity-name="Enumeration">
+        <key-map field-name="enumId"/>
+      </relation>
     </entity>
 
   <!-- ========================================================= -->
