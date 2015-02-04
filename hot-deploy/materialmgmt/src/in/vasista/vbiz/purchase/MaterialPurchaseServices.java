@@ -102,7 +102,6 @@ public class MaterialPurchaseServices {
 			Debug.logError("Cannot process receipts without orderId: "+ orderId, module);
 			return "error";
 		}
-		
 		Timestamp receiptDate = null;
 		Timestamp supplierInvoiceDate = null;
 		Map<String, Object> paramMap = UtilHttp.getParameterMap(request);
@@ -111,18 +110,19 @@ public class MaterialPurchaseServices {
 			Debug.logError("No rows to process, as rowCount = " + rowCount, module);
 			return "error";
 		}
+		SimpleDateFormat SimpleDF = new SimpleDateFormat("dd:mm:yyyy hh:mm");
+		
 		SimpleDateFormat sdf = new SimpleDateFormat("dd MMMM, yyyy");
 		receiptDate = UtilDateTime.nowTimestamp();
 	  	if(UtilValidate.isNotEmpty(receiptDateStr)){
 	  		try {
-	  			receiptDate = new java.sql.Timestamp(sdf.parse(receiptDateStr).getTime());
+	  			receiptDate = new java.sql.Timestamp(SimpleDF.parse(receiptDateStr).getTime());
 		  	} catch (ParseException e) {
 		  		Debug.logError(e, "Cannot parse date string: " + receiptDateStr, module);
 		  	} catch (NullPointerException e) {
 	  			Debug.logError(e, "Cannot parse date string: " + receiptDateStr, module);
 		  	}
 	  	}
-	  	
 	  	if(UtilValidate.isNotEmpty(supplierInvoiceDateStr)){
 	  		try {
 	  			supplierInvoiceDate = new java.sql.Timestamp(sdf.parse(supplierInvoiceDateStr).getTime());
@@ -142,7 +142,6 @@ public class MaterialPurchaseServices {
 	  			Debug.logError(e, "Cannot parse date string: " + deliveryChallanDateStr, module);
 		  	}
 	  	}
-	  	
 	  	boolean beganTransaction = false;
 		try{
 			beganTransaction = TransactionUtil.begin(7200);
@@ -347,7 +346,6 @@ public class MaterialPurchaseServices {
 					inventoryReceiptCtx.put("orderId", ordItm.getString("orderId"));
 					inventoryReceiptCtx.put("orderItemSeqId", ordItm.getString("orderItemSeqId"));
 				}
-				
 				/*inventoryReceiptCtx.put("shipmentId", shipmentId);
 				inventoryReceiptCtx.put("shipmentItemSeqId", shipmentItemSeqId);*/
 				Map<String, Object> receiveInventoryResult;

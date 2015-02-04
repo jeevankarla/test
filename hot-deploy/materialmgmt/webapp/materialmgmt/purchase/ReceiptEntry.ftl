@@ -1,32 +1,34 @@
 <link type="text/css" href="<@ofbizContentUrl>/images/jquery/ui/css/ui-lightness/jquery-ui-1.8.13.custom.css</@ofbizContentUrl>" rel="Stylesheet" />	
 <link type="text/css" href="<@ofbizContentUrl>/images/jquery/plugins/multiSelect/jquery.multiselect.css</@ofbizContentUrl>" rel="Stylesheet" />
 
-
 <script type="text/javascript">
-
+	
+	function datetimepick(){
+	$("#effectiveDate").datetimepicker({
+			dateFormat:'dd:mm:yy',
+			showSecond: false,
+			timeFormat: 'hh:mm',
+	        changeMonth: true,
+			numberOfMonths: 1
+			});
+			$('#ui-datepicker-div').css('clip','auto');
+			
+			}
+	
 	$(document).ready(function(){
 	
-		$( "#effectiveDate" ).datepicker({
-			dateFormat:'d MM, yy',
-			changeMonth: true,
-			numberOfMonths: 1,
-			onSelect: function( selectedDate ) {
-				$( "#effectiveDate" ).datepicker("option", selectedDate);
-			}
-		});
+		//$('#ui-datetimepicker-div').css('clip','auto');
+			
+		
 		$( "#suppInvoiceDate" ).datepicker({
 			dateFormat:'d MM, yy',
 			changeMonth: true,
-			onSelect: function( selectedDate ) {
-				$( "#effectiveDate" ).datepicker("option", selectedDate);
-			}
+			
 		});
 		$( "#deliveryChallanDate" ).datepicker({
 			dateFormat:'d MM, yy',
 			changeMonth: true,
-			onSelect: function( selectedDate ) {
-				$( "#deliveryChallanDate" ).datepicker("option", selectedDate);
-			}
+			
 		});
 		$('#ui-datepicker-div').css('clip', 'auto');
 		
@@ -70,7 +72,7 @@
 					          	</td>       
 					       	<#else> 
 					        	<td valign='middle'>          
-					            	<input class='h3' type="text" name="effectiveDate" id="effectiveDate" value="${defaultEffectiveDate}"/>           		
+					            	<input class='h3' type="text" name="effectiveDate" id="effectiveDate" onmouseover="datetimepick()" value="${defaulteffectiveDate}"/>           		
 					            </td>
 					       	  </#if>
 					  	</tr>
@@ -229,7 +231,7 @@
 				
 				<form method="post" id="indententry" action="<@ofbizUrl>IndentEntryInit</@ofbizUrl>">  
 					<input type="hidden" name="receiptDate" id="receiptDate" value="${parameters.effectiveDate?if_exists}"/>
-				</form>
+			</form>
     		</div>
 		</div>
 	</div>
