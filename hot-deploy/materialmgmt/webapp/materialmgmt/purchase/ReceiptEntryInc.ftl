@@ -65,6 +65,7 @@
 <script language="javascript" type="text/javascript" src="<@ofbizContentUrl>/images/jquery/plugins/slickgrid/controls/slick.columnpicker.js</@ofbizContentUrl>"></script>
 <script language="javascript" type="text/javascript" src="<@ofbizContentUrl>/images/jquery/plugins/validate/jquery.validate.js</@ofbizContentUrl>"></script>
 <script language="javascript" type="text/javascript" src="<@ofbizContentUrl>/images/jquery/plugins/multiSelect/jquery.multiselect.js</@ofbizContentUrl>"></script>
+<script type="text/javascript" src="<@ofbizContentUrl>/images/jquery/plugins/datetimepicker/jquery-ui-timepicker-addon-0.9.3.min.js</@ofbizContentUrl>"></script>
 <script type="application/javascript">
     
     	
@@ -101,7 +102,7 @@
 			var prodId = productId.toUpperCase();
 			}
 			var qty = parseFloat(data[rowCount]["quantity"]);
-	 		if (!isNaN(qty)) {	 		
+	 		if (!isNaN(qty) && qty>0 ) {	 		
 				var inputProd = jQuery("<input>").attr("type", "hidden").attr("name", "productId_o_" + rowCount).val(prodId);
 				var inputQty = jQuery("<input>").attr("type", "hidden").attr("name", "quantity_o_" + rowCount).val(qty);
 				jQuery(formId).append(jQuery(inputProd));				
@@ -148,6 +149,11 @@
 		var dcNo = jQuery("<input>").attr("type", "hidden").attr("name", "deliveryChallanNo").val(deliveryChallanNo);
 		var deliveryChallanDate = $("#deliveryChallanDate").val();
 		var dcDate = jQuery("<input>").attr("type", "hidden").attr("name", "deliveryChallanDate").val(deliveryChallanDate);
+		var effectiveDate = $("#effectiveDate").val();
+		var effDate = jQuery("<input>").attr("type", "hidden").attr("name", "receiptDate").val(effectiveDate);
+		$("#receiptDate").val(effectiveDate);
+		
+		jQuery(formId).append(jQuery(effDate));
 		jQuery(formId).append(jQuery(suppInvoice));
 		jQuery(formId).append(jQuery(suppInvDate));
 		jQuery(formId).append(jQuery(order));

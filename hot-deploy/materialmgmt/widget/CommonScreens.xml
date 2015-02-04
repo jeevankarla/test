@@ -11,7 +11,7 @@
                  <property-map resource="OrderUiLabels" map-name="uiLabelMap" global="true"/>
                 <set field="layoutSettings.companyName" from-field="uiLabelMap.materialmgmtCompanyName" global="true"/>
                 <set field="layoutSettings.companySubtitle" from-field="uiLabelMap.materialmgmtCompanySubtitle" global="true"/>
-
+				<set field="layoutSettings.javaScripts[+0]" value="/images/jquery/plugins/datetimepicker/jquery-ui-timepicker-addon-0.9.3.min.js" global="true"/>
                 <set field="activeApp" value="materialmgmt" global="true"/>
                 <set field="applicationMenuName" value="MtMgmtAppBar" global="true"/>
                 <set field="applicationMenuLocation" value="component://materialmgmt/widget/materialmgmtMenus.xml" global="true"/>
