@@ -868,7 +868,10 @@ under the License.
 
         <make-value value-field="newEntity" entity-name="OrderTerm"/>
         <set-pk-fields map="parameters" value-field="newEntity"/>
-        <set value="_NA_" set-if-empty="true" field="newEntity.orderItemSeqId"/>
+        <if-empty field="newEntity.orderItemSeqId">
+        	<set value="_NA_" field="newEntity.orderItemSeqId"/>
+        </if-empty>
+        <!-- <set default-value="_NA_" set-if-empty="true" field="newEntity.orderItemSeqId" /> -->
         <set-nonpk-fields map="parameters" value-field="newEntity"/>
 
         <create-value value-field="newEntity"/>

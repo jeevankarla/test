@@ -135,18 +135,11 @@ if(orderHeader && orderHeader.statusId == "ORDER_CREATED"){
 		newObj.put("cProductId",eachItem.productId);
 		newObj.put("cProductName", prodDetail.brandName +" [ " +prodDetail.description+"]");
 		newObj.put("quantity",eachItem.quantity);
-		newObj.put("UPrice",eachItem.unitPrice);
+		newObj.put("unitPrice",eachItem.unitPrice);
 		newObj.put("amount", amount);
-		newObj.put("ExcisePercent",eachItem.bedPercent);
-		newObj.put("Excise",eachItem.bedAmount);
-		newObj.put("CSTPercent", eachItem.cstPercent);
-		newObj.put("CST", eachItem.cstAmount);
-		newObj.put("VatPercent", eachItem.vatPercent);
-		newObj.put("VAT", eachItem.vatAmount);
-		newObj.put("bedCessPercent", eachItem.bedcessPercent);
-		newObj.put("bedCessAmount", eachItem.bedcessAmount);
-		newObj.put("bedSecCessPercent", eachItem.bedseccessPercent);
-		newObj.put("bedSecCessAmount", eachItem.bedseccessAmount);
+		newObj.put("bedPercent",eachItem.bedPercent);
+		newObj.put("cstPercent", eachItem.cstPercent);
+		newObj.put("vatPercent", eachItem.vatPercent);
 		orderItemsJSON.add(newObj);
 	}
 	context.put("orderItemsJSON", orderItemsJSON);

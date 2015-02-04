@@ -440,111 +440,21 @@ function makeDatePicker(fromDateId ,thruDateId){
 								<table width="50%" border="0" cellspacing="0" cellpadding="0">
 										
 					 		       <tr><td><br/></td></tr>
-					 		        <#--<tr>
-							        	<td align='left' valign='middle' nowrap="nowrap"><div class='h3'>Freight Charges: </div></td>
-					       				<td valign='middle' align='left'> 
-					       					<#if orderId?exists && orderAdjInfo.get("freightCharges")?exists>
-						    					<input class='h3' type="text" size="20" maxlength="30" name="freightCharges" id="freightCharges" value="${orderAdjInfo.get("freightCharges")?if_exists}" onblur="javascript:addToInvoiceAmount();" />
-						    				<#else>
-						    					<input class='h3' type="text" size="20" maxlength="30" name="freightCharges" id="freightCharges" onblur="javascript:addToInvoiceAmount();"/>
-						    				</#if>
-					           				          
-					       				</td>
-					       				<td>&nbsp;&nbsp;&nbsp;</td>
-					       				<td align='left' valign='middle' nowrap="nowrap"><div class='h3'>Discount: </div></td>
-							         	<td valign='middle' align='left'>
-							         		<#if orderId?exists && orderAdjInfo.get("discount")?exists>
-						    					<input class='h3' type="text" size="20" maxlength="30" name="discount" id="discount" value="${orderAdjInfo.get("discount")?if_exists}" onblur="javascript:addToInvoiceAmount();" />
-						    				<#else>
-						             			<input class='h3' type="text" size="20" maxlength="30" name="discount" id="discount" onblur="javascript:addToInvoiceAmount();"  />
-						             		</#if>          
-					          			</td>
-					          			<td>&nbsp;&nbsp;&nbsp;</td>
-					       				<td align='left' valign='middle' nowrap="nowrap"><div class='h3'>Insurance: </div></td>
-							         	<td valign='middle' align='left'>
-							         		<#if orderId?exists && orderAdjInfo.get("insurence")?exists>
-						    					<input class='h3' type="text" size="20" maxlength="30" name="insurence" id="insurence" value="${orderAdjInfo.get("insurence")?if_exists}" onblur="javascript:addToInvoiceAmount();" />
-						    				<#else> 
-					             				<input class='h3' type="text" size="20" maxlength="30" name="insurence" id="insurence" onblur="javascript:addToInvoiceAmount();"/>
-					             			</#if>          
-					          			</td>
-					          			<td>&nbsp;&nbsp;&nbsp;</td>
-					          			<td align='left' valign='middle' nowrap="nowrap"><div class='h3'>Pack.&Fowdg: </div></td>
-							         	<td valign='middle' align='left'>
-							         		<#if orderId?exists && orderAdjInfo.get("packAndFowdg")?exists>
-						    					<input class='h3' type="text" size="20" maxlength="30" name="packAndFowdg" id="packAndFowdg" value="${orderAdjInfo.get("packAndFowdg")?if_exists}" onblur="javascript:addToInvoiceAmount();" />
-						    				<#else>
-						    					<input class='h3' type="text" size="20" maxlength="30" name="packAndFowdg" id="packAndFowdg" onblur="javascript:addToInvoiceAmount();"/> 
-						    				</#if> 
-							         	 
-					          			</td>
-					 		         </tr>
-					 		        <tr><td><br/></td></tr>-->
 					 		        <tr>
-							        	<#--<td align='left' valign='middle' nowrap="nowrap"><div class='h3'>Other Charges: </div></td>
-					       				<td valign='middle' align='left'>
-					       					<#if orderId?exists && orderAdjInfo.get("otherCharges")?exists>
-						    					<input class='h3' type="text" size="20" maxlength="30" name="otherCharges" id="otherCharges" onblur="javascript:addToInvoiceAmount();" value="${orderAdjInfo.get("otherCharges")?if_exists}"/>
-						    				<#else> 
-					           					<input class='h3' type="text" size="20" maxlength="30" name="otherCharges" id="otherCharges" onblur="javascript:addToInvoiceAmount();"/>
-					           				</#if>          
-					       				</td>-->
-					          			<td align='left' valign='middle' nowrap="nowrap"><div class='h3'>Inc Tax: <input class='h3' type="checkbox" id="incTax" name="incTax" value="true"/></div></td>
-							         	<td>&nbsp;&nbsp;&nbsp;</td>
-					          			<td align='left' valign='middle' nowrap="nowrap"><div class='h3'>Add BED: <input class='h3' type="checkbox" size="20" id="addBED" name="addBED" value="" onclick="javascript:addBedColumns();"/></div></td>
+							        	<td align='left' valign='middle' nowrap="nowrap"><div class='h3'>Inc Tax: <input class='h3' type="checkbox" id="incTax" name="incTax" value="true"/></div></td>
+							         	
 					 		         </tr>
 					 		          <tr><td><br/></td></tr>
-					 		          <tr><td colspan="6"> <span class="tooltip"> Note:once BED columns added and input given to BED columns You cant remove them</span></tr>
 					        	</table>
 							</div>
 							<div class="grid-header" style="width:100%">
 								<label>Purchase Entry </label><span id="totalAmount"></span>
 							</div>
 							<div id="myGrid1" style="width:100%;height:250px;"></div>
-							<#-->
-						    	<div align="center">
-						    	<table width="60%" border="0" cellspacing="0" cellpadding="0">  
-						    	<tr><td></td><td></td></tr>
-						    	<tr><td> &nbsp;<input type="button" style="padding:.3em" name="changeSave" id="changeSave" value="Save" /></td>
-						    	<td> &nbsp;<input type="button" style="padding:.3em" id="changeCancel" value="Cancel"/> </td></tr>
-						    	 
-						    	</table>
-						    	</div>    -->
+							
 				             </div>  
 			          </div>
 			</div>        
-           
-            <#-->
-            	<fieldset>
-            	
-            	
-				    <table cellpadding="2" cellspacing="1" class='h2'>
-					          <tr>
-		          				<td align='left' valign='middle' nowrap="nowrap"></td>
-					            <td>
-					               <table border="0" cellspacing="2" id="productTable" style="width:200px;" align="center">
-					               <input type="button" id="addProduct" value="Add" />    <input type="button" id="delProduct" value="Del" />
-								    <tr>
-								        <td>Product</td>
-								         <td>Quantity</td>
-								          <td>UnitPrice</td>
-								    </tr>
-								    <tr>
-								        <td>
-								          <input type="text"  value="" name="productId_o_0"/>
-								        </td>
-							            <td>
-							                <input type="text" name="quantity_o_0" value="" />
-							            </td>
-							            <td>
-							                <input type="text" name="unitPrice_o_0" value="" />
-							            </td>
-								    </tr> 
-								</table>
-	          				     </td>
-					        </tr>
-		                 </table> 
-                    </fieldset>  -->
                </section>
                       <h3>Payment Terms</h3>
 			          <section>
