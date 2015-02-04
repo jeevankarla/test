@@ -2,6 +2,7 @@ package in.vasista.vbiz.rest;
 
 
 import java.util.Map;
+import java.util.List;
  
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
@@ -12,11 +13,13 @@ import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.Response;
  
 import javolution.util.FastMap;
+import javolution.util.FastList;
  
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.entity.DelegatorFactory;
 import org.ofbiz.entity.GenericDelegator;
+import org.ofbiz.entity.GenericValue;
 import org.ofbiz.service.GenericDispatcher;
 import org.ofbiz.service.GenericServiceException;
 import org.ofbiz.service.LocalDispatcher;
@@ -102,8 +105,20 @@ public class MaterialManagementResource {
             );
  
         Map<String, Object> context = FastMap.newInstance();
-        result = MaterialHelperServices.getMaterialProducts(dispatcher.getDispatchContext(),  context);
-		return result;
+        Map<String, Object> productListMap = MaterialHelperServices.getMaterialProducts(dispatcher.getDispatchContext(),  context);
+        List<GenericValue> productList = (List<GenericValue>)productListMap.get("productList");
+		List resultList = FastList.newInstance();
+
+    	for(GenericValue product : productList){
+            Map productMap = FastMap.newInstance();
+    		productMap.put("name",(String)product.get("internalName")); 
+    		productMap.put("description",(String)product.get("description"));                		
+    		productMap.put("productCategoryId",(String)product.get("primaryProductCategoryId"));  
+    		productMap.put("trackInventory",(String)product.get("Y"));                		    		
+		    resultList.add(productMap);	
+    	}
+    	result.put("productList", resultList);
+        return result;
 
     }
 }
