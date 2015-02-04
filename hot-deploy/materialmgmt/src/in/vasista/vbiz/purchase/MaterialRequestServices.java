@@ -1253,9 +1253,6 @@ public class MaterialRequestServices {
 	        	}
 	        	
                 List<GenericValue> itemIssuanceList = delegator.findList("ItemIssuance", EntityCondition.makeCondition("shipmentId", EntityOperator.EQUALS, shipmentId), null, null, null, false);
-	        	
-	        	Debug.log("===issuanceAndShipmentAndCustRequest==="+issuanceAndShipmentAndCustRequest);
-	        		            
 	            for(GenericValue itemShipIssuence:itemIssuanceList){
 	            	
 	                itemIssuanceId=itemShipIssuence.getString("itemIssuanceId");
