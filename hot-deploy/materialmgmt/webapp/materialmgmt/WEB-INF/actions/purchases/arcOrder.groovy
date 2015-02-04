@@ -45,6 +45,13 @@ productDescription = EntityUtil.getFieldListFromEntityList(productCategories, "d
 
 allDetailsMap.put("productDescription",productDescription);
 
+//FileNo
+fileNumber = delegator.findOne("OrderAttribute",["orderId":orderId,"attrName":"FILE_NUMBER"],false);
+if(fileNumber){
+	fileNo=fileNumber.get("attrValue");
+	allDetailsMap.put("fileNo",fileNo);
+}
+
 //referNumber
 referNumber = delegator.findOne("OrderHeader",["orderId":orderId],false);
 if(referNumber){

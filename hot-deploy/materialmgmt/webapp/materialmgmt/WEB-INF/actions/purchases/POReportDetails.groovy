@@ -55,6 +55,7 @@ if(UtilValidate.isNotEmpty(orderHeader)){
    orderDate=orderHeader.orderDate;
    allDetailsMap.put("orderDate",orderDate);
  }
+
 // partyId,partyName
 if(UtilValidate.isNotEmpty(orderId)){
 	List conlist=[];
@@ -63,7 +64,7 @@ if(UtilValidate.isNotEmpty(orderId)){
 	cond=EntityCondition.makeCondition(conlist,EntityOperator.AND);
 	vendorDetails = delegator.findList("OrderRole", cond , null, null, null, false );
 	vendorDetail=EntityUtil.getFirst(vendorDetails);
-	if(UtilValidate.isNotEmpty(vendorDetail.partyId)){
+	if(UtilValidate.isNotEmpty(vendorDetail)){
 	partyId=vendorDetail.partyId;
 	allDetailsMap.put("partyId",partyId);
 		partyName =  PartyHelper.getPartyName(delegator, partyId, false);
