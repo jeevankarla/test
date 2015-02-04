@@ -231,7 +231,9 @@ public class MaterialPurchaseServices {
 				
 				String productId = "";
 		        String quantityStr = "";
+		        String deliveryChallanQtyStr = "";
 				BigDecimal quantity = BigDecimal.ZERO;
+				BigDecimal deliveryChallanQty = BigDecimal.ZERO;
 				Map productQtyMap = FastMap.newInstance();
 				String thisSuffix = UtilHttp.MULTI_ROW_DELIMITER + i;
 				if (paramMap.containsKey("productId" + thisSuffix)) {
@@ -251,6 +253,13 @@ public class MaterialPurchaseServices {
 				}		  
 				if(UtilValidate.isNotEmpty(quantityStr)){
 					quantity = new BigDecimal(quantityStr);
+				}
+				//DC qty here
+				if (paramMap.containsKey("deliveryChallanQty" + thisSuffix)) {
+					deliveryChallanQtyStr = (String) paramMap.get("deliveryChallanQty" + thisSuffix);
+				}
+				if(UtilValidate.isNotEmpty(deliveryChallanQtyStr)){
+					deliveryChallanQty = new BigDecimal(deliveryChallanQtyStr);
 				}
 				
 				if(UtilValidate.isEmpty(withoutPO)){
@@ -336,6 +345,9 @@ public class MaterialPurchaseServices {
 				inventoryReceiptCtx.put("datetimeReceived", receiptDate);
 				inventoryReceiptCtx.put("quantityAccepted", quantity);
 				inventoryReceiptCtx.put("quantityRejected", BigDecimal.ZERO);
+				if(deliveryChallanQty.compareTo(BigDecimal.ZERO)>0){
+					inventoryReceiptCtx.put("deliveryChallanQty",deliveryChallanQty);
+		        }
 				inventoryReceiptCtx.put("inventoryItemTypeId", "NON_SERIAL_INV_ITEM");
 				inventoryReceiptCtx.put("ownerPartyId", supplierId);
 				/*inventoryReceiptCtx.put("consolidateInventoryReceive", "Y");*/
