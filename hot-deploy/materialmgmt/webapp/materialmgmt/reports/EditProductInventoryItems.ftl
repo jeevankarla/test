@@ -53,7 +53,7 @@ under the License.
                     <#assign inventoryItemDetailFirst = Static["org.ofbiz.entity.util.EntityUtil"].getFirst(inventoryItem.getRelated("InventoryItemDetail", Static["org.ofbiz.base.util.UtilMisc"].toList("effectiveDate")))?if_exists>
                     <#if curInventoryItemType?exists>
                         <tr valign="middle"<#if rowClass == "1"> class="alternate-row"</#if>>
-                            <td><a href="/facility/control/EditInventoryItem?inventoryItemId=${(inventoryItem.inventoryItemId)?if_exists}${externalKeyParam}" class="buttontext">${(inventoryItem.inventoryItemId)?if_exists}</a></td>
+                            <td><#--<a href="/facility/control/EditInventoryItem?inventoryItemId=${(inventoryItem.inventoryItemId)?if_exists}${externalKeyParam}" class="buttontext">-->${(inventoryItem.inventoryItemId)?if_exists}<#--</a>--></td>
                             <td>&nbsp;${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(inventoryItem.datetimeReceived?if_exists, "dd/MM/yyyy")}</td>
                             <td><@ofbizCurrency amount=inventoryItem.unitCost isoCode=inventoryItem.currencyUomId/></td>
                             <td>
