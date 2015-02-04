@@ -480,9 +480,9 @@ function makeDatePicker(fromDateId ,thruDateId){
 									    <tr></tr>
 									    <tr>
 								        	<td align="center">Term Type</td>
-								         	<td align="center">Term Days</td>
+								         	<#--<td align="center">Term Days</td>
 								          	<td align="center">Term Value</td>
-								          	<td align="center">UOM</td>
+								          	<td align="center">UOM</td>-->
 								          	<td align="center">Description</td>
 								    	</tr>
 								    	<#if orderId?exists && orderPayTermInfo?has_content>
@@ -493,7 +493,7 @@ function makeDatePicker(fromDateId ,thruDateId){
 										        	<td>
 										          		<input type="text"  name="paymentTermDesc" value="${eachPayTerm.get("termTypeDescription")?if_exists}" size="40"/>
 										        	</td>
-									            	<td>
+									            	<#--<td>
 									                	<input type="text" name="paymentTermDays_o_${rowCount}" value="${eachPayTerm.get("termDays")?if_exists}" size="10"/>
 									            	</td>
 									            	<td>
@@ -510,7 +510,7 @@ function makeDatePicker(fromDateId ,thruDateId){
 									            			</#if>
 									            			
 									            		</select>
-									            	</td>
+									            	</td>-->
 									            	<td>
 									                	<input type="textarea" cols="40" rows="5" maxlength="255" name="paymentTermDescription_o_${rowCount}" value="${eachPayTerm.get("description")?if_exists}" />
 									            	</td>
@@ -522,7 +522,7 @@ function makeDatePicker(fromDateId ,thruDateId){
 								        	<td>
 								        		<select id='payTermDes' name="paymentTermTypeId_o_0" class='flexselect' ></select>
 								        	</td>
-							            	<td>
+							            	<#--<td>
 							                	<input type="text" name="paymentTermDays_o_0" value=""  size="10"/>
 							            	</td>
 							            	<td>
@@ -533,7 +533,7 @@ function makeDatePicker(fromDateId ,thruDateId){
 							            			<option value="INR">Rupees</option>
 							            			<option value="PERCENT">Percent</option>
 							            		</select>
-							            	</td>
+							            	</td>-->
 							            	<td>
 							                	<input type="textarea" name="paymentTermDescription_o_0" value="" maxlength="255"/>
 							            	</td>
@@ -564,9 +564,9 @@ function makeDatePicker(fromDateId ,thruDateId){
 								    </tr>
 								    <tr>
 							        	<td align="center">Term Type</td>
-							         	<td align="center">Term Days</td>
+							         	<#--<td align="center">Term Days</td>
 							          	<td align="center">Term Value</td>
-							          	<td align="center">UOM</td>
+							          	<td align="center">UOM</td>-->
 							          	<td align="center">Description</td>
 								    </tr>
 								    <#if orderId?exists && orderShipTermInfo?has_content>
@@ -577,7 +577,7 @@ function makeDatePicker(fromDateId ,thruDateId){
 									        	<td>
 									          		<input type="text"  name="deliveryTermDesc" value="${eachShipTerm.get("termTypeDescription")?if_exists}" size="40"/>
 									        	</td>
-								            	<td>
+								            	<#--<td>
 								                	<input type="text" name="deliveryTermDays_o_${rowCount}" value="${eachShipTerm.get("termDays")?if_exists}" size="10"/>
 								            	</td>
 								            	<td>
@@ -594,7 +594,7 @@ function makeDatePicker(fromDateId ,thruDateId){
 								            			</#if>
 								            			
 								            		</select>
-								            	</td>
+								            	</td>-->
 								            	<td>
 								                	<input type="textarea" name="deliveryTermDescription_o_${rowCount}" value="${eachShipTerm.get("description")?if_exists}" maxlength="255"/>
 								            	</td>
@@ -606,7 +606,7 @@ function makeDatePicker(fromDateId ,thruDateId){
 									        <td>
 								        		<select id='delTermDes' name="deliveryTermTypeId_o_0" class='flexselect' ></select>
 									        </td>
-								            <td>
+								            <#--<td>
 								                <input type="text" name="deliveryTermDays_o_0" value="" size="10"/>
 								            </td>
 								            <td>
@@ -617,7 +617,7 @@ function makeDatePicker(fromDateId ,thruDateId){
 							            			<option value="INR">Rupees</option>
 							            			<option value="PERCENT">Percent</option>
 							            		</select>
-							            	</td>
+							            	</td>-->
 							            	<td>
 							                	<input type="textarea" name="deliveryTermDescription_o_0" value="" maxlength="255"/>
 							            	</td>
@@ -727,7 +727,7 @@ function makeDatePicker(fromDateId ,thruDateId){
 	    var rows = document.getElementById("paymentTermsTable").getElementsByTagName("tr").length;
 	    if (rows > 0) {
         var rowCount = rows-4;
-        table.append('<tr><td> <select id ="payTermDes" name="paymentTermTypeId_o_'+rowCount+'" class = "flexselect" /></td><td> <input type="text" size="10" name="paymentTermDays_o_'+rowCount+'" value="" /> </td><td> <input type="text" size="10" name="paymentTermValue_o_'+rowCount+'" value="" /> </td><td><select name="paymentTermUom_o_'+rowCount+'"><option value="INR">Rupees</option><option value="PERCENT">Percent</option></select></td><td><input type="textarea" name="paymentTermDescription_o_'+rowCount+'" value="" maxlength="255"/>	</td></tr>');
+        table.append('<tr><td> <select id ="payTermDes" name="paymentTermTypeId_o_'+rowCount+'" class = "flexselect" /></td><#--<td> <input type="text" size="10" name="paymentTermDays_o_'+rowCount+'" value="" /> </td><td> <input type="text" size="10" name="paymentTermValue_o_'+rowCount+'" value="" /> </td><td><select name="paymentTermUom_o_'+rowCount+'"><option value="INR">Rupees</option><option value="PERCENT">Percent</option></select></td>--><td><input type="textarea" name="paymentTermDescription_o_'+rowCount+'" value="" maxlength="255"/>	</td></tr>');
     }
   	$.each(paymentTerms, function(key, val){
     	$("select[name*='paymentTermTypeId']").append('<option value="' + val.value + '">' + val.label + " [" + val.value + "]" + '</option>');
@@ -755,7 +755,7 @@ function makeDatePicker(fromDateId ,thruDateId){
      var rows = document.getElementById("deliveryTermsTable").getElementsByTagName("tr").length;
     if (rows >0) {
         var rowCount = rows-3;
-        table.append('<tr><td> <select id ="delTermDes" name="deliveryTermTypeId_o_'+rowCount+'" class = "flexselect" /></td><td> <input type="text" size="10" name="deliveryTermDays_o_'+rowCount+'" value="" /> </td><td> <input type="text" size="10" name="deliveryTermValue_o_'+rowCount+'" value="" /> </td><td><select name="deliveryTermUom_o_'+rowCount+'"><option value="INR">Rupees</option><option value="PERCENT">Percent</option></select></td><td><input type="textarea" name="deliveryTermDescription_o_'+rowCount+'" value="" maxlength="255"/></td></tr>');
+        table.append('<tr><td> <select id ="delTermDes" name="deliveryTermTypeId_o_'+rowCount+'" class = "flexselect" /></td><#--<td> <input type="text" size="10" name="deliveryTermDays_o_'+rowCount+'" value="" /> </td><td> <input type="text" size="10" name="deliveryTermValue_o_'+rowCount+'" value="" /> </td><td><select name="deliveryTermUom_o_'+rowCount+'"><option value="INR">Rupees</option><option value="PERCENT">Percent</option></select></td>--><td><input type="textarea" name="deliveryTermDescription_o_'+rowCount+'" value="" maxlength="255"/></td></tr>');
     }
     $.each(deliveryTerms, function(key, val){
     	$("select[name*='deliveryTermTypeId']").append('<option value="' + val.value + '">' + val.label + " [" + val.value + "]" + '</option>');

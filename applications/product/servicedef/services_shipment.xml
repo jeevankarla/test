@@ -762,6 +762,7 @@ under the License.
         <attribute name="receiptId" type="String" mode="OUT" optional="true"></attribute>
         <attribute name="orderCurrencyUnitPrice" type="String" mode="IN" optional="true"/>
         <attribute name="consolidateInventoryReceive" type="String" mode="IN" optional="true"/>
+        <attribute name="deliveryChallanQty" type="BigDecimal" mode="IN" optional="true"/>
         <override name="quantityAccepted" optional="false"/>
         <override name="quantityRejected" optional="false"/>
         <override name="inventoryItemTypeId" optional="false"/>

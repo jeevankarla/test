@@ -131,20 +131,24 @@ JSONArray paymentTermsJSON = new JSONArray();
 JSONArray deliveryTermsJSON = new JSONArray();
 JSONArray otherTermsJSON = new JSONArray();
 
+JSONObject newObj = new JSONObject();
+newObj.put("value","");
+newObj.put("label","");
+paymentTermsJSON.add(newObj);
+deliveryTermsJSON.add(newObj);
+otherTermsJSON.add(newObj);
+
 paymentTerms.each{ eachTerm ->
-	JSONObject newObj = new JSONObject();
 	newObj.put("value",eachTerm.termTypeId);
 	newObj.put("label",eachTerm.description);
 	paymentTermsJSON.add(newObj);
 }
 deliveryTerms.each{ eachTerm ->
-	JSONObject newObj = new JSONObject();
 	newObj.put("value",eachTerm.termTypeId);
 	newObj.put("label",eachTerm.description);
 	deliveryTermsJSON.add(newObj);
 }
 otherTerms.each{ eachTerm ->
-	JSONObject newObj = new JSONObject();
 	newObj.put("value",eachTerm.termTypeId);
 	newObj.put("label",eachTerm.description);
 	otherTermsJSON.add(newObj);
