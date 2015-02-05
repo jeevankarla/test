@@ -142,12 +142,21 @@ under the License.
 	               <#if noteList?has_content>
 	               <fo:block  font-size="12pt" keep-together="always"  white-space-collapse="false"  text-align="left">&#160;Notes :</fo:block>     
 						<fo:block>
-						   <#assign sno=1> 
+						<fo:table>
+	                 	<fo:table-column column-width="5%"/>
+                    	<fo:table-column column-width="95%"/>
+							<fo:table-body>
+						  	 <#assign sno=1> 
                               <#list noteList as noteEntry>
-								<fo:block text-align="left" keep-together="always" >&#160;&#160; &#160;&#160; &#160;&#160; &#160;&#160; ${sno?if_exists}&#160;&#160; ${noteEntry?if_exists}</fo:block>
+                               <fo:table-row>
+								<fo:table-cell border-style="solid"><fo:block text-align="left" >${sno?if_exists}</fo:block></fo:table-cell>
+								<fo:table-cell border-style="solid"><fo:block text-align="left">${noteEntry?if_exists}</fo:block></fo:table-cell>
+							   </fo:table-row>
 					          <#assign sno=sno+1> 
                               </#list>  
-                        </fo:block>  	
+                             </fo:table-body>
+                          </fo:table>
+                        </fo:block>    	
 					<fo:block page-break-after="always"></fo:block>
                    </#if>
 	               <fo:block  font-size="12pt"  white-space-collapse="false">&#160; </fo:block>        
