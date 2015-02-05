@@ -2234,7 +2234,13 @@ public class ProductionRunServices {
         BigDecimal quantity = (BigDecimal)context.get("quantity");
         
         Map inputMap = FastMap.newInstance();
-        
+        if(UtilValidate.isEmpty(quantity) || (UtilValidate.isNotEmpty(quantity) && quantity.compareTo(BigDecimal.ZERO)==0)){
+			return ServiceUtil.returnError("Cannot Accept Quantity ZERO or Empty");
+		}
+        if(UtilValidate.isNotEmpty(quantity) && quantity.compareTo(BigDecimal.ZERO)==-1){
+			return ServiceUtil.returnError(UtilProperties.getMessage(resource, "Negative Value Not Allowed", locale));
+			
+		}
         GenericValue requirement = null;
         try {
             requirement = delegator.findByPrimaryKey("Requirement", UtilMisc.toMap("requirementId", requirementId));
