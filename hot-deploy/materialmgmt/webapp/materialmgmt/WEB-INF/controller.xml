@@ -195,6 +195,15 @@
      	<response name="error" type="view" value="FindMaterialQuotes"/>
     </request-map>
     
+    <request-map uri="setQuoteStatus">
+       <security https="true" auth="true"/>
+       <event type="service" invoke="updateQuote"></event>
+       <response name="success" type="request-redirect" value="ViewMaterialEnquiry">
+       <redirect-parameter name="custRequestId"/>
+       </response>
+       <response name="error" type="view" value="FindMaterialQuotes"/>
+    </request-map>
+    
     <request-map uri="AddEnquiryContent">
      	<security auth="true" https="true"/>
      	<response name="success" type="view" value="AddEnquiryContent"/>

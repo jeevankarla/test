@@ -77,6 +77,14 @@
                 <parameter param-name="flag" value="Y" />
             </hyperlink>
         </field>
+        <field use-when="!((statusId.equals(&quot;QUO_ORDERED&quot;)) || (statusId.equals(&quot;QUO_REJECTED&quot;)))" name="cancelQuote" title="Cancel" widget-style="buttontext" >
+        	<hyperlink target="setQuoteStatus" description="Cancel">
+                 <parameter param-name="quoteId"/>
+                 <parameter param-name="custRequestId"/>
+                <parameter param-name="statusId" value="QUO_REJECTED"/>
+                <parameter param-name="flag" value="Y" />
+            </hyperlink>
+        </field>
     </form>
     
     <form name="viewQuotation" type="single"  title="" default-map-name="quote" 
