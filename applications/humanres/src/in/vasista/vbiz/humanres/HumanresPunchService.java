@@ -461,7 +461,7 @@ public class HumanresPunchService {
 				//Debug.log("lateMin============"+lateMin);
 				employeeDailyAttendanceMap.put("lateMin",new BigDecimal(lateMin));
 				employeeDailyAttendanceMap.put("extraMin",new BigDecimal(extraMin));
-				if(UtilValidate.isNotEmpty(employeeDetail.getString("canteenFacin")) && ("Y").equalsIgnoreCase(employeeDetail.getString("canteenFacin"))){
+				if(UtilValidate.isNotEmpty(employeeDetail)  && UtilValidate.isNotEmpty(employeeDetail.getString("canteenFacin")) && ("Y").equalsIgnoreCase(employeeDetail.getString("canteenFacin"))){
 					employeeDailyAttendanceMap.put("availedCanteen","Y");
 				}
 				//Debug.log("employeeDailyAttendanceMap============"+employeeDailyAttendanceMap);

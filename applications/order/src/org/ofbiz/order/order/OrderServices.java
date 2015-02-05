@@ -7006,7 +7006,7 @@ public class OrderServices {
 	    		   termAmount = termValue.negate();
 	    	   }
 	       }
-
+        
 	       //Discount  After Tax
 	       if(termTypeId.equals("COGS_DISC_ATR")){
 	    	   if(UtilValidate.isNotEmpty(uomId) && uomId.equals("PERCENT")){
@@ -7021,20 +7021,17 @@ public class OrderServices {
 	       if(termTypeId.equals("COGS_PCK_FWD")){
 	    	   if(UtilValidate.isNotEmpty(uomId) && uomId.equals("PERCENT")){
 	    		   termAmount = ((basicAmount.add(exciseDuty)).multiply(termValue)).divide(new BigDecimal("100"),taxRounding);
-	    		   termAmount = termAmount.negate();
 	    	   }else{
-	    		   termAmount = termValue.negate();
+	    		   termAmount = termValue;
 	    	   }
 	       }
-
 	       //Packing And Forwarding Charges After Tax
 	       if(termTypeId.equals("COGS_PCK_FWD_ATR")){
 	    	   if(UtilValidate.isNotEmpty(uomId) && uomId.equals("PERCENT")){
 	    		   Debug.log("poValue========"+poValue);
 	    		   termAmount = (poValue.multiply(termValue)).divide(new BigDecimal("100"),taxRounding);
-	    		   termAmount = termAmount.negate();
 	    	   }else{
-	    		   termAmount = termValue.negate();
+	    		   termAmount = termValue;
 	    	   }
 	       }
 	       
