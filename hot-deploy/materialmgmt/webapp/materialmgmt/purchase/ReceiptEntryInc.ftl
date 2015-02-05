@@ -230,9 +230,12 @@
 		var floorValue = Math.floor(quarterVal);
 		var remainder = quarterVal - floorValue;
 		var remainderVal =  Math.floor(value) - value;
+		 if(parseInt(value) <=0 ){
+			return {valid: false, msg: "required quantity Should not be less than or equals to zero" + value};
+		 }
 	     if(remainder !=0 ){
 			return {valid: false, msg: "packets should not be in decimals " + value};
-		}
+		 }
       return {valid: true, msg: null};
     }
 	var mainGrid;		
