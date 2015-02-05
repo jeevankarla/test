@@ -166,11 +166,20 @@
             </service>
             <script location="component://materialmgmt/webapp/materialmgmt/WEB-INF/actions/purchases/SupplyTillDate.groovy"/>
         </actions>
+        <row-actions>
+        	<entity-one value-field="product" entity-name="Product">
+				<field-map field-name="productId" from-field="productId"/>
+			</entity-one>
+			<entity-one value-field="uom" entity-name="Uom">
+				<field-map field-name="uomId" from-field="product.quantityUomId"/>
+			</entity-one>
+			<set field="dec" from-field="uom.description"/>
+        </row-actions>
       	<field name="receiptId" title="GRN No">
       		<display/>
       	</field>
-      	<field name="productId" title="productId">
-      		<display-entity entity-name="Product" description="${description}"/>
+      	<field name="productId" title="Code- Name [UOM]">
+      		<display-entity entity-name="Product" description="${productId} ${description}[${dec}]"/>
       	</field>
         <field name="datetimeReceived" title="Received Date"><display description="${groovy:org.ofbiz.base.util.UtilDateTime.toDateString(datetimeReceived, &quot;dd-MMM-yyyy&quot;);}"/></field>
         <field name="shipmentId" title="ShipmentId"><display/></field>
@@ -295,12 +304,20 @@
     </form>
     <form name="ListMaterialForQCApproval" type="list" list-name="receiptItems" paginate-target="${targetRequest}"
         odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar"  separate-columns="true" target="acceptReceiptQtyByQC">
-        
+        <row-actions>
+        	<entity-one value-field="product" entity-name="Product">
+				<field-map field-name="productId" from-field="productId"/>
+			</entity-one>
+			<entity-one value-field="uom" entity-name="Uom">
+				<field-map field-name="uomId" from-field="product.quantityUomId"/>
+			</entity-one>
+			<set field="dec" from-field="uom.description"/>
+        </row-actions>
       	<field name="receiptId" title ="GRN No">
       		<display/>
       	</field>
         <field name="datetimeReceived" title="Received Time"><display description="${groovy:org.ofbiz.base.util.UtilDateTime.toDateString(datetimeReceived, &quot;dd/MM/yyyy HH:mm:ss&quot;);}"/></field>
-        <field name="productId" title="Product"><display-entity entity-name="Product" description="${productName} - [ ${productId} ] "/></field>
+        <field name="productId" title="Name [Code][UOM]"><display-entity entity-name="Product" description="${productName} - [ ${productId} ][${dec}] "/></field>
         <field name="shipmentId"><display/></field>
         <field name="statusIdTo"><hidden value="SR_QUALITYCHECK"/></field>
         <field name="shipmentItemSeqId"><display/></field>

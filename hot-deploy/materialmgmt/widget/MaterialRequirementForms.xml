@@ -52,6 +52,13 @@
             </service> -->
             <!-- <set field="facilityQuantityOnHandTotal" from-field="resultQoh.quantityOnHandTotal"/>
             <set field="quantityOnHandTotal" from-field="resultQohTotal.quantityOnHandTotal"/> -->
+            <entity-one value-field="product" entity-name="Product">
+				<field-map field-name="productId" from-field="productId"/>
+			</entity-one>
+			<entity-one value-field="uom" entity-name="Uom">
+				<field-map field-name="uomId" from-field="product.quantityUomId"/>
+			</entity-one>
+			<set field="dec" from-field="uom.description"/>
         </row-actions>
         <field name="requirementId" title="Requirement Id" widget-style="buttontext"> 
             <hyperlink  description="${requirementId}" target="requirementOverView" target-window="_blank">
@@ -63,8 +70,8 @@
             <display-entity entity-name="RequirementType"/>
         </field> -->
         <!-- <field name="facilityId"><display/></field> -->
-        <field name="productId" title="${uiLabelMap.MaterialMangement_ProductId} - ${uiLabelMap.MaterialMangement_ProductName}">
-            <display-entity entity-name="Product" key-field-name="productId" description="${productId} - ${productName}"/>
+        <field name="productId" title="${uiLabelMap.MaterialMangement_ProductId} - ${uiLabelMap.MaterialMangement_ProductName} [UOM]">
+            <display-entity entity-name="Product" key-field-name="productId" description="${productId} - ${productName} [${dec}]"/>
         </field>
         <field name="requirementStartDate" title="Requirement Date"><display/></field>
         <!-- <field name="requiredByDate"><display/></field> -->
@@ -159,6 +166,13 @@
           	</service>
           	<set field="supplyDetails" value="${resultMap.productSupplyDetails}" type="Object"/>
           	<set field="partyId" value="${supplyDetails.supplierPartyId}"/>
+          	<entity-one value-field="product" entity-name="Product">
+				<field-map field-name="productId" from-field="productId"/>
+			</entity-one>
+			<entity-one value-field="uom" entity-name="Uom">
+				<field-map field-name="uomId" from-field="product.quantityUomId"/>
+			</entity-one>
+			<set field="dec" from-field="uom.description"/>
         </row-actions>
         <field name="requirementId" widget-style="buttontext"><display/>
             <!-- <hyperlink also-hidden="true" description="${requirementId}" target="EditRequirement">
@@ -169,8 +183,8 @@
             <display-entity entity-name="RequirementType" also-hidden="true"/>
         </field> -->
         <!-- <field name="facilityId"><display/></field> -->
-        <field name="productId" title="${uiLabelMap.MaterialMangement_ProductId} - ${uiLabelMap.MaterialMangement_ProductName}">
-            <display-entity entity-name="Product" key-field-name="productId" description="${productId} - ${productName}"/>
+        <field name="productId" title="${uiLabelMap.MaterialMangement_ProductId} - ${uiLabelMap.MaterialMangement_ProductName}[UOM]">
+            <display-entity entity-name="Product" key-field-name="productId" description="${productId} - ${productName}[${dec}]"/>
         </field>
         <field name="statusId"><hidden/></field>
         <field name="supplyDate" title="Last Supply Date"><display description="${supplyDetails.supplyDate}"/></field>

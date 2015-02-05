@@ -138,6 +138,15 @@
 
     <form name="ListIssuanceList" type="list" use-row-submit="true" list-name="listIt" title="List of customer requests"
         odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
+        <row-actions>
+			<entity-one value-field="product" entity-name="Product">
+				<field-map field-name="productId" from-field="productId"/>
+			</entity-one>
+			<entity-one value-field="uom" entity-name="Uom">
+				<field-map field-name="uomId" from-field="product.quantityUomId"/>
+			</entity-one>
+			<set field="dec" from-field="uom.description"/>
+		</row-actions>
         <field name="itemIssuanceId" title="Issuance Id"><display/></field>
         <field name="custRequestId" title="${uiLabelMap.MaterialMangement_CustRequestId}">
 			<display/>
@@ -150,8 +159,8 @@
         	<display-entity entity-name="PartyNameView" key-field-name="partyId" description="${firstName} ${middleName} ${lastName} ${groupName}"/>
         </field>
         <field name="custRequestName" title="${uiLabelMap.MaterialMangement_CustRequestName}"><display/></field>
-        <field name="productId" title="${uiLabelMap.MaterialMangement_ProductId} - ${uiLabelMap.MaterialMangement_ProductName}">
-        	<display-entity entity-name="Product" description="${productId} - ${description}"/>
+        <field name="productId" title="${uiLabelMap.MaterialMangement_ProductId} - ${uiLabelMap.MaterialMangement_ProductName} [UOM]">
+        	<display-entity entity-name="Product" description="${productId} - ${description} [${dec}]"/>
         </field>
         <field name="quantity" title="Quantity"><display/></field>
         <field name="cancelQuantity" title="Cancel Qty"><display/></field>
@@ -195,6 +204,13 @@
        		<select-field field-name="statusId"/>
        	  </entity-one>
         	<set field="crqItemstatusId" from-field="statusId"/>
+        	<entity-one value-field="product" entity-name="Product">
+				<field-map field-name="productId" from-field="productId"/>
+			</entity-one>
+			<entity-one value-field="uom" entity-name="Uom">
+				<field-map field-name="uomId" from-field="product.quantityUomId"/>
+			</entity-one>
+			<set field="dec" from-field="uom.description"/>
        </row-actions>
         <field name="itemIssuanceId" title="Issuance Id"><display/></field>
         <field name="custRequestId" title="${uiLabelMap.MaterialMangement_CustRequestId}">
@@ -208,8 +224,8 @@
         	<display-entity entity-name="PartyNameView" key-field-name="partyId" description="${firstName} ${middleName} ${lastName} ${groupName}"/>
         </field>
         <field name="custRequestName" title="${uiLabelMap.MaterialMangement_CustRequestName}"><display/></field>
-        <field name="productId" title="${uiLabelMap.MaterialMangement_ProductId} - ${uiLabelMap.MaterialMangement_ProductName}">
-        	<display-entity entity-name="Product" description="${productId} - ${description}"/>
+        <field name="productId" title="${uiLabelMap.MaterialMangement_ProductId} - ${uiLabelMap.MaterialMangement_ProductName} [UOM]">
+        	<display-entity entity-name="Product" description="${productId} - ${description} [${dec}]"/>
         </field>
         <field name="quantity" title="Issued Quantity"><display/></field>
         <field name="issueDate" title="Issue Date"><display description="${groovy:org.ofbiz.base.util.UtilDateTime.toDateString(issueDate,&quot;dd/MM/yyyy HH:mm:ss&quot;)}"/></field>
@@ -334,11 +350,14 @@
         </entity-condition>
        </actions>
        <row-actions>
-          <entity-one entity-name="Product">
-       		<field-map field-name="productId" from-field="productId"/>
-       		<select-field field-name="longDescription"/>
-       	  </entity-one>
-        	<set field="longDescription" from-field="longDescription"/>
+          <entity-one value-field="product" entity-name="Product">
+				<field-map field-name="productId" from-field="productId"/>
+			</entity-one>
+			<entity-one value-field="uom" entity-name="Uom">
+				<field-map field-name="uomId" from-field="product.quantityUomId"/>
+			</entity-one>
+			<set field="dec" from-field="uom.description"/>
+        	<set field="longDescription" from-field="product.longDescription"/>
        </row-actions>
        <field name="custRequestId"  sort-field="true"  sort-field-style="true" title="Tender Reference No">
           <display-entity entity-name="CustRequest"  key-field-name="custRequestId" description="${custRequestName}" also-hidden="true">
@@ -356,6 +375,7 @@
                 </sub-hyperlink>
             </display-entity>
         </field>
+         <field name="dec" title="UOM"><display></display></field>
         <field name="longDescription" title="Product Specification"> 
             <display description="${longDescription}"/>
         </field>
@@ -394,6 +414,13 @@
         	<set field="flag" value="${groovy: return (QOH > 0)? 'Y' : 'N';}"/>
         	<set field="custmQuantity" value="${quantity-(QOH+issuedQty)}"/>
         	<set field="toBeIssuedQty" value="${groovy: return (quantity-issuedQty > QOH)?  QOH: (quantity-issuedQty);}"/>
+        	<entity-one value-field="product" entity-name="Product">
+				<field-map field-name="productId" from-field="productId"/>
+			</entity-one>
+			<entity-one value-field="uom" entity-name="Uom">
+				<field-map field-name="uomId" from-field="product.quantityUomId"/>
+			</entity-one>
+			<set field="dec" from-field="uom.description"/>
         </row-actions>
         <field name="custRequestId" title="${uiLabelMap.MaterialMangement_CustRequestId}"><display/></field>
         <field name="custRequestItemSeqId" title="${uiLabelMap.MaterialMangement_CustRequestItemSeqId}"><display/></field>
@@ -401,8 +428,8 @@
         <field name="fromPartyId" title="${uiLabelMap.MaterialMangement_CustRequestFromPartyId}">
             <display-entity entity-name="PartyNameView" key-field-name="partyId" description="${firstName} ${middleName} ${lastName} ${groupName}"/>
         </field>
-        <field name="productId" title="${uiLabelMap.MaterialMangement_ProductId} - ${uiLabelMap.MaterialMangement_ProductName}">
-            <display-entity entity-name="Product" key-field-name="productId" description="${productId} - ${productName}"/>
+        <field name="productId" title="${uiLabelMap.MaterialMangement_ProductId} - ${uiLabelMap.MaterialMangement_ProductName} [UOM]">
+            <display-entity entity-name="Product" key-field-name="productId" description="${productId} - ${productName} [${dec}]"/>
         </field>
         <field name="statusId" title="Status" ><display-entity entity-name="StatusItem" description="${description}"></display-entity> </field>
          <field name="quantity" title="Req. Qty"><display/></field>
@@ -488,15 +515,23 @@
     </form>
     <form name="RequestsToApproveList" type="list" use-row-submit="true"  title="" list-name="custRequestItemsList"
         odd-row-style="alternate-row"  default-table-style="basic-table hover-bar" paginate-target="StoreProductIssue" separate-columns="true">
-        
+        <row-actions>
+			<entity-one value-field="product" entity-name="Product">
+				<field-map field-name="productId" from-field="productId"/>
+			</entity-one>
+			<entity-one value-field="uom" entity-name="Uom">
+				<field-map field-name="uomId" from-field="product.quantityUomId"/>
+			</entity-one>
+			<set field="dec" from-field="uom.description"/>
+		</row-actions>
         <field name="custRequestId" title="${uiLabelMap.MaterialMangement_CustRequestId}"><display/></field>
         <field name="custRequestItemSeqId" title="${uiLabelMap.MaterialMangement_CustRequestItemSeqId}"><display/></field>
         <field name="custRequestDate" title="${uiLabelMap.MaterialMangement_CustRequestDate}"><display description="${groovy:org.ofbiz.base.util.UtilDateTime.toDateString(custRequestDate, &quot;dd/MM/yyyy&quot;)}"/></field>
         <field name="fromPartyId" title="${uiLabelMap.MaterialMangement_CustRequestFromPartyId}">
             <display-entity entity-name="PartyNameView" key-field-name="partyId" description="${firstName} ${middleName} ${lastName} ${groupName}"/>
         </field>
-        <field name="productId" title="${uiLabelMap.MaterialMangement_ProductId} - ${uiLabelMap.MaterialMangement_ProductName}">
-            <display-entity entity-name="Product" key-field-name="productId" description="${productId} - ${productName}"/>
+        <field name="productId" title="${uiLabelMap.MaterialMangement_ProductId} - ${uiLabelMap.MaterialMangement_ProductName} [UOM]">
+            <display-entity entity-name="Product" key-field-name="productId" description="${productId} - ${productName} [${dec}]"/>
         </field>
         <field name="requireQty" title="Required Qty"><display description="${quantity}"/></field>
         <field name="tempQty" title="Accepted Qty"><text default-value="${quantity}"></text></field>

@@ -34,6 +34,13 @@
         </actions>
         <row-actions>
            <script location="component://materialmgmt/webapp/materialmgmt/WEB-INF/actions/purchases/FindQuoteMaterials.groovy"/>
+           <entity-one value-field="product" entity-name="Product">
+				<field-map field-name="productId" from-field="productId"/>
+			</entity-one>
+			<entity-one value-field="uom" entity-name="Uom">
+				<field-map field-name="uomId" from-field="product.quantityUomId"/>
+			</entity-one>
+			<set field="dec" from-field="uom.description"/>
         </row-actions>
     </form>
 
@@ -59,7 +66,9 @@
         <field name="statusId" sort-field="true" title="Status">
             <display-entity also-hidden="false" entity-name="StatusItem"/>
         </field>
-        <field name="productId" title="Material Code - Name" sort-field="true"><display-entity entity-name="Product" description="${productName}" key-field-name="productId"/></field>
+        <field name="productId" title="${uiLabelMap.MaterialMangement_ProductId} - ${uiLabelMap.MaterialMangement_ProductName} [UOM]">
+            <display-entity entity-name="Product" key-field-name="productId" description="${productId} - ${productName} [${dec}]"/>
+        </field>
         <field name="quantity" title="Quote Qty"><display/></field>
         <field name="quoteUnitPrice" title="Quote Unit Price"><display/></field>
         <field use-when="statusId.equals(&quot;QUO_CREATED&quot;)" name="editQuote" title="Edit" widget-style="buttontext" >
@@ -88,6 +97,15 @@
     
     <form name="viewQuoteItemDetails" type="list" title="" default-map-name="item" list-name="quoteItemList" 
         header-row-style="header-row" default-table-style="basic-table" >
+        <row-actions>
+        	<entity-one value-field="product" entity-name="Product">
+				<field-map field-name="productId" from-field="productId"/>
+			</entity-one>
+			<entity-one value-field="uom" entity-name="Uom">
+				<field-map field-name="uomId" from-field="product.quantityUomId"/>
+			</entity-one>
+			<set field="dec" from-field="uom.description"/>
+        </row-actions>
         <field name="quoteItemSeqId" title="Item" widget-style="buttontext">
         	<hyperlink target="BidItemOverview" description="${quoteItemSeqId}">
 				<parameter param-name="quoteId"/>
@@ -100,8 +118,8 @@
             </sub-hyperlink> -->
         </display-entity> </field>
         <field name="custRequestItemSeqId" title="Enquiry Item No"><hidden/></field> 
-        <field name="productId" title="Item">
-            <display-entity entity-name="Product" description="${description}">
+        <field name="productId" title="Name[UOM][Code]">
+            <display-entity entity-name="Product" description="${description}[${dec}]">
                 <sub-hyperlink  description="[${productId}]" target="EditProduct">
                     <parameter param-name="productId"/>
                 </sub-hyperlink>
@@ -244,6 +262,15 @@
     </form>
     <form name="ListQuotesForEvaluation" type="list" list-name="quotesList"  separate-columns="true" use-row-submit="true"
         odd-row-style="alternate-row" default-table-style="basic-table hover-bar" paginate-target="QuoteForEvalution">
+        <row-actions>
+        	<entity-one value-field="product" entity-name="Product">
+				<field-map field-name="productId" from-field="productId"/>
+			</entity-one>
+			<entity-one value-field="uom" entity-name="Uom">
+				<field-map field-name="uomId" from-field="product.quantityUomId"/>
+			</entity-one>
+			<set field="dec" from-field="uom.description"/>
+        </row-actions>
         <field name="quoteNo" widget-style="buttontext h2" title="Quote No">
         	<hyperlink also-hidden="false" description="${quoteId}" target="ViewMaterialQuote" target-window="_blank">
                 <parameter param-name="quoteId"/>
@@ -254,7 +281,7 @@
         <field name="quoteId"><hidden/></field>
         <field name="quoteItemSeqId" title="Item No"><display/></field>
         <field name="partyId" title="Supplier"><display-entity entity-name="PartyNameView" key-field-name="partyId" description="${firstName} ${middleName} ${lastName} ${groupName}"/></field>
-        <field name="productId" title="Material Name - [Code]" sort-field="true"><display-entity description="${productName} - [${productId}]" key-field-name="productId" entity-name="Product"/></field>
+        <field name="productId" title="Material Name - [Code] [UOM]" sort-field="true"><display-entity description="${productName} - [${productId}] [${dec}]" key-field-name="productId" entity-name="Product"/></field>
         <field name="quantity"><display/></field>
         <field name="quotePrice"><display description="${quoteUnitPrice}"/></field>
         <field name="qiStatusId" title="Status"><display-entity entity-name="StatusItem" key-field-name="statusId" description="${description}"/></field>
@@ -348,7 +375,15 @@
     </form>
     <form name="ListQuotesForShortlisting" id="ListQuotesForShortlisting" type="list"  list-name="quotesList"
         odd-row-style="alternate-row" default-table-style="basic-table hover-bar" paginate-target="quoteForAcceptance" target="changeQuoteItemStatusNew">
-        
+        <row-actions>
+        	<entity-one value-field="product" entity-name="Product">
+				<field-map field-name="productId" from-field="productId"/>
+			</entity-one>
+			<entity-one value-field="uom" entity-name="Uom">
+				<field-map field-name="uomId" from-field="product.quantityUomId"/>
+			</entity-one>
+			<set field="dec" from-field="uom.description"/>
+        </row-actions>
         <field name="quoteItemSeqId"><hidden/></field>
         <field name="quoteId" widget-style="buttontext h2" title="Quote No">
         	<hyperlink also-hidden="false" description="${quoteId}" target="ViewMaterialQuote" target-window="_blank">
@@ -361,7 +396,7 @@
         <field name="issueDate" title="Quote Issue Date"><display description="${groovy:org.ofbiz.base.util.UtilDateTime.toDateString(issueDate,&quot;dd/MM/yyyy&quot;)}" /></field>
         <field name="validFromDate" title="Quote Valid From"><display description="${groovy:org.ofbiz.base.util.UtilDateTime.toDateString(validFromDate,&quot;dd/MM/yyyy&quot;)}" /></field>
         <field name="validThruDate" title="Quote Valid Thru"><display description="${groovy:org.ofbiz.base.util.UtilDateTime.toDateString(validThruDate,&quot;dd/MM/yyyy&quot;)}" /></field>
-        <field name="productId" title="Material Name - [Code]"><display-entity entity-name="Product" key-field-name="productId" description="${productName}"/></field>
+       <field name="productId" title="Material Name - [Code][UOM]"><display-entity entity-name="Product" key-field-name="productId" description="${productName}-[${productId}][${dec}]"/></field>
         <field name="quantity" title="Qty"><display /></field>
         <field name="qiStatusId" title="Status"><display-entity entity-name="StatusItem" key-field-name="statusId" description="${description}" /></field>
         <field name="quoteUnitPrice" title="Unit Price"><display /></field>
@@ -406,13 +441,15 @@
         			<condition-expr field-name="quoteItemSeqId" from-field="quoteItemSeqId"/>
         		</condition-list>
         	</entity-condition>
-        	<entity-one entity-name="Product">
-        		<field-map field-name="productId" from-field="productId"/>
-        		<select-field field-name="productName"/>
-        		<select-field field-name="longDescription"/>
-        	</entity-one>
-        	<set field="productName" from-field="productName"/>
-        	<set field="longDescription" from-field="longDescription"/>
+        	<entity-one value-field="product" entity-name="Product">
+				<field-map field-name="productId" from-field="productId"/>
+			</entity-one>
+			<entity-one value-field="uom" entity-name="Uom">
+				<field-map field-name="uomId" from-field="product.quantityUomId"/>
+			</entity-one>
+			<set field="dec" from-field="uom.description"/>
+        	<set field="productName" from-field="product.productName"/>
+        	<set field="longDescription" from-field="product.longDescription"/>
         	<set field="size" value="${groovy: return (QuoteStatusList.size());}"/>
         	<set field="comments" value="${QuoteStatusList[(${size}-1)].comments}"/>
         </row-actions>
@@ -424,6 +461,7 @@
         </field>
         <field name="partyId" title="Supplier"><display-entity entity-name="PartyNameView" key-field-name="partyId" description="${firstName} ${middleName} ${lastName} ${groupName} [${partyId}] "/></field>
         <field name="productName" title="Material Name - [Code]"><display /></field>
+        <field name="dec" title="UOM"><display/></field>
         <field name="longDescription" title="Material Specification"><display /></field>
         <field name="qiStatusId" title="Status"><display-entity entity-name="StatusItem" key-field-name="statusId" description="${description}"/></field>
         <field name="quoteUnitPrice" title="Quote Unit Price"><display /></field>
