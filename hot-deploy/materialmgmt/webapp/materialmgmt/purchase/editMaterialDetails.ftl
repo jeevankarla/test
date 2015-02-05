@@ -4,7 +4,16 @@
 <script language="javascript" type="text/javascript" src="<@ofbizContentUrl>/images/jquery/plugins/qtip/jquery.qtip.js</@ofbizContentUrl>"></script>
 
 
+<style type="text/css">
+ .labelFontCSS {
+    font-size: 13px;
+}
+
+</style>
+
 <script type="application/javascript">
+
+
 
 	/*
 	 * Common dialogue() function that creates our dialogue qTip.
@@ -68,18 +77,20 @@
 	function cancelForm(){		 
 		return false;
 	}
-	
+	var globalUomOptionList="";
 
-	function showUpdateProductForm(productId,productName,longDescription,uomId) {	
-
+	function showUpdateProductForm(productId,productName,longDescription,uomId) {
+         var innerUomId=$.trim(uomId);
 		var message = "";
 		message += "<div style='width:100%;height:200px;overflow-x:auto;overflow-y:auto;' ><form action='updateProductDetails' method='post' onsubmit='return disableGenerateButton();'><table cellspacing=10 cellpadding=10  width='100%' > " ; 
-			 message += "<tr ><td align='right' class='h2' width='15%' >Specification: </td><td align='left'  width='75%'  > <input type='text' size='60' class='h2' id='longDescription' name='longDescription'  value='"+longDescription+"'/><input type='hidden' name='productId'  value='"+productId+"'/></td></tr>";
-			 message += "<tr ><td align='right' class='h2' width='15%' >Product Name: </td><td align='left'  width='75%'  > <input type='text' size='60' class='h2' id='productName' name='description'  value='"+productName+"'/></td></tr>";
 			message +="<tr ><td align='right' class='h2' width='15%' >Uom Id: </td><td align='left' width='60%'><select name='quantityUomId' id='quantityUomId' class='h3'>"+
-              		"<#list uomList as uom><option value='${uom.uomId}' >${uom.description}[${uom.abbreviation}]</option></#list>"+            
+              		"<#list uomList as uom><option value='${uom.uomId}' <#if uom.uomId=='"+innerUomId+"'  > selected='selected'</#if> >${uom.description}[${uom.abbreviation}]</option></#list>"+            
 					"</select></td></tr>";
-	          message +="<tr ><td align='right' class='h2' width='15%' ><span align='center'><button value='${uiLabelMap.CommonCancel}' onclick='return cancelForm();' class='smallSubmit'>${uiLabelMap.CommonCancel}</button></span></td><td width='20%' align='center' class='h3' ><input type='submit' value='Update' id='updateProduct' class='smallSubmit'/></td></tr>";
+		   message += "<tr ><td align='right' class='h2' width='15%' >Product Name: </td><td align='left'  width='75%'  > <input type='text' size='70'  id='productName' name='description'  value='"+productName+"'/><input type='hidden' name='productId'  value='"+productId+"'/> </tr></tbody></table></td></tr>";
+			 message += "<tr ><td width='100%' colspan='2' ><table  border='0' cellspacing='10' cellpadding='10'><tbody><tr><td width='15%' align='right' class='label labelFontCSS' >Specification: </td><td align='left'  width='75%'  >";
+              message += "<textarea name='longDescription' id='longDescription' cols='70' rows='4'>"+longDescription+"</textarea> </td></tr>";
+			
+	          message +="<tr ><td align='right' class='h3' width='15%' ><input type='submit' value='Update' id='updateProduct' class='smallSubmit'/></td><td width='20%' align='center' class='h3' ><span align='center'><button value='${uiLabelMap.CommonCancel}' onclick='return cancelForm();' class='smallSubmit'>${uiLabelMap.CommonCancel}</button></span></td></tr>";
 	          message += "</table></form>";
 	      	
 		message += "</div>";				
@@ -88,5 +99,6 @@
 	};
 	
 	function populateDate(){
+	//$('#quantityUomId').html(globalUomOptionList.join(''));
 	};
 </script>
