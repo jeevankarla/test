@@ -1394,7 +1394,7 @@ public class HumanresService {
 	        Map<String, Object> inMap = FastMap.newInstance();
 
 	        String customTimePeriodId = (String)context.get("customTimePeriodId");
-	        String organizationPartyId = (String)context.get("orgPartyId");
+	        String organizationPartyId = (String)context.get("organizationPartyId");
 	        String holiDayDateStr = (String)context.get("holidayDate");
 	        Timestamp holiDayDate = null;
 	        String description = (String)context.get("description");

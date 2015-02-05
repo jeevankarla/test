@@ -12,7 +12,7 @@ import in.vasista.vbiz.humanres.HumanresService;
 import in.vasista.vbiz.byproducts.ByProductServices;
 
 holidyDate = parameters.holidayDate;
-organizaionId = parameters.orgPartyId;
+organizaionId = parameters.organizationPartyId;
 customTimePeriodId = parameters.customTimePeriodId;
 
 dateStr = null;
@@ -21,7 +21,8 @@ def sdf1 = new SimpleDateFormat("dd-MM-yyyy");
 if(UtilValidate.isNotEmpty(holidyDate)){
 	try {
 		if (holidyDate) {
-			dateTimestamp = new java.sql.Timestamp(sdf1.parse(holidyDate).getTime());
+			dateTimestamp = UtilDateTime.getDayStart(new java.sql.Timestamp(sdf1.parse(holidyDate).getTime()));
+			//dateTimestamp = new java.sql.Timestamp(sdf1.parse(holidyDate).getTime());
 			dateStr = UtilDateTime.toDateString(dateTimestamp,"yyyy-MM-dd");
 		}
 	} catch (ParseException e) {
@@ -32,7 +33,6 @@ if(UtilValidate.isNotEmpty(holidyDate)){
 	def sdf = new SimpleDateFormat("yyyy-MM-dd");
 	holidayDatestart = new java.sql.Timestamp(sdf.parse(dateStr).getTime());
 }
-
 
 //holidayDatestart = UtilDateTime.getDayStart(UtilDateTime.toTimestamp(dateStr));
 //holidayDatestart = UtilDateTime.toTimestamp(dateStr);
