@@ -78,7 +78,7 @@ under the License.
           <td>Indent Ref.</td>
           <td>Indent Date</td>
           <td>From Department</td>
-          <td>Material Name - [Code]</td>
+          <td>Material Name - [Code][UOM]</td>
           <td>quantity</td>
           
 		  <td align="right" cell-padding>${uiLabelMap.CommonSelect} <input type="checkbox" id="checkAllIndents" name="checkAllIndents" onchange="javascript:toggleRequestId(this);"/></td>
@@ -98,7 +98,8 @@ under the License.
 				<#assign partyName = (delegator.findOne("PartyNameView", {"partyId" : eachItem.fromPartyId}, false))!>
               	<td>${partyName.groupName?if_exists}${partyName.firstName?if_exists} ${partyName.lastName?if_exists} - [${eachItem.fromPartyId}]</td>
               	<#assign product = (delegator.findOne("Product", {"productId" : eachItem.productId}, false))!>
-              	<td>${product.productName?if_exists} - [${eachItem.productId?if_exists}]</td>
+              	<#assign uom = (delegator.findOne("Uom", {"uomId" : product.quantityUomId}, false))!>
+              	<td>${product.productName?if_exists} - [${eachItem.productId?if_exists}][${uom.description?if_exists}]</td>
               	<td>${eachItem.quantity?if_exists}</td>
            		<td><input type="checkbox" id="indentCheckBoxId_${eachItem_index}" name="indentCheckBoxId"/></td>
             </tr>
