@@ -368,6 +368,10 @@
      <field name="primaryProductCategoryId" title="Material Category">
      	<display-entity entity-name="ProductCategory" key-field-name="productCategoryId" description="${description}" ></display-entity>
      </field>
+     <field name="updateMaterial" widget-style="buttontext" title="update Material"  >productId,productName,longDescription,uomId
+            <hyperlink target-type="plain" target="javascript:showUpdateProductForm('${productId}','${description}','${longDescription}','${quantityUomId}');" description="update Material">
+            </hyperlink>
+      </field> 
      <field name="partyId" title="Supplier" >
      	<hyperlink target="/partymgr/control/viewprofile" target-type="inter-app" description="${groovy:org.ofbiz.party.party.PartyHelper.getPartyName(delegator, partyId, false);}  [${partyId}]">
                 <parameter param-name="partyId" from-field="partyId"/>
