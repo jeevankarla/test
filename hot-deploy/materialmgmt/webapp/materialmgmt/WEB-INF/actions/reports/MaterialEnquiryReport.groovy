@@ -37,11 +37,25 @@ if(UtilValidate.isNotEmpty(tinDetails.cstNumber)){
 if(parameters.issueToCustReqId){
       custRequestId=parameters.issueToCustReqId;
       context.custRequestId=custRequestId;
+	  CustRequestSequenceDetails = delegator.findList("CustRequestSequence",EntityCondition.makeCondition("custRequestId", EntityOperator.EQUALS , custRequestId)  , null, null, null, false );
+	  if(CustRequestSequenceDetails){
+		  if(UtilValidate.isNotEmpty(CustRequestSequenceDetails.sequenceId)){
+			  enquirySequenceNo=CustRequestSequenceDetails.sequenceId;
+			  context.enquirySequenceNo=enquirySequenceNo;
+		  }
+	  }
 }
 else{
      fromPartyId=parameters.partyId;
      custRequestId=parameters.custRequestId;
      context.custRequestId=custRequestId;
+	 CustRequestSequenceDetails = delegator.findList("CustRequestSequence",EntityCondition.makeCondition("custRequestId", EntityOperator.EQUALS , custRequestId)  , null, null, null, false );
+	 if(CustRequestSequenceDetails){
+		 if(UtilValidate.isNotEmpty(CustRequestSequenceDetails.sequenceId)){
+			 enquirySequenceNo=CustRequestSequenceDetails.sequenceId;
+			 context.enquirySequenceNo=enquirySequenceNo;
+		 }
+	 }
 }
 conditionList.add(EntityCondition.makeCondition("custRequestId", EntityOperator.EQUALS, custRequestId));
 conditionList.add(EntityCondition.makeCondition("noteType", EntityOperator.EQUALS, "EXTERNAL_NOTE_ID"));
@@ -49,6 +63,7 @@ condition = EntityCondition.makeCondition(conditionList,EntityOperator.AND);
 custReqNoteList = delegator.findList("CustRequestAndNote", condition, null, null, null, false);
 noteList = EntityUtil.getFieldListFromEntityList(custReqNoteList, "noteInfo", true);
 context.noteList = noteList;
+Debug.log("noteList==============="+noteList);
 partyAddressMap=[:];
 custReqDetails = delegator.findOne("CustRequest", [custRequestId : custRequestId], false);
 if(UtilValidate.isNotEmpty(custReqDetails)){
@@ -117,9 +132,9 @@ if(UtilValidate.isNotEmpty(custReqDetails)){
 							   productDetails = delegator.findOne("Product",["productId":productId],false);
 							   if(UtilValidate.isNotEmpty(productDetails)){
 								   itemCode=productDetails.internalName;
-								   description=productDetails.description;
+								   longDescription=productDetails.longDescription;
 								   productMap.put("itemCode",itemCode);
-								   productMap.put("description",description);
+								   productMap.put("longDescription",longDescription);
 								   uomId=productDetails.quantityUomId;
 							   }
 							   if(UtilValidate.isNotEmpty(uomId)){
@@ -188,9 +203,9 @@ if(UtilValidate.isNotEmpty(custReqDetails)){
 							   productDetails = delegator.findOne("Product",["productId":productId],false);
 							   if(UtilValidate.isNotEmpty(productDetails)){
 								   itemCode=productDetails.internalName;
-								   description=productDetails.description;
+								   longDescription=productDetails.longDescription;
 								   productMap.put("itemCode",itemCode);
-								   productMap.put("description",description);
+								   productMap.put("longDescription",longDescription);
 								   uomId=productDetails.quantityUomId;
 							   }
 							   if(UtilValidate.isNotEmpty(uomId)){
@@ -208,3 +223,4 @@ if(UtilValidate.isNotEmpty(custReqDetails)){
     }
     context.partyAddressMap=partyAddressMap;
 }
+

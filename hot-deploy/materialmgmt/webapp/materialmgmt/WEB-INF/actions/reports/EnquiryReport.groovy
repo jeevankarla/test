@@ -27,28 +27,41 @@ if(UtilValidate.isNotEmpty(custReqDetails)){
    dueDate= custReqDetails.closedDateTime;
    context.put("dueDate",dueDate);
    context.put("custReqDate",custReqDate);
+   CustRequestSequenceDetails = delegator.findList("CustRequestSequence",EntityCondition.makeCondition("custRequestId", EntityOperator.EQUALS , custRequestId)  , null, null, null, false );
+   if(CustRequestSequenceDetails){
+	   if(UtilValidate.isNotEmpty(CustRequestSequenceDetails.sequenceId)){
+		   enquirySequenceNo=CustRequestSequenceDetails.sequenceId;
+		   context.enquirySequenceNo=enquirySequenceNo;	   
+	   }
+   }
 }
 enquiryMap=[:];
 productId ="";
+key = 0;
 custReqItemDetails = delegator.findList("CustRequestItem",EntityCondition.makeCondition("custRequestId", EntityOperator.EQUALS , custRequestId)  , null, null, null, false );
 if(UtilValidate.isNotEmpty(custReqItemDetails)){
-   custReqItemDetails=EntityUtil.getFirst(custReqItemDetails);
-   productId=custReqItemDetails.productId;
-   requrdqty=custReqItemDetails.quantity;
-   enquiryMap.put("productId",productId);
-   enquiryMap.put("requrdqty",requrdqty);
-}
-productDetails = delegator.findOne("Product",["productId":productId],false);
-if(UtilValidate.isNotEmpty(productDetails)){
-	itemCode=productDetails.internalName;
-	description=productDetails.description;
-    enquiryMap.put("itemCode",itemCode);
-    enquiryMap.put("description",description);
-    uomId=productDetails.quantityUomId;
-}
-if(UtilValidate.isNotEmpty(uomId)){
-	unitDesciption = delegator.findOne("Uom",["uomId":uomId],false);
-	enquiryMap.put("unit",unitDesciption.description);
+	 custReqItemDetails.each{custReqItem->
+		 productMap=[:];
+		 
+		 requrdqty=custReqItem.quantity;
+		 productId=custReqItem.productId;
+		 productMap.put("productId",productId);
+		 productDetails = delegator.findOne("Product",["productId":productId],false);
+		 if(UtilValidate.isNotEmpty(productDetails)){
+			 itemCode=productDetails.internalName;
+			 longDescription=productDetails.longDescription;
+			 productMap.put("itemCode",itemCode);
+			 productMap.put("longDescription",longDescription);
+			 uomId=productDetails.quantityUomId;
+		 }
+		 if(UtilValidate.isNotEmpty(uomId)){
+			 unitDesciption = delegator.findOne("Uom",["uomId":uomId],false);
+			 productMap.put("unit",unitDesciption.description);
+		 }
+		 productMap.put("requrdqty",requrdqty);
+		 key=key+1;
+		 enquiryMap.put(key,productMap);
+	 }
 }
 context.enquiryMap=enquiryMap;
 vendorList=[];
