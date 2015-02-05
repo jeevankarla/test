@@ -3316,4 +3316,37 @@ public class MaterialPurchaseServices {
 		}
 		return result;
 	}
+	public static Map<String, Object> sendReceiptQtyForQC(DispatchContext ctx,Map<String, ? extends Object> context) {
+		Delegator delegator = ctx.getDelegator();
+		LocalDispatcher dispatcher = ctx.getDispatcher();
+		String statusId = (String) context.get("statusIdTo");
+		String receiptId = (String) context.get("receiptId");
+		String shipmentId = (String) context.get("shipmentId");
+		String shipmentItemSeqId = (String) context.get("shipmentItemSeqId");
+		BigDecimal quantityAccepted = (BigDecimal) context.get("quantityAccepted");
+		GenericValue userLogin = (GenericValue) context.get("userLogin");
+		Map result = ServiceUtil.returnSuccess();
+		if(UtilValidate.isEmpty(quantityAccepted)){
+			return ServiceUtil.returnError("Quantity accepted cannot be ZERO ");
+		}
+		if(quantityAccepted.compareTo(BigDecimal.ZERO) ==0){
+			statusId = "SR_REJECTED";
+		}
+		if(quantityAccepted.compareTo(BigDecimal.ZERO) ==-1){
+			return ServiceUtil.returnError("negative value not allowed");
+		}
+		try{
+			
+			GenericValue shipmentReceipt = delegator.findOne("ShipmentReceipt", UtilMisc.toMap("receiptId", receiptId), false);
+			shipmentReceipt.put("statusId", statusId);
+			shipmentReceipt.store();
+			
+		} catch (Exception e) {
+			// TODO: handle exception
+			Debug.logError(e, module);
+			return ServiceUtil.returnError(e.getMessage());
+		}
+		result = ServiceUtil.returnSuccess("GRN no: "+receiptId+" Send For Quality Check ");
+		return result;
+	}
 }
