@@ -285,25 +285,29 @@
 			</actions>
 			<widgets>
 				<decorator-screen name="HumanresCommonDecorator" location="component://humanres/widget/CommonScreens.xml">
-					 <decorator-section name="body">
-					 <include-menu location="component://humanres/widget/HumanresMenus.xml" name="AttendanceTabBar"/>
-                    <container style="button-bar">
-                            <link target="NewHoliday" style="buttontext create" text="${uiLabelMap.CommonCreateNew} Holiday"/>
-                        </container>                           
-                    	<section>
-		                    <widgets>                       
-		                        <decorator-screen name="FindScreenDecorator" location="component://humanres/widget/CommonScreens.xml">
-		                            <decorator-section name="search-options">
-		                            <screenlet title="Search Options">
-		                            	<include-form name="HolidayOptions" location="component://humanres/widget/CalendarForms.xml"/>
-		                            	</screenlet>
-				                    </decorator-section>
-				                    <decorator-section name="search-results">
-				                        <include-form name="HolidayResults" location="component://humanres/widget/CalendarForms.xml"/>				            
-				                    </decorator-section>
-		                        </decorator-screen>
-		                    </widgets>		
-		            	</section>				                        
+				 	<decorator-section name="body">
+				 	<include-menu location="component://humanres/widget/HumanresMenus.xml" name="AttendanceTabBar"/>
+                   	<container style="button-bar">
+                     	<link target="NewHoliday" style="buttontext create" text="${uiLabelMap.CommonCreateNew} Holiday"/>
+                   	</container>                           
+	            	<decorator-section name="search-options">
+	            		<screenlet title="Search-Options">
+                           	<section>
+                               	<widgets>
+                                   	<include-form name="HolidayOptions" location="component://humanres/widget/CalendarForms.xml"/>
+                               	</widgets>
+                           	</section>
+                       	</screenlet>
+                 	</decorator-section>		                           	 
+                 	<decorator-section name="search-results">
+                      	<screenlet title="Search-Results">
+                           	<section>
+                               	<widgets>
+                                   	<include-form name="HolidayResults" location="component://humanres/widget/CalendarForms.xml"/>
+                               	</widgets>
+                           	</section>
+                       	</screenlet>
+                      </decorator-section>
                     </decorator-section>
                 </decorator-screen>
             </widgets>
