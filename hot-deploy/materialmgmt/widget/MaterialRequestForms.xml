@@ -168,6 +168,8 @@
         <field name="fromPartyId" title="${uiLabelMap.MaterialMangement_CustRequestFromPartyId}"><lookup target-form-name="LookupPartyName"/></field>
  		<field name="custRequestDate" title="${uiLabelMap.MaterialMangement_CustRequestDate}"><date-find/></field>
  		<field name="issueDate" title="${uiLabelMap.MaterialMangement_IssuedDate}"><date-find/></field>
+ 		<field name="shipmentTypeId" ><hidden value="ISSUANCE_SHIPMENT"/> </field>
+ 		<field name="statusId" ><hidden value="GENERATED"/> </field>
         <field name="submitButton" title="${uiLabelMap.CommonFind}" widget-style="smallSubmit">
             <submit button-type="button"/>
         </field>
@@ -186,8 +188,14 @@
         </actions>
     </form>
 
-    <form name="ListIssuanceListNew" type="list" use-row-submit="true" list-name="listIt" title="List of customer requests"
+    <form name="ListIssuanceListNew" type="list"  list-name="listIt" title="List of customer requests"
         odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
+       <row-actions>
+          <entity-one entity-name="CustRequestItem" auto-field-map="true">
+       		<select-field field-name="statusId"/>
+       	  </entity-one>
+        	<set field="crqItemstatusId" from-field="statusId"/>
+       </row-actions>
         <field name="itemIssuanceId" title="Issuance Id"><display/></field>
         <field name="custRequestId" title="${uiLabelMap.MaterialMangement_CustRequestId}">
 			<display/>
@@ -206,7 +214,15 @@
         <field name="quantity" title="Issued Quantity"><display/></field>
         <field name="issueDate" title="Issue Date"><display description="${groovy:org.ofbiz.base.util.UtilDateTime.toDateString(issueDate,&quot;dd/MM/yyyy HH:mm:ss&quot;)}"/></field>
         <field name="issuedByUserLoginId" title="Issued By"><display/></field>
-        
+        <!--  <field name="crqItemstatusId" title="crqItemstatusId-"><display/></field>  -->
+        <field  use-when="&quot;${crqItemstatusId}&quot; != &quot;CRQ_COMPLETED&quot;" name="cancelIssue" widget-style="buttontext">
+            <hyperlink target="cancelIssuenceForCustRequest" description="Cancel Issue">
+                <parameter param-name="custRequestId"/>
+                 <parameter param-name="custRequestItemSeqId"/>
+                 <parameter param-name="itemIssuanceId"/>
+                   <parameter param-name="shipmentId"/>
+            </hyperlink>
+        </field> 
     </form>
     
 	

@@ -417,6 +417,13 @@
        <response name="success" type="request-redirect-noparam" value="StoreProductIssue"/>
        <response name="error" type="view" value="StoreProductIssue"/>
      </request-map>
+     <request-map uri="cancelIssuenceForCustRequest">
+       <security https="true" auth="true"/>
+       <event type="service" path="" invoke="cancelIssuenceForCustRequest" global-transaction="true"/>
+       <response name="success" type="request-redirect-noparam" value="FindMaterialIssuanceNew"/>
+       <response name="error" type="view" value="FindMaterialIssuanceNew"/>
+     </request-map>
+     
      
      <request-map uri="draftEnquiryForApprovedRequirementsEvent">
        <security https="true" auth="true"/>

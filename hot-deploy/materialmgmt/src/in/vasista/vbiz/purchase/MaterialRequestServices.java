@@ -1224,4 +1224,101 @@ public class MaterialRequestServices {
            
         return ServiceUtil.returnSuccess();
     }
+	 //cancel issuence for request   
+	 
+	 public static Map<String, Object> cancelIssuenceForCustRequest(DispatchContext ctx, Map<String, Object> context) {
+	        LocalDispatcher dispatcher = ctx.getDispatcher();
+	        Delegator delegator = ctx.getDelegator();
+	        Locale locale = (Locale) context.get("locale");
+	        String custRequestId = (String)context.get("custRequestId");
+	        String custRequestItemSeqId = (String)context.get("custRequestItemSeqId");
+	        String itemIssuanceId = (String)context.get("itemIssuanceId");
+	        String shipmentId = (String)context.get("shipmentId");
+	        String facilityId = (String)context.get("facilityId");
+	        GenericValue userLogin = (GenericValue) context.get("userLogin");
+	        Map<String, Object> result = ServiceUtil.returnSuccess();
+	        try {
+	        	String productId="";
+	        	/*GenericValue custRequestItem = delegator.findOne("CustRequestItem", UtilMisc.toMap("custRequestId", custRequestId, "custRequestItemSeqId", custRequestItemSeqId), false);
+	        	
+	        	if (custRequestItem == null) {
+	                return ServiceUtil.returnError("No Request found for Id : "+custRequestId+" and seqId : "+custRequestItemSeqId);
+	            }*/
+	        	GenericValue issuanceAndShipmentAndCustRequest= null;
+	        	List<GenericValue> issuanceAndShipmentAndCustRequestList = delegator.findList("IssuanceAndShipmentAndCustRequest", EntityCondition.makeCondition("shipmentId", EntityOperator.EQUALS, shipmentId), null, null, null, false);
+	        	
+	        	if(UtilValidate.isNotEmpty(issuanceAndShipmentAndCustRequestList)){
+	        		issuanceAndShipmentAndCustRequest = EntityUtil.getFirst(issuanceAndShipmentAndCustRequestList);
+	        	    productId=issuanceAndShipmentAndCustRequest.getString("productId");
+	        	}
+	        	
+                List<GenericValue> itemIssuanceList = delegator.findList("ItemIssuance", EntityCondition.makeCondition("shipmentId", EntityOperator.EQUALS, shipmentId), null, null, null, false);
+	            for(GenericValue itemShipIssuence:itemIssuanceList){
+	            	
+	                itemIssuanceId=itemShipIssuence.getString("itemIssuanceId");
+	            	BigDecimal actQuantity = itemShipIssuence.getBigDecimal("quantity");
+	            	BigDecimal cancelQuantity = actQuantity;
+	                
+	            	//update isssuenceItem
+	            	Map itemIssueCtx = FastMap.newInstance();
+					itemIssueCtx.put("cancelQuantity", cancelQuantity);
+					itemIssueCtx.put("itemIssuanceId", itemIssuanceId);
+					itemIssueCtx.put("userLogin", userLogin);
+					itemIssueCtx.put("modifiedByUserLoginId", userLogin.getString("userLoginId"));
+					itemIssueCtx.put("modifiedDateTime", UtilDateTime.nowTimestamp());
+					Map resultCtx = dispatcher.runSync("updateItemIssuance", itemIssueCtx);
+					if (ServiceUtil.isError(resultCtx)) {
+						Debug.logError("Problem updateItemIssuance item issuance for requested item", module);
+						return resultCtx;
+					}
+	            	
+	            	String inventoryItemId=itemShipIssuence.getString("inventoryItemId");
+	            	//update inventery details.
+	            	Map createInvDetail = FastMap.newInstance();
+					createInvDetail.put("userLogin", userLogin);
+					createInvDetail.put("inventoryItemId", inventoryItemId);
+					createInvDetail.put("itemIssuanceId", itemIssuanceId);
+					createInvDetail.put("quantityOnHandDiff", actQuantity);
+					createInvDetail.put("availableToPromiseDiff", actQuantity);
+					Map invResultCtx = dispatcher.runSync("createInventoryItemDetail", createInvDetail);
+					if (ServiceUtil.isError(invResultCtx)) {
+						Debug.logError("Problem Incrementing inventory for requested item ", module);
+						return invResultCtx;
+					}
+					
+	            }
+				//set previous status
+					Map itemStatusCtx = FastMap.newInstance();
+					itemStatusCtx.put("custRequestId", custRequestId);
+					itemStatusCtx.put("custRequestItemSeqId", custRequestItemSeqId);
+					itemStatusCtx.put("userLogin", userLogin);
+					itemStatusCtx.put("description", "");
+					itemStatusCtx.put("statusId", "CRQ_SUBMITTED");
+					Map crqResultCtx = dispatcher.runSync("setCustRequestItemStatus", itemStatusCtx);
+					if (ServiceUtil.isError(crqResultCtx)) {
+						Debug.logError("Problem changing status for requested item ", module);
+						return crqResultCtx;
+					}
+					//updating shipment
+		            try{
+		            	GenericValue shipment = delegator.findOne("Shipment", UtilMisc.toMap("shipmentId", shipmentId), false);
+		            	shipment.set("statusId","SHIPMENT_CANCELLED");
+		            	shipment.set("lastModifiedByUserLogin", userLogin.getString("userLoginId"));
+		            	shipment.set("lastModifiedDate", UtilDateTime.nowTimestamp());
+		                delegator.store(shipment);
+		            } catch (GenericEntityException e) {
+		                Debug.logError(e, module);
+		                return ServiceUtil.returnError("Failed to update shipment " + e);            
+		            }
+		            
+	            result = ServiceUtil.returnSuccess("Successfully Canceled item :"+productId+" for Indent Number:"+custRequestId);
+	        } catch (GenericEntityException e) {
+	            Debug.logError("Problem in retriving data from database", module);
+	        } catch (GenericServiceException e) {
+	            Debug.logError("Problem in calling service issueInventoryItemToCustRequest", module);
+	            return ServiceUtil.returnError("Problem in calling service issueInventoryItemToCustRequest");
+	        }
+	        return result;
+	    }
+	 
 }
