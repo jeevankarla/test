@@ -164,6 +164,13 @@
          <response name="success" type="view" value="searchMaterial"/>
         <response name="error" type="view" value="searchMaterial"/>
     </request-map>
+    <request-map uri="updateProductDetails">
+        <security auth="true" https="true"/>
+         <event type="service" invoke="updateProduct" ></event>
+         <response name="success" type="view" value="searchMaterial"/>
+        <response name="error" type="view" value="searchMaterial"/>
+    </request-map>
+    
     
     
     <request-map uri="FindMaterialInvoices">
