@@ -612,12 +612,13 @@ public class MaterialRequestServices {
             
             List conditionList = FastList.newInstance();
             conditionList.add(EntityCondition.makeCondition("productId", EntityOperator.EQUALS, productId));
+            conditionList.add(EntityCondition.makeCondition("statusId", EntityOperator.EQUALS, "SR_ACCEPTED"));
             conditionList.add(EntityCondition.makeCondition("quantityOnHandTotal", EntityOperator.GREATER_THAN, BigDecimal.ZERO));
             if(UtilValidate.isNotEmpty(facilityId)){
             	conditionList.add(EntityCondition.makeCondition("facilityId", EntityOperator.EQUALS, facilityId));
             }
             EntityCondition condition = EntityCondition.makeCondition(conditionList, EntityOperator.AND);
-            List<GenericValue> inventoryItems = delegator.findList("InventoryItem", condition, null, UtilMisc.toList("datetimeReceived"), null, false);
+            List<GenericValue> inventoryItems = delegator.findList("ShipmentReceiptAndItem", condition, null, UtilMisc.toList("datetimeReceived"), null, false);
             Iterator<GenericValue> itr = inventoryItems.iterator();
             while ((requestedQty.compareTo(BigDecimal.ZERO) > 0) && itr.hasNext()) {
                 GenericValue inventoryItem = itr.next();
