@@ -537,7 +537,12 @@ public class MaterialRequestServices {
         GenericValue userLogin = (GenericValue) context.get("userLogin");
         Map<String, Object> result = ServiceUtil.returnSuccess();
         try {
-        	
+        	 if(UtilValidate.isEmpty(toBeIssuedQty) || (UtilValidate.isNotEmpty(toBeIssuedQty) && toBeIssuedQty.compareTo(BigDecimal.ZERO)==0)){
+     			return ServiceUtil.returnError("Cannot Accept Quantity ZERO or Empty");
+     		 }
+             if(UtilValidate.isNotEmpty(toBeIssuedQty) && toBeIssuedQty.compareTo(BigDecimal.ZERO)==-1){
+     			return ServiceUtil.returnError("Negative Value Not Allowed");
+     		 }
         	GenericValue custRequestItem = delegator.findOne("CustRequestItem", UtilMisc.toMap("custRequestId", custRequestId, "custRequestItemSeqId", custRequestItemSeqId), false);
         	
         	if (custRequestItem == null) {
