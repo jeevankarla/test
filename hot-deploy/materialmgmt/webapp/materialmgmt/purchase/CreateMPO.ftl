@@ -253,6 +253,7 @@ function makeDatePicker(fromDateId ,thruDateId){
 	<#assign bedCheck = "">
 	<#assign orderOtherTermInfo = []>
 	<#assign quoteTerm = "">
+	<#assign orderTypeId = "">
 	<#if orderEditParam?has_content>
 		<#assign orderInfo = orderEditParam.get("orderHeader")?if_exists>
 		<#assign quoteInfo = orderEditParam.get("quoteDetails")?if_exists>
@@ -264,6 +265,7 @@ function makeDatePicker(fromDateId ,thruDateId){
 		</#if>
 		<#assign orderAdjInfo = orderEditParam.get("orderAdjustment")?if_exists>
 		<#assign orderTermInfo = orderEditParam.get("orderTerms")?if_exists>
+		<#assign orderTypeId = orderInfo.orderTypeId>
 		<#if orderTermInfo?has_content>
 			<#assign orderPayTermInfo = orderTermInfo.get("paymentTerms")>
 			<#assign orderShipTermInfo = orderTermInfo.get("deliveryTerms")>
@@ -282,7 +284,7 @@ function makeDatePicker(fromDateId ,thruDateId){
 						    <td>
 							<select name="orderTypeId" id="orderTypeId" onchange="javascript: hideExtPO();">
 						      	   <#list orderTypes as orderType>
-						      	   		<#if orderId?exists && (orderInfo.get("orderTypeId") == orderType.orderTypeId)>
+						      	   		<#if orderId?exists && (orderTypeId == orderType.orderTypeId)>
 						      	   			<option value='${orderType.orderTypeId}' selected>${orderType.description}</option> 
 						      	   		<#else>
 						      	   			<option value='${orderType.orderTypeId}'>${orderType.description}</option>

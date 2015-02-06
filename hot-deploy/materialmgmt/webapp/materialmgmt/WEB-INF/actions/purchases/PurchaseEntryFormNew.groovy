@@ -28,6 +28,19 @@ if(changeFlag=="PurchaseOrder"){
 	productCatageoryId="PACKING_PRODUCT";
 }
 
+if(parameters.orderId){
+	orderHeader = delegator.findOne("OrderHeader", UtilMisc.toMap("orderId", parameters.orderId), false);
+	orderTypeId = orderHeader.orderTypeId;
+	orderType = delegator.findOne("OrderType", UtilMisc.toMap("orderTypeId", orderTypeId), false);
+		
+	if(orderType){
+		parentOrderTypeId = orderType.parentTypeId;
+		if(parentOrderTypeId == "PURCHASE_CONTRACT"){
+			parameters.purchaseTypeFlag = "contractPurchase";
+		}
+	}
+}
+
 //Debug.log("========changeFlagAFTERR NEWAPPLICATIONNNNNN=="+changeFlag+"=====in OrderINDesdff");
 subscriptionProdList = [];
 displayGrid = true;

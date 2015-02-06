@@ -7034,6 +7034,13 @@ public class OrderServices {
 	    		   termAmount = termValue;
 	    	   }
 	       }
+	       if(termTypeId.equals("COGS_INSURANCE")){
+	    	   if(UtilValidate.isNotEmpty(uomId) && uomId.equals("PERCENT")){
+	    		   termAmount = ((basicAmount.add(exciseDuty)).multiply(termValue)).divide(new BigDecimal("100"),taxRounding);
+	    	   }else{
+	    		   termAmount = termValue;
+	    	   }
+	       }
 	       
 	       return termAmount;
 	   }
