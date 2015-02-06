@@ -657,7 +657,7 @@
           default-menu-item-name="EmployeeProfile" selected-menuitem-context-field-name="tabButtonItem2">
         <menu-item name="EmployeeProfile" title="OverView">
             <link target="EmployeeProfile">
-                <parameter param-name="partyId"/>
+                <parameter param-name="partyId" from-field="parameters.partyId"/>
                 <parameter param-name="roleTypeIdFrom"/>
                 <parameter param-name="roleTypeIdTo"/>
                 <parameter param-name="partyIdFrom"/>
