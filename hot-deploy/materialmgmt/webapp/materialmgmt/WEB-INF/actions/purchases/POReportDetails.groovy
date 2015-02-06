@@ -120,10 +120,14 @@ if(UtilValidate.isNotEmpty(orderDetails)){
 		orderDetailsMap["productId"]=orderitems.productId;
 		product = delegator.findOne("Product",["productId":orderitems.productId],false);
 		if(product){
+		
+		orderDetailsMap["description"]=product.get("description");
+		orderDetailsMap["longDescription"]=product.get("longDescription");
+		
 		uomId=product.get("quantityUomId");
 		if(UtilValidate.isNotEmpty(uomId)){
 			unitDesciption = delegator.findOne("Uom",["uomId":uomId],false);
-		 orderDetailsMap["unit"]=unitDesciption.get("abbreviation");
+		 orderDetailsMap["unit"]=unitDesciption.get("description");
 		}}
 		
 		orderDetailsMap["quantity"]=orderitems.quantity;
@@ -143,9 +147,12 @@ if(UtilValidate.isNotEmpty(orderDetails)){
 	if(UtilValidate.isNotEmpty(quoteId)){
 		QuoteDetails = delegator.findOne("Quote",["quoteId":quoteId],false);
 		qutationDate=QuoteDetails.get("issueDate");
+		quoteRef=QuoteDetails.get("quoteName");
+		
 		allDetailsMap.put("quoteId",quoteId);
 		allDetailsMap.put("qutationDate",qutationDate);
-				
+		allDetailsMap.put("quoteRef",quoteRef);
+		
 		enquiryDetails = delegator.findList("QuoteAndItemAndCustRequest",EntityCondition.makeCondition("quoteId", EntityOperator.EQUALS , quoteId)  , null, null, null, false );
 		enquiryDetails=EntityUtil.getFirst(enquiryDetails);
 		enquiryId=enquiryDetails.custRequestId;

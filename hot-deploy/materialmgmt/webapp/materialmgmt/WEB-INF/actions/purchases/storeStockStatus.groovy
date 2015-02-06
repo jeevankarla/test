@@ -20,7 +20,7 @@ import java.text.SimpleDateFormat;
 import org.ofbiz.service.DispatchContext;
 import org.ofbiz.service.GenericServiceException;
 import org.ofbiz.service.ServiceUtil;
-
+import org.ofbiz.product.inventory.InventoryServices;
 import java.math.BigDecimal;
 import java.math.MathContext;
 import org.ofbiz.base.util.UtilNumber;
@@ -30,12 +30,16 @@ import in.vasista.vbiz.byproducts.SalesInvoiceServices;
 import org.ofbiz.party.party.PartyHelper;
 import org.ofbiz.product.inventory.InventoryWorker;
 import in.vasista.vbiz.purchase.MaterialHelperServices;
-
+import org.ofbiz.product.inventory.InventoryWorker;
+import in.vasista.vbiz.purchase.MaterialHelperServices;
+ 
 dctx = dispatcher.getDispatchContext();
 facilityId=parameters.issueToFacilityId;
+
+
  productDetails = delegator.findList("ProductFacility",EntityCondition.makeCondition("facilityId", EntityOperator.EQUALS , facilityId)  ,  UtilMisc.toSet("productId"), null, null, false );
  productIds = EntityUtil.getFieldListFromEntityList(productDetails, "productId", true);
- 
+
 productCatDetails = delegator.findList("ProductCategoryMember",EntityCondition.makeCondition("productId", EntityOperator.IN , productIds)  , null, null, null, false );
 productCatIds = EntityUtil.getFieldListFromEntityList(productCatDetails,"productCategoryId", true);
 if(UtilValidate.isNotEmpty(productCatIds)){
@@ -47,21 +51,30 @@ if(UtilValidate.isNotEmpty(productCatIds)){
 	conlist.add(EntityCondition.makeCondition("productId", EntityOperator.IN, productIds));
 	cond=EntityCondition.makeCondition(conlist,EntityOperator.AND);
 	prodIdData = delegator.findList("ProductAndCategoryMember", cond , null, null, null, false );
-  
+	
 	if(UtilValidate.isNotEmpty(prodIdData)){
 	  prodIdData.each{productDetails->
 	  productDetailMap=[:];
 	  productDetailMap["productId"]=productDetails.productId;
 	  productDetailMap["description"]=productDetails.description;
 	  uomId=productDetails.quantityUomId;
+	  Map resultOutput = null;
+	  
+	  bookStock = dispatcher.runSync("getInventoryAvailableByFacility", [productId : productDetails.productId, facilityId : facilityId ,ownerPartyId :"Company"]);
+	 
+//	  totalInventory = dispatcher.runSync("getInventoryAvailableByFacility", [productId : productDetails.productId, facilityId : facilityId]);
+//	  Debug.log("totalInventory==============================="+totalInventory);
+	  
+	// bookStock = InventoryServices.getProductInventoryOpeningBalance(dctx, [effectiveDate:effdayEnd,productId:productDetails.productId,facilityId:facilityId ]);
+	// Debug.log("bookStock==============================="+bookStock);
+	  productDetailMap["inventoryCount"]=bookStock.quantityOnHandTotal;
 	  
 	  if(UtilValidate.isNotEmpty(uomId)){
-		  uomDesc = delegator.findList("Uom",EntityCondition.makeCondition("uomId", EntityOperator.EQUALS , uomId)  , null, null, null, false );
-		  uomDesc=EntityUtil.getFirst(uomDesc);
-		  productDetailMap["unit"]=uomDesc.abbreviation;
-	      }
-	  
+		  unitDesciption = delegator.findOne("Uom",["uomId":uomId],false);
+	   productDetailMap["unit"]=unitDesciption.get("description");
+	  }
 	  prodList.addAll(productDetailMap);
+	  
 	  
        }
 	 }
