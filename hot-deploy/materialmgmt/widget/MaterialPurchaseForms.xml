@@ -155,7 +155,7 @@
     </form>
     
      <form name="listMaterialShipmentReceipt" type="list" list-name="listIt" paginate-target="${targetRequest}"
-        odd-row-style="alternate-row" header-row-style="header-row" default-table-style="basic-table hover-bar">
+        odd-row-style="alternate-row" header-row-style="header-row"  target="sendReceiptQtyForQC" default-table-style="basic-table hover-bar">
         <actions>
             <service service-name="performFind" result-map="result" result-map-list="listIt">
                 <field-map field-name="inputFields" from-field="parameters"/>
@@ -166,11 +166,20 @@
             </service>
             <script location="component://materialmgmt/webapp/materialmgmt/WEB-INF/actions/purchases/SupplyTillDate.groovy"/>
         </actions>
+        <row-actions>
+        	<entity-one value-field="product" entity-name="Product">
+				<field-map field-name="productId" from-field="productId"/>
+			</entity-one>
+			<entity-one value-field="uom" entity-name="Uom">
+				<field-map field-name="uomId" from-field="product.quantityUomId"/>
+			</entity-one>
+			<set field="dec" from-field="uom.description"/>
+        </row-actions>
       	<field name="receiptId" title="GRN No">
       		<display/>
       	</field>
-      	<field name="productId" title="productId">
-      		<display-entity entity-name="Product" description="${description}"/>
+      	<field name="productId" title="Code- Name [UOM]">
+      		<display-entity entity-name="Product" description="${productId} ${description}[${dec}]"/>
       	</field>
         <field name="datetimeReceived" title="Received Date"><display description="${groovy:org.ofbiz.base.util.UtilDateTime.toDateString(datetimeReceived, &quot;dd-MMM-yyyy&quot;);}"/></field>
         <field name="shipmentId" title="ShipmentId"><display/></field>
@@ -182,7 +191,7 @@
       	<field name="quantityRejected" title="Qty Rejected"><display/></field>
       	<field name="supplyTillDate"><display/></field>
       	<field name="receivedByUserLoginId" title="Entry by"><display/></field>	
-      	
+      	 
       	 <field name="report" widget-style="buttontext" >
             <hyperlink target="MRRreport.pdf" description="Report" target-window="_blank">
              	<parameter param-name="shipmentId" value="${shipmentId}"/>
@@ -190,6 +199,10 @@
               	<parameter param-name="receiptId" value="${receiptId}"/>
                	<parameter param-name="datetimeReceived" value="${groovy:org.ofbiz.base.util.UtilDateTime.toDateString(datetimeReceived, &quot;dd-MMM-yyyy&quot;);}"/>
             </hyperlink>
+        </field>
+        <field name="statusIdTo"  > <hidden  value="SR_QUALITYCHECK" /> </field>
+         <field name="SendtoQC" title="Send to QC"   use-when="statusId.equals(&quot;SR_RECEIVED&quot;)"    widget-style="buttontext"> 
+           <submit button-type="button"  />
         </field>
       	
     </form>
@@ -275,7 +288,7 @@
              <lookup target-form-name="LookupProduct" size="15" />
         </field>
     	<field name="shipmentId"><text-find></text-find></field>
-    	<field name="datetimeReceived"><date-find/></field>
+    	<field name="datetimeReceived" ><date-find type="timestamp"/></field>
     	<field name="submitButton" title="${uiLabelMap.CommonFind}" widget-style="smallSubmit">
             <submit button-type="button"/>
         </field>
@@ -286,7 +299,7 @@
           <service service-name="performFind" result-map="result" result-map-list="listIt">
             <field-map field-name="inputFields" from-field="parameters"/>
             <field-map field-name="entityName" from-field="entityName"/>
-            <field-map field-name="inputFields.statusId" value="SR_RECEIVED"/>
+            <field-map field-name="inputFields.statusId" value="SR_QUALITYCHECK"/>
             <field-map field-name="orderBy" value="datetimeReceived"/>  
             <field-map field-name="viewIndex" from-field="viewIndex"/>
             <field-map field-name="viewSize" from-field="viewSize"/>
@@ -295,14 +308,23 @@
     </form>
     <form name="ListMaterialForQCApproval" type="list" list-name="receiptItems" paginate-target="${targetRequest}"
         odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar"  separate-columns="true" target="acceptReceiptQtyByQC">
-        
+        <row-actions>
+        	<entity-one value-field="product" entity-name="Product">
+				<field-map field-name="productId" from-field="productId"/>
+			</entity-one>
+			<entity-one value-field="uom" entity-name="Uom">
+				<field-map field-name="uomId" from-field="product.quantityUomId"/>
+			</entity-one>
+			<set field="dec" from-field="uom.description"/>
+        </row-actions>
       	<field name="receiptId" title ="GRN No">
       		<display/>
       	</field>
         <field name="datetimeReceived" title="Received Time"><display description="${groovy:org.ofbiz.base.util.UtilDateTime.toDateString(datetimeReceived, &quot;dd/MM/yyyy HH:mm:ss&quot;);}"/></field>
-        <field name="productId" title="Product"><display-entity entity-name="Product" description="${productName} - [ ${productId} ] "/></field>
+        <field name="productId" title="Name [Code][UOM]"><display-entity entity-name="Product" description="${productName} - [ ${productId} ][${dec}] "/></field>
         <field name="shipmentId"><display/></field>
-        <field name="statusIdTo"><hidden value="SR_QUALITYCHECK"/></field>
+      <!--   <field name="statusIdTo"><hidden value="SR_QUALITYCHECK"/></field> -->
+        <field name="statusIdTo"><hidden value="SR_ACCEPTED"/></field>
         <field name="shipmentItemSeqId"><display/></field>
  		<field name="receivedByUserLoginId" title="Received By"><display/></field>
  		<field name="currentQty"><hidden value="${quantityAccepted}"/></field>

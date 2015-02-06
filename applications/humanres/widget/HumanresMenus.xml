@@ -657,7 +657,7 @@
           default-menu-item-name="EmployeeProfile" selected-menuitem-context-field-name="tabButtonItem2">
         <menu-item name="EmployeeProfile" title="OverView">
             <link target="EmployeeProfile">
-                <parameter param-name="partyId"/>
+                <parameter param-name="partyId" from-field="parameters.partyId"/>
                 <parameter param-name="roleTypeIdFrom"/>
                 <parameter param-name="roleTypeIdTo"/>
                 <parameter param-name="partyIdFrom"/>
@@ -673,7 +673,7 @@
 	               </or>
             </condition> 
         	<link target="empShiftCalender" >
-        		<parameter param-name="partyId"/>
+        		<parameter param-name="partyId" from-field="parameters.partyId"/>
         	</link>
         </menu-item>
         
@@ -686,7 +686,7 @@
 	               </or> 
             </condition>
             <link target="PreviousEmployementProfile">
-                <parameter param-name="partyId"/>
+                <parameter param-name="partyId" from-field="parameters.partyId"/>
             </link>
         </menu-item>
              
@@ -723,7 +723,7 @@
 	               </or> 
             </condition>
             <link target="EditEmployeeSkills">
-                <parameter param-name="partyId"/>
+               <parameter param-name="partyId" from-field="parameters.partyId"/>
             </link>
         </menu-item>
         <menu-item name="EditEmployeeQuals" title="${uiLabelMap.HumanResPartyQualification}">
@@ -735,7 +735,7 @@
 	               </or> 
             </condition>
             <link target="EditEmployeeQuals">
-                <parameter param-name="partyId"/>
+                <parameter param-name="partyId" from-field="parameters.partyId"/>
             </link>
         </menu-item>
         <!--<menu-item name="EditEmployeeTrainings" title="${uiLabelMap.HumanResTraining}">
@@ -768,7 +768,7 @@
 	               </or> 
             </condition>
             <link target="EditEmployeeLeaves">
-                <parameter param-name="partyId"/>
+                <parameter param-name="partyId" from-field="parameters.partyId"/>
             </link>
         </menu-item>
         <menu-item name="PayrollItems" title="Salary">
@@ -784,11 +784,13 @@
                 <parameter param-name="roleTypeIdTo" from-field="parameters.roleTypeIdTo"/>
                 <parameter param-name="partyIdFrom" from-field="parameters.partyIdFrom"/>
                 <parameter param-name="partyIdTo" from-field="parameters.partyId"/>
+                <parameter param-name="partyId" from-field="parameters.partyId"/>
         	</link>
         </menu-item>
         <menu-item name="paySlip" title="Pay Slip">
         	<link target="paySlip">
         		<parameter param-name="partyId" from-field="userLogin.partyId"/>
+        		<parameter param-name="partyId" from-field="parameters.partyId"/>
         	</link>
         </menu-item>
     </menu>

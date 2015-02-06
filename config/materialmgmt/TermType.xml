@@ -49,4 +49,5 @@
     <TermType termTypeId="COGS_TNS_CHG" parentTypeId="OTHERS" hasTable="N" description="Transportation Charges"/>
     <TermType termTypeId="COGS_PCK_FWD_ATR" parentTypeId="OTHERS" hasTable="N" description="Packing And Forwarding Charges After Tax"/>
     <TermType termTypeId="COGS_DISC_ATR" parentTypeId="OTHERS" hasTable="N" description="Discount After"/>
+    <TermType description="Including Tax" hasTable="N" parentTypeId="TAX" termTypeId="INC_TAX"/>
 </entity-engine-xml>

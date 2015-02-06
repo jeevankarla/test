@@ -133,6 +133,7 @@ under the License.
         <attribute name="noteDate" type="Timestamp" mode="IN" optional="true"/>
         <attribute name="noteInfo" type="String" mode="IN" optional="true" allow-html="safe"/>
         <attribute name="noteId" type="String" mode="OUT" optional="false"/>
+        <attribute name="noteType" type="String" mode="IN" optional="false"/>
         <attribute name="fromPartyId" type="String" mode="OUT" optional="true"/><!-- party to be notified -->
         <attribute name="custRequestName" type="String" mode="OUT" optional="true"/><!-- for notification services -->
     </service>

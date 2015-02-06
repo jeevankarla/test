@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<entity-engine-xml>
+    <OrderTaxTypeComponentMap orderTaxTypeId="100" componentRate="2" componentType="BEDCESS_PUR"/>
+    <OrderTaxTypeComponentMap orderTaxTypeId="100" componentRate="1" componentType="BEDSECCESS_PUR"/>
+    <OrderTaxTypeComponentMap orderTaxTypeId="100" componentRate="12" componentType="BED_PUR"/>
+    <OrderTaxTypeComponentMap orderTaxTypeId="101" componentRate="2" componentType="BEDCESS_PUR"/>
+    <OrderTaxTypeComponentMap orderTaxTypeId="101" componentRate="1" componentType="BEDSECCESS_PUR"/>
+    <OrderTaxTypeComponentMap orderTaxTypeId="101" componentRate="6" componentType="BED_PUR"/>
+    <OrderTaxTypeComponentMap orderTaxTypeId="200" componentRate="2" componentType="CST_PUR"/>
+    <OrderTaxTypeComponentMap orderTaxTypeId="300" componentRate="14.5" componentType="VAT_PUR"/>
+    <OrderTaxTypeComponentMap orderTaxTypeId="301" componentRate="5.5" componentType="VAT_PUR"/>
+    <OrderTaxTypeComponentMap orderTaxTypeId="400" componentRate="12.36" componentType="SERVICE_TAX_PUR"/>
+</entity-engine-xml>

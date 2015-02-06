@@ -21,7 +21,6 @@ import org.ofbiz.service.ServiceUtil;
 import java.math.BigDecimal;
 import java.math.MathContext;
 import org.ofbiz.base.util.UtilNumber;
-import in.vasista.vbiz.purchase.MaterialHelperServices;
 import org.ofbiz.accounting.invoice.InvoiceWorker;
 import in.vasista.vbiz.byproducts.SalesInvoiceServices;
 import org.ofbiz.party.party.PartyHelper;

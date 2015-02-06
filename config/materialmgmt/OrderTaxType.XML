@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<entity-engine-xml>
+    <OrderTaxType orderTaxTypeId="100" taxType="EXCISE_DUTY_PUR" taxRate="12.36" fromDate="2014-01-01 00:00:00"/>
+    <OrderTaxType orderTaxTypeId="101" taxType="EXCISE_DUTY_PUR" taxRate="6.18" fromDate="2014-01-01 00:00:00"/>
+    <OrderTaxType orderTaxTypeId="200" taxType="CST_PUR" taxRate="2" fromDate="2014-01-01 00:00:00"/>
+    <OrderTaxType orderTaxTypeId="300" taxType="VAT_PUR" taxRate="14.5" fromDate="2014-01-01 00:00:00"/>
+    <OrderTaxType orderTaxTypeId="301" taxType="VAT_PUR" taxRate="5.5" fromDate="2014-01-01 00:00:00"/>
+    <OrderTaxType orderTaxTypeId="400" taxType="SER_PUR" taxRate="12.36" fromDate="2014-01-01 00:00:00"/>
+</entity-engine-xml>
+

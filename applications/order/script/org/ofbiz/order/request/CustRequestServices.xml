@@ -304,6 +304,7 @@ under the License.
         <if-not-empty field="parameters.noteInfo">
           <set from-field="parameters.noteInfo" field="newNoteMap.note"/>
         </if-not-empty>
+        <set from-field="parameters.noteType" field="newNoteMap.noteType"/>
         <set from-field="parameters.noteName" field="newNoteMap.noteName"/>
         <set from-field="parameters.noteDate" field="newNoteMap.noteDate"/>
         <call-service service-name="createNote" in-map-name="newNoteMap">

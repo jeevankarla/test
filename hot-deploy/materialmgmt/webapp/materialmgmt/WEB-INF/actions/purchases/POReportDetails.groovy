@@ -105,13 +105,13 @@ if(fileNumber){
 	fileNo=fileNumber.get("attrValue");
 	allDetailsMap.put("fileNo",fileNo);
 }
-
 //referNumber
-referNumber = delegator.findOne("OrderHeader",["orderId":orderId],false);
+referNumber = delegator.findOne("OrderAttribute",["orderId":orderId,"attrName":"REF_NUMBER"],false);
 if(referNumber){
-	refNo=referNumber.get("externalId");
+	refNo=referNumber.get("attrValue");
 	allDetailsMap.put("refNo",refNo);
 }
+
 //to get product details
 orderDetails = delegator.findList("OrderItem",EntityCondition.makeCondition("orderId", EntityOperator.EQUALS , orderId)  , null, null, null, false );
 if(UtilValidate.isNotEmpty(orderDetails)){

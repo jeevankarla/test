@@ -21,9 +21,9 @@ under the License.
 <fo:root xmlns:fo="http://www.w3.org/1999/XSL/Format">
 <#-- do not display columns associated with values specified in the request, ie constraint values -->
 <fo:layout-master-set>
-	<fo:simple-page-master master-name="main" page-height="12in" page-width="15in"
+	<fo:simple-page-master master-name="main" page-height="15in" page-width="12in"
             margin-top="0.1in" margin-bottom=".7in" margin-left=".5in" margin-right=".5in">
-        <fo:region-body margin-top="1.6in"/>
+        <fo:region-body margin-top="2in"/>
         <fo:region-before extent="1.in"/>
         <fo:region-after extent="1.5in"/>        
     </fo:simple-page-master>   
@@ -32,13 +32,16 @@ under the License.
         <#--<#if prodNameMap?has_content> -->   
         <fo:page-sequence master-reference="main">
            <fo:static-content font-size="13pt" font-family="Courier,monospace"  flow-name="xsl-region-before" font-weight="bold">
+			  <fo:block  keep-together="always" text-align="center" font-family="Courier,monospace" white-space-collapse="false">&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;UserLogin : <#if userLogin?exists>${userLogin.userLoginId?if_exists}</#if></fo:block>
+			  <fo:block  keep-together="always" text-align="center" font-family="Courier,monospace" white-space-collapse="false">&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;Date:${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(nowTimestamp, "dd/MM/yy HH:mm:ss")}</fo:block> 
+		      <fo:block  keep-together="always" text-align="center" font-family="Courier,monospace" white-space-collapse="false" font-size="12pt" > &#160;&#160;  </fo:block>
               <fo:block  keep-together="always" text-align="center" font-weight = "bold" font-family="Courier,monospace" white-space-collapse="false">${uiLabelMap.KMFDairyHeader}</fo:block>
 			  <fo:block  keep-together="always" text-align="center" font-family="Courier,monospace" white-space-collapse="false" font-weight="bold">${uiLabelMap.KMFDairySubHeader}</fo:block> 
               <fo:block text-align="center" keep-together="always"> COMPARATIVE STATEMENT SHOWING DETAILS OF OFFERS RECEIVED AS AGAINST OUR ENQUIRY DATE:${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(enquiryDate, "dd-MMM-yyyy")}</fo:block>
               <fo:block text-align="center" keep-together="always"  >&#160;---------------------------------------------------------------------------------------------------</fo:block>
             </fo:static-content>                 
                 <fo:flow flow-name="xsl-region-body"   font-family="Courier,monospace">				        
-				   <fo:block text-align="left" keep-together="always" white-space-collapse="false" font-size="13pt" font-weight="bold">ENQUIRY NO.: ${parameters.issueToEnquiryNo}                                                          </fo:block>	
+				   <fo:block text-align="center" keep-together="always" white-space-collapse="false" font-size="13pt" font-weight="bold">ENQUIRY NO.: ${parameters.issueToEnquiryNo}                                                          </fo:block>	
 				   <fo:block font-family="Courier,monospace">
 	                 <fo:table  border-style="solid">
 					     <fo:table-column column-width="240pt"/>
@@ -46,16 +49,16 @@ under the License.
 					      <fo:table-column column-width="140pt"/>					      
 					      </#list> 
 					         <fo:table-body>
-					             <fo:table-row>
+					             <fo:table-row height="50pt">
 					                 <fo:table-cell >
-								        <fo:block text-align="center" keep-together="always" font-weight="bold" font-size="13pt">VENDOR NAME</fo:block>
+								        <fo:block text-align="center" keep-together="always" font-weight="bold" font-size="11pt">VENDOR NAME</fo:block>
 								        <fo:block linefeed-treatment="preserve">&#xA;</fo:block>							        
 								        <fo:block text-align="left" keep-together="always"  font-weight="bold" white-space-collapse="false">&#160;MATERIALS  REQRD QTY    LAST PO</fo:block>
 								        <fo:block text-align="left" keep-together="always"  font-weight="bold" white-space-collapse="false">&#160;                       DATE/RATE</fo:block>								        
 								     </fo:table-cell>
 					                 <#list partyDetList as partyNameList>
     										<fo:table-cell border-style="solid">
-						                      <fo:block text-align="center" font-size="13pt" white-space-collapse="false" font-weight="bold">${partyNameList.get("partyName")?if_exists}[${partyNameList.get("partyId")}]</fo:block>
+						                      <fo:block text-align="center" font-size="11pt" white-space-collapse="false" font-weight="bold" >${partyNameList.get("partyName")?if_exists}[${partyNameList.get("partyId")}]</fo:block>
 						                  	</fo:table-cell>
     									</#list>    	
 					             </fo:table-row> 
@@ -65,7 +68,7 @@ under the License.
 					                </fo:table-cell>
 					                 <#list partyDetList as partyNameList>
 					                 <fo:table-cell border-style="solid">
-					                    <fo:block text-align="center" font-size="13pt" white-space-collapse="false" font-weight="bold">UNIT PRICE/TOT COST</fo:block>
+					                    <fo:block text-align="center" font-size="11pt" white-space-collapse="false" font-weight="bold">UNIT PRICE/TOT COST</fo:block>
 					                </fo:table-cell>
 					                </#list> 
 					            </fo:table-row> 					              		                             
@@ -120,18 +123,18 @@ under the License.
 	                  <fo:block linefeed-treatment="preserve">&#xA;</fo:block>       
 				      <fo:block font-family="Courier,monospace">
 	                    <fo:table>
-					      <fo:table-column column-width="140pt"/>
+					      <fo:table-column column-width="160pt"/>
 					      <#list partyDetList as partyNameList>					      
 					      <fo:table-column column-width="140pt"/>
 					      </#list> 					                					      
 					          <fo:table-body>
 					              <fo:table-row>
 					                 <fo:table-cell border-style="solid">
-					                      <fo:block text-align="center" font-weight="bold" font-size="13pt" >VENDOR NAME</fo:block>
+					                      <fo:block text-align="center" font-weight="bold" font-size="11pt" >VENDOR NAME</fo:block>
 					                  </fo:table-cell>					                  
     									<#list partyDetList as partyNameList>
     										<fo:table-cell border-style="solid">
-						                      <fo:block text-align="center" font-size="13pt"  font-weight="bold">${partyNameList.get("partyName")?if_exists}</fo:block>
+						                      <fo:block text-align="center" font-size="11pt"  font-weight="bold">${partyNameList.get("partyName")?if_exists}</fo:block>
 						                  	</fo:table-cell>
     									</#list>    									    								
 					              </fo:table-row>
@@ -157,13 +160,17 @@ under the License.
 				   
 				   <fo:block linefeed-treatment="preserve">&#xA;</fo:block>		        
 				   <fo:block linefeed-treatment="preserve">&#xA;</fo:block>		        				   
-                   <fo:block text-align="left" keep-together="always"  font-weight="bold" white-space-collapse="false" font-size="13pt" >VENDOR NAME</fo:block>
+                   <fo:block text-align="left" keep-together="always"  font-weight="bold" white-space-collapse="false" font-size="11pt" >VENDOR NAME</fo:block>
 			       <#list partyDetList as partyNameList>
-						 <fo:block text-align="left" font-size="13pt" font-weight="bold">${partyNameList.get("partyName")}</fo:block>
+						 <fo:block text-align="left" font-size="11pt" font-weight="bold">${partyNameList.get("partyName")}</fo:block>
     				</#list>   
 				   <fo:block linefeed-treatment="preserve">&#xA;</fo:block>		        
+				   <fo:block linefeed-treatment="preserve">&#xA;</fo:block>
 				   <fo:block linefeed-treatment="preserve">&#xA;</fo:block>		        
-				   <fo:block text-align="left" keep-together="always" white-space-collapse="false">(CASH WORKER)                Purchase Officer                Manager(Purchase)                PRI-ADITOR</fo:block>				   
+				   <fo:block linefeed-treatment="preserve">&#xA;</fo:block>
+				   <fo:block linefeed-treatment="preserve">&#xA;</fo:block>		        
+				   <fo:block linefeed-treatment="preserve">&#xA;</fo:block>		        
+				   <fo:block text-align="left" keep-together="always" white-space-collapse="false">(CASE WORKER)                Purchase Officer                Manager(Purchase)                PRE-ADITOR</fo:block>				   
 			    </fo:flow>	
 		 </fo:page-sequence>	
 		 <#-- </#if>   --> 	

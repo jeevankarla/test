@@ -117,13 +117,16 @@ under the License.
     </form>
     <form name="HolidayOptions" type="single" target="FindHoliday" 
         odd-row-style="header-row" default-table-style="basic-table">
-        <field name="customTimePeriodId" title="TimePeriod Id"><text-find/></field>
-        <field name="organizationPartyId" title="Organization Id"><text-find/></field>
-        <field name="holiDayDate" title="HoliDay Date"><date-find/></field>
-		<field name="description" title="Description"><text-find/></field>
-
-        <field name="noConditionFind"><hidden value="Y"/><!-- if this isn't there then with all fields empty no query will be done --></field>
-    	<field name="hideSearch"><hidden value="Y"/></field>
+        <field name="customTimePeriodId" title="Period Id" required-field="true">
+             <drop-down allow-empty="true" no-current-selected-key="${timecustom}" >
+                <entity-options entity-name="CustomTimePeriod" key-field-name="customTimePeriodId" description="${periodName}" filter-by-date="false">
+                    <entity-constraint name="periodTypeId" operator="equals" value="HR_YEAR"/>
+                    <entity-order-by field-name="-thruDate"/>
+                    <entity-order-by field-name="periodNum"/>
+                </entity-options>
+            </drop-down>
+        </field>
+        <field name="holidayDate" id-name="holidayDate" event="onclick" action="javascript:picker()"><text  size="12"/></field>
         <field name="submitButton" title="${uiLabelMap.CommonFind}" widget-style="smallSubmit"><submit button-type="button"/></field>
     </form>
     <form name="HolidayResults" list-name="holidayList" type="list"
@@ -145,7 +148,6 @@ under the License.
     </form>
     <form name="NewHoliday" type="single" target="CreateHoliday"
         odd-row-style="header-row" default-table-style="basic-table">
-
          <field name="customTimePeriodId" title="Period Id">
              <drop-down allow-empty="true" no-current-selected-key="${timecustom}" >
                 <entity-options entity-name="CustomTimePeriod" key-field-name="customTimePeriodId" description="${periodName}: ${fromDate} - ${thruDate}" filter-by-date="false">
@@ -155,7 +157,7 @@ under the License.
                 </entity-options>
             </drop-down>
         </field>
-        <field name="partyId" title="Organization Party Id" parameter-name="orgPartyId">
+        <field name="partyId" title="Organization Party Id" parameter-name="organizationPartyId">
 			<drop-down allow-empty="false">
 				<entity-options entity-name="PartyRoleAndPartyDetail" description="${groupName}">
 					<entity-constraint name="roleTypeId" operator="equals"

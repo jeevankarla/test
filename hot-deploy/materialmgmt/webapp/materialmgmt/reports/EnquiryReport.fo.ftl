@@ -31,17 +31,21 @@ under the License.
 		<#if enquiryMap?has_content>
 			<fo:page-sequence master-reference="main">
 			    <fo:static-content font-size="13pt" font-family="Courier,monospace"  flow-name="xsl-region-before" font-weight="bold">
+				    <fo:block  keep-together="always" text-align="center" font-family="Courier,monospace" white-space-collapse="false">&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;UserLogin : <#if userLogin?exists>${userLogin.userLoginId?if_exists}</#if></fo:block>
+				    <fo:block  keep-together="always" text-align="center" font-family="Courier,monospace" white-space-collapse="false">&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;Date:${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(nowTimestamp, "dd/MM/yy HH:mm:ss")}</fo:block> 
+		            <fo:block  keep-together="always" text-align="center" font-family="Courier,monospace" white-space-collapse="false" font-size="12pt" > &#160;&#160;  </fo:block>
 				    <fo:block  keep-together="always" text-align="center" font-weight = "bold" font-family="Courier,monospace" white-space-collapse="false">${uiLabelMap.KMFDairyHeader}</fo:block>
 				    <fo:block  keep-together="always" text-align="center" font-family="Courier,monospace" white-space-collapse="false" font-weight="bold">${uiLabelMap.KMFDairySubHeader}</fo:block>				   
 				    <fo:block text-align="center" keep-together="always"  >&#160;---------------------------------------------------------------------------</fo:block>
-			        <fo:block text-align="center" keep-together="always">                                  ENQUIRY REPORT                                                 </fo:block>				    
+			        <fo:block text-align="center" keep-together="always">                                  ENQUIRY ABSTRACT REPORT                                                 </fo:block>				    
 			        </fo:static-content>			        	
 			        <fo:flow flow-name="xsl-region-body"   font-family="Courier,monospace">				        
 				    <fo:block text-align="left" keep-together="always" white-space-collapse="false">ENQUIRY NO.: ${parameters.issueToCustReqId}                                             ENQUIRY DATE: ${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(custReqDate, "dd-MMM-yyyy")}</fo:block>				   
+ 				    <fo:block text-align="left" keep-together="always" white-space-collapse="false">ENQUIRY SEQUENCE NO.: ${enquirySequenceNo?if_exists}</fo:block>				   				    
 				    <fo:block linefeed-treatment="preserve">&#xA;</fo:block>		        
 	                <fo:block linefeed-treatment="preserve">&#xA;</fo:block>
 	                <fo:block  font-size="12pt" text-align="left">Dear Sir,                                                                                                     </fo:block> 	             
-	                <fo:block  font-size="12pt"  text-align="left">&#160;&#160;    &#160;&#160; &#160;&#160; &#160; We Intend to purchase the following items from the regular manufacturer/dealer and requested to quote your lowest competitive rate subjected to the terms and conditions stipulated below.The sealed quotation duly superscribed mentioning the enquiry no,date and due date should reach this office on or before  <#if dueDate?has_content>${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(dueDate, "dd-MMM-yyyy")?if_exists}<#else>.</#if> </fo:block> 
+	                <fo:block  font-size="12pt"  text-align="left">&#160;&#160;    &#160;&#160; &#160;&#160; &#160; We Intend to purchase the following items from the regular manufacturer/dealer and request you to quote your lowest competitive rate subjected to the terms and conditions stipulated below.The sealed quotation duly superscribed mentioning the enquiry no,date and due date should reach this office on or before  <#if dueDate?has_content>${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(dueDate, "dd-MMM-yyyy")?if_exists}<#else>.</#if> </fo:block> 
 	                <fo:block  font-size="12pt"  white-space-collapse="false">&#160; </fo:block>        
 	                <fo:block  font-size="12pt"   white-space-collapse="false"  text-align="left"> Terms and Conditions :</fo:block>     
 	                <fo:block  font-size="12pt"   white-space-collapse="false"  text-align="left">1.Mother Dairy is not responsible for the premature opening of the quatations.When they  </fo:block> 
@@ -76,7 +80,7 @@ under the License.
 									<fo:block text-align="left"  >ITEM CODE</fo:block>
 								</fo:table-cell>
 								<fo:table-cell >
-									<fo:block text-align="left" >DESCRIPTION</fo:block>
+									<fo:block text-align="left" >SPECIFICATION</fo:block>
 								</fo:table-cell>
 								<fo:table-cell >
 									<fo:block text-align="center" keep-together="always" >DUE DATE</fo:block>
@@ -106,28 +110,35 @@ under the License.
 					       <fo:table-column column-width="100pt"/>
 					       <fo:table-column column-width="100pt"/>  
 					          <fo:table-body>
-					          <#assign sno=1>
+					          <#if enquiryMap?has_content>
+					          <#assign sno=1>	
+				              <#assign productList = enquiryMap.entrySet()>                                                                 					          
+                               <#list productList as productEntry>
+                               <#assign productd=productEntry.getKey()> 
+                                <#assign productDetails=productEntry.getValue()> 
 				                  <fo:table-row >
 					                 <fo:table-cell>
 									    <fo:block text-align="center" keep-together="always" >${sno?if_exists}</fo:block>
 								     </fo:table-cell>
 								     <fo:table-cell >
-									    <fo:block text-align="left"  >${enquiryMap.get("itemCode")?if_exists}</fo:block>
+									    <fo:block text-align="left"  >${productDetails.get("itemCode")?if_exists}</fo:block>
 								     </fo:table-cell>
 								     <fo:table-cell >
-									    <fo:block text-align="left"  >${enquiryMap.get("description")?if_exists}</fo:block>
+									    <fo:block text-align="left"  >${productDetails.get("longDescription")?if_exists}</fo:block>
 								     </fo:table-cell>
 								     <fo:table-cell >
 									    <fo:block text-align="center" keep-together="always" > <#if dueDate?has_content>${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(dueDate, "dd-MMM-yyyy")?if_exists}<#else></#if> </fo:block>
 								     </fo:table-cell>
 								     <fo:table-cell >
-									    <fo:block text-align="right" keep-together="always" >${enquiryMap.get("requrdqty")?if_exists?string("##0.000")}</fo:block>
-								    </fo:table-cell>
+									    <fo:block text-align="right" keep-together="always" >${productDetails.get("requrdqty")?if_exists?string("##0.000")}</fo:block>
+								    </fo:table-cell>								   
 								    <fo:table-cell >
-									   <fo:block text-align="center" keep-together="always" >${enquiryMap.get("unit")?if_exists}</fo:block>
+									   <fo:block text-align="center" keep-together="always" >${productDetails.get("unit")?if_exists}</fo:block>
 								    </fo:table-cell>				  
 					            </fo:table-row>
-					         <#assign sno=sno+1>
+					         <#assign sno=sno+1> 
+                              </#list>  
+                            </#if>    
 					      </fo:table-body>  
 					    </fo:table>
 				   <fo:block text-align="left" keep-together="always">----------------------------------------------------------------------------------------------------------</fo:block>

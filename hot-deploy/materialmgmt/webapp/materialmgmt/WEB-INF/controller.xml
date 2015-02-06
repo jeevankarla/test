@@ -164,6 +164,13 @@
          <response name="success" type="view" value="searchMaterial"/>
         <response name="error" type="view" value="searchMaterial"/>
     </request-map>
+    <request-map uri="updateProductDetails">
+        <security auth="true" https="true"/>
+         <event type="service" invoke="updateProduct" ></event>
+         <response name="success" type="view" value="searchMaterial"/>
+        <response name="error" type="view" value="searchMaterial"/>
+    </request-map>
+    
     
     
     <request-map uri="FindMaterialInvoices">
@@ -186,6 +193,15 @@
      	<security auth="true" https="true"/>
      	<response name="success" type="view" value="EditQuotItems"/>
      	<response name="error" type="view" value="FindMaterialQuotes"/>
+    </request-map>
+    
+    <request-map uri="setQuoteStatus">
+       <security https="true" auth="true"/>
+       <event type="service" invoke="updateQuote"></event>
+       <response name="success" type="request-redirect" value="ViewMaterialEnquiry">
+       <redirect-parameter name="custRequestId"/>
+       </response>
+       <response name="error" type="view" value="FindMaterialQuotes"/>
     </request-map>
     
     <request-map uri="AddEnquiryContent">
@@ -299,6 +315,12 @@
        <response name="success" type="request-redirect-noparam" value="MaterialForQCApproval"/>
        <response name="error" type="request-redirect-noparam" value="MaterialForQCApproval"/>
      </request-map>
+      <request-map uri="sendReceiptQtyForQC">
+       <security https="true" auth="true"/>
+       <event type="service" path="" invoke="sendReceiptQtyForQC"></event>
+       <response name="success" type="request-redirect-noparam" value="FindGRNReceipts"/>
+       <response name="error" type="request-redirect-noparam" value="FindGRNReceipts"/>
+     </request-map>
      
      <request-map uri="FindMaterialQuotes">
        <security https="true" auth="true"/>
@@ -410,6 +432,13 @@
        <response name="success" type="request-redirect-noparam" value="StoreProductIssue"/>
        <response name="error" type="view" value="StoreProductIssue"/>
      </request-map>
+     <request-map uri="cancelIssuenceForCustRequest">
+       <security https="true" auth="true"/>
+       <event type="service" path="" invoke="cancelIssuenceForCustRequest" global-transaction="true"/>
+       <response name="success" type="request-redirect-noparam" value="FindMaterialIssuanceNew"/>
+       <response name="error" type="view" value="FindMaterialIssuanceNew"/>
+     </request-map>
+     
      
      <request-map uri="draftEnquiryForApprovedRequirementsEvent">
        <security https="true" auth="true"/>
@@ -815,6 +844,10 @@
         <security https="true" auth="true"/>
     	<response name="success" type="view" value="StockPosition"/>
     </request-map>
+    <request-map uri="stockPositionReport.pdf">
+        <security https="true" auth="true"/>
+    	<response name="success" type="view" value="stockPositionReportPDF"/>
+    </request-map>
     <request-map uri="StockPositionInternal">
         <security https="true" auth="true"/>
     	<response name="success" type="view" value="StockPositionInternal"/>
@@ -908,19 +941,25 @@
     <request-map uri="createCustEnquiryNote">
         <security https="true" auth="true"/>
      	<event type="service"   invoke="createCustRequestNote"/>
-        <response name="success" type="view" value="ViewMaterialEnquiry"/>
+        <response name="success" type="request-redirect" value="ViewMaterialEnquiry">
+      	<redirect-parameter name="custRequestId"/>
+      	</response>
         <response name="error" type="view" value="ViewMaterialEnquiry"/>
     </request-map>
     <request-map uri="addCustRequestParty">
         <security https="true" auth="true"/>
      	<event type="service"   invoke="createCustRequestParty"/>
-        <response name="success" type="view" value="ViewMaterialEnquiry"/>
+        <response name="success" type="request-redirect" value="ViewMaterialEnquiry">
+        <redirect-parameter name="custRequestId"/>
+        </response>
         <response name="error" type="view" value="ViewMaterialEnquiry"/>
     </request-map>
     <request-map uri="deleteCustRequestParty">
         <security https="true" auth="true"/>
      	<event type="service"   invoke="deleteCustRequestParty"/>
-        <response name="success" type="view" value="ViewMaterialEnquiry"/>
+        <response name="success" type="request-redirect" value="ViewMaterialEnquiry">
+        <redirect-parameter name="custRequestId"/>
+        </response>
         <response name="error" type="view" value="ViewMaterialEnquiry"/>
     </request-map>
     
@@ -992,6 +1031,7 @@
     <view-map name="letterOfAcceptancePDF" type="screenfop" page="component://materialmgmt/widget/materialmgmtReportScreens.xml#letterOfAcceptancePDF" content-type="application/pdf"/>
     <view-map name="PurchaseOrderViewPDF" type="screenfop" page="component://materialmgmt/widget/materialmgmtReportScreens.xml#PurchaseOrderViewPDF" content-type="application/pdf"/>
     <view-map name="extensionPurchaseOrderPDF" type="screenfop" page="component://materialmgmt/widget/materialmgmtReportScreens.xml#extensionPurchaseOrderPDF" content-type="application/pdf"/>
+    <view-map name="stockPositionReportPDF" type="screenfop" page="component://materialmgmt/widget/materialmgmtReportScreens.xml#StockPositionReportPDF" content-type="application/pdf"/>
     <!-- custRequest views -->
     <view-map name="FindMaterialRequest" type="screen" page="component://materialmgmt/widget/MaterialRequestScreens.xml#FindMaterialRequest"/>
     <view-map name="ViewMaterialRequest" type="screen" page="component://materialmgmt/widget/MaterialRequestScreens.xml#ViewMaterialRequest"/>

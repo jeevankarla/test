@@ -1998,6 +1998,9 @@ public class MaterialPurchaseServices {
 		//let's create Fright Adjustment here
     	 Boolean COGS_DISC_ATR = Boolean.FALSE;
     	 Map COGS_DISC_ATR_Map = FastMap.newInstance();
+    	 Boolean COGS_PCK_FWD_ATR = Boolean.FALSE;
+    	 Map COGS_PCK_FWD_ATR_Map = FastMap.newInstance();
+    	 
 		for(Map eachAdj : otherChargesAdjustment){
 			Map adjustCtx = UtilMisc.toMap("userLogin",userLogin);	
 			String adjustmentTypeId=(String)eachAdj.get("adjustmentTypeId");
@@ -2011,7 +2014,11 @@ public class MaterialPurchaseServices {
 	    		COGS_DISC_ATR = Boolean.TRUE;
 	    		COGS_DISC_ATR_Map.putAll(eachAdj);
 	    	}
-	    	if(!adjustmentTypeId.equals("COGS_DISC_ATR")){
+	    	if(adjustmentTypeId.equals("COGS_PCK_FWD_ATR")){
+	    		COGS_PCK_FWD_ATR = Boolean.TRUE;
+	    		COGS_PCK_FWD_ATR_Map.putAll(eachAdj);
+	    	}
+	    	if(!adjustmentTypeId.equals("COGS_DISC_ATR") && !adjustmentTypeId.equals("COGS_PCK_FWD_ATR")){
 	    		Map inputMap = UtilMisc.toMap("userLogin",userLogin);
 	    		inputMap.put("termTypeId", adjustmentTypeId);
 	    		inputMap.put("basicAmount", basicAmount);
@@ -2061,7 +2068,6 @@ public class MaterialPurchaseServices {
             }
     		BigDecimal poValue = orh.getOrderGrandTotal();
     		inputMap.put("poValue", poValue);
-    		Debug.log("inputMap==========="+inputMap);
     		BigDecimal termAmount = OrderServices.calculatePurchaseOrderTermValue(ctx,inputMap);
     		adjustCtx.put("amount", termAmount);
     		Map adjResultMap=FastMap.newInstance();
@@ -2078,11 +2084,48 @@ public class MaterialPurchaseServices {
 	  	 	}
     		
 		}
-			/*String mrnNumber = (String) context.get("mrnNumber");
-		  	String PONumber=(String) context.get("PONumber");
-		  	String SInvNumber = (String) context.get("SInvNumber");
-		  	
-		  	*/
+			
+		//check discount after tax
+				if(COGS_PCK_FWD_ATR){
+					
+					//GenericValue eachAdj = delegator.findOne("OrderTerm", UtilMisc.toMap("orderId",orderId,"orderItemSeqId","_NA_","termTypeId","COGS_DISC_ATR"), false);
+					//Debug.log("COGS_DISC_ATR_Map attr==========="+COGS_DISC_ATR_Map);
+					Map adjustCtx = UtilMisc.toMap("userLogin",userLogin);	
+					String adjustmentTypeId=(String)COGS_PCK_FWD_ATR_Map.get("adjustmentTypeId");
+					BigDecimal termValue =(BigDecimal)COGS_PCK_FWD_ATR_Map.get("amount");
+			    	adjustCtx.put("orderId", orderId);
+			    	adjustCtx.put("orderAdjustmentTypeId", adjustmentTypeId);
+					String uomId = (String)COGS_DISC_ATR_Map.get("uomId");
+					Map inputMap = UtilMisc.toMap("userLogin",userLogin);
+		    		inputMap.put("termTypeId", adjustmentTypeId);
+		    		inputMap.put("basicAmount", basicAmount);
+		    		inputMap.put("exciseDuty", exciseDuty);
+		    		inputMap.put("uomId", uomId);
+		    		inputMap.put("termValue", termValue);
+		    		OrderReadHelper orh = null;
+		    		try {
+		    			  orh = new OrderReadHelper(delegator, orderId);
+		            } catch (IllegalArgumentException e) {
+		                return ServiceUtil.returnError(e.getMessage());
+		            }
+		    		BigDecimal poValue = orh.getOrderGrandTotal();
+		    		inputMap.put("poValue", poValue);
+		    		BigDecimal termAmount = OrderServices.calculatePurchaseOrderTermValue(ctx,inputMap);
+		    		adjustCtx.put("amount", termAmount);
+		    		Map adjResultMap=FastMap.newInstance();
+			  	 	try{
+			  	 		adjResultMap = dispatcher.runSync("createOrderAdjustment",adjustCtx);  		  		 
+			  	 		if (ServiceUtil.isError(adjResultMap)) {
+			  	 			String errMsg =  ServiceUtil.getErrorMessage(adjResultMap);
+			  	 			Debug.logError(errMsg , module);
+			  	 			return ServiceUtil.returnError(" Error While Creating Adjustment for Purchase Order !");
+			  	 		}
+			  	 	}catch (Exception e) {
+			  			  Debug.logError(e, "Error While Creating Adjustment for Purchase Order ", module);
+			  			  return adjResultMap;			  
+			  	 	}
+		    		
+				}
 			//before save OrderRole save partyRole
 			if(UtilValidate.isNotEmpty(issueToDeptId)){
 				try{
@@ -2385,7 +2428,9 @@ public class MaterialPurchaseServices {
 			
 			Boolean COGS_DISC_ATR = Boolean.FALSE;
 	    	Map COGS_DISC_ATR_Map = FastMap.newInstance();
-
+            Boolean COGS_PCK_FWD_ATR =Boolean.FALSE;
+            Map COGS_PCK_FWD_ATR_Map = FastMap.newInstance();
+            
 			for(Map orderAdj : otherChargesAdjustment){
 				String adjustmentTypeId = (String)orderAdj.get("adjustmentTypeId");
 				BigDecimal amount = (BigDecimal)orderAdj.get("amount");
@@ -2394,14 +2439,18 @@ public class MaterialPurchaseServices {
 		    		COGS_DISC_ATR = Boolean.TRUE;
 		    		COGS_DISC_ATR_Map.putAll(orderAdj);
 		    	}
-		    	if(!adjustmentTypeId.equals("COGS_DISC_ATR")){
+		    	
+		    	if(adjustmentTypeId.equals("COGS_PCK_FWD_ATR")){
+		    		COGS_PCK_FWD_ATR = Boolean.TRUE;
+		    		COGS_PCK_FWD_ATR_Map.putAll(orderAdj);
+		    	}
+		    	if(!adjustmentTypeId.equals("COGS_DISC_ATR") && !adjustmentTypeId.equals("COGS_PCK_FWD_ATR")){
 		    		Map inputMap = UtilMisc.toMap("userLogin",userLogin);
 		    		inputMap.put("termTypeId", adjustmentTypeId);
 		    		inputMap.put("basicAmount", basicAmount);
 		    		inputMap.put("exciseDuty", exciseDuty);
 		    		inputMap.put("uomId", uomId);
 		    		inputMap.put("termValue", amount);
-		    		//Debug.log("inputMap==========="+inputMap);
 		    		amount = OrderServices.calculatePurchaseOrderTermValue(ctx,inputMap);
 		    	}
 				List<GenericValue> adjItems = EntityUtil.filterByCondition(orderAdjustments, EntityCondition.makeCondition("orderAdjustmentTypeId", EntityOperator.EQUALS, adjustmentTypeId));
@@ -2465,6 +2514,46 @@ public class MaterialPurchaseServices {
 	    		BigDecimal poValue = orh.getOrderGrandTotal();
 	    		inputMap.put("poValue", poValue);
 	    		Debug.log("inputMap==========="+inputMap);
+	    		BigDecimal termAmount = OrderServices.calculatePurchaseOrderTermValue(ctx,inputMap);
+	    		adjustCtx.put("amount", termAmount);
+	    		Map adjResultMap=FastMap.newInstance();
+		  	 	try{
+		  	 		adjResultMap = dispatcher.runSync("createOrderAdjustment",adjustCtx);  		  		 
+		  	 		if (ServiceUtil.isError(adjResultMap)) {
+		  	 			String errMsg =  ServiceUtil.getErrorMessage(adjResultMap);
+		  	 			Debug.logError(errMsg , module);
+		  	 			return ServiceUtil.returnError(" Error While Creating Adjustment for Purchase Order !");
+		  	 		}
+		  	 	}catch (Exception e) {
+		  			  Debug.logError(e, "Error While Creating Adjustment for Purchase Order ", module);
+		  			  return adjResultMap;			  
+		  	 	}
+	    		
+			}
+			if(COGS_PCK_FWD_ATR){
+				
+				//GenericValue eachAdj = delegator.findOne("OrderTerm", UtilMisc.toMap("orderId",orderId,"orderItemSeqId","_NA_","termTypeId","COGS_DISC_ATR"), false);
+				//Debug.log("COGS_DISC_ATR_Map attr==========="+COGS_DISC_ATR_Map);
+				Map adjustCtx = UtilMisc.toMap("userLogin",userLogin);	
+				String adjustmentTypeId=(String)COGS_PCK_FWD_ATR_Map.get("adjustmentTypeId");
+				BigDecimal termValue =(BigDecimal)COGS_PCK_FWD_ATR_Map.get("amount");
+		    	adjustCtx.put("orderId", orderId);
+		    	adjustCtx.put("orderAdjustmentTypeId", adjustmentTypeId);
+				String uomId = (String)COGS_DISC_ATR_Map.get("uomId");
+				Map inputMap = UtilMisc.toMap("userLogin",userLogin);
+	    		inputMap.put("termTypeId", adjustmentTypeId);
+	    		inputMap.put("basicAmount", basicAmount);
+	    		inputMap.put("exciseDuty", exciseDuty);
+	    		inputMap.put("uomId", uomId);
+	    		inputMap.put("termValue", termValue);
+	    		OrderReadHelper orh = null;
+	    		try {
+	    			  orh = new OrderReadHelper(delegator, orderId);
+	            } catch (IllegalArgumentException e) {
+	                return ServiceUtil.returnError(e.getMessage());
+	            }
+	    		BigDecimal poValue = orh.getOrderGrandTotal();
+	    		inputMap.put("poValue", poValue);
 	    		BigDecimal termAmount = OrderServices.calculatePurchaseOrderTermValue(ctx,inputMap);
 	    		adjustCtx.put("amount", termAmount);
 	    		Map adjResultMap=FastMap.newInstance();
@@ -3225,6 +3314,27 @@ public class MaterialPurchaseServices {
 			Debug.logError(e, module);
 			return ServiceUtil.returnError(e.getMessage());
 		}
+		return result;
+	}
+	public static Map<String, Object> sendReceiptQtyForQC(DispatchContext ctx,Map<String, ? extends Object> context) {
+		Delegator delegator = ctx.getDelegator();
+		LocalDispatcher dispatcher = ctx.getDispatcher();
+		String statusId = (String) context.get("statusIdTo");
+		String receiptId = (String) context.get("receiptId");
+		GenericValue userLogin = (GenericValue) context.get("userLogin");
+		Map result = ServiceUtil.returnSuccess();
+		try{
+			
+			GenericValue shipmentReceipt = delegator.findOne("ShipmentReceipt", UtilMisc.toMap("receiptId", receiptId), false);
+			shipmentReceipt.put("statusId", statusId);
+			shipmentReceipt.store();
+			
+		} catch (Exception e) {
+			// TODO: handle exception
+			Debug.logError(e, module);
+			return ServiceUtil.returnError(e.getMessage());
+		}
+		result = ServiceUtil.returnSuccess("GRN no: "+receiptId+" Send For Quality Check ");
 		return result;
 	}
 }

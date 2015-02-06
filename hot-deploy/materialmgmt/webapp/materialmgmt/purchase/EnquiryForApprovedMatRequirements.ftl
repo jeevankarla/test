@@ -109,6 +109,7 @@ $(document).ready(function(){
 		  <td>Requirement Id</td>
 		  <td>Product Id</td>
 		  <td>Product Name</td>
+		  <td>UOM</td>
 		  <td>Facility Id</td>
 		  <td>Quantity</td>
 		  <td align="right">${uiLabelMap.CommonSelectAll} <input type="checkbox" id="checkAllRequirements" name="checkAllRequirements" onchange="javascript:toggleRequirementId(this);"/></td>
@@ -120,7 +121,10 @@ $(document).ready(function(){
 			<tr valign="middle"<#if alt_row> class="alternate-row"</#if>>
 				<td>${requirement.requirementId?if_exists}</td>
 				<td>${requirement.productId?if_exists}</td>
-				<td>  <#assign productName = delegator.findOne("Product", {"productId" : requirement.productId}, true) /> ${productName.productName}</td>
+				<#assign productName = delegator.findOne("Product", {"productId" : requirement.productId}, true) />
+				<#assign uom = (delegator.findOne("Uom", {"uomId" : productName.quantityUomId}, false))!>
+				<td> ${productName.productName?if_exists}</td>
+				<td>${uom.description?if_exists}</td>
 				<td>${requirement.facilityId?if_exists}</td>
 				<td>${requirement.quantity?if_exists}</td>
 				<td align="right"><input type="checkbox" id="requirementId_${requirement.requirementId?if_exists}" name="requirementIds" value="${requirement.requirementId?if_exists}" onclick="javascript:getRequrimentsRunningTotal();"/></td>

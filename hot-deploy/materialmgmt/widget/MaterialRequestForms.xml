@@ -138,6 +138,15 @@
 
     <form name="ListIssuanceList" type="list" use-row-submit="true" list-name="listIt" title="List of customer requests"
         odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
+        <row-actions>
+			<entity-one value-field="product" entity-name="Product">
+				<field-map field-name="productId" from-field="productId"/>
+			</entity-one>
+			<entity-one value-field="uom" entity-name="Uom">
+				<field-map field-name="uomId" from-field="product.quantityUomId"/>
+			</entity-one>
+			<set field="dec" from-field="uom.description"/>
+		</row-actions>
         <field name="itemIssuanceId" title="Issuance Id"><display/></field>
         <field name="custRequestId" title="${uiLabelMap.MaterialMangement_CustRequestId}">
 			<display/>
@@ -150,8 +159,8 @@
         	<display-entity entity-name="PartyNameView" key-field-name="partyId" description="${firstName} ${middleName} ${lastName} ${groupName}"/>
         </field>
         <field name="custRequestName" title="${uiLabelMap.MaterialMangement_CustRequestName}"><display/></field>
-        <field name="productId" title="${uiLabelMap.MaterialMangement_ProductId} - ${uiLabelMap.MaterialMangement_ProductName}">
-        	<display-entity entity-name="Product" description="${productId} - ${description}"/>
+        <field name="productId" title="${uiLabelMap.MaterialMangement_ProductId} - ${uiLabelMap.MaterialMangement_ProductName} [UOM]">
+        	<display-entity entity-name="Product" description="${productId} - ${description} [${dec}]"/>
         </field>
         <field name="quantity" title="Quantity"><display/></field>
         <field name="cancelQuantity" title="Cancel Qty"><display/></field>
@@ -168,6 +177,8 @@
         <field name="fromPartyId" title="${uiLabelMap.MaterialMangement_CustRequestFromPartyId}"><lookup target-form-name="LookupPartyName"/></field>
  		<field name="custRequestDate" title="${uiLabelMap.MaterialMangement_CustRequestDate}"><date-find/></field>
  		<field name="issueDate" title="${uiLabelMap.MaterialMangement_IssuedDate}"><date-find/></field>
+ 		<field name="shipmentTypeId" ><hidden value="ISSUANCE_SHIPMENT"/> </field>
+ 		<field name="statusId" ><hidden value="GENERATED"/> </field>
         <field name="submitButton" title="${uiLabelMap.CommonFind}" widget-style="smallSubmit">
             <submit button-type="button"/>
         </field>
@@ -186,8 +197,21 @@
         </actions>
     </form>
 
-    <form name="ListIssuanceListNew" type="list" use-row-submit="true" list-name="listIt" title="List of customer requests"
+    <form name="ListIssuanceListNew" type="list"  list-name="listIt" title="List of customer requests"
         odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
+       <row-actions>
+          <entity-one entity-name="CustRequestItem" auto-field-map="true">
+       		<select-field field-name="statusId"/>
+       	  </entity-one>
+        	<set field="crqItemstatusId" from-field="statusId"/>
+        	<entity-one value-field="product" entity-name="Product">
+				<field-map field-name="productId" from-field="productId"/>
+			</entity-one>
+			<entity-one value-field="uom" entity-name="Uom">
+				<field-map field-name="uomId" from-field="product.quantityUomId"/>
+			</entity-one>
+			<set field="dec" from-field="uom.description"/>
+       </row-actions>
         <field name="itemIssuanceId" title="Issuance Id"><display/></field>
         <field name="custRequestId" title="${uiLabelMap.MaterialMangement_CustRequestId}">
 			<display/>
@@ -200,13 +224,21 @@
         	<display-entity entity-name="PartyNameView" key-field-name="partyId" description="${firstName} ${middleName} ${lastName} ${groupName}"/>
         </field>
         <field name="custRequestName" title="${uiLabelMap.MaterialMangement_CustRequestName}"><display/></field>
-        <field name="productId" title="${uiLabelMap.MaterialMangement_ProductId} - ${uiLabelMap.MaterialMangement_ProductName}">
-        	<display-entity entity-name="Product" description="${productId} - ${description}"/>
+        <field name="productId" title="${uiLabelMap.MaterialMangement_ProductId} - ${uiLabelMap.MaterialMangement_ProductName} [UOM]">
+        	<display-entity entity-name="Product" description="${productId} - ${description} [${dec}]"/>
         </field>
         <field name="quantity" title="Issued Quantity"><display/></field>
         <field name="issueDate" title="Issue Date"><display description="${groovy:org.ofbiz.base.util.UtilDateTime.toDateString(issueDate,&quot;dd/MM/yyyy HH:mm:ss&quot;)}"/></field>
         <field name="issuedByUserLoginId" title="Issued By"><display/></field>
-        
+        <!--  <field name="crqItemstatusId" title="crqItemstatusId-"><display/></field>  -->
+        <field  use-when="&quot;${crqItemstatusId}&quot; != &quot;CRQ_COMPLETED&quot;" name="cancelIssue" widget-style="buttontext">
+            <hyperlink target="cancelIssuenceForCustRequest" description="Cancel Issue">
+                <parameter param-name="custRequestId"/>
+                 <parameter param-name="custRequestItemSeqId"/>
+                 <parameter param-name="itemIssuanceId"/>
+                   <parameter param-name="shipmentId"/>
+            </hyperlink>
+        </field> 
     </form>
     
 	
@@ -288,7 +320,12 @@
         <field use-when="&quot;statusId&quot;==&quot;ENQ_CREATED&quot;"  name="setStatusLink" title="Close Enquiry" widget-style="buttontext h3" tooltip="Close if all item in enquiry are shortlisted for PO">
         	<submit/>
         </field>
-        
+        <field name="Report" widget-style="buttontext">
+            <hyperlink target="MaterialEnquiryReport.pdf" description="Report" target-window="_blank">
+                <parameter param-name="partyId"/>
+                <parameter param-name="custRequestId"/>
+            </hyperlink>
+      </field>
     </form>
     
     <form name="ListCustRequestContent" type="list" list-name="custRequestContents"
@@ -313,11 +350,14 @@
         </entity-condition>
        </actions>
        <row-actions>
-          <entity-one entity-name="Product">
-       		<field-map field-name="productId" from-field="productId"/>
-       		<select-field field-name="longDescription"/>
-       	  </entity-one>
-        	<set field="longDescription" from-field="longDescription"/>
+          <entity-one value-field="product" entity-name="Product">
+				<field-map field-name="productId" from-field="productId"/>
+			</entity-one>
+			<entity-one value-field="uom" entity-name="Uom">
+				<field-map field-name="uomId" from-field="product.quantityUomId"/>
+			</entity-one>
+			<set field="dec" from-field="uom.description"/>
+        	<set field="longDescription" from-field="product.longDescription"/>
        </row-actions>
        <field name="custRequestId"  sort-field="true"  sort-field-style="true" title="Tender Reference No">
           <display-entity entity-name="CustRequest"  key-field-name="custRequestId" description="${custRequestName}" also-hidden="true">
@@ -335,6 +375,7 @@
                 </sub-hyperlink>
             </display-entity>
         </field>
+         <field name="dec" title="UOM"><display></display></field>
         <field name="longDescription" title="Product Specification"> 
             <display description="${longDescription}"/>
         </field>
@@ -373,6 +414,13 @@
         	<set field="flag" value="${groovy: return (QOH > 0)? 'Y' : 'N';}"/>
         	<set field="custmQuantity" value="${quantity-(QOH+issuedQty)}"/>
         	<set field="toBeIssuedQty" value="${groovy: return (quantity-issuedQty > QOH)?  QOH: (quantity-issuedQty);}"/>
+        	<entity-one value-field="product" entity-name="Product">
+				<field-map field-name="productId" from-field="productId"/>
+			</entity-one>
+			<entity-one value-field="uom" entity-name="Uom">
+				<field-map field-name="uomId" from-field="product.quantityUomId"/>
+			</entity-one>
+			<set field="dec" from-field="uom.description"/>
         </row-actions>
         <field name="custRequestId" title="${uiLabelMap.MaterialMangement_CustRequestId}"><display/></field>
         <field name="custRequestItemSeqId" title="${uiLabelMap.MaterialMangement_CustRequestItemSeqId}"><display/></field>
@@ -380,8 +428,8 @@
         <field name="fromPartyId" title="${uiLabelMap.MaterialMangement_CustRequestFromPartyId}">
             <display-entity entity-name="PartyNameView" key-field-name="partyId" description="${firstName} ${middleName} ${lastName} ${groupName}"/>
         </field>
-        <field name="productId" title="${uiLabelMap.MaterialMangement_ProductId} - ${uiLabelMap.MaterialMangement_ProductName}">
-            <display-entity entity-name="Product" key-field-name="productId" description="${productId} - ${productName}"/>
+        <field name="productId" title="${uiLabelMap.MaterialMangement_ProductId} - ${uiLabelMap.MaterialMangement_ProductName} [UOM]">
+            <display-entity entity-name="Product" key-field-name="productId" description="${productId} - ${productName} [${dec}]"/>
         </field>
         <field name="statusId" title="Status" ><display-entity entity-name="StatusItem" description="${description}"></display-entity> </field>
          <field name="quantity" title="Req. Qty"><display/></field>
@@ -467,15 +515,23 @@
     </form>
     <form name="RequestsToApproveList" type="list" use-row-submit="true"  title="" list-name="custRequestItemsList"
         odd-row-style="alternate-row"  default-table-style="basic-table hover-bar" paginate-target="StoreProductIssue" separate-columns="true">
-        
+        <row-actions>
+			<entity-one value-field="product" entity-name="Product">
+				<field-map field-name="productId" from-field="productId"/>
+			</entity-one>
+			<entity-one value-field="uom" entity-name="Uom">
+				<field-map field-name="uomId" from-field="product.quantityUomId"/>
+			</entity-one>
+			<set field="dec" from-field="uom.description"/>
+		</row-actions>
         <field name="custRequestId" title="${uiLabelMap.MaterialMangement_CustRequestId}"><display/></field>
         <field name="custRequestItemSeqId" title="${uiLabelMap.MaterialMangement_CustRequestItemSeqId}"><display/></field>
         <field name="custRequestDate" title="${uiLabelMap.MaterialMangement_CustRequestDate}"><display description="${groovy:org.ofbiz.base.util.UtilDateTime.toDateString(custRequestDate, &quot;dd/MM/yyyy&quot;)}"/></field>
         <field name="fromPartyId" title="${uiLabelMap.MaterialMangement_CustRequestFromPartyId}">
             <display-entity entity-name="PartyNameView" key-field-name="partyId" description="${firstName} ${middleName} ${lastName} ${groupName}"/>
         </field>
-        <field name="productId" title="${uiLabelMap.MaterialMangement_ProductId} - ${uiLabelMap.MaterialMangement_ProductName}">
-            <display-entity entity-name="Product" key-field-name="productId" description="${productId} - ${productName}"/>
+        <field name="productId" title="${uiLabelMap.MaterialMangement_ProductId} - ${uiLabelMap.MaterialMangement_ProductName} [UOM]">
+            <display-entity entity-name="Product" key-field-name="productId" description="${productId} - ${productName} [${dec}]"/>
         </field>
         <field name="requireQty" title="Required Qty"><display description="${quantity}"/></field>
         <field name="tempQty" title="Accepted Qty"><text default-value="${quantity}"></text></field>
@@ -645,9 +701,19 @@
     <form name="AddCustEnquiryNote" type="single" target="createCustEnquiryNote"
         focus-field-name="noteId" header-row-style="header-row" default-table-style="basic-table">
         <field name="custRequestId"><hidden/></field>
-        <field name="noteName"><text></text></field>
-        <field name="noteDate"><date-time type="timestamp"></date-time></field>
-        <!--  <field name="noteInfo"><text></text></field>-->
+<!--         <field name="noteName"><text></text></field> -->
+<!--         <field name="noteDate"><date-time type="timestamp"></date-time></field> -->
+		<field name="noteType" title="Note Type">
+           <drop-down allow-empty="false" >
+				<entity-options description="${description}" entity-name="Enumeration" key-field-name="enumId" >
+    				<entity-constraint name="enumId" value="INTERNAL_NOTE_ID"/>
+    			</entity-options>
+    			<entity-options description="${description}" entity-name="Enumeration" key-field-name="enumId" >
+    				<entity-constraint name="enumId" value="EXTERNAL_NOTE_ID"/>
+    			</entity-options>
+			</drop-down>
+        </field>
+         <field name="noteInfo"><textarea  default-value=""/></field>
         <field name="submitButton" title="${uiLabelMap.CommonSave}" widget-style="smallSubmit"><submit button-type="text-link"/></field>
         <field name="cancelLink" title="${uiLabelMap.CommonEmptyHeader}" widget-style="smallSubmit">
             <hyperlink target="ViewMaterialEnquiry" also-hidden="false" description="${uiLabelMap.CommonCancelDone}">
@@ -657,11 +723,11 @@
     </form>
     <form name="ListEnquiryNotes" type="list" use-row-submit="true"  title="" list-name="enquiryNotes"
         odd-row-style="alternate-row" default-table-style="basic-table hover-bar" paginate-target="PreBidNotes">
-        <auto-fields-entity entity-name="CustRequestNoteView" default-field-type="display"/>
+<!--         <auto-fields-entity entity-name="CustRequestNoteView" default-field-type="display"/> -->
         <field name="noteParty"><hidden/></field>
         <!-- <field name="noteType"><display/></field> -->
         <field name="noteId"><hidden/></field>
-        <field name="noteName"><display></display></field>
+<!--         <field name="noteName"><display></display></field> -->
         <field name="noteInfo" title="Note"><display/></field>
         <field name="noteDateTime" title="Note Date Time"><display description="${groovy:org.ofbiz.base.util.UtilDateTime.toDateString(noteDateTime, &quot;dd-MM-yyyy HH:mm:ss&quot;)}"/></field>
         <field name="custRequestId"><hidden/></field>

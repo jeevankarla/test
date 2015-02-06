@@ -108,7 +108,11 @@ custRequestItems.each{ eachItem ->
 	custReqIssuenceList.each{custRequestIssueItem->
 		if(UtilValidate.isNotEmpty(custRequestIssueItem.quantity)){
 			issuedQty+=custRequestIssueItem.quantity;
+		} 
+		if(UtilValidate.isNotEmpty(custRequestIssueItem.cancelQuantity)){
+			issuedQty-=custRequestIssueItem.cancelQuantity;
 		}
+		
 	}
 	tempMap.putAt("QOH", invAvail);
 	tempMap.putAt("issuedQty", issuedQty);

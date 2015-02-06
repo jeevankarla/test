@@ -99,8 +99,7 @@ function makeDatePicker1(fromDateId ,thruDateId){
 		makeDatePicker("fromDateStock","thruDateStock");
 		makeDatePicker("fromDateArc","thruDateArc");
 	    makeDatePicker("fromDatependingPOs","thruDatependingPOs");
-		
-	
+		makeDatePicker("stockDate","stockDate");
 		
 		$('#ui-datepicker-div').css('clip', 'auto');		
 	});
@@ -135,6 +134,22 @@ function makeDatePicker1(fromDateId ,thruDateId){
 	</div>
 	<div class="screenlet-body">
 		<table class="basic-table hover-bar h3" style="border-spacing: 0 10px;">
+			<tr class="alternate-row"> 
+				<form id="stockPositionReport" name="stockPositionReport" mothed="post" action="<@ofbizUrl>stockPositionReport.pdf</@ofbizUrl>" target="_blank">
+					<table class="basic-table" cellspacing="5">
+						<tr class="alternate-row">
+							<td width="20%"><span class='h3'>Stock Position Report</span></td>
+							<td width="30%">
+							     <span class='h3'>
+									Date <input  type="text" size="18pt" id="stockDate"   name="fromDate"/>
+								 </span>
+							</td>
+							<td width="25%">
+						    <td width="10%"><span class='h3'><input type="submit" value="Download" class="buttontext"></span></td>
+						</tr>
+					</table>
+				</form>
+			</tr>
 			<tr class="alternate-row"> 
 				<form id="StoreIssueReport" name="StoreIssueReport" mothed="post" action="<@ofbizUrl>StoreIssueReport.pdf</@ofbizUrl>" target="_blank">
 					<table class="basic-table" cellspacing="5">
@@ -175,8 +190,14 @@ function makeDatePicker1(fromDateId ,thruDateId){
 								 </span>
 							</td>
 							<td width="15%"><span class='h3'>							</span></td>
-							<td width="15%"><span class='h3'>   				       </span></td>				
-						 
+							<td width="15%"><span class='h3'>Store
+							    <select name="issueToFacilityId" id="issueToFacilityId">
+							        <option value=""></option>
+							        <#list  storeList as store>
+							          <option value='${store.facilityId?if_exists}'>${store.facilityId?if_exists}</option>
+							        </#list> 
+							    </select>    								
+						   </span></td>
 						    <td width="10%"><span class='h3'><input type="submit" value="Download" class="buttontext"></span></td>
 						</tr>
 					 </table>
@@ -389,10 +410,10 @@ function makeDatePicker1(fromDateId ,thruDateId){
 			 </form>
 		  </tr>
 		  <tr class="alternate-row"> 
-				<form id="EnquiryReport" name="EnquiryReport" mothed="post" action="<@ofbizUrl>EnquiryReport.pdf</@ofbizUrl>" target="_blank">
+				<form id="EnquiryAbstractReport" name="EnquiryAbstractReport" mothed="post" action="<@ofbizUrl>EnquiryReport.pdf</@ofbizUrl>" target="_blank">
 				   <table class="basic-table" cellspacing="5">
 					  <tr class="alternate-row">
-					     <td width="20%"><span class='h3'>Enquiry Report</span></td>
+					     <td width="20%"><span class='h3'>Enquiry Abstract Report</span></td>
 						 <td width="25%">
 							 <span class='h3'>Enquiry No.<input type="textfield"  id="issueToCustReqId"  name="issueToCustReqId"/></span>   								
 						  </td>
@@ -407,7 +428,7 @@ function makeDatePicker1(fromDateId ,thruDateId){
 				<form id="EnquiryNoReport" name="EnquiryNoReport" mothed="post" action="<@ofbizUrl>EnquiryNoReport.pdf</@ofbizUrl>" target="_blank">
 				   <table class="basic-table" cellspacing="5">
 					  <tr class="alternate-row">
-					     <td width="20%"><span class='h3'>Enquiry No Report</span></td>
+					     <td width="20%"><span class='h3'>Comparative Statement Report</span></td>
 						 <td width="25%">
 							 <span class='h3'>Enquiry No.<input type="textfield"  id="issueToEnquiryNo"  name="issueToEnquiryNo"/></span>   								
 						  </td>
