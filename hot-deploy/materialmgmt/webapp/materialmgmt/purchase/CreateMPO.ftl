@@ -443,7 +443,7 @@ function makeDatePicker(fromDateId ,thruDateId){
 										
 					 		       <tr><td><br/></td></tr>
 					 		        <tr>
-							        	<td align='left' valign='middle' nowrap="nowrap"><div class='h3'>Inc Tax: <input class='h3' type="checkbox" id="incTax" name="incTax" value="true"/></div></td>
+							        	<td align='left' valign='middle' nowrap="nowrap"><div class='h3'>Inc Tax: <input class='h3' type="checkbox" id="incTax" name="incTax" value="true" onClick="javascript: updateGridAmount();"/></div></td>
 							         	
 					 		         </tr>
 					 		          <tr><td><br/></td></tr>
@@ -674,6 +674,9 @@ function makeDatePicker(fromDateId ,thruDateId){
 								            			<#if eachShipTerm.get("uomId") == "INR">
 								            				<option value="INR" selected>Rupees</option>
 								            				<option value="PERCENT">Percent</option>
+								            			<#elseif eachShipTerm.get("uomId") == "PERCENT">
+								            				<option value="INR">Rupees</option>
+								            				<option value="PERCENT" selected>Percent</option>
 								            			<#else>
 								            				<option value="INR">Rupees</option>
 								            				<option value="PERCENT">Percent</option>
