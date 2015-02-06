@@ -38,9 +38,10 @@ if(parameters.issueToCustReqId){
       custRequestId=parameters.issueToCustReqId;
       context.custRequestId=custRequestId;
 	  CustRequestSequenceDetails = delegator.findList("CustRequestSequence",EntityCondition.makeCondition("custRequestId", EntityOperator.EQUALS , custRequestId)  , null, null, null, false );
-	  if(CustRequestSequenceDetails){
-		  if(UtilValidate.isNotEmpty(CustRequestSequenceDetails.sequenceId)){
-			  enquirySequenceNo=CustRequestSequenceDetails.sequenceId;
+	  CustRequestSequence= EntityUtil.getFirst(CustRequestSequenceDetails);	  
+	  if(CustRequestSequence){
+		  if(UtilValidate.isNotEmpty(CustRequestSequence.sequenceId)){
+			  enquirySequenceNo=CustRequestSequence.sequenceId;
 			  context.enquirySequenceNo=enquirySequenceNo;
 		  }
 	  }
@@ -50,9 +51,10 @@ else{
      custRequestId=parameters.custRequestId;
      context.custRequestId=custRequestId;
 	 CustRequestSequenceDetails = delegator.findList("CustRequestSequence",EntityCondition.makeCondition("custRequestId", EntityOperator.EQUALS , custRequestId)  , null, null, null, false );
-	 if(CustRequestSequenceDetails){
-		 if(UtilValidate.isNotEmpty(CustRequestSequenceDetails.sequenceId)){
-			 enquirySequenceNo=CustRequestSequenceDetails.sequenceId;
+	 CustRequestSequence= EntityUtil.getFirst(CustRequestSequenceDetails);	 
+	 if(CustRequestSequence){
+		 if(UtilValidate.isNotEmpty(CustRequestSequence.sequenceId)){
+			 enquirySequenceNo=CustRequestSequence.sequenceId;
 			 context.enquirySequenceNo=enquirySequenceNo;
 		 }
 	 }
@@ -63,7 +65,6 @@ condition = EntityCondition.makeCondition(conditionList,EntityOperator.AND);
 custReqNoteList = delegator.findList("CustRequestAndNote", condition, null, null, null, false);
 noteList = EntityUtil.getFieldListFromEntityList(custReqNoteList, "noteInfo", true);
 context.noteList = noteList;
-Debug.log("noteList==============="+noteList);
 partyAddressMap=[:];
 custReqDetails = delegator.findOne("CustRequest", [custRequestId : custRequestId], false);
 if(UtilValidate.isNotEmpty(custReqDetails)){
@@ -134,6 +135,7 @@ if(UtilValidate.isNotEmpty(custReqDetails)){
 								   itemCode=productDetails.internalName;
 								   longDescription=productDetails.longDescription;
 								   productMap.put("itemCode",itemCode);
+								   productMap.put("productName",longDescription);
 								   productMap.put("longDescription",longDescription);
 								   uomId=productDetails.quantityUomId;
 							   }
@@ -205,6 +207,7 @@ if(UtilValidate.isNotEmpty(custReqDetails)){
 								   itemCode=productDetails.internalName;
 								   longDescription=productDetails.longDescription;
 								   productMap.put("itemCode",itemCode);
+								   productMap.put("productName",longDescription);
 								   productMap.put("longDescription",longDescription);
 								   uomId=productDetails.quantityUomId;
 							   }
@@ -217,7 +220,7 @@ if(UtilValidate.isNotEmpty(custReqDetails)){
 							   enquiryMap.put(key,productMap);
 						   }						   
 				   }					 
-				  context.enquiryMap=enquiryMap;			  
+				  context.enquiryMap=enquiryMap;
             }	   	  
         }    
     }
