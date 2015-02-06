@@ -219,6 +219,8 @@ under the License.
         <field name="payGradeId" title="${uiLabelMap.HumanResLookupPayGradeId}"><text-find/></field>
         <field name="payGradeName" title ="Pay Grade Name"><text-find ></text-find>
         </field>
+         <field name="payScale" title ="Pay Scale"><text-find ></text-find>
+        </field>
         <field name="noConditionFind"><hidden value="Y"/><!-- if this isn't there then with all fields empty no query will be done --></field>
         <field name="submitButton" title="${uiLabelMap.CommonFind}" widget-style="smallSubmit"><submit button-type="button"/></field>
     </form>
@@ -238,6 +240,7 @@ under the License.
         <field name="payGradeName" widget-style="buttontext">
           <display-entity entity-name="PayGrade" key-field-name="payGradeId" description="${payGradeName}"/>
         </field>
+        <field name="payScale" title="Pay Scale"><display></display></field>
         <!-- <field name="description"><display/></field> -->
     </form>
     <form name="LookupPayRollPreference" type="single" target="LookupPayRollPreference"

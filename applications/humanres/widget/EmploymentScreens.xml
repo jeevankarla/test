@@ -232,8 +232,9 @@
 	            <set field="partyName" value="${groovy:org.ofbiz.party.party.PartyHelper.getPartyName(party, true)}"/>
                 <set field="titleProperty" value="ListPayHistories   ${parameters.partyIdTo} ${partyName}  "/>
                 <set field="headerItem" value="PayrollItems"/>
-                <set field="tabButtonItem" value="PayrollItems"/>
-                <set field="tabButtonItem2" value="ListPayHistories"/>
+                <set field="tabButtonItem" value="EmployeeProfile"/>
+                <set field="tabButtonItem2" value="PayrollItems"/>
+                <set field="tabButtonItem3" value="ListPayHistories"/>
                 <set field="roleTypeIdFrom" from-field="parameters.roleTypeIdFrom"/>
                 <set field="roleTypeIdTo" from-field="parameters.roleTypeIdTo"/>
                 <set field="partyIdTo" from-field="parameters.partyIdTo"/>
