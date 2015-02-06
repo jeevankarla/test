@@ -444,7 +444,8 @@ under the License.
 
     <simple-method method-name="updateIssuanceShipmentAndPoOnReceiveInventory" short-description="Update issuance, shipment and order items if quantity received is higher than quantity on purchase order">
         <entity-one value-field="orderItem" entity-name="OrderItem"/>
-        <if-not-empty field="parameters.orderCurrencyUnitPrice">
+        <!-- we have to preserve original quantity of orderItem -->
+       <!--  <if-not-empty field="parameters.orderCurrencyUnitPrice">
             <if-compare-field field="parameters.orderCurrencyUnitPrice" operator="not-equals" to-field="orderItem.unitPrice" type="BigDecimal">
                 <set field="orderItem.unitPrice" from-field="parameters.orderCurrencyUnitPrice" type="BigDecimal"/>
                 <store-value value-field="orderItem"/>
@@ -455,12 +456,12 @@ under the License.
                 <store-value value-field="orderItem"/>
             </if-compare-field>
         </else>
-        </if-not-empty>
+        </if-not-empty> -->
         <call-simple-method method-name="getReceivedQuantityForOrderItem"/>
-        <if-compare-field field="orderItem.quantity" operator="less" to-field="receivedQuantity" type="BigDecimal">
+       <!--  <if-compare-field field="orderItem.quantity" operator="less" to-field="receivedQuantity" type="BigDecimal">
             <set field="orderItem.quantity" from-field="receivedQuantity"/>
             <store-value value-field="orderItem"/>
-        </if-compare-field>
+        </if-compare-field> -->
         <if-not-empty field="parameters.shipmentId">
             <if-not-empty field="orderItem.productId">
                 <call-simple-method method-name="getTotalIssuedQuantityForOrderItem" xml-resource="component://product/script/org/ofbiz/shipment/issuance/IssuanceServices.xml"/>
