@@ -619,6 +619,10 @@ public class MaterialRequestServices {
             }
             EntityCondition condition = EntityCondition.makeCondition(conditionList, EntityOperator.AND);
             List<GenericValue> inventoryItems = delegator.findList("ShipmentReceiptAndItem", condition, null, UtilMisc.toList("datetimeReceived"), null, false);
+            if (UtilValidate.isEmpty(inventoryItems)) {
+            	Debug.logError("Unable to process issue this item : "+productId + " still in QC ", module);
+                return ServiceUtil.returnError("Unable to process issue this item : "+productId + " still in QC ");
+            }
             Iterator<GenericValue> itr = inventoryItems.iterator();
             while ((requestedQty.compareTo(BigDecimal.ZERO) > 0) && itr.hasNext()) {
                 GenericValue inventoryItem = itr.next();
