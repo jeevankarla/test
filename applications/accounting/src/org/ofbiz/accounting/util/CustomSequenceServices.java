@@ -162,10 +162,12 @@ public class CustomSequenceServices {
 	   				custRequestSequence.put("custReqSequenceTypeId",custReqSequenceTypeId );
 	   				custRequestSequence.put("custRequestId", custRequestId);
 	   				custRequestSequence.put("finYearId", finYearId);
-	   				custRequestSequence.put("custRequestNo", custRequestId+"/"+UtilDateTime.toDateString(customTimePeriod.getDate("fromDate"),"yyyy")+"-"+UtilDateTime.toDateString(customTimePeriod.getDate("thruDate"),"yy"));
-					delegator.setNextSubSeqId(custRequestSequence, "sequenceId", 10, 1);
-		            delegator.create(custRequestSequence);
-		            String sequenceId = (String) custRequestSequence.get("sequenceId");
+	   				//custRequestSequence.put("custRequestNo", custRequestId+"/"+UtilDateTime.toDateString(customTimePeriod.getDate("fromDate"),"yyyy")+"-"+UtilDateTime.toDateString(customTimePeriod.getDate("thruDate"),"yy"));
+					delegator.setNextSubSeqId(custRequestSequence, "sequenceId", 6, 1);
+					String sequenceId = (String) custRequestSequence.get("sequenceId");
+					custRequestSequence.put("custRequestNo", sequenceId+"/"+UtilDateTime.toDateString(customTimePeriod.getDate("fromDate"),"yyyy")+"-"+UtilDateTime.toDateString(customTimePeriod.getDate("thruDate"),"yy"));
+		            delegator.createOrStore(custRequestSequence);
+		            
 		            result.put("sequenceId", sequenceId) ;
 	       			}
 	       		}
