@@ -369,7 +369,7 @@
      	<display-entity entity-name="ProductCategory" key-field-name="productCategoryId" description="${description}" ></display-entity>
      </field>
      <field name="updateMaterial" widget-style="buttontext" title="Update"  >
-            <hyperlink target-type="plain" target="javascript:showUpdateProductForm('${productId}','${description}','${longDescription}','${quantityUomId}');" description="Update">
+            <hyperlink target-type="plain" target="javascript:showUpdateProductForm('${productId}','${quantityUomId}');" description="Update">
             </hyperlink>
       </field> 
      <field name="partyId" title="Supplier" >
