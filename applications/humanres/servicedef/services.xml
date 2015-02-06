@@ -308,6 +308,7 @@ under the License.emplpunch
         <description>Create new employment and closing previous employment</description>
        <attribute name="partyIdTo" mode="IN" type="String" optional="false"/>
        <attribute name="partyIdFrom" mode="IN" type="String" optional="false"/>
+       <attribute name="reportingDate" mode="IN" type="String" optional="true"/>
        <attribute name="fromDate" type="String" mode="IN" optional="false"/>
    </service>
 
@@ -940,7 +941,7 @@ under the License.emplpunch
         <override name="partyId" optional="false"/>
     </service>
     
-    <service name="updateEmplLeave" engine="java" default-entity-name="EmplLeave"
+      <service name="updateEmplLeave" engine="java" default-entity-name="EmplLeave"
              location="in.vasista.vbiz.humanres.EmplLeaveService" invoke="updateEmplLeave" auth="true">
         <description>Update Valid Employee Leave</description>
         <permission-service service-name="humanResManagerPermission" main-action="LEAVE_EDIT"/>

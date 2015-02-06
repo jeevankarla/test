@@ -439,6 +439,7 @@ under the License.
       <field name="terminationReasonId" type="id"></field>
       <field name="terminationTypeId" type="id"></field>
       <field name="appointmentDate" type="date-time"></field>
+      <field name="reportingDate" type="date-time"></field>
       <field name="resignationDate" type="date-time"></field>
       <field name="locationGeoId" type="id"></field>
       <field name="stateGeoId" type="id"></field>

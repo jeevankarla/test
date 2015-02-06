@@ -103,6 +103,10 @@
 		$( "#fromDate" ).datepicker({
 			dateFormat:'dd/mm/yy',
 			changeMonth: true,
+			numberOfMonths: 1});
+			$( "#reportingDate" ).datepicker({
+			dateFormat:'dd/mm/yy',
+			changeMonth: true,
 			numberOfMonths: 1});		
 		$('#ui-datepicker-div').css('clip', 'auto');
 		
@@ -125,6 +129,8 @@
 					"</select></td></tr>";
 		
 		message +=	"<tr class='h3'><td align='left' class='h3' width='60%'>From Date:</td><td align='left' width='60%'><input class='h4' type='text' readonly id='fromDate' name='fromDate' onmouseover='datepick()'/></td></tr>";
+		
+		message +=	"<tr class='h3'><td align='left' class='h3' width='60%'>Reporting Date:</td><td align='left' width='60%'><input class='h4' type='text' readonly id='reportingDate' name='reportingDate' onmouseover='datepick()'/></td></tr>";
 		
 		message +=  "<tr class='h3'><td align='center'><span align='right'><input type='submit' value='Create' class='smallSubmit'/></span></td><td class='h3' width='100%' align='left'><span align='left'><button value='${uiLabelMap.CommonCancel}' onclick='return cancelForm();' class='smallSubmit'>${uiLabelMap.CommonCancel}</button></span></td></tr>";
 		title = "<center>Create New Employment<center><br />";

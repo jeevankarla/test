@@ -104,7 +104,8 @@ def populateChildren(org, employeeList) {
 		employee.put("emailAddress",emailAddress);
 		employee.put("locationGeoId",employment.locationGeoId);
 		employee.put("gender",employment.gender);
-	
+		dateofBirth = UtilDateTime.toDateString(employment.birthDate, "dd/MM/yyyy");
+		employee.put("dateofBirth",dateofBirth);
 		if(UtilValidate.isNotEmpty(employment.bloodGroup)){
 		bloodGroups=delegator.findByAnd("Enumeration",[enumId:employment.bloodGroup]);
 		if(UtilValidate.isNotEmpty(bloodGroups)){
