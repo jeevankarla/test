@@ -22,8 +22,8 @@ under the License.
 <#-- do not display columns associated with values specified in the request, ie constraint values -->
 <fo:layout-master-set>
 	<fo:simple-page-master master-name="main" page-height="12in" page-width="10in"
-            margin-top="0.1in" margin-bottom=".7in" margin-left=".5in" margin-right=".5in">
-        <fo:region-body margin-top="2.5in"/>
+            margin-top="0.2in" margin-bottom=".7in" margin-left=".5in" margin-right=".5in">
+        <fo:region-body margin-top="2in"/>
         <fo:region-before extent="1.5in"/>
         <fo:region-after extent="1.5in"/>        
     </fo:simple-page-master>   
@@ -33,8 +33,7 @@ under the License.
            <#if enquiryMap?has_content>
          <#list partyList as partyEntry>   
           <#assign partyId=partyEntry.getKey()> 
-          <#assign addressDetails=partyEntry.getValue()>
-         
+          <#assign addressDetails=partyEntry.getValue()>         
           <fo:page-sequence master-reference="main">
 			    <fo:static-content font-size="13pt" font-family="Courier,monospace"  flow-name="xsl-region-before" font-weight="bold">
 			        <fo:block  keep-together="always" text-align="center" font-family="Courier,monospace" white-space-collapse="false">&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;UserLogin : <#if userLogin?exists>${userLogin.userLoginId?if_exists}</#if></fo:block>
@@ -49,10 +48,13 @@ under the License.
                     <fo:block  keep-together="always" text-align="center" font-family="Courier,monospace" white-space-collapse="false" font-size="12pt" >----------------------------------------------------------------------------------------- </fo:block>
 				    <fo:block text-align="center" keep-together="always">                                              MATERIAL ENQUIRY REPORT                                                  </fo:block>				    
 			        </fo:static-content>	
-			        <fo:flow flow-name="xsl-region-body"   font-family="Courier,monospace">	 			       
-				    <fo:block text-align="left" keep-together="always" white-space-collapse="false">&#160;ENQUIRY NO.: ${custRequestId?if_exists}                                          ENQUIRY DATE: ${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(custReqDate, "dd-MMM-yyyy")?if_exists}</fo:block>
-			        <fo:block  keep-together="always"  text-align="left"  white-space-collapse="false">&#160;VENDOR NO.:${partyId?if_exists}                                            SEQUENCE NO.: ${enquirySequenceNo?if_exists}</fo:block>
-                    <fo:block  keep-together="always" text-align="left"  white-space-collapse="false">&#160;&#160;                                                           FAX NO: ${partyEntry.getValue().get("faxNumber")?if_exists}</fo:block>                                        
+			        <fo:flow flow-name="xsl-region-body"   font-family="Courier,monospace">
+                    <fo:block linefeed-treatment="preserve">&#xA;</fo:block>
+                    <fo:block linefeed-treatment="preserve">&#xA;</fo:block>
+                    <fo:block text-align="left" keep-together="always" white-space-collapse="false">&#160;SEQUENCE NO.: ${enquirySequenceNo?if_exists}                                                ENQUIRY DATE: ${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(custReqDate, "dd-MMM-yyyy")?if_exists}</fo:block>  	 			       
+				    <fo:block text-align="left" keep-together="always" white-space-collapse="false">&#160;ENQUIRY NO.:${custRequestId?if_exists}                                             FAX NO: ${partyEntry.getValue().get("faxNumber")?if_exists}</fo:block>
+			        <fo:block  keep-together="always"  text-align="left"  white-space-collapse="false">&#160;VENDOR NO.:${partyId?if_exists}                                            </fo:block>
+                    <fo:block  keep-together="always" text-align="left"  white-space-collapse="false">&#160;&#160;                                                           </fo:block>                                        
                     <fo:block  keep-together="always" text-align="left"  white-space-collapse="false">&#160;To: ${partyEntry.getValue().get("partyName")?if_exists}                                           </fo:block>                    
 				    <fo:block text-align="left" white-space-collapse="false">&#160;&#160; ${partyEntry.getValue().get("address1")?if_exists}</fo:block>
 				    <fo:block text-align="left" white-space-collapse="false">&#160;&#160; ${partyEntry.getValue().get("address2")?if_exists}</fo:block>
@@ -84,7 +86,7 @@ under the License.
 									<fo:block text-align="left"  >ITEM CODE</fo:block>
 								</fo:table-cell>
 								<fo:table-cell >
-									<fo:block text-align="left" >SPECIFICATION</fo:block>
+									<fo:block text-align="left" >MATERIAL NAME</fo:block>
 								</fo:table-cell>
 								<fo:table-cell >
 									<fo:block text-align="center" keep-together="always" >UNIT</fo:block>
@@ -100,7 +102,7 @@ under the License.
 						</fo:table-row>
 					 </fo:table-body> 
 			       </fo:table>
-			       </fo:block>		             	   			 
+			       </fo:block>		  	   	   			 
 	               <fo:block font-family="Courier,monospace"  font-size="10pt">
 	                   <fo:table>
 					       <fo:table-column column-width="70pt"/>
@@ -114,23 +116,22 @@ under the License.
 				              <#assign productList = enquiryMap.entrySet()>                                                                 					          
                                <#list productList as productEntry>
                                <#assign productd=productEntry.getKey()> 
-                                <#assign productDetails=productEntry.getValue()> 
-                                 
+                                <#assign productDetails=productEntry.getValue()>                                  
 				                  <fo:table-row >
 					                 <fo:table-cell>
-									    <fo:block text-align="center" keep-together="always" >${sno?if_exists}</fo:block>
+									    <fo:block text-align="center" keep-together="always" font-size="12pt" >${sno?if_exists}</fo:block>
 								     </fo:table-cell>
 								     <fo:table-cell >
-									    <fo:block text-align="left"  >${productDetails.get("itemCode")?if_exists}</fo:block>
+									    <fo:block text-align="left"  font-size="12pt" >${productDetails.get("itemCode")?if_exists}</fo:block>
 								    </fo:table-cell>
 								    <fo:table-cell >
-									   <fo:block text-align="left"  >${productDetails.get("longDescription")?if_exists}</fo:block>
+									   <fo:block text-align="left"  font-size="12pt" >${productDetails.get("productName")?if_exists}</fo:block>
 								   </fo:table-cell>
 								   <fo:table-cell >
-									  <fo:block text-align="center" keep-together="always" >${productDetails.get("unit")?if_exists}</fo:block>
+									  <fo:block text-align="center" keep-together="always" font-size="12pt">${productDetails.get("unit")?if_exists}</fo:block>
 								   </fo:table-cell>
 								   <fo:table-cell >
-									  <fo:block text-align="right" keep-together="always" >${productDetails.get("requrdqty")?if_exists?string("##0.000")}</fo:block>
+									  <fo:block text-align="right" keep-together="always" font-size="12pt" >${productDetails.get("requrdqty")?if_exists?string("##0.000")}</fo:block>
 								   </fo:table-cell>
 					           </fo:table-row>
 					           <#assign sno=sno+1> 
@@ -149,15 +150,14 @@ under the License.
 						  	 <#assign sno=1> 
                               <#list noteList as noteEntry>
                                <fo:table-row>
-								<fo:table-cell border-style="solid"><fo:block text-align="left" >${sno?if_exists}</fo:block></fo:table-cell>
-								<fo:table-cell border-style="solid"><fo:block text-align="left">${noteEntry?if_exists}</fo:block></fo:table-cell>
+								<fo:table-cell ><fo:block text-align="left" >${sno?if_exists}</fo:block></fo:table-cell>
+								<fo:table-cell ><fo:block text-align="left">${noteEntry?if_exists}</fo:block></fo:table-cell>
 							   </fo:table-row>
 					          <#assign sno=sno+1> 
                               </#list>  
                              </fo:table-body>
                           </fo:table>
                         </fo:block>    	
-					<fo:block page-break-after="always"></fo:block>
                    </#if>
 	               <fo:block  font-size="12pt"  white-space-collapse="false">&#160; </fo:block>        
 	                <fo:block  font-size="12pt"   white-space-collapse="false"  text-align="left"> Terms and Conditions :</fo:block>     
@@ -169,8 +169,76 @@ under the License.
 	                <fo:block  font-size="12pt"   white-space-collapse="false"  text-align="left">5.The validity of your offers should be 60 days from date of due date.</fo:block>
 	                <fo:block  font-size="12pt"  white-space-collapse="false"  text-align="left">6.Substandard / material not as per our specifications are liable for rejection.</fo:block>
 	                <fo:block  font-size="12pt"   white-space-collapse="false"  text-align="left">7.Payment will be made within 30 days from date of satisfactory receipt of the materials.</fo:block>
-	                <fo:block  font-size="12pt"   white-space-collapse="false"  text-align="left">8.If you are a authorized dealer please send the dealership certificate and manufacturers price list.</fo:block>
-	               <fo:block linefeed-treatment="preserve">&#xA;</fo:block>
+	                <fo:block  font-size="12pt"   white-space-collapse="false"  text-align="left">8.If you are a authorized dealer please send the dealership certificate and manufacturers price list.</fo:block>	               
+	                <fo:block page-break-after="always"></fo:block>
+	                <fo:block linefeed-treatment="preserve">&#xA;</fo:block>
+	                <fo:block linefeed-treatment="preserve">&#xA;</fo:block>
+	                <fo:block linefeed-treatment="preserve">&#xA;</fo:block>	                
+                    <fo:block font-family="Courier,monospace">
+	                <fo:table>
+                    <fo:table-column column-width="70pt"/>   
+					<fo:table-column column-width="100pt"/>
+					<fo:table-column column-width="150pt"/>
+					<fo:table-column column-width="150pt"/>
+					     <fo:table-body>
+					         <fo:table-row >
+							   <fo:table-cell >
+				                  <fo:block text-align="left" keep-together="always"  >----------------------------------------------------------------------------------------</fo:block>
+								</fo:table-cell>
+						     </fo:table-row>
+					         <fo:table-row>
+                                <fo:table-cell>
+									<fo:block text-align="center" >SL.No</fo:block>
+								</fo:table-cell>
+					            <fo:table-cell>
+									<fo:block text-align="left" >ITEM CODE</fo:block>
+								</fo:table-cell>
+                                <fo:table-cell >
+									<fo:block text-align="left"  >MATERIAL NAME</fo:block>
+								</fo:table-cell>
+								<fo:table-cell >
+									<fo:block text-align="left"  >SPECIFICATION</fo:block>
+								</fo:table-cell>
+						    </fo:table-row>
+					        <fo:table-row >
+							<fo:table-cell >
+				                <fo:block text-align="left" keep-together="always"  >----------------------------------------------------------------------------------------</fo:block>
+							</fo:table-cell>
+						</fo:table-row>
+					 </fo:table-body> 
+			       </fo:table>
+			       </fo:block>
+			       <fo:block font-family="Courier,monospace"  font-size="10pt">
+	                   <fo:table>
+                          <fo:table-column column-width="70pt"/>
+	                      <fo:table-column column-width="100pt"/>
+					      <fo:table-column column-width="150pt"/>
+					      <fo:table-column column-width="150pt"/>
+					          <fo:table-body>
+                               <#assign sno=1>  					          				                                                                               					          
+                               <#list productList as productEntry>
+                               <#assign productdId=productEntry.getKey()> 
+                                <#assign productDetails=productEntry.getValue()> 
+                                   <fo:table-row >
+                                       <fo:table-cell>
+									    <fo:block text-align="center" keep-together="always" font-size="12pt" >${sno?if_exists}</fo:block>
+								       </fo:table-cell>
+                                       <fo:table-cell >
+									       <fo:block text-align="left" font-size="12pt"  >${productDetails.get("itemCode")?if_exists}</fo:block>
+								       </fo:table-cell>
+								       <fo:table-cell >
+									       <fo:block text-align="left"  font-size="12pt" >${productDetails.get("productName")?if_exists}</fo:block>
+								       </fo:table-cell>
+								       <fo:table-cell >
+									       <fo:block text-align="left" font-size="12pt"  >${productDetails.get("longDescription")?if_exists}</fo:block>
+								       </fo:table-cell>
+                                  </fo:table-row>
+                                  <#assign sno=sno+1> 
+                               </#list>  					                                                            
+					     </fo:table-body>  
+					  </fo:table>
+				           <fo:block text-align="left" keep-together="always"  >----------------------------------------------------------------------------------------------------------</fo:block>
+	                </fo:block> 					      		  		
 	               <fo:block  font-size="12pt" keep-together="always"  white-space-collapse="false"  text-align="left">&#160;  Thanking you,                                                        Yours faithfully</fo:block>
 	               <fo:block  font-size="12pt" keep-together="always"  white-space-collapse="false"  text-align="left">&#160;                                                                       for MOTHER DAIRY</fo:block>
 	               <fo:block linefeed-treatment="preserve">&#xA;</fo:block>
