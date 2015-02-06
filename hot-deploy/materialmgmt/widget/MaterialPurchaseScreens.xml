@@ -50,6 +50,7 @@
                 <script location="component://byproducts/webapp/byproducts/WEB-INF/actions/facility/enablePartyAutoComplete.groovy"/>
                 <script location="component://materialmgmt/webapp/materialmgmt/WEB-INF/actions/orgnigationDept.groovy"/>
                  <script location="component://materialmgmt/webapp/materialmgmt/WEB-INF/actions/purchases/PurchaseEntryFormNew.groovy"/>
+                 
             </actions>
             <widgets>
                  <decorator-screen name="materialmgmtNgCommonDecorator" location="${parameters.mainDecoratorLocation}">
@@ -80,7 +81,7 @@
                 <script location="component://materialmgmt/webapp/materialmgmt/WEB-INF/actions/orgnigationDept.groovy"/>
                  <script location="component://materialmgmt/webapp/materialmgmt/WEB-INF/actions/purchases/PurchaseEntryFormNew.groovy"/>
                  <script location="component://materialmgmt/webapp/materialmgmt/WEB-INF/actions/purchases/EditPOEntryForm.groovy"/>
-                 
+                 <set field="purchaseTypeFlag" from-field="parameters.purchaseTypeFlag"/>
             </actions>
             <widgets>
                  <decorator-screen name="materialmgmtNgCommonDecorator" location="${parameters.mainDecoratorLocation}">
@@ -113,20 +114,23 @@
                       <include-menu name="FindMaterialPOSubTabBar" location="component://materialmgmt/widget/materialmgmtMenus.xml"/>
                         <section>
                             <widgets>
+                            <section>
+                            <condition>
+                            	<if-has-permission permission="MM"  action="_CREATE_PO"/>
+                            </condition>
+                            <widgets>
                                <link target="CreateMPO" text="Create PO" style="buttontext"/>
                                <link target="CreateMPO" text="Create Rate Contract PO" style="buttontext">
 									<parameter param-name="purchaseTypeFlag" value="contractPurchase"/>
 							   </link>
-                                <decorator-screen name="FindScreenDecorator" location="component://common/widget/CommonScreens.xml">
-                                    <decorator-section name="search-options">
-                            			<include-form name="FindMaterialPurchaseOrder" location="component://materialmgmt/widget/MaterialPurchaseForms.xml"/>
-                      				</decorator-section>
-                      				<decorator-section name="search-results">
-                      					<screenlet title="">
-                          					<include-form name="listMaterialPurchaseOrders" location="component://materialmgmt/widget/MaterialPurchaseForms.xml"/>
-                      					</screenlet>
-                      				</decorator-section>
-                                </decorator-screen>
+							   </widgets>
+							   </section>
+                                  	<screenlet title="search-options">
+                          				<include-form name="FindMaterialPurchaseOrder" location="component://materialmgmt/widget/MaterialPurchaseForms.xml"/>
+                          			</screenlet>
+                   					<screenlet title="Search-results">
+                       					<include-form name="listMaterialPurchaseOrders" location="component://materialmgmt/widget/MaterialPurchaseForms.xml"/>
+                   					</screenlet>
                             </widgets>
                         </section>
                     </decorator-section>
@@ -143,6 +147,7 @@
 			    <set field="tabButtonItem2" value="FindGRNReceipts" />	
                <set field="viewSize" from-field="parameters.VIEW_SIZE"/>
                <set field="targetRequest" value="FindGRNReceipts"/>
+               <script location="component://materialmgmt/webapp/materialmgmt/WEB-INF/actions/purchases/purchaseDepartments.groovy"/>
             </actions>
             <widgets>
                  <decorator-screen name="materialmgmtNgCommonDecorator" location="${parameters.mainDecoratorLocation}">
@@ -158,6 +163,11 @@
                       					<screenlet title="">
                           					<include-form name="listMaterialShipmentReceipt" location="component://materialmgmt/widget/MaterialPurchaseForms.xml"/>
                       					</screenlet>
+                      					<platform-specific>
+                                           <html>
+											  <html-template location="component://materialmgmt/webapp/materialmgmt/purchase/qcApproval.ftl"/>
+										   </html>
+									   </platform-specific>
                       				</decorator-section>
                                 </decorator-screen>
                             </widgets>

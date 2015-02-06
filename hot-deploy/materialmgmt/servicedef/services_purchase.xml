@@ -236,5 +236,6 @@
         <description>Send Receipts For Quality Control Check</description>
         <attribute name="receiptId" type="String" mode="IN" optional="false"/>
         <attribute name="statusIdTo" type="String" mode="IN" optional="false"/>
+        <attribute name="partyId" type="String" mode="IN" optional="false"/>
     </service>
 </services>

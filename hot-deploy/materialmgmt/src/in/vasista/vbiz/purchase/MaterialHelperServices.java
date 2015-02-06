@@ -178,7 +178,74 @@ public class MaterialHelperServices{
 		}
 		
 		return result;
-	}	
+	}
+	
+	public static Map<String, Object> getOrderTaxComponentBreakUp(DispatchContext ctx,Map<String, ? extends Object> context) {
+		Delegator delegator = ctx.getDelegator();
+		LocalDispatcher dispatcher = ctx.getDispatcher();
+		String taxType = (String) context.get("taxType");
+		Timestamp effectiveDate = (Timestamp) context.get("effectiveDate");
+		BigDecimal taxRate = (BigDecimal) context.get("taxRate");
+		GenericValue userLogin = (GenericValue) context.get("userLogin");
+		Map result = ServiceUtil.returnSuccess();
+		List condList=FastList.newInstance();
+		Map taxComponents = FastMap.newInstance();
+		if(UtilValidate.isEmpty(effectiveDate)){
+			effectiveDate = UtilDateTime.nowTimestamp();
+		}
+		try{
+			condList.add(EntityCondition.makeCondition("taxType", EntityOperator.EQUALS, taxType));
+			condList.add(EntityCondition.makeCondition("taxRate", EntityOperator.EQUALS, taxRate.setScale(6)));
+			EntityCondition cond = EntityCondition.makeCondition(condList, EntityOperator.AND);
+			List<GenericValue> taxRateComponent = delegator.findList("OrderTaxTypeAndComponentMap", cond, null, null, null, false);
+			taxRateComponent = EntityUtil.filterByDate(taxRateComponent, effectiveDate);
+			for(GenericValue eachTaxRate : taxRateComponent){
+				String componentType = eachTaxRate.getString("componentType");
+				BigDecimal componentRate = eachTaxRate.getBigDecimal("componentRate");
+				taxComponents.put(componentType, componentRate);
+			}
+		}catch(Exception e){
+			Debug.logError(e.toString(), module);
+			return ServiceUtil.returnError(e.toString());
+		}
+		result.put("taxComponents", taxComponents);
+		return result;
+	}
+	
+	public static Map<String, Object> getOrderTaxRateForComponentRate(DispatchContext ctx,Map<String, ? extends Object> context) {
+		Delegator delegator = ctx.getDelegator();
+		LocalDispatcher dispatcher = ctx.getDispatcher();
+		String taxType = (String) context.get("taxType");
+		Timestamp effectiveDate = (Timestamp) context.get("effectiveDate");
+		BigDecimal componentRate = (BigDecimal) context.get("componentRate");
+		GenericValue userLogin = (GenericValue) context.get("userLogin");
+		Map result = ServiceUtil.returnSuccess();
+		List condList=FastList.newInstance();
+		Map taxComponents = FastMap.newInstance();
+		if(UtilValidate.isEmpty(effectiveDate)){
+			effectiveDate = UtilDateTime.nowTimestamp();
+		}
+		BigDecimal taxRate = BigDecimal.ZERO;
+		try{
+			condList.add(EntityCondition.makeCondition("taxType", EntityOperator.EQUALS, taxType));
+			condList.add(EntityCondition.makeCondition("componentRate", EntityOperator.EQUALS, componentRate.setScale(6)));
+			EntityCondition cond = EntityCondition.makeCondition(condList, EntityOperator.AND);
+			List<GenericValue> taxRateComponent = delegator.findList("OrderTaxTypeAndComponentMap", cond, null, null, null, false);
+			taxRateComponent = EntityUtil.filterByDate(taxRateComponent, effectiveDate);
+			
+			if(UtilValidate.isNotEmpty(taxRateComponent)){
+				GenericValue taxRateValue = EntityUtil.getFirst(taxRateComponent);
+				taxRate = taxRateValue.getBigDecimal("taxRate");
+			}
+			
+		}catch(Exception e){
+			Debug.logError(e.toString(), module);
+			return ServiceUtil.returnError(e.toString());
+		}
+		result.put("taxRate", taxRate);
+		return result;
+	}
+	
 	public static Map<String, Object> getMaterialReceiptsForPeriod(DispatchContext ctx,Map<String, ? extends Object> context) {
 		Delegator delegator = ctx.getDelegator();
 		LocalDispatcher dispatcher = ctx.getDispatcher();
@@ -753,6 +820,42 @@ public static Map<String, Object> setReauirementStatusId(DispatchContext ctx,Map
 		 result.put("receiptItemTotals", receiptItemTotals);  
 		return result;
 	}
-
+  	
+  public static Map<String, Object> getDivisionDepartments(DispatchContext dctx, Map<String, ? extends Object> context) {
+  	Delegator delegator = dctx.getDelegator();
+		LocalDispatcher dispatcher = dctx.getDispatcher();    	
+      GenericValue userLogin = (GenericValue) context.get("userLogin");
+      Timestamp fromDate =  (Timestamp)context.get("fromDate");
+      Timestamp thruDate = (Timestamp)context.get("thruDate");
+      String partyIdFrom = (String) context.get("partyIdFrom");
+      List partyRelationshipAndDetailList = FastList.newInstance();
+      List partyIds = FastList.newInstance();
+      Security security = dctx.getSecurity();
+      Map result = ServiceUtil.returnSuccess();
+      try {
+    	  List conditionList = FastList.newInstance();
+    	  conditionList.add(EntityCondition.makeCondition("partyTypeId", EntityOperator.EQUALS, "PARTY_GROUP"));
+    	  conditionList.add(EntityCondition.makeCondition("roleTypeIdFrom", EntityOperator.EQUALS, "INTERNAL_ORGANIZATIO"));
+    	  if(UtilValidate.isNotEmpty(partyIdFrom)){
+    		  conditionList.add(EntityCondition.makeCondition("partyIdFrom", EntityOperator.EQUALS, partyIdFrom));
+    	  }
+    	  conditionList.add(EntityCondition.makeCondition("roleTypeIdTo", EntityOperator.EQUALS, "DIVISION"));
+    	  conditionList.add(EntityCondition.makeCondition("partyRelationshipTypeId", EntityOperator.EQUALS, "SUB_DIVISION"));
+    	  conditionList.add(EntityCondition.makeCondition("fromDate", EntityOperator.GREATER_THAN_EQUAL_TO, fromDate));	
+    	  if(UtilValidate.isNotEmpty(thruDate)){
+    		  conditionList.add(EntityCondition.makeCondition("thruDate", EntityOperator.LESS_THAN_EQUAL_TO, thruDate));
+    	  }
+    	  EntityCondition condition = EntityCondition.makeCondition(conditionList, EntityOperator.AND); 
+    	  partyRelationshipAndDetailList = delegator.findList("PartyRelationshipAndDetail", condition, null, null, null, false);
+    	  if(UtilValidate.isNotEmpty(partyRelationshipAndDetailList)){
+    		   partyIds = EntityUtil.getFieldListFromEntityList(partyRelationshipAndDetailList, "partyIdTo", true);
+    	  }
+      }catch(GenericEntityException e){
+		Debug.logError("Error fetching employments " + e.getMessage(), module);
+      }
+  		result.put("subDivisionDepartmentList", partyRelationshipAndDetailList);
+  		result.put("subDivisionPartyIds", partyIds);
+  		return result;
+  }   
 }
 
