@@ -61,7 +61,7 @@ if(orderHeader && orderHeader.statusId == "ORDER_CREATED"){
 	orderInfoDetail.putAt("refNo", refNo);
 	
 	conditionList.add(EntityCondition.makeCondition("orderId", EntityOperator.EQUALS, orderId));
-	conditionList.add(EntityCondition.makeCondition("roleTypeId", EntityOperator.EQUALS, "SUPPLIER_AGENT"));
+	conditionList.add(EntityCondition.makeCondition("roleTypeId", EntityOperator.IN, UtilMisc.toList("SUPPLIER_AGENT", "BILL_FROM_VENDOR")));
 	condition = EntityCondition.makeCondition(conditionList, EntityOperator.AND);
 	orderRoles = delegator.findList("OrderRole", condition, null, null, null, false);
 	orderRole = EntityUtil.getFirst(orderRoles);
