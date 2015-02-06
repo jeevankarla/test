@@ -449,7 +449,7 @@
          <field name="QOH" title="Inv. Available"><display/></field>
         <field name="toBeIssuedQty" title="QtyToIssue"><text size="5"  disabled="false"> </text></field>
         
-        <field name="UpdateCrates" title="Issue ${uiLabelMap.MaterialMangement_Product}"  use-when="flag == &quot;Y&quot;" event="onclick" action="javascript:issueProductForRequest(this);"   widget-style="buttontext"> 
+        <field name="UpdateCrates" title="Issue ${uiLabelMap.MaterialMangement_Product}"  use-when="flag == &quot;Y&quot; &amp;&amp;${groovy:((security.hasEntityPermission(&quot;MM&quot;, &quot;_RAISE_REQ&quot;, session)))}" event="onclick" action="javascript:issueProductForRequest(this);"   widget-style="buttontext"> 
            <submit button-type="button" />
         </field>
         <!-- <field use-when="flag == &quot;Y&quot;" name="issueProduct" widget-style="buttontext" title="Issue ${uiLabelMap.MaterialMangement_Product}">
@@ -460,7 +460,7 @@
         </field> -->
         <field use-when="flag == &quot;N&quot; &amp;&amp; &quot;${statusId}&quot; == &quot;CRQ_SUBMITTED&quot;" name="custmQuantity" title="Diffr.Qty" ><text size="5" disabled="true" ></text>
         </field>
-        <field use-when="flag == &quot;N&quot; &amp;&amp; &quot;${statusId}&quot; == &quot;CRQ_SUBMITTED&quot;" name="raiseRequirement" event="onclick" action="javascript:createRequirementForCustRequestItem(this);" widget-style="buttontext" >
+        <field use-when="flag == &quot;N&quot; &amp;&amp; &quot;${statusId}&quot; == &quot;CRQ_SUBMITTED&quot; &amp;&amp;${groovy:((security.hasEntityPermission(&quot;MM&quot;, &quot;_RAISE_REQ&quot;, session)))}" name="raiseRequirement" event="onclick" action="javascript:createRequirementForCustRequestItem(this);" widget-style="buttontext" >
         	<!-- <hyperlink target="createRequirementForCustRequestItem" description="Raise Requirement">
                 <parameter param-name="custRequestId"/>
                 <parameter param-name="custRequestItemSeqId"/>

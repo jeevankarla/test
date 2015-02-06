@@ -15,17 +15,20 @@
                 <decorator-screen name="materialmgmtNgCommonDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                     	<include-menu name="RequirementTabBar" location="component://materialmgmt/widget/materialmgmtMenus.xml"/>
+                    	<section>
+                    	<condition>
+                    		<if-has-permission permission="MM_CREATE_REQ"/>
+                    	</condition>
+                    	<widgets>
                     	<link target="newRequirement"  text="Create New Requirement" style="buttontext" url-mode="plain"/>
-                        <decorator-screen name="FindScreenDecorator" location="component://common/widget/CommonScreens.xml">
-                            <decorator-section name="search-options">
+                    	</widgets>
+                    	</section>
+                            <screenlet title="Search-Options">
                                 <include-form name="FindMaterialRequirements" location="component://materialmgmt/widget/MaterialRequirementForms.xml"/>
-                            </decorator-section>
-                            <decorator-section name="search-results">
-                            	<screenlet>
+                                </screenlet>
+                            	<screenlet title="Search-Results">
                                 	<include-form name="ListMaterialRequirements" location="component://materialmgmt/widget/MaterialRequirementForms.xml"/>
                                 </screenlet>
-                            </decorator-section>
-                        </decorator-screen>
                     </decorator-section>
                 </decorator-screen>
             </widgets>
