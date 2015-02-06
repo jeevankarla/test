@@ -109,14 +109,14 @@ if(orderHeader && orderHeader.statusId == "ORDER_CREATED"){
 	quoteNo = EntityUtil.getFirst(orderItems);
 	quoteDetailMap = [:];
 	quoteDate = delegator.findOne("Quote", UtilMisc.toMap("quoteId", quoteNo.quoteId), false);
-		if(quoteNo)
-		 {
+	if(quoteNo)
+	 {
 		quoteDetailMap.putAt("quoteId", quoteNo.quoteId);
-		 }
-		if(quoteDate)
-		 {
-		quoteDetailMap.putAt("quoteIssueDate", UtilDateTime.toDateString(quoteDate.issueDate, "dd MMMMM, yyyy"));
-		 }
+	 }
+	 if(quoteDate)
+	 {
+		 quoteDetailMap.putAt("quoteIssueDate", UtilDateTime.toDateString(quoteDate.issueDate, "dd MMMMM, yyyy"));
+	 }
 	orderEditParamMap.put("quoteDetails", quoteDetailMap);
 	
 	productIds = EntityUtil.getFieldListFromEntityList(orderItems, "productId", true);
@@ -129,6 +129,24 @@ if(orderHeader && orderHeader.statusId == "ORDER_CREATED"){
 		if(!amount){
 			amount = 0;
 		}
+		
+		bedTaxPercent = 0;
+		if(eachItem.bedPercent){
+			bedCompare = (eachItem.bedPercent).setScale(6);
+			condList = [];
+			condList.add(EntityCondition.makeCondition("taxType", EntityOperator.EQUALS, "EXCISE_DUTY_PUR"));
+			condList.add(EntityCondition.makeCondition("componentRate", EntityOperator.EQUALS, bedCompare));
+			cond = EntityCondition.makeCondition(condList, EntityOperator.AND);
+			
+			taxComponent = delegator.findList("OrderTaxTypeAndComponentMap", cond, null, null, null, false);
+			taxComponent = EntityUtil.filterByDate(taxComponent, UtilDateTime.nowTimestamp());
+			
+			if(taxComponent){
+				bedTaxPercent = (BigDecimal)(EntityUtil.getFirst(taxComponent)).get("taxRate");
+			}
+			
+		}
+		
 		prodDetails = EntityUtil.filterByCondition(products, EntityCondition.makeCondition("productId", EntityOperator.EQUALS, eachItem.productId));
 		prodDetail = EntityUtil.getFirst(prodDetails);
 		JSONObject newObj = new JSONObject();
@@ -137,7 +155,13 @@ if(orderHeader && orderHeader.statusId == "ORDER_CREATED"){
 		newObj.put("quantity",eachItem.quantity);
 		newObj.put("unitPrice",eachItem.unitPrice);
 		newObj.put("amount", amount);
-		newObj.put("bedPercent",eachItem.bedPercent);
+		if(eachItem.bedPercent){
+			newObj.put("bedPercent", bedTaxPercent);
+		}
+		else{
+			newObj.put("bedPercent", 0);
+		}
+		
 		newObj.put("cstPercent", eachItem.cstPercent);
 		newObj.put("vatPercent", eachItem.vatPercent);
 		orderItemsJSON.add(newObj);
