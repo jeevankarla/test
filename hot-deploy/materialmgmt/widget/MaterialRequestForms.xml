@@ -261,6 +261,18 @@
 
     <form name="ListEnquiryList" type="list" use-row-submit="true" list-name="custRequests" title="List of Enquiry"
         odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
+       <row-actions>
+            <entity-condition entity-name="CustRequestItem" list="custRequestItemList" >
+               <condition-list combine="and">
+                    <condition-expr field-name="custRequestId" from-field="custRequestId"/>
+                    <condition-list combine="or">
+                        <condition-expr field-name="statusId" operator="equals" value="ENQ_COMPLETED"/>
+                        <condition-expr field-name="statusId" operator="equals" value="ENQ_ORDERED" />
+                    </condition-list>
+                </condition-list>
+      		</entity-condition>
+      		<set field="itemSize" value="${groovy: custRequestItemList.size();}"/>
+      	</row-actions>
         <field name="custRequestId" sort-field="true" title="Enquiry No" widget-style="buttontext">
             <hyperlink description="${custRequestId}" target="ViewMaterialEnquiry">
                 <parameter param-name="custRequestId"/>
@@ -281,10 +293,10 @@
         <field name="lastModifiedDate" sort-field="true"><display/></field>
         <field name="createdByUserLogin" sort-field="true"><display/></field>
         
-        <field use-when="&quot;${statusId}&quot;== &quot;CRQ_DRAFT&quot;" name="cancel" widget-style="buttontext">
-            <hyperlink target="updateIndentStatus" description="Cancel">
+        <field use-when="${itemSize}==0" name="cancel" widget-style="buttontext">
+            <hyperlink target="updateEnquiryStatus" description="Cancel">
                 <parameter param-name="custRequestId"/>
-                <parameter param-name="statusId" value="CRQ_CANCELLED"/>
+                <parameter param-name="statusId" value="ENQ_CANCELLED"/>
             </hyperlink>
         </field>
         
@@ -480,7 +492,7 @@
             <field-map field-name="inputFields.custRequestTypeId" value="PRODUCT_REQUIREMENT"/>
             <field-map field-name="inputFields.itemStatusId" value="CRQ_DRAFT"/>
             <field-map field-name="inputFields.fromPartyId" from-field="parameters.partyId" />
-            <field-map field-name="orderBy" value="-custRequestDate"/>  
+            <field-map field-name="orderBy" value="-custRequestId"/>  
             <field-map field-name="viewIndex" from-field="viewIndex"/>
             <field-map field-name="viewSize" from-field="viewSize"/>
           </service>

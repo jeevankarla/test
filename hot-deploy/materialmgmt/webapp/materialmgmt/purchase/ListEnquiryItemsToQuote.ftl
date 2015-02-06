@@ -234,9 +234,10 @@ under the License.
       		<thead>
         		<tr class="header-row-2">
           			<td>Item</td>
+          			<td>Item Specification</td>
           			<td>Quantity</td>
           			<td>Supply Qty</td>
-          			<td>Price per piece</td>
+          			<td>Price Per Unit</td>
           			<td align="right" width="6%">Select All <input type="checkbox" id="checkAllItems" name="checkAllItems" onchange="javascript:toggleSelectId(this);"/></td>
         		</tr>
       		</thead>
@@ -251,12 +252,14 @@ under the License.
               <input type="hidden" name="custRequestItemSeqId" id="custRequestItemSeqId" value="${items.custRequestItemSeqId}">
               </#if>
               <#if items.productId?exists && items.productId?has_content>
+              <#assign product = delegator.findOne("Product", {"productId" : items.productId}, true)?if_exists/>
               <input type="hidden" name="productId" id="productId" value="${items.productId}">
               </#if>
               <#if items.quoteItemSeqId?exists && items.quoteItemSeqId?has_content>
               <input type="hidden" name="quoteItemSeqId" id="quoteItemSeqId" value="${items.quoteItemSeqId}">
               </#if>
               <td><input type="button" name="productName" id="productName" value="${items.productName}(${items.productId})" style="border:0;background-color:transparent;color:#3B5998;"/></td>
+              <td><input type="button" name="longDescription" id="longDescription" value="${product.longDescription?if_exists}" style="border:0;background-color:transparent;color:#3B5998;"/></td>
               <td><input type="button" id="enqQty" name="enqQty" style="background-color:transparent;border:0;color:#3B5998;" value="${items.quantity}"/ ></td>
               <td><input type="text" id="quantity" name="quantity" value="${items.quantity}"/></td>
               <#if items.unitPrice?exists && items.unitPrice?has_content><td><input type="text" id="price" name="price" value=${items.unitPrice}></td>
