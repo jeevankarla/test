@@ -253,7 +253,6 @@ function makeDatePicker(fromDateId ,thruDateId){
 	<#assign bedCheck = "">
 	<#assign orderOtherTermInfo = []>
 	<#assign quoteTerm = "">
-	<#assign orderTypeId = "">
 	<#if orderEditParam?has_content>
 		<#assign orderInfo = orderEditParam.get("orderHeader")?if_exists>
 		<#assign quoteInfo = orderEditParam.get("quoteDetails")?if_exists>
@@ -270,7 +269,6 @@ function makeDatePicker(fromDateId ,thruDateId){
 			<#assign orderShipTermInfo = orderTermInfo.get("deliveryTerms")>
 			<#assign orderOtherTermInfo = orderTermInfo.get("otherTerms")>
 		</#if>
-		<#assign orderTypeId = orderInfo.orderTypeId>
 	</#if>
 	
 	<form id="CreateMPO"  action="<@ofbizUrl>CreateMaterialPO</@ofbizUrl>" name="CreateMPO" method="post">
@@ -280,11 +278,11 @@ function makeDatePicker(fromDateId ,thruDateId){
           <fieldset>
 	            <table cellpadding="15" cellspacing="15" class='h3' width="50%">
 	                   <tr>
-							<td class="label">Order Type(<font color="red">*</font>) :${purchaseTypeFlag?if_exists}</td>
+							<td class="label">Order Type(<font color="red">*</font>) :</td>
 						    <td>
 							<select name="orderTypeId" id="orderTypeId" onchange="javascript: hideExtPO();">
 						      	   <#list orderTypes as orderType>
-						      	   		<#if orderId?exists && (orderTypeId == orderType.orderTypeId)>
+						      	   		<#if orderId?exists && (orderInfo.get("orderTypeId") == orderType.orderTypeId)>
 						      	   			<option value='${orderType.orderTypeId}' selected>${orderType.description}</option> 
 						      	   		<#else>
 						      	   			<option value='${orderType.orderTypeId}'>${orderType.description}</option>

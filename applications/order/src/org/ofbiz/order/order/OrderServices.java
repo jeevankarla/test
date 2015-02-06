@@ -7006,14 +7006,7 @@ public class OrderServices {
 	    		   termAmount = termValue.negate();
 	    	   }
 	       }
-	       if(termTypeId.equals("COGS_INSURANCE")){
-	    	   if(UtilValidate.isNotEmpty(uomId) && uomId.equals("PERCENT")){
-	    		   termAmount = ((basicAmount.add(exciseDuty)).multiply(termValue)).divide(new BigDecimal("100"),taxRounding);
-	    		   termAmount = termAmount;
-	    	   }else{
-	    		   termAmount = termValue;
-	    	   }
-	       }
+
 	       //Discount  After Tax
 	       if(termTypeId.equals("COGS_DISC_ATR")){
 	    	   if(UtilValidate.isNotEmpty(uomId) && uomId.equals("PERCENT")){
@@ -7028,9 +7021,9 @@ public class OrderServices {
 	       if(termTypeId.equals("COGS_PCK_FWD")){
 	    	   if(UtilValidate.isNotEmpty(uomId) && uomId.equals("PERCENT")){
 	    		   termAmount = ((basicAmount.add(exciseDuty)).multiply(termValue)).divide(new BigDecimal("100"),taxRounding);
-	    		   termAmount = termAmount;
+	    		   termAmount = termAmount.negate();
 	    	   }else{
-	    		   termAmount = termValue;
+	    		   termAmount = termValue.negate();
 	    	   }
 	       }
 
@@ -7039,9 +7032,9 @@ public class OrderServices {
 	    	   if(UtilValidate.isNotEmpty(uomId) && uomId.equals("PERCENT")){
 	    		   Debug.log("poValue========"+poValue);
 	    		   termAmount = (poValue.multiply(termValue)).divide(new BigDecimal("100"),taxRounding);
-	    		   termAmount = termAmount;
+	    		   termAmount = termAmount.negate();
 	    	   }else{
-	    		   termAmount = termValue;
+	    		   termAmount = termValue.negate();
 	    	   }
 	       }
 	       
