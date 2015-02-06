@@ -190,8 +190,14 @@ function makeDatePicker1(fromDateId ,thruDateId){
 								 </span>
 							</td>
 							<td width="15%"><span class='h3'>							</span></td>
-							<td width="15%"><span class='h3'>   				       </span></td>				
-						 
+							<td width="15%"><span class='h3'>Store
+							    <select name="issueToFacilityId" id="issueToFacilityId">
+							        <option value=""></option>
+							        <#list  storeList as store>
+							          <option value='${store.facilityId?if_exists}'>${store.facilityId?if_exists}</option>
+							        </#list> 
+							    </select>    								
+						   </span></td>
 						    <td width="10%"><span class='h3'><input type="submit" value="Download" class="buttontext"></span></td>
 						</tr>
 					 </table>
