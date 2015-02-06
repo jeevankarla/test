@@ -315,6 +315,12 @@
        <response name="success" type="request-redirect-noparam" value="MaterialForQCApproval"/>
        <response name="error" type="request-redirect-noparam" value="MaterialForQCApproval"/>
      </request-map>
+      <request-map uri="sendReceiptQtyForQC">
+       <security https="true" auth="true"/>
+       <event type="service" path="" invoke="sendReceiptQtyForQC"></event>
+       <response name="success" type="request-redirect-noparam" value="FindGRNReceipts"/>
+       <response name="error" type="request-redirect-noparam" value="FindGRNReceipts"/>
+     </request-map>
      
      <request-map uri="FindMaterialQuotes">
        <security https="true" auth="true"/>

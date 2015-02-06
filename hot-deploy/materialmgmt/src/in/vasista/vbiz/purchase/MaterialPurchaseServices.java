@@ -3316,4 +3316,25 @@ public class MaterialPurchaseServices {
 		}
 		return result;
 	}
+	public static Map<String, Object> sendReceiptQtyForQC(DispatchContext ctx,Map<String, ? extends Object> context) {
+		Delegator delegator = ctx.getDelegator();
+		LocalDispatcher dispatcher = ctx.getDispatcher();
+		String statusId = (String) context.get("statusIdTo");
+		String receiptId = (String) context.get("receiptId");
+		GenericValue userLogin = (GenericValue) context.get("userLogin");
+		Map result = ServiceUtil.returnSuccess();
+		try{
+			
+			GenericValue shipmentReceipt = delegator.findOne("ShipmentReceipt", UtilMisc.toMap("receiptId", receiptId), false);
+			shipmentReceipt.put("statusId", statusId);
+			shipmentReceipt.store();
+			
+		} catch (Exception e) {
+			// TODO: handle exception
+			Debug.logError(e, module);
+			return ServiceUtil.returnError(e.getMessage());
+		}
+		result = ServiceUtil.returnSuccess("GRN no: "+receiptId+" Send For Quality Check ");
+		return result;
+	}
 }

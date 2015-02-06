@@ -232,4 +232,9 @@
          <attribute name="itemIssuanceId" type="String" mode="IN" optional="false"/>
           <attribute name="shipmentId" type="String" mode="IN" optional="false"/>
     </service>
+    <service name="sendReceiptQtyForQC" engine="java" location="in.vasista.vbiz.purchase.MaterialPurchaseServices" invoke="sendReceiptQtyForQC">
+        <description>Send Receipts For Quality Control Check</description>
+        <attribute name="receiptId" type="String" mode="IN" optional="false"/>
+        <attribute name="statusIdTo" type="String" mode="IN" optional="false"/>
+    </service>
 </services>
