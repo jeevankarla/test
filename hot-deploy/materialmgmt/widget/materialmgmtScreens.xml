@@ -496,6 +496,7 @@
                     </condition-list>
                     <order-by field-name="description"/>
              </entity-condition> 
+            <script location="component://materialmgmt/webapp/materialmgmt/WEB-INF/actions/purchases/materialUpdateUomIds.groovy"/>
     	</actions>
     	<widgets>
     		<decorator-screen name="materialmgmtNgCommonDecorator" location="${parameters.mainDecoratorLocation}">
