@@ -986,6 +986,8 @@ public class HumanresService {
 	    	String partyIdFrom = (String) context.get("partyIdFrom");
 	    	String partyIdTo = (String) context.get("partyIdTo");
 	    	String fromDateStr = (String) context.get("fromDate");
+	    	String reportingDateStr =  (String)context.get("reportingDate");
+	    	Timestamp reportingDateStamp=null;
 	    	Timestamp fromDate = UtilDateTime.nowTimestamp();
 	        if (UtilValidate.isNotEmpty(fromDateStr)) {
 				SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
@@ -997,7 +999,18 @@ public class HumanresService {
 					Debug.logError(e, "Cannot parse date string: "	+ fromDateStr, module);
 				}
 			}
+	        if (UtilValidate.isNotEmpty(reportingDateStr)) {
+				SimpleDateFormat sdf1 = new SimpleDateFormat("dd/MM/yyyy");
+				try {
+					reportingDateStamp = new java.sql.Timestamp(sdf1.parse(reportingDateStr).getTime());
+				} catch (ParseException e) {
+					Debug.logError(e, "Cannot parse date string: "+ reportingDateStr, module);
+				} catch (NullPointerException e) {
+					Debug.logError(e, "Cannot parse date string: "	+ reportingDateStr, module);
+				}
+			}
 	    	Timestamp fromDateStart = UtilDateTime.getDayStart(fromDate);
+	    	Timestamp reportingDateStart = UtilDateTime.getDayStart(reportingDateStamp);
 	    	Timestamp previousDayEnd = UtilDateTime.getDayEnd(UtilDateTime.addDaysToTimestamp(fromDate, -1));
 	    	GenericValue userLogin = (GenericValue) context.get("userLogin");
 	    	GenericDelegator delegator = (GenericDelegator) dctx.getDelegator();
@@ -1025,6 +1038,7 @@ public class HumanresService {
 					newEntity.set("partyIdFrom", partyIdFrom);
 					newEntity.set("partyIdTo", partyIdTo);
 					newEntity.set("fromDate", fromDateStart);
+					newEntity.set("reportingDate", reportingDateStart);
 					newEntity.set("appointmentDate", appointmentDate);
 					newEntity.set("locationGeoId", locationGeoId);
 					newEntity.create();
@@ -1394,7 +1408,7 @@ public class HumanresService {
 	        Map<String, Object> inMap = FastMap.newInstance();
 
 	        String customTimePeriodId = (String)context.get("customTimePeriodId");
-	        String organizationPartyId = (String)context.get("organizationPartyId");
+	        String organizationPartyId = (String)context.get("orgPartyId");
 	        String holiDayDateStr = (String)context.get("holidayDate");
 	        Timestamp holiDayDate = null;
 	        String description = (String)context.get("description");
