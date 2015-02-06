@@ -22,9 +22,9 @@ under the License.
 
 <#-- do not display columns associated with values specified in the request, ie constraint values -->
 <fo:layout-master-set>
-	<fo:simple-page-master master-name="main" page-height="12in" page-width="9in"
+	<fo:simple-page-master master-name="main" page-height="12in" page-width="10in"
             margin-top="0.1in" margin-bottom=".7in" margin-left=".5in" margin-right=".5in">
-        <fo:region-body margin-top="2.5in"/>
+        <fo:region-body margin-top="2.7in"/>
         <fo:region-before extent="1.in"/>
         <fo:region-after extent="1.5in"/>        
     </fo:simple-page-master>   
@@ -33,38 +33,55 @@ ${setRequestAttribute("OUTPUT_FILENAME", "LoanAvailedReport.pdf")}
              <#if prodMap?has_content> 
 <fo:page-sequence master-reference="main" force-page-count="no-force" font-family="Courier,monospace">					
 			<fo:static-content flow-name="xsl-region-before">
-				<#--	<fo:block  keep-together="always" text-align="center" font-family="Courier,monospace" white-space-collapse="false">&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;UserLogin : <#if userLogin?exists>${userLogin.userLoginId?if_exists}</#if></fo:block>
-					<fo:block  keep-together="always" text-align="center" font-family="Courier,monospace" white-space-collapse="false">&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;Date:${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(nowTimestamp, "dd/MM/yy HH:mm:ss")}</fo:block>   -->
-					<fo:block  keep-together="always" text-align="center" font-family="Helvetica" white-space-collapse="false" font-size="10pt" >  KARNATAKA CO-OPERATIVE MILK PRODUCERS FEDERATION LTD.  </fo:block>
+				<fo:block  keep-together="always" text-align="left"  font-family="Courier,monospace" white-space-collapse="false">&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;    UserLogin: <#if userLogin?exists>${userLogin.userLoginId?if_exists}</#if></fo:block>
+		   <fo:block  keep-together="always" text-align="left" font-family="Courier,monospace" white-space-collapse="false">&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;Date     : ${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(nowTimestamp, "dd/MM/yy HH:mm:ss")}</fo:block> 
+		    			       <fo:block  keep-together="always" text-align="center" font-family="Courier,monospace" white-space-collapse="false" font-size="5pt" > &#160;&#160;                                                                </fo:block>
+		    
+		     <fo:block  keep-together="always" text-align="center" font-family="Helvetica" white-space-collapse="false" font-size="10pt" >  KARNATAKA CO-OPERATIVE MILK PRODUCERS FEDERATION LTD.  </fo:block>
 			       <fo:block  keep-together="always" text-align="center" font-family="Courier,monospace" white-space-collapse="false" font-size="10pt" > &#160;&#160;                                                                </fo:block>
 					<fo:block  keep-together="always" text-align="center" font-family="Helvetica" white-space-collapse="false" font-size="10pt" >  UNIT : MOTHER DAIRY:G.K.V.K POST : YELAHANKA:BANGALORE : 560065  </fo:block>
 			        <fo:block  keep-together="always" text-align="center" font-family="Courier,monospace" white-space-collapse="false" font-size="10pt" > &#160;&#160;  </fo:block>
 					<fo:block  keep-together="always" text-align="center" font-family="Courier,monospace" white-space-collapse="false" font-size="10pt" > &#160;&#160;  </fo:block>
-					 <fo:block  keep-together="always" text-align="center" font-family="Courier,monospace" white-space-collapse="false" font-size="10pt" > &#160;&#160;  </fo:block>
-			
-		          
                     <fo:block text-align="center" font-size="10pt"   font-family="Helvetica"  keep-together="always"  white-space-collapse="false" >&#160;&#160;STATEMENT SHOWING THE DETAILS OF STORES STOCK POSITION <#-- (${parameters.stockId})-->       ON :  ${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(nowTimestamp, "dd/MM/yy")}  </fo:block>
   			        <fo:block  keep-together="always" text-align="center" font-family="Helvetica" white-space-collapse="false" font-size="10pt" > &#160;&#160;  </fo:block>
                  	<#--  <fo:block  keep-together="always" text-align="center" font-family="Helvetica" white-space-collapse="false" font-size="10pt" > &#160;&#160;                                                                                                                                PRINT DATE: ${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(nowTimestamp, "dd/MM/yy")}  </fo:block>
                     
               	 <#assign stockDetails = delegator.findOne("Stock", {"stockId" :parameters.stockId }, true)>
 		   		          <#if stockDetails?has_content>  -->
-			        	   <fo:block white-space-collapse="false" font-size="10pt"  font-family="Helvetica" keep-together="always" >&#160; &#160;&#160; &#160;&#160;    STORE CODE: ${parameters.issueToFacilityId} &#160;    &#160;     &#160;  &#160;&#160; &#160;&#160; &#160;&#160; &#160;&#160; &#160;&#160; &#160;&#160; &#160;&#160; &#160;&#160; &#160;&#160; &#160;&#160; &#160;&#160;  DESCRIPTION: ${parameters.issueToFacilityId?if_exists}</fo:block>
+			        	
 			          <#--     </#if>  <#assign prodDetails = prodMap.entrySet()> 
               		   -->
-              		<fo:block  keep-together="always" text-align="left" font-family="Courier,monospace" white-space-collapse="false" font-size="10pt" >_____________________________________________________________________________________________</fo:block>
-              	    <fo:block  font-size="10pt" keep-together="always"  font-family="Helvetica"  white-space-collapse="false" >&#160;&#160;LEDGER          ITEM               DESCRIPTION                                             UNIT                     BOOK                  CLOSING  </fo:block>
-              		<fo:block  font-size="10pt" keep-together="always"  font-family="Helvetica"  white-space-collapse="false" >&#160;&#160;FOLIO              CODE                                                                                                                STOCK                  STOCK   </fo:block>
-              		<fo:block  keep-together="always" text-align="left" font-family="Courier,monospace" white-space-collapse="false" font-size="10pt" >_____________________________________________________________________________________________</fo:block>               
+ <fo:block >
+			        			 <fo:table width="100%" align="right" table-layout="fixed"  font-size="12pt">
+					               <fo:table-column column-width="80"/>               
+					                <fo:table-column column-width="160pt"/>               
+						           <fo:table-column column-width="240pt"/>               
+					                <fo:table-column column-width="160pt"/>               
+
+						           	<fo:table-body>
+				                     <fo:table-row>
+				                     <fo:table-cell  ><fo:block text-align="left" font-size="12pt"  >STORE CODE:</fo:block></fo:table-cell>       			
+				                     <fo:table-cell  ><fo:block text-align="left"  font-size="12pt"  >&#160;${parameters.issueToFacilityId}</fo:block></fo:table-cell>         		
+				                     <fo:table-cell  ><fo:block text-align="right"  font-size="12pt"  >DESCRIPTION:</fo:block></fo:table-cell>       		
+				                     <fo:table-cell  ><fo:block text-align="left"  font-size="12pt"  >&#160;${parameters.issueToFacilityId?if_exists}</fo:block></fo:table-cell>       		
+                                  </fo:table-row>
+			                	</fo:table-body>
+			                		</fo:table>
+			        	  </fo:block>	 
+
+              		<fo:block  keep-together="always" text-align="left" font-family="Courier,monospace" white-space-collapse="false" font-size="10pt" >____________________________________________________________________________________________________________</fo:block>
+              	    <fo:block  font-size="10pt" keep-together="always"  font-family="Helvetica"  white-space-collapse="false" >&#160;&#160;LEDGER          ITEM                          DESCRIPTION                                           UNIT                              BOOK                  CLOSING  </fo:block>
+              		<fo:block  font-size="10pt" keep-together="always"  font-family="Helvetica"  white-space-collapse="false" >&#160;&#160;FOLIO              CODE                                                                                                                                 STOCK                  STOCK   </fo:block>
+              		<fo:block  keep-together="always" text-align="left" font-family="Courier,monospace" white-space-collapse="false" font-size="10pt" >____________________________________________________________________________________________________________</fo:block>               
             </fo:static-content>
             		
            <fo:flow flow-name="xsl-region-body"   font-family="Courier,monospace">		
             	<fo:block>
                  	<fo:table >
                     <fo:table-column column-width="80pt"/>
-                    <fo:table-column column-width="70pt"/>
+                    <fo:table-column column-width="80pt"/>
                     <fo:table-column column-width="190pt"/>  
-               	    <fo:table-column column-width="50pt"/>
+               	    <fo:table-column column-width="80pt"/>
                	    <fo:table-column column-width="90pt"/>
             		<fo:table-column column-width="90pt"/> 		
                     <fo:table-body>
@@ -75,9 +92,9 @@ ${setRequestAttribute("OUTPUT_FILENAME", "LoanAvailedReport.pdf")}
                 	   <fo:table-cell ><fo:block text-align="center" font-weight="bold"  font-size="11pt" keep-together="always">${sNo?if_exists}</fo:block></fo:table-cell>     
   				  	   <fo:table-cell ><fo:block text-align="left" font-weight="bold"  font-size="11pt" keep-together="always">${prodCatids.getKey()?if_exists}</fo:block></fo:table-cell>     
   				       <fo:table-cell ><fo:block text-align="left"  font-size="10pt" keep-together="always">&#160;</fo:block></fo:table-cell>     
+  				       <fo:table-cell ><fo:block text-align="left"   font-size="10pt" keep-together="always"></fo:block></fo:table-cell>     
   				       <fo:table-cell ><fo:block text-align="center"   font-size="10pt" keep-together="always"></fo:block></fo:table-cell>     
-  				       <fo:table-cell ><fo:block text-align="right"   font-size="10pt" keep-together="always"></fo:block></fo:table-cell>     
-  				       <fo:table-cell ><fo:block text-align="right"   font-size="10pt" keep-together="always"></fo:block></fo:table-cell>     
+  				       <fo:table-cell ><fo:block text-align="center"   font-size="10pt" keep-together="always"></fo:block></fo:table-cell>     
   				     </fo:table-row>
                   
     <#list prodCatids.getValue() as productIds>
@@ -86,9 +103,9 @@ ${setRequestAttribute("OUTPUT_FILENAME", "LoanAvailedReport.pdf")}
                 	   <fo:table-cell ><fo:block text-align="center"   font-size="10pt" ></fo:block></fo:table-cell>     
   				  	   <fo:table-cell ><fo:block text-align="left"  font-size="10pt">${productIds.productId?if_exists}</fo:block></fo:table-cell>  
   				       <fo:table-cell ><fo:block text-align="left"   font-size="10pt" >${productIds.description?if_exists}</fo:block></fo:table-cell>     
-  				       <fo:table-cell ><fo:block text-align="center"   font-size="10pt" >${productIds.unit?if_exists}</fo:block></fo:table-cell>     
-  				       <fo:table-cell ><fo:block text-align="right"   font-size="10pt" ></fo:block></fo:table-cell>     
-  				       <fo:table-cell ><fo:block text-align="right"   font-size="10pt" ></fo:block></fo:table-cell>     
+  				       <fo:table-cell ><fo:block text-align="left"   font-size="10pt" >${productIds.unit?if_exists}</fo:block></fo:table-cell>     
+  				       <fo:table-cell ><fo:block text-align="center"   font-size="10pt" >${productIds.inventoryCount?if_exists}</fo:block></fo:table-cell>     
+  				       <fo:table-cell ><fo:block text-align="center"   font-size="10pt" >${productIds.inventoryCount?if_exists}</fo:block></fo:table-cell>     
   				     </fo:table-row>
      </#list>
   	  <#assign sNo=sNo+1>
