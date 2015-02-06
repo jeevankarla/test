@@ -315,6 +315,12 @@
        <response name="success" type="request-redirect-noparam" value="MaterialForQCApproval"/>
        <response name="error" type="request-redirect-noparam" value="MaterialForQCApproval"/>
      </request-map>
+      <request-map uri="sendReceiptQtyForQC">
+       <security https="true" auth="true"/>
+       <event type="service" path="" invoke="sendReceiptQtyForQC"></event>
+       <response name="success" type="request-redirect-noparam" value="FindGRNReceipts"/>
+       <response name="error" type="request-redirect-noparam" value="FindGRNReceipts"/>
+     </request-map>
      
      <request-map uri="FindMaterialQuotes">
        <security https="true" auth="true"/>
@@ -978,13 +984,10 @@
        <response name="success" type="view" value="ApproveRequestsByDeptHead"/>
        <response name="error" type="view" value="ApproveRequestsByDeptHead"/>
      </request-map>
-         <request-map uri="getproductName">
+     <request-map uri="getproductName">
        <security https="true" auth="true"/>
-   
        <event type="groovy" path="component://materialmgmt/webapp/materialmgmt/WEB-INF/actions/purchases/"  invoke="materialUpdateUomIds.groovy"/>
-
-       <response name="success" type="request" value="json"/>
-             
+       <response name="success" type="request" value="json"/>    
    </request-map>
     
     <view-map name="main" type="screen" page="component://materialmgmt/widget/materialmgmtScreens.xml#main"/>
