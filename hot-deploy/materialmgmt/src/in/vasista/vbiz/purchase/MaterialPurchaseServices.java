@@ -3321,20 +3321,8 @@ public class MaterialPurchaseServices {
 		LocalDispatcher dispatcher = ctx.getDispatcher();
 		String statusId = (String) context.get("statusIdTo");
 		String receiptId = (String) context.get("receiptId");
-		String shipmentId = (String) context.get("shipmentId");
-		String shipmentItemSeqId = (String) context.get("shipmentItemSeqId");
-		BigDecimal quantityAccepted = (BigDecimal) context.get("quantityAccepted");
 		GenericValue userLogin = (GenericValue) context.get("userLogin");
 		Map result = ServiceUtil.returnSuccess();
-		if(UtilValidate.isEmpty(quantityAccepted)){
-			return ServiceUtil.returnError("Quantity accepted cannot be ZERO ");
-		}
-		if(quantityAccepted.compareTo(BigDecimal.ZERO) ==0){
-			statusId = "SR_REJECTED";
-		}
-		if(quantityAccepted.compareTo(BigDecimal.ZERO) ==-1){
-			return ServiceUtil.returnError("negative value not allowed");
-		}
 		try{
 			
 			GenericValue shipmentReceipt = delegator.findOne("ShipmentReceipt", UtilMisc.toMap("receiptId", receiptId), false);

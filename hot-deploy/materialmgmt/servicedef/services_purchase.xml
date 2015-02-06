@@ -236,8 +236,5 @@
         <description>Send Receipts For Quality Control Check</description>
         <attribute name="receiptId" type="String" mode="IN" optional="false"/>
         <attribute name="statusIdTo" type="String" mode="IN" optional="false"/>
-        <attribute name="quantityAccepted" type="BigDecimal" mode="IN" optional="false"/>
-        <attribute name="shipmentId" type="String" mode="IN" optional="true"/>
-        <attribute name="shipmentItemSeqId" type="String" mode="IN" optional="true"/>
     </service>
 </services>
