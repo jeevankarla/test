@@ -113,20 +113,23 @@
                       <include-menu name="FindMaterialPOSubTabBar" location="component://materialmgmt/widget/materialmgmtMenus.xml"/>
                         <section>
                             <widgets>
+                            <section>
+                            <condition>
+                            	<if-has-permission permission="MM"  action="_CREATE_PO"/>
+                            </condition>
+                            <widgets>
                                <link target="CreateMPO" text="Create PO" style="buttontext"/>
                                <link target="CreateMPO" text="Create Rate Contract PO" style="buttontext">
 									<parameter param-name="purchaseTypeFlag" value="contractPurchase"/>
 							   </link>
-                                <decorator-screen name="FindScreenDecorator" location="component://common/widget/CommonScreens.xml">
-                                    <decorator-section name="search-options">
-                            			<include-form name="FindMaterialPurchaseOrder" location="component://materialmgmt/widget/MaterialPurchaseForms.xml"/>
-                      				</decorator-section>
-                      				<decorator-section name="search-results">
-                      					<screenlet title="">
-                          					<include-form name="listMaterialPurchaseOrders" location="component://materialmgmt/widget/MaterialPurchaseForms.xml"/>
-                      					</screenlet>
-                      				</decorator-section>
-                                </decorator-screen>
+							   </widgets>
+							   </section>
+                                  	<screenlet title="search-options">
+                          				<include-form name="FindMaterialPurchaseOrder" location="component://materialmgmt/widget/MaterialPurchaseForms.xml"/>
+                          			</screenlet>
+                   					<screenlet title="Search-results">
+                       					<include-form name="listMaterialPurchaseOrders" location="component://materialmgmt/widget/MaterialPurchaseForms.xml"/>
+                   					</screenlet>
                             </widgets>
                         </section>
                     </decorator-section>

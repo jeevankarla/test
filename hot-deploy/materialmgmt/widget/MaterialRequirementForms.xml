@@ -61,7 +61,7 @@
 			<set field="dec" from-field="uom.description"/>
         </row-actions>
         <field name="requirementId" title="Requirement Id" widget-style="buttontext"> 
-            <hyperlink  description="${requirementId}" target="requirementOverView" target-window="_blank">
+            <hyperlink  description="${requirementId}" target="requirementOverView" >
                 <parameter param-name="requirementId"/>
             </hyperlink>
         </field>
@@ -76,12 +76,12 @@
         <field name="requirementStartDate" title="Requirement Date"><display/></field>
         <!-- <field name="requiredByDate"><display/></field> -->
         <field name="quantity" title="${uiLabelMap.CommonQuantity}"><display/></field>
-        <field name="editRequirement" widget-style="buttontext" title="Edit" use-when="statusId.equals(&quot;REQ_CREATED&quot;)">
+        <field name="editRequirement" widget-style="buttontext" title="Edit" use-when="statusId.equals(&quot;REQ_CREATED&quot;) &amp;&amp; ${groovy:((security.hasEntityPermission(&quot;MM&quot;, &quot;_EDIT_REQ&quot;, session)))}">
         	<hyperlink description="Edit" target="editRequirement">
                 <parameter param-name="requirementId"/>
             </hyperlink>
         </field>
-        <field name="rejectRequirement" widget-style="buttontext" title="Cancel" use-when="statusId.equals(&quot;REQ_CREATED&quot;) || statusId.equals(&quot;REQ_APPROVED&quot;) ">
+        <field name="rejectRequirement" widget-style="buttontext" title="Cancel" use-when="(statusId.equals(&quot;REQ_CREATED&quot;) || statusId.equals(&quot;REQ_APPROVED&quot;)) &amp;&amp; ${groovy:((security.hasEntityPermission(&quot;MM&quot;, &quot;_EDIT_REQ&quot;, session)))}">
         	<hyperlink description="Cancel" target="rejectRequirement">
                 <parameter param-name="requirementId"/>
                 <parameter param-name="statusId" value="REQ_REJECTED"/>

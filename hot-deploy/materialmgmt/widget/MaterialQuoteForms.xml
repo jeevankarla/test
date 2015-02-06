@@ -71,7 +71,7 @@
         </field>
         <field name="quantity" title="Quote Qty"><display/></field>
         <field name="quoteUnitPrice" title="Quote Unit Price"><display/></field>
-        <field use-when="statusId.equals(&quot;QUO_CREATED&quot;)" name="editQuote" title="Edit" widget-style="buttontext" >
+        <field use-when="statusId.equals(&quot;QUO_CREATED&quot;)&amp;&amp; ${groovy:((security.hasEntityPermission(&quot;MM&quot;, &quot;_QUOTE_EDIT&quot;, session)))}" name="editQuote" title="Edit" widget-style="buttontext" >
         	<hyperlink target="editQuot" description="Edit">
                  <parameter param-name="quoteId"/>
                 <parameter param-name="flag" value="Y" />

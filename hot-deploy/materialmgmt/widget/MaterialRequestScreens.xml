@@ -502,6 +502,7 @@
 			                  	 <condition> 
 			                  	   <and>
 				                  	   	<if-compare operator="equals" value="ENQ_CREATED" field="checkStatusId"/>
+				                  	   	<if-has-permission permission="MM" action="_QUOTE_ADD"/>
 			                  	   </and>
 			                  	 </condition>
 		                  	 	<widgets>

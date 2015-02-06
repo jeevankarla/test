@@ -128,6 +128,9 @@
       
       <menu name="RequestTabBar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml" selected-menuitem-context-field-name="tabButtonItem2">
         <menu-item name="FindMaterialRequest" title="Find Indent">
+        <condition>
+         	<if-has-permission permission="MM" action="_INDENT_ENTRY"/>
+         </condition>
         	<link target="FindMaterialRequest"/>
         </menu-item>
         <menu-item name="viewIndent" title="Indent Overview">
@@ -147,12 +150,21 @@
             </link>
         </menu-item> -->
          <menu-item name="CustRequestEntry" title="${uiLabelMap.MaterialMangement_CustRequest} Entry">
+         <condition>
+         	<if-has-permission permission="MM" action="_INDENT_ENTRY"/>
+         </condition>
         	<link target="CustRequestEntry"/>
         </menu-item>
         <menu-item name="ApproveRequestsByDeptHead" title="Dept. Head Approval">
+        	<condition>
+        		<if-has-permission permission="MM" action="_DEPT_HEAD_APPROVE"/>
+        	</condition>
         	<link target="ApproveRequestsByDeptHead"/>
         </menu-item>
         <menu-item name="RequestsReceiptAcknowledgement" title="Material Receipt Acknowledgement">
+        	<condition>
+        		<if-has-permission permission="MM" action="_RECEIPT_AKNOWL"/>
+        	</condition>
         	<link target="RequestsReceiptAcknowledgement"/>
         </menu-item>
       </menu>
@@ -170,6 +182,9 @@
             </link>
         </menu-item>
         <menu-item name="ReturnEntry" title="Return Entry">
+        <condition>
+         	<if-has-permission permission="MM" action="_INDENT_ENTRY"/>
+         </condition>
         	<link target="ReturnEntry"/>
         </menu-item>
         
@@ -183,9 +198,15 @@
         	<link target="FindMaterialIssuanceNew" />
         </menu-item>
         <menu-item name="StoreProductIssue" title="Issuance Request">
+        <condition>
+        	<if-has-permission permission="MM" action="_MATERIAL_ISSUE"/>
+        </condition>
         	<link target="StoreProductIssue"/>
         </menu-item>
         <menu-item name="ReturnRequests" title="Return Request">
+        <condition>
+        	<if-has-permission permission="MM" action="_MATERIAL_ISSUE"/>
+        </condition>
         	<link target="StoreReturnRequests"/>
         </menu-item>
       </menu>
@@ -224,9 +245,18 @@
         	<link target="FindGRNReceipts"/>
         </menu-item>
         <menu-item name="POMaterialReceipts" title="GRN Entry">
+        <condition>
+        	<if-has-permission permission="MM" action="_RAISE_GRN"/>
+        </condition>
         	<link target="POMaterialReceipts"/>
         </menu-item>
         <menu-item name="FindGRNShipments" title="Find GRN Shipments">
+        <condition>
+        	<or>
+        	<if-has-permission permission="MM" action="_RAISE_GRN"/>
+        	<if-has-permission permission="MM" action="_RAISE_INVOICE"/>
+        	</or>
+        </condition>
         	<link target="FindGRNShipments"/>
         </menu-item>
         <menu-item name="MaterialShipmentOverview" title="Material Shipment Overview">	
@@ -238,7 +268,10 @@
         </menu-item>
         <menu-item name="MaterialInvoiceInit" title="Invoice For Shipment">	
         	<condition>
+        		<and>
         		<if-compare operator="not-equals" value="" field="shipmentId"/>
+        		<if-has-permission permission="MM" action="_RAISE_INVOICE"/>
+        		</and>
         	</condition>
             <link target="MaterialInvoiceInit">
             </link>
@@ -302,9 +335,15 @@
         	<link target="FindMaterialRequirement"/>
         </menu-item>
         <menu-item name="ApproveMaterialRequirement" title="Approve Requirement">
+        	<condition>
+        		<if-has-permission permission="MM" action="_APPROVE_REQ_VIEW"/>
+        	</condition>
         	<link target="ApproveMaterialRequirement"/>
         </menu-item>
         <menu-item name="EnquiryForRequirements" title=" Enquiry For Requirements">
+        	<condition>
+        		<if-has-permission permission="MM" action="_ENQ_REQMENT_VIEW"/>
+        	</condition>
         	<link target="EnquiryForApprovedMatRequirements"/>
         </menu-item>
        <!--  <menu-item name="ApprovedMatRequirementBySupplier" title="Requirement To PO">
