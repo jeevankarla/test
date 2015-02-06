@@ -225,8 +225,11 @@ function viewGHandSS(){
             	   return;
             	 }
             	 var leaveBalance = emplLeaveBalance[leaveTypeId];
-            	 if(leaveBalance == undefined || leaveBalance<0){
-            	    leaveBalance =0;
+            	 
+            	 if(leaveTypeId != "RL" && leaveTypeId != "ML" && leaveTypeId != "PL" && leaveTypeId != "SPCL"){
+	            	 if(leaveBalance == undefined || leaveBalance<0){
+	            	    leaveBalance =0;
+	            	 }
             	 }
             	 if(leaveBalance == 0){
             	   $('#leaveBalance').html('<span style="color:red; font-size:11pt; font-stlye:bold"> no leaves available, you can not apply for leave.</span>');
