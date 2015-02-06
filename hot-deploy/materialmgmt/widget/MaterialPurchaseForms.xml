@@ -201,10 +201,12 @@
             </hyperlink>
         </field>
         <field name="statusIdTo"  > <hidden  value="SR_QUALITYCHECK" /> </field>
-         <field name="SendtoQC" title="Send to QC"   use-when="statusId.equals(&quot;SR_RECEIVED&quot;)"    widget-style="buttontext"> 
+         <!-- <field name="SendtoQC" title="Send to QC"   use-when="statusId.equals(&quot;SR_RECEIVED&quot;)"    widget-style="buttontext"> 
            <submit button-type="button"  />
-        </field>
-      	
+        </field> -->
+      	<field name="SendtoQC" use-when="statusId.equals(&quot;SR_RECEIVED&quot;)"  title="Send to QC" widget-style="buttontext">
+             <hyperlink  target-type="plain" description="Send to QC"  target="javascript:showQCApprovalQTip('${receiptId}');"></hyperlink>
+        </field> 
     </form>
     
     <form name="FindMaterialShipment" title="" type="single" target="${targetRequest}" header-row-style="header-row" default-table-style="basic-table">

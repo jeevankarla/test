@@ -111,10 +111,9 @@
    			}
    			var dcQty = parseFloat(data[rowCount]["deliveryChallanQty"]);
 	 		if (!isNaN(dcQty) && dcQty>0 ) {	 		
-				var inputDCQty = jQuery("<input>").attr("type", "hidden").attr("name", "deliveryChallanQty_o_" + rowCount).val(qty);
+				var inputDCQty = jQuery("<input>").attr("type", "hidden").attr("name", "deliveryChallanQty_o_" + rowCount).val(dcQty);
 				jQuery(formId).append(jQuery(inputDCQty));
    			}
-   			
 		}
 		
 		var dataString = $("#indententryinit").serializeArray();

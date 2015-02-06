@@ -88,11 +88,11 @@ under the License.
 							       			</fo:table-cell>
 							       			<#assign ledgerTotalPromise = ledgerTotalPromise + productDetails.getValue().get("availableToPromiseTotal")?if_exists>
 							       			<fo:table-cell>
-							            		<fo:block  keep-together="always" text-align="right" font-size="12pt" white-space-collapse="false">${productDetails.getValue().get("availableToPromiseTotal")?if_exists?string("#0.00")}</fo:block>
+							            		<fo:block  keep-together="always" text-align="right" font-size="12pt" white-space-collapse="false">${productDetails.getValue().get("availableToPromiseTotal")?if_exists?string("#0.000")}</fo:block>
 							       			</fo:table-cell>
 							       			<#assign ledgerQtyHnd = ledgerQtyHnd + productDetails.getValue().get("quantityOnHandTotal")?if_exists>
 							       			<fo:table-cell>
-							            		<fo:block  keep-together="always" text-align="right" font-size="12pt" white-space-collapse="false">${productDetails.getValue().get("quantityOnHandTotal")?if_exists?string("#0.00")}</fo:block>
+							            		<fo:block  keep-together="always" text-align="right" font-size="12pt" white-space-collapse="false">${productDetails.getValue().get("quantityOnHandTotal")?if_exists?string("#0.000")}</fo:block>
 							       			</fo:table-cell>
 						  			</fo:table-row>
 		                        	</#list>
@@ -116,11 +116,11 @@ under the License.
 							       			</fo:table-cell>
 							       			<#assign ledgerGrandTotalPromise = ledgerGrandTotalPromise+ledgerTotalPromise>
 							       			<fo:table-cell>
-							            		<fo:block  keep-together="always" font-weight="bold" text-align="right" font-size="12pt" white-space-collapse="false">${ledgerTotalPromise?if_exists?string("#0.00")}</fo:block>
+							            		<fo:block  keep-together="always" font-weight="bold" text-align="right" font-size="12pt" white-space-collapse="false">${ledgerTotalPromise?if_exists?string("#0.000")}</fo:block>
 							       			</fo:table-cell>
 							       			<#assign ledgerGrandQtyHnd = ledgerGrandQtyHnd+ ledgerQtyHnd>
 							       			<fo:table-cell>
-							            		<fo:block  keep-together="always" font-weight="bold" text-align="right" font-size="12pt" white-space-collapse="false">${ledgerQtyHnd?if_exists?string("#0.00")}</fo:block>
+							            		<fo:block  keep-together="always" font-weight="bold" text-align="right" font-size="12pt" white-space-collapse="false">${ledgerQtyHnd?if_exists?string("#0.000")}</fo:block>
 							       			</fo:table-cell>
 						  			</fo:table-row>
 						  			<fo:table-row>
@@ -143,10 +143,10 @@ under the License.
 							            		<fo:block  keep-together="always" text-align="left" font-size="12pt" white-space-collapse="false"></fo:block>
 							       			</fo:table-cell>
 							       			<fo:table-cell>
-							            		<fo:block  keep-together="always" font-weight="bold" text-align="right" font-size="12pt" white-space-collapse="false">${ledgerGrandTotalPromise?if_exists?string("#0.00")}</fo:block>
+							            		<fo:block  keep-together="always" font-weight="bold" text-align="right" font-size="12pt" white-space-collapse="false">${ledgerGrandTotalPromise?if_exists?string("#0.000")}</fo:block>
 							       			</fo:table-cell>
 							       			<fo:table-cell>
-							            		<fo:block  keep-together="always"  font-weight="bold" text-align="right" font-size="12pt" white-space-collapse="false">${ledgerGrandQtyHnd?if_exists?string("#0.00")}</fo:block>
+							            		<fo:block  keep-together="always"  font-weight="bold" text-align="right" font-size="12pt" white-space-collapse="false">${ledgerGrandQtyHnd?if_exists?string("#0.000")}</fo:block>
 							       			</fo:table-cell>
 						  			</fo:table-row>
 		                        		<fo:table-row>

@@ -147,6 +147,7 @@
 			    <set field="tabButtonItem2" value="FindGRNReceipts" />	
                <set field="viewSize" from-field="parameters.VIEW_SIZE"/>
                <set field="targetRequest" value="FindGRNReceipts"/>
+               <script location="component://materialmgmt/webapp/materialmgmt/WEB-INF/actions/purchases/purchaseDepartments.groovy"/>
             </actions>
             <widgets>
                  <decorator-screen name="materialmgmtNgCommonDecorator" location="${parameters.mainDecoratorLocation}">
@@ -162,6 +163,11 @@
                       					<screenlet title="">
                           					<include-form name="listMaterialShipmentReceipt" location="component://materialmgmt/widget/MaterialPurchaseForms.xml"/>
                       					</screenlet>
+                      					<platform-specific>
+                                           <html>
+											  <html-template location="component://materialmgmt/webapp/materialmgmt/purchase/qcApproval.ftl"/>
+										   </html>
+									   </platform-specific>
                       				</decorator-section>
                                 </decorator-screen>
                             </widgets>
