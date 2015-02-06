@@ -3550,6 +3550,7 @@ if(UtilValidate.isNotEmpty(prodQtyMap.get("bedPercent"))){
 		LocalDispatcher dispatcher = ctx.getDispatcher();
 		String statusId = (String) context.get("statusIdTo");
 		String receiptId = (String) context.get("receiptId");
+		String partyId = (String) context.get("partyId");
 		GenericValue userLogin = (GenericValue) context.get("userLogin");
 		Map result = ServiceUtil.returnSuccess();
 		try{
@@ -3557,6 +3558,15 @@ if(UtilValidate.isNotEmpty(prodQtyMap.get("bedPercent"))){
 			GenericValue shipmentReceipt = delegator.findOne("ShipmentReceipt", UtilMisc.toMap("receiptId", receiptId), false);
 			shipmentReceipt.put("statusId", statusId);
 			shipmentReceipt.store();
+			
+			//creating shipmentReceiptRole here
+			if(UtilValidate.isNotEmpty(partyId)){
+				GenericValue shipmentReceiptRole = delegator.makeValue("ShipmentReceiptRole");
+				shipmentReceiptRole.put("receiptId", receiptId);
+				shipmentReceiptRole.put("partyId", partyId);
+				shipmentReceiptRole.put("roleTypeId", "DIVISION");
+				delegator.createOrStore(shipmentReceiptRole);
+			}
 			
 		} catch (Exception e) {
 			// TODO: handle exception
