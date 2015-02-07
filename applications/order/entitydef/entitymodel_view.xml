@@ -2148,5 +2148,27 @@ under the License.
       <view-link entity-alias="INV" rel-entity-alias="BSI">
         <key-map field-name="invoiceId"/>
       </view-link>
-	 </view-entity>    
+	 </view-entity>   
+	  
+	 <view-entity entity-name="OrderHeaderAndSequenceAndRoles"
+            package-name="org.ofbiz.order.order"
+            never-cache="true"
+            title="Order Header And Sequence And Roles View Entity">
+      <member-entity entity-alias="ORLE" entity-name="OrderRole"/>
+      <member-entity entity-alias="OH" entity-name="OrderHeader"/>
+      <member-entity entity-alias="OHS" entity-name="OrderHeaderSequence"/>
+      <alias-all entity-alias="ORLE"/>
+      <alias-all entity-alias="OH"/>
+      <alias entity-alias="OHS" name="finYearId"/>
+      <alias entity-alias="OHS" name="orderHeaderSequenceTypeId"/> 
+      <alias entity-alias="OHS" name="sequenceId"/>
+      <alias entity-alias="OHS" name="orderSeqNo"/>
+      <view-link entity-alias="OH" rel-entity-alias="ORLE">
+        <key-map field-name="orderId"/>
+      </view-link>
+      <view-link entity-alias="OH" rel-entity-alias="OHS">
+        <key-map field-name="orderId"/>
+      </view-link>
+    </view-entity>
+    
 </entitymodel>

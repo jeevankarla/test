@@ -12,6 +12,8 @@
         </field>
         <field title="Delivery Date" name="estimatedDeliveryDate"><date-find/></field>
         <field name="orderId"><text-find/></field>
+        <field name="sequenceId"><text-find/></field>
+       <field name="productId"><lookup target-form-name="LookupProduct"/></field>
         <!-- <field name="orderTypeId"><hidden value="PURCHASE_ORDER"/></field> -->
         <field name="statusId">
 	        	<drop-down allow-empty="true">
@@ -20,6 +22,8 @@
 	        		<option key="ORDER_CANCELLED" description="Cancelled"/>
 	        	</drop-down>
         </field>
+        <field name="roleTypeId"><hidden value="BILL_FROM_VENDOR"/></field>
+    	<field name="partyId" title="Supplier"><lookup target-form-name="LookupPartyName" target-parameter="roleTypeId"/></field>
         <field name="noConditionFind"><hidden value="Y"/><!-- if this isn't there then with all fields empty no query will be done --></field>
         <field name="submitButton" title="${uiLabelMap.CommonFind}" widget-style="smallSubmit"><submit button-type="button"/></field>
     </form>
@@ -29,23 +33,18 @@
         <actions>
             <service service-name="performFind" result-map="result" result-map-list="listIt">
                 <field-map field-name="inputFields" from-field="parameters"/>
-                <field-map field-name="entityName" value="OrderHeader"/>
-                <field-map field-name="orderBy"  value="-lastUpdatedStamp"/>
+                <field-map field-name="entityName" value="OrderHeaderAndSequenceAndRoles"/>
+                <field-map field-name="orderBy"  value="-orderDate"/>
                 <field-map field-name="viewIndex" from-field="viewIndex"/>
                 <field-map field-name="viewSize" from-field="viewSize"/>
             </service>
+            <script location="component://materialmgmt/webapp/materialmgmt/WEB-INF/actions/purchases/POSearchFilter.groovy"/>
         </actions>
       	<row-actions>
-      		<entity-condition entity-name="OrderRole" list="orderRoles">
-      			<condition-list combine="and">
-      				<condition-expr field-name="orderId" from-field="orderId"/>
-      				<condition-expr field-name="roleTypeId" operator="equals" value="BILL_FROM_VENDOR"/>
-      			</condition-list>
-      		</entity-condition>
       		<entity-condition entity-name="OrderItem" list="orderItemList" >
       			<condition-expr field-name="orderId" operator="equals" value="${orderId}" />
       		</entity-condition>
-      		<entity-condition entity-name="SupplierProduct" list="SupplierProductList" >
+      		<!-- <entity-condition entity-name="SupplierProduct" list="SupplierProductList" >
       			<condition-expr field-name="productId" operator="equals" value="${orderItemList[0].productId}"/>
       		</entity-condition>
       		<set field="partyId" value="${orderRoles[0].partyId}" />
@@ -56,7 +55,7 @@
       			</condition-list>
       		</entity-condition>
       		<set field="flag" value="${groovy: return (ShipmentReceiptList.size() > 0)? 'Y' : 'N';}"/>
-      		<!-- <entity-condition entity-name="Shipment" list="ShipmentList" >
+      		<entity-condition entity-name="Shipment" list="ShipmentList" >
       			<condition-list combine="and" >
 	      			<condition-expr field-name="primaryOrderId" operator="equals" value="${orderId}" />
       			</condition-list>

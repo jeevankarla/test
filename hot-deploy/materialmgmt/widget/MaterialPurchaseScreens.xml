@@ -107,6 +107,7 @@
                <set field="viewSize" from-field="parameters.VIEW_SIZE"/>
                <set field="targetRequest" value="FindMaterialPO"/>
                <set field="ChannalType" value="MATERIAL_PUR_CHANNEL"/>
+               <set field="partyId" from-field="parameters.partyId"/>
             </actions>
             <widgets>
                  <decorator-screen name="materialmgmtNgCommonDecorator" location="${parameters.mainDecoratorLocation}">
