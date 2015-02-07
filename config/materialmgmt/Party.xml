@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<entity-engine-xml>
+    <Party partyId="SUB_ADMN_1" partyTypeId="PARTY_GROUP"/>
+    <Party partyId="SUB_ADMN_2" partyTypeId="PARTY_GROUP"/>
+    <Party partyId="SUB_ADMN_3" partyTypeId="PARTY_GROUP"/>
+    <Party partyId="SUB_ADMN_4" partyTypeId="PARTY_GROUP"/>
+    <Party partyId="SUB_ACNT_1" partyTypeId="PARTY_GROUP"/>
+    <Party partyId="SUB_ACNT_2" partyTypeId="PARTY_GROUP"/>
+    <Party partyId="SUB_PUR_1" partyTypeId="PARTY_GROUP"/>
+    <Party partyId="SUB_STORE_1" partyTypeId="PARTY_GROUP"/>
+    <Party partyId="SUB_STORE_2" partyTypeId="PARTY_GROUP"/>
+    <Party partyId="SUB_SRT_1" partyTypeId="PARTY_GROUP"/>
+    <Party partyId="SUB_QC_1" partyTypeId="PARTY_GROUP"/>
+    <Party partyId="SUB_PRODC_1" partyTypeId="PARTY_GROUP"/>
+    <Party partyId="SUB_PRODC_2" partyTypeId="PARTY_GROUP"/>
+    <Party partyId="SUB_PRODC_3" partyTypeId="PARTY_GROUP"/>
+    <Party partyId="SUB_PRODC_4" partyTypeId="PARTY_GROUP"/>
+    <Party partyId="SUB_PRODC_5" partyTypeId="PARTY_GROUP"/>
+    <Party partyId="SUB_PRODC_6" partyTypeId="PARTY_GROUP"/>
+    <Party partyId="SUB_PRODC_7" partyTypeId="PARTY_GROUP"/>
+    <Party partyId="SUB_ENG_1" partyTypeId="PARTY_GROUP"/>
+    <Party partyId="SUB_ENG_2" partyTypeId="PARTY_GROUP"/>
+    <Party partyId="SUB_ENG_3" partyTypeId="PARTY_GROUP"/>
+    <Party partyId="SUB_ENG_4" partyTypeId="PARTY_GROUP"/>
+    <Party partyId="SUB_ENG_5" partyTypeId="PARTY_GROUP"/>
+    <Party partyId="SUB_ENG_6" partyTypeId="PARTY_GROUP"/>
+    <Party partyId="SUB_VT_1" partyTypeId="PARTY_GROUP"/>
+    <Party partyId="SUB_MRKT_1" partyTypeId="PARTY_GROUP"/>
+    <Party partyId="SUB_MRKT_2" partyTypeId="PARTY_GROUP"/>
+    <Party partyId="SUB_MRKT_3" partyTypeId="PARTY_GROUP"/>
+    <Party partyId="SUB_TRNS_1" partyTypeId="PARTY_GROUP"/>
+    <Party partyId="SUB_ICP_1" partyTypeId="PARTY_GROUP"/>
+    <Party partyId="SUB_MPT_1" partyTypeId="PARTY_GROUP"/>
+    <Party partyId="SUB_FGS_1" partyTypeId="PARTY_GROUP"/>
+    <Party partyId="SUB_FGS_2" partyTypeId="PARTY_GROUP"/>
+    <Party partyId="SUB_FGS_3" partyTypeId="PARTY_GROUP"/>
+</entity-engine-xml>
