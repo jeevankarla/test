@@ -117,7 +117,7 @@ $(document).ready(function(){
 <div class="screenlet-body">
 	<div class="screenlet">
 	    <div class="screenlet-title-bar">
-	      <h3>For Product : ${productId}</h3>
+	      <h3>For Product : ${productId}        &#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160; UOM : ${uom}</h3>
 	    </div>
 	    <div class="screenlet-body">
 	   		<div id="chart3" class="graph">ll-${productDataListJSON.size()}</div>
