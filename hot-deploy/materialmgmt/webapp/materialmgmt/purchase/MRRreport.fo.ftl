@@ -24,7 +24,7 @@ under the License.
 <fo:layout-master-set>
 	<fo:simple-page-master master-name="main" page-height="12in" page-width="15in"
             margin-top="0.1in" margin-bottom=".7in" margin-left=".5in" margin-right=".5in">
-        <fo:region-body margin-top="2.94in"/>
+        <fo:region-body margin-top="3.590in"/>
         <fo:region-before extent="1.in"/>
         <fo:region-after extent="1.5in"/>        
     </fo:simple-page-master>   
@@ -34,21 +34,117 @@ ${setRequestAttribute("OUTPUT_FILENAME", "LoanAvailedReport.pdf")}
 	
 <fo:page-sequence master-reference="main" force-page-count="no-force" font-family="Courier,monospace">					
 			<fo:static-content flow-name="xsl-region-before">
-			
-						<fo:block  keep-together="always" text-align="center" font-family="Courier,monospace" white-space-collapse="false">&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;UserLogin : <#if userLogin?exists>${userLogin.userLoginId?if_exists}</#if></fo:block>
-					<fo:block  keep-together="always" text-align="center" font-family="Courier,monospace" white-space-collapse="false">&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;Date:${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(nowTimestamp, "dd/MM/yy HH:mm:ss")}</fo:block> 
-					<fo:block  keep-together="always" text-align="left" font-family="Courier,monospace" white-space-collapse="false" font-size="11pt" font-weight="bold" >&#160;&#160;&#160;&#160;&#160;&#160;                  KARNATAKA CO-OPERATIVE MILK PRODUCERS FEDERATION LTD. </fo:block>
-				  	<fo:block  keep-together="always" text-align="left" font-family="Courier,monospace" white-space-collapse="false" font-size="11pt" font-weight="bold">&#160;&#160;&#160;&#160;&#160;&#160;                UNIT : MOTHER DAIRY:G.K.V.K POST : YELAHANKA:BANGALORE : 560065            ACCOUNTS / PURCHASE / STORES   </fo:block>
+			  	<#--   <fo:block white-space-collapse="false" font-size="10pt"  font-family="Helvetica" keep-together="always" >&#160;  STORE CODE:${parameters.stockId}&#160;    &#160;     &#160;  DESCRIPTION:${stockDetails.get("description")?if_exists}</fo:block> -->
+			       <fo:block  keep-together="always" text-align="left"  font-family="Courier,monospace" white-space-collapse="false">&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;                                                   UserLogin: <#if userLogin?exists>${userLogin.userLoginId?if_exists}</#if></fo:block>
+		   <fo:block  keep-together="always" text-align="left" font-family="Courier,monospace" white-space-collapse="false">&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;                                               Date     : ${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(nowTimestamp, "dd/MM/yy HH:mm:ss")}</fo:block> 
+		       
+					
+					<fo:block  keep-together="always" text-align="left" font-family="Courier,monospace" white-space-collapse="false" font-size="12pt" font-weight="bold" >&#160;&#160;&#160;&#160;&#160;&#160;                  KARNATAKA CO-OPERATIVE MILK PRODUCERS FEDERATION LTD. </fo:block>
+				  	<fo:block  keep-together="always" text-align="left" font-family="Courier,monospace" white-space-collapse="false" font-size="12pt" font-weight="bold">&#160;&#160;&#160;&#160;&#160;&#160;                UNIT : MOTHER DAIRY:G.K.V.K POST : YELAHANKA:BANGALORE : 560065            ACCOUNTS / PURCHASE / STORES   </fo:block>
 			        <fo:block  keep-together="always" text-align="left" font-family="Courier,monospace" white-space-collapse="false" font-size="10pt" >&#160;&#160;&#160;&#160;&#160;              -------------------------------------------------------------------------------  </fo:block> 
-				    <fo:block  keep-together="always" text-align="left" font-family="Courier,monospace" white-space-collapse="false" font-size="10pt" font-weight="bold">&#160;&#160;&#160;&#160;&#160;                                                                 MATERIAL RECEIPT REPORT 	    </fo:block> 
-				    <fo:block  keep-together="always" text-align="left" font-family="Courier,monospace" white-space-collapse="false" font-size="10pt" >&#160;&#160;&#160;&#160;&#160;   M R R NO:${shipmentMap.get("receiptId")}                  DATE:  ${shipmentMap.get("dateReceived")?if_exists}                                                             PRINT DATE:Date:  ${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(nowTimestamp, "dd-MMM-yy")} 	    </fo:block> 
+				    <fo:block  keep-together="always" text-align="left" font-family="Courier,monospace" white-space-collapse="false" font-size="12pt" font-weight="bold">&#160;&#160;&#160;&#160;&#160;                                                            MATERIAL RECEIPT REPORT 	    </fo:block> 
+				              	<fo:block   text-align="left" font-size="12pt" white-space-collapse="false" >&#160;&#160;  Shipment Seq Id : ${shipmentMap.get("shipmentSequenceId")?if_exists}   </fo:block>
+				    
+				    <fo:block  keep-together="always" text-align="left" font-family="Courier,monospace" white-space-collapse="false" font-size="12pt" >&#160;&#160;&#160;&#160;&#160;   M R R NO:${shipmentMap.get("receiptId")}                  DATE:  ${shipmentMap.get("dateReceived")?if_exists}                                                             PRINT DATE:Date:  ${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(nowTimestamp, "dd-MMM-yy")} 	    </fo:block> 
 			        <fo:block  keep-together="always" text-align="left" font-family="Courier,monospace" white-space-collapse="false" font-size="10pt" > &#160;&#160;&#160;&#160;&#160;______________________________________________________________________________________________________________________________________________________________ </fo:block> 
-				    <fo:block  keep-together="always" text-align="left" font-family="Courier,monospace" white-space-collapse="false" font-size="10pt" > P O NO : ${shipmentMap.get("ordId")?if_exists}                    P O DATE: ${shipmentMap.get("dateReceived")?if_exists}                VENDOR CODE: ${shipmentMap.get("partyId")?if_exists}                                   STORE: ${shipmentMap.get("store")?if_exists?if_exists}   	    </fo:block> 
+				 <#--   <fo:block  keep-together="always" text-align="left" font-family="Courier,monospace" white-space-collapse="false" font-size="10pt" > P O NO : ${shipmentMap.get("ordId")?if_exists}                    P O DATE: ${shipmentMap.get("dateReceived")?if_exists}                VENDOR CODE: ${shipmentMap.get("partyId")?if_exists}                                   STORE: ${shipmentMap.get("store")?if_exists?if_exists}   	    </fo:block> 
 					<fo:block  keep-together="always" text-align="center" font-family="Courier,monospace" white-space-collapse="false" font-size="10pt"> &#160;  </fo:block> 
 			        <fo:block  keep-together="always" text-align="left" font-family="Courier,monospace" white-space-collapse="false" font-size="10pt" > D C NO: ${shipmentMap.get("dcNo")?if_exists}                           D C DATE:<#if (shipmentMap.get("dcDate")?has_content)> ${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(shipmentMap.get("dcDate"), "dd-MMM-yy")?if_exists}   </#if>                          VENDOR NAME: ${shipmentMap.get("partyName")?if_exists}            	    </fo:block> 
              		<fo:block  keep-together="always" text-align="center" font-family="Courier,monospace" white-space-collapse="false" font-size="10pt" > &#160;&#160;  </fo:block> 
 			        <fo:block  keep-together="always" text-align="left" font-family="Courier,monospace" white-space-collapse="false" font-size="10pt" > INVOICE NO: ${shipmentMap.get("invoiceNo")?if_exists}                   INVOICE DATE: <#if (shipmentMap.get("invoiceDate")?has_content)>${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(shipmentMap.get("invoiceDate"), "dd-MMM-yy")?if_exists}    </#if>                                                   </fo:block> 
-			              		
+			           
+-->
+
+			 <fo:block  keep-together="always" text-align="left" font-family="Courier,monospace" white-space-collapse="false" font-size="10pt" > &#160;&#160; </fo:block> 
+
+          	<fo:block   text-align="left" font-size="12pt" white-space-collapse="false" >&#160;&#160;PO SEQ ID : ${shipmentMap.get("sequenceId")?if_exists}   </fo:block>
+
+  <fo:block>
+	                 	<fo:table >
+	                    <fo:table-column column-width="100pt"/>
+	                    <fo:table-column column-width="150pt"/>
+	                    <fo:table-column column-width="100pt"/>  
+	               	    <fo:table-column column-width="120pt"/>
+	               	    <fo:table-column column-width="100pt"/>
+	            		<fo:table-column column-width="250pt"/> 
+	            		<fo:table-column column-width="60pt"/> 		
+	            		<fo:table-column column-width="130pt"/> 		
+	                    <fo:table-body>
+	                    <fo:table-row >
+	                    		<fo:table-cell >
+                            		<fo:block   text-align="left" font-size="12pt" white-space-collapse="false" >&#160; P O NO    : </fo:block>  
+                       			</fo:table-cell>                     
+	                    		<fo:table-cell >
+                            		<fo:block   text-align="left" font-size="12pt" white-space-collapse="false" >${shipmentMap.get("orderNo")?if_exists}   </fo:block>
+                       			</fo:table-cell>
+	                    		<fo:table-cell >
+                            		<fo:block   text-align="right" font-size="12pt" white-space-collapse="false"> P O DATE    :</fo:block> 
+                       			</fo:table-cell>
+	                    		<fo:table-cell >
+                            		<fo:block   text-align="left" font-size="12pt" white-space-collapse="false" >&#160;${shipmentMap.get("dateReceived")?if_exists}</fo:block>  
+                       			</fo:table-cell>
+	                    		<fo:table-cell >
+                            		<fo:block   text-align="right" font-size="12pt" white-space-collapse="false" > VENDOR CODE:</fo:block>  
+                       			</fo:table-cell>
+	                    		<fo:table-cell >
+                            		<fo:block   text-align="left" font-size="12pt" white-space-collapse="false" >&#160;${shipmentMap.get("partyId")}      </fo:block>  
+                       			</fo:table-cell>
+	                    		<fo:table-cell >
+                            		<fo:block   text-align="right" font-size="12pt" white-space-collapse="false" > STORE:</fo:block>  
+                       			</fo:table-cell>
+	                    		<fo:table-cell >
+                            		<fo:block   text-align="left" font-size="12pt" white-space-collapse="false" > &#160;${shipmentMap.get("store")?if_exists} </fo:block>  
+                       			</fo:table-cell>	                    		
+                			</fo:table-row>
+                			<fo:table-row >
+	                    		<fo:table-cell >
+                            		<fo:block   text-align="left" font-size="12pt" white-space-collapse="false" >&#160; D C NO    : </fo:block>  
+                       			</fo:table-cell>                     
+	                    		<fo:table-cell >
+                            		<fo:block   text-align="left" font-size="12pt" white-space-collapse="false" >${shipmentMap.get("dcNo")?if_exists}   </fo:block>  
+                       			</fo:table-cell>
+	                    		<fo:table-cell >
+                            		<fo:block   text-align="right" font-size="12pt" white-space-collapse="false"> D C DATE    :</fo:block> 
+                       			</fo:table-cell>
+	                    		<fo:table-cell >
+                            		<fo:block   text-align="left" font-size="12pt" white-space-collapse="false" >&#160;<#if (shipmentMap.get("dcDate")?has_content)>${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(shipmentMap.get("dcDate"), "dd-MMM-yy")?if_exists}   </#if> </fo:block>  
+                       			</fo:table-cell>
+	                    		<fo:table-cell >
+                            		<fo:block   text-align="right" font-size="12pt" white-space-collapse="false" >VENDOR NAME: </fo:block>  
+                       			</fo:table-cell>
+	                    		<fo:table-cell >
+                            		<fo:block   text-align="left" font-size="12pt" white-space-collapse="false" >&#160;${shipmentMap.get("partyName")?if_exists}      </fo:block>  
+                       			</fo:table-cell>
+                			</fo:table-row>
+                        <fo:table-row >
+	                    		<fo:table-cell >
+                            		<fo:block   text-align="left" font-size="12pt" white-space-collapse="false" >&#160; INVOICE NO: </fo:block>  
+                       			</fo:table-cell>                     
+	                    		<fo:table-cell >
+                            		<fo:block   text-align="left" font-size="12pt" white-space-collapse="false" >${shipmentMap.get("invoiceNo")?if_exists}   </fo:block>
+                       			</fo:table-cell>
+	                    		<fo:table-cell >
+                            		<fo:block   text-align="right" font-size="12pt" white-space-collapse="false"> INVOICE DATE: </fo:block> 
+                       			</fo:table-cell>
+	                    		<fo:table-cell >
+                            		<fo:block   text-align="left" font-size="12pt" white-space-collapse="false" >&#160;<#if (shipmentMap.get("invoiceDate")?has_content)>${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(shipmentMap.get("invoiceDate"), "dd-MMM-yy")?if_exists}    </#if> </fo:block>  
+                       			</fo:table-cell>
+	                    		                   		
+                			</fo:table-row>
+                    </fo:table-body>
+                </fo:table>
+              </fo:block>               	
+
+
+
+
+
+
+
+
+
+
+   		
 			         <fo:block  keep-together="always" text-align="center" font-family="Courier,monospace" white-space-collapse="false" font-size="10pt" font-weight="bold"> &#160;&#160;  </fo:block> 
 			         <fo:block  keep-together="always" text-align="center" font-family="Courier,monospace" white-space-collapse="false" font-size="10pt" font-weight="bold"> &#160;&#160;  </fo:block> 
 	             
@@ -71,46 +167,46 @@ ${setRequestAttribute("OUTPUT_FILENAME", "LoanAvailedReport.pdf")}
 	                    <fo:table-body>
 	                    <fo:table-row >
 	                    		<fo:table-cell border-style="solid">
-                            		<fo:block   text-align="center" font-size="10pt" white-space-collapse="false" >SI NO</fo:block>  
+                            		<fo:block   text-align="center" font-size="10pt" white-space-collapse="false" font-weight="bold">SI NO</fo:block>  
                        			</fo:table-cell>                     
                        			<fo:table-cell border-style="solid">
-                            		<fo:block   text-align="center" font-size="10pt" white-space-collapse="false" >MTRL Code </fo:block>
+                            		<fo:block   text-align="center" font-size="10pt" white-space-collapse="false" font-weight="bold">MTRL Code </fo:block>
                        			</fo:table-cell>
                        			<fo:table-cell border-style="solid">
-                            		<fo:block   text-align="center" font-size="10pt" white-space-collapse="false">MATERIAL Name</fo:block> 
+                            		<fo:block   text-align="center" font-size="10pt" white-space-collapse="false" font-weight="bold">MATERIAL Name</fo:block> 
                        			</fo:table-cell>
                        			<fo:table-cell border-style="solid">
-                            		<fo:block   text-align="center" font-size="10pt" white-space-collapse="false" >UNIT</fo:block>  
+                            		<fo:block   text-align="center" font-size="10pt" white-space-collapse="false" font-weight="bold">UNIT</fo:block>  
                        			</fo:table-cell>
                        			<fo:table-cell border-style="solid">
-                            		<fo:block   text-align="center" font-size="10pt" white-space-collapse="false" >P O QTY</fo:block>  
+                            		<fo:block   text-align="center" font-size="10pt" white-space-collapse="false" font-weight="bold">P O QTY</fo:block>  
                        			</fo:table-cell>
                        			<fo:table-cell border-style="solid">
-                            		<fo:block   text-align="center" font-size="10pt" white-space-collapse="false" >DC/INVOICE QTY</fo:block>  
+                            		<fo:block   text-align="center" font-size="10pt" white-space-collapse="false" font-weight="bold">DC/INVOICE QTY</fo:block>  
                        			</fo:table-cell>
                         		<fo:table-cell border-style="solid">
-                            		<fo:block   text-align="center" font-size="10pt" white-space-collapse="false" >RECEIVED QTY</fo:block>   
+                            		<fo:block   text-align="center" font-size="10pt" white-space-collapse="false" font-weight="bold">RECEIVED QTY</fo:block>   
                         		</fo:table-cell>
                         		<fo:table-cell border-style="solid">
-                            		<fo:block   text-align="center" font-size="10pt" white-space-collapse="false" >REJECTED QTY </fo:block>  
+                            		<fo:block   text-align="center" font-size="10pt" white-space-collapse="false" font-weight="bold">REJECTED QTY </fo:block>  
                         		</fo:table-cell>
                         		<fo:table-cell border-style="solid">
-                            		<fo:block  text-align="center" font-size="10pt" white-space-collapse="false" >ACCEPTED QTY</fo:block>  
+                            		<fo:block  text-align="center" font-size="10pt" white-space-collapse="false" font-weight="bold">ACCEPTED QTY</fo:block>  
                         		</fo:table-cell>
                         		<fo:table-cell border-style="solid">
-                            		<fo:block   text-align="center" font-size="10pt" white-space-collapse="false" >UNITRATE Rs </fo:block>  
+                            		<fo:block   text-align="center" font-size="10pt" white-space-collapse="false" font-weight="bold">UNITRATE Rs </fo:block>  
                        			</fo:table-cell>
                        			<fo:table-cell border-style="solid">
-                            		<fo:block   text-align="center" font-size="10pt" white-space-collapse="false" >BOOK FOLOIO NO </fo:block>  
+                            		<fo:block   text-align="center" font-size="10pt" white-space-collapse="false" font-weight="bold">BOOK FOLOIO NO </fo:block>  
                        			</fo:table-cell>
                         		<fo:table-cell border-style="solid">
-                            		<fo:block   text-align="center" font-size="10pt" white-space-collapse="false" >AMOUNT Rs </fo:block>   
+                            		<fo:block   text-align="center" font-size="10pt" white-space-collapse="false" font-weight="bold">AMOUNT Rs </fo:block>   
                         		</fo:table-cell>
                         		<fo:table-cell border-style="solid">
-                            		<fo:block   text-align="center" font-size="10pt" white-space-collapse="false" >VEHICLE NO</fo:block>  
+                            		<fo:block   text-align="center" font-size="10pt" white-space-collapse="false" font-weight="bold">VEHICLE NO</fo:block>  
                         		</fo:table-cell>
                         		<fo:table-cell border-style="solid">
-                            		<fo:block  text-align="center" font-size="10pt" white-space-collapse="false" >REMARKS</fo:block>  
+                            		<fo:block  text-align="center" font-size="10pt" white-space-collapse="false" font-weight="bold">REMARKS</fo:block>  
                         		</fo:table-cell>
                         		
                 			</fo:table-row>
@@ -164,7 +260,7 @@ ${setRequestAttribute("OUTPUT_FILENAME", "LoanAvailedReport.pdf")}
 	                                </fo:table-cell>
 	                                <fo:table-cell border-style="solid">
 	                                    <fo:block text-align="center" font-size="10pt">
-	                               ${grnListItem.get("receivedQty")?if_exists}
+	                               ${grnListItem.get("deliveryChallanQty")?if_exists}
 	                                    </fo:block>
 	                                </fo:table-cell>
 	                                <fo:table-cell border-style="solid">
@@ -192,7 +288,8 @@ ${setRequestAttribute("OUTPUT_FILENAME", "LoanAvailedReport.pdf")}
 	                                </fo:table-cell>
 	                               <fo:table-cell border-style="solid">
 	                                    <fo:block text-align="left" font-size="10pt">
-	                               
+	                                      ${grnListItem.get("folioNo")?if_exists}
+
 	                                    </fo:block>
 	                                </fo:table-cell>
 	                               <fo:table-cell border-style="solid">
@@ -222,37 +319,47 @@ ${setRequestAttribute("OUTPUT_FILENAME", "LoanAvailedReport.pdf")}
 			<fo:block  keep-together="always" text-align="left" font-family="Courier,monospace" white-space-collapse="false" font-size="12pt" > Tax Details:                                                                                            TOTAL VALUE:${shipmentMap.get("total")?if_exists?string("##0.00")}     			</fo:block>  
 			<fo:block  keep-together="always" text-align="center" font-family="Courier,monospace" white-space-collapse="false" font-size="10pt" font-weight="bold"> &#160;&#160;  </fo:block> 
 			 <fo:block  keep-together="always" text-align="center" font-family="Courier,monospace" white-space-collapse="false" font-size="10pt" font-weight="bold"> &#160;&#160;  </fo:block> 
-			 <fo:block  keep-together="always" text-align="left" font-family="Courier,monospace" white-space-collapse="false" font-size="10pt" > &#160;&#160; Apply to:  </fo:block> 
+			 <fo:block  keep-together="always" text-align="left" font-family="Courier,monospace" white-space-collapse="false" font-size="10pt" font-weight="bold"> &#160;&#160; Apply to:  </fo:block> 
 			 <fo:block  keep-together="always" text-align="center" font-family="Courier,monospace" white-space-collapse="false" font-size="10pt" font-weight="bold"> &#160;&#160;  </fo:block> 
 			 <fo:block  keep-together="always" text-align="center" font-family="Courier,monospace" white-space-collapse="false" font-size="10pt" font-weight="bold"> &#160;&#160;  </fo:block> 
 				
 				<fo:block>
                  	<fo:table>
 	                    <fo:table-column column-width="250pt"/>
+	                    	                    <fo:table-column column-width="50pt"/>
+	                    
 	                    <fo:table-column column-width="250pt"/>
+	                    	                    <fo:table-column column-width="50pt"/>
+	                    
 	                    <fo:table-column column-width="250pt"/>  
+	                    
 	                    <fo:table-column column-width="250pt"/>  
 	                    <fo:table-body>
 	                    <fo:table-row >
 	                               <fo:table-cell >
-	                                    <fo:block text-align="left" font-size="10pt">
+	                                    <fo:block text-align="left" font-size="11pt">
 	                             	 1.The materials at 
-                                  	Sl.no............................... were 
+                                  	Sl.no......................... were 
 								  	inspected and found as per and 
 									specification.Hence accepted
 									2.Remaining items are rejected for the 
 									following reasons .................    &#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;
 	                                    </fo:block>
 	                                </fo:table-cell>
+	                                <fo:table-cell >
+	                                    <fo:block text-align="left" font-size="11pt"> &#160;&#160;</fo:block>
+	                                </fo:table-cell>
 	                               <fo:table-cell >
-	                                    <fo:block text-align="left" font-size="10pt">
+	                                    <fo:block text-align="left" font-size="11pt">
 	                                 The materials at Sl No.............. 
 								  	above have been received and taken into 
 									stock , vide ledgerfolio of each item .
 	                                    </fo:block>
 	                                </fo:table-cell>
+	                                  <fo:table-cell >
+	                                    <fo:block text-align="left" font-size="11pt"> &#160;&#160; </fo:block>  </fo:table-cell>
 	                               <fo:table-cell >
-	                                    <fo:block text-align="left" font-size="10pt">
+	                                    <fo:block text-align="left" font-size="11pt">
 	                               Verified with the ledgerfolio for having 
 									taken into stock account.
 	                                    </fo:block>
@@ -260,51 +367,57 @@ ${setRequestAttribute("OUTPUT_FILENAME", "LoanAvailedReport.pdf")}
                           </fo:table-row>
                           <fo:table-row >
 	                               <fo:table-cell>
-	                                    <fo:block text-align="center" font-size="10pt">
+	                                    <fo:block text-align="center" font-size="11pt">
 										&#160;&#160;&#160;&#160;	                        
 							            </fo:block>
 	                                </fo:table-cell>
 	                               <fo:table-cell >
-	                                    <fo:block text-align="center" font-size="10pt">
+	                                    <fo:block text-align="center" font-size="11pt">
 	                                 &#160;&#160;&#160;&#160;
 	                                    </fo:block>
 	                                </fo:table-cell>
 	                               <fo:table-cell>
-	                                    <fo:block text-align="center" font-size="10pt">
+	                                    <fo:block text-align="center" font-size="11pt">
 	                               &#160;&#160;&#160;&#160;
 	                                    </fo:block>
 	                                </fo:table-cell>
                            </fo:table-row>
                            <fo:table-row >
 	                               <fo:table-cell >
-	                                    <fo:block text-align="center" font-size="10pt">
+	                                    <fo:block text-align="center" font-size="11pt">
 										&#160;&#160;&#160;&#160;	                        
 							            </fo:block>
 	                                </fo:table-cell>
 	                               <fo:table-cell >
-	                                    <fo:block text-align="center" font-size="10pt">
+	                                    <fo:block text-align="center" font-size="11pt">
 	                                 &#160;&#160;&#160;&#160;
 	                                    </fo:block>
 	                                </fo:table-cell>
 	                               <fo:table-cell>
-	                                    <fo:block text-align="center" font-size="10pt">
+	                                    <fo:block text-align="center" font-size="11pt">
 	                               &#160;&#160;&#160;&#160;
 	                                    </fo:block>
 	                                </fo:table-cell>
                            </fo:table-row>                    
                            <fo:table-row >
 	                               <fo:table-cell >
-	                                    <fo:block text-align="left" font-size="10pt">
+	                                    <fo:block text-align="left" font-size="11pt">
 	                             &#160;&#160;&#160;&#160;  CERTIFIED BY 
 	                                    </fo:block>
 	                                </fo:table-cell>
+	                                 <fo:table-cell >
+	                                    <fo:block text-align="left" font-size="11pt"> &#160;&#160;</fo:block>
+	                                </fo:table-cell>
 	                               <fo:table-cell >
-	                                    <fo:block text-align="center" font-size="10pt">
+	                                    <fo:block text-align="center" font-size="11pt">
 	                                    RECEIVED BY
 	                                    </fo:block>
 	                                </fo:table-cell>
+	                                 <fo:table-cell >
+	                                    <fo:block text-align="left" font-size="11pt"> &#160;&#160;</fo:block>
+	                                </fo:table-cell>
 	                               <fo:table-cell >
-	                                    <fo:block text-align="center" font-size="10pt">
+	                                    <fo:block text-align="center" font-size="11pt">
 	                                STORES OFFICER
 	                                    </fo:block>
 	                                </fo:table-cell>
