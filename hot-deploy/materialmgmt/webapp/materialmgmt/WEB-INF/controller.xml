@@ -864,6 +864,125 @@
      <security https="true" auth="true"/>
     	<response name="success" type="view" value="PurchaseTaxReportCSV"/>
     </request-map>
+        <request-map uri="FGSProductSaleMm">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="FGSProductSaleMm"/>   
+       <response name="failed" type="view" value="FGSProductSaleMm"/>  
+    </request-map>
+    <request-map uri="processFGSOrdersMm">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="ProcessFGSOrdersMm"/>   
+       <response name="failed" type="view" value="ProcessFGSOrdersMm"/>  
+    </request-map>
+        <request-map uri="FindFGSShipmentMm">
+    	<security https="true" auth="true"/>
+        <response name="success" type="view" value="FindFGSShipmentMm"/>   
+       	<response name="failed" type="view" value="FindFGSShipmentMm"/>  
+    </request-map>
+     <request-map uri="InterUnitStkTrMm">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="InterUnitStkTrMm"/>   
+       <response name="failed" type="view" value="InterUnitStkTrMm"/>  
+    </request-map>
+    <request-map uri="ProcessInterUnitStkTrMm">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="ProcessInterUnitStkTrMm"/>   
+       <response name="failed" type="view" value="ProcessInterUnitStkTrMm"/>  
+    </request-map>
+        <request-map uri="FindStockTranferShipmentMm">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="FindStockTranferShipmentMm"/>   
+       <response name="failed" type="view" value="FindStockTranferShipmentMm"/>  
+    </request-map>
+     <request-map uri="processInterUnitStkTrSaleMm">
+        <security https="true" auth="true"/>
+     	<event type="java"  path="in.vasista.vbiz.byproducts.icp.ICPServices"  invoke="processIcpSale" global-transaction="true"/>
+        <response name="success"  type="request-redirect-noparam" value="InterUnitStkTrMm">
+        <redirect-parameter name="orderStatus"/>
+     		<redirect-parameter name="orderId"/>
+     		<redirect-parameter name="supplyDate"/></response>
+        <response name="error" type="view" value="InterUnitStkTrMm"/>
+    </request-map>
+    
+    <request-map uri="processICPStkTrSaleMm">
+        <security https="true" auth="true"/>
+     	<event type="java"  path="in.vasista.vbiz.byproducts.icp.ICPServices"  invoke="processIcpSale" global-transaction="true"/>
+        <response name="success"  type="request-redirect-noparam" value="IcpStockTransferMm">
+        <redirect-parameter name="orderStatus"/>
+     		<redirect-parameter name="orderId"/>
+     		<redirect-parameter name="supplyDate"/></response>
+        <response name="error" type="view" value="IcpStockTransferMm"/>
+    </request-map>
+    
+    <request-map uri="processFGSProductSaleMm">
+        <security https="true" auth="true"/>
+     	<event type="java"  path="in.vasista.vbiz.byproducts.icp.ICPServices"  invoke="processIcpSale" global-transaction="true"/>
+        <response name="success"  type="request-redirect-noparam" value="FGSProductSaleMm">
+        <redirect-parameter name="orderStatus"/>
+     		<redirect-parameter name="orderId"/>
+     		<redirect-parameter name="supplyDate"/></response>
+        <response name="error" type="view" value="FGSProductSaleMm"/>
+    </request-map>
+        <request-map uri="approveIUSTransferOrderMm">
+        <security https="true" auth="true"/>
+        <event type="service" path="" invoke="approveICPOrder"/>
+        <response name="success" type="view" value="ProcessInterUnitStkTrMm"/>   
+       <response name="failed" type="view" value="ProcessInterUnitStkTrMm"/>  
+    </request-map>
+        <request-map uri="createShipAndInvForIUSTransferOrdersMm">
+        <security https="true" auth="true"/>
+        <event type="java" path="in.vasista.vbiz.byproducts.icp.ICPServices" invoke="createShipmentAndInvoiceForOrders"/>
+        <response name="success" type="view" value="ProcessInterUnitStkTrMm"/>   
+       <response name="failed" type="view" value="ProcessInterUnitStkTrMm"/>  
+    </request-map>
+     <request-map uri="approveFGSOrderMm">
+        <security https="true" auth="true"/>
+        <event type="service" path="" invoke="approveICPOrder"/>
+        <response name="success" type="view" value="ProcessFGSOrdersMm"/>   
+       <response name="failed" type="view" value="ProcessFGSOrdersMm"/>  
+    </request-map>
+       <request-map uri="createShipmentAndInvoiceForFGSOrdersMm">
+        <security https="true" auth="true"/>
+        <event type="java" path="in.vasista.vbiz.byproducts.icp.ICPServices" invoke="createShipmentAndInvoiceForOrders"/>
+        <response name="success" type="view" value="ProcessFGSOrdersMm"/>   
+       <response name="failed" type="view" value="ProcessFGSOrdersMm"/>  
+    </request-map>
+    <request-map uri="cancelFGSOrderMm">
+        <security https="true" auth="true"/>
+        <event type="service" path="" invoke="cancelICPOrder"/>
+        <response name="success" type="view" value="ProcessFGSOrdersMm"/>   
+       <response name="failed" type="view" value="ProcessFGSOrdersMm"/>  
+    </request-map>
+        <request-map uri="cancelICPStkTrOrderMm">
+        <security https="true" auth="true"/>
+        <event type="service" path="" invoke="cancelICPOrder"/>
+        <response name="success" type="view" value="ProcessICPStkTransMm"/>   
+       <response name="failed" type="view" value="ProcessICPStkTransMm"/>  
+    </request-map>
+     <request-map uri="cancelIUSTransferOrderMm">
+        <security https="true" auth="true"/>
+        <event type="service" path="" invoke="cancelICPOrder"/>
+        <response name="success" type="view" value="ProcessInterUnitStkTrMm"/>   
+       <response name="failed" type="view" value="ProcessInterUnitStkTrMm"/>  
+    </request-map>
+        <request-map uri="cancelFGSShipmentMm">
+     	<security https="true" auth="true"/>     	
+        <event type="service" invoke="cancelICPShipment"/>
+        <response name="success" type="request" value="FindFGSShipmentMm"/>
+        <response name="error" type="request" value="FindFGSShipmentMm"/>
+    </request-map>
+      <request-map uri="cancelInterUnitShipmentMm">
+     	<security https="true" auth="true"/>     	
+        <event type="service" invoke="cancelICPShipment"/>
+        <response name="success" type="request" value="FindStockTranferShipmentMm"/>
+        <response name="error" type="request" value="FindStockTranferShipmentMM"/>
+    </request-map>
+        <request-map uri="editFGSOrderBatchNumberMm">
+        <security https="true" auth="true"/>
+        <event type="java"  path="in.vasista.vbiz.byproducts.icp.ICPServices" invoke="editBatchNumber"/>
+        <response name="success" type="view-last"/>   
+       <response name="failed" type="view-last"/>  
+    </request-map>
     <request-map uri="newReports">
      <security https="true" auth="true"/>
     	<response name="success" type="view" value="newReports"/>
@@ -1015,6 +1134,14 @@
     <view-map name="PurchaseReportPDF" type="screenfop" page="component://materialmgmt/widget/materialmgmtReportScreens.xml#PurchaseReportPDF" content-type="application/pdf"/>
     <view-map name="PurchaseReportCSV" type="screencsv" page="component://materialmgmt/widget/materialmgmtReportScreens.xml#PurchaseReportCSV" content-type="text/csv" encoding="none"/>
         <view-map name="PurchaseTaxReportCSV" type="screencsv" page="component://materialmgmt/widget/materialmgmtReportScreens.xml#PurchaseTaxReportCSV" content-type="text/csv" encoding="none"/>
+    
+    
+     <view-map name="FGSProductSaleMm" type="screen" page="component://materialmgmt/widget/materialmgmtScreens.xml#FGSProductSaleMm"/>
+     <view-map name="ProcessFGSOrdersMm" type="screen" page="component://materialmgmt/widget/materialmgmtScreens.xml#ProcessFGSOrdersMm"/>
+     <view-map name="FindFGSShipmentMm" type="screen" page="component://materialmgmt/widget/materialmgmtScreens.xml#FindFGSShipmentMm"/>
+     <view-map name="InterUnitStkTrMm" type="screen" page="component://materialmgmt/widget/materialmgmtScreens.xml#InterUnitStkTrMm"/>
+     <view-map name="ProcessInterUnitStkTrMm" type="screen" page="component://materialmgmt/widget/materialmgmtScreens.xml#ProcessInterUnitStkTrMm"/>
+     <view-map name="FindStockTranferShipmentMm" type="screen" page="component://materialmgmt/widget/materialmgmtScreens.xml#FindStockTranferShipmentMm"/>
     
     <view-map name="newReports" type="screen" page="component://materialmgmt/widget/materialmgmtReportScreens.xml#newReports"/>
     <view-map name="StoreIssueReport" type="screenfop" page="component://materialmgmt/widget/materialmgmtReportScreens.xml#StoreIssueReport" content-type="application/pdf" encoding="none"/>
