@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<entity-engine-xml>
+    <PartyGroup partyId="SUB_ADMN_1" groupName="ADM-ENGINEERING"/>
+    <PartyGroup partyId="SUB_ADMN_2" groupName="ADM-COMPUTER"/>
+    <PartyGroup partyId="SUB_ADMN_3" groupName="ADMINISTRATION"/>
+    <PartyGroup partyId="SUB_ADMN_4" groupName="ADM-CANTEEN"/>
+    <PartyGroup partyId="SUB_ACNT_1" groupName="FINANCE-MARKETING"/>
+    <PartyGroup partyId="SUB_ACNT_2" groupName="FINANCE"/>
+    <PartyGroup partyId="SUB_PUR_1" groupName="PURCHASE"/>
+    <PartyGroup partyId="SUB_STORE_1" groupName="ICP  STORES-AMUL"/>
+    <PartyGroup partyId="SUB_STORE_2" groupName="STORES"/>
+    <PartyGroup partyId="SUB_SRT_1" groupName="SECURITY"/>
+    <PartyGroup partyId="SUB_QC_1" groupName="QUALITY CONTROL"/>
+    <PartyGroup partyId="SUB_PRODC_1" groupName="PROD - GHEE"/>
+    <PartyGroup partyId="SUB_PRODC_2" groupName="PROD - CURDS"/>
+    <PartyGroup partyId="SUB_PRODC_3" groupName="PRE-PACK"/>
+    <PartyGroup partyId="SUB_PRODC_4" groupName="MILK - PASTERISATION"/>
+    <PartyGroup partyId="SUB_PRODC_5" groupName="PRODUCTS"/>
+    <PartyGroup partyId="SUB_PRODC_6" groupName="MILK  - RECEPTION"/>
+    <PartyGroup partyId="SUB_PRODC_7" groupName="PRODUCTION"/>
+    <PartyGroup partyId="SUB_ENG_1" groupName="ENG - REFRIGERATION"/>
+    <PartyGroup partyId="SUB_ENG_2" groupName="ENG - CIVIL"/>
+    <PartyGroup partyId="SUB_ENG_3" groupName="ENG - ELECTRICAL"/>
+    <PartyGroup partyId="SUB_ENG_4" groupName="ENG-OFFICE"/>
+    <PartyGroup partyId="SUB_ENG_5" groupName="ENG - MECHANICAL"/>
+    <PartyGroup partyId="SUB_ENG_6" groupName="ENG - BOILER"/>
+    <PartyGroup partyId="SUB_VT_1" groupName="VT"/>
+    <PartyGroup partyId="SUB_MRKT_1" groupName="MARKETING - ICE CREAM SALES"/>
+    <PartyGroup partyId="SUB_MRKT_2" groupName="MARKETING - WEIGH BRIDGE"/>
+    <PartyGroup partyId="SUB_MRKT_3" groupName="MARKETING"/>
+    <PartyGroup partyId="SUB_TRNS_1" groupName="TRANSPORT"/>
+    <PartyGroup partyId="SUB_ICP_1" groupName="ICE CREAM PLANT"/>
+    <PartyGroup partyId="SUB_MPT_1" groupName="MILK POWDER PLANT"/>
+    <PartyGroup partyId="SUB_FGS_1" groupName="FGS PRODUCTS"/>
+    <PartyGroup partyId="SUB_FGS_2" groupName="FGS ICP"/>
+    <PartyGroup partyId="SUB_FGS_3" groupName="FGS POWDER"/>
+</entity-engine-xml>
