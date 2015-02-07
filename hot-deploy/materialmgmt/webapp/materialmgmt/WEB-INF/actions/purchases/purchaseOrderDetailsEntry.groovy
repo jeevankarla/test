@@ -25,11 +25,12 @@ dctx = dispatcher.getDispatchContext();
 supplierId = "";
 
 // usage of po balance if needed
-/*resultMap=MaterialHelperServices.getBalanceAndReceiptQtyForPO(dctx,UtilMisc.toMap("orderId", orderId));
-Debug.log("===resultMap=="+resultMap+"===orderId=="+orderId);
-productTotals=resultMap.get("productTotals");
-productTotals.each{prodMap->
-}*/
+poBalanceProductMap=[:];
+resultMap=MaterialHelperServices.getBalanceAndReceiptQtyForPO(dctx,UtilMisc.toMap("orderId", orderId));
+if(UtilValidate.isNotEmpty(resultMap.get("productTotals"))){
+	poBalanceProductMap=resultMap.get("productTotals");
+}
+
 if(orderId){
 	orderHeader = delegator.findOne("OrderHeader", UtilMisc.toMap("orderId", orderId), false);
 	if(!orderHeader){
@@ -72,6 +73,15 @@ if(orderId){
 			uomLabel = uomLabelMap.get(uomId);
 		}
 		newObj.put("cProductId",eachItem.productId);
+		receivedQty=0;
+		maxReceivedQty=0;
+		poBalDetailsMap=poBalanceProductMap.get(eachItem.productId);
+		if(UtilValidate.isNotEmpty(poBalDetailsMap.get("receivedQty"))){
+			receivedQty=poBalDetailsMap.get("receivedQty");
+		}
+		if(UtilValidate.isNotEmpty(poBalDetailsMap.get("maxReceivedQty"))){
+			maxReceivedQty=poBalDetailsMap.get("maxReceivedQty");
+		}
 		productDetails = delegator.findOne("Product", UtilMisc.toMap("productId", eachItem.productId), false);
 		if(UtilValidate.isNotEmpty(productDetails)){
 			newObj.put("cProductName",productDetails.brandName +" [ " +productDetails.description+"]");
@@ -82,6 +92,8 @@ if(orderId){
 		
 		
 		newObj.put("orderedQty",eachItem.quantity);
+		newObj.put("oldRecvdQty",receivedQty);
+		newObj.put("maxReceivedQty",maxReceivedQty);
 		newObj.put("uomDescription",uomLabel);
 		orderItemsJSON.add(newObj);
 	

@@ -146,7 +146,7 @@
 					          	</td>
 				             <#else> 
 				              <td valign='middle'>
-		          				<input type="text" name="deliveryChallanDate" id="deliveryChallanDate" value="${defaultEffectiveDate}" />
+		          				<input type="text" name="deliveryChallanDate" readonly  id="deliveryChallanDate" value="${defaultEffectiveDate}" />
 		          			</td>
 				          </#if>
 		          			
@@ -199,7 +199,7 @@
 					          	</td>
 				             <#else> 
 				              <td valign='middle'>
-		          				<input type="text" name="suppInvoiceDate" id="suppInvoiceDate" />
+		          				<input type="text" readOnly name="suppInvoiceDate" id="suppInvoiceDate" />
 		          			</td>
 				          </#if>
 		          			

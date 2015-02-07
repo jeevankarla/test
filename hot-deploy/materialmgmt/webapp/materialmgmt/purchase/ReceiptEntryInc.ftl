@@ -93,6 +93,7 @@
 		var inputRowSubmit = jQuery("<input>").attr("type", "hidden").attr("name", "_useRowSubmit").val("Y");
 		jQuery(formId).append(jQuery(inputRowSubmit));
 		
+		var rowCountIndex=0;
 		for (var rowCount=0; rowCount < data.length; ++rowCount)
 		{ 
 			var productId = data[rowCount]["cProductId"];
@@ -103,17 +104,26 @@
 			}
 			var qty = parseFloat(data[rowCount]["quantity"]);
 	 		if (!isNaN(qty) && qty>0 ) {	 		
-				var inputProd = jQuery("<input>").attr("type", "hidden").attr("name", "productId_o_" + rowCount).val(prodId);
-				var inputQty = jQuery("<input>").attr("type", "hidden").attr("name", "quantity_o_" + rowCount).val(qty);
+				var inputProd = jQuery("<input>").attr("type", "hidden").attr("name", "productId_o_" + rowCountIndex).val(prodId);
+				var inputQty = jQuery("<input>").attr("type", "hidden").attr("name", "quantity_o_" + rowCountIndex).val(qty);
 				jQuery(formId).append(jQuery(inputProd));				
 				jQuery(formId).append(jQuery(inputQty));
 				
+				var dcQty = parseFloat(data[rowCount]["deliveryChallanQty"]);
+		 		if (!isNaN(dcQty) && dcQty>0 ) {	 		
+					var inputDCQty = jQuery("<input>").attr("type", "hidden").attr("name", "deliveryChallanQty_o_" + rowCountIndex).val(dcQty);
+					jQuery(formId).append(jQuery(inputDCQty));
+	   			}
+	   			
+	   			var oldRecvdQty = parseFloat(data[rowCount]["oldRecvdQty"]);
+		 		if (!isNaN(oldRecvdQty) && oldRecvdQty>0 ) {	 		
+					var inputOldQty = jQuery("<input>").attr("type", "hidden").attr("name", "oldRecvdQty_o_"+ rowCountIndex).val(oldRecvdQty);
+					jQuery(formId).append(jQuery(inputOldQty));
+	   			}
+				rowCountIndex++;
    			}
-   			var dcQty = parseFloat(data[rowCount]["deliveryChallanQty"]);
-	 		if (!isNaN(dcQty) && dcQty>0 ) {	 		
-				var inputDCQty = jQuery("<input>").attr("type", "hidden").attr("name", "deliveryChallanQty_o_" + rowCount).val(dcQty);
-				jQuery(formId).append(jQuery(inputDCQty));
-   			}
+   			
+   			  
 		}
 		
 		var dataString = $("#indententryinit").serializeArray();
@@ -241,7 +251,7 @@
 		var floorValue = Math.floor(quarterVal);
 		var remainder = quarterVal - floorValue;
 		var remainderVal =  Math.floor(value) - value;
-		 if(parseInt(value) <=0 ){
+		 if(parseInt(value) <0 ){
 			return {valid: false, msg: "required quantity Should not be less than or equals to zero" + value};
 		 }
 	     if(remainder !=0 ){
@@ -276,6 +286,7 @@
 					{id:"ordQuantity", name:"Order Qty", field:"orderedQty", width:60, minWidth:60, cssClass:"readOnlyColumnClass", sortable:false, focusable :false,},
 					{id:"quantity", name:"Received Qty", field:"quantity", width:80, minWidth:80, cssClass:"cell-title",editor:FloatCellEditor, sortable:false , formatter: quantityFormatter,  validator: quantityValidator},
 					{id:"deliveryChallanQty", name:"DC Qty", field:"deliveryChallanQty", width:80, minWidth:80, cssClass:"cell-title",editor:FloatCellEditor, sortable:false , formatter: deliveryChallanQtyFormatter,  validator: deliveryChallanQtyValidator},
+					{id:"oldRecvdQty", name:"Old Recvd Qty", field:"oldRecvdQty", width:80, minWidth:80, cssClass:"readOnlyColumnClass", sortable:false, focusable :false,},
 					{id:"UOM", name:"UOM", field:"uomDescription", width:80, minWidth:80, cssClass:"readOnlyColumnClass", focusable :false,editor:FloatCellEditor, sortable:false}
 				];
 		</#if>
