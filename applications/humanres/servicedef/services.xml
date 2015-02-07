@@ -169,7 +169,7 @@ under the License.emplpunch
         <attribute name="partyId"  mode="IN" type="String" optional="false"/>  
         <attribute name="encashmentStatus"  mode="IN" type="String" optional="true"/> 
         <attribute name="checkBox" mode="IN" type="String" optional="false"/>                                                  
-        <attribute name="date" type="Timestamp" mode="IN" optional="false"/>
+        <attribute name="date" type="String" mode="IN" optional="false"/>
     </service>
     
     <service name="updatePartySkill" engine="simple" default-entity-name="PartySkill"
