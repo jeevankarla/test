@@ -65,6 +65,7 @@ public class MaterialHelperServices{
 		String facilityId = (String) context.get("facilityId");
 		Timestamp fromDate = (Timestamp) context.get("fromDate");
 		Timestamp thruDate = (Timestamp) context.get("thruDate");
+		String orgPartyId = (String) context.get("orgPartyId");
 		GenericValue userLogin = (GenericValue) context.get("userLogin");
 		Map result = ServiceUtil.returnSuccess();
 		List condList=FastList.newInstance();
@@ -82,7 +83,9 @@ public class MaterialHelperServices{
 			 condList.clear();
 			 condList.add(EntityCondition.makeCondition("custRequestId", EntityOperator.IN, EntityUtil.getFieldListFromEntityList(custRequestStatus, "custRequestId", true)));
 			 condList.add(EntityCondition.makeCondition("custRequestTypeId", EntityOperator.EQUALS, "PRODUCT_REQUIREMENT"));
-			 
+			 if(UtilValidate.isNotEmpty(orgPartyId)){
+				 condList.add(EntityCondition.makeCondition("fromPartyId", EntityOperator.EQUALS, orgPartyId));
+			 }
 			 cond = EntityCondition.makeCondition(condList,EntityOperator.AND);
 			 List<GenericValue> custRequestsList = delegator.findList("CustRequest", cond, UtilMisc.toSet("custRequestId","fromPartyId","custRequestDate","responseRequiredDate"),null, null, false);
 			
@@ -99,7 +102,9 @@ public class MaterialHelperServices{
 			 
 			 cond = EntityCondition.makeCondition(condList,EntityOperator.AND);
 			 EntityListIterator custRequestIssuesItr = null;
-			 custRequestIssuesItr = delegator.find("ItemIssuanceAndInventoryItem", cond, null,UtilMisc.toSet("custRequestId","custRequestItemSeqId","facilityId","issuedDateTime" ,"quantity","unitCost"), null,null);
+			 Set fieldToSelect =UtilMisc.toSet("custRequestId","custRequestItemSeqId","facilityId","issuedDateTime" ,"quantity","unitCost");
+			 fieldToSelect.add("productId");
+			 custRequestIssuesItr = delegator.find("ItemIssuanceAndInventoryItem", cond, null,fieldToSelect, null,null);
 			 GenericValue custRequestitemIssue;
 			 List itemIssuanceList =FastList.newInstance();
 			 Map<String, Object> productTotals = new TreeMap<String, Object>();
@@ -107,11 +112,11 @@ public class MaterialHelperServices{
 			 while( custRequestIssuesItr != null && (custRequestitemIssue = custRequestIssuesItr.next()) != null) {
 				    Map tempMap = FastMap.newInstance();
 		            String custRequestId = custRequestitemIssue.getString("custRequestId");
-		            String tmpProductId = custRequestitemIssue.getString("custRequestId");
+		            String tmpProductId = custRequestitemIssue.getString("productId");
 		            BigDecimal quantity  = custRequestitemIssue.getBigDecimal("quantity");
 		            BigDecimal price  = custRequestitemIssue.getBigDecimal("unitCost");
 		            Timestamp issuedDateTime =  custRequestitemIssue.getTimestamp("issuedDateTime");
-		            String issueDate = UtilDateTime.toDateString(UtilDateTime.toSqlDate(issuedDateTime));
+		            String issueDate = UtilDateTime.toDateString(issuedDateTime,"yyyy-MM-dd");
 		            BigDecimal amount = price.multiply(quantity);
 		            //String storeId = custRequestitemIssue.getString("facilityId");
 		            GenericValue custRequest = EntityUtil.getFirst(EntityUtil.filterByAnd(custRequestsList, UtilMisc.toMap("custRequestId",custRequestId)));
@@ -158,7 +163,7 @@ public class MaterialHelperServices{
 		    				dayDetailMap.put("quantity", runningDayQuantity);
 		    				dayDetailMap.put("amount", runningDayAmount);
 		    				dayWiseMap.put(issueDate,dayDetailMap);
-	        				productMap.put("dayWiseMap", dayDetailMap);
+	        				productMap.put("dayWiseMap", dayWiseMap);
 	    				}else{
 	    					Map<String, Object> dayDetailMap = FastMap.newInstance();
 		    				dayDetailMap.put("quantity", quantity);
@@ -178,8 +183,7 @@ public class MaterialHelperServices{
 		}
 		
 		return result;
-	}
-	
+	}	
 	public static Map<String, Object> getOrderTaxComponentBreakUp(DispatchContext ctx,Map<String, ? extends Object> context) {
 		Delegator delegator = ctx.getDelegator();
 		LocalDispatcher dispatcher = ctx.getDispatcher();
