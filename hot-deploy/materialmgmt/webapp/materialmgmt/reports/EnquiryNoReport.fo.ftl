@@ -41,20 +41,24 @@ under the License.
               <fo:block text-align="center" keep-together="always"  >&#160;---------------------------------------------------------------------------------------------------</fo:block>
             </fo:static-content>                 
                 <fo:flow flow-name="xsl-region-body"   font-family="Courier,monospace">				        
-				   <fo:block text-align="center" keep-together="always" white-space-collapse="false" font-size="13pt" font-weight="bold">ENQUIRY NO.: ${parameters.issueToEnquiryNo}                                                          </fo:block>	
+				   <fo:block text-align="left" keep-together="always" white-space-collapse="false" font-size="12pt" font-weight="bold">ENQUIRY NO.: ${parameters.issueToEnquiryNo}                                                          SEQUENCE NO.: ${enquirySequenceNo?if_exists}       </fo:block>	
 				   <fo:block font-family="Courier,monospace">
 	                 <fo:table  border-style="solid">
+	                     <fo:table-column column-width="70pt"/>
 					     <fo:table-column column-width="240pt"/>
 					     <#list partyDetList as partyNameList>
 					      <fo:table-column column-width="140pt"/>					      
 					      </#list> 
 					         <fo:table-body>
 					             <fo:table-row height="50pt">
+                                    <fo:table-cell>
+									    <fo:block text-align="center" >SL.No</fo:block>
+								    </fo:table-cell>     
 					                 <fo:table-cell >
 								        <fo:block text-align="center" keep-together="always" font-weight="bold" font-size="11pt">VENDOR NAME</fo:block>
 								        <fo:block linefeed-treatment="preserve">&#xA;</fo:block>							        
-								        <fo:block text-align="left" keep-together="always"  font-weight="bold" white-space-collapse="false">&#160;MATERIALS  REQRD QTY    LAST PO</fo:block>
-								        <fo:block text-align="left" keep-together="always"  font-weight="bold" white-space-collapse="false">&#160;                       DATE/RATE</fo:block>								        
+								        <fo:block text-align="left" keep-together="always"  font-weight="bold" white-space-collapse="false">&#160;MATERIALS     REQRD     LAST PO</fo:block>
+								        <fo:block text-align="left" keep-together="always"  font-weight="bold" white-space-collapse="false">&#160;              QTY      DATE/RATE</fo:block>								        
 								     </fo:table-cell>
 					                 <#list partyDetList as partyNameList>
     										<fo:table-cell border-style="solid">
@@ -66,9 +70,12 @@ under the License.
 					                <fo:table-cell>
 					                    <fo:block ></fo:block>
 					                </fo:table-cell>
+					                <fo:table-cell>
+					                    <fo:block ></fo:block>
+					                </fo:table-cell>
 					                 <#list partyDetList as partyNameList>
 					                 <fo:table-cell border-style="solid">
-					                    <fo:block text-align="center" font-size="11pt" white-space-collapse="false" font-weight="bold">UNIT PRICE/TOT COST</fo:block>
+					                    <fo:block text-align="center" font-size="11pt" white-space-collapse="false" font-weight="bold">BASIC PRICE/TOT COST (including tax)</fo:block>
 					                </fo:table-cell>
 					                </#list> 
 					            </fo:table-row> 					              		                             
@@ -77,25 +84,36 @@ under the License.
 					  </fo:block>					 
 				     <fo:block font-family="Courier,monospace">
 	                     <fo:table border-style="solid">
+	                      <fo:table-column column-width="70pt"/>
 					     <fo:table-column column-width="100pt"/>
 					     <fo:table-column column-width="50pt"/>
 					     <fo:table-column column-width="90pt"/>
 					     <#list partyDetList as partyNameList>
 					     <fo:table-column column-width="140pt"/>
 					      </#list> 				    
-					         <fo:table-body>					         
+					         <fo:table-body>	
+                                <#assign sno=1>					         
                            		<#assign productQtyList = productQtyMap.entrySet()>
                            	     <#if productQtyList?has_content>                           	     
 		  					     <#list productQtyList as productEntry>   
                            		 <#assign productId=productEntry.getKey()>
                            		 <#assign product = delegator.findOne("Product", {"productId" : productId}, true)?if_exists/>
-                           		 <#assign productEntryValue=productEntry.getValue()>
+                           		 <#assign productEntryValue=productEntry.getValue()> 
+                                <#if product.quantityUomId?if_exists>
+									<#assign uomId =  product.quantityUomId>
+                                    <#assign unit = delegator.findOne("Uom", {"uomId" : uomId}, true)?if_exists/>
+                                  <#else>
+                                    <#assign unit = "">       
+								</#if>                           
                                 <fo:table-row>
-		  					        <fo:table-cell border-style="solid">
+                                    <fo:table-cell border-style="solid">
+									    <fo:block text-align="center" keep-together="always" font-size="11pt" >${sno?if_exists}</fo:block>
+								     </fo:table-cell>
+								     <fo:table-cell border-style="solid">
 		  					            <fo:block text-align="center" font-size="11pt" >${product.description}</fo:block>
-		  					        </fo:table-cell> 
-		  					         <fo:table-cell border-style="solid">
-		  					            <fo:block text-align="center" font-size="11pt" >${productEntryValue}</fo:block>
+		  					        </fo:table-cell>
+ 		  					         <fo:table-cell border-style="solid">
+		  					            <fo:block text-align="center" font-size="11pt" white-space-collapse="false">${productEntryValue} ${unit}</fo:block>
 		  					        </fo:table-cell>
 		  					        <fo:table-cell border-style="solid">
 		  					            <fo:block text-align="center" font-size="11pt" >${poDateMap.get(productId)?if_exists}</fo:block>
@@ -113,7 +131,8 @@ under the License.
 		  					        </fo:table-cell> 
 		  					        </#if>
 		  					         </#list> 		  					        	  					    
-					           </fo:table-row> 					               				             
+					           </fo:table-row>
+					               <#assign sno=sno+1> 					               				             
 					               </#list>
 					               </#if> 
 	                          </fo:table-body> 
@@ -140,8 +159,7 @@ under the License.
 					              </fo:table-row>
 					              <#if quoteDetailList?has_content >
 					              <#list quoteDetailList as quoteList>
-					               <#assign TermType = delegator.findOne("TermType", {"termTypeId" : quoteList.get("termTypeId")}, true)?if_exists/>
-		   						
+					               <#assign TermType = delegator.findOne("TermType", {"termTypeId" : quoteList.get("termTypeId")}, true)?if_exists/>		   						
 					              <fo:table-row>
 					                  <fo:table-cell border-style="solid">
 					                      <fo:block text-align="center" font-size="11pt" font-weight="bold">${TermType.description?if_exists}</fo:block>
@@ -170,7 +188,7 @@ under the License.
 				   <fo:block linefeed-treatment="preserve">&#xA;</fo:block>
 				   <fo:block linefeed-treatment="preserve">&#xA;</fo:block>		        
 				   <fo:block linefeed-treatment="preserve">&#xA;</fo:block>		        
-				   <fo:block text-align="left" keep-together="always" white-space-collapse="false">(CASE WORKER)                Purchase Officer                Manager(Purchase)                PRE-ADITOR</fo:block>				   
+				   <fo:block text-align="left" keep-together="always" white-space-collapse="false">(CASE WORKER)                Purchase Officer                Manager(Purchase)                PRE AUDITOR</fo:block>				   
 			    </fo:flow>	
 		 </fo:page-sequence>	
 		 <#-- </#if>   --> 	
