@@ -305,7 +305,8 @@
             </actions>
             <widgets>
                  <decorator-screen name="CommonInventoryDecorator" location="${parameters.mainDecoratorLocation}">
-                      <decorator-section name="body">  
+                      <decorator-section name="body"> 
+                      	<include-menu name="stockPositionSubTabBar" location="component://materialmgmt/widget/materialmgmtMenus.xml"/>  
                         <section>
                             <widgets>
                                <platform-specific> 
@@ -546,5 +547,59 @@
 			</widgets>    	
     	</section>
     </screen>
-    
+    <screen name="MaterialConsumption">
+        <section>
+            <actions>
+                <property-map resource="OrderUiLabels" map-name="uiLabelMap" global="true"/>
+                 <property-map resource="ProductUiLabels" map-name="uiLabelMap" global="true"/>
+                <set field="titleProperty" value="MaterialConsumption"/>              
+			    <set field="tabButtonItem" value="stockPosition" />	
+			   <set field="tabButtonItem2" value="MaterialConsumption"/>       
+               <set field="headerItem" value="StockPosition"/>
+               <set field="ajaxUrl" value="MaterialConsumptionInternal" type="String"/>
+               <entity-and list="internalOrgList" entity-name="PartyRoleAndPartyDetail">
+                   <field-map field-name="roleTypeId" value="INTERNAL_ORGANIZATIO"/>
+                   <select-field field-name="partyId"/>
+                   <select-field field-name="groupName"/>
+               </entity-and>
+            </actions>
+            <widgets>
+                 <decorator-screen name="CommonInventoryDecorator" location="${parameters.mainDecoratorLocation}">
+                      <decorator-section name="body"> 
+                      	 <include-menu name="stockPositionSubTabBar" location="component://materialmgmt/widget/materialmgmtMenus.xml"/> 
+                        <section>
+                            <widgets>
+                               <platform-specific> 
+                            		<html><html-template location="component://materialmgmt/webapp/materialmgmt/reports/materialConsumption_Select.ftl"/></html>
+                        		</platform-specific>  
+                        		<include-screen name="MaterialConsumptionInternal"/>
+                            </widgets>
+                        </section>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>            
+        </section>
+    </screen> 
+     <screen name="MaterialConsumptionInternal">
+        <section>
+            <actions>
+                 <property-map resource="OrderUiLabels" map-name="uiLabelMap" global="true"/>
+                  <property-map resource="ProductUiLabels" map-name="uiLabelMap" global="true"/>
+                  <property-map resource="CommonUiLabels" map-name="uiLabelMap" global="true"/>
+				<script location="component://materialmgmt/webapp/materialmgmt/WEB-INF/actions/reports/MaterialConsumptionPattern.groovy"/>  
+            </actions>  
+               <condition> <or>
+               		<not><if-empty field="parameters.productId"/></not>
+               		<not><if-empty field="productId"/></not>
+               </or>
+            	</condition> 
+            <widgets>
+                  	<container>
+	                  	    <platform-specific> 
+	                            <html><html-template location="component://materialmgmt/webapp/materialmgmt/reports/materialConsumptionPattern.ftl"/></html>
+	                        </platform-specific>
+                  	</container>   
+            </widgets>
+        </section>
+    </screen>
 </screens>
