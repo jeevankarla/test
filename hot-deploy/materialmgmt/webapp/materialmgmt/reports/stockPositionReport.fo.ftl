@@ -78,13 +78,13 @@ under the License.
 							            		<fo:block  keep-together="always" text-align="left" font-size="12pt" white-space-collapse="false"></fo:block>
 							       			</fo:table-cell>
 											<fo:table-cell>
-							            		<fo:block   text-align="left" font-size="12pt" white-space-collapse="false">${productDetails.getKey()?if_exists}</fo:block>
+							            		<fo:block   text-align="left" font-size="12pt" white-space-collapse="false">${productDetails.getValue().get("internalName")?if_exists}</fo:block>
 							       			</fo:table-cell>
 							       			<fo:table-cell>
-							            		<fo:block  keep-together="always" text-align="left" font-size="12pt" white-space-collapse="false">${productDetails.getValue().get("productName")?if_exists}</fo:block>
+							            		<fo:block   text-align="left" font-size="12pt" white-space-collapse="false">${productDetails.getValue().get("productName")?if_exists}</fo:block>
 							       			</fo:table-cell>
 							       			<fo:table-cell>
-							            		<fo:block  keep-together="always" text-align="left" font-size="12pt" white-space-collapse="false">${productDetails.getValue().get("uomDescription")?if_exists}</fo:block>
+							            		<fo:block   text-align="left" font-size="12pt" white-space-collapse="false">${productDetails.getValue().get("uomDescription")?if_exists}</fo:block>
 							       			</fo:table-cell>
 							       			<#assign ledgerTotalPromise = ledgerTotalPromise + productDetails.getValue().get("availableToPromiseTotal")?if_exists>
 							       			<fo:table-cell>

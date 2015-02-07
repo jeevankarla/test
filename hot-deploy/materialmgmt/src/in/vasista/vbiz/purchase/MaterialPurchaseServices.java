@@ -6,6 +6,7 @@ import java.math.BigDecimal;
 import java.sql.Timestamp;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.text.DateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -115,7 +116,7 @@ public class MaterialPurchaseServices {
 		
 		SimpleDateFormat sdf = new SimpleDateFormat("dd MMMM, yyyy");
 		receiptDate = UtilDateTime.nowTimestamp();
-	  	if(UtilValidate.isNotEmpty(receiptDateStr)){
+	  	/*if(UtilValidate.isNotEmpty(receiptDateStr)){
 	  		try {
 	  			receiptDate = new java.sql.Timestamp(SimpleDF.parse(receiptDateStr).getTime());
 		  	} catch (ParseException e) {
@@ -123,7 +124,20 @@ public class MaterialPurchaseServices {
 		  	} catch (NullPointerException e) {
 	  			Debug.logError(e, "Cannot parse date string: " + receiptDateStr, module);
 		  	}
-	  	}
+	  	}*/
+        DateFormat givenFormatter = new SimpleDateFormat("dd:MM:yyyy hh:mm");
+        DateFormat reqformatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        if(UtilValidate.isNotEmpty(receiptDateStr)){
+	        try {
+	        Date givenReceiptDate = (Date)givenFormatter.parse(receiptDateStr);
+	        receiptDate = UtilDateTime.toTimestamp(reqformatter.format(givenReceiptDate));
+	        }catch (ParseException e) {
+		  		Debug.logError(e, "Cannot parse date string: " + receiptDateStr, module);
+		  	} catch (NullPointerException e) {
+	  			Debug.logError(e, "Cannot parse date string: " + receiptDateStr, module);
+		  	}
+        }
+        
 	  	if(UtilValidate.isNotEmpty(supplierInvoiceDateStr)){
 	  		try {
 	  			supplierInvoiceDate = new java.sql.Timestamp(sdf.parse(supplierInvoiceDateStr).getTime());
@@ -261,6 +275,8 @@ public class MaterialPurchaseServices {
 				}
 				if(UtilValidate.isNotEmpty(deliveryChallanQtyStr)){
 					deliveryChallanQty = new BigDecimal(deliveryChallanQtyStr);
+				}else{
+					deliveryChallanQty = quantity;
 				}
 				
 				if(UtilValidate.isEmpty(withoutPO)){

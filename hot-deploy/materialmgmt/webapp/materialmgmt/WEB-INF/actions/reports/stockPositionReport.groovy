@@ -77,6 +77,10 @@ dctx = dispatcher.getDispatchContext();
 						 productFacilityList.each{ productFacility ->
 							 productId = productFacility.get("productId");
 							 productDetails = delegator.findOne("Product",[productId : productId], false);
+							 internalName = "";
+							 if(UtilValidate.isNotEmpty(productDetails)){
+								 internalName = productDetails.internalName;
+							 }
 							 productName = "";
 							 uomDescription = "";
 							 quantityOnHandTotal = BigDecimal.ZERO;
@@ -101,6 +105,7 @@ dctx = dispatcher.getDispatchContext();
 							 }
 							 tempMap = [:];
 							 tempMap["productName"] = productName;
+							 tempMap["internalName"] = internalName;
 							 tempMap["uomDescription"] = uomDescription;
 							 tempMap["availableToPromiseTotal"] = availableToPromiseTotal;
 							 tempMap["quantityOnHandTotal"] = quantityOnHandTotal;
