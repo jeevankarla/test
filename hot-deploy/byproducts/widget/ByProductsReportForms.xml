@@ -4,7 +4,7 @@
 
     <form name="Sample" type="list" list-name=""
         odd-row-style="alternate-row" default-table-style="basic-table hover-bar">
-        <field name="sNo" title="SL." ><display/></field> 
+        <field name="sNo" title="SL." ><display/></field>
     </form>
     <form name="ListBoothWiseSalesCSV" type="list" list-name="boothWiseSalesList" paginate="false"
     		odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
@@ -139,7 +139,7 @@
     <form name="PurchaseRegisterBookCSV" type="list" list-name="purchaseRegisterCsvList" view-size="99999">
         <field name="invoiceDate" title="Invoice Date"><display/></field>
         <field name="invoiceId" title="Invoice Id"><display/></field>
-        <field name="partyName" title="Party"><display description="${partyName}[${partyId}]"/></field>
+        <field name="partyId" title="Party"><display  description="${partyName}${partyId}"/></field>
         <field name="mrrNumber" title="MRR Number"><display/></field>
         <field name="poNumber" title="PO Number"><display/></field>
         <field name="supInvNumber" title="Supp Invoice Number"><display/></field>

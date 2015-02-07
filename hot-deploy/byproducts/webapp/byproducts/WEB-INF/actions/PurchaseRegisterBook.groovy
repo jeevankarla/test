@@ -68,7 +68,7 @@ if(categoryType.equals("ICE_CREAM_AMUL")||categoryType.equals("All")){
    partyIds.addAll(amulPartyIds);
 }*/
 // Invoice No Purchase report
-invoiceMap = [:]; 
+invoiceMap = [:];
 purchaseRegisterList = [];
 salesInvoiceTotals = SalesInvoiceServices.getPeriodSalesInvoiceTotals(dctx, [isPurchaseInvoice:true, isQuantityLtrs:true,fromDate:dayBegin, thruDate:dayEnd]);
 if(UtilValidate.isNotEmpty(salesInvoiceTotals)){
@@ -264,6 +264,15 @@ context.put("InvoicePartyMapReg",InvoicePartyMapReg);
 // FOR CSV REPORT.............
 
 purchaseRegisterCsvList=[];
+totalBasicRev=0;
+totalBedRev=0;
+totalVatRev=0;
+totalCstRev=0;
+totalRevenue=0;
+totalFreightAmount=0;
+totalDiscountAmount=0;
+totalInsuranceAmount=0;
+totalAmount=0;
 purchaseRegisterList.each { purchaseRegisterList ->
 		eachlist=[];
 		eachlist=purchaseRegisterList;
@@ -287,23 +296,41 @@ purchaseRegisterList.each { purchaseRegisterList ->
 	partyMap["grandTotal"]=eachlist.grandTotal;
 	partyMap["tinNumber"]=eachlist.tinNumber;
 	//Debug.log("eachlist.partyId=============================="+eachlist.partyId);
-	
+	totalBasicRev=totalBasicRev+eachlist.basicRevenue;
+	totalBedRev=totalBedRev+eachlist.bedRevenue;
+	totalVatRev=totalVatRev+eachlist.vatRevenue;
+	totalCstRev=totalCstRev+eachlist.cstRevenue;
+	totalRevenue=totalRevenue+eachlist.totalRevenue;
+	totalFreightAmount=totalFreightAmount+eachlist.freightAmount;
+	totalDiscountAmount=totalDiscountAmount+eachlist.discountAmount;
+	totalInsuranceAmount=totalInsuranceAmount+eachlist.insuranceAmount;
+	totalAmount=totalAmount+eachlist.grandTotal;
 	if(partyId){
-		
 		partyName = org.ofbiz.party.party.PartyHelper.getPartyName(delegator, partyId, false);
-		
 	partyMap["partyName"]=partyName;
-	partyMap["partyId"]=partyId;
+	partyMap["partyId"]=[partyId];
 	
 	}else{
-	
-	partyMap["partyName"]=eachlist.partyName;
-	partyMap["partyId"]=eachlist.partyId;
+	partyName = org.ofbiz.party.party.PartyHelper.getPartyName(delegator, eachlist.partyId, false);
+	partyMap["partyName"]=partyName;
+	partyMap["partyId"]=[eachlist.partyId];
 	
 	}
 	//Debug.log("partyMap=============================="+partyMap);
+	
 	purchaseRegisterCsvList.addAll(partyMap);
 }
+grandtotalsMap=[:];
+grandtotalsMap["invoiceDate"]="grandtotal";
+	grandtotalsMap["basicRevenue"]=totalBasicRev;
+	grandtotalsMap["bedRevenue"]=totalBedRev;
+	grandtotalsMap["vatRevenue"]=totalVatRev;
+	grandtotalsMap["cstRevenue"]=totalCstRev;
+	grandtotalsMap["freightAmount"]=totalFreightAmount;
+	grandtotalsMap["discountAmount"]=totalDiscountAmount;
+	grandtotalsMap["insuranceAmount"]=totalInsuranceAmount;
+	grandtotalsMap["grandTotal"]=totalAmount;
+	purchaseRegisterCsvList.addAll(grandtotalsMap);
 context.purchaseRegisterCsvList=purchaseRegisterCsvList;
 
  /*// for vat totals
