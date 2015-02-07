@@ -210,6 +210,92 @@
 		var formatValue = parseFloat(value).toFixed(4);
         return formatValue;
     }
+    
+    function updateGridAmount(){
+    	var totalAmt = 0;
+    	if(data){
+    		var isIncTax = $('#incTax').is(':checked');
+    		
+    		for (i = 0; i < data.length; i++) {
+    			
+    			var itemTotal = 0
+    			var unitPrice = 0;
+    			var qty = 0;
+    			var bedPercent = 0;
+    			var vatPercent = 0;
+    			var cstPercent = 0;
+    			
+    			if(!isNaN(data[i]["unitPrice"])){
+					unitPrice = data[i]["unitPrice"];
+				}
+				if(!isNaN(data[i]["quantity"])){
+					qty = data[i]["quantity"];
+				}
+				
+				if(!isNaN(data[i]["bedPercent"])){
+					bedPercent = data[i]["bedPercent"];
+			   	}
+					  
+				if(!isNaN(data[i]["vatPercent"])){
+					vatPercent = data[i]["vatPercent"];
+				}
+				if(!isNaN(data[i]["cstPercent"])){
+					cstPercent = data[i]["cstPercent"];
+				}
+					
+    			if(!isIncTax){
+    			
+					var basicPrice = parseFloat(Math.round( ((qty*unitPrice) * 100) / 100 ));
+					var bedAmt = parseFloat(Math.round(((basicPrice*(bedPercent/100)) * 100) / 100));
+					var basePrice = basicPrice+bedAmt;
+					var vatAmt = parseFloat(Math.round(((basePrice*(vatPercent/100)) * 100) / 100));
+					var cstAmt = parseFloat(Math.round(((basePrice*(bedPercent/100)) * 100) / 100));
+					
+					itemTotal = basePrice+vatAmt+cstAmt;
+	    		}
+    			else{
+    			
+    				var newUnitPrice = 0;
+    				
+    				var itemTotal = parseFloat(Math.round(((qty*unitPrice) * 100) / 100));
+    				
+    				var vatAmt = parseFloat(Math.round(((unitPrice*(vatPercent/100)) * 100) / 100));
+    				var baseVatStrpAmt = unitPrice-vatAmt;
+    				
+    				var cstAmt = parseFloat(Math.round(((unitPrice*(cstPercent/100)) * 100) / 100));
+    				var baseCstStrpAmt = unitPrice-cstAmt;
+    				
+    				var taxStrpAmt = 0;
+    				
+    				if(baseVatStrpAmt && baseVatStrpAmt>0){
+    					taxStrpAmt = baseVatStrpAmt;
+    				}
+    				
+    				if(baseCstStrpAmt && baseCstStrpAmt>0){
+    					taxStrpAmt = baseCstStrpAmt;
+    				}
+    				
+    				bedAmt = parseFloat(Math.round((taxStrpAmt*(bedPercent/100)) * 100) / 100);
+    				newUnitPrice = taxStrpAmt-bedAmt;
+    				data[i]["unitPrice"] = newUnitPrice;
+    					
+    			}
+				totalAmt += itemTotal;
+				data[i]["amount"] = itemTotal;
+				grid.updateRow(i);
+    		}
+    		 
+		}
+		var amt = parseFloat(Math.round((totalAmt) * 100) / 100);
+			
+		if(amt > 0 ){
+			var dispText = "<b>  [Total PO Amt: Rs " +  amt + "]</b>";
+		}
+		else{
+			var dispText = "<b>  [Total PO Amt: Rs 0 ]</b>";
+		}
+		jQuery("#totalAmount").html(dispText);
+    }
 	
 	function quantityValidator(value ,item) {
 		/*var quarterVal = value*4;
@@ -228,8 +314,8 @@
 			{id:"cProductName", name:"Product", field:"cProductName", width:180, minWidth:180, <#if orderId?exists>cssClass:"readOnlyColumnClass", focusable :false,<#else>cssClass:"cell-title", availableTags: availableTags, regexMatcher:"contains", editor: AutoCompleteEditor, validator: productValidator,</#if> sortable:false ,toolTip:""},
 			{id:"quantity", name:"Qty(Pkt)", field:"quantity", width:70, minWidth:70, cssClass:"cell-title",editor:FloatCellEditor, sortable:false , formatter: quantityFormatter,  validator: quantityValidator},
 			{id:"uomDescription", name:"UOM", field:"uomDescription", width:70, minWidth:70, cssClass:"readOnlyColumnClass", sortable:false, focusable :false, align:"right", toolTip:"Unit of Measure"},
-			{id:"unitPrice", name:"Unit Price", field:"unitPrice", width:130, minWidth:130, editor:FloatCellEditor, sortable:false, formatter: rateFormatter, align:"right", toolTip:"UD Price"},
-			{id:"amount", name:"Basic Amount(Rs)", field:"amount", width:100, minWidth:100, cssClass:"readOnlyColumnClass", sortable:false, formatter: rateFormatter, focusable :false},
+			{id:"unitPrice", name:"Basic Unit Price", field:"unitPrice", width:130, minWidth:130, editor:FloatCellEditor, sortable:false, formatter: rateFormatter, align:"right", toolTip:"UD Price"},
+			{id:"amount", name:"Amount(Rs)", field:"amount", width:100, minWidth:100, cssClass:"readOnlyColumnClass", sortable:false, formatter: rateFormatter, focusable :false},
 			{id:"bedPercent", name:"Excise(%)", field:"bedPercent", width:80, minWidth:80, editor:FloatCellEditor, sortable:false, formatter: rateFormatter, align:"right", toolTip:"Excise Percent"},
 			{id:"vatPercent", name:"VAT(%)", field:"vatPercent", width:80, minWidth:80, editor:FloatCellEditor, sortable:false, formatter: rateFormatter, align:"right", toolTip:"VAT Percent"},
 			{id:"cstPercent", name:"CST (%)", field:"cstPercent", width:80, minWidth:80, editor:FloatCellEditor, sortable:false, formatter: rateFormatter, align:"right", toolTip:"CST Percentage"},
@@ -280,7 +366,6 @@
 				
 				e.stopPropagation();
 			}
-			
 			else if((e.which == $.ui.keyCode.DOWN || e.which == $.ui.keyCode.RIGHT) && cell 
 				&& cell.row == data.length && cell.cell == cellNav){
   				grid.getEditController().commitCurrentEdit();	
@@ -420,84 +505,8 @@
     
     
     function updateInvoiceTotalAmount(){
-            var totalAmount = 0;
-            var isIncTax = $('#incTax').is(':checked');
-            if(isIncTax){
-               $("#incTax").attr('disabled', 'disabled');
-		    	$("#incTax").attr('readonly', 'readonly');
-            }
-           
-		    
-           // alert("==isIncTax===>"+isIncTax);
-				for (i = 0; i < data.length; i++) {
-				   if(!isNaN(data[i]["amount"])){
-					totalAmount += data[i]["amount"];
-				   }
-				  if(!isIncTax){
-				  		if(!isNaN(data[i]["Excise"])){
-					totalAmount += data[i]["Excise"];
-				   }
-				   if(!isNaN(data[i]["bedCessAmount"])){
-					totalAmount += data[i]["bedCessAmount"];
-				   }
-				   if(!isNaN(data[i]["bedSecCessAmount"])){
-					totalAmount += data[i]["bedSecCessAmount"];
-				   }
-				  
-				   if(!isNaN(data[i]["VAT"])){
-					totalAmount += data[i]["VAT"];
-				   }
-				   if(!isNaN(data[i]["CST"])){
-					totalAmount += data[i]["CST"];
-				   }
-				   
-				 } 
-				   
-				   
-				}
-				
-				 	var freightCharges=$("#freightCharges").val();
-			         var discount=$("#discount").val();
-			         var insurence = $("#insurence").val();
-			         var packAndFowdg = $("#packAndFowdg").val();
-			          var otherCharges = $("#otherCharges").val();
-			         
-			         //alert("<==totalAmount===>"+totalAmount+"=packAndFowdg="+packAndFowdg+"=otherCharges="+otherCharges+"=insurence="+insurence);
-			         if(freightCharges !=="" && (!isNaN(freightCharges))){
-			          freightCharges = parseFloat(freightCharges);
-			          //alert("<==totalAmount===>"+totalAmount+"==freightCharges=="+freightCharges);
-			         totalAmount +=freightCharges;
-			         }
-			         if(insurence !=="" && (!isNaN(insurence))){
-			         insurence = parseFloat(insurence);
-			         // alert("<==totalAmount===>"+totalAmount+"==insurence=="+insurence);
-			         totalAmount +=insurence;
-			         }
-			         if(discount !=="" && (!isNaN(discount))){
-			        discount = parseFloat(discount);
-			         totalAmount -=discount;
-			         }
-			         if(packAndFowdg !=="" && (!isNaN(packAndFowdg))){
-			           packAndFowdg = parseFloat(packAndFowdg);
-			         totalAmount +=packAndFowdg;
-			         }
-			         if(otherCharges !=="" && (!isNaN(otherCharges))){
-			        otherCharges = parseFloat(otherCharges);
-			         totalAmount +=otherCharges;
-			         }
-			        
-			    //var amt = parseFloat(Math.round((totalAmount))); for total rounding
-				var amt = parseFloat(Math.round((totalAmount) * 100) / 100);
-			
-				if(amt > 0 ){
-					var dispText = "<b>  [Total PO Amt: Rs " +  amt + "]</b>";
-				}
-				else{
-					var dispText = "<b>  [Total PO Amt: Rs 0 ]</b>";
-				}
-				//alert("==amt="+amt);
-				jQuery("#totalAmount").html(dispText);
-    }
+   		updateGridAmount();
+   	}
     
  
 		//updateProductTotalAmount();
@@ -597,30 +606,6 @@
 				jQuery("#totalAmount").html(dispText);
     }
     
-	//update ExciseElementValues
-    function updateGridColumnsValues(){
-				for (i = 0; i < data.length; i++) {
-				   if(!isNaN(data[i]["Excise"])){
-				   data[args.row]["CST"] = cstAmount;
-				   data[i]["Excise"]=0;
-					totalAmount += data[i]["Excise"];
-				   }
-				   if(!isNaN(data[i]["bedCessAmount"])){
-					data[i]["bedCessAmount"]=0;
-				   }
-				   if(!isNaN(data[i]["bedSecCessAmount"])){
-					data[i]["bedSecCessAmount"]=0;
-				   }
-				   if(!isNaN(data[i]["VAT"])){
-					data[i]["VAT"]=0;
-				   }
-				   if(!isNaN(data[i]["CST"])){
-					data[i]["CST"]=0;
-				   }
-				   updateInvoiceTotalAmount();
-				}		
-     }
-	
 	jQuery(function(){
 	     // only setupGrid when BoothId exists
 	     var boothId=$('[name=boothId]').val();
