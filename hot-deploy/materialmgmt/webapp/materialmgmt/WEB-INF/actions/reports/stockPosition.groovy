@@ -103,6 +103,21 @@ import in.vasista.vbiz.purchase.MaterialHelperServices;
 	 
 	 GenericValue product = delegator.findOne("Product", UtilMisc.toMap("productId",productId),false);
 	 context.product = product;
+	 
+	 //finding UOM---------------
+	 productQuantityUomId="";
+	 productUOMdescription="";
+	 if(UtilValidate.isNotEmpty(product.quantityUomId)){
+		 productQuantityUomId= product.quantityUomId;
+	  }
+	 GenericValue productUOM = delegator.findOne("Uom", UtilMisc.toMap("uomId",productQuantityUomId),false);
+	 if(UtilValidate.isNotEmpty(productUOM)){
+		 if(UtilValidate.isNotEmpty(productUOM.description)){
+			productUOMdescription= productUOM.description;
+		 }
+	 }
+	 context.uom = productUOMdescription;
+	 //----------------
 	 boolean isMarketingPackage = EntityTypeUtil.hasParentType(delegator, "ProductType", "productTypeId", product.productTypeId, "parentTypeId", "MARKETING_PKG");
 	 context.isMarketingPackage = (isMarketingPackage? "true": "false");
 	 //If product is virtual gather summary data from variants
