@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<entity-engine-xml>
+    <PartyStatus partyId="SUB_ADMN_1" statusId="PARTY_ENABLED" statusDate="2014-01-01 00:00:00"/>
+    <PartyStatus partyId="SUB_ADMN_2" statusId="PARTY_ENABLED" statusDate="2014-01-01 00:00:00"/>
+    <PartyStatus partyId="SUB_ADMN_3" statusId="PARTY_ENABLED" statusDate="2014-01-01 00:00:00"/>
+    <PartyStatus partyId="SUB_ADMN_4" statusId="PARTY_ENABLED" statusDate="2014-01-01 00:00:00"/>
+    <PartyStatus partyId="SUB_ACNT_1" statusId="PARTY_ENABLED" statusDate="2014-01-01 00:00:00"/>
+    <PartyStatus partyId="SUB_ACNT_2" statusId="PARTY_ENABLED" statusDate="2014-01-01 00:00:00"/>
+    <PartyStatus partyId="SUB_PUR_1" statusId="PARTY_ENABLED" statusDate="2014-01-01 00:00:00"/>
+    <PartyStatus partyId="SUB_STORE_1" statusId="PARTY_ENABLED" statusDate="2014-01-01 00:00:00"/>
+    <PartyStatus partyId="SUB_STORE_2" statusId="PARTY_ENABLED" statusDate="2014-01-01 00:00:00"/>
+    <PartyStatus partyId="SUB_SRT_1" statusId="PARTY_ENABLED" statusDate="2014-01-01 00:00:00"/>
+    <PartyStatus partyId="SUB_QC_1" statusId="PARTY_ENABLED" statusDate="2014-01-01 00:00:00"/>
+    <PartyStatus partyId="SUB_PRODC_1" statusId="PARTY_ENABLED" statusDate="2014-01-01 00:00:00"/>
+    <PartyStatus partyId="SUB_PRODC_2" statusId="PARTY_ENABLED" statusDate="2014-01-01 00:00:00"/>
+    <PartyStatus partyId="SUB_PRODC_3" statusId="PARTY_ENABLED" statusDate="2014-01-01 00:00:00"/>
+    <PartyStatus partyId="SUB_PRODC_4" statusId="PARTY_ENABLED" statusDate="2014-01-01 00:00:00"/>
+    <PartyStatus partyId="SUB_PRODC_5" statusId="PARTY_ENABLED" statusDate="2014-01-01 00:00:00"/>
+    <PartyStatus partyId="SUB_PRODC_6" statusId="PARTY_ENABLED" statusDate="2014-01-01 00:00:00"/>
+    <PartyStatus partyId="SUB_PRODC_7" statusId="PARTY_ENABLED" statusDate="2014-01-01 00:00:00"/>
+    <PartyStatus partyId="SUB_ENG_1" statusId="PARTY_ENABLED" statusDate="2014-01-01 00:00:00"/>
+    <PartyStatus partyId="SUB_ENG_2" statusId="PARTY_ENABLED" statusDate="2014-01-01 00:00:00"/>
+    <PartyStatus partyId="SUB_ENG_3" statusId="PARTY_ENABLED" statusDate="2014-01-01 00:00:00"/>
+    <PartyStatus partyId="SUB_ENG_4" statusId="PARTY_ENABLED" statusDate="2014-01-01 00:00:00"/>
+    <PartyStatus partyId="SUB_ENG_5" statusId="PARTY_ENABLED" statusDate="2014-01-01 00:00:00"/>
+    <PartyStatus partyId="SUB_ENG_6" statusId="PARTY_ENABLED" statusDate="2014-01-01 00:00:00"/>
+    <PartyStatus partyId="SUB_VT_1" statusId="PARTY_ENABLED" statusDate="2014-01-01 00:00:00"/>
+    <PartyStatus partyId="SUB_MRKT_1" statusId="PARTY_ENABLED" statusDate="2014-01-01 00:00:00"/>
+    <PartyStatus partyId="SUB_MRKT_2" statusId="PARTY_ENABLED" statusDate="2014-01-01 00:00:00"/>
+    <PartyStatus partyId="SUB_MRKT_3" statusId="PARTY_ENABLED" statusDate="2014-01-01 00:00:00"/>
+    <PartyStatus partyId="SUB_TRNS_1" statusId="PARTY_ENABLED" statusDate="2014-01-01 00:00:00"/>
+    <PartyStatus partyId="SUB_ICP_1" statusId="PARTY_ENABLED" statusDate="2014-01-01 00:00:00"/>
+    <PartyStatus partyId="SUB_MPT_1" statusId="PARTY_ENABLED" statusDate="2014-01-01 00:00:00"/>
+    <PartyStatus partyId="SUB_FGS_1" statusId="PARTY_ENABLED" statusDate="2014-01-01 00:00:00"/>
+    <PartyStatus partyId="SUB_FGS_2" statusId="PARTY_ENABLED" statusDate="2014-01-01 00:00:00"/>
+    <PartyStatus partyId="SUB_FGS_3" statusId="PARTY_ENABLED" statusDate="2014-01-01 00:00:00"/>
+</entity-engine-xml>
