@@ -5670,17 +5670,25 @@ public class PayrollService {
 	        LocalDispatcher dispatcher = dctx.getDispatcher();  
 	        Map<String, Object> serviceResult;
 	        String partyId =  (String)context.get("partyId");
-	        Timestamp date=(Timestamp)context.get("date");
+	        String date=(String)context.get("date");
+	        Timestamp encashDate = null;
+	        SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy");	
+		    if(UtilValidate.isNotEmpty(date)){
+	        	try {
+	        		encashDate = new java.sql.Timestamp(sdf.parse(date).getTime());
+	    		} catch (ParseException e) {
+	    			Debug.logError(e, "Cannot parse date string: " + date, module);
+	    			 return ServiceUtil.returnError(e.toString());
+	    		}
+		    }
 		    String encashmentStatus=(String) context.get("encashmentStatus");
 		    String checkBox = (String) context.get("checkBox");
 	        String dateTimeStr = "";
-	        if (UtilValidate.isNotEmpty(date)) {
-	        	dateTimeStr = UtilDateTime.toDateString(date, "dd,MMM yyyy");
+	        if (UtilValidate.isNotEmpty(encashDate)) {
+	        	dateTimeStr = UtilDateTime.toDateString(encashDate, "dd,MMM yyyy");
 	        }
-	            
 	        String text = null;
 	        String smsPartyId = partyId;
-	       
 			String employeeName = PartyHelper.getPartyName(delegator,
 					partyId, false);
 			if(UtilValidate.isNotEmpty(checkBox) && UtilValidate.isNotEmpty(encashmentStatus)){
