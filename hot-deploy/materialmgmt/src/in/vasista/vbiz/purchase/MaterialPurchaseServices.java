@@ -6,6 +6,7 @@ import java.math.BigDecimal;
 import java.sql.Timestamp;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.text.DateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -115,7 +116,7 @@ public class MaterialPurchaseServices {
 		
 		SimpleDateFormat sdf = new SimpleDateFormat("dd MMMM, yyyy");
 		receiptDate = UtilDateTime.nowTimestamp();
-	  	if(UtilValidate.isNotEmpty(receiptDateStr)){
+	  	/*if(UtilValidate.isNotEmpty(receiptDateStr)){
 	  		try {
 	  			receiptDate = new java.sql.Timestamp(SimpleDF.parse(receiptDateStr).getTime());
 		  	} catch (ParseException e) {
@@ -123,7 +124,20 @@ public class MaterialPurchaseServices {
 		  	} catch (NullPointerException e) {
 	  			Debug.logError(e, "Cannot parse date string: " + receiptDateStr, module);
 		  	}
-	  	}
+	  	}*/
+        DateFormat givenFormatter = new SimpleDateFormat("dd:MM:yyyy hh:mm");
+        DateFormat reqformatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        if(UtilValidate.isNotEmpty(receiptDateStr)){
+	        try {
+	        Date givenReceiptDate = (Date)givenFormatter.parse(receiptDateStr);
+	        receiptDate = UtilDateTime.toTimestamp(reqformatter.format(givenReceiptDate));
+	        }catch (ParseException e) {
+		  		Debug.logError(e, "Cannot parse date string: " + receiptDateStr, module);
+		  	} catch (NullPointerException e) {
+	  			Debug.logError(e, "Cannot parse date string: " + receiptDateStr, module);
+		  	}
+        }
+        
 	  	if(UtilValidate.isNotEmpty(supplierInvoiceDateStr)){
 	  		try {
 	  			supplierInvoiceDate = new java.sql.Timestamp(sdf.parse(supplierInvoiceDateStr).getTime());
@@ -233,8 +247,10 @@ public class MaterialPurchaseServices {
 				String productId = "";
 		        String quantityStr = "";
 		        String deliveryChallanQtyStr = "";
+		        String oldRecvdQtyStr = "";
 				BigDecimal quantity = BigDecimal.ZERO;
 				BigDecimal deliveryChallanQty = BigDecimal.ZERO;
+				BigDecimal oldRecvdQty = BigDecimal.ZERO;
 				Map productQtyMap = FastMap.newInstance();
 				String thisSuffix = UtilHttp.MULTI_ROW_DELIMITER + i;
 				if (paramMap.containsKey("productId" + thisSuffix)) {
@@ -261,8 +277,16 @@ public class MaterialPurchaseServices {
 				}
 				if(UtilValidate.isNotEmpty(deliveryChallanQtyStr)){
 					deliveryChallanQty = new BigDecimal(deliveryChallanQtyStr);
+				}else{
+					deliveryChallanQty = quantity;
 				}
-				
+				//old recived qty oldRecvdQty
+				if (paramMap.containsKey("oldRecvdQty" + thisSuffix)) {
+					oldRecvdQtyStr = (String) paramMap.get("oldRecvdQty" + thisSuffix);
+				}
+				if(UtilValidate.isNotEmpty(oldRecvdQtyStr)){
+					oldRecvdQty = new BigDecimal(oldRecvdQtyStr);
+				}
 				if(UtilValidate.isEmpty(withoutPO)){
 					if(directPO){
 						GenericValue checkOrderItem = null;
@@ -274,7 +298,10 @@ public class MaterialPurchaseServices {
 						if(UtilValidate.isNotEmpty(checkOrderItem)){
 							BigDecimal orderQty = checkOrderItem.getBigDecimal("quantity");
 							BigDecimal checkQty = (orderQty.multiply(new BigDecimal(1.1))).setScale(0, BigDecimal.ROUND_CEILING);
-							if(quantity.compareTo(checkQty)>0){
+							BigDecimal maxQty=oldRecvdQty.add(quantity);
+							Debug.log("=orderQty=="+orderQty+"==checkQty="+checkQty+"==maxQty=="+maxQty+"==quantity="+quantity);
+							//if(quantity.compareTo(checkQty)>0){
+							if(maxQty.compareTo(checkQty)>0){	
 								Debug.logError("Quantity cannot be more than 10%("+checkQty+") for PO : "+orderId, module);
 								request.setAttribute("_ERROR_MESSAGE_", "Quantity cannot be more than 10%("+checkQty+") for PO : "+orderId);	
 								TransactionUtil.rollback();
