@@ -40,6 +40,7 @@ under the License.
        <#if invoiceMap?has_content>
 	        <fo:page-sequence master-reference="main" font-size="11pt">	
 	        	<fo:static-content flow-name="xsl-region-before" font-family="Courier,monospace">
+	        		<fo:block  keep-together="always" text-align="right" font-family="Courier,monospace" white-space-collapse="false" font-weight="bold">Page No: <fo:page-number/></fo:block>
 	        		<fo:block  keep-together="always" text-align="center" font-family="Courier,monospace" white-space-collapse="false" font-weight="bold">${uiLabelMap.KMFDairyHeader}</fo:block>
 					<fo:block  keep-together="always" text-align="center" font-family="Courier,monospace" white-space-collapse="false" font-weight="bold">${uiLabelMap.KMFDairySubHeader}</fo:block>
                 	<fo:block text-align="center"  keep-together="always"  white-space-collapse="false" font-weight="bold">PURCHASE REGISTER REPORT</fo:block>

@@ -4,7 +4,7 @@
 
     <form name="Sample" type="list" list-name=""
         odd-row-style="alternate-row" default-table-style="basic-table hover-bar">
-        <field name="sNo" title="SL." ><display/></field>
+        <field name="sNo" title="SL." ><display/></field> 
     </form>
     <form name="ListBoothWiseSalesCSV" type="list" list-name="boothWiseSalesList" paginate="false"
     		odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
