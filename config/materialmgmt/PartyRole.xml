@@ -406,5 +406,38 @@
     <PartyRole partyId="V15071" roleTypeId="SUPPLIER"/>
     <PartyRole partyId="V14860" roleTypeId="SUPPLIER"/>
     <PartyRole partyId="V15045" roleTypeId="SUPPLIER"/>
-      
+    	    <PartyRole partyId="SUB_ADMN_1" roleTypeId="DIVISION"/>
+	    <PartyRole partyId="SUB_ADMN_2" roleTypeId="DIVISION"/>
+	    <PartyRole partyId="SUB_ADMN_3" roleTypeId="DIVISION"/>
+	    <PartyRole partyId="SUB_ADMN_4" roleTypeId="DIVISION"/>
+	    <PartyRole partyId="SUB_ACNT_1" roleTypeId="DIVISION"/>
+	    <PartyRole partyId="SUB_ACNT_2" roleTypeId="DIVISION"/>
+	    <PartyRole partyId="SUB_PUR_1" roleTypeId="DIVISION"/>
+	    <PartyRole partyId="SUB_STORE_1" roleTypeId="DIVISION"/>
+	    <PartyRole partyId="SUB_STORE_2" roleTypeId="DIVISION"/>
+	    <PartyRole partyId="SUB_SRT_1" roleTypeId="DIVISION"/>
+	    <PartyRole partyId="SUB_QC_1" roleTypeId="DIVISION"/>
+	    <PartyRole partyId="SUB_PRODC_1" roleTypeId="DIVISION"/>
+	    <PartyRole partyId="SUB_PRODC_2" roleTypeId="DIVISION"/>
+	    <PartyRole partyId="SUB_PRODC_3" roleTypeId="DIVISION"/>
+	    <PartyRole partyId="SUB_PRODC_4" roleTypeId="DIVISION"/>
+	    <PartyRole partyId="SUB_PRODC_5" roleTypeId="DIVISION"/>
+	    <PartyRole partyId="SUB_PRODC_6" roleTypeId="DIVISION"/>
+	    <PartyRole partyId="SUB_PRODC_7" roleTypeId="DIVISION"/>
+	    <PartyRole partyId="SUB_ENG_1" roleTypeId="DIVISION"/>
+	    <PartyRole partyId="SUB_ENG_2" roleTypeId="DIVISION"/>
+	    <PartyRole partyId="SUB_ENG_3" roleTypeId="DIVISION"/>
+	    <PartyRole partyId="SUB_ENG_4" roleTypeId="DIVISION"/>
+	    <PartyRole partyId="SUB_ENG_5" roleTypeId="DIVISION"/>
+	    <PartyRole partyId="SUB_ENG_6" roleTypeId="DIVISION"/>
+	    <PartyRole partyId="SUB_VT_1" roleTypeId="DIVISION"/>
+	    <PartyRole partyId="SUB_MRKT_1" roleTypeId="DIVISION"/>
+	    <PartyRole partyId="SUB_MRKT_2" roleTypeId="DIVISION"/>
+	    <PartyRole partyId="SUB_MRKT_3" roleTypeId="DIVISION"/>
+	    <PartyRole partyId="SUB_TRNS_1" roleTypeId="DIVISION"/>
+	    <PartyRole partyId="SUB_ICP_1" roleTypeId="DIVISION"/>
+	    <PartyRole partyId="SUB_MPT_1" roleTypeId="DIVISION"/>
+	    <PartyRole partyId="SUB_FGS_1" roleTypeId="DIVISION"/>
+	    <PartyRole partyId="SUB_FGS_2" roleTypeId="DIVISION"/>
+	    <PartyRole partyId="SUB_FGS_3" roleTypeId="DIVISION"/>
 </entity-engine-xml>
