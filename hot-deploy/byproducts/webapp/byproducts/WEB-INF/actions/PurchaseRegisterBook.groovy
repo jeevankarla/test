@@ -68,7 +68,7 @@ if(categoryType.equals("ICE_CREAM_AMUL")||categoryType.equals("All")){
    partyIds.addAll(amulPartyIds);
 }*/
 // Invoice No Purchase report
-invoiceMap = [:];
+invoiceMap = [:]; 
 purchaseRegisterList = [];
 salesInvoiceTotals = SalesInvoiceServices.getPeriodSalesInvoiceTotals(dctx, [isPurchaseInvoice:true, isQuantityLtrs:true,fromDate:dayBegin, thruDate:dayEnd]);
 if(UtilValidate.isNotEmpty(salesInvoiceTotals)){
