@@ -110,4 +110,9 @@ under the License.
     <SecurityPermission description="Upload photos in the Image Management." permissionId="IMAGE_MANAGEMENT_UPLOAD"/>
     <SecurityGroupPermission groupId="IMAGEUPLOAD" permissionId="IMAGE_MANAGEMENT_UPLOAD"/>
     
+    <SecurityGroup description="Facility Location Update." groupId="FACILITY_LOC_UPDATE"/>
+    <SecurityPermission description="Facility Loaction Update." permissionId="FACILITY_LOC_UPDATE"/>
+    <SecurityGroupPermission groupId="FACILITY_LOC_UPDATE" permissionId="FACILITY_LOC_UPDATE"/>
+    
+    
 </entity-engine-xml>

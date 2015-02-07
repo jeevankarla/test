@@ -48,6 +48,7 @@
     <SecurityGroupPermission groupId="FULLADMIN" permissionId="MM_STOCK_VIEW"/>
     <SecurityGroupPermission groupId="MM_STOCK_VIEW"  permissionId="materialmgmt_VIEW"/>
     <SecurityGroupPermission groupId="MM_STOCK_VIEW"  permissionId="OFBTOOLS_VIEW"/>
+    <SecurityGroupPermission groupId="MM_STOCK_VIEW"  permissionId="CATALOG_VIEW"/>
      
     <SecurityPermission description="View Indent." permissionId="MM_INDENT_VIEW"/>
     <SecurityGroup description="Viewing the INDENT TAB!" groupId="MM_INDENT_VIEW"/>
@@ -282,6 +283,7 @@
     <SecurityGroupPermission groupId="MM_USEER_DEPT"  permissionId="MM_INDENT_ENTRY"/>
     <SecurityGroupPermission groupId="MM_USEER_DEPT"  permissionId="MM_DEPT_HEAD_APPROVE"/>
     <SecurityGroupPermission groupId="MM_USEER_DEPT"  permissionId="MM_RECEIPT_AKNOWL"/>
+    <SecurityGroupPermission groupId="MM_USEER_DEPT"  permissionId="CATALOG_VIEW"/>
    
     
     <SecurityPermission description="Create Purchase Order" permissionId="MM_CREATE_PO"/>
@@ -381,5 +383,19 @@
     <SecurityGroupPermission groupId="FULLADMIN" permissionId="MM_QUOTE_EDIT"/>
     <SecurityGroupPermission groupId="MM_QUOTE_EDIT"  permissionId="MM_QUOTATION_VIEW"/>
     
+    <SecurityGroupPermission groupId="MM_INDENT_VIEW"  permissionId="PARTYMGR_VIEW"/>
+	<SecurityGroupPermission groupId="MM_STOREISSUE_VIEW"  permissionId="PARTYMGR_VIEW"/>
+	<SecurityGroupPermission groupId="MM_REQUIREMENTS_VIEW"  permissionId="PARTYMGR_VIEW"/>
+	<SecurityGroupPermission groupId="MM_ENQUIRY_VIEW"  permissionId="PARTYMGR_VIEW"/>
+	<SecurityGroupPermission groupId="MM_QUOTATION_VIEW"  permissionId="PARTYMGR_VIEW"/>
+	<SecurityGroupPermission groupId="MM_PO_VIEW"  permissionId="PARTYMGR_VIEW"/>
+	<SecurityGroupPermission groupId="MM_MR_VIEW"  permissionId="PARTYMGR_VIEW"/>
+	<SecurityGroupPermission groupId="MM_QC_VIEW"  permissionId="PARTYMGR_VIEW"/>
+	<SecurityGroupPermission groupId="MM_MINVOICE_VIEW"  permissionId="PARTYMGR_VIEW"/>
+	<SecurityGroupPermission groupId="MM_STORE_MANAGER"  permissionId="PARTYMGR_VIEW"/>
+	<SecurityGroupPermission groupId="MM_PURCHASE_MANAGER"  permissionId="PARTYMGR_VIEW"/>
+	<SecurityGroupPermission groupId="MM_ACCOUNT_MANAGER"  permissionId="PARTYMGR_VIEW"/>
+	<SecurityGroupPermission groupId="MM_QC_MANAGER"  permissionId="PARTYMGR_VIEW"/>
+	<SecurityGroupPermission groupId="MM_USEER_DEPT"  permissionId="PARTYMGR_VIEW"/>
      
 </entity-engine-xml>

@@ -41,6 +41,11 @@ if(UtilValidate.isNotEmpty(parentTypeId)){
 		request.setAttribute("termTypeIdList", termTypeIdList);
 	}
 }
+if(UtilValidate.isNotEmpty(parameters.termTypeId)){
+	orderTaxTypeList=[];
+	orderTaxTypeList=delegator.findList("OrderTaxType",EntityCondition.makeCondition("taxType",EntityOperator.EQUALS,parameters.termTypeId),null,null,null,false);
+	request.setAttribute("orderTaxTypeList",orderTaxTypeList);
+}
 
 
 

@@ -242,6 +242,12 @@
         <event type="groovy" path="component://materialmgmt/webapp/materialmgmt/WEB-INF/actions/purchases/" invoke="termTypesAndParentTypes.groovy"/>
         <response name="success" type="request" value="json"/>
     </request-map>
+    
+    <request-map uri="getOrderTaxTypeByTermType">
+        <security https="true" auth="true"/>
+        <event type="groovy" path="component://materialmgmt/webapp/materialmgmt/WEB-INF/actions/purchases/" invoke="termTypesAndParentTypes.groovy"/>
+        <response name="success" type="request" value="json"/>
+    </request-map>
      
      <request-map uri="createQuoteContent">
        <security https="true" auth="true"/>

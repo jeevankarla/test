@@ -379,6 +379,21 @@ public class MaterialQuoteServices {
         	quote.set("statusId", statusId);
         	quote.store();
         	
+        	List condList=FastList.newInstance();
+			List<GenericValue> quoteItems = FastList.newInstance();
+			condList.add(EntityCondition.makeCondition("quoteId", EntityOperator.EQUALS, quoteId));
+			
+			if(statusId.equals("QTITM_REJECTED")){
+				condList.add(EntityCondition.makeCondition("statusId", EntityOperator.NOT_EQUAL,"QTITM_REJECTED"));
+			}
+			
+			EntityCondition cond = EntityCondition.makeCondition(condList,EntityOperator.AND);
+			quoteItems = delegator.findList("QuoteItem", cond,null,null,null,false);
+        	if(quoteItems.size()==0 && statusId.equals("QTITM_REJECTED")){
+        		GenericValue setQuote=delegator.findOne("Quote", UtilMisc.toMap("quoteId", quoteId), false);
+        		setQuote.set("statusId","QUO_REJECTED");
+        		setQuote.store();
+        	}
         	result = dispatcher.runSync("createQuoteStatus", UtilMisc.toMap("userLogin", userLogin, "quoteId", quoteId, "quoteItemSeqId", quoteItemSeqId, "statusId", statusId,"comments",comments));
         	if(ServiceUtil.isError(result)){
         		Debug.logError("Error updating QuoteStatus", module);
