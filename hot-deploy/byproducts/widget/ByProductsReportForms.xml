@@ -139,7 +139,7 @@
     <form name="PurchaseRegisterBookCSV" type="list" list-name="purchaseRegisterCsvList" view-size="99999">
         <field name="invoiceDate" title="Invoice Date"><display/></field>
         <field name="invoiceId" title="Invoice Id"><display/></field>
-        <field name="partyId" title="Party Id"><display  description="${partyName}${partyId}"/></field>
+        <field name="partyName" title="Party"><display description="${partyName}[${partyId}]"/></field>
         <field name="mrrNumber" title="MRR Number"><display/></field>
         <field name="poNumber" title="PO Number"><display/></field>
         <field name="supInvNumber" title="Supp Invoice Number"><display/></field>
