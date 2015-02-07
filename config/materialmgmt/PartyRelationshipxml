@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<entity-engine-xml>
+    <PartyRelationship partyIdFrom="INT4" partyIdTo="SUB_ADMN_1" roleTypeIdFrom="INTERNAL_ORGANIZATIO" roleTypeIdTo="DIVISION" fromDate="2014-01-01 00:00:00" partyRelationshipTypeId="SUB_DIVISION"/>
+    <PartyRelationship partyIdFrom="INT4" partyIdTo="SUB_ADMN_2" roleTypeIdFrom="INTERNAL_ORGANIZATIO" roleTypeIdTo="DIVISION" fromDate="2014-01-01 00:00:00" partyRelationshipTypeId="SUB_DIVISION"/>
+    <PartyRelationship partyIdFrom="INT4" partyIdTo="SUB_ADMN_3" roleTypeIdFrom="INTERNAL_ORGANIZATIO" roleTypeIdTo="DIVISION" fromDate="2014-01-01 00:00:00" partyRelationshipTypeId="SUB_DIVISION"/>
+    <PartyRelationship partyIdFrom="INT4" partyIdTo="SUB_ADMN_4" roleTypeIdFrom="INTERNAL_ORGANIZATIO" roleTypeIdTo="DIVISION" fromDate="2014-01-01 00:00:00" partyRelationshipTypeId="SUB_DIVISION"/>
+    <PartyRelationship partyIdFrom="INT3" partyIdTo="SUB_ACNT_1" roleTypeIdFrom="INTERNAL_ORGANIZATIO" roleTypeIdTo="DIVISION" fromDate="2014-01-01 00:00:00" partyRelationshipTypeId="SUB_DIVISION"/>
+    <PartyRelationship partyIdFrom="INT3" partyIdTo="SUB_ACNT_2" roleTypeIdFrom="INTERNAL_ORGANIZATIO" roleTypeIdTo="DIVISION" fromDate="2014-01-01 00:00:00" partyRelationshipTypeId="SUB_DIVISION"/>
+    <PartyRelationship partyIdFrom="INT5" partyIdTo="SUB_PUR_1" roleTypeIdFrom="INTERNAL_ORGANIZATIO" roleTypeIdTo="DIVISION" fromDate="2014-01-01 00:00:00" partyRelationshipTypeId="SUB_DIVISION"/>
+    <PartyRelationship partyIdFrom="INT16" partyIdTo="SUB_STORE_1" roleTypeIdFrom="INTERNAL_ORGANIZATIO" roleTypeIdTo="DIVISION" fromDate="2014-01-01 00:00:00" partyRelationshipTypeId="SUB_DIVISION"/>
+    <PartyRelationship partyIdFrom="INT16" partyIdTo="SUB_STORE_2" roleTypeIdFrom="INTERNAL_ORGANIZATIO" roleTypeIdTo="DIVISION" fromDate="2014-01-01 00:00:00" partyRelationshipTypeId="SUB_DIVISION"/>
+    <PartyRelationship partyIdFrom="INT12" partyIdTo="SUB_SRT_1" roleTypeIdFrom="INTERNAL_ORGANIZATIO" roleTypeIdTo="DIVISION" fromDate="2014-01-01 00:00:00" partyRelationshipTypeId="SUB_DIVISION"/>
+    <PartyRelationship partyIdFrom="INT9" partyIdTo="SUB_QC_1" roleTypeIdFrom="INTERNAL_ORGANIZATIO" roleTypeIdTo="DIVISION" fromDate="2014-01-01 00:00:00" partyRelationshipTypeId="SUB_DIVISION"/>
+    <PartyRelationship partyIdFrom="INT7" partyIdTo="SUB_PRODC_1" roleTypeIdFrom="INTERNAL_ORGANIZATIO" roleTypeIdTo="DIVISION" fromDate="2014-01-01 00:00:00" partyRelationshipTypeId="SUB_DIVISION"/>
+    <PartyRelationship partyIdFrom="INT7" partyIdTo="SUB_PRODC_2" roleTypeIdFrom="INTERNAL_ORGANIZATIO" roleTypeIdTo="DIVISION" fromDate="2014-01-01 00:00:00" partyRelationshipTypeId="SUB_DIVISION"/>
+    <PartyRelationship partyIdFrom="INT7" partyIdTo="SUB_PRODC_3" roleTypeIdFrom="INTERNAL_ORGANIZATIO" roleTypeIdTo="DIVISION" fromDate="2014-01-01 00:00:00" partyRelationshipTypeId="SUB_DIVISION"/>
+    <PartyRelationship partyIdFrom="INT7" partyIdTo="SUB_PRODC_4" roleTypeIdFrom="INTERNAL_ORGANIZATIO" roleTypeIdTo="DIVISION" fromDate="2014-01-01 00:00:00" partyRelationshipTypeId="SUB_DIVISION"/>
+    <PartyRelationship partyIdFrom="INT7" partyIdTo="SUB_PRODC_5" roleTypeIdFrom="INTERNAL_ORGANIZATIO" roleTypeIdTo="DIVISION" fromDate="2014-01-01 00:00:00" partyRelationshipTypeId="SUB_DIVISION"/>
+    <PartyRelationship partyIdFrom="INT7" partyIdTo="SUB_PRODC_6" roleTypeIdFrom="INTERNAL_ORGANIZATIO" roleTypeIdTo="DIVISION" fromDate="2014-01-01 00:00:00" partyRelationshipTypeId="SUB_DIVISION"/>
+    <PartyRelationship partyIdFrom="INT7" partyIdTo="SUB_PRODC_7" roleTypeIdFrom="INTERNAL_ORGANIZATIO" roleTypeIdTo="DIVISION" fromDate="2014-01-01 00:00:00" partyRelationshipTypeId="SUB_DIVISION"/>
+    <PartyRelationship partyIdFrom="INT8" partyIdTo="SUB_ENG_1" roleTypeIdFrom="INTERNAL_ORGANIZATIO" roleTypeIdTo="DIVISION" fromDate="2014-01-01 00:00:00" partyRelationshipTypeId="SUB_DIVISION"/>
+    <PartyRelationship partyIdFrom="INT8" partyIdTo="SUB_ENG_2" roleTypeIdFrom="INTERNAL_ORGANIZATIO" roleTypeIdTo="DIVISION" fromDate="2014-01-01 00:00:00" partyRelationshipTypeId="SUB_DIVISION"/>
+    <PartyRelationship partyIdFrom="INT8" partyIdTo="SUB_ENG_3" roleTypeIdFrom="INTERNAL_ORGANIZATIO" roleTypeIdTo="DIVISION" fromDate="2014-01-01 00:00:00" partyRelationshipTypeId="SUB_DIVISION"/>
+    <PartyRelationship partyIdFrom="INT8" partyIdTo="SUB_ENG_4" roleTypeIdFrom="INTERNAL_ORGANIZATIO" roleTypeIdTo="DIVISION" fromDate="2014-01-01 00:00:00" partyRelationshipTypeId="SUB_DIVISION"/>
+    <PartyRelationship partyIdFrom="INT8" partyIdTo="SUB_ENG_5" roleTypeIdFrom="INTERNAL_ORGANIZATIO" roleTypeIdTo="DIVISION" fromDate="2014-01-01 00:00:00" partyRelationshipTypeId="SUB_DIVISION"/>
+    <PartyRelationship partyIdFrom="INT8" partyIdTo="SUB_ENG_6" roleTypeIdFrom="INTERNAL_ORGANIZATIO" roleTypeIdTo="DIVISION" fromDate="2014-01-01 00:00:00" partyRelationshipTypeId="SUB_DIVISION"/>
+    <PartyRelationship partyIdFrom="INT15" partyIdTo="SUB_VT_1" roleTypeIdFrom="INTERNAL_ORGANIZATIO" roleTypeIdTo="DIVISION" fromDate="2014-01-01 00:00:00" partyRelationshipTypeId="SUB_DIVISION"/>
+    <PartyRelationship partyIdFrom="INT6" partyIdTo="SUB_MRKT_1" roleTypeIdFrom="INTERNAL_ORGANIZATIO" roleTypeIdTo="DIVISION" fromDate="2014-01-01 00:00:00" partyRelationshipTypeId="SUB_DIVISION"/>
+    <PartyRelationship partyIdFrom="INT6" partyIdTo="SUB_MRKT_2" roleTypeIdFrom="INTERNAL_ORGANIZATIO" roleTypeIdTo="DIVISION" fromDate="2014-01-01 00:00:00" partyRelationshipTypeId="SUB_DIVISION"/>
+    <PartyRelationship partyIdFrom="INT6" partyIdTo="SUB_MRKT_3" roleTypeIdFrom="INTERNAL_ORGANIZATIO" roleTypeIdTo="DIVISION" fromDate="2014-01-01 00:00:00" partyRelationshipTypeId="SUB_DIVISION"/>
+    <PartyRelationship partyIdFrom="INT13" partyIdTo="SUB_TRNS_1" roleTypeIdFrom="INTERNAL_ORGANIZATIO" roleTypeIdTo="DIVISION" fromDate="2014-01-01 00:00:00" partyRelationshipTypeId="SUB_DIVISION"/>
+    <PartyRelationship partyIdFrom="INT10" partyIdTo="SUB_ICP_1" roleTypeIdFrom="INTERNAL_ORGANIZATIO" roleTypeIdTo="DIVISION" fromDate="2014-01-01 00:00:00" partyRelationshipTypeId="SUB_DIVISION"/>
+    <PartyRelationship partyIdFrom="INT14" partyIdTo="SUB_MPT_1" roleTypeIdFrom="INTERNAL_ORGANIZATIO" roleTypeIdTo="DIVISION" fromDate="2014-01-01 00:00:00" partyRelationshipTypeId="SUB_DIVISION"/>
+    <PartyRelationship partyIdFrom="INT11" partyIdTo="SUB_FGS_1" roleTypeIdFrom="INTERNAL_ORGANIZATIO" roleTypeIdTo="DIVISION" fromDate="2014-01-01 00:00:00" partyRelationshipTypeId="SUB_DIVISION"/>
+    <PartyRelationship partyIdFrom="INT11" partyIdTo="SUB_FGS_2" roleTypeIdFrom="INTERNAL_ORGANIZATIO" roleTypeIdTo="DIVISION" fromDate="2014-01-01 00:00:00" partyRelationshipTypeId="SUB_DIVISION"/>
+    <PartyRelationship partyIdFrom="INT11" partyIdTo="SUB_FGS_3" roleTypeIdFrom="INTERNAL_ORGANIZATIO" roleTypeIdTo="DIVISION" fromDate="2014-01-01 00:00:00" partyRelationshipTypeId="SUB_DIVISION"/>
+</entity-engine-xml>
