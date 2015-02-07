@@ -275,6 +275,8 @@ public class MaterialPurchaseServices {
 				}
 				if(UtilValidate.isNotEmpty(deliveryChallanQtyStr)){
 					deliveryChallanQty = new BigDecimal(deliveryChallanQtyStr);
+				}else{
+					deliveryChallanQty = quantity;
 				}
 				
 				if(UtilValidate.isEmpty(withoutPO)){
