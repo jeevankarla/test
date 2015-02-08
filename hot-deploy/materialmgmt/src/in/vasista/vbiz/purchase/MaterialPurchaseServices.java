@@ -247,8 +247,10 @@ public class MaterialPurchaseServices {
 				String productId = "";
 		        String quantityStr = "";
 		        String deliveryChallanQtyStr = "";
+		        String oldRecvdQtyStr = "";
 				BigDecimal quantity = BigDecimal.ZERO;
 				BigDecimal deliveryChallanQty = BigDecimal.ZERO;
+				BigDecimal oldRecvdQty = BigDecimal.ZERO;
 				Map productQtyMap = FastMap.newInstance();
 				String thisSuffix = UtilHttp.MULTI_ROW_DELIMITER + i;
 				if (paramMap.containsKey("productId" + thisSuffix)) {
@@ -278,7 +280,13 @@ public class MaterialPurchaseServices {
 				}else{
 					deliveryChallanQty = quantity;
 				}
-				
+				//old recived qty oldRecvdQty
+				if (paramMap.containsKey("oldRecvdQty" + thisSuffix)) {
+					oldRecvdQtyStr = (String) paramMap.get("oldRecvdQty" + thisSuffix);
+				}
+				if(UtilValidate.isNotEmpty(oldRecvdQtyStr)){
+					oldRecvdQty = new BigDecimal(oldRecvdQtyStr);
+				}
 				if(UtilValidate.isEmpty(withoutPO)){
 					if(directPO){
 						GenericValue checkOrderItem = null;
@@ -290,7 +298,10 @@ public class MaterialPurchaseServices {
 						if(UtilValidate.isNotEmpty(checkOrderItem)){
 							BigDecimal orderQty = checkOrderItem.getBigDecimal("quantity");
 							BigDecimal checkQty = (orderQty.multiply(new BigDecimal(1.1))).setScale(0, BigDecimal.ROUND_CEILING);
-							if(quantity.compareTo(checkQty)>0){
+							BigDecimal maxQty=oldRecvdQty.add(quantity);
+							Debug.log("=orderQty=="+orderQty+"==checkQty="+checkQty+"==maxQty=="+maxQty+"==quantity="+quantity);
+							//if(quantity.compareTo(checkQty)>0){
+							if(maxQty.compareTo(checkQty)>0){	
 								Debug.logError("Quantity cannot be more than 10%("+checkQty+") for PO : "+orderId, module);
 								request.setAttribute("_ERROR_MESSAGE_", "Quantity cannot be more than 10%("+checkQty+") for PO : "+orderId);	
 								TransactionUtil.rollback();
