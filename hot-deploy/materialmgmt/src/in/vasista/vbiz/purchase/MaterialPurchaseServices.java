@@ -1913,14 +1913,14 @@ public class MaterialPurchaseServices {
 					  	 	//modify the vat unit rate here
 					  	 	if(uomId.equals("PERCENT") ){
 					  	 		if(!cstUnitRate.equals(BigDecimal.ZERO)){
-					  	 			cstUnitRate = cstUnitRate.subtract((vatUnitRate.multiply(termValue)).divide(new BigDecimal("100"), 3, BigDecimal.ROUND_HALF_UP));
+					  	 			cstUnitRate = cstUnitRate.add((vatUnitRate.multiply(termValue)).divide(new BigDecimal("100"), 3, BigDecimal.ROUND_HALF_UP));
 					  	 		}
 					  	 		if(!vatUnitRate.equals(BigDecimal.ZERO)){
-					  	 			vatUnitRate = vatUnitRate.subtract((vatUnitRate.multiply(termValue)).divide(new BigDecimal("100"), 3, BigDecimal.ROUND_HALF_UP));
+					  	 			vatUnitRate = vatUnitRate.add((vatUnitRate.multiply(termValue)).divide(new BigDecimal("100"), 3, BigDecimal.ROUND_HALF_UP));
 					  	 		}
 					  	 		
 					  	 	}
-					  	 	basicAmount = basicAmount.subtract(termAmount);
+					  	 	basicAmount = basicAmount.add(termAmount);
 				    	}	
 					}
 				    
