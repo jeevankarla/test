@@ -44,7 +44,7 @@ if(shipments){
 		conditionList.clear();
 		conditionList.add(EntityCondition.makeCondition("orderId", EntityOperator.EQUALS, orderId));
 		conditionList.add(EntityCondition.makeCondition("shipmentId", EntityOperator.EQUALS, shipmentId));
-		conditionList.add(EntityCondition.makeCondition("statusId", EntityOperator.EQUALS, "SR_QUALITYCHECK"));
+		conditionList.add(EntityCondition.makeCondition("statusId", EntityOperator.EQUALS, "SR_ACCEPTED"));
 		condition2 = EntityCondition.makeCondition(conditionList, EntityOperator.AND);
 		shipmentReceipts = delegator.findList("ShipmentReceipt", condition2, null, null, null, false);
 		

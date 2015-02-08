@@ -143,8 +143,7 @@
 	
 	
 	function getProductInventory(prod){
-		var data="productId="+prod;
-		
+		var data="productId="+prod+"&ownerPartyId=Company";
 		$.ajax({
         type: "POST",
         url: "getProductInventory",
@@ -152,7 +151,7 @@
         data: data,
         dataType: 'json',
         success: function(result) {
-        quantityAvailability=result["availableToPromiseTotal"];
+        quantityAvailability=result["inventoryCount"];
         
         
        	 },
