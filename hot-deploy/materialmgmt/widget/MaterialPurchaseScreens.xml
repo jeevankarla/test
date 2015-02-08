@@ -108,6 +108,8 @@
                <set field="targetRequest" value="FindMaterialPO"/>
                <set field="ChannalType" value="MATERIAL_PUR_CHANNEL"/>
                <set field="partyId" from-field="parameters.partyId"/>
+               <set field="roleTypeId" value="BILL_FROM_VENDOR"/>
+                <set field="parameters.roleTypeId" from-field="roleTypeId"/>
             </actions>
             <widgets>
                  <decorator-screen name="materialmgmtNgCommonDecorator" location="${parameters.mainDecoratorLocation}">
