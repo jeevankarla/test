@@ -92,6 +92,22 @@ partyName =  PartyHelper.getPartyName(delegator, partyId, false);
 shipmentMap.put("partyName",partyName);
 }
 }
+//orderSequenceNO
+OrderHeaderSequenceData = delegator.findList("OrderHeaderSequence",EntityCondition.makeCondition("orderId", EntityOperator.EQUALS , orderId)  , null, null, null, false );
+if(UtilValidate.isNotEmpty(OrderHeaderSequenceData)){
+OrderHeaderSequenceData=EntityUtil.getFirst(OrderHeaderSequenceData);
+sequenceId=OrderHeaderSequenceData.sequenceId;
+orderNo=OrderHeaderSequenceData.orderNo;
+shipmentMap.put("sequenceId",sequenceId);
+shipmentMap.put("orderNo",orderNo);
+	}
+//shipmentSequenceNO
+shipmentSequenceData = delegator.findList("ShipmentReceiptSequence",EntityCondition.makeCondition("receiptId", EntityOperator.EQUALS , receiptId)  , null, null, null, false );
+if(UtilValidate.isNotEmpty(shipmentSequenceData)){
+shipmentSequenceData=EntityUtil.getFirst(shipmentSequenceData);
+shipmentSequenceId=shipmentSequenceData.sequenceId;
+shipmentMap.put("shipmentSequenceId",shipmentSequenceId);
+	}
 grnDetails=[];
 if(UtilValidate.isNotEmpty(shipmentId)){
 	grnDetailsList = delegator.findList("ShipmentReceipt",EntityCondition.makeCondition("shipmentId", EntityOperator.EQUALS , shipmentId)  , null, null, null, false );
@@ -134,7 +150,15 @@ if(UtilValidate.isNotEmpty(shipmentId)){
 		unitDesciption = delegator.findOne("Uom",["uomId":uomId],false);
 	 grnDetailsMap["unit"]=unitDesciption.get("description");
 	}
-		
+	// productFolioNo
+	productFolioNo = delegator.findOne("ProductAttribute",["productId":grnData.productId,"attrName":"LEDGERFOLIONO"],false);
+	if(productFolioNo){
+	grnDetailsMap["folioNo"]=productFolioNo.get("attrValue");
+	}
+	
+	
+	
+	
 	// OrderItems Details
 	if(UtilValidate.isNotEmpty(orderId)){
 	List condlist=[];
@@ -158,6 +182,7 @@ if(UtilValidate.isNotEmpty(shipmentId)){
 	shipmtReciptList = delegator.findList("ShipmentReceipt", condit , null, null, null, false );
 	shipmtReciptList=EntityUtil.getFirst(shipmtReciptList);
 	if(UtilValidate.isNotEmpty(shipmtReciptList)){
+	grnDetailsMap["deliveryChallanQty"]=shipmtReciptList.deliveryChallanQty;
     grnDetailsMap["quantityAccepted"]=shipmtReciptList.quantityAccepted;
     grnDetailsMap["quantityRejected"]=shipmtReciptList.quantityRejected;
 	if(UtilValidate.isNotEmpty(orderId)){

@@ -33,6 +33,7 @@ dctx = dispatcher.getDispatchContext();
 orderId = parameters.orderId;
 orderDetailsList=[];
 allDetailsMap=[:]; 
+orderTermList=[];
 
 allDetailsMap.put("orderId",orderId);
 allDetailsMap["total"]=BigDecimal.ZERO;
@@ -43,10 +44,18 @@ productCategories = delegator.findList("ProductCategoryAndMember",EntityConditio
 //productCategory = EntityUtil.getFieldListFromEntityList(productCategories, "productCategoryId", true);
 productDescription = EntityUtil.getFieldListFromEntityList(productCategories, "description", true);
 //productParentDescription = EntityUtil.getFieldListFromEntityList(productCategories, "primaryParentCategoryId", true);
-
 //allDetailsMap.put("productParentDescription",productParentDescription);
 allDetailsMap.put("productDescription",productDescription);
 
+//orderSequenceNO
+OrderHeaderSequenceData = delegator.findList("OrderHeaderSequence",EntityCondition.makeCondition("orderId", EntityOperator.EQUALS , orderId)  , null, null, null, false );
+if(UtilValidate.isNotEmpty(OrderHeaderSequenceData)){
+OrderHeaderSequenceData=EntityUtil.getFirst(OrderHeaderSequenceData);
+sequenceId=OrderHeaderSequenceData.sequenceId;
+orderNo=OrderHeaderSequenceData.orderNo;
+allDetailsMap.put("sequenceId",sequenceId);
+allDetailsMap.put("orderNo",orderNo);
+	}
 //FileNo
 fileNumber = delegator.findOne("OrderAttribute",["orderId":orderId,"attrName":"FILE_NUMBER"],false);
 if(fileNumber){
@@ -58,6 +67,18 @@ referNumber = delegator.findOne("OrderAttribute",["orderId":orderId,"attrName":"
 if(referNumber){
 	refNo=referNumber.get("attrValue");
 	allDetailsMap.put("refNo",refNo);
+}
+//Valid from 
+validFrom = delegator.findOne("OrderAttribute",["orderId":orderId,"attrName":"VALID_FROM"],false);
+if(validFrom){
+	fromDate=validFrom.get("attrValue");
+	allDetailsMap.put("fromDate",fromDate);
+}
+//valid TO
+validThru = delegator.findOne("OrderAttribute",["orderId":orderId,"attrName":"VALID_THRU"],false);
+if(validThru){
+	thruDate=validThru.get("attrValue");
+	allDetailsMap.put("thruDate",thruDate);
 }
 
 //to get product details
@@ -271,153 +292,32 @@ if(UtilValidate.isNotEmpty(orderDetails)){
 	
 	}
 
-// waranty ,delivery,pod,payment
+ //waranty ,delivery,pod,payment
 orderTermDetails = delegator.findList("OrderTerm",EntityCondition.makeCondition("orderId", EntityOperator.EQUALS , orderId)  , null, null, null, false );
-
-deliveryDetails = EntityUtil.filterByCondition(orderTermDetails, EntityCondition.makeCondition("termTypeId", EntityOperator.EQUALS, "IMMEDIATELY"));
-deliveryDetails = EntityUtil.getFirst(deliveryDetails);
-if(UtilValidate.isNotEmpty(deliveryDetails)){
-   delivery =deliveryDetails.description;
-   allDetailsMap.put("delivery",delivery);
+if(UtilValidate.isNotEmpty(orderTermDetails)){
+	orderTermDetails.each{orderTerm ->
+ orderTermMap=[:];
+ termtypId=orderTerm.termTypeId;
+ uiDescription=orderTerm.description;
+ if(UtilValidate.isNotEmpty(termtypId)){
+	 typeDesciptions = delegator.findOne("TermType",["termTypeId":termtypId],false);
+	 typeDescip=typeDesciptions.get("description");
+	 parentTypeId=typeDesciptions.get("parentTypeId");
+	 TermTypeDetails = delegator.findList("TermType",EntityCondition.makeCondition("parentTypeId", EntityOperator.EQUALS , parentTypeId)  , null, null, null, false );
+	 TermTypeDetails = EntityUtil.getFirst(TermTypeDetails);
+	 Parentdescription= TermTypeDetails.description;
  }
-deliveryDetails = EntityUtil.filterByCondition(orderTermDetails, EntityCondition.makeCondition("termTypeId", EntityOperator.EQUALS, "EX_GODN"));
-deliveryDetails = EntityUtil.getFirst(deliveryDetails);
-  if(UtilValidate.isNotEmpty(deliveryDetails)){
-	delivery =deliveryDetails.description;
-   allDetailsMap.put("delivery",delivery);
-   }
-deliveryDetails = EntityUtil.filterByCondition(orderTermDetails, EntityCondition.makeCondition("termTypeId", EntityOperator.EQUALS, "EX_OUR_GODN"));
-deliveryDetails = EntityUtil.getFirst(deliveryDetails);
-	  if(UtilValidate.isNotEmpty(deliveryDetails)){
-	   delivery =deliveryDetails.description;
-	   allDetailsMap.put("delivery",delivery);
+		     orderTermMap.put("typeDescip",typeDescip);
+			 orderTermMap.put("Parentdescription",Parentdescription);
+			 orderTermMap.put("uiDescription",uiDescription);
+			 
+orderTermList.addAll(orderTermMap);	
 }
-deliveryDetails = EntityUtil.filterByCondition(orderTermDetails, EntityCondition.makeCondition("termTypeId", EntityOperator.EQUALS, "EX_STOCK"));
-deliveryDetails = EntityUtil.getFirst(deliveryDetails);
-		if(UtilValidate.isNotEmpty(deliveryDetails)){
-		 delivery =deliveryDetails.description;
-		 allDetailsMap.put("delivery",delivery);
-   }
-deliveryDetails = EntityUtil.filterByCondition(orderTermDetails, EntityCondition.makeCondition("termTypeId", EntityOperator.EQUALS, "MTL_REDY_OBTND"));
-deliveryDetails = EntityUtil.getFirst(deliveryDetails);
-		if(UtilValidate.isNotEmpty(deliveryDetails)){
-		delivery =deliveryDetails.description;
-		  allDetailsMap.put("delivery",delivery);
-   }
-deliveryDetails = EntityUtil.filterByCondition(orderTermDetails, EntityCondition.makeCondition("termTypeId", EntityOperator.EQUALS, "FOR_MD"));
-deliveryDetails = EntityUtil.getFirst(deliveryDetails);
-	  if(UtilValidate.isNotEmpty(deliveryDetails)){
-	  placeOfDispatch =deliveryDetails.description;
-	  allDetailsMap.put("placeOfDispatch",placeOfDispatch);
-   }
-deliveryDetails = EntityUtil.filterByCondition(orderTermDetails, EntityCondition.makeCondition("termTypeId", EntityOperator.EQUALS, "OWN_CON_DEST_PONT"));
-deliveryDetails = EntityUtil.getFirst(deliveryDetails);
-		if(UtilValidate.isNotEmpty(deliveryDetails)){
-		delivery =deliveryDetails.description;
-		allDetailsMap.put("delivery",delivery);
-  }
-deliveryDetails = EntityUtil.filterByCondition(orderTermDetails, EntityCondition.makeCondition("termTypeId", EntityOperator.EQUALS, "WTHN_15_PO"));
-deliveryDetails = EntityUtil.getFirst(deliveryDetails);
-	 if(UtilValidate.isNotEmpty(deliveryDetails)){
-	 delivery =deliveryDetails.description;
-	 allDetailsMap.put("delivery",delivery);
-		}
-deliveryDetails = EntityUtil.filterByCondition(orderTermDetails, EntityCondition.makeCondition("termTypeId", EntityOperator.EQUALS, "WTHN_30_PO"));
-deliveryDetails = EntityUtil.getFirst(deliveryDetails);
-	if(UtilValidate.isNotEmpty(deliveryDetails)){
-	 delivery =deliveryDetails.description;
-	  allDetailsMap.put("delivery",delivery);
-		}
-
-
-		  
-paymentDetails = EntityUtil.filterByCondition(orderTermDetails, EntityCondition.makeCondition("termTypeId", EntityOperator.EQUALS, "FEE_PAY_NETDAYS_1"));
-paymentDetails = EntityUtil.getFirst(paymentDetails);
-	 if(UtilValidate.isNotEmpty(paymentDetails)){
-	 payment =paymentDetails.description;
-	  allDetailsMap.put("payment",payment);
-}
- paymentDetails = EntityUtil.filterByCondition(orderTermDetails, EntityCondition.makeCondition("termTypeId", EntityOperator.EQUALS, "100_COD_BASIS"));
- paymentDetails = EntityUtil.getFirst(paymentDetails);
-	  if(UtilValidate.isNotEmpty(paymentDetails)){
-	  payment =paymentDetails.description;
-	   allDetailsMap.put("payment",payment);
- }
-  paymentDetails = EntityUtil.filterByCondition(orderTermDetails, EntityCondition.makeCondition("termTypeId", EntityOperator.EQUALS, "90_ADVANCE"));
-  paymentDetails = EntityUtil.getFirst(paymentDetails);
-	   if(UtilValidate.isNotEmpty(paymentDetails)){
-	   payment =paymentDetails.description;
-		allDetailsMap.put("payment",payment);
-  }
- paymentDetails = EntityUtil.filterByCondition(orderTermDetails, EntityCondition.makeCondition("termTypeId", EntityOperator.EQUALS, "AGNT_DELVER"));
- paymentDetails = EntityUtil.getFirst(paymentDetails);
-	  if(UtilValidate.isNotEmpty(paymentDetails)){
-	  payment =paymentDetails.description;
-	   allDetailsMap.put("payment",payment);
- }
- paymentDetails = EntityUtil.filterByCondition(orderTermDetails, EntityCondition.makeCondition("termTypeId", EntityOperator.EQUALS, "AGNT_PFORM"));
- paymentDetails = EntityUtil.getFirst(paymentDetails);
-	  if(UtilValidate.isNotEmpty(paymentDetails)){
-	  payment =paymentDetails.description;
-	   allDetailsMap.put("payment",payment);
- }
- paymentDetails = EntityUtil.filterByCondition(orderTermDetails, EntityCondition.makeCondition("termTypeId", EntityOperator.EQUALS, "ALD_MADE"));
- paymentDetails = EntityUtil.getFirst(paymentDetails);
-	  if(UtilValidate.isNotEmpty(paymentDetails)){
-	  payment =paymentDetails.description;
-	   allDetailsMap.put("payment",payment);
- }
- paymentDetails = EntityUtil.filterByCondition(orderTermDetails, EntityCondition.makeCondition("termTypeId", EntityOperator.EQUALS, "DOCMNT_NEGO"));
- paymentDetails = EntityUtil.getFirst(paymentDetails);
-	  if(UtilValidate.isNotEmpty(paymentDetails)){
-	  payment =paymentDetails.description;
-	   allDetailsMap.put("payment",payment);
- }
-  paymentDetails = EntityUtil.filterByCondition(orderTermDetails, EntityCondition.makeCondition("termTypeId", EntityOperator.EQUALS, "50_ADVANCE"));
-  paymentDetails = EntityUtil.getFirst(paymentDetails);
-	   if(UtilValidate.isNotEmpty(paymentDetails)){
-	   payment =paymentDetails.description;
-		allDetailsMap.put("payment",payment);
-  }
- paymentDetails = EntityUtil.filterByCondition(orderTermDetails, EntityCondition.makeCondition("termTypeId", EntityOperator.EQUALS, "FEE_PAY_NETDAYS_2"));
-  paymentDetails = EntityUtil.getFirst(paymentDetails);
-		if(UtilValidate.isNotEmpty(paymentDetails)){
-		payment =paymentDetails.description;
-		 allDetailsMap.put("payment",payment);
-   }
-paymentDetails = EntityUtil.filterByCondition(orderTermDetails, EntityCondition.makeCondition("termTypeId", EntityOperator.EQUALS, "FEE_PAY_NETDAYS_3"));
-paymentDetails = EntityUtil.getFirst(paymentDetails);
-	 if(UtilValidate.isNotEmpty(paymentDetails)){
-	 payment =paymentDetails.description;
-	  allDetailsMap.put("payment",payment);
-}
- paymentDetails = EntityUtil.filterByCondition(orderTermDetails, EntityCondition.makeCondition("termTypeId", EntityOperator.EQUALS, "SATFACTRY_SUPLY"));
- paymentDetails = EntityUtil.getFirst(paymentDetails);
-	  if(UtilValidate.isNotEmpty(paymentDetails)){
-	  payment =paymentDetails.description;
-	   allDetailsMap.put("payment",payment);
- }
-  paymentDetails = EntityUtil.filterByCondition(orderTermDetails, EntityCondition.makeCondition("termTypeId", EntityOperator.EQUALS, "PMT_15_DAYS"));
-  paymentDetails = EntityUtil.getFirst(paymentDetails);
-	   if(UtilValidate.isNotEmpty(paymentDetails)){
-	   payment =paymentDetails.description;
-		allDetailsMap.put("payment",payment);
-  }
-   paymentDetails = EntityUtil.filterByCondition(orderTermDetails, EntityCondition.makeCondition("termTypeId", EntityOperator.EQUALS, "PMT_30_DAYS"));
-   paymentDetails = EntityUtil.getFirst(paymentDetails);
-		if(UtilValidate.isNotEmpty(paymentDetails)){
-		payment =paymentDetails.description;
-		 allDetailsMap.put("payment",payment);
-   }
-paymentDetails = EntityUtil.filterByCondition(orderTermDetails, EntityCondition.makeCondition("termTypeId", EntityOperator.EQUALS, "TO_BE_MADE"));
-paymentDetails = EntityUtil.getFirst(paymentDetails);
-	 if(UtilValidate.isNotEmpty(paymentDetails)){
-	 payment =paymentDetails.description;
-	  allDetailsMap.put("payment",payment);
 }
 
 context.allDetailsMap=allDetailsMap;
 context.orderDetailsList=orderDetailsList;
+context.orderTermList=orderTermList;
 
 //Debug.log("orderDetailsList=================================="+orderDetailsList);
 
