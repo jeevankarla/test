@@ -73,12 +73,12 @@ public class MaterialManagementResource {
     @GET
     @Path("/json")        
     @Produces(MediaType.APPLICATION_JSON)
-    public Map<String, Object> fetchMaterialsJSON() {
+    public List<Object> fetchMaterialsJSON() {
  
         String username = null;
         String password = null;
         String tenantId = null;
-        Map<String, Object> result = FastMap.newInstance();
+        List<Object> result = FastList.newInstance();
 
         try {
             username = headers.getRequestHeader("login.username").get(0);
@@ -111,14 +111,14 @@ public class MaterialManagementResource {
 
     	for(GenericValue product : productList){
             Map productMap = FastMap.newInstance();
+    		productMap.put("id",(String)product.get("productId"));             
     		productMap.put("name",(String)product.get("internalName")); 
     		productMap.put("description",(String)product.get("description"));                		
     		productMap.put("productCategoryId",(String)product.get("primaryProductCategoryId"));  
-    		productMap.put("trackInventory",(String)product.get("Y"));                		    		
+    		productMap.put("trackInventory","Y");                		    		
 		    resultList.add(productMap);	
     	}
-    	result.put("productList", resultList);
-        return result;
+        return resultList;
 
     }
 }
