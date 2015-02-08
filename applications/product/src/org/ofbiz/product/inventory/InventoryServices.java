@@ -1265,5 +1265,70 @@ public class InventoryServices {
         result.put("inventoryCost", inventoryCost);
         return result;
     }
+    
+    public static Map<String, Object> getProductInventoryByOwner(DispatchContext dctx, Map<String, ? extends Object> context) {
+        Delegator delegator = dctx.getDelegator();
+        LocalDispatcher dispatcher = dctx.getDispatcher();
+        Timestamp effectiveDate = (Timestamp)context.get("effectiveDate");
+        String facilityId = (String)context.get("facilityId");
+        String productId = (String)context.get("productId");
+        String ownerPartyId = (String) context.get("ownerPartyId");
+        Map<String, Object> result = FastMap.newInstance();
+
+        GenericValue product = null;
+        try {
+            product = delegator.findByPrimaryKey("Product", UtilMisc.toMap("productId", productId));
+            
+            if(UtilValidate.isEmpty(facilityId)){
+            	List<GenericValue> productFacility = delegator.findList("ProductFacility", EntityCondition.makeCondition("productId", EntityOperator.EQUALS, productId), null, null, null, false);
+            	if(UtilValidate.isNotEmpty(productFacility)){
+            		facilityId = (EntityUtil.getFirst(productFacility)).getString("facilityId");
+            	}
+            	
+            }
+            
+        } catch (GenericEntityException e) {
+        	Debug.logError(e, module);
+            return ServiceUtil.returnError("Error fetching data " + e);
+        }
+        
+        if(UtilValidate.isEmpty(effectiveDate)){
+        	effectiveDate = UtilDateTime.nowTimestamp();
+        }
+        
+        if(UtilValidate.isEmpty(product)){
+        	Debug.logError("Product with code "+productId+" doesn't exists", module);
+        	return ServiceUtil.returnError("Product with code "+productId+" doesn't exists");
+        }
+        
+        
+        List conditionList = FastList.newInstance();
+        conditionList.add(EntityCondition.makeCondition("facilityId", EntityOperator.EQUALS, facilityId));
+        conditionList.add(EntityCondition.makeCondition("quantityOnHandTotal", EntityOperator.GREATER_THAN, BigDecimal.ZERO));
+        if(UtilValidate.isNotEmpty(ownerPartyId)){
+        	conditionList.add(EntityCondition.makeCondition("ownerPartyId", EntityOperator.EQUALS, ownerPartyId));
+        }
+        conditionList.add(EntityCondition.makeCondition("productId", EntityOperator.EQUALS, productId));
+        EntityCondition condition = EntityCondition.makeCondition(conditionList, EntityOperator.AND);
+        BigDecimal inventoryCount = BigDecimal.ZERO;
+        EntityListIterator eli = null;
+        try {
+            eli = delegator.find("InventoryItem", condition, null, null, UtilMisc.toList("quantityOnHandTotal"), null);
+
+            GenericValue inventoryTrans;
+            while ((inventoryTrans = eli.next()) != null) {
+                BigDecimal qoh = inventoryTrans.getBigDecimal("quantityOnHandTotal");
+                inventoryCount = inventoryCount.add(qoh);
+            }
+            eli.close();
+            
+        }
+        catch(GenericEntityException e){
+        	Debug.logError(e, module);
+        	return ServiceUtil.returnError(e.toString());
+        }
+        result.put("inventoryCount", inventoryCount);
+        return result;
+    }
 
 }

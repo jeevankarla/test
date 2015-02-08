@@ -155,7 +155,7 @@
     
     <request-map uri="getProductInventory">
         <security auth="true" https="true"/>
-        <event type="service" invoke="getProductInventoryAvailable" ></event>
+        <event type="service" invoke="getProductInventoryByOwner" ></event>
         <response name="success" type="request" value="json"/>
     </request-map>
     

@@ -49,6 +49,8 @@ if(orderHeader && orderHeader.statusId == "ORDER_CREATED"){
 	
 	fileNo = "";
 	refNo = "";
+	thruDate = "";
+	fromDate = "";
 	orderAttr.each{ eachAttr ->
 		if(eachAttr.attrName == "FILE_NUMBER"){
 			fileNo =  eachAttr.attrValue;
@@ -56,9 +58,17 @@ if(orderHeader && orderHeader.statusId == "ORDER_CREATED"){
 		if(eachAttr.attrName == "REF_NUMBER"){
 			refNo = eachAttr.attrValue;
 		}
+		if(eachAttr.attrName == "VALID_FROM"){
+			fromDate = eachAttr.attrValue;
+		}
+		if(eachAttr.attrName == "VALID_THRU"){
+			thruDate = eachAttr.attrValue;
+		}
 	}
 	orderInfoDetail.putAt("fileNo", fileNo);
 	orderInfoDetail.putAt("refNo", refNo);
+	orderInfoDetail.putAt("validFromDate", fromDate);
+	orderInfoDetail.putAt("validThruDate", thruDate);
 	
 	conditionList.add(EntityCondition.makeCondition("orderId", EntityOperator.EQUALS, orderId));
 	conditionList.add(EntityCondition.makeCondition("roleTypeId", EntityOperator.IN, UtilMisc.toList("SUPPLIER_AGENT", "BILL_FROM_VENDOR")));

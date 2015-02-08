@@ -620,6 +620,8 @@ public class MaterialRequestServices {
                 return ServiceUtil.returnError("Available Inventory level for productId : "+productId + " is "+qoh);
             }
             
+            List<GenericValue> inventoryItems = FastList.newInstance();
+            //receiptItems for items 
             List conditionList = FastList.newInstance();
             conditionList.add(EntityCondition.makeCondition("productId", EntityOperator.EQUALS, productId));
             conditionList.add(EntityCondition.makeCondition("statusId", EntityOperator.EQUALS, "SR_ACCEPTED"));
@@ -628,11 +630,31 @@ public class MaterialRequestServices {
             	conditionList.add(EntityCondition.makeCondition("facilityId", EntityOperator.EQUALS, facilityId));
             }
             EntityCondition condition = EntityCondition.makeCondition(conditionList, EntityOperator.AND);
-            List<GenericValue> inventoryItems = delegator.findList("ShipmentReceiptAndItem", condition, null, UtilMisc.toList("datetimeReceived"), null, false);
+            List<GenericValue> receiptInventoryItems = delegator.findList("ShipmentReceiptAndItem", condition, null, UtilMisc.toList("datetimeReceived"), null, false);
+            List<String> inventoryItemIdsExl = EntityUtil.getFieldListFromEntityList(receiptInventoryItems, "inventoryId", true);
+            
+            // OB inventory Items
+            conditionList.clear();
+            conditionList.add(EntityCondition.makeCondition("productId", EntityOperator.EQUALS, productId));
+            conditionList.add(EntityCondition.makeCondition("quantityOnHandTotal", EntityOperator.GREATER_THAN, BigDecimal.ZERO));
+            if(UtilValidate.isNotEmpty(inventoryItemIdsExl)){
+            	conditionList.add(EntityCondition.makeCondition("inventoryItemId", EntityOperator.NOT_IN, inventoryItemIdsExl));
+            }
+            EntityCondition condExpr = EntityCondition.makeCondition(conditionList, EntityOperator.AND);
+            List<GenericValue> inventoryOBItems = delegator.findList("InventoryItem", condExpr, null, UtilMisc.toList("datetimeReceived"), null, false);
+            if(UtilValidate.isNotEmpty(inventoryOBItems)){
+            	inventoryItems.addAll(inventoryOBItems);
+            }
+            
+            if(UtilValidate.isNotEmpty(receiptInventoryItems)){
+            	inventoryItems.addAll(receiptInventoryItems);
+            }
+            
             if (UtilValidate.isEmpty(inventoryItems)) {
             	Debug.logError("Unable to process issue this item : "+productId + " still in QC ", module);
                 return ServiceUtil.returnError("Unable to process issue this item : "+productId + " still in QC ");
             }
+            Debug.log("inventoryItems ##################"+inventoryItems);
             Iterator<GenericValue> itr = inventoryItems.iterator();
             while ((requestedQty.compareTo(BigDecimal.ZERO) > 0) && itr.hasNext()) {
                 GenericValue inventoryItem = itr.next();

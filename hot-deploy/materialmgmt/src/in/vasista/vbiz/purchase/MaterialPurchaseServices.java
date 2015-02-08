@@ -3356,6 +3356,7 @@ if(UtilValidate.isNotEmpty(prodQtyMap.get("bedPercent"))){
 			GenericValue shipmentReceipt = delegator.findOne("ShipmentReceipt", UtilMisc.toMap("receiptId", receiptId), false);
 			if(UtilValidate.isNotEmpty(shipmentReceipt)){
 				shipmentReceipt.set("returnId", returnId);
+				shipmentReceipt.set("statusId", "SR_ACCEPTED");
 				shipmentReceipt.set("returnItemSeqId", returnItemSeqId);
 				shipmentReceipt.store();
 			}

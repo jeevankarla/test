@@ -253,6 +253,15 @@ under the License.
         <attribute name="inventoryCount" type="BigDecimal" mode="OUT" optional="false"/>
         <attribute name="inventoryCost" type="BigDecimal" mode="OUT" optional="false"/>
     </service>
+    <service name="getProductInventoryByOwner" engine="java"
+                location="org.ofbiz.product.inventory.InventoryServices" invoke="getProductInventoryByOwner" auth="true" use-transaction="false">
+        <description>Count Inventory On Hand </description>
+        <attribute name="productId" type="String" mode="IN" optional="false"/>
+        <attribute name="facilityId" type="String" mode="IN" optional="true"/>
+        <attribute name="ownerPartyId" type="String" mode="IN" optional="true"/>
+        <attribute name="inventoryCount" type="BigDecimal" mode="OUT" optional="false"/>
+    </service>
+    
     <service name="countProductInventoryShippedForSales" engine="simple"
                 location="component://product/script/org/ofbiz/product/inventory/InventoryServices.xml" invoke="countProductInventoryShippedForSales" auth="true" use-transaction="false">
         <description>Count Inventory Shipped for Sales Orders for a Product constrained by a facilityId in a given date range.</description>
