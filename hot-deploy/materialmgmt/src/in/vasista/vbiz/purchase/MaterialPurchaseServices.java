@@ -1928,7 +1928,7 @@ public class MaterialPurchaseServices {
 					    
 				    	BigDecimal taxAmount = vatUnitRate.multiply(quantity);
 						//if ED not zero then add ED% value to tax amount
-				    	taxAmount = taxAmount.add(exciseDuty.multiply(vatPercent).divide(quantity, 3, BigDecimal.ROUND_HALF_UP));
+				    	taxAmount = taxAmount.add(exciseDuty.multiply(vatPercent).divide(PERCENT_SCALE, 3, BigDecimal.ROUND_HALF_UP));
 				    	
 				    	if(taxAmount.compareTo(BigDecimal.ZERO)>0){
 			        		taxAmount=taxAmount.setScale(salestaxCalcDecimals, salestaxRounding);
