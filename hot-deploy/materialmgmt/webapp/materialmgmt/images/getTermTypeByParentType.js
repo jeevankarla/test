@@ -65,5 +65,10 @@ function showOrderTax(){
 }
 function setTermValue(){
 	var orderTaxTypeId = jQuery("select[name='orderTaxTypeId']").val();
-	$('#termValue').val(orderTaxTypeId);
+	var parentTypeId = jQuery("select[name='parentTypeId']").val();
+	var uomId = jQuery("select[name='uomId']").val();
+	var termTypeId = jQuery("select[name='termTypeId']").val();
+	if(parentTypeId=="TAX" && uomId=="PERCENT"){
+		$('#termValue').val(orderTaxTypeId);
+	}
 }
