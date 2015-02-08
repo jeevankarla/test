@@ -417,6 +417,11 @@ public class MaterialRequestServices {
 				custRequest.set("statusId", "CRQ_SUBMITTED");
 				custRequest.store();
 			}
+			if((custRequestItems.size()>0) && (statusId.equals("CRQ_SUBMITTED"))){
+				GenericValue custRequest = delegator.findOne("CustRequest", UtilMisc.toMap("custRequestId", custRequestId),  false);
+				custRequest.set("statusId", "CRQ_SUBMITTED");
+				custRequest.store();
+			}
 			
 			Map inputCtx = FastMap.newInstance();
 			inputCtx.put("custRequestId", custRequestId);
@@ -700,9 +705,10 @@ public class MaterialRequestServices {
 			List filterIssuenceReq = FastList.newInstance();
 			filterIssuenceReq.add(EntityCondition.makeCondition("custRequestId", EntityOperator.EQUALS, custRequestId));
 			filterIssuenceReq.add(EntityCondition.makeCondition("custRequestItemSeqId", EntityOperator.EQUALS, custRequestItemSeqId));
-			if(UtilValidate.isNotEmpty(shipmentId)){
+			//we have to ignore this condition bcz issuance can be more than one shipment
+			/*if(UtilValidate.isNotEmpty(shipmentId)){
 				filterIssuenceReq.add(EntityCondition.makeCondition("shipmentId", EntityOperator.EQUALS, shipmentId));
-			}
+			}*/
 			EntityCondition filterIssuenceCond = EntityCondition.makeCondition(filterIssuenceReq, EntityOperator.AND);
 			List<GenericValue> itemIssuanceList = delegator.findList("ItemIssuance", filterIssuenceCond, UtilMisc.toSet("quantity"), UtilMisc.toList("-issuedDateTime"), null, false);
 			
