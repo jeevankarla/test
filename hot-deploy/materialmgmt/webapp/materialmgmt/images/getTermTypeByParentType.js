@@ -68,6 +68,7 @@ function setTermValue(){
 	var parentTypeId = jQuery("select[name='parentTypeId']").val();
 	var uomId = jQuery("select[name='uomId']").val();
 	var termTypeId = jQuery("select[name='termTypeId']").val();
+	
 	if(parentTypeId=="TAX" && uomId=="PERCENT"){
 		$('#termValue').val(orderTaxTypeId);
 	}
