@@ -1927,7 +1927,9 @@ public class MaterialPurchaseServices {
 				    if( !vatUnitRate.equals(BigDecimal.ZERO)){
 					    
 				    	BigDecimal taxAmount = vatUnitRate.multiply(quantity);
-						
+						//if ED not zero then add ED% value to tax amount
+				    	taxAmount = taxAmount.add(exciseDuty.multiply(bedPercent).divide(quantity, 3, BigDecimal.ROUND_HALF_UP));
+				    	
 				    	if(taxAmount.compareTo(BigDecimal.ZERO)>0){
 			        		taxAmount=taxAmount.setScale(salestaxCalcDecimals, salestaxRounding);
 			        		Map taxDetailMap = FastMap.newInstance();
