@@ -24,17 +24,31 @@ custRequestId=parameters.issueToCustReqId;
 custReqDetails = delegator.findOne("CustRequest", [custRequestId : custRequestId], false);
 if(UtilValidate.isNotEmpty(custReqDetails)){
    custReqDate = custReqDetails.custRequestDate;
+   closedDateTime=custReqDetails.closedDateTime
+   openDateTime=custReqDetails.openDateTime
    dueDate= custReqDetails.closedDateTime;
+   fileNumber=custReqDetails.custRequestName
+   context.put("fileNumber",fileNumber);   
+   context.put("openDateTime",openDateTime);   
+   context.put("closedDateTime",closedDateTime); 
    context.put("dueDate",dueDate);
    context.put("custReqDate",custReqDate);
    CustRequestSequenceDetails = delegator.findList("CustRequestSequence",EntityCondition.makeCondition("custRequestId", EntityOperator.EQUALS , custRequestId)  , null, null, null, false );
-   if(CustRequestSequenceDetails){
-	   if(UtilValidate.isNotEmpty(CustRequestSequenceDetails.sequenceId)){
-		   enquirySequenceNo=CustRequestSequenceDetails.sequenceId;
-		   context.enquirySequenceNo=enquirySequenceNo;	   
-	   }
-   }
+	  CustRequestSequence= EntityUtil.getFirst(CustRequestSequenceDetails);	  
+	  if(CustRequestSequence){
+		  if(UtilValidate.isNotEmpty(CustRequestSequence.sequenceId)){
+			  enquirySequenceNo=CustRequestSequence.sequenceId;
+			  context.enquirySequenceNo=enquirySequenceNo;
+		  }
+	  }
 }
+conditionList =[];
+conditionList.add(EntityCondition.makeCondition("custRequestId", EntityOperator.EQUALS, custRequestId));
+conditionList.add(EntityCondition.makeCondition("noteType", EntityOperator.EQUALS, "EXTERNAL_NOTE_ID"));
+condition = EntityCondition.makeCondition(conditionList,EntityOperator.AND);
+custReqNoteList = delegator.findList("CustRequestAndNote", condition, null, null, null, false);
+noteList = EntityUtil.getFieldListFromEntityList(custReqNoteList, "noteInfo", true);
+context.noteList = noteList;
 enquiryMap=[:];
 productId ="";
 key = 0;
@@ -49,8 +63,10 @@ if(UtilValidate.isNotEmpty(custReqItemDetails)){
 		 productDetails = delegator.findOne("Product",["productId":productId],false);
 		 if(UtilValidate.isNotEmpty(productDetails)){
 			 itemCode=productDetails.internalName;
+			 description=productDetails.description;
 			 longDescription=productDetails.longDescription;
 			 productMap.put("itemCode",itemCode);
+			 productMap.put("description",description);
 			 productMap.put("longDescription",longDescription);
 			 uomId=productDetails.quantityUomId;
 		 }
