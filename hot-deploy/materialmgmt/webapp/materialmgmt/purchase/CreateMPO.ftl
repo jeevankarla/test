@@ -330,9 +330,9 @@ function makeDatePicker(fromDateId ,thruDateId){
 							<td class="label"><b>From Date : </b></td>
 							<td>
 								<#if orderId?exists && orderInfo.get("validFromDate")?exists>
-						    		<input type="text" name="fromDate" id="fileNo" size="18" maxlength="60" autocomplete="off" value="${orderInfo.get("validFromDate")?if_exists}"/>
+						    		<input type="text" name="fromDate" id="fromDate" size="18" maxlength="60" autocomplete="off" value="${orderInfo.get("validFromDate")?if_exists}"/>
 						    	<#else>
-						    		<input type="text" name="fromDate" id="fileNo" size="18" maxlength="60" autocomplete="off"/>
+						    		<input type="text" name="fromDate" id="fromDate" size="18" maxlength="60" autocomplete="off"/>
 						    	</#if>
 							</td>
 						</tr>
@@ -340,9 +340,9 @@ function makeDatePicker(fromDateId ,thruDateId){
 							<td class="label"><b>Thru Date : </b></td>
 							<td>
 								<#if orderId?exists && orderInfo.get("validThruDate")?exists>
-						    		<input type="text" name="thruDate" id="fileNo" size="18" maxlength="60" autocomplete="off" value="${orderInfo.get("validThruDate")?if_exists}"/>
+						    		<input type="text" name="thruDate" id="thruDate" size="18" maxlength="60" autocomplete="off" value="${orderInfo.get("validThruDate")?if_exists}"/>
 						    	<#else>
-						    		<input type="text" name="thruDate" id="fileNo" size="18" maxlength="60" autocomplete="off"/>
+						    		<input type="text" name="thruDate" id="thruDate" size="18" maxlength="60" autocomplete="off"/>
 						    	</#if>
 							</td>
 						</tr>
