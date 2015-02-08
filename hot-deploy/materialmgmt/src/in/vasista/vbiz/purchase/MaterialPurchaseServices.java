@@ -1575,7 +1575,7 @@ public class MaterialPurchaseServices {
 		BigDecimal basicAmount = BigDecimal.ZERO;
 		//exciseDuty includes BED,CESS,SECESS
 		BigDecimal exciseDuty = BigDecimal.ZERO;
-		
+		BigDecimal discountBeforeTax = BigDecimal.ZERO;
 		ShoppingCart cart = new ShoppingCart(delegator, productStoreId, locale,currencyUomId);
 		
 		try {
@@ -1892,6 +1892,37 @@ public class MaterialPurchaseServices {
 			        	}
 			        	exciseDuty = exciseDuty.add(taxAmount);
 					}
+				    //discount before tax
+				    for(Map eachAdj : otherChargesAdjustment){
+						String adjustmentTypeId=(String)eachAdj.get("adjustmentTypeId");
+						BigDecimal termValue =(BigDecimal)eachAdj.get("amount");
+				    	//adjustCtx.put("amount", termValue);
+				    	//Debug.log("eachAdj==========="+eachAdj);
+				    	String uomId = (String)eachAdj.get("uomId");
+				    	
+				    	if(adjustmentTypeId.equals("COGS_DISC")){
+				    		Map inputMap = UtilMisc.toMap("userLogin",userLogin);
+				    		inputMap.put("termTypeId", adjustmentTypeId);
+				    		inputMap.put("basicAmount", basicAmount);
+				    		inputMap.put("exciseDuty", exciseDuty);
+				    		inputMap.put("uomId", uomId);
+				    		inputMap.put("termValue", termValue);
+				    		//Debug.log("inputMap==========="+inputMap);
+				    		BigDecimal termAmount = OrderServices.calculatePurchaseOrderTermValue(ctx,inputMap);
+				    		discountBeforeTax = discountBeforeTax.add(termAmount);
+					  	 	//modify the vat unit rate here
+					  	 	if(uomId.equals("PERCENT") ){
+					  	 		if(!cstUnitRate.equals(BigDecimal.ZERO)){
+					  	 			cstUnitRate = cstUnitRate.subtract((vatUnitRate.multiply(termValue)).divide(new BigDecimal("100"), 3, BigDecimal.ROUND_HALF_UP));
+					  	 		}
+					  	 		if(!vatUnitRate.equals(BigDecimal.ZERO)){
+					  	 			vatUnitRate = vatUnitRate.subtract((vatUnitRate.multiply(termValue)).divide(new BigDecimal("100"), 3, BigDecimal.ROUND_HALF_UP));
+					  	 		}
+					  	 		
+					  	 	}
+					  	 	basicAmount = basicAmount.subtract(termAmount);
+				    	}	
+					}
 				    
 				    if( !vatUnitRate.equals(BigDecimal.ZERO)){
 					    
@@ -2055,7 +2086,12 @@ public class MaterialPurchaseServices {
 	    		inputMap.put("uomId", uomId);
 	    		inputMap.put("termValue", termValue);
 	    		//Debug.log("inputMap==========="+inputMap);
-	    		BigDecimal termAmount = OrderServices.calculatePurchaseOrderTermValue(ctx,inputMap);
+	    		BigDecimal termAmount =BigDecimal.ZERO;
+	    		if(adjustmentTypeId.equals("COGS_DISC")){
+	    			termAmount = discountBeforeTax;
+	    		}else{
+	    			termAmount = OrderServices.calculatePurchaseOrderTermValue(ctx,inputMap);
+	    		}
 	    		adjustCtx.put("amount", termAmount);
 	    	}
 	    	
