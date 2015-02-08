@@ -801,11 +801,15 @@ public static Map<String, Object> setReauirementStatusId(DispatchContext ctx,Map
 					  BigDecimal checkQty = (orderdQty.multiply(new BigDecimal(1.1))).setScale(0, BigDecimal.ROUND_CEILING);
 					  BigDecimal receivedQty=BigDecimal.ZERO;
 					  BigDecimal receivedQtyValue=BigDecimal.ZERO;
-					  Map productMap=(Map)receiptItemTotals.get(productId);
-					  if(productMap!=null){
-						  receivedQty=(BigDecimal)productMap.get("receivedQty");
-						  receivedQtyValue=(BigDecimal)productMap.get("receivedQtyValue");
+					  Map productMap=FastMap.newInstance();
+					  if(UtilValidate.isNotEmpty(receiptItemTotals)){
+						  Map productInnerMap= (Map)receiptItemTotals.get(productId);
+						  if(productMap!=null){
+							  receivedQty=(BigDecimal)productInnerMap.get("receivedQty");
+							  receivedQtyValue=(BigDecimal)productInnerMap.get("receivedQtyValue");
+						  }
 					  }
+					 
 					  BigDecimal toBeReceived=orderdQty.subtract(receivedQty);
 					  productMap.put("receivedQty",receivedQty);
 					  productMap.put("receivedQtyValue",receivedQtyValue);
