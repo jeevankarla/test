@@ -280,7 +280,7 @@ public class MaterialPurchaseServices {
 				}else{
 					deliveryChallanQty = quantity;
 				}
-				//old recived qty oldRecvdQty
+				//old recived qty oldRecvdQty for check
 				if (paramMap.containsKey("oldRecvdQty" + thisSuffix)) {
 					oldRecvdQtyStr = (String) paramMap.get("oldRecvdQty" + thisSuffix);
 				}
