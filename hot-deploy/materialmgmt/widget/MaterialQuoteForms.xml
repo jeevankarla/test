@@ -493,7 +493,7 @@
             	<list-options  list-name="filterTermTypeList" key-name="termTypeId" description="${description}"/>
             </drop-down>
         </field>
-        <field name="termTypeId" tooltip="${uiLabelMap.CommonRequired}" id-name="termTypeId">
+        <field name="termTypeId" tooltip="${uiLabelMap.CommonRequired}" id-name="termTypeId" event="onchange" action="javascript:showOrderTax();">
         	<drop-down allow-empty="true" current-description="">
        			 <list-options  list-name="termTypeIdList" key-name="termTypeId" description="${description}"/>
         	</drop-down>
@@ -506,7 +506,7 @@
                 </entity-options>
             </drop-down>
         </field>
-        <field name="uomId" title="Uom">
+        <field id-name="uomId" name="uomId" title="Uom" event="onchange" action="javascript:showOrderTax();">
         	<drop-down allow-empty="false">
         		<option key="INR" description="Rupees"/>
         		<option key="PERCENT" description="Percentage"/>
@@ -515,10 +515,15 @@
         <field name="quoteId"><hidden/></field>
         <!-- <field name="quoteItemSeqId"><hidden/></field> -->
         <!-- <field name="uomId"><hidden value="INR"/></field> -->
-        <field name="termValue" title="term Value"><text/></field>
+        <field  name="orderTaxTypeId" id-name="orderTaxTypeId" title="Order Tax Type"  >
+        	<drop-down allow-empty="true" current-description="">
+       			 <list-options  list-name="orderTaxTypeList" key-name="orderTaxTypeId" description="${taxRate}"/>
+        	</drop-down>
+        </field>
+        <field name="termValue" id-name="termValue" title="Value"><text/></field>
         <field name="termDays" title="term Days"><text/></field>
-        <field name="textValue" title="text Value"><text/></field>
+        <!-- <field name="textValue" title="text Value"><text/></field> -->
         <field name="description" title="description"><text/></field>
-        <field name="createButton"><submit button-type="button"/></field>
+        <field name="createButton" event="onclick" action="javascript:setTermValue();"><submit button-type="button"/></field>
       </form>
 </forms>

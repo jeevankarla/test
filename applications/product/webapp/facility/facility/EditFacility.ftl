@@ -318,7 +318,9 @@ var pmRouteList = ${StringUtil.wrapString(pmRouteList)}
   <tr>
     <td>&nbsp;</td>
     <#if facilityId?has_content>
-      <td><input type="submit" name="Update" value="${uiLabelMap.CommonUpdate}" /></td>
+		
+      <td><#if security.hasEntityPermission("","FACILITY_LOC_UPDATE", session)><input type="submit" name="Update" value="${uiLabelMap.CommonUpdate}" /></#if></td>
+		
     <#else>
       <td><input type="submit" name="Update" value="${uiLabelMap.CommonSave}" /></td>
     </#if>
