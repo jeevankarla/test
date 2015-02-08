@@ -1903,7 +1903,7 @@ public class MaterialPurchaseServices {
 				    	if(adjustmentTypeId.equals("COGS_DISC")){
 				    		Map inputMap = UtilMisc.toMap("userLogin",userLogin);
 				    		inputMap.put("termTypeId", adjustmentTypeId);
-				    		inputMap.put("basicAmount", basicAmount);
+				    		inputMap.put("basicAmount", unitPrice.multiply(quantity));
 				    		inputMap.put("exciseDuty", exciseDuty);
 				    		inputMap.put("uomId", uomId);
 				    		inputMap.put("termValue", termValue);
