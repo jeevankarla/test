@@ -103,13 +103,22 @@
             <actions>
                 <set field="titleProperty" value="Find Purchase Order"/>              
 			    <set field="tabButtonItem" value="FindMaterialPO" />	
-			      <set field="tabButtonItem2" value="FindMaterialPO"/>
-               <set field="viewSize" from-field="parameters.VIEW_SIZE"/>
+			    <set field="tabButtonItem2" value="FindMaterialPO"/>
+			    <service service-name="performFind" result-map="result" result-map-list="listIt">
+	                <field-map field-name="inputFields" from-field="parameters"/>
+	                <field-map field-name="entityName" value="OrderHeaderAndSequenceAndRoles"/>
+	                <field-map field-name="orderBy"  value="-orderDate"/>
+                </service>
                <set field="targetRequest" value="FindMaterialPO"/>
                <set field="ChannalType" value="MATERIAL_PUR_CHANNEL"/>
                <set field="partyId" from-field="parameters.partyId"/>
                <set field="roleTypeId" value="BILL_FROM_VENDOR"/>
-                <set field="parameters.roleTypeId" from-field="roleTypeId"/>
+               <set field="parameters.roleTypeId" from-field="roleTypeId"/>
+               <set field="parameters.noConditionFind"  value="N"></set> 
+               <set field="parameters.salesChannelEnumId"  value="MATERIAL_PUR_CHANNEL"></set> 
+               
+            <script location="component://materialmgmt/webapp/materialmgmt/WEB-INF/actions/purchases/POSearchFilter.groovy"/>
+                 
             </actions>
             <widgets>
                  <decorator-screen name="materialmgmtNgCommonDecorator" location="${parameters.mainDecoratorLocation}">
