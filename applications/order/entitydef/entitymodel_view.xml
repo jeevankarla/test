@@ -2166,7 +2166,7 @@ under the License.
       <view-link entity-alias="OH" rel-entity-alias="ORLE">
         <key-map field-name="orderId"/>
       </view-link>
-      <view-link entity-alias="OH" rel-entity-alias="OHS">
+      <view-link entity-alias="OH" rel-entity-alias="OHS" rel-optional="true">
         <key-map field-name="orderId"/>
       </view-link>
     </view-entity>
