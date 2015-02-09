@@ -619,15 +619,16 @@ public class MaterialRequestServices {
             //receiptItems for items 
             List conditionList = FastList.newInstance();
             conditionList.add(EntityCondition.makeCondition("productId", EntityOperator.EQUALS, productId));
-            conditionList.add(EntityCondition.makeCondition("statusId", EntityOperator.EQUALS, "SR_ACCEPTED"));
+            /*conditionList.add(EntityCondition.makeCondition("statusId", EntityOperator.EQUALS, "SR_ACCEPTED"));*/
             conditionList.add(EntityCondition.makeCondition("quantityOnHandTotal", EntityOperator.GREATER_THAN, BigDecimal.ZERO));
             if(UtilValidate.isNotEmpty(facilityId)){
             	conditionList.add(EntityCondition.makeCondition("facilityId", EntityOperator.EQUALS, facilityId));
             }
             EntityCondition condition = EntityCondition.makeCondition(conditionList, EntityOperator.AND);
             List<GenericValue> receiptInventoryItems = delegator.findList("ShipmentReceiptAndItem", condition, null, UtilMisc.toList("datetimeReceived"), null, false);
-            List<String> inventoryItemIdsExl = EntityUtil.getFieldListFromEntityList(receiptInventoryItems, "inventoryId", true);
             
+            List<GenericValue> qcAcceptedReceipts = EntityUtil.filterByCondition(receiptInventoryItems,EntityCondition.makeCondition("statusId", EntityOperator.EQUALS, "SR_ACCEPTED"));
+            List<String> inventoryItemIdsExl = EntityUtil.getFieldListFromEntityList(receiptInventoryItems, "inventoryId", true);
             // OB inventory Items
             conditionList.clear();
             conditionList.add(EntityCondition.makeCondition("productId", EntityOperator.EQUALS, productId));
@@ -641,8 +642,8 @@ public class MaterialRequestServices {
             	inventoryItems.addAll(inventoryOBItems);
             }
             
-            if(UtilValidate.isNotEmpty(receiptInventoryItems)){
-            	inventoryItems.addAll(receiptInventoryItems);
+            if(UtilValidate.isNotEmpty(qcAcceptedReceipts)){
+            	inventoryItems.addAll(qcAcceptedReceipts);
             }
             
             if (UtilValidate.isEmpty(inventoryItems)) {
