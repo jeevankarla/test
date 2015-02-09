@@ -602,4 +602,324 @@
             </widgets>
         </section>
     </screen>
+         <screen name="FGSProductSaleMm">
+        <section>
+            <actions>
+               <set field="titleProperty" value="Sale"/>              
+			   <set field="tabButtonItem" value="FGSProductSaleMm" />	
+			   <set field="tabButtonItem2" value="FGSProductSaleMm"/>  
+			    <set field="changeFlag" value="FgsSales"/>  
+               <set field="priceTypeId" from-field="parameters.priceTypeId"/>
+               <set field="orderStatus" from-field="parameters.orderStatus"/> 
+               <set field="orderId" from-field="parameters.orderId"/>
+               <set field="supplyDate" from-field="parameters.supplyDate"/>
+                <set field="isFormSubmitted" from-field="parameters.isFormSubmitted"/>
+               <set field="defaultEffectiveDateTime" value="${supplyDate}" default-value="${bsh:org.ofbiz.base.util.UtilDateTime.nowTimestamp()}"/>
+			   <set field="defaultEffectiveDate" 
+					value="${groovy:org.ofbiz.base.util.UtilDateTime.toDateString(defaultEffectiveDateTime, &quot;dd MMMMM, yyyy&quot;);}" />	
+				 <set field="parameters.roleTypeId" value="FGS_CUSTOMER"/>
+				 <set field="productCategoryResult" value="${groovy:org.ofbiz.product.product.ProductWorker.getProductsByCategoryAssoc(delegator, 'INDENT_PROD_CAT', 'FGS_INDENT', null)}" />
+				 <set field="productStoreResult" value="${groovy:in.vasista.vbiz.byproducts.icp.ICPServices.getProductStoreByGroupId(delegator, 'FG_STORE')}" />
+				<set field="productStoreId" value="${productStoreResult.factoryStoreId}"/>
+				<set field="categoryList" value="${productCategoryResult.productCategory}"/>
+            </actions>
+            <widgets>
+              <decorator-screen name="materialmgmtNgCommonDecorator" location="${parameters.mainDecoratorLocation}">
+                      <decorator-section name="body">   
+                      <include-menu name="FGSSaleTabBarMm" location="component://materialmgmt/widget/materialmgmtMenus.xml"/>
+                      	<section>
+	                    	<condition>
+	                        	<if-compare operator="equals" field="isFormSubmitted" value=""/>
+	                        </condition>
+                      		<widgets>
+           						<include-screen name="AdhocSaleInnerMm"/>
+                      		</widgets>
+                      	</section>
+                      <section>
+                      <condition>
+                      <if-compare operator="equals" field="isFormSubmitted" value="YES"/>
+                      </condition>
+                          <widgets>
+      						 <include-screen name="SalesInnerScreenMm"/>
+                 		</widgets>
+                      </section>
+                    </decorator-section>                                       
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+     <screen name="ProcessFGSOrdersMm">
+        <section>
+            <actions>
+                <set field="titleProperty" value="Process Union Orders"/>              
+			    <set field="tabButtonItem" value="FGSProductSaleMm" />	
+			   <set field="tabButtonItem2" value="ProcessFGSOrdersMm"/>       
+               <set field="headerItem" value="byProductsOrderEntry"/>
+               <set field="viewSize" from-field="parameters.VIEW_SIZE"/>
+               <set field="defaultEffectiveDateTime" value="${bsh:org.ofbiz.base.util.UtilDateTime.getDayStart(org.ofbiz.base.util.UtilDateTime.nowTimestamp())}"/>
+			    <set field="defaultEffectiveDate" 
+					value="${groovy:org.ofbiz.base.util.UtilDateTime.toDateString(defaultEffectiveDateTime, &quot;dd MMMMM, yyyy&quot;);}" />
+               <set field="shipmentTypeId" from-field="parameters.shipmentTypeId"/>
+               <set field="salesChannelEnumId" from-field="parameters.salesChannelEnumId" />
+               <set field="screenFlag" value="fgsSales"/>
+               <script	location="component://byproducts/webapp/byproducts/WEB-INF/actions/facility/getIcpSalesOrder.groovy" />
+            </actions>
+            <widgets>
+              <decorator-screen name="materialmgmtNgCommonDecorator" location="${parameters.mainDecoratorLocation}">
+                      <decorator-section name="body">  
+                      <include-menu name="FGSSaleTabBarMm" location="component://materialmgmt/widget/materialmgmtMenus.xml"/>
+                        <section>
+                            <widgets>
+               					<screenlet title="FGS Orders">
+               						<platform-specific><html><html-template location="component://materialmgmt/webapp/materialmgmt/purchase/ListSearchIceCreamOrdersMm.ftl"/></html></platform-specific>
+               					</screenlet>
+                            </widgets>
+                        </section>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>            
+        </section>
+    </screen>
+    <screen name="FindFGSShipmentMm">
+        <section>
+            <actions>
+                <set field="titleProperty" value="Find Union Sale Shipments"/>              
+			    <set field="tabButtonItem" value="FGSProductSaleMm" />	
+			   <set field="tabButtonItem2" value="FindFGSShipmentMm"/>       
+               <set field="viewSize" from-field="parameters.VIEW_SIZE"/>
+               <set field="targetRequest" value="FindFGSShipmentMm"/>
+               <set field="shipmentTypeId" value="FGS_SHIPMENT"/>
+               <set field="screenFlag" value="fgsSales"/>
+            </actions>
+            <widgets>
+              <decorator-screen name="materialmgmtNgCommonDecorator" location="${parameters.mainDecoratorLocation}">
+                      <decorator-section name="body">  
+                      <include-menu name="FGSSaleTabBarMm" location="component://materialmgmt/widget/materialmgmtMenus.xml"/>
+                        <section>
+                            <widgets>
+                                <decorator-screen name="FindScreenDecorator" location="component://common/widget/CommonScreens.xml">
+                                    <decorator-section name="search-options">
+			                            			<include-form name="FindICPShipmentMm" location="component://materialmgmt/widget/materialmgmtForms.xml"/>
+                      				</decorator-section>
+                      				<decorator-section name="search-results">
+                      					<screenlet title="">
+                      						<include-form name="listFGSShipmentsMm" location="component://materialmgmt/widget/materialmgmtForms.xml"/>
+                      					</screenlet>
+                      				</decorator-section>
+                                </decorator-screen>
+                            </widgets>
+                        </section>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>            
+        </section>
+    </screen>
+    <screen name="InterUnitStkTrMm">
+        <section>
+            <actions>
+               <set field="titleProperty" value="Inter Unit Transfer"/>              
+			   <set field="tabButtonItem" value="InterUnitStkTrMm" />	
+			   <set field="tabButtonItem2" value="InterUnitStkTrMm"/>  
+			    <set field="changeFlag" value="InterUnitTransferSale"/>  
+               <set field="priceTypeId" from-field="parameters.priceTypeId"/>
+               <set field="orderStatus" from-field="parameters.orderStatus"/> 
+               <set field="orderId" from-field="parameters.orderId"/>
+               <set field="orderFacility" from-field="parameters.orderFacility"/> 
+               <set field="orderRoute" from-field="parameters.orderRoute"/> 
+               <set field="supplyDate" from-field="parameters.supplyDate"/>
+                <set field="isFormSubmitted" from-field="parameters.isFormSubmitted"/>
+               <set field="defaultEffectiveDateTime" value="${supplyDate}" default-value="${bsh:org.ofbiz.base.util.UtilDateTime.nowTimestamp()}"/>
+			   <set field="defaultEffectiveDate" 
+					value="${groovy:org.ofbiz.base.util.UtilDateTime.toDateString(defaultEffectiveDateTime, &quot;dd MMMMM, yyyy&quot;);}" />
+			   <set field="parameters.roleTypeId" value="UNITS"/>
+			   <set field="productStoreResult"	value="${groovy:in.vasista.vbiz.byproducts.icp.ICPServices.getProductStoreByGroupId(delegator, 'FG_STORE')}" />
+				<set field="productStoreId" value="${productStoreResult.factoryStoreId}"/>
+				<set field="productCategoryResult" value="${groovy:org.ofbiz.product.product.ProductWorker.getProductsByCategoryAssoc(delegator, 'INDENT_PROD_CAT', 'FGS_INDENT', null)}" />
+				 <set field="productStoreResult" value="${groovy:in.vasista.vbiz.byproducts.icp.ICPServices.getProductStoreByGroupId(delegator, 'FG_STORE')}" />
+				<set field="categoryList" value="${productCategoryResult.productCategory}"/>		
+			   					  					  
+            </actions>
+            <widgets>
+              <decorator-screen name="materialmgmtNgCommonDecorator" location="${parameters.mainDecoratorLocation}">
+                      <decorator-section name="body">   
+                      <include-menu name="InterUnitTrTabBarMm" location="component://materialmgmt/widget/materialmgmtMenus.xml"/>
+                      	<section>
+	                      	  <condition>
+	                             <if-compare operator="equals" field="isFormSubmitted" value=""/>
+	                         </condition>
+	                      		<widgets>
+	           						<include-screen name="AdhocSaleInnerMm"/>
+	                      		</widgets>
+                      	</section>
+                      <section>
+                      <condition>
+                      <if-compare operator="equals" field="isFormSubmitted" value="YES"/>
+                      </condition>
+                         <widgets>
+     						 <include-screen name="SalesInnerScreenMm"/>
+                		</widgets>
+                      </section>
+                      
+                    </decorator-section>                                       
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+     <screen name="ProcessInterUnitStkTrMm">
+        <section>
+            <actions>
+                <set field="titleProperty" value="Inter Unit Transfer"/>              
+			    <set field="tabButtonItem" value="InterUnitStkTrMm" />	
+			   <set field="tabButtonItem2" value="ProcessInterUnitStkTrMm"/>       
+               <set field="headerItem" value="OrderEntry"/>
+               <set field="viewSize" from-field="parameters.VIEW_SIZE"/>
+               <set field="defaultEffectiveDateTime" value="${bsh:org.ofbiz.base.util.UtilDateTime.getDayStart(org.ofbiz.base.util.UtilDateTime.nowTimestamp())}"/>
+			    <set field="defaultEffectiveDate" 
+					value="${groovy:org.ofbiz.base.util.UtilDateTime.toDateString(defaultEffectiveDateTime, &quot;dd MMMMM, yyyy&quot;);}" />
+               <set field="shipmentTypeId" from-field="parameters.shipmentTypeId"/>
+               <set field="salesChannelEnumId" from-field="parameters.salesChannelEnumId" />
+               <set field="screenFlag" value="InterUnitTransferSale"/>
+               <script	location="component://byproducts/webapp/byproducts/WEB-INF/actions/facility/getIcpSalesOrder.groovy" />
+            </actions>
+            <widgets>
+              <decorator-screen name="materialmgmtNgCommonDecorator" location="${parameters.mainDecoratorLocation}">
+                      <decorator-section name="body">  
+                      <include-menu name="InterUnitTrTabBarMm" location="component://materialmgmt/widget/materialmgmtMenus.xml"/>
+                        <section>
+                            <widgets>
+               					<screenlet title="Inter Unit Transfer Orders">
+               						<platform-specific><html><html-template location="component://materialmgmt/webapp/materialmgmt/purchase/ListSearchIceCreamOrdersMm.ftl"/></html></platform-specific>
+               					</screenlet>
+                            </widgets>
+                        </section>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>            
+        </section>
+    </screen>
+    <screen name="FindStockTranferShipmentMm">
+        <section>
+            <actions>
+                <set field="titleProperty" value="Find Stock Transfer Shipment"/>              
+			    <set field="tabButtonItem" value="InterUnitStkTrMm" />	
+			   <set field="tabButtonItem2" value="FindStockTranferShipmentMm"/>       
+               <set field="viewSize" from-field="parameters.VIEW_SIZE"/>
+               <set field="targetRequest" value="FindStockTranferShipmentMm"/>
+               <set field="shipmentTypeId" value="INTUNIT_TR_SHIPMENT"/> 
+               <set field="screenFlag" value="InterUnitTransferSale"/> 
+            </actions>
+            <widgets>
+              <decorator-screen name="materialmgmtNgCommonDecorator" location="${parameters.mainDecoratorLocation}">
+                      <decorator-section name="body">  
+                      <include-menu name="InterUnitTrTabBarMm" location="component://materialmgmt/widget/materialmgmtMenus.xml"/>
+                        <section>
+                            <widgets>
+                                <decorator-screen name="FindScreenDecorator" location="component://common/widget/CommonScreens.xml">
+                                    <decorator-section name="search-options">
+			                            			<include-form name="FindICPShipmentMm" location="component://materialmgmt/widget/materialmgmtForms.xml"/>
+                      				</decorator-section>
+                      				<decorator-section name="search-results">
+                      					<screenlet title="Inter Unit Stock Transfrd Shipments">
+                      						<include-form name="listInterUnitShipmentsMm" location="component://materialmgmt/widget/materialmgmtForms.xml"/>
+                      					</screenlet>
+                      				</decorator-section>
+                                </decorator-screen>
+                            </widgets>
+                        </section>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>            
+        </section>
+    </screen>
+     <screen name="AdhocSaleInnerMm">
+        <section>
+            <actions>
+               <set field="changeFlag" from-field="changeFlag"/> 
+               <set field="productSubscriptionTypeId" value="${parameters.productSubscriptionTypeId}"/>
+               <set field="subscriptionTypeId" from-field="parameters.subscriptionTypeId"/>
+               <entity-one value-field="showBoothAutoSuggestConf" entity-name="TenantConfiguration">
+               		<field-map field-name="propertyTypeEnumId" value="FACILITY_AUTOSUGGEST"/>
+               		<field-map field-name="propertyName" value="showBoothAutoSuggest"/>
+               		<select-field field-name="propertyValue"/>
+               </entity-one>
+              
+            
+               <set field="showBoothAutoSuggest" value="${showBoothAutoSuggestConf.propertyValue}"/>
+               <set field="supplyDate" from-field="parameters.supplyDate"/>
+               <set field="effectiveDate" value="${parameters.effectiveDate}"/>
+               <set field="checkListType" value="indentEntry"/>
+               <set field="shipmentTypeId" value="${parameters.shipmentTypeId}"/>
+                <entity-condition entity-name="Enumeration" list="prodSubTypes" use-cache="true">
+                	<condition-list>
+                    	<condition-expr field-name="enumTypeId" value="SUB_PROD_TYPE"/>  
+                    	<condition-expr field-name="enumId" operator="not-equals" value="CARD"/> 
+                    	 <condition-expr field-name="enumId" operator="not-equals" value="LEAK"/>  
+                    </condition-list>
+                    <order-by field-name="sequenceId"/>
+                </entity-condition>
+              
+                <entity-condition entity-name="Product" list="productList" use-cache="true">
+                </entity-condition>                
+                <script location="component://byproducts/webapp/byproducts/WEB-INF/actions/recentChangeIndents.groovy"/>
+              <!--   <script location="component://byproducts/webapp/byproducts/WEB-INF/actions/indentCheckListReport.groovy"/>  --> 
+              <!--   <script location="component://byproducts/webapp/byproducts/WEB-INF/actions/facility/enableBoothAutoComplete.groovy"/> -->
+                <script location="component://byproducts/webapp/byproducts/WEB-INF/actions/facility/enablePartyAutoComplete.groovy"/>
+               <set field="routeId" from-field="parameters.routeId"/>            
+            </actions>
+            <widgets>
+               	<section>
+                 	 <widgets>
+          					<platform-specific><html><html-template location="component://materialmgmt/webapp/materialmgmt/purchase/indentAdhocSaleMm.ftl"/></html></platform-specific>
+                     </widgets>
+                     <fail-widgets>
+						<label style="h3">${uiLabelMap.ProductFacilityViewPermissionError}
+						</label>
+					</fail-widgets>
+             	</section>                  
+            </widgets>
+        </section>
+    </screen> 
+    
+     <screen name="SalesInnerScreenMm">
+        <section>
+            <actions>
+            	<set field="changeFlag" from-field="changeFlag"/>  
+               	<set field="productSubscriptionTypeId" from-field="parameters.productSubscriptionTypeId"/>
+               	<set field="subscriptionTypeId" from-field="parameters.subscriptionTypeId"/> 
+               	<set field="boothId" from-field="parameters.boothId"/>
+                <!-- <entity-condition entity-name="Enumeration" list="prodSubTypes" use-cache="true">
+                    <condition-expr field-name="enumTypeId" value="SUB_PROD_TYPE"/>
+                    <order-by field-name="sequenceId"/>
+                </entity-condition> -->
+                <set field="checkListType" value="indentEntry"/>
+                <set field="effectiveDate" value="${parameters.effectiveDate}"/>
+                <set field="shipmentTypeId" value="${parameters.shipmentTypeId}"/>
+                <set field="priceTypeId" from-field="parameters.priceTypeId"/>
+                <set field="PONumber" from-field="parameters.PONumber"/>
+                <set field="promotionAdj" from-field="parameters.promotionAdj"/>
+                <set field="productCategoryId" from-field="parameters.productCategoryId"/>
+                <set field="vehicleId" from-field="parameters.vehicleId"/>
+                <script location="component://byproducts/webapp/byproducts/WEB-INF/actions/facility/AdhocIndentForm.groovy"/>
+                <script location="component://byproducts/webapp/byproducts/WEB-INF/actions/facility/EditStoreOrderForm.groovy"/>
+              <!--   <script location="component://byproducts/webapp/byproducts/WEB-INF/actions/recentChangeIndents.groovy"/>   -->              
+               <!--  <script location="component://byproducts/webapp/byproducts/WEB-INF/actions/indentCheckListReport.groovy"/>    -->             
+            </actions>
+            <widgets>
+                   <section>
+               	   <condition>
+               			<and>                     		
+          					<if-has-permission permission="BYPRODUCTS" action="_INDENT"/>
+              					<not><if-empty field="booth"/></not>
+               			</and>
+               		</condition> 
+                       	<widgets>
+                       	    <platform-specific><html><html-template location="component://materialmgmt/webapp/materialmgmt/purchase/indentAdhocSaleMm.ftl"/></html></platform-specific>
+                        </widgets>
+                       <fail-widgets>
+                           <platform-specific><html><html-template location="component://materialmgmt/webapp/materialmgmt/purchase/indentAdhocSaleMm.ftl"/></html></platform-specific>								                           
+                       </fail-widgets>
+                   </section>
+            </widgets>
+        </section>
+    </screen>
 </screens>
