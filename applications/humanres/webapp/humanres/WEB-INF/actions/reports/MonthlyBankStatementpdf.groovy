@@ -19,6 +19,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import org.ofbiz.service.ServiceUtil;
 import org.ofbiz.base.util.UtilNumber;
+import org.ofbiz.party.party.PartyHelper;
 import in.vasista.vbiz.humanres.PayrollService;
 import in.vasista.vbiz.humanres.HumanresService;
 
@@ -185,11 +186,12 @@ if(UtilValidate.isNotEmpty(companyBankAccountList)){
 									accNo = partyFin.get("finAccountCode");
 									bankAdviceDetailsMap.put("acNo",accNo);
 									if(UtilValidate.isNotEmpty(partyDetails.employeeId)){
+										partyId = partyDetails.get("employeeId");
 										bankAdviceDetailsMap.put("emplNo",partyDetails.get("employeeId"));
-										partyDetails = delegator.findOne("Person",[ partyId : partyDetails.get("employeeId") ], false);
+										partyDetails = delegator.findOne("Person",[ partyId : partyId ], false);
 										String partyName = partyDetails.get("nickname");
 										if(UtilValidate.isEmpty(partyName)){
-											partyName = PartyHelper.getPartyName(delegator, partyDetails.get("employeeId"), false);
+											partyName = PartyHelper.getPartyName(delegator, partyId, false);
 										}
 										bankAdviceDetailsMap["empName"]= partyName;
 									}else{
