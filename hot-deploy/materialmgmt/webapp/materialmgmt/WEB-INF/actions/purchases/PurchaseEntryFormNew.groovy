@@ -183,3 +183,28 @@ if(UtilValidate.isNotEmpty(purchaseTypeFlag) && purchaseTypeFlag == "contractPur
 
 productStoreId =PurchaseStoreServices.getPurchaseFactoryStore(delegator).get("factoryStoreId");
 context.productStoreId = productStoreId;
+
+
+JSONArray cstJSON = new JSONArray();
+JSONArray vatJSON = new JSONArray();
+JSONArray excJSON = new JSONArray();
+orderTaxTypeList=delegator.findList("OrderTaxType",null,UtilMisc.toSet("taxType","taxRate"),null,null,false);
+if(UtilValidate.isNotEmpty(orderTaxTypeList)){
+	orderTaxTypeList.each{ orderTax ->
+		JSONObject newObjt = new JSONObject();
+		newObjt.put("value",orderTax.taxRate);
+		newObjt.put("label",orderTax.taxRate);
+		if(orderTax.taxType=="EXCISE_DUTY_PUR"){
+			excJSON.add(newObjt);
+		}
+		if(orderTax.taxType=="CST_PUR"){
+			cstJSON.add(newObjt);
+		}
+		if(orderTax.taxType=="VAT_PUR"){
+			vatJSON.add(newObjt);
+		}
+	}
+}
+context.cstJSON=cstJSON;
+context.excJSON=excJSON;
+context.vatJSON=vatJSON;

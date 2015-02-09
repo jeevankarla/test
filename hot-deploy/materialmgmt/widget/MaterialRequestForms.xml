@@ -56,7 +56,7 @@
         <field name="lastModifiedDate" ><display/></field>
         <field name="createdByUserLogin" ><display/></field>
         
-        <field use-when="&quot;${statusId}&quot;== &quot;CRQ_DRAFT&quot;" name="cancel" widget-style="buttontext">
+        <field use-when="&quot;${statusId}&quot;== &quot;CRQ_DRAFT&quot; &amp;&amp;${groovy:((security.hasEntityPermission(&quot;MM&quot;, &quot;_CANCEL_INDENT&quot;, session)))}" name="cancel" widget-style="buttontext">
             <hyperlink target="setRequestStatus" description="Cancel">
                 <parameter param-name="custRequestId"/>
                 <parameter param-name="statusId" value="CRQ_CANCELLED"/>
@@ -309,7 +309,7 @@
         <field name="lastModifiedDate" sort-field="true"><display/></field>
         <field name="createdByUserLogin" sort-field="true"><display/></field>
         
-        <field use-when="${itemSize}==0" name="cancel" widget-style="buttontext">
+        <field use-when="${itemSize}==0 &amp;&amp;${groovy:((security.hasEntityPermission(&quot;MM&quot;, &quot;_CANCEL_ENQ&quot;, session)))}" name="cancel" widget-style="buttontext">
             <hyperlink target="updateEnquiryStatus" description="Cancel">
                 <parameter param-name="custRequestId"/>
                 <parameter param-name="statusId" value="ENQ_CANCELLED"/>

@@ -74,6 +74,9 @@
 	var deliveryTermsJSON = ${StringUtil.wrapString(deliveryTermsJSON)!'[]'};	
 	var otherTermsJSON = ${StringUtil.wrapString(otherTermsJSON)!'[]'};	
 	
+	var cstlableTags = ${StringUtil.wrapString(cstJSON)!'[]'};
+	var exclableTags = ${StringUtil.wrapString(excJSON)!'[]'};
+	var vatlableTags = ${StringUtil.wrapString(vatJSON)!'[]'};
 	function requiredFieldValidator(value) {
 		if (value == null || value == undefined || !value.length)
 			return {valid:false, msg:"This is a required field"};
@@ -166,7 +169,6 @@
     }
 
     function productValidator(value,item) {
-      
     	var currProdCnt = 1;
 	  	for (var rowCount=0; rowCount < data.length; ++rowCount)
 	  	{ 
@@ -194,7 +196,57 @@
 	  	}      
       	return {valid: true, msg: null};
     }
-    
+    //persent Validation
+	function excValidator(value){
+		var invalidValue = 0;
+	  	for (var rowCount=0; rowCount < exclableTags.length; ++rowCount)
+	  	{  
+			if (value == exclableTags[rowCount]["label"] || value==0) {
+				invalidValue = 1;
+			}
+	  	}
+		if(invalidValue == 0){
+      		return {valid: false, msg: "Invalid Product " + value};
+      	}
+		return {valid: true, msg: null};
+	}
+	function vatValidator(value,item){
+		var invalidValue = 0;
+	  	for (var rowCount=0; rowCount < vatlableTags.length; ++rowCount)
+	  	{  
+			if (value == vatlableTags[rowCount]["label"] || value==0) {
+				invalidValue = 1;
+			}
+			
+	  	}
+	  	var cstPrecent =item['cstPercent'];
+	  	
+	  	if( cstPrecent>0){
+	  		invalidValue=0;
+	  	}
+		if(invalidValue == 0){
+      		return {valid: false, msg: "Invalid Product " + value};
+      	}
+		return {valid: true, msg: null};
+	}
+	function cstValidator(value,item){
+		var invalidValue = 0;
+	  	for (var rowCount=0; rowCount < cstlableTags.length; ++rowCount)
+	  	{  
+			if (value == cstlableTags[rowCount]["label"] || value==0) {
+				invalidValue = 1;
+			}
+	  	}
+	  	var vatPercent =item['vatPercent'];
+	  	if(vatPercent>0){
+	  		invalidValue=0;
+	  	}
+		if(invalidValue == 0){
+      		return {valid: false, msg: "Invalid Product " + value};
+      	}
+		
+		return {valid: true, msg: null};
+	}
     //quantity validator
 	function quantityFormatter(row, cell, value, columnDef, dataContext) { 
 		if(value == null){
@@ -242,14 +294,14 @@
 				if(!isNaN(data[i]["cstPercent"])){
 					cstPercent = data[i]["cstPercent"];
 				}
-					
+				
     			if(!isIncTax){
     			
 					var basicPrice = parseFloat(Math.round( ((qty*unitPrice) * 100) / 100 ));
 					var bedAmt = parseFloat(Math.round(((basicPrice*(bedPercent/100)) * 100) / 100));
 					var basePrice = basicPrice+bedAmt;
 					var vatAmt = parseFloat(Math.round(((basePrice*(vatPercent/100)) * 100) / 100));
-					var cstAmt = parseFloat(Math.round(((basePrice*(bedPercent/100)) * 100) / 100));
+					var cstAmt = parseFloat(Math.round(((basePrice*(cstPercent/100)) * 100) / 100));
 					
 					itemTotal = basePrice+vatAmt+cstAmt;
 	    		}
@@ -316,9 +368,9 @@
 			{id:"uomDescription", name:"UOM", field:"uomDescription", width:70, minWidth:70, cssClass:"readOnlyColumnClass", sortable:false, focusable :false, align:"right", toolTip:"Unit of Measure"},
 			{id:"unitPrice", name:"Basic Unit Price", field:"unitPrice", width:130, minWidth:130, editor:FloatCellEditor, sortable:false, formatter: rateFormatter, align:"right", toolTip:"UD Price"},
 			{id:"amount", name:"Amount(Rs)", field:"amount", width:100, minWidth:100, cssClass:"readOnlyColumnClass", sortable:false, formatter: rateFormatter, focusable :false},
-			{id:"bedPercent", name:"Excise(%)", field:"bedPercent", width:80, minWidth:80, editor:FloatCellEditor, sortable:false, formatter: rateFormatter, align:"right", toolTip:"Excise Percent"},
-			{id:"vatPercent", name:"VAT(%)", field:"vatPercent", width:80, minWidth:80, editor:FloatCellEditor, sortable:false, formatter: rateFormatter, align:"right", toolTip:"VAT Percent"},
-			{id:"cstPercent", name:"CST (%)", field:"cstPercent", width:80, minWidth:80, editor:FloatCellEditor, sortable:false, formatter: rateFormatter, align:"right", toolTip:"CST Percentage"},
+			{id:"bedPercent", name:"Excise(%)", field:"bedPercent", width:80, minWidth:80, editor:FloatCellEditor, sortable:false, formatter: rateFormatter, align:"right", toolTip:"Excise Percent", availableTags: exclableTags, editor: AutoCompleteEditor,validator:excValidator},
+			{id:"vatPercent", name:"VAT(%)", field:"vatPercent", width:80, minWidth:80, editor:FloatCellEditor, sortable:false, formatter: rateFormatter, align:"right", toolTip:"VAT Percent", availableTags: vatlableTags, editor: AutoCompleteEditor,validator:vatValidator},
+			{id:"cstPercent", name:"CST (%)", field:"cstPercent", width:80, minWidth:80, editor:FloatCellEditor, sortable:false, formatter: rateFormatter, align:"right", toolTip:"CST Percentage", availableTags: cstlableTags, editor: AutoCompleteEditor,validator:cstValidator},
 			
 		];
             
@@ -472,6 +524,8 @@
 			}
 			
 		}); 
+		
+		
 		
 		grid.onActiveCellChanged.subscribe(function(e,args) {
         	if (args.cell == 1 && data[args.row] != null) {

@@ -111,6 +111,9 @@
     <SecurityGroupPermission groupId="FULLADMIN" permissionId="MM_QUOTATION_VIEW"/>
     <SecurityGroupPermission groupId="MM_QUOTATION_VIEW"  permissionId="materialmgmt_VIEW"/>
     <SecurityGroupPermission groupId="MM_QUOTATION_VIEW"  permissionId="OFBTOOLS_VIEW"/>
+    <SecurityGroupPermission groupId="MM_QUOTATION_VIEW"  permissionId="CATALOG_VIEW"/>
+     <SecurityGroupPermission groupId="MM_QUOTATION_VIEW"  permissionId="CATALOG_CREATE"/>
+    <SecurityGroupPermission groupId="MM_QUOTATION_VIEW"  permissionId="CATALOG_UPDATE"/>
     
     <SecurityPermission description="View Purchase Order" permissionId="MM_PORDER_VIEW"/>
     <SecurityGroup description="Viewing the Purchase TAB!" groupId="MM_PO_VIEW"/>
@@ -151,6 +154,7 @@
     <SecurityGroupPermission groupId="MM_QC_VIEW"  permissionId="ACCOUNTING_APINVOICE_EDIT"/>
     <SecurityGroupPermission groupId="MM_QC_VIEW"  permissionId="ACCOUNTING_UPDATE"/>
     
+    
     <SecurityPermission description="View Material Invoice" permissionId="MM_MINVOICE_VIEW"/>
     <SecurityGroup description="Viewing the Find Material Invoice TAB!" groupId="MM_MINVOICE_VIEW"/>
     <SecurityGroupPermission groupId="MM_MINVOICE_VIEW"  permissionId="MM_MINVOICE_VIEW"/>
@@ -170,6 +174,8 @@
     <SecurityGroupPermission groupId="FULLADMIN" permissionId="MM_REPORTS_VIEW"/>
     <SecurityGroupPermission groupId="MM_REPORTS_VIEW"  permissionId="materialmgmt_VIEW"/>
     <SecurityGroupPermission groupId="MM_REPORTS_VIEW"  permissionId="OFBTOOLS_VIEW"/>
+    <SecurityGroupPermission groupId="MM_REPORTS_VIEW"  permissionId="CATALOG_VIEW"/>
+    
     
     <SecurityGroup description="Material Management Store Manager !" groupId="MM_STORE_MANAGER"/>
     <SecurityGroupPermission groupId="MM_STORE_MANAGER"  permissionId="MM_STORE_ISSUE_VIEW"/>
@@ -271,6 +277,7 @@
     <SecurityGroupPermission groupId="MM_QC_MANAGER"  permissionId="MM_INDENT_ENTRY"/>
     <SecurityGroupPermission groupId="MM_QC_MANAGER"  permissionId="MM_DEPT_HEAD_APPROVE"/>
     <SecurityGroupPermission groupId="MM_QC_MANAGER"  permissionId="MM_RECEIPT_AKNOWL"/>
+    <SecurityGroupPermission groupId="MM_QC_MANAGER"  permissionId="CATALOG_VIEW"/>
     
     <SecurityGroup description="Material Management User Department !" groupId="MM_USEER_DEPT"/>
     <SecurityGroupPermission groupId="MM_USEER_DEPT"  permissionId="MM_INDENT_VIEW"/>
@@ -397,5 +404,15 @@
 	<SecurityGroupPermission groupId="MM_ACCOUNT_MANAGER"  permissionId="PARTYMGR_VIEW"/>
 	<SecurityGroupPermission groupId="MM_QC_MANAGER"  permissionId="PARTYMGR_VIEW"/>
 	<SecurityGroupPermission groupId="MM_USEER_DEPT"  permissionId="PARTYMGR_VIEW"/>
+	
+	<SecurityPermission description="Cancel Indent" permissionId="MM_CANCEL_INDENT"/>
+    <SecurityGroup description="Cancel Indent!" groupId="MM_CANCEL_INDENT"/>
+    <SecurityGroupPermission groupId="MM_CANCEL_INDENT"  permissionId="MM_CANCEL_INDENT"/>
+    <SecurityGroupPermission groupId="FULLADMIN" permissionId="MM_CANCEL_INDENT"/>
+    
+    <SecurityPermission description="Cancel Enquiry" permissionId="MM_CANCEL_ENQ"/>
+    <SecurityGroup description="Cancel Enquiry!" groupId="MM_CANCEL_ENQ"/>
+    <SecurityGroupPermission groupId="MM_CANCEL_ENQ"  permissionId="MM_CANCEL_ENQ"/>
+    <SecurityGroupPermission groupId="FULLADMIN" permissionId="MM_CANCEL_ENQ"/>
      
 </entity-engine-xml>
