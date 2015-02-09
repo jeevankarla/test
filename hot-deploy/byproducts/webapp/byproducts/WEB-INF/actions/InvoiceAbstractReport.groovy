@@ -92,7 +92,12 @@ if(UtilValidate.isNotEmpty(reportTypeFlag) && reportTypeFlag == "InvoiceSales"){
 	shippingDetails=[:];
 	if(UtilValidate.isNotEmpty(partyIds)){
 		invoiceTaxMap = SalesInvoiceServices.getInvoiceSalesTaxItems(dctx, [partyIds:partyIds,fromDate:dayBegin, thruDate:dayEnd]).get("invoiceTaxMap");
-		salesInvoiceTotals = SalesInvoiceServices.getPeriodSalesInvoiceTotals(dctx, [categoryType:categoryType,partyIds:partyIds, isQuantityLtrs:true,fromDate:dayBegin, thruDate:dayEnd]);
+		if("ICE_CREAM_NANDINI".equals(categoryType)){
+			IcpStocktrnsflag="N";
+		salesInvoiceTotals = SalesInvoiceServices.getPeriodSalesInvoiceTotals(dctx, [IcpStocktrnsflag:IcpStocktrnsflag,partyIds:partyIds, isQuantityLtrs:true,fromDate:dayBegin, thruDate:dayEnd]);
+		}else{
+			salesInvoiceTotals = SalesInvoiceServices.getPeriodSalesInvoiceTotals(dctx, [categoryType:categoryType,partyIds:partyIds, isQuantityLtrs:true,fromDate:dayBegin, thruDate:dayEnd]);
+		}
 		if(UtilValidate.isNotEmpty(salesInvoiceTotals)){
 			invoiceTotals = salesInvoiceTotals.get("invoiceIdTotals");
 			if(UtilValidate.isNotEmpty(invoiceTotals)){
@@ -195,8 +200,13 @@ if(UtilValidate.isNotEmpty(reportTypeFlag) && reportTypeFlag == "InvoiceSalesAbs
 		invoicePartyMap = [:];
 		if(UtilValidate.isNotEmpty(partyIds)){
 			invoiceTaxMap = SalesInvoiceServices.getInvoiceSalesTaxItems(dctx, [partyIds:partyIds,fromDate:dayBegin, thruDate:dayEnd]).get("invoiceTaxMap");
+		if("ICE_CREAM_NANDINI".equals(categoryType)){
+			IcpStocktrnsflag="N";
+		salesInvoiceTotals = SalesInvoiceServices.getPeriodSalesInvoiceTotals(dctx, [IcpStocktrnsflag:IcpStocktrnsflag,partyIds:partyIds, isQuantityLtrs:true,fromDate:dayBegin, thruDate:dayEnd]);
+		}else{
 			salesInvoiceTotals = SalesInvoiceServices.getPeriodSalesInvoiceTotals(dctx, [categoryType:categoryType,partyIds:partyIds, isQuantityLtrs:true,fromDate:dayBegin, thruDate:dayEnd]);
-			if(UtilValidate.isNotEmpty(salesInvoiceTotals)){
+		}	
+				if(UtilValidate.isNotEmpty(salesInvoiceTotals)){
 				invoiceTotals = salesInvoiceTotals.get("invoiceIdTotals");
 				if(UtilValidate.isNotEmpty(invoiceTotals)){
 					invoiceTotals.each { invoice ->
