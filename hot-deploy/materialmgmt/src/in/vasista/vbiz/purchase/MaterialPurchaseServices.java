@@ -1913,7 +1913,7 @@ public class MaterialPurchaseServices {
 					  	 	//modify the vat unit rate here
 					  	 	if(uomId.equals("PERCENT") ){
 					  	 		if(!cstUnitRate.equals(BigDecimal.ZERO)){
-					  	 			cstUnitRate = cstUnitRate.subtract((vatUnitRate.multiply(termValue)).divide(new BigDecimal("100"), 3, BigDecimal.ROUND_HALF_UP));
+					  	 			cstUnitRate = cstUnitRate.subtract((cstUnitRate.multiply(termValue)).divide(new BigDecimal("100"), 3, BigDecimal.ROUND_HALF_UP));
 					  	 		}
 					  	 		if(!vatUnitRate.equals(BigDecimal.ZERO)){
 					  	 			vatUnitRate = vatUnitRate.subtract((vatUnitRate.multiply(termValue)).divide(new BigDecimal("100"), 3, BigDecimal.ROUND_HALF_UP));
@@ -2294,6 +2294,7 @@ public class MaterialPurchaseServices {
 		BigDecimal basicAmount = BigDecimal.ZERO;
 		//exciseDuty includes BED,CESS,SECESS
 		BigDecimal exciseDuty = BigDecimal.ZERO;
+		BigDecimal discountBeforeTax = BigDecimal.ZERO;
 		try {
 				
 			List conList= FastList.newInstance();
@@ -2651,6 +2652,38 @@ if(UtilValidate.isNotEmpty(prodQtyMap.get("bedPercent"))){
 							orderItemDetail.set("bedseccessAmount", null);
 						}
 						
+						//discount before tax
+					    for(Map eachAdj : otherChargesAdjustment){
+							String adjustmentTypeId=(String)eachAdj.get("adjustmentTypeId");
+							BigDecimal termValue =(BigDecimal)eachAdj.get("amount");
+					    	//adjustCtx.put("amount", termValue);
+					    	//Debug.log("eachAdj==========="+eachAdj);
+					    	String uomId = (String)eachAdj.get("uomId");
+					    	
+					    	if(adjustmentTypeId.equals("COGS_DISC")){
+					    		Map inputMap = UtilMisc.toMap("userLogin",userLogin);
+					    		inputMap.put("termTypeId", adjustmentTypeId);
+					    		inputMap.put("basicAmount", unitPrice.multiply(quantity));
+					    		inputMap.put("exciseDuty", exciseDuty);
+					    		inputMap.put("uomId", uomId);
+					    		inputMap.put("termValue", termValue);
+					    		//Debug.log("inputMap==========="+inputMap);
+					    		BigDecimal termAmount = OrderServices.calculatePurchaseOrderTermValue(ctx,inputMap);
+					    		discountBeforeTax = discountBeforeTax.add(termAmount);
+						  	 	//modify the vat unit rate here
+						  	 	if(uomId.equals("PERCENT") ){
+						  	 		if(!cstAmount.equals(BigDecimal.ZERO)){
+						  	 			cstAmount = cstAmount.subtract((cstAmount.multiply(termValue)).divide(new BigDecimal("100"), 3, BigDecimal.ROUND_HALF_UP));
+						  	 		}
+						  	 		if(!vatAmount.equals(BigDecimal.ZERO)){
+						  	 			vatAmount = vatAmount.subtract((vatAmount.multiply(termValue)).divide(new BigDecimal("100"), 3, BigDecimal.ROUND_HALF_UP));
+						  	 		}
+						  	 		
+						  	 	}
+						  	 	basicAmount = basicAmount.add(termAmount);
+					    	}	
+						}
+						
 						if(!vatAmount.equals(BigDecimal.ZERO)){
 							
 							BigDecimal taxAmount = vatAmount.multiply(quantity);
@@ -2757,33 +2790,37 @@ if(UtilValidate.isNotEmpty(prodQtyMap.get("bedPercent"))){
 		    		COGS_PCK_FWD_ATR_Map.putAll(orderAdj);
 		    	}
 		    	if(!adjustmentTypeId.equals("COGS_DISC_ATR") && !adjustmentTypeId.equals("COGS_PCK_FWD_ATR")){
+		    		Map adjustCtx = FastMap.newInstance();	  	
+					adjustCtx.put("userLogin", userLogin);
+					adjustCtx.put("orderId", orderId);
+					adjustCtx.put("orderAdjustmentTypeId", adjustmentTypeId);
 		    		Map inputMap = UtilMisc.toMap("userLogin",userLogin);
 		    		inputMap.put("termTypeId", adjustmentTypeId);
 		    		inputMap.put("basicAmount", basicAmount);
 		    		inputMap.put("exciseDuty", exciseDuty);
 		    		inputMap.put("uomId", uomId);
 		    		inputMap.put("termValue", amount);
+		    		BigDecimal termAmount =BigDecimal.ZERO;
+		    		if(adjustmentTypeId.equals("COGS_DISC")){
+		    			termAmount = discountBeforeTax;
+		    		}else{
+		    			termAmount = OrderServices.calculatePurchaseOrderTermValue(ctx,inputMap);
+		    		}
+		    		adjustCtx.put("amount", termAmount);
 		    		amount = OrderServices.calculatePurchaseOrderTermValue(ctx,inputMap);
-		    	}
-		    	
-		    	Map adjustCtx = FastMap.newInstance();	  	
-				adjustCtx.put("userLogin", userLogin);
-				adjustCtx.put("orderId", orderId);
-				adjustCtx.put("orderAdjustmentTypeId", adjustmentTypeId);
-				adjustCtx.put("amount", amount);
-				Map adjResultMap=FastMap.newInstance();
-	  	 		try{
-	  	 			adjResultMap = dispatcher.runSync("createOrderAdjustment",adjustCtx);
-		  	 		if (ServiceUtil.isError(adjResultMap)) {
-		  	 			String errMsg =  ServiceUtil.getErrorMessage(adjResultMap);
-		  	 			Debug.logError(errMsg , module);
-		  	 			return ServiceUtil.returnError(" Error While Creating Adjustment for Purchase Order !");
+		    		Map adjResultMap=FastMap.newInstance();
+		  	 		try{
+		  	 			adjResultMap = dispatcher.runSync("createOrderAdjustment",adjustCtx);
+			  	 		if (ServiceUtil.isError(adjResultMap)) {
+			  	 			String errMsg =  ServiceUtil.getErrorMessage(adjResultMap);
+			  	 			Debug.logError(errMsg , module);
+			  	 			return ServiceUtil.returnError(" Error While Creating Adjustment for Purchase Order !");
+			  	 		}
+		  	 		}catch (Exception e) {
+		  			  Debug.logError(e, "Error While Creating Adjustment for Purchase Order ", module);
+		  			  return adjResultMap;			  
 		  	 		}
-	  	 		}catch (Exception e) {
-	  			  Debug.logError(e, "Error While Creating Adjustment for Purchase Order ", module);
-	  			  return adjResultMap;			  
-	  	 		}
-
+		    	}
 		    }
 			
 			//check discount after tax
@@ -2835,7 +2872,7 @@ if(UtilValidate.isNotEmpty(prodQtyMap.get("bedPercent"))){
 				BigDecimal termValue =(BigDecimal)COGS_PCK_FWD_ATR_Map.get("amount");
 		    	adjustCtx.put("orderId", orderId);
 		    	adjustCtx.put("orderAdjustmentTypeId", adjustmentTypeId);
-				String uomId = (String)COGS_DISC_ATR_Map.get("uomId");
+				String uomId = (String)COGS_PCK_FWD_ATR_Map.get("uomId");
 				Map inputMap = UtilMisc.toMap("userLogin",userLogin);
 	    		inputMap.put("termTypeId", adjustmentTypeId);
 	    		inputMap.put("basicAmount", basicAmount);
