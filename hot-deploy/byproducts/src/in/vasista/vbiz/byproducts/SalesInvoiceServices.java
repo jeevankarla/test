@@ -660,6 +660,7 @@ public class SalesInvoiceServices {
 		Delegator delegator = ctx.getDelegator();
 	    List<String> partyIds = (List<String>) context.get("partyIds");
 	    String categoryType = (String) context.get("categoryType");
+	    String IcpStocktrnsflag =(String) context.get("IcpStocktrnsflag");
 		Map<String, String>  shipInvoicePartyMap = FastMap.newInstance();
 
 		//List<String> shipmentIds = (List<String>) context.get("shipmentIds");
@@ -814,6 +815,9 @@ public class SalesInvoiceServices {
 			}
 			conditionList.add(EntityCondition.makeCondition("invoiceDate", EntityOperator.GREATER_THAN_EQUAL_TO,dayBegin));
 			conditionList.add(EntityCondition.makeCondition("invoiceDate",EntityOperator.LESS_THAN_EQUAL_TO, dayEnd));
+			if(UtilValidate.isNotEmpty(IcpStocktrnsflag) && IcpStocktrnsflag.equals("N")){
+				conditionList.add(EntityCondition.makeCondition("purposeTypeId", EntityOperator.NOT_EQUAL, "ICP_TRANS_CHANNEL"));
+			}
 			if(UtilValidate.isNotEmpty(categoryType) && categoryType.equals("ICE_CREAM_NANDINI")){
 				conditionList.add(EntityCondition.makeCondition("purposeTypeId",EntityOperator.EQUALS, "ICP_NANDINI_CHANNEL"));
 			}
