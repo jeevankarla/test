@@ -31,14 +31,7 @@
      <form name="listMaterialPurchaseOrders" type="list" list-name="listIt" paginate-target="${targetRequest}"
         odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
         <actions>
-            <service service-name="performFind" result-map="result" result-map-list="listIt">
-                <field-map field-name="inputFields" from-field="parameters"/>
-                <field-map field-name="entityName" value="OrderHeaderAndSequenceAndRoles"/>
-                <field-map field-name="orderBy"  value="-orderDate"/>
-                <field-map field-name="viewIndex" from-field="viewIndex"/>
-                <field-map field-name="viewSize" from-field="viewSize"/>
-            </service>
-            <script location="component://materialmgmt/webapp/materialmgmt/WEB-INF/actions/purchases/POSearchFilter.groovy"/>
+           
         </actions>
       	<row-actions>
       		<entity-condition entity-name="OrderItem" list="orderItemList" >
@@ -91,6 +84,7 @@
                 <parameter param-name="orderId"/>
                 <parameter param-name="statusId" value="ORDER_APPROVED" />
                 <parameter param-name="setItemStatus" value="Y" />
+                 <parameter param-name="roleTypeId"  />
             </hyperlink>
         </field> 
         <field name="ApproveOrder" widget-style="buttontext" use-when="statusId.equals(&quot;ORDER_APPROVED&quot;)" ><display description="Order Approved" /></field>
