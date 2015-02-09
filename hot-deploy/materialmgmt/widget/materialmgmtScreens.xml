@@ -592,7 +592,7 @@
                		<not><if-empty field="parameters.productId"/></not>
                		<not><if-empty field="productId"/></not>
                </or>
-            	</condition>  
+            	</condition> 
             <widgets>
                   	<container>
 	                  	    <platform-specific> 
