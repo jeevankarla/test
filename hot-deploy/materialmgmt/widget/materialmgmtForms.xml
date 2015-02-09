@@ -99,7 +99,7 @@
         </field>
         <field name="debitNote" title="Debit/Credit Note" widget-style="buttontext" id-name = "DebitNote">
             <hyperlink target="DebitNote" description="Debit/Credit Note" target-window="_blank"> 	
-               	  <parameter param-name="shipmentId" /> 
+               	  <parameter param-name="shipmentId" />  
                	  <parameter param-name="reportTypeFlag" value="debitNote"/> 
             </hyperlink>
         </field>

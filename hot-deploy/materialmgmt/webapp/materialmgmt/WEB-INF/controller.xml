@@ -155,7 +155,7 @@
     
     <request-map uri="getProductInventory">
         <security auth="true" https="true"/>
-        <event type="service" invoke="getProductInventoryAvailable" ></event>
+        <event type="service" invoke="getProductInventoryByOwner" ></event>
         <response name="success" type="request" value="json"/>
     </request-map>
     
@@ -238,6 +238,12 @@
        <response name="error" type="view" value="ViewMaterialQuote"/>
      </request-map>
      <request-map uri="getTermTypesByParentType">
+        <security https="true" auth="true"/>
+        <event type="groovy" path="component://materialmgmt/webapp/materialmgmt/WEB-INF/actions/purchases/" invoke="termTypesAndParentTypes.groovy"/>
+        <response name="success" type="request" value="json"/>
+    </request-map>
+    
+    <request-map uri="getOrderTaxTypeByTermType">
         <security https="true" auth="true"/>
         <event type="groovy" path="component://materialmgmt/webapp/materialmgmt/WEB-INF/actions/purchases/" invoke="termTypesAndParentTypes.groovy"/>
         <response name="success" type="request" value="json"/>
@@ -852,6 +858,14 @@
         <security https="true" auth="true"/>
     	<response name="success" type="view" value="StockPositionInternal"/>
     </request-map>
+    <request-map uri="MaterialConsumption">
+        <security https="true" auth="true"/>
+    	<response name="success" type="view" value="MaterialConsumption"/>
+    </request-map>
+    <request-map uri="MaterialConsumptionInternal">
+        <security https="true" auth="true"/>
+    	<response name="success" type="view" value="MaterialConsumptionInternal"/>
+    </request-map>
     <request-map uri="purchaseReport.pdf">
      <security https="true" auth="true"/>
     	<response name="success" type="view" value="PurchaseReportPDF"/>
@@ -1131,6 +1145,8 @@
        <view-map name="PurchaseTaxProductReportCSV" type="screencsv" page="component://materialmgmt/widget/materialmgmtReportScreens.xml#PurchaseTaxProductReportCSV"  content-type="text/csv" encoding="none"/>
     <view-map name="StockPosition" type="screen" page="component://materialmgmt/widget/materialmgmtScreens.xml#StockPosition"/>   
     <view-map name="StockPositionInternal" type="screen" page="component://materialmgmt/widget/materialmgmtScreens.xml#StockPositionInternal"/>
+    <view-map name="MaterialConsumption" type="screen" page="component://materialmgmt/widget/materialmgmtScreens.xml#MaterialConsumption"/>   
+    <view-map name="MaterialConsumptionInternal" type="screen" page="component://materialmgmt/widget/materialmgmtScreens.xml#MaterialConsumptionInternal"/>
     <view-map name="PurchaseReportPDF" type="screenfop" page="component://materialmgmt/widget/materialmgmtReportScreens.xml#PurchaseReportPDF" content-type="application/pdf"/>
     <view-map name="PurchaseReportCSV" type="screencsv" page="component://materialmgmt/widget/materialmgmtReportScreens.xml#PurchaseReportCSV" content-type="text/csv" encoding="none"/>
         <view-map name="PurchaseTaxReportCSV" type="screencsv" page="component://materialmgmt/widget/materialmgmtReportScreens.xml#PurchaseTaxReportCSV" content-type="text/csv" encoding="none"/>
