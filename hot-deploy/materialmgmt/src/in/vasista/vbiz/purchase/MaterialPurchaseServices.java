@@ -1115,6 +1115,24 @@ public class MaterialPurchaseServices {
 		HttpSession session = request.getSession();
 		GenericValue userLogin = (GenericValue) session.getAttribute("userLogin");
 		SimpleDateFormat sdf = new SimpleDateFormat("dd MMMMM, yyyy"); 
+		
+		try {
+			if(UtilValidate.isNotEmpty(PONumber)){
+				GenericValue orderHeader = delegator.findOne("OrderHeader", UtilMisc.toMap("orderId", PONumber), false);
+				if (UtilValidate.isNotEmpty(orderHeader)) { 
+				String statusId = orderHeader.getString("statusId");
+				if(statusId.equals("ORDER_CANCELLED")){
+					Debug.logError("Cannot create PurchaseOrder for cancelled orderId : "+PONumber, module);
+					request.setAttribute("_ERROR_MESSAGE_", "Cannot create PurchaseOrder for cancelled orderId : "+PONumber);	
+			  		return "error";
+				}}
+			  }
+		}catch(GenericEntityException e){
+			Debug.logError("Cannot create PurchaseOrder for cancelled orderId : "+PONumber, module);
+			request.setAttribute("_ERROR_MESSAGE_", "Cannot create PurchaseOrder for cancelled orderId : "+PONumber);	
+			return "error";
+		}
+				
 		if (UtilValidate.isNotEmpty(effectiveDateStr)) { 
 			try {
 				effectiveDate = new java.sql.Timestamp(sdf.parse(effectiveDateStr).getTime());
