@@ -69,9 +69,13 @@
                    <section>
                 
  				 <condition>
-                <if-compare operator="equals" value="Y" field="statusFlag"/>
+ 				 <and>
+	                <if-has-permission permission="MM"  action="_CREATE_PO"/>
+	                <if-compare operator="equals" value="Y" field="statusFlag"/>
+                </and>
                     </condition>
                    		<widgets>
+                   		
                    		<link target="createPOForQuote" text="Create PO" style="buttontext h2" >
            					<parameter param-name="quoteId" from-field="quoteId"/>
            				</link>
