@@ -14,7 +14,12 @@
             </drop-down>
         </field>
         <field name="custRequestName" title="${uiLabelMap.MaterialMangement_CustRequestName}"><text-find/></field>
-        <field name="fromPartyId" title="${uiLabelMap.MaterialMangement_CustRequestFromPartyId}"><lookup target-form-name="LookupPartyName"/></field>
+        <!-- <field name="fromPartyId" title="${uiLabelMap.MaterialMangement_CustRequestFromPartyId}"><lookup target-form-name="LookupPartyName"/></field> -->
+ 		<field name="fromPartyId" title="From Department">
+			<drop-down allow-empty="true" >
+				<list-options key-name="partyId" list-name="finalDepartmentList" description="${groupName}"/>
+			</drop-down>
+		</field>
  		<field name="custRequestDate" title="${uiLabelMap.MaterialMangement_CustRequestDate}"><date-find/></field>   
         <field name="submitButton" title="${uiLabelMap.CommonFind}" widget-style="smallSubmit">
             <submit button-type="button"/>
@@ -68,7 +73,12 @@
     <form name="FindMaterialReturn" target="FindMaterialReturns" title="" type="single" default-map-name="parameters"
         header-row-style="header-row" default-table-style="basic-table">
         <field name="returnId" title="Return Id"><text-find/></field>
-        <field name="fromPartyId" title="${uiLabelMap.MaterialMangement_CustRequestFromPartyId}"><lookup target-form-name="LookupPartyName"/></field>
+        <!-- <field name="fromPartyId" title="${uiLabelMap.MaterialMangement_CustRequestFromPartyId}"><lookup target-form-name="LookupPartyName"/></field> -->
+ 		<field name="fromPartyId" title="From Department">
+			<drop-down allow-empty="true" >
+				<list-options key-name="partyId" list-name="finalDepartmentList" description="${groupName}"/>
+			</drop-down>
+		</field>
  		<field name="returnDate" title="Returned Date"><date-find/></field>   
         <field name="submitButton" title="${uiLabelMap.CommonFind}" widget-style="smallSubmit">
             <submit button-type="button"/>
@@ -114,7 +124,12 @@
         <field name="itemIssuanceId" title="Issuance Id"><text-find/></field>
         <field name="custRequestId" title="${uiLabelMap.MaterialMangement_CustRequestId}"><text-find/></field>
         <field name="custRequestName" title="${uiLabelMap.MaterialMangement_CustRequestName}"><text-find/></field>
-        <field name="fromPartyId" title="${uiLabelMap.MaterialMangement_CustRequestFromPartyId}"><lookup target-form-name="LookupPartyName"/></field>
+        <!-- <field name="fromPartyId" title="${uiLabelMap.MaterialMangement_CustRequestFromPartyId}"><lookup target-form-name="LookupPartyName"/></field> -->
+ 		<field name="fromPartyId" title="From Department">
+			<drop-down allow-empty="true" >
+				<list-options key-name="partyId" list-name="finalDepartmentList" description="${groupName}"/>
+			</drop-down>
+		</field>
  		<field name="custRequestDate" title="${uiLabelMap.MaterialMangement_CustRequestDate}"><date-find/></field>
  		<field name="issuedDateTime" title="${uiLabelMap.MaterialMangement_IssuedDate}"><date-find/></field>
  		<field name="shipmentId"><hidden value=""/></field>
@@ -174,7 +189,12 @@
         <field name="shipmentId" title="Issuance Id"><text-find/></field>
         <field name="custRequestId" title="${uiLabelMap.MaterialMangement_CustRequestId}"><text-find/></field>
         <field name="custRequestName" title="${uiLabelMap.MaterialMangement_CustRequestName}"><text-find/></field>
-        <field name="fromPartyId" title="${uiLabelMap.MaterialMangement_CustRequestFromPartyId}"><lookup target-form-name="LookupPartyName"/></field>
+        <!-- <field name="fromPartyId" title="${uiLabelMap.MaterialMangement_CustRequestFromPartyId}"><lookup target-form-name="LookupPartyName"/></field> -->
+ 		<field name="fromPartyId" title="From Department">
+			<drop-down allow-empty="true" >
+				<list-options key-name="partyId" list-name="finalDepartmentList" description="${groupName}"/>
+			</drop-down>
+		</field>
  		<field name="custRequestDate" title="${uiLabelMap.MaterialMangement_CustRequestDate}"><date-find/></field>
  		<field name="issueDate" title="${uiLabelMap.MaterialMangement_IssuedDate}"><date-find/></field>
  		<field name="shipmentTypeId" ><hidden value="ISSUANCE_SHIPMENT"/> </field>
@@ -499,10 +519,7 @@
    		 <field name="custRequestId" title="${uiLabelMap.MaterialMangement_CustRequestId}"><text-find/></field>
    		  <field name="partyId" title="From Department">
 			<drop-down allow-empty="true" >
-				<entity-options entity-name="PartyRoleAndPartyDetail" description="${groupName}">
-					<entity-constraint name="roleTypeId" operator="equals" value="INTERNAL_ORGANIZATIO" />
-					<entity-order-by field-name="partyId" />
-				</entity-options>
+				<list-options key-name="partyId" list-name="finalDepartmentList" description="${groupName}"/>
 			</drop-down>
 		</field>
 		<field name="custRequestDate" title="${uiLabelMap.MaterialMangement_CustRequestDate}"><date-time type="date"/></field>   
@@ -973,12 +990,17 @@
              <lookup target-form-name="LookupProduct" size="15" />
         </field>
    		 <field name="custRequestId" title="${uiLabelMap.MaterialMangement_CustRequestId}"><text-find/></field>
-   		  <field name="partyId" title="From Department">
+   		  <!-- <field name="partyId" title="From Department">
 			<drop-down allow-empty="true" >
 				<entity-options entity-name="PartyRoleAndPartyDetail" description="${groupName}">
 					<entity-constraint name="roleTypeId" operator="equals" value="INTERNAL_ORGANIZATIO" />
 					<entity-order-by field-name="partyId" />
 				</entity-options>
+			</drop-down>
+		</field> -->
+		<field name="partyId" title="From Department">
+			<drop-down allow-empty="true" >
+				<list-options key-name="partyId" list-name="finalDepartmentList" description="${groupName}"/>
 			</drop-down>
 		</field>
 		<field name="custRequestDate" title="${uiLabelMap.MaterialMangement_CustRequestDate}"><date-time type="date"/></field>   
