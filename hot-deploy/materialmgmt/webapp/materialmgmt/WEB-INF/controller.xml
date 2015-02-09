@@ -963,7 +963,7 @@
     </request-map>
     <request-map uri="cancelFGSOrderMm">
         <security https="true" auth="true"/>
-        <event type="service" path="" invoke="cancelICPOrder"/>
+        <event type="service" path="" invoke="cancelICPOrder"/> 
         <response name="success" type="view" value="ProcessFGSOrdersMm"/>   
        <response name="failed" type="view" value="ProcessFGSOrdersMm"/>  
     </request-map>

@@ -6,7 +6,7 @@
 
 <script type="application/javascript">
 					 
-	var orderData;			
+	var orderData;		
 	var orderId;
 	var screenFlag;		
 	var requestFlag;	 

@@ -125,7 +125,7 @@
 	        	<or>
 	        		<if-has-permission permission="FGSSALE"  action="_VIEW"/>
 	        	</or>        		
-	        </condition>  
+	        </condition>   
       	 	<link target="FGSProductSaleMm">    
          	</link>
         </menu-item> 
