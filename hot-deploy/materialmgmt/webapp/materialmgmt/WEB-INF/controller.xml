@@ -1068,7 +1068,9 @@
     <request-map uri="createCustRequestNote">
         <security https="true" auth="true"/>
      	<event type="service"   invoke="createCustRequestNote"/>
-        <response name="success" type="view" value="ViewMaterialRequest"/>
+        <response name="success" type="request-redirect" value="ViewMaterialRequest">
+      	<redirect-parameter name="custRequestId"/>
+      	</response>
         <response name="error" type="view" value="ViewMaterialRequest"/>
     </request-map>
     <request-map uri="createCustEnquiryNote">
