@@ -119,6 +119,25 @@
 	        </condition>
             <link target="FindMaterialInvoices"/>
 	        </menu-item>
+	        
+	        <menu-item name="FGSProductSaleMm" title="Sale"> 
+	        <condition>
+	        	<or>
+	        		<if-has-permission permission="FGSSALE"  action="_VIEW"/>
+	        	</or>        		
+	        </condition>   
+      	 	<link target="FGSProductSaleMm">    
+         	</link>
+        </menu-item> 
+               <menu-item name="InterUnitStkTrMm" title="Inter Unit Transfer"> 
+        <condition>
+        	<or>
+        		<if-has-permission permission="FGSSALE"  action="_VIEW"/>
+        	</or>        		
+        </condition>  
+      	 <link target="InterUnitStkTrMm">    
+         </link>
+        </menu-item>
 	        <menu-item name="newReports" title="Reports">
 	        <condition>
 	        	<if-has-permission permission="MM" action="_REPORTS_VIEW"/>
@@ -137,7 +156,34 @@
         	<link target="PurchaseOrderInit"/>
         </menu-item>
       </menu>
-      
+          <menu name="FGSSaleTabBarMm" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml" selected-menuitem-context-field-name="tabButtonItem2">
+         <menu-item name="FGSProductSaleMm" title="Order Entry">
+        	<link target="FGSProductSaleMm"/>
+        </menu-item>
+        <menu-item name="ProcessFGSOrdersMm" title="Process Orders">
+        	<link target="processFGSOrdersMm">
+        		<parameter param-name="salesChannelEnumId" value="FGS_PRODUCT_CHANNEL"/>
+        		<parameter param-name="shipmentTypeId" value="FGS_SHIPMENT"/>
+        	</link>
+        </menu-item>
+        <menu-item name="FindFGSShipmentMm" title="Find Shipments">
+        	<link target="FindFGSShipmentMm" />
+        </menu-item>
+      </menu>
+       <menu name="InterUnitTrTabBarMm" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml" selected-menuitem-context-field-name="tabButtonItem2">
+         <menu-item name="InterUnitStkTrMm" title="Order Entry">
+        	<link target="InterUnitStkTrMm"/>
+        </menu-item>
+        <menu-item name="ProcessInterUnitStkTrMm" title="Process InterUnit Stock Orders">
+        	<link target="ProcessInterUnitStkTrMm">
+        		<parameter param-name="salesChannelEnumId" value="INTUNIT_TR_CHANNEL"/>
+        		<parameter param-name="shipmentTypeId" value="INTUNIT_TR_SHIPMENT"/>
+        	</link>
+        </menu-item>
+        <menu-item name="FindStockTranferShipmentMm" title="Find Stock Transfer Shipments">
+        	<link target="FindStockTranferShipmentMm" />
+        </menu-item>
+      </menu>
       <menu name="RequestTabBar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml" selected-menuitem-context-field-name="tabButtonItem2">
         <menu-item name="FindMaterialRequest" title="Find Indent">
         <condition>
