@@ -2095,20 +2095,21 @@ public class MaterialPurchaseServices {
 	    			termAmount = OrderServices.calculatePurchaseOrderTermValue(ctx,inputMap);
 	    		}
 	    		adjustCtx.put("amount", termAmount);
+	    		Map adjResultMap=FastMap.newInstance();
+		  	 	try{
+		  	 		adjResultMap = dispatcher.runSync("createOrderAdjustment",adjustCtx);  		  		 
+		  	 		if (ServiceUtil.isError(adjResultMap)) {
+		  	 			String errMsg =  ServiceUtil.getErrorMessage(adjResultMap);
+		  	 			Debug.logError(errMsg , module);
+		  	 			return ServiceUtil.returnError(" Error While Creating Adjustment for Purchase Order !");
+		  	 		}
+		  	 	}catch (Exception e) {
+		  			  Debug.logError(e, "Error While Creating Adjustment for Purchase Order ", module);
+		  			  return adjResultMap;			  
+		  	 	}
 	    	}
 	    	
-	    	Map adjResultMap=FastMap.newInstance();
-	  	 	try{
-	  	 		adjResultMap = dispatcher.runSync("createOrderAdjustment",adjustCtx);  		  		 
-	  	 		if (ServiceUtil.isError(adjResultMap)) {
-	  	 			String errMsg =  ServiceUtil.getErrorMessage(adjResultMap);
-	  	 			Debug.logError(errMsg , module);
-	  	 			return ServiceUtil.returnError(" Error While Creating Adjustment for Purchase Order !");
-	  	 		}
-	  	 	}catch (Exception e) {
-	  			  Debug.logError(e, "Error While Creating Adjustment for Purchase Order ", module);
-	  			  return adjResultMap;			  
-	  	 	}
+	    	
 		}
 		//check discount after tax
 		if(COGS_DISC_ATR){
@@ -2162,7 +2163,7 @@ public class MaterialPurchaseServices {
 					BigDecimal termValue =(BigDecimal)COGS_PCK_FWD_ATR_Map.get("amount");
 			    	adjustCtx.put("orderId", orderId);
 			    	adjustCtx.put("orderAdjustmentTypeId", adjustmentTypeId);
-					String uomId = (String)COGS_DISC_ATR_Map.get("uomId");
+					String uomId = (String)COGS_PCK_FWD_ATR_Map.get("uomId");
 					Map inputMap = UtilMisc.toMap("userLogin",userLogin);
 		    		inputMap.put("termTypeId", adjustmentTypeId);
 		    		inputMap.put("basicAmount", basicAmount);
@@ -2177,6 +2178,7 @@ public class MaterialPurchaseServices {
 		            }
 		    		BigDecimal poValue = orh.getOrderGrandTotal();
 		    		inputMap.put("poValue", poValue);
+		    		Debug.log("inputMap=========="+inputMap);
 		    		BigDecimal termAmount = OrderServices.calculatePurchaseOrderTermValue(ctx,inputMap);
 		    		adjustCtx.put("amount", termAmount);
 		    		Map adjResultMap=FastMap.newInstance();
