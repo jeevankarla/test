@@ -40,8 +40,8 @@
 							<fo:table>
 				  				<fo:table-column column-width="12pt"/>
 		                       	<fo:table-column column-width="20pt"/>
-		                       	<fo:table-column column-width="80pt"/>
-		                       	<fo:table-column column-width="55pt"/>
+		                       	<fo:table-column column-width="70pt"/>
+		                       	<fo:table-column column-width="65pt"/>
 		                       	<fo:table-column column-width="40pt"/>
 		                       	<fo:table-column column-width="40pt"/>
 		                       	<fo:table-body>
@@ -84,8 +84,8 @@
 							<fo:table>
 								<fo:table-column column-width="12pt"/>
 		                       	<fo:table-column column-width="20pt"/>
-		                       	<fo:table-column column-width="80pt"/>
-		                       	<fo:table-column column-width="55pt"/>
+		                       	<fo:table-column column-width="70pt"/>
+		                       	<fo:table-column column-width="65pt"/>
 		                       	<fo:table-column column-width="40pt"/>
 		                       	<fo:table-column column-width="40pt"/>
 		                       	<fo:table-body>
