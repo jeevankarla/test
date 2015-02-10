@@ -295,7 +295,7 @@
        <security https="true" auth="true"/>
        <event type="service" path="" invoke="createPOForQuote"></event>
        <response name="success" type="request" value="editMaterialPO"/>
-       <response name="error" type="view" value="ViewMaterialQuote"/>
+        <response name="error" type="view" value="ViewMaterialQuote"/>
      </request-map>
      <request-map uri="MRRreport.pdf">
         <security https="true" auth="true"/>

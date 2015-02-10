@@ -236,3 +236,4 @@ if(orderHeader && orderHeader.statusId == "ORDER_CREATED"){
 	orderEditParamMap.putAt("orderTerms", orderTerms);
 }
 context.orderEditParam = orderEditParamMap;
+
