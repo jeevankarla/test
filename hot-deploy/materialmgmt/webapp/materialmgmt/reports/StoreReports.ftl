@@ -114,6 +114,7 @@ function reportTypeChangeFunc() {
 		makeDatePicker("purchaseTaxFDate","purchaseTaxTDate");
 		makeDatePicker("purchaseTaxProdFDate","purchaseTaxProdTDate");
 		makeDatePicker("purchaseSumFDate","purchaseSumTDate");
+				makeDatePicker("purchaseSumFDateNew","purchaseSumTDateNew");
 		
 		$('#ui-datepicker-div').css('clip', 'auto');		
 	});
@@ -236,7 +237,6 @@ function reportTypeChangeFunc() {
                                                                        <select name='reportNameFlag' id = "reportNameFlag">
                                                                            <option value=''></option>
                                                                                <option value='Detailed'>Detailed</option>
-                                                                                <option value='CategoryWise'>CategoryWise</option>
                                                                                  <option value='ProductWise'>ProductWise</option>
                                                                        </select>
                                                                </td>
@@ -244,8 +244,27 @@ function reportTypeChangeFunc() {
                                                                <td width="10%"><input type="submit" value="Download" class="buttontext"/></td> 
                                                        </form>
 		                </tr>
+		                	</#if>
+		                <#if (security.hasEntityPermission("MMPURCHSSMMRY", "_VIEW", session) )>
+		                 <tr class="alternate-row">
+		                <form id="purchaseSummeryReportNew" name="purchaseSummeryReportNew" method="post" action="<@ofbizUrl>purchaseAccountSummeryNew.pdf</@ofbizUrl>" target="_blank">        
+                                                               <td width="30%">Purchase Analysis Report Summary</td>
+                                                               <td width="15%">From<input  type="text" size="18pt" id="purchaseSumFDateNew" readonly  name="fromDate"/></td>
+                                                           <td width="15%">To<input  type="text" size="18pt" id="purchaseSumTDateNew" readonly  name="thruDate"/></td>
+                                                           <td width="15%">ReportType
+                                                                       <select name='reportNameFlag' id = "reportNameFlag">
+                                                                           <option value=''></option>
+                                                                               <option value='Detailed'>Detailed</option>
+                                                                                 <option value='ProductWise'>ProductWise</option>
+                                                                       </select>
+                                                               </td>
+                                                               <td width="15%"></td>
+                                                               <td width="10%"><input type="submit" value="Download" class="buttontext"/></td> 
+                                                       </form>
+		                </tr>
+		                </#if>
 	  			
-					</#if>
+				
 				
       			</table>
     		</div>

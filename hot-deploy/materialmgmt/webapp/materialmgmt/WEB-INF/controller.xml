@@ -850,6 +850,10 @@
         <security https="true" auth="true"/>
     	<response name="success" type="view" value="purchaseAccountSummeryPDF"/>
     </request-map>
+         <request-map uri="purchaseAccountSummeryNew.pdf">
+        <security https="true" auth="true"/>
+    	<response name="success" type="view" value="purchaseAccountSummeryNewPDF"/>
+    </request-map>
     
     <request-map uri="stockPosition">
         <security https="true" auth="true"/>
@@ -1162,6 +1166,8 @@
     <view-map name="StoreReports" type="screen" page="component://materialmgmt/widget/materialmgmtReportScreens.xml#StoreReports" />
     <view-map name="purchaseTaxReportPDF" type="screenfop" page="component://materialmgmt/widget/materialmgmtReportScreens.xml#PurchaseTaxReportPDF" content-type="application/pdf"/>
     <view-map name="purchaseAccountSummeryPDF" type="screenfop" page="component://materialmgmt/widget/materialmgmtReportScreens.xml#purchaseAccountSummeryPDF" content-type="application/pdf"/>
+        <view-map name="purchaseAccountSummeryNewPDF" type="screenfop" page="component://materialmgmt/widget/materialmgmtReportScreens.xml#purchaseAccountSummeryNewPDF" content-type="application/pdf"/>
+    
     <view-map name="PurchaseTaxProductReportPDF" type="screenfop" page="component://materialmgmt/widget/materialmgmtReportScreens.xml#PurchaseTaxProductReportPDF" content-type="application/pdf"/>
        <view-map name="PurchaseTaxProductReportCSV" type="screencsv" page="component://materialmgmt/widget/materialmgmtReportScreens.xml#PurchaseTaxProductReportCSV"  content-type="text/csv" encoding="none"/>
     <view-map name="StockPosition" type="screen" page="component://materialmgmt/widget/materialmgmtScreens.xml#StockPosition"/>   
