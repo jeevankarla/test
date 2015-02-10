@@ -804,7 +804,7 @@ public static Map<String, Object> setReauirementStatusId(DispatchContext ctx,Map
 					  Map productMap=FastMap.newInstance();
 					  if(UtilValidate.isNotEmpty(receiptItemTotals)){
 						  Map productInnerMap= (Map)receiptItemTotals.get(productId);
-						  if(productMap!=null){
+						  if(productInnerMap!=null){
 							  receivedQty=(BigDecimal)productInnerMap.get("receivedQty");
 							  receivedQtyValue=(BigDecimal)productInnerMap.get("receivedQtyValue");
 						  }
