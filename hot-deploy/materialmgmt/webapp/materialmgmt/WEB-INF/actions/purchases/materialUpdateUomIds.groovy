@@ -17,6 +17,7 @@
  * under the License.
  */
 import org.ofbiz.base.util.*;
+import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.entity.*;
 import org.ofbiz.entity.condition.EntityCondition;
 import org.ofbiz.entity.condition.EntityOperator;
@@ -42,17 +43,17 @@ if("y".equals(parameters.productflag))
 
 JSONArray dataJSONList = new JSONArray();
 innerUomId=parameters.innerUomId;
-	condList.add(EntityCondition.makeCondition("uomTypeId", EntityOperator.EQUALS, "WEIGHT_MEASURE"));
-	cond = EntityCondition.makeCondition(condList, EntityOperator.AND);
-	uomList = delegator.findList("Uom", cond, null, ["description"], null, false);
-	uomList.each{eachuom ->
-		JSONObject newUomObj = new JSONObject();
+condList.add(EntityCondition.makeCondition("uomTypeId", EntityOperator.NOT_IN, UtilMisc.toList("CURRENCY_MEASURE", "TIME_FREQ_MEASURE")));
+cond = EntityCondition.makeCondition(condList, EntityOperator.AND);
+uomList = delegator.findList("Uom", cond, null, ["description"], null, false);
+uomList.each{eachuom ->
+	JSONObject newUomObj = new JSONObject();
 	newUomObj.put("value",eachuom.uomId);
 	newUomObj.put("text",eachuom.description+"[" +eachuom.abbreviation+" ]");
 	dataJSONList.add(newUomObj);
-			}
-	context.dataJSONList=dataJSONList;
-	
+}
+context.dataJSONList=dataJSONList;
+
 
 
 
