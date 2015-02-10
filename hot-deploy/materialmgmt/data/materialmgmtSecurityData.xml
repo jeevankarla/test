@@ -414,5 +414,10 @@
     <SecurityGroup description="Cancel Enquiry!" groupId="MM_CANCEL_ENQ"/>
     <SecurityGroupPermission groupId="MM_CANCEL_ENQ"  permissionId="MM_CANCEL_ENQ"/>
     <SecurityGroupPermission groupId="FULLADMIN" permissionId="MM_CANCEL_ENQ"/>
+    
+    <SecurityPermission description="MM Enquiry Email Permission " permissionId="MM_ENQUIRYMAIL_SEND"/>
+    <SecurityGroup description="MM Enquiry Email Permission" groupId="MM_ENQUIRYMAIL_SEND"/>
+    <SecurityGroupPermission groupId="MM_ENQUIRYMAIL_SEND"  permissionId="MM_ENQUIRYMAIL_SEND"/>
+    <SecurityGroupPermission groupId="FULLADMIN" permissionId="MM_ENQUIRYMAIL_SEND"/>
      
 </entity-engine-xml>
