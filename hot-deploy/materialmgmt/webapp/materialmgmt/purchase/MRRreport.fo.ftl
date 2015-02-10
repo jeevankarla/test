@@ -189,7 +189,7 @@ ${setRequestAttribute("OUTPUT_FILENAME", "LoanAvailedReport.pdf")}
                             		<fo:block  text-align="center" font-size="10pt" white-space-collapse="false" font-weight="bold">ACCEPTED QTY</fo:block>  
                         		</fo:table-cell>
                         		<fo:table-cell border-style="solid">
-                            		<fo:block   text-align="center" font-size="10pt" white-space-collapse="false" font-weight="bold">UNITRATE Rs </fo:block>  
+                            		<fo:block   text-align="center" font-size="10pt" white-space-collapse="false" font-weight="bold">UNIT RATE Rs </fo:block>  
                        			</fo:table-cell>
                        			<fo:table-cell border-style="solid">
                             		<fo:block   text-align="center" font-size="10pt" white-space-collapse="false" font-weight="bold">BOOK FOLOIO NO </fo:block>  
