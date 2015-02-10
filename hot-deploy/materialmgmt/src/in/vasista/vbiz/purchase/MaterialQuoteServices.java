@@ -543,6 +543,9 @@ public class MaterialQuoteServices {
         	quoteInputCtx.put("validFromDate", validFromDate);
         	quoteInputCtx.put("validThruDate", validThruDate);
         	quoteInputCtx.put("issueDate", issueDate);
+        	quoteInputCtx.put("createdByUserLogin", userLogin.getString("userLoginId"));
+        	quoteInputCtx.put("createdDate", UtilDateTime.nowTimestamp());
+        	quoteInputCtx.put("lastModifiedDate", UtilDateTime.nowTimestamp());
         	quoteResult = dispatcher.runSync("createQuote", quoteInputCtx);
         	if(ServiceUtil.isError(quoteResult)){
         		Debug.logError("Error in  creating Quote for enquiry", module);
@@ -1017,6 +1020,8 @@ public class MaterialQuoteServices {
 	  				if((validThruDate.compareTo(thruDate)>0) || (validThruDate.compareTo(thruDate)<0)){
 	  					quotes.set("validThruDate",validThruDate);
 	  				}
+	  				quotes.set("lastModifiedDate",nowTimeStamp);
+  					quotes.set("lastModifiedByUserLogin",userLogin.getString("userLoginId"));
 	  				quotes.store();
 	  			}catch(Exception e){
 	  				request.setAttribute("_ERROR_MESSAGE_", "Error While Updating The Quote");

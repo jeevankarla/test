@@ -156,6 +156,9 @@
         <attribute name="validThruDate" type="Timestamp" mode="IN" optional="true"/>
         <attribute name="partyId" type="String" mode="IN" optional="false"/>
         <attribute name="quoteId" mode="OUT" type="String" optional="true"></attribute>
+        <attribute name="createdByUserLogin" type="String" mode="IN" optional="true"/>
+        <attribute name="createdDate" type="Timestamp" mode="IN" optional="true"/>
+        <attribute name="lastModifiedDate" type="Timestamp" mode="IN" optional="true"/>
     </service>
     
     <service name="setQuoteAndItemStatus" engine="java"
