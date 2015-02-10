@@ -42,6 +42,9 @@ if(UtilValidate.isNotEmpty(parentTypeId)){
 	}
 }
 if(UtilValidate.isNotEmpty(parameters.termTypeId)){
+	if(parameters.termTypeId=="BED_PUR"){
+		parameters.termTypeId="EXCISE_DUTY_PUR";
+	}
 	orderTaxTypeList=[];
 	orderTaxTypeList=delegator.findList("OrderTaxType",EntityCondition.makeCondition("taxType",EntityOperator.EQUALS,parameters.termTypeId),null,null,null,false);
 	request.setAttribute("orderTaxTypeList",orderTaxTypeList);
