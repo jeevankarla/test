@@ -471,7 +471,7 @@
         <field name="productName" title="Material Name - [Code]"><display /></field>
         <field name="dec" title="UOM"><display/></field>
         <field name="longDescription" title="Material Specification"><display /></field>
-        <field name="qiStatusId" title="Status"><display-entity entity-name="StatusItem" key-field-name="statusId" description="${description}"/></field>
+        <field name="statusId" title="Status"><display-entity entity-name="StatusItem" key-field-name="statusId" description="${description}"/></field>
         <field name="quoteUnitPrice" title="Quote Unit Price"><display /></field>
         <field name="comments"><display/></field>
     </form>
