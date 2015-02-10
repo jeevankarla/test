@@ -406,7 +406,7 @@
         <field name="productId" title="product Id"><display/></field>
         <field name="totalRevenue" title="Amount"><display/></field>
     </form>  
-    <form name="findMaterial" type="single">
+    <form name="findMaterial" type="single" target="searchMaterial">
     	<field name="productId" title="Product">
              <lookup target-form-name="LookupProduct" size="15" />
         </field>
