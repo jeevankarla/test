@@ -69,7 +69,7 @@
 			    <set field="tabButtonItem2" value="FindMaterialReturns"/> 
                 <set field="entityName" value="ReturnHeader"/>
                 <set field="parameters.returnHeaderTypeId" value="DEPARTMENT_RETURN"/>
-             <script location="component://materialmgmt/webapp/materialmgmt/WEB-INF/actions/purchases/purchaseDepartments.groovy"/>
+                <script location="component://materialmgmt/webapp/materialmgmt/WEB-INF/actions/purchases/purchaseDepartments.groovy"/>
             </actions>
             <widgets>
                 <decorator-screen name="materialmgmtNgCommonDecorator" location="${parameters.mainDecoratorLocation}">
@@ -155,7 +155,7 @@
                 <set field="headerItem" value="Issue"/>
                 <set field="tabButtonItem" value="FindMaterialIssuance" />	
                 <set field="tabButtonItem2" value="FindMaterialIssuance" />	
-            <script location="component://materialmgmt/webapp/materialmgmt/WEB-INF/actions/purchases/purchaseDepartments.groovy"/>
+                <script location="component://materialmgmt/webapp/materialmgmt/WEB-INF/actions/purchases/purchaseDepartments.groovy"/>
             </actions>
             <widgets>
                 <decorator-screen name="materialmgmtNgCommonDecorator" location="${parameters.mainDecoratorLocation}">
@@ -502,7 +502,6 @@
             <widgets>
                <decorator-screen name="materialmgmtNgCommonDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
-                    <platform-specific><html><html-template location="component://materialmgmt/webapp/materialmgmt/purchase/email/EnquiryEmailOpen.ftl"/></html></platform-specific>
                     	<include-menu name="EnquiryTabBar" location="component://materialmgmt/widget/materialmgmtMenus.xml"/>
                     	<container style="button-bar">
 		                    <section>
