@@ -28,50 +28,14 @@ import javax.ws.rs.core.MediaType;
 
 import in.vasista.vbiz.purchase.MaterialHelperServices;
 
-@Path("/fetchMaterials")
+@Path("/materialmgmt")
 public class MaterialManagementResource {
  
     @Context
     HttpHeaders headers;
 
     @GET
-    @Path("/plaintext")    
-    @Produces("text/plain")
-    public Response fetchMaterialsText() {
- 
-        String username = null;
-        String password = null;
-        String tenantId = null;
- 
-        try {
-            username = headers.getRequestHeader("login.username").get(0);
-            password = headers.getRequestHeader("login.password").get(0);
-            tenantId = headers.getRequestHeader("tenantId").get(0);            
-        } catch (NullPointerException e) {
-            return Response.serverError().entity("Problem reading http header(s): login.username or login.password or tenantId").build();
-        }
- 
-        if (username == null || password == null || tenantId == null) {
-           return Response.serverError().entity("Problem reading http header(s): login.username or login.password or tenantId").build();
-        }
-        String tenantDelegatorName =  "default#" + tenantId;
-        GenericDelegator delegator = (GenericDelegator) DelegatorFactory.getDelegator(tenantDelegatorName);
-        LocalDispatcher dispatcher = GenericDispatcher.getLocalDispatcher(tenantDelegatorName,delegator);
- 
-        Map<String, String> paramMap = UtilMisc.toMap(
-        		"login.username", username,
-                "login.password", password,
-                "tenantId", tenantId
-            );
-        Map<String, Object> context = FastMap.newInstance();
-        Map<String, Object> result = MaterialHelperServices.getMaterialProducts(dispatcher.getDispatchContext(),  context);
-
- 
-
-        return Response.ok(" " + result + " ").type("text/plain").build();
-    }
-    @GET
-    @Path("/json")        
+    @Path("/fetchMaterials")        
     @Produces(MediaType.APPLICATION_JSON)
     public List<Object> fetchMaterialsJSON() {
  
@@ -115,10 +79,53 @@ public class MaterialManagementResource {
     		productMap.put("name",(String)product.get("internalName")); 
     		productMap.put("description",(String)product.get("description"));                		
     		productMap.put("productCategoryId",(String)product.get("primaryProductCategoryId"));  
-    		productMap.put("trackInventory","Y");                		    		
+    		productMap.put("trackInventory","true");                		    		
 		    resultList.add(productMap);	
     	}
         return resultList;
-
     }
+    
+    @GET
+    @Path("/fetchMaterialInventory")        
+    @Produces(MediaType.APPLICATION_JSON)
+    public Map<String, Object> fetchMaterialsInventory() {
+ 
+        String username = null;
+        String password = null;
+        String tenantId = null;
+        Map<String, Object> result = FastMap.newInstance();
+
+        try {
+            username = headers.getRequestHeader("login.username").get(0);
+            password = headers.getRequestHeader("login.password").get(0);
+            tenantId = headers.getRequestHeader("tenantId").get(0);            
+        } catch (NullPointerException e) {
+            Debug.logError("Problem reading http header(s): login.username or login.password or tenantId", MaterialManagementResource.class.getName());        	        	
+        	//::TODO:: error handling
+        	result = ServiceUtil.returnError("UserName or Password or tenantId is empty");
+        	return result;
+        }
+ 
+        if (username == null || password == null || tenantId == null) {
+            Debug.logError("Problem reading http header(s): login.username or login.password or tenantId", MaterialManagementResource.class.getName());        	
+        	//::TODO:: error handling
+        	result = ServiceUtil.returnError("UserName or Password or tenantId is empty");
+            return result;        
+        }
+        String tenantDelegatorName =  "default#" + tenantId;
+        GenericDelegator delegator = (GenericDelegator) DelegatorFactory.getDelegator(tenantDelegatorName);
+        LocalDispatcher dispatcher = GenericDispatcher.getLocalDispatcher(tenantDelegatorName,delegator);
+ 
+        Map<String, String> paramMap = UtilMisc.toMap(
+        		"login.username", username,
+                "login.password", password,
+                "tenantId", tenantId
+            );
+ 
+        Map<String, Object> context = FastMap.newInstance();
+        Map<String, Object> productListMap = MaterialHelperServices.getMaterialProducts(dispatcher.getDispatchContext(),  context);
+
+        return result;
+
+    }    
 }
