@@ -88,7 +88,7 @@ public class MaterialManagementResource {
     @GET
     @Path("/fetchMaterialInventory")        
     @Produces(MediaType.APPLICATION_JSON)
-    public List<Object> fetchMaterialsJSON() {
+    public Map<String, Object> fetchMaterialsInventory() {
  
         String username = null;
         String password = null;
