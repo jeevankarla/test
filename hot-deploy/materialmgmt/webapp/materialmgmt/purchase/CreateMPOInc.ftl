@@ -329,7 +329,7 @@
     				
     				bedAmt = parseFloat(Math.round((taxStrpAmt*(bedPercent/100)) * 100) / 100);
     				newUnitPrice = taxStrpAmt-bedAmt;
-    				data[i]["unitPrice"] = newUnitPrice;
+    				//data[i]["unitPrice"] = newUnitPrice;
     					
     			}
 				totalAmt += itemTotal;

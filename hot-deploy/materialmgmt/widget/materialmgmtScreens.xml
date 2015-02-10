@@ -493,7 +493,7 @@
         </field> -->
             <entity-condition entity-name="Uom" list="uomList" >
              <condition-list combine="and">
-                        <condition-expr field-name="uomTypeId"  operator="equals"  value="WEIGHT_MEASURE"  />
+                        <condition-expr field-name="uomTypeId"  operator="not-equals"  value="CURRENCY_MEASURE"  />
                     </condition-list>
                     <order-by field-name="description"/>
              </entity-condition> 
