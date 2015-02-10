@@ -29,7 +29,7 @@ under the License.
          ${setRequestAttribute("OUTPUT_FILENAME", "stockPositionReport.pdf")}
 		 
 		 
-       <#if stockPositionMap?has_content>        
+       <#if finalStockPositionMap?has_content>        
 		        <fo:page-sequence master-reference="main" font-size="10pt">	
 		        	<fo:static-content flow-name="xsl-region-before" font-family="Courier,monospace">
 		        		<fo:block  keep-together="always" text-align="right" font-family="Courier,monospace" font-size="10pt" white-space-collapse="false">&#160;${uiLabelMap.CommonPage}- <fo:page-number/> </fo:block>
@@ -57,12 +57,12 @@ under the License.
 	                    			<#assign serialNo = 1>
 	                    			<#assign ledgerGrandTotalPromise = 0>
 				                     <#assign ledgerGrandQtyHnd = 0>
-		                    	<#assign stockDetails = stockPositionMap.entrySet()>
+		                    	<#assign stockDetails = finalStockPositionMap.keySet()>
 		                    	<#list stockDetails as stockDet>
-		                    		<#assign productDet = stockDet.getValue().entrySet()>
+		                    		<#assign productDet = finalStockPositionMap.get(stockDet)>
 		                    		<fo:table-row>
 		                        			<fo:table-cell>
-		                            			<fo:block  keep-together="always" text-align="left" font-size="12pt" white-space-collapse="false">${stockDet.getKey()?if_exists}</fo:block>  
+		                            			<fo:block  keep-together="always" font-weight="bold" text-align="left" font-size="12pt" white-space-collapse="false">${stockDet?if_exists}</fo:block>  
 		                        			</fo:table-cell>
 		                        	</fo:table-row>
 		                        	<fo:table-row>
@@ -78,21 +78,21 @@ under the License.
 							            		<fo:block  keep-together="always" text-align="left" font-size="12pt" white-space-collapse="false"></fo:block>
 							       			</fo:table-cell>
 											<fo:table-cell>
-							            		<fo:block   text-align="left" font-size="12pt" white-space-collapse="false">${productDetails.getValue().get("internalName")?if_exists}</fo:block>
+							            		<fo:block   text-align="left" font-size="12pt" white-space-collapse="false">${productDetails.get("internalName")?if_exists}</fo:block>
 							       			</fo:table-cell>
 							       			<fo:table-cell>
-							            		<fo:block   text-align="left" font-size="12pt" white-space-collapse="false">${productDetails.getValue().get("productName")?if_exists}</fo:block>
+							            		<fo:block   text-align="left" font-size="12pt" white-space-collapse="false">${productDetails.get("productName")?if_exists}</fo:block>
 							       			</fo:table-cell>
 							       			<fo:table-cell>
-							            		<fo:block   text-align="left" font-size="12pt" white-space-collapse="false">${productDetails.getValue().get("uomDescription")?if_exists}</fo:block>
+							            		<fo:block   text-align="left" font-size="12pt" white-space-collapse="false">${productDetails.get("uomDescription")?if_exists}</fo:block>
 							       			</fo:table-cell>
-							       			<#assign ledgerTotalPromise = ledgerTotalPromise + productDetails.getValue().get("availableToPromiseTotal")?if_exists>
+							       			<#assign ledgerTotalPromise = ledgerTotalPromise + productDetails.get("availableToPromiseTotal")?if_exists>
 							       			<fo:table-cell>
-							            		<fo:block  keep-together="always" text-align="right" font-size="12pt" white-space-collapse="false">${productDetails.getValue().get("availableToPromiseTotal")?if_exists?string("#0.000")}</fo:block>
+							            		<fo:block  keep-together="always" text-align="right" font-size="12pt" white-space-collapse="false">${productDetails.get("availableToPromiseTotal")?if_exists?string("#0.000")}</fo:block>
 							       			</fo:table-cell>
-							       			<#assign ledgerQtyHnd = ledgerQtyHnd + productDetails.getValue().get("quantityOnHandTotal")?if_exists>
+							       			<#assign ledgerQtyHnd = ledgerQtyHnd + productDetails.get("quantityOnHandTotal")?if_exists>
 							       			<fo:table-cell>
-							            		<fo:block  keep-together="always" text-align="right" font-size="12pt" white-space-collapse="false">${productDetails.getValue().get("quantityOnHandTotal")?if_exists?string("#0.000")}</fo:block>
+							            		<fo:block  keep-together="always" text-align="right" font-size="12pt" white-space-collapse="false">${productDetails.get("quantityOnHandTotal")?if_exists?string("#0.000")}</fo:block>
 							       			</fo:table-cell>
 						  			</fo:table-row>
 		                        	</#list>
@@ -103,7 +103,7 @@ under the License.
 					                 </fo:table-row>
 		                        	<fo:table-row>
 		                        			<fo:table-cell>
-							            		<fo:block  keep-together="always" font-weight="bold" text-align="left" font-size="12pt" white-space-collapse="false">Ledger Folio Total</fo:block>
+							            		<fo:block  keep-together="always" font-weight="bold" text-align="left" font-size="12pt" white-space-collapse="false"><#if stockDet != "Others">Ledger Folio Total<#else>Others Total</#if></fo:block>
 							       			</fo:table-cell>
 											<fo:table-cell>
 							            		<fo:block   text-align="left" font-size="12pt" white-space-collapse="false"></fo:block>
