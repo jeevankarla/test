@@ -115,6 +115,7 @@
          	 }
           }); 
  		if(uomList != undefined && uomList != ""){
+ 		        UomOptionList.push('<option value=""></option>');
 				$.each(uomList, function(key, item){
 					//alert("item"+item.text);
 					//alert("<option value="+item.value+">"+item.text+"</option>");
