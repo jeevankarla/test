@@ -40,8 +40,8 @@ if(parameters.issueToCustReqId){
 	  CustRequestSequenceDetails = delegator.findList("CustRequestSequence",EntityCondition.makeCondition("custRequestId", EntityOperator.EQUALS , custRequestId)  , null, null, null, false );
 	  CustRequestSequence= EntityUtil.getFirst(CustRequestSequenceDetails);	  
 	  if(CustRequestSequence){
-		  if(UtilValidate.isNotEmpty(CustRequestSequence.sequenceId)){
-			  enquirySequenceNo=CustRequestSequence.sequenceId;
+		  if(UtilValidate.isNotEmpty(CustRequestSequence.custRequestNo)){
+			  enquirySequenceNo=CustRequestSequence.custRequestNo;
 			  context.enquirySequenceNo=enquirySequenceNo;
 		  }
 	  }
@@ -59,8 +59,8 @@ else{
 	 CustRequestSequenceDetails = delegator.findList("CustRequestSequence",EntityCondition.makeCondition("custRequestId", EntityOperator.EQUALS , custRequestId)  , null, null, null, false );
 	 CustRequestSequence= EntityUtil.getFirst(CustRequestSequenceDetails);	 
 	 if(CustRequestSequence){
-		 if(UtilValidate.isNotEmpty(CustRequestSequence.sequenceId)){
-			 enquirySequenceNo=CustRequestSequence.sequenceId;
+		 if(UtilValidate.isNotEmpty(CustRequestSequence.custRequestNo)){
+			 enquirySequenceNo=CustRequestSequence.custRequestNo;
 			 context.enquirySequenceNo=enquirySequenceNo;
 		 }
 	 }

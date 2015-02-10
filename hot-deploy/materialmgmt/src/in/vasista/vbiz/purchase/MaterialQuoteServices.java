@@ -650,7 +650,7 @@ public class MaterialQuoteServices {
          while (i.hasNext()) {
              GenericValue quoteItem = i.next();
              if (quoteItem != null) {
-            	 custRequestId=quoteItem.getString("custRequestId");
+            	 custRequestId=quoteItem.getString("custRequestId");            	 
              	try { 
                     
              		ShoppingCartItem item = null;
@@ -790,10 +790,28 @@ public class MaterialQuoteServices {
                 
              }  
          }
-         
+         GenericValue custReqDetails = null;
+         String custRequestName=null;
+         if(UtilValidate.isNotEmpty(custRequestId)){
+             try{
+        	        custReqDetails = delegator.findOne("CustRequest", UtilMisc.toMap("custRequestId",custRequestId), false);
+        	        if(UtilValidate.isNotEmpty(custReqDetails)){ 
+        	            custRequestName=(String) custReqDetails.get("custRequestName");
+        	         }
+    	        }
+               catch(Exception e) {
+    	  		     Debug.logError("Error While fecting data from CustRequest", module);
+    	  		     return ServiceUtil.returnError("Error While fecting data from CustRequest");
+    	  	   }
+          
+         }
          if(UtilValidate.isNotEmpty(custRequestId)){
 				cart.setOrderAttribute("REF_NUMBER",custRequestId);
          }
+         if(UtilValidate.isNotEmpty(custRequestName)){
+				cart.setOrderAttribute("FILE_NUMBER",custRequestName);
+         }
+      
          cart.setDefaultCheckoutOptions(dispatcher);
          CheckOutHelper checkout = new CheckOutHelper(dispatcher, delegator, cart);
          Map<String, Object> orderCreateResult = checkout.createOrder(userLogin);
@@ -862,6 +880,7 @@ public class MaterialQuoteServices {
          
          result = ServiceUtil.returnSuccess("Created Purchase Order for Quote : "+quoteId);
          result.put("orderId", orderId);
+        // result.put("custRequestName", custRequestName);
          return result;
     }
 	
