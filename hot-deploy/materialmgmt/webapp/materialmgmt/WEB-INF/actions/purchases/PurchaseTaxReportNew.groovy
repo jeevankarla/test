@@ -96,11 +96,11 @@ orgList=[];
 		   invoiceId = allSupplyagent.invoiceId;
 			   partyId = allSupplyagent.invoiceRolePartyId;
 			   InvoicePartyMap.put(invoiceId,partyId);
-		   }	  
+		   }
 	   context.put("InvoicePartyMap",InvoicePartyMap);
 	  // Debug.log("InvoicePartyMap=======from else========================="+InvoicePartyMap);
 	   deptInvoiceIdRoleList=[];
-	       orgList.each{orgDept->
+		   orgList.each{orgDept->
 			partyId=orgDept.partyId;
 			invoiceRoleList = delegator.findList("InvoiceRole",EntityCondition.makeCondition(EntityCondition.makeCondition("partyId", EntityOperator.EQUALS, partyId),EntityOperator.AND,EntityCondition.makeCondition("roleTypeId", EntityOperator.EQUALS, "ISSUE_TO_DEPT"))  , null, null, null, false );
 			invoiceIdsRoleList=EntityUtil.getFieldListFromEntityList(invoiceRoleList, "invoiceId", true);
@@ -109,7 +109,7 @@ orgList=[];
 			deptInvoiceIdRoleList.addAll(invoiceIdsRoleList);
 			}
 			}
-		   //call for Invoices RoleIds OtherThan Dept 
+		   //call for Invoices RoleIds OtherThan Dept
 		   exprList.clear();
 		   exprList.add(EntityCondition.makeCondition("invoiceTypeId", EntityOperator.EQUALS,"PURCHASE_INVOICE"));
 		   exprList.add(EntityCondition.makeCondition("statusId",EntityOperator.NOT_EQUAL, "INVOICE_CANCELLED"));
@@ -132,9 +132,9 @@ orgList=[];
 		   if(UtilValidate.isEmpty(parameters.issueToDeptId)){
 			   populateDeptInvoiceDetail("Other",invoiceRoleOthrIdsList);
 			 }
-    }else{
+	}else{
 	dummyList=[];
-        populateDeptInvoiceDetail("",dummyList);
+		populateDeptInvoiceDetail("",dummyList);
 		exprList.clear();
 		exprList.add(EntityCondition.makeCondition("invoiceTypeId", EntityOperator.EQUALS,"PURCHASE_INVOICE"));
 		exprList.add(EntityCondition.makeCondition("statusId",EntityOperator.NOT_EQUAL, "INVOICE_CANCELLED"));
@@ -156,8 +156,8 @@ orgList=[];
 		}
 		context.put("InvoicePartyMap",InvoicePartyMap);
 		//Debug.log("InvoicePartyMap=======from else========================="+InvoicePartyMap);
-    }
-//function  for Each Dept	
+	}
+//function  for Each Dept
 def populateDeptInvoiceDetail(departmentId, invoiceIdsList){
 	EntityListIterator invoiceItemsIter = null;
 	List taxDetails5pt5List=[];
@@ -259,6 +259,18 @@ def populateDeptInvoiceDetail(departmentId, invoiceIdsList){
 						invoiceList=[];
 						invoiceList.addAll(innerItemMap);
 						innerTaxCatMap["invoiceList"]=invoiceList;
+						//inside category ProductWise starts
+						productMap=[:];
+						if(UtilValidate.isEmpty(productMap[productId])){
+							innerProdMap=[:];
+							innerProdMap["totalValue"]=invTotalVal;
+							innerProdMap["taxAmount"]=0;
+							prodInvItemList=[];
+							prodInvItemList.addAll(innerItemMap);
+							innerProdMap["prodInvItemList"]=prodInvItemList;
+							productMap[productId]=innerProdMap;
+						}
+						innerTaxCatMap["productDetailMap"]=productMap;
 						tax5pt5CatMap[prodCategoryId]=innerTaxCatMap;
 					}else if(UtilValidate.isNotEmpty(tax5pt5CatMap[prodCategoryId])){
 						Map innerTaxCatMap=tax5pt5CatMap[prodCategoryId];
@@ -267,6 +279,27 @@ def populateDeptInvoiceDetail(departmentId, invoiceIdsList){
 						invoiceList=innerTaxCatMap["invoiceList"];
 						invoiceList.addAll(innerItemMap);
 						innerTaxCatMap["invoiceList"]=invoiceList;
+						//update proddetailsMap
+						updateProductMap=innerTaxCatMap["productDetailMap"];
+						if(UtilValidate.isEmpty(updateProductMap[productId])){
+							innerProdMap=[:];
+							innerProdMap["totalValue"]=invTotalVal;
+							innerProdMap["taxAmount"]=0;
+							prodInvItemList=[];
+							prodInvItemList.addAll(innerItemMap);
+							innerProdMap["prodInvItemList"]=prodInvItemList;
+							updateProductMap[productId]=innerProdMap;
+						}else{
+						innerProdMap=updateProductMap[productId];
+						innerProdMap["totalValue"]+=invTotalVal;
+						innerProdMap["taxAmount"]+=0;
+						prodInvItemList=innerProdMap["prodInvItemList"];
+						prodInvItemList.addAll(innerItemMap);
+						innerProdMap["prodInvItemList"]=prodInvItemList;
+						updateProductMap[productId]=innerProdMap;
+						}
+						innerTaxCatMap["productDetailMap"]=updateProductMap;
+					   //productWise update ends
 						tax5pt5CatMap[prodCategoryId]=innerTaxCatMap;
 					}
 				}
@@ -348,6 +381,18 @@ def populateDeptInvoiceDetail(departmentId, invoiceIdsList){
 						invoiceList=[];
 						invoiceList.addAll(innerItemMap);
 						innerTaxCatMap["invoiceList"]=invoiceList;
+						//inside category ProductWise starts
+						productMap=[:];
+						if(UtilValidate.isEmpty(productMap[productId])){
+							innerProdMap=[:];
+							innerProdMap["totalValue"]=invTotalVal;
+							innerProdMap["taxAmount"]=0;
+							prodInvItemList=[];
+							prodInvItemList.addAll(innerItemMap);
+							innerProdMap["prodInvItemList"]=prodInvItemList;
+							productMap[productId]=innerProdMap;
+						}
+						innerTaxCatMap["productDetailMap"]=productMap;
 						tax14pt5CatMap[prodCategoryId]=innerTaxCatMap;
 					}else if(UtilValidate.isNotEmpty(tax14pt5CatMap[prodCategoryId])){
 						Map innerTaxCatMap=tax14pt5CatMap[prodCategoryId];
@@ -356,6 +401,27 @@ def populateDeptInvoiceDetail(departmentId, invoiceIdsList){
 						invoiceList=innerTaxCatMap["invoiceList"];
 						invoiceList.addAll(innerItemMap);
 						innerTaxCatMap["invoiceList"]=invoiceList;
+						//update proddetailsMap
+						updateProductMap=innerTaxCatMap["productDetailMap"];
+						if(UtilValidate.isEmpty(updateProductMap[productId])){
+							innerProdMap=[:];
+							innerProdMap["totalValue"]=invTotalVal;
+							innerProdMap["taxAmount"]=0;
+							prodInvItemList=[];
+							prodInvItemList.addAll(innerItemMap);
+							innerProdMap["prodInvItemList"]=prodInvItemList;
+							updateProductMap[productId]=innerProdMap;
+						}else{
+						innerProdMap=updateProductMap[productId];
+						innerProdMap["totalValue"]+=invTotalVal;
+						innerProdMap["taxAmount"]+=0;
+						prodInvItemList=innerProdMap["prodInvItemList"];
+						prodInvItemList.addAll(innerItemMap);
+						innerProdMap["prodInvItemList"]=prodInvItemList;
+						updateProductMap[productId]=innerProdMap;
+						}
+						innerTaxCatMap["productDetailMap"]=updateProductMap;
+					   //productWise update ends
 						tax14pt5CatMap[prodCategoryId]=innerTaxCatMap;
 					}
 				}
@@ -569,7 +635,6 @@ def populateDeptInvoiceDetail(departmentId, invoiceIdsList){
 
 		context.issueToDeptInvMap = issueToDeptInvMap;
 		
-			
 		
 		//Debug.log("issueToDeptInvMap====="+issueToDeptInvMap);
 		
