@@ -84,7 +84,11 @@ prodPriceMap = [:];
 if(changeFlag != "AdhocSaleNew"){
 	partyId = parameters.partyId;
 	party = delegator.findOne("PartyGroup", UtilMisc.toMap("partyId", partyId), false);
-	roleTypeId = parameters.roleTypeId;
+	if(partyId.contains("SUB")){
+		roleTypeId = "DIVISION";
+	}else{
+		roleTypeId = parameters.roleTypeId;
+	}
 	partyRole = null;
 	if(party){
 		partyRole = delegator.findOne("PartyRole", UtilMisc.toMap("partyId", partyId, "roleTypeId", roleTypeId), false);

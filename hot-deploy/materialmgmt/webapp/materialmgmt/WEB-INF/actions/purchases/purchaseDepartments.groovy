@@ -44,7 +44,7 @@ organisationList = delegator.findByAnd("PartyRoleAndPartyDetail", [roleTypeId : 
 // sub division here
 inputMap = [:];
 inputMap.put("userLogin", userLogin);
-inputMap.put("fromDate", UtilDateTime.nowTimestamp());
+inputMap.put("fromDate", UtilDateTime.addDaysToTimestamp(UtilDateTime.nowTimestamp(), -730));
 Map departmentsMap = MaterialHelperServices.getDivisionDepartments(dctx,inputMap);
 if(UtilValidate.isNotEmpty(departmentsMap)){
 	departmentList=departmentsMap.get("subDivisionDepartmentList");
