@@ -63,7 +63,12 @@
        <response name="success" type="view" value="PurchageOrderOverView"/>
        <response name="error" type="view" value="PurchageOrderOverView"/>
      </request-map>
-     
+     <request-map uri="suspendPO">
+       <security https="true" auth="true"/>
+        <event type="service" invoke="suspendPO"/>
+       <response name="success" type="view" value="PurchageOrderOverView"/>
+       <response name="error" type="view" value="PurchageOrderOverView"/>
+     </request-map>
      <request-map uri="creatNewnote">
         <security https="true" auth="true"/>
         <response name="success" type="view" value="creatNewnote"/>
