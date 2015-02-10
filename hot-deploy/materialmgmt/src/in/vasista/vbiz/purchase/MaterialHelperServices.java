@@ -804,7 +804,7 @@ public static Map<String, Object> setReauirementStatusId(DispatchContext ctx,Map
 					  Map productMap=FastMap.newInstance();
 					  if(UtilValidate.isNotEmpty(receiptItemTotals)){
 						  Map productInnerMap= (Map)receiptItemTotals.get(productId);
-						  if(productMap!=null){
+						  if(productInnerMap!=null){
 							  receivedQty=(BigDecimal)productInnerMap.get("receivedQty");
 							  receivedQtyValue=(BigDecimal)productInnerMap.get("receivedQtyValue");
 						  }
@@ -856,7 +856,7 @@ public static Map<String, Object> setReauirementStatusId(DispatchContext ctx,Map
     	  EntityCondition condition = EntityCondition.makeCondition(conditionList, EntityOperator.AND); 
     	  partyRelationshipAndDetailList = delegator.findList("PartyRelationshipAndDetail", condition, null, null, null, false);
     	  if(UtilValidate.isNotEmpty(partyRelationshipAndDetailList)){
-    		   partyIds = EntityUtil.getFieldListFromEntityList(partyRelationshipAndDetailList, "partyIdTo", true);
+    		   partyIds = EntityUtil.getFieldListFromEntityList(partyRelationshipAndDetailList, "partyId", true);
     	  }
       }catch(GenericEntityException e){
 		Debug.logError("Error fetching employments " + e.getMessage(), module);
