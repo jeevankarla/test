@@ -95,6 +95,7 @@
                  <parameter param-name="orderId"/>
                 <parameter param-name="statusId" value="ORDER_CANCELLED" />
                 <parameter param-name="setItemStatus" value="Y" />
+                <parameter param-name="roleTypeId"/>
             </hyperlink>
         </field> 
         <!-- <field use-when="(flag == &quot;N&quot;)&amp;&amp;((&quot;${statusId}&quot;!=&quot;ORDER_CANCELLED&quot;)&amp;&amp;(&quot;${statusId}&quot;!=&quot;ORDER_COMPLETED&quot;)&amp;&amp;(&quot;${statusId}&quot;!=&quot;ORDER_CREATED&quot;))"  name="raiseGRN" title="Raise GRN" widget-style="buttontext" > -->
