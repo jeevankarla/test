@@ -75,7 +75,8 @@
                <set field="targetRequest" value="FindMaterialPO"/>
                <set field="parameters.roleTypeId" value="MAINSTORE_VENDOR"/>
                <set field="orderId" from-field="parameters.orderId"/>
-               <set field="changeFlag" value="PurchaseOrder"/> 
+               <set field="changeFlag" value="PurchaseOrder"/>
+               <set field="parameters.POId" from-field="orderId"/> 
                <set field="parameters.changeFlag" value="PurchaseOrder"/> 
                <script location="component://byproducts/webapp/byproducts/WEB-INF/actions/facility/enablePartyAutoComplete.groovy"/>
                <script location="component://materialmgmt/webapp/materialmgmt/WEB-INF/actions/orgnigationDept.groovy"/>

@@ -731,7 +731,17 @@ public static Map<String, Object> setReauirementStatusId(DispatchContext ctx,Map
 			List<GenericValue> productCategoryList = delegator.findByAnd("ProductCategory", UtilMisc.toMap("productCategoryTypeId","RAW_MATERIAL"));
 			List productCategoryIdsList = EntityUtil.getFieldListFromEntityList(productCategoryList, "productCategoryId", true);
 			productList = ProductWorker.getProductsByCategoryList(delegator, productCategoryIdsList, null);
-			result.put("productList", productList);
+			List<String> prodIdsList = FastList.newInstance();
+			List<GenericValue> uniqueProducts = FastList.newInstance();
+			for(GenericValue product : productList){
+				String productId = product.getString("productId");
+				if(!prodIdsList.contains(productId)){
+					prodIdsList.add(productId);
+					uniqueProducts.add(product);
+				}
+			}
+			
+			result.put("productList", uniqueProducts);
 		}catch(Exception e){
 			Debug.logError(e.toString(), module);
 			return ServiceUtil.returnError(e.toString());

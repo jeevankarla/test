@@ -130,14 +130,13 @@ public class MaterialPurchaseServices {
         if(UtilValidate.isNotEmpty(receiptDateStr)){
 	        try {
 	        Date givenReceiptDate = (Date)givenFormatter.parse(receiptDateStr);
-	        receiptDate = UtilDateTime.toTimestamp(reqformatter.format(givenReceiptDate));
+	        receiptDate = new java.sql.Timestamp(givenReceiptDate.getTime());
 	        }catch (ParseException e) {
 		  		Debug.logError(e, "Cannot parse date string: " + receiptDateStr, module);
 		  	} catch (NullPointerException e) {
 	  			Debug.logError(e, "Cannot parse date string: " + receiptDateStr, module);
 		  	}
         }
-        
 	  	if(UtilValidate.isNotEmpty(supplierInvoiceDateStr)){
 	  		try {
 	  			supplierInvoiceDate = new java.sql.Timestamp(sdf.parse(supplierInvoiceDateStr).getTime());
@@ -2472,9 +2471,10 @@ public class MaterialPurchaseServices {
 					}
 					if(UtilValidate.isNotEmpty(prodQtyMap.get("unitPrice"))){
 						unitPrice = (BigDecimal)prodQtyMap.get("unitPrice");
+						orderItemDetail.set("unitPrice", unitPrice);
 					}
 
-if(UtilValidate.isNotEmpty(prodQtyMap.get("bedPercent"))){
+					if(UtilValidate.isNotEmpty(prodQtyMap.get("bedPercent"))){
 						
 						BigDecimal bedPercent = (BigDecimal)prodQtyMap.get("bedPercent");
 						
@@ -2526,7 +2526,6 @@ if(UtilValidate.isNotEmpty(prodQtyMap.get("bedPercent"))){
 							}
 							
 							Map taxComponent = (Map)resultCtx.get("taxComponents");
-							Debug.log("taxComponent #########################"+taxComponent);
 							if(UtilValidate.isNotEmpty(taxComponent.get("VAT_PUR"))){
 								vatTaxPercent = (BigDecimal)taxComponent.get("VAT_PUR");
 							}
