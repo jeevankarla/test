@@ -130,14 +130,13 @@ public class MaterialPurchaseServices {
         if(UtilValidate.isNotEmpty(receiptDateStr)){
 	        try {
 	        Date givenReceiptDate = (Date)givenFormatter.parse(receiptDateStr);
-	        receiptDate = UtilDateTime.toTimestamp(reqformatter.format(givenReceiptDate));
+	        receiptDate = new java.sql.Timestamp(givenReceiptDate.getTime());
 	        }catch (ParseException e) {
 		  		Debug.logError(e, "Cannot parse date string: " + receiptDateStr, module);
 		  	} catch (NullPointerException e) {
 	  			Debug.logError(e, "Cannot parse date string: " + receiptDateStr, module);
 		  	}
         }
-        
 	  	if(UtilValidate.isNotEmpty(supplierInvoiceDateStr)){
 	  		try {
 	  			supplierInvoiceDate = new java.sql.Timestamp(sdf.parse(supplierInvoiceDateStr).getTime());
@@ -2472,9 +2471,10 @@ public class MaterialPurchaseServices {
 					}
 					if(UtilValidate.isNotEmpty(prodQtyMap.get("unitPrice"))){
 						unitPrice = (BigDecimal)prodQtyMap.get("unitPrice");
+						orderItemDetail.set("unitPrice", unitPrice);
 					}
 
-if(UtilValidate.isNotEmpty(prodQtyMap.get("bedPercent"))){
+					if(UtilValidate.isNotEmpty(prodQtyMap.get("bedPercent"))){
 						
 						BigDecimal bedPercent = (BigDecimal)prodQtyMap.get("bedPercent");
 						
@@ -2526,7 +2526,6 @@ if(UtilValidate.isNotEmpty(prodQtyMap.get("bedPercent"))){
 							}
 							
 							Map taxComponent = (Map)resultCtx.get("taxComponents");
-							Debug.log("taxComponent #########################"+taxComponent);
 							if(UtilValidate.isNotEmpty(taxComponent.get("VAT_PUR"))){
 								vatTaxPercent = (BigDecimal)taxComponent.get("VAT_PUR");
 							}
@@ -3697,6 +3696,41 @@ if(UtilValidate.isNotEmpty(prodQtyMap.get("bedPercent"))){
 			return ServiceUtil.returnError(e.getMessage());
 		}
 		result = ServiceUtil.returnSuccess("GRN no: "+receiptId+" Send For Quality Check ");
+		return result;
+	}
+	
+	public static Map<String, Object> suspendPO(DispatchContext ctx,Map<String, ? extends Object> context) {
+		Delegator delegator = ctx.getDelegator();
+		LocalDispatcher dispatcher = ctx.getDispatcher();
+		String orderId = (String) context.get("orderId");
+		String statusUserLogin = (String) context.get("statusUserLogin");
+		String changeReason = (String) context.get("changeReason");
+		Timestamp statusDatetime = (Timestamp) context.get("statusDatetime");
+		
+		GenericValue userLogin = (GenericValue) context.get("userLogin");
+		Map result = ServiceUtil.returnSuccess();
+		try{
+			if(UtilValidate.isNotEmpty(orderId)){
+				GenericValue orderStatus = delegator.makeValue("OrderStatus");
+				orderStatus.set("orderId", orderId);
+				orderStatus.set("statusUserLogin", statusUserLogin);
+				orderStatus.set("changeReason", changeReason);
+				orderStatus.set("statusDatetime", statusDatetime);
+				orderStatus.set("statusId", "ORDER_SUSPENDED");
+				delegator.createSetNextSeqId(orderStatus);
+				
+				GenericValue orderHeader = delegator.findOne("OrderHeader", UtilMisc.toMap("orderId", orderId), false);
+				if(UtilValidate.isNotEmpty(orderHeader)){
+					orderHeader.put("statusId", "ORDER_SUSPENDED");
+					orderHeader.store();
+				}
+			}
+		} catch (Exception e) {
+			// TODO: handle exception	
+			Debug.logError(e, module);
+			return ServiceUtil.returnError(e.getMessage());
+		}
+		result = ServiceUtil.returnSuccess("Order"+orderId+" Suspended sucessfully");
 		return result;
 	}
 }

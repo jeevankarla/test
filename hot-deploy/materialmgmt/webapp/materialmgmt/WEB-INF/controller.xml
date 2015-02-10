@@ -63,7 +63,12 @@
        <response name="success" type="view" value="PurchageOrderOverView"/>
        <response name="error" type="view" value="PurchageOrderOverView"/>
      </request-map>
-     
+     <request-map uri="suspendPO">
+       <security https="true" auth="true"/>
+        <event type="service" invoke="suspendPO"/>
+       <response name="success" type="view" value="PurchageOrderOverView"/>
+       <response name="error" type="view" value="PurchageOrderOverView"/>
+     </request-map>
      <request-map uri="creatNewnote">
         <security https="true" auth="true"/>
         <response name="success" type="view" value="creatNewnote"/>
@@ -1123,7 +1128,21 @@
        <security https="true" auth="true"/>
        <event type="groovy" path="component://materialmgmt/webapp/materialmgmt/WEB-INF/actions/purchases/"  invoke="materialUpdateUomIds.groovy"/>
        <response name="success" type="request" value="json"/>    
+    </request-map>
+    <request-map uri="sendEquiryEmailDataAjax">
+       <security https="true" auth="true"/>
+       <event type="groovy" path="component://materialmgmt/webapp/materialmgmt/WEB-INF/actions/purchases/email/"  invoke="getEnquiryEmailData.groovy"/>
+       <response name="success" type="request" value="json"/>    
    </request-map>
+    <request-map uri="sendEquiryEmailToSupplier">
+       <security https="true" auth="true"/>
+       <event type="service"   invoke="sendEquiryPerEmail"/>
+       <response name="success" type="request-redirect" value="ViewMaterialEnquiry">  
+       <redirect-parameter name="custRequestId"/>
+       </response>
+       <response name="error" type="request" value="ViewMaterialEnquiry"/>   
+   </request-map>
+   
     
     <view-map name="main" type="screen" page="component://materialmgmt/widget/materialmgmtScreens.xml#main"/>
     <view-map name="mainNg" type="screen" page="component://materialmgmt/widget/materialmgmtScreens.xml#mainNG"/>

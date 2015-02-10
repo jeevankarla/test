@@ -29,6 +29,9 @@ under the License.
          	<#if ((currentStatus.statusCode != "CANCELLED" && currentStatus.statusCode != "COMPLETED") && security.hasEntityPermission("ORDERMGR", "_NOTE", session))>
           		<li><a href="#" onclick="javascript:prepareAmendPoFrom()">Amend PO</a></li>
         	</#if>
+        	<#if ((currentStatus.statusCode != "CANCELLED" && currentStatus.statusCode != "COMPLETED") && security.hasEntityPermission("ORDERMGR", "_NOTE", session))>
+          		<li><a href="#" onclick="javascript:prepareSuspendPOForm('${orderId}')">Suspend PO</a></li>
+        	</#if>
          </ul>
         <br class="clear"/>
     </div>
