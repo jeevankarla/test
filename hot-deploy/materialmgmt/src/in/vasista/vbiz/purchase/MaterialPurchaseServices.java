@@ -137,6 +137,7 @@ public class MaterialPurchaseServices {
 	  			Debug.logError(e, "Cannot parse date string: " + receiptDateStr, module);
 		  	}
         }
+        
 	  	if(UtilValidate.isNotEmpty(supplierInvoiceDateStr)){
 	  		try {
 	  			supplierInvoiceDate = new java.sql.Timestamp(sdf.parse(supplierInvoiceDateStr).getTime());
@@ -1819,7 +1820,7 @@ public class MaterialPurchaseServices {
 					}
 					
 					if(UtilValidate.isNotEmpty(cstTaxPercent) && cstTaxPercent.compareTo(BigDecimal.ZERO)>0){
-						Map<String,Object> exCstRateMap = UtilAccounting.getExclusiveTaxRate(baseValue,cstTaxPercent);
+						Map<String,Object> exCstRateMap = UtilAccounting.getInclusiveTaxRate(baseValue,cstTaxPercent);
 						cstUnitRate = (BigDecimal)exCstRateMap.get("taxAmount");
 					}
 				}
@@ -1936,6 +1937,13 @@ public class MaterialPurchaseServices {
 					  	 			vatUnitRate = vatUnitRate.subtract((vatUnitRate.multiply(termValue)).divide(new BigDecimal("100"), 3, BigDecimal.ROUND_HALF_UP));
 					  	 		}
 					  	 		
+					  	 	}else if(uomId.equals("INR")){
+					  	 		if(!cstUnitRate.equals(BigDecimal.ZERO)){
+					  	 			cstUnitRate = cstUnitRate.add(((termAmount.multiply(cstPercent)).divide(new BigDecimal("100"), 3, BigDecimal.ROUND_HALF_UP)).divide(quantity, 3, BigDecimal.ROUND_HALF_UP));
+					  	 		}
+					  	 		if(!vatUnitRate.equals(BigDecimal.ZERO)){
+					  	 			vatUnitRate = vatUnitRate.add((termAmount.multiply(vatPercent)).divide(new BigDecimal("100"), 3, BigDecimal.ROUND_HALF_UP));
+					  	 		}
 					  	 	}
 					  	 	basicAmount = basicAmount.add(termAmount);
 				    	}	
@@ -2474,7 +2482,7 @@ public class MaterialPurchaseServices {
 						orderItemDetail.set("unitPrice", unitPrice);
 					}
 
-					if(UtilValidate.isNotEmpty(prodQtyMap.get("bedPercent"))){
+if(UtilValidate.isNotEmpty(prodQtyMap.get("bedPercent"))){
 						
 						BigDecimal bedPercent = (BigDecimal)prodQtyMap.get("bedPercent");
 						
@@ -2612,7 +2620,7 @@ public class MaterialPurchaseServices {
 						}
 						
 						if(UtilValidate.isNotEmpty(cstTaxPercent) && cstTaxPercent.compareTo(BigDecimal.ZERO)>0){
-							Map<String,Object> exCstRateMap = UtilAccounting.getExclusiveTaxRate(baseValue,cstTaxPercent);
+							Map<String,Object> exCstRateMap = UtilAccounting.getInclusiveTaxRate(baseValue,cstTaxPercent);
 							cstAmount = (BigDecimal)exCstRateMap.get("taxAmount");
 						}
 					}
@@ -2696,6 +2704,13 @@ public class MaterialPurchaseServices {
 						  	 			vatAmount = vatAmount.subtract((vatAmount.multiply(termValue)).divide(new BigDecimal("100"), 3, BigDecimal.ROUND_HALF_UP));
 						  	 		}
 						  	 		
+						  	 	}else if(uomId.equals("INR")){
+						  	 		if(!cstAmount.equals(BigDecimal.ZERO)){
+						  	 			cstAmount = cstAmount.add(((termAmount.multiply(cstTaxPercent)).divide(new BigDecimal("100"), 3, BigDecimal.ROUND_HALF_UP)).divide(quantity, 3, BigDecimal.ROUND_HALF_UP));
+						  	 		}
+						  	 		if(!vatAmount.equals(BigDecimal.ZERO)){
+						  	 			vatAmount = vatAmount.add((termAmount.multiply(vatTaxPercent)).divide(new BigDecimal("100"), 3, BigDecimal.ROUND_HALF_UP));
+						  	 		}
 						  	 	}
 						  	 	basicAmount = basicAmount.add(termAmount);
 					    	}	
