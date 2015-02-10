@@ -45,7 +45,7 @@ var screenFlag;
 		
 		 	$("#partyId").autocomplete({ source: partyAutoJson }).keydown(function(e){ 
 			if (e.keyCode === 13){
-		      	 $('#boothId').autocomplete('close');
+		      	 $('#partyId').autocomplete('close');
 	    			$('#indententryinit').submit();
 	    			return false;   
 			}

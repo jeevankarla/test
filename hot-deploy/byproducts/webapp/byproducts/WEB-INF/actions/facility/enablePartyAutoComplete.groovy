@@ -14,6 +14,7 @@ import org.ofbiz.entity.condition.EntityCondition;
 import org.ofbiz.entity.condition.EntityOperator;
 import java.sql.*;
 import in.vasista.vbiz.byproducts.ByProductNetworkServices;
+import in.vasista.vbiz.purchase.MaterialHelperServices;
 import org.ofbiz.party.party.PartyHelper;
 
 JSONArray partyJSON = new JSONArray();
@@ -34,6 +35,15 @@ if(UtilValidate.isNotEmpty(parameters.roleTypeId)){//to handle IceCream Parties
 				partyDetailsList=unionPartyDetailsList;
 			}
 		}
+		// sub division here
+		inputMap = [:];
+		inputMap.put("userLogin", userLogin);
+		inputMap.put("fromDate", UtilDateTime.addDaysToTimestamp(UtilDateTime.nowTimestamp(), -730));
+		Map departmentsMap = MaterialHelperServices.getDivisionDepartments(dctx,inputMap);
+		if(UtilValidate.isNotEmpty(departmentsMap)){
+			departmentList=departmentsMap.get("subDivisionDepartmentList");
+			partyDetailsList.addAll(departmentList);
+		}
 	partyDetailsList.each{eachParty ->
 		JSONObject newPartyObj = new JSONObject();
 		partyName=PartyHelper.getPartyName(delegator, eachParty.partyId, false);
@@ -45,10 +55,7 @@ if(UtilValidate.isNotEmpty(parameters.roleTypeId)){//to handle IceCream Parties
 }
 context.partyNameObj = partyNameObj;
 context.partyJSON = partyJSON;
-
-
 //supplier json for supplier lookup.
-
 JSONArray supplierJSON = new JSONArray();
 
 Condition = EntityCondition.makeCondition([EntityCondition.makeCondition("roleTypeId", "SUPPLIER")],EntityOperator.AND);
