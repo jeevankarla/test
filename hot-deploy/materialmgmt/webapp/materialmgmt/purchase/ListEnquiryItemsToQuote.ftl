@@ -236,6 +236,7 @@ under the License.
           			<td>Item</td>
           			<td>Item Specification</td>
           			<td>Quantity</td>
+          			<td>UOM</td>
           			<td>Supply Qty</td>
           			<td>Price Per Unit</td>
           			<td align="right" width="6%">Select All <input type="checkbox" id="checkAllItems" name="checkAllItems" onchange="javascript:toggleSelectId(this);"/></td>
@@ -260,7 +261,9 @@ under the License.
               </#if>
               <td><input type="button" name="productName" id="productName" value="${items.productName}(${items.productId})" style="border:0;background-color:transparent;color:#3B5998;"/></td>
               <td><input type="button" name="longDescription" id="longDescription" value="${product.longDescription?if_exists}" style="border:0;background-color:transparent;color:#3B5998;"/></td>
+              <#assign uom = (delegator.findOne("Uom", {"uomId" : product.quantityUomId}, false))!>
               <td><input type="button" id="enqQty" name="enqQty" style="background-color:transparent;border:0;color:#3B5998;" value="${items.quantity}"/ ></td>
+              <td><input type="button" id="uom" name="uom" style="background-color:transparent;border:0;color:#3B5998;" value="${uom.description?if_exists}"/ ></td>
               <td><input type="text" id="quantity" name="quantity" value="${items.quantity}"/></td>
               <#if items.unitPrice?exists && items.unitPrice?has_content><td><input type="text" id="price" name="price" value=${items.unitPrice}></td>
               <#else><td><input type="text" id="price" name="price"/></td>
