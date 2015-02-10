@@ -169,7 +169,7 @@ if(UtilValidate.isNotEmpty(shipmentId)){
 	ordDetails = delegator.findList("OrderItem", condition , null, null, null, false );
 	orderDetails=EntityUtil.getFirst(ordDetails);
 	quantity=orderDetails.quantity;
-	unitPrice=orderDetails.unitPrice;
+	unitPrice=orderDetails.unitListPrice;
 	grnDetailsMap["unitPrice"]=unitPrice;
 	grnDetailsMap["quantity"]=quantity;
 	}
