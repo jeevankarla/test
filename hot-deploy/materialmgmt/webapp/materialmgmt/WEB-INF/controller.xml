@@ -220,7 +220,7 @@
        <security https="true" auth="true"/>
        <event type="service" path="" invoke="approveRequestByHOD"></event>
        <response name="success" type="request-redirect-noparam" value="ApproveRequestsByDeptHead"/>
-       <response name="error" type="view" value="ApproveRequestsByDeptHead"/>
+       <response name="error" type="request-redirect-noparam" value="ApproveRequestsByDeptHead"/>
      </request-map>
      <request-map uri="updateMaterialQuoteTerm">
        <security https="true" auth="true"/>
@@ -295,7 +295,7 @@
        <security https="true" auth="true"/>
        <event type="service" path="" invoke="createPOForQuote"></event>
        <response name="success" type="request" value="editMaterialPO"/>
-        <response name="error" type="view" value="ViewMaterialQuote"/>
+       <response name="error" type="view" value="ViewMaterialQuote"/>
      </request-map>
      <request-map uri="MRRreport.pdf">
         <security https="true" auth="true"/>
@@ -312,7 +312,7 @@
        <security https="true" auth="true"/>
        <event type="service" path="" invoke="setCustRequestItemStatus"></event>
        <response name="success" type="request-redirect-noparam" value="ApproveRequestsByDeptHead"/>
-       <response name="error" type="view" value="ApproveRequestsByDeptHead"/>
+       <response name="error" type="request-redirect-noparam" value="ApproveRequestsByDeptHead"/>
      </request-map>
      
      <request-map uri="acceptReceiptQtyByQC">
@@ -607,6 +607,12 @@
         <event type="service" invoke="setRequestStatus"/>
         <response name="success" type="view" value="ViewMaterialEnquiry"/>
         <response name="error" type="view" value="ViewMaterialEnquiry"/>
+    </request-map>
+    <request-map uri="cancelEnquiryStatus">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="cancelEnquiry"/>
+        <response name="success" type="request-redirect-noparam" value="FindMaterialEnquiry"/>
+        <response name="error" type="request-redirect-noparam" value="FindMaterialEnquiry"/>
     </request-map>
     
     <request-map uri="updateIndentStatus">
