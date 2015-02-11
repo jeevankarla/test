@@ -197,7 +197,30 @@ if(UtilValidate.isNotEmpty(shipmentIds)){
 		//  Debug.log("=====No Flag===");
 		  dayTotals = ByProductNetworkServices.getPeriodTotals(dispatcher.getDispatchContext(), [shipmentIds:shipmentIds, fromDate:dayBegin, thruDate:dayEnd]);
 		 }
-	if(UtilValidate.isNotEmpty(dayTotals)){
+	  if(UtilValidate.isNotEmpty(dayTotals)){
+			//Debug.log("dayTotals====="+dayTotals.get("dayWiseTotals"));
+			    countMap=[:];
+				if(UtilValidate.isNotEmpty(dayTotals.get("dayWiseTotals"))){
+					curntDaySalesMap=dayTotals.get("dayWiseTotals").entrySet();
+					curntDaySalesMap.each{daySalesMap->
+					if(UtilValidate.isNotEmpty(daySalesMap.getValue())){
+						productTotList=daySalesMap.getValue().get("productTotals");
+						productTotList.each{ product->
+							count=0;
+							productId=product.getKey();
+							if(UtilValidate.isEmpty(countMap[productId])){
+							  countMap.put(productId, count+1);
+							}else{
+							   val=countMap.get(productId);
+							   count=val+1;
+							   countMap.put(productId, count);
+							}
+						}
+					 }
+						
+					}//curnt Day caliculation
+				}
+		context.putAt("countMap", countMap);
 		prodTotals = dayTotals.get("productTotals");
 		grandTotalRevenue=dayTotals.get("totalRevenue");
 		if(UtilValidate.isNotEmpty(prodTotals)){
@@ -220,10 +243,19 @@ if(UtilValidate.isNotEmpty(shipmentIds)){
 			curdAverageTotal = 0;
 			milkSaleTotal = 0;
 			curdSaleTotal = 0;
+			count=0;
 			productCategoryMap = [:];
+			productReturnMap = context.get("productReturnMap");
 			productValueMap.each{ productValue ->
 				if(UtilValidate.isNotEmpty(productValue)){
 					currentProduct = productValue.getKey();
+					returnProdMap=[:];
+					if(UtilValidate.isNotEmpty(countMap)){
+					   noOfDays=countMap.get(currentProduct);
+					}
+					if(UtilValidate.isNotEmpty(productReturnMap)){
+					  returnProdMap=productReturnMap.get(currentProduct);
+					}
 					product = delegator.findOne("Product", [productId : currentProduct], false);
 					tempVariantMap =[:];
 					productAssoc = EntityUtil.getFirst(delegator.findList("ProductAssoc", EntityCondition.makeCondition(["productAssocTypeId": "PRODUCT_VARIANT", "productIdTo": currentProduct,"thruDate":null]), null, ["-fromDate"], null, false));
@@ -249,10 +281,28 @@ if(UtilValidate.isNotEmpty(shipmentIds)){
 						tempVariantMap[virtualProductId] = tempMap;
 					}
 					if("Milk".equals(product.primaryProductCategoryId)){
-						milkSaleTotal=milkSaleTotal+productValue.getValue().get("total");
+						returnQty=0;
+						saleProdQty=0;
+						if(UtilValidate.isNotEmpty(returnProdMap)){
+						  returnQty=returnProdMap.get("returnQuantity");
+						}
+						saleProdQty=productValue.getValue().get("total")-returnQty;
+						if(noOfDays!=0){
+							quantity=saleProdQty/noOfDays;
+						}
+						milkSaleTotal=milkSaleTotal+quantity;
 					}
 					if("Curd".equals(product.primaryProductCategoryId)){
-						curdSaleTotal=curdSaleTotal+productValue.getValue().get("total");
+						returnQty=0;
+						saleProdQty=0;
+						if(UtilValidate.isNotEmpty(returnProdMap)){
+						  returnQty=returnProdMap.get("returnQuantity");
+						}
+						saleProdQty=productValue.getValue().get("total")-returnQty;
+						if(noOfDays!=0){
+							quantity=saleProdQty/noOfDays;
+						}
+						curdSaleTotal=curdSaleTotal+quantity;
 					}
 					if(UtilValidate.isEmpty(productCategoryMap[product.primaryProductCategoryId])){
 						productCategoryMap.put(product.primaryProductCategoryId,tempVariantMap);
@@ -286,18 +336,21 @@ if(UtilValidate.isNotEmpty(shipmentIds)){
 					}
 				}
 			}
-			milkReturnTotal = context.get("milkReturnQty");
+			/*milkReturnTotal = context.get("milkReturnQty");
 			curdReturnTotal = context.get("curdReturnQty");
 			if(UtilValidate.isNotEmpty(milkReturnTotal)){
 				milkAverageTotal = milkAverageTotal+(milkSaleTotal-milkReturnTotal);
 			}else{
 				milkAverageTotal = milkSaleTotal;
 			}
-			if(UtilValidate.isNotEmpty(curdReturnTotal)){
+			Debug.log("milkAverageTotal====="+milkAverageTotal);
+			/*if(UtilValidate.isNotEmpty(curdReturnTotal)){
 				curdAverageTotal = curdAverageTotal+(curdSaleTotal-curdReturnTotal);
 			}else{
 				curdAverageTotal = curdSaleTotal;
-			}
+			}*/
+			milkAverageTotal = milkSaleTotal;
+			curdAverageTotal = curdSaleTotal;
 			context.putAt("productCategoryMap", productCategoryMap);
 			context.putAt("milkAverageTotal", milkAverageTotal);
 			context.putAt("curdAverageTotal", curdAverageTotal);
