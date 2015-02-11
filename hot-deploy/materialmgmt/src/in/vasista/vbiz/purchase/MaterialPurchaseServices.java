@@ -73,12 +73,11 @@ public class MaterialPurchaseServices {
 	public static final BigDecimal ZERO_BASE = BigDecimal.ZERO;
 	public static final BigDecimal ONE_BASE = BigDecimal.ONE;
 	public static final BigDecimal PERCENT_SCALE = new BigDecimal("100.000");
-	public static int salestaxFinalDecimals = UtilNumber.getBigDecimalScale("salestax.final.decimals");
-	public static int salestaxCalcDecimals = 2;//UtilNumber.getBigDecimalScale("salestax.calc.decimals");
+	public static int purchaseTaxFinalDecimals = UtilNumber.getBigDecimalScale("purchaseTax.final.decimals");
+	public static int purchaseTaxCalcDecimals = UtilNumber.getBigDecimalScale("purchaseTax.calc.decimals");
 	
-	public static int salestaxRounding = UtilNumber.getBigDecimalRoundingMode("salestax.rounding");
+	public static int purchaseTaxRounding = UtilNumber.getBigDecimalRoundingMode("purchaseTax.rounding");
 	
-
 	public static String processReceiptItems(HttpServletRequest request, HttpServletResponse response) {
 		
 		Delegator delegator = (Delegator) request.getAttribute("delegator");
@@ -1830,7 +1829,7 @@ public class MaterialPurchaseServices {
 						BigDecimal taxAmount = bedUnitRate.multiply(quantity);
 						
 						if(taxAmount.compareTo(BigDecimal.ZERO)>0){
-			        		taxAmount = (taxAmount).setScale(salestaxCalcDecimals, salestaxRounding);
+			        		taxAmount = (taxAmount).setScale(purchaseTaxFinalDecimals, purchaseTaxRounding);
 			        		Map taxDetailMap = FastMap.newInstance();
 				    		taxDetailMap.put("taxType", "BED_PUR");
 				    		taxDetailMap.put("amount", taxAmount);
@@ -1848,7 +1847,7 @@ public class MaterialPurchaseServices {
 				    		newProdPriceType.set("taxAmount", taxAmount);
 				    		newProdPriceType.set("currencyUomId", "INR");
 				    		prodPriceTypeList.add(newProdPriceType);
-				    		totalTaxAmt=totalTaxAmt.add(taxAmount.divide(quantity, 3, BigDecimal.ROUND_HALF_UP));
+				    		totalTaxAmt=totalTaxAmt.add(taxAmount.divide(quantity, purchaseTaxFinalDecimals, purchaseTaxRounding));
 			        	}
 			        	exciseDuty = exciseDuty.add(taxAmount);
 			        	
@@ -1859,8 +1858,8 @@ public class MaterialPurchaseServices {
 						BigDecimal taxAmount = bedCessUnitRate.multiply(quantity);
 
 						if(taxAmount.compareTo(BigDecimal.ZERO)>0){
-			        		//taxAmount = (tempPrice.multiply(taxRate)).divide(PERCENT_SCALE, salestaxCalcDecimals, salestaxRounding);
-			        		taxAmount=taxAmount.setScale(salestaxCalcDecimals, salestaxRounding);
+			        		//taxAmount = (tempPrice.multiply(taxRate)).divide(PERCENT_SCALE, purchaseTaxFinalDecimals, purchaseTaxRounding);
+			        		taxAmount=taxAmount.setScale(purchaseTaxFinalDecimals, purchaseTaxRounding);
 			        		Map taxDetailMap = FastMap.newInstance();
 				    		taxDetailMap.put("taxType", "BEDCESS_PUR");
 				    		taxDetailMap.put("amount", taxAmount);
@@ -1878,7 +1877,7 @@ public class MaterialPurchaseServices {
 				    		newProdPriceType.set("taxAmount", taxAmount);
 				    		newProdPriceType.set("currencyUomId", "INR");
 				    		prodPriceTypeList.add(newProdPriceType);
-				    		totalTaxAmt=totalTaxAmt.add(taxAmount.divide(quantity, 3, BigDecimal.ROUND_HALF_UP));
+				    		totalTaxAmt=totalTaxAmt.add(taxAmount.divide(quantity, purchaseTaxFinalDecimals, purchaseTaxRounding));
 			        	}
 			        	exciseDuty = exciseDuty.add(taxAmount);
 					}
@@ -1888,7 +1887,7 @@ public class MaterialPurchaseServices {
 				    	BigDecimal taxAmount = bedSecCessUnitRate.multiply(quantity);
 						
 						if(taxAmount.compareTo(BigDecimal.ZERO)>0){
-			        		taxAmount=taxAmount.setScale(salestaxCalcDecimals, salestaxRounding);
+			        		taxAmount=taxAmount.setScale(purchaseTaxFinalDecimals, purchaseTaxRounding);
 			        		Map taxDetailMap = FastMap.newInstance();
 				    		taxDetailMap.put("taxType", "BEDSECCESS_PUR");
 				    		taxDetailMap.put("amount", taxAmount);
@@ -1906,7 +1905,7 @@ public class MaterialPurchaseServices {
 				    		newProdPriceType.set("taxAmount", taxAmount);
 				    		newProdPriceType.set("currencyUomId", "INR");
 				    		prodPriceTypeList.add(newProdPriceType);
-				    		totalTaxAmt=totalTaxAmt.add(taxAmount.divide(quantity, 3, BigDecimal.ROUND_HALF_UP));
+				    		totalTaxAmt=totalTaxAmt.add(taxAmount.divide(quantity, purchaseTaxFinalDecimals, purchaseTaxRounding));
 			        	}
 			        	exciseDuty = exciseDuty.add(taxAmount);
 					}
@@ -1931,18 +1930,18 @@ public class MaterialPurchaseServices {
 					  	 	//modify the vat unit rate here
 					  	 	if(uomId.equals("PERCENT") ){
 					  	 		if(!cstUnitRate.equals(BigDecimal.ZERO)){
-					  	 			cstUnitRate = cstUnitRate.subtract((cstUnitRate.multiply(termValue)).divide(new BigDecimal("100"), 3, BigDecimal.ROUND_HALF_UP));
+					  	 			cstUnitRate = cstUnitRate.subtract((cstUnitRate.multiply(termValue)).divide(new BigDecimal("100"), purchaseTaxFinalDecimals, purchaseTaxRounding));
 					  	 		}
 					  	 		if(!vatUnitRate.equals(BigDecimal.ZERO)){
-					  	 			vatUnitRate = vatUnitRate.subtract((vatUnitRate.multiply(termValue)).divide(new BigDecimal("100"), 3, BigDecimal.ROUND_HALF_UP));
+					  	 			vatUnitRate = vatUnitRate.subtract((vatUnitRate.multiply(termValue)).divide(new BigDecimal("100"), purchaseTaxFinalDecimals, purchaseTaxRounding));
 					  	 		}
 					  	 		
 					  	 	}else if(uomId.equals("INR")){
 					  	 		if(!cstUnitRate.equals(BigDecimal.ZERO)){
-					  	 			cstUnitRate = cstUnitRate.add(((termAmount.multiply(cstPercent)).divide(new BigDecimal("100"), 3, BigDecimal.ROUND_HALF_UP)).divide(quantity, 3, BigDecimal.ROUND_HALF_UP));
+					  	 			cstUnitRate = cstUnitRate.add(((termAmount.multiply(cstPercent)).divide(new BigDecimal("100"), purchaseTaxFinalDecimals, purchaseTaxRounding)).divide(quantity, purchaseTaxFinalDecimals, purchaseTaxRounding));
 					  	 		}
 					  	 		if(!vatUnitRate.equals(BigDecimal.ZERO)){
-					  	 			vatUnitRate = vatUnitRate.add((termAmount.multiply(vatPercent)).divide(new BigDecimal("100"), 3, BigDecimal.ROUND_HALF_UP));
+					  	 			vatUnitRate = vatUnitRate.add((termAmount.multiply(vatPercent)).divide(new BigDecimal("100"), purchaseTaxFinalDecimals, purchaseTaxRounding));
 					  	 		}
 					  	 	}
 					  	 	basicAmount = basicAmount.add(termAmount);
@@ -1956,7 +1955,7 @@ public class MaterialPurchaseServices {
 				    	//taxAmount = taxAmount.add(exciseDuty.multiply(vatPercent).divide(PERCENT_SCALE, 3, BigDecimal.ROUND_HALF_UP));
 				    	
 				    	if(taxAmount.compareTo(BigDecimal.ZERO)>0){
-			        		taxAmount=taxAmount.setScale(salestaxCalcDecimals, salestaxRounding);
+			        		taxAmount=taxAmount.setScale(purchaseTaxFinalDecimals, purchaseTaxRounding);
 			        		Map taxDetailMap = FastMap.newInstance();
 				    		taxDetailMap.put("taxType", "VAT_PUR");
 				    		taxDetailMap.put("amount", taxAmount);
@@ -1974,7 +1973,7 @@ public class MaterialPurchaseServices {
 				    		newProdPriceType.set("taxAmount", taxAmount);
 				    		newProdPriceType.set("currencyUomId", "INR");
 				    		prodPriceTypeList.add(newProdPriceType);
-				    		totalTaxAmt=totalTaxAmt.add(taxAmount.divide(quantity, 3, BigDecimal.ROUND_HALF_UP));
+				    		totalTaxAmt=totalTaxAmt.add(taxAmount.divide(quantity, purchaseTaxFinalDecimals, purchaseTaxRounding));
 			        	}
 					}
 					if( !cstUnitRate.equals(BigDecimal.ZERO)){
@@ -1982,7 +1981,7 @@ public class MaterialPurchaseServices {
 						BigDecimal taxAmount = cstUnitRate.multiply(quantity);
 
 						if(taxAmount.compareTo(BigDecimal.ZERO)>0){
-			        		taxAmount=taxAmount.setScale(salestaxCalcDecimals, salestaxRounding);
+			        		taxAmount=taxAmount.setScale(purchaseTaxFinalDecimals, purchaseTaxRounding);
 			        		Map taxDetailMap = FastMap.newInstance();
 				    		taxDetailMap.put("taxType", "CST_PUR");
 				    		taxDetailMap.put("amount", taxAmount);
@@ -2000,7 +1999,7 @@ public class MaterialPurchaseServices {
 				    		newProdPriceType.set("taxAmount", taxAmount);
 				    		newProdPriceType.set("currencyUomId", "INR");
 				    		prodPriceTypeList.add(newProdPriceType);
-				    		totalTaxAmt=totalTaxAmt.add(taxAmount.divide(quantity, 3, BigDecimal.ROUND_HALF_UP));
+				    		totalTaxAmt=totalTaxAmt.add(taxAmount.divide(quantity, purchaseTaxFinalDecimals, purchaseTaxRounding));
 			        	}
 					}
 				}
@@ -2630,12 +2629,12 @@ if(UtilValidate.isNotEmpty(prodQtyMap.get("bedPercent"))){
 							
 							BigDecimal taxAmount = bedAmount.multiply(quantity);
 							if(taxAmount.compareTo(BigDecimal.ZERO)>0){
-				        		taxAmount = (taxAmount).setScale(salestaxCalcDecimals, salestaxRounding);
+				        		taxAmount = (taxAmount).setScale(purchaseTaxFinalDecimals, purchaseTaxRounding);
 							}
 							totalBedAmount = totalBedAmount.add(taxAmount);
 							orderItemDetail.set("bedPercent", bedTaxPercent);
 							orderItemDetail.set("bedAmount", taxAmount);
-							totalTaxAmt=totalTaxAmt.add(taxAmount.divide(quantity, 3, BigDecimal.ROUND_HALF_UP));
+							totalTaxAmt=totalTaxAmt.add(taxAmount.divide(quantity, purchaseTaxFinalDecimals, purchaseTaxRounding));
 							exciseDuty = exciseDuty.add(taxAmount);
 						}
 						else{
@@ -2647,12 +2646,12 @@ if(UtilValidate.isNotEmpty(prodQtyMap.get("bedPercent"))){
 							
 							BigDecimal taxAmount = bedcessAmount.multiply(quantity);
 							if(taxAmount.compareTo(BigDecimal.ZERO)>0){
-				        		taxAmount = (taxAmount).setScale(salestaxCalcDecimals, salestaxRounding);
+				        		taxAmount = (taxAmount).setScale(purchaseTaxFinalDecimals, purchaseTaxRounding);
 							}
 							totalBedCessAmount = totalBedCessAmount.add(taxAmount);
 							orderItemDetail.set("bedcessPercent", bedcessTaxPercent);
 							orderItemDetail.set("bedcessAmount", taxAmount);
-							totalTaxAmt=totalTaxAmt.add(taxAmount.divide(quantity, 3, BigDecimal.ROUND_HALF_UP));
+							totalTaxAmt=totalTaxAmt.add(taxAmount.divide(quantity, purchaseTaxFinalDecimals, purchaseTaxRounding));
 							exciseDuty = exciseDuty.add(taxAmount);
 						}
 						else{
@@ -2664,12 +2663,12 @@ if(UtilValidate.isNotEmpty(prodQtyMap.get("bedPercent"))){
 							
 							BigDecimal taxAmount = bedseccessAmount.multiply(quantity);
 							if(taxAmount.compareTo(BigDecimal.ZERO)>0){
-				        		taxAmount = (taxAmount).setScale(salestaxCalcDecimals, salestaxRounding);
+				        		taxAmount = (taxAmount).setScale(purchaseTaxFinalDecimals, purchaseTaxRounding);
 							}
 							totalBedSecCessAmount = totalBedSecCessAmount.add(taxAmount);
 							orderItemDetail.set("bedseccessPercent", bedseccessTaxPercent);
 							orderItemDetail.set("bedseccessAmount", taxAmount);
-							totalTaxAmt=totalTaxAmt.add(taxAmount.divide(quantity, 3, BigDecimal.ROUND_HALF_UP));
+							totalTaxAmt=totalTaxAmt.add(taxAmount.divide(quantity, purchaseTaxFinalDecimals, purchaseTaxRounding));
 							exciseDuty = exciseDuty.add(taxAmount);
 						}
 						else{
@@ -2698,18 +2697,18 @@ if(UtilValidate.isNotEmpty(prodQtyMap.get("bedPercent"))){
 						  	 	//modify the vat unit rate here
 						  	 	if(uomId.equals("PERCENT") ){
 						  	 		if(!cstAmount.equals(BigDecimal.ZERO)){
-						  	 			cstAmount = cstAmount.subtract((cstAmount.multiply(termValue)).divide(new BigDecimal("100"), 3, BigDecimal.ROUND_HALF_UP));
+						  	 			cstAmount = cstAmount.subtract((cstAmount.multiply(termValue)).divide(new BigDecimal("100"), purchaseTaxFinalDecimals, purchaseTaxRounding));
 						  	 		}
 						  	 		if(!vatAmount.equals(BigDecimal.ZERO)){
-						  	 			vatAmount = vatAmount.subtract((vatAmount.multiply(termValue)).divide(new BigDecimal("100"), 3, BigDecimal.ROUND_HALF_UP));
+						  	 			vatAmount = vatAmount.subtract((vatAmount.multiply(termValue)).divide(new BigDecimal("100"), purchaseTaxFinalDecimals, purchaseTaxRounding));
 						  	 		}
 						  	 		
 						  	 	}else if(uomId.equals("INR")){
 						  	 		if(!cstAmount.equals(BigDecimal.ZERO)){
-						  	 			cstAmount = cstAmount.add(((termAmount.multiply(cstTaxPercent)).divide(new BigDecimal("100"), 3, BigDecimal.ROUND_HALF_UP)).divide(quantity, 3, BigDecimal.ROUND_HALF_UP));
+						  	 			cstAmount = cstAmount.add(((termAmount.multiply(cstTaxPercent)).divide(new BigDecimal("100"), purchaseTaxFinalDecimals, purchaseTaxRounding)).divide(quantity, purchaseTaxFinalDecimals, purchaseTaxRounding));
 						  	 		}
 						  	 		if(!vatAmount.equals(BigDecimal.ZERO)){
-						  	 			vatAmount = vatAmount.add((termAmount.multiply(vatTaxPercent)).divide(new BigDecimal("100"), 3, BigDecimal.ROUND_HALF_UP));
+						  	 			vatAmount = vatAmount.add((termAmount.multiply(vatTaxPercent)).divide(new BigDecimal("100"), purchaseTaxFinalDecimals, purchaseTaxRounding));
 						  	 		}
 						  	 	}
 						  	 	basicAmount = basicAmount.add(termAmount);
@@ -2720,12 +2719,12 @@ if(UtilValidate.isNotEmpty(prodQtyMap.get("bedPercent"))){
 							
 							BigDecimal taxAmount = vatAmount.multiply(quantity);
 							if(taxAmount.compareTo(BigDecimal.ZERO)>0){
-				        		taxAmount = (taxAmount).setScale(salestaxCalcDecimals, salestaxRounding);
+				        		taxAmount = (taxAmount).setScale(purchaseTaxFinalDecimals, purchaseTaxRounding);
 							}
 							totalVatAmount = totalVatAmount.add(taxAmount);
 							orderItemDetail.set("vatPercent", vatTaxPercent);
 							orderItemDetail.set("vatAmount", taxAmount);
-							totalTaxAmt=totalTaxAmt.add(taxAmount.divide(quantity, 3, BigDecimal.ROUND_HALF_UP));
+							totalTaxAmt=totalTaxAmt.add(taxAmount.divide(quantity, purchaseTaxFinalDecimals, purchaseTaxRounding));
 						}
 						else{
 							orderItemDetail.set("vatPercent", null);
@@ -2736,11 +2735,11 @@ if(UtilValidate.isNotEmpty(prodQtyMap.get("bedPercent"))){
 							
 							BigDecimal taxAmount = cstAmount.multiply(quantity);
 							if(taxAmount.compareTo(BigDecimal.ZERO)>0){
-				        		taxAmount = (taxAmount).setScale(salestaxCalcDecimals, salestaxRounding);
+				        		taxAmount = (taxAmount).setScale(purchaseTaxFinalDecimals, purchaseTaxRounding);
 							}
 							totalCstAmount = totalCstAmount.add(taxAmount);
 							orderItemDetail.set("cstPercent", cstTaxPercent);							orderItemDetail.set("cstAmount", taxAmount);
-							totalTaxAmt=totalTaxAmt.add(taxAmount.divide(quantity, 3, BigDecimal.ROUND_HALF_UP));
+							totalTaxAmt=totalTaxAmt.add(taxAmount.divide(quantity, purchaseTaxFinalDecimals, purchaseTaxRounding));
 						}
 						else{
 							orderItemDetail.set("cstPercent", null);

@@ -61,10 +61,10 @@ public class MaterialRequestServices {
 	public static final BigDecimal ZERO_BASE = BigDecimal.ZERO;
 	public static final BigDecimal ONE_BASE = BigDecimal.ONE;
 	public static final BigDecimal PERCENT_SCALE = new BigDecimal("100.000");
-	public static int salestaxFinalDecimals = UtilNumber.getBigDecimalScale("salestax.final.decimals");
-	public static int salestaxCalcDecimals = 2;//UtilNumber.getBigDecimalScale("salestax.calc.decimals");
+	public static int purchaseTaxFinalDecimals = UtilNumber.getBigDecimalScale("purchaseTax.final.decimals");
+	public static int purchaseTaxCalcDecimals = UtilNumber.getBigDecimalScale("purchaseTax.calc.decimals");
 	
-	public static int salestaxRounding = UtilNumber.getBigDecimalRoundingMode("salestax.rounding");
+	public static int purchaseTaxRounding = UtilNumber.getBigDecimalRoundingMode("purchaseTax.rounding");
 	
 
 	public static String processCustRequestItems(HttpServletRequest request, HttpServletResponse response) {
