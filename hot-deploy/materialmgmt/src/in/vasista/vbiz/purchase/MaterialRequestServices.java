@@ -1375,7 +1375,7 @@ public class MaterialRequestServices {
 					for(GenericValue reqCustRequest : requirementCustRequest){
 						requirementId = reqCustRequest.getString("requirementId");
 						requirement = delegator.findOne("Requirement", UtilMisc.toMap("requirementId", requirementId), false);
-						requirement.set("statusId", "REQ_REJECTED");
+						requirement.set("statusId", "REQ_ORDERED");
 						requirement.store();
 					}
 				}

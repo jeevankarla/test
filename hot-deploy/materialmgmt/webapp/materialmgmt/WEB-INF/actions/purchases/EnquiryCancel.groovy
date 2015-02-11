@@ -11,7 +11,7 @@ import org.ofbiz.base.util.Debug;
 
 dctx = dispatcher.getDispatchContext();
 custRequestId = context.custRequestId;
-selectFields = ["statusId","custRequestId"] as Set;
+selectFields = ["qiStatusId","custRequestId"] as Set;
 List conditionList=FastList.newInstance();
 
 conditionList.add(EntityCondition.makeCondition("custRequestId",EntityOperator.EQUALS,custRequestId));
@@ -20,8 +20,8 @@ cancelFlag = "N";
 quoteAndItemAndCustRequest = delegator.findList("QuoteAndItemAndCustRequest",condition, selectFields , null, null, false);
 if (UtilValidate.isNotEmpty(quoteAndItemAndCustRequest)){
 	 quoteAndItemAndCustRequest.each{ quoteAndItem ->
-		statusId = quoteAndItem.statusId;
-		if (!("QUO_REJECTED".equals(statusId))&&"N".equals(cancelFlag)) {
+		statusId = quoteAndItem.qiStatusId;
+		if (("QTITM_ORDERED".equals(statusId))&&"N".equals(cancelFlag)) {
 		     cancelFlag = "Y";
 	    }
 	}
