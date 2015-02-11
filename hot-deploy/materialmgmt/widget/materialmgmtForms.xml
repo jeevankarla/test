@@ -439,10 +439,11 @@
         		<condition-expr field-name="productId" operator="equals" value="${productId}"/>
         	</entity-condition>
         	<set  field="partyId" value="${list[0].partyId}"/>
+        	
         </row-actions>
      <field name="internalName" title="Internal Name"><display/></field>
 	<field name="productId" title="Product">
-     	<display-entity entity-name="Product" description="${description} [${productId}]" ></display-entity>
+     	<display-entity entity-name="Product" description="${productName} [${productId}]" ></display-entity>
     </field>     
      <!-- <field name="productId" title="Product" >
      <display-entity entity-name="Product" description="${description}">

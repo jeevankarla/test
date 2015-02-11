@@ -133,7 +133,7 @@
 			message +="<tr ><td align='right' class='h2' width='15%' >Uom Id: </td><td align='left' width='60%'><select name='quantityUomId' id='quantityUomId' class='h3'>"+
               		<#--<#list uomList as uom><option value='${uom.uomId}' <#if uom.uomId=='"+innerUomId+"'  > selected='selected'</#if> >${uom.description}[${uom.abbreviation}]</option></#list>"+   -->         
 					"</select></td></tr>";
-		   message += "<tr ><td align='right' class='h2' width='15%' >Product Name: </td><td align='left'  width='75%'  > <input type='text' size='70'  id='productName' name='description'/><input type='hidden' id='productId'  name='productId'  /> </tr></tbody></table></td></tr>";
+		   message += "<tr ><td align='right' class='h2' width='15%' >Product Name: </td><td align='left'  width='75%'  > <input type='text' size='70'  id='productName' name='productName'/><input type='hidden' id='productId'  name='productId'  /> </tr></tbody></table></td></tr>";
 			 message += "<tr ><td width='100%' colspan='2' ><table  border='0' cellspacing='10' cellpadding='10'><tbody><tr><td width='15%' align='right' class='label labelFontCSS' >Specification: </td><td align='left'  width='75%'  >";
               message += "<textarea name='longDescription' id='longDescription' cols='70' rows='4'></textarea> </td></tr>";
 			
