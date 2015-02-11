@@ -293,10 +293,6 @@
             <field-map field-name="viewSize" from-field="viewSize"/>
           </service>
         </actions>
-         <row-actions>
-           <script  location="component://materialmgmt/webapp/materialmgmt/WEB-INF/actions/purchases/EnquiryCancel.groovy"/>
-           <set field="cancelFlag" value="${cancelFlag}"/>
-        </row-actions>
     </form>
 
     <form name="ListEnquiryList" type="list" use-row-submit="true" list-name="custRequests" title="List of Enquiry"
@@ -333,8 +329,8 @@
         <field name="lastModifiedDate" sort-field="true"><display/></field>
         <field name="createdByUserLogin" sort-field="true"><display/></field>
         
-       <field use-when="&quot;N&quot;.equals(&quot;${cancelFlag}&quot;)&amp;&amp;!(&quot;ENQ_CANCELLED&quot;.equals(&quot;${statusId}&quot;))&amp;&amp;${groovy:((security.hasEntityPermission(&quot;MM&quot;, &quot;_CANCEL_ENQ&quot;, session)))}" name="cancel" widget-style="buttontext">
-            <hyperlink target="cancelEnquiryStatus" description="Cancel">
+        <field use-when="${itemSize}==0 &amp;&amp;${groovy:((security.hasEntityPermission(&quot;MM&quot;, &quot;_CANCEL_ENQ&quot;, session)))}" name="cancel" widget-style="buttontext">
+            <hyperlink target="updateEnquiryStatus" description="Cancel">
                 <parameter param-name="custRequestId"/>
                 <parameter param-name="statusId" value="ENQ_CANCELLED"/>
             </hyperlink>
@@ -972,10 +968,14 @@
                 </sub-hyperlink>
             </display-entity>
       </field>
-      <field use-when="&quot;${roleTypeId}&quot; == &quot;SUPPLIER&quot;" name="materialEnquiryReport" widget-style="buttontext">
+      <field use-when="&quot;${roleTypeId}&quot; == &quot;SUPPLIER&quot;" name="Report" widget-style="buttontext">
             <hyperlink target="MaterialEnquiryReport.pdf" description="Report" target-window="_blank">
                 <parameter param-name="partyId"/>
                 <parameter param-name="custRequestId"/>
+            </hyperlink>
+      </field>
+      <field use-when="${groovy:((security.hasEntityPermission(&quot;MM&quot;, &quot;_ENQUIRYMAIL_SEND&quot;, session)))}"  title="Email" name="Send Email" widget-style="buttontext">
+             <hyperlink target-type="plain" target="javascript:showEnquiryEmail('${partyId}','${custRequestId}');" description="Send Email">
             </hyperlink>
       </field>
       <field name="fromDate"><display description="${groovy:org.ofbiz.base.util.UtilDateTime.toDateString(fromDate,&quot;dd MMM,yyyy&quot;)}"/></field>

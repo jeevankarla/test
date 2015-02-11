@@ -238,10 +238,13 @@
         <attribute name="statusIdTo" type="String" mode="IN" optional="false"/>
         <attribute name="partyId" type="String" mode="IN" optional="false"/>
     </service>
-    <service name="cancelEnquiry" engine="java" location="in.vasista.vbiz.purchase.MaterialRequestServices" invoke="cancelEnquiry">
-        <description>Set cust Request status change wrapper service</description>
-        <attribute name="custRequestId" type="String" mode="IN" optional="false"/>
-        <attribute name="statusId" type="String" mode="IN" optional="false"/>
+    
+    <service name="suspendPO" engine="java" location="in.vasista.vbiz.purchase.MaterialPurchaseServices" invoke="suspendPO">
+        <description>Suspend PO</description>
+        <attribute name="orderId" type="String" mode="IN" optional="false"/>
+        <attribute name="statusUserLogin" type="String" mode="IN" optional="false"/>
+        <attribute name="changeReason" type="String" mode="IN" optional="true"/>
+        <attribute name="statusDatetime" type="Timestamp" mode="IN" optional="false"/>
+        <attribute name="statusUserLogin" type="String" mode="IN" optional="false"/>
     </service>
-   
 </services>
