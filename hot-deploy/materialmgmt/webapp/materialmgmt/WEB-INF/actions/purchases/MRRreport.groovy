@@ -179,11 +179,14 @@ if(UtilValidate.isNotEmpty(shipmentId)){
 	List cList=[];
 	cList.add(EntityCondition.makeCondition("shipmentId", EntityOperator.EQUALS, grnData.shipmentId));
 	cList.add(EntityCondition.makeCondition("shipmentItemSeqId", EntityOperator.EQUALS,grnData.shipmentItemSeqId));
-	cList.add(EntityCondition.makeCondition("statusId", EntityOperator.EQUALS,"SR_QUALITYCHECK"));
+	cList.add(EntityCondition.makeCondition("statusId", EntityOperator.EQUALS,"SR_ACCEPTED"));
 	condit=EntityCondition.makeCondition(cList,EntityOperator.AND);
+	
 	shipmtReciptList = delegator.findList("ShipmentReceipt", condit , null, null, null, false );
 	shipmtReciptList=EntityUtil.getFirst(shipmtReciptList);
 	if(UtilValidate.isNotEmpty(shipmtReciptList)){
+		
+
     grnDetailsMap["quantityAccepted"]=shipmtReciptList.quantityAccepted;
     grnDetailsMap["quantityRejected"]=shipmtReciptList.quantityRejected;
 	if(UtilValidate.isNotEmpty(orderId)){
@@ -204,7 +207,5 @@ if(UtilValidate.isNotEmpty(shipmentId)){
 }
 context.shipmentMap=shipmentMap;
 context.grnList=grnList;
-
-//Debug.log("grnList=============="+grnList);
 //Debug.log("shipmentList=================shipmentMap=================="+shipmentMap);
 
