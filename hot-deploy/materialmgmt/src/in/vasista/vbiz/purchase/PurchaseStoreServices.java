@@ -52,10 +52,10 @@ public static final String module = PurchaseStoreServices.class.getName();
 public static final BigDecimal ZERO_BASE = BigDecimal.ZERO;
 public static final BigDecimal ONE_BASE = BigDecimal.ONE;
 public static final BigDecimal PERCENT_SCALE = new BigDecimal("100.000");
-public static int salestaxFinalDecimals = UtilNumber.getBigDecimalScale("salestax.final.decimals");
-public static int salestaxCalcDecimals = 2;//UtilNumber.getBigDecimalScale("salestax.calc.decimals");
+public static int purchaseTaxFinalDecimals = UtilNumber.getBigDecimalScale("purchaseTax.final.decimals");
+public static int purchaseTaxCalcDecimals = UtilNumber.getBigDecimalScale("purchaseTax.calc.decimals");
 
-public static int salestaxRounding = UtilNumber.getBigDecimalRoundingMode("salestax.rounding");
+public static int purchaseTaxRounding = UtilNumber.getBigDecimalRoundingMode("purchaseTax.rounding");
 	    
 public static Map<String, Object> getPurchaseFactoryStore(Delegator delegator){
 	
@@ -637,8 +637,8 @@ public static Map<String, Object> createPurchaseOrder(DispatchContext dctx, Map<
 				BigDecimal taxAmount = BigDecimal.ZERO;
 				
 	        	if(taxRate.compareTo(BigDecimal.ZERO)>0){
-	        		//taxAmount = (unitPrice.multiply(taxRate)).divide(PERCENT_SCALE, salestaxCalcDecimals, salestaxRounding);
-	        		taxAmount = (taxRate).setScale(salestaxCalcDecimals, salestaxRounding);
+	        		//taxAmount = (unitPrice.multiply(taxRate)).divide(PERCENT_SCALE, purchaseTaxCalcDecimals, purchaseTaxRounding);
+	        		taxAmount = (taxRate).setScale(purchaseTaxCalcDecimals, purchaseTaxRounding);
 	        		Map taxDetailMap = FastMap.newInstance();
 		    		taxDetailMap.put("taxType", "BED_PUR");
 		    		//taxDetailMap.put("taxType", "BED_SALE");
@@ -672,8 +672,8 @@ public static Map<String, Object> createPurchaseOrder(DispatchContext dctx, Map<
 			    BigDecimal bedCessPercent=(BigDecimal)prodQtyMap.get("bedCessPercent");
 				BigDecimal taxAmount = BigDecimal.ZERO;
 	        	if(taxRate.compareTo(BigDecimal.ZERO)>0){
-	        		//taxAmount = (tempPrice.multiply(taxRate)).divide(PERCENT_SCALE, salestaxCalcDecimals, salestaxRounding);
-	        		taxAmount=taxRate.setScale(salestaxCalcDecimals, salestaxRounding);
+	        		//taxAmount = (tempPrice.multiply(taxRate)).divide(PERCENT_SCALE, purchaseTaxCalcDecimals, purchaseTaxRounding);
+	        		taxAmount=taxRate.setScale(purchaseTaxCalcDecimals, purchaseTaxRounding);
 	        		Map taxDetailMap = FastMap.newInstance();
 		    		taxDetailMap.put("taxType", "BEDCESS_PUR");
 		    		taxDetailMap.put("amount", taxAmount);
@@ -700,8 +700,8 @@ public static Map<String, Object> createPurchaseOrder(DispatchContext dctx, Map<
 			    BigDecimal bedSecCessPercent=(BigDecimal)prodQtyMap.get("bedSecCessPercent");
 				BigDecimal taxAmount = BigDecimal.ZERO;
 	        	if(taxRate.compareTo(BigDecimal.ZERO)>0){
-	        		//taxAmount = (tempPrice.multiply(taxRate)).divide(PERCENT_SCALE, salestaxCalcDecimals, salestaxRounding);
-	        		taxAmount=taxRate.setScale(salestaxCalcDecimals, salestaxRounding);
+	        		//taxAmount = (tempPrice.multiply(taxRate)).divide(PERCENT_SCALE, purchaseTaxCalcDecimals, purchaseTaxRounding);
+	        		taxAmount=taxRate.setScale(purchaseTaxCalcDecimals, purchaseTaxRounding);
 	        		Map taxDetailMap = FastMap.newInstance();
 		    		taxDetailMap.put("taxType", "BEDSECCESS_PUR");
 		    		taxDetailMap.put("amount", taxAmount);
@@ -727,8 +727,8 @@ public static Map<String, Object> createPurchaseOrder(DispatchContext dctx, Map<
 			    BigDecimal vatPercent=(BigDecimal)prodQtyMap.get("vatPercent");
 				BigDecimal taxAmount = BigDecimal.ZERO;
 	        	if(taxRate.compareTo(BigDecimal.ZERO)>0){
-	        		//taxAmount = (tempPrice.multiply(taxRate)).divide(PERCENT_SCALE, salestaxCalcDecimals, salestaxRounding);
-	        		taxAmount=taxRate.setScale(salestaxCalcDecimals, salestaxRounding);
+	        		//taxAmount = (tempPrice.multiply(taxRate)).divide(PERCENT_SCALE, purchaseTaxCalcDecimals, purchaseTaxRounding);
+	        		taxAmount=taxRate.setScale(purchaseTaxCalcDecimals, purchaseTaxRounding);
 	        		Map taxDetailMap = FastMap.newInstance();
 		    		//taxDetailMap.put("taxType", "VAT_SALE");
 		    		taxDetailMap.put("taxType", "VAT_PUR");
@@ -736,7 +736,7 @@ public static Map<String, Object> createPurchaseOrder(DispatchContext dctx, Map<
 		    		taxDetailMap.put("percentage", vatPercent);
 		    		taxList.add(taxDetailMap);
 		        	/*if(taxPrice.compareTo(BigDecimal.ZERO)>0){
-		        		taxAmount = itemQuantity.multiply(taxPrice).setScale(salestaxCalcDecimals, salestaxRounding);
+		        		taxAmount = itemQuantity.multiply(taxPrice).setScale(purchaseTaxCalcDecimals, purchaseTaxRounding);
 		        	}*/
 		    		GenericValue newProdPriceType = delegator.makeValue("ProductPriceAndType");        	 
 		    		newProdPriceType.set("fromDate", effectiveDate);
@@ -758,8 +758,8 @@ public static Map<String, Object> createPurchaseOrder(DispatchContext dctx, Map<
 				BigDecimal taxRate = cst;
 				BigDecimal taxAmount = BigDecimal.ZERO;
 	        	if(taxRate.compareTo(BigDecimal.ZERO)>0){
-	        		//taxAmount = (tempPrice.multiply(taxRate)).divide(PERCENT_SCALE, salestaxCalcDecimals, salestaxRounding);
-	        		taxAmount=taxRate.setScale(salestaxCalcDecimals, salestaxRounding);
+	        		//taxAmount = (tempPrice.multiply(taxRate)).divide(PERCENT_SCALE, purchaseTaxCalcDecimals, purchaseTaxRounding);
+	        		taxAmount=taxRate.setScale(purchaseTaxCalcDecimals, purchaseTaxRounding);
 	        		Map taxDetailMap = FastMap.newInstance();
 		    		//taxDetailMap.put("taxType", "CST_SALE");
 		    		taxDetailMap.put("taxType", "CST_PUR");
