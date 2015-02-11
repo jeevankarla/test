@@ -24,8 +24,15 @@ under the License.
                <#assign externalOrder = "(" + orderHeader.externalId + ")"/>
             </#if>
             <#assign orderType = orderHeader.getRelatedOne("OrderType")/>
-
-            <li class="h3">&nbsp;${orderType?if_exists.get("description", locale)?default(uiLabelMap.OrderOrder)}&nbsp;Number&nbsp;-&nbsp;${orderId}&nbsp;[&nbsp;<a href="<@ofbizUrl>order.pdf?orderId=${orderId}</@ofbizUrl>" target="_blank">PDF</a>&nbsp;]</li>
+           <#if "ARC_ORDER" == orderHeader.orderTypeId>
+            <li class="h3">&nbsp;${orderType?if_exists.get("description", locale)?default(uiLabelMap.OrderOrder)}&nbsp;Number&nbsp;-&nbsp;${orderId}&nbsp;[&nbsp;<a href="<@ofbizUrl>arcOrder.pdf?orderId=${orderId}</@ofbizUrl>" target="_blank">PDF</a>&nbsp;]</li>
+     	  </#if>
+            <#if "PURCHASE_ORDER" == orderHeader.orderTypeId>
+            <li class="h3">&nbsp;${orderType?if_exists.get("description", locale)?default(uiLabelMap.OrderOrder)}&nbsp;Number&nbsp;-&nbsp;${orderId}&nbsp;[&nbsp;<a href="<@ofbizUrl>PurchaseOrderView.pdf?orderId=${orderId}</@ofbizUrl>" target="_blank">PDF</a>&nbsp;]</li>
+          </#if>
+         <#if "CPC_ORDER" == orderHeader.orderTypeId>
+            <li class="h3">&nbsp;${orderType?if_exists.get("description", locale)?default(uiLabelMap.OrderOrder)}&nbsp;Number&nbsp;-&nbsp;${orderId}&nbsp;[&nbsp;<a href="<@ofbizUrl>PurchaseOrderView.pdf?orderId=${orderId}</@ofbizUrl>" target="_blank">PDF</a>&nbsp;]</li>
+          </#if>
          	<#if ((currentStatus.statusCode != "CANCELLED" && currentStatus.statusCode != "COMPLETED") && security.hasEntityPermission("ORDERMGR", "_NOTE", session))>
           		<li><a href="#" onclick="javascript:prepareAmendPoFrom()">Amend PO</a></li>
         	</#if>
