@@ -36,6 +36,7 @@ if("y".equals(parameters.productflag))
 	productDetails=ProductWorker.findProduct(delegator, productId);
 	JSONObject productObj = new JSONObject();
 	productObj.put("productName",productDetails.productName);
+	productObj.put("description",productDetails.description);
 	productObj.put("longDescription",productDetails.longDescription);
 	request.setAttribute("productObj", productObj);
 	return "success";
