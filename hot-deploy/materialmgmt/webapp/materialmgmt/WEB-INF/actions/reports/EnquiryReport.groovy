@@ -20,6 +20,8 @@ import org.ofbiz.service.GenericServiceException;
 import org.ofbiz.service.ServiceUtil;
 import org.ofbiz.party.contact.ContactHelper;
 
+signature=parameters.signature;
+context.signature=signature;
 custRequestId=parameters.issueToCustReqId;
 custReqDetails = delegator.findOne("CustRequest", [custRequestId : custRequestId], false);
 if(UtilValidate.isNotEmpty(custReqDetails)){
