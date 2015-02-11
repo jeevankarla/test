@@ -89,8 +89,8 @@ public class MaterialPurchaseServices {
 	    String receiptDateStr = (String) request.getParameter("receiptDate");
 	    String orderId = (String) request.getParameter("orderId");
 	    String vehicleId = (String) request.getParameter("vehicleId");
-	    String supplierInvoiceId = (String) request.getParameter("supplierInvoiceId");
-	    String supplierInvoiceDateStr = (String) request.getParameter("supplierInvoiceDate");
+	    String supplierInvoiceId = (String) request.getParameter("suppInvoiceId");
+	    String supplierInvoiceDateStr = (String) request.getParameter("suppInvoiceDate");
 	    String withoutPO = (String) request.getParameter("withoutPO");
 	    //GRN on PO then override this supplier with PO supplier
 	    String supplierId = (String) request.getParameter("supplierId");
@@ -405,7 +405,15 @@ public class MaterialPurchaseServices {
 					shipmentReceipt.set("shipmentItemSeqId", shipmentItemSeqId);
 					shipmentReceipt.store();
 				}
-
+				//storing shipment receipt status Here 
+				if(UtilValidate.isNotEmpty(receiptId)){
+					GenericValue shipmentReceiptStatus = delegator.makeValue("ShipmentReceiptStatus");
+					shipmentReceiptStatus.set("receiptId", receiptId);
+					shipmentReceiptStatus.set("statusId", (String) shipmentReceipt.get("statusId"));
+					shipmentReceiptStatus.set("changedByUserLogin", userLogin.getString("userLoginId"));
+					shipmentReceiptStatus.set("statusDatetime", UtilDateTime.nowTimestamp());
+					delegator.createSetNextSeqId(shipmentReceiptStatus);
+				}
 			}
 			
 		}
@@ -3065,6 +3073,16 @@ if(UtilValidate.isNotEmpty(prodQtyMap.get("bedPercent"))){
 				inventoryItem.store();
 			}
 			
+			//storing shipment receipt status Here 
+			if(UtilValidate.isNotEmpty(receiptId)){
+				GenericValue shipmentReceiptStatus = delegator.makeValue("ShipmentReceiptStatus");
+				shipmentReceiptStatus.set("receiptId", receiptId);
+				shipmentReceiptStatus.set("statusId", statusId);
+				shipmentReceiptStatus.set("changedByUserLogin", userLogin.getString("userLoginId"));
+				shipmentReceiptStatus.set("statusDatetime", UtilDateTime.nowTimestamp());
+				delegator.createSetNextSeqId(shipmentReceiptStatus);
+			}
+			
 		} catch (Exception e) {
 			// TODO: handle exception
 			Debug.logError(e, module);
@@ -3709,6 +3727,17 @@ if(UtilValidate.isNotEmpty(prodQtyMap.get("bedPercent"))){
 				shipmentReceiptRole.put("roleTypeId", "DIVISION");
 				delegator.createOrStore(shipmentReceiptRole);
 			}
+			
+			//storing shipment receipt status Here 
+			if(UtilValidate.isNotEmpty(receiptId)){
+				GenericValue shipmentReceiptStatus = delegator.makeValue("ShipmentReceiptStatus");
+				shipmentReceiptStatus.set("receiptId", receiptId);
+				shipmentReceiptStatus.set("statusId", statusId);
+				shipmentReceiptStatus.set("changedByUserLogin", userLogin.getString("userLoginId"));
+				shipmentReceiptStatus.set("statusDatetime", UtilDateTime.nowTimestamp());
+				delegator.createSetNextSeqId(shipmentReceiptStatus);
+			}
+			
 			
 		} catch (Exception e) {
 			// TODO: handle exception

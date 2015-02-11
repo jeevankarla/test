@@ -2149,6 +2149,24 @@ under the License.
       </relation>
     </entity>
     
+    <entity entity-name="ShipmentReceiptStatus"
+            package-name="org.ofbiz.order.request"
+            title="Shipment Receipt Status Entity">
+      <field name="shipReceiptStatusId" type="id-ne"></field>
+      <field name="statusId" type="id"></field>
+      <field name="receiptId" type="id"></field>
+      <field name="comments" type="description"></field>
+      <field name="statusDatetime" type="date-time"></field>
+      <field name="changedByUserLogin" type="id-vlong"></field>
+      <prim-key field="shipReceiptStatusId"/>
+      <relation type="one" fk-name="SHP_RECPT_STTS" rel-entity-name="StatusItem">
+        <key-map field-name="statusId"/>
+      </relation>
+      <relation type="one" fk-name="SHP_RECPT_ID" rel-entity-name="ShipmentReceipt">
+        <key-map field-name="receiptId" rel-field-name="receiptId"/>
+      </relation>
+    </entity>
+    
     <!-- <entity entity-name="CustRequestItemStatus" package-name="org.ofbiz.order.request"
             title="Customer Request Item Status Entity">
       <field name="custRequestItemStatusId" type="id-ne"></field>

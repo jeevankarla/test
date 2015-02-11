@@ -31,6 +31,7 @@ import javolution.util.FastMap;
 
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.UtilGenerics;
+import org.ofbiz.base.util.UtilDateTime;
 import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.base.util.UtilNumber;
 import org.ofbiz.base.util.UtilProperties;
@@ -1308,9 +1309,19 @@ public class ShipmentServices {
 					Debug.logError("There was an error while canceling GRN Id :"+receiptId, module);
 					return ServiceUtil.returnError("There was an error while canceling GRN Id :"+receiptId);
 				}
+				//storing shipment receipt status Here 
+				if(UtilValidate.isNotEmpty(receiptId)){
+					GenericValue shipmentReceiptStatus = delegator.makeValue("ShipmentReceiptStatus");
+					shipmentReceiptStatus.set("receiptId", receiptId);
+					shipmentReceiptStatus.set("statusId", "SHIPMENT_CANCELLED");
+					shipmentReceiptStatus.set("changedByUserLogin", userLogin.getString("userLoginId"));
+					shipmentReceiptStatus.set("statusDatetime", UtilDateTime.nowTimestamp());
+					delegator.createSetNextSeqId(shipmentReceiptStatus);
+				}
 			}
 			shipment.set("statusId","SHIPMENT_CANCELLED");
 			shipment.store();
+			
         }catch (GenericEntityException e) {
   	  		Debug.logError("An error occurred while getting  GRN shipments "+e.toString(), module);
   	  	}catch (GenericServiceException e) {

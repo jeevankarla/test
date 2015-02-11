@@ -148,7 +148,7 @@
 		window.location.reload(true);
    		return false;	 
    		}
-		var suppInvoice = jQuery("<input>").attr("type", "hidden").attr("name", "supplierInvoiceId").val(suppInvoiceId);
+		var suppInvoice = jQuery("<input>").attr("type", "hidden").attr("name", "suppInvoiceId").val(suppInvoiceId);
 		var suppInvoiceDate = $("#suppInvoiceDate").val();
 		if(suppInvoiceDate == '')
 		{
@@ -156,7 +156,7 @@
 		window.location.reload(true);
    		return false;	 
    		}
-		var suppInvDate = jQuery("<input>").attr("type", "hidden").attr("name", "supplierInvoiceDate").val(suppInvoiceDate);
+		var suppInvDate = jQuery("<input>").attr("type", "hidden").attr("name", "suppInvoiceDate").val(suppInvoiceDate);
 		var withoutPO =  jQuery("<input>").attr("type", "hidden").attr("name", "withoutPO").val($("#withoutPO").val());
 	
 		var deliveryChallanNo = $("#deliveryChallanNo").val();
