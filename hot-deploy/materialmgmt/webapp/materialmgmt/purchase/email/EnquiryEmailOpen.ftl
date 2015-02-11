@@ -133,7 +133,7 @@
 					"</td></tr>";
 			message +="<tr ><td align='right' class='h2' width='15%' >Send CC: </td><td  class='h2' align='left' width='75%'>&nbsp;<input type='text' size='42'  id='sendCc' name='sendCc'/> <input type='hidden' id='sendFrom'  name='sendFrom'  /> "+
 			"</td></tr>";
-		   message += "<tr ><td align='right' class='h2' width='15%' >Subject &nbsp;: </td><td align='left' class='h2' width='75%'  >&nbsp;<input type='text' size='63'  id='subject' name='subject'/><input type='hidden' id='supplierPartyId'  name='supplierPartyId'  /><input type='hidden' id='custRequestId'  name='custRequestId' value='"+custRequestId+"'  /> </tr></tbody></table></td></tr>";
+		   message += "<tr ><td align='right' class='h2' width='15%' >Subject &nbsp;: </td><td align='left' class='h2' width='75%'  >&nbsp;<input type='text' size='63'  id='subject' name='subject'/><input type='hidden' id='partyId'  name='partyId' value='"+supplierPartyId+"'  /><input type='hidden' id='custRequestId'  name='custRequestId' value='"+custRequestId+"'  /> </tr></tbody></table></td></tr>";
 			 message += "<tr ><td width='100%' colspan='2' ><table  border='0' cellspacing='10' cellpadding='10'><tbody><tr><td width='15%' align='left' class='label labelFontCSS' >Content:</td><td align='left'  width='75%'  >";
               message += "<textarea name='longDescription' id='longDescription' cols='70' rows='10'></textarea> </td></tr>";
 			
