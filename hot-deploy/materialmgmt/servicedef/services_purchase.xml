@@ -247,4 +247,9 @@
         <attribute name="statusDatetime" type="Timestamp" mode="IN" optional="false"/>
         <attribute name="statusUserLogin" type="String" mode="IN" optional="false"/>
     </service>
+     <service name="cancelEnquiry" engine="java" location="in.vasista.vbiz.purchase.MaterialRequestServices" invoke="cancelEnquiry">
+        <description>Set cust Request status change wrapper service</description>
+        <attribute name="custRequestId" type="String" mode="IN" optional="false"/>
+        <attribute name="statusId" type="String" mode="IN" optional="false"/>
+    </service>
 </services>

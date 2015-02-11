@@ -1364,5 +1364,56 @@ public class MaterialRequestServices {
 	        }
 	        return result;
 	    }
-	 
+	 public static Map<String, Object> cancelEnquiry(DispatchContext ctx,Map<String, ? extends Object> context) {
+			Delegator delegator = ctx.getDelegator();
+			LocalDispatcher dispatcher = ctx.getDispatcher();
+			String statusId = (String) context.get("statusId");
+			String custRequestId = (String) context.get("custRequestId");
+			GenericValue userLogin = (GenericValue) context.get("userLogin");
+			Map result = ServiceUtil.returnSuccess("Enquiry Successfully Rejected");
+			try{
+				GenericValue requirement= null;
+				String requirementId="";
+				List<GenericValue> requirementCustRequest = delegator.findList("RequirementCustRequest", EntityCondition.makeCondition("custRequestId", EntityOperator.EQUALS, custRequestId), null, null, null, false);
+				if(UtilValidate.isNotEmpty(requirementCustRequest)){
+					for(GenericValue reqCustRequest : requirementCustRequest){
+						requirementId = reqCustRequest.getString("requirementId");
+						requirement = delegator.findOne("Requirement", UtilMisc.toMap("requirementId", requirementId), false);
+						requirement.set("statusId", "REQ_REJECTED");
+						requirement.store();
+					}
+				}
+				
+				Map statusCtx = FastMap.newInstance();
+				statusCtx.put("statusId", statusId);
+				statusCtx.put("custRequestId", custRequestId);
+				statusCtx.put("userLogin", userLogin);
+				Map resultCtx = dispatcher.runSync("setCustRequestStatus", statusCtx);
+				if (ServiceUtil.isError(resultCtx)) {
+					Debug.logError("Request set status failed for RequestId: " + custRequestId, module);
+					return resultCtx;
+				}
+				
+				List<GenericValue> custRequestItems = delegator.findList("CustRequestItem", EntityCondition.makeCondition("custRequestId", EntityOperator.EQUALS, custRequestId), null, null, null, false);
+				for(GenericValue custReq : custRequestItems){
+					statusCtx.clear();
+					statusCtx.put("statusId", statusId);
+					statusCtx.put("custRequestId", custRequestId);
+					statusCtx.put("custRequestItemSeqId", custReq.getString("custRequestItemSeqId"));
+					statusCtx.put("userLogin", userLogin);
+					statusCtx.put("description", "");
+					resultCtx = dispatcher.runSync("setCustRequestItemStatus", statusCtx);
+					if (ServiceUtil.isError(resultCtx)) {
+						Debug.logError("RequestItem set status failed for Request: " + custRequestId+" : "+custReq.getString("custRequestItemSeqId"), module);
+						return resultCtx;
+					}
+				}
+				
+			} catch (Exception e) {
+				// TODO: handle exception
+				Debug.logError(e, module);
+				return ServiceUtil.returnError(e.getMessage());
+			}
+			return result;
+		}
 }
