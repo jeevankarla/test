@@ -305,10 +305,10 @@
                <property-map resource="OrderUiLabels" map-name="uiLabelMap" global="true"/>
                 <set field="viewIndex" from-field="parameters.VIEW_INDEX" type="Integer" default-value="0"/>
                 <set field="viewSize" from-field="parameters.VIEW_SIZE" type="Integer" default-value="20"/> 
-                <entity-condition list="listTruckSheets" entity-name="Shipment">
+                <!--<entity-condition list="listTruckSheets" entity-name="Shipment">
                 	<order-by field-name="-estimatedShipDate"/>
                 	<order-by field-name="statusId"/>
-                </entity-condition>  
+                </entity-condition>-->  
 				<script location="component://byproducts/webapp/byproducts/WEB-INF/actions/shipmentList.groovy"/>          
 				<script	location="component://byproducts/webapp/byproducts/WEB-INF/actions/facility/SeperateRoutesList.groovy" />
                  <entity-condition list="lmsShipTypeList" entity-name="ShipmentType">
