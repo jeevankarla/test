@@ -34,6 +34,9 @@ if(UtilValidate.isNotEmpty(tinDetails.cstNumber)){
 	cstNumber=tinDetails.cstNumber;
 	context.put("cstNumber",cstNumber);
 }
+signature=parameters.signature;
+context.signature=signature;
+Debug.log("signature===================="+signature);
 if(parameters.issueToCustReqId){
       custRequestId=parameters.issueToCustReqId;
       context.custRequestId=custRequestId;
