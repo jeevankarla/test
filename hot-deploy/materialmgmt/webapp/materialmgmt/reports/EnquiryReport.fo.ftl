@@ -292,12 +292,12 @@ under the License.
                    <fo:block linefeed-treatment="preserve">&#xA;</fo:block>
                    <fo:block linefeed-treatment="preserve">&#xA;</fo:block>
 	               <fo:block linefeed-treatment="preserve">&#xA;</fo:block>
-                   <fo:block  font-size="12pt" keep-together="always"  white-space-collapse="false"  text-align="left">&#160;  Thanking you,                                                        Yours faithfully</fo:block>
-	               <fo:block  font-size="12pt" keep-together="always"  white-space-collapse="false"  text-align="left">&#160;                                                                       for MOTHER DAIRY</fo:block>
+                   <fo:block  font-size="12pt" keep-together="always"  white-space-collapse="false"  text-align="left">&#160;  Thanking you,                                                 Yours faithfully</fo:block>
+	               <fo:block  font-size="12pt" keep-together="always"  white-space-collapse="false"  text-align="left">&#160;                                                                for MOTHER DAIRY</fo:block>
 	               <fo:block linefeed-treatment="preserve">&#xA;</fo:block>
 	               <fo:block linefeed-treatment="preserve">&#xA;</fo:block>
 	               <fo:block linefeed-treatment="preserve">&#xA;</fo:block>	               
-	              <fo:block  font-size="12pt" keep-together="always"  white-space-collapse="false"  text-align="left" font-weight="bold">&#160;                                                                       MANAGER(PURCHASE)</fo:block>
+	              <fo:block  font-size="12pt" keep-together="always"  white-space-collapse="false"  text-align="left" font-weight="bold">&#160;                                                         MANAGER(Purchase)/MANAGER(Engg)</fo:block>
 	           </fo:flow> 	          
 	      </fo:page-sequence>
          <#else>
