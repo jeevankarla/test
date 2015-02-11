@@ -66,12 +66,17 @@ dctx = dispatcher.getDispatchContext();
  if(UtilValidate.isNotEmpty(productFacilityList)){
 	 List productIdList = EntityUtil.getFieldListFromEntityList(productFacilityList, "productId", true);
 	 if(UtilValidate.isNotEmpty(productIdList)){
-		 productAttrList = delegator.findList("ProductAttribute", EntityCondition.makeCondition("productId", EntityOperator.IN, productIdList), null, null, null, false);
-		 if(UtilValidate.isNotEmpty(productAttrList)){
-			 productAttrList.each{ productAttr ->
-				 productId = productAttr.get("productId");
-				 String attrName = productAttr.get("attrName");
-				 String attrValue = productAttr.get("attrValue");
+		 //productAttrList = delegator.findList("ProductAttribute", EntityCondition.makeCondition("productId", EntityOperator.IN, productIdList), null, null, null, false);
+		 //if(UtilValidate.isNotEmpty(productAttrList)){
+			 productIdList.each{ productId ->
+				 productId = productId;
+				 productAttr = delegator.findOne("ProductAttribute", [productId : productId , attrName : "LEDGERFOLIONO"], false);
+				 String attrName = null;
+				 String attrValue = null;
+				 if(UtilValidate.isNotEmpty(productAttr)){
+					 attrName = productAttr.get("attrName");
+					 attrValue = productAttr.get("attrValue");
+				 }
 				 List tempList = FastList.newInstance();
 				 Map productValueMap = FastMap.newInstance();
 				 productDetails = delegator.findOne("Product",[productId : productId], false);
@@ -115,17 +120,19 @@ dctx = dispatcher.getDispatchContext();
 				 }
 				 if(UtilValidate.isNotEmpty(productValueMap)){
 					 tempList.add(productValueMap);
-					 if(attrName.equalsIgnoreCase("LEDGERFOLIONO")){
-						 if(UtilValidate.isEmpty(finalStockPositionMap.get(attrValue))){
-							 finalStockPositionMap.put(attrValue,tempList);
-						 }else{
-							 List existingList = FastList.newInstance();
-							 existingList = finalStockPositionMap.get(attrValue);
-							 existingList.add(productValueMap);
-							 finalStockPositionMap.put(attrValue,existingList);
+					 if(UtilValidate.isNotEmpty(attrName)){
+						 if(attrName.equalsIgnoreCase("LEDGERFOLIONO")){
+							 if(UtilValidate.isEmpty(finalStockPositionMap.get(attrValue))){
+								 finalStockPositionMap.put(attrValue,tempList);
+							 }else{
+								 List existingList = FastList.newInstance();
+								 existingList = finalStockPositionMap.get(attrValue);
+								 existingList.add(productValueMap);
+								 finalStockPositionMap.put(attrValue,existingList);
+							 }
 						 }
 					 }else{
-							 if(UtilValidate.isEmpty(finalStockPositionMap.get("Others"))){
+					     if(UtilValidate.isEmpty(finalStockPositionMap.get("Others"))){
 							 finalStockPositionMap.put("Others",tempList);
 						 }else{
 							 List existingList = FastList.newInstance();
@@ -136,8 +143,7 @@ dctx = dispatcher.getDispatchContext();
 					 }
 				 }
 			 }
-		 }
-	}
+	 }
  }
  /*Map sortedMap = FastMap.newInstance();
  List sortedListofMaps = FastList.newInstance();
