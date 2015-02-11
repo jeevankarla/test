@@ -76,89 +76,18 @@ custReqDetails = delegator.findOne("CustRequest", [custRequestId : custRequestId
 if(UtilValidate.isNotEmpty(custReqDetails)){
       custReqDate = custReqDetails.custRequestDate;   
       dueDate= custReqDetails.closedDateTime;
-      partyDetails=delegator.findList("CustRequestParty",EntityCondition.makeCondition("custRequestId", EntityOperator.EQUALS , custRequestId)  , null, null, null, false );   
+	  conditionList.clear();
+	  if(UtilValidate.isNotEmpty(parameters.partyId)){
+		  conditionList.add(EntityCondition.makeCondition("partyId", EntityOperator.EQUALS, parameters.partyId));
+	  }
+	  conditionList.add(EntityCondition.makeCondition("custRequestId", EntityOperator.EQUALS, custRequestId));
+	  
+	  custRequestPartyCondition=EntityCondition.makeCondition(conditionList,EntityOperator.AND);
+      partyDetails=delegator.findList("CustRequestParty",custRequestPartyCondition , null, null, null, false );   
      if(UtilValidate.isNotEmpty(partyDetails)){
 	       partyIds = EntityUtil.getFieldListFromEntityList(partyDetails, "partyId", true);
 	       partyIds.each{eachPartyId->
 		   partyMap=[:];
-		   
-	       if((parameters.partyId))
-		   {			   
-			    if(eachPartyId.equals(parameters.partyId)){	
-					  partyMap["partyName"] = org.ofbiz.party.party.PartyHelper.getPartyName(delegator, eachPartyId, false);
-                      partyPostalAddress= dispatcher.runSync("getPartyPostalAddress", [partyId:eachPartyId, userLogin: userLogin]);
-                      if(UtilValidate.isNotEmpty(partyPostalAddress)){
-                            if(UtilValidate.isNotEmpty(partyPostalAddress.address1)){
-                               address1=partyPostalAddress.address1;
-		                       partyMap.put("address1",address1);
-                             }	  
-	                         if(UtilValidate.isNotEmpty(partyPostalAddress.address2)){
-		                          address2=partyPostalAddress.address2;
-		                          partyMap.put("address2",address2);
-	                         }
-	                        if(UtilValidate.isNotEmpty(partyPostalAddress.city)){
-		                           city=partyPostalAddress.city;		
-		                           partyMap.put("city",city);
-	                        }	  
-	                       if(UtilValidate.isNotEmpty(partyPostalAddress.postalCode)){
-		                          postalCode=partyPostalAddress.postalCode;
-		                          partyMap.put("postalCode",postalCode);
-	                        }	  
-                       } 	    
-                       partyContactDetails=dispatcher.runSync("getPartyTelephone", [partyId:eachPartyId, userLogin: userLogin]);
-                       if(UtilValidate.isNotEmpty(partyContactDetails)){
-	                         if(UtilValidate.isNotEmpty(partyContactDetails.contactNumber)){
-		                          contactNumber=partyContactDetails.contactNumber;
-		                          partyMap.put("contactNumber",contactNumber);
-	                          }
-                        } 
-					   faxId="FAX_BILLING";
-					   partyFaxNumber= dispatcher.runSync("getPartyTelephone", [partyId: eachPartyId, contactMechPurposeTypeId: faxId, userLogin: userLogin]);
-					   faxNumber = "";
-					   if (partyFaxNumber != null && partyFaxNumber.contactNumber != null) {
-						   faxNumber = partyFaxNumber.contactNumber;
-						   partyMap.put("faxNumber", faxNumber);
-					   }					   
-                      context.partyMap=partyMap;
-				      context.put("custReqDate",custReqDate);
-			          context.put("dueDate",dueDate);
-			          partyAddressMap.put(eachPartyId,partyMap);
-					  
-					  //productDetails
-			          enquiryMap=[:];
-			          productId ="";
-					  key = 0;
-			          custReqItemDetails = delegator.findList("CustRequestItem",EntityCondition.makeCondition("custRequestId", EntityOperator.EQUALS , custRequestId)  , null, null, null, false );
-					  if(UtilValidate.isNotEmpty(custReqItemDetails)){
-						   custReqItemDetails.each{custReqItem->
-							   productMap=[:];
-							   
-							   requrdqty=custReqItem.quantity;
-							   productId=custReqItem.productId;							   
-							   productMap.put("productId",productId);
-							   productDetails = delegator.findOne("Product",["productId":productId],false);
-							   if(UtilValidate.isNotEmpty(productDetails)){
-								   itemCode=productDetails.internalName;
-								   description=productDetails.description;
-								   longDescription=productDetails.longDescription;
-								   productMap.put("itemCode",itemCode);
-								   productMap.put("description",description);
-								   productMap.put("longDescription",longDescription);
-								   uomId=productDetails.quantityUomId;
-							   }
-							   if(UtilValidate.isNotEmpty(uomId)){
-								   unitDesciption = delegator.findOne("Uom",["uomId":uomId],false);
-								   productMap.put("unit",unitDesciption.description);
-							   }
-							   productMap.put("requrdqty",requrdqty);
-							   key=key+1;
-							   enquiryMap.put(key,productMap);
-						   }						   
-					  }					 
-					  context.enquiryMap=enquiryMap;
-			      }  			   
-		   }
-           else{	
 			  partyMap["partyName"] = org.ofbiz.party.party.PartyHelper.getPartyName(delegator, eachPartyId, false);			   
               partyPostalAddress= dispatcher.runSync("getPartyPostalAddress", [partyId:eachPartyId, userLogin: userLogin]);
               if(UtilValidate.isNotEmpty(partyPostalAddress)){
@@ -228,10 +157,9 @@ if(UtilValidate.isNotEmpty(custReqDetails)){
 							   enquiryMap.put(key,productMap);
 						   }						   
 				   }					 
-				  context.enquiryMap=enquiryMap;
-            }	   	  
-        }    
+				context.enquiryMap=enquiryMap;
+             
     }
-    context.partyAddressMap=partyAddressMap;
+  }
+     context.partyAddressMap=partyAddressMap;
 }
-
