@@ -81,7 +81,7 @@ if(UtilValidate.isNotEmpty(custReqItemDetails)){
 }
 context.enquiryMap=enquiryMap;
 vendorList=[];
-partyIdsList=delegator.findList("QuoteAndItemAndCustRequest",EntityCondition.makeCondition("custRequestId", EntityOperator.EQUALS,custRequestId),UtilMisc.toSet("quoteId","partyId"), null,null,false);
+partyIdsList=delegator.findList("CustRequestParty",EntityCondition.makeCondition("custRequestId", EntityOperator.EQUALS,custRequestId),null, null,null,false);
 partyIds = EntityUtil.getFieldListFromEntityList(partyIdsList, "partyId", true);
 if(UtilValidate.isNotEmpty(partyIds)){
 	partyIds.each{eachPartyId->
