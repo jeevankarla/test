@@ -248,7 +248,7 @@ function reportTypeChangeFunc() {
 		                <#if (security.hasEntityPermission("MMPURCHSSMMRY", "_VIEW", session) )>
 		                 <tr class="alternate-row">
 		                <form id="purchaseSummeryReportNew" name="purchaseSummeryReportNew" method="post" action="<@ofbizUrl>purchaseAccountSummeryNew.pdf</@ofbizUrl>" target="_blank">        
-                                                               <td width="30%">Purchase Analysis Report Summary</td>
+                                                               <td width="30%">Purchase Analysis Report Summary New</td>
                                                                <td width="15%">From<input  type="text" size="18pt" id="purchaseSumFDateNew" readonly  name="fromDate"/></td>
                                                            <td width="15%">To<input  type="text" size="18pt" id="purchaseSumTDateNew" readonly  name="thruDate"/></td>
                                                            <td width="15%">ReportType
