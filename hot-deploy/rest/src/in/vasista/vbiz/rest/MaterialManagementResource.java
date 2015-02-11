@@ -148,6 +148,8 @@ public class MaterialManagementResource {
         	result.put("productId", productId);				
         	result.put("name", productDetails.getString("internalName"));	
         	result.put("description", productDetails.getString("description"));	
+        	result.put("categoryId", productDetails.getString("primaryProductCategoryId"));  
+
         	String uom = "";
         	GenericValue uomDetails = delegator.findOne("Uom",UtilMisc.toMap("uomId", productDetails.getString("quantityUomId")),false);
         	if (UtilValidate.isNotEmpty(uomDetails)) {
