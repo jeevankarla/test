@@ -70,11 +70,18 @@
                 <parameter param-name="orderId"/>
             </hyperlink>
         </field>
-        <field use-when="&quot;${orderTypeId}&quot; != &quot;LETTER_OF_INTENT&quot;" name="poReport" widget-style="buttontext">
+        <field use-when="&quot;${orderTypeId}&quot; != &quot;LETTER_OF_INTENT&quot; &amp;&amp; &quot;${orderTypeId}&quot; != &quot;ARC_ORDER&quot;" name="poReport" widget-style="buttontext">
             <hyperlink target="PurchaseOrderView.pdf" description="Report" target-window="_blank">
                 <parameter param-name="orderId"/>
             </hyperlink>
         </field>
+         <field use-when="&quot;${orderTypeId}&quot; == &quot;ARC_ORDER&quot;" name="arcReport" widget-style="buttontext">
+            <hyperlink target="arcOrder.pdf" description="Report" target-window="_blank">
+                <parameter param-name="orderId"/>
+            </hyperlink>
+        </field>
+        
+        
        <field name="editOrder" widget-style="buttontext" use-when="statusId.equals(&quot;ORDER_CREATED&quot;) &amp;&amp;${groovy:((security.hasEntityPermission(&quot;MM&quot;, &quot;_EDIT_PO&quot;, session)))}" >
             <hyperlink target="editMaterialPO" description="Edit Order">
                  <parameter param-name="orderId"/>
