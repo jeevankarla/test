@@ -139,7 +139,7 @@ dctx = dispatcher.getDispatchContext();
 		 }
 	}
  }
- Map sortedMap = FastMap.newInstance();
+ /*Map sortedMap = FastMap.newInstance();
  List sortedListofMaps = FastList.newInstance();
  if(UtilValidate.isNotEmpty(finalStockPositionMap)){
 	 	for(String key in finalStockPositionMap.keySet()){
@@ -159,8 +159,8 @@ dctx = dispatcher.getDispatchContext();
 	 if(UtilValidate.isNotEmpty(finalStockPositionMap) && UtilValidate.isNotEmpty(finalStockPositionMap.get(key))){
 		 sortedMap.put(key,finalStockPositionMap.get(key));
 	 }
- }
- context.put("finalStockPositionMap",sortedMap);
+ }*/
+ context.put("finalStockPositionMap",finalStockPositionMap);
  
  
  /*ledgerFolioList = delegator.findList("ProductAttribute", EntityCondition.makeCondition("attrName", EntityOperator.EQUALS, "LEDGERFOLIONO"), null, null, null, false);

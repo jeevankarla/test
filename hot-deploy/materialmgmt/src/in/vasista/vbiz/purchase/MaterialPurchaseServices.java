@@ -3279,7 +3279,12 @@ if(UtilValidate.isNotEmpty(prodQtyMap.get("bedPercent"))){
 	  	boolean beganTransaction = false;
 		try{
 			beganTransaction = TransactionUtil.begin(7200);
-			
+			String roleTypeId = null;
+			if(partyId.contains("SUB")){
+				roleTypeId = "DIVISION";
+			}else{
+				roleTypeId = "INTERNAL_ORGANIZATIO";
+			}
 			GenericValue party = delegator.findOne("PartyRole", UtilMisc.toMap("partyId", partyId, "roleTypeId", "INTERNAL_ORGANIZATIO"), false);
 			if(UtilValidate.isEmpty(party)){
 				Debug.logError("Request can only made by departments", module);
