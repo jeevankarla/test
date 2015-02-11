@@ -142,6 +142,9 @@
             </link>
         </menu-item>-->
         <menu-item name="EditPartyClassifications" title="${uiLabelMap.PartyClassifications}">
+        <condition>
+        	<if-has-permission permission="PARTYMGR" action="_CREATE"/>
+        </condition>
             <link target="EditPartyClassifications">
                 <parameter param-name="partyId"/>
             </link>
