@@ -2739,8 +2739,7 @@ if(UtilValidate.isNotEmpty(prodQtyMap.get("bedPercent"))){
 				        		taxAmount = (taxAmount).setScale(salestaxCalcDecimals, salestaxRounding);
 							}
 							totalCstAmount = totalCstAmount.add(taxAmount);
-							orderItemDetail.set("cstPercent", cstTaxPercent);
-							orderItemDetail.set("cstAmount", taxAmount);
+							orderItemDetail.set("cstPercent", cstTaxPercent);							orderItemDetail.set("cstAmount", taxAmount);
 							totalTaxAmt=totalTaxAmt.add(taxAmount.divide(quantity, 3, BigDecimal.ROUND_HALF_UP));
 						}
 						else{
@@ -2757,7 +2756,8 @@ if(UtilValidate.isNotEmpty(prodQtyMap.get("bedPercent"))){
 					}else{
 						 totalPrice = unitPrice.add(totalTaxAmt);
 					}
-					orderItemDetail.set("unitListPrice", unitListPrice);
+					orderItemDetail.set("unitPrice", unitPrice);
+					orderItemDetail.set("unitListPrice", totalPrice);
 					orderItemDetail.set("changeByUserLoginId", userLogin.getString("userLoginId"));
 					orderItemDetail.set("changeDatetime", UtilDateTime.nowTimestamp());
 					orderItemDetail.store();
