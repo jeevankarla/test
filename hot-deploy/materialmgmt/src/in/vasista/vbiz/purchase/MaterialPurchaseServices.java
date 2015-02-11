@@ -3285,7 +3285,7 @@ if(UtilValidate.isNotEmpty(prodQtyMap.get("bedPercent"))){
 			}else{
 				roleTypeId = "INTERNAL_ORGANIZATIO";
 			}
-			GenericValue party = delegator.findOne("PartyRole", UtilMisc.toMap("partyId", partyId, "roleTypeId", "INTERNAL_ORGANIZATIO"), false);
+			GenericValue party = delegator.findOne("PartyRole", UtilMisc.toMap("partyId", partyId, "roleTypeId", roleTypeId), false);
 			if(UtilValidate.isEmpty(party)){
 				Debug.logError("Request can only made by departments", module);
 				request.setAttribute("_ERROR_MESSAGE_", "Request can only made by departments");
