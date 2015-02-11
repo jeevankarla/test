@@ -102,7 +102,7 @@ orderItemList.each{orderItem->
 		shipmentReceiptList.each{shipmentReceipt->
 			qtyAccepted=qtyAccepted+shipmentReceipt.quantityAccepted;			
 		}
-		balancePOqty=quantity-qtyAccepted
+		balancePOqty=(quantity+((10*quantity)/100)-qtyAccepted);
         pendingPOsMap["orderId"]=orderId;
 		pendingPOsMap["createdDate"]=orderDate;
 		pendingPOsMap["description"]=productName;
