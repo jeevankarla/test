@@ -78,7 +78,7 @@ ${setRequestAttribute("OUTPUT_FILENAME", "LoanAvailedReport.pdf")}
                             		<fo:block   text-align="left" font-size="12pt" white-space-collapse="false" >&#160; P O NO    : </fo:block>  
                        			</fo:table-cell>                     
 	                    		<fo:table-cell >
-                            		<fo:block   text-align="left" font-size="12pt" white-space-collapse="false" >${shipmentMap.get("orderNo")?if_exists}   </fo:block>
+                            		<fo:block   text-align="left" font-size="12pt" white-space-collapse="false" >${shipmentMap.get("ordId")?if_exists}   </fo:block>
                        			</fo:table-cell>
 	                    		<fo:table-cell >
                             		<fo:block   text-align="right" font-size="12pt" white-space-collapse="false"> P O DATE    :</fo:block> 
@@ -158,8 +158,7 @@ ${setRequestAttribute("OUTPUT_FILENAME", "LoanAvailedReport.pdf")}
 	            		<fo:table-column column-width="70pt"/>
 	            		<fo:table-column column-width="70pt"/>
 	                    <fo:table-body>
-	                    <#assign sNo=1>
-	                    <#list grnList as grnListItem>
+	                   
  <fo:table-row >
 	                    		<fo:table-cell border-style="solid">
                             		<fo:block   text-align="center" font-size="10pt" white-space-collapse="false" font-weight="bold">SI NO</fo:block>  
@@ -205,6 +204,8 @@ ${setRequestAttribute("OUTPUT_FILENAME", "LoanAvailedReport.pdf")}
                         		</fo:table-cell>
                         		
                 			</fo:table-row>
+                                 <#assign sNo=1>                 
+	                    <#list grnList as grnListItem>
 	                    <fo:table-row >
 									<fo:table-cell border-style="solid">
 	                            	 <fo:block  text-align="center"  font-size="10pt" >
@@ -277,8 +278,8 @@ ${setRequestAttribute("OUTPUT_FILENAME", "LoanAvailedReport.pdf")}
 	                                    
 	                                    </fo:block>
 	                                </fo:table-cell>
-	                              	<#assign sNo=sNo+1>
 	                               </fo:table-row>
+	                           	<#assign sNo=sNo+1>
                                 </#list>
                     </fo:table-body>
                 </fo:table>
