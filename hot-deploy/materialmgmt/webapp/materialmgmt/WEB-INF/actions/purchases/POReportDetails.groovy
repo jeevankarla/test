@@ -32,6 +32,9 @@ import org.ofbiz.order.order.*;
 
 dctx = dispatcher.getDispatchContext();
 orderId = parameters.orderId;
+signature = parameters.sign;
+context.signature=signature;
+
 orderDetailsList=[];
 allDetailsMap=[:];
 orderTermList=[];
@@ -77,40 +80,71 @@ if(UtilValidate.isNotEmpty(orderId)){
 	  }
 	}
 
-//to get company details
-tinCstDetails = delegator.findList("PartyGroup",EntityCondition.makeCondition("partyId", EntityOperator.EQUALS , "Company")  , null, null, null, false );
-tinDetails=EntityUtil.getFirst(tinCstDetails);
-tinNumber="";cstNumber="";kstNumber="";
-if(UtilValidate.isNotEmpty(tinDetails.tinNumber)){
-	tinNumber=tinDetails.tinNumber;
-	allDetailsMap.put("tinNumber",tinNumber);
-}
-if(UtilValidate.isNotEmpty(tinDetails.cstNumber)){
-	cstNumber=tinDetails.cstNumber;
-	allDetailsMap.put("cstNumber",cstNumber);
-}
-partyEmail= dispatcher.runSync("getPartyEmail", [partyId:"Company", userLogin: userLogin]);
-if(partyEmail){
-	emailAddress=partyEmail.emailAddress;
-	context.emailAddress=emailAddress;
-}
-companyTelephone= dispatcher.runSync("getPartyTelephone", [partyId: "Company", userLogin: userLogin]);
-companyPhone = "";
-if (companyTelephone != null && companyTelephone.contactNumber != null) {
-	companyPhone = companyTelephone.contactNumber;
-}
-context.companyPhone=companyPhone;
-faxId="FAX_BILLING";
-companyFaxNumber= dispatcher.runSync("getPartyTelephone", [partyId: "Company", contactMechPurposeTypeId: faxId, userLogin: userLogin]);
-companyFax = "";
-if (companyFaxNumber != null && companyFaxNumber.contactNumber != null) {
-	companyFax = companyFaxNumber.contactNumber;
-}
-context.companyFax;
-//if(UtilValidate.isNotEmpty((tinDetails.kstNumber)){
-//kstNumber=kstDetails.kstNumber;
-//allDetailsMap.put("kstNumber",kstNumber);
+          //to get company details
+
+//tinCstDetails = delegator.findList("PartyGroup",EntityCondition.makeCondition("partyId", EntityOperator.EQUALS , "Company")  , null, null, null, false );
+//tinDetails=EntityUtil.getFirst(tinCstDetails);
+//tinNumber="";cstNumber="";kstNumber="";
+//if(UtilValidate.isNotEmpty(tinDetails.tinNumber)){
+//	tinNumber=tinDetails.tinNumber;
+//	allDetailsMap.put("tinNumber",tinNumber);
 //}
+//if(UtilValidate.isNotEmpty(tinDetails.cstNumber)){
+//	cstNumber=tinDetails.cstNumber;
+//	allDetailsMap.put("cstNumber",cstNumber);
+//}
+
+mailIdConfig = delegator.findOne("TenantConfiguration",["propertyName":"PURCHASEDEPT","propertyTypeEnumId":"PURCHASE_OR_STORES"],false);
+if(mailIdConfig){
+propertyValue=mailIdConfig.get("propertyValue");
+
+   partyEmail= dispatcher.runSync("getPartyEmail", [partyId:propertyValue, userLogin: userLogin]);
+   if(partyEmail){
+   companyMail=partyEmail.emailAddress;
+   context.companyMail=companyMail;
+   allDetailsMap.put("companyMail",companyMail);	
+   } 
+   companyTelephone= dispatcher.runSync("getPartyTelephone", [partyId: propertyValue, userLogin: userLogin]);
+   companyPhone = "";
+   if(companyTelephone != null && companyTelephone.contactNumber != null) {
+   companyPhone = companyTelephone.contactNumber;
+   allDetailsMap.put("companyPhone",companyPhone);
+   }
+   faxId="FAX_BILLING";
+   companyFaxNumber= dispatcher.runSync("getPartyTelephone", [partyId: propertyValue, contactMechPurposeTypeId: faxId, userLogin: userLogin]);
+   companyFax = "";
+   if (companyFaxNumber != null && companyFaxNumber.contactNumber != null) {
+   companyFax = companyFaxNumber.contactNumber;
+   allDetailsMap.put("companyFax",companyFax);
+   }
+}
+
+//company Details-tin,cst,kst
+tinCstKstDetails = delegator.findList("PartyIdentification",EntityCondition.makeCondition("partyId", EntityOperator.EQUALS , "Company")  , null, null, null, false );
+if(UtilValidate.isNotEmpty(tinCstKstDetails)){
+
+tinDetails = EntityUtil.filterByCondition(tinCstKstDetails, EntityCondition.makeCondition("partyIdentificationTypeId", EntityOperator.EQUALS, "TIN_NUMBER"));
+tinNumber="";
+if(UtilValidate.isNotEmpty(tinDetails)){
+tinDetails=EntityUtil.getFirst(tinDetails);
+tinNumber=tinDetails.idValue;
+allDetailsMap.put("tinNumber",tinNumber);
+  }
+cstDetails = EntityUtil.filterByCondition(tinCstKstDetails, EntityCondition.makeCondition("partyIdentificationTypeId", EntityOperator.EQUALS, "CST_NUMBER"));
+cstNumber="";
+if(UtilValidate.isNotEmpty(cstDetails)){
+cstDetails=EntityUtil.getFirst(cstDetails);	
+cstNumber=cstDetails.idValue;
+allDetailsMap.put("cstNumber",cstNumber);
+  }
+kstDetails = EntityUtil.filterByCondition(tinCstKstDetails, EntityCondition.makeCondition("partyIdentificationTypeId", EntityOperator.EQUALS, "KST_NUMBER"));
+kstNumber="";
+if(UtilValidate.isNotEmpty(kstDetails)){
+kstDetails=EntityUtil.getFirst(kstDetails);
+kstNumber=kstDetails.idValue;
+allDetailsMap.put("kstNumber",kstNumber);
+  }
+ }
 
 //orderSequenceNO
 OrderHeaderSequenceData = delegator.findList("OrderHeaderSequence",EntityCondition.makeCondition("orderId", EntityOperator.EQUALS , orderId)  , null, null, null, false );
@@ -367,17 +401,4 @@ context.Amount=bedAmount;
 context.vatAmount=vatAmount;
 context.cstAmount=cstAmount;
 context.listSize=listSize;
-//company Details-tin,cst,kst
-//List condlist=[];
-//condlist.add(EntityCondition.makeCondition("partyId", EntityOperator.EQUALS, "Company"));
-//condlist.add(EntityCondition.makeCondition("partyIdentificationTypeId", EntityOperator.EQUALS,"TIN_NUMBER"));
-//cond=EntityCondition.makeCondition(condlist,EntityOperator.AND);
-//tinDetails = delegator.findList("PartyIdentification", cond , null, null, null, false );
-//tinDetails=EntityUtil.getFirst(tinDetails);
-//tinNumber="";
-//if(UtilValidate.isNotEmpty(tinDetails)){
-//tinNumber=tinDetails.idValue;
-//allDetailsMap.put("tinNumber",tinNumber);
-//}
-
 
