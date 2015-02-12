@@ -86,7 +86,6 @@ public class CreateWeighBridgeData {
             return Response.serverError().entity("username Or password Or tennatId is missing").build();
             //::TODO:: error handling
          }
-        
        
         if (vehicleId == null || weight == null ) {
         	return Response.serverError().entity("VehicleId or Weight is Missing").build();

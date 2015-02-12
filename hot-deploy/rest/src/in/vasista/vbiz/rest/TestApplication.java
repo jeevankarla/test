@@ -43,7 +43,7 @@ public class TestApplication extends Application {
 	    JacksonJaxbJsonProvider jaxbProvider = new JacksonJaxbJsonProvider();
 	    jaxbProvider.setMapper(mapper);
 	    
-	    s.add(jaxbProvider);
+	    s.add(jaxbProvider);  
 	    return s;
 	  }
 }

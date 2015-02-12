@@ -764,7 +764,7 @@
 		<field name="statusId" type="id-ne"></field>
 		<field name="weightKgs" type="fixed-point"></field>
 		<field name="createdDate" type="date-time"></field>      
-		<prim-key field="weighmentId" />
+		<prim-key field="weighmentId"/>
 		<relation type="one" fk-name="WBD_VID" rel-entity-name="Vehicle">
 			<key-map field-name="vehicleId" />
 		</relation>
