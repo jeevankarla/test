@@ -109,7 +109,7 @@
 			    <service service-name="performFind" result-map="result" result-map-list="listIt">
 	                <field-map field-name="inputFields" from-field="parameters"/>
 	                <field-map field-name="entityName" value="OrderHeaderAndSequenceAndRoles"/>
-	                <field-map field-name="orderBy"  value="-orderDate"/>
+	                <field-map field-name="orderBy" value="-orderId" />
                 </service>
                <set field="targetRequest" value="FindMaterialPO"/>
                <set field="ChannalType" value="MATERIAL_PUR_CHANNEL"/>

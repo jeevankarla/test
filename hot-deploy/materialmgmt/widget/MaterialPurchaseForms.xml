@@ -163,7 +163,7 @@
             <service service-name="performFind" result-map="result" result-map-list="listIt">
                 <field-map field-name="inputFields" from-field="parameters"/>
                 <field-map field-name="entityName" value="ShipmentReceipt"/>
-                <field-map field-name="orderBy"  value="-lastUpdatedStamp"/>
+                <field-map field-name="orderBy"  value="-receiptId"/>
                 <field-map field-name="viewIndex" from-field="viewIndex"/>
                 <field-map field-name="viewSize" from-field="viewSize"/>
             </service>
@@ -305,7 +305,7 @@
             <field-map field-name="inputFields" from-field="parameters"/>
             <field-map field-name="entityName" from-field="entityName"/>
             <field-map field-name="inputFields.statusId" value="SR_QUALITYCHECK"/>
-            <field-map field-name="orderBy" value="datetimeReceived"/>  
+            <field-map field-name="orderBy" value="-receiptId"/>  
             <field-map field-name="viewIndex" from-field="viewIndex"/>
             <field-map field-name="viewSize" from-field="viewSize"/>
           </service>
