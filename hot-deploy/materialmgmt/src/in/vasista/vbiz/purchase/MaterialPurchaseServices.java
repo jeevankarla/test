@@ -2488,7 +2488,8 @@ public class MaterialPurchaseServices {
 						unitPrice = (BigDecimal)prodQtyMap.get("unitPrice");
 						orderItemDetail.set("unitPrice", unitPrice);
 					}
-
+					basicAmount = basicAmount.add(unitPrice.multiply(quantity));
+					
 if(UtilValidate.isNotEmpty(prodQtyMap.get("bedPercent"))){
 						
 						BigDecimal bedPercent = (BigDecimal)prodQtyMap.get("bedPercent");
@@ -2604,8 +2605,7 @@ if(UtilValidate.isNotEmpty(prodQtyMap.get("bedPercent"))){
 							
 						}
 						
-					}
-					else{
+					}else{
 						if(UtilValidate.isNotEmpty(bedTaxPercent) && bedTaxPercent.compareTo(BigDecimal.ZERO)>0){
 							
 							Map<String,Object> exBedRateMap = UtilAccounting.getInclusiveTaxRate(unitPrice, bedTaxPercent);
@@ -2817,6 +2817,7 @@ if(UtilValidate.isNotEmpty(prodQtyMap.get("bedPercent"))){
             
 			for(Map orderAdj : otherChargesAdjustment){
 				String adjustmentTypeId = (String)orderAdj.get("adjustmentTypeId");
+				Debug.log("adjustmentTypeId=========="+adjustmentTypeId);
 				BigDecimal amount = (BigDecimal)orderAdj.get("amount");
 				String uomId = (String)orderAdj.get("uomId");
 		    	if(adjustmentTypeId.equals("COGS_DISC_ATR")){
@@ -2846,7 +2847,6 @@ if(UtilValidate.isNotEmpty(prodQtyMap.get("bedPercent"))){
 		    			termAmount = OrderServices.calculatePurchaseOrderTermValue(ctx,inputMap);
 		    		}
 		    		adjustCtx.put("amount", termAmount);
-		    		amount = OrderServices.calculatePurchaseOrderTermValue(ctx,inputMap);
 		    		Map adjResultMap=FastMap.newInstance();
 		  	 		try{
 		  	 			adjResultMap = dispatcher.runSync("createOrderAdjustment",adjustCtx);
