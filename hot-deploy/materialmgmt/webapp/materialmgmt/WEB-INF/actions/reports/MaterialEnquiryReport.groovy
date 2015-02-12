@@ -22,21 +22,62 @@ import org.ofbiz.party.contact.ContactHelper;
 
 conditionList =[];
 dctx = dispatcher.getDispatchContext();
-tinDetails = delegator.findList("PartyGroup",EntityCondition.makeCondition("partyId", EntityOperator.EQUALS , "Company")  , null, null, null, false );
-tinDetails=EntityUtil.getFirst(tinDetails);
-companyTinNumber="";
-if(UtilValidate.isNotEmpty(tinDetails.tinNumber)){
-	companyTinNumber=tinDetails.tinNumber;
-	context.put("companyTinNumber",companyTinNumber);
+mailIdConfig = delegator.findOne("TenantConfiguration",["propertyName":"PURCHASEDEPT","propertyTypeEnumId":"PURCHASE_OR_STORES"],false);
+if(mailIdConfig){
+	propertyValue=mailIdConfig.get("propertyValue");
+
+   partyEmail= dispatcher.runSync("getPartyEmail", [partyId:propertyValue,contactMechPurposeTypeId:" ", userLogin: userLogin]);
+if(partyEmail){
+	companyMail=partyEmail.emailAddress;
+	context.companyMail=companyMail;
+	
+   }
+partyOtherEmail= dispatcher.runSync("getPartyEmail", [partyId:propertyValue,contactMechPurposeTypeId:"SECONDARY_EMAIL",userLogin: userLogin]);
+if(partyOtherEmail){
+	companyOtherMail=partyOtherEmail.emailAddress;
+	context.companyOtherMail=companyOtherMail;
+   }
+companyFaxNumber= dispatcher.runSync("getPartyTelephone", [partyId:propertyValue,  contactMechPurposeTypeId:"FAX_BILLING", userLogin: userLogin]);
+if (companyFaxNumber) {
+	companyFax = companyFaxNumber.contactNumber;
+	context.companyFax=companyFax;	
 }
-cstNumber="";
-if(UtilValidate.isNotEmpty(tinDetails.cstNumber)){
-	cstNumber=tinDetails.cstNumber;
-	context.put("cstNumber",cstNumber);
+ 
+ }
+
+tinDetails = delegator.findList("PartyIdentification",EntityCondition.makeCondition("partyId", EntityOperator.EQUALS , mailIdConfig.propertyValue)  , null, null, null, false );
+compantTinDetails = EntityUtil.filterByCondition(tinDetails, EntityCondition.makeCondition("partyIdentificationTypeId", EntityOperator.EQUALS, "TIN_NUMBER"));
+compantTinDetail = EntityUtil.getFirst(compantTinDetails);
+if(UtilValidate.isNotEmpty(compantTinDetail.idValue)){
+   companyTinNumber=compantTinDetail.idValue;
+   context.companyTinNumber=companyTinNumber;   
 }
+compantTinDetails = EntityUtil.filterByCondition(tinDetails, EntityCondition.makeCondition("partyIdentificationTypeId", EntityOperator.EQUALS, "KST_NUMBER"));
+compantTinDetail = EntityUtil.getFirst(compantTinDetails);
+if(UtilValidate.isNotEmpty(compantTinDetail.idValue)){
+   kstNumber=compantTinDetail.idValue;
+   context.kstNumber=kstNumber;   
+}
+compantTinDetails = EntityUtil.filterByCondition(tinDetails, EntityCondition.makeCondition("partyIdentificationTypeId", EntityOperator.EQUALS, "CST_NUMBER"));
+compantTinDetail = EntityUtil.getFirst(compantTinDetails);
+if(UtilValidate.isNotEmpty(compantTinDetail.idValue)){
+   cstNumber=compantTinDetail.idValue;
+   context.cstNumber=cstNumber;   
+}
+companyTelephone= dispatcher.runSync("getPartyTelephone", [partyId: mailIdConfig.propertyValue,contactMechPurposeTypeId:"PRIMARY_PHONE", userLogin: userLogin]);
+if(companyTelephone) {
+	companyPhone = companyTelephone.contactNumber;
+	context.companyPhone=companyPhone;		
+}
+companyAnotherTelephone= dispatcher.runSync("getPartyTelephone", [partyId: mailIdConfig.propertyValue,contactMechPurposeTypeId:"PHONE_WORK_SEC", userLogin: userLogin]);
+if(companyAnotherTelephone){
+	companyAnotherPhone = companyAnotherTelephone.contactNumber;
+	context.companyAnotherPhone=companyAnotherPhone;	
+}
+
+
 signature=parameters.signature;
 context.signature=signature;
-Debug.log("signature===================="+signature);
 if(parameters.issueToCustReqId){
       custRequestId=parameters.issueToCustReqId;
       context.custRequestId=custRequestId;
