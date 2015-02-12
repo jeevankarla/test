@@ -70,4 +70,10 @@ under the License.
 <!--        <condition field-name="availableToPromiseDiff" operator="not-equals" value="0" type="BigDecimal"/>-->
 <!--        <action service="setLastInventoryCount" mode="sync"/>-->
 <!--    </eca>-->
+ 
+ <eca entity="Shipment" operation="create" event="return">
+        <condition field-name="statusId" operator="equals" value="GENERATED"/>
+         <condition field-name="shipmentTypeId" operator="equals" value="MATERIAL_SHIPMENT"/>
+        <action service="createShipmentSequence" mode="sync"/>
+    </eca>
 </entity-eca>

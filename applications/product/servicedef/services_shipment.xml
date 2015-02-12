@@ -988,5 +988,13 @@ under the License.
         <attribute name="unitCost" type="String" mode="IN" optional="true"/>
         <attribute name="orderCurrencyUnitPrice" type="String" mode="IN" optional="true"/>
     </service>
-    
+      
+     <service name="createShipmentSequence" engine="java"
+        location="org.ofbiz.accounting.util.CustomSequenceServices" invoke="createShipmentSequence">
+        <description>Get the Next Sequence for the given shipmentId(GRN Id) in ShipmentSequence Entity</description>
+        <attribute name="shipmentSequenceTypeId" type="String" mode="IN" optional="true"/>
+        <attribute name="shipmentId" type="String" mode="IN" optional="false"/>
+        <attribute name="estimatedShipDate" type="Timestamp" mode="IN" optional="true"/>
+        <attribute name="sequenceId" type="String" mode="OUT" optional="true"/>
+    </service>
 </services>

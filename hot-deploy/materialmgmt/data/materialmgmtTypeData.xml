@@ -169,4 +169,7 @@
 
  <TenantConfiguration  description="Send CC MailId Configuration For EnquiryEmail"  propertyName="sendCcMailId" propertyValue="vbiz@vasista.in,vbiz@vasista.in" propertyTypeEnumId="PURCHASE_OR_STORES" />
 
+ <TenantConfiguration  description="Enable Shipment Sequence Functionality"  propertyName="enableGRNShipmentSequence" propertyTypeEnumId="PURCHASE_OR_STORES" propertyValue="Y"/>
+ <Enumeration description="SHIPMENT(GRN) SEQUENCE" enumCode="GRN SHIPMENT SEQUENCE" enumId="GRN_SHIPMNT_SEQUENCE" enumTypeId="CUSTOM_SEQ_NUM"/>
+    
 </entity-engine-xml>
