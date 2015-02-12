@@ -92,6 +92,7 @@ under the License.
     <SecurityGroup description="Security Admin group, has all permissions to modify security settings in party manager." groupId="SECURITYADMIN"/>
     <SecurityGroupPermission groupId="SECURITYADMIN" permissionId="SECURITY_ADMIN"/>
     
+    <SecurityPermission description="Party Manager Edit." permissionId="PARTYMGR_CNTMEC_EDIT"/>
     <SecurityGroup description="PartyManager Edit Contact Information" groupId="PARTYMGR_CNTMEC_EDIT"/>
     <SecurityGroupPermission groupId="PARTYMGR_CNTMEC_EDIT" permissionId="PARTYMGR_CNTMEC_EDIT"/>
     <SecurityGroupPermission groupId="PARTYMGR_CNTMEC_EDIT" permissionId="PARTYMGR_VIEW"/>
@@ -102,6 +103,8 @@ under the License.
     <SecurityGroupPermission groupId="PARTYMGR_CNTMEC_EDIT" permissionId="PARTYMGR_PCM_CREATE"/>
     <SecurityGroupPermission groupId="PARTYMGR_CNTMEC_EDIT" permissionId="PARTYMGR_PCM_UPDATE"/>
     <SecurityGroupPermission groupId="PARTYMGR_CNTMEC_EDIT" permissionId="ASSETMAINT_CREATE"/>
+    
+    
     
 
 </entity-engine-xml>

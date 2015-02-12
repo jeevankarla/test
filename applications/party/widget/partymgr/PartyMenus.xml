@@ -150,6 +150,9 @@
             </link>
         </menu-item>
         <menu-item name="ContactList" title="${uiLabelMap.PartyContactLists}">
+        <condition>
+        	<if-has-permission permission="PARTYMGR" action="_CREATE"/>
+        </condition>
             <link target="ListPartyContactLists">
                 <parameter param-name="partyId"/>
             </link>
