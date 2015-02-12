@@ -482,9 +482,11 @@ if (organizationPartyId) {
 					if(UtilValidate.isNotEmpty(paymentId)){
 						if(UtilValidate.isNotEmpty(paymentGroupId)){
 							acctgTransEntryMap["paymentId"] = paymentGroupId;
-							acctgTransEntryMap["partyId"] = partyId;
-							acctgTransEntryMap["partyName"] = partyName;
-							acctgTransEntryMap["description"] = paymentGroupTypeDes;
+							acctgTransEntryMap["partyId"] = " ";
+							paymentgroup=delegator.findOne("PaymentGroup", ["paymentGroupId" :paymentGroupId], false);
+							paymentGroupType = delegator.findOne("PaymentGroupType", [paymentGroupTypeId : paymentGroupTypeId], false);
+							acctgTransEntryMap["partyName"] = paymentGroupType.description;
+							acctgTransEntryMap["description"] = paymentGroupType.description;
 							acctgTransEntryMap["comments"] = paymentGroupComments;
 							acctgTransEntryMap["paymentMethodTypeDes"] = paymentGroupMethodTypeDes;
 							acctgTransEntryMap["instrumentNum"] = paymentGroupRefNum;
