@@ -122,18 +122,18 @@
 	        
 	        <menu-item name="FGSProductSaleMm" title="Sale"> 
 	        <condition>
-	        	<or>
-	        		<if-has-permission permission="FGSSALE"  action="_VIEW"/>
-	        	</or>        		
+	        	
+	        		<if-has-permission permission="MM"  action="_SALE_VIEW"/>
+	        	       		
 	        </condition>   
       	 	<link target="FGSProductSaleMm">    
          	</link>
         </menu-item> 
                <menu-item name="InterUnitStkTrMm" title="Inter Unit Transfer"> 
         <condition>
-        	<or>
-        		<if-has-permission permission="FGSSALE"  action="_VIEW"/>
-        	</or>        		
+        	
+        		<if-has-permission permission="MM"  action="_INTR_UNIT_VIEW"/>
+        	       		
         </condition>  
       	 <link target="InterUnitStkTrMm">    
          </link>
