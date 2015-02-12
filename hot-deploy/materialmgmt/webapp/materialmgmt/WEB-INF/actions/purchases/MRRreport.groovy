@@ -38,7 +38,7 @@ dateReceived = parameters.datetimeReceived;
 shipmentMap=[:];
 shipmentList=[];
 
-shipmentMap.put("receiptId",receiptId);
+shipmentMap.put("shipmentId",shipmentId);
 shipmentMap.put("ordId",orderId);
 shipmentMap.put("dateReceived",dateReceived);
 shipmentMap["total"]=BigDecimal.ZERO;
@@ -102,7 +102,7 @@ shipmentMap.put("sequenceId",sequenceId);
 shipmentMap.put("orderNo",orderNo);
 	}
 //shipmentSequenceNO
-shipmentSequenceData = delegator.findList("ShipmentReceiptSequence",EntityCondition.makeCondition("receiptId", EntityOperator.EQUALS , receiptId)  , null, null, null, false );
+shipmentSequenceData = delegator.findList("ShipmentSequence",EntityCondition.makeCondition("shipmentId", EntityOperator.EQUALS , shipmentId)  , null, null, null, false );
 if(UtilValidate.isNotEmpty(shipmentSequenceData)){
 shipmentSequenceData=EntityUtil.getFirst(shipmentSequenceData);
 shipmentSequenceId=shipmentSequenceData.sequenceId;

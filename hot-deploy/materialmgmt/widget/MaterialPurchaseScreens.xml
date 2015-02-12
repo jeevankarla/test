@@ -156,7 +156,7 @@
     <screen name="FindGRNReceipts">
         <section>
             <actions>
-                <set field="titleProperty" value="Find GRN"/>              
+                <set field="titleProperty" value="Find GRN Items"/>              
 			    <set field="tabButtonItem" value="FindGRNReceipts" />
 			    <set field="tabButtonItem2" value="FindGRNReceipts" />	
                <set field="viewSize" from-field="parameters.VIEW_SIZE"/>
@@ -195,7 +195,7 @@
 	<screen name="FindGRNShipments">
         <section>
             <actions>
-                <set field="titleProperty" value="Find Shipments"/>              
+                <set field="titleProperty" value="Find GRN Shipments"/>              
 			    <set field="tabButtonItem" value="FindGRNReceipts" />
 			    <set field="tabButtonItem2" value="FindGRNShipments" />	
                <set field="viewSize" from-field="parameters.VIEW_SIZE"/>
