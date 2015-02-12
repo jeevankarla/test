@@ -253,4 +253,81 @@ public class CustomSequenceServices {
 			        }
 			        return result;
 				}
+				//new Service for Billing Sequence for Shipment
+				public static Map<String, Object> createShipmentSequence(DispatchContext dctx, Map<String, Object> context) {
+					Delegator delegator = dctx.getDelegator();
+			        LocalDispatcher dispatcher = dctx.getDispatcher();       
+			        String shipmentSequenceTypeId = (String) context.get("shipmentSequenceTypeId");
+			        String shipmentId = (String) context.get("shipmentId");
+			        Locale locale = (Locale) context.get("locale");     
+			        Timestamp estimatedShipDate=(Timestamp) context.get("estimatedShipDate");
+			        
+			        GenericValue userLogin = (GenericValue) context.get("userLogin");
+			        Map<String, Object> result = ServiceUtil.returnSuccess();
+			        try {
+			        	Boolean enableGRNSequence  = Boolean.FALSE;
+			    		GenericValue tenantConfigEnableTaxInvSeq = delegator.findOne("TenantConfiguration", UtilMisc.toMap("propertyTypeEnumId","PURCHASE_OR_STORES", "propertyName","enableGRNShipmentSequence"), false);
+			       		if (UtilValidate.isNotEmpty(tenantConfigEnableTaxInvSeq) && (tenantConfigEnableTaxInvSeq.getString("propertyValue")).equals("Y")) {
+			       			enableGRNSequence = Boolean.TRUE;
+			       		}
+			       		if(enableGRNSequence && UtilValidate.isNotEmpty(shipmentId)){
+			       			GenericValue shipment = delegator.findOne("Shipment", UtilMisc.toMap("shipmentId", shipmentId), false);
+			       			//at present sequence is generated only for OrderHeader
+			       			//if( UtilValidate.isNotEmpty(custRequest) && ("RF_PUR_QUOTE".equals(custRequest.getString("custRequestTypeId"))) ){
+			       			estimatedShipDate = shipment.getTimestamp("estimatedShipDate");
+				       			if(UtilValidate.isEmpty(estimatedShipDate)){
+										Debug.logError("estimatedShipDate can not be empty in ShipmentSequence generation !", module);
+										return ServiceUtil.returnError("estimatedShipDate can not be empty in ShipmentSequence generation ! ");
+								}
+				       			
+			       			Map finYearContext = FastMap.newInstance();
+			   				finYearContext.put("onlyIncludePeriodTypeIdList", UtilMisc.toList("FISCAL_YEAR"));
+			   				finYearContext.put("organizationPartyId", "Company");
+			   				finYearContext.put("userLogin", userLogin);
+			   				finYearContext.put("findDate", estimatedShipDate);
+			   				finYearContext.put("excludeNoOrganizationPeriods", "Y");
+			   				List customTimePeriodList = FastList.newInstance();
+			   				Map resultCtx = FastMap.newInstance();
+			   				try{
+			   					resultCtx = dispatcher.runSync("findCustomTimePeriods", finYearContext);
+			   					if(ServiceUtil.isError(resultCtx)){
+			   						Debug.logError("Problem in fetching financial year ", module);
+			   						return ServiceUtil.returnError("Problem in fetching financial year ");
+			   					}
+			   				}catch(GenericServiceException e){
+			   					Debug.logError(e, module);
+			   					return ServiceUtil.returnError(e.getMessage());
+			   				}
+			   				customTimePeriodList = (List)resultCtx.get("customTimePeriodList");
+			   				String finYearId = "";
+			   				if(UtilValidate.isNotEmpty(customTimePeriodList)){
+			   					GenericValue customTimePeriod = EntityUtil.getFirst(customTimePeriodList);
+			   					finYearId = (String)customTimePeriod.get("customTimePeriodId");
+			   				}
+			   				GenericValue customTimePeriod = delegator.findOne("CustomTimePeriod", UtilMisc.toMap("customTimePeriodId",finYearId), false);
+			   				Timestamp timePeriodStart=UtilDateTime.toTimestamp(customTimePeriod.getDate("fromDate"));
+			   				Timestamp timePeriodEnd=UtilDateTime.toTimestamp(customTimePeriod.getDate("thruDate"));
+			       			if(UtilValidate.isEmpty(shipmentSequenceTypeId)){
+			       				shipmentSequenceTypeId="GRN_SHIPMNT_SEQUENCE";
+			       			}
+			   				GenericValue shipmentSequence = delegator.makeValue("ShipmentSequence");
+			   				shipmentSequence.put("shipmentSequenceTypeId",shipmentSequenceTypeId );
+			   				shipmentSequence.put("shipmentId", shipmentId);
+			   				shipmentSequence.put("finYearId", finYearId);
+			   				//orderHeaderSequence.put("orderNo", orderId+"/"+UtilDateTime.toDateString(customTimePeriod.getDate("fromDate"),"yyyy")+"-"+UtilDateTime.toDateString(customTimePeriod.getDate("thruDate"),"yy"));
+							delegator.setNextSubSeqId(shipmentSequence, "sequenceId", 6, 1);
+				            delegator.create(shipmentSequence);
+				            String sequenceId = (String) shipmentSequence.get("sequenceId");
+				            shipmentSequence.put("shipmentNo", sequenceId+"/"+UtilDateTime.toDateString(customTimePeriod.getDate("fromDate"),"yyyy")+"-"+UtilDateTime.toDateString(customTimePeriod.getDate("thruDate"),"yy"));
+				            delegator.createOrStore(shipmentSequence);
+				            result.put("sequenceId", sequenceId) ;
+			       			//}
+			       		}
+			       		
+			        }catch(Exception e){
+			        	Debug.logError(e, e.toString(), module);
+			        	return ServiceUtil.returnError(e.toString()+" Error While Creating Shipment Sequence for shipmentSequenceTypeId:"+shipmentSequenceTypeId+" shipmentId:"+shipmentId);
+			        }
+			        return result;
+				}
 }
