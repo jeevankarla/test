@@ -145,8 +145,7 @@ kstNumber=kstDetails.idValue;
 allDetailsMap.put("kstNumber",kstNumber);
   }
  }
-Debug.log("tinNumber=="+tinNumber);Debug.log("kstNumber=="+kstNumber);
-Debug.log("cstNumber=="+cstNumber);
+
 //orderSequenceNO
 OrderHeaderSequenceData = delegator.findList("OrderHeaderSequence",EntityCondition.makeCondition("orderId", EntityOperator.EQUALS , orderId)  , null, null, null, false );
 if(UtilValidate.isNotEmpty(OrderHeaderSequenceData)){
