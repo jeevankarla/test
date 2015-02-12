@@ -757,4 +757,20 @@
         <key-map field-name="facilityId"/>
       </relation>
   </entity>
+  <entity entity-name="WeighBridgeDetails" package-name="org.ofbiz.product.inventory "
+		title="Vehicle Entity">
+		<field name="weighmentId" type="id"></field>
+		<field name="vehicleId" type="id-ne"></field>
+		<field name="statusId" type="id-ne"></field>
+		<field name="weightKgs" type="fixed-point"></field>
+		<field name="createdDate" type="date-time"></field>      
+		<prim-key field="weighmentId" />
+		<relation type="one" fk-name="WBD_VID" rel-entity-name="Vehicle">
+			<key-map field-name="vehicleId" />
+		</relation>
+		<relation type="one" fk-name="WBD_STTS" rel-entity-name="StatusItem">
+			<key-map field-name="statusId" />
+		</relation>
+		
+	</entity>
 </entitymodel>
