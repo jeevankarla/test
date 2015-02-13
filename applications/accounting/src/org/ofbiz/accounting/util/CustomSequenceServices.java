@@ -9,18 +9,22 @@ import javolution.util.FastList;
 import javolution.util.FastMap;
 
 import org.ofbiz.base.util.Debug;
+import org.ofbiz.base.util.GeneralException;
+import org.ofbiz.base.util.UtilDateTime;
 import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.entity.Delegator;
+import org.ofbiz.entity.GenericEntityException;
 import org.ofbiz.entity.GenericValue;
 import org.ofbiz.entity.condition.EntityCondition;
+import org.ofbiz.entity.condition.EntityExpr;
 import org.ofbiz.entity.condition.EntityOperator;
+import org.ofbiz.entity.util.EntityListIterator;
 import org.ofbiz.entity.util.EntityUtil;
 import org.ofbiz.service.DispatchContext;
 import org.ofbiz.service.GenericServiceException;
 import org.ofbiz.service.LocalDispatcher;
 import org.ofbiz.service.ServiceUtil;
-import org.ofbiz.base.util.UtilDateTime;
 
 /**
 * Custom Sequences are for custom sequence number generation for entities.*/
@@ -330,4 +334,94 @@ public class CustomSequenceServices {
 			        }
 			        return result;
 				}
+				
+				
+		//new Service for Create or Reset  Sequence for Shipment
+		public static Map<String, Object> updateOrResetShipmentSequence(DispatchContext dctx, Map<String, Object> context) {
+			Delegator delegator = dctx.getDelegator();
+	        LocalDispatcher dispatcher = dctx.getDispatcher();       
+	        String shipmentSequenceTypeId = (String) context.get("shipmentSequenceTypeId");
+	        String shipmentTypeId = (String) context.get("shipmentTypeId");
+	        String shipmentId = (String) context.get("shipmentId");
+	        GenericValue userLogin = (GenericValue) context.get("userLogin");
+	        Map<String, Object> result = ServiceUtil.returnSuccess();
+	        if(UtilValidate.isEmpty(shipmentTypeId)){
+	        	shipmentTypeId="MATERIAL_SHIPMENT";
+	        }
+	        if(UtilValidate.isEmpty(shipmentSequenceTypeId)){
+   				shipmentSequenceTypeId="GRN_SHIPMNT_SEQUENCE";
+   			}
+	        Timestamp fromDate=null;
+	        Timestamp thruDate=null;
+	        if(UtilValidate.isNotEmpty(context.get("fromDate"))){
+	        	 fromDate =UtilDateTime.getDayStart(UtilDateTime.getTimestamp(((java.sql.Date)context.get("fromDate")).getTime())) ;
+	        }
+	        if(UtilValidate.isNotEmpty(context.get("thruDate"))){
+	        	 thruDate =UtilDateTime.getDayStart(UtilDateTime.getTimestamp(((java.sql.Date)context.get("thruDate")).getTime())) ;
+	        }
+	        
+	        List<String> shipmentIds=FastList.newInstance();
+	        List<GenericValue> shipmentsList=FastList.newInstance();
+	        
+	        Timestamp estimatedShipDate=(Timestamp) context.get("estimatedShipDate");
+				
+				List<EntityExpr> exprs = FastList.newInstance();
+				
+		        if(UtilValidate.isNotEmpty(shipmentTypeId)){
+		        	exprs.add(EntityCondition.makeCondition("shipmentTypeId", EntityOperator.EQUALS, shipmentTypeId));
+		        }
+		        if(UtilValidate.isNotEmpty(fromDate) && UtilValidate.isNotEmpty(thruDate)){
+		        	 exprs.add(EntityCondition.makeCondition("estimatedShipDate", EntityOperator.GREATER_THAN_EQUAL_TO, UtilDateTime.getDayStart(fromDate)));
+				     exprs.add(EntityCondition.makeCondition("estimatedShipDate", EntityOperator.LESS_THAN_EQUAL_TO, UtilDateTime.getDayEnd(thruDate)));
+		        }
+		        exprs.add(EntityCondition.makeCondition("estimatedShipDate", EntityOperator.NOT_EQUAL, null));
+		        EntityCondition condition = EntityCondition.makeCondition(exprs, EntityOperator.AND);
+		        Debug.log("==fromDate=="+fromDate+"====thruDate=="+thruDate+"=condition="+condition);
+		        try {
+		        	shipmentsList = delegator.findList("Shipment", condition, UtilMisc.toSet("estimatedShipDate", "shipmentTypeId", "shipmentId"), UtilMisc.toList("estimatedShipDate"), null, false);
+					shipmentIds = EntityUtil.getFieldListFromEntityList(shipmentsList, "shipmentId", true);
+				} catch (GenericEntityException e) {
+					Debug.logError(e, module);
+					return ServiceUtil.returnError(e.getMessage());
+				}
+		        List<String> shipmentSequenceIds=FastList.newInstance();
+		        List<GenericValue> shipmentSequenceList=FastList.newInstance();
+		        try {
+		        	exprs.clear();
+		        	 if(UtilValidate.isNotEmpty(shipmentIds)){
+				        	exprs.add(EntityCondition.makeCondition("shipmentId", EntityOperator.IN, shipmentIds));
+				        }
+		        	 EntityCondition shipSeqcondition = EntityCondition.makeCondition(exprs, EntityOperator.AND);
+		        	shipmentSequenceList = delegator.findList("ShipmentSequence", shipSeqcondition, null, null, null, false);
+		        	Debug.log("====shipmentSequenceList=Size===="+shipmentSequenceList.size()+"==shipmentIds.size()="+shipmentIds.size());
+		        	delegator.removeAll(shipmentSequenceList);
+		        	Debug.log("====shipmentSequenceList=======Deleted==and=Size()==>"+shipmentSequenceList.size());
+				} catch (GenericEntityException e) {
+					Debug.logError(e, module);
+					return ServiceUtil.returnError(e.getMessage());
+				}
+		        int i = 0;
+		        for(String eachShipmentId:shipmentIds){
+		        	i++;
+		        	Map resultCtx = FastMap.newInstance();
+	   				try{
+	   					resultCtx = dispatcher.runSync("createShipmentSequence",UtilMisc.toMap("shipmentId", eachShipmentId ,"userLogin",userLogin));
+	   					if(ServiceUtil.isError(resultCtx)){
+	   						Debug.logError("Problem while Creating  Sequence for shipmentId:"+eachShipmentId, module);
+	   						return ServiceUtil.returnError("Problem while Creating  Sequence for shipmentId:"+eachShipmentId);
+	   					}
+	   				}catch(GenericServiceException e){
+	   					Debug.logError(e, module);
+	   					return ServiceUtil.returnError(e.getMessage());
+	   				}
+	   				if(i%100 == 0){
+		            	Debug.log("Records processed ###########"+i);
+		            }
+	   				
+		        }
+		        
+		        Debug.log("====service=Completed Sucessfully=====");
+		        return result;
+				}
+		
 }
