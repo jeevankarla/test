@@ -3170,7 +3170,7 @@
 			   	<set field="parameters.roleTypeId" value="DEPOT_CUSTOMER"/>
 			   	<set field="productStoreResult"	value="${groovy:in.vasista.vbiz.byproducts.icp.ICPServices.getProductStoreByGroupId(delegator, 'FG_STORE')}" />
 				<set field="productStoreId" value="${productStoreResult.factoryStoreId}"/>
-				<set field="productCategoryResult" value="${groovy:org.ofbiz.product.product.ProductWorker.getProductsByCategoryAssoc(delegator, 'INDENT_PROD_CAT', 'DEPOT_INDENT', null)}" />
+				<set field="productCategoryResult" value="${groovy:org.ofbiz.product.product.ProductWorker.getProductsByCategoryAssoc(delegator, 'INDENT_PROD_CAT', 'FGS_INDENT', null)}" />
 				<set field="categoryList" value="${productCategoryResult.productCategory}"/>							  					  
             </actions>
             <widgets>
