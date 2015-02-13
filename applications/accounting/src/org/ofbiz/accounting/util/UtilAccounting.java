@@ -47,10 +47,9 @@ import javolution.util.FastMap;
 
 
 public class UtilAccounting {
-
     public static String module = UtilAccounting.class.getName();
-    private static final int TAX_DECIMALS = UtilNumber.getBigDecimalScale("salestax.calc.decimals");
-    private static final int TAX_ROUNDING = UtilNumber.getBigDecimalRoundingMode("salestax.rounding");
+    private static final int TAX_DECIMALS = UtilNumber.getBigDecimalScale("purchaseTax.calc.decimals");
+    private static final int TAX_ROUNDING = UtilNumber.getBigDecimalRoundingMode("purchaseTax.rounding");
 
     /**
      * Get the GL Account for a product or the default account type based on input. This replaces the simple-method service
