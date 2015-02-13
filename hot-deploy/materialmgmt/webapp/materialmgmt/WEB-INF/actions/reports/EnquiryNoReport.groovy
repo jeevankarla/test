@@ -38,6 +38,7 @@ if(UtilValidate.isNotEmpty(custRequestItem)){
 List EnquiryDetList=[];
 quoteItemList=delegator.findList("QuoteAndItemAndCustRequest",EntityCondition.makeCondition("custRequestId", EntityOperator.EQUALS,custRequestId),null, null,null,false);
 partyIds = EntityUtil.getFieldListFromEntityList(quoteItemList, "partyId", true);
+
 productIds = EntityUtil.getFieldListFromEntityList(quoteItemList, "productId", true);
 productPriceMap = [:];
 poDateMap = [:];
@@ -102,32 +103,39 @@ context.prodNameMap=prodNameMap;
 */
 partyDetList = [];
 if(UtilValidate.isNotEmpty(partyIds)){	
-	partyIds.each{eachPartyId->
+	partyIds.each{eachPartyId->		
 		partyNameMap=[:];
 		partyNameMap["partyId"] = eachPartyId;
 		partyNameMap["partyName"] = org.ofbiz.party.party.PartyHelper.getPartyName(delegator, eachPartyId, false);
-		partyDetList.addAll(partyNameMap);
+		partyDetList.addAll(partyNameMap);				
 	}
 }
 context.partyDetList=partyDetList;
 context.poDateMap=poDateMap;
-quoteDetailList =[];
+//Comapare  termValue Of All Vendors 
+allTermsMap=[:];
 quoteIds = EntityUtil.getFieldListFromEntityList(quoteItemList, "quoteId", true);
-if(UtilValidate.isNotEmpty(quoteIds)){
-	quoteIds.each{eachQuoteId->		
-		quoteDetailsMap=[:];
-	    conditionList=[];
-	    conditionList.add(EntityCondition.makeCondition("quoteId", EntityOperator.EQUALS,eachQuoteId));
-		cond=EntityCondition.makeCondition(conditionList,EntityOperator.AND);
-		quoteList=delegator.findList("QuoteTerm",cond,UtilMisc.toSet("quoteId","termTypeId","termValue"),null,null,false);		
-		if(UtilValidate.isNotEmpty(quoteList)){
-			quoteDetails=EntityUtil.getFirst(quoteList);
-			termTypeId=quoteDetails.termTypeId;
-			termValue=quoteDetails.termValue;
-			quoteDetailsMap["termTypeId"]=termTypeId;
-			quoteDetailsMap["termValue"]=termValue;
-			quoteDetailList.addAll(quoteDetailsMap)	
-	   }
-   }
+termTypeDetails = delegator.findList("QuoteTerm", EntityCondition.makeCondition("quoteId", EntityOperator.IN,quoteIds),null, null,null,false);
+termTypeIds = EntityUtil.getFieldListFromEntityList(termTypeDetails, "termTypeId", true);
+termTypeIds.each{eachTermType->
+	termDetailsMap=[:];	
+	quoteIds.each{eachQuoteId->
+		partyDetails = delegator.findOne("Quote", ["quoteId" : eachQuoteId], false);
+		partyId=partyDetails.partyId;
+		termTypeDetails = delegator.findList("QuoteTerm", EntityCondition.makeCondition("quoteId", EntityOperator.EQUALS,eachQuoteId),null, null,null,false);
+		termTypeDetail = EntityUtil.filterByCondition(termTypeDetails, EntityCondition.makeCondition("termTypeId", EntityOperator.EQUALS, eachTermType));		
+		if(UtilValidate.isNotEmpty(termTypeDetail)){
+				termTypeDetail = EntityUtil.getFirst(termTypeDetail);
+				termTypeId=termTypeDetail.termTypeId;
+				termValue=termTypeDetail.termValue;
+			    termDetailsMap.put(partyId,termValue);		
+		}
+		else{			
+				termValue="";
+				termDetailsMap.put(partyId,termValue);
+			
+		}
+	}
+	allTermsMap.put(eachTermType,termDetailsMap);
 }
-context.quoteDetailList=quoteDetailList;
+context.allTermsMap=allTermsMap;
