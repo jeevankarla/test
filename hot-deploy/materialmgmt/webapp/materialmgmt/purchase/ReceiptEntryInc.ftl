@@ -103,6 +103,10 @@
 			var prodId = productId.toUpperCase();
 			}
 			var qty = parseFloat(data[rowCount]["quantity"]);
+			
+			if( (qty==0) || (isNaN(qty))) {
+			alert("please enter received quantity");
+			 }
 	 		if (!isNaN(qty) && qty>0 ) {	 		
 				var inputProd = jQuery("<input>").attr("type", "hidden").attr("name", "productId_o_" + rowCountIndex).val(prodId);
 				var inputQty = jQuery("<input>").attr("type", "hidden").attr("name", "quantity_o_" + rowCountIndex).val(qty);

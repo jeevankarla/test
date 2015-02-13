@@ -45,7 +45,7 @@ try {
 } catch (ParseException e) {
 	Debug.logError(e, "Cannot parse date string: "+fromDate, "");
 }
-fromDateTime = UtilDateTime.getDayStart(fromDateTime);
+//fromDateTime = UtilDateTime.getDayStart(fromDateTime);
 dayBegin = UtilDateTime.getDayStart(fromDateTime);
 dayEnd = UtilDateTime.getDayEnd(thruDateTime);
 context.fromDate = dayBegin;
@@ -61,18 +61,21 @@ if(totalDays > 32){
 facilityId=parameters.issueToFacilityId;
 context.facilityId=facilityId;
 
+productDetails = delegator.findList("ProductFacility",EntityCondition.makeCondition("facilityId", EntityOperator.EQUALS , facilityId)  ,  UtilMisc.toSet("productId"), null, null, false );
+productIdsFacility = EntityUtil.getFieldListFromEntityList(productDetails, "productId", true);
+
 conditionList=[];
 conditionList.add(EntityCondition.makeCondition("custRequestDate", EntityOperator.GREATER_THAN_EQUAL_TO,dayBegin));
 conditionList.add(EntityCondition.makeCondition("custRequestDate",EntityOperator.LESS_THAN_EQUAL_TO, dayEnd));
-conditionList.add(EntityCondition.makeCondition("facilityId", EntityOperator.EQUALS, facilityId));
+conditionList.add(EntityCondition.makeCondition("productId", EntityOperator.IN, productIdsFacility));
 condition = EntityCondition.makeCondition(conditionList,EntityOperator.AND);
+
 custReqAndItemDetails= delegator.findList("CustRequestAndCustRequestItem",condition,null,null,null,false);
 
 productMap=[:];
 
 if(UtilValidate.isNotEmpty(custReqAndItemDetails)){
-		 productIds = EntityUtil.getFieldListFromEntityList(custReqAndItemDetails, "productId", true);		 
-		 productMap=[:];
+		 productIds = EntityUtil.getFieldListFromEntityList(custReqAndItemDetails, "productId", true);			 
 		 productIds.each{eachProduct->
 			 productDetailsMap=[:];
 			 productDetails = delegator.findOne("Product",["productId":eachProduct],false);
@@ -89,26 +92,35 @@ if(UtilValidate.isNotEmpty(custReqAndItemDetails)){
 					productDetailsMap.put("unit",unitDesciption.description);
 			 }
 			 invCountMap = dispatcher.runSync("getProductInventoryOpeningBalance", [productId: eachProduct, ownerPartyId:"Company", userLogin: userLogin]);
-			 openingQty = invCountMap.get("inventoryCount");
-			 openingTot=invCountMap.get("inventoryCount");
+			 if(UtilValidate.isNotEmpty(invCountMap)){
+			 	 openingQty = invCountMap.get("inventoryCount");
+			 openingTotCost=invCountMap.get("inventoryCost");
 			 productDetailsMap.put("openingQty", openingQty);
-			 productDetailsMap.put("openingTot", openingTot);
+			 productDetailsMap.put("openingTot", openingTotCost);
+			 }
+			 
 			 storeIssueReceipts = MaterialHelperServices.getMaterialReceiptsForPeriod(dctx, [fromDate:dayBegin,thruDate:dayEnd, productId: eachProduct, userLogin: userLogin,]);
 			  receiptList =storeIssueReceipts.get("receiptsList");
+			  ReceiptQty=0;ReceiptAmount=0;
 			 if(UtilValidate.isNotEmpty(receiptList)){
 				 receiptList.each{receiptDetails->
-					 productDetailsMap.put("ReceiptQty",receiptDetails.get("quantity"));
-					 productDetailsMap.put("ReceiptAmount",receiptDetails.get("amount"));
+					 ReceiptQty=ReceiptQty+receiptDetails.get("quantity");
+					 ReceiptAmount=ReceiptAmount+receiptDetails.get("amount");
 				 }
+				 productDetailsMap.put("ReceiptQty",ReceiptQty);
+				 productDetailsMap.put("ReceiptAmount",ReceiptAmount);
+				 
 			 }
-			 totQty=
 			 itemIssueMap=MaterialHelperServices.getCustRequestIssuancesForPeriod(dctx,[fromDate:dayBegin, thruDate:dayEnd,productId: eachProduct, userLogin: userLogin]);
 			 StoreIssueList=itemIssueMap.get("itemIssuanceList");
+			 IssueQty=0;IssueAmount=0;
 			 if(UtilValidate.isNotEmpty(StoreIssueList)){
 				 StoreIssueList.each{storeIssueDetails->
-						 productDetailsMap.put("IssueQty",storeIssueDetails.get("quantity"));
-						 productDetailsMap.put("IssueAmount",storeIssueDetails.get("amount"));
+					 IssueQty=IssueQty+storeIssueDetails.get("quantity");
+					 IssueAmount=IssueAmount+storeIssueDetails.get("amount");
 				 }
+				 productDetailsMap.put("IssueQty",IssueQty);
+				 productDetailsMap.put("IssueAmount",IssueAmount);
 			 }			 																						   
 			 productMap.put(eachProduct,productDetailsMap);
 		 }						
