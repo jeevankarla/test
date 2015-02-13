@@ -380,7 +380,7 @@ function makeDatePicker1(fromDateId ,thruDateId){
 				<form id="LetterOfIndentReport" name="LetterOfIndentReport" mothed="post" action="<@ofbizUrl>LetterOfIndentReport.pdf</@ofbizUrl>" target="_blank">
 				   <table class="basic-table" cellspacing="5">
 					  <tr class="alternate-row">
-					     <td width="20%"><span class='h3'>Letter Of Indent </span></td>
+					     <td width="20%"><span class='h3'>Letter Of Intent </span></td>
 						 <td width="25%">
 							 <span class='h3'>PO No.<input type="textfield"  id="orderId"  name="orderId"/></span>   								
 						  </td>
