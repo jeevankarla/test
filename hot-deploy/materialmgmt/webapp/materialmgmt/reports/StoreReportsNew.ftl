@@ -303,7 +303,7 @@ function makeDatePicker1(fromDateId ,thruDateId){
 					     <td width="20%"><span class='h3'>ARC Purchase Order</span></td>
 		     	     
 				    <td width="25%"><span class='h3'>PO No<input type="textfield" id="orderId"name="orderId"></span></td>
-				    <td width="15%"><span class='h3'>							</span></td>
+				    <td width="15%"><span class='h3'>Subject Line<input type="textfield" id="subject" name="subject"></span></td>
 				     <td width="15%"><span class='h3'>   				       </span></td>	
 				    
 						 <td width="10%"><span class='h3'><input type="submit" value="Download" class="buttontext"></span></td>

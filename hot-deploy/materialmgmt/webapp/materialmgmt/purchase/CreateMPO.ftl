@@ -180,13 +180,24 @@ function makeDatePicker(fromDateId ,thruDateId){
 		var orderTypeId = $("#orderTypeId").val();
 		var formObj = jQuery("#CreateMPO");
 		var poNumberObj  = $(formObj).find("#PONumber");
+	    var quoteNumObj  = $(formObj).find("#quoteNum");
+        var quoteDateObj  = $(formObj).find("#quoteDate");
+        var billToPartyIdObj  = $(formObj).find("#0_lookupId_billToPartyId");
+
 		if(orderTypeId && orderTypeId == "PURCHASE_ORDER"){
 			$(poNumberObj).parent().parent().show();
+			$(quoteNumObj).parent().parent().show();
+			$(quoteDateObj).parent().parent().show();
+			$(billToPartyIdObj).parent().parent().show();
 		}
 		else{
 			$(poNumberObj).parent().parent().hide();
+			$(quoteNumObj).parent().parent().hide();
+			$(quoteDateObj).parent().parent().hide();
+			$(billToPartyIdObj).parent().parent().parent().hide();	
 		}
 	}    
+	
 	
 	var supplierName;
 	function dispSuppName(selection){
@@ -371,7 +382,7 @@ function makeDatePicker(fromDateId ,thruDateId){
 						    <td class="label">Bill To Party :</td>
 						    <td>
 						    	<#if orderId?exists && orderInfo.get("billToPartyId")?exists>
-						    	<#assign billToPartyId=orderInfo.get("billToPartyId")>
+						    	<#assign billToPartyId=orderInfo.get("billToPartyId")> 
 						    	<@htmlTemplate.lookupField value="${billToPartyId?if_exists}" formName="CreateMPO" size="18" maxlength="60" name="billToPartyId"  id="billToPartyId" fieldFormName="LookupPartyName"/>
 						    	<#else>
 						      	<@htmlTemplate.lookupField  formName="CreateMPO" size="18" maxlength="60" name="billToPartyId" id="billToPartyId" fieldFormName="LookupPartyName"/>
