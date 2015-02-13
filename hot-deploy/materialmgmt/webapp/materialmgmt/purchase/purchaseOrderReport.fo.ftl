@@ -144,9 +144,8 @@ ${setRequestAttribute("OUTPUT_FILENAME", "LoanAvailedReport.pdf")}
 						<fo:block >
 	        			 <fo:table width="100%" align="right" table-layout="fixed"  font-size="12pt">
 			               <fo:table-column column-width="250"/>               
-                           <fo:table-column column-width="100"/>
-							<fo:table-column column-width="170"/> 
-							<fo:table-column column-width="100"/> 
+                           <fo:table-column column-width="80"/>
+							<fo:table-column column-width="150"/> 
 							<fo:table-column column-width="100"/> 
 							              
 				            <fo:table-body>
@@ -157,7 +156,7 @@ ${setRequestAttribute("OUTPUT_FILENAME", "LoanAvailedReport.pdf")}
                           <#if Amount gt 0>
                           <fo:table-row>
 		                  	 <fo:table-cell  ><fo:block text-align="left" font-size="12pt"  >Basic Excise Duty On Purchase</fo:block></fo:table-cell>
-							 <fo:table-cell  ><fo:block text-align="left" font-size="12pt"  >: 12.36%  </fo:block></fo:table-cell>
+							 <fo:table-cell  ><fo:block text-align="left" font-size="12pt"  >: <#list bedPercents as bed>${bed}%,</#list> </fo:block></fo:table-cell>
 							<fo:table-cell  ><fo:block text-align="left" font-size="12pt"  >-- ${Amount} INR </fo:block></fo:table-cell>
                           </fo:table-row>
                           </#if>
@@ -190,6 +189,9 @@ ${setRequestAttribute("OUTPUT_FILENAME", "LoanAvailedReport.pdf")}
 							 <fo:table-cell  ><fo:block text-align="left" font-size="12pt"  >: ${termtypeId.get("termValue")?if_exists}  </fo:block></fo:table-cell>
 							 </#if>
 							<fo:table-cell  ><fo:block text-align="left" font-size="12pt"  >-- ${termtypeId.get("amount")?if_exists} INR </fo:block></fo:table-cell>
+							<#if termtypeId.get("description")?has_content>
+							 <fo:table-cell  ><fo:block text-align="left" font-size="12pt"  >: ${termtypeId.get("description")?if_exists}  </fo:block></fo:table-cell>
+							 </#if>
                           </fo:table-row>
 						</#list>
 						</#if>

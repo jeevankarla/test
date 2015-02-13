@@ -73,7 +73,7 @@ conditionList.clear();
 conditionList.add(EntityCondition.makeCondition("custRequestId", EntityOperator.IN, custRequestIds));
 conditionItemIssue = EntityCondition.makeCondition(conditionList, EntityOperator.AND);
 
-itemIssuanceList = delegator.findList("ItemIssuance", conditionItemIssue, null, UtilMisc.toList("-issuedDateTime"), null, false);
+itemIssuanceList = delegator.findList("ItemIssuance", conditionItemIssue, null, UtilMisc.toList("-issuedDateTime","-custRequestId"), null, false);
 
 
 prodInvMap = [:];
