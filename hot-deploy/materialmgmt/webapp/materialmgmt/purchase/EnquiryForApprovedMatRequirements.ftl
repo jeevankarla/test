@@ -20,6 +20,7 @@ $(document).ready(function(){
 			$( "#closedDate" ).datepicker({
 			dateFormat:'dd MM, yy',
 			changeMonth: true,
+			minDate:"#requestDate",
 			numberOfMonths: 1});
 		$('#ui-datepicker-div').css('clip', 'auto');
 		
