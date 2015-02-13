@@ -182,7 +182,14 @@ if(orderheadDetails){
 	}
   }
 	}
-
+//bed percents
+bedCondition=EntityCondition.makeCondition([
+			EntityCondition.makeCondition("orderId", EntityOperator.EQUALS, orderId),
+			EntityCondition.makeCondition("termTypeId", EntityOperator.EQUALS, "BED_PUR")],
+		EntityOperator.AND);
+orderBedPercents = delegator.findList("OrderTerm",bedCondition, null, null, null, false );
+bedPercents=EntityUtil.getFieldListFromEntityList(orderBedPercents, "termValue", true);
+context.bedPercents=bedPercents;
 //to get product details
 orderDetails = delegator.findList("OrderItem",EntityCondition.makeCondition("orderId", EntityOperator.EQUALS , orderId)  , null, null, null, false );
 vatpercents=EntityUtil.getFieldListFromEntityList(orderDetails, "vatPercent", true);
@@ -295,6 +302,7 @@ bedAmount=0;
 vatAmount=0;
 cstAmount=0;
 listSize=0;
+bedPercent=0;
 orderTerms= delegator.findList("OrderTerm",EntityCondition.makeCondition("orderId", EntityOperator.EQUALS , orderId)  , null, null, null, false );
 parentMap=[:];
 if(UtilValidate.isNotEmpty(orderTerms)){
@@ -316,6 +324,7 @@ if(UtilValidate.isNotEmpty(orderTerms)){
 				Amount+=orderAdjt.amount;
 			}
 			bedAmount=Amount;
+			bedPercent=orderTerm.termValue;
 		}
 		
 		orderAdjustment=[];
@@ -400,5 +409,6 @@ context.parentMap=parentMap;
 context.Amount=bedAmount;
 context.vatAmount=vatAmount;
 context.cstAmount=cstAmount;
+context.bedPercent=bedPercent;
 context.listSize=listSize;
 
