@@ -146,7 +146,7 @@ ${setRequestAttribute("OUTPUT_FILENAME", "LoanAvailedReport.pdf")}
 			               <fo:table-column column-width="250"/>               
                            <fo:table-column column-width="80"/>
 							<fo:table-column column-width="150"/> 
-							<fo:table-column column-width="100"/> 
+							<fo:table-column column-width="200"/> 
 							              
 				            <fo:table-body>
 				           <#if termType == "TAX">
@@ -185,7 +185,7 @@ ${setRequestAttribute("OUTPUT_FILENAME", "LoanAvailedReport.pdf")}
 		                  	 <#if termtypeId.get("uomId")=="PERCENT">
 							 <fo:table-cell  ><fo:block text-align="left" font-size="12pt"  >: ${termtypeId.get("termValue")?if_exists}%  </fo:block></fo:table-cell>
 							 </#if>
-							<#if termtypeId.get("uomId")=="INR">
+							<#if termtypeId.get("uomId")=="INR" >
 							 <fo:table-cell  ><fo:block text-align="left" font-size="12pt"  >: ${termtypeId.get("termValue")?if_exists}  </fo:block></fo:table-cell>
 							 </#if>
 							<fo:table-cell  ><fo:block text-align="left" font-size="12pt"  >-- ${termtypeId.get("amount")?if_exists} INR </fo:block></fo:table-cell>
