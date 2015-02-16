@@ -265,8 +265,8 @@ function reportTypeChangeFunc() {
                <tr class="alternate-row">
 			      	   <form id="PartyFinancialHistoryWithDrCr" name="PartyFinancialHistoryWithDrCr" method="post" action="<@ofbizUrl>PartyFinancialHistoryWithDrCr.pdf</@ofbizUrl>" target="_blank">        
 			             <td width="30%">Party Financial History With Dr/Cr</td>
-			             <td width="15%">From<input  type="text" size="15pt" id="PFHFromDateCrDr" readonly  name="fromDate"/></td>
-			      		 <td width="15%">Thru<input  type="text" size="15pt" id="PFHThruDateCrDr" readonly  name="thruDate"/></td>
+			             <td width="15%">From<input  type="text" size="15pt" id="PFHFromDateCrDr" readonly  name="partyfromDate"/></td>
+			      		 <td width="15%">Thru<input  type="text" size="15pt" id="PFHThruDateCrDr" readonly  name="partythruDate"/></td>
 			             <td width="20%">Party Code<@htmlTemplate.lookupField size="10" maxlength="22" formName="PartyFinancialHistoryWithDrCr" name="partyId" id="partyId" fieldFormName="LookupPartyName"/>
 			            <#--> <input type="text" name="partyId" id="partyId" size="10" maxlength="22"> --></td>
 			             <td width="15%"></td>

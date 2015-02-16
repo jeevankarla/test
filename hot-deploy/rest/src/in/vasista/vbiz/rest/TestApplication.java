@@ -19,6 +19,7 @@ public class TestApplication extends Application {
 	      classes.add(ActiveEmployeesResource.class);
 	      classes.add(FetchProcurementPriceData.class);
 	      classes.add(MaterialManagementResource.class);
+	      classes.add(CreateWeighBridgeData.class);
 	      
 	      return classes;
 	  }
@@ -42,7 +43,7 @@ public class TestApplication extends Application {
 	    JacksonJaxbJsonProvider jaxbProvider = new JacksonJaxbJsonProvider();
 	    jaxbProvider.setMapper(mapper);
 	    
-	    s.add(jaxbProvider);
+	    s.add(jaxbProvider);  
 	    return s;
 	  }
 }

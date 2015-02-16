@@ -716,6 +716,27 @@ under the License.
         <key-map field-name="shipmentId"/>
       </relation>
     </entity>
+    <entity entity-name="ShipmentSequence" package-name="org.ofbiz.shipment.shipment"
+		title="Shipment Sequence Entity">
+		<field name="finYearId" type="id-ne"></field>
+		<field name="shipmentSequenceTypeId" type="id"></field>
+		<field name="sequenceId" type="id-ne"></field>
+		<field name="shipmentId" type="id-ne"></field>
+		<field name="shipmentNo" type="id-long-ne" ></field>
+		<prim-key field="finYearId" />
+		<prim-key field="shipmentSequenceTypeId" />
+		<prim-key field="sequenceId" />
+		<relation type="one" fk-name="SSEQ_FIY"
+			rel-entity-name="CustomTimePeriod">
+			<key-map field-name="finYearId"  rel-field-name="customTimePeriodId"/>
+		</relation>
+		<relation type="one" fk-name="SSEQ_Ship" rel-entity-name="Shipment">
+			<key-map field-name="shipmentId" />
+		</relation>
+		<relation type="one" fk-name="SSEQ_ENUMT" title="shipmentSequenceTypeId" rel-entity-name="Enumeration">
+            <key-map field-name="shipmentSequenceTypeId" rel-field-name="enumId"/>
+        </relation>
+	</entity>
     <view-entity entity-name="ShipmentAndItem"
             package-name="org.ofbiz.shipment.shipment"
             title="Shipment and Item View Entity">

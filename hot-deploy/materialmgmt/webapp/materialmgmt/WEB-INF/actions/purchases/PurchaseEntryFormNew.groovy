@@ -28,8 +28,8 @@ if(changeFlag=="PurchaseOrder"){
 	productCatageoryId="PACKING_PRODUCT";
 }
 
-if(parameters.orderId){
-	orderHeader = delegator.findOne("OrderHeader", UtilMisc.toMap("orderId", parameters.orderId), false);
+if(parameters.POId){
+	orderHeader = delegator.findOne("OrderHeader", UtilMisc.toMap("orderId", parameters.POId), false);
 	orderTypeId = orderHeader.orderTypeId;
 	orderType = delegator.findOne("OrderType", UtilMisc.toMap("orderTypeId", orderTypeId), false);
 		

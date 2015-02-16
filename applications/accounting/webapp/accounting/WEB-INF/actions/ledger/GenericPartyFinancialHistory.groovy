@@ -40,12 +40,23 @@ import org.ofbiz.service.ServiceUtil;
 
 fromDate=parameters.fromDate;
 thruDate=parameters.thruDate;
+partyfromDate=parameters.partyfromDate;
+partythruDate=parameters.partythruDate;
 partyCode = parameters.partyId;
 dctx = dispatcher.getDispatchContext();
 fromDateTime = null;
 thruDateTime = null;
-if((UtilValidate.isNotEmpty(fromDate))&& (UtilValidate.isNotEmpty(thruDate))){
-def sdf = new SimpleDateFormat("yyyy, MMM dd");
+if(UtilValidate.isNotEmpty(partyfromDate)&& UtilValidate.isNotEmpty(partythruDate)){
+	def sdf = new SimpleDateFormat("yyyy, MMM dd");
+	try {
+		fromDateTime = new java.sql.Timestamp(sdf.parse(partyfromDate).getTime());
+		thruDateTime = new java.sql.Timestamp(sdf.parse(partythruDate).getTime());
+	} catch (ParseException e) {
+		Debug.logError(e, "Cannot parse date string: "+fromDate, "");
+	}
+	}
+if(UtilValidate.isNotEmpty(fromDate)&& UtilValidate.isNotEmpty(thruDate)){
+def sdf = new SimpleDateFormat("MMMM dd, yyyy");
 try {
 	fromDateTime = new java.sql.Timestamp(sdf.parse(fromDate).getTime());
 	thruDateTime = new java.sql.Timestamp(sdf.parse(thruDate).getTime());
@@ -102,6 +113,10 @@ conditionList=[];
 conditionList.add(EntityCondition.makeCondition("statusId", EntityOperator.NOT_EQUAL, "INVOICE_IN_PROCESS"));
 conditionList.add(EntityCondition.makeCondition("statusId", EntityOperator.NOT_EQUAL, "INVOICE_WRITEOFF"));
 conditionList.add(EntityCondition.makeCondition("statusId", EntityOperator.NOT_EQUAL, "INVOICE_CANCELLED"));
+if(UtilValidate.isNotEmpty(partyfromDate)&& UtilValidate.isNotEmpty(partythruDate)){
+	conditionList.add(EntityCondition.makeCondition("invoiceDate", EntityOperator.GREATER_THAN_EQUAL_TO,UtilDateTime.getDayStart(fromDateTime)))
+	conditionList.add(EntityCondition.makeCondition("invoiceDate",EntityOperator.LESS_THAN_EQUAL_TO, UtilDateTime.getDayEnd(thruDateTime)))
+	}
 if(UtilValidate.isNotEmpty(fromDate)&& UtilValidate.isNotEmpty(thruDate)){
 conditionList.add(EntityCondition.makeCondition("invoiceDate", EntityOperator.GREATER_THAN_EQUAL_TO,UtilDateTime.getDayStart(fromDateTime)))
 conditionList.add(EntityCondition.makeCondition("invoiceDate",EntityOperator.LESS_THAN_EQUAL_TO, UtilDateTime.getDayEnd(thruDateTime)))
@@ -118,7 +133,6 @@ conditionList.add( EntityCondition.makeCondition([
             ],EntityOperator.OR));
 
 newInvCondition=EntityCondition.makeCondition(conditionList,EntityOperator.AND);
-
 
 
 	List<String> payOrderBy = UtilMisc.toList("invoiceDate");
@@ -265,6 +279,10 @@ conditionList.clear();
 conditionList.add( EntityCondition.makeCondition("statusId", EntityOperator.NOT_EQUAL, "PMNT_NOTPAID"));
 conditionList.add(EntityCondition.makeCondition("statusId", EntityOperator.NOT_EQUAL, "PMNT_CANCELLED"));
 conditionList.add(EntityCondition.makeCondition("statusId", EntityOperator.NOT_EQUAL, "PMNT_VOID"));
+if(UtilValidate.isNotEmpty(partyfromDate)&& UtilValidate.isNotEmpty(partythruDate)){
+	conditionList.add(EntityCondition.makeCondition("paymentDate", EntityOperator.GREATER_THAN_EQUAL_TO,UtilDateTime.getDayStart(fromDateTime)))
+	conditionList.add(EntityCondition.makeCondition("paymentDate",EntityOperator.LESS_THAN_EQUAL_TO, UtilDateTime.getDayEnd(thruDateTime)))
+	}
 if(UtilValidate.isNotEmpty(fromDate)&& UtilValidate.isNotEmpty(thruDate)){
 conditionList.add(EntityCondition.makeCondition("paymentDate", EntityOperator.GREATER_THAN_EQUAL_TO,UtilDateTime.getDayStart(fromDateTime)))
 conditionList.add(EntityCondition.makeCondition("paymentDate",EntityOperator.LESS_THAN_EQUAL_TO, UtilDateTime.getDayEnd(thruDateTime)))
@@ -364,7 +382,14 @@ while (payment = payIterator.next()) {
 }
 payIterator.close();
 //finalMap prepration
-if(UtilValidate.isEmpty(fromDate)){
+/*if(UtilValidate.isEmpty(fromDate)){
+	if(paymentFirstDate<invoiceFirstDate){
+		fromDateTime=paymentFirstDate;
+	}else{
+	fromDateTime=invoiceFirstDate;
+	}
+}*/
+if(UtilValidate.isEmpty(partyfromDate)){
 	if(paymentFirstDate<invoiceFirstDate){
 		fromDateTime=paymentFirstDate;
 	}else{

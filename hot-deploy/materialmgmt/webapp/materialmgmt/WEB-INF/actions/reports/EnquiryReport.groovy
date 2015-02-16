@@ -20,6 +20,8 @@ import org.ofbiz.service.GenericServiceException;
 import org.ofbiz.service.ServiceUtil;
 import org.ofbiz.party.contact.ContactHelper;
 
+signature=parameters.signature;
+context.signature=signature;
 custRequestId=parameters.issueToCustReqId;
 custReqDetails = delegator.findOne("CustRequest", [custRequestId : custRequestId], false);
 if(UtilValidate.isNotEmpty(custReqDetails)){
@@ -36,8 +38,8 @@ if(UtilValidate.isNotEmpty(custReqDetails)){
    CustRequestSequenceDetails = delegator.findList("CustRequestSequence",EntityCondition.makeCondition("custRequestId", EntityOperator.EQUALS , custRequestId)  , null, null, null, false );
 	  CustRequestSequence= EntityUtil.getFirst(CustRequestSequenceDetails);	  
 	  if(CustRequestSequence){
-		  if(UtilValidate.isNotEmpty(CustRequestSequence.sequenceId)){
-			  enquirySequenceNo=CustRequestSequence.sequenceId;
+		  if(UtilValidate.isNotEmpty(CustRequestSequence.custRequestNo)){
+			  enquirySequenceNo=CustRequestSequence.custRequestNo;
 			  context.enquirySequenceNo=enquirySequenceNo;
 		  }
 	  }
@@ -81,7 +83,7 @@ if(UtilValidate.isNotEmpty(custReqItemDetails)){
 }
 context.enquiryMap=enquiryMap;
 vendorList=[];
-partyIdsList=delegator.findList("QuoteAndItemAndCustRequest",EntityCondition.makeCondition("custRequestId", EntityOperator.EQUALS,custRequestId),UtilMisc.toSet("quoteId","partyId"), null,null,false);
+partyIdsList=delegator.findList("CustRequestParty",EntityCondition.makeCondition("custRequestId", EntityOperator.EQUALS,custRequestId),null, null,null,false);
 partyIds = EntityUtil.getFieldListFromEntityList(partyIdsList, "partyId", true);
 if(UtilValidate.isNotEmpty(partyIds)){
 	partyIds.each{eachPartyId->

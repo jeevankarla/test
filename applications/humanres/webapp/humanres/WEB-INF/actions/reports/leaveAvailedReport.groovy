@@ -105,7 +105,6 @@ context.orgName=orgName;
 
 finalMap=[:];
 
-
 if(UtilValidate.isNotEmpty(leaveTypeIds)){
 		leaveTypeIds.each { leaveTypeId ->
 			employeesList=[];
@@ -116,8 +115,9 @@ if(UtilValidate.isNotEmpty(leaveTypeIds)){
 			conditionList.add(EntityCondition.makeCondition("partyId", EntityOperator.IN,empIds));
 			}
 			conditionList.add(EntityCondition.makeCondition("leaveTypeId", EntityOperator.EQUALS, leaveTypeId));
-			conditionList.add(EntityCondition.makeCondition("fromDate",EntityOperator.GREATER_THAN_EQUAL_TO,fromDate));
-			conditionList.add(EntityCondition.makeCondition("thruDate",EntityOperator.LESS_THAN_EQUAL_TO,thruDate));
+			//conditionList.add(EntityCondition.makeCondition("fromDate",EntityOperator.LESS_THAN_EQUAL_TO,fromDate));
+			conditionList.add(EntityCondition.makeCondition("thruDate",EntityOperator.GREATER_THAN_EQUAL_TO,fromDate));
+			conditionList.add(EntityCondition.makeCondition("leaveStatus",EntityOperator.EQUALS,"LEAVE_APPROVED"));
 			condition=EntityCondition.makeCondition(conditionList,EntityOperator.AND);
 			empLeavesList = delegator.findList("EmplLeave", condition ,null,null, null, false );
 			if(UtilValidate.isNotEmpty(empLeavesList)){
@@ -125,7 +125,7 @@ if(UtilValidate.isNotEmpty(leaveTypeIds)){
 				leaveBalanceMap=[:];
 				empLeavesList.each { empLeaves ->
 					employeeMap=[:];
-					empLeaveMap=EmplLeaveService.fetchLeaveDaysForPeriod(dctx,[partyId:empLeaves.get("partyId"),leaveTypeId:empLeaves.get("leaveTypeId"),timePeriodStart:fromDate, timePeriodEnd: thruDate,userLogin:userLogin]);
+					empLeaveMap=EmplLeaveService.fetchLeaveDaysForPeriod(dctx,[partyId:empLeaves.get("partyId"),leaveTypeId:empLeaves.get("leaveTypeId"),timePeriodStart:fromDate,userLogin:userLogin]);
 					if(UtilValidate.isNotEmpty(empLeaveMap)){
 						leaveDetailmap=empLeaveMap.get("leaveDetailmap");
 						employeeMap.put("employeeId",empLeaves.get("partyId"));
@@ -156,7 +156,25 @@ if(UtilValidate.isNotEmpty(leaveTypeIds)){
 						}else{
 							leaveBalances = delegator.findByAnd("EmplLeaveBalanceStatus",[partyId:empLeaves.get("partyId"),customTimePeriodId:customTimePeriodId,leaveTypeId:empLeaves.get("leaveTypeId")],["openingBalance"]);
 							if(UtilValidate.isNotEmpty(leaveBalances) && (leaveTypeId=="CL" || leaveTypeId=="EL" || leaveTypeId=="HPL")){
-								balance=leaveBalances.get(0).openingBalance;
+								leaveBalance = leaveBalances.get(0);
+								if (UtilValidate.isNotEmpty(leaveBalance.openingBalance)) {
+									balance = balance + (leaveBalance.openingBalance);
+								}
+								if (UtilValidate.isNotEmpty(leaveBalance.allotedDays)) {
+									balance = balance + (leaveBalance.allotedDays);
+								}
+								if (UtilValidate.isNotEmpty(leaveBalance.availedDays)) {
+									balance = balance - (leaveBalance.availedDays);
+								}
+								if (UtilValidate.isNotEmpty(leaveBalance.adjustedDays)) {
+									balance = balance + (leaveBalance.adjustedDays);
+								}
+								if (UtilValidate.isNotEmpty(leaveBalance.encashedDays)) {
+									balance = balance - (leaveBalance.encashedDays);
+								}
+								if (UtilValidate.isNotEmpty(leaveBalance.lapsedDays)) {
+									balance = balance - (leaveBalance.lapsedDays);
+								}
 							}
 						}
 						balance = balance-intv;
@@ -181,7 +199,4 @@ if(UtilValidate.isEmpty(finalMap)){
 }
 
 context.put("finalMap",finalMap);
-
-
-
 

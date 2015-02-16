@@ -24,7 +24,7 @@ under the License.
 <fo:layout-master-set>
 	<fo:simple-page-master master-name="main" page-height="12in" page-width="15in"
             margin-top="0.1in" margin-bottom=".7in" margin-left=".5in" margin-right=".5in">
-        <fo:region-body margin-top="3.590in"/>
+        <fo:region-body margin-top="1.8in"/>
         <fo:region-before extent="1.in"/>
         <fo:region-after extent="1.5in"/>        
     </fo:simple-page-master>   
@@ -45,7 +45,7 @@ ${setRequestAttribute("OUTPUT_FILENAME", "LoanAvailedReport.pdf")}
 				    <fo:block  keep-together="always" text-align="left" font-family="Courier,monospace" white-space-collapse="false" font-size="12pt" font-weight="bold">&#160;&#160;&#160;&#160;&#160;                                                            MATERIAL RECEIPT REPORT 	    </fo:block> 
 				              	<fo:block   text-align="left" font-size="12pt" white-space-collapse="false" >&#160;&#160;  Shipment Seq Id : ${shipmentMap.get("shipmentSequenceId")?if_exists}   </fo:block>
 				    
-				    <fo:block  keep-together="always" text-align="left" font-family="Courier,monospace" white-space-collapse="false" font-size="12pt" >&#160;&#160;&#160;&#160;&#160;   M R R NO:${shipmentMap.get("receiptId")}                  DATE:  ${shipmentMap.get("dateReceived")?if_exists}                                                             PRINT DATE:Date:  ${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(nowTimestamp, "dd-MMM-yy")} 	    </fo:block> 
+				    <fo:block  keep-together="always" text-align="left" font-family="Courier,monospace" white-space-collapse="false" font-size="12pt" >&#160;&#160;&#160;&#160;&#160;   M R R NO:${shipmentMap.get("shipmentId")}                  DATE:  ${shipmentMap.get("dateReceived")?if_exists}                                                             PRINT DATE:Date:  ${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(nowTimestamp, "dd-MMM-yy")} 	    </fo:block> 
 			        <fo:block  keep-together="always" text-align="left" font-family="Courier,monospace" white-space-collapse="false" font-size="10pt" > &#160;&#160;&#160;&#160;&#160;______________________________________________________________________________________________________________________________________________________________ </fo:block> 
 				 <#--   <fo:block  keep-together="always" text-align="left" font-family="Courier,monospace" white-space-collapse="false" font-size="10pt" > P O NO : ${shipmentMap.get("ordId")?if_exists}                    P O DATE: ${shipmentMap.get("dateReceived")?if_exists}                VENDOR CODE: ${shipmentMap.get("partyId")?if_exists}                                   STORE: ${shipmentMap.get("store")?if_exists?if_exists}   	    </fo:block> 
 					<fo:block  keep-together="always" text-align="center" font-family="Courier,monospace" white-space-collapse="false" font-size="10pt"> &#160;  </fo:block> 
@@ -53,8 +53,11 @@ ${setRequestAttribute("OUTPUT_FILENAME", "LoanAvailedReport.pdf")}
              		<fo:block  keep-together="always" text-align="center" font-family="Courier,monospace" white-space-collapse="false" font-size="10pt" > &#160;&#160;  </fo:block> 
 			        <fo:block  keep-together="always" text-align="left" font-family="Courier,monospace" white-space-collapse="false" font-size="10pt" > INVOICE NO: ${shipmentMap.get("invoiceNo")?if_exists}                   INVOICE DATE: <#if (shipmentMap.get("invoiceDate")?has_content)>${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(shipmentMap.get("invoiceDate"), "dd-MMM-yy")?if_exists}    </#if>                                                   </fo:block> 
 			           
--->
+--> 
+ </fo:static-content>
+ <fo:flow flow-name="xsl-region-body"   font-family="Courier,monospace">		
 
+			 <fo:block  keep-together="always" text-align="left" font-family="Courier,monospace" white-space-collapse="false" font-size="10pt" > &#160;&#160; </fo:block> 
 			 <fo:block  keep-together="always" text-align="left" font-family="Courier,monospace" white-space-collapse="false" font-size="10pt" > &#160;&#160; </fo:block> 
 
           	<fo:block   text-align="left" font-size="12pt" white-space-collapse="false" >&#160;&#160;PO SEQ ID : ${shipmentMap.get("sequenceId")?if_exists}   </fo:block>
@@ -75,7 +78,7 @@ ${setRequestAttribute("OUTPUT_FILENAME", "LoanAvailedReport.pdf")}
                             		<fo:block   text-align="left" font-size="12pt" white-space-collapse="false" >&#160; P O NO    : </fo:block>  
                        			</fo:table-cell>                     
 	                    		<fo:table-cell >
-                            		<fo:block   text-align="left" font-size="12pt" white-space-collapse="false" >${shipmentMap.get("orderNo")?if_exists}   </fo:block>
+                            		<fo:block   text-align="left" font-size="12pt" white-space-collapse="false" >${shipmentMap.get("ordId")?if_exists}   </fo:block>
                        			</fo:table-cell>
 	                    		<fo:table-cell >
                             		<fo:block   text-align="right" font-size="12pt" white-space-collapse="false"> P O DATE    :</fo:block> 
@@ -135,21 +138,11 @@ ${setRequestAttribute("OUTPUT_FILENAME", "LoanAvailedReport.pdf")}
                 </fo:table>
               </fo:block>               	
 
+   	    		
+          			 <fo:block  keep-together="always" text-align="left" font-family="Courier,monospace" white-space-collapse="false" font-size="10pt" > &#160;&#160; </fo:block> 
 
-
-
-
-
-
-
-
-
-   		
-			         <fo:block  keep-together="always" text-align="center" font-family="Courier,monospace" white-space-collapse="false" font-size="10pt" font-weight="bold"> &#160;&#160;  </fo:block> 
-			         <fo:block  keep-together="always" text-align="center" font-family="Courier,monospace" white-space-collapse="false" font-size="10pt" font-weight="bold"> &#160;&#160;  </fo:block> 
-	             
-              		 <fo:block>
-	                 	<fo:table >
+            	<fo:block>
+                 	<fo:table border-style="solid">
 	                    <fo:table-column column-width="30pt"/>
 	                    <fo:table-column column-width="60pt"/>
 	                    <fo:table-column column-width="140pt"/>  
@@ -165,7 +158,8 @@ ${setRequestAttribute("OUTPUT_FILENAME", "LoanAvailedReport.pdf")}
 	            		<fo:table-column column-width="70pt"/>
 	            		<fo:table-column column-width="70pt"/>
 	                    <fo:table-body>
-	                    <fo:table-row >
+	                   
+ <fo:table-row >
 	                    		<fo:table-cell border-style="solid">
                             		<fo:block   text-align="center" font-size="10pt" white-space-collapse="false" font-weight="bold">SI NO</fo:block>  
                        			</fo:table-cell>                     
@@ -194,7 +188,7 @@ ${setRequestAttribute("OUTPUT_FILENAME", "LoanAvailedReport.pdf")}
                             		<fo:block  text-align="center" font-size="10pt" white-space-collapse="false" font-weight="bold">ACCEPTED QTY</fo:block>  
                         		</fo:table-cell>
                         		<fo:table-cell border-style="solid">
-                            		<fo:block   text-align="center" font-size="10pt" white-space-collapse="false" font-weight="bold">UNITRATE Rs </fo:block>  
+                            		<fo:block   text-align="center" font-size="10pt" white-space-collapse="false" font-weight="bold">UNIT RATE Rs </fo:block>  
                        			</fo:table-cell>
                        			<fo:table-cell border-style="solid">
                             		<fo:block   text-align="center" font-size="10pt" white-space-collapse="false" font-weight="bold">BOOK FOLOIO NO </fo:block>  
@@ -210,31 +204,8 @@ ${setRequestAttribute("OUTPUT_FILENAME", "LoanAvailedReport.pdf")}
                         		</fo:table-cell>
                         		
                 			</fo:table-row>
-                    </fo:table-body>
-                </fo:table>
-              </fo:block> 		                
-            </fo:static-content>		
-           <fo:flow flow-name="xsl-region-body"   font-family="Courier,monospace">		
-            	<fo:block>
-                 	<fo:table border-style="solid">
-	                    <fo:table-column column-width="30pt"/>
-	                    <fo:table-column column-width="60pt"/>
-	                    <fo:table-column column-width="140pt"/>  
-	               	    <fo:table-column column-width="70pt"/>
-	               	    <fo:table-column column-width="80pt"/>
-	            		<fo:table-column column-width="80pt"/> 		
-	            		<fo:table-column column-width="50pt"/>
-	            		<fo:table-column column-width="80pt"/>
-	            		<fo:table-column column-width="80pt"/>
-	            		<fo:table-column column-width="80pt"/>
-	            		<fo:table-column column-width="70pt"/>
-	            		<fo:table-column column-width="80pt"/>
-	            		<fo:table-column column-width="70pt"/>
-	            		<fo:table-column column-width="70pt"/>
-	                    <fo:table-body>
-	                    <#assign sNo=1>
+                                 <#assign sNo=1>                 
 	                    <#list grnList as grnListItem>
-
 	                    <fo:table-row >
 									<fo:table-cell border-style="solid">
 	                            	 <fo:block  text-align="center"  font-size="10pt" >
@@ -307,8 +278,8 @@ ${setRequestAttribute("OUTPUT_FILENAME", "LoanAvailedReport.pdf")}
 	                                    
 	                                    </fo:block>
 	                                </fo:table-cell>
-	                              	<#assign sNo=sNo+1>
 	                               </fo:table-row>
+	                           	<#assign sNo=sNo+1>
                                 </#list>
                     </fo:table-body>
                 </fo:table>

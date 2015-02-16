@@ -392,6 +392,9 @@
 	                        		<platform-specific>
 	                            		<html><html-template location="component://materialmgmt/webapp/materialmgmt/purchase/POterms.ftl"/></html>
 	                        		</platform-specific>
+	                        		<platform-specific>
+	                            		<html><html-template location="component://materialmgmt/webapp/materialmgmt/purchase/POSuspend.ftl"/></html>
+	                        		</platform-specific>
 	                        		<screenlet title="Order Amendments">
 	                        			<include-form location="component://materialmgmt/widget/MaterialPurchaseForms.xml" name="orderAmendments"/>
 	                        		</screenlet>
@@ -493,7 +496,7 @@
         </field> -->
             <entity-condition entity-name="Uom" list="uomList" >
              <condition-list combine="and">
-                        <condition-expr field-name="uomTypeId"  operator="equals"  value="WEIGHT_MEASURE"  />
+                        <condition-expr field-name="uomTypeId"  operator="not-equals"  value="CURRENCY_MEASURE"  />
                     </condition-list>
                     <order-by field-name="description"/>
              </entity-condition> 
@@ -562,6 +565,7 @@
                    <select-field field-name="partyId"/>
                    <select-field field-name="groupName"/>
                </entity-and>
+               <script location="component://materialmgmt/webapp/materialmgmt/WEB-INF/actions/purchases/purchaseDepartments.groovy"/>
             </actions>
             <widgets>
                  <decorator-screen name="CommonInventoryDecorator" location="${parameters.mainDecoratorLocation}">

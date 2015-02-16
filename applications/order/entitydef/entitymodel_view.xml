@@ -1734,6 +1734,7 @@ under the License.
       <alias name="validFromDate" entity-alias="QUO"/>
       <alias name="validThruDate" entity-alias="QUO"/>
       <alias name="quoteName" entity-alias="QUO"/>
+      <alias name="lastModifiedDate" entity-alias="QUO"/>
       
       <view-link entity-alias="QITM" rel-entity-alias="QUO">
         <key-map field-name="quoteId"/>

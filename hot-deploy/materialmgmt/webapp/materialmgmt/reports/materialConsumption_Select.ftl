@@ -125,7 +125,7 @@ $(document).ready(function(){
 				<td width="20%">
 				<select name="orgPartyId">
 					<option ></option>
-					<#list internalOrgList as internalOrg>
+					<#list finalDepartmentList as internalOrg>
 						<option value="${internalOrg.partyId}">${internalOrg.groupName}</option>	
 					</#list>
 				</select>

@@ -288,7 +288,7 @@ function makeDatePicker1(fromDateId ,thruDateId){
 					  <tr class="alternate-row">
 					     <td width="20%"><span class='h3'>Purchase Order</span></td>
 					     <td width="25%"><span class='h3'>PO No<input type="textfield" id="orderId"name="orderId"></span></td>
-				    <td width="15%"><span class='h3'>							</span></td>
+				    <td width="15%"><span class='h3'>Signature<input type="textfield" id="sign" name="sign"></span></td>
 				     <td width="15%"><span class='h3'>   				       </span></td>	
 						 <td width="10%"><span class='h3'><input type="submit" value="Download" class="buttontext"></span></td>
 		 		    </tr>
@@ -303,7 +303,7 @@ function makeDatePicker1(fromDateId ,thruDateId){
 					     <td width="20%"><span class='h3'>ARC Purchase Order</span></td>
 		     	     
 				    <td width="25%"><span class='h3'>PO No<input type="textfield" id="orderId"name="orderId"></span></td>
-				    <td width="15%"><span class='h3'>							</span></td>
+				    <td width="15%"><span class='h3'>Subject Line<input type="textfield" id="subject" name="subject"></span></td>
 				     <td width="15%"><span class='h3'>   				       </span></td>	
 				    
 						 <td width="10%"><span class='h3'><input type="submit" value="Download" class="buttontext"></span></td>
@@ -380,7 +380,7 @@ function makeDatePicker1(fromDateId ,thruDateId){
 				<form id="LetterOfIndentReport" name="LetterOfIndentReport" mothed="post" action="<@ofbizUrl>LetterOfIndentReport.pdf</@ofbizUrl>" target="_blank">
 				   <table class="basic-table" cellspacing="5">
 					  <tr class="alternate-row">
-					     <td width="20%"><span class='h3'>Letter Of Indent Report</span></td>
+					     <td width="20%"><span class='h3'>Letter Of Intent </span></td>
 						 <td width="25%">
 							 <span class='h3'>PO No.<input type="textfield"  id="orderId"  name="orderId"/></span>   								
 						  </td>
@@ -401,8 +401,8 @@ function makeDatePicker1(fromDateId ,thruDateId){
 							 <span class='h3'>Enquiry No.<input type="textfield"  id="issueToCustReqId"  name="issueToCustReqId"/></span>   	
 							 							
 						  </td>
-						   <td width="15%"><span class='h3'>							</span></td>
-						      <td width="15%"><span class='h3'>   				       </span></td>	
+						   <td width="15%"><span class='h3'>Signature<input type="textfield" id="signature" name="signature"></span></td>
+						   <td width="15%"><span class='h3'>   				       </span></td>	
 						  
 						 <td width="10%"><span class='h3'><input type="submit" value="Download" class="buttontext"></span></td>
 		 		    </tr>
@@ -417,7 +417,7 @@ function makeDatePicker1(fromDateId ,thruDateId){
 						 <td width="25%">
 							 <span class='h3'>Enquiry No.<input type="textfield"  id="issueToCustReqId"  name="issueToCustReqId"/></span>   								
 						  </td>
-						   <td width="15%"><span class='h3'>							</span></td>
+						   <td width="15%"><span class='h3'>Signature<input type="textfield" id="signature" name="signature">							</span></td>
 						      <td width="15%"><span class='h3'>   				       </span></td>	
 						 <td width="10%"><span class='h3'><input type="submit" value="Download" class="buttontext"></span></td>
 		 		    </tr>
@@ -431,6 +431,21 @@ function makeDatePicker1(fromDateId ,thruDateId){
 					     <td width="20%"><span class='h3'>Comparative Statement Report</span></td>
 						 <td width="25%">
 							 <span class='h3'>Enquiry No.<input type="textfield"  id="issueToEnquiryNo"  name="issueToEnquiryNo"/></span>   								
+						  </td>
+						  <td width="15%"><span class='h3'>							</span></td>
+						      <td width="15%"><span class='h3'>   				       </span></td>	
+						 <td width="10%"><span class='h3'><input type="submit" value="Download" class="buttontext"></span></td>
+		 		    </tr>
+				 </table>
+			 </form>
+		  </tr>
+		  <tr class="alternate-row"> 
+				<form id="MaterialIndentReport" name="MaterialIndentReport" mothed="post" action="<@ofbizUrl>MaterialIndentReport.pdf</@ofbizUrl>" target="_blank">
+				   <table class="basic-table" cellspacing="5">
+					  <tr class="alternate-row">
+					     <td width="20%"><span class='h3'>Material Indent Report</span></td>
+						 <td width="25%">
+							 <span class='h3'>Indent No.<input type="textfield"  id="IndentNo"  name="IndentNo"/></span>   								
 						  </td>
 						  <td width="15%"><span class='h3'>							</span></td>
 						      <td width="15%"><span class='h3'>   				       </span></td>	

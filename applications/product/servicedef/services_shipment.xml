@@ -988,5 +988,22 @@ under the License.
         <attribute name="unitCost" type="String" mode="IN" optional="true"/>
         <attribute name="orderCurrencyUnitPrice" type="String" mode="IN" optional="true"/>
     </service>
-    
+      
+     <service name="createShipmentSequence" engine="java"
+        location="org.ofbiz.accounting.util.CustomSequenceServices" invoke="createShipmentSequence">
+        <description>Get the Next Sequence for the given shipmentId(GRN Id) in ShipmentSequence Entity</description>
+        <attribute name="shipmentSequenceTypeId" type="String" mode="IN" optional="true"/>
+        <attribute name="shipmentId" type="String" mode="IN" optional="false"/>
+        <attribute name="estimatedShipDate" type="Timestamp" mode="IN" optional="true"/>
+        <attribute name="sequenceId" type="String" mode="OUT" optional="true"/>
+    </service>
+     <service name="updateOrResetShipmentSequence" engine="java"
+            location="org.ofbiz.accounting.util.CustomSequenceServices" invoke="updateOrResetShipmentSequence" auth="true"  transaction-timeout="10200">
+        <description>Update or Reset ShipmentSequence(MRN sequence) Entity</description>  
+         <attribute name="fromDate" type="Date" mode="IN"  optional="true"/> 
+         <attribute name="thruDate" type="Date" mode="IN" optional="true"/>  
+          <!--  <attribute name="shipmentId" type="String" mode="IN" optional="true"/>  --> 
+         <attribute name="shipmentSequenceTypeId" type="String" mode="IN" optional="true"/>
+         <attribute name="shipmentTypeId" type="String" default-value="MATERIAL_SHIPMENT" mode="IN" optional="false"/>
+    </service> 
 </services>

@@ -130,7 +130,8 @@ under the License.
             <calculate field="totalsMap[receipt.orderItemSeqId]">
                 <calcop field="totalsMap[receipt.orderItemSeqId]" operator="add">
                     <calcop field="receipt.quantityAccepted" operator="get"/>
-                    <calcop field="receipt.quantityRejected" operator="get"/>
+                    <!-- Don't consider rejected Quantity -->
+                   <!--  <calcop field="receipt.quantityRejected" operator="get"/> -->
                 </calcop>
             </calculate>
             <set from-field="receipt.orderId" field="newLookupMap.orderId"/>

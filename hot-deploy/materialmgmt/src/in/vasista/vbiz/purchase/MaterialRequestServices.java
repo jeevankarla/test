@@ -61,10 +61,10 @@ public class MaterialRequestServices {
 	public static final BigDecimal ZERO_BASE = BigDecimal.ZERO;
 	public static final BigDecimal ONE_BASE = BigDecimal.ONE;
 	public static final BigDecimal PERCENT_SCALE = new BigDecimal("100.000");
-	public static int salestaxFinalDecimals = UtilNumber.getBigDecimalScale("salestax.final.decimals");
-	public static int salestaxCalcDecimals = 2;//UtilNumber.getBigDecimalScale("salestax.calc.decimals");
+	public static int purchaseTaxFinalDecimals = UtilNumber.getBigDecimalScale("purchaseTax.final.decimals");
+	public static int purchaseTaxCalcDecimals = UtilNumber.getBigDecimalScale("purchaseTax.calc.decimals");
 	
-	public static int salestaxRounding = UtilNumber.getBigDecimalRoundingMode("salestax.rounding");
+	public static int purchaseTaxRounding = UtilNumber.getBigDecimalRoundingMode("purchaseTax.rounding");
 	
 
 	public static String processCustRequestItems(HttpServletRequest request, HttpServletResponse response) {
@@ -124,8 +124,13 @@ public class MaterialRequestServices {
 		boolean beganTransaction = false;
 		try{
 			beganTransaction = TransactionUtil.begin(7200);
-			
-			GenericValue party = delegator.findOne("PartyRole", UtilMisc.toMap("partyId", partyId, "roleTypeId", "INTERNAL_ORGANIZATIO"), false);
+			String roleTypeId = null;
+			if(partyId.contains("SUB")){
+				roleTypeId = "DIVISION";
+			}else{
+				roleTypeId = "INTERNAL_ORGANIZATIO";
+			}
+			GenericValue party = delegator.findOne("PartyRole", UtilMisc.toMap("partyId", partyId, "roleTypeId", roleTypeId), false);
 			if(UtilValidate.isEmpty(party)){
 				Debug.logError("Request can only made by departments", module);
 				request.setAttribute("_ERROR_MESSAGE_", "Request can only made by departments");
@@ -1359,5 +1364,56 @@ public class MaterialRequestServices {
 	        }
 	        return result;
 	    }
-	 
+	 public static Map<String, Object> cancelEnquiry(DispatchContext ctx,Map<String, ? extends Object> context) {
+			Delegator delegator = ctx.getDelegator();
+			LocalDispatcher dispatcher = ctx.getDispatcher();
+			String statusId = (String) context.get("statusId");
+			String custRequestId = (String) context.get("custRequestId");
+			GenericValue userLogin = (GenericValue) context.get("userLogin");
+			Map result = ServiceUtil.returnSuccess("Enquiry Successfully Rejected");
+			try{
+				GenericValue requirement= null;
+				String requirementId="";
+				List<GenericValue> requirementCustRequest = delegator.findList("RequirementCustRequest", EntityCondition.makeCondition("custRequestId", EntityOperator.EQUALS, custRequestId), null, null, null, false);
+				if(UtilValidate.isNotEmpty(requirementCustRequest)){
+					for(GenericValue reqCustRequest : requirementCustRequest){
+						requirementId = reqCustRequest.getString("requirementId");
+						requirement = delegator.findOne("Requirement", UtilMisc.toMap("requirementId", requirementId), false);
+						requirement.set("statusId", "REQ_APPROVED");
+						requirement.store();
+					}
+				}
+				
+				Map statusCtx = FastMap.newInstance();
+				statusCtx.put("statusId", statusId);
+				statusCtx.put("custRequestId", custRequestId);
+				statusCtx.put("userLogin", userLogin);
+				Map resultCtx = dispatcher.runSync("setCustRequestStatus", statusCtx);
+				if (ServiceUtil.isError(resultCtx)) {
+					Debug.logError("Request set status failed for RequestId: " + custRequestId, module);
+					return resultCtx;
+				}
+				
+				List<GenericValue> custRequestItems = delegator.findList("CustRequestItem", EntityCondition.makeCondition("custRequestId", EntityOperator.EQUALS, custRequestId), null, null, null, false);
+				for(GenericValue custReq : custRequestItems){
+					statusCtx.clear();
+					statusCtx.put("statusId", statusId);
+					statusCtx.put("custRequestId", custRequestId);
+					statusCtx.put("custRequestItemSeqId", custReq.getString("custRequestItemSeqId"));
+					statusCtx.put("userLogin", userLogin);
+					statusCtx.put("description", "");
+					resultCtx = dispatcher.runSync("setCustRequestItemStatus", statusCtx);
+					if (ServiceUtil.isError(resultCtx)) {
+						Debug.logError("RequestItem set status failed for Request: " + custRequestId+" : "+custReq.getString("custRequestItemSeqId"), module);
+						return resultCtx;
+					}
+				}
+				
+			} catch (Exception e) {
+				// TODO: handle exception
+				Debug.logError(e, module);
+				return ServiceUtil.returnError(e.getMessage());
+			}
+			return result;
+		}
 }
