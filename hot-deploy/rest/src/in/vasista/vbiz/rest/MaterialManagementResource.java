@@ -82,8 +82,22 @@ public class MaterialManagementResource {
             Map productMap = FastMap.newInstance();
     		productMap.put("id",(String)product.get("productId"));             
     		productMap.put("name",(String)product.get("internalName")); 
-    		productMap.put("description",(String)product.get("description"));                		
-    		productMap.put("productCategoryId",(String)product.get("primaryProductCategoryId"));  
+    		productMap.put("description",(String)product.get("description")); 
+    		
+    		String productCategoryId = (String)product.get("primaryProductCategoryId"); 
+    		if (UtilValidate.isNotEmpty(productCategoryId)) {
+    	        try{
+    	        	GenericValue productCategory = delegator.findOne("ProductCategory", UtilMisc.toMap("productCategoryId", productCategoryId), true);
+    	        	if (UtilValidate.isNotEmpty(productCategory) && 
+    	        			UtilValidate.isNotEmpty(productCategory.getString("description"))) {
+    	        		productCategoryId = productCategory.getString("description");
+    	        	}
+    	        }catch(GenericEntityException e){
+    	        	Debug.logError("Error while getting product category"+e,MaterialManagementResource.class.getName());
+    	        }
+    		}
+    		productMap.put("productCategoryId",productCategoryId); 
+
     		productMap.put("trackInventory","true");                		    		
 		    resultList.add(productMap);	
     	}
@@ -148,6 +162,16 @@ public class MaterialManagementResource {
         	result.put("productId", productId);				
         	result.put("name", productDetails.getString("internalName"));	
         	result.put("description", productDetails.getString("description"));	
+    		String productCategoryId = productDetails.getString("primaryProductCategoryId"); 
+    		if (UtilValidate.isNotEmpty(productCategoryId)) {
+    			GenericValue productCategory = delegator.findOne("ProductCategory", UtilMisc.toMap("productCategoryId", productCategoryId), true);
+    	        if (UtilValidate.isNotEmpty(productCategory) && 
+    	        	UtilValidate.isNotEmpty(productCategory.getString("description"))) {
+    	        	productCategoryId = productCategory.getString("description");
+    	        }
+    		}
+        	result.put("categoryId", productCategoryId);  
+
         	String uom = "";
         	GenericValue uomDetails = delegator.findOne("Uom",UtilMisc.toMap("uomId", productDetails.getString("quantityUomId")),false);
         	if (UtilValidate.isNotEmpty(uomDetails)) {
