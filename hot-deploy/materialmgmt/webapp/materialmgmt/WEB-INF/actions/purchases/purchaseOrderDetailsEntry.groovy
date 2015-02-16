@@ -84,7 +84,7 @@ if(orderId){
 		}
 		productDetails = delegator.findOne("Product", UtilMisc.toMap("productId", eachItem.productId), false);
 		if(UtilValidate.isNotEmpty(productDetails)){
-			newObj.put("cProductName",productDetails.brandName +" [ " +productDetails.description+"]");
+			newObj.put("cProductName","("+productDetails.productId +") "+productDetails.description+" - "+productDetails.internalName);
 		}else{
 		newObj.put("cProductName",eachItem.itemDescription +" [ "+eachItem.productId+"]");
 		}
@@ -115,10 +115,10 @@ if(orderId){
 	prodList.each{eachItem ->
 		JSONObject newObj = new JSONObject();
 		newObj.put("value",eachItem.productId);
-		newObj.put("label",eachItem.brandName +" [ " +eachItem.description+"]");
+		newObj.put("label",eachItem.internalName +" [ " +eachItem.description+"]");
 		productItemsJSON.add(newObj);
-		productIdLabelJSON.put(eachItem.productId, eachItem.brandName+" [ "+eachItem.description +"]");
-		productLabelIdJSON.put(eachItem.brandName+" [ "+eachItem.description+"]", eachItem.productId);
+		productIdLabelJSON.put(eachItem.productId, eachItem.internalName+" [ "+eachItem.description +"]");
+		productLabelIdJSON.put(eachItem.internalName+" [ "+eachItem.description+"]", eachItem.productId);
 	}
 	
 	
