@@ -1,6 +1,5 @@
 package in.vasista.vbiz.rest;
 
-
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
@@ -13,6 +12,7 @@ import javolution.util.FastList;
 import javolution.util.FastMap;
 import java.math.BigDecimal;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import org.ofbiz.base.util.Debug;
@@ -29,6 +29,7 @@ import org.ofbiz.service.GenericDispatcher;
 import org.ofbiz.service.GenericServiceException;
 import org.ofbiz.service.LocalDispatcher;
 import org.ofbiz.service.ServiceUtil;
+import org.ofbiz.security.Security;
 import org.ofbiz.party.party.PartyHelper;
 import org.ofbiz.product.inventory.InventoryServices;
 import in.vasista.vbiz.purchase.MaterialHelperServices;
@@ -66,7 +67,22 @@ public class MaterialManagementResource {
         String tenantDelegatorName =  "default#" + tenantId;
         GenericDelegator delegator = (GenericDelegator) DelegatorFactory.getDelegator(tenantDelegatorName);
         LocalDispatcher dispatcher = GenericDispatcher.getLocalDispatcher(tenantDelegatorName,delegator);
- 
+
+  		GenericValue userLogin = null;
+  		try{
+  	    	userLogin = delegator.findOne("UserLogin",UtilMisc.toMap("userLoginId",username), false);
+  		}catch(GenericEntityException e){
+  			Debug.logWarning("Error fetching userLogin " +username + " " +  e.getMessage(), MaterialManagementResource.class.getName());
+			return result;	   
+  		}        
+
+        Security security = dispatcher.getDispatchContext().getSecurity();
+        // security check
+        if (!security.hasEntityPermission("MOB_INVENTORY", "_VIEW", userLogin)) {
+            Debug.logWarning("**** Security [" + (new Date()).toString() + "]: " + userLogin.get("userLoginId") + " attempt to view inventory!", MaterialManagementResource.class.getName());
+            return result;
+        }
+        
         Map<String, String> paramMap = UtilMisc.toMap(
         		"login.username", username,
                 "login.password", password,
@@ -131,27 +147,41 @@ public class MaterialManagementResource {
         	result = ServiceUtil.returnError("UserName or Password or tenantId is empty");
             return result;        
         }
+               
+        String tenantDelegatorName =  "default#" + tenantId;
+        GenericDelegator delegator = (GenericDelegator) DelegatorFactory.getDelegator(tenantDelegatorName);
+        LocalDispatcher dispatcher = GenericDispatcher.getLocalDispatcher(tenantDelegatorName,delegator);
+
+  		GenericValue userLogin = null;
+  		try{
+  	    	userLogin = delegator.findOne("UserLogin",UtilMisc.toMap("userLoginId",username), false);
+  		}catch(GenericEntityException e){
+  			Debug.logWarning("Error fetching userLogin " +username + " " +  e.getMessage(), MaterialManagementResource.class.getName());
+			return result;	   
+  		}        
+
+        Security security = dispatcher.getDispatchContext().getSecurity();
+        // security check
+        if (!security.hasEntityPermission("MOB_INVENTORY", "_VIEW", userLogin)) {
+            Debug.logWarning("**** Security [" + (new Date()).toString() + "]: " + userLogin.get("userLoginId") + " attempt to view inventory!", MaterialManagementResource.class.getName());
+            return result;
+        }
+        
         if (productId == null || UtilValidate.isEmpty(productId)) {
             Debug.logError("Empty product Id ", MaterialManagementResource.class.getName());        	
         	//::TODO:: error handling
         	result = ServiceUtil.returnError("Product Id is empty");
             return result;        
-        }        
-        String tenantDelegatorName =  "default#" + tenantId;
-        GenericDelegator delegator = (GenericDelegator) DelegatorFactory.getDelegator(tenantDelegatorName);
-        LocalDispatcher dispatcher = GenericDispatcher.getLocalDispatcher(tenantDelegatorName,delegator);
- 
+        }         
+        
         Map<String, String> paramMap = UtilMisc.toMap(
         		"login.username", username,
                 "login.password", password,
                 "tenantId", tenantId
             );
  
-        GenericValue userLogin = null;
 		GenericValue productDetails = null;
         try{
-        	userLogin = delegator.findOne("UserLogin",UtilMisc.toMap("userLoginId",username), false);
-
         	productDetails = delegator.findOne("Product",UtilMisc.toMap("productId", productId),false);
         	if(UtilValidate.isEmpty(productDetails)){
         		Debug.logError("Product Id does not exist " + productId, MaterialManagementResource.class.getName());        	
