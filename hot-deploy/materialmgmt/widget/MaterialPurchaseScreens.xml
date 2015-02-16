@@ -120,7 +120,6 @@
                <set field="parameters.salesChannelEnumId"  value="MATERIAL_PUR_CHANNEL"></set> 
                
             <script location="component://materialmgmt/webapp/materialmgmt/WEB-INF/actions/purchases/POSearchFilter.groovy"/>
-                 
             </actions>
             <widgets>
                  <decorator-screen name="materialmgmtNgCommonDecorator" location="${parameters.mainDecoratorLocation}">
@@ -159,9 +158,18 @@
                 <set field="titleProperty" value="Find GRN Items"/>              
 			    <set field="tabButtonItem" value="FindGRNReceipts" />
 			    <set field="tabButtonItem2" value="FindGRNReceipts" />	
-               <set field="viewSize" from-field="parameters.VIEW_SIZE"/>
+			    <set field="viewIndex" from-field="parameters.VIEW_INDEX" type="Integer"/>
+                <set field="viewSize" from-field="parameters.VIEW_SIZE" type="Integer" default-value="20"/>
                <set field="targetRequest" value="FindGRNReceipts"/>
+             <service service-name="performFind" result-map="result" result-map-list="listIt">
+                <field-map field-name="inputFields" from-field="parameters"/>
+                <field-map field-name="entityName" value="ShipmentReceipt"/>
+                <field-map field-name="orderBy"  value="-receiptId"/>
+                <field-map field-name="viewIndex" from-field="viewIndex"/>
+                <field-map field-name="viewSize" from-field="viewSize"/>
+            </service>
                <script location="component://materialmgmt/webapp/materialmgmt/WEB-INF/actions/purchases/purchaseDepartments.groovy"/>
+               <script location="component://materialmgmt/webapp/materialmgmt/WEB-INF/actions/purchases/SupplyTillDate.groovy"/>
             </actions>
             <widgets>
                  <decorator-screen name="materialmgmtNgCommonDecorator" location="${parameters.mainDecoratorLocation}">
@@ -196,9 +204,10 @@
         <section>
             <actions>
                 <set field="titleProperty" value="Find GRN Shipments"/>              
-			    <set field="tabButtonItem" value="FindGRNReceipts" />
+			    <set field="tabButtonItem" value="FindGRNShipments" />
 			    <set field="tabButtonItem2" value="FindGRNShipments" />	
-               <set field="viewSize" from-field="parameters.VIEW_SIZE"/>
+               <set field="viewIndex" from-field="parameters.VIEW_INDEX" type="Integer"/>
+                <set field="viewSize" from-field="parameters.VIEW_SIZE" type="Integer" default-value="20"/>
                <set field="targetRequest" value="FindGRNShipments"/>
                <set field="noConditionFind" value="Y"/>
               <!--  <script location="component://materialmgmt/webapp/materialmgmt/WEB-INF/actions/purchases/findOrderWithOutShipment.groovy"/> -->
