@@ -607,7 +607,12 @@ employementList.each{employment->
 				tempMap.put("partyId",employment.partyId);
 				panId=employment.panId;
 				if(UtilValidate.isEmpty(panId)){
-					panId="";
+					panNo = delegator.findOne("PartyIdentification",UtilMisc.toMap("partyId", employment.partyId, "partyIdentificationTypeId", "PAN_NUMBER"), false);
+					if(UtilValidate.isNotEmpty(panNo)){
+						panId = panNo.get("idValue");
+					}else{
+						panId = "-----";
+					}
 				}
 				tempMap.put("panId",panId);
 				incomeTax = periodTotals.get("PAYROL_DD_INC_TAX");

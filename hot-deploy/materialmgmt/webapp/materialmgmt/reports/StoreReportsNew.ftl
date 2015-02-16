@@ -99,7 +99,7 @@ function makeDatePicker1(fromDateId ,thruDateId){
 		makeDatePicker("fromDateStock","thruDateStock");
 		makeDatePicker("fromDateArc","thruDateArc");
 	    makeDatePicker("fromDatependingPOs","thruDatependingPOs");
-		makeDatePicker("stockDate","stockDate");
+		makeDatePicker("stockDate");
 		
 		$('#ui-datepicker-div').css('clip', 'auto');		
 	});
