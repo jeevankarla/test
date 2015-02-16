@@ -201,21 +201,21 @@ ${setRequestAttribute("OUTPUT_FILENAME", "arcOrder.pdf")}
                           <fo:table-row>
 		                  	 <fo:table-cell  ><fo:block text-align="left" font-size="12pt"  >Basic Excise Duty On Purchase</fo:block></fo:table-cell>
 							 <fo:table-cell  ><fo:block text-align="left" font-size="12pt"  >: 12.36%  </fo:block></fo:table-cell>
-							<fo:table-cell  ><fo:block text-align="left" font-size="12pt"  >-- ${Amount} INR </fo:block></fo:table-cell>
+							<fo:table-cell  ><fo:block text-align="left" font-size="12pt"  >-- ${Amount?if_exists} INR </fo:block></fo:table-cell>
                           </fo:table-row>
                           </#if>
 							<#if vatAmount gt 0>
                             <fo:table-row>
 		                  	 <fo:table-cell  ><fo:block text-align="left" font-size="12pt"  >Value Added Tax On Purchase</fo:block></fo:table-cell>
-							 <fo:table-cell  ><fo:block text-align="left" font-size="12pt"  >:  <#list vatpercents as vat>${vat}%,</#list></fo:block></fo:table-cell>
-							<fo:table-cell  ><fo:block text-align="left" font-size="12pt"  >-- ${vatAmount} INR </fo:block></fo:table-cell>
+							 <fo:table-cell  ><fo:block text-align="left" font-size="12pt"  >:  <#list vatpercents as vat>${vat?if_exists?}%,</#list></fo:block></fo:table-cell>
+							<fo:table-cell  ><fo:block text-align="left" font-size="12pt"  >-- ${vatAmount?if_exists} INR </fo:block></fo:table-cell>
                           </fo:table-row>
 							</#if>
                           <#if cstAmount gt 0>
                             <fo:table-row>
 		                  	 <fo:table-cell  ><fo:block text-align="left" font-size="12pt"  >Central Sales Tax On Purchase</fo:block></fo:table-cell>
-							 <fo:table-cell  ><fo:block text-align="left" font-size="12pt"  >:  <#list cstpercents as cst>${cst}%</#list></fo:block></fo:table-cell>
-							<fo:table-cell  ><fo:block text-align="left" font-size="12pt"  >-- ${cstAmount} INR </fo:block></fo:table-cell>
+							 <fo:table-cell  ><fo:block text-align="left" font-size="12pt"  >:  <#list cstpercents as cst>${cst?if_exists}%</#list></fo:block></fo:table-cell>
+							<fo:table-cell  ><fo:block text-align="left" font-size="12pt"  >-- ${cstAmount?if_exists} INR </fo:block></fo:table-cell>
                           </fo:table-row>
 							</#if>
 						</#if>i
