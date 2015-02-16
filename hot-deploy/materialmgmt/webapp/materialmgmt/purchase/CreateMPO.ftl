@@ -60,6 +60,9 @@ function makeDatePicker(fromDateId ,thruDateId){
                 transitionEffect: "slideLeft",
                 onStepChanging: function (event, currentIndex, newIndex)
                 {	
+                		if(currentIndex==1 && newIndex==0){
+                			newGrid();
+                		}
                 	if(currentIndex == 0 && newIndex == 1){
                 		var supplierId = $("#supplierId").val();
                 		
@@ -70,7 +73,7 @@ function makeDatePicker(fromDateId ,thruDateId){
 					       	}, 800);
 					    	return false;
 				    	}
-					      //alert("==supplierId="+supplierId);
+					    //  alert("==supplierId="+supplierId);
 					    //populate SlickGrid starts here
 						 if(supplierId){
 						    gridShowCall();
@@ -103,6 +106,7 @@ function makeDatePicker(fromDateId ,thruDateId){
 				    	}
     	 		      //populate SlickGrid ends here
                 		return true;
+                		
                 	}
                 	if(currentIndex == 1 && newIndex == 2){
                 	     
@@ -118,15 +122,18 @@ function makeDatePicker(fromDateId ,thruDateId){
 					    	
 						    
                 		return true;
+                		
                 	}
                 	if(currentIndex == 2 && newIndex == 3){
                 	
                 		return true;
+                		
                 	}
                 	
                 	if(currentIndex == 3 && newIndex == 4){
                 		
                 		return true;
+                		
                 		
                 	}
                 	return true;

@@ -291,6 +291,11 @@ if(UtilValidate.isNotEmpty(orderDetails)){
 				faxNumber = partyFaxNumber.contactNumber;
 			}
 			allDetailsMap.put("faxNumber", faxNumber);
+			formPartyTinNumber=delegator.findOne("PartyIdentification",[partyId:fromPartyId,partyIdentificationTypeId:"TIN_NUMBER"],false);
+			if(formPartyTinNumber){
+				fromPartyTinNo=formPartyTinNumber.idValue;
+				context.fromPartyTinNo=fromPartyTinNo;
+			}
  }
 	   
 
