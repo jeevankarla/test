@@ -1,0 +1,4 @@
+ <PaymentMethodType description="Axis Bank - Cash Deposit Machine(CDM)" parentTypeId="MONEY" paymentMethodTypeId="AXISCDM_PAYIN"/>
+ 
+ 
+ 
