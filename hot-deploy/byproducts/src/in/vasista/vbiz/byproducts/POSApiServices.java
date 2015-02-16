@@ -75,6 +75,9 @@ public class POSApiServices {
         if (security.hasEntityPermission("MOB_HR_DB", "_VIEW", userLogin)) {
         	permissionList.add("MOB_HR_DB_VIEW");
         }   
+        if (security.hasEntityPermission("MOB_INVENTORY_DB", "_VIEW", userLogin)) {
+        	permissionList.add("MOB_INVENTORY_DB_VIEW");
+        } 
         
 		Map result = FastMap.newInstance();  	
 		Map permissions = FastMap.newInstance();

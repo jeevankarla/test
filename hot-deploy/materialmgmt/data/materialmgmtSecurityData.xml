@@ -14,8 +14,14 @@
     <SecurityGroupPermission groupId="VIEWADMIN" permissionId="materialmgmt_VIEW"/>
     <SecurityGroupPermission groupId="BIZADMIN" permissionId="materialmgmt_ADMIN"/>
     
-    
-    
+    <SecurityPermission description="Mobile inventory view Permission." permissionId="MOB_INVENTORY_VIEW"/>
+    <SecurityPermission description="Mobile inventory dashboard permission." permissionId="MOB_INVENTORY_DB_VIEW"/>
+        
+    <SecurityGroup description="Mobile inventory" groupId="MOB_INVENTORY"/>
+    <SecurityGroupPermission groupId="MOB_INVENTORY" permissionId="MOB_INVENTORY_VIEW"/>  
+    <SecurityGroupPermission groupId="MOB_INVENTORY" permissionId="MOB_INVENTORY_DB_VIEW"/>
+
+        
     <SecurityGroup description="Material Management admin group for Purchase And Stores !" groupId="MATERIALMNG_ADMIN"/>
     <SecurityGroupPermission groupId="MATERIALMNG_ADMIN"  permissionId="materialmgmt_ADMIN"/>
    
