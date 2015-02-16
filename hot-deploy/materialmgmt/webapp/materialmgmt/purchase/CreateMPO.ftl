@@ -188,7 +188,7 @@ function makeDatePicker(fromDateId ,thruDateId){
 			$(poNumberObj).parent().parent().show();
 			$(quoteNumObj).parent().parent().show();
 			$(quoteDateObj).parent().parent().show();
-			$(billToPartyIdObj).parent().parent().show();
+			$(billToPartyIdObj).parent().parent().parent().show();
 		}
 		else{
 			$(poNumberObj).parent().parent().hide();

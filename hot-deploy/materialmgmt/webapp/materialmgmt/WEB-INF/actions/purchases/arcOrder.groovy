@@ -42,6 +42,12 @@ allDetailsMap.put("subject",subject);
 allDetailsMap["total"]=BigDecimal.ZERO;
 
 orderDetails = delegator.findList("OrderItem",EntityCondition.makeCondition("orderId", EntityOperator.EQUALS , orderId)  , null, null, null, false );
+
+vatpercents=EntityUtil.getFieldListFromEntityList(orderDetails, "vatPercent", true);
+cstpercents=EntityUtil.getFieldListFromEntityList(orderDetails, "cstPercent", true);
+context.cstpercents=cstpercents;
+context.vatpercents=vatpercents;
+
 productIds=orderDetails.productId;
 productCategories = delegator.findList("ProductCategoryAndMember",EntityCondition.makeCondition("productId", EntityOperator.IN, productIds) , null, null, null, false );
 //productCategory = EntityUtil.getFieldListFromEntityList(productCategories, "productCategoryId", true);
@@ -103,34 +109,28 @@ if(UtilValidate.isNotEmpty(orderDetails)){
 	}
 }
 
-// partyId,partyName
-if(UtilValidate.isNotEmpty(orderId)){
-	List conlist=[];
-	conlist.add(EntityCondition.makeCondition("orderId", EntityOperator.EQUALS, orderId));
-	conlist.add(EntityCondition.makeCondition("roleTypeId", EntityOperator.EQUALS,"SUPPLIER_AGENT"));
-	cond=EntityCondition.makeCondition(conlist,EntityOperator.AND);
-	vendorDetails = delegator.findList("OrderRole", cond , null, null, null, false );
-	vendorDetail=EntityUtil.getFirst(vendorDetails);
-	if(UtilValidate.isNotEmpty(vendorDetail)){
-	partyId=vendorDetail.partyId;
-	allDetailsMap.put("partyId",partyId);
-		partyName =  PartyHelper.getPartyName(delegator, partyId, false);
-		allDetailsMap.put("partyName",partyName);
-	  }
-	}
-// party Address
+
+// partyId,partyName ,party Address
 List conlist=[];
 conlist.add(EntityCondition.makeCondition("orderId", EntityOperator.EQUALS, orderId));
 conlist.add(EntityCondition.makeCondition("roleTypeId", EntityOperator.EQUALS,"SUPPLIER_AGENT"));
 cond=EntityCondition.makeCondition(conlist,EntityOperator.AND);
 vendorDetails = delegator.findList("OrderRole", cond , null, null, null, false );
 vendorDetail=EntityUtil.getFirst(vendorDetails);
-fromPartyId="";
+partyId="";
 if(UtilValidate.isNotEmpty(vendorDetail)){
-fromPartyId=vendorDetail.partyId;
+partyId=vendorDetail.partyId;
 }
-   if(UtilValidate.isNotEmpty(fromPartyId)){
-	 partyPostalAddress= dispatcher.runSync("getPartyPostalAddress", [partyId:fromPartyId, userLogin: userLogin]);
+   if(UtilValidate.isNotEmpty(partyId)){
+	   
+	   allDetailsMap.put("partyId",partyId);
+	   partyName =  PartyHelper.getPartyName(delegator, partyId, false);
+	   if(UtilValidate.isNotEmpty(partyName)){
+		   
+	   allDetailsMap.put("partyName",partyName);
+	 }
+	   
+	 partyPostalAddress= dispatcher.runSync("getPartyPostalAddress", [partyId:partyId, userLogin: userLogin]);
 	   address1="";address2="";city="";postalCode="";
 		if (partyPostalAddress != null && UtilValidate.isNotEmpty(partyPostalAddress)) {
 		   if(partyPostalAddress.address1){
@@ -151,14 +151,14 @@ fromPartyId=vendorDetail.partyId;
 			}
 		 }
 		
-		partyTelephone= dispatcher.runSync("getPartyTelephone", [partyId: fromPartyId, userLogin: userLogin]);
+		partyTelephone= dispatcher.runSync("getPartyTelephone", [partyId: partyId, userLogin: userLogin]);
 		phoneNumber = "";
 		if (partyTelephone != null && partyTelephone.contactNumber != null) {
 			phoneNumber = partyTelephone.contactNumber;
 		}
 		allDetailsMap.put("phoneNumber", phoneNumber);
 		
-		partyEmail= dispatcher.runSync("getPartyEmail", [partyId: fromPartyId, userLogin: userLogin]);
+		partyEmail= dispatcher.runSync("getPartyEmail", [partyId: partyId, userLogin: userLogin]);
 		emailAddress="";
 		if (partyEmail != null && partyEmail.emailAddress != null) {
 			emailAddress = partyEmail.emailAddress;
@@ -326,11 +326,3 @@ context.Amount=bedAmount;
 context.vatAmount=vatAmount;
 context.cstAmount=cstAmount;
 context.listSize=listSize;
-
-
-
-
-
-
-
-

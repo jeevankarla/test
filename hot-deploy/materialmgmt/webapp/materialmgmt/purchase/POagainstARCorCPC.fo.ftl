@@ -73,9 +73,9 @@ ${setRequestAttribute("OUTPUT_FILENAME", "arcOrder.pdf")}
 				                     <fo:table-cell border-style="solid"><fo:block text-align="center"  font-weight="bold" >Material Name</fo:block></fo:table-cell>
 				                      <fo:table-cell border-style="solid"><fo:block text-align="center"  font-weight="bold"  >Material Code</fo:block></fo:table-cell>       		
 				                      <fo:table-cell border-style="solid"><fo:block text-align="center"  font-weight="bold" >ARC/CPC Quantity</fo:block></fo:table-cell>       		
-				                      <fo:table-cell border-style="solid"><fo:block text-align="center" font-weight="bold">Quntity</fo:block></fo:table-cell> 				                    
+				                      <fo:table-cell border-style="solid"><fo:block text-align="center" font-weight="bold">Quantity</fo:block></fo:table-cell> 				                    
                                      <fo:table-cell border-style="solid"><fo:block text-align="center"  font-weight="bold"  >Supplied Qty</fo:block></fo:table-cell>
-				                      <fo:table-cell border-style="solid"><fo:block text-align="center" font-weight="bold">Balance Quntity</fo:block></fo:table-cell>  
+				                      <fo:table-cell border-style="solid"><fo:block text-align="center" font-weight="bold">Balance Quantity</fo:block></fo:table-cell>  
 				                      <fo:table-cell border-style="solid"><fo:block text-align="center"  font-weight="bold"  >ARC/CPC Bal Qty</fo:block></fo:table-cell>       		
 				                        </fo:table-row>
 				                     
@@ -135,9 +135,9 @@ ${setRequestAttribute("OUTPUT_FILENAME", "arcOrder.pdf")}
 				                     <fo:table-row border-style="solid">
 				                      <fo:table-cell border-style="solid"><fo:block text-align="center" font-weight="bold">PO NO </fo:block></fo:table-cell> 				                    
                                      <fo:table-cell border-style="solid"><fo:block text-align="center"  font-weight="bold"  >Product Id</fo:block></fo:table-cell>
-				                      <fo:table-cell border-style="solid"><fo:block text-align="center" font-weight="bold"> Quntity</fo:block></fo:table-cell>  
+				                      <fo:table-cell border-style="solid"><fo:block text-align="center" font-weight="bold"> Quantity</fo:block></fo:table-cell>  
 				                      <fo:table-cell border-style="solid"><fo:block text-align="center"  font-weight="bold"  >Supplied Quantity</fo:block></fo:table-cell>       		
-				                      <fo:table-cell border-style="solid"><fo:block text-align="center"  font-weight="bold"  >Balance Quntity</fo:block></fo:table-cell>       		
+				                      <fo:table-cell border-style="solid"><fo:block text-align="center"  font-weight="bold"  >Balance Quantity</fo:block></fo:table-cell>       		
 				                        </fo:table-row>
 				                     
 			                	</fo:table-body>
