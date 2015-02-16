@@ -30,9 +30,7 @@ under the License.
 		</fo:layout-master-set>
 		${setRequestAttribute("OUTPUT_FILENAME", "LeaveAvailedReport.txt")}
 		<#if finalMap?has_content>
-		<#assign finalLists=finalMap.entrySet()>
-		<#list finalLists as employee>
-		<#assign leaveTypeId=employee.getKey()>
+		
 		<fo:page-sequence master-reference="main">
 			<fo:static-content font-size="13.5pt" font-family="Courier,monospace"  flow-name="xsl-region-before" font-weight="bold">
 				<fo:block text-align="center" white-space-collapse="false">&#160;   MOTHER DAIRY A UNIT OF K.M.F						          													</fo:block>
@@ -45,7 +43,7 @@ under the License.
 				 <fo:block text-align="center" keep-together="always" white-space-collapse="false">The following officers/officials are sanctioned leave for the period mentioned against their names.</fo:block>
 				 <fo:block linefeed-treatment="preserve">&#xA;</fo:block>
 				 <fo:block text-align="left" keep-together="always" white-space-collapse="false" >&#160;                                        <fo:inline  text-decoration="underline">${orgName?upper_case}</fo:inline></fo:block>
-				 <fo:block text-align="left" keep-together="always" white-space-collapse="false">&#160;                                          Leave Code	:${leaveTypeId}</fo:block>
+				 <fo:block text-align="left" keep-together="always" white-space-collapse="false">&#160;                                          Leave Code	:${parameters.leaveTypeId}</fo:block>
 				 <fo:block linefeed-treatment="preserve">&#xA;</fo:block>
 				 <fo:block text-align="left" keep-together="always" white-space-collapse="false">&#160;From Date	:${fromlarDate}			To Date	:${thrularDate}</fo:block>
 				 <fo:block text-align="left" keep-together="always"  >&#160;----------------------------------------------------------------------------------------------------</fo:block>
@@ -97,9 +95,14 @@ under the License.
 				  </fo:block>
 			</fo:static-content>
 			<fo:flow flow-name="xsl-region-body" font-family="Courier,monospace">
+			<#assign sno=1>
+			<#assign finalLists=finalMap.entrySet()>
+				<#list finalLists as employee>
+					<#assign leaveTypeId=employee.getKey()>
+			
 				 <fo:block font-family="Courier,monospace"  font-size="14pt">
 				 <#assign employees=employee.getValue()>
-				 <#assign sno=1>
+				 
 				 <#list employees as emp>
 				<fo:table >
 					 <fo:table-column column-width="30pt"/>
@@ -143,12 +146,14 @@ under the License.
 					<fo:table-row>
                     <fo:table-cell><fo:block linefeed-treatment="preserve">&#xA;</fo:block></fo:table-cell>
                     </fo:table-row>
-					<#assign sno=sno+1>
 					</fo:table-body>
 				   </fo:table>
+				   <#assign sno=sno+1>
+				   </#list>
+				   </fo:block>
 				   </#list>
 				   <fo:block text-align="left" keep-together="always"  >&#160;------------------------------------------------------------------------------------------------</fo:block>
-				   </fo:block>
+				   
 				   <fo:block font-family="Courier,monospace"  font-size="14pt">
                 	<fo:table >
                      	<fo:table-column column-width="100pt"/>
@@ -209,7 +214,7 @@ under the License.
                  </fo:block>
 					 </fo:flow>
 		</fo:page-sequence>
-		</#list>
+		
 		<#else>
 				<fo:page-sequence master-reference="main">
 	    			<fo:flow flow-name="xsl-region-body" font-family="Courier,monospace">

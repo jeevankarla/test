@@ -70,13 +70,12 @@ ${setRequestAttribute("OUTPUT_FILENAME", "arcOrder.pdf")}
 			                	</fo:table-body>
 			                		</fo:table>
 			        	  </fo:block>	
-			        	<fo:block  keep-together="always" text-align="left" font-family="Courier,monospace" white-space-collapse="false" font-size="12pt" >PO Seq No :${allDetailsMap.get("sequenceId")?if_exists}</fo:block>
-			        	  
-        <#--    	<fo:block  keep-together="always" text-align="left" font-family="Courier,monospace" white-space-collapse="false" font-size="12pt" >    Ref No: ${allDetailsMap.get("refNo")?if_exists}                                                   DATE: ${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(nowTimestamp, "dd-MMM-yy")}  </fo:block> -->
+		    <#--<fo:block  keep-together="always" text-align="left" font-family="Courier,monospace" white-space-collapse="false" font-size="12pt" >PO Seq No :${allDetailsMap.get("sequenceId")?if_exists}</fo:block>		        	  
+         	    <fo:block  keep-together="always" text-align="left" font-family="Courier,monospace" white-space-collapse="false" font-size="12pt" >    Ref No: ${allDetailsMap.get("refNo")?if_exists}                                                   DATE: ${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(nowTimestamp, "dd-MMM-yy")}  </fo:block> 
               	<fo:block  keep-together="always" text-align="left" font-family="Courier,monospace" white-space-collapse="false" font-size="13pt" >    OrderNo:${allDetailsMap.get("orderNo")?if_exists}                                                     </fo:block>
-                              	<fo:block  keep-together="always" text-align="left" font-family="Courier,monospace" white-space-collapse="false" font-size="13pt" >    File No:${allDetailsMap.get("fileNo")?if_exists}                                                     </fo:block>
+               	<fo:block  keep-together="always" text-align="left" font-family="Courier,monospace" white-space-collapse="false" font-size="13pt" >    File No:${allDetailsMap.get("fileNo")?if_exists}                                                       </fo:block>   -->
 
-            <fo:block  keep-together="always" text-align="center" font-family="Courier,monospace" white-space-collapse="false" font-size="3pt" >&#160; </fo:block>
+            <fo:block  keep-together="always" text-align="center" font-family="Courier,monospace" white-space-collapse="false" font-size="3pt" >&#160; </fo:block> 
                 <fo:block  keep-together="always" text-align="left" font-family="Courier,monospace" white-space-collapse="false" font-size="12pt" font-weight="bold" >ADDRESS:      </fo:block>
               	<fo:block  keep-together="always" text-align="left" font-family="Courier,monospace" white-space-collapse="false" font-size="12pt" ><#if allDetailsMap.get("partyId")?has_content>Id: ${allDetailsMap.get("partyId")}, <#else> </#if><#if allDetailsMap.get("partyName")?has_content>${allDetailsMap.get("partyName")} <#else> </#if>        </fo:block>
               	<fo:block  keep-together="always" text-align="left" font-family="Courier,monospace" white-space-collapse="false" font-size="12pt" ><#if allDetailsMap.get("address1")?has_content>${allDetailsMap.get("address1")}   <#else> </#if>     </fo:block>
@@ -85,11 +84,10 @@ ${setRequestAttribute("OUTPUT_FILENAME", "arcOrder.pdf")}
                 
               	<fo:block  keep-together="always" text-align="left" font-family="Courier,monospace" white-space-collapse="false" font-size="12pt" >    Ph No: ${allDetailsMap.get("phoneNumber")?if_exists}         </fo:block>
                 <fo:block  keep-together="always" text-align="left" font-family="Courier,monospace" white-space-collapse="false" font-size="12pt" >    Mail : ${allDetailsMap.get("emailAddress")?if_exists}        </fo:block>
-               	<fo:block  keep-together="always" text-align="left" font-family="Courier,monospace" white-space-collapse="false" font-size="16pt" font-weight="bold" >&#160;&#160;&#160;&#160;                     <fo:inline font-weight="bold" text-decoration="underline">ARC PURCHASE ORDER</fo:inline>         </fo:block>
+               	<fo:block  keep-together="always" text-align="left" font-family="Courier,monospace" white-space-collapse="false" font-size="16pt" font-weight="bold" >&#160;&#160;&#160;&#160;                         <fo:inline font-weight="bold" text-decoration="underline">ARC ORDER</fo:inline>         </fo:block>
                 <fo:block   text-align="left" font-family="Courier,monospace" white-space-collapse="false" font-size="10pt" > &#160;</fo:block>
                 <#assign productWiseTotalList =allDetailsMap.get("productDescription")>               
-                 <#assign ParentDescriptionList=allDetailsMap.get("productParentDescription")>               
-               
+                 <#if allDetailsMap.get("subject")?has_content>
                 <fo:block >
 			        			 <fo:table width="100%" align="right" table-layout="fixed"  font-size="12pt">
 					               <fo:table-column column-width="70pt"/>               
@@ -98,11 +96,12 @@ ${setRequestAttribute("OUTPUT_FILENAME", "arcOrder.pdf")}
 						           	<fo:table-body>
 				                     <fo:table-row>
 				                      <fo:table-cell ><fo:block text-align="left" font-size="12pt" font-weight="bold" keep-together="always" >&#160;    &#160;&#160;      Sub: </fo:block></fo:table-cell>       		
-				                     <fo:table-cell ><fo:block text-align="left"  font-size="12pt"  >Supply of   <#if  productWiseTotalList?has_content> <#list productWiseTotalList as productWiseEntries>${productWiseEntries}, </#list> </#if>on ARC Basis -reg.</fo:block></fo:table-cell>       		
+				                     <fo:table-cell ><fo:block text-align="left"  font-size="12pt"  >${allDetailsMap.get("subject")}</fo:block></fo:table-cell>       		
 				                       </fo:table-row>
 			                	</fo:table-body>
 			                		</fo:table>
 			        	  </fo:block>	
+			        </#if> 	  
          <#if allDetailsMap.get("tendorNo")?has_content || allDetailsMap.get("techDate")?has_content || allDetailsMap.get("negotiationDate")?has_content || allDetailsMap.get("commercialDate")?has_content || allDetailsMap.get("loaDate")?has_content> 
                 <fo:block   text-align="left" font-family="Courier,monospace" white-space-collapse="false" font-size="12pt" ><fo:inline text-align="left" font-family="Courier,monospace" font-size="12pt" font-weight="bold">&#160;    Ref:</fo:inline><#if allDetailsMap.get("tendorNo")?has_content> Tender Notification No.${allDetailsMap.get("tendorDate")?if_exists}, Dtd:${allDetailsMap.get("tendorDate")?if_exists}.  </#if>   </fo:block> 
                <#if allDetailsMap.get("techDate")?has_content>  <fo:block  keep-together="always" text-align="left" font-family="Courier,monospace" white-space-collapse="false" font-size="12pt" >&#160;         Technical Tender opened on ${allDetailsMap.get("techDate")?if_exists}  </fo:block> </#if> 
@@ -174,78 +173,122 @@ ${setRequestAttribute("OUTPUT_FILENAME", "arcOrder.pdf")}
                </fo:block>
                 	<fo:block text-align="left" font-size="5pt" white-space-collapse="false" keep-together="always" > &#160;</fo:block>
                
-               <#assign amountWords = Static["org.ofbiz.base.util.UtilNumber"].formatRuleBasedAmount(allDetailsMap.get("total"), "%indRupees-and-paiseRupees", locale)>
-						  	
-                  <fo:block white-space-collapse="false" >Amount(words): Rupees ${amountWords} only</fo:block>
                
-            	<fo:block text-align="left" font-size="12pt" white-space-collapse="false" keep-together="always" > &#160;</fo:block>
-                 <#if allDetailsMap.get("discount")?has_content && (allDetailsMap.get("discount")!=0)> 
-            <fo:block  keep-together="always" text-align="left" font-family="Courier,monospace" white-space-collapse="false" font-size="12pt" > DISCOUNT        : ${allDetailsMap.get("discount")?if_exists} </fo:block></#if> 
-               <#-->
-               <fo:block  keep-together="always" text-align="center" font-family="Courier,monospace" white-space-collapse="false" font-size="12pt" >&#160;&#160; </fo:block>
-               -->
-         <#if allDetailsMap.get("pakfwdCharges")?has_content && (allDetailsMap.get("pakfwdCharges")!=0)> 
-     <fo:block  keep-together="always" text-align="left" font-family="Courier,monospace" white-space-collapse="false" font-size="12pt" > P AND F CHARGES  : ${allDetailsMap.get("pakfwdCharges")?if_exists}  </fo:block>  </#if>
-               <#-->
-               <fo:block  keep-together="always" text-align="center" font-family="Courier,monospace" white-space-collapse="false" font-size="12pt" >&#160;&#160; </fo:block>
-               -->
-    <#if allDetailsMap.get("frightCharges")?has_content && (allDetailsMap.get("frightCharges")!=0)> 
-     <fo:block  keep-together="always" text-align="left" font-family="Courier,monospace" white-space-collapse="false" font-size="12pt" > FREIGHT CHARGES  : ${allDetailsMap.get("frightCharges")?if_exists}  </fo:block>  </#if>
-               <#-->
-               <fo:block  keep-together="always" text-align="center" font-family="Courier,monospace" white-space-collapse="false" font-size="12pt" >&#160;&#160; </fo:block>
-               -->
-      <#if allDetailsMap.get("insurance")?has_content > 
-     <fo:block  keep-together="always" text-align="left" font-family="Courier,monospace" white-space-collapse="false" font-size="12pt" > INSURANCE        : ${allDetailsMap.get("insurance")?if_exists}  </fo:block>  </#if>
-               <#-->
-               <fo:block  keep-together="always" text-align="center" font-family="Courier,monospace" white-space-collapse="false" font-size="12pt" >&#160;&#160; </fo:block>
-               -->
-    <#if allDetailsMap.get("otherCharges")?has_content && (allDetailsMap.get("otherCharges")!=0)> 
-     <fo:block  keep-together="always" text-align="left" font-family="Courier,monospace" white-space-collapse="false" font-size="12pt" > OTHER CHARGES    : ${allDetailsMap.get("otherCharges")?if_exists}  </fo:block> </#if>
-               <#-->
-               <fo:block  keep-together="always" text-align="center" font-family="Courier,monospace" white-space-collapse="false" font-size="12pt" >&#160;&#160; </fo:block>
-               -->
+               
+               
+  <#if allDetailsMap.get("total")?has_content> 
+    <fo:block  keep-together="always" text-align="left" font-family="Courier,monospace" white-space-collapse="false" font-size="12pt" font-weight="bold"> SUB TOTAL                          : ${allDetailsMap.get("total")?if_exists?string("##0.00")}  </fo:block> </#if>
+	<#if parentMap?has_content>
+	<#assign parent=parentMap.entrySet()>
+		<#list parent as parentList>
+				<#assign termType=parentList.getKey()>
+				<#assign termValues=parentList.getValue()>
+				<#assign size=termValues.size()>
+						<fo:block >
+	        			 <fo:table width="100%" align="right" table-layout="fixed"  font-size="12pt">
+			               <fo:table-column column-width="250"/>               
+                           <fo:table-column column-width="100"/>
+							<fo:table-column column-width="170"/> 
+							<fo:table-column column-width="100"/> 
+							<fo:table-column column-width="100"/> 
+							              
+				            <fo:table-body>
+				           <#if termType == "TAX">
+							<fo:table-row>
+		                     <fo:table-cell  ><fo:block text-align="left" font-size="12pt"  ><fo:inline  text-decoration="underline"  font-weight="bold">TAX&#160;&#160;:</fo:inline></fo:block></fo:table-cell>       			
+                          </fo:table-row>
+                          <#if Amount gt 0>
+                          <fo:table-row>
+		                  	 <fo:table-cell  ><fo:block text-align="left" font-size="12pt"  >Basic Excise Duty On Purchase</fo:block></fo:table-cell>
+							 <fo:table-cell  ><fo:block text-align="left" font-size="12pt"  >: 12.36%  </fo:block></fo:table-cell>
+							<fo:table-cell  ><fo:block text-align="left" font-size="12pt"  >-- ${Amount?if_exists} INR </fo:block></fo:table-cell>
+                          </fo:table-row>
+                          </#if>
+							<#if vatAmount gt 0>
+                            <fo:table-row>
+		                  	 <fo:table-cell  ><fo:block text-align="left" font-size="12pt"  >Value Added Tax On Purchase</fo:block></fo:table-cell>
+							 <fo:table-cell  ><fo:block text-align="left" font-size="12pt"  >:  <#list vatpercents as vat>${vat?if_exists?}%,</#list></fo:block></fo:table-cell>
+							<fo:table-cell  ><fo:block text-align="left" font-size="12pt"  >-- ${vatAmount?if_exists} INR </fo:block></fo:table-cell>
+                          </fo:table-row>
+							</#if>
+                          <#if cstAmount gt 0>
+                            <fo:table-row>
+		                  	 <fo:table-cell  ><fo:block text-align="left" font-size="12pt"  >Central Sales Tax On Purchase</fo:block></fo:table-cell>
+							 <fo:table-cell  ><fo:block text-align="left" font-size="12pt"  >:  <#list cstpercents as cst>${cst?if_exists}%</#list></fo:block></fo:table-cell>
+							<fo:table-cell  ><fo:block text-align="left" font-size="12pt"  >-- ${cstAmount?if_exists} INR </fo:block></fo:table-cell>
+                          </fo:table-row>
+							</#if>
+						</#if>i
+						<#if termType == "OTHERS">
+							<fo:table-row>
+		                     <fo:table-cell  ><fo:block text-align="left" font-size="12pt"><fo:inline  text-decoration="underline" font-weight="bold" >OTHER CHARGES&#160;&#160;:</fo:inline></fo:block></fo:table-cell>       			
+                          </fo:table-row>
+                         <#list termValues as termtypeId>						
+		                     <fo:table-row>
+		                  	 <fo:table-cell  ><fo:block text-align="left" font-size="12pt"  >${termtypeId.get("termTypeDes")?if_exists}</fo:block></fo:table-cell>
+		                  	 <#if termtypeId.get("uomId")=="PERCENT">
+							 <fo:table-cell  ><fo:block text-align="left" font-size="12pt"  >: ${termtypeId.get("termValue")?if_exists}%  </fo:block></fo:table-cell>
+							 </#if>
+							<#if termtypeId.get("uomId")=="INR">
+							 <fo:table-cell  ><fo:block text-align="left" font-size="12pt"  >: ${termtypeId.get("termValue")?if_exists}  </fo:block></fo:table-cell>
+							 </#if>
+							<fo:table-cell  ><fo:block text-align="left" font-size="12pt"  >-- ${termtypeId.get("amount")?if_exists} INR </fo:block></fo:table-cell>
+                          </fo:table-row>
+						</#list>
+						</#if>
+	                	</fo:table-body>
+	                		</fo:table>
+	        	  </fo:block>	
+	</#list>
+		 <#if allDetailsMap.get("grandTotal")?has_content> 
+      <fo:block  keep-together="always" text-align="left" font-family="Courier,monospace" white-space-collapse="false" font-size="12pt" font-weight="bold" >  GRAND TOTAL                        :<#if allDetailsMap.get("discount")?has_content>${(allDetailsMap.get("grandTotal")-allDetailsMap.get("discount"))?string("##0.00")} INR<#else> ${allDetailsMap.get("grandTotal")?if_exists?string("##0.00")} INR</#if> </fo:block> 
+               
+    	           <#assign amountWords = Static["org.ofbiz.base.util.UtilNumber"].formatRuleBasedAmount(allDetailsMap.get("grandTotal"), "%indRupees-and-paiseRupees", locale)>
+										  	
+                  <fo:block white-space-collapse="false" >Amount(words): Rupees ${amountWords}only</fo:block>  </#if>
+                    
+	<#list parent as parentList>
+				<#assign termType=parentList.getKey()>
+				<#assign termValues=parentList.getValue()>
+						<fo:block >
+	        			 <fo:table width="100%" align="right" table-layout="fixed"  font-size="12pt">
+			               <fo:table-column column-width="250"/>               
+                           <fo:table-column column-width="150"/>
+							<fo:table-column column-width="100"/>               
+				            <fo:table-body>
+						<#if termType == "DELIVERY_TERM">
+							<fo:table-row>
+		                     <fo:table-cell  ><fo:block text-align="left" font-size="12pt"   ><fo:inline  text-decoration="underline" font-weight="bold">DELIVERY TERMS&#160;&#160;:</fo:inline></fo:block></fo:table-cell>       			
+                          </fo:table-row>
+						<#list termValues as termtypeId>
+		                     <fo:table-row>
+		                  	 <fo:table-cell  ><fo:block text-align="left" font-size="12pt"  >${termtypeId.get("termTypeDes")?if_exists}</fo:block></fo:table-cell>
+		                  	 <#if termtypeId.get("description")?has_content>
+							 <fo:table-cell  ><fo:block text-align="left" font-size="12pt"  >:${termtypeId.get("description")?if_exists} </fo:block></fo:table-cell>
+							 </#if>
+                          </fo:table-row>
+						</#list>
+                         </#if> 
+	   					<#if termType == "FEE_PAYMENT_TERM">
+							<fo:table-row>
+		                     <fo:table-cell  ><fo:block text-align="left" font-size="12pt" ><fo:inline text-decoration="underline" font-weight="bold" >PAYMENT TERMS&#160;&#160;:</fo:inline></fo:block></fo:table-cell>       			
+                          </fo:table-row>
+						<#list termValues as termtypeId>
+		                     <fo:table-row>
+		                  	 <fo:table-cell  ><fo:block text-align="left" font-size="12pt"  >${termtypeId.get("termTypeDes")?if_exists}</fo:block></fo:table-cell>
+							<#if termtypeId.get("description")?has_content>
+							 <fo:table-cell  ><fo:block text-align="left" font-size="12pt"  >:${termtypeId.get("description")?if_exists} </fo:block></fo:table-cell>
+							 </#if>
+                          </fo:table-row>
+						</#list>
+                          </#if> 
+	                	</fo:table-body>
+	                		</fo:table>
+	        	  </fo:block>	
+	</#list>
+	</#if>
 
-                      <#if allDetailsMap.get("exciseAmt")?has_content && (allDetailsMap.get("exciseAmt")!=0)> 
-   <fo:block  keep-together="always" text-align="left" font-family="Courier,monospace" white-space-collapse="false" font-size="12pt" >EXCISE DUTY      : ${allDetailsMap.get("exciseAmt")?if_exists?string("##0.00")} </fo:block> </#if>
-                <#-->
-                <fo:block  keep-together="always" text-align="left" font-family="Courier,monospace" white-space-collapse="false" font-size="12pt" >TAX               : ${allDetailsMap.get("tax")?if_exists}  </fo:block>  
-                -->
-                <#assign taxDetailsList = allDetailsMap.get("taxDetailsList")?if_exists>
-                 <#list taxDetailsList as taxDetailedItem>
-                 <#-->
-                  <fo:block  keep-together="always" text-align="center" font-family="Courier,monospace" white-space-collapse="false" font-size="12pt" >&#160;&#160; </fo:block>
-                  -->
-                  <fo:block  keep-together="always" text-align="left" font-family="Courier,monospace" white-space-collapse="false" font-size="12pt" ><#if taxDetailedItem.orderAdjustmentTypeId=="VAT_PUR">VAT TOTAL        :<#elseif taxDetailedItem.orderAdjustmentTypeId=="CST_PUR">CST TOTAL        :</#if> ${taxDetailedItem.sourcePercentage}% - ${taxDetailedItem.amount} INR </fo:block>
-                 </#list>
-                  <#-->
-                  <fo:block  keep-together="always" text-align="center" font-family="Courier,monospace" white-space-collapse="false" font-size="12pt" >&#160;&#160; </fo:block>
-                  -->
-                   <#if allDetailsMap.get("grandTotal")?has_content> 
-      <fo:block  keep-together="always" text-align="left" font-family="Courier,monospace" white-space-collapse="false" font-size="12pt" >  GRAND TOTAL      :<#if allDetailsMap.get("discount")?has_content> ${(allDetailsMap.get("grandTotal")-allDetailsMap.get("discount"))?string("##0.00")}<#else> ${allDetailsMap.get("grandTotal")?if_exists?string("##0.00")}</#if> </fo:block> </#if>
-     
-<#if orderTermList?has_content>
 
-  <#list orderTermList as orderTerms>   
-
- <fo:block >
-			        			 <fo:table width="100%" align="right" table-layout="fixed"  font-size="12pt">
-					               <fo:table-column column-width="300pt"/>               
-                                   <fo:table-column column-width="250pt"/>               
-                     
-           
-						            <fo:table-body>
-				                     <fo:table-row>
-				                     <fo:table-cell  ><fo:block text-align="left" font-size="12pt"  > ${orderTerms.get("typeDescip")?if_exists}(${orderTerms.get("Parentdescription")?if_exists})</fo:block></fo:table-cell>       			
-  				                  	 <fo:table-cell  ><fo:block text-align="left" font-size="12pt"  > :${orderTerms.get("uiDescription")?if_exists}</fo:block></fo:table-cell>       			
-
-                                  </fo:table-row>
-                                 
-			                	</fo:table-body>
-			                		</fo:table>
-			        	  </fo:block>	
- 
-</#list>
-       </#if>
         <fo:block  keep-together="always" text-align="center" font-family="Courier,monospace" white-space-collapse="false" font-size="12pt" >&#160;&#160; 
 
                   <fo:block  keep-together="always" text-align="center" font-family="Courier,monospace" white-space-collapse="false" font-size="12pt" >&#160;&#160; </fo:block>

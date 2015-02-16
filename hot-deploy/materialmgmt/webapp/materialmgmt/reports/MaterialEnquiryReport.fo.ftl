@@ -43,9 +43,9 @@ under the License.
 				    <fo:block  keep-together="always" text-align="center" font-weight = "bold" font-family="Courier,monospace" white-space-collapse="false">${uiLabelMap.KMFDairyHeader}</fo:block>
 				    <fo:block  keep-together="always" text-align="center" font-family="Courier,monospace" white-space-collapse="false" font-weight="bold">${uiLabelMap.KMFDairySubHeader}</fo:block>
 				    <fo:block text-align="center" keep-together="always"  >&#160;-------------------------------------------------------------------</fo:block>
-				    <fo:block  keep-together="always" text-align="left" font-family="Courier,monospace" white-space-collapse="false" font-size="12pt" font-weight="bold">&#160;TEL NOS:22179004 /41          FAX  : 080-20462652                    TIN NO : ${companyTinNumber?if_exists} </fo:block>
-                    <fo:block  keep-together="always" text-align="left" font-family="Courier,monospace" white-space-collapse="false" font-size="12pt" font-weight="bold">&#160;        22179074 /55          Email: purchase@motherdairykmf.in      KST NO : 90700065  </fo:block>
-                    <fo:block  keep-together="always" text-align="left" font-family="Courier,monospace" white-space-collapse="false" font-size="12pt" font-weight="bold">&#160;                                     enggpur@motherdairykmf.in       CST NO : ${cstNumber? if_exists}</fo:block>
+				    <fo:block  keep-together="always" text-align="left" font-family="Courier,monospace" white-space-collapse="false" font-size="12pt" font-weight="bold">&#160;TEL NOS:${companyPhone?if_exists}         FAX  :${companyFax?if_exists}                   TIN NO :${companyTinNumber?if_exists} </fo:block>
+                    <fo:block  keep-together="always" text-align="left" font-family="Courier,monospace" white-space-collapse="false" font-size="12pt" font-weight="bold">&#160;        ${companyAnotherPhone?if_exists}         Email:${companyMail?if_exists}    KST NO :${kstNumber?if_exists}   </fo:block>
+                    <fo:block  keep-together="always" text-align="left" font-family="Courier,monospace" white-space-collapse="false" font-size="12pt" font-weight="bold">&#160;                                     ${companyOtherMail?if_exists}       CST NO :${cstNumber?if_exists}</fo:block>
                     <fo:block  keep-together="always" text-align="center" font-family="Courier,monospace" white-space-collapse="false" font-size="12pt" >----------------------------------------------------------------------------------------- </fo:block>
 				    <fo:block text-align="center" keep-together="always" font-weight="bold">                                              MATERIAL ENQUIRY REPORT                                                  </fo:block>
                     <fo:block linefeed-treatment="preserve">&#xA;</fo:block>
@@ -244,12 +244,12 @@ under the License.
 	               	<fo:block linefeed-treatment="preserve">&#xA;</fo:block>
                     <fo:block linefeed-treatment="preserve">&#xA;</fo:block>
 	                <fo:block linefeed-treatment="preserve">&#xA;</fo:block>			   	               
-                   <fo:block  font-size="12pt" keep-together="always"  white-space-collapse="false"  text-align="left">&#160;  Thanking you,                                                        Yours faithfully</fo:block>
-	               <fo:block  font-size="12pt" keep-together="always"  white-space-collapse="false"  text-align="left">&#160;                                                                       for MOTHER DAIRY</fo:block>
+                   <fo:block  font-size="12pt" keep-together="always"  white-space-collapse="false"  text-align="left">&#160;  Thanking you,                                                      Yours faithfully</fo:block>
+	               <fo:block  font-size="12pt" keep-together="always"  white-space-collapse="false"  text-align="left">&#160;                                                                     for MOTHER DAIRY</fo:block>
 	               <fo:block linefeed-treatment="preserve">&#xA;</fo:block>
 	               <fo:block linefeed-treatment="preserve">&#xA;</fo:block>
 	               <fo:block linefeed-treatment="preserve">&#xA;</fo:block>	               
-	              <fo:block  font-size="12pt" keep-together="always"  white-space-collapse="false"  text-align="left" font-weight="bold">&#160;                                                                       MANAGER(PURCHASE)</fo:block>
+	              <fo:block  font-size="12pt" keep-together="always"  white-space-collapse="false"  text-align="left" font-weight="bold">&#160;                                                                     <#if signature?has_content>${signature?if_exists}<#else>MANAGER(Purchase)</#if></fo:block>
 	                </fo:flow>
 		  </fo:page-sequence>	
        </#list>

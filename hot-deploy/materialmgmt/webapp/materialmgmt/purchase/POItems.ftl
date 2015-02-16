@@ -33,13 +33,13 @@ under the License.
                     <td width="14%" align="left">${uiLabelMap.CommonStatus}</td>
                     <td width="5%" align="left">Qty</td>
                      <td width="10%" align="right">U.Price</td>
+                     <td width="15%" align="right">${uiLabelMap.OrderSubTotal}</td>
                     <#-->
                     <td width="10%" align="center">${uiLabelMap.OrderUnitList}</td>-->
                   <#--  <td width="10%" align="right">${uiLabelMap.OrderAdjustments}</td> -->
                    <td width="5%" align="right">Ed</td>
                     <td width="6%" align="right">VAT</td>
                     <td width="6%" align="right">CST</td>
-                    <td width="15%" align="right">${uiLabelMap.OrderSubTotal}</td>
                     <td width="2%">&nbsp;</td>
                 </tr>
                  <#assign orderExTaxTotal = (Static["java.math.BigDecimal"].ZERO)>
@@ -95,10 +95,20 @@ under the License.
                                 <td align="right"  nowrap="nowrap">
                                     <@ofbizCurrency amount=orderItem.unitPrice isoCode=currencyUomId/>
                                 </td>
-                                <#assign exciseAmount=0>
+                                 <#assign exciseAmount=0>
                                 <#if orderItem.bedAmount?exists > <#assign exciseAmount=exciseAmount+orderItem.bedAmount >  </#if>
                                 <#if orderItem.bedcessAmount?exists> <#assign exciseAmount=exciseAmount+orderItem.bedcessAmount>  </#if>
                                 <#if orderItem.bedseccessAmount?exists> <#assign exciseAmount=exciseAmount+orderItem.bedseccessAmount>  </#if>
+                                <td align="right" valign="top" nowrap="nowrap">
+                                    <#if orderItem.statusId != "ITEM_CANCELLED">
+                                         <#assign  itemSubTotal=Static["org.ofbiz.order.order.OrderReadHelper"].getPurchaseOrderItemTotal(orderItem,false)-exciseAmount>
+                                         <#assign  orderExTaxTotal=orderExTaxTotal.add(itemSubTotal)>
+                                        <@ofbizCurrency amount=itemSubTotal isoCode=currencyUomId/>
+                                    <#else>
+                                        <@ofbizCurrency amount=0.00 isoCode=currencyUomId/>
+                                    </#if>
+                                </td>
+                               
                                 <td align="right"  nowrap="nowrap">
                                    <@ofbizCurrency amount=exciseAmount isoCode=currencyUomId/>
                                 </td>
@@ -117,15 +127,7 @@ under the License.
 								<td align="right" valign="top" nowrap="nowrap">
                                    <@ofbizCurrency amount=orderItemAdjs.cstAmount isoCode=currencyUomId/>
                                 </td>
-                                <td align="right" valign="top" nowrap="nowrap">
-                                    <#if orderItem.statusId != "ITEM_CANCELLED">
-                                         <#assign  itemSubTotal=Static["org.ofbiz.order.order.OrderReadHelper"].getPurchaseOrderItemTotal(orderItem,false)>
-                                         <#assign  orderExTaxTotal=orderExTaxTotal.add(itemSubTotal)>
-                                        <@ofbizCurrency amount=itemSubTotal isoCode=currencyUomId/>
-                                    <#else>
-                                        <@ofbizCurrency amount=0.00 isoCode=currencyUomId/>
-                                    </#if>
-                                </td>
+                                
                             </#if>
                         </tr>
                    <#--     <tr<#if itemClass == "1"> class="alternate-row"</#if>>

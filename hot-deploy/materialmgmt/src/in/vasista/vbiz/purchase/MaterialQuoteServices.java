@@ -61,10 +61,10 @@ public class MaterialQuoteServices {
 	public static final BigDecimal ZERO_BASE = BigDecimal.ZERO;
 	public static final BigDecimal ONE_BASE = BigDecimal.ONE;
 	public static final BigDecimal PERCENT_SCALE = new BigDecimal("100.000");
-	public static int salestaxFinalDecimals = UtilNumber.getBigDecimalScale("salestax.final.decimals");
-	public static int salestaxCalcDecimals = 2;//UtilNumber.getBigDecimalScale("salestax.calc.decimals");
+	public static int purchaseTaxFinalDecimals = UtilNumber.getBigDecimalScale("purchaseTax.final.decimals");
+	public static int purchaseTaxCalcDecimals = UtilNumber.getBigDecimalScale("purchaseTax.calc.decimals");
 	
-	public static int salestaxRounding = UtilNumber.getBigDecimalRoundingMode("salestax.rounding");
+	public static int purchaseTaxRounding = UtilNumber.getBigDecimalRoundingMode("purchaseTax.rounding");
 	
 	public static String createQuoteForEnquiry(HttpServletRequest request, HttpServletResponse response) {
 		
@@ -543,6 +543,9 @@ public class MaterialQuoteServices {
         	quoteInputCtx.put("validFromDate", validFromDate);
         	quoteInputCtx.put("validThruDate", validThruDate);
         	quoteInputCtx.put("issueDate", issueDate);
+        	quoteInputCtx.put("createdByUserLogin", userLogin.getString("userLoginId"));
+        	quoteInputCtx.put("createdDate", UtilDateTime.nowTimestamp());
+        	quoteInputCtx.put("lastModifiedDate", UtilDateTime.nowTimestamp());
         	quoteResult = dispatcher.runSync("createQuote", quoteInputCtx);
         	if(ServiceUtil.isError(quoteResult)){
         		Debug.logError("Error in  creating Quote for enquiry", module);
@@ -650,7 +653,7 @@ public class MaterialQuoteServices {
          while (i.hasNext()) {
              GenericValue quoteItem = i.next();
              if (quoteItem != null) {
-            	 custRequestId=quoteItem.getString("custRequestId");
+            	 custRequestId=quoteItem.getString("custRequestId");            	 
              	try { 
                     
              		ShoppingCartItem item = null;
@@ -681,7 +684,7 @@ public class MaterialQuoteServices {
             							if(UtilValidate.isNotEmpty(vatUnitRate)){
             								BigDecimal vatAmount = vatUnitRate.multiply(quantity);
             								if(vatAmount.compareTo(BigDecimal.ZERO)>0){
-            									vatAmount=vatAmount.setScale(salestaxCalcDecimals, salestaxRounding);
+            									vatAmount=vatAmount.setScale(purchaseTaxCalcDecimals, purchaseTaxRounding);
                     			        		Map taxDetailMap = FastMap.newInstance();
                     				    		taxDetailMap.put("taxType", "VAT_PUR");
                     				    		taxDetailMap.put("amount", vatAmount);
@@ -710,7 +713,7 @@ public class MaterialQuoteServices {
             							if(UtilValidate.isNotEmpty(bedUnitRate)){
             								BigDecimal bedAmount = bedUnitRate.multiply(quantity);
             								if(bedAmount.compareTo(BigDecimal.ZERO)>0){
-            									bedAmount=bedAmount.setScale(salestaxCalcDecimals, salestaxRounding);
+            									bedAmount=bedAmount.setScale(purchaseTaxCalcDecimals, purchaseTaxRounding);
                     			        		Map taxDetailMap = FastMap.newInstance();
                     				    		taxDetailMap.put("taxType", "BED_PUR");
                     				    		taxDetailMap.put("amount", bedAmount);
@@ -723,7 +726,7 @@ public class MaterialQuoteServices {
         									BigDecimal bedCessUnitRate = (BigDecimal)inBedCessRateMap.get("taxAmount");
         									BigDecimal bedCessAmount = bedCessUnitRate.multiply(quantity);
         									if(bedCessAmount.compareTo(BigDecimal.ZERO)>0){
-        										bedCessAmount=bedCessAmount.setScale(salestaxCalcDecimals, salestaxRounding);
+        										bedCessAmount=bedCessAmount.setScale(purchaseTaxCalcDecimals, purchaseTaxRounding);
                     			        		Map taxDetailMap = FastMap.newInstance();
                     				    		taxDetailMap.put("taxType", "BEDCESS_PUR");
                     				    		taxDetailMap.put("amount", bedCessAmount);
@@ -736,7 +739,7 @@ public class MaterialQuoteServices {
         									BigDecimal bedSecCessUnitRate = (BigDecimal)inBedSecCessRateMap.get("taxAmount");
         									BigDecimal bedSecCessAmount = bedSecCessUnitRate.multiply(quantity);
         									if(bedSecCessAmount.compareTo(BigDecimal.ZERO)>0){
-        										bedSecCessAmount=bedSecCessAmount.setScale(salestaxCalcDecimals, salestaxRounding);
+        										bedSecCessAmount=bedSecCessAmount.setScale(purchaseTaxCalcDecimals, purchaseTaxRounding);
                     			        		Map taxDetailMap = FastMap.newInstance();
                     				    		taxDetailMap.put("taxType", "BEDSECCESS_PUR");
                     				    		taxDetailMap.put("amount", bedSecCessAmount);
@@ -765,7 +768,7 @@ public class MaterialQuoteServices {
             							if(UtilValidate.isNotEmpty(cstUnitRate)){
             								BigDecimal cstAmount = cstUnitRate.multiply(quantity);
             								if(cstAmount.compareTo(BigDecimal.ZERO)>0){
-            									cstAmount=cstAmount.setScale(salestaxCalcDecimals, salestaxRounding);
+            									cstAmount=cstAmount.setScale(purchaseTaxCalcDecimals, purchaseTaxRounding);
                     			        		Map taxDetailMap = FastMap.newInstance();
                     				    		taxDetailMap.put("taxType", "CST_PUR");
                     				    		taxDetailMap.put("amount", cstAmount);
@@ -790,10 +793,28 @@ public class MaterialQuoteServices {
                 
              }  
          }
-         
+         GenericValue custReqDetails = null;
+         String custRequestName=null;
+         if(UtilValidate.isNotEmpty(custRequestId)){
+             try{
+        	        custReqDetails = delegator.findOne("CustRequest", UtilMisc.toMap("custRequestId",custRequestId), false);
+        	        if(UtilValidate.isNotEmpty(custReqDetails)){ 
+        	            custRequestName=(String) custReqDetails.get("custRequestName");
+        	         }
+    	        }
+               catch(Exception e) {
+    	  		     Debug.logError("Error While fecting data from CustRequest", module);
+    	  		     return ServiceUtil.returnError("Error While fecting data from CustRequest");
+    	  	   }
+          
+         }
          if(UtilValidate.isNotEmpty(custRequestId)){
 				cart.setOrderAttribute("REF_NUMBER",custRequestId);
          }
+         if(UtilValidate.isNotEmpty(custRequestName)){
+				cart.setOrderAttribute("FILE_NUMBER",custRequestName);
+         }
+      
          cart.setDefaultCheckoutOptions(dispatcher);
          CheckOutHelper checkout = new CheckOutHelper(dispatcher, delegator, cart);
          Map<String, Object> orderCreateResult = checkout.createOrder(userLogin);
@@ -862,6 +883,7 @@ public class MaterialQuoteServices {
          
          result = ServiceUtil.returnSuccess("Created Purchase Order for Quote : "+quoteId);
          result.put("orderId", orderId);
+        // result.put("custRequestName", custRequestName);
          return result;
     }
 	
@@ -998,6 +1020,8 @@ public class MaterialQuoteServices {
 	  				if((validThruDate.compareTo(thruDate)>0) || (validThruDate.compareTo(thruDate)<0)){
 	  					quotes.set("validThruDate",validThruDate);
 	  				}
+	  				quotes.set("lastModifiedDate",nowTimeStamp);
+  					quotes.set("lastModifiedByUserLogin",userLogin.getString("userLoginId"));
 	  				quotes.store();
 	  			}catch(Exception e){
 	  				request.setAttribute("_ERROR_MESSAGE_", "Error While Updating The Quote");

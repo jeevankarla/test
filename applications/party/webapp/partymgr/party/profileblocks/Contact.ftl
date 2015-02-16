@@ -21,7 +21,7 @@ under the License.
     <div class="screenlet-title-bar">
       <ul>
         <li class="h3">${uiLabelMap.PartyContactInformation}</li>
-        <#if security.hasEntityPermission("PARTYMGR", "_CREATE", session) || userLogin.partyId == partyId>
+        <#if security.hasEntityPermission("PARTYMGR", "_CREATE", session) || security.hasEntityPermission("", "PARTYMGR_CNTMEC_EDIT", session) || userLogin.partyId == partyId >
           <li><a href="<@ofbizUrl>editcontactmech?partyId=${partyId}</@ofbizUrl>">${uiLabelMap.CommonCreateNew}</a></li>
         </#if>
       </ul>
@@ -146,7 +146,7 @@ under the License.
               </td>
               <td valign="top"><b>(${partyContactMech.allowSolicitation?if_exists})</b></td>
               <td class="button-col">
-                <#if security.hasEntityPermission("PARTYMGR", "_UPDATE", session) || userLogin.partyId == partyId>
+                <#if security.hasEntityPermission("PARTYMGR", "_UPDATE", session) || userLogin.partyId == partyId || security.hasEntityPermission("", "PARTYMGR_CNTMEC_EDIT", session)>
                   <a href="<@ofbizUrl>editcontactmech?partyId=${partyId}&amp;contactMechId=${contactMech.contactMechId}</@ofbizUrl>">${uiLabelMap.CommonUpdate}</a>
                 </#if>
                 <#if security.hasEntityPermission("PARTYMGR", "_DELETE", session) || userLogin.partyId == partyId>

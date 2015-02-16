@@ -63,7 +63,7 @@ conditionList.add(EntityCondition.makeCondition("itemStatusId", EntityOperator.I
 conditionList.add(EntityCondition.makeCondition("custRequestTypeId", EntityOperator.EQUALS, "PRODUCT_REQUIREMENT"));
 condition = EntityCondition.makeCondition(conditionList, EntityOperator.AND);
 
-custRequestItems = delegator.findList("CustRequestAndItemAndAttribute", condition, null, UtilMisc.toList("-custRequestDate"), null, false);
+custRequestItems = delegator.findList("CustRequestAndItemAndAttribute", condition, null, UtilMisc.toList("-custRequestId"), null, false);
 
 productIds = EntityUtil.getFieldListFromEntityList(custRequestItems, "productId", true);
 
@@ -73,7 +73,7 @@ conditionList.clear();
 conditionList.add(EntityCondition.makeCondition("custRequestId", EntityOperator.IN, custRequestIds));
 conditionItemIssue = EntityCondition.makeCondition(conditionList, EntityOperator.AND);
 
-itemIssuanceList = delegator.findList("ItemIssuance", conditionItemIssue, null, UtilMisc.toList("-issuedDateTime"), null, false);
+itemIssuanceList = delegator.findList("ItemIssuance", conditionItemIssue, null, UtilMisc.toList("-issuedDateTime","-custRequestId"), null, false);
 
 
 prodInvMap = [:];

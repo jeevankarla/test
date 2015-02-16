@@ -27,7 +27,7 @@
           <service service-name="performFind" result-map="result" result-map-list="listIt">
             <field-map field-name="inputFields" from-field="parameters"/>
             <field-map field-name="entityName" from-field="entityName"/>
-            <field-map field-name="orderBy" from-field="parameters.sortField"/>
+            <field-map field-name="orderBy" value="-quoteId"/>
             <field-map field-name="viewIndex" from-field="viewIndex"/>
             <field-map field-name="viewSize" from-field="viewSize"/>
           </service>
@@ -471,7 +471,7 @@
         <field name="productName" title="Material Name - [Code]"><display /></field>
         <field name="dec" title="UOM"><display/></field>
         <field name="longDescription" title="Material Specification"><display /></field>
-        <field name="qiStatusId" title="Status"><display-entity entity-name="StatusItem" key-field-name="statusId" description="${description}"/></field>
+        <field name="statusId" title="Status"><display-entity entity-name="StatusItem" key-field-name="statusId" description="${description}"/></field>
         <field name="quoteUnitPrice" title="Quote Unit Price"><display /></field>
         <field name="comments"><display/></field>
     </form>

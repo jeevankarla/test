@@ -31,14 +31,23 @@ import org.ofbiz.party.party.PartyHelper;
 
 dctx = dispatcher.getDispatchContext();
 orderId = parameters.orderId;
+subject=parameters.subject;
 orderDetailsList=[];
 allDetailsMap=[:]; 
 orderTermList=[];
 
 allDetailsMap.put("orderId",orderId);
+allDetailsMap.put("subject",subject);
+
 allDetailsMap["total"]=BigDecimal.ZERO;
 
 orderDetails = delegator.findList("OrderItem",EntityCondition.makeCondition("orderId", EntityOperator.EQUALS , orderId)  , null, null, null, false );
+
+vatpercents=EntityUtil.getFieldListFromEntityList(orderDetails, "vatPercent", true);
+cstpercents=EntityUtil.getFieldListFromEntityList(orderDetails, "cstPercent", true);
+context.cstpercents=cstpercents;
+context.vatpercents=vatpercents;
+
 productIds=orderDetails.productId;
 productCategories = delegator.findList("ProductCategoryAndMember",EntityCondition.makeCondition("productId", EntityOperator.IN, productIds) , null, null, null, false );
 //productCategory = EntityUtil.getFieldListFromEntityList(productCategories, "productCategoryId", true);
@@ -100,34 +109,28 @@ if(UtilValidate.isNotEmpty(orderDetails)){
 	}
 }
 
-// partyId,partyName
-if(UtilValidate.isNotEmpty(orderId)){
-	List conlist=[];
-	conlist.add(EntityCondition.makeCondition("orderId", EntityOperator.EQUALS, orderId));
-	conlist.add(EntityCondition.makeCondition("roleTypeId", EntityOperator.EQUALS,"SUPPLIER_AGENT"));
-	cond=EntityCondition.makeCondition(conlist,EntityOperator.AND);
-	vendorDetails = delegator.findList("OrderRole", cond , null, null, null, false );
-	vendorDetail=EntityUtil.getFirst(vendorDetails);
-	if(UtilValidate.isNotEmpty(vendorDetail)){
-	partyId=vendorDetail.partyId;
-	allDetailsMap.put("partyId",partyId);
-		partyName =  PartyHelper.getPartyName(delegator, partyId, false);
-		allDetailsMap.put("partyName",partyName);
-	  }
-	}
-// party Address
+
+// partyId,partyName ,party Address
 List conlist=[];
 conlist.add(EntityCondition.makeCondition("orderId", EntityOperator.EQUALS, orderId));
 conlist.add(EntityCondition.makeCondition("roleTypeId", EntityOperator.EQUALS,"SUPPLIER_AGENT"));
 cond=EntityCondition.makeCondition(conlist,EntityOperator.AND);
 vendorDetails = delegator.findList("OrderRole", cond , null, null, null, false );
 vendorDetail=EntityUtil.getFirst(vendorDetails);
-fromPartyId="";
+partyId="";
 if(UtilValidate.isNotEmpty(vendorDetail)){
-fromPartyId=vendorDetail.partyId;
+partyId=vendorDetail.partyId;
 }
-   if(UtilValidate.isNotEmpty(fromPartyId)){
-	 partyPostalAddress= dispatcher.runSync("getPartyPostalAddress", [partyId:fromPartyId, userLogin: userLogin]);
+   if(UtilValidate.isNotEmpty(partyId)){
+	   
+	   allDetailsMap.put("partyId",partyId);
+	   partyName =  PartyHelper.getPartyName(delegator, partyId, false);
+	   if(UtilValidate.isNotEmpty(partyName)){
+		   
+	   allDetailsMap.put("partyName",partyName);
+	 }
+	   
+	 partyPostalAddress= dispatcher.runSync("getPartyPostalAddress", [partyId:partyId, userLogin: userLogin]);
 	   address1="";address2="";city="";postalCode="";
 		if (partyPostalAddress != null && UtilValidate.isNotEmpty(partyPostalAddress)) {
 		   if(partyPostalAddress.address1){
@@ -148,14 +151,14 @@ fromPartyId=vendorDetail.partyId;
 			}
 		 }
 		
-		partyTelephone= dispatcher.runSync("getPartyTelephone", [partyId: fromPartyId, userLogin: userLogin]);
+		partyTelephone= dispatcher.runSync("getPartyTelephone", [partyId: partyId, userLogin: userLogin]);
 		phoneNumber = "";
 		if (partyTelephone != null && partyTelephone.contactNumber != null) {
 			phoneNumber = partyTelephone.contactNumber;
 		}
 		allDetailsMap.put("phoneNumber", phoneNumber);
 		
-		partyEmail= dispatcher.runSync("getPartyEmail", [partyId: fromPartyId, userLogin: userLogin]);
+		partyEmail= dispatcher.runSync("getPartyEmail", [partyId: partyId, userLogin: userLogin]);
 		emailAddress="";
 		if (partyEmail != null && partyEmail.emailAddress != null) {
 			emailAddress = partyEmail.emailAddress;
@@ -203,129 +206,123 @@ if(UtilValidate.isNotEmpty(tendorLOADate)){
 	loaDate=tendorLOADate.attrValue;
 	allDetailsMap.put("loaDate",loaDate);
 }
-// ED,VAT
-orderDetails = delegator.findList("OrderItem",EntityCondition.makeCondition("orderId", EntityOperator.EQUALS , orderId)  , null, null, null, false );
-exciseAmt = 0;
-if(UtilValidate.isNotEmpty(orderDetails)){
-	orderDetails.each{orderDet->
-		if(orderDet.bedAmount){
-			exciseAmt += orderDet.bedAmount;
-		}
-		if(orderDet.bedcessAmount){
-			exciseAmt += orderDet.bedcessAmount;
-		}
-		if(orderDet.bedseccessAmount){
-			exciseAmt += orderDet.bedseccessAmount;
-		}
-		}
-	allDetailsMap.put("exciseAmt",exciseAmt);
-	
-	}
-List condlist=[];
-condlist.add(EntityCondition.makeCondition("orderId", EntityOperator.EQUALS, orderId));
-condlist.add(EntityCondition.makeCondition("orderAdjustmentTypeId", EntityOperator.EQUALS,"VAT_PUR"));
-condition=EntityCondition.makeCondition(condlist,EntityOperator.AND);
-vatDetails = delegator.findList("OrderAdjustment", condition , null, null, null, false );
-vatDetails = EntityUtil.getFirst(vatDetails);
-if(UtilValidate.isNotEmpty(vatDetails)){
-   vat =vatDetails.sourcePercentage;
-   allDetailsMap.put("vat",vat);
-}
-
-// discount,pakfwdDetails,tax
-orderAdjustmentDetails = delegator.findList("OrderAdjustment",EntityCondition.makeCondition("orderId", EntityOperator.EQUALS , orderId)  , null, null, null, false );
-
-discountDetails = EntityUtil.filterByCondition(orderAdjustmentDetails, EntityCondition.makeCondition("orderAdjustmentTypeId", EntityOperator.EQUALS, "COGS_DISC"));
-discountDetail = EntityUtil.getFirst(discountDetails);
-if(UtilValidate.isNotEmpty(discountDetail)){
-	discount=discountDetail.amount;
-	allDetailsMap.put("discount",discount);
-}
-pakfwdDetails = EntityUtil.filterByCondition(orderAdjustmentDetails, EntityCondition.makeCondition("orderAdjustmentTypeId", EntityOperator.EQUALS, "COGS_FREIGHT"));
-pakfwdDetails = EntityUtil.getFirst(pakfwdDetails);
-if(UtilValidate.isNotEmpty(pakfwdDetails)){
-   frightCharges =pakfwdDetails.amount;
-   allDetailsMap.put("frightCharges",frightCharges);
-}
-pakfwdDetails = EntityUtil.filterByCondition(orderAdjustmentDetails, EntityCondition.makeCondition("orderAdjustmentTypeId", EntityOperator.EQUALS, "COGS_INSURANCE"));
-pakfwdDetails = EntityUtil.getFirst(pakfwdDetails);
-if(UtilValidate.isNotEmpty(pakfwdDetails)){
-   insurance =pakfwdDetails.amount;
-   allDetailsMap.put("insurance",insurance);
-}
-pakfwdDetails = EntityUtil.filterByCondition(orderAdjustmentDetails, EntityCondition.makeCondition("orderAdjustmentTypeId", EntityOperator.EQUALS, "COGS_OTH_CHARGES"));
-pakfwdDetails = EntityUtil.getFirst(pakfwdDetails);
-if(UtilValidate.isNotEmpty(pakfwdDetails)){
-   otherCharges =pakfwdDetails.amount;
-   allDetailsMap.put("otherCharges",otherCharges);
-}
-pakfwdDetails = EntityUtil.filterByCondition(orderAdjustmentDetails, EntityCondition.makeCondition("orderAdjustmentTypeId", EntityOperator.EQUALS, "COGS_PCK_FWD"));
-pakfwdDetails = EntityUtil.getFirst(pakfwdDetails);
-if(UtilValidate.isNotEmpty(pakfwdDetails)){
-   pakfwdCharges =pakfwdDetails.amount;
-   allDetailsMap.put("pakfwdCharges",pakfwdCharges);
-}
-taxDetails = EntityUtil.filterByCondition(orderAdjustmentDetails, EntityCondition.makeCondition("orderAdjustmentTypeId", EntityOperator.IN , UtilMisc.toList("VAT_PUR","CST_PUR")));
-allDetailsMap.put("taxDetailsList",taxDetails);
-
-if(UtilValidate.isNotEmpty(taxDetails)){
-   tax =taxDetails.amount;
-   allDetailsMap.put("tax",tax);
-}
-
-// exciseDuty
-orderDetails = delegator.findList("OrderItem",EntityCondition.makeCondition("orderId", EntityOperator.EQUALS , orderId)  , null, null, null, false );
-exciseAmt = 0;
-if(UtilValidate.isNotEmpty(orderDetails)){
-	orderDetails.each{orderDet->
-		if(orderDet.bedAmount){
-			exciseAmt += orderDet.bedAmount;
-		}
-		if(orderDet.bedcessAmount){
-			exciseAmt += orderDet.bedcessAmount;
-		}
-		if(orderDet.bedseccessAmount){
-			exciseAmt += orderDet.bedseccessAmount;
-		}
-		}
-	allDetailsMap.put("exciseAmt",exciseAmt);
-	
-	}
-
- //waranty ,delivery,pod,payment
-orderTermDetails = delegator.findList("OrderTerm",EntityCondition.makeCondition("orderId", EntityOperator.EQUALS , orderId)  , null, null, null, false );
-if(UtilValidate.isNotEmpty(orderTermDetails)){
-	orderTermDetails.each{orderTerm ->
- orderTermMap=[:];
- termtypId=orderTerm.termTypeId;
- uiDescription=orderTerm.description;
- if(UtilValidate.isNotEmpty(termtypId)){
-	 typeDesciptions = delegator.findOne("TermType",["termTypeId":termtypId],false);
-	 typeDescip=typeDesciptions.get("description");
-	 parentTypeId=typeDesciptions.get("parentTypeId");
-	 TermTypeDetails = delegator.findList("TermType",EntityCondition.makeCondition("parentTypeId", EntityOperator.EQUALS , parentTypeId)  , null, null, null, false );
-	 TermTypeDetails = EntityUtil.getFirst(TermTypeDetails);
-	 Parentdescription= TermTypeDetails.description;
- }
-		     orderTermMap.put("typeDescip",typeDescip);
-			 orderTermMap.put("Parentdescription",Parentdescription);
-			 orderTermMap.put("uiDescription",uiDescription);
-			 
-orderTermList.addAll(orderTermMap);	
-}
-}
 
 context.allDetailsMap=allDetailsMap;
 context.orderDetailsList=orderDetailsList;
-context.orderTermList=orderTermList;
 
 //Debug.log("orderDetailsList=================================="+orderDetailsList);
 
 
 
+// tax details
 
-
-
-
-
-
+bedAmount=0;
+vatAmount=0;
+cstAmount=0;
+listSize=0;
+orderTerms= delegator.findList("OrderTerm",EntityCondition.makeCondition("orderId", EntityOperator.EQUALS , orderId)  , null, null, null, false );
+parentMap=[:];
+if(UtilValidate.isNotEmpty(orderTerms)){
+	orderTerms.each{orderTerm ->
+		Amount=0;
+		listSize+=1;
+		ecl = EntityCondition.makeCondition([
+			EntityCondition.makeCondition("orderId", EntityOperator.EQUALS, orderId),
+			EntityCondition.makeCondition("orderAdjustmentTypeId", EntityOperator.EQUALS, orderTerm.termTypeId)],
+		EntityOperator.AND);
+		orderAdjustments= delegator.findList("OrderAdjustment",ecl , UtilMisc.toSet("orderAdjustmentTypeId","amount"), null, null, false );
+		if(orderTerm.termTypeId == "BED_PUR"){
+			condition = EntityCondition.makeCondition([
+				EntityCondition.makeCondition("orderId", EntityOperator.EQUALS, orderId),
+				EntityCondition.makeCondition("orderAdjustmentTypeId", EntityOperator.IN,UtilMisc.toList("BEDCESS_PUR","BEDSECCESS_PUR","BED_PUR") )],
+			EntityOperator.AND);
+			orderAdjts= delegator.findList("OrderAdjustment",condition , UtilMisc.toSet("orderAdjustmentTypeId","amount"), null, null, false );
+			orderAdjts.each{orderAdjt->
+				Amount+=orderAdjt.amount;
+			}
+			bedAmount=Amount;
+		}
+		
+		orderAdjustment=[];
+		if(UtilValidate.isNotEmpty(orderAdjustments)){
+		orderAdjustment = EntityUtil.getFirst(orderAdjustments);
+		}
+		
+		if(orderTerm.termTypeId == "VAT_PUR"){
+			vatAmount=orderAdjustment.amount;
+		}
+		if(orderTerm.termTypeId == "CST_PUR"){
+			cstAmount=orderAdjustment.amount;
+		}
+	GenericValue termTypes= delegator.findOne("TermType",[termTypeId:orderTerm.termTypeId],false);
+	if(UtilValidate.isEmpty(parentMap[termTypes.parentTypeId])){
+		termsList=[];
+		tempMap=[:];
+		tempMap.put("termTypeId", orderTerm.termTypeId);
+		tempMap.put("parentTypeId", termTypes.parentTypeId);
+		if(UtilValidate.isNotEmpty(orderAdjustments)){
+			if(Amount>0){
+				tempMap.put("amount",Amount);
+			}else{
+			tempMap.put("amount",orderAdjustment.amount);
+			}
+		}
+		if(UtilValidate.isNotEmpty(orderTerm.orderItemSeqId)){
+			tempMap.put("orderItemSeqId", orderTerm.orderItemSeqId);
+		}
+		if(UtilValidate.isNotEmpty(orderTerm.termValue)){
+			tempMap.put("termValue", orderTerm.termValue);
+		}
+		if(UtilValidate.isNotEmpty(orderTerm.termDays)){
+			tempMap.put("termDays", orderTerm.termDays);
+		}
+		if(UtilValidate.isNotEmpty(orderTerm.description)){
+			tempMap.put("description", orderTerm.description);
+		}
+		if(UtilValidate.isNotEmpty(orderTerm.uomId)){
+			tempMap.put("uomId", orderTerm.uomId);
+		}
+		tempMap.put("termTypeDes", termTypes.description);
+		termsList.add(tempMap);
+		parentMap[termTypes.parentTypeId]=termsList;
+		
+	}else{
+		tempMap=[:];
+		tempMap.put("termTypeId", orderTerm.termTypeId);
+		tempMap.put("parentTypeId", termTypes.parentTypeId);
+		if(UtilValidate.isNotEmpty(orderAdjustments)){
+			if(Amount>0){
+				tempMap.put("amount",Amount);
+			}else{
+			tempMap.put("amount",orderAdjustment.amount);
+			}
+		}
+		if(UtilValidate.isNotEmpty(orderTerm.orderItemSeqId)){
+			tempMap.put("orderItemSeqId", orderTerm.orderItemSeqId);
+		}
+		if(UtilValidate.isNotEmpty(orderTerm.termValue)){
+			tempMap.put("termValue", orderTerm.termValue);
+		}
+		if(UtilValidate.isNotEmpty(orderTerm.termDays)){
+			tempMap.put("termDays", orderTerm.termDays);
+		}
+		if(UtilValidate.isNotEmpty(orderTerm.description)){
+			tempMap.put("description", orderTerm.description);
+		}
+		if(UtilValidate.isNotEmpty(orderTerm.uomId)){
+			tempMap.put("uomId", orderTerm.uomId);
+		}
+		tempMap.put("termTypeDes", termTypes.description);
+		testList = parentMap[termTypes.parentTypeId]
+		testList.add(tempMap);
+		parentMap[termTypes.parentTypeId]=testList;
+		
+		}
+	
+	}
+}
+context.parentMap=parentMap;
+context.Amount=bedAmount;
+context.vatAmount=vatAmount;
+context.cstAmount=cstAmount;
+context.listSize=listSize;

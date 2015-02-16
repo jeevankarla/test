@@ -32,6 +32,7 @@ ${setRequestAttribute("OUTPUT_FILENAME", "prdctRetrnReport.txt")}
  <#if productCategoryMap?has_content> 
  <#assign grandTotalNetValue = 0>
  <#assign grandTotalNetQty = 0>
+ <#assign grandTotalAvgSale = 0>
 <fo:page-sequence master-reference="main" force-page-count="no-force" font-family="Courier,monospace">					
 			<fo:static-content flow-name="xsl-region-before">
 			    <fo:block  keep-together="always" text-align="right" font-family="Courier,monospace" white-space-collapse="false"> &#160;${uiLabelMap.CommonPage}- <fo:page-number/></fo:block>
@@ -87,12 +88,16 @@ ${setRequestAttribute("OUTPUT_FILENAME", "prdctRetrnReport.txt")}
 		                        	</fo:table-row>
 									<#assign totalNetValue = 0>
 						 			<#assign totalNetQty = 0>
+						 			<#assign totalAvgSale = 0>
 						 					<#list catProdDetails as catProd>
 		                    				 <#assign product = delegator.findOne("Product", {"productId" : catProd.getKey()}, true)?if_exists/>
 		                    				 <#assign saleValue = (catProd.getValue().get("revenue"))?if_exists>
 		                    				 <#assign saleQuantity = (catProd.getValue().get("quantity"))?if_exists>
 		                    				 <#assign returnValue = (productReturnMap[product.productId].get("returnPrice"))?if_exists>
 		                    				 <#assign returnQty = (productReturnMap[product.productId].get("returnQtyLtrs"))?if_exists>
+		                    				 <#if countMap?has_content>
+		                    				    <#assign totalDays =countMap.get(product.productId)?if_exists>
+		                    				 </#if>
 		                    				  <#if returnValue?has_content>
 		                    				 	<#assign netValue = (saleValue-returnValue)?if_exists>
 		                    				 <#else>
@@ -114,6 +119,9 @@ ${setRequestAttribute("OUTPUT_FILENAME", "prdctRetrnReport.txt")}
 			                        			<fo:table-cell>
 			                            			<fo:block  keep-together="always" text-align="right" font-size="9pt" white-space-collapse="false">${netQty?if_exists?string("#0.00")}</fo:block>  
 			                        			</fo:table-cell>
+			                        			<#if (totalDays!=0)>
+			                        			<#assign totalAvgSale = (totalAvgSale + netQty?if_exists/totalDays)>
+			                        			 </#if>
 			                        			<fo:table-cell>
 			                            			<fo:block  keep-together="always" text-align="right" font-size="9pt" white-space-collapse="false"><#if (totalDays!=0)>${(netQty/totalDays)?if_exists?string("#0.00")}</#if></fo:block>  
 			                        			</fo:table-cell>
@@ -140,8 +148,9 @@ ${setRequestAttribute("OUTPUT_FILENAME", "prdctRetrnReport.txt")}
 	                        			<fo:table-cell>
 	                            			<fo:block  keep-together="always" font-weight="bold" text-align="right" font-size="9pt" white-space-collapse="false">${totalNetQty?if_exists?string("#0.00")}</fo:block>  
 	                        			</fo:table-cell>
+	                        			<#assign grandTotalAvgSale = (grandTotalAvgSale + totalAvgSale?if_exists)>
 	                        			<fo:table-cell>
-	                            			<fo:block  keep-together="always" font-weight="bold" text-align="right" font-size="9pt" white-space-collapse="false"><#if (totalDays!=0)>${(totalNetQty/totalDays)?if_exists?string("#0.00")}</#if></fo:block>  
+	                            			<fo:block  keep-together="always" font-weight="bold" text-align="right" font-size="9pt" white-space-collapse="false">${totalAvgSale?if_exists?string("#0.00")}</fo:block>  
 	                        			</fo:table-cell>
 	                        			<#assign grandTotalNetValue = (grandTotalNetValue + totalNetValue?if_exists)>
 	                        			<fo:table-cell>
@@ -166,7 +175,7 @@ ${setRequestAttribute("OUTPUT_FILENAME", "prdctRetrnReport.txt")}
                             			<fo:block  keep-together="always" font-weight="bold" text-align="right" font-size="9pt" white-space-collapse="false">${grandTotalNetQty?if_exists?string("#0.00")}</fo:block>  
                         			</fo:table-cell>
                         			<fo:table-cell>
-                            			<fo:block  keep-together="always" font-weight="bold" text-align="right" font-size="9pt" white-space-collapse="false"><#if (totalDays!=0)>${(grandTotalNetQty/totalDays)?if_exists?string("#0.00")}</#if></fo:block>  
+                            			<fo:block  keep-together="always" font-weight="bold" text-align="right" font-size="9pt" white-space-collapse="false">${(grandTotalAvgSale)?if_exists?string("#0.00")}</fo:block>  
                         			</fo:table-cell>
                         			<fo:table-cell>
                             			<fo:block  keep-together="always" font-weight="bold" text-align="right" font-size="9pt" white-space-collapse="false">${grandTotalNetValue?if_exists?string("#0.00")}</fo:block>  
@@ -188,7 +197,7 @@ ${setRequestAttribute("OUTPUT_FILENAME", "prdctRetrnReport.txt")}
                             			<fo:block  keep-together="always" font-weight="bold" text-align="right" font-size="9pt" white-space-collapse="false"></fo:block>  
                         			</fo:table-cell>
                         			<fo:table-cell>
-                            			<fo:block  keep-together="always" font-weight="bold" text-align="right" font-size="9pt" white-space-collapse="false"><#if (totalDays!=0)>${(milkAverageTotal/totalDays)?if_exists?string("#0.00")}</#if></fo:block>  
+                            			<fo:block  keep-together="always" font-weight="bold" text-align="right" font-size="9pt" white-space-collapse="false"><#if (totalDays!=0)>${(milkAverageTotal)?if_exists?string("#0.00")}</#if></fo:block>  
                         			</fo:table-cell>
 		                        </fo:table-row>
 		                        <fo:table-row>
@@ -202,7 +211,7 @@ ${setRequestAttribute("OUTPUT_FILENAME", "prdctRetrnReport.txt")}
                             			<fo:block  keep-together="always" font-weight="bold" text-align="right" font-size="9pt" white-space-collapse="false"></fo:block>  
                         			</fo:table-cell>
                         			<fo:table-cell>
-                            			<fo:block  keep-together="always" font-weight="bold" text-align="right" font-size="9pt" white-space-collapse="false"><#if (totalDays!=0)>${(curdAverageTotal/totalDays)?if_exists?string("#0.00")}</#if></fo:block>  
+                            			<fo:block  keep-together="always" font-weight="bold" text-align="right" font-size="9pt" white-space-collapse="false"><#if (totalDays!=0)>${(curdAverageTotal)?if_exists?string("#0.00")}</#if></fo:block>  
                         			</fo:table-cell>
 		                        </fo:table-row>
 		                         <fo:table-row>

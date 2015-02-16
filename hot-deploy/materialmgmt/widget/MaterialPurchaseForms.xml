@@ -20,6 +20,7 @@
 	        		<option key="ORDER_CREATED" description="Created"/>
 	        		<option key="ORDER_APPROVED" description="Approved"/>
 	        		<option key="ORDER_CANCELLED" description="Cancelled"/>
+	        		<option key="ORDER_SUSPENDED" description="Suspended"/>
 	        	</drop-down>
         </field>
         <field name="roleTypeId"><hidden value="BILL_FROM_VENDOR"/></field>
@@ -69,11 +70,18 @@
                 <parameter param-name="orderId"/>
             </hyperlink>
         </field>
-        <field use-when="&quot;${orderTypeId}&quot; != &quot;LETTER_OF_INTENT&quot;" name="poReport" widget-style="buttontext">
+        <field use-when="&quot;${orderTypeId}&quot; != &quot;LETTER_OF_INTENT&quot; &amp;&amp; &quot;${orderTypeId}&quot; != &quot;ARC_ORDER&quot;" name="poReport" widget-style="buttontext">
             <hyperlink target="PurchaseOrderView.pdf" description="Report" target-window="_blank">
                 <parameter param-name="orderId"/>
             </hyperlink>
         </field>
+         <field use-when="&quot;${orderTypeId}&quot; == &quot;ARC_ORDER&quot;" name="arcReport" widget-style="buttontext">
+            <hyperlink target="arcOrder.pdf" description="Report" target-window="_blank">
+                <parameter param-name="orderId"/>
+            </hyperlink>
+        </field>
+        
+        
        <field name="editOrder" widget-style="buttontext" use-when="statusId.equals(&quot;ORDER_CREATED&quot;) &amp;&amp;${groovy:((security.hasEntityPermission(&quot;MM&quot;, &quot;_EDIT_PO&quot;, session)))}" >
             <hyperlink target="editMaterialPO" description="Edit Order">
                  <parameter param-name="orderId"/>
@@ -90,15 +98,17 @@
         <field name="ApproveOrder" widget-style="buttontext" use-when="statusId.equals(&quot;ORDER_APPROVED&quot;)" ><display description="Order Approved" /></field>
         <field name="ApproveOrder" widget-style="buttontext" use-when="statusId.equals(&quot;ORDER_COMPLETED&quot;)" ><display description="Order Completed" /></field>
         <field name="ApproveOrder" widget-style="buttontext" use-when="statusId.equals(&quot;ORDER_CANCELLED&quot;)" ><display description="Order Cancelled" /></field>
+        <field name="SuspendedOrder" use-when="statusId.equals(&quot;ORDER_SUSPENDED&quot;)" ><display description="Order Suspended" /></field>
         <field name="cancelOrder" widget-style="buttontext" use-when="statusId.equals(&quot;ORDER_CREATED&quot;) &amp;&amp;${groovy:((security.hasEntityPermission(&quot;MM&quot;, &quot;_CANCEL_PO&quot;, session)))}" >
             <hyperlink target="CancelOrder" description="Cancel Order">
                  <parameter param-name="orderId"/>
                 <parameter param-name="statusId" value="ORDER_CANCELLED" />
                 <parameter param-name="setItemStatus" value="Y" />
+                <parameter param-name="roleTypeId"/>
             </hyperlink>
         </field> 
         <!-- <field use-when="(flag == &quot;N&quot;)&amp;&amp;((&quot;${statusId}&quot;!=&quot;ORDER_CANCELLED&quot;)&amp;&amp;(&quot;${statusId}&quot;!=&quot;ORDER_COMPLETED&quot;)&amp;&amp;(&quot;${statusId}&quot;!=&quot;ORDER_CREATED&quot;))"  name="raiseGRN" title="Raise GRN" widget-style="buttontext" > -->
-        <field use-when="((&quot;${statusId}&quot;!=&quot;ORDER_CANCELLED&quot;)&amp;&amp;(&quot;${statusId}&quot;!=&quot;ORDER_COMPLETED&quot;)&amp;&amp;(&quot;${statusId}&quot;!=&quot;ORDER_CREATED&quot;)) &amp;&amp;${groovy:((security.hasEntityPermission(&quot;MM&quot;, &quot;_RAISE_GRN&quot;, session)))}"  name="raiseGRN" title="Raise GRN" widget-style="buttontext" >	 <hyperlink target="raiseGRN" description="Raise GRN">
+        <field use-when="((&quot;${statusId}&quot;!=&quot;ORDER_CANCELLED&quot;)&amp;&amp;(&quot;${statusId}&quot;!=&quot;ORDER_COMPLETED&quot;)&amp;&amp;(&quot;${statusId}&quot;!=&quot;ORDER_CREATED&quot;)&amp;&amp;(&quot;${statusId}&quot;!=&quot;ORDER_SUSPENDED&quot;)) &amp;&amp;${groovy:((security.hasEntityPermission(&quot;MM&quot;, &quot;_RAISE_GRN&quot;, session)))}"  name="raiseGRN" title="Raise GRN" widget-style="buttontext" >	 <hyperlink target="raiseGRN" description="Raise GRN">
         	 	<parameter param-name="orderId"/>
         	 	<!-- <parameter param-name="vehicleId"/> -->
             </hyperlink>
@@ -133,7 +143,7 @@
     <form name="FindShipmentReceipt" title="" type="single" target="${targetRequest}" header-row-style="header-row" default-table-style="basic-table">
         <field name="datetimeReceived"><date-find/></field>
         <field name="productId"><text-find/></field>
-        <field name="receiptId" title="GRN No"><text-find/></field>
+        <field name="receiptId" title="GRN Item No"><text-find/></field>
         <field name="statusId">
         	<drop-down allow-empty="true">
         		<entity-options description="${description}" entity-name="StatusItem">
@@ -141,7 +151,7 @@
         		</entity-options>
         	</drop-down>
         </field>
-        <field name="shipmentId"><text-find/></field>
+        <field name="shipmentId" title="GRN Shipment Id"><text-find/></field>
         <field name="orderId" title="PO Order"><text-find/></field>
         <field name="noConditionFind"><hidden value="Y"/><!-- if this isn't there then with all fields empty no query will be done --></field>
         <field name="submitButton" title="${uiLabelMap.CommonFind}" widget-style="smallSubmit"><submit button-type="button"/></field>
@@ -153,7 +163,7 @@
             <service service-name="performFind" result-map="result" result-map-list="listIt">
                 <field-map field-name="inputFields" from-field="parameters"/>
                 <field-map field-name="entityName" value="ShipmentReceipt"/>
-                <field-map field-name="orderBy"  value="-lastUpdatedStamp"/>
+                <field-map field-name="orderBy"  value="-receiptId"/>
                 <field-map field-name="viewIndex" from-field="viewIndex"/>
                 <field-map field-name="viewSize" from-field="viewSize"/>
             </service>
@@ -168,14 +178,14 @@
 			</entity-one>
 			<set field="dec" from-field="uom.description"/>
         </row-actions>
-      	<field name="receiptId" title="GRN No">
+      	<field name="receiptId" title="GRN Item No">
       		<display/>
       	</field>
       	<field name="productId" title="Code- Name [UOM]">
       		<display-entity entity-name="Product" description="${productId} ${description}[${dec}]"/>
       	</field>
         <field name="datetimeReceived" title="Received Date"><display description="${groovy:org.ofbiz.base.util.UtilDateTime.toDateString(datetimeReceived, &quot;dd-MMM-yyyy&quot;);}"/></field>
-        <field name="shipmentId" title="ShipmentId"><display/></field>
+        <field name="shipmentId" title="GRN ShipmentId"><display/></field>
         <field name="orderId" title="PO No"><display/></field>
         <field name="statusId" title="Status">
         	<display-entity entity-name="StatusItem" description="${description}"/>
@@ -184,15 +194,7 @@
       	<field name="quantityRejected" title="Qty Rejected"><display/></field>
       	<field name="supplyTillDate"><display/></field>
       	<field name="receivedByUserLoginId" title="Entry by"><display/></field>	
-      	 
-      	 <field name="report" widget-style="buttontext" >
-            <hyperlink target="MRRreport.pdf" description="Report" target-window="_blank">
-             	<parameter param-name="shipmentId" value="${shipmentId}"/>
-             	<parameter param-name="orderId" value="${orderId}"/>
-              	<parameter param-name="receiptId" value="${receiptId}"/>
-               	<parameter param-name="datetimeReceived" value="${groovy:org.ofbiz.base.util.UtilDateTime.toDateString(datetimeReceived, &quot;dd-MMM-yyyy&quot;);}"/>
-            </hyperlink>
-        </field>
+      	
         <field name="statusIdTo"  > <hidden  value="SR_QUALITYCHECK" /> </field>
          <!-- <field name="SendtoQC" title="Send to QC"   use-when="statusId.equals(&quot;SR_RECEIVED&quot;)"    widget-style="buttontext"> 
            <submit button-type="button"  />
@@ -205,9 +207,9 @@
     <form name="FindMaterialShipment" title="" type="single" target="${targetRequest}" header-row-style="header-row" default-table-style="basic-table">
         
         <field name="shipmentTypeId"><hidden value="MATERIAL_SHIPMENT"/></field>
-        <field name="estimatedShipDate" title="Ship Date"><date-find/></field>
+        <field name="estimatedShipDate" title="GRN Shipment Date"><date-find/></field>
         <field name="primaryOrderId" title="PO no"><text-find/></field>
-        <field name="shipmentId"><text-find/></field>
+        <field name="shipmentId" title="GRN Shipment Id"><text-find/></field>
         <field name="partyId" title="Party"><lookup target-form-name="LookupPartyName"/></field>
         <field name="vehicleId" title="Vehicle No"><text-find/></field>
         <field name="noConditionFind"><hidden value="Y"/><!-- if this isn't there then with all fields empty no query will be done --></field>
@@ -241,13 +243,13 @@
         	</entity-condition>
         	<set field="partyId" value="${orderRoleList[0].partyId}"/> -->
         </row-actions>
-      	<field name="shipmentId" widget-style="buttontext h3">
+      	<field name="shipmentId" widget-style="buttontext h3" title="GRN Shipment Id">
       		<hyperlink target="MaterialShipmentOverview" description="${shipmentId}" target-window="_blank" >
                 <parameter param-name="shipmentId"/>
             </hyperlink>
       	</field>
       	<field name="statusId"><hidden/></field>
-        <field name="estimatedShipDate" title="Ship Date"><display description="${groovy:org.ofbiz.base.util.UtilDateTime.toDateString(estimatedShipDate, &quot;dd MMMMM, yyyy&quot;);}"/></field>
+        <field name="estimatedShipDate" title="GRN Ship Date"><display description="${groovy:org.ofbiz.base.util.UtilDateTime.toDateString(estimatedShipDate, &quot;dd MMMMM, yyyy&quot;);}"/></field>
         <field name="primaryOrderId" title="PO No" widget-style="buttontext">
         	<hyperlink target="POoverview" description="${primaryOrderId}" target-window="_blank">
       			<parameter param-name="orderId" value="${primaryOrderId}"/>
@@ -268,6 +270,13 @@
         <field name="cancelGRN" widget-style="buttontext" title="Cancel GRN" use-when="(&quot;${invSize}&quot; == &quot;0&quot;)&amp;&amp;(!statusId.equals(&quot;SHIPMENT_CANCELLED&quot;))&amp;&amp; ${groovy:((security.hasEntityPermission(&quot;MM&quot;, &quot;_RAISE_GRN&quot;, session)))}">
             <hyperlink target="CancelGrnShipment" description="Cancel GRN">
                 <parameter param-name="shipmentId"/>
+            </hyperlink>
+        </field>
+        <field name="report" widget-style="buttontext" >
+            <hyperlink target="MRRreport.pdf" description="Report" target-window="_blank">
+             	<parameter param-name="shipmentId" value="${shipmentId}"/>
+             	<parameter param-name="orderId" value="${primaryOrderId}"/>
+               	<parameter param-name="datetimeReceived" value="${groovy:org.ofbiz.base.util.UtilDateTime.toDateString(estimatedShipDate, &quot;dd-MMM-yyyy&quot;);}"/>
             </hyperlink>
         </field>
         <field name="raiseInvoice" widget-style="buttontext" title="Raise Invoice" use-when="(&quot;${invSize}&quot; == &quot;0&quot;)&amp;&amp;(!statusId.equals(&quot;SHIPMENT_CANCELLED&quot;))&amp;&amp;${groovy:((security.hasEntityPermission(&quot;MM&quot;, &quot;_RAISE_INVOICE&quot;, session)))}">
@@ -295,7 +304,7 @@
             <field-map field-name="inputFields" from-field="parameters"/>
             <field-map field-name="entityName" from-field="entityName"/>
             <field-map field-name="inputFields.statusId" value="SR_QUALITYCHECK"/>
-            <field-map field-name="orderBy" value="datetimeReceived"/>  
+            <field-map field-name="orderBy" value="-receiptId"/>  
             <field-map field-name="viewIndex" from-field="viewIndex"/>
             <field-map field-name="viewSize" from-field="viewSize"/>
           </service>

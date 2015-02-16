@@ -21,7 +21,7 @@ under the License.
 <fo:root xmlns:fo="http://www.w3.org/1999/XSL/Format">
 <#-- do not display columns associated with values specified in the request, ie constraint values -->
 <fo:layout-master-set>
-	<fo:simple-page-master master-name="main" page-height="15in" page-width="12in"
+	<fo:simple-page-master master-name="main" page-height="12in" page-width="15in"
             margin-top="0.1in" margin-bottom=".7in" margin-left=".5in" margin-right=".5in">
         <fo:region-body margin-top="2in"/>
         <fo:region-before extent="1.in"/>
@@ -29,7 +29,7 @@ under the License.
     </fo:simple-page-master>   
 </fo:layout-master-set>
      <#if productPriceMap?has_content> 
-        <#--<#if prodNameMap?has_content> -->   
+            <#--<#if prodNameMap?has_content> -->   
         <fo:page-sequence master-reference="main">
            <fo:static-content font-size="13pt" font-family="Courier,monospace"  flow-name="xsl-region-before" font-weight="bold">
 			  <fo:block  keep-together="always" text-align="center" font-family="Courier,monospace" white-space-collapse="false">&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;UserLogin : <#if userLogin?exists>${userLogin.userLoginId?if_exists}</#if></fo:block>
@@ -52,7 +52,7 @@ under the License.
 					         <fo:table-body>
 					             <fo:table-row height="50pt">
                                     <fo:table-cell>
-									    <fo:block text-align="center" >SL.No</fo:block>
+									    <fo:block text-align="center" padding-before="1cm" keep-together="always"  font-weight="bold" white-space-collapse="false">SL.No</fo:block>
 								    </fo:table-cell>     
 					                 <fo:table-cell >
 								        <fo:block text-align="center" keep-together="always" font-weight="bold" font-size="11pt">VENDOR NAME</fo:block>
@@ -150,28 +150,32 @@ under the License.
 					              <fo:table-row>
 					                 <fo:table-cell border-style="solid">
 					                      <fo:block text-align="center" font-weight="bold" font-size="11pt" >VENDOR NAME</fo:block>
-					                  </fo:table-cell>					                  
+					                  </fo:table-cell>	
+                                        				                  
     									<#list partyDetList as partyNameList>
     										<fo:table-cell border-style="solid">
 						                      <fo:block text-align="center" font-size="11pt"  font-weight="bold">${partyNameList.get("partyName")?if_exists}</fo:block>
 						                  	</fo:table-cell>
     									</#list>    									    								
 					              </fo:table-row>
-					              <#if quoteDetailList?has_content >
-					              <#list quoteDetailList as quoteList>
-					               <#assign TermType = delegator.findOne("TermType", {"termTypeId" : quoteList.get("termTypeId")}, true)?if_exists/>		   						
+					              <#if allTermsMap?has_content>
+                                 <#assign allTermsList = allTermsMap.entrySet()>                                
+					              <#list allTermsList as termList>
+                                    <#assign termTypeId=termList.getKey()>					              
 					              <fo:table-row>
 					                  <fo:table-cell border-style="solid">
-					                      <fo:block text-align="center" font-size="11pt" font-weight="bold">${TermType.description?if_exists}</fo:block>
+					                      <fo:block text-align="center" font-size="11pt" font-weight="bold">${termTypeId?if_exists}</fo:block>
 					                  </fo:table-cell>
-					                 <#list partyDetList as partyNameList>
+                                       <#assign termVal=termList.getValue()>
+                                       <#assign eachTermList = termVal.entrySet()>                                
+	                                   <#list eachTermList as term>
     										<fo:table-cell border-style="solid">
-					                      		<fo:block text-align="center" font-size="11pt" font-weight="bold">${quoteList.get("termValue")?if_exists}</fo:block>
+					                      		<fo:block text-align="center" font-size="11pt" font-weight="bold">${term.getValue()}</fo:block>
 					                 		</fo:table-cell>
-    									</#list> 					                
-					             </fo:table-row>
-					             </#list> 
-					             </#if>					              
+					                    </#list> 		
+		                         </fo:table-row>
+					            </#list> 
+                               </#if>					  
 					          </fo:table-body>
 					   </fo:table>
 				   </fo:block>  

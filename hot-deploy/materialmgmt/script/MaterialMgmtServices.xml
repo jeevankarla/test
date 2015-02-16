@@ -291,6 +291,7 @@
         <set-service-fields service-name="sendMailFromScreen" map="parameters" to-map="emailParams"/>
         <set field="emailParams.xslfoAttachScreenLocation" value="component://materialmgmt/widget/materialmgmtReportScreens.xml#MaterialEnquiryReport"/>
         <set field="emailParams.bodyParameters.custRequestId" from-field="parameters.custRequestId"/>
+         <set field="emailParams.bodyParameters.partyId" from-field="parameters.partyId"/>
         <set field="emailParams.bodyParameters.userLogin" from-field="parameters.userLogin"/>
         <call-service-asynch service-name="sendMailFromScreen" in-map-name="emailParams"/>
         <set field="successMessage" value="Enquiry Email Scheduled ToSend :${parameters.sendTo}"/>

@@ -731,7 +731,17 @@ public static Map<String, Object> setReauirementStatusId(DispatchContext ctx,Map
 			List<GenericValue> productCategoryList = delegator.findByAnd("ProductCategory", UtilMisc.toMap("productCategoryTypeId","RAW_MATERIAL"));
 			List productCategoryIdsList = EntityUtil.getFieldListFromEntityList(productCategoryList, "productCategoryId", true);
 			productList = ProductWorker.getProductsByCategoryList(delegator, productCategoryIdsList, null);
-			result.put("productList", productList);
+			List<String> prodIdsList = FastList.newInstance();
+			List<GenericValue> uniqueProducts = FastList.newInstance();
+			for(GenericValue product : productList){
+				String productId = product.getString("productId");
+				if(!prodIdsList.contains(productId)){
+					prodIdsList.add(productId);
+					uniqueProducts.add(product);
+				}
+			}
+			
+			result.put("productList", uniqueProducts);
 		}catch(Exception e){
 			Debug.logError(e.toString(), module);
 			return ServiceUtil.returnError(e.toString());
@@ -804,7 +814,7 @@ public static Map<String, Object> setReauirementStatusId(DispatchContext ctx,Map
 					  Map productMap=FastMap.newInstance();
 					  if(UtilValidate.isNotEmpty(receiptItemTotals)){
 						  Map productInnerMap= (Map)receiptItemTotals.get(productId);
-						  if(productMap!=null){
+						  if(productInnerMap!=null){
 							  receivedQty=(BigDecimal)productInnerMap.get("receivedQty");
 							  receivedQtyValue=(BigDecimal)productInnerMap.get("receivedQtyValue");
 						  }
@@ -856,7 +866,7 @@ public static Map<String, Object> setReauirementStatusId(DispatchContext ctx,Map
     	  EntityCondition condition = EntityCondition.makeCondition(conditionList, EntityOperator.AND); 
     	  partyRelationshipAndDetailList = delegator.findList("PartyRelationshipAndDetail", condition, null, null, null, false);
     	  if(UtilValidate.isNotEmpty(partyRelationshipAndDetailList)){
-    		   partyIds = EntityUtil.getFieldListFromEntityList(partyRelationshipAndDetailList, "partyIdTo", true);
+    		   partyIds = EntityUtil.getFieldListFromEntityList(partyRelationshipAndDetailList, "partyId", true);
     	  }
       }catch(GenericEntityException e){
 		Debug.logError("Error fetching employments " + e.getMessage(), module);
@@ -864,6 +874,50 @@ public static Map<String, Object> setReauirementStatusId(DispatchContext ctx,Map
   		result.put("subDivisionDepartmentList", partyRelationshipAndDetailList);
   		result.put("subDivisionPartyIds", partyIds);
   		return result;
-  }   
+  } 
+  public static  Map<String, Object> getUnitPriceAndQuantity(DispatchContext dctx, Map context) {
+	 	GenericValue userLogin = (GenericValue) context.get("userLogin");
+	 	Date date =  (Date)context.get("date");
+	 	Timestamp dateTime = (Timestamp)context.get("dateTime");
+	 	String custRequestId = (String)context.get("custRequestId");
+	 	String custRequestItemSeqId = (String)context.get("custRequestItemSeqId");
+        Delegator delegator = dctx.getDelegator();
+        Timestamp issuedDateTime=null;
+        BigDecimal totalQty = BigDecimal.ZERO;
+        BigDecimal totalUnitPrice = BigDecimal.ZERO;
+        BigDecimal totalValue = BigDecimal.ZERO;
+        if(UtilValidate.isNotEmpty(dateTime)){
+        	issuedDateTime = UtilDateTime.getDayEnd(dateTime);
+        }else if(UtilValidate.isNotEmpty(date)){
+        	issuedDateTime = UtilDateTime.getDayEnd(UtilDateTime.toTimestamp(date));
+        }else{
+        	issuedDateTime = UtilDateTime.getDayEnd(UtilDateTime.nowTimestamp());
+        }
+      Map result = ServiceUtil.returnSuccess();
+      try {
+    	  List conditionList = FastList.newInstance();
+    	  conditionList.add(EntityCondition.makeCondition("custRequestItemSeqId",EntityOperator.EQUALS,custRequestItemSeqId));
+    	  conditionList.add(EntityCondition.makeCondition("issuedDateTime",EntityOperator.LESS_THAN_EQUAL_TO,issuedDateTime));
+    	  conditionList.add(EntityCondition.makeCondition("custRequestId",EntityOperator.EQUALS,custRequestId));
+    	  EntityCondition condition = EntityCondition.makeCondition(conditionList, EntityOperator.AND); 
+    	  List<GenericValue> itemIssuances=delegator.findList("ItemIssuance",condition,null,null,null,false);
+			if(UtilValidate.isNotEmpty(itemIssuances)){
+				for(GenericValue issuedItem:itemIssuances){
+					GenericValue inventoryItem = delegator.findOne("InventoryItem",UtilMisc.toMap("inventoryItemId",issuedItem.get("inventoryItemId")),false);
+					totalValue = totalValue.add(((BigDecimal)inventoryItem.get("unitCost")).multiply((BigDecimal)issuedItem.get("quantity")));
+					totalUnitPrice = totalUnitPrice.add((BigDecimal)inventoryItem.get("unitCost"));
+					totalQty = totalQty.add((BigDecimal)issuedItem.get("quantity"));
+				}
+				totalUnitPrice = totalUnitPrice.divide(new BigDecimal((itemIssuances.size())));
+			}
+			result.put("totalUnitPrice",totalUnitPrice);
+			result.put("totalQty",totalQty);
+			result.put("totalValue",totalValue);
+      }
+      catch (GenericEntityException e) {
+          Debug.logError(e, "Error While getting the Quantity and UnitPrice.!");
+      }        
+      return result;
+}
 }
 

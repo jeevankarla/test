@@ -63,7 +63,12 @@
        <response name="success" type="view" value="PurchageOrderOverView"/>
        <response name="error" type="view" value="PurchageOrderOverView"/>
      </request-map>
-     
+     <request-map uri="suspendPO">
+       <security https="true" auth="true"/>
+        <event type="service" invoke="suspendPO"/>
+       <response name="success" type="view" value="PurchageOrderOverView"/>
+       <response name="error" type="view" value="PurchageOrderOverView"/>
+     </request-map>
      <request-map uri="creatNewnote">
         <security https="true" auth="true"/>
         <response name="success" type="view" value="creatNewnote"/>
@@ -220,7 +225,7 @@
        <security https="true" auth="true"/>
        <event type="service" path="" invoke="approveRequestByHOD"></event>
        <response name="success" type="request-redirect-noparam" value="ApproveRequestsByDeptHead"/>
-       <response name="error" type="view" value="ApproveRequestsByDeptHead"/>
+       <response name="error" type="request-redirect-noparam" value="ApproveRequestsByDeptHead"/>
      </request-map>
      <request-map uri="updateMaterialQuoteTerm">
        <security https="true" auth="true"/>
@@ -295,7 +300,7 @@
        <security https="true" auth="true"/>
        <event type="service" path="" invoke="createPOForQuote"></event>
        <response name="success" type="request" value="editMaterialPO"/>
-       <response name="error" type="view" value="ViewMaterialQuote"/>
+        <response name="error" type="view" value="ViewMaterialQuote"/>
      </request-map>
      <request-map uri="MRRreport.pdf">
         <security https="true" auth="true"/>
@@ -312,7 +317,7 @@
        <security https="true" auth="true"/>
        <event type="service" path="" invoke="setCustRequestItemStatus"></event>
        <response name="success" type="request-redirect-noparam" value="ApproveRequestsByDeptHead"/>
-       <response name="error" type="view" value="ApproveRequestsByDeptHead"/>
+       <response name="error" type="request-redirect-noparam" value="ApproveRequestsByDeptHead"/>
      </request-map>
      
      <request-map uri="acceptReceiptQtyByQC">
@@ -608,7 +613,12 @@
         <response name="success" type="view" value="ViewMaterialEnquiry"/>
         <response name="error" type="view" value="ViewMaterialEnquiry"/>
     </request-map>
-    
+     <request-map uri="cancelEnquiryStatus">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="cancelEnquiry"/>
+        <response name="success" type="request-redirect-noparam" value="FindMaterialEnquiry"/>
+        <response name="error" type="request-redirect-noparam" value="FindMaterialEnquiry"/>
+    </request-map>
     <request-map uri="updateIndentStatus">
         <security https="true" auth="true"/>
         <event type="service" invoke="setRequestStatus"/>
@@ -844,6 +854,10 @@
      <request-map uri="purchaseAccountSummery.pdf">
         <security https="true" auth="true"/>
     	<response name="success" type="view" value="purchaseAccountSummeryPDF"/>
+    </request-map>
+         <request-map uri="purchaseAccountSummeryNew.pdf">
+        <security https="true" auth="true"/>
+    	<response name="success" type="view" value="purchaseAccountSummeryNewPDF"/>
     </request-map>
     
     <request-map uri="stockPosition">
@@ -1123,7 +1137,24 @@
        <security https="true" auth="true"/>
        <event type="groovy" path="component://materialmgmt/webapp/materialmgmt/WEB-INF/actions/purchases/"  invoke="materialUpdateUomIds.groovy"/>
        <response name="success" type="request" value="json"/>    
+    </request-map>
+    <request-map uri="sendEquiryEmailDataAjax">
+       <security https="true" auth="true"/>
+       <event type="groovy" path="component://materialmgmt/webapp/materialmgmt/WEB-INF/actions/purchases/email/"  invoke="getEnquiryEmailData.groovy"/>
+       <response name="success" type="request" value="json"/>    
    </request-map>
+    <request-map uri="sendEquiryEmailToSupplier">
+       <security https="true" auth="true"/>
+       <event type="service"   invoke="sendEquiryPerEmail"/>
+       <response name="success" type="request-redirect" value="ViewMaterialEnquiry">  
+       <redirect-parameter name="custRequestId"/>
+       </response>
+       <response name="error" type="request" value="ViewMaterialEnquiry"/>   
+   </request-map>
+   <request-map uri="MaterialIndentReport.pdf">
+        <security https="true" auth="true"/>                        
+        <response name="success" type="view" value="MaterialIndentReport"/>        
+    </request-map>
     
     <view-map name="main" type="screen" page="component://materialmgmt/widget/materialmgmtScreens.xml#main"/>
     <view-map name="mainNg" type="screen" page="component://materialmgmt/widget/materialmgmtScreens.xml#mainNG"/>
@@ -1143,6 +1174,8 @@
     <view-map name="StoreReports" type="screen" page="component://materialmgmt/widget/materialmgmtReportScreens.xml#StoreReports" />
     <view-map name="purchaseTaxReportPDF" type="screenfop" page="component://materialmgmt/widget/materialmgmtReportScreens.xml#PurchaseTaxReportPDF" content-type="application/pdf"/>
     <view-map name="purchaseAccountSummeryPDF" type="screenfop" page="component://materialmgmt/widget/materialmgmtReportScreens.xml#purchaseAccountSummeryPDF" content-type="application/pdf"/>
+        <view-map name="purchaseAccountSummeryNewPDF" type="screenfop" page="component://materialmgmt/widget/materialmgmtReportScreens.xml#purchaseAccountSummeryNewPDF" content-type="application/pdf"/>
+    
     <view-map name="PurchaseTaxProductReportPDF" type="screenfop" page="component://materialmgmt/widget/materialmgmtReportScreens.xml#PurchaseTaxProductReportPDF" content-type="application/pdf"/>
        <view-map name="PurchaseTaxProductReportCSV" type="screencsv" page="component://materialmgmt/widget/materialmgmtReportScreens.xml#PurchaseTaxProductReportCSV"  content-type="text/csv" encoding="none"/>
     <view-map name="StockPosition" type="screen" page="component://materialmgmt/widget/materialmgmtScreens.xml#StockPosition"/>   
@@ -1176,6 +1209,7 @@
     <view-map name="ArcOrderPDF" type="screenfop" page="component://materialmgmt/widget/materialmgmtReportScreens.xml#ArcOrderPDF" content-type="application/pdf"/>
    <view-map name="pendingQuantityARCPDF" type="screenfop" page="component://materialmgmt/widget/materialmgmtReportScreens.xml#pendingQuantityARCPDF" content-type="application/pdf"/>
        <view-map name="listofpendingPOsPDF" type="screenfop" page="component://materialmgmt/widget/materialmgmtReportScreens.xml#listofpendingPOsPDF" content-type="application/pdf"/>
+       <view-map name="MaterialIndentReport" type="screenfop" page="component://materialmgmt/widget/materialmgmtReportScreens.xml#MaterialIndentReport" content-type="application/pdf"/>
     
     <view-map name="letterOfAcceptancePDF" type="screenfop" page="component://materialmgmt/widget/materialmgmtReportScreens.xml#letterOfAcceptancePDF" content-type="application/pdf"/>
     <view-map name="PurchaseOrderViewPDF" type="screenfop" page="component://materialmgmt/widget/materialmgmtReportScreens.xml#PurchaseOrderViewPDF" content-type="application/pdf"/>

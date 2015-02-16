@@ -176,7 +176,10 @@ vatMap=[:];
 																totProd["amount"]+= productValue.getValue().get("totalRevenue");
 																prodTempMap.put(product.brandName,totProd);
 															}
-														    virtualProductId = product.brandName;
+															virtualProductId = "";
+															if(product.brandName){
+																virtualProductId = product.brandName;
+															}
 															context.prodTempMap=prodTempMap;
 														}
 														if(UtilValidate.isEmpty(tempVariantMap[virtualProductId])){

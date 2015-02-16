@@ -38,8 +38,17 @@ import org.ofbiz.product.inventory.InventoryWorker;
 import in.vasista.vbiz.purchase.MaterialHelperServices;
 
 dctx = dispatcher.getDispatchContext();
+userLogin= context.userLogin;
 organisationList = delegator.findByAnd("PartyRoleAndPartyDetail", [roleTypeId : "INTERNAL_ORGANIZATIO"], ["groupName", "partyId"]);
-departmentList = delegator.findByAnd("PartyRelationshipAndDetail", [roleTypeIdFrom : "INTERNAL_ORGANIZATIO",roleTypeIdTo : "DIVISION"], ["groupName", "partyId"]);
+//departmentList = delegator.findByAnd("PartyRelationshipAndDetail", [roleTypeIdFrom : "INTERNAL_ORGANIZATIO",roleTypeIdTo : "DIVISION"], ["groupName", "partyId"]);
+// sub division here
+inputMap = [:];
+inputMap.put("userLogin", userLogin);
+inputMap.put("fromDate", UtilDateTime.addDaysToTimestamp(UtilDateTime.nowTimestamp(), -730));
+Map departmentsMap = MaterialHelperServices.getDivisionDepartments(dctx,inputMap);
+if(UtilValidate.isNotEmpty(departmentsMap)){
+	departmentList=departmentsMap.get("subDivisionDepartmentList");
+}
 finalDepartmentList = [];
 if(UtilValidate.isNotEmpty(organisationList)){
 	finalDepartmentList.addAll(organisationList);

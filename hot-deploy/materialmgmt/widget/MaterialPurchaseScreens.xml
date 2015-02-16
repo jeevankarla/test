@@ -73,15 +73,16 @@
                 <set field="titleProperty" value="Find Purchase Order"/>              
 			    <set field="tabButtonItem" value="FindMaterialPO" />	
                <set field="targetRequest" value="FindMaterialPO"/>
-                 <set field="parameters.roleTypeId" value="MAINSTORE_VENDOR"/>
-                 <set field="orderId" from-field="parameters.orderId"/>
-                 <set field="changeFlag" value="PurchaseOrder"/> 
-                  <set field="parameters.changeFlag" value="PurchaseOrder"/> 
-                <script location="component://byproducts/webapp/byproducts/WEB-INF/actions/facility/enablePartyAutoComplete.groovy"/>
-                <script location="component://materialmgmt/webapp/materialmgmt/WEB-INF/actions/orgnigationDept.groovy"/>
-                 <script location="component://materialmgmt/webapp/materialmgmt/WEB-INF/actions/purchases/PurchaseEntryFormNew.groovy"/>
-                 <script location="component://materialmgmt/webapp/materialmgmt/WEB-INF/actions/purchases/EditPOEntryForm.groovy"/>
-                 <set field="purchaseTypeFlag" from-field="parameters.purchaseTypeFlag"/>
+               <set field="parameters.roleTypeId" value="MAINSTORE_VENDOR"/>
+               <set field="orderId" from-field="parameters.orderId"/>
+               <set field="changeFlag" value="PurchaseOrder"/>
+               <set field="parameters.POId" from-field="orderId"/> 
+               <set field="parameters.changeFlag" value="PurchaseOrder"/> 
+               <script location="component://byproducts/webapp/byproducts/WEB-INF/actions/facility/enablePartyAutoComplete.groovy"/>
+               <script location="component://materialmgmt/webapp/materialmgmt/WEB-INF/actions/orgnigationDept.groovy"/>
+               <script location="component://materialmgmt/webapp/materialmgmt/WEB-INF/actions/purchases/PurchaseEntryFormNew.groovy"/>
+               <script location="component://materialmgmt/webapp/materialmgmt/WEB-INF/actions/purchases/EditPOEntryForm.groovy"/>
+               <set field="purchaseTypeFlag" from-field="parameters.purchaseTypeFlag"/>
             </actions>
             <widgets>
                  <decorator-screen name="materialmgmtNgCommonDecorator" location="${parameters.mainDecoratorLocation}">
@@ -89,6 +90,7 @@
                         <section>
                             <widgets>
                                <label style="h1">Order Id : "${orderId}"</label>
+                               
                                <platform-specific><html><html-template location="component://materialmgmt/webapp/materialmgmt/purchase/CreateMPO.ftl"/></html></platform-specific>
                             </widgets>
                         </section>
@@ -107,7 +109,7 @@
 			    <service service-name="performFind" result-map="result" result-map-list="listIt">
 	                <field-map field-name="inputFields" from-field="parameters"/>
 	                <field-map field-name="entityName" value="OrderHeaderAndSequenceAndRoles"/>
-	                <field-map field-name="orderBy"  value="-orderDate"/>
+	                <field-map field-name="orderBy" value="-orderId" />
                 </service>
                <set field="targetRequest" value="FindMaterialPO"/>
                <set field="ChannalType" value="MATERIAL_PUR_CHANNEL"/>
@@ -154,7 +156,7 @@
     <screen name="FindGRNReceipts">
         <section>
             <actions>
-                <set field="titleProperty" value="Find GRN"/>              
+                <set field="titleProperty" value="Find GRN Items"/>              
 			    <set field="tabButtonItem" value="FindGRNReceipts" />
 			    <set field="tabButtonItem2" value="FindGRNReceipts" />	
                <set field="viewSize" from-field="parameters.VIEW_SIZE"/>
@@ -193,7 +195,7 @@
 	<screen name="FindGRNShipments">
         <section>
             <actions>
-                <set field="titleProperty" value="Find Shipments"/>              
+                <set field="titleProperty" value="Find GRN Shipments"/>              
 			    <set field="tabButtonItem" value="FindGRNReceipts" />
 			    <set field="tabButtonItem2" value="FindGRNShipments" />	
                <set field="viewSize" from-field="parameters.VIEW_SIZE"/>

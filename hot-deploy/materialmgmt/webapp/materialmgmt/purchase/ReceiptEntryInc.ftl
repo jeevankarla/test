@@ -103,6 +103,10 @@
 			var prodId = productId.toUpperCase();
 			}
 			var qty = parseFloat(data[rowCount]["quantity"]);
+			
+			if( (qty==0) || (isNaN(qty))) {
+			alert("please enter received quantity");
+			 }
 	 		if (!isNaN(qty) && qty>0 ) {	 		
 				var inputProd = jQuery("<input>").attr("type", "hidden").attr("name", "productId_o_" + rowCountIndex).val(prodId);
 				var inputQty = jQuery("<input>").attr("type", "hidden").attr("name", "quantity_o_" + rowCountIndex).val(qty);
@@ -148,7 +152,7 @@
 		window.location.reload(true);
    		return false;	 
    		}
-		var suppInvoice = jQuery("<input>").attr("type", "hidden").attr("name", "supplierInvoiceId").val(suppInvoiceId);
+		var suppInvoice = jQuery("<input>").attr("type", "hidden").attr("name", "suppInvoiceId").val(suppInvoiceId);
 		var suppInvoiceDate = $("#suppInvoiceDate").val();
 		if(suppInvoiceDate == '')
 		{
@@ -156,7 +160,7 @@
 		window.location.reload(true);
    		return false;	 
    		}
-		var suppInvDate = jQuery("<input>").attr("type", "hidden").attr("name", "supplierInvoiceDate").val(suppInvoiceDate);
+		var suppInvDate = jQuery("<input>").attr("type", "hidden").attr("name", "suppInvoiceDate").val(suppInvoiceDate);
 		var withoutPO =  jQuery("<input>").attr("type", "hidden").attr("name", "withoutPO").val($("#withoutPO").val());
 	
 		var deliveryChallanNo = $("#deliveryChallanNo").val();
@@ -254,9 +258,7 @@
 		 if(parseInt(value) <0 ){
 			return {valid: false, msg: "required quantity Should not be less than or equals to zero" + value};
 		 }
-	     if(remainder !=0 ){
-			return {valid: false, msg: "packets should not be in decimals " + value};
-		 }
+	     
       return {valid: true, msg: null};
     }
     function deliveryChallanQtyValidator(value ,item) {
@@ -264,9 +266,7 @@
 		var floorValue = Math.floor(quarterVal);
 		var remainder = quarterVal - floorValue;
 		var remainderVal =  Math.floor(value) - value;
-	     if(remainder !=0 ){
-			return {valid: false, msg: "packets should not be in decimals " + value};
-		}
+	     
       return {valid: true, msg: null};
     }
     

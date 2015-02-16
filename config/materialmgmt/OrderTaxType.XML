@@ -7,5 +7,6 @@
     <OrderTaxType orderTaxTypeId="300" taxType="VAT_PUR" taxRate="14.5" fromDate="2014-01-01 00:00:00"/>
     <OrderTaxType orderTaxTypeId="301" taxType="VAT_PUR" taxRate="5.5" fromDate="2014-01-01 00:00:00"/>
     <OrderTaxType orderTaxTypeId="400" taxType="SER_PUR" taxRate="12.36" fromDate="2014-01-01 00:00:00"/>
+    <OrderTaxType orderTaxTypeId="102" taxType="EXCISE_DUTY_PUR" taxRate="10.3" fromDate="2014-01-01 00:00:00"/>
 </entity-engine-xml>
 

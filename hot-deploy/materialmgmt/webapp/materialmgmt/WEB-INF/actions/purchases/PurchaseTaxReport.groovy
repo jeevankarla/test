@@ -282,7 +282,7 @@ def populateDeptInvoiceDetail(departmentId, invoiceIdsList){
 					innerTaxItemMap["vchrType"]="Purchase";
 					innerTaxItemMap["crOrDbId"]="D";
 					invoiceDisItemList = delegator.findList("InvoiceAndItem",EntityCondition.makeCondition(EntityCondition.makeCondition("invoiceId", EntityOperator.EQUALS, invoiceItem.invoiceId),EntityOperator.AND,
-							EntityCondition.makeCondition("invoiceItemTypeId", EntityOperator.EQUALS, "COGS_ITEM17"))  , null, null, null, false );
+							EntityCondition.makeCondition("invoiceItemTypeId", EntityOperator.EQUALS, "COGS_DISC"))  , null, null, null, false );
 					if(UtilValidate.isNotEmpty(invoiceDisItemList)){
 						discountInvoiceItem=invoiceDisItemList.getFirst();
 						invTotalVal+=org.ofbiz.accounting.invoice.InvoiceWorker.getPurchaseInvoiceItemTotal(discountInvoiceItem,false);
@@ -376,7 +376,7 @@ def populateDeptInvoiceDetail(departmentId, invoiceIdsList){
 					innerTaxItemMap["crOrDbId"]="D";
 					//to get Discount Item
 					invoiceDisItemList = delegator.findList("InvoiceAndItem",EntityCondition.makeCondition(EntityCondition.makeCondition("invoiceId", EntityOperator.EQUALS, invoiceItem.invoiceId),EntityOperator.AND,
-							EntityCondition.makeCondition("invoiceItemTypeId", EntityOperator.EQUALS, "COGS_ITEM17")) , null, null, null, false );
+							EntityCondition.makeCondition("invoiceItemTypeId", EntityOperator.EQUALS, "COGS_DISC")) , null, null, null, false );
 					if(UtilValidate.isNotEmpty(invoiceDisItemList)){
 						discountInvoiceItem=invoiceDisItemList.getFirst();
 						invTotalVal+=org.ofbiz.accounting.invoice.InvoiceWorker.getPurchaseInvoiceItemTotal(discountInvoiceItem,false);
@@ -473,7 +473,7 @@ def populateDeptInvoiceDetail(departmentId, invoiceIdsList){
 				innerTaxItemMap["crOrDbId"]="D";
 				//to get Discount Item
 				invoiceDisItemList = delegator.findList("InvoiceAndItem",EntityCondition.makeCondition(EntityCondition.makeCondition("invoiceId", EntityOperator.EQUALS, invoiceItem.invoiceId),EntityOperator.AND,
-						EntityCondition.makeCondition("invoiceItemTypeId", EntityOperator.EQUALS, "COGS_ITEM17"))  , null, null, null, false );
+						EntityCondition.makeCondition("invoiceItemTypeId", EntityOperator.EQUALS, "COGS_DISC"))  , null, null, null, false );
 				if(UtilValidate.isNotEmpty(invoiceDisItemList)){
 					discountInvoiceItem=invoiceDisItemList.getFirst();
 					invTotalVal+=org.ofbiz.accounting.invoice.InvoiceWorker.getPurchaseInvoiceItemTotal(discountInvoiceItem,false);
