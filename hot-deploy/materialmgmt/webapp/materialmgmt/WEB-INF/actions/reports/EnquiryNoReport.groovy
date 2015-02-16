@@ -21,6 +21,14 @@ import org.ofbiz.service.ServiceUtil;
 import org.ofbiz.party.contact.ContactHelper;
 
 custRequestId=parameters.issueToEnquiryNo;
+CustRequestSequenceDetails = delegator.findList("CustRequestSequence",EntityCondition.makeCondition("custRequestId", EntityOperator.EQUALS , custRequestId)  , null, null, null, false );
+CustRequestSequence= EntityUtil.getFirst(CustRequestSequenceDetails);
+if(CustRequestSequence){
+	if(UtilValidate.isNotEmpty(CustRequestSequence.custRequestNo)){
+		enquirySequenceNo=CustRequestSequence.custRequestNo;
+		context.enquirySequenceNo=enquirySequenceNo;
+	}
+}
 custReqDetails = delegator.findOne("CustRequest", [custRequestId : custRequestId], false);
 if(UtilValidate.isNotEmpty(custReqDetails)){
 	enquiryDate = custReqDetails.custRequestDate;

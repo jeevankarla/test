@@ -32,8 +32,8 @@ under the License.
             <#--<#if prodNameMap?has_content> -->   
         <fo:page-sequence master-reference="main">
            <fo:static-content font-size="13pt" font-family="Courier,monospace"  flow-name="xsl-region-before" font-weight="bold">
-			  <fo:block  keep-together="always" text-align="center" font-family="Courier,monospace" white-space-collapse="false">&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;UserLogin : <#if userLogin?exists>${userLogin.userLoginId?if_exists}</#if></fo:block>
-			  <fo:block  keep-together="always" text-align="center" font-family="Courier,monospace" white-space-collapse="false">&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;Date:${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(nowTimestamp, "dd/MM/yy HH:mm:ss")}</fo:block> 
+			  <fo:block  keep-together="always" text-align="center" font-family="Courier,monospace" white-space-collapse="false">&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;                                UserLogin : <#if userLogin?exists>${userLogin.userLoginId?if_exists}</#if></fo:block>
+			  <fo:block  keep-together="always" text-align="center" font-family="Courier,monospace" white-space-collapse="false">&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;                                Date:${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(nowTimestamp, "dd/MM/yy HH:mm:ss")}</fo:block> 
 		      <fo:block  keep-together="always" text-align="center" font-family="Courier,monospace" white-space-collapse="false" font-size="12pt" > &#160;&#160;  </fo:block>
               <fo:block  keep-together="always" text-align="center" font-weight = "bold" font-family="Courier,monospace" white-space-collapse="false">${uiLabelMap.KMFDairyHeader}</fo:block>
 			  <fo:block  keep-together="always" text-align="center" font-family="Courier,monospace" white-space-collapse="false" font-weight="bold">${uiLabelMap.KMFDairySubHeader}</fo:block> 
@@ -41,7 +41,7 @@ under the License.
               <fo:block text-align="center" keep-together="always"  >&#160;---------------------------------------------------------------------------------------------------</fo:block>
             </fo:static-content>                 
                 <fo:flow flow-name="xsl-region-body"   font-family="Courier,monospace">				        
-				   <fo:block text-align="left" keep-together="always" white-space-collapse="false" font-size="12pt" font-weight="bold">ENQUIRY NO.: ${parameters.issueToEnquiryNo}                                                          SEQUENCE NO.: ${enquirySequenceNo?if_exists}       </fo:block>	
+				   <fo:block text-align="left" keep-together="always" white-space-collapse="false" font-size="12pt" font-weight="bold">ENQUIRY NO.: ${parameters.issueToEnquiryNo}                                                                                    ENQUIRYSEQUENCE NO.: ${enquirySequenceNo?if_exists}       </fo:block>	
 				   <fo:block font-family="Courier,monospace">
 	                 <fo:table  border-style="solid">
 	                     <fo:table-column column-width="70pt"/>
@@ -99,12 +99,13 @@ under the License.
                            		 <#assign productId=productEntry.getKey()>
                            		 <#assign product = delegator.findOne("Product", {"productId" : productId}, true)?if_exists/>
                            		 <#assign productEntryValue=productEntry.getValue()> 
-                                <#if product.quantityUomId?if_exists>
+                                 <#if product.quantityUomId?if_exists>
 									<#assign uomId =  product.quantityUomId>
-                                    <#assign unit = delegator.findOne("Uom", {"uomId" : uomId}, true)?if_exists/>
+                                    <#assign uom = delegator.findOne("Uom", {"uomId" : uomId}, true)?if_exists/>
+                                    <#assign unit=uom.description>
                                   <#else>
                                     <#assign unit = "">       
-								</#if>                           
+								 </#if>                           
                                 <fo:table-row>
                                     <fo:table-cell border-style="solid">
 									    <fo:block text-align="center" keep-together="always" font-size="11pt" >${sno?if_exists}</fo:block>
@@ -113,7 +114,7 @@ under the License.
 		  					            <fo:block text-align="center" font-size="11pt" >${product.description}</fo:block>
 		  					        </fo:table-cell>
  		  					         <fo:table-cell border-style="solid">
-		  					            <fo:block text-align="center" font-size="11pt" white-space-collapse="false">${productEntryValue} ${unit}</fo:block>
+		  					            <fo:block text-align="center" font-size="11pt" >${productEntryValue?if_exists} ${unit?if_exists}</fo:block>
 		  					        </fo:table-cell>
 		  					        <fo:table-cell border-style="solid">
 		  					            <fo:block text-align="center" font-size="11pt" >${poDateMap.get(productId)?if_exists}</fo:block>
@@ -148,20 +149,19 @@ under the License.
 					      </#list> 					                					      
 					          <fo:table-body>
 					              <fo:table-row>
-					                 <fo:table-cell border-style="solid">
+					                  <fo:table-cell border-style="solid">
 					                      <fo:block text-align="center" font-weight="bold" font-size="11pt" >VENDOR NAME</fo:block>
-					                  </fo:table-cell>	
-                                        				                  
-    									<#list partyDetList as partyNameList>
-    										<fo:table-cell border-style="solid">
-						                      <fo:block text-align="center" font-size="11pt"  font-weight="bold">${partyNameList.get("partyName")?if_exists}</fo:block>
-						                  	</fo:table-cell>
-    									</#list>    									    								
+					                  </fo:table-cell>	                                      				                  
+    								  <#list partyDetList as partyNameList>
+    								  <fo:table-cell border-style="solid">
+						                  <fo:block text-align="center" font-size="11pt"  font-weight="bold">${partyNameList.get("partyName")?if_exists}</fo:block>
+						              </fo:table-cell>
+    								  </#list>    									    								
 					              </fo:table-row>
 					              <#if allTermsMap?has_content>
-                                 <#assign allTermsList = allTermsMap.entrySet()>                                
+                                  <#assign allTermsList = allTermsMap.entrySet()>                                
 					              <#list allTermsList as termList>
-                                    <#assign termTypeId=termList.getKey()>					              
+                                  <#assign termTypeId=termList.getKey()>					              
 					              <fo:table-row>
 					                  <fo:table-cell border-style="solid">
 					                      <fo:block text-align="center" font-size="11pt" font-weight="bold">${termTypeId?if_exists}</fo:block>
@@ -169,20 +169,19 @@ under the License.
                                        <#assign termVal=termList.getValue()>
                                        <#assign eachTermList = termVal.entrySet()>                                
 	                                   <#list eachTermList as term>
-    										<fo:table-cell border-style="solid">
-					                      		<fo:block text-align="center" font-size="11pt" font-weight="bold">${term.getValue()}</fo:block>
-					                 		</fo:table-cell>
-					                    </#list> 		
+    								   <fo:table-cell border-style="solid">
+					                      <fo:block text-align="center" font-size="11pt" font-weight="bold">${term.getValue()}</fo:block>
+					                   </fo:table-cell>
+					                   </#list>  		
 		                         </fo:table-row>
 					            </#list> 
                                </#if>					  
 					          </fo:table-body>
 					   </fo:table>
-				   </fo:block>  
-				   
+				   </fo:block>  				   
 				   <fo:block linefeed-treatment="preserve">&#xA;</fo:block>		        
 				   <fo:block linefeed-treatment="preserve">&#xA;</fo:block>		        				   
-                   <fo:block text-align="left" keep-together="always"  font-weight="bold" white-space-collapse="false" font-size="11pt" >VENDOR NAME</fo:block>
+                   <fo:block text-align="left" keep-together="always"  font-weight="bold" white-space-collapse="false" font-size="13pt" >VENDOR NAME</fo:block>
 			       <#list partyDetList as partyNameList>
 						 <fo:block text-align="left" font-size="11pt" font-weight="bold">${partyNameList.get("partyName")}</fo:block>
     				</#list>   
@@ -192,7 +191,7 @@ under the License.
 				   <fo:block linefeed-treatment="preserve">&#xA;</fo:block>
 				   <fo:block linefeed-treatment="preserve">&#xA;</fo:block>		        
 				   <fo:block linefeed-treatment="preserve">&#xA;</fo:block>		        
-				   <fo:block text-align="left" keep-together="always" white-space-collapse="false">(CASE WORKER)                Purchase Officer                Manager(Purchase)                PRE AUDITOR</fo:block>				   
+				   <fo:block text-align="left" keep-together="always" white-space-collapse="false">(CASE WORKER)                         Purchase Officer                       Manager(Purchase)                         PRE AUDITOR</fo:block>				   
 			    </fo:flow>	
 		 </fo:page-sequence>	
 		 <#-- </#if>   --> 	
