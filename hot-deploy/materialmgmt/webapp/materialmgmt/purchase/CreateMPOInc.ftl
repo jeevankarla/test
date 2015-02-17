@@ -697,7 +697,12 @@
 			$("#boothId").focus();      
 		}  		
 	});
-	
+//
+function newGrid(){
+	//var data = []; 
+        grid.setData(data);
+        grid.render();
+}
 	
 // to show special related fields in form			
 
