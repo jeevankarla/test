@@ -4,16 +4,29 @@
 <script type="text/javascript">
 	
 	function datetimepick(){
-	$("#effectiveDate").datetimepicker({
-			dateFormat:'dd:mm:yy',
-			showSecond: false,
-			timeFormat: 'hh:mm',
-	        changeMonth: true,
-			numberOfMonths: 1
-			});
-			$('#ui-datepicker-div').css('clip','auto');
+	
+	//$("#effectiveDate").datetimepicker({
+	//		dateFormat:'dd:mm:yy',
+	//		changeMonth: true,
+	//		minDate:"#effectiveDate",
+	//		numberOfMonths: 1,
+	//	});	
+		
+ var currentTime = new Date();
+ // First Date Of the month 
+ var startDateFrom = new Date(currentTime.getFullYear(),currentTime.getMonth(),1);
+ // Last Date Of the Month 
+ var startDateTo = new Date(currentTime.getFullYear(),currentTime.getMonth() +1,0);
+  
+ $("#effectiveDate").datetimepicker({
+	dateFormat:'dd:mm:yy',
+	changeMonth: true,
+    minDate: startDateFrom,
+   // maxDate: startDateTo
+ });	
 			
-			}
+	$('#ui-datepicker-div').css('clip', 'auto');	
+	  }
 	
 	$(document).ready(function(){
 	
