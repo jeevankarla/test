@@ -824,6 +824,10 @@ under the License.
         <security https="true" auth="true"/>
         <response name="success" type="view" value="FindBenefitsOrDeductions"/>
     </request-map>
+    <request-map uri="WaterCharges">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="WaterCharges"/>
+    </request-map>
     <request-map uri="benDedCheckList">
     	<security https="true" auth="true"/>
     	<response name="success" type="view" value="benDedCheckList"></response>
@@ -2326,6 +2330,7 @@ under the License.
     <view-map name="EditPartyBenefits" type="screen" page="component://humanres/widget/EmploymentScreens.xml#EditPartyBenefits"/>
     <view-map name="EditPartyDeductions" type="screen" page="component://humanres/widget/EmploymentScreens.xml#EditPartyDeductions"/>
     <view-map name="FindBenefitsOrDeductions" type="screen" page="component://humanres/widget/EmploymentScreens.xml#FindBenefitsOrDeductions"/>
+    <view-map name="WaterCharges" type="screen" page="component://humanres/widget/EmploymentScreens.xml#WaterCharges"/>  
     <view-map name="benDedCheckList" type="screenfop" page="component://humanres/widget/EmploymentScreens.xml#benDedCheckList" content-type="text/plain"/>
     <view-map name="attendanceCheckList" type="screenfop" page="component://humanres/widget/EmploymentScreens.xml#attendanceCheckList" content-type="text/plain"/>
     <view-map name="AttendanceNotGiven" type="screenfop" page="component://humanres/widget/EmploymentScreens.xml#AttendanceNotGiven" content-type="text/plain"/>

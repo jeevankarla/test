@@ -78,7 +78,8 @@
         	<condition>
         	<or>
         		<if-has-permission permission="HR"  action="_BENFDED_VIEW"/>
-            	<if-has-permission permission="WATER_ELECTR"  action="_VIEW"/>
+            	<if-has-permission permission="HR"  action="_ELECTR_VIEW"/>
+            	<if-has-permission permission="HR"  action="_WATER_VIEW"/>
         	</or>
             </condition> 
             <link target="benefitOrDeduction"/>
@@ -266,18 +267,24 @@
             </condition> 
             <link target="benefitOrDeduction"/>
         </menu-item>
-		<menu-item name="BenefitDeductionCalculator" title="Benefit Deduction Calculator">
-			<link target="BenefitDeductionCalculator"/>
-		</menu-item>
-		<menu-item name="WaterElectricityCharges" title="Water&amp;Electricity Charges">
+		<menu-item name="WaterElectricityCharges" title="Electricity Charges">
          	 <condition>
-            	<if-has-permission permission="WATER_ELECTR"  action="_VIEW"/>
+            	<if-has-permission permission="HR"  action="_ELECTR_VIEW"/>
             </condition>
            	<link target="waterElectricityCharges"/>
+        </menu-item>
+        <menu-item name="WaterCharges" title="Water Charges">
+        	<condition>
+            	<if-has-permission permission="HR"  action="_WATER_VIEW"/>
+            </condition>
+         	<link target="WaterCharges"/>
         </menu-item>
         <menu-item name="TelephoneCUGCharges" title="Telephone CUG Charges">
            	<link target="TelephoneCUGCharges"/>
         </menu-item>
+        <menu-item name="BenefitDeductionCalculator" title="Benefit Deduction Calculator">
+			<link target="BenefitDeductionCalculator"/>
+		</menu-item>
     </menu>
     
     <menu name="SuplyPayRollTabBar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml" 
